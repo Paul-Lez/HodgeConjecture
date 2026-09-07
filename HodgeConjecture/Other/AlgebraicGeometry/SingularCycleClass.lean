@@ -40,69 +40,79 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+
 /-- The analytic complex-point space as an object of `TopCat`. -/
-abbrev AnalyticPointTopCat (V : SmoothProjectiveComplexVariety) : TopCat :=
-  TopCat.of V.analyticPoint
+abbrev AnalyticPointTopCat
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] : TopCat :=
+  TopCat.of (ComplexPoint X structureMap)
 
 /-- Singular cohomology of the analytic complex-point space. -/
 abbrev RationalSingularCohomology
-    (V : SmoothProjectiveComplexVariety) (n : ℕ) :=
-  Cohomology ℚ (AnalyticPointTopCat V) n
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (n : ℕ) :=
+  Cohomology ℚ (AnalyticPointTopCat structureMap) n
 
 /-- Singular cohomology supported on an irreducible algebraic component. -/
 abbrev RationalSingularComponentCohomologyWithSupport
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ) :=
-  CohomologyWithSupport ℚ (AnalyticPointTopCat V) (cycleComponentSupport V x) n
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (n : ℕ) :=
+  CohomologyWithSupport ℚ (AnalyticPointTopCat structureMap)
+    (cycleComponentSupport structureMap x) n
 
 /-- A class generates its supported cohomology group over `ℚ`. This is a property, not an
 assumed purity theorem. -/
-def IsSupportedCohomologyGenerator
-    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {n : ℕ}
-    (β : RationalSingularComponentCohomologyWithSupport V x n) : Prop :=
+def IsSupportedCohomologyGenerator {X : Scheme} {structureMap : X ⟶ Spec (.of ℂ)}
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
+    {x : X} {n : ℕ}
+    (β : RationalSingularComponentCohomologyWithSupport structureMap x n) : Prop :=
   Submodule.span ℚ {β} = ⊤
 
 /-- The degree-`2p` singular cycle-class line of an irreducible codimension-`p` component.
 It is the span of the images of all generators of the corresponding supported cohomology group.
 This definition is independent of the choice and scaling of a fundamental class. -/
 def singularComponentCycleClassLine
-    (V : SmoothProjectiveComplexVariety) (p : ℕ) (x : V.scheme) :
-    Submodule ℚ (RationalSingularCohomology V (2 * p)) :=
-  Submodule.span ℚ {α | ∃ β : RationalSingularComponentCohomologyWithSupport V x (2 * p),
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X) :
+    Submodule ℚ (RationalSingularCohomology structureMap (2 * p)) :=
+  Submodule.span ℚ {α | ∃ β : RationalSingularComponentCohomologyWithSupport structureMap x (2 * p),
     IsSupportedCohomologyGenerator β ∧
-      forgetSupport ℚ (AnalyticPointTopCat V) (cycleComponentSupport V x) (2 * p) β = α}
+      forgetSupport ℚ (AnalyticPointTopCat structureMap)
+          (cycleComponentSupport structureMap x) (2 * p) β = α}
 
 /-- The rational span of the guarded singular component-class lines in codimension `p`.
 Cohomological purity and local normalization are still required before this can be identified
 with the usual topological cycle-class span in positive codimension. -/
 def rationalSingularAlgebraicCycleClassSpan
-    (V : SmoothProjectiveComplexVariety) (p : ℕ) :
-    Submodule ℚ (RationalSingularCohomology V (2 * p)) :=
-  ⨆ (x : V.scheme) (_ : coheight x = p), singularComponentCycleClassLine V p x
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) :
+    Submodule ℚ (RationalSingularCohomology structureMap (2 * p)) :=
+  ⨆ (x : X) (_ : coheight x = p), singularComponentCycleClassLine structureMap p x
 
 /-- The forgotten class of a supported generator belongs to its component cycle-class line. -/
 lemma forgetSupport_mem_singularComponentCycleClassLine
-    (V : SmoothProjectiveComplexVariety) (p : ℕ) (x : V.scheme)
-    (β : RationalSingularComponentCohomologyWithSupport V x (2 * p))
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X)
+    (β : RationalSingularComponentCohomologyWithSupport structureMap x (2 * p))
     (hβ : IsSupportedCohomologyGenerator β) :
-    forgetSupport ℚ (AnalyticPointTopCat V) (cycleComponentSupport V x) (2 * p) β ∈
-      singularComponentCycleClassLine V p x := by
+    forgetSupport ℚ (AnalyticPointTopCat structureMap)
+        (cycleComponentSupport structureMap x) (2 * p) β ∈
+      singularComponentCycleClassLine structureMap p x := by
   apply Submodule.subset_span
   exact ⟨β, hβ, rfl⟩
 
 /-- Any supported generator computes the same intrinsic component line. -/
 lemma singularComponentCycleClassLine_eq_span
-    (V : SmoothProjectiveComplexVariety) (p : ℕ) (x : V.scheme)
-    (β : RationalSingularComponentCohomologyWithSupport V x (2 * p))
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X)
+    (β : RationalSingularComponentCohomologyWithSupport structureMap x (2 * p))
     (hβ : IsSupportedCohomologyGenerator β) :
-    singularComponentCycleClassLine V p x =
+    singularComponentCycleClassLine structureMap p x =
       Submodule.span ℚ
-        {forgetSupport ℚ (AnalyticPointTopCat V) (cycleComponentSupport V x) (2 * p) β} := by
+        {forgetSupport ℚ (AnalyticPointTopCat structureMap)
+          (cycleComponentSupport structureMap x) (2 * p) β} := by
   apply le_antisymm
   · apply Submodule.span_le.mpr
     intro α hα
     obtain ⟨γ, -, rfl⟩ := hα
-    let f := forgetSupport ℚ (AnalyticPointTopCat V)
-      (cycleComponentSupport V x) (2 * p)
+    let f := forgetSupport ℚ (AnalyticPointTopCat structureMap)
+      (cycleComponentSupport structureMap x) (2 * p)
     have hγ : γ ∈ Submodule.span ℚ {β} := by
       rw [hβ]
       exact Submodule.mem_top
@@ -118,15 +128,16 @@ lemma singularComponentCycleClassLine_eq_span
 /-- The forgotten class of a supported generator on a codimension-`p` component belongs to the
 full algebraic cycle-class span. -/
 lemma forgetSupport_mem_rationalSingularAlgebraicCycleClassSpan
-    (V : SmoothProjectiveComplexVariety) (p : ℕ) (x : V.scheme)
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X)
     (hx : coheight x = p)
-    (β : RationalSingularComponentCohomologyWithSupport V x (2 * p))
+    (β : RationalSingularComponentCohomologyWithSupport structureMap x (2 * p))
     (hβ : IsSupportedCohomologyGenerator β) :
-    forgetSupport ℚ (AnalyticPointTopCat V) (cycleComponentSupport V x) (2 * p) β ∈
-      rationalSingularAlgebraicCycleClassSpan V p := by
-  apply (le_iSup (fun y : V.scheme => ⨆ hy : coheight y = p,
-    singularComponentCycleClassLine V p y) x)
-  apply (le_iSup (fun _ : coheight x = p => singularComponentCycleClassLine V p x) hx)
-  exact forgetSupport_mem_singularComponentCycleClassLine V p x β hβ
+    forgetSupport ℚ (AnalyticPointTopCat structureMap)
+        (cycleComponentSupport structureMap x) (2 * p) β ∈
+      rationalSingularAlgebraicCycleClassSpan structureMap p := by
+  apply (le_iSup (fun y : X => ⨆ hy : coheight y = p,
+    singularComponentCycleClassLine structureMap p y) x)
+  apply (le_iSup (fun _ : coheight x = p => singularComponentCycleClassLine structureMap p x) hx)
+  exact forgetSupport_mem_singularComponentCycleClassLine structureMap p x β hβ
 
 end AlgebraicGeometry.ComplexPoint

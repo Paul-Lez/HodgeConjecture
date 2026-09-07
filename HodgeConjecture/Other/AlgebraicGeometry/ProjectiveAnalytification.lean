@@ -1789,29 +1789,11 @@ end ProjectiveSpace.Presentation
 namespace ProjectiveSpace.IsProjective
 
 /-- The analytic complex points of a projective complex scheme form a compact space. -/
-theorem complexPoint_compactSpace {X : Scheme} {f : X ⟶ Spec (.of ℂ)}
-    (h : ProjectiveSpace.IsProjective f) :
-    @CompactSpace (ComplexPoint X f) ComplexPoint.analyticTopology :=
-  ProjectiveSpace.Presentation.complexPoint_compactSpace (Classical.choice h)
+noncomputable instance complexPoint_compactSpace {X : Scheme} {f : X ⟶ Spec (.of ℂ)}
+    [h : ProjectiveSpace.IsProjective f] : CompactSpace (ComplexPoint X f) :=
+  ProjectiveSpace.Presentation.complexPoint_compactSpace
+    (Classical.choice h.nonempty_presentation)
 
 end ProjectiveSpace.IsProjective
-
-namespace IntegralProjectiveComplexVariety
-
-/-- The analytification of an integral projective complex variety is compact. -/
-noncomputable instance instCompactSpace (V : IntegralProjectiveComplexVariety) :
-    CompactSpace V.analyticPoint :=
-  ProjectiveSpace.IsProjective.complexPoint_compactSpace V.projective
-
-end IntegralProjectiveComplexVariety
-
-namespace SmoothProjectiveComplexVariety
-
-/-- The analytification of a smooth projective complex variety is compact. -/
-noncomputable instance instCompactSpace (V : SmoothProjectiveComplexVariety) :
-    CompactSpace V.analyticPoint :=
-  ProjectiveSpace.IsProjective.complexPoint_compactSpace V.projective
-
-end SmoothProjectiveComplexVariety
 
 end AlgebraicGeometry

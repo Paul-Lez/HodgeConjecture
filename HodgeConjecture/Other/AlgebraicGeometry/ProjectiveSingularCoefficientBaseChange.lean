@@ -37,30 +37,34 @@ Mathlib.
 
 open CategoryTheory Limits
 
-namespace AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety
+namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+  [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
 
 /-- Zeroth rational singular homology of a smooth projective complex analytification is
 finite-dimensional, without assuming global connectedness. -/
-theorem finiteRationalSingularHomologyZero [SmoothOfRelativeDimension d V.structureMap] :
-    Module.Finite ℚ (Homology ℚ (TopCat.of V.analyticPoint) 0) := by
-  let _ : Finite (ZerothHomotopy V.analyticPoint) := finiteZerothHomotopy V d
+theorem finiteRationalSingularHomologyZero [SmoothOfRelativeDimension d structureMap] :
+    Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) := by
+  let _ : Finite (ZerothHomotopy (ComplexPoint X structureMap)) :=
+    finiteZerothHomotopy structureMap d
   have hfinite : Module.Finite ℚ
-      (∐ fun _ : ZerothHomotopy V.analyticPoint ↦ ModuleCat.of ℚ ℚ : ModuleCat ℚ) :=
+      (∐ fun _ : ZerothHomotopy (ComplexPoint X structureMap) ↦
+        ModuleCat.of ℚ ℚ : ModuleCat ℚ) :=
     inferInstance
   exact Module.Finite.equiv
-    (TopCat.singularHomology₀Iso (TopCat.of V.analyticPoint) (ModuleCat.of ℚ ℚ)).symm.toLinearEquiv
+    (TopCat.singularHomology₀Iso (TopCat.of (ComplexPoint X structureMap))
+      (ModuleCat.of ℚ ℚ)).symm.toLinearEquiv
 
 /-- Rational-to-complex singular cohomology base change for projective analytifications in
 degree zero. -/
-def rationalToComplexCohomologyBaseChangeZero [SmoothOfRelativeDimension d V.structureMap] :
-    TensorProduct ℚ ℂ (Cohomology ℚ (TopCat.of V.analyticPoint) 0) ≃ₗ[ℂ]
-      Cohomology ℂ (TopCat.of V.analyticPoint) 0 :=
-  letI : Module.Finite ℚ (Homology ℚ (TopCat.of V.analyticPoint) 0) :=
-    finiteRationalSingularHomologyZero V d
-  rationalToComplexCohomologyBaseChange (TopCat.of V.analyticPoint) 0
+def rationalToComplexCohomologyBaseChangeZero [SmoothOfRelativeDimension d structureMap] :
+    TensorProduct ℚ ℂ (Cohomology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) ≃ₗ[ℂ]
+      Cohomology ℂ (TopCat.of (ComplexPoint X structureMap)) 0 :=
+  letI : Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) :=
+    finiteRationalSingularHomologyZero structureMap d
+  rationalToComplexCohomologyBaseChange (TopCat.of (ComplexPoint X structureMap)) 0
 
-end AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety
+end AlgebraicGeometry.ComplexPoint

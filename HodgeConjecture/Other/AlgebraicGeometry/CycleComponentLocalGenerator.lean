@@ -45,53 +45,56 @@ namespace AlgebraicGeometry
 noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec (.of ℂ)} :
     TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
 
-variable {d n : ℕ} {V : SmoothProjectiveComplexVariety} {x : V.scheme}
-  [SmoothOfRelativeDimension d V.structureMap]
+variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec (.of ℂ)} [IsIntegral X]
+  [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] {x : X}
+  [SmoothOfRelativeDimension d structureMap]
 
 namespace CycleComponentSeparateLocalCoordinates
 
-variable (C : CycleComponentSeparateLocalCoordinates V x d n)
+variable (C : CycleComponentSeparateLocalCoordinates structureMap x d n)
 
 /-- The smooth locus of the reduced cycle component underlying an exact coordinate package. -/
 abbrev componentSmoothLocus
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :=
-  (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus
+    (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) :=
+  (cycleComponentι X x ≫ structureMap).smoothLocus
 
 /-- The complex structure map on the component's smooth locus. -/
 abbrev componentSmoothStructureMap
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    (componentSmoothLocus V x).toScheme ⟶ Spec (.of ℂ) :=
-  (componentSmoothLocus V x).ι ≫ cycleComponentι V.scheme x ≫ V.structureMap
+    (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    (componentSmoothLocus structureMap x).toScheme ⟶ Spec (.of ℂ) :=
+  (componentSmoothLocus structureMap x).ι ≫ cycleComponentι X x ≫ structureMap
 
 /-- The selected smooth component point regarded as a complex point of the smooth locus. -/
-def smoothPoint : ComplexPoint (componentSmoothLocus V x).toScheme
-    (componentSmoothStructureMap V x) :=
-  ComplexPoint.asOpenPoint (componentSmoothLocus V x)
-    (cycleComponentι V.scheme x ≫ V.structureMap)
+def smoothPoint : ComplexPoint (componentSmoothLocus structureMap x).toScheme
+    (componentSmoothStructureMap structureMap x) :=
+  ComplexPoint.asOpenPoint (componentSmoothLocus structureMap x)
+    (cycleComponentι X x ≫ structureMap)
     C.point C.point_mem_smoothLocus
 
 /-- The complex structure map on the selected affine component neighborhood. -/
 abbrev neighborhoodStructureMap :
     C.componentNeighborhood.toScheme ⟶ Spec (.of ℂ) :=
-  C.componentNeighborhood.ι ≫ componentSmoothStructureMap V x
+  C.componentNeighborhood.ι ≫ componentSmoothStructureMap structureMap x
 
 /-- The selected smooth point regarded as a complex point of its affine neighborhood. -/
 def neighborhoodPoint :
     ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap :=
-  ComplexPoint.asOpenPoint C.componentNeighborhood (componentSmoothStructureMap V x)
+  ComplexPoint.asOpenPoint C.componentNeighborhood (componentSmoothStructureMap structureMap x)
     (smoothPoint C) (by
       change (smoothPoint C).underlying ∈ C.componentNeighborhood
-      have hmap : ComplexPoint.map (componentSmoothLocus V x).ι rfl (smoothPoint C) =
+      have hmap : ComplexPoint.map (componentSmoothLocus structureMap x).ι rfl (smoothPoint C) =
           C.point := by
         exact congrArg Subtype.val
-          ((ComplexPoint.openEquiv (componentSmoothLocus V x)
-            (cycleComponentι V.scheme x ≫ V.structureMap)).apply_symm_apply
+          ((ComplexPoint.openEquiv (componentSmoothLocus structureMap x)
+            (cycleComponentι X x ≫ structureMap)).apply_symm_apply
               ⟨C.point, C.point_mem_smoothLocus⟩)
       have hu := congrArg ComplexPoint.underlying hmap
       rw [ComplexPoint.underlying_map] at hu
       have hu' : (smoothPoint C).underlying =
           (⟨C.point.underlying, C.point_mem_smoothLocus⟩ :
-            (componentSmoothLocus V x).toScheme) := Subtype.ext hu
+            (componentSmoothLocus structureMap x).toScheme) := Subtype.ext hu
       rw [hu']
       exact C.point_mem_componentNeighborhood)
 
@@ -121,7 +124,7 @@ lemma C_comp_coordinateRingHomOnNeighborhood :
   change CommRingCat.ofHom
       (C.componentCoordinateRingHom.comp MvPolynomial.C) =
     CommRingCat.ofHom
-      (complexRestrictionMap (componentSmoothStructureMap V x)
+      (complexRestrictionMap (componentSmoothStructureMap structureMap x)
         C.componentNeighborhood)
   exact congrArg CommRingCat.ofHom C.componentCoordinateRingHom_comp_C
 
@@ -347,9 +350,10 @@ namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec (.of ℂ)} :
     TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
 
-variable {d n : ℕ} {V : SmoothProjectiveComplexVariety} {x : V.scheme}
-  [SmoothOfRelativeDimension d V.structureMap]
-  (C : CycleComponentSeparateLocalCoordinates V x d n)
+variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec (.of ℂ)} [IsIntegral X]
+  [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] {x : X}
+  [SmoothOfRelativeDimension d structureMap]
+  (C : CycleComponentSeparateLocalCoordinates structureMap x d n)
 
 /-- The transported local class generates exactly the image of the chart-induced local-homology
 map. This is the algebraic intermediate identity used by the full generator theorem below. -/
@@ -386,80 +390,86 @@ lemma span_neighborhoodLocalClass_eq_top :
 /-- In ambient dimension at most two, the established exact component coordinates provide an
 actual analytic chart whose transported class generates the chart map's image. -/
 lemma exists_span_neighborhoodLocalClass_eq_range_of_le_two
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : d ≤ 2) :
-    ∃ C : CycleComponentSeparateLocalCoordinates V x d (d - p),
+    ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d (d - p),
       Submodule.span ℚ {C.neighborhoodLocalClass} =
         LinearMap.range C.neighborhoodLocalHomologyMap := by
   obtain ⟨C⟩ := nonempty_cycleComponentSeparateLocalCoordinates_of_le_two
-    V x d p hx hd
+    structureMap x d p hx hd
   exact ⟨C, C.span_neighborhoodLocalClass_eq_range⟩
 
 /-- In ambient dimension at most two, exact component coordinates give an actual generator of
 the full local homology at the selected smooth component point. -/
 lemma exists_span_neighborhoodLocalClass_eq_top_of_le_two
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : d ≤ 2) :
-    ∃ C : CycleComponentSeparateLocalCoordinates V x d (d - p),
+    ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d (d - p),
       Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
   obtain ⟨C⟩ := nonempty_cycleComponentSeparateLocalCoordinates_of_le_two
-    V x d p hx hd
+    structureMap x d p hx hd
   exact ⟨C, C.span_neighborhoodLocalClass_eq_top⟩
 
 /-- A codimension-`d` component has an exact zero-dimensional component chart whose transported
 class generates the chart map's image. -/
 lemma exists_span_neighborhoodLocalClass_eq_range_of_coheight_eq_dimension
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = d) :
-    ∃ C : CycleComponentSeparateLocalCoordinates V x d 0,
+    ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d 0,
       Submodule.span ℚ {C.neighborhoodLocalClass} =
         LinearMap.range C.neighborhoodLocalHomologyMap := by
   obtain ⟨C⟩ :=
     nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_eq_dimension
-      V x d hx
+      structureMap x d hx
   exact ⟨C, C.span_neighborhoodLocalClass_eq_range⟩
 
 /-- A codimension-`d` component has an actual generator of its zero-dimensional local homology
 at the selected smooth point. -/
 lemma exists_span_neighborhoodLocalClass_eq_top_of_coheight_eq_dimension
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = d) :
-    ∃ C : CycleComponentSeparateLocalCoordinates V x d 0,
+    ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d 0,
       Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
   obtain ⟨C⟩ :=
     nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_eq_dimension
-      V x d hx
+      structureMap x d hx
   exact ⟨C, C.span_neighborhoodLocalClass_eq_top⟩
 
 /-- A one-dimensional component has an exact one-dimensional component chart whose transported
 class generates the chart map's image. -/
 lemma exists_span_neighborhoodLocalClass_eq_range_of_coheight_succ_eq_dimension
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : p + 1 = d) :
-    ∃ C : CycleComponentSeparateLocalCoordinates V x d 1,
+    ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d 1,
       Submodule.span ℚ {C.neighborhoodLocalClass} =
         LinearMap.range C.neighborhoodLocalHomologyMap := by
   obtain ⟨C⟩ :=
     nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_succ_eq_dimension
-      V x d p hx hd
+      structureMap x d p hx hd
   exact ⟨C, C.span_neighborhoodLocalClass_eq_range⟩
 
 /-- A one-dimensional component has an actual generator of its local homology at the selected
 smooth point. -/
 lemma exists_span_neighborhoodLocalClass_eq_top_of_coheight_succ_eq_dimension
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : p + 1 = d) :
-    ∃ C : CycleComponentSeparateLocalCoordinates V x d 1,
+    ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d 1,
       Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
   obtain ⟨C⟩ :=
     nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_succ_eq_dimension
-      V x d p hx hd
+      structureMap x d p hx hd
   exact ⟨C, C.span_neighborhoodLocalClass_eq_top⟩
 
 end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

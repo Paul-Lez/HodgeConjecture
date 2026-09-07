@@ -36,39 +36,36 @@ open CategoryTheory
 
 namespace AlgebraicGeometry.ComplexPoint
 
-namespace SmoothProjectiveComplexVariety
-
-variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+  [ProjectiveSpace.IsProjective structureMap]
 
 /-- Every open subset of a smooth projective complex analytification is paracompact. -/
-theorem openParacompactSpace [SmoothOfRelativeDimension d V.structureMap]
-    (U : Opens V.analyticPoint) : ParacompactSpace U := by
-  let _ : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
-    analyticChartedSpace V.structureMap d
-  exact opens_paracompactSpace_of_compact_chartedSpace
-    (H := Fin d → ℂ) U
+theorem openParacompactSpace [SmoothOfRelativeDimension d structureMap]
+    (U : Opens (ComplexPoint X structureMap)) : ParacompactSpace U := by
+  let _ : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
+    analyticChartedSpace structureMap d
+  exact opens_paracompactSpace_of_compact_chartedSpace (H := Fin d → ℂ) U
 
 /-- Every term of the rational singular-cochain sheaf resolution on a smooth projective
 analytification is flasque. -/
-theorem rationalSingularCochainSheafIsFlasque [SmoothOfRelativeDimension d V.structureMap]
+theorem rationalSingularCochainSheafIsFlasque [SmoothOfRelativeDimension d structureMap]
     (n : ℕ) :
     TopCat.Sheaf.IsFlasque
       (AlgebraicTopology.Singular.singularCochainSheaf ℚ
-        (TopCat.of V.analyticPoint) n) := by
-  let _ : ∀ U : Opens V.analyticPoint, ParacompactSpace U := openParacompactSpace V d
+        (TopCat.of (ComplexPoint X structureMap)) n) := by
+  let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
+    openParacompactSpace structureMap d
   infer_instance
 
 /-- Ordinary rational singular cochains compute the global sections of the chosen
 singular-cochain sheaf complex on a smooth projective analytification. -/
 theorem rationalSingularCochain_globalComparison_quasiIso
-    [SmoothOfRelativeDimension d V.structureMap] :
+    [SmoothOfRelativeDimension d structureMap] :
     QuasiIso
       (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ
-        (TopCat.of V.analyticPoint)) := by
-  let _ : ∀ U : Opens V.analyticPoint, ParacompactSpace U := openParacompactSpace V d
-  exact
-    AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
-
-end SmoothProjectiveComplexVariety
+        (TopCat.of (ComplexPoint X structureMap))) := by
+  let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
+    openParacompactSpace structureMap d
+  exact AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
 
 end AlgebraicGeometry.ComplexPoint

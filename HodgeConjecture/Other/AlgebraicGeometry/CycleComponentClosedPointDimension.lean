@@ -135,41 +135,41 @@ end RingHom
 
 namespace AlgebraicGeometry
 
-variable {d p : ℕ}
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) {d p : ℕ}
 
 /-- Every closed point of the reduced closure of a codimension-`p` point in a smooth complex
 `d`-fold has coheight `d - p` inside that reduced closure. -/
 lemma cycleComponent_closedPoint_coheight_eq_sub
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme)
-    (z : cycleComponent V.scheme x)
-    [SmoothOfRelativeDimension d V.structureMap]
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    (z : cycleComponent X x)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hz : IsClosed {z}) :
     Order.coheight z = d - p := by
-  let c : cycleComponent V.scheme x ⟶ V.scheme := cycleComponentι V.scheme x
-  let y : V.scheme := c z
+  let c : cycleComponent X x ⟶ X := cycleComponentι X x
+  let y : X := c z
   have hyx : y ≤ x := by
-    exact (cycleComponentOrderIsoIic V.scheme x z).2
+    exact (cycleComponentOrderIsoIic X x z).2
   obtain ⟨U, hU, hyU, hstandard⟩ :=
     SmoothOfRelativeDimension.exists_affine_isStandardSmoothOfRelativeDimension
-      (d := d) V.structureMap y
+      (d := d) structureMap y
   have hxU : x ∈ U := by
     rw [Scheme.le_iff_specializes] at hyx
     exact hyx.mem_open U.isOpen hyU
-  let W : (cycleComponent V.scheme x).Opens := c ⁻¹ᵁ U
+  let W : (cycleComponent X x).Opens := c ⁻¹ᵁ U
   have hW : IsAffineOpen W := hU.preimage c
   have hzW : z ∈ W := hyU
   let _ : Nonempty W := ⟨⟨z, hzW⟩⟩
   let xu : U.toScheme := ⟨x, hxU⟩
   let zw : W.toScheme := ⟨z, hzW⟩
-  let q : Γ(V.scheme, U) →+* Γ(cycleComponent V.scheme x, W) :=
+  let q : Γ(X, U) →+* Γ(cycleComponent X x, W) :=
     (c.app U).hom
   have hqsurj : Function.Surjective q := c.app_surjective U hU
-  let P : Ideal Γ(V.scheme, U) :=
+  let P : Ideal Γ(X, U) :=
     (hU.primeIdealOf xu).asIdeal
   let I := Scheme.IdealSheafData.vanishingIdeal
-    (X := V.scheme) ⟨closure {x}, isClosed_closure⟩
-  have hsingleton : hU.fromSpec ⁻¹' ({x} : Set V.scheme) =
-      ({hU.primeIdealOf xu} : Set (Spec Γ(V.scheme, U))) := by
+    (X := X) ⟨closure {x}, isClosed_closure⟩
+  have hsingleton : hU.fromSpec ⁻¹' ({x} : Set X) =
+      ({hU.primeIdealOf xu} : Set (Spec Γ(X, U))) := by
     ext Q
     simp only [Set.mem_preimage, Set.mem_singleton_iff]
     constructor
@@ -182,9 +182,9 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
   have hpreimage : hU.fromSpec ⁻¹' closure {x} =
       closure {hU.primeIdealOf xu} := by
     have hclosure := congrArg
-      (fun T : Set (Spec Γ(V.scheme, U)) ↦ closure T) hsingleton
+      (fun T : Set (Spec Γ(X, U)) ↦ closure T) hsingleton
     exact (hU.fromSpec.isOpenEmbedding.isOpenMap.preimage_closure_eq_closure_preimage
-      hU.fromSpec.continuous ({x} : Set V.scheme)).trans hclosure
+      hU.fromSpec.continuous ({x} : Set X)).trans hclosure
   have hideal : I.ideal ⟨U, hU⟩ = P := by
     change PrimeSpectrum.vanishingIdeal (hU.fromSpec ⁻¹' closure {x}) = P
     erw [hpreimage, PrimeSpectrum.vanishingIdeal_closure,
@@ -195,7 +195,7 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
     calc
       c.ker.ideal ⟨U, hU⟩ = I.ideal ⟨U, hU⟩ := by
         rw [show c = I.subschemeι from rfl]
-        exact congrArg (fun J : V.scheme.IdealSheafData ↦ J.ideal ⟨U, hU⟩)
+        exact congrArg (fun J : X.IdealSheafData ↦ J.ideal ⟨U, hU⟩)
           I.ker_subschemeι
       _ = P := hideal
   have hPheight : P.height = p := by
@@ -208,28 +208,28 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
           (x := xu) U.ι
         simpa [xu] using h.symm
       _ = p := hx
-  have hquotient : ringKrullDim (Γ(V.scheme, U) ⧸ P) = d - p :=
+  have hquotient : ringKrullDim (Γ(X, U) ⧸ P) = d - p :=
     (complexRestrictionMap_isStandardSmoothOfRelativeDimension
-      (d := d) V.structureMap hstandard).ringKrullDim_quotient_eq_sub_complex
+      (d := d) structureMap hstandard).ringKrullDim_quotient_eq_sub_complex
         P hPheight
-  have hringW : ringKrullDim Γ(cycleComponent V.scheme x, W) = d - p := by
+  have hringW : ringKrullDim Γ(cycleComponent X x, W) = d - p := by
     calc
-      ringKrullDim Γ(cycleComponent V.scheme x, W) =
-          ringKrullDim (Γ(V.scheme, U) ⧸ RingHom.ker q) :=
+      ringKrullDim Γ(cycleComponent X x, W) =
+          ringKrullDim (Γ(X, U) ⧸ RingHom.ker q) :=
         (ringKrullDim_eq_of_ringEquiv
           (RingHom.quotientKerEquivOfSurjective hqsurj)).symm
-      _ = ringKrullDim (Γ(V.scheme, U) ⧸ P) := by rw [hqker]
+      _ = ringKrullDim (Γ(X, U) ⧸ P) := by rw [hqker]
       _ = d - p := hquotient
-  let s : cycleComponent V.scheme x ⟶ Spec (.of ℂ) := c ≫ V.structureMap
-  let _ : Algebra ℂ Γ(cycleComponent V.scheme x, W) :=
+  let s : cycleComponent X x ⟶ Spec (.of ℂ) := c ≫ structureMap
+  let _ : Algebra ℂ Γ(cycleComponent X x, W) :=
     (complexRestrictionMap s W).toAlgebra
-  let _ : Algebra.FiniteType ℂ Γ(cycleComponent V.scheme x, W) := by
+  let _ : Algebra.FiniteType ℂ Γ(cycleComponent X x, W) := by
     rw [← RingHom.finiteType_algebraMap]
     change (complexRestrictionMap s W).FiniteType
     apply (s.finiteType_appLE (isAffineOpen_top (Spec (.of ℂ))) hW (by simp)).comp
     exact RingHom.FiniteType.of_surjective _
       (Scheme.ΓSpecIso (.of ℂ)).symm.commRingCatIsoToRingEquiv.surjective
-  let Q : Ideal Γ(cycleComponent V.scheme x, W) :=
+  let Q : Ideal Γ(cycleComponent X x, W) :=
     (hW.primeIdealOf zw).asIdeal
   have hQmax : Q.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed
     zw hz
@@ -253,30 +253,31 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
 /-- The underlying point of every complex point of a codimension-`p` reduced component has
 coheight `d - p`. -/
 lemma cycleComponent_complexPoint_coheight_eq_sub
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme)
-    (z : ComplexPoint (cycleComponent V.scheme x)
-      (cycleComponentι V.scheme x ≫ V.structureMap))
-    [SmoothOfRelativeDimension d V.structureMap]
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    (z : ComplexPoint (cycleComponent X x)
+      (cycleComponentι X x ≫ structureMap))
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) :
     Order.coheight z.underlying = d - p :=
-  cycleComponent_closedPoint_coheight_eq_sub V x z.underlying hx
-    (cycleComponent_complexPoint_underlying_isClosed V x z)
+  cycleComponent_closedPoint_coheight_eq_sub structureMap x z.underlying hx
+    (cycleComponent_complexPoint_underlying_isClosed structureMap x z)
 
 /-- In every ambient dimension, a reduced component of coheight `p` has separate component and
 ambient étale coordinates, with exactly `d - p` component coordinates. -/
 lemma nonempty_cycleComponentSeparateLocalCoordinates
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) :
-    Nonempty (CycleComponentSeparateLocalCoordinates V x d (d - p)) := by
-  let c : cycleComponent V.scheme x ⟶ Spec (.of ℂ) :=
-    cycleComponentι V.scheme x ≫ V.structureMap
-  let S : (cycleComponent V.scheme x).Opens := c.smoothLocus
+    Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d (d - p)) := by
+  let c : cycleComponent X x ⟶ Spec (.of ℂ) :=
+    cycleComponentι X x ≫ structureMap
+  let S : (cycleComponent X x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec (.of ℂ) := S.ι ≫ c
   let _ : Smooth g := by
-    exact cycleComponent_smoothLocus_smooth V x
+    exact cycleComponent_smoothLocus_smooth structureMap x
   obtain ⟨z, hzsmooth, hzclosed⟩ :=
-    exists_cycleComponent_smooth_closed_complexPoint V x
+    exists_cycleComponent_smooth_closed_complexPoint structureMap x
   let zs : S.toScheme := ⟨z.underlying, hzsmooth⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
   have hstandardComplex : (complexRestrictionMap g W).IsStandardSmooth :=
@@ -284,7 +285,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
   obtain ⟨m, hm⟩ :=
     hstandardComplex.exists_isStandardSmoothOfRelativeDimension
   have hzsClosed : IsClosed {zs} := by
-    have hpreimage : S.ι ⁻¹' ({z.underlying} : Set (cycleComponent V.scheme x)) =
+    have hpreimage : S.ι ⁻¹' ({z.underlying} : Set (cycleComponent X x)) =
         ({zs} : Set S.toScheme) := by
       ext y
       simp only [Set.mem_preimage, Set.mem_singleton_iff]
@@ -311,7 +312,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
       _ = Order.coheight zw := hPcoheight
       _ = Order.coheight zs := hWcoheight.symm
       _ = Order.coheight z.underlying := hScoheight.symm
-      _ = d - p := cycleComponent_complexPoint_coheight_eq_sub V x z hx
+      _ = d - p := cycleComponent_complexPoint_coheight_eq_sub structureMap x z hx
   subst m
   obtain ⟨coordinateRingHom, hcomp, hetale⟩ := hm.exists_etale_mvPolynomial
   exact ⟨
@@ -324,23 +325,26 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
       componentCoordinateRingHom := coordinateRingHom
       componentCoordinateRingHom_comp_C := hcomp
       componentCoordinateRingHom_etale := hetale
-      ambientCoordinates := localEtaleCoordinates V.structureMap d
-        (cycleComponentι V.scheme x z.underlying) }⟩
+      ambientCoordinates := localEtaleCoordinates structureMap d
+        (cycleComponentι X x z.underlying) }⟩
 
 end AlgebraicGeometry
 
 namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+
 /-- In every ambient dimension, exact component coordinates give a transported generator of the
 full local homology at the selected smooth component point. -/
 lemma exists_span_neighborhoodLocalClass_eq_top
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) :
-    ∃ C : CycleComponentSeparateLocalCoordinates V x d (d - p),
+    ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d (d - p),
       Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
   obtain ⟨C⟩ := AlgebraicGeometry.nonempty_cycleComponentSeparateLocalCoordinates
-    V x d p hx
+    structureMap x d p hx
   exact ⟨C, C.span_neighborhoodLocalClass_eq_top⟩
 
 end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

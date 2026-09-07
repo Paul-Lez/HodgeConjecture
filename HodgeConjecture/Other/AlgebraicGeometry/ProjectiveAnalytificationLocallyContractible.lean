@@ -86,28 +86,24 @@ theorem ChartedSpace.stronglyLocallyContractibleSpace
   exact
     ((chartAt H x).toHomeomorphSourceTarget).isOpenEmbedding.stronglyLocallyContractibleSpace
 
-namespace SmoothProjectiveComplexVariety
-
-variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
 
 /-- The analytification of a smooth projective complex variety is strongly locally
 contractible. -/
-theorem stronglyLocallyContractibleSpace [SmoothOfRelativeDimension d V.structureMap] :
-    StronglyLocallyContractibleSpace V.analyticPoint := by
-  let _ : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
-    analyticChartedSpace V.structureMap d
+theorem stronglyLocallyContractibleSpace [SmoothOfRelativeDimension d structureMap] :
+    StronglyLocallyContractibleSpace (ComplexPoint X structureMap) := by
+  let _ : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
+    analyticChartedSpace structureMap d
   let _ : StronglyLocallyContractibleSpace (Fin d → ℂ) :=
     normedSpace_stronglyLocallyContractibleSpace
   exact ChartedSpace.stronglyLocallyContractibleSpace
-    (H := Fin d → ℂ) (M := V.analyticPoint)
+    (H := Fin d → ℂ) (M := ComplexPoint X structureMap)
 
 /-- The analytification of a smooth projective complex variety is locally contractible. -/
-theorem locallyContractibleSpace [SmoothOfRelativeDimension d V.structureMap] :
-    LocallyContractibleSpace V.analyticPoint := by
-  let _ : StronglyLocallyContractibleSpace V.analyticPoint :=
-    stronglyLocallyContractibleSpace V d
+theorem locallyContractibleSpace [SmoothOfRelativeDimension d structureMap] :
+    LocallyContractibleSpace (ComplexPoint X structureMap) := by
+  let _ : StronglyLocallyContractibleSpace (ComplexPoint X structureMap) :=
+    stronglyLocallyContractibleSpace structureMap d
   exact StronglyLocallyContractibleSpace.locallyContractible
-
-end SmoothProjectiveComplexVariety
 
 end AlgebraicGeometry.ComplexPoint

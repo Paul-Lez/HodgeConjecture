@@ -34,44 +34,49 @@ metrizability theorem.
 
 open Topology
 
-namespace AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety
+namespace AlgebraicGeometry.ComplexPoint
 
-variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+  [ProjectiveSpace.IsProjective structureMap]
 
 /-- A smooth projective complex analytification has a second-countable topology. -/
-theorem secondCountableTopology [SmoothOfRelativeDimension d V.structureMap] :
-    SecondCountableTopology V.analyticPoint := by
-  let _ : SigmaCompactSpace V.analyticPoint := inferInstance
-  let _ : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
-    ComplexPoint.analyticChartedSpace V.structureMap d
-  exact ChartedSpace.secondCountable_of_sigmaCompact (Fin d → ℂ) V.analyticPoint
+theorem secondCountableTopology [SmoothOfRelativeDimension d structureMap] :
+    SecondCountableTopology (ComplexPoint X structureMap) := by
+  let _ : SigmaCompactSpace (ComplexPoint X structureMap) := inferInstance
+  let _ : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
+    analyticChartedSpace structureMap d
+  exact ChartedSpace.secondCountable_of_sigmaCompact (Fin d → ℂ) (ComplexPoint X structureMap)
 
 /-- A smooth projective complex analytification is separable. -/
-theorem separableSpace [SmoothOfRelativeDimension d V.structureMap] :
-    TopologicalSpace.SeparableSpace V.analyticPoint := by
-  let _ : SecondCountableTopology V.analyticPoint := secondCountableTopology V d
+theorem separableSpace [SmoothOfRelativeDimension d structureMap] :
+    TopologicalSpace.SeparableSpace (ComplexPoint X structureMap) := by
+  let _ : SecondCountableTopology (ComplexPoint X structureMap) :=
+    secondCountableTopology structureMap d
   infer_instance
 
 /-- A smooth projective complex analytification is first countable. -/
-theorem firstCountableTopology [SmoothOfRelativeDimension d V.structureMap] :
-    FirstCountableTopology V.analyticPoint := by
-  let _ : SecondCountableTopology V.analyticPoint := secondCountableTopology V d
+theorem firstCountableTopology [SmoothOfRelativeDimension d structureMap] :
+    FirstCountableTopology (ComplexPoint X structureMap) := by
+  let _ : SecondCountableTopology (ComplexPoint X structureMap) :=
+    secondCountableTopology structureMap d
   infer_instance
 
 /-- A smooth projective complex analytification is Lindelöf. -/
-theorem lindelofSpace [SmoothOfRelativeDimension d V.structureMap] :
-    LindelofSpace V.analyticPoint := by
-  let _ : SecondCountableTopology V.analyticPoint := secondCountableTopology V d
+theorem lindelofSpace [SmoothOfRelativeDimension d structureMap] :
+    LindelofSpace (ComplexPoint X structureMap) := by
+  let _ : SecondCountableTopology (ComplexPoint X structureMap) :=
+    secondCountableTopology structureMap d
   infer_instance
 
 /-- A smooth projective complex analytification is metrizable. -/
-theorem metrizableSpace [SmoothOfRelativeDimension d V.structureMap] :
-    TopologicalSpace.MetrizableSpace V.analyticPoint := by
-  let _ : SigmaCompactSpace V.analyticPoint := inferInstance
-  let _ : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
-    ComplexPoint.analyticChartedSpace V.structureMap d
-  let _ : SecondCountableTopology V.analyticPoint := secondCountableTopology V d
-  let _ : T2Space V.analyticPoint := inferInstance
-  exact Manifold.metrizableSpace (modelWithCornersSelf ℝ (Fin d → ℂ)) V.analyticPoint
+theorem metrizableSpace [SmoothOfRelativeDimension d structureMap] :
+    TopologicalSpace.MetrizableSpace (ComplexPoint X structureMap) := by
+  let _ : SigmaCompactSpace (ComplexPoint X structureMap) := inferInstance
+  let _ : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
+    analyticChartedSpace structureMap d
+  let _ : SecondCountableTopology (ComplexPoint X structureMap) :=
+    secondCountableTopology structureMap d
+  exact Manifold.metrizableSpace (modelWithCornersSelf ℝ (Fin d → ℂ))
+    (ComplexPoint X structureMap)
 
-end AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety
+end AlgebraicGeometry.ComplexPoint

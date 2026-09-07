@@ -49,8 +49,9 @@ subvarieties.
 This definition is a proposition, not a proof. It is deliberately untagged because the current
 problem metadata treats a sorry-free definition as a solved declaration. -/
 public def hodgeConjecture : Prop :=
-  ∀ (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] (p : ℕ),
-    rationalHodgeClasses V.structureMap d p ≤ algebraicCycleClassSpan V p
+  ∀ {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
+    [SmoothOfRelativeDimension d structureMap] (p : ℕ),
+    rationalHodgeClasses structureMap d p ≤ algebraicCycleClassSpan structureMap p
 
 end HodgeConjecture

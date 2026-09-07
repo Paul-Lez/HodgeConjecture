@@ -38,11 +38,15 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+
 /-- An algebraic cycle on a projective complex variety has finite support. Algebraic cycles are
 locally finite by definition, and the underlying Zariski space is compact. -/
 lemma algebraicCycle_support_finite {R : Type*} [Zero R]
-    (V : SmoothProjectiveComplexVariety) (c : AlgebraicCycle V.scheme R) :
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (c : AlgebraicCycle X R) :
     c.support.Finite := by
+  let _ : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace structureMap
   have h := c.locallyFiniteSupport.finite_inter_support_of_isCompact
     (W := Set.univ) isCompact_univ
   simpa using h
@@ -122,64 +126,69 @@ lemma complexPoint_ker_eq_vanishingIdeal_closure
   exact h
 
 /-- A cycle component of a projective variety is projective over `ℂ`. -/
-theorem cycleComponent_projective (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    ProjectiveSpace.IsProjective (cycleComponentι V.scheme x ≫ V.structureMap) := by
-  rcases V.projective with ⟨P⟩
-  exact ⟨
+instance cycleComponent_projective
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    ProjectiveSpace.IsProjective (cycleComponentι X x ≫ structureMap) := by
+  rcases ‹ProjectiveSpace.IsProjective structureMap›.nonempty_presentation with ⟨P⟩
+  exact ⟨⟨
     { ambientDimension := P.ambientDimension
-      immersion := cycleComponentι V.scheme x ≫ P.immersion
+      immersion := cycleComponentι X x ≫ P.immersion
       isClosedImmersion := by
         let _ := P.isClosedImmersion
         infer_instance
       immersion_toBase := by rw [Category.assoc, P.immersion_toBase] }
-  ⟩
+  ⟩⟩
 
 /-- A cycle component of a projective complex variety is proper over `ℂ`. -/
 noncomputable instance cycleComponent_isProper
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    IsProper (cycleComponentι V.scheme x ≫ V.structureMap) :=
-  (cycleComponent_projective V x).isProper
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    IsProper (cycleComponentι X x ≫ structureMap) :=
+  inferInstance
 
 /-- A cycle component of a projective complex variety is locally of finite presentation over
 `ℂ`. -/
 noncomputable instance cycleComponent_locallyOfFinitePresentation
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    LocallyOfFinitePresentation (cycleComponentι V.scheme x ≫ V.structureMap) :=
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    LocallyOfFinitePresentation (cycleComponentι X x ≫ structureMap) :=
   inferInstance
 
 /-- The integral projective variety defined by one generic point of a smooth projective variety. -/
-def cycleComponentVariety (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
+def cycleComponentVariety
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
     IntegralProjectiveComplexVariety where
-  scheme := cycleComponent V.scheme x
+  scheme := cycleComponent X x
   isIntegral := inferInstance
-  structureMap := cycleComponentι V.scheme x ≫ V.structureMap
-  projective := cycleComponent_projective V x
+  structureMap := cycleComponentι X x ≫ structureMap
+  projective := cycleComponent_projective structureMap x
 
-/-- The reduced closure of a point in a projective complex variety is Noetherian. -/
-noncomputable instance cycleComponent_isNoetherian
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    IsNoetherian (cycleComponent V.scheme x) := by
-  change IsNoetherian (cycleComponentVariety V x).scheme
+/-- The reduced closure of a point in a projective complex variety is Noetherian.
+
+This is not an instance: the component does not determine the structure morphism carrying the
+projectivity hypothesis. -/
+theorem cycleComponent_isNoetherian
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    IsNoetherian (cycleComponent X x) := by
+  change IsNoetherian (cycleComponentVariety structureMap x).scheme
   infer_instance
 
 /-- The smooth locus of an integral cycle component is a smooth complex scheme. -/
 theorem cycleComponent_smoothLocus_smooth
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
     Smooth
-      ((cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus.ι ≫
-        (cycleComponentι V.scheme x ≫ V.structureMap)) :=
-  (cycleComponentι V.scheme x ≫ V.structureMap).smooth_restrict_smoothLocus
+      ((cycleComponentι X x ≫ structureMap).smoothLocus.ι ≫
+        (cycleComponentι X x ≫ structureMap)) :=
+  (cycleComponentι X x ≫ structureMap).smooth_restrict_smoothLocus
 
 /-- Every integral cycle component has a complex point in its smooth locus. The smooth locus is
 dense over the perfect field `ℂ`, and a projective complex variety has a closed point there. -/
 theorem exists_cycleComponent_smooth_complexPoint
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    ∃ z : ComplexPoint (cycleComponent V.scheme x)
-        (cycleComponentι V.scheme x ≫ V.structureMap),
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    ∃ z : ComplexPoint (cycleComponent X x)
+        (cycleComponentι X x ≫ structureMap),
       z.underlying ∈
-        (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus := by
-  let f := cycleComponentι V.scheme x ≫ V.structureMap
-  let _ : JacobsonSpace (cycleComponent V.scheme x) :=
+        (cycleComponentι X x ≫ structureMap).smoothLocus := by
+  let f := cycleComponentι X x ≫ structureMap
+  let _ : JacobsonSpace (cycleComponent X x) :=
     LocallyOfFiniteType.jacobsonSpace f
   obtain ⟨y, hy, hyClosed⟩ := nonempty_inter_closedPoints
     f.dense_smoothLocus_of_perfectField.nonempty
@@ -193,54 +202,59 @@ theorem exists_cycleComponent_smooth_complexPoint
   exact hy
 
 /-- The complex points supported on the irreducible closed subset with generic point `x`. -/
-def cycleComponentSupport (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    Set V.analyticPoint :=
+def cycleComponentSupport
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    Set (ComplexPoint X structureMap) :=
   ComplexPoint.underlying ⁻¹' closure {x}
 
 /-- The complex points over a Zariski-closed subset form an analytically closed set. -/
 lemma isClosed_complexPoint_underlying_preimage
-    (V : SmoothProjectiveComplexVariety)
-    (Z : TopologicalSpace.Closeds V.scheme) :
-    IsClosed ((@ComplexPoint.underlying V.scheme V.structureMap) ⁻¹'
-      (Z : Set V.scheme)) := by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
+    (Z : TopologicalSpace.Closeds X) :
+    IsClosed ((@ComplexPoint.underlying X structureMap) ⁻¹'
+      (Z : Set X)) := by
   rw [← isOpen_compl_iff]
-  let U : V.scheme.Opens := ⟨(Z : Set V.scheme)ᶜ,
+  let U : X.Opens := ⟨(Z : Set X)ᶜ,
     isOpen_compl_iff.mpr Z.2⟩
-  change @IsOpen V.analyticPoint ComplexPoint.analyticTopology
-    ((@ComplexPoint.underlying V.scheme V.structureMap) ⁻¹' (Z : Set V.scheme))ᶜ
-  rw [show ((@ComplexPoint.underlying V.scheme V.structureMap) ⁻¹'
-      (Z : Set V.scheme))ᶜ = ComplexPoint.overOpen U by
+  change @IsOpen (ComplexPoint X structureMap) ComplexPoint.analyticTopology
+    ((@ComplexPoint.underlying X structureMap) ⁻¹' (Z : Set X))ᶜ
+  rw [show ((@ComplexPoint.underlying X structureMap) ⁻¹'
+      (Z : Set X))ᶜ = ComplexPoint.overOpen U by
     apply Set.ext
     intro z
     change (¬ComplexPoint.underlying z ∈ Z) ↔
-      ComplexPoint.underlying z ∈ (Z : Set V.scheme)ᶜ
+      ComplexPoint.underlying z ∈ (Z : Set X)ᶜ
     rfl]
   exact ComplexPoint.isOpen_overOpen U
 
-lemma isClosed_cycleComponentSupport (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    IsClosed (cycleComponentSupport V x) :=
-  isClosed_complexPoint_underlying_preimage V
+lemma isClosed_cycleComponentSupport
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    IsClosed (cycleComponentSupport structureMap x) :=
+  isClosed_complexPoint_underlying_preimage structureMap
     ⟨closure {x}, isClosed_closure⟩
 
 /-- The map on complex points induced by the canonical inclusion of a cycle component. -/
-def cycleComponentMap (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    ComplexPoint (cycleComponent V.scheme x)
-      (cycleComponentι V.scheme x ≫ V.structureMap) → V.analyticPoint :=
-  ComplexPoint.map (cycleComponentι V.scheme x) rfl
+def cycleComponentMap
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    ComplexPoint (cycleComponent X x)
+      (cycleComponentι X x ≫ structureMap) → (ComplexPoint X structureMap) :=
+  ComplexPoint.map (cycleComponentι X x) rfl
 
 /-- The inclusion of a cycle component on complex points, bundled as a continuous map. -/
-def cycleComponentContinuousMap (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
+def cycleComponentContinuousMap
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
     @ContinuousMap
-      (ComplexPoint (cycleComponent V.scheme x) (cycleComponentι V.scheme x ≫ V.structureMap))
-      V.analyticPoint ComplexPoint.analyticTopology ComplexPoint.analyticTopology :=
-  ComplexPoint.continuousMap (cycleComponentι V.scheme x) rfl
+      (ComplexPoint (cycleComponent X x) (cycleComponentι X x ≫ structureMap))
+      (ComplexPoint X structureMap) ComplexPoint.analyticTopology ComplexPoint.analyticTopology :=
+  ComplexPoint.continuousMap (cycleComponentι X x) rfl
 
-lemma range_cycleComponentMap_subset (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    Set.range (cycleComponentMap V x) ⊆ cycleComponentSupport V x := by
+lemma range_cycleComponentMap_subset
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    Set.range (cycleComponentMap structureMap x) ⊆ cycleComponentSupport structureMap x := by
   rintro z ⟨w, rfl⟩
   change ComplexPoint.underlying
-    (ComplexPoint.map (cycleComponentι V.scheme x) rfl w) ∈ closure {x}
-  rw [ComplexPoint.underlying_map, ← range_cycleComponentι V.scheme x]
+    (ComplexPoint.map (cycleComponentι X x) rfl w) ∈ closure {x}
+  rw [ComplexPoint.underlying_map, ← range_cycleComponentι X x]
   exact ⟨w.underlying, rfl⟩
 
 set_option backward.defeqAttrib.useBackward true in
@@ -248,9 +262,9 @@ set_option backward.isDefEq.respectTransparency false in
 /-- A complex point in the support of a component annihilates the defining ideal of that
 component. -/
 lemma cycleComponent_vanishingIdeal_le_complexPoint_ker
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme)
-    (z : V.analyticPoint) (hz : z.underlying ∈ closure {x}) :
-    (cycleComponentι V.scheme x).ker ≤ z.1.ker := by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    (z : (ComplexPoint X structureMap)) (hz : z.underlying ∈ closure {x}) :
+    (cycleComponentι X x).ker ≤ z.1.ker := by
   unfold cycleComponentι
   rw [Scheme.IdealSheafData.ker_subschemeι]
   change Scheme.IdealSheafData.vanishingIdeal
@@ -261,130 +275,132 @@ lemma cycleComponent_vanishingIdeal_le_complexPoint_ker
 
 /-- Lift a complex point in a component support through the reduced closed component. -/
 def cycleComponentComplexPointLift
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme)
-    (z : V.analyticPoint) (hz : z ∈ cycleComponentSupport V x) :
-    ComplexPoint (cycleComponent V.scheme x)
-      (cycleComponentι V.scheme x ≫ V.structureMap) :=
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    (z : (ComplexPoint X structureMap)) (hz : z ∈ cycleComponentSupport structureMap x) :
+    ComplexPoint (cycleComponent X x)
+      (cycleComponentι X x ≫ structureMap) :=
   have hz' : z.underlying ∈ closure {x} := hz
-  ⟨IsClosedImmersion.lift (cycleComponentι V.scheme x) z.1
-      (cycleComponent_vanishingIdeal_le_complexPoint_ker V x z hz'), by
+  ⟨IsClosedImmersion.lift (cycleComponentι X x) z.1
+      (cycleComponent_vanishingIdeal_le_complexPoint_ker structureMap x z hz'), by
     rw [← Category.assoc, IsClosedImmersion.lift_fac, z.2]⟩
 
 @[simp]
 lemma cycleComponentMap_lift
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme)
-    (z : V.analyticPoint) (hz : z ∈ cycleComponentSupport V x) :
-    cycleComponentMap V x (cycleComponentComplexPointLift V x z hz) = z := by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    (z : (ComplexPoint X structureMap)) (hz : z ∈ cycleComponentSupport structureMap x) :
+    cycleComponentMap structureMap x (cycleComponentComplexPointLift structureMap x z hz) = z := by
   apply Subtype.ext
   exact IsClosedImmersion.lift_fac _ _ _
 
 /-- The complex points of a reduced cycle component map onto exactly its closed analytic
 support. -/
 lemma range_cycleComponentMap
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    Set.range (cycleComponentMap V x) = cycleComponentSupport V x := by
-  apply Set.Subset.antisymm (range_cycleComponentMap_subset V x)
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    Set.range (cycleComponentMap structureMap x) = cycleComponentSupport structureMap x := by
+  apply Set.Subset.antisymm (range_cycleComponentMap_subset structureMap x)
   intro z hz
-  exact ⟨cycleComponentComplexPointLift V x z hz,
-    cycleComponentMap_lift V x z hz⟩
+  exact ⟨cycleComponentComplexPointLift structureMap x z hz,
+    cycleComponentMap_lift structureMap x z hz⟩
 
 /-- A closed immersion of a cycle component is injective on complex points. -/
 lemma cycleComponentMap_injective
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    Function.Injective (cycleComponentMap V x) := by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    Function.Injective (cycleComponentMap structureMap x) := by
   intro a b hab
   apply Subtype.ext
-  apply (cancel_mono (cycleComponentι V.scheme x)).mp
+  apply (cancel_mono (cycleComponentι X x)).mp
   exact congrArg Subtype.val hab
 
 /-- Map the complex points of a cycle component into its analytic support. -/
 def cycleComponentSupportMap
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    ComplexPoint (cycleComponent V.scheme x)
-        (cycleComponentι V.scheme x ≫ V.structureMap) →
-      cycleComponentSupport V x :=
-  fun z => ⟨cycleComponentMap V x z,
-    range_cycleComponentMap_subset V x ⟨z, rfl⟩⟩
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    ComplexPoint (cycleComponent X x)
+        (cycleComponentι X x ≫ structureMap) →
+      cycleComponentSupport structureMap x :=
+  fun z => ⟨cycleComponentMap structureMap x z,
+    range_cycleComponentMap_subset structureMap x ⟨z, rfl⟩⟩
 
 /-- Complex points of the reduced component are equivalent to the points in its analytic
 support. -/
 def cycleComponentPointEquivSupport
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    ComplexPoint (cycleComponent V.scheme x)
-        (cycleComponentι V.scheme x ≫ V.structureMap) ≃
-      cycleComponentSupport V x :=
-  Equiv.ofBijective (cycleComponentSupportMap V x) ⟨
-    fun _ _ h => cycleComponentMap_injective V x (congrArg Subtype.val h),
-    fun z => ⟨cycleComponentComplexPointLift V x z z.2, by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    ComplexPoint (cycleComponent X x)
+        (cycleComponentι X x ≫ structureMap) ≃
+      cycleComponentSupport structureMap x :=
+  Equiv.ofBijective (cycleComponentSupportMap structureMap x) ⟨
+    fun _ _ h => cycleComponentMap_injective structureMap x (congrArg Subtype.val h),
+    fun z => ⟨cycleComponentComplexPointLift structureMap x z z.2, by
       apply Subtype.ext
-      exact cycleComponentMap_lift V x z z.2⟩⟩
+      exact cycleComponentMap_lift structureMap x z z.2⟩⟩
 
 /-- The analytic complex points in the smooth locus of a reduced cycle component. -/
 def cycleComponentSmoothAnalyticLocus
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    Set (ComplexPoint (cycleComponent V.scheme x)
-      (cycleComponentι V.scheme x ≫ V.structureMap)) :=
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    Set (ComplexPoint (cycleComponent X x)
+      (cycleComponentι X x ≫ structureMap)) :=
   ComplexPoint.overOpen
-    (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus
+    (cycleComponentι X x ≫ structureMap).smoothLocus
 
 /-- The smooth locus of a cycle component is analytically open in that component. -/
 lemma isOpen_cycleComponentSmoothAnalyticLocus
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
     @IsOpen
-      (ComplexPoint (cycleComponent V.scheme x)
-        (cycleComponentι V.scheme x ≫ V.structureMap))
+      (ComplexPoint (cycleComponent X x)
+        (cycleComponentι X x ≫ structureMap))
       ComplexPoint.analyticTopology
-      (cycleComponentSmoothAnalyticLocus V x) :=
+      (cycleComponentSmoothAnalyticLocus structureMap x) :=
   ComplexPoint.isOpen_overOpen _
 
 /-- The analytic smooth locus of every reduced integral cycle component is nonempty. -/
 lemma cycleComponentSmoothAnalyticLocus_nonempty
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    (cycleComponentSmoothAnalyticLocus V x).Nonempty := by
-  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint V x
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    (cycleComponentSmoothAnalyticLocus structureMap x).Nonempty := by
+  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint structureMap x
   exact ⟨z, hz⟩
 
 /-- The image in the ambient analytic space of the smooth locus of a cycle component. -/
 def cycleComponentSmoothSupport
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) : Set V.analyticPoint :=
-  cycleComponentMap V x '' cycleComponentSmoothAnalyticLocus V x
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) : Set (ComplexPoint X structureMap) :=
+  cycleComponentMap structureMap x '' cycleComponentSmoothAnalyticLocus structureMap x
 
 /-- The smooth part of a component lies in its closed analytic support. -/
 lemma cycleComponentSmoothSupport_subset
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    cycleComponentSmoothSupport V x ⊆ cycleComponentSupport V x := by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    cycleComponentSmoothSupport structureMap x ⊆ cycleComponentSupport structureMap x := by
   rintro z ⟨w, -, rfl⟩
-  exact range_cycleComponentMap_subset V x ⟨w, rfl⟩
+  exact range_cycleComponentMap_subset structureMap x ⟨w, rfl⟩
 
 /-- Every reduced integral cycle component has a smooth point in its analytic support. -/
 lemma cycleComponentSmoothSupport_nonempty
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    (cycleComponentSmoothSupport V x).Nonempty := by
-  obtain ⟨z, hz⟩ := cycleComponentSmoothAnalyticLocus_nonempty V x
-  exact ⟨cycleComponentMap V x z, z, hz, rfl⟩
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    (cycleComponentSmoothSupport structureMap x).Nonempty := by
+  obtain ⟨z, hz⟩ := cycleComponentSmoothAnalyticLocus_nonempty structureMap x
+  exact ⟨cycleComponentMap structureMap x z, z, hz, rfl⟩
 
 /-- Membership in the smooth part of a component support can be checked on the canonical lift
 to the reduced component. -/
 lemma mem_cycleComponentSmoothSupport_iff
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme)
-    (z : V.analyticPoint) :
-    z ∈ cycleComponentSmoothSupport V x ↔
-      ∃ hz : z ∈ cycleComponentSupport V x,
-        (cycleComponentComplexPointLift V x z hz).underlying ∈
-          (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus := by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    (z : (ComplexPoint X structureMap)) :
+    z ∈ cycleComponentSmoothSupport structureMap x ↔
+      ∃ hz : z ∈ cycleComponentSupport structureMap x,
+        (cycleComponentComplexPointLift structureMap x z hz).underlying ∈
+          (cycleComponentι X x ≫ structureMap).smoothLocus := by
   constructor
   · rintro ⟨w, hw, rfl⟩
-    let hz : cycleComponentMap V x w ∈ cycleComponentSupport V x :=
-      range_cycleComponentMap_subset V x ⟨w, rfl⟩
+    let hz : cycleComponentMap structureMap x w ∈ cycleComponentSupport structureMap x :=
+      range_cycleComponentMap_subset structureMap x ⟨w, rfl⟩
     refine ⟨hz, ?_⟩
-    have heq : cycleComponentComplexPointLift V x (cycleComponentMap V x w) hz = w := by
-      apply cycleComponentMap_injective V x
-      exact cycleComponentMap_lift V x _ hz
+    have heq : cycleComponentComplexPointLift structureMap x
+        (cycleComponentMap structureMap x w) hz = w := by
+      apply cycleComponentMap_injective structureMap x
+      exact cycleComponentMap_lift structureMap x _ hz
     rw [heq]
     exact hw
   · rintro ⟨hz, hsmooth⟩
-    exact ⟨cycleComponentComplexPointLift V x z hz, hsmooth,
-      cycleComponentMap_lift V x z hz⟩
+    exact ⟨cycleComponentComplexPointLift structureMap x z hz, hsmooth,
+      cycleComponentMap_lift structureMap x z hz⟩
 
 /-- The underlying closed support of an algebraic cycle: the union of the closures of all generic
 points having nonzero coefficient. -/
@@ -417,56 +433,60 @@ lemma PrincipalDivisor.algebraicCycleSupport_pushforwardCycle_subset_range
   · exact D.inclusion.isClosedEmbedding.isClosed_range
 
 /-- The complex points lying over the geometric support of an algebraic cycle. -/
-def analyticCycleSupport {R : Type*} [Zero R] (V : SmoothProjectiveComplexVariety)
-    (c : AlgebraicCycle V.scheme R) : Set V.analyticPoint :=
-  ComplexPoint.underlying ⁻¹' algebraicCycleSupport V.scheme c
+def analyticCycleSupport {R : Type*} [Zero R]
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
+    (c : AlgebraicCycle X R) : Set (ComplexPoint X structureMap) :=
+  ComplexPoint.underlying ⁻¹' algebraicCycleSupport X c
 
 /-- The complex points lying over the closed carrier of a principal divisor. -/
 def principalDivisorCarrierSupport
-    (V : SmoothProjectiveComplexVariety)
-    {p : ℕ} (D : PrincipalDivisor V.scheme p) : Set V.analyticPoint :=
-  (@ComplexPoint.underlying V.scheme V.structureMap) ⁻¹' Set.range D.inclusion
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
+    {p : ℕ} (D : PrincipalDivisor X p) : Set (ComplexPoint X structureMap) :=
+  (@ComplexPoint.underlying X structureMap) ⁻¹' Set.range D.inclusion
 
 /-- The analytic support of a principal-divisor carrier is closed. -/
 lemma isClosed_principalDivisorCarrierSupport
-    (V : SmoothProjectiveComplexVariety)
-    {p : ℕ} (D : PrincipalDivisor V.scheme p) :
-    IsClosed (principalDivisorCarrierSupport V D) := by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
+    {p : ℕ} (D : PrincipalDivisor X p) :
+    IsClosed (principalDivisorCarrierSupport structureMap D) := by
   let _ := D.isClosedImmersion
-  let Z : TopologicalSpace.Closeds V.scheme :=
+  let Z : TopologicalSpace.Closeds X :=
     ⟨Set.range D.inclusion, D.inclusion.isClosedEmbedding.isClosed_range⟩
-  exact isClosed_complexPoint_underlying_preimage V Z
+  exact isClosed_complexPoint_underlying_preimage structureMap Z
 
 /-- The analytic support of a pushed-forward principal divisor lies over its carrier. -/
 lemma analyticCycleSupport_pushforwardCycle_subset_carrierSupport
-    (V : SmoothProjectiveComplexVariety)
-    {p : ℕ} (D : PrincipalDivisor V.scheme p) :
-    analyticCycleSupport V D.pushforwardCycle ⊆
-      principalDivisorCarrierSupport V D := by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
+    {p : ℕ} (D : PrincipalDivisor X p) :
+    analyticCycleSupport structureMap D.pushforwardCycle ⊆
+      principalDivisorCarrierSupport structureMap D := by
   intro z hz
   exact D.algebraicCycleSupport_pushforwardCycle_subset_range hz
 
 /-- The analytic support of a cycle is the union of the analytic supports of its nonzero
 components. -/
 lemma analyticCycleSupport_eq_iUnion {R : Type*} [Zero R]
-    (V : SmoothProjectiveComplexVariety) (c : AlgebraicCycle V.scheme R) :
-    analyticCycleSupport V c =
-      ⋃ x ∈ c.support, cycleComponentSupport V x := by
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (c : AlgebraicCycle X R) :
+    analyticCycleSupport structureMap c =
+      ⋃ x ∈ c.support, cycleComponentSupport structureMap x := by
   ext z
   simp [analyticCycleSupport, algebraicCycleSupport, cycleComponentSupport]
 
 /-- The analytic support of an algebraic cycle on a projective variety is closed. -/
 lemma isClosed_analyticCycleSupport {R : Type*} [Zero R]
-    (V : SmoothProjectiveComplexVariety) (c : AlgebraicCycle V.scheme R) :
-    IsClosed (analyticCycleSupport V c) := by
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (c : AlgebraicCycle X R) :
+    IsClosed (analyticCycleSupport structureMap c) := by
   rw [analyticCycleSupport_eq_iUnion]
-  exact (algebraicCycle_support_finite V c).isClosed_biUnion fun x _ =>
-    isClosed_cycleComponentSupport V x
+  exact (algebraicCycle_support_finite structureMap c).isClosed_biUnion fun x _ =>
+    isClosed_cycleComponentSupport structureMap x
 
 lemma cycleComponentSupport_subset_analyticCycleSupport {R : Type*} [Zero R]
-    (V : SmoothProjectiveComplexVariety) (c : AlgebraicCycle V.scheme R)
-    (x : V.scheme) (hx : c x ≠ 0) :
-    cycleComponentSupport V x ⊆ analyticCycleSupport V c := by
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (c : AlgebraicCycle X R)
+    (x : X) (hx : c x ≠ 0) :
+    cycleComponentSupport structureMap x ⊆ analyticCycleSupport structureMap c := by
   intro z hz
   change z.underlying ∈ ⋃ y ∈ c.support, closure {y}
   exact Set.mem_iUnion₂.mpr ⟨x, Function.mem_support.mpr hx, hz⟩
@@ -483,8 +503,8 @@ lemma algebraicCycleSupport_zero {R : Type*} [Zero R] (X : Scheme) :
 
 @[simp]
 lemma analyticCycleSupport_zero {R : Type*} [Zero R]
-    (V : SmoothProjectiveComplexVariety) :
-    analyticCycleSupport V (0 : AlgebraicCycle V.scheme R) = ∅ := by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    analyticCycleSupport structureMap (0 : AlgebraicCycle X R) = ∅ := by
   simp [analyticCycleSupport]
 
 end AlgebraicGeometry

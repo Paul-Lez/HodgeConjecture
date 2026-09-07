@@ -55,7 +55,7 @@ end RingHom
 
 namespace AlgebraicGeometry
 
-variable {X : Scheme} {f : X ⟶ Spec (.of ℂ)} {d p : ℕ}
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) {f : X ⟶ Spec (.of ℂ)} {d p : ℕ}
 
 /-- A component whose generic point has coheight equal to the ambient dimension has dimension
 zero. -/
@@ -187,14 +187,15 @@ lemma SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
 /-- In ambient dimension at most two, a closed point of a reduced component of coheight `p` has
 coheight exactly `d - p` inside that component. -/
 lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
-    (V : SmoothProjectiveComplexVariety) [SmoothOfRelativeDimension d V.structureMap]
-    (x : V.scheme) (z : ComplexPoint (cycleComponent V.scheme x)
-      (cycleComponentι V.scheme x ≫ V.structureMap))
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] [SmoothOfRelativeDimension d structureMap]
+    (x : X) (z : ComplexPoint (cycleComponent X x)
+      (cycleComponentι X x ≫ structureMap))
     (hx : Order.coheight x = p) (hd : d ≤ 2) :
     Order.coheight z.underlying = d - p := by
-  have hp : p ≤ d := cycleComponent_codimension_le V x hx
+  have hp : p ≤ d := cycleComponent_codimension_le structureMap x hx
   have hzclosed : IsClosed {z.underlying} :=
-    cycleComponent_complexPoint_underlying_isClosed V x z
+    cycleComponent_complexPoint_underlying_isClosed structureMap x z
   have hcases :
       (d = 0 ∧ p = 0) ∨
       (d = 1 ∧ p = 0) ∨ (d = 1 ∧ p = 1) ∨
@@ -205,106 +206,108 @@ lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
     exact coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
       x z.underlying hzclosed
         (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
-          (f := V.structureMap) (d := 0) x hx)
+          (f := structureMap) (d := 0) x hx)
   · obtain ⟨rfl, rfl⟩ := h10
     exact coheight_eq_one_of_isClosed_of_cycleComponent_orderKrullDim_eq_one
       x z.underlying hzclosed
         (orderKrullDim_cycleComponent_eq_one_of_coheight_succ_eq_dimension
-          (f := V.structureMap) (d := 1) (p := 0) x hx rfl)
+          (f := structureMap) (d := 1) (p := 0) x hx rfl)
   · obtain ⟨rfl, rfl⟩ := h11
     exact coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
       x z.underlying hzclosed
         (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
-          (f := V.structureMap) (d := 1) x hx)
+          (f := structureMap) (d := 1) x hx)
   · obtain ⟨rfl, rfl⟩ := h20
-    have hxgeneric : x = genericPoint V.scheme :=
+    have hxgeneric : x = genericPoint X :=
       CodimensionCycle.eq_genericPoint_of_coheight_zero x hx
     subst x
-    let e : cycleComponent V.scheme (genericPoint V.scheme) ≃o V.scheme :=
-      (cycleComponentOrderIsoIic V.scheme (genericPoint V.scheme)).trans OrderIso.IicTop
+    let e : cycleComponent X (genericPoint X) ≃o X :=
+      (cycleComponentOrderIsoIic X (genericPoint X)).trans OrderIso.IicTop
     have he : Order.coheight (e z.underlying) = Order.coheight z.underlying :=
       Order.coheight_orderIso e z.underlying
     have he_apply : e z.underlying =
-        cycleComponentι V.scheme (genericPoint V.scheme) z.underlying := by
+        cycleComponentι X (genericPoint X) z.underlying := by
       rfl
     rw [he_apply] at he
     have hambient : Order.coheight
-        (cycleComponentι V.scheme (genericPoint V.scheme) z.underlying) = 2 :=
+        (cycleComponentι X (genericPoint X) z.underlying) = 2 :=
       SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
-        (f := V.structureMap) (d := 2)
-          (cycleComponentι V.scheme (genericPoint V.scheme) z.underlying)
+        (f := structureMap) (d := 2)
+          (cycleComponentι X (genericPoint X) z.underlying)
           (cycleComponent_complexPoint_ambient_underlying_isClosed
-            V (genericPoint V.scheme) z)
+            structureMap (genericPoint X) z)
     rw [hambient] at he
     exact he.symm
   · obtain ⟨rfl, rfl⟩ := h21
     exact coheight_eq_one_of_isClosed_of_cycleComponent_orderKrullDim_eq_one
       x z.underlying hzclosed
         (orderKrullDim_cycleComponent_eq_one_of_coheight_succ_eq_dimension
-          (f := V.structureMap) (d := 2) (p := 1) x hx rfl)
+          (f := structureMap) (d := 2) (p := 1) x hx rfl)
   · obtain ⟨rfl, rfl⟩ := h22
     exact coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
       x z.underlying hzclosed
         (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
-          (f := V.structureMap) (d := 2) x hx)
+          (f := structureMap) (d := 2) x hx)
 
 /-- Separate exact local coordinates on a smooth cycle component and on its smooth ambient
 variety.  The component coordinates use exactly `n` variables.  This package does not assert
 that the two coordinate systems straighten the closed immersion simultaneously. -/
 structure CycleComponentSeparateLocalCoordinates
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d n : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] where
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d n : ℕ)
+    [SmoothOfRelativeDimension d structureMap] where
   /-- A complex point of the reduced component. -/
-  point : ComplexPoint (cycleComponent V.scheme x)
-    (cycleComponentι V.scheme x ≫ V.structureMap)
+  point : ComplexPoint (cycleComponent X x)
+    (cycleComponentι X x ≫ structureMap)
   /-- The point lies in the component's smooth locus. -/
   point_mem_smoothLocus : point.underlying ∈
-    (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus
+    (cycleComponentι X x ≫ structureMap).smoothLocus
   /-- The underlying point is closed in the component. -/
   point_isClosed : IsClosed {point.underlying}
   /-- An affine neighborhood in the smooth locus of the component. -/
   componentNeighborhood :
-    (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus.toScheme.Opens
+    (cycleComponentι X x ≫ structureMap).smoothLocus.toScheme.Opens
   /-- The component neighborhood is affine. -/
   componentNeighborhood_isAffine : IsAffineOpen componentNeighborhood
   /-- The chosen point belongs to the component neighborhood. -/
   point_mem_componentNeighborhood :
     (⟨point.underlying, point_mem_smoothLocus⟩ :
-      (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus.toScheme) ∈
+      (cycleComponentι X x ≫ structureMap).smoothLocus.toScheme) ∈
         componentNeighborhood
   /-- An étale coordinate homomorphism with exactly `n` component coordinates. -/
   componentCoordinateRingHom : MvPolynomial (Fin n) ℂ →+*
-    Γ((cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus.toScheme,
+    Γ((cycleComponentι X x ≫ structureMap).smoothLocus.toScheme,
       componentNeighborhood)
   /-- The component coordinate map is a homomorphism of complex algebras. -/
   componentCoordinateRingHom_comp_C :
     componentCoordinateRingHom.comp MvPolynomial.C =
       complexRestrictionMap
-        ((cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus.ι ≫
-          (cycleComponentι V.scheme x ≫ V.structureMap)) componentNeighborhood
+        ((cycleComponentι X x ≫ structureMap).smoothLocus.ι ≫
+          (cycleComponentι X x ≫ structureMap)) componentNeighborhood
   /-- The component coordinate homomorphism is étale. -/
   componentCoordinateRingHom_etale : componentCoordinateRingHom.Etale
   /-- Independently chosen étale coordinates on the ambient `d`-fold. -/
-  ambientCoordinates : LocalEtaleCoordinates V.structureMap d
-    (cycleComponentι V.scheme x point.underlying)
+  ambientCoordinates : LocalEtaleCoordinates structureMap d
+    (cycleComponentι X x point.underlying)
 
 /-- Exact coheight at closed component points determines the number of coordinates on the smooth
 locus.  This is an internal bridge from the dimension calculation to the coordinate package. -/
 private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d n : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
-    (hcoheight : ∀ z : ComplexPoint (cycleComponent V.scheme x)
-      (cycleComponentι V.scheme x ≫ V.structureMap),
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d n : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
+    (hcoheight : ∀ z : ComplexPoint (cycleComponent X x)
+      (cycleComponentι X x ≫ structureMap),
       Order.coheight z.underlying = n) :
-    Nonempty (CycleComponentSeparateLocalCoordinates V x d n) := by
-  let c : cycleComponent V.scheme x ⟶ Spec (.of ℂ) :=
-    cycleComponentι V.scheme x ≫ V.structureMap
-  let S : (cycleComponent V.scheme x).Opens := c.smoothLocus
+    Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d n) := by
+  let c : cycleComponent X x ⟶ Spec (.of ℂ) :=
+    cycleComponentι X x ≫ structureMap
+  let S : (cycleComponent X x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec (.of ℂ) := S.ι ≫ c
   let _ : Smooth g := by
-    exact cycleComponent_smoothLocus_smooth V x
+    exact cycleComponent_smoothLocus_smooth structureMap x
   obtain ⟨z, hzsmooth, hzclosed⟩ :=
-    exists_cycleComponent_smooth_closed_complexPoint V x
+    exists_cycleComponent_smooth_closed_complexPoint structureMap x
   let zs : S.toScheme := ⟨z.underlying, hzsmooth⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
   have hstandardComplex : (complexRestrictionMap g W).IsStandardSmooth :=
@@ -312,7 +315,7 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
   obtain ⟨m, hm⟩ :=
     hstandardComplex.exists_isStandardSmoothOfRelativeDimension
   have hzsClosed : IsClosed {zs} := by
-    have hpreimage : S.ι ⁻¹' ({z.underlying} : Set (cycleComponent V.scheme x)) =
+    have hpreimage : S.ι ⁻¹' ({z.underlying} : Set (cycleComponent X x)) =
         ({zs} : Set S.toScheme) := by
       ext y
       simp only [Set.mem_preimage, Set.mem_singleton_iff]
@@ -352,46 +355,48 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
       componentCoordinateRingHom := coordinateRingHom
       componentCoordinateRingHom_comp_C := hcomp
       componentCoordinateRingHom_etale := hetale
-      ambientCoordinates := localEtaleCoordinates V.structureMap d
-        (cycleComponentι V.scheme x z.underlying) }⟩
+      ambientCoordinates := localEtaleCoordinates structureMap d
+        (cycleComponentι X x z.underlying) }⟩
 
 /-- In ambient dimension at most two, every reduced component of coheight `p` has separate
 component and ambient étale coordinates, with exactly `d - p` component coordinates. -/
 lemma nonempty_cycleComponentSeparateLocalCoordinates_of_le_two
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : d ≤ 2) :
-    Nonempty (CycleComponentSeparateLocalCoordinates V x d (d - p)) := by
+    Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d (d - p)) := by
   apply nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight
   intro z
-  exact cycleComponent_closedPoint_coheight_eq_sub_of_le_two V x z hx hd
+  exact cycleComponent_closedPoint_coheight_eq_sub_of_le_two structureMap x z hx hd
 
 /-- A zero-dimensional reduced component in a smooth complex `d`-fold has a local étale chart
 with no component coordinates and an independent ambient chart with `d` coordinates. -/
 lemma nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_eq_dimension
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) (d : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = d) :
-    Nonempty (CycleComponentSeparateLocalCoordinates V x d 0) := by
+    Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d 0) := by
   apply nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight
   intro z
   exact coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
-    x z.underlying (cycleComponent_complexPoint_underlying_isClosed V x z)
+    x z.underlying (cycleComponent_complexPoint_underlying_isClosed structureMap x z)
       (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
-        (f := V.structureMap) (d := d) x hx)
+        (f := structureMap) (d := d) x hx)
 
 /-- A one-dimensional reduced component in a smooth complex `d`-fold has a local étale chart
 with one component coordinate and an independent ambient chart with `d` coordinates. -/
 lemma nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_succ_eq_dimension
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : p + 1 = d) :
-    Nonempty (CycleComponentSeparateLocalCoordinates V x d 1) := by
+    Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d 1) := by
   apply nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight
   intro z
   exact coheight_eq_one_of_isClosed_of_cycleComponent_orderKrullDim_eq_one
-    x z.underlying (cycleComponent_complexPoint_underlying_isClosed V x z)
+    x z.underlying (cycleComponent_complexPoint_underlying_isClosed structureMap x z)
       (orderKrullDim_cycleComponent_eq_one_of_coheight_succ_eq_dimension
-        (f := V.structureMap) (d := d) (p := p) x hx hd)
+        (f := structureMap) (d := d) (p := p) x hx hd)
 
 end AlgebraicGeometry

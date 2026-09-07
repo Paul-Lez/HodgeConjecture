@@ -39,113 +39,118 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+
 /-- The smooth locus of a reduced cycle component is Zariski dense. -/
 lemma dense_cycleComponent_smoothLocus
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
     Dense
-      ((cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus :
-        Set (cycleComponent V.scheme x)) :=
-  (cycleComponentι V.scheme x ≫ V.structureMap).dense_smoothLocus_of_perfectField
+      ((cycleComponentι X x ≫ structureMap).smoothLocus :
+        Set (cycleComponent X x)) :=
+  (cycleComponentι X x ≫ structureMap).dense_smoothLocus_of_perfectField
 
 /-- The smooth locus of an integral cycle component is irreducible. -/
 noncomputable instance cycleComponent_smoothLocus_irreducibleSpace
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
     IrreducibleSpace
-      (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus := by
-  obtain ⟨y, hy⟩ := (dense_cycleComponent_smoothLocus V x).nonempty
+      (cycleComponentι X x ≫ structureMap).smoothLocus := by
+  obtain ⟨y, hy⟩ := (dense_cycleComponent_smoothLocus structureMap x).nonempty
   let _ : Nonempty
-      (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus :=
+      (cycleComponentι X x ≫ structureMap).smoothLocus :=
     ⟨⟨y, hy⟩⟩
   exact
-    (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus.ι.isOpenEmbedding.irreducibleSpace
+    (cycleComponentι X x ≫ structureMap).smoothLocus.ι.isOpenEmbedding.irreducibleSpace
 
 /-- The smooth locus of an integral cycle component is itself an integral scheme. -/
 noncomputable instance cycleComponent_smoothLocus_isIntegral
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    IsIntegral (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus :=
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    IsIntegral (cycleComponentι X x ≫ structureMap).smoothLocus :=
   isIntegral_of_irreducibleSpace_of_isReduced _
 
 /-- The scheme points that are both smooth and closed are dense in a reduced cycle component. -/
 lemma dense_cycleComponent_smooth_closedPoints
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
     Dense
-      (((cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus :
-          Set (cycleComponent V.scheme x)) ∩
-        closedPoints (cycleComponent V.scheme x)) := by
-  let f := cycleComponentι V.scheme x ≫ V.structureMap
-  let _ : JacobsonSpace (cycleComponent V.scheme x) :=
+      (((cycleComponentι X x ≫ structureMap).smoothLocus :
+          Set (cycleComponent X x)) ∩
+        closedPoints (cycleComponent X x)) := by
+  let f := cycleComponentι X x ≫ structureMap
+  let _ : JacobsonSpace (cycleComponent X x) :=
     LocallyOfFiniteType.jacobsonSpace f
-  change Dense ((f.smoothLocus : Set (cycleComponent V.scheme x)) ∩
-    closedPoints (cycleComponent V.scheme x))
+  change Dense ((f.smoothLocus : Set (cycleComponent X x)) ∩
+    closedPoints (cycleComponent X x))
   apply dense_iff_closure_eq.mpr
   exact (JacobsonSpace.closure_inter_closedPoints_eq_closure
     f.smoothLocus.2.isLocallyClosed).trans
-      (dense_iff_closure_eq.mp (dense_cycleComponent_smoothLocus V x))
+      (dense_iff_closure_eq.mp (dense_cycleComponent_smoothLocus structureMap x))
 
 /-- The underlying scheme point of a complex point of a cycle component is closed. -/
 lemma cycleComponent_complexPoint_underlying_isClosed
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme)
-    (z : ComplexPoint (cycleComponent V.scheme x)
-      (cycleComponentι V.scheme x ≫ V.structureMap)) :
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    (z : ComplexPoint (cycleComponent X x)
+      (cycleComponentι X x ≫ structureMap)) :
     IsClosed {z.underlying} := by
   change IsClosed {z.1 (IsLocalRing.closedPoint ℂ)}
   exact ((pointEquivClosedPoint
-    (cycleComponentι V.scheme x ≫ V.structureMap)) z).2
+    (cycleComponentι X x ≫ structureMap)) z).2
 
 /-- The image in the ambient variety of a complex point of a cycle component is a closed scheme
 point. -/
 lemma cycleComponent_complexPoint_ambient_underlying_isClosed
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme)
-    (z : ComplexPoint (cycleComponent V.scheme x)
-      (cycleComponentι V.scheme x ≫ V.structureMap)) :
-    IsClosed {cycleComponentι V.scheme x z.underlying} := by
-  have hclosed := (cycleComponentι V.scheme x).isClosedEmbedding.isClosedMap
-    {z.underlying} (cycleComponent_complexPoint_underlying_isClosed V x z)
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    (z : ComplexPoint (cycleComponent X x)
+      (cycleComponentι X x ≫ structureMap)) :
+    IsClosed {cycleComponentι X x z.underlying} := by
+  have hclosed := (cycleComponentι X x).isClosedEmbedding.isClosedMap
+    {z.underlying} (cycleComponent_complexPoint_underlying_isClosed structureMap x z)
   simpa only [Set.image_singleton] using hclosed
 
 /-- A reduced cycle component has a smooth complex point whose underlying scheme point is
 closed. -/
 lemma exists_cycleComponent_smooth_closed_complexPoint
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    ∃ z : ComplexPoint (cycleComponent V.scheme x)
-        (cycleComponentι V.scheme x ≫ V.structureMap),
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    ∃ z : ComplexPoint (cycleComponent X x)
+        (cycleComponentι X x ≫ structureMap),
       z.underlying ∈
-          (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus ∧
+          (cycleComponentι X x ≫ structureMap).smoothLocus ∧
         IsClosed {z.underlying} := by
-  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint V x
-  exact ⟨z, hz, cycleComponent_complexPoint_underlying_isClosed V x z⟩
+  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint structureMap x
+  exact ⟨z, hz, cycleComponent_complexPoint_underlying_isClosed structureMap x z⟩
 
 /-- The coheight of the generic point of a component cannot exceed the relative dimension of
 the smooth ambient complex scheme. -/
 lemma cycleComponent_codimension_le
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap] (hx : Order.coheight x = p) :
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) {d p : ℕ}
+    [SmoothOfRelativeDimension d structureMap] (hx : Order.coheight x = p) :
     p ≤ d := by
   have hle := SmoothOfRelativeDimension.coheight_le_complex
-    (f := V.structureMap) (d := d) x
+    (f := structureMap) (d := d) x
   rw [hx] at hle
   exact_mod_cast hle
 
 /-- The reduced component of a point of coheight `p` in a smooth complex `d`-fold has order
 Krull dimension at most `d - p`. -/
 lemma orderKrullDim_cycleComponent_le_sub
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap] (hx : Order.coheight x = p) :
-    Order.krullDim (cycleComponent V.scheme x) ≤ d - p := by
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) {d p : ℕ}
+    [SmoothOfRelativeDimension d structureMap] (hx : Order.coheight x = p) :
+    Order.krullDim (cycleComponent X x) ≤ d - p := by
   rw [orderKrullDim_cycleComponent]
   exact WithBot.coe_le_coe.mpr
     (SmoothOfRelativeDimension.height_le_sub_of_coheight_eq
-      (f := V.structureMap) (d := d) x hx)
+      (f := structureMap) (d := d) x hx)
 
 /-- The reduced component of a point of coheight `p` in a smooth complex `d`-fold has
 topological Krull dimension at most `d - p`. -/
 lemma topologicalKrullDim_cycleComponent_le_sub
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap] (hx : Order.coheight x = p) :
-    topologicalKrullDim (cycleComponent V.scheme x) ≤ d - p := by
+    [IsIntegral X] [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) {d p : ℕ}
+    [SmoothOfRelativeDimension d structureMap] (hx : Order.coheight x = p) :
+    topologicalKrullDim (cycleComponent X x) ≤ d - p := by
   rw [topologicalKrullDim_cycleComponent]
   exact WithBot.coe_le_coe.mpr
     (SmoothOfRelativeDimension.height_le_sub_of_coheight_eq
-      (f := V.structureMap) (d := d) x hx)
+      (f := structureMap) (d := d) x hx)
 
 end AlgebraicGeometry

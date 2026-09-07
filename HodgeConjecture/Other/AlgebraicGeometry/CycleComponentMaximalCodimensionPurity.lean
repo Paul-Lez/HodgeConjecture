@@ -37,7 +37,7 @@ Betti comparison with forgetting support.
 
 open CategoryTheory Order TopologicalSpace
 
-namespace AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety
+namespace AlgebraicGeometry.ComplexPoint
 
 private lemma span_singleton_image_eq_span_range_of_span_eq_top
     {M N : Type*} [AddCommGroup M] [Module ℚ M] [AddCommGroup N] [Module ℚ N]
@@ -68,32 +68,34 @@ constant-sheaf cohomology. The supported generator is constructed in the proof a
 conclusion records only the resulting equality of the fundamental-class line and supported
 image. -/
 theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] (x : V.scheme) (hx : coheight x = d) :
-    RationalComponentCycleClassPurity V d x := by
+    {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
+    [SmoothOfRelativeDimension d structureMap] (x : X) (hx : coheight x = d) :
+    RationalComponentCycleClassPurity structureMap d x := by
   unfold RationalComponentCycleClassPurity
-  let _ : ∀ U : Opens V.analyticPoint, ParacompactSpace U := openParacompactSpace V d
-  let Z := cycleComponentSupport V x
-  have hZ : IsClosed Z := isClosed_cycleComponentSupport V x
-  let e : RationalCohomologyWithSupport V.structureMap Z ((2 * d : ℕ) : ℤ) ≃+
+  let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
+    openParacompactSpace structureMap d
+  let Z := cycleComponentSupport structureMap x
+  have hZ : IsClosed Z := isClosed_cycleComponentSupport structureMap x
+  let e : RationalCohomologyWithSupport structureMap Z ((2 * d : ℕ) : ℤ) ≃+
       AlgebraicTopology.Singular.CohomologyWithSupport ℚ
-        (TopCat.of V.analyticPoint) Z (2 * d) :=
-    rationalCohomologyWithSupportAddEquivSingular V.structureMap d Z hZ (2 * d)
-  let _ : Module ℚ (RationalCohomologyWithSupport V.structureMap Z ((2 * d : ℕ) : ℤ)) :=
+        (TopCat.of (ComplexPoint X structureMap)) Z (2 * d) :=
+    rationalCohomologyWithSupportAddEquivSingular structureMap d Z hZ (2 * d)
+  let _ : Module ℚ (RationalCohomologyWithSupport structureMap Z ((2 * d : ℕ) : ℤ)) :=
     e.module ℚ
   obtain ⟨β, hβ⟩ :=
-    exists_singularComponentSupportedGenerator_of_coheight_eq_dimension V d x hx
-  let γ : RationalCohomologyWithSupport V.structureMap Z ((2 * d : ℕ) : ℤ) := e.symm β
+    exists_singularComponentSupportedGenerator_of_coheight_eq_dimension structureMap d x hx
+  let γ : RationalCohomologyWithSupport structureMap Z ((2 * d : ℕ) : ℤ) := e.symm β
   have hγ : Submodule.span ℚ {γ} = ⊤ := by
     change Submodule.span ℚ {e.symm β} = ⊤
     exact span_addEquiv_apply_eq_top e.symm β hβ
-  let α := forgetSupport V.structureMap Z ((2 * d : ℕ) : ℤ) γ
-  have hα : IsRationalComponentCycleClass V d x α := by
+  let α := forgetSupport structureMap Z ((2 * d : ℕ) : ℤ) γ
+  have hα : IsRationalComponentCycleClass structureMap d x α := by
     constructor
     · exact Submodule.subset_span ⟨γ, rfl⟩
     · exact span_singleton_image_eq_span_range_of_span_eq_top
-        (forgetSupport V.structureMap Z ((2 * d : ℕ) : ℤ)) γ hγ
+        (forgetSupport structureMap Z ((2 * d : ℕ) : ℤ)) γ hγ
   simpa only [Nat.cast_mul, Nat.cast_ofNat] using
-    (rationalComponentCycleClassLine_eq_span V d x α hα).trans hα.2
+    (rationalComponentCycleClassLine_eq_span structureMap d x α hα).trans hα.2
 
-end AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety
+end AlgebraicGeometry.ComplexPoint

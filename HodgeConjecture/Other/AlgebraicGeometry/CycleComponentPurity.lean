@@ -91,9 +91,10 @@ open AlgebraicTopology.Singular
 noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec (.of ℂ)} :
     TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
 
-variable {d n : ℕ} {V : SmoothProjectiveComplexVariety} {x : V.scheme}
-  [SmoothOfRelativeDimension d V.structureMap]
-  (C : CycleComponentSeparateLocalCoordinates V x d n)
+variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec (.of ℂ)} [IsIntegral X]
+  [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] {x : X}
+  [SmoothOfRelativeDimension d structureMap]
+  (C : CycleComponentSeparateLocalCoordinates structureMap x d n)
 
 /-- The local homology class transported from the exact component chart is nonzero. -/
 lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
@@ -146,13 +147,14 @@ lemma neighborhoodLocalCoclass_unique
 /-- Every codimension-`p` component of a smooth complex `d`-fold has an exact smooth local
 coordinate package whose normalized point-supported coclass generates local cohomology. -/
 lemma exists_span_neighborhoodLocalCoclass_eq_top
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
+    (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) :
-    ∃ C : CycleComponentSeparateLocalCoordinates V x d (d - p),
+    ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d (d - p),
       C.neighborhoodLocalCoclass C.neighborhoodLocalClass = 1 ∧
         Submodule.span ℚ {C.neighborhoodLocalCoclass} = ⊤ := by
-  obtain ⟨C, -⟩ := exists_span_neighborhoodLocalClass_eq_top V x d p hx
+  obtain ⟨C, -⟩ := exists_span_neighborhoodLocalClass_eq_top structureMap x d p hx
   exact ⟨C, C.neighborhoodLocalCoclass_apply_localClass,
     C.span_neighborhoodLocalCoclass_eq_top⟩
 

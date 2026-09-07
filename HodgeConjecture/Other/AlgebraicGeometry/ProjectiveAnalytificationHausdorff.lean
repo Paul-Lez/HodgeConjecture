@@ -295,22 +295,14 @@ theorem complexPoint_t2Space {X : Scheme} {f : X ⟶ Spec (.of ℂ)}
 
 end ProjectiveSpace.Presentation
 
-namespace IntegralProjectiveComplexVariety
+namespace ProjectiveSpace.IsProjective
 
-/-- The analytification of an integral projective complex variety is Hausdorff. -/
-noncomputable instance instT2Space (V : IntegralProjectiveComplexVariety) :
-    T2Space V.analyticPoint :=
-  ProjectiveSpace.Presentation.complexPoint_t2Space (Classical.choice V.projective)
+/-- The analytification of a projective complex scheme is Hausdorff. -/
+noncomputable instance complexPoint_t2Space {X : Scheme} {f : X ⟶ Spec (.of ℂ)}
+    [h : ProjectiveSpace.IsProjective f] : T2Space (ComplexPoint X f) :=
+  ProjectiveSpace.Presentation.complexPoint_t2Space
+    (Classical.choice h.nonempty_presentation)
 
-end IntegralProjectiveComplexVariety
-
-namespace SmoothProjectiveComplexVariety
-
-/-- The analytification of a smooth projective complex variety is Hausdorff. -/
-noncomputable instance instT2Space (V : SmoothProjectiveComplexVariety) :
-    T2Space V.analyticPoint :=
-  ProjectiveSpace.Presentation.complexPoint_t2Space (Classical.choice V.projective)
-
-end SmoothProjectiveComplexVariety
+end ProjectiveSpace.IsProjective
 
 end AlgebraicGeometry

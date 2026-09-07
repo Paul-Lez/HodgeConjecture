@@ -31,29 +31,31 @@ open Order
 
 namespace AlgebraicGeometry.ComplexPoint
 
+variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+
 /-- A smooth complex `d`-fold has no algebraic points of codimension greater than `d`. -/
 lemma no_cycleComponent_of_lt
-    (V : SmoothProjectiveComplexVariety) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] (h : d < p) :
-    IsEmpty {x : V.scheme // coheight x = p} := by
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap] (h : d < p) :
+    IsEmpty {x : X // coheight x = p} := by
   constructor
   intro x
   exact (SmoothOfRelativeDimension.coheight_ne_of_lt
-    (f := V.structureMap) (d := d) x.1 h) x.2
+    (f := structureMap) (d := d) x.1 h) x.2
 
 /-- The algebraic cycle-class span is zero above the dimension of a smooth complex variety. -/
 lemma algebraicCycleClassSpan_eq_bot_of_lt
-    (V : SmoothProjectiveComplexVariety) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] (h : d < p) :
-    algebraicCycleClassSpan V p = ⊥ := by
-  rw [algebraicCycleClassSpan_of_ne_zero V p (by omega)]
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (d p : ℕ)
+    [SmoothOfRelativeDimension d structureMap] (h : d < p) :
+    algebraicCycleClassSpan structureMap p = ⊥ := by
+  rw [algebraicCycleClassSpan_of_ne_zero structureMap p (by omega)]
   apply le_antisymm
   · apply iSup_le
     intro x
     apply iSup_le
     intro hx
     exact (SmoothOfRelativeDimension.coheight_ne_of_lt
-      (f := V.structureMap) (d := d) x h hx).elim
+      (f := structureMap) (d := d) x h hx).elim
   · exact bot_le
 
 end AlgebraicGeometry.ComplexPoint

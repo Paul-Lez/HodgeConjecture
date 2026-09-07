@@ -131,12 +131,17 @@ structure Presentation (f : X ⟶ T) where
   immersion_toBase :
     immersion ≫ toBase (Fin (ambientDimension + 1)) T = f
 
-/-- A scheme morphism is projective if it admits a finite-dimensional projective presentation. -/
-def IsProjective (f : X ⟶ T) : Prop := Nonempty (Presentation f)
+/-- A scheme morphism is projective if it admits a finite-dimensional projective presentation.
+
+This is a class so that projectivity travels by instance resolution alongside the other
+hypotheses on a structure morphism, rather than as a bundled field. -/
+class IsProjective (f : X ⟶ T) : Prop where
+  /-- A finite-dimensional projective presentation exists. -/
+  nonempty_presentation : Nonempty (Presentation f)
 
 /-- A projective morphism in the explicit-presentation sense is proper. -/
-lemma IsProjective.isProper {f : X ⟶ T} (h : IsProjective f) : IsProper f := by
-  obtain ⟨P⟩ := h
+instance IsProjective.isProper {f : X ⟶ T} [h : IsProjective f] : IsProper f := by
+  obtain ⟨P⟩ := h.nonempty_presentation
   let _ : IsClosedImmersion P.immersion := P.isClosedImmersion
   have hcomp : IsProper
       (P.immersion ≫ toBase (Fin (P.ambientDimension + 1)) T) := by
