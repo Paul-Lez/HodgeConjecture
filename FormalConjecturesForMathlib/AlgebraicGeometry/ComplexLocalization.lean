@@ -41,15 +41,8 @@ variable {A B : Type} [CommRing A] [CommRing B] [Algebra ℂ A] [Algebra ℂ B]
 
 /-- Precomposition by a complex algebra equivalence, as an equivalence of complex-valued algebra
 homomorphisms. -/
-def precompAlgEquiv (e : A ≃ₐ[ℂ] B) : (B →ₐ[ℂ] ℂ) ≃ (A →ₐ[ℂ] ℂ) where
-  toFun u := u.comp e.toAlgHom
-  invFun u := u.comp e.symm.toAlgHom
-  left_inv u := by
-    ext b
-    simp
-  right_inv u := by
-    ext a
-    simp
+def precompAlgEquiv (e : A ≃ₐ[ℂ] B) : (B →ₐ[ℂ] ℂ) ≃ (A →ₐ[ℂ] ℂ) :=
+  AlgEquiv.arrowCongr e.symm (AlgEquiv.refl : ℂ ≃ₐ[ℂ] ℂ)
 
 lemma continuous_precompAlgEquiv (e : A ≃ₐ[ℂ] B) :
     Continuous (precompAlgEquiv e) := by
@@ -87,14 +80,8 @@ def localizationAwayAlgHomRestriction (f : S) (u : Localization.Away f →ₐ[�
 
 /-- Extension of an algebra homomorphism on which `f` is nonzero to `S[1/f]`. -/
 def nonvanishingAlgHomExtension (f : S) (u : nonvanishingAlgHom S f) :
-    Localization.Away f →ₐ[ℂ] ℂ where
-  toRingHom := IsLocalization.Away.lift f (isUnit_iff_ne_zero.mpr u.2)
-  commutes' c := by
-    rw [IsScalarTower.algebraMap_apply ℂ S (Localization.Away f)]
-    change IsLocalization.Away.lift f _
-      (algebraMap S (Localization.Away f) (algebraMap ℂ S c)) = _
-    rw [IsLocalization.Away.lift_eq]
-    exact u.1.commutes c
+    Localization.Away f →ₐ[ℂ] ℂ :=
+  IsLocalization.Away.liftAlgHom f (isUnit_iff_ne_zero.mpr u.2)
 
 @[simp]
 lemma nonvanishingAlgHomExtension_algebraMap (f : S) (u : nonvanishingAlgHom S f) (s : S) :

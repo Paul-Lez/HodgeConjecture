@@ -154,18 +154,6 @@ def standardRelativeHomologyProjectionZeroIso :
   HomologicalComplex.homologyMapIso
     (asIso standardRelativeChainProjectionZero) 0
 
-/-- A coproduct of copies of a module indexed by a unique type is canonically the module. -/
-def uniqueCoproductIso (R : Type) [Ring R] (X : Type) [Unique X] :
-    (∐ fun _ : X ↦ ModuleCat.of R R) ≅ ModuleCat.of R R where
-  hom := Sigma.desc fun _ ↦ 𝟙 _
-  inv := Sigma.ι (fun _ : X ↦ ModuleCat.of R R) default
-  hom_inv_id := by
-    apply Sigma.hom_ext
-    intro x
-    rw [Subsingleton.elim x default]
-    simp
-  inv_hom_id := by simp
-
 /-- The zero-dimensional standard relative local homology group is canonically one-dimensional. -/
 def standardLocalRelativeHomologyZeroIso :
     RelativeHomology ℚ (standardPuncturedPair 0) 0 ≅ ModuleCat.of ℚ ℚ := by
@@ -175,7 +163,8 @@ def standardLocalRelativeHomologyZeroIso :
       singularHomologyFunctorZeroOfTotallyDisconnectedSpace
         (ModuleCat (R := ℚ)) (ModuleCat.of ℚ ℚ)
           (TopCat.of (StandardRealModel 0)) ≪≫
-      uniqueCoproductIso ℚ (StandardRealModel 0)
+      CategoryTheory.Limits.coproductUniqueIso
+        (fun _ : StandardRealModel 0 ↦ ModuleCat.of ℚ ℚ)
 
 /-- The ambient zero-cycle represented by the unique singular point of `ℝ⁰`. -/
 def standardAmbientCycleZero :
