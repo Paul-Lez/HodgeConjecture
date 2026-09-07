@@ -120,7 +120,7 @@ public theorem ιTotalOrZero_horizontalTotalComponent (p q n : ℕ) :
   · rw [K.ιTotalOrZero_eq_zero (ComplexShape.down ℕ) p q n hpq, zero_comp,
       M.ιTotalOrZero_eq_zero (ComplexShape.down ℕ) (p + 1) q (n + 1) (by
         change ¬ p + 1 + q = n + 1
-        omega), comp_zero]
+        lia), comp_zero]
 
 public theorem horizontalTotalComponent_zero (n n' : ℕ)
     (hn : ¬ (ComplexShape.down ℕ).Rel n' n) : horizontalTotalComponent h n n' = 0 := by
@@ -132,7 +132,7 @@ public theorem horizontalTotalComponent_zero (n n' : ℕ)
   change p + q = n at hpq
   change p + 1 + q = n' at hpq'
   change n + 1 = n'
-  omega
+  lia
 
 /-- The two vertical cross terms in the total homotopy equation cancel, because each component
 of the horizontal homotopy is a vertical chain map and `ε₂` changes sign along the horizontal
@@ -182,12 +182,12 @@ public def horizontalTotalHomotopy :
       rw [Homotopy.prevD_chainComplex, ← Category.assoc, ιTotal_horizontalTotalComponent,
         M.ιTotalOrZero_eq (ComplexShape.down ℕ) (p + 1) q (n + 1) (by
           change p + 1 + q = n + 1
-          omega), Category.assoc, ιTotal_total_d, d₁_succ, Preadditive.comp_add]
+          lia), Category.assoc, ιTotal_total_d, d₁_succ, Preadditive.comp_add]
     rw [hprev, ← M.ιTotalOrZero_eq (ComplexShape.down ℕ) p q n hpq]
     cases n with
     | zero =>
-      obtain rfl : p = 0 := by omega
-      obtain rfl : q = 0 := by omega
+      obtain rfl : p = 0 := by lia
+      obtain rfl : q = 0 := by lia
       rw [Homotopy.dNext_zero_chainComplex, comp_zero, zero_add, d₂_zero, comp_zero, add_zero,
         hom_comm_f h 0 0, Homotopy.dNext_zero_chainComplex, HomologicalComplex.zero_f_apply,
         zero_add, Preadditive.add_comp, Category.assoc]
@@ -205,7 +205,7 @@ public def horizontalTotalHomotopy :
         rw [d₁_zero, zero_comp, zero_add, hom_comm_f h 0 q, Homotopy.dNext_zero_chainComplex,
           HomologicalComplex.zero_f_apply, zero_add, Preadditive.add_comp, Category.assoc]
         cases q with
-        | zero => omega
+        | zero => lia
         | succ q =>
           rw [d₂_succ, d₂_succ, Linear.units_smul_comp, Category.assoc,
             ιTotalOrZero_horizontalTotalComponent, Linear.comp_units_smul,

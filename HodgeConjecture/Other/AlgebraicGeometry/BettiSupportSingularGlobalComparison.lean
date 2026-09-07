@@ -301,7 +301,7 @@ def globalRawSingularRestrictionConeIsoRelative (A : Set X) :
   have h : f ≫ eA.hom = eX.hom ≫ g :=
     globalRawSingularRestrictionInt_transport_relative R X A
   exact HomologicalComplex.homotopyCofiber.mapArrowIso f g
-    (fun j ↦ ⟨j - 1, ComplexShape.up_mk _ _ (by omega)⟩)
+    (fun j ↦ ⟨j - 1, ComplexShape.up_mk _ _ (by lia)⟩)
     (Arrow.isoMk eX eA h.symm)
 
 /-- The cohomology of the raw global restriction cone computes relative singular cohomology.

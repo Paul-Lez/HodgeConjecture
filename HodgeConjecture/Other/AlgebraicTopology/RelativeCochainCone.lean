@@ -310,7 +310,7 @@ def relativeCochainConeHomologyIsoDualRelativeInt (X : TopPair.{u}) (n : ℕ) :
     (ModuleCat.{u} R) (ComplexShape.up ℤ) z
   let C := CochainComplex.mappingCone (relativeCochainRestrictionInt R X)
   let D := (relativeDualCochainShortComplexInt R X).X₁
-  have hn : (1 : ℤ) + ((n : ℤ) - 1) = (n : ℤ) := by omega
+  have hn : (1 : ℤ) + ((n : ℤ) - 1) = (n : ℤ) := by lia
   exact
     (HomotopyCategory.homologyFunctorFactors
       (ModuleCat.{u} R) (ComplexShape.up ℤ) ((n : ℤ) - 1)).symm.app C ≪≫

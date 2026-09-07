@@ -342,6 +342,6 @@ theorem MvPolynomial.ringKrullDim_quotient_eq_fin_sub_of_height_eq {n p : ℕ}
   have hpm : p + m = n := by exact_mod_cast hab
   rw [← hb, WithBot.coe_natCast]
   congr
-  omega
+  lia
 
 end PolynomialCatenary

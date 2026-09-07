@@ -1135,7 +1135,7 @@ lemma hodgeFilteredDeRhamComplex_isZero_of_lt
   refine ⟨fun n => ?_⟩
   change IsZero ((holomorphicDeRhamComplexInt structureMap d).X (p + n))
   exact (holomorphicDeRhamComplexInt structureMap d).isZero_of_isStrictlyLE
-    d (p + n) (by omega)
+    d (p + n) (by lia)
 
 /-- Inclusion of the degree-at-least-`p` de Rham complex into the full complex. -/
 def hodgeFilteredDeRhamInclusion [SmoothOfRelativeDimension d structureMap] (p : ℤ) :

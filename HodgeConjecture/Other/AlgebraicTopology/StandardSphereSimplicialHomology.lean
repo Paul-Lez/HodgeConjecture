@@ -125,8 +125,8 @@ def standardSphereSuccTopCyclesIsoStandardSimplexSuccTopCycles (n : ℕ) :
   let f := SSet.normalizedChainComplexMap
     (SSet.boundary (n + 2) : SSet.Subcomplex (Δ[n + 2] : SSet.{0})).ι
       (ModuleCat.of ℚ ℚ)
-  let eTop := standardSphereSuccNormalizedChainsXIsoStandard n (n + 1) (by omega)
-  let eBelow := standardSphereSuccNormalizedChainsXIsoStandard n n (by omega)
+  let eTop := standardSphereSuccNormalizedChainsXIsoStandard n (n + 1) (by lia)
+  let eBelow := standardSphereSuccNormalizedChainsXIsoStandard n n (by lia)
   letI : IsIso (f.f (n + 1)) := by
     change IsIso eTop.hom
     infer_instance
@@ -174,7 +174,7 @@ def standardSimplexSuccNormalizedChainsXTopIsoRat (n : ℕ) :
 /-- The top differential of a full standard simplex is a monomorphism. -/
 lemma standardSimplexSucc_normalized_d_top_mono (n : ℕ) :
     Mono ((standardSimplexSuccNormalizedRationalChains n).d (n + 2) (n + 1)) := by
-  have hTop := standardSimplexSucc_normalizedChains_exactAt n (n + 2) (by omega)
+  have hTop := standardSimplexSucc_normalizedChains_exactAt n (n + 2) (by lia)
   have hTop' : ((standardSimplexSuccNormalizedRationalChains n).sc'
       (n + 3) (n + 2) (n + 1)).Exact :=
     ShortComplex.exact_of_iso
@@ -193,7 +193,7 @@ def standardSimplexSuccNormalizedChainsXTopIsoTopCycles (n : ℕ) :
       kernel ((standardSimplexSuccNormalizedRationalChains n).d (n + 1) n) := by
   letI : Mono ((standardSimplexSuccNormalizedRationalChains n).d (n + 2) (n + 1)) :=
     standardSimplexSucc_normalized_d_top_mono n
-  have h := standardSimplexSucc_normalizedChains_exactAt n (n + 1) (by omega)
+  have h := standardSimplexSucc_normalizedChains_exactAt n (n + 1) (by lia)
   have h' : ((standardSimplexSuccNormalizedRationalChains n).sc'
       (n + 2) (n + 1) n).Exact :=
     ShortComplex.exact_of_iso

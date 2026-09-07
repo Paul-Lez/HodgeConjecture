@@ -258,11 +258,11 @@ public theorem neg_one_pow_succAbove_add_predAbove (j : Fin (n + 2)) (k : Fin (n
   · rw [Fin.succAbove_of_castSucc_lt _ _ h, Fin.predAbove_of_castSucc_lt _ _ h, Fin.val_castSucc,
       Fin.val_pred]
     have hj : k.val < j.val := by simpa [Fin.lt_def] using h
-    rw [show j.val + k.val = k.val + (j.val - 1) + 1 by omega, pow_succ]
+    rw [show j.val + k.val = k.val + (j.val - 1) + 1 by lia, pow_succ]
     ring
   · rw [Fin.succAbove_of_le_castSucc _ _ h, Fin.predAbove_of_le_castSucc _ _ h, Fin.val_succ,
       Fin.coe_castPred]
-    rw [show k.val + 1 + j.val = j.val + k.val + 1 by omega, pow_succ]
+    rw [show k.val + 1 + j.val = j.val + k.val + 1 by lia, pow_succ]
     ring
 
 /-! ### Sorting with sign -/

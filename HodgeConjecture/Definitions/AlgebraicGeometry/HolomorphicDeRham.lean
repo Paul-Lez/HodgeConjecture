@@ -909,7 +909,7 @@ dimension. Both sides have zero cohomology there. -/
 lemma constantsToHolomorphicDeRhamComplex_quasiIsoAt_of_lt
     [SmoothOfRelativeDimension d structureMap] {p : ℕ} (hp : d < p) :
     QuasiIsoAt (constantsToHolomorphicDeRhamComplex structureMap d) p := by
-  have hp0 : p ≠ 0 := by omega
+  have hp0 : p ≠ 0 := by lia
   obtain ⟨q, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hp0
   rw [quasiIsoAt_iff_exactAt _ _
     (CochainComplex.exactAt_succ_single_obj (constantComplexSheaf structureMap) q)]
@@ -966,11 +966,11 @@ dimension. -/
 lemma holomorphicDeRhamComplexInt_isZero_X_of_lt
     [SmoothOfRelativeDimension d structureMap] (n : ℤ) (hn : (d : ℤ) < n) :
     IsZero ((holomorphicDeRhamComplexInt structureMap d).X n) := by
-  have hn0 : 0 ≤ n := by omega
+  have hn0 : 0 ≤ n := by lia
   let p := n.toNat
   have hp : (p : ℤ) = n := by
     simp [p, Int.toNat_of_nonneg hn0]
-  have hdp : d < p := by omega
+  have hdp : d < p := by lia
   exact (holomorphicDeRhamSheaf_isZero_of_lt structureMap d hdp).of_iso
     ((holomorphicDeRhamComplex structureMap d).extendXIso
       ComplexShape.embeddingUpNat hp)
@@ -1067,7 +1067,7 @@ lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_of_neg
     QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt structureMap d) n := by
   have hnone : ∀ p : ℕ, (p : ℤ) ≠ n := by
     intro p hp
-    omega
+    lia
   rw [quasiIsoAt_iff_exactAt]
   · exact HomologicalComplex.extend_exactAt
       (holomorphicDeRhamComplex structureMap d) ComplexShape.embeddingUpNat n hnone

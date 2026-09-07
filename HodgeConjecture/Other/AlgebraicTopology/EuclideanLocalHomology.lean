@@ -77,7 +77,7 @@ lemma relativeSingularChainShortComplex_shortExact (X : TopPair) :
 def relativeSingularBoundary (X : TopPair) (n : ℕ) :
     RelativeHomology ℚ X (n + 1) ⟶ Homology ℚ X.snd n :=
   (relativeSingularChainShortComplex_shortExact X).δ (n + 1) n
-    (ComplexShape.down_mk (n + 1) n (by omega))
+    (ComplexShape.down_mk (n + 1) n (by lia))
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Exactness at ambient homology in the long exact sequence of a topological pair. -/
@@ -100,9 +100,9 @@ lemma relativeSingular_homology_exact_relative (X : TopPair) (n : ℕ) :
       (relativeSingularBoundary X n)
       (by
         exact (relativeSingularChainShortComplex_shortExact X).comp_δ
-          (n + 1) n (ComplexShape.down_mk (n + 1) n (by omega)))).Exact :=
+          (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia)))).Exact :=
   (relativeSingularChainShortComplex_shortExact X).homology_exact₃
-    (n + 1) n (ComplexShape.down_mk (n + 1) n (by omega))
+    (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
 
 /-- Exactness at subspace homology in the long exact sequence of a topological pair. -/
 lemma relativeSingular_homology_exact_subspace (X : TopPair) (n : ℕ) :
@@ -111,9 +111,9 @@ lemma relativeSingular_homology_exact_subspace (X : TopPair) (n : ℕ) :
       (HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n)
       (by
         exact (relativeSingularChainShortComplex_shortExact X).δ_comp
-          (n + 1) n (ComplexShape.down_mk (n + 1) n (by omega)))).Exact :=
+          (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia)))).Exact :=
   (relativeSingularChainShortComplex_shortExact X).homology_exact₁
-    (n + 1) n (ComplexShape.down_mk (n + 1) n (by omega))
+    (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
 
 /-- The alternating sum of the faces of the standard affine `(n + 1)`-simplex, regarded as a
 chain in punctured Euclidean space. -/
@@ -172,7 +172,7 @@ lemma standardLocalCycle_comp_relativeSingularBoundary (n : ℕ) :
   let S := relativeSingularChainShortComplex (standardPuncturedPair (n + 1))
   let hS := relativeSingularChainShortComplex_shortExact
     (standardPuncturedPair (n + 1))
-  exact hS.δ_eq (n + 1) n (ComplexShape.down_mk (n + 1) n (by omega))
+  exact hS.δ_eq (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
     (standardLocalChain (n + 1)) (standardLocalChain_boundary_succ n)
     (standardAmbientSimplexChain (n + 1)) rfl
     (standardSubspaceBoundaryChain n) (standardSubspaceBoundaryChain_inclusion n)
@@ -219,8 +219,8 @@ def standardPuncturedRelativeBoundaryIso (n : ℕ) (hn : n ≠ 0) :
     RelativeHomology ℚ (standardPuncturedPair (n + 1)) (n + 1) ≅
       Homology ℚ (standardPuncturedPair (n + 1)).snd n :=
   (relativeSingularChainShortComplex_shortExact (standardPuncturedPair (n + 1))).δIso
-    (n + 1) n (ComplexShape.down_mk (n + 1) n (by omega))
-    (standardRealModel_homology_isZero (n + 1) (n + 1) (by omega))
+    (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
+    (standardRealModel_homology_isZero (n + 1) (n + 1) (by lia))
     (standardRealModel_homology_isZero (n + 1) n hn)
 
 lemma standardPuncturedRelativeBoundaryIso_hom (n : ℕ) (hn : n ≠ 0) :

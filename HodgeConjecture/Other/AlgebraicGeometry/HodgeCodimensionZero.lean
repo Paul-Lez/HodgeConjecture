@@ -84,7 +84,7 @@ theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero
   · subst p
     exact rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected structureMap d
       (connectedSpaceOfDimensionEqZero structureMap d hd)
-  · have hdim : d < p := by omega
+  · have hdim : d < p := by lia
     rw [rationalHodgeClasses_eq_bot_of_lt structureMap d hdim,
       algebraicCycleClassSpan_eq_bot_of_lt structureMap d p hdim]
 

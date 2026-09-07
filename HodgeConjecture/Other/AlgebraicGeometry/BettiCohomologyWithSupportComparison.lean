@@ -167,7 +167,7 @@ lemma constantsToSingularCochainSheafComplex_mono
       exact constantsToSingularCochainZeroSheaf_mono R Y
   | succ n =>
       exact (HomologicalComplex.isZero_single_obj_X (ComplexShape.up ℕ) 0
-        (constantCoefficientSheaf R Y) (n + 1) (by omega)).mono _
+        (constantCoefficientSheaf R Y) (n + 1) (by lia)).mono _
 
 /-- Extending the constant-to-singular-cochain resolution to integer degrees remains monic. -/
 lemma constantsToSingularCochainComplexInt_mono

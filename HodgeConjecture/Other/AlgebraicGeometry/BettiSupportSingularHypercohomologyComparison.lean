@@ -798,7 +798,7 @@ lemma naturalSingularSupportCone_isStrictlyGE
     infer_instance
   exact CochainComplex.isStrictlyGE_mappingCone
     (naturalSingularResolutionRestriction structureMap d Z hZ) 0 0 (-1)
-      (by omega) (by omega)
+      (by lia) (by lia)
 
 /-- Every term of the derived complement resolution is flasque. In nonnegative degrees it is
 the pushforward of an injective sheaf; in negative degrees it is zero. -/

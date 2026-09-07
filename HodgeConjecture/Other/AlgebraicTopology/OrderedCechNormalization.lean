@@ -303,7 +303,7 @@ public theorem isZero_cechObject_strictMono [Fintype ι] {n : ℕ} (hn : Fintype
   rintro ⟨a, ha⟩
   have := Fintype.card_le_of_injective a ha.injective
   rw [Fintype.card_fin] at this
-  omega
+  lia
 
 end SupportChainModels
 

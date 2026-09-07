@@ -279,7 +279,7 @@ def forgetSupportShiftedHom (Z : Set (ComplexPoint X structureMap)) :
 def forgetSupport (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
     RationalCohomologyWithSupport structureMap Z n →+
       RationalCohomology structureMap n where
-  toFun α := α.comp (forgetSupportShiftedHom structureMap Z) (by omega)
+  toFun α := α.comp (forgetSupportShiftedHom structureMap Z) (by lia)
   map_zero' := by
     let e : RationalCohomology structureMap n ≃
         ShiftedHom
@@ -369,15 +369,15 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
         (DerivedCategory.Q.obj (constantRationalSheafComplexInt structureMap)) n :=
     ShiftedHom.postcompEquivOfIsIso
       (X := DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap)) g
-      (show (1 : ℤ) + (n - 1) = n by omega)
+      (show (1 : ℤ) + (n - 1) = n by lia)
   have hcomp (α : RationalCohomologyWithSupport structureMap
       (Set.univ : Set (ComplexPoint X structureMap)) n) :
       eTarget (forgetSupport structureMap Set.univ n α) = eComp (eSource α) := by
     change eTarget
-      (α.comp (forgetSupportShiftedHom structureMap Set.univ) (by omega)) = _
+      (α.comp (forgetSupportShiftedHom structureMap Set.univ) (by lia)) = _
     rw [Localization.SmallShiftedHom.equiv_comp]
     exact (ShiftedHom.postcompEquivOfIsIso_apply g
-      (show (1 : ℤ) + (n - 1) = n by omega) (eSource α)).symm
+      (show (1 : ℤ) + (n - 1) = n by lia) (eSource α)).symm
   refine
     { toFun := forgetSupport structureMap Set.univ n
       invFun := fun α => eSource.symm (eComp.symm (eTarget α))

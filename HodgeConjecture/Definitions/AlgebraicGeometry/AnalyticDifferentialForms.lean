@@ -829,7 +829,7 @@ lemma chartEvaluationKernel_eq_top_of_lt [SmoothOfRelativeDimension d structureM
   intro hli
   have hcard := hli.fintype_card_le_finrank
   rw [Fintype.card_fin, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hcard
-  omega
+  lia
 
 
 def rawRestriction [SmoothOfRelativeDimension d structureMap]
@@ -1020,7 +1020,7 @@ lemma holomorphicFormRelations_eq_top_of_lt [SmoothOfRelativeDimension d structu
   intro x hx
   apply (le_sup_right : analyticRelations structureMap d U p ≤ _)
   induction p with
-  | zero => omega
+  | zero => lia
   | succ p ih =>
       rw [analyticRelations]
       apply (le_sup_left : restrictionStableAnalyticKernel structureMap d U (p + 1) ≤ _)

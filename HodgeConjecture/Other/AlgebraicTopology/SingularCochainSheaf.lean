@@ -760,7 +760,7 @@ lemma exists_local_singularCochain_primitive_of_contractibleOpenBasis
     (singularCochainPresheaf R X (n + 1)).map i.op φ
   let _ : ContractibleSpace V := hVcontractible
   have hK : K.ExactAt (n + 1) := by
-    exact singularChainComplex_exactAt_of_contractible R V (n + 1) (by omega)
+    exact singularChainComplex_exactAt_of_contractible R V (n + 1) (by lia)
   have hφV : (K.d (n + 2) (n + 1)).hom.dualMap φV = 0 := by
     change (singularCochainCoboundary R X (n + 1)).app (.op V) φV = 0
     dsimp [φV]

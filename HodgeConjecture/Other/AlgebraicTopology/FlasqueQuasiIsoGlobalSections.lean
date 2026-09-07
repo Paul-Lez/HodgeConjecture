@@ -210,7 +210,7 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
   let _ : M.IsStrictlyGE n := by
     dsimp [M, n]
     exact CochainComplex.isStrictlyGE_mappingCone f nK nL (min nK nL - 1)
-      (by omega) (by omega)
+      (by lia) (by lia)
   have hM : M.Acyclic := by
     dsimp [M]
     exact mappingCone_acyclic_of_quasiIso f

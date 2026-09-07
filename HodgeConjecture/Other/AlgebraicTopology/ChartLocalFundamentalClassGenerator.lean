@@ -160,7 +160,7 @@ lemma span_standardComplexLocalClass_eq_top_for_chart :
   | zero => exact span_standardComplexLocalClass_zero_eq_top
   | succ n =>
       rw [span_standardComplexLocalClass_eq_top_iff]
-      have hdeg : (n + 1) * 2 = n * 2 + 2 := by omega
+      have hdeg : (n + 1) * 2 = n * 2 + 2 := by lia
       rw [hdeg]
       exact span_standardLocalClass_add_two_eq_top (n * 2)
 

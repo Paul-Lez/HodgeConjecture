@@ -132,7 +132,7 @@ public theorem exists_standardTopologicalSimplex_cycleFiller
     (K.exactAt_iff' (i := n + 2) (j := n + 1) (k := n)
       (by simp) (by simp)).mp
         (standardTopologicalSimplex_singularChainExactAt m (n + 1)
-          (by omega))
+          (by lia))
   have hz1 : K.d (n + 1) n (z 1) = 0 := by
     have h := CategoryTheory.congr_fun hz 1
     simpa using h

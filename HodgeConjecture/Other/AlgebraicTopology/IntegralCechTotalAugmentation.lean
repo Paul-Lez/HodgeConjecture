@@ -333,7 +333,7 @@ public noncomputable def firstQuadrantTotalToSingleZero
     · have hzcol : IsZero
           ((firstQuadrantSingleZeroBicomplex K).X (p + 1)) :=
         HomologicalComplex.isZero_single_obj_X
-          (ComplexShape.down ℕ) 0 K (p + 1) (by omega)
+          (ComplexShape.down ℕ) 0 K (p + 1) (by lia)
       have hz : IsZero
           (((firstQuadrantSingleZeroBicomplex K).X (p + 1)).X q) :=
         (HomologicalComplex.eval AddCommGrpCat
@@ -378,7 +378,7 @@ public theorem firstQuadrantTotalToSingleZero_comp_inclusion
   · have hzcol : IsZero
         ((firstQuadrantSingleZeroBicomplex K).X (p + 1)) :=
       HomologicalComplex.isZero_single_obj_X
-        (ComplexShape.down ℕ) 0 K (p + 1) (by omega)
+        (ComplexShape.down ℕ) 0 K (p + 1) (by lia)
     have hz : IsZero
         (((firstQuadrantSingleZeroBicomplex K).X (p + 1)).X q) :=
       (HomologicalComplex.eval AddCommGrpCat

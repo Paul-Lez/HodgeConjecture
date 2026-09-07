@@ -230,7 +230,7 @@ private lemma pieceSum_firstLarge (p : ℕ) (H : Pure V (2 * p)) :
           intro heq
           have h1 : p ≤ pq.1 := hpq
           have h2 : p ≤ pq.2 := hsecond
-          have h : pq.1 = p ∧ pq.2 = p := by omega
+          have h : pq.1 = p ∧ pq.2 = p := by lia
           exact hpp (Prod.ext h.1 h.2)
         rw [H.piece_eq_bot_of_add_ne pq.1 pq.2 hadd]
         exact bot_le
@@ -252,7 +252,7 @@ private lemma pieceSum_secondLarge (p : ℕ) (H : Pure V (2 * p)) :
           intro heq
           have h1 : p ≤ pq.1 := hfirst
           have h2 : p ≤ pq.2 := hpq
-          have h : pq.1 = p ∧ pq.2 = p := by omega
+          have h : pq.1 = p ∧ pq.2 = p := by lia
           exact hpp (Prod.ext h.1 h.2)
         rw [H.piece_eq_bot_of_add_ne pq.1 pq.2 hadd]
         exact bot_le

@@ -73,7 +73,7 @@ lemma cyclesShortComplex_shortExact (i : ℤ) (hK : K.ExactAt (i + 1)) :
   have hepi : Epi S.g := by
     dsimp [S, cyclesShortComplex]
     have hnext : (ComplexShape.up ℤ).next (i + 1) = i + 2 :=
-      (ComplexShape.up ℤ).next_eq' (ComplexShape.up_mk _ _ (by omega))
+      (ComplexShape.up ℤ).next_eq' (ComplexShape.up_mk _ _ (by lia))
     have hsc' : (K.sc' i (i + 1) (i + 2)).Exact :=
       (K.exactAt_iff' (i := i) (j := i + 1) (k := i + 2) (by simp) hnext).mp hK
     have hepi' : Epi ((K.sc' i (i + 1) (i + 2)).toCycles) :=
@@ -106,7 +106,7 @@ lemma cycles_isFlasque_add_nat (N : ℤ) [K.IsStrictlyGE N]
         simpa only [sub_add_cancel] using hK N
       have hsource : IsZero S.X₂ := by
         dsimp [S, cyclesShortComplex]
-        exact K.isZero_of_isStrictlyGE N (N - 1) (by omega)
+        exact K.isZero_of_isStrictlyGE N (N - 1) (by lia)
       let _ : Epi S.g := hS.epi_g
       have htarget : IsZero S.X₃ := IsZero.of_epi S.g hsource
       have hzero : IsZero (K.cycles N) := by
@@ -135,8 +135,8 @@ lemma cycles_isFlasque (N : ℤ) [K.IsStrictlyGE N]
   · let m : ℕ := (i - N).toNat
     have hm : i = N + (m : ℤ) := by
       dsimp [m]
-      rw [Int.toNat_of_nonneg (by omega)]
-      omega
+      rw [Int.toNat_of_nonneg (by lia)]
+      lia
     rw [hm]
     exact cycles_isFlasque_add_nat K N hK hflasque m
 
@@ -200,13 +200,13 @@ theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
     epi_of_shortExact (U := (⊤ : Opens X)) hSprev
   have hepi : Epi (F.map (K.toCycles (i - 1) i)) := by
     change Epi ((K.toCycles (i - 1) i).hom.app (op (⊤ : Opens X)))
-    have hi : i - 1 + 1 = i := by omega
+    have hi : i - 1 + 1 = i := by lia
     change Epi ((K.toCycles (i - 1) (i - 1 + 1)).hom.app
       (op (⊤ : Opens X))) at hepiTop
     rw [hi] at hepiTop
     exact hepiTop
   have hprev : (ComplexShape.up ℤ).prev i = i - 1 :=
-    (ComplexShape.up ℤ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
+    (ComplexShape.up ℤ).prev_eq' (ComplexShape.up_mk _ _ (by lia))
   have hnext : (ComplexShape.up ℤ).next i = i + 1 :=
     (ComplexShape.up ℤ).next_eq' (ComplexShape.up_mk _ _ rfl)
   let T : ShortComplex AddCommGrpCat.{u} :=

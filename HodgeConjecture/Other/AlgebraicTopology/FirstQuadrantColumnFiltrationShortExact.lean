@@ -62,7 +62,7 @@ public noncomputable def firstQuadrantColumnPrefixSuccInclusionComponent
       (firstQuadrantColumnPrefix K (p + 1)).X q := by
   by_cases hq : q ≤ p
   · exact (firstQuadrantColumnPrefixXIso K p q hq).hom ≫
-      (firstQuadrantColumnPrefixXIso K (p + 1) q (by omega)).inv
+      (firstQuadrantColumnPrefixXIso K (p + 1) q (by lia)).inv
   · exact 0
 
 @[simp]
@@ -70,13 +70,13 @@ public theorem firstQuadrantColumnPrefixSuccInclusionComponent_of_le
     (K : FirstQuadrantBicomplex) (p q : ℕ) (hq : q ≤ p) :
     firstQuadrantColumnPrefixSuccInclusionComponent K p q =
       (firstQuadrantColumnPrefixXIso K p q hq).hom ≫
-        (firstQuadrantColumnPrefixXIso K (p + 1) q (by omega)).inv := by
+        (firstQuadrantColumnPrefixXIso K (p + 1) q (by lia)).inv := by
   simp [firstQuadrantColumnPrefixSuccInclusionComponent, hq]
 
 public theorem firstQuadrantColumnPrefixSuccInclusionComponent_eq_zero
     (K : FirstQuadrantBicomplex) (p q : ℕ) (hq : p < q) :
     firstQuadrantColumnPrefixSuccInclusionComponent K p q = 0 := by
-  simp [firstQuadrantColumnPrefixSuccInclusionComponent, show ¬ q ≤ p by omega]
+  simp [firstQuadrantColumnPrefixSuccInclusionComponent, show ¬ q ≤ p by lia]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Canonical inclusion from the prefix through `p` into the prefix through `p + 1`. -/
@@ -87,16 +87,16 @@ public noncomputable def firstQuadrantColumnPrefixSuccInclusion
   comm' i j hij := by
     change j + 1 = i at hij
     by_cases hi : i ≤ p
-    · have hj : j ≤ p := by omega
+    · have hj : j ≤ p := by lia
       rw [firstQuadrantColumnPrefixSuccInclusionComponent_of_le K p i hi,
         firstQuadrantColumnPrefixSuccInclusionComponent_of_le K p j hj,
-        firstQuadrantColumnPrefix_d_eq K (p + 1) i j (by omega) (by omega),
+        firstQuadrantColumnPrefix_d_eq K (p + 1) i j (by lia) (by lia),
         firstQuadrantColumnPrefix_d_eq K p i j hi hj]
       simp
-    · rw [firstQuadrantColumnPrefixSuccInclusionComponent_eq_zero K p i (by omega),
+    · rw [firstQuadrantColumnPrefixSuccInclusionComponent_eq_zero K p i (by lia),
         zero_comp]
       have hz : IsZero ((firstQuadrantColumnPrefix K p).X i) :=
-        firstQuadrantColumnPrefix_isZero_X K p i (by omega)
+        firstQuadrantColumnPrefix_isZero_X K p i (by lia)
       exact hz.eq_of_src _ _
 
 @[reassoc (attr := simp)]
@@ -107,14 +107,14 @@ public theorem firstQuadrantColumnPrefixSuccInclusion_comp_toLast
   apply HomologicalComplex.hom_ext
   intro q
   by_cases hq : q ≤ p
-  · have hne : q ≠ p + 1 := by omega
+  · have hne : q ≠ p + 1 := by lia
     change firstQuadrantColumnPrefixSuccInclusionComponent K p q ≫
       firstQuadrantColumnPrefixToLastComponent K (p + 1) q = 0
     rw [firstQuadrantColumnPrefixToLastComponent_eq_zero K (p + 1) q hne,
       comp_zero]
   · change firstQuadrantColumnPrefixSuccInclusionComponent K p q ≫
       firstQuadrantColumnPrefixToLastComponent K (p + 1) q = 0
-    rw [firstQuadrantColumnPrefixSuccInclusionComponent_eq_zero K p q (by omega),
+    rw [firstQuadrantColumnPrefixSuccInclusionComponent_eq_zero K p q (by lia),
       zero_comp]
 
 /-- The inclusion of one finite prefix into the next is the kernel of projection onto the
@@ -136,7 +136,7 @@ public noncomputable def firstQuadrantColumnPrefixSuccInclusionIsKernel
   · let e : (firstQuadrantColumnPrefix K p).X q ≅
         (firstQuadrantColumnPrefix K (p + 1)).X q :=
       firstQuadrantColumnPrefixXIso K p q hq ≪≫
-        (firstQuadrantColumnPrefixXIso K (p + 1) q (by omega)).symm
+        (firstQuadrantColumnPrefixXIso K (p + 1) q (by lia)).symm
     have he : (firstQuadrantColumnPrefixSuccInclusion K p).f q = e.hom := by
       change firstQuadrantColumnPrefixSuccInclusionComponent K p q = e.hom
       simp [e, firstQuadrantColumnPrefixSuccInclusionComponent_of_le K p q hq]
@@ -147,7 +147,7 @@ public noncomputable def firstQuadrantColumnPrefixSuccInclusionIsKernel
     · intro W k hk m hm
       rw [he] at hm
       rw [← hm, Category.assoc, e.hom_inv_id, Category.comp_id]
-  · have hpq : p < q := by omega
+  · have hpq : p < q := by lia
     have hz : IsZero ((firstQuadrantColumnPrefix K p).X q) :=
       firstQuadrantColumnPrefix_isZero_X K p q hpq
     apply KernelFork.IsLimit.ofMonoOfIsZero _ _ hz
@@ -156,7 +156,7 @@ public noncomputable def firstQuadrantColumnPrefixSuccInclusionIsKernel
       change Mono (firstQuadrantColumnPrefixToLastComponent K (p + 1) (p + 1))
       rw [firstQuadrantColumnPrefixToLastComponent_self]
       infer_instance
-    · have hgt : p + 1 < q := by omega
+    · have hgt : p + 1 < q := by lia
       exact (firstQuadrantColumnPrefix_isZero_X K (p + 1) q hgt).mono _
 
 /-- The canonical short complex associated to one step of the finite column filtration. -/

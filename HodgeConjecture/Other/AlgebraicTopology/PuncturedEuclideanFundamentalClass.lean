@@ -345,7 +345,7 @@ lemma exists_standardPuncturedFacetIntersection_cycleFiller
   have hexact : (K.sc' (n + 2) (n + 1) n).Exact :=
     (K.exactAt_iff' (i := n + 2) (j := n + 1) (k := n)
       (by simp) (by simp)).mp
-        (standardPuncturedFacetIntersection_exactAt d I hI (n + 1) (by omega))
+        (standardPuncturedFacetIntersection_exactAt d I hI (n + 1) (by lia))
   have hz1 : K.d (n + 1) n (z 1) = 0 := by
     have h := ConcreteCategory.congr_hom hz 1
     simpa using h
@@ -465,7 +465,7 @@ lemma exists_standardPuncturedFacetIntersection_integralCycleFiller
     (K.exactAt_iff' (i := n + 2) (j := n + 1) (k := n)
       (by simp) (by simp)).mp
         (standardPuncturedFacetIntersection_integralExactAt
-          d (n + 1) I hI hproper (by omega))
+          d (n + 1) I hI hproper (by lia))
   have hz1 : K.d (n + 1) n (z 1) = 0 := by
     have h := ConcreteCategory.congr_hom hz 1
     simpa using h
@@ -3212,19 +3212,19 @@ nonvanishing of the standard relative local class. -/
 lemma standardLocalClass_add_two_ne_zero_of_affine_injective
     (n : ℕ) (h : Function.Injective (standardAffineBoundaryHomologyMap n).hom) :
     standardLocalClass (n + 2) ≠ 0 := by
-  rw [standardLocalClass_succ_ne_zero_iff (n + 1) (by omega)]
+  rw [standardLocalClass_succ_ne_zero_iff (n + 1) (by lia)]
   exact standardPuncturedBoundaryClass_succ_ne_zero_of_affine_injective n h
 
 /-- The explicit standard local class is nonzero in every positive dimension. -/
 lemma standardLocalClass_ne_zero_of_pos (d : ℕ) (hd : 0 < d) :
     standardLocalClass d ≠ 0 := by
   cases d with
-  | zero => omega
+  | zero => lia
   | succ n =>
       cases n with
       | zero => exact standardLocalClass_one_ne_zero
       | succ n =>
-          rw [standardLocalClass_succ_ne_zero_iff (n + 1) (by omega)]
+          rw [standardLocalClass_succ_ne_zero_iff (n + 1) (by lia)]
           exact standardPuncturedBoundaryClass_succ_ne_zero n
 
 /-- In dimensions at least two, an affine-boundary homology isomorphism makes the standard
@@ -3232,7 +3232,7 @@ relative local class a generator. -/
 lemma span_standardLocalClass_add_two_eq_top_of_affine_isIso
     (n : ℕ) [IsIso (standardAffineBoundaryHomologyMap n)] :
     Submodule.span ℚ {standardLocalClass (n + 2)} = ⊤ := by
-  rw [span_standardLocalClass_succ_eq_top_iff (n + 1) (by omega)]
+  rw [span_standardLocalClass_succ_eq_top_iff (n + 1) (by lia)]
   exact span_standardPuncturedBoundaryClass_succ_eq_top_of_affine_isIso n
 
 /-- In every dimension at least two, the explicit standard relative local class generates

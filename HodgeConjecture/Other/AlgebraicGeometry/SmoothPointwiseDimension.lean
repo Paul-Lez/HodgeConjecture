@@ -225,9 +225,9 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_of_coheight_succ_eq_dimen
         (f := f) (d := d) x hclosed
     rw [hheight, hx, zero_add] at hformula
     have hpd : p = d := by exact_mod_cast hformula
-    omega
+    lia
   · rw [hheight, hx]
-    exact_mod_cast (by omega : 1 + p = d)
+    exact_mod_cast (by lia : 1 + p = d)
 
 /-- The pointwise dimension formula holds everywhere on an integral smooth complex surface. -/
 lemma SmoothOfRelativeDimension.height_add_coheight_eq_two [IsIntegral X]
@@ -241,7 +241,7 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_two [IsIntegral X]
     ENat.toNat_le_of_le_natCast hcoheight
   have hcases : (Order.coheight x).toNat = 0 ∨
       (Order.coheight x).toNat = 1 ∨ (Order.coheight x).toNat = 2 := by
-    omega
+    lia
   rcases hcases with hzero | hone | htwo
   · have hcozero : Order.coheight x = 0 := by
       rw [← ENat.natCast_toNat hne, hzero]
@@ -283,7 +283,7 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_two [IsIntegral X]
 lemma SmoothOfRelativeDimension.height_add_coheight_eq_of_le_two [IsIntegral X]
     [SmoothOfRelativeDimension d f] (hd : d ≤ 2) (x : X) :
     Order.height x + Order.coheight x = d := by
-  have hd_cases : d = 0 ∨ d = 1 ∨ d = 2 := by omega
+  have hd_cases : d = 0 ∨ d = 1 ∨ d = 2 := by lia
   rcases hd_cases with rfl | rfl | rfl
   · exact SmoothOfRelativeDimension.height_add_coheight_eq_zero (f := f) x
   · exact SmoothOfRelativeDimension.height_add_coheight_eq_one (f := f) x

@@ -79,7 +79,7 @@ public theorem firstQuadrantColumnPrefixToOriginalComponent_of_le
 public theorem firstQuadrantColumnPrefixToOriginalComponent_eq_zero
     (K : FirstQuadrantBicomplex) (N p : ℕ) (hp : N < p) :
     firstQuadrantColumnPrefixToOriginalComponent K N p = 0 := by
-  simp [firstQuadrantColumnPrefixToOriginalComponent, show ¬ p ≤ N by omega]
+  simp [firstQuadrantColumnPrefixToOriginalComponent, show ¬ p ≤ N by lia]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Canonical map from a finite outer-column prefix to the original bicomplex. -/
@@ -90,14 +90,14 @@ public noncomputable def firstQuadrantColumnPrefixToOriginal
   comm' i j hij := by
     change j + 1 = i at hij
     by_cases hi : i ≤ N
-    · have hj : j ≤ N := by omega
+    · have hj : j ≤ N := by lia
       rw [firstQuadrantColumnPrefixToOriginalComponent_of_le K N i hi,
         firstQuadrantColumnPrefixToOriginalComponent_of_le K N j hj,
         firstQuadrantColumnPrefix_d_eq K N i j hi hj]
       simp
-    · rw [firstQuadrantColumnPrefixToOriginalComponent_eq_zero K N i (by omega),
+    · rw [firstQuadrantColumnPrefixToOriginalComponent_eq_zero K N i (by lia),
         zero_comp]
-      exact (firstQuadrantColumnPrefix_isZero_X K N i (by omega)).eq_of_src _ _
+      exact (firstQuadrantColumnPrefix_isZero_X K N i (by lia)).eq_of_src _ _
 
 /-- Totalization of the canonical map from a finite prefix to the full bicomplex. -/
 public noncomputable def firstQuadrantColumnPrefixTotalToOriginal
@@ -116,7 +116,7 @@ public noncomputable def firstQuadrantColumnPrefixTotalToOriginalInverseComponen
   K.totalDesc (fun p q hpq =>
     (firstQuadrantColumnPrefixXIso K N p (by
       change p + q = n at hpq
-      omega)).inv.f q ≫
+      lia)).inv.f q ≫
       (firstQuadrantColumnPrefix K N).ιTotal
         (ComplexShape.down ℕ) p q n hpq)
 
@@ -130,7 +130,7 @@ public theorem firstQuadrantColumnPrefixTotalToOriginal_hom_inv
   intro p q hpq
   have hp : p ≤ N := by
     change p + q = n at hpq
-    omega
+    lia
   dsimp [firstQuadrantColumnPrefixTotalToOriginal,
     firstQuadrantColumnPrefixTotalToOriginalInverseComponent]
   rw [HomologicalComplex₂.ιTotal_map_assoc]
@@ -155,7 +155,7 @@ public theorem firstQuadrantColumnPrefixTotalToOriginal_inv_hom
   intro p q hpq
   have hp : p ≤ N := by
     change p + q = n at hpq
-    omega
+    lia
   dsimp [firstQuadrantColumnPrefixTotalToOriginal,
     firstQuadrantColumnPrefixTotalToOriginalInverseComponent]
   rw [HomologicalComplex₂.ι_totalDesc_assoc]
@@ -204,11 +204,11 @@ public theorem firstQuadrantColumnPrefixTotalToOriginal_quasiIsoAt
     rcases n with _ | n
     · simp
     · simp
-      omega
+      lia
   letI : IsIso φ.τ₁ :=
     firstQuadrantColumnPrefixTotalToOriginal_component_isIso K N (n + 1) hn
   letI : IsIso φ.τ₂ :=
-    firstQuadrantColumnPrefixTotalToOriginal_component_isIso K N n (by omega)
+    firstQuadrantColumnPrefixTotalToOriginal_component_isIso K N n (by lia)
   letI : IsIso φ.τ₃ :=
     firstQuadrantColumnPrefixTotalToOriginal_component_isIso K N
       ((ComplexShape.down ℕ).next n) hnext
@@ -232,7 +232,7 @@ public theorem firstQuadrantColumnPrefixMap_toOriginal_naturality
       firstQuadrantColumnPrefixToOriginalComponent_of_le K N p hp]
     exact HomologicalComplex.stupidTruncMap_stupidTruncXIso_hom
       f (firstQuadrantColumnPrefixEmbedding N) (i := ⟨p, hp⟩) (i' := p) rfl
-  · have hNp : N < p := by omega
+  · have hNp : N < p := by lia
     change (firstQuadrantColumnPrefixMap f N).f p ≫
       firstQuadrantColumnPrefixToOriginalComponent L N p =
         firstQuadrantColumnPrefixToOriginalComponent K N p ≫ f.f p
@@ -313,7 +313,7 @@ public noncomputable def firstQuadrantSingleColumnTotalXHom
     · subst r
       have hs : s = q := by
         change p + s = p + q at hrs
-        omega
+        lia
       subst s
       exact (firstQuadrantSingleColumnXIso K p).hom.f q
     · exact 0)
@@ -338,7 +338,7 @@ public theorem firstQuadrantSingleColumnTotalXHom_inv
   · subst r
     have hs : s = q := by
       change p + s = p + q at hrs
-      omega
+      lia
     subst s
     dsimp [firstQuadrantSingleColumnTotalXHom,
       firstQuadrantSingleColumnTotalXInv]
@@ -396,7 +396,7 @@ public theorem firstQuadrantSingleColumnTotalXIso_d
   · subst r
     have hs : s = i := by
       change p + s = p + i at hrs
-      omega
+      lia
     subst s
     rw [Linear.comp_units_smul]
     dsimp only [HomologicalComplex₂.total_d]
@@ -461,7 +461,7 @@ public abbrev firstQuadrantColumnDegreeEmbedding (p : ℕ) :
     intro i j hij
     change j + 1 = i at hij
     change p + j + 1 = p + i
-    omega
+    lia
 
 set_option backward.isDefEq.respectTransparency true in
 /-- Naturality of the unscaled sole-summand identification. -/
@@ -477,7 +477,7 @@ public theorem firstQuadrantSingleColumnTotalXIso_naturality
   · subst r
     have hs : s = q := by
       change p + s = p + q at hrs
-      omega
+      lia
     subst s
     dsimp [firstQuadrantSingleColumnTotalXIso,
       firstQuadrantSingleColumnTotalXHom]
@@ -555,16 +555,16 @@ public noncomputable def firstQuadrantSingleColumnTotalExtendedXIso
       ((K.X p).extend (firstQuadrantColumnDegreeEmbedding p)).X n := by
   by_cases hn : p ≤ n
   · exact firstQuadrantSingleColumnTotalExtendedXIsoOfEq K p
-      (n - p) n (by omega)
+      (n - p) n (by lia)
   · exact
       (firstQuadrantSingleColumnTotalX_isZero_of_not_exists K p n
-        (by intro q h; omega)).isoZero ≪≫
+        (by intro q h; lia)).isoZero ≪≫
       ((K.X p).isZero_extend_X (firstQuadrantColumnDegreeEmbedding p) n
         (by
           intro q h
           apply hn
           change p + q = n at h
-          omega)).isoZero.symm
+          lia)).isoZero.symm
 
 public theorem firstQuadrantSingleColumnTotalExtendedXIso_eq
     (K : FirstQuadrantBicomplex) (p q n : ℕ) (h : p + q = n) :
@@ -607,21 +607,21 @@ public theorem firstQuadrantSingleColumnTotalExtendedXIso_d
   · let q := n - p
     have hnq : p + q = n := by
       dsimp [q]
-      omega
+      lia
     by_cases hq : q = 0
-    · have hm : m < p := by omega
+    · have hm : m < p := by lia
       have hz : IsZero
           (((K.X p).extend (firstQuadrantColumnDegreeEmbedding p)).X m) :=
         (K.X p).isZero_extend_X (firstQuadrantColumnDegreeEmbedding p) m (by
           intro r hr
           change p + r = m at hr
-          omega)
+          lia)
       exact hz.eq_of_tgt _ _
     · let j := q - 1
       have hjq : j + 1 = q := by
         dsimp [j]
-        omega
-      have hmj : p + j = m := by omega
+        lia
+      have hmj : p + j = m := by lia
       rw [firstQuadrantSingleColumnTotalExtendedXIso_eq K p q n hnq,
         firstQuadrantSingleColumnTotalExtendedXIso_eq K p j m hmj]
       exact firstQuadrantSingleColumnTotalExtendedXIsoOfEq_d
@@ -634,7 +634,7 @@ public theorem firstQuadrantSingleColumnTotalExtendedXIso_d
       firstQuadrantSingleColumnTotalX_isZero_of_not_exists K p n (by
         intro q h
         apply hn
-        omega)
+        lia)
     exact hz.eq_of_src _ _
 
 /-- A total supported in one outer column is the extension by zero of that column, with
@@ -680,7 +680,7 @@ public theorem firstQuadrantSingleColumnTotalExtendedXIso_naturality
   · let q := n - p
     have h : p + q = n := by
       dsimp [q]
-      omega
+      lia
     rw [firstQuadrantSingleColumnTotalExtendedXIso_eq L p q n h,
       firstQuadrantSingleColumnTotalExtendedXIso_eq K p q n h]
     exact firstQuadrantSingleColumnTotalExtendedXIsoOfEq_naturality f p q n h
@@ -690,7 +690,7 @@ public theorem firstQuadrantSingleColumnTotalExtendedXIso_naturality
       firstQuadrantSingleColumnTotalX_isZero_of_not_exists K p n (by
         intro q h
         apply hn
-        omega)
+        lia)
     exact hz.eq_of_src _ _
 
 set_option backward.isDefEq.respectTransparency false in
@@ -768,11 +768,11 @@ public theorem firstQuadrantColumnPrefixSuccInclusion_naturality
       firstQuadrantColumnPrefixMap_XIso_hom f p q hq]
     rw [Category.assoc, Category.assoc]
     apply (cancel_mono
-      (firstQuadrantColumnPrefixXIso L (p + 1) q (by omega)).hom).1
+      (firstQuadrantColumnPrefixXIso L (p + 1) q (by lia)).hom).1
     simp only [Category.assoc, Iso.inv_hom_id, Category.comp_id]
-    rw [firstQuadrantColumnPrefixMap_XIso_hom f (p + 1) q (by omega)]
+    rw [firstQuadrantColumnPrefixMap_XIso_hom f (p + 1) q (by lia)]
     simp
-  · have hpq : p < q := by omega
+  · have hpq : p < q := by lia
     change (firstQuadrantColumnPrefixMap f p).f q ≫
       firstQuadrantColumnPrefixSuccInclusionComponent L p q =
         firstQuadrantColumnPrefixSuccInclusionComponent K p q ≫
@@ -836,7 +836,7 @@ public theorem firstQuadrantColumnPrefixToLast_zero_isIso
       change IsIso (firstQuadrantColumnPrefixToLastComponent K 0 0)
       rw [firstQuadrantColumnPrefixToLastComponent_self]
       infer_instance
-    · have hpos : 0 < q := by omega
+    · have hpos : 0 < q := by lia
       change IsIso (firstQuadrantColumnPrefixToLastComponent K 0 q)
       rw [firstQuadrantColumnPrefixToLastComponent_eq_zero K 0 q hq]
       exact (firstQuadrantColumnPrefix_isZero_X K 0 q hpos).isIso

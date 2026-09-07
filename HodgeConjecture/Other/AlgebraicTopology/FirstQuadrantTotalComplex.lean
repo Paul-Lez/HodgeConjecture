@@ -56,13 +56,13 @@ public abbrev FirstQuadrantTotalFiber (n : ℕ) :=
 noncomputable instance (n : ℕ) : Finite (FirstQuadrantTotalFiber n) := by
   apply Finite.of_injective
     (fun pq : FirstQuadrantTotalFiber n =>
-      (⟨pq.1.1, by omega⟩ : Fin (n + 1)))
+      (⟨pq.1.1, by lia⟩ : Fin (n + 1)))
   intro pq rs h
   apply Subtype.ext
   apply Prod.ext
   · exact Fin.ext_iff.mp h
   · have h₁ : pq.1.1 = rs.1.1 := Fin.ext_iff.mp h
-    omega
+    lia
 
 /-- Before taking the coproduct in total degree `n`, a bicomplex gives the discrete diagram of
 its entries on the `n`th antidiagonal. -/

@@ -129,7 +129,7 @@ lemma IsStandardSmoothOfRelativeDimension.ringKrullDim_quotient_eq_sub_complex
   have hpn : p + n = d := by exact_mod_cast hab
   rw [← hb, WithBot.coe_natCast]
   congr
-  omega
+  lia
 
 end RingHom
 

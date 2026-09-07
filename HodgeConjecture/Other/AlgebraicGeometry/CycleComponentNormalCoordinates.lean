@@ -91,7 +91,7 @@ lemma orderKrullDim_cycleComponent_eq_one_of_coheight_succ_eq_dimension
     calc
       Order.height x + (p : ℕ∞) = d := h
       _ = (1 : ℕ∞) + p := by
-        exact_mod_cast (by omega : d = 1 + p)
+        exact_mod_cast (by lia : d = 1 + p)
   rw [hheight]
 
 /-- In ambient relative dimension at most two, a component of coheight `p` has dimension exactly
@@ -200,7 +200,7 @@ lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
       (d = 0 ∧ p = 0) ∨
       (d = 1 ∧ p = 0) ∨ (d = 1 ∧ p = 1) ∨
       (d = 2 ∧ p = 0) ∨ (d = 2 ∧ p = 1) ∨ (d = 2 ∧ p = 2) := by
-    omega
+    lia
   rcases hcases with h00 | h10 | h11 | h20 | h21 | h22
   · obtain ⟨rfl, rfl⟩ := h00
     exact coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero

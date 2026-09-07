@@ -166,7 +166,7 @@ public theorem permutationMaximalFlagSimplex_interiorFace_swap {n : ℕ}
         exact Fin.ext heq
       change r.val + 1 ≤ (r.castSucc.succAbove k).val
       change r.val ≤ (r.castSucc.succAbove k).val at h
-      omega
+      lia
     · intro h
       exact le_trans r.castSucc_le_succ h
   · apply Subsingleton.elim

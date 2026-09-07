@@ -48,7 +48,7 @@ lemma algebraicCycleClassSpan_eq_bot_of_lt
     [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap] (h : d < p) :
     algebraicCycleClassSpan structureMap p = ⊥ := by
-  rw [algebraicCycleClassSpan_of_ne_zero structureMap p (by omega)]
+  rw [algebraicCycleClassSpan_of_ne_zero structureMap p (by lia)]
   apply le_antisymm
   · apply iSup_le
     intro x

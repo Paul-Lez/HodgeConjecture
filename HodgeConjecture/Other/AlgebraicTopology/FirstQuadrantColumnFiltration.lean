@@ -90,6 +90,6 @@ public theorem firstQuadrantColumnPrefix_isZero_X
   apply HomologicalComplex.isZero_stupidTrunc_X
   intro i hi
   change i.1 = p at hi
-  omega
+  lia
 
 end AlgebraicTopology
