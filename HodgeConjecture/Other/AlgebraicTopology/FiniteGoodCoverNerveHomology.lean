@@ -339,7 +339,7 @@ public def goodCoverNerveLocalMap :
     SupportChainModels.Hom (openCoverIntersectionChainModels X U)
       (goodCoverNerveChainModels X U) where
   app s := goodCoverLocalAugmentation X U s.unop
-  naturality s t f := goodCoverLocalAugmentation_naturality X U (leOfHom f.unop)
+  naturality _ _ f := goodCoverLocalAugmentation_naturality X U (leOfHom f.unop)
 
 /-- The natural local augmentation on the normalized ordered Čech bicomplex. -/
 public def goodCoverNerveBicomplexMap :
