@@ -15,9 +15,9 @@ limitations under the License.
 -/
 module
 
-public import FormalConjecturesForMathlib.AlgebraicGeometry.CycleClass
-public import FormalConjecturesForMathlib.AlgebraicGeometry.DimensionedSmoothProjective
-public import FormalConjecturesForMathlib.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.DimensionedSmoothProjective
+public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 
 /-!
 # The Hodge conjecture
