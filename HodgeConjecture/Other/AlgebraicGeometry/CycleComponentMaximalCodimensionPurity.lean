@@ -91,11 +91,9 @@ theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
     exact span_addEquiv_apply_eq_top e.symm β hβ
   let α := forgetSupport structureMap Z ((2 * d : ℕ) : ℤ) γ
   have hα : IsRationalComponentCycleClass structureMap d x α := by
-    constructor
-    · exact Submodule.subset_span ⟨γ, rfl⟩
-    · exact span_singleton_image_eq_span_range_of_span_eq_top
-        (forgetSupport structureMap Z ((2 * d : ℕ) : ℤ)) γ hγ
+    exact span_singleton_image_eq_span_range_of_span_eq_top
+      (forgetSupport structureMap Z ((2 * d : ℕ) : ℤ)) γ hγ
   simpa only [Nat.cast_mul, Nat.cast_ofNat] using
-    (rationalComponentCycleClassLine_eq_span structureMap d x α hα).trans hα.2
+    (rationalComponentCycleClassLine_eq_span structureMap d x α hα).trans hα
 
 end AlgebraicGeometry.ComplexPoint

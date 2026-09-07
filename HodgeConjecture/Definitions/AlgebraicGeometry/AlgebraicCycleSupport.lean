@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoints
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSupport
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
 public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
 public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
@@ -200,38 +200,6 @@ theorem exists_cycleComponent_smooth_complexPoint
   rw [show ComplexPoint.underlying z =
       z.1 (IsLocalRing.closedPoint ℂ) by rfl, hz']
   exact hy
-
-/-- The complex points supported on the irreducible closed subset with generic point `x`. -/
-def cycleComponentSupport
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
-    Set (ComplexPoint X structureMap) :=
-  ComplexPoint.underlying ⁻¹' closure {x}
-
-/-- The complex points over a Zariski-closed subset form an analytically closed set. -/
-lemma isClosed_complexPoint_underlying_preimage
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
-    (Z : TopologicalSpace.Closeds X) :
-    IsClosed ((@ComplexPoint.underlying X structureMap) ⁻¹'
-      (Z : Set X)) := by
-  rw [← isOpen_compl_iff]
-  let U : X.Opens := ⟨(Z : Set X)ᶜ,
-    isOpen_compl_iff.mpr Z.2⟩
-  change @IsOpen (ComplexPoint X structureMap) ComplexPoint.analyticTopology
-    ((@ComplexPoint.underlying X structureMap) ⁻¹' (Z : Set X))ᶜ
-  rw [show ((@ComplexPoint.underlying X structureMap) ⁻¹'
-      (Z : Set X))ᶜ = ComplexPoint.overOpen U by
-    apply Set.ext
-    intro z
-    change (¬ComplexPoint.underlying z ∈ Z) ↔
-      ComplexPoint.underlying z ∈ (Z : Set X)ᶜ
-    rfl]
-  exact ComplexPoint.isOpen_overOpen U
-
-lemma isClosed_cycleComponentSupport
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
-    IsClosed (cycleComponentSupport structureMap x) :=
-  isClosed_complexPoint_underlying_preimage structureMap
-    ⟨closure {x}, isClosed_closure⟩
 
 /-- The map on complex points induced by the canonical inclusion of a cycle component. -/
 def cycleComponentMap

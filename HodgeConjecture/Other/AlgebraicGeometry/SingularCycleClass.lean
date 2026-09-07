@@ -15,21 +15,22 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSupport
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
+public import Mathlib.LinearAlgebra.Span.Basic
 
 /-!
 # Algebraic cycle-class lines in singular cohomology
 
-Let `Z` be an irreducible algebraic subset of complex codimension `p`. Its fundamental class is
-the image of a generator of `H^{2p}(X, X ∖ Z; ℚ)` in ordinary singular cohomology. Rather than
-choosing a generator and thereby introducing an arbitrary sign or rational scalar, this file
-takes the span of the images of all generators. This gives the cycle-class line intrinsically.
+For a closed support `Z`, this file takes the image of
+`H^{2p}(X, X ∖ Z; ℚ) → H^{2p}(X; ℚ)`. The component cycle-class line is the span of the
+classes that generate this image. This is the same image-generator condition used in the
+constant-sheaf construction. It does not choose a generator or a normalization.
 
-The assertion that the supported group is one-dimensional is cohomological purity. It is not an
-assumption in these definitions: a class counts as a generator only when the displayed span is
-the whole supported group. A later purity theorem can prove that every irreducible component has
-such generators and identify them with locally normalized fundamental classes.
+Cohomological purity identifies the supported image of an irreducible codimension-`p` component
+with its usual fundamental-class line. A generator of the entire supported cohomology group
+is sufficient to generate the image, and the lemmas below retain that useful special case.
+The definitions themselves only test generators of the image.
 -/
 
 @[expose] public noncomputable section
@@ -67,25 +68,68 @@ def IsSupportedCohomologyGenerator {X : Scheme} {structureMap : X ⟶ Spec (.of 
     (β : RationalSingularComponentCohomologyWithSupport structureMap x n) : Prop :=
   Submodule.span ℚ {β} = ⊤
 
-/-- The degree-`2p` singular cycle-class line of an irreducible codimension-`p` component.
-It is the span of the images of all generators of the corresponding supported cohomology group.
-This definition is independent of the choice and scaling of a fundamental class. -/
+/-- The image in ordinary rational singular cohomology of classes supported on `Z`. -/
+def rationalSingularCohomologySupportedOn
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
+    (Z : Set (ComplexPoint X structureMap)) (n : ℕ) :
+    Submodule ℚ (RationalSingularCohomology structureMap n) :=
+  LinearMap.range (forgetSupport ℚ (AnalyticPointTopCat structureMap) Z n)
+
+/-- A rational singular class generates the image supported on one component in degree `2p`. -/
+def IsRationalSingularComponentCycleClass
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
+    (p : ℕ) (x : X) (α : RationalSingularCohomology structureMap (2 * p)) : Prop :=
+  Submodule.span ℚ {α} =
+    rationalSingularCohomologySupportedOn structureMap (cycleComponentSupport structureMap x) (2 * p)
+
+/-- The degree-`2p` singular cycle-class line is the span of all generators of the component's
+supported image. This definition is independent of the choice and scaling of a generator. -/
 def singularComponentCycleClassLine
     [IsIntegral X] [Smooth structureMap]
     [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X) :
     Submodule ℚ (RationalSingularCohomology structureMap (2 * p)) :=
-  Submodule.span ℚ {α | ∃ β : RationalSingularComponentCohomologyWithSupport structureMap x (2 * p),
-    IsSupportedCohomologyGenerator β ∧
-      forgetSupport ℚ (AnalyticPointTopCat structureMap)
-          (cycleComponentSupport structureMap x) (2 * p) β = α}
+  Submodule.span ℚ {α | IsRationalSingularComponentCycleClass structureMap p x α}
 
-/-- The rational span of the guarded singular component-class lines in codimension `p`.
-Cohomological purity and local normalization are still required before this can be identified
-with the usual topological cycle-class span in positive codimension. -/
+/-- The rational span of the component-class lines in codimension `p`. Cohomological purity
+identifies each supported image with its usual fundamental-class line. -/
 def rationalSingularAlgebraicCycleClassSpan
     [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) :
     Submodule ℚ (RationalSingularCohomology structureMap (2 * p)) :=
   ⨆ (x : X) (_ : coheight x = p), singularComponentCycleClassLine structureMap p x
+
+/-- A generator of the supported cohomology group maps to a generator of its image. -/
+lemma isRationalSingularComponentCycleClass_forgetSupport
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X)
+    (β : RationalSingularComponentCohomologyWithSupport structureMap x (2 * p))
+    (hβ : IsSupportedCohomologyGenerator β) :
+    IsRationalSingularComponentCycleClass structureMap p x
+      (forgetSupport ℚ (AnalyticPointTopCat structureMap)
+        (cycleComponentSupport structureMap x) (2 * p) β) := by
+  let f := forgetSupport ℚ (AnalyticPointTopCat structureMap)
+    (cycleComponentSupport structureMap x) (2 * p)
+  change Submodule.span ℚ {f β} = LinearMap.range f
+  change Submodule.span ℚ {β} = ⊤ at hβ
+  rw [← Set.image_singleton, ← Submodule.map_span, hβ, Submodule.map_top]
+
+/-- Any generator of the supported image computes the same intrinsic component line. -/
+lemma singularComponentCycleClassLine_eq_span_of_isRationalSingularComponentCycleClass
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X)
+    (α : RationalSingularCohomology structureMap (2 * p))
+    (hα : IsRationalSingularComponentCycleClass structureMap p x α) :
+    singularComponentCycleClassLine structureMap p x = Submodule.span ℚ {α} := by
+  apply le_antisymm
+  · apply Submodule.span_le.mpr
+    intro γ hγ
+    have hγmem : γ ∈ Submodule.span ℚ {γ} := Submodule.subset_span (Set.mem_singleton γ)
+    change Submodule.span ℚ {γ} = _ at hγ
+    change Submodule.span ℚ {α} = _ at hα
+    rw [hγ, ← hα] at hγmem
+    exact hγmem
+  · apply Submodule.span_mono
+    intro γ hγ
+    rw [Set.mem_singleton_iff] at hγ
+    subst γ
+    exact hα
 
 /-- The forgotten class of a supported generator belongs to its component cycle-class line. -/
 lemma forgetSupport_mem_singularComponentCycleClassLine
@@ -96,9 +140,9 @@ lemma forgetSupport_mem_singularComponentCycleClassLine
         (cycleComponentSupport structureMap x) (2 * p) β ∈
       singularComponentCycleClassLine structureMap p x := by
   apply Submodule.subset_span
-  exact ⟨β, hβ, rfl⟩
+  exact isRationalSingularComponentCycleClass_forgetSupport structureMap p x β hβ
 
-/-- Any supported generator computes the same intrinsic component line. -/
+/-- Any generator of the entire supported group computes the intrinsic component line. -/
 lemma singularComponentCycleClassLine_eq_span
     [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X)
     (β : RationalSingularComponentCohomologyWithSupport structureMap x (2 * p))
@@ -107,23 +151,8 @@ lemma singularComponentCycleClassLine_eq_span
       Submodule.span ℚ
         {forgetSupport ℚ (AnalyticPointTopCat structureMap)
           (cycleComponentSupport structureMap x) (2 * p) β} := by
-  apply le_antisymm
-  · apply Submodule.span_le.mpr
-    intro α hα
-    obtain ⟨γ, -, rfl⟩ := hα
-    let f := forgetSupport ℚ (AnalyticPointTopCat structureMap)
-      (cycleComponentSupport structureMap x) (2 * p)
-    have hγ : γ ∈ Submodule.span ℚ {β} := by
-      rw [hβ]
-      exact Submodule.mem_top
-    change f γ ∈ Submodule.span ℚ {f β}
-    rw [← Set.image_singleton, ← Submodule.map_span]
-    exact Submodule.mem_map_of_mem hγ
-  · apply Submodule.span_mono
-    intro α hα
-    rw [Set.mem_singleton_iff] at hα
-    subst α
-    exact ⟨β, hβ, rfl⟩
+  apply singularComponentCycleClassLine_eq_span_of_isRationalSingularComponentCycleClass
+  exact isRationalSingularComponentCycleClass_forgetSupport structureMap p x β hβ
 
 /-- The forgotten class of a supported generator on a codimension-`p` component belongs to the
 full algebraic cycle-class span. -/

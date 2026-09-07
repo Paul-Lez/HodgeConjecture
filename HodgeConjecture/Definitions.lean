@@ -23,6 +23,8 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSuppor
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoints
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClassImage
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
@@ -32,7 +34,7 @@ public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
 /-!
 # Definitions used by the Hodge conjecture statement
 
-This umbrella contains the construction and definition modules in the transitive source closure
-of `HodgeConjecture.Statement`. The statement itself imports only its three immediate definition
-modules rather than this keep-all umbrella.
+This umbrella contains the construction and definition modules, including the optional Chow-group
+compatibility layer. The statement imports only the intrinsic cycle-class images and Hodge
+filtration, so its dependencies do not include the Chow-group construction.
 -/

@@ -1209,6 +1209,43 @@ def hodgeFiltration [SmoothOfRelativeDimension d structureMap] (p n : ℤ) :
     AddSubgroup (DeRhamHypercohomology structureMap d n) :=
   (filteredToDeRhamCohomology structureMap d p n).range
 
+set_option backward.isDefEq.respectTransparency false in
+/-- The Hodge filtration decreases as the filtration index increases. -/
+lemma hodgeFiltration_antitone [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
+    Antitone (fun p : ℤ => hodgeFiltration structureMap d p n) := by
+  intro p q hpq
+  let ep := ComplexShape.embeddingUpIntGE p
+  let Kq := hodgeFilteredDeRhamComplex structureMap d q
+  let _ : Kq.IsStrictlyGE q := by
+    unfold Kq hodgeFilteredDeRhamComplex
+    infer_instance
+  let _ : Kq.IsStrictlyGE p := CochainComplex.isStrictlyGE_of_ge Kq p q hpq
+  let i := HomologicalComplex.stupidTruncInclusion Kq ep
+  let _ : IsIso i := by
+    unfold i ep
+    infer_instance
+  let f : hodgeFilteredDeRhamComplex structureMap d q ⟶
+      hodgeFilteredDeRhamComplex structureMap d p :=
+    inv i ≫ HomologicalComplex.stupidTruncMap
+      (hodgeFilteredDeRhamInclusion structureMap d q) ep
+  have hf : f ≫ hodgeFilteredDeRhamInclusion structureMap d p =
+      hodgeFilteredDeRhamInclusion structureMap d q := by
+    change (inv i ≫ HomologicalComplex.stupidTruncMap
+      (hodgeFilteredDeRhamInclusion structureMap d q) ep) ≫
+      HomologicalComplex.stupidTruncInclusion
+        (holomorphicDeRhamComplexInt structureMap d) ep = _
+    rw [Category.assoc, HomologicalComplex.stupidTruncMap_comp_stupidTruncInclusion]
+    change inv i ≫ i ≫ _ = _
+    simp
+  rintro α ⟨β, rfl⟩
+  refine ⟨hypercohomologyMap structureMap f n β, ?_⟩
+  change hypercohomologyMap structureMap
+    (hodgeFilteredDeRhamInclusion structureMap d p) n
+    (hypercohomologyMap structureMap f n β) = _
+  exact (hypercohomologyMap_comp_apply structureMap f
+    (hodgeFilteredDeRhamInclusion structureMap d p) n β).symm.trans
+      (congrArg (fun g => hypercohomologyMap structureMap g n β) hf)
+
 /-- The Hodge filtration is zero above the complex dimension. -/
 lemma hodgeFiltration_eq_bot_of_lt [SmoothOfRelativeDimension d structureMap]
     {p : ℤ} (hp : (d : ℤ) < p) (n : ℤ) :
@@ -1302,6 +1339,14 @@ lemma hodgeFiltration_zero_eq_top [SmoothOfRelativeDimension d structureMap] (n 
   exact ⟨(hodgeFiltrationZeroEquiv structureMap d n).symm α,
     filteredToDeRhamCohomology_zero_apply structureMap d n _ |>.trans
       ((hodgeFiltrationZeroEquiv structureMap d n).apply_symm_apply α)⟩
+
+/-- At every nonpositive index, the Hodge filtration is the whole de Rham hypercohomology group. -/
+lemma hodgeFiltration_eq_top_of_nonpos [SmoothOfRelativeDimension d structureMap]
+    {p : ℤ} (hp : p ≤ 0) (n : ℤ) :
+    hodgeFiltration structureMap d p n = ⊤ := by
+  apply top_unique
+  rw [← hodgeFiltration_zero_eq_top structureMap d n]
+  exact hodgeFiltration_antitone structureMap d n hp
 
 /-- The rational submodule underlying `F⁰` is the whole de Rham hypercohomology group. -/
 lemma hodgeFiltrationSubmodule_zero_eq_top

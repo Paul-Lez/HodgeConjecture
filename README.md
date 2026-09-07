@@ -14,3 +14,9 @@ For now this is an autoformalisation!
 The public entry point `HodgeConjecture.lean` imports only the conjecture statement. The three
 source layers also have `HodgeConjecture.Definitions`, `HodgeConjecture.Lemmas`, and
 `HodgeConjecture.Other` umbrella modules.
+
+The statement uses `CycleClassImage` for the intrinsic span of supported-image generators and
+the cohomological unit in codimension zero. It has no Chow-group dependency. Import `CycleClass`
+for the codimension-zero Chow map and its compatibility with this span. The optional
+`SupportedCohomologyImage` module exposes supported-image membership through the existing
+Betti comparison.

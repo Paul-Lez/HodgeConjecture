@@ -29,9 +29,9 @@ public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 This file constructs analytic differential forms from holomorphic functions and their actual
 manifold derivatives. A raw form is evaluated pointwise as an alternating continuous multilinear
-map. We quotient raw forms by the identities detected after every restriction and close those
-identities under the exterior derivative. This enforces analytic identities such as the chain
-rule, rather than only the algebraic identities of Kahler differentials.
+map. We quotient raw forms by the kernel of evaluation in every coordinate chart. These
+identities are preserved by restriction and exterior differentiation. They include analytic
+identities such as the chain rule.
 
 In degrees above the complex dimension the evaluation target is zero, so the resulting forms
 vanish.
@@ -852,6 +852,86 @@ def rawRestriction [SmoothOfRelativeDimension d structureMap]
   rw [rawRestriction, rawRestriction, rawRestriction,
     holomorphicRestrictionAlgHom_comp, Algebra.DeRham.rawMap_comp]
 
+/-- Restricting a holomorphic function does not change its value in a fixed chart. -/
+lemma chartSection_holomorphicRestrictionAlgHom
+    [SmoothOfRelativeDimension d structureMap]
+    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V)
+    (z : ComplexPoint X structureMap)
+    (f : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
+    (hy : y ∈ chartSectionDomain structureMap d V z) :
+    chartSection structureMap d V z (holomorphicRestrictionAlgHom structureMap d i f) y =
+      chartSection structureMap d U z f y := by
+  have hyU : y ∈ chartSectionDomain structureMap d U z :=
+    ⟨hy.1, leOfHom i.unop hy.2⟩
+  rw [chartSection_apply_of_mem structureMap d V z _ hy,
+    chartSection_apply_of_mem structureMap d U z _ hyU]
+  rfl
+
+/-- Restricting a holomorphic function does not change its derivative in a fixed chart. -/
+lemma chartSectionDifferential_holomorphicRestrictionAlgHom
+    [SmoothOfRelativeDimension d structureMap]
+    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V)
+    (z : ComplexPoint X structureMap)
+    (f : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
+    (hy : y ∈ chartSectionDomain structureMap d V z) :
+    chartSectionDifferential structureMap d V z
+        (holomorphicRestrictionAlgHom structureMap d i f) y =
+      chartSectionDifferential structureMap d U z f y := by
+  have hyU : y ∈ chartSectionDomain structureMap d U z :=
+    ⟨hy.1, leOfHom i.unop hy.2⟩
+  have heq : Filter.EventuallyEq (nhds y)
+      (chartSection structureMap d V z
+        (holomorphicRestrictionAlgHom structureMap d i f))
+      (chartSection structureMap d U z f) := by
+    filter_upwards [(isOpen_chartSectionDomain structureMap d V z).mem_nhds hy] with w hw
+    exact chartSection_holomorphicRestrictionAlgHom structureMap d i z f hw
+  rw [chartSectionDifferential, chartSectionDifferential,
+    fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d V z) hy,
+    fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d U z) hyU]
+  exact heq.fderiv_eq
+
+/-- Fixed-chart evaluation of a raw form commutes with restriction. -/
+lemma chartRawEvaluation_rawRestriction
+    [SmoothOfRelativeDimension d structureMap]
+    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V)
+    (z : ComplexPoint X structureMap) (p : ℕ)
+    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p)
+    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d V z) :
+    chartRawEvaluation structureMap d V z p
+        (rawRestriction structureMap d i p x) y =
+      chartRawEvaluation structureMap d U z p x y := by
+  classical
+  induction x using Finsupp.induction with
+  | zero => simp
+  | single_add g c x hg hc ih =>
+      rw [map_add, map_add, Pi.add_apply, map_add, Pi.add_apply, ih]
+      simp only [rawRestriction, Algebra.DeRham.rawMap_single,
+        chartRawEvaluation_single, Pi.smul_apply]
+      simp only [chartGeneratorEvaluation, Algebra.DeRham.generatorMap]
+      rw [chartSection_holomorphicRestrictionAlgHom structureMap d i z g.1 hy]
+      have hd :
+          (fun j ↦ chartSectionDifferential structureMap d V z
+            (holomorphicRestrictionAlgHom structureMap d i (g.2 j)) y) =
+          (fun j ↦ chartSectionDifferential structureMap d U z (g.2 j) y) := by
+        funext j
+        exact chartSectionDifferential_holomorphicRestrictionAlgHom
+          structureMap d i z (g.2 j) hy
+      rw [hd]
+
+/-- Coordinate-zero identities remain so after restriction. -/
+lemma rawRestriction_mem_chartEvaluationKernel
+    [SmoothOfRelativeDimension d structureMap]
+    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    {x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p}
+    (hx : x ∈ chartEvaluationKernel structureMap d U p) :
+    rawRestriction structureMap d i p x ∈ chartEvaluationKernel structureMap d V p := by
+  apply (mem_chartEvaluationKernel_iff structureMap d V p _).2
+  intro z y hy
+  rw [chartRawEvaluation_rawRestriction structureMap d i z p x hy]
+  exact (mem_chartEvaluationKernel_iff structureMap d U p x).1 hx z y
+    ⟨hy.1, leOfHom i.unop hy.2⟩
+
+/-- Raw forms whose restrictions vanish in every coordinate chart. -/
 def restrictionStableAnalyticKernel [SmoothOfRelativeDimension d structureMap]
     (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
     Submodule ℂ (Algebra.DeRham.RawForm ℂ
@@ -861,19 +941,31 @@ def restrictionStableAnalyticKernel [SmoothOfRelativeDimension d structureMap]
       (chartEvaluationKernel structureMap d V p).comap
         (rawRestriction structureMap d i p)
 
+/-- Vanishing in every coordinate chart already implies vanishing after every restriction. -/
+lemma restrictionStableAnalyticKernel_eq_chartEvaluationKernel
+    [SmoothOfRelativeDimension d structureMap]
+    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    restrictionStableAnalyticKernel structureMap d U p =
+      chartEvaluationKernel structureMap d U p := by
+  apply le_antisymm
+  · intro x hx
+    simp only [restrictionStableAnalyticKernel, Submodule.mem_iInf, Submodule.mem_comap] at hx
+    have h := hx U (𝟙 U)
+    rw [rawRestriction_id structureMap d U p] at h
+    exact h
+  · intro x hx
+    simp only [restrictionStableAnalyticKernel, Submodule.mem_iInf, Submodule.mem_comap]
+    intro V i
+    exact rawRestriction_mem_chartEvaluationKernel structureMap d i p hx
+
 /-- Every standard Kähler relation remains evaluation-zero after every restriction. -/
 lemma standardRelations_le_restrictionStableAnalyticKernel
     [SmoothOfRelativeDimension d structureMap]
     (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
     Algebra.DeRham.standardRelations ℂ (OpenHolomorphicFunctions structureMap d U) p ≤
       restrictionStableAnalyticKernel structureMap d U p := by
-  intro x hx
-  rw [restrictionStableAnalyticKernel]
-  simp only [Submodule.mem_iInf, Submodule.mem_comap]
-  intro V i
-  apply standardRelations_le_chartEvaluationKernel structureMap d V p
-  exact Algebra.DeRham.rawMap_standardRelations ℂ
-    (holomorphicRestrictionAlgHom structureMap d i) p hx
+  rw [restrictionStableAnalyticKernel_eq_chartEvaluationKernel]
+  exact standardRelations_le_chartEvaluationKernel structureMap d U p
 
 lemma rawRestriction_mem_restrictionStableAnalyticKernel
     [SmoothOfRelativeDimension d structureMap]
@@ -882,12 +974,8 @@ lemma rawRestriction_mem_restrictionStableAnalyticKernel
     (hx : x ∈ restrictionStableAnalyticKernel structureMap d U p) :
     rawRestriction structureMap d i p x ∈
       restrictionStableAnalyticKernel structureMap d V p := by
-  rw [restrictionStableAnalyticKernel] at hx ⊢
-  simp only [Submodule.mem_iInf, Submodule.mem_comap] at hx ⊢
-  intro W j
-  specialize hx W (i ≫ j)
-  rw [rawRestriction_comp, LinearMap.comp_apply] at hx
-  exact hx
+  rw [restrictionStableAnalyticKernel_eq_chartEvaluationKernel] at hx ⊢
+  exact rawRestriction_mem_chartEvaluationKernel structureMap d i p hx
 
 /-- Restriction-stable coordinate identities remain so after exterior differentiation. -/
 lemma rawDifferential_mem_restrictionStableAnalyticKernel
@@ -898,40 +986,28 @@ lemma rawDifferential_mem_restrictionStableAnalyticKernel
     Algebra.DeRham.rawDifferential ℂ
         (OpenHolomorphicFunctions structureMap d U) p x ∈
       restrictionStableAnalyticKernel structureMap d U (p + 1) := by
-  rw [restrictionStableAnalyticKernel] at hx ⊢
-  simp only [Submodule.mem_iInf, Submodule.mem_comap] at hx ⊢
-  intro V i
-  specialize hx V i
-  rw [rawRestriction, Algebra.DeRham.rawMap_rawDifferential]
-  exact rawDifferential_mem_chartEvaluationKernel structureMap d V p hx
+  rw [restrictionStableAnalyticKernel_eq_chartEvaluationKernel] at hx ⊢
+  exact rawDifferential_mem_chartEvaluationKernel structureMap d U p hx
 
-/-- Analytic identities and all their exterior derivatives. -/
+/-- Analytic identities detected by evaluation in every coordinate chart. -/
 def analyticRelations [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) :
-    (p : ℕ) → Submodule ℂ (Algebra.DeRham.RawForm ℂ
-      (OpenHolomorphicFunctions structureMap d U) p)
-  | 0 => restrictionStableAnalyticKernel structureMap d U 0
-  | p + 1 => restrictionStableAnalyticKernel structureMap d U (p + 1) ⊔
-      (analyticRelations U p).map
-        (Algebra.DeRham.rawDifferential ℂ
-          (OpenHolomorphicFunctions structureMap d U) p)
+    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    Submodule ℂ (Algebra.DeRham.RawForm ℂ
+      (OpenHolomorphicFunctions structureMap d U) p) :=
+  chartEvaluationKernel structureMap d U p
 
-/-- Because analytic exterior differentiation preserves the fixed-chart evaluation kernel, the
-recursive differential closure adds no extra relations. -/
+lemma analyticRelations_eq_chartEvaluationKernel
+    [SmoothOfRelativeDimension d structureMap]
+    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    analyticRelations structureMap d U p = chartEvaluationKernel structureMap d U p := rfl
+
+/-- Analytic identities remain evaluation-zero after every restriction. -/
 lemma analyticRelations_eq_restrictionStableAnalyticKernel
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) : ∀ p : ℕ,
+    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
     analyticRelations structureMap d U p =
-      restrictionStableAnalyticKernel structureMap d U p := by
-  intro p
-  induction p with
-  | zero => rfl
-  | succ p ih =>
-      rw [analyticRelations, ih]
-      apply sup_eq_left.mpr
-      intro y hy
-      rcases hy with ⟨x, hx, rfl⟩
-      exact rawDifferential_mem_restrictionStableAnalyticKernel structureMap d U p hx
+      restrictionStableAnalyticKernel structureMap d U p :=
+  (restrictionStableAnalyticKernel_eq_chartEvaluationKernel structureMap d U p).symm
 
 /-- The differential closure of the standard Kähler relations is contained in the analytic
 relations. -/
@@ -942,13 +1018,12 @@ lemma algebraicRelations_le_analyticRelations [SmoothOfRelativeDimension d struc
   intro p
   induction p with
   | zero =>
-      exact standardRelations_le_restrictionStableAnalyticKernel structureMap d U 0
+      exact standardRelations_le_chartEvaluationKernel structureMap d U 0
   | succ p ih =>
-      rw [Algebra.DeRham.relations, analyticRelations]
-      apply sup_le
-      · exact (standardRelations_le_restrictionStableAnalyticKernel structureMap d U (p + 1)).trans
-          le_sup_left
-      · exact (Submodule.map_mono ih).trans le_sup_right
+      rw [Algebra.DeRham.relations]
+      refine sup_le (standardRelations_le_chartEvaluationKernel structureMap d U (p + 1)) ?_
+      rintro _ ⟨x, hx, rfl⟩
+      exact rawDifferential_mem_chartEvaluationKernel structureMap d U p (ih hx)
 
 lemma rawDifferential_mem_analyticRelations [SmoothOfRelativeDimension d structureMap]
     (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ)
@@ -956,79 +1031,46 @@ lemma rawDifferential_mem_analyticRelations [SmoothOfRelativeDimension d structu
     (hx : x ∈ analyticRelations structureMap d U p) :
     Algebra.DeRham.rawDifferential ℂ
         (OpenHolomorphicFunctions structureMap d U) p x ∈
-      analyticRelations structureMap d U (p + 1) := by
-  rw [analyticRelations]
-  apply (le_sup_right : (analyticRelations structureMap d U p).map
-    (Algebra.DeRham.rawDifferential ℂ
-      (OpenHolomorphicFunctions structureMap d U) p) ≤ _)
-  exact ⟨x, hx, rfl⟩
+      analyticRelations structureMap d U (p + 1) :=
+  rawDifferential_mem_chartEvaluationKernel structureMap d U p hx
 
 lemma rawRestriction_mem_analyticRelations [SmoothOfRelativeDimension d structureMap]
     {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     {x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p}
     (hx : x ∈ analyticRelations structureMap d U p) :
-    rawRestriction structureMap d i p x ∈ analyticRelations structureMap d V p := by
-  induction p with
-  | zero =>
-      exact rawRestriction_mem_restrictionStableAnalyticKernel structureMap d i 0 hx
-  | succ p ih =>
-      rw [analyticRelations] at hx ⊢
-      rcases Submodule.mem_sup.mp hx with ⟨y, hy, z, hz, rfl⟩
-      rw [map_add]
-      apply Submodule.add_mem
-      · exact (le_sup_left : restrictionStableAnalyticKernel structureMap d V (p + 1) ≤ _)
-          (rawRestriction_mem_restrictionStableAnalyticKernel structureMap d i (p + 1) hy)
-      · rcases hz with ⟨w, hw, rfl⟩
-        rw [rawRestriction, Algebra.DeRham.rawMap_rawDifferential]
-        apply (le_sup_right : (analyticRelations structureMap d V p).map
-          (Algebra.DeRham.rawDifferential ℂ
-            (OpenHolomorphicFunctions structureMap d V) p) ≤ _)
-        exact ⟨rawRestriction structureMap d i p w, ih hw, rfl⟩
+    rawRestriction structureMap d i p x ∈ analyticRelations structureMap d V p :=
+  rawRestriction_mem_chartEvaluationKernel structureMap d i p hx
 
-/-- Relations for analytic de Rham forms: algebraic differential-form identities together with
-all restriction-stable identities detected by actual complex derivatives. -/
+/-- Relations for holomorphic forms: raw forms that vanish in every coordinate chart. -/
 def holomorphicFormRelations [SmoothOfRelativeDimension d structureMap]
     (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
     Submodule ℂ (Algebra.DeRham.RawForm ℂ
       (OpenHolomorphicFunctions structureMap d U) p) :=
-  Algebra.DeRham.relations ℂ (OpenHolomorphicFunctions structureMap d U) p ⊔
-    analyticRelations structureMap d U p
+  chartEvaluationKernel structureMap d U p
 
-/-- Algebraic relations are already among the restriction-stable analytic relations and their
-exterior derivatives. -/
+lemma holomorphicFormRelations_eq_chartEvaluationKernel
+    [SmoothOfRelativeDimension d structureMap]
+    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    holomorphicFormRelations structureMap d U p = chartEvaluationKernel structureMap d U p := rfl
+
+/-- Holomorphic form relations are exactly the analytic identities. -/
 lemma holomorphicFormRelations_eq_analyticRelations
     [SmoothOfRelativeDimension d structureMap]
     (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
-    holomorphicFormRelations structureMap d U p =
-      analyticRelations structureMap d U p := by
-  exact sup_eq_right.mpr (algebraicRelations_le_analyticRelations structureMap d U p)
+    holomorphicFormRelations structureMap d U p = analyticRelations structureMap d U p := rfl
 
-/-- Holomorphic forms are quotiented by exactly the identities that vanish in every fixed chart
-after every restriction. -/
+/-- Holomorphic form relations vanish in every coordinate chart after every restriction. -/
 lemma holomorphicFormRelations_eq_restrictionStableAnalyticKernel
     [SmoothOfRelativeDimension d structureMap]
     (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
     holomorphicFormRelations structureMap d U p =
-      restrictionStableAnalyticKernel structureMap d U p := by
-  rw [holomorphicFormRelations_eq_analyticRelations,
-    analyticRelations_eq_restrictionStableAnalyticKernel]
+      restrictionStableAnalyticKernel structureMap d U p :=
+  (restrictionStableAnalyticKernel_eq_chartEvaluationKernel structureMap d U p).symm
 
 lemma holomorphicFormRelations_eq_top_of_lt [SmoothOfRelativeDimension d structureMap]
     (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    {p : ℕ} (hp : d < p) : holomorphicFormRelations structureMap d U p = ⊤ := by
-  apply top_unique
-  intro x hx
-  apply (le_sup_right : analyticRelations structureMap d U p ≤ _)
-  induction p with
-  | zero => lia
-  | succ p ih =>
-      rw [analyticRelations]
-      apply (le_sup_left : restrictionStableAnalyticKernel structureMap d U (p + 1) ≤ _)
-      rw [restrictionStableAnalyticKernel]
-      simp only [Submodule.mem_iInf, Submodule.mem_comap]
-      intro V i
-      rw [chartEvaluationKernel_eq_top_of_lt structureMap d V hp]
-      trivial
+    {p : ℕ} (hp : d < p) : holomorphicFormRelations structureMap d U p = ⊤ :=
+  chartEvaluationKernel_eq_top_of_lt structureMap d U hp
 
 lemma rawDifferential_mem_holomorphicFormRelations
     [SmoothOfRelativeDimension d structureMap]
@@ -1037,32 +1079,16 @@ lemma rawDifferential_mem_holomorphicFormRelations
     (hx : x ∈ holomorphicFormRelations structureMap d U p) :
     Algebra.DeRham.rawDifferential ℂ
         (OpenHolomorphicFunctions structureMap d U) p x ∈
-      holomorphicFormRelations structureMap d U (p + 1) := by
-  rcases Submodule.mem_sup.mp hx with ⟨y, hy, z, hz, rfl⟩
-  rw [map_add]
-  apply Submodule.add_mem
-  · exact (le_sup_left : Algebra.DeRham.relations ℂ
-      (OpenHolomorphicFunctions structureMap d U) (p + 1) ≤ _)
-      (Algebra.DeRham.rawDifferential_mem_relations ℂ
-        (OpenHolomorphicFunctions structureMap d U) p hy)
-  · exact (le_sup_right : analyticRelations structureMap d U (p + 1) ≤ _)
-      (rawDifferential_mem_analyticRelations structureMap d U p hz)
+      holomorphicFormRelations structureMap d U (p + 1) :=
+  rawDifferential_mem_chartEvaluationKernel structureMap d U p hx
 
 lemma rawRestriction_mem_holomorphicFormRelations
     [SmoothOfRelativeDimension d structureMap]
     {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     {x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p}
     (hx : x ∈ holomorphicFormRelations structureMap d U p) :
-    rawRestriction structureMap d i p x ∈ holomorphicFormRelations structureMap d V p := by
-  rcases Submodule.mem_sup.mp hx with ⟨y, hy, z, hz, rfl⟩
-  rw [map_add]
-  apply Submodule.add_mem
-  · exact (le_sup_left : Algebra.DeRham.relations ℂ
-      (OpenHolomorphicFunctions structureMap d V) p ≤ _)
-      (Algebra.DeRham.rawMap_relations ℂ
-        (holomorphicRestrictionAlgHom structureMap d i) p hy)
-  · exact (le_sup_right : analyticRelations structureMap d V p ≤ _)
-      (rawRestriction_mem_analyticRelations structureMap d i p hz)
+    rawRestriction structureMap d i p x ∈ holomorphicFormRelations structureMap d V p :=
+  rawRestriction_mem_chartEvaluationKernel structureMap d i p hx
 
 abbrev HolomorphicForm [SmoothOfRelativeDimension d structureMap]
     (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :=
@@ -1087,8 +1113,7 @@ def algebraicFormToHolomorphicForm [SmoothOfRelativeDimension d structureMap]
     (holomorphicFormRelations structureMap d U p).mkQ (by
       intro x hx
       rw [LinearMap.mem_ker, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-      exact (le_sup_left : Algebra.DeRham.relations ℂ
-        (OpenHolomorphicFunctions structureMap d U) p ≤ _) hx)
+      exact algebraicRelations_le_analyticRelations structureMap d U p hx)
 
 /-- A complex constant regarded as an analytic differential zero-form. -/
 def holomorphicFormOfConstant [SmoothOfRelativeDimension d structureMap]
@@ -1177,10 +1202,7 @@ lemma holomorphicFormDifferential_squared [SmoothOfRelativeDimension d structure
       (Algebra.DeRham.rawDifferential ℂ
         (OpenHolomorphicFunctions structureMap d U) p x)) = 0
   rw [Submodule.Quotient.mk_eq_zero]
-  apply (le_sup_left : Algebra.DeRham.relations ℂ
-    (OpenHolomorphicFunctions structureMap d U) (p + 2) ≤ _)
-  exact Algebra.DeRham.standardRelations_le_relations ℂ
-    (OpenHolomorphicFunctions structureMap d U) (p + 2)
+  exact standardRelations_le_chartEvaluationKernel structureMap d U (p + 2)
     (Algebra.DeRham.rawDifferential_squared_mem_standardRelations ℂ
       (OpenHolomorphicFunctions structureMap d U) p x)
 

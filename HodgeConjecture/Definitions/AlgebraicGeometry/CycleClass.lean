@@ -16,32 +16,19 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClassImage
 public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
 /-!
-# Cycle classes and coniveau
+# Chow-group compatibility for intrinsic cycle classes
 
-For a projective complex variety, a class supported on a closed set `Z` belongs to the homotopy
-fiber of `RΓ(X, ℚ) → RΓ(X ∖ Z, ℚ)`, and its image in ordinary cohomology is the canonical
-connecting map. The sum of these images over codimension-`p` algebraic subsets is a coniveau
-subspace. It is only an upper bound for the span of cycle classes until cohomological purity has
-been proved: arbitrary supported cohomology classes are not, by definition, fundamental classes.
+This module extends maps on cycles to Chow groups when rational equivalences map to zero. It
+constructs the codimension-zero cycle-class map and proves that its image is the unit line used
+by the intrinsic definition in `CycleClassImage`.
 
-This file therefore keeps the coniveau construction explicitly named as such. It constructs the
-genuine Chow-group cycle-class map in codimension zero. In every codimension it also defines the
-intrinsic component class line as the span of those classes which generate the component's entire
-supported image. This generator condition is a proposition, not an assumed purity theorem. It
-removes choices of sign and rational scaling, while a later purity theorem can prove that the
-condition is inhabited and agrees with the usual locally normalized fundamental class.
-
-A positive-codimension map on Chow groups additionally requires Gysin compatibility and
-vanishing on rational equivalences; neither fact is postulated here. The Hodge conjecture itself
-only needs the span of classes of irreducible subvarieties, so it does not require choosing such a
-Chow-group map.
-
-The elementary constructions at the start of the file record how an independently constructed
-map on cycles descends to Chow groups once vanishing on rational equivalences has been proved.
+A positive-codimension Chow-group map additionally requires Gysin compatibility and vanishing
+on rational equivalences. The conjecture statement only imports `CycleClassImage` and does not
+choose such a map.
 -/
 
 @[expose] public noncomputable section
@@ -259,184 +246,24 @@ lemma codimensionZeroCycleClassSpan_eq_span_unit
         (Order.IsMax.coheight_eq_zero isMax_top) 1)),
       codimensionZeroCycleClass_genericPoint structureMap⟩
 
-/-! ### The coniveau subspace -/
-
-/-- Rational constant-sheaf cohomology supported on a closed subset of an analytification. -/
-abbrev RationalConstantSheafCohomologyWithSupport
-    [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :=
-  RationalCohomologyWithSupport structureMap Z n
-
-/-- The rational span in ordinary cohomology of classes supported on `Z`. -/
-def rationalCohomologySupportedOn
-    [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
-    Submodule ℚ (RationalCohomology structureMap n) :=
-  Submodule.span ℚ (Set.range (forgetSupport structureMap Z n))
-
-/-- A class which generates the whole degree-`2p` image of cohomology supported on one
-irreducible component. This is a property inside ordinary rational cohomology; it does not assume
-that the supported image is one-dimensional. Cohomological purity proves that such a generator
-is precisely a nonzero rational multiple of the component's fundamental class. -/
-def IsRationalComponentCycleClass
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
-    (p : ℕ) (x : X) (α : RationalCohomology structureMap (2 * (p : ℤ))) : Prop :=
-  α ∈ rationalCohomologySupportedOn structureMap
-      (cycleComponentSupport structureMap x) (2 * (p : ℤ)) ∧
-    Submodule.span ℚ {α} =
-      rationalCohomologySupportedOn structureMap
-        (cycleComponentSupport structureMap x) (2 * (p : ℤ))
-
-/-- The intrinsic cycle-class line of an irreducible codimension-`p` component. Taking the span
-of all generators removes the arbitrary choice of generator and its rational scaling. -/
-def rationalComponentCycleClassLine
-    [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X) :
-    Submodule ℚ (RationalCohomology structureMap (2 * (p : ℤ))) :=
-  Submodule.span ℚ {α | IsRationalComponentCycleClass structureMap p x α}
-
-/-- Any generator of the supported image computes the same intrinsic component line. -/
-lemma rationalComponentCycleClassLine_eq_span
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X)
-    (α : RationalCohomology structureMap (2 * (p : ℤ)))
-    (hα : IsRationalComponentCycleClass structureMap p x α) :
-    rationalComponentCycleClassLine structureMap p x = Submodule.span ℚ {α} := by
-  apply le_antisymm
-  · apply Submodule.span_le.mpr
-    intro β hβ
-    have hβ' := hβ.1
-    rw [← hα.2] at hβ'
-    exact hβ'
-  · apply Submodule.span_mono
-    intro β hβ
-    rw [Set.mem_singleton_iff] at hβ
-    subst β
-    exact hα
-
-/-- Cohomological purity for a component, stated independently of the construction of any
-particular supported class: its fundamental-class line is the whole supported image in the
-critical degree. -/
-def RationalComponentCycleClassPurity
-    [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X) : Prop :=
-  rationalComponentCycleClassLine structureMap p x =
-    rationalCohomologySupportedOn structureMap (cycleComponentSupport structureMap x) (2 * (p : ℤ))
-
-lemma rationalComponentCycleClassLine_eq_supportedOn_of_purity
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X)
-    (h : RationalComponentCycleClassPurity structureMap p x) :
-    rationalComponentCycleClassLine structureMap p x =
-      rationalCohomologySupportedOn structureMap
-        (cycleComponentSupport structureMap x) (2 * (p : ℤ)) := by
-  exact h
-
-/-- The component cycle-class line lies in the image of cohomology supported on that component. -/
-lemma rationalComponentCycleClassLine_le_supportedOn
-    [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X) :
-    rationalComponentCycleClassLine structureMap p x ≤
-      rationalCohomologySupportedOn structureMap
-        (cycleComponentSupport structureMap x) (2 * (p : ℤ)) := by
-  apply Submodule.span_le.mpr
-  intro α hα
-  exact hα.1
-
-/-- The rational span of algebraic cycle classes in codimension `p`. In codimension zero this is
-the range of the genuine Chow-group cycle-class map constructed above. In positive codimension,
-a component contributes only through a generator of its supported image; cohomological purity
-identifies this line with the usual class `cl(Z)`. -/
-def algebraicCycleClassSpan
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) :
-    Submodule ℚ (RationalCohomology structureMap (2 * (p : ℤ))) :=
-  if hp : p = 0 then hp ▸ codimensionZeroCycleClassSpan structureMap
-  else ⨆ (x : X) (_ : coheight x = p), rationalComponentCycleClassLine structureMap p x
-
-@[simp]
+/-- The intrinsic codimension-zero span is the image of the Chow-group cycle-class map. -/
 lemma algebraicCycleClassSpan_zero
     [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
     algebraicCycleClassSpan structureMap 0 = codimensionZeroCycleClassSpan structureMap := by
-  simp [algebraicCycleClassSpan]
+  rw [algebraicCycleClassSpan_zero_eq_span_unit, codimensionZeroCycleClassSpan_eq_span_unit]
 
-lemma algebraicCycleClassSpan_of_ne_zero
-    [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (hp : p ≠ 0) :
+/-- The intrinsic definition agrees with the formulation using a Chow-group image in
+codimension zero and component-image generators in positive codimension. -/
+lemma algebraicCycleClassSpan_eq_chow_zero_or_component_span
+    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) :
     algebraicCycleClassSpan structureMap p =
-      ⨆ (x : X) (_ : coheight x = p), rationalComponentCycleClassLine structureMap p x := by
-  simp [algebraicCycleClassSpan, hp]
-
-/-- Every ordinary rational cohomology class is represented with support on the whole analytic
-space. -/
-lemma rationalCohomologySupportedOn_univ_eq_top
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (n : ℤ) :
-    rationalCohomologySupportedOn structureMap Set.univ n = ⊤ := by
-  apply top_unique
-  intro α _
-  obtain ⟨β, hβ⟩ := forgetSupport_surjective_univ structureMap n α
-  exact Submodule.subset_span ⟨β, hβ⟩
-
-/-- The component belonging to the generic point of an integral variety has the whole analytic
-space as its support. -/
-lemma cycleComponentSupport_genericPoint_eq_univ
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
-    cycleComponentSupport structureMap (genericPoint X) = Set.univ := by
-  rw [cycleComponentSupport, genericPoint_closure]
-  exact Set.preimage_univ
-
-/-- The degree-`2p` rational coniveau subspace obtained from all cohomology classes supported on
-irreducible algebraic subvarieties of codimension `p`. This is not the cycle-class span unless a
-purity theorem identifying each relevant image with its fundamental-class line is supplied. -/
-def rationalConiveauSubspace
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) :
-    Submodule ℚ (RationalCohomology structureMap (2 * (p : ℤ))) :=
-  ⨆ (x : X) (_ : coheight x = p),
-    rationalCohomologySupportedOn structureMap (cycleComponentSupport structureMap x) (2 * (p : ℤ))
-
-/-- In codimension zero, the degree-zero coniveau subspace is all rational cohomology because
-support on the whole space imposes no condition. This is a statement about coniveau, not about
-the span of the codimension-zero cycle class. -/
-lemma rationalConiveauSubspace_zero_eq_top
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
-    rationalConiveauSubspace structureMap 0 = ⊤ := by
-  apply top_unique
-  rw [← rationalCohomologySupportedOn_univ_eq_top structureMap 0,
-    ← cycleComponentSupport_genericPoint_eq_univ structureMap]
-  apply le_iSup_of_le (genericPoint X)
-  apply le_iSup_of_le (Order.IsMax.coheight_eq_zero isMax_top)
-  rfl
-
-/-- Forgetting the support of a class on one codimension-`p` component lands in the corresponding
-coniveau subspace. -/
-lemma forgetSupport_mem_rationalConiveauSubspace
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ)
-    (x : X) (hx : coheight x = p)
-    (α : RationalConstantSheafCohomologyWithSupport structureMap
-      (cycleComponentSupport structureMap x) (2 * (p : ℤ))) :
-    forgetSupport structureMap (cycleComponentSupport structureMap x) (2 * (p : ℤ)) α ∈
-      rationalConiveauSubspace structureMap p := by
-  apply (le_iSup (fun x : X => ⨆ hx : coheight x = p,
-    rationalCohomologySupportedOn structureMap
-      (cycleComponentSupport structureMap x) (2 * (p : ℤ))) x)
-  apply (le_iSup (fun _ : coheight x = p =>
-    rationalCohomologySupportedOn structureMap
-      (cycleComponentSupport structureMap x) (2 * (p : ℤ))) hx)
-  exact Submodule.subset_span ⟨α, rfl⟩
-
-/-- Every algebraic cycle class has coniveau at least its codimension. The reverse inclusion is
-the purity statement that arbitrary supported classes in degree `2p` are multiples of the
-fundamental class. -/
-lemma algebraicCycleClassSpan_le_rationalConiveauSubspace
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) :
-    algebraicCycleClassSpan structureMap p ≤ rationalConiveauSubspace structureMap p := by
+      if hp : p = 0 then hp ▸ codimensionZeroCycleClassSpan structureMap
+      else ⨆ (x : X) (_ : coheight x = p), rationalComponentCycleClassLine structureMap p x := by
   by_cases hp : p = 0
   · subst p
-    rw [rationalConiveauSubspace_zero_eq_top]
-    exact le_top
-  · rw [algebraicCycleClassSpan_of_ne_zero structureMap p hp]
-    refine iSup_le fun x ↦ iSup_le fun hx ↦ ?_
-    apply (rationalComponentCycleClassLine_le_supportedOn structureMap p x).trans
-    apply le_iSup_of_le x
-    apply le_iSup_of_le hx
-    rfl
+    rw [dif_pos rfl]
+    exact algebraicCycleClassSpan_zero structureMap
+  · simpa only [dif_neg hp] using algebraicCycleClassSpan_of_ne_zero structureMap p hp
 
 /-- If the codimension-zero unit spans degree-zero cohomology and positive-codimension purity has
 been proved for every relevant component, the algebraic cycle-class span agrees with the
