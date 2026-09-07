@@ -15,7 +15,6 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.DimensionedSmoothProjective
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
@@ -37,36 +36,39 @@ open CategoryTheory
 
 namespace AlgebraicGeometry.ComplexPoint
 
-namespace DimensionedSmoothProjectiveComplexVariety
+namespace SmoothProjectiveComplexVariety
+
+variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
 
 /-- Every open subset of a smooth projective complex analytification is paracompact. -/
-instance instOpenParacompactSpace
-    (V : DimensionedSmoothProjectiveComplexVariety)
+theorem openParacompactSpace [SmoothOfRelativeDimension d V.structureMap]
     (U : Opens V.analyticPoint) : ParacompactSpace U := by
-  let _ : ChartedSpace (Fin V.dimension → ℂ) V.analyticPoint :=
-    analyticChartedSpace V.structureMap V.dimension
+  let _ : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
+    analyticChartedSpace V.structureMap d
   exact opens_paracompactSpace_of_compact_chartedSpace
-    (H := Fin V.dimension → ℂ) U
+    (H := Fin d → ℂ) U
 
 /-- Every term of the rational singular-cochain sheaf resolution on a smooth projective
 analytification is flasque. -/
-instance instRationalSingularCochainSheafIsFlasque
-    (V : DimensionedSmoothProjectiveComplexVariety) (n : ℕ) :
+theorem rationalSingularCochainSheafIsFlasque [SmoothOfRelativeDimension d V.structureMap]
+    (n : ℕ) :
     TopCat.Sheaf.IsFlasque
       (AlgebraicTopology.Singular.singularCochainSheaf ℚ
         (TopCat.of V.analyticPoint) n) := by
+  let _ : ∀ U : Opens V.analyticPoint, ParacompactSpace U := openParacompactSpace V d
   infer_instance
 
 /-- Ordinary rational singular cochains compute the global sections of the chosen
 singular-cochain sheaf complex on a smooth projective analytification. -/
 theorem rationalSingularCochain_globalComparison_quasiIso
-    (V : DimensionedSmoothProjectiveComplexVariety) :
+    [SmoothOfRelativeDimension d V.structureMap] :
     QuasiIso
       (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ
         (TopCat.of V.analyticPoint)) := by
+  let _ : ∀ U : Opens V.analyticPoint, ParacompactSpace U := openParacompactSpace V d
   exact
     AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
 
-end DimensionedSmoothProjectiveComplexVariety
+end SmoothProjectiveComplexVariety
 
 end AlgebraicGeometry.ComplexPoint

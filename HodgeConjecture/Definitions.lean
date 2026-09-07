@@ -23,7 +23,6 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSuppor
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoints
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
-public import HodgeConjecture.Definitions.AlgebraicGeometry.DimensionedSmoothProjective
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace

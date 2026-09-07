@@ -16,7 +16,6 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Definitions.AlgebraicGeometry.DimensionedSmoothProjective
 public import Mathlib.Analysis.Convex.Contractible
 public import Mathlib.Analysis.Normed.Module.Convex
 public import Mathlib.Topology.Homotopy.LocallyContractible
@@ -87,27 +86,28 @@ theorem ChartedSpace.stronglyLocallyContractibleSpace
   exact
     ((chartAt H x).toHomeomorphSourceTarget).isOpenEmbedding.stronglyLocallyContractibleSpace
 
-namespace DimensionedSmoothProjectiveComplexVariety
+namespace SmoothProjectiveComplexVariety
 
-/-- The analytification of a dimensioned smooth projective complex variety is strongly locally
+variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
+
+/-- The analytification of a smooth projective complex variety is strongly locally
 contractible. -/
-noncomputable instance instStronglyLocallyContractibleSpace
-    (V : DimensionedSmoothProjectiveComplexVariety) :
+theorem stronglyLocallyContractibleSpace [SmoothOfRelativeDimension d V.structureMap] :
     StronglyLocallyContractibleSpace V.analyticPoint := by
-  let _ : ChartedSpace (Fin V.dimension → ℂ) V.analyticPoint :=
-    analyticChartedSpace V.structureMap V.dimension
-  let _ : StronglyLocallyContractibleSpace (Fin V.dimension → ℂ) :=
+  let _ : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
+    analyticChartedSpace V.structureMap d
+  let _ : StronglyLocallyContractibleSpace (Fin d → ℂ) :=
     normedSpace_stronglyLocallyContractibleSpace
   exact ChartedSpace.stronglyLocallyContractibleSpace
-    (H := Fin V.dimension → ℂ) (M := V.analyticPoint)
+    (H := Fin d → ℂ) (M := V.analyticPoint)
 
-/-- The analytification of a dimensioned smooth projective complex variety is locally
-contractible. -/
-theorem locallyContractibleSpace
-    (V : DimensionedSmoothProjectiveComplexVariety) :
-    LocallyContractibleSpace V.analyticPoint :=
-  StronglyLocallyContractibleSpace.locallyContractible
+/-- The analytification of a smooth projective complex variety is locally contractible. -/
+theorem locallyContractibleSpace [SmoothOfRelativeDimension d V.structureMap] :
+    LocallyContractibleSpace V.analyticPoint := by
+  let _ : StronglyLocallyContractibleSpace V.analyticPoint :=
+    stronglyLocallyContractibleSpace V d
+  exact StronglyLocallyContractibleSpace.locallyContractible
 
-end DimensionedSmoothProjectiveComplexVariety
+end SmoothProjectiveComplexVariety
 
 end AlgebraicGeometry.ComplexPoint

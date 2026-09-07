@@ -37,16 +37,17 @@ Mathlib.
 
 open CategoryTheory Limits
 
-namespace AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety
+namespace AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety
 
 open AlgebraicTopology.Singular
 
+variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
+
 /-- Zeroth rational singular homology of a smooth projective complex analytification is
 finite-dimensional, without assuming global connectedness. -/
-noncomputable instance instFiniteRationalSingularHomologyZero
-    (V : DimensionedSmoothProjectiveComplexVariety) :
+theorem finiteRationalSingularHomologyZero [SmoothOfRelativeDimension d V.structureMap] :
     Module.Finite ℚ (Homology ℚ (TopCat.of V.analyticPoint) 0) := by
-  let _ : Finite (ZerothHomotopy V.analyticPoint) := finiteZerothHomotopy V
+  let _ : Finite (ZerothHomotopy V.analyticPoint) := finiteZerothHomotopy V d
   have hfinite : Module.Finite ℚ
       (∐ fun _ : ZerothHomotopy V.analyticPoint ↦ ModuleCat.of ℚ ℚ : ModuleCat ℚ) :=
     inferInstance
@@ -55,10 +56,11 @@ noncomputable instance instFiniteRationalSingularHomologyZero
 
 /-- Rational-to-complex singular cohomology base change for projective analytifications in
 degree zero. -/
-def rationalToComplexCohomologyBaseChangeZero
-    (V : DimensionedSmoothProjectiveComplexVariety) :
+def rationalToComplexCohomologyBaseChangeZero [SmoothOfRelativeDimension d V.structureMap] :
     TensorProduct ℚ ℂ (Cohomology ℚ (TopCat.of V.analyticPoint) 0) ≃ₗ[ℂ]
       Cohomology ℂ (TopCat.of V.analyticPoint) 0 :=
+  letI : Module.Finite ℚ (Homology ℚ (TopCat.of V.analyticPoint) 0) :=
+    finiteRationalSingularHomologyZero V d
   rationalToComplexCohomologyBaseChange (TopCat.of V.analyticPoint) 0
 
-end AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety
+end AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety

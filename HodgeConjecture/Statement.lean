@@ -16,7 +16,6 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
-public import HodgeConjecture.Definitions.AlgebraicGeometry.DimensionedSmoothProjective
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 
 /-!
@@ -50,8 +49,8 @@ subvarieties.
 This definition is a proposition, not a proof. It is deliberately untagged because the current
 problem metadata treats a sorry-free definition as a solved declaration. -/
 public def hodgeConjecture : Prop :=
-  ∀ (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ),
-    rationalHodgeClasses V.structureMap V.dimension p ≤
-      algebraicCycleClassSpan V.toSmoothProjectiveComplexVariety p
+  ∀ (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (p : ℕ),
+    rationalHodgeClasses V.structureMap d p ≤ algebraicCycleClassSpan V p
 
 end HodgeConjecture

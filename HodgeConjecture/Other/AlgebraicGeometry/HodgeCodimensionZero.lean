@@ -28,8 +28,8 @@ degree-zero constant-sheaf cohomology identifies this line with the whole cohomo
 Consequently the Hodge conjecture holds in codimension zero whenever analytic connectedness is
 available.
 
-For a dimensioned smooth projective complex variety of complex dimension zero, analytic
-connectedness is already known.  Combining the codimension-zero calculation with the dimension
+For a smooth projective complex variety of complex dimension zero, analytic connectedness is
+already known.  Combining the codimension-zero calculation with the dimension
 bounds proves the Hodge-conjecture inclusion in every codimension for such a variety.
 -/
 
@@ -59,37 +59,32 @@ theorem algebraicCycleClassSpan_zero_eq_top_of_connected
 /-- The degree-zero Hodge classes are exactly the algebraic cycle-class span when the
 analytification is connected. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected
-    (V : DimensionedSmoothProjectiveComplexVariety)
-    (hV : ConnectedSpace V.analyticPoint) :
-    rationalHodgeClasses V.structureMap V.dimension 0 =
-      algebraicCycleClassSpan V.toSmoothProjectiveComplexVariety 0 := by
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (hV : ConnectedSpace V.analyticPoint) :
+    rationalHodgeClasses V.structureMap d 0 = algebraicCycleClassSpan V 0 := by
   rw [rationalHodgeClasses_zero_eq_top,
-    algebraicCycleClassSpan_zero_eq_top_of_connected
-      V.toSmoothProjectiveComplexVariety hV]
+    algebraicCycleClassSpan_zero_eq_top_of_connected V hV]
 
 /-- The Hodge-conjecture inclusion holds in codimension zero when the analytification is
 connected. -/
 theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected
-    (V : DimensionedSmoothProjectiveComplexVariety)
-    (hV : ConnectedSpace V.analyticPoint) :
-    rationalHodgeClasses V.structureMap V.dimension 0 ≤
-      algebraicCycleClassSpan V.toSmoothProjectiveComplexVariety 0 := by
-  rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected V hV]
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (hV : ConnectedSpace V.analyticPoint) :
+    rationalHodgeClasses V.structureMap d 0 ≤ algebraicCycleClassSpan V 0 := by
+  rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected V d hV]
 
 /-- The Hodge-conjecture inclusion holds in every codimension for a smooth projective complex
 variety of complex dimension zero. -/
 theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero
-    (V : DimensionedSmoothProjectiveComplexVariety) (hV : V.dimension = 0) (p : ℕ) :
-    rationalHodgeClasses V.structureMap V.dimension p ≤
-      algebraicCycleClassSpan V.toSmoothProjectiveComplexVariety p := by
-  let _ : ConnectedSpace V.analyticPoint :=
-    DimensionedSmoothProjectiveComplexVariety.connectedSpaceOfDimensionEqZero V hV
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (hd : d = 0) (p : ℕ) :
+    rationalHodgeClasses V.structureMap d p ≤ algebraicCycleClassSpan V p := by
   by_cases hp : p = 0
   · subst p
-    exact rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected V inferInstance
-  · have hdim : V.dimension < p := by omega
-    rw [rationalHodgeClasses_eq_bot_of_lt V.structureMap V.dimension hdim,
-      algebraicCycleClassSpan_eq_bot_of_lt V.toSmoothProjectiveComplexVariety
-        V.dimension p hdim]
+    exact rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected V d
+      (SmoothProjectiveComplexVariety.connectedSpaceOfDimensionEqZero V d hd)
+  · have hdim : d < p := by omega
+    rw [rationalHodgeClasses_eq_bot_of_lt V.structureMap d hdim,
+      algebraicCycleClassSpan_eq_bot_of_lt V d p hdim]
 
 end AlgebraicGeometry.ComplexPoint

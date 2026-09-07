@@ -16,17 +16,17 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Definitions.AlgebraicGeometry.DimensionedSmoothProjective
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothDimensionFormula
 
 /-!
 # Connected components of projective analytifications
 
-The analytification of a dimensioned smooth projective complex variety is nonempty, compact,
-and locally path connected.  Consequently it has finitely many connected and path components,
-and connectedness is equivalent to path connectedness.  In complex dimension zero, integrality
-also proves that the analytification is a singleton, hence connected and path connected.
+The analytification of a smooth projective complex variety of complex dimension `d` is nonempty,
+compact, and locally path connected.  Consequently it has finitely many connected and path
+components, and connectedness is equivalent to path connectedness.  In complex dimension zero,
+integrality also proves that the analytification is a singleton, hence connected and path
+connected.
 
 The local-to-path-connected reduction follows the distinction made in
 [sphere-six-complex PR #192](https://github.com/deancureton/sphere-six-complex/pull/192): manifold
@@ -39,17 +39,17 @@ not prove the positive-dimensional algebraic analytification theorem needed here
 
 open CategoryTheory Topology
 
-namespace AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety
+namespace AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety
 
-/-- A dimensioned smooth projective complex analytification is locally path connected. -/
-noncomputable instance instLocallyPathConnectedSpace
-    (V : DimensionedSmoothProjectiveComplexVariety) :
+variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
+
+/-- A smooth projective complex analytification is locally path connected. -/
+theorem locallyPathConnectedSpace [SmoothOfRelativeDimension d V.structureMap] :
     LocallyPathConnectedSpace V.analyticPoint :=
-  ComplexPoint.locallyPathConnectedSpace V.structureMap V.dimension
+  ComplexPoint.locallyPathConnectedSpace V.structureMap d
 
-/-- A dimensioned smooth projective complex variety has a complex point. -/
-noncomputable instance instNonemptyAnalyticPoint
-    (V : DimensionedSmoothProjectiveComplexVariety) : Nonempty V.analyticPoint := by
+/-- A smooth projective complex variety has a complex point. -/
+noncomputable instance instNonemptyAnalyticPoint : Nonempty V.analyticPoint := by
   let _ : LocallyOfFiniteType V.structureMap := inferInstance
   let _ : JacobsonSpace V.scheme := LocallyOfFiniteType.jacobsonSpace V.structureMap
   obtain ⟨x, -, hx⟩ := nonempty_inter_closedPoints
@@ -58,37 +58,37 @@ noncomputable instance instNonemptyAnalyticPoint
 
 /-- A compact, locally path connected projective analytification has finitely many connected
 components. -/
-theorem finiteConnectedComponents
-    (V : DimensionedSmoothProjectiveComplexVariety) :
+theorem finiteConnectedComponents [SmoothOfRelativeDimension d V.structureMap] :
     Finite (ConnectedComponents V.analyticPoint) := by
+  let _ : LocallyPathConnectedSpace V.analyticPoint := locallyPathConnectedSpace V d
   let _ : LocallyConnectedSpace V.analyticPoint := inferInstance
   let _ : CompactSpace V.analyticPoint := inferInstance
   infer_instance
 
 /-- A compact, locally path connected projective analytification has finitely many path
 components. -/
-theorem finiteZerothHomotopy
-    (V : DimensionedSmoothProjectiveComplexVariety) :
+theorem finiteZerothHomotopy [SmoothOfRelativeDimension d V.structureMap] :
     Finite (ZerothHomotopy V.analyticPoint) := by
+  let _ : LocallyPathConnectedSpace V.analyticPoint := locallyPathConnectedSpace V d
   let _ : CompactSpace V.analyticPoint := inferInstance
   infer_instance
 
-/-- For a dimensioned smooth projective complex analytification, connectedness is equivalent to
-path connectedness.  This theorem does not supply the global connectedness premise. -/
-theorem pathConnectedSpace_iff_connectedSpace
-    (V : DimensionedSmoothProjectiveComplexVariety) :
-    PathConnectedSpace V.analyticPoint ↔ ConnectedSpace V.analyticPoint :=
-  _root_.pathConnectedSpace_iff_connectedSpace
+/-- For a smooth projective complex analytification, connectedness is equivalent to path
+connectedness.  This theorem does not supply the global connectedness premise. -/
+theorem pathConnectedSpace_iff_connectedSpace [SmoothOfRelativeDimension d V.structureMap] :
+    PathConnectedSpace V.analyticPoint ↔ ConnectedSpace V.analyticPoint := by
+  let _ : LocallyPathConnectedSpace V.analyticPoint := locallyPathConnectedSpace V d
+  exact _root_.pathConnectedSpace_iff_connectedSpace
 
 /-- Every complex point of an integral smooth zero-dimensional variety lies over its generic
 point. -/
 lemma underlying_eq_genericPoint_of_dimension_eq_zero
-    (V : DimensionedSmoothProjectiveComplexVariety) (hV : V.dimension = 0)
-    (z : V.analyticPoint) : z.underlying = genericPoint V.scheme := by
+    [SmoothOfRelativeDimension d V.structureMap] (hd : d = 0) (z : V.analyticPoint) :
+    z.underlying = genericPoint V.scheme := by
   have hzle : Order.coheight z.underlying ≤ (0 : ℕ) := by
-    rw [← hV]
+    rw [← hd]
     exact SmoothOfRelativeDimension.coheight_le_complex
-      (f := V.structureMap) (d := V.dimension) z.underlying
+      (f := V.structureMap) (d := d) z.underlying
   apply inseparable_iff_eq.mp
   rw [inseparable_iff_specializes_and]
   exact ⟨(Order.coheight_eq_zero.mp (bot_unique hzle)) le_top,
@@ -96,21 +96,21 @@ lemma underlying_eq_genericPoint_of_dimension_eq_zero
 
 /-- The analytification of an integral smooth projective complex variety of dimension zero has at
 most one point. -/
-noncomputable instance instSubsingletonAnalyticPointOfDimensionEqZero
-    (V : DimensionedSmoothProjectiveComplexVariety) [Fact (V.dimension = 0)] :
+theorem subsingletonAnalyticPointOfDimensionEqZero
+    [SmoothOfRelativeDimension d V.structureMap] (hd : d = 0) :
     Subsingleton V.analyticPoint := by
   constructor
   intro z w
   apply ComplexPoint.underlying_injective_of_locallyOfFiniteType
-  rw [underlying_eq_genericPoint_of_dimension_eq_zero V Fact.out z,
-    underlying_eq_genericPoint_of_dimension_eq_zero V Fact.out w]
+  rw [underlying_eq_genericPoint_of_dimension_eq_zero V d hd z,
+    underlying_eq_genericPoint_of_dimension_eq_zero V d hd w]
 
 /-- The analytification of an integral smooth projective complex variety of dimension zero is
 connected. -/
 theorem connectedSpaceOfDimensionEqZero
-    (V : DimensionedSmoothProjectiveComplexVariety) (hV : V.dimension = 0) :
+    [SmoothOfRelativeDimension d V.structureMap] (hd : d = 0) :
     ConnectedSpace V.analyticPoint := by
-  let _ : Fact (V.dimension = 0) := ⟨hV⟩
+  let _ : Subsingleton V.analyticPoint := subsingletonAnalyticPointOfDimensionEqZero V d hd
   exact
     { toNonempty := inferInstance
       isPreconnected_univ := Set.Subsingleton.isPreconnected Set.subsingleton_univ }
@@ -118,9 +118,9 @@ theorem connectedSpaceOfDimensionEqZero
 /-- The analytification of an integral smooth projective complex variety of dimension zero is path
 connected. -/
 theorem pathConnectedSpaceOfDimensionEqZero
-    (V : DimensionedSmoothProjectiveComplexVariety) (hV : V.dimension = 0) :
+    [SmoothOfRelativeDimension d V.structureMap] (hd : d = 0) :
     PathConnectedSpace V.analyticPoint := by
-  let _ : ConnectedSpace V.analyticPoint := connectedSpaceOfDimensionEqZero V hV
-  exact (pathConnectedSpace_iff_connectedSpace V).mpr inferInstance
+  let _ : ConnectedSpace V.analyticPoint := connectedSpaceOfDimensionEqZero V d hd
+  exact (pathConnectedSpace_iff_connectedSpace V d).mpr inferInstance
 
-end AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety
+end AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety

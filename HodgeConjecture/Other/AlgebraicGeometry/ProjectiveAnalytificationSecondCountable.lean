@@ -22,7 +22,7 @@ public import Mathlib.Geometry.Manifold.Metrizable
 /-!
 # Second-countability of projective analytifications
 
-A dimensioned smooth projective complex analytification is compact and has manifold charts
+A smooth projective complex analytification is compact and has manifold charts
 modeled on a finite-dimensional complex vector space. Compactness gives sigma-compactness, so the
 charted-space second-countability theorem applies. Standard consequences include separability,
 first countability, and the Lindelöf property. The independently proved Hausdorff theorem for
@@ -34,42 +34,44 @@ metrizability theorem.
 
 open Topology
 
-namespace AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety
+namespace AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety
+
+variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
 
 /-- A smooth projective complex analytification has a second-countable topology. -/
-noncomputable instance instSecondCountableTopology
-    (V : DimensionedSmoothProjectiveComplexVariety) :
+theorem secondCountableTopology [SmoothOfRelativeDimension d V.structureMap] :
     SecondCountableTopology V.analyticPoint := by
   let _ : SigmaCompactSpace V.analyticPoint := inferInstance
-  let _ : ChartedSpace (Fin V.dimension → ℂ) V.analyticPoint :=
-    ComplexPoint.analyticChartedSpace V.structureMap V.dimension
-  exact ChartedSpace.secondCountable_of_sigmaCompact
-    (Fin V.dimension → ℂ) V.analyticPoint
+  let _ : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
+    ComplexPoint.analyticChartedSpace V.structureMap d
+  exact ChartedSpace.secondCountable_of_sigmaCompact (Fin d → ℂ) V.analyticPoint
 
 /-- A smooth projective complex analytification is separable. -/
-noncomputable instance instSeparableSpace
-    (V : DimensionedSmoothProjectiveComplexVariety) :
-    TopologicalSpace.SeparableSpace V.analyticPoint := inferInstance
+theorem separableSpace [SmoothOfRelativeDimension d V.structureMap] :
+    TopologicalSpace.SeparableSpace V.analyticPoint := by
+  let _ : SecondCountableTopology V.analyticPoint := secondCountableTopology V d
+  infer_instance
 
 /-- A smooth projective complex analytification is first countable. -/
-noncomputable instance instFirstCountableTopology
-    (V : DimensionedSmoothProjectiveComplexVariety) :
-    FirstCountableTopology V.analyticPoint := inferInstance
+theorem firstCountableTopology [SmoothOfRelativeDimension d V.structureMap] :
+    FirstCountableTopology V.analyticPoint := by
+  let _ : SecondCountableTopology V.analyticPoint := secondCountableTopology V d
+  infer_instance
 
 /-- A smooth projective complex analytification is Lindelöf. -/
-noncomputable instance instLindelofSpace
-    (V : DimensionedSmoothProjectiveComplexVariety) :
-    LindelofSpace V.analyticPoint := inferInstance
+theorem lindelofSpace [SmoothOfRelativeDimension d V.structureMap] :
+    LindelofSpace V.analyticPoint := by
+  let _ : SecondCountableTopology V.analyticPoint := secondCountableTopology V d
+  infer_instance
 
 /-- A smooth projective complex analytification is metrizable. -/
-noncomputable instance instMetrizableSpace
-    (V : DimensionedSmoothProjectiveComplexVariety) :
+theorem metrizableSpace [SmoothOfRelativeDimension d V.structureMap] :
     TopologicalSpace.MetrizableSpace V.analyticPoint := by
   let _ : SigmaCompactSpace V.analyticPoint := inferInstance
-  let _ : ChartedSpace (Fin V.dimension → ℂ) V.analyticPoint :=
-    ComplexPoint.analyticChartedSpace V.structureMap V.dimension
+  let _ : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
+    ComplexPoint.analyticChartedSpace V.structureMap d
+  let _ : SecondCountableTopology V.analyticPoint := secondCountableTopology V d
   let _ : T2Space V.analyticPoint := inferInstance
-  exact Manifold.metrizableSpace
-    (modelWithCornersSelf ℝ (Fin V.dimension → ℂ)) V.analyticPoint
+  exact Manifold.metrizableSpace (modelWithCornersSelf ℝ (Fin d → ℂ)) V.analyticPoint
 
-end AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety
+end AlgebraicGeometry.ComplexPoint.SmoothProjectiveComplexVariety
