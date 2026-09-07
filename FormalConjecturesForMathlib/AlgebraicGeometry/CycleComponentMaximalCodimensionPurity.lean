@@ -63,15 +63,16 @@ private lemma span_addEquiv_apply_eq_top
   rw [← e.apply_symm_apply y, ← hq, map_rat_smul]
   exact Submodule.smul_mem _ _ (Submodule.subset_span (Set.mem_singleton _))
 
-/-- A component of maximal codimension has a guarded rational fundamental-class line in
-constant-sheaf cohomology. -/
-theorem hasRationalComponentFundamentalClass_of_coheight_eq_dimension
+/-- A component of maximal codimension satisfies rational component cycle-class purity in
+constant-sheaf cohomology. The supported generator is constructed in the proof and the public
+conclusion records only the resulting equality of the fundamental-class line and supported
+image. -/
+theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
     (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
     (hx : coheight x = V.dimension) :
-    HasRationalComponentFundamentalClass
+    RationalComponentCycleClassPurity
       V.toSmoothProjectiveComplexVariety V.dimension x := by
-  unfold HasRationalComponentFundamentalClass IsRationalComponentCycleClass
-  simp only [rationalCohomologySupportedOn]
+  unfold RationalComponentCycleClassPurity
   rw [show 2 * (V.dimension : ℤ) = ((2 * V.dimension : ℕ) : ℤ) by omega]
   let W := V.toSmoothProjectiveComplexVariety
   let Z := cycleComponentSupport W x
@@ -92,10 +93,11 @@ theorem hasRationalComponentFundamentalClass_of_coheight_eq_dimension
     change Submodule.span ℚ {e.symm β} = ⊤
     exact span_addEquiv_apply_eq_top e.symm β hβ
   let α := forgetSupport V.structureMap Z ((2 * V.dimension : ℕ) : ℤ) γ
-  refine ⟨α, ?_⟩
-  constructor
-  · exact Submodule.subset_span ⟨γ, rfl⟩
-  · exact span_singleton_image_eq_span_range_of_span_eq_top
-      (forgetSupport V.structureMap Z ((2 * V.dimension : ℕ) : ℤ)) γ hγ
+  have hα : IsRationalComponentCycleClass W V.dimension x α := by
+    constructor
+    · exact Submodule.subset_span ⟨γ, rfl⟩
+    · exact span_singleton_image_eq_span_range_of_span_eq_top
+        (forgetSupport V.structureMap Z ((2 * V.dimension : ℕ) : ℤ)) γ hγ
+  exact (rationalComponentCycleClassLine_eq_span W V.dimension x α hα).trans hα.2
 
 end AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety

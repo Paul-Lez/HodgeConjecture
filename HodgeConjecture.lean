@@ -13,13 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -/
-module  -- shake: keep-all
+module
 
-public import FormalConjecturesForMathlib
 public import HodgeConjecture.Statement
 
 /-!
 # The Hodge conjecture
 
-The standalone umbrella for the statement and its proved support library.
+The standalone public entry point for the conjecture statement.
 -/
