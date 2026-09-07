@@ -73,7 +73,6 @@ theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
     RationalComponentCycleClassPurity
       V.toSmoothProjectiveComplexVariety V.dimension x := by
   unfold RationalComponentCycleClassPurity
-  rw [show 2 * (V.dimension : ℤ) = ((2 * V.dimension : ℕ) : ℤ) by omega]
   let W := V.toSmoothProjectiveComplexVariety
   let Z := cycleComponentSupport W x
   have hZ : IsClosed Z := isClosed_cycleComponentSupport W x
@@ -98,6 +97,7 @@ theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
     · exact Submodule.subset_span ⟨γ, rfl⟩
     · exact span_singleton_image_eq_span_range_of_span_eq_top
         (forgetSupport V.structureMap Z ((2 * V.dimension : ℕ) : ℤ)) γ hγ
-  exact (rationalComponentCycleClassLine_eq_span W V.dimension x α hα).trans hα.2
+  simpa only [Nat.cast_mul, Nat.cast_ofNat] using
+    (rationalComponentCycleClassLine_eq_span W V.dimension x α hα).trans hα.2
 
 end AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety

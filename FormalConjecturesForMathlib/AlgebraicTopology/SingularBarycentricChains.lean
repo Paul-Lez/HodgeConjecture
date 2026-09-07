@@ -48,6 +48,17 @@ public theorem nonemptyFiniteChainSingleton_finset
     (nonemptyFiniteChainSingleton x).finset = {x} :=
   rfl
 
+/-- A specified nonempty finset in a linear order, regarded as a finite chain.
+
+This constructor is shared by the all-degree barycentric development; unlike the removed
+degree-one scaffolding, it is part of that file's live API. -/
+public noncomputable def nonemptyFiniteChainOfFinset
+    {X : Type*} [LinearOrder X] (s : Finset X) (hs : s.Nonempty) :
+    NonemptyFiniteChains X where
+  finset := s
+  nonempty := hs
+  comparable a b := le_total a b
+
 /-- The vertex of the subdivision model of `Δ[0]` represented by its singleton vertex chain. -/
 public noncomputable def subdividedZeroSimplexVertex :
     (SimplexCategory.sd.{0}.obj (SimplexCategory.mk 0)).obj
