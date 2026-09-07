@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
@@ -36,7 +38,7 @@ open CategoryTheory
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
   [ProjectiveSpace.IsProjective structureMap]
 
 /-- Every open subset of a smooth projective complex analytification is paracompact. -/

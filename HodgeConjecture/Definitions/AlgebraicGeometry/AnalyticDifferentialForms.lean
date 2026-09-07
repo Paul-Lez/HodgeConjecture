@@ -15,8 +15,10 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.Algebra.DeRham.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.Analysis.Calculus.DifferentialForm.Basic
 public import Mathlib.Analysis.Normed.Module.Alternating.Uncurry.Fin
 public import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
@@ -44,7 +46,7 @@ open scoped ContDiff Manifold
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 local instance analyticEvalTopology :
     TopologicalSpace (ComplexPoint X structureMap) := analyticTopology

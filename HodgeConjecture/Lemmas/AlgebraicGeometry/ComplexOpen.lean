@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoints
 
 /-!
@@ -34,13 +35,13 @@ namespace AlgebraicGeometry.ComplexPoint
 
 noncomputable section
 
-noncomputable local instance {Y : Scheme} {f : Y ⟶ Spec (.of ℂ)} :
+noncomputable local instance {Y : Scheme} {f : Y ⟶ Spec ↧ℂ} :
     TopologicalSpace (ComplexPoint Y f) := analyticTopology
 
-variable {X : Scheme} (U : X.Opens) (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (U : X.Opens) (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The structure morphism on an open subscheme. -/
-abbrev openStructureMap : U.toScheme ⟶ Spec (.of ℂ) :=
+abbrev openStructureMap : U.toScheme ⟶ Spec ↧ℂ :=
   U.ι ≫ structureMap
 
 /-- The image of a complex point lying in `U` is contained in the image of its inclusion. -/
@@ -54,7 +55,7 @@ lemma point_range_subset (z : ComplexPoint X structureMap) (hz : z ∈ overOpen 
 
 /-- A complex point in an open set factors through the corresponding open subscheme. -/
 def liftToOpen (z : ComplexPoint X structureMap) (hz : z ∈ overOpen U) :
-    Spec (.of ℂ) ⟶ U.toScheme :=
+    Spec ↧ℂ ⟶ U.toScheme :=
   IsOpenImmersion.lift U.ι z.1 (point_range_subset U structureMap z hz)
 
 @[reassoc (attr := simp)]
@@ -108,7 +109,7 @@ lemma continuous_openEquiv :
     (continuous_map U.ι rfl) _
 
 /-- Evaluation is unchanged when both a point and a section are transported across equal opens. -/
-lemma evaluate_eq {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+lemma evaluate_eq {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     {V W : Y.Opens} (e : V = W) (t : Γ(Y, V)) (z : ComplexPoint Y structureMapY) :
     evaluate V t z = evaluate W (Y.presheaf.map (eqToHom e.symm).op t) z := by
   subst e

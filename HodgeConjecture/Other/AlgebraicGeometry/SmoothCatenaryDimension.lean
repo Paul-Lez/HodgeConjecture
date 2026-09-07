@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.Algebra.PolynomialCatenary
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothPointwiseDimension
 public import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
@@ -127,10 +128,10 @@ namespace AlgebraicGeometry
 /-- The dimension of the quotient by the prime represented by a point of an affine spectrum is
 at most the order-theoretic height of that point. -/
 lemma ringKrullDim_quotient_le_height_spec {S : Type*} [CommRing S]
-    (x : Spec (.of S)) :
+    (x : Spec ↧S) :
     ringKrullDim (S ⧸ x.asIdeal) ≤
       (↑(Order.height x) : WithBot ℕ∞) := by
-  let e := specOrderIsoPrimeSpectrum (.of S)
+  let e := specOrderIsoPrimeSpectrum ↧S
   let g : (PrimeSpectrum (S ⧸ x.asIdeal))ᵒᵈ → Set.Iic x := fun Q ↦
     ⟨e.symm (OrderDual.toDual
       (PrimeSpectrum.comap (Ideal.Quotient.mk x.asIdeal) Q.ofDual)), by
@@ -181,7 +182,7 @@ lemma IsAffineOpen.ringKrullDim_quotient_le_height {X : Scheme.{0}} {U : X.Opens
     (hU : IsAffineOpen U) (y : U.toScheme) :
     ringKrullDim (Γ(X, U) ⧸ (hU.primeIdealOf y).asIdeal) ≤
       (↑(Order.height (U.ι.base y)) : WithBot ℕ∞) := by
-  let e : U.toScheme ≃o Spec (.of Γ(X, U)) :=
+  let e : U.toScheme ≃o Spec ↧Γ(X, U) :=
     { toEquiv := hU.isoSpec.hom.homeomorph.toEquiv
       map_rel_iff' := by
         intro a b
@@ -234,7 +235,7 @@ end RingHom
 
 namespace AlgebraicGeometry
 
-variable {X : Scheme.{0}} {f : X ⟶ Spec (.of ℂ)} {d : ℕ}
+variable {X : Scheme.{0}} {f : X ⟶ Spec ↧ℂ} {d : ℕ}
 
 /-- The pointwise dimension formula holds at every point of a smooth complex scheme of relative
 dimension `d`. -/

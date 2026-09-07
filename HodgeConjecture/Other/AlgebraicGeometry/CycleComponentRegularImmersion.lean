@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentClosedPointDimension
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothRegularLocal
 public import Mathlib.RingTheory.KrullDimension.Regular
@@ -38,7 +39,7 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) [IsIntegral X] [Smooth structureMap]
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) [IsIntegral X] [Smooth structureMap]
   [ProjectiveSpace.IsProjective structureMap] (x : X)
 
 /-- The component stalk at a point in the component's smooth locus is regular local. -/
@@ -46,10 +47,10 @@ lemma cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus
     (z : cycleComponent X x)
     (hz : z ∈ (cycleComponentι X x ≫ structureMap).smoothLocus) :
     IsRegularLocalRing ((cycleComponent X x).presheaf.stalk z) := by
-  let c : cycleComponent X x ⟶ Spec (.of ℂ) :=
+  let c : cycleComponent X x ⟶ Spec ↧ℂ :=
     cycleComponentι X x ≫ structureMap
   let U : (cycleComponent X x).Opens := c.smoothLocus
-  let g : U.toScheme ⟶ Spec (.of ℂ) := U.ι ≫ c
+  let g : U.toScheme ⟶ Spec ↧ℂ := U.ι ≫ c
   let _ : Smooth g := cycleComponent_smoothLocus_smooth structureMap x
   let zu : U.toScheme := ⟨z, hz⟩
   have hregular : IsRegularLocalRing (U.toScheme.presheaf.stalk zu) :=

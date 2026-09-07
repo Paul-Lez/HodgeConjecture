@@ -16,6 +16,9 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
+public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.Algebra.Category.Grp.Zero
 public import Mathlib.Algebra.Category.ModuleCat.Presheaf.Sheafification
 public import Mathlib.Algebra.Homology.Embedding.Extend
@@ -47,7 +50,7 @@ open scoped ContDiff Manifold
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 local instance holomorphicDeRhamTopology :
     TopologicalSpace (ComplexPoint X structureMap) := analyticTopology

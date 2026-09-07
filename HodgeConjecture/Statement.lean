@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 
@@ -45,7 +46,7 @@ subvarieties.
 This definition is a proposition, not a proof. It is deliberately untagged because the current
 problem metadata treats a sorry-free definition as a solved declaration. -/
 @[expose] public def HodgeConjecture : Prop :=
-  ∀ {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+  ∀ {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
     [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
     [SmoothOfRelativeDimension d structureMap] (p : ℕ),
     rationalHodgeClasses structureMap d p ≤ algebraicCycleClassSpan structureMap p

@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 public import Mathlib.Algebra.Category.ModuleCat.Abelian

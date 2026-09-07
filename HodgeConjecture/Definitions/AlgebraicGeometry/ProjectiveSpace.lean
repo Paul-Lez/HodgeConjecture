@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import Mathlib.AlgebraicGeometry.Limits
 public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
 public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Proper
@@ -98,7 +99,7 @@ scheme. -/
 noncomputable instance terminalProjProper [Finite n] :
     IsProper (terminal.from (Proj ℤ[n].{u, v})) := by
   have hterminal : IsTerminal
-      (Spec (.of (homogeneousSubmodule n (ULift.{max u v} ℤ) 0))) := by
+      (Spec ↧(homogeneousSubmodule n (ULift.{max u v} ℤ) 0)) := by
     exact IsTerminal.ofIso specULiftZIsTerminal
       (Scheme.Spec.mapIso
         (degreeZeroEquiv n (ULift.{max u v} ℤ)).toCommRingCatIso.op)

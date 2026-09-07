@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
 public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
@@ -103,7 +104,7 @@ lemma single_zero (x : X) (hx : coheight x = p) : single x hx 0 = 0 := by
   simp
 
 /-- Every point of the spectrum of a field has codimension zero. -/
-lemma specField_coheight (K : Type u) [Field K] (x : Spec (.of K)) : coheight x = 0 := by
+lemma specField_coheight (K : Type u) [Field K] (x : Spec ↧K) : coheight x = 0 := by
   apply Order.IsMax.coheight_eq_zero
   intro y _
   rw [Subsingleton.elim y x]
@@ -142,13 +143,13 @@ noncomputable def integralEquiv [IsIntegral X] : CodimensionCycle X 0 ≃+ ℤ w
 /-- Codimension-zero cycles on the spectrum of a field are determined by the coefficient of its
 unique point. -/
 noncomputable def specFieldEquiv (K : Type u) [Field K] :
-    CodimensionCycle (Spec (.of K)) 0 ≃+ ℤ where
+    CodimensionCycle (Spec ↧K) 0 ≃+ ℤ where
   toFun c := c default
   invFun n := single default (specField_coheight K default) n
   left_inv c := by
     apply ext
     intro x
-    rw [Subsingleton.elim x (default : Spec (.of K))]
+    rw [Subsingleton.elim x (default : Spec ↧K)]
     exact single_same default _ _
   right_inv n := single_same default _ _
   map_add' _ _ := rfl
@@ -418,13 +419,13 @@ lemma rational_eq_smul_genericPoint (X : Scheme.{u}) [IsIntegral X]
 
 /-- The codimension-zero Chow group of the spectrum of a field is `ℤ`. -/
 noncomputable def specFieldEquiv (K : Type u) [Field K] :
-    ChowGroup (Spec (.of K)) 0 ≃+ ℤ :=
-  (codimensionZeroEquiv (Spec (.of K))).trans (CodimensionCycle.specFieldEquiv K)
+    ChowGroup (Spec ↧K) 0 ≃+ ℤ :=
+  (codimensionZeroEquiv (Spec ↧K)).trans (CodimensionCycle.specFieldEquiv K)
 
 /-- With rational coefficients, the codimension-zero Chow group of the spectrum of a field is
 `ℚ`. -/
 noncomputable def rationalSpecFieldEquiv (K : Type u) [Field K] :
-    RationalChowGroup (Spec (.of K)) 0 ≃ₗ[ℚ] ℚ :=
+    RationalChowGroup (Spec ↧K) 0 ≃ₗ[ℚ] ℚ :=
   (TensorProduct.AlgebraTensorModule.congr
     (LinearEquiv.refl ℚ ℚ) (specFieldEquiv K).toIntLinearEquiv).trans
       (TensorProduct.AlgebraTensorModule.rid ℤ ℚ ℚ)
@@ -452,12 +453,12 @@ lemma rationalSpecFieldEquiv_toRational_single (K : Type u) [Field K] (n : ℤ) 
   simp
 
 /-- A concrete boundary computation: every Chow group of `Spec PUnit` is trivial. -/
-example (p : ℕ) : Subsingleton (ChowGroup (Spec (.of PUnit)) p) := by
+example (p : ℕ) : Subsingleton (ChowGroup (Spec ↧PUnit) p) := by
   let _ := spec_punit_isEmpty
   infer_instance
 
 /-- A rational-coefficient version of the same boundary computation. -/
-example (p : ℕ) : Subsingleton (RationalChowGroup (Spec (.of PUnit)) p) := by
+example (p : ℕ) : Subsingleton (RationalChowGroup (Spec ↧PUnit) p) := by
   let _ := spec_punit_isEmpty
   infer_instance
 

@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointPurity
@@ -68,7 +70,7 @@ constant-sheaf cohomology. The supported generator is constructed in the proof a
 conclusion records only the resulting equality of the fundamental-class line and supported
 image. -/
 theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
-    {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
     [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
     [SmoothOfRelativeDimension d structureMap] (x : X) (hx : coheight x = d) :
     RationalComponentCycleClassPurity structureMap d x := by

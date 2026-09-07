@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothPointwiseDimension
 
@@ -55,7 +56,7 @@ end RingHom
 
 namespace AlgebraicGeometry
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) {f : X ⟶ Spec (.of ℂ)} {d p : ℕ}
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) {f : X ⟶ Spec ↧ℂ} {d p : ℕ}
 
 /-- A component whose generic point has coheight equal to the ambient dimension has dimension
 zero. -/
@@ -300,10 +301,10 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
       (cycleComponentι X x ≫ structureMap),
       Order.coheight z.underlying = n) :
     Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d n) := by
-  let c : cycleComponent X x ⟶ Spec (.of ℂ) :=
+  let c : cycleComponent X x ⟶ Spec ↧ℂ :=
     cycleComponentι X x ≫ structureMap
   let S : (cycleComponent X x).Opens := c.smoothLocus
-  let g : S.toScheme ⟶ Spec (.of ℂ) := S.ι ≫ c
+  let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
   let _ : Smooth g := by
     exact cycleComponent_smoothLocus_smooth structureMap x
   obtain ⟨z, hzsmooth, hzclosed⟩ :=

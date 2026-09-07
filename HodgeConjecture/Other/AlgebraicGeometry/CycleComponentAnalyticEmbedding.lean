@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
 public import Mathlib.Topology.Homeomorph.Lemmas
@@ -34,7 +35,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 noncomputable local instance cycleComponentTopology
     [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :

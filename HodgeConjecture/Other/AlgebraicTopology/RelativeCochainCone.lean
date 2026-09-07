@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainCohomology
 public import HodgeConjecture.Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
 public import Mathlib.Algebra.Category.ModuleCat.Projective

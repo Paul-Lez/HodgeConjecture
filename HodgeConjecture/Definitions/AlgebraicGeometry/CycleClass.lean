@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
 public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
@@ -158,7 +159,7 @@ end AlgebraicGeometry
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The rational Chow class represented by an irreducible codimension-`p` component with
 coefficient one. -/

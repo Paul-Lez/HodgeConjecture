@@ -15,8 +15,10 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 
 /-!
 # Algebraic cycle-class lines in singular cohomology
@@ -40,7 +42,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The analytic complex-point space as an object of `TopCat`. -/
 abbrev AnalyticPointTopCat
@@ -61,7 +63,7 @@ abbrev RationalSingularComponentCohomologyWithSupport
 
 /-- A class generates its supported cohomology group over `ℚ`. This is a property, not an
 assumed purity theorem. -/
-def IsSupportedCohomologyGenerator {X : Scheme} {structureMap : X ⟶ Spec (.of ℂ)}
+def IsSupportedCohomologyGenerator {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ}
     [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
     {x : X} {n : ℕ}
     (β : RationalSingularComponentCohomologyWithSupport structureMap x n) : Prop :=

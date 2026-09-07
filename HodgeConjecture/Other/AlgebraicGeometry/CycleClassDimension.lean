@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothDimensionFormula
 
@@ -31,7 +32,7 @@ open Order
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- A smooth complex `d`-fold has no algebraic points of codimension greater than `d`. -/
 lemma no_cycleComponent_of_lt

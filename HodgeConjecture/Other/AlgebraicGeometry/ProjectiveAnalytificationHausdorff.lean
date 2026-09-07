@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineScheme
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
@@ -40,7 +41,7 @@ namespace AlgebraicGeometry
 namespace ComplexPoint
 
 /-- The analytification of an affine complex scheme is Hausdorff. -/
-lemma t2Space_of_isAffine {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) [IsAffine X] :
+lemma t2Space_of_isAffine {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) [IsAffine X] :
     @T2Space (ComplexPoint X structureMap) analyticTopology := by
   let _ : TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
   rw [t2Space_iff_nhds]
@@ -51,13 +52,13 @@ lemma t2Space_of_isAffine {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) [Is
     apply Subtype.ext
     exact ext_of_isAffine h
   have hex : ∃ s : Γ(X, ⊤),
-      (Scheme.ΓSpecIso (.of ℂ)).hom (z.1.appTop s) ≠
-        (Scheme.ΓSpecIso (.of ℂ)).hom (w.1.appTop s) := by
+      (Scheme.ΓSpecIso ↧ℂ).hom (z.1.appTop s) ≠
+        (Scheme.ΓSpecIso ↧ℂ).hom (w.1.appTop s) := by
     by_contra hn
     push Not at hn
     apply happ
     ext s
-    exact (Scheme.ΓSpecIso (.of ℂ)).commRingCatIsoToRingEquiv.injective (hn s)
+    exact (Scheme.ΓSpecIso ↧ℂ).commRingCatIsoToRingEquiv.injective (hn s)
   obtain ⟨s, hs⟩ := hex
   have heval : evaluate ⊤ s z ≠ evaluate ⊤ s w := by
     simpa only [evaluate_top_eq_appTop] using hs
@@ -71,7 +72,7 @@ lemma t2Space_of_isAffine {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) [Is
 /-- A complex scheme whose every pair of complex points lies in a common affine open has a
 Hausdorff analytification. -/
 lemma t2Space_of_pair_mem_affineOpen {X : Scheme}
-    (structureMap : X ⟶ Spec (.of ℂ))
+    (structureMap : X ⟶ Spec ↧ℂ)
     (hpair : ∀ z w : ComplexPoint X structureMap,
       ∃ U : X.Opens, z ∈ overOpen U ∧ w ∈ overOpen U ∧ IsAffine U.toScheme) :
     @T2Space (ComplexPoint X structureMap) analyticTopology := by
@@ -79,7 +80,7 @@ lemma t2Space_of_pair_mem_affineOpen {X : Scheme}
   rw [t2Space_iff_nhds]
   intro z w hzw
   obtain ⟨U, hzU, hwU, hUaff⟩ := hpair z w
-  let structureMapU : U.toScheme ⟶ Spec (.of ℂ) := U.ι ≫ structureMap
+  let structureMapU : U.toScheme ⟶ Spec ↧ℂ := U.ι ≫ structureMap
   let _ : IsAffine U.toScheme := hUaff
   let _ : TopologicalSpace (ComplexPoint U.toScheme structureMapU) := analyticTopology
   let _ : T2Space (ComplexPoint U.toScheme structureMapU) :=
@@ -115,8 +116,8 @@ lemma exists_common_nonvanishing_linearForm {n : ℕ}
     (v w : CoordinateSpace n) (hv : v ≠ 0) (hw : w ≠ 0) :
     ∃ r : UniversalRing n,
       r ∈ UniversalGrading n 1 ∧
-      (Scheme.ΓSpecIso (.of ℂ)).hom (coordinateGlobalSectionsHom v r) ≠ 0 ∧
-      (Scheme.ΓSpecIso (.of ℂ)).hom (coordinateGlobalSectionsHom w r) ≠ 0 := by
+      (Scheme.ΓSpecIso ↧ℂ).hom (coordinateGlobalSectionsHom v r) ≠ 0 ∧
+      (Scheme.ΓSpecIso ↧ℂ).hom (coordinateGlobalSectionsHom w r) ≠ 0 := by
   let i := coordinateIndex v hv
   have hvi : v i ≠ 0 := coordinateIndex_ne_zero v hv
   by_cases hwi : w i ≠ 0
@@ -195,9 +196,9 @@ lemma chartIntegralProj_preimage_basicOpen {n d : ℕ}
 
 /-- The inverse image of a projective-spectrum basic open in complex projective space. -/
 noncomputable def projectiveSpaceBasicOpen (n : ℕ) (r : UniversalRing n) :
-    (ProjectiveSpace (Fin (n + 1)) (Spec (.of ℂ))).Opens :=
+    (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ)).Opens :=
   Limits.pullback.snd
-      (Limits.terminal.from (Spec (.of ℂ)))
+      (Limits.terminal.from (Spec ↧ℂ))
       (Limits.terminal.from (Proj (UniversalGrading n))) ⁻¹ᵁ
     Proj.basicOpen (UniversalGrading n) r
 
@@ -206,13 +207,13 @@ set_option linter.style.haveILetI false in
 lemma projectiveSpaceBasicOpen_isAffine {n d : ℕ}
     (r : UniversalRing n) (hd : 0 < d) (hr : r ∈ UniversalGrading n d) :
     IsAffine (projectiveSpaceBasicOpen n r).toScheme := by
-  haveI : IsAffineHom (Limits.terminal.from (Spec (.of ℂ))) := inferInstance
+  haveI : IsAffineHom (Limits.terminal.from (Spec ↧ℂ)) := inferInstance
   haveI : MorphismProperty.IsStableUnderBaseChangeAlong (@IsAffineHom)
       (Limits.terminal.from (Proj (UniversalGrading n))) :=
     { of_isPullback := fun pb h ↦
         MorphismProperty.IsStableUnderBaseChange.of_isPullback pb h }
   have hsnd : IsAffineHom (Limits.pullback.snd
-      (Limits.terminal.from (Spec (.of ℂ)))
+      (Limits.terminal.from (Spec ↧ℂ))
       (Limits.terminal.from (Proj (UniversalGrading n)))) :=
     MorphismProperty.pullback_snd _ _ inferInstance
   exact @IsAffineHom.isAffine_preimage _ _ _ hsnd
@@ -231,7 +232,7 @@ lemma vectorToComplexPoint_mem_projectiveSpaceBasicOpen {n d : ℕ}
     projectiveSpaceBasicOpen n r
   unfold projectiveSpaceBasicOpen
   change ((vectorToProjectiveSpace v hv) ≫ Limits.pullback.snd
-    (Limits.terminal.from (Spec (.of ℂ)))
+    (Limits.terminal.from (Spec ↧ℂ))
     (Limits.terminal.from (Proj (UniversalGrading n))))
       (IsLocalRing.closedPoint ℂ) ∈ Proj.basicOpen (UniversalGrading n) r
   rw [vectorToProjectiveSpace_toProj]
@@ -242,9 +243,9 @@ lemma vectorToComplexPoint_mem_projectiveSpaceBasicOpen {n d : ℕ}
 
 /-- Any two complex points of finite-dimensional projective space lie in a common affine open. -/
 lemma projectiveSpace_pair_mem_affineOpen (n : ℕ)
-    (z w : ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec (.of ℂ)))
-      (ProjectiveSpace.toBase (Fin (n + 1)) (Spec (.of ℂ)))) :
-    ∃ U : (ProjectiveSpace (Fin (n + 1)) (Spec (.of ℂ))).Opens,
+    (z w : ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
+      (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :
+    ∃ U : (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ)).Opens,
       z ∈ ComplexPoint.overOpen U ∧ w ∈ ComplexPoint.overOpen U ∧ IsAffine U.toScheme := by
   obtain ⟨v, hvz⟩ := surjective_vectorToComplexPoint z
   obtain ⟨u, huw⟩ := surjective_vectorToComplexPoint w
@@ -262,10 +263,10 @@ lemma projectiveSpace_pair_mem_affineOpen (n : ℕ)
 /-- Finite-dimensional scheme-theoretic complex projective space is Hausdorff. -/
 noncomputable instance instT2SpaceProjectiveSpaceComplexPoint (n : ℕ) :
     T2Space
-      (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec (.of ℂ)))
-        (ProjectiveSpace.toBase (Fin (n + 1)) (Spec (.of ℂ)))) :=
+      (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
+        (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
   ComplexPoint.t2Space_of_pair_mem_affineOpen
-    (ProjectiveSpace.toBase (Fin (n + 1)) (Spec (.of ℂ)))
+    (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))
     (projectiveSpace_pair_mem_affineOpen n)
 
 end ComplexProjectiveSpace
@@ -274,7 +275,7 @@ namespace ProjectiveSpace.Presentation
 
 set_option linter.style.haveILetI false in
 /-- Any two complex points of a projective presentation lie in a common affine open. -/
-lemma pair_mem_affineOpen {X : Scheme} {f : X ⟶ Spec (.of ℂ)}
+lemma pair_mem_affineOpen {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) (z w : ComplexPoint X f) :
     ∃ U : X.Opens, z ∈ ComplexPoint.overOpen U ∧
       w ∈ ComplexPoint.overOpen U ∧ IsAffine U.toScheme := by
@@ -288,7 +289,7 @@ lemma pair_mem_affineOpen {X : Scheme} {f : X ⟶ Spec (.of ℂ)}
   exact @IsAffineHom.isAffine_preimage _ _ P.immersion inferInstance U hUaff
 
 /-- The analytification of an explicit projective presentation is Hausdorff. -/
-theorem complexPoint_t2Space {X : Scheme} {f : X ⟶ Spec (.of ℂ)}
+theorem complexPoint_t2Space {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) :
     @T2Space (ComplexPoint X f) ComplexPoint.analyticTopology :=
   ComplexPoint.t2Space_of_pair_mem_affineOpen f (pair_mem_affineOpen P)
@@ -298,7 +299,7 @@ end ProjectiveSpace.Presentation
 namespace ProjectiveSpace.IsProjective
 
 /-- The analytification of a projective complex scheme is Hausdorff. -/
-noncomputable instance complexPoint_t2Space {X : Scheme} {f : X ⟶ Spec (.of ℂ)}
+noncomputable instance complexPoint_t2Space {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     [h : ProjectiveSpace.IsProjective f] : T2Space (ComplexPoint X f) :=
   ProjectiveSpace.Presentation.complexPoint_t2Space
     (Classical.choice h.nonempty_presentation)

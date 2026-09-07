@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineSpace
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexEtale
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
@@ -52,14 +53,14 @@ lemma Scheme.Opens.ι_appTop_topIso_hom {Y : Scheme} (U : Y.Opens) :
   rw [← Y.presheaf.map_comp]
   exact congrArg Y.presheaf.map (Subsingleton.elim (a ≫ b) c)
 
-variable {X : Scheme} (f : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (f : X ⟶ Spec ↧ℂ)
 
-noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec (.of ℂ)} :
+noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
     TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
 
 /-- The map from complex scalars to sections on an open, induced by a structure morphism. -/
 def complexRestrictionMap (V : X.Opens) : ℂ →+* Γ(X, V) :=
-  (f.appLE ⊤ V (by simp)).hom.comp (Scheme.ΓSpecIso (.of ℂ)).inv.hom
+  (f.appLE ⊤ V (by simp)).hom.comp (Scheme.ΓSpecIso ↧ℂ).inv.hom
 
 lemma Smooth.exists_affine_isStandardSmooth [Smooth f] (x : X) :
     ∃ (V : X.Opens) (_ : IsAffineOpen V), x ∈ V ∧
@@ -78,7 +79,7 @@ lemma complexRestrictionMap_isStandardSmooth {V : X.Opens}
     (h : (f.appLE ⊤ V (by simp)).hom.IsStandardSmooth) :
     (complexRestrictionMap f V).IsStandardSmooth := by
   exact RingHom.isStandardSmooth_respectsIso.2 _
-    (Scheme.ΓSpecIso (.of ℂ)).symm.commRingCatIsoToRingEquiv h
+    (Scheme.ΓSpecIso ↧ℂ).symm.commRingCatIsoToRingEquiv h
 
 lemma SmoothOfRelativeDimension.exists_affine_isStandardSmoothOfRelativeDimension
     {d : ℕ} [SmoothOfRelativeDimension d f] (x : X) :
@@ -99,7 +100,7 @@ lemma complexRestrictionMap_isStandardSmoothOfRelativeDimension {d : ℕ} {V : X
     (h : (f.appLE ⊤ V (by simp)).hom.IsStandardSmoothOfRelativeDimension d) :
     (complexRestrictionMap f V).IsStandardSmoothOfRelativeDimension d := by
   exact RingHom.isStandardSmoothOfRelativeDimension_respectsIso.2 _
-    (Scheme.ΓSpecIso (.of ℂ)).symm.commRingCatIsoToRingEquiv h
+    (Scheme.ΓSpecIso ↧ℂ).symm.commRingCatIsoToRingEquiv h
 
 /-- Étale algebraic coordinates of the specified relative dimension around a point of a smooth
 complex scheme. -/
@@ -149,12 +150,12 @@ lemma coordinateRingHomOnOpen_etale : D.coordinateRingHomOnOpen.Etale := by
 
 lemma C_comp_coordinateRingHomOnOpen :
     CommRingCat.ofHom MvPolynomial.C ≫ CommRingCat.ofHom D.coordinateRingHomOnOpen =
-      (Scheme.ΓSpecIso (.of ℂ)).inv ≫ (D.neighborhood.ι ≫ f).appTop := by
+      (Scheme.ΓSpecIso ↧ℂ).inv ≫ (D.neighborhood.ι ≫ f).appTop := by
   apply (cancel_mono D.neighborhood.topIso.hom).mp
   change (((CommRingCat.ofHom MvPolynomial.C) ≫
       CommRingCat.ofHom D.coordinateRingHom) ≫ D.neighborhood.topIso.inv) ≫
         D.neighborhood.topIso.hom =
-    ((Scheme.ΓSpecIso (.of ℂ)).inv ≫
+    ((Scheme.ΓSpecIso ↧ℂ).inv ≫
       (D.neighborhood.ι ≫ f).appTop) ≫ D.neighborhood.topIso.hom
   rw [Category.assoc, Iso.inv_hom_id, Category.comp_id]
   simp only [Scheme.Hom.comp_appTop, Category.assoc]
@@ -168,7 +169,7 @@ def toAffineSpace : D.neighborhood.toScheme ⟶
     ComplexPoint.complexAffineSpace (Fin d) :=
   D.neighborhood.toScheme.toSpecΓ ≫
     Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen) ≫
-      (AffineSpace.SpecIso (Fin d) (.of ℂ)).inv
+      (AffineSpace.SpecIso (Fin d) ↧ℂ).inv
 
 lemma etale_toAffineSpace : Etale D.toAffineSpace := by
   have h₁ : Etale D.neighborhood.toScheme.toSpecΓ := by
@@ -176,23 +177,23 @@ lemma etale_toAffineSpace : Etale D.toAffineSpace := by
     infer_instance
   have h₂ : Etale (Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen)) :=
     HasRingHomProperty.Spec_iff.mpr D.coordinateRingHomOnOpen_etale
-  have h₃ : Etale (AffineSpace.SpecIso (Fin d) (.of ℂ)).inv := by
+  have h₃ : Etale (AffineSpace.SpecIso (Fin d) ↧ℂ).inv := by
     infer_instance
   have h₁₂ : Etale (D.neighborhood.toScheme.toSpecΓ ≫
       Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen)) := by
     exact @Etale.etale_comp _ _ _ _ _ h₁ h₂
   change Etale ((D.neighborhood.toScheme.toSpecΓ ≫
     Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen)) ≫
-      (AffineSpace.SpecIso (Fin d) (.of ℂ)).inv)
+      (AffineSpace.SpecIso (Fin d) ↧ℂ).inv)
   exact @Etale.etale_comp _ _ _ _ _ h₁₂ h₃
 
 /-- The étale coordinate morphism respects the structure maps to `Spec ℂ`. -/
 lemma toAffineSpace_over :
     D.toAffineSpace ≫
-        (ComplexPoint.complexAffineSpace (Fin d) ↘ Spec (.of ℂ)) =
+        (ComplexPoint.complexAffineSpace (Fin d) ↘ Spec ↧ℂ) =
       D.neighborhood.ι ≫ f := by
   simp only [toAffineSpace, Category.assoc, AffineSpace.SpecIso_inv_over]
-  let φ : CommRingCat.of ℂ ⟶ Γ(D.neighborhood.toScheme, ⊤) :=
+  let φ : ↧ℂ ⟶ Γ(D.neighborhood.toScheme, ⊤) :=
     CommRingCat.ofHom MvPolynomial.C ≫ CommRingCat.ofHom D.coordinateRingHomOnOpen
   have hSpec : Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen) ≫
       Spec.map (CommRingCat.ofHom MvPolynomial.C) = Spec.map φ := by
@@ -200,7 +201,7 @@ lemma toAffineSpace_over :
     rfl
   refine (congrArg (fun q ↦ D.neighborhood.toScheme.toSpecΓ ≫ q) hSpec).trans ?_
   change (ΓSpec.adjunction.homEquiv D.neighborhood.toScheme
-    (Opposite.op (CommRingCat.of ℂ))) φ.op = D.neighborhood.ι ≫ f
+    (Opposite.op ↧ℂ)) φ.op = D.neighborhood.ι ≫ f
   apply ext_to_Spec
   exact (ΓSpecIso_inv_ΓSpec_adjunction_homEquiv φ).trans
     D.C_comp_coordinateRingHomOnOpen
@@ -209,7 +210,7 @@ lemma toAffineSpace_over :
 def pointMap :
     ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f) →
       ComplexPoint (ComplexPoint.complexAffineSpace (Fin d))
-        (ComplexPoint.complexAffineSpace (Fin d) ↘ Spec (.of ℂ)) :=
+        (ComplexPoint.complexAffineSpace (Fin d) ↘ Spec ↧ℂ) :=
   ComplexPoint.map D.toAffineSpace D.toAffineSpace_over
 
 /-- The étale coordinate morphism is continuous on complex points. -/
@@ -217,7 +218,7 @@ lemma continuous_pointMap :
     @Continuous
       (ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f))
       (ComplexPoint (ComplexPoint.complexAffineSpace (Fin d))
-        (ComplexPoint.complexAffineSpace (Fin d) ↘ Spec (.of ℂ)))
+        (ComplexPoint.complexAffineSpace (Fin d) ↘ Spec ↧ℂ))
       ComplexPoint.analyticTopology ComplexPoint.analyticTopology D.pointMap :=
   ComplexPoint.continuous_map D.toAffineSpace D.toAffineSpace_over
 
@@ -279,11 +280,11 @@ lemma toSpecΓ_over :
     D.neighborhood.toScheme.toSpecΓ ≫
         ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤) =
       D.neighborhood.ι ≫ f := by
-  let φ : CommRingCat.of ℂ ⟶ Γ(D.neighborhood.toScheme, ⊤) :=
+  let φ : ↧ℂ ⟶ Γ(D.neighborhood.toScheme, ⊤) :=
     CommRingCat.ofHom MvPolynomial.C ≫ CommRingCat.ofHom D.coordinateRingHomOnOpen
   change D.neighborhood.toScheme.toSpecΓ ≫ Spec.map φ = D.neighborhood.ι ≫ f
   change (ΓSpec.adjunction.homEquiv D.neighborhood.toScheme
-    (Opposite.op (CommRingCat.of ℂ))) φ.op = D.neighborhood.ι ≫ f
+    (Opposite.op ↧ℂ)) φ.op = D.neighborhood.ι ≫ f
   apply ext_to_Spec
   exact (ΓSpecIso_inv_ΓSpec_adjunction_homEquiv φ).trans
     D.C_comp_coordinateRingHomOnOpen
@@ -293,7 +294,7 @@ spectrum of its global sections. -/
 def affineSpecPointHomeomorph :
     @Homeomorph
       (ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f))
-      (ComplexPoint (Spec (.of Γ(D.neighborhood.toScheme, ⊤)))
+      (ComplexPoint (Spec ↧Γ(D.neighborhood.toScheme, ⊤))
       (ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤)))
       ComplexPoint.analyticTopology ComplexPoint.analyticTopology := by
   let _ : IsAffine D.neighborhood.toScheme :=
@@ -340,13 +341,13 @@ lemma pointAlgHomHomeomorph_apply
   rw [ComplexPoint.evaluate_map]
   change ComplexPoint.evaluate ⊤
       (D.neighborhood.toScheme.toSpecΓ.appTop
-        ((Scheme.ΓSpecIso (.of Γ(D.neighborhood.toScheme, ⊤))).inv r)) z = _
+        ((Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).inv r)) z = _
   rw [Scheme.toSpecΓ_appTop]
   change ComplexPoint.evaluate ⊤
-      ((Scheme.ΓSpecIso (.of Γ(D.neighborhood.toScheme, ⊤))).hom
-        ((Scheme.ΓSpecIso (.of Γ(D.neighborhood.toScheme, ⊤))).inv r)) z = _
+      ((Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).hom
+        ((Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).inv r)) z = _
   have h := DFunLike.congr_fun (congrArg CommRingCat.Hom.hom
-    (Scheme.ΓSpecIso (.of Γ(D.neighborhood.toScheme, ⊤))).inv_hom_id) r
+    (Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).inv_hom_id) r
   exact congrArg (fun s ↦ ComplexPoint.evaluate ⊤ s z) h
 
 /-- The analytic coordinate map reconstructed through the affine ring and its étale polynomial

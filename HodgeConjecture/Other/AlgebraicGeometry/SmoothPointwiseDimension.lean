@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothDimensionFormula
 
 /-!
@@ -64,15 +65,15 @@ the scheme point. -/
 lemma IsAffineOpen.primeIdealOf_height_eq_coheight {X : Scheme} {U : X.Opens}
     (hU : IsAffineOpen U) (x : U.toScheme) :
     (hU.primeIdealOf x).asIdeal.height = Order.coheight x := by
-  change (hU.isoSpec.hom x : Spec (.of Γ(X, U))).asIdeal.height = Order.coheight x
+  change (hU.isoSpec.hom x : Spec ↧Γ(X, U)).asIdeal.height = Order.coheight x
   calc
-    (hU.isoSpec.hom x : Spec (.of Γ(X, U))).asIdeal.height =
+    (hU.isoSpec.hom x : Spec ↧Γ(X, U)).asIdeal.height =
         Order.coheight (hU.isoSpec.hom x) :=
-      idealHeight_eq_coheight (.of Γ(X, U)) (hU.isoSpec.hom x)
+      idealHeight_eq_coheight ↧Γ(X, U) (hU.isoSpec.hom x)
     _ = Order.coheight x := by
       exact coheight_eq_of_isOpenImmersion hU.isoSpec.hom
 
-variable {X : Scheme} {f : X ⟶ Spec (.of ℂ)} {d : ℕ}
+variable {X : Scheme} {f : X ⟶ Spec ↧ℂ} {d : ℕ}
 
 /-- A nonempty integral smooth complex scheme of relative dimension `d` has global order Krull
 dimension exactly `d`. -/

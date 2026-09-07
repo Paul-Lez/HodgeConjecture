@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import Mathlib.Geometry.Manifold.Metrizable
@@ -36,7 +37,7 @@ open Topology
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
   [ProjectiveSpace.IsProjective structureMap]
 
 /-- A smooth projective complex analytification has a second-countable topology. -/

@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
 public import Mathlib.RingTheory.KrullDimension.Field
@@ -271,7 +272,7 @@ lemma Scheme.orderKrullDim_le_of_exists_open_orderKrullDim_le (X : Scheme) (d : 
         Order.le_krullDim_iff.mpr ⟨lU, rfl⟩
       exact WithBot.coe_le_coe.mp (hlength.trans hU)
 
-variable {f : X ⟶ Spec (.of ℂ)} {d : ℕ}
+variable {f : X ⟶ Spec ↧ℂ} {d : ℕ}
 
 /-- A smooth complex scheme of relative dimension `d` has order-theoretic Krull dimension at
 most `d`. -/

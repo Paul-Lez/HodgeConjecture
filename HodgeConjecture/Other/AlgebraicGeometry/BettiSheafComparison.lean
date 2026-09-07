@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.ComplexSingularComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 
@@ -32,7 +33,7 @@ open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 local instance bettiSheafComparisonTopology :
     TopologicalSpace (ComplexPoint X structureMap) := analyticTopology

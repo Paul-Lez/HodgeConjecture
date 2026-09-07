@@ -15,6 +15,9 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiSheafComparison
 public import HodgeConjecture.Other.AlgebraicTopology.BoundedBelowFlasqueComplex
 public import HodgeConjecture.Other.AlgebraicTopology.FlasqueQuasiIsoGlobalSections
@@ -258,7 +261,7 @@ end TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 local instance bettiGlobalSectionsComparisonTopology :
     TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
@@ -549,7 +552,7 @@ end AlgebraicTopology.Singular.HereditarilyParacompact
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 local instance bettiHypercohomologyComparisonTopology :
     TopologicalSpace (ComplexPoint X structureMap) := analyticTopology

@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleClassDimension
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
 public import HodgeConjecture.Other.AlgebraicGeometry.RationalCohomologyZero
@@ -39,7 +40,7 @@ open TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+variable {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
   [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
 
 /-- On a connected projective analytification, the image of the genuine codimension-zero Chow

@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentClosedPointDimension
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
 public import Mathlib.LinearAlgebra.Dual.Lemmas
@@ -88,10 +90,10 @@ namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 
 open AlgebraicTopology.Singular
 
-noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec (.of ℂ)} :
+noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
     TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
 
-variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec (.of ℂ)} [IsIntegral X]
+variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
   [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] {x : X}
   [SmoothOfRelativeDimension d structureMap]
   (C : CycleComponentSeparateLocalCoordinates structureMap x d n)
@@ -147,7 +149,7 @@ lemma neighborhoodLocalCoclass_unique
 /-- Every codimension-`p` component of a smooth complex `d`-fold has an exact smooth local
 coordinate package whose normalized point-supported coclass generates local cohomology. -/
 lemma exists_span_neighborhoodLocalCoclass_eq_top
-    (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
+    (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
     [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) :

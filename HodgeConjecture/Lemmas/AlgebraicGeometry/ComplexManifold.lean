@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
 public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
 public import Mathlib.Analysis.Normed.Module.Connected
@@ -40,7 +41,7 @@ open scoped Manifold ContDiff
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 local instance complexManifoldTopology :
     TopologicalSpace (ComplexPoint X structureMap) := analyticTopology

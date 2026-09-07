@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
 
 /-!
@@ -34,7 +35,7 @@ open scoped Manifold ContDiff
 namespace AlgebraicGeometry.ComplexPoint
 
 variable {X Y : Scheme}
-  (structureMapX : X ⟶ Spec (.of ℂ)) (structureMapY : Y ⟶ Spec (.of ℂ))
+  (structureMapX : X ⟶ Spec ↧ℂ) (structureMapY : Y ⟶ Spec ↧ℂ)
   (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMapX)
   (d e : ℕ)
 

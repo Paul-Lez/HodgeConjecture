@@ -15,9 +15,12 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Lemmas.Algebra.Homology.StupidTruncation
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.Algebra.Group.Shrink
 public import Mathlib.Algebra.Homology.DerivedCategory.SmallShiftedHom
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
@@ -42,7 +45,7 @@ open CategoryTheory Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 local instance hodgeFiltrationTopology :
     TopologicalSpace (ComplexPoint X structureMap) := analyticTopology

@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionOpenCover
 public import Mathlib.Topology.Category.TopCat.Opens
 

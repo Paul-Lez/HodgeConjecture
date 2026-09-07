@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothDimensionFormula
 public import Mathlib.RingTheory.LocalRing.Etale
 public import Mathlib.RingTheory.RegularLocalRing.Polynomial
@@ -117,7 +118,7 @@ end RingHom
 
 namespace AlgebraicGeometry
 
-variable {X : Scheme} {f : X ⟶ Spec (.of ℂ)}
+variable {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 
 /-- Every scheme-theoretic stalk of a smooth complex scheme is a regular local ring. -/
 lemma Smooth.isRegularLocalRing_stalk_complex [Smooth f] (x : X) :

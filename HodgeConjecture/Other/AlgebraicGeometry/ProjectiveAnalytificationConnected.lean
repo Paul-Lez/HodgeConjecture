@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothDimensionFormula
@@ -41,7 +42,7 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 /-- A smooth projective complex variety has a complex point. -/
 noncomputable instance instNonemptyComplexPoint [IsIntegral X] [Smooth structureMap] :

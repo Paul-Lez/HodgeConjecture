@@ -15,8 +15,10 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.Analysis.Analytic.ChangeOrigin
 public import Mathlib.LinearAlgebra.Multilinear.Basis
 public import Mathlib.MeasureTheory.Integral.DominatedConvergence
@@ -500,7 +502,7 @@ namespace AlgebraicGeometry.ComplexPoint
 open CategoryTheory TopologicalSpace
 open scoped Manifold
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 local instance holomorphicPoincareTopology :
     TopologicalSpace (ComplexPoint X structureMap) := analyticTopology

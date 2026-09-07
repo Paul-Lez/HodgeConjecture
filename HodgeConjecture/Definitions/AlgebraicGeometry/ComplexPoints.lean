@@ -15,7 +15,9 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.AlgebraicGeometry.Noetherian
 public import Mathlib.Topology.Instances.Complex
@@ -46,16 +48,16 @@ open CategoryTheory Topology
 namespace AlgebraicGeometry
 
 /-- A complex point of `X` over its given structure morphism to `Spec ℂ`. -/
-abbrev ComplexPoint (X : Scheme) (structureMap : X ⟶ Spec (.of ℂ)) :=
-  {z : Spec (.of ℂ) ⟶ X // z ≫ structureMap = 𝟙 _}
+abbrev ComplexPoint (X : Scheme) (structureMap : X ⟶ Spec ↧ℂ) :=
+  {z : Spec ↧ℂ ⟶ X // z ≫ structureMap = 𝟙 _}
 
 namespace ComplexPoint
 
-variable {X : Scheme} {structureMap : X ⟶ Spec (.of ℂ)}
+variable {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ}
 
 /-- The scheme point and residue-field embedding corresponding to a complex point. -/
 noncomputable def residueData (z : ComplexPoint X structureMap) :
-    Σ x : X, X.residueField x ⟶ .of ℂ :=
+    Σ x : X, X.residueField x ⟶ ↧ℂ :=
   Scheme.SpecToEquivOfField ℂ X z.1
 
 /-- The underlying point of the scheme. -/
@@ -124,7 +126,7 @@ lemma isOpen_overOpen (U : X.Opens) :
   simp
 
 /-- The map on complex points induced by a morphism over `Spec ℂ`. -/
-noncomputable def map {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+noncomputable def map {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMap) :
     ComplexPoint X structureMap → ComplexPoint Y structureMapY :=
   fun z ↦ ⟨z.1 ≫ f, by rw [Category.assoc, hf, z.2]⟩
@@ -139,7 +141,7 @@ lemma map_id (h : 𝟙 X ≫ structureMap = structureMap) (z : ComplexPoint X st
 /-- Composition of scheme morphisms agrees with composition on complex points. -/
 @[simp]
 lemma map_comp_apply {Y Z : Scheme}
-    {structureMapY : Y ⟶ Spec (.of ℂ)} {structureMapZ : Z ⟶ Spec (.of ℂ)}
+    {structureMapY : Y ⟶ Spec ↧ℂ} {structureMapZ : Z ⟶ Spec ↧ℂ}
     (f : X ⟶ Y) (g : Y ⟶ Z)
     (hf : f ≫ structureMapY = structureMap) (hg : g ≫ structureMapZ = structureMapY)
     (hfg : (f ≫ g) ≫ structureMapZ = structureMap) (z : ComplexPoint X structureMap) :
@@ -149,7 +151,7 @@ lemma map_comp_apply {Y Z : Scheme}
 
 /-- The residue-field description of the image of a complex point. Both the underlying point and
 its residue-field embedding are obtained functorially. -/
-lemma residueData_map {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+lemma residueData_map {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMap)
     (z : ComplexPoint X structureMap) :
     (map f hf z).residueData =
@@ -161,13 +163,13 @@ lemma residueData_map {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
     rw [Scheme.descResidueField_stalkClosedPointTo_comp]
 
 @[simp]
-lemma residueData_map_fst {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+lemma residueData_map_fst {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMap)
     (z : ComplexPoint X structureMap) :
     (map f hf z).residueData.1 = f z.residueData.1 := by
   rw [residueData_map]
 
-lemma residueData_map_snd {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+lemma residueData_map_snd {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMap)
     (z : ComplexPoint X structureMap) :
     (map f hf z).residueData.2 =
@@ -176,21 +178,21 @@ lemma residueData_map_snd {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
   rw [Scheme.descResidueField_stalkClosedPointTo_comp]
 
 @[simp]
-lemma underlying_map {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+lemma underlying_map {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMap)
     (z : ComplexPoint X structureMap) :
     (map f hf z).underlying = f z.underlying :=
   residueData_map_fst f hf z
 
 /-- Pulling back a scheme open commutes with passage to complex points. -/
-lemma mem_overOpen_map_iff {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+lemma mem_overOpen_map_iff {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMap)
     (z : ComplexPoint X structureMap) (U : Y.Opens) :
     map f hf z ∈ overOpen U ↔ z ∈ overOpen (f ⁻¹ᵁ U) := by
   simp [overOpen]
 
 /-- Evaluation of a pulled-back regular function agrees with evaluation after mapping the point. -/
-lemma evaluate_map {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+lemma evaluate_map {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMap)
     (U : Y.Opens) (s : Γ(Y, U)) (z : ComplexPoint X structureMap) :
     evaluate U s (map f hf z) = evaluate (f ⁻¹ᵁ U) (f.app U s) z := by
@@ -210,7 +212,7 @@ lemma evaluate_map {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
 
 /-- Every morphism over `Spec ℂ` induces a continuous map on complex points for the topology
 generated by regular-function evaluations. -/
-lemma continuous_map {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+lemma continuous_map {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMap) :
     @Continuous (ComplexPoint X structureMap) (ComplexPoint Y structureMapY)
       analyticTopology analyticTopology (map f hf) := by
@@ -228,14 +230,14 @@ lemma continuous_map {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
   exact isOpen_overOpen_inter_preimage _ _ _ hV
 
 /-- A morphism over `Spec ℂ`, bundled as a continuous map on complex points. -/
-noncomputable def continuousMap {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+noncomputable def continuousMap {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMap) :
     @ContinuousMap (ComplexPoint X structureMap) (ComplexPoint Y structureMapY)
       analyticTopology analyticTopology :=
   @ContinuousMap.mk _ _ analyticTopology analyticTopology (map f hf) (continuous_map f hf)
 
 /-- An isomorphism of schemes over `Spec ℂ` induces a homeomorphism on complex points. -/
-noncomputable def isoMapHomeomorph {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+noncomputable def isoMapHomeomorph {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (e : X ≅ Y) (h : e.hom ≫ structureMapY = structureMap) :
     @Homeomorph (ComplexPoint X structureMap) (ComplexPoint Y structureMapY)
       analyticTopology analyticTopology := by
@@ -256,7 +258,7 @@ noncomputable def isoMapHomeomorph {Y : Scheme} {structureMapY : Y ⟶ Spec (.of
         rw [← h, ← Category.assoc, e.inv_hom_id, Category.id_comp]) }
 
 @[simp]
-lemma isoMapHomeomorph_apply {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
+lemma isoMapHomeomorph_apply {Y : Scheme} {structureMapY : Y ⟶ Spec ↧ℂ}
     (e : X ≅ Y) (h : e.hom ≫ structureMapY = structureMap)
     (z : ComplexPoint X structureMap) :
     isoMapHomeomorph e h z = map e.hom h z :=
@@ -269,7 +271,7 @@ end ComplexPoint
 This is the canonical home for functorial complex points.  In particular, consumers need not
 package their own morphism records or reprove identity and composition laws. -/
 noncomputable def complexAnalytification :
-    CategoryTheory.Functor (Over (Spec (.of ℂ))) TopCat where
+    CategoryTheory.Functor (Over (Spec ↧ℂ)) TopCat where
   obj X := @TopCat.of (ComplexPoint X.left X.hom) ComplexPoint.analyticTopology
   map f := @TopCat.ofHom _ _ ComplexPoint.analyticTopology ComplexPoint.analyticTopology
     (ComplexPoint.continuousMap f.left (Over.w f))
@@ -287,11 +289,11 @@ structure IntegralProjectiveComplexVariety where
   scheme : Scheme
   [isIntegral : IsIntegral scheme]
   /-- The structure morphism to `Spec ℂ`. -/
-  structureMap : scheme ⟶ Spec (.of ℂ)
+  structureMap : scheme ⟶ Spec ↧ℂ
   [projective : ProjectiveSpace.IsProjective structureMap]
 
 /-- A projective complex scheme is Noetherian. -/
-theorem isNoetherian_of_isProjective {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+theorem isNoetherian_of_isProjective {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
     [ProjectiveSpace.IsProjective structureMap] : IsNoetherian X where
   toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian structureMap
   toCompactSpace := QuasiCompact.compactSpace_of_compactSpace structureMap
@@ -310,7 +312,7 @@ noncomputable instance (V : IntegralProjectiveComplexVariety) : IsNoetherian V.s
   isNoetherian_of_isProjective V.structureMap
 
 /-- The variety regarded as the corresponding object over `Spec ℂ`. -/
-noncomputable abbrev over (V : IntegralProjectiveComplexVariety) : Over (Spec (.of ℂ)) :=
+noncomputable abbrev over (V : IntegralProjectiveComplexVariety) : Over (Spec ↧ℂ) :=
   Over.mk V.structureMap
 
 /-- The complex points of an integral projective complex variety. -/

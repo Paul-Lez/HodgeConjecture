@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoints
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
@@ -38,7 +39,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- An algebraic cycle on a projective complex variety has finite support. Algebraic cycles are
 locally finite by definition, and the underlying Zariski space is compact. -/
@@ -74,7 +75,7 @@ instance (X : Scheme) (x : X) : IsReduced (cycleComponent X x) := by
   rw [IsReduced.iff_of_openCover I.subscheme I.subschemeCover.openCover]
   intro U
   let U' : X.affineOpens := U
-  change IsReduced (Spec (.of (Γ(X, U') ⧸ I.ideal U')))
+  change IsReduced (Spec ↧(Γ(X, U') ⧸ I.ideal U'))
   rw [affine_isReduced_iff, ← Ideal.isRadical_iff_quotient_reduced]
   change (PrimeSpectrum.vanishingIdeal (U'.2.fromSpec ⁻¹' closure {x})).IsRadical
   exact PrimeSpectrum.isRadical_vanishingIdeal _
@@ -100,7 +101,7 @@ lemma range_cycleComponentι (X : Scheme) (x : X) :
 /-- The kernel of a complex point is the vanishing ideal of the closure of its underlying scheme
 point. -/
 lemma complexPoint_ker_eq_vanishingIdeal_closure
-    {X : Scheme} {structureMap : X ⟶ Spec (.of ℂ)}
+    {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ}
     (z : ComplexPoint X structureMap) :
     z.1.ker = Scheme.IdealSheafData.vanishingIdeal
       ⟨closure {z.underlying}, isClosed_closure⟩ := by
@@ -116,11 +117,11 @@ lemma complexPoint_ker_eq_vanishingIdeal_closure
       subst y
       exact ⟨IsLocalRing.closedPoint ℂ, rfl⟩
   have h := Scheme.IdealSheafData.map_vanishingIdeal z.1
-    (⊤ : TopologicalSpace.Closeds (Spec (.of ℂ)))
+    (⊤ : TopologicalSpace.Closeds (Spec ↧ℂ))
   rw [Scheme.IdealSheafData.vanishingIdeal_top, Scheme.nilradical_eq_bot,
     Scheme.IdealSheafData.map_bot] at h
-  have himage : z.1 '' (↑(⊤ : TopologicalSpace.Closeds (Spec (.of ℂ))) :
-      Set (Spec (.of ℂ))) = {z.underlying} := by
+  have himage : z.1 '' (↑(⊤ : TopologicalSpace.Closeds (Spec ↧ℂ)) :
+      Set (Spec ↧ℂ)) = {z.underlying} := by
     simpa only [TopologicalSpace.Closeds.coe_top, Set.image_univ] using hrange
   rw [himage] at h
   exact h

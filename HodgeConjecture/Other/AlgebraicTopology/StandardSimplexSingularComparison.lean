@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.SingularContractibleMapQuasiIso
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.AlgebraicTopology.ExtraDegeneracy

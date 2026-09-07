@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentAnalyticEmbedding
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPurity
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
@@ -43,7 +45,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
   [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
 
 /-- The ambient chart-local homology class at an analytic point. -/

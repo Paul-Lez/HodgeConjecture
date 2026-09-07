@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothDimensionFormula
 public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 public import Mathlib.Analysis.Complex.Polynomial.Basic
@@ -39,7 +40,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The smooth locus of a reduced cycle component is Zariski dense. -/
 lemma dense_cycleComponent_smoothLocus

@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentLocalGenerator
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothCatenaryDimension
 public import Mathlib.RingTheory.IntegralClosure.GoingDown
@@ -135,7 +136,7 @@ end RingHom
 
 namespace AlgebraicGeometry
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) {d p : ℕ}
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) {d p : ℕ}
 
 /-- Every closed point of the reduced closure of a codimension-`p` point in a smooth complex
 `d`-fold has coheight `d - p` inside that reduced closure. -/
@@ -220,15 +221,15 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
           (RingHom.quotientKerEquivOfSurjective hqsurj)).symm
       _ = ringKrullDim (Γ(X, U) ⧸ P) := by rw [hqker]
       _ = d - p := hquotient
-  let s : cycleComponent X x ⟶ Spec (.of ℂ) := c ≫ structureMap
+  let s : cycleComponent X x ⟶ Spec ↧ℂ := c ≫ structureMap
   let _ : Algebra ℂ Γ(cycleComponent X x, W) :=
     (complexRestrictionMap s W).toAlgebra
   let _ : Algebra.FiniteType ℂ Γ(cycleComponent X x, W) := by
     rw [← RingHom.finiteType_algebraMap]
     change (complexRestrictionMap s W).FiniteType
-    apply (s.finiteType_appLE (isAffineOpen_top (Spec (.of ℂ))) hW (by simp)).comp
+    apply (s.finiteType_appLE (isAffineOpen_top (Spec ↧ℂ)) hW (by simp)).comp
     exact RingHom.FiniteType.of_surjective _
-      (Scheme.ΓSpecIso (.of ℂ)).symm.commRingCatIsoToRingEquiv.surjective
+      (Scheme.ΓSpecIso ↧ℂ).symm.commRingCatIsoToRingEquiv.surjective
   let Q : Ideal Γ(cycleComponent X x, W) :=
     (hW.primeIdealOf zw).asIdeal
   have hQmax : Q.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed
@@ -270,10 +271,10 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) :
     Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d (d - p)) := by
-  let c : cycleComponent X x ⟶ Spec (.of ℂ) :=
+  let c : cycleComponent X x ⟶ Spec ↧ℂ :=
     cycleComponentι X x ≫ structureMap
   let S : (cycleComponent X x).Opens := c.smoothLocus
-  let g : S.toScheme ⟶ Spec (.of ℂ) := S.ι ≫ c
+  let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
   let _ : Smooth g := by
     exact cycleComponent_smoothLocus_smooth structureMap x
   obtain ⟨z, hzsmooth, hzclosed⟩ :=
@@ -332,7 +333,7 @@ end AlgebraicGeometry
 
 namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- In every ambient dimension, exact component coordinates give a transported generator of the
 full local homology at the selected smooth component point. -/
