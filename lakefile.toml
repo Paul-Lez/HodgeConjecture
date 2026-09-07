@@ -1,0 +1,19 @@
+name = "HodgeConjecture"
+keywords = ["math", "algebraic-geometry", "hodge-theory"]
+defaultTargets = ["HodgeConjecture"]
+
+[leanOptions]
+pp.unicode.fun = true
+autoImplicit = false
+relaxedAutoImplicit = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.33.1"
+
+[[lean_lib]]
+name = "FormalConjecturesForMathlib"
+
+[[lean_lib]]
+name = "HodgeConjecture"
