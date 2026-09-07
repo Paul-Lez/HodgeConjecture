@@ -56,7 +56,31 @@ local instance holomorphicDeRhamChartedSpace [SmoothOfRelativeDimension d struct
     ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
   analyticChartedSpace structureMap d
 
-/-- Holomorphic de Rham forms in a fixed degree, as a presheaf of additive groups. -/
+/-- Holomorphic de Rham forms in a fixed degree, as a presheaf of complex vector spaces.
+
+This is the coefficient-aware object.  It is the migration target for the additive presheaf used
+by the existing derived comparison below, and keeps the linearity of restriction maps available
+for module-valued sheafification. -/
+def holomorphicDeRhamModulePresheaf [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
+    TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X structureMap)) where
+  obj U := ModuleCat.of ℂ
+    (HolomorphicForm structureMap d U p)
+  map {U V} i := ModuleCat.ofHom
+    (holomorphicFormRestriction structureMap d i p)
+  map_id U := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro x
+    rw [holomorphicFormRestriction_id]
+    rfl
+  map_comp i j := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro x
+    rw [holomorphicFormRestriction_comp]
+    rfl
+
+/-- The legacy additive-group presentation of the holomorphic de Rham presheaf. -/
 def holomorphicDeRhamPresheaf [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
     TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)) where
   obj U := AddCommGrpCat.of
@@ -88,6 +112,29 @@ lemma holomorphicDeRhamPresheaf_isZero_of_lt
   exact AddCommGrpCat.isZero_of_subsingleton _
 
 /-- The exterior derivative as a morphism of presheaves. -/
+def holomorphicDeRhamModuleDifferential [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
+    holomorphicDeRhamModulePresheaf structureMap d p ⟶
+      holomorphicDeRhamModulePresheaf structureMap d (p + 1) where
+  app U := ModuleCat.ofHom <|
+    holomorphicFormDifferential structureMap d U p
+  naturality {U V} i := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro x
+    exact (holomorphicFormRestriction_differential structureMap d i p x).symm
+
+lemma holomorphicDeRhamModuleDifferential_comp
+    [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
+    holomorphicDeRhamModuleDifferential structureMap d p ≫
+      holomorphicDeRhamModuleDifferential structureMap d (p + 1) = 0 := by
+  apply NatTrans.ext
+  funext U
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  intro x
+  exact holomorphicFormDifferential_squared structureMap d U p x
+
+/-- The legacy additive presentation of the exterior derivative. -/
 def holomorphicDeRhamDifferential [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
     holomorphicDeRhamPresheaf structureMap d p ⟶
       holomorphicDeRhamPresheaf structureMap d (p + 1) where
@@ -109,6 +156,22 @@ lemma holomorphicDeRhamDifferential_comp [SmoothOfRelativeDimension d structureM
   intro x
   exact holomorphicFormDifferential_squared structureMap d U p x
 
+/-- The holomorphic de Rham complex before forgetting its complex-linear structure. -/
+def holomorphicDeRhamModulePresheafComplex [SmoothOfRelativeDimension d structureMap] :
+    CochainComplex
+      (TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X structureMap))) ℕ :=
+  CochainComplex.of
+    (holomorphicDeRhamModulePresheaf structureMap d)
+    (holomorphicDeRhamModuleDifferential structureMap d)
+    (by
+      intro p
+      apply NatTrans.ext
+      funext U
+      apply ModuleCat.hom_ext
+      apply LinearMap.ext
+      intro x
+      exact holomorphicFormDifferential_squared structureMap d U p x)
+
 /-- The holomorphic de Rham complex before sheafification. -/
 def holomorphicDeRhamPresheafComplex [SmoothOfRelativeDimension d structureMap] :
     CochainComplex
@@ -129,6 +192,50 @@ def constantComplexAddCommGrpPresheaf :
     TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)) :=
   (Functor.const (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ).obj
     (AddCommGrpCat.of ℂ)
+
+/-- The constant presheaf with value `ℂ`, retaining its complex-module structure. -/
+def constantComplexModulePresheaf :
+    TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X structureMap)) :=
+  (Functor.const (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ).obj
+    (ModuleCat.of ℂ ℂ)
+
+/-- Complex-linear constants as holomorphic de Rham forms of degree zero. -/
+def constantsToHolomorphicDeRhamModuleZero [SmoothOfRelativeDimension d structureMap] :
+    constantComplexModulePresheaf structureMap ⟶
+      holomorphicDeRhamModulePresheaf structureMap d 0 where
+  app U := ModuleCat.ofHom
+    (holomorphicFormOfConstant structureMap d U)
+  naturality {U V} i := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro c
+    exact (holomorphicFormRestriction_ofConstant structureMap d i c).symm
+
+lemma constantsToHolomorphicDeRhamModuleZero_comp_differential
+    [SmoothOfRelativeDimension d structureMap] :
+    constantsToHolomorphicDeRhamModuleZero structureMap d ≫
+      holomorphicDeRhamModuleDifferential structureMap d 0 = 0 := by
+  apply NatTrans.ext
+  funext U
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  intro c
+  exact holomorphicFormDifferential_ofConstant structureMap d U c
+
+/-- The complex-linear inclusion of constants in the module-valued de Rham complex. -/
+def constantsToHolomorphicDeRhamModulePresheafComplex
+    [SmoothOfRelativeDimension d structureMap] :
+    (CochainComplex.single₀
+      (TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X structureMap)))).obj
+        (constantComplexModulePresheaf structureMap) ⟶
+      holomorphicDeRhamModulePresheafComplex structureMap d :=
+  HomologicalComplex.mkHomFromSingle
+    (constantsToHolomorphicDeRhamModuleZero structureMap d) <| by
+      intro k hk
+      obtain rfl : k = 1 := by simpa using hk.symm
+      change constantsToHolomorphicDeRhamModuleZero structureMap d ≫
+        holomorphicDeRhamModuleDifferential structureMap d 0 = 0
+      exact constantsToHolomorphicDeRhamModuleZero_comp_differential structureMap d
 
 /-- Constants as holomorphic de Rham forms of degree zero. -/
 def constantsToHolomorphicDeRhamZero [SmoothOfRelativeDimension d structureMap] :

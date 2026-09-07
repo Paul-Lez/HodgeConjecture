@@ -278,13 +278,6 @@ def IsRationalComponentCycleClass
     Submodule.span ℚ {α} =
       rationalCohomologySupportedOn V (cycleComponentSupport V x) (2 * (p : ℤ))
 
-/-- The purity assertion needed to produce the fundamental-class line of one component. It is
-kept as a named proposition so that later results can state exactly where purity is used. -/
-def HasRationalComponentFundamentalClass
-    (V : SmoothProjectiveComplexVariety) (p : ℕ) (x : V.scheme) : Prop :=
-  ∃ α : RationalCohomology V.structureMap (2 * (p : ℤ)),
-    IsRationalComponentCycleClass V p x α
-
 /-- The intrinsic cycle-class line of an irreducible codimension-`p` component. Taking the span
 of all generators removes the arbitrary choice of generator and its rational scaling. -/
 def rationalComponentCycleClassLine
@@ -310,15 +303,20 @@ lemma rationalComponentCycleClassLine_eq_span
     subst β
     exact hα
 
-/-- Once the component purity proposition is proved, its intrinsic class line is exactly the
-whole supported image in degree `2p`. -/
-lemma rationalComponentCycleClassLine_eq_supportedOn_of_hasFundamentalClass
+/-- Cohomological purity for a component, stated independently of the construction of any
+particular supported class: its fundamental-class line is the whole supported image in the
+critical degree. -/
+def RationalComponentCycleClassPurity
+    (V : SmoothProjectiveComplexVariety) (p : ℕ) (x : V.scheme) : Prop :=
+  rationalComponentCycleClassLine V p x =
+    rationalCohomologySupportedOn V (cycleComponentSupport V x) (2 * (p : ℤ))
+
+lemma rationalComponentCycleClassLine_eq_supportedOn_of_purity
     (V : SmoothProjectiveComplexVariety) (p : ℕ) (x : V.scheme)
-    (h : HasRationalComponentFundamentalClass V p x) :
+    (h : RationalComponentCycleClassPurity V p x) :
     rationalComponentCycleClassLine V p x =
       rationalCohomologySupportedOn V (cycleComponentSupport V x) (2 * (p : ℤ)) := by
-  obtain ⟨α, hα⟩ := h
-  rw [rationalComponentCycleClassLine_eq_span V p x α hα, hα.2]
+  exact h
 
 /-- The component cycle-class line lies in the image of cohomology supported on that component. -/
 lemma rationalComponentCycleClassLine_le_supportedOn
@@ -427,7 +425,7 @@ lemma algebraicCycleClassSpan_eq_rationalConiveauSubspace_of_purity
     (V : SmoothProjectiveComplexVariety) (p : ℕ)
     (hzero : p = 0 → codimensionZeroCycleClassSpan V = ⊤)
     (h : ∀ (x : V.scheme), coheight x = p →
-      HasRationalComponentFundamentalClass V p x) :
+      RationalComponentCycleClassPurity V p x) :
     algebraicCycleClassSpan V p = rationalConiveauSubspace V p := by
   by_cases hp : p = 0
   · subst p
@@ -441,7 +439,7 @@ lemma algebraicCycleClassSpan_eq_rationalConiveauSubspace_of_purity
       apply le_iSup_of_le hx
       rfl
     · refine iSup_le fun x ↦ iSup_le fun hx ↦ ?_
-      rw [← rationalComponentCycleClassLine_eq_supportedOn_of_hasFundamentalClass
+      rw [← rationalComponentCycleClassLine_eq_supportedOn_of_purity
         V p x (h x hx)]
       apply le_iSup_of_le x
       apply le_iSup_of_le hx

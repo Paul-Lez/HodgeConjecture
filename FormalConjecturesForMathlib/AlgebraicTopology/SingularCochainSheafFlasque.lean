@@ -327,15 +327,13 @@ instance singularCochainPlus_isFlasque (n : ℕ) :
         (singularCochainPresheaf R X n)).naturality i,
       ConcreteCategory.comp_apply, hφU, hφV]
 
-abbrev ZeroSimplex (U : (Opens X)ᵒᵖ) :=
-  (TopCat.toSSet.obj ((Opens.toTopCat X).obj U.unop)).obj
-    (Opposite.op (SimplexCategory.mk 0))
+abbrev ZeroSimplex (U : (Opens X)ᵒᵖ) := OpenSimplex X U 0
 
 /-- The degree-zero singular chain associated to a point of an open subset. -/
 noncomputable def singularZeroChainOfPoint (U : (Opens X)ᵒᵖ) (x : U.unop) :
     OpenChains R X U 0 :=
-  (Sigma.ι (fun _ : ZeroSimplex X U ↦ ModuleCat.of R R)
-    ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)).symm x)).hom 1
+  singularChainOfSimplex R X U 0
+    ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)).symm x)
 
 /-- The zero-chain associated to a point is natural under inclusion of open subsets. -/
 lemma singularZeroChainOfPoint_naturality {U V : (Opens X)ᵒᵖ} (i : U ⟶ V)
@@ -346,16 +344,13 @@ lemma singularZeroChainOfPoint_naturality {U V : (Opens X)ᵒᵖ} (i : U ⟶ V)
   let f := TopCat.toSSet.map ((Opens.toTopCat X).map i.unop)
   let s := (@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj V.unop)).symm x
   have hs := SSet.ι_chainComplexMap_f _ _ f (ModuleCat.of R R) s
-  have h := congrArg (fun g ↦ g.hom 1) hs
-  change _ =
-    (Sigma.ι (fun _ : ZeroSimplex X U ↦ ModuleCat.of R R)
-      ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)).symm (i.unop x))).hom 1
-  exact h
+  exact congrArg (fun g ↦ g.hom 1) hs
 
 /-- Evaluate a degree-zero singular cochain on the chain associated to each point. -/
 def singularZeroCochainToFunction (U : (Opens X)ᵒᵖ) :
     OpenCochains R X U 0 →ₗ[R] (U.unop → R) where
-  toFun φ x := φ (singularZeroChainOfPoint R X U x)
+  toFun φ x := singularCochainToSimplexFunction R X U 0 φ
+    ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)).symm x)
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
@@ -370,90 +365,51 @@ lemma singularZeroCochainToFunction_naturality {U V : (Opens X)ᵒᵖ} (i : U �
     φ (singularZeroChainOfPoint R X U (i.unop x))
   rw [singularZeroChainOfPoint_naturality]
 
-/-- Construct a degree-zero singular cochain from a function on points. -/
+/-- Construct a degree-zero singular cochain by transporting a function on points along the
+canonical equivalence between points and singular zero-simplices. -/
 noncomputable def singularZeroCochainOfFunction (U : (Opens X)ᵒᵖ) :
     (U.unop → R) →ₗ[R] OpenCochains R X U 0 where
-  toFun f := by
-    change Module.Dual R
-      ((sigmaObj (C := ModuleCat.{u} R) fun _ : ZeroSimplex X U ↦ ModuleCat.of R R) : Type u)
-    exact (Sigma.desc fun s ↦ ModuleCat.ofHom <|
-      (LinearMap.ringLmapEquivSelf R R R).symm
-        (f ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) s))).hom
+  toFun f := singularCochainOfSimplexFunction R X U 0
+    (f ∘ (@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)))
   map_add' f g := by
-    change (Sigma.desc fun s : ZeroSimplex X U ↦ ModuleCat.ofHom <|
-      (LinearMap.ringLmapEquivSelf R R R).symm
-        ((f + g) ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) s))).hom =
-      ((Sigma.desc fun s : ZeroSimplex X U ↦ ModuleCat.ofHom <|
-          (LinearMap.ringLmapEquivSelf R R R).symm
-            (f ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) s))) +
-        (Sigma.desc fun s : ZeroSimplex X U ↦ ModuleCat.ofHom <|
-          (LinearMap.ringLmapEquivSelf R R R).symm
-            (g ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) s)))).hom
-    exact congrArg ModuleCat.Hom.hom <| Sigma.hom_ext _ _ fun s ↦ by
-      rw [Preadditive.comp_add, Sigma.ι_desc, Sigma.ι_desc, Sigma.ι_desc]
-      apply ModuleCat.hom_ext
-      apply LinearMap.ext
-      intro r
-      let p := (@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) s
-      change r * (f p + g p) = r * f p + r * g p
-      exact mul_add r (f p) (g p)
+    rw [← map_add]
+    rfl
   map_smul' a f := by
-    change (Sigma.desc fun s : ZeroSimplex X U ↦ ModuleCat.ofHom <|
-      (LinearMap.ringLmapEquivSelf R R R).symm
-        ((a • f) ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) s))).hom =
-      (a • (Sigma.desc fun s : ZeroSimplex X U ↦ ModuleCat.ofHom <|
-        (LinearMap.ringLmapEquivSelf R R R).symm
-          (f ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) s)))).hom
-    exact congrArg ModuleCat.Hom.hom <| Sigma.hom_ext _ _ fun s ↦ by
-      rw [Linear.comp_smul, Sigma.ι_desc, Sigma.ι_desc]
-      apply ModuleCat.hom_ext
-      apply LinearMap.ext
-      intro r
-      let p := (@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) s
-      change r * (a * f p) = a * (r * f p)
-      ring
+    rw [← map_smul]
+    rfl
 
 @[simp]
 lemma singularZeroCochainToFunction_ofFunction (U : (Opens X)ᵒᵖ) (f : U.unop → R) :
     singularZeroCochainToFunction R X U (singularZeroCochainOfFunction R X U f) = f := by
   ext x
-  change (ModuleCat.Hom.hom
-    (Sigma.ι (fun _ : ZeroSimplex X U ↦ ModuleCat.of R R)
-      ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)).symm x) ≫
-    Sigma.desc (fun s : ZeroSimplex X U ↦ ModuleCat.ofHom <|
-      (LinearMap.ringLmapEquivSelf R R R).symm
-        (f ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) s))))) 1 = f x
-  rw [Sigma.ι_desc]
-  simpa using congrArg f
+  change singularCochainToSimplexFunction R X U 0
+      (singularCochainOfSimplexFunction R X U 0
+        (f ∘ (@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop))))
+      ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)).symm x) = f x
+  rw [congrFun (singularCochainToSimplexFunction_ofFunction R X U 0 _) _]
+  exact congrArg f
     ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)).apply_symm_apply x)
 
 @[simp]
 lemma singularZeroCochainOfFunction_toFunction (U : (Opens X)ᵒᵖ)
     (φ : OpenCochains R X U 0) :
     singularZeroCochainOfFunction R X U (singularZeroCochainToFunction R X U φ) = φ := by
-  change Module.Dual R
-    ((sigmaObj (C := ModuleCat.{u} R) fun _ : ZeroSimplex X U ↦ ModuleCat.of R R) : Type u) at φ
-  let e : ZeroSimplex X U ≃ U.unop :=
-    @TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)
-  dsimp [singularZeroCochainOfFunction, singularZeroCochainToFunction,
-    singularZeroChainOfPoint]
-  change (Sigma.desc (fun s : ZeroSimplex X U ↦ ModuleCat.ofHom <|
-      (LinearMap.ringLmapEquivSelf R R R).symm
-        (φ ((Sigma.ι (fun _ : ZeroSimplex X U ↦ ModuleCat.of R R)
-          (e.symm (e s))).hom 1)))).hom = φ
-  exact congrArg ModuleCat.Hom.hom <| Sigma.hom_ext _ _ fun s ↦ by
-    rw [Sigma.ι_desc]
-    rw [e.symm_apply_apply]
-    apply ModuleCat.hom_ext
-    change (LinearMap.ringLmapEquivSelf R R R).symm
-      (φ ((Sigma.ι (fun _ : ZeroSimplex X U ↦ ModuleCat.of R R) s).hom 1)) =
-      (Sigma.ι (fun _ : ZeroSimplex X U ↦ ModuleCat.of R R) s ≫
-        ModuleCat.ofHom φ).hom
-    apply (LinearMap.ringLmapEquivSelf R R R).injective
-    rw [LinearEquiv.apply_symm_apply]
-    rfl
+  change singularCochainOfSimplexFunction R X U 0
+      ((singularZeroCochainToFunction R X U φ) ∘
+        (@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop))) = φ
+  have hfun :
+      (singularZeroCochainToFunction R X U φ) ∘
+          (@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) =
+        singularCochainToSimplexFunction R X U 0 φ := by
+    ext s
+    change singularCochainToSimplexFunction R X U 0 φ
+      ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)).symm
+        ((@TopCat.toSSetObj₀Equiv.{u} ((Opens.toTopCat X).obj U.unop)) s)) = _
+    rw [Equiv.symm_apply_apply]
+  rw [hfun, singularCochainOfSimplexFunction_toFunction]
 
-/-- Degree-zero singular cochains are linearly equivalent to all functions on points. -/
+/-- Degree-zero singular cochains are the all-degree simplex-function equivalence specialized at
+zero, transported along Mathlib's equivalence between zero-simplices and points. -/
 noncomputable def singularZeroCochainEquivFunction (U : (Opens X)ᵒᵖ) :
     OpenCochains R X U 0 ≃ₗ[R] (U.unop → R) := by
   refine LinearEquiv.ofLinearMap (singularZeroCochainToFunction R X U)

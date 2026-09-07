@@ -188,6 +188,43 @@ lemma linearDualCochainComplex_d (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : �
       ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap := by
   simp [linearDualCochainComplex]
 
+set_option backward.isDefEq.respectTransparency false in
+/-- The degree-`n` short complex of a linear-dual cochain complex is the reversed dual of the
+degree-`n` short complex of the original chain complex. -/
+def linearDualCochainComplexScIso (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
+    K.linearDualCochainComplex.sc n ≅ (K.sc n).linearDual := by
+  let D := K.linearDualCochainComplex
+  have hprev : (ComplexShape.up ℕ).prev n = (ComplexShape.down ℕ).next n := by
+    cases n <;> simp
+  have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by simp
+  refine D.isoSc' ((ComplexShape.down ℕ).next n) n
+      ((ComplexShape.down ℕ).prev n) hprev hnext ≪≫
+    ShortComplex.isoMk (Iso.refl _) (Iso.refl _) (Iso.refl _) ?_ ?_
+  · cases n with
+    | zero =>
+        simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
+          HomologicalComplex.shortComplexFunctor'_obj_f]
+        dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk, HomologicalComplex.sc,
+          HomologicalComplex.shortComplexFunctor, HomologicalComplex.shortComplexFunctor']
+        rw [ChainComplex.next_nat_zero]
+        change ModuleCat.ofHom (K.d 0 0).hom.dualMap = D.d 0 0
+        rw [K.shape 0 0 (by simp), D.shape 0 0 (by simp)]
+        ext φ x
+        exact map_zero φ
+    | succ n =>
+        simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
+          HomologicalComplex.shortComplexFunctor'_obj_f]
+        dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk, HomologicalComplex.sc,
+          HomologicalComplex.shortComplexFunctor, HomologicalComplex.shortComplexFunctor']
+        rw [ChainComplex.next_nat_succ]
+        exact (linearDualCochainComplex_d K n).symm
+  · simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
+      HomologicalComplex.shortComplexFunctor'_obj_g]
+    dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk, HomologicalComplex.sc,
+      HomologicalComplex.shortComplexFunctor, HomologicalComplex.shortComplexFunctor']
+    rw [ChainComplex.prev]
+    exact (linearDualCochainComplex_d K n).symm
+
 end HomologicalComplex
 
 namespace HomologicalComplex.HomotopyEquiv

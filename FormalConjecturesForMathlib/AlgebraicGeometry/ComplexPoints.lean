@@ -60,6 +60,17 @@ noncomputable def underlying (z : ComplexPoint X structureMap) : X := z.residueD
 noncomputable def overOpen (U : X.Opens) : Set (ComplexPoint X structureMap) :=
   {z | z.underlying ∈ U}
 
+/-- A complex point whose underlying scheme point lies in `U`.
+
+Using this subtype is preferable whenever a local regular function is evaluated: it records the
+domain condition in the type instead of assigning an arbitrary value outside `U`. -/
+abbrev OverOpen (U : X.Opens) := {z : ComplexPoint X structureMap // z.underlying ∈ U}
+
+/-- Evaluation of a local regular function on its actual domain. -/
+noncomputable def evaluateOnOpen (U : X.Opens) (s : Γ(X, U))
+    (z : OverOpen (structureMap := structureMap) U) : ℂ :=
+  z.1.residueData.2 (X.evaluation U z.1.residueData.1 z.2 s)
+
 /--
 Evaluation of a local regular function at a complex point. Outside the function's domain this is
 defined to be zero; all uses in the analytic topology are restricted to `overOpen U`.
@@ -70,6 +81,14 @@ noncomputable def evaluate (U : X.Opens) (s : Γ(X, U))
   exact if hz : z.residueData.1 ∈ U then
       z.residueData.2 (X.evaluation U z.residueData.1 hz s)
     else 0
+
+lemma evaluate_eq_evaluateOnOpen (U : X.Opens) (s : Γ(X, U))
+    (z : OverOpen (structureMap := structureMap) U) :
+    evaluate U s z.1 = evaluateOnOpen U s z := by
+  have hz : z.1.residueData.1 ∈ U := by
+    simpa only [underlying] using z.2
+  rw [evaluate, dif_pos hz]
+  rfl
 
 /-- Sets obtained by restricting an inverse image of a complex open set to the domain of a local
 regular function. -/
@@ -237,6 +256,22 @@ lemma isoMapHomeomorph_apply {Y : Scheme} {structureMapY : Y ⟶ Spec (.of ℂ)}
 
 end ComplexPoint
 
+/-- Analytification of schemes over `Spec ℂ` as a functor to topological spaces.
+
+This is the canonical home for functorial complex points.  In particular, consumers need not
+package their own morphism records or reprove identity and composition laws. -/
+noncomputable def complexAnalytification :
+    CategoryTheory.Functor (Over (Spec (.of ℂ))) TopCat where
+  obj X := @TopCat.of (ComplexPoint X.left X.hom) ComplexPoint.analyticTopology
+  map f := @TopCat.ofHom _ _ ComplexPoint.analyticTopology ComplexPoint.analyticTopology
+    (ComplexPoint.continuousMap f.left (Over.w f))
+  map_id X := by
+    ext z
+    simp [ComplexPoint.continuousMap, ComplexPoint.map]
+  map_comp f g := by
+    ext z
+    simp [ComplexPoint.continuousMap, ComplexPoint.map, Category.assoc]
+
 /-- An integral projective algebraic variety over `ℂ`. Projectivity is witnessed by an explicit
 closed embedding into a finite-dimensional projective space. -/
 structure IntegralProjectiveComplexVariety where
@@ -264,6 +299,10 @@ noncomputable instance (V : IntegralProjectiveComplexVariety) : IsNoetherian V.s
   toCompactSpace :=
     QuasiCompact.compactSpace_of_compactSpace V.structureMap
 
+/-- The variety regarded as the corresponding object over `Spec ℂ`. -/
+noncomputable abbrev over (V : IntegralProjectiveComplexVariety) : Over (Spec (.of ℂ)) :=
+  Over.mk V.structureMap
+
 /-- The complex points of an integral projective complex variety. -/
 abbrev analyticPoint (V : IntegralProjectiveComplexVariety) :=
   ComplexPoint V.scheme V.structureMap
@@ -274,7 +313,7 @@ noncomputable instance (V : IntegralProjectiveComplexVariety) :
 
 /-- The analytification as a topological space. -/
 noncomputable def analytification (V : IntegralProjectiveComplexVariety) : TopCat :=
-  TopCat.of V.analyticPoint
+  complexAnalytification.obj V.over
 
 end IntegralProjectiveComplexVariety
 
@@ -306,6 +345,10 @@ noncomputable instance (V : SmoothProjectiveComplexVariety) : IsNoetherian V.sch
   toCompactSpace :=
     QuasiCompact.compactSpace_of_compactSpace V.structureMap
 
+/-- The variety regarded as the corresponding object over `Spec ℂ`. -/
+noncomputable abbrev over (V : SmoothProjectiveComplexVariety) : Over (Spec (.of ℂ)) :=
+  Over.mk V.structureMap
+
 /-- Forget smoothness while retaining the integral projective variety. -/
 def toIntegralProjective (V : SmoothProjectiveComplexVariety) :
     IntegralProjectiveComplexVariety where
@@ -324,7 +367,7 @@ noncomputable instance (V : SmoothProjectiveComplexVariety) :
 
 /-- The analytification as an object of the category of topological spaces. -/
 noncomputable def analytification (V : SmoothProjectiveComplexVariety) : TopCat :=
-  TopCat.of V.analyticPoint
+  complexAnalytification.obj V.over
 
 /-- Singular homology of the analytification with coefficients in a field `R`. -/
 noncomputable abbrev bettiHomology (R : Type) [Field R]
@@ -347,6 +390,11 @@ structure Hom (V W : SmoothProjectiveComplexVariety) where
 
 namespace Hom
 
+/-- The ordinary morphism in the over-category underlying a variety morphism. -/
+noncomputable def toOverHom {V W : SmoothProjectiveComplexVariety} (f : Hom V W) :
+    V.over ⟶ W.over :=
+  Over.homMk f.toSchemeHom f.commutes
+
 /-- The identity morphism of a smooth projective complex variety. -/
 @[refl]
 def id (V : SmoothProjectiveComplexVariety) : Hom V V where
@@ -363,7 +411,7 @@ end Hom
 /-- The continuous map on analytifications induced by a morphism of varieties. -/
 noncomputable def analyticMap {V W : SmoothProjectiveComplexVariety} (f : Hom V W) :
     V.analytification ⟶ W.analytification :=
-  TopCat.ofHom (ComplexPoint.continuousMap f.toSchemeHom f.commutes)
+  complexAnalytification.map f.toOverHom
 
 /-- The map on singular homology induced by a morphism of varieties. -/
 noncomputable def homologyMap (R : Type) [Field R]

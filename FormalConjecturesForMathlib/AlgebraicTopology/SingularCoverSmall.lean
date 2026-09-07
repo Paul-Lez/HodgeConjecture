@@ -143,42 +143,11 @@ public theorem coverMemberToSmallIntegralSingularChains_comp_inclusion (j : ι) 
         (TopCat.toSSet.map (topologicalSubsetInclusion X (U j)))
   rw [← Functor.map_comp, coverMemberToSmallSingularSet_comp_inclusion]
 
-/-- The chain-level output of the classical subdivision-and-prism argument: a map which makes
-chains small, together with the two chain homotopies required for a homotopy inverse.  This is
-strictly algebraic data, rather than a homology-isomorphism assumption. -/
-public structure CoverSmallChainRetractionData where
-  /-- A chain map sending arbitrary singular chains to cover-small chains. -/
-  smallify : IntegralSingularChainComplexObj X ⟶ CoverSmallIntegralSingularChainComplex X U
-  /-- Smallifying after inclusion is chain-homotopic to the identity on small chains. -/
-  homotopyInclusionSmallify :
-    Homotopy (coverSmallIntegralSingularChainInclusion X U ≫ smallify)
-      (𝟙 (CoverSmallIntegralSingularChainComplex X U))
-  /-- Including after smallifying is chain-homotopic to the identity on all singular chains. -/
-  homotopySmallifyInclusion :
-    Homotopy (smallify ≫ coverSmallIntegralSingularChainInclusion X U)
-      (𝟙 (IntegralSingularChainComplexObj X))
-
-/-- Retraction data packages directly into mathlib's chain-homotopy equivalence. -/
-public noncomputable def CoverSmallChainRetractionData.toHomotopyEquiv
-    (d : CoverSmallChainRetractionData X U) :
-    HomotopyEquiv (CoverSmallIntegralSingularChainComplex X U)
-      (IntegralSingularChainComplexObj X) where
-  hom := coverSmallIntegralSingularChainInclusion X U
-  inv := d.smallify
-  homotopyHomInvId := d.homotopyInclusionSmallify
-  homotopyInvHomId := d.homotopySmallifyInclusion
-
 /-- The exact small-chain approximation assertion supplied classically by iterated barycentric
 subdivision and its prism chain homotopy. -/
 public def CoverSmallChainApproximation : Prop :=
   HomologicalComplex.homotopyEquivalences AddCommGrpCat (ComplexShape.down ℕ)
     (coverSmallIntegralSingularChainInclusion X U)
-
-/-- Explicit subdivision retraction data proves the small-chain approximation theorem. -/
-public theorem CoverSmallChainRetractionData.approximation
-    (d : CoverSmallChainRetractionData X U) :
-    CoverSmallChainApproximation X U :=
-  ⟨d.toHomotopyEquiv, rfl⟩
 
 /-- A selected chain-homotopy equivalence witnessing small-chain approximation. -/
 public noncomputable def coverSmallChainHomotopyEquiv

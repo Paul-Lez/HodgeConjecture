@@ -249,46 +249,4 @@ def standardSphereSuccSimplicialHomologyTopIsoRat (n : ℕ) :
       ((∂Δ[n + 2] : SSet.{0}).toNormalizedChainComplex (ModuleCat.of ℚ ℚ)) (n + 1) ≪≫
     standardSphereSuccNormalizedHomologyTopIsoRat n
 
-/-- The rational top-homology generator selected by the canonical normalized-chain
-calculation. -/
-def standardSphereSuccSimplicialFundamentalClass (n : ℕ) :
-    ((∂Δ[n + 2] : SSet.{0}).chainComplex
-      (ModuleCat.of ℚ ℚ)).homology (n + 1) :=
-  (standardSphereSuccSimplicialHomologyTopIsoRat n).inv.hom 1
-
-lemma standardSphereSuccSimplicialHomologyTopIsoRat_hom_fundamentalClass (n : ℕ) :
-    (standardSphereSuccSimplicialHomologyTopIsoRat n).hom.hom
-        (standardSphereSuccSimplicialFundamentalClass n) = 1 := by
-  unfold standardSphereSuccSimplicialFundamentalClass
-  exact (standardSphereSuccSimplicialHomologyTopIsoRat n).inv_hom_id_apply 1
-
-/-- The canonical top class of every positive-dimensional standard simplicial sphere is
-nonzero. -/
-lemma standardSphereSuccSimplicialFundamentalClass_ne_zero (n : ℕ) :
-    standardSphereSuccSimplicialFundamentalClass n ≠ 0 := by
-  intro h
-  have hmap := standardSphereSuccSimplicialHomologyTopIsoRat_hom_fundamentalClass n
-  rw [h, map_zero] at hmap
-  exact zero_ne_one hmap
-
-/-- The canonical top class spans the rational top homology of every positive-dimensional
-standard simplicial sphere. -/
-lemma span_standardSphereSuccSimplicialFundamentalClass_eq_top (n : ℕ) :
-    Submodule.span ℚ {standardSphereSuccSimplicialFundamentalClass n} = ⊤ := by
-  let e := (standardSphereSuccSimplicialHomologyTopIsoRat n).toLinearEquiv
-  have he : e (standardSphereSuccSimplicialFundamentalClass n) = 1 :=
-    standardSphereSuccSimplicialHomologyTopIsoRat_hom_fundamentalClass n
-  have hmap :
-      (Submodule.span ℚ {standardSphereSuccSimplicialFundamentalClass n}).map e.toLinearMap =
-        Submodule.span ℚ {(1 : ℚ)} := by
-    rw [Submodule.map_span]
-    simp [he]
-  have hone : Submodule.span ℚ {(1 : ℚ)} = ⊤ := by
-    apply (Submodule.span_singleton_eq_top_iff ℚ (1 : ℚ)).mpr
-    intro q
-    exact ⟨q, by simp⟩
-  apply Submodule.map_injective_of_injective e.injective
-  rw [hmap, hone, Submodule.map_top]
-  exact (LinearMap.range_eq_top.mpr e.surjective).symm
-
 end AlgebraicTopology.Singular
