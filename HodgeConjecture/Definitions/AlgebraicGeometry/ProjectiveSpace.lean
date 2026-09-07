@@ -131,10 +131,7 @@ structure Presentation (f : X ⟶ T) where
   immersion_toBase :
     immersion ≫ toBase (Fin (ambientDimension + 1)) T = f
 
-/-- A scheme morphism is projective if it admits a finite-dimensional projective presentation.
-
-This is a class so that projectivity travels by instance resolution alongside the other
-hypotheses on a structure morphism, rather than as a bundled field. -/
+/-- A scheme morphism is projective if it admits a finite-dimensional projective presentation. -/
 class IsProjective (f : X ⟶ T) : Prop where
   /-- A finite-dimensional projective presentation exists. -/
   nonempty_presentation : Nonempty (Presentation f)

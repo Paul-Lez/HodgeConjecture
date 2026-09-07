@@ -36,11 +36,7 @@ This file names an open proposition. It does not assert or prove that propositio
 - [P. Deligne, *The Hodge Conjecture*](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf)
 -/
 
-open AlgebraicGeometry Order
-
-namespace HodgeConjecture
-
-open ComplexPoint
+open AlgebraicGeometry ComplexPoint
 
 /-- The Hodge conjecture: on every nonsingular complex projective variety, every rational Hodge
 class of degree `2p` is a rational linear combination of classes of codimension-`p` algebraic
@@ -48,10 +44,8 @@ subvarieties.
 
 This definition is a proposition, not a proof. It is deliberately untagged because the current
 problem metadata treats a sorry-free definition as a solved declaration. -/
-public def hodgeConjecture : Prop :=
+@[expose] public def HodgeConjecture : Prop :=
   ∀ {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec (.of ℂ)) [Smooth structureMap]
     [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
     [SmoothOfRelativeDimension d structureMap] (p : ℕ),
     rationalHodgeClasses structureMap d p ≤ algebraicCycleClassSpan structureMap p
-
-end HodgeConjecture
