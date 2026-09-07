@@ -94,15 +94,15 @@ public theorem openCoverIntersectionInclusion_comp {r s t : Finset ι}
 /-- Integral singular chains on all nonempty finite supports, with maps induced by inclusions
 of intersections. -/
 public def openCoverIntersectionChainModels : SupportChainModels ι where
-  model s := IntegralSingularChainComplexObj
-    (TopCat.of (openCoverIntersection X U s.1))
-  face {s t} hst := integralSingularChainMapObj
-    (openCoverIntersectionInclusion X U hst)
-  face_id s := by
+  obj s := IntegralSingularChainComplexObj
+    (TopCat.of (openCoverIntersection X U s.unop.1))
+  map {s t} f := integralSingularChainMapObj
+    (openCoverIntersectionInclusion X U (leOfHom f.unop))
+  map_id s := by
     unfold integralSingularChainMapObj
     rw [openCoverIntersectionInclusion_refl]
     simp
-  face_comp {r s t} hrs hst := by
+  map_comp {r s t} f g := by
     unfold integralSingularChainMapObj
     rw [← Functor.map_comp, openCoverIntersectionInclusion_comp]
 

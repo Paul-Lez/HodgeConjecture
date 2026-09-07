@@ -198,14 +198,14 @@ public theorem goodCoverNerveLocalModel_X_module_finite
 
 /-- Point-or-zero local models form a contravariant diagram on nonempty finite supports. -/
 public def goodCoverNerveChainModels : SupportChainModels ι where
-  model := goodCoverNerveLocalModel (X := X) (U := U)
-  face {s t} hst := integralSingularChainMapObj
-    (TopCat.ofHom (goodCoverNerveSpaceFace (X := X) (U := U) hst))
-  face_id s := by
+  obj s := goodCoverNerveLocalModel (X := X) (U := U) s.unop
+  map {s t} f := integralSingularChainMapObj
+    (TopCat.ofHom (goodCoverNerveSpaceFace (X := X) (U := U) (leOfHom f.unop)))
+  map_id s := by
     unfold integralSingularChainMapObj
     rw [goodCoverNerveSpaceFace_refl]
     simp
-  face_comp {r s t} hrs hst := by
+  map_comp {r s t} f g := by
     unfold integralSingularChainMapObj
     rw [← Functor.map_comp, goodCoverNerveSpaceFace_comp]
 
@@ -241,8 +241,14 @@ public theorem goodCoverLocalAugmentation_naturality {s t : CoverSupport ι}
         goodCoverLocalAugmentation X U s =
       goodCoverLocalAugmentation X U t ≫
         (goodCoverNerveChainModels X U).face hst := by
-  unfold goodCoverLocalAugmentation openCoverIntersectionChainModels
-    goodCoverNerveChainModels integralSingularChainMapObj
+  change integralSingularChainMapObj (openCoverIntersectionInclusion X U hst) ≫
+      integralSingularChainMapObj
+        (TopCat.ofHom (openCoverIntersectionToNerve (X := X) (U := U) s)) =
+    integralSingularChainMapObj
+        (TopCat.ofHom (openCoverIntersectionToNerve (X := X) (U := U) t)) ≫
+      integralSingularChainMapObj
+        (TopCat.ofHom (goodCoverNerveSpaceFace (X := X) (U := U) hst))
+  unfold integralSingularChainMapObj
   rw [← Functor.map_comp, ← Functor.map_comp,
     openCoverIntersectionToNerve_naturality]
 
@@ -253,12 +259,7 @@ namespace SupportChainModels
 variable {ι : Type} [LinearOrder ι] {M N : SupportChainModels ι}
 
 /-- A natural morphism between contravariant diagrams of local chain models. -/
-public structure Hom (M N : SupportChainModels ι) where
-  /-- The map on a finite support. -/
-  app : ∀ s, M.model s ⟶ N.model s
-  /-- Compatibility with restriction to a smaller support. -/
-  naturality : ∀ {s t : CoverSupport ι} (hst : s.1 ⊆ t.1),
-    M.face hst ≫ app s = app t ≫ N.face hst
+public abbrev Hom (M N : SupportChainModels ι) := M ⟶ N
 
 namespace Hom
 
@@ -268,31 +269,31 @@ variable (η : Hom M N)
 public def cechObjectMap (P : TupleClass ι) (n : ℕ) :
     M.cechObject P n ⟶ N.cechObject P n :=
   Limits.Sigma.map fun a : {a : Fin (n + 1) → ι // P.mem n a} ↦
-    η.app (tupleSupport a.1)
+    η.app (Opposite.op (tupleSupport a.1))
 
 @[reassoc]
 public theorem faceOrZero_naturality {n m : ℕ}
     (a : Fin (n + 1) → ι) (b : Fin (m + 1) → ι) :
-    M.faceOrZero a b ≫ η.app (tupleSupport b) =
-      η.app (tupleSupport a) ≫ N.faceOrZero a b := by
+    M.faceOrZero a b ≫ η.app (Opposite.op (tupleSupport b)) =
+      η.app (Opposite.op (tupleSupport a)) ≫ N.faceOrZero a b := by
   unfold SupportChainModels.faceOrZero
   split_ifs with h
-  · exact η.naturality h
+  · exact η.naturality ((homOfLE h).op)
   · simp
 
 @[reassoc]
 public theorem realizeAux_naturality {n m : ℕ} (a : Fin (n + 1) → ι)
     (P : TupleClass ι) (w : OrderedCechTuple.Formal ι (m + 1)) :
     M.realizeAux a P w ≫ η.cechObjectMap P m =
-      η.app (tupleSupport a) ≫ N.realizeAux a P w := by
+      η.app (Opposite.op (tupleSupport a)) ≫ N.realizeAux a P w := by
   have hw := OrderedCechTuple.linearMap_apply_eq_of_forall_mem_support
     (L := (Preadditive.rightComp _ (η.cechObjectMap P m)).toIntLinearMap ∘ₗ
       M.realizeAux a P)
-    (R := (Preadditive.leftComp _ (η.app (tupleSupport a))).toIntLinearMap ∘ₗ
+    (R := (Preadditive.leftComp _ (η.app (Opposite.op (tupleSupport a)))).toIntLinearMap ∘ₗ
       N.realizeAux a P)
     (w := w) fun b _ ↦ by
       change M.realizeAux a P (Finsupp.single b 1) ≫ η.cechObjectMap P m =
-        η.app (tupleSupport a) ≫ N.realizeAux a P (Finsupp.single b 1)
+        η.app (Opposite.op (tupleSupport a)) ≫ N.realizeAux a P (Finsupp.single b 1)
       rw [M.realizeAux_single, N.realizeAux_single]
       by_cases hb : P.mem m b
       · rw [M.ιOrZero_of_mem P hb, N.ιOrZero_of_mem P hb]
@@ -334,8 +335,8 @@ variable {ι : Type} [LinearOrder ι] (X : TopCat) (U : ι → Set X)
 public def goodCoverNerveLocalMap :
     SupportChainModels.Hom (openCoverIntersectionChainModels X U)
       (goodCoverNerveChainModels X U) where
-  app := goodCoverLocalAugmentation X U
-  naturality := goodCoverLocalAugmentation_naturality X U
+  app s := goodCoverLocalAugmentation X U s.unop
+  naturality s t f := goodCoverLocalAugmentation_naturality X U (leOfHom f.unop)
 
 /-- The natural local augmentation on the normalized ordered Čech bicomplex. -/
 public def goodCoverNerveBicomplexMap :

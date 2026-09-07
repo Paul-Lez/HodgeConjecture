@@ -63,16 +63,8 @@ public theorem tupleSupport_subset_iff {n m : ℕ} (a : Fin (n + 1) → ι) (b :
 
 /-- A contravariant diagram of chain complexes on nonempty finite sets of cover indices: the
 generic local intersection-chain input of the ordered Čech construction. -/
-public structure SupportChainModels (ι : Type) where
-  /-- A chain model for each nonempty finite intersection. -/
-  model : CoverSupport ι → ChainComplex AddCommGrpCat ℕ
-  /-- Restriction along `s ⊆ t`, directed like inclusion of the corresponding intersections. -/
-  face : ∀ {s t : CoverSupport ι}, s.1 ⊆ t.1 → (model t ⟶ model s)
-  /-- Identity inclusions act as identity chain maps. -/
-  face_id : ∀ s, face (Finset.Subset.refl s.1) = 𝟙 (model s)
-  /-- Restriction maps compose functorially. -/
-  face_comp : ∀ {r s t : CoverSupport ι} (hrs : r.1 ⊆ s.1) (hst : s.1 ⊆ t.1),
-    face hst ≫ face hrs = face (hrs.trans hst)
+public abbrev SupportChainModels (ι : Type) :=
+  (CoverSupport ι)ᵒᵖ ⥤ ChainComplex AddCommGrpCat ℕ
 
 /-- A class of ordered tuples, one predicate per simplicial degree, closed under faces. -/
 public structure TupleClass (ι : Type) where
@@ -111,6 +103,24 @@ public structure Admissible (P Q : TupleClass ι) {n m : ℕ}
 namespace SupportChainModels
 
 variable (M : SupportChainModels ι)
+
+/-- The local chain model at a nonempty support. -/
+public abbrev model (s : CoverSupport ι) := M.obj (Opposite.op s)
+
+/-- Restriction along an inclusion of supports. -/
+public def face {s t : CoverSupport ι} (h : s.1 ⊆ t.1) : M.model t ⟶ M.model s :=
+  M.map (homOfLE h).op
+
+omit [LinearOrder ι] in
+@[simp] public theorem face_id (s : CoverSupport ι) :
+    M.face (Finset.Subset.refl s.1) = 𝟙 (M.model s) := by
+  apply M.map_id
+
+omit [LinearOrder ι] in
+public theorem face_comp {r s t : CoverSupport ι} (hrs : r.1 ⊆ s.1) (hst : s.1 ⊆ t.1) :
+    M.face hst ≫ M.face hrs = M.face (hrs.trans hst) := by
+  rw [face, face, face, ← M.map_comp]
+  rfl
 
 /-- The coproduct of local models over the tuples of a class in one simplicial degree. -/
 public abbrev cechObject (P : TupleClass ι) (n : ℕ) : ChainComplex AddCommGrpCat ℕ :=
