@@ -115,36 +115,6 @@ lemma exists_cycleComponent_smooth_closed_complexPoint
   obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint V x
   exact ⟨z, hz, cycleComponent_complexPoint_underlying_isClosed V x z⟩
 
-/-- A smooth closed point of a cycle component together with ambient étale coordinates. -/
-structure CycleComponentSmoothAmbientCoordinates
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] where
-  /-- A complex point of the reduced component. -/
-  point : ComplexPoint (cycleComponent V.scheme x)
-    (cycleComponentι V.scheme x ≫ V.structureMap)
-  /-- The point belongs to the smooth locus of the component. -/
-  point_mem_smoothLocus : point.underlying ∈
-    (cycleComponentι V.scheme x ≫ V.structureMap).smoothLocus
-  /-- The underlying point is Zariski closed in the component. -/
-  point_isClosed : IsClosed {point.underlying}
-  /-- Étale coordinates on the ambient `d`-fold at the image of the point. -/
-  ambientCoordinates : LocalEtaleCoordinates V.structureMap d
-    (cycleComponentι V.scheme x point.underlying)
-
-/-- Every reduced cycle component admits a smooth closed point with ambient étale
-coordinates. -/
-lemma nonempty_cycleComponentSmoothAmbientCoordinates
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] :
-    Nonempty (CycleComponentSmoothAmbientCoordinates V x d) := by
-  obtain ⟨z, hz, hzclosed⟩ := exists_cycleComponent_smooth_closed_complexPoint V x
-  exact ⟨
-    { point := z
-      point_mem_smoothLocus := hz
-      point_isClosed := hzclosed
-      ambientCoordinates := localEtaleCoordinates V.structureMap d
-        (cycleComponentι V.scheme x z.underlying) }⟩
-
 /-- The coheight of the generic point of a component cannot exceed the relative dimension of
 the smooth ambient complex scheme. -/
 lemma cycleComponent_codimension_le
