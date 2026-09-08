@@ -312,7 +312,12 @@ run_cmd do
      "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentSmoothSupportCoclassSection",
      "HodgeConjecture.Other.AlgebraicTopology.SupportRelativeCohomologyOpenTransport",
      "HodgeConjecture.Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality",
-     "HodgeConjecture.Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison"]
+     "HodgeConjecture.Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison",
+     "HodgeConjecture.Other.AlgebraicTopology.SupportedSectionRestrictionConeNaturality",
+     "HodgeConjecture.Other.AlgebraicTopology.SupportedSingularSectionNaturality",
+     "HodgeConjecture.Other.AlgebraicTopology.SupportedSingularCohomologySheafComparison",
+     "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentSheafClass",
+     "HodgeConjecture.Other.AlgebraicGeometry.SheafCycleClass"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv
   for moduleName in modules do
