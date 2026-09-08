@@ -1,0 +1,9 @@
+import HodgeConjecture.Other.AlgebraicTopology.FlasqueCohomologyLowerVanishing
+
+open TopCat.Sheaf.IsFlasque.BoundedBelowComplex
+
+#print axioms cycles_isFlasque_add_nat_of_exact_le
+#print axioms cycles_isFlasque_of_exact_le
+#print axioms globalSectionsComplex_exactAt_of_cycles_isFlasque
+#print axioms globalSectionsComplex_exactAt_of_exact_le
+#print axioms globalSectionsComplex_homology_isZero_of_homology_isZero_le
