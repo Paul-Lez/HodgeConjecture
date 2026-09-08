@@ -575,7 +575,7 @@ lemma triadRelativeUnionSmallIso_hom_comp_toUnion :
     (triadRelativeUnionSmallIso X A B).hom ≫
         triadUnionSmallRelativeToUnionRelativeChainMap X A B =
       triadToUnionRelativeChainMap ℚ X A B := by
-  let _ : Epi (triadRelativeChainProjection ℚ X A B) := by
+  let : Epi (triadRelativeChainProjection ℚ X A B) := by
     change Epi (cokernel.π (triadSubspaceChainMap ℚ X A B))
     infer_instance
   apply (cancel_epi (triadRelativeChainProjection ℚ X A B)).1
@@ -590,11 +590,11 @@ theorem triadToUnionRelativeChainMap_quasiIso_of_openCover
     (hA : IsOpen (triadUnionCover X A B true))
     (hB : IsOpen (triadUnionCover X A B false)) :
     QuasiIso (triadToUnionRelativeChainMap ℚ X A B) := by
-  let _ : IsIso (triadRelativeUnionSmallIso X A B).hom :=
+  let : IsIso (triadRelativeUnionSmallIso X A B).hom :=
     (triadRelativeUnionSmallIso X A B).isIso_hom
-  let _ : QuasiIso (triadRelativeUnionSmallIso X A B).hom := by
+  let : QuasiIso (triadRelativeUnionSmallIso X A B).hom := by
     infer_instance
-  let _ : QuasiIso
+  let : QuasiIso
       (triadUnionSmallRelativeToUnionRelativeChainMap X A B) :=
     triadUnionSmallRelativeToUnionRelative_quasiIso X A B hA hB
   rw [← triadRelativeUnionSmallIso_hom_comp_toUnion]

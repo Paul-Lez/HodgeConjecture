@@ -219,7 +219,7 @@ lemma cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension
   have hdim : Order.krullDim (cycleComponent V.scheme x) = 0 := by
     simpa using orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
       (f := V.structureMap) (d := d) x hx
-  let _ : Subsingleton (cycleComponent V.scheme x) := by
+  let : Subsingleton (cycleComponent V.scheme x) := by
     constructor
     intro a b
     have hallMin : ∀ q : cycleComponent V.scheme x, IsMin q :=
@@ -249,9 +249,9 @@ theorem existsUnique_cycleComponentBorelMooreFundamentalClass_of_coheight_eq_dim
     ∃! c, IsCycleComponentBorelMooreFundamentalClass
       ℚ V x (2 * (d - d))
         (cycleComponentComplexLocalOrientation V x d d hx) c := by
-  let _ : TopologicalSpace (CycleComponentAnalyticPoint V x) :=
+  let : TopologicalSpace (CycleComponentAnalyticPoint V x) :=
     Point.analyticTopology
-  let _ : Subsingleton (CycleComponentAnalyticPoint V x) :=
+  let : Subsingleton (CycleComponentAnalyticPoint V x) :=
     cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension V x d hx
   obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint V.structureMap x
   let orientation := cycleComponentComplexLocalOrientation V x d d hx

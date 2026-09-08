@@ -86,7 +86,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
     cycleComponentι V.scheme x ≫ V.structureMap
   let S : (cycleComponent V.scheme x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec (.of ℂ) := S.ι ≫ c
-  let _ : Smooth g := by
+  let : Smooth g := by
     exact cycleComponent_smoothLocus_smooth V.structureMap x
   let zs : S.toScheme := ⟨z.underlying, hz⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
@@ -104,7 +104,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
     exact hpreimage ▸ hzclosed.preimage S.ι.continuous
   let zw : W.toScheme := ⟨zs, hzsW⟩
   let P : Ideal Γ(S, W) := (hW.primeIdealOf zw).asIdeal
-  let _ : P.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed zw hzsClosed
+  let : P.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed zw hzsClosed
   have hPm : P.height = m :=
     RingHom.IsStandardSmoothOfRelativeDimension.height_eq_of_isMaximal hm P
   have hPcoheight : P.height = Order.coheight zw :=
@@ -231,7 +231,7 @@ def componentLocalOrientationClass :
 /-- The constructed component-local class generates the full top local homology group. -/
 theorem span_componentLocalOrientationClass_eq_top :
     Submodule.span ℚ {C.componentLocalOrientationClass} = ⊤ := by
-  let _ : T2Space
+  let : T2Space
       (ComplexPoint (cycleComponent V.scheme x)
         (cycleComponentι V.scheme x ≫ V.structureMap)) :=
     ProjectiveSpace.Presentation.complexPoint_t2Space
@@ -242,7 +242,7 @@ theorem span_componentLocalOrientationClass_eq_top :
 /-- The exactly normalized component-local orientation class is nonzero. -/
 theorem componentLocalOrientationClass_ne_zero :
     C.componentLocalOrientationClass ≠ 0 := by
-  let _ : T2Space
+  let : T2Space
       (ComplexPoint (cycleComponent V.scheme x)
         (cycleComponentι V.scheme x ≫ V.structureMap)) :=
     ProjectiveSpace.Presentation.complexPoint_t2Space

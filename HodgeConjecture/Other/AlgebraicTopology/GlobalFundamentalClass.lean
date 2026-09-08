@@ -146,7 +146,7 @@ public theorem relativeSingularBoundary_eq_zero_of_injective_subspaceMap
       (HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n).hom) :
     relativeSingularBoundary X n = 0 := by
   let i := HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n
-  let _ : Mono i := (ModuleCat.mono_iff_injective i).mpr hinjective
+  let : Mono i := (ModuleCat.mono_iff_injective i).mpr hinjective
   have hcomp :
       relativeSingularBoundary X n ≫
         i = 0 :=

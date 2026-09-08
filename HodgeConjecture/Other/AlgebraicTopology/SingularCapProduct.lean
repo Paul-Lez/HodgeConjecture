@@ -1422,7 +1422,7 @@ theorem boundary_relativeCap_eq_of_cocycle (X : TopPair.{u}) (p q : ℕ)
   apply LinearMap.ext
   intro z
   let π := (relativeChainProjection R X).f (p + q + 1)
-  let _ : Epi π := Cofork.IsColimit.epi
+  let : Epi π := Cofork.IsColimit.epi
     (relativeChainProjectionComponentIsCokernelForCap R X (p + q + 1))
   obtain ⟨c, rfl⟩ := (ModuleCat.epi_iff_surjective π).mp inferInstance z
   dsimp only [π]
@@ -1626,7 +1626,7 @@ theorem relativeCap_coboundary_eq (X : TopPair.{u}) (p q : ℕ)
   apply LinearMap.ext
   intro z
   let π := (relativeChainProjection R X).f (p + q + 1)
-  let _ : Epi π := Cofork.IsColimit.epi
+  let : Epi π := Cofork.IsColimit.epi
     (relativeChainProjectionComponentIsCokernelForCap R X (p + q + 1))
   obtain ⟨c, rfl⟩ := (ModuleCat.epi_iff_surjective π).mp inferInstance z
   dsimp only [π]

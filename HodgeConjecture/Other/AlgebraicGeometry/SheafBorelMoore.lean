@@ -345,12 +345,12 @@ def orientationInducedComparisonAddEquiv
         (2 * (V.dimension - p)) ≃+
       RationalSingularCycleComponentCohomologyWithSupport
         V.toSmoothProjectiveComplexVariety x (2 * p) := by
-  let _ : TopologicalSpace V.analyticPoint := Point.analyticTopology
-  let _ : T2Space V.analyticPoint := inferInstance
-  let _ : CompactSpace V.analyticPoint := inferInstance
-  let _ : ChartedSpace (Fin V.dimension → ℂ) V.analyticPoint :=
+  let : TopologicalSpace V.analyticPoint := Point.analyticTopology
+  let : T2Space V.analyticPoint := inferInstance
+  let : CompactSpace V.analyticPoint := inferInstance
+  let : ChartedSpace (Fin V.dimension → ℂ) V.analyticPoint :=
     inferInstance
-  let _ : ∀ U : Opens V.analyticPoint, ParacompactSpace U := fun U =>
+  let : ∀ U : Opens V.analyticPoint, ParacompactSpace U := fun U =>
     opens_paracompactSpace_of_compact_chartedSpace
       (H := Fin V.dimension → ℂ) U
   exact D.compactificationComparison |>.trans

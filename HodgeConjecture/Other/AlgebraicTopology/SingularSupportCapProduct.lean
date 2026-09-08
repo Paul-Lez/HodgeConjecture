@@ -309,7 +309,7 @@ theorem boundary_supportCap_eq_of_cocycle
   apply LinearMap.ext
   intro z
   let π := (relativeChainProjection R (TopPair.ofSubset B)).f (p + q + 1)
-  let _ : Epi π := Cofork.IsColimit.epi
+  let : Epi π := Cofork.IsColimit.epi
     (relativeChainProjectionComponentIsCokernelForCap R
       (TopPair.ofSubset B) (p + q + 1))
   obtain ⟨c, rfl⟩ := (ModuleCat.epi_iff_surjective π).mp inferInstance z
@@ -522,7 +522,7 @@ theorem supportCap_coboundary_eq
   apply LinearMap.ext
   intro z
   let π := (relativeChainProjection R (TopPair.ofSubset B)).f (p + q + 1)
-  let _ : Epi π := Cofork.IsColimit.epi
+  let : Epi π := Cofork.IsColimit.epi
     (relativeChainProjectionComponentIsCokernelForCap R
       (TopPair.ofSubset B) (p + q + 1))
   obtain ⟨c, rfl⟩ := (ModuleCat.epi_iff_surjective π).mp inferInstance z

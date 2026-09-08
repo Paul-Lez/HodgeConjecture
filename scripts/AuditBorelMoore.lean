@@ -1,5 +1,5 @@
 /- Run after `lake build HodgeConjecture` with `lake env lean scripts/AuditBorelMoore.lean`. -/
-import HodgeConjecture.Other
+import HodgeConjecture
 import Lean.Util.CollectAxioms
 
 open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
@@ -37,13 +37,14 @@ open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
 #print axioms AlgebraicGeometry.ChowGroup.cycleClassOfComponents
 #print axioms AlgebraicGeometry.ChowGroup.rationalCycleClassOfComponents
 
--- Audit every declaration (including generated auxiliaries) in the material Borel–Moore tranche.
+-- Audit every declaration (including generated auxiliaries) in the changed auxiliary modules.
 -- Mathematical hypotheses passed as arguments remain hypotheses; this checks foundational axioms.
 set_option maxHeartbeats 0 in
 run_cmd do
   let modules : List String := [
     "AlgebraicGeometry.BorelMooreCycleClass",
     "AlgebraicGeometry.ChowCycleClassDescent",
+    "AlgebraicGeometry.CompactlySupportedCohomology",
     "AlgebraicGeometry.ComplexLocalOrientation",
     "AlgebraicGeometry.ComplexLocalOrientationCoherence",
     "AlgebraicGeometry.ComplexManifoldOrientation",
@@ -55,22 +56,46 @@ run_cmd do
     "AlgebraicGeometry.CycleComponentLocalOrientationCoherence",
     "AlgebraicGeometry.CycleComponentPurity",
     "AlgebraicGeometry.DimensionedSmoothProjective",
+    "AlgebraicGeometry.PrincipalDivisorCycleClass",
     "AlgebraicGeometry.PrincipalDivisorDegreeReduction",
     "AlgebraicGeometry.SheafBorelMoore",
+    "AlgebraicGeometry.SingularCycleClass",
+    "AlgebraicTopology.ChartLocalFundamentalClass",
     "AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance",
     "AlgebraicTopology.ChartLocalFundamentalClassGenerator",
+    "AlgebraicTopology.ChartLocalFundamentalClassInvariance",
     "AlgebraicTopology.CompactificationBorelMoore",
+    "AlgebraicTopology.ComplexDifferentiableLocalClassInvariance",
     "AlgebraicTopology.ComplexLinearLocalClassInvariance",
+    "AlgebraicTopology.ComplexOrientation",
+    "AlgebraicTopology.EuclideanLocalHomology",
     "AlgebraicTopology.GlobalFundamentalClass",
+    "AlgebraicTopology.LocalFundamentalClass",
+    "AlgebraicTopology.LocalFundamentalClassGenerator",
+    "AlgebraicTopology.RelativeHomologyEmpty",
+    "AlgebraicTopology.RelativeHomotopyInvariance",
+    "AlgebraicTopology.RelativePairExcision",
+    "AlgebraicTopology.SheafCohomologyWithSupport",
     "AlgebraicTopology.SingularCapProduct",
+    "AlgebraicTopology.SingularCochainCohomology",
+    "AlgebraicTopology.SingularCochainSheaf",
+    "AlgebraicTopology.SingularCoefficientBaseChange",
+    "AlgebraicTopology.SingularCohomology",
     "AlgebraicTopology.SingularCohomologySupportNaturality",
+    "AlgebraicTopology.SingularCohomologyZero",
+    "AlgebraicTopology.SingularHomologyVanishing",
     "AlgebraicTopology.SingularSupportCapProduct",
     "AlgebraicTopology.SingularTriadCapProduct",
     "AlgebraicTopology.SingularTriadExcision",
+    "AlgebraicTopology.StandardSphereAffineBoundary",
     "Geometry.Manifold.Orientation",
     "LinearAlgebra.ComplexOrientation"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv
+  for suffix in modules do
+    unless env.header.moduleNames.any
+        (fun name => name.toString == "HodgeConjecture.Other." ++ suffix) do
+      throwError "Audit module not imported: {suffix}"
   let mut count : Nat := 0
   let mut found : List Lean.Name := []
   for (name, _) in env.constants.toList do

@@ -52,8 +52,8 @@ variable {X : Scheme.{u}} {p : ℕ} (D : PrincipalDivisor X p)
 integral carrier.  No purity datum is needed: the order-of-vanishing function is zero at every
 point whose coheight is not one. -/
 def codimensionOneDivisor : CodimensionCycle D.carrier 1 :=
-  let _ := D.isIntegral
-  let _ := D.isNoetherian
+  let := D.isIntegral
+  let := D.isNoetherian
   ⟨D.divisor, by
     intro y hy
     by_contra hcodim
@@ -85,7 +85,7 @@ def CycleClassCommutesWithPrincipalDivisorPushforwardVia
     (carrierClass : AlgebraicCycle D.carrier ℤ →+ N)
     (ambientClass : AlgebraicCycle X ℤ →+ M)
     (gysin : N →+ M) : Prop :=
-  let _ := D.isClosedImmersion
+  let := D.isClosedImmersion
   ∀ c, ambientClass
       (AlgebraicCycle.map D.inclusion (fun _ : D.carrier ↦ ()) (fun _ : X ↦ ()) c) =
     gysin (carrierClass c)
@@ -101,7 +101,7 @@ def CycleClassCommutesWithPrincipalDivisorPushforward
     (D : PrincipalDivisor X p)
     (carrierClass : AlgebraicCycle D.carrier ℤ →+ M)
     (ambientClass : AlgebraicCycle X ℤ →+ M) : Prop :=
-  let _ := D.isClosedImmersion
+  let := D.isClosedImmersion
   ∀ c, ambientClass
       (AlgebraicCycle.map D.inclusion (fun _ : D.carrier ↦ ()) (fun _ : X ↦ ()) c) =
     carrierClass c

@@ -95,7 +95,7 @@ def wholeSupportCohomologyLinearEquiv (n : ℕ) :
         (TopPair.ofSubset ((Set.univ : Set X)ᶜ)))
       rw [Set.compl_univ]
       infer_instance
-    let _ := hP
+    let := hP
     let e := HomologicalComplex.homologyMapIso
       (asIso (relativeChainProjection R P)) n
     have h : Function.Bijective (relativeHomologyProjection R P n).hom :=

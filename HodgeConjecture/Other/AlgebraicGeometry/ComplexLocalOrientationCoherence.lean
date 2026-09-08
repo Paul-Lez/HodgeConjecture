@@ -54,9 +54,9 @@ theorem localClassOfChart_localChart_eq
     (hq' : q ∈ (localChart structureMap d z').source) :
     localClassOfChart d (localChart structureMap d z) q hq =
       localClassOfChart d (localChart structureMap d z') q hq' := by
-  let _ : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
+  let : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
     inferInstance
-  let _ : IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X structureMap) :=
+  let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X structureMap) :=
     isManifold_omega structureMap d
   let T : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     tangentCoordChange 𝓘(ℂ, Fin d → ℂ) z z' q

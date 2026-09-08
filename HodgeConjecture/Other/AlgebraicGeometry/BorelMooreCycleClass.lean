@@ -111,12 +111,12 @@ def supportedComparison
         (cycleComponentSupport V.structureMap x) (2 * (p : ℤ)) ≃+
       RationalSingularCycleComponentCohomologyWithSupport
         V.toSmoothProjectiveComplexVariety x (2 * p) := by
-  let _ : TopologicalSpace V.analyticPoint := Point.analyticTopology
-  let _ : T2Space V.analyticPoint := inferInstance
-  let _ : CompactSpace V.analyticPoint := inferInstance
-  let _ : ChartedSpace (Fin V.dimension → ℂ) V.analyticPoint :=
+  let : TopologicalSpace V.analyticPoint := Point.analyticTopology
+  let : T2Space V.analyticPoint := inferInstance
+  let : CompactSpace V.analyticPoint := inferInstance
+  let : ChartedSpace (Fin V.dimension → ℂ) V.analyticPoint :=
     inferInstance
-  let _ : ∀ U : Opens V.analyticPoint, ParacompactSpace U := fun U =>
+  let : ∀ U : Opens V.analyticPoint, ParacompactSpace U := fun U =>
     opens_paracompactSpace_of_compact_chartedSpace
       (H := Fin V.dimension → ℂ) U
   rw [show 2 * (p : ℤ) = ((2 * p : ℕ) : ℤ) by omega]
@@ -409,9 +409,9 @@ lemma maximalCodimensionBorelMooreFundamentalClass_ne_zero
   let hz := maximalCodimensionCycleComponentPoint_mem_smooth V x
   let D := rationalCycleComponentBorelMooreDataOfCoheightEqDimension
     V.toSmoothProjectiveComplexVariety x V.dimension hx
-  let _ : TopologicalSpace (CycleComponentAnalyticPoint
+  let : TopologicalSpace (CycleComponentAnalyticPoint
       V.toSmoothProjectiveComplexVariety x) := Point.analyticTopology
-  let _ : Subsingleton (CycleComponentAnalyticPoint
+  let : Subsingleton (CycleComponentAnalyticPoint
       V.toSmoothProjectiveComplexVariety x) :=
     cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension
       V.toSmoothProjectiveComplexVariety x V.dimension hx
@@ -434,9 +434,9 @@ lemma span_maximalCodimensionBorelMooreFundamentalClass_eq_top
   let hz := maximalCodimensionCycleComponentPoint_mem_smooth V x
   let D := rationalCycleComponentBorelMooreDataOfCoheightEqDimension
     V.toSmoothProjectiveComplexVariety x V.dimension hx
-  let _ : TopologicalSpace (CycleComponentAnalyticPoint
+  let : TopologicalSpace (CycleComponentAnalyticPoint
       V.toSmoothProjectiveComplexVariety x) := Point.analyticTopology
-  let _ : Subsingleton (CycleComponentAnalyticPoint
+  let : Subsingleton (CycleComponentAnalyticPoint
       V.toSmoothProjectiveComplexVariety x) :=
     cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension
       V.toSmoothProjectiveComplexVariety x V.dimension hx

@@ -243,7 +243,7 @@ def toInjectiveBoundaryInputs
     D.toRationalCycleComponentGlobalFundamentalClassCore
   complementInclusion_injective := D.complementInclusion_injective
   puncturedTopHomology_isZero := by
-    let _ : QuasiIso D.chainModelMap := D.chainModelMap_quasiIso
+    let : QuasiIso D.chainModelMap := D.chainModelMap_quasiIso
     exact pointComplementHomology_isZero_of_bounded_chainModel
       (2 * (d - p)) D.anchor D.chainModel D.chainModelMap D.topChainGroup_isZero
 

@@ -392,7 +392,7 @@ theorem boundary_triadCap_eq_of_cocycle
   apply LinearMap.ext
   intro z
   let π := (triadRelativeChainProjection R X A B).f (p + q + 1)
-  let _ : Epi π := Cofork.IsColimit.epi
+  let : Epi π := Cofork.IsColimit.epi
     (triadRelativeChainProjectionComponentIsCokernel R X A B (p + q + 1))
   obtain ⟨c, rfl⟩ := (ModuleCat.epi_iff_surjective π).mp inferInstance z
   dsimp only [π]
@@ -622,7 +622,7 @@ theorem triadCap_coboundary_eq
   apply LinearMap.ext
   intro z
   let π := (triadRelativeChainProjection R X A B).f (p + q + 1)
-  let _ : Epi π := Cofork.IsColimit.epi
+  let : Epi π := Cofork.IsColimit.epi
     (triadRelativeChainProjectionComponentIsCokernel R X A B (p + q + 1))
   obtain ⟨c, rfl⟩ := (ModuleCat.epi_iff_surjective π).mp inferInstance z
   dsimp only [π]

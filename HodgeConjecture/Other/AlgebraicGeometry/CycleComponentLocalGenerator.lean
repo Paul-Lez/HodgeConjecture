@@ -271,7 +271,7 @@ lemma neighborhoodPointAlgHomHomeomorph_apply
     (z : ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap)
     (r : Γ(C.componentNeighborhood.toScheme, ⊤)) :
     C.neighborhoodPointAlgHomHomeomorph z r = Point.evaluate ⊤ r z := by
-  let _ : IsAffine C.componentNeighborhood.toScheme :=
+  let : IsAffine C.componentNeighborhood.toScheme :=
     C.componentNeighborhood_isAffine
   rw [neighborhoodPointAlgHomHomeomorph, Homeomorph.trans_apply]
   change ComplexPoint.affineSpecEquiv Γ(C.componentNeighborhood.toScheme, ⊤)
@@ -364,7 +364,7 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
     AnalyticAt ℂ (fun v ↦ Point.evaluate W s
       (C.neighborhoodProjectionChart.symm v)) w := by
   let Y := C.componentNeighborhood.toScheme
-  let _ : IsAffine Y := C.componentNeighborhood_isAffine
+  let : IsAffine Y := C.componentNeighborhood_isAffine
   let y : ComplexPoint Y C.neighborhoodStructureMap := C.neighborhoodProjectionChart.symm w
   obtain ⟨g, hgW, hyg⟩ :=
     (isAffineOpen_top Y).exists_basicOpen_le
