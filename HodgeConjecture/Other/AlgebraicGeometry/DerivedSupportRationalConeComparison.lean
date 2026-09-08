@@ -318,7 +318,9 @@ lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
 /-- The existing rational support group is the homology of the actual
 kernel-defined supported sections of the ambient rational injective
 resolution. The shift `n - 1` in the old cone model is reconciled by the
-explicit homology/shift isomorphism. -/
+explicit homology/shift isomorphism. The final negation corrects the
+standard cone triangle's negative connecting projection, so that the
+comparison preserves the actual support-forgetting inclusion. -/
 def rationalSupportAddEquivSupportedInjectiveHomology
     (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport structureMap Z n ≃+
@@ -343,6 +345,7 @@ def rationalSupportAddEquivSupportedInjectiveHomology
     (CochainComplex.mappingCocone.shiftedLiftShortComplex S) (n - 1))).symm
   let e₅ := ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftIso
     1 (n - 1) n (by omega)).app S.X₁
-  exact e₁.trans (e₂ ≪≫ e₃ ≪≫ e₄ ≪≫ e₅).addCommGroupIsoToAddEquiv
+  exact (e₁.trans (e₂ ≪≫ e₃ ≪≫ e₄ ≪≫ e₅).addCommGroupIsoToAddEquiv).trans
+    (AddEquiv.neg _)
 
 end AlgebraicGeometry.ComplexPoint
