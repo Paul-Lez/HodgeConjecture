@@ -25,6 +25,8 @@ public import HodgeConjecture.Other.AlgebraicGeometry.ComplexLocalHomologyVanish
 public import HodgeConjecture.Other.AlgebraicGeometry.ComplexLocalOrientationNeighborhood
 public import HodgeConjecture.Other.AlgebraicGeometry.ComplexOrientationHomologySheaf
 public import HodgeConjecture.Other.AlgebraicGeometry.ComplexSheafBorelMoore
+public import HodgeConjecture.Other.AlgebraicGeometry.ComplexSheafBorelMooreForget
+public import HodgeConjecture.Other.AlgebraicGeometry.ComplexSheafBorelMooreRationalComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
@@ -59,6 +61,8 @@ public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
 public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
 public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
+public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
+public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtendNaturality
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
@@ -89,6 +93,8 @@ public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeomet
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointPurity
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPurity
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentRegularImmersion
+public import HodgeConjecture.Other.AlgebraicGeometry.DerivedSupportRationalComparison
+public import HodgeConjecture.Other.AlgebraicGeometry.DerivedSupportRationalConeComparison
 public import HodgeConjecture.Other.AlgebraicGeometry.HodgeCodimensionZero
 public import HodgeConjecture.Other.AlgebraicGeometry.PrincipalDivisorCycleClass
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
@@ -111,7 +117,11 @@ public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClass
 public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassInvariance
 public import HodgeConjecture.Other.AlgebraicTopology.ChartNeighborhoodOrientation
 public import HodgeConjecture.Other.AlgebraicTopology.ClosedEmbeddingSheafification
+public import HodgeConjecture.Other.AlgebraicTopology.ClosedEmbeddingSheafExact
+public import HodgeConjecture.Other.AlgebraicTopology.ClosedEmbeddingDerivedPushforward
 public import HodgeConjecture.Other.AlgebraicTopology.ClosedSubsetDimensionDrop
+public import HodgeConjecture.Other.AlgebraicTopology.NormalSlicePurity
+public import HodgeConjecture.Other.AlgebraicTopology.GraphNormalSlicePurity
 public import HodgeConjecture.Other.AlgebraicTopology.CompactificationBorelMoore
 public import HodgeConjecture.Other.AlgebraicTopology.ComplexDifferentiableLocalClassInvariance
 public import HodgeConjecture.Other.AlgebraicTopology.ComplexLinearLocalClassInvariance
@@ -128,6 +138,7 @@ public import HodgeConjecture.Other.AlgebraicTopology.CenteredComplexEmbeddingOr
 public import HodgeConjecture.Other.AlgebraicTopology.ComplexNeighborhoodOrientation
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedConcentratedOrientation
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportLocalization
+public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportForget
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportNaturality
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportShift
 public import HodgeConjecture.Other.AlgebraicTopology.EuclideanLocalHomologyVanishing
@@ -145,6 +156,7 @@ public import HodgeConjecture.Other.AlgebraicTopology.LocalFundamentalClassGener
 public import HodgeConjecture.Other.AlgebraicTopology.MappingConeQuasiIso
 public import HodgeConjecture.Other.AlgebraicTopology.OpenCoverOrderedCechBicomplex
 public import HodgeConjecture.Other.AlgebraicTopology.OpenSheafRestriction
+public import HodgeConjecture.Other.AlgebraicTopology.OpenInjectiveResolutionComparison
 public import HodgeConjecture.Other.AlgebraicTopology.OpenRestrictionStalk
 public import HodgeConjecture.Other.AlgebraicTopology.OrderedCechNormalization
 public import HodgeConjecture.Other.AlgebraicTopology.OrderedCechRealization

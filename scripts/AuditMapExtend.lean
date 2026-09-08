@@ -1,10 +1,10 @@
 import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 
-#print axioms HomologicalComplex.mapExtendXIso
-#print axioms HomologicalComplex.mapExtendXIso_hom_d
-#print axioms HomologicalComplex.mapExtendIso
-#print axioms HomologicalComplex.mapExtendIso_hom_f
-#print axioms HomologicalComplex.mapExtendXIso_hom_mapX
-#print axioms HomologicalComplex.mapExtendIso_naturality
-#print axioms HomologicalComplex.mapExtendIso_natTrans
-#print axioms HomologicalComplex.mapExtendIso_id
+#print axioms HomologicalComplex.mapExtendCanonicalXIso
+#print axioms HomologicalComplex.mapExtendCanonicalXIso_hom_d
+#print axioms HomologicalComplex.mapExtendCanonicalIso
+#print axioms HomologicalComplex.mapExtendCanonicalIso_hom_f
+#print axioms HomologicalComplex.mapExtendCanonicalXIso_hom_mapX
+#print axioms HomologicalComplex.mapExtendCanonicalIso_naturality
+#print axioms HomologicalComplex.mapExtendCanonicalIso_natTrans
+#print axioms HomologicalComplex.mapExtendCanonicalIso_id

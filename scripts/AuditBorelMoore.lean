@@ -110,6 +110,13 @@ open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
 #print axioms complexDerivedSupportedCohomologySupportMap
 #print axioms complexAmbientSheafBorelMooreOrientationIso_naturality
 #print axioms complexAmbientSheafBorelMooreHomologyIso_naturality
+#print axioms TopCat.Sheaf.derivedClosedSupportSectionsTopIso
+#print axioms TopCat.Sheaf.derivedForgetClosedSupport_unit_app
+#print axioms complexAmbientSheafBorelMooreToCohomology
+#print axioms complexAmbientSheafBorelMooreToCohomology_eq_forgetSupport
+#print axioms derivedRationalSupportAddEquiv
+#print axioms complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport
+#print axioms complexAmbientSheafBorelMooreCycleDegreeToFieldCohomology
 #print axioms maximalCodimensionPrincipalDivisorClassVanishes_of_coefficientSum
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCycles
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCyclesOfComponents
@@ -132,6 +139,8 @@ run_cmd do
     "AlgebraicGeometry.ComplexManifoldOrientation",
     "AlgebraicGeometry.ComplexOrientationHomologySheaf",
     "AlgebraicGeometry.ComplexSheafBorelMoore",
+    "AlgebraicGeometry.ComplexSheafBorelMooreForget",
+    "AlgebraicGeometry.ComplexSheafBorelMooreRationalComparison",
     "AlgebraicGeometry.CycleComponentAnalyticImmersion",
     "AlgebraicGeometry.CycleComponentBorelMoore",
     "AlgebraicGeometry.CycleComponentGlobalFundamentalClass",
@@ -140,6 +149,8 @@ run_cmd do
     "AlgebraicGeometry.CycleComponentLocalOrientationCoherence",
     "AlgebraicGeometry.CycleComponentPurity",
     "AlgebraicGeometry.DimensionedSmoothProjective",
+    "AlgebraicGeometry.DerivedSupportRationalComparison",
+    "AlgebraicGeometry.DerivedSupportRationalConeComparison",
     "AlgebraicGeometry.PrincipalDivisorCycleClass",
     "AlgebraicGeometry.PrincipalDivisorDegreeReduction",
     "AlgebraicGeometry.PointCycleClass",
@@ -155,6 +166,8 @@ run_cmd do
     "AlgebraicTopology.ChartLocalFundamentalClassInvariance",
     "AlgebraicTopology.ChartNeighborhoodOrientation",
     "AlgebraicTopology.ClosedEmbeddingSheafification",
+    "AlgebraicTopology.ClosedEmbeddingSheafExact",
+    "AlgebraicTopology.ClosedEmbeddingDerivedPushforward",
     "AlgebraicTopology.ClosedSubsetDimensionDrop",
     "AlgebraicTopology.CompactificationBorelMoore",
     "AlgebraicTopology.ComplexDifferentiableLocalClassInvariance",
@@ -163,6 +176,7 @@ run_cmd do
     "AlgebraicTopology.ComplexNeighborhoodOrientation",
     "AlgebraicTopology.DerivedSheafSupport",
     "AlgebraicTopology.DerivedSheafSupportLocalization",
+    "AlgebraicTopology.DerivedSheafSupportForget",
     "AlgebraicTopology.DerivedSheafSupportNaturality",
     "AlgebraicTopology.DerivedSheafSupportShift",
     "AlgebraicTopology.DerivedConcentratedOrientation",
@@ -170,11 +184,14 @@ run_cmd do
     "AlgebraicTopology.EuclideanLocalHomologyVanishing",
     "AlgebraicTopology.EuclideanNeighborhoodOrientation",
     "AlgebraicTopology.GlobalFundamentalClass",
+    "AlgebraicTopology.GraphNormalSlicePurity",
     "AlgebraicTopology.HomologyZeroNaturality",
     "AlgebraicTopology.HomologySheafSection",
     "AlgebraicTopology.LocalFundamentalClass",
     "AlgebraicTopology.LocalFundamentalClassGenerator",
+    "AlgebraicTopology.NormalSlicePurity",
     "AlgebraicTopology.OpenSheafRestriction",
+    "AlgebraicTopology.OpenInjectiveResolutionComparison",
     "AlgebraicTopology.OpenRestrictionStalk",
     "AlgebraicTopology.RelativeHomologyEmpty",
     "AlgebraicTopology.RelativeHomotopyInvariance",
@@ -210,6 +227,8 @@ run_cmd do
     ["HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift",
      "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusNaturality",
      "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShiftNaturality",
+     "HodgeConjecture.Mathlib.Algebra.Homology.MapExtend",
+     "HodgeConjecture.Mathlib.Algebra.Homology.MapExtendNaturality",
      "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingCoconeShortExact"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv

@@ -91,3 +91,24 @@ theorem rightDerivedFunctorPlus_comp (α : F ⟶ G) (β : G ⟶ H) :
   simp [rightDerivedFunctorPlus]
 
 end CategoryTheory.NatTrans
+
+namespace CategoryTheory.NatIso
+
+variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
+  [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
+  {F G : C ⥤ D} [F.Additive] [G.Additive]
+
+/-- A coefficient natural isomorphism induces an isomorphism of the actual bounded-below
+right derived functors, using the already constructed derived natural transformations. -/
+def rightDerivedFunctorPlus (e : F ≅ G) :
+    F.rightDerivedFunctorPlus ≅ G.rightDerivedFunctorPlus where
+  hom := e.hom.rightDerivedFunctorPlus
+  inv := e.inv.rightDerivedFunctorPlus
+  hom_inv_id := by
+    rw [← NatTrans.rightDerivedFunctorPlus_comp, e.hom_inv_id,
+      NatTrans.rightDerivedFunctorPlus_id]
+  inv_hom_id := by
+    rw [← NatTrans.rightDerivedFunctorPlus_comp, e.inv_hom_id,
+      NatTrans.rightDerivedFunctorPlus_id]
+
+end CategoryTheory.NatIso
