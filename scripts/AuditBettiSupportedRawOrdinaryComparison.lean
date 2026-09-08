@@ -1,0 +1,9 @@
+import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportedRawOrdinaryComparison
+import HodgeConjecture.Mathlib.Algebra.Homology.MapHomologyShift
+
+#print axioms CochainComplex.map_shiftShortComplex_middle
+#print axioms CochainComplex.mapHomologyIso_shift
+#print axioms CochainComplex.mapHomologyIso_shiftMap
+#print axioms AlgebraicGeometry.ComplexPoint.globalRawSupportConeToNatural_ambient_connecting
+#print axioms AlgebraicGeometry.ComplexPoint.rationalCohomologyAmbient_forgetSupport_rawSingularCone
+#print axioms AlgebraicGeometry.ComplexPoint.rationalCohomologyAmbient_forgetSupport_of_singular
