@@ -588,7 +588,7 @@ def rationalCohomologyEquivSingularCohomology
     [T2Space (ComplexPoint X structureMap)]
     [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
     (n : ℕ) :
-    RationalCohomology structureMap (n : ℤ) ≃
+    FieldCohomology ℚ structureMap (n : ℤ) ≃
       AlgebraicTopology.Singular.Cohomology ℚ
         (TopCat.of (ComplexPoint X structureMap)) n :=
   (rationalCohomologySingularCochainEquiv structureMap d (n : ℤ)).trans

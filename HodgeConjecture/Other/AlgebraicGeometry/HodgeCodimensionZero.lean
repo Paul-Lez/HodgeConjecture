@@ -64,8 +64,8 @@ analytification is connected. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected
     [SmoothOfRelativeDimension d structureMap]
     (hV : ConnectedSpace (ComplexPoint X structureMap)) :
-    rationalHodgeClasses structureMap d 0 = algebraicCycleClassSpan structureMap 0 := by
-  rw [rationalHodgeClasses_zero_eq_top,
+    hodgeClasses ℚ structureMap d 0 = algebraicCycleClassSpan structureMap 0 := by
+  rw [hodgeClasses_zero_eq_top,
     algebraicCycleClassSpan_zero_eq_top_of_connected structureMap hV]
 
 /-- The Hodge-conjecture inclusion holds in codimension zero when the analytification is
@@ -73,20 +73,20 @@ connected. -/
 theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected
     [SmoothOfRelativeDimension d structureMap]
     (hV : ConnectedSpace (ComplexPoint X structureMap)) :
-    rationalHodgeClasses structureMap d 0 ≤ algebraicCycleClassSpan structureMap 0 := by
+    hodgeClasses ℚ structureMap d 0 ≤ algebraicCycleClassSpan structureMap 0 := by
   rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected structureMap d hV]
 
 /-- The Hodge-conjecture inclusion holds in every codimension for a smooth projective complex
 variety of complex dimension zero. -/
 theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero
     [SmoothOfRelativeDimension d structureMap] (hd : d = 0) (p : ℕ) :
-    rationalHodgeClasses structureMap d p ≤ algebraicCycleClassSpan structureMap p := by
+    hodgeClasses ℚ structureMap d p ≤ algebraicCycleClassSpan structureMap p := by
   by_cases hp : p = 0
   · subst p
     exact rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected structureMap d
       (connectedSpaceOfDimensionEqZero structureMap d hd)
   · have hdim : d < p := by lia
-    rw [rationalHodgeClasses_eq_bot_of_lt structureMap d hdim,
+    rw [hodgeClasses_eq_bot_of_lt ℚ structureMap d hdim,
       algebraicCycleClassSpan_eq_bot_of_lt structureMap d p hdim]
 
 end AlgebraicGeometry.ComplexPoint

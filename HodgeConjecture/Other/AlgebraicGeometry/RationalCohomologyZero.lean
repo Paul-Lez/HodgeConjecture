@@ -58,11 +58,11 @@ def constantIntegerSheafComplexIntIsoSingleZero :
 
 /-- The extended rational constant-sheaf complex is the rational constant sheaf in degree zero. -/
 def constantRationalSheafComplexIntIsoSingleZero :
-    constantRationalSheafComplexInt structureMap ≅
+    constantFieldSheafComplexInt ℚ structureMap ≅
       (CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-        (constantRationalSheaf structureMap) :=
+        (constantFieldSheaf ℚ structureMap) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    (constantRationalSheaf structureMap) 0 0 embeddingUpNat_zero
+    (constantFieldSheaf ℚ structureMap) 0 0 embeddingUpNat_zero
 
 /-- The inverse of the integer extension/single comparison is a quasi-isomorphism. -/
 lemma constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso :
@@ -83,12 +83,12 @@ lemma constantRationalSheafComplexIntIsoSingleZero_hom_quasiIso :
 /-- Degree-zero rational cohomology after replacing both extended complexes by single
 complexes. -/
 def rationalCohomologyZeroEquivSingle :
-    RationalCohomology structureMap 0 ≃
+    FieldCohomology ℚ structureMap 0 ≃
       Localization.SmallShiftedHom (analyticQuasiIsomorphisms structureMap)
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
           (constantIntegerSheaf structureMap))
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-          (constantRationalSheaf structureMap)) (0 : ℤ) :=
+          (constantFieldSheaf ℚ structureMap)) (0 : ℤ) :=
   (Localization.SmallShiftedHom.precompEquiv
       (constantIntegerSheafComplexIntIsoSingleZero structureMap).inv
       (constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso structureMap)).trans
@@ -102,9 +102,9 @@ def rationalCohomologyZeroSingleEquivExt :
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
           (constantIntegerSheaf structureMap))
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-          (constantRationalSheaf structureMap)) (0 : ℤ) ≃
+          (constantFieldSheaf ℚ structureMap)) (0 : ℤ) ≃
       Abelian.Ext (constantIntegerSheaf structureMap)
-        (constantRationalSheaf structureMap) 0 :=
+        (constantFieldSheaf ℚ structureMap) 0 :=
   Equiv.refl _
 
 /-- The definitional comparison from shifted Hom to Ext acts as the identity. -/
@@ -113,14 +113,14 @@ def rationalCohomologyZeroSingleEquivExt :
       ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
         (constantIntegerSheaf structureMap))
       ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-        (constantRationalSheaf structureMap)) (0 : ℤ)) :
+        (constantFieldSheaf ℚ structureMap)) (0 : ℤ)) :
     rationalCohomologyZeroSingleEquivExt structureMap a = a := rfl
 
 /-- Degree-zero rational constant-sheaf cohomology is ordinary Hom from integer constants to
 rational constants. -/
 def rationalCohomologyZeroEquivSheafHom :
-    RationalCohomology structureMap 0 ≃
-      (constantIntegerSheaf structureMap ⟶ constantRationalSheaf structureMap) :=
+    FieldCohomology ℚ structureMap 0 ≃
+      (constantIntegerSheaf structureMap ⟶ constantFieldSheaf ℚ structureMap) :=
   ((rationalCohomologyZeroEquivSingle structureMap).trans
     (rationalCohomologyZeroSingleEquivExt structureMap)).trans Abelian.Ext.homEquiv₀
 
@@ -130,19 +130,19 @@ set_option backward.isDefEq.respectTransparency false in
 corresponding single-complex morphism. -/
 lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
     rationalCohomologyZeroEquivSingle structureMap
-        (rationalCohomologyClass structureMap q) =
+        (fieldCohomologyClass ℚ structureMap q) =
       Localization.SmallShiftedHom.mk₀
         (analyticQuasiIsomorphisms structureMap) (0 : ℤ) rfl
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).map
-          (integerToRationalConstantSheaf structureMap q)) := by
-  simp only [rationalCohomologyZeroEquivSingle, rationalCohomologyClass,
-    Equiv.trans_apply, Localization.SmallShiftedHom.precompEquiv_apply]
+          (integerToFieldConstantSheaf ℚ structureMap q)) := by
+  simp only [rationalCohomologyZeroEquivSingle, fieldCohomologyClass, Equiv.trans_apply,
+    Localization.SmallShiftedHom.precompEquiv_apply]
   rw [← smallShiftedHomMkZero_comp structureMap]
   rw [Localization.SmallShiftedHom.postcompEquiv_apply]
   rw [← smallShiftedHomMkZero_comp structureMap]
   congr 1
-  unfold constantIntegerSheafComplexInt constantRationalSheafComplexInt
-    integerToRationalConstantSheafComplexInt
+  unfold constantIntegerSheafComplexInt constantFieldSheafComplexInt
+    integerToFieldConstantSheafComplexInt
     constantIntegerSheafComplexIntIsoSingleZero
     constantRationalSheafComplexIntIsoSingleZero
   ext i
@@ -154,7 +154,7 @@ lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
       HomologicalComplex.extendSingleIso_hom_f]
     simp
     exact (HomologicalComplex.single_map_f_self (ComplexShape.up ℤ) 0
-      (integerToRationalConstantSheaf structureMap q)).symm
+      (integerToFieldConstantSheaf ℚ structureMap q)).symm
   · exact (HomologicalComplex.isZero_single_obj_X
       (ComplexShape.up ℤ) 0 (constantIntegerSheaf structureMap) i hi).eq_of_src _ _
 
@@ -164,8 +164,8 @@ set_option backward.isDefEq.respectTransparency false in
 induced by `n ↦ n q`. -/
 @[simp] theorem rationalCohomologyZeroEquivSheafHom_class (q : ℚ) :
     rationalCohomologyZeroEquivSheafHom structureMap
-        (rationalCohomologyClass structureMap q) =
-      integerToRationalConstantSheaf structureMap q := by
+        (fieldCohomologyClass ℚ structureMap q) =
+      integerToFieldConstantSheaf ℚ structureMap q := by
   apply (Abelian.Ext.mk₀_bijective _ _).injective
   dsimp only [rationalCohomologyZeroEquivSheafHom, Equiv.trans_apply]
   rw [Abelian.Ext.mk₀_homEquiv₀_apply]
@@ -179,13 +179,13 @@ theorem rationalCohomologyClass_injective_of_constantSheaf_faithful
     [(constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
       AddCommGrpCat).Faithful] :
-    Function.Injective (rationalCohomologyClass structureMap) := by
+    Function.Injective (fieldCohomologyClass ℚ structureMap) := by
   intro a b hab
-  have hs : integerToRationalConstantSheaf structureMap a =
-      integerToRationalConstantSheaf structureMap b := by
+  have hs : integerToFieldConstantSheaf ℚ structureMap a =
+      integerToFieldConstantSheaf ℚ structureMap b := by
     rw [← rationalCohomologyZeroEquivSheafHom_class,
       ← rationalCohomologyZeroEquivSheafHom_class, hab]
-  unfold integerToRationalConstantSheaf at hs
+  unfold integerToFieldConstantSheaf at hs
   have hm := (constantSheaf
     (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
     AddCommGrpCat).map_injective hs
@@ -195,7 +195,7 @@ theorem rationalCohomologyClass_injective_of_constantSheaf_faithful
 degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective
     [Nonempty (ComplexPoint X structureMap)] :
-    Function.Injective (rationalCohomologyClass structureMap) := by
+    Function.Injective (fieldCohomologyClass ℚ structureMap) := by
   let _ : (constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
       AddCommGrpCat).Faithful :=
@@ -206,7 +206,7 @@ theorem rationalCohomologyClass_injective
 a constant class. -/
 theorem rationalCohomologyClass_surjective
     [ConnectedSpace (ComplexPoint X structureMap)] :
-    Function.Surjective (rationalCohomologyClass structureMap) := by
+    Function.Surjective (fieldCohomologyClass ℚ structureMap) := by
   intro α
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
   let F := constantSheaf J AddCommGrpCat
@@ -220,8 +220,8 @@ theorem rationalCohomologyClass_surjective
   refine ⟨q, e.injective ?_⟩
   rw [rationalCohomologyZeroEquivSheafHom_class]
   rw [← hf]
-  unfold integerToRationalConstantSheaf
-  change F.map (AddCommGrpCat.ofHom (integerMultipleAddHom q)) = F.map f
+  unfold integerToFieldConstantSheaf
+  change F.map (AddCommGrpCat.ofHom (integerMultipleAddHom ℚ q)) = F.map f
   congr 1
   apply AddCommGrpCat.hom_ext
   apply AddMonoidHom.ext
@@ -234,7 +234,7 @@ theorem rationalCohomologyClass_surjective
 analytic complex-point space. -/
 theorem rationalCohomologyClass_bijective
     [ConnectedSpace (ComplexPoint X structureMap)] :
-    Function.Bijective (rationalCohomologyClass structureMap) := by
+    Function.Bijective (fieldCohomologyClass ℚ structureMap) := by
   let _ : Nonempty (ComplexPoint X structureMap) := inferInstance
   exact ⟨rationalCohomologyClass_injective structureMap,
     rationalCohomologyClass_surjective structureMap⟩
@@ -243,22 +243,22 @@ theorem rationalCohomologyClass_bijective
 degree-zero rational cohomology. -/
 def rationalCohomologyClassLinearEquiv
     [ConnectedSpace (ComplexPoint X structureMap)] :
-    ℚ ≃ₗ[ℚ] RationalCohomology structureMap 0 :=
-  LinearEquiv.ofBijective (rationalCohomologyClassLinear structureMap)
+    ℚ ≃ₗ[ℚ] FieldCohomology ℚ structureMap 0 :=
+  LinearEquiv.ofBijective (fieldCohomologyClassLinear ℚ structureMap)
     (rationalCohomologyClass_bijective structureMap)
 
 /-- On a connected analytic complex-point space, the rational cohomology unit spans all of
 degree-zero rational cohomology. -/
 theorem span_rationalCohomologyUnit_eq_top
     [ConnectedSpace (ComplexPoint X structureMap)] :
-    Submodule.span ℚ {rationalCohomologyUnit structureMap} = ⊤ := by
+    Submodule.span ℚ {fieldCohomologyUnit ℚ structureMap} = ⊤ := by
   apply le_antisymm le_top
   intro α _
   obtain ⟨q, rfl⟩ := rationalCohomologyClass_surjective structureMap α
-  have hq : rationalCohomologyClass structureMap q =
-      q • rationalCohomologyUnit structureMap := by
-    simpa [rationalCohomologyUnit] using
-      rationalCohomologyClass_mul structureMap q 1
+  have hq : fieldCohomologyClass ℚ structureMap q =
+      q • fieldCohomologyUnit ℚ structureMap := by
+    simpa [fieldCohomologyUnit] using
+      fieldCohomologyClass_mul ℚ structureMap q 1
   rw [hq]
   exact Submodule.smul_mem _ q (Submodule.subset_span (Set.mem_singleton _))
 
@@ -266,11 +266,11 @@ theorem span_rationalCohomologyUnit_eq_top
 space. -/
 theorem rationalCohomologyUnit_ne_zero
     [Nonempty (ComplexPoint X structureMap)] :
-    rationalCohomologyUnit structureMap ≠ 0 := by
+    fieldCohomologyUnit ℚ structureMap ≠ 0 := by
   intro h
-  have h10 : rationalCohomologyClass structureMap 1 =
-      rationalCohomologyClass structureMap 0 := by
-    simpa [rationalCohomologyUnit] using h
+  have h10 : fieldCohomologyClass ℚ structureMap 1 =
+      fieldCohomologyClass ℚ structureMap 0 := by
+    simpa [fieldCohomologyUnit] using h
   exact one_ne_zero (rationalCohomologyClass_injective structureMap h10)
 
 end AlgebraicGeometry.ComplexPoint

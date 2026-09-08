@@ -244,8 +244,8 @@ def singularResolutionRestriction
     (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
     singularCochainSheafComplexInt structureMap ℚ ⟶
       derivedPushforwardComplementConstantRationalComplexInt structureMap Z := by
-  let _ : (constantRationalSheafComplexInt structureMap).IsStrictlyGE 0 := by
-    unfold constantRationalSheafComplexInt
+  let _ : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
+    unfold constantFieldSheafComplexInt
     infer_instance
   let _ : (singularCochainSheafComplexInt structureMap ℚ).IsStrictlyGE 0 := by
     unfold singularCochainSheafComplexInt
@@ -270,8 +270,8 @@ lemma rationalToSingular_comp_singularResolutionRestriction
     rationalToSingularCochainComplexInt structureMap ≫
         singularResolutionRestriction structureMap d Z hZ =
       rationalRestrictionComplexInt structureMap Z := by
-  let _ : (constantRationalSheafComplexInt structureMap).IsStrictlyGE 0 := by
-    unfold constantRationalSheafComplexInt
+  let _ : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
+    unfold constantFieldSheafComplexInt
     infer_instance
   let _ : (singularCochainSheafComplexInt structureMap ℚ).IsStrictlyGE 0 := by
     unfold singularCochainSheafComplexInt
@@ -295,8 +295,8 @@ def rationalSupportConeToSingularResolutionCone
     (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
     rationalCohomologyWithSupportComplex structureMap Z ⟶
       CochainComplex.mappingCone (singularResolutionRestriction structureMap d Z hZ) := by
-  let _ : (constantRationalSheafComplexInt structureMap).IsStrictlyGE 0 := by
-    unfold constantRationalSheafComplexInt
+  let _ : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
+    unfold constantFieldSheafComplexInt
     infer_instance
   let _ : (singularCochainSheafComplexInt structureMap ℚ).IsStrictlyGE 0 := by
     unfold singularCochainSheafComplexInt
@@ -317,8 +317,8 @@ def rationalSupportConeToSingularResolutionCone
 noncomputable instance rationalSupportConeToSingularResolutionCone_quasiIso
     (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
     QuasiIso (rationalSupportConeToSingularResolutionCone structureMap d Z hZ) := by
-  let _ : (constantRationalSheafComplexInt structureMap).IsStrictlyGE 0 := by
-    unfold constantRationalSheafComplexInt
+  let _ : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
+    unfold constantFieldSheafComplexInt
     infer_instance
   let _ : (singularCochainSheafComplexInt structureMap ℚ).IsStrictlyGE 0 := by
     unfold singularCochainSheafComplexInt

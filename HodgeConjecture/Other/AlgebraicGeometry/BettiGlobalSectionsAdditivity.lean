@@ -259,7 +259,7 @@ def rationalCohomologyAddEquivSingularCohomology
     [T2Space (ComplexPoint X structureMap)]
     [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
     (n : ℕ) :
-    RationalCohomology structureMap (n : ℤ) ≃+
+    FieldCohomology ℚ structureMap (n : ℤ) ≃+
       AlgebraicTopology.Singular.Cohomology ℚ
         (TopCat.of (ComplexPoint X structureMap)) n :=
   (rationalCohomologySingularCochainAddEquiv structureMap d (n : ℤ)).trans
@@ -270,7 +270,7 @@ lemma rationalCohomologyEquivSingularCohomology_add
     {d : ℕ} [SmoothOfRelativeDimension d structureMap]
     [T2Space (ComplexPoint X structureMap)]
     [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
-    (n : ℕ) (α β : RationalCohomology structureMap (n : ℤ)) :
+    (n : ℕ) (α β : FieldCohomology ℚ structureMap (n : ℤ)) :
     rationalCohomologyEquivSingularCohomology (d := d) structureMap n (α + β) =
       rationalCohomologyEquivSingularCohomology (d := d) structureMap n α +
       rationalCohomologyEquivSingularCohomology (d := d) structureMap n β := by

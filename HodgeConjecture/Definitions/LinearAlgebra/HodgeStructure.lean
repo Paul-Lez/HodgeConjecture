@@ -42,22 +42,26 @@ universe u
 
 namespace HodgeStructure
 
-/-- Extension of scalars of a rational vector space from `ℚ` to `ℂ`. -/
-abbrev Complexification (V : Type u) [AddCommGroup V] [Module ℚ V] :=
-  TensorProduct ℚ ℂ V
+/-- Extension of scalars of a `K`-vector space from `K` to `ℂ`, for any field `K` mapping to
+`ℂ`. -/
+abbrev Complexification (K : Type) [Field K] [Algebra K ℂ] (V : Type u) [AddCommGroup V]
+    [Module K V] :=
+  TensorProduct K ℂ V
+
+/-- The canonical map from a `K`-vector space to its complexification. -/
+def ofBase (K : Type) [Field K] [Algebra K ℂ] (V : Type u) [AddCommGroup V] [Module K V] :
+    V →ₗ[K] Complexification K V :=
+  TensorProduct.mk K ℂ V 1
+
+@[simp]
+lemma ofBase_apply (K : Type) [Field K] [Algebra K ℂ] (V : Type u) [AddCommGroup V] [Module K V]
+    (v : V) : ofBase K V v = 1 ⊗ₜ[K] v := rfl
 
 variable (V : Type u) [AddCommGroup V] [Module ℚ V]
 
-/-- The canonical map from a rational vector space to its complexification. -/
-def ofRational : V →ₗ[ℚ] Complexification V :=
-  TensorProduct.mk ℚ ℂ V 1
-
-@[simp]
-lemma ofRational_apply (v : V) : ofRational V v = 1 ⊗ₜ[ℚ] v := rfl
-
 /-- Complex conjugation on a complexified rational vector space. It conjugates the scalar factor
 and fixes every rational vector. -/
-def conjugate : Complexification V →ₗ[ℚ] Complexification V :=
+def conjugate : Complexification ℚ V →ₗ[ℚ] Complexification ℚ V :=
   TensorProduct.map (Complex.conjAe.restrictScalars ℚ).toLinearMap LinearMap.id
 
 @[simp]
@@ -65,11 +69,11 @@ lemma conjugate_tmul (z : ℂ) (v : V) :
     conjugate V (z ⊗ₜ[ℚ] v) = Complex.conjAe z ⊗ₜ[ℚ] v := rfl
 
 @[simp]
-lemma conjugate_ofRational (v : V) : conjugate V (ofRational V v) = ofRational V v := by
-  simp [ofRational]
+lemma conjugate_ofBase (v : V) : conjugate V (ofBase ℚ V v) = ofBase ℚ V v := by
+  simp
 
 @[simp]
-lemma conjugate_conjugate (x : Complexification V) : conjugate V (conjugate V x) = x := by
+lemma conjugate_conjugate (x : Complexification ℚ V) : conjugate V (conjugate V x) = x := by
   refine TensorProduct.induction_on x ?_ ?_ ?_
   · simp
   · intro z v
@@ -83,7 +87,7 @@ The pieces are indexed by pairs `(p,q)`. They form an internal direct sum, only 
 `p + q = n` can be nonzero, and complex conjugation exchanges the `(p,q)` and `(q,p)` pieces. -/
 structure Pure (n : ℕ) where
   /-- The Hodge piece `V^{p,q}` inside `V_ℂ`. -/
-  piece : ℕ → ℕ → Submodule ℂ (Complexification V)
+  piece : ℕ → ℕ → Submodule ℂ (Complexification ℚ V)
   /-- Hodge pieces off the prescribed weight are zero. -/
   piece_eq_bot_of_add_ne : ∀ p q, p + q ≠ n → piece p q = ⊥
   /-- Every complexified vector has a unique finite decomposition into Hodge pieces. -/
@@ -101,13 +105,13 @@ lemma iSup_piece_eq_top (H : Pure V n) :
   H.isInternal.submodule_iSup_eq_top
 
 /-- Membership in a conjugate Hodge piece, with conjugation moved to the other side. -/
-lemma mem_piece_conjugate_iff (H : Pure V n) (p q : ℕ) (x : Complexification V) :
+lemma mem_piece_conjugate_iff (H : Pure V n) (p q : ℕ) (x : Complexification ℚ V) :
     x ∈ H.piece p q ↔ conjugate V x ∈ H.piece q p :=
   (H.conjugate_mem_iff q p x).symm
 
 /-- The Hodge filtration `F^p V_ℂ`, constructed as the sum of pieces whose first index is at
 least `p`. -/
-def filtration (H : Pure V n) (p : ℕ) : Submodule ℂ (Complexification V) :=
+def filtration (H : Pure V n) (p : ℕ) : Submodule ℂ (Complexification ℚ V) :=
   ⨆ a : ℕ, ⨆ (_ : p ≤ a), ⨆ b : ℕ, H.piece a b
 
 /-- A piece with first index at least `p` lies in `F^p`. -/
@@ -118,29 +122,29 @@ lemma piece_le_filtration (H : Pure V n) {p a b : ℕ} (ha : p ≤ a) :
 /-- Rational Hodge classes of codimension `p`: rational vectors whose complexifications lie in
 the middle Hodge piece `V^{p,p}`. -/
 def hodgeClasses (p : ℕ) (H : Pure V (2 * p)) : Submodule ℚ V :=
-  Submodule.comap (ofRational V) ((H.piece p p).restrictScalars ℚ)
+  Submodule.comap (ofBase ℚ V) ((H.piece p p).restrictScalars ℚ)
 
 /-- The defining membership criterion for a rational Hodge class. -/
 lemma mem_hodgeClasses_iff (p : ℕ) (H : Pure V (2 * p)) (x : V) :
-    x ∈ hodgeClasses p H ↔ ofRational V x ∈ H.piece p p :=
+    x ∈ hodgeClasses p H ↔ ofBase ℚ V x ∈ H.piece p p :=
   Iff.rfl
 
 /-- Every rational Hodge class lies in the corresponding Hodge filtration after
 complexification. -/
-lemma ofRational_mem_filtration {p : ℕ} (H : Pure V (2 * p))
+lemma ofBase_mem_filtration {p : ℕ} (H : Pure V (2 * p))
     {x : V} (hx : x ∈ hodgeClasses p H) :
-    ofRational V x ∈ H.filtration p :=
+    ofBase ℚ V x ∈ H.filtration p :=
   H.piece_le_filtration le_rfl hx
 
 /-- The direct-sum coordinates of a pure Hodge structure. -/
 noncomputable def decomposition (H : Pure V n) :
-    Complexification V ≃ₗ[ℂ] (⨁ pq : ℕ × ℕ, H.piece pq.1 pq.2) :=
+    Complexification ℚ V ≃ₗ[ℂ] (⨁ pq : ℕ × ℕ, H.piece pq.1 pq.2) :=
   (LinearEquiv.ofBijective (DirectSum.coeLinearMap fun pq : ℕ × ℕ ↦ H.piece pq.1 pq.2)
     H.isInternal).symm
 
 /-- A vector in one Hodge piece has only that direct-sum coordinate. -/
 lemma decomposition_apply_of_mem (H : Pure V n) {pq : ℕ × ℕ}
-    {x : Complexification V} (hx : x ∈ H.piece pq.1 pq.2) :
+    {x : Complexification ℚ V} (hx : x ∈ H.piece pq.1 pq.2) :
     H.decomposition x =
       DirectSum.lof ℂ (ℕ × ℕ) (fun ab ↦ H.piece ab.1 ab.2) pq ⟨x, hx⟩ :=
   H.decomposition.symm.injective (by
@@ -151,7 +155,7 @@ lemma decomposition_apply_of_mem (H : Pure V n) {pq : ℕ × ℕ}
 
 /-- Sum of the Hodge pieces indexed by a set of bidegrees. -/
 noncomputable def pieceSum (H : Pure V n) (s : Set (ℕ × ℕ)) :
-    Submodule ℂ (Complexification V) :=
+    Submodule ℂ (Complexification ℚ V) :=
   ⨆ pq, ⨆ (_ : pq ∈ s), H.piece pq.1 pq.2
 
 lemma pieceSum_mono (H : Pure V n) {s t : Set (ℕ × ℕ)} (hst : s ⊆ t) :
@@ -195,9 +199,9 @@ lemma filtration_eq_pieceSum (H : Pure V n) (p : ℕ) :
 
 /-- The conjugate filtration, written as the sum of pieces whose second index is large. -/
 noncomputable def conjugateFiltration (H : Pure V n) (p : ℕ) :
-    Submodule ℂ (Complexification V) := H.pieceSum {pq | p ≤ pq.2}
+    Submodule ℂ (Complexification ℚ V) := H.pieceSum {pq | p ≤ pq.2}
 
-lemma conjugate_mem_filtration (H : Pure V n) (p : ℕ) {x : Complexification V}
+lemma conjugate_mem_filtration (H : Pure V n) (p : ℕ) {x : Complexification ℚ V}
     (hx : x ∈ H.filtration p) : conjugate V x ∈ H.conjugateFiltration p := by
   rw [H.filtration_eq_pieceSum] at hx
   induction hx using Submodule.iSup_induction' with
@@ -285,12 +289,12 @@ lemma filtration_inf_conjugateFiltration (p : ℕ) (H : Pure V (2 * p)) :
 /-- For a rational class in weight `2p`, membership in `F^p` is equivalent to membership in the
 middle Hodge piece. Thus the filtration definition of rational Hodge classes agrees with the
 usual `(p,p)` definition. -/
-lemma ofRational_mem_filtration_iff (p : ℕ) (H : Pure V (2 * p)) (x : V) :
-    ofRational V x ∈ H.filtration p ↔ ofRational V x ∈ H.piece p p := by
+lemma ofBase_mem_filtration_iff (p : ℕ) (H : Pure V (2 * p)) (x : V) :
+    ofBase ℚ V x ∈ H.filtration p ↔ ofBase ℚ V x ∈ H.piece p p := by
   constructor
   · intro hx
-    have hconj : ofRational V x ∈ H.conjugateFiltration p := by
-      rw [← conjugate_ofRational V x]
+    have hconj : ofBase ℚ V x ∈ H.conjugateFiltration p := by
+      rw [← conjugate_ofBase V x]
       exact H.conjugate_mem_filtration p hx
     rw [← H.filtration_inf_conjugateFiltration p]
     exact ⟨hx, hconj⟩
@@ -299,11 +303,11 @@ lemma ofRational_mem_filtration_iff (p : ℕ) (H : Pure V (2 * p)) (x : V) :
 
 /-- In weight `2p`, taking the inverse image of `F^p` along the rational lattice gives exactly
 the usual rational `(p,p)` classes. -/
-lemma filtration_comap_ofRational_eq_hodgeClasses (p : ℕ) (H : Pure V (2 * p)) :
-    Submodule.comap (ofRational V) ((H.filtration p).restrictScalars ℚ) =
+lemma filtration_comap_ofBase_eq_hodgeClasses (p : ℕ) (H : Pure V (2 * p)) :
+    Submodule.comap (ofBase ℚ V) ((H.filtration p).restrictScalars ℚ) =
       hodgeClasses p H := by
   ext x
-  exact H.ofRational_mem_filtration_iff p x
+  exact H.ofBase_mem_filtration_iff p x
 
 end Pure
 

@@ -97,7 +97,7 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X structureMap)) :
 
 /-- The canonical restriction of the rational constant sheaf to the complement. -/
 def rationalRestrictionSheaf (Z : Set (ComplexPoint X structureMap)) :
-    constantRationalSheaf structureMap ⟶
+    constantFieldSheaf ℚ structureMap ⟶
       pushforwardComplementConstantRationalSheaf structureMap Z :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X structureMap))
@@ -206,7 +206,7 @@ pushforward from the complement. -/
 def rationalRestrictionComplexNat
     (Z : Set (ComplexPoint X structureMap)) :
     (CochainComplex.single₀ (AnalyticAdditiveSheaf structureMap)).obj
-        (constantRationalSheaf structureMap) ⟶
+        (constantFieldSheaf ℚ structureMap) ⟶
       derivedPushforwardComplementConstantRationalComplexNat structureMap Z :=
   (CochainComplex.single₀ (AnalyticAdditiveSheaf structureMap)).map
       (rationalRestrictionSheaf structureMap Z) ≫
@@ -219,7 +219,7 @@ def rationalRestrictionComplexNat
 /-- Restriction from the ambient rational constant complex to the derived pushforward from the
 complement. -/
 def rationalRestrictionComplexInt (Z : Set (ComplexPoint X structureMap)) :
-    constantRationalSheafComplexInt structureMap ⟶
+    constantFieldSheafComplexInt ℚ structureMap ⟶
       derivedPushforwardComplementConstantRationalComplexInt structureMap Z :=
   HomologicalComplex.extendMap (rationalRestrictionComplexNat structureMap Z)
     ComplexShape.embeddingUpNat
@@ -273,7 +273,7 @@ complex. -/
 def forgetSupportShiftedHom (Z : Set (ComplexPoint X structureMap)) :
     Localization.SmallShiftedHom (analyticQuasiIsomorphisms structureMap)
       (rationalCohomologyWithSupportComplex structureMap Z)
-      (constantRationalSheafComplexInt structureMap) (1 : ℤ) :=
+      (constantFieldSheafComplexInt ℚ structureMap) (1 : ℤ) :=
   Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms structureMap)
     (CochainComplex.mappingCone.triangle
       (rationalRestrictionComplexInt structureMap Z)).mor₃
@@ -281,13 +281,13 @@ def forgetSupportShiftedHom (Z : Set (ComplexPoint X structureMap)) :
 /-- Forget support, using the connecting morphism of the mapping-cone triangle. -/
 def forgetSupport (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
     RationalCohomologyWithSupport structureMap Z n →+
-      RationalCohomology structureMap n where
+      FieldCohomology ℚ structureMap n where
   toFun α := α.comp (forgetSupportShiftedHom structureMap Z) (by lia)
   map_zero' := by
-    let e : RationalCohomology structureMap n ≃
+    let e : FieldCohomology ℚ structureMap n ≃
         ShiftedHom
           (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
-          (DerivedCategory.Q.obj (constantRationalSheafComplexInt structureMap)) n :=
+          (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ structureMap)) n :=
       Localization.SmallShiftedHom.equiv
         (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
     apply e.injective
@@ -295,7 +295,7 @@ def forgetSupport (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
       hypercohomologyEquiv_zero structureMap
         (rationalCohomologyWithSupportComplex structureMap Z) (n - 1),
       hypercohomologyEquiv_zero structureMap
-        (constantRationalSheafComplexInt structureMap) n]
+        (constantFieldSheafComplexInt ℚ structureMap) n]
     simp
   map_add' α β := by
     let eSource : RationalCohomologyWithSupport structureMap Z n ≃
@@ -305,10 +305,10 @@ def forgetSupport (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
             (rationalCohomologyWithSupportComplex structureMap Z)) (n - 1) :=
       Localization.SmallShiftedHom.equiv
         (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
-    let eTarget : RationalCohomology structureMap n ≃
+    let eTarget : FieldCohomology ℚ structureMap n ≃
         ShiftedHom
           (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
-          (DerivedCategory.Q.obj (constantRationalSheafComplexInt structureMap)) n :=
+          (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ structureMap)) n :=
       Localization.SmallShiftedHom.equiv
         (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
     apply eTarget.injective
@@ -316,7 +316,7 @@ def forgetSupport (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
       hypercohomologyEquiv_add structureMap
         (rationalCohomologyWithSupportComplex structureMap Z) (n - 1),
       hypercohomologyEquiv_add structureMap
-        (constantRationalSheafComplexInt structureMap) n,
+        (constantFieldSheafComplexInt ℚ structureMap) n,
       Localization.SmallShiftedHom.equiv_comp,
       Localization.SmallShiftedHom.equiv_comp]
     simp
@@ -344,7 +344,7 @@ ordinary rational cohomology. Its forward map is definitionally the support-forg
 noncomputable def forgetSupportEquivUniv (n : ℤ) :
     RationalCohomologyWithSupport structureMap
         (Set.univ : Set (ComplexPoint X structureMap)) n ≃
-      RationalCohomology structureMap n := by
+      FieldCohomology ℚ structureMap n := by
   let eSource : RationalCohomologyWithSupport structureMap
         (Set.univ : Set (ComplexPoint X structureMap)) n ≃
       ShiftedHom
@@ -353,10 +353,10 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
         (n - 1) :=
     Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
-  let eTarget : RationalCohomology structureMap n ≃
+  let eTarget : FieldCohomology ℚ structureMap n ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
-        (DerivedCategory.Q.obj (constantRationalSheafComplexInt structureMap)) n :=
+        (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ structureMap)) n :=
     Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
   let g := (Localization.SmallShiftedHom.equiv
@@ -369,7 +369,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
         (n - 1) ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
-        (DerivedCategory.Q.obj (constantRationalSheafComplexInt structureMap)) n :=
+        (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ structureMap)) n :=
     ShiftedHom.postcompEquivOfIsIso
       (X := DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap)) g
       (show (1 : ℤ) + (n - 1) = n by lia)

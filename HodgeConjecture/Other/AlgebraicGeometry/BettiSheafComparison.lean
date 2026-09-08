@@ -41,7 +41,7 @@ local instance bettiSheafComparisonTopology :
 /-- The rational constant-sheaf comparison with the integer-indexed singular-cochain
 resolution. -/
 def rationalToSingularCochainComplexInt :
-    constantRationalSheafComplexInt structureMap ⟶
+    constantFieldSheafComplexInt ℚ structureMap ⟶
       singularCochainSheafComplexInt structureMap ℚ :=
   constantsToSingularCochainComplexInt structureMap ℚ
 
@@ -61,7 +61,7 @@ abbrev RationalSingularCochainHypercohomology (n : ℤ) : Type 1 :=
 singular-cochain resolution. -/
 def rationalCohomologySingularCochainEquiv
     [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    RationalCohomology structureMap n ≃
+    FieldCohomology ℚ structureMap n ≃
       RationalSingularCochainHypercohomology structureMap n :=
   Localization.SmallShiftedHom.postcompEquiv
     (rationalToSingularCochainComplexInt structureMap)
@@ -71,7 +71,7 @@ def rationalCohomologySingularCochainEquiv
 constant-to-singular-cochain morphism. -/
 lemma rationalCohomologySingularCochainEquiv_apply
     [SmoothOfRelativeDimension d structureMap] (n : ℤ)
-    (α : RationalCohomology structureMap n) :
+    (α : FieldCohomology ℚ structureMap n) :
     rationalCohomologySingularCochainEquiv structureMap d n α =
       hypercohomologyMap structureMap
         (rationalToSingularCochainComplexInt structureMap) n α :=
@@ -80,7 +80,7 @@ lemma rationalCohomologySingularCochainEquiv_apply
 /-- The rational constant-to-singular comparison is additive. -/
 def rationalCohomologySingularCochainAddEquiv
     [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    RationalCohomology structureMap n ≃+
+    FieldCohomology ℚ structureMap n ≃+
       RationalSingularCochainHypercohomology structureMap n where
   toEquiv := rationalCohomologySingularCochainEquiv structureMap d n
   map_add' α β :=
@@ -90,7 +90,7 @@ def rationalCohomologySingularCochainAddEquiv
 @[simp]
 lemma rationalCohomologySingularCochainAddEquiv_apply
     [SmoothOfRelativeDimension d structureMap] (n : ℤ)
-    (α : RationalCohomology structureMap n) :
+    (α : FieldCohomology ℚ structureMap n) :
     rationalCohomologySingularCochainAddEquiv structureMap d n α =
       hypercohomologyMap structureMap
         (rationalToSingularCochainComplexInt structureMap) n α :=
