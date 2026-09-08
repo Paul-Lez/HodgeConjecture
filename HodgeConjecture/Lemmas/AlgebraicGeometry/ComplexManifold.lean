@@ -123,7 +123,7 @@ lemma localChart_apply_of_mem [SmoothOfRelativeDimension d structureMap]
 
 /-- The canonical charted-space structure obtained from algebraic smooth coordinates. -/
 @[instance_reducible]
-def analyticChartedSpace [SmoothOfRelativeDimension d structureMap] :
+instance analyticChartedSpace [SmoothOfRelativeDimension d structureMap] :
     ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) where
   atlas := Set.range (localChart structureMap d)
   chartAt := localChart structureMap d

@@ -20,6 +20,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSuppor
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CompactlySupportedCohomology
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
@@ -27,6 +28,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.SheafCohomologyWithSupport
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
 
 /-!

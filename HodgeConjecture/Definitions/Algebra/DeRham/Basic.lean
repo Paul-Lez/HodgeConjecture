@@ -18,6 +18,9 @@ module
 public import Mathlib.Algebra.Module.Presentation.Basic
 public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 public import Mathlib.LinearAlgebra.Quotient.Basic
+public import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
+public import Mathlib.LinearAlgebra.ExteriorPower.Basic
+public import Mathlib.RingTheory.Kaehler.Basic
 
 /-!
 # Algebraic de Rham forms
@@ -40,10 +43,11 @@ universe u
 
 namespace Algebra.DeRham
 
-
-
-
 variable (R A : Type u) [CommRing R] [CommRing A] [Algebra R A]
+
+-- open KaehlerDifferential
+
+-- abbrev derham := ⋀[A]^p Ω[A⁄R]
 
 /-- A symbol `a₀ da₁ ∧ ... ∧ daₚ`. -/
 abbrev Generator (p : ℕ) := A × (Fin p → A)
