@@ -43,6 +43,7 @@ open CategoryTheory Limits
 namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
+open scoped TensorProduct
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
   [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
@@ -64,7 +65,7 @@ theorem finiteRationalSingularHomologyZero [SmoothOfRelativeDimension d structur
 /-- Rational-to-complex singular cohomology base change for projective analytifications in
 degree zero. -/
 def rationalToComplexCohomologyBaseChangeZero [SmoothOfRelativeDimension d structureMap] :
-    TensorProduct ℚ ℂ (Cohomology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) ≃ₗ[ℂ]
+    ℂ ⊗[ℚ] Cohomology ℚ (TopCat.of (ComplexPoint X structureMap)) 0 ≃ₗ[ℂ]
       Cohomology ℂ (TopCat.of (ComplexPoint X structureMap)) 0 :=
   letI : Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) :=
     finiteRationalSingularHomologyZero structureMap d

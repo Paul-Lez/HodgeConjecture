@@ -39,7 +39,7 @@ hypothesis is used to infer it.
 
 open CategoryTheory Limits
 open AlgebraicTopology
-open scoped Simplicial
+open scoped Simplicial TensorProduct
 
 namespace AlgebraicTopology.Singular
 
@@ -394,7 +394,7 @@ def rationalToComplexCohomologyMap (X : TopCat) (n : ℕ) :
 singular cohomology coefficients to `ℂ` gives complex singular cohomology. -/
 def rationalToComplexCohomologyBaseChange (X : TopCat) (n : ℕ)
     [Module.Finite ℚ (Homology ℚ X n)] :
-    TensorProduct ℚ ℂ (Cohomology ℚ X n) ≃ₗ[ℂ] Cohomology ℂ X n := by
+    ℂ ⊗[ℚ] Cohomology ℚ X n ≃ₗ[ℂ] Cohomology ℂ X n := by
   letI : Module.Finite ℚ ((QChains X).homology n) := by
     change Module.Finite ℚ (Homology ℚ X n)
     infer_instance

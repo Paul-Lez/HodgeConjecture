@@ -42,15 +42,9 @@ universe u
 
 namespace HodgeStructure
 
-/-- Extension of scalars of a `K`-vector space from `K` to `ℂ`, for any field `K` mapping to
-`ℂ`. -/
-abbrev Complexification (K : Type) [Field K] [Algebra K ℂ] (V : Type u) [AddCommGroup V]
-    [Module K V] :=
-  TensorProduct K ℂ V
-
 /-- The canonical map from a `K`-vector space to its complexification. -/
 def ofBase (K : Type) [Field K] [Algebra K ℂ] (V : Type u) [AddCommGroup V] [Module K V] :
-    V →ₗ[K] Complexification K V :=
+    V →ₗ[K] ℂ ⊗[K] V :=
   TensorProduct.mk K ℂ V 1
 
 @[simp]
@@ -61,7 +55,7 @@ variable (V : Type u) [AddCommGroup V] [Module ℚ V]
 
 /-- Complex conjugation on a complexified rational vector space. It conjugates the scalar factor
 and fixes every rational vector. -/
-def conjugate : Complexification ℚ V →ₗ[ℚ] Complexification ℚ V :=
+def conjugate : ℂ ⊗[ℚ] V →ₗ[ℚ] ℂ ⊗[ℚ] V :=
   TensorProduct.map (Complex.conjAe.restrictScalars ℚ).toLinearMap LinearMap.id
 
 @[simp]
@@ -73,7 +67,7 @@ lemma conjugate_ofBase (v : V) : conjugate V (ofBase ℚ V v) = ofBase ℚ V v :
   simp
 
 @[simp]
-lemma conjugate_conjugate (x : Complexification ℚ V) : conjugate V (conjugate V x) = x := by
+lemma conjugate_conjugate (x : ℂ ⊗[ℚ] V) : conjugate V (conjugate V x) = x := by
   refine TensorProduct.induction_on x ?_ ?_ ?_
   · simp
   · intro z v
@@ -87,7 +81,7 @@ The pieces are indexed by pairs `(p,q)`. They form an internal direct sum, only 
 `p + q = n` can be nonzero, and complex conjugation exchanges the `(p,q)` and `(q,p)` pieces. -/
 structure Pure (n : ℕ) where
   /-- The Hodge piece `V^{p,q}` inside `V_ℂ`. -/
-  piece : ℕ → ℕ → Submodule ℂ (Complexification ℚ V)
+  piece : ℕ → ℕ → Submodule ℂ (ℂ ⊗[ℚ] V)
   /-- Hodge pieces off the prescribed weight are zero. -/
   piece_eq_bot_of_add_ne : ∀ p q, p + q ≠ n → piece p q = ⊥
   /-- Every complexified vector has a unique finite decomposition into Hodge pieces. -/
@@ -105,13 +99,13 @@ lemma iSup_piece_eq_top (H : Pure V n) :
   H.isInternal.submodule_iSup_eq_top
 
 /-- Membership in a conjugate Hodge piece, with conjugation moved to the other side. -/
-lemma mem_piece_conjugate_iff (H : Pure V n) (p q : ℕ) (x : Complexification ℚ V) :
+lemma mem_piece_conjugate_iff (H : Pure V n) (p q : ℕ) (x : ℂ ⊗[ℚ] V) :
     x ∈ H.piece p q ↔ conjugate V x ∈ H.piece q p :=
   (H.conjugate_mem_iff q p x).symm
 
 /-- The Hodge filtration `F^p V_ℂ`, constructed as the sum of pieces whose first index is at
 least `p`. -/
-def filtration (H : Pure V n) (p : ℕ) : Submodule ℂ (Complexification ℚ V) :=
+def filtration (H : Pure V n) (p : ℕ) : Submodule ℂ (ℂ ⊗[ℚ] V) :=
   ⨆ a : ℕ, ⨆ (_ : p ≤ a), ⨆ b : ℕ, H.piece a b
 
 /-- A piece with first index at least `p` lies in `F^p`. -/
@@ -138,13 +132,13 @@ lemma ofBase_mem_filtration {p : ℕ} (H : Pure V (2 * p))
 
 /-- The direct-sum coordinates of a pure Hodge structure. -/
 noncomputable def decomposition (H : Pure V n) :
-    Complexification ℚ V ≃ₗ[ℂ] (⨁ pq : ℕ × ℕ, H.piece pq.1 pq.2) :=
+    ℂ ⊗[ℚ] V ≃ₗ[ℂ] (⨁ pq : ℕ × ℕ, H.piece pq.1 pq.2) :=
   (LinearEquiv.ofBijective (DirectSum.coeLinearMap fun pq : ℕ × ℕ ↦ H.piece pq.1 pq.2)
     H.isInternal).symm
 
 /-- A vector in one Hodge piece has only that direct-sum coordinate. -/
 lemma decomposition_apply_of_mem (H : Pure V n) {pq : ℕ × ℕ}
-    {x : Complexification ℚ V} (hx : x ∈ H.piece pq.1 pq.2) :
+    {x : ℂ ⊗[ℚ] V} (hx : x ∈ H.piece pq.1 pq.2) :
     H.decomposition x =
       DirectSum.lof ℂ (ℕ × ℕ) (fun ab ↦ H.piece ab.1 ab.2) pq ⟨x, hx⟩ :=
   H.decomposition.symm.injective (by
@@ -155,7 +149,7 @@ lemma decomposition_apply_of_mem (H : Pure V n) {pq : ℕ × ℕ}
 
 /-- Sum of the Hodge pieces indexed by a set of bidegrees. -/
 noncomputable def pieceSum (H : Pure V n) (s : Set (ℕ × ℕ)) :
-    Submodule ℂ (Complexification ℚ V) :=
+    Submodule ℂ (ℂ ⊗[ℚ] V) :=
   ⨆ pq, ⨆ (_ : pq ∈ s), H.piece pq.1 pq.2
 
 lemma pieceSum_mono (H : Pure V n) {s t : Set (ℕ × ℕ)} (hst : s ⊆ t) :
@@ -199,9 +193,9 @@ lemma filtration_eq_pieceSum (H : Pure V n) (p : ℕ) :
 
 /-- The conjugate filtration, written as the sum of pieces whose second index is large. -/
 noncomputable def conjugateFiltration (H : Pure V n) (p : ℕ) :
-    Submodule ℂ (Complexification ℚ V) := H.pieceSum {pq | p ≤ pq.2}
+    Submodule ℂ (ℂ ⊗[ℚ] V) := H.pieceSum {pq | p ≤ pq.2}
 
-lemma conjugate_mem_filtration (H : Pure V n) (p : ℕ) {x : Complexification ℚ V}
+lemma conjugate_mem_filtration (H : Pure V n) (p : ℕ) {x : ℂ ⊗[ℚ] V}
     (hx : x ∈ H.filtration p) : conjugate V x ∈ H.conjugateFiltration p := by
   rw [H.filtration_eq_pieceSum] at hx
   induction hx using Submodule.iSup_induction' with

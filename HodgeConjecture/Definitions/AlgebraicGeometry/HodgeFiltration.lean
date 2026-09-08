@@ -42,6 +42,7 @@ class is then a rational class whose de Rham image belongs to `F^p`.
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace
+open scoped TensorProduct
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -1131,7 +1132,7 @@ def fieldToDeRhamComplexificationBilinear
 constant-sheaf cohomology to holomorphic de Rham hypercohomology. -/
 def fieldToDeRhamComplexification
     [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    TensorProduct K ℂ (FieldCohomology K structureMap n) →ₗ[ℂ]
+    ℂ ⊗[K] FieldCohomology K structureMap n →ₗ[ℂ]
       DeRhamHypercohomology structureMap d n :=
   TensorProduct.AlgebraTensorModule.lift
     (fieldToDeRhamComplexificationBilinear K structureMap d n)
@@ -1278,7 +1279,7 @@ constant-sheaf cohomology. This definition uses the canonical comparison map rat
 identifying the two cohomology theories without proof. -/
 def complexifiedFieldHodgeFiltration [SmoothOfRelativeDimension d structureMap]
     (p n : ℤ) :
-    Submodule ℂ (HodgeStructure.Complexification K (FieldCohomology K structureMap n)) :=
+    Submodule ℂ (ℂ ⊗[K] FieldCohomology K structureMap n) :=
   (hodgeFiltrationComplexSubmodule structureMap d p n).comap
     (fieldToDeRhamComplexification K structureMap d n)
 
