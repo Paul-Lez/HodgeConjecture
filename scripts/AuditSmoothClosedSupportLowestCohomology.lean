@@ -1,0 +1,11 @@
+import HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedSupportLowestCohomology
+
+open AlgebraicGeometry.ComplexPoint
+
+#print axioms complexSupportInjectiveComplex_isFlasque
+#print axioms smoothClosedSupportLowestSectionCohomologyIso
+#print axioms smoothClosedSupportLowestSectionCohomologyIso_hom
+#print axioms smoothClosedSupportSectionCohomology_isZero_of_lt
+
+#check @smoothClosedSupportLowestSectionCohomologyIso
+#check @smoothClosedSupportSectionCohomology_isZero_of_lt
