@@ -1,0 +1,10 @@
+import HodgeConjecture.Other.AlgebraicTopology.OpenRestrictedLowestCohomologyNormalization
+
+open TopCat.Sheaf
+
+#print axioms supportEvaluationEqIso
+#print axioms sectionComplexEqIso
+#print axioms sectionComplexEqIso_hom_refl
+#print axioms sectionComplexEqIso_homology_section
+#print axioms openRestrictionTopSectionComplexIso_homology_section
+#print axioms openRestrictedLowestSectionCohomologyIso_hom
