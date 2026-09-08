@@ -33,19 +33,34 @@ This is a file-level check; placing individual declarations still requires mathe
 
 ## Borel–Moore construction
 
-`HodgeConjecture/Other/AlgebraicGeometry/SheafBorelMoore.lean` constructs the ambient comparison
-`H_i^BM(Z ⊂ X; ℚ) ≃ H_Z^(2d-i)(X; ℚ)` by transporting an explicitly supplied derived orientation
-isomorphism through an explicitly supplied support functor and its shift compatibility. The
-cycle degree specialization is proved arithmetically. The general equivalence is derived at
-the object level, rather than supplied as a homology-level Alexander-duality field.
+The constructed smooth-ambient route is in
+`HodgeConjecture/Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean`. It applies actual derived
+closed-support sections to the actual relative singular-chain sheaf. The constructed complex
+orientation identifies that derived sheaf with `ℚ_X[2d]`, yielding
+`H_i^BM(Z ⊂ X; ℚ) ≃ H_Z^(2d-i)(X; ℚ)`, including singular closed supports. Neither the support
+functor, orientation, nor a homology-level Alexander-duality equivalence is an input to this
+route. The cycle-degree identity is proved, and the comparison to the repository's ordinary
+rational cohomology includes the actual support-forgetting square and its cone signs.
 
-The full geometric construction remains conditional on a dualizing complex with the normalized
-complex orientation, the derived support functor, its comparison with the restriction cone,
-the compactification/sheaf and costalk comparisons, and the local Thom-cap compatibility and
-detection theorem. General global fundamental classes additionally require the puncture and
-propagation inputs recorded in `CycleComponentGlobalFundamentalClass`; Chow descent requires
-principal-divisor vanishing. The maximal-codimension component and its normalized point
-comparison are constructed. No intrinsic compactification-independence theorem is claimed.
+`CycleComponentSheafClass.lean` constructs arbitrary-codimension component classes. Exact
+normal-chart coclasses glue on the smooth locus. A finite smooth filtration proves the required
+vanishing along the singular boundary, so the actual localization map has a proved inverse
+giving the unique supported extension. The resulting class also determines a fundamental class
+in the actual ambient sheaf Borel–Moore group through the constructed orientation duality.
+
+`SheafCycleClass.lean` provides `sheafCycleClassOnCycles V p` on integral codimension-`p` cycles
+and `rationalSheafCycleClassOnCycles V p` on their rational scalar extension. These functions
+take only the dimensioned smooth projective complex variety and the codimension; no
+fundamental-class, purity, extension, or duality data are supplied. Exact agreement with the
+older ordinary point-cycle map is still being verified, separately from the construction.
+
+These maps are on **cycles**, not Chow groups: rational-equivalence invariance still requires
+principal-divisor vanishing. They are not yet substituted into `HodgeConjecture.Statement`.
+The earlier conditional interfaces in `SheafBorelMoore.lean`, `CycleComponentGlobalFundamentalClass`,
+and the compactification-based route remain available, but their additional data are not
+arguments to the new cycle maps. No full dualizing universal property, six-functor formalism,
+intrinsic compactification independence, or identification with the compactification-relative
+Borel–Moore model is claimed.
 
 The closed-support Ext construction and compact-support colimit supplied by upstream are retained
 in `Other`; comparison with the integer-graded restriction-cone model remains separate.

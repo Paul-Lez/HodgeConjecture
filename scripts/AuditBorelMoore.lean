@@ -317,7 +317,19 @@ run_cmd do
      "HodgeConjecture.Other.AlgebraicTopology.SupportedSingularSectionNaturality",
      "HodgeConjecture.Other.AlgebraicTopology.SupportedSingularCohomologySheafComparison",
      "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentSheafClass",
-     "HodgeConjecture.Other.AlgebraicGeometry.SheafCycleClass"]
+     "HodgeConjecture.Other.AlgebraicGeometry.SheafCycleClass",
+     "HodgeConjecture.Mathlib.Algebra.Homology.MapHomologyShift",
+     "HodgeConjecture.Other.AlgebraicGeometry.BettiSupportedRawOrdinaryComparison",
+     "HodgeConjecture.Other.AlgebraicTopology.CohomologySheafSectionNaturality",
+     "HodgeConjecture.Other.AlgebraicTopology.ChartLocalClassHomeomorph",
+     "HodgeConjecture.Other.AlgebraicGeometry.ComplexPointCoclassSchemeIso",
+     "HodgeConjecture.Other.AlgebraicGeometry.ComplexPointCoclassSheafIso",
+     "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointBoundary",
+     "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointCoclassSectionNormalization",
+     "HodgeConjecture.Mathlib.Algebra.Homology.MapArrowConeConnecting",
+     "HodgeConjecture.Other.AlgebraicTopology.GlobalRawRelativeConnecting",
+     "HodgeConjecture.Other.AlgebraicTopology.SupportedSectionConeConnecting",
+     "HodgeConjecture.Other.AlgebraicGeometry.BettiSupportedOrdinarySign"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv
   for moduleName in modules do
