@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointPurity
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationParacompact
+
+import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
+import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointPurity
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationParacompact
 
 /-!
 # Maximal-codimension component purity
@@ -77,7 +77,7 @@ theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
     [SmoothOfRelativeDimension d structureMap] (x : X) (hx : coheight x = d) :
     RationalComponentCycleClassPurity structureMap d x := by
   unfold RationalComponentCycleClassPurity
-  let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
+  let : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
     openParacompactSpace structureMap
   let Z := cycleComponentSupport structureMap x
   have hZ : IsClosed Z := isClosed_cycleComponentSupport structureMap x
@@ -85,7 +85,7 @@ theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
       AlgebraicTopology.Singular.CohomologyWithSupport ℚ
         (TopCat.of (ComplexPoint X structureMap)) Z (2 * d) :=
     rationalCohomologyWithSupportAddEquivSingular structureMap Z hZ (2 * d)
-  let _ : Module ℚ (RationalCohomologyWithSupport structureMap Z ((2 * d : ℕ) : ℤ)) :=
+  let : Module ℚ (RationalCohomologyWithSupport structureMap Z ((2 * d : ℕ) : ℤ)) :=
     e.module ℚ
   obtain ⟨β, hβ⟩ :=
     exists_singularComponentSupportedGenerator_of_coheight_eq_dimension structureMap d x hx

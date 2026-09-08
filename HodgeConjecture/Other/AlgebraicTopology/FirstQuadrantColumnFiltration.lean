@@ -17,7 +17,6 @@ module
 
 public import HodgeConjecture.Other.AlgebraicTopology.FirstQuadrantTotalComplex
 public import Mathlib.Algebra.Homology.Embedding.StupidTrunc
-public import Mathlib.Algebra.Homology.TotalComplexSymmetry
 
 /-!
 This module is adapted from Paul Lezeau's `sphere-six-complex`, commit

@@ -15,13 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalCoordinates
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClass
-public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
-public import HodgeConjecture.Other.AlgebraicTopology.LocalFundamentalClassGenerator
-public import HodgeConjecture.Other.AlgebraicTopology.PuncturedEuclideanFundamentalClass
+public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalCoordinates
+
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+import HodgeConjecture.Other.AlgebraicTopology.LocalFundamentalClassGenerator
+import HodgeConjecture.Other.AlgebraicTopology.PuncturedEuclideanFundamentalClass
 
 /-!
 # Local generators from exact cycle-component coordinates
@@ -258,7 +258,7 @@ def neighborhoodPointAlgHomHomeomorph :
       (Γ(C.componentNeighborhood.toScheme, ⊤) →ₐ[ℂ] ℂ)
       Point.analyticTopology
       (ComplexPoint.affineAlgebraHomTopology Γ(C.componentNeighborhood.toScheme, ⊤)) := by
-  let _ : IsAffine C.componentNeighborhood.toScheme :=
+  let : IsAffine C.componentNeighborhood.toScheme :=
     C.componentNeighborhood_isAffine
   exact (Point.isoMapHomeomorph
       (asIso C.componentNeighborhood.toScheme.toSpecΓ)
@@ -471,9 +471,9 @@ neighborhood.  The missing surjectivity in `span_neighborhoodLocalClass_eq_range
 open-neighborhood excision for the target of the compressed chart. -/
 lemma span_neighborhoodLocalClass_eq_top :
     Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
-  let _ : IsAffine C.componentNeighborhood.toScheme :=
+  let : IsAffine C.componentNeighborhood.toScheme :=
     C.componentNeighborhood_isAffine
-  let _ : T2Space
+  let : T2Space
       (ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap) :=
     ComplexPoint.t2Space_of_isAffine C.neighborhoodStructureMap
   rw [C.neighborhoodLocalClass_eq_localClassOfChart]

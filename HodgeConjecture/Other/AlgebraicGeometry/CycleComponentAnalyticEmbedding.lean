@@ -15,10 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
-public import Mathlib.Topology.Homeomorph.Lemmas
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
 
 /-!
 # Analytic embedding of a cycle component

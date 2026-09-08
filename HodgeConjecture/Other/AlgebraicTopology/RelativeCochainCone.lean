@@ -15,13 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainCohomology
+public import HodgeConjecture.Other.Algebra.Homology.DualExact
 public import HodgeConjecture.Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
 public import Mathlib.Algebra.Category.ModuleCat.Projective
-public import Mathlib.Algebra.Homology.Embedding.ExtendHomology
-public import Mathlib.Algebra.Homology.HomotopyCategory.ShortExact
-public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.Analysis.Normed.Group.Basic
+public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Relative singular cohomology as a cochain mapping cone
@@ -57,7 +56,7 @@ def relativeChainShortComplex (X : TopPair.{u}) :
 /-- The singular-chain map of a topological-pair inclusion is a monomorphism. -/
 lemma relativeChainMap_mono (X : TopPair.{u}) :
     Mono ((chainPairFunctor R).obj X).hom := by
-  let _ : Mono X.hom :=
+  let : Mono X.hom :=
     (TopCat.mono_iff_injective X.hom).mpr X.prop.injective
   change Mono (((singularChainComplexFunctor (ModuleCat.{u} R)).obj
     (ModuleCat.of R R)).map X.hom)
@@ -66,7 +65,7 @@ lemma relativeChainMap_mono (X : TopPair.{u}) :
 /-- Singular chains of a pair form a short exact sequence. -/
 lemma relativeChainShortComplex_shortExact (X : TopPair.{u}) :
     (relativeChainShortComplex R X).ShortExact := by
-  let _ : Mono ((chainPairFunctor R).obj X).hom := relativeChainMap_mono R X
+  let : Mono ((chainPairFunctor R).obj X).hom := relativeChainMap_mono R X
   exact
     { exact := ShortComplex.exact_cokernel ((chainPairFunctor R).obj X).hom
       mono_f := by

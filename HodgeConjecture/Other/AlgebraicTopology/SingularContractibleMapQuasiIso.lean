@@ -15,10 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import Mathlib.Algebra.Homology.QuasiIso
 public import Mathlib.Algebra.Category.Grp.Abelian
-public import Mathlib.Algebra.Category.Grp.LargeColimits
+public import Mathlib.Algebra.Homology.QuasiIso
 public import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
 public import Mathlib.Topology.Homotopy.Contractible
 

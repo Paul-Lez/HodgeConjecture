@@ -15,8 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivision
-public import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
+public import Mathlib.AlgebraicTopology.SingularSet
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in
@@ -33,7 +32,7 @@ of the barycentric mesh estimate.
 
 noncomputable section
 
-open AlgebraicTopology Set
+open Set
 
 namespace AlgebraicTopology.Singular
 

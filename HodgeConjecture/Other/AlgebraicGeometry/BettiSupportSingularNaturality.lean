@@ -15,9 +15,6 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiCohomologyWithSupportComparison
 
 /-!
@@ -74,7 +71,7 @@ lemma locallyPathConnectedSpace_of_contractibleOpenBasis
   obtain ⟨V, hVS, hVopen, hxV⟩ := mem_nhds_iff.mp hS
   let Vo : Opens X := ⟨V, hVopen⟩
   obtain ⟨W, hxW, hWcontractible, hWVo⟩ := hX x Vo hxV
-  let _ : ContractibleSpace W := hWcontractible
+  let : ContractibleSpace W := hWcontractible
   refine ⟨(W : Set X), W.2.mem_nhds hxW, ?_, ?_⟩
   · rw [isPathConnected_iff_pathConnectedSpace]
     infer_instance
@@ -84,7 +81,7 @@ lemma constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis
     (hX : ∀ (x : X) (V : Opens X), x ∈ V →
       ∃ (W : Opens X), x ∈ W ∧ ContractibleSpace W ∧ W ≤ V) :
     QuasiIso (constantsToSingularCochainSheafComplex R X) := by
-  let _ : LocallyPathConnectedSpace X :=
+  let : LocallyPathConnectedSpace X :=
     locallyPathConnectedSpace_of_contractibleOpenBasis hX
   constructor
   intro n
@@ -394,8 +391,8 @@ def complementSingularToInjectiveResolutionInt
   let r := complementResolutionMapInt structureMap Z
   let I := (complementConstantRationalInjectiveResolution structureMap Z).cocomplex.extend
     ComplexShape.embeddingUpNat
-  let _ : Mono a := complementConstantsToSingularCochainInt_mono structureMap Z
-  let _ : QuasiIso a :=
+  let : Mono a := complementConstantsToSingularCochainInt_mono structureMap Z
+  let : QuasiIso a :=
     complementConstantsToSingularCochainInt_quasiIso structureMap Z hZ
   have hI : ∀ n : ℤ, Injective (I.X n) := by
     intro n
@@ -414,8 +411,8 @@ lemma complementConstants_comp_singularToInjectiveResolutionInt
   let r := complementResolutionMapInt structureMap Z
   let I := (complementConstantRationalInjectiveResolution structureMap Z).cocomplex.extend
     ComplexShape.embeddingUpNat
-  let _ : Mono a := complementConstantsToSingularCochainInt_mono structureMap Z
-  let _ : QuasiIso a :=
+  let : Mono a := complementConstantsToSingularCochainInt_mono structureMap Z
+  let : QuasiIso a :=
     complementConstantsToSingularCochainInt_quasiIso structureMap Z hZ
   have hI : ∀ n : ℤ, Injective (I.X n) := by
     intro n
@@ -466,7 +463,7 @@ lemma complementSingularToInjectiveResolutionInt_quasiIso
   let a := complementConstantsToSingularCochainInt structureMap Z
   let b := complementSingularToInjectiveResolutionInt structureMap Z hZ
   let r := complementResolutionMapInt structureMap Z
-  let _ : QuasiIso a :=
+  let : QuasiIso a :=
     complementConstantsToSingularCochainInt_quasiIso structureMap Z hZ
   have hr : QuasiIso r := by
     apply (HomologicalComplex.quasiIso_extendMap_iff
@@ -475,7 +472,7 @@ lemma complementSingularToInjectiveResolutionInt_quasiIso
     infer_instance
   have hab : a ≫ b = r :=
     complementConstants_comp_singularToInjectiveResolutionInt structureMap Z hZ
-  let _ : QuasiIso (a ≫ b) := hab ▸ hr
+  let : QuasiIso (a ≫ b) := hab ▸ hr
   exact quasiIso_of_comp_left a b
 
 lemma complementSingularToInjectiveResolution_quasiIso

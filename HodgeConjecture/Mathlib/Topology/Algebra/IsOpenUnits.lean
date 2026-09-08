@@ -16,7 +16,6 @@ limitations under the License.
 module
 
 public import Mathlib.Topology.Algebra.IsOpenUnits
-public import Mathlib.Topology.Algebra.Group.Basic
 
 /-!
 # Monoids with open units

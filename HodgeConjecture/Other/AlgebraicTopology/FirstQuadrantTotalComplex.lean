@@ -15,9 +15,14 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.Algebra.Category.Grp.AB
-public import Mathlib.Algebra.Homology.HomologySequenceLemmas
+public import Mathlib.Algebra.Category.Grp.Abelian
+public import Mathlib.Algebra.Homology.QuasiIso
+public import Mathlib.Algebra.Homology.ShortComplex.ShortExact
 public import Mathlib.Algebra.Homology.TotalComplex
+
+import Mathlib.Algebra.Category.Grp.Biproducts
+import Mathlib.Algebra.Homology.HomologySequenceLemmas
+import Mathlib.CategoryTheory.Abelian.GrothendieckAxioms.Basic
 
 /-!
 This module is adapted from Paul Lezeau's `sphere-six-complex`, commits

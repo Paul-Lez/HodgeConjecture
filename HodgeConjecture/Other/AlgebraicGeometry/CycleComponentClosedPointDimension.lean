@@ -15,10 +15,18 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentLocalGenerator
-public import HodgeConjecture.Other.AlgebraicGeometry.SmoothCatenaryDimension
-public import Mathlib.RingTheory.IntegralClosure.GoingDown
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+import HodgeConjecture.Other.Algebra.PolynomialCatenary
+import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
+import HodgeConjecture.Other.AlgebraicGeometry.SmoothCatenaryDimension
+import Mathlib.RingTheory.IntegralClosure.GoingDown
+import Mathlib.RingTheory.KrullDimension.Field
+import Mathlib.RingTheory.KrullDimension.Polynomial
+import Mathlib.RingTheory.NoetherNormalization
 
 /-!
 # Dimensions at closed points of cycle components
@@ -52,16 +60,16 @@ lemma FiniteType.height_eq_ringKrullDim_of_isMaximal
     (P : Ideal A) [P.IsMaximal] :
     (↑P.height : WithBot ℕ∞) = ringKrullDim A := by
   obtain ⟨n, g, hg, hfinite⟩ := exists_finite_inj_algHom_of_fg k A
-  let _ : Algebra (MvPolynomial (Fin n) k) A := g.toAlgebra
-  let _ : FaithfulSMul (MvPolynomial (Fin n) k) A :=
+  let : Algebra (MvPolynomial (Fin n) k) A := g.toAlgebra
+  let : FaithfulSMul (MvPolynomial (Fin n) k) A :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hg
-  let _ : IsScalarTower k (MvPolynomial (Fin n) k) A :=
+  let : IsScalarTower k (MvPolynomial (Fin n) k) A :=
     IsScalarTower.of_algebraMap_eq' (by
       ext r
       exact (g.commutes r).symm)
-  let _ : Algebra.IsIntegral (MvPolynomial (Fin n) k) A :=
+  let : Algebra.IsIntegral (MvPolynomial (Fin n) k) A :=
     ⟨hfinite.to_isIntegral⟩
-  let _ : Algebra.HasGoingDown (MvPolynomial (Fin n) k) A := inferInstance
+  let : Algebra.HasGoingDown (MvPolynomial (Fin n) k) A := inferInstance
   have hunder : (P.under (MvPolynomial (Fin n) k)).IsMaximal :=
     Ideal.isMaximal_comap_of_isIntegral_of_isMaximal P
   have hheight : P.height = (P.under (MvPolynomial (Fin n) k)).height := by
@@ -159,7 +167,7 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
   let W : (cycleComponent X x).Opens := c ⁻¹ᵁ U
   have hW : IsAffineOpen W := hU.preimage c
   have hzW : z ∈ W := hyU
-  let _ : Nonempty W := ⟨⟨z, hzW⟩⟩
+  let : Nonempty W := ⟨⟨z, hzW⟩⟩
   let xu : U.toScheme := ⟨x, hxU⟩
   let zw : W.toScheme := ⟨z, hzW⟩
   let q : Γ(X, U) →+* Γ(cycleComponent X x, W) :=
@@ -222,9 +230,9 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
       _ = ringKrullDim (Γ(X, U) ⧸ P) := by rw [hqker]
       _ = d - p := hquotient
   let s : cycleComponent X x ⟶ Spec ↧ℂ := c ≫ structureMap
-  let _ : Algebra ℂ Γ(cycleComponent X x, W) :=
+  let : Algebra ℂ Γ(cycleComponent X x, W) :=
     (complexRestrictionMap s W).toAlgebra
-  let _ : Algebra.FiniteType ℂ Γ(cycleComponent X x, W) := by
+  let : Algebra.FiniteType ℂ Γ(cycleComponent X x, W) := by
     rw [← RingHom.finiteType_algebraMap]
     change (complexRestrictionMap s W).FiniteType
     apply (s.finiteType_appLE (isAffineOpen_top (Spec ↧ℂ)) hW (by simp)).comp
@@ -234,7 +242,7 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
     (hW.primeIdealOf zw).asIdeal
   have hQmax : Q.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed
     zw hz
-  let _ : Q.IsMaximal := hQmax
+  let : Q.IsMaximal := hQmax
   have hQheight : (↑Q.height : WithBot ℕ∞) = d - p := by
     rw [Algebra.FiniteType.height_eq_ringKrullDim_of_isMaximal
       (k := ℂ) Q, hringW]
@@ -275,7 +283,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
     cycleComponentι X x ≫ structureMap
   let S : (cycleComponent X x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
-  let _ : Smooth g := by
+  let : Smooth g := by
     exact cycleComponent_smoothLocus_smooth structureMap x
   obtain ⟨z, hzsmooth, hzclosed⟩ :=
     exists_cycleComponent_smooth_closed_complexPoint structureMap x
@@ -294,7 +302,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
     exact hpreimage ▸ hzclosed.preimage S.ι.continuous
   let zw : W.toScheme := ⟨zs, hzsW⟩
   let P : Ideal Γ(S, W) := (hW.primeIdealOf zw).asIdeal
-  let _ : P.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed zw hzsClosed
+  let : P.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed zw hzsClosed
   have hPm : P.height = m :=
     RingHom.IsStandardSmoothOfRelativeDimension.height_eq_of_isMaximal hm P
   have hPcoheight : P.height = Order.coheight zw :=

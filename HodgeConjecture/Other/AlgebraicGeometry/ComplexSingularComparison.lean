@@ -15,11 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainSheaf
-public import Mathlib.Algebra.Homology.Embedding.ExtendHomology
+public import Mathlib.Algebra.Homology.Embedding.Extend
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+import Mathlib.Algebra.Homology.Embedding.ExtendHomology
 
 /-!
 # Singular cochains on smooth complex-point spaces
@@ -60,7 +62,7 @@ lemma constantsToSingularCochain_quasiIsoAt_zero
     QuasiIsoAt
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
         (TopCat.of (ComplexPoint X structureMap))) 0 := by
-  let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
+  let : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
     locallyPathConnectedSpace structureMap
   exact
     AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_zero

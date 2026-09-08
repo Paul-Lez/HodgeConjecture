@@ -15,14 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivisionSmall
-public import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
-public import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
-public import Mathlib.Analysis.Convex.Contractible
-public import Mathlib.Algebra.Homology.ShortComplex.Ab
-public import Mathlib.Algebra.Category.Grp.Zero
+public import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivision
+public import Mathlib.Topology.Homotopy.Contractible
+
+import Mathlib.Algebra.Category.Grp.Zero
+import Mathlib.Algebra.Homology.ShortComplex.Ab
+import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.Logic.Equiv.PartialEquiv
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in
@@ -80,17 +80,17 @@ public theorem standardTopologicalSimplex_integralSingularHomology_isZero
   change IsZero (((singularHomologyFunctor AddCommGrpCat k).obj
     (AddCommGrpCat.of ℤ)).obj
       (TopCat.of (stdSimplex ℝ (Fin (m + 1)))))
-  let _ : ContractibleSpace (stdSimplex ℝ (Fin (m + 1))) :=
+  let : ContractibleSpace (stdSimplex ℝ (Fin (m + 1))) :=
     standardTopologicalSimplex_contractibleSpace m
   obtain ⟨e⟩ := ContractibleSpace.hequiv_unit
     (stdSimplex ℝ (Fin (m + 1)))
   have hunit :=
     AlgebraicTopology.isZero_singularHomologyFunctor_of_totallyDisconnectedSpace
       AddCommGrpCat k (AddCommGrpCat.of ℤ) (TopCat.of Unit) hk
-  let _ : Subsingleton (IntegralSingularHomology k Unit) :=
+  let : Subsingleton (IntegralSingularHomology k Unit) :=
     AddCommGrpCat.subsingleton_of_isZero hunit
   let he := integralSingularHomologyEquivOfHomotopyEquiv k e
-  let _ : Subsingleton
+  let : Subsingleton
       (IntegralSingularHomology k (stdSimplex ℝ (Fin (m + 1)))) :=
     ⟨fun x y ↦ he.injective (Subsingleton.elim _ _)⟩
   exact AddCommGrpCat.isZero_of_subsingleton _

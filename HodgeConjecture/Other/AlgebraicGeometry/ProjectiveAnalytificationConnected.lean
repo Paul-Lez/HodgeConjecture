@@ -15,10 +15,15 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Topology.Connected.PathConnected
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
+import Mathlib.AlgebraicGeometry.AlgClosed.Basic
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Connected components of projective analytifications
@@ -49,8 +54,8 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 /-- A smooth projective complex variety has a complex point. -/
 noncomputable instance instNonemptyComplexPoint [IsIntegral X] [Smooth structureMap] :
     Nonempty (ComplexPoint X structureMap) := by
-  let _ : LocallyOfFiniteType structureMap := inferInstance
-  let _ : JacobsonSpace X := LocallyOfFiniteType.jacobsonSpace structureMap
+  let : LocallyOfFiniteType structureMap := inferInstance
+  let : JacobsonSpace X := LocallyOfFiniteType.jacobsonSpace structureMap
   obtain ⟨x, -, hx⟩ := nonempty_inter_closedPoints
     (X := X) (Z := Set.univ) Set.univ_nonempty isOpen_univ.isLocallyClosed
   exact ⟨(pointEquivClosedPoint structureMap).symm ⟨x, hx⟩⟩
@@ -60,9 +65,9 @@ components. -/
 theorem finiteConnectedComponents [IsProjective structureMap]
     [IsIntegral X] [Smooth structureMap] :
     Finite (ConnectedComponents (ComplexPoint X structureMap)) := by
-  let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
+  let : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
     locallyPathConnectedSpace structureMap
-  let _ : LocallyConnectedSpace (ComplexPoint X structureMap) := inferInstance
+  let : LocallyConnectedSpace (ComplexPoint X structureMap) := inferInstance
   infer_instance
 
 /-- A compact, locally path connected projective analytification has finitely many path
@@ -70,7 +75,7 @@ components. -/
 theorem finiteZerothHomotopy [IsProjective structureMap]
     [IsIntegral X] [Smooth structureMap] :
     Finite (ZerothHomotopy (ComplexPoint X structureMap)) := by
-  let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
+  let : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
     locallyPathConnectedSpace structureMap
   infer_instance
 
@@ -79,7 +84,7 @@ connectedness.  This theorem does not supply the global connectedness premise. -
 theorem pathConnectedSpace_iff_connectedSpace [IsIntegral X] [Smooth structureMap] :
     PathConnectedSpace (ComplexPoint X structureMap) ↔
       ConnectedSpace (ComplexPoint X structureMap) := by
-  let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
+  let : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
     locallyPathConnectedSpace structureMap
   exact _root_.pathConnectedSpace_iff_connectedSpace
 
@@ -115,7 +120,7 @@ theorem connectedSpaceOfDimensionEqZero [IsIntegral X] [Smooth structureMap]
     [IsProjective structureMap]
     [SmoothOfRelativeDimension d structureMap] (hd : d = 0) :
     ConnectedSpace (ComplexPoint X structureMap) := by
-  let _ : Subsingleton (ComplexPoint X structureMap) :=
+  let : Subsingleton (ComplexPoint X structureMap) :=
     subsingletonComplexPointOfDimensionEqZero structureMap d hd
   exact
     { toNonempty := inferInstance
@@ -127,7 +132,7 @@ theorem pathConnectedSpaceOfDimensionEqZero [IsIntegral X] [Smooth structureMap]
     [IsProjective structureMap]
     [SmoothOfRelativeDimension d structureMap] (hd : d = 0) :
     PathConnectedSpace (ComplexPoint X structureMap) := by
-  let _ : ConnectedSpace (ComplexPoint X structureMap) :=
+  let : ConnectedSpace (ComplexPoint X structureMap) :=
     connectedSpaceOfDimensionEqZero structureMap d hd
   exact (pathConnectedSpace_iff_connectedSpace structureMap).mpr inferInstance
 

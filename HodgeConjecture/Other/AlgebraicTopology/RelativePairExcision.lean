@@ -16,10 +16,11 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClass
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionField
-public import Mathlib.Algebra.Homology.HomologySequenceLemmas
+public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
+public import Mathlib.Algebra.Homology.QuasiIso
+
+import Mathlib.Algebra.Homology.HomologySequenceLemmas
 
 /-!
 # Relative excision for an open neighborhood of a point
@@ -715,7 +716,7 @@ lemma pointExcisionSmallRelativeToNeighborhood_comp_neighborhoodToSmall
     pointExcisionSmallRelativeToNeighborhoodRelativeChainMap U x ≫
         neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x =
       𝟙 (PointExcisionSmallRelativeChainComplex U x) := by
-  let _ : Epi (pointExcisionSmallRelativeProjection U x) := by
+  let : Epi (pointExcisionSmallRelativeProjection U x) := by
     change Epi (colimit.ι
       (parallelPair (pointComplementToExcisionSmallChains U x) 0)
       WalkingParallelPair.one)
@@ -742,7 +743,7 @@ lemma neighborhoodToSmall_comp_pointExcisionSmallRelativeToNeighborhood
     neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x ≫
         pointExcisionSmallRelativeToNeighborhoodRelativeChainMap U x =
       𝟙 ((relativeChainFunctor ℚ).obj (neighborhoodPointComplementPair U x)) := by
-  let _ : Epi (neighborhoodRelativeProjection U x) := by
+  let : Epi (neighborhoodRelativeProjection U x) := by
     change Epi (colimit.ι
       (parallelPair
         ((chainPairFunctor ℚ).obj (neighborhoodPointComplementPair U x)).hom 0)
@@ -1029,7 +1030,7 @@ lemma neighborhoodToSmallRelative_comp_smallRelativeToAmbient
     neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x ≫
         pointExcisionSmallRelativeToAmbientRelativeChainMap U x =
       (relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x) := by
-  let _ : Epi (neighborhoodRelativeProjection U x) := by
+  let : Epi (neighborhoodRelativeProjection U x) := by
     change Epi (colimit.ι
       (parallelPair
         ((chainPairFunctor ℚ).obj (neighborhoodPointComplementPair U x)).hom 0)
@@ -1046,11 +1047,11 @@ theorem neighborhoodPointComplement_relativeChainMap_quasiIso
     (U : Set X) (x : X) (hU : IsOpen U) (hx : x ∈ U) :
     QuasiIso
       ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) := by
-  let _ : IsIso (neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x) :=
+  let : IsIso (neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x) :=
     (neighborhoodRelativePointExcisionSmallIso U x).isIso_hom
-  let _ : QuasiIso (neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x) := by
+  let : QuasiIso (neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x) := by
     infer_instance
-  let _ : QuasiIso (pointExcisionSmallRelativeToAmbientRelativeChainMap U x) :=
+  let : QuasiIso (pointExcisionSmallRelativeToAmbientRelativeChainMap U x) :=
     pointExcisionSmallRelativeToAmbient_quasiIso U x hU hx
   rw [← neighborhoodToSmallRelative_comp_smallRelativeToAmbient]
   infer_instance
@@ -1061,7 +1062,7 @@ def neighborhoodPointComplementRelativeHomologyIso
     (U : Set X) (x : X) (hU : IsOpen U) (hx : x ∈ U) (n : ℕ) :
     RelativeHomology ℚ (neighborhoodPointComplementPair U x) n ≅
       RelativeHomology ℚ (pointComplementPair x) n := by
-  let _ : QuasiIso
+  let : QuasiIso
       ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) :=
     neighborhoodPointComplement_relativeChainMap_quasiIso U x hU hx
   exact isoOfQuasiIsoAt
@@ -1072,7 +1073,7 @@ theorem neighborhoodPointComplement_relativeHomologyMap_bijective
     (U : Set X) (x : X) (hU : IsOpen U) (hx : x ∈ U) (n : ℕ) :
     Function.Bijective
       (relativeHomologyMap ℚ n (neighborhoodPointComplementPairMap U x)) := by
-  let _ : QuasiIso
+  let : QuasiIso
       ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) :=
     neighborhoodPointComplement_relativeChainMap_quasiIso U x hU hx
   have hIso : IsIso ((relativeHomologyFunctor ℚ n).map

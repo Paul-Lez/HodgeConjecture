@@ -17,7 +17,6 @@ module
 
 public import HodgeConjecture.Other.AlgebraicTopology.FirstQuadrantColumnFiltrationQuotient
 public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
-public import Mathlib.Algebra.Homology.ShortComplex.Abelian
 
 /-!
 This module is adapted from Paul Lezeau's `sphere-six-complex`, commit

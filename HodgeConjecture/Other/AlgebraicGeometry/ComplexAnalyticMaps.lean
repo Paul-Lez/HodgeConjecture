@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
 
 /-!
 # Analytic maps induced by morphisms of smooth complex schemes
@@ -104,10 +104,10 @@ theorem contMDiff_analyticMap
     [SmoothOfRelativeDimension d structureMapX]
     [SmoothOfRelativeDimension e structureMapY] :
     ContMDiff 𝓘(ℂ, Fin d → ℂ) 𝓘(ℂ, Fin e → ℂ) ω (map f hf) := by
-  let _ : IsManifold 𝓘(ℂ, Fin d → ℂ) ω
+  let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω
       (ComplexPoint X structureMapX) :=
     isManifold_omega structureMapX d
-  let _ : IsManifold 𝓘(ℂ, Fin e → ℂ) ω
+  let : IsManifold 𝓘(ℂ, Fin e → ℂ) ω
       (ComplexPoint Y structureMapY) :=
     isManifold_omega structureMapY e
   intro z

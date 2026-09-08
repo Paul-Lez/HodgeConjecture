@@ -15,8 +15,6 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiGlobalSectionsComparison
 
 /-!
@@ -136,7 +134,7 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
   let ae₅ := (HomologicalComplex.homologyMapIso
     (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
       |>.addCommGroupIsoToAddEquiv
-  let _ : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
+  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
   let ae₆ := (asIso (HomologicalComplex.homologyMap
     ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
       |>.addCommGroupIsoToAddEquiv
@@ -154,7 +152,7 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSections
         (singularCochainSheafComplexInt structureMap ℚ)).homology n := by
   let Y := TopCat.of (ComplexPoint X structureMap)
   let S := singularCochainSheafComplexInt structureMap ℚ
-  let _ : S.IsStrictlyGE 0 := by
+  let : S.IsStrictlyGE 0 := by
     dsimp [S, singularCochainSheafComplexInt]
     infer_instance
   let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0

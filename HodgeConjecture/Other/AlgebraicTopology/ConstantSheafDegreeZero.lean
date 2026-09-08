@@ -15,14 +15,15 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.Algebra.Category.ModuleCat.Presheaf.Sheafification
-public import Mathlib.Algebra.Category.Grp.EpiMono
+public import Mathlib.Algebra.Category.Grp.Colimits
 public import Mathlib.Algebra.Category.Grp.FilteredColimits
-public import Mathlib.CategoryTheory.Sites.Abelian
+public import Mathlib.Algebra.Category.Grp.Limits
 public import Mathlib.CategoryTheory.Sites.ConstantSheaf
-public import Mathlib.Topology.Connected.Clopen
-public import Mathlib.Topology.LocallyConstant.Basic
-public import Mathlib.Topology.Sheaves.Sheafify
+public import Mathlib.CategoryTheory.Sites.Spaces
+public import Mathlib.Topology.Sheaves.Presheaf
+
+import Mathlib.Topology.LocallyConstant.Basic
+import Mathlib.Topology.Sheaves.Sheafify
 
 /-!
 # Degree-zero facts about constant sheaves
@@ -65,7 +66,7 @@ lemma constant_toSheafify_app_top_injective [Nonempty X] (A : AddCommGrpCat.{u})
   let Q : X.Presheaf AddCommGrpCat.{u} :=
     CategoryTheory.sheafify (Opens.grothendieckTopology X) P
   let stalk := Presheaf.stalkFunctor AddCommGrpCat.{u} x
-  let _ : IsIso (stalk.map η) :=
+  let : IsIso (stalk.map η) :=
     Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u} P
   intro a b h
   change η.app (op ⊤) a = η.app (op ⊤) b at h
@@ -97,7 +98,7 @@ private lemma exists_constant_local_representation (A : AddCommGrpCat.{u})
   let Q : X.Presheaf AddCommGrpCat.{u} := CategoryTheory.sheafify J P
   let η := CategoryTheory.toSheafify J P
   let stalk := Presheaf.stalkFunctor AddCommGrpCat.{u} x
-  let _ : IsIso (stalk.map η) :=
+  let : IsIso (stalk.map η) :=
     Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u} P
   obtain ⟨t, ht⟩ :=
     (ConcreteCategory.bijective_of_isIso (stalk.map η)).2 (Q.Γgerm x s)
@@ -134,7 +135,7 @@ private lemma constant_local_representation_value_unique (A : AddCommGrpCat.{u})
   let Q : X.Presheaf AddCommGrpCat.{u} := CategoryTheory.sheafify J P
   let η := CategoryTheory.toSheafify J P
   let stalk := Presheaf.stalkFunctor AddCommGrpCat.{u} x
-  let _ : IsIso (stalk.map η) :=
+  let : IsIso (stalk.map η) :=
     Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u} P
   have hp : P.germ U x hxU a = P.germ V x hxV b := by
     apply (ConcreteCategory.bijective_of_isIso (stalk.map η)).1
@@ -228,7 +229,7 @@ instance constantSheaf_faithful_of_nonempty [Nonempty X] :
       (presheafToSheaf J AddCommGrpCat.{u}).map cg at h
     have hs : CategoryTheory.sheafifyMap J cf = CategoryTheory.sheafifyMap J cg :=
       congrArg (fun k => k.hom) h
-    let _ : Mono (ηB.app (op ⊤)) := ConcreteCategory.mono_of_injective _
+    let : Mono (ηB.app (op ⊤)) := ConcreteCategory.mono_of_injective _
       (constant_toSheafify_app_top_injective X B)
     apply (cancel_mono (ηB.app (op ⊤))).1
     change f ≫ ηB.app (op ⊤) = g ≫ ηB.app (op ⊤)

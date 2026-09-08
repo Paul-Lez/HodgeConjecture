@@ -15,10 +15,11 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.OpenCoverOrderedCechBicomplex
-public import HodgeConjecture.Other.AlgebraicTopology.SingularContractibleMapQuasiIso
-public import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionOpenCover
+public import Mathlib.Topology.Homotopy.Contractible
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularContractibleMapQuasiIso
+import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionOpenCover
 
 /-!
 # Finite good covers and normalized singular Čech chains
@@ -112,8 +113,8 @@ public theorem isZero_normalizedCechObject (h : FiniteGoodCover X U)
     {n : ℕ} (hn : Nat.card ι ≤ n) :
     IsZero ((openCoverIntersectionChainModels X U).cechObject
       TupleClass.strictMono n) := by
-  let _ : Finite ι := h.finite_index
-  let _ : Fintype ι := Fintype.ofFinite ι
+  let : Finite ι := h.finite_index
+  let : Fintype ι := Fintype.ofFinite ι
   rw [Nat.card_eq_fintype_card] at hn
   exact (openCoverIntersectionChainModels X U).isZero_cechObject_strictMono hn
 

@@ -15,11 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import Mathlib.Analysis.Convex.Contractible
-public import Mathlib.Analysis.Normed.Module.Convex
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Geometry.Manifold.ChartedSpace
 public import Mathlib.Topology.Homotopy.LocallyContractible
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+import Mathlib.Analysis.Convex.Contractible
 
 /-!
 # Local contractibility of projective analytifications
@@ -95,7 +98,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 contractible. -/
 theorem stronglyLocallyContractibleSpace [IsIntegral X] [Smooth structureMap] :
     StronglyLocallyContractibleSpace (ComplexPoint X structureMap) := by
-  let _ : StronglyLocallyContractibleSpace (Fin (dim X) → ℂ) :=
+  let : StronglyLocallyContractibleSpace (Fin (dim X) → ℂ) :=
     normedSpace_stronglyLocallyContractibleSpace
   exact ChartedSpace.stronglyLocallyContractibleSpace
     (H := Fin (dim X) → ℂ) (M := ComplexPoint X structureMap)
@@ -103,7 +106,7 @@ theorem stronglyLocallyContractibleSpace [IsIntegral X] [Smooth structureMap] :
 /-- The analytification of a smooth projective complex variety is locally contractible. -/
 theorem locallyContractibleSpace [IsIntegral X] [Smooth structureMap] :
     LocallyContractibleSpace (ComplexPoint X structureMap) := by
-  let _ : StronglyLocallyContractibleSpace (ComplexPoint X structureMap) :=
+  let : StronglyLocallyContractibleSpace (ComplexPoint X structureMap) :=
     stronglyLocallyContractibleSpace structureMap
   exact StronglyLocallyContractibleSpace.locallyContractible
 

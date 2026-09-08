@@ -15,9 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
 
 /-!
 # Exact local coordinates on small-dimensional cycle components
@@ -45,7 +50,7 @@ lemma IsStandardSmooth.exists_isStandardSmoothOfRelativeDimension
     {R S : Type*} [CommRing R] [CommRing S] {f : R →+* S}
     (hf : f.IsStandardSmooth) :
     ∃ n, f.IsStandardSmoothOfRelativeDimension n := by
-  let _ : Algebra R S := f.toAlgebra
+  let : Algebra R S := f.toAlgebra
   change Algebra.IsStandardSmooth R S at hf
   obtain ⟨ι, σ, hσ, hι, ⟨P⟩⟩ := hf.out
   refine ⟨P.dimension, ?_⟩
@@ -305,7 +310,7 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
     cycleComponentι X x ≫ structureMap
   let S : (cycleComponent X x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
-  let _ : Smooth g := by
+  let : Smooth g := by
     exact cycleComponent_smoothLocus_smooth structureMap x
   obtain ⟨z, hzsmooth, hzclosed⟩ :=
     exists_cycleComponent_smooth_closed_complexPoint structureMap x
@@ -324,7 +329,7 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
     exact hpreimage ▸ hzclosed.preimage S.ι.continuous
   let zw : W.toScheme := ⟨zs, hzsW⟩
   let P : Ideal Γ(S, W) := (hW.primeIdealOf zw).asIdeal
-  let _ : P.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed zw hzsClosed
+  let : P.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed zw hzsClosed
   have hPm : P.height = m :=
     RingHom.IsStandardSmoothOfRelativeDimension.height_eq_of_isMaximal hm P
   have hPcoheight : P.height = Order.coheight zw :=

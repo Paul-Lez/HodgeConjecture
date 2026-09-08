@@ -15,12 +15,11 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Other.AlgebraicTopology.InjectiveFlasque
-public import Mathlib.Algebra.Homology.DerivedCategory.Ext.ExactSequences
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt
 public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
-public import Mathlib.Topology.Sheaves.Abelian
+public import Mathlib.Topology.Sheaves.Flasque
+
+import HodgeConjecture.Other.AlgebraicTopology.InjectiveFlasque
 
 /-!
 # Flasque sheaves are acyclic
@@ -80,21 +79,21 @@ theorem cohomology_succ_eq_zero
     (x : Abelian.Ext (globalSectionsSource (X := X)) F (n + 1)) : x = 0 := by
   induction n generalizing F with
   | zero =>
-      let _ : AddCommGroup
+      let : AddCommGroup
           (Abelian.Ext (globalSectionsSource (X := X)) F 1) :=
         extAddCommGroup
       let S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
         ShortComplex.mk (Injective.ι F) (cokernel.π (Injective.ι F))
           (cokernel.condition (Injective.ι F))
       have hS : S.ShortExact := { exact := ShortComplex.exact_cokernel (Injective.ι F) }
-      let _ : S.X₁.IsFlasque := by dsimp [S]; infer_instance
-      let _ : S.X₂.IsFlasque := by dsimp [S]; infer_instance
-      let _ : S.X₃.IsFlasque := of_shortExact_of_isFlasque₁₂ hS
-      let _ : Injective S.X₂ := by dsimp [S]; infer_instance
-      let _ : AddCommGroup
+      let : S.X₁.IsFlasque := by dsimp [S]; infer_instance
+      let : S.X₂.IsFlasque := by dsimp [S]; infer_instance
+      let : S.X₃.IsFlasque := of_shortExact_of_isFlasque₁₂ hS
+      let : Injective S.X₂ := by dsimp [S]; infer_instance
+      let : AddCommGroup
           (Abelian.Ext (globalSectionsSource (X := X)) S.X₂ 1) :=
         extAddCommGroup
-      let _ : AddCommGroup
+      let : AddCommGroup
           (Abelian.Ext (globalSectionsSource (X := X)) S.X₃ 0) :=
         extAddCommGroup
       have hx : x.comp (Abelian.Ext.mk₀ S.f) (add_zero 1) = 0 := by
@@ -107,7 +106,7 @@ theorem cohomology_succ_eq_zero
       obtain ⟨z, hz⟩ := hg (globalSectionsEquiv S.X₃ y)
       let z' : Abelian.Ext (globalSectionsSource (X := X)) S.X₂ 0 :=
         (globalSectionsEquiv S.X₂).symm z
-      let _ : AddCommGroup
+      let : AddCommGroup
           (Abelian.Ext (globalSectionsSource (X := X)) S.X₂ 0) :=
         extAddCommGroup
       have hz' : z'.comp (Abelian.Ext.mk₀ S.g) (add_zero 0) = y := by
@@ -124,21 +123,21 @@ theorem cohomology_succ_eq_zero
       rw [Abelian.Ext.comp_assoc_of_second_deg_zero]
       rw [hS.comp_extClass, Abelian.Ext.comp_zero]
   | succ n ih =>
-      let _ : AddCommGroup
+      let : AddCommGroup
           (Abelian.Ext (globalSectionsSource (X := X)) F (n + 2)) :=
         extAddCommGroup
       let S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
         ShortComplex.mk (Injective.ι F) (cokernel.π (Injective.ι F))
           (cokernel.condition (Injective.ι F))
       have hS : S.ShortExact := { exact := ShortComplex.exact_cokernel (Injective.ι F) }
-      let _ : S.X₁.IsFlasque := by dsimp [S]; infer_instance
-      let _ : S.X₂.IsFlasque := by dsimp [S]; infer_instance
-      let _ : S.X₃.IsFlasque := of_shortExact_of_isFlasque₁₂ hS
-      let _ : Injective S.X₂ := by dsimp [S]; infer_instance
-      let _ : AddCommGroup
+      let : S.X₁.IsFlasque := by dsimp [S]; infer_instance
+      let : S.X₂.IsFlasque := by dsimp [S]; infer_instance
+      let : S.X₃.IsFlasque := of_shortExact_of_isFlasque₁₂ hS
+      let : Injective S.X₂ := by dsimp [S]; infer_instance
+      let : AddCommGroup
           (Abelian.Ext (globalSectionsSource (X := X)) S.X₂ (n + 2)) :=
         extAddCommGroup
-      let _ : AddCommGroup
+      let : AddCommGroup
           (Abelian.Ext (globalSectionsSource (X := X)) S.X₃ (n + 1)) :=
         extAddCommGroup
       have hx : x.comp (Abelian.Ext.mk₀ S.f) (add_zero (n + 2)) = 0 := by

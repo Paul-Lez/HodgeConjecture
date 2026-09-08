@@ -15,9 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularComparison
+public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularNaturality
+
+import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularComparison
 
 /-!
 # Betti support-cone comparison
@@ -133,7 +133,7 @@ noncomputable instance rationalSupportConeToNaturalSingularCone_quasiIso
     [IsIntegral X] [Smooth structureMap]
     (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
     QuasiIso (rationalSupportConeToNaturalSingularCone structureMap Z hZ) := by
-  let _ : QuasiIso (rationalToSingularCochainComplexInt structureMap) :=
+  let : QuasiIso (rationalToSingularCochainComplexInt structureMap) :=
     rationalToSingularCochainComplexInt_quasiIso structureMap
   change QuasiIso (CochainComplex.mappingCone.map
     (rationalRestrictionComplexInt structureMap Z)

@@ -15,11 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.FiniteGoodCoverHomology
-public import Mathlib.Algebra.Category.FGModuleCat.Colimits
+public import Mathlib.RingTheory.Finiteness.Defs
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularContractibleMapQuasiIso
+import Mathlib.Algebra.Category.FGModuleCat.Colimits
+import Mathlib.Algebra.Category.Grp.EpiMono
+import Mathlib.CategoryTheory.Limits.Shapes.Countable
 
 /-!
 # The finite nerve model of a good cover
@@ -83,7 +85,7 @@ public theorem module_finite_addCommGrp_finite_coproduct
   let Z : I → ModuleCat ℤ := fun i ↦ ModuleCat.of ℤ (A i)
   let F := forget₂ (ModuleCat ℤ) AddCommGrpCat
   let σ := sigmaComparison F Z
-  let _ (i : I) : Module.Finite ℤ (Z i) := hA i
+  let (i : I) : Module.Finite ℤ (Z i) := hA i
   have htarget : Module.Finite ℤ (∐ Z : ModuleCat ℤ) := inferInstance
   have htarget' : Module.Finite ℤ (F.obj (∐ Z : ModuleCat ℤ)) := by
     change @Module.Finite ℤ ((∐ Z : ModuleCat ℤ) : Type) _ _
@@ -93,8 +95,8 @@ public theorem module_finite_addCommGrp_finite_coproduct
       Subsingleton.elim _ _
     rw [← hm]
     exact htarget
-  let _ : Module.Finite ℤ (F.obj (∐ Z : ModuleCat ℤ)) := htarget'
-  let _ : IsIso σ := by dsimp [σ, F]; infer_instance
+  let : Module.Finite ℤ (F.obj (∐ Z : ModuleCat ℤ)) := htarget'
+  let : IsIso σ := by dsimp [σ, F]; infer_instance
   change Module.Finite ℤ ((∐ fun i ↦ F.obj (Z i) : AddCommGrpCat) : Type)
   exact Module.Finite.equiv
     (asIso σ).symm.addCommGroupIsoToAddEquiv.toIntLinearEquiv
@@ -104,14 +106,14 @@ generated. -/
 public theorem module_finite_integral_homology_of_finite_chain_group
     (C : ChainComplex AddCommGrpCat ℕ) (n : ℕ)
     (h : Module.Finite ℤ (C.X n)) : Module.Finite ℤ (C.homology n) := by
-  let _ := h
+  let := h
   let i : C.cycles n →ₗ[ℤ] C.X n := (C.iCycles n).hom.toIntLinearMap
   have hi : Function.Injective i := by
     change Function.Injective (C.iCycles n).hom
     exact (AddCommGrpCat.mono_iff_injective (C.iCycles n)).mp inferInstance
   have hcycles : Module.Finite ℤ (C.cycles n) :=
     Module.Finite.of_injective i hi
-  let _ := hcycles
+  let := hcycles
   let q : C.cycles n →ₗ[ℤ] C.homology n := (C.homologyπ n).hom.toIntLinearMap
   have hq : Function.Surjective q := by
     change Function.Surjective (C.homologyπ n).hom
@@ -188,10 +190,10 @@ public theorem goodCoverNerveLocalModel_X_module_finite
     Module.Finite ℤ ((goodCoverNerveLocalModel (X := X) (U := U) s).X q) := by
   let Y := TopCat.of (goodCoverNerveLocalSpace (X := X) (U := U) s)
   let e := TopCat.toSSetObjEquiv Y (Opposite.op (SimplexCategory.mk q))
-  let _ : Subsingleton ((TopCat.toSSet.obj Y).obj
+  let : Subsingleton ((TopCat.toSSet.obj Y).obj
       (Opposite.op (SimplexCategory.mk q))) :=
     ⟨fun a b ↦ e.injective (Subsingleton.elim _ _)⟩
-  let _ : Finite ((TopCat.toSSet.obj Y).obj
+  let : Finite ((TopCat.toSSet.obj Y).obj
       (Opposite.op (SimplexCategory.mk q))) := Finite.of_subsingleton
   change Module.Finite ℤ ((∐ fun _ : (TopCat.toSSet.obj Y).obj
     (Opposite.op (SimplexCategory.mk q)) ↦ AddCommGrpCat.of ℤ : AddCommGrpCat) : Type)
@@ -357,7 +359,7 @@ public theorem nerveCechObject_X_module_finite (h : FiniteGoodCover X U)
     (p q : ℕ) : Module.Finite ℤ
       (((goodCoverNerveChainModels X U).cechObject
         TupleClass.strictMono p).X q) := by
-  let _ : Finite ι := h.finite_index
+  let : Finite ι := h.finite_index
   let I := {a : Fin (p + 1) → ι // TupleClass.strictMono.mem p a}
   let K : I → ChainComplex AddCommGrpCat ℕ := fun a ↦
     goodCoverNerveLocalModel (X := X) (U := U) (tupleSupport a.1)
@@ -367,9 +369,9 @@ public theorem nerveCechObject_X_module_finite (h : FiniteGoodCover X U)
     apply module_finite_addCommGrp_finite_coproduct
     intro a
     exact goodCoverNerveLocalModel_X_module_finite X U (tupleSupport a.1) q
-  let _ : Module.Finite ℤ ((∐ fun a ↦ F.obj (K a) : AddCommGrpCat) : Type) :=
+  let : Module.Finite ℤ ((∐ fun a ↦ F.obj (K a) : AddCommGrpCat) : Type) :=
     hsource
-  let _ : IsIso σ := by dsimp [σ, F]; infer_instance
+  let : IsIso σ := by dsimp [σ, F]; infer_instance
   change Module.Finite ℤ (F.obj (∐ K))
   exact Module.Finite.equiv
     (asIso σ).addCommGroupIsoToAddEquiv.toIntLinearEquiv
@@ -378,7 +380,7 @@ public theorem nerveCechObject_X_module_finite (h : FiniteGoodCover X U)
 public theorem nerveTotal_X_module_finite (h : FiniteGoodCover X U) (n : ℕ) :
     Module.Finite ℤ
       (((goodCoverNerveChainModels X U).cechTotal TupleClass.strictMono).X n) := by
-  let _ : Finite ι := h.finite_index
+  let : Finite ι := h.finite_index
   change Module.Finite ℤ ((∐ fun pq : FirstQuadrantTotalFiber n ↦
     (((goodCoverNerveChainModels X U).cechObject
       TupleClass.strictMono pq.1.1).X pq.1.2) : AddCommGrpCat) : Type)
@@ -413,7 +415,7 @@ public theorem localAugmentation_quasiIso (h : FiniteGoodCover X U)
 /-- Each vertical column of the normalized good-cover comparison is a quasi-isomorphism. -/
 public theorem nerveBicomplexMap_column_quasiIso (h : FiniteGoodCover X U) (p : ℕ) :
     QuasiIso ((goodCoverNerveBicomplexMap X U).f p) := by
-  let _ : Finite ι := h.finite_index
+  let : Finite ι := h.finite_index
   change QuasiIso (Limits.Sigma.map fun a :
     {a : Fin (p + 1) → ι // TupleClass.strictMono.mem p a} ↦
       goodCoverLocalAugmentation X U (tupleSupport a.1))
@@ -449,7 +451,7 @@ every degree. -/
 public theorem integralSingularHomology_module_finite
     (h : FiniteGoodCover X U) (n : ℕ) :
     Module.Finite ℤ ((IntegralSingularChainComplexObj X).homology n) := by
-  let _ : Module.Finite ℤ
+  let : Module.Finite ℤ
       (((goodCoverNerveChainModels X U).cechTotal TupleClass.strictMono).homology n) :=
     module_finite_integral_homology_of_finite_chain_group _ _
       (h.nerveTotal_X_module_finite n)

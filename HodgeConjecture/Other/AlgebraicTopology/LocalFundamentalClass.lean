@@ -16,10 +16,6 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCohomology
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import Mathlib.Algebra.Homology.ConcreteCategory
-public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
 
 /-!
 # A standard local fundamental cycle

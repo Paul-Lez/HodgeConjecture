@@ -15,11 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import Mathlib.AlgebraicGeometry.Limits
-public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
-public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Proper
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Scheme
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Proper
 
 /-!
 # Projective space and explicit projective presentations
@@ -150,7 +151,7 @@ class IsProjective (f : X ⟶ T) : Prop where
 /-- A projective morphism in the explicit-presentation sense is proper. -/
 instance IsProjective.isProper {f : X ⟶ T} [h : IsProjective f] : IsProper f := by
   obtain ⟨P⟩ := h.nonempty_presentation
-  let _ : IsClosedImmersion P.immersion := P.isClosedImmersion
+  let : IsClosedImmersion P.immersion := P.isClosedImmersion
   have hcomp : IsProper
       (P.immersion ≫ toBase (Fin (P.ambientDimension + 1)) T) := by
     infer_instance

@@ -15,9 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicTopology.FlasqueAcyclic
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
-public import Mathlib.Algebra.Homology.ShortComplex.ExactFunctor
+public import Mathlib.Topology.Sheaves.Flasque
 
 /-!
 # Global sections of bounded-below exact flasque complexes
@@ -83,7 +82,7 @@ lemma cyclesShortComplex_shortExact (i : ℤ) (hK : K.ExactAt (i + 1)) :
     have hfac : K.toCycles i (i + 1) =
         (K.toCycles i (i + 1) ≫ e.hom) ≫ e.inv := by
       simp only [Category.assoc, Iso.hom_inv_id, Category.comp_id]
-    let _ : Epi (K.toCycles i (i + 1) ≫ e.hom) := hepi'
+    let : Epi (K.toCycles i (i + 1) ≫ e.hom) := hepi'
     rw [hfac]
     infer_instance
   have hmono : Mono S.f := by
@@ -107,7 +106,7 @@ lemma cycles_isFlasque_add_nat (N : ℤ) [K.IsStrictlyGE N]
       have hsource : IsZero S.X₂ := by
         dsimp [S, cyclesShortComplex]
         exact K.isZero_of_isStrictlyGE N (N - 1) (by lia)
-      let _ : Epi S.g := hS.epi_g
+      let : Epi S.g := hS.epi_g
       have htarget : IsZero S.X₃ := IsZero.of_epi S.g hsource
       have hzero : IsZero (K.cycles N) := by
         simpa only [S, cyclesShortComplex, sub_add_cancel] using htarget
@@ -116,10 +115,10 @@ lemma cycles_isFlasque_add_nat (N : ℤ) [K.IsStrictlyGE N]
       let i : ℤ := N + (m : ℤ)
       let S := cyclesShortComplex K i
       have hS : S.ShortExact := cyclesShortComplex_shortExact K i (hK (i + 1))
-      let _ : S.X₁.IsFlasque := by
+      let : S.X₁.IsFlasque := by
         dsimp [S, cyclesShortComplex, i]
         exact ih
-      let _ : S.X₂.IsFlasque := by
+      let : S.X₂.IsFlasque := by
         dsimp [S, cyclesShortComplex]
         exact hflasque i
       have htarget : S.X₃.IsFlasque := of_shortExact_of_isFlasque₁₂ hS
@@ -157,7 +156,7 @@ noncomputable instance globalSectionsFunctor_additive :
 
 noncomputable instance globalSectionsFunctor_preservesFiniteLimits :
     PreservesFiniteLimits (globalSectionsFunctor X) := by
-  let _ : PreservesFiniteLimits
+  let : PreservesFiniteLimits
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op (⊤ : Opens X))) :=
     inferInstance
   exact comp_preservesFiniteLimits (TopCat.Sheaf.forget AddCommGrpCat.{u} X)
@@ -193,7 +192,7 @@ theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
   have hSprev : Sprev.ShortExact := by
     apply cyclesShortComplex_shortExact K (i - 1)
     simpa only [sub_add_cancel] using hK i
-  let _ : Sprev.X₁.IsFlasque := by
+  let : Sprev.X₁.IsFlasque := by
     dsimp [Sprev, cyclesShortComplex]
     exact cycles_isFlasque K N hK hflasque (i - 1)
   have hepiTop : Epi (Sprev.g.hom.app (op (⊤ : Opens X))) :=
@@ -229,11 +228,11 @@ theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
       comm₂₃ := by
         dsimp [T, B]
         simp }
-  let _ : Epi φ.τ₁ := hepi
-  let _ : IsIso φ.τ₂ := by
+  let : Epi φ.τ₁ := hepi
+  let : IsIso φ.τ₂ := by
     change IsIso (𝟙 (F.obj (K.X i)))
     infer_instance
-  let _ : Mono φ.τ₃ := by
+  let : Mono φ.τ₃ := by
     change Mono (𝟙 (F.obj (K.X (i + 1))))
     infer_instance
   have hT : T.Exact :=

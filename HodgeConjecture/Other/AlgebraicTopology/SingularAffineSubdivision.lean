@@ -15,8 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicTopology.SingularBarycentricOuterFaces
-public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
+public import HodgeConjecture.Other.AlgebraicTopology.SingularBarycentricAllDegrees
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularBarycentricOuterFaces
+import Mathlib.Logic.Equiv.PartialEquiv
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in

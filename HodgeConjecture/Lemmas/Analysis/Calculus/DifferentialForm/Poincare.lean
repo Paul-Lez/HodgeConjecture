@@ -15,11 +15,11 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.Analysis.Calculus.DifferentialForm.VectorField
-public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-public import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.ContDiff
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.Analysis.Calculus.DifferentialForm.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The radial homotopy operator on differential forms
@@ -64,7 +64,7 @@ theorem hasFDerivAt_intervalIntegral_of_continuous
     (hdiff : ∀ x t, HasFDerivAt (F · t) (F' x t) x) :
     HasFDerivAt (fun x ↦ ∫ t in (0 : ℝ)..1, F x t)
       (∫ t in (0 : ℝ)..1, F' x₀ t) x₀ := by
-  let _ : ProperSpace E := FiniteDimensional.proper ℂ E
+  let : ProperSpace E := FiniteDimensional.proper ℂ E
   let K : Set (E × ℝ) := Metric.closedBall x₀ 1 ×ˢ Set.Icc 0 1
   have hK : IsCompact K := (isCompact_closedBall x₀ 1).prod isCompact_Icc
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hF'.continuousOn
@@ -95,7 +95,7 @@ theorem hasFDerivAt_intervalIntegral_of_continuousOn
       HasFDerivAt (F · t) (F' x t) x) :
     HasFDerivAt (fun x ↦ ∫ t in (0 : ℝ)..1, F x t)
       (∫ t in (0 : ℝ)..1, F' x₀ t) x₀ := by
-  let _ : ProperSpace E := FiniteDimensional.proper ℂ E
+  let : ProperSpace E := FiniteDimensional.proper ℂ E
   obtain ⟨ε, hε, hεs⟩ := Metric.nhds_basis_closedBall.mem_iff.mp (hs.mem_nhds hx₀)
   let K : Set (E × ℝ) := Metric.closedBall x₀ ε ×ˢ Set.Icc 0 1
   have hK : IsCompact K := (isCompact_closedBall x₀ ε).prod isCompact_Icc
@@ -134,7 +134,7 @@ theorem continuousOn_intervalIntegral_of_continuousOn
     (F : E → ℝ → G) {s : Set E} (hs : IsOpen s)
     (hF : ContinuousOn (fun p : E × ℝ ↦ F p.1 p.2) (s ×ˢ Set.Icc 0 1)) :
     ContinuousOn (fun x ↦ ∫ t in (0 : ℝ)..1, F x t) s := by
-  let _ : ProperSpace E := FiniteDimensional.proper ℂ E
+  let : ProperSpace E := FiniteDimensional.proper ℂ E
   intro x₀ hx₀
   obtain ⟨ε, hε, hεs⟩ := Metric.nhds_basis_closedBall.mem_iff.mp (hs.mem_nhds hx₀)
   let K : Set (E × ℝ) := Metric.closedBall x₀ ε ×ˢ Set.Icc 0 1
@@ -385,13 +385,13 @@ theorem radialHomotopy_contDiffOn_one [FiniteDimensional ℂ E] (n : ℕ) {s : S
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hs : IsOpen s)
     (hstar : StarConvex ℝ 0 s) (hη : ContDiffOn ℂ 1 η s) :
     ContDiffOn ℂ 1 (radialHomotopy n η) s := by
-  let _ : NormedAddCommGroup (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
+  let : NormedAddCommGroup (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
     with_reducible_and_instances exact ContinuousLinearMap.toNormedAddCommGroup
-  let _ : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
+  let : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
     with_reducible_and_instances exact ContinuousLinearMap.toNormedSpace
-  let _ : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
+  let : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
     NormedSpace.restrictScalars ℝ ℂ _
-  let _ : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
+  let : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
   have hD : ContinuousOn
       (fun x ↦ ∫ t : ℝ in 0..1, radialIntegrandFDeriv n η t x) s :=
     continuousOn_intervalIntegral_of_continuousOn
@@ -413,13 +413,13 @@ theorem extDeriv_radialHomotopy [FiniteDimensional ℂ E] (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η) (x : E) :
     extDeriv (radialHomotopy n η) x =
       ∫ t : ℝ in 0..1, extDeriv (radialIntegrand n η t) x := by
-  let _ : NormedAddCommGroup (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
+  let : NormedAddCommGroup (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
     with_reducible_and_instances exact ContinuousLinearMap.toNormedAddCommGroup
-  let _ : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
+  let : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
     with_reducible_and_instances exact ContinuousLinearMap.toNormedSpace
-  let _ : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
+  let : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
     NormedSpace.restrictScalars ℝ ℂ _
-  let _ : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
+  let : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
   have hF' : Continuous fun t : ℝ ↦ radialIntegrandFDeriv n η t x :=
     (continuous_radialIntegrandFDeriv n η hη).comp (continuous_const.prodMk continuous_id)
   with_reducible_and_instances
@@ -444,13 +444,13 @@ theorem extDeriv_radialHomotopy_of_contDiffOn [FiniteDimensional ℂ E] (n : ℕ
     (hstar : StarConvex ℝ 0 s) (hη : ContDiffOn ℂ 1 η s) {x : E} (hx : x ∈ s) :
     extDeriv (radialHomotopy n η) x =
       ∫ t : ℝ in 0..1, extDeriv (radialIntegrand n η t) x := by
-  let _ : NormedAddCommGroup (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
+  let : NormedAddCommGroup (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
     with_reducible_and_instances exact ContinuousLinearMap.toNormedAddCommGroup
-  let _ : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
+  let : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
     with_reducible_and_instances exact ContinuousLinearMap.toNormedSpace
-  let _ : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
+  let : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
     NormedSpace.restrictScalars ℝ ℂ _
-  let _ : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
+  let : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
   have hF' : ContinuousOn (fun t : ℝ ↦ radialIntegrandFDeriv n η t x) (Set.Icc 0 1) := by
     have h := (continuousOn_radialIntegrandFDeriv n η hs hstar hη).comp
       (continuousOn_const.prodMk continuousOn_id) (fun t ht ↦ ⟨hx, ht⟩)

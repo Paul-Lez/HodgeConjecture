@@ -16,7 +16,9 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.FirstQuadrantColumnFiltrationShortExact
-public import Mathlib.Algebra.Homology.Embedding.ExtendHomology
+public import Mathlib.Algebra.Homology.TotalComplexSymmetry
+
+import Mathlib.Algebra.Homology.Embedding.ExtendHomology
 
 /-!
 This module is adapted from Paul Lezeau's `sphere-six-complex`, commits

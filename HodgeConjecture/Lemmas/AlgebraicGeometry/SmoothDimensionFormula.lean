@@ -15,15 +15,16 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
-public import Mathlib.RingTheory.KrullDimension.Field
-public import Mathlib.RingTheory.KrullDimension.Polynomial
-public import Mathlib.RingTheory.Jacobson.Ring
-public import Mathlib.RingTheory.Ideal.GoingUp
-public import Mathlib.RingTheory.Smooth.Flat
-public import Mathlib.RingTheory.Unramified.LocalStructure
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.RingTheory.QuasiFinite.Basic
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.RingTheory.KrullDimension.Field
+import Mathlib.RingTheory.KrullDimension.Polynomial
+import Mathlib.RingTheory.Unramified.LocalStructure
 
 /-!
 # Dimension bounds for smooth complex schemes
@@ -110,7 +111,7 @@ lemma FiniteType.isMaximal_comap_of_isJacobsonRing [IsJacobsonRing R] {f : R →
     (hf : f.FiniteType) (P : Ideal S) [P.IsMaximal] : (P.comap f).IsMaximal := by
   let K := S ⧸ P
   let q : S →+* K := Ideal.Quotient.mk P
-  let _ : Field K := Ideal.Quotient.field P
+  let : Field K := Ideal.Quotient.field P
   have hft : (q.comp f).FiniteType := hf.comp_surjective Ideal.Quotient.mk_surjective
   have hfin : (q.comp f).Finite :=
     RingHom.finite_iff_finiteType_of_isJacobsonRing.mpr hft
@@ -129,8 +130,8 @@ lemma IsStandardSmoothOfRelativeDimension.ringKrullDim_le_add {f : R →+* S} {d
     (hf : f.IsStandardSmoothOfRelativeDimension d) :
     ringKrullDim S ≤ ringKrullDim R + d := by
   obtain ⟨g, _, hg⟩ := hf.exists_etale_mvPolynomial
-  let _ : Algebra (MvPolynomial (Fin d) R) S := g.toAlgebra
-  let _ : Algebra.Etale (MvPolynomial (Fin d) R) S :=
+  let : Algebra (MvPolynomial (Fin d) R) S := g.toAlgebra
+  let : Algebra.Etale (MvPolynomial (Fin d) R) S :=
     RingHom.etale_algebraMap.mp hg
   calc
     ringKrullDim S ≤ ringKrullDim (MvPolynomial (Fin d) R) :=
@@ -165,7 +166,7 @@ lemma height_eq_fin_of_isMaximal (K : Type*) [Field K] (d : ℕ)
       let e : MvPolynomial (Fin (n + 1)) K ≃+* Polynomial (MvPolynomial (Fin n) K) :=
         (MvPolynomial.finSuccEquiv K n).toRingEquiv
       let Q : Ideal (Polynomial (MvPolynomial (Fin n) K)) := P.map e
-      let _ : Q.IsMaximal := Ideal.map_isMaximal_of_equiv e
+      let : Q.IsMaximal := Ideal.map_isMaximal_of_equiv e
       have hunder : (Q.under (MvPolynomial (Fin n) K)).IsMaximal := by
         change (Q.comap (Polynomial.C : MvPolynomial (Fin n) K →+*
           Polynomial (MvPolynomial (Fin n) K))).IsMaximal
@@ -189,11 +190,11 @@ lemma IsStandardSmoothOfRelativeDimension.ringKrullDim_eq_complex {S : Type*} [C
     [Nontrivial S] {f : ℂ →+* S} {d : ℕ}
     (hf : f.IsStandardSmoothOfRelativeDimension d) : ringKrullDim S = d := by
   obtain ⟨g, _, hg⟩ := hf.exists_etale_mvPolynomial
-  let _ : Algebra (MvPolynomial (Fin d) ℂ) S := g.toAlgebra
-  let _ : Algebra.Etale (MvPolynomial (Fin d) ℂ) S :=
+  let : Algebra (MvPolynomial (Fin d) ℂ) S := g.toAlgebra
+  let : Algebra.Etale (MvPolynomial (Fin d) ℂ) S :=
     RingHom.etale_algebraMap.mp hg
   obtain ⟨P, hP⟩ := Ideal.exists_maximal S
-  let _ : P.IsMaximal := hP
+  let : P.IsMaximal := hP
   have hfiniteType : (algebraMap (MvPolynomial (Fin d) ℂ) S).FiniteType :=
     RingHom.finiteType_algebraMap.mpr inferInstance
   have hunder : (P.under (MvPolynomial (Fin d) ℂ)).IsMaximal :=
@@ -240,7 +241,7 @@ lemma Scheme.orderKrullDim_le_of_exists_open_orderKrullDim_le (X : Scheme) (d : 
       rw [Order.krullDim_eq_bot]
       exact bot_le
   | inr hX =>
-      let _ : Nonempty X := hX
+      let : Nonempty X := hX
       rw [Order.krullDim_eq_iSup_length]
       apply WithBot.coe_le_coe.mpr
       apply iSup_le
@@ -293,7 +294,7 @@ order-theoretic dimension and codimension is at most `d`. -/
 lemma SmoothOfRelativeDimension.height_add_coheight_le_complex
     [SmoothOfRelativeDimension d f] (x : X) :
     Order.height x + Order.coheight x ≤ d := by
-  let _ : Nonempty X := ⟨x⟩
+  let : Nonempty X := ⟨x⟩
   have hpoint :
       (↑(Order.height x + Order.coheight x) : WithBot ℕ∞) ≤ Order.krullDim X := by
     rw [Order.krullDim_eq_iSup_height_add_coheight_of_nonempty]

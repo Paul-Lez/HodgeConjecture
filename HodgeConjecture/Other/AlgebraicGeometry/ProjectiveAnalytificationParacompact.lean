@@ -15,12 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 
 /-!
 # Paracompact open subsets of smooth projective analytifications
@@ -55,7 +56,7 @@ theorem rationalSingularCochainSheafIsFlasque [IsIntegral X] [Smooth structureMa
     TopCat.Sheaf.IsFlasque
       (AlgebraicTopology.Singular.singularCochainSheaf ℚ
         (TopCat.of (ComplexPoint X structureMap)) n) := by
-  let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
+  let : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
     openParacompactSpace structureMap
   infer_instance
 
@@ -66,7 +67,7 @@ theorem rationalSingularCochain_globalComparison_quasiIso
     QuasiIso
       (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ
         (TopCat.of (ComplexPoint X structureMap))) := by
-  let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
+  let : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
     openParacompactSpace structureMap
   exact AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
 

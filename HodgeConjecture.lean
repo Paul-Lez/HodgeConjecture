@@ -15,7 +15,6 @@ limitations under the License.
 -/
 module  -- shake: keep-all --deprecated_module: ignore
 
-public import HodgeConjecture.Definitions
 public import HodgeConjecture.Definitions.Algebra.DeRham.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
@@ -32,7 +31,6 @@ public import HodgeConjecture.Other.AlgebraicTopology.SingularCohomology
 public import HodgeConjecture.Other.AlgebraicTopology.SheafCohomologyWithSupport
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Definitions.Topology.Dimension
-public import HodgeConjecture.Lemmas
 public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
 public import HodgeConjecture.Lemmas.Algebra.Homology.StupidTruncation
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineScheme
@@ -61,7 +59,6 @@ public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Mathlib.Topology.KrullDimension
-public import HodgeConjecture.Other
 public import HodgeConjecture.Other.Algebra.Category.ModuleCat.Presheaf.ExteriorPower
 public import HodgeConjecture.Other.Algebra.DeRham.Complex
 public import HodgeConjecture.Other.Algebra.Homology.DualExact

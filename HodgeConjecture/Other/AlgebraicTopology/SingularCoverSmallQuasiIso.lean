@@ -15,9 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicTopology.SingularCoverSmallProjective
 public import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivisionIteration
-public import Mathlib.Algebra.Homology.ConcreteCategory
+public import HodgeConjecture.Other.AlgebraicTopology.SingularCoverSmallProjective
+
+import Mathlib.Algebra.Category.Grp.Zero
+import Mathlib.Algebra.Homology.HomologicalComplexLimits
+import Mathlib.Algebra.Homology.ShortComplex.Ab
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in

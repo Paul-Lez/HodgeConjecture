@@ -15,9 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.ComplexSingularComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Other.AlgebraicGeometry.ComplexSingularComparison
 
 /-!
 # Betti and constant-sheaf comparison

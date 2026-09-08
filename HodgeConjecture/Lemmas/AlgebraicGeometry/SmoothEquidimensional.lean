@@ -16,7 +16,14 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.Topology.Dimension
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Data.Complex.Basic
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Smooth integral complex schemes are equidimensional
@@ -48,7 +55,7 @@ submersive presentation. -/
 lemma RingHom.IsStandardSmooth.exists_isStandardSmoothOfRelativeDimension {R S : Type*}
     [CommRing R] [CommRing S] {φ : R →+* S} (h : φ.IsStandardSmooth) :
     ∃ n : ℕ, φ.IsStandardSmoothOfRelativeDimension n := by
-  let _ := φ.toAlgebra
+  let := φ.toAlgebra
   obtain ⟨ι, σ, _, _, ⟨P⟩⟩ := h
   exact ⟨P.dimension, P.isStandardSmoothOfRelativeDimension rfl⟩
 

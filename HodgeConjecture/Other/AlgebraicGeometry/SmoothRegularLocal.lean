@@ -15,10 +15,16 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
-public import Mathlib.RingTheory.LocalRing.Etale
-public import Mathlib.RingTheory.RegularLocalRing.Polynomial
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.RingTheory.RegularLocalRing.Polynomial
+import Mathlib.RingTheory.Unramified.LocalStructure
 
 /-!
 # Regular local rings of smooth schemes
@@ -43,7 +49,7 @@ lemma of_formallyUnramified_of_flat_of_quasiFinite
     [Algebra.EssFiniteType R S] [Algebra.FormallyUnramified R S]
     [Module.Flat R S] [Algebra.QuasiFinite R S] :
     IsRegularLocalRing S := by
-  let _ : IsNoetherianRing S := Algebra.EssFiniteType.isNoetherianRing R S
+  let : IsNoetherianRing S := Algebra.EssFiniteType.isNoetherianRing R S
   apply IsRegularLocalRing.of_spanFinrank_maximalIdeal_le
   rw [← Algebra.FormallyUnramified.map_maximalIdeal (R := R) (S := S)]
   have hspan :
@@ -74,9 +80,9 @@ lemma Etale.isRegularLocalRing_atPrime [IsRegularRing R] [Algebra.Etale R S]
     (P : Ideal S) [P.IsPrime] :
     IsRegularLocalRing (Localization.AtPrime P) := by
   let q : Ideal R := P.under R
-  let _ : q.IsPrime := Ideal.IsPrime.comap (algebraMap R S)
-  let _ : P.LiesOver q := ⟨rfl⟩
-  let _ : Algebra (Localization.AtPrime q) (Localization.AtPrime P) :=
+  let : q.IsPrime := Ideal.IsPrime.comap (algebraMap R S)
+  let : P.LiesOver q := ⟨rfl⟩
+  let : Algebra (Localization.AtPrime q) (Localization.AtPrime P) :=
     Localization.AtPrime.algebraOfLiesOver q P
   have _ : Algebra.FormallyEtale R (Localization.AtPrime P) := inferInstance
   have _ : Algebra.FormallyEtale (Localization.AtPrime q) (Localization.AtPrime P) :=
@@ -102,8 +108,8 @@ lemma IsStandardSmooth.isRegularLocalRing_atPrime
     {f : K →+* S} (hf : f.IsStandardSmooth) (P : Ideal S) [P.IsPrime] :
     IsRegularLocalRing (Localization.AtPrime P) := by
   obtain ⟨d, g, _, hg⟩ := hf.exists_etale_mvPolynomial
-  let _ : Algebra (MvPolynomial (Fin d) K) S := g.toAlgebra
-  let _ : Algebra.Etale (MvPolynomial (Fin d) K) S :=
+  let : Algebra (MvPolynomial (Fin d) K) S := g.toAlgebra
+  let : Algebra.Etale (MvPolynomial (Fin d) K) S :=
     RingHom.etale_algebraMap.mp hg
   exact Algebra.Etale.isRegularLocalRing_atPrime
     (R := MvPolynomial (Fin d) K) P
@@ -130,9 +136,9 @@ lemma Smooth.isRegularLocalRing_stalk_complex [Smooth f] (x : X) :
     complexRestrictionMap_isStandardSmooth f hf
   have hregular : IsRegularLocalRing (Localization.AtPrime P) :=
     RingHom.IsStandardSmooth.isRegularLocalRing_atPrime hstandard P
-  let _ : Algebra Γ(X, V) (X.presheaf.stalk x) :=
+  let : Algebra Γ(X, V) (X.presheaf.stalk x) :=
     TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨x, hxV⟩
-  let _ : IsLocalization.AtPrime (X.presheaf.stalk x) P :=
+  let : IsLocalization.AtPrime (X.presheaf.stalk x) P :=
     hV.isLocalization_stalk ⟨x, hxV⟩
   exact @IsRegularLocalRing.of_ringEquiv (Localization.AtPrime P) _ hregular
     (X.presheaf.stalk x) _
@@ -145,7 +151,7 @@ variable {d : ℕ}
 lemma SmoothOfRelativeDimension.isRegularLocalRing_stalk_complex
     [SmoothOfRelativeDimension d f] (x : X) :
     IsRegularLocalRing (X.presheaf.stalk x) := by
-  let _ : Smooth f := SmoothOfRelativeDimension.smooth d f
+  let : Smooth f := SmoothOfRelativeDimension.smooth d f
   exact Smooth.isRegularLocalRing_stalk_complex (f := f) x
 
 end AlgebraicGeometry

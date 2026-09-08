@@ -15,13 +15,16 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicTopology.SingularContractibleMapQuasiIso
-public import Mathlib.Algebra.Homology.SingleHomology
-public import Mathlib.AlgebraicTopology.ExtraDegeneracy
-public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
-public import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
-public import Mathlib.Analysis.Convex.Contractible
+public import Mathlib.Algebra.Category.Grp.Abelian
+public import Mathlib.Algebra.Homology.QuasiIso
+public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
+public import Mathlib.AlgebraicTopology.SingularSet
+public import Mathlib.Topology.Homotopy.Contractible
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularContractibleMapQuasiIso
+import Mathlib.Algebra.Homology.SingleHomology
+import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
+import Mathlib.Analysis.Convex.Contractible
 
 /-!
 # Singular chains of a standard simplex
@@ -148,7 +151,7 @@ theorem standardSimplex_isConnected (n : ℕ) :
 theorem standardSimplexRealization_contractibleSpace (n : ℕ) :
     ContractibleSpace
       (SSet.toTop.obj (SSet.stdSimplex.obj (SimplexCategory.mk n)) : Type) := by
-  let _ : ContractibleSpace (stdSimplex ℝ (Fin (n + 1))) :=
+  let : ContractibleSpace (stdSimplex ℝ (Fin (n + 1))) :=
     (convex_stdSimplex ℝ (Fin (n + 1))).contractibleSpace
       ⟨stdSimplex.vertex (0 : Fin (n + 1)),
         (stdSimplex.vertex (0 : Fin (n + 1))).2⟩
@@ -168,7 +171,7 @@ theorem standardSimplex_simplicialChains_exactAt
 theorem standardSimplexRealization_singularChains_exactAt
     (R : AddCommGrpCat) (n k : ℕ) (hk : k ≠ 0) :
     ((TopCat.toSSet.obj (SSet.toTop.obj (Δ[n] : SSet.{0}))).chainComplex R).ExactAt k := by
-  let _ : ContractibleSpace (SSet.toTop.obj (Δ[n] : SSet.{0}) : Type) :=
+  let : ContractibleSpace (SSet.toTop.obj (Δ[n] : SSet.{0}) : Type) :=
     standardSimplexRealization_contractibleSpace n
   obtain ⟨e⟩ := ContractibleSpace.hequiv_unit
     (SSet.toTop.obj (Δ[n] : SSet.{0}) : Type)
@@ -189,14 +192,14 @@ theorem standardSimplex_simplicialToRealizationSingularChainMap_quasiIso
   by_cases hk : k = 0
   · subst k
     rw [quasiIsoAt_iff_isIso_homologyMap]
-    let _ : (SSet.stdSimplex.obj (SimplexCategory.mk n)).IsConnected :=
+    let : (SSet.stdSimplex.obj (SimplexCategory.mk n)).IsConnected :=
       standardSimplex_isConnected n
-    let _ : ContractibleSpace
+    let : ContractibleSpace
         (SSet.toTop.obj (Δ[n] : SSet.{0}) : Type) :=
       standardSimplexRealization_contractibleSpace n
-    let _ : PathConnectedSpace
+    let : PathConnectedSpace
         (SSet.toTop.obj (Δ[n] : SSet.{0}) : Type) := inferInstance
-    let _ : (TopCat.toSSet.obj (SSet.toTop.obj (Δ[n] : SSet.{0}))).IsConnected :=
+    let : (TopCat.toSSet.obj (SSet.toTop.obj (Δ[n] : SSet.{0}))).IsConnected :=
       inferInstance
     let φ := simplicialToRealizationSingularChainMap (Δ[n] : SSet.{0}) R
     have hε : HomologicalComplex.homologyMap φ 0 ≫
@@ -236,7 +239,7 @@ theorem standardSimplexToContractibleSingularChainMap_quasiIso
     (R : AddCommGrpCat) (n : ℕ)
     (f : C((SSet.toTop.obj (Δ[n] : SSet.{0}) : Type), Z)) :
     QuasiIso (standardSimplexToContractibleSingularChainMap R n f) := by
-  let _ : ContractibleSpace (SSet.toTop.obj (Δ[n] : SSet.{0}) : Type) :=
+  let : ContractibleSpace (SSet.toTop.obj (Δ[n] : SSet.{0}) : Type) :=
     standardSimplexRealization_contractibleSpace n
   let hstandard : QuasiIso
       (simplicialToRealizationSingularChainMap (Δ[n] : SSet.{0}) R) :=

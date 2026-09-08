@@ -5,13 +5,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Mathlib.Algebra.Category.Grp.FilteredColimits
-public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
+public import Mathlib.CategoryTheory.Limits.Shapes.Countable
 public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
-public import Mathlib.Topology.Sheaves.Abelian
-public import Mathlib.Topology.Sheaves.Functors
 public import Mathlib.Topology.Sets.Closeds
-public import Mathlib.Topology.Sets.Compacts
-public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import Mathlib.Topology.Sheaves.Functors
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
+import Mathlib.Topology.Sheaves.Abelian
 
 /-!
 # Sheaf cohomology with closed and compact supports

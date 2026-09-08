@@ -15,12 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineScheme
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
-public import Mathlib.AlgebraicGeometry.Morphisms.Affine
-public import Mathlib.Topology.Separation.Hausdorff
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Hausdorff analytifications of projective complex schemes
@@ -45,7 +43,7 @@ open Point
 /-- The analytification of an affine complex scheme is Hausdorff. -/
 lemma t2Space_of_isAffine {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) [IsAffine X] :
     @T2Space (ComplexPoint X structureMap) analyticTopology := by
-  let _ : TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+  let : TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
   rw [t2Space_iff_nhds]
   intro z w hzw
   have happ : z.1.appTop ≠ w.1.appTop := by
@@ -78,18 +76,18 @@ lemma t2Space_of_pair_mem_affineOpen {X : Scheme}
     (hpair : ∀ z w : ComplexPoint X structureMap,
       ∃ U : X.Opens, z ∈ overOpen U ∧ w ∈ overOpen U ∧ IsAffine U.toScheme) :
     @T2Space (ComplexPoint X structureMap) analyticTopology := by
-  let _ : TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+  let : TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
   rw [t2Space_iff_nhds]
   intro z w hzw
   obtain ⟨U, hzU, hwU, hUaff⟩ := hpair z w
   let structureMapU : U.toScheme ⟶ Spec ↧ℂ := U.ι ≫ structureMap
-  let _ : IsAffine U.toScheme := hUaff
-  let _ : TopologicalSpace (ComplexPoint U.toScheme structureMapU) := analyticTopology
-  let _ : T2Space (ComplexPoint U.toScheme structureMapU) :=
+  let : IsAffine U.toScheme := hUaff
+  let : TopologicalSpace (ComplexPoint U.toScheme structureMapU) := analyticTopology
+  let : T2Space (ComplexPoint U.toScheme structureMapU) :=
     t2Space_of_isAffine structureMapU
-  let _ : TopologicalSpace {q : ComplexPoint X structureMap // q ∈ overOpen U} :=
+  let : TopologicalSpace {q : ComplexPoint X structureMap // q ∈ overOpen U} :=
     TopologicalSpace.induced Subtype.val analyticTopology
-  let _ : T2Space {q : ComplexPoint X structureMap // q ∈ overOpen U} :=
+  let : T2Space {q : ComplexPoint X structureMap // q ∈ overOpen U} :=
     (openHomeomorph U structureMap).t2Space
   let zU : {q : ComplexPoint X structureMap // q ∈ overOpen U} := ⟨z, hzU⟩
   let wU : {q : ComplexPoint X structureMap // q ∈ overOpen U} := ⟨w, hwU⟩

@@ -16,7 +16,6 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.LocalFundamentalClass
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.Analysis.Complex.Basic
 
 /-!

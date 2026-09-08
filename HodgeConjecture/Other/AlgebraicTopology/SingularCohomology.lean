@@ -15,14 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
+public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic -- shake: keep
 public import Mathlib.Algebra.Algebra.Rat
 public import Mathlib.Algebra.Category.ModuleCat.Abelian
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
-public import Mathlib.Algebra.Homology.HomologicalComplexLimits
+public import Mathlib.Algebra.Homology.HomologicalComplexLimits -- shake: keep
 public import Mathlib.AlgebraicTopology.SingularHomology.Basic
 public import Mathlib.LinearAlgebra.Complex.Module
-public import Mathlib.LinearAlgebra.Dual.Defs
 public import Mathlib.Topology.Category.TopPair
 
 /-!

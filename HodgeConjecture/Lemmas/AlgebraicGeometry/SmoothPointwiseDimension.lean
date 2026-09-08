@@ -15,8 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Data.Complex.Basic
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.RingTheory.Unramified.LocalStructure
 
 /-!
 # Pointwise dimension of smooth complex schemes
@@ -45,8 +51,8 @@ lemma IsStandardSmoothOfRelativeDimension.height_eq_of_isMaximal
     (hf : f.IsStandardSmoothOfRelativeDimension d) (P : Ideal S) [P.IsMaximal] :
     P.height = d := by
   obtain ⟨g, _, hg⟩ := hf.exists_etale_mvPolynomial
-  let _ : Algebra (MvPolynomial (Fin d) ℂ) S := g.toAlgebra
-  let _ : Algebra.Etale (MvPolynomial (Fin d) ℂ) S :=
+  let : Algebra (MvPolynomial (Fin d) ℂ) S := g.toAlgebra
+  let : Algebra.Etale (MvPolynomial (Fin d) ℂ) S :=
     RingHom.etale_algebraMap.mp hg
   have hfiniteType : (algebraMap (MvPolynomial (Fin d) ℂ) S).FiniteType :=
     RingHom.finiteType_algebraMap.mpr inferInstance
@@ -85,7 +91,7 @@ lemma SmoothOfRelativeDimension.orderKrullDim_eq_complex [IsIntegral X]
   obtain ⟨U, hU, hxU, hsmooth⟩ :=
     SmoothOfRelativeDimension.exists_affine_isStandardSmoothOfRelativeDimension
       (d := d) f x
-  let _ : Nonempty U := ⟨⟨x, hxU⟩⟩
+  let : Nonempty U := ⟨⟨x, hxU⟩⟩
   have hUdim : Order.krullDim U = d := by
     rw [orderKrullDim_affineOpen_eq_ringKrullDim U hU]
     exact (complexRestrictionMap_isStandardSmoothOfRelativeDimension
@@ -132,7 +138,7 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_of_isClosed [IsIntegral X
       (d := d) f x
   let y : U.toScheme := ⟨x, hxU⟩
   let P : Ideal Γ(X, U) := (hU.primeIdealOf y).asIdeal
-  let _ : P.IsMaximal := hU.primeIdealOf_isMaximal_of_isClosed y hx
+  let : P.IsMaximal := hU.primeIdealOf_isMaximal_of_isClosed y hx
   have hP : P.height = d :=
     (complexRestrictionMap_isStandardSmoothOfRelativeDimension
       (d := d) f hsmooth).height_eq_of_isMaximal P

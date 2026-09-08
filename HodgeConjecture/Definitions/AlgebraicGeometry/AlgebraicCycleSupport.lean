@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
-public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
-public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
@@ -47,7 +47,7 @@ lemma algebraicCycle_support_finite {R : Type*} [Zero R]
     [IsIntegral X] [Smooth structureMap]
     [IsProjective structureMap] (c : AlgebraicCycle X R) :
     c.support.Finite := by
-  let _ : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace structureMap
+  let : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace structureMap
   have h := c.locallyFiniteSupport.finite_inter_support_of_isCompact
     (W := Set.univ) isCompact_univ
   simpa using h
@@ -135,7 +135,7 @@ instance cycleComponent_projective
     { ambientDimension := P.ambientDimension
       immersion := cycleComponentι X x ≫ P.immersion
       isClosedImmersion := by
-        let _ := P.isClosedImmersion
+        let := P.isClosedImmersion
         infer_instance
       immersion_toBase := by rw [Category.assoc, P.immersion_toBase] }
   ⟩⟩
@@ -189,7 +189,7 @@ theorem exists_cycleComponent_smooth_complexPoint
       z.underlying ∈
         (cycleComponentι X x ≫ structureMap).smoothLocus := by
   let f := cycleComponentι X x ≫ structureMap
-  let _ : JacobsonSpace (cycleComponent X x) :=
+  let : JacobsonSpace (cycleComponent X x) :=
     LocallyOfFiniteType.jacobsonSpace f
   obtain ⟨y, hy, hyClosed⟩ := nonempty_inter_closedPoints
     f.dense_smoothLocus_of_perfectField.nonempty
@@ -424,7 +424,7 @@ lemma PrincipalDivisor.pushforwardCycle_support_subset_range
 lemma PrincipalDivisor.algebraicCycleSupport_pushforwardCycle_subset_range
     {X : Scheme} {p : ℕ} (D : PrincipalDivisor X p) :
     algebraicCycleSupport X D.pushforwardCycle ⊆ Set.range D.inclusion := by
-  let _ := D.isClosedImmersion
+  let := D.isClosedImmersion
   rw [algebraicCycleSupport]
   rw [Set.iUnion₂_subset_iff]
   intro x hx
@@ -450,7 +450,7 @@ lemma isClosed_principalDivisorCarrierSupport
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap]
     {p : ℕ} (D : PrincipalDivisor X p) :
     IsClosed (principalDivisorCarrierSupport structureMap D) := by
-  let _ := D.isClosedImmersion
+  let := D.isClosedImmersion
   let Z : TopologicalSpace.Closeds X :=
     ⟨Set.range D.inclusion, D.inclusion.isClosedEmbedding.isClosed_range⟩
   exact isClosed_complexPoint_underlying_preimage structureMap Z
