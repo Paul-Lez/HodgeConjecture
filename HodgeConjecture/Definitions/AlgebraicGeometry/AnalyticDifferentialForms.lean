@@ -45,7 +45,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 local instance analyticEvalIsManifold [SmoothOfRelativeDimension d structureMap] :
     IsManifold (modelWithCornersSelf ℂ (Fin d → ℂ)) ω
-      (ComplexPoint X structureMap) :=
+      (ComplexPoint (Over.mk structureMap)) :=
   isManifold_omega structureMap d
 
 def wedgeCovectors (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E] :
@@ -273,28 +273,28 @@ lemma extDerivWithin_smul_exactWedgeWithin
 
 noncomputable instance holomorphicFunctionPresheafAlgebra
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) :
     Algebra ℂ ((holomorphicFunctionPresheaf structureMap d).obj U) := by
   change Algebra ℂ
-    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X structureMap)); ℂ⟯
+    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint (Over.mk structureMap))); ℂ⟯
   infer_instance
 
 /-- Restriction of holomorphic functions as an algebra homomorphism over the constants. -/
 def holomorphicRestrictionAlgHom [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) :
+    {U V : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ} (i : U ⟶ V) :
     ((holomorphicFunctionPresheaf structureMap d).obj U : Type) →ₐ[ℂ]
       ((holomorphicFunctionPresheaf structureMap d).obj V : Type) where
   toRingHom := ((holomorphicFunctionSheaf structureMap d).presheaf.map i).hom
   commutes' _ := rfl
 
 @[simp] lemma holomorphicRestrictionAlgHom_id [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) :
     holomorphicRestrictionAlgHom structureMap d (𝟙 U) = AlgHom.id ℂ _ := by
   ext f
   rfl
 
 @[simp] lemma holomorphicRestrictionAlgHom_comp [SmoothOfRelativeDimension d structureMap]
-    {U V W : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ}
+    {U V W : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ}
     (i : U ⟶ V) (j : V ⟶ W) :
     holomorphicRestrictionAlgHom structureMap d (i ≫ j) =
       (holomorphicRestrictionAlgHom structureMap d j).comp
@@ -303,20 +303,20 @@ def holomorphicRestrictionAlgHom [SmoothOfRelativeDimension d structureMap]
   rfl
 
 abbrev OpenHolomorphicFunctions [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) :=
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) :=
   ((holomorphicFunctionPresheaf structureMap d).obj U : Type)
 
 /-- The part of a fixed chart target whose inverse image belongs to `U`. -/
 def chartSectionDomain [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (z : ComplexPoint X structureMap) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (z : ComplexPoint (Over.mk structureMap)) :
     Set (Fin d → ℂ) :=
   (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).target ∩
     (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm ⁻¹'
-      ((Opposite.unop U : Opens (ComplexPoint X structureMap)) :
-        Set (ComplexPoint X structureMap))
+      ((Opposite.unop U : Opens (ComplexPoint (Over.mk structureMap))) :
+        Set (ComplexPoint (Over.mk structureMap)))
 
 lemma isOpen_chartSectionDomain [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (z : ComplexPoint X structureMap) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (z : ComplexPoint (Over.mk structureMap)) :
     IsOpen (chartSectionDomain structureMap d U z) := by
   simpa [chartSectionDomain, extChartAt_target, extChartAt_coe_symm] using
     (chartAt (Fin d → ℂ) z).isOpen_inter_preimage_symm
@@ -325,23 +325,23 @@ lemma isOpen_chartSectionDomain [SmoothOfRelativeDimension d structureMap]
 /-- An arbitrary total extension of a section from its open domain. Its values outside the
 domain play no role in derivatives taken within that domain. -/
 def extendedSection [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
     (f : OpenHolomorphicFunctions structureMap d U) :
-    ComplexPoint X structureMap → ℂ :=
+    ComplexPoint (Over.mk structureMap) → ℂ :=
   Function.extend Subtype.val f.1 0
 
 lemma extendedSection_contMDiffWithinAt [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (f : OpenHolomorphicFunctions structureMap d U) {x : ComplexPoint X structureMap}
-    (hx : x ∈ (Opposite.unop U : Opens (ComplexPoint X structureMap))) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (f : OpenHolomorphicFunctions structureMap d U) {x : ComplexPoint (Over.mk structureMap)}
+    (hx : x ∈ (Opposite.unop U : Opens (ComplexPoint (Over.mk structureMap)))) :
     ContMDiffWithinAt (modelWithCornersSelf ℂ (Fin d → ℂ))
       (modelWithCornersSelf ℂ ℂ) ω
       (extendedSection structureMap d U f)
-      ((Opposite.unop U : Opens (ComplexPoint X structureMap)) :
-        Set (ComplexPoint X structureMap)) x := by
+      ((Opposite.unop U : Opens (ComplexPoint (Over.mk structureMap))) :
+        Set (ComplexPoint (Over.mk structureMap))) x := by
   apply ContMDiffAt.contMDiffWithinAt
   apply (contMDiffAt_subtype_iff
-    (U := (Opposite.unop U : Opens (ComplexPoint X structureMap)))
+    (U := (Opposite.unop U : Opens (ComplexPoint (Over.mk structureMap))))
     (x := ⟨x, hx⟩)).mp
   simpa only [extendedSection, Subtype.val_injective.extend_apply] using
     (holomorphicFunctionSheaf_section_analytic structureMap d f).contMDiffAt
@@ -349,15 +349,15 @@ lemma extendedSection_contMDiffWithinAt [SmoothOfRelativeDimension d structureMa
 
 /-- The expression of a holomorphic section in one fixed chart. -/
 def chartSection [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap))
     (f : OpenHolomorphicFunctions structureMap d U) : (Fin d → ℂ) → ℂ :=
   extendedSection structureMap d U f ∘
     (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm
 
 lemma chartSection_contDiffWithinAt [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap))
     (f : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain structureMap d U z) :
     ContDiffWithinAt ℂ ω (chartSection structureMap d U z f)
@@ -372,23 +372,23 @@ lemma chartSection_contDiffWithinAt [SmoothOfRelativeDimension d structureMap]
   have hext : ContMDiffWithinAt (modelWithCornersSelf ℂ (Fin d → ℂ))
       (modelWithCornersSelf ℂ ℂ) ω
       (extendedSection structureMap d U f)
-      ((Opposite.unop U : Opens (ComplexPoint X structureMap)) :
-        Set (ComplexPoint X structureMap))
+      ((Opposite.unop U : Opens (ComplexPoint (Over.mk structureMap))) :
+        Set (ComplexPoint (Over.mk structureMap)))
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm y) :=
     extendedSection_contMDiffWithinAt structureMap d U f hy.2
   exact (hext.comp y hsymm (fun _ h ↦ h.2)).contDiffWithinAt
 
 lemma chartSection_contDiffOn [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap))
     (f : OpenHolomorphicFunctions structureMap d U) :
     ContDiffOn ℂ ω (chartSection structureMap d U z f)
       (chartSectionDomain structureMap d U z) :=
   fun _ hy ↦ chartSection_contDiffWithinAt structureMap d U z f hy
 
 @[simp] lemma chartSection_apply_of_mem [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap))
     (f : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain structureMap d U z) :
     chartSection structureMap d U z f y =
@@ -400,16 +400,16 @@ lemma chartSection_contDiffOn [SmoothOfRelativeDimension d structureMap]
 
 /-- The derivative of a section in one fixed chart. -/
 def chartSectionDifferential [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap))
     (f : OpenHolomorphicFunctions structureMap d U) (y : Fin d → ℂ) :
     (Fin d → ℂ) →L[ℂ] ℂ :=
   fderivWithin ℂ (chartSection structureMap d U z f)
     (chartSectionDomain structureMap d U z) y
 
 lemma chartSectionDifferential_add [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap))
     (f g : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain structureMap d U z) :
     chartSectionDifferential structureMap d U z (f + g) y =
@@ -427,8 +427,8 @@ lemma chartSectionDifferential_add [SmoothOfRelativeDimension d structureMap]
     ((chartSection_contDiffWithinAt structureMap d U z g hy).differentiableWithinAt (by simp))
 
 lemma chartSectionDifferential_smul [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (c : ℂ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (c : ℂ)
     (f : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain structureMap d U z) :
     chartSectionDifferential structureMap d U z (c • f) y =
@@ -444,8 +444,8 @@ lemma chartSectionDifferential_smul [SmoothOfRelativeDimension d structureMap]
     ((isOpen_chartSectionDomain structureMap d U z).uniqueDiffWithinAt hy)
 
 lemma chartSectionDifferential_mul [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap))
     (f g : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain structureMap d U z) :
     chartSectionDifferential structureMap d U z (f * g) y =
@@ -464,8 +464,8 @@ lemma chartSectionDifferential_mul [SmoothOfRelativeDimension d structureMap]
     ((chartSection_contDiffWithinAt structureMap d U z g hy).differentiableWithinAt (by simp))
 
 lemma chartSectionDifferential_algebraMap [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (c : ℂ) {y : Fin d → ℂ}
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (c : ℂ) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain structureMap d U z) :
     chartSectionDifferential structureMap d U z
       (algebraMap ℂ (OpenHolomorphicFunctions structureMap d U) c) y = 0 := by
@@ -483,8 +483,8 @@ lemma chartSectionDifferential_algebraMap [SmoothOfRelativeDimension d structure
 
 /-- Evaluation of a generator in one fixed coordinate chart. -/
 def chartGeneratorEvaluation [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (p : ℕ) :
     Algebra.DeRham.Generator (OpenHolomorphicFunctions structureMap d U) p →
       (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
   fun g y ↦ chartSection structureMap d U z g.1 y •
@@ -493,15 +493,15 @@ def chartGeneratorEvaluation [SmoothOfRelativeDimension d structureMap]
 
 /-- Evaluation of a raw form in one fixed coordinate chart. -/
 def chartRawEvaluation [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (p : ℕ) :
     Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p →ₗ[ℂ]
       ((Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) :=
   Finsupp.linearCombination ℂ (chartGeneratorEvaluation structureMap d U z p)
 
 @[simp] lemma chartRawEvaluation_single [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (p : ℕ)
     (g : Algebra.DeRham.Generator (OpenHolomorphicFunctions structureMap d U) p)
     (c : ℂ) :
     chartRawEvaluation structureMap d U z p (Finsupp.single g c) =
@@ -511,8 +511,8 @@ def chartRawEvaluation [SmoothOfRelativeDimension d structureMap]
 /-- Every defining Kähler relation evaluates to zero in each fixed chart, at every point of the
 coordinate domain. -/
 lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (p : ℕ)
     (r : Algebra.DeRham.Relation ℂ (OpenHolomorphicFunctions structureMap d U) p)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d U z) :
     chartRawEvaluation structureMap d U z p
@@ -622,8 +622,8 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d structureMap
 Rham differential. -/
 lemma extDerivWithin_chartGeneratorEvaluation
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (p : ℕ)
     (g : Algebra.DeRham.Generator (OpenHolomorphicFunctions structureMap d U) p)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d U z) :
     extDerivWithin (chartGeneratorEvaluation structureMap d U z p g)
@@ -657,8 +657,8 @@ lemma extDerivWithin_chartGeneratorEvaluation
 
 lemma chartGeneratorEvaluation_differentiableWithinAt
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (p : ℕ)
     (g : Algebra.DeRham.Generator (OpenHolomorphicFunctions structureMap d U) p)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d U z) :
     DifferentiableWithinAt ℂ (chartGeneratorEvaluation structureMap d U z p g)
@@ -680,8 +680,8 @@ lemma chartGeneratorEvaluation_differentiableWithinAt
 
 lemma chartRawEvaluation_differentiableWithinAt
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (p : ℕ)
     (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d U z) :
     DifferentiableWithinAt ℂ (chartRawEvaluation structureMap d U z p x)
@@ -700,8 +700,8 @@ lemma chartRawEvaluation_differentiableWithinAt
 /-- Fixed-chart evaluation intertwines the syntactic and analytic exterior derivatives. -/
 lemma chartRawEvaluation_rawDifferential
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (p : ℕ)
     (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d U z) :
     chartRawEvaluation structureMap d U z (p + 1)
@@ -738,8 +738,8 @@ lemma chartRawEvaluation_rawDifferential
 
 /-- Evaluation at one point of one fixed coordinate chart. -/
 def chartEvaluationAt [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ) (y : Fin d → ℂ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
+    (z : ComplexPoint (Over.mk structureMap)) (p : ℕ) (y : Fin d → ℂ) :
     Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p →ₗ[ℂ]
       (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ where
   toFun x := chartRawEvaluation structureMap d U z p x y
@@ -750,15 +750,15 @@ def chartEvaluationAt [SmoothOfRelativeDimension d structureMap]
 
 /-- Raw forms that vanish in every fixed chart at every point of its coordinate domain. -/
 def chartEvaluationKernel [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     Submodule ℂ (Algebra.DeRham.RawForm ℂ
       (OpenHolomorphicFunctions structureMap d U) p) :=
-  ⨅ (z : ComplexPoint X structureMap), ⨅ (y : Fin d → ℂ),
+  ⨅ (z : ComplexPoint (Over.mk structureMap)), ⨅ (y : Fin d → ℂ),
     ⨅ (_ : y ∈ chartSectionDomain structureMap d U z),
       LinearMap.ker (chartEvaluationAt structureMap d U z p y)
 
 lemma mem_chartEvaluationKernel_iff [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ)
     (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p) :
     x ∈ chartEvaluationKernel structureMap d U p ↔
       ∀ z y, y ∈ chartSectionDomain structureMap d U z →
@@ -771,7 +771,7 @@ lemma mem_chartEvaluationKernel_iff [SmoothOfRelativeDimension d structureMap]
 /-- The ordinary Kähler relations are genuine coordinate identities. -/
 lemma standardRelations_le_chartEvaluationKernel
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     Algebra.DeRham.standardRelations ℂ (OpenHolomorphicFunctions structureMap d U) p ≤
       chartEvaluationKernel structureMap d U p := by
   apply Submodule.span_le.mpr
@@ -783,7 +783,7 @@ lemma standardRelations_le_chartEvaluationKernel
 /-- Coordinate-zero identities remain coordinate-zero after exterior differentiation. -/
 lemma rawDifferential_mem_chartEvaluationKernel
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ)
     {x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p}
     (hx : x ∈ chartEvaluationKernel structureMap d U p) :
     Algebra.DeRham.rawDifferential ℂ
@@ -806,7 +806,7 @@ lemma rawDifferential_mem_chartEvaluationKernel
   simp [ContinuousAlternatingMap.alternatizeUncurryFin_apply]
 
 lemma chartEvaluationKernel_eq_top_of_lt [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
     {p : ℕ} (hp : d < p) : chartEvaluationKernel structureMap d U p = ⊤ := by
   apply top_unique
   intro x hx
@@ -822,19 +822,19 @@ lemma chartEvaluationKernel_eq_top_of_lt [SmoothOfRelativeDimension d structureM
 
 
 def rawRestriction [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
+    {U V : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
     Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p →ₗ[ℂ]
       Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d V) p :=
   Algebra.DeRham.rawMap ℂ (holomorphicRestrictionAlgHom structureMap d i) p
 
 @[simp] lemma rawRestriction_id [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     rawRestriction structureMap d (𝟙 U) p = LinearMap.id := by
   rw [rawRestriction, holomorphicRestrictionAlgHom_id,
     Algebra.DeRham.rawMap_id]
 
 @[simp] lemma rawRestriction_comp [SmoothOfRelativeDimension d structureMap]
-    {U V W : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ}
+    {U V W : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ}
     (i : U ⟶ V) (j : V ⟶ W) (p : ℕ) :
     rawRestriction structureMap d (i ≫ j) p =
       (rawRestriction structureMap d j p).comp (rawRestriction structureMap d i p) := by
@@ -842,10 +842,10 @@ def rawRestriction [SmoothOfRelativeDimension d structureMap]
     holomorphicRestrictionAlgHom_comp, Algebra.DeRham.rawMap_comp]
 
 def restrictionStableAnalyticKernel [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     Submodule ℂ (Algebra.DeRham.RawForm ℂ
       (OpenHolomorphicFunctions structureMap d U) p) :=
-  ⨅ (V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ),
+  ⨅ (V : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ),
     ⨅ (i : U ⟶ V),
       (chartEvaluationKernel structureMap d V p).comap
         (rawRestriction structureMap d i p)
@@ -853,7 +853,7 @@ def restrictionStableAnalyticKernel [SmoothOfRelativeDimension d structureMap]
 /-- Every standard Kähler relation remains evaluation-zero after every restriction. -/
 lemma standardRelations_le_restrictionStableAnalyticKernel
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     Algebra.DeRham.standardRelations ℂ (OpenHolomorphicFunctions structureMap d U) p ≤
       restrictionStableAnalyticKernel structureMap d U p := by
   intro x hx
@@ -866,7 +866,7 @@ lemma standardRelations_le_restrictionStableAnalyticKernel
 
 lemma rawRestriction_mem_restrictionStableAnalyticKernel
     [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    {U V : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     {x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p}
     (hx : x ∈ restrictionStableAnalyticKernel structureMap d U p) :
     rawRestriction structureMap d i p x ∈
@@ -881,7 +881,7 @@ lemma rawRestriction_mem_restrictionStableAnalyticKernel
 /-- Restriction-stable coordinate identities remain so after exterior differentiation. -/
 lemma rawDifferential_mem_restrictionStableAnalyticKernel
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ)
     {x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p}
     (hx : x ∈ restrictionStableAnalyticKernel structureMap d U p) :
     Algebra.DeRham.rawDifferential ℂ
@@ -896,7 +896,7 @@ lemma rawDifferential_mem_restrictionStableAnalyticKernel
 
 /-- Analytic identities and all their exterior derivatives. -/
 def analyticRelations [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) :
     (p : ℕ) → Submodule ℂ (Algebra.DeRham.RawForm ℂ
       (OpenHolomorphicFunctions structureMap d U) p)
   | 0 => restrictionStableAnalyticKernel structureMap d U 0
@@ -909,7 +909,7 @@ def analyticRelations [SmoothOfRelativeDimension d structureMap]
 recursive differential closure adds no extra relations. -/
 lemma analyticRelations_eq_restrictionStableAnalyticKernel
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) : ∀ p : ℕ,
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) : ∀ p : ℕ,
     analyticRelations structureMap d U p =
       restrictionStableAnalyticKernel structureMap d U p := by
   intro p
@@ -925,7 +925,7 @@ lemma analyticRelations_eq_restrictionStableAnalyticKernel
 /-- The differential closure of the standard Kähler relations is contained in the analytic
 relations. -/
 lemma algebraicRelations_le_analyticRelations [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) : ∀ p : ℕ,
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) : ∀ p : ℕ,
     Algebra.DeRham.relations ℂ (OpenHolomorphicFunctions structureMap d U) p ≤
       analyticRelations structureMap d U p := by
   intro p
@@ -940,7 +940,7 @@ lemma algebraicRelations_le_analyticRelations [SmoothOfRelativeDimension d struc
       · exact (Submodule.map_mono ih).trans le_sup_right
 
 lemma rawDifferential_mem_analyticRelations [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ)
     {x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p}
     (hx : x ∈ analyticRelations structureMap d U p) :
     Algebra.DeRham.rawDifferential ℂ
@@ -953,7 +953,7 @@ lemma rawDifferential_mem_analyticRelations [SmoothOfRelativeDimension d structu
   exact ⟨x, hx, rfl⟩
 
 lemma rawRestriction_mem_analyticRelations [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    {U V : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     {x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p}
     (hx : x ∈ analyticRelations structureMap d U p) :
     rawRestriction structureMap d i p x ∈ analyticRelations structureMap d V p := by
@@ -977,7 +977,7 @@ lemma rawRestriction_mem_analyticRelations [SmoothOfRelativeDimension d structur
 /-- Relations for analytic de Rham forms: algebraic differential-form identities together with
 all restriction-stable identities detected by actual complex derivatives. -/
 def holomorphicFormRelations [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     Submodule ℂ (Algebra.DeRham.RawForm ℂ
       (OpenHolomorphicFunctions structureMap d U) p) :=
   Algebra.DeRham.relations ℂ (OpenHolomorphicFunctions structureMap d U) p ⊔
@@ -987,7 +987,7 @@ def holomorphicFormRelations [SmoothOfRelativeDimension d structureMap]
 exterior derivatives. -/
 lemma holomorphicFormRelations_eq_analyticRelations
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     holomorphicFormRelations structureMap d U p =
       analyticRelations structureMap d U p := by
   exact sup_eq_right.mpr (algebraicRelations_le_analyticRelations structureMap d U p)
@@ -996,14 +996,14 @@ lemma holomorphicFormRelations_eq_analyticRelations
 after every restriction. -/
 lemma holomorphicFormRelations_eq_restrictionStableAnalyticKernel
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     holomorphicFormRelations structureMap d U p =
       restrictionStableAnalyticKernel structureMap d U p := by
   rw [holomorphicFormRelations_eq_analyticRelations,
     analyticRelations_eq_restrictionStableAnalyticKernel]
 
 lemma holomorphicFormRelations_eq_top_of_lt [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
     {p : ℕ} (hp : d < p) : holomorphicFormRelations structureMap d U p = ⊤ := by
   apply top_unique
   intro x hx
@@ -1021,7 +1021,7 @@ lemma holomorphicFormRelations_eq_top_of_lt [SmoothOfRelativeDimension d structu
 
 lemma rawDifferential_mem_holomorphicFormRelations
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ)
     {x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p}
     (hx : x ∈ holomorphicFormRelations structureMap d U p) :
     Algebra.DeRham.rawDifferential ℂ
@@ -1039,7 +1039,7 @@ lemma rawDifferential_mem_holomorphicFormRelations
 
 lemma rawRestriction_mem_holomorphicFormRelations
     [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    {U V : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     {x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p}
     (hx : x ∈ holomorphicFormRelations structureMap d U p) :
     rawRestriction structureMap d i p x ∈ holomorphicFormRelations structureMap d V p := by
@@ -1054,12 +1054,12 @@ lemma rawRestriction_mem_holomorphicFormRelations
       (rawRestriction_mem_analyticRelations structureMap d i p hz)
 
 abbrev HolomorphicForm [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :=
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :=
   Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p ⧸
     holomorphicFormRelations structureMap d U p
 
 lemma holomorphicForm_eq_zero_of_lt [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
     {p : ℕ} (hp : d < p) (x : HolomorphicForm structureMap d U p) : x = 0 := by
   obtain ⟨x, rfl⟩ := Submodule.mkQ_surjective
     (holomorphicFormRelations structureMap d U p) x
@@ -1069,7 +1069,7 @@ lemma holomorphicForm_eq_zero_of_lt [SmoothOfRelativeDimension d structureMap]
 
 /-- The quotient map from algebraic Kähler forms to analytic differential forms. -/
 def algebraicFormToHolomorphicForm [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions structureMap d U) p →ₗ[ℂ]
       HolomorphicForm structureMap d U p :=
   (Algebra.DeRham.relations ℂ (OpenHolomorphicFunctions structureMap d U) p).liftQ
@@ -1081,13 +1081,13 @@ def algebraicFormToHolomorphicForm [SmoothOfRelativeDimension d structureMap]
 
 /-- A complex constant regarded as an analytic differential zero-form. -/
 def holomorphicFormOfConstant [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) :
     ℂ →ₗ[ℂ] HolomorphicForm structureMap d U 0 :=
   (algebraicFormToHolomorphicForm structureMap d U 0).comp
     (Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions structureMap d U))
 
 def holomorphicFormDifferential [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     HolomorphicForm structureMap d U p →ₗ[ℂ] HolomorphicForm structureMap d U (p + 1) :=
   (holomorphicFormRelations structureMap d U p).liftQ
     ((holomorphicFormRelations structureMap d U (p + 1)).mkQ.comp
@@ -1099,7 +1099,7 @@ def holomorphicFormDifferential [SmoothOfRelativeDimension d structureMap]
           exact rawDifferential_mem_holomorphicFormRelations structureMap d U p hx)
 
 def holomorphicFormRestriction [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
+    {U V : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
     HolomorphicForm structureMap d U p →ₗ[ℂ] HolomorphicForm structureMap d V p :=
   (holomorphicFormRelations structureMap d U p).liftQ
     ((holomorphicFormRelations structureMap d V p).mkQ.comp
@@ -1111,7 +1111,7 @@ def holomorphicFormRestriction [SmoothOfRelativeDimension d structureMap]
 
 lemma holomorphicFormRestriction_algebraicFormToHolomorphicForm
     [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    {U V : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     (x : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions structureMap d U) p) :
     holomorphicFormRestriction structureMap d i p
         (algebraicFormToHolomorphicForm structureMap d U p x) =
@@ -1123,7 +1123,7 @@ lemma holomorphicFormRestriction_algebraicFormToHolomorphicForm
 
 lemma holomorphicFormDifferential_algebraicFormToHolomorphicForm
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ)
     (x : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions structureMap d U) p) :
     holomorphicFormDifferential structureMap d U p
         (algebraicFormToHolomorphicForm structureMap d U p x) =
@@ -1135,7 +1135,7 @@ lemma holomorphicFormDifferential_algebraicFormToHolomorphicForm
 
 @[simp] lemma holomorphicFormRestriction_ofConstant
     [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (c : ℂ) :
+    {U V : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ} (i : U ⟶ V) (c : ℂ) :
     holomorphicFormRestriction structureMap d i 0
         (holomorphicFormOfConstant structureMap d U c) =
       holomorphicFormOfConstant structureMap d V c := by
@@ -1146,7 +1146,7 @@ lemma holomorphicFormDifferential_algebraicFormToHolomorphicForm
 
 @[simp] lemma holomorphicFormDifferential_ofConstant
     [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (c : ℂ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (c : ℂ) :
     holomorphicFormDifferential structureMap d U 0
         (holomorphicFormOfConstant structureMap d U c) = 0 := by
   rw [holomorphicFormOfConstant, LinearMap.comp_apply,
@@ -1154,7 +1154,7 @@ lemma holomorphicFormDifferential_algebraicFormToHolomorphicForm
     Algebra.DeRham.differential_ofConstant, map_zero]
 
 lemma holomorphicFormDifferential_squared [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ)
     (x : HolomorphicForm structureMap d U p) :
     holomorphicFormDifferential structureMap d U (p + 1)
       (holomorphicFormDifferential structureMap d U p x) = 0 := by
@@ -1174,7 +1174,7 @@ lemma holomorphicFormDifferential_squared [SmoothOfRelativeDimension d structure
       (OpenHolomorphicFunctions structureMap d U) p x)
 
 lemma holomorphicFormRestriction_differential [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    {U V : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     (x : HolomorphicForm structureMap d U p) :
     holomorphicFormRestriction structureMap d i (p + 1)
         (holomorphicFormDifferential structureMap d U p x) =
@@ -1193,7 +1193,7 @@ lemma holomorphicFormRestriction_differential [SmoothOfRelativeDimension d struc
   simp only [rawRestriction, Algebra.DeRham.rawMap_rawDifferential]
 
 @[simp] lemma holomorphicFormRestriction_id [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) (p : ℕ) :
     holomorphicFormRestriction structureMap d (𝟙 U) p = LinearMap.id := by
   apply LinearMap.ext
   intro x
@@ -1204,7 +1204,7 @@ lemma holomorphicFormRestriction_differential [SmoothOfRelativeDimension d struc
   rw [rawRestriction_id, LinearMap.id_apply]
 
 @[simp] lemma holomorphicFormRestriction_comp [SmoothOfRelativeDimension d structureMap]
-    {U V W : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ}
+    {U V W : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ}
     (i : U ⟶ V) (j : V ⟶ W) (p : ℕ) :
     holomorphicFormRestriction structureMap d (i ≫ j) p =
       (holomorphicFormRestriction structureMap d j p).comp

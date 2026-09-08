@@ -42,7 +42,7 @@ Lean and Mathlib versions rather than importing the upstream repository.
 
 @[expose] public noncomputable section
 
-open Filter Set Topology TopologicalSpace
+open CategoryTheory Filter Set Topology TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -97,16 +97,16 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 /-- The analytification of a smooth projective complex variety is strongly locally
 contractible. -/
 theorem stronglyLocallyContractibleSpace [IsIntegral X] [Smooth structureMap] :
-    StronglyLocallyContractibleSpace (ComplexPoint X structureMap) := by
+    StronglyLocallyContractibleSpace (ComplexPoint (Over.mk structureMap)) := by
   let : StronglyLocallyContractibleSpace (Fin (dim X) → ℂ) :=
     normedSpace_stronglyLocallyContractibleSpace
   exact ChartedSpace.stronglyLocallyContractibleSpace
-    (H := Fin (dim X) → ℂ) (M := ComplexPoint X structureMap)
+    (H := Fin (dim X) → ℂ) (M := ComplexPoint (Over.mk structureMap))
 
 /-- The analytification of a smooth projective complex variety is locally contractible. -/
 theorem locallyContractibleSpace [IsIntegral X] [Smooth structureMap] :
-    LocallyContractibleSpace (ComplexPoint X structureMap) := by
-  let : StronglyLocallyContractibleSpace (ComplexPoint X structureMap) :=
+    LocallyContractibleSpace (ComplexPoint (Over.mk structureMap)) := by
+  let : StronglyLocallyContractibleSpace (ComplexPoint (Over.mk structureMap)) :=
     stronglyLocallyContractibleSpace structureMap
   exact StronglyLocallyContractibleSpace.locallyContractible
 

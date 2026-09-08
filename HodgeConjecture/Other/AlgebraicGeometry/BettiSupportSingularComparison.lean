@@ -87,9 +87,9 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 set_option backward.isDefEq.respectTransparency false in
 /-- Constant singular zero-cochains commute with restriction to an analytic complement. -/
 lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
-    (Z : Set (ComplexPoint X structureMap)) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) :
     constantsToSingularCochainZeroSheaf ℚ
-          (TopCat.of (ComplexPoint X structureMap)) ≫
+          (TopCat.of (ComplexPoint (Over.mk structureMap))) ≫
         singularRestrictionSheaf ℚ
           (analyticComplementInclusion structureMap Z) 0 =
       rationalRestrictionSheaf structureMap Z ≫
@@ -99,9 +99,9 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
               (TopCat.of (AnalyticComplement structureMap Z))) := by
   apply Sheaf.hom_ext
   change sheafifyMap (Opens.grothendieckTopology
-        (TopCat.of (ComplexPoint X structureMap)))
+        (TopCat.of (ComplexPoint (Over.mk structureMap))))
         (constantsToSingularCochainZero ℚ
-          (TopCat.of (ComplexPoint X structureMap))) ≫
+          (TopCat.of (ComplexPoint (Over.mk structureMap)))) ≫
       (singularRestrictionSheaf ℚ
         (analyticComplementInclusion structureMap Z) 0).hom =
     (rationalRestrictionSheaf structureMap Z).hom ≫
@@ -113,9 +113,9 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
             (TopCat.of (AnalyticComplement structureMap Z))))
   apply sheafify_hom_ext
     (J := Opens.grothendieckTopology
-      (TopCat.of (ComplexPoint X structureMap)))
+      (TopCat.of (ComplexPoint (Over.mk structureMap))))
     (P := constantCoefficientPresheaf ℚ
-      (TopCat.of (ComplexPoint X structureMap))) _ _
+      (TopCat.of (ComplexPoint (Over.mk structureMap)))) _ _
     ((TopCat.Sheaf.pushforward AddCommGrpCat
       (analyticComplementInclusion structureMap Z)).obj
         (singularCochainSheaf ℚ

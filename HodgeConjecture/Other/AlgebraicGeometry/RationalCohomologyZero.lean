@@ -175,7 +175,7 @@ induced by `n ↦ n q`. -/
 degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective_of_constantSheaf_faithful
     [(constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       AddCommGrpCat).Faithful] :
     Function.Injective (fieldCohomologyClass ℚ structureMap) := by
   intro a b hab
@@ -185,17 +185,17 @@ theorem rationalCohomologyClass_injective_of_constantSheaf_faithful
       ← rationalCohomologyZeroEquivSheafHom_class, hab]
   unfold integerToFieldConstantSheaf at hs
   have hm := (constantSheaf
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
     AddCommGrpCat).map_injective hs
   simpa [integerMultipleAddHom] using ConcreteCategory.congr_hom hm (1 : ℤ)
 
 /-- On a nonempty analytic complex-point space, distinct rational constants define distinct
 degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective
-    [Nonempty (ComplexPoint X structureMap)] :
+    [Nonempty (ComplexPoint (Over.mk structureMap))] :
     Function.Injective (fieldCohomologyClass ℚ structureMap) := by
   let : (constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       AddCommGrpCat).Faithful :=
     TopCat.constantSheaf_faithful_of_nonempty _
   exact rationalCohomologyClass_injective_of_constantSheaf_faithful structureMap
@@ -203,13 +203,13 @@ theorem rationalCohomologyClass_injective
 /-- On a connected analytic complex-point space, every degree-zero rational cohomology class is
 a constant class. -/
 theorem rationalCohomologyClass_surjective
-    [ConnectedSpace (ComplexPoint X structureMap)] :
+    [ConnectedSpace (ComplexPoint (Over.mk structureMap))] :
     Function.Surjective (fieldCohomologyClass ℚ structureMap) := by
   intro α
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   let F := constantSheaf J AddCommGrpCat
   let ff := TopCat.constantSheafFullyFaithfulOfConnected
-    (TopCat.of (ComplexPoint X structureMap))
+    (TopCat.of (ComplexPoint (Over.mk structureMap)))
   let : F.Full := ff.full
   let : F.Faithful := ff.faithful
   let e := rationalCohomologyZeroEquivSheafHom structureMap
@@ -231,16 +231,16 @@ theorem rationalCohomologyClass_surjective
 /-- Constant rational classes give a bijection onto degree-zero cohomology of a connected
 analytic complex-point space. -/
 theorem rationalCohomologyClass_bijective
-    [ConnectedSpace (ComplexPoint X structureMap)] :
+    [ConnectedSpace (ComplexPoint (Over.mk structureMap))] :
     Function.Bijective (fieldCohomologyClass ℚ structureMap) := by
-  let : Nonempty (ComplexPoint X structureMap) := inferInstance
+  let : Nonempty (ComplexPoint (Over.mk structureMap)) := inferInstance
   exact ⟨rationalCohomologyClass_injective structureMap,
     rationalCohomologyClass_surjective structureMap⟩
 
 /-- On a connected analytic complex-point space, rational constants are linearly equivalent to
 degree-zero rational cohomology. -/
 def rationalCohomologyClassLinearEquiv
-    [ConnectedSpace (ComplexPoint X structureMap)] :
+    [ConnectedSpace (ComplexPoint (Over.mk structureMap))] :
     ℚ ≃ₗ[ℚ] FieldCohomology ℚ structureMap 0 :=
   LinearEquiv.ofBijective (fieldCohomologyClassLinear ℚ structureMap)
     (rationalCohomologyClass_bijective structureMap)
@@ -248,7 +248,7 @@ def rationalCohomologyClassLinearEquiv
 /-- On a connected analytic complex-point space, the rational cohomology unit spans all of
 degree-zero rational cohomology. -/
 theorem span_rationalCohomologyUnit_eq_top
-    [ConnectedSpace (ComplexPoint X structureMap)] :
+    [ConnectedSpace (ComplexPoint (Over.mk structureMap))] :
     Submodule.span ℚ {fieldCohomologyUnit ℚ structureMap} = ⊤ := by
   apply le_antisymm le_top
   intro α _
@@ -263,7 +263,7 @@ theorem span_rationalCohomologyUnit_eq_top
 /-- The degree-zero rational cohomology unit is nonzero on a nonempty analytic complex-point
 space. -/
 theorem rationalCohomologyUnit_ne_zero
-    [Nonempty (ComplexPoint X structureMap)] :
+    [Nonempty (ComplexPoint (Over.mk structureMap))] :
     fieldCohomologyUnit ℚ structureMap ≠ 0 := by
   intro h
   have h10 : fieldCohomologyClass ℚ structureMap 1 =

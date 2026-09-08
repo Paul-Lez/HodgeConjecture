@@ -195,8 +195,7 @@ coheight exactly `d - p` inside that component. -/
 lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
     [IsIntegral X] [Smooth structureMap]
     [IsProjective structureMap] [SmoothOfRelativeDimension d structureMap]
-    (x : X) (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap))
+    (x : X) (z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap)))
     (hx : Order.coheight x = p) (hd : d ≤ 2) :
     Order.coheight z.underlying = d - p := by
   have hp : p ≤ d := cycleComponent_codimension_le structureMap x hx
@@ -263,8 +262,7 @@ structure CycleComponentSeparateLocalCoordinates
     [IsProjective structureMap] (x : X) (d n : ℕ)
     [SmoothOfRelativeDimension d structureMap] where
   /-- A complex point of the reduced component. -/
-  point : ComplexPoint (cycleComponent X x)
-    (cycleComponentι X x ≫ structureMap)
+  point : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap))
   /-- The point lies in the component's smooth locus. -/
   point_mem_smoothLocus : point.underlying ∈
     (cycleComponentι X x ≫ structureMap).smoothLocus
@@ -302,8 +300,7 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
     [IsIntegral X] [Smooth structureMap]
     [IsProjective structureMap] (x : X) (d n : ℕ)
     [SmoothOfRelativeDimension d structureMap]
-    (hcoheight : ∀ z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap),
+    (hcoheight : ∀ z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap)),
       Order.coheight z.underlying = n) :
     Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d n) := by
   let c : cycleComponent X x ⟶ Spec ↧ℂ :=

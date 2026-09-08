@@ -38,7 +38,7 @@ open Point
 
 variable {X Y : Scheme}
   (structureMapX : X ⟶ Spec ↧ℂ) (structureMapY : Y ⟶ Spec ↧ℂ)
-  (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMapX)
+  (f : Over.mk structureMapX ⟶ Over.mk structureMapY)
   (d e : ℕ)
 
 /-- In algebraic coordinate charts, each component of a morphism of smooth complex schemes is
@@ -46,41 +46,41 @@ complex analytic. -/
 lemma analyticAt_localChart_symm_map_component
     [SmoothOfRelativeDimension d structureMapX]
     [SmoothOfRelativeDimension e structureMapY]
-    (z : ComplexPoint X structureMapX) {w : Fin d → ℂ}
+    (z : ComplexPoint (Over.mk structureMapX)) {w : Fin d → ℂ}
     (hw : w ∈ (localChart structureMapX d z).target)
-    (hmap : map f hf ((localChart structureMapX d z).symm w) ∈
-      (localChart structureMapY e (map f hf z)).source)
+    (hmap : map f ((localChart structureMapX d z).symm w) ∈
+      (localChart structureMapY e (map f z)).source)
     (i : Fin e) :
     AnalyticAt ℂ
-      (fun v ↦ localChart structureMapY e (map f hf z)
-        (map f hf ((localChart structureMapX d z).symm v)) i) w := by
-  let D := localEtaleCoordinates structureMapY e (map f hf z)
-  have htargetOpen : map f hf ((localChart structureMapX d z).symm w) ∈
+      (fun v ↦ localChart structureMapY e (map f z)
+        (map f ((localChart structureMapX d z).symm v)) i) w := by
+  let D := localEtaleCoordinates structureMapY e (map f z)
+  have htargetOpen : map f ((localChart structureMapX d z).symm w) ∈
       overOpen D.ambientCoordinateOpen := by
     have hmem := mem_coordinateNeighborhood_of_mem_localChart_source
-      structureMapY e (map f hf z)
-      (map f hf ((localChart structureMapX d z).symm w)) hmap
+      structureMapY e (map f z)
+      (map f ((localChart structureMapX d z).symm w)) hmap
     simpa only [D, LocalEtaleCoordinates.ambientCoordinateOpen,
       Scheme.Opens.ι_image_top] using hmem
   have hsourceOpen : (localChart structureMapX d z).symm w ∈
-      overOpen (f ⁻¹ᵁ D.ambientCoordinateOpen) :=
-    (mem_overOpen_map_iff f hf _ D.ambientCoordinateOpen).mp htargetOpen
+      overOpen (f.left ⁻¹ᵁ D.ambientCoordinateOpen) :=
+    (mem_overOpen_map_iff f _ D.ambientCoordinateOpen).mp htargetOpen
   have ha := analyticAt_localChart_symm_evaluate structureMapX d z hw
-    (f ⁻¹ᵁ D.ambientCoordinateOpen)
-    (f.app D.ambientCoordinateOpen (D.ambientCoordinateSection i)) hsourceOpen
+    (f.left ⁻¹ᵁ D.ambientCoordinateOpen)
+    (f.left.app D.ambientCoordinateOpen (D.ambientCoordinateSection i)) hsourceOpen
   have hcontinuous : ContinuousAt
-      (fun v ↦ map f hf ((localChart structureMapX d z).symm v)) w :=
-    (continuous_map f hf).continuousAt.comp
+      (fun v ↦ map f ((localChart structureMapX d z).symm v)) w :=
+    (continuous_map f).continuousAt.comp
       ((localChart structureMapX d z).continuousAt_symm hw)
   have heventually :
-      (fun v ↦ map f hf ((localChart structureMapX d z).symm v)) ⁻¹'
-          (localChart structureMapY e (map f hf z)).source ∈ 𝓝 w :=
-    hcontinuous ((localChart structureMapY e (map f hf z)).open_source.mem_nhds hmap)
+      (fun v ↦ map f ((localChart structureMapX d z).symm v)) ⁻¹'
+          (localChart structureMapY e (map f z)).source ∈ 𝓝 w :=
+    hcontinuous ((localChart structureMapY e (map f z)).open_source.mem_nhds hmap)
   apply ha.congr
   filter_upwards [heventually] with v hv
-  rw [localChart_apply_component_eq_evaluate structureMapY e (map f hf z)
-    (map f hf ((localChart structureMapX d z).symm v)) hv i]
-  exact evaluate_map f hf D.ambientCoordinateOpen
+  rw [localChart_apply_component_eq_evaluate structureMapY e (map f z)
+    (map f ((localChart structureMapX d z).symm v)) hv i]
+  exact evaluate_map f D.ambientCoordinateOpen
     (D.ambientCoordinateSection i) ((localChart structureMapX d z).symm v) |>.symm
 
 /-- In algebraic coordinate charts, the map induced by a morphism of smooth complex schemes is
@@ -88,30 +88,30 @@ complex analytic. -/
 lemma analyticAt_localChart_symm_map
     [SmoothOfRelativeDimension d structureMapX]
     [SmoothOfRelativeDimension e structureMapY]
-    (z : ComplexPoint X structureMapX) {w : Fin d → ℂ}
+    (z : ComplexPoint (Over.mk structureMapX)) {w : Fin d → ℂ}
     (hw : w ∈ (localChart structureMapX d z).target)
-    (hmap : map f hf ((localChart structureMapX d z).symm w) ∈
-      (localChart structureMapY e (map f hf z)).source) :
+    (hmap : map f ((localChart structureMapX d z).symm w) ∈
+      (localChart structureMapY e (map f z)).source) :
     AnalyticAt ℂ
-      (fun v ↦ localChart structureMapY e (map f hf z)
-        (map f hf ((localChart structureMapX d z).symm v))) w :=
+      (fun v ↦ localChart structureMapY e (map f z)
+        (map f ((localChart structureMapX d z).symm v))) w :=
   AnalyticAt.pi fun i ↦ analyticAt_localChart_symm_map_component
-    structureMapX structureMapY f hf d e z hw hmap i
+    structureMapX structureMapY f d e z hw hmap i
 
 /-- A morphism of smooth complex schemes is holomorphic for the complex-manifold structures
 constructed from algebraic étale coordinates. -/
 theorem contMDiff_analyticMap
     [SmoothOfRelativeDimension d structureMapX]
     [SmoothOfRelativeDimension e structureMapY] :
-    ContMDiff 𝓘(ℂ, Fin d → ℂ) 𝓘(ℂ, Fin e → ℂ) ω (map f hf) := by
+    ContMDiff 𝓘(ℂ, Fin d → ℂ) 𝓘(ℂ, Fin e → ℂ) ω (map f) := by
   let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω
-      (ComplexPoint X structureMapX) :=
+      (ComplexPoint (Over.mk structureMapX)) :=
     isManifold_omega structureMapX d
   let : IsManifold 𝓘(ℂ, Fin e → ℂ) ω
-      (ComplexPoint Y structureMapY) :=
+      (ComplexPoint (Over.mk structureMapY)) :=
     isManifold_omega structureMapY e
   intro z
-  let z' := map f hf z
+  let z' := map f z
   have hz : z ∈ (localChart structureMapX d z).source :=
     mem_localChart_source structureMapX d z
   have hz' : z' ∈ (localChart structureMapY e z').source :=
@@ -119,16 +119,16 @@ theorem contMDiff_analyticMap
   rw [contMDiffAt_iff_of_mem_source
     (I := 𝓘(ℂ, Fin d → ℂ)) (I' := 𝓘(ℂ, Fin e → ℂ))
     (x := z) (y := z') hz hz']
-  refine ⟨(continuous_map f hf).continuousAt, ?_⟩
+  refine ⟨(continuous_map f).continuousAt, ?_⟩
   have hw : localChart structureMapX d z z ∈
       (localChart structureMapX d z).target :=
     (localChart structureMapX d z).map_source hz
-  have hmap : map f hf
+  have hmap : map f
       ((localChart structureMapX d z).symm (localChart structureMapX d z z)) ∈
         (localChart structureMapY e z').source := by
     rw [(localChart structureMapX d z).left_inv hz]
     exact hz'
-  have ha := analyticAt_localChart_symm_map structureMapX structureMapY f hf d e
+  have ha := analyticAt_localChart_symm_map structureMapX structureMapY f d e
     z hw hmap
   have hsourceChart : chartAt (Fin d → ℂ) z = localChart structureMapX d z := rfl
   have htargetChart : chartAt (Fin e → ℂ) z' = localChart structureMapY e z' := rfl

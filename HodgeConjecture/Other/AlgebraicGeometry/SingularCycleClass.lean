@@ -47,7 +47,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 /-- The analytic complex-point space as an object of `TopCat`. -/
 abbrev AnalyticPointTopCat
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] : TopCat :=
-  TopCat.of (ComplexPoint X structureMap)
+  TopCat.of (ComplexPoint (Over.mk structureMap))
 
 /-- Singular cohomology of the analytic complex-point space. -/
 abbrev RationalSingularCohomology

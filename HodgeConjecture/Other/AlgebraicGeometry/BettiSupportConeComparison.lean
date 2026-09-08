@@ -48,9 +48,9 @@ set_option backward.isDefEq.respectTransparency false in
 rational constants before extending the complexes to integer degrees. -/
 lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
     [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
     constantsToSingularCochainSheafComplex ℚ
-          (TopCat.of (ComplexPoint X structureMap)) ≫
+          (TopCat.of (ComplexPoint (Over.mk structureMap))) ≫
         naturalSingularResolutionRestrictionNat structureMap Z hZ =
       rationalRestrictionComplexNat structureMap Z := by
   apply HomologicalComplex.Hom.ext
@@ -62,12 +62,12 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
       unfold rationalRestrictionComplexNat
       rw [HomologicalComplex.comp_f, HomologicalComplex.comp_f]
       rw [show (constantsToSingularCochainSheafComplex ℚ
-          (TopCat.of (ComplexPoint X structureMap))).f 0 =
+          (TopCat.of (ComplexPoint (Over.mk structureMap)))).f 0 =
             constantsToSingularCochainZeroSheaf ℚ
-              (TopCat.of (ComplexPoint X structureMap)) by
+              (TopCat.of (ComplexPoint (Over.mk structureMap))) by
         rfl]
       change constantsToSingularCochainZeroSheaf ℚ
-            (TopCat.of (ComplexPoint X structureMap)) ≫
+            (TopCat.of (ComplexPoint (Over.mk structureMap))) ≫
           singularRestrictionSheaf ℚ
               (analyticComplementInclusion structureMap Z) 0 ≫
             ((TopCat.Sheaf.pushforward AddCommGrpCat
@@ -94,7 +94,7 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
 restriction of rational constants. -/
 lemma rationalToSingular_comp_naturalSingularResolutionRestriction
     [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
     rationalToSingularCochainComplexInt structureMap ≫
         naturalSingularResolutionRestriction structureMap Z hZ =
       rationalRestrictionComplexInt structureMap Z := by
@@ -103,7 +103,7 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestriction
   calc
     _ = HomologicalComplex.extendMap
         (constantsToSingularCochainSheafComplex ℚ
-            (TopCat.of (ComplexPoint X structureMap)) ≫
+            (TopCat.of (ComplexPoint (Over.mk structureMap))) ≫
           naturalSingularResolutionRestrictionNat structureMap Z hZ)
         ComplexShape.embeddingUpNat :=
       (HomologicalComplex.extendMap_comp _ _ ComplexShape.embeddingUpNat).symm
@@ -116,7 +116,7 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestriction
 support cones. -/
 def rationalSupportConeToNaturalSingularCone
     [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
     rationalCohomologyWithSupportComplex structureMap Z ⟶
       CochainComplex.mappingCone
         (naturalSingularResolutionRestriction structureMap Z hZ) :=
@@ -131,7 +131,7 @@ def rationalSupportConeToNaturalSingularCone
 quasi-isomorphism. -/
 noncomputable instance rationalSupportConeToNaturalSingularCone_quasiIso
     [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
     QuasiIso (rationalSupportConeToNaturalSingularCone structureMap Z hZ) := by
   let : QuasiIso (rationalToSingularCochainComplexInt structureMap) :=
     rationalToSingularCochainComplexInt_quasiIso structureMap

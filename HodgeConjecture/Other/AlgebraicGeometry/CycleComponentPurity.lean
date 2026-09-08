@@ -93,7 +93,7 @@ namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 open AlgebraicTopology.Singular
 
 noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
-    TopologicalSpace (ComplexPoint Y g) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint (Over.mk g)) := Point.analyticTopology
 
 variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
   [Smooth structureMap] [IsProjective structureMap] {x : X}
@@ -105,7 +105,7 @@ lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
   let : IsAffine C.componentNeighborhood.toScheme :=
     C.componentNeighborhood_isAffine
   let : T2Space
-      (ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap) :=
+      (ComplexPoint (Over.mk C.neighborhoodStructureMap)) :=
     ComplexPoint.t2Space_of_isAffine C.neighborhoodStructureMap
   have hinjective : Function.Injective C.neighborhoodLocalHomologyMap :=
     (chartModelEmbedding_relativeHomologyMap_bijective
@@ -119,7 +119,7 @@ lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
 /-- Cohomology of the component neighborhood supported at its selected smooth point. -/
 abbrev neighborhoodPointSupportedCohomology :=
   CohomologyWithSupport ℚ
-    (TopCat.of (ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap))
+    (TopCat.of (ComplexPoint (Over.mk C.neighborhoodStructureMap)))
     {C.neighborhoodPoint} (2 * n)
 
 /-- The unique local cohomology class normalized to evaluate to one on the transported local

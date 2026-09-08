@@ -49,11 +49,11 @@ variable (K : Type) [Field K] [Algebra K ℂ]
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 local instance hodgeFiltrationTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+    TopologicalSpace (ComplexPoint (Over.mk structureMap)) := analyticTopology
 
 /-- Sheaves of additive groups on the analytic complex-point space. -/
 abbrev AnalyticAdditiveSheaf :=
-  TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap))
+  TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap)))
 
 local instance analyticHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
@@ -61,13 +61,13 @@ local instance analyticHasDerivedCategory :
 
 /-- The constant rational sheaf on the analytic complex-point space. -/
 def constantFieldSheaf : AnalyticAdditiveSheaf structureMap :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of K)
 
 /-- The inclusion of the rational constant sheaf into the complex constant sheaf. -/
 def fieldToComplexConstantSheaf :
     constantFieldSheaf K structureMap ⟶ constantComplexSheaf structureMap :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   (constantSheaf J AddCommGrpCat).map
     (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
 
@@ -95,7 +95,7 @@ lemma complexToFieldLinear_comp_fieldToComplexLinear :
 /-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
 def complexToFieldConstantSheaf :
     constantComplexSheaf structureMap ⟶ constantFieldSheaf K structureMap :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   (constantSheaf J AddCommGrpCat).map
     (AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom)
 
@@ -103,7 +103,7 @@ def complexToFieldConstantSheaf :
 lemma fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf :
     fieldToComplexConstantSheaf K structureMap ≫
       complexToFieldConstantSheaf K structureMap = 𝟙 _ := by
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   change (constantSheaf J AddCommGrpCat).map
       (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
     (constantSheaf J AddCommGrpCat).map
@@ -167,7 +167,7 @@ def fieldToHolomorphicDeRhamComplexInt [IsIntegral X] [Smooth structureMap] :
 
 /-- The constant integer sheaf on the analytic complex-point space. -/
 def constantIntegerSheaf : AnalyticAdditiveSheaf structureMap :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of ℤ)
 
 /-- The constant integer sheaf complex, extended by zero to integer degrees. -/
@@ -198,7 +198,7 @@ omit [Algebra K ℂ] in
 /-- A rational number as a morphism from the integer to the rational constant sheaf. -/
 def integerToFieldConstantSheaf (q : K) :
     constantIntegerSheaf structureMap ⟶ constantFieldSheaf K structureMap :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   (constantSheaf J AddCommGrpCat).map (AddCommGrpCat.ofHom (integerMultipleAddHom K q))
 
 omit [Algebra K ℂ] in
@@ -288,7 +288,7 @@ omit [Algebra K ℂ] in
 /-- Scalar multiplication on the rational constant sheaf. -/
 def fieldScalarSheaf (q : K) :
     constantFieldSheaf K structureMap ⟶ constantFieldSheaf K structureMap :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   (constantSheaf J AddCommGrpCat).map
     (AddCommGrpCat.ofHom (fieldScalarAddHom K q))
 
@@ -308,14 +308,14 @@ omit [Algebra K ℂ] in
     apply AddCommGrpCat.hom_ext
     rfl
   change (constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       AddCommGrpCat).map (AddCommGrpCat.ofHom (fieldScalarAddHom K 1)) =
     𝟙 ((constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       AddCommGrpCat).obj (AddCommGrpCat.of K))
   rw [fieldScalarAddHom_one, h]
   exact (constantSheaf
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
     AddCommGrpCat).map_id (AddCommGrpCat.of K)
 
 omit [Algebra K ℂ] in
@@ -328,7 +328,7 @@ omit [Algebra K ℂ] in
     apply AddCommGrpCat.hom_ext
     rfl
   change (constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       AddCommGrpCat).map
         (AddCommGrpCat.ofHom (fieldScalarAddHom K (a + b))) = _
   rw [fieldScalarAddHom_add, h, Functor.map_add]
@@ -345,7 +345,7 @@ omit [Algebra K ℂ] in
     apply AddCommGrpCat.hom_ext
     rfl
   change (constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       AddCommGrpCat).map
         (AddCommGrpCat.ofHom (fieldScalarAddHom K (a * b))) = _
   rw [fieldScalarAddHom_mul, h, Functor.map_comp]
@@ -359,7 +359,7 @@ lemma fieldToComplexConstantSheaf_scalar (q : K) :
     fieldScalarSheaf K structureMap q ≫
       fieldToComplexConstantSheaf K structureMap := by
   let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X structureMap))
+    (TopCat.of (ComplexPoint (Over.mk structureMap)))
   change (constantSheaf J AddCommGrpCat).map
       (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
     (presheafToSheaf J AddCommGrpCat).map
@@ -388,7 +388,7 @@ lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
         integerToFieldConstantSheaf K structureMap (q * r) := by
   unfold integerToFieldConstantSheaf fieldScalarSheaf
   let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X structureMap))
+    (TopCat.of (ComplexPoint (Over.mk structureMap)))
   change (constantSheaf J AddCommGrpCat).map
       (AddCommGrpCat.ofHom (integerMultipleAddHom K r)) ≫
     (constantSheaf J AddCommGrpCat).map
@@ -632,18 +632,10 @@ def hypercohomologyMap
       Localization.SmallShiftedHom.equiv
         (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
     apply eL.injective
-    rw [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_zero structureMap K n,
-      hypercohomologyEquiv_zero structureMap L n]
-    simp
+    simp only [eL, Localization.SmallShiftedHom.equiv_comp,
+      hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
 
   map_add' α β := by
-    let eK : Hypercohomology structureMap K n ≃
-        ShiftedHom
-          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
-          (DerivedCategory.Q.obj K) n :=
-      Localization.SmallShiftedHom.equiv
-        (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
     let eL : Hypercohomology structureMap L n ≃
         ShiftedHom
           (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
@@ -651,12 +643,8 @@ def hypercohomologyMap
       Localization.SmallShiftedHom.equiv
         (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
     apply eL.injective
-    rw [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_add structureMap K n,
-      hypercohomologyEquiv_add structureMap L n,
-      Localization.SmallShiftedHom.equiv_comp,
-      Localization.SmallShiftedHom.equiv_comp]
-    simp
+    simp only [eL, Localization.SmallShiftedHom.equiv_comp,
+      hypercohomologyEquiv_add, ShiftedHom.add_comp]
 
 /-- Postcomposition by the zero map of complexes is the zero map on hypercohomology. -/
 @[simp] lemma hypercohomologyMap_zero

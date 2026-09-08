@@ -833,22 +833,19 @@ variable {T}
 
 /-- The complex-point map from the spectrum of a polynomial ring to algebraic affine space. -/
 def polynomialSpecToAffineSpacePointMap :
-    ComplexPoint (Spec ↧(complexPolynomialRing n))
-        (affineSpecStructureMap (complexPolynomialRing n)) →
-      ComplexPoint (complexAffineSpace (Fin n))
-        (complexAffineSpace (Fin n) ↘ Spec ↧ℂ) :=
-  map (AffineSpace.SpecIso (Fin n) ↧ℂ).inv (AffineSpace.SpecIso_inv_over ↧ℂ)
+    ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n))) →
+      ComplexPoint (Over.mk (complexAffineSpace (Fin n) ↘ Spec ↧ℂ)) :=
+  map (Over.homMk (AffineSpace.SpecIso (Fin n) ↧ℂ).inv (AffineSpace.SpecIso_inv_over ↧ℂ))
 
 /-- The scheme isomorphism between the spectrum of a polynomial ring and affine space agrees
 with evaluation of the polynomial variables. -/
 lemma affineSpaceEquiv_polynomialSpecToAffineSpacePointMap
-    (z : ComplexPoint (Spec ↧(complexPolynomialRing n))
-      (affineSpecStructureMap (complexPolynomialRing n))) :
+    (z : ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n)))) :
     affineSpaceEquiv (Fin n) (polynomialSpecToAffineSpacePointMap (n := n) z) =
       mvPolynomialAlgHomHomeomorph n (affineSpecEquiv (complexPolynomialRing n) z) := by
   funext i
   change (Scheme.ΓSpecIso ↧ℂ).hom
-      (z.1.appTop ((AffineSpace.SpecIso (Fin n) ↧ℂ).inv.appTop
+      (z.left.appTop ((AffineSpace.SpecIso (Fin n) ↧ℂ).inv.appTop
         (AffineSpace.coord (Spec ↧ℂ) i))) =
     affineSpecEquiv (complexPolynomialRing n) z (MvPolynomial.X i)
   rw [AffineSpace.SpecIso_inv_appTop_coord]
@@ -867,13 +864,12 @@ lemma standardEtaleSpecMap_over :
 
 /-- The map on complex points associated to a standard étale algebra. -/
 def standardEtaleComplexPointMap :
-    ComplexPoint (Spec ↧P.Ring) (affineSpecStructureMap P.Ring) →
-      ComplexPoint (Spec ↧(complexPolynomialRing n))
-        (affineSpecStructureMap (complexPolynomialRing n)) :=
-  Point.map (standardEtaleSpecMap P) (standardEtaleSpecMap_over P)
+    ComplexPoint (Over.mk (affineSpecStructureMap P.Ring)) →
+      ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n))) :=
+  Point.map (Over.homMk (standardEtaleSpecMap P) (standardEtaleSpecMap_over P))
 
 lemma affineSpecEquiv_standardEtaleComplexPointMap
-    (z : ComplexPoint (Spec ↧P.Ring) (affineSpecStructureMap P.Ring)) :
+    (z : ComplexPoint (Over.mk (affineSpecStructureMap P.Ring))) :
     affineSpecEquiv (complexPolynomialRing n) (standardEtaleComplexPointMap P z) =
       standardEtaleBaseAlgHom P (affineSpecEquiv P.Ring z) := by
   ext b
@@ -884,15 +880,13 @@ lemma affineSpecEquiv_standardEtaleComplexPointMap
 points. -/
 lemma isLocalHomeomorph_standardEtaleComplexPointMap :
     @IsLocalHomeomorph
-      (ComplexPoint (Spec ↧P.Ring) (affineSpecStructureMap P.Ring))
-      (ComplexPoint (Spec ↧(complexPolynomialRing n))
-        (affineSpecStructureMap (complexPolynomialRing n)))
+      (ComplexPoint (Over.mk (affineSpecStructureMap P.Ring)))
+      (ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n))))
       analyticTopology analyticTopology (standardEtaleComplexPointMap P) := by
   let : TopologicalSpace
-      (ComplexPoint (Spec ↧P.Ring) (affineSpecStructureMap P.Ring)) := analyticTopology
+      (ComplexPoint (Over.mk (affineSpecStructureMap P.Ring))) := analyticTopology
   let : TopologicalSpace
-      (ComplexPoint (Spec ↧(complexPolynomialRing n))
-        (affineSpecStructureMap (complexPolynomialRing n))) := analyticTopology
+      (ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n)))) := analyticTopology
   have h := (affineSpecHomeomorph (complexPolynomialRing n)).symm.isLocalHomeomorph.comp
     ((isLocalHomeomorph_standardEtaleBaseAlgHom P).comp
       (affineSpecHomeomorph P.Ring).isLocalHomeomorph)

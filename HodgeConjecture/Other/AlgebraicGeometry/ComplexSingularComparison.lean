@@ -49,7 +49,7 @@ lemma constantsToSingularCochain_quasiIsoAt_succ
     (R : Type) [Field R] (n : ℕ) :
     QuasiIsoAt
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-        (TopCat.of (ComplexPoint X structureMap))) (n + 1) := by
+        (TopCat.of (ComplexPoint (Over.mk structureMap)))) (n + 1) := by
   apply AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_contractibleOpenBasis
   intro x U hxU
   exact exists_contractibleOpen_le structureMap x U hxU
@@ -61,12 +61,12 @@ lemma constantsToSingularCochain_quasiIsoAt_zero
     (R : Type) [Field R] :
     QuasiIsoAt
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-        (TopCat.of (ComplexPoint X structureMap))) 0 := by
-  let : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
+        (TopCat.of (ComplexPoint (Over.mk structureMap)))) 0 := by
+  let : LocallyPathConnectedSpace (ComplexPoint (Over.mk structureMap)) :=
     locallyPathConnectedSpace structureMap
   exact
     AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_zero
-      R (TopCat.of (ComplexPoint X structureMap))
+      R (TopCat.of (ComplexPoint (Over.mk structureMap)))
 
 /-- On the analytic space of a smooth complex scheme, the constant sheaf is resolved by the
 sheafified singular-cochain complex. -/
@@ -75,7 +75,7 @@ lemma constantsToSingularCochain_quasiIso
     (R : Type) [Field R] :
     QuasiIso
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-        (TopCat.of (ComplexPoint X structureMap))) := by
+        (TopCat.of (ComplexPoint (Over.mk structureMap)))) := by
   constructor
   intro n
   cases n with
@@ -85,18 +85,18 @@ lemma constantsToSingularCochain_quasiIso
 /-- The sheafified singular-cochain complex, extended by zero to integer degrees. -/
 def singularCochainSheafComplexInt (R : Type) [Field R] :
     CochainComplex
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap))) ℤ :=
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap)))) ℤ :=
   (AlgebraicTopology.Singular.singularCochainSheafComplex R
-    (TopCat.of (ComplexPoint X structureMap))).extend ComplexShape.embeddingUpNat
+    (TopCat.of (ComplexPoint (Over.mk structureMap)))).extend ComplexShape.embeddingUpNat
 
 /-- The constant coefficient sheaf complex, extended by zero to integer degrees. -/
 def constantCoefficientSheafComplexInt (R : Type) [Field R] :
     CochainComplex
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap))) ℤ :=
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap)))) ℤ :=
   ((CochainComplex.single₀
-    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)))).obj
+    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))))).obj
       (AlgebraicTopology.Singular.constantCoefficientSheaf R
-        (TopCat.of (ComplexPoint X structureMap)))).extend ComplexShape.embeddingUpNat
+        (TopCat.of (ComplexPoint (Over.mk structureMap))))).extend ComplexShape.embeddingUpNat
 
 /-- The constant-to-singular comparison, extended by zero to integer degrees. -/
 def constantsToSingularCochainComplexInt (R : Type) [Field R] :
@@ -104,7 +104,7 @@ def constantsToSingularCochainComplexInt (R : Type) [Field R] :
       singularCochainSheafComplexInt structureMap R :=
   HomologicalComplex.extendMap
     (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-      (TopCat.of (ComplexPoint X structureMap))) ComplexShape.embeddingUpNat
+      (TopCat.of (ComplexPoint (Over.mk structureMap)))) ComplexShape.embeddingUpNat
 
 /-- The integer-indexed constant-to-singular comparison remains a quasi-isomorphism. -/
 lemma constantsToSingularCochainComplexInt_quasiIso
@@ -115,7 +115,7 @@ lemma constantsToSingularCochainComplexInt_quasiIso
     singularCochainSheafComplexInt
   exact (HomologicalComplex.quasiIso_extendMap_iff
     (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-      (TopCat.of (ComplexPoint X structureMap))) ComplexShape.embeddingUpNat).mpr
+      (TopCat.of (ComplexPoint (Over.mk structureMap)))) ComplexShape.embeddingUpNat).mpr
         (constantsToSingularCochain_quasiIso structureMap R)
 
 end AlgebraicGeometry.ComplexPoint

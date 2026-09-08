@@ -44,7 +44,7 @@ open CategoryTheory Topology
 namespace AlgebraicGeometry
 
 noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
-    TopologicalSpace (ComplexPoint Y g) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint (Over.mk g)) := Point.analyticTopology
 
 variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
   [Smooth structureMap] [IsProjective structureMap] {x : X}
@@ -68,8 +68,7 @@ abbrev componentSmoothStructureMap
   (componentSmoothLocus structureMap x).ι ≫ cycleComponentι X x ≫ structureMap
 
 /-- The selected smooth component point regarded as a complex point of the smooth locus. -/
-def smoothPoint : ComplexPoint (componentSmoothLocus structureMap x).toScheme
-    (componentSmoothStructureMap structureMap x) :=
+def smoothPoint : ComplexPoint (Over.mk (componentSmoothStructureMap structureMap x)) :=
   ComplexPoint.asOpenPoint (componentSmoothLocus structureMap x)
     (cycleComponentι X x ≫ structureMap)
     C.point C.point_mem_smoothLocus
@@ -81,11 +80,12 @@ abbrev neighborhoodStructureMap :
 
 /-- The selected smooth point regarded as a complex point of its affine neighborhood. -/
 def neighborhoodPoint :
-    ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap :=
+    ComplexPoint (Over.mk C.neighborhoodStructureMap) :=
   ComplexPoint.asOpenPoint C.componentNeighborhood (componentSmoothStructureMap structureMap x)
     (smoothPoint C) (by
       change (smoothPoint C).underlying ∈ C.componentNeighborhood
-      have hmap : Point.map (componentSmoothLocus structureMap x).ι rfl (smoothPoint C) =
+      have hmap : Point.map (ComplexPoint.openInclusion (componentSmoothLocus structureMap x)
+          (cycleComponentι X x ≫ structureMap)) (smoothPoint C) =
           C.point := by
         exact congrArg Subtype.val
           ((ComplexPoint.openEquiv (componentSmoothLocus structureMap x)
@@ -254,21 +254,23 @@ lemma neighborhoodToSpecΓ_over :
 coordinate ring. -/
 def neighborhoodPointAlgHomHomeomorph :
     @Homeomorph
-      (ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap)
+      (ComplexPoint (Over.mk C.neighborhoodStructureMap))
       (Γ(C.componentNeighborhood.toScheme, ⊤) →ₐ[ℂ] ℂ)
       Point.analyticTopology
       (ComplexPoint.affineAlgebraHomTopology Γ(C.componentNeighborhood.toScheme, ⊤)) := by
   let : IsAffine C.componentNeighborhood.toScheme :=
     C.componentNeighborhood_isAffine
-  exact (Point.isoMapHomeomorph
-      (asIso C.componentNeighborhood.toScheme.toSpecΓ)
-      C.neighborhoodToSpecΓ_over).trans
+  let schemeIso := asIso C.componentNeighborhood.toScheme.toSpecΓ
+  let e : Over.mk C.neighborhoodStructureMap ≅
+      Over.mk (ComplexPoint.affineSpecStructureMap Γ(C.componentNeighborhood.toScheme, ⊤)) :=
+    Over.isoMk schemeIso C.neighborhoodToSpecΓ_over
+  exact (Point.isoMapHomeomorph e).trans
     (ComplexPoint.affineSpecHomeomorph Γ(C.componentNeighborhood.toScheme, ⊤))
 
 /-- The actual local analytic chart supplied by the exact étale component coordinates. -/
 def neighborhoodProjectionChart :
     OpenPartialHomeomorph
-      (ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap)
+      (ComplexPoint (Over.mk C.neighborhoodStructureMap))
       (Fin n → ℂ) :=
   C.neighborhoodPointAlgHomHomeomorph.toOpenPartialHomeomorph |>.trans
     (ComplexPoint.etaleAlgHomProjectionChart
@@ -288,7 +290,7 @@ lemma neighborhoodPoint_mem_projectionChart_source :
 /-- On its source, the component chart is exactly restriction of a complex point along the
 retained polynomial coordinate map, followed by evaluation on the coordinate variables. -/
 lemma neighborhoodProjectionChart_apply_of_mem
-    (z : ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap)
+    (z : ComplexPoint (Over.mk C.neighborhoodStructureMap))
     (hz : z ∈ C.neighborhoodProjectionChart.source) :
     C.neighborhoodProjectionChart z =
       ComplexPoint.mvPolynomialAlgHomHomeomorph n
@@ -349,7 +351,7 @@ end AlgebraicTopology.Singular
 namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 
 noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
-    TopologicalSpace (ComplexPoint Y g) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint (Over.mk g)) := Point.analyticTopology
 
 variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
   [Smooth structureMap] [IsProjective structureMap] {x : X}
@@ -381,7 +383,7 @@ lemma span_neighborhoodLocalClass_eq_top :
   let : IsAffine C.componentNeighborhood.toScheme :=
     C.componentNeighborhood_isAffine
   let : T2Space
-      (ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap) :=
+      (ComplexPoint (Over.mk C.neighborhoodStructureMap)) :=
     ComplexPoint.t2Space_of_isAffine C.neighborhoodStructureMap
   rw [C.neighborhoodLocalClass_eq_localClassOfChart]
   exact AlgebraicTopology.Singular.span_localClassOfChart_eq_top

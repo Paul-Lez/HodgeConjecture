@@ -47,14 +47,14 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
     [I.IsKInjective]
     (i : singularCochainSheafComplexInt structureMap ℚ ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X structureMap))).mapHomologicalComplex
+      (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map i)]
     (n : ℤ) :
     RationalSingularCochainHypercohomology structureMap n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X structureMap))
+        (TopCat.of (ComplexPoint (Over.mk structureMap)))
         (singularCochainSheafComplexInt structureMap ℚ)).homology n := by
-  let Y := TopCat.of (ComplexPoint X structureMap)
+  let Y := TopCat.of (ComplexPoint (Over.mk structureMap))
   let A := constantIntegerSheafComplexInt structureMap
   let A' := TopCat.Sheaf.integerConstantSingleComplex Y
   let S := singularCochainSheafComplexInt structureMap ℚ
@@ -143,14 +143,14 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
 /-- The canonical hypercohomology comparison with the global-section complex, bundled as an
 additive equivalence. -/
 def rationalSingularCochainHypercohomologyAddEquivGlobalSections
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint (Over.mk structureMap))]
+    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
     (n : ℤ) :
     RationalSingularCochainHypercohomology structureMap n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X structureMap))
+        (TopCat.of (ComplexPoint (Over.mk structureMap)))
         (singularCochainSheafComplexInt structureMap ℚ)).homology n := by
-  let Y := TopCat.of (ComplexPoint X structureMap)
+  let Y := TopCat.of (ComplexPoint (Over.mk structureMap))
   let S := singularCochainSheafComplexInt structureMap ℚ
   let : S.IsStrictlyGE 0 := by
     dsimp [S, singularCochainSheafComplexInt]
@@ -185,8 +185,8 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSections
 
 /-- The forward map of the original global-sections comparison preserves addition. -/
 lemma rationalSingularCochainHypercohomologyEquivGlobalSections_add
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint (Over.mk structureMap))]
+    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
     (n : ℤ) (α β : RationalSingularCochainHypercohomology structureMap n) :
     rationalSingularCochainHypercohomologyEquivGlobalSections structureMap n (α + β) =
       rationalSingularCochainHypercohomologyEquivGlobalSections structureMap n α +
@@ -196,8 +196,8 @@ lemma rationalSingularCochainHypercohomologyEquivGlobalSections_add
 
 /-- The forward map of the original global-sections comparison preserves zero. -/
 lemma rationalSingularCochainHypercohomologyEquivGlobalSections_zero
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint (Over.mk structureMap))]
+    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
     (n : ℤ) :
     rationalSingularCochainHypercohomologyEquivGlobalSections structureMap n 0 = 0 := by
   exact (rationalSingularCochainHypercohomologyAddEquivGlobalSections
@@ -206,17 +206,17 @@ lemma rationalSingularCochainHypercohomologyEquivGlobalSections_zero
 /-- The comparison from rational singular-cochain hypercohomology to ordinary singular
 cohomology, bundled as an additive equivalence. -/
 def rationalSingularCochainHypercohomologyAddEquivCohomology
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint (Over.mk structureMap))]
+    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
     (n : ℕ) :
     RationalSingularCochainHypercohomology structureMap (n : ℤ) ≃+
       AlgebraicTopology.Singular.Cohomology ℚ
-        (TopCat.of (ComplexPoint X structureMap)) n := by
-  let Y := TopCat.of (ComplexPoint X structureMap)
+        (TopCat.of (ComplexPoint (Over.mk structureMap))) n := by
+  let Y := TopCat.of (ComplexPoint (Over.mk structureMap))
   let K := AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y
-  letI : ParacompactSpace (ComplexPoint X structureMap) :=
-    (Homeomorph.Set.univ (ComplexPoint X structureMap)).paracompactSpace_iff.mp
-      (inferInstance : ParacompactSpace (⊤ : Opens (ComplexPoint X structureMap)))
+  letI : ParacompactSpace (ComplexPoint (Over.mk structureMap)) :=
+    (Homeomorph.Set.univ (ComplexPoint (Over.mk structureMap))).paracompactSpace_iff.mp
+      (inferInstance : ParacompactSpace (⊤ : Opens (ComplexPoint (Over.mk structureMap))))
   exact (rationalSingularCochainHypercohomologyAddEquivGlobalSections
       structureMap (n : ℤ)).trans <|
     (HomologicalComplex.homologyMapIso
@@ -230,8 +230,8 @@ def rationalSingularCochainHypercohomologyAddEquivCohomology
 /-- The forward map of the original hypercohomology-to-singular-cohomology comparison
 preserves addition. -/
 lemma rationalSingularCochainHypercohomologyEquivCohomology_add
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint (Over.mk structureMap))]
+    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
     (n : ℕ) (α β : RationalSingularCochainHypercohomology structureMap (n : ℤ)) :
     rationalSingularCochainHypercohomologyEquivCohomology structureMap n (α + β) =
       rationalSingularCochainHypercohomologyEquivCohomology structureMap n α +
@@ -242,8 +242,8 @@ lemma rationalSingularCochainHypercohomologyEquivCohomology_add
 /-- The forward map of the original hypercohomology-to-singular-cohomology comparison
 preserves zero. -/
 lemma rationalSingularCochainHypercohomologyEquivCohomology_zero
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint (Over.mk structureMap))]
+    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
     (n : ℕ) :
     rationalSingularCochainHypercohomologyEquivCohomology structureMap n 0 = 0 := by
   exact (rationalSingularCochainHypercohomologyAddEquivCohomology
@@ -253,20 +253,20 @@ lemma rationalSingularCochainHypercohomologyEquivCohomology_zero
 equivalent. -/
 def rationalCohomologyAddEquivSingularCohomology
     [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint (Over.mk structureMap))]
+    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
     (n : ℕ) :
     FieldCohomology ℚ structureMap (n : ℤ) ≃+
       AlgebraicTopology.Singular.Cohomology ℚ
-        (TopCat.of (ComplexPoint X structureMap)) n :=
+        (TopCat.of (ComplexPoint (Over.mk structureMap))) n :=
   (rationalCohomologySingularCochainAddEquiv structureMap (n : ℤ)).trans
     (rationalSingularCochainHypercohomologyAddEquivCohomology structureMap n)
 
 /-- The forward map of the original rational Betti comparison preserves addition. -/
 lemma rationalCohomologyEquivSingularCohomology_add
     [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint (Over.mk structureMap))]
+    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
     (n : ℕ) (α β : FieldCohomology ℚ structureMap (n : ℤ)) :
     rationalCohomologyEquivSingularCohomology structureMap n (α + β) =
       rationalCohomologyEquivSingularCohomology structureMap n α +
@@ -277,8 +277,8 @@ lemma rationalCohomologyEquivSingularCohomology_add
 /-- The forward map of the original rational Betti comparison preserves zero. -/
 lemma rationalCohomologyEquivSingularCohomology_zero
     [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint (Over.mk structureMap))]
+    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
     (n : ℕ) :
     rationalCohomologyEquivSingularCohomology structureMap n 0 = 0 := by
   exact (rationalCohomologyAddEquivSingularCohomology

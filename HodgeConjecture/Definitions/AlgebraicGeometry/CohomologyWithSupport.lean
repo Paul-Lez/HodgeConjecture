@@ -50,21 +50,21 @@ local instance analyticSupportHasDerivedCategory :
   HasDerivedCategory.standard (AnalyticAdditiveSheaf structureMap)
 
 /-- The analytic complement of a subset of the complex-point space. -/
-abbrev AnalyticComplement (Z : Set (ComplexPoint X structureMap)) :=
+abbrev AnalyticComplement (Z : Set (ComplexPoint (Over.mk structureMap))) :=
   Zᶜ
 
 /-- The inclusion of the analytic complement into the complex-point space. -/
-def analyticComplementInclusion (Z : Set (ComplexPoint X structureMap)) :
+def analyticComplementInclusion (Z : Set (ComplexPoint (Over.mk structureMap))) :
     TopCat.of (AnalyticComplement structureMap Z) ⟶
-      TopCat.of (ComplexPoint X structureMap) :=
+      TopCat.of (ComplexPoint (Over.mk structureMap)) :=
   TopCat.ofHom ⟨Subtype.val, continuous_subtype_val⟩
 
 /-- Sheaves of additive groups on the analytic complement. -/
-abbrev AnalyticComplementAdditiveSheaf (Z : Set (ComplexPoint X structureMap)) :=
+abbrev AnalyticComplementAdditiveSheaf (Z : Set (ComplexPoint (Over.mk structureMap))) :=
   TopCat.Sheaf AddCommGrpCat (TopCat.of (AnalyticComplement structureMap Z))
 
 /-- The rational constant sheaf on the analytic complement. -/
-def complementConstantRationalSheaf (Z : Set (ComplexPoint X structureMap)) :
+def complementConstantRationalSheaf (Z : Set (ComplexPoint (Over.mk structureMap))) :
     AnalyticComplementAdditiveSheaf structureMap Z :=
   let J := Opens.grothendieckTopology
     (TopCat.of (AnalyticComplement structureMap Z))
@@ -72,15 +72,15 @@ def complementConstantRationalSheaf (Z : Set (ComplexPoint X structureMap)) :
 
 /-- The rational constant sheaf on the complement, pushed forward to the ambient space. -/
 def pushforwardComplementConstantRationalSheaf
-    (Z : Set (ComplexPoint X structureMap)) : AnalyticAdditiveSheaf structureMap :=
+    (Z : Set (ComplexPoint (Over.mk structureMap))) : AnalyticAdditiveSheaf structureMap :=
   (TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion structureMap Z)).obj
       (complementConstantRationalSheaf structureMap Z)
 
 /-- Constant rational sections restrict canonically to locally constant sections on the
 complement. This is the presheaf morphism before sheafifying the source. -/
-def rationalRestrictionPresheaf (Z : Set (ComplexPoint X structureMap)) :
-    (Functor.const (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ).obj
+def rationalRestrictionPresheaf (Z : Set (ComplexPoint (Over.mk structureMap))) :
+    (Functor.const (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ).obj
         (AddCommGrpCat.of ℚ) ⟶
       (pushforwardComplementConstantRationalSheaf structureMap Z).obj :=
   let U := TopCat.of (AnalyticComplement structureMap Z)
@@ -90,24 +90,24 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X structureMap)) :
       ((Functor.const (Opens U)ᵒᵖ).obj (AddCommGrpCat.of ℚ)))
 
 /-- The canonical restriction of the rational constant sheaf to the complement. -/
-def rationalRestrictionSheaf (Z : Set (ComplexPoint X structureMap)) :
+def rationalRestrictionSheaf (Z : Set (ComplexPoint (Over.mk structureMap))) :
     constantFieldSheaf ℚ structureMap ⟶
       pushforwardComplementConstantRationalSheaf structureMap Z :=
   let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X structureMap))
+    (TopCat.of (ComplexPoint (Over.mk structureMap)))
   ⟨sheafifyLift J (rationalRestrictionPresheaf structureMap Z)
     (pushforwardComplementConstantRationalSheaf structureMap Z).property⟩
 
 /-- A fixed injective resolution used to compute the derived pushforward from the complement. -/
 def complementConstantRationalInjectiveResolution
-    (Z : Set (ComplexPoint X structureMap)) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) :
     InjectiveResolution (complementConstantRationalSheaf structureMap Z) :=
   injectiveResolution (complementConstantRationalSheaf structureMap Z)
 
 /-- A complex representing the derived pushforward of the rational constant sheaf on the
 complement. -/
 def derivedPushforwardComplementConstantRationalComplexNat
-    (Z : Set (ComplexPoint X structureMap)) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) :
     CochainComplex (AnalyticAdditiveSheaf structureMap) ℕ :=
   ((TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion structureMap Z)).mapHomologicalComplex
@@ -118,12 +118,12 @@ def derivedPushforwardComplementConstantRationalComplexNat
 lemma isZero_sheaf_on_complement_univ
     (F : TopCat.Sheaf AddCommGrpCat.{0}
       (TopCat.of (AnalyticComplement structureMap
-        (Set.univ : Set (ComplexPoint X structureMap))))) :
+        (Set.univ : Set (ComplexPoint (Over.mk structureMap)))))) :
     IsZero F := by
   apply (TopCat.Sheaf.isZero_iff_stalkFunctor_obj_isZero
     (C := AddCommGrpCat.{0})
     (X := TopCat.of (AnalyticComplement structureMap
-      (Set.univ : Set (ComplexPoint X structureMap)))) F).2
+      (Set.univ : Set (ComplexPoint (Over.mk structureMap))))) F).2
   intro x
   have hx : False := by
     simpa [AnalyticComplement] using x.property
@@ -132,17 +132,17 @@ lemma isZero_sheaf_on_complement_univ
 /-- Every term of the derived pushforward from the empty complement is zero. -/
 lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
     IsZero ((derivedPushforwardComplementConstantRationalComplexNat structureMap
-      (Set.univ : Set (ComplexPoint X structureMap))).X n) :=
+      (Set.univ : Set (ComplexPoint (Over.mk structureMap)))).X n) :=
   (TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion structureMap
-      (Set.univ : Set (ComplexPoint X structureMap)))).map_isZero
+      (Set.univ : Set (ComplexPoint (Over.mk structureMap))))).map_isZero
         (isZero_sheaf_on_complement_univ structureMap _)
 
 /-- The complex representing derived pushforward from the empty complement is itself a zero
 object, not merely acyclic. -/
 lemma isZero_derivedPushforwardComplement_univ :
     IsZero (derivedPushforwardComplementConstantRationalComplexNat structureMap
-      (Set.univ : Set (ComplexPoint X structureMap))) := by
+      (Set.univ : Set (ComplexPoint (Over.mk structureMap)))) := by
   constructor
   · intro K
     refine ⟨⟨⟨0⟩, fun f => ?_⟩⟩
@@ -157,7 +157,7 @@ lemma isZero_derivedPushforwardComplement_univ :
 
 /-- The derived pushforward complex, extended by zero to integer degrees. -/
 def derivedPushforwardComplementConstantRationalComplexInt
-    (Z : Set (ComplexPoint X structureMap)) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) :
     CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ :=
   (derivedPushforwardComplementConstantRationalComplexNat structureMap Z).extend
     ComplexShape.embeddingUpNat
@@ -166,14 +166,14 @@ def derivedPushforwardComplementConstantRationalComplexInt
 zero complex. -/
 lemma isZero_derivedPushforwardComplement_univ_int :
     IsZero (derivedPushforwardComplementConstantRationalComplexInt structureMap
-      (Set.univ : Set (ComplexPoint X structureMap))) :=
+      (Set.univ : Set (ComplexPoint (Over.mk structureMap)))) :=
   (ComplexShape.embeddingUpNat.extendFunctor
     (AnalyticAdditiveSheaf structureMap)).map_isZero
       (isZero_derivedPushforwardComplement_univ structureMap)
 
 /-- The pushed-forward resolution map from the underived constant sheaf on the complement. -/
 def pushforwardComplementResolutionMap
-    (Z : Set (ComplexPoint X structureMap)) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) :
     ((TopCat.Sheaf.pushforward AddCommGrpCat
       (analyticComplementInclusion structureMap Z)).mapHomologicalComplex
         (ComplexShape.up ℕ)).obj
@@ -189,7 +189,7 @@ def pushforwardComplementResolutionMap
 /-- Restriction from ambient rational constants to a complex representing the derived
 pushforward from the complement. -/
 def rationalRestrictionComplexNat
-    (Z : Set (ComplexPoint X structureMap)) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) :
     (CochainComplex.single₀ (AnalyticAdditiveSheaf structureMap)).obj
         (constantFieldSheaf ℚ structureMap) ⟶
       derivedPushforwardComplementConstantRationalComplexNat structureMap Z :=
@@ -203,7 +203,7 @@ def rationalRestrictionComplexNat
 
 /-- Restriction from the ambient rational constant complex to the derived pushforward from the
 complement. -/
-def rationalRestrictionComplexInt (Z : Set (ComplexPoint X structureMap)) :
+def rationalRestrictionComplexInt (Z : Set (ComplexPoint (Over.mk structureMap))) :
     constantFieldSheafComplexInt ℚ structureMap ⟶
       derivedPushforwardComplementConstantRationalComplexInt structureMap Z :=
   HomologicalComplex.extendMap (rationalRestrictionComplexNat structureMap Z)
@@ -215,9 +215,9 @@ fact that cohomology supported on the whole space is ordinary cohomology. -/
 noncomputable instance isIso_mappingConeTriangleh_mor₃_univ :
     IsIso ((CochainComplex.mappingCone.triangleh
       (rationalRestrictionComplexInt structureMap
-        (Set.univ : Set (ComplexPoint X structureMap)))).mor₃) := by
+        (Set.univ : Set (ComplexPoint (Over.mk structureMap))))).mor₃) := by
   let f := rationalRestrictionComplexInt structureMap
-    (Set.univ : Set (ComplexPoint X structureMap))
+    (Set.univ : Set (ComplexPoint (Over.mk structureMap)))
   have hdist : CochainComplex.mappingCone.triangleh f ∈
       HomotopyCategory.Pretriangulated.distinguishedTriangles
         (AnalyticAdditiveSheaf structureMap) :=
@@ -233,9 +233,9 @@ noncomputable instance isIso_derivedMappingConeTriangle_mor₃_univ :
     IsIso ((DerivedCategory.Q.mapTriangle.obj
       (CochainComplex.mappingCone.triangle
         (rationalRestrictionComplexInt structureMap
-          (Set.univ : Set (ComplexPoint X structureMap))))).mor₃) := by
+          (Set.univ : Set (ComplexPoint (Over.mk structureMap)))))).mor₃) := by
   let f := rationalRestrictionComplexInt structureMap
-    (Set.univ : Set (ComplexPoint X structureMap))
+    (Set.univ : Set (ComplexPoint (Over.mk structureMap)))
   apply (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _
     (DerivedCategory.mappingCone_triangle_distinguished f)).1
   exact DerivedCategory.Q.map_isZero
@@ -243,19 +243,19 @@ noncomputable instance isIso_derivedMappingConeTriangle_mor₃_univ :
 
 /-- The mapping-cone model for the homotopy fiber defining rational cohomology with support. -/
 abbrev rationalCohomologyWithSupportComplex
-    (Z : Set (ComplexPoint X structureMap)) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) :
     CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ :=
   CochainComplex.mappingCone (rationalRestrictionComplexInt structureMap Z)
 
 /-- Rational constant-sheaf cohomology with support in `Z`. The degree shift realizes the
 homotopy fiber of restriction as the mapping cone shifted by `-1`. -/
 abbrev RationalCohomologyWithSupport
-    (Z : Set (ComplexPoint X structureMap)) (n : ℤ) : Type 1 :=
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (n : ℤ) : Type 1 :=
   Hypercohomology structureMap (rationalCohomologyWithSupportComplex structureMap Z) (n - 1)
 
 /-- The degree-one connecting morphism from the mapping cone to the ambient rational constant
 complex. -/
-def forgetSupportShiftedHom (Z : Set (ComplexPoint X structureMap)) :
+def forgetSupportShiftedHom (Z : Set (ComplexPoint (Over.mk structureMap))) :
     Localization.SmallShiftedHom (analyticQuasiIsomorphisms structureMap)
       (rationalCohomologyWithSupportComplex structureMap Z)
       (constantFieldSheafComplexInt ℚ structureMap) (1 : ℤ) :=
@@ -264,7 +264,7 @@ def forgetSupportShiftedHom (Z : Set (ComplexPoint X structureMap)) :
       (rationalRestrictionComplexInt structureMap Z)).mor₃
 
 /-- Forget support, using the connecting morphism of the mapping-cone triangle. -/
-def forgetSupport (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
+def forgetSupport (Z : Set (ComplexPoint (Over.mk structureMap))) (n : ℤ) :
     RationalCohomologyWithSupport structureMap Z n →+
       FieldCohomology ℚ structureMap n where
   toFun α := α.comp (forgetSupportShiftedHom structureMap Z) (by lia)
@@ -276,20 +276,9 @@ def forgetSupport (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
       Localization.SmallShiftedHom.equiv
         (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
     apply e.injective
-    rw [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_zero structureMap
-        (rationalCohomologyWithSupportComplex structureMap Z) (n - 1),
-      hypercohomologyEquiv_zero structureMap
-        (constantFieldSheafComplexInt ℚ structureMap) n]
-    simp
+    simp only [e, Localization.SmallShiftedHom.equiv_comp,
+      hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
   map_add' α β := by
-    let eSource : RationalCohomologyWithSupport structureMap Z n ≃
-        ShiftedHom
-          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
-          (DerivedCategory.Q.obj
-            (rationalCohomologyWithSupportComplex structureMap Z)) (n - 1) :=
-      Localization.SmallShiftedHom.equiv
-        (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
     let eTarget : FieldCohomology ℚ structureMap n ≃
         ShiftedHom
           (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
@@ -297,14 +286,8 @@ def forgetSupport (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
       Localization.SmallShiftedHom.equiv
         (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
     apply eTarget.injective
-    rw [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_add structureMap
-        (rationalCohomologyWithSupportComplex structureMap Z) (n - 1),
-      hypercohomologyEquiv_add structureMap
-        (constantFieldSheafComplexInt ℚ structureMap) n,
-      Localization.SmallShiftedHom.equiv_comp,
-      Localization.SmallShiftedHom.equiv_comp]
-    simp
+    simp only [eTarget, Localization.SmallShiftedHom.equiv_comp,
+      hypercohomologyEquiv_add, ShiftedHom.add_comp]
 
 section
 
@@ -314,7 +297,7 @@ instance isIso_forgetSupportShiftedHom_univ_map :
     IsIso ((Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q)
         (forgetSupportShiftedHom structureMap
-          (Set.univ : Set (ComplexPoint X structureMap)))) := by
+          (Set.univ : Set (ComplexPoint (Over.mk structureMap))))) := by
   unfold forgetSupportShiftedHom
   erw [Localization.SmallShiftedHom.equiv_mk]
   exact isIso_derivedMappingConeTriangle_mor₃_univ structureMap
@@ -325,10 +308,10 @@ end
 ordinary rational cohomology. Its forward map is definitionally the support-forgetting map. -/
 noncomputable def forgetSupportEquivUniv (n : ℤ) :
     RationalCohomologyWithSupport structureMap
-        (Set.univ : Set (ComplexPoint X structureMap)) n ≃
+        (Set.univ : Set (ComplexPoint (Over.mk structureMap))) n ≃
       FieldCohomology ℚ structureMap n := by
   let eSource : RationalCohomologyWithSupport structureMap
-        (Set.univ : Set (ComplexPoint X structureMap)) n ≃
+        (Set.univ : Set (ComplexPoint (Over.mk structureMap))) n ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
         (DerivedCategory.Q.obj (rationalCohomologyWithSupportComplex structureMap Set.univ))
@@ -344,7 +327,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
   let g := (Localization.SmallShiftedHom.equiv
     (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q)
       (forgetSupportShiftedHom structureMap
-        (Set.univ : Set (ComplexPoint X structureMap)))
+        (Set.univ : Set (ComplexPoint (Over.mk structureMap))))
   let eComp : ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
         (DerivedCategory.Q.obj (rationalCohomologyWithSupportComplex structureMap Set.univ))
@@ -356,7 +339,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
       (X := DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap)) g
       (show (1 : ℤ) + (n - 1) = n by lia)
   have hcomp (α : RationalCohomologyWithSupport structureMap
-      (Set.univ : Set (ComplexPoint X structureMap)) n) :
+      (Set.univ : Set (ComplexPoint (Over.mk structureMap))) n) :
       eTarget (forgetSupport structureMap Set.univ n α) = eComp (eSource α) := by
     change eTarget
       (α.comp (forgetSupportShiftedHom structureMap Set.univ) (by lia)) = _
@@ -377,7 +360,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
 
 @[simp] lemma forgetSupportEquivUniv_apply (n : ℤ)
     (α : RationalCohomologyWithSupport structureMap
-      (Set.univ : Set (ComplexPoint X structureMap)) n) :
+      (Set.univ : Set (ComplexPoint (Over.mk structureMap))) n) :
     forgetSupportEquivUniv structureMap n α =
       forgetSupport structureMap Set.univ n α := by
   rfl
@@ -385,7 +368,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
 /-- Forgetting whole-space support is surjective. -/
 lemma forgetSupport_surjective_univ (n : ℤ) :
     Function.Surjective
-      (forgetSupport structureMap (Set.univ : Set (ComplexPoint X structureMap)) n) := by
+      (forgetSupport structureMap (Set.univ : Set (ComplexPoint (Over.mk structureMap))) n) := by
   intro α
   obtain ⟨β, hβ⟩ := (forgetSupportEquivUniv structureMap n).surjective α
   exact ⟨β, (forgetSupportEquivUniv_apply structureMap n β).symm.trans hβ⟩
