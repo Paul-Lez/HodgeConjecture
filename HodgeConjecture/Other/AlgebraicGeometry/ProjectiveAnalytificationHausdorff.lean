@@ -296,14 +296,14 @@ theorem complexPoint_t2Space {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 
 end ProjectiveSpace.Presentation
 
-namespace ProjectiveSpace.IsProjective
+namespace IsProjective
 
 /-- The analytification of a projective complex scheme is Hausdorff. -/
 noncomputable instance complexPoint_t2Space {X : Scheme} {f : X ⟶ Spec ↧ℂ}
-    [h : ProjectiveSpace.IsProjective f] : T2Space (ComplexPoint X f) :=
+    [h : IsProjective f] : T2Space (ComplexPoint X f) :=
   ProjectiveSpace.Presentation.complexPoint_t2Space
     (Classical.choice h.nonempty_presentation)
 
-end ProjectiveSpace.IsProjective
+end IsProjective
 
 end AlgebraicGeometry

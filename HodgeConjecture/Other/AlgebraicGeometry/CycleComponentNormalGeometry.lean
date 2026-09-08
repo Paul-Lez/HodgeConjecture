@@ -44,7 +44,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The smooth locus of a reduced cycle component is Zariski dense. -/
 lemma dense_cycleComponent_smoothLocus
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     Dense
       ((cycleComponentι X x ≫ structureMap).smoothLocus :
         Set (cycleComponent X x)) :=
@@ -52,7 +52,7 @@ lemma dense_cycleComponent_smoothLocus
 
 /-- The smooth locus of an integral cycle component is irreducible. -/
 noncomputable instance cycleComponent_smoothLocus_irreducibleSpace
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     IrreducibleSpace
       (cycleComponentι X x ≫ structureMap).smoothLocus := by
   obtain ⟨y, hy⟩ := (dense_cycleComponent_smoothLocus structureMap x).nonempty
@@ -64,13 +64,13 @@ noncomputable instance cycleComponent_smoothLocus_irreducibleSpace
 
 /-- The smooth locus of an integral cycle component is itself an integral scheme. -/
 noncomputable instance cycleComponent_smoothLocus_isIntegral
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     IsIntegral (cycleComponentι X x ≫ structureMap).smoothLocus :=
   isIntegral_of_irreducibleSpace_of_isReduced _
 
 /-- The scheme points that are both smooth and closed are dense in a reduced cycle component. -/
 lemma dense_cycleComponent_smooth_closedPoints
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     Dense
       (((cycleComponentι X x ≫ structureMap).smoothLocus :
           Set (cycleComponent X x)) ∩
@@ -87,7 +87,7 @@ lemma dense_cycleComponent_smooth_closedPoints
 
 /-- The underlying scheme point of a complex point of a cycle component is closed. -/
 lemma cycleComponent_complexPoint_underlying_isClosed
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
     (z : ComplexPoint (cycleComponent X x)
       (cycleComponentι X x ≫ structureMap)) :
     IsClosed {z.underlying} := by
@@ -98,7 +98,7 @@ lemma cycleComponent_complexPoint_underlying_isClosed
 /-- The image in the ambient variety of a complex point of a cycle component is a closed scheme
 point. -/
 lemma cycleComponent_complexPoint_ambient_underlying_isClosed
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
     (z : ComplexPoint (cycleComponent X x)
       (cycleComponentι X x ≫ structureMap)) :
     IsClosed {cycleComponentι X x z.underlying} := by
@@ -109,7 +109,7 @@ lemma cycleComponent_complexPoint_ambient_underlying_isClosed
 /-- A reduced cycle component has a smooth complex point whose underlying scheme point is
 closed. -/
 lemma exists_cycleComponent_smooth_closed_complexPoint
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     ∃ z : ComplexPoint (cycleComponent X x)
         (cycleComponentι X x ≫ structureMap),
       z.underlying ∈
@@ -122,7 +122,7 @@ lemma exists_cycleComponent_smooth_closed_complexPoint
 the smooth ambient complex scheme. -/
 lemma cycleComponent_codimension_le
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) {d p : ℕ}
+    [IsProjective structureMap] (x : X) {d p : ℕ}
     [SmoothOfRelativeDimension d structureMap] (hx : Order.coheight x = p) :
     p ≤ d := by
   have hle := SmoothOfRelativeDimension.coheight_le_complex
@@ -134,7 +134,7 @@ lemma cycleComponent_codimension_le
 Krull dimension at most `d - p`. -/
 lemma orderKrullDim_cycleComponent_le_sub
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) {d p : ℕ}
+    [IsProjective structureMap] (x : X) {d p : ℕ}
     [SmoothOfRelativeDimension d structureMap] (hx : Order.coheight x = p) :
     Order.krullDim (cycleComponent X x) ≤ d - p := by
   rw [orderKrullDim_cycleComponent]
@@ -146,7 +146,7 @@ lemma orderKrullDim_cycleComponent_le_sub
 topological Krull dimension at most `d - p`. -/
 lemma topologicalKrullDim_cycleComponent_le_sub
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) {d p : ℕ}
+    [IsProjective structureMap] (x : X) {d p : ℕ}
     [SmoothOfRelativeDimension d structureMap] (hx : Order.coheight x = p) :
     topologicalKrullDim (cycleComponent X x) ≤ d - p := by
   rw [topologicalKrullDim_cycleComponent]

@@ -38,7 +38,7 @@ open Topology
 namespace AlgebraicGeometry.ComplexPoint
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
-  [ProjectiveSpace.IsProjective structureMap]
+  [IsProjective structureMap]
 
 /-- A smooth projective complex analytification has a second-countable topology. -/
 theorem secondCountableTopology [SmoothOfRelativeDimension d structureMap] :

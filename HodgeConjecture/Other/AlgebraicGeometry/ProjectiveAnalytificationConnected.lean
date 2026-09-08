@@ -55,7 +55,7 @@ noncomputable instance instNonemptyComplexPoint [IsIntegral X] [Smooth structure
 
 /-- A compact, locally path connected projective analytification has finitely many connected
 components. -/
-theorem finiteConnectedComponents [ProjectiveSpace.IsProjective structureMap]
+theorem finiteConnectedComponents [IsProjective structureMap]
     [SmoothOfRelativeDimension d structureMap] :
     Finite (ConnectedComponents (ComplexPoint X structureMap)) := by
   let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
@@ -65,7 +65,7 @@ theorem finiteConnectedComponents [ProjectiveSpace.IsProjective structureMap]
 
 /-- A compact, locally path connected projective analytification has finitely many path
 components. -/
-theorem finiteZerothHomotopy [ProjectiveSpace.IsProjective structureMap]
+theorem finiteZerothHomotopy [IsProjective structureMap]
     [SmoothOfRelativeDimension d structureMap] :
     Finite (ZerothHomotopy (ComplexPoint X structureMap)) := by
   let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
@@ -98,7 +98,7 @@ lemma underlying_eq_genericPoint_of_dimension_eq_zero [IsIntegral X]
 /-- The analytification of an integral smooth projective complex variety of dimension zero has at
 most one point. -/
 theorem subsingletonComplexPointOfDimensionEqZero [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap]
+    [IsProjective structureMap]
     [SmoothOfRelativeDimension d structureMap] (hd : d = 0) :
     Subsingleton (ComplexPoint X structureMap) := by
   constructor
@@ -110,7 +110,7 @@ theorem subsingletonComplexPointOfDimensionEqZero [IsIntegral X] [Smooth structu
 /-- The analytification of an integral smooth projective complex variety of dimension zero is
 connected. -/
 theorem connectedSpaceOfDimensionEqZero [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap]
+    [IsProjective structureMap]
     [SmoothOfRelativeDimension d structureMap] (hd : d = 0) :
     ConnectedSpace (ComplexPoint X structureMap) := by
   let _ : Subsingleton (ComplexPoint X structureMap) :=
@@ -122,7 +122,7 @@ theorem connectedSpaceOfDimensionEqZero [IsIntegral X] [Smooth structureMap]
 /-- The analytification of an integral smooth projective complex variety of dimension zero is path
 connected. -/
 theorem pathConnectedSpaceOfDimensionEqZero [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap]
+    [IsProjective structureMap]
     [SmoothOfRelativeDimension d structureMap] (hd : d = 0) :
     PathConnectedSpace (ComplexPoint X structureMap) := by
   let _ : ConnectedSpace (ComplexPoint X structureMap) :=

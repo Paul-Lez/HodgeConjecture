@@ -38,7 +38,7 @@ namespace AlgebraicGeometry.ComplexPoint
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 noncomputable local instance cycleComponentTopology
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     TopologicalSpace
       (ComplexPoint (cycleComponent X x)
         (cycleComponentι X x ≫ structureMap)) :=
@@ -46,7 +46,7 @@ noncomputable local instance cycleComponentTopology
 
 /-- The complex-point map of a reduced cycle component is a closed topological embedding. -/
 lemma cycleComponentMap_isClosedEmbedding
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     IsClosedEmbedding (cycleComponentMap structureMap x) := by
   exact isClosedEmbedding_map_of_closedImmersion
     (i := cycleComponentι X x) (structureMapA :=
@@ -55,7 +55,7 @@ lemma cycleComponentMap_isClosedEmbedding
 /-- The analytification of a reduced cycle component is canonically homeomorphic to its
 analytic support in the ambient variety. -/
 def cycleComponentPointHomeomorphSupport
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     ComplexPoint (cycleComponent X x)
         (cycleComponentι X x ≫ structureMap) ≃ₜ
       cycleComponentSupport structureMap x :=
@@ -64,7 +64,7 @@ def cycleComponentPointHomeomorphSupport
 
 @[simp]
 lemma cycleComponentPointHomeomorphSupport_apply
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
     (z : ComplexPoint (cycleComponent X x)
       (cycleComponentι X x ≫ structureMap)) :
     cycleComponentPointHomeomorphSupport structureMap x z =
@@ -74,7 +74,7 @@ lemma cycleComponentPointHomeomorphSupport_apply
 /-- The underlying equivalence of the component-support homeomorphism is the previously
 constructed point equivalence. -/
 lemma cycleComponentPointHomeomorphSupport_toEquiv
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     (cycleComponentPointHomeomorphSupport structureMap x).toEquiv =
       cycleComponentPointEquivSupport structureMap x := by
   apply Equiv.ext
@@ -84,7 +84,7 @@ lemma cycleComponentPointHomeomorphSupport_toEquiv
 /-- The smooth analytic locus of a component is homeomorphic to its image in the ambient
 analytic variety. -/
 def cycleComponentSmoothPointHomeomorphSupport
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     cycleComponentSmoothAnalyticLocus structureMap x ≃ₜ
       cycleComponentSmoothSupport structureMap x :=
   (cycleComponentMap_isClosedEmbedding structureMap x).toIsEmbedding.homeomorphImage
@@ -92,7 +92,7 @@ def cycleComponentSmoothPointHomeomorphSupport
 
 @[simp]
 lemma cycleComponentSmoothPointHomeomorphSupport_apply
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
     (z : cycleComponentSmoothAnalyticLocus structureMap x) :
     (cycleComponentSmoothPointHomeomorphSupport structureMap x z : (ComplexPoint X structureMap)) =
       cycleComponentMap structureMap x z := by

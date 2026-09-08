@@ -164,7 +164,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 /-- The rational Chow class represented by an irreducible codimension-`p` component with
 coefficient one. -/
 def rationalComponentChowClass
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (p : ℕ)
     (x : X) (hx : coheight x = p) : RationalChowGroup X p :=
   ChowGroup.toRational (ChowGroup.mk (CodimensionCycle.single x hx 1))
 
@@ -173,7 +173,7 @@ def rationalComponentChowClass
 /-- A codimension-zero cycle maps to the constant cohomology class given by the coefficient of
 the generic component. -/
 def codimensionZeroCycleClassOnCycles
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     CodimensionCycle X 0 →+ FieldCohomology ℚ structureMap 0 :=
   (fieldCohomologyClassAddHom ℚ structureMap).comp
     ((Int.castAddHom ℚ).comp CodimensionCycle.integralEquiv.toAddMonoidHom)
@@ -182,7 +182,7 @@ def codimensionZeroCycleClassOnCycles
 of the data of the cycle-class map: the rational-equivalence subgroup is trivial in codimension
 zero. -/
 lemma rationalEquivalenceSubgroup_le_codimensionZeroCycleClassOnCycles_ker
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     rationalEquivalenceSubgroup X 0 ≤
       (codimensionZeroCycleClassOnCycles structureMap).ker := by
   rw [rationalEquivalenceSubgroup_zero]
@@ -190,7 +190,7 @@ lemma rationalEquivalenceSubgroup_le_codimensionZeroCycleClassOnCycles_ker
 
 /-- The genuine integral codimension-zero cycle-class map on the Chow group. -/
 def codimensionZeroChowCycleClass
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     ChowGroup X 0 →+ FieldCohomology ℚ structureMap 0 :=
   ChowGroup.liftCycleClass (codimensionZeroCycleClassOnCycles structureMap)
     (rationalEquivalenceSubgroup_le_codimensionZeroCycleClassOnCycles_ker structureMap)
@@ -198,7 +198,7 @@ def codimensionZeroChowCycleClass
 /-- Evaluation of the integral codimension-zero class map on a represented cycle. -/
 @[simp] lemma codimensionZeroChowCycleClass_mk
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (z : CodimensionCycle X 0) :
+    [IsProjective structureMap] (z : CodimensionCycle X 0) :
     codimensionZeroChowCycleClass structureMap (ChowGroup.mk z) =
       codimensionZeroCycleClassOnCycles structureMap z := by
   exact ChowGroup.liftCycleClass_mk _ _ _
@@ -206,13 +206,13 @@ def codimensionZeroChowCycleClass
 /-- The rational codimension-zero Chow group of an integral variety maps to degree-zero
 cohomology by rational extension of the integral class map. -/
 def codimensionZeroCycleClass
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     RationalChowGroup X 0 →ₗ[ℚ] FieldCohomology ℚ structureMap 0 :=
   ChowGroup.rationalExtension (codimensionZeroChowCycleClass structureMap)
 
 /-- The generic component with coefficient one maps to the unit in degree-zero cohomology. -/
 @[simp] lemma codimensionZeroCycleClass_genericPoint
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     codimensionZeroCycleClass structureMap
         (ChowGroup.toRational
           (ChowGroup.mk (CodimensionCycle.single (genericPoint X)
@@ -236,7 +236,7 @@ def codimensionZeroCycleClass
 
 /-- The actual codimension-zero algebraic cycle-class span. -/
 def codimensionZeroCycleClassSpan
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     Submodule ℚ (FieldCohomology ℚ structureMap 0) :=
   LinearMap.range (codimensionZeroCycleClass structureMap)
 
@@ -244,7 +244,7 @@ def codimensionZeroCycleClassSpan
 unit. This statement does not assert that the unit spans all of `H⁰`; that further conclusion
 requires connectedness of the analytic space. -/
 lemma codimensionZeroCycleClassSpan_eq_span_unit
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     codimensionZeroCycleClassSpan structureMap =
       Submodule.span ℚ {fieldCohomologyUnit ℚ structureMap} := by
   apply le_antisymm
@@ -265,13 +265,13 @@ lemma codimensionZeroCycleClassSpan_eq_span_unit
 /-- Rational constant-sheaf cohomology supported on a closed subset of an analytification. -/
 abbrev RationalConstantSheafCohomologyWithSupport
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :=
+    [IsProjective structureMap] (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :=
   RationalCohomologyWithSupport structureMap Z n
 
 /-- The rational span in ordinary cohomology of classes supported on `Z`. -/
 def rationalCohomologySupportedOn
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
+    [IsProjective structureMap] (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
     Submodule ℚ (FieldCohomology ℚ structureMap n) :=
   Submodule.span ℚ (Set.range (forgetSupport structureMap Z n))
 
@@ -280,7 +280,7 @@ irreducible component. This is a property inside ordinary rational cohomology; i
 that the supported image is one-dimensional. Cohomological purity proves that such a generator
 is precisely a nonzero rational multiple of the component's fundamental class. -/
 def IsRationalComponentCycleClass
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap]
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap]
     (p : ℕ) (x : X) (α : FieldCohomology ℚ structureMap (2 * (p : ℤ))) : Prop :=
   α ∈ rationalCohomologySupportedOn structureMap
       (cycleComponentSupport structureMap x) (2 * (p : ℤ)) ∧
@@ -292,13 +292,13 @@ def IsRationalComponentCycleClass
 of all generators removes the arbitrary choice of generator and its rational scaling. -/
 def rationalComponentCycleClassLine
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X) :
+    [IsProjective structureMap] (p : ℕ) (x : X) :
     Submodule ℚ (FieldCohomology ℚ structureMap (2 * (p : ℤ))) :=
   Submodule.span ℚ {α | IsRationalComponentCycleClass structureMap p x α}
 
 /-- Any generator of the supported image computes the same intrinsic component line. -/
 lemma rationalComponentCycleClassLine_eq_span
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (p : ℕ) (x : X)
     (α : FieldCohomology ℚ structureMap (2 * (p : ℤ)))
     (hα : IsRationalComponentCycleClass structureMap p x α) :
     rationalComponentCycleClassLine structureMap p x = Submodule.span ℚ {α} := by
@@ -319,12 +319,12 @@ particular supported class: its fundamental-class line is the whole supported im
 critical degree. -/
 def RationalComponentCycleClassPurity
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X) : Prop :=
+    [IsProjective structureMap] (p : ℕ) (x : X) : Prop :=
   rationalComponentCycleClassLine structureMap p x =
     rationalCohomologySupportedOn structureMap (cycleComponentSupport structureMap x) (2 * (p : ℤ))
 
 lemma rationalComponentCycleClassLine_eq_supportedOn_of_purity
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (p : ℕ) (x : X)
     (h : RationalComponentCycleClassPurity structureMap p x) :
     rationalComponentCycleClassLine structureMap p x =
       rationalCohomologySupportedOn structureMap
@@ -334,7 +334,7 @@ lemma rationalComponentCycleClassLine_eq_supportedOn_of_purity
 /-- The component cycle-class line lies in the image of cohomology supported on that component. -/
 lemma rationalComponentCycleClassLine_le_supportedOn
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (x : X) :
+    [IsProjective structureMap] (p : ℕ) (x : X) :
     rationalComponentCycleClassLine structureMap p x ≤
       rationalCohomologySupportedOn structureMap
         (cycleComponentSupport structureMap x) (2 * (p : ℤ)) := by
@@ -347,20 +347,20 @@ the range of the genuine Chow-group cycle-class map constructed above. In positi
 a component contributes only through a generator of its supported image; cohomological purity
 identifies this line with the usual class `cl(Z)`. -/
 def algebraicCycleClassSpan
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (p : ℕ) :
     Submodule ℚ (FieldCohomology ℚ structureMap (2 * (p : ℤ))) :=
   if hp : p = 0 then hp ▸ codimensionZeroCycleClassSpan structureMap
   else ⨆ (x : X) (_ : coheight x = p), rationalComponentCycleClassLine structureMap p x
 
 @[simp]
 lemma algebraicCycleClassSpan_zero
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     algebraicCycleClassSpan structureMap 0 = codimensionZeroCycleClassSpan structureMap := by
   simp [algebraicCycleClassSpan]
 
 lemma algebraicCycleClassSpan_of_ne_zero
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (p : ℕ) (hp : p ≠ 0) :
+    [IsProjective structureMap] (p : ℕ) (hp : p ≠ 0) :
     algebraicCycleClassSpan structureMap p =
       ⨆ (x : X) (_ : coheight x = p), rationalComponentCycleClassLine structureMap p x := by
   simp [algebraicCycleClassSpan, hp]
@@ -368,7 +368,7 @@ lemma algebraicCycleClassSpan_of_ne_zero
 /-- Every ordinary rational cohomology class is represented with support on the whole analytic
 space. -/
 lemma rationalCohomologySupportedOn_univ_eq_top
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (n : ℤ) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (n : ℤ) :
     rationalCohomologySupportedOn structureMap Set.univ n = ⊤ := by
   apply top_unique
   intro α _
@@ -378,7 +378,7 @@ lemma rationalCohomologySupportedOn_univ_eq_top
 /-- The component belonging to the generic point of an integral variety has the whole analytic
 space as its support. -/
 lemma cycleComponentSupport_genericPoint_eq_univ
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     cycleComponentSupport structureMap (genericPoint X) = Set.univ := by
   rw [cycleComponentSupport, genericPoint_closure]
   exact Set.preimage_univ
@@ -387,7 +387,7 @@ lemma cycleComponentSupport_genericPoint_eq_univ
 irreducible algebraic subvarieties of codimension `p`. This is not the cycle-class span unless a
 purity theorem identifying each relevant image with its fundamental-class line is supplied. -/
 def rationalConiveauSubspace
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (p : ℕ) :
     Submodule ℚ (FieldCohomology ℚ structureMap (2 * (p : ℤ))) :=
   ⨆ (x : X) (_ : coheight x = p),
     rationalCohomologySupportedOn structureMap (cycleComponentSupport structureMap x) (2 * (p : ℤ))
@@ -396,7 +396,7 @@ def rationalConiveauSubspace
 support on the whole space imposes no condition. This is a statement about coniveau, not about
 the span of the codimension-zero cycle class. -/
 lemma rationalConiveauSubspace_zero_eq_top
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     rationalConiveauSubspace structureMap 0 = ⊤ := by
   apply top_unique
   rw [← rationalCohomologySupportedOn_univ_eq_top structureMap 0,
@@ -408,7 +408,7 @@ lemma rationalConiveauSubspace_zero_eq_top
 /-- Forgetting the support of a class on one codimension-`p` component lands in the corresponding
 coniveau subspace. -/
 lemma forgetSupport_mem_rationalConiveauSubspace
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (p : ℕ)
     (x : X) (hx : coheight x = p)
     (α : RationalConstantSheafCohomologyWithSupport structureMap
       (cycleComponentSupport structureMap x) (2 * (p : ℤ))) :
@@ -426,7 +426,7 @@ lemma forgetSupport_mem_rationalConiveauSubspace
 the purity statement that arbitrary supported classes in degree `2p` are multiples of the
 fundamental class. -/
 lemma algebraicCycleClassSpan_le_rationalConiveauSubspace
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ) :
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (p : ℕ) :
     algebraicCycleClassSpan structureMap p ≤ rationalConiveauSubspace structureMap p := by
   by_cases hp : p = 0
   · subst p
@@ -444,7 +444,7 @@ been proved for every relevant component, the algebraic cycle-class span agrees 
 coniveau subspace. The separate degree-zero hypothesis records the connectedness calculation
 needed to identify `H⁰` with the line generated by the unit. -/
 lemma algebraicCycleClassSpan_eq_rationalConiveauSubspace_of_purity
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (p : ℕ)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (p : ℕ)
     (hzero : p = 0 → codimensionZeroCycleClassSpan structureMap = ⊤)
     (h : ∀ (x : X), coheight x = p →
       RationalComponentCycleClassPurity structureMap p x) :

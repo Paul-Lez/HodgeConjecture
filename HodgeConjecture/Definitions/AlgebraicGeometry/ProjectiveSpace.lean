@@ -132,6 +132,16 @@ structure Presentation (f : X ⟶ T) where
   immersion_toBase :
     immersion ≫ toBase (Fin (ambientDimension + 1)) T = f
 
+end ProjectiveSpace
+
+namespace AlgebraicGeometry
+
+open ProjectiveSpace
+
+universe w
+
+variable {X T : Scheme.{w}}
+
 /-- A scheme morphism is projective if it admits a finite-dimensional projective presentation. -/
 class IsProjective (f : X ⟶ T) : Prop where
   /-- A finite-dimensional projective presentation exists. -/
@@ -147,4 +157,4 @@ instance IsProjective.isProper {f : X ⟶ T} [h : IsProjective f] : IsProper f :
   rw [P.immersion_toBase] at hcomp
   exact hcomp
 
-end ProjectiveSpace
+end AlgebraicGeometry

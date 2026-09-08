@@ -94,7 +94,7 @@ noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
     TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
 
 variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
-  [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] {x : X}
+  [Smooth structureMap] [IsProjective structureMap] {x : X}
   [SmoothOfRelativeDimension d structureMap]
   (C : CycleComponentSeparateLocalCoordinates structureMap x d n)
 
@@ -150,7 +150,7 @@ lemma neighborhoodLocalCoclass_unique
 coordinate package whose normalized point-supported coclass generates local cohomology. -/
 lemma exists_span_neighborhoodLocalCoclass_eq_top
     (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [IsProjective structureMap] (x : X) (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) :
     ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d (d - p),

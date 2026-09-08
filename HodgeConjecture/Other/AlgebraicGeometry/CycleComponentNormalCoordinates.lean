@@ -189,7 +189,7 @@ lemma SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
 coheight exactly `d - p` inside that component. -/
 lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] [SmoothOfRelativeDimension d structureMap]
+    [IsProjective structureMap] [SmoothOfRelativeDimension d structureMap]
     (x : X) (z : ComplexPoint (cycleComponent X x)
       (cycleComponentι X x ≫ structureMap))
     (hx : Order.coheight x = p) (hd : d ≤ 2) :
@@ -255,7 +255,7 @@ variety.  The component coordinates use exactly `n` variables.  This package doe
 that the two coordinate systems straighten the closed immersion simultaneously. -/
 structure CycleComponentSeparateLocalCoordinates
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d n : ℕ)
+    [IsProjective structureMap] (x : X) (d n : ℕ)
     [SmoothOfRelativeDimension d structureMap] where
   /-- A complex point of the reduced component. -/
   point : ComplexPoint (cycleComponent X x)
@@ -295,7 +295,7 @@ structure CycleComponentSeparateLocalCoordinates
 locus.  This is an internal bridge from the dimension calculation to the coordinate package. -/
 private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d n : ℕ)
+    [IsProjective structureMap] (x : X) (d n : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hcoheight : ∀ z : ComplexPoint (cycleComponent X x)
       (cycleComponentι X x ≫ structureMap),
@@ -363,7 +363,7 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
 component and ambient étale coordinates, with exactly `d - p` component coordinates. -/
 lemma nonempty_cycleComponentSeparateLocalCoordinates_of_le_two
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [IsProjective structureMap] (x : X) (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : d ≤ 2) :
     Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d (d - p)) := by
@@ -374,7 +374,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_of_le_two
 /-- A zero-dimensional reduced component in a smooth complex `d`-fold has a local étale chart
 with no component coordinates and an independent ambient chart with `d` coordinates. -/
 lemma nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_eq_dimension
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X) (d : ℕ)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) (d : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = d) :
     Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d 0) := by
@@ -389,7 +389,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_eq_dimension
 with one component coordinate and an independent ambient chart with `d` coordinates. -/
 lemma nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_succ_eq_dimension
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [IsProjective structureMap] (x : X) (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : p + 1 = d) :
     Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d 1) := by

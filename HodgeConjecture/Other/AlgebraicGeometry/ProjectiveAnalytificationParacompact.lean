@@ -39,7 +39,7 @@ open CategoryTheory
 namespace AlgebraicGeometry.ComplexPoint
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
-  [ProjectiveSpace.IsProjective structureMap]
+  [IsProjective structureMap]
 
 /-- Every open subset of a smooth projective complex analytification is paracompact. -/
 theorem openParacompactSpace [SmoothOfRelativeDimension d structureMap]

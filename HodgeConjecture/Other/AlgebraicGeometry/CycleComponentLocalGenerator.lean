@@ -47,7 +47,7 @@ noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
     TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
 
 variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
-  [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] {x : X}
+  [Smooth structureMap] [IsProjective structureMap] {x : X}
   [SmoothOfRelativeDimension d structureMap]
 
 namespace CycleComponentSeparateLocalCoordinates
@@ -57,13 +57,13 @@ variable (C : CycleComponentSeparateLocalCoordinates structureMap x d n)
 /-- The smooth locus of the reduced cycle component underlying an exact coordinate package. -/
 abbrev componentSmoothLocus
     (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) :=
+    [IsProjective structureMap] (x : X) :=
   (cycleComponentι X x ≫ structureMap).smoothLocus
 
 /-- The complex structure map on the component's smooth locus. -/
 abbrev componentSmoothStructureMap
     (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) :
+    [IsProjective structureMap] (x : X) :
     (componentSmoothLocus structureMap x).toScheme ⟶ Spec ↧ℂ :=
   (componentSmoothLocus structureMap x).ι ≫ cycleComponentι X x ≫ structureMap
 
@@ -352,7 +352,7 @@ noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
     TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
 
 variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
-  [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] {x : X}
+  [Smooth structureMap] [IsProjective structureMap] {x : X}
   [SmoothOfRelativeDimension d structureMap]
   (C : CycleComponentSeparateLocalCoordinates structureMap x d n)
 
@@ -392,7 +392,7 @@ lemma span_neighborhoodLocalClass_eq_top :
 actual analytic chart whose transported class generates the chart map's image. -/
 lemma exists_span_neighborhoodLocalClass_eq_range_of_le_two
     (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [IsProjective structureMap] (x : X) (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : d ≤ 2) :
     ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d (d - p),
@@ -406,7 +406,7 @@ lemma exists_span_neighborhoodLocalClass_eq_range_of_le_two
 the full local homology at the selected smooth component point. -/
 lemma exists_span_neighborhoodLocalClass_eq_top_of_le_two
     (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [IsProjective structureMap] (x : X) (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : d ≤ 2) :
     ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d (d - p),
@@ -419,7 +419,7 @@ lemma exists_span_neighborhoodLocalClass_eq_top_of_le_two
 class generates the chart map's image. -/
 lemma exists_span_neighborhoodLocalClass_eq_range_of_coheight_eq_dimension
     (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d : ℕ)
+    [IsProjective structureMap] (x : X) (d : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = d) :
     ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d 0,
@@ -434,7 +434,7 @@ lemma exists_span_neighborhoodLocalClass_eq_range_of_coheight_eq_dimension
 at the selected smooth point. -/
 lemma exists_span_neighborhoodLocalClass_eq_top_of_coheight_eq_dimension
     (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d : ℕ)
+    [IsProjective structureMap] (x : X) (d : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = d) :
     ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d 0,
@@ -448,7 +448,7 @@ lemma exists_span_neighborhoodLocalClass_eq_top_of_coheight_eq_dimension
 class generates the chart map's image. -/
 lemma exists_span_neighborhoodLocalClass_eq_range_of_coheight_succ_eq_dimension
     (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [IsProjective structureMap] (x : X) (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : p + 1 = d) :
     ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d 1,
@@ -463,7 +463,7 @@ lemma exists_span_neighborhoodLocalClass_eq_range_of_coheight_succ_eq_dimension
 smooth point. -/
 lemma exists_span_neighborhoodLocalClass_eq_top_of_coheight_succ_eq_dimension
     (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [IsProjective structureMap] (x : X) (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hd : p + 1 = d) :
     ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d 1,

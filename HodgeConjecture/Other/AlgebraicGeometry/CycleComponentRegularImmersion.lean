@@ -40,7 +40,7 @@ open CategoryTheory Topology
 namespace AlgebraicGeometry
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) [IsIntegral X] [Smooth structureMap]
-  [ProjectiveSpace.IsProjective structureMap] (x : X)
+  [IsProjective structureMap] (x : X)
 
 /-- The component stalk at a point in the component's smooth locus is regular local. -/
 lemma cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus
@@ -59,7 +59,7 @@ lemma cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus
     ((cycleComponent X x).presheaf.stalk z) _
     (U.stalkIso zu).commRingCatIsoToRingEquiv
 
-omit [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] in
+omit [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] in
 /-- The ambient stalk at a point of a cycle component in a smooth complex variety is regular
 local. -/
 lemma cycleComponent_ambient_stalk_isRegularLocalRing
@@ -84,7 +84,7 @@ lemma cycleComponent_stalkMap_quotient_isRegularLocalRing_of_mem_smoothLocus
     ((cycleComponent X x).presheaf.stalk z) _ hregular _ _
     (RingHom.quotientKerEquivOfSurjective hsurj).symm
 
-omit [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] in
+omit [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] in
 /-- The kernel of the cycle-component stalk map is finitely generated. -/
 lemma cycleComponent_stalkMap_ker_fg
     {d : ℕ} [SmoothOfRelativeDimension d structureMap]

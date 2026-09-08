@@ -141,7 +141,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) {d p : ℕ}
 /-- Every closed point of the reduced closure of a codimension-`p` point in a smooth complex
 `d`-fold has coheight `d - p` inside that reduced closure. -/
 lemma cycleComponent_closedPoint_coheight_eq_sub
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
     (z : cycleComponent X x)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) (hz : IsClosed {z}) :
@@ -254,7 +254,7 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
 /-- The underlying point of every complex point of a codimension-`p` reduced component has
 coheight `d - p`. -/
 lemma cycleComponent_complexPoint_coheight_eq_sub
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (x : X)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
     (z : ComplexPoint (cycleComponent X x)
       (cycleComponentι X x ≫ structureMap))
     [SmoothOfRelativeDimension d structureMap]
@@ -267,7 +267,7 @@ lemma cycleComponent_complexPoint_coheight_eq_sub
 ambient étale coordinates, with exactly `d - p` component coordinates. -/
 lemma nonempty_cycleComponentSeparateLocalCoordinates
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [IsProjective structureMap] (x : X) (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) :
     Nonempty (CycleComponentSeparateLocalCoordinates structureMap x d (d - p)) := by
@@ -339,7 +339,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 full local homology at the selected smooth component point. -/
 lemma exists_span_neighborhoodLocalClass_eq_top
     [IsIntegral X] [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (x : X) (d p : ℕ)
+    [IsProjective structureMap] (x : X) (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) :
     ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d (d - p),

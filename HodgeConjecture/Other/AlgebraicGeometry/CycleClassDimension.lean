@@ -36,7 +36,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- A smooth complex `d`-fold has no algebraic points of codimension greater than `d`. -/
 lemma no_cycleComponent_of_lt
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (d p : ℕ)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap] (h : d < p) :
     IsEmpty {x : X // coheight x = p} := by
   constructor
@@ -46,7 +46,7 @@ lemma no_cycleComponent_of_lt
 
 /-- The algebraic cycle-class span is zero above the dimension of a smooth complex variety. -/
 lemma algebraicCycleClassSpan_eq_bot_of_lt
-    [IsIntegral X] [Smooth structureMap] [ProjectiveSpace.IsProjective structureMap] (d p : ℕ)
+    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (d p : ℕ)
     [SmoothOfRelativeDimension d structureMap] (h : d < p) :
     algebraicCycleClassSpan structureMap p = ⊥ := by
   rw [algebraicCycleClassSpan_of_ne_zero structureMap p (by lia)]

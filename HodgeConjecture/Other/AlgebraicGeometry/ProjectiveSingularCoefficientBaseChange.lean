@@ -46,7 +46,7 @@ open AlgebraicTopology.Singular
 open scoped TensorProduct
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
-  [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
+  [IsProjective structureMap] (d : ℕ)
 
 /-- Zeroth rational singular homology of a smooth projective complex analytification is
 finite-dimensional, without assuming global connectedness. -/

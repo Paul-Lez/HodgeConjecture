@@ -37,7 +37,7 @@ resulting space.
 
 A nonsingular projective complex variety is not bundled into a structure. Its data travel as
 an integral scheme `X`, a structure morphism to `Spec ℂ`, and the instance hypotheses `Smooth`
-and `ProjectiveSpace.IsProjective` on that morphism, matching how the rest of this development
+and `IsProjective` on that morphism, matching how the rest of this development
 states its results.
 -/
 
@@ -290,11 +290,11 @@ structure IntegralProjectiveComplexVariety where
   [isIntegral : IsIntegral scheme]
   /-- The structure morphism to `Spec ℂ`. -/
   structureMap : scheme ⟶ Spec ↧ℂ
-  [projective : ProjectiveSpace.IsProjective structureMap]
+  [projective : IsProjective structureMap]
 
 /-- A projective complex scheme is Noetherian. -/
 theorem isNoetherian_of_isProjective {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
-    [ProjectiveSpace.IsProjective structureMap] : IsNoetherian X where
+    [IsProjective structureMap] : IsNoetherian X where
   toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian structureMap
   toCompactSpace := QuasiCompact.compactSpace_of_compactSpace structureMap
 
@@ -305,7 +305,7 @@ instance (V : IntegralProjectiveComplexVariety) : IsIntegral V.scheme := V.isInt
 
 /-- The projective presentation carried by an integral projective complex variety. -/
 instance (V : IntegralProjectiveComplexVariety) :
-    ProjectiveSpace.IsProjective V.structureMap := V.projective
+    IsProjective V.structureMap := V.projective
 
 /-- An integral projective complex variety is Noetherian. -/
 noncomputable instance (V : IntegralProjectiveComplexVariety) : IsNoetherian V.scheme :=

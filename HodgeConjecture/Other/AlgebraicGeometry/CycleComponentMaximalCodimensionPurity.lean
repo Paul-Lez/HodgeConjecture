@@ -71,7 +71,7 @@ conclusion records only the resulting equality of the fundamental-class line and
 image. -/
 theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
     {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
+    [IsProjective structureMap] (d : ℕ)
     [SmoothOfRelativeDimension d structureMap] (x : X) (hx : coheight x = d) :
     RationalComponentCycleClassPurity structureMap d x := by
   unfold RationalComponentCycleClassPurity

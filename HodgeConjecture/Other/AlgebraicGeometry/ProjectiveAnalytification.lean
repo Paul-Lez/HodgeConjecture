@@ -1787,14 +1787,14 @@ theorem complexPoint_compactSpace {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 
 end ProjectiveSpace.Presentation
 
-namespace ProjectiveSpace.IsProjective
+namespace IsProjective
 
 /-- The analytic complex points of a projective complex scheme form a compact space. -/
 noncomputable instance complexPoint_compactSpace {X : Scheme} {f : X ⟶ Spec ↧ℂ}
-    [h : ProjectiveSpace.IsProjective f] : CompactSpace (ComplexPoint X f) :=
+    [h : IsProjective f] : CompactSpace (ComplexPoint X f) :=
   ProjectiveSpace.Presentation.complexPoint_compactSpace
     (Classical.choice h.nonempty_presentation)
 
-end ProjectiveSpace.IsProjective
+end IsProjective
 
 end AlgebraicGeometry

@@ -41,7 +41,7 @@ open TopologicalSpace
 namespace AlgebraicGeometry.ComplexPoint
 
 variable {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-  [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
+  [IsProjective structureMap] (d : ℕ)
 
 /-- On a connected projective analytification, the image of the genuine codimension-zero Chow
 cycle-class map is all of degree-zero rational cohomology. -/

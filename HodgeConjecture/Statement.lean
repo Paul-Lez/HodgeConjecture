@@ -47,6 +47,6 @@ This definition is a proposition, not a proof. It is deliberately untagged becau
 problem metadata treats a sorry-free definition as a solved declaration. -/
 @[expose] public def HodgeConjecture : Prop :=
   ∀ {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
+    [IsProjective structureMap] (d : ℕ)
     [SmoothOfRelativeDimension d structureMap] (p : ℕ),
     hodgeClasses ℚ structureMap d p ≤ algebraicCycleClassSpan structureMap p

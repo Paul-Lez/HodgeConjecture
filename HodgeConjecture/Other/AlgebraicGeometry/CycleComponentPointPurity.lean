@@ -46,7 +46,7 @@ namespace AlgebraicGeometry.ComplexPoint
 open AlgebraicTopology.Singular
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
-  [ProjectiveSpace.IsProjective structureMap] (d : ℕ)
+  [IsProjective structureMap] (d : ℕ)
 
 /-- The ambient chart-local homology class at an analytic point. -/
 def analyticPointLocalHomologyClass [SmoothOfRelativeDimension d structureMap]
