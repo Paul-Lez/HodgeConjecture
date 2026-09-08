@@ -329,7 +329,15 @@ run_cmd do
      "HodgeConjecture.Mathlib.Algebra.Homology.MapArrowConeConnecting",
      "HodgeConjecture.Other.AlgebraicTopology.GlobalRawRelativeConnecting",
      "HodgeConjecture.Other.AlgebraicTopology.SupportedSectionConeConnecting",
-     "HodgeConjecture.Other.AlgebraicGeometry.BettiSupportedOrdinarySign"]
+     "HodgeConjecture.Other.AlgebraicGeometry.BettiSupportedOrdinarySign",
+     "HodgeConjecture.Other.AlgebraicTopology.CohomologySheafSectionRestriction",
+     "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointClassNormalization",
+     "HodgeConjecture.Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization",
+     "HodgeConjecture.Other.AlgebraicTopology.CohomologySheafOpenComparison",
+     "HodgeConjecture.Other.AlgebraicTopology.CohomologySheafOpenRestriction",
+     "HodgeConjecture.Other.AlgebraicTopology.OpenRawRelativeConnecting",
+     "HodgeConjecture.Other.AlgebraicTopology.SupportedSingularOrdinaryComparison",
+     "HodgeConjecture.Other.AlgebraicTopology.OpenRestrictedLowestCohomologyNormalization"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv
   for moduleName in modules do
