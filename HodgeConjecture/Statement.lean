@@ -49,4 +49,4 @@ problem metadata treats a sorry-free definition as a solved declaration. -/
   ∀ {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
     [IsProjective structureMap] (d : ℕ)
     [SmoothOfRelativeDimension d structureMap] (p : ℕ),
-    hodgeClasses ℚ structureMap d p ≤ algebraicCycleClassSpan structureMap p
+    Hdg^p(ℚ; structureMap, d) ≤ algebraicCycleClassSpan structureMap p

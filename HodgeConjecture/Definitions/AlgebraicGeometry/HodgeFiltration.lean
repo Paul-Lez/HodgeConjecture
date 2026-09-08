@@ -1354,12 +1354,18 @@ def hodgeClasses [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
   (hodgeFiltrationSubmodule K structureMap d p (2 * p)).comap
     (fieldToDeRhamCohomologyLinear K structureMap d (2 * p))
 
+/-- `Hdg^p(K; f, d)` is the space of Hodge classes of codimension `p` with coefficients in `K`.
+
+The literature writes `Hdg^p(X)` for the variety `X` alone; here the variety is presented by its
+structure morphism `f` and its relative dimension `d`, and the coefficient field is named. -/
+scoped notation:max "Hdg^" p:max "(" K "; " f ", " d ")" => hodgeClasses K f d p
+
 /-- Above the complex dimension, the rational Hodge subgroup is exactly the kernel of the
 rational-to-de Rham comparison. In particular, showing that comparison injective makes the
 out-of-range Hodge subgroup vanish. -/
 lemma hodgeClasses_eq_ker_of_lt
     [SmoothOfRelativeDimension d structureMap] {p : ℕ} (hp : d < p) :
-    hodgeClasses K structureMap d p =
+    Hdg^p(K; structureMap, d) =
       LinearMap.ker (fieldToDeRhamCohomologyLinear K structureMap d (2 * p)) := by
   rw [hodgeClasses, ← Submodule.comap_bot]
   congr 1
@@ -1376,7 +1382,7 @@ lemma hodgeClasses_eq_bot_of_lt_of_quasiIso
     [SmoothOfRelativeDimension d structureMap]
     (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap d))
     {p : ℕ} (hp : d < p) :
-    hodgeClasses K structureMap d p = ⊥ := by
+    Hdg^p(K; structureMap, d) = ⊥ := by
   rw [hodgeClasses_eq_ker_of_lt K structureMap d hp]
   apply LinearMap.ker_eq_bot.mpr
   exact fieldToDeRhamCohomology_injective_of_quasiIso K structureMap d h (2 * p)
@@ -1384,7 +1390,7 @@ lemma hodgeClasses_eq_bot_of_lt_of_quasiIso
 /-- Rational Hodge classes vanish above the complex dimension. -/
 lemma hodgeClasses_eq_bot_of_lt
     [SmoothOfRelativeDimension d structureMap] {p : ℕ} (hp : d < p) :
-    hodgeClasses K structureMap d p = ⊥ :=
+    Hdg^p(K; structureMap, d) = ⊥ :=
   hodgeClasses_eq_bot_of_lt_of_quasiIso K structureMap d inferInstance hp
 
 /-- Rational Hodge classes described through the rational lattice inside its actual
@@ -1401,7 +1407,7 @@ complexified rational lattice. -/
 lemma hodgeClassesViaComplexification_eq
     [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
     hodgeClassesViaComplexification K structureMap d p =
-      hodgeClasses K structureMap d p := by
+      Hdg^p(K; structureMap, d) := by
   ext α
   change fieldToDeRhamComplexification K structureMap d (2 * (p : ℤ))
       (HodgeStructure.ofBase K
@@ -1416,17 +1422,17 @@ lemma hodgeClassesViaComplexification_eq
 canonical subgroup of rational Hodge classes. -/
 def IsHodgeClass [SmoothOfRelativeDimension d structureMap] (p : ℕ)
     (α : FieldCohomology K structureMap (2 * p)) : Prop :=
-  α ∈ hodgeClasses K structureMap d p
+  α ∈ Hdg^p(K; structureMap, d)
 
 lemma mem_hodgeClasses_iff [SmoothOfRelativeDimension d structureMap]
     (p : ℕ) (α : FieldCohomology K structureMap (2 * p)) :
-    α ∈ hodgeClasses K structureMap d p ↔
+    α ∈ Hdg^p(K; structureMap, d) ↔
       IsHodgeClass K structureMap d p α :=
   Iff.rfl
 
 /-- Every rational degree-zero cohomology class belongs to the rational Hodge subgroup. -/
 lemma hodgeClasses_zero_eq_top [SmoothOfRelativeDimension d structureMap] :
-    hodgeClasses K structureMap d 0 = ⊤ := by
+    Hdg^0(K; structureMap, d) = ⊤ := by
   apply SetLike.ext
   intro α
   change fieldToDeRhamCohomology K structureMap d (2 * (0 : ℕ)) α ∈
@@ -1439,7 +1445,7 @@ lemma hodgeClasses_zero_eq_top [SmoothOfRelativeDimension d structureMap] :
 lemma isHodgeClass_zero [SmoothOfRelativeDimension d structureMap]
     (α : FieldCohomology K structureMap 0) :
     IsHodgeClass K structureMap d 0 α := by
-  change α ∈ hodgeClasses K structureMap d 0
+  change α ∈ Hdg^0(K; structureMap, d)
   rw [hodgeClasses_zero_eq_top]
   trivial
 
