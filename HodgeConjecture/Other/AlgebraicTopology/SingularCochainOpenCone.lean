@@ -7,6 +7,7 @@ module
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainOpenSections
 public import HodgeConjecture.Other.AlgebraicTopology.MappingConeQuasiIso
 public import HodgeConjecture.Other.AlgebraicTopology.RelativeCochainCone
+public import HodgeConjecture.Other.AlgebraicTopology.RelativeCochainConeNaturality
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularGlobalComparison
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtendNaturality
 
@@ -216,7 +217,7 @@ def openRawSingularRestrictionConeCohomologyEquivRelative {V W : Opens X}
     ((CochainComplex.mappingCone
       (relativeCochainRestrictionInt R (openInclusionPair X i))).sc ((n : ℤ) - 1))
     (forget₂ (ModuleCat R) AddCommGrpCat)).addCommGroupIsoToAddEquiv
-    |>.trans (relativeCochainConeCohomologyEquiv R (openInclusionPair X i) n).toAddEquiv
+    |>.trans (relativeCochainConeCohomologyEquivCanonical R (openInclusionPair X i) n).toAddEquiv
 
 /-- Sections of the actual singular sheaf restriction cone compute
 relative rational cohomology. Apply to `Opens.infLELeft V U` for `(V, V ∩ U)`. -/
