@@ -4,6 +4,25 @@ import Lean.Util.CollectAxioms
 
 open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
 
+-- The unconditional public route, including the actual general point normalization.
+#print axioms cycleComponentSupportedClassNormalizationIso
+#print axioms cycleComponentSupportedInjectiveClass
+#print axioms cycleComponentSheafClass
+#print axioms cycleComponentSheafBorelMooreFundamentalClass
+#print axioms sheafCycleClassOnCycles
+#print axioms rationalSheafCycleClassOnCycles
+#print axioms cycleComponentSupportedInjectiveClass_point_normalization
+#print axioms cycleComponentSheafClass_point_normalization
+#print axioms sheafCycleClassOnCycles_sum_single_point_normalization
+#print axioms rationalSheafCycleClassOnCycles_sum_tmul_single_point_normalization
+#print axioms complexSupportInjectiveSectionCohomologyEquiv_inclusion_positive
+#print axioms complexSupportInjectiveSectionCohomologyEquiv_inclusion_eq_neg_legacy
+#print axioms cycleComponentSheafClass_point_raw_positive
+#print axioms cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass
+#print axioms sheafCycleClassOnCycles_eq_neg_pointCycleClassOnCycles
+#print axioms rationalSheafCycleClassOnCycles_eq_neg_rationalPointCycleClassOnCycles
+#print axioms cycleComponentSheafClass_closedPoint_positiveKernel
+
 #print axioms ambientSheafBorelMooreObject
 #print axioms AmbientSheafBorelMooreHomology
 #print axioms IntrinsicSheafBorelMooreHomology
@@ -337,7 +356,11 @@ run_cmd do
      "HodgeConjecture.Other.AlgebraicTopology.CohomologySheafOpenRestriction",
      "HodgeConjecture.Other.AlgebraicTopology.OpenRawRelativeConnecting",
      "HodgeConjecture.Other.AlgebraicTopology.SupportedSingularOrdinaryComparison",
-     "HodgeConjecture.Other.AlgebraicTopology.OpenRestrictedLowestCohomologyNormalization"]
+     "HodgeConjecture.Other.AlgebraicTopology.OpenRestrictedLowestCohomologyNormalization",
+     "HodgeConjecture.Other.Algebra.Homology.MapExtendBettiComparison",
+     "HodgeConjecture.Other.AlgebraicTopology.TopOpenRelativeCochainNormalization",
+     "HodgeConjecture.Other.AlgebraicGeometry.ComplexSupportedOrdinaryComparison",
+     "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointOrdinarySign"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv
   for moduleName in modules do

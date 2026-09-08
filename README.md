@@ -51,8 +51,21 @@ in the actual ambient sheaf Borel–Moore group through the constructed orientat
 `SheafCycleClass.lean` provides `sheafCycleClassOnCycles V p` on integral codimension-`p` cycles
 and `rationalSheafCycleClassOnCycles V p` on their rational scalar extension. These functions
 take only the dimensioned smooth projective complex variety and the codimension; no
-fundamental-class, purity, extension, or duality data are supplied. Exact agreement with the
-older ordinary point-cycle map is still being verified, separately from the construction.
+fundamental-class, purity, extension, or duality data are supplied. They are noncomputable
+Lean functions, with proved evaluation formulas for arbitrary finite integer and rational
+linear combinations.
+
+`CycleComponentPointClassNormalization.lean` proves that the general construction sends a
+point component to the existing exactly normalized relative point coclass, transported by the
+actual relative-to-injective comparison and positive inclusion into ordinary cohomology.
+The proof uses local normalization and uniqueness of the supported extension; the general
+map has no special point branch. Exact integer and rational multiplicity formulas follow.
+`CycleComponentPointOrdinarySign.lean` further displays the actual positive raw-cochain
+inclusion and proves the comparison with the older ordinary point-cycle API: the new integral
+and rational point-cycle maps equal the **negative** of the corresponding legacy maps, whose
+support-cone comparison has the opposite sign. Closed-point corollaries derive the codimension
+from geometry and construct the needed analytic point. The old definitions have not been
+changed or used to rescale the new fundamental classes.
 
 These maps are on **cycles**, not Chow groups: rational-equivalence invariance still requires
 principal-divisor vanishing. They are not yet substituted into `HodgeConjecture.Statement`.
