@@ -30,6 +30,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.SheafCohomologyWithSupport
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
+public import HodgeConjecture.Definitions.Topology.Dimension
 
 /-!
 # Definitions used by the Hodge conjecture statement

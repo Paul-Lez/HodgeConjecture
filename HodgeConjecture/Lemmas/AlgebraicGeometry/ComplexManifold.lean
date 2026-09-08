@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
 public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
 public import Mathlib.Analysis.Normed.Module.Connected
 public import Mathlib.Geometry.Manifold.Complex
@@ -36,7 +37,7 @@ extend that chart from the corresponding analytic open subset to the ambient spa
 
 @[expose] public noncomputable section
 
-open CategoryTheory Topology Filter
+open CategoryTheory Topology TopologicalSpace Filter
 open scoped Manifold ContDiff
 
 namespace AlgebraicGeometry.ComplexPoint
@@ -44,9 +45,6 @@ namespace AlgebraicGeometry.ComplexPoint
 open Point
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
-
-local instance complexManifoldTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
 
 /-- The analytic open subset on which the chosen coordinates at `z` are defined. -/
 abbrev coordinateNeighborhood [SmoothOfRelativeDimension d structureMap]
@@ -122,21 +120,12 @@ lemma localChart_apply_of_mem [SmoothOfRelativeDimension d structureMap]
     (pointInCoordinateNeighborhood structureMap d z) w' hw'
 
 /-- The canonical charted-space structure obtained from algebraic smooth coordinates. -/
-@[instance_reducible]
-instance analyticChartedSpace [SmoothOfRelativeDimension d structureMap] :
+instance [SmoothOfRelativeDimension d structureMap] :
     ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) where
   atlas := Set.range (localChart structureMap d)
   chartAt := localChart structureMap d
   mem_chart_source := mem_localChart_source structureMap d
   chart_mem_atlas z := ⟨z, rfl⟩
-
-/-- Smooth complex points are topological complex manifolds of the specified dimension. -/
-theorem isManifold_zero [SmoothOfRelativeDimension d structureMap] :
-    @IsManifold ℂ _ (Fin d → ℂ) _ _ (Fin d → ℂ) _ 𝓘(ℂ, Fin d → ℂ) 0
-      (ComplexPoint X structureMap) _ (analyticChartedSpace structureMap d) := by
-  let _ : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
-    analyticChartedSpace structureMap d
-  infer_instance
 
 /-- Evaluation of a regular section near an inverse-chart point is complex analytic. -/
 lemma analyticAt_localChart_symm_evaluate
@@ -227,14 +216,9 @@ lemma contDiffOn_localChart_transition
 
 /-- Smooth complex points form a holomorphic complex manifold of the specified dimension. -/
 theorem isManifold_omega [SmoothOfRelativeDimension d structureMap] :
-    @IsManifold ℂ _ (Fin d → ℂ) _ _ (Fin d → ℂ) _ 𝓘(ℂ, Fin d → ℂ) ω
-      (ComplexPoint X structureMap) _ (analyticChartedSpace structureMap d) := by
-  let _ : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
-    analyticChartedSpace structureMap d
+    IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X structureMap) := by
   apply isManifold_of_contDiffOn
-  intro e e' he he'
-  obtain ⟨z, rfl⟩ := he
-  obtain ⟨z', rfl⟩ := he'
+  rintro _ _ ⟨z, rfl⟩ ⟨z', rfl⟩
   simpa only [modelWithCornersSelf_coe, modelWithCornersSelf_coe_symm,
     CompTriple.comp_eq, Function.id_comp, Function.comp_id, Set.preimage_id,
     Set.range_id, Set.inter_univ] using
@@ -243,13 +227,13 @@ theorem isManifold_omega [SmoothOfRelativeDimension d structureMap] :
 /-- Every analytic neighborhood of a smooth complex point contains an open contractible
 neighborhood. The smaller neighborhood is the inverse image of a Euclidean ball in the chosen
 algebraic coordinate chart. -/
-lemma exists_contractibleOpen_le [SmoothOfRelativeDimension d structureMap]
+lemma exists_contractibleOpen_le [IsIntegral X] [Smooth structureMap]
     (x : ComplexPoint X structureMap)
     (U : TopologicalSpace.Opens (ComplexPoint X structureMap)) (hxU : x ∈ U) :
     ∃ (V : TopologicalSpace.Opens (ComplexPoint X structureMap)),
       x ∈ V ∧ ContractibleSpace V ∧ V ≤ U := by
-  let e := localChart structureMap d x
-  have hxsource : x ∈ e.source := mem_localChart_source structureMap d x
+  let e := localChart structureMap (dim X) x
+  have hxsource : x ∈ e.source := mem_localChart_source structureMap (dim X) x
   have hopen : IsOpen (e.target ∩ e.symm ⁻¹' (U : Set _)) :=
     e.isOpen_inter_preimage_symm U.2
   have hximage : e x ∈ e.target ∩ e.symm ⁻¹' (U : Set _) := by
@@ -289,13 +273,13 @@ lemma exists_contractibleOpen_le [SmoothOfRelativeDimension d structureMap]
   exact ⟨V, hxV, hVcontractible, hVU⟩
 
 /-- The analytic topology on the smooth complex-point space is locally path connected. -/
-theorem locallyPathConnectedSpace [SmoothOfRelativeDimension d structureMap] :
+theorem locallyPathConnectedSpace [IsIntegral X] [Smooth structureMap] :
     LocallyPathConnectedSpace (ComplexPoint X structureMap) := by
   refine ⟨fun x ↦ hasBasis_self.mpr fun S hS ↦ ?_⟩
   obtain ⟨U, hUS, hUopen, hxU⟩ := mem_nhds_iff.mp hS
   let Uo : TopologicalSpace.Opens (ComplexPoint X structureMap) := ⟨U, hUopen⟩
   obtain ⟨V, hxV, hVcontractible, hVU⟩ :=
-    exists_contractibleOpen_le structureMap d x Uo hxU
+    exists_contractibleOpen_le structureMap x Uo hxU
   let _ : ContractibleSpace V := hVcontractible
   refine ⟨(V : Set _), V.2.mem_nhds hxV, ?_, ?_⟩
   · rw [isPathConnected_iff_pathConnectedSpace]

@@ -48,14 +48,14 @@ open AlgebraicTopology.Singular
 open scoped TensorProduct
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
-  [IsProjective structureMap] (d : ℕ)
+  [IsProjective structureMap]
 
 /-- Zeroth rational singular homology of a smooth projective complex analytification is
 finite-dimensional, without assuming global connectedness. -/
-theorem finiteRationalSingularHomologyZero [SmoothOfRelativeDimension d structureMap] :
+theorem finiteRationalSingularHomologyZero [IsIntegral X] [Smooth structureMap] :
     Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) := by
   let _ : Finite (ZerothHomotopy (ComplexPoint X structureMap)) :=
-    finiteZerothHomotopy structureMap d
+    finiteZerothHomotopy structureMap
   have hfinite : Module.Finite ℚ
       (∐ fun _ : ZerothHomotopy (ComplexPoint X structureMap) ↦
         ModuleCat.of ℚ ℚ : ModuleCat ℚ) :=
@@ -66,11 +66,11 @@ theorem finiteRationalSingularHomologyZero [SmoothOfRelativeDimension d structur
 
 /-- Rational-to-complex singular cohomology base change for projective analytifications in
 degree zero. -/
-def rationalToComplexCohomologyBaseChangeZero [SmoothOfRelativeDimension d structureMap] :
+def rationalToComplexCohomologyBaseChangeZero [IsIntegral X] [Smooth structureMap] :
     ℂ ⊗[ℚ] Cohomology ℚ (TopCat.of (ComplexPoint X structureMap)) 0 ≃ₗ[ℂ]
       Cohomology ℂ (TopCat.of (ComplexPoint X structureMap)) 0 :=
   letI : Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) :=
-    finiteRationalSingularHomologyZero structureMap d
+    finiteRationalSingularHomologyZero structureMap
   rationalToComplexCohomologyBaseChange (TopCat.of (ComplexPoint X structureMap)) 0
 
 end AlgebraicGeometry.ComplexPoint

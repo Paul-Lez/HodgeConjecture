@@ -41,20 +41,6 @@ variable {X Y : Scheme}
   (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMapX)
   (d e : ℕ)
 
-local instance sourceTopology :
-    TopologicalSpace (ComplexPoint X structureMapX) := analyticTopology
-
-local instance targetTopology :
-    TopologicalSpace (ComplexPoint Y structureMapY) := analyticTopology
-
-local instance sourceChartedSpace [SmoothOfRelativeDimension d structureMapX] :
-    ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMapX) :=
-  analyticChartedSpace structureMapX d
-
-local instance targetChartedSpace [SmoothOfRelativeDimension e structureMapY] :
-    ChartedSpace (Fin e → ℂ) (ComplexPoint Y structureMapY) :=
-  analyticChartedSpace structureMapY e
-
 /-- In algebraic coordinate charts, each component of a morphism of smooth complex schemes is
 complex analytic. -/
 lemma analyticAt_localChart_symm_map_component

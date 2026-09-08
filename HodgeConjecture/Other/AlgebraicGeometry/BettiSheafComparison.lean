@@ -35,10 +35,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
-
-local instance bettiSheafComparisonTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The rational constant-sheaf comparison with the integer-indexed singular-cochain
 resolution. -/
@@ -50,10 +47,10 @@ def rationalToSingularCochainComplexInt :
 /-- The rational constant-to-singular comparison is a quasi-isomorphism on a smooth
 complex-point space. -/
 lemma rationalToSingularCochainComplexInt_quasiIso
-    [SmoothOfRelativeDimension d structureMap] :
+    [IsIntegral X] [Smooth structureMap] :
     QuasiIso (rationalToSingularCochainComplexInt structureMap) := by
   change QuasiIso (constantsToSingularCochainComplexInt structureMap ℚ)
-  exact constantsToSingularCochainComplexInt_quasiIso structureMap d ℚ
+  exact constantsToSingularCochainComplexInt_quasiIso structureMap ℚ
 
 /-- Hypercohomology of the integer-indexed rational singular-cochain sheaf complex. -/
 abbrev RationalSingularCochainHypercohomology (n : ℤ) : Type 1 :=
@@ -62,38 +59,38 @@ abbrev RationalSingularCochainHypercohomology (n : ℤ) : Type 1 :=
 /-- Rational constant-sheaf cohomology is canonically equivalent to the hypercohomology of its
 singular-cochain resolution. -/
 def rationalCohomologySingularCochainEquiv
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
     FieldCohomology ℚ structureMap n ≃
       RationalSingularCochainHypercohomology structureMap n :=
   Localization.SmallShiftedHom.postcompEquiv
     (rationalToSingularCochainComplexInt structureMap)
-    (rationalToSingularCochainComplexInt_quasiIso structureMap d)
+    (rationalToSingularCochainComplexInt_quasiIso structureMap)
 
 /-- The comparison equivalence is the map on hypercohomology induced by the canonical
 constant-to-singular-cochain morphism. -/
 lemma rationalCohomologySingularCochainEquiv_apply
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ)
+    [IsIntegral X] [Smooth structureMap] (n : ℤ)
     (α : FieldCohomology ℚ structureMap n) :
-    rationalCohomologySingularCochainEquiv structureMap d n α =
+    rationalCohomologySingularCochainEquiv structureMap n α =
       hypercohomologyMap structureMap
         (rationalToSingularCochainComplexInt structureMap) n α :=
   rfl
 
 /-- The rational constant-to-singular comparison is additive. -/
 def rationalCohomologySingularCochainAddEquiv
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
     FieldCohomology ℚ structureMap n ≃+
       RationalSingularCochainHypercohomology structureMap n where
-  toEquiv := rationalCohomologySingularCochainEquiv structureMap d n
+  toEquiv := rationalCohomologySingularCochainEquiv structureMap n
   map_add' α β :=
     (hypercohomologyMap structureMap
       (rationalToSingularCochainComplexInt structureMap) n).map_add α β
 
 @[simp]
 lemma rationalCohomologySingularCochainAddEquiv_apply
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ)
+    [IsIntegral X] [Smooth structureMap] (n : ℤ)
     (α : FieldCohomology ℚ structureMap n) :
-    rationalCohomologySingularCochainAddEquiv structureMap d n α =
+    rationalCohomologySingularCochainAddEquiv structureMap n α =
       hypercohomologyMap structureMap
         (rationalToSingularCochainComplexInt structureMap) n α :=
   rfl

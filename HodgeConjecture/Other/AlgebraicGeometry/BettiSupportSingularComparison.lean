@@ -87,9 +87,6 @@ open AlgebraicTopology.Singular
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
-local instance bettiSupportSingularComparisonTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
-
 set_option backward.isDefEq.respectTransparency false in
 /-- Constant singular zero-cochains commute with restriction to an analytic complement. -/
 lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction

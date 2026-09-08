@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
+public import HodgeConjecture.Definitions.Topology.Dimension
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Lemmas.Algebra.Homology.StupidTruncation
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
@@ -49,14 +50,10 @@ namespace AlgebraicGeometry.ComplexPoint
 open Point
 
 variable (K : Type) [Field K] [Algebra K ℂ]
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 local instance hodgeFiltrationTopology :
     TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
-
-local instance hodgeFiltrationChartedSpace [SmoothOfRelativeDimension d structureMap] :
-    ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
-  analyticChartedSpace structureMap d
 
 /-- Sheaves of additive groups on the analytic complex-point space. -/
 abbrev AnalyticAdditiveSheaf :=
@@ -166,11 +163,11 @@ lemma fieldToComplexConstantSheafComplexInt_comp_complexToField :
   exact HomologicalComplex.extendMap_id _ _
 
 /-- Rational constants mapped canonically into the holomorphic de Rham complex. -/
-def fieldToHolomorphicDeRhamComplexInt [SmoothOfRelativeDimension d structureMap] :
+def fieldToHolomorphicDeRhamComplexInt [IsIntegral X] [Smooth structureMap] :
     constantFieldSheafComplexInt K structureMap ⟶
-      holomorphicDeRhamComplexInt structureMap d :=
+      holomorphicDeRhamComplexInt structureMap :=
   fieldToComplexConstantSheafComplexInt K structureMap ≫
-    constantsToHolomorphicDeRhamComplexInt structureMap d
+    constantsToHolomorphicDeRhamComplexInt structureMap
 
 /-- The constant integer sheaf on the analytic complex-point space. -/
 def constantIntegerSheaf : AnalyticAdditiveSheaf structureMap :=
@@ -486,11 +483,11 @@ lemma fieldToComplexConstantSheafComplexInt_scalar (q : K) :
 /-- The rational-to-de Rham comparison of complexes commutes with rational scalar
 multiplication. -/
 lemma fieldToHolomorphicDeRhamComplexInt_scalar
-    [SmoothOfRelativeDimension d structureMap] (q : K) :
-    fieldToHolomorphicDeRhamComplexInt K structureMap d ≫
-      scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ q) =
+    [IsIntegral X] [Smooth structureMap] (q : K) :
+    fieldToHolomorphicDeRhamComplexInt K structureMap ≫
+      scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ q) =
     fieldScalarComplex K structureMap q ≫
-      fieldToHolomorphicDeRhamComplexInt K structureMap d := by
+      fieldToHolomorphicDeRhamComplexInt K structureMap := by
   unfold fieldToHolomorphicDeRhamComplexInt
   rw [Category.assoc, constantsToHolomorphicDeRhamComplexInt_scalar]
   rw [← Category.assoc,
@@ -611,18 +608,18 @@ def fieldCohomologyUnit : FieldCohomology K structureMap 0 :=
   fieldCohomologyClass K structureMap 1
 
 /-- Hypercohomology of the holomorphic de Rham complex in integer degree `n`. -/
-abbrev DeRhamHypercohomology [SmoothOfRelativeDimension d structureMap] (n : ℤ) : Type 1 :=
-  Hypercohomology structureMap (holomorphicDeRhamComplexInt structureMap d) n
+abbrev DeRhamHypercohomology [IsIntegral X] [Smooth structureMap] (n : ℤ) : Type 1 :=
+  Hypercohomology structureMap (holomorphicDeRhamComplexInt structureMap) n
 
 /-- A proved constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
 equivalence on hypercohomology. -/
 def complexConstantCohomologyDeRhamEquiv
-    [SmoothOfRelativeDimension d structureMap]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap d)) (n : ℤ) :
+    [IsIntegral X] [Smooth structureMap]
+    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap)) (n : ℤ) :
     ComplexConstantCohomology structureMap n ≃
-      DeRhamHypercohomology structureMap d n :=
+      DeRhamHypercohomology structureMap n :=
   Localization.SmallShiftedHom.postcompEquiv
-    (constantsToHolomorphicDeRhamComplexInt structureMap d) h
+    (constantsToHolomorphicDeRhamComplexInt structureMap) h
 
 /-- Postcomposition on hypercohomology by a map of complexes. -/
 def hypercohomologyMap
@@ -704,12 +701,12 @@ def hypercohomologyMap
   simp [eK]
 
 lemma complexConstantCohomologyDeRhamEquiv_apply
-    [SmoothOfRelativeDimension d structureMap]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap d)) (n : ℤ)
+    [IsIntegral X] [Smooth structureMap]
+    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap)) (n : ℤ)
     (α : ComplexConstantCohomology structureMap n) :
-    complexConstantCohomologyDeRhamEquiv structureMap d h n α =
+    complexConstantCohomologyDeRhamEquiv structureMap h n α =
       hypercohomologyMap structureMap
-        (constantsToHolomorphicDeRhamComplexInt structureMap d) n α :=
+        (constantsToHolomorphicDeRhamComplexInt structureMap) n α :=
   rfl
 
 /-- Extension of coefficients from rational to complex constant-sheaf cohomology. -/
@@ -862,43 +859,43 @@ noncomputable instance fieldCohomologyModule (n : ℤ) :
 
 /-- The complex action on holomorphic de Rham hypercohomology, induced by scalar multiplication
 on the holomorphic de Rham complex. -/
-def deRhamComplexSMul [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology structureMap d n) :
-    DeRhamHypercohomology structureMap d n :=
+def deRhamComplexSMul [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology structureMap n) :
+    DeRhamHypercohomology structureMap n :=
   hypercohomologyMap structureMap
-    (scalarHolomorphicDeRhamComplexInt structureMap d c) n α
+    (scalarHolomorphicDeRhamComplexInt structureMap c) n α
 
 noncomputable instance deRhamComplexSMulInstance
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    SMul ℂ (DeRhamHypercohomology structureMap d n) :=
-  ⟨deRhamComplexSMul structureMap d n⟩
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    SMul ℂ (DeRhamHypercohomology structureMap n) :=
+  ⟨deRhamComplexSMul structureMap n⟩
 
-lemma deRham_complex_smul_eq [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology structureMap d n) :
+lemma deRham_complex_smul_eq [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology structureMap n) :
     c • α = hypercohomologyMap structureMap
-      (scalarHolomorphicDeRhamComplexInt structureMap d c) n α :=
+      (scalarHolomorphicDeRhamComplexInt structureMap c) n α :=
   rfl
 
-lemma deRham_complex_smul_add [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (c : ℂ) (α β : DeRhamHypercohomology structureMap d n) :
+lemma deRham_complex_smul_add [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (c : ℂ) (α β : DeRhamHypercohomology structureMap n) :
     c • (α + β) = c • α + c • β := by
   exact (hypercohomologyMap structureMap
-    (scalarHolomorphicDeRhamComplexInt structureMap d c) n).map_add α β
+    (scalarHolomorphicDeRhamComplexInt structureMap c) n).map_add α β
 
-lemma deRham_complex_add_smul [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (a b : ℂ) (α : DeRhamHypercohomology structureMap d n) :
+lemma deRham_complex_add_smul [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (a b : ℂ) (α : DeRhamHypercohomology structureMap n) :
     (a + b) • α = a • α + b • α := by
   change hypercohomologyMap structureMap
-      (scalarHolomorphicDeRhamComplexInt structureMap d (a + b)) n α =
+      (scalarHolomorphicDeRhamComplexInt structureMap (a + b)) n α =
     hypercohomologyMap structureMap
-        (scalarHolomorphicDeRhamComplexInt structureMap d a) n α +
+        (scalarHolomorphicDeRhamComplexInt structureMap a) n α +
       hypercohomologyMap structureMap
-        (scalarHolomorphicDeRhamComplexInt structureMap d b) n α
+        (scalarHolomorphicDeRhamComplexInt structureMap b) n α
   rw [scalarHolomorphicDeRhamComplexInt_add]
-  let e : DeRhamHypercohomology structureMap d n ≃
+  let e : DeRhamHypercohomology structureMap n ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
-        (DerivedCategory.Q.obj (holomorphicDeRhamComplexInt structureMap d)) n :=
+        (DerivedCategory.Q.obj (holomorphicDeRhamComplexInt structureMap)) n :=
     Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
   apply e.injective
@@ -906,80 +903,80 @@ lemma deRham_complex_add_smul [SmoothOfRelativeDimension d structureMap]
   simp [e, hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
     Functor.map_add]
 
-lemma deRham_complex_one_smul [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (α : DeRhamHypercohomology structureMap d n) :
+lemma deRham_complex_one_smul [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (α : DeRhamHypercohomology structureMap n) :
     (1 : ℂ) • α = α := by
   rw [deRham_complex_smul_eq, scalarHolomorphicDeRhamComplexInt_one]
-  let e : DeRhamHypercohomology structureMap d n ≃
+  let e : DeRhamHypercohomology structureMap n ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
-        (DerivedCategory.Q.obj (holomorphicDeRhamComplexInt structureMap d)) n :=
+        (DerivedCategory.Q.obj (holomorphicDeRhamComplexInt structureMap)) n :=
     Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
   apply e.injective
   simp [e, hypercohomologyMap]
 
-lemma deRham_complex_mul_smul [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (a b : ℂ) (α : DeRhamHypercohomology structureMap d n) :
+lemma deRham_complex_mul_smul [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (a b : ℂ) (α : DeRhamHypercohomology structureMap n) :
     (a * b) • α = a • b • α := by
   change hypercohomologyMap structureMap
-      (scalarHolomorphicDeRhamComplexInt structureMap d (a * b)) n α =
+      (scalarHolomorphicDeRhamComplexInt structureMap (a * b)) n α =
     hypercohomologyMap structureMap
-      (scalarHolomorphicDeRhamComplexInt structureMap d a) n
+      (scalarHolomorphicDeRhamComplexInt structureMap a) n
       (hypercohomologyMap structureMap
-        (scalarHolomorphicDeRhamComplexInt structureMap d b) n α)
+        (scalarHolomorphicDeRhamComplexInt structureMap b) n α)
   rw [scalarHolomorphicDeRhamComplexInt_mul]
   exact hypercohomologyMap_comp_apply structureMap _ _ n α
 
 /-- Holomorphic de Rham hypercohomology is canonically a complex vector space. -/
 noncomputable instance deRhamHypercohomologyComplexModule
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    Module ℂ (DeRhamHypercohomology structureMap d n) :=
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    Module ℂ (DeRhamHypercohomology structureMap n) :=
   Module.ofMinimalAxioms
-    (deRham_complex_smul_add structureMap d n)
-    (deRham_complex_add_smul structureMap d n)
-    (deRham_complex_mul_smul structureMap d n)
-    (deRham_complex_one_smul structureMap d n)
+    (deRham_complex_smul_add structureMap n)
+    (deRham_complex_add_smul structureMap n)
+    (deRham_complex_mul_smul structureMap n)
+    (deRham_complex_one_smul structureMap n)
 
 /-- The rational action on de Rham hypercohomology, induced by multiplication by the corresponding
 complex scalar on the de Rham complex. -/
-def deRhamFieldSMul [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (q : K) (α : DeRhamHypercohomology structureMap d n) :
-    DeRhamHypercohomology structureMap d n :=
+def deRhamFieldSMul [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (q : K) (α : DeRhamHypercohomology structureMap n) :
+    DeRhamHypercohomology structureMap n :=
   hypercohomologyMap structureMap
-    (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ q)) n α
+    (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ q)) n α
 
 noncomputable instance deRhamFieldSMulInstance
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    SMul K (DeRhamHypercohomology structureMap d n) :=
-  ⟨deRhamFieldSMul K structureMap d n⟩
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    SMul K (DeRhamHypercohomology structureMap n) :=
+  ⟨deRhamFieldSMul K structureMap n⟩
 
-lemma deRham_field_smul_eq [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (q : K) (α : DeRhamHypercohomology structureMap d n) :
+lemma deRham_field_smul_eq [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (q : K) (α : DeRhamHypercohomology structureMap n) :
     q • α = hypercohomologyMap structureMap
-      (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ q)) n α :=
+      (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ q)) n α :=
   rfl
 
-lemma deRham_field_smul_add [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (q : K) (α β : DeRhamHypercohomology structureMap d n) :
+lemma deRham_field_smul_add [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (q : K) (α β : DeRhamHypercohomology structureMap n) :
     q • (α + β) = q • α + q • β := by
   exact (hypercohomologyMap structureMap
-    (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ q)) n).map_add α β
+    (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ q)) n).map_add α β
 
-lemma deRham_field_add_smul [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (a b : K) (α : DeRhamHypercohomology structureMap d n) :
+lemma deRham_field_add_smul [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (a b : K) (α : DeRhamHypercohomology structureMap n) :
     (a + b) • α = a • α + b • α := by
   change hypercohomologyMap structureMap
-      (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ (a + b))) n α =
+      (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ (a + b))) n α =
     hypercohomologyMap structureMap
-        (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ a)) n α +
+        (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ a)) n α +
       hypercohomologyMap structureMap
-        (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ b)) n α
+        (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ b)) n α
   rw [map_add, scalarHolomorphicDeRhamComplexInt_add]
-  let e : DeRhamHypercohomology structureMap d n ≃
+  let e : DeRhamHypercohomology structureMap n ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
-        (DerivedCategory.Q.obj (holomorphicDeRhamComplexInt structureMap d)) n :=
+        (DerivedCategory.Q.obj (holomorphicDeRhamComplexInt structureMap)) n :=
     Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
   apply e.injective
@@ -987,56 +984,56 @@ lemma deRham_field_add_smul [SmoothOfRelativeDimension d structureMap]
   simp [e, hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
     Functor.map_add]
 
-lemma deRham_field_one_smul [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (α : DeRhamHypercohomology structureMap d n) :
+lemma deRham_field_one_smul [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (α : DeRhamHypercohomology structureMap n) :
     (1 : K) • α = α := by
   rw [deRham_field_smul_eq, map_one,
     scalarHolomorphicDeRhamComplexInt_one]
-  let e : DeRhamHypercohomology structureMap d n ≃
+  let e : DeRhamHypercohomology structureMap n ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
-        (DerivedCategory.Q.obj (holomorphicDeRhamComplexInt structureMap d)) n :=
+        (DerivedCategory.Q.obj (holomorphicDeRhamComplexInt structureMap)) n :=
     Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
   apply e.injective
   simp [e, hypercohomologyMap]
 
-lemma deRham_field_mul_smul [SmoothOfRelativeDimension d structureMap]
-    (n : ℤ) (a b : K) (α : DeRhamHypercohomology structureMap d n) :
+lemma deRham_field_mul_smul [IsIntegral X] [Smooth structureMap]
+    (n : ℤ) (a b : K) (α : DeRhamHypercohomology structureMap n) :
     (a * b) • α = a • b • α := by
   change hypercohomologyMap structureMap
-      (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ (a * b))) n α =
+      (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ (a * b))) n α =
     hypercohomologyMap structureMap
-      (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ a)) n
+      (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ a)) n
       (hypercohomologyMap structureMap
-        (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ b)) n α)
+        (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ b)) n α)
   rw [map_mul, scalarHolomorphicDeRhamComplexInt_mul]
   exact hypercohomologyMap_comp_apply structureMap _ _ n α
 
 /-- Holomorphic de Rham hypercohomology is canonically a rational vector space. -/
 noncomputable instance deRhamHypercohomologyModule
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    Module K (DeRhamHypercohomology structureMap d n) :=
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    Module K (DeRhamHypercohomology structureMap n) :=
   Module.ofMinimalAxioms
-    (deRham_field_smul_add K structureMap d n)
-    (deRham_field_add_smul K structureMap d n)
-    (deRham_field_mul_smul K structureMap d n)
-    (deRham_field_one_smul K structureMap d n)
+    (deRham_field_smul_add K structureMap n)
+    (deRham_field_add_smul K structureMap n)
+    (deRham_field_mul_smul K structureMap n)
+    (deRham_field_one_smul K structureMap n)
 
 /-- The independently constructed rational and complex scalar actions on de Rham
 hypercohomology agree through the canonical embedding `K → ℂ`. -/
 lemma deRham_field_smul_eq_complex_smul
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ)
-    (q : K) (α : DeRhamHypercohomology structureMap d n) :
+    [IsIntegral X] [Smooth structureMap] (n : ℤ)
+    (q : K) (α : DeRhamHypercohomology structureMap n) :
     q • α = (algebraMap K ℂ q) • α :=
   rfl
 
 /-- Rational, complex, and de Rham scalar multiplication form the expected scalar tower. -/
 noncomputable instance deRhamHypercohomologyIsScalarTower
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    IsScalarTower K ℂ (DeRhamHypercohomology structureMap d n) :=
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    IsScalarTower K ℂ (DeRhamHypercohomology structureMap n) :=
   IsScalarTower.of_algebraMap_smul fun q α =>
-    deRham_field_smul_eq_complex_smul K structureMap d n q α
+    deRham_field_smul_eq_complex_smul K structureMap n q α
 
 omit [Algebra K ℂ] in
 /-- Constant degree-zero cohomology classes respect rational scalar multiplication. -/
@@ -1056,52 +1053,52 @@ def fieldCohomologyClassLinear : K →ₗ[K] FieldCohomology K structureMap 0 wh
   map_smul' q r := fieldCohomologyClass_mul K structureMap q r
 
 /-- The derived comparison from rational cohomology to holomorphic de Rham hypercohomology. -/
-def fieldToDeRhamCohomology [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    FieldCohomology K structureMap n →+ DeRhamHypercohomology structureMap d n :=
+def fieldToDeRhamCohomology [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    FieldCohomology K structureMap n →+ DeRhamHypercohomology structureMap n :=
   hypercohomologyMap structureMap
-    (fieldToHolomorphicDeRhamComplexInt K structureMap d) n
+    (fieldToHolomorphicDeRhamComplexInt K structureMap) n
 
 /-- The rational-to-de Rham map factors through extension from rational to complex constants. -/
 lemma fieldToDeRhamCohomology_factor
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ)
+    [IsIntegral X] [Smooth structureMap] (n : ℤ)
     (α : FieldCohomology K structureMap n) :
-    fieldToDeRhamCohomology K structureMap d n α =
+    fieldToDeRhamCohomology K structureMap n α =
       hypercohomologyMap structureMap
-        (constantsToHolomorphicDeRhamComplexInt structureMap d) n
+        (constantsToHolomorphicDeRhamComplexInt structureMap) n
         (fieldToComplexCohomology K structureMap n α) := by
   unfold fieldToDeRhamCohomology fieldToComplexCohomology
     fieldToHolomorphicDeRhamComplexInt
   exact hypercohomologyMap_comp_apply structureMap
     (fieldToComplexConstantSheafComplexInt K structureMap)
-    (constantsToHolomorphicDeRhamComplexInt structureMap d) n α
+    (constantsToHolomorphicDeRhamComplexInt structureMap) n α
 
 /-- Once the analytic Poincare comparison is proved to be a quasi-isomorphism, the
 rational-to-de Rham comparison is injective. This uses the explicit splitting of `K → ℂ`, not a
 finite-dimensionality assumption. -/
 lemma fieldToDeRhamCohomology_injective_of_quasiIso
-    [SmoothOfRelativeDimension d structureMap]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap d)) (n : ℤ) :
-    Function.Injective (fieldToDeRhamCohomology K structureMap d n) := by
+    [IsIntegral X] [Smooth structureMap]
+    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap)) (n : ℤ) :
+    Function.Injective (fieldToDeRhamCohomology K structureMap n) := by
   intro α β hαβ
   apply fieldToComplexCohomology_injective K structureMap n
-  apply (complexConstantCohomologyDeRhamEquiv structureMap d h n).injective
+  apply (complexConstantCohomologyDeRhamEquiv structureMap h n).injective
   simpa only [complexConstantCohomologyDeRhamEquiv_apply,
-    fieldToDeRhamCohomology_factor K structureMap d n] using hαβ
+    fieldToDeRhamCohomology_factor K structureMap n] using hαβ
 
 /-- The rational-to-de Rham comparison is injective. The holomorphic Poincaré lemma supplies
 the analytic quasi-isomorphism, while the explicit coefficient splitting proves that extending
 scalars from `K` to `ℂ` is injective. -/
 lemma fieldToDeRhamCohomology_injective
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    Function.Injective (fieldToDeRhamCohomology K structureMap d n) :=
-  fieldToDeRhamCohomology_injective_of_quasiIso K structureMap d inferInstance n
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    Function.Injective (fieldToDeRhamCohomology K structureMap n) :=
+  fieldToDeRhamCohomology_injective_of_quasiIso K structureMap inferInstance n
 
 /-- The rational-to-de Rham comparison is compatible with rational scalar multiplication. -/
 lemma fieldToDeRhamCohomology_smul
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ)
+    [IsIntegral X] [Smooth structureMap] (n : ℤ)
     (q : K) (α : FieldCohomology K structureMap n) :
-    fieldToDeRhamCohomology K structureMap d n (q • α) =
-      q • fieldToDeRhamCohomology K structureMap d n α := by
+    fieldToDeRhamCohomology K structureMap n (q • α) =
+      q • fieldToDeRhamCohomology K structureMap n α := by
   rw [field_smul_eq, deRham_field_smul_eq]
   unfold fieldToDeRhamCohomology
   rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
@@ -1109,20 +1106,20 @@ lemma fieldToDeRhamCohomology_smul
 
 /-- The rational-to-de Rham comparison as a rational-linear map. -/
 def fieldToDeRhamCohomologyLinear
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
     FieldCohomology K structureMap n →ₗ[K]
-      DeRhamHypercohomology structureMap d n where
-  toFun := fieldToDeRhamCohomology K structureMap d n
-  map_add' := (fieldToDeRhamCohomology K structureMap d n).map_add
-  map_smul' := fieldToDeRhamCohomology_smul K structureMap d n
+      DeRhamHypercohomology structureMap n where
+  toFun := fieldToDeRhamCohomology K structureMap n
+  map_add' := (fieldToDeRhamCohomology K structureMap n).map_add
+  map_smul' := fieldToDeRhamCohomology_smul K structureMap n
 
 /-- The balanced map that extends rational-to-de Rham comparison after scalar extension from
 `K` to `ℂ`. -/
 def fieldToDeRhamComplexificationBilinear
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
     ℂ →ₗ[ℂ] FieldCohomology K structureMap n →ₗ[K]
-      DeRhamHypercohomology structureMap d n where
-  toFun c := c • (fieldToDeRhamCohomologyLinear K structureMap d n)
+      DeRhamHypercohomology structureMap n where
+  toFun c := c • (fieldToDeRhamCohomologyLinear K structureMap n)
   map_add' a b := by
     ext α
     simp [add_smul]
@@ -1133,321 +1130,322 @@ def fieldToDeRhamComplexificationBilinear
 /-- The canonical complex-linear comparison from the complexification of rational
 constant-sheaf cohomology to holomorphic de Rham hypercohomology. -/
 def fieldToDeRhamComplexification
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
     ℂ ⊗[K] FieldCohomology K structureMap n →ₗ[ℂ]
-      DeRhamHypercohomology structureMap d n :=
+      DeRhamHypercohomology structureMap n :=
   TensorProduct.AlgebraTensorModule.lift
-    (fieldToDeRhamComplexificationBilinear K structureMap d n)
+    (fieldToDeRhamComplexificationBilinear K structureMap n)
 
 @[simp] lemma fieldToDeRhamComplexification_tmul
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ)
+    [IsIntegral X] [Smooth structureMap] (n : ℤ)
     (c : ℂ) (α : FieldCohomology K structureMap n) :
-    fieldToDeRhamComplexification K structureMap d n (c ⊗ₜ[K] α) =
-      c • fieldToDeRhamCohomology K structureMap d n α :=
+    fieldToDeRhamComplexification K structureMap n (c ⊗ₜ[K] α) =
+      c • fieldToDeRhamCohomology K structureMap n α :=
   rfl
 
 /-- On the rational lattice, the complexified comparison agrees with the original map. -/
 @[simp] lemma fieldToDeRhamComplexification_ofField
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ)
+    [IsIntegral X] [Smooth structureMap] (n : ℤ)
     (α : FieldCohomology K structureMap n) :
-    fieldToDeRhamComplexification K structureMap d n (1 ⊗ₜ[K] α) =
-      fieldToDeRhamCohomology K structureMap d n α := by
+    fieldToDeRhamComplexification K structureMap n (1 ⊗ₜ[K] α) =
+      fieldToDeRhamCohomology K structureMap n α := by
   simp
 
 /-- The de Rham complex with only form degrees at least `p` retained. -/
-def hodgeFilteredDeRhamComplex [SmoothOfRelativeDimension d structureMap] (p : ℤ) :
+def hodgeFilteredDeRhamComplex [IsIntegral X] [Smooth structureMap] (p : ℤ) :
     CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ :=
-  (holomorphicDeRhamComplexInt structureMap d).stupidTrunc
+  (holomorphicDeRhamComplexInt structureMap).stupidTrunc
     (ComplexShape.embeddingUpIntGE p)
 
 /-- The part of the holomorphic de Rham complex in form degrees at least `p` is zero when `p`
 is above the complex dimension. -/
 lemma hodgeFilteredDeRhamComplex_isZero_of_lt
-    [SmoothOfRelativeDimension d structureMap] {p : ℤ} (hp : (d : ℤ) < p) :
-    IsZero (hodgeFilteredDeRhamComplex structureMap d p) := by
+    [IsIntegral X] [Smooth structureMap] {p : ℤ} (hp : (dim X : ℤ) < p) :
+    IsZero (hodgeFilteredDeRhamComplex structureMap p) := by
   rw [hodgeFilteredDeRhamComplex,
     HomologicalComplex.isZero_stupidTrunc_iff]
   refine ⟨fun n => ?_⟩
-  change IsZero ((holomorphicDeRhamComplexInt structureMap d).X (p + n))
-  exact (holomorphicDeRhamComplexInt structureMap d).isZero_of_isStrictlyLE
-    d (p + n) (by lia)
+  change IsZero ((holomorphicDeRhamComplexInt structureMap).X (p + n))
+  exact (holomorphicDeRhamComplexInt structureMap).isZero_of_isStrictlyLE
+    (dim X) (p + n) (by lia)
 
 /-- Inclusion of the degree-at-least-`p` de Rham complex into the full complex. -/
-def hodgeFilteredDeRhamInclusion [SmoothOfRelativeDimension d structureMap] (p : ℤ) :
-    hodgeFilteredDeRhamComplex structureMap d p ⟶
-      holomorphicDeRhamComplexInt structureMap d :=
+def hodgeFilteredDeRhamInclusion [IsIntegral X] [Smooth structureMap] (p : ℤ) :
+    hodgeFilteredDeRhamComplex structureMap p ⟶
+      holomorphicDeRhamComplexInt structureMap :=
   HomologicalComplex.stupidTruncInclusion
-    (holomorphicDeRhamComplexInt structureMap d) (ComplexShape.embeddingUpIntGE p)
+    (holomorphicDeRhamComplexInt structureMap) (ComplexShape.embeddingUpIntGE p)
 
 /-- Above the complex dimension the filtered-to-full inclusion has zero source and hence is the
 zero morphism. -/
 lemma hodgeFilteredDeRhamInclusion_eq_zero_of_lt
-    [SmoothOfRelativeDimension d structureMap] {p : ℤ} (hp : (d : ℤ) < p) :
-    hodgeFilteredDeRhamInclusion structureMap d p = 0 :=
-  (hodgeFilteredDeRhamComplex_isZero_of_lt structureMap d hp).eq_of_src _ _
+    [IsIntegral X] [Smooth structureMap] {p : ℤ} (hp : (dim X : ℤ) < p) :
+    hodgeFilteredDeRhamInclusion structureMap p = 0 :=
+  (hodgeFilteredDeRhamComplex_isZero_of_lt structureMap hp).eq_of_src _ _
 
 /-- Rational scalar multiplication on the filtered de Rham complex. -/
-def hodgeFilteredDeRhamScalar [SmoothOfRelativeDimension d structureMap]
+def hodgeFilteredDeRhamScalar [IsIntegral X] [Smooth structureMap]
     (p : ℤ) (q : K) :
-    hodgeFilteredDeRhamComplex structureMap d p ⟶
-      hodgeFilteredDeRhamComplex structureMap d p :=
+    hodgeFilteredDeRhamComplex structureMap p ⟶
+      hodgeFilteredDeRhamComplex structureMap p :=
   HomologicalComplex.stupidTruncMap
-    (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ q))
+    (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ q))
     (ComplexShape.embeddingUpIntGE p)
 
 /-- Complex scalar multiplication on the filtered de Rham complex. -/
-def hodgeFilteredDeRhamComplexScalar [SmoothOfRelativeDimension d structureMap]
+def hodgeFilteredDeRhamComplexScalar [IsIntegral X] [Smooth structureMap]
     (p : ℤ) (c : ℂ) :
-    hodgeFilteredDeRhamComplex structureMap d p ⟶
-      hodgeFilteredDeRhamComplex structureMap d p :=
+    hodgeFilteredDeRhamComplex structureMap p ⟶
+      hodgeFilteredDeRhamComplex structureMap p :=
   HomologicalComplex.stupidTruncMap
-    (scalarHolomorphicDeRhamComplexInt structureMap d c)
+    (scalarHolomorphicDeRhamComplexInt structureMap c)
     (ComplexShape.embeddingUpIntGE p)
 
 /-- Scalar multiplication on the filtered complex commutes with its inclusion into the full de
 Rham complex. -/
 lemma hodgeFilteredDeRhamScalar_comp_inclusion
-    [SmoothOfRelativeDimension d structureMap] (p : ℤ) (q : K) :
-    hodgeFilteredDeRhamScalar K structureMap d p q ≫
-      hodgeFilteredDeRhamInclusion structureMap d p =
-    hodgeFilteredDeRhamInclusion structureMap d p ≫
-      scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ q) := by
+    [IsIntegral X] [Smooth structureMap] (p : ℤ) (q : K) :
+    hodgeFilteredDeRhamScalar K structureMap p q ≫
+      hodgeFilteredDeRhamInclusion structureMap p =
+    hodgeFilteredDeRhamInclusion structureMap p ≫
+      scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ q) := by
   exact HomologicalComplex.stupidTruncMap_comp_stupidTruncInclusion
     (ComplexShape.embeddingUpIntGE p)
-    (scalarHolomorphicDeRhamComplexInt structureMap d (algebraMap K ℂ q))
+    (scalarHolomorphicDeRhamComplexInt structureMap (algebraMap K ℂ q))
 
 /-- Complex scalar multiplication on the filtered complex commutes with inclusion into the full
 de Rham complex. -/
 lemma hodgeFilteredDeRhamComplexScalar_comp_inclusion
-    [SmoothOfRelativeDimension d structureMap] (p : ℤ) (c : ℂ) :
-    hodgeFilteredDeRhamComplexScalar structureMap d p c ≫
-      hodgeFilteredDeRhamInclusion structureMap d p =
-    hodgeFilteredDeRhamInclusion structureMap d p ≫
-      scalarHolomorphicDeRhamComplexInt structureMap d c := by
+    [IsIntegral X] [Smooth structureMap] (p : ℤ) (c : ℂ) :
+    hodgeFilteredDeRhamComplexScalar structureMap p c ≫
+      hodgeFilteredDeRhamInclusion structureMap p =
+    hodgeFilteredDeRhamInclusion structureMap p ≫
+      scalarHolomorphicDeRhamComplexInt structureMap c := by
   exact HomologicalComplex.stupidTruncMap_comp_stupidTruncInclusion
     (ComplexShape.embeddingUpIntGE p)
-    (scalarHolomorphicDeRhamComplexInt structureMap d c)
+    (scalarHolomorphicDeRhamComplexInt structureMap c)
 
 /-- Hypercohomology of the degree-at-least-`p` part of the de Rham complex. -/
-abbrev FilteredDeRhamHypercohomology [SmoothOfRelativeDimension d structureMap]
+abbrev FilteredDeRhamHypercohomology [IsIntegral X] [Smooth structureMap]
     (p n : ℤ) : Type 1 :=
-  Hypercohomology structureMap (hodgeFilteredDeRhamComplex structureMap d p) n
+  Hypercohomology structureMap (hodgeFilteredDeRhamComplex structureMap p) n
 
 /-- The map from filtered to full de Rham hypercohomology. -/
-def filteredToDeRhamCohomology [SmoothOfRelativeDimension d structureMap] (p n : ℤ) :
-    FilteredDeRhamHypercohomology structureMap d p n →+
-      DeRhamHypercohomology structureMap d n :=
-  hypercohomologyMap structureMap (hodgeFilteredDeRhamInclusion structureMap d p) n
+def filteredToDeRhamCohomology [IsIntegral X] [Smooth structureMap] (p n : ℤ) :
+    FilteredDeRhamHypercohomology structureMap p n →+
+      DeRhamHypercohomology structureMap n :=
+  hypercohomologyMap structureMap (hodgeFilteredDeRhamInclusion structureMap p) n
 
 /-- The Hodge filtration `F^p` on de Rham hypercohomology. -/
-def hodgeFiltration [SmoothOfRelativeDimension d structureMap] (p n : ℤ) :
-    AddSubgroup (DeRhamHypercohomology structureMap d n) :=
-  (filteredToDeRhamCohomology structureMap d p n).range
+def hodgeFiltration [IsIntegral X] [Smooth structureMap] (p n : ℤ) :
+    AddSubgroup (DeRhamHypercohomology structureMap n) :=
+  (filteredToDeRhamCohomology structureMap p n).range
 
 /-- The Hodge filtration is zero above the complex dimension. -/
-lemma hodgeFiltration_eq_bot_of_lt [SmoothOfRelativeDimension d structureMap]
-    {p : ℤ} (hp : (d : ℤ) < p) (n : ℤ) :
-    hodgeFiltration structureMap d p n = ⊥ := by
+lemma hodgeFiltration_eq_bot_of_lt [IsIntegral X] [Smooth structureMap]
+    {p : ℤ} (hp : (dim X : ℤ) < p) (n : ℤ) :
+    hodgeFiltration structureMap p n = ⊥ := by
   rw [hodgeFiltration]
   change (hypercohomologyMap structureMap
-    (hodgeFilteredDeRhamInclusion structureMap d p) n).range = ⊥
-  rw [hodgeFilteredDeRhamInclusion_eq_zero_of_lt structureMap d hp,
+    (hodgeFilteredDeRhamInclusion structureMap p) n).range = ⊥
+  rw [hodgeFilteredDeRhamInclusion_eq_zero_of_lt structureMap hp,
     hypercohomologyMap_zero]
   simp
 
 /-- The Hodge filtration is stable under arbitrary complex scalar multiplication. -/
-lemma hodgeFiltration_complex_smul_mem [SmoothOfRelativeDimension d structureMap]
-    (p n : ℤ) (c : ℂ) {α : DeRhamHypercohomology structureMap d n}
-    (hα : α ∈ hodgeFiltration structureMap d p n) :
-    c • α ∈ hodgeFiltration structureMap d p n := by
+lemma hodgeFiltration_complex_smul_mem [IsIntegral X] [Smooth structureMap]
+    (p n : ℤ) (c : ℂ) {α : DeRhamHypercohomology structureMap n}
+    (hα : α ∈ hodgeFiltration structureMap p n) :
+    c • α ∈ hodgeFiltration structureMap p n := by
   rcases hα with ⟨β, rfl⟩
   refine ⟨hypercohomologyMap structureMap
-    (hodgeFilteredDeRhamComplexScalar structureMap d p c) n β, ?_⟩
+    (hodgeFilteredDeRhamComplexScalar structureMap p c) n β, ?_⟩
   rw [deRham_complex_smul_eq]
   unfold filteredToDeRhamCohomology
   rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
   rw [hodgeFilteredDeRhamComplexScalar_comp_inclusion]
 
 /-- The Hodge filtration bundled as a complex subspace of de Rham hypercohomology. -/
-def hodgeFiltrationComplexSubmodule [SmoothOfRelativeDimension d structureMap]
-    (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology structureMap d n) where
-  carrier := hodgeFiltration structureMap d p n
-  zero_mem' := (hodgeFiltration structureMap d p n).zero_mem
-  add_mem' := (hodgeFiltration structureMap d p n).add_mem
-  smul_mem' := fun c _ h => hodgeFiltration_complex_smul_mem structureMap d p n c h
+def hodgeFiltrationComplexSubmodule [IsIntegral X] [Smooth structureMap]
+    (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology structureMap n) where
+  carrier := hodgeFiltration structureMap p n
+  zero_mem' := (hodgeFiltration structureMap p n).zero_mem
+  add_mem' := (hodgeFiltration structureMap p n).add_mem
+  smul_mem' := fun c _ h => hodgeFiltration_complex_smul_mem structureMap p n c h
 
 /-- Pull back the de Rham Hodge filtration to the actual complexification of rational
 constant-sheaf cohomology. This definition uses the canonical comparison map rather than
 identifying the two cohomology theories without proof. -/
-def complexifiedFieldHodgeFiltration [SmoothOfRelativeDimension d structureMap]
+def complexifiedFieldHodgeFiltration [IsIntegral X] [Smooth structureMap]
     (p n : ℤ) :
     Submodule ℂ (ℂ ⊗[K] FieldCohomology K structureMap n) :=
-  (hodgeFiltrationComplexSubmodule structureMap d p n).comap
-    (fieldToDeRhamComplexification K structureMap d n)
+  (hodgeFiltrationComplexSubmodule structureMap p n).comap
+    (fieldToDeRhamComplexification K structureMap n)
 
 /-- The Hodge filtration is stable under rational scalar multiplication. -/
-lemma hodgeFiltration_smul_mem [SmoothOfRelativeDimension d structureMap]
-    (p n : ℤ) (q : K) {α : DeRhamHypercohomology structureMap d n}
-    (hα : α ∈ hodgeFiltration structureMap d p n) :
-    q • α ∈ hodgeFiltration structureMap d p n := by
+lemma hodgeFiltration_smul_mem [IsIntegral X] [Smooth structureMap]
+    (p n : ℤ) (q : K) {α : DeRhamHypercohomology structureMap n}
+    (hα : α ∈ hodgeFiltration structureMap p n) :
+    q • α ∈ hodgeFiltration structureMap p n := by
   rcases hα with ⟨β, rfl⟩
   refine ⟨hypercohomologyMap structureMap
-    (hodgeFilteredDeRhamScalar K structureMap d p q) n β, ?_⟩
+    (hodgeFilteredDeRhamScalar K structureMap p q) n β, ?_⟩
   rw [deRham_field_smul_eq]
   unfold filteredToDeRhamCohomology
   rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
   rw [hodgeFilteredDeRhamScalar_comp_inclusion]
 
 /-- The Hodge filtration bundled as a rational subspace of de Rham hypercohomology. -/
-def hodgeFiltrationSubmodule [SmoothOfRelativeDimension d structureMap]
-    (p n : ℤ) : Submodule K (DeRhamHypercohomology structureMap d n) where
-  carrier := hodgeFiltration structureMap d p n
-  zero_mem' := (hodgeFiltration structureMap d p n).zero_mem
-  add_mem' := (hodgeFiltration structureMap d p n).add_mem
-  smul_mem' := fun q _ h => hodgeFiltration_smul_mem K structureMap d p n q h
+def hodgeFiltrationSubmodule [IsIntegral X] [Smooth structureMap] (p n : ℤ) :
+    Submodule K (DeRhamHypercohomology structureMap n) where
+  carrier := hodgeFiltration structureMap p n
+  zero_mem' := (hodgeFiltration structureMap p n).zero_mem
+  add_mem' := (hodgeFiltration structureMap p n).add_mem
+  smul_mem' := fun q _ h => hodgeFiltration_smul_mem K structureMap p n q h
 
 /-- In degree filtration `F⁰`, the filtered and full de Rham hypercohomology groups are
 canonically equivalent. -/
-def hodgeFiltrationZeroEquiv [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    FilteredDeRhamHypercohomology structureMap d 0 n ≃
-      DeRhamHypercohomology structureMap d n := by
-  letI : (holomorphicDeRhamComplexInt structureMap d).IsStrictlyGE 0 := by
+def hodgeFiltrationZeroEquiv [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    FilteredDeRhamHypercohomology structureMap 0 n ≃
+      DeRhamHypercohomology structureMap n := by
+  letI : (holomorphicDeRhamComplexInt structureMap).IsStrictlyGE 0 := by
     unfold holomorphicDeRhamComplexInt
     infer_instance
-  letI : IsIso (hodgeFilteredDeRhamInclusion structureMap d 0) := by
+  letI : IsIso (hodgeFilteredDeRhamInclusion structureMap 0) := by
     unfold hodgeFilteredDeRhamInclusion hodgeFilteredDeRhamComplex
     infer_instance
   exact Localization.SmallShiftedHom.postcompEquiv
-    (hodgeFilteredDeRhamInclusion structureMap d 0)
+    (hodgeFilteredDeRhamInclusion structureMap 0)
     (by
-      change QuasiIso (hodgeFilteredDeRhamInclusion structureMap d 0)
+      change QuasiIso (hodgeFilteredDeRhamInclusion structureMap 0)
       infer_instance)
 
 lemma filteredToDeRhamCohomology_zero_apply
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ)
-    (α : FilteredDeRhamHypercohomology structureMap d 0 n) :
-    filteredToDeRhamCohomology structureMap d 0 n α =
-      hodgeFiltrationZeroEquiv structureMap d n α := rfl
+    [IsIntegral X] [Smooth structureMap] (n : ℤ)
+    (α : FilteredDeRhamHypercohomology structureMap 0 n) :
+    filteredToDeRhamCohomology structureMap 0 n α =
+      hodgeFiltrationZeroEquiv structureMap n α := rfl
 
 /-- The zeroth Hodge filtration is the whole de Rham hypercohomology group. -/
-lemma hodgeFiltration_zero_eq_top [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    hodgeFiltration structureMap d 0 n = ⊤ := by
+lemma hodgeFiltration_zero_eq_top [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    hodgeFiltration structureMap 0 n = ⊤ := by
   ext α
   simp only [hodgeFiltration, AddMonoidHom.mem_range, AddSubgroup.mem_top, iff_true]
-  exact ⟨(hodgeFiltrationZeroEquiv structureMap d n).symm α,
-    filteredToDeRhamCohomology_zero_apply structureMap d n _ |>.trans
-      ((hodgeFiltrationZeroEquiv structureMap d n).apply_symm_apply α)⟩
+  exact ⟨(hodgeFiltrationZeroEquiv structureMap n).symm α,
+    filteredToDeRhamCohomology_zero_apply structureMap n _ |>.trans
+      ((hodgeFiltrationZeroEquiv structureMap n).apply_symm_apply α)⟩
 
 /-- The rational submodule underlying `F⁰` is the whole de Rham hypercohomology group. -/
-lemma hodgeFiltrationSubmodule_zero_eq_top
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    hodgeFiltrationSubmodule K structureMap d 0 n = ⊤ := by
+lemma hodgeFiltrationSubmodule_zero_eq_top [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    hodgeFiltrationSubmodule K structureMap 0 n = ⊤ := by
   apply SetLike.ext
   intro α
-  change α ∈ hodgeFiltration structureMap d 0 n ↔ α ∈ (⊤ :
-    Submodule K (DeRhamHypercohomology structureMap d n))
-  rw [hodgeFiltration_zero_eq_top structureMap d n]
+  change α ∈ hodgeFiltration structureMap 0 n ↔ α ∈ (⊤ :
+    Submodule K (DeRhamHypercohomology structureMap n))
+  rw [hodgeFiltration_zero_eq_top structureMap n]
   simp
 
 /-- Rational cohomology classes whose de Rham images lie in `F^p H^{2p}`, bundled as an additive
-subgroup. -/
-def hodgeClasses [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
-    Submodule K (FieldCohomology K structureMap (2 * p)) :=
-  (hodgeFiltrationSubmodule K structureMap d p (2 * p)).comap
-    (fieldToDeRhamCohomologyLinear K structureMap d (2 * p))
+subgroup.
 
-/-- `Hdg^p(K; f, d)` is the space of Hodge classes of codimension `p` with coefficients in `K`.
+The Hodge filtration is indexed by a relative dimension, but the dimension is not a choice: it is
+`dim X`, recovered from the scheme itself. -/
+def hodgeClasses [IsIntegral X] [Smooth structureMap] (p : ℕ) :
+    Submodule K (FieldCohomology K structureMap (2 * p)) :=
+  (hodgeFiltrationSubmodule K structureMap p (2 * p)).comap
+    (fieldToDeRhamCohomologyLinear K structureMap (2 * p))
+
+/-- `Hdg^p(K; f)` is the space of Hodge classes of codimension `p` with coefficients in `K`.
 
 The literature writes `Hdg^p(X)` for the variety `X` alone; here the variety is presented by its
-structure morphism `f` and its relative dimension `d`, and the coefficient field is named. -/
-scoped notation:max "Hdg^" p:max "(" K "; " f ", " d ")" => hodgeClasses K f d p
+structure morphism `f`, and the coefficient field is named. -/
+scoped notation:max "Hdg^" p:max "(" K "; " f ")" => hodgeClasses K f p
 
 /-- Above the complex dimension, the rational Hodge subgroup is exactly the kernel of the
 rational-to-de Rham comparison. In particular, showing that comparison injective makes the
 out-of-range Hodge subgroup vanish. -/
-lemma hodgeClasses_eq_ker_of_lt
-    [SmoothOfRelativeDimension d structureMap] {p : ℕ} (hp : d < p) :
-    Hdg^p(K; structureMap, d) =
-      LinearMap.ker (fieldToDeRhamCohomologyLinear K structureMap d (2 * p)) := by
+lemma hodgeClasses_eq_ker_of_lt [IsIntegral X] [Smooth structureMap] {p : ℕ} (hp : dim X < p) :
+    Hdg^p(K; structureMap) =
+      LinearMap.ker (fieldToDeRhamCohomologyLinear K structureMap (2 * p)) := by
   rw [hodgeClasses, ← Submodule.comap_bot]
   congr 1
   apply SetLike.ext
   intro α
-  change α ∈ hodgeFiltration structureMap d (p : ℤ) (2 * (p : ℤ)) ↔ α ∈ (⊥ :
-    Submodule ℂ (DeRhamHypercohomology structureMap d (2 * (p : ℤ))))
-  rw [hodgeFiltration_eq_bot_of_lt structureMap d (by exact_mod_cast hp)]
+  change α ∈ hodgeFiltration structureMap (p : ℤ) (2 * (p : ℤ)) ↔ α ∈ (⊥ :
+    Submodule ℂ (DeRhamHypercohomology structureMap (2 * (p : ℤ))))
+  rw [hodgeFiltration_eq_bot_of_lt structureMap (by exact_mod_cast hp)]
   rfl
 
 /-- If the analytic constant-to-holomorphic de Rham comparison is a quasi-isomorphism, rational
 Hodge classes vanish above the complex dimension. -/
-lemma hodgeClasses_eq_bot_of_lt_of_quasiIso
-    [SmoothOfRelativeDimension d structureMap]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap d))
-    {p : ℕ} (hp : d < p) :
-    Hdg^p(K; structureMap, d) = ⊥ := by
-  rw [hodgeClasses_eq_ker_of_lt K structureMap d hp]
+lemma hodgeClasses_eq_bot_of_lt_of_quasiIso [IsIntegral X] [Smooth structureMap]
+    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap))
+    {p : ℕ} (hp : dim X < p) :
+    Hdg^p(K; structureMap) = ⊥ := by
+  rw [hodgeClasses_eq_ker_of_lt K structureMap hp]
   apply LinearMap.ker_eq_bot.mpr
-  exact fieldToDeRhamCohomology_injective_of_quasiIso K structureMap d h (2 * p)
+  exact fieldToDeRhamCohomology_injective_of_quasiIso K structureMap h (2 * p)
 
 /-- Rational Hodge classes vanish above the complex dimension. -/
 lemma hodgeClasses_eq_bot_of_lt
-    [SmoothOfRelativeDimension d structureMap] {p : ℕ} (hp : d < p) :
-    Hdg^p(K; structureMap, d) = ⊥ :=
-  hodgeClasses_eq_bot_of_lt_of_quasiIso K structureMap d inferInstance hp
+    [IsIntegral X] [Smooth structureMap]
+    {p : ℕ} (hp : dim X < p) :
+    Hdg^p(K; structureMap) = ⊥ :=
+  hodgeClasses_eq_bot_of_lt_of_quasiIso K structureMap inferInstance hp
 
 /-- Rational Hodge classes described through the rational lattice inside its actual
 complexification. -/
 def hodgeClassesViaComplexification
-    [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
+    [IsIntegral X] [Smooth structureMap] (p : ℕ) :
     Submodule K (FieldCohomology K structureMap (2 * p)) :=
   Submodule.comap
     (HodgeStructure.ofBase K (FieldCohomology K structureMap (2 * p)))
-    ((complexifiedFieldHodgeFiltration K structureMap d p (2 * p)).restrictScalars K)
+    ((complexifiedFieldHodgeFiltration K structureMap p (2 * p)).restrictScalars K)
 
 /-- The direct definition of rational Hodge classes agrees with the definition using the
 complexified rational lattice. -/
-lemma hodgeClassesViaComplexification_eq
-    [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
-    hodgeClassesViaComplexification K structureMap d p =
-      Hdg^p(K; structureMap, d) := by
+lemma hodgeClassesViaComplexification_eq [IsIntegral X] [Smooth structureMap] (p : ℕ) :
+    hodgeClassesViaComplexification K structureMap p =
+      Hdg^p(K; structureMap) := by
   ext α
-  change fieldToDeRhamComplexification K structureMap d (2 * (p : ℤ))
+  change fieldToDeRhamComplexification K structureMap (2 * (p : ℤ))
       (HodgeStructure.ofBase K
         (FieldCohomology K structureMap (2 * (p : ℤ))) α) ∈
-        hodgeFiltration structureMap d p (2 * (p : ℤ)) ↔
-    fieldToDeRhamCohomology K structureMap d (2 * (p : ℤ)) α ∈
-      hodgeFiltration structureMap d p (2 * (p : ℤ))
+        hodgeFiltration structureMap p (2 * (p : ℤ)) ↔
+    fieldToDeRhamCohomology K structureMap (2 * (p : ℤ)) α ∈
+      hodgeFiltration structureMap p (2 * (p : ℤ))
   rw [HodgeStructure.ofBase_apply,
     fieldToDeRhamComplexification_ofField]
 
 /-- A rational cohomology class is a Hodge class of codimension `p` when it belongs to the
 canonical subgroup of rational Hodge classes. -/
-def IsHodgeClass [SmoothOfRelativeDimension d structureMap] (p : ℕ)
+def IsHodgeClass [IsIntegral X] [Smooth structureMap] (p : ℕ)
     (α : FieldCohomology K structureMap (2 * p)) : Prop :=
-  α ∈ Hdg^p(K; structureMap, d)
+  α ∈ Hdg^p(K; structureMap)
 
-lemma mem_hodgeClasses_iff [SmoothOfRelativeDimension d structureMap]
+lemma mem_hodgeClasses_iff [IsIntegral X] [Smooth structureMap]
     (p : ℕ) (α : FieldCohomology K structureMap (2 * p)) :
-    α ∈ Hdg^p(K; structureMap, d) ↔
-      IsHodgeClass K structureMap d p α :=
+    α ∈ Hdg^p(K; structureMap) ↔
+      IsHodgeClass K structureMap p α :=
   Iff.rfl
 
 /-- Every rational degree-zero cohomology class belongs to the rational Hodge subgroup. -/
-lemma hodgeClasses_zero_eq_top [SmoothOfRelativeDimension d structureMap] :
-    Hdg^0(K; structureMap, d) = ⊤ := by
+lemma hodgeClasses_zero_eq_top [IsIntegral X] [Smooth structureMap]
+    :
+    Hdg^0(K; structureMap) = ⊤ := by
   apply SetLike.ext
   intro α
-  change fieldToDeRhamCohomology K structureMap d (2 * (0 : ℕ)) α ∈
-      hodgeFiltration structureMap d (0 : ℕ) (2 * (0 : ℕ)) ↔ True
+  change fieldToDeRhamCohomology K structureMap (2 * (0 : ℕ)) α ∈
+      hodgeFiltration structureMap (0 : ℕ) (2 * (0 : ℕ)) ↔ True
   simp only [Nat.cast_zero]
   rw [hodgeFiltration_zero_eq_top]
   trivial
 
 /-- Every rational degree-zero class has Hodge type `(0,0)`. -/
-lemma isHodgeClass_zero [SmoothOfRelativeDimension d structureMap]
+lemma isHodgeClass_zero [IsIntegral X] [Smooth structureMap]
     (α : FieldCohomology K structureMap 0) :
-    IsHodgeClass K structureMap d 0 α := by
-  change α ∈ Hdg^0(K; structureMap, d)
+    IsHodgeClass K structureMap 0 α := by
+  change α ∈ Hdg^0(K; structureMap)
   rw [hodgeClasses_zero_eq_top]
   trivial
 

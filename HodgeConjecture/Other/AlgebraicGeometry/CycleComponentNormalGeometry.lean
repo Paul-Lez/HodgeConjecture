@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.SmoothDimensionFormula
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 public import Mathlib.Analysis.Complex.Polynomial.Basic
 

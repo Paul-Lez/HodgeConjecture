@@ -29,8 +29,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
-local instance : TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
-
 /-- Rational sheaf cohomology with support in a closed subset of the analytic complex-point space,
 using Ext. -/
 abbrev RationalCohomologyWithClosedSupport

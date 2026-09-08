@@ -50,9 +50,6 @@ open Point
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
-local instance cohomologyWithSupportTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
-
 local instance analyticSupportHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf structureMap)

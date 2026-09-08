@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
-public import HodgeConjecture.Other.AlgebraicGeometry.SmoothPointwiseDimension
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
 
 /-!
 # Exact local coordinates on small-dimensional cycle components

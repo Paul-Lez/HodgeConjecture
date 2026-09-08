@@ -44,9 +44,6 @@ open Point
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
-local instance rationalCohomologyZeroTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
-
 /-- The natural-to-integer cochain embedding sends degree zero to degree zero. -/
 lemma embeddingUpNat_zero : ComplexShape.embeddingUpNat.f 0 = (0 : ℤ) := rfl
 

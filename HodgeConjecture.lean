@@ -31,6 +31,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.SheafCohomologyWithSupport
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
+public import HodgeConjecture.Definitions.Topology.Dimension
 public import HodgeConjecture.Lemmas
 public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
 public import HodgeConjecture.Lemmas.Algebra.Homology.StupidTruncation
@@ -41,10 +42,14 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalization
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexStandardEtale
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
 public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.ComplexOrientation
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalFundamentalClass
@@ -55,6 +60,7 @@ public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
+public import HodgeConjecture.Mathlib.Topology.KrullDimension
 public import HodgeConjecture.Other
 public import HodgeConjecture.Other.Algebra.Category.ModuleCat.Presheaf.ExteriorPower
 public import HodgeConjecture.Other.Algebra.DeRham.Complex
@@ -74,7 +80,6 @@ public import HodgeConjecture.Other.AlgebraicGeometry.ComplexSingularComparison
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleClassDimension
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentAnalyticEmbedding
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentClosedPointDimension
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentDimension
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentLocalGenerator
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentMaximalCodimensionPurity
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalCoordinates
@@ -93,8 +98,6 @@ public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveSingularCoeffici
 public import HodgeConjecture.Other.AlgebraicGeometry.RationalCohomologyZero
 public import HodgeConjecture.Other.AlgebraicGeometry.SingularCycleClass
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothCatenaryDimension
-public import HodgeConjecture.Other.AlgebraicGeometry.SmoothDimensionFormula
-public import HodgeConjecture.Other.AlgebraicGeometry.SmoothPointwiseDimension
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothRegularLocal
 public import HodgeConjecture.Other.AlgebraicTopology.BoundedBelowFlasqueComplex
 public import HodgeConjecture.Other.AlgebraicTopology.CechNerveEvaluation

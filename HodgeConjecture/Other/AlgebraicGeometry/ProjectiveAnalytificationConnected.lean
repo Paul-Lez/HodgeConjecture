@@ -18,7 +18,7 @@ module
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
-public import HodgeConjecture.Other.AlgebraicGeometry.SmoothDimensionFormula
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 
 /-!
 # Connected components of projective analytifications
@@ -58,29 +58,29 @@ noncomputable instance instNonemptyComplexPoint [IsIntegral X] [Smooth structure
 /-- A compact, locally path connected projective analytification has finitely many connected
 components. -/
 theorem finiteConnectedComponents [IsProjective structureMap]
-    [SmoothOfRelativeDimension d structureMap] :
+    [IsIntegral X] [Smooth structureMap] :
     Finite (ConnectedComponents (ComplexPoint X structureMap)) := by
   let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
-    locallyPathConnectedSpace structureMap d
+    locallyPathConnectedSpace structureMap
   let _ : LocallyConnectedSpace (ComplexPoint X structureMap) := inferInstance
   infer_instance
 
 /-- A compact, locally path connected projective analytification has finitely many path
 components. -/
 theorem finiteZerothHomotopy [IsProjective structureMap]
-    [SmoothOfRelativeDimension d structureMap] :
+    [IsIntegral X] [Smooth structureMap] :
     Finite (ZerothHomotopy (ComplexPoint X structureMap)) := by
   let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
-    locallyPathConnectedSpace structureMap d
+    locallyPathConnectedSpace structureMap
   infer_instance
 
 /-- For a smooth projective complex analytification, connectedness is equivalent to path
 connectedness.  This theorem does not supply the global connectedness premise. -/
-theorem pathConnectedSpace_iff_connectedSpace [SmoothOfRelativeDimension d structureMap] :
+theorem pathConnectedSpace_iff_connectedSpace [IsIntegral X] [Smooth structureMap] :
     PathConnectedSpace (ComplexPoint X structureMap) ↔
       ConnectedSpace (ComplexPoint X structureMap) := by
   let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
-    locallyPathConnectedSpace structureMap d
+    locallyPathConnectedSpace structureMap
   exact _root_.pathConnectedSpace_iff_connectedSpace
 
 /-- Every complex point of an integral smooth zero-dimensional variety lies over its generic
@@ -129,6 +129,6 @@ theorem pathConnectedSpaceOfDimensionEqZero [IsIntegral X] [Smooth structureMap]
     PathConnectedSpace (ComplexPoint X structureMap) := by
   let _ : ConnectedSpace (ComplexPoint X structureMap) :=
     connectedSpaceOfDimensionEqZero structureMap d hd
-  exact (pathConnectedSpace_iff_connectedSpace structureMap d).mpr inferInstance
+  exact (pathConnectedSpace_iff_connectedSpace structureMap).mpr inferInstance
 
 end AlgebraicGeometry.ComplexPoint

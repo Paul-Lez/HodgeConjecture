@@ -506,13 +506,6 @@ open scoped Manifold
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
-local instance holomorphicPoincareTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
-
-local instance holomorphicPoincareChartedSpace [SmoothOfRelativeDimension d structureMap] :
-    ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
-  analyticChartedSpace structureMap d
-
 local instance holomorphicPoincareIsManifold [SmoothOfRelativeDimension d structureMap] :
     IsManifold (modelWithCornersSelf ℂ (Fin d → ℂ)) ω
       (ComplexPoint X structureMap) :=

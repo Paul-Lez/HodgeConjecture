@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
 public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
@@ -53,13 +54,6 @@ namespace AlgebraicGeometry.ComplexPoint
 open Point
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
-
-local instance holomorphicDeRhamTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
-
-local instance holomorphicDeRhamChartedSpace [SmoothOfRelativeDimension d structureMap] :
-    ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
-  analyticChartedSpace structureMap d
 
 /-- Holomorphic de Rham forms in a fixed degree, as a presheaf of complex vector spaces.
 
@@ -961,121 +955,120 @@ def complexScalarComplexInt (c : ℂ) :
     ComplexShape.embeddingUpNat
 
 /-- The holomorphic de Rham complex, extended by zero to negative degrees. -/
-def holomorphicDeRhamComplexInt [SmoothOfRelativeDimension d structureMap] :
-    CochainComplex
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap))) ℤ :=
-  (holomorphicDeRhamComplex structureMap d).extend ComplexShape.embeddingUpNat
+def holomorphicDeRhamComplexInt [IsIntegral X] [Smooth structureMap] :
+    CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(ComplexPoint X structureMap)) ℤ :=
+  (holomorphicDeRhamComplex structureMap (dim X)).extend ComplexShape.embeddingUpNat
 
 /-- The integer-indexed holomorphic de Rham complex vanishes in every degree above the complex
 dimension. -/
 lemma holomorphicDeRhamComplexInt_isZero_X_of_lt
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) (hn : (d : ℤ) < n) :
-    IsZero ((holomorphicDeRhamComplexInt structureMap d).X n) := by
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) (hn : (dim X : ℤ) < n) :
+    IsZero ((holomorphicDeRhamComplexInt structureMap).X n) := by
   have hn0 : 0 ≤ n := by lia
   let p := n.toNat
   have hp : (p : ℤ) = n := by
     simp [p, Int.toNat_of_nonneg hn0]
-  have hdp : d < p := by lia
-  exact (holomorphicDeRhamSheaf_isZero_of_lt structureMap d hdp).of_iso
-    ((holomorphicDeRhamComplex structureMap d).extendXIso
+  have hdp : dim X < p := by lia
+  exact (holomorphicDeRhamSheaf_isZero_of_lt structureMap (dim X) hdp).of_iso
+    ((holomorphicDeRhamComplex structureMap (dim X)).extendXIso
       ComplexShape.embeddingUpNat hp)
 
 /-- The integer-indexed holomorphic de Rham complex is strictly supported in degrees at most the
 complex dimension. -/
 noncomputable instance holomorphicDeRhamComplexInt_isStrictlyLE
-    [SmoothOfRelativeDimension d structureMap] :
-    (holomorphicDeRhamComplexInt structureMap d).IsStrictlySupported
-      (ComplexShape.embeddingUpIntLE d) where
+    [IsIntegral X] [Smooth structureMap] :
+    (holomorphicDeRhamComplexInt structureMap).IsStrictlySupported
+      (ComplexShape.embeddingUpIntLE (dim X)) where
   isZero n hn := by
     rw [ComplexShape.notMem_range_embeddingUpIntLE_iff] at hn
-    exact holomorphicDeRhamComplexInt_isZero_X_of_lt structureMap d n hn
+    exact holomorphicDeRhamComplexInt_isZero_X_of_lt structureMap n hn
 
 /-- Multiplication by a complex scalar on the integer-indexed holomorphic de Rham complex. -/
-def scalarHolomorphicDeRhamComplexInt [SmoothOfRelativeDimension d structureMap]
+def scalarHolomorphicDeRhamComplexInt [IsIntegral X] [Smooth structureMap]
     (c : ℂ) :
-    holomorphicDeRhamComplexInt structureMap d ⟶
-      holomorphicDeRhamComplexInt structureMap d :=
+    holomorphicDeRhamComplexInt structureMap ⟶
+      holomorphicDeRhamComplexInt structureMap :=
   HomologicalComplex.extendMap
-    (scalarHolomorphicDeRhamComplex structureMap d c) ComplexShape.embeddingUpNat
+    (scalarHolomorphicDeRhamComplex structureMap (dim X) c) ComplexShape.embeddingUpNat
 
 @[simp] lemma scalarHolomorphicDeRhamComplexInt_zero
-    [SmoothOfRelativeDimension d structureMap] :
-    scalarHolomorphicDeRhamComplexInt structureMap d 0 = 0 := by
+    [IsIntegral X] [Smooth structureMap] :
+    scalarHolomorphicDeRhamComplexInt structureMap 0 = 0 := by
   unfold scalarHolomorphicDeRhamComplexInt
   rw [scalarHolomorphicDeRhamComplex_zero, HomologicalComplex.extendMap_zero]
   rfl
 
 @[simp] lemma scalarHolomorphicDeRhamComplexInt_one
-    [SmoothOfRelativeDimension d structureMap] :
-    scalarHolomorphicDeRhamComplexInt structureMap d 1 = 𝟙 _ := by
+    [IsIntegral X] [Smooth structureMap] :
+    scalarHolomorphicDeRhamComplexInt structureMap 1 = 𝟙 _ := by
   unfold scalarHolomorphicDeRhamComplexInt holomorphicDeRhamComplexInt
   rw [scalarHolomorphicDeRhamComplex_one]
   exact HomologicalComplex.extendMap_id _ _
 
 @[simp] lemma scalarHolomorphicDeRhamComplexInt_add
-    [SmoothOfRelativeDimension d structureMap] (a b : ℂ) :
-    scalarHolomorphicDeRhamComplexInt structureMap d (a + b) =
-      scalarHolomorphicDeRhamComplexInt structureMap d a +
-        scalarHolomorphicDeRhamComplexInt structureMap d b := by
+    [IsIntegral X] [Smooth structureMap] (a b : ℂ) :
+    scalarHolomorphicDeRhamComplexInt structureMap (a + b) =
+      scalarHolomorphicDeRhamComplexInt structureMap a +
+        scalarHolomorphicDeRhamComplexInt structureMap b := by
   unfold scalarHolomorphicDeRhamComplexInt
   rw [scalarHolomorphicDeRhamComplex_add, HomologicalComplex.extendMap_add]
   rfl
 
 @[simp] lemma scalarHolomorphicDeRhamComplexInt_mul
-    [SmoothOfRelativeDimension d structureMap] (a b : ℂ) :
-    scalarHolomorphicDeRhamComplexInt structureMap d (a * b) =
-      scalarHolomorphicDeRhamComplexInt structureMap d b ≫
-        scalarHolomorphicDeRhamComplexInt structureMap d a := by
+    [IsIntegral X] [Smooth structureMap] (a b : ℂ) :
+    scalarHolomorphicDeRhamComplexInt structureMap (a * b) =
+      scalarHolomorphicDeRhamComplexInt structureMap b ≫
+        scalarHolomorphicDeRhamComplexInt structureMap a := by
   unfold scalarHolomorphicDeRhamComplexInt
   rw [scalarHolomorphicDeRhamComplex_mul, HomologicalComplex.extendMap_comp]
   rfl
 
 /-- The constant-to-de Rham comparison on integer-indexed complexes. -/
-def constantsToHolomorphicDeRhamComplexInt [SmoothOfRelativeDimension d structureMap] :
+def constantsToHolomorphicDeRhamComplexInt [IsIntegral X] [Smooth structureMap] :
     constantComplexSheafComplexInt structureMap ⟶
-      holomorphicDeRhamComplexInt structureMap d :=
+      holomorphicDeRhamComplexInt structureMap :=
   HomologicalComplex.extendMap
-    (constantsToHolomorphicDeRhamComplex structureMap d) ComplexShape.embeddingUpNat
+    (constantsToHolomorphicDeRhamComplex structureMap (dim X)) ComplexShape.embeddingUpNat
 
 /-- Extending by zero gives the holomorphic de Rham quasi-isomorphism in every integer
 degree. -/
 instance constantsToHolomorphicDeRhamComplexInt_quasiIso
-    [SmoothOfRelativeDimension d structureMap] :
-    QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap d) := by
+    [IsIntegral X] [Smooth structureMap] :
+    QuasiIso (constantsToHolomorphicDeRhamComplexInt structureMap) := by
   change QuasiIso (HomologicalComplex.extendMap
-    (constantsToHolomorphicDeRhamComplex structureMap d) ComplexShape.embeddingUpNat)
+    (constantsToHolomorphicDeRhamComplex structureMap (dim X)) ComplexShape.embeddingUpNat)
   exact (HomologicalComplex.quasiIso_extendMap_iff
-    (constantsToHolomorphicDeRhamComplex structureMap d) ComplexShape.embeddingUpNat).2
+    (constantsToHolomorphicDeRhamComplex structureMap (dim X)) ComplexShape.embeddingUpNat).2
       (by infer_instance)
 
 /-- The integer-indexed constant-to-de Rham comparison is a quasi-isomorphism at every
 degree. -/
 lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt
-    [SmoothOfRelativeDimension d structureMap] (n : ℤ) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt structureMap d) n := by
+    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
+    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt structureMap) n := by
   infer_instance
 
 /-- In a nonnegative degree, extending the constant-to-de Rham comparison from natural to
 integer indices does not change whether it is a quasi-isomorphism. -/
 lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_iff
-    [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt structureMap d) (p : ℤ) ↔
-      QuasiIsoAt (constantsToHolomorphicDeRhamComplex structureMap d) p := by
+    [IsIntegral X] [Smooth structureMap] (p : ℕ) :
+    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt structureMap) (p : ℤ) ↔
+      QuasiIsoAt (constantsToHolomorphicDeRhamComplex structureMap (dim X)) p := by
   exact HomologicalComplex.quasiIsoAt_extendMap_iff
-    (constantsToHolomorphicDeRhamComplex structureMap d)
+    (constantsToHolomorphicDeRhamComplex structureMap (dim X))
     ComplexShape.embeddingUpNat rfl
 
 /-- The integer-indexed constant-to-de Rham comparison is automatically a quasi-isomorphism in
 negative degrees, since both extended complexes vanish there. -/
 lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_of_neg
-    [SmoothOfRelativeDimension d structureMap] {n : ℤ} (hn : n < 0) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt structureMap d) n := by
+    [IsIntegral X] [Smooth structureMap] {n : ℤ} (hn : n < 0) :
+    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt structureMap) n := by
   have hnone : ∀ p : ℕ, (p : ℤ) ≠ n := by
     intro p hp
     lia
   rw [quasiIsoAt_iff_exactAt]
   · exact HomologicalComplex.extend_exactAt
-      (holomorphicDeRhamComplex structureMap d) ComplexShape.embeddingUpNat n hnone
+      (holomorphicDeRhamComplex structureMap (dim X)) ComplexShape.embeddingUpNat n hnone
   · exact HomologicalComplex.extend_exactAt
       ((CochainComplex.single₀
         (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)))).obj
@@ -1085,29 +1078,29 @@ lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_of_neg
 /-- The integer-indexed comparison is a quasi-isomorphism in every nonnegative degree above the
 complex dimension. -/
 lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_of_lt
-    [SmoothOfRelativeDimension d structureMap] {p : ℕ} (hp : d < p) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt structureMap d) (p : ℤ) := by
+    [IsIntegral X] [Smooth structureMap] {p : ℕ} (hp : dim X < p) :
+    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt structureMap) (p : ℤ) := by
   rw [constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_iff]
-  exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_of_lt structureMap d hp
+  exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_of_lt structureMap (dim X) hp
 
 /-- The integer-indexed constant-to-de Rham comparison commutes with complex scalar
 multiplication. -/
 lemma constantsToHolomorphicDeRhamComplexInt_scalar
-    [SmoothOfRelativeDimension d structureMap] (c : ℂ) :
-    constantsToHolomorphicDeRhamComplexInt structureMap d ≫
-      scalarHolomorphicDeRhamComplexInt structureMap d c =
+    [IsIntegral X] [Smooth structureMap] (c : ℂ) :
+    constantsToHolomorphicDeRhamComplexInt structureMap ≫
+      scalarHolomorphicDeRhamComplexInt structureMap c =
     complexScalarComplexInt structureMap c ≫
-      constantsToHolomorphicDeRhamComplexInt structureMap d := by
+      constantsToHolomorphicDeRhamComplexInt structureMap := by
   unfold constantsToHolomorphicDeRhamComplexInt
     scalarHolomorphicDeRhamComplexInt complexScalarComplexInt
   change HomologicalComplex.extendMap
-      (constantsToHolomorphicDeRhamComplex structureMap d) ComplexShape.embeddingUpNat ≫
+      (constantsToHolomorphicDeRhamComplex structureMap (dim X)) ComplexShape.embeddingUpNat ≫
     HomologicalComplex.extendMap
-      (scalarHolomorphicDeRhamComplex structureMap d c) ComplexShape.embeddingUpNat =
+      (scalarHolomorphicDeRhamComplex structureMap (dim X) c) ComplexShape.embeddingUpNat =
     HomologicalComplex.extendMap
       (complexScalarComplex structureMap c) ComplexShape.embeddingUpNat ≫
     HomologicalComplex.extendMap
-      (constantsToHolomorphicDeRhamComplex structureMap d) ComplexShape.embeddingUpNat
+      (constantsToHolomorphicDeRhamComplex structureMap (dim X)) ComplexShape.embeddingUpNat
   rw [← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp,
     constantsToHolomorphicDeRhamComplex_scalar]
 

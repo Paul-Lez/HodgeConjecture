@@ -78,13 +78,13 @@ theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
     RationalComponentCycleClassPurity structureMap d x := by
   unfold RationalComponentCycleClassPurity
   let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
-    openParacompactSpace structureMap d
+    openParacompactSpace structureMap
   let Z := cycleComponentSupport structureMap x
   have hZ : IsClosed Z := isClosed_cycleComponentSupport structureMap x
   let e : RationalCohomologyWithSupport structureMap Z ((2 * d : ℕ) : ℤ) ≃+
       AlgebraicTopology.Singular.CohomologyWithSupport ℚ
         (TopCat.of (ComplexPoint X structureMap)) Z (2 * d) :=
-    rationalCohomologyWithSupportAddEquivSingular structureMap d Z hZ (2 * d)
+    rationalCohomologyWithSupportAddEquivSingular structureMap Z hZ (2 * d)
   let _ : Module ℚ (RationalCohomologyWithSupport structureMap Z ((2 * d : ℕ) : ℤ)) :=
     e.module ℚ
   obtain ⟨β, hβ⟩ :=
