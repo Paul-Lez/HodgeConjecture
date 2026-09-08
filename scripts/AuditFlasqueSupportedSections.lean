@@ -1,0 +1,15 @@
+import HodgeConjecture.Other.AlgebraicTopology.FlasqueSupportedSections
+
+#print axioms TopCat.Sheaf.supportedOutsideIntersectionIso
+#print axioms TopCat.Sheaf.toOpenRestrictionPushforward_intersection
+#print axioms TopCat.Sheaf.supportedOutsideInclusion_restrict_intersection
+#print axioms TopCat.Sheaf.supportedOutsideGlueZero
+#print axioms TopCat.Sheaf.supportedOutsideGlueZero_restrict_left
+#print axioms TopCat.Sheaf.supportedOutsideGlueZero_restrict_right
+#print axioms TopCat.Sheaf.exists_supportedOutsideSection_of_restrict_eq_zero
+#print axioms TopCat.Sheaf.sheafSectionsSupportedOutside_restriction_surjective
+#print axioms TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+#print axioms TopCat.Sheaf.sheafSectionsWithClosedSupport_isFlasque
+
+#check @TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+#check @TopCat.Sheaf.sheafSectionsWithClosedSupport_isFlasque
