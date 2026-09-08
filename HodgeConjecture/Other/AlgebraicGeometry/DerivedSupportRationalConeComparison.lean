@@ -7,6 +7,7 @@ module
 public import HodgeConjecture.Other.AlgebraicTopology.OpenInjectiveResolutionComparison
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportLocalization
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtendNaturality
+public import HodgeConjecture.Other.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
 
 /-!
 # Normalized injective models for the rational support cone
@@ -141,6 +142,25 @@ lemma ambientRationalInjectiveCone_isFlasque
     exact TopCat.Sheaf.injective_isFlasque _ _
   · exact derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque structureMap Z
 
+/-- The replacement cone is genuinely termwise injective: its terms are
+finite biproducts of ambient injectives and open direct images of injectives. -/
+instance ambientRationalInjectiveCone_injective
+    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) (q : ℤ) :
+    Injective ((CochainComplex.mappingCone
+      (ambientRationalInjectiveRestriction structureMap Z hZ)).X q) := by
+  let : Injective
+      ((derivedPushforwardComplementConstantRationalComplexInt structureMap Z).X q) :=
+    derivedPushforwardComplementConstantRationalComplexInt_injective structureMap Z hZ q
+  exact Injective.of_iso
+    (HomologicalComplex.homotopyCofiber.XIsoBiprod
+      (ambientRationalInjectiveRestriction structureMap Z hZ) q (q + 1) rfl).symm inferInstance
+
+instance ambientRationalInjectiveCone_isKInjective
+    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    (CochainComplex.mappingCone
+      (ambientRationalInjectiveRestriction structureMap Z hZ)).IsKInjective :=
+  CochainComplex.isKInjective_of_injective _ (-1)
+
 /-- The existing support group is computed by the global sections of this
 normalized ambient-injective cone. No smoothness assumption is needed. -/
 def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
@@ -158,8 +178,7 @@ def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
         ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)
       map_add' α β := (hypercohomologyMap structureMap
         (rationalSupportConeToAmbientInjectiveCone structureMap Z hZ) (n - 1)).map_add α β }
-  exact e.trans (hypercohomologyAddEquivGlobalSections structureMap _ (-1)
-    (ambientRationalInjectiveCone_isFlasque structureMap Z hZ) (n - 1))
+  exact e.trans (hypercohomologyAddEquivGlobalSectionsKInjective structureMap _ (n - 1))
 
 /-- Compare actual restriction of the integer-indexed ambient resolution with
 the independently chosen complement resolution. The map/extension isomorphism
