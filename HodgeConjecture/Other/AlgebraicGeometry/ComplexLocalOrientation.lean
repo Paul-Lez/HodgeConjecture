@@ -46,7 +46,15 @@ open AlgebraicTopology.Singular
 variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
 
 noncomputable local instance :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+
+/-- The local fundamental class at a smooth complex point, constructed from its chosen algebraic
+étale chart and the standard complex orientation. -/
+def localFundamentalClass [SmoothOfRelativeDimension d structureMap]
+    (z : ComplexPoint X structureMap) :
+    RelativeHomology ℚ (pointComplementPair z) (2 * d) :=
+  localClassOfChart d (localChart structureMap d z) z
+    (mem_localChart_source structureMap d z)
 
 /-- A family of rational top-degree local homology classes on a complex analytic space. -/
 abbrev RationalLocalHomologyClassFamily :=

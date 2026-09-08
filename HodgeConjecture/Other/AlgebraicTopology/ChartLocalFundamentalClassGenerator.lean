@@ -164,6 +164,16 @@ lemma span_standardComplexLocalClass_eq_top_for_chart :
       rw [hdeg]
       exact span_standardLocalClass_add_two_eq_top (n * 2)
 
+/-- The oriented standard complex local class is nonzero in every complex dimension. -/
+lemma standardComplexLocalClass_ne_zero_for_chart :
+    standardComplexLocalClass d ≠ 0 := by
+  rw [standardComplexLocalClass_ne_zero_iff]
+  by_cases hd : d = 0
+  · subst d
+    exact standardLocalClass_zero_ne_zero
+  · exact standardLocalClass_ne_zero_of_pos (d * 2)
+      (Nat.mul_pos (Nat.pos_of_ne_zero hd) (by norm_num))
+
 /-- The class transported through a complex chart generates the full ambient rational local
 homology group. -/
 theorem span_localClassOfChart_eq_top :
@@ -180,5 +190,16 @@ theorem span_localClassOfChart_eq_top :
     _ = LinearMap.range f := Submodule.map_top f
     _ = ⊤ := LinearMap.range_eq_top.mpr
       (chartModelEmbedding_relativeHomologyMap_surjective d e x hx)
+
+/-- The exactly normalized local class transported through a chart is nonzero. -/
+theorem localClassOfChart_ne_zero :
+    localClassOfChart d e x hx ≠ 0 := by
+  have hinjective : Function.Injective
+      (relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e x hx)) :=
+    (chartModelEmbedding_relativeHomologyMap_bijective d e x hx).1
+  intro hzero
+  apply standardComplexLocalClass_ne_zero_for_chart d
+  apply hinjective
+  simpa only [localClassOfChart, hzero, map_zero]
 
 end AlgebraicTopology.Singular

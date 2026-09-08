@@ -144,6 +144,64 @@ def compactificationBorelMooreToLocal
       RelativeHomology R (pointComplementPair x) n :=
   relativeHomologyMap R n (compactificationToPointComplementPair U x hx)
 
+/-- If the compactification consists of a single point, then restriction from its
+compactification-relative Borel--Moore homology to local homology at that point is an
+isomorphism.  This is a genuine isomorphism of pairs: both omitted subspaces are empty.
+
+The statement is useful for zero-dimensional irreducible components and does not appeal to a
+fundamental-class existence theorem. -/
+lemma compactificationToPointComplementPair_isIso_of_subsingleton
+    {X : Type} [TopologicalSpace X] [Subsingleton X] (x : X) :
+    IsIso (compactificationToPointComplementPair
+      (Set.univ : Set X) x (Set.mem_univ x)) := by
+  let hpointComplement : IsEmpty ({x}ᶜ : Set X) :=
+    ⟨fun y ↦ y.2 (Subsingleton.elim y.1 x)⟩
+  let hunivComplement : IsEmpty ((Set.univ : Set X)ᶜ : Set X) :=
+    ⟨fun y ↦ y.2 (Set.mem_univ y.1)⟩
+  have hemptyPointComplement (y : ({x}ᶜ : Set X)) : False :=
+    y.2 (Subsingleton.elim y.1 x)
+  have hemptyUnivComplement (y : ((Set.univ : Set X)ᶜ : Set X)) : False :=
+    y.2 (Set.mem_univ y.1)
+  let inverse : pointComplementPair x ⟶
+      TopPair.ofSubset (X := TopCat.of X) (Set.univ : Set X)ᶜ :=
+    TopPair.ofHom (𝟙 _) (TopCat.ofHom
+      ⟨(fun y : ({x}ᶜ : Set X) ↦ (hemptyPointComplement y).elim),
+        continuous_of_discreteTopology⟩)
+      (by ext y; exact (hemptyPointComplement y).elim)
+  refine ⟨⟨inverse, ?_, ?_⟩⟩
+  · apply MorphismProperty.Arrow.Hom.ext
+    · ext y
+      exact (hemptyUnivComplement y).elim
+    · rfl
+  · apply MorphismProperty.Arrow.Hom.ext
+    · ext y
+      exact (hemptyPointComplement y).elim
+    · rfl
+
+/-- For a one-point compactification, the canonical local-value map is a linear equivalence in
+every degree. -/
+def compactificationBorelMooreToLocalEquivOfSubsingleton
+    (R : Type) [Field R] {X : Type} [TopologicalSpace X] [Subsingleton X]
+    (x : X) (n : ℕ) :
+    CompactificationBorelMooreHomology R (Set.univ : Set X)ᶜ n ≃ₗ[R]
+      RelativeHomology R (pointComplementPair x) n := by
+  let f := compactificationToPointComplementPair
+    (Set.univ : Set X) x (Set.mem_univ x)
+  let _ : IsIso f := compactificationToPointComplementPair_isIso_of_subsingleton x
+  exact LinearEquiv.ofBijective
+    (compactificationBorelMooreToLocal R (Set.univ : Set X) n x (Set.mem_univ x))
+    ((ConcreteCategory.isIso_iff_bijective
+      ((relativeHomologyFunctor R n).map f)).mp inferInstance)
+
+@[simp]
+lemma compactificationBorelMooreToLocalEquivOfSubsingleton_apply
+    (R : Type) [Field R] {X : Type} [TopologicalSpace X] [Subsingleton X]
+    (x : X) (n : ℕ)
+    (c : CompactificationBorelMooreHomology R (Set.univ : Set X)ᶜ n) :
+    compactificationBorelMooreToLocalEquivOfSubsingleton R x n c =
+      compactificationBorelMooreToLocal R (Set.univ : Set X) n x (Set.mem_univ x) c :=
+  rfl
+
 /-- A compactification-relative Borel--Moore class has the prescribed orientation when all of
 its local values are exactly the selected local orientation classes. -/
 def IsCompactificationFundamentalClass

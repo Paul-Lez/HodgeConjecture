@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
+public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClass
 public import HodgeConjecture.Other.AlgebraicTopology.EuclideanLocalHomology
 public import HodgeConjecture.Other.AlgebraicTopology.SingularHomologyVanishing
 public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
@@ -76,6 +76,23 @@ public theorem relativeHomologyProjection_injective_of_isZero_subspace
   have ha0 : a = 0 := (ModuleCat.subsingleton_of_isZero hA).elim _ _
   have hsub : z - z' = 0 :=
     ha.symm.trans (by simp [ha0])
+  exact sub_eq_zero.mp hsub
+
+set_option backward.isDefEq.respectTransparency false in
+/-- Degree-unrestricted form of the left exact-sequence criterion: if the subspace has no
+homology in degree `n`, absolute-to-relative homology is injective in degree `n`. -/
+public theorem relativeHomologyProjection_injective_of_isZero_subspace_degree
+    (X : TopPair) (n : ℕ) (hA : IsZero (Homology ℚ X.snd n)) :
+    Function.Injective (relativeHomologyProjection ℚ X n).hom := by
+  intro z z' hzz'
+  have hker : (relativeHomologyProjection ℚ X n).hom (z - z') = 0 := by
+    rw [map_sub, hzz', sub_self]
+  have hexact :=
+    (ShortComplex.moduleCat_exact_iff _).mp
+      (relativeSingular_homology_exact_ambient X n)
+  obtain ⟨a, ha⟩ := hexact (z - z') hker
+  have ha0 : a = 0 := (ModuleCat.subsingleton_of_isZero hA).elim _ _
+  have hsub : z - z' = 0 := ha.symm.trans (by simp [ha0])
   exact sub_eq_zero.mp hsub
 
 /-- If the connecting morphism vanishes, every relative class in degree `n + 1` has a global

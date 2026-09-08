@@ -16,8 +16,9 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.RelativeHomotopyInvariance
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ComplexOrientation
+public import HodgeConjecture.Other.AlgebraicTopology.ComplexOrientation
 public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.SpecialFunctions.Complex.Log
 public import Mathlib.Analysis.Normed.Module.FiniteDimension
 public import Mathlib.LinearAlgebra.Matrix.Transvection
 

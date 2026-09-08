@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
+public import HodgeConjecture.Other.AlgebraicGeometry.ChowCycleClassDescent
 
 /-!
 # Principal divisors and functorial cycle classes

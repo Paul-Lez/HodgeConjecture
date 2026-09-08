@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SheafCohomologyWithSupport
+public import HodgeConjecture.Other.AlgebraicTopology.SheafCohomologyWithSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 

@@ -72,14 +72,6 @@ def asOpenPoint (z : ComplexPoint X structureMap) (hz : z ∈ overOpen U) :
     change liftToOpen U structureMap z hz ≫ (U.ι ≫ structureMap) = 𝟙 _
     rw [← Category.assoc, liftToOpen_fac, z.2]⟩
 
-/-- Mapping a point lifted to an open subscheme back to the ambient scheme recovers the original
-complex point. -/
-@[simp]
-lemma map_asOpenPoint (z : ComplexPoint X structureMap) (hz : z ∈ overOpen U) :
-    map U.ι rfl (asOpenPoint U structureMap z hz) = z := by
-  apply Subtype.ext
-  exact liftToOpen_fac U structureMap z hz
-
 /-- Complex points of an open subscheme are the ambient complex points lying in the open. -/
 def openEquiv :
     ComplexPoint U.toScheme (openStructureMap U structureMap) ≃

@@ -28,9 +28,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ComplexOrientation
-public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalFundamentalClass
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
 
 /-!

@@ -18,7 +18,7 @@ module
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalCoordinates
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
+public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClass
 public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
 public import HodgeConjecture.Other.AlgebraicTopology.LocalFundamentalClassGenerator
 public import HodgeConjecture.Other.AlgebraicTopology.PuncturedEuclideanFundamentalClass
@@ -265,6 +265,36 @@ def neighborhoodPointAlgHomHomeomorph :
       C.neighborhoodToSpecΓ_over).trans
     (ComplexPoint.affineSpecHomeomorph Γ(C.componentNeighborhood.toScheme, ⊤))
 
+/-- The affine algebra-homomorphism coordinate of a neighborhood point evaluates global
+regular sections in the usual way. -/
+lemma neighborhoodPointAlgHomHomeomorph_apply
+    (z : ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap)
+    (r : Γ(C.componentNeighborhood.toScheme, ⊤)) :
+    C.neighborhoodPointAlgHomHomeomorph z r = Point.evaluate ⊤ r z := by
+  let _ : IsAffine C.componentNeighborhood.toScheme :=
+    C.componentNeighborhood_isAffine
+  rw [neighborhoodPointAlgHomHomeomorph, Homeomorph.trans_apply]
+  change ComplexPoint.affineSpecEquiv Γ(C.componentNeighborhood.toScheme, ⊤)
+      (Point.isoMapHomeomorph
+        (asIso C.componentNeighborhood.toScheme.toSpecΓ)
+        C.neighborhoodToSpecΓ_over z) r = _
+  rw [ComplexPoint.affineSpecEquiv_apply]
+  change Point.evaluate ⊤
+      ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)
+      (Point.map C.componentNeighborhood.toScheme.toSpecΓ
+        C.neighborhoodToSpecΓ_over z) = _
+  rw [Point.evaluate_map]
+  change Point.evaluate ⊤
+      (C.componentNeighborhood.toScheme.toSpecΓ.appTop
+        ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)) z = _
+  rw [Scheme.toSpecΓ_appTop]
+  change Point.evaluate ⊤
+      ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).hom
+        ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)) z = _
+  have h := DFunLike.congr_fun (congrArg CommRingCat.Hom.hom
+    (Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv_hom_id) r
+  exact congrArg (fun s ↦ Point.evaluate ⊤ s z) h
+
 /-- The actual local analytic chart supplied by the exact étale component coordinates. -/
 def neighborhoodProjectionChart :
     OpenPartialHomeomorph
@@ -300,6 +330,69 @@ lemma neighborhoodProjectionChart_apply_of_mem
     Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)
       (C.neighborhoodPointAlgHomHomeomorph z) hz.2
+
+/-- Evaluation of a global section of the affine component neighborhood is analytic along the
+inverse of its exact projection chart. -/
+lemma analyticAt_neighborhoodProjectionChart_symm_evaluate_top
+    {w : Fin n → ℂ} (hw : w ∈ C.neighborhoodProjectionChart.target)
+    (r : Γ(C.componentNeighborhood.toScheme, ⊤)) :
+    AnalyticAt ℂ (fun v ↦ Point.evaluate ⊤ r
+      (C.neighborhoodProjectionChart.symm v)) w := by
+  let u := C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint
+  have hw' : w ∈ (ComplexPoint.etaleAlgHomProjectionChart
+      Γ(C.componentNeighborhood.toScheme, ⊤) u).target := by
+    rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_target] at hw
+    exact hw.1
+  have h := ComplexPoint.analyticAt_etaleAlgHomProjectionChart_symm_apply
+    Γ(C.componentNeighborhood.toScheme, ⊤) u hw' r
+  have h' : AnalyticAt ℂ (fun v ↦ C.neighborhoodPointAlgHomHomeomorph
+      (C.neighborhoodProjectionChart.symm v) r) w := by
+    apply h.congr
+    filter_upwards with v
+    simp only [neighborhoodProjectionChart, OpenPartialHomeomorph.coe_trans_symm,
+      Function.comp_apply, Homeomorph.toOpenPartialHomeomorph_symm_apply]
+    rw [Homeomorph.apply_symm_apply]
+  simpa only [C.neighborhoodPointAlgHomHomeomorph_apply] using h'
+
+/-- Evaluation of an arbitrary regular section defined near the inverse-chart point is analytic
+there.  The proof shrinks inside the affine neighborhood to a principal open and represents the
+section by a quotient of global sections. -/
+lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
+    {w : Fin n → ℂ} (hw : w ∈ C.neighborhoodProjectionChart.target)
+    (W : C.componentNeighborhood.toScheme.Opens) (s : Γ(C.componentNeighborhood.toScheme, W))
+    (hW : C.neighborhoodProjectionChart.symm w ∈ Point.overOpen W) :
+    AnalyticAt ℂ (fun v ↦ Point.evaluate W s
+      (C.neighborhoodProjectionChart.symm v)) w := by
+  let Y := C.componentNeighborhood.toScheme
+  let _ : IsAffine Y := C.componentNeighborhood_isAffine
+  let y : ComplexPoint Y C.neighborhoodStructureMap := C.neighborhoodProjectionChart.symm w
+  obtain ⟨g, hgW, hyg⟩ :=
+    (isAffineOpen_top Y).exists_basicOpen_le
+      (V := W) ⟨y.underlying, hW⟩ trivial
+  let t : Γ(Y, Y.basicOpen g) := Y.presheaf.map (homOfLE hgW).op s
+  obtain ⟨k, a, hquot⟩ :=
+    ComplexPoint.exists_evaluate_affine_basicOpen_eq_div
+      (structureMap := C.neighborhoodStructureMap) g t
+  have hyg' : y ∈ Point.overOpen (Y.basicOpen g) := hyg
+  have hgzero : Point.evaluate ⊤ g y ≠ 0 :=
+    (Point.mem_overOpen_basicOpen_iff_evaluate_ne_zero g y trivial).mp hyg'
+  have ha := C.analyticAt_neighborhoodProjectionChart_symm_evaluate_top hw a
+  have hg := C.analyticAt_neighborhoodProjectionChart_symm_evaluate_top hw g
+  have hrat : AnalyticAt ℂ
+      (fun v ↦ Point.evaluate ⊤ a (C.neighborhoodProjectionChart.symm v) /
+        Point.evaluate ⊤ g (C.neighborhoodProjectionChart.symm v) ^ k) w :=
+    ha.div (hg.pow k) (pow_ne_zero k hgzero)
+  apply hrat.congr
+  have hcontinuous : ContinuousAt C.neighborhoodProjectionChart.symm w :=
+    C.neighborhoodProjectionChart.continuousAt_symm hw
+  have heventually : C.neighborhoodProjectionChart.symm ⁻¹'
+      Point.overOpen (Y.basicOpen g) ∈ 𝓝 w :=
+    hcontinuous ((Point.isOpen_overOpen (Y.basicOpen g)).mem_nhds hyg')
+  filter_upwards [heventually] with v hv
+  let yv : ComplexPoint Y C.neighborhoodStructureMap :=
+    C.neighborhoodProjectionChart.symm v
+  have hres := Point.evaluate_res hgW s yv hv
+  exact (hres.trans (hquot yv hv)).symm
 
 /-- The relative-homology map induced by the actual analytic chart coming from the exact
 component coordinates. -/

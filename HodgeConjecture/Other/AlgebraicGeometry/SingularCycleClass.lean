@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
+public import HodgeConjecture.Other.AlgebraicTopology.SingularCohomology
 public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 
 /-!

@@ -20,17 +20,12 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSuppor
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CompactlySupportedCohomology
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
-public import HodgeConjecture.Definitions.AlgebraicTopology.SheafCohomologyWithSupport
-public import HodgeConjecture.Definitions.Geometry.Manifold.Orientation
-public import HodgeConjecture.Definitions.LinearAlgebra.ComplexOrientation
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Definitions.Topology.Dimension
 
@@ -38,6 +33,6 @@ public import HodgeConjecture.Definitions.Topology.Dimension
 # Definitions used by the Hodge conjecture statement
 
 This umbrella contains the construction and definition modules in the transitive source closure
-of `HodgeConjecture.Statement`. The statement itself imports only its three immediate definition
-modules rather than this keep-all umbrella.
+of `HodgeConjecture.Statement`. The statement itself imports only its immediate dependencies
+rather than this keep-all umbrella.
 -/

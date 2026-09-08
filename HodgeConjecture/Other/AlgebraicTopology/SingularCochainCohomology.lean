@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
 public import HodgeConjecture.Other.Algebra.Homology.DualExact
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
+public import HodgeConjecture.Other.AlgebraicTopology.SingularCohomology
 
 /-!
 # Cohomology of singular cochains
