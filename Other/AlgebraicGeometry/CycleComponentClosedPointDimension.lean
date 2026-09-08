@@ -263,8 +263,7 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
 coheight `d - p`. -/
 lemma cycleComponent_complexPoint_coheight_eq_sub
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap))
+    (z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap)))
     [SmoothOfRelativeDimension d structureMap]
     (hx : Order.coheight x = p) :
     Order.coheight z.underlying = d - p :=

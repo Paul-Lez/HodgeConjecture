@@ -37,7 +37,7 @@ bounds proves the Hodge-conjecture inclusion in every codimension for such a var
 
 @[expose] public noncomputable section
 
-open TopologicalSpace
+open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -49,16 +49,16 @@ variable {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth 
 /-- On a connected projective analytification, the image of the genuine codimension-zero Chow
 cycle-class map is all of degree-zero rational cohomology. -/
 theorem codimensionZeroCycleClassSpan_eq_top_of_connected
-    (hV : ConnectedSpace (ComplexPoint X structureMap)) :
+    (hV : ConnectedSpace (ComplexPoint (Over.mk structureMap))) :
     codimensionZeroCycleClassSpan structureMap = ⊤ := by
-  let : ConnectedSpace (ComplexPoint X structureMap) := hV
+  let : ConnectedSpace (ComplexPoint (Over.mk structureMap)) := hV
   rw [codimensionZeroCycleClassSpan_eq_span_unit, span_rationalCohomologyUnit_eq_top]
 
 /-- On a connected projective analytification, the constructed codimension-zero algebraic
 cycle-class span is the whole degree-zero rational cohomology group, provided it has been compared
 with the separately constructed codimension-zero Chow-class span. -/
 theorem algebraicCycleClassSpan_zero_eq_top_of_connected
-    (hV : ConnectedSpace (ComplexPoint X structureMap))
+    (hV : ConnectedSpace (ComplexPoint (Over.mk structureMap)))
     (hcompare : algebraicCycleClassSpan structureMap 0 =
       codimensionZeroCycleClassSpan structureMap) :
     algebraicCycleClassSpan structureMap 0 = ⊤ := by
@@ -68,7 +68,7 @@ theorem algebraicCycleClassSpan_zero_eq_top_of_connected
 analytification is connected. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected
 
-    (hV : ConnectedSpace (ComplexPoint X structureMap))
+    (hV : ConnectedSpace (ComplexPoint (Over.mk structureMap)))
     (hcompare : algebraicCycleClassSpan structureMap 0 =
       codimensionZeroCycleClassSpan structureMap) :
     Hdg^0(ℚ; structureMap) = algebraicCycleClassSpan structureMap 0 := by
@@ -79,7 +79,7 @@ theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected
 connected. -/
 theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected
 
-    (hV : ConnectedSpace (ComplexPoint X structureMap))
+    (hV : ConnectedSpace (ComplexPoint (Over.mk structureMap)))
     (hcompare : algebraicCycleClassSpan structureMap 0 =
       codimensionZeroCycleClassSpan structureMap) :
     Hdg^0(ℚ; structureMap) ≤ algebraicCycleClassSpan structureMap 0 := by

@@ -109,8 +109,7 @@ lemma cycleComponent_stalkMap_ker_isPrime (z : cycleComponent X x) :
 of the ambient stalk by the stalk-map kernel has Krull dimension `d - p`. -/
 lemma ringKrullDim_cycleComponent_stalkMap_quotient
     {d p : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap))
+    (z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap)))
     (hx : Order.coheight x = p) :
     ringKrullDim
       (X.presheaf.stalk (cycleComponentι X x z.underlying) ⧸
@@ -131,8 +130,7 @@ lemma ringKrullDim_cycleComponent_stalkMap_quotient
 /-- The ambient stalk at the image of a complex component point has Krull dimension `d`. -/
 lemma ringKrullDim_cycleComponent_ambient_stalk
     {d : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap)) :
+    (z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap))) :
     ringKrullDim
       (X.presheaf.stalk (cycleComponentι X x z.underlying)) = d := by
   rw [ringKrullDim_stalk_eq_coheight]
@@ -156,8 +154,7 @@ lemma ringKrullDim_cycleComponent_ambient_stalk
 codimension `p`. -/
 lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
     {d p : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap))
+    (z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap)))
     (hx : Order.coheight x = p) :
     (p : ℕ∞) ≤ Submodule.spanFinrank
       (RingHom.ker ((cycleComponentι X x).stalkMap z.underlying).hom) := by
@@ -185,8 +182,7 @@ lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
 the geometric codimension. -/
 lemma exists_cycleComponent_stalkMap_ker_generators
     {d p : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap))
+    (z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap)))
     (hx : Order.coheight x = p) :
     ∃ s : Finset (X.presheaf.stalk
         (cycleComponentι X x z.underlying)),

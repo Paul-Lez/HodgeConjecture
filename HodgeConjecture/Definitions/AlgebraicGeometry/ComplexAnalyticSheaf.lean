@@ -46,19 +46,19 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 /-- The sheaf of complex-valued functions which are analytic in the algebraically constructed
 étale charts, initially regarded as a sheaf of types. -/
 def holomorphicFunctionSheafToTypes [SmoothOfRelativeDimension d structureMap] :
-    TopCat.Sheaf (Type) (TopCat.of (ComplexPoint X structureMap)) :=
+    TopCat.Sheaf (Type) (TopCat.of (ComplexPoint (Over.mk structureMap))) :=
   (contDiffWithinAt_localInvariantProp (I := 𝓘(ℂ, Fin d → ℂ))
-    (I' := 𝓘(ℂ)) ω).sheaf (ComplexPoint X structureMap) ℂ
+    (I' := 𝓘(ℂ)) ω).sheaf (ComplexPoint (Over.mk structureMap)) ℂ
 
 instance holomorphicFunctionSheafToTypes.commRing [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) :
     CommRing ((holomorphicFunctionSheafToTypes structureMap d).presheaf.obj U) :=
   inferInstanceAs <| CommRing
-    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X structureMap)); ℂ⟯
+    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint (Over.mk structureMap))); ℂ⟯
 
 /-- The presheaf of rings underlying the holomorphic-function sheaf. -/
 def holomorphicFunctionPresheaf [SmoothOfRelativeDimension d structureMap] :
-    TopCat.Presheaf CommRingCat (TopCat.of (ComplexPoint X structureMap)) where
+    TopCat.Presheaf CommRingCat (TopCat.of (ComplexPoint (Over.mk structureMap))) where
   obj U := CommRingCat.of
     ((holomorphicFunctionSheafToTypes structureMap d).presheaf.obj U)
   map h := CommRingCat.ofHom <|
@@ -70,7 +70,7 @@ def holomorphicFunctionPresheaf [SmoothOfRelativeDimension d structureMap] :
 /-- The sheaf of complex-valued functions which are analytic in the algebraically constructed
 étale charts. -/
 def holomorphicFunctionSheaf [SmoothOfRelativeDimension d structureMap] :
-    TopCat.Sheaf CommRingCat (TopCat.of (ComplexPoint X structureMap)) where
+    TopCat.Sheaf CommRingCat (TopCat.of (ComplexPoint (Over.mk structureMap))) where
   obj := holomorphicFunctionPresheaf structureMap d
   property := by
     rw [CategoryTheory.Presheaf.isSheaf_iff_isSheaf_forget _ _
@@ -80,7 +80,7 @@ def holomorphicFunctionSheaf [SmoothOfRelativeDimension d structureMap] :
 /-- A section of the holomorphic-function sheaf is an analytic map to `ℂ` in the constructed
 charted-space structure. -/
 lemma holomorphicFunctionSheaf_section_analytic [SmoothOfRelativeDimension d structureMap]
-    {U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ}
+    {U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ}
     (s : (holomorphicFunctionSheaf structureMap d).presheaf.obj U) :
     ContMDiff 𝓘(ℂ, Fin d → ℂ) 𝓘(ℂ) ω s.1 :=
   (contDiffWithinAt_localInvariantProp ω).section_spec _ _ _ _

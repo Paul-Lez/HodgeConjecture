@@ -54,24 +54,24 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 /-- Zeroth rational singular homology of a smooth projective complex analytification is
 finite-dimensional, without assuming global connectedness. -/
 theorem finiteRationalSingularHomologyZero [IsIntegral X] [Smooth structureMap] :
-    Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) := by
-  let : Finite (ZerothHomotopy (ComplexPoint X structureMap)) :=
+    Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint (Over.mk structureMap))) 0) := by
+  let : Finite (ZerothHomotopy (ComplexPoint (Over.mk structureMap))) :=
     finiteZerothHomotopy structureMap
   have hfinite : Module.Finite ℚ
-      (∐ fun _ : ZerothHomotopy (ComplexPoint X structureMap) ↦
+      (∐ fun _ : ZerothHomotopy (ComplexPoint (Over.mk structureMap)) ↦
         ModuleCat.of ℚ ℚ : ModuleCat ℚ) :=
     inferInstance
   exact Module.Finite.equiv
-    (TopCat.singularHomology₀Iso (TopCat.of (ComplexPoint X structureMap))
+    (TopCat.singularHomology₀Iso (TopCat.of (ComplexPoint (Over.mk structureMap)))
       (ModuleCat.of ℚ ℚ)).symm.toLinearEquiv
 
 /-- Rational-to-complex singular cohomology base change for projective analytifications in
 degree zero. -/
 def rationalToComplexCohomologyBaseChangeZero [IsIntegral X] [Smooth structureMap] :
-    ℂ ⊗[ℚ] Cohomology ℚ (TopCat.of (ComplexPoint X structureMap)) 0 ≃ₗ[ℂ]
-      Cohomology ℂ (TopCat.of (ComplexPoint X structureMap)) 0 :=
-  letI : Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) :=
+    ℂ ⊗[ℚ] Cohomology ℚ (TopCat.of (ComplexPoint (Over.mk structureMap))) 0 ≃ₗ[ℂ]
+      Cohomology ℂ (TopCat.of (ComplexPoint (Over.mk structureMap))) 0 :=
+  letI : Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint (Over.mk structureMap))) 0) :=
     finiteRationalSingularHomologyZero structureMap
-  rationalToComplexCohomologyBaseChange (TopCat.of (ComplexPoint X structureMap)) 0
+  rationalToComplexCohomologyBaseChange (TopCat.of (ComplexPoint (Over.mk structureMap))) 0
 
 end AlgebraicGeometry.ComplexPoint

@@ -42,8 +42,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 noncomputable local instance cycleComponentTopology
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
     TopologicalSpace
-      (ComplexPoint (cycleComponent X x)
-        (cycleComponentι X x ≫ structureMap)) :=
+      (ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap))) :=
   analyticTopology
 
 /-- The complex-point map of a reduced cycle component is a closed topological embedding. -/
@@ -58,8 +57,7 @@ lemma cycleComponentMap_isClosedEmbedding
 analytic support in the ambient variety. -/
 def cycleComponentPointHomeomorphSupport
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
-    ComplexPoint (cycleComponent X x)
-        (cycleComponentι X x ≫ structureMap) ≃ₜ
+    ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap)) ≃ₜ
       cycleComponentSupport structureMap x :=
   (cycleComponentMap_isClosedEmbedding structureMap x).toIsEmbedding.toHomeomorph.trans
     (Homeomorph.setCongr (range_cycleComponentMap structureMap x))
@@ -67,8 +65,7 @@ def cycleComponentPointHomeomorphSupport
 @[simp]
 lemma cycleComponentPointHomeomorphSupport_apply
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap)) :
+    (z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap))) :
     cycleComponentPointHomeomorphSupport structureMap x z =
       cycleComponentSupportMap structureMap x z := by
   rfl
@@ -96,7 +93,7 @@ def cycleComponentSmoothPointHomeomorphSupport
 lemma cycleComponentSmoothPointHomeomorphSupport_apply
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
     (z : cycleComponentSmoothAnalyticLocus structureMap x) :
-    (cycleComponentSmoothPointHomeomorphSupport structureMap x z : (ComplexPoint X structureMap)) =
+    (cycleComponentSmoothPointHomeomorphSupport structureMap x z : (ComplexPoint (Over.mk structureMap))) =
       cycleComponentMap structureMap x z := by
   rfl
 

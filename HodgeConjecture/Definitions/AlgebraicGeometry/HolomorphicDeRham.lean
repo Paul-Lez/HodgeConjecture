@@ -56,7 +56,7 @@ This is the coefficient-aware object.  It is the migration target for the additi
 by the existing derived comparison below, and keeps the linearity of restriction maps available
 for module-valued sheafification. -/
 def holomorphicDeRhamModulePresheaf [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
-    TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X structureMap)) where
+    TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint (Over.mk structureMap))) where
   obj U := ModuleCat.of ℂ
     (HolomorphicForm structureMap d U p)
   map {U V} i := ModuleCat.ofHom
@@ -76,7 +76,7 @@ def holomorphicDeRhamModulePresheaf [SmoothOfRelativeDimension d structureMap] (
 
 /-- The legacy additive-group presentation of the holomorphic de Rham presheaf. -/
 def holomorphicDeRhamPresheaf [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
-    TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)) where
+    TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))) where
   obj U := AddCommGrpCat.of
     (HolomorphicForm structureMap d U p)
   map {U V} i := AddCommGrpCat.ofHom
@@ -153,7 +153,7 @@ lemma holomorphicDeRhamDifferential_comp [SmoothOfRelativeDimension d structureM
 /-- The holomorphic de Rham complex before forgetting its complex-linear structure. -/
 def holomorphicDeRhamModulePresheafComplex [SmoothOfRelativeDimension d structureMap] :
     CochainComplex
-      (TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X structureMap))) ℕ :=
+      (TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint (Over.mk structureMap)))) ℕ :=
   CochainComplex.of
     (holomorphicDeRhamModulePresheaf structureMap d)
     (holomorphicDeRhamModuleDifferential structureMap d)
@@ -169,7 +169,7 @@ def holomorphicDeRhamModulePresheafComplex [SmoothOfRelativeDimension d structur
 /-- The holomorphic de Rham complex before sheafification. -/
 def holomorphicDeRhamPresheafComplex [SmoothOfRelativeDimension d structureMap] :
     CochainComplex
-      (TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap))) ℕ :=
+      (TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap)))) ℕ :=
   CochainComplex.of
     (holomorphicDeRhamPresheaf structureMap d)
     (holomorphicDeRhamDifferential structureMap d)
@@ -183,14 +183,14 @@ def holomorphicDeRhamPresheafComplex [SmoothOfRelativeDimension d structureMap] 
 
 /-- The constant presheaf of additive groups with value `ℂ`. -/
 def constantComplexAddCommGrpPresheaf :
-    TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)) :=
-  (Functor.const (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ).obj
+    TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))) :=
+  (Functor.const (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ).obj
     (AddCommGrpCat.of ℂ)
 
 /-- The constant presheaf with value `ℂ`, retaining its complex-module structure. -/
 def constantComplexModulePresheaf :
-    TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X structureMap)) :=
-  (Functor.const (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ).obj
+    TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint (Over.mk structureMap))) :=
+  (Functor.const (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ).obj
     (ModuleCat.of ℂ ℂ)
 
 /-- Complex-linear constants as holomorphic de Rham forms of degree zero. -/
@@ -220,7 +220,7 @@ lemma constantsToHolomorphicDeRhamModuleZero_comp_differential
 def constantsToHolomorphicDeRhamModulePresheafComplex
     [SmoothOfRelativeDimension d structureMap] :
     (CochainComplex.single₀
-      (TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X structureMap)))).obj
+      (TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint (Over.mk structureMap))))).obj
         (constantComplexModulePresheaf structureMap) ⟶
       holomorphicDeRhamModulePresheafComplex structureMap d :=
   HomologicalComplex.mkHomFromSingle
@@ -245,7 +245,7 @@ def constantsToHolomorphicDeRhamZero [SmoothOfRelativeDimension d structureMap] 
 
 /-- On a nonempty open set, distinct complex constants define distinct holomorphic zero-forms. -/
 lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) [Nonempty U.unop] :
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ) [Nonempty U.unop] :
     Function.Injective (holomorphicFormOfConstant structureMap d U) := by
   intro c c' hcc'
   have hzero : holomorphicFormOfConstant structureMap d U (c - c') = 0 := by
@@ -282,7 +282,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The inclusion of complex constants into holomorphic zero-forms is a monomorphism on every
 stalk. -/
 lemma constantsToHolomorphicDeRhamZero_stalk_mono
-    [SmoothOfRelativeDimension d structureMap] (x : ComplexPoint X structureMap) :
+    [SmoothOfRelativeDimension d structureMap] (x : ComplexPoint (Over.mk structureMap)) :
     Mono ((TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map
       (constantsToHolomorphicDeRhamZero structureMap d)) := by
   rw [AddCommGrpCat.mono_iff_injective]
@@ -333,7 +333,7 @@ lemma constantsToHolomorphicDeRhamZero_comp_differential
 def constantsToHolomorphicDeRhamPresheafComplex
     [SmoothOfRelativeDimension d structureMap] :
     (CochainComplex.single₀
-      (TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)))).obj
+      (TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))))).obj
         (constantComplexAddCommGrpPresheaf structureMap) ⟶
       holomorphicDeRhamPresheafComplex structureMap d :=
   HomologicalComplex.mkHomFromSingle
@@ -347,8 +347,8 @@ def constantsToHolomorphicDeRhamPresheafComplex
 
 /-- Holomorphic de Rham forms in a fixed degree, after additive sheafification. -/
 def holomorphicDeRhamSheaf [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
-    TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)) :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+    TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))) :=
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   (presheafToSheaf J AddCommGrpCat).obj
     (holomorphicDeRhamPresheaf structureMap d p)
 
@@ -356,7 +356,7 @@ def holomorphicDeRhamSheaf [SmoothOfRelativeDimension d structureMap] (p : ℕ) 
 lemma holomorphicDeRhamSheaf_isZero_of_lt
     [SmoothOfRelativeDimension d structureMap] {p : ℕ} (hp : d < p) :
     IsZero (holomorphicDeRhamSheaf structureMap d p) := by
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   exact (presheafToSheaf J AddCommGrpCat).map_isZero
     (holomorphicDeRhamPresheaf_isZero_of_lt structureMap d hp)
 
@@ -364,19 +364,19 @@ lemma holomorphicDeRhamSheaf_isZero_of_lt
 def holomorphicDeRhamSheafDifferential [SmoothOfRelativeDimension d structureMap] (p : ℕ) :
     holomorphicDeRhamSheaf structureMap d p ⟶
       holomorphicDeRhamSheaf structureMap d (p + 1) :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   (presheafToSheaf J AddCommGrpCat).map
     (holomorphicDeRhamDifferential structureMap d p)
 
 /-- The sheafified holomorphic de Rham complex. -/
 def holomorphicDeRhamComplex [SmoothOfRelativeDimension d structureMap] :
     CochainComplex
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap))) ℕ :=
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap)))) ℕ :=
   CochainComplex.of
     (holomorphicDeRhamSheaf structureMap d)
     (holomorphicDeRhamSheafDifferential structureMap d)
     (fun p => by
-      let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+      let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
       change (presheafToSheaf J AddCommGrpCat).map
           (holomorphicDeRhamDifferential structureMap d p) ≫
         (presheafToSheaf J AddCommGrpCat).map
@@ -392,14 +392,14 @@ def holomorphicDeRhamComplex [SmoothOfRelativeDimension d structureMap] :
 The primitive may be taken after shrinking the original neighborhood. -/
 lemma holomorphicStalkExact_of_locallyPrimitive
     (S : ShortComplex (TopCat.Presheaf AddCommGrpCat
-      (TopCat.of (ComplexPoint X structureMap))))
-    (hlocal : ∀ (x : ComplexPoint X structureMap)
-      (U : Opens (TopCat.of (ComplexPoint X structureMap))) (_hx : x ∈ U)
+      (TopCat.of (ComplexPoint (Over.mk structureMap)))))
+    (hlocal : ∀ (x : ComplexPoint (Over.mk structureMap))
+      (U : Opens (TopCat.of (ComplexPoint (Over.mk structureMap)))) (_hx : x ∈ U)
       (s : S.X₂.obj (.op U)), S.g.app (.op U) s = 0 →
-        ∃ (V : Opens (TopCat.of (ComplexPoint X structureMap))) (_hxV : x ∈ V)
+        ∃ (V : Opens (TopCat.of (ComplexPoint (Over.mk structureMap)))) (_hxV : x ∈ V)
           (i : V ⟶ U) (t : S.X₁.obj (.op V)),
           S.f.app (.op V) t = S.X₂.map i.op s)
-    (x : ComplexPoint X structureMap) :
+    (x : ComplexPoint (Over.mk structureMap)) :
     (S.map (TopCat.Presheaf.stalkFunctor AddCommGrpCat x)).Exact := by
   rw [ShortComplex.ab_exact_iff]
   intro z hz
@@ -431,10 +431,10 @@ noncomputable def holomorphicDeRhamSheafificationUnit
     [SmoothOfRelativeDimension d structureMap] :
     holomorphicDeRhamPresheafComplex structureMap d ⟶
       (TopCat.Sheaf.forget AddCommGrpCat
-        (TopCat.of (ComplexPoint X structureMap))).mapHomologicalComplex
+        (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
           (ComplexShape.up ℕ) |>.obj (holomorphicDeRhamComplex structureMap d) where
   f p := toSheafify
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
     (holomorphicDeRhamPresheaf structureMap d p)
   comm' i j hij := by
     obtain rfl := hij
@@ -442,7 +442,7 @@ noncomputable def holomorphicDeRhamSheafificationUnit
       holomorphicDeRhamComplex_d]
     dsimp [holomorphicDeRhamSheafDifferential, holomorphicDeRhamSheaf]
     exact (toSheafify_naturality
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       (holomorphicDeRhamDifferential structureMap d i)).symm
 
 set_option backward.isDefEq.respectTransparency false in
@@ -509,7 +509,7 @@ def scalarHolomorphicDeRhamPresheaf [SmoothOfRelativeDimension d structureMap]
 
 @[simp] lemma scalarHolomorphicDeRhamPresheaf_apply
     [SmoothOfRelativeDimension d structureMap] (p : ℕ) (c : ℂ)
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
+    (U : (Opens (TopCat.of (ComplexPoint (Over.mk structureMap))))ᵒᵖ)
     (x : HolomorphicForm structureMap d U p) :
     (scalarHolomorphicDeRhamPresheaf structureMap d p c).app U x = c • x := by
   rfl
@@ -601,12 +601,12 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d structureMap]
   exact CochainComplex.ofHom
     (fun p =>
       let J := Opens.grothendieckTopology
-        (TopCat.of (ComplexPoint X structureMap))
+        (TopCat.of (ComplexPoint (Over.mk structureMap)))
       (presheafToSheaf J AddCommGrpCat).map
         (scalarHolomorphicDeRhamPresheaf structureMap d p c))
     (fun p => by
       let J := Opens.grothendieckTopology
-        (TopCat.of (ComplexPoint X structureMap))
+        (TopCat.of (ComplexPoint (Over.mk structureMap)))
       simp only [CochainComplex.of_d]
       change (presheafToSheaf J AddCommGrpCat).map
           (scalarHolomorphicDeRhamPresheaf structureMap d p c) ≫
@@ -625,7 +625,7 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d structureMap]
   apply HomologicalComplex.hom_ext
   intro p
   change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       AddCommGrpCat).map
       (scalarHolomorphicDeRhamPresheaf structureMap d p 0) = 0
   rw [scalarHolomorphicDeRhamPresheaf_zero, Functor.map_zero]
@@ -636,12 +636,12 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d structureMap]
   apply HomologicalComplex.hom_ext
   intro p
   change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       AddCommGrpCat).map
       (scalarHolomorphicDeRhamPresheaf structureMap d p 1) = 𝟙 _
   rw [scalarHolomorphicDeRhamPresheaf_one]
   exact (presheafToSheaf
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
     AddCommGrpCat).map_id _
 
 @[simp] lemma scalarHolomorphicDeRhamComplex_add
@@ -652,7 +652,7 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d structureMap]
   apply HomologicalComplex.hom_ext
   intro p
   change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       AddCommGrpCat).map
       (scalarHolomorphicDeRhamPresheaf structureMap d p (a + b)) = _
   rw [scalarHolomorphicDeRhamPresheaf_add, Functor.map_add]
@@ -666,7 +666,7 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d structureMap]
   apply HomologicalComplex.hom_ext
   intro p
   change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
       AddCommGrpCat).map
       (scalarHolomorphicDeRhamPresheaf structureMap d p (a * b)) = _
   rw [scalarHolomorphicDeRhamPresheaf_mul, Functor.map_comp]
@@ -674,8 +674,8 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d structureMap]
 
 /-- The constant sheaf with value the additive group of complex numbers. -/
 def constantComplexSheaf :
-    TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)) :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+    TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))) :=
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of ℂ)
 
 /-- Multiplication by a complex scalar as an additive endomorphism of `ℂ`. -/
@@ -697,14 +697,14 @@ def complexScalarPresheaf (c : ℂ) :
 def complexScalarSheaf (c : ℂ) :
     constantComplexSheaf structureMap ⟶ constantComplexSheaf structureMap := by
   let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X structureMap))
+    (TopCat.of (ComplexPoint (Over.mk structureMap)))
   exact (presheafToSheaf J AddCommGrpCat).map
     (complexScalarPresheaf structureMap c)
 
 /-- The sheafified inclusion of constants as de Rham zero-forms. -/
 def constantsToHolomorphicDeRhamZeroSheaf [SmoothOfRelativeDimension d structureMap] :
     constantComplexSheaf structureMap ⟶ holomorphicDeRhamSheaf structureMap d 0 :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   (presheafToSheaf J AddCommGrpCat).map
     (constantsToHolomorphicDeRhamZero structureMap d)
 
@@ -712,7 +712,7 @@ lemma constantsToHolomorphicDeRhamZeroSheaf_comp_differential
     [SmoothOfRelativeDimension d structureMap] :
     constantsToHolomorphicDeRhamZeroSheaf structureMap d ≫
       holomorphicDeRhamSheafDifferential structureMap d 0 = 0 := by
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
   change (presheafToSheaf J AddCommGrpCat).map
       (constantsToHolomorphicDeRhamZero structureMap d) ≫
     (presheafToSheaf J AddCommGrpCat).map
@@ -724,7 +724,7 @@ lemma constantsToHolomorphicDeRhamZeroSheaf_comp_differential
 noncomputable def constantsToHolomorphicDeRhamPresheafShortComplex
     [SmoothOfRelativeDimension d structureMap] :
     ShortComplex (TopCat.Presheaf AddCommGrpCat
-      (TopCat.of (ComplexPoint X structureMap))) :=
+      (TopCat.of (ComplexPoint (Over.mk structureMap)))) :=
   ShortComplex.mk (constantsToHolomorphicDeRhamZero structureMap d)
     (holomorphicDeRhamDifferential structureMap d 0)
     (constantsToHolomorphicDeRhamZero_comp_differential structureMap d)
@@ -733,7 +733,7 @@ noncomputable def constantsToHolomorphicDeRhamPresheafShortComplex
 noncomputable def constantsToHolomorphicDeRhamSheafShortComplex
     [SmoothOfRelativeDimension d structureMap] :
     ShortComplex (TopCat.Sheaf AddCommGrpCat
-      (TopCat.of (ComplexPoint X structureMap))) :=
+      (TopCat.of (ComplexPoint (Over.mk structureMap)))) :=
   ShortComplex.mk (constantsToHolomorphicDeRhamZeroSheaf structureMap d)
     (holomorphicDeRhamSheafDifferential structureMap d 0)
     (constantsToHolomorphicDeRhamZeroSheaf_comp_differential structureMap d)
@@ -745,21 +745,21 @@ noncomputable def constantsToHolomorphicDeRhamShortComplexSheafificationUnit
     constantsToHolomorphicDeRhamPresheafShortComplex structureMap d ⟶
       (constantsToHolomorphicDeRhamSheafShortComplex structureMap d).map
         (TopCat.Sheaf.forget AddCommGrpCat
-          (TopCat.of (ComplexPoint X structureMap))) where
+          (TopCat.of (ComplexPoint (Over.mk structureMap)))) where
   τ₁ := toSheafify
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
     (constantComplexAddCommGrpPresheaf structureMap)
   τ₂ := toSheafify
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
     (holomorphicDeRhamPresheaf structureMap d 0)
   τ₃ := toSheafify
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
     (holomorphicDeRhamPresheaf structureMap d 1)
   comm₁₂ := (toSheafify_naturality
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
     (constantsToHolomorphicDeRhamZero structureMap d)).symm
   comm₂₃ := (toSheafify_naturality
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
     (holomorphicDeRhamDifferential structureMap d 0)).symm
 
 set_option backward.isDefEq.respectTransparency false in
@@ -807,7 +807,7 @@ lemma constantsToHolomorphicDeRhamZeroSheaf_mono
   let S := (constantsToHolomorphicDeRhamPresheafShortComplex structureMap d).map stalk
   let T := (constantsToHolomorphicDeRhamSheafShortComplex structureMap d).map
     (TopCat.Sheaf.forget AddCommGrpCat
-      (TopCat.of (ComplexPoint X structureMap)) ⋙ stalk)
+      (TopCat.of (ComplexPoint (Over.mk structureMap))) ⋙ stalk)
   let η : S ⟶ T := (stalk.mapShortComplex).map unit
   let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
@@ -828,13 +828,13 @@ lemma constantsToHolomorphicDeRhamZero_scalar
     [SmoothOfRelativeDimension d structureMap] (c : ℂ) :
     constantsToHolomorphicDeRhamZeroSheaf structureMap d ≫
       (let J := Opens.grothendieckTopology
-        (TopCat.of (ComplexPoint X structureMap))
+        (TopCat.of (ComplexPoint (Over.mk structureMap)))
       (presheafToSheaf J AddCommGrpCat).map
         (scalarHolomorphicDeRhamPresheaf structureMap d 0 c)) =
     complexScalarSheaf structureMap c ≫
       constantsToHolomorphicDeRhamZeroSheaf structureMap d := by
   let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X structureMap))
+    (TopCat.of (ComplexPoint (Over.mk structureMap)))
   change (presheafToSheaf J AddCommGrpCat).map
       (constantsToHolomorphicDeRhamZero structureMap d) ≫
       (presheafToSheaf J AddCommGrpCat).map
@@ -859,7 +859,7 @@ lemma constantsToHolomorphicDeRhamZero_scalar
 /-- The comparison from the constant sheaf complex to the holomorphic de Rham complex. -/
 def constantsToHolomorphicDeRhamComplex [SmoothOfRelativeDimension d structureMap] :
     (CochainComplex.single₀
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)))).obj
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))))).obj
         (constantComplexSheaf structureMap) ⟶
       holomorphicDeRhamComplex structureMap d :=
   (CochainComplex.fromSingle₀Equiv (holomorphicDeRhamComplex structureMap d)
@@ -912,10 +912,10 @@ lemma constantsToHolomorphicDeRhamComplex_quasiIsoAt_of_lt
 /-- Scalar multiplication on the constant complex-valued complex concentrated in degree zero. -/
 def complexScalarComplex (c : ℂ) :
     (CochainComplex.single₀
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)))).obj
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))))).obj
         (constantComplexSheaf structureMap) ⟶
     (CochainComplex.single₀
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)))).obj
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))))).obj
         (constantComplexSheaf structureMap) :=
   (CochainComplex.single₀ _).map (complexScalarSheaf structureMap c)
 
@@ -937,9 +937,9 @@ lemma constantsToHolomorphicDeRhamComplex_scalar
 /-- The constant sheaf complex, extended by zero from natural to integer degrees. -/
 def constantComplexSheafComplexInt :
     CochainComplex
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap))) ℤ :=
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap)))) ℤ :=
   ((CochainComplex.single₀
-    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)))).obj
+    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))))).obj
       (constantComplexSheaf structureMap)).extend ComplexShape.embeddingUpNat
 
 /-- Scalar multiplication on the integer-indexed constant complex-valued complex. -/
@@ -951,7 +951,7 @@ def complexScalarComplexInt (c : ℂ) :
 
 /-- The holomorphic de Rham complex, extended by zero to negative degrees. -/
 def holomorphicDeRhamComplexInt [IsIntegral X] [Smooth structureMap] :
-    CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(ComplexPoint X structureMap)) ℤ :=
+    CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(ComplexPoint (Over.mk structureMap))) ℤ :=
   (holomorphicDeRhamComplex structureMap (dim X)).extend ComplexShape.embeddingUpNat
 
 /-- The integer-indexed holomorphic de Rham complex vanishes in every degree above the complex
@@ -1066,7 +1066,7 @@ lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_of_neg
       (holomorphicDeRhamComplex structureMap (dim X)) ComplexShape.embeddingUpNat n hnone
   · exact HomologicalComplex.extend_exactAt
       ((CochainComplex.single₀
-        (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)))).obj
+        (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint (Over.mk structureMap))))).obj
           (constantComplexSheaf structureMap))
       ComplexShape.embeddingUpNat n hnone
 

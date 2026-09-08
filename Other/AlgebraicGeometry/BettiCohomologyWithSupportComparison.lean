@@ -198,15 +198,15 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The inclusion of the complement of a closed support is an open embedding. -/
 lemma analyticComplementInclusion_isOpenEmbedding
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
     Topology.IsOpenEmbedding (analyticComplementInclusion structureMap Z) := by
   change Topology.IsOpenEmbedding
-    (Subtype.val : (Zᶜ : Set (ComplexPoint X structureMap)) → ComplexPoint X structureMap)
+    (Subtype.val : (Zᶜ : Set (ComplexPoint (Over.mk structureMap))) → ComplexPoint (Over.mk structureMap))
   exact hZ.isOpen_compl.isOpenEmbedding_subtypeVal
 
 /-- Every term of the chosen derived-pushforward model from an open complement is injective. -/
 theorem derivedPushforwardComplementConstantRationalComplexInt_injective
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) (n : ℤ) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) (n : ℤ) :
     Injective ((derivedPushforwardComplementConstantRationalComplexInt structureMap Z).X n) := by
   by_cases hn : ∃ m : ℕ, (m : ℤ) = n
   · obtain ⟨m, rfl⟩ := hn
@@ -226,7 +226,7 @@ lemma rationalToSingularCochainComplexInt_mono :
     Mono (rationalToSingularCochainComplexInt structureMap) := by
   change Mono (HomologicalComplex.extendMap
     (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex ℚ
-      (TopCat.of (ComplexPoint X structureMap))) ComplexShape.embeddingUpNat)
+      (TopCat.of (ComplexPoint (Over.mk structureMap)))) ComplexShape.embeddingUpNat)
   exact AlgebraicTopology.Singular.constantsToSingularCochainComplexInt_mono ℚ _
 
 variable [IsIntegral X] [Smooth structureMap]
@@ -238,7 +238,7 @@ local instance bettiSupportComparisonHasDerivedCategory :
 /-- A strict chain-level extension of restriction from rational constants to the chosen derived
 pushforward complex across the singular-cochain resolution. -/
 def singularResolutionRestriction
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
     singularCochainSheafComplexInt structureMap ℚ ⟶
       derivedPushforwardComplementConstantRationalComplexInt structureMap Z := by
   let : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
@@ -263,7 +263,7 @@ def singularResolutionRestriction
 set_option backward.isDefEq.respectTransparency false in
 /-- The singular-resolution restriction strictly extends restriction of rational constants. -/
 lemma rationalToSingular_comp_singularResolutionRestriction
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
     rationalToSingularCochainComplexInt structureMap ≫
         singularResolutionRestriction structureMap Z hZ =
       rationalRestrictionComplexInt structureMap Z := by
@@ -289,7 +289,7 @@ lemma rationalToSingular_comp_singularResolutionRestriction
 /-- Replacing rational constants by their singular-cochain resolution gives a quasi-isomorphic
 mapping-cone model for supported cohomology. -/
 def rationalSupportConeToSingularResolutionCone
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
     rationalCohomologyWithSupportComplex structureMap Z ⟶
       CochainComplex.mappingCone (singularResolutionRestriction structureMap Z hZ) := by
   let : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
@@ -312,7 +312,7 @@ def rationalSupportConeToSingularResolutionCone
     (derivedPushforwardComplementConstantRationalComplexInt_injective structureMap Z hZ)
 
 noncomputable instance rationalSupportConeToSingularResolutionCone_quasiIso
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
     QuasiIso (rationalSupportConeToSingularResolutionCone structureMap Z hZ) := by
   let : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
     unfold constantFieldSheafComplexInt

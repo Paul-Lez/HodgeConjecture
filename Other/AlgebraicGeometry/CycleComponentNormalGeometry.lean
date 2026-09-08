@@ -91,19 +91,18 @@ lemma dense_cycleComponent_smooth_closedPoints
 /-- The underlying scheme point of a complex point of a cycle component is closed. -/
 lemma cycleComponent_complexPoint_underlying_isClosed
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap)) :
+    (z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap))) :
     IsClosed {z.underlying} := by
-  change IsClosed {z.1 (IsLocalRing.closedPoint ℂ)}
+  let φ : Spec ↧ℂ ⟶ cycleComponent X x := z.left
+  change IsClosed {φ (IsLocalRing.closedPoint ℂ)}
   exact ((pointEquivClosedPoint
-    (cycleComponentι X x ≫ structureMap)) z).2
+    (cycleComponentι X x ≫ structureMap)) ⟨φ, Over.w z⟩).2
 
 /-- The image in the ambient variety of a complex point of a cycle component is a closed scheme
 point. -/
 lemma cycleComponent_complexPoint_ambient_underlying_isClosed
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap)) :
+    (z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap))) :
     IsClosed {cycleComponentι X x z.underlying} := by
   have hclosed := (cycleComponentι X x).isClosedEmbedding.isClosedMap
     {z.underlying} (cycleComponent_complexPoint_underlying_isClosed structureMap x z)
@@ -113,8 +112,7 @@ lemma cycleComponent_complexPoint_ambient_underlying_isClosed
 closed. -/
 lemma exists_cycleComponent_smooth_closed_complexPoint
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
-    ∃ z : ComplexPoint (cycleComponent X x)
-        (cycleComponentι X x ≫ structureMap),
+    ∃ z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap)),
       z.underlying ∈
           (cycleComponentι X x ≫ structureMap).smoothLocus ∧
         IsClosed {z.underlying} := by

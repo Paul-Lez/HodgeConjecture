@@ -31,28 +31,28 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 /-- Rational sheaf cohomology with support in a closed subset of the analytic complex-point space,
 using Ext. -/
 abbrev RationalCohomologyWithClosedSupport
-    (Z : Closeds (ComplexPoint X structureMap)) (n : ℕ) :=
-  TopCat.Sheaf.cohomologyWithSupport (TopCat.of (ComplexPoint X structureMap)) Z
+    (Z : Closeds (ComplexPoint (Over.mk structureMap))) (n : ℕ) :=
+  TopCat.Sheaf.cohomologyWithSupport (TopCat.of (ComplexPoint (Over.mk structureMap))) Z
     (constantFieldSheaf ℚ structureMap) n
 
-instance (Z : Closeds (ComplexPoint X structureMap)) (n : ℕ) :
+instance (Z : Closeds (ComplexPoint (Over.mk structureMap))) (n : ℕ) :
     AddCommGroup (RationalCohomologyWithClosedSupport structureMap Z n) :=
   inferInstanceAs (AddCommGroup
     (((TopCat.Sheaf.cohomologyWithSupportFunctor
-      (TopCat.of (ComplexPoint X structureMap)) n).obj Z).obj
+      (TopCat.of (ComplexPoint (Over.mk structureMap))) n).obj Z).obj
         (constantFieldSheaf ℚ structureMap)))
 
 /-- Rational compactly supported cohomology of the analytic complex-point space. -/
 abbrev RationalCompactlySupportedCohomology (n : ℕ) : AddCommGrpCat :=
-  TopCat.Sheaf.compactlySupportedCohomology (TopCat.of (ComplexPoint X structureMap))
+  TopCat.Sheaf.compactlySupportedCohomology (TopCat.of (ComplexPoint (Over.mk structureMap)))
     (constantFieldSheaf ℚ structureMap) n
 
 /-- A rational class with specified compact closed support defines a compactly supported class. -/
 def toRationalCompactlySupportedCohomology
-    (K : CompactCloseds (ComplexPoint X structureMap)) (n : ℕ) :
+    (K : CompactCloseds (ComplexPoint (Over.mk structureMap))) (n : ℕ) :
     AddCommGrpCat.of (RationalCohomologyWithClosedSupport structureMap K.1 n) ⟶
       RationalCompactlySupportedCohomology structureMap n :=
-  TopCat.Sheaf.toCompactlySupportedCohomology (TopCat.of (ComplexPoint X structureMap)) K
+  TopCat.Sheaf.toCompactlySupportedCohomology (TopCat.of (ComplexPoint (Over.mk structureMap))) K
     (constantFieldSheaf ℚ structureMap) n
 
 end AlgebraicGeometry.ComplexPoint

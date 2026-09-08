@@ -265,13 +265,13 @@ lemma codimensionZeroCycleClassSpan_eq_span_unit
 /-- Rational constant-sheaf cohomology supported on a closed subset of an analytification. -/
 abbrev RationalConstantSheafCohomologyWithSupport
     [IsIntegral X] [Smooth structureMap]
-    [IsProjective structureMap] (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :=
+    [IsProjective structureMap] (Z : Set (ComplexPoint (Over.mk structureMap))) (n : ℤ) :=
   RationalCohomologyWithSupport structureMap Z n
 
 /-- The rational span in ordinary cohomology of classes supported on `Z`. -/
 def rationalCohomologySupportedOn
     [IsIntegral X] [Smooth structureMap]
-    [IsProjective structureMap] (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
+    [IsProjective structureMap] (Z : Set (ComplexPoint (Over.mk structureMap))) (n : ℤ) :
     Submodule ℚ (FieldCohomology ℚ structureMap n) :=
   Submodule.span ℚ (Set.range (forgetSupport structureMap Z n))
 
@@ -384,7 +384,10 @@ space as its support. -/
 lemma cycleComponentSupport_genericPoint_eq_univ
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] :
     cycleComponentSupport structureMap (genericPoint X) = Set.univ := by
-  rw [cycleComponentSupport, genericPoint_closure]
+  rw [cycleComponentSupport]
+  change (@Point.underlying ℂ _ _ (Over.mk structureMap)) ⁻¹'
+    (closure {genericPoint X} : Set X) = Set.univ
+  rw [genericPoint_closure (α := X)]
   exact Set.preimage_univ
 
 /-- The degree-`2p` rational coniveau subspace obtained from all cohomology classes supported on

@@ -46,7 +46,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- Every open subset of a smooth projective complex analytification is paracompact. -/
 theorem openParacompactSpace [IsIntegral X] [Smooth structureMap]
-    (U : Opens (ComplexPoint X structureMap)) : ParacompactSpace U := by
+    (U : Opens (ComplexPoint (Over.mk structureMap))) : ParacompactSpace U := by
   exact opens_paracompactSpace_of_compact_chartedSpace (H := Fin (dim X) → ℂ) U
 
 /-- Every term of the rational singular-cochain sheaf resolution on a smooth projective
@@ -55,8 +55,8 @@ theorem rationalSingularCochainSheafIsFlasque [IsIntegral X] [Smooth structureMa
     (n : ℕ) :
     TopCat.Sheaf.IsFlasque
       (AlgebraicTopology.Singular.singularCochainSheaf ℚ
-        (TopCat.of (ComplexPoint X structureMap)) n) := by
-  let : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
+        (TopCat.of (ComplexPoint (Over.mk structureMap))) n) := by
+  let : ∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U :=
     openParacompactSpace structureMap
   infer_instance
 
@@ -66,8 +66,8 @@ theorem rationalSingularCochain_globalComparison_quasiIso
     [IsIntegral X] [Smooth structureMap] :
     QuasiIso
       (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ
-        (TopCat.of (ComplexPoint X structureMap))) := by
-  let : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
+        (TopCat.of (ComplexPoint (Over.mk structureMap)))) := by
+  let : ∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U :=
     openParacompactSpace structureMap
   exact AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
 
