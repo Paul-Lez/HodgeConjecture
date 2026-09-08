@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCapProduct
 public import HodgeConjecture.Other.AlgebraicTopology.RelativeHomotopyInvariance
+public import HodgeConjecture.Other.Algebra.Homology.LinearDualNaturality
 
 /-!
 # Naturality of cap product on homology
@@ -96,6 +97,42 @@ theorem capHomologyMap_naturality {X Y : SSet.{u}} (f : X ⟶ Y) (p q : ℕ)
   rw [ShortComplex.homologyMap_comp, ShortComplex.homologyMap_comp] at h
   exact congrArg ModuleCat.Hom.hom h
 
+/-- Pullback on cochain cohomology, induced by the actual dual chain map. -/
+def cochainCohomologyMap {X Y : SSet.{u}} (f : X ⟶ Y) (p : ℕ) :
+    CochainCohomology R Y p →ₗ[R] CochainCohomology R X p :=
+  (ShortComplex.homologyMap (ShortComplex.linearDualMap
+    ((HomologicalComplex.shortComplexFunctor
+      (ModuleCat.{u} R) (ComplexShape.down ℕ) p).map
+        (SSet.chainComplexMap f (ModuleCat.of R R))))).hom
+
+set_option backward.isDefEq.respectTransparency false in
+/-- Naturality after descent in both the cochain and chain variables. -/
+theorem capCohomologyLinear_naturality {X Y : SSet.{u}} (f : X ⟶ Y) (p q : ℕ)
+    (alpha : CochainCohomology R Y p) :
+    (HomologicalComplex.homologyMap (SSet.chainComplexMap f (ModuleCat.of R R)) q).hom.comp
+        (capCohomologyLinear R p q (cochainCohomologyMap R f p alpha)) =
+      (capCohomologyLinear R p q alpha).comp
+        (HomologicalComplex.homologyMap
+          (SSet.chainComplexMap f (ModuleCat.of R R)) (p + q)).hom := by
+  let S := (X.chainComplex (ModuleCat.of R R)).sc p
+  let T := (Y.chainComplex (ModuleCat.of R R)).sc p
+  let F := (HomologicalComplex.shortComplexFunctor
+    (ModuleCat.{u} R) (ComplexShape.down ℕ) p).map
+      (SSet.chainComplexMap f (ModuleCat.of R R))
+  obtain ⟨phi, rfl⟩ := T.linearDual.moduleCatHomologyClass_surjective alpha
+  change (HomologicalComplex.homologyMap
+      (SSet.chainComplexMap f (ModuleCat.of R R)) q).hom.comp (capCohomologyLinear R p q
+      ((ShortComplex.homologyMap (ShortComplex.linearDualMap F)).hom
+        (T.linearDual.moduleCatHomologyClass phi))) = _
+  rw [ShortComplex.moduleCatHomologyClass_naturality]
+  change (HomologicalComplex.homologyMap
+      (SSet.chainComplexMap f (ModuleCat.of R R)) q).hom.comp (capCohomologyLinear R p q
+      (S.linearDual.moduleCatHomologyIso.inv.hom (Submodule.Quotient.mk _))) =
+    (capCohomologyLinear R p q
+      (T.linearDual.moduleCatHomologyIso.inv.hom (Submodule.Quotient.mk phi))).comp _
+  rw [capCohomologyLinear_on_cycle, capCohomologyLinear_on_cycle]
+  exact capHomologyMap_naturality R f p q (cohomologyCycleToCocycle R p phi)
+
 end AlgebraicTopology.Simplicial
 
 namespace AlgebraicTopology.Singular
@@ -114,6 +151,54 @@ theorem capHomologyMap_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p q : ℕ)
       capHomologyMap R Y p q phi (homologyMap R (p + q) f c) := by
   exact LinearMap.congr_fun
     (Simplicial.capHomologyMap_naturality R (TopCat.toSSet.map f) p q phi) c
+
+/-- The pullback on singular cochain cohomology induced by the continuous map. -/
+def cochainCohomologyMap {X Y : TopCat.{u}} (f : X ⟶ Y) (p : ℕ) :
+    CochainCohomology R Y p →ₗ[R] CochainCohomology R X p :=
+  Simplicial.cochainCohomologyMap R (TopCat.toSSet.map f) p
+
+/-- The universal-coefficient comparison respects the actual pullback maps. -/
+theorem cochainCohomologyEquiv_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p : ℕ)
+    (alpha : CochainCohomology R Y p) :
+    cochainCohomologyEquiv R X p (cochainCohomologyMap R f p alpha) =
+      cohomologyMap R p f (cochainCohomologyEquiv R Y p alpha) :=
+  ShortComplex.linearDualHomologyEquiv_naturality
+    ((HomologicalComplex.shortComplexFunctor (ModuleCat.{u} R) (ComplexShape.down ℕ) p).map
+      (SSet.chainComplexMap (TopCat.toSSet.map f) (ModuleCat.of R R))) alpha
+
+/-- The singular cap projection formula is independent of both representatives. -/
+theorem capCohomologyLinear_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p q : ℕ)
+    (alpha : CochainCohomology R Y p) (c : Homology R X (p + q)) :
+    homologyMap R q f
+        (capCohomologyLinear R X p q (cochainCohomologyMap R f p alpha) c) =
+      capCohomologyLinear R Y p q alpha (homologyMap R (p + q) f c) :=
+  LinearMap.congr_fun
+    (Simplicial.capCohomologyLinear_naturality R (TopCat.toSSet.map f) p q alpha) c
+
+/-- Cap product in the repository's standard, homology-dual model of singular cohomology.
+The comparison is the constructed universal-coefficient map. -/
+def standardCapCohomologyLinear (X : TopCat.{u}) (p q : ℕ) :
+    Cohomology R X p →ₗ[R] (Homology R X (p + q) →ₗ[R] Homology R X q) :=
+  (capCohomologyLinear R X p q).comp (cochainCohomologyEquiv R X p).symm.toLinearMap
+
+/-- Naturality for the standard singular cohomology and homology APIs. -/
+theorem standardCapCohomologyLinear_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p q : ℕ)
+    (alpha : Cohomology R Y p) (c : Homology R X (p + q)) :
+    homologyMap R q f
+        (standardCapCohomologyLinear R X p q (cohomologyMap R p f alpha) c) =
+      standardCapCohomologyLinear R Y p q alpha (homologyMap R (p + q) f c) := by
+  have hpull :
+      (cochainCohomologyEquiv R X p).symm (cohomologyMap R p f alpha) =
+        cochainCohomologyMap R f p ((cochainCohomologyEquiv R Y p).symm alpha) := by
+    apply (cochainCohomologyEquiv R X p).injective
+    rw [LinearEquiv.apply_symm_apply, cochainCohomologyEquiv_naturality,
+      LinearEquiv.apply_symm_apply]
+  change homologyMap R q f
+      (capCohomologyLinear R X p q
+        ((cochainCohomologyEquiv R X p).symm (cohomologyMap R p f alpha)) c) = _
+  rw [hpull]
+  exact capCohomologyLinear_naturality R f p q
+    ((cochainCohomologyEquiv R Y p).symm alpha) c
 
 /-- Pullback of relative cochains along a continuous map of pairs. -/
 def relativeCochainMap {X Y : TopPair.{u}} (f : X ⟶ Y) (p : ℕ) :

@@ -34,14 +34,46 @@ open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
 #print axioms AlgebraicTopology.Simplicial.coboundary_cochainMap
 #print axioms AlgebraicTopology.Simplicial.cocycleMap
 #print axioms AlgebraicTopology.Simplicial.capHomologyMap_naturality
+#print axioms CategoryTheory.ShortComplex.moduleCatHomologyClass_naturality
+#print axioms CategoryTheory.ShortComplex.linearDualMap
+#print axioms CategoryTheory.ShortComplex.linearDualHomologyEquiv_naturality
+#print axioms AlgebraicTopology.Simplicial.cochainCohomologyMap
+#print axioms AlgebraicTopology.Simplicial.capCohomologyLinear_naturality
 #print axioms AlgebraicTopology.Singular.cocycleMap
 #print axioms AlgebraicTopology.Singular.capHomologyMap_naturality
+#print axioms AlgebraicTopology.Singular.cochainCohomologyEquiv_naturality
+#print axioms AlgebraicTopology.Singular.capCohomologyLinear_naturality
+#print axioms standardCapCohomologyLinear
+#print axioms standardCapCohomologyLinear_naturality
 #print axioms relativeCochainMap
 #print axioms relativeCoboundary_relativeCochainMap
 #print axioms relativeCocycleMap
 #print axioms relativeCochainToAbsolute_relativeCochainMap
 #print axioms relativeCapHom_naturality
 #print axioms relativeCapHomologyMap_naturality
+#print axioms pointCycleClassOnCycles
+#print axioms pointCycleClassOnCycles_single_eq_forgetSupport_pointCoclass
+#print axioms pointCycleClassOnCycles_sum_single
+#print axioms rationalPointCycleClassOnCycles
+#print axioms rationalPointCycleClassOnCycles_sum_tmul_single
+#print axioms singularMayerVietorisShortComplex_shortExact
+#print axioms singularMayerVietorisBoundary
+#print axioms singularMayerVietoris_exact_sum
+#print axioms singularMayerVietoris_exact_ambient
+#print axioms singularMayerVietoris_exact_overlap
+#print axioms singularMayerVietoris_overlap_map_eq
+#print axioms singularMayerVietoris_sum_map_eq
+#print axioms singularChainPresheafComplex
+#print axioms singularChainSheafComplex
+#print axioms singularChainSheafificationStalkIso
+#print axioms singularChainSheafCochainComplex
+#print axioms singularChainSheafCochainComplex_d
+#print axioms TopCat.Sheaf.sheafSectionsWithClosedSupport
+#print axioms TopCat.Sheaf.sheafSectionsSupportedOutsideOnOpenIso
+#print axioms TopCat.Sheaf.derivedSheafSectionsWithClosedSupport
+#print axioms TopCat.Sheaf.derivedSheafSectionsWithClosedSupport_isRightDerivedFunctor
+#print axioms TopCat.Sheaf.derivedClosedSupportSections
+#print axioms TopCat.Sheaf.derivedClosedSupportSections_isRightDerivedFunctor
 #print axioms maximalCodimensionPrincipalDivisorClassVanishes_of_coefficientSum
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCycles
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCyclesOfComponents
@@ -53,6 +85,7 @@ open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
 set_option maxHeartbeats 0 in
 run_cmd do
   let modules : List String := [
+    "Algebra.Homology.LinearDualNaturality",
     "AlgebraicGeometry.BorelMooreCycleClass",
     "AlgebraicGeometry.ChowCycleClassDescent",
     "AlgebraicGeometry.CompactlySupportedCohomology",
@@ -69,6 +102,7 @@ run_cmd do
     "AlgebraicGeometry.DimensionedSmoothProjective",
     "AlgebraicGeometry.PrincipalDivisorCycleClass",
     "AlgebraicGeometry.PrincipalDivisorDegreeReduction",
+    "AlgebraicGeometry.PointCycleClass",
     "AlgebraicGeometry.SheafBorelMoore",
     "AlgebraicGeometry.SingularCycleClass",
     "AlgebraicTopology.ChartLocalFundamentalClass",
@@ -79,6 +113,7 @@ run_cmd do
     "AlgebraicTopology.ComplexDifferentiableLocalClassInvariance",
     "AlgebraicTopology.ComplexLinearLocalClassInvariance",
     "AlgebraicTopology.ComplexOrientation",
+    "AlgebraicTopology.DerivedSheafSupport",
     "AlgebraicTopology.EuclideanLocalHomology",
     "AlgebraicTopology.GlobalFundamentalClass",
     "AlgebraicTopology.LocalFundamentalClass",
@@ -89,6 +124,7 @@ run_cmd do
     "AlgebraicTopology.SheafCohomologyWithSupport",
     "AlgebraicTopology.SingularCapNaturality",
     "AlgebraicTopology.SingularCapProduct",
+    "AlgebraicTopology.SingularChainSheaf",
     "AlgebraicTopology.SingularCochainCohomology",
     "AlgebraicTopology.SingularCochainSheaf",
     "AlgebraicTopology.SingularCoefficientBaseChange",
@@ -96,6 +132,7 @@ run_cmd do
     "AlgebraicTopology.SingularCohomologySupportNaturality",
     "AlgebraicTopology.SingularCohomologyZero",
     "AlgebraicTopology.SingularHomologyVanishing",
+    "AlgebraicTopology.SingularMayerVietoris",
     "AlgebraicTopology.SingularSupportCapProduct",
     "AlgebraicTopology.SingularTriadCapProduct",
     "AlgebraicTopology.SingularTriadExcision",
