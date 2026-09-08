@@ -1,0 +1,27 @@
+import HodgeConjecture.Other.AlgebraicGeometry.ComplexLocalOrientationNeighborhood
+
+open AlgebraicTopology.Singular
+
+#print axioms radialTargetPointPairMap
+#print axioms radialTargetPointPairMap_comp_inclusion
+#print axioms radialTargetPointPairMap_normalization
+#print axioms radialTargetPointPairMap_class_eq
+#print axioms chartTargetInversePointPairMap
+#print axioms chartOrientationEmbeddingMap
+#print axioms chartOrientationEmbeddingMap_injective
+#print axioms chartOrientationEmbeddingMap_mem_source
+#print axioms chartOrientationEmbeddingMap_coordinates
+#print axioms chartOrientationEmbeddingMap_translate_standardComplexLocalClass
+#print axioms chartOrientationNeighborhood
+#print axioms mem_chartOrientationNeighborhood
+#print axioms chartOrientationNeighborhood_subset_source
+#print axioms chartOrientationNeighborhoodClass
+#print axioms chartOrientationNeighborhoodClass_restrict
+
+open AlgebraicGeometry.ComplexPoint
+
+#print axioms complexLocalOrientationNeighborhood
+#print axioms mem_complexLocalOrientationNeighborhood
+#print axioms complexLocalOrientationNeighborhoodClass
+#print axioms complexLocalOrientationNeighborhoodClass_restrict
+#print axioms exists_neighborhood_complexLocalOrientation

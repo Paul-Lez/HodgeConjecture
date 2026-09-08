@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
+public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClass
 public import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionField
 public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 public import Mathlib.Algebra.Homology.QuasiIso

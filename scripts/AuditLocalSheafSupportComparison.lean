@@ -1,0 +1,22 @@
+import HodgeConjecture.Other.AlgebraicTopology.FlasqueSheafSupportComparison
+
+open CategoryTheory TopCat.Sheaf
+
+#print axioms TopCat.Presheaf.isZero_stalk_of_cofinal_sections
+#print axioms sectionCohomologyPresheaf
+#print axioms sectionCohomologyPresheafOnOpenIso
+#print axioms sectionCohomologyPresheafStalkIso
+#print axioms cohomologySheaf_stalk_isZero_of_cofinal_sections
+#print axioms cohomologySheaf_isZero_of_cofinal_sections
+#print axioms quasiIso_of_cofinal_section_quasiIso
+#print axioms CochainComplex.quasiIso_first_of_shortExact
+#print axioms openRestrictionGlobalSectionsIso
+#print axioms supportEvaluation_map_quasiIso_of_flasque
+#print axioms pushforward_map_quasiIso_of_flasque
+#print axioms supportRestrictionShortComplex_shortExact_of_flasque
+#print axioms supportRestrictionSectionsShortComplex_shortExact_of_flasque
+#print axioms supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque
+#print axioms supportRestrictionToFiber_quasiIso_of_flasque
+#print axioms supportRestrictionComplexShortComplexMap
+#print axioms supportedSections_map_quasiIso_of_flasque
+#print axioms sheafSectionsSupportedOutside_map_quasiIso_of_flasque

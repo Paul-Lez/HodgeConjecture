@@ -1,0 +1,24 @@
+import HodgeConjecture.Other.AlgebraicGeometry.ComplexSheafBorelMooreForget
+
+#print axioms CategoryTheory.NatIso.rightDerivedFunctorPlus
+#print axioms TopCat.Sheaf.closedSupportSectionsInclusion
+#print axioms TopCat.Sheaf.closedSupportSectionsMap_inclusion
+#print axioms TopCat.Sheaf.closedSupportSectionsInclusion_top_isIso
+#print axioms TopCat.Sheaf.closedSupportSectionsTopIso
+#print axioms TopCat.Sheaf.derivedGlobalSections
+#print axioms TopCat.Sheaf.derivedGlobalSections_commShift
+#print axioms TopCat.Sheaf.derivedForgetClosedSupport
+#print axioms TopCat.Sheaf.derivedForgetClosedSupport_commShift
+#print axioms TopCat.Sheaf.derivedClosedSupportSectionsTopIso
+#print axioms TopCat.Sheaf.derivedClosedSupportSectionsTopIso_hom
+#print axioms TopCat.Sheaf.derivedClosedSupportSectionsMap_forget
+#print axioms TopCat.Sheaf.derivedForgetClosedSupport_unit_app
+#print axioms AlgebraicGeometry.ComplexPoint.ComplexDerivedCohomology
+#print axioms AlgebraicGeometry.ComplexPoint.complexDerivedSupportedCohomologyForgetSupport
+#print axioms AlgebraicGeometry.ComplexPoint.complexDerivedSupportedCohomologyTopIso
+#print axioms AlgebraicGeometry.ComplexPoint.complexDerivedSupportedCohomologyTopIso_hom
+#print axioms AlgebraicGeometry.ComplexPoint.complexDerivedSupportedCohomologySupportMap_forget
+#print axioms AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreToCohomology
+#print axioms AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreToCohomology_naturality
+#print axioms AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreToCohomology_eq_forgetSupport
+#print axioms AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreCycleDegreeToCohomology

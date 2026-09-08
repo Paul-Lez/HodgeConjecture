@@ -1,0 +1,25 @@
+import HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedCycleClass
+
+#print axioms CategoryTheory.Functor.sectionSinglePlusIso
+#print axioms CategoryTheory.Functor.derivedSectionSingleUnit
+#print axioms CategoryTheory.Functor.derivedSectionClassMap
+#print axioms CategoryTheory.Functor.derivedSectionClassMap_eq
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlusSingleIso
+#print axioms TopCat.Sheaf.constantPushforwardGlobalSection
+#print axioms TopCat.Sheaf.constantPushforwardGlobalSection_apply
+#print axioms TopCat.Sheaf.constantPushforwardTopSupportSection
+#print axioms TopCat.Sheaf.constantPushforwardTopSupportSection_forget
+#print axioms TopCat.Sheaf.constantPushforwardGlobalSection_stalk
+#print axioms TopCat.Sheaf.closedEmbeddingConstantSectionClassMap
+#print axioms TopCat.Sheaf.closedEmbeddingConstantShiftedSectionsIso
+#print axioms TopCat.Sheaf.closedEmbeddingConstantShiftedSectionClassMap
+#print axioms TopCat.Sheaf.closedEmbeddingConstantShiftedSectionClassMap_unshift
+#print axioms AlgebraicGeometry.ComplexPoint.smoothClosedWholeSupportBorelMooreClassMap
+#print axioms AlgebraicGeometry.ComplexPoint.smoothClosedWholeSupportBorelMooreClass
+#print axioms AlgebraicGeometry.ComplexPoint.smoothClosedCohomologyClassMap
+#print axioms AlgebraicGeometry.ComplexPoint.smoothClosedCohomologyClass
+#print axioms AlgebraicGeometry.ComplexPoint.smoothClosedCohomologyClass_eq_orientation
+#print axioms AlgebraicGeometry.ComplexPoint.smoothClosedCohomologyClassMap_add
+#print axioms AlgebraicGeometry.ComplexPoint.smoothClosedCohomologyClassMap_int
+#print axioms AlgebraicGeometry.ComplexPoint.smoothClosedCohomologyClassMap_sum
+#print axioms AlgebraicGeometry.ComplexPoint.smoothClosedCohomologyClassInCodimension

@@ -1,0 +1,23 @@
+import HodgeConjecture.Other.AlgebraicTopology.FiniteSheafSupportVanishing
+
+open TopCat.Sheaf
+
+#print axioms openRestrictionImage_top
+#print axioms openRestrictionImage_eq_of_le
+#print axioms openRestrictionPushforwardTopEvaluationIso
+#print axioms sheafSectionsBetweenOpensInclusion
+#print axioms nestedSupportRestrictionTargetIso
+#print axioms nestedSupportRestrictionTargetIso_square
+#print axioms sheafSectionsBetweenOpensGlobalIso
+#print axioms sheafSectionsBetweenOpensGlobalIso_hom_inclusion
+#print axioms sheafSectionsBetweenOpensGlobalIso_naturality
+#print axioms sheafSectionsBetweenOpensGlobalNatIso
+#print axioms nestedSupportRestrictionLastComplexIso
+#print axioms toOpenRestrictionPushforward_top_app_isIso
+#print axioms toOpenRestrictionPushforward_top_isIso
+#print axioms isZero_sheafSectionsSupportedOutside_top
+#print axioms supportedSections_top_homology_isZero
+#print axioms nestedSupportRestrictionSectionsShortComplex_shortExact_of_flasque
+#print axioms nestedSupportRestrictionSectionsComplexShortComplex_shortExact_of_flasque
+#print axioms nestedSupportRestriction_middle_homology_isZero
+#print axioms finiteNestedSupport_homology_isZero

@@ -1,0 +1,24 @@
+/- Run after `lake build HodgeConjecture.Other.AlgebraicTopology.SingularChainSheafStalk`. -/
+import HodgeConjecture.Other.AlgebraicTopology.SingularChainSheafStalk
+
+open AlgebraicTopology.Singular
+
+#print axioms relativeChainNeighborhoodDiagram
+#print axioms relativeChainProjection_supportInclusion
+#print axioms localRelativeChainCocone
+#print axioms exists_openNhds_complement_simplex
+#print axioms absoluteChainMapOfNeighborhoodCocone
+#print axioms absoluteChainMapOfNeighborhoodCocone_eq
+#print axioms iota_subspace_relativeChainProjection
+#print axioms subspaceChainMap_absoluteChainMapOfNeighborhoodCocone
+#print axioms localRelativeChainCoconeDesc
+#print axioms relativeChainProjection_localRelativeChainCoconeDesc
+#print axioms localRelativeChainCoconeIsColimit
+#print axioms chainDegreeAdditiveFunctor
+#print axioms chainDegreeAdditiveFunctor_preservesColimits
+#print axioms singularChainPresheafStalkIso
+#print axioms singularChainPresheafStalkIso_germ
+#print axioms singularChainPresheafStalkIso_boundary
+#print axioms singularChainPresheafComplexStalkIso
+#print axioms singularChainSheafStalkIso
+#print axioms singularChainSheafStalkHomologyIso

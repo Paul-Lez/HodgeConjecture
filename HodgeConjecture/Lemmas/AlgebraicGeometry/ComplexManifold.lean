@@ -16,13 +16,14 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
+public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.Geometry.Manifold.IsManifold.Basic
 public import Mathlib.Topology.Homotopy.Contractible
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
 import Mathlib.Analysis.Normed.Module.Connected
+import Mathlib.Geometry.Manifold.Complex
 
 /-!
 # The topological manifold of complex points
@@ -288,14 +289,5 @@ theorem locallyPathConnectedSpace [IsIntegral X] [Smooth structureMap] :
     infer_instance
   · intro z hz
     exact hUS (hVU hz)
-
-/-- The local fundamental class at a smooth complex point, constructed from its chosen algebraic
-étale chart and the standard complex orientation. -/
-def localFundamentalClass [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint X structureMap) :
-    AlgebraicTopology.Singular.RelativeHomology ℚ
-      (AlgebraicTopology.Singular.pointComplementPair z) (2 * d) :=
-  AlgebraicTopology.Singular.localClassOfChart d (localChart structureMap d z) z
-    (mem_localChart_source structureMap d z)
 
 end AlgebraicGeometry.ComplexPoint

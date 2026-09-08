@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ComplexOrientation
+public import HodgeConjecture.Other.AlgebraicTopology.ComplexOrientation
 public import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
 
 /-!

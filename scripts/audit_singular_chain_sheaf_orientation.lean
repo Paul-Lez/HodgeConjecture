@@ -1,0 +1,27 @@
+import HodgeConjecture.Other.AlgebraicTopology.SingularChainSheafOrientation
+
+#print axioms CochainComplex.strictSingleIso
+#print axioms CochainComplex.singleTruncation
+#print axioms CochainComplex.singleTruncationHomologyIso
+#print axioms CochainComplex.singleTruncationTermIso
+#print axioms CochainComplex.singleTruncationIso
+#print axioms CochainComplex.toSingleHomology
+#print axioms CochainComplex.toSingleHomology_homology
+#print axioms CochainComplex.isGE_of_homology_concentrated
+#print axioms CochainComplex.isLE_of_homology_concentrated
+#print axioms CochainComplex.toSingleHomology_quasiIso
+#print axioms DerivedCategory.concentratedHomologyIso
+#print axioms DerivedCategory.concentratedOrientationIso
+#print axioms DerivedCategory.concentratedHomologyIso_roof
+#print axioms DerivedCategory.concentratedHomologyIso_homology
+#print axioms DerivedCategory.concentratedOrientationIso_homology
+#print axioms DerivedCategory.concentratedOrientationShiftIso
+#print axioms DerivedCategory.concentratedPlusObject
+#print axioms AlgebraicTopology.Singular.singularChainSheafCochainHomologyIso
+#print axioms AlgebraicTopology.Singular.singularChainSheafCochainHomology_concentrated
+#print axioms AlgebraicTopology.Singular.singularOrientationConstantSheaf
+#print axioms AlgebraicTopology.Singular.singularChainSheafDerivedSingleOrientationIso
+#print axioms AlgebraicTopology.Singular.singularChainSheafDerivedSingleOrientationIso_homology
+#print axioms AlgebraicTopology.Singular.singularChainSheafDerivedOrientationIso
+#print axioms AlgebraicTopology.Singular.singularChainSheafPlusObject
+#print axioms AlgebraicTopology.Singular.singularChainSheafPlusObject_obj
