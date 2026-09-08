@@ -1,0 +1,40 @@
+import HodgeConjecture.Other.AlgebraicTopology.GraphNormalSlicePurity
+
+open AlgebraicTopology.Singular
+
+#print axioms normalSliceProjection
+#print axioms normalSliceSection
+#print axioms normalSliceSection_projection
+#print axioms normalSliceContraction
+#print axioms normalSliceContraction_fixes_section
+#print axioms normalSliceRelativeChainHomotopyEquiv
+#print axioms normalSliceRelativeHomologyIso
+#print axioms normalSliceRelativeHomologyIso_hom
+#print axioms normalSliceRelativeHomologyIso_inv
+#print axioms normalSliceRelativeHomology_isZero_of_ne
+#print axioms normalSliceClass
+#print axioms normalSliceProjection_class
+#print axioms normalSliceClass_ne_zero
+#print axioms normalSliceSectionAt
+#print axioms normalSliceSectionAtHomotopy
+#print axioms normalSliceSectionAt_class
+#print axioms span_normalSliceClass_eq_top
+#print axioms normalSliceRelativeCohomologyEquiv
+#print axioms normalSliceRelativeCohomologyEquiv_apply
+#print axioms normalSliceRelativeCohomologyEquiv_evaluate_class
+#print axioms normalSliceRelativeCohomology_isZero_of_ne
+#print axioms graphFlattenHomeomorph
+#print axioms graphFlattenHomeomorph_graph
+#print axioms graphFlattenComplementHomeomorph
+#print axioms graphFlattenPairIso
+#print axioms graphNormalRelativeChainHomotopyEquiv
+#print axioms graphNormalRelativeHomologyIso
+#print axioms graphRelativeHomology_isZero_of_ne
+#print axioms graphNormalClass
+#print axioms graphNormalClass_normalization
+#print axioms graphNormalFiber
+#print axioms graphNormalFiber_apply
+#print axioms graphNormalFiber_class
+#print axioms graphNormalRelativeCohomologyEquiv
+#print axioms graphNormalRelativeCohomologyEquiv_evaluate_class
+#print axioms graphRelativeCohomology_isZero_of_ne
