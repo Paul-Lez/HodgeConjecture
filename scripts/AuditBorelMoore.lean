@@ -31,6 +31,17 @@ open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
 #print axioms unionRelativeTriadCapCohomologyLinear
 #print axioms triadToUnionRelativeChainMap_quasiIso_of_openCover
 #print axioms cohomologyMap_forgetSupport
+#print axioms AlgebraicTopology.Simplicial.coboundary_cochainMap
+#print axioms AlgebraicTopology.Simplicial.cocycleMap
+#print axioms AlgebraicTopology.Simplicial.capHomologyMap_naturality
+#print axioms AlgebraicTopology.Singular.cocycleMap
+#print axioms AlgebraicTopology.Singular.capHomologyMap_naturality
+#print axioms relativeCochainMap
+#print axioms relativeCoboundary_relativeCochainMap
+#print axioms relativeCocycleMap
+#print axioms relativeCochainToAbsolute_relativeCochainMap
+#print axioms relativeCapHom_naturality
+#print axioms relativeCapHomologyMap_naturality
 #print axioms maximalCodimensionPrincipalDivisorClassVanishes_of_coefficientSum
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCycles
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCyclesOfComponents
@@ -76,6 +87,7 @@ run_cmd do
     "AlgebraicTopology.RelativeHomotopyInvariance",
     "AlgebraicTopology.RelativePairExcision",
     "AlgebraicTopology.SheafCohomologyWithSupport",
+    "AlgebraicTopology.SingularCapNaturality",
     "AlgebraicTopology.SingularCapProduct",
     "AlgebraicTopology.SingularCochainCohomology",
     "AlgebraicTopology.SingularCochainSheaf",

@@ -144,6 +144,7 @@ public import HodgeConjecture.Other.AlgebraicTopology.SingularBarycentricAllDegr
 public import HodgeConjecture.Other.AlgebraicTopology.SingularBarycentricChains
 public import HodgeConjecture.Other.AlgebraicTopology.SingularBarycentricHomotopy
 public import HodgeConjecture.Other.AlgebraicTopology.SingularBarycentricOuterFaces
+public import HodgeConjecture.Other.AlgebraicTopology.SingularCapNaturality
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCapProduct
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainCohomology
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainFlasque
