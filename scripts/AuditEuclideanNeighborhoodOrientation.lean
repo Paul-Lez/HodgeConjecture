@@ -1,0 +1,26 @@
+import HodgeConjecture.Other.AlgebraicTopology.EuclideanNeighborhoodOrientation
+
+open AlgebraicTopology.Singular
+
+#print axioms standardAffineBoundarySupport
+#print axioms isCompact_standardAffineBoundarySupport
+#print axioms zero_not_mem_standardAffineBoundarySupport
+#print axioms exists_standardOrientationRadius
+#print axioms standardOrientationRadius
+#print axioms standardOrientationRadius_pos
+#print axioms ball_standardOrientationRadius_subset
+#print axioms standardOrientationBall
+#print axioms zero_mem_standardOrientationBall
+#print axioms standardOrientationBallFaceMap
+#print axioms standardOrientationBallFace_projection
+#print axioms standardOrientationBallChain
+#print axioms standardOrientationBallChain_boundary
+#print axioms standardOrientationBallCycle
+#print axioms standardOrientationBallClass
+#print axioms standardOrientationBallPointMap
+#print axioms standardOrientationBallCycle_restrict_zero
+#print axioms standardOrientationBallClass_restrict_zero
+#print axioms translationPointComplementPairMap
+#print axioms convexSupport_translation_ne
+#print axioms convexSupportTranslationPairHomotopy
+#print axioms standardOrientationBallClass_restrict
