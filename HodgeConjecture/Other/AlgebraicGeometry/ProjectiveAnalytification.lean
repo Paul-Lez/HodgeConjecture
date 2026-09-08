@@ -1212,7 +1212,7 @@ noncomputable def chartAffineComplexPointMap {n : ℕ} (i : Fin (n + 1)) :
         (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ) →
       ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)) :=
-  ComplexPoint.map (chartAffineToProjectiveSpace i)
+  Point.map (chartAffineToProjectiveSpace i)
     (chartAffineToProjectiveSpace_over i)
 
 lemma continuous_chartAffineComplexPointMap {n : ℕ} (i : Fin (n + 1)) :
@@ -1221,9 +1221,9 @@ lemma continuous_chartAffineComplexPointMap {n : ℕ} (i : Fin (n + 1)) :
         (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ))
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
-      ComplexPoint.analyticTopology ComplexPoint.analyticTopology
+      Point.analyticTopology Point.analyticTopology
       (chartAffineComplexPointMap i) :=
-  ComplexPoint.continuous_map _ _
+  Point.continuous_map _ _
 
 /-- Affine ratio coordinates associated to a vector in the `i`-th standard chart. -/
 noncomputable def vectorChartRatios {n : ℕ} (i : Fin (n + 1))
@@ -1251,7 +1251,7 @@ lemma continuous_vectorChartToAffinePoint {n : ℕ} (i : Fin (n + 1)) :
     @Continuous {v : CoordinateSpace n // v i ≠ 0}
       (ComplexPoint (ComplexPoint.complexAffineSpace (Fin (n + 1)))
         (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ))
-      inferInstance ComplexPoint.analyticTopology
+      inferInstance Point.analyticTopology
       (vectorChartToAffinePoint i) := by
   exact (ComplexPoint.affineSpaceHomeomorph (Fin (n + 1))).symm.continuous.comp
     (continuous_vectorChartRatios i)
@@ -1260,16 +1260,16 @@ lemma continuous_chartVectorToComplexPoint {n : ℕ} (i : Fin (n + 1)) :
     @Continuous {v : CoordinateSpace n // v i ≠ 0}
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
-      inferInstance ComplexPoint.analyticTopology
+      inferInstance Point.analyticTopology
       (chartAffineComplexPointMap i ∘ vectorChartToAffinePoint i) := by
   let _ : TopologicalSpace
       (ComplexPoint (ComplexPoint.complexAffineSpace (Fin (n + 1)))
         (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)) :=
-    ComplexPoint.analyticTopology
+    Point.analyticTopology
   let _ : TopologicalSpace
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
-    ComplexPoint.analyticTopology
+    Point.analyticTopology
   exact (continuous_chartAffineComplexPointMap i).comp
     (continuous_vectorChartToAffinePoint i)
 
@@ -1446,12 +1446,12 @@ lemma continuousOn_vectorToComplexPoint_chart {n : ℕ} (i : Fin (n + 1)) :
     @ContinuousOn {v : CoordinateSpace n // v ≠ 0}
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
-      inferInstance ComplexPoint.analyticTopology
+      inferInstance Point.analyticTopology
       (fun v ↦ vectorToComplexPoint v.1 v.2) (nonzeroVectorChart i) := by
   let _ : TopologicalSpace
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
-    ComplexPoint.analyticTopology
+    Point.analyticTopology
   rw [continuousOn_iff_continuous_domRestrict]
   have h := (continuous_chartVectorToComplexPoint i).comp
     (continuous_toVectorChart i)
@@ -1463,12 +1463,12 @@ lemma continuous_vectorToComplexPoint {n : ℕ} :
     @Continuous {v : CoordinateSpace n // v ≠ 0}
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
-      inferInstance ComplexPoint.analyticTopology
+      inferInstance Point.analyticTopology
       (fun v ↦ vectorToComplexPoint v.1 v.2) := by
   let _ : TopologicalSpace
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
-    ComplexPoint.analyticTopology
+    Point.analyticTopology
   apply continuous_of_continuousOn_iUnion_of_isOpen
     (continuousOn_vectorToComplexPoint_chart (n := n))
     (isOpen_nonzeroVectorChart (n := n))
@@ -1478,12 +1478,12 @@ lemma continuous_projectivizationToComplexPoint {n : ℕ} :
     @Continuous (Projectivization ℂ (CoordinateSpace n))
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
-      (instTopologicalSpace n) ComplexPoint.analyticTopology
+      (instTopologicalSpace n) Point.analyticTopology
       projectivizationToComplexPoint := by
   let _ : TopologicalSpace
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
-    ComplexPoint.analyticTopology
+    Point.analyticTopology
   apply Continuous.quotient_lift
   exact continuous_vectorToComplexPoint
 
@@ -1493,7 +1493,7 @@ noncomputable instance instTopologicalSpaceProjectiveSpaceComplexPoint (n : ℕ)
     TopologicalSpace
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
-  ComplexPoint.analyticTopology
+  Point.analyticTopology
 
 /-- Finite-dimensional scheme-theoretic complex projective space is analytically compact. -/
 noncomputable instance instCompactSpaceProjectiveSpaceComplexPoint (n : ℕ) :
@@ -1508,13 +1508,15 @@ end ComplexProjectiveSpace
 
 namespace ComplexPoint
 
+open Point
+
 variable {X Y : Scheme} {f : X ⟶ Spec ↧ℂ} {g : Y ⟶ Spec ↧ℂ}
 
 /-- For a complex scheme locally of finite type, a complex point is determined by its underlying
 closed point. -/
 lemma underlying_injective_of_locallyOfFiniteType
     {structureMap : X ⟶ Spec ↧ℂ} [LocallyOfFiniteType structureMap] :
-    Function.Injective (@underlying X structureMap) := by
+    Function.Injective (@underlying ℂ _ _ X structureMap) := by
   intro z w h
   apply Subtype.ext
   exact ext_of_apply_closedPoint_eq structureMap z.2 w.2 h
@@ -1523,7 +1525,7 @@ lemma underlying_injective_of_locallyOfFiniteType
 underlying closed point. -/
 lemma projectiveSpace_underlying_injective (n : ℕ) :
     Function.Injective
-      (@underlying
+      (@underlying ℂ _ _
         (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) := by
   apply underlying_injective_of_locallyOfFiniteType
@@ -1608,7 +1610,8 @@ lemma isClosed_range_map_of_closedImmersion [IsClosedImmersion i]
   apply isOpen_compl_iff.mp
   let U : B.Opens :=
     ⟨(Set.range i)ᶜ, i.isClosedEmbedding.isClosed_range.isOpen_compl⟩
-  convert isOpen_overOpen U using 1
+  have h : IsOpen (overOpen U : Set (ComplexPoint B structureMapB)) := isOpen_overOpen U
+  convert h using 1
   ext y
   simp [overOpen, U]
 
@@ -1725,7 +1728,9 @@ lemma isInducing_map_of_closedImmersion [IsClosedImmersion i]
   rw [isInducing_iff]
   apply le_antisymm
   · exact continuous_iff_le_induced.mp (continuous_map i hi)
-  · exact le_generateFrom_iff_subset_isOpen.mpr fun _ hW ↦
+  · rw [show (analyticTopology : TopologicalSpace (ComplexPoint A structureMapA)) =
+      .generateFrom analyticSubbasis from analyticTopology_eq_generateFrom]
+    exact le_generateFrom_iff_subset_isOpen.mpr fun _ hW ↦
       analyticSubbasis_isOpen_induced hi hW
 
 /-- A closed immersion induces a topological embedding on complex points. -/
@@ -1758,8 +1763,8 @@ noncomputable def analyticImmersion {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     @ContinuousMap (ComplexPoint X f)
       (ComplexPoint (ProjectiveSpace (Fin (P.ambientDimension + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (P.ambientDimension + 1)) (Spec ↧ℂ)))
-      ComplexPoint.analyticTopology ComplexPoint.analyticTopology :=
-  ComplexPoint.continuousMap P.immersion P.immersion_toBase
+      Point.analyticTopology Point.analyticTopology :=
+  Point.continuousMap P.immersion P.immersion_toBase
 
 /-- The analytic map of an explicit projective presentation is injective. -/
 lemma analyticImmersion_injective {X : Scheme} {f : X ⟶ Spec ↧ℂ}
@@ -1774,15 +1779,15 @@ lemma analyticImmersion_isClosedEmbedding {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     @IsClosedEmbedding (ComplexPoint X f)
       (ComplexPoint (ProjectiveSpace (Fin (P.ambientDimension + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (P.ambientDimension + 1)) (Spec ↧ℂ)))
-      ComplexPoint.analyticTopology ComplexPoint.analyticTopology (analyticImmersion P) := by
+      Point.analyticTopology Point.analyticTopology (analyticImmersion P) := by
   let _ : IsClosedImmersion P.immersion := P.isClosedImmersion
   exact ComplexPoint.isClosedEmbedding_map_of_closedImmersion P.immersion_toBase
 
 /-- The analytic complex points of an explicit projective presentation form a compact space. -/
 theorem complexPoint_compactSpace {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) :
-    @CompactSpace (ComplexPoint X f) ComplexPoint.analyticTopology := by
-  let _ : TopologicalSpace (ComplexPoint X f) := ComplexPoint.analyticTopology
+    @CompactSpace (ComplexPoint X f) Point.analyticTopology := by
+  let _ : TopologicalSpace (ComplexPoint X f) := Point.analyticTopology
   exact (analyticImmersion_isClosedEmbedding P).compactSpace
 
 end ProjectiveSpace.Presentation

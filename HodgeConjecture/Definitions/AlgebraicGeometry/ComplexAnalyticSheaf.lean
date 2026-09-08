@@ -40,14 +40,9 @@ open scoped ContDiff Manifold
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
-
-local instance complexAnalyticSheafTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
-
-local instance complexAnalyticSheafChartedSpace [SmoothOfRelativeDimension d structureMap] :
-    ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
-  analyticChartedSpace structureMap d
 
 /-- The sheaf of complex-valued functions which are analytic in the algebraically constructed
 étale charts, initially regarded as a sheaf of types. -/

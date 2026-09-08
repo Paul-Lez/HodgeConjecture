@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoints
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import Mathlib.AlgebraicGeometry.AffineSpace
 public import Mathlib.Topology.Algebra.MvPolynomial
 
@@ -34,6 +34,8 @@ appearing in the analytic topology.
 open CategoryTheory Topology
 
 namespace AlgebraicGeometry.ComplexPoint
+
+open Point
 
 noncomputable section
 
@@ -197,29 +199,6 @@ lemma continuous_evaluate_top_affineSpaceEquiv_symm {n : Type}
   simpa only [evaluate_affineSpaceEquiv_symm_top] using
     (affineGlobalPolynomial s).continuous_eval
 
-/-- Restricting a regular function does not change its value at a point in the smaller open. -/
-lemma evaluate_res {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ}
-    {U V : X.Opens} (hVU : V ≤ U) (s : Γ(X, U)) (z : ComplexPoint X structureMap)
-    (hz : z ∈ overOpen V) :
-    evaluate U s z = evaluate V (X.presheaf.map (homOfLE hVU).op s) z := by
-  rw [evaluate, dif_pos, evaluate, dif_pos]
-  · congr 1
-    exact congrArg (fun a ↦ X.residue z.residueData.1 a)
-      (X.presheaf.germ_res_apply (homOfLE hVU) z.residueData.1 hz s).symm
-  · exact hz
-  · exact hVU hz
-
-/-- A complex point belongs to a principal open exactly when its defining function is nonzero. -/
-lemma mem_overOpen_basicOpen_iff_evaluate_ne_zero
-    {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ}
-    (s : Γ(X, ⊤)) (z : ComplexPoint X structureMap) :
-    z ∈ overOpen (X.basicOpen s) ↔ evaluate ⊤ s z ≠ 0 := by
-  rw [evaluate, dif_pos (by exact trivial)]
-  change z.residueData.1 ∈ X.basicOpen s ↔
-    z.residueData.2 (X.evaluation ⊤ z.residueData.1 trivial s) ≠ 0
-  rw [← Scheme.evaluation_ne_zero_iff_mem_basicOpen]
-  exact (map_ne_zero_iff z.residueData.2.hom z.residueData.2.hom.injective).symm
-
 /-- Principal opens of complex affine space pull back to Euclidean open sets. -/
 lemma isOpen_affineSpaceEquiv_symm_preimage_overOpen_basicOpen {n : Type}
     (s : Γ(complexAffineSpace n, ⊤)) :
@@ -229,37 +208,8 @@ lemma isOpen_affineSpaceEquiv_symm_preimage_overOpen_basicOpen {n : Type}
       overOpen ((complexAffineSpace n).basicOpen s) =
       {v | evaluate ⊤ s ((affineSpaceEquiv n).symm v) ≠ 0} by
     ext v
-    exact mem_overOpen_basicOpen_iff_evaluate_ne_zero s _]
+    exact mem_overOpen_basicOpen_iff_evaluate_ne_zero s _ trivial]
   exact isOpen_ne_fun (continuous_evaluate_top_affineSpaceEquiv_symm s) continuous_const
-
-/-- A regular function on a principal open evaluates as a quotient of global polynomials. -/
-lemma exists_evaluate_basicOpen_eq_div {n : Type}
-    (f : Γ(complexAffineSpace n, ⊤))
-    (t : Γ(complexAffineSpace n, (complexAffineSpace n).basicOpen f)) :
-    ∃ (k : ℕ) (a : Γ(complexAffineSpace n, ⊤)),
-      ∀ z : ComplexPoint (complexAffineSpace n) (complexAffineSpace n ↘ Spec ↧ℂ),
-        z ∈ overOpen ((complexAffineSpace n).basicOpen f) →
-          evaluate ((complexAffineSpace n).basicOpen f) t z =
-            evaluate ⊤ a z / evaluate ⊤ f z ^ k := by
-  let _ := AlgebraicGeometry.isLocalization_away_of_isAffine f
-  obtain ⟨k, a, hta⟩ := IsLocalization.Away.surj f t
-  refine ⟨k, a, ?_⟩
-  intro z hz
-  have hden : evaluate ⊤ f z ≠ 0 :=
-    (mem_overOpen_basicOpen_iff_evaluate_ne_zero f z).mp hz
-  apply (eq_div_iff (pow_ne_zero k hden)).2
-  let ψ : Γ(complexAffineSpace n, (complexAffineSpace n).basicOpen f) →+* ℂ :=
-    z.residueData.2.hom.comp
-      ((complexAffineSpace n).evaluation ((complexAffineSpace n).basicOpen f)
-        z.residueData.1 hz).hom
-  have hmap := congrArg ψ hta
-  have hf := evaluate_res ((complexAffineSpace n).basicOpen_le f) f z hz
-  have ha := evaluate_res ((complexAffineSpace n).basicOpen_le f) a z hz
-  have hz' : z.residueData.1 ∈ (complexAffineSpace n).basicOpen f := hz
-  rw [hf, ha]
-  simp only [evaluate, dif_pos hz']
-  change ψ t * ψ (algebraMap _ _ f) ^ k = ψ (algebraMap _ _ a)
-  simpa using hmap
 
 /-- Evaluation on a principal open is continuous on the corresponding Euclidean open set. -/
 lemma continuousOn_evaluate_basicOpen_affineSpaceEquiv_symm {n : Type}
@@ -270,7 +220,9 @@ lemma continuousOn_evaluate_basicOpen_affineSpaceEquiv_symm {n : Type}
         ((affineSpaceEquiv n).symm v))
       ((affineSpaceEquiv n).symm ⁻¹'
         overOpen ((complexAffineSpace n).basicOpen f)) := by
-  obtain ⟨k, a, h⟩ := exists_evaluate_basicOpen_eq_div f t
+  obtain ⟨k, a, h⟩ :=
+    exists_evaluate_basicOpen_eq_div (structureMap := complexAffineSpace n ↘ Spec ↧ℂ)
+      (isAffineOpen_top (complexAffineSpace n)) f t
   have ha := continuous_evaluate_top_affineSpaceEquiv_symm a
   have hf := continuous_evaluate_top_affineSpaceEquiv_symm f
   have hrat : ContinuousOn
@@ -279,7 +231,7 @@ lemma continuousOn_evaluate_basicOpen_affineSpaceEquiv_symm {n : Type}
       ((affineSpaceEquiv n).symm ⁻¹'
         overOpen ((complexAffineSpace n).basicOpen f)) :=
     ha.continuousOn.div (hf.pow k).continuousOn fun v hv ↦
-      pow_ne_zero k ((mem_overOpen_basicOpen_iff_evaluate_ne_zero f _).mp hv)
+      pow_ne_zero k ((mem_overOpen_basicOpen_iff_evaluate_ne_zero f _ trivial).mp hv)
   exact hrat.congr fun v hv ↦ h _ hv
 
 /-- The inverse coordinate map is continuous for every local regular-function subbasis set. -/
@@ -287,7 +239,7 @@ lemma continuous_affineSpaceEquiv_symm (n : Type) :
     @Continuous (n → ℂ)
       (ComplexPoint (complexAffineSpace n) (complexAffineSpace n ↘ Spec ↧ℂ))
       inferInstance analyticTopology (affineSpaceEquiv n).symm := by
-  rw [continuous_generateFrom_iff]
+  rw [continuous_iff_analyticSubbasis]
   rintro W ⟨U, s, V, hV, rfl⟩
   rw [Set.preimage_inter, Set.preimage_preimage]
   apply isOpen_iff_forall_mem_open.mpr

@@ -38,36 +38,36 @@ open CategoryTheory
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
+open Point
+
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
   [IsProjective structureMap]
 
 /-- Every open subset of a smooth projective complex analytification is paracompact. -/
-theorem openParacompactSpace [SmoothOfRelativeDimension d structureMap]
+theorem openParacompactSpace [IsIntegral X] [Smooth structureMap]
     (U : Opens (ComplexPoint X structureMap)) : ParacompactSpace U := by
-  let _ : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
-    analyticChartedSpace structureMap d
-  exact opens_paracompactSpace_of_compact_chartedSpace (H := Fin d → ℂ) U
+  exact opens_paracompactSpace_of_compact_chartedSpace (H := Fin (dim X) → ℂ) U
 
 /-- Every term of the rational singular-cochain sheaf resolution on a smooth projective
 analytification is flasque. -/
-theorem rationalSingularCochainSheafIsFlasque [SmoothOfRelativeDimension d structureMap]
+theorem rationalSingularCochainSheafIsFlasque [IsIntegral X] [Smooth structureMap]
     (n : ℕ) :
     TopCat.Sheaf.IsFlasque
       (AlgebraicTopology.Singular.singularCochainSheaf ℚ
         (TopCat.of (ComplexPoint X structureMap)) n) := by
   let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
-    openParacompactSpace structureMap d
+    openParacompactSpace structureMap
   infer_instance
 
 /-- Ordinary rational singular cochains compute the global sections of the chosen
 singular-cochain sheaf complex on a smooth projective analytification. -/
 theorem rationalSingularCochain_globalComparison_quasiIso
-    [SmoothOfRelativeDimension d structureMap] :
+    [IsIntegral X] [Smooth structureMap] :
     QuasiIso
       (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ
         (TopCat.of (ComplexPoint X structureMap))) := by
   let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
-    openParacompactSpace structureMap d
+    openParacompactSpace structureMap
   exact AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
 
 end AlgebraicGeometry.ComplexPoint

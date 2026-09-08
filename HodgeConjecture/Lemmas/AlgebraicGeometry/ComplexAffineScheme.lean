@@ -33,6 +33,8 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 noncomputable section
 
 variable (R : Type) [CommRing R] [Algebra ℂ R]
@@ -120,7 +122,7 @@ lemma isOpen_affineSpecEquiv_symm_preimage_overOpen_basicOpen
       overOpen ((Spec ↧R).basicOpen s) =
       {φ | φ ((Scheme.ΓSpecIso ↧R).hom s) ≠ 0} by
     ext φ
-    rw [Set.mem_preimage, mem_overOpen_basicOpen_iff_evaluate_ne_zero,
+    rw [Set.mem_preimage, mem_overOpen_basicOpen_iff_evaluate_ne_zero (U := ⊤) (hz := trivial),
       evaluate_affineSpecEquiv_symm_top]
     rfl]
   exact isOpen_ne_fun
@@ -133,25 +135,8 @@ lemma exists_evaluate_affine_basicOpen_eq_div {X : Scheme} [IsAffine X]
     {structureMap : X ⟶ Spec ↧ℂ} (f : Γ(X, ⊤)) (t : Γ(X, X.basicOpen f)) :
     ∃ (k : ℕ) (a : Γ(X, ⊤)),
       ∀ z : ComplexPoint X structureMap, z ∈ overOpen (X.basicOpen f) →
-        evaluate (X.basicOpen f) t z = evaluate ⊤ a z / evaluate ⊤ f z ^ k := by
-  let _ := AlgebraicGeometry.isLocalization_away_of_isAffine f
-  obtain ⟨k, a, hta⟩ := IsLocalization.Away.surj f t
-  refine ⟨k, a, ?_⟩
-  intro z hz
-  have hden : evaluate ⊤ f z ≠ 0 :=
-    (mem_overOpen_basicOpen_iff_evaluate_ne_zero f z).mp hz
-  apply (eq_div_iff (pow_ne_zero k hden)).2
-  let ψ : Γ(X, X.basicOpen f) →+* ℂ :=
-    z.residueData.2.hom.comp
-      (X.evaluation (X.basicOpen f) z.residueData.1 hz).hom
-  have hmap := congrArg ψ hta
-  have hf := evaluate_res (X.basicOpen_le f) f z hz
-  have ha := evaluate_res (X.basicOpen_le f) a z hz
-  have hz' : z.residueData.1 ∈ X.basicOpen f := hz
-  rw [hf, ha]
-  simp only [evaluate, dif_pos hz']
-  change ψ t * ψ (algebraMap _ _ f) ^ k = ψ (algebraMap _ _ a)
-  simpa using hmap
+        evaluate (X.basicOpen f) t z = evaluate ⊤ a z / evaluate ⊤ f z ^ k :=
+  exists_evaluate_basicOpen_eq_div (isAffineOpen_top X) f t
 
 lemma exists_evaluate_affineSpec_basicOpen_eq_div
     (f : Γ(Spec ↧R, ⊤))
@@ -186,14 +171,14 @@ lemma continuousOn_evaluate_affineSpec_basicOpen_equiv_symm
       ((affineSpecEquiv R).symm ⁻¹'
         overOpen ((Spec ↧R).basicOpen f)) :=
     ha.continuousOn.div (hf.pow k).continuousOn fun φ hφ ↦
-      pow_ne_zero k ((mem_overOpen_basicOpen_iff_evaluate_ne_zero f _).mp hφ)
+      pow_ne_zero k ((mem_overOpen_basicOpen_iff_evaluate_ne_zero f _ trivial).mp hφ)
   exact hrat.congr fun φ hφ ↦ h _ hφ
 
 lemma continuous_affineSpecEquiv_symm :
     @Continuous (R →ₐ[ℂ] ℂ)
       (ComplexPoint (Spec ↧R) (affineSpecStructureMap R))
       (affineAlgebraHomTopology R) analyticTopology (affineSpecEquiv R).symm := by
-  rw [continuous_generateFrom_iff]
+  rw [continuous_iff_analyticSubbasis]
   rintro W ⟨U, s, V, hV, rfl⟩
   rw [Set.preimage_inter, Set.preimage_preimage]
   apply isOpen_iff_forall_mem_open.mpr

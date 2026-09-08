@@ -35,6 +35,8 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 noncomputable local instance cycleComponentTopology

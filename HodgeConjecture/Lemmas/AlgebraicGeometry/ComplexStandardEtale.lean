@@ -35,6 +35,8 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 noncomputable section
 
 /-- The polynomial coordinate ring of complex affine `n`-space. -/

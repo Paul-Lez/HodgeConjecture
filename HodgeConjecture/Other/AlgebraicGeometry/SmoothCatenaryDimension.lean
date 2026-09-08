@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.Algebra.PolynomialCatenary
-public import HodgeConjecture.Other.AlgebraicGeometry.SmoothPointwiseDimension
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
 public import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
 public import Mathlib.RingTheory.LocalRing.ResidueField.Ideal
 

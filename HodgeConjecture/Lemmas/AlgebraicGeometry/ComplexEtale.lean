@@ -43,6 +43,8 @@ open CategoryTheory Topology Filter
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 noncomputable section
 
 variable {n : ℕ} (P : StandardEtalePair (complexPolynomialRing n))
@@ -866,14 +868,14 @@ def standardEtaleComplexPointMap :
     ComplexPoint (Spec ↧P.Ring) (affineSpecStructureMap P.Ring) →
       ComplexPoint (Spec ↧(complexPolynomialRing n))
         (affineSpecStructureMap (complexPolynomialRing n)) :=
-  ComplexPoint.map (standardEtaleSpecMap P) (standardEtaleSpecMap_over P)
+  Point.map (standardEtaleSpecMap P) (standardEtaleSpecMap_over P)
 
 lemma affineSpecEquiv_standardEtaleComplexPointMap
     (z : ComplexPoint (Spec ↧P.Ring) (affineSpecStructureMap P.Ring)) :
     affineSpecEquiv (complexPolynomialRing n) (standardEtaleComplexPointMap P z) =
       standardEtaleBaseAlgHom P (affineSpecEquiv P.Ring z) := by
   ext b
-  simp [standardEtaleComplexPointMap, ComplexPoint.map, affineSpecEquiv,
+  simp [standardEtaleComplexPointMap, Point.map, affineSpecEquiv,
     standardEtaleBaseAlgHom, standardEtaleSpecMap, Spec.preimage_comp]
 
 /-- A standard étale morphism of affine complex schemes is a local homeomorphism on complex

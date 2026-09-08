@@ -40,10 +40,9 @@ open CategoryTheory Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+open Point
 
-local instance rationalCohomologyZeroTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The natural-to-integer cochain embedding sends degree zero to degree zero. -/
 lemma embeddingUpNat_zero : ComplexShape.embeddingUpNat.f 0 = (0 : ℤ) := rfl

@@ -261,10 +261,9 @@ end TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+open Point
 
-local instance bettiGlobalSectionsComparisonTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The integer constant-sheaf complex used to define hypercohomology is the degree-zero
 integer constant sheaf, after extending its natural-number grading to integer degrees. -/
@@ -552,10 +551,9 @@ end AlgebraicTopology.Singular.HereditarilyParacompact
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+open Point
 
-local instance bettiHypercohomologyComparisonTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- On a hereditarily paracompact Hausdorff complex-point space, hypercohomology of the rational
 singular-cochain resolution is the repository's existing rational singular cohomology type. -/
@@ -584,14 +582,14 @@ def rationalSingularCochainHypercohomologyEquivCohomology
 /-- On a smooth complex scheme whose analytification is hereditarily paracompact Hausdorff,
 rational constant-sheaf cohomology agrees with the repository's rational singular cohomology. -/
 def rationalCohomologyEquivSingularCohomology
-    {d : ℕ} [SmoothOfRelativeDimension d structureMap]
+    [IsIntegral X] [Smooth structureMap]
     [T2Space (ComplexPoint X structureMap)]
     [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
     (n : ℕ) :
     FieldCohomology ℚ structureMap (n : ℤ) ≃
       AlgebraicTopology.Singular.Cohomology ℚ
         (TopCat.of (ComplexPoint X structureMap)) n :=
-  (rationalCohomologySingularCochainEquiv structureMap d (n : ℤ)).trans
+  (rationalCohomologySingularCochainEquiv structureMap (n : ℤ)).trans
     (rationalSingularCochainHypercohomologyEquivCohomology structureMap n)
 
 end AlgebraicGeometry.ComplexPoint

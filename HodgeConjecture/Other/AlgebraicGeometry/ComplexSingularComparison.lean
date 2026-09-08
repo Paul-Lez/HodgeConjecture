@@ -36,33 +36,32 @@ open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
+open Point
 
-local instance complexSingularComparisonTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 /-- The constant-to-singular-cochain comparison on a smooth complex-point space is a
 quasi-isomorphism in positive degrees. -/
 lemma constantsToSingularCochain_quasiIsoAt_succ
-    [SmoothOfRelativeDimension d structureMap]
+    [IsIntegral X] [Smooth structureMap]
     (R : Type) [Field R] (n : ℕ) :
     QuasiIsoAt
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
         (TopCat.of (ComplexPoint X structureMap))) (n + 1) := by
   apply AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_contractibleOpenBasis
   intro x U hxU
-  exact exists_contractibleOpen_le structureMap d x U hxU
+  exact exists_contractibleOpen_le structureMap x U hxU
 
 /-- The constant-to-singular-cochain comparison on a smooth complex-point space is a
 quasi-isomorphism in degree zero. -/
 lemma constantsToSingularCochain_quasiIsoAt_zero
-    [SmoothOfRelativeDimension d structureMap]
+    [IsIntegral X] [Smooth structureMap]
     (R : Type) [Field R] :
     QuasiIsoAt
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
         (TopCat.of (ComplexPoint X structureMap))) 0 := by
   let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
-    locallyPathConnectedSpace structureMap d
+    locallyPathConnectedSpace structureMap
   exact
     AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_zero
       R (TopCat.of (ComplexPoint X structureMap))
@@ -70,7 +69,7 @@ lemma constantsToSingularCochain_quasiIsoAt_zero
 /-- On the analytic space of a smooth complex scheme, the constant sheaf is resolved by the
 sheafified singular-cochain complex. -/
 lemma constantsToSingularCochain_quasiIso
-    [SmoothOfRelativeDimension d structureMap]
+    [IsIntegral X] [Smooth structureMap]
     (R : Type) [Field R] :
     QuasiIso
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
@@ -78,8 +77,8 @@ lemma constantsToSingularCochain_quasiIso
   constructor
   intro n
   cases n with
-  | zero => exact constantsToSingularCochain_quasiIsoAt_zero structureMap d R
-  | succ n => exact constantsToSingularCochain_quasiIsoAt_succ structureMap d R n
+  | zero => exact constantsToSingularCochain_quasiIsoAt_zero structureMap R
+  | succ n => exact constantsToSingularCochain_quasiIsoAt_succ structureMap R n
 
 /-- The sheafified singular-cochain complex, extended by zero to integer degrees. -/
 def singularCochainSheafComplexInt (R : Type) [Field R] :
@@ -107,7 +106,7 @@ def constantsToSingularCochainComplexInt (R : Type) [Field R] :
 
 /-- The integer-indexed constant-to-singular comparison remains a quasi-isomorphism. -/
 lemma constantsToSingularCochainComplexInt_quasiIso
-    [SmoothOfRelativeDimension d structureMap]
+    [IsIntegral X] [Smooth structureMap]
     (R : Type) [Field R] :
     QuasiIso (constantsToSingularCochainComplexInt structureMap R) := by
   unfold constantsToSingularCochainComplexInt constantCoefficientSheafComplexInt
@@ -115,6 +114,6 @@ lemma constantsToSingularCochainComplexInt_quasiIso
   exact (HomologicalComplex.quasiIso_extendMap_iff
     (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
       (TopCat.of (ComplexPoint X structureMap))) ComplexShape.embeddingUpNat).mpr
-        (constantsToSingularCochain_quasiIso structureMap d R)
+        (constantsToSingularCochain_quasiIso structureMap R)
 
 end AlgebraicGeometry.ComplexPoint

@@ -39,9 +39,11 @@ Lean and Mathlib versions rather than importing the upstream repository.
 
 @[expose] public noncomputable section
 
-open Filter Set Topology
+open Filter Set Topology TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
+
+open Point
 
 /-- A real normed space is strongly locally contractible: open balls form a neighbourhood basis
 and are convex. -/
@@ -87,24 +89,22 @@ theorem ChartedSpace.stronglyLocallyContractibleSpace
   exact
     ((chartAt H x).toHomeomorphSourceTarget).isOpenEmbedding.stronglyLocallyContractibleSpace
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The analytification of a smooth projective complex variety is strongly locally
 contractible. -/
-theorem stronglyLocallyContractibleSpace [SmoothOfRelativeDimension d structureMap] :
+theorem stronglyLocallyContractibleSpace [IsIntegral X] [Smooth structureMap] :
     StronglyLocallyContractibleSpace (ComplexPoint X structureMap) := by
-  let _ : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
-    analyticChartedSpace structureMap d
-  let _ : StronglyLocallyContractibleSpace (Fin d → ℂ) :=
+  let _ : StronglyLocallyContractibleSpace (Fin (dim X) → ℂ) :=
     normedSpace_stronglyLocallyContractibleSpace
   exact ChartedSpace.stronglyLocallyContractibleSpace
-    (H := Fin d → ℂ) (M := ComplexPoint X structureMap)
+    (H := Fin (dim X) → ℂ) (M := ComplexPoint X structureMap)
 
 /-- The analytification of a smooth projective complex variety is locally contractible. -/
-theorem locallyContractibleSpace [SmoothOfRelativeDimension d structureMap] :
+theorem locallyContractibleSpace [IsIntegral X] [Smooth structureMap] :
     LocallyContractibleSpace (ComplexPoint X structureMap) := by
   let _ : StronglyLocallyContractibleSpace (ComplexPoint X structureMap) :=
-    stronglyLocallyContractibleSpace structureMap d
+    stronglyLocallyContractibleSpace structureMap
   exact StronglyLocallyContractibleSpace.locallyContractible
 
 end AlgebraicGeometry.ComplexPoint

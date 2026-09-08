@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentDimension
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
 public import Mathlib.RingTheory.KrullDimension.Field
 public import Mathlib.RingTheory.KrullDimension.Polynomial

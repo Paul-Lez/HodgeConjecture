@@ -46,10 +46,9 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+open Point
 
-local instance cohomologyWithSupportTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 local instance analyticSupportHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
@@ -138,13 +137,8 @@ lemma isZero_sheaf_on_complement_univ
 /-- Every term of the derived pushforward from the empty complement is zero. -/
 lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
     IsZero ((derivedPushforwardComplementConstantRationalComplexNat structureMap
-      (Set.univ : Set (ComplexPoint X structureMap))).X n) := by
-  change IsZero ((TopCat.Sheaf.pushforward AddCommGrpCat
-    (analyticComplementInclusion structureMap
-      (Set.univ : Set (ComplexPoint X structureMap)))).obj
-        ((complementConstantRationalInjectiveResolution structureMap
-          (Set.univ : Set (ComplexPoint X structureMap))).cocomplex.X n))
-  exact (TopCat.Sheaf.pushforward AddCommGrpCat
+      (Set.univ : Set (ComplexPoint X structureMap))).X n) :=
+  (TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion structureMap
       (Set.univ : Set (ComplexPoint X structureMap)))).map_isZero
         (isZero_sheaf_on_complement_univ structureMap _)
@@ -177,12 +171,8 @@ def derivedPushforwardComplementConstantRationalComplexInt
 zero complex. -/
 lemma isZero_derivedPushforwardComplement_univ_int :
     IsZero (derivedPushforwardComplementConstantRationalComplexInt structureMap
-      (Set.univ : Set (ComplexPoint X structureMap))) := by
-  change IsZero ((ComplexShape.embeddingUpNat.extendFunctor
-    (AnalyticAdditiveSheaf structureMap)).obj
-      (derivedPushforwardComplementConstantRationalComplexNat structureMap
-        (Set.univ : Set (ComplexPoint X structureMap))))
-  exact (ComplexShape.embeddingUpNat.extendFunctor
+      (Set.univ : Set (ComplexPoint X structureMap))) :=
+  (ComplexShape.embeddingUpNat.extendFunctor
     (AnalyticAdditiveSheaf structureMap)).map_isZero
       (isZero_derivedPushforwardComplement_univ structureMap)
 
@@ -322,9 +312,6 @@ def forgetSupport (Z : Set (ComplexPoint X structureMap)) (n : ℤ) :
     simp
 
 section
-
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
 
 /-- After passage to the derived category, the morphism which forgets whole-space support is an
 isomorphism. -/

@@ -91,7 +91,7 @@ namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 open AlgebraicTopology.Singular
 
 noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
-    TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
+    TopologicalSpace (ComplexPoint Y g) := Point.analyticTopology
 
 variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
   [Smooth structureMap] [IsProjective structureMap] {x : X}

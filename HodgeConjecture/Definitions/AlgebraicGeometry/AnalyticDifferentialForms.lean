@@ -46,14 +46,9 @@ open scoped ContDiff Manifold
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
-
-local instance analyticEvalTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
-
-local instance analyticEvalChartedSpace [SmoothOfRelativeDimension d structureMap] :
-    ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
-  analyticChartedSpace structureMap d
 
 local instance analyticEvalIsManifold [SmoothOfRelativeDimension d structureMap] :
     IsManifold (modelWithCornersSelf ℂ (Fin d → ℂ)) ω
@@ -330,8 +325,7 @@ def chartSectionDomain [SmoothOfRelativeDimension d structureMap]
 lemma isOpen_chartSectionDomain [SmoothOfRelativeDimension d structureMap]
     (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (z : ComplexPoint X structureMap) :
     IsOpen (chartSectionDomain structureMap d U z) := by
-  simpa [chartSectionDomain, extChartAt_target, extChartAt_coe_symm,
-    analyticEvalChartedSpace, analyticChartedSpace] using
+  simpa [chartSectionDomain, extChartAt_target, extChartAt_coe_symm] using
     (chartAt (Fin d → ℂ) z).isOpen_inter_preimage_symm
       (Opposite.unop U).isOpen
 

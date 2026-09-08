@@ -40,8 +40,10 @@ open TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-  [IsProjective structureMap] (d : ℕ)
+  [IsProjective structureMap]
 
 /-- On a connected projective analytification, the image of the genuine codimension-zero Chow
 cycle-class map is all of degree-zero rational cohomology. -/
@@ -62,31 +64,31 @@ theorem algebraicCycleClassSpan_zero_eq_top_of_connected
 /-- The degree-zero Hodge classes are exactly the algebraic cycle-class span when the
 analytification is connected. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected
-    [SmoothOfRelativeDimension d structureMap]
+
     (hV : ConnectedSpace (ComplexPoint X structureMap)) :
-    Hdg^0(ℚ; structureMap, d) = algebraicCycleClassSpan structureMap 0 := by
+    Hdg^0(ℚ; structureMap) = algebraicCycleClassSpan structureMap 0 := by
   rw [hodgeClasses_zero_eq_top,
     algebraicCycleClassSpan_zero_eq_top_of_connected structureMap hV]
 
 /-- The Hodge-conjecture inclusion holds in codimension zero when the analytification is
 connected. -/
 theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected
-    [SmoothOfRelativeDimension d structureMap]
+
     (hV : ConnectedSpace (ComplexPoint X structureMap)) :
-    Hdg^0(ℚ; structureMap, d) ≤ algebraicCycleClassSpan structureMap 0 := by
-  rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected structureMap d hV]
+    Hdg^0(ℚ; structureMap) ≤ algebraicCycleClassSpan structureMap 0 := by
+  rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected structureMap hV]
 
 /-- The Hodge-conjecture inclusion holds in every codimension for a smooth projective complex
 variety of complex dimension zero. -/
 theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero
-    [SmoothOfRelativeDimension d structureMap] (hd : d = 0) (p : ℕ) :
-    Hdg^p(ℚ; structureMap, d) ≤ algebraicCycleClassSpan structureMap p := by
+    (hd : dim X = 0) (p : ℕ) :
+    Hdg^p(ℚ; structureMap) ≤ algebraicCycleClassSpan structureMap p := by
   by_cases hp : p = 0
   · subst p
-    exact rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected structureMap d
-      (connectedSpaceOfDimensionEqZero structureMap d hd)
-  · have hdim : d < p := by lia
-    rw [hodgeClasses_eq_bot_of_lt ℚ structureMap d hdim,
-      algebraicCycleClassSpan_eq_bot_of_lt structureMap d p hdim]
+    exact rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected structureMap
+      (connectedSpaceOfDimensionEqZero structureMap (dim X) hd)
+  · have hdim : dim X < p := by lia
+    rw [hodgeClasses_eq_bot_of_lt ℚ structureMap hdim,
+      algebraicCycleClassSpan_eq_bot_of_lt structureMap (dim X) p hdim]
 
 end AlgebraicGeometry.ComplexPoint

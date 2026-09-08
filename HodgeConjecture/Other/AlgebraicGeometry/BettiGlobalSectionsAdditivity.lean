@@ -33,10 +33,9 @@ open CategoryTheory Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+open Point
 
-local instance bettiGlobalSectionsAdditivityTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := analyticTopology
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 local instance bettiGlobalSectionsAdditivityHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
@@ -255,36 +254,36 @@ lemma rationalSingularCochainHypercohomologyEquivCohomology_zero
 /-- Rational constant-sheaf cohomology and rational singular cohomology are additively
 equivalent. -/
 def rationalCohomologyAddEquivSingularCohomology
-    {d : ℕ} [SmoothOfRelativeDimension d structureMap]
+    [IsIntegral X] [Smooth structureMap]
     [T2Space (ComplexPoint X structureMap)]
     [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
     (n : ℕ) :
     FieldCohomology ℚ structureMap (n : ℤ) ≃+
       AlgebraicTopology.Singular.Cohomology ℚ
         (TopCat.of (ComplexPoint X structureMap)) n :=
-  (rationalCohomologySingularCochainAddEquiv structureMap d (n : ℤ)).trans
+  (rationalCohomologySingularCochainAddEquiv structureMap (n : ℤ)).trans
     (rationalSingularCochainHypercohomologyAddEquivCohomology structureMap n)
 
 /-- The forward map of the original rational Betti comparison preserves addition. -/
 lemma rationalCohomologyEquivSingularCohomology_add
-    {d : ℕ} [SmoothOfRelativeDimension d structureMap]
+    [IsIntegral X] [Smooth structureMap]
     [T2Space (ComplexPoint X structureMap)]
     [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
     (n : ℕ) (α β : FieldCohomology ℚ structureMap (n : ℤ)) :
-    rationalCohomologyEquivSingularCohomology (d := d) structureMap n (α + β) =
-      rationalCohomologyEquivSingularCohomology (d := d) structureMap n α +
-      rationalCohomologyEquivSingularCohomology (d := d) structureMap n β := by
-  exact (rationalCohomologyAddEquivSingularCohomology (d := d)
+    rationalCohomologyEquivSingularCohomology structureMap n (α + β) =
+      rationalCohomologyEquivSingularCohomology structureMap n α +
+      rationalCohomologyEquivSingularCohomology structureMap n β := by
+  exact (rationalCohomologyAddEquivSingularCohomology
     structureMap n).map_add α β
 
 /-- The forward map of the original rational Betti comparison preserves zero. -/
 lemma rationalCohomologyEquivSingularCohomology_zero
-    {d : ℕ} [SmoothOfRelativeDimension d structureMap]
+    [IsIntegral X] [Smooth structureMap]
     [T2Space (ComplexPoint X structureMap)]
     [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
     (n : ℕ) :
-    rationalCohomologyEquivSingularCohomology (d := d) structureMap n 0 = 0 := by
-  exact (rationalCohomologyAddEquivSingularCohomology (d := d)
+    rationalCohomologyEquivSingularCohomology structureMap n 0 = 0 := by
+  exact (rationalCohomologyAddEquivSingularCohomology
     structureMap n).map_zero
 
 end AlgebraicGeometry.ComplexPoint
