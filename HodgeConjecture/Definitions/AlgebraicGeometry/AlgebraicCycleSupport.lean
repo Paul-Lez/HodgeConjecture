@@ -212,14 +212,14 @@ def cycleComponentSupport
 lemma isClosed_complexPoint_underlying_preimage
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap]
     (Z : TopologicalSpace.Closeds X) :
-    IsClosed ((@Point.underlying ℂ _ X structureMap) ⁻¹'
+    IsClosed ((@Point.underlying ℂ _ _ X structureMap) ⁻¹'
       (Z : Set X)) := by
   rw [← isOpen_compl_iff]
   let U : X.Opens := ⟨(Z : Set X)ᶜ,
     isOpen_compl_iff.mpr Z.2⟩
   change @IsOpen (ComplexPoint X structureMap) Point.analyticTopology
-    ((@Point.underlying ℂ _ X structureMap) ⁻¹' (Z : Set X))ᶜ
-  rw [show ((@Point.underlying ℂ _ X structureMap) ⁻¹'
+    ((@Point.underlying ℂ _ _ X structureMap) ⁻¹' (Z : Set X))ᶜ
+  rw [show ((@Point.underlying ℂ _ _ X structureMap) ⁻¹'
       (Z : Set X))ᶜ = Point.overOpen U by
     apply Set.ext
     intro z
@@ -443,7 +443,7 @@ def analyticCycleSupport {R : Type*} [Zero R]
 def principalDivisorCarrierSupport
     [IsIntegral X] [Smooth structureMap] [IsProjective structureMap]
     {p : ℕ} (D : PrincipalDivisor X p) : Set (ComplexPoint X structureMap) :=
-  (@Point.underlying ℂ _ X structureMap) ⁻¹' Set.range D.inclusion
+  (@Point.underlying ℂ _ _ X structureMap) ⁻¹' Set.range D.inclusion
 
 /-- The analytic support of a principal-divisor carrier is closed. -/
 lemma isClosed_principalDivisorCarrierSupport

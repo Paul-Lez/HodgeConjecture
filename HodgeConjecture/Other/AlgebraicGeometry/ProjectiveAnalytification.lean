@@ -1516,7 +1516,7 @@ variable {X Y : Scheme} {f : X ⟶ Spec ↧ℂ} {g : Y ⟶ Spec ↧ℂ}
 closed point. -/
 lemma underlying_injective_of_locallyOfFiniteType
     {structureMap : X ⟶ Spec ↧ℂ} [LocallyOfFiniteType structureMap] :
-    Function.Injective (@underlying ℂ _ X structureMap) := by
+    Function.Injective (@underlying ℂ _ _ X structureMap) := by
   intro z w h
   apply Subtype.ext
   exact ext_of_apply_closedPoint_eq structureMap z.2 w.2 h
@@ -1525,7 +1525,7 @@ lemma underlying_injective_of_locallyOfFiniteType
 underlying closed point. -/
 lemma projectiveSpace_underlying_injective (n : ℕ) :
     Function.Injective
-      (@underlying ℂ _
+      (@underlying ℂ _ _
         (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) := by
   apply underlying_injective_of_locallyOfFiniteType

@@ -51,6 +51,7 @@ public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
 public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other
 public import HodgeConjecture.Other.Algebra.Category.ModuleCat.Presheaf.ExteriorPower
