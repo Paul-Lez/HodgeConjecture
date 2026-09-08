@@ -1,0 +1,8 @@
+import HodgeConjecture.Other.AlgebraicTopology.RelativeCochainConeForgetComparison
+
+open AlgebraicTopology.Singular
+
+#print axioms relativeDualShiftIsoCochainCone_hom_connecting
+#print axioms relativeDualShiftIsoCochainCone_inv_inclusion
+#print axioms relativeCochainConeHomologyIsoDualRelativeInt_inclusion
+#print axioms relativeCochainCone_legacy_canonical_inclusion
