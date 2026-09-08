@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicGeometry.ComplexSheafBorelMoore
-public import HodgeConjecture.Other.AlgebraicGeometry.DerivedSupportRationalComparison
+public import HodgeConjecture.Other.AlgebraicGeometry.ComplexSheafBorelMooreForget
+public import HodgeConjecture.Other.AlgebraicGeometry.DerivedSupportRationalForget
 
 /-!
 # The constructed ambient Borel–Moore map into the existing rational cohomology API
@@ -15,9 +15,10 @@ injective-resolution/support-cone equivalence. Forgetting support then lands in 
 repository's `FieldCohomology` itself, with no supplied duality or comparison argument.
 
 This module transports Borel–Moore classes; it does not produce fundamental classes
-for general algebraic components. Agreement with the separate actual derived-global
-support-forgetting route and the existing normalized point coclass are further
-comparison theorems, not assumptions or claims of this adapter.
+for general algebraic components. Agreement with the actual derived-global
+support-forgetting route is proved below, using the normalized support-cone
+comparison including its sign. Agreement with the existing point coclass for a
+particular fundamental-class construction remains a separate comparison theorem.
 -/
 
 @[expose] public noncomputable section
@@ -80,5 +81,19 @@ def complexAmbientSheafBorelMooreCycleDegreeToFieldCohomology
     (2 * (p : ℤ))).comp
       (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport
         structureMap d Z p hp).toAddMonoidHom
+
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
+/-- The existing-cohomology adapter is exactly the actual derived support-forgetting
+map transported through the constructed ordinary cohomology comparison. In
+particular no independent sign or scalar is chosen at the final adapter. -/
+theorem complexAmbientSheafBorelMooreToFieldCohomology_eq_derivedForget
+    (Z : Closeds (ComplexPoint X structureMap)) (i : ℤ)
+    (x : ComplexAmbientSheafBorelMooreHomology structureMap d Z i) :
+    complexAmbientSheafBorelMooreToFieldCohomology structureMap d Z i x =
+      derivedRationalCohomologyAddEquiv structureMap (2 * (d : ℤ) - i)
+        (complexAmbientSheafBorelMooreToCohomology structureMap d Z i x) := by
+  exact (derivedRationalSupportAddEquiv_forgetSupport structureMap Z (2 * (d : ℤ) - i)
+    ((complexAmbientSheafBorelMooreHomologyIso structureMap d Z i).hom x)).symm
 
 end AlgebraicGeometry.ComplexPoint

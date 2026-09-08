@@ -244,7 +244,30 @@ run_cmd do
      "HodgeConjecture.Mathlib.Algebra.Homology.MapExtendNaturality",
      "HodgeConjecture.Mathlib.Algebra.Homology.HomComplexPostcompNaturality",
      "HodgeConjecture.Mathlib.CategoryTheory.Abelian.KernelCompositionShortExact",
-     "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingCoconeShortExact"]
+     "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingCoconeShortExact",
+     "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality",
+     "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusInjectiveModel",
+     "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.ShortExactQuasiIso",
+     "HodgeConjecture.Mathlib.Algebra.Homology.HomComplexShiftNaturality",
+     "HodgeConjecture.Other.AlgebraicGeometry.ClosedImmersionPointNormalCoordinates",
+     "HodgeConjecture.Other.AlgebraicGeometry.ComplexPointCoclassOrientationComparison",
+     "HodgeConjecture.Other.AlgebraicGeometry.ComplexSupportedSingularModel",
+     "HodgeConjecture.Other.AlgebraicGeometry.DerivedSupportRationalConeForget",
+     "HodgeConjecture.Other.AlgebraicGeometry.DerivedSupportRationalForget",
+     "HodgeConjecture.Other.AlgebraicGeometry.HolomorphicClosedImmersionCharts",
+     "HodgeConjecture.Other.AlgebraicGeometry.HypercohomologyGlobalSectionsShift",
+     "HodgeConjecture.Other.AlgebraicGeometry.SheafBorelMoorePointClass",
+     "HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedPointPurityNormalization",
+     "HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedSupportLocalHomology",
+     "HodgeConjecture.Other.AlgebraicTopology.ChartTargetPointClassNormalization",
+     "HodgeConjecture.Other.AlgebraicTopology.CohomologySheafStalkVanishing",
+     "HodgeConjecture.Other.AlgebraicTopology.DerivedClosedSupportTruncation",
+     "HodgeConjecture.Other.AlgebraicTopology.FlasqueSheafSupportComparison",
+     "HodgeConjecture.Other.AlgebraicTopology.FlattenedSupportLocalHomology",
+     "HodgeConjecture.Other.AlgebraicTopology.HolomorphicNormalTransition",
+     "HodgeConjecture.Other.AlgebraicTopology.PointSupportedChainSection",
+     "HodgeConjecture.Other.AlgebraicTopology.SingularAmbientCapSheaf",
+     "HodgeConjecture.Other.AlgebraicTopology.SingularFlasqueSupportModel"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv
   for moduleName in modules do
