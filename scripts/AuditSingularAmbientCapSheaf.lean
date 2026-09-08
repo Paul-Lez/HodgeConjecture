@@ -1,0 +1,14 @@
+import HodgeConjecture.Other.AlgebraicTopology.SingularAmbientCapSheaf
+
+#print axioms AlgebraicTopology.Singular.ambientCapRelativeLift
+#print axioms AlgebraicTopology.Singular.subspaceChain_ambientCapRelativeLift
+#print axioms AlgebraicTopology.Singular.relativeAmbientCapHom
+#print axioms AlgebraicTopology.Singular.relativeChainProjection_relativeAmbientCapHom
+#print axioms AlgebraicTopology.Singular.relativeAmbientCapHom_supportInclusion
+#print axioms AlgebraicTopology.Singular.singularChainPresheafAmbientCap
+#print axioms AlgebraicTopology.Singular.singularChainSheafAmbientCap
+#print axioms AlgebraicTopology.Singular.singularChainSheafAmbientCap_unit
+#print axioms AlgebraicTopology.Singular.relativeAmbientCapHom_boundary_apply
+#print axioms AlgebraicTopology.Singular.relativeAmbientCapHom_boundary
+#print axioms AlgebraicTopology.Singular.singularChainPresheafAmbientCap_boundary
+#print axioms AlgebraicTopology.Singular.singularChainSheafAmbientCap_boundary
