@@ -1,0 +1,10 @@
+import HodgeConjecture.Other.AlgebraicTopology.CenteredComplexEmbeddingOrientation
+
+open AlgebraicTopology.Singular
+
+#print axioms centeredComplexEmbeddingPair
+#print axioms centeredComplexEmbeddingPairHomotopy
+#print axioms centeredComplexEmbeddingPair_relativeHomologyMap_eq
+#print axioms continuous_complexUnivBall
+#print axioms injective_complexUnivBall
+#print axioms centeredComplexUnivBall_preserves_standardComplexLocalClass
