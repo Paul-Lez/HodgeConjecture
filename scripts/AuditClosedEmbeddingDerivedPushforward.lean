@@ -1,0 +1,23 @@
+import HodgeConjecture.Other.AlgebraicTopology.ClosedEmbeddingDerivedPushforward
+
+#print axioms TopCat.Sheaf.closedEmbeddingPushforwardStalkIso
+#print axioms TopCat.Sheaf.closedEmbeddingPushforwardStalkIso_germ
+#print axioms TopCat.Sheaf.closedEmbeddingPushforwardStalkFunctorIso
+#print axioms TopCat.Sheaf.closedEmbeddingPushforwardStalk_isZero
+#print axioms TopCat.Sheaf.closedEmbeddingPushforward_map_exact
+#print axioms TopCat.Sheaf.closedEmbeddingPushforward_preservesHomology
+#print axioms TopCat.Sheaf.closedEmbeddingPushforward_preservesFiniteColimits
+#print axioms TopCat.Sheaf.closedEmbeddingPushforward_map_quasiIso
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforward
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforward_commShift
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforward_isTriangulated
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforwardFactors
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforwardFactors_naturality
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforwardFactorsh
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforward_isGE
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlus
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlusForgetIso
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlus_commShift
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlus_isTriangulated
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlusFactors
+#print axioms TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlusFactors_hom
