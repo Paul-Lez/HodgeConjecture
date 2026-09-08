@@ -145,6 +145,16 @@ def ComplexDerivedSupportedCohomology
       (TopCat.of (ComplexPoint X structureMap)) Z).obj
         (complexConstantRationalSheafPlusObject structureMap))
 
+/-- Enlarge support in the actual derived supported-cohomology model. -/
+def complexDerivedSupportedCohomologySupportMap
+    {Z W : Closeds (ComplexPoint X structureMap)} (h : Z ≤ W) (n : ℤ) :
+    ComplexDerivedSupportedCohomology structureMap Z n ⟶
+      ComplexDerivedSupportedCohomology structureMap W n :=
+  (DerivedCategory.Plus.homologyFunctor AddCommGrpCat n).map
+    ((TopCat.Sheaf.derivedClosedSupportSectionsMap
+      (TopCat.of (ComplexPoint X structureMap)) h).app
+        (complexConstantRationalSheafPlusObject structureMap))
+
 /-- Intermediate orientation transport: an orientation of the actual top homology SHEAF
 induces the shifted isomorphism in `D⁺`. Local vanishing and boundedness are proved above;
 the sheaf orientation remains an explicit argument to this general transport lemma. -/
@@ -197,9 +207,7 @@ def complexAmbientSheafBorelMooreHomologyIsoOfOrientation
       ComplexDerivedSupportedCohomology structureMap Z (2 * (d : ℤ) - i) := by
   refine (DerivedCategory.Plus.homologyFunctor AddCommGrpCat (-i)).mapIso
     (complexAmbientSheafBorelMooreIsoOfOrientation structureMap d orientation Z) ≪≫ ?_
-  refine (DerivedCategory.homologyFunctor AddCommGrpCat (-i)).mapIso
-    ((DerivedCategory.Plus.ι.commShiftIso (2 * (d : ℤ))).app _) ≪≫ ?_
-  exact ((DerivedCategory.homologyFunctor AddCommGrpCat 0).shiftIso
+  exact ((DerivedCategory.Plus.homologyFunctor AddCommGrpCat 0).shiftIso
     (2 * (d : ℤ)) (-i) (2 * (d : ℤ) - i) (by omega)).app _
 
 /-- The cycle-degree specialization, with arithmetic proved rather than supplied.
@@ -297,5 +305,51 @@ def complexAmbientSheafBorelMooreCycleDegreeIso
       ComplexDerivedSupportedCohomology structureMap Z (2 * (p : ℤ)) :=
   complexAmbientSheafBorelMooreCycleDegreeIsoOfOrientation structureMap d
     (complexOrientationHomologySheafIso structureMap d).symm Z p hp
+
+set_option backward.isDefEq.respectTransparency false in
+/-- The constructed orientation duality commutes with actual support enlargement
+already at the derived-object level. -/
+@[reassoc]
+theorem complexAmbientSheafBorelMooreOrientationIso_naturality
+    {Z W : Closeds (ComplexPoint X structureMap)} (h : Z ≤ W) :
+    (TopCat.Sheaf.derivedClosedSupportSectionsMap
+        (TopCat.of (ComplexPoint X structureMap)) h).app
+          (complexChainSheafPlusObject structureMap d) ≫
+        (complexAmbientSheafBorelMooreOrientationIso structureMap d W).hom =
+      (complexAmbientSheafBorelMooreOrientationIso structureMap d Z).hom ≫
+        ((TopCat.Sheaf.derivedClosedSupportSectionsMap
+          (TopCat.of (ComplexPoint X structureMap)) h).app
+            (complexConstantRationalSheafPlusObject structureMap))⟦2 * (d : ℤ)⟧' := by
+  simp only [complexAmbientSheafBorelMooreOrientationIso,
+    complexAmbientSheafBorelMooreIsoOfOrientation, Iso.trans_hom,
+    Functor.mapIso_hom, Category.assoc]
+  rw [← NatTrans.naturality_assoc]
+  congr 1
+  exact (TopCat.Sheaf.derivedClosedSupportSectionsMap_shift
+    (TopCat.of (ComplexPoint X structureMap)) h (2 * (d : ℤ))
+      (complexConstantRationalSheafPlusObject structureMap)).symm
+
+set_option backward.isDefEq.respectTransparency false in
+/-- The normalized duality on homology commutes with support enlargement. In particular,
+passing to whole-space support before or after duality gives the same class. -/
+@[reassoc]
+theorem complexAmbientSheafBorelMooreHomologyIso_naturality
+    {Z W : Closeds (ComplexPoint X structureMap)} (h : Z ≤ W) (i : ℤ) :
+    complexAmbientSheafBorelMooreSupportMap structureMap d h i ≫
+        (complexAmbientSheafBorelMooreHomologyIso structureMap d W i).hom =
+      (complexAmbientSheafBorelMooreHomologyIso structureMap d Z i).hom ≫
+        complexDerivedSupportedCohomologySupportMap structureMap h (2 * (d : ℤ) - i) := by
+  simp only [complexAmbientSheafBorelMooreHomologyIso,
+    complexAmbientSheafBorelMooreHomologyIsoOfOrientation,
+    complexAmbientSheafBorelMooreSupportMap, complexDerivedSupportedCohomologySupportMap,
+    Iso.trans_hom, Functor.mapIso_hom, Category.assoc]
+  rw [← Functor.map_comp_assoc]
+  rw [show _ ≫ (complexAmbientSheafBorelMooreIsoOfOrientation structureMap d
+      (complexOrientationHomologySheafIso structureMap d).symm W).hom = _ from
+    complexAmbientSheafBorelMooreOrientationIso_naturality structureMap d h]
+  rw [Functor.map_comp, Category.assoc]
+  congr 1
+  exact (((DerivedCategory.Plus.homologyFunctor AddCommGrpCat 0).shiftIso
+    (2 * (d : ℤ)) (-i) (2 * (d : ℤ) - i) (by omega)).hom.naturality _)
 
 end AlgebraicGeometry.ComplexPoint

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupport
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusNaturality
+public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportShift
+public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShiftNaturality
 
 /-!
 # Naturality of derived sections with closed support
@@ -146,6 +146,21 @@ local instance derivedSupportNaturalityGroupDerivedCategory :
 def derivedClosedSupportSectionsMap {Z W : Closeds X} (h : Z ≤ W) :
     derivedClosedSupportSections X Z ⟶ derivedClosedSupportSections X W :=
   (closedSupportSectionsMap X h).rightDerivedFunctorPlus
+
+/-- The actual support-enlargement maps commute with the constructed coherent shifts. -/
+instance derivedClosedSupportSectionsMap_commShift {Z W : Closeds X} (h : Z ≤ W) :
+    NatTrans.CommShift (derivedClosedSupportSectionsMap X h) ℤ :=
+  inferInstanceAs (NatTrans.CommShift (closedSupportSectionsMap X h).rightDerivedFunctorPlus ℤ)
+
+/-- The shift square for support enlargement, including its exact normalization. -/
+@[reassoc]
+theorem derivedClosedSupportSectionsMap_shift {Z W : Closeds X} (h : Z ≤ W)
+    (a : ℤ) (K : DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X)) :
+    ((derivedClosedSupportSections X Z).commShiftIso a).hom.app K ≫
+        ((derivedClosedSupportSectionsMap X h).app K)⟦a⟧' =
+      (derivedClosedSupportSectionsMap X h).app (K⟦a⟧) ≫
+        ((derivedClosedSupportSections X W).commShiftIso a).hom.app K :=
+  NatTrans.shift_app_comm (derivedClosedSupportSectionsMap X h) a K
 
 @[simp]
 theorem derivedClosedSupportSectionsMap_refl (Z : Closeds X) :

@@ -105,6 +105,11 @@ open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
 #print axioms complexAmbientSheafBorelMooreSupportMap
 #print axioms complexAmbientSheafBorelMooreSupportMap_comp
 #print axioms complexAmbientSheafBorelMooreForgetSupport
+#print axioms CategoryTheory.NatTrans.rightDerivedFunctorPlusCommShift
+#print axioms TopCat.Sheaf.derivedClosedSupportSectionsMap_shift
+#print axioms complexDerivedSupportedCohomologySupportMap
+#print axioms complexAmbientSheafBorelMooreOrientationIso_naturality
+#print axioms complexAmbientSheafBorelMooreHomologyIso_naturality
 #print axioms maximalCodimensionPrincipalDivisorClassVanishes_of_coefficientSum
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCycles
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCyclesOfComponents
@@ -197,6 +202,7 @@ run_cmd do
   let modules := otherModules.map ("HodgeConjecture.Other." ++ ·) ++
     ["HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift",
      "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusNaturality",
+     "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShiftNaturality",
      "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingCoconeShortExact"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv

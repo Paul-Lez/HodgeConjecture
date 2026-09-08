@@ -25,3 +25,6 @@ open AlgebraicGeometry.ComplexPoint
 #print axioms complexAmbientSheafBorelMooreOrientationIso
 #print axioms complexAmbientSheafBorelMooreHomologyIso
 #print axioms complexAmbientSheafBorelMooreCycleDegreeIso
+#print axioms complexDerivedSupportedCohomologySupportMap
+#print axioms complexAmbientSheafBorelMooreOrientationIso_naturality
+#print axioms complexAmbientSheafBorelMooreHomologyIso_naturality
