@@ -22,29 +22,31 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 /-!
 # The Hodge conjecture
 
-The Hodge conjecture says that every rational Hodge class of degree `2p` on a nonsingular
-complex projective variety is a rational linear combination of classes of algebraic subvarieties
-of codimension `p`.
+This file states (but does not prove!) the Hodge conjecture.
 
-The proposition is stated intrinsically: rational Hodge classes must lie in the span of the
-cycle-class lines of irreducible algebraic subvarieties. It does not choose a map out of the
-rational Chow group. Construction of cycle-class maps, compatibility with rational equivalence,
-and purity are useful independent results, but are not extra data in the conjecture itself.
+The Hodge conjecture says that, for every nonsingular complex projective variety `X` and natural
+number `p`, every rational Hodge class of degree `2p` on `X` is a rational linear combination of
+classes of algebraic subvarieties of `X` of codimension `p`.
 
-This file names an open proposition. It does not assert or prove that proposition.
+## TODO
 
-*Reference:*
-- [P. Deligne, *The Hodge Conjecture*](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf)
+Currently we state the Hodge conjecture as an inclusion of the Hodge classes inside the
+algebraic classes. we should instead write the explicit map out of the Chow group, which is valued
+into rational Hodge classes and whose image is the algebraic classes, and restate the conjecture
+as the surjectivity of this map.
+
+## References
+
+[P. Deligne, *The Hodge Conjecture*](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf)
 -/
 
 open AlgebraicGeometry ComplexPoint
 
-/-- The Hodge conjecture: on every nonsingular complex projective variety, every rational Hodge
-class of degree `2p` is a rational linear combination of classes of codimension-`p` algebraic
-subvarieties.
+/-- Statement of the **Hodge conjecture**.
 
-This definition is a proposition, not a proof. It is deliberately untagged because the current
-problem metadata treats a sorry-free definition as a solved declaration. -/
+For every nonsingular complex projective variety `X` and natural number `p`, every rational Hodge
+class of degree `2p` on `X` is a rational linear combination of classes of algebraic subvarieties of
+`X` of codimension `p`. -/
 @[expose] public def HodgeConjecture : Prop :=
   ∀ {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
     [IsProjective structureMap] (p : ℕ),
