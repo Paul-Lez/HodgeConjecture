@@ -16,10 +16,11 @@ proved augmentation quasi-isomorphism and the derived unit, then through the
 normalized cone comparison. No replacement functor or support comparison is
 an input.
 
-The underlying cone comparisons preserve the actual connecting morphisms.
-A final commutative-square theorem for this additive equivalence and the old
-`forgetSupport` still requires naturality of the hypercohomology/global-sections
-comparison; that further normalization theorem is not asserted in this file.
+The underlying cone comparisons preserve the actual connecting morphisms,
+with the standard cone triangle's negative projection corrected explicitly.
+The support-forgetting square, including the actual derived-unit and ordinary
+rational-cohomology comparison, is proved separately in
+`DerivedSupportRationalForget`.
 -/
 
 @[expose] public noncomputable section
