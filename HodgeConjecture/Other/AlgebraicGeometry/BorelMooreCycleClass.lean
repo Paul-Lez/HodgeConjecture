@@ -190,8 +190,9 @@ def IsComplexOrientedAlexanderPoincare
       cycleComponentBorelMooreToLocal ℚ V.toSmoothProjectiveComplexVariety x
         (2 * (V.dimension - p)) z c
 
-/-- The local Thom-cap square and local detection determine the entire normalized comparison,
-not merely the image of the fundamental class. -/
+/-- For a fixed local Thom-cap input, its square and local detection determine the entire
+comparison, not merely the image of the fundamental class. This does not compare different
+choices of the supplied Thom-cap operation. -/
 theorem complexOrientedAlexanderPoincare_unique
     {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
     {x : V.scheme} {hx : coheight x = p}
@@ -212,9 +213,11 @@ theorem complexOrientedAlexanderPoincare_unique
 
 /-- Conditional normalized component cycle-class data.
 
-Unlike the auxiliary structure, the comparison is required to satisfy the independent local
-Thom-cap square. The remaining fields are precisely the unconstructed general
-Thom/costalk/purity inputs; the exact Borel--Moore local orientation itself is already built. -/
+The comparison is required to satisfy a square relative to the supplied local Thom-cap maps.
+Those maps, their local-detection theorem, the comparison, and the existence and uniqueness
+of a global Borel--Moore fundamental class remain inputs. Only the exact local orientation
+itself is already constructed here. Simultaneously rescaling the supplied comparison and
+Thom-cap maps is not excluded; canonicity requires instantiating them geometrically. -/
 structure ComplexOrientedRationalCycleComponentClassData
     (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ)
     (x : V.scheme) (hx : coheight x = p) where
@@ -905,10 +908,12 @@ end AuxiliaryRationalBorelMooreCycleClassDescent
 /-- The remaining geometric input for descending the conditionally normalized component classes
 to the rational Chow group.
 
-The component classes carry the full local Thom-cap normalization, so unlike
-`AuxiliaryRationalBorelMooreCycleClassDescent` they cannot be independently rescaled.  The only
-stored theorem is the geometric vanishing of principal divisors.  The additive extension,
-quotient descent, and rational scalar extension are constructed below. -/
+The component field retains the global fundamental-class existence theorem and the supplied
+Thom-cap, local-detection, and comparison inputs of
+`ComplexOrientedRationalCycleComponentClassData`. Its normalization is relative to those
+supplied maps, not an unconditional protection against simultaneous rescaling. In addition,
+principal-divisor vanishing is supplied here. The additive extension, quotient descent,
+and rational scalar extension are constructed below from these explicit inputs. -/
 structure ComplexOrientedRationalBorelMooreCycleClassConstruction
     (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) where
   component : ∀ (x : V.scheme) (hx : coheight x = p),
