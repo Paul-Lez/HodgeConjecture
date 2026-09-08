@@ -210,7 +210,7 @@ lemma exists_evaluate_basicOpen_eq_inverse_mul {U : X.Opens} (hU : IsAffineOpen 
       z ∈ overOpen (X.basicOpen f) →
         evaluate (X.basicOpen f) t z =
           Ring.inverse (evaluate U f z ^ k) * evaluate U a z := by
-  let _ := hU.isLocalization_basicOpen f
+  let := hU.isLocalization_basicOpen f
   obtain ⟨k, a, hta⟩ := IsLocalization.Away.surj f t
   refine ⟨k, a, fun z hz ↦ ?_⟩
   have hzU : z ∈ overOpen U := X.basicOpen_le f hz
@@ -435,8 +435,8 @@ noncomputable def isoMapHomeomorph {Y : Scheme} {structureMapY : Y ⟶ Spec ↧R
     (e : X ≅ Y) (h : e.hom ≫ structureMapY = structureMap) :
     @Homeomorph (Point R X structureMap) (Point R Y structureMapY)
       analyticTopology analyticTopology := by
-  let _ : TopologicalSpace (Point R X structureMap) := analyticTopology
-  let _ : TopologicalSpace (Point R Y structureMapY) := analyticTopology
+  let : TopologicalSpace (Point R X structureMap) := analyticTopology
+  let : TopologicalSpace (Point R Y structureMapY) := analyticTopology
   exact
     { toFun := map e.hom h
       invFun := map e.inv (by

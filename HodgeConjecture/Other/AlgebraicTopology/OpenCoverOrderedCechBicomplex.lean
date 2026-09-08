@@ -269,11 +269,11 @@ private theorem openCoverTupleIntersectionToMember_app_injective
     (i : Fin (n.unop.len + 1)) :
     Function.Injective
       ((TopCat.toSSet.map (openCoverTupleIntersectionToMember X U a i)).app q) := by
-  let _ : Mono (openCoverTupleIntersectionToMember X U a i) :=
+  let : Mono (openCoverTupleIntersectionToMember X U a i) :=
     (TopCat.mono_iff_injective _).mpr
       (fun _ _ h ↦ Subtype.ext
         (congrArg (fun z : U (a.1 i) ↦ z.1) h))
-  let _ : Mono (TopCat.toSSet.map
+  let : Mono (TopCat.toSSet.map
       (openCoverTupleIntersectionToMember X U a i)) :=
     Functor.map_mono TopCat.toSSet _
   exact (CategoryTheory.mono_iff_injective _).mp inferInstance
@@ -414,11 +414,11 @@ public def openCoverOrderedCechIso (n : SimplexCategoryᵒᵖ) :
     (∐ fun a : OpenCoverCechTuple (ι := ι) n ↦
       TopCat.toSSet.obj (TopCat.of (openCoverTupleIntersection X U a))) ≅
       (Arrow.mk (coverSmallPresentation X U)).augmentedCechNerve.left.obj n := by
-  let _ : ∀ q, IsIso ((openCoverOrderedCechMap X U n).app q) := fun q ↦
+  let : ∀ q, IsIso ((openCoverOrderedCechMap X U n).app q) := fun q ↦
     (CategoryTheory.isIso_iff_bijective _).mpr
       ⟨openCoverOrderedCechMap_app_injective X U n q,
         openCoverOrderedCechMap_app_surjective X U n q⟩
-  let _ : IsIso (openCoverOrderedCechMap X U n) :=
+  let : IsIso (openCoverOrderedCechMap X U n) :=
     NatIso.isIso_of_isIso_app (openCoverOrderedCechMap X U n)
   exact asIso (openCoverOrderedCechMap X U n)
 
@@ -573,7 +573,7 @@ public noncomputable instance integralChainsPreservesCoproducts (κ : Type) :
   apply HomologicalComplex.preservesColimitsOfShape_of_eval
   intro q
   let adj := sigmaConstAdj (AddCommGrpCat.of ℤ)
-  let _ : PreservesColimitsOfShape (Discrete κ)
+  let : PreservesColimitsOfShape (Discrete κ)
       (sigmaConst.obj (AddCommGrpCat.of ℤ)) :=
     adj.leftAdjoint_preservesColimits.preservesColimitsOfShape
   change PreservesColimitsOfShape (Discrete κ)

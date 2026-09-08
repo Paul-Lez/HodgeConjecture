@@ -42,8 +42,8 @@ variable {X : TopCat.{u}}
 lemma of_iso {F G : TopCat.Presheaf AddCommGrpCat.{u} X} (e : F ≅ G) [G.IsFlasque] :
     F.IsFlasque where
   epi {U V} i := by
-    let _ : IsIso (e.hom.app U) := by infer_instance
-    let _ : IsIso (e.inv.app V) := by infer_instance
+    let : IsIso (e.hom.app U) := by infer_instance
+    let : IsIso (e.inv.app V) := by infer_instance
     have hmap : F.map i =
         e.hom.app U ≫ G.map i ≫ e.inv.app V := by
       apply (cancel_mono (e.hom.app V)).1
@@ -59,18 +59,18 @@ lemma biprod (F G : TopCat.Presheaf AddCommGrpCat.{u} X) [F.IsFlasque] [G.IsFlas
   epi {U V} i := by
     let evalU := (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj U
     let evalV := (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj V
-    let _ : evalU.PreservesZeroMorphisms := evalU.preservesZeroMorphisms_of_additive
-    let _ : evalV.PreservesZeroMorphisms := evalV.preservesZeroMorphisms_of_additive
-    let _ : PreservesLimit (pair F G) evalU := by
+    let : evalU.PreservesZeroMorphisms := evalU.preservesZeroMorphisms_of_additive
+    let : evalV.PreservesZeroMorphisms := evalV.preservesZeroMorphisms_of_additive
+    let : PreservesLimit (pair F G) evalU := by
       letI : PreservesLimitsOfShape (Discrete WalkingPair) evalU := by infer_instance
       exact PreservesLimitsOfShape.preservesLimit
-    let _ : PreservesLimit (pair F G) evalV := by
+    let : PreservesLimit (pair F G) evalV := by
       letI : PreservesLimitsOfShape (Discrete WalkingPair) evalV := by infer_instance
       exact PreservesLimitsOfShape.preservesLimit
-    let _ : PreservesBinaryBiproduct F G
+    let : PreservesBinaryBiproduct F G
         evalU := by
       exact preservesBinaryBiproduct_of_preservesBinaryProduct _
-    let _ : PreservesBinaryBiproduct F G
+    let : PreservesBinaryBiproduct F G
         evalV := by
       exact preservesBinaryBiproduct_of_preservesBinaryProduct _
     let eU := evalU.mapBiprod F G
@@ -140,7 +140,7 @@ lemma biprod (F G : TopCat.Sheaf AddCommGrpCat.{u} X)
   letI : TopCat.Presheaf.IsFlasque (F.obj ⊞ G.obj) :=
     TopCat.Presheaf.IsFlasque.biprod F.obj G.obj
   let forget := TopCat.Sheaf.forget AddCommGrpCat.{u} X
-  let _ : PreservesBinaryBiproduct F G forget := by
+  let : PreservesBinaryBiproduct F G forget := by
     exact preservesBinaryBiproduct_of_preservesBinaryProduct forget
   apply TopCat.Presheaf.IsFlasque.of_iso (G := F.obj ⊞ G.obj)
   exact forget.mapBiprod F G
@@ -193,9 +193,9 @@ variable {K L : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ}
 lemma mappingCone_term_isFlasque (f : K ⟶ L)
     (hK : ∀ i, (K.X i).IsFlasque) (hL : ∀ i, (L.X i).IsFlasque) (i : ℤ) :
     ((CochainComplex.mappingCone f).X i).IsFlasque := by
-  let _ : (K.X (i + 1)).IsFlasque := hK (i + 1)
-  let _ : (L.X i).IsFlasque := hL i
-  let _ : (K.X (i + 1) ⊞ L.X i).IsFlasque := biprod _ _
+  let : (K.X (i + 1)).IsFlasque := hK (i + 1)
+  let : (L.X i).IsFlasque := hL i
+  let : (K.X (i + 1) ⊞ L.X i).IsFlasque := biprod _ _
   exact of_iso (HomologicalComplex.homotopyCofiber.XIsoBiprod f i (i + 1) rfl)
 
 /-- A quasi-isomorphism between bounded-below termwise-flasque complexes remains a
@@ -207,7 +207,7 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
       (((globalSectionsFunctor X).mapHomologicalComplex (ComplexShape.up ℤ)).map f) := by
   let M := CochainComplex.mappingCone f
   let n := min nK nL - 1
-  let _ : M.IsStrictlyGE n := by
+  let : M.IsStrictlyGE n := by
     dsimp [M, n]
     exact CochainComplex.isStrictlyGE_mappingCone f nK nL (min nK nL - 1)
       (by lia) (by lia)

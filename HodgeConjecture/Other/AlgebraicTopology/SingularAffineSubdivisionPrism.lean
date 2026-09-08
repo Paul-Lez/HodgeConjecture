@@ -80,17 +80,17 @@ public theorem standardTopologicalSimplex_integralSingularHomology_isZero
   change IsZero (((singularHomologyFunctor AddCommGrpCat k).obj
     (AddCommGrpCat.of ℤ)).obj
       (TopCat.of (stdSimplex ℝ (Fin (m + 1)))))
-  let _ : ContractibleSpace (stdSimplex ℝ (Fin (m + 1))) :=
+  let : ContractibleSpace (stdSimplex ℝ (Fin (m + 1))) :=
     standardTopologicalSimplex_contractibleSpace m
   obtain ⟨e⟩ := ContractibleSpace.hequiv_unit
     (stdSimplex ℝ (Fin (m + 1)))
   have hunit :=
     AlgebraicTopology.isZero_singularHomologyFunctor_of_totallyDisconnectedSpace
       AddCommGrpCat k (AddCommGrpCat.of ℤ) (TopCat.of Unit) hk
-  let _ : Subsingleton (IntegralSingularHomology k Unit) :=
+  let : Subsingleton (IntegralSingularHomology k Unit) :=
     AddCommGrpCat.subsingleton_of_isZero hunit
   let he := integralSingularHomologyEquivOfHomotopyEquiv k e
-  let _ : Subsingleton
+  let : Subsingleton
       (IntegralSingularHomology k (stdSimplex ℝ (Fin (m + 1)))) :=
     ⟨fun x y ↦ he.injective (Subsingleton.elim _ _)⟩
   exact AddCommGrpCat.isZero_of_subsingleton _

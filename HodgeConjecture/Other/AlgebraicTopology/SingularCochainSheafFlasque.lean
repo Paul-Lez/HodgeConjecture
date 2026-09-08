@@ -475,7 +475,7 @@ instance singularCochainSheaf_zero_isFlasque :
     let J := Opens.grothendieckTopology X
     let P := singularCochainPresheaf R X 0
     let η := toSheafify J P
-    let _ : IsIso η := singularCochainPresheaf_zero_toSheafify_isIso R X
+    let : IsIso η := singularCochainPresheaf_zero_toSheafify_isIso R X
     change Epi ((CategoryTheory.sheafify J P).map i)
     have hcomp : Epi (η.app U ≫ (CategoryTheory.sheafify J P).map i) := by
       rw [← η.naturality i]

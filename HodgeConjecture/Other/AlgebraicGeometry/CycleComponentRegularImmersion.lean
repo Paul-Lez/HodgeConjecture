@@ -51,7 +51,7 @@ lemma cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus
     cycleComponentι X x ≫ structureMap
   let U : (cycleComponent X x).Opens := c.smoothLocus
   let g : U.toScheme ⟶ Spec ↧ℂ := U.ι ≫ c
-  let _ : Smooth g := cycleComponent_smoothLocus_smooth structureMap x
+  let : Smooth g := cycleComponent_smoothLocus_smooth structureMap x
   let zu : U.toScheme := ⟨z, hz⟩
   have hregular : IsRegularLocalRing (U.toScheme.presheaf.stalk zu) :=
     Smooth.isRegularLocalRing_stalk_complex (f := g) zu
@@ -161,7 +161,7 @@ lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
   let R := X.presheaf.stalk (cycleComponentι X x z.underlying)
   let I : Ideal R :=
     RingHom.ker ((cycleComponentι X x).stalkMap z.underlying).hom
-  let _ : IsRegularLocalRing R :=
+  let : IsRegularLocalRing R :=
     cycleComponent_ambient_stalk_isRegularLocalRing (d := d) structureMap x z.underlying
   have hI : I ≤ Ring.jacobson R := by
     rw [IsLocalRing.ringJacobson_eq_maximalIdeal]

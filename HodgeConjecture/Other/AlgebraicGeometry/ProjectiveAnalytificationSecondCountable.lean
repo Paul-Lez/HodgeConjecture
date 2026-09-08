@@ -45,35 +45,35 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 /-- A smooth projective complex analytification has a second-countable topology. -/
 theorem secondCountableTopology [IsIntegral X] [Smooth structureMap] :
     SecondCountableTopology (ComplexPoint X structureMap) := by
-  let _ : SigmaCompactSpace (ComplexPoint X structureMap) := inferInstance
+  let : SigmaCompactSpace (ComplexPoint X structureMap) := inferInstance
   exact ChartedSpace.secondCountable_of_sigmaCompact (Fin (dim X) → ℂ) (ComplexPoint X structureMap)
 
 /-- A smooth projective complex analytification is separable. -/
 theorem separableSpace [IsIntegral X] [Smooth structureMap] :
     TopologicalSpace.SeparableSpace (ComplexPoint X structureMap) := by
-  let _ : SecondCountableTopology (ComplexPoint X structureMap) :=
+  let : SecondCountableTopology (ComplexPoint X structureMap) :=
     secondCountableTopology structureMap
   infer_instance
 
 /-- A smooth projective complex analytification is first countable. -/
 theorem firstCountableTopology [IsIntegral X] [Smooth structureMap] :
     FirstCountableTopology (ComplexPoint X structureMap) := by
-  let _ : SecondCountableTopology (ComplexPoint X structureMap) :=
+  let : SecondCountableTopology (ComplexPoint X structureMap) :=
     secondCountableTopology structureMap
   infer_instance
 
 /-- A smooth projective complex analytification is Lindelöf. -/
 theorem lindelofSpace [IsIntegral X] [Smooth structureMap] :
     LindelofSpace (ComplexPoint X structureMap) := by
-  let _ : SecondCountableTopology (ComplexPoint X structureMap) :=
+  let : SecondCountableTopology (ComplexPoint X structureMap) :=
     secondCountableTopology structureMap
   infer_instance
 
 /-- A smooth projective complex analytification is metrizable. -/
 theorem metrizableSpace [IsIntegral X] [Smooth structureMap] :
     TopologicalSpace.MetrizableSpace (ComplexPoint X structureMap) := by
-  let _ : SigmaCompactSpace (ComplexPoint X structureMap) := inferInstance
-  let _ : SecondCountableTopology (ComplexPoint X structureMap) :=
+  let : SigmaCompactSpace (ComplexPoint X structureMap) := inferInstance
+  let : SecondCountableTopology (ComplexPoint X structureMap) :=
     secondCountableTopology structureMap
   exact Manifold.metrizableSpace (modelWithCornersSelf ℝ (Fin (dim X) → ℂ))
     (ComplexPoint X structureMap)

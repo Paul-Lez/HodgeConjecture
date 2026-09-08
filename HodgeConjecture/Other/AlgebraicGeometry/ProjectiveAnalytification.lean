@@ -1262,11 +1262,11 @@ lemma continuous_chartVectorToComplexPoint {n : ℕ} (i : Fin (n + 1)) :
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
       inferInstance Point.analyticTopology
       (chartAffineComplexPointMap i ∘ vectorChartToAffinePoint i) := by
-  let _ : TopologicalSpace
+  let : TopologicalSpace
       (ComplexPoint (ComplexPoint.complexAffineSpace (Fin (n + 1)))
         (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)) :=
     Point.analyticTopology
-  let _ : TopologicalSpace
+  let : TopologicalSpace
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
     Point.analyticTopology
@@ -1448,7 +1448,7 @@ lemma continuousOn_vectorToComplexPoint_chart {n : ℕ} (i : Fin (n + 1)) :
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
       inferInstance Point.analyticTopology
       (fun v ↦ vectorToComplexPoint v.1 v.2) (nonzeroVectorChart i) := by
-  let _ : TopologicalSpace
+  let : TopologicalSpace
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
     Point.analyticTopology
@@ -1465,7 +1465,7 @@ lemma continuous_vectorToComplexPoint {n : ℕ} :
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
       inferInstance Point.analyticTopology
       (fun v ↦ vectorToComplexPoint v.1 v.2) := by
-  let _ : TopologicalSpace
+  let : TopologicalSpace
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
     Point.analyticTopology
@@ -1480,7 +1480,7 @@ lemma continuous_projectivizationToComplexPoint {n : ℕ} :
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
       (instTopologicalSpace n) Point.analyticTopology
       projectivizationToComplexPoint := by
-  let _ : TopologicalSpace
+  let : TopologicalSpace
       (ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
     Point.analyticTopology
@@ -1605,7 +1605,7 @@ lemma isClosed_range_map_of_closedImmersion [IsClosedImmersion i]
     (hi : i ≫ structureMapB = structureMapA) :
     @IsClosed (ComplexPoint B structureMapB) analyticTopology
       (Set.range (map i hi)) := by
-  let _ : TopologicalSpace (ComplexPoint B structureMapB) := analyticTopology
+  let : TopologicalSpace (ComplexPoint B structureMapB) := analyticTopology
   rw [range_map_of_closedImmersion hi]
   apply isOpen_compl_iff.mp
   let U : B.Opens :=
@@ -1620,7 +1620,7 @@ version removes the pushforward-stalk comparison from the usual statement. -/
 lemma stalkMap_c_surjective [IsClosedImmersion i] (x : A) :
     Function.Surjective ((TopCat.Presheaf.stalkFunctor CommRingCat (i x)).map i.c) := by
   let p := A.presheaf.stalkPushforward CommRingCat i.base x
-  let _ : IsIso p :=
+  let : IsIso p :=
     TopCat.Presheaf.stalkPushforward.stalkPushforward_iso_of_isInducing
       CommRingCat i.isClosedEmbedding.isInducing A.presheaf x
   intro y
@@ -1659,8 +1659,8 @@ lemma isOpen_induced_chartSubbasic [IsClosedImmersion i]
     @IsOpen (ComplexPoint A structureMapA)
       (TopologicalSpace.induced (map i hi) analyticTopology)
       (overOpen (i ⁻¹ᵁ U) ∩ evaluate (i ⁻¹ᵁ U) s ⁻¹' O) := by
-  let _ : TopologicalSpace (ComplexPoint B structureMapB) := analyticTopology
-  let _ : TopologicalSpace (ComplexPoint A structureMapA) :=
+  let : TopologicalSpace (ComplexPoint B structureMapB) := analyticTopology
+  let : TopologicalSpace (ComplexPoint A structureMapA) :=
     TopologicalSpace.induced (map i hi) analyticTopology
   rw [isOpen_iff_forall_mem_open]
   rintro z ⟨hzU, hzO⟩
@@ -1723,8 +1723,8 @@ lemma isInducing_map_of_closedImmersion [IsClosedImmersion i]
     (hi : i ≫ structureMapB = structureMapA) :
     @IsInducing (ComplexPoint A structureMapA) (ComplexPoint B structureMapB)
       analyticTopology analyticTopology (map i hi) := by
-  let _ : TopologicalSpace (ComplexPoint A structureMapA) := analyticTopology
-  let _ : TopologicalSpace (ComplexPoint B structureMapB) := analyticTopology
+  let : TopologicalSpace (ComplexPoint A structureMapA) := analyticTopology
+  let : TopologicalSpace (ComplexPoint B structureMapB) := analyticTopology
   rw [isInducing_iff]
   apply le_antisymm
   · exact continuous_iff_le_induced.mp (continuous_map i hi)
@@ -1738,8 +1738,8 @@ lemma isEmbedding_map_of_closedImmersion [IsClosedImmersion i]
     (hi : i ≫ structureMapB = structureMapA) :
     @IsEmbedding (ComplexPoint A structureMapA) (ComplexPoint B structureMapB)
       analyticTopology analyticTopology (map i hi) := by
-  let _ : TopologicalSpace (ComplexPoint A structureMapA) := analyticTopology
-  let _ : TopologicalSpace (ComplexPoint B structureMapB) := analyticTopology
+  let : TopologicalSpace (ComplexPoint A structureMapA) := analyticTopology
+  let : TopologicalSpace (ComplexPoint B structureMapB) := analyticTopology
   exact ⟨isInducing_map_of_closedImmersion hi, map_injective_of_mono i hi⟩
 
 /-- A closed immersion induces a closed topological embedding on complex points. -/
@@ -1747,8 +1747,8 @@ lemma isClosedEmbedding_map_of_closedImmersion [IsClosedImmersion i]
     (hi : i ≫ structureMapB = structureMapA) :
     @IsClosedEmbedding (ComplexPoint A structureMapA) (ComplexPoint B structureMapB)
       analyticTopology analyticTopology (map i hi) := by
-  let _ : TopologicalSpace (ComplexPoint A structureMapA) := analyticTopology
-  let _ : TopologicalSpace (ComplexPoint B structureMapB) := analyticTopology
+  let : TopologicalSpace (ComplexPoint A structureMapA) := analyticTopology
+  let : TopologicalSpace (ComplexPoint B structureMapB) := analyticTopology
   exact ⟨isEmbedding_map_of_closedImmersion hi, isClosed_range_map_of_closedImmersion hi⟩
 
 end ClosedImmersion
@@ -1769,7 +1769,7 @@ noncomputable def analyticImmersion {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 /-- The analytic map of an explicit projective presentation is injective. -/
 lemma analyticImmersion_injective {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) : Function.Injective (analyticImmersion P) := by
-  let _ : IsClosedImmersion P.immersion := P.isClosedImmersion
+  let : IsClosedImmersion P.immersion := P.isClosedImmersion
   exact ComplexPoint.map_injective_of_mono P.immersion P.immersion_toBase
 
 /-- The analytic map of an explicit projective presentation is a closed topological
@@ -1780,14 +1780,14 @@ lemma analyticImmersion_isClosedEmbedding {X : Scheme} {f : X ⟶ Spec ↧ℂ}
       (ComplexPoint (ProjectiveSpace (Fin (P.ambientDimension + 1)) (Spec ↧ℂ))
         (ProjectiveSpace.toBase (Fin (P.ambientDimension + 1)) (Spec ↧ℂ)))
       Point.analyticTopology Point.analyticTopology (analyticImmersion P) := by
-  let _ : IsClosedImmersion P.immersion := P.isClosedImmersion
+  let : IsClosedImmersion P.immersion := P.isClosedImmersion
   exact ComplexPoint.isClosedEmbedding_map_of_closedImmersion P.immersion_toBase
 
 /-- The analytic complex points of an explicit projective presentation form a compact space. -/
 theorem complexPoint_compactSpace {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) :
     @CompactSpace (ComplexPoint X f) Point.analyticTopology := by
-  let _ : TopologicalSpace (ComplexPoint X f) := Point.analyticTopology
+  let : TopologicalSpace (ComplexPoint X f) := Point.analyticTopology
   exact (analyticImmersion_isClosedEmbedding P).compactSpace
 
 end ProjectiveSpace.Presentation

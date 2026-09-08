@@ -50,7 +50,7 @@ cycle-class map is all of degree-zero rational cohomology. -/
 theorem codimensionZeroCycleClassSpan_eq_top_of_connected
     (hV : ConnectedSpace (ComplexPoint X structureMap)) :
     codimensionZeroCycleClassSpan structureMap = ⊤ := by
-  let _ : ConnectedSpace (ComplexPoint X structureMap) := hV
+  let : ConnectedSpace (ComplexPoint X structureMap) := hV
   rw [codimensionZeroCycleClassSpan_eq_span_unit, span_rationalCohomologyUnit_eq_top]
 
 /-- On a connected projective analytification, the codimension-zero algebraic cycle-class span

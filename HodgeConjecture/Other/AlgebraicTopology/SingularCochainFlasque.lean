@@ -46,7 +46,7 @@ variable (R : Type u) [Field R] (X : TopCat.{u})
 /-- Inclusion of open subsets induces a monomorphism of singular chain complexes. -/
 lemma openSingularChainComplexMap_mono {U V : Opens X} (i : U ⟶ V) :
     Mono ((openSingularChainComplexFunctor R X).map i) := by
-  let _ : Mono ((Opens.toTopCat X).map i) :=
+  let : Mono ((Opens.toTopCat X).map i) :=
     (TopCat.mono_iff_injective ((Opens.toTopCat X).map i)).mpr fun x y h ↦ by
       exact Subtype.ext (congrArg (fun z : V ↦ z.1) h)
   dsimp [openSingularChainComplexFunctor]
@@ -55,7 +55,7 @@ lemma openSingularChainComplexMap_mono {U V : Opens X} (i : U ⟶ V) :
 /-- Inclusion of open subsets is injective on singular chains in every degree. -/
 lemma openSingularChainMap_injective {U V : Opens X} (i : U ⟶ V) (n : ℕ) :
     Function.Injective (((openSingularChainComplexFunctor R X).map i).f n).hom := by
-  let _ : Mono ((openSingularChainComplexFunctor R X).map i) :=
+  let : Mono ((openSingularChainComplexFunctor R X).map i) :=
     openSingularChainComplexMap_mono R X i
   rw [← ModuleCat.mono_iff_injective]
   exact Functor.map_mono (HomologicalComplex.eval (ModuleCat R) _ n)

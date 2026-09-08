@@ -183,14 +183,14 @@ variable {X : Scheme.{u}} {p : ℕ} (D : PrincipalDivisor X p)
 
 /-- The order-of-vanishing function determined by a principal divisor datum. -/
 noncomputable def orderFunction : D.carrier → ℤ := by
-  let _ := D.isIntegral
-  let _ := D.isNoetherian
+  let := D.isIntegral
+  let := D.isNoetherian
   exact D.carrier.ord D.rationalFunction
 
 /-- The divisor of the rational function as an algebraic cycle on its carrier. -/
 noncomputable def divisor : AlgebraicCycle D.carrier ℤ := by
-  let _ := D.isIntegral
-  let _ := D.isNoetherian
+  let := D.isIntegral
+  let := D.isNoetherian
   exact
     { toFun := D.orderFunction
       supportWithinDomain' := by simp
@@ -204,9 +204,9 @@ lemma divisor_apply (x : D.carrier) : D.divisor x = D.orderFunction x := rfl
 
 /-- The proper pushforward of a principal divisor to the ambient scheme. -/
 noncomputable def pushforwardCycle : AlgebraicCycle X ℤ := by
-  let _ := D.isClosedImmersion
-  let _ := D.isIntegral
-  let _ := D.isNoetherian
+  let := D.isClosedImmersion
+  let := D.isIntegral
+  let := D.isNoetherian
   exact AlgebraicCycle.map D.inclusion (fun _ : D.carrier ↦ ()) (fun _ : X ↦ ()) D.divisor
 
 /-- A principal divisor known to be pure of codimension `p`, bundled as a codimension cycle. -/
@@ -454,12 +454,12 @@ lemma rationalSpecFieldEquiv_toRational_single (K : Type u) [Field K] (n : ℤ) 
 
 /-- A concrete boundary computation: every Chow group of `Spec PUnit` is trivial. -/
 example (p : ℕ) : Subsingleton (ChowGroup (Spec ↧PUnit) p) := by
-  let _ := spec_punit_isEmpty
+  let := spec_punit_isEmpty
   infer_instance
 
 /-- A rational-coefficient version of the same boundary computation. -/
 example (p : ℕ) : Subsingleton (RationalChowGroup (Spec ↧PUnit) p) := by
-  let _ := spec_punit_isEmpty
+  let := spec_punit_isEmpty
   infer_instance
 
 /-- A nonempty calculation: `CH⁰(Spec ℚ) ≃ ℤ`, including its distinguished generator. -/

@@ -150,7 +150,7 @@ class IsProjective (f : X ⟶ T) : Prop where
 /-- A projective morphism in the explicit-presentation sense is proper. -/
 instance IsProjective.isProper {f : X ⟶ T} [h : IsProjective f] : IsProper f := by
   obtain ⟨P⟩ := h.nonempty_presentation
-  let _ : IsClosedImmersion P.immersion := P.isClosedImmersion
+  let : IsClosedImmersion P.immersion := P.isClosedImmersion
   have hcomp : IsProper
       (P.immersion ≫ toBase (Fin (P.ambientDimension + 1)) T) := by
     infer_instance

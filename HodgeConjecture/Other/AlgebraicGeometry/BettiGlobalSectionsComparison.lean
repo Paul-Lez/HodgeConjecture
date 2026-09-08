@@ -249,7 +249,7 @@ def homComplexSingleIntegerIsoGlobalSections
       globalSectionsComplexInt Y K := by
   let pre := (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y))
   letI : Preadditive (TopCat.Sheaf AddCommGrpCat Y) := pre
-  let _ : (IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).PreservesZeroMorphisms :=
+  let : (IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
   exact CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda
       ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
@@ -320,8 +320,8 @@ def globalSectionsSingularCochainComplexIntIsoExtend :
   let E := (evaluation (Opens Y)ᵒᵖ AddCommGrpCat).obj (.op ⊤)
   let G := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let K := AlgebraicTopology.Singular.singularCochainSheafComplex ℚ Y
-  let _ : F.Additive := by dsimp [F]; infer_instance
-  let _ : E.Additive := by dsimp [E]; infer_instance
+  let : F.Additive := by dsimp [F]; infer_instance
+  let : E.Additive := by dsimp [E]; infer_instance
   let eComp : F ⋙ E ≅ G := Iso.refl _
   exact HomologicalComplex.mapExtendIso G K ComplexShape.embeddingUpNat ≪≫
     (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
@@ -367,7 +367,7 @@ def rationalSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
   let e₅ := (HomologicalComplex.homologyMapIso
     (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
       |>.addCommGroupIsoToAddEquiv.toEquiv
-  let _ : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
+  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
   let e₆ := (asIso (HomologicalComplex.homologyMap
     ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
       |>.addCommGroupIsoToAddEquiv.toEquiv
@@ -387,7 +387,7 @@ def rationalSingularCochainHypercohomologyEquivGlobalSections
         (singularCochainSheafComplexInt structureMap ℚ)).homology n := by
   let Y := TopCat.of (ComplexPoint X structureMap)
   let S := singularCochainSheafComplexInt structureMap ℚ
-  let _ : S.IsStrictlyGE 0 := by
+  let : S.IsStrictlyGE 0 := by
     dsimp [S, singularCochainSheafComplexInt]
     infer_instance
   let hres :=
@@ -520,7 +520,7 @@ def ordinaryRationalSingularCohomologyEquivGlobalSections
     (Y : TopCat.{0}) [ParacompactSpace Y] [T2Space Y] (n : ℕ) :
     AlgebraicTopology.Singular.OrdinarySingularCohomology ℚ Y n ≃+
       (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y).homology n := by
-  let _ := AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
+  let := AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
     (Y := Y)
   exact
     AlgebraicTopology.Singular.ordinarySingularCohomologyEquivGlobalRaw ℚ Y n |>.trans <|

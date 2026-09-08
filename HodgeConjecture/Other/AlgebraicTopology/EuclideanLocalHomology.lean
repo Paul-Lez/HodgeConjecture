@@ -51,7 +51,7 @@ def relativeSingularChainShortComplex (X : TopPair) :
 /-- Singular chains turn the subspace inclusion of a topological pair into a monomorphism. -/
 lemma relativeSingularChainMap_mono (X : TopPair) :
     Mono ((chainPairFunctor ℚ).obj X).hom := by
-  let _ : Mono X.hom :=
+  let : Mono X.hom :=
     (TopCat.mono_iff_injective X.hom).mpr X.prop.injective
   change Mono (((singularChainComplexFunctor (ModuleCat ℚ)).obj
     (ModuleCat.of ℚ ℚ)).map X.hom)
@@ -61,7 +61,7 @@ lemma relativeSingularChainMap_mono (X : TopPair) :
 sequence. -/
 lemma relativeSingularChainShortComplex_shortExact (X : TopPair) :
     (relativeSingularChainShortComplex X).ShortExact := by
-  let _ : Mono ((chainPairFunctor ℚ).obj X).hom := relativeSingularChainMap_mono X
+  let : Mono ((chainPairFunctor ℚ).obj X).hom := relativeSingularChainMap_mono X
   exact
     { exact := ShortComplex.exact_cokernel ((chainPairFunctor ℚ).obj X).hom
       mono_f := by
@@ -139,8 +139,8 @@ lemma standardSubspaceBoundaryChain_boundary (n : ℕ) :
       ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).left.d n
         ((ComplexShape.down ℕ).next n) = 0 := by
   let f := ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).hom
-  let _ : Mono f := relativeSingularChainMap_mono (standardPuncturedPair (n + 1))
-  let _ : Mono (f.f ((ComplexShape.down ℕ).next n)) :=
+  let : Mono f := relativeSingularChainMap_mono (standardPuncturedPair (n + 1))
+  let : Mono (f.f ((ComplexShape.down ℕ).next n)) :=
     Functor.map_mono (HomologicalComplex.eval (ModuleCat ℚ) _
       ((ComplexShape.down ℕ).next n)) f
   rw [← cancel_mono (f.f ((ComplexShape.down ℕ).next n)), Category.assoc, ← f.comm]

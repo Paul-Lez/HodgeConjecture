@@ -41,7 +41,7 @@ variable {R S : Type*} [CommRing R] [CommRing S] [Nontrivial R] [Nontrivial S]
 theorem ringKrullDim_eq_of_isIntegral_of_injective
     [Algebra.IsIntegral R S] (hinj : Function.Injective (algebraMap R S)) :
     ringKrullDim S = ringKrullDim R := by
-  let _ : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective R S).mpr hinj
+  let : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective R S).mpr hinj
   rw [ringKrullDim, ringKrullDim, Order.krullDim_eq_iSup_length,
     Order.krullDim_eq_iSup_length]
   apply le_antisymm
@@ -98,12 +98,12 @@ theorem Polynomial.height_eq_comap_height_add_one_of_monic_mem
       (Set.disjoint_compl_left_iff_subset.mpr (fun _ a ↦ a))
   have hP'prime : P'.IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint _ _ P inferInstance disj
-  let _ : P'.IsPrime := hP'prime
+  let : P'.IsPrime := hP'prime
   have hPover : P.LiesOver p := ⟨rfl⟩
-  let _ : P.LiesOver p := hPover
+  let : P.LiesOver p := hPover
   have hP'over : P'.LiesOver p' :=
     IsLocalization.liesOver_of_isPrime_of_disjoint p.primeCompl _ _ disj
-  let _ : P'.LiesOver p' := hP'over
+  let : P'.LiesOver p' := hP'over
   have hgP' : g.map (algebraMap R Rₚ) ∈ P' := by
     change algebraMap (Polynomial R) (Polynomial Rₚ) g ∈ P'
     exact Ideal.mem_map_of_mem _ hgP
@@ -116,7 +116,7 @@ theorem Polynomial.height_eq_comap_height_add_one_of_monic_mem
               rw [Ideal.under_def, Polynomial.algebraMap_eq]
             _ = p' := hP'over.over.symm
         exact heq ▸ hp')
-  let _ : P'.IsMaximal := hP'max
+  let : P'.IsMaximal := hP'max
   have eq1 : p.height = p'.height := by
     rw [p'_def, IsLocalization.height_map_of_disjoint p.primeCompl]
     exact Disjoint.symm <| Set.disjoint_left.mpr fun _ a b ↦ b a

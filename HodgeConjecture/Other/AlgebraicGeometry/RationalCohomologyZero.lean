@@ -67,7 +67,7 @@ def constantRationalSheafComplexIntIsoSingleZero :
 lemma constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso :
     analyticQuasiIsomorphisms structureMap
       (constantIntegerSheafComplexIntIsoSingleZero structureMap).inv := by
-  let _ : IsIso (constantIntegerSheafComplexIntIsoSingleZero structureMap).inv :=
+  let : IsIso (constantIntegerSheafComplexIntIsoSingleZero structureMap).inv :=
     (constantIntegerSheafComplexIntIsoSingleZero structureMap).isIso_inv
   exact ⟨fun _ ↦ inferInstance⟩
 
@@ -75,7 +75,7 @@ lemma constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso :
 lemma constantRationalSheafComplexIntIsoSingleZero_hom_quasiIso :
     analyticQuasiIsomorphisms structureMap
       (constantRationalSheafComplexIntIsoSingleZero structureMap).hom := by
-  let _ : IsIso (constantRationalSheafComplexIntIsoSingleZero structureMap).hom :=
+  let : IsIso (constantRationalSheafComplexIntIsoSingleZero structureMap).hom :=
     (constantRationalSheafComplexIntIsoSingleZero structureMap).isIso_hom
   exact ⟨fun _ ↦ inferInstance⟩
 
@@ -195,7 +195,7 @@ degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective
     [Nonempty (ComplexPoint X structureMap)] :
     Function.Injective (fieldCohomologyClass ℚ structureMap) := by
-  let _ : (constantSheaf
+  let : (constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X structureMap)))
       AddCommGrpCat).Faithful :=
     TopCat.constantSheaf_faithful_of_nonempty _
@@ -211,8 +211,8 @@ theorem rationalCohomologyClass_surjective
   let F := constantSheaf J AddCommGrpCat
   let ff := TopCat.constantSheafFullyFaithfulOfConnected
     (TopCat.of (ComplexPoint X structureMap))
-  let _ : F.Full := ff.full
-  let _ : F.Faithful := ff.faithful
+  let : F.Full := ff.full
+  let : F.Faithful := ff.faithful
   let e := rationalCohomologyZeroEquivSheafHom structureMap
   obtain ⟨f, hf⟩ := F.map_surjective (e α)
   let q : ℚ := f (1 : ℤ)
@@ -234,7 +234,7 @@ analytic complex-point space. -/
 theorem rationalCohomologyClass_bijective
     [ConnectedSpace (ComplexPoint X structureMap)] :
     Function.Bijective (fieldCohomologyClass ℚ structureMap) := by
-  let _ : Nonempty (ComplexPoint X structureMap) := inferInstance
+  let : Nonempty (ComplexPoint X structureMap) := inferInstance
   exact ⟨rationalCohomologyClass_injective structureMap,
     rationalCohomologyClass_surjective structureMap⟩
 

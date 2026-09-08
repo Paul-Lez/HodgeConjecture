@@ -197,7 +197,7 @@ public theorem topologicalSubsetInclusion_isIso_of_eq_univ
 public theorem coverSmallSingularSubcomplex_eq_top_of_member_eq_univ
     (j : ι) (hj : U j = Set.univ) :
     coverSmallSingularSubcomplex X U = ⊤ := by
-  let _ := topologicalSubsetInclusion_isIso_of_eq_univ X (U j) hj
+  let := topologicalSubsetInclusion_isIso_of_eq_univ X (U j) hj
   have hrange : SSet.Subcomplex.range
       (TopCat.toSSet.map (topologicalSubsetInclusion X (U j))) = ⊤ :=
     SSet.Subcomplex.range_eq_top _
@@ -226,7 +226,7 @@ space, without subdivision. -/
 public theorem coverSmallChainApproximation_of_member_eq_univ
     (j : ι) (hj : U j = Set.univ) :
     CoverSmallChainApproximation X U := by
-  let _ := coverSmallIntegralSingularChainInclusion_isIso_of_member_eq_univ X U j hj
+  let := coverSmallIntegralSingularChainInclusion_isIso_of_member_eq_univ X U j hj
   exact HomologicalComplex.homotopyEquivalences.of_isIso _
 
 end SmallChains

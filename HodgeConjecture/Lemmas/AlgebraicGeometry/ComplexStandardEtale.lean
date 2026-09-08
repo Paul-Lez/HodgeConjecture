@@ -112,7 +112,7 @@ def algHomToStandardEtalePoint (φ : P.Ring →ₐ[ℂ] ℂ) : standardEtalePoin
     φ.comp (IsScalarTower.toAlgHom ℂ (complexPolynomialRing n) P.Ring)
   let x := φ P.X
   refine ⟨(v, x), ?_⟩
-  let _ : Algebra (complexPolynomialRing n) ℂ := v.toRingHom.toAlgebra
+  let : Algebra (complexPolynomialRing n) ℂ := v.toRingHom.toAlgebra
   let φB : P.Ring →ₐ[complexPolynomialRing n] ℂ :=
     { toRingHom := φ.toRingHom
       commutes' b := rfl }
@@ -132,11 +132,11 @@ def standardEtalePointEquiv :
   left_inv φ := by
     let v : complexPolynomialRing n →ₐ[ℂ] ℂ :=
       φ.comp (IsScalarTower.toAlgHom ℂ (complexPolynomialRing n) P.Ring)
-    let _ : Algebra (complexPolynomialRing n) ℂ := v.toRingHom.toAlgebra
+    let : Algebra (complexPolynomialRing n) ℂ := v.toRingHom.toAlgebra
     let hscalar : IsScalarTower ℂ (complexPolynomialRing n) ℂ := by
       apply IsScalarTower.of_algebraMap_eq
       exact fun c ↦ (v.commutes c).symm
-    let _ := hscalar
+    let := hscalar
     let φB : P.Ring →ₐ[complexPolynomialRing n] ℂ :=
       { toRingHom := φ.toRingHom
         commutes' b := rfl }
@@ -150,11 +150,11 @@ def standardEtalePointEquiv :
     change (P.lift (φ P.X) (P.hasMap_X.map φB)).restrictScalars ℂ = φ
     exact hres.trans hφ
   right_inv z := by
-    let _ : Algebra (complexPolynomialRing n) ℂ := z.1.1.toRingHom.toAlgebra
+    let : Algebra (complexPolynomialRing n) ℂ := z.1.1.toRingHom.toAlgebra
     let hscalar : IsScalarTower ℂ (complexPolynomialRing n) ℂ := by
       apply IsScalarTower.of_algebraMap_eq
       exact fun c ↦ (z.1.1.commutes c).symm
-    let _ := hscalar
+    let := hscalar
     have hz : P.HasMap z.1.2 := by
       rw [StandardEtalePair.HasMap]
       constructor
@@ -213,11 +213,11 @@ lemma standardEtalePointToAlgHom_mk (z : standardEtalePointSpace P)
       Polynomial.eval₂
         (Polynomial.eval₂RingHom z.1.1 z.1.2)
         (Polynomial.eval₂ z.1.1 z.1.2 P.g)⁻¹ q := by
-  let _ : Algebra (complexPolynomialRing n) ℂ := z.1.1.toRingHom.toAlgebra
+  let : Algebra (complexPolynomialRing n) ℂ := z.1.1.toRingHom.toAlgebra
   let hscalar : IsScalarTower ℂ (complexPolynomialRing n) ℂ := by
     apply IsScalarTower.of_algebraMap_eq
     exact fun c ↦ (z.1.1.commutes c).symm
-  let _ := hscalar
+  let := hscalar
   have hz : P.HasMap z.1.2 := by
     rw [StandardEtalePair.HasMap]
     constructor

@@ -112,8 +112,8 @@ public theorem isZero_normalizedCechObject (h : FiniteGoodCover X U)
     {n : ℕ} (hn : Nat.card ι ≤ n) :
     IsZero ((openCoverIntersectionChainModels X U).cechObject
       TupleClass.strictMono n) := by
-  let _ : Finite ι := h.finite_index
-  let _ : Fintype ι := Fintype.ofFinite ι
+  let : Finite ι := h.finite_index
+  let : Fintype ι := Fintype.ofFinite ι
   rw [Nat.card_eq_fintype_card] at hn
   exact (openCoverIntersectionChainModels X U).isZero_cechObject_strictMono hn
 

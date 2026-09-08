@@ -59,12 +59,12 @@ theorem opens_paracompactSpace_of_compact_chartedSpace
     [ChartedSpace H M] [SecondCountableTopology H] [LocallyCompactSpace H]
     [CompactSpace M] [T2Space M] (U : Opens M) :
     ParacompactSpace U := by
-  let _ : SigmaCompactSpace M := inferInstance
-  let _ : SecondCountableTopology M :=
+  let : SigmaCompactSpace M := inferInstance
+  let : SecondCountableTopology M :=
     ChartedSpace.secondCountable_of_sigmaCompact H M
-  let _ : LocallyCompactSpace M := ChartedSpace.locallyCompactSpace H M
-  let _ : LocallyCompactSpace U := U.isOpen.locallyCompactSpace
-  let _ : SigmaCompactSpace U := inferInstance
+  let : LocallyCompactSpace M := ChartedSpace.locallyCompactSpace H M
+  let : LocallyCompactSpace U := U.isOpen.locallyCompactSpace
+  let : SigmaCompactSpace U := inferInstance
   infer_instance
 
 end TopologicalSpace
@@ -259,7 +259,7 @@ theorem exists_coveringSieve_locallyFinite_closedRefinement
     (coveringSieveOpenFamilyOn X S)
     (coveringSieveOpenFamilyOn_isOpen X S)
     (coveringSieveOpenFamilyOn_iUnion X S)
-  let _ : NormalSpace U := inferInstance
+  let : NormalSpace U := inferInstance
   obtain ⟨W, hWcover, hWopen, hWsub⟩ :=
     exists_iUnion_eq_closure_subset hVopen hVfinite.point_finite hVcover
   refine ⟨W, hWopen, hWcover, ?_, fun I ↦ (hWsub I).trans (hVsub I)⟩
@@ -910,7 +910,7 @@ acyclic. -/
 theorem rationalCoverSmallCochainKernel_acyclic
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
     (kernel (rationalCochainRestrictionToCoverSmall Y U)).Acyclic := by
-  let _ := rationalCochainRestrictionToCoverSmall_quasiIso Y U hUopen hUcover
+  let := rationalCochainRestrictionToCoverSmall_quasiIso Y U hUopen hUcover
   exact HomologicalComplex.kernel_acyclic_of_epi_of_quasiIso
     (rationalCochainRestrictionToCoverSmall Y U)
 
@@ -1214,7 +1214,7 @@ cover is acyclic. -/
 theorem topOpenRationalCoverSmallCochainKernel_acyclic
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
     (kernel (topOpenRationalCochainRestrictionToCoverSmall Y U)).Acyclic := by
-  let _ := topOpenRationalCochainRestrictionToCoverSmall_quasiIso
+  let := topOpenRationalCochainRestrictionToCoverSmall_quasiIso
     Y U hUopen hUcover
   exact HomologicalComplex.kernel_acyclic_of_epi_of_quasiIso
     (topOpenRationalCochainRestrictionToCoverSmall Y U)
@@ -1526,7 +1526,7 @@ instance singularCochainSheaf_isFlasque_of_opens_paracompact
   let e : J.sheafify P ≅ CategoryTheory.sheafify J P :=
     plusPlusIsoSheafify J AddCommGrpCat P
   change TopCat.Presheaf.IsFlasque (CategoryTheory.sheafify J P)
-  let _ : TopCat.Presheaf.IsFlasque (J.sheafify P) :=
+  let : TopCat.Presheaf.IsFlasque (J.sheafify P) :=
     singularCochainPlusPlus_isFlasque (R := R) (X := X) n
   exact presheaf_isFlasque_of_iso e
 
@@ -1546,7 +1546,7 @@ double-plus cochains is an isomorphism of complexes. -/
 noncomputable instance globalSingularCochainPlusToPlusPlusComplex_isIso
     [ParacompactSpace X] [T2Space X] :
     IsIso (globalSingularCochainPlusToPlusPlusComplex R X) := by
-  let _ : ParacompactSpace (Set.univ : Set X) :=
+  let : ParacompactSpace (Set.univ : Set X) :=
     (Homeomorph.Set.univ X).paracompactSpace_iff.mpr inferInstance
   have hIso : ∀ n : ℕ,
       IsIso ((globalSingularCochainPlusToPlusPlusComplex R X).f n) := by
@@ -1564,7 +1564,7 @@ noncomputable instance globalSingularCochainPlusToPlusPlusComplex_isIso
       exact GrothendieckTopology.Plus.sep
         (singularCochainPresheaf R X n) S x y h
     · exact singularCochain_plusToPlus_surjective_on (⊤ : Opens X) n
-  let _ : ∀ n : ℕ,
+  let : ∀ n : ℕ,
       IsIso ((globalSingularCochainPlusToPlusPlusComplex R X).f n) := hIso
   exact HomologicalComplex.Hom.isIso_of_components
     (globalSingularCochainPlusToPlusPlusComplex R X)
@@ -1577,7 +1577,7 @@ theorem topOpenToGlobalSingularCochainPlusPlusComplex_quasiIso
   change QuasiIso
     (topOpenToGlobalSingularCochainPlusComplex ℚ Y ≫
       globalSingularCochainPlusToPlusPlusComplex ℚ Y)
-  let _ := topOpenToGlobalSingularCochainPlusComplex_quasiIso Y
+  let := topOpenToGlobalSingularCochainPlusComplex_quasiIso Y
   infer_instance
 
 /-- On a paracompact Hausdorff space, ordinary rational singular cochains compute the global
@@ -1588,7 +1588,7 @@ theorem topOpenToGlobalSingularCochainSheafComplex_quasiIso
   change QuasiIso
     (topOpenToGlobalSingularCochainPlusPlusComplex ℚ Y ≫
       (globalSingularCochainPlusPlusComplexIsoSheafComplex ℚ Y).hom)
-  let _ := topOpenToGlobalSingularCochainPlusPlusComplex_quasiIso (Y := Y)
+  let := topOpenToGlobalSingularCochainPlusPlusComplex_quasiIso (Y := Y)
   infer_instance
 
 end HereditarilyParacompact

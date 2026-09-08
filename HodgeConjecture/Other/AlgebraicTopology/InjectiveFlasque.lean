@@ -91,14 +91,14 @@ instance injective_isFlasque
     let gV : A.obj V.unop ⟶ F :=
       (freeAbelianYonedaSheafHomEquiv X V.unop F).symm s
     let a : A.obj V.unop ⟶ A.obj U.unop := A.map i.unop
-    let _ : Mono a := by
+    let : Mono a := by
       let W :=
         (Functor.whiskeringRight (Opens X)ᵒᵖ (Type u) AddCommGrpCat.{u}).obj
           AddCommGrpCat.free
       let S := presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}
       change Mono (S.map (W.map (yoneda.map i.unop)))
-      let _ : Mono (yoneda.map i.unop) := Functor.map_mono yoneda i.unop
-      let _ : Mono (W.map (yoneda.map i.unop)) := Functor.map_mono W (yoneda.map i.unop)
+      let : Mono (yoneda.map i.unop) := Functor.map_mono yoneda i.unop
+      let : Mono (W.map (yoneda.map i.unop)) := Functor.map_mono W (yoneda.map i.unop)
       exact Functor.map_mono S (W.map (yoneda.map i.unop))
     let gU : A.obj U.unop ⟶ F := Injective.factorThru gV a
     refine ⟨freeAbelianYonedaSheafHomEquiv X U.unop F gU, ?_⟩

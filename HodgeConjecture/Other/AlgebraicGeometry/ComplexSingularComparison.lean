@@ -60,7 +60,7 @@ lemma constantsToSingularCochain_quasiIsoAt_zero
     QuasiIsoAt
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
         (TopCat.of (ComplexPoint X structureMap))) 0 := by
-  let _ : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
+  let : LocallyPathConnectedSpace (ComplexPoint X structureMap) :=
     locallyPathConnectedSpace structureMap
   exact
     AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_zero

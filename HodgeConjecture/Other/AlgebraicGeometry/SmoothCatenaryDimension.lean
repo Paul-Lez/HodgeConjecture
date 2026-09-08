@@ -49,14 +49,14 @@ transcendence degree.  The natural number is obtained from Noether normalization
 lemma FiniteType.exists_ringKrullDim_eq_and_trdeg_eq :
     ∃ n : ℕ, ringKrullDim A = n ∧ Algebra.trdeg k A = n := by
   obtain ⟨n, g, hg, hfinite⟩ := exists_finite_inj_algHom_of_fg k A
-  let _ : Algebra (MvPolynomial (Fin n) k) A := g.toAlgebra
-  let _ : FaithfulSMul (MvPolynomial (Fin n) k) A :=
+  let : Algebra (MvPolynomial (Fin n) k) A := g.toAlgebra
+  let : FaithfulSMul (MvPolynomial (Fin n) k) A :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hg
-  let _ : IsScalarTower k (MvPolynomial (Fin n) k) A :=
+  let : IsScalarTower k (MvPolynomial (Fin n) k) A :=
     IsScalarTower.of_algebraMap_eq' (by
       ext r
       exact (g.commutes r).symm)
-  let _ : Algebra.IsIntegral (MvPolynomial (Fin n) k) A :=
+  let : Algebra.IsIntegral (MvPolynomial (Fin n) k) A :=
     ⟨hfinite.to_isIntegral⟩
   refine ⟨n, ?_, ?_⟩
   · rw [PolynomialCatenary.ringKrullDim_eq_of_isIntegral_of_injective hg,
@@ -88,10 +88,10 @@ lemma QuasiFinite.trdeg_residueField_eq (P : Ideal S) [P.IsPrime] :
     Algebra.trdeg k P.ResidueField =
       Algebra.trdeg k (P.under R).ResidueField := by
   let q : Ideal R := P.under R
-  let _ : P.LiesOver q := ⟨rfl⟩
-  let _ : Algebra (Localization.AtPrime q) (Localization.AtPrime P) :=
+  let : P.LiesOver q := ⟨rfl⟩
+  let : Algebra (Localization.AtPrime q) (Localization.AtPrime P) :=
     Localization.AtPrime.algebraOfLiesOver q P
-  let _ : Module.Finite q.ResidueField P.ResidueField := inferInstance
+  let : Module.Finite q.ResidueField P.ResidueField := inferInstance
   have h := trdeg_add_eq k q.ResidueField (A := P.ResidueField)
   have hzero : Algebra.trdeg q.ResidueField P.ResidueField = 0 := trdeg_eq_zero
   rw [hzero, add_zero] at h
@@ -105,9 +105,9 @@ the quotient at a prime.  This does not assert that the induced quotient map is 
 lemma QuasiFinite.ringKrullDim_quotient_eq (P : Ideal S) [P.IsPrime] :
     ringKrullDim (S ⧸ P) = ringKrullDim (R ⧸ P.under R) := by
   let q : Ideal R := P.under R
-  let _ : q.IsPrime := Ideal.IsPrime.comap (algebraMap R S)
-  let _ : Algebra.FiniteType k (R ⧸ q) := Algebra.FiniteType.quotient k q
-  let _ : Algebra.FiniteType k (S ⧸ P) := Algebra.FiniteType.quotient k P
+  let : q.IsPrime := Ideal.IsPrime.comap (algebraMap R S)
+  let : Algebra.FiniteType k (R ⧸ q) := Algebra.FiniteType.quotient k q
+  let : Algebra.FiniteType k (S ⧸ P) := Algebra.FiniteType.quotient k P
   obtain ⟨n, hnDim, hnTrdeg⟩ :=
     FiniteType.exists_ringKrullDim_eq_and_trdeg_eq (k := k) (A := R ⧸ q)
   obtain ⟨m, hmDim, hmTrdeg⟩ :=
@@ -212,13 +212,13 @@ lemma IsStandardSmoothOfRelativeDimension.height_add_ringKrullDim_quotient_eq_co
     (P : Ideal S) [P.IsPrime] :
     (↑P.height : WithBot ℕ∞) + ringKrullDim (S ⧸ P) = d := by
   obtain ⟨g, hgC, hg⟩ := hf.exists_etale_mvPolynomial
-  let _ : Algebra ℂ S := f.toAlgebra
-  let _ : Algebra (MvPolynomial (Fin d) ℂ) S := g.toAlgebra
-  let _ : IsScalarTower ℂ (MvPolynomial (Fin d) ℂ) S :=
+  let : Algebra ℂ S := f.toAlgebra
+  let : Algebra (MvPolynomial (Fin d) ℂ) S := g.toAlgebra
+  let : IsScalarTower ℂ (MvPolynomial (Fin d) ℂ) S :=
     IsScalarTower.of_algebraMap_eq' hgC.symm
-  let _ : Algebra.Etale (MvPolynomial (Fin d) ℂ) S :=
+  let : Algebra.Etale (MvPolynomial (Fin d) ℂ) S :=
     RingHom.etale_algebraMap.mp hg
-  let _ : Algebra.FiniteType ℂ S :=
+  let : Algebra.FiniteType ℂ S :=
     Algebra.FiniteType.trans (R := ℂ) (S := MvPolynomial (Fin d) ℂ)
       (A := S) inferInstance inferInstance
   have hheight : P.height = (P.under (MvPolynomial (Fin d) ℂ)).height :=

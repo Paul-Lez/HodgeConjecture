@@ -56,7 +56,7 @@ noncomputable instance cycleComponent_smoothLocus_irreducibleSpace
     IrreducibleSpace
       (cycleComponentι X x ≫ structureMap).smoothLocus := by
   obtain ⟨y, hy⟩ := (dense_cycleComponent_smoothLocus structureMap x).nonempty
-  let _ : Nonempty
+  let : Nonempty
       (cycleComponentι X x ≫ structureMap).smoothLocus :=
     ⟨⟨y, hy⟩⟩
   exact
@@ -76,7 +76,7 @@ lemma dense_cycleComponent_smooth_closedPoints
           Set (cycleComponent X x)) ∩
         closedPoints (cycleComponent X x)) := by
   let f := cycleComponentι X x ≫ structureMap
-  let _ : JacobsonSpace (cycleComponent X x) :=
+  let : JacobsonSpace (cycleComponent X x) :=
     LocallyOfFiniteType.jacobsonSpace f
   change Dense ((f.smoothLocus : Set (cycleComponent X x)) ∩
     closedPoints (cycleComponent X x))

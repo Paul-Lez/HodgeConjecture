@@ -95,7 +95,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 contractible. -/
 theorem stronglyLocallyContractibleSpace [IsIntegral X] [Smooth structureMap] :
     StronglyLocallyContractibleSpace (ComplexPoint X structureMap) := by
-  let _ : StronglyLocallyContractibleSpace (Fin (dim X) → ℂ) :=
+  let : StronglyLocallyContractibleSpace (Fin (dim X) → ℂ) :=
     normedSpace_stronglyLocallyContractibleSpace
   exact ChartedSpace.stronglyLocallyContractibleSpace
     (H := Fin (dim X) → ℂ) (M := ComplexPoint X structureMap)
@@ -103,7 +103,7 @@ theorem stronglyLocallyContractibleSpace [IsIntegral X] [Smooth structureMap] :
 /-- The analytification of a smooth projective complex variety is locally contractible. -/
 theorem locallyContractibleSpace [IsIntegral X] [Smooth structureMap] :
     LocallyContractibleSpace (ComplexPoint X structureMap) := by
-  let _ : StronglyLocallyContractibleSpace (ComplexPoint X structureMap) :=
+  let : StronglyLocallyContractibleSpace (ComplexPoint X structureMap) :=
     stronglyLocallyContractibleSpace structureMap
   exact StronglyLocallyContractibleSpace.locallyContractible
 

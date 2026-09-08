@@ -173,7 +173,7 @@ def toAffineSpace : D.neighborhood.toScheme ⟶
 
 lemma etale_toAffineSpace : Etale D.toAffineSpace := by
   have h₁ : Etale D.neighborhood.toScheme.toSpecΓ := by
-    let _ : IsAffine D.neighborhood.toScheme := D.isAffine
+    let : IsAffine D.neighborhood.toScheme := D.isAffine
     infer_instance
   have h₂ : Etale (Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen)) :=
     HasRingHomProperty.Spec_iff.mpr D.coordinateRingHomOnOpen_etale
@@ -297,7 +297,7 @@ def affineSpecPointHomeomorph :
       (ComplexPoint (Spec ↧Γ(D.neighborhood.toScheme, ⊤))
       (ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤)))
       Point.analyticTopology Point.analyticTopology := by
-  let _ : IsAffine D.neighborhood.toScheme :=
+  let : IsAffine D.neighborhood.toScheme :=
     show IsAffine D.neighborhood.toScheme from D.isAffine
   let e := asIso D.neighborhood.toScheme.toSpecΓ
   have he : e.hom ≫ ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤) =
@@ -311,7 +311,7 @@ lemma affineSpecPointHomeomorph_apply
     (z : ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f)) :
     D.affineSpecPointHomeomorph z =
       Point.map D.neighborhood.toScheme.toSpecΓ D.toSpecΓ_over z := by
-  let _ : IsAffine D.neighborhood.toScheme :=
+  let : IsAffine D.neighborhood.toScheme :=
     show IsAffine D.neighborhood.toScheme from D.isAffine
   rw [affineSpecPointHomeomorph, Point.isoMapHomeomorph_apply]
   rfl
@@ -554,7 +554,7 @@ lemma analyticAt_ambientProjectionChart_symm_evaluate
       (fun v ↦ Point.evaluate V s ((D.ambientProjectionChart z).symm v).1) w := by
   let Y := D.neighborhood.toScheme
   let W : Y.Opens := D.neighborhood.ι ⁻¹ᵁ V
-  let _ : IsAffine Y :=
+  let : IsAffine Y :=
     show IsAffine D.neighborhood.toScheme from D.isAffine
   let y : ComplexPoint Y (D.neighborhood.ι ≫ f) :=
     (ComplexPoint.openHomeomorph D.neighborhood f).symm

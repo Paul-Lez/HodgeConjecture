@@ -54,7 +54,7 @@ variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 finite-dimensional, without assuming global connectedness. -/
 theorem finiteRationalSingularHomologyZero [IsIntegral X] [Smooth structureMap] :
     Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) := by
-  let _ : Finite (ZerothHomotopy (ComplexPoint X structureMap)) :=
+  let : Finite (ZerothHomotopy (ComplexPoint X structureMap)) :=
     finiteZerothHomotopy structureMap
   have hfinite : Module.Finite ℚ
       (∐ fun _ : ZerothHomotopy (ComplexPoint X structureMap) ↦

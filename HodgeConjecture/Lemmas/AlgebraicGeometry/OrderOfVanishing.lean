@@ -48,8 +48,8 @@ theorem Scheme.ord_support_finite [IsIntegral X] [IsNoetherian X]
   obtain ⟨S, hSfinite, hSclosed, hSirred, hZ⟩ :=
     NoetherianSpace.exists_finite_set_isClosed_irreducible
       (show IsClosed Z from U.isOpen.isClosed_compl)
-  let _ : Finite S := hSfinite
-  let _ : PartialOrder X := specializationOrder X
+  let : Finite S := hSfinite
+  let : PartialOrder X := specializationOrder X
   let g : S → X := fun T ↦ (hSirred T.1 T.2).genericPoint
   apply (Set.finite_range g).subset
   intro x hx

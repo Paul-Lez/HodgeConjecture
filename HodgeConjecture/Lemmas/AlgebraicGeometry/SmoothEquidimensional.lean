@@ -48,7 +48,7 @@ submersive presentation. -/
 lemma RingHom.IsStandardSmooth.exists_isStandardSmoothOfRelativeDimension {R S : Type*}
     [CommRing R] [CommRing S] {φ : R →+* S} (h : φ.IsStandardSmooth) :
     ∃ n : ℕ, φ.IsStandardSmoothOfRelativeDimension n := by
-  let _ := φ.toAlgebra
+  let := φ.toAlgebra
   obtain ⟨ι, σ, _, _, ⟨P⟩⟩ := h
   exact ⟨P.dimension, P.isStandardSmoothOfRelativeDimension rfl⟩
 

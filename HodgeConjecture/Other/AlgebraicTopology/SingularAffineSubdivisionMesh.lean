@@ -64,7 +64,7 @@ public theorem barycentricContractionFactor_lt_one (n : ℕ) :
 /-- The intrinsic diameter of a nonempty standard simplex is one in the sup metric. -/
 public theorem diam_univ_stdSimplex (n : ℕ) (hn : 1 ≤ n) :
     Metric.diam (Set.univ : Set (stdSimplex ℝ (Fin (n + 1)))) = 1 := by
-  let _ : Nontrivial (Fin (n + 1)) :=
+  let : Nontrivial (Fin (n + 1)) :=
     Fin.nontrivial_iff_two_le.mpr (Nat.add_le_add_right hn 1)
   calc
     Metric.diam (Set.univ : Set (stdSimplex ℝ (Fin (n + 1)))) =

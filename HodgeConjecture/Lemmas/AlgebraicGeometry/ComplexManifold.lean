@@ -260,7 +260,7 @@ lemma exists_contractibleOpen_le [IsIntegral X] [Smooth structureMap]
       rw [e.right_inv hytarget]
       exact hy
   have hVcontractible : ContractibleSpace V := by
-    let _ : ContractibleSpace (Metric.ball (e x) r) :=
+    let : ContractibleSpace (Metric.ball (e x) r) :=
       Metric.contractibleSpace_ball hr
     exact (e.homeomorphOfImageSubsetSource hVsource himage).contractibleSpace
   have hVU : V ≤ U := by
@@ -280,7 +280,7 @@ theorem locallyPathConnectedSpace [IsIntegral X] [Smooth structureMap] :
   let Uo : TopologicalSpace.Opens (ComplexPoint X structureMap) := ⟨U, hUopen⟩
   obtain ⟨V, hxV, hVcontractible, hVU⟩ :=
     exists_contractibleOpen_le structureMap x Uo hxU
-  let _ : ContractibleSpace V := hVcontractible
+  let : ContractibleSpace V := hVcontractible
   refine ⟨(V : Set _), V.2.mem_nhds hxV, ?_, ?_⟩
   · rw [isPathConnected_iff_pathConnectedSpace]
     infer_instance

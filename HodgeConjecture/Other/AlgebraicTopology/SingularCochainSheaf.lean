@@ -264,16 +264,16 @@ lemma singularCochainSheafComplex_exactAt_succ_of_locallyPrimitive (n : ℕ)
   let stalkUnit := (stalk.mapHomologicalComplex (ComplexShape.up ℕ)).map unit
   let η := (HomologicalComplex.shortComplexFunctor' AddCommGrpCat.{u}
     (ComplexShape.up ℕ) n (n + 1) ((n + 1) + 1)).map stalkUnit
-  let _ : IsIso η.τ₁ :=
+  let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
       (singularCochainPresheaf R X n)
-  let _ : IsIso η.τ₂ :=
+  let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
       (singularCochainPresheaf R X (n + 1))
-  let _ : IsIso η.τ₃ :=
+  let : IsIso η.τ₃ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
       (singularCochainPresheaf R X ((n + 1) + 1))
-  let _ : IsIso η := ShortComplex.isIso_of_isIso η
+  let : IsIso η := ShortComplex.isIso_of_isIso η
   exact ShortComplex.exact_of_iso (asIso η) hP
 
 /-- The augmentation of simplicial zero-chains, sending every vertex to `1`. -/
@@ -445,7 +445,7 @@ def constantSingularZeroCochain (U : (Opens X)ᵒᵖ) :
 /-- Constant singular zero-cochains on a nonempty open set have unique coefficients. -/
 lemma constantSingularZeroCochain_injective (U : (Opens X)ᵒᵖ) [Nonempty U.unop] :
     Function.Injective (constantSingularZeroCochain R X U) := by
-  let _ : Nonempty
+  let : Nonempty
       ((TopCat.toSSet.obj ((Opens.toTopCat X).obj U.unop)).obj (.op ⟨0⟩)) :=
     ⟨(TopCat.toSSetObj₀Equiv (X := (Opens.toTopCat X).obj U.unop)).symm
       (Classical.arbitrary U.unop)⟩
@@ -458,7 +458,7 @@ lemma exists_eq_constantSingularZeroCochain_of_pathConnected (U : (Opens X)ᵒ�
     (φ : OpenCochains R X U 0)
     (hφ : (((openSingularChainComplexFunctor R X).obj U.unop).d 1 0).hom.dualMap φ = 0) :
     ∃ r : R, constantSingularZeroCochain R X U r = φ := by
-  let _ : PathConnectedSpace ((Opens.toTopCat X).obj U.unop) :=
+  let : PathConnectedSpace ((Opens.toTopCat X).obj U.unop) :=
     show PathConnectedSpace U.unop from inferInstance
   exact exists_eq_smul_simplicialZeroAugmentation_of_connected R
     (TopCat.toSSet.obj ((Opens.toTopCat X).obj U.unop)) φ hφ
@@ -470,7 +470,7 @@ lemma existsUnique_eq_constantSingularZeroCochain_of_pathConnected (U : (Opens X
     (φ : OpenCochains R X U 0)
     (hφ : (((openSingularChainComplexFunctor R X).obj U.unop).d 1 0).hom.dualMap φ = 0) :
     ∃! r : R, constantSingularZeroCochain R X U r = φ := by
-  let _ : PathConnectedSpace ((Opens.toTopCat X).obj U.unop) :=
+  let : PathConnectedSpace ((Opens.toTopCat X).obj U.unop) :=
     show PathConnectedSpace U.unop from inferInstance
   exact existsUnique_eq_smul_simplicialZeroAugmentation_of_connected R
     (TopCat.toSSet.obj ((Opens.toTopCat X).obj U.unop)) φ hφ
@@ -507,7 +507,7 @@ lemma constantsToSingularCochainZero_stalk_mono (x : X) :
     (singularCochainPresheaf R X 0).germ_eq x hxU hxV
       ((constantsToSingularCochainZero R X).app (.op U) r)
       ((constantsToSingularCochainZero R X).app (.op V) s) h
-  let _ : Nonempty W := ⟨⟨x, hxW⟩⟩
+  let : Nonempty W := ⟨⟨x, hxW⟩⟩
   have hrs : r = s := by
     apply constantSingularZeroCochain_injective R X (.op W)
     have hr := congrArg (fun k :
@@ -543,7 +543,7 @@ lemma exists_local_constantSingularZeroCochain [LocallyPathConnectedSpace X]
   let V : Opens X := ⟨pathComponentIn U x, U.2.pathComponentIn x⟩
   have hxV : x ∈ V := mem_pathComponentIn_self hx
   let i : V ⟶ U := homOfLE pathComponentIn_subset
-  let _ : PathConnectedSpace V :=
+  let : PathConnectedSpace V :=
     isPathConnected_iff_pathConnectedSpace.mp (isPathConnected_pathComponentIn hx)
   let φV := (singularCochainPresheaf R X 0).map i.op φ
   have hφV : (singularCochainCoboundary R X 0).app (.op V) φV = 0 := by
@@ -665,16 +665,16 @@ lemma constantsToSingularCochainSheafShortComplex_exact [LocallyPathConnectedSpa
         exact ⟨V, hyV, i, r, hr⟩) x
   let unit := constantsToSingularCochainShortComplexSheafificationUnit R X
   let η := (stalk.mapShortComplex).map unit
-  let _ : IsIso η.τ₁ :=
+  let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
       (constantCoefficientPresheaf R X)
-  let _ : IsIso η.τ₂ :=
+  let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
       (singularCochainPresheaf R X 0)
-  let _ : IsIso η.τ₃ :=
+  let : IsIso η.τ₃ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
       (singularCochainPresheaf R X 1)
-  let _ : IsIso η := ShortComplex.isIso_of_isIso η
+  let : IsIso η := ShortComplex.isIso_of_isIso η
   exact ShortComplex.exact_of_iso (asIso η) hP
 
 set_option backward.isDefEq.respectTransparency false in
@@ -689,13 +689,13 @@ lemma constantsToSingularCochainZeroSheaf_mono :
   let T := (constantsToSingularCochainSheafShortComplex R X).map
     (TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙ stalk)
   let η : S ⟶ T := (stalk.mapShortComplex).map unit
-  let _ : IsIso η.τ₁ :=
+  let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
       (constantCoefficientPresheaf R X)
-  let _ : IsIso η.τ₂ :=
+  let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
       (singularCochainPresheaf R X 0)
-  let _ : Mono S.f := constantsToSingularCochainZero_stalk_mono R X x
+  let : Mono S.f := constantsToSingularCochainZero_stalk_mono R X x
   change Mono T.f
   have h : T.f = inv η.τ₁ ≫ S.f ≫ η.τ₂ := by
     rw [← cancel_epi η.τ₁, η.comm₁₂]
@@ -760,7 +760,7 @@ lemma exists_local_singularCochain_primitive_of_contractibleOpenBasis
   let K := (openSingularChainComplexFunctor R X).obj V
   let φV : OpenCochains R X (.op V) (n + 1) :=
     (singularCochainPresheaf R X (n + 1)).map i.op φ
-  let _ : ContractibleSpace V := hVcontractible
+  let : ContractibleSpace V := hVcontractible
   have hK : K.ExactAt (n + 1) := by
     exact singularChainComplex_exactAt_of_contractible R V (n + 1) (by lia)
   have hφV : (K.d (n + 2) (n + 1)).hom.dualMap φV = 0 := by

@@ -100,9 +100,9 @@ variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral
 
 /-- The local homology class transported from the exact component chart is nonzero. -/
 lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
-  let _ : IsAffine C.componentNeighborhood.toScheme :=
+  let : IsAffine C.componentNeighborhood.toScheme :=
     C.componentNeighborhood_isAffine
-  let _ : T2Space
+  let : T2Space
       (ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap) :=
     ComplexPoint.t2Space_of_isAffine C.neighborhoodStructureMap
   have hinjective : Function.Injective C.neighborhoodLocalHomologyMap :=

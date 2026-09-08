@@ -102,7 +102,7 @@ theorem pathConnectedSpace_iff_span_cohomologyUnitZero_eq_top :
       Submodule.span R {cohomologyUnitZero R X} = ⊤ := by
   constructor
   · intro h
-    let _ : PathConnectedSpace X := h
+    let : PathConnectedSpace X := h
     exact span_cohomologyUnitZero_eq_top R X
   · exact pathConnectedSpace_of_span_cohomologyUnitZero_eq_top R X
 

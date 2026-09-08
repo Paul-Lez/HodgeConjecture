@@ -287,7 +287,7 @@ def standardPuncturedFacetIntersectionHomeomorph (d : ℕ)
 lemma standardPuncturedFacetIntersectionSubspace_contractibleSpace (d : ℕ)
     (I : Finset (Fin (d + 1))) (hI : I.Nonempty) (hproper : I ≠ Finset.univ) :
     ContractibleSpace (standardPuncturedFacetIntersectionSubspace d I) := by
-  let _ : ContractibleSpace (StandardPuncturedFacetIntersection d I) :=
+  let : ContractibleSpace (StandardPuncturedFacetIntersection d I) :=
     standardPuncturedFacetIntersection_contractibleSpace d I hproper
   exact (standardPuncturedFacetIntersectionHomeomorph d I hI).symm.contractibleSpace
 
@@ -317,7 +317,7 @@ lemma standardPuncturedFacetIntersection_exactAt (d : ℕ)
     ((TopCat.toSSet.obj
       (TopCat.of (StandardPuncturedFacetIntersection d I))).chainComplex
         (ModuleCat.of ℚ ℚ)).ExactAt k := by
-  let _ : ContractibleSpace (StandardPuncturedFacetIntersection d I) :=
+  let : ContractibleSpace (StandardPuncturedFacetIntersection d I) :=
     standardPuncturedFacetIntersection_contractibleSpace d I hI
   exact AlgebraicTopology.singularChainComplex_exactAt_of_contractible
     ℚ (StandardPuncturedFacetIntersection d I) k hk
@@ -410,17 +410,17 @@ lemma standardPuncturedFacetIntersection_integralHomology_isZero
   change IsZero (((singularHomologyFunctor AddCommGrpCat k).obj
     (AddCommGrpCat.of ℤ)).obj
       (TopCat.of (standardPuncturedFacetIntersectionSubspace d I)))
-  let _ : ContractibleSpace (standardPuncturedFacetIntersectionSubspace d I) :=
+  let : ContractibleSpace (standardPuncturedFacetIntersectionSubspace d I) :=
     standardPuncturedFacetIntersectionSubspace_contractibleSpace d I hI hproper
   obtain ⟨e⟩ := ContractibleSpace.hequiv_unit
     (standardPuncturedFacetIntersectionSubspace d I)
   have hunit :=
     AlgebraicTopology.isZero_singularHomologyFunctor_of_totallyDisconnectedSpace
       AddCommGrpCat k (AddCommGrpCat.of ℤ) (TopCat.of Unit) hk
-  let _ : Subsingleton (IntegralSingularHomology k Unit) :=
+  let : Subsingleton (IntegralSingularHomology k Unit) :=
     AddCommGrpCat.subsingleton_of_isZero hunit
   let he := integralSingularHomologyEquivOfHomotopyEquiv k e
-  let _ : Subsingleton
+  let : Subsingleton
       (IntegralSingularHomology k
         (standardPuncturedFacetIntersectionSubspace d I)) :=
     ⟨fun x y ↦ he.injective (Subsingleton.elim _ _)⟩
@@ -1914,7 +1914,7 @@ lemma standardFacetCarrierIntersectionDiscrepancy_zero_augmentation
   let I := standardFacetCarrier d x
   have hI : I.Nonempty := standardFacetCarrier_nonempty d x
   have hproper : I ≠ Finset.univ := standardFacetCarrier_ne_univ d x
-  let _ : ContractibleSpace
+  let : ContractibleSpace
       (standardPuncturedFacetIntersectionSubspace d I) :=
     standardPuncturedFacetIntersectionSubspace_contractibleSpace d I hI hproper
   have _ : (TopCat.toSSet.obj (TopCat.of

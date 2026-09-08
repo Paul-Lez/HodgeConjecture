@@ -88,7 +88,7 @@ lemma exists_isRegular_of_isPrime_height_eq_one [IsDomain R] [IsLocalRing R]
     [UniqueFactorizationMonoid R] (I : Ideal R) [I.IsPrime] (hheight : I.height = 1) :
     ∃ rs : List R, Ideal.ofList rs = I ∧ rs.length = I.spanFinrank ∧
       RingTheory.Sequence.IsRegular R rs := by
-  let _ : I.IsPrincipal :=
+  let : I.IsPrincipal :=
     UniqueFactorizationMonoid.isPrincipal_of_height_eq_one hheight
   exact I.exists_isRegular_of_isPrincipal (I.ne_bot_of_height_eq_one hheight)
     (Ideal.IsPrime.ne_top (inferInstance : I.IsPrime))
@@ -99,7 +99,7 @@ lemma ringKrullDim_quotient_add_one_eq_of_isPrime_height_eq_one
     [IsDomain R] [IsNoetherianRing R] [IsLocalRing R] [UniqueFactorizationMonoid R]
     (I : Ideal R) [I.IsPrime] (hheight : I.height = 1) :
     ringKrullDim (R ⧸ I) + 1 = ringKrullDim R := by
-  let _ : I.IsPrincipal :=
+  let : I.IsPrincipal :=
     UniqueFactorizationMonoid.isPrincipal_of_height_eq_one hheight
   obtain ⟨rs, hrs, hrslen, hregular⟩ :=
     I.exists_isRegular_of_isPrime_height_eq_one hheight

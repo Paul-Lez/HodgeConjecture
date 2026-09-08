@@ -55,7 +55,7 @@ theorem rationalSingularCochainSheafIsFlasque [IsIntegral X] [Smooth structureMa
     TopCat.Sheaf.IsFlasque
       (AlgebraicTopology.Singular.singularCochainSheaf ℚ
         (TopCat.of (ComplexPoint X structureMap)) n) := by
-  let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
+  let : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
     openParacompactSpace structureMap
   infer_instance
 
@@ -66,7 +66,7 @@ theorem rationalSingularCochain_globalComparison_quasiIso
     QuasiIso
       (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ
         (TopCat.of (ComplexPoint X structureMap))) := by
-  let _ : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
+  let : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
     openParacompactSpace structureMap
   exact AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
 

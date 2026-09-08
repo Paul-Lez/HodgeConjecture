@@ -300,7 +300,7 @@ lemma constantsToHolomorphicDeRhamZero_stalk_mono
     (holomorphicDeRhamPresheaf structureMap d 0).germ_eq x hxU hxV
       ((constantsToHolomorphicDeRhamZero structureMap d).app (.op U) c)
       ((constantsToHolomorphicDeRhamZero structureMap d).app (.op V) c') h
-  let _ : Nonempty W := ⟨⟨x, hxW⟩⟩
+  let : Nonempty W := ⟨⟨x, hxW⟩⟩
   have hcc' : c = c' := by
     apply holomorphicFormOfConstant_injective structureMap d (.op W)
     have hc := congrArg (fun k :
@@ -477,16 +477,16 @@ lemma holomorphicDeRhamComplex_exactAt_succ
   let stalkUnit := (stalk.mapHomologicalComplex (ComplexShape.up ℕ)).map unit
   let η := (HomologicalComplex.shortComplexFunctor' AddCommGrpCat
     (ComplexShape.up ℕ) p (p + 1) ((p + 1) + 1)).map stalkUnit
-  let _ : IsIso η.τ₁ :=
+  let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (holomorphicDeRhamPresheaf structureMap d p)
-  let _ : IsIso η.τ₂ :=
+  let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (holomorphicDeRhamPresheaf structureMap d (p + 1))
-  let _ : IsIso η.τ₃ :=
+  let : IsIso η.τ₃ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (holomorphicDeRhamPresheaf structureMap d ((p + 1) + 1))
-  let _ : IsIso η := ShortComplex.isIso_of_isIso η
+  let : IsIso η := ShortComplex.isIso_of_isIso η
   exact ShortComplex.exact_of_iso (asIso η) hP
 
 /-- The holomorphic de Rham complex is exact in every degree above the complex dimension. -/
@@ -787,16 +787,16 @@ lemma constantsToHolomorphicDeRhamSheafShortComplex_exact
         exact ⟨V.unop, hyV, i.unop, c, hi.symm⟩) x
   let unit := constantsToHolomorphicDeRhamShortComplexSheafificationUnit structureMap d
   let η := (stalk.mapShortComplex).map unit
-  let _ : IsIso η.τ₁ :=
+  let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (constantComplexAddCommGrpPresheaf structureMap)
-  let _ : IsIso η.τ₂ :=
+  let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (holomorphicDeRhamPresheaf structureMap d 0)
-  let _ : IsIso η.τ₃ :=
+  let : IsIso η.τ₃ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (holomorphicDeRhamPresheaf structureMap d 1)
-  let _ : IsIso η := ShortComplex.isIso_of_isIso η
+  let : IsIso η := ShortComplex.isIso_of_isIso η
   exact ShortComplex.exact_of_iso (asIso η) hP
 
 set_option backward.isDefEq.respectTransparency false in
@@ -814,13 +814,13 @@ lemma constantsToHolomorphicDeRhamZeroSheaf_mono
     (TopCat.Sheaf.forget AddCommGrpCat
       (TopCat.of (ComplexPoint X structureMap)) ⋙ stalk)
   let η : S ⟶ T := (stalk.mapShortComplex).map unit
-  let _ : IsIso η.τ₁ :=
+  let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (constantComplexAddCommGrpPresheaf structureMap)
-  let _ : IsIso η.τ₂ :=
+  let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (holomorphicDeRhamPresheaf structureMap d 0)
-  let _ : Mono S.f := constantsToHolomorphicDeRhamZero_stalk_mono structureMap d x
+  let : Mono S.f := constantsToHolomorphicDeRhamZero_stalk_mono structureMap d x
   change Mono T.f
   have h : T.f = inv η.τ₁ ≫ S.f ≫ η.τ₂ := by
     rw [← cancel_epi η.τ₁, η.comm₁₂]

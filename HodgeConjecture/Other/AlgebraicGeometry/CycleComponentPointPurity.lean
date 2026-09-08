@@ -63,7 +63,7 @@ lemma analyticPointLocalHomologyClass_ne_zero [SmoothOfRelativeDimension d struc
     analyticPointLocalHomologyClass structureMap d z ≠ 0 := by
   let e := ComplexPoint.localChart structureMap d z
   let hz := ComplexPoint.mem_localChart_source structureMap d z
-  let _ : T1Space (ComplexPoint X structureMap) := inferInstance
+  let : T1Space (ComplexPoint X structureMap) := inferInstance
   have hinjective : Function.Injective
       (relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e z hz)) :=
     (chartModelEmbedding_relativeHomologyMap_bijective d e z hz).1
@@ -76,7 +76,7 @@ lemma analyticPointLocalHomologyClass_ne_zero [SmoothOfRelativeDimension d struc
 lemma span_analyticPointLocalHomologyClass_eq_top [SmoothOfRelativeDimension d structureMap]
     (z : ComplexPoint X structureMap) :
     Submodule.span ℚ {analyticPointLocalHomologyClass structureMap d z} = ⊤ := by
-  let _ : T1Space (ComplexPoint X structureMap) := inferInstance
+  let : T1Space (ComplexPoint X structureMap) := inferInstance
   exact span_localClassOfChart_eq_top d (ComplexPoint.localChart structureMap d z) z
     (ComplexPoint.mem_localChart_source structureMap d z)
 
@@ -113,7 +113,7 @@ lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X]
   have hdim : Order.krullDim (cycleComponent X x) = 0 := by
     simpa using orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
       (f := structureMap) (d := d) x hx
-  let _ : Subsingleton (cycleComponent X x) := by
+  let : Subsingleton (cycleComponent X x) := by
     constructor
     intro a b
     have hallMin : ∀ q : cycleComponent X x, IsMin q :=

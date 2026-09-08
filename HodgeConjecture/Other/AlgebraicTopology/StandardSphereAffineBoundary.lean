@@ -217,7 +217,7 @@ lemma standardSphereSimplicialBoundaryChain_boundary_succ (n : ℕ) :
   let f := SSet.chainComplexMap
     (SSet.boundary (n + 2) : SSet.Subcomplex (Δ[n + 2] : SSet.{0})).ι
     (ModuleCat.of ℚ ℚ)
-  let _ : Mono (f.f n) := standardSphereBoundaryChainInclusionComponent_mono (n + 2) n
+  let : Mono (f.f n) := standardSphereBoundaryChainInclusionComponent_mono (n + 2) n
   rw [← cancel_mono (f.f n), Category.assoc, ← f.comm]
   rw [← Category.assoc, standardSphereSimplicialBoundaryChain_inclusion]
   rw [Category.assoc, HomologicalComplex.d_comp_d, comp_zero]
@@ -361,7 +361,7 @@ lemma standardSphereSimplicialNormalizedBoundaryClass_ne_zero (n : ℕ) :
   let K := standardSphereSuccNormalizedRationalChains n
   have hd : K.d (n + 2) (n + 1) = 0 :=
     (standardSphereSucc_normalizedChains_aboveTop_isZero n).eq_of_src _ _
-  let _ : IsIso (K.homologyπ (n + 1)) :=
+  let : IsIso (K.homologyπ (n + 1)) :=
     K.isIso_homologyπ (n + 2) (n + 1) (by simp) hd
   intro h
   have hcycle : (standardSphereSimplicialNormalizedBoundaryCycle n).hom 1 = 0 := by
