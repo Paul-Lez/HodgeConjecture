@@ -70,7 +70,8 @@ abbrev singularOrientationConstantSheaf : TopCat.Sheaf AddCommGrpCat.{u} X :=
   (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
     (AddCommGrpCat.of R)
 
-local instance : HasDerivedCategory (TopCat.Sheaf AddCommGrpCat.{u} X) :=
+local instance singularChainSheafOrientationHasDerivedCategory :
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat.{u} X) :=
   HasDerivedCategory.standard _
 
 /-- The unshifted form of the canonical orientation, used to state its normalization
