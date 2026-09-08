@@ -499,6 +499,8 @@ end DifferentialForm
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 open CategoryTheory TopologicalSpace
 open scoped Manifold
 

@@ -42,6 +42,8 @@ open CategoryTheory Limits
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 open AlgebraicTopology.Singular
 open scoped TensorProduct
 

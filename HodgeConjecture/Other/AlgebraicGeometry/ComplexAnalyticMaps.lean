@@ -34,6 +34,8 @@ open scoped Manifold ContDiff
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X Y : Scheme}
   (structureMapX : X ⟶ Spec ↧ℂ) (structureMapY : Y ⟶ Spec ↧ℂ)
   (f : X ⟶ Y) (hf : f ≫ structureMapY = structureMapX)

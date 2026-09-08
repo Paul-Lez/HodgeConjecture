@@ -41,6 +41,8 @@ open CategoryTheory Order TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 private lemma span_singleton_image_eq_span_range_of_span_eq_top
     {M N : Type*} [AddCommGroup M] [Module ℚ M] [AddCommGroup N] [Module ℚ N]
     (f : M →+ N) (x : M) (hx : Submodule.span ℚ {x} = ⊤) :

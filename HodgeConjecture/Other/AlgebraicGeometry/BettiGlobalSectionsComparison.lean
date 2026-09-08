@@ -261,6 +261,8 @@ end TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 local instance bettiGlobalSectionsComparisonTopology :
@@ -551,6 +553,8 @@ theorem rationalSingularCochainTerm_cohomology_succ_eq_zero
 end AlgebraicTopology.Singular.HereditarilyParacompact
 
 namespace AlgebraicGeometry.ComplexPoint
+
+open Point
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 

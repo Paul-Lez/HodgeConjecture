@@ -21,7 +21,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferential
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoints
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham

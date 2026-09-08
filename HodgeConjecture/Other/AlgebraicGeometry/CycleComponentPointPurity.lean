@@ -43,6 +43,8 @@ open CategoryTheory Order Topology TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 open AlgebraicTopology.Singular
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)

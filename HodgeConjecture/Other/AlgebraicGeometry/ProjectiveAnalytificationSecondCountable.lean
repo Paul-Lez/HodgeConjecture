@@ -37,6 +37,8 @@ open Topology
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
   [IsProjective structureMap]
 

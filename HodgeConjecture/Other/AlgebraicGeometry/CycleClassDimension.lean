@@ -32,6 +32,8 @@ open Order
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- A smooth complex `d`-fold has no algebraic points of codimension greater than `d`. -/

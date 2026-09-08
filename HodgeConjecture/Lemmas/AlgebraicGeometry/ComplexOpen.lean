@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoints
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 
 /-!
 # Complex points of open subschemes
@@ -32,6 +32,8 @@ embedding on complex points.
 open CategoryTheory Topology
 
 namespace AlgebraicGeometry.ComplexPoint
+
+open Point
 
 noncomputable section
 
@@ -146,7 +148,7 @@ lemma continuous_openEquiv_symm :
       (ComplexPoint U.toScheme (openStructureMap U structureMap))
       (TopologicalSpace.induced Subtype.val analyticTopology) analyticTopology
       (openEquiv U structureMap).symm := by
-  rw [continuous_generateFrom_iff]
+  rw [continuous_iff_analyticSubbasis]
   rintro W ⟨V, t, O, hO, rfl⟩
   let A : Set (ComplexPoint X structureMap) := overOpen (U.ι ''ᵁ V) ∩
     evaluate (U.ι ''ᵁ V) ((U.ι.appIso V).inv t) ⁻¹' O

@@ -159,6 +159,8 @@ end AlgebraicGeometry
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 /-- The rational Chow class represented by an irreducible codimension-`p` component with

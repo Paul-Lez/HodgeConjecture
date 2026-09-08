@@ -35,6 +35,8 @@ open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 universe u v
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)

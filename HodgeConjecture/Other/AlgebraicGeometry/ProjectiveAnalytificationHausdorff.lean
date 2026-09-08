@@ -40,6 +40,8 @@ namespace AlgebraicGeometry
 
 namespace ComplexPoint
 
+open Point
+
 /-- The analytification of an affine complex scheme is Hausdorff. -/
 lemma t2Space_of_isAffine {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) [IsAffine X] :
     @T2Space (ComplexPoint X structureMap) analyticTopology := by
@@ -227,7 +229,7 @@ lemma vectorToComplexPoint_mem_projectiveSpaceBasicOpen {n d : ℕ}
     (v : CoordinateSpace n) (hv : v ≠ 0)
     (r : UniversalRing n) (hd : 0 < d) (hr : r ∈ UniversalGrading n d)
     (hne : coordinateEvaluationHom v r ≠ 0) :
-    vectorToComplexPoint v hv ∈ ComplexPoint.overOpen (projectiveSpaceBasicOpen n r) := by
+    vectorToComplexPoint v hv ∈ Point.overOpen (projectiveSpaceBasicOpen n r) := by
   change (vectorToProjectiveSpace v hv) (IsLocalRing.closedPoint ℂ) ∈
     projectiveSpaceBasicOpen n r
   unfold projectiveSpaceBasicOpen
@@ -246,7 +248,7 @@ lemma projectiveSpace_pair_mem_affineOpen (n : ℕ)
     (z w : ComplexPoint (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ))
       (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :
     ∃ U : (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ)).Opens,
-      z ∈ ComplexPoint.overOpen U ∧ w ∈ ComplexPoint.overOpen U ∧ IsAffine U.toScheme := by
+      z ∈ Point.overOpen U ∧ w ∈ Point.overOpen U ∧ IsAffine U.toScheme := by
   obtain ⟨v, hvz⟩ := surjective_vectorToComplexPoint z
   obtain ⟨u, huw⟩ := surjective_vectorToComplexPoint w
   obtain ⟨r, hr, hrv, hru⟩ :=
@@ -277,21 +279,21 @@ set_option linter.style.haveILetI false in
 /-- Any two complex points of a projective presentation lie in a common affine open. -/
 lemma pair_mem_affineOpen {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) (z w : ComplexPoint X f) :
-    ∃ U : X.Opens, z ∈ ComplexPoint.overOpen U ∧
-      w ∈ ComplexPoint.overOpen U ∧ IsAffine U.toScheme := by
+    ∃ U : X.Opens, z ∈ Point.overOpen U ∧
+      w ∈ Point.overOpen U ∧ IsAffine U.toScheme := by
   obtain ⟨U, hzU, hwU, hUaff⟩ :=
     ComplexProjectiveSpace.projectiveSpace_pair_mem_affineOpen P.ambientDimension
       (analyticImmersion P z) (analyticImmersion P w)
   letI : IsClosedImmersion P.immersion := P.isClosedImmersion
   refine ⟨P.immersion ⁻¹ᵁ U,
-    (ComplexPoint.mem_overOpen_map_iff P.immersion P.immersion_toBase z U).mp hzU,
-    (ComplexPoint.mem_overOpen_map_iff P.immersion P.immersion_toBase w U).mp hwU, ?_⟩
+    (Point.mem_overOpen_map_iff P.immersion P.immersion_toBase z U).mp hzU,
+    (Point.mem_overOpen_map_iff P.immersion P.immersion_toBase w U).mp hwU, ?_⟩
   exact @IsAffineHom.isAffine_preimage _ _ P.immersion inferInstance U hUaff
 
 /-- The analytification of an explicit projective presentation is Hausdorff. -/
 theorem complexPoint_t2Space {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) :
-    @T2Space (ComplexPoint X f) ComplexPoint.analyticTopology :=
+    @T2Space (ComplexPoint X f) Point.analyticTopology :=
   ComplexPoint.t2Space_of_pair_mem_affineOpen f (pair_mem_affineOpen P)
 
 end ProjectiveSpace.Presentation

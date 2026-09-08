@@ -41,6 +41,8 @@ open scoped Manifold ContDiff
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 local instance complexManifoldTopology :
@@ -144,7 +146,7 @@ lemma analyticAt_localChart_symm_evaluate
     (V : X.Opens) (s : Γ(X, V))
     (hV : (localChart structureMap d z).symm w ∈ overOpen V) :
     AnalyticAt ℂ
-      (fun v ↦ ComplexPoint.evaluate V s ((localChart structureMap d z).symm v)) w := by
+      (fun v ↦ Point.evaluate V s ((localChart structureMap d z).symm v)) w := by
   let D := localEtaleCoordinates structureMap d z
   let p := pointInCoordinateNeighborhood structureMap d z
   have hwD : w ∈ (D.ambientProjectionChart p).target := by
@@ -161,7 +163,7 @@ lemma localChart_apply_component_eq_evaluate
     (z q : ComplexPoint X structureMap) (hq : q ∈ (localChart structureMap d z).source)
     (i : Fin d) :
     localChart structureMap d z q i =
-      ComplexPoint.evaluate
+      Point.evaluate
         (localEtaleCoordinates structureMap d z).ambientCoordinateOpen
         ((localEtaleCoordinates structureMap d z).ambientCoordinateSection i) q := by
   rw [localChart_apply_of_mem structureMap d z q hq]

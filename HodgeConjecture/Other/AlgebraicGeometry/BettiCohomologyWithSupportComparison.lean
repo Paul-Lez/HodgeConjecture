@@ -194,6 +194,8 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
 
 local instance bettiSupportComparisonTopology :

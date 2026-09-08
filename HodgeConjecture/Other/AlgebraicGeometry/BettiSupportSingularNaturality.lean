@@ -304,6 +304,8 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 open AlgebraicTopology.Singular
 
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)

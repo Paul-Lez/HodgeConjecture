@@ -35,6 +35,8 @@ open Topology
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 noncomputable section
 
 variable {A B : Type} [CommRing A] [CommRing B] [Algebra ℂ A] [Algebra ℂ B]

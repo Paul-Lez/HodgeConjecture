@@ -56,7 +56,7 @@ lemma Scheme.Opens.ι_appTop_topIso_hom {Y : Scheme} (U : Y.Opens) :
 variable {X : Scheme} (f : X ⟶ Spec ↧ℂ)
 
 noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
-    TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
+    TopologicalSpace (ComplexPoint Y g) := Point.analyticTopology
 
 /-- The map from complex scalars to sections on an open, induced by a structure morphism. -/
 def complexRestrictionMap (V : X.Opens) : ℂ →+* Γ(X, V) :=
@@ -211,7 +211,7 @@ def pointMap :
     ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f) →
       ComplexPoint (ComplexPoint.complexAffineSpace (Fin d))
         (ComplexPoint.complexAffineSpace (Fin d) ↘ Spec ↧ℂ) :=
-  ComplexPoint.map D.toAffineSpace D.toAffineSpace_over
+  Point.map D.toAffineSpace D.toAffineSpace_over
 
 /-- The étale coordinate morphism is continuous on complex points. -/
 lemma continuous_pointMap :
@@ -219,8 +219,8 @@ lemma continuous_pointMap :
       (ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f))
       (ComplexPoint (ComplexPoint.complexAffineSpace (Fin d))
         (ComplexPoint.complexAffineSpace (Fin d) ↘ Spec ↧ℂ))
-      ComplexPoint.analyticTopology ComplexPoint.analyticTopology D.pointMap :=
-  ComplexPoint.continuous_map D.toAffineSpace D.toAffineSpace_over
+      Point.analyticTopology Point.analyticTopology D.pointMap :=
+  Point.continuous_map D.toAffineSpace D.toAffineSpace_over
 
 /-- The ordinary complex-valued coordinate tuple on the analytic neighborhood. -/
 def analyticCoordinates :
@@ -232,23 +232,23 @@ def analyticCoordinates :
 lemma continuous_analyticCoordinates :
     @Continuous
       (ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f))
-      (Fin d → ℂ) ComplexPoint.analyticTopology inferInstance
+      (Fin d → ℂ) Point.analyticTopology inferInstance
       D.analyticCoordinates := by
   exact (ComplexPoint.continuous_affineSpaceEquiv (Fin d)).comp
     D.continuous_pointMap
 
 /-- Étale coordinates written on the corresponding open subset of the ambient complex points. -/
 def ambientAnalyticCoordinates :
-    {z : ComplexPoint X f // z ∈ ComplexPoint.overOpen D.neighborhood} →
+    {z : ComplexPoint X f // z ∈ Point.overOpen D.neighborhood} →
       Fin d → ℂ :=
   D.analyticCoordinates ∘ (ComplexPoint.openEquiv D.neighborhood f).symm
 
 /-- The étale coordinate tuple is continuous on its ambient analytic open set. -/
 lemma continuous_ambientAnalyticCoordinates :
     @Continuous
-      {z : ComplexPoint X f // z ∈ ComplexPoint.overOpen D.neighborhood}
+      {z : ComplexPoint X f // z ∈ Point.overOpen D.neighborhood}
       (Fin d → ℂ)
-      (TopologicalSpace.induced Subtype.val ComplexPoint.analyticTopology) inferInstance
+      (TopologicalSpace.induced Subtype.val Point.analyticTopology) inferInstance
       D.ambientAnalyticCoordinates := by
   exact D.continuous_analyticCoordinates.comp
     (ComplexPoint.continuous_openEquiv_symm D.neighborhood f)
@@ -296,7 +296,7 @@ def affineSpecPointHomeomorph :
       (ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f))
       (ComplexPoint (Spec ↧Γ(D.neighborhood.toScheme, ⊤))
       (ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤)))
-      ComplexPoint.analyticTopology ComplexPoint.analyticTopology := by
+      Point.analyticTopology Point.analyticTopology := by
   let _ : IsAffine D.neighborhood.toScheme :=
     show IsAffine D.neighborhood.toScheme from D.isAffine
   let e := asIso D.neighborhood.toScheme.toSpecΓ
@@ -305,15 +305,15 @@ def affineSpecPointHomeomorph :
     change D.neighborhood.toScheme.toSpecΓ ≫
       ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤) = _
     exact D.toSpecΓ_over
-  exact ComplexPoint.isoMapHomeomorph e he
+  exact Point.isoMapHomeomorph e he
 
 lemma affineSpecPointHomeomorph_apply
     (z : ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f)) :
     D.affineSpecPointHomeomorph z =
-      ComplexPoint.map D.neighborhood.toScheme.toSpecΓ D.toSpecΓ_over z := by
+      Point.map D.neighborhood.toScheme.toSpecΓ D.toSpecΓ_over z := by
   let _ : IsAffine D.neighborhood.toScheme :=
     show IsAffine D.neighborhood.toScheme from D.isAffine
-  rw [affineSpecPointHomeomorph, ComplexPoint.isoMapHomeomorph_apply]
+  rw [affineSpecPointHomeomorph, Point.isoMapHomeomorph_apply]
   rfl
 
 /-- Complex points of an affine neighborhood as complex-valued algebra homomorphisms on its
@@ -322,7 +322,7 @@ def pointAlgHomHomeomorph :
     @Homeomorph
       (ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f))
       (Γ(D.neighborhood.toScheme, ⊤) →ₐ[ℂ] ℂ)
-      ComplexPoint.analyticTopology
+      Point.analyticTopology
       (ComplexPoint.affineAlgebraHomTopology Γ(D.neighborhood.toScheme, ⊤)) :=
   D.affineSpecPointHomeomorph.trans
     (ComplexPoint.affineSpecHomeomorph Γ(D.neighborhood.toScheme, ⊤))
@@ -332,23 +332,23 @@ corresponding global section on the affine neighborhood. -/
 lemma pointAlgHomHomeomorph_apply
     (z : ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f))
     (r : Γ(D.neighborhood.toScheme, ⊤)) :
-    D.pointAlgHomHomeomorph z r = ComplexPoint.evaluate ⊤ r z := by
+    D.pointAlgHomHomeomorph z r = Point.evaluate ⊤ r z := by
   rw [pointAlgHomHomeomorph, Homeomorph.trans_apply]
   change ComplexPoint.affineSpecEquiv Γ(D.neighborhood.toScheme, ⊤)
       (D.affineSpecPointHomeomorph z) r = _
   rw [ComplexPoint.affineSpecEquiv_apply]
   rw [affineSpecPointHomeomorph_apply]
-  rw [ComplexPoint.evaluate_map]
-  change ComplexPoint.evaluate ⊤
+  rw [Point.evaluate_map]
+  change Point.evaluate ⊤
       (D.neighborhood.toScheme.toSpecΓ.appTop
         ((Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).inv r)) z = _
   rw [Scheme.toSpecΓ_appTop]
-  change ComplexPoint.evaluate ⊤
+  change Point.evaluate ⊤
       ((Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).hom
         ((Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).inv r)) z = _
   have h := DFunLike.congr_fun (congrArg CommRingCat.Hom.hom
     (Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).inv_hom_id) r
-  exact congrArg (fun s ↦ ComplexPoint.evaluate ⊤ s z) h
+  exact congrArg (fun s ↦ Point.evaluate ⊤ s z) h
 
 /-- The analytic coordinate map reconstructed through the affine ring and its étale polynomial
 subalgebra. -/
@@ -395,7 +395,7 @@ affine neighborhood. -/
 lemma analyticCoordinates_apply_eq_evaluate
     (z : ComplexPoint D.neighborhood.toScheme (D.neighborhood.ι ≫ f)) (i : Fin d) :
     D.analyticCoordinates z i =
-      ComplexPoint.evaluate ⊤ (D.coordinateRingHomOnOpen (MvPolynomial.X i)) z := by
+      Point.evaluate ⊤ (D.coordinateRingHomOnOpen (MvPolynomial.X i)) z := by
   rw [← D.algebraicCoordinates_eq_analyticCoordinates]
   change D.pointAlgHomHomeomorph z
       (D.coordinateRingHomOnOpen (MvPolynomial.X i)) = _
@@ -412,20 +412,20 @@ def ambientCoordinateSection (i : Fin d) : Γ(X, D.ambientCoordinateOpen) :=
 
 /-- An ambient analytic coordinate is evaluation of its transported regular section. -/
 lemma ambientAnalyticCoordinates_apply_eq_evaluate
-    (z : {z : ComplexPoint X f // z ∈ ComplexPoint.overOpen D.neighborhood}) (i : Fin d) :
+    (z : {z : ComplexPoint X f // z ∈ Point.overOpen D.neighborhood}) (i : Fin d) :
     D.ambientAnalyticCoordinates z i =
-      ComplexPoint.evaluate D.ambientCoordinateOpen (D.ambientCoordinateSection i) z.1 := by
+      Point.evaluate D.ambientCoordinateOpen (D.ambientCoordinateSection i) z.1 := by
   let z' := (ComplexPoint.openHomeomorph D.neighborhood f).symm z
   calc
     D.ambientAnalyticCoordinates z i = D.analyticCoordinates z' i := rfl
-    _ = ComplexPoint.evaluate ⊤
+    _ = Point.evaluate ⊤
         (D.coordinateRingHomOnOpen (MvPolynomial.X i)) z' :=
       D.analyticCoordinates_apply_eq_evaluate z' i
-    _ = ComplexPoint.evaluate D.ambientCoordinateOpen
-        (D.ambientCoordinateSection i) (ComplexPoint.map D.neighborhood.ι rfl z') :=
+    _ = Point.evaluate D.ambientCoordinateOpen
+        (D.ambientCoordinateSection i) (Point.map D.neighborhood.ι rfl z') :=
       (ComplexPoint.evaluate_openEquiv D.neighborhood f
         (D.coordinateRingHomOnOpen (MvPolynomial.X i)) z').symm
-    _ = ComplexPoint.evaluate D.ambientCoordinateOpen (D.ambientCoordinateSection i) z.1 := by
+    _ = Point.evaluate D.ambientCoordinateOpen (D.ambientCoordinateSection i) z.1 := by
       congr 2
       exact congrArg Subtype.val
         ((ComplexPoint.openHomeomorph D.neighborhood f).apply_symm_apply z)
@@ -448,9 +448,9 @@ lemma isLocalHomeomorph_ambientAnalyticCoordinates :
 neighborhood. Unlike a chart chosen only from local-homeomorphism existence, its inverse retains
 the standard étale construction and its analyticity theorem. -/
 noncomputable def ambientProjectionChart
-    (z : {z : ComplexPoint X f // z ∈ ComplexPoint.overOpen D.neighborhood}) :
+    (z : {z : ComplexPoint X f // z ∈ Point.overOpen D.neighborhood}) :
     OpenPartialHomeomorph
-      {z : ComplexPoint X f // z ∈ ComplexPoint.overOpen D.neighborhood} (Fin d → ℂ) :=
+      {z : ComplexPoint X f // z ∈ Point.overOpen D.neighborhood} (Fin d → ℂ) :=
   let z' := (ComplexPoint.openHomeomorph D.neighborhood f).symm z
   let u := D.pointAlgHomHomeomorph z'
   (ComplexPoint.openHomeomorph D.neighborhood f).symm.toOpenPartialHomeomorph |>.trans
@@ -458,7 +458,7 @@ noncomputable def ambientProjectionChart
       (ComplexPoint.etaleAlgHomProjectionChart (n := d) Γ(D.neighborhood.toScheme, ⊤) u)
 
 lemma mem_ambientProjectionChart_source
-    (z : {z : ComplexPoint X f // z ∈ ComplexPoint.overOpen D.neighborhood}) :
+    (z : {z : ComplexPoint X f // z ∈ Point.overOpen D.neighborhood}) :
     z ∈ (D.ambientProjectionChart z).source := by
   let z' := (ComplexPoint.openHomeomorph D.neighborhood f).symm z
   let u := D.pointAlgHomHomeomorph z'
@@ -473,7 +473,7 @@ lemma mem_ambientProjectionChart_source
       (n := d) Γ(D.neighborhood.toScheme, ⊤) u
 
 lemma ambientProjectionChart_apply_of_mem
-    (z y : {z : ComplexPoint X f // z ∈ ComplexPoint.overOpen D.neighborhood})
+    (z y : {z : ComplexPoint X f // z ∈ Point.overOpen D.neighborhood})
     (hy : y ∈ (D.ambientProjectionChart z).source) :
     D.ambientProjectionChart z y = D.ambientAnalyticCoordinates y := by
   let z' := (ComplexPoint.openHomeomorph D.neighborhood f).symm z
@@ -506,7 +506,7 @@ lemma ambientProjectionChart_apply_of_mem
 /-- Evaluation of a regular function is analytic along the inverse of the explicit ambient
 projection chart. -/
 lemma analyticAt_ambientProjectionChart_symm_pointAlgHom_apply
-    (z : {z : ComplexPoint X f // z ∈ ComplexPoint.overOpen D.neighborhood})
+    (z : {z : ComplexPoint X f // z ∈ Point.overOpen D.neighborhood})
     {w : Fin d → ℂ} (hw : w ∈ (D.ambientProjectionChart z).target)
     (r : Γ(D.neighborhood.toScheme, ⊤)) :
     AnalyticAt ℂ
@@ -532,11 +532,11 @@ lemma analyticAt_ambientProjectionChart_symm_pointAlgHom_apply
 /-- Evaluation of a global regular function on the affine neighborhood is analytic along the
 inverse of its explicit projection chart. -/
 lemma analyticAt_ambientProjectionChart_symm_evaluate_top
-    (z : {z : ComplexPoint X f // z ∈ ComplexPoint.overOpen D.neighborhood})
+    (z : {z : ComplexPoint X f // z ∈ Point.overOpen D.neighborhood})
     {w : Fin d → ℂ} (hw : w ∈ (D.ambientProjectionChart z).target)
     (r : Γ(D.neighborhood.toScheme, ⊤)) :
     AnalyticAt ℂ
-      (fun v ↦ ComplexPoint.evaluate ⊤ r
+      (fun v ↦ Point.evaluate ⊤ r
         ((ComplexPoint.openHomeomorph D.neighborhood f).symm
           ((D.ambientProjectionChart z).symm v))) w := by
   simpa only [D.pointAlgHomHomeomorph_apply] using
@@ -546,12 +546,12 @@ lemma analyticAt_ambientProjectionChart_symm_evaluate_top
 The proof shrinks to a principal open in the affine coordinate neighborhood and writes the
 restricted section as a quotient of global sections. -/
 lemma analyticAt_ambientProjectionChart_symm_evaluate
-    (z : {z : ComplexPoint X f // z ∈ ComplexPoint.overOpen D.neighborhood})
+    (z : {z : ComplexPoint X f // z ∈ Point.overOpen D.neighborhood})
     {w : Fin d → ℂ} (hw : w ∈ (D.ambientProjectionChart z).target)
     (V : X.Opens) (s : Γ(X, V))
-    (hV : ((D.ambientProjectionChart z).symm w).1 ∈ ComplexPoint.overOpen V) :
+    (hV : ((D.ambientProjectionChart z).symm w).1 ∈ Point.overOpen V) :
     AnalyticAt ℂ
-      (fun v ↦ ComplexPoint.evaluate V s ((D.ambientProjectionChart z).symm v).1) w := by
+      (fun v ↦ Point.evaluate V s ((D.ambientProjectionChart z).symm v).1) w := by
   let Y := D.neighborhood.toScheme
   let W : Y.Opens := D.neighborhood.ι ⁻¹ᵁ V
   let _ : IsAffine Y :=
@@ -559,13 +559,13 @@ lemma analyticAt_ambientProjectionChart_symm_evaluate
   let y : ComplexPoint Y (D.neighborhood.ι ≫ f) :=
     (ComplexPoint.openHomeomorph D.neighborhood f).symm
       ((D.ambientProjectionChart z).symm w)
-  have hymap : ComplexPoint.map D.neighborhood.ι rfl y =
+  have hymap : Point.map D.neighborhood.ι rfl y =
       ((D.ambientProjectionChart z).symm w).1 := by
     exact congrArg Subtype.val
       ((ComplexPoint.openHomeomorph D.neighborhood f).apply_symm_apply
         ((D.ambientProjectionChart z).symm w))
-  have hyW : y ∈ ComplexPoint.overOpen W := by
-    apply (ComplexPoint.mem_overOpen_map_iff D.neighborhood.ι rfl y V).mp
+  have hyW : y ∈ Point.overOpen W := by
+    apply (Point.mem_overOpen_map_iff D.neighborhood.ι rfl y V).mp
     rwa [hymap]
   obtain ⟨g, hgW, hyg⟩ :=
     (isAffineOpen_top Y).exists_basicOpen_le
@@ -575,16 +575,16 @@ lemma analyticAt_ambientProjectionChart_symm_evaluate
   obtain ⟨k, a, hquot⟩ :=
     ComplexPoint.exists_evaluate_affine_basicOpen_eq_div
       (structureMap := D.neighborhood.ι ≫ f) g t
-  have hyg' : y ∈ ComplexPoint.overOpen (Y.basicOpen g) := hyg
-  have hgzero : ComplexPoint.evaluate ⊤ g y ≠ 0 :=
-    (ComplexPoint.mem_overOpen_basicOpen_iff_evaluate_ne_zero g y).mp hyg'
+  have hyg' : y ∈ Point.overOpen (Y.basicOpen g) := hyg
+  have hgzero : Point.evaluate ⊤ g y ≠ 0 :=
+    (Point.mem_overOpen_basicOpen_iff_evaluate_ne_zero g y trivial).mp hyg'
   have ha := D.analyticAt_ambientProjectionChart_symm_evaluate_top z hw a
   have hg := D.analyticAt_ambientProjectionChart_symm_evaluate_top z hw g
   have hrat : AnalyticAt ℂ
-      (fun v ↦ ComplexPoint.evaluate ⊤ a
+      (fun v ↦ Point.evaluate ⊤ a
           ((ComplexPoint.openHomeomorph D.neighborhood f).symm
             ((D.ambientProjectionChart z).symm v)) /
-        ComplexPoint.evaluate ⊤ g
+        Point.evaluate ⊤ g
           ((ComplexPoint.openHomeomorph D.neighborhood f).symm
             ((D.ambientProjectionChart z).symm v)) ^ k) w :=
     ha.div (hg.pow k) (pow_ne_zero k hgzero)
@@ -597,20 +597,20 @@ lemma analyticAt_ambientProjectionChart_symm_evaluate
   have heventually :
       (fun v ↦ (ComplexPoint.openHomeomorph D.neighborhood f).symm
         ((D.ambientProjectionChart z).symm v)) ⁻¹'
-          ComplexPoint.overOpen (Y.basicOpen g) ∈ 𝓝 w :=
-    hcontinuous ((ComplexPoint.isOpen_overOpen (Y.basicOpen g)).mem_nhds hyg')
+          Point.overOpen (Y.basicOpen g) ∈ 𝓝 w :=
+    hcontinuous ((Point.isOpen_overOpen (Y.basicOpen g)).mem_nhds hyg')
   filter_upwards [heventually] with v hv
   let yv : ComplexPoint Y (D.neighborhood.ι ≫ f) :=
     (ComplexPoint.openHomeomorph D.neighborhood f).symm
       ((D.ambientProjectionChart z).symm v)
-  have hymapv : ComplexPoint.map D.neighborhood.ι rfl yv =
+  have hymapv : Point.map D.neighborhood.ι rfl yv =
       ((D.ambientProjectionChart z).symm v).1 := by
     exact congrArg Subtype.val
       ((ComplexPoint.openHomeomorph D.neighborhood f).apply_symm_apply
         ((D.ambientProjectionChart z).symm v))
-  have hmap := ComplexPoint.evaluate_map D.neighborhood.ι rfl V s yv
+  have hmap := Point.evaluate_map D.neighborhood.ι rfl V s yv
   rw [hymapv] at hmap
-  have hres := ComplexPoint.evaluate_res hgW sY yv hv
+  have hres := Point.evaluate_res hgW sY yv hv
   exact ((hmap.trans hres).trans (hquot yv hv)).symm
 
 end LocalEtaleCoordinates
@@ -624,7 +624,7 @@ def ComplexPoint.localEtaleCoordinates (d : ℕ) [SmoothOfRelativeDimension d f]
 @[simp]
 lemma ComplexPoint.mem_localEtaleCoordinates (d : ℕ) [SmoothOfRelativeDimension d f]
     (z : ComplexPoint X f) :
-    z ∈ ComplexPoint.overOpen ((ComplexPoint.localEtaleCoordinates f d z).neighborhood) :=
+    z ∈ Point.overOpen ((ComplexPoint.localEtaleCoordinates f d z).neighborhood) :=
   (ComplexPoint.localEtaleCoordinates f d z).mem
 
 end

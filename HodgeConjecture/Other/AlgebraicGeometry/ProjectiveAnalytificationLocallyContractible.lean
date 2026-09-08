@@ -43,6 +43,8 @@ open Filter Set Topology
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 /-- A real normed space is strongly locally contractible: open balls form a neighbourhood basis
 and are convex. -/
 theorem normedSpace_stronglyLocallyContractibleSpace

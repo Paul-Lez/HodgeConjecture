@@ -46,6 +46,8 @@ open scoped TensorProduct
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 

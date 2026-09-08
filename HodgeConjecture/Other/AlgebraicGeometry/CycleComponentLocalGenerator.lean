@@ -44,7 +44,7 @@ open CategoryTheory Topology
 namespace AlgebraicGeometry
 
 noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
-    TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
+    TopologicalSpace (ComplexPoint Y g) := Point.analyticTopology
 
 variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
   [Smooth structureMap] [IsProjective structureMap] {x : X}
@@ -85,14 +85,14 @@ def neighborhoodPoint :
   ComplexPoint.asOpenPoint C.componentNeighborhood (componentSmoothStructureMap structureMap x)
     (smoothPoint C) (by
       change (smoothPoint C).underlying ∈ C.componentNeighborhood
-      have hmap : ComplexPoint.map (componentSmoothLocus structureMap x).ι rfl (smoothPoint C) =
+      have hmap : Point.map (componentSmoothLocus structureMap x).ι rfl (smoothPoint C) =
           C.point := by
         exact congrArg Subtype.val
           ((ComplexPoint.openEquiv (componentSmoothLocus structureMap x)
             (cycleComponentι X x ≫ structureMap)).apply_symm_apply
               ⟨C.point, C.point_mem_smoothLocus⟩)
-      have hu := congrArg ComplexPoint.underlying hmap
-      rw [ComplexPoint.underlying_map] at hu
+      have hu := congrArg Point.underlying hmap
+      rw [Point.underlying_map] at hu
       have hu' : (smoothPoint C).underlying =
           (⟨C.point.underlying, C.point_mem_smoothLocus⟩ :
             (componentSmoothLocus structureMap x).toScheme) := Subtype.ext hu
@@ -256,11 +256,11 @@ def neighborhoodPointAlgHomHomeomorph :
     @Homeomorph
       (ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap)
       (Γ(C.componentNeighborhood.toScheme, ⊤) →ₐ[ℂ] ℂ)
-      ComplexPoint.analyticTopology
+      Point.analyticTopology
       (ComplexPoint.affineAlgebraHomTopology Γ(C.componentNeighborhood.toScheme, ⊤)) := by
   let _ : IsAffine C.componentNeighborhood.toScheme :=
     C.componentNeighborhood_isAffine
-  exact (ComplexPoint.isoMapHomeomorph
+  exact (Point.isoMapHomeomorph
       (asIso C.componentNeighborhood.toScheme.toSpecΓ)
       C.neighborhoodToSpecΓ_over).trans
     (ComplexPoint.affineSpecHomeomorph Γ(C.componentNeighborhood.toScheme, ⊤))
@@ -349,7 +349,7 @@ end AlgebraicTopology.Singular
 namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 
 noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
-    TopologicalSpace (ComplexPoint Y g) := ComplexPoint.analyticTopology
+    TopologicalSpace (ComplexPoint Y g) := Point.analyticTopology
 
 variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
   [Smooth structureMap] [IsProjective structureMap] {x : X}

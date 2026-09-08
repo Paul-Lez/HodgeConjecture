@@ -40,6 +40,8 @@ open TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
   [IsProjective structureMap] (d : ℕ)
 

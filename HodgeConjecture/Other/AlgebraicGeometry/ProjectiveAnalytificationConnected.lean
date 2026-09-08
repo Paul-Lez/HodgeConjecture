@@ -42,6 +42,8 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
 
 /-- A smooth projective complex variety has a complex point. -/
