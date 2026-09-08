@@ -8,6 +8,7 @@ public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentSmoothClosed
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedSupportOpenTransport
 public import HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
 public import HodgeConjecture.Other.AlgebraicTopology.OpenRestrictedLowestCohomology
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 
 /-!
 # Actual purity along the smooth locus of an integral cycle component

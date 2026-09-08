@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.RelativeCochainConeNaturality
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
 
 /-!
 # Ordinary-target compatibility of the two relative cone comparisons

@@ -9,7 +9,7 @@ public import HodgeConjecture.Other.AlgebraicTopology.MappingConeQuasiIso
 public import HodgeConjecture.Other.AlgebraicTopology.RelativeCochainCone
 public import HodgeConjecture.Other.AlgebraicTopology.RelativeCochainConeNaturality
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularGlobalComparison
-public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtendNaturality
+public import HodgeConjecture.Other.Algebra.Homology.MapExtendNaturality
 
 /-! # Local singular-cochain restriction cones
 

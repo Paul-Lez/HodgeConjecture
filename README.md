@@ -18,6 +18,7 @@ The long-term goal is to have either a proof or a disproof of the Hodge conjectu
 
 The statement of the conjecture is in `HodgeConjecture/Statement.lean`.
 The remaining content of the project is sorted into four folders:
+
 - `HodgeConjecture/Mathlib`: Content that is on track to be upstreamed to Mathlib;
 - `HodgeConjecture/Definitions`: Definitions used in the statement of the conjecture;
 - `HodgeConjecture/Lemmas`: Supporting results needed by those definitions;
@@ -29,6 +30,9 @@ on `Other`. The full-library entry point `HodgeConjecture.lean` aggregates all m
 
 Run `python3 scripts/check_import_layers.py` to check that every definition/lemma module is in
 the statement's transitive import closure and that no `Other` module enters that closure.
+Helpers outside that closure, including prospective Mathlib material, live in `Other`;
+the check also rejects support-only helpers left in the local `Mathlib` directory.
+It also checks that the full-library umbrella reaches every local module.
 This is a file-level check; placing individual declarations still requires mathematical judgment.
 
 ## Borel–Moore construction

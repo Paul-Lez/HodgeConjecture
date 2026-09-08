@@ -5,8 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.SupportedSectionRestrictionCone
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
 
 /-!
 # Restriction naturality of the actual supported-section kernel comparison

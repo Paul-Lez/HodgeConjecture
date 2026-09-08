@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportShift
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShiftNaturality
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShiftNaturality
 
 /-!
 # Naturality of derived sections with closed support

@@ -6,6 +6,9 @@ module
 
 public import HodgeConjecture.Other.AlgebraicGeometry.SingularLocusDimension
 
+import Mathlib.AlgebraicGeometry.AlgClosed.Basic
+import Mathlib.Analysis.Complex.Polynomial.Basic
+
 /-!
 # Complex points of the constructed smooth decomposition
 

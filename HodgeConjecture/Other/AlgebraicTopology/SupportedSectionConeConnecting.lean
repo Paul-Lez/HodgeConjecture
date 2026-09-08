@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.SupportedSectionRestrictionCone
-public import HodgeConjecture.Mathlib.Algebra.Homology.MapArrowConeConnecting
+public import HodgeConjecture.Other.Algebra.Homology.MapArrowConeConnecting
 
 /-! # The exact sign of the actual supported-section kernel comparison -/
 

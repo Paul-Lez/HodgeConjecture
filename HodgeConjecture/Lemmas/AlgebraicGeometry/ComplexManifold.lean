@@ -16,12 +16,14 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.Geometry.Manifold.IsManifold.Basic
 public import Mathlib.Topology.Homotopy.Contractible
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
 import Mathlib.Analysis.Normed.Module.Connected
+import Mathlib.Geometry.Manifold.Complex
 
 /-!
 # The topological manifold of complex points

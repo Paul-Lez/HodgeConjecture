@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupport
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift
 
 /-!
 # Coherent shifts of concrete derived sections with support

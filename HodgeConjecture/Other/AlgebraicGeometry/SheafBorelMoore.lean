@@ -17,6 +17,8 @@ module
 
 public import HodgeConjecture.Other.AlgebraicGeometry.BorelMooreCycleClass
 
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+
 /-!
 # Sheaf-theoretic Borel--Moore homology
 

@@ -40,8 +40,8 @@ namespace AlgebraicTopology.Singular
 instance rationalSimplicialChains_preservesColimitsOfShape {J : Type} [Category J] :
     PreservesColimitsOfShape J ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj
       (ModuleCat.of ℚ ℚ)) := by
-  let : PreservesColimits (sigmaConst.obj (ModuleCat.of ℚ ℚ)) :=
-    (sigmaConstAdj (ModuleCat.of ℚ ℚ)).leftAdjoint_preservesColimits
+  let : PreservesColimitsOfShape J (sigmaConst.obj (ModuleCat.of ℚ ℚ)) :=
+    (sigmaConstAdj (ModuleCat.of ℚ ℚ)).leftAdjoint_preservesColimits.preservesColimitsOfShape
   apply HomologicalComplex.preservesColimitsOfShape_of_eval
   intro n
   change PreservesColimitsOfShape J

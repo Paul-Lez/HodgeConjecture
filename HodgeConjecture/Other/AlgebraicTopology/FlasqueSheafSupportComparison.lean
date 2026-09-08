@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Other.AlgebraicTopology.CohomologySheafStalkVanishing
 public import HodgeConjecture.Other.AlgebraicTopology.OpenSheafRestriction
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.ShortExactQuasiIso
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.ShortExactQuasiIso
 
 /-!
 # Local sections of flasque resolution comparisons

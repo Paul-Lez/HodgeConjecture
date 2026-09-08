@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Other.AlgebraicTopology.RelativeCochainCone
 public import HodgeConjecture.Other.AlgebraicTopology.LinearDualHomologyNaturality
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 
 /-! # Canonical natural relative-cochain cone comparison
 

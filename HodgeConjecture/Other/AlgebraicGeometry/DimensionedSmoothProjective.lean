@@ -16,6 +16,8 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 /-!
 # Dimensioned smooth projective complex varieties

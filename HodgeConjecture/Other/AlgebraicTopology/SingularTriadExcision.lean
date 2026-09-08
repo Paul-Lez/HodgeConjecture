@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 public import HodgeConjecture.Other.AlgebraicTopology.SingularTriadCapProduct
 public import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionField
 public import Mathlib.Algebra.Homology.HomologySequenceLemmas

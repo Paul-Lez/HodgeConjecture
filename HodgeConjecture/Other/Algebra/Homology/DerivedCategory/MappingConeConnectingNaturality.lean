@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 
 /-! # Exact normalization of the cone connecting map
 

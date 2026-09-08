@@ -1,5 +1,5 @@
 import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportedRawOrdinaryComparison
-import HodgeConjecture.Mathlib.Algebra.Homology.MapHomologyShift
+import HodgeConjecture.Other.Algebra.Homology.MapHomologyShift
 
 #print axioms CochainComplex.map_shiftShortComplex_middle
 #print axioms CochainComplex.mapHomologyIso_shift

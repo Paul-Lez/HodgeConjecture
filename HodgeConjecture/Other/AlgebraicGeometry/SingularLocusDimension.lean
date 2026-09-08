@@ -9,6 +9,9 @@ public import HodgeConjecture.Other.AlgebraicGeometry.ReducedSmoothStratificatio
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
 
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+
 /-!
 # The actual singular locus has smaller algebraic dimension
 

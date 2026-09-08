@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Other.AlgebraicTopology.OpenInjectiveResolutionComparison
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportLocalization
-public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtendNaturality
+public import HodgeConjecture.Other.Algebra.Homology.MapExtendNaturality
 public import HodgeConjecture.Other.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
 
 /-!

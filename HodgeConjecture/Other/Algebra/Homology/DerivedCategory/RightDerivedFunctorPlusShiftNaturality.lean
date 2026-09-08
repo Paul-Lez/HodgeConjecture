@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusNaturality
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusNaturality
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift
 
 /-!
 # Shift compatibility of derived natural transformations

@@ -19,6 +19,11 @@ public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentClosedPointD
 public import HodgeConjecture.Other.AlgebraicGeometry.DimensionedSmoothProjective
 public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+
 /-!
 # Local complex orientation of a cycle component
 

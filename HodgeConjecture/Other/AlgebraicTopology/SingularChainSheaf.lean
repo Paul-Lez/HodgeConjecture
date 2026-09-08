@@ -16,8 +16,8 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCohomology
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
+public import HodgeConjecture.Other.Algebra.Category.Grp.Basic
+public import HodgeConjecture.Other.Algebra.Category.ModuleCat.Basic
 public import Mathlib.Algebra.Category.ModuleCat.Presheaf.Sheafification
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Topology.Sheaves.Abelian

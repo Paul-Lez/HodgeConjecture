@@ -6,8 +6,8 @@ module
 
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularGlobalComparison
 public import HodgeConjecture.Other.AlgebraicTopology.RelativeCochainConeForgetComparison
-public import HodgeConjecture.Mathlib.Algebra.Homology.MapHomologyShift
-public import HodgeConjecture.Mathlib.Algebra.Homology.MapArrowConeConnecting
+public import HodgeConjecture.Other.Algebra.Homology.MapHomologyShift
+public import HodgeConjecture.Other.Algebra.Homology.MapArrowConeConnecting
 
 /-! # Exact connecting sign for the raw global relative cochain comparison -/
 

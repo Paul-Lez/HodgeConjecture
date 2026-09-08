@@ -21,6 +21,7 @@ public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentBorelMoore
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointPurity
 public import HodgeConjecture.Other.AlgebraicGeometry.DimensionedSmoothProjective
 public import HodgeConjecture.Other.AlgebraicGeometry.PrincipalDivisorCycleClass
+public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationParacompact
 import Lean.Elab.Tactic.Omega
 

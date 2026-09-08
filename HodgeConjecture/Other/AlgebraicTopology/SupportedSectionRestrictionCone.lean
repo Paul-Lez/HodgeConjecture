@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Other.AlgebraicTopology.FlasqueSupportedSections
 public import HodgeConjecture.Other.AlgebraicTopology.FlasqueSheafSupportComparison
-public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
+public import HodgeConjecture.Other.Algebra.Homology.MapExtend
 
 /-!
 # Actual supported-section kernels and open restriction cones

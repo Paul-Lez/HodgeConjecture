@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic -- shake: keep
+public import HodgeConjecture.Other.Algebra.Category.ModuleCat.Basic -- shake: keep
 public import Mathlib.Algebra.Algebra.Rat
 public import Mathlib.Algebra.Category.ModuleCat.Abelian
 public import Mathlib.Algebra.Category.ModuleCat.Colimits

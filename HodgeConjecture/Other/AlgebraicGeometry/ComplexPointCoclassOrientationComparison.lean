@@ -7,6 +7,8 @@ module
 public import HodgeConjecture.Other.AlgebraicGeometry.ComplexOrientationHomologySheaf
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointPurity
 
+public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+
 /-!
 # Exact point-coclass normalization of the constructed orientation sheaf
 

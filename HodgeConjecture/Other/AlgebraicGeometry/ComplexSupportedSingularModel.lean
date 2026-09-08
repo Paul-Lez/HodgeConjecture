@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Other.AlgebraicTopology.SingularFlasqueSupportModel
 public import HodgeConjecture.Other.AlgebraicGeometry.DerivedSupportRationalConeComparison
+public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationParacompact
 
 /-!

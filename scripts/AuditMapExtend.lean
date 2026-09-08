@@ -1,4 +1,4 @@
-import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
+import HodgeConjecture.Other.Algebra.Homology.MapExtend
 
 #print axioms HomologicalComplex.mapExtendCanonicalXIso
 #print axioms HomologicalComplex.mapExtendCanonicalXIso_hom_d

@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupport
 public import HodgeConjecture.Other.AlgebraicTopology.InjectiveFlasque
-public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
+public import HodgeConjecture.Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 
 /-!
 # The actual localization sequence on injective coefficient complexes

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Homology.HomComplexPostcompNaturality
+public import HodgeConjecture.Other.Algebra.Homology.HomComplexPostcompNaturality
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 
 /-! # Naturality of the hypercohomology/global-sections comparison -/
