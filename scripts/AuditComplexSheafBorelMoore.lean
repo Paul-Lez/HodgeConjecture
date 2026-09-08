@@ -1,0 +1,15 @@
+import HodgeConjecture.Other.AlgebraicGeometry.ComplexSheafBorelMoore
+
+open AlgebraicGeometry.ComplexPoint
+
+#print axioms complexChainSheafCohomology_concentrated
+#print axioms complexChainSheafPlusObject
+#print axioms complexChainSheafPlusObject_obj
+#print axioms complexAmbientSheafBorelMooreObject
+#print axioms ComplexAmbientSheafBorelMooreHomology
+#print axioms complexConstantRationalSheafPlusObject
+#print axioms ComplexDerivedSupportedCohomology
+#print axioms complexChainSheafPlusIsoOfOrientation
+#print axioms complexAmbientSheafBorelMooreIsoOfOrientation
+#print axioms complexAmbientSheafBorelMooreHomologyIsoOfOrientation
+#print axioms complexAmbientSheafBorelMooreCycleDegreeIsoOfOrientation

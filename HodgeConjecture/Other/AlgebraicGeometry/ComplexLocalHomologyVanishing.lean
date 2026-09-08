@@ -76,7 +76,7 @@ open AlgebraicTopology.Singular
 
 variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
 
-noncomputable local instance :
+noncomputable local instance complexLocalHomologyAnalyticTopology :
     TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
 
 /-- Local homology of a smooth complex scheme is concentrated in its real dimension. -/

@@ -74,6 +74,27 @@ open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
 #print axioms TopCat.Sheaf.derivedSheafSectionsWithClosedSupport_isRightDerivedFunctor
 #print axioms TopCat.Sheaf.derivedClosedSupportSections
 #print axioms TopCat.Sheaf.derivedClosedSupportSections_isRightDerivedFunctor
+#print axioms CategoryTheory.Functor.rightDerivedFunctorPlusCommShift
+#print axioms CategoryTheory.Functor.rightDerivedFunctorPlusUnitCommShift
+#print axioms TopCat.Sheaf.derivedClosedSupportSectionsShiftIso
+#print axioms TopCat.Sheaf.derivedSheafSectionsWithClosedSupportShiftIso
+#print axioms SSet.homology₀ε_naturality
+#print axioms TopCat.singularHomologyMap_zero_isIso
+#print axioms standardLocalHomology_isZero_of_ne
+#print axioms localHomology_isZero_of_ne
+#print axioms singularChainHomologySheaf_isZero_of_ne
+#print axioms singularChainSheafStalkIso
+#print axioms singularChainHomologySheafStalkIso
+#print axioms DerivedCategory.concentratedOrientationIso_homology
+#print axioms singularChainSheafDerivedOrientationIso
+#print axioms singularChainSheafPlusObject
+#print axioms complexChainSheafCohomology_concentrated
+#print axioms complexChainSheafPlusObject
+#print axioms complexAmbientSheafBorelMooreObject
+#print axioms ComplexAmbientSheafBorelMooreHomology
+#print axioms complexChainSheafPlusIsoOfOrientation
+#print axioms complexAmbientSheafBorelMooreHomologyIsoOfOrientation
+#print axioms complexAmbientSheafBorelMooreCycleDegreeIsoOfOrientation
 #print axioms maximalCodimensionPrincipalDivisorClassVanishes_of_coefficientSum
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCycles
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCyclesOfComponents
@@ -84,14 +105,16 @@ open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
 -- Mathematical hypotheses passed as arguments remain hypotheses; this checks foundational axioms.
 set_option maxHeartbeats 0 in
 run_cmd do
-  let modules : List String := [
+  let otherModules : List String := [
     "Algebra.Homology.LinearDualNaturality",
     "AlgebraicGeometry.BorelMooreCycleClass",
     "AlgebraicGeometry.ChowCycleClassDescent",
     "AlgebraicGeometry.CompactlySupportedCohomology",
     "AlgebraicGeometry.ComplexLocalOrientation",
     "AlgebraicGeometry.ComplexLocalOrientationCoherence",
+    "AlgebraicGeometry.ComplexLocalHomologyVanishing",
     "AlgebraicGeometry.ComplexManifoldOrientation",
+    "AlgebraicGeometry.ComplexSheafBorelMoore",
     "AlgebraicGeometry.CycleComponentAnalyticImmersion",
     "AlgebraicGeometry.CycleComponentBorelMoore",
     "AlgebraicGeometry.CycleComponentGlobalFundamentalClass",
@@ -106,6 +129,7 @@ run_cmd do
     "AlgebraicGeometry.SheafBorelMoore",
     "AlgebraicGeometry.SingularCycleClass",
     "AlgebraicTopology.ChartLocalFundamentalClass",
+    "AlgebraicTopology.CenteredComplexEmbeddingOrientation",
     "AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance",
     "AlgebraicTopology.ChartLocalFundamentalClassGenerator",
     "AlgebraicTopology.ChartLocalFundamentalClassInvariance",
@@ -113,18 +137,28 @@ run_cmd do
     "AlgebraicTopology.ComplexDifferentiableLocalClassInvariance",
     "AlgebraicTopology.ComplexLinearLocalClassInvariance",
     "AlgebraicTopology.ComplexOrientation",
+    "AlgebraicTopology.ComplexNeighborhoodOrientation",
     "AlgebraicTopology.DerivedSheafSupport",
+    "AlgebraicTopology.DerivedSheafSupportShift",
+    "AlgebraicTopology.DerivedConcentratedOrientation",
     "AlgebraicTopology.EuclideanLocalHomology",
+    "AlgebraicTopology.EuclideanLocalHomologyVanishing",
+    "AlgebraicTopology.EuclideanNeighborhoodOrientation",
     "AlgebraicTopology.GlobalFundamentalClass",
+    "AlgebraicTopology.HomologyZeroNaturality",
     "AlgebraicTopology.LocalFundamentalClass",
     "AlgebraicTopology.LocalFundamentalClassGenerator",
     "AlgebraicTopology.RelativeHomologyEmpty",
     "AlgebraicTopology.RelativeHomotopyInvariance",
+    "AlgebraicTopology.RelativeMayerVietoris",
     "AlgebraicTopology.RelativePairExcision",
     "AlgebraicTopology.SheafCohomologyWithSupport",
     "AlgebraicTopology.SingularCapNaturality",
     "AlgebraicTopology.SingularCapProduct",
     "AlgebraicTopology.SingularChainSheaf",
+    "AlgebraicTopology.SingularChainSheafStalk",
+    "AlgebraicTopology.SingularChainHomologySheaf",
+    "AlgebraicTopology.SingularChainSheafOrientation",
     "AlgebraicTopology.SingularCochainCohomology",
     "AlgebraicTopology.SingularCochainSheaf",
     "AlgebraicTopology.SingularCoefficientBaseChange",
@@ -139,18 +173,19 @@ run_cmd do
     "AlgebraicTopology.StandardSphereAffineBoundary",
     "Geometry.Manifold.Orientation",
     "LinearAlgebra.ComplexOrientation"]
+  let modules := otherModules.map ("HodgeConjecture.Other." ++ ·) ++
+    ["HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv
-  for suffix in modules do
-    unless env.header.moduleNames.any
-        (fun name => name.toString == "HodgeConjecture.Other." ++ suffix) do
-      throwError "Audit module not imported: {suffix}"
+  for moduleName in modules do
+    unless env.header.moduleNames.any (fun name => name.toString == moduleName) do
+      throwError "Audit module not imported: {moduleName}"
   let mut count : Nat := 0
   let mut found : List Lean.Name := []
   for (name, _) in env.constants.toList do
     if let some index := env.getModuleIdxFor? name then
       let moduleName := env.header.moduleNames[index]!.toString
-      if modules.any (fun suffix => moduleName == "HodgeConjecture.Other." ++ suffix) then
+      if modules.contains moduleName then
         count := count + 1
         for axiomName in ← Lean.collectAxioms name do
           unless allowed.contains axiomName do
