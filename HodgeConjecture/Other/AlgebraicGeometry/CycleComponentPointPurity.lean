@@ -1,0 +1,160 @@
+/-
+Copyright 2026 The Formal Conjectures Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-/
+module
+
+public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
+public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentAnalyticEmbedding
+public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPurity
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+public import HodgeConjecture.Other.AlgebraicGeometry.SingularCycleClass
+public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+
+/-!
+# Purity for point supports
+
+A complex manifold chart identifies local homology at a point with the punctured complex affine
+model. The chart-local fundamental class therefore generates local homology, and its normalized
+dual generates local cohomology.
+
+For a codimension-`d` component of a smooth complex `d`-fold, the component has Krull dimension
+zero. Its analytic support is consequently a singleton, so the chart-local coclass proves the
+guarded singular purity proposition for that component. This is point-support purity only; it
+does not assert the Thom--Gysin comparison needed for positive-dimensional supports.
+-/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Order Topology TopologicalSpace
+
+namespace AlgebraicGeometry.ComplexPoint
+
+open AlgebraicTopology.Singular
+
+variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+  [IsProjective structureMap] (d : ℕ)
+
+/-- The ambient chart-local homology class at an analytic point. -/
+def analyticPointLocalHomologyClass [SmoothOfRelativeDimension d structureMap]
+    (z : ComplexPoint X structureMap) :
+    RelativeHomology ℚ (pointComplementPair z) (2 * d) :=
+  localClassOfChart d (ComplexPoint.localChart structureMap d z) z
+    (ComplexPoint.mem_localChart_source structureMap d z)
+
+/-- The ambient chart-local homology class is nonzero. -/
+lemma analyticPointLocalHomologyClass_ne_zero [SmoothOfRelativeDimension d structureMap]
+    (z : ComplexPoint X structureMap) :
+    analyticPointLocalHomologyClass structureMap d z ≠ 0 := by
+  let e := ComplexPoint.localChart structureMap d z
+  let hz := ComplexPoint.mem_localChart_source structureMap d z
+  let _ : T1Space (ComplexPoint X structureMap) := inferInstance
+  have hinjective : Function.Injective
+      (relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e z hz)) :=
+    (chartModelEmbedding_relativeHomologyMap_bijective d e z hz).1
+  intro hzero
+  apply standardComplexLocalClass_ne_zero d
+  apply hinjective
+  simpa only [analyticPointLocalHomologyClass, localClassOfChart, e, hz, map_zero] using hzero
+
+/-- The ambient chart-local homology class generates local homology at the point. -/
+lemma span_analyticPointLocalHomologyClass_eq_top [SmoothOfRelativeDimension d structureMap]
+    (z : ComplexPoint X structureMap) :
+    Submodule.span ℚ {analyticPointLocalHomologyClass structureMap d z} = ⊤ := by
+  let _ : T1Space (ComplexPoint X structureMap) := inferInstance
+  exact span_localClassOfChart_eq_top d (ComplexPoint.localChart structureMap d z) z
+    (ComplexPoint.mem_localChart_source structureMap d z)
+
+/-- The normalized local cohomology class dual to the chart-local fundamental class. -/
+def analyticPointLocalCoclass [SmoothOfRelativeDimension d structureMap]
+    (z : ComplexPoint X structureMap) :
+    CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X structureMap)) {z} (2 * d) :=
+  normalizedDual (analyticPointLocalHomologyClass structureMap d z)
+    (analyticPointLocalHomologyClass_ne_zero structureMap d z)
+
+@[simp]
+lemma analyticPointLocalCoclass_apply_localClass [SmoothOfRelativeDimension d structureMap]
+    (z : ComplexPoint X structureMap) :
+    analyticPointLocalCoclass structureMap d z
+        (analyticPointLocalHomologyClass structureMap d z) = 1 :=
+  normalizedDual_apply_self (analyticPointLocalHomologyClass structureMap d z)
+    (analyticPointLocalHomologyClass_ne_zero structureMap d z)
+
+/-- The normalized chart-local coclass generates rational cohomology supported at the point. -/
+lemma span_analyticPointLocalCoclass_eq_top [SmoothOfRelativeDimension d structureMap]
+    (z : ComplexPoint X structureMap) :
+    Submodule.span ℚ {analyticPointLocalCoclass structureMap d z} = ⊤ :=
+  span_normalizedDual_eq_top
+    (analyticPointLocalHomologyClass_ne_zero structureMap d z)
+    (span_analyticPointLocalHomologyClass_eq_top structureMap d z)
+
+/-- A maximal-codimension component of a smooth complex variety has a singleton analytic
+support. -/
+lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X]
+    [Smooth structureMap] [SmoothOfRelativeDimension d structureMap]
+    (x : X) (hx : coheight x = d)
+    (z : ComplexPoint (cycleComponent X x) (cycleComponentι X x ≫ structureMap)) :
+    cycleComponentSupport structureMap x = {cycleComponentMap structureMap x z} := by
+  have hdim : Order.krullDim (cycleComponent X x) = 0 := by
+    simpa using orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
+      (f := structureMap) (d := d) x hx
+  let _ : Subsingleton (cycleComponent X x) := by
+    constructor
+    intro a b
+    have hallMin : ∀ q : cycleComponent X x, IsMin q :=
+      Order.krullDim_nonpos_iff_forall_isMin.mp hdim.le
+    have htopLe (q : cycleComponent X x) : (⊤ : cycleComponent X x) ≤ q :=
+      hallMin ⊤ le_top
+    have hab : a ≤ b := le_top.trans (htopLe b)
+    have hba : b ≤ a := le_top.trans (htopLe a)
+    apply inseparable_iff_eq.mp
+    rw [inseparable_iff_specializes_and, ← Scheme.le_iff_specializes,
+      ← Scheme.le_iff_specializes]
+    exact ⟨hba, hab⟩
+  have hpoints : Subsingleton
+      (ComplexPoint (cycleComponent X x) (cycleComponentι X x ≫ structureMap)) := by
+    constructor
+    intro a b
+    apply ComplexPoint.underlying_injective_of_locallyOfFiniteType
+    exact Subsingleton.elim a.underlying b.underlying
+  rw [← range_cycleComponentMap]
+  ext y
+  constructor
+  · rintro ⟨w, rfl⟩
+    rw [show w = z from hpoints.elim w z]
+    exact Set.mem_singleton _
+  · intro hy
+    exact ⟨z, Set.mem_singleton_iff.mp hy.symm⟩
+
+/-- Every maximal-codimension component has a generator of its singular cohomology with
+support. -/
+theorem exists_singularComponentSupportedGenerator_of_coheight_eq_dimension [IsIntegral X]
+    [Smooth structureMap] [SmoothOfRelativeDimension d structureMap]
+    (x : X) (hx : coheight x = d) :
+    ∃ β : RationalSingularComponentCohomologyWithSupport structureMap x (2 * d),
+      IsSupportedCohomologyGenerator β := by
+  obtain ⟨z, -⟩ := exists_cycleComponent_smooth_complexPoint structureMap x
+  let y := cycleComponentMap structureMap x z
+  have hsupport : cycleComponentSupport structureMap x = {y} :=
+    cycleComponentSupport_eq_singleton_of_coheight_eq_dimension structureMap d x hx z
+  change ∃ β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X structureMap))
+      (cycleComponentSupport structureMap x) (2 * d),
+    Submodule.span ℚ {β} = ⊤
+  rw [hsupport]
+  exact ⟨analyticPointLocalCoclass structureMap d y,
+    span_analyticPointLocalCoclass_eq_top structureMap d y⟩
+
+end AlgebraicGeometry.ComplexPoint
