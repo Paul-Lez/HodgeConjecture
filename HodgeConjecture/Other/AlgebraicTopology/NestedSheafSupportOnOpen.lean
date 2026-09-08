@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Other.AlgebraicTopology.NestedSheafSupportLocalization
 public import HodgeConjecture.Other.AlgebraicTopology.FlasqueSupportedSections
+public import HodgeConjecture.Other.AlgebraicTopology.SupportedSectionRestrictionCone
 
 /-!
 # The actual open-set model of the last localization term
@@ -148,5 +149,49 @@ def nestedSupportRestrictionLastComplexIso
       ((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj
         (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K) :=
   (NatIso.mapHomologicalComplex (sheafSectionsBetweenOpensGlobalNatIso X h) (.up ℤ)).app K
+
+/-- The last localization map, under the proved kernel comparison, is
+literally restriction of the supported section to `U`. -/
+@[reassoc]
+theorem toSheafSectionsBetweenOpens_global_comparison
+    (F : Sheaf AddCommGrpCat.{u} X) :
+    ((toSheafSectionsBetweenOpens X h).app F).hom.app (op ⊤) ≫
+        (sheafSectionsBetweenOpensGlobalIso X h F).hom =
+      ((sheafSectionsSupportedOutside X V).obj F).obj.map (homOfLE (le_top : U ≤ ⊤)).op := by
+  have : Mono (((sheafSectionsSupportedOutsideInclusion X V).app F).hom.app (op U)) := by
+    rw [← sheafSectionsSupportedOutsideOnOpenIso_hom_ι X V U F]
+    infer_instance
+  apply (cancel_mono (((sheafSectionsSupportedOutsideInclusion X V).app F).hom.app (op U))).1
+  rw [Category.assoc, sheafSectionsBetweenOpensGlobalIso_hom_inclusion]
+  have hι := ((sheafSectionsSupportedOutsideInclusion X V).app F).hom.naturality
+    (homOfLE (le_top : U ≤ ⊤)).op
+  rw [hι, ← Category.assoc]
+  have hg : ((toSheafSectionsBetweenOpens X h).app F).hom.app (op ⊤) ≫
+      ((sheafSectionsBetweenOpensInclusion X h).app F).hom.app (op ⊤) =
+    ((sheafSectionsSupportedOutsideInclusion X V).app F).hom.app (op ⊤) ≫
+      ((toOpenRestrictionPushforward X U).app F).hom.app (op ⊤) := by
+    change (((toSheafSectionsBetweenOpens X h).app F) ≫
+      ((sheafSectionsBetweenOpensInclusion X h).app F)).hom.app (op ⊤) = _
+    simp only [toSheafSectionsBetweenOpens, sheafSectionsBetweenOpensInclusion,
+      kernel.map, kernel.lift_ι]
+    rfl
+  rw [hg, Category.assoc]
+  congr 1
+  change F.obj.map _ ≫ F.obj.map _ = F.obj.map _
+  rw [← F.obj.map_comp]
+  congr 1
+
+/-- The last-complex identification retains the literal restriction map,
+before passage to homology. -/
+@[reassoc]
+theorem nestedSupportRestrictionLastComplexIso_g
+    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
+    (nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).g ≫
+        (nestedSupportRestrictionLastComplexIso X h K).hom =
+      sectionComplexRestriction X (.up ℤ)
+        (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)
+        (homOfLE (le_top : U ≤ ⊤)) := by
+  ext n : 1
+  exact toSheafSectionsBetweenOpens_global_comparison X h (K.X n)
 
 end TopCat.Sheaf

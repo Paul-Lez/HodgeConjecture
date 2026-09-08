@@ -290,7 +290,29 @@ run_cmd do
      "HodgeConjecture.Other.AlgebraicTopology.SupportedSectionRestrictionCone",
      "HodgeConjecture.Other.AlgebraicTopology.SupportedSingularSectionCohomology",
      "HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf",
-     "HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedSupportLowestCohomology"]
+     "HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedSupportLowestCohomology",
+     "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality",
+     "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingConeMapNaturality",
+     "HodgeConjecture.Other.AlgebraicGeometry.ClosedImmersionSourceOpen",
+     "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentSmoothClosedLift",
+     "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentSmoothSupportPurity",
+     "HodgeConjecture.Other.AlgebraicGeometry.SingularFiltrationLocalSupportVanishing",
+     "HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedPointCoclassSectionNormalization",
+     "HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedSupportCoclassSection",
+     "HodgeConjecture.Other.AlgebraicGeometry.SmoothClosedSupportOpenTransport",
+     "HodgeConjecture.Other.AlgebraicTopology.LinearDualHomologyNaturality",
+     "HodgeConjecture.Other.AlgebraicTopology.NeighborhoodSupportPairImage",
+     "HodgeConjecture.Other.AlgebraicTopology.OpenRestrictedCohomologyVanishing",
+     "HodgeConjecture.Other.AlgebraicTopology.OpenRestrictedLowestCohomology",
+     "HodgeConjecture.Other.AlgebraicTopology.RelativeCochainConeForgetComparison",
+     "HodgeConjecture.Other.AlgebraicTopology.RelativeCochainConeNaturality",
+     "HodgeConjecture.Other.AlgebraicTopology.SingularCochainOpenConeNaturality",
+     "HodgeConjecture.Other.AlgebraicTopology.SupportRelativeCohomologySheaf",
+     "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentSupportExtension",
+     "HodgeConjecture.Other.AlgebraicGeometry.CycleComponentSmoothSupportCoclassSection",
+     "HodgeConjecture.Other.AlgebraicTopology.SupportRelativeCohomologyOpenTransport",
+     "HodgeConjecture.Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality",
+     "HodgeConjecture.Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv
   for moduleName in modules do
