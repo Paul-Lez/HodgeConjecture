@@ -15,9 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularComparison
+public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularNaturality
+
+import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularComparison
 
 /-!
 # Betti support-cone comparison

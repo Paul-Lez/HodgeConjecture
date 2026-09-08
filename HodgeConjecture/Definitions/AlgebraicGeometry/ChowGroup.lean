@@ -15,12 +15,11 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
 public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
-public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
-public import Mathlib.Algebra.Group.Subgroup.Lattice
-public import Mathlib.LinearAlgebra.TensorProduct.Tower
+public import Mathlib.AlgebraicGeometry.OrderOfVanishing
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Chow groups of schemes

@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
-public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
-public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 

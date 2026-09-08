@@ -15,13 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalCoordinates
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
-public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
-public import HodgeConjecture.Other.AlgebraicTopology.LocalFundamentalClassGenerator
-public import HodgeConjecture.Other.AlgebraicTopology.PuncturedEuclideanFundamentalClass
+public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalCoordinates
+
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+import HodgeConjecture.Other.AlgebraicTopology.LocalFundamentalClassGenerator
+import HodgeConjecture.Other.AlgebraicTopology.PuncturedEuclideanFundamentalClass
 
 /-!
 # Local generators from exact cycle-component coordinates

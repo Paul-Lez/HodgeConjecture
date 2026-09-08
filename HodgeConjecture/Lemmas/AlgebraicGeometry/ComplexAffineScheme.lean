@@ -15,8 +15,11 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineSpace
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineSpace
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.Logic.Equiv.PartialEquiv
 
 /-!
 # Complex points of affine schemes

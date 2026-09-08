@@ -15,14 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import Mathlib.Algebra.Homology.SingleHomology
-public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 public import Mathlib.Algebra.Category.ModuleCat.Abelian
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
-public import Mathlib.AlgebraicTopology.ExtraDegeneracy
 public import Mathlib.AlgebraicTopology.SimplicialSet.Boundary
 public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.Nondegenerate
+
+import Mathlib.Algebra.Homology.SingleHomology
+import Mathlib.AlgebraicTopology.ExtraDegeneracy
 
 /-!
 # Rational top homology of simplicial spheres

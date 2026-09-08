@@ -15,12 +15,11 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCoverSmall
-public import Mathlib.Algebra.Homology.DerivedCategory.KProjective
-public import Mathlib.Algebra.Category.Grp.ZModuleEquivalence
-public import Mathlib.Algebra.Category.ModuleCat.Projective
+public import Mathlib.Algebra.Homology.QuasiIso
+
+import Mathlib.Algebra.Category.ModuleCat.Projective
+import Mathlib.Algebra.Homology.DerivedCategory.KProjective
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in

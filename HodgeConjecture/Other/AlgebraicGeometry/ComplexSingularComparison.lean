@@ -15,11 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainSheaf
-public import Mathlib.Algebra.Homology.Embedding.ExtendHomology
+public import Mathlib.Algebra.Homology.Embedding.Extend
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+import Mathlib.Algebra.Homology.Embedding.ExtendHomology
 
 /-!
 # Singular cochains on smooth complex-point spaces

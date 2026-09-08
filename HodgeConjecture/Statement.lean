@@ -15,9 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 
 /-!
 # The Hodge conjecture

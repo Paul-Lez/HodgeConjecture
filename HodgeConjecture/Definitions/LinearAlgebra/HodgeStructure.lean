@@ -16,11 +16,7 @@ limitations under the License.
 module
 
 public import Mathlib.Algebra.Algebra.Rat
-public import Mathlib.Algebra.DirectSum.Module
-public import Mathlib.Algebra.Module.Rat
 public import Mathlib.LinearAlgebra.Complex.Module
-public import Mathlib.LinearAlgebra.TensorProduct.Map
-public import Mathlib.Order.CompactlyGenerated.Basic
 
 /-!
 # Rational Hodge structures

@@ -15,14 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineSpace
-public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
-public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Basic
 public import Mathlib.LinearAlgebra.Projectivization.Basic
-public import Mathlib.Topology.Constructions
-public import Mathlib.Topology.MetricSpace.ProperSpace
-public import Mathlib.Topology.Sheaves.LocallySurjective
+public import Mathlib.Tactic.Bound
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.AlgebraicGeometry.AlgClosed.Basic
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Projective analytification

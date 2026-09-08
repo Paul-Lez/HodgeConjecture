@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.Algebra.Category.Grp.AB
+public import Mathlib.Algebra.Category.Grp.Colimits
 public import Mathlib.Algebra.Homology.Homotopy
 public import Mathlib.Algebra.Homology.TotalComplex
 

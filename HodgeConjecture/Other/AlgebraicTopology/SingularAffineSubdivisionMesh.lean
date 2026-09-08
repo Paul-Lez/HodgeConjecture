@@ -15,10 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicTopology.SingularOpenCoverLebesgue
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCoverSmallQuasiIso
-public import Mathlib.Analysis.Normed.Module.Convex
-public import Mathlib.Analysis.SpecificLimits.Basic
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularOpenCoverLebesgue
+import Mathlib.Analysis.Normed.Module.Convex
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in

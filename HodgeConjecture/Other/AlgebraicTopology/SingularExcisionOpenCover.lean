@@ -15,9 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivisionRelativeMesh
-public import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivisionSupport
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCoverSmallQuasiIso
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivisionRelativeMesh
+import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivisionSupport
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in

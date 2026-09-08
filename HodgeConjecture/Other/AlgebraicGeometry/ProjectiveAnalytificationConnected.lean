@@ -15,10 +15,15 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Topology.Connected.PathConnected
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
+import Mathlib.AlgebraicGeometry.AlgClosed.Basic
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Connected components of projective analytifications

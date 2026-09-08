@@ -15,8 +15,11 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.RingTheory.Ideal.UFD
-public import Mathlib.RingTheory.KrullDimension.Regular
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.Regular.RegularSequence
+
+import Mathlib.RingTheory.Ideal.UFD
+import Mathlib.RingTheory.KrullDimension.Regular
 
 /-!
 # Quotient kernels in regular local rings

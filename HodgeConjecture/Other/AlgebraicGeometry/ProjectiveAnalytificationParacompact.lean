@@ -15,12 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 
 /-!
 # Paracompact open subsets of smooth projective analytifications

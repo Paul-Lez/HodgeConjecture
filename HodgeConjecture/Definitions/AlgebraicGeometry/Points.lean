@@ -15,15 +15,15 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
-public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.Algebra.Category.Ring.Topology
-public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.AlgebraicGeometry.Noetherian
-public import Mathlib.Topology.Instances.Complex
-public import Mathlib.Topology.Order
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.RingTheory.Valuation.ValuationRing
+public import Mathlib.Topology.Algebra.IsOpenUnits
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 
 /-!
 # Points over a commutative ring, and analytification

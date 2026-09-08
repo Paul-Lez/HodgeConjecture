@@ -16,8 +16,9 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.BoundedBelowFlasqueComplex
-public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
-public import Mathlib.Algebra.Homology.HomotopyCategory.Plus
+public import Mathlib.Algebra.Homology.HomotopyCategory.MappingCone
+
+import Mathlib.Algebra.Homology.HomotopyCategory.Plus
 
 /-!
 # Global sections and quasi-isomorphisms of flasque complexes

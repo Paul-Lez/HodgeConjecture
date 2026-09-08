@@ -15,21 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiSheafComparison
-public import HodgeConjecture.Other.AlgebraicTopology.BoundedBelowFlasqueComplex
 public import HodgeConjecture.Other.AlgebraicTopology.FlasqueQuasiIsoGlobalSections
+public import HodgeConjecture.Other.AlgebraicTopology.InjectiveFlasque
 public import HodgeConjecture.Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
-public import Mathlib.Algebra.Homology.DerivedCategory.DerivabilityStructureInjectives
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
-public import Mathlib.Algebra.Homology.Embedding.ExtendHomology
+public import Mathlib.Algebra.Homology.Factorizations.CM5a
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
-public import Mathlib.CategoryTheory.Adjunction.Additive
-public import Mathlib.CategoryTheory.Localization.SmallShiftedHom
-public import Mathlib.CategoryTheory.Preadditive.Yoneda.Basic
-public import Mathlib.CategoryTheory.Preadditive.Basic
 
 /-!
 # Betti cohomology and global sections

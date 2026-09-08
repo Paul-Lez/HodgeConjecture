@@ -15,11 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentClosedPointDimension
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
-public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentLocalGenerator
+
+import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentClosedPointDimension
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+import HodgeConjecture.Other.AlgebraicTopology.LocalFundamentalClassGenerator
+import HodgeConjecture.Other.AlgebraicTopology.PuncturedEuclideanFundamentalClass
 
 /-!
 # Local dual classes on cycle components

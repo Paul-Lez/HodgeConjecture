@@ -15,10 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
-public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
 /-!
 # Cycle classes and coniveau

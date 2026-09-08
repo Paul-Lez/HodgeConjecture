@@ -15,21 +15,16 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
+public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import Mathlib.Algebra.Category.Grp.Zero
-public import Mathlib.Algebra.Category.ModuleCat.Presheaf.Sheafification
 public import Mathlib.Algebra.Homology.Embedding.Extend
-public import Mathlib.Algebra.Homology.Embedding.ExtendHomology
-public import Mathlib.Algebra.Homology.Functor
-public import Mathlib.Algebra.Homology.Single
 public import Mathlib.Algebra.Homology.SingleHomology
-public import Mathlib.CategoryTheory.Abelian.FunctorCategory
 public import Mathlib.Topology.Sheaves.Abelian
-public import Mathlib.Topology.Sheaves.Sheafify
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
+import Mathlib.Algebra.Category.Grp.Zero
+import Mathlib.Algebra.Homology.Embedding.ExtendHomology
+import Mathlib.Topology.Sheaves.Sheafify
 
 /-!
 # The holomorphic de Rham complex

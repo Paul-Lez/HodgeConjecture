@@ -15,11 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.BettiGlobalSectionsComparison
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportConeComparison
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularGlobalComparison
+
+import Mathlib.Algebra.Homology.HomotopyCategory.Plus
 
 /-!
 # Hypercohomology and singular cohomology with support

@@ -15,7 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Topology.KrullDimension
+public import Mathlib.Topology.KrullDimension
+
+import HodgeConjecture.Mathlib.Topology.KrullDimension
 
 /-!
 # The dimension of an irreducible topological space

@@ -16,12 +16,12 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
 public import Mathlib.Algebra.Category.ModuleCat.ChangeOfRings
-public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 public import Mathlib.LinearAlgebra.Dual.BaseChange
-public import Mathlib.RingTheory.Flat.IsBaseChange
-public import Mathlib.RingTheory.TensorProduct.IsBaseChangeRightExact
+
+import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
+import Mathlib.RingTheory.Flat.IsBaseChange
+import Mathlib.RingTheory.TensorProduct.IsBaseChangeRightExact
 
 /-!
 # Base change for rational and complex singular cohomology

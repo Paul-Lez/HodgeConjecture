@@ -15,9 +15,12 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
-public import Mathlib.Algebra.Homology.SingleHomology
-public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import Mathlib.Algebra.Category.ModuleCat.Basic
+public import Mathlib.Algebra.Homology.ShortComplex.HomologicalComplex
+public import Mathlib.LinearAlgebra.Dual.Defs
+
+import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
+import Mathlib.LinearAlgebra.Dual.Lemmas
 
 /-!
 # Duals of exact complexes of vector spaces

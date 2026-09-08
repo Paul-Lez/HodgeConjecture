@@ -15,12 +15,10 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.Algebra.Module.Presentation.Basic
-public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+public import Mathlib.LinearAlgebra.DFinsupp
 public import Mathlib.LinearAlgebra.Quotient.Basic
-public import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
-public import Mathlib.LinearAlgebra.ExteriorPower.Basic
-public import Mathlib.RingTheory.Kaehler.Basic
+
+import Mathlib.Algebra.Algebra.NonUnitalHom
 
 /-!
 # Algebraic de Rham forms

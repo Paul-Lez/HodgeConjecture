@@ -15,8 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Data.Complex.Basic
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.RingTheory.Unramified.LocalStructure
 
 /-!
 # Pointwise dimension of smooth complex schemes

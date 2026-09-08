@@ -15,10 +15,7 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.CategoryTheory.Adjunction.Whiskering
 public import Mathlib.Algebra.Category.Grp.Adjunctions
-public import Mathlib.CategoryTheory.Preadditive.Injective.Basic
-public import Mathlib.CategoryTheory.Sites.LeftExact
 public import Mathlib.Topology.Sheaves.Flasque
 
 /-!

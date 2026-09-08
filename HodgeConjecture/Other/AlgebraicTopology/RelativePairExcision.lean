@@ -16,10 +16,11 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionField
-public import Mathlib.Algebra.Homology.HomologySequenceLemmas
+public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
+public import Mathlib.Algebra.Homology.QuasiIso
+
+import Mathlib.Algebra.Homology.HomologySequenceLemmas
 
 /-!
 # Relative excision for an open neighborhood of a point

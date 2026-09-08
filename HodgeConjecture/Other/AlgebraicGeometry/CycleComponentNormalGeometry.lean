@@ -15,10 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
-public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
-public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.AlgebraicGeometry.AlgClosed.Basic
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Smooth geometry of cycle components

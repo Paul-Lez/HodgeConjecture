@@ -15,10 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import Mathlib.Geometry.Manifold.Sheaf.Smooth
+public import Mathlib.Geometry.Manifold.Algebra.SmoothFunctions
+public import Mathlib.Geometry.Manifold.Sheaf.Basic
 
 /-!
 # Holomorphic functions on complex points

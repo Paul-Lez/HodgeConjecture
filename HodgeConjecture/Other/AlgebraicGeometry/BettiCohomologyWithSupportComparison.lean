@@ -15,10 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.BettiGlobalSectionsComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
+public import HodgeConjecture.Other.AlgebraicGeometry.BettiSheafComparison
 public import HodgeConjecture.Other.AlgebraicTopology.MappingConeQuasiIso
 public import Mathlib.Algebra.Homology.ModelCategory.Injective
 

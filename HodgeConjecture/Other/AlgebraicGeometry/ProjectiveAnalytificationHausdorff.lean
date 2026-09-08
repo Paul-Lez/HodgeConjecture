@@ -15,12 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineScheme
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
 public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytification
-public import Mathlib.AlgebraicGeometry.Morphisms.Affine
-public import Mathlib.Topology.Separation.Hausdorff
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Hausdorff analytifications of projective complex schemes

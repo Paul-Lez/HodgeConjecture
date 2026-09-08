@@ -15,11 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import Mathlib.AlgebraicGeometry.Limits
-public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
-public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Proper
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Scheme
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Proper
 
 /-!
 # Projective space and explicit projective presentations

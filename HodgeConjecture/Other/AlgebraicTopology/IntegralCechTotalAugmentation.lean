@@ -15,10 +15,11 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.CechNerveEvaluation
 public import HodgeConjecture.Other.AlgebraicTopology.FirstQuadrantRowwiseTotalization
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCoverSmallPresentation
+
+import Mathlib.Logic.Equiv.PartialEquiv
 
 /-!
 This module generalizes the rowwise Čech globalization in Paul Lezeau's

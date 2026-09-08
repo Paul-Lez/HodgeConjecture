@@ -15,14 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentAnalyticEmbedding
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPurity
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPurity
 public import HodgeConjecture.Other.AlgebraicGeometry.SingularCycleClass
-public import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
 
 /-!
 # Purity for point supports

@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularNaturality
+public import HodgeConjecture.Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
 
 /-!
 # Global singular restriction

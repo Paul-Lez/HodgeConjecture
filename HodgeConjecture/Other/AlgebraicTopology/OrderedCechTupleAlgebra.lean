@@ -15,13 +15,12 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Data.Fintype.Lattice
+public import Mathlib.Data.Fintype.Lattice -- shake: keep
 public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
-public import Mathlib.Order.Monotone.Basic
+
+import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Module
 
 /-!
 This module is adapted from Chris Birkbeck's `sphere-six-complex` pull request #185,

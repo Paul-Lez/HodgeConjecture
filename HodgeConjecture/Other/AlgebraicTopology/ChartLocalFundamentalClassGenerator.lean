@@ -15,9 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicTopology.LocalFundamentalClassGenerator
-public import HodgeConjecture.Other.AlgebraicTopology.PuncturedEuclideanFundamentalClass
 public import HodgeConjecture.Other.AlgebraicTopology.RelativePairExcision
+
+import HodgeConjecture.Other.AlgebraicTopology.LocalFundamentalClassGenerator
+import HodgeConjecture.Other.AlgebraicTopology.PuncturedEuclideanFundamentalClass
 
 /-!
 # Generator properties of chart-local fundamental classes

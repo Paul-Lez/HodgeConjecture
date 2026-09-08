@@ -15,11 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionOpenCover
+public import HodgeConjecture.Other.AlgebraicTopology.SingularCoverSmall
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
-public import Mathlib.LinearAlgebra.Span.Basic
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionOpenCover
 
 /-!
 # Small singular chains with rational coefficients

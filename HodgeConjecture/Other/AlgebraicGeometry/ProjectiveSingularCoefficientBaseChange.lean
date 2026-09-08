@@ -15,13 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCoefficientBaseChange
-public import Mathlib.Algebra.Category.FGModuleCat.Colimits
-public import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
+import Mathlib.Algebra.Category.FGModuleCat.Colimits
+import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
+import Mathlib.NumberTheory.NumberField.Basic
 
 /-!
 # Degree-zero coefficient change for projective analytifications

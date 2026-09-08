@@ -15,16 +15,20 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.EuclideanLocalHomology
 public import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionField
-public import HodgeConjecture.Other.AlgebraicTopology.SingularContractible
-public import HodgeConjecture.Other.AlgebraicTopology.StandardSphereAffineBoundary
 public import HodgeConjecture.Other.AlgebraicTopology.SingularStandardSimplexCone
-public import Mathlib.Analysis.Convex.Contractible
-public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
+public import HodgeConjecture.Other.AlgebraicTopology.StandardSphereAffineBoundary
+public import Mathlib.Topology.Homotopy.Contractible
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivisionPrism
+import HodgeConjecture.Other.AlgebraicTopology.SingularContractible
+import Mathlib.Algebra.Category.Grp.Zero
+import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.Logic.Equiv.PartialEquiv
+import Mathlib.Tactic.Bound
+import Mathlib.Topology.Homotopy.TopCat.ZerothHomotopy
 
 /-!
 # The affine sphere class in punctured Euclidean space

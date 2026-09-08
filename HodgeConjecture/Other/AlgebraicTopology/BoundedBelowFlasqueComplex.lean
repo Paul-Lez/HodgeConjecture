@@ -15,9 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicTopology.FlasqueAcyclic
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
-public import Mathlib.Algebra.Homology.ShortComplex.ExactFunctor
+public import Mathlib.Topology.Sheaves.Flasque
 
 /-!
 # Global sections of bounded-below exact flasque complexes

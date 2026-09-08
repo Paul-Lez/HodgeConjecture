@@ -18,6 +18,9 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineScheme
 public import Mathlib.RingTheory.Etale.StandardEtale
 
+import Mathlib.Logic.Equiv.PartialEquiv
+import Mathlib.Topology.Algebra.MvPolynomial
+
 /-!
 # Complex points of standard étale algebras
 

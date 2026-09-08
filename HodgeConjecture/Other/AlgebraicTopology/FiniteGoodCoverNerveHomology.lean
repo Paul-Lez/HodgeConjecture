@@ -15,11 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.FiniteGoodCoverHomology
-public import Mathlib.Algebra.Category.FGModuleCat.Colimits
+public import Mathlib.RingTheory.Finiteness.Defs
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularContractibleMapQuasiIso
+import Mathlib.Algebra.Category.FGModuleCat.Colimits
+import Mathlib.Algebra.Category.Grp.EpiMono
+import Mathlib.CategoryTheory.Limits.Shapes.Countable
 
 /-!
 # The finite nerve model of a good cover

@@ -15,11 +15,19 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.Algebra.PolynomialCatenary
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
-public import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
-public import Mathlib.RingTheory.LocalRing.ResidueField.Ideal
+public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+public import Mathlib.RingTheory.QuasiFinite.Basic
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import HodgeConjecture.Other.Algebra.PolynomialCatenary
+import Mathlib.RingTheory.KrullDimension.Field
+import Mathlib.RingTheory.KrullDimension.Polynomial
+import Mathlib.RingTheory.NoetherNormalization
+import Mathlib.RingTheory.Unramified.LocalStructure
 
 /-!
 # Catenary dimension formulas for smooth complex schemes

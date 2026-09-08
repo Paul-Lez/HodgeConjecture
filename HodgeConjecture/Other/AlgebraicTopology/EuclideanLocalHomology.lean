@@ -16,15 +16,15 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalFundamentalClass
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.Algebra.Homology.HomologySequence
-public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
-public import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
-public import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
-public import Mathlib.Analysis.Convex.Contractible
-public import Mathlib.CategoryTheory.Abelian.Exact
-public import Mathlib.Topology.Order.IntermediateValue
+public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
+public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
+public import Mathlib.Topology.Homotopy.Equiv
+
+import Mathlib.Algebra.Homology.HomologicalComplexAbelian
+import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.Topology.Homotopy.TopCat.ZerothHomotopy
 
 /-!
 # Euclidean local homology

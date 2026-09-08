@@ -15,8 +15,11 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.CategoryTheory.Triangulated.Yoneda
 public import Mathlib.CategoryTheory.HomCongr
+public import Mathlib.CategoryTheory.Shift.ShiftedHom
+public import Mathlib.CategoryTheory.Triangulated.Pretriangulated
+
+import Mathlib.CategoryTheory.Triangulated.Yoneda
 
 /-!
 # Exactness for shifted morphisms

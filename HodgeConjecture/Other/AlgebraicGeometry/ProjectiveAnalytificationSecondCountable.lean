@@ -15,10 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-public import Mathlib.Geometry.Manifold.Metrizable
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import Mathlib.Geometry.Manifold.Metrizable
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # Second-countability of projective analytifications

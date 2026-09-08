@@ -15,10 +15,18 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentLocalGenerator
-public import HodgeConjecture.Other.AlgebraicGeometry.SmoothCatenaryDimension
-public import Mathlib.RingTheory.IntegralClosure.GoingDown
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+import HodgeConjecture.Other.Algebra.PolynomialCatenary
+import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
+import HodgeConjecture.Other.AlgebraicGeometry.SmoothCatenaryDimension
+import Mathlib.RingTheory.IntegralClosure.GoingDown
+import Mathlib.RingTheory.KrullDimension.Field
+import Mathlib.RingTheory.KrullDimension.Polynomial
+import Mathlib.RingTheory.NoetherNormalization
 
 /-!
 # Dimensions at closed points of cycle components

@@ -15,11 +15,11 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.Analysis.Calculus.DifferentialForm.VectorField
-public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-public import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.ContDiff
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.Analysis.Calculus.DifferentialForm.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The radial homotopy operator on differential forms

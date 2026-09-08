@@ -15,13 +15,16 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicTopology.SingularContractibleMapQuasiIso
-public import Mathlib.Algebra.Homology.SingleHomology
-public import Mathlib.AlgebraicTopology.ExtraDegeneracy
-public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
-public import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
-public import Mathlib.Analysis.Convex.Contractible
+public import Mathlib.Algebra.Category.Grp.Abelian
+public import Mathlib.Algebra.Homology.QuasiIso
+public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
+public import Mathlib.AlgebraicTopology.SingularSet
+public import Mathlib.Topology.Homotopy.Contractible
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularContractibleMapQuasiIso
+import Mathlib.Algebra.Homology.SingleHomology
+import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
+import Mathlib.Analysis.Convex.Contractible
 
 /-!
 # Singular chains of a standard simplex

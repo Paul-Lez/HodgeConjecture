@@ -15,11 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import Mathlib.Analysis.Convex.Contractible
-public import Mathlib.Analysis.Normed.Module.Convex
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Geometry.Manifold.ChartedSpace
 public import Mathlib.Topology.Homotopy.LocallyContractible
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+import Mathlib.Analysis.Convex.Contractible
 
 /-!
 # Local contractibility of projective analytifications

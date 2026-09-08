@@ -15,18 +15,15 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
+public import HodgeConjecture.Other.AlgebraicTopology.FlasqueAcyclic
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainCohomology
 public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainSheafFlasque
 public import HodgeConjecture.Other.AlgebraicTopology.SingularExcisionField
-public import HodgeConjecture.Other.AlgebraicTopology.FlasqueAcyclic
-public import Mathlib.Algebra.Homology.HomologySequenceLemmas
-public import Mathlib.CategoryTheory.Sites.LeftExact
 public import Mathlib.Geometry.Manifold.ChartedSpace
 public import Mathlib.Topology.Compactness.Paracompact
-public import Mathlib.Topology.ShrinkingLemma
+
+import Mathlib.LinearAlgebra.Dual.Lemmas
+import Mathlib.Topology.ShrinkingLemma
 
 /-!
 # Global and locally defined singular cochains

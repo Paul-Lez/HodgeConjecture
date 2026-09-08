@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
 
 /-!
 # Analytic maps induced by morphisms of smooth complex schemes

@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Other.AlgebraicTopology.IntegralCechTotalAugmentation
 public import HodgeConjecture.Other.AlgebraicTopology.OrderedCechNormalization
-public import Mathlib.CategoryTheory.Adjunction.Limits
-public import Mathlib.CategoryTheory.Limits.Types.Coproducts
+
+import Mathlib.CategoryTheory.Limits.Shapes.Countable
+import Mathlib.CategoryTheory.Limits.Types.Coproducts
+import Mathlib.Topology.Category.TopCat.EpiMono
 
 /-!
 This module generalizes the ordered-intersection decomposition in Paul Lezeau's

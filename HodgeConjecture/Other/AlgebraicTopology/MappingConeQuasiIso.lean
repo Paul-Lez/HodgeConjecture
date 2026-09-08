@@ -16,7 +16,6 @@ limitations under the License.
 module
 
 public import Mathlib.Algebra.Homology.DerivedCategory.Basic
-public import Mathlib.Algebra.Homology.HomotopyCategory.Pretriangulated
 
 /-!
 # Quasi-isomorphisms between mapping cones

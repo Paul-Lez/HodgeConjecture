@@ -15,10 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentClosedPointDimension
-public import HodgeConjecture.Other.AlgebraicGeometry.SmoothRegularLocal
-public import Mathlib.RingTheory.KrullDimension.Regular
+public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentClosedPointDimension
+import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
+import HodgeConjecture.Other.AlgebraicGeometry.SmoothRegularLocal
 
 /-!
 # Local rings of cycle-component immersions

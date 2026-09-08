@@ -15,14 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivisionSmall
-public import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
-public import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
-public import Mathlib.Analysis.Convex.Contractible
-public import Mathlib.Algebra.Homology.ShortComplex.Ab
-public import Mathlib.Algebra.Category.Grp.Zero
+public import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivision
+public import Mathlib.Topology.Homotopy.Contractible
+
+import Mathlib.Algebra.Category.Grp.Zero
+import Mathlib.Algebra.Homology.ShortComplex.Ab
+import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.Logic.Equiv.PartialEquiv
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in

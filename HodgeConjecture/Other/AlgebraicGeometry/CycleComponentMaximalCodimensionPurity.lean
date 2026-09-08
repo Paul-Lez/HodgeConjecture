@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointPurity
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationParacompact
+
+import HodgeConjecture.Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
+import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointPurity
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationParacompact
 
 /-!
 # Maximal-codimension component purity

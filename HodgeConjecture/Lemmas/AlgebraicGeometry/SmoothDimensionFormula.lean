@@ -15,15 +15,16 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
-public import Mathlib.RingTheory.KrullDimension.Field
-public import Mathlib.RingTheory.KrullDimension.Polynomial
-public import Mathlib.RingTheory.Jacobson.Ring
-public import Mathlib.RingTheory.Ideal.GoingUp
-public import Mathlib.RingTheory.Smooth.Flat
-public import Mathlib.RingTheory.Unramified.LocalStructure
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.RingTheory.QuasiFinite.Basic
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.RingTheory.KrullDimension.Field
+import Mathlib.RingTheory.KrullDimension.Polynomial
+import Mathlib.RingTheory.Unramified.LocalStructure
 
 /-!
 # Dimension bounds for smooth complex schemes

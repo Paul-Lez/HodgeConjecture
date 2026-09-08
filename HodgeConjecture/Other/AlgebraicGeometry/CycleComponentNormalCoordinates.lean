@@ -15,9 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentNormalGeometry
 
 /-!
 # Exact local coordinates on small-dimensional cycle components

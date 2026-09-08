@@ -15,10 +15,16 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
-public import Mathlib.RingTheory.LocalRing.Etale
-public import Mathlib.RingTheory.RegularLocalRing.Polynomial
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.RingTheory.RegularLocalRing.Polynomial
+import Mathlib.RingTheory.Unramified.LocalStructure
 
 /-!
 # Regular local rings of smooth schemes

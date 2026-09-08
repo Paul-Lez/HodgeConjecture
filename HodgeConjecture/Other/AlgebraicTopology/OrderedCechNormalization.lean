@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Other.AlgebraicTopology.OrderedCechRealization
 public import HodgeConjecture.Other.AlgebraicTopology.HorizontalTotalHomotopy
+public import HodgeConjecture.Other.AlgebraicTopology.OrderedCechRealization
 
 /-!
 This module is adapted from Chris Birkbeck's `sphere-six-complex` pull request #185,

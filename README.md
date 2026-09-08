@@ -11,6 +11,4 @@ For now this is an autoformalisation!
 - `HodgeConjecture/Lemmas`: supporting results needed by those definitions;
 - `HodgeConjecture/Other`: the remaining formalisation and prospective Mathlib material.
 
-The public entry point `HodgeConjecture.lean` imports only the conjecture statement. The three
-source layers also have `HodgeConjecture.Definitions`, `HodgeConjecture.Lemmas`, and
-`HodgeConjecture.Other` umbrella modules.
+`HodgeConjecture.lean` is the entry point and imports every module in the project.

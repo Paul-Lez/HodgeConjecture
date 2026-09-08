@@ -15,11 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.BettiGlobalSectionsComparison
-public import HodgeConjecture.Other.AlgebraicTopology.ConstantSheafDegreeZero
+public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Basic
+
+import HodgeConjecture.Other.AlgebraicTopology.ConstantSheafDegreeZero
 
 /-!
 # Degree-zero rational constant-sheaf cohomology

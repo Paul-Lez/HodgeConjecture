@@ -15,11 +15,11 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineSpace
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexEtale
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
 public import Mathlib.AlgebraicGeometry.Morphisms.Etale
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Local coordinates on smooth complex schemes

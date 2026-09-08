@@ -15,15 +15,17 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexStandardEtale
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineSpace
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalization
-public import Mathlib.Analysis.Analytic.Polynomial
-public import Mathlib.Analysis.Calculus.ImplicitContDiff
-public import Mathlib.Analysis.Calculus.Deriv.Polynomial
-public import Mathlib.Topology.IsLocalHomeomorph
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexStandardEtale
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike -- shake: keep
+public import Mathlib.Analysis.Calculus.Deriv.Polynomial -- shake: keep
+public import Mathlib.Analysis.Calculus.ImplicitFunction.ProdDomain
 public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
-public import Mathlib.RingTheory.Unramified.LocalStructure
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.Analysis.Analytic.Polynomial
+import Mathlib.RingTheory.Unramified.LocalStructure
 
 /-!
 # Complex points of étale morphisms

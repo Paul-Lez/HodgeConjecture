@@ -15,13 +15,11 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import Mathlib.Analysis.Analytic.ChangeOrigin
-public import Mathlib.LinearAlgebra.Multilinear.Basis
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+import Mathlib.LinearAlgebra.ExteriorAlgebra.OfAlternating
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The holomorphic Poincare operator

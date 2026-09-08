@@ -15,10 +15,11 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Other.AlgebraicGeometry.CycleClassDimension
-public import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
-public import HodgeConjecture.Other.AlgebraicGeometry.RationalCohomologyZero
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
+
+import HodgeConjecture.Other.AlgebraicGeometry.CycleClassDimension
+import HodgeConjecture.Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
+import HodgeConjecture.Other.AlgebraicGeometry.RationalCohomologyZero
 
 /-!
 # The Hodge conjecture in codimension zero

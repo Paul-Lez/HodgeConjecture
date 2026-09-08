@@ -15,12 +15,13 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.RingTheory.Ideal.HasGoingUp
-public import Mathlib.RingTheory.Ideal.GoingUp
-public import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
-public import Mathlib.RingTheory.KrullDimension.Field
-public import Mathlib.RingTheory.KrullDimension.Polynomial
-public import Mathlib.RingTheory.NoetherNormalization
+public import Mathlib.RingTheory.Ideal.Height
+
+import Mathlib.Algebra.MvPolynomial.Monad
+import Mathlib.Data.List.Indexes
+import Mathlib.RingTheory.Ideal.HasGoingUp
+import Mathlib.RingTheory.KrullDimension.Field
+import Mathlib.RingTheory.KrullDimension.Polynomial
 
 /-!
 # Dimension formulas for polynomial rings

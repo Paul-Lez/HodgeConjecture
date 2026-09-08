@@ -15,10 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import Mathlib.AlgebraicGeometry.AffineSpace
-public import Mathlib.Topology.Algebra.MvPolynomial
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.Logic.Equiv.PartialEquiv
+import Mathlib.Topology.Algebra.MvPolynomial
 
 /-!
 # Complex points of affine space

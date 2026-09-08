@@ -15,16 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
 public import HodgeConjecture.Definitions.Algebra.DeRham.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.Analysis.Calculus.DifferentialForm.Basic
-public import Mathlib.Analysis.Normed.Module.Alternating.Uncurry.Fin
-public import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
-public import Mathlib.LinearAlgebra.Dimension.Constructions
-public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 /-!
 # Analytic differential forms

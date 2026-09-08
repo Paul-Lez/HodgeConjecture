@@ -15,14 +15,15 @@ limitations under the License.
 -/
 module
 
-public import Mathlib.Algebra.Category.ModuleCat.Presheaf.Sheafification
-public import Mathlib.Algebra.Category.Grp.EpiMono
+public import Mathlib.Algebra.Category.Grp.Colimits
 public import Mathlib.Algebra.Category.Grp.FilteredColimits
-public import Mathlib.CategoryTheory.Sites.Abelian
+public import Mathlib.Algebra.Category.Grp.Limits
 public import Mathlib.CategoryTheory.Sites.ConstantSheaf
-public import Mathlib.Topology.Connected.Clopen
-public import Mathlib.Topology.LocallyConstant.Basic
-public import Mathlib.Topology.Sheaves.Sheafify
+public import Mathlib.CategoryTheory.Sites.Spaces
+public import Mathlib.Topology.Sheaves.Presheaf
+
+import Mathlib.Topology.LocallyConstant.Basic
+import Mathlib.Topology.Sheaves.Sheafify
 
 /-!
 # Degree-zero facts about constant sheaves

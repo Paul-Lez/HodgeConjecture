@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainFlasque
-public import Mathlib.CategoryTheory.NatIso
-public import Mathlib.CategoryTheory.Sites.ConcreteSheafification
-public import Mathlib.Topology.Sheaves.SheafOfFunctions
+public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainSheaf
+public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
+public import Mathlib.Topology.Sheaves.Flasque
+
+import HodgeConjecture.Other.AlgebraicTopology.SingularCochainFlasque
+import Mathlib.Topology.Sheaves.SheafOfFunctions
 
 /-!
 # Descent for singular cochains

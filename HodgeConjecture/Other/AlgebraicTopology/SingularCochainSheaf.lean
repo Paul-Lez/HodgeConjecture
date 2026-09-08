@@ -15,19 +15,20 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Other.AlgebraicTopology.SingularContractible
-public import HodgeConjecture.Other.Algebra.Homology.DualExact
-public import Mathlib.Algebra.Category.ModuleCat.Presheaf.Sheafification
+public import Mathlib.Algebra.Category.ModuleCat.Colimits
 public import Mathlib.Algebra.Homology.QuasiIso
 public import Mathlib.Algebra.Homology.SingleHomology
-public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
+public import Mathlib.AlgebraicTopology.SimplicialSet.PiZero
+public import Mathlib.AlgebraicTopology.SingularHomology.Basic
 public import Mathlib.Topology.Connected.LocallyPathConnected
-public import Mathlib.Topology.Homotopy.TopCat.ZerothHomotopy
+public import Mathlib.Topology.Homotopy.Contractible
 public import Mathlib.Topology.Sheaves.Abelian
-public import Mathlib.Topology.Sheaves.Sheafify
+
+import HodgeConjecture.Other.Algebra.Homology.DualExact
+import HodgeConjecture.Other.AlgebraicTopology.SingularContractible
+import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
+import Mathlib.Topology.Homotopy.TopCat.ZerothHomotopy
+import Mathlib.Topology.Sheaves.Sheafify
 
 /-!
 # The singular-cochain sheaf

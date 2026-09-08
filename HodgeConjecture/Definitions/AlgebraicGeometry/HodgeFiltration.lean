@@ -15,17 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.Ring.Basic
-public import HodgeConjecture.Definitions.Topology.Dimension
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
-public import HodgeConjecture.Lemmas.Algebra.Homology.StupidTruncation
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import Mathlib.Algebra.Group.Shrink
-public import Mathlib.Algebra.Homology.DerivedCategory.SmallShiftedHom
+public import HodgeConjecture.Lemmas.Algebra.Homology.StupidTruncation
+public import Mathlib.Algebra.Homology.DerivedCategory.Basic
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
-public import Mathlib.LinearAlgebra.TensorProduct.Map
+public import Mathlib.Algebra.Module.MinimalAxioms
+public import Mathlib.CategoryTheory.Localization.SmallShiftedHom
 
 /-!
 # The Hodge filtration

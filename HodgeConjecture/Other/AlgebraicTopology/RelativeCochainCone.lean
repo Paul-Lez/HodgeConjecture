@@ -15,13 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
-public import HodgeConjecture.Other.AlgebraicTopology.SingularCochainCohomology
+public import HodgeConjecture.Other.Algebra.Homology.DualExact
 public import HodgeConjecture.Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
 public import Mathlib.Algebra.Category.ModuleCat.Projective
-public import Mathlib.Algebra.Homology.Embedding.ExtendHomology
-public import Mathlib.Algebra.Homology.HomotopyCategory.ShortExact
-public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.Analysis.Normed.Group.Basic
+public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Relative singular cohomology as a cochain mapping cone

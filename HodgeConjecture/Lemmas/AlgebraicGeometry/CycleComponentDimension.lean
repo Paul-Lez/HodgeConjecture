@@ -16,7 +16,6 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
-public import Mathlib.Topology.KrullDimension
 
 /-!
 # Dimension of a reduced cycle component

@@ -15,8 +15,10 @@ limitations under the License.
 -/
 module
 
-public import Lean.PrettyPrinter.Delaborator.Builtins
-public import Mathlib.Init
+public meta import Lean.Elab.Term
+public meta import Lean.PrettyPrinter.Delaborator.Builtins
+
+import Lean.Exception
 
 /-!
 # Notation for bundling a type into a concrete category

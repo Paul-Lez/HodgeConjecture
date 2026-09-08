@@ -16,6 +16,9 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Other.AlgebraicTopology.SingularAffineSubdivisionMesh
+public import Mathlib.Analysis.Normed.Module.Basic
+
+import Mathlib.Analysis.Normed.Module.Convex
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in
