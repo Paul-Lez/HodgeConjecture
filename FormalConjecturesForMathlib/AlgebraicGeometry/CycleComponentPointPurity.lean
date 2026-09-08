@@ -58,7 +58,9 @@ lemma analyticPointLocalHomologyClass_ne_zero
     analyticPointLocalHomologyClass V z ≠ 0 := by
   let e := ComplexPoint.localChart V.structureMap V.dimension z
   let hz := ComplexPoint.mem_localChart_source V.structureMap V.dimension z
-  let _ : T1Space V.analyticPoint := inferInstance
+  let _ : @T2Space V.analyticPoint ComplexPoint.analyticTopology :=
+    ProjectiveSpace.Presentation.complexPoint_t2Space
+      (Classical.choice V.toSmoothProjectiveComplexVariety.projective)
   have hinjective : Function.Injective
       (relativeHomologyMap ℚ (2 * V.dimension)
         (chartModelEmbeddingPair V.dimension e z hz)) :=
@@ -72,7 +74,9 @@ lemma analyticPointLocalHomologyClass_ne_zero
 lemma span_analyticPointLocalHomologyClass_eq_top
     (V : DimensionedSmoothProjectiveComplexVariety) (z : V.analyticPoint) :
     Submodule.span ℚ {analyticPointLocalHomologyClass V z} = ⊤ := by
-  let _ : T1Space V.analyticPoint := inferInstance
+  let _ : @T2Space V.analyticPoint ComplexPoint.analyticTopology :=
+    ProjectiveSpace.Presentation.complexPoint_t2Space
+      (Classical.choice V.toSmoothProjectiveComplexVariety.projective)
   exact span_localClassOfChart_eq_top V.dimension
     (ComplexPoint.localChart V.structureMap V.dimension z) z
     (ComplexPoint.mem_localChart_source V.structureMap V.dimension z)

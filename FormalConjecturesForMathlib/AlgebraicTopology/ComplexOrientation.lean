@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import FormalConjecturesForMathlib.AlgebraicTopology.LocalFundamentalClass
+public import FormalConjecturesForMathlib.LinearAlgebra.ComplexOrientation
 public import Mathlib.Analysis.Complex.Basic
 
 /-!
@@ -37,6 +38,16 @@ namespace AlgebraicTopology.Singular
 def complexCoordinatesToReal (p : ℕ) (z : Fin p → ℂ) : StandardRealModel (p * 2) := fun k =>
   let jk := finProdFinEquiv.symm k
   ![(z jk.1).re, (z jk.1).im] jk.2
+
+/-- The explicit real-coordinate listing agrees with the coordinate map of the standard
+interleaved real basis of complex affine space. -/
+lemma complexCoordinatesToReal_eq_piBasisOneI_equivFun (p : ℕ) (z : Fin p → ℂ) :
+    complexCoordinatesToReal p z = (Complex.piBasisOneI p).equivFun z := by
+  ext k
+  obtain ⟨⟨j, l⟩, rfl⟩ := finProdFinEquiv.surjective k
+  fin_cases l <;>
+    simp [complexCoordinatesToReal, Complex.piBasisOneI, Module.Basis.equivFun_apply,
+      Module.Basis.smulTower'_repr_mk, Complex.coe_basisOneI_repr]
 
 /-- Reassemble consecutive pairs of real coordinates into complex coordinates. -/
 def realCoordinatesToComplex (p : ℕ) (x : StandardRealModel (p * 2)) (j : Fin p) : ℂ :=
