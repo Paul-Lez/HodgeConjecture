@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Other.AlgebraicGeometry.ComplexLocalHomologyVanishing
+public import HodgeConjecture.Other.AlgebraicGeometry.ComplexOrientationHomologySheaf
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportShift
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportNaturality
 public import HodgeConjecture.Other.AlgebraicTopology.SingularChainSheafOrientation
@@ -24,8 +25,8 @@ object, support functor, shift compatibility, or bounded model. Homological degr
 These are ambient groups for a closed support in the specified smooth space. This
 module does not assert intrinsic compactification independence or identify these
 groups with the existing compactification-relative Borel–Moore groups. The normalized
-orientation equivalence and comparison with the existing support-cone presentation
-remain separate theorems, not parts of the definition.
+complex orientation constructs the equivalence with actual derived supported cohomology
+below; comparison with the existing support-cone presentation remains a separate theorem.
 -/
 
 @[expose] public noncomputable section
@@ -214,5 +215,87 @@ def complexAmbientSheafBorelMooreCycleDegreeIsoOfOrientation
   complexAmbientSheafBorelMooreHomologyIsoOfOrientation structureMap d orientation Z
     (2 * ((d - p : ℕ) : ℤ)) ≪≫
       eqToIso (congrArg (ComplexDerivedSupportedCohomology structureMap Z) (by omega))
+
+/-! ### The geometrically normalized route, with no orientation input -/
+
+/-- The canonical unshifted derived orientation of the actual chain sheaf. The
+orientation is the inverse of the constructed map sending `1` to the exact complex
+local fundamental class; no orientation or comparison equivalence is an argument. -/
+def complexChainSheafDerivedSingleOrientationIso :
+    DerivedCategory.Q.obj (singularChainSheafCochainComplex ℚ
+        (TopCat.of (ComplexPoint X structureMap))) ≅
+      (DerivedCategory.singleFunctor
+        (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap)))
+          (-((2 * d : ℕ) : ℤ))).obj
+            (singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X structureMap))) :=
+  singularChainSheafDerivedSingleOrientationIso ℚ
+    (TopCat.of (ComplexPoint X structureMap)) (2 * d)
+      (fun m hm z ↦ localHomology_isZero_of_ne structureMap d z m hm)
+      (complexOrientationHomologySheafIso structureMap d).symm
+
+/-- The derived orientation induces exactly the geometrically constructed homology-sheaf
+orientation, through the canonical grading and localization comparisons. Combined with
+`complexOrientationHomologySheafIso_stalk_one`, this fixes its normalization, not merely
+its nonvanishing or its rational span. -/
+@[reassoc]
+theorem complexChainSheafDerivedSingleOrientationIso_homology :
+    (DerivedCategory.homologyFunctor _ (-((2 * d : ℕ) : ℤ))).map
+        (complexChainSheafDerivedSingleOrientationIso structureMap d).hom ≫
+      (DerivedCategory.homologyFunctorFactors _ (-((2 * d : ℕ) : ℤ))).hom.app
+        ((HomologicalComplex.single _ (.up ℤ) (-((2 * d : ℕ) : ℤ))).obj
+          (singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X structureMap)))) ≫
+      (HomologicalComplex.singleObjHomologySelfIso (.up ℤ) (-((2 * d : ℕ) : ℤ)) _).hom =
+      (DerivedCategory.homologyFunctorFactors _ (-((2 * d : ℕ) : ℤ))).hom.app
+        (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X structureMap))) ≫
+      (singularChainSheafCochainHomologyIso ℚ
+        (TopCat.of (ComplexPoint X structureMap)) (2 * d)).hom ≫
+      (complexOrientationHomologySheafIso structureMap d).inv :=
+  singularChainSheafDerivedSingleOrientationIso_homology ℚ
+    (TopCat.of (ComplexPoint X structureMap)) (2 * d)
+      (fun m hm z ↦ localHomology_isZero_of_ne structureMap d z m hm)
+      (complexOrientationHomologySheafIso structureMap d).symm
+
+/-- The actual chain sheaf is canonically `ℚ_X[2d]` in `D⁺`. Smoothness and
+Hausdorffness are the only geometric assumptions; all local concentration and exact
+complex-orientation data have been constructed. This does not assert the full
+dualizing universal property or any intrinsic closed-embedding comparison. -/
+def complexChainSheafPlusOrientationIso :
+    complexChainSheafPlusObject structureMap d ≅
+      (complexConstantRationalSheafPlusObject structureMap)⟦2 * (d : ℤ)⟧ :=
+  complexChainSheafPlusIsoOfOrientation structureMap d
+    (complexOrientationHomologySheafIso structureMap d).symm
+
+/-- Apply the actual derived support functor to the constructed complex orientation.
+This is the source of smooth-ambient Alexander–Poincaré duality, not a supplied
+group-level equivalence. -/
+def complexAmbientSheafBorelMooreOrientationIso
+    (Z : Closeds (ComplexPoint X structureMap)) :
+    complexAmbientSheafBorelMooreObject structureMap d Z ≅
+      ((TopCat.Sheaf.derivedClosedSupportSections
+        (TopCat.of (ComplexPoint X structureMap)) Z).obj
+          (complexConstantRationalSheafPlusObject structureMap))⟦2 * (d : ℤ)⟧ :=
+  complexAmbientSheafBorelMooreIsoOfOrientation structureMap d
+    (complexOrientationHomologySheafIso structureMap d).symm Z
+
+/-- Constructed smooth-ambient sheaf duality in every integer degree:
+`H_i^BM(Z ⊂ X; ℚ) ≅ H_Z^(2d-i)(X; ℚ)`, where both sides use actual derived support.
+The support may be singular. This theorem does not supply its fundamental class or
+identify intrinsic homology of that support. -/
+def complexAmbientSheafBorelMooreHomologyIso
+    (Z : Closeds (ComplexPoint X structureMap)) (i : ℤ) :
+    ComplexAmbientSheafBorelMooreHomology structureMap d Z i ≅
+      ComplexDerivedSupportedCohomology structureMap Z (2 * (d : ℤ) - i) :=
+  complexAmbientSheafBorelMooreHomologyIsoOfOrientation structureMap d
+    (complexOrientationHomologySheafIso structureMap d).symm Z i
+
+/-- Cycle-degree specialization of the constructed smooth-ambient duality. The
+identity `2d - 2(d-p) = 2p` is proved in the transport construction, not assumed. -/
+def complexAmbientSheafBorelMooreCycleDegreeIso
+    (Z : Closeds (ComplexPoint X structureMap)) (p : ℕ) (hp : p ≤ d) :
+    ComplexAmbientSheafBorelMooreHomology structureMap d Z
+        (2 * ((d - p : ℕ) : ℤ)) ≅
+      ComplexDerivedSupportedCohomology structureMap Z (2 * (p : ℤ)) :=
+  complexAmbientSheafBorelMooreCycleDegreeIsoOfOrientation structureMap d
+    (complexOrientationHomologySheafIso structureMap d).symm Z p hp
 
 end AlgebraicGeometry.ComplexPoint

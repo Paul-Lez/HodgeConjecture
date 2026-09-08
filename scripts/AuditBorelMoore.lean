@@ -95,6 +95,16 @@ open AlgebraicGeometry.ComplexPoint AlgebraicTopology.Singular
 #print axioms complexChainSheafPlusIsoOfOrientation
 #print axioms complexAmbientSheafBorelMooreHomologyIsoOfOrientation
 #print axioms complexAmbientSheafBorelMooreCycleDegreeIsoOfOrientation
+#print axioms complexOrientationHomologySheafIso
+#print axioms complexOrientationHomologySheafIso_stalk_one
+#print axioms complexChainSheafDerivedSingleOrientationIso_homology
+#print axioms complexChainSheafPlusOrientationIso
+#print axioms complexAmbientSheafBorelMooreOrientationIso
+#print axioms complexAmbientSheafBorelMooreHomologyIso
+#print axioms complexAmbientSheafBorelMooreCycleDegreeIso
+#print axioms complexAmbientSheafBorelMooreSupportMap
+#print axioms complexAmbientSheafBorelMooreSupportMap_comp
+#print axioms complexAmbientSheafBorelMooreForgetSupport
 #print axioms maximalCodimensionPrincipalDivisorClassVanishes_of_coefficientSum
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCycles
 #print axioms AlgebraicGeometry.cycleClassOnAlgebraicCyclesOfComponents
@@ -112,8 +122,10 @@ run_cmd do
     "AlgebraicGeometry.CompactlySupportedCohomology",
     "AlgebraicGeometry.ComplexLocalOrientation",
     "AlgebraicGeometry.ComplexLocalOrientationCoherence",
+    "AlgebraicGeometry.ComplexLocalOrientationNeighborhood",
     "AlgebraicGeometry.ComplexLocalHomologyVanishing",
     "AlgebraicGeometry.ComplexManifoldOrientation",
+    "AlgebraicGeometry.ComplexOrientationHomologySheaf",
     "AlgebraicGeometry.ComplexSheafBorelMoore",
     "AlgebraicGeometry.CycleComponentAnalyticImmersion",
     "AlgebraicGeometry.CycleComponentBorelMoore",
@@ -133,12 +145,16 @@ run_cmd do
     "AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance",
     "AlgebraicTopology.ChartLocalFundamentalClassGenerator",
     "AlgebraicTopology.ChartLocalFundamentalClassInvariance",
+    "AlgebraicTopology.ChartNeighborhoodOrientation",
+    "AlgebraicTopology.ClosedEmbeddingSheafification",
     "AlgebraicTopology.CompactificationBorelMoore",
     "AlgebraicTopology.ComplexDifferentiableLocalClassInvariance",
     "AlgebraicTopology.ComplexLinearLocalClassInvariance",
     "AlgebraicTopology.ComplexOrientation",
     "AlgebraicTopology.ComplexNeighborhoodOrientation",
     "AlgebraicTopology.DerivedSheafSupport",
+    "AlgebraicTopology.DerivedSheafSupportLocalization",
+    "AlgebraicTopology.DerivedSheafSupportNaturality",
     "AlgebraicTopology.DerivedSheafSupportShift",
     "AlgebraicTopology.DerivedConcentratedOrientation",
     "AlgebraicTopology.EuclideanLocalHomology",
@@ -146,19 +162,24 @@ run_cmd do
     "AlgebraicTopology.EuclideanNeighborhoodOrientation",
     "AlgebraicTopology.GlobalFundamentalClass",
     "AlgebraicTopology.HomologyZeroNaturality",
+    "AlgebraicTopology.HomologySheafSection",
     "AlgebraicTopology.LocalFundamentalClass",
     "AlgebraicTopology.LocalFundamentalClassGenerator",
+    "AlgebraicTopology.OpenSheafRestriction",
     "AlgebraicTopology.RelativeHomologyEmpty",
     "AlgebraicTopology.RelativeHomotopyInvariance",
     "AlgebraicTopology.RelativeMayerVietoris",
     "AlgebraicTopology.RelativePairExcision",
     "AlgebraicTopology.SheafCohomologyWithSupport",
+    "AlgebraicTopology.SheafMapOfLocallyRepresentableStalks",
     "AlgebraicTopology.SingularCapNaturality",
     "AlgebraicTopology.SingularCapProduct",
     "AlgebraicTopology.SingularChainSheaf",
     "AlgebraicTopology.SingularChainSheafStalk",
     "AlgebraicTopology.SingularChainHomologySheaf",
     "AlgebraicTopology.SingularChainSheafOrientation",
+    "AlgebraicTopology.SingularChainSheafPushforward",
+    "AlgebraicTopology.SingularChainSheafClosedSupport",
     "AlgebraicTopology.SingularCochainCohomology",
     "AlgebraicTopology.SingularCochainSheaf",
     "AlgebraicTopology.SingularCoefficientBaseChange",
@@ -174,7 +195,9 @@ run_cmd do
     "Geometry.Manifold.Orientation",
     "LinearAlgebra.ComplexOrientation"]
   let modules := otherModules.map ("HodgeConjecture.Other." ++ ·) ++
-    ["HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift"]
+    ["HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift",
+     "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusNaturality",
+     "HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.MappingCoconeShortExact"]
   let allowed : List Lean.Name := [``propext, ``Classical.choice, ``Quot.sound]
   let env ← Lean.getEnv
   for moduleName in modules do

@@ -196,10 +196,11 @@ lemma sheafSupportRestrictionToFiber_fst
       (supportRestrictionComplexShortComplex X U K).f :=
   CochainComplex.mappingCocone.liftShortComplex_fst _
 
-local instance : HasDerivedCategory (Sheaf AddCommGrpCat.{u} X) :=
+local instance derivedSupportLocalizationSheafDerivedCategory :
+    HasDerivedCategory (Sheaf AddCommGrpCat.{u} X) :=
   HasDerivedCategory.standard (Sheaf AddCommGrpCat.{u} X)
 
-local instance : HasDerivedCategory AddCommGrpCat.{u} :=
+local instance derivedSupportLocalizationGroupDerivedCategory : HasDerivedCategory AddCommGrpCat.{u} :=
   HasDerivedCategory.standard AddCommGrpCat.{u}
 
 set_option backward.defeqAttrib.useBackward true in
