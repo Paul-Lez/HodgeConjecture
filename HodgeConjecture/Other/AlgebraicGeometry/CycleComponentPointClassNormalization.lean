@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentSheafClass
 public import HodgeConjecture.Other.AlgebraicGeometry.CycleComponentPointCoclassSectionNormalization
+public import HodgeConjecture.Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization
 public import HodgeConjecture.Other.AlgebraicGeometry.SheafCycleClass
 public import HodgeConjecture.Other.AlgebraicTopology.CohomologySheafSectionRestriction
 
@@ -32,6 +33,24 @@ namespace AlgebraicGeometry.ComplexPoint
 variable {X : Scheme} (s : X ⟶ Spec (.of ℂ))
   [IsIntegral X] [Smooth s] [IsProjective s] (x : X)
   {d p : ℕ} [SmoothOfRelativeDimension d s] (hx : Order.coheight x = p)
+
+/-- Actual restriction followed by the cohomology-sheaf comparison is the
+restriction of the literal relative sheafification unit. -/
+theorem complexSupportInjectiveCohomologySheafIsoRelative_restriction_section
+    (S : Closeds (ComplexPoint X s)) (n : ℕ)
+    {V W : Opens (ComplexPoint X s)} (a : W ⟶ V) :
+    HomologicalComplex.homologyMap
+      (TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X s)) (.up ℤ)
+        (complexSupportInjectiveComplex s S) a) (n : ℤ) ≫
+      TopCat.Sheaf.sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X s))
+        (complexSupportInjectiveComplex s S) (n : ℤ) W ≫
+      (complexSupportInjectiveCohomologySheafIsoRelative s S n).hom.hom.app (op W) =
+    (complexSupportInjectiveSectionCohomologyEquiv s S V n).toAddCommGrpIso.hom ≫
+      (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X s)) S n).app (op V) ≫
+      (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X s)) S n).obj.map a.op := by
+  rw [TopCat.Sheaf.sectionCohomologyToSheafSection_restriction_assoc,
+    (complexSupportInjectiveCohomologySheafIsoRelative s S n).hom.hom.naturality,
+    complexSupportInjectiveCohomologySheafIsoRelative_section_assoc]
 
 /-- The normalization isomorphism's forward map displays the actual restriction,
 actual lowest-degree map, and actual cohomology-sheaf comparison. -/
@@ -99,6 +118,36 @@ theorem analyticComponentPointRelativeCoclass_toSheaf :
         (analyticComponentPointRelativeCoclass s x d z) =
       analyticPointCoclassSupportSection s d (cycleComponentSupport s x)
         (cycleComponentMap s x z) (range_cycleComponentMap_subset s x ⟨z, rfl⟩) ⊤ := rfl
+
+/-- The old point candidate has the EXACT general smooth-locus section as its
+canonical sheaf normalization, using actual maps throughout. -/
+theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
+    (hx : Order.coheight x = d) :
+    (complexSupportInjectiveCohomologySheafIsoRelative s
+      (cycleComponentAnalyticClosedSupport s x) (2 * d)).hom.hom.app
+        (op (cycleComponentSmoothSupportAmbientOpen s x))
+      (TopCat.Sheaf.sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X s))
+        (complexSupportInjectiveComplex s (cycleComponentAnalyticClosedSupport s x))
+        (2 * (d : ℤ)) (cycleComponentSmoothSupportAmbientOpen s x)
+        (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction s x)
+          (2 * (d : ℤ)) (analyticComponentPointSupportedInjectiveCoclass s x d z))) =
+      cycleComponentSmoothSupportCoclassSection s x (d := d) hx := by
+  have h := ConcreteCategory.congr_hom
+    (complexSupportInjectiveCohomologySheafIsoRelative_restriction_section s
+      (cycleComponentAnalyticClosedSupport s x) (2 * d)
+      (homOfLE (show cycleComponentSmoothSupportAmbientOpen s x ≤ ⊤ from le_top)))
+        (analyticComponentPointSupportedInjectiveCoclass s x d z)
+  refine h.trans ?_
+  change (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X s))
+      (cycleComponentSupport s x) (2 * d)).obj.map (homOfLE le_top).op
+    ((supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X s))
+      (cycleComponentSupport s x) (2 * d)).app (op ⊤)
+      (complexSupportInjectiveSectionCohomologyEquiv s
+        (cycleComponentAnalyticClosedSupport s x) ⊤ (2 * d)
+        (analyticComponentPointSupportedInjectiveCoclass s x d z))) = _
+  rw [analyticComponentPointSupportedInjectiveCoclass_relative,
+    analyticComponentPointRelativeCoclass_toSheaf]
+  exact cycleComponentSmoothSupportCoclassSection_global_point_normalization s x hx z
 
 end Point
 end AlgebraicGeometry.ComplexPoint
