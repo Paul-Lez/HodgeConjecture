@@ -1,0 +1,15 @@
+import HodgeConjecture.Other.AlgebraicTopology.ComplexNeighborhoodOrientation
+
+open AlgebraicTopology.Singular
+
+#print axioms imageSupportPairMap
+#print axioms imagePointPairMap
+#print axioms imageSupportPairMap_restrict
+#print axioms relativeHomologyMap_cast
+#print axioms standardRealToComplexMap
+#print axioms standardRealToComplexMap_injective
+#print axioms standardComplexOrientationNeighborhood
+#print axioms zero_mem_standardComplexOrientationNeighborhood
+#print axioms standardComplexOrientationNeighborhoodClass
+#print axioms standardRealToComplexPair_translation
+#print axioms standardComplexOrientationNeighborhoodClass_restrict
