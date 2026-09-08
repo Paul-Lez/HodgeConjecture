@@ -7,6 +7,10 @@ open AlgebraicGeometry.ComplexPoint
 #print axioms complexChainSheafPlusObject_obj
 #print axioms complexAmbientSheafBorelMooreObject
 #print axioms ComplexAmbientSheafBorelMooreHomology
+#print axioms complexAmbientSheafBorelMooreSupportMap
+#print axioms complexAmbientSheafBorelMooreSupportMap_refl
+#print axioms complexAmbientSheafBorelMooreSupportMap_comp
+#print axioms complexAmbientSheafBorelMooreForgetSupport
 #print axioms complexConstantRationalSheafPlusObject
 #print axioms ComplexDerivedSupportedCohomology
 #print axioms complexChainSheafPlusIsoOfOrientation

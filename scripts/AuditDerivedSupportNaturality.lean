@@ -1,0 +1,30 @@
+import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportNaturality
+
+#print axioms CategoryTheory.NatTrans.mapHomotopyCategoryPlus
+#print axioms CategoryTheory.NatTrans.mapHomotopyCategoryPlus_id
+#print axioms CategoryTheory.NatTrans.mapHomotopyCategoryPlus_comp
+#print axioms CategoryTheory.NatTrans.rightDerivedFunctorPlus
+#print axioms CategoryTheory.NatTrans.rightDerivedFunctorPlus_unit
+#print axioms CategoryTheory.NatTrans.rightDerivedFunctorPlus_unit_app
+#print axioms CategoryTheory.NatTrans.rightDerivedFunctorPlus_id
+#print axioms CategoryTheory.NatTrans.rightDerivedFunctorPlus_comp
+
+open TopCat.Sheaf
+
+#print axioms sheafSectionsSupportedOutsideInclusion_mono
+#print axioms openRestrictionImage
+#print axioms openRestrictionImage_mono
+#print axioms openRestrictionPushforwardMap
+#print axioms toOpenRestrictionPushforward_comp
+#print axioms sheafSectionsSupportedOutsideMap
+#print axioms sheafSectionsSupportedOutsideMap_inclusion
+#print axioms sheafSectionsSupportedOutsideMap_refl
+#print axioms sheafSectionsSupportedOutsideMap_comp
+#print axioms sheafSectionsWithClosedSupportMap
+#print axioms closedSupportSectionsMap
+#print axioms closedSupportSectionsMap_refl
+#print axioms closedSupportSectionsMap_comp
+#print axioms derivedClosedSupportSectionsMap
+#print axioms derivedClosedSupportSectionsMap_refl
+#print axioms derivedClosedSupportSectionsMap_comp
+#print axioms derivedClosedSupportSectionsMap_unit_app

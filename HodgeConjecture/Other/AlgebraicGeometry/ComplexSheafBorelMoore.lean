@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Other.AlgebraicGeometry.ComplexLocalHomologyVanishing
 public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportShift
+public import HodgeConjecture.Other.AlgebraicTopology.DerivedSheafSupportNaturality
 public import HodgeConjecture.Other.AlgebraicTopology.SingularChainSheafOrientation
 
 /-!
@@ -87,6 +88,45 @@ def ComplexAmbientSheafBorelMooreHomology
     (Z : Closeds (ComplexPoint X structureMap)) (i : ℤ) : AddCommGrpCat :=
   (DerivedCategory.Plus.homologyFunctor AddCommGrpCat (-i)).obj
     (complexAmbientSheafBorelMooreObject structureMap d Z)
+
+/-- Enlarge the closed support using the actual derived kernel-inclusion map. -/
+def complexAmbientSheafBorelMooreSupportMap
+    {Z W : Closeds (ComplexPoint X structureMap)} (h : Z ≤ W) (i : ℤ) :
+    ComplexAmbientSheafBorelMooreHomology structureMap d Z i ⟶
+      ComplexAmbientSheafBorelMooreHomology structureMap d W i :=
+  (DerivedCategory.Plus.homologyFunctor AddCommGrpCat (-i)).map
+    ((TopCat.Sheaf.derivedClosedSupportSectionsMap
+      (TopCat.of (ComplexPoint X structureMap)) h).app
+        (complexChainSheafPlusObject structureMap d))
+
+@[simp]
+theorem complexAmbientSheafBorelMooreSupportMap_refl
+    (Z : Closeds (ComplexPoint X structureMap)) (i : ℤ) :
+      complexAmbientSheafBorelMooreSupportMap structureMap d (le_refl Z) i = 𝟙 _ := by
+  unfold complexAmbientSheafBorelMooreSupportMap
+  rw [TopCat.Sheaf.derivedClosedSupportSectionsMap_refl]
+  exact (DerivedCategory.Plus.homologyFunctor AddCommGrpCat (-i)).map_id _
+
+set_option backward.isDefEq.respectTransparency false in
+@[reassoc (attr := simp)]
+theorem complexAmbientSheafBorelMooreSupportMap_comp
+    {Z W T : Closeds (ComplexPoint X structureMap)} (h : Z ≤ W) (h' : W ≤ T) (i : ℤ) :
+    complexAmbientSheafBorelMooreSupportMap structureMap d h i ≫
+        complexAmbientSheafBorelMooreSupportMap structureMap d h' i =
+      complexAmbientSheafBorelMooreSupportMap structureMap d (h.trans h') i := by
+  unfold complexAmbientSheafBorelMooreSupportMap
+  rw [← Functor.map_comp]
+  congr 1
+  exact NatTrans.congr_app
+    (TopCat.Sheaf.derivedClosedSupportSectionsMap_comp
+      (TopCat.of (ComplexPoint X structureMap)) h h') _
+
+/-- Forget the specified closed support by enlarging it to the whole ambient space. -/
+def complexAmbientSheafBorelMooreForgetSupport
+    (Z : Closeds (ComplexPoint X structureMap)) (i : ℤ) :
+    ComplexAmbientSheafBorelMooreHomology structureMap d Z i ⟶
+      ComplexAmbientSheafBorelMooreHomology structureMap d ⊤ i :=
+  complexAmbientSheafBorelMooreSupportMap structureMap d le_top i
 
 /-- The constant rational sheaf in degree zero, as an actual bounded-below derived object. -/
 def complexConstantRationalSheafPlusObject :
