@@ -1,0 +1,8 @@
+import HodgeConjecture.Other.AlgebraicTopology.CohomologySheafSection
+
+open TopCat.Sheaf
+
+#print axioms sectionCohomologyPresheafSheafificationIso
+#print axioms sectionCohomologyPresheafToSheaf
+#print axioms sectionCohomologyToSheafSection
+#print axioms sectionCohomologyPresheafToSheaf_stalk_isIso
