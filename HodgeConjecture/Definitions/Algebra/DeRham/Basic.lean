@@ -43,10 +43,6 @@ namespace Algebra.DeRham
 
 variable (R A : Type u) [CommRing R] [CommRing A] [Algebra R A]
 
--- open KaehlerDifferential
-
--- abbrev derham := ⋀[A]^p Ω[A⁄R]
-
 /-- A symbol `a₀ da₁ ∧ ... ∧ daₚ`. -/
 abbrev Generator (p : ℕ) := A × (Fin p → A)
 

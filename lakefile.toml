@@ -1,6 +1,6 @@
 name = "HodgeConjecture"
 keywords = ["math", "algebraic-geometry", "hodge-theory"]
-defaultTargets = ["HodgeConjecture"]
+defaultTargets = ["HodgeConjecture", "Other"]
 
 [leanOptions]
 pp.unicode.fun = true
@@ -14,3 +14,6 @@ rev = "v4.33.1"
 
 [[lean_lib]]
 name = "HodgeConjecture"
+
+[[lean_lib]]
+name = "Other"

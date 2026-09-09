@@ -1,9 +1,0 @@
-import HodgeConjecture.Other.AlgebraicGeometry.ComplexSheafBorelMooreRationalComparison
-
-open AlgebraicGeometry.ComplexPoint
-
-#print axioms complexDerivedSupportedCohomologyAddEquivRationalSupport
-#print axioms complexAmbientSheafBorelMooreAddEquivRationalSupport
-#print axioms complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport
-#print axioms complexAmbientSheafBorelMooreToFieldCohomology
-#print axioms complexAmbientSheafBorelMooreCycleDegreeToFieldCohomology
