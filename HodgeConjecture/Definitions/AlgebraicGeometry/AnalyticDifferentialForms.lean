@@ -68,13 +68,11 @@ lemma wedgeCovectors_apply_eq_det (E : Type*) [NormedAddCommGroup E] [NormedSpac
       intro L v
       rw [wedgeCovectors, ContinuousAlternatingMap.alternatizeUncurryFin_apply,
         Matrix.det_succ_row_zero]
-      apply Finset.sum_congr rfl
-      intro j hj
+      refine Finset.sum_congr rfl fun j _ ↦ ?_
       simp only [ContinuousLinearMap.smulRight_apply, Matrix.of_apply,
         zsmul_eq_mul, Int.cast_pow, Int.cast_neg, Int.cast_one,
         ContinuousAlternatingMap.smul_apply, smul_eq_mul]
-      rw [ih]
-      rw [mul_assoc]
+      rw [ih, mul_assoc]
       congr 2
 
 /-- The wedge construction is additive in each covector. -/
@@ -83,8 +81,7 @@ lemma wedgeCovectors_update_add (E : Type*) [NormedAddCommGroup E] [NormedSpace 
     wedgeCovectors E p (Function.update L i (a + b)) =
       wedgeCovectors E p (Function.update L i a) +
         wedgeCovectors E p (Function.update L i b) := by
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   rw [ContinuousAlternatingMap.add_apply]
   simp only [wedgeCovectors_apply_eq_det]
   let A : Matrix (Fin p) (Fin p) ℂ := Matrix.of (fun k j ↦ L k (v j))
@@ -101,11 +98,6 @@ lemma wedgeCovectors_update_add (E : Type*) [NormedAddCommGroup E] [NormedSpace 
     ext k j
     by_cases h : k = i <;> simp [A, h]
   rw [hAdd, ha, hb]
-  have hfun : (fun j ↦ a (v j) + b (v j)) =
-      (fun j ↦ a (v j)) + (fun j ↦ b (v j)) := by
-    funext j
-    rfl
-  rw [hfun]
   exact Matrix.det_updateRow_add A i _ _
 
 /-- The wedge construction is homogeneous in each covector. -/
@@ -113,8 +105,7 @@ lemma wedgeCovectors_update_smul (E : Type*) [NormedAddCommGroup E] [NormedSpace
     (p : ℕ) (L : Fin p → E →L[ℂ] ℂ) (i : Fin p) (c : ℂ) (a : E →L[ℂ] ℂ) :
     wedgeCovectors E p (Function.update L i (c • a)) =
       c • wedgeCovectors E p (Function.update L i a) := by
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   rw [ContinuousAlternatingMap.smul_apply]
   simp only [wedgeCovectors_apply_eq_det]
   let A : Matrix (Fin p) (Fin p) ℂ := Matrix.of (fun k j ↦ L k (v j))
@@ -134,8 +125,7 @@ lemma wedgeCovectors_eq_zero_of_eq (E : Type*) [NormedAddCommGroup E] [NormedSpa
     (p : ℕ) (L : Fin p → E →L[ℂ] ℂ) (i j : Fin p)
     (h : L i = L j) (hne : i ≠ j) :
     wedgeCovectors E p L = 0 := by
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   rw [wedgeCovectors_apply_eq_det]
   apply Matrix.det_zero_of_row_eq hne
   ext k
@@ -145,11 +135,9 @@ lemma wedgeCovectors_eq_zero_of_eq (E : Type*) [NormedAddCommGroup E] [NormedSpa
 lemma wedgeCovectors_update_zero (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
     (p : ℕ) (L : Fin p → E →L[ℂ] ℂ) (i : Fin p) :
     wedgeCovectors E p (Function.update L i 0) = 0 := by
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   rw [wedgeCovectors_apply_eq_det]
-  apply Matrix.det_eq_zero_of_row_eq_zero i
-  intro j
+  refine Matrix.det_eq_zero_of_row_eq_zero i fun j ↦ ?_
   simp
 
 /-- The standard constant volume form on `ℂ^p`. -/
@@ -167,8 +155,7 @@ lemma wedgeFDerivWithin_eq_standardVolumeForm_comp
     wedgeCovectors E p (fun i ↦ fderivWithin ℂ (f i) s x) =
       (standardVolumeForm p).compContinuousLinearMap
         (fderivWithin ℂ (fun y i ↦ f i y) s x) := by
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   rw [wedgeCovectors_apply_eq_det,
     ContinuousAlternatingMap.compContinuousLinearMap_apply,
     standardVolumeForm, wedgeCovectors_apply_eq_det]
@@ -194,9 +181,7 @@ lemma extDerivWithin_exactWedgeWithin_eq_zero
   let F : E → (Fin p → ℂ) := fun y i ↦ f i y
   let η : (Fin p → ℂ) → (Fin p → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
     fun _ ↦ standardVolumeForm p
-  have hF : ContDiffWithinAt ℂ ω F s x := by
-    rw [contDiffWithinAt_pi]
-    exact fun i ↦ hf i x hx
+  have hF : ContDiffWithinAt ℂ ω F s x := contDiffWithinAt_pi.2 fun i ↦ hf i x hx
   have hEq : Set.EqOn (exactWedgeWithin E p f s)
       (fun y ↦ (η (F y)).compContinuousLinearMap
         (fderivWithin ℂ F s y)) s := by
@@ -211,15 +196,12 @@ lemma extDerivWithin_exactWedgeWithin_eq_zero
     (hxc := by simpa [hs.interior_eq] using (show x ∈ closure s from subset_closure hx))
     (hxs := hx) (hst := Set.mapsTo_univ F s)]
   have hη : extDerivWithin η Set.univ (F x) = 0 := by
-    rw [extDerivWithin]
-    have hconst := congrFun
-      (fderivWithin_const (𝕜 := ℂ) (E := Fin p → ℂ)
-        (s := Set.univ) (standardVolumeForm p)) (F x)
-    rw [show fderivWithin ℂ η Set.univ (F x) = 0 from hconst]
+    rw [extDerivWithin, show fderivWithin ℂ η Set.univ (F x) = 0 from
+      congrFun (fderivWithin_const (𝕜 := ℂ) (E := Fin p → ℂ)
+        (s := Set.univ) (standardVolumeForm p)) (F x)]
     exact map_zero _
   rw [hη]
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
 
 lemma exactWedgeWithin_differentiableWithinAt
@@ -231,9 +213,7 @@ lemma exactWedgeWithin_differentiableWithinAt
   let F : E → (Fin p → ℂ) := fun y i ↦ f i y
   let η : (Fin p → ℂ) → (Fin p → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
     fun _ ↦ standardVolumeForm p
-  have hF : ContDiffWithinAt ℂ ω F s x := by
-    rw [contDiffWithinAt_pi]
-    exact fun i ↦ hf i x hx
+  have hF : ContDiffWithinAt ℂ ω F s x := contDiffWithinAt_pi.2 fun i ↦ hf i x hx
   have hDF : DifferentiableWithinAt ℂ (fderivWithin ℂ F s) s x :=
     (hF.fderivWithin_right (m := 1) hs.uniqueDiffOn (by simp) hx).differentiableWithinAt
       one_ne_zero
@@ -366,9 +346,8 @@ lemma chartSection_contDiffWithinAt [SmoothOfRelativeDimension d X.hom]
       (modelWithCornersSelf ℂ (Fin d → ℂ)) ω
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm
       (chartSectionDomain X d U z) y := by
-    apply (contMDiffOn_extChartAt_symm
-      (I := modelWithCornersSelf ℂ (Fin d → ℂ)) z y hy.1).mono
-    exact Set.inter_subset_left
+    exact (contMDiffOn_extChartAt_symm
+      (I := modelWithCornersSelf ℂ (Fin d → ℂ)) z y hy.1).mono Set.inter_subset_left
   have hext : ContMDiffWithinAt (modelWithCornersSelf ℂ (Fin d → ℂ))
       (modelWithCornersSelf ℂ ℂ) ω
       (extendedSection X d U f)
@@ -517,6 +496,13 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d X.hom]
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     chartRawEvaluation X d U z p
       (Algebra.DeRham.relationValue ℂ _ p r) y = 0 := by
+  have hupdate (v : Fin p → OpenHolomorphicFunctions X d U) (i : Fin p)
+      (q : OpenHolomorphicFunctions X d U) :
+      (fun j ↦ chartSectionDifferential X d U z (Function.update v i q j) y) =
+        Function.update (fun j ↦ chartSectionDifferential X d U z (v j) y) i
+          (chartSectionDifferential X d U z q y) := by
+    funext j
+    by_cases hji : j = i <;> simp [hji]
   cases r with
   | coeffAdd a b v =>
       simp only [Algebra.DeRham.relationValue, map_sub, chartRawEvaluation_single,
@@ -538,13 +524,6 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d X.hom]
   | diffAdd a₀ v i a b =>
       simp only [Algebra.DeRham.relationValue, map_sub, chartRawEvaluation_single,
         one_smul, Pi.sub_apply, chartGeneratorEvaluation]
-      have hupdate (q : OpenHolomorphicFunctions X d U) :
-          (fun j ↦ chartSectionDifferential X d U z (Function.update v i q j) y) =
-            Function.update
-              (fun j ↦ chartSectionDifferential X d U z (v j) y) i
-              (chartSectionDifferential X d U z q y) := by
-        funext j
-        by_cases hji : j = i <;> simp [hji]
       rw [hupdate, hupdate, hupdate,
         chartSectionDifferential_add X d U z a b hy,
         wedgeCovectors_update_add]
@@ -553,13 +532,6 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d X.hom]
       simp only [Algebra.DeRham.relationValue, map_sub, chartRawEvaluation_single,
         one_smul, map_smul, Pi.sub_apply, Pi.smul_apply,
         chartGeneratorEvaluation]
-      have hupdate (q : OpenHolomorphicFunctions X d U) :
-          (fun j ↦ chartSectionDifferential X d U z (Function.update v i q j) y) =
-            Function.update
-              (fun j ↦ chartSectionDifferential X d U z (v j) y) i
-              (chartSectionDifferential X d U z q y) := by
-        funext j
-        by_cases hji : j = i <;> simp [hji]
       rw [hupdate, hupdate,
         chartSectionDifferential_smul X d U z c a hy,
         wedgeCovectors_update_smul]
@@ -567,13 +539,6 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d X.hom]
   | diffMul a₀ v i a b =>
       simp only [Algebra.DeRham.relationValue, map_sub, chartRawEvaluation_single,
         one_smul, Pi.sub_apply, chartGeneratorEvaluation]
-      have hupdate (q : OpenHolomorphicFunctions X d U) :
-          (fun j ↦ chartSectionDifferential X d U z (Function.update v i q j) y) =
-            Function.update
-              (fun j ↦ chartSectionDifferential X d U z (v j) y) i
-              (chartSectionDifferential X d U z q y) := by
-        funext j
-        by_cases hji : j = i <;> simp [hji]
       rw [hupdate, hupdate, hupdate]
       rw [show chartSection X d U z (a₀ * a) y =
           chartSection X d U z a₀ y * chartSection X d U z a y by
@@ -596,17 +561,9 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d X.hom]
   | diffConst a₀ v i c =>
       simp only [Algebra.DeRham.relationValue, chartRawEvaluation_single, one_smul,
         chartGeneratorEvaluation]
-      have hupdate (q : OpenHolomorphicFunctions X d U) :
-          (fun j ↦ chartSectionDifferential X d U z (Function.update v i q j) y) =
-            Function.update
-              (fun j ↦ chartSectionDifferential X d U z (v j) y) i
-              (chartSectionDifferential X d U z q y) := by
-        funext j
-        by_cases hji : j = i <;> simp [hji]
       rw [hupdate, chartSectionDifferential_algebraMap X d U z c hy,
         wedgeCovectors_update_zero]
-      apply ContinuousAlternatingMap.ext
-      intro w
+      refine ContinuousAlternatingMap.ext fun w ↦ ?_
       simp
   | alt a₀ v i j h hne =>
       simp only [Algebra.DeRham.relationValue, chartRawEvaluation_single, one_smul,
@@ -614,8 +571,7 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d X.hom]
       have heq : chartSectionDifferential X d U z (v i) y =
           chartSectionDifferential X d U z (v j) y := by rw [h]
       rw [wedgeCovectors_eq_zero_of_eq (Fin d → ℂ) p _ i j heq hne]
-      apply ContinuousAlternatingMap.ext
-      intro w
+      refine ContinuousAlternatingMap.ext fun w ↦ ?_
       simp
 
 /-- Exterior differentiation of a generator in fixed coordinates agrees with the syntactic de
@@ -642,7 +598,6 @@ lemma extDerivWithin_chartGeneratorEvaluation
         exactWedgeWithin (Fin d → ℂ) p
           (fun i ↦ chartSection X d U z (g.2 i))
           (chartSectionDomain X d U z) w) by
-        funext w
         rfl]
   rw [h]
   simp only [chartGeneratorEvaluation, Algebra.DeRham.nextGenerator,
@@ -668,7 +623,6 @@ lemma chartGeneratorEvaluation_differentiableWithinAt
         exactWedgeWithin (Fin d → ℂ) p
           (fun i ↦ chartSection X d U z (g.2 i))
           (chartSectionDomain X d U z) w) by
-        funext w
         rfl]
   exact DifferentiableWithinAt.smul
     ((chartSection_contDiffWithinAt X d U z g.1 hy).differentiableWithinAt (by simp))
@@ -714,8 +668,7 @@ lemma chartRawEvaluation_rawDifferential
   | zero =>
       rw [map_zero, map_zero]
       symm
-      apply ContinuousAlternatingMap.ext
-      intro v
+      refine ContinuousAlternatingMap.ext fun v ↦ ?_
       simp [extDerivWithin, ContinuousAlternatingMap.alternatizeUncurryFin_apply,
         fderivWithin_zero]
   | single_add g c x hg hc ih =>
@@ -765,8 +718,7 @@ lemma mem_chartEvaluationKernel_iff [SmoothOfRelativeDimension d X.hom]
         chartRawEvaluation X d U z p x y = 0 := by
   simp only [chartEvaluationKernel, Submodule.mem_iInf, LinearMap.mem_ker,
     chartEvaluationAt]
-  exact forall_congr' fun z ↦ forall_congr' fun y ↦
-    ⟨fun h hy ↦ h hy, fun h hy ↦ h hy⟩
+  rfl
 
 /-- The ordinary Kähler relations are genuine coordinate identities. -/
 lemma standardRelations_le_chartEvaluationKernel
@@ -774,11 +726,10 @@ lemma standardRelations_le_chartEvaluationKernel
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
     Algebra.DeRham.standardRelations ℂ (OpenHolomorphicFunctions X d U) p ≤
       chartEvaluationKernel X d U p := by
-  apply Submodule.span_le.mpr
+  refine Submodule.span_le.mpr ?_
   rintro _ ⟨r, rfl⟩
-  apply (mem_chartEvaluationKernel_iff X d U p _).2
-  intro z y hy
-  exact chartRawEvaluation_relationValue X d U z p r hy
+  exact (mem_chartEvaluationKernel_iff X d U p _).2 fun z y hy ↦
+    chartRawEvaluation_relationValue X d U z p r hy
 
 /-- Coordinate-zero identities remain coordinate-zero after exterior differentiation. -/
 lemma rawDifferential_mem_chartEvaluationKernel
@@ -790,8 +741,7 @@ lemma rawDifferential_mem_chartEvaluationKernel
         (OpenHolomorphicFunctions X d U) p x ∈
       chartEvaluationKernel X d U (p + 1) := by
   have hx' := (mem_chartEvaluationKernel_iff X d U p x).1 hx
-  apply (mem_chartEvaluationKernel_iff X d U (p + 1) _).2
-  intro z y hy
+  refine (mem_chartEvaluationKernel_iff X d U (p + 1) _).2 fun z y hy ↦ ?_
   rw [chartRawEvaluation_rawDifferential X d U z p x hy]
   have hEq : Set.EqOn (chartRawEvaluation X d U z p x) 0
       (chartSectionDomain X d U z) := fun w hw ↦ hx' z w hw
@@ -801,21 +751,16 @@ lemma rawDifferential_mem_chartEvaluationKernel
       (F := (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)
       (s := chartSectionDomain X d U z)) y
   rw [hzero]
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   simp [ContinuousAlternatingMap.alternatizeUncurryFin_apply]
 
 lemma chartEvaluationKernel_eq_top_of_lt [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     {p : ℕ} (hp : d < p) : chartEvaluationKernel X d U p = ⊤ := by
-  apply top_unique
-  intro x hx
-  apply (mem_chartEvaluationKernel_iff X d U p x).2
-  intro z y hy
-  apply ContinuousAlternatingMap.ext
-  intro v
-  apply (chartRawEvaluation X d U z p x y).toAlternatingMap.map_linearDependent
-  intro hli
+  refine top_unique fun x _ ↦ ?_
+  refine (mem_chartEvaluationKernel_iff X d U p x).2 fun z y hy ↦
+    ContinuousAlternatingMap.ext fun v ↦ ?_
+  refine (chartRawEvaluation X d U z p x y).toAlternatingMap.map_linearDependent _ fun hli ↦ ?_
   have hcard := hli.fintype_card_le_finrank
   rw [Fintype.card_fin, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hcard
   lia
@@ -860,9 +805,8 @@ lemma standardRelations_le_restrictionStableAnalyticKernel
   rw [restrictionStableAnalyticKernel]
   simp only [Submodule.mem_iInf, Submodule.mem_comap]
   intro V i
-  apply standardRelations_le_chartEvaluationKernel X d V p
-  exact Algebra.DeRham.rawMap_standardRelations ℂ
-    (holomorphicRestrictionAlgHom X d i) p hx
+  exact standardRelations_le_chartEvaluationKernel X d V p
+    (Algebra.DeRham.rawMap_standardRelations ℂ (holomorphicRestrictionAlgHom X d i) p hx)
 
 lemma rawRestriction_mem_restrictionStableAnalyticKernel
     [SmoothOfRelativeDimension d X.hom]
@@ -875,8 +819,7 @@ lemma rawRestriction_mem_restrictionStableAnalyticKernel
   simp only [Submodule.mem_iInf, Submodule.mem_comap] at hx ⊢
   intro W j
   specialize hx W (i ≫ j)
-  rw [rawRestriction_comp, LinearMap.comp_apply] at hx
-  exact hx
+  rwa [rawRestriction_comp, LinearMap.comp_apply] at hx
 
 /-- Restriction-stable coordinate identities remain so after exterior differentiation. -/
 lemma rawDifferential_mem_restrictionStableAnalyticKernel
@@ -917,9 +860,8 @@ lemma analyticRelations_eq_restrictionStableAnalyticKernel
   | zero => rfl
   | succ p ih =>
       rw [analyticRelations, ih]
-      apply sup_eq_left.mpr
-      intro y hy
-      rcases hy with ⟨x, hx, rfl⟩
+      refine sup_eq_left.mpr ?_
+      rintro y ⟨x, hx, rfl⟩
       exact rawDifferential_mem_restrictionStableAnalyticKernel X d U p hx
 
 /-- The differential closure of the standard Kähler relations is contained in the analytic
@@ -947,10 +889,9 @@ lemma rawDifferential_mem_analyticRelations [SmoothOfRelativeDimension d X.hom]
         (OpenHolomorphicFunctions X d U) p x ∈
       analyticRelations X d U (p + 1) := by
   rw [analyticRelations]
-  apply (le_sup_right : (analyticRelations X d U p).map
+  exact (le_sup_right : (analyticRelations X d U p).map
     (Algebra.DeRham.rawDifferential ℂ
-      (OpenHolomorphicFunctions X d U) p) ≤ _)
-  exact ⟨x, hx, rfl⟩
+      (OpenHolomorphicFunctions X d U) p) ≤ _) ⟨x, hx, rfl⟩
 
 lemma rawRestriction_mem_analyticRelations [SmoothOfRelativeDimension d X.hom]
     {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
@@ -989,8 +930,8 @@ lemma holomorphicFormRelations_eq_analyticRelations
     [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
     holomorphicFormRelations X d U p =
-      analyticRelations X d U p := by
-  exact sup_eq_right.mpr (algebraicRelations_le_analyticRelations X d U p)
+      analyticRelations X d U p :=
+  sup_eq_right.mpr (algebraicRelations_le_analyticRelations X d U p)
 
 /-- Holomorphic forms are quotiented by exactly the identities that vanish in every fixed chart
 after every restriction. -/
@@ -1005,8 +946,7 @@ lemma holomorphicFormRelations_eq_restrictionStableAnalyticKernel
 lemma holomorphicFormRelations_eq_top_of_lt [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     {p : ℕ} (hp : d < p) : holomorphicFormRelations X d U p = ⊤ := by
-  apply top_unique
-  intro x hx
+  refine top_unique fun x _ ↦ ?_
   apply (le_sup_right : analyticRelations X d U p ≤ _)
   induction p with
   | zero => lia
@@ -1195,8 +1135,7 @@ lemma holomorphicFormRestriction_differential [SmoothOfRelativeDimension d X.hom
 @[simp] lemma holomorphicFormRestriction_id [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
     holomorphicFormRestriction X d (𝟙 U) p = LinearMap.id := by
-  apply LinearMap.ext
-  intro x
+  refine LinearMap.ext fun x ↦ ?_
   obtain ⟨x, rfl⟩ := Submodule.mkQ_surjective
     (holomorphicFormRelations X d U p) x
   change Submodule.Quotient.mk (rawRestriction X d (𝟙 U) p x) =
@@ -1209,8 +1148,7 @@ lemma holomorphicFormRestriction_differential [SmoothOfRelativeDimension d X.hom
     holomorphicFormRestriction X d (i ≫ j) p =
       (holomorphicFormRestriction X d j p).comp
         (holomorphicFormRestriction X d i p) := by
-  apply LinearMap.ext
-  intro x
+  refine LinearMap.ext fun x ↦ ?_
   obtain ⟨x, rfl⟩ := Submodule.mkQ_surjective
     (holomorphicFormRelations X d U p) x
   change Submodule.Quotient.mk (rawRestriction X d (i ≫ j) p x) =

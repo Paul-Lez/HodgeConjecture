@@ -74,9 +74,7 @@ lemma QuasiFinite.height_eq_height_under [QuasiFinite R S] [Module.Flat R S]
     P.height = (P.under R).height := by
   calc
     P.height = Order.height (⟨P, inferInstance⟩ : PrimeSpectrum S) :=
-      by
-        exact PrimeSpectrum.height_eq_orderHeight
-          (⟨P, inferInstance⟩ : PrimeSpectrum S)
+      PrimeSpectrum.height_eq_orderHeight (⟨P, inferInstance⟩ : PrimeSpectrum S)
     _ = Order.height
         (PrimeSpectrum.comap (algebraMap R S) (⟨P, inferInstance⟩ : PrimeSpectrum S)) := by
       apply Order.height_eq_of_strictMono (PrimeSpectrum.comap (algebraMap R S))
@@ -120,8 +118,7 @@ lemma FiniteType.isMaximal_comap_of_isJacobsonRing [IsJacobsonRing R] {f : R →
   change (((⊥ : Ideal K).comap q).comap f).IsMaximal at hmax
   have hq : (⊥ : Ideal K).comap q = P := by
     rw [← RingHom.ker_eq_comap_bot, Ideal.mk_ker]
-  rw [hq] at hmax
-  exact hmax
+  rwa [hq] at hmax
 
 /-- A standard-smooth algebra of relative dimension `d` has Krull dimension at most the
 dimension of the base plus `d`. -/
@@ -207,8 +204,7 @@ lemma IsStandardSmoothOfRelativeDimension.ringKrullDim_eq_complex {S : Type*} [C
   change (↑(d : ℕ∞) : WithBot ℕ∞) ≤ ringKrullDim S
   have hlower : (↑P.height : WithBot ℕ∞) ≤ ringKrullDim S :=
     Ideal.height_le_ringKrullDim_of_ne_top Ideal.IsPrime.ne_top'
-  rw [← hheight]
-  exact hlower
+  rwa [← hheight]
 
 end RingHom
 
@@ -243,9 +239,7 @@ lemma Scheme.orderKrullDim_le_of_exists_open_orderKrullDim_le (X : Scheme) (d : 
   | inr hX =>
       let : Nonempty X := hX
       rw [Order.krullDim_eq_iSup_length]
-      apply WithBot.coe_le_coe.mpr
-      apply iSup_le
-      intro l
+      refine WithBot.coe_le_coe.mpr (iSup_le fun l ↦ ?_)
       obtain ⟨U, hhead, hU⟩ := h l.head
       have hmem (i : Fin (l.length + 1)) : l i ∈ U := by
         have hle : l.head ≤ l i := l.monotone (Fin.zero_le i)

@@ -81,7 +81,6 @@ lemma shifted_coyoneda_exact₁ (T : Triangle C) (hT : T ∈ distTriang C)
   obtain ⟨β, hβ⟩ := hexact α hkernel
   refine ⟨β, ?_⟩
   change F.homologySequenceδ T (n - 1) n (by lia) β = α at hβ
-  rw [preadditiveCoyoneda_homologySequenceδ_apply] at hβ
-  exact hβ
+  rwa [preadditiveCoyoneda_homologySequenceδ_apply] at hβ
 
 end CategoryTheory.Pretriangulated.Triangle

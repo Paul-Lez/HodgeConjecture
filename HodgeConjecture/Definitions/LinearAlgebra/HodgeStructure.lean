@@ -106,8 +106,8 @@ def filtration (H : Pure V n) (p : ℕ) : Submodule ℂ (ℂ ⊗[ℚ] V) :=
 
 /-- A piece with first index at least `p` lies in `F^p`. -/
 lemma piece_le_filtration (H : Pure V n) {p a b : ℕ} (ha : p ≤ a) :
-    H.piece a b ≤ H.filtration p := by
-  exact le_iSup_of_le a <| le_iSup_of_le ha <| le_iSup (fun b' ↦ H.piece a b') b
+    H.piece a b ≤ H.filtration p :=
+  le_iSup_of_le a <| le_iSup_of_le ha <| le_iSup (fun b' ↦ H.piece a b') b
 
 /-- Rational Hodge classes of codimension `p`: rational vectors whose complexifications lie in
 the middle Hodge piece `V^{p,p}`. -/
@@ -149,9 +149,8 @@ noncomputable def pieceSum (H : Pure V n) (s : Set (ℕ × ℕ)) :
   ⨆ pq, ⨆ (_ : pq ∈ s), H.piece pq.1 pq.2
 
 lemma pieceSum_mono (H : Pure V n) {s t : Set (ℕ × ℕ)} (hst : s ⊆ t) :
-    H.pieceSum s ≤ H.pieceSum t := by
-  refine iSup₂_le fun pq hpq ↦ ?_
-  exact le_iSup₂_of_le pq (hst hpq) le_rfl
+    H.pieceSum s ≤ H.pieceSum t :=
+  iSup₂_le fun pq hpq ↦ le_iSup₂_of_le pq (hst hpq) le_rfl
 
 lemma piece_le_pieceSum (H : Pure V n) {s : Set (ℕ × ℕ)} {pq : ℕ × ℕ}
     (hpq : pq ∈ s) : H.piece pq.1 pq.2 ≤ H.pieceSum s :=
@@ -169,15 +168,12 @@ lemma pieceSum_union (H : Pure V n) (s t : Set (ℕ × ℕ)) :
 lemma pieceSum_singleton (H : Pure V n) (pq : ℕ × ℕ) :
     H.pieceSum {pq} = H.piece pq.1 pq.2 := by
   apply le_antisymm
-  · exact iSup₂_le fun ab hab ↦ by
-      have h : ab = pq := hab
-      subst ab
-      exact le_rfl
+  · exact iSup₂_le fun ab hab ↦ le_of_eq (by rw [show ab = pq from hab])
   · exact H.piece_le_pieceSum (Set.mem_singleton pq)
 
 lemma disjoint_pieceSum (H : Pure V n) {s t : Set (ℕ × ℕ)}
-    (hst : Disjoint s t) : Disjoint (H.pieceSum s) (H.pieceSum t) := by
-  exact H.isInternal.submodule_iSupIndep.disjoint_biSup_biSup hst
+    (hst : Disjoint s t) : Disjoint (H.pieceSum s) (H.pieceSum t) :=
+  H.isInternal.submodule_iSupIndep.disjoint_biSup_biSup hst
 
 lemma filtration_eq_pieceSum (H : Pure V n) (p : ℕ) :
     H.filtration p = H.pieceSum {pq | p ≤ pq.1} := by
@@ -288,8 +284,7 @@ lemma ofBase_mem_filtration_iff (p : ℕ) (H : Pure V (2 * p)) (x : V) :
       exact H.conjugate_mem_filtration p hx
     rw [← H.filtration_inf_conjugateFiltration p]
     exact ⟨hx, hconj⟩
-  · intro hx
-    exact H.piece_le_filtration (p := p) (a := p) (b := p) le_rfl hx
+  · exact fun hx ↦ H.piece_le_filtration (p := p) (a := p) (b := p) le_rfl hx
 
 /-- In weight `2p`, taking the inverse image of `F^p` along the rational lattice gives exactly
 the usual rational `(p,p)` classes. -/

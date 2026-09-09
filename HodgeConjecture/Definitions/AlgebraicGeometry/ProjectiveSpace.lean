@@ -64,10 +64,8 @@ noncomputable def degreeZeroEquiv (R : Type*) [CommRing R] :
     homogeneousSubmodule n R 0 ≃+* R where
   toFun f := coeff 0 f.1
   invFun r := ⟨C r, isHomogeneous_C n r⟩
-  left_inv f := by
-    apply Subtype.ext
-    exact (totalDegree_eq_zero_iff_eq_C.mp
-      ((totalDegree_zero_iff_isHomogeneous n).mpr f.2)).symm
+  left_inv f := Subtype.ext (totalDegree_eq_zero_iff_eq_C.mp
+    ((totalDegree_zero_iff_isHomogeneous n).mpr f.2)).symm
   right_inv r := coeff_zero_C r
   map_mul' x y := by
     have hx := totalDegree_eq_zero_iff_eq_C.mp
@@ -90,9 +88,7 @@ noncomputable instance degreeZeroFiniteType [Finite n] (R : Type*) [CommRing R] 
     RingHom.FiniteType.of_surjective _ (degreeZeroEquiv n R).surjective
   have h := hC.comp he
   convert h using 1
-  apply RingHom.ext
-  intro x
-  exact totalDegree_eq_zero_iff_eq_C.mp
+  exact RingHom.ext fun x ↦ totalDegree_eq_zero_iff_eq_C.mp
     ((totalDegree_zero_iff_isHomogeneous n).mpr x.2)
 
 /-- Projective space on finitely many homogeneous coordinates is proper over the terminal
@@ -100,8 +96,8 @@ scheme. -/
 noncomputable instance terminalProjProper [Finite n] :
     IsProper (terminal.from (Proj ℤ[n].{u, v})) := by
   have hterminal : IsTerminal
-      (Spec ↧(homogeneousSubmodule n (ULift.{max u v} ℤ) 0)) := by
-    exact IsTerminal.ofIso specULiftZIsTerminal
+      (Spec ↧(homogeneousSubmodule n (ULift.{max u v} ℤ) 0)) :=
+    IsTerminal.ofIso specULiftZIsTerminal
       (Scheme.Spec.mapIso
         (degreeZeroEquiv n (ULift.{max u v} ℤ)).toCommRingCatIso.op)
   have := isIso_of_isTerminal hterminal terminalIsTerminal (terminal.from _)
@@ -155,7 +151,6 @@ instance IsProjective.isProper {f : X ⟶ T} [h : IsProjective f] : IsProper f :
   have hcomp : IsProper
       (P.immersion ≫ toBase (Fin (P.ambientDimension + 1)) T) := by
     infer_instance
-  rw [P.immersion_toBase] at hcomp
-  exact hcomp
+  rwa [P.immersion_toBase] at hcomp
 
 end AlgebraicGeometry

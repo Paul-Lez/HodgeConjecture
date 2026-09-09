@@ -18,8 +18,10 @@ The long-term goal is to have either a proof or a disproof of the Hodge conjectu
 
 The statement of the conjecture is in `HodgeConjecture/Statement.lean`.
 The remaining content of the project is sorted into four folders:
+
 - `HodgeConjecture/Mathlib`: Content that is on track to be upstreamed to Mathlib;
 - `HodgeConjecture/Definitions`: Definitions used in the statement of the conjecture;
 - `HodgeConjecture/Lemmas`: Supporting results needed by those definitions;
-- `HodgeConjecture/Other`: Results that aren't needed to state the conjecture but whose truth
-  increases likelihood that the conjecture is correctly formalised.
+- `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
+
+WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.

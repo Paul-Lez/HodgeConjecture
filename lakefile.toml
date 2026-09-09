@@ -1,6 +1,6 @@
 name = "HodgeConjecture"
 keywords = ["math", "algebraic-geometry", "hodge-theory"]
-defaultTargets = ["HodgeConjecture"]
+defaultTargets = ["HodgeConjecture", "Other"]
 
 [leanOptions]
 pp.unicode.fun = true
@@ -12,5 +12,20 @@ name = "mathlib"
 scope = "leanprover-community"
 rev = "v4.33.1"
 
+[[require]]
+name = "verso"
+git = "https://github.com/leanprover/verso"
+rev = "v4.33.0"
+
 [[lean_lib]]
 name = "HodgeConjecture"
+
+[[lean_lib]]
+name = "Other"
+
+[[lean_lib]]
+name = "HodgeGuide"
+
+[[lean_exe]]
+name = "hodge-guide"
+root = "HodgeGuideMain"

@@ -51,25 +51,18 @@ def mvPolynomialAlgHomEquiv (n : ℕ) :
     (complexPolynomialRing n →ₐ[ℂ] ℂ) ≃ (Fin n → ℂ) where
   toFun φ i := φ (MvPolynomial.X i)
   invFun v := MvPolynomial.aeval v
-  left_inv φ := by
-    apply MvPolynomial.algHom_ext
-    intro i
-    simp
-  right_inv v := by
-    funext i
-    simp
+  left_inv φ := MvPolynomial.algHom_ext fun i ↦ by simp
+  right_inv v := funext fun i ↦ by simp
 
 lemma continuous_mvPolynomialAlgHomEquiv (n : ℕ) :
-    Continuous (mvPolynomialAlgHomEquiv n) := by
-  apply continuous_pi
-  intro i
-  exact continuous_affineAlgebraHom_apply (complexPolynomialRing n) (MvPolynomial.X i)
+    Continuous (mvPolynomialAlgHomEquiv n) :=
+  continuous_pi fun i ↦
+    continuous_affineAlgebraHom_apply (complexPolynomialRing n) (MvPolynomial.X i)
 
 lemma continuous_mvPolynomialAlgHomEquiv_symm (n : ℕ) :
     Continuous (mvPolynomialAlgHomEquiv n).symm := by
   rw [continuous_induced_rng]
-  apply continuous_pi
-  intro p
+  refine continuous_pi fun p ↦ ?_
   simpa [mvPolynomialAlgHomEquiv] using p.continuous_eval
 
 /-- Pointwise convergence on complex algebra homomorphisms out of a polynomial ring is the usual
@@ -99,9 +92,8 @@ abbrev standardEtalePointSpace :=
 /-- Construct a complex algebra homomorphism from the root data of a standard étale point. -/
 def standardEtalePointToAlgHom (z : standardEtalePointSpace P) : P.Ring →ₐ[ℂ] ℂ := by
   letI : Algebra (complexPolynomialRing n) ℂ := z.1.1.toRingHom.toAlgebra
-  letI : IsScalarTower ℂ (complexPolynomialRing n) ℂ := by
-    apply IsScalarTower.of_algebraMap_eq
-    exact fun c ↦ (z.1.1.commutes c).symm
+  letI : IsScalarTower ℂ (complexPolynomialRing n) ℂ :=
+    IsScalarTower.of_algebraMap_eq fun c ↦ (z.1.1.commutes c).symm
   have hz : P.HasMap z.1.2 := by
     rw [StandardEtalePair.HasMap]
     constructor
@@ -136,9 +128,8 @@ def standardEtalePointEquiv :
     let v : complexPolynomialRing n →ₐ[ℂ] ℂ :=
       φ.comp (IsScalarTower.toAlgHom ℂ (complexPolynomialRing n) P.Ring)
     let : Algebra (complexPolynomialRing n) ℂ := v.toRingHom.toAlgebra
-    let hscalar : IsScalarTower ℂ (complexPolynomialRing n) ℂ := by
-      apply IsScalarTower.of_algebraMap_eq
-      exact fun c ↦ (v.commutes c).symm
+    let hscalar : IsScalarTower ℂ (complexPolynomialRing n) ℂ :=
+      IsScalarTower.of_algebraMap_eq fun c ↦ (v.commutes c).symm
     let := hscalar
     let φB : P.Ring →ₐ[complexPolynomialRing n] ℂ :=
       { toRingHom := φ.toRingHom
@@ -147,16 +138,13 @@ def standardEtalePointEquiv :
       P.hom_ext (by simp [φB])
     have hres := congrArg
       (fun q : P.Ring →ₐ[complexPolynomialRing n] ℂ ↦ q.restrictScalars ℂ) heq
-    have hφ : φB.restrictScalars ℂ = φ := by
-      ext r
-      rfl
+    have hφ : φB.restrictScalars ℂ = φ := AlgHom.ext fun _ ↦ rfl
     change (P.lift (φ P.X) (P.hasMap_X.map φB)).restrictScalars ℂ = φ
     exact hres.trans hφ
   right_inv z := by
     let : Algebra (complexPolynomialRing n) ℂ := z.1.1.toRingHom.toAlgebra
-    let hscalar : IsScalarTower ℂ (complexPolynomialRing n) ℂ := by
-      apply IsScalarTower.of_algebraMap_eq
-      exact fun c ↦ (z.1.1.commutes c).symm
+    let hscalar : IsScalarTower ℂ (complexPolynomialRing n) ℂ :=
+      IsScalarTower.of_algebraMap_eq fun c ↦ (z.1.1.commutes c).symm
     let := hscalar
     have hz : P.HasMap z.1.2 := by
       rw [StandardEtalePair.HasMap]
@@ -165,8 +153,7 @@ def standardEtalePointEquiv :
       · simpa [Polynomial.aeval_def, RingHom.algebraMap_toAlgebra, isUnit_iff_ne_zero] using z.2.2
     apply Subtype.ext
     apply Prod.ext
-    · apply AlgHom.ext
-      intro b
+    · refine AlgHom.ext fun b ↦ ?_
       change P.lift z.1.2 hz (algebraMap (complexPolynomialRing n) P.Ring b) = z.1.1 b
       exact (P.lift z.1.2 hz).commutes b
     · change P.lift z.1.2 hz P.X = z.1.2
@@ -177,8 +164,7 @@ lemma continuous_algHomToStandardEtalePoint :
   rw [continuous_induced_rng]
   apply Continuous.prodMk
   · rw [continuous_induced_rng]
-    apply continuous_pi
-    intro b
+    refine continuous_pi fun b ↦ ?_
     simpa [algHomToStandardEtalePoint] using
       continuous_affineAlgebraHom_apply P.Ring
         (algebraMap (complexPolynomialRing n) P.Ring b)
@@ -217,9 +203,8 @@ lemma standardEtalePointToAlgHom_mk (z : standardEtalePointSpace P)
         (Polynomial.eval₂RingHom z.1.1 z.1.2)
         (Polynomial.eval₂ z.1.1 z.1.2 P.g)⁻¹ q := by
   let : Algebra (complexPolynomialRing n) ℂ := z.1.1.toRingHom.toAlgebra
-  let hscalar : IsScalarTower ℂ (complexPolynomialRing n) ℂ := by
-    apply IsScalarTower.of_algebraMap_eq
-    exact fun c ↦ (z.1.1.commutes c).symm
+  let hscalar : IsScalarTower ℂ (complexPolynomialRing n) ℂ :=
+    IsScalarTower.of_algebraMap_eq fun c ↦ (z.1.1.commutes c).symm
   let := hscalar
   have hz : P.HasMap z.1.2 := by
     rw [StandardEtalePair.HasMap]
@@ -283,8 +268,7 @@ lemma continuous_standardEtale_bivariate_evaluation
 lemma continuous_standardEtalePointToAlgHom :
     Continuous (standardEtalePointToAlgHom P) := by
   rw [continuous_induced_rng]
-  apply continuous_pi
-  intro r
+  refine continuous_pi fun r ↦ ?_
   obtain ⟨q, rfl⟩ := Ideal.Quotient.mk_surjective r
   simpa only [Function.comp_apply, standardEtalePointToAlgHom_mk] using
     continuous_standardEtale_bivariate_evaluation P q

@@ -39,8 +39,7 @@ locus. -/
 lemma Scheme.Hom.smooth_restrict_smoothLocus
     (f : X ⟶ Y) [LocallyOfFinitePresentation f] :
     Smooth (f.smoothLocus.ι ≫ f) := by
-  rw [← Scheme.Hom.smoothLocus_eq_top_iff]
-  rw [← Scheme.Hom.preimage_smoothLocus_eq]
+  rw [← Scheme.Hom.smoothLocus_eq_top_iff, ← Scheme.Hom.preimage_smoothLocus_eq]
   ext x
   simp
 

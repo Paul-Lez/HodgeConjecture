@@ -68,14 +68,11 @@ def affineSpecEquiv :
   invFun φ := Over.homMk (Spec.map (CommRingCat.ofHom φ.toRingHom)) (by
     change Spec.map (CommRingCat.ofHom φ.toRingHom) ≫
       Spec.map (CommRingCat.ofHom (algebraMap ℂ R)) = 𝟙 (Spec ↧ℂ)
-    rw [← Spec.map_comp]
-    rw [← Spec.map_id]
+    rw [← Spec.map_comp, ← Spec.map_id]
     congr 1
     ext c
     exact φ.commutes c)
-  left_inv z := by
-    apply Over.OverMorphism.ext
-    exact Spec.map_preimage z.left
+  left_inv z := Over.OverMorphism.ext (Spec.map_preimage z.left)
   right_inv φ := by
     ext r
     simp [Spec.homEquiv_apply]
@@ -106,8 +103,8 @@ lemma evaluate_affineSpecEquiv_symm_top (s : Γ(Spec ↧R, ⊤)) (φ : R →ₐ[
     _ = φ ((Scheme.ΓSpecIso ↧R).hom s) := by simp
 
 lemma continuous_affineAlgebraHom_apply (r : R) :
-    Continuous (fun φ : R →ₐ[ℂ] ℂ ↦ φ r) := by
-  exact (continuous_apply r).comp continuous_induced_dom
+    Continuous (fun φ : R →ₐ[ℂ] ℂ ↦ φ r) :=
+  (continuous_apply r).comp continuous_induced_dom
 
 lemma continuous_affineSpecEquiv :
     @Continuous
@@ -209,8 +206,7 @@ lemma continuous_affineSpecEquiv_symm :
     have hψU : (affineSpecEquiv R).symm ψ ∈ overOpen U := hfU hψf
     refine ⟨hψU, ?_⟩
     change evaluate U s ((affineSpecEquiv R).symm ψ) ∈ V
-    rw [evaluate_res hfU s _ hψf]
-    exact hψV
+    rwa [evaluate_res hfU s _ hψf]
   · refine ⟨hφf, ?_⟩
     change evaluate ((Spec ↧R).basicOpen f) t
       ((affineSpecEquiv R).symm φ) ∈ V
@@ -251,9 +247,7 @@ lemma affineSpecEquiv_affineSpecComplexPointMap (g : A →ₐ[ℂ] B)
     (z : ComplexPoint (Over.mk (affineSpecStructureMap B))) :
     affineSpecEquiv A (affineSpecComplexPointMap g z) =
       (affineSpecEquiv B z).comp g := by
-  apply AlgHom.coe_ringHom_injective
-  apply DFunLike.ext _ _
-  intro a
+  ext a
   simp [affineSpecComplexPointMap, map, affineSpecEquiv, affineSpecMap,
     Spec.preimage_comp]
 

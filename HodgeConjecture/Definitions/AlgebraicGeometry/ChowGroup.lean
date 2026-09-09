@@ -45,9 +45,7 @@ namespace AlgebraicGeometry
 /-- The subgroup of algebraic cycles supported at points of codimension `p`. -/
 def codimensionCycleSubgroup (X : Scheme.{u}) (p : ℕ) : AddSubgroup (AlgebraicCycle X ℤ) where
   carrier c := ∀ x, c x ≠ 0 → coheight x = p
-  zero_mem' := by
-    intro x hx
-    exact (hx rfl).elim
+  zero_mem' x hx := (hx rfl).elim
   add_mem' := by
     intro a b ha hb x hx
     by_cases hax : a x = 0
@@ -55,9 +53,7 @@ def codimensionCycleSubgroup (X : Scheme.{u}) (p : ℕ) : AddSubgroup (Algebraic
     · exact ha x hax
   neg_mem' := by
     intro a ha x hx
-    apply ha x
-    intro h
-    apply hx
+    refine ha x fun h ↦ hx ?_
     change -(a x) = 0
     simp [h]
 
@@ -72,9 +68,8 @@ namespace CodimensionCycle
 variable {X : Scheme.{u}} {p : ℕ}
 
 @[ext]
-lemma ext {a b : CodimensionCycle X p} (h : ∀ x, a.1 x = b.1 x) : a = b := by
-  apply Subtype.ext
-  exact Function.locallyFinsuppWithin.ext h
+lemma ext {a b : CodimensionCycle X p} (h : ∀ x, a.1 x = b.1 x) : a = b :=
+  Subtype.ext (Function.locallyFinsuppWithin.ext h)
 
 /-- The cycle with coefficient `n` at one point and zero elsewhere. -/
 noncomputable def single (x : X) (hx : coheight x = p) (n : ℤ) : CodimensionCycle X p :=
@@ -104,17 +99,15 @@ lemma single_zero (x : X) (hx : coheight x = p) : single x hx 0 = 0 := by
 
 /-- Every point of the spectrum of a field has codimension zero. -/
 lemma specField_coheight (K : Type u) [Field K] (x : Spec ↧K) : coheight x = 0 := by
-  apply Order.IsMax.coheight_eq_zero
-  intro y _
+  refine Order.IsMax.coheight_eq_zero fun y _ ↦ ?_
   rw [Subsingleton.elim y x]
 
 /-- A codimension-zero point of an integral scheme is its generic point. -/
 lemma eq_genericPoint_of_coheight_zero [IsIntegral X] (x : X) (hx : coheight x = 0) :
     x = genericPoint X := by
-  have hmax : IsMax x := Order.coheight_eq_zero.mp hx
   apply inseparable_iff_eq.mp
   rw [inseparable_iff_specializes_and]
-  exact ⟨hmax le_top, genericPoint_specializes x⟩
+  exact ⟨Order.coheight_eq_zero.mp hx le_top, genericPoint_specializes x⟩
 
 /-- Codimension-zero cycles on an integral scheme are determined by their generic coefficient. -/
 noncomputable def integralEquiv [IsIntegral X] : CodimensionCycle X 0 ≃+ ℤ where
@@ -124,8 +117,7 @@ noncomputable def integralEquiv [IsIntegral X] : CodimensionCycle X 0 ≃+ ℤ w
     have hgp : coheight (genericPoint X) = (0 : ℕ) :=
       Order.IsMax.coheight_eq_zero isMax_top
     change single (genericPoint X) hgp (c (genericPoint X)) = c
-    apply ext
-    intro x
+    refine ext fun x ↦ ?_
     classical
     by_cases hx : c x = 0
     · by_cases h : x = genericPoint X
@@ -146,8 +138,7 @@ noncomputable def specFieldEquiv (K : Type u) [Field K] :
   toFun c := c default
   invFun n := single default (specField_coheight K default) n
   left_inv c := by
-    apply ext
-    intro x
+    refine ext fun x ↦ ?_
     rw [Subsingleton.elim x (default : Spec ↧K)]
     exact single_same default _ _
   right_inv n := single_same default _ _
@@ -242,13 +233,12 @@ lemma mem_rationalEquivalenceSubgroup_iff {X : Scheme.{u}} {p : ℕ}
 @[simp]
 lemma principalDivisorSubgroup_zero (X : Scheme.{u}) :
     principalDivisorSubgroup X 0 = ⊥ := by
-  apply le_antisymm
-  · unfold principalDivisorSubgroup
-    rw [AddSubgroup.closure_le]
-    rintro _ ⟨D, rfl⟩
-    have h := D.genericPoint_codimension
-    simp at h
-  · exact bot_le
+  rw [eq_bot_iff]
+  unfold principalDivisorSubgroup
+  rw [AddSubgroup.closure_le]
+  rintro _ ⟨D, rfl⟩
+  have h := D.genericPoint_codimension
+  simp at h
 
 /-- There are no principal-divisor relations in codimension zero. -/
 @[simp]
@@ -258,9 +248,7 @@ lemma rationalEquivalenceSubgroup_zero (X : Scheme.{u}) :
   simp only [rationalEquivalenceSubgroup, principalDivisorSubgroup_zero,
     AddSubgroup.mem_comap, AddSubgroup.mem_bot]
   constructor
-  · intro h
-    apply Subtype.ext
-    exact h
+  · exact fun h ↦ Subtype.ext h
   · rintro rfl
     rfl
 
@@ -317,8 +305,7 @@ instance codimensionCycle_subsingleton_of_isEmpty [IsEmpty X] :
 
 instance subsingleton_of_isEmpty [IsEmpty X] : Subsingleton (ChowGroup X p) :=
   (QuotientAddGroup.subsingleton_iff).2 <| by
-    apply SetLike.ext
-    intro a
+    refine SetLike.ext fun a ↦ ?_
     simp only [AddSubgroup.mem_top, iff_true]
     rw [Subsingleton.elim a (0 : CodimensionCycle X p)]
     exact (rationalEquivalenceSubgroup X p).zero_mem
@@ -344,23 +331,14 @@ lemma toRational_add (a b : ChowGroup X p) :
 
 instance rational_subsingleton_of_isEmpty [IsEmpty X] :
     Subsingleton (RationalChowGroup X p) := by
-  constructor
-  intro a b
-  have ha : a = 0 := by
-    refine TensorProduct.induction_on a rfl ?_ ?_
+  have key : ∀ w : RationalChowGroup X p, w = 0 := fun w ↦ by
+    refine TensorProduct.induction_on w rfl ?_ ?_
     · intro q z
       rw [Subsingleton.elim z 0]
       simp
     · intro x y hx hy
       simp [hx, hy]
-  have hb : b = 0 := by
-    refine TensorProduct.induction_on b rfl ?_ ?_
-    · intro q z
-      rw [Subsingleton.elim z 0]
-      simp
-    · intro x y hx hy
-      simp [hx, hy]
-  exact ha.trans hb.symm
+  exact ⟨fun a b ↦ (key a).trans (key b).symm⟩
 
 /-- Every rational Chow class on the empty scheme is zero. -/
 lemma rational_eq_zero_of_isEmpty [IsEmpty X] (z : RationalChowGroup X p) : z = 0 :=
@@ -412,8 +390,7 @@ lemma rational_eq_smul_genericPoint (X : Scheme.{u}) [IsIntegral X]
         (mk (CodimensionCycle.single (genericPoint X)
           (Order.IsMax.coheight_eq_zero isMax_top) 1)) := by
   apply (rationalIntegralEquiv X).injective
-  rw [map_smul]
-  rw [rationalIntegralEquiv_toRational_single]
+  rw [map_smul, rationalIntegralEquiv_toRational_single]
   simp
 
 /-- The codimension-zero Chow group of the spectrum of a field is `ℤ`. -/
@@ -470,8 +447,8 @@ example : specFieldEquiv ℚ
 /-- The rational-coefficient calculation sends the same generator to `1 : ℚ`. -/
 example : rationalSpecFieldEquiv ℚ
     (toRational (mk (CodimensionCycle.single default
-      (CodimensionCycle.specField_coheight ℚ default) 1))) = 1 := by
-  exact rationalSpecFieldEquiv_toRational_single ℚ 1
+      (CodimensionCycle.specField_coheight ℚ default) 1))) = 1 :=
+  rationalSpecFieldEquiv_toRational_single ℚ 1
 
 end ChowGroup
 
