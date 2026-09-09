@@ -76,9 +76,8 @@ lemma orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
   have h := SmoothOfRelativeDimension.height_add_coheight_eq_of_coheight_eq_dimension
     (f := f) (d := d) x hx
   rw [hx] at h
-  have hheight : Order.height x = 0 := by
-    apply bot_unique
-    exact (ENat.add_le_add_iff_right (ENat.natCast_ne_top d)).mp (by simpa using h.le)
+  have hheight : Order.height x = 0 :=
+    bot_unique ((ENat.add_le_add_iff_right (ENat.natCast_ne_top d)).mp (by simpa using h.le))
   rw [hheight]
 
 /-- A component whose generic point has coheight one less than the ambient dimension has
@@ -313,8 +312,7 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
     cycleComponentι X.left x ≫ X.hom
   let S : (cycleComponent X.left x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
-  let : Smooth g := by
-    exact cycleComponent_smoothLocus_smooth X x
+  let : Smooth g := cycleComponent_smoothLocus_smooth X x
   obtain ⟨z, hzsmooth, hzclosed⟩ :=
     exists_cycleComponent_smooth_closed_complexPoint X x
   let zs : S.toScheme := ⟨z.underlying, hzsmooth⟩
@@ -337,14 +335,10 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
     RingHom.IsStandardSmoothOfRelativeDimension.height_eq_of_isMaximal hm P
   have hPcoheight : P.height = Order.coheight zw :=
     hW.primeIdealOf_height_eq_coheight zw
-  have hWcoheight : Order.coheight zs = Order.coheight zw := by
-    have h := coheight_eq_of_isOpenImmersion (x := zw) W.ι
-    change Order.coheight zs = Order.coheight zw at h
-    exact h
-  have hScoheight : Order.coheight z.underlying = Order.coheight zs := by
-    have h := coheight_eq_of_isOpenImmersion (x := zs) S.ι
-    change Order.coheight z.underlying = Order.coheight zs at h
-    exact h
+  have hWcoheight : Order.coheight zs = Order.coheight zw :=
+    coheight_eq_of_isOpenImmersion (x := zw) W.ι
+  have hScoheight : Order.coheight z.underlying = Order.coheight zs :=
+    coheight_eq_of_isOpenImmersion (x := zs) S.ι
   have hmEq : m = n := by
     exact_mod_cast calc
       (m : ℕ∞) = P.height := hPm.symm
@@ -374,10 +368,9 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_of_le_two
     [IsProjective X.hom] (x : X.left) (d p : ℕ)
     [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = p) (hd : d ≤ 2) :
-    Nonempty (CycleComponentSeparateLocalCoordinates X x d (d - p)) := by
-  apply nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight
-  intro z
-  exact cycleComponent_closedPoint_coheight_eq_sub_of_le_two X x z hx hd
+    Nonempty (CycleComponentSeparateLocalCoordinates X x d (d - p)) :=
+  nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight X x d (d - p)
+    fun z ↦ cycleComponent_closedPoint_coheight_eq_sub_of_le_two X x z hx hd
 
 /-- A zero-dimensional reduced component in a smooth complex `d`-fold has a local étale chart
 with no component coordinates and an independent ambient chart with `d` coordinates. -/
@@ -385,13 +378,12 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_eq_dimension
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) (d : ℕ)
     [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = d) :
-    Nonempty (CycleComponentSeparateLocalCoordinates X x d 0) := by
-  apply nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight
-  intro z
-  exact coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
-    x z.underlying (cycleComponent_complexPoint_underlying_isClosed X x z)
-      (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
-        (f := X.hom) (d := d) x hx)
+    Nonempty (CycleComponentSeparateLocalCoordinates X x d 0) :=
+  nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight X x d 0 fun z ↦
+    coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
+      x z.underlying (cycleComponent_complexPoint_underlying_isClosed X x z)
+        (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
+          (f := X.hom) (d := d) x hx)
 
 /-- A one-dimensional reduced component in a smooth complex `d`-fold has a local étale chart
 with one component coordinate and an independent ambient chart with `d` coordinates. -/
@@ -400,12 +392,11 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_succ_eq_dimens
     [IsProjective X.hom] (x : X.left) (d p : ℕ)
     [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = p) (hd : p + 1 = d) :
-    Nonempty (CycleComponentSeparateLocalCoordinates X x d 1) := by
-  apply nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight
-  intro z
-  exact coheight_eq_one_of_isClosed_of_cycleComponent_orderKrullDim_eq_one
-    x z.underlying (cycleComponent_complexPoint_underlying_isClosed X x z)
-      (orderKrullDim_cycleComponent_eq_one_of_coheight_succ_eq_dimension
-        (f := X.hom) (d := d) (p := p) x hx hd)
+    Nonempty (CycleComponentSeparateLocalCoordinates X x d 1) :=
+  nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight X x d 1 fun z ↦
+    coheight_eq_one_of_isClosed_of_cycleComponent_orderKrullDim_eq_one
+      x z.underlying (cycleComponent_complexPoint_underlying_isClosed X x z)
+        (orderKrullDim_cycleComponent_eq_one_of_coheight_succ_eq_dimension
+          (f := X.hom) (d := d) (p := p) x hx hd)
 
 end AlgebraicGeometry

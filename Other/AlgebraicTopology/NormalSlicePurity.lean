@@ -60,33 +60,21 @@ def normalSliceContraction :
       continuous_toFun :=
         ((continuous_subtype_val.comp continuous_fst).smul
           (continuous_fst.comp continuous_snd)).prodMk (continuous_snd.comp continuous_snd)
-      map_zero_left := fun z => by change ((0 : ℝ) • z.1, z.2) = (0, z.2); simp
-      map_one_left := fun z => by
-        change ((1 : ℝ) • z.1, z.2) = z
-        simp only [one_smul]
-        rfl }
+      map_zero_left := fun z => Prod.ext (zero_smul ℝ z.1) rfl
+      map_one_left := fun z => Prod.ext (one_smul ℝ z.1) rfl }
   snd :=
     { toFun := fun tz => ⟨((tz.1 : ℝ) • tz.2.1.1, tz.2.1.2), tz.2.2⟩
-      continuous_toFun := by
-        apply Continuous.subtype_mk
-        exact ((continuous_subtype_val.comp continuous_fst).smul
-          (continuous_fst.comp (continuous_subtype_val.comp continuous_snd))).prodMk
-            (continuous_snd.comp (continuous_subtype_val.comp continuous_snd))
-      map_zero_left := fun z => by
-        apply Subtype.ext
-        change ((0 : ℝ) • z.1.1, z.1.2) = (0, z.1.2)
-        simp
-      map_one_left := fun z => by
-        apply Subtype.ext
-        change ((1 : ℝ) • z.1.1, z.1.2) = z.1
-        simp }
+      continuous_toFun := (((continuous_subtype_val.comp continuous_fst).smul
+        (continuous_fst.comp (continuous_subtype_val.comp continuous_snd))).prodMk
+          (continuous_snd.comp (continuous_subtype_val.comp continuous_snd))).subtype_mk _
+      map_zero_left := fun z => Subtype.ext (Prod.ext (zero_smul ℝ z.1.1) rfl)
+      map_one_left := fun z => Subtype.ext (Prod.ext (one_smul ℝ z.1.1) rfl) }
   w := rfl
 
 /-- The actual contraction fixes the whole zero tangent section throughout. -/
 theorem normalSliceContraction_fixes_section (t : unitInterval) (z : Fin c → ℂ) :
-    (normalSliceContraction E c).fst (t, (0, z)) = (0, z) := by
-  change ((t : ℝ) • (0 : E), z) = (0, z)
-  simp
+    (normalSliceContraction E c).fst (t, (0, z)) = (0, z) :=
+  Prod.ext (smul_zero (t : ℝ)) rfl
 
 /-- Normal projection and zero section are inverse up to the actual relative prism homotopy. -/
 def normalSliceRelativeChainHomotopyEquiv :
@@ -153,20 +141,14 @@ def normalSliceSectionAtHomotopy (a : E) :
     { toFun := fun tz : unitInterval × (Fin c → ℂ) => ((tz.1 : ℝ) • a, tz.2)
       continuous_toFun := ((continuous_subtype_val.comp continuous_fst).smul
         continuous_const).prodMk continuous_snd
-      map_zero_left := fun z => by change ((0 : ℝ) • a, z) = (0, z); simp
-      map_one_left := fun z => by change ((1 : ℝ) • a, z) = (a, z); simp }
+      map_zero_left := fun _ => Prod.ext (zero_smul ℝ a) rfl
+      map_one_left := fun _ => Prod.ext (one_smul ℝ a) rfl }
   snd :=
     { toFun := fun tz => ⟨((tz.1 : ℝ) • a, tz.2.1), tz.2.2⟩
       continuous_toFun := (((continuous_subtype_val.comp continuous_fst).smul
         continuous_const).prodMk (continuous_subtype_val.comp continuous_snd)).subtype_mk _
-      map_zero_left := fun z => by
-        apply Subtype.ext
-        change ((0 : ℝ) • a, z.1) = (0, z.1)
-        simp
-      map_one_left := fun z => by
-        apply Subtype.ext
-        change ((1 : ℝ) • a, z.1) = (a, z.1)
-        simp }
+      map_zero_left := fun _ => Subtype.ext (Prod.ext (zero_smul ℝ a) rfl)
+      map_one_left := fun _ => Subtype.ext (Prod.ext (one_smul ℝ a) rfl) }
   w := rfl
 
 /-- Every normal fiber gives the same exactly normalized class, not merely a nonzero

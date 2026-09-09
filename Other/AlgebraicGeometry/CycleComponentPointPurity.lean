@@ -128,18 +128,15 @@ lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.
       (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) := by
     let : LocallyOfFiniteType (Over.mk (cycleComponentι X.left x ≫ X.hom)).hom :=
       inferInstanceAs (LocallyOfFiniteType (cycleComponentι X.left x ≫ X.hom))
-    constructor
-    intro a b
-    apply ComplexPoint.underlying_injective_of_locallyOfFiniteType
-    exact Subsingleton.elim (α := cycleComponent X.left x) a.underlying b.underlying
+    exact ⟨fun a b ↦ ComplexPoint.underlying_injective_of_locallyOfFiniteType
+      (Subsingleton.elim (α := cycleComponent X.left x) a.underlying b.underlying)⟩
   rw [← range_cycleComponentMap]
   ext y
   constructor
   · rintro ⟨w, rfl⟩
     rw [show w = z from hpoints.elim w z]
     exact Set.mem_singleton _
-  · intro hy
-    exact ⟨z, Set.mem_singleton_iff.mp hy.symm⟩
+  · exact fun hy ↦ ⟨z, Set.mem_singleton_iff.mp hy.symm⟩
 
 /-- Every maximal-codimension component has a generator of its singular cohomology with
 support. -/

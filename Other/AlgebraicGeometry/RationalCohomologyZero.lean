@@ -135,9 +135,8 @@ lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
           (integerToFieldConstantSheaf ℚ X q)) := by
   simp only [rationalCohomologyZeroEquivSingle, fieldCohomologyClass, Equiv.trans_apply,
     Localization.SmallShiftedHom.precompEquiv_apply]
-  rw [← smallShiftedHomMkZero_comp X]
-  rw [Localization.SmallShiftedHom.postcompEquiv_apply]
-  rw [← smallShiftedHomMkZero_comp X]
+  rw [← smallShiftedHomMkZero_comp X, Localization.SmallShiftedHom.postcompEquiv_apply,
+    ← smallShiftedHomMkZero_comp X]
   congr 1
   unfold constantIntegerSheafComplexInt constantFieldSheafComplexInt
     integerToFieldConstantSheafComplexInt
@@ -166,9 +165,8 @@ induced by `n ↦ n q`. -/
       integerToFieldConstantSheaf ℚ X q := by
   apply (Abelian.Ext.mk₀_bijective _ _).injective
   dsimp only [rationalCohomologyZeroEquivSheafHom, Equiv.trans_apply]
-  rw [Abelian.Ext.mk₀_homEquiv₀_apply]
-  rw [rationalCohomologyZeroEquivSingle_class]
-  rw [rationalCohomologyZeroSingleEquivExt_apply]
+  rw [Abelian.Ext.mk₀_homEquiv₀_apply, rationalCohomologyZeroEquivSingle_class,
+    rationalCohomologyZeroSingleEquivExt_apply]
   rfl
 
 /-- If the constant-sheaf functor is faithful, distinct rational constants define distinct
@@ -216,14 +214,11 @@ theorem rationalCohomologyClass_surjective
   obtain ⟨f, hf⟩ := F.map_surjective (e α)
   let q : ℚ := f (1 : ℤ)
   refine ⟨q, e.injective ?_⟩
-  rw [rationalCohomologyZeroEquivSheafHom_class]
-  rw [← hf]
+  rw [rationalCohomologyZeroEquivSheafHom_class, ← hf]
   unfold integerToFieldConstantSheaf
   change F.map (AddCommGrpCat.ofHom (integerMultipleAddHom ℚ q)) = F.map f
   congr 1
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro n
+  refine AddCommGrpCat.hom_ext (AddMonoidHom.ext fun n ↦ ?_)
   change n * q = f n
   rw [show n = n • (1 : ℤ) by simp, map_zsmul]
   simp [q]

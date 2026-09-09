@@ -37,8 +37,8 @@ local instance smoothClosedSupportLowestAnalyticTopology :
 proved gluing-with-zero theorem for the defining support kernel. -/
 theorem complexSupportInjectiveComplex_isFlasque
     (S : Closeds (ComplexPoint X)) (n : ℤ) :
-    ((complexSupportInjectiveComplex X S).X n).IsFlasque := by
-  exact TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+    ((complexSupportInjectiveComplex X S).X n).IsFlasque :=
+  TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
     (TopCat.of (ComplexPoint X)) S.compl ((ambientRationalInjectiveComplex X).X n)
 
 variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]

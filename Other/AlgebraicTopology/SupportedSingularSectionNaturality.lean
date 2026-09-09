@@ -127,8 +127,8 @@ lemma supportedRationalSingularSectionCohomologyEquivSupportComplement_naturalit
     relativeCohomologyMap ℚ n _
       (relativeCohomologyMap ℚ n (openIntersectionPairIsoSupportComplement X S hS V).inv
         (supportedRationalSingularSectionCohomologyEquivRelative X _ V n z))
-  rw [supportedRationalSingularSectionCohomologyEquivRelative_naturality]
-  rw [← LinearMap.comp_apply, ← LinearMap.comp_apply, ← relativeCohomologyMap_comp,
+  rw [supportedRationalSingularSectionCohomologyEquivRelative_naturality,
+    ← LinearMap.comp_apply, ← LinearMap.comp_apply, ← relativeCohomologyMap_comp,
     ← relativeCohomologyMap_comp]
   congr 2
 

@@ -102,18 +102,7 @@ public noncomputable def simplexSubdivisionMaximumNatTrans :
         (A.map (SimplexCategory.toPartOrd.{u}.map f).hom) =
       (SimplexCategory.toPartOrd.{u}.map f).hom
         (nonemptyFiniteChainMaximum (ULift.{u} (Fin (n.len + 1))) A)
-    rw [nonemptyFiniteChainMaximum_apply, nonemptyFiniteChainMaximum_apply]
-    apply le_antisymm
-    · apply Finset.max'_le
-      intro y hy
-      obtain ⟨x, hx, rfl⟩ :=
-        (NonemptyFiniteChains.mem_map_iff A
-          (SimplexCategory.toPartOrd.{u}.map f).hom y).1 hy
-      exact simplexToPartOrdMap_monotone f (Finset.le_max' A.finset x hx)
-    · apply Finset.le_max'
-      exact (NonemptyFiniteChains.mem_map_iff A
-        (SimplexCategory.toPartOrd.{u}.map f).hom _).2
-          ⟨A.finset.max' A.nonempty, A.finset.max'_mem A.nonempty, rfl⟩
+    exact nonemptyFiniteChainMaximum_map _ A
 
 /-- Taking nerves gives the last-vertex map on the subdivision model of standard simplices. -/
 public noncomputable def simplexSubdivisionLastVertexToNerve :
@@ -126,9 +115,7 @@ natural in the simplex category. -/
 public noncomputable def standardSimplexNerveIso :
     SSet.stdSimplex.{u} ≅
       SimplexCategory.toPartOrd.{u} ⋙ PartOrd.nerveFunctor :=
-  NatIso.ofComponents (fun n ↦ SSet.stdSimplex.isoNerve n.len) (by
-    intro n m f
-    rfl)
+  NatIso.ofComponents (fun n ↦ SSet.stdSimplex.isoNerve n.len) fun _ ↦ rfl
 
 /-- The last-vertex map from the subdivision model of standard simplices to standard simplices. -/
 public noncomputable def simplexSubdivisionLastVertex :
@@ -156,10 +143,9 @@ construction above. -/
 public theorem subdivisionLastVertex_standardSimplex (n : SimplexCategory) :
     SSet.stdSimplex.sdIso.inv.app n ≫
         (subdivisionLastVertex.{u}.app (SSet.stdSimplex.obj n)) =
-      simplexSubdivisionLastVertex.{u}.app n := by
-  have h := SSet.sd.descOfIsLeftKanExtension_fac_app SSet.stdSimplex.sdIso.inv
+      simplexSubdivisionLastVertex.{u}.app n :=
+  SSet.sd.descOfIsLeftKanExtension_fac_app SSet.stdSimplex.sdIso.inv
     (Functor.id SSet.{u}) simplexSubdivisionLastVertexExtension.{u} n
-  exact h.trans (by rfl)
 
 /-- The chain map induced by the last-vertex map of a simplicial set. -/
 public noncomputable def subdivisionLastVertexChainMap (X : SSet.{0}) :

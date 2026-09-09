@@ -202,8 +202,7 @@ def supportIntegerSheafTopIso :
 lemma isZero_supportIntegerSheaf_bot : IsZero (supportIntegerSheaf X ⊥) := by
   apply (pushforward AddCommGrpCat (closedInclusion X ⊥)).map_isZero
   apply (isZero_iff_stalkFunctor_obj_isZero _).2
-  intro x
-  exact False.elim x.property
+  exact fun x ↦ False.elim x.property
 
 local instance :
     HasExt.{u} (CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) :=

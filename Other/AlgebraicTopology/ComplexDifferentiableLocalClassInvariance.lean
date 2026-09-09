@@ -140,9 +140,8 @@ theorem exists_open_straightLine_ne_zero
         field_simp [hK_real_pos.ne']
       _ < ‖f' z‖ := by nlinarith
   intro hzero
-  have heq : f' z = -(((t : ℝ) : ℂ) • (f z - f' z)) := by
-    rw [eq_neg_iff_add_eq_zero]
-    exact hzero
+  have heq : f' z = -(((t : ℝ) : ℂ) • (f z - f' z)) :=
+    eq_neg_iff_add_eq_zero.mpr hzero
   have ht : ‖((t : ℝ) : ℂ)‖ ≤ 1 := by
     simpa [Real.norm_eq_abs, abs_of_nonneg t.2.1] using t.2.2
   have hle : ‖f' z‖ ≤ ‖f z - f' z‖ := by
@@ -257,10 +256,8 @@ theorem exists_open_complexDifferentiable_localClass_invariance
   let f' : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     A.mulVecLin.toContinuousLinearMap
   have hf'_apply (z : Fin d → ℂ) : f' z = A.mulVec z := rfl
-  have hf'_inj : Function.Injective f' := by
-    intro x y hxy
-    apply A.mulVec_injective_of_det_ne_zero hA
-    simpa only [← hf'_apply] using hxy
+  have hf'_inj : Function.Injective f' := fun x y hxy ↦
+    A.mulVec_injective_of_det_ne_zero hA (by simpa only [← hf'_apply] using hxy)
   obtain ⟨W, hW, h0W, hline⟩ :=
     exists_open_straightLine_ne_zero d f f' hf0 hf' hf'_inj
   let V := U ∩ W
@@ -377,10 +374,8 @@ theorem relativeHomologyMap_complexDifferentiable_standardComplexLocalClass
   let f' : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     A.mulVecLin.toContinuousLinearMap
   have hf'_apply (z : Fin d → ℂ) : f' z = A.mulVec z := rfl
-  have hf'_inj : Function.Injective f' := by
-    intro x y hxy
-    apply A.mulVec_injective_of_det_ne_zero hA
-    simpa only [← hf'_apply] using hxy
+  have hf'_inj : Function.Injective f' := fun x y hxy ↦
+    A.mulVec_injective_of_det_ne_zero hA (by simpa only [← hf'_apply] using hxy)
   obtain ⟨U, hU, h0U, hline⟩ :=
     exists_open_straightLine_ne_zero d f f' hf0 hf' hf'_inj
   have hline' : ∀ (t : unitInterval) (z : Fin d → ℂ), z ∈ U → z ≠ 0 →
@@ -410,12 +405,6 @@ theorem relativeHomologyMap_complexDifferentiable_standardComplexLocalClass_of_i
           simpa only [hf0] using hfz))
         (standardComplexLocalClass d) =
       standardComplexLocalClass d := by
-  apply relativeHomologyMap_complexDifferentiable_standardComplexLocalClass d A hA f hf hf0
-    (fun z hz ↦ by
-      intro hfz
-      apply hz
-      apply hf_inj
-      simpa only [hf0] using hfz)
-    hf'
+  exact relativeHomologyMap_complexDifferentiable_standardComplexLocalClass d A hA f hf hf0 _ hf'
 
 end AlgebraicTopology.Singular

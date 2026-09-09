@@ -112,8 +112,7 @@ lemma qToCChainGroup_isBaseChange (X : TopCat) (n : ℕ) :
     (chainGroupFinsuppIso ℚ X n).toLinearEquiv
     (chainGroupFinsuppIso ℂ X n).toLinearEquiv ?_).mpr
   · exact IsBaseChange.finsuppPow _ (IsBaseChange.linearMap ℚ ℂ)
-  · apply LinearMap.ext
-    intro z
+  · ext z
     simp [qToCChainGroup]
 
 /-- Complex singular chains, regarded as a chain complex of rational modules. -/
@@ -188,8 +187,8 @@ def restrictedCChainsCyclesIso (X : TopCat) (n : ℕ) :
 /-- Restriction of scalars commutes with the selected complex homology object. -/
 def restrictedCChainsHomologyIso (X : TopCat) (n : ℕ) :
     (RestrictedCChains X).homology n ≅
-      (ModuleCat.restrictScalars (algebraMap ℚ ℂ)).obj ((CChains X).homology n) := by
-  exact (((CChains X).sc n).homologyData.left.map
+      (ModuleCat.restrictScalars (algebraMap ℚ ℂ)).obj ((CChains X).homology n) :=
+  (((CChains X).sc n).homologyData.left.map
     (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).homologyIso
 
 /-- The coefficient-extension map on cycles. -/
@@ -209,8 +208,7 @@ lemma iCycles_comp_qToCChainGroup (X : TopCat) (n : ℕ) :
       (((CChains X).sc n).homologyData.left.map
         (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).i.hom.comp
         (qToCCycles X n) := by
-  apply LinearMap.ext
-  intro z
+  ext z
   have h₁ := DFunLike.congr_fun
     (congrArg ModuleCat.Hom.hom
       (HomologicalComplex.cyclesMap_i (qToCChainMap X) n).symm) z
@@ -226,8 +224,8 @@ lemma restrictedCChains_homologyπ_iso (X : TopCat) (n : ℕ) :
         (restrictedCChainsHomologyIso X n).hom =
       (restrictedCChainsCyclesIso X n).hom ≫
         (((CChains X).sc n).homologyData.left.map
-          (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).π := by
-  exact (((CChains X).sc n).homologyData.left.map
+          (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).π :=
+  (((CChains X).sc n).homologyData.left.map
     (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).homologyπ_comp_homologyIso_hom
 
 lemma homologyπ_comp_qToCHomology (X : TopCat) (n : ℕ) :
@@ -273,11 +271,9 @@ lemma qToCCycles_isBaseChange (X : TopCat) (n : ℕ) :
     hC.i.hom ((CChains X).d n ((ComplexShape.down ℕ).next n)).hom
     ?_ ?_ _ (qToCChainGroup_isBaseChange X n)
     (qToCChainGroup_isBaseChange X ((ComplexShape.down ℕ).next n)) ?_ ?_ ?_ ?_
-  · apply LinearMap.ext
-    intro z
+  · ext z
     exact DFunLike.congr_fun (iCycles_comp_qToCChainGroup X n) z
-  · apply LinearMap.ext
-    intro z
+  · ext z
     have h := (qToCChainMap X).comm n ((ComplexShape.down ℕ).next n)
     exact DFunLike.congr_fun (congrArg ModuleCat.Hom.hom h.symm) z
   · let T := ShortComplex.mk hQ.i ((QChains X).sc n).g hQ.wi
@@ -299,15 +295,14 @@ lemma restrictedCChains_toCycles_iso (X : TopCat) (n : ℕ) :
       (((CChains X).sc n).homologyData.left.map
         (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).f' := by
   rw [← cancel_mono (((CChains X).sc n).homologyData.left.map
-    (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).i]
-  rw [Category.assoc]
-  rw [show (restrictedCChainsCyclesIso X n).hom ≫
+    (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).i, Category.assoc,
+    show (restrictedCChainsCyclesIso X n).hom ≫
       (((CChains X).sc n).homologyData.left.map
         (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).i =
-      ((RestrictedCChains X).sc n).iCycles by
-    exact (((CChains X).sc n).homologyData.left.map
-      (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).cyclesIso_hom_comp_i]
-  rw [ShortComplex.toCycles_i]
+      ((RestrictedCChains X).sc n).iCycles from
+      (((CChains X).sc n).homologyData.left.map
+        (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).cyclesIso_hom_comp_i,
+    ShortComplex.toCycles_i]
   simp only [ShortComplex.LeftHomologyData.map_f',
     ShortComplex.LeftHomologyData.map_i, ← Functor.map_comp,
     ShortComplex.LeftHomologyData.f'_i]
@@ -320,16 +315,14 @@ lemma toCycles_comp_qToCCycles (X : TopCat) (n : ℕ) :
       (((CChains X).sc n).homologyData.left.map
         (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).f'.hom.comp
         (qToCChainGroup X ((ComplexShape.down ℕ).prev n)) := by
-  apply LinearMap.ext
-  intro z
+  ext z
   let φ := (HomologicalComplex.shortComplexFunctor (ModuleCat ℚ)
     (ComplexShape.down ℕ) n).map (qToCChainMap X)
   have h : (((QChains X).sc n).toCycles ≫
       ShortComplex.cyclesMap φ) ≫ (restrictedCChainsCyclesIso X n).hom =
       φ.τ₁ ≫ (((CChains X).sc n).homologyData.left.map
         (ModuleCat.restrictScalars (algebraMap ℚ ℂ))).f' := by
-    rw [ShortComplex.toCycles_naturality]
-    rw [Category.assoc, restrictedCChains_toCycles_iso]
+    rw [ShortComplex.toCycles_naturality, Category.assoc, restrictedCChains_toCycles_iso]
   exact DFunLike.congr_fun (congrArg ModuleCat.Hom.hom h) z
 
 /-- Singular homology with complex coefficients is obtained from rational singular homology by
@@ -359,15 +352,13 @@ lemma qToCHomology_isBaseChange (X : TopCat) (n : ℕ) :
     hC.f'.hom hC.π.hom
     ?_ ?_ (qToCChainGroup_isBaseChange X ((ComplexShape.down ℕ).prev n))
     (qToCCycles_isBaseChange X n) ?_ ?_ ?_ ?_
-  · apply LinearMap.ext
-    intro z
+  · ext z
     have hz := DFunLike.congr_fun (toCycles_comp_qToCCycles X n) z
     change qToCCycles X n (((QChains X).sc n).toCycles.hom z) =
       hC.f'.hom (qToCChainGroup X ((ComplexShape.down ℕ).prev n) z)
     rw [ShortComplex.LeftHomologyData.map_f'] at hz
     exact hz
-  · apply LinearMap.ext
-    intro z
+  · ext z
     have h := homologyπ_comp_qToCHomology X n
     have hz := DFunLike.congr_fun (congrArg ModuleCat.Hom.hom h) z
     change qToCHomology X n (((QChains X).homologyπ n).hom z) =

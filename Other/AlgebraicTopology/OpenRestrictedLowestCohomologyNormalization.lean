@@ -94,8 +94,7 @@ theorem openRestrictedLowestSectionCohomologyIso_hom (U : Opens X) (N n : ℤ)
         (op (⊤ : Opens (TopCat.of U))) ≫
       (openRestrictionTopSectionsIso X U).hom.app (K.homology n)) = _
   rw [sectionCohomologyToSheafSection_openRestriction_assoc,
-    ← openRestrictionTopSectionComplexIso_homology_section]
-  rw [← Category.assoc, ← homologyMap_comp, Iso.inv_hom_id,
-    homologyMap_id, Category.id_comp]
+    ← openRestrictionTopSectionComplexIso_homology_section, ← Category.assoc, ← homologyMap_comp,
+    Iso.inv_hom_id, homologyMap_id, Category.id_comp]
 
 end TopCat.Sheaf

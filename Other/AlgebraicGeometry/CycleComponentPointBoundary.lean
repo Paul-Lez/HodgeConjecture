@@ -59,8 +59,7 @@ theorem cycleComponentSmoothLocusAmbientOpen_eq_top_of_coheight_eq_dimension :
     cycleComponentSmoothLocusAmbientOpen X x = ⊤ := by
   rw [cycleComponentSmoothLocusAmbientOpen,
     cycleComponentSingularAmbientClosedFiltration_eq_bot_of_coheight_eq_dimension X x hx 0]
-  apply Opens.ext
-  exact Set.compl_empty
+  exact Opens.ext Set.compl_empty
 
 namespace ComplexPoint
 
@@ -79,8 +78,7 @@ theorem cycleComponentSmoothSupportAmbientOpen_eq_top_of_coheight_eq_dimension :
     cycleComponentSmoothSupportAmbientOpen X x = ⊤ := by
   rw [cycleComponentSmoothSupportAmbientOpen,
     cycleComponentSingularAnalyticClosedFiltration_eq_bot_of_coheight_eq_dimension X x hx 0]
-  apply Opens.ext
-  exact Set.compl_empty
+  exact Opens.ext Set.compl_empty
 
 include d hx in
 /-- The actual auxiliary ambient scheme-open inclusion is an isomorphism in the point case. -/

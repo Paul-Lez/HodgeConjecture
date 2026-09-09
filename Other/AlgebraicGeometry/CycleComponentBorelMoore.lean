@@ -223,29 +223,23 @@ lemma cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension
   let hcomponent : Subsingleton (cycleComponent V.scheme x) := by
     constructor
     intro a b
-    have hallMin : ∀ q : cycleComponent V.scheme x, IsMin q :=
-      Order.krullDim_nonpos_iff_forall_isMin.mp hdim.le
     have htopLe (q : cycleComponent V.scheme x) :
         (⊤ : cycleComponent V.scheme x) ≤ q :=
-      hallMin ⊤ le_top
-    have hab : a ≤ b := le_top.trans (htopLe b)
-    have hba : b ≤ a := le_top.trans (htopLe a)
+      Order.krullDim_nonpos_iff_forall_isMin.mp hdim.le ⊤ le_top
     apply inseparable_iff_eq.mp
     rw [inseparable_iff_specializes_and, ← Scheme.le_iff_specializes,
       ← Scheme.le_iff_specializes]
-    exact ⟨hba, hab⟩
+    exact ⟨le_top.trans (htopLe a), le_top.trans (htopLe b)⟩
   let : Subsingleton (Over.mk
-      (cycleComponentι V.over.left x ≫ V.over.hom)).left := by
-    change Subsingleton (cycleComponent V.scheme x)
-    exact hcomponent
+      (cycleComponentι V.over.left x ≫ V.over.hom)).left := hcomponent
   constructor
   intro a b
   let : LocallyOfFiniteType
       (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom)).hom :=
     inferInstanceAs (LocallyOfFiniteType
       (cycleComponentι V.over.left x ≫ V.over.hom))
-  apply ComplexPoint.underlying_injective_of_locallyOfFiniteType
-  exact Subsingleton.elim a.underlying b.underlying
+  exact ComplexPoint.underlying_injective_of_locallyOfFiniteType
+    (Subsingleton.elim a.underlying b.underlying)
 
 /-- In maximal codimension the global Borel--Moore fundamental class is constructed directly.
 The component is a one-point space, so restriction from its homology to local homology is an
@@ -274,13 +268,8 @@ theorem existsUnique_cycleComponentBorelMooreFundamentalClass_of_coheight_eq_dim
     subst w
     have hproof : hw = hz := Subsingleton.elim hw hz
     subst hw
-    change e c = orientation z hz
     exact e.apply_symm_apply (orientation z hz)
-  refine ⟨c, hc, ?_⟩
-  intro c' hc'
-  apply e.injective
-  change e c' = e c
-  exact (hc' z hz).trans (hc z hz).symm
+  exact ⟨c, hc, fun c' hc' ↦ e.injective ((hc' z hz).trans (hc z hz).symm)⟩
 
 /-- The remaining rational Borel--Moore fundamental-class theorem for a codimension-`p`
 component of a smooth complex `d`-fold. The exact local complex orientation is constructed, not

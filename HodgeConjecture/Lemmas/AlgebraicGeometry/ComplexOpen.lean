@@ -93,10 +93,7 @@ def openEquiv :
     symm
     apply IsOpenImmersion.lift_uniq U.ι (map (openInclusion X U) z).left
     simp [map]
-  right_inv z := by
-    apply Subtype.ext
-    apply Over.OverMorphism.ext
-    exact liftToOpen_fac X U z.1 z.2
+  right_inv z := Subtype.ext (Over.OverMorphism.ext (liftToOpen_fac X U z.1 z.2))
 
 @[simp]
 lemma openEquiv_coe (z : ComplexPoint (openScheme X U)) :
@@ -109,8 +106,8 @@ lemma continuous_openEquiv :
       (ComplexPoint (openScheme X U))
       {z : ComplexPoint X // z ∈ overOpen U}
       analyticTopology (TopologicalSpace.induced Subtype.val analyticTopology)
-      (openEquiv X U) := by
-  exact @Continuous.subtype_mk
+      (openEquiv X U) :=
+  @Continuous.subtype_mk
     (ComplexPoint X)
     (ComplexPoint (openScheme X U))
     analyticTopology analyticTopology
@@ -173,11 +170,7 @@ lemma continuous_openEquiv_symm :
       (map (openInclusion X U) z ∈ overOpen (U.ι ''ᵁ V) ∧
         evaluate (U.ι ''ᵁ V) ((U.ι.appIso V).inv t) (map (openInclusion X U) z) ∈ O)
     rw [evaluate_openEquiv]
-    constructor
-    · rintro ⟨hzV, ht⟩
-      exact ⟨by simpa [overOpen] using hzV, ht⟩
-    · rintro ⟨hzV, ht⟩
-      exact ⟨by simpa [overOpen] using hzV, ht⟩]
+    exact and_congr_left' (by simp [overOpen])]
   exact @isOpen_induced
     {z : ComplexPoint X // z ∈ overOpen U}
     (ComplexPoint X) analyticTopology Subtype.val A hA

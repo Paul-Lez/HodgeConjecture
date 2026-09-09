@@ -71,8 +71,8 @@ lemma pointCycleClassOnCycles_single_closedPoint
     let hcodim := SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
       (f := V.structureMap) (d := V.dimension) x hx
     pointCycleClassOnCycles V (CodimensionCycle.single x hcodim n) =
-      n • maximalCodimensionComponentClass V x hcodim := by
-  exact pointCycleClassOnCycles_single V x _ n
+      n • maximalCodimensionComponentClass V x hcodim :=
+  pointCycleClassOnCycles_single V x _ n
 
 /-- The point-cycle construction really uses the normalized supported point coclass before
 forgetting support. This equality fixes its scale and sign. -/

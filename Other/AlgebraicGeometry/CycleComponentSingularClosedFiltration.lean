@@ -66,7 +66,6 @@ def cycleComponentSingularFiltrationStratumOverι (k : ℕ) :
 
 instance cycleComponentSingularFiltrationStratumOverι_isImmersion (k : ℕ) :
     IsImmersion (cycleComponentSingularFiltrationStratumOverι X x k).left := by
-  dsimp only [cycleComponentSingularFiltrationStratumOverι]
   change IsImmersion (reducedClosedSmoothPieceι (cycleComponentι X.left x ≫ X.hom)
     (cycleComponentSingularClosedFiltration X x k) ≫ cycleComponentι X.left x)
   infer_instance
@@ -97,9 +96,8 @@ def cycleComponentSingularAmbientClosedFiltration (k : ℕ) : Closeds X.left :=
 
 omit [IsIntegral X.left] [Smooth X.hom] in
 theorem cycleComponentSingularAmbientClosedFiltration_antitone :
-    Antitone (cycleComponentSingularAmbientClosedFiltration X x) := by
-  intro k l hkl
-  exact Set.image_mono (reducedSmoothClosedFiltration_antitone _ _ hkl)
+    Antitone (cycleComponentSingularAmbientClosedFiltration X x) :=
+  fun _ _ hkl ↦ Set.image_mono (reducedSmoothClosedFiltration_antitone _ _ hkl)
 
 theorem cycleComponentSingularAmbientClosedFiltration_length :
     cycleComponentSingularAmbientClosedFiltration X x (cycleComponentSingularFiltrationLength X x) =
@@ -272,9 +270,8 @@ def cycleComponentSingularAnalyticClosedFiltration (k : ℕ) : Closeds (ComplexP
 
 omit [IsIntegral X.left] [Smooth X.hom] in
 theorem cycleComponentSingularAnalyticClosedFiltration_antitone :
-    Antitone (cycleComponentSingularAnalyticClosedFiltration X x) := by
-  intro k l hkl z hz
-  exact cycleComponentSingularAmbientClosedFiltration_antitone X x hkl hz
+    Antitone (cycleComponentSingularAnalyticClosedFiltration X x) :=
+  fun _ _ hkl _ hz ↦ cycleComponentSingularAmbientClosedFiltration_antitone X x hkl hz
 
 theorem cycleComponentSingularAnalyticClosedFiltration_length :
     cycleComponentSingularAnalyticClosedFiltration X x (cycleComponentSingularFiltrationLength X x) =

@@ -77,8 +77,7 @@ theorem stronglyLocallyContractibleSpace_of_open_nhds
     · rw [hmap]
       exact Filter.image_mem_map hs
     · exact (hemb.toIsEmbedding.homeomorphImage s).contractibleSpace_iff.mp hcontr
-  · rintro s ⟨hs, -⟩
-    exact hs
+  · exact fun s hs ↦ hs.1
 
 /-- A charted space over a strongly locally contractible model is strongly locally
 contractible. -/

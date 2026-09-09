@@ -137,9 +137,8 @@ public def sortHomotopyMap : Homotopy (M.sortMap ≫ M.monotoneInclusion) (𝟙 
       (fun n a _ ↦ boundary_sortHomotopy_add (single a 1))
       (fun a _ ↦ by
         have := boundary_sortHomotopy_add (single a 1)
-        rw [show sortHomotopy 0 = (0 : Formal ι 0 →ₗ[ℤ] Formal ι 1) from rfl,
-          LinearMap.zero_apply, add_zero] at this
-        exact this)).symm.trans
+        rwa [show sortHomotopy 0 = (0 : Formal ι 0 →ₗ[ℤ] Formal ι 1) from rfl,
+          LinearMap.zero_apply, add_zero] at this)).symm.trans
       (Homotopy.ofEq (M.realizeChainMap_id TupleClass.all (admissible_id _) fun _ _ _ ↦ rfl)))
 
 /-! ### Killing repetitions -/

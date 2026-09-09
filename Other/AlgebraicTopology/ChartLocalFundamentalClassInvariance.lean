@@ -41,7 +41,7 @@ point-complement pairs. -/
 theorem localClassOfChart_eq_of_pairHomotopy
     (H : TopPair.Homotopy (chartModelEmbeddingPair d e x hx)
       (chartModelEmbeddingPair d e' x hx')) :
-    localClassOfChart d e x hx = localClassOfChart d e' x hx' := by
-  exact H.relativeHomologyMap_apply_eq (R := ℚ) (2 * d) (standardComplexLocalClass d)
+    localClassOfChart d e x hx = localClassOfChart d e' x hx' :=
+  H.relativeHomologyMap_apply_eq (R := ℚ) (2 * d) (standardComplexLocalClass d)
 
 end AlgebraicTopology.Singular

@@ -48,8 +48,8 @@ variable (R : Type u) [Field R] (X : TopCat.{u})
 lemma openSingularChainComplexMap_mono {U V : Opens X} (i : U ⟶ V) :
     Mono ((openSingularChainComplexFunctor R X).map i) := by
   let : Mono ((Opens.toTopCat X).map i) :=
-    (TopCat.mono_iff_injective ((Opens.toTopCat X).map i)).mpr fun x y h ↦ by
-      exact Subtype.ext (congrArg (fun z : V ↦ z.1) h)
+    (TopCat.mono_iff_injective ((Opens.toTopCat X).map i)).mpr fun x y h ↦
+      Subtype.ext (congrArg (fun z : V ↦ z.1) h)
   dsimp [openSingularChainComplexFunctor]
   apply Functor.map_mono
 
@@ -66,8 +66,8 @@ lemma openSingularChainMap_injective {U V : Opens X} (i : U ⟶ V) (n : ℕ) :
 lemma openSingularCochainRestriction_surjective
     {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) :
     Function.Surjective
-      ((singularCochainPresheaf R X n).map i) := by
-  exact LinearMap.dualMap_surjective_of_injective
+      ((singularCochainPresheaf R X n).map i) :=
+  LinearMap.dualMap_surjective_of_injective
     (openSingularChainMap_injective R X i.unop n)
 
 /-- A linear choice of extension of cochains along an inclusion of open subsets. -/
@@ -91,8 +91,8 @@ lemma openSingularCochainRestriction_comp_extension
 lemma openSingularCochainRestriction_extension
     {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) (φ : OpenCochains R X V n) :
     (singularCochainPresheaf R X n).map i
-        (openSingularCochainExtension R X i n φ) = φ := by
-  exact LinearMap.congr_fun (openSingularCochainRestriction_comp_extension R X i n) φ
+        (openSingularCochainExtension R X i n φ) = φ :=
+  LinearMap.congr_fun (openSingularCochainRestriction_comp_extension R X i n) φ
 
 /-- Every cochain on an open subset extends to a cochain on the whole space. -/
 lemma globalOpenSingularCochainRestriction_surjective (U : Opens X) (n : ℕ) :

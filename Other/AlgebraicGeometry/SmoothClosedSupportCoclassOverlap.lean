@@ -107,8 +107,7 @@ theorem exists_open_smoothClosedSupportChartCoclass_eq
   have ht : e x ∈ (closedImmersionNormalTransition X Y i m d z z').source := by
     refine ⟨e.map_source hx, ?_⟩
     change e.symm (e x) ∈ e'.source
-    rw [e.left_inv hx]
-    exact hx'
+    rwa [e.left_inv hx]
   exact exists_open_chartNormalProjectionCoclass_eq (d - m) e e' (Set.range (Point.map i))
     (closedImmersionHolomorphicFlatteningChart_mem_range_iff X Y i m d z)
     (closedImmersionHolomorphicFlatteningChart_mem_range_iff X Y i m d z')
@@ -173,8 +172,7 @@ theorem exists_open_smoothClosedSupportNormalCoclass_restrict_eq
       (smoothClosedSupportNeighborhood X Y i m d z' V' hzV' : Set (ComplexPoint X)) :=
     fun _ hy => (hWU hy).2
   refine ⟨W, hWV, hWV', hxW, ?_⟩
-  rw [smoothClosedSupportNormalCoclass_restrict_eq_chart X Y i m d z V hzV W hWV hW,
+  rwa [smoothClosedSupportNormalCoclass_restrict_eq_chart X Y i m d z V hzV W hWV hW,
     smoothClosedSupportNormalCoclass_restrict_eq_chart X Y i m d z' V' hzV' W hWV' hW']
-  exact heq
 
 end AlgebraicGeometry.ComplexPoint

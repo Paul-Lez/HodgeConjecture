@@ -102,9 +102,8 @@ theorem maximalCodimensionPrincipalDivisorClassVanishes_of_coefficientSum
     (hconstant : ∀ x hx, maximalCodimensionComponentClass V x hx = m)
     (hdegree : ∀ D : PrincipalDivisor V.scheme V.dimension,
       codimensionCoefficientSum V.dimension D.pushforwardCycle = 0) :
-    MaximalCodimensionPrincipalDivisorClassVanishes V := by
-  intro D
-  exact principalDivisor_class_eq_zero_of_coefficientSum_eq_zero
+    MaximalCodimensionPrincipalDivisorClassVanishes V :=
+  fun D ↦ principalDivisor_class_eq_zero_of_coefficientSum_eq_zero
     (maximalCodimensionComponentClass V) m hconstant D (hdegree D)
 
 end ComplexPoint

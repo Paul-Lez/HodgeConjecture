@@ -38,8 +38,8 @@ lemma globalSectionsShiftShortComplex_homologyMap :
       ((((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
         (.up ℤ)).commShiftIso s).hom.app K) n ≫
       ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftIso
-        s n n' (by omega)).hom.app (globalSectionsComplexInt Y K) := by
-  exact (ShortComplex.homologyMap_comp _ _).trans
+        s n n' (by omega)).hom.app (globalSectionsComplexInt Y K) :=
+  (ShortComplex.homologyMap_comp _ _).trans
     (congrArg (fun f => HomologicalComplex.homologyMap
       ((((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
         (.up ℤ)).commShiftIso s).hom.app K) n ≫ f)
@@ -77,8 +77,8 @@ lemma homComplexSingleIntegerGlobalSections_rightUnshift_homology :
       ShortComplex.homologyMap (globalSectionsShiftShortComplex Y K s n n' h) =
     ShortComplex.homologyMap (CochainComplex.HomComplex.rightUnshiftShortComplex
       (integerConstantSingleComplex Y) K s n n' h) ≫
-      HomologicalComplex.homologyMap (homComplexSingleIntegerIsoGlobalSections Y K).hom n' := by
-  exact (ShortComplex.homologyMap_comp _ _).symm.trans
+      HomologicalComplex.homologyMap (homComplexSingleIntegerIsoGlobalSections Y K).hom n' :=
+  (ShortComplex.homologyMap_comp _ _).symm.trans
     ((ShortComplex.homologyMap_eq_of_middle_eq _ _
       (homComplexSingleIntegerGlobalSections_rightUnshift_middle Y K s n n' h)).trans
       (ShortComplex.homologyMap_comp _ _))

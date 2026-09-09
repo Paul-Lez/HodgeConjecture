@@ -226,8 +226,7 @@ public def horizontalTotalHomotopy :
             ιTotalOrZero_horizontalTotalComponent, Linear.comp_units_smul,
             ← Category.assoc ((h.hom (p + 1) (p + 1 + 1)).f (q + 1)), Category.assoc]
           have hv := vertical_terms_cancel h (p + 1) q (m + 1)
-          have hv' := eq_neg_of_add_eq_zero_left hv
-          rw [hv']
+          rw [eq_neg_of_add_eq_zero_left hv]
           abel
 
 end AlgebraicTopology

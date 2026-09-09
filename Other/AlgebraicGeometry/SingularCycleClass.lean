@@ -96,9 +96,8 @@ lemma forgetSupport_mem_singularComponentCycleClassLine
     (hβ : IsSupportedCohomologyGenerator β) :
     forgetSupport ℚ (AnalyticPointTopCat X)
         (cycleComponentSupport X x) (2 * p) β ∈
-      singularComponentCycleClassLine X p x := by
-  apply Submodule.subset_span
-  exact ⟨β, hβ, rfl⟩
+      singularComponentCycleClassLine X p x :=
+  Submodule.subset_span ⟨β, hβ, rfl⟩
 
 /-- Any supported generator computes the same intrinsic component line. -/
 lemma singularComponentCycleClassLine_eq_span

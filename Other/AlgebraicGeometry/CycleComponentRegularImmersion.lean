@@ -69,8 +69,8 @@ lemma cycleComponent_ambient_stalk_isRegularLocalRing
     {d : ℕ} [SmoothOfRelativeDimension d X.hom]
     (z : cycleComponent X.left x) :
     IsRegularLocalRing
-      (X.left.presheaf.stalk (cycleComponentι X.left x z)) := by
-  exact SmoothOfRelativeDimension.isRegularLocalRing_stalk_complex
+      (X.left.presheaf.stalk (cycleComponentι X.left x z)) :=
+  SmoothOfRelativeDimension.isRegularLocalRing_stalk_complex
     (d := d) (f := X.hom) (cycleComponentι X.left x z)
 
 /-- At a smooth component point, the quotient of the ambient stalk by the kernel of the
@@ -101,8 +101,8 @@ lemma cycleComponent_stalkMap_ker_fg
 
 /-- The kernel of the cycle-component stalk map is prime. -/
 lemma cycleComponent_stalkMap_ker_isPrime {X : Scheme} (x : X) (z : cycleComponent X x) :
-    (RingHom.ker ((cycleComponentι X x).stalkMap z).hom).IsPrime := by
-  exact RingHom.ker_isPrime _
+    (RingHom.ker ((cycleComponentι X x).stalkMap z).hom).IsPrime :=
+  RingHom.ker_isPrime _
 
 /-- At a complex point of a codimension-`p` component in a smooth complex `d`-fold, the quotient
 of the ambient stalk by the stalk-map kernel has Krull dimension `d - p`. -/
@@ -169,8 +169,7 @@ lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
   rw [ringKrullDim_cycleComponent_ambient_stalk (d := d) X x z,
     ringKrullDim_cycleComponent_stalkMap_quotient
       (d := d) (p := p) X x z hx] at hle
-  have hle' : (d : ℕ∞) ≤ ((d - p : ℕ) : ℕ∞) + I.spanFinrank := by
-    exact WithBot.coe_le_coe.mp hle
+  have hle' : (d : ℕ∞) ≤ ((d - p : ℕ) : ℕ∞) + I.spanFinrank := WithBot.coe_le_coe.mp hle
   have hp : p ≤ d := cycleComponent_codimension_le X x hx
   have hdecomp : (d : ℕ∞) = ((d - p : ℕ) : ℕ∞) + (p : ℕ∞) := by
     exact_mod_cast (Nat.sub_add_cancel hp).symm
@@ -194,8 +193,7 @@ lemma exists_cycleComponent_stalkMap_ker_generators
     Submodule.FG.exists_span_finset_card_eq_spanFinrank
       (cycleComponent_stalkMap_ker_fg (d := d) X x z.underlying)
   refine ⟨s, ?_, hcard, ?_⟩
-  · rw [← Ideal.submodule_span_eq]
-    exact hspan
+  · rwa [← Ideal.submodule_span_eq]
   · have hle := cycleComponent_codimension_le_stalkMap_ker_spanFinrank
       (d := d) (p := p) X x z hx
     rw [← hcard] at hle

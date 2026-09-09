@@ -51,8 +51,7 @@ lemma constantsToSingularCochain_quasiIsoAt_succ
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
         (TopCat.of (ComplexPoint X))) (n + 1) := by
   apply AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_contractibleOpenBasis
-  intro x U hxU
-  exact exists_contractibleOpen_le X x U hxU
+  exact fun x U hxU ↦ exists_contractibleOpen_le X x U hxU
 
 /-- The constant-to-singular-cochain comparison on a smooth complex-point space is a
 quasi-isomorphism in degree zero. -/
@@ -76,8 +75,7 @@ lemma constantsToSingularCochain_quasiIso
     QuasiIso
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
         (TopCat.of (ComplexPoint X))) := by
-  constructor
-  intro n
+  refine ⟨fun n ↦ ?_⟩
   cases n with
   | zero => exact constantsToSingularCochain_quasiIsoAt_zero X R
   | succ n => exact constantsToSingularCochain_quasiIsoAt_succ X R n

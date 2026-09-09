@@ -212,10 +212,6 @@ lemma contDiffOn_localChart_transition
         (((localChart X d z).symm.trans
           (localChart X d z')).source) := by
   intro w hw
-  change ContDiffWithinAt ℂ ω
-    (fun v ↦ localChart X d z' ((localChart X d z).symm v))
-      (((localChart X d z).symm.trans
-        (localChart X d z')).source) w
   exact (analyticAt_localChart_transition X d z z' hw).contDiffAt.contDiffWithinAt
 
 /-- Smooth complex points form a holomorphic complex manifold of the specified dimension. -/
@@ -242,9 +238,7 @@ lemma exists_contractibleOpen_le [IsIntegral X.left] [Smooth X.hom]
     e.isOpen_inter_preimage_symm U.2
   have hximage : e x ∈ e.target ∩ e.symm ⁻¹' (U : Set _) := by
     refine ⟨e.map_source hxsource, ?_⟩
-    change e.symm (e x) ∈ (U : Set _)
-    rw [e.left_inv hxsource]
-    exact hxU
+    rwa [Set.mem_preimage, e.left_inv hxsource]
   obtain ⟨r, hr, hball⟩ := Metric.nhds_basis_ball.mem_iff.mp
     (hopen.mem_nhds hximage)
   let V : TopologicalSpace.Opens (ComplexPoint X) :=
@@ -260,20 +254,14 @@ lemma exists_contractibleOpen_le [IsIntegral X.left] [Smooth X.hom]
     · intro hy
       have hytarget : y ∈ e.target := (hball hy).1
       refine ⟨e.symm y, ⟨e.map_target hytarget, ?_⟩, e.right_inv hytarget⟩
-      change e (e.symm y) ∈ Metric.ball (e x) r
-      rw [e.right_inv hytarget]
-      exact hy
+      rwa [Set.mem_preimage, e.right_inv hytarget]
   have hVcontractible : ContractibleSpace V := by
-    let : ContractibleSpace (Metric.ball (e x) r) :=
-      Metric.contractibleSpace_ball hr
+    let : ContractibleSpace (Metric.ball (e x) r) := Metric.contractibleSpace_ball hr
     exact (e.homeomorphOfImageSubsetSource hVsource himage).contractibleSpace
   have hVU : V ≤ U := by
     intro z hz
-    have hze : e z ∈ e.target ∩ e.symm ⁻¹' (U : Set _) := hball hz.2
-    change z ∈ (U : Set _)
-    have hzU : e.symm (e z) ∈ (U : Set _) := hze.2
-    rw [e.left_inv hz.1] at hzU
-    exact hzU
+    have hzU : e.symm (e z) ∈ (U : Set _) := (hball hz.2).2
+    rwa [e.left_inv hz.1] at hzU
   exact ⟨V, hxV, hVcontractible, hVU⟩
 
 /-- The analytic topology on the smooth complex-point space is locally path connected. -/
@@ -288,7 +276,6 @@ theorem locallyPathConnectedSpace [IsIntegral X.left] [Smooth X.hom] :
   refine ⟨(V : Set _), V.2.mem_nhds hxV, ?_, ?_⟩
   · rw [isPathConnected_iff_pathConnectedSpace]
     infer_instance
-  · intro z hz
-    exact hUS (hVU hz)
+  · exact fun z hz ↦ hUS (hVU hz)
 
 end AlgebraicGeometry.ComplexPoint

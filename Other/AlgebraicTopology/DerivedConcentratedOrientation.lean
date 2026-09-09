@@ -101,15 +101,13 @@ theorem toSingleHomology_homology :
 theorem isGE_of_homology_concentrated
     (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i)) : K.IsGE n := by
   rw [isGE_iff]
-  intro i hi
-  exact (exactAt_iff_isZero_homology _ _).2 (h i (ne_of_lt hi))
+  exact fun i hi ↦ (exactAt_iff_isZero_homology _ _).2 (h i (ne_of_lt hi))
 
 /-- Cohomological concentration implies the upper bound on the actual complex. -/
 theorem isLE_of_homology_concentrated
     (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i)) : K.IsLE n := by
   rw [isLE_iff]
-  intro i hi
-  exact (exactAt_iff_isZero_homology _ _).2 (h i (ne_of_gt hi))
+  exact fun i hi ↦ (exactAt_iff_isZero_homology _ _).2 (h i (ne_of_gt hi))
 
 /-- The right leg of the canonical roof is a quasi-isomorphism under concentration. -/
 theorem toSingleHomology_quasiIso
@@ -117,9 +115,8 @@ theorem toSingleHomology_quasiIso
   let := isLE_of_homology_concentrated K n h
   let : (K.truncLE n).IsGE n := by
     rw [isGE_iff]
-    intro i hi
-    apply (exactAt_iff_of_quasiIsoAt (K.ιTruncLE n) i).2
-    exact (exactAt_iff_isZero_homology _ _).2 (h i (ne_of_lt hi))
+    exact fun i hi ↦ (exactAt_iff_of_quasiIsoAt (K.ιTruncLE n) i).2
+      ((exactAt_iff_isZero_homology _ _).2 (h i (ne_of_lt hi)))
   unfold toSingleHomology
   infer_instance
 

@@ -45,10 +45,9 @@ abbrev rationalForget := forget₂ (ModuleCat ℚ) AddCommGrpCat
 
 @[simp]
 lemma moduleCat_toSpanSingleton_apply_one (M : ModuleCat ℚ) (v : M) :
-    (ModuleCat.ofHom (LinearMap.toSpanSingleton ℚ M v)).hom 1 = v :=
-  by
-    change (1 : ℚ) • v = v
-    simp
+    (ModuleCat.ofHom (LinearMap.toSpanSingleton ℚ M v)).hom 1 = v := by
+  change (1 : ℚ) • v = v
+  simp
 
 /-- The coefficient map from integral to rational chains in one degree. -/
 def integralToRationalChainComponent (X : SSet.{0}) (n : ℕ) :
@@ -65,8 +64,8 @@ lemma iota_integralToRationalChainComponent (X : SSet.{0}) (n : ℕ)
     X.ιChainComplex (R := AddCommGrpCat.of ℤ) x ≫
         integralToRationalChainComponent X n =
       AddCommGrpCat.ofHom (Int.castAddHom ℚ) ≫
-        rationalForget.map (X.ιChainComplex (R := ModuleCat.of ℚ ℚ) x) := by
-  exact (X.isColimitChainComplexXCofan (AddCommGrpCat.of ℤ) n).fac _ (Discrete.mk x)
+        rationalForget.map (X.ιChainComplex (R := ModuleCat.of ℚ ℚ) x) :=
+  (X.isColimitChainComplexXCofan (AddCommGrpCat.of ℤ) n).fac _ (Discrete.mk x)
 
 /-- Extend an integral map between free simplicial-chain groups rational-linearly. -/
 def rationalizeSimplicialChainComponent (X Y : SSet.{0}) (n m : ℕ)
@@ -92,8 +91,8 @@ lemma iota_rationalizeSimplicialChainComponent
       ModuleCat.ofHom (LinearMap.toSpanSingleton ℚ _ <|
         (show (RationalSimplicialChainComplex Y).X m from
           (integralToRationalChainComponent Y m).hom
-            (f.hom ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1)))) := by
-  exact (X.isColimitChainComplexXCofan (ModuleCat.of ℚ ℚ) n).fac _ (Discrete.mk x)
+            (f.hom ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1)))) :=
+  (X.isColimitChainComplexXCofan (ModuleCat.of ℚ ℚ) n).fac _ (Discrete.mk x)
 
 lemma integralToRationalChainComponent_naturality
     (X Y : SSet.{0}) (n m : ℕ)
@@ -102,8 +101,7 @@ lemma integralToRationalChainComponent_naturality
     integralToRationalChainComponent X n ≫
         rationalForget.map (rationalizeSimplicialChainComponent X Y n m f) =
       f ≫ integralToRationalChainComponent Y m := by
-  apply (X.isColimitChainComplexXCofan (AddCommGrpCat.of ℤ) n).hom_ext
-  intro x
+  refine (X.isColimitChainComplexXCofan (AddCommGrpCat.of ℤ) n).hom_ext fun x ↦ ?_
   change X.ιChainComplex (R := AddCommGrpCat.of ℤ) x.as ≫
       (integralToRationalChainComponent X n ≫
         rationalForget.map (rationalizeSimplicialChainComponent X Y n m f)) =
@@ -133,8 +131,7 @@ lemma rationalizeSimplicialChainComponent_comp
     rationalizeSimplicialChainComponent X Z n k (f ≫ g) =
       rationalizeSimplicialChainComponent X Y n m f ≫
         rationalizeSimplicialChainComponent Y Z m k g := by
-  apply SSet.chainComplex_hom_ext
-  intro x
+  refine SSet.chainComplex_hom_ext fun x ↦ ?_
   rw [iota_rationalizeSimplicialChainComponent,
     iota_rationalizeSimplicialChainComponent_assoc]
   ext
@@ -146,8 +143,7 @@ lemma rationalizeSimplicialChainComponent_comp
 
 lemma rationalizeSimplicialChainComponent_id (X : SSet.{0}) (n : ℕ) :
     rationalizeSimplicialChainComponent X X n n (𝟙 _) = 𝟙 _ := by
-  apply SSet.chainComplex_hom_ext
-  intro x
+  refine SSet.chainComplex_hom_ext fun x ↦ ?_
   rw [iota_rationalizeSimplicialChainComponent]
   ext
   simp only [Category.comp_id,
@@ -160,8 +156,7 @@ lemma rationalizeSimplicialChainComponent_id (X : SSet.{0}) (n : ℕ) :
 lemma rationalizeSimplicialChainComponent_zero
     (X Y : SSet.{0}) (n m : ℕ) :
     rationalizeSimplicialChainComponent X Y n m 0 = 0 := by
-  apply SSet.chainComplex_hom_ext
-  intro x
+  refine SSet.chainComplex_hom_ext fun x ↦ ?_
   rw [iota_rationalizeSimplicialChainComponent]
   ext
   simp
@@ -173,8 +168,7 @@ lemma rationalizeSimplicialChainComponent_add
     rationalizeSimplicialChainComponent X Y n m (f + g) =
       rationalizeSimplicialChainComponent X Y n m f +
         rationalizeSimplicialChainComponent X Y n m g := by
-  apply SSet.chainComplex_hom_ext
-  intro x
+  refine SSet.chainComplex_hom_ext fun x ↦ ?_
   rw [iota_rationalizeSimplicialChainComponent, Preadditive.comp_add,
     iota_rationalizeSimplicialChainComponent,
     iota_rationalizeSimplicialChainComponent]
@@ -187,10 +181,9 @@ lemma rationalizeSimplicialChainComponent_neg
       (Y.chainComplex (AddCommGrpCat.of ℤ)).X m) :
     rationalizeSimplicialChainComponent X Y n m (-f) =
       -rationalizeSimplicialChainComponent X Y n m f := by
-  apply SSet.chainComplex_hom_ext
-  intro x
-  rw [iota_rationalizeSimplicialChainComponent]
-  rw [Preadditive.comp_neg, iota_rationalizeSimplicialChainComponent]
+  refine SSet.chainComplex_hom_ext fun x ↦ ?_
+  rw [iota_rationalizeSimplicialChainComponent, Preadditive.comp_neg,
+    iota_rationalizeSimplicialChainComponent]
   ext
   simp
 
@@ -200,22 +193,20 @@ lemma integralToRationalChainComponent_comm_d (X : SSet.{0}) (n : ℕ) :
         rationalForget.map ((RationalSimplicialChainComplex X).d (n + 1) n) =
       (X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n ≫
         integralToRationalChainComponent X n := by
-  apply (X.isColimitChainComplexXCofan (AddCommGrpCat.of ℤ) (n + 1)).hom_ext
-  intro x
+  refine (X.isColimitChainComplexXCofan (AddCommGrpCat.of ℤ) (n + 1)).hom_ext fun x ↦ ?_
   change X.ιChainComplex (R := AddCommGrpCat.of ℤ) x.as ≫
       (integralToRationalChainComponent X (n + 1) ≫
         rationalForget.map ((RationalSimplicialChainComplex X).d (n + 1) n)) =
     X.ιChainComplex (R := AddCommGrpCat.of ℤ) x.as ≫
       ((X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n ≫
         integralToRationalChainComponent X n)
-  rw [← Category.assoc, iota_integralToRationalChainComponent,
-    Category.assoc, ← Functor.map_comp, SSet.ιChainComplex_d]
-  rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
+  rw [← Category.assoc, iota_integralToRationalChainComponent, Category.assoc,
+    ← Functor.map_comp, SSet.ιChainComplex_d, ← Category.assoc, SSet.ιChainComplex_d,
+    Preadditive.sum_comp]
   simp_rw [Preadditive.zsmul_comp, iota_integralToRationalChainComponent]
   simp only [Functor.map_sum, Functor.map_zsmul]
   rw [Preadditive.comp_sum]
-  apply Finset.sum_congr rfl
-  intro i _
+  refine Finset.sum_congr rfl fun i _ ↦ ?_
   rw [Preadditive.comp_zsmul]
 
 /-- Rationalization sends the integral simplicial differential to the rational differential. -/
@@ -223,8 +214,7 @@ lemma rationalizeSimplicialChainComponent_d (X : SSet.{0}) (n : ℕ) :
     rationalizeSimplicialChainComponent X X (n + 1) n
         ((X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n) =
       (RationalSimplicialChainComplex X).d (n + 1) n := by
-  apply SSet.chainComplex_hom_ext
-  intro x
+  refine SSet.chainComplex_hom_ext fun x ↦ ?_
   rw [iota_rationalizeSimplicialChainComponent]
   ext
   change (LinearMap.toSpanSingleton ℚ _ _) 1 = _
@@ -267,10 +257,8 @@ lemma rationalizeSimplicialChainMap_f (X Y : SSet.{0})
   rfl
 
 lemma rationalizeSimplicialChainMap_id (X : SSet.{0}) :
-    rationalizeSimplicialChainMap X X (𝟙 _) = 𝟙 _ := by
-  apply HomologicalComplex.hom_ext
-  intro n
-  exact rationalizeSimplicialChainComponent_id X n
+    rationalizeSimplicialChainMap X X (𝟙 _) = 𝟙 _ :=
+  HomologicalComplex.hom_ext _ _ fun n ↦ rationalizeSimplicialChainComponent_id X n
 
 lemma rationalizeSimplicialChainMap_comp (X Y Z : SSet.{0})
     (f : X.chainComplex (AddCommGrpCat.of ℤ) ⟶
@@ -279,26 +267,23 @@ lemma rationalizeSimplicialChainMap_comp (X Y Z : SSet.{0})
       Z.chainComplex (AddCommGrpCat.of ℤ)) :
     rationalizeSimplicialChainMap X Z (f ≫ g) =
       rationalizeSimplicialChainMap X Y f ≫
-        rationalizeSimplicialChainMap Y Z g := by
-  apply HomologicalComplex.hom_ext
-  intro n
-  exact rationalizeSimplicialChainComponent_comp X Y Z n n n (f.f n) (g.f n)
+        rationalizeSimplicialChainMap Y Z g :=
+  HomologicalComplex.hom_ext _ _ fun n ↦
+    rationalizeSimplicialChainComponent_comp X Y Z n n n (f.f n) (g.f n)
 
 lemma rationalizeSimplicialChainMap_add (X Y : SSet.{0})
     (f g : X.chainComplex (AddCommGrpCat.of ℤ) ⟶
       Y.chainComplex (AddCommGrpCat.of ℤ)) :
     rationalizeSimplicialChainMap X Y (f + g) =
       rationalizeSimplicialChainMap X Y f +
-        rationalizeSimplicialChainMap X Y g := by
-  apply HomologicalComplex.hom_ext
-  intro n
-  exact rationalizeSimplicialChainComponent_add X Y n n (f.f n) (g.f n)
+        rationalizeSimplicialChainMap X Y g :=
+  HomologicalComplex.hom_ext _ _ fun n ↦
+    rationalizeSimplicialChainComponent_add X Y n n (f.f n) (g.f n)
 
 lemma rationalizeSimplicialChainMap_zero (X Y : SSet.{0}) :
-    rationalizeSimplicialChainMap X Y 0 = 0 := by
-  apply HomologicalComplex.hom_ext
-  intro n
-  exact rationalizeSimplicialChainComponent_zero X Y n n
+    rationalizeSimplicialChainMap X Y 0 = 0 :=
+  HomologicalComplex.hom_ext _ _ fun n ↦
+    rationalizeSimplicialChainComponent_zero X Y n n
 
 /-- Rationalization preserves a chain homotopy between integral simplicial chain maps. -/
 def rationalizeSimplicialChainHomotopy (X Y : SSet.{0})
@@ -359,8 +344,7 @@ lemma rationalizeSimplicialChainComponent_chainComplexMap
     rationalizeSimplicialChainComponent X Y n n
         ((SSet.chainComplexMap f (AddCommGrpCat.of ℤ)).f n) =
       (SSet.chainComplexMap f (ModuleCat.of ℚ ℚ)).f n := by
-  apply SSet.chainComplex_hom_ext
-  intro x
+  refine SSet.chainComplex_hom_ext fun x ↦ ?_
   rw [iota_rationalizeSimplicialChainComponent,
     SSet.ι_chainComplexMap_f]
   ext
@@ -382,10 +366,9 @@ lemma rationalizeSimplicialChainMap_chainComplexMap
     {X Y : SSet.{0}} (f : X ⟶ Y) :
     rationalizeSimplicialChainMap X Y
         (SSet.chainComplexMap f (AddCommGrpCat.of ℤ)) =
-      SSet.chainComplexMap f (ModuleCat.of ℚ ℚ) := by
-  apply HomologicalComplex.hom_ext
-  intro n
-  exact rationalizeSimplicialChainComponent_chainComplexMap f n
+      SSet.chainComplexMap f (ModuleCat.of ℚ ℚ) :=
+  HomologicalComplex.hom_ext _ _ fun n ↦
+    rationalizeSimplicialChainComponent_chainComplexMap f n
 
 section RationalSmallChains
 

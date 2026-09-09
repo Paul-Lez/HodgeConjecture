@@ -107,8 +107,8 @@ def sheafBorelMoorePointClass :
 /-- The constructed orientation transports the actual point class to degree `2d`. -/
 def sheafBorelMoorePointSupportedCohomologyClass :
     ComplexDerivedSupportedCohomology X
-      (sheafBorelMoorePointSupport X x) (2 * (d : ℤ)) := by
-  exact (eqToIso (congrArg
+      (sheafBorelMoorePointSupport X x) (2 * (d : ℤ)) :=
+  (eqToIso (congrArg
     (ComplexDerivedSupportedCohomology X (sheafBorelMoorePointSupport X x))
       (sub_zero (2 * (d : ℤ))))).hom
         ((complexAmbientSheafBorelMooreHomologyIso X d

@@ -67,8 +67,8 @@ noncomputable def integralSingularHomologyEquivOfHomotopyEquiv
 
 /-- A real topological standard simplex is contractible because it is nonempty and convex. -/
 public theorem standardTopologicalSimplex_contractibleSpace (m : ℕ) :
-    ContractibleSpace (stdSimplex ℝ (Fin (m + 1))) := by
-  exact (convex_stdSimplex ℝ (Fin (m + 1))).contractibleSpace
+    ContractibleSpace (stdSimplex ℝ (Fin (m + 1))) :=
+  (convex_stdSimplex ℝ (Fin (m + 1))).contractibleSpace
     ⟨stdSimplex.vertex 0, stdSimplex.vertex 0 |>.2⟩
 
 /-- Positive-degree integral singular homology of a topological standard simplex vanishes. -/
@@ -136,8 +136,7 @@ public theorem exists_standardTopologicalSimplex_cycleFiller
         (standardTopologicalSimplex_singularChainExactAt m (n + 1)
           (by lia))
   have hz1 : K.d (n + 1) n (z 1) = 0 := by
-    have h := CategoryTheory.congr_fun hz 1
-    simpa using h
+    simpa using CategoryTheory.congr_fun hz 1
   obtain ⟨p, hp⟩ := (ShortComplex.ab_exact_iff _).mp hexact (z 1) hz1
   change K.X (n + 2) at p
   change K.d (n + 2) (n + 1) p = z 1 at hp
@@ -285,8 +284,7 @@ public theorem iota_affineSingularSubdivisionDiscrepancyChainMap
         (SSet.chainComplexMap
           (TopCat.toSSet.map (singularSimplexTopCatMap X n x))
           (AddCommGrpCat.of ℤ)).f n
-  simp only [Preadditive.comp_sub, Category.comp_id]
-  simp only [Preadditive.sub_comp]
+  simp only [Preadditive.comp_sub, Category.comp_id, Preadditive.sub_comp]
   let F := SSet.chainComplexMap
     (TopCat.toSSet.map (singularSimplexTopCatMap X n x))
     (AddCommGrpCat.of ℤ)
@@ -312,23 +310,7 @@ public theorem iota_affineSingularSubdivisionDiscrepancyChainMap
               (standardTopologicalSimplexIdentitySimplex n) ≫
             (affineSingularSubdivisionChainMap
               (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).f n) ≫ F.f n := by
-    calc
-      _ = ((TopCat.toSSet.obj
-            (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).ιChainComplex
-              (standardTopologicalSimplexIdentitySimplex n) ≫ F.f n) ≫
-            (affineSingularSubdivisionChainMap X).f n := by rw [htop]
-      _ = (TopCat.toSSet.obj
-            (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).ιChainComplex
-              (standardTopologicalSimplexIdentitySimplex n) ≫
-            (F.f n ≫ (affineSingularSubdivisionChainMap X).f n) :=
-        Category.assoc _ _ _
-      _ = (TopCat.toSSet.obj
-            (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).ιChainComplex
-              (standardTopologicalSimplexIdentitySimplex n) ≫
-            ((affineSingularSubdivisionChainMap
-              (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).f n ≫ F.f n) := by
-        rw [hnat]
-      _ = _ := (Category.assoc _ _ _).symm
+    rw [← htop, Category.assoc, hnat, ← Category.assoc]
   change _ = _ - _
   rw [hA, htop]
 
@@ -349,8 +331,7 @@ public theorem affineSubdivisionSingularSimplexChain_zero
   rw [hperm, Finset.sum_singleton]
   simp only [permutationSignInteger, Equiv.Perm.sign_one, Units.val_one,
     one_zsmul, affineFlagChainMap_f]
-  rw [iota_affineFlagChainComponent]
-  rw [SSet.ι_chainComplexMap_f]
+  rw [iota_affineFlagChainComponent, SSet.ι_chainComplexMap_f]
   congr 1
   apply (TopCat.toSSetObjEquiv _ _).injective
   apply ContinuousMap.ext
@@ -545,15 +526,7 @@ public theorem standardAffinePrismFaceChain_transport_raw
       (TopCat.toSSet.map
         (singularSimplexTopCatMap X n ((TopCat.toSSet.obj X).δ p x)))
       (AddCommGrpCat.of ℤ)).f (n + 1) at hn
-  calc
-    _ = prism n ≫
-        ((SSet.chainComplexMap
-            (TopCat.toSSet.map (standardSimplexFaceTopCatMap n p))
-            (AddCommGrpCat.of ℤ)).f (n + 1) ≫
-          (SSet.chainComplexMap
-            (TopCat.toSSet.map (singularSimplexTopCatMap X (n + 1) x))
-            (AddCommGrpCat.of ℤ)).f (n + 1)) := Category.assoc _ _ _
-    _ = _ := congrArg (fun k ↦ prism n ≫ k) hn
+  rw [hn]
 
 /-- A universal prism equation induces the corresponding operator equation on every
 topological space in that degree. -/
@@ -686,8 +659,8 @@ termination_by n
 
 @[simp]
 public theorem canonicalAffineSubdivisionPrism_zero :
-    canonicalAffineSubdivisionPrism 0 = 0 :=
-  by simp [canonicalAffineSubdivisionPrism]
+    canonicalAffineSubdivisionPrism 0 = 0 := by
+  simp [canonicalAffineSubdivisionPrism]
 
 /-- The successor prism is the chosen filler of discrepancy minus the already constructed
 face-prism sum. -/
@@ -775,8 +748,8 @@ public theorem affineSingularSubdivisionPrismComponent_naturality
   apply (TopCat.toSSet.obj X).chainComplex_hom_ext
   intro x
   rw [← Category.assoc, SSet.ι_chainComplexMap_f,
+    iota_affineSingularSubdivisionPrismComponent, ← Category.assoc,
     iota_affineSingularSubdivisionPrismComponent]
-  rw [← Category.assoc, iota_affineSingularSubdivisionPrismComponent]
   let G := (SSet.chainComplexFunctor AddCommGrpCat).obj
     (AddCommGrpCat.of ℤ)
   have hsset :
@@ -808,12 +781,11 @@ public theorem affineSingularSubdivisionPrismComponent_discrepancy_succ
           (AddCommGrpCat.of ℤ)).d (n + 2) (n + 1) +
       ((TopCat.toSSet.obj X).chainComplex
           (AddCommGrpCat.of ℤ)).d (n + 1) n ≫
-        affineSingularSubdivisionPrismComponent X n :=
-  by
-    simpa only [affineSingularSubdivisionPrismComponent] using
-      universalAffinePrismComponent_boundary_succ
-        canonicalAffineSubdivisionPrism n
-          (canonicalAffineSubdivisionPrism_boundary (n + 1)) X
+        affineSingularSubdivisionPrismComponent X n := by
+  simpa only [affineSingularSubdivisionPrismComponent] using
+    universalAffinePrismComponent_boundary_succ
+      canonicalAffineSubdivisionPrism n
+        (canonicalAffineSubdivisionPrism_boundary (n + 1)) X
 
 /-- In degree zero the canonical transported prism satisfies the discrepancy equation, with
 no lower-dimensional face term. -/
@@ -825,8 +797,8 @@ public theorem affineSingularSubdivisionPrismComponent_discrepancy_zero
           (AddCommGrpCat.of ℤ)).d 1 0 := by
   apply (TopCat.toSSet.obj X).chainComplex_hom_ext
   intro x
-  rw [iota_affineSingularSubdivisionDiscrepancyChainMap]
-  rw [← Category.assoc, iota_affineSingularSubdivisionPrismComponent]
+  rw [iota_affineSingularSubdivisionDiscrepancyChainMap, ← Category.assoc,
+    iota_affineSingularSubdivisionPrismComponent]
   simp
 
 /-- The transported prism gives the chain-homotopy identity in every positive degree. -/
@@ -858,8 +830,7 @@ public theorem affineSingularSubdivisionPrismComponent_identity_zero
           (AddCommGrpCat.of ℤ)).X 0) := by
   have h := affineSingularSubdivisionPrismComponent_discrepancy_zero X
   change (affineSingularSubdivisionChainMap X).f 0 - 𝟙 _ = _ at h
-  rw [sub_eq_iff_eq_add] at h
-  exact h
+  rwa [sub_eq_iff_eq_add] at h
 
 /-- The homotopy family, supported from degree `i` to degree `i+1`. -/
 public noncomputable def affineSingularSubdivisionPrismHom

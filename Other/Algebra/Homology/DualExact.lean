@@ -75,9 +75,8 @@ cochain maps in the opposite direction. -/
 lemma dual_differentials_range_eq_ker_of_exactAt
     (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) (hK : K.ExactAt (n + 1)) :
     LinearMap.range (K.d (n + 1) n).hom.dualMap =
-      LinearMap.ker (K.d (n + 2) (n + 1)).hom.dualMap := by
-  have hS : (K.sc' (n + 2) (n + 1) n).Exact :=
-    (K.exactAt_iff' (n + 2) (n + 1) n (by simp) (by simp)).mp hK
-  exact ShortComplex.dual_range_eq_ker_of_exact _ hS
+      LinearMap.ker (K.d (n + 2) (n + 1)).hom.dualMap :=
+  ShortComplex.dual_range_eq_ker_of_exact _
+    ((K.exactAt_iff' (n + 2) (n + 1) n (by simp) (by simp)).mp hK)
 
 end HomologicalComplex

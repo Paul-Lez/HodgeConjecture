@@ -46,8 +46,8 @@ variable (X : Over (Spec ↧ℂ))
 
 /-- Every open subset of a smooth projective complex analytification is paracompact. -/
 theorem openParacompactSpace [IsIntegral X.left] [Smooth X.hom]
-    (U : Opens (ComplexPoint X)) : ParacompactSpace U := by
-  exact opens_paracompactSpace_of_compact_chartedSpace (H := Fin (dim X.left) → ℂ) U
+    (U : Opens (ComplexPoint X)) : ParacompactSpace U :=
+  opens_paracompactSpace_of_compact_chartedSpace (H := Fin (dim X.left) → ℂ) U
 
 /-- Every term of the rational singular-cochain sheaf resolution on a smooth projective
 analytification is flasque. -/

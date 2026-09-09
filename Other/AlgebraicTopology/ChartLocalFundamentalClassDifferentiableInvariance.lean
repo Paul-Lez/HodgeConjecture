@@ -173,8 +173,8 @@ def complexMatrixOfContinuousLinearMap
 @[simp]
 lemma complexMatrixOfContinuousLinearMap_mulVec
     (L : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) (v : Fin d → ℂ) :
-    (complexMatrixOfContinuousLinearMap d L).mulVec v = L v := by
-  exact LinearMap.toMatrix'_mulVec L.toLinearMap v
+    (complexMatrixOfContinuousLinearMap d L).mulVec v = L v :=
+  LinearMap.toMatrix'_mulVec L.toLinearMap v
 
 lemma complexMatrixOfContinuousLinearMap_det_ne_zero
     (L : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) (hL : Function.Injective L) :
@@ -251,15 +251,13 @@ lemma complexNeighborhoodPuncturedPairMap_compressedChartTransition_comp
     change chartModelEmbedding d e' x hx'
         ((chartModelEmbedding d e' x hx').symm (chartModelEmbedding d e x hx z.1.1)) =
       chartModelEmbedding d e x hx z.1.1
-    apply (chartModelEmbedding d e' x hx').right_inv
-    exact (hV z.1.2).2
+    exact (chartModelEmbedding d e' x hx').right_inv (hV z.1.2).2
   · apply ConcreteCategory.hom_ext
     intro z
     change chartModelEmbedding d e' x hx'
         ((chartModelEmbedding d e' x hx').symm (chartModelEmbedding d e x hx z.1)) =
       chartModelEmbedding d e x hx z.1
-    apply (chartModelEmbedding d e' x hx').right_inv
-    exact (hV z.2).2
+    exact (chartModelEmbedding d e' x hx').right_inv (hV z.2).2
 
 /-- Differentiability with injective complex derivative of the actual compressed chart transition
 implies equality of the two normalized chart-local fundamental classes. -/
@@ -274,15 +272,12 @@ theorem localClassOfChart_eq_of_hasFDerivAt_compressedTransition
   let A := complexMatrixOfContinuousLinearMap d L
   have hA : A.det ≠ 0 := complexMatrixOfContinuousLinearMap_det_ne_zero d L hL
   have hAL : (A.mulVecLin.toContinuousLinearMap :
-      (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) = L := by
-    apply ContinuousLinearMap.ext
-    intro v
-    exact complexMatrixOfContinuousLinearMap_mulVec d L v
+      (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) = L :=
+    ContinuousLinearMap.ext (complexMatrixOfContinuousLinearMap_mulVec d L)
   have hderivA : HasFDerivAt f
-      (A.mulVecLin.toContinuousLinearMap : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) 0 :=
-    by
-      rw [hAL]
-      exact hderiv
+      (A.mulVecLin.toContinuousLinearMap : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) 0 := by
+    rw [hAL]
+    exact hderiv
   obtain ⟨V, hVsource, hf_ne, hVopen, h0V, hlocal⟩ :=
     exists_open_complexDifferentiable_localClass_invariance d A hA f.source f.open_source
       (zero_mem_compressedChartTransition_source d e e' x hx hx') f f.continuousOn
@@ -341,13 +336,12 @@ theorem localClassOfChart_eq_of_hasFDerivAt_transition
   let L := L₂.comp (T.comp L₀)
   have hfirst : HasFDerivAt
       (OpenPartialHomeomorph.univBall (e x) r :
-        (Fin d → ℂ) → (Fin d → ℂ)) L₀ 0 := by
-    exact hasFDerivAt_univBall_complex d (e x) r (chartRadius_pos d e x hx)
+        (Fin d → ℂ) → (Fin d → ℂ)) L₀ 0 :=
+    hasFDerivAt_univBall_complex d (e x) r (chartRadius_pos d e x hx)
   have hlast : HasFDerivAt
       ((OpenPartialHomeomorph.univBall (e' x) r').symm :
-        (Fin d → ℂ) → (Fin d → ℂ)) L₂ (e' x) := by
-    exact hasFDerivAt_univBall_symm_complex d (e' x) r'
-      (chartRadius_pos d e' x hx')
+        (Fin d → ℂ) → (Fin d → ℂ)) L₂ (e' x) :=
+    hasFDerivAt_univBall_symm_complex d (e' x) r' (chartRadius_pos d e' x hx')
   have hfirstN := (piHasFDerivAt_iff_normed d _ L₀ 0).mp hfirst
   have hderivN := (piHasFDerivAt_iff_normed d _ T (e x)).mp hderiv
   have hlastN := (piHasFDerivAt_iff_normed d _ L₂ (e' x)).mp hlast
@@ -378,10 +372,9 @@ theorem localClassOfChart_eq_of_hasFDerivAt_transition
       (OpenPartialHomeomorph.univBall (e' x) r').symm
         (e' (e.symm (OpenPartialHomeomorph.univBall (e x) r v)))
     rfl
-  have hr : (r : ℂ) ≠ 0 := by
-    exact_mod_cast (chartRadius_pos d e x hx).ne'
-  have hr' : (r'⁻¹ : ℂ) ≠ 0 := by
-    exact inv_ne_zero (by exact_mod_cast (chartRadius_pos d e' x hx').ne')
+  have hr : (r : ℂ) ≠ 0 := by exact_mod_cast (chartRadius_pos d e x hx).ne'
+  have hr' : (r'⁻¹ : ℂ) ≠ 0 :=
+    inv_ne_zero (by exact_mod_cast (chartRadius_pos d e' x hx').ne')
   have hL₀ : Function.Injective L₀ := by
     intro a b hab
     apply smul_right_injective (Fin d → ℂ) hr
@@ -426,11 +419,10 @@ theorem localClassOfChart_eq_of_analyticAt_transition
   have hsource : e x ∈ t.source := by
     change e x ∈ (e.symm.trans e').source
     rw [OpenPartialHomeomorph.trans_source]
-    constructor
-    · exact e.map_source hx
-    · change e.symm (e x) ∈ e'.source
-      rw [e.left_inv hx]
-      exact hx'
+    refine ⟨e.map_source hx, ?_⟩
+    change e.symm (e x) ∈ e'.source
+    rw [e.left_inv hx]
+    exact hx'
   have hlocalInverse : (g ∘ f) =ᶠ[nhds (e x)] id := by
     filter_upwards [t.open_source.mem_nhds hsource] with v hv
     change t.symm (t v) = v

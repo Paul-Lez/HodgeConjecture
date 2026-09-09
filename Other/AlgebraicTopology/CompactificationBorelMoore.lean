@@ -158,24 +158,20 @@ lemma compactificationToPointComplementPair_isIso_of_subsingleton
     ⟨fun y ↦ y.2 (Subsingleton.elim y.1 x)⟩
   let hunivComplement : IsEmpty ((Set.univ : Set X)ᶜ : Set X) :=
     ⟨fun y ↦ y.2 (Set.mem_univ y.1)⟩
-  have hemptyPointComplement (y : ({x}ᶜ : Set X)) : False :=
-    y.2 (Subsingleton.elim y.1 x)
-  have hemptyUnivComplement (y : ((Set.univ : Set X)ᶜ : Set X)) : False :=
-    y.2 (Set.mem_univ y.1)
   let inverse : pointComplementPair x ⟶
       TopPair.ofSubset (X := TopCat.of X) (Set.univ : Set X)ᶜ :=
     TopPair.ofHom (𝟙 _) (TopCat.ofHom
-      ⟨(fun y : ({x}ᶜ : Set X) ↦ (hemptyPointComplement y).elim),
+      ⟨(fun y : ({x}ᶜ : Set X) ↦ hpointComplement.elim y),
         continuous_of_discreteTopology⟩)
-      (by ext y; exact (hemptyPointComplement y).elim)
+      (by ext y; exact hpointComplement.elim y)
   refine ⟨⟨inverse, ?_, ?_⟩⟩
   · apply MorphismProperty.Arrow.Hom.ext
     · ext y
-      exact (hemptyUnivComplement y).elim
+      exact hunivComplement.elim y
     · rfl
   · apply MorphismProperty.Arrow.Hom.ext
     · ext y
-      exact (hemptyPointComplement y).elim
+      exact hpointComplement.elim y
     · rfl
 
 /-- For a one-point compactification, the canonical local-value map is a linear equivalence in

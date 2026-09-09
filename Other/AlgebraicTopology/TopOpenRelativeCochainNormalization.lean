@@ -29,13 +29,9 @@ def topOpenIntersectionPairIso (U : Opens X) :
   inv := TopPair.ofHom (Opens.inclusionTopIso X).inv
     (TopCat.ofHom ⟨fun u => ⟨u.1, ⟨trivial, u.2⟩⟩, continuous_subtype_val.subtype_mk _⟩) rfl
   hom_inv_id := by
-    apply MorphismProperty.Arrow.Hom.ext
-    · ext w; rfl
-    · ext w; rfl
+    apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
   inv_hom_id := by
-    apply MorphismProperty.Arrow.Hom.ext
-    · ext w; rfl
-    · ext w; rfl
+    apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
 
 /-- The whole-open support-complement pair is the literal ordinary ambient
 support pair, with both subtype regroupings displayed. -/
@@ -133,8 +129,8 @@ theorem openRawRelativeCochainClass_top (U : Opens X) (n : ℕ)
       eG.hom ≫ F.map (HomologicalComplex.homologyMap f.τ₂ (n : ℤ)) at hn
     change HomologicalComplex.homologyMap (openRawSingularCochainComplexIntIsoDual R X ⊤).hom
       (n : ℤ) ≫ eL.hom = _
-    rw [← globalRawCochainIntIso_comp_topOpenDual R X U, HomologicalComplex.homologyMap_comp]
-    rw [Category.assoc, hn]
+    rw [← globalRawCochainIntIso_comp_topOpenDual R X U, HomologicalComplex.homologyMap_comp,
+      Category.assoc, hn]
     rfl
   apply l.addCommGroupIsoToAddEquiv.injective
   apply eL.addCommGroupIsoToAddEquiv.injective

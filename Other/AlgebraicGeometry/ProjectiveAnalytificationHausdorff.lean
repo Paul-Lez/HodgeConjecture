@@ -46,11 +46,8 @@ lemma t2Space_of_isAffine (X : Over (Spec ↧ℂ)) [IsAffine X.left] :
   let : TopologicalSpace (ComplexPoint X) := analyticTopology
   rw [t2Space_iff_nhds]
   intro z w hzw
-  have happ : z.left.appTop ≠ w.left.appTop := by
-    intro h
-    apply hzw
-    apply Over.OverMorphism.ext
-    exact ext_of_isAffine (Y := X.left) h
+  have happ : z.left.appTop ≠ w.left.appTop := fun h ↦
+    hzw (Over.OverMorphism.ext (ext_of_isAffine (Y := X.left) h))
   have hex : ∃ s : Γ(X.left, ⊤),
       (Scheme.ΓSpecIso ↧ℂ).hom (z.left.appTop s) ≠
         (Scheme.ΓSpecIso ↧ℂ).hom (w.left.appTop s) := by
@@ -89,9 +86,7 @@ lemma t2Space_of_pair_mem_affineOpen (X : Over (Spec ↧ℂ))
     (openHomeomorph X U).t2Space
   let zU : {q : ComplexPoint X // q ∈ overOpen U} := ⟨z, hzU⟩
   let wU : {q : ComplexPoint X // q ∈ overOpen U} := ⟨w, hwU⟩
-  have hzwU : zU ≠ wU := by
-    intro h
-    exact hzw (congrArg Subtype.val h)
+  have hzwU : zU ≠ wU := fun h ↦ hzw (congrArg Subtype.val h)
   obtain ⟨A, B, hA, hB, hzA, hwB, hAB⟩ := t2_separation hzwU
   let e : {q : ComplexPoint X // q ∈ overOpen U} →
       ComplexPoint X := Subtype.val
@@ -152,19 +147,17 @@ lemma chartIntegralProjAt_preimage_basicOpen {n d : ℕ}
     chartIntegralProjAt v i hi ⁻¹ᵁ Proj.basicOpen (UniversalGrading n) r =
       if coordinateEvaluationHom v r = 0 then ⊥ else ⊤ := by
   unfold chartIntegralProjAt
-  rw [Scheme.Hom.comp_preimage]
-  rw [show Proj.awayι (UniversalGrading n) (MvPolynomial.X i)
+  rw [Scheme.Hom.comp_preimage, show Proj.awayι (UniversalGrading n) (MvPolynomial.X i)
       (MvPolynomial.isHomogeneous_X (ULift ℤ) i) zero_lt_one ⁻¹ᵁ
         Proj.basicOpen (UniversalGrading n) r =
       PrimeSpectrum.basicOpen
         (HomogeneousLocalization.Away.isLocalizationElem
-          (MvPolynomial.isHomogeneous_X (ULift ℤ) i) hr) by
-    exact Proj.awayι_preimage_basicOpen
+          (MvPolynomial.isHomogeneous_X (ULift ℤ) i) hr) from
+    Proj.awayι_preimage_basicOpen
       (𝒜 := UniversalGrading n) (f := MvPolynomial.X i) (g := r)
       (m := 1) (m' := d)
       (MvPolynomial.isHomogeneous_X (ULift ℤ) i) zero_lt_one hr hd]
-  rw [SpecMap_preimage_basicOpen]
-  rw [show HomogeneousLocalization.Away.isLocalizationElem
+  rw [SpecMap_preimage_basicOpen, show HomogeneousLocalization.Away.isLocalizationElem
       (MvPolynomial.isHomogeneous_X (ULift ℤ) i) hr =
       HomogeneousLocalization.Away.mk (UniversalGrading n)
         (MvPolynomial.isHomogeneous_X (ULift ℤ) i) d r (by simpa using hr) by

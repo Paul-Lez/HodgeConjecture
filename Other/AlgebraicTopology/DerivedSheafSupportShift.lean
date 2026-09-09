@@ -43,8 +43,8 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The sheaf-valued derived unit respects the constructed shifts. -/
 instance derivedSheafSectionsWithClosedSupportUnit_commShift (Z : Closeds X) :
-    NatTrans.CommShift (derivedSheafSectionsWithClosedSupportUnit X Z) ℤ := by
-  exact Functor.rightDerivedFunctorPlusUnitCommShift (sheafSectionsWithClosedSupport X Z)
+    NatTrans.CommShift (derivedSheafSectionsWithClosedSupportUnit X Z) ℤ :=
+  Functor.rightDerivedFunctorPlusUnitCommShift (sheafSectionsWithClosedSupport X Z)
 
 /-- The canonical natural isomorphism `RΓ̲_Z(K[n]) ≅ (RΓ̲_Z K)[n]`. -/
 def derivedSheafSectionsWithClosedSupportShiftIso (Z : Closeds X) (n : ℤ) :
@@ -64,8 +64,8 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The group-valued derived unit respects the constructed shifts. -/
 instance derivedClosedSupportSectionsUnit_commShift (Z : Closeds X) :
-    NatTrans.CommShift (derivedClosedSupportSectionsUnit X Z) ℤ := by
-  exact Functor.rightDerivedFunctorPlusUnitCommShift (closedSupportSections X Z)
+    NatTrans.CommShift (derivedClosedSupportSectionsUnit X Z) ℤ :=
+  Functor.rightDerivedFunctorPlusUnitCommShift (closedSupportSections X Z)
 
 /-- The canonical natural isomorphism `RΓ_Z(K[n]) ≅ (RΓ_Z K)[n]`. -/
 def derivedClosedSupportSectionsShiftIso (Z : Closeds X) (n : ℤ) :

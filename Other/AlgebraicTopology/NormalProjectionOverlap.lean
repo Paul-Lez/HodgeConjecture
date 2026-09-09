@@ -50,10 +50,8 @@ theorem exists_open_normalTransition_localClass_invariance_within
   let A := complexMatrixOfContinuousLinearMap c L.toContinuousLinearMap
   have hA := complexMatrixOfContinuousLinearMap_det_ne_zero c L.toContinuousLinearMap L.injective
   have hAL : (A.mulVecLin.toContinuousLinearMap : (Fin c → ℂ) →L[ℂ] (Fin c → ℂ)) =
-      L.toContinuousLinearMap := by
-    apply ContinuousLinearMap.ext
-    intro v
-    exact complexMatrixOfContinuousLinearMap_mulVec c L.toContinuousLinearMap v
+      L.toContinuousLinearMap :=
+    ContinuousLinearMap.ext (complexMatrixOfContinuousLinearMap_mulVec c L.toContinuousLinearMap)
   apply exists_open_complexDifferentiable_localClass_invariance c A hA U hU h0U
     (normalTransitionMap c t a) ((normalTransitionMap_continuousOn c t a).mono hUt)
     (normalTransitionMap_zero c t a ha hp)
@@ -214,8 +212,8 @@ theorem exists_open_chartNormalProjectionCoclass_eq (hx' : x ∈ e'.source)
   have hWr := flattenedSupportNeighborhood_subset_source E c er x hxr
   have hW : (W : Set M) ⊆ e.source := fun _ hy => (hWr hy).1
   have hW' : (W : Set M) ⊆ e'.source := fun _ hy => (hWr hy).2
-  refine ⟨W, hW, hW', mem_flattenedSupportNeighborhood E c er x hxr, ?_⟩
-  exact chartNormalProjectionCoclass_eq_on_flattenedNeighborhood c er e' S hSr hS' x hxr h0 hW' ht hti
+  exact ⟨W, hW, hW', mem_flattenedSupportNeighborhood E c er x hxr,
+    chartNormalProjectionCoclass_eq_on_flattenedNeighborhood c er e' S hSr hS' x hxr h0 hW' ht hti⟩
 
 end Overlap
 

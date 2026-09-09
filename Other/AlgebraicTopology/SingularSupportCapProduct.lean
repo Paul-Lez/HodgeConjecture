@@ -90,9 +90,7 @@ lemma subspaceBChainMap_supportCapLiftHom_eq_zero
     (phi : RelativeCochain R (TopPair.ofSubset A) p) :
     ((chainPairFunctor R).obj (TopPair.ofSubset B)).hom.f (p + q) ≫
       supportCapLiftHom R X A B p q phi = 0 := by
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro c
+  ext c
   have hcap := Simplicial.cap_naturality R
     (TopCat.toSSet.map (TopPair.ofSubset B).map) p q
     (relativeCochainToAbsolute R (TopPair.ofSubset A) p phi) c
@@ -101,11 +99,7 @@ lemma subspaceBChainMap_supportCapLiftHom_eq_zero
   have hprojection' :
       (SSet.chainComplexMap (TopCat.toSSet.map (TopPair.ofSubset B).map)
           (ModuleCat.of R R)).f q ≫
-        (relativeChainProjection R (TopPair.ofSubset (A ∪ B))).f q = 0 := by
-    change (SSet.chainComplexMap (TopCat.toSSet.map (TopPair.ofSubset B).map)
-        (ModuleCat.of R R)).f q ≫
-      (relativeChainProjection R (TopPair.ofSubset (A ∪ B))).f q = 0 at hprojection
-    exact hprojection
+        (relativeChainProjection R (TopPair.ofSubset (A ∪ B))).f q = 0 := hprojection
   have hzero := ConcreteCategory.congr_hom hprojection'
     (Simplicial.cap R p q
       (Simplicial.cochainMap R
@@ -149,8 +143,8 @@ lemma relativeChainProjection_supportCapHom
     (phi : RelativeCochain R (TopPair.ofSubset A) p) :
     (relativeChainProjection R (TopPair.ofSubset B)).f (p + q) ≫
       supportCapHom R X A B p q phi =
-        supportCapLiftHom R X A B p q phi := by
-  exact (Cofork.IsColimit.π_desc
+        supportCapLiftHom R X A B p q phi :=
+  (Cofork.IsColimit.π_desc
     (relativeChainProjectionComponentIsCokernelForCap R
       (TopPair.ofSubset B) (p + q))
     (t := CokernelCofork.ofπ (supportCapLiftHom R X A B p q phi)
@@ -164,8 +158,8 @@ lemma supportCap_projection_apply
     (c : Simplicial.ChainGroup R (TopCat.toSSet.obj X) (p + q)) :
     supportCap R X A B p q phi
         (((relativeChainProjection R (TopPair.ofSubset B)).f (p + q)).hom c) =
-      supportCapLift R X A B p q phi c := by
-  exact ConcreteCategory.congr_hom
+      supportCapLift R X A B p q phi c :=
+  ConcreteCategory.congr_hom
     (relativeChainProjection_supportCapHom R X A B p q phi) c
 
 set_option backward.isDefEq.respectTransparency false in
@@ -175,9 +169,7 @@ lemma supportCapLiftHom_add
     supportCapLiftHom R X A B p q (phi + psi) =
       supportCapLiftHom R X A B p q phi +
         supportCapLiftHom R X A B p q psi := by
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro c
+  ext c
   change ((relativeChainProjection R (TopPair.ofSubset (A ∪ B))).f q).hom
       (relativeCapLift R (TopPair.ofSubset A) p q (phi + psi) c) =
     ((relativeChainProjection R (TopPair.ofSubset (A ∪ B))).f q).hom
@@ -194,9 +186,7 @@ lemma supportCapLiftHom_smul
     (phi : RelativeCochain R (TopPair.ofSubset A) p) :
     supportCapLiftHom R X A B p q (a • phi) =
       a • supportCapLiftHom R X A B p q phi := by
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro c
+  ext c
   change ((relativeChainProjection R (TopPair.ofSubset (A ∪ B))).f q).hom
       (relativeCapLift R (TopPair.ofSubset A) p q (a • phi) c) =
     a • ((relativeChainProjection R (TopPair.ofSubset (A ∪ B))).f q).hom
@@ -270,8 +260,7 @@ theorem boundary_supportCapLift_eq_of_cocycle
       (-1 : R) ^ p •
         (supportCapLift R X A B p q phi).comp
           (Simplicial.boundary R (p + q)) := by
-  apply LinearMap.ext
-  intro c
+  ext c
   simp only [LinearMap.comp_apply, LinearMap.smul_apply]
   have hboundary := ConcreteCategory.congr_hom
     ((relativeChainProjection R (TopPair.ofSubset (A ∪ B))).comm (q + 1) q)
@@ -306,8 +295,7 @@ theorem boundary_supportCap_eq_of_cocycle
       (-1 : R) ^ p •
         (supportCap R X A B p q phi).comp
           (relativeBoundary R (TopPair.ofSubset B) (p + q)) := by
-  apply LinearMap.ext
-  intro z
+  ext z
   let π := (relativeChainProjection R (TopPair.ofSubset B)).f (p + q + 1)
   let : Epi π := Cofork.IsColimit.epi
     (relativeChainProjectionComponentIsCokernelForCap R
@@ -342,9 +330,7 @@ noncomputable def supportCapShortComplexHomZero
       τ₃ := 0
       comm₁₂ := ?_
       comm₂₃ := ?_ }
-  · apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
+  · ext c
     change relativeBoundary R (TopPair.ofSubset (A ∪ B)) 0
         (s • supportCap R X A B p 1 phi c) =
       supportCap R X A B p 0 phi
@@ -383,9 +369,7 @@ noncomputable def supportCapShortComplexHomSucc
       τ₃ := ModuleCat.ofHom (s • supportCap R X A B p q phi)
       comm₁₂ := ?_
       comm₂₃ := ?_ }
-  · apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
+  · ext c
     change relativeBoundary R (TopPair.ofSubset (A ∪ B)) (q + 1)
         (s • supportCap R X A B p ((q + 1) + 1) phi c) =
       supportCap R X A B p (q + 1) phi
@@ -398,8 +382,7 @@ noncomputable def supportCapShortComplexHomSucc
       s • supportCap R X A B p (q + 1) phi
         (relativeBoundary R (TopPair.ofSubset B) (p + (q + 1)) c) at h
     simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · apply ModuleCat.hom_ext
-    exact boundary_supportCap_eq_of_cocycle R X A B p q phi hphi
+  · exact ModuleCat.hom_ext (boundary_supportCap_eq_of_cocycle R X A B p q phi hphi)
 
 /-- The short-complex morphism underlying the support-valued cap product. -/
 noncomputable def supportCapShortComplexHom
@@ -519,8 +502,7 @@ theorem supportCap_coboundary_eq
         (-1 : R) ^ p •
           (relativeBoundary R (TopPair.ofSubset (A ∪ B)) q).comp
             (supportCap R X A B p (q + 1) phi) := by
-  apply LinearMap.ext
-  intro z
+  ext z
   let π := (relativeChainProjection R (TopPair.ofSubset B)).f (p + q + 1)
   let : Epi π := Cofork.IsColimit.epi
     (relativeChainProjectionComponentIsCokernelForCap R
@@ -553,15 +535,7 @@ theorem supportCap_coboundary_eq
         relativeBoundary R (TopPair.ofSubset (A ∪ B)) q
           (((relativeChainProjection R
             (TopPair.ofSubset (A ∪ B))).f (q + 1)).hom
-              (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) := by
-    change relativeBoundary R (TopPair.ofSubset (A ∪ B)) q
-        (((relativeChainProjection R
-          (TopPair.ofSubset (A ∪ B))).f (q + 1)).hom
-            (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) =
-      ((relativeChainProjection R (TopPair.ofSubset (A ∪ B))).f q).hom
-        (Simplicial.boundary R q
-          (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) at hboundary
-    exact hboundary.symm
+              (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) := hboundary.symm
   change ((relativeChainProjection R (TopPair.ofSubset (A ∪ B))).f q).hom
       (Simplicial.cap R (p + 1) q
         (relativeCochainToAbsolute R (TopPair.ofSubset A) (p + 1)
@@ -584,9 +558,7 @@ theorem supportCap_coboundary_eq
               (TopPair.ofSubset (A ∪ B))).f (q + 1)).hom
                 (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) := by
       rw [map_sub, map_smul]
-      apply congrArg₂ (fun x y ↦ x - (-1 : R) ^ p • y)
-      · rfl
-      · exact hboundary'
+      exact congrArg₂ (fun x y ↦ x - (-1 : R) ^ p • y) rfl hboundary'
 
 /-- The short-complex map obtained by capping with a relative coboundary. -/
 noncomputable def supportCapCoboundaryShortComplexHom
@@ -624,8 +596,7 @@ lemma supportCapCoboundaryShortComplexHom_τ₂_eq
             ((relativeChainFunctor R).obj
               (TopPair.ofSubset (A ∪ B))).d (q + 1) q) := by
   rw [supportCapCoboundaryShortComplexHom_τ₂]
-  apply ModuleCat.hom_ext
-  exact supportCap_coboundary_eq R X A B p q phi
+  exact ModuleCat.hom_ext (supportCap_coboundary_eq R X A B p q phi)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Cap product by a relative coboundary induces zero on support-valued relative
@@ -636,9 +607,8 @@ theorem supportCapCoboundary_homologyMap_eq_zero
     ShortComplex.homologyMap
       (supportCapCoboundaryShortComplexHom R X A B p q phi) = 0 := by
   rw [← cancel_epi (((relativeChainFunctor R).obj
-    (TopPair.ofSubset B)).sc (p + q + 1)).homologyπ]
-  rw [← cancel_mono
-    (((relativeChainFunctor R).obj
+      (TopPair.ofSubset B)).sc (p + q + 1)).homologyπ,
+    ← cancel_mono (((relativeChainFunctor R).obj
       (TopPair.ofSubset (A ∪ B))).sc q).homologyι]
   simp only [Category.assoc, zero_comp, comp_zero]
   rw [ShortComplex.π_homologyMap_ι,
@@ -673,8 +643,8 @@ theorem supportCapShortComplexHom_coboundary_homologyMap_eq_zero
         (relativeCoboundary_relativeCoboundary R
           (TopPair.ofSubset A) p phi)) = 0 := by
   rw [← cancel_epi (ShortComplex.homologyMap
-    (relativeReassocShortComplexIso R (TopPair.ofSubset B) p q).hom)]
-  rw [← ShortComplex.homologyMap_comp, comp_zero]
+      (relativeReassocShortComplexIso R (TopPair.ofSubset B) p q).hom),
+    ← ShortComplex.homologyMap_comp, comp_zero]
   exact supportCapCoboundary_homologyMap_eq_zero R X A B p q phi
 
 /-- A relative coboundary acts trivially on support-valued relative homology. -/
@@ -685,8 +655,8 @@ theorem supportCapHomologyMap_coboundary
     supportCapHomologyMap R X A B (p + 1) q
       (relativeCoboundary R (TopPair.ofSubset A) p phi)
       (relativeCoboundary_relativeCoboundary R
-        (TopPair.ofSubset A) p phi) = 0 := by
-  exact congrArg ModuleCat.Hom.hom
+        (TopPair.ofSubset A) p phi) = 0 :=
+  congrArg ModuleCat.Hom.hom
     (supportCapShortComplexHom_coboundary_homologyMap_eq_zero
       R X A B p q phi)
 
@@ -728,8 +698,7 @@ lemma supportRelativeCohomologyCycleCapLinear_vanishes_on_boundaries
           rw [ChainComplex.next_nat_zero]
           simp
         rw [hg]
-        apply LinearMap.ext
-        intro c
+        ext c
         let etaF : Module.Dual R (K.sc 0).X₃ := eta
         change etaF (0 : (K.sc 0).X₃) = 0
         exact map_zero etaF

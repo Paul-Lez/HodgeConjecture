@@ -94,11 +94,10 @@ lemma realTangentCoordChange_eq_restrictScalars
     (I := 𝓘(ℝ, Fin d → ℂ)) hoverlapR
   have hC := (hasFDerivWithinAt_tangentCoordChange
     (I := 𝓘(ℂ, Fin d → ℂ)) hoverlapC).restrictScalars ℝ
-  have hR' := hR
   simp only [extChartAt_coe, extChartAt_coe_symm, modelWithCornersSelf_coe,
     modelWithCornersSelf_coe_symm, Function.id_comp, Function.comp_id,
-    Set.range_id] at hR' hC
-  exact uniqueDiffWithinAt_univ.eq hR' hC
+    Set.range_id] at hR hC
+  exact uniqueDiffWithinAt_univ.eq hR hC
 
 /-- The real tangent coordinate equivalence on a chart overlap is the restriction of scalars of
 the corresponding complex tangent coordinate equivalence. -/

@@ -177,12 +177,10 @@ public noncomputable def firstQuadrantColumnPrefixSuccShortComplex
 the newly added single column. -/
 public theorem firstQuadrantColumnPrefixSuccShortComplex_shortExact
     (K : FirstQuadrantBicomplex) (p : ℕ) :
-    (firstQuadrantColumnPrefixSuccShortComplex K p).ShortExact := by
-  exact
-    { exact := (firstQuadrantColumnPrefixSuccShortComplex K p).exact_of_f_is_kernel
-        (firstQuadrantColumnPrefixSuccInclusionIsKernel K p)
-      mono_f := mono_of_isLimit_fork
-        (firstQuadrantColumnPrefixSuccInclusionIsKernel K p)
-      epi_g := firstQuadrantColumnPrefixToLast_epi K (p + 1) }
+    (firstQuadrantColumnPrefixSuccShortComplex K p).ShortExact where
+  exact := (firstQuadrantColumnPrefixSuccShortComplex K p).exact_of_f_is_kernel
+    (firstQuadrantColumnPrefixSuccInclusionIsKernel K p)
+  mono_f := mono_of_isLimit_fork (firstQuadrantColumnPrefixSuccInclusionIsKernel K p)
+  epi_g := firstQuadrantColumnPrefixToLast_epi K (p + 1)
 
 end AlgebraicTopology

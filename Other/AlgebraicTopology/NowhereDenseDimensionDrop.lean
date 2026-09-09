@@ -48,5 +48,4 @@ theorem topologicalKrullDim_lt_of_isClosed_of_dense_compl {S : Set X}
     obtain ⟨x, hxU, hxnot⟩ := hdense.inter_open_nonempty U hU hUne
     exact hxnot (hsub (hUZ hxU))
   have hle := (LTSeries.length_le_krullDim ((l.map φ hφ).snoc Z' hlast)).trans hdim
-  have hnat : l.length + 1 ≤ n := by exact_mod_cast hle
-  omega
+  exact_mod_cast hle

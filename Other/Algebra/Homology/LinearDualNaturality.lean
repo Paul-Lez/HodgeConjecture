@@ -54,8 +54,7 @@ def moduleCatCycleMap {S T : ShortComplex (ModuleCat.{u} R)} (f : S ⟶ T) :
     change T.g.hom (f.τ₂.hom x) = 0
     have h := ConcreteCategory.congr_hom f.comm₂₃ x
     change T.g.hom (f.τ₂.hom x) = f.τ₃.hom (S.g.hom x) at h
-    rw [show S.g.hom x = 0 from hx, map_zero] at h
-    exact h)
+    rwa [show S.g.hom x = 0 from hx, map_zero] at h)
 
 set_option backward.isDefEq.respectTransparency false in
 lemma moduleCatCyclesIso_inv_cycleMap {S T : ShortComplex (ModuleCat.{u} R)}

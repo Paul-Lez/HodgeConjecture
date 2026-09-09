@@ -43,6 +43,5 @@ theorem topologicalKrullDim_lt_of_isClosed_of_ne_univ {S : Set X}
     rw [he'] at hsub
     exact hproper (Set.Subset.antisymm (Set.subset_univ S) hsub)
   have hle := (LTSeries.length_le_krullDim ((l.map φ hφ).snoc topX hlast)).trans hdim
-  have hnat : l.length + 1 ≤ n := by
-    exact_mod_cast hle
+  have hnat : l.length + 1 ≤ n := by exact_mod_cast hle
   omega

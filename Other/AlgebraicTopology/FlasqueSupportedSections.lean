@@ -170,8 +170,8 @@ theorem sheafSectionsSupportedOutside_restriction_surjective [F.IsFlasque]
 instance sheafSectionsSupportedOutside_isFlasque [F.IsFlasque] :
     ((sheafSectionsSupportedOutside X U).obj F).IsFlasque where
   epi {V W} i := by
-    apply (AddCommGrpCat.epi_iff_surjective _).mpr
-    exact sheafSectionsSupportedOutside_restriction_surjective X U F (leOfHom i.unop)
+    exact (AddCommGrpCat.epi_iff_surjective _).mpr
+      (sheafSectionsSupportedOutside_restriction_surjective X U F (leOfHom i.unop))
 
 /-- Equivalently, sections supported in any actual closed subset preserve flasqueness. -/
 instance sheafSectionsWithClosedSupport_isFlasque (Z : Closeds X) [F.IsFlasque] :

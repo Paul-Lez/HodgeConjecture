@@ -101,11 +101,9 @@ def singularChainBoundary (n : ℕ) :
 
 /-- Consecutive relative singular boundaries compose to zero. -/
 lemma singularChainBoundary_comp (n : ℕ) :
-    singularChainBoundary R X (n + 1) ≫ singularChainBoundary R X n = 0 := by
-  apply NatTrans.ext
-  funext U
-  exact congrArg ((forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map)
-    (((openRelativeSingularChainComplexFunctor R X).obj U).d_comp_d (n + 2) (n + 1) n)
+    singularChainBoundary R X (n + 1) ≫ singularChainBoundary R X n = 0 :=
+  NatTrans.ext (funext fun U ↦ congrArg ((forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map)
+    (((openRelativeSingularChainComplexFunctor R X).obj U).d_comp_d (n + 2) (n + 1) n))
 
 /-- The relative singular-chain complex as a complex of additive presheaves. -/
 def singularChainPresheafComplex : ChainComplex (TopCat.Presheaf AddCommGrpCat.{u} X) ℕ :=

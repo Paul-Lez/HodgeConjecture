@@ -102,13 +102,9 @@ theorem complexOrientationHomologyStalkMap_isIso (x : ComplexPoint X) :
       (mem_localChart_source X d x)
   have hbij : Function.Bijective (LinearMap.toSpanSingleton ℚ _
       (complexLocalOrientation X d x)) := by
-    constructor
-    · exact smul_left_injective ℚ hne
-    · intro a
-      have ha : a ∈ Submodule.span ℚ {complexLocalOrientation X d x} := by
-        rw [span_complexLocalOrientation_eq_top]
-        exact Submodule.mem_top
-      exact Submodule.mem_span_singleton.mp ha
+    refine ⟨smul_left_injective ℚ hne, fun a ↦ Submodule.mem_span_singleton.mp ?_⟩
+    rw [span_complexLocalOrientation_eq_top]
+    exact Submodule.mem_top
   let : IsIso (AddCommGrpCat.ofHom
       ((LinearMap.toSpanSingleton ℚ _ (complexLocalOrientation X d x)).toAddMonoidHom)) :=
     (ConcreteCategory.isIso_iff_bijective _).mpr hbij

@@ -46,9 +46,8 @@ theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
       (.up ℤ)).obj (complexSupportInjectiveComplex X
         (cycleComponentSingularAnalyticClosedFiltration X x k))).homology n) := by
   let O (j : ℕ) := (cycleComponentSingularAnalyticClosedFiltration X x j).compl
-  have hO : Monotone O := by
-    intro a b hab y hy hyb
-    exact hy (cycleComponentSingularAnalyticClosedFiltration_antitone X x hab hyb)
+  have hO : Monotone O := fun _ _ hab _ hy hyb ↦
+    hy (cycleComponentSingularAnalyticClosedFiltration_antitone X x hab hyb)
   have hN : O (cycleComponentSingularFiltrationLength X x) = ⊤ := by
     dsimp only [O]
     rw [cycleComponentSingularAnalyticClosedFiltration_length]
@@ -98,9 +97,8 @@ theorem cycleComponentSingularBoundary_le_support :
 
 /-- The actual complement inclusion determining the localization sequence. -/
 theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
-    (cycleComponentAnalyticClosedSupport X x).compl ≤ cycleComponentSmoothSupportAmbientOpen X x := by
-  intro y hy hyS
-  exact hy (cycleComponentSingularBoundary_le_support X x hyS)
+    (cycleComponentAnalyticClosedSupport X x).compl ≤ cycleComponentSmoothSupportAmbientOpen X x :=
+  fun _ hy hyS ↦ hy (cycleComponentSingularBoundary_le_support X x hyS)
 
 /-- Restriction of the original supported injective section complex to the
 actual smooth-locus ambient open. -/

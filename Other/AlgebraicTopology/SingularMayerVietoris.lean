@@ -61,8 +61,8 @@ theorem subcomplexChainSquare_isPushout :
       (SSet.chainComplexMap (SSet.Subcomplex.homOfLE (le_sup_left : A ≤ A ⊔ B))
         (ModuleCat.of ℚ ℚ))
       (SSet.chainComplexMap (SSet.Subcomplex.homOfLE (le_sup_right : B ≤ A ⊔ B))
-        (ModuleCat.of ℚ ℚ)) := by
-  exact (SSet.Subcomplex.BicartSq.isPushout
+        (ModuleCat.of ℚ ℚ)) :=
+  (SSet.Subcomplex.BicartSq.isPushout
     (show SSet.Subcomplex.BicartSq (A ⊓ B) A B (A ⊔ B) from ⟨rfl, rfl⟩)).map
       ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ))
 
@@ -250,14 +250,11 @@ sequence compute ambient homology for every two-open cover. -/
 theorem twoSubsetSmallChainInclusion_homology_isIso
     (hU : IsOpen U) (hV : IsOpen V) (hUV : U ∪ V = Set.univ) (n : ℕ) :
     IsIso (HomologicalComplex.homologyMap (twoSubsetSmallChainInclusion X U V) n) := by
-  have hopen : ∀ b : Bool, IsOpen (if b then U else V) := by
-    intro b
+  have hopen : ∀ b : Bool, IsOpen (if b then U else V) := fun b ↦ by
     cases b <;> assumption
   have hcover : ⋃ b : Bool, (if b then U else V) = Set.univ := by
-    apply Set.eq_univ_of_forall
-    intro x
-    have hx : x ∈ U ∪ V := hUV.symm ▸ Set.mem_univ x
-    rcases hx with hx | hx
+    refine Set.eq_univ_of_forall fun x ↦ ?_
+    rcases (hUV.symm ▸ Set.mem_univ x : x ∈ U ∪ V) with hx | hx
     · exact Set.mem_iUnion.mpr ⟨true, hx⟩
     · exact Set.mem_iUnion.mpr ⟨false, hx⟩
   change IsIso (HomologicalComplex.homologyMap
@@ -308,16 +305,12 @@ theorem singularMayerVietorisSumChainMap_eq :
   apply biprod.hom_ext'
   · simp only [singularMayerVietorisSumChainMap, singularMayerVietorisShortComplex,
       CommSq.shortComplex_g, biprod.inl_desc_assoc, biprod.inl_desc]
-    change (SSet.chainComplexMap (subsetLeftToSmallSingularSet X U V)
-      (ModuleCat.of ℚ ℚ)) ≫ twoSubsetSmallChainInclusion X U V = _
     change ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ)).map _ ≫
       ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ)).map _ = _
     rw [← Functor.map_comp]
     rfl
   · simp only [singularMayerVietorisSumChainMap, singularMayerVietorisShortComplex,
       CommSq.shortComplex_g, biprod.inr_desc_assoc, biprod.inr_desc]
-    change (SSet.chainComplexMap (subsetRightToSmallSingularSet X U V)
-      (ModuleCat.of ℚ ℚ)) ≫ twoSubsetSmallChainInclusion X U V = _
     change ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ)).map _ ≫
       ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ)).map _ = _
     rw [← Functor.map_comp]

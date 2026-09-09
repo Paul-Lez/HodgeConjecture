@@ -165,9 +165,7 @@ public theorem nonemptyFiniteChainBarycenter_apply {n : ℕ}
       simp only [Finset.mem_filter, Finset.mem_univ, true_and,
         Finset.mem_singleton]
       constructor
-      · intro ha
-        apply Subtype.ext
-        exact ULift.ext _ _ ha
+      · exact fun ha ↦ Subtype.ext (ULift.ext _ _ ha)
       · rintro rfl
         rfl
     rw [hfilter]
@@ -220,8 +218,7 @@ public theorem nonemptyFiniteChainBarycenter_face
   have hginj : Function.Injective g := by
     intro a b hab
     rw [hg a, hg b] at hab
-    apply ULift.down_injective
-    exact Fin.succAbove_right_injective (congrArg ULift.down hab)
+    exact ULift.down_injective (Fin.succAbove_right_injective (congrArg ULift.down hab))
   have hcard : (A.map g).finset.card = A.finset.card := by
     letI : DecidableEq (ULift.{0} (Fin (n + 2))) := Classical.decEq _
     unfold NonemptyFiniteChains.map
@@ -236,31 +233,25 @@ public theorem nonemptyFiniteChainBarycenter_face
       constructor
       · rintro ⟨a, ha, hga⟩
         rw [hg a] at hga
-        have hadown : a.down = x :=
-          Fin.succAbove_right_injective (ULift.up_injective hga)
-        have haeq : a = ULift.up x := ULift.ext _ _ hadown
+        have haeq : a = ULift.up x := ULift.ext _ _
+          (Fin.succAbove_right_injective (ULift.up_injective hga))
         simpa [haeq] using ha
       · intro hx
         exact ⟨ULift.up x, hx, by simp [hg]⟩
-    rw [stdSimplex_map_apply_injective p.succAbove
-      Fin.succAbove_right_injective]
-    rw [nonemptyFiniteChainBarycenter_apply,
-      nonemptyFiniteChainBarycenter_apply]
+    rw [stdSimplex_map_apply_injective p.succAbove Fin.succAbove_right_injective,
+      nonemptyFiniteChainBarycenter_apply, nonemptyFiniteChainBarycenter_apply]
     by_cases hx : ULift.up x ∈ A.finset
     · simp [hx, hmem.mpr hx, hcard]
     · have hx' : ULift.up (p.succAbove x) ∉ (A.map g).finset :=
         fun h ↦ hx (hmem.mp h)
       simp [hx, hx']
-  · rw [stdSimplex_map_apply_eq_zero_of_not_mem_range
-      p.succAbove _ y hy]
-    rw [nonemptyFiniteChainBarycenter_apply, if_neg]
+  · rw [stdSimplex_map_apply_eq_zero_of_not_mem_range p.succAbove _ y hy,
+      nonemptyFiniteChainBarycenter_apply, if_neg]
     intro hmem
     rw [NonemptyFiniteChains.mem_map_iff] at hmem
     obtain ⟨a, _, hga⟩ := hmem
-    apply hy
-    refine ⟨a.down, ?_⟩
     rw [hg a] at hga
-    exact ULift.up_injective hga
+    exact hy ⟨a.down, ULift.up_injective hga⟩
 
 /-- The affine map associated to a flag of nonempty faces. -/
 public noncomputable def affineFlagContinuousMap (n k : ℕ)
@@ -407,10 +398,8 @@ public theorem affineFlagChainComponents_commute (n k : ℕ) :
   apply (SimplexCategory.sd.{0}.obj
     (SimplexCategory.mk n)).chainComplex_hom_ext
   intro F
-  rw [← Category.assoc, iota_affineFlagChainComponent,
-    SSet.ιChainComplex_d]
-  rw [← Category.assoc, SSet.ιChainComplex_d,
-    Preadditive.sum_comp]
+  rw [← Category.assoc, iota_affineFlagChainComponent, SSet.ιChainComplex_d,
+    ← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp only [Preadditive.zsmul_comp, iota_affineFlagChainComponent,
     affineFlagSingularSimplex_delta]
 
@@ -459,8 +448,8 @@ public theorem affineFlagChainMap_face
       (affineFlagChainMap (n + 1)).f k
   simp only [affineFlagChainMap_f]
   rw [iota_affineFlagChainComponent, SSet.ι_chainComplexMap_f,
-    affineFlagSingularSimplex_face]
-  rw [SSet.ι_chainComplexMap_f, iota_affineFlagChainComponent]
+    affineFlagSingularSimplex_face, SSet.ι_chainComplexMap_f,
+    iota_affineFlagChainComponent]
 
 /-- The signed affine barycentric subdivision of the topological standard `n`-simplex, now as
 an actual integral singular chain. -/
@@ -492,9 +481,7 @@ public theorem affineSubdividedSimplexFundamentalChain_face
       (SimplexCategory.sd.{0}.map (SimplexCategory.δ p))
       (AddCommGrpCat.of ℤ)).f n ≫
       (affineFlagChainMap (n + 1)).f n at h
-  rw [affineSubdividedSimplexFundamentalChain]
-  rw [Category.assoc, h]
-  rw [← Category.assoc]
+  rw [affineSubdividedSimplexFundamentalChain, Category.assoc, h, ← Category.assoc]
 
 /-- The realized alternating boundary chain: each subdivided face flag is interpreted inside
 the ambient topological `(n+1)`-simplex. -/
@@ -521,9 +508,8 @@ public theorem affineSubdividedSimplexAlternatingFaceChain_eq_expected
     (n : ℕ) :
     affineSubdividedSimplexAlternatingFaceChain n =
       affineSubdividedSimplexExpectedBoundaryChain n := by
-  rw [affineSubdividedSimplexAlternatingFaceChain,
-    subdividedSimplexAlternatingFaceChain, Preadditive.sum_comp]
-  rw [affineSubdividedSimplexExpectedBoundaryChain]
+  rw [affineSubdividedSimplexAlternatingFaceChain, subdividedSimplexAlternatingFaceChain,
+    Preadditive.sum_comp, affineSubdividedSimplexExpectedBoundaryChain]
   apply Finset.sum_congr rfl
   intro p _
   simp only [Preadditive.zsmul_comp, Category.assoc]
@@ -716,8 +702,7 @@ public theorem affineSubdivisionSingularSimplexChain_boundary
             (singularSimplexTopCatMap X n
               ((TopCat.toSSet.obj X).δ p x)))
           (AddCommGrpCat.of ℤ)).f n at hn
-      rw [affineSubdivisionSingularSimplexChain]
-      rw [hn]
+      rw [affineSubdivisionSingularSimplexChain, hn]
 
 /-- The degreewise affine barycentric subdivision operator on integral singular chains. -/
 public noncomputable def affineSingularSubdivisionComponent
@@ -747,9 +732,8 @@ public theorem affineSingularSubdivisionComponent_naturality
         (AddCommGrpCat.of ℤ)).f n := by
   apply (TopCat.toSSet.obj X).chainComplex_hom_ext
   intro x
-  rw [← Category.assoc, SSet.ι_chainComplexMap_f,
-    iota_affineSingularSubdivisionComponent]
-  rw [← Category.assoc, iota_affineSingularSubdivisionComponent,
+  rw [← Category.assoc, SSet.ι_chainComplexMap_f, iota_affineSingularSubdivisionComponent,
+    ← Category.assoc, iota_affineSingularSubdivisionComponent,
     affineSubdivisionSingularSimplexChain_naturality]
 
 /-- The affine singular subdivision components commute with the boundary maps. -/
@@ -764,9 +748,8 @@ public theorem affineSingularSubdivisionComponents_commute
   apply (TopCat.toSSet.obj X).chainComplex_hom_ext
   intro x
   rw [← Category.assoc, iota_affineSingularSubdivisionComponent,
-    affineSubdivisionSingularSimplexChain_boundary]
-  rw [← Category.assoc, SSet.ιChainComplex_d,
-    Preadditive.sum_comp]
+    affineSubdivisionSingularSimplexChain_boundary, ← Category.assoc,
+    SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp only [Preadditive.zsmul_comp,
     iota_affineSingularSubdivisionComponent]
   rfl

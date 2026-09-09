@@ -85,11 +85,10 @@ lemma smoothPoints_eq_of_neighborhoodToComponentPoint_eq
     Point.map (ComplexPoint.openInclusion
       (componentSmoothScheme V.over x) C.componentNeighborhood) z =
       Point.map (ComplexPoint.openInclusion
-        (componentSmoothScheme V.over x) C'.componentNeighborhood) z' := by
-  apply (ComplexPoint.isOpenEmbedding_map_open
+        (componentSmoothScheme V.over x) C'.componentNeighborhood) z' :=
+  (ComplexPoint.isOpenEmbedding_map_open
     (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
-    (componentSmoothLocus V.over x)).injective
-  exact h
+    (componentSmoothLocus V.over x)).injective h
 
 /-- If a smooth-locus point lies in the source of an extended component chart, that chart is
 evaluation of its defining smooth-locus sections. -/
@@ -112,11 +111,10 @@ lemma componentProjectionChart_apply_component_eq_evaluate
     C.neighborhoodProjectionChart_apply_eq_evaluate z hz i]
   have hsmooth :
       Point.map (ComplexPoint.openInclusion
-        (componentSmoothScheme V.over x) C.componentNeighborhood) z = q := by
-    apply (ComplexPoint.isOpenEmbedding_map_open
+        (componentSmoothScheme V.over x) C.componentNeighborhood) z = q :=
+    (ComplexPoint.isOpenEmbedding_map_open
       (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
-      (componentSmoothLocus V.over x)).injective
-    exact heq
+      (componentSmoothLocus V.over x)).injective heq
   rw [← hsmooth]
   exact (ComplexPoint.evaluate_openEquiv (componentSmoothScheme V.over x)
     C.componentNeighborhood
@@ -134,11 +132,10 @@ lemma mem_smoothCoordinateOpen_of_mem_componentProjectionChart_source
   rw [componentProjectionChart, OpenPartialHomeomorph.lift_openEmbedding_source] at hq
   obtain ⟨z, _, heq⟩ := hq
   have hsmooth : Point.map (ComplexPoint.openInclusion
-      (componentSmoothScheme V.over x) C.componentNeighborhood) z = q := by
-    apply (ComplexPoint.isOpenEmbedding_map_open
+      (componentSmoothScheme V.over x) C.componentNeighborhood) z = q :=
+    (ComplexPoint.isOpenEmbedding_map_open
       (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
-      (componentSmoothLocus V.over x)).injective
-    exact heq
+      (componentSmoothLocus V.over x)).injective heq
   rw [← hsmooth]
   change (Point.map (ComplexPoint.openInclusion
     (componentSmoothScheme V.over x) C.componentNeighborhood) z).underlying ∈
@@ -192,14 +189,11 @@ lemma analyticAt_componentProjectionChart_transition_component
   have hqmap : Point.map (ComplexPoint.openInclusion
       (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
       (componentSmoothLocus V.over x)) q =
-      C.componentProjectionChart.symm w := by
-    rfl
+      C.componentProjectionChart.symm w := rfl
   have hsource : Point.map (ComplexPoint.openInclusion
       (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
       (componentSmoothLocus V.over x)) q ∈
-      C'.componentProjectionChart.source := by
-    rw [hqmap]
-    exact hw.2
+      C'.componentProjectionChart.source := hqmap ▸ hw.2
   have hW : q ∈ Point.overOpen C'.smoothCoordinateOpen :=
     C'.mem_smoothCoordinateOpen_of_mem_componentProjectionChart_source q hsource
   have ha := C.analyticAt_componentProjectionChart_symm_smoothEvaluate hw.1
@@ -218,8 +212,7 @@ lemma analyticAt_componentProjectionChart_transition_component
   have hqvmap : Point.map (ComplexPoint.openInclusion
       (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
       (componentSmoothLocus V.over x)) qv =
-      C.componentProjectionChart.symm v := by
-    rfl
+      C.componentProjectionChart.symm v := rfl
   have hv' : Point.map (ComplexPoint.openInclusion
       (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
       (componentSmoothLocus V.over x)) qv ∈
@@ -253,19 +246,13 @@ theorem localClassOfChart_componentProjectionChart_eq
   · apply C.analyticAt_componentProjectionChart_transition C'
     rw [OpenPartialHomeomorph.trans_source]
     refine ⟨C.componentProjectionChart.map_source hq, ?_⟩
-    change C.componentProjectionChart.symm
-      (C.componentProjectionChart q) ∈ C'.componentProjectionChart.source
-    ·
-      rw [C.componentProjectionChart.left_inv hq]
-      exact hq'
+    rw [Set.mem_preimage, C.componentProjectionChart.left_inv hq]
+    exact hq'
   · apply C'.analyticAt_componentProjectionChart_transition C
     rw [OpenPartialHomeomorph.trans_source]
     refine ⟨C'.componentProjectionChart.map_source hq', ?_⟩
-    change C'.componentProjectionChart.symm
-      (C'.componentProjectionChart q) ∈ C.componentProjectionChart.source
-    ·
-      rw [C'.componentProjectionChart.left_inv hq']
-      exact hq
+    rw [Set.mem_preimage, C'.componentProjectionChart.left_inv hq']
+    exact hq
 
 private lemma transport_localClassOfChart
     {M : Type} [TopologicalSpace M]

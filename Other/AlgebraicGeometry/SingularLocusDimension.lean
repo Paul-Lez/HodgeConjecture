@@ -44,14 +44,12 @@ def reducedSingularLocus : Scheme := reducedClosedSubscheme (singularLocusClosed
 def reducedSingularLocusι : reducedSingularLocus f ⟶ X :=
   reducedClosedSubschemeι (singularLocusClosed f)
 
-instance reducedSingularLocus_isReduced : IsReduced (reducedSingularLocus f) := by
-  dsimp [reducedSingularLocus]
-  infer_instance
+instance reducedSingularLocus_isReduced : IsReduced (reducedSingularLocus f) :=
+  inferInstanceAs (IsReduced (reducedClosedSubscheme (singularLocusClosed f)))
 
 instance reducedSingularLocusι_isClosedImmersion :
-    IsClosedImmersion (reducedSingularLocusι f) := by
-  change IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f))
-  infer_instance
+    IsClosedImmersion (reducedSingularLocusι f) :=
+  inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f)))
 
 @[simp] theorem range_reducedSingularLocusι :
     Set.range (reducedSingularLocusι f) = (f.smoothLocus : Set X)ᶜ :=
@@ -70,10 +68,9 @@ theorem singularLocusClosed_ne_top [PerfectField K] [IsReduced X] [Nonempty X] :
 irreducible scheme. -/
 theorem topologicalKrullDim_reducedSingularLocus_lt [PerfectField K] [IsIntegral X]
     {n : ℕ} (hdim : topologicalKrullDim X ≤ n) :
-    topologicalKrullDim (reducedSingularLocus f) < n := by
-  apply topologicalKrullDim_lt_of_isClosed_of_ne_univ
-    (singularLocusClosed f).isClosed _ hdim
-  exact fun he => singularLocusClosed_ne_top f (SetLike.coe_injective he)
+    topologicalKrullDim (reducedSingularLocus f) < n :=
+  topologicalKrullDim_lt_of_isClosed_of_ne_univ (singularLocusClosed f).isClosed
+    (fun he => singularLocusClosed_ne_top f (SetLike.coe_injective he)) hdim
 
 /-- Each actual smooth piece has dimension at most that of any containing closed set. -/
 theorem topologicalKrullDim_reducedClosedSmoothPiece_le {S T : Closeds X} (hTS : T ≤ S) :

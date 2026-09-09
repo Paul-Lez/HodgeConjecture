@@ -49,16 +49,12 @@ def precompAlgEquiv (e : A ≃ₐ[ℂ] B) : (B →ₐ[ℂ] ℂ) ≃ (A →ₐ[�
 lemma continuous_precompAlgEquiv (e : A ≃ₐ[ℂ] B) :
     Continuous (precompAlgEquiv e) := by
   rw [continuous_induced_rng]
-  apply continuous_pi
-  intro a
-  exact continuous_affineAlgebraHom_apply B (e a)
+  exact continuous_pi fun a ↦ continuous_affineAlgebraHom_apply B (e a)
 
 lemma continuous_precompAlgEquiv_symm (e : A ≃ₐ[ℂ] B) :
     Continuous (precompAlgEquiv e).symm := by
   rw [continuous_induced_rng]
-  apply continuous_pi
-  intro b
-  exact continuous_affineAlgebraHom_apply A (e.symm b)
+  exact continuous_pi fun b ↦ continuous_affineAlgebraHom_apply A (e.symm b)
 
 /-- Precomposition by a complex algebra equivalence is a homeomorphism for pointwise
 convergence. -/
@@ -108,25 +104,21 @@ def localizationAwayAlgHomEquiv (f : S) :
   left_inv u := by
     apply AlgHom.coe_ringHom_injective
     apply IsLocalization.ringHom_ext (.powers f)
-    apply DFunLike.ext _ _
-    intro s
+    refine DFunLike.ext _ _ fun s ↦ ?_
     change nonvanishingAlgHomExtension S f (localizationAwayAlgHomRestriction S f u)
       (algebraMap S (Localization.Away f) s) = u (algebraMap S (Localization.Away f) s)
     rw [nonvanishingAlgHomExtension_algebraMap, localizationAwayAlgHomRestriction_apply]
   right_inv u := by
     apply Subtype.ext
-    apply AlgHom.coe_ringHom_injective
-    apply DFunLike.ext _ _
-    intro s
-    exact nonvanishingAlgHomExtension_algebraMap S f u s
+    exact AlgHom.coe_ringHom_injective
+      (DFunLike.ext _ _ (nonvanishingAlgHomExtension_algebraMap S f u))
 
 lemma continuous_localizationAwayAlgHomEquiv (f : S) :
     Continuous (localizationAwayAlgHomEquiv S f) := by
   apply Continuous.subtype_mk
   rw [continuous_induced_rng]
-  apply continuous_pi
-  intro s
-  exact continuous_affineAlgebraHom_apply (Localization.Away f) (algebraMap S _ s)
+  exact continuous_pi fun s ↦
+    continuous_affineAlgebraHom_apply (Localization.Away f) (algebraMap S _ s)
 
 lemma localizationAwayAlgHomEquiv_symm_apply_eq_div (f : S)
     (x : Localization.Away f) :
@@ -142,8 +134,7 @@ lemma localizationAwayAlgHomEquiv_symm_apply_eq_div (f : S)
 lemma continuous_localizationAwayAlgHomEquiv_symm (f : S) :
     Continuous (localizationAwayAlgHomEquiv S f).symm := by
   rw [continuous_induced_rng]
-  apply continuous_pi
-  intro x
+  refine continuous_pi fun x ↦ ?_
   obtain ⟨n, a, h⟩ := localizationAwayAlgHomEquiv_symm_apply_eq_div S f x
   have ha : Continuous (fun u : nonvanishingAlgHom S f ↦ u.1 a) :=
     (continuous_affineAlgebraHom_apply S a).comp continuous_subtype_val
@@ -172,8 +163,8 @@ lemma isOpen_nonvanishingAlgHom (f : S) :
 /-- Restriction from `S[1/f]` identifies its complex points with an open subspace of the complex
 points of `S`. -/
 lemma isOpenEmbedding_localizationAwayAlgHomMap (f : S) :
-    IsOpenEmbedding (localizationAwayAlgHomMap S f) := by
-  exact (isOpen_nonvanishingAlgHom S f).isOpenEmbedding_subtypeVal.comp
+    IsOpenEmbedding (localizationAwayAlgHomMap S f) :=
+  (isOpen_nonvanishingAlgHom S f).isOpenEmbedding_subtypeVal.comp
     (localizationAwayAlgHomHomeomorph S f).isOpenEmbedding
 
 lemma isLocalHomeomorph_localizationAwayAlgHomMap (f : S) :

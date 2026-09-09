@@ -49,8 +49,8 @@ def standardAffineSimplex (d : ℕ) (t : stdSimplex ℝ (Fin (d + 1))) :
     StandardRealModel d :=
   fun j => t (Fin.castSucc j) - t (Fin.last d)
 
-lemma continuous_standardAffineSimplex (d : ℕ) : Continuous (standardAffineSimplex d) := by
-  exact continuous_pi fun j =>
+lemma continuous_standardAffineSimplex (d : ℕ) : Continuous (standardAffineSimplex d) :=
+  continuous_pi fun j =>
     ((continuous_apply (Fin.castSucc j)).comp continuous_subtype_val).sub
       ((continuous_apply (Fin.last d)).comp continuous_subtype_val)
 
@@ -128,8 +128,8 @@ def standardSingularSimplex (d : ℕ) :
 def standardFaceMap (n : ℕ) (i : Fin (n + 2)) :
     C(stdSimplex ℝ (Fin (n + 1)),
       ({0}ᶜ : Set (StandardRealModel (n + 1)))) where
-  toFun t := ⟨standardAffineSimplex (n + 1) (stdSimplex.map i.succAbove t), by
-    exact standardAffineSimplex_ne_zero_of_coord_zero (n + 1) _ i
+  toFun t := ⟨standardAffineSimplex (n + 1) (stdSimplex.map i.succAbove t),
+    standardAffineSimplex_ne_zero_of_coord_zero (n + 1) _ i
       (stdSimplex_map_succAbove_self_zero n i t)⟩
   continuous_toFun := Continuous.subtype_mk
     ((continuous_standardAffineSimplex (n + 1)).comp
@@ -214,8 +214,7 @@ lemma standardPairChain_projection (d k : ℕ) :
 
 lemma standardFaceChain_projection (n : ℕ) (i : Fin (n + 2)) :
     standardAmbientFaceChain n i ≫ standardLocalProjectionComponent (n + 1) n = 0 := by
-  rw [← standardFaceChain_inclusion]
-  rw [Category.assoc, standardPairChain_projection, comp_zero]
+  rw [← standardFaceChain_inclusion, Category.assoc, standardPairChain_projection, comp_zero]
 
 lemma standardAmbientSimplexChain_boundary (n : ℕ) :
     standardAmbientSimplexChain (n + 1) ≫
@@ -235,16 +234,14 @@ lemma standardLocalProjectionComponent_comm (n : ℕ) :
       (standardLocalRelativeChainComplex (n + 1)).d (n + 1) n =
     ((chainPairFunctor ℚ).obj
       (standardPuncturedPair (n + 1))).right.d (n + 1) n ≫
-      standardLocalProjectionComponent (n + 1) n := by
-  exact (relativeChainProjection ℚ
-    (standardPuncturedPair (n + 1))).comm (n + 1) n
+      standardLocalProjectionComponent (n + 1) n :=
+  (relativeChainProjection ℚ (standardPuncturedPair (n + 1))).comm (n + 1) n
 
 lemma standardLocalChain_boundary_succ (n : ℕ) :
     standardLocalChain (n + 1) ≫
       (standardLocalRelativeChainComplex (n + 1)).d (n + 1) n = 0 := by
-  rw [standardLocalChain, Category.assoc, standardLocalProjectionComponent_comm]
-  rw [← Category.assoc, standardAmbientSimplexChain_boundary]
-  rw [Preadditive.sum_comp]
+  rw [standardLocalChain, Category.assoc, standardLocalProjectionComponent_comm,
+    ← Category.assoc, standardAmbientSimplexChain_boundary, Preadditive.sum_comp]
   apply Finset.sum_eq_zero
   intro i _
   rw [Preadditive.zsmul_comp]
@@ -276,8 +273,8 @@ def standardLocalClass (d : ℕ) :
 
 lemma standardLocalCycle_inclusion (d : ℕ) :
     standardLocalCycle d ≫ (standardLocalRelativeChainComplex d).iCycles d =
-      standardLocalChain d := by
-  exact (standardLocalRelativeChainComplex d).liftCycles_i (standardLocalChain d)
+      standardLocalChain d :=
+  (standardLocalRelativeChainComplex d).liftCycles_i (standardLocalChain d)
     ((ComplexShape.down ℕ).next d) rfl (standardLocalChain_boundary d)
 
 end AlgebraicTopology.Singular

@@ -113,8 +113,8 @@ theorem singularChainMap_quasiIso_of_contractibleSpaces
     [ContractibleSpace X] [ContractibleSpace Y]
     (R : AddCommGrpCat) (f : C(X, Y)) :
     QuasiIso (SSet.chainComplexMap
-      (TopCat.toSSet.map (TopCat.ofHom f)) R) := by
-  exact singularChainMap_quasiIso_of_homotopyEquiv R
+      (TopCat.toSSet.map (TopCat.ofHom f)) R) :=
+  singularChainMap_quasiIso_of_homotopyEquiv R
     (homotopyEquivOfMapBetweenContractibleSpaces f)
 
 end AlgebraicTopology

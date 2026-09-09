@@ -146,8 +146,7 @@ theorem span_flattenedSupportNormalClass_eq_top :
     Submodule.span ℚ {flattenedSupportNormalClass E c e x hx S hS h0} = ⊤ := by
   let eH := (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).symm.toLinearEquiv
   have h := congrArg (Submodule.map eH.toLinearMap) (span_standardComplexLocalClass_eq_top_for_chart c)
-  rw [Submodule.map_span, Set.image_singleton, Submodule.map_top, LinearEquiv.range] at h
-  exact h
+  rwa [Submodule.map_span, Set.image_singleton, Submodule.map_top, LinearEquiv.range] at h
 
 include h0 in
 /-- In top normal degree the actual normal projection is injective; this is deduced from

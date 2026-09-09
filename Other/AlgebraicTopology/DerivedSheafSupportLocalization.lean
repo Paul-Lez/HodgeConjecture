@@ -129,10 +129,9 @@ def supportRestrictionComplexShortComplex
 sequence of complexes of sheaves. -/
 lemma supportRestrictionComplexShortComplex_shortExact
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :
-    (supportRestrictionComplexShortComplex X U K).ShortExact := by
-  apply HomologicalComplex.shortExact_of_degreewise_shortExact
-  intro n
-  exact supportRestrictionShortComplex_shortExact X U (K.X n)
+    (supportRestrictionComplexShortComplex X U K).ShortExact :=
+  HomologicalComplex.shortExact_of_degreewise_shortExact _ fun n =>
+    supportRestrictionShortComplex_shortExact X U (K.X n)
 
 /-- Evaluate the actual termwise support/restriction sequence on `V`. -/
 def supportRestrictionSectionsComplexShortComplex (V : Opens X)
@@ -145,10 +144,9 @@ def supportRestrictionSectionsComplexShortComplex (V : Opens X)
 on an arbitrary open set, for a termwise injective coefficient complex. -/
 lemma supportRestrictionSectionsComplexShortComplex_shortExact (V : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :
-    (supportRestrictionSectionsComplexShortComplex X U V K).ShortExact := by
-  apply HomologicalComplex.shortExact_of_degreewise_shortExact
-  intro n
-  exact supportRestrictionSectionsShortComplex_shortExact X U V (K.X n)
+    (supportRestrictionSectionsComplexShortComplex X U V K).ShortExact :=
+  HomologicalComplex.shortExact_of_degreewise_shortExact _ fun n =>
+    supportRestrictionSectionsShortComplex_shortExact X U V (K.X n)
 
 /-- Canonical localization comparison to the homotopy fiber of actual
 restriction, on a coefficient complex. -/

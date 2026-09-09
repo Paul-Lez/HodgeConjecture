@@ -44,19 +44,14 @@ lemma sheafPullback_preservesMonomorphisms :
   constructor
   intro F G g hg
   letI : Mono g := hg
-  have hgHom' : Mono ((TopCat.Sheaf.forget AddCommGrpCat.{0} Y).map g) :=
-    Functor.map_mono _ g
-  have hgHom : Mono g.hom := by
-    exact hgHom'
-  let : Mono g.hom := hgHom
+  let : Mono g.hom := Functor.map_mono (TopCat.Sheaf.forget AddCommGrpCat.{0} Y) g
   let : Mono (Functor.whiskerLeft hf.functor.op g.hom) := by
     rw [NatTrans.mono_iff_mono_app]
     intro U
     exact (NatTrans.mono_iff_mono_app g.hom).mp inferInstance _
-  have hpres : Mono ((hf.sheafPullback AddCommGrpCat.{0}).map g).hom := by
+  let : Mono ((hf.sheafPullback AddCommGrpCat.{0}).map g).hom := by
     change Mono (Functor.whiskerLeft hf.functor.op g.hom)
     infer_instance
-  let := hpres
   exact CategoryTheory.Sheaf.Hom.mono_of_presheaf_mono
     (J := Opens.grothendieckTopology X) (A := AddCommGrpCat.{0})
       ((hf.sheafPullback AddCommGrpCat.{0}).map g)

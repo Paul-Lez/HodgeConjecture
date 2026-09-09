@@ -83,10 +83,10 @@ theorem complexSupportInjectiveComplex_homology_stalk_isZero_of_not_mem
   apply TopCat.Sheaf.cohomologySheaf_stalk_isZero_of_cofinal_sections
   intro V hxV
   refine ⟨V ⊓ S.compl, inf_le_left, ⟨hxV, hx⟩, ?_⟩
-  apply ShortComplex.isZero_homology_of_isZero_X₂
-  exact TopCat.Sheaf.supportedOutsideSections_isZero_of_le
-    (TopCat.of (ComplexPoint X)) S.compl (V ⊓ S.compl)
-    ((ambientRationalInjectiveComplex X).X n) inf_le_right
+  exact ShortComplex.isZero_homology_of_isZero_X₂ _
+    (TopCat.Sheaf.supportedOutsideSections_isZero_of_le
+      (TopCat.of (ComplexPoint X)) S.compl (V ⊓ S.compl)
+      ((ambientRationalInjectiveComplex X).X n) inf_le_right)
 
 variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
@@ -111,10 +111,8 @@ theorem smoothClosedSupportInjective_homology_stalk_isZero_of_ne
     mem_smoothClosedSupportNeighborhood X Y i m d z V hzV, ?_⟩
   let : Subsingleton (RelativeCohomology ℚ
       (neighborhoodSupportComplementPair (W : Set (ComplexPoint X))
-        (smoothClosedAnalyticSupport X Y i : Set (ComplexPoint X))) n) := by
-    change Subsingleton (RelativeCohomology ℚ
-      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n)
-    exact ModuleCat.subsingleton_of_isZero
+        (smoothClosedAnalyticSupport X Y i : Set (ComplexPoint X))) n) :=
+    ModuleCat.subsingleton_of_isZero
       (smoothClosedSupportRelativeCohomology_isZero_of_ne X Y i m d z V hzV n hn)
   let e := complexSupportInjectiveSectionCohomologyEquiv X
     (smoothClosedAnalyticSupport X Y i) W n

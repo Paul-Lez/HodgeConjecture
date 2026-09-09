@@ -70,9 +70,9 @@ theorem standardPuncturedHomology_isZero_of_lt (d k : ℕ)
 the empty punctured zero-dimensional space. -/
 theorem standardPuncturedHomology_isZero_of_dimension_le (d k : ℕ) (hk : d ≤ k) :
     IsZero (Homology ℚ (standardPuncturedPair d).snd k) := by
-  have h : IsZero (((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)).homology k) :=
-    (∂Δ[d] : SSet.{0}).isZero_homology_of_hasDimensionLT (ModuleCat.of ℚ ℚ) k d hk
-  exact h.of_iso ((standardAffineBoundaryChainHomotopyEquiv d).toHomologyIso k).symm
+  exact ((∂Δ[d] : SSet.{0}).isZero_homology_of_hasDimensionLT
+    (ModuleCat.of ℚ ℚ) k d hk).of_iso
+      ((standardAffineBoundaryChainHomotopyEquiv d).toHomologyIso k).symm
 
 /-- Local homology of real `d`-space vanishes above degree `d`. This also covers
 degree one in dimension zero, without invoking a positive-degree boundary isomorphism. -/

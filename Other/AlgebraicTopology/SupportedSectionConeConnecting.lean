@@ -67,8 +67,7 @@ theorem supportedSectionHomologyIsoRestrictionCone_connecting
       (n - 1) ≫
     HomologicalComplex.homologyMap (supportRestrictionSectionsConeIso X U V K).hom (n - 1)) ≫ _ = _
   simp only [Category.assoc]
-  erw [he]
-  erw [hl]
+  erw [he, hl]
   simp only [H, Preadditive.comp_neg, Iso.inv_hom_id_app_assoc]
   rfl
 

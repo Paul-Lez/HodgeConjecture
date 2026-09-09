@@ -55,8 +55,8 @@ instance reducedClosedSubscheme_isReduced (S : Closeds X) :
   exact PrimeSpectrum.isRadical_vanishingIdeal _
 
 @[simp] lemma range_reducedClosedSubschemeι (S : Closeds X) :
-    Set.range (reducedClosedSubschemeι S) = (S : Set X) := by
-  apply Scheme.IdealSheafData.range_subschemeι
+    Set.range (reducedClosedSubschemeι S) = (S : Set X) :=
+  Scheme.IdealSheafData.range_subschemeι _
 
 variable {K : Type u} [Field K]
   (f : X ⟶ Spec (.of K)) [LocallyOfFiniteType f]
@@ -187,8 +187,7 @@ theorem reducedSmoothStratification_covers (S : Closeds X) (x : X) :
       subst S
       rfl
     · simp only [List.mem_cons, or_and_right, exists_or, exists_eq_left]
-      rw [ih _ (reducedClosedSingularRemainder_lt f S hS)]
-      rw [reducedClosedSmoothPiece_range]
+      rw [ih _ (reducedClosedSingularRemainder_lt f S hS), reducedClosedSmoothPiece_range]
       exact ⟨fun h => h.elim And.left (fun hx => reducedClosedSingularRemainder_le f S hx),
         fun hx => by
           by_cases hmem : x ∈ reducedClosedSingularRemainder f S

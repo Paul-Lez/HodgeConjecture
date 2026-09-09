@@ -138,8 +138,7 @@ lemma ambientRationalInjectiveCone_isFlasque
       (ambientRationalInjectiveRestriction X Z hZ)).X q).IsFlasque := by
   apply TopCat.Sheaf.IsFlasque.BoundedBelowComplex.mappingCone_term_isFlasque
     (ambientRationalInjectiveRestriction X Z hZ)
-  · intro n
-    exact TopCat.Sheaf.injective_isFlasque _ _
+  · exact fun _ ↦ TopCat.Sheaf.injective_isFlasque _ _
   · exact derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque X Z
 
 /-- The replacement cone is genuinely termwise injective: its terms are
@@ -306,14 +305,13 @@ lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,
         actualRestriction_comp_openResolutionComparison])).comm₃
-  refine h.symm.trans ?_
-  exact (congrArg (fun f =>
+  exact h.symm.trans ((congrArg (fun f =>
     (CochainComplex.mappingCone.triangle
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
         (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
         (ambientRationalInjectiveComplex X)).g).mor₃ ≫ f)
     ((shiftFunctor (CochainComplex AddCommGrpCat ℤ) (1 : ℤ)).map_id _)).trans
-      (Category.comp_id _)
+      (Category.comp_id _))
 
 /-- The existing rational support group is the homology of the actual
 kernel-defined supported sections of the ambient rational injective

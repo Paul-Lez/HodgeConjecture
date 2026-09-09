@@ -64,8 +64,7 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
       rw [show (constantsToSingularCochainSheafComplex ℚ
           (TopCat.of (ComplexPoint X))).f 0 =
             constantsToSingularCochainZeroSheaf ℚ
-              (TopCat.of (ComplexPoint X)) by
-        rfl]
+              (TopCat.of (ComplexPoint X)) from rfl]
       change constantsToSingularCochainZeroSheaf ℚ
             (TopCat.of (ComplexPoint X)) ≫
           singularRestrictionSheaf ℚ
@@ -75,8 +74,7 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
                 ((complementSingularToInjectiveResolution X Z hZ).f 0)) = _
       rw [← Category.assoc,
         constantsToSingularCochainZeroSheaf_comp_singularRestriction X Z,
-        Category.assoc]
-      rw [← Functor.map_comp]
+        Category.assoc, ← Functor.map_comp]
       have hcomp := HomologicalComplex.congr_hom
         (complementConstants_comp_singularToInjectiveResolution
           X Z hZ) 0

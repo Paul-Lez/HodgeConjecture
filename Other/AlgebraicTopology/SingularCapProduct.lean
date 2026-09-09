@@ -114,9 +114,7 @@ lemma sum_early_add_late {M : Type*} [AddCommMonoid M] (p q : ℕ)
   let e : Fin (p + q + 2) ≃ Fin ((p + 1) + (q + 1)) := finCongr h
   calc
     ∑ k, f k = ∑ k : Fin ((p + 1) + (q + 1)), f (e.symm k) := by
-      apply Fintype.sum_equiv e
-      intro k
-      rfl
+      exact Fintype.sum_equiv e _ _ fun _ => rfl
     _ = (∑ i : Fin (p + 1), f (earlyFaceIndex p q i)) +
         ∑ j : Fin (q + 1), f (lateFaceIndex p q j) := by
       rw [Fin.sum_univ_add]
@@ -205,9 +203,8 @@ lemma lastFace_comp_nextFrontInclusion (p q : ℕ) :
     SimplexCategory.comp_toOrderHom, SimplexCategory.Hom.toOrderHom_mk,
     OrderHom.comp_coe, OrderEmbedding.toOrderHom_coe, Function.comp_apply,
     Fin.succAboveOrderEmb_apply]
-  rw [Fin.succAbove_of_castSucc_lt]
+  rw [Fin.succAbove_of_castSucc_lt _ _ k.castSucc_lt_last]
   rfl
-  exact k.castSucc_lt_last
 
 /-- Dropping the first vertex of the ordinary back face gives the next back face. -/
 lemma firstFace_comp_backInclusion (p q : ℕ) :
@@ -322,14 +319,14 @@ lemma firstFace_backFace {p q : ℕ} (x : X _⦋p + q + 1⦌) :
 /-- Front faces commute with maps of simplicial sets. -/
 lemma frontFace_naturality {Y : SSet.{u}} (f : X ⟶ Y) {p q : ℕ}
     (x : X _⦋p + q⦌) :
-    frontFace Y (f.app _ x) = f.app _ (frontFace X x) := by
-  exact (NatTrans.naturality_apply f (frontInclusion p q).op x).symm
+    frontFace Y (f.app _ x) = f.app _ (frontFace X x) :=
+  (NatTrans.naturality_apply f (frontInclusion p q).op x).symm
 
 /-- Back faces commute with maps of simplicial sets. -/
 lemma backFace_naturality {Y : SSet.{u}} (f : X ⟶ Y) {p q : ℕ}
     (x : X _⦋p + q⦌) :
-    backFace Y (f.app _ x) = f.app _ (backFace X x) := by
-  exact (NatTrans.naturality_apply f (backInclusion p q).op x).symm
+    backFace Y (f.app _ x) = f.app _ (backFace X x) :=
+  (NatTrans.naturality_apply f (backInclusion p q).op x).symm
 
 variable (R : Type u) [Field R]
 
@@ -439,8 +436,8 @@ lemma coboundary_coboundary {X : SSet.{u}} (n : ℕ) (phi : Cochain R X n) :
   intro c
   change phi (boundary R n (boundary R (n + 1) c)) = 0
   have h := (X.chainComplex (ModuleCat.of R R)).d_comp_d (n + 2) (n + 1) n
-  rw [show boundary R n (boundary R (n + 1) c) = 0 by
-    exact ConcreteCategory.congr_hom h c, map_zero]
+  rw [show boundary R n (boundary R (n + 1) c) = 0 from
+    ConcreteCategory.congr_hom h c, map_zero]
 
 /-- The categorical cap-product map by a fixed cochain.  On a simplex `x`, it evaluates the
 cochain on the front face and multiplies the back face by the resulting scalar. -/
@@ -463,8 +460,8 @@ lemma iota_capHom {X : SSet.{u}} (p q : ℕ) (phi : Cochain R X p)
     X.ιChainComplex (R := ModuleCat.of R R) x ≫ capHom R p q phi =
       ModuleCat.ofHom (LinearMap.toSpanSingleton R _ <|
         phi (chainOfSimplex R (frontFace X x)) •
-          chainOfSimplex R (backFace X x)) := by
-  exact (X.isColimitChainComplexXCofan (ModuleCat.of R R) (p + q)).fac _ (Discrete.mk x)
+          chainOfSimplex R (backFace X x)) :=
+  (X.isColimitChainComplexXCofan (ModuleCat.of R R) (p + q)).fac _ (Discrete.mk x)
 
 @[simp]
 lemma cap_chainOfSimplex {X : SSet.{u}} (p q : ℕ) (phi : Cochain R X p)
@@ -567,9 +564,7 @@ theorem cap_coboundary_eq {X : SSet.{u}} (p q : ℕ) (phi : Cochain R X p) :
   have hcat : ModuleCat.ofHom lhs = ModuleCat.ofHom rhs := by
     apply SSet.chainComplex_hom_ext
     intro x
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro a
+    refine ModuleCat.hom_ext (LinearMap.ext fun a => ?_)
     have hiota :
         (X.ιChainComplex (R := ModuleCat.of R R) x).hom a =
           a • chainOfSimplex R x := by
@@ -600,9 +595,7 @@ theorem cap_boundary_compatibility_of_cocycle {X : SSet.{u}} (p q : ℕ)
   have hcat : ModuleCat.ofHom lhs = ModuleCat.ofHom rhs := by
     apply SSet.chainComplex_hom_ext
     intro x
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro a
+    refine ModuleCat.hom_ext (LinearMap.ext fun a => ?_)
     change lhs ((X.ιChainComplex (R := ModuleCat.of R R) x).hom a) =
       rhs ((X.ιChainComplex (R := ModuleCat.of R R) x).hom a)
     have hiota :
@@ -643,9 +636,7 @@ lemma capHom_add {X : SSet.{u}} (p q : ℕ) (phi psi : Cochain R X p) :
   apply SSet.chainComplex_hom_ext
   intro x
   rw [iota_capHom, Preadditive.comp_add, iota_capHom, iota_capHom]
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro a
+  refine ModuleCat.hom_ext (LinearMap.ext fun a => ?_)
   simp only [ModuleCat.hom_add, LinearMap.add_apply, ModuleCat.hom_ofHom,
     LinearMap.toSpanSingleton_apply]
   simp [add_smul]
@@ -655,9 +646,7 @@ lemma capHom_smul {X : SSet.{u}} (p q : ℕ) (a : R) (phi : Cochain R X p) :
   apply SSet.chainComplex_hom_ext
   intro x
   rw [iota_capHom, Linear.comp_smul, iota_capHom]
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro b
+  refine ModuleCat.hom_ext (LinearMap.ext fun b => ?_)
   simp only [ModuleCat.hom_smul, LinearMap.smul_apply, ModuleCat.hom_ofHom,
     LinearMap.toSpanSingleton_apply]
   simp only [smul_smul]
@@ -713,9 +702,7 @@ theorem cap_naturality {X Y : SSet.{u}} (f : X ⟶ Y) (p q : ℕ)
     dsimp [lhs, rhs]
     rw [iota_capHom_assoc,
       SSet.ι_chainComplexMap_f_assoc, iota_capHom]
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro a
+    refine ModuleCat.hom_ext (LinearMap.ext fun a => ?_)
     simp only [ModuleCat.hom_comp, LinearMap.coe_comp, Function.comp_apply,
       ModuleCat.hom_ofHom, LinearMap.toSpanSingleton_apply]
     rw [cochainMap_apply, map_smul, chainOfSimplex_map,
@@ -754,9 +741,7 @@ noncomputable def capShortComplexHomZero {X : SSet.{u}} (p : ℕ)
       τ₃ := 0
       comm₁₂ := ?_
       comm₂₃ := ?_ }
-  · apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
+  · refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
     change boundary R 0 (s • cap R p 1 phi c) =
       cap R p 0 phi (boundary R p c)
     rw [map_smul]
@@ -783,16 +768,13 @@ noncomputable def capShortComplexHomSucc {X : SSet.{u}} (p q : ℕ)
       τ₃ := ModuleCat.ofHom (s • cap R p q phi)
       comm₁₂ := ?_
       comm₂₃ := ?_ }
-  · apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
+  · refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
     change boundary R (q + 1) (s • cap R p (q + 2) phi c) =
       cap R p (q + 1) phi (boundary R (p + (q + 1)) c)
     rw [map_smul]
     have h := boundary_cap_eq_of_cocycle R p (q + 1) phi hphi c
     simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · apply ModuleCat.hom_ext
-    exact cap_boundary_compatibility_of_cocycle R p q phi hphi
+  · exact ModuleCat.hom_ext (cap_boundary_compatibility_of_cocycle R p q phi hphi)
 
 /-- The short-complex morphism induced by capping with a cocycle.  The adjacent-degree
 components carry the sign needed to turn the signed cap boundary formula into strictly
@@ -896,8 +878,7 @@ lemma capCoboundaryShortComplexHom_τ₂_eq {X : SSet.{u}} (p q : ℕ)
         (-1 : R) ^ p •
           (capHom R p (q + 1) phi ≫ ModuleCat.ofHom (boundary R q)) := by
   rw [capCoboundaryShortComplexHom_τ₂]
-  apply ModuleCat.hom_ext
-  exact cap_coboundary_eq R p q phi
+  exact ModuleCat.hom_ext (cap_coboundary_eq R p q phi)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Cap product by a coboundary induces the zero map on homology, after the canonical
@@ -913,12 +894,12 @@ theorem capCoboundary_homologyMap_eq_zero {X : SSet.{u}} (p q : ℕ)
     capCoboundaryShortComplexHom_τ₂_eq]
   have hsource :
       ((X.chainComplex (ModuleCat.of R R)).sc (p + q + 1)).iCycles ≫
-        ModuleCat.ofHom (boundary R (p + q)) = 0 := by
-    exact (X.chainComplex (ModuleCat.of R R)).iCycles_d (p + q + 1) (p + q)
+        ModuleCat.ofHom (boundary R (p + q)) = 0 :=
+    (X.chainComplex (ModuleCat.of R R)).iCycles_d (p + q + 1) (p + q)
   have htarget :
       ModuleCat.ofHom (boundary R q) ≫
-        ((X.chainComplex (ModuleCat.of R R)).sc q).pOpcycles = 0 := by
-    exact (X.chainComplex (ModuleCat.of R R)).d_pOpcycles (q + 1) q
+        ((X.chainComplex (ModuleCat.of R R)).sc q).pOpcycles = 0 :=
+    (X.chainComplex (ModuleCat.of R R)).d_pOpcycles (q + 1) q
   rw [Preadditive.sub_comp, Preadditive.comp_sub, Linear.smul_comp,
     Linear.comp_smul]
   simp only [← Category.assoc, hsource, zero_comp]
@@ -948,8 +929,8 @@ noncomputable def capHomologyMap {X : SSet.{u}} (p q : ℕ)
 theorem capHomologyMap_coboundary {X : SSet.{u}} (p q : ℕ)
     (phi : Cochain R X p) :
     capHomologyMap R (p + 1) q (coboundary R p phi)
-      (coboundary_coboundary R p phi) = 0 := by
-  exact congrArg ModuleCat.Hom.hom
+      (coboundary_coboundary R p phi) = 0 :=
+  congrArg ModuleCat.Hom.hom
     (capShortComplexHom_coboundary_homologyMap_eq_zero R p q phi)
 
 /-- Cap product by cocycles, linear in the cocycle and valued in linear maps on homology. -/
@@ -958,12 +939,12 @@ noncomputable def capCocycleHomologyLinear {X : SSet.{u}} (p q : ℕ) :
       ((X.chainComplex (ModuleCat.of R R)).homology (p + q) →ₗ[R]
         (X.chainComplex (ModuleCat.of R R)).homology q) where
   toFun phi := capHomologyMap R p q phi.1 phi.2
-  map_add' phi psi := by
-    exact congrArg ModuleCat.Hom.hom
+  map_add' phi psi :=
+    congrArg ModuleCat.Hom.hom
       (capShortComplexHom_homologyMap_add R p q phi.1 psi.1 phi.2 psi.2
         (phi + psi).2)
-  map_smul' a phi := by
-    exact congrArg ModuleCat.Hom.hom
+  map_smul' a phi :=
+    congrArg ModuleCat.Hom.hom
       (capShortComplexHom_homologyMap_smul R p q a phi.1 phi.2 (a • phi).2)
 
 @[simp]
@@ -1030,9 +1011,7 @@ lemma cohomologyCycleToCocycle_moduleCatToCycles_succ {X : SSet.{u}}
         ((((K.sc (p + 1)).linearDual).moduleCatToCycles) eta) =
       ⟨coboundary R p eta', coboundary_coboundary R p eta'⟩ := by
   dsimp only
-  apply Subtype.ext
-  apply LinearMap.ext
-  intro c
+  refine Subtype.ext (LinearMap.ext fun c => ?_)
   let K := X.chainComplex (ModuleCat.of R R)
   let hnext : (ComplexShape.down ℕ).next (p + 1) = p :=
     ChainComplex.next_nat_succ p
@@ -1133,9 +1112,7 @@ theorem capCocycleHomologyLinear_eq_of_sub_eq_coboundary {X : SSet.{u}}
   rw [← map_sub]
   let deta : Cocycle R X (p + 1) :=
     ⟨coboundary R p eta, coboundary_coboundary R p eta⟩
-  have hdeta : phi - psi = deta := by
-    apply Subtype.ext
-    exact h
+  have hdeta : phi - psi = deta := Subtype.ext h
   rw [hdeta]
   exact capHomologyMap_coboundary R p q eta
 
@@ -1145,8 +1122,8 @@ lemma capHomologyMap_on_cycles {X : SSet.{u}} (p q : ℕ)
     ((X.chainComplex (ModuleCat.of R R)).homologyπ (p + q) ≫
         ModuleCat.ofHom (capHomologyMap R p q phi hphi)) =
       ShortComplex.cyclesMap (capShortComplexHom R p q phi hphi) ≫
-        (X.chainComplex (ModuleCat.of R R)).homologyπ q := by
-  exact ShortComplex.homologyπ_naturality (capShortComplexHom R p q phi hphi)
+        (X.chainComplex (ModuleCat.of R R)).homologyπ q :=
+  ShortComplex.homologyπ_naturality (capShortComplexHom R p q phi hphi)
 
 /-- On the underlying chain groups, the map on cycles used to define `capHomologyMap` is
 literally the cap product. -/
@@ -1233,8 +1210,8 @@ boundary. -/
 lemma relativeBoundary_projection (X : TopPair.{u}) (n : ℕ)
     (c : Simplicial.ChainGroup R (TopCat.toSSet.obj X.fst) (n + 1)) :
     relativeBoundary R X n (((relativeChainProjection R X).f (n + 1)).hom c) =
-      ((relativeChainProjection R X).f n).hom (Simplicial.boundary R n c) := by
-  exact ConcreteCategory.congr_hom
+      ((relativeChainProjection R X).f n).hom (Simplicial.boundary R n c) :=
+  ConcreteCategory.congr_hom
     ((relativeChainProjection R X).comm (n + 1) n) c
 
 /-- The pullback of a relative cochain to the subspace is zero. -/
@@ -1250,7 +1227,7 @@ lemma cochainMap_relativeCochainToAbsolute_eq_zero (X : TopPair.{u}) (n : ℕ)
   change phi (((relativeChainProjection R X).f n).hom
     ((((chainPairFunctor R).obj X).hom.f n).hom c)) = 0
   rw [show ((relativeChainProjection R X).f n).hom
-    ((((chainPairFunctor R).obj X).hom.f n).hom c) = 0 by exact hc]
+    ((((chainPairFunctor R).obj X).hom.f n).hom c) = 0 from hc]
   exact map_zero phi
 
 /-- Before quotienting the chain variable, cap a pulled-back relative cochain with an
@@ -1282,9 +1259,7 @@ lemma subspaceChainMap_relativeCapLift_eq_zero (X : TopPair.{u}) (p q : ℕ)
     (phi : RelativeCochain R X p) :
     ((chainPairFunctor R).obj X).hom.f (p + q) ≫
       ModuleCat.ofHom (relativeCapLift R X p q phi) = 0 := by
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro c
+  refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
   have h := Simplicial.cap_naturality R (TopCat.toSSet.map X.map) p q
     (relativeCochainToAbsolute R X p phi) c
   rw [cochainMap_relativeCochainToAbsolute_eq_zero] at h
@@ -1308,8 +1283,8 @@ noncomputable def relativeChainProjectionComponentIsCokernelForCap
           (subspaceChainMap_relativeChainProjection R X)
         change ((chainPairFunctor R).obj X).hom.f n ≫
           (relativeChainProjection R X).f n = 0 at h
-        exact h)) := by
-  exact CokernelCofork.mapIsColimit _
+        exact h)) :=
+  CokernelCofork.mapIsColimit _
     (cokernelIsCokernel ((chainPairFunctor R).obj X).hom)
     (HomologicalComplex.eval (ModuleCat R) (ComplexShape.down ℕ) n)
 
@@ -1336,8 +1311,8 @@ with the lifted absolute cap product. -/
 lemma relativeChainProjection_relativeCapHom (X : TopPair.{u}) (p q : ℕ)
     (phi : RelativeCochain R X p) :
     (relativeChainProjection R X).f (p + q) ≫ relativeCapHom R X p q phi =
-      ModuleCat.ofHom (relativeCapLift R X p q phi) := by
-  exact (Cofork.IsColimit.π_desc
+      ModuleCat.ofHom (relativeCapLift R X p q phi) :=
+  (Cofork.IsColimit.π_desc
     (relativeChainProjectionComponentIsCokernelForCap R X (p + q))
     (t := CokernelCofork.ofπ (ModuleCat.ofHom (relativeCapLift R X p q phi))
       (subspaceChainMap_relativeCapLift_eq_zero R X p q phi))).trans
@@ -1356,8 +1331,7 @@ lemma relativeCapHom_add (X : TopPair.{u}) (p q : ℕ)
       (relativeCapHom R X p q phi + relativeCapHom R X p q psi)
   rw [relativeChainProjection_relativeCapHom, Preadditive.comp_add,
     relativeChainProjection_relativeCapHom, relativeChainProjection_relativeCapHom]
-  apply ModuleCat.hom_ext
-  exact relativeCapLift_add R X p q phi psi
+  exact ModuleCat.hom_ext (relativeCapLift_add R X p q phi psi)
 
 set_option backward.isDefEq.respectTransparency false in
 lemma relativeCapHom_smul (X : TopPair.{u}) (p q : ℕ)
@@ -1371,8 +1345,7 @@ lemma relativeCapHom_smul (X : TopPair.{u}) (p q : ℕ)
       (a • relativeCapHom R X p q phi)
   rw [relativeChainProjection_relativeCapHom, Linear.comp_smul,
     relativeChainProjection_relativeCapHom]
-  apply ModuleCat.hom_ext
-  exact relativeCapLift_smul R X p q a phi
+  exact ModuleCat.hom_ext (relativeCapLift_smul R X p q a phi)
 
 /-- Relative cap product, bilinear in a relative cochain and a relative chain, and valued
 in absolute ambient chains. -/
@@ -1397,8 +1370,8 @@ lemma relativeCap_projection_apply (X : TopPair.{u}) (p q : ℕ)
     (phi : RelativeCochain R X p)
     (c : Simplicial.ChainGroup R (TopCat.toSSet.obj X.fst) (p + q)) :
     relativeCap R X p q phi ((relativeChainProjection R X).f (p + q) c) =
-      relativeCapLift R X p q phi c := by
-  exact ConcreteCategory.congr_hom
+      relativeCapLift R X p q phi c :=
+  ConcreteCategory.congr_hom
     (relativeChainProjection_relativeCapHom R X p q phi) c
 
 /-- For a relative cocycle, the lifted cap product satisfies the signed boundary identity
@@ -1461,9 +1434,7 @@ noncomputable def relativeCapShortComplexHomZero (X : TopPair.{u}) (p : ℕ)
       τ₃ := 0
       comm₁₂ := ?_
       comm₂₃ := ?_ }
-  · apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
+  · refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
     change Simplicial.boundary R 0 (s • relativeCap R X p 1 phi c) =
       relativeCap R X p 0 phi (relativeBoundary R X p c)
     rw [map_smul]
@@ -1496,9 +1467,7 @@ noncomputable def relativeCapShortComplexHomSucc (X : TopPair.{u}) (p q : ℕ)
       τ₃ := ModuleCat.ofHom (s • relativeCap R X p q phi)
       comm₁₂ := ?_
       comm₂₃ := ?_ }
-  · apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
+  · refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
     change Simplicial.boundary R (q + 1)
         (s • relativeCap R X p ((q + 1) + 1) phi c) =
       relativeCap R X p (q + 1) phi
@@ -1511,8 +1480,7 @@ noncomputable def relativeCapShortComplexHomSucc (X : TopPair.{u}) (p q : ℕ)
       s • relativeCap R X p (q + 1) phi
         (relativeBoundary R X (p + (q + 1)) c) at h
     simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · apply ModuleCat.hom_ext
-    exact boundary_relativeCap_eq_of_cocycle R X p q phi hphi
+  · exact ModuleCat.hom_ext (boundary_relativeCap_eq_of_cocycle R X p q phi hphi)
 
 /-- The short-complex morphism underlying the same-pair relative cap product. -/
 noncomputable def relativeCapShortComplexHom (X : TopPair.{u}) (p q : ℕ)
@@ -1609,8 +1577,8 @@ lemma relativeChainProjection_reassoc_apply (X : TopPair.{u}) (p q : ℕ)
     (c : Simplicial.ChainGroup R (TopCat.toSSet.obj X.fst) (p + q + 1)) :
     relativeReassocChain R X p q (((relativeChainProjection R X).f (p + q + 1)).hom c) =
       ((relativeChainProjection R X).f (p + 1 + q)).hom
-        (Simplicial.reassocChain R p q c) := by
-  exact ConcreteCategory.congr_hom
+        (Simplicial.reassocChain R p q c) :=
+  ConcreteCategory.congr_hom
     (HomologicalComplex.XIsoOfEq_hom_naturality
       (relativeChainProjection R X) (by omega)) c
 
@@ -1694,8 +1662,7 @@ lemma relativeCapCoboundaryShortComplexHom_τ₂_eq (X : TopPair.{u}) (p q : ℕ
             (((singularChainComplexFunctor (ModuleCat.{u} R)).obj
               (ModuleCat.of R R)).obj X.fst).d (q + 1) q) := by
   rw [relativeCapCoboundaryShortComplexHom_τ₂]
-  apply ModuleCat.hom_ext
-  exact relativeCap_coboundary_eq R X p q phi
+  exact ModuleCat.hom_ext (relativeCap_coboundary_eq R X p q phi)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Cap product by a relative coboundary induces the zero map from relative homology to
@@ -1743,8 +1710,8 @@ theorem relativeCapShortComplexHom_coboundary_homologyMap_eq_zero
 theorem relativeCapHomologyMap_coboundary (X : TopPair.{u}) (p q : ℕ)
     (phi : RelativeCochain R X p) :
     relativeCapHomologyMap R X (p + 1) q (relativeCoboundary R X p phi)
-      (relativeCoboundary_relativeCoboundary R X p phi) = 0 := by
-  exact congrArg ModuleCat.Hom.hom
+      (relativeCoboundary_relativeCoboundary R X p phi) = 0 :=
+  congrArg ModuleCat.Hom.hom
     (relativeCapShortComplexHom_coboundary_homologyMap_eq_zero R X p q phi)
 
 /-- Relative cocycles differing by a relative coboundary induce the same map on
@@ -1760,9 +1727,7 @@ theorem relativeCapCocycleHomologyLinear_eq_of_sub_eq_coboundary
   let deta : RelativeCocycle R X (p + 1) :=
     ⟨relativeCoboundary R X p eta,
       relativeCoboundary_relativeCoboundary R X p eta⟩
-  have hdeta : phi - psi = deta := by
-    apply Subtype.ext
-    exact h
+  have hdeta : phi - psi = deta := Subtype.ext h
   rw [hdeta]
   exact relativeCapHomologyMap_coboundary R X p q eta
 
@@ -1822,9 +1787,7 @@ lemma relativeCohomologyCycleToCocycle_moduleCatToCycles_succ
       ⟨relativeCoboundary R X p eta',
         relativeCoboundary_relativeCoboundary R X p eta'⟩ := by
   dsimp only
-  apply Subtype.ext
-  apply LinearMap.ext
-  intro c
+  refine Subtype.ext (LinearMap.ext fun c => ?_)
   let K := (relativeChainFunctor R).obj X
   let hnext : (ComplexShape.down ℕ).next (p + 1) = p :=
     ChainComplex.next_nat_succ p
