@@ -67,6 +67,15 @@ additional axioms or assumed comparison maps:
   actual Mayer–Vietoris extension and explicit sheaf/Ext/hypercohomology
   comparisons. Their rational images are proved Hodge; the trivial transition
   gives zero. No algebraic cycle comparison is assumed or asserted.
+- `AnalyticTransitionCoboundary.lean` proves that changing local trivializations
+  preserves the units, integral, and rational transition classes. It also proves
+  that the units class vanishes exactly when actual units on the two opens
+  trivialize the transition function, without assuming an acyclic cover.
+- `HolomorphicUnitObstruction.lean` constructs the actual degree-one integral
+  sheaf cohomology class of a holomorphic unit on any analytic open. It vanishes
+  exactly when a holomorphic logarithm exists there. A closed analytic loop on
+  which the unit makes one exponential turn proves that this class is nonzero.
+  This is a local prerequisite, not the requested global non-Hodge class.
 - `HolomorphicZeroForms.lean` identifies the actual analytic quotient in degree
   zero with holomorphic functions, including the sheaf isomorphism.
 - `FirstHodgeObstruction.lean` constructs the short exact sequence
@@ -133,7 +142,13 @@ is smooth, integral, proper, and of relative dimension two.
 standard projective charts in arbitrary finite coordinate dimension and actual
 Segre closed immersions on product charts. Their kernels are exactly the ideals
 of matrix minors, and the overlap-open formula is proved. The global gluing
-and resulting projective presentation are not yet established.
+is now constructed in `ExplicitProjectiveCoordinates.lean`,
+`ExplicitProjectiveRatioSections.lean`, and `ExplicitSegreMorphism.lean`, with
+coordinate relabeling in `ExplicitProjectiveRelabeling.lean`.
+`ExplicitEllipticSegre.lean` constructs the actual map
+`surfaceSegre : surface ⟶ ProjectiveSpace (Fin 9) base`, proves it is over the
+complex base, and proves its local coordinate formulas. The global closed
+immersion property is not yet established.
 
 The self-product's explicit projective presentation and the cohomology/filtration
 computation needed for the non-Hodge example remain to be established. A non-Hodge
@@ -141,7 +156,7 @@ class has not yet been constructed.
 
 ## Verification
 
-- `lake build` succeeds for both default library targets (4732 jobs).
+- `lake build` succeeds for both default library targets (4744 jobs).
 - The new cohomological theorems were checked with `#print axioms`; they use only
   `propext`, `Classical.choice`, and `Quot.sound`.
 - No `sorry`, `admit`, new axioms, or unsafe declarations were added.

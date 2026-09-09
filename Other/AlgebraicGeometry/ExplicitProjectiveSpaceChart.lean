@@ -202,7 +202,7 @@ private theorem fromPolynomial_comp_toPolynomial :
   · intro j
     by_cases h : j = i
     · subst j; simp
-    · simp [coordinateValues, h] 
+    · simp [coordinateValues, h]
 
 omit [Fintype σ] in
 private theorem toPolynomial_comp_fromPolynomial :
