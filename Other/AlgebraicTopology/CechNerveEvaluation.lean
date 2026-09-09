@@ -58,9 +58,7 @@ public noncomputable def cechPresentationWideCospanEvaluationIso
         (fun _ ↦ (cechPresentationEvaluationArrow A q).hom) :=
   NatIso.ofComponents
     (fun x ↦ by cases x <;> exact Iso.refl _)
-    (by
-      intro X Y f
-      cases f <;> rfl)
+    (fun f ↦ by cases f <;> rfl)
 
 /-- Evaluation in simplicial degree `q` commutes with the wide pullback defining Čech level
 `p`. -/
@@ -106,10 +104,9 @@ public theorem cechPresentationEvaluationIso_hom_π
       limit.π D' (some i) = E.map (limit.π D (some i)) ≫
         (cechPresentationWideCospanEvaluationIso A p q).hom.app (some i)
   dsimp only [D']
-  rw [Iso.trans_hom, Category.assoc]
-  rw [HasLimit.isoOfNatIso_hom_π
-    (cechPresentationWideCospanEvaluationIso A p q) (some i)]
-  rw [← Category.assoc, preservesLimitIso_hom_π]
+  rw [Iso.trans_hom, Category.assoc, HasLimit.isoOfNatIso_hom_π
+    (cechPresentationWideCospanEvaluationIso A p q) (some i), ← Category.assoc,
+    preservesLimitIso_hom_π]
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
@@ -134,10 +131,9 @@ public theorem cechPresentationEvaluationIso_hom_base
       limit.π D' none = E.map (limit.π D none) ≫
         (cechPresentationWideCospanEvaluationIso A p q).hom.app none
   dsimp only [D']
-  rw [Iso.trans_hom, Category.assoc]
-  rw [HasLimit.isoOfNatIso_hom_π
-    (cechPresentationWideCospanEvaluationIso A p q) none]
-  rw [← Category.assoc, preservesLimitIso_hom_π]
+  rw [Iso.trans_hom, Category.assoc, HasLimit.isoOfNatIso_hom_π
+    (cechPresentationWideCospanEvaluationIso A p q) none, ← Category.assoc,
+    preservesLimitIso_hom_π]
 
 set_option backward.isDefEq.respectTransparency false in
 public theorem cechPresentationEvaluation_map_π_comp_diagramIso
@@ -175,13 +171,11 @@ public theorem cechPresentationEvaluationIso_naturality
   let B := cechPresentationEvaluationArrow A q
   let D := WidePullbackShape.wideCospan B.right
     (fun _ : Fin (b.unop.len + 1) ↦ B.left) (fun _ ↦ B.hom)
-  apply limit.hom_ext (F := D)
-  intro j
+  refine limit.hom_ext (F := D) fun j => ?_
   cases j with
   | some i =>
-    rw [Category.assoc, cechPresentationEvaluationIso_hom_π]
-    rw [cechPresentationEvaluation_map_π_comp_diagramIso]
-    rw [← Functor.map_comp]
+    rw [Category.assoc, cechPresentationEvaluationIso_hom_π,
+      cechPresentationEvaluation_map_π_comp_diagramIso, ← Functor.map_comp]
     change ((evaluation SimplexCategoryᵒᵖ (Type 0)).obj
         (Opposite.op (SimplexCategory.mk q))).map
           (A.cechNerve.map f ≫
@@ -195,9 +189,8 @@ public theorem cechPresentationEvaluationIso_naturality
     rw [cechPresentationEvaluationIso_hom_π,
       cechPresentationEvaluation_map_π_comp_diagramIso]
   | none =>
-    rw [Category.assoc, cechPresentationEvaluationIso_hom_base]
-    rw [cechPresentationEvaluation_map_base_comp_diagramIso]
-    rw [← Functor.map_comp]
+    rw [Category.assoc, cechPresentationEvaluationIso_hom_base,
+      cechPresentationEvaluation_map_base_comp_diagramIso, ← Functor.map_comp]
     change ((evaluation SimplexCategoryᵒᵖ (Type 0)).obj
         (Opposite.op (SimplexCategory.mk q))).map
           (A.cechNerve.map f ≫
@@ -221,9 +214,7 @@ public noncomputable def cechPresentationSimplicialEvaluationIso
       (cechPresentationEvaluationArrow A q).augmentedCechNerve.left :=
   NatIso.ofComponents
     (fun a ↦ cechPresentationEvaluationIso A a.unop.len q)
-    (by
-      intro a b f
-      exact cechPresentationEvaluationIso_naturality A q f)
+    (fun f ↦ cechPresentationEvaluationIso_naturality A q f)
 
 /-- Evaluation of an `SSet`-level augmented Čech nerve is canonically the augmented Čech nerve
 of the evaluated arrow. -/

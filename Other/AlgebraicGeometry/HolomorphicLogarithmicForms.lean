@@ -30,107 +30,109 @@ open CategoryTheory Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (s : X ⟶ Spec ↧ℂ) (d : ℕ) [SmoothOfRelativeDimension d s]
+open Point
+
+variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 /-- The logarithmic form of a tuple of nowhere-vanishing holomorphic functions. -/
 def holomorphicLogarithmicForm
-    (U : (Opens (TopCat.of (ComplexPoint X s)))ᵒᵖ) (p : ℕ)
-    (u : Fin p → (OpenHolomorphicFunctions s d U)ˣ) : HolomorphicForm s d U p :=
-  algebraicFormToHolomorphicForm s d U p
-    (Algebra.DeRham.logarithmicForm ℂ (OpenHolomorphicFunctions s d U) p u)
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ)
+    (u : Fin p → (OpenHolomorphicFunctions X d U)ˣ) : HolomorphicForm X d U p :=
+  algebraicFormToHolomorphicForm X d U p
+    (Algebra.DeRham.logarithmicForm ℂ (OpenHolomorphicFunctions X d U) p u)
 
 /-- Logarithmic forms are closed under the actual analytic exterior derivative. -/
 @[simp]
 theorem holomorphicFormDifferential_logarithmicForm
-    (U : (Opens (TopCat.of (ComplexPoint X s)))ᵒᵖ) (p : ℕ)
-    (u : Fin p → (OpenHolomorphicFunctions s d U)ˣ) :
-    holomorphicFormDifferential s d U p (holomorphicLogarithmicForm s d U p u) = 0 := by
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ)
+    (u : Fin p → (OpenHolomorphicFunctions X d U)ˣ) :
+    holomorphicFormDifferential X d U p (holomorphicLogarithmicForm X d U p u) = 0 := by
   rw [holomorphicLogarithmicForm, holomorphicFormDifferential_algebraicFormToHolomorphicForm,
     Algebra.DeRham.differential_logarithmicForm, map_zero]
 
 /-- Restriction of logarithmic forms is the logarithmic form of the restricted units. -/
 @[simp]
 theorem holomorphicFormRestriction_logarithmicForm
-    {U V : (Opens (TopCat.of (ComplexPoint X s)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
-    (u : Fin p → (OpenHolomorphicFunctions s d U)ˣ) :
-    holomorphicFormRestriction s d i p (holomorphicLogarithmicForm s d U p u) =
-      holomorphicLogarithmicForm s d V p
-        (fun j => Units.map (holomorphicRestrictionAlgHom s d i).toMonoidHom (u j)) := by
+    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    (u : Fin p → (OpenHolomorphicFunctions X d U)ˣ) :
+    holomorphicFormRestriction X d i p (holomorphicLogarithmicForm X d U p u) =
+      holomorphicLogarithmicForm X d V p
+        (fun j => Units.map (holomorphicRestrictionAlgHom X d i).toMonoidHom (u j)) := by
   rw [holomorphicLogarithmicForm, holomorphicFormRestriction_algebraicFormToHolomorphicForm,
     Algebra.DeRham.map_logarithmicForm]
   rfl
 
 /-- Units regarded additively, as needed for their sheaf cohomology. -/
-def holomorphicUnitsPresheaf : TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X s)) :=
-  holomorphicFunctionPresheaf s d ⋙ forget₂ CommRingCat CommMonCat ⋙
+def holomorphicUnitsPresheaf : TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
+  holomorphicFunctionPresheaf X d ⋙ forget₂ CommRingCat CommMonCat ⋙
     CommMonCat.units ⋙ CommGrpCat.toAddCommGrp
 
 /-- The actual sheaf of holomorphic units, with its multiplicative group written additively. -/
-def holomorphicUnitsSheaf : TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X s)) :=
+def holomorphicUnitsSheaf : TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
   letI : CreatesLimitsOfSize.{0, 0} (forget CommMonCat) :=
     { CreatesLimitsOfShape := fun {_ _} => { CreatesLimit := fun {_} => inferInstance } }
   letI : PreservesLimitsOfSize.{0, 0} (forget₂ CommRingCat CommMonCat) :=
     preservesLimits_of_reflects_of_preserves _ (forget CommMonCat)
   letI : CommGrpCat.toAddCommGrp.IsEquivalence :=
     inferInstanceAs commGroupAddCommGroupEquivalence.functor.IsEquivalence
-  (sheafCompose (Opens.grothendieckTopology (TopCat.of (ComplexPoint X s)))
+  (sheafCompose (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     (forget₂ CommRingCat CommMonCat ⋙ CommMonCat.units ⋙ CommGrpCat.toAddCommGrp)).obj
-      (holomorphicFunctionSheaf s d)
+      (holomorphicFunctionSheaf X d)
 
 /-- The logarithmic differential as a morphism of presheaves of abelian groups. -/
-def holomorphicDlogPresheaf : holomorphicUnitsPresheaf s d ⟶
-    holomorphicDeRhamPresheaf s d 1 where
+def holomorphicDlogPresheaf : holomorphicUnitsPresheaf X d ⟶
+    holomorphicDeRhamPresheaf X d 1 where
   app U := AddCommGrpCat.ofHom {
-    toFun u := holomorphicLogarithmicForm s d U 1 (fun _ => u.toMul)
+    toFun u := holomorphicLogarithmicForm X d U 1 (fun _ => u.toMul)
     map_zero' := by
-      change algebraicFormToHolomorphicForm s d U 1
-        (Algebra.DeRham.dlog ℂ (OpenHolomorphicFunctions s d U) 1) = 0
+      change algebraicFormToHolomorphicForm X d U 1
+        (Algebra.DeRham.dlog ℂ (OpenHolomorphicFunctions X d U) 1) = 0
       rw [Algebra.DeRham.dlog_one, map_zero]
     map_add' u v := by
-      change algebraicFormToHolomorphicForm s d U 1
-        (Algebra.DeRham.dlog ℂ (OpenHolomorphicFunctions s d U) (u.toMul * v.toMul)) = _
-      rw [Algebra.DeRham.dlog_mul ℂ (OpenHolomorphicFunctions s d U), map_add]
+      change algebraicFormToHolomorphicForm X d U 1
+        (Algebra.DeRham.dlog ℂ (OpenHolomorphicFunctions X d U) (u.toMul * v.toMul)) = _
+      rw [Algebra.DeRham.dlog_mul ℂ (OpenHolomorphicFunctions X d U), map_add]
       rfl }
   naturality {U V} i := by
     apply AddCommGrpCat.hom_ext
     apply AddMonoidHom.ext
     intro u
-    exact (holomorphicFormRestriction_logarithmicForm s d i 1 (fun _ => u.toMul)).symm
+    exact (holomorphicFormRestriction_logarithmicForm X d i 1 (fun _ => u.toMul)).symm
 
 /-- The logarithmic differential lands in closed one-forms. -/
 theorem holomorphicDlogPresheaf_comp_differential :
-    holomorphicDlogPresheaf s d ≫ holomorphicDeRhamDifferential s d 1 = 0 := by
+    holomorphicDlogPresheaf X d ≫ holomorphicDeRhamDifferential X d 1 = 0 := by
   apply NatTrans.ext
   funext U
   apply AddCommGrpCat.hom_ext
   apply AddMonoidHom.ext
   intro u
-  exact holomorphicFormDifferential_logarithmicForm s d U 1 (fun _ => u.toMul)
+  exact holomorphicFormDifferential_logarithmicForm X d U 1 (fun _ => u.toMul)
 
 /-- The actual logarithmic derivative from holomorphic units to holomorphic one-forms. -/
-def holomorphicDlogSheaf : holomorphicUnitsSheaf s d ⟶ holomorphicDeRhamSheaf s d 1 :=
-  ⟨holomorphicDlogPresheaf s d ≫
-    toSheafify (Opens.grothendieckTopology (TopCat.of (ComplexPoint X s)))
-      (holomorphicDeRhamPresheaf s d 1)⟩
+def holomorphicDlogSheaf : holomorphicUnitsSheaf X d ⟶ holomorphicDeRhamSheaf X d 1 :=
+  ⟨holomorphicDlogPresheaf X d ≫
+    toSheafify (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+      (holomorphicDeRhamPresheaf X d 1)⟩
 
 /-- Sheafification preserves the proved closedness of logarithmic derivatives. -/
 theorem holomorphicDlogSheaf_comp_differential :
-    holomorphicDlogSheaf s d ≫ holomorphicDeRhamSheafDifferential s d 1 = 0 := by
+    holomorphicDlogSheaf X d ≫ holomorphicDeRhamSheafDifferential X d 1 = 0 := by
   apply CategoryTheory.Sheaf.hom_ext_iff.mpr
-  change holomorphicDlogPresheaf s d ≫
-      toSheafify (Opens.grothendieckTopology (TopCat.of (ComplexPoint X s))) _ ≫
-        sheafifyMap _ (holomorphicDeRhamDifferential s d 1) = 0
+  change holomorphicDlogPresheaf X d ≫
+      toSheafify (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) _ ≫
+        sheafifyMap _ (holomorphicDeRhamDifferential X d 1) = 0
   rw [← toSheafify_naturality, ← Category.assoc,
     holomorphicDlogPresheaf_comp_differential, zero_comp]
 
 /-- The logarithmic derivative, as a cochain map from units placed in degree one. -/
 def holomorphicDlogComplex :
-    (HomologicalComplex.single _ (ComplexShape.up ℕ) 1).obj (holomorphicUnitsSheaf s d) ⟶
-      holomorphicDeRhamComplex s d :=
-  HomologicalComplex.mkHomFromSingle (holomorphicDlogSheaf s d) (by
+    (HomologicalComplex.single _ (ComplexShape.up ℕ) 1).obj (holomorphicUnitsSheaf X d) ⟶
+      holomorphicDeRhamComplex X d :=
+  HomologicalComplex.mkHomFromSingle (holomorphicDlogSheaf X d) (by
     intro k hk
     have hk' : k = 2 := by simpa using hk.symm
     subst k
-    exact holomorphicDlogSheaf_comp_differential s d)
+    exact holomorphicDlogSheaf_comp_differential X d)
 
 end AlgebraicGeometry.ComplexPoint

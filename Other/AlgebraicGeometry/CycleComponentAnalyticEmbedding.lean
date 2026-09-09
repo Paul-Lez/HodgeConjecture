@@ -37,67 +37,64 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 noncomputable local instance cycleComponentTopology
-    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
     TopologicalSpace
-      (ComplexPoint (cycleComponent X x)
-        (cycleComponentι X x ≫ structureMap)) :=
+      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :=
   analyticTopology
 
 /-- The complex-point map of a reduced cycle component is a closed topological embedding. -/
 lemma cycleComponentMap_isClosedEmbedding
-    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
-    IsClosedEmbedding (cycleComponentMap structureMap x) := by
-  exact isClosedEmbedding_map_of_closedImmersion
-    (i := cycleComponentι X x) (structureMapA :=
-      cycleComponentι X x ≫ structureMap) (structureMapB := structureMap) rfl
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
+    IsClosedEmbedding (cycleComponentMap X x) := by
+  let i : Over.mk (cycleComponentι X.left x ≫ X.hom) ⟶ X :=
+    Over.homMk (cycleComponentι X.left x) rfl
+  let : IsClosedImmersion i.left :=
+    inferInstanceAs (IsClosedImmersion (cycleComponentι X.left x))
+  exact isClosedEmbedding_map_of_closedImmersion i
 
 /-- The analytification of a reduced cycle component is canonically homeomorphic to its
 analytic support in the ambient variety. -/
 def cycleComponentPointHomeomorphSupport
-    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
-    ComplexPoint (cycleComponent X x)
-        (cycleComponentι X x ≫ structureMap) ≃ₜ
-      cycleComponentSupport structureMap x :=
-  (cycleComponentMap_isClosedEmbedding structureMap x).toIsEmbedding.toHomeomorph.trans
-    (Homeomorph.setCongr (range_cycleComponentMap structureMap x))
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
+    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) ≃ₜ
+      cycleComponentSupport X x :=
+  (cycleComponentMap_isClosedEmbedding X x).toIsEmbedding.toHomeomorph.trans
+    (Homeomorph.setCongr (range_cycleComponentMap X x))
 
 @[simp]
 lemma cycleComponentPointHomeomorphSupport_apply
-    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap)) :
-    cycleComponentPointHomeomorphSupport structureMap x z =
-      cycleComponentSupportMap structureMap x z := by
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
+    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
+    cycleComponentPointHomeomorphSupport X x z =
+      cycleComponentSupportMap X x z := by
   rfl
 
 /-- The underlying equivalence of the component-support homeomorphism is the previously
 constructed point equivalence. -/
 lemma cycleComponentPointHomeomorphSupport_toEquiv
-    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
-    (cycleComponentPointHomeomorphSupport structureMap x).toEquiv =
-      cycleComponentPointEquivSupport structureMap x := by
-  apply Equiv.ext
-  intro z
-  rfl
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
+    (cycleComponentPointHomeomorphSupport X x).toEquiv =
+      cycleComponentPointEquivSupport X x :=
+  Equiv.ext fun _ ↦ rfl
 
 /-- The smooth analytic locus of a component is homeomorphic to its image in the ambient
 analytic variety. -/
 def cycleComponentSmoothPointHomeomorphSupport
-    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X) :
-    cycleComponentSmoothAnalyticLocus structureMap x ≃ₜ
-      cycleComponentSmoothSupport structureMap x :=
-  (cycleComponentMap_isClosedEmbedding structureMap x).toIsEmbedding.homeomorphImage
-    (cycleComponentSmoothAnalyticLocus structureMap x)
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
+    cycleComponentSmoothAnalyticLocus X x ≃ₜ
+      cycleComponentSmoothSupport X x :=
+  (cycleComponentMap_isClosedEmbedding X x).toIsEmbedding.homeomorphImage
+    (cycleComponentSmoothAnalyticLocus X x)
 
 @[simp]
 lemma cycleComponentSmoothPointHomeomorphSupport_apply
-    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (x : X)
-    (z : cycleComponentSmoothAnalyticLocus structureMap x) :
-    (cycleComponentSmoothPointHomeomorphSupport structureMap x z : (ComplexPoint X structureMap)) =
-      cycleComponentMap structureMap x z := by
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
+    (z : cycleComponentSmoothAnalyticLocus X x) :
+    (cycleComponentSmoothPointHomeomorphSupport X x z : (ComplexPoint X)) =
+      cycleComponentMap X x z := by
   rfl
 
 end AlgebraicGeometry.ComplexPoint

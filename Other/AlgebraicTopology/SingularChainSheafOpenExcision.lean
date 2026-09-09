@@ -34,10 +34,10 @@ def openSubsetPointExcisionPairIso (y : (Opens.toTopCat X).obj U) :
       neighborhoodPointComplementPair (U : Set X) y.val where
   hom := TopPair.ofHom (𝟙 _) (TopCat.ofHom
     ⟨fun z => ⟨z.val, fun h => z.property (Subtype.ext h)⟩,
-      continuous_subtype_val.subtype_mk _⟩) (by rfl)
+      continuous_subtype_val.subtype_mk _⟩) rfl
   inv := TopPair.ofHom (𝟙 _) (TopCat.ofHom
     ⟨fun z => ⟨z.val, fun h => z.property (congrArg Subtype.val h)⟩,
-      continuous_subtype_val.subtype_mk _⟩) (by rfl)
+      continuous_subtype_val.subtype_mk _⟩) rfl
   hom_inv_id := by
     apply MorphismProperty.Arrow.Hom.ext
     · ext z; rfl
@@ -101,7 +101,6 @@ theorem sheafChainMap_quasiIso_of_stalk {Y : TopCat}
       ((F.mapHomologicalComplex (ComplexShape.down ℕ)).map f) n ≫
       ((L.sc n).mapHomologyIso F).hom =
       ((K.sc n).mapHomologyIso F).hom ≫ F.map (HomologicalComplex.homologyMap f n) at heq
-  have hiso : IsIso ((K.sc n).mapHomologyIso F).hom := inferInstance
   have hcomp : IsIso (((K.sc n).mapHomologyIso F).hom ≫
       F.map (HomologicalComplex.homologyMap f n)) := by
     rw [← heq]
@@ -117,8 +116,8 @@ theorem singularChainSheafOpenRestriction_quasiIso [T2Space X] :
 
 /-- The open comparison remains a quasi-isomorphism after the `n ↦ -n` regrading. -/
 theorem singularChainSheafOpenRestrictionRegraded_quasiIso [T2Space X] :
-    QuasiIso (singularChainSheafOpenRestrictionRegraded U ℚ) := by
-  have h := singularChainSheafOpenRestriction_quasiIso U
-  exact (quasiIso_extendMap_iff _ ComplexShape.embeddingDownNat).mpr h
+    QuasiIso (singularChainSheafOpenRestrictionRegraded U ℚ) :=
+  (quasiIso_extendMap_iff _ ComplexShape.embeddingDownNat).mpr
+    (singularChainSheafOpenRestriction_quasiIso U)
 
 end AlgebraicTopology.Singular

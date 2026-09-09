@@ -51,41 +51,40 @@ abbrev affineSpecStructureMap : Spec ↧R ⟶ Spec ↧ℂ :=
   Spec.map (CommRingCat.ofHom (algebraMap ℂ R))
 
 noncomputable local instance :
-    TopologicalSpace (ComplexPoint (Spec ↧R) (affineSpecStructureMap R)) :=
+    TopologicalSpace (ComplexPoint (Over.mk (affineSpecStructureMap R))) :=
   analyticTopology
 
 /-- Complex points of `Spec R` correspond to complex algebra homomorphisms from `R` to `ℂ`. -/
 def affineSpecEquiv :
-    ComplexPoint (Spec ↧R) (affineSpecStructureMap R) ≃ (R →ₐ[ℂ] ℂ) where
+    ComplexPoint (Over.mk (affineSpecStructureMap R)) ≃ (R →ₐ[ℂ] ℂ) where
   toFun z :=
-    { toRingHom := (Spec.homEquiv z.1).hom
+    { toRingHom := (Spec.homEquiv z.left).hom
       commutes' c := by
-        have hz := congrArg Spec.preimage z.2
-        have hr : CommRingCat.ofHom (algebraMap ℂ R) ≫ Spec.preimage z.1 =
+        have hz := congrArg Spec.preimage (Over.w z)
+        have hr : CommRingCat.ofHom (algebraMap ℂ R) ≫ Spec.preimage z.left =
             𝟙 (CommRingCat.of ℂ) := by
           simpa [affineSpecStructureMap, Spec.preimage_comp] using hz
         exact DFunLike.congr_fun (congrArg CommRingCat.Hom.hom hr) c }
-  invFun φ := ⟨Spec.map (CommRingCat.ofHom φ.toRingHom), by
-    rw [← Spec.map_comp]
-    rw [← Spec.map_id]
+  invFun φ := Over.homMk (Spec.map (CommRingCat.ofHom φ.toRingHom)) (by
+    change Spec.map (CommRingCat.ofHom φ.toRingHom) ≫
+      Spec.map (CommRingCat.ofHom (algebraMap ℂ R)) = 𝟙 (Spec ↧ℂ)
+    rw [← Spec.map_comp, ← Spec.map_id]
     congr 1
     ext c
-    exact φ.commutes c⟩
-  left_inv z := by
-    apply Subtype.ext
-    exact Spec.map_preimage z.1
+    exact φ.commutes c)
+  left_inv z := Over.OverMorphism.ext (Spec.map_preimage z.left)
   right_inv φ := by
     ext r
     simp [Spec.homEquiv_apply]
 
 lemma affineSpecEquiv_apply
-    (z : ComplexPoint (Spec ↧R) (affineSpecStructureMap R)) (r : R) :
+    (z : ComplexPoint (Over.mk (affineSpecStructureMap R))) (r : R) :
     affineSpecEquiv R z r =
       evaluate ⊤ ((Scheme.ΓSpecIso ↧R).inv r) z := by
   rw [evaluate_top_eq_appTop]
-  change (Spec.preimage z.1).hom r =
-    (Scheme.ΓSpecIso ↧ℂ).hom (z.1.appTop ((Scheme.ΓSpecIso ↧R).inv r))
-  have h := Scheme.ΓSpecIso_naturality (Spec.preimage z.1)
+  change (Spec.preimage z.left).hom r =
+    (Scheme.ΓSpecIso ↧ℂ).hom (z.left.appTop ((Scheme.ΓSpecIso ↧R).inv r))
+  have h := Scheme.ΓSpecIso_naturality (Spec.preimage z.left)
   rw [Spec.map_preimage] at h
   have h' := DFunLike.congr_fun (congrArg CommRingCat.Hom.hom h)
     ((Scheme.ΓSpecIso ↧R).inv r)
@@ -104,18 +103,19 @@ lemma evaluate_affineSpecEquiv_symm_top (s : Γ(Spec ↧R, ⊤)) (φ : R →ₐ[
     _ = φ ((Scheme.ΓSpecIso ↧R).hom s) := by simp
 
 lemma continuous_affineAlgebraHom_apply (r : R) :
-    Continuous (fun φ : R →ₐ[ℂ] ℂ ↦ φ r) := by
-  exact (continuous_apply r).comp continuous_induced_dom
+    Continuous (fun φ : R →ₐ[ℂ] ℂ ↦ φ r) :=
+  (continuous_apply r).comp continuous_induced_dom
 
 lemma continuous_affineSpecEquiv :
     @Continuous
-      (ComplexPoint (Spec ↧R) (affineSpecStructureMap R))
+      (ComplexPoint (Over.mk (affineSpecStructureMap R)))
       (R →ₐ[ℂ] ℂ) analyticTopology (affineAlgebraHomTopology R)
       (affineSpecEquiv R) := by
   rw [continuous_induced_rng]
   exact continuous_pi fun r ↦ by
     simpa only [Function.comp_apply, affineSpecEquiv_apply] using
-      continuous_evaluate_top ((Scheme.ΓSpecIso ↧R).inv r)
+      continuous_evaluate_top (X := Over.mk (affineSpecStructureMap R))
+        ((Scheme.ΓSpecIso ↧R).inv r)
 
 lemma isOpen_affineSpecEquiv_symm_preimage_overOpen_basicOpen
     (s : Γ(Spec ↧R, ⊤)) :
@@ -125,31 +125,34 @@ lemma isOpen_affineSpecEquiv_symm_preimage_overOpen_basicOpen
       overOpen ((Spec ↧R).basicOpen s) =
       {φ | φ ((Scheme.ΓSpecIso ↧R).hom s) ≠ 0} by
     ext φ
-    rw [Set.mem_preimage, mem_overOpen_basicOpen_iff_evaluate_ne_zero (U := ⊤) (hz := trivial),
-      evaluate_affineSpecEquiv_symm_top]
-    rfl]
+    exact (mem_overOpen_basicOpen_iff_evaluate_ne_zero
+      (X := Over.mk (affineSpecStructureMap R)) (U := ⊤)
+      s ((affineSpecEquiv R).symm φ) trivial).trans
+        (Iff.of_eq (congrArg (· ≠ 0) (evaluate_affineSpecEquiv_symm_top R s φ)))]
   exact isOpen_ne_fun
     (continuous_affineAlgebraHom_apply R ((Scheme.ΓSpecIso ↧R).hom s))
     continuous_const
 
 /-- On an affine scheme, evaluation of a section on a principal open is locally a quotient of
 evaluations of global sections. -/
-lemma exists_evaluate_affine_basicOpen_eq_div {X : Scheme} [IsAffine X]
-    {structureMap : X ⟶ Spec ↧ℂ} (f : Γ(X, ⊤)) (t : Γ(X, X.basicOpen f)) :
-    ∃ (k : ℕ) (a : Γ(X, ⊤)),
-      ∀ z : ComplexPoint X structureMap, z ∈ overOpen (X.basicOpen f) →
-        evaluate (X.basicOpen f) t z = evaluate ⊤ a z / evaluate ⊤ f z ^ k :=
-  exists_evaluate_basicOpen_eq_div (isAffineOpen_top X) f t
+lemma exists_evaluate_affine_basicOpen_eq_div {X : Over (Spec ↧ℂ)} [IsAffine X.left]
+    (f : Γ(X.left, ⊤)) (t : Γ(X.left, X.left.basicOpen f)) :
+    ∃ (k : ℕ) (a : Γ(X.left, ⊤)),
+      ∀ z : ComplexPoint X, z ∈ overOpen (X.left.basicOpen f) →
+        evaluate (X.left.basicOpen f) t z = evaluate ⊤ a z / evaluate ⊤ f z ^ k :=
+  exists_evaluate_basicOpen_eq_div (X := X) (isAffineOpen_top X.left) f t
 
 lemma exists_evaluate_affineSpec_basicOpen_eq_div
     (f : Γ(Spec ↧R, ⊤))
     (t : Γ(Spec ↧R, (Spec ↧R).basicOpen f)) :
     ∃ (k : ℕ) (a : Γ(Spec ↧R, ⊤)),
-      ∀ z : ComplexPoint (Spec ↧R) (affineSpecStructureMap R),
+      ∀ z : ComplexPoint (Over.mk (affineSpecStructureMap R)),
         z ∈ overOpen ((Spec ↧R).basicOpen f) →
           evaluate ((Spec ↧R).basicOpen f) t z =
-            evaluate ⊤ a z / evaluate ⊤ f z ^ k :=
-  exists_evaluate_affine_basicOpen_eq_div f t
+            evaluate ⊤ a z / evaluate ⊤ f z ^ k := by
+  let : IsAffine (Over.mk (affineSpecStructureMap R)).left :=
+    inferInstanceAs (IsAffine (Spec ↧R))
+  exact exists_evaluate_affine_basicOpen_eq_div (X := Over.mk (affineSpecStructureMap R)) f t
 
 lemma continuousOn_evaluate_affineSpec_basicOpen_equiv_symm
     (f : Γ(Spec ↧R, ⊤))
@@ -174,12 +177,13 @@ lemma continuousOn_evaluate_affineSpec_basicOpen_equiv_symm
       ((affineSpecEquiv R).symm ⁻¹'
         overOpen ((Spec ↧R).basicOpen f)) :=
     ha.continuousOn.div (hf.pow k).continuousOn fun φ hφ ↦
-      pow_ne_zero k ((mem_overOpen_basicOpen_iff_evaluate_ne_zero f _ trivial).mp hφ)
+      pow_ne_zero k ((mem_overOpen_basicOpen_iff_evaluate_ne_zero
+        (X := Over.mk (affineSpecStructureMap R)) (U := ⊤) f _ trivial).mp hφ)
   exact hrat.congr fun φ hφ ↦ h _ hφ
 
 lemma continuous_affineSpecEquiv_symm :
     @Continuous (R →ₐ[ℂ] ℂ)
-      (ComplexPoint (Spec ↧R) (affineSpecStructureMap R))
+      (ComplexPoint (Over.mk (affineSpecStructureMap R)))
       (affineAlgebraHomTopology R) analyticTopology (affineSpecEquiv R).symm := by
   rw [continuous_iff_analyticSubbasis]
   rintro W ⟨U, s, V, hV, rfl⟩
@@ -202,19 +206,17 @@ lemma continuous_affineSpecEquiv_symm :
     have hψU : (affineSpecEquiv R).symm ψ ∈ overOpen U := hfU hψf
     refine ⟨hψU, ?_⟩
     change evaluate U s ((affineSpecEquiv R).symm ψ) ∈ V
-    rw [evaluate_res hfU s _ hψf]
-    exact hψV
+    rwa [evaluate_res hfU s _ hψf]
   · refine ⟨hφf, ?_⟩
     change evaluate ((Spec ↧R).basicOpen f) t
       ((affineSpecEquiv R).symm φ) ∈ V
-    rw [← evaluate_res hfU s _ hφf]
-    exact hφV
+    exact (congrArg (fun c ↦ c ∈ V) (evaluate_res hfU s _ hφf)).mp hφV
 
 /-- The complex points of `Spec R` are homeomorphic to the complex algebra homomorphisms
 from `R` to `ℂ`, with their topology of pointwise convergence. -/
 def affineSpecHomeomorph :
     @Homeomorph
-      (ComplexPoint (Spec ↧R) (affineSpecStructureMap R))
+      (ComplexPoint (Over.mk (affineSpecStructureMap R)))
       (R →ₐ[ℂ] ℂ) analyticTopology (affineAlgebraHomTopology R) where
   toEquiv := affineSpecEquiv R
   continuous_toFun := continuous_affineSpecEquiv R
@@ -235,19 +237,17 @@ lemma affineSpecMap_over (g : A →ₐ[ℂ] B) :
 
 /-- The map on complex points contravariantly associated to a complex algebra homomorphism. -/
 def affineSpecComplexPointMap (g : A →ₐ[ℂ] B) :
-    ComplexPoint (Spec ↧B) (affineSpecStructureMap B) →
-      ComplexPoint (Spec ↧A) (affineSpecStructureMap A) :=
-  map (affineSpecMap g) (affineSpecMap_over g)
+    ComplexPoint (Over.mk (affineSpecStructureMap B)) →
+      ComplexPoint (Over.mk (affineSpecStructureMap A)) :=
+  map (Over.homMk (affineSpecMap g) (affineSpecMap_over g))
 
 /-- Under the affine-point equivalence, an affine scheme map acts by precomposition of algebra
 homomorphisms. -/
 lemma affineSpecEquiv_affineSpecComplexPointMap (g : A →ₐ[ℂ] B)
-    (z : ComplexPoint (Spec ↧B) (affineSpecStructureMap B)) :
+    (z : ComplexPoint (Over.mk (affineSpecStructureMap B))) :
     affineSpecEquiv A (affineSpecComplexPointMap g z) =
       (affineSpecEquiv B z).comp g := by
-  apply AlgHom.coe_ringHom_injective
-  apply DFunLike.ext _ _
-  intro a
+  ext a
   simp [affineSpecComplexPointMap, map, affineSpecEquiv, affineSpecMap,
     Spec.preimage_comp]
 

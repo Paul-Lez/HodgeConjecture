@@ -49,28 +49,28 @@ namespace AlgebraicGeometry.ComplexPoint
 set_option backward.defeqAttrib.useBackward true
 set_option backward.isDefEq.respectTransparency false
 
-variable {X : Scheme} (s : X ⟶ Spec (.of ℂ))
+variable (X : Over (Spec (.of ℂ)))
 
 local instance hypercohomologyFlasqueNaturalitySheafDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf s) := HasDerivedCategory.standard _
+    HasDerivedCategory (AnalyticAdditiveSheaf X) := HasDerivedCategory.standard _
 
 /-- The resolution comparison, followed by its actual global-section map, is precisely
 the direct comparison after applying the resolution morphism in hypercohomology. -/
 theorem hypercohomologyAddEquivGlobalSectionsOfResolution_map
-    (K I : CochainComplex (AnalyticAdditiveSheaf s) ℤ) [I.IsKInjective]
+    (K I : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [I.IsKInjective]
     (i : K ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X s))).mapHomologicalComplex (.up ℤ)).map i)]
-    (n : ℤ) (a : Hypercohomology s K n) :
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map i)]
+    (n : ℤ) (a : Hypercohomology X K n) :
     HomologicalComplex.homologyMap
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X s))).mapHomologicalComplex (.up ℤ)).map i) n
-      (hypercohomologyAddEquivGlobalSectionsOfResolution s K I i n a) =
-        hypercohomologyAddEquivGlobalSectionsKInjective s I n
-          (hypercohomologyMap s i n a) := by
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map i) n
+      (hypercohomologyAddEquivGlobalSectionsOfResolution X K I i n a) =
+        hypercohomologyAddEquivGlobalSectionsKInjective X I n
+          (hypercohomologyMap X i n a) := by
   let b := HomologicalComplex.homologyMap
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X s))).mapHomologicalComplex (.up ℤ)).map i) n
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map i) n
   dsimp only [hypercohomologyAddEquivGlobalSectionsOfResolution,
     hypercohomologyAddEquivGlobalSectionsKInjective,
     derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
@@ -84,25 +84,25 @@ theorem hypercohomologyAddEquivGlobalSectionsOfResolution_map
 /-- Naturality of the resolution comparison into any actual K-injective target.
 No compatibility of chosen resolutions is an input: a homotopy lift is constructed. -/
 theorem hypercohomologyAddEquivGlobalSectionsOfResolution_naturality_to_kInjective
-    (K I L : CochainComplex (AnalyticAdditiveSheaf s) ℤ)
+    (K I L : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     [I.IsKInjective] [L.IsKInjective]
     (i : K ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X s))).mapHomologicalComplex (.up ℤ)).map i)]
-    (f : K ⟶ L) (n : ℤ) (a : Hypercohomology s K n) :
-    hypercohomologyAddEquivGlobalSectionsKInjective s L n (hypercohomologyMap s f n a) =
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map i)]
+    (f : K ⟶ L) (n : ℤ) (a : Hypercohomology X K n) :
+    hypercohomologyAddEquivGlobalSectionsKInjective X L n (hypercohomologyMap X f n a) =
       HomologicalComplex.homologyMap
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X s))).mapHomologicalComplex (.up ℤ)).map f) n
-        (hypercohomologyAddEquivGlobalSectionsOfResolution s K I i n a) := by
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map f) n
+        (hypercohomologyAddEquivGlobalSectionsOfResolution X K I i n a) := by
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-    (TopCat.of (ComplexPoint X s))
+    (TopCat.of (ComplexPoint X))
   obtain ⟨g, ⟨h⟩⟩ := CochainComplex.exists_homotopyLift_of_quasiIso_to_isKInjective i f
   have he : DerivedCategory.Q.map i ≫ DerivedCategory.Q.map g = DerivedCategory.Q.map f := by
     rw [← Functor.map_comp]
     exact DerivedCategory.Qh.congr_map (HomotopyCategory.eq_of_homotopy _ _ h)
-  have ha : hypercohomologyMap s f n a = hypercohomologyMap s g n (hypercohomologyMap s i n a) := by
-    apply (hypercohomologyAddEquivDerived s L n).injective
+  have ha : hypercohomologyMap X f n a = hypercohomologyMap X g n (hypercohomologyMap X i n a) := by
+    apply (hypercohomologyAddEquivDerived X L n).injective
     simp only [hypercohomologyAddEquivDerived_naturality, Category.assoc,
       ← Functor.map_comp]
     rw [show DerivedCategory.Q.map (i ≫ g) = DerivedCategory.Q.map f from
@@ -112,20 +112,20 @@ theorem hypercohomologyAddEquivGlobalSectionsOfResolution_naturality_to_kInjecti
   have hh := (Γ.mapHomotopy h).homologyMap_eq n
   rw [Functor.map_comp, HomologicalComplex.homologyMap_comp] at hh
   exact ConcreteCategory.congr_hom hh
-    (hypercohomologyAddEquivGlobalSectionsOfResolution s K I i n a)
+    (hypercohomologyAddEquivGlobalSectionsOfResolution X K I i n a)
 
 /-- The actual bounded-below flasque comparison is natural into K-injective targets,
 independently of the injective replacement chosen in its definition. -/
 theorem hypercohomologyAddEquivGlobalSections_naturality_to_kInjective
-    (K L : CochainComplex (AnalyticAdditiveSheaf s) ℤ) [L.IsKInjective]
+    (K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [L.IsKInjective]
     (N : ℤ) [K.IsStrictlyGE N] (hKflasque : ∀ q, (K.X q).IsFlasque)
-    (f : K ⟶ L) (n : ℤ) (a : Hypercohomology s K n) :
-    hypercohomologyAddEquivGlobalSectionsKInjective s L n (hypercohomologyMap s f n a) =
+    (f : K ⟶ L) (n : ℤ) (a : Hypercohomology X K n) :
+    hypercohomologyAddEquivGlobalSectionsKInjective X L n (hypercohomologyMap X f n a) =
       HomologicalComplex.homologyMap
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X s))).mapHomologicalComplex (.up ℤ)).map f) n
-        (hypercohomologyAddEquivGlobalSections s K N hKflasque n a) := by
-  let Y := TopCat.of (ComplexPoint X s)
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map f) n
+        (hypercohomologyAddEquivGlobalSections X K N hKflasque n a) := by
+  let Y := TopCat.of (ComplexPoint X)
   let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective K N
   let I := Classical.choose hres
   let hresI := Classical.choose_spec hres
@@ -146,29 +146,29 @@ theorem hypercohomologyAddEquivGlobalSections_naturality_to_kInjective
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i N N hKflasque hIflasque
   exact hypercohomologyAddEquivGlobalSectionsOfResolution_naturality_to_kInjective
-    s K I L i f n a
+    X K I L i f n a
 
 set_option maxHeartbeats 800000 in
 /-- The flasque comparison preserves actual shifted maps into K-injective targets,
 including the exact cone-connecting sign used by support-forgetting. -/
 theorem hypercohomologyAddEquivGlobalSections_shifted_naturality_to_kInjective
-    (K L : CochainComplex (AnalyticAdditiveSheaf s) ℤ) [L.IsKInjective]
+    (K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [L.IsKInjective]
     (N : ℤ) [K.IsStrictlyGE N] (hKflasque : ∀ q, (K.X q).IsFlasque)
     (t n n' : ℤ) (h : n + t = n') (f : K ⟶ L⟦t⟧)
-    (a : Hypercohomology s K n) :
-    hypercohomologyAddEquivGlobalSectionsKInjective s L n'
-      (a.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms s) f) (by omega)) =
+    (a : Hypercohomology X K n) :
+    hypercohomologyAddEquivGlobalSectionsKInjective X L n'
+      (a.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X) f) (by omega)) =
       (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
         (ShiftedHom.map f
           ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-            (TopCat.of (ComplexPoint X s))).mapHomologicalComplex (.up ℤ))) n n' (by omega)
-        (hypercohomologyAddEquivGlobalSections s K N hKflasque n a) := by
+            (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ))) n n' (by omega)
+        (hypercohomologyAddEquivGlobalSections X K N hKflasque n a) := by
   have hf : a.comp (Localization.SmallShiftedHom.mk
-      (analyticQuasiIsomorphisms s) f) (show t + n = n' by omega) =
-      (hypercohomologyMap s f n a).comp
-        (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms s)
+      (analyticQuasiIsomorphisms X) f) (show t + n = n' by omega) =
+      (hypercohomologyMap X f n a).comp
+        (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
           (show ShiftedHom (L⟦t⟧) L t from 𝟙 (L⟦t⟧))) (by omega) := by
-    apply (hypercohomologyAddEquivDerived s L n').injective
+    apply (hypercohomologyAddEquivDerived X L n').injective
     rw [hypercohomologyAddEquivDerived_rightUnshift _ _ t n n' h,
       hypercohomologyAddEquivDerived_naturality]
     change Localization.SmallShiftedHom.equiv _ DerivedCategory.Q _ = _
@@ -176,7 +176,7 @@ theorem hypercohomologyAddEquivGlobalSections_shifted_naturality_to_kInjective
     simp [ShiftedHom.map, ShiftedHom.comp, Category.assoc]
     rfl
   rw [hf, hypercohomologyAddEquivGlobalSectionsKInjective_rightUnshift _ _ t n n' h,
-    hypercohomologyAddEquivGlobalSections_naturality_to_kInjective s K (L⟦t⟧) N hKflasque,
+    hypercohomologyAddEquivGlobalSections_naturality_to_kInjective X K (L⟦t⟧) N hKflasque,
     TopCat.Sheaf.globalSectionsShiftShortComplex_homologyMap]
   simp only [Functor.shiftMap, ShiftedHom.map, Functor.map_comp, AddCommGrpCat.comp_apply]
   rfl

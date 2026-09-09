@@ -73,13 +73,8 @@ public theorem affineParentFaceCentroid_mem_convexHull
     (fun i hi ↦ by simp only [Finset.centroidWeights_apply]; positivity)
     (A.finset.sum_centroidWeights_eq_one_of_nonempty ℝ A.nonempty)
   have hrange : Set.range (fun i : ULift.{0} (Fin (n + 1)) ↦ p i.down) =
-      Set.range p := by
-    ext x
-    constructor
-    · rintro ⟨i, rfl⟩
-      exact ⟨i.down, rfl⟩
-    · rintro ⟨i, rfl⟩
-      exact ⟨ULift.up i, rfl⟩
+      Set.range p :=
+    ULift.down_surjective.range_comp p
   rwa [hrange] at h
 
 /-- Translation formula for a parent-face centroid, in vector-space notation. -/
@@ -124,12 +119,11 @@ public theorem card_sub_div_card_le_barycentricContractionFactor
   have hnpos : (0 : ℝ) < n + 1 := by positivity
   have hone_div_b_le : (1 : ℝ) / b ≤ a / b :=
     div_le_div_of_nonneg_right haR hbpos.le
-  have hone_div_N_le : (1 : ℝ) / (n + 1) ≤ 1 / b := by
-    exact one_div_le_one_div_of_le hbpos hbR
+  have hone_div_N_le : (1 : ℝ) / (n + 1) ≤ 1 / b :=
+    one_div_le_one_div_of_le hbpos hbR
   have hratio : (1 : ℝ) / (n + 1) ≤ a / b :=
     hone_div_N_le.trans hone_div_b_le
-  have hcast : ((b - a : ℕ) : ℝ) = (b : ℝ) - a := by
-    exact_mod_cast (Nat.cast_sub hab : ((b - a : ℕ) : ℝ) = b - a)
+  have hcast : ((b - a : ℕ) : ℝ) = (b : ℝ) - a := Nat.cast_sub hab
   have hlhs : ((b : ℝ) - a) / b = 1 - a / b := by
     field_simp
   have hrhs : barycentricContractionFactor n = 1 - 1 / (n + 1 : ℝ) := by
@@ -153,8 +147,8 @@ public theorem dist_affineParentFaceCentroid_le
   have hbpos : (0 : ℝ) < B.finset.card := by
     exact_mod_cast B.nonempty.card_pos
   have hbinv : 0 ≤ (B.finset.card : ℝ)⁻¹ := by positivity
-  have hAsum : ∑ i ∈ A.finset, (p i.down - cA) = 0 := by
-    exact sum_sub_affineParentFaceCentroid_eq_zero p A
+  have hAsum : ∑ i ∈ A.finset, (p i.down - cA) = 0 :=
+    sum_sub_affineParentFaceCentroid_eq_zero p A
   have hBsum : ∑ i ∈ B.finset, (p i.down - cA) =
       ∑ i ∈ B.finset \ A.finset, (p i.down - cA) := by
     rw [← Finset.sum_sdiff hAB, hAsum, add_zero]
@@ -372,19 +366,14 @@ public theorem diam_range_affineParentContinuousMap_comp_affineFlag_le
   have hpoint (w w' : stdSimplex ℝ (Fin (k + 1))) :
       dist (normedAffineCombination p' (affineFlagContinuousMap n k F w))
           (normedAffineCombination p' (affineFlagContinuousMap n k F w')) ≤
-        barycentricContractionFactor n * Metric.diam (Set.range p') := by
-    exact (Metric.dist_le_diam_of_mem hsbounded ⟨w, rfl⟩ ⟨w', rfl⟩).trans
+        barycentricContractionFactor n * Metric.diam (Set.range p') :=
+    (Metric.dist_le_diam_of_mem hsbounded ⟨w, rfl⟩ ⟨w', rfl⟩).trans
       (diam_range_normedAffineCombination_affineFlag_le n k p' F)
   have hpdiam : Metric.diam (Set.range p') = Metric.diam (Set.range p) := by
     have himage :
         (Subtype.val : stdSimplex ℝ (Fin (n + 1)) → Fin (n + 1) → ℝ) ''
-            Set.range p = Set.range p' := by
-      ext x
-      constructor
-      · rintro ⟨_, ⟨i, rfl⟩, rfl⟩
-        exact ⟨i, rfl⟩
-      · rintro ⟨i, rfl⟩
-        exact ⟨p i, ⟨i, rfl⟩, rfl⟩
+            Set.range p = Set.range p' :=
+      (Set.range_comp _ p).symm
     rw [← himage, isometry_subtype_coe.diam_image]
   have hvertices : Set.range p ⊆ Set.range (affineParentContinuousMap p) := by
     rintro _ ⟨i, rfl⟩
@@ -424,11 +413,7 @@ public theorem stdSimplexAffineCombination_assoc
   simp only [stdSimplexAffineCombination_apply]
   simp_rw [Finset.sum_mul, Finset.mul_sum]
   rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro j _
-  apply Finset.sum_congr rfl
-  intro i _
-  ring
+  exact Finset.sum_congr rfl fun j _ ↦ Finset.sum_congr rfl fun i _ ↦ by ring
 
 /-- Composition of two explicitly affine standard-simplex maps is explicitly affine. -/
 public theorem affineParentContinuousMap_comp
@@ -436,10 +421,8 @@ public theorem affineParentContinuousMap_comp
     (p : I → stdSimplex ℝ K) (q : J → stdSimplex ℝ I) :
     (affineParentContinuousMap p).comp (affineParentContinuousMap q) =
       affineParentContinuousMap
-        (fun j ↦ affineParentContinuousMap p (q j)) := by
-  apply ContinuousMap.ext
-  intro w
-  exact stdSimplexAffineCombination_assoc p q w
+        (fun j ↦ affineParentContinuousMap p (q j)) :=
+  ContinuousMap.ext (stdSimplexAffineCombination_assoc p q)
 
 /-- The flag map itself is the affine map determined by its face-barycenter vertices. -/
 public theorem affineFlagContinuousMap_eq_affineParentContinuousMap

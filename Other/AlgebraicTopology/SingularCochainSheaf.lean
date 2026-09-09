@@ -92,9 +92,7 @@ def singularCochainCoboundary (n : ℕ) :
     ((((openSingularChainComplexFunctor R X).obj U.unop).d
       (n + 1) n).hom.dualMap).toAddMonoidHom
   naturality {U V} i := by
-    apply AddCommGrpCat.hom_ext
-    apply AddMonoidHom.ext
-    intro φ
+    ext φ
     change OpenCochains R X U n at φ
     apply LinearMap.ext
     intro c
@@ -120,9 +118,7 @@ lemma singularCochainCoboundary_comp (n : ℕ) :
     singularCochainCoboundary R X n ≫ singularCochainCoboundary R X (n + 1) = 0 := by
   apply NatTrans.ext
   funext U
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro φ
+  ext φ
   change OpenCochains R X U n at φ
   apply LinearMap.ext
   intro c
@@ -256,10 +252,6 @@ lemma singularCochainSheafComplex_exactAt_succ_of_locallyPrimitive (n : ℕ)
       rw [singularCochainPresheafComplex_d] at hφ
       rw [singularCochainPresheafComplex_d]
       change (singularCochainCoboundary R X (n + 1)).app (.op U) φ = 0 at hφ
-      change ∃ (V : Opens X) (_ : y ∈ V) (i : V ⟶ U)
-        (ψ : OpenCochains R X (.op V) n),
-        (singularCochainCoboundary R X n).app (.op V) ψ =
-          (singularCochainPresheaf R X (n + 1)).map i.op φ
       exact hlocal y U hyU φ hφ) x
   let unit := singularCochainSheafificationUnit R X
   let stalkUnit := (stalk.mapHomologicalComplex (ComplexShape.up ℕ)).map unit
@@ -285,8 +277,8 @@ def simplicialZeroAugmentation (S : SSet.{u}) :
 @[reassoc (attr := simp)]
 lemma ιChainComplex_comp_simplicialZeroAugmentation (S : SSet.{u})
     (σ : S.obj (.op ⟨0⟩)) :
-    S.ιChainComplex σ ≫ simplicialZeroAugmentation R S = 𝟙 _ := by
-  exact Limits.Sigma.ι_desc (fun _ ↦ 𝟙 (ModuleCat.of R R)) σ
+    S.ιChainComplex σ ≫ simplicialZeroAugmentation R S = 𝟙 _ :=
+  Limits.Sigma.ι_desc (fun _ ↦ 𝟙 (ModuleCat.of R R)) σ
 
 /-- The zero-chain augmentation is natural in the simplicial set. -/
 lemma simplicialZeroAugmentation_naturality {S T : SSet.{u}} (f : S ⟶ T) :
@@ -328,11 +320,8 @@ lemma exists_eq_smul_simplicialZeroAugmentation_of_connected (S : SSet.{u}) [S.I
     (φ : Module.Dual R ((S.chainComplex (ModuleCat.of R R)).X 0))
     (hφ : ((S.chainComplex (ModuleCat.of R R)).d 1 0).hom.dualMap φ = 0) :
     ∃ r : R, r • (simplicialZeroAugmentation R S).hom = φ := by
-  have hd : (S.chainComplex (ModuleCat.of R R)).d 1 0 ≫ ModuleCat.ofHom φ = 0 := by
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
-    exact LinearMap.congr_fun hφ c
+  have hd : (S.chainComplex (ModuleCat.of R R)).d 1 0 ≫ ModuleCat.ofHom φ = 0 :=
+    ModuleCat.hom_ext (LinearMap.ext (LinearMap.congr_fun hφ))
   let s := CokernelCofork.ofπ (ModuleCat.ofHom φ) hd
   let q := SSet.π₀.fromChainComplexXZero S (ModuleCat.of R R)
   let g := (S.isColimitCokernelCoforkChainComplexDOneZero
@@ -403,8 +392,8 @@ lemma existsUnique_eq_smul_simplicialZeroAugmentation_of_connected
     (hφ : ((S.chainComplex (ModuleCat.of R R)).d 1 0).hom.dualMap φ = 0) :
     ∃! r : R, r • (simplicialZeroAugmentation R S).hom = φ := by
   obtain ⟨r, hr⟩ := exists_eq_smul_simplicialZeroAugmentation_of_connected R S φ hφ
-  refine ⟨r, hr, fun s hs ↦ ?_⟩
-  exact smul_simplicialZeroAugmentation_injective R S (hs.trans hr.symm)
+  exact ⟨r, hr, fun s hs ↦
+    smul_simplicialZeroAugmentation_injective R S (hs.trans hr.symm)⟩
 
 /-- The augmentation on the zero-chains of an open subset. -/
 def openZeroAugmentation (U : (Opens X)ᵒᵖ) :
@@ -415,15 +404,15 @@ def openZeroAugmentation (U : (Opens X)ᵒᵖ) :
 /-- Restriction of open subsets commutes with the zero-chain augmentation. -/
 lemma openZeroAugmentation_naturality {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) :
     ((openSingularChainComplexFunctor R X).map i.unop).f 0 ≫
-      openZeroAugmentation R X U = openZeroAugmentation R X V := by
-  exact simplicialZeroAugmentation_naturality R
+      openZeroAugmentation R X U = openZeroAugmentation R X V :=
+  simplicialZeroAugmentation_naturality R
     (TopCat.toSSet.map ((Opens.toTopCat X).map i.unop))
 
 /-- The boundary of an open singular one-chain has augmentation zero. -/
 lemma openBoundary_comp_zeroAugmentation (U : (Opens X)ᵒᵖ) :
     ((openSingularChainComplexFunctor R X).obj U.unop).d 1 0 ≫
-      openZeroAugmentation R X U = 0 := by
-  exact simplicialBoundary_comp_zeroAugmentation R
+      openZeroAugmentation R X U = 0 :=
+  simplicialBoundary_comp_zeroAugmentation R
     (TopCat.toSSet.obj ((Opens.toTopCat X).obj U.unop))
 
 /-- The constant presheaf with value the additive group of `R`. -/
@@ -434,14 +423,8 @@ def constantCoefficientPresheaf : TopCat.Presheaf AddCommGrpCat X :=
 def constantSingularZeroCochain (U : (Opens X)ᵒᵖ) :
     R →+ OpenCochains R X U 0 where
   toFun r := r • (openZeroAugmentation R X U).hom
-  map_zero' := by
-    apply LinearMap.ext
-    intro c
-    simp
-  map_add' r s := by
-    apply LinearMap.ext
-    intro c
-    simp [add_smul]
+  map_zero' := LinearMap.ext fun c ↦ by simp
+  map_add' r s := LinearMap.ext fun c ↦ by simp [add_smul]
 
 /-- Constant singular zero-cochains on a nonempty open set have unique coefficients. -/
 lemma constantSingularZeroCochain_injective (U : (Opens X)ᵒᵖ) [Nonempty U.unop] :
@@ -481,9 +464,7 @@ def constantsToSingularCochainZero :
     constantCoefficientPresheaf R X ⟶ singularCochainPresheaf R X 0 where
   app U := AddCommGrpCat.ofHom (constantSingularZeroCochain R X U)
   naturality {U V} i := by
-    apply AddCommGrpCat.hom_ext
-    apply AddMonoidHom.ext
-    intro r
+    ext r
     change R at r
     apply LinearMap.ext
     intro c
@@ -553,8 +534,7 @@ lemma exists_local_constantSingularZeroCochain [LocallyPathConnectedSpace X]
       (singularCochainCoboundary R X 0).naturality,
       ConcreteCategory.comp_apply, hφ, map_zero]
   obtain ⟨r, hr⟩ :=
-    exists_eq_constantSingularZeroCochain_of_pathConnected R X (.op V) φV (by
-      exact hφV)
+    exists_eq_constantSingularZeroCochain_of_pathConnected R X (.op V) φV hφV
   exact ⟨V, hxV, i, r, hr⟩
 
 /-- Constant zero-cochains have zero coboundary. -/
@@ -562,9 +542,7 @@ lemma constantsToSingularCochainZero_comp_coboundary :
     constantsToSingularCochainZero R X ≫ singularCochainCoboundary R X 0 = 0 := by
   apply NatTrans.ext
   funext U
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro r
+  ext r
   change R at r
   apply LinearMap.ext
   intro c
@@ -572,7 +550,6 @@ lemma constantsToSingularCochainZero_comp_coboundary :
     constantCoefficientPresheaf, singularCochainPresheaf, singularCochainCoboundary]
   change r * (openZeroAugmentation R X U).hom
       ((((openSingularChainComplexFunctor R X).obj U.unop).d 1 0).hom c) = 0
-  have h := openBoundary_comp_zeroAugmentation R X U
   have hc : (openZeroAugmentation R X U).hom
       ((((openSingularChainComplexFunctor R X).obj U.unop).d 1 0).hom c) = 0 := by
     calc
@@ -581,7 +558,7 @@ lemma constantsToSingularCochainZero_comp_coboundary :
             openZeroAugmentation R X U) c := rfl
       _ = ModuleCat.Hom.hom
           (0 : OpenChains R X U 1 ⟶ ModuleCat.of R R) c :=
-        congrArg (fun f ↦ f.hom c) h
+        congrArg (fun f ↦ f.hom c) (openBoundary_comp_zeroAugmentation R X U)
       _ = 0 := rfl
   rw [hc, mul_zero]
 
@@ -661,9 +638,7 @@ lemma constantsToSingularCochainSheafShortComplex_exact [LocallyPathConnectedSpa
       (constantsToSingularCochainPresheafShortComplex R X) (by
         intro y U hyU φ hφ
         change (singularCochainCoboundary R X 0).app (.op U) φ = 0 at hφ
-        obtain ⟨V, hyV, i, r, hr⟩ :=
-          exists_local_constantSingularZeroCochain R X y U hyU φ hφ
-        exact ⟨V, hyV, i, r, hr⟩) x
+        exact exists_local_constantSingularZeroCochain R X y U hyU φ hφ) x
   let unit := constantsToSingularCochainShortComplexSheafificationUnit R X
   let η := (stalk.mapShortComplex).map unit
   let : IsIso η.τ₁ :=
@@ -762,21 +737,18 @@ lemma exists_local_singularCochain_primitive_of_contractibleOpenBasis
   let φV : OpenCochains R X (.op V) (n + 1) :=
     (singularCochainPresheaf R X (n + 1)).map i.op φ
   let : ContractibleSpace V := hVcontractible
-  have hK : K.ExactAt (n + 1) := by
-    exact singularChainComplex_exactAt_of_contractible R V (n + 1) (by lia)
+  have hK : K.ExactAt (n + 1) :=
+    singularChainComplex_exactAt_of_contractible R V (n + 1) (by lia)
   have hφV : (K.d (n + 2) (n + 1)).hom.dualMap φV = 0 := by
     change (singularCochainCoboundary R X (n + 1)).app (.op V) φV = 0
     dsimp [φV]
     rw [← ConcreteCategory.comp_apply,
       (singularCochainCoboundary R X (n + 1)).naturality,
       ConcreteCategory.comp_apply, hφ, map_zero]
-  have hker : φV ∈ LinearMap.ker (K.d (n + 2) (n + 1)).hom.dualMap := by
-    exact hφV
+  have hker : φV ∈ LinearMap.ker (K.d (n + 2) (n + 1)).hom.dualMap := hφV
   rw [← K.dual_differentials_range_eq_ker_of_exactAt n hK] at hker
   obtain ⟨ψ, hψ⟩ := hker
-  refine ⟨V, hxV, i, ψ, ?_⟩
-  change (K.d (n + 1) n).hom.dualMap ψ = φV
-  exact hψ
+  exact ⟨V, hxV, i, ψ, hψ⟩
 
 /-- On a space with a basis of open contractible neighborhoods, the constant-to-singular
 comparison is a quasi-isomorphism in every positive degree. -/

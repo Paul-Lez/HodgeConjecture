@@ -82,70 +82,66 @@ open Point
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Constant singular zero-cochains commute with restriction to an analytic complement. -/
 lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
-    (Z : Set (ComplexPoint X structureMap)) :
+    (Z : Set (ComplexPoint X)) :
     constantsToSingularCochainZeroSheaf ℚ
-          (TopCat.of (ComplexPoint X structureMap)) ≫
+          (TopCat.of (ComplexPoint X)) ≫
         singularRestrictionSheaf ℚ
-          (analyticComplementInclusion structureMap Z) 0 =
-      rationalRestrictionSheaf structureMap Z ≫
+          (analyticComplementInclusion X Z) 0 =
+      rationalRestrictionSheaf X Z ≫
         (TopCat.Sheaf.pushforward AddCommGrpCat
-          (analyticComplementInclusion structureMap Z)).map
+          (analyticComplementInclusion X Z)).map
             (constantsToSingularCochainZeroSheaf ℚ
-              (TopCat.of (AnalyticComplement structureMap Z))) := by
+              (TopCat.of (AnalyticComplement X Z))) := by
   apply Sheaf.hom_ext
   change sheafifyMap (Opens.grothendieckTopology
-        (TopCat.of (ComplexPoint X structureMap)))
+        (TopCat.of (ComplexPoint X)))
         (constantsToSingularCochainZero ℚ
-          (TopCat.of (ComplexPoint X structureMap))) ≫
+          (TopCat.of (ComplexPoint X))) ≫
       (singularRestrictionSheaf ℚ
-        (analyticComplementInclusion structureMap Z) 0).hom =
-    (rationalRestrictionSheaf structureMap Z).hom ≫
+        (analyticComplementInclusion X Z) 0).hom =
+    (rationalRestrictionSheaf X Z).hom ≫
       Functor.whiskerLeft
-        (Opens.map (analyticComplementInclusion structureMap Z)).op
+        (Opens.map (analyticComplementInclusion X Z)).op
         (sheafifyMap (Opens.grothendieckTopology
-          (TopCat.of (AnalyticComplement structureMap Z)))
+          (TopCat.of (AnalyticComplement X Z)))
           (constantsToSingularCochainZero ℚ
-            (TopCat.of (AnalyticComplement structureMap Z))))
+            (TopCat.of (AnalyticComplement X Z))))
   apply sheafify_hom_ext
     (J := Opens.grothendieckTopology
-      (TopCat.of (ComplexPoint X structureMap)))
+      (TopCat.of (ComplexPoint X)))
     (P := constantCoefficientPresheaf ℚ
-      (TopCat.of (ComplexPoint X structureMap))) _ _
+      (TopCat.of (ComplexPoint X))) _ _
     ((TopCat.Sheaf.pushforward AddCommGrpCat
-      (analyticComplementInclusion structureMap Z)).obj
+      (analyticComplementInclusion X Z)).obj
         (singularCochainSheaf ℚ
-          (TopCat.of (AnalyticComplement structureMap Z)) 0)).property
-  rw [← Category.assoc]
-  rw [← toSheafify_naturality]
-  rw [Category.assoc, toSheafify_comp_singularRestrictionSheaf]
+          (TopCat.of (AnalyticComplement X Z)) 0)).property
+  rw [← Category.assoc, ← toSheafify_naturality, Category.assoc,
+    toSheafify_comp_singularRestrictionSheaf]
   unfold rationalRestrictionSheaf
-  rw [← Category.assoc]
-  rw [toSheafify_sheafifyLift]
+  rw [← Category.assoc, toSheafify_sheafifyLift]
   unfold singularRestrictionPresheaf rationalRestrictionPresheaf
   rw [← Functor.whiskerLeft_comp]
   change _ = Functor.whiskerLeft
-    (Opens.map (analyticComplementInclusion structureMap Z)).op
+    (Opens.map (analyticComplementInclusion X Z)).op
       (toSheafify (Opens.grothendieckTopology
-          (TopCat.of (AnalyticComplement structureMap Z)))
+          (TopCat.of (AnalyticComplement X Z)))
           (constantCoefficientPresheaf ℚ
-            (TopCat.of (AnalyticComplement structureMap Z))) ≫
+            (TopCat.of (AnalyticComplement X Z))) ≫
         sheafifyMap (Opens.grothendieckTopology
-          (TopCat.of (AnalyticComplement structureMap Z)))
+          (TopCat.of (AnalyticComplement X Z)))
           (constantsToSingularCochainZero ℚ
-            (TopCat.of (AnalyticComplement structureMap Z))))
+            (TopCat.of (AnalyticComplement X Z))))
   have hunit := toSheafify_naturality
     (Opens.grothendieckTopology
-      (TopCat.of (AnalyticComplement structureMap Z)))
+      (TopCat.of (AnalyticComplement X Z)))
     (constantsToSingularCochainZero ℚ
-      (TopCat.of (AnalyticComplement structureMap Z)))
-  rw [← hunit]
-  rw [Functor.whiskerLeft_comp]
-  rw [← Category.assoc,
+      (TopCat.of (AnalyticComplement X Z)))
+  rw [← hunit, Functor.whiskerLeft_comp, ← Category.assoc,
     constantsToSingularCochainZero_comp_singularRestrictionToRawPushforward]
 
 end AlgebraicGeometry.ComplexPoint

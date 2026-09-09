@@ -65,9 +65,7 @@ def flattenedSupportEmbedding : OpenPartialHomeomorph (E × (Fin c → ℂ)) M :
 
 theorem flattenedSupportEmbedding_source :
     (flattenedSupportEmbedding E c e x hx).source = Set.univ := by
-  apply Set.eq_univ_of_forall
-  intro v
-  refine ⟨by simp, ?_⟩
+  refine Set.eq_univ_of_forall fun v => ⟨by simp, ?_⟩
   apply ball_flattenedSupportRadius_subset E c e x hx
   rw [← OpenPartialHomeomorph.univBall_target (e x)
     (flattenedSupportRadius_pos E c e x hx)]
@@ -91,9 +89,8 @@ theorem mem_flattenedSupportNeighborhood : x ∈ flattenedSupportNeighborhood E 
   simpa only [flattenedSupportEmbedding_zero] using h
 
 theorem flattenedSupportNeighborhood_subset_source :
-    (flattenedSupportNeighborhood E c e x hx : Set M) ⊆ e.source := by
-  intro y hy
-  exact hy.1
+    (flattenedSupportNeighborhood E c e x hx : Set M) ⊆ e.source :=
+  fun _ hy => hy.1
 
 /-- The homeomorphism is constructed from radial compression and the inverse chart. -/
 def flattenedSupportHomeomorph :

@@ -26,71 +26,73 @@ open CategoryTheory Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (s : X ⟶ Spec ↧ℂ)
+open Point
 
-local instance unitObstructionSheafAbelian : Abelian (AnalyticAdditiveSheaf s) :=
+variable (X : Over (Spec ↧ℂ))
+
+local instance unitObstructionSheafAbelian : Abelian (AnalyticAdditiveSheaf X) :=
   CategoryTheory.sheafIsAbelian
 
-local instance unitObstructionHasExt : HasExt.{1} (AnalyticAdditiveSheaf s) := analyticHasExt s
+local instance unitObstructionHasExt : HasExt.{1} (AnalyticAdditiveSheaf X) := analyticHasExt X
 
-variable (d : ℕ) [SmoothOfRelativeDimension d s]
+variable (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 /-- The actual integral cohomology class obstructing a logarithm of a holomorphic unit. -/
 def holomorphicUnitLogarithmObstruction
-    (U : Opens (TopCat.of (ComplexPoint X s)))
-    (u : (OpenHolomorphicFunctions s d (.op U))ˣ) :
-    Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf s U) (constantIntegerSheaf s) 1 :=
-  let a : Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf s U) (holomorphicUnitsSheaf s d) 0 :=
-    Abelian.Ext.mk₀ (analyticSectionSheafHom s (holomorphicUnitsSheaf s d) U (Additive.ofMul u))
-  let δ : Abelian.Ext.{1} (holomorphicUnitsSheaf s d) (constantIntegerSheaf s) 1 :=
-    (holomorphicExponentialSequence_shortExact s d).extClass (C := AnalyticAdditiveSheaf s)
+    (U : Opens (TopCat.of (ComplexPoint X)))
+    (u : (OpenHolomorphicFunctions X d (.op U))ˣ) :
+    Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf X U) (constantIntegerSheaf X) 1 :=
+  let a : Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf X U) (holomorphicUnitsSheaf X d) 0 :=
+    Abelian.Ext.mk₀ (analyticSectionSheafHom X (holomorphicUnitsSheaf X d) U (Additive.ofMul u))
+  let δ : Abelian.Ext.{1} (holomorphicUnitsSheaf X d) (constantIntegerSheaf X) 1 :=
+    (holomorphicExponentialSequence_shortExact X d).extClass (C := AnalyticAdditiveSheaf X)
   a.comp δ (show 0 + 1 = 1 from rfl)
 
 /-- The local exponential class is zero exactly when an actual logarithm exists. -/
 theorem holomorphicUnitLogarithmObstruction_eq_zero_iff
-    (U : Opens (TopCat.of (ComplexPoint X s)))
-    (u : (OpenHolomorphicFunctions s d (.op U))ˣ) :
-    holomorphicUnitLogarithmObstruction s d U u = 0 ↔
-      ∃ f : OpenHolomorphicFunctions s d (.op U), holomorphicExpUnit s d (.op U) f = u := by
-  let T : ShortComplex (AnalyticAdditiveSheaf s) := holomorphicExponentialSequence s d
-  have hT : T.ShortExact := holomorphicExponentialSequence_shortExact s d
-  let a : Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf s U) (holomorphicUnitsSheaf s d) 0 :=
-    Abelian.Ext.mk₀ (analyticSectionSheafHom s (holomorphicUnitsSheaf s d) U (Additive.ofMul u))
+    (U : Opens (TopCat.of (ComplexPoint X)))
+    (u : (OpenHolomorphicFunctions X d (.op U))ˣ) :
+    holomorphicUnitLogarithmObstruction X d U u = 0 ↔
+      ∃ f : OpenHolomorphicFunctions X d (.op U), holomorphicExpUnit X d (.op U) f = u := by
+  let T : ShortComplex (AnalyticAdditiveSheaf X) := holomorphicExponentialSequence X d
+  have hT : T.ShortExact := holomorphicExponentialSequence_shortExact X d
+  let a : Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf X U) (holomorphicUnitsSheaf X d) 0 :=
+    Abelian.Ext.mk₀ (analyticSectionSheafHom X (holomorphicUnitsSheaf X d) U (Additive.ofMul u))
   constructor
   · intro hu
-    obtain ⟨a₂, ha₂⟩ := Abelian.Ext.covariant_sequence_exact₃ (analyticOpenFreeAbelianSheaf s U)
+    obtain ⟨a₂, ha₂⟩ := Abelian.Ext.covariant_sequence_exact₃ (analyticOpenFreeAbelianSheaf X U)
       hT a (show 0 + 1 = 1 from rfl) hu
-    obtain ⟨η, rfl⟩ := (Abelian.Ext.mk₀_bijective (C := AnalyticAdditiveSheaf s)
-      (analyticOpenFreeAbelianSheaf s U) T.X₂).surjective a₂
-    obtain ⟨f, hf⟩ := (analyticSectionSheafHomEquiv s (holomorphicAdditiveFunctionSheaf s d) U).surjective η
-    have hη : η ≫ T.g = analyticSectionSheafHom s (holomorphicUnitsSheaf s d) U (Additive.ofMul u) := by
-      apply (Abelian.Ext.mk₀_bijective (C := AnalyticAdditiveSheaf s)
-        (analyticOpenFreeAbelianSheaf s U) T.X₃).injective
+    obtain ⟨η, rfl⟩ := (Abelian.Ext.mk₀_bijective (C := AnalyticAdditiveSheaf X)
+      (analyticOpenFreeAbelianSheaf X U) T.X₂).surjective a₂
+    obtain ⟨f, hf⟩ := (analyticSectionSheafHomEquiv X (holomorphicAdditiveFunctionSheaf X d) U).surjective η
+    have hη : η ≫ T.g = analyticSectionSheafHom X (holomorphicUnitsSheaf X d) U (Additive.ofMul u) := by
+      apply (Abelian.Ext.mk₀_bijective (C := AnalyticAdditiveSheaf X)
+        (analyticOpenFreeAbelianSheaf X U) T.X₃).injective
       simpa only [Abelian.Ext.mk₀_comp_mk₀] using ha₂
     refine ⟨f, ?_⟩
-    have hsec : analyticSectionSheafHom s (holomorphicUnitsSheaf s d) U
-        (Additive.ofMul (holomorphicExpUnit s d (.op U) f)) =
-          analyticSectionSheafHom s (holomorphicUnitsSheaf s d) U (Additive.ofMul u) :=
-      (analyticSectionSheafHom_postcomp s (holomorphicAdditiveFunctionSheaf s d)
-        (holomorphicUnitsSheaf s d) (holomorphicExpSheaf s d) U f).symm.trans
-          ((congrArg (fun z : analyticOpenFreeAbelianSheaf s U ⟶ T.X₂ => z ≫ T.g) hf).trans hη)
-    exact (analyticSectionSheafHomEquiv s (holomorphicUnitsSheaf s d) U).injective hsec
+    have hsec : analyticSectionSheafHom X (holomorphicUnitsSheaf X d) U
+        (Additive.ofMul (holomorphicExpUnit X d (.op U) f)) =
+          analyticSectionSheafHom X (holomorphicUnitsSheaf X d) U (Additive.ofMul u) :=
+      (analyticSectionSheafHom_postcomp X (holomorphicAdditiveFunctionSheaf X d)
+        (holomorphicUnitsSheaf X d) (holomorphicExpSheaf X d) U f).symm.trans
+          ((congrArg (fun z : analyticOpenFreeAbelianSheaf X U ⟶ T.X₂ => z ≫ T.g) hf).trans hη)
+    exact (analyticSectionSheafHomEquiv X (holomorphicUnitsSheaf X d) U).injective hsec
   · rintro ⟨f, rfl⟩
-    let b : Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf s U)
-        (holomorphicAdditiveFunctionSheaf s d) 0 :=
-      Abelian.Ext.mk₀ (analyticSectionSheafHom s (holomorphicAdditiveFunctionSheaf s d) U f)
-    let δ : Abelian.Ext.{1} (holomorphicUnitsSheaf s d) (constantIntegerSheaf s) 1 := hT.extClass
-    change (Abelian.Ext.mk₀ (analyticSectionSheafHom s (holomorphicUnitsSheaf s d) U
-      (Additive.ofMul (holomorphicExpUnit s d (.op U) f)))).comp δ
+    let b : Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf X U)
+        (holomorphicAdditiveFunctionSheaf X d) 0 :=
+      Abelian.Ext.mk₀ (analyticSectionSheafHom X (holomorphicAdditiveFunctionSheaf X d) U f)
+    let δ : Abelian.Ext.{1} (holomorphicUnitsSheaf X d) (constantIntegerSheaf X) 1 := hT.extClass
+    change (Abelian.Ext.mk₀ (analyticSectionSheafHom X (holomorphicUnitsSheaf X d) U
+      (Additive.ofMul (holomorphicExpUnit X d (.op U) f)))).comp δ
         (show 0 + 1 = 1 from rfl) = 0
-    have hf : analyticSectionSheafHom s (holomorphicAdditiveFunctionSheaf s d) U f ≫
-        holomorphicExpSheaf s d = analyticSectionSheafHom s (holomorphicUnitsSheaf s d) U
-          (Additive.ofMul (holomorphicExpUnit s d (.op U) f)) :=
-      analyticSectionSheafHom_postcomp s (holomorphicAdditiveFunctionSheaf s d)
-        (holomorphicUnitsSheaf s d) (holomorphicExpSheaf s d) U f
+    have hf : analyticSectionSheafHom X (holomorphicAdditiveFunctionSheaf X d) U f ≫
+        holomorphicExpSheaf X d = analyticSectionSheafHom X (holomorphicUnitsSheaf X d) U
+          (Additive.ofMul (holomorphicExpUnit X d (.op U) f)) :=
+      analyticSectionSheafHom_postcomp X (holomorphicAdditiveFunctionSheaf X d)
+        (holomorphicUnitsSheaf X d) (holomorphicExpSheaf X d) U f
     rw [← hf, ← Abelian.Ext.mk₀_comp_mk₀]
-    let e : Abelian.Ext.{1} (holomorphicAdditiveFunctionSheaf s d) (holomorphicUnitsSheaf s d) 0 :=
-      Abelian.Ext.mk₀ (holomorphicExpSheaf s d)
+    let e : Abelian.Ext.{1} (holomorphicAdditiveFunctionSheaf X d) (holomorphicUnitsSheaf X d) 0 :=
+      Abelian.Ext.mk₀ (holomorphicExpSheaf X d)
     change (b.comp e (show 0 + 0 = 0 from rfl)).comp δ
       (show 0 + 1 = 1 from rfl) = 0
     have hz : e.comp δ (show 0 + 1 = 1 from rfl) = 0 := hT.comp_extClass
@@ -99,28 +101,28 @@ theorem holomorphicUnitLogarithmObstruction_eq_zero_iff
 
 /-- A unit with no holomorphic logarithm gives a nonzero actual integral cohomology class. -/
 theorem holomorphicUnitLogarithmObstruction_ne_zero
-    (U : Opens (TopCat.of (ComplexPoint X s)))
-    (u : (OpenHolomorphicFunctions s d (.op U))ˣ)
-    (hu : ¬ ∃ f : OpenHolomorphicFunctions s d (.op U), holomorphicExpUnit s d (.op U) f = u) :
-    holomorphicUnitLogarithmObstruction s d U u ≠ 0 :=
-  mt (holomorphicUnitLogarithmObstruction_eq_zero_iff s d U u).1 hu
+    (U : Opens (TopCat.of (ComplexPoint X)))
+    (u : (OpenHolomorphicFunctions X d (.op U))ˣ)
+    (hu : ¬ ∃ f : OpenHolomorphicFunctions X d (.op U), holomorphicExpUnit X d (.op U) f = u) :
+    holomorphicUnitLogarithmObstruction X d U u ≠ 0 :=
+  mt (holomorphicUnitLogarithmObstruction_eq_zero_iff X d U u).1 hu
 
 /-- One positive turn of the value of a unit along an actual analytic loop obstructs a
 holomorphic logarithm. The normalization is exactly the exponential period `2πi`. -/
 theorem holomorphicUnitLogarithmObstruction_ne_zero_of_loop
-    (U : Opens (TopCat.of (ComplexPoint X s)))
-    (u : (OpenHolomorphicFunctions s d (.op U))ˣ)
+    (U : Opens (TopCat.of (ComplexPoint X)))
+    (u : (OpenHolomorphicFunctions X d (.op U))ˣ)
     (γ : ℝ → U) (hγ : Continuous γ) (hclose : γ 1 = γ 0)
     (hturn : ∀ t : ℝ, u.val.1 (γ t) = u.val.1 (γ 0) *
       Complex.exp ((2 * (Real.pi : ℂ) * Complex.I) * (t : ℂ))) :
-    holomorphicUnitLogarithmObstruction s d U u ≠ 0 := by
+    holomorphicUnitLogarithmObstruction X d U u ≠ 0 := by
   apply holomorphicUnitLogarithmObstruction_ne_zero
   rintro ⟨f, hf⟩
   have hexp (x : U) : Complex.exp (f.1 x) = u.val.1 x :=
-    congrArg (fun v : (OpenHolomorphicFunctions s d (.op U))ˣ => v.val.1 x) hf
+    congrArg (fun v : (OpenHolomorphicFunctions X d (.op U))ˣ => v.val.1 x) hf
   let g₁ : ℝ → ℂ := fun t => f.1 (γ t)
   let g₂ : ℝ → ℂ := fun t => f.1 (γ 0) + (2 * (Real.pi : ℂ) * Complex.I) * (t : ℂ)
-  have hg₁ : Continuous g₁ := (holomorphicFunctionSheaf_section_analytic s d f).continuous.comp hγ
+  have hg₁ : Continuous g₁ := (holomorphicFunctionSheaf_section_analytic X d f).continuous.comp hγ
   have hg₂ : Continuous g₂ := by unfold g₂; fun_prop
   have he : (fun z : ℂ => (⟨Complex.exp z, Complex.exp_ne_zero z⟩ : {z : ℂ // z ≠ 0})) ∘ g₁ =
       (fun z : ℂ => (⟨Complex.exp z, Complex.exp_ne_zero z⟩ : {z : ℂ // z ≠ 0})) ∘ g₂ := by

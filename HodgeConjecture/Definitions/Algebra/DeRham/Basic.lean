@@ -101,16 +101,13 @@ lemma rawDifferential_squared_single_mem_standardRelations (p : ℕ)
   have hrel : relationValue R A (p + 2) (Relation.diffConst 1 w 0 1) ∈
       standardRelations R A (p + 2) :=
     Submodule.subset_span (Set.mem_range_self _)
-  have hr := (standardRelations R A (p + 2)).smul_mem r hrel
-  convert hr using 1
+  convert (standardRelations R A (p + 2)).smul_mem r hrel using 1
   simp only [relationValue, smul_single, smul_eq_mul, mul_one]
   congr 2
   apply Prod.ext
   · rfl
   · funext i
-    refine Fin.cases ?_ (fun j => ?_) i
-    · simp [nextGenerator, w]
-    · simp [nextGenerator, w]
+    refine Fin.cases ?_ (fun j => ?_) i <;> simp [nextGenerator, w]
 
 lemma rawDifferential_squared_mem_standardRelations (p : ℕ) (x : RawForm R A p) :
     rawDifferential R A (p + 1) (rawDifferential R A p x) ∈
@@ -216,13 +213,13 @@ def ofConstant : R →ₗ[R] Form R A 0 :=
   exact eq_add_of_sub_eq' (by simpa [relationValue, mk, sub_eq_zero] using h)
 
 @[simp] lemma mk_diff_const (p : ℕ) (a₀ : A) (v : Fin p → A) (i : Fin p) (r : R) :
-    mk R A p a₀ (Function.update v i (algebraMap R A r)) = 0 := by
-  exact relationValue_eq_zero R A p (Relation.diffConst a₀ v i r)
+    mk R A p a₀ (Function.update v i (algebraMap R A r)) = 0 :=
+  relationValue_eq_zero R A p (Relation.diffConst a₀ v i r)
 
 @[simp] lemma mk_alt (p : ℕ) (a₀ : A) (v : Fin p → A) (i j : Fin p)
     (h : v i = v j) (hne : i ≠ j) :
-    mk R A p a₀ v = 0 := by
-  exact relationValue_eq_zero R A p (Relation.alt a₀ v i j h hne)
+    mk R A p a₀ v = 0 :=
+  relationValue_eq_zero R A p (Relation.alt a₀ v i j h hne)
 
 /-- The exterior derivative on the generators-and-relations model of differential forms. -/
 def differential (p : ℕ) : Form R A p →ₗ[R] Form R A (p + 1) :=
@@ -240,14 +237,12 @@ def differential (p : ℕ) : Form R A p →ₗ[R] Form R A (p + 1) :=
 
 @[simp] lemma differential_ofFunction_algebraMap (r : R) :
     differential R A 0 (ofFunction R A (algebraMap R A r)) = 0 := by
-  rw [ofFunction_apply, differential_mk]
-  have h := mk_diff_const R A 1 1 (fun _ => 0) 0 r
-  rw [show Fin.cases (algebraMap R A r) Fin.elim0 =
+  rw [ofFunction_apply, differential_mk, show Fin.cases (algebraMap R A r) Fin.elim0 =
       Function.update (fun _ : Fin 1 => (0 : A)) 0 (algebraMap R A r) by
     funext i
     obtain rfl := Fin.eq_zero i
     simp]
-  exact h
+  exact mk_diff_const R A 1 1 (fun _ => 0) 0 r
 
 @[simp] lemma differential_ofConstant (r : R) :
     differential R A 0 (ofConstant R A r) = 0 := by
@@ -398,9 +393,7 @@ def map (f : A →ₐ[R] B) (p : ℕ) : Form R A p →ₗ[R] Form R B p :=
 @[simp] lemma map_ofFunction (f : A →ₐ[R] B) (a : A) :
     map R f 0 (ofFunction R A a) = ofFunction R B (f a) := by
   rw [ofFunction_apply, map_mk, ofFunction_apply]
-  congr
-  funext i
-  exact Fin.elim0 i
+  exact congrArg _ (funext fun i : Fin 0 => i.elim0)
 
 @[simp] lemma map_ofConstant (f : A →ₐ[R] B) (r : R) :
     map R f 0 (ofConstant R A r) = ofConstant R B r := by

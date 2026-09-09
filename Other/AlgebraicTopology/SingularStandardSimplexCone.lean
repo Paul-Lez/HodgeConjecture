@@ -49,11 +49,9 @@ public noncomputable def standardSimplexZeroConeSimplex
 public theorem standardSimplexZeroConeSimplex_delta_zero
     (m n : ℕ)
     (x : (Δ[m] : SSet.{0}).obj (Opposite.op (SimplexCategory.mk n))) :
-    (Δ[m] : SSet.{0}).δ 0 (standardSimplexZeroConeSimplex m n x) = x := by
-  let ed := SSet.Augmented.StandardSimplex.extraDegeneracy
-    (SimplexCategory.mk m)
-  have h := ed.s_comp_δ₀ n
-  exact ConcreteCategory.congr_hom h x
+    (Δ[m] : SSet.{0}).δ 0 (standardSimplexZeroConeSimplex m n x) = x :=
+  ConcreteCategory.congr_hom
+    ((SSet.Augmented.StandardSimplex.extraDegeneracy (SimplexCategory.mk m)).s_comp_δ₀ n) x
 
 /-- Every later face of a cone is the cone on the preceding face. -/
 @[simp]
@@ -61,11 +59,9 @@ public theorem standardSimplexZeroConeSimplex_delta_succ
     (m n : ℕ) (i : Fin (n + 2))
     (x : (Δ[m] : SSet.{0}).obj (Opposite.op (SimplexCategory.mk (n + 1)))) :
     (Δ[m] : SSet.{0}).δ i.succ (standardSimplexZeroConeSimplex m (n + 1) x) =
-      standardSimplexZeroConeSimplex m n ((Δ[m] : SSet.{0}).δ i x) := by
-  let ed := SSet.Augmented.StandardSimplex.extraDegeneracy
-    (SimplexCategory.mk m)
-  have h := ed.s_comp_δ n i
-  exact ConcreteCategory.congr_hom h x
+      standardSimplexZeroConeSimplex m n ((Δ[m] : SSet.{0}).δ i x) :=
+  ConcreteCategory.congr_hom
+    ((SSet.Augmented.StandardSimplex.extraDegeneracy (SimplexCategory.mk m)).s_comp_δ n i) x
 
 /-- The integral cone operator on all basis simplices in degree `n`. -/
 public noncomputable def standardSimplexZeroConeComponent
@@ -83,8 +79,8 @@ public theorem iota_standardSimplexZeroConeComponent
     (Δ[m] : SSet.{0}).ιChainComplex x ≫
         standardSimplexZeroConeComponent m n =
       (Δ[m] : SSet.{0}).ιChainComplex
-        (standardSimplexZeroConeSimplex m n x) := by
-  apply Sigma.ι_desc
+        (standardSimplexZeroConeSimplex m n x) :=
+  Sigma.ι_desc _ _
 
 /-- In every positive degree, the zero-vertex cone contracts the integral chains of a standard
 simplex. -/
@@ -101,16 +97,14 @@ public theorem standardSimplexZeroConeComponent_boundary_succ
   apply (Δ[m] : SSet.{0}).chainComplex_hom_ext
   intro x
   simp only [Preadditive.comp_add, Category.comp_id]
-  rw [← Category.assoc, iota_standardSimplexZeroConeComponent,
-    SSet.ιChainComplex_d]
-  rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
+  rw [← Category.assoc, iota_standardSimplexZeroConeComponent, SSet.ιChainComplex_d,
+    ← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp only [Preadditive.zsmul_comp, iota_standardSimplexZeroConeComponent]
   rw [Fin.sum_univ_succ]
   simp only [Fin.val_zero, pow_zero, one_zsmul,
     standardSimplexZeroConeSimplex_delta_zero,
     standardSimplexZeroConeSimplex_delta_succ, Fin.val_succ, pow_succ]
-  rw [add_assoc]
-  rw [← Finset.sum_add_distrib]
+  rw [add_assoc, ← Finset.sum_add_distrib]
   simp
 
 /-- The positive-degree cone fills every cycle in a standard simplex. -/
@@ -162,8 +156,8 @@ public theorem iota_barycentricLastVertexDiscrepancyChainMap
       standardBarycentricLastVertexDiscrepancy n ≫
         (SSet.chainComplexMap (SSet.yonedaEquiv.symm x)
           (AddCommGrpCat.of ℤ)).f n := by
-  rw [standardBarycentricLastVertexDiscrepancy_transport]
-  rw [barycentricLastVertexDiscrepancyChainMap]
+  rw [standardBarycentricLastVertexDiscrepancy_transport,
+    barycentricLastVertexDiscrepancyChainMap]
   simp only [HomologicalComplex.comp_f, HomologicalComplex.sub_f_apply,
     HomologicalComplex.id_f, Preadditive.comp_sub, Category.comp_id]
   rw [← Category.assoc, barycentricSubdivisionChainMapCanonical_f,
@@ -196,14 +190,11 @@ public theorem standardBarycentricLastVertexDiscrepancy_boundary
               ((Δ[n + 1] : SSet.{0}).δ i
                 (standardSimplexTopSimplex (n + 1))))
             (AddCommGrpCat.of ℤ)).f n) := by
-  rw [standardBarycentricLastVertexDiscrepancy_eq_top_comp,
-    Category.assoc]
-  rw [(barycentricLastVertexDiscrepancyChainMap
-    (Δ[n + 1] : SSet.{0})).comm]
-  rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
+  rw [standardBarycentricLastVertexDiscrepancy_eq_top_comp, Category.assoc,
+    (barycentricLastVertexDiscrepancyChainMap (Δ[n + 1] : SSet.{0})).comm,
+    ← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp only [Preadditive.zsmul_comp]
-  apply Finset.sum_congr rfl
-  intro i hi
+  refine Finset.sum_congr rfl fun i _ ↦ ?_
   rw [← iota_barycentricLastVertexDiscrepancyChainMap]
 
 /-- The same discrepancy boundary formula, written using the standard coface maps appearing in
@@ -219,8 +210,7 @@ public theorem standardBarycentricLastVertexDiscrepancy_boundary_stdSimplex
             (SSet.stdSimplex.map (SimplexCategory.δ i))
             (AddCommGrpCat.of ℤ)).f n) := by
   rw [standardBarycentricLastVertexDiscrepancy_boundary]
-  apply Finset.sum_congr rfl
-  intro i hi
+  refine Finset.sum_congr rfl fun i _ ↦ ?_
   rw [yonedaEquiv_symm_standardSimplexTopSimplex_delta]
 
 /-- The unique maximal flag of the zero-simplex is its singleton vertex. -/
@@ -312,8 +302,7 @@ public theorem standardPrismFaceChain_eq_top_boundary_comp
     SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp only [Preadditive.zsmul_comp,
     iota_universalStandardSimplexPrismComponent]
-  apply Finset.sum_congr rfl
-  intro i hi
+  refine Finset.sum_congr rfl fun i _ ↦ ?_
   rw [yonedaEquiv_symm_standardSimplexTopSimplex_delta]
 
 /-- Transporting a raw face-prism sum is the source boundary followed by the transported raw
@@ -335,8 +324,7 @@ public theorem standardPrismFaceChain_transport_raw
   rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp only [Preadditive.zsmul_comp,
     iota_universalStandardSimplexPrismComponent]
-  apply Finset.sum_congr rfl
-  intro i hi
+  refine Finset.sum_congr rfl fun i _ ↦ ?_
   apply congrArg (fun k ↦ ((-1 : ℤ) ^ i.val) • k)
   let F := (SSet.chainComplexFunctor AddCommGrpCat).obj (AddCommGrpCat.of ℤ)
   have hδ := SSet.stdSimplex.δ_comp_yonedaEquiv_symm x i
@@ -388,9 +376,8 @@ public theorem universalStandardSimplexPrismComponent_boundary_succ
   · rw [← Category.assoc, iota_universalStandardSimplexPrismComponent]
     simp only [Category.assoc]
     congr 1
-    symm
-    exact (SSet.chainComplexMap (SSet.yonedaEquiv.symm x)
-      (AddCommGrpCat.of ℤ)).comm (n + 2) (n + 1)
+    exact ((SSet.chainComplexMap (SSet.yonedaEquiv.symm x)
+      (AddCommGrpCat.of ℤ)).comm (n + 2) (n + 1)).symm
   · exact standardPrismFaceChain_transport_raw prism X n x
 
 /-- Once the prism equation is known in degree `n+1`, the residual used to define the next
@@ -445,9 +432,8 @@ public theorem standardBarycentricLastVertexPrismResidual_cycle_succ
           (X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 2) (n + 1)) ≫
             (X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n ≫ V = 0 := by
       rw [← Category.assoc, hdd, zero_comp]
-    rw [hddV, sub_zero]
-    rw [Category.assoc, ← K.comm]
-    rw [standardBarycentricLastVertexDiscrepancy_eq_top_comp]
+    rw [hddV, sub_zero, Category.assoc, ← K.comm,
+      standardBarycentricLastVertexDiscrepancy_eq_top_comp]
     dsimp [X, K]
     exact (Category.assoc _ _ _).symm
   rw [hface, sub_self]
@@ -472,8 +458,8 @@ termination_by n
 
 @[simp]
 public theorem canonicalBarycentricLastVertexPrism_zero :
-    canonicalBarycentricLastVertexPrism 0 = 0 :=
-  by simp [canonicalBarycentricLastVertexPrism]
+    canonicalBarycentricLastVertexPrism 0 = 0 := by
+  simp [canonicalBarycentricLastVertexPrism]
 
 /-- The recursive prism is the cone on discrepancy minus the already constructed face
 prisms. -/
@@ -482,8 +468,8 @@ public theorem canonicalBarycentricLastVertexPrism_succ
     canonicalBarycentricLastVertexPrism (n + 1) =
       (standardBarycentricLastVertexDiscrepancy (n + 1) -
         standardPrismFaceChain canonicalBarycentricLastVertexPrism (n + 1)) ≫
-        standardSimplexZeroConeComponent (n + 1) (n + 1) :=
-  by simp [canonicalBarycentricLastVertexPrism, standardPrismFaceChain]
+        standardSimplexZeroConeComponent (n + 1) (n + 1) := by
+  simp [canonicalBarycentricLastVertexPrism, standardPrismFaceChain]
 
 /-- The first recursive residual is a cycle; both its degree-zero discrepancy and its previous
 prism vanish. -/

@@ -209,8 +209,7 @@ public theorem iota_affineSingularSubdivisionIterate_eq_ancestry_sum
         iota_affineSingularSubdivisionComponent,
         affineSubdivisionSingularSimplexChain_eq_permutation_sum,
         Finset.smul_sum, smul_smul]
-      rw [Finset.sum_comm]
-      rw [← Fintype.sum_prod_type']
+      rw [Finset.sum_comm, ← Fintype.sum_prod_type']
       apply Fintype.sum_equiv
         (Fin.consEquiv (fun _ : Fin (m + 1) ↦
           Equiv.Perm (Fin (n + 1)))) _ _
@@ -222,9 +221,8 @@ public theorem iota_affineSingularSubdivisionIterate_eq_ancestry_sum
             (iteratedAffineCellSingularSimplex X n x
               (affinePermutationAncestryFlags n (m + 1) (Fin.cons σ a)))
       rw [affinePermutationAncestrySign_cons,
-        affinePermutationAncestryFlags_cons]
-      rw [mul_comm]
-      rw [iteratedAffineCellSingularSimplex_singleton_parent]
+        affinePermutationAncestryFlags_cons, mul_comm,
+        iteratedAffineCellSingularSimplex_singleton_parent]
 
 section CoverSmall
 
@@ -379,10 +377,9 @@ public noncomputable def affineSubdivisionEventuallySmallAddSubgroup
   carrier := {c | ∃ m : ℕ,
     (affineSingularSubdivisionIterate X m).f n c ∈
       Set.range ((coverSmallIntegralSingularChainInclusion X U).f n)}
-  zero_mem' := by
-    refine ⟨0, 0, ?_⟩
-    exact ((coverSmallIntegralSingularChainInclusion X U).f n).hom.map_zero.trans
-      ((affineSingularSubdivisionIterate X 0).f n).hom.map_zero.symm
+  zero_mem' :=
+    ⟨0, 0, ((coverSmallIntegralSingularChainInclusion X U).f n).hom.map_zero.trans
+      ((affineSingularSubdivisionIterate X 0).f n).hom.map_zero.symm⟩
   add_mem' := by
     rintro c d ⟨m, hm⟩ ⟨r, hr⟩
     have hm' := affineSingularSubdivisionIterate_mem_range_add
@@ -431,23 +428,19 @@ public theorem exists_affineSubdivisionIterate_mem_range_of_generator_ancestries
     intro z
     change QuotientAddGroup.mk' P (j z) = 0
     obtain ⟨m, hm⟩ := hsmall x
-    have hgen : j 1 ∈ P := by
-      exact ⟨m,
-        affineSingularSubdivisionIterate_generator_mem_range_of_ancestries
-          X U n m x hm⟩
+    have hgen : j 1 ∈ P :=
+      ⟨m, affineSingularSubdivisionIterate_generator_mem_range_of_ancestries
+        X U n m x hm⟩
     have hzsmul := P.zsmul_mem hgen z
     have heq : j z = z • j 1 := by
       calc
         j z = j (z • (1 : ℤ)) := by simp
         _ = z • j 1 := j.hom.map_zsmul z 1
     rw [← heq] at hzsmul
-    have hker : j z ∈ (QuotientAddGroup.mk' P).ker := by
-      rwa [QuotientAddGroup.ker_mk']
-    exact hker
+    show j z ∈ (QuotientAddGroup.mk' P).ker
+    rwa [QuotientAddGroup.ker_mk']
   intro c
-  have hc : QuotientAddGroup.mk' P c = 0 := by
-    have hcq := ConcreteCategory.congr_hom hq c
-    exact hcq
+  have hc : QuotientAddGroup.mk' P c = 0 := ConcreteCategory.congr_hom hq c
   change c ∈ P
   have hcker : c ∈ (QuotientAddGroup.mk' P).ker := hc
   rwa [QuotientAddGroup.ker_mk'] at hcker
@@ -468,9 +461,8 @@ public theorem exists_affineSubdivisionIterate_mem_range_of_ancestries
   apply exists_affineSubdivisionIterate_mem_range_of_generator_ancestries X U n
   intro x
   obtain ⟨m, hm⟩ := hsmall x
-  refine ⟨m, fun a ↦ ?_⟩
-  exact hm (affinePermutationAncestryFlags n m a)
-    (length_affinePermutationAncestryFlags n m a)
+  exact ⟨m, fun a ↦ hm (affinePermutationAncestryFlags n m a)
+    (length_affinePermutationAncestryFlags n m a)⟩
 
 /-- Cover-subordination of every depth-`m` ancestry cell (with a depth depending on the original
 simplex and degree) implies affine eventual smallness for all singular chains. -/

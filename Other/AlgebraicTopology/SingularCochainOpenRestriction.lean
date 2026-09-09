@@ -29,9 +29,8 @@ def openSubspaceImageIso (V : Opens U) :
 lemma openSubspaceImageIso_naturality {V W : Opens U} (f : V ⟶ W) :
     (Opens.toTopCat (TopCat.of U)).map f ≫ (openSubspaceImageIso X U W).hom =
       (openSubspaceImageIso X U V).hom ≫
-        (Opens.toTopCat X).map (U.isOpenEmbedding.functor.map f) := by
-  apply TopCat.hom_ext
-  rfl
+        (Opens.toTopCat X).map (U.isOpenEmbedding.functor.map f) :=
+  TopCat.hom_ext rfl
 
 /-- The actual ambient-image homeomorphisms induce chain isomorphisms. -/
 def openSubspaceImageChainIso (V : Opens U) :
@@ -61,9 +60,7 @@ def singularCochainPresheafOpenRestrictionIso (n : ℕ) :
         (HomologicalComplex.linearDualIso (openSubspaceImageChainIso R X U V.unop))))
     (by
       intro V W f
-      apply AddCommGrpCat.hom_ext
-      apply AddMonoidHom.ext
-      intro φ
+      ext φ
       change OpenCochains R X (.op (U.isOpenEmbedding.functor.obj V.unop)) n at φ
       apply LinearMap.ext
       intro c
@@ -78,9 +75,7 @@ lemma singularCochainPresheafOpenRestrictionIso_coboundary (n : ℕ) :
       singularCochainCoboundary R (TopCat.of U) n := by
   apply NatTrans.ext
   funext V
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro φ
+  ext φ
   change OpenCochains R X (.op (U.isOpenEmbedding.functor.obj V.unop)) n at φ
   apply LinearMap.ext
   intro c

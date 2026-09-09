@@ -63,7 +63,6 @@ lemma map_quasiIso_of_vertical_quasiIso
       (DerivedCategory.mappingCone_triangle_distinguished φ₂)
       (inferInstance : IsIso tmap.hom₁) (inferInstance : IsIso tmap.hom₂)
   rw [← DerivedCategory.isIso_Q_map_iff_quasiIso]
-  change IsIso tmap.hom₃
-  infer_instance
+  exact (inferInstance : IsIso tmap.hom₃)
 
 end CochainComplex.mappingCone

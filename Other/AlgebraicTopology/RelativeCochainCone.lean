@@ -221,8 +221,7 @@ lemma relativeDualCochainShortComplexInt_shortExact (X : TopPair.{u}) :
       dsimp [S, relativeDualCochainShortComplexInt]
       exact (relativeDualCochainShortComplexNat R X).X₃.isZero_extend_X
         ComplexShape.embeddingUpNat z hi
-    apply ShortComplex.Splitting.shortExact
-    exact
+    exact ShortComplex.Splitting.shortExact
       { r := 0
         s := 0
         f_r := h₁.eq_of_src _ _
@@ -253,8 +252,8 @@ def relativeCochainConeTriangleIso (X : TopPair.{u}) :
     (CochainComplex.trianglehOfDegreewiseSplit
       (relativeDualCochainShortComplexInt R X)
       (relativeDualCochainDegreewiseSplitting R X)).rotate ≅
-    CochainComplex.mappingCone.triangleh (relativeCochainRestrictionInt R X) := by
-  exact isoTriangleOfIso₁₂
+    CochainComplex.mappingCone.triangleh (relativeCochainRestrictionInt R X) :=
+  isoTriangleOfIso₁₂
     (CochainComplex.trianglehOfDegreewiseSplit
       (relativeDualCochainShortComplexInt R X)
       (relativeDualCochainDegreewiseSplitting R X)).rotate

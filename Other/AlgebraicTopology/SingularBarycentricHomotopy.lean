@@ -70,8 +70,7 @@ public theorem standardBarycentricLastVertexDiscrepancy_transport
       barycentricSubdivisionSimplexChain X n x ≫
           (subdivisionLastVertexChainMap X).f n -
         X.ιChainComplex x := by
-  rw [standardBarycentricLastVertexDiscrepancy, Preadditive.sub_comp]
-  rw [Category.assoc]
+  rw [standardBarycentricLastVertexDiscrepancy, Preadditive.sub_comp, Category.assoc]
   have hlast := congrArg (fun k ↦ k.f n)
     (subdivisionLastVertexChainMap_naturality (SSet.yonedaEquiv.symm x))
   change (SSet.chainComplexMap (SSet.sd.map (SSet.yonedaEquiv.symm x))
@@ -79,10 +78,8 @@ public theorem standardBarycentricLastVertexDiscrepancy_transport
     (subdivisionLastVertexChainMap (Δ[n] : SSet.{0})).f n ≫
       (SSet.chainComplexMap (SSet.yonedaEquiv.symm x)
         (AddCommGrpCat.of ℤ)).f n at hlast
-  rw [← hlast]
-  rw [← Category.assoc]
-  rw [← barycentricSubdivisionSimplexChain_naturality]
-  rw [SSet.ι_chainComplexMap_f]
+  rw [← hlast, ← Category.assoc, ← barycentricSubdivisionSimplexChain_naturality,
+    SSet.ι_chainComplexMap_f]
   change barycentricSubdivisionSimplexChain X n
         ((SSet.yonedaEquiv.symm x).app _ (standardSimplexTopSimplex n)) ≫
       (subdivisionLastVertexChainMap X).f n -
@@ -155,12 +152,10 @@ public theorem barycentricLastVertexPrismComponent_naturality
         (SSet.chainComplexMap f (AddCommGrpCat.of ℤ)).f (n + 1) := by
   apply X.chainComplex_hom_ext
   intro x
-  rw [← Category.assoc, SSet.ι_chainComplexMap_f,
-    iota_barycentricLastVertexPrismComponent]
-  rw [← Category.assoc, iota_barycentricLastVertexPrismComponent]
+  rw [← Category.assoc, SSet.ι_chainComplexMap_f, iota_barycentricLastVertexPrismComponent,
+    ← Category.assoc, iota_barycentricLastVertexPrismComponent]
   unfold barycentricLastVertexPrismSimplexChain
-  rw [← SSet.yonedaEquiv_symm_comp]
-  rw [Category.assoc]
+  rw [← SSet.yonedaEquiv_symm_comp, Category.assoc]
   congr 1
   let F := (SSet.chainComplexFunctor AddCommGrpCat).obj (AddCommGrpCat.of ℤ)
   have hmap := F.map_comp (SSet.yonedaEquiv.symm x) f
@@ -219,15 +214,13 @@ public theorem barycentricLastVertexPrismSimplex_boundary_succ
         X.ιChainComplex x ≫
           (X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n ≫
             barycentricLastVertexPrismComponent P X n := by
-  rw [← standardBarycentricLastVertexDiscrepancy_transport]
-  rw [P.boundary, Preadditive.add_comp]
+  rw [← standardBarycentricLastVertexDiscrepancy_transport, P.boundary, Preadditive.add_comp]
   apply congrArg₂ (· + ·)
   · unfold barycentricLastVertexPrismSimplexChain
     rw [Category.assoc, Category.assoc]
     congr 1
-    symm
-    exact (SSet.chainComplexMap (SSet.yonedaEquiv.symm x)
-      (AddCommGrpCat.of ℤ)).comm (n + 2) (n + 1)
+    exact ((SSet.chainComplexMap (SSet.yonedaEquiv.symm x)
+      (AddCommGrpCat.of ℤ)).comm (n + 2) (n + 1)).symm
   · exact standardPrismFaceChain_transport_succ P X n x
 
 /-- The degree-zero universal prism equation has no lower-dimensional face term. -/
@@ -239,14 +232,13 @@ public theorem barycentricLastVertexPrismSimplex_boundary_zero
         X.ιChainComplex x =
       barycentricLastVertexPrismSimplexChain P X 0 x ≫
         (X.chainComplex (AddCommGrpCat.of ℤ)).d 1 0 := by
-  rw [← standardBarycentricLastVertexDiscrepancy_transport]
-  rw [P.boundary, standardPrismFaceChain, add_zero]
+  rw [← standardBarycentricLastVertexDiscrepancy_transport, P.boundary, standardPrismFaceChain,
+    add_zero]
   unfold barycentricLastVertexPrismSimplexChain
   rw [Category.assoc, Category.assoc]
   congr 1
-  symm
-  exact (SSet.chainComplexMap (SSet.yonedaEquiv.symm x)
-    (AddCommGrpCat.of ℤ)).comm 1 0
+  exact ((SSet.chainComplexMap (SSet.yonedaEquiv.symm x)
+    (AddCommGrpCat.of ℤ)).comm 1 0).symm
 
 /-- The transported prism operators satisfy the chain-homotopy equation in positive degrees. -/
 public theorem barycentricLastVertexPrismComponent_identity_succ

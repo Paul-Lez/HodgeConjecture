@@ -52,14 +52,8 @@ public noncomputable def insertOmittedVertexLast {n : ℕ}
   toFun := Fin.lastCases p (fun k ↦ p.succAbove (τ k))
   invFun := Fin.succAboveCases p (Fin.last (n + 1))
     (fun k ↦ (τ.symm k).castSucc)
-  left_inv i := by
-    refine Fin.lastCases ?_ (fun k ↦ ?_) i
-    · simp
-    · simp
-  right_inv i := by
-    refine Fin.succAboveCases p ?_ (fun k ↦ ?_) i
-    · simp
-    · simp
+  left_inv i := by refine Fin.lastCases ?_ (fun k ↦ ?_) i <;> simp
+  right_inv i := by refine Fin.succAboveCases p ?_ (fun k ↦ ?_) i <;> simp
 
 @[simp]
 public theorem insertOmittedVertexLast_apply_last {n : ℕ}
@@ -86,9 +80,7 @@ public noncomputable def insertOmittedVertexLastEquiv (n : ℕ) :
       simp only [insertOmittedVertexLast_apply_last] at hp
       subst q
       congr 1
-      apply Equiv.ext
-      intro k
-      apply p.succAbove_right_injective
+      refine Equiv.ext fun k ↦ p.succAbove_right_injective ?_
       have hk := congrArg (fun σ ↦ σ k.castSucc) h
       simpa only [insertOmittedVertexLast_apply_castSucc] using hk
     · simp [Fintype.card_prod, Fintype.card_perm, Nat.factorial_succ]
@@ -286,9 +278,8 @@ public theorem permutationMaximalFlagSimplex_outerFace_insert {n : ℕ}
 /-- The surviving outer faces reindex to the alternating sum of subdivided simplex faces. -/
 public theorem barycentricOuterFaceIdentity : BarycentricOuterFaceIdentity := by
   intro n
-  rw [subdividedSimplexOuterFaceSum, subdividedSimplexAlternatingFaceChain]
-  rw [← Equiv.sum_comp (insertOmittedVertexLastEquiv n)]
-  rw [Fintype.sum_prod_type]
+  rw [subdividedSimplexOuterFaceSum, subdividedSimplexAlternatingFaceChain,
+    ← Equiv.sum_comp (insertOmittedVertexLastEquiv n), Fintype.sum_prod_type]
   simp only [insertOmittedVertexLastEquiv_apply, smul_smul, Fin.val_last,
     outerFaceCoefficient_insertOmittedVertexLast,
     permutationMaximalFlagSimplex_outerFace_insert]

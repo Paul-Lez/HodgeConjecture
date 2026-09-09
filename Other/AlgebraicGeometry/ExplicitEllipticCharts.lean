@@ -92,13 +92,13 @@ theorem chart_one_sup_chart_two : chart 1 ⊔ chart 2 = ⊤ := by
 
 /-- Homogeneous coordinates define a complex point of the ambient scheme-theoretic plane. -/
 def homogeneousPlanePoint (P : Fin 3 → ℂ) (hP : P ≠ 0) :
-    ComplexPoint plane (ProjectiveSpace.toBase (Fin 3) base) :=
-  ⟨pullback.lift (𝟙 base) (toIntegralProj P hP) (Subsingleton.elim _ _), by
-    exact pullback.lift_fst _ _ _⟩
+    ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin 3) base)) :=
+  Over.homMk (pullback.lift (𝟙 base) (toIntegralProj P hP) (Subsingleton.elim _ _))
+    (pullback.lift_fst _ _ _)
 
 @[reassoc]
 theorem homogeneousPlanePoint_toIntegralProj (P : Fin 3 → ℂ) (hP : P ≠ 0) :
-    (homogeneousPlanePoint P hP).1 ≫ planeToIntegerPlane = toIntegralProj P hP := by
+    (homogeneousPlanePoint P hP).left ≫ planeToIntegerPlane = toIntegralProj P hP := by
   exact pullback.lift_snd _ _ _
 
 /-- Evaluating the integral cubic in complex coordinates gives the displayed Weierstrass
@@ -114,9 +114,9 @@ theorem homogeneousPlanePoint_mem_cubicLocus_iff (P : Fin 3 → ℂ) (hP : P ≠
     (homogeneousPlanePoint P hP).underlying ∈ (cubicLocus : Set plane) ↔
       equation.toProjective.Equation P := by
   classical
-  change planeToIntegerPlane ((homogeneousPlanePoint P hP).1 (IsLocalRing.closedPoint ℂ)) ∈
+  change planeToIntegerPlane ((homogeneousPlanePoint P hP).left (IsLocalRing.closedPoint ℂ)) ∈
     ProjectiveSpectrum.zeroLocus (UniversalGrading 2) {cubic} ↔ _
-  change ((homogeneousPlanePoint P hP).1 ≫ planeToIntegerPlane)
+  change ((homogeneousPlanePoint P hP).left ≫ planeToIntegerPlane)
     (IsLocalRing.closedPoint ℂ) ∈ ProjectiveSpectrum.zeroLocus (UniversalGrading 2) {cubic} ↔ _
   rw [homogeneousPlanePoint_toIntegralProj]
   change ({cubic} : Set (UniversalRing 2)) ⊆
@@ -136,10 +136,13 @@ theorem homogeneousPlanePoint_mem_cubicLocus_iff (P : Fin 3 → ℂ) (hP : P ≠
 /-- Every nonzero homogeneous solution gives an actual complex point of the cubic scheme. -/
 theorem exists_curvePoint_of_equation (P : Fin 3 → ℂ) (hP : P ≠ 0)
     (heq : equation.toProjective.Equation P) :
-    ∃ z : ComplexPoint curve curveToBase,
-      Point.map curveToPlane rfl z = homogeneousPlanePoint P hP := by
-  change homogeneousPlanePoint P hP ∈ Set.range (Point.map curveToPlane rfl)
-  rw [ComplexPoint.range_map_of_closedImmersion (i := curveToPlane) rfl]
+    ∃ z : ComplexPoint (Over.mk curveToBase),
+      Point.map (Over.homMk curveToPlane rfl) z = homogeneousPlanePoint P hP := by
+  let i : Over.mk curveToBase ⟶ Over.mk (ProjectiveSpace.toBase (Fin 3) base) :=
+    Over.homMk curveToPlane rfl
+  let : IsClosedImmersion i.left := inferInstanceAs (IsClosedImmersion curveToPlane)
+  change homogeneousPlanePoint P hP ∈ Set.range (Point.map i)
+  erw [ComplexPoint.range_map_of_closedImmersion i]
   change (homogeneousPlanePoint P hP).underlying ∈ Set.range curveToPlane
   change (homogeneousPlanePoint P hP).underlying ∈ Set.range cubicIdeal.subschemeι
   rw [cubicIdeal.range_subschemeι, cubicIdeal,
@@ -148,13 +151,13 @@ theorem exists_curvePoint_of_equation (P : Fin 3 → ℂ) (hP : P ≠ 0)
 
 /-- An actual complex point of the cubic, obtained from the given homogeneous coordinates. -/
 def curvePoint (P : Fin 3 → ℂ) (hP : P ≠ 0)
-    (heq : equation.toProjective.Equation P) : ComplexPoint curve curveToBase :=
+    (heq : equation.toProjective.Equation P) : ComplexPoint (Over.mk curveToBase) :=
   (exists_curvePoint_of_equation P hP heq).choose
 
 @[simp]
 theorem curvePoint_map (P : Fin 3 → ℂ) (hP : P ≠ 0)
     (heq : equation.toProjective.Equation P) :
-    Point.map curveToPlane rfl (curvePoint P hP heq) = homogeneousPlanePoint P hP :=
+    Point.map (Over.homMk curveToPlane rfl) (curvePoint P hP heq) = homogeneousPlanePoint P hP :=
   (exists_curvePoint_of_equation P hP heq).choose_spec
 
 /-- Membership in the actual affine chart is detected by the corresponding homogeneous
@@ -163,29 +166,29 @@ theorem curvePoint_mem_chart_iff (P : Fin 3 → ℂ) (hP : P ≠ 0)
     (heq : equation.toProjective.Equation P) (i : Fin 3) :
     (curvePoint P hP heq).underlying ∈ chart i ↔ P i ≠ 0 := by
   have hmap := congrArg Point.underlying (curvePoint_map P hP heq)
-  rw [Point.underlying_map] at hmap
+  simp only [Point.underlying_map, Over.homMk_left] at hmap
   change curveToPlane (curvePoint P hP heq).underlying ∈
     planeToIntegerPlane ⁻¹ᵁ Proj.basicOpen (UniversalGrading 2) (X i) ↔ _
-  rw [hmap]
+  erw [hmap]
   change IsLocalRing.closedPoint ℂ ∈
-    ((homogeneousPlanePoint P hP).1 ≫ planeToIntegerPlane) ⁻¹ᵁ
+    ((homogeneousPlanePoint P hP).left ≫ planeToIntegerPlane) ⁻¹ᵁ
       Proj.basicOpen (UniversalGrading 2) (X i) ↔ _
   rw [homogeneousPlanePoint_toIntegralProj,
     toIntegralProj_preimage_coordinateBasicOpen]
   split_ifs <;> simp_all
 
 /-- The point at infinity `[0:1:0]`, as a point of the actual cubic scheme. -/
-def infinity : ComplexPoint curve curveToBase :=
+def infinity : ComplexPoint (Over.mk curveToBase) :=
   curvePoint ![0, 1, 0]
     (by intro h; have := congrFun h 1; simp at this)
     WeierstrassCurve.Projective.equation_zero
 
-instance : Nonempty (ComplexPoint curve curveToBase) := ⟨infinity⟩
+instance : Nonempty (ComplexPoint (Over.mk curveToBase)) := ⟨infinity⟩
 
 instance : Nonempty curve := ⟨infinity.underlying⟩
 
 /-- The complex point `[i:1-i:1]` lies in both affine charts. -/
-def overlapPoint : ComplexPoint curve curveToBase :=
+def overlapPoint : ComplexPoint (Over.mk curveToBase) :=
   curvePoint ![Complex.I, 1 - Complex.I, 1]
     (by intro h; have := congrFun h 2; simp at this)
     (by

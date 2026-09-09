@@ -137,8 +137,7 @@ lemma Smooth.exists_smoothOfRelativeDimension [IsIntegral X] [Smooth f] :
   have hne : Nonempty V := ⟨⟨x, hxV⟩⟩
   obtain ⟨m, hm⟩ := RingHom.IsStandardSmooth.exists_isStandardSmoothOfRelativeDimension hs
   refine ⟨⊤, isAffineOpen_top _, V, hV, hxV, by simp, ?_⟩
-  rw [isStandardSmoothOfRelativeDimension_eq f hV₀ hV hn hm]
-  exact hm
+  rwa [isStandardSmoothOfRelativeDimension_eq f hV₀ hV hn hm]
 
 /-- A smooth integral complex scheme is smooth of relative dimension `dim X`.
 

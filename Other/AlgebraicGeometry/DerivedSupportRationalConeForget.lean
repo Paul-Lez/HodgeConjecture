@@ -16,41 +16,41 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 local instance rationalConeForgetSheafDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf structureMap)
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 instance ambientRationalInjectiveComplex_isKInjective :
-    (ambientRationalInjectiveComplex structureMap).IsKInjective :=
+    (ambientRationalInjectiveComplex X).IsKInjective :=
   CochainComplex.isKInjective_of_injective _ 0
 
 /-- Ordinary rational cohomology computed by the actual ambient rational
 injective resolution. This has the ordinary augmentation normalization. -/
 def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
-    FieldCohomology ℚ structureMap n ≃+
-      (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X structureMap))
-        (ambientRationalInjectiveComplex structureMap)).homology n := by
-  let e : FieldCohomology ℚ structureMap n ≃+
-      Hypercohomology structureMap (ambientRationalInjectiveComplex structureMap) n :=
+    FieldCohomology ℚ X n ≃+
+      (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X))
+        (ambientRationalInjectiveComplex X)).homology n := by
+  let e : FieldCohomology ℚ X n ≃+
+      Hypercohomology X (ambientRationalInjectiveComplex X) n :=
     { toEquiv := Localization.SmallShiftedHom.postcompEquiv
-        (ambientRationalInjectiveAugmentation structureMap)
+        (ambientRationalInjectiveAugmentation X)
         ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)
-      map_add' α β := (hypercohomologyMap structureMap
-        (ambientRationalInjectiveAugmentation structureMap) n).map_add α β }
-  exact e.trans (hypercohomologyAddEquivGlobalSectionsKInjective structureMap _ n)
+      map_add' α β := (hypercohomologyMap X
+        (ambientRationalInjectiveAugmentation X) n).map_add α β }
+  exact e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ n)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma hypercohomologyAddEquivDerived_comp_shifted
-    {K L : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ}
+    {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ}
     (s n n' : ℤ) (h : s + n = n') (g : K ⟶ L⟦s⟧)
-    (x : Hypercohomology structureMap K n) :
-    hypercohomologyAddEquivDerived structureMap L n'
+    (x : Hypercohomology X K n) :
+    hypercohomologyAddEquivDerived X L n'
       (x.comp (Localization.SmallShiftedHom.mk
-        (analyticQuasiIsomorphisms structureMap) g) h) =
-    (hypercohomologyAddEquivDerived structureMap K n x).comp
+        (analyticQuasiIsomorphisms X) g) h) =
+    (hypercohomologyAddEquivDerived X K n x).comp
       (ShiftedHom.map g DerivedCategory.Q) h := by
   change Localization.SmallShiftedHom.equiv _ DerivedCategory.Q _ = _
   rw [Localization.SmallShiftedHom.equiv_comp, Localization.SmallShiftedHom.equiv_mk]
@@ -59,16 +59,16 @@ lemma hypercohomologyAddEquivDerived_comp_shifted
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma hypercohomologyMap_comp_shifted
-    {K L K' L' : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ}
+    {K L K' L' : CochainComplex (AnalyticAdditiveSheaf X) ℤ}
     (s n n' : ℤ) (h : s + n = n')
     (a : K ⟶ K') (b : L ⟶ L') (g : K ⟶ L⟦s⟧) (g' : K' ⟶ L'⟦s⟧)
-    (hab : a ≫ g' = g ≫ b⟦s⟧') (x : Hypercohomology structureMap K n) :
-    hypercohomologyMap structureMap b n'
+    (hab : a ≫ g' = g ≫ b⟦s⟧') (x : Hypercohomology X K n) :
+    hypercohomologyMap X b n'
       (x.comp (Localization.SmallShiftedHom.mk
-        (analyticQuasiIsomorphisms structureMap) g) h) =
-    (hypercohomologyMap structureMap a n x).comp
-      (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms structureMap) g') h := by
-  apply (hypercohomologyAddEquivDerived structureMap L' n').injective
+        (analyticQuasiIsomorphisms X) g) h) =
+    (hypercohomologyMap X a n x).comp
+      (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X) g') h := by
+  apply (hypercohomologyAddEquivDerived X L' n').injective
   rw [hypercohomologyAddEquivDerived_naturality,
     hypercohomologyAddEquivDerived_comp_shifted,
     hypercohomologyAddEquivDerived_comp_shifted,
@@ -82,32 +82,32 @@ set_option backward.isDefEq.respectTransparency false in
 constant sheaf by its actual injective resolution, is the actual cone
 connecting homology map. -/
 lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) (n : ℤ)
-    (x : RationalCohomologyWithSupport structureMap Z n) :
-    rationalCohomologyAddEquivAmbientInjectiveHomology structureMap n
-      (forgetSupport structureMap Z n x) =
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
+    (x : RationalCohomologyWithSupport X Z n) :
+    rationalCohomologyAddEquivAmbientInjectiveHomology X n
+      (forgetSupport X Z n x) =
     (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
       (ShiftedHom.map
         (CochainComplex.mappingCone.triangle
-          (ambientRationalInjectiveRestriction structureMap Z hZ)).mor₃
+          (ambientRationalInjectiveRestriction X Z hZ)).mor₃
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X structureMap))).mapHomologicalComplex (.up ℤ)))
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)))
       (n - 1) n (by omega)
-      (rationalSupportAddEquivAmbientInjectiveConeGlobalSections structureMap Z hZ n x) := by
-  change hypercohomologyAddEquivGlobalSectionsKInjective structureMap _ n
-    (hypercohomologyMap structureMap (ambientRationalInjectiveAugmentation structureMap) n
-      (x.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms structureMap)
+      (rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x) := by
+  change hypercohomologyAddEquivGlobalSectionsKInjective X _ n
+    (hypercohomologyMap X (ambientRationalInjectiveAugmentation X) n
+      (x.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
         (CochainComplex.mappingCone.triangle
-          (rationalRestrictionComplexInt structureMap Z)).mor₃) (by omega))) = _
-  exact (congrArg (hypercohomologyAddEquivGlobalSectionsKInjective structureMap
-    (ambientRationalInjectiveComplex structureMap) n)
+          (rationalRestrictionComplexInt X Z)).mor₃) (by omega))) = _
+  exact (congrArg (hypercohomologyAddEquivGlobalSectionsKInjective X
+    (ambientRationalInjectiveComplex X) n)
     (hypercohomologyMap_comp_shifted _ 1 (n - 1) n (by omega)
-    (rationalSupportConeToAmbientInjectiveCone structureMap Z hZ) _ _ _
-    (rationalSupportConeToAmbientInjectiveCone_connecting structureMap Z hZ) x)).trans
+    (rationalSupportConeToAmbientInjectiveCone X Z hZ) _ _ _
+    (rationalSupportConeToAmbientInjectiveCone_connecting X Z hZ) x)).trans
     (hypercohomologyAddEquivGlobalSectionsKInjective_shifted_naturality
-      structureMap
-        (CochainComplex.mappingCone (ambientRationalInjectiveRestriction structureMap Z hZ))
-        (ambientRationalInjectiveComplex structureMap) 1 (n - 1) n (by omega) _ _)
+      X
+        (CochainComplex.mappingCone (ambientRationalInjectiveRestriction X Z hZ))
+        (ambientRationalInjectiveComplex X) 1 (n - 1) n (by omega) _ _)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -116,25 +116,25 @@ set_option maxHeartbeats 800000 in
 `forgetSupport` with the actual inclusion of supported injective sections.
 No compatibility or choice of a sign is supplied as an input. -/
 lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) (n : ℤ)
-    (x : RationalCohomologyWithSupport structureMap Z n) :
-    rationalCohomologyAddEquivAmbientInjectiveHomology structureMap n
-      (forgetSupport structureMap Z n x) =
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
+    (x : RationalCohomologyWithSupport X Z n) :
+    rationalCohomologyAddEquivAmbientInjectiveHomology X n
+      (forgetSupport X Z n x) =
     HomologicalComplex.homologyMap
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X structureMap)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
-        (ambientRationalInjectiveComplex structureMap)).f n
-      (rationalSupportAddEquivSupportedInjectiveHomology structureMap Z hZ n x) := by
-  let Y := TopCat.of (ComplexPoint X structureMap)
+        (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
+        (ambientRationalInjectiveComplex X)).f n
+      (rationalSupportAddEquivSupportedInjectiveHomology X Z hZ n x) := by
+  let Y := TopCat.of (ComplexPoint X)
   let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤
-    (ambientRationalInjectiveComplex structureMap)
-  let b := ambientRationalInjectiveRestriction structureMap Z hZ
-  let c := actualSupportConeToAmbientInjectiveGlobalCone structureMap Z hZ
+    (ambientRationalInjectiveComplex X)
+  let b := ambientRationalInjectiveRestriction X Z hZ
+  let c := actualSupportConeToAmbientInjectiveGlobalCone X Z hZ
   let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
   let e := CochainComplex.mappingCone.mapHomologicalComplexIso b Γ
-  let y := rationalSupportAddEquivAmbientInjectiveConeGlobalSections structureMap Z hZ n x
+  let y := rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x
   let : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
     CochainComplex.mappingCocone.quasiIso_shiftedLiftShortComplex S
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)

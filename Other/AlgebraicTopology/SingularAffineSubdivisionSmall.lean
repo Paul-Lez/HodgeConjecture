@@ -124,8 +124,7 @@ public theorem coverSmallAffineSubdivisionSimplexChain_comp_inclusion
     (SSet.chainComplexMap
       (TopCat.toSSet.map (topologicalSubsetInclusion X (U j)))
       (AddCommGrpCat.of ℤ)).f n at hcover
-  rw [Category.assoc, hcover]
-  rw [← affineSubdivisionSingularSimplexChain_naturality]
+  rw [Category.assoc, hcover, ← affineSubdivisionSingularSimplexChain_naturality]
   change affineSubdivisionSingularSimplexChain X n
       ((TopCat.toSSet.map (topologicalSubsetInclusion X (U j))).app _ y) =
     affineSubdivisionSingularSimplexChain X n x.1
@@ -173,56 +172,12 @@ public theorem coverSmallAffineSubdivisionComponents_commute
       (ComplexShape.down ℕ) n).map I)
     exact Functor.map_mono (HomologicalComplex.eval AddCommGrpCat
       (ComplexShape.down ℕ) n) I
-  have hAI (k : ℕ) : A k ≫ I.f k = I.f k ≫ B k := by
-    change coverSmallAffineSubdivisionComponent X U k ≫
-        (SSet.chainComplexMap (coverSmallSingularSubcomplex X U).ι
-          (AddCommGrpCat.of ℤ)).f k =
-      (SSet.chainComplexMap (coverSmallSingularSubcomplex X U).ι
-        (AddCommGrpCat.of ℤ)).f k ≫
-        affineSingularSubdivisionComponent X k
-    exact coverSmallAffineSubdivisionComponent_comp_inclusion X U k
+  have hAI (k : ℕ) : A k ≫ I.f k = I.f k ≫ B k :=
+    coverSmallAffineSubdivisionComponent_comp_inclusion X U k
   apply (cancel_mono (I.f n)).mp
-  calc
-    (A (n + 1) ≫
-        (CoverSmallIntegralSingularChainComplex X U).d (n + 1) n) ≫ I.f n =
-      A (n + 1) ≫
-        ((CoverSmallIntegralSingularChainComplex X U).d (n + 1) n ≫
-          I.f n) := Category.assoc _ _ _
-    _ = A (n + 1) ≫
-        (I.f (n + 1) ≫
-          ((TopCat.toSSet.obj X).chainComplex
-            (AddCommGrpCat.of ℤ)).d (n + 1) n) := by
-      rw [I.comm]
-    _ = (A (n + 1) ≫ I.f (n + 1)) ≫
-        ((TopCat.toSSet.obj X).chainComplex
-          (AddCommGrpCat.of ℤ)).d (n + 1) n :=
-      (Category.assoc _ _ _).symm
-    _ = (I.f (n + 1) ≫ B (n + 1)) ≫
-        ((TopCat.toSSet.obj X).chainComplex
-          (AddCommGrpCat.of ℤ)).d (n + 1) n := by
-      rw [hAI]
-    _ = I.f (n + 1) ≫
-        (B (n + 1) ≫
-          ((TopCat.toSSet.obj X).chainComplex
-            (AddCommGrpCat.of ℤ)).d (n + 1) n) :=
-      Category.assoc _ _ _
-    _ = I.f (n + 1) ≫
-        (((TopCat.toSSet.obj X).chainComplex
-          (AddCommGrpCat.of ℤ)).d (n + 1) n ≫ B n) := by
-      rw [affineSingularSubdivisionComponents_commute]
-    _ = (I.f (n + 1) ≫
-        ((TopCat.toSSet.obj X).chainComplex
-          (AddCommGrpCat.of ℤ)).d (n + 1) n) ≫ B n :=
-      (Category.assoc _ _ _).symm
-    _ = ((CoverSmallIntegralSingularChainComplex X U).d (n + 1) n ≫
-        I.f n) ≫ B n := by rw [I.comm]
-    _ = (CoverSmallIntegralSingularChainComplex X U).d (n + 1) n ≫
-        (I.f n ≫ B n) := Category.assoc _ _ _
-    _ = (CoverSmallIntegralSingularChainComplex X U).d (n + 1) n ≫
-        (A n ≫ I.f n) := by
-      rw [hAI]
-    _ = ((CoverSmallIntegralSingularChainComplex X U).d (n + 1) n ≫ A n) ≫
-        I.f n := (Category.assoc _ _ _).symm
+  rw [Category.assoc, ← I.comm, ← Category.assoc, hAI, Category.assoc,
+    affineSingularSubdivisionComponents_commute, ← Category.assoc, I.comm,
+    Category.assoc, ← hAI, ← Category.assoc]
 
 /-- Affine barycentric subdivision as an endomorphism of the cover-small chain complex. -/
 public noncomputable def coverSmallAffineSubdivisionChainMap :

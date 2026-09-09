@@ -24,29 +24,31 @@ open CategoryTheory Limits Pretriangulated
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (s : X ⟶ Spec ↧ℂ)
+open Point
 
-local instance : HasDerivedCategory (AnalyticAdditiveSheaf s) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf s)
+variable (X : Over (Spec ↧ℂ))
+
+local instance : HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 /-- In a short exact sequence, a hypercohomology class lifts through the first map exactly when
 its image under the second map vanishes. -/
 theorem hypercohomologyMap_exact
-    (S : ShortComplex (CochainComplex (AnalyticAdditiveSheaf s) ℤ)) (hS : S.ShortExact)
-    (n : ℤ) (α : Hypercohomology s S.X₂ n) :
-    (∃ β, hypercohomologyMap s S.f n β = α) ↔ hypercohomologyMap s S.g n α = 0 := by
+    (S : ShortComplex (CochainComplex (AnalyticAdditiveSheaf X) ℤ)) (hS : S.ShortExact)
+    (n : ℤ) (α : Hypercohomology X S.X₂ n) :
+    (∃ β, hypercohomologyMap X S.f n β = α) ↔ hypercohomologyMap X S.g n α = 0 := by
   constructor
   · rintro ⟨β, rfl⟩
     rw [← hypercohomologyMap_comp_apply, S.zero, hypercohomologyMap_zero]
     rfl
   · intro hα
-    let e (K : CochainComplex (AnalyticAdditiveSheaf s) ℤ) :
-        Hypercohomology s K n ≃ ShiftedHom
-          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt s))
+    let e (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) :
+        Hypercohomology X K n ≃ ShiftedHom
+          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
           (DerivedCategory.Q.obj K) n :=
-      Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms s) DerivedCategory.Q
+      Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
     let F := preadditiveCoyoneda.obj
-      (Opposite.op (DerivedCategory.Q.obj (constantIntegerSheafComplexInt s)))
+      (Opposite.op (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X)))
     have he := F.homologySequence_exact₂ (DerivedCategory.triangleOfSES hS)
       (DerivedCategory.triangleOfSES_distinguished hS) n
     have hz : e S.X₂ α ≫ (DerivedCategory.Q.map S.g)⟦n⟧' = 0 := by

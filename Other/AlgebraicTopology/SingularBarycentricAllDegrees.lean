@@ -225,14 +225,13 @@ public theorem barycentricSubdivisionSimplexChain_naturality
     barycentricSubdivisionSimplexChain Y n (f.app _ x) =
       barycentricSubdivisionSimplexChain X n x ≫
         (SSet.chainComplexMap (SSet.sd.map f) (AddCommGrpCat.of ℤ)).f n := by
-  rw [barycentricSubdivisionSimplexChain, barycentricSubdivisionSimplexChain]
-  rw [← SSet.yonedaEquiv_symm_comp]
+  rw [barycentricSubdivisionSimplexChain, barycentricSubdivisionSimplexChain,
+    ← SSet.yonedaEquiv_symm_comp]
   let F := (SSet.chainComplexFunctor AddCommGrpCat).obj (AddCommGrpCat.of ℤ)
   have hsd := SSet.sd.map_comp (SSet.yonedaEquiv.symm x) f
   have hmap := F.congr_map hsd
   have hn := congrArg (fun k ↦ k.f n) hmap
-  rw [hn]
-  rw [Functor.map_comp]
+  rw [hn, Functor.map_comp]
   rfl
 
 /-- Every degree of the barycentric subdivision operator is natural. -/

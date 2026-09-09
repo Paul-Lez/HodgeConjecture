@@ -27,60 +27,60 @@ open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
 local instance complexBorelMooreRationalComparisonAnalyticTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- The actual derived-support groups agree with the existing rational support API,
 through its constructed resolution and cone comparison. -/
 def complexDerivedSupportedCohomologyAddEquivRationalSupport
-    (Z : Closeds (ComplexPoint X structureMap)) (n : ℤ) :
-    ComplexDerivedSupportedCohomology structureMap Z n ≃+
-      RationalCohomologyWithSupport structureMap Z n :=
-  derivedRationalSupportAddEquiv structureMap Z n
+    (Z : Closeds (ComplexPoint X)) (n : ℤ) :
+    ComplexDerivedSupportedCohomology X Z n ≃+
+      RationalCohomologyWithSupport X Z n :=
+  derivedRationalSupportAddEquiv X Z n
 
-variable [SmoothOfRelativeDimension d structureMap] [T2Space (ComplexPoint X structureMap)]
+variable [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
 
 /-- The smooth-ambient Borel–Moore comparison with the existing rational support
 cohomology, derived from geometric orientation and actual supported resolutions. -/
 def complexAmbientSheafBorelMooreAddEquivRationalSupport
-    (Z : Closeds (ComplexPoint X structureMap)) (i : ℤ) :
-    ComplexAmbientSheafBorelMooreHomology structureMap d Z i ≃+
-      RationalCohomologyWithSupport structureMap Z (2 * (d : ℤ) - i) :=
-  (complexAmbientSheafBorelMooreHomologyIso structureMap d Z i).addCommGroupIsoToAddEquiv.trans
-    (complexDerivedSupportedCohomologyAddEquivRationalSupport structureMap Z (2 * (d : ℤ) - i))
+    (Z : Closeds (ComplexPoint X)) (i : ℤ) :
+    ComplexAmbientSheafBorelMooreHomology X d Z i ≃+
+      RationalCohomologyWithSupport X Z (2 * (d : ℤ) - i) :=
+  (complexAmbientSheafBorelMooreHomologyIso X d Z i).addCommGroupIsoToAddEquiv.trans
+    (complexDerivedSupportedCohomologyAddEquivRationalSupport X Z (2 * (d : ℤ) - i))
 
 /-- The cycle-degree comparison lands in degree `2p` using the proved shift arithmetic. -/
 def complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport
-    (Z : Closeds (ComplexPoint X structureMap)) (p : ℕ) (hp : p ≤ d) :
-    ComplexAmbientSheafBorelMooreHomology structureMap d Z
+    (Z : Closeds (ComplexPoint X)) (p : ℕ) (hp : p ≤ d) :
+    ComplexAmbientSheafBorelMooreHomology X d Z
         (2 * ((d - p : ℕ) : ℤ)) ≃+
-      RationalCohomologyWithSupport structureMap Z (2 * (p : ℤ)) :=
-  (complexAmbientSheafBorelMooreCycleDegreeIso structureMap d Z p hp).addCommGroupIsoToAddEquiv.trans
-    (complexDerivedSupportedCohomologyAddEquivRationalSupport structureMap Z (2 * (p : ℤ)))
+      RationalCohomologyWithSupport X Z (2 * (p : ℤ)) :=
+  (complexAmbientSheafBorelMooreCycleDegreeIso X d Z p hp).addCommGroupIsoToAddEquiv.trans
+    (complexDerivedSupportedCohomologyAddEquivRationalSupport X Z (2 * (p : ℤ)))
 
 /-- An explicit additive map from actual ambient Borel–Moore homology to the
 repository's ordinary rational cohomology. It requires a class, not a duality datum. -/
 def complexAmbientSheafBorelMooreToFieldCohomology
-    (Z : Closeds (ComplexPoint X structureMap)) (i : ℤ) :
-    ComplexAmbientSheafBorelMooreHomology structureMap d Z i →+
-      FieldCohomology ℚ structureMap (2 * (d : ℤ) - i) :=
-  (forgetSupport structureMap (Z : Set (ComplexPoint X structureMap))
+    (Z : Closeds (ComplexPoint X)) (i : ℤ) :
+    ComplexAmbientSheafBorelMooreHomology X d Z i →+
+      FieldCohomology ℚ X (2 * (d : ℤ) - i) :=
+  (forgetSupport X (Z : Set (ComplexPoint X))
     (2 * (d : ℤ) - i)).comp
-      (complexAmbientSheafBorelMooreAddEquivRationalSupport structureMap d Z i).toAddMonoidHom
+      (complexAmbientSheafBorelMooreAddEquivRationalSupport X d Z i).toAddMonoidHom
 
 /-- Cycle-degree transport into the existing ordinary cohomology API. No global
 component class or local-purity theorem is silently supplied by this map. -/
 def complexAmbientSheafBorelMooreCycleDegreeToFieldCohomology
-    (Z : Closeds (ComplexPoint X structureMap)) (p : ℕ) (hp : p ≤ d) :
-    ComplexAmbientSheafBorelMooreHomology structureMap d Z
+    (Z : Closeds (ComplexPoint X)) (p : ℕ) (hp : p ≤ d) :
+    ComplexAmbientSheafBorelMooreHomology X d Z
         (2 * ((d - p : ℕ) : ℤ)) →+
-      FieldCohomology ℚ structureMap (2 * (p : ℤ)) :=
-  (forgetSupport structureMap (Z : Set (ComplexPoint X structureMap))
+      FieldCohomology ℚ X (2 * (p : ℤ)) :=
+  (forgetSupport X (Z : Set (ComplexPoint X))
     (2 * (p : ℤ))).comp
       (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport
-        structureMap d Z p hp).toAddMonoidHom
+        X d Z p hp).toAddMonoidHom
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -88,12 +88,12 @@ set_option backward.defeqAttrib.useBackward true in
 map transported through the constructed ordinary cohomology comparison. In
 particular no independent sign or scalar is chosen at the final adapter. -/
 theorem complexAmbientSheafBorelMooreToFieldCohomology_eq_derivedForget
-    (Z : Closeds (ComplexPoint X structureMap)) (i : ℤ)
-    (x : ComplexAmbientSheafBorelMooreHomology structureMap d Z i) :
-    complexAmbientSheafBorelMooreToFieldCohomology structureMap d Z i x =
-      derivedRationalCohomologyAddEquiv structureMap (2 * (d : ℤ) - i)
-        (complexAmbientSheafBorelMooreToCohomology structureMap d Z i x) := by
-  exact (derivedRationalSupportAddEquiv_forgetSupport structureMap Z (2 * (d : ℤ) - i)
-    ((complexAmbientSheafBorelMooreHomologyIso structureMap d Z i).hom x)).symm
+    (Z : Closeds (ComplexPoint X)) (i : ℤ)
+    (x : ComplexAmbientSheafBorelMooreHomology X d Z i) :
+    complexAmbientSheafBorelMooreToFieldCohomology X d Z i x =
+      derivedRationalCohomologyAddEquiv X (2 * (d : ℤ) - i)
+        (complexAmbientSheafBorelMooreToCohomology X d Z i x) :=
+  (derivedRationalSupportAddEquiv_forgetSupport X Z (2 * (d : ℤ) - i)
+    ((complexAmbientSheafBorelMooreHomologyIso X d Z i).hom x)).symm
 
 end AlgebraicGeometry.ComplexPoint

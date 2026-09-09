@@ -44,14 +44,12 @@ def reducedSingularLocus : Scheme := reducedClosedSubscheme (singularLocusClosed
 def reducedSingularLocusι : reducedSingularLocus f ⟶ X :=
   reducedClosedSubschemeι (singularLocusClosed f)
 
-instance reducedSingularLocus_isReduced : IsReduced (reducedSingularLocus f) := by
-  dsimp [reducedSingularLocus]
-  infer_instance
+instance reducedSingularLocus_isReduced : IsReduced (reducedSingularLocus f) :=
+  inferInstanceAs (IsReduced (reducedClosedSubscheme (singularLocusClosed f)))
 
 instance reducedSingularLocusι_isClosedImmersion :
-    IsClosedImmersion (reducedSingularLocusι f) := by
-  change IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f))
-  infer_instance
+    IsClosedImmersion (reducedSingularLocusι f) :=
+  inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f)))
 
 @[simp] theorem range_reducedSingularLocusι :
     Set.range (reducedSingularLocusι f) = (f.smoothLocus : Set X)ᶜ :=
@@ -70,10 +68,9 @@ theorem singularLocusClosed_ne_top [PerfectField K] [IsReduced X] [Nonempty X] :
 irreducible scheme. -/
 theorem topologicalKrullDim_reducedSingularLocus_lt [PerfectField K] [IsIntegral X]
     {n : ℕ} (hdim : topologicalKrullDim X ≤ n) :
-    topologicalKrullDim (reducedSingularLocus f) < n := by
-  apply topologicalKrullDim_lt_of_isClosed_of_ne_univ
-    (singularLocusClosed f).isClosed _ hdim
-  exact fun he => singularLocusClosed_ne_top f (SetLike.coe_injective he)
+    topologicalKrullDim (reducedSingularLocus f) < n :=
+  topologicalKrullDim_lt_of_isClosed_of_ne_univ (singularLocusClosed f).isClosed
+    (fun he => singularLocusClosed_ne_top f (SetLike.coe_injective he)) hdim
 
 /-- Each actual smooth piece has dimension at most that of any containing closed set. -/
 theorem topologicalKrullDim_reducedClosedSmoothPiece_le {S T : Closeds X} (hTS : T ≤ S) :
@@ -103,60 +100,61 @@ theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
   rw [hdimU] at hlt
   exact ⟨U, hU, hzU, n, by exact_mod_cast hlt, hn⟩
 
-variable {Y : Scheme} (structureMap : Y ⟶ Spec (.of ℂ))
-  [IsIntegral Y] [Smooth structureMap] [IsProjective structureMap]
+variable (Y : Over (Spec (.of ℂ)))
+  [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
 
 /-- For a codimension-`p` component of a smooth projective complex `d`-fold, the reduced
 singular locus has algebraic dimension strictly less than `d - p`. -/
 theorem topologicalKrullDim_cycleComponent_singularLocus_lt
-    (x : Y) {d p : ℕ} [SmoothOfRelativeDimension d structureMap]
+    (x : Y.left) {d p : ℕ} [SmoothOfRelativeDimension d Y.hom]
     (hx : Order.coheight x = p) :
     topologicalKrullDim
-      (reducedSingularLocus (cycleComponentι Y x ≫ structureMap)) < (d - p : ℕ) :=
+      (reducedSingularLocus (cycleComponentι Y.left x ≫ Y.hom)) < (d - p : ℕ) :=
   topologicalKrullDim_reducedSingularLocus_lt _
-    (topologicalKrullDim_cycleComponent_le_sub structureMap x hx)
+    (topologicalKrullDim_cycleComponent_le_sub Y x hx)
 
 /-- The singular locus of every cycle component admits the actual finite smooth
 decomposition constructed by Noetherian recursion. -/
-def cycleComponentSingularStratification (x : Y) :
-    List (Closeds (cycleComponent Y x)) := by
-  letI := cycleComponent_isNoetherian structureMap x
-  exact reducedSmoothStratification (cycleComponentι Y x ≫ structureMap)
-    (singularLocusClosed (cycleComponentι Y x ≫ structureMap))
+def cycleComponentSingularStratification (x : Y.left) :
+    List (Closeds (cycleComponent Y.left x)) := by
+  letI := cycleComponent_isNoetherian Y x
+  exact reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
+    (singularLocusClosed (cycleComponentι Y.left x ≫ Y.hom))
 
-theorem cycleComponentSingularStratification_covers (x : Y) (y : cycleComponent Y x) :
-    (∃ T ∈ cycleComponentSingularStratification structureMap x,
-      y ∈ Set.range (reducedClosedSmoothPieceι (cycleComponentι Y x ≫ structureMap) T)) ↔
-        y ∉ (cycleComponentι Y x ≫ structureMap).smoothLocus := by
-  let := cycleComponent_isNoetherian structureMap x
+theorem cycleComponentSingularStratification_covers
+    (x : Y.left) (y : cycleComponent Y.left x) :
+    (∃ T ∈ cycleComponentSingularStratification Y x,
+      y ∈ Set.range (reducedClosedSmoothPieceι (cycleComponentι Y.left x ≫ Y.hom) T)) ↔
+        y ∉ (cycleComponentι Y.left x ≫ Y.hom).smoothLocus := by
+  let := cycleComponent_isNoetherian Y x
   exact reducedSmoothStratification_covers _ _ y
 
 /-- Every constructed smooth stratum of the singular locus has strictly smaller algebraic
 dimension than the cycle component. -/
 theorem cycleComponentSingularStratification_piece_dimension_lt
-    (x : Y) {d p : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (hx : Order.coheight x = p) (T : Closeds (cycleComponent Y x))
-    (hT : T ∈ cycleComponentSingularStratification structureMap x) :
+    (x : Y.left) {d p : ℕ} [SmoothOfRelativeDimension d Y.hom]
+    (hx : Order.coheight x = p) (T : Closeds (cycleComponent Y.left x))
+    (hT : T ∈ cycleComponentSingularStratification Y x) :
     topologicalKrullDim
-      (reducedClosedSmoothPiece (cycleComponentι Y x ≫ structureMap) T) < (d - p : ℕ) := by
-  let := cycleComponent_isNoetherian structureMap x
+      (reducedClosedSmoothPiece (cycleComponentι Y.left x ≫ Y.hom) T) < (d - p : ℕ) := by
+  let := cycleComponent_isNoetherian Y x
   exact (topologicalKrullDim_reducedClosedSmoothPiece_le _
     (reducedSmoothStratification_mem_le _ _ T hT)).trans_lt
-      (topologicalKrullDim_cycleComponent_singularLocus_lt structureMap x hx)
+      (topologicalKrullDim_cycleComponent_singularLocus_lt Y x hx)
 
 /-- The algebraic dimension bound is realized by actual lower-dimensional smooth affine
 charts on each constructed singular-locus stratum. -/
 theorem cycleComponentSingularStratification_exists_affine_relativeDimension_lt
-    (x : Y) {d p : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (hx : Order.coheight x = p) (T : Closeds (cycleComponent Y x))
-    (hT : T ∈ cycleComponentSingularStratification structureMap x)
-    (z : reducedClosedSmoothPiece (cycleComponentι Y x ≫ structureMap) T) :
-    ∃ (U : (reducedClosedSmoothPiece (cycleComponentι Y x ≫ structureMap) T).Opens)
+    (x : Y.left) {d p : ℕ} [SmoothOfRelativeDimension d Y.hom]
+    (hx : Order.coheight x = p) (T : Closeds (cycleComponent Y.left x))
+    (hT : T ∈ cycleComponentSingularStratification Y x)
+    (z : reducedClosedSmoothPiece (cycleComponentι Y.left x ≫ Y.hom) T) :
+    ∃ (U : (reducedClosedSmoothPiece (cycleComponentι Y.left x ≫ Y.hom) T).Opens)
       (_ : IsAffineOpen U), z ∈ U ∧ ∃ n : ℕ, n < d - p ∧
         RingHom.IsStandardSmoothOfRelativeDimension n
-          ((reducedClosedSmoothPieceι (cycleComponentι Y x ≫ structureMap) T ≫
-            (cycleComponentι Y x ≫ structureMap)).appLE ⊤ U (by simp)).hom :=
+          ((reducedClosedSmoothPieceι (cycleComponentι Y.left x ≫ Y.hom) T ≫
+            (cycleComponentι Y.left x ≫ Y.hom)).appLE ⊤ U (by simp)).hom :=
   Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt _
-    (cycleComponentSingularStratification_piece_dimension_lt structureMap x hx T hT) z
+    (cycleComponentSingularStratification_piece_dimension_lt Y x hx T hT) z
 
 end AlgebraicGeometry

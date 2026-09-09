@@ -90,10 +90,7 @@ theorem capHomologyMap_naturality {X Y : SSet.{u}} (f : X ⟶ Y) (p q : ℕ)
       ShortComplex.homologyMap (Fpq ≫ capShortComplexHom R p q phi.1 phi.2) := by
     apply homologyMap_eq_of_τ₂_eq
     simp only [ShortComplex.comp_τ₂, capShortComplexHom_τ₂]
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
-    exact cap_naturality R f p q phi.1 c
+    exact ModuleCat.hom_ext (LinearMap.ext fun c => cap_naturality R f p q phi.1 c)
   rw [ShortComplex.homologyMap_comp, ShortComplex.homologyMap_comp] at h
   exact congrArg ModuleCat.Hom.hom h
 
@@ -148,8 +145,8 @@ def cocycleMap {X Y : TopCat.{u}} (f : X ⟶ Y) (p : ℕ) :
 theorem capHomologyMap_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p q : ℕ)
     (phi : Cocycle R Y p) (c : Homology R X (p + q)) :
     homologyMap R q f (capHomologyMap R X p q (cocycleMap R f p phi) c) =
-      capHomologyMap R Y p q phi (homologyMap R (p + q) f c) := by
-  exact LinearMap.congr_fun
+      capHomologyMap R Y p q phi (homologyMap R (p + q) f c) :=
+  LinearMap.congr_fun
     (Simplicial.capHomologyMap_naturality R (TopCat.toSSet.map f) p q phi) c
 
 /-- The pullback on singular cochain cohomology induced by the continuous map. -/
@@ -258,9 +255,7 @@ lemma relativeCapHom_naturality {X Y : TopPair.{u}} (f : X ⟶ Y) (p q : ℕ)
     (SSet.chainComplexMap (TopCat.toSSet.map (TopPair.Hom.fst f))
       (ModuleCat.of R R)).f (p + q) ≫ (relativeChainProjection R Y).f (p + q) at hnat
   rw [hnat, Category.assoc, relativeChainProjection_relativeCapHom]
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro c
+  refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
   change ((SSet.chainComplexMap (TopCat.toSSet.map (TopPair.Hom.fst f))
       (ModuleCat.of R R)).f q).hom (Simplicial.cap R p q
       (relativeCochainToAbsolute R X p (relativeCochainMap R f p phi)) c) =

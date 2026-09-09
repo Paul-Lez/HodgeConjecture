@@ -110,19 +110,13 @@ lemma standardSphereBoundaryFaceSimplex_injective (n : ℕ) :
       (standardSimplexTopSimplexForLocalClass n) =
     (SSet.stdSimplex.map (SimplexCategory.δ j)).app _
       (standardSimplexTopSimplexForLocalClass n) at h'
-  have hi : (SSet.stdSimplex.map (SimplexCategory.δ i)).app _
+  have key : ∀ k : Fin (n + 2), (SSet.stdSimplex.map (SimplexCategory.δ k)).app _
       (standardSimplexTopSimplexForLocalClass n) =
-        SSet.stdSimplex.objEquiv.symm (SimplexCategory.δ i) := by
+        SSet.stdSimplex.objEquiv.symm (SimplexCategory.δ k) := fun k ↦ by
     simpa [standardSimplexTopSimplexForLocalClass] using
       (SSet.stdSimplex.objEquiv_symm_comp
-        (𝟙 (SimplexCategory.mk n)) (SimplexCategory.δ i)).symm
-  have hj : (SSet.stdSimplex.map (SimplexCategory.δ j)).app _
-      (standardSimplexTopSimplexForLocalClass n) =
-        SSet.stdSimplex.objEquiv.symm (SimplexCategory.δ j) := by
-    simpa [standardSimplexTopSimplexForLocalClass] using
-      (SSet.stdSimplex.objEquiv_symm_comp
-        (𝟙 (SimplexCategory.mk n)) (SimplexCategory.δ j)).symm
-  rw [hi, hj] at h'
+        (𝟙 (SimplexCategory.mk n)) (SimplexCategory.δ k)).symm
+  rw [key i, key j] at h'
   exact SSet.stdSimplex.objEquiv.symm.injective h'
 
 lemma standardAffineBoundarySimplicialMap_face (n : ℕ) (i : Fin (n + 2)) :
@@ -219,9 +213,9 @@ lemma standardSphereSimplicialBoundaryChain_boundary_succ (n : ℕ) :
     (SSet.boundary (n + 2) : SSet.Subcomplex (Δ[n + 2] : SSet.{0})).ι
     (ModuleCat.of ℚ ℚ)
   let : Mono (f.f n) := standardSphereBoundaryChainInclusionComponent_mono (n + 2) n
-  rw [← cancel_mono (f.f n), Category.assoc, ← f.comm]
-  rw [← Category.assoc, standardSphereSimplicialBoundaryChain_inclusion]
-  rw [Category.assoc, HomologicalComplex.d_comp_d, comp_zero]
+  rw [← cancel_mono (f.f n), Category.assoc, ← f.comm, ← Category.assoc,
+    standardSphereSimplicialBoundaryChain_inclusion, Category.assoc,
+    HomologicalComplex.d_comp_d, comp_zero]
   simp
 
 /-- The alternating facets as a cycle in every positive-dimensional standard simplicial
@@ -291,8 +285,8 @@ lemma standardSphereSimplicialNormalizedBoundaryChain_detect (n : ℕ) :
       standardSphereSimplicialNormalizedBoundaryDetector n = 𝟙 _ := by
   classical
   rw [standardSphereSimplicialNormalizedBoundaryChain,
-    standardSphereSimplicialBoundaryChain, Preadditive.sum_comp]
-  rw [Preadditive.sum_comp]
+    standardSphereSimplicialBoundaryChain, Preadditive.sum_comp,
+    Preadditive.sum_comp]
   simp_rw [Preadditive.zsmul_comp, Category.assoc,
     SSet.ιChainComplex_toNormalizedChainComplex_f_assoc,
     standardSphereSimplicialNormalizedBoundaryFace_detect]
@@ -345,8 +339,8 @@ def standardSphereSimplicialNormalizedBoundaryCycle (n : ℕ) :
 lemma standardSphereSimplicialNormalizedBoundaryCycle_inclusion (n : ℕ) :
     standardSphereSimplicialNormalizedBoundaryCycle n ≫
       (standardSphereSuccNormalizedRationalChains n).iCycles (n + 1) =
-        standardSphereSimplicialNormalizedBoundaryChain n := by
-  exact (standardSphereSuccNormalizedRationalChains n).liftCycles_i
+        standardSphereSimplicialNormalizedBoundaryChain n :=
+  (standardSphereSuccNormalizedRationalChains n).liftCycles_i
     (standardSphereSimplicialNormalizedBoundaryChain n)
     ((ComplexShape.down ℕ).next (n + 1)) rfl _
 
@@ -371,8 +365,7 @@ lemma standardSphereSimplicialNormalizedBoundaryClass_ne_zero (n : ℕ) :
       (K.homologyπ (n + 1)).hom 0
     simpa only [map_zero] using h
   have hchain : (standardSphereSimplicialNormalizedBoundaryChain n).hom 1 = 0 := by
-    have h' := congrArg
-      (K.iCycles (n + 1)).hom hcycle
+    have h' := congrArg (K.iCycles (n + 1)).hom hcycle
     rw [map_zero] at h'
     change ((standardSphereSimplicialNormalizedBoundaryCycle n ≫
       K.iCycles (n + 1)).hom) 1 = 0 at h'
@@ -391,22 +384,15 @@ lemma span_standardSphereSimplicialNormalizedBoundaryClass_eq_top (n : ℕ) :
   let e := (standardSphereSuccNormalizedHomologyTopIsoRat n).toLinearEquiv
   have he : e (standardSphereSimplicialNormalizedBoundaryClass n) ≠ 0 :=
     e.map_ne_zero_iff.mpr (standardSphereSimplicialNormalizedBoundaryClass_ne_zero n)
-  have hmap :
-      (Submodule.span ℚ {standardSphereSimplicialNormalizedBoundaryClass n}).map
-          e.toLinearMap =
-        Submodule.span ℚ {e (standardSphereSimplicialNormalizedBoundaryClass n)} := by
-    rw [Submodule.map_span]
-    simp
   have hone : Submodule.span ℚ
-      {e (standardSphereSimplicialNormalizedBoundaryClass n)} = ⊤ := by
-    apply (Submodule.span_singleton_eq_top_iff ℚ
-      (e (standardSphereSimplicialNormalizedBoundaryClass n))).mpr
-    intro q
-    exact ⟨q / e (standardSphereSimplicialNormalizedBoundaryClass n), by
-      simpa only [smul_eq_mul] using div_mul_cancel₀ q he⟩
+      {e (standardSphereSimplicialNormalizedBoundaryClass n)} = ⊤ :=
+    (Submodule.span_singleton_eq_top_iff ℚ _).mpr fun q ↦
+      ⟨q / e (standardSphereSimplicialNormalizedBoundaryClass n), by
+        simpa only [smul_eq_mul] using div_mul_cancel₀ q he⟩
   apply Submodule.map_injective_of_injective e.injective
-  rw [hmap, hone, Submodule.map_top]
-  exact (LinearMap.range_eq_top.mpr e.surjective).symm
+  rw [Submodule.map_span, Set.image_singleton, Submodule.map_top,
+    LinearMap.range_eq_top.mpr e.surjective]
+  exact hone
 
 lemma standardSphereSimplicialBoundaryCycle_normalization (n : ℕ) :
     standardSphereSimplicialBoundaryCycle n ≫
@@ -416,10 +402,9 @@ lemma standardSphereSimplicialBoundaryCycle_normalization (n : ℕ) :
       standardSphereSimplicialNormalizedBoundaryCycle n := by
   apply (cancel_mono
     ((standardSphereSuccNormalizedRationalChains n).iCycles (n + 1))).mp
-  rw [Category.assoc, HomologicalComplex.cyclesMap_i]
-  rw [standardSphereSimplicialNormalizedBoundaryCycle_inclusion]
-  rw [← Category.assoc]
-  rw [standardSphereSimplicialBoundaryCycle, HomologicalComplex.liftCycles_i]
+  rw [Category.assoc, HomologicalComplex.cyclesMap_i,
+    standardSphereSimplicialNormalizedBoundaryCycle_inclusion, ← Category.assoc,
+    standardSphereSimplicialBoundaryCycle, HomologicalComplex.liftCycles_i]
   rfl
 
 lemma standardSphereSimplicialBoundaryClass_normalization (n : ℕ) :
@@ -436,8 +421,8 @@ lemma standardSphereSimplicialBoundaryClass_normalization (n : ℕ) :
           HomologicalComplex.homologyMap q (n + 1) =
         standardSphereSimplicialNormalizedBoundaryCycle n ≫
           (standardSphereSuccNormalizedRationalChains n).homologyπ (n + 1) := by
-    rw [HomologicalComplex.homologyπ_naturality]
-    rw [← Category.assoc, standardSphereSimplicialBoundaryCycle_normalization]
+    rw [HomologicalComplex.homologyπ_naturality, ← Category.assoc,
+      standardSphereSimplicialBoundaryCycle_normalization]
   change ((standardSphereSimplicialBoundaryCycle n ≫
       ((∂Δ[n + 2] : SSet.{0}).chainComplex
         (ModuleCat.of ℚ ℚ)).homologyπ (n + 1) ≫
@@ -460,21 +445,14 @@ lemma span_standardSphereSimplicialBoundaryClass_eq_top (n : ℕ) :
   let e := (standardSphereSuccSimplicialHomologyTopIsoRat n).toLinearEquiv
   have he : e (standardSphereSimplicialBoundaryClass n) ≠ 0 :=
     e.map_ne_zero_iff.mpr (standardSphereSimplicialBoundaryClass_ne_zero n)
-  have hmap :
-      (Submodule.span ℚ {standardSphereSimplicialBoundaryClass n}).map
-          e.toLinearMap =
-        Submodule.span ℚ {e (standardSphereSimplicialBoundaryClass n)} := by
-    rw [Submodule.map_span]
-    simp
-  have hone : Submodule.span ℚ {e (standardSphereSimplicialBoundaryClass n)} = ⊤ := by
-    apply (Submodule.span_singleton_eq_top_iff ℚ
-      (e (standardSphereSimplicialBoundaryClass n))).mpr
-    intro q
-    exact ⟨q / e (standardSphereSimplicialBoundaryClass n), by
-      simpa only [smul_eq_mul] using div_mul_cancel₀ q he⟩
+  have hone : Submodule.span ℚ {e (standardSphereSimplicialBoundaryClass n)} = ⊤ :=
+    (Submodule.span_singleton_eq_top_iff ℚ _).mpr fun q ↦
+      ⟨q / e (standardSphereSimplicialBoundaryClass n), by
+        simpa only [smul_eq_mul] using div_mul_cancel₀ q he⟩
   apply Submodule.map_injective_of_injective e.injective
-  rw [hmap, hone, Submodule.map_top]
-  exact (LinearMap.range_eq_top.mpr e.surjective).symm
+  rw [Submodule.map_span, Set.image_singleton, Submodule.map_top,
+    LinearMap.range_eq_top.mpr e.surjective]
+  exact hone
 
 /-- The alternating affine face chain in punctured coordinate space. -/
 def standardPuncturedAffineBoundaryChain (n : ℕ) :

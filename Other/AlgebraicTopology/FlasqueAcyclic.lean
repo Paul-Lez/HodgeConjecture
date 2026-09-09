@@ -67,11 +67,8 @@ def globalSectionsEquiv (F : TopCat.Sheaf AddCommGrpCat.{u} X) :
 lemma globalSectionsEquiv_naturality {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
     (f : F ⟶ G) (x : Abelian.Ext (globalSectionsSource (X := X)) F 0) :
     f.hom.app (op (⊤ : Opens X)) (globalSectionsEquiv F x) =
-      globalSectionsEquiv G (x.comp (Abelian.Ext.mk₀ f) (add_zero 0)) := by
-  have h := CategoryTheory.Sheaf.H.equiv₀_naturality isTerminalTop f x
-  change f.hom.app (op (⊤ : Opens X)) (globalSectionsEquiv F x) =
-    globalSectionsEquiv G (x.comp (Abelian.Ext.mk₀ f) (add_zero 0)) at h
-  exact h
+      globalSectionsEquiv G (x.comp (Abelian.Ext.mk₀ f) (add_zero 0)) :=
+  CategoryTheory.Sheaf.H.equiv₀_naturality isTerminalTop f x
 
 /-- Every positive-degree cohomology class of a flasque sheaf is zero. -/
 theorem cohomology_succ_eq_zero
@@ -115,13 +112,12 @@ theorem cohomology_succ_eq_zero
           globalSectionsEquiv S.X₃
               (z'.comp (Abelian.Ext.mk₀ S.g) (add_zero 0)) =
               S.g.hom.app (op (⊤ : Opens X))
-                (globalSectionsEquiv S.X₂ z') := by
-            exact (globalSectionsEquiv_naturality S.g z').symm
+                (globalSectionsEquiv S.X₂ z') :=
+            (globalSectionsEquiv_naturality S.g z').symm
           _ = globalSectionsEquiv S.X₃ y := by
             simpa only [z', Equiv.apply_symm_apply] using hz
-      rw [← hy, ← hz']
-      rw [Abelian.Ext.comp_assoc_of_second_deg_zero]
-      rw [hS.comp_extClass, Abelian.Ext.comp_zero]
+      rw [← hy, ← hz', Abelian.Ext.comp_assoc_of_second_deg_zero, hS.comp_extClass,
+        Abelian.Ext.comp_zero]
   | succ n ih =>
       let : AddCommGroup
           (Abelian.Ext (globalSectionsSource (X := X)) F (n + 2)) :=

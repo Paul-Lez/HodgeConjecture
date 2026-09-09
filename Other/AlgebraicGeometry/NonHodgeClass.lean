@@ -25,12 +25,12 @@ open scoped TensorProduct
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} [IsIntegral X] (s : X ⟶ Spec ↧ℂ) [Smooth s] (p : ℕ)
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (p : ℕ)
 
 /-- All rational classes of a variety are Hodge exactly when the pulled-back complex Hodge
 filtration is the whole complexification of rational cohomology. -/
 theorem hodgeClasses_eq_top_iff_complexifiedFieldHodgeFiltration_eq_top :
-    Hdg^p(ℚ; s) = ⊤ ↔ complexifiedFieldHodgeFiltration ℚ s p (2 * (p : ℤ)) = ⊤ := by
+    Hdg^p(ℚ; X) = ⊤ ↔ complexifiedFieldHodgeFiltration ℚ X p (2 * (p : ℤ)) = ⊤ := by
   rw [← hodgeClassesViaComplexification_eq]
   constructor
   · intro h
@@ -41,33 +41,33 @@ theorem hodgeClasses_eq_top_iff_complexifiedFieldHodgeFiltration_eq_top :
     | zero => exact Submodule.zero_mem _
     | tmul z v =>
         have hv : HodgeStructure.ofBase ℚ _ v ∈
-            complexifiedFieldHodgeFiltration ℚ s p (2 * (p : ℤ)) := by
-          change v ∈ hodgeClassesViaComplexification ℚ s p
+            complexifiedFieldHodgeFiltration ℚ X p (2 * (p : ℤ)) := by
+          change v ∈ hodgeClassesViaComplexification ℚ X p
           rw [h]
           trivial
         simpa [TensorProduct.smul_tmul'] using
-          (complexifiedFieldHodgeFiltration ℚ s p (2 * (p : ℤ))).smul_mem z hv
+          (complexifiedFieldHodgeFiltration ℚ X p (2 * (p : ℤ))).smul_mem z hv
     | add x y hx hy => exact Submodule.add_mem _ hx hy
   · intro h
     apply top_unique
     intro x _
     change HodgeStructure.ofBase ℚ _ x ∈
-      complexifiedFieldHodgeFiltration ℚ s p (2 * (p : ℤ))
+      complexifiedFieldHodgeFiltration ℚ X p (2 * (p : ℤ))
     rw [h]
     trivial
 
 /-- A proper Hodge filtration on the actual complexified cohomology gives a rational class
 which is not Hodge, and conversely. -/
 theorem exists_not_isHodgeClass_iff :
-    (∃ α : FieldCohomology ℚ s (2 * (p : ℤ)), ¬ IsHodgeClass ℚ s p α) ↔
-      complexifiedFieldHodgeFiltration ℚ s p (2 * (p : ℤ)) ≠ ⊤ := by
-  change (∃ α : FieldCohomology ℚ s (2 * (p : ℤ)), ¬ IsHodgeClass ℚ s p α) ↔
-    ¬ complexifiedFieldHodgeFiltration ℚ s p (2 * (p : ℤ)) = ⊤
+    (∃ α : FieldCohomology ℚ X (2 * (p : ℤ)), ¬ IsHodgeClass ℚ X p α) ↔
+      complexifiedFieldHodgeFiltration ℚ X p (2 * (p : ℤ)) ≠ ⊤ := by
+  change (∃ α : FieldCohomology ℚ X (2 * (p : ℤ)), ¬ IsHodgeClass ℚ X p α) ↔
+    ¬ complexifiedFieldHodgeFiltration ℚ X p (2 * (p : ℤ)) = ⊤
   rw [← hodgeClasses_eq_top_iff_complexifiedFieldHodgeFiltration_eq_top]
   constructor
   · rintro ⟨α, hα⟩ h
     apply hα
-    change α ∈ Hdg^p(ℚ; s)
+    change α ∈ Hdg^p(ℚ; X)
     rw [h]
     trivial
   · intro h

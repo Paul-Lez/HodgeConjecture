@@ -24,66 +24,68 @@ open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} [IsIntegral X] (s : X ⟶ Spec ↧ℂ) [Smooth s]
+open Point
+
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
 
 /-- The sheaf of holomorphic units placed in integer cochain degree one. -/
-def holomorphicUnitsComplexInt : CochainComplex (AnalyticAdditiveSheaf s) ℤ :=
-  (CochainComplex.singleFunctor (AnalyticAdditiveSheaf s) 1).obj
-    (holomorphicUnitsSheaf s (dim X))
+def holomorphicUnitsComplexInt : CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+  (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 1).obj
+    (holomorphicUnitsSheaf X (dim X.left))
 
 instance holomorphicUnitsComplexInt_isStrictlyGE :
-    (holomorphicUnitsComplexInt s).IsStrictlyGE 1 := by
+    (holomorphicUnitsComplexInt X).IsStrictlyGE 1 := by
   unfold holomorphicUnitsComplexInt
   infer_instance
 
 /-- The actual logarithmic derivative, extended to integer-indexed complexes. -/
 def holomorphicDlogComplexInt :
-    holomorphicUnitsComplexInt s ⟶ holomorphicDeRhamComplexInt s :=
+    holomorphicUnitsComplexInt X ⟶ holomorphicDeRhamComplexInt X :=
   (HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    (holomorphicUnitsSheaf s (dim X)) 1 1 rfl).inv ≫
-      HomologicalComplex.extendMap (holomorphicDlogComplex s (dim X))
+    (holomorphicUnitsSheaf X (dim X.left)) 1 1 rfl).inv ≫
+      HomologicalComplex.extendMap (holomorphicDlogComplex X (dim X.left))
         ComplexShape.embeddingUpNat
 
 /-- The constructed logarithmic derivative with values in the first filtered de Rham complex. -/
 def holomorphicDlogFilteredComplexInt :
-    holomorphicUnitsComplexInt s ⟶ hodgeFilteredDeRhamComplex s 1 :=
+    holomorphicUnitsComplexInt X ⟶ hodgeFilteredDeRhamComplex X 1 :=
   HomologicalComplex.liftStupidTrunc (ComplexShape.embeddingUpIntGE 1)
-    (holomorphicDlogComplexInt s)
+    (holomorphicDlogComplexInt X)
 
 /-- The filtered logarithmic derivative forgets to the original derivative. -/
 @[reassoc (attr := simp)]
 theorem holomorphicDlogFilteredComplexInt_comp_inclusion :
-    holomorphicDlogFilteredComplexInt s ≫ hodgeFilteredDeRhamInclusion s 1 =
-      holomorphicDlogComplexInt s :=
+    holomorphicDlogFilteredComplexInt X ≫ hodgeFilteredDeRhamInclusion X 1 =
+      holomorphicDlogComplexInt X :=
   HomologicalComplex.liftStupidTrunc_inclusion _ _
 
 /-- The filtered logarithmic class map on hypercohomology. Its degree-two domain is the
 hypercohomology of holomorphic units placed in degree one. -/
 def filteredLogarithmicClass (n : ℤ) :
-    Hypercohomology s (holomorphicUnitsComplexInt s) n →+
-      FilteredDeRhamHypercohomology s 1 n :=
-  hypercohomologyMap s (holomorphicDlogFilteredComplexInt s) n
+    Hypercohomology X (holomorphicUnitsComplexInt X) n →+
+      FilteredDeRhamHypercohomology X 1 n :=
+  hypercohomologyMap X (holomorphicDlogFilteredComplexInt X) n
 
 /-- The logarithmic class in the full holomorphic de Rham hypercohomology. -/
 def logarithmicClass (n : ℤ) :
-    Hypercohomology s (holomorphicUnitsComplexInt s) n →+ DeRhamHypercohomology s n :=
-  hypercohomologyMap s (holomorphicDlogComplexInt s) n
+    Hypercohomology X (holomorphicUnitsComplexInt X) n →+ DeRhamHypercohomology X n :=
+  hypercohomologyMap X (holomorphicDlogComplexInt X) n
 
 /-- The constructed filtered logarithmic class lifts its full de Rham class. -/
 @[simp]
 theorem filteredToDeRhamCohomology_filteredLogarithmicClass (n : ℤ)
-    (α : Hypercohomology s (holomorphicUnitsComplexInt s) n) :
-    filteredToDeRhamCohomology s 1 n (filteredLogarithmicClass s n α) =
-      logarithmicClass s n α := by
+    (α : Hypercohomology X (holomorphicUnitsComplexInt X) n) :
+    filteredToDeRhamCohomology X 1 n (filteredLogarithmicClass X n α) =
+      logarithmicClass X n α := by
   unfold filteredToDeRhamCohomology filteredLogarithmicClass logarithmicClass
   rw [← hypercohomologyMap_comp_apply,
     holomorphicDlogFilteredComplexInt_comp_inclusion]
 
 /-- Every logarithmic class belongs to the actual first Hodge filtration. -/
 theorem logarithmicClass_mem_hodgeFiltration (n : ℤ)
-    (α : Hypercohomology s (holomorphicUnitsComplexInt s) n) :
-    logarithmicClass s n α ∈ hodgeFiltration s 1 n :=
-  ⟨filteredLogarithmicClass s n α,
-    filteredToDeRhamCohomology_filteredLogarithmicClass s n α⟩
+    (α : Hypercohomology X (holomorphicUnitsComplexInt X) n) :
+    logarithmicClass X n α ∈ hodgeFiltration X 1 n :=
+  ⟨filteredLogarithmicClass X n α,
+    filteredToDeRhamCohomology_filteredLogarithmicClass X n α⟩
 
 end AlgebraicGeometry.ComplexPoint

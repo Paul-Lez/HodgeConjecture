@@ -28,93 +28,95 @@ open CategoryTheory Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (s : X ⟶ Spec ↧ℂ) (d : ℕ) [SmoothOfRelativeDimension d s]
+open Point
+
+variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 /-- The two-term exponential resolution on the actual analytic variety. -/
-abbrev holomorphicExponentialResolution : CochainComplex (AnalyticAdditiveSheaf s) ℕ :=
-  (holomorphicExponentialSequence s d).rightResolution
+abbrev holomorphicExponentialResolution : CochainComplex (AnalyticAdditiveSheaf X) ℕ :=
+  (holomorphicExponentialSequence X d).rightResolution
 
 /-- Integral periods augment the exponential resolution. -/
 def holomorphicExponentialResolutionι :
-    (CochainComplex.single₀ (AnalyticAdditiveSheaf s)).obj (constantIntegerSheaf s) ⟶
-      holomorphicExponentialResolution s d :=
-  (holomorphicExponentialSequence s d).rightResolutionι
+    (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj (constantIntegerSheaf X) ⟶
+      holomorphicExponentialResolution X d :=
+  (holomorphicExponentialSequence X d).rightResolutionι
 
 instance holomorphicExponentialResolutionι_quasiIso :
-    QuasiIso (holomorphicExponentialResolutionι s d) :=
-  (holomorphicExponentialSequence s d).rightResolutionι_quasiIso
-    (holomorphicExponentialSequence_shortExact s d)
+    QuasiIso (holomorphicExponentialResolutionι X d) :=
+  (holomorphicExponentialSequence X d).rightResolutionι_quasiIso
+    (holomorphicExponentialSequence_shortExact X d)
 
 /-- The analytic chain rule defines the cochain comparison to de Rham forms. -/
 def holomorphicExponentialResolutionToDeRham :
-    holomorphicExponentialResolution s d ⟶ holomorphicDeRhamComplex s d :=
-  (holomorphicExponentialSequence s d).fromRightResolution
-    (holomorphicFunctionToZeroFormSheaf s d) (holomorphicDlogSheaf s d)
+    holomorphicExponentialResolution X d ⟶ holomorphicDeRhamComplex X d :=
+  (holomorphicExponentialSequence X d).fromRightResolution
+    (holomorphicFunctionToZeroFormSheaf X d) (holomorphicDlogSheaf X d)
     (by
-      change holomorphicFunctionToZeroFormSheaf s d ≫ (holomorphicDeRhamComplex s d).d 0 1 =
-        holomorphicExpSheaf s d ≫ holomorphicDlogSheaf s d
+      change holomorphicFunctionToZeroFormSheaf X d ≫ (holomorphicDeRhamComplex X d).d 0 1 =
+        holomorphicExpSheaf X d ≫ holomorphicDlogSheaf X d
       rw [holomorphicDeRhamComplex_d]
-      exact (holomorphicExpSheaf_comp_dlog s d).symm)
+      exact (holomorphicExpSheaf_comp_dlog X d).symm)
     (by
       rw [holomorphicDeRhamComplex_d]
-      exact holomorphicDlogSheaf_comp_differential s d)
+      exact holomorphicDlogSheaf_comp_differential X d)
 
 /-- Units placed in degree one map into the exponential resolution. -/
 def holomorphicUnitsToExponentialResolution :
-    (HomologicalComplex.single _ (ComplexShape.up ℕ) 1).obj (holomorphicUnitsSheaf s d) ⟶
-      holomorphicExponentialResolution s d :=
-  HomologicalComplex.mkHomFromSingle (𝟙 (holomorphicUnitsSheaf s d)) (by
+    (HomologicalComplex.single _ (ComplexShape.up ℕ) 1).obj (holomorphicUnitsSheaf X d) ⟶
+      holomorphicExponentialResolution X d :=
+  HomologicalComplex.mkHomFromSingle (𝟙 (holomorphicUnitsSheaf X d)) (by
     intro k hk
     have hk' : k = 2 := by simpa using hk.symm
     subst k
     rw [Category.id_comp]
-    exact (holomorphicExponentialSequence s d).rightResolution_d_succ 0)
+    exact (holomorphicExponentialSequence X d).rightResolution_d_succ 0)
 
 /-- Restricting the comparison to units gives precisely the constructed logarithmic derivative. -/
 @[reassoc (attr := simp)]
 theorem holomorphicUnitsToExponentialResolution_comp_deRham :
-    holomorphicUnitsToExponentialResolution s d ≫ holomorphicExponentialResolutionToDeRham s d =
-      holomorphicDlogComplex s d := by
+    holomorphicUnitsToExponentialResolution X d ≫ holomorphicExponentialResolutionToDeRham X d =
+      holomorphicDlogComplex X d := by
   apply HomologicalComplex.from_single_hom_ext
   simp [holomorphicUnitsToExponentialResolution, holomorphicExponentialResolutionToDeRham,
     holomorphicDlogComplex]
 
-variable [IsIntegral X] [Smooth s]
+variable [IsIntegral X.left] [Smooth X.hom]
 
 /-- The exponential resolution extended by zero to integer cochain degrees. -/
-def holomorphicExponentialResolutionInt : CochainComplex (AnalyticAdditiveSheaf s) ℤ :=
-  (holomorphicExponentialResolution s (dim X)).extend ComplexShape.embeddingUpNat
+def holomorphicExponentialResolutionInt : CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+  (holomorphicExponentialResolution X (dim X.left)).extend ComplexShape.embeddingUpNat
 
 /-- The integer-indexed augmentation uses exactly the repository's constant integer complex. -/
 def holomorphicExponentialResolutionIntι :
-    constantIntegerSheafComplexInt s ⟶ holomorphicExponentialResolutionInt s :=
-  HomologicalComplex.extendMap (holomorphicExponentialResolutionι s (dim X))
+    constantIntegerSheafComplexInt X ⟶ holomorphicExponentialResolutionInt X :=
+  HomologicalComplex.extendMap (holomorphicExponentialResolutionι X (dim X.left))
     ComplexShape.embeddingUpNat
 
 instance holomorphicExponentialResolutionIntι_quasiIso :
-    QuasiIso (holomorphicExponentialResolutionIntι s) := by
+    QuasiIso (holomorphicExponentialResolutionIntι X) := by
   unfold holomorphicExponentialResolutionIntι
   infer_instance
 
 /-- The integer-indexed comparison from the exponential resolution to de Rham forms. -/
 def holomorphicExponentialResolutionToDeRhamInt :
-    holomorphicExponentialResolutionInt s ⟶ holomorphicDeRhamComplexInt s :=
-  HomologicalComplex.extendMap (holomorphicExponentialResolutionToDeRham s (dim X))
+    holomorphicExponentialResolutionInt X ⟶ holomorphicDeRhamComplexInt X :=
+  HomologicalComplex.extendMap (holomorphicExponentialResolutionToDeRham X (dim X.left))
     ComplexShape.embeddingUpNat
 
 /-- Units in degree one map into the integer-indexed exponential resolution. -/
 def holomorphicUnitsToExponentialResolutionInt :
-    holomorphicUnitsComplexInt s ⟶ holomorphicExponentialResolutionInt s :=
+    holomorphicUnitsComplexInt X ⟶ holomorphicExponentialResolutionInt X :=
   (HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    (holomorphicUnitsSheaf s (dim X)) 1 1 rfl).inv ≫
-      HomologicalComplex.extendMap (holomorphicUnitsToExponentialResolution s (dim X))
+    (holomorphicUnitsSheaf X (dim X.left)) 1 1 rfl).inv ≫
+      HomologicalComplex.extendMap (holomorphicUnitsToExponentialResolution X (dim X.left))
         ComplexShape.embeddingUpNat
 
 /-- The integer-indexed comparison agrees with `dlog` on units. -/
 @[reassoc (attr := simp)]
 theorem holomorphicUnitsToExponentialResolutionInt_comp_deRham :
-    holomorphicUnitsToExponentialResolutionInt s ≫ holomorphicExponentialResolutionToDeRhamInt s =
-      holomorphicDlogComplexInt s := by
+    holomorphicUnitsToExponentialResolutionInt X ≫ holomorphicExponentialResolutionToDeRhamInt X =
+      holomorphicDlogComplexInt X := by
   unfold holomorphicUnitsToExponentialResolutionInt holomorphicExponentialResolutionToDeRhamInt
     holomorphicDlogComplexInt
   rw [Category.assoc, ← HomologicalComplex.extendMap_comp,
@@ -122,44 +124,44 @@ theorem holomorphicUnitsToExponentialResolutionInt_comp_deRham :
 
 /-- The proved exponential resolution induces an additive equivalence on hypercohomology. -/
 def exponentialResolutionCohomologyEquiv (n : ℤ) :
-    Hypercohomology s (constantIntegerSheafComplexInt s) n ≃+
-      Hypercohomology s (holomorphicExponentialResolutionInt s) n :=
-  AddEquiv.ofBijective (hypercohomologyMap s (holomorphicExponentialResolutionIntι s) n)
+    Hypercohomology X (constantIntegerSheafComplexInt X) n ≃+
+      Hypercohomology X (holomorphicExponentialResolutionInt X) n :=
+  AddEquiv.ofBijective (hypercohomologyMap X (holomorphicExponentialResolutionIntι X) n)
     (Localization.SmallShiftedHom.postcompEquiv
-      (holomorphicExponentialResolutionIntι s) (by
-        change QuasiIso (holomorphicExponentialResolutionIntι s)
+      (holomorphicExponentialResolutionIntι X) (by
+        change QuasiIso (holomorphicExponentialResolutionIntι X)
         infer_instance)).bijective
 
 /-- The integral class obtained from units using the constructed exponential resolution.
 In degree two its domain is the hypercohomology of units placed in degree one. -/
 def integralExponentialClass (n : ℤ) :
-    Hypercohomology s (holomorphicUnitsComplexInt s) n →+
-      Hypercohomology s (constantIntegerSheafComplexInt s) n :=
-  (exponentialResolutionCohomologyEquiv s n).symm.toAddMonoidHom.comp
-    (hypercohomologyMap s (holomorphicUnitsToExponentialResolutionInt s) n)
+    Hypercohomology X (holomorphicUnitsComplexInt X) n →+
+      Hypercohomology X (constantIntegerSheafComplexInt X) n :=
+  (exponentialResolutionCohomologyEquiv X n).symm.toAddMonoidHom.comp
+    (hypercohomologyMap X (holomorphicUnitsToExponentialResolutionInt X) n)
 
 /-- Rational coefficients applied to the integral exponential class. -/
 def rationalExponentialClass (n : ℤ) :
-    Hypercohomology s (holomorphicUnitsComplexInt s) n →+ FieldCohomology ℚ s n :=
-  (hypercohomologyMap s (integerToFieldConstantSheafComplexInt ℚ s 1) n).comp
-    (integralExponentialClass s n)
+    Hypercohomology X (holomorphicUnitsComplexInt X) n →+ FieldCohomology ℚ X n :=
+  (hypercohomologyMap X (integerToFieldConstantSheafComplexInt ℚ X 1) n).comp
+    (integralExponentialClass X n)
 
 /-- Resolving an integral exponential class recovers the original units class in the resolution. -/
 @[simp]
 theorem augmentation_integralExponentialClass (n : ℤ)
-    (α : Hypercohomology s (holomorphicUnitsComplexInt s) n) :
-    hypercohomologyMap s (holomorphicExponentialResolutionIntι s) n
-        (integralExponentialClass s n α) =
-      hypercohomologyMap s (holomorphicUnitsToExponentialResolutionInt s) n α :=
-  (exponentialResolutionCohomologyEquiv s n).apply_symm_apply _
+    (α : Hypercohomology X (holomorphicUnitsComplexInt X) n) :
+    hypercohomologyMap X (holomorphicExponentialResolutionIntι X) n
+        (integralExponentialClass X n α) =
+      hypercohomologyMap X (holomorphicUnitsToExponentialResolutionInt X) n α :=
+  (exponentialResolutionCohomologyEquiv X n).apply_symm_apply _
 
 /-- The comparison induced by the integral-period augmentation sends the integral exponential
 class to the actual logarithmic class. -/
 theorem integralExponentialClass_logarithmic_comparison (n : ℤ)
-    (α : Hypercohomology s (holomorphicUnitsComplexInt s) n) :
-    hypercohomologyMap s
-        (holomorphicExponentialResolutionIntι s ≫ holomorphicExponentialResolutionToDeRhamInt s) n
-        (integralExponentialClass s n α) = logarithmicClass s n α := by
+    (α : Hypercohomology X (holomorphicUnitsComplexInt X) n) :
+    hypercohomologyMap X
+        (holomorphicExponentialResolutionIntι X ≫ holomorphicExponentialResolutionToDeRhamInt X) n
+        (integralExponentialClass X n α) = logarithmicClass X n α := by
   rw [hypercohomologyMap_comp_apply, augmentation_integralExponentialClass,
     ← hypercohomologyMap_comp_apply, holomorphicUnitsToExponentialResolutionInt_comp_deRham]
   rfl

@@ -56,9 +56,8 @@ def openSubsetPointPairMap (y : (Opens.toTopCat X).obj U) :
       TopPair.ofSubset (X := X) ({y.val} : Set X)ᶜ := by
   refine TopPair.ofHom U.inclusion' ?_ ?_
   · have hmem : ∀ z : (({y} : Set ((Opens.toTopCat X).obj U))ᶜ :
-        Set ((Opens.toTopCat X).obj U)), z.val.val ∈ ({y.val} : Set X)ᶜ := by
-      intro z hz
-      exact z.property (Subtype.ext hz)
+        Set ((Opens.toTopCat X).obj U)), z.val.val ∈ ({y.val} : Set X)ᶜ :=
+      fun z hz => z.property (Subtype.ext hz)
     exact TopCat.ofHom ⟨fun z => ⟨z.val.val, hmem z⟩,
       (continuous_subtype_val.comp continuous_subtype_val).subtype_mk hmem⟩
   · rfl
@@ -129,11 +128,9 @@ lemma singularChainPresheafOpenRestriction_boundary (n : ℕ) :
     singularChainPresheafOpenRestriction U R (n + 1) ≫
         Functor.whiskerLeft U.isOpenEmbedding.functor.op (singularChainBoundary R X n) =
       singularChainBoundary R ((Opens.toTopCat X).obj U) n ≫
-        singularChainPresheafOpenRestriction U R n := by
-  apply NatTrans.ext
-  funext V
-  exact congrArg ((forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map)
-    (((relativeChainFunctor R).map (openSubsetSupportPairMap U V.unop)).comm (n + 1) n)
+        singularChainPresheafOpenRestriction U R n :=
+  NatTrans.ext (funext fun V ↦ congrArg ((forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map)
+    (((relativeChainFunctor R).map (openSubsetSupportPairMap U V.unop)).comm (n + 1) n))
 
 /-- The actual open-inclusion map commutes with the sheafified boundary. -/
 @[reassoc]
@@ -186,9 +183,8 @@ def openRestrictionSheafComplexStalkIso
       TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} y.val).mapHomologicalComplex
         (ComplexShape.down ℕ)).obj K :=
   HomologicalComplex.Hom.isoOfComponents
-    (fun n => TopCat.Presheaf.openRestrictionStalkIso U (K.X n).obj y) (by
-      intro n m hnm
-      exact (TopCat.Presheaf.openRestrictionStalkHom_naturality U y (K.d n m).hom).symm)
+    (fun n => TopCat.Presheaf.openRestrictionStalkIso U (K.X n).obj y)
+    (fun n m _ => (TopCat.Presheaf.openRestrictionStalkHom_naturality U y (K.d n m).hom).symm)
 
 /-- The local relative-chain identification retains its exact normalization after the
 sheafification unit. -/

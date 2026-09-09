@@ -46,10 +46,9 @@ column is a quasi-isomorphism after direct-sum totalization. -/
 public theorem firstQuadrantTotal_quasiIso_of_columns
     {K L : FirstQuadrantBicomplex} (f : K ⟶ L)
     (hcolumn : ∀ p : ℕ, QuasiIso (f.f p)) :
-    QuasiIso (HomologicalComplex₂.total.map f (ComplexShape.down ℕ)) := by
-  apply firstQuadrantTotal_quasiIso_of_singleColumns f
-  intro p
-  exact firstQuadrantSingleColumnTotal_quasiIso f p (hcolumn p)
+    QuasiIso (HomologicalComplex₂.total.map f (ComplexShape.down ℕ)) :=
+  firstQuadrantTotal_quasiIso_of_singleColumns f fun p =>
+    firstQuadrantSingleColumnTotal_quasiIso f p (hcolumn p)
 
 namespace Singular
 

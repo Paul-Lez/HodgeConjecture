@@ -139,9 +139,7 @@ lemma subspaceBChainMap_triadCapLiftHom_eq_zero
       (ModuleCat.of R R)).f (p + q) ≫
     ModuleCat.ofHom (relativeCapLift R (TopPair.ofSubset A) p q phi) ≫
       (relativeChainProjection R (TopPair.ofSubset B)).f q = 0
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro c
+  ext c
   have hcap := Simplicial.cap_naturality R
     (TopCat.toSSet.map (TopPair.ofSubset B).map) p q
     (relativeCochainToAbsolute R (TopPair.ofSubset A) p phi) c
@@ -150,11 +148,7 @@ lemma subspaceBChainMap_triadCapLiftHom_eq_zero
   have hprojection' :
       (SSet.chainComplexMap (TopCat.toSSet.map (TopPair.ofSubset B).map)
           (ModuleCat.of R R)).f q ≫
-        (relativeChainProjection R (TopPair.ofSubset B)).f q = 0 := by
-    change (SSet.chainComplexMap (TopCat.toSSet.map (TopPair.ofSubset B).map)
-        (ModuleCat.of R R)).f q ≫
-      (relativeChainProjection R (TopPair.ofSubset B)).f q = 0 at hprojection
-    exact hprojection
+        (relativeChainProjection R (TopPair.ofSubset B)).f q = 0 := hprojection
   have hzero' := ConcreteCategory.congr_hom hprojection'
     (Simplicial.cap R p q
       (Simplicial.cochainMap R (TopCat.toSSet.map (TopPair.ofSubset B).map) p
@@ -197,8 +191,8 @@ noncomputable def triadRelativeChainProjectionComponentIsCokernel
       ((triadRelativeChainProjection R X A B).f n) (by
         have h := congrArg (fun f ↦ f.f n)
           (triadSubspaceChainMap_triadRelativeChainProjection R X A B)
-        exact h)) := by
-  exact CokernelCofork.mapIsColimit _
+        exact h)) :=
+  CokernelCofork.mapIsColimit _
     (cokernelIsCokernel (triadSubspaceChainMap R X A B))
     (HomologicalComplex.eval (ModuleCat R) (ComplexShape.down ℕ) n)
 
@@ -225,8 +219,8 @@ lemma triadRelativeChainProjection_triadCapHom
     (X : TopCat.{u}) (A B : Set X) (p q : ℕ)
     (phi : RelativeCochain R (TopPair.ofSubset A) p) :
     (triadRelativeChainProjection R X A B).f (p + q) ≫
-      triadCapHom R X A B p q phi = triadCapLiftHom R X A B p q phi := by
-  exact (Cofork.IsColimit.π_desc
+      triadCapHom R X A B p q phi = triadCapLiftHom R X A B p q phi :=
+  (Cofork.IsColimit.π_desc
     (triadRelativeChainProjectionComponentIsCokernel R X A B (p + q))
     (t := CokernelCofork.ofπ (triadCapLiftHom R X A B p q phi)
       (triadSubspaceChainMap_triadCapLiftHom_eq_zero R X A B p q phi))).trans
@@ -239,8 +233,8 @@ lemma triadCap_projection_apply
     (c : Simplicial.ChainGroup R (TopCat.toSSet.obj X) (p + q)) :
     triadCap R X A B p q phi
         ((triadRelativeChainProjection R X A B).f (p + q) c) =
-      triadCapLift R X A B p q phi c := by
-  exact ConcreteCategory.congr_hom
+      triadCapLift R X A B p q phi c :=
+  ConcreteCategory.congr_hom
     (triadRelativeChainProjection_triadCapHom R X A B p q phi) c
 
 set_option backward.isDefEq.respectTransparency false in
@@ -250,9 +244,7 @@ lemma triadCapLiftHom_add
     triadCapLiftHom R X A B p q (phi + psi) =
       triadCapLiftHom R X A B p q phi +
         triadCapLiftHom R X A B p q psi := by
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro c
+  ext c
   change ((relativeChainProjection R (TopPair.ofSubset B)).f q).hom
       (relativeCapLift R (TopPair.ofSubset A) p q (phi + psi) c) =
     ((relativeChainProjection R (TopPair.ofSubset B)).f q).hom
@@ -269,9 +261,7 @@ lemma triadCapLiftHom_smul
     (phi : RelativeCochain R (TopPair.ofSubset A) p) :
     triadCapLiftHom R X A B p q (a • phi) =
       a • triadCapLiftHom R X A B p q phi := by
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro c
+  ext c
   change ((relativeChainProjection R (TopPair.ofSubset B)).f q).hom
       (relativeCapLift R (TopPair.ofSubset A) p q (a • phi) c) =
     a • ((relativeChainProjection R (TopPair.ofSubset B)).f q).hom
@@ -339,8 +329,8 @@ lemma triadRelativeBoundary_projection
     triadRelativeBoundary R X A B n
         (((triadRelativeChainProjection R X A B).f (n + 1)).hom c) =
       ((triadRelativeChainProjection R X A B).f n).hom
-        (Simplicial.boundary R n c) := by
-  exact ConcreteCategory.congr_hom
+        (Simplicial.boundary R n c) :=
+  ConcreteCategory.congr_hom
     ((triadRelativeChainProjection R X A B).comm (n + 1) n) c
 
 set_option backward.isDefEq.respectTransparency false in
@@ -355,8 +345,7 @@ theorem boundary_triadCapLift_eq_of_cocycle
       (-1 : R) ^ p •
         (triadCapLift R X A B p q phi).comp
           (Simplicial.boundary R (p + q)) := by
-  apply LinearMap.ext
-  intro c
+  ext c
   simp only [LinearMap.comp_apply, LinearMap.smul_apply]
   have hboundary := ConcreteCategory.congr_hom
     ((relativeChainProjection R (TopPair.ofSubset B)).comm (q + 1) q)
@@ -389,8 +378,7 @@ theorem boundary_triadCap_eq_of_cocycle
       (-1 : R) ^ p •
         (triadCap R X A B p q phi).comp
           (triadRelativeBoundary R X A B (p + q)) := by
-  apply LinearMap.ext
-  intro z
+  ext z
   let π := (triadRelativeChainProjection R X A B).f (p + q + 1)
   let : Epi π := Cofork.IsColimit.epi
     (triadRelativeChainProjectionComponentIsCokernel R X A B (p + q + 1))
@@ -424,9 +412,7 @@ noncomputable def triadCapShortComplexHomZero
       τ₃ := 0
       comm₁₂ := ?_
       comm₂₃ := ?_ }
-  · apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
+  · ext c
     change relativeBoundary R (TopPair.ofSubset B) 0
         (s • triadCap R X A B p 1 phi c) =
       triadCap R X A B p 0 phi (triadRelativeBoundary R X A B p c)
@@ -464,9 +450,7 @@ noncomputable def triadCapShortComplexHomSucc
       τ₃ := ModuleCat.ofHom (s • triadCap R X A B p q phi)
       comm₁₂ := ?_
       comm₂₃ := ?_ }
-  · apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
+  · ext c
     change relativeBoundary R (TopPair.ofSubset B) (q + 1)
         (s • triadCap R X A B p ((q + 1) + 1) phi c) =
       triadCap R X A B p (q + 1) phi
@@ -479,8 +463,7 @@ noncomputable def triadCapShortComplexHomSucc
       s • triadCap R X A B p (q + 1) phi
         (triadRelativeBoundary R X A B (p + (q + 1)) c) at h
     simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · apply ModuleCat.hom_ext
-    exact boundary_triadCap_eq_of_cocycle R X A B p q phi hphi
+  · exact ModuleCat.hom_ext (boundary_triadCap_eq_of_cocycle R X A B p q phi hphi)
 
 /-- The short-complex morphism underlying the sum-relative triad cap product. -/
 noncomputable def triadCapShortComplexHom
@@ -600,8 +583,8 @@ lemma triadRelativeChainProjection_reassoc_apply
     triadRelativeReassocChain R X A B p q
         (((triadRelativeChainProjection R X A B).f (p + q + 1)).hom c) =
       ((triadRelativeChainProjection R X A B).f (p + 1 + q)).hom
-        (Simplicial.reassocChain R p q c) := by
-  exact ConcreteCategory.congr_hom
+        (Simplicial.reassocChain R p q c) :=
+  ConcreteCategory.congr_hom
     (HomologicalComplex.XIsoOfEq_hom_naturality
       (triadRelativeChainProjection R X A B) (by omega)) c
 
@@ -619,8 +602,7 @@ theorem triadCap_coboundary_eq
         (-1 : R) ^ p •
           (relativeBoundary R (TopPair.ofSubset B) q).comp
             (triadCap R X A B p (q + 1) phi) := by
-  apply LinearMap.ext
-  intro z
+  ext z
   let π := (triadRelativeChainProjection R X A B).f (p + q + 1)
   let : Epi π := Cofork.IsColimit.epi
     (triadRelativeChainProjectionComponentIsCokernel R X A B (p + q + 1))
@@ -651,14 +633,7 @@ theorem triadCap_coboundary_eq
             (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) =
         relativeBoundary R (TopPair.ofSubset B) q
           (((relativeChainProjection R (TopPair.ofSubset B)).f (q + 1)).hom
-            (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) := by
-    change relativeBoundary R (TopPair.ofSubset B) q
-        (((relativeChainProjection R (TopPair.ofSubset B)).f (q + 1)).hom
-          (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) =
-      ((relativeChainProjection R (TopPair.ofSubset B)).f q).hom
-        (Simplicial.boundary R q
-          (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) at hboundary
-    exact hboundary.symm
+            (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) := hboundary.symm
   change ((relativeChainProjection R (TopPair.ofSubset B)).f q).hom
       (Simplicial.cap R (p + 1) q
         (relativeCochainToAbsolute R (TopPair.ofSubset A) (p + 1)
@@ -680,9 +655,7 @@ theorem triadCap_coboundary_eq
             (((relativeChainProjection R (TopPair.ofSubset B)).f (q + 1)).hom
               (relativeCapLift R (TopPair.ofSubset A) p (q + 1) phi c)) := by
       rw [map_sub, map_smul]
-      apply congrArg₂ (fun x y ↦ x - (-1 : R) ^ p • y)
-      · rfl
-      · exact hboundary'
+      exact congrArg₂ (fun x y ↦ x - (-1 : R) ^ p • y) rfl hboundary'
 
 /-- Reassociation of source degree as an isomorphism of triad homology short complexes. -/
 noncomputable def triadRelativeReassocShortComplexIso
@@ -739,8 +712,7 @@ lemma triadCapCoboundaryShortComplexHom_τ₂_eq
           (triadCapHom R X A B p (q + 1) phi ≫
             ((relativeChainFunctor R).obj (TopPair.ofSubset B)).d (q + 1) q) := by
   rw [triadCapCoboundaryShortComplexHom_τ₂]
-  apply ModuleCat.hom_ext
-  exact triadCap_coboundary_eq R X A B p q phi
+  exact ModuleCat.hom_ext (triadCap_coboundary_eq R X A B p q phi)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Cap product by a relative coboundary induces zero on sum-relative triad homology. -/
@@ -749,10 +721,9 @@ theorem triadCapCoboundary_homologyMap_eq_zero
     (phi : RelativeCochain R (TopPair.ofSubset A) p) :
     ShortComplex.homologyMap
       (triadCapCoboundaryShortComplexHom R X A B p q phi) = 0 := by
-  rw [← cancel_epi ((triadRelativeChainComplex R X A B).sc
-    (p + q + 1)).homologyπ]
-  rw [← cancel_mono
-    (((relativeChainFunctor R).obj (TopPair.ofSubset B)).sc q).homologyι]
+  rw [← cancel_epi ((triadRelativeChainComplex R X A B).sc (p + q + 1)).homologyπ,
+    ← cancel_mono
+      (((relativeChainFunctor R).obj (TopPair.ofSubset B)).sc q).homologyι]
   simp only [Category.assoc, zero_comp, comp_zero]
   rw [ShortComplex.π_homologyMap_ι,
     triadCapCoboundaryShortComplexHom_τ₂_eq]
@@ -779,8 +750,8 @@ theorem triadCapShortComplexHom_coboundary_homologyMap_eq_zero
         (relativeCoboundary R (TopPair.ofSubset A) p phi)
         (relativeCoboundary_relativeCoboundary R (TopPair.ofSubset A) p phi)) = 0 := by
   rw [← cancel_epi (ShortComplex.homologyMap
-    (triadRelativeReassocShortComplexIso R X A B p q).hom)]
-  rw [← ShortComplex.homologyMap_comp, comp_zero]
+      (triadRelativeReassocShortComplexIso R X A B p q).hom),
+    ← ShortComplex.homologyMap_comp, comp_zero]
   exact triadCapCoboundary_homologyMap_eq_zero R X A B p q phi
 
 /-- A relative coboundary acts trivially on triad homology by cap product. -/
@@ -790,8 +761,8 @@ theorem triadCapHomologyMap_coboundary
     (phi : RelativeCochain R (TopPair.ofSubset A) p) :
     triadCapHomologyMap R X A B (p + 1) q
       (relativeCoboundary R (TopPair.ofSubset A) p phi)
-      (relativeCoboundary_relativeCoboundary R (TopPair.ofSubset A) p phi) = 0 := by
-  exact congrArg ModuleCat.Hom.hom
+      (relativeCoboundary_relativeCoboundary R (TopPair.ofSubset A) p phi) = 0 :=
+  congrArg ModuleCat.Hom.hom
     (triadCapShortComplexHom_coboundary_homologyMap_eq_zero R X A B p q phi)
 
 /-- Relative cocycles differing by a relative coboundary induce the same triad cap map. -/
@@ -807,9 +778,7 @@ theorem triadCapCocycleHomologyLinear_eq_of_sub_eq_coboundary
   let deta : RelativeCocycle R (TopPair.ofSubset A) (p + 1) :=
     ⟨relativeCoboundary R (TopPair.ofSubset A) p eta,
       relativeCoboundary_relativeCoboundary R (TopPair.ofSubset A) p eta⟩
-  have hdeta : phi - psi = deta := by
-    apply Subtype.ext
-    exact h
+  have hdeta : phi - psi = deta := Subtype.ext h
   rw [hdeta]
   exact triadCapHomologyMap_coboundary R X A B p q eta
 
@@ -849,8 +818,7 @@ lemma triadRelativeCohomologyCycleCapLinear_vanishes_on_boundaries
           rw [ChainComplex.next_nat_zero]
           simp
         rw [hg]
-        apply LinearMap.ext
-        intro c
+        ext c
         let etaF : Module.Dual R (K.sc 0).X₃ := eta
         change etaF (0 : (K.sc 0).X₃) = 0
         exact map_zero etaF
@@ -975,16 +943,14 @@ def subsetToUnionRight (X : TopCat.{u}) (A B : Set X) :
 lemma subsetToUnionLeft_comp_unionMap
     (X : TopCat.{u}) (A B : Set X) :
     subsetToUnionLeft X A B ≫ (TopPair.ofSubset (A ∪ B)).map =
-      (TopPair.ofSubset A).map := by
-  ext x
+      (TopPair.ofSubset A).map :=
   rfl
 
 @[reassoc]
 lemma subsetToUnionRight_comp_unionMap
     (X : TopCat.{u}) (A B : Set X) :
     subsetToUnionRight X A B ≫ (TopPair.ofSubset (A ∪ B)).map =
-      (TopPair.ofSubset B).map := by
-  ext x
+      (TopPair.ofSubset B).map :=
   rfl
 
 /-- The chain map induced by `A ⊆ A ∪ B`. -/
@@ -1124,8 +1090,8 @@ lemma triadRelativeChainProjection_triadToUnionRelativeChainMap
     (X : TopCat.{u}) (A B : Set X) :
     triadRelativeChainProjection R X A B ≫
       triadToUnionRelativeChainMap R X A B =
-        relativeChainProjection R (TopPair.ofSubset (A ∪ B)) := by
-  exact (Cofork.IsColimit.π_desc
+        relativeChainProjection R (TopPair.ofSubset (A ∪ B)) :=
+  (Cofork.IsColimit.π_desc
     (cokernelIsCokernel (triadSubspaceChainMap R X A B))
     (t := CokernelCofork.ofπ
       (relativeChainProjection R (TopPair.ofSubset (A ∪ B)))
@@ -1183,12 +1149,10 @@ noncomputable def unionRelativeTriadCapCohomologyLinear
   toFun alpha := (triadCapCohomologyLinear R X A B p q alpha).comp
     (triadUnionExcisionHomologyEquiv R X A B (p + q) hExcision).symm.toLinearMap
   map_add' alpha beta := by
-    apply LinearMap.ext
-    intro z
+    ext z
     simp
   map_smul' a alpha := by
-    apply LinearMap.ext
-    intro z
+    ext z
     simp
 
 /-- Evaluation of the customary triad cap product is evaluation of the sum-relative product on

@@ -143,9 +143,9 @@ lemma standardSubspaceBoundaryChain_boundary (n : ℕ) :
   let : Mono (f.f ((ComplexShape.down ℕ).next n)) :=
     Functor.map_mono (HomologicalComplex.eval (ModuleCat ℚ) _
       ((ComplexShape.down ℕ).next n)) f
-  rw [← cancel_mono (f.f ((ComplexShape.down ℕ).next n)), Category.assoc, ← f.comm]
-  rw [← Category.assoc, standardSubspaceBoundaryChain_inclusion, Category.assoc]
-  rw [HomologicalComplex.d_comp_d, comp_zero]
+  rw [← cancel_mono (f.f ((ComplexShape.down ℕ).next n)), Category.assoc, ← f.comm,
+    ← Category.assoc, standardSubspaceBoundaryChain_inclusion, Category.assoc,
+    HomologicalComplex.d_comp_d, comp_zero]
   simp
 
 /-- The boundary of the standard affine simplex as a cycle in punctured Euclidean space. -/
@@ -185,9 +185,8 @@ boundary of the standard affine simplex. -/
 lemma relativeSingularBoundary_standardLocalClass (n : ℕ) :
     (relativeSingularBoundary (standardPuncturedPair (n + 1)) n).hom
         (standardLocalClass (n + 1)) =
-      standardPuncturedBoundaryClass n := by
-  exact ConcreteCategory.congr_hom
-    (standardLocalCycle_comp_relativeSingularBoundary n) 1
+      standardPuncturedBoundaryClass n :=
+  ConcreteCategory.congr_hom (standardLocalCycle_comp_relativeSingularBoundary n) 1
 
 /-! ### Contractibility of the ambient Euclidean space -/
 
@@ -372,8 +371,8 @@ lemma standardPuncturedFaceCycle_homology₀Iso (i : Fin 2) :
         ((TopCat.toSSet.obj (standardPuncturedPair 1).snd).homology₀Iso
           (ModuleCat.of ℚ ℚ)).hom =
       Sigma.ι (fun (_ : (TopCat.toSSet.obj (standardPuncturedPair 1).snd).π₀) ↦
-        ModuleCat.of ℚ ℚ) (SSet.π₀.mk (standardFaceSimplex 0 i)) := by
-  exact SSet.liftCycles_ιChainComplex_homologyπ_homology₀Iso_hom
+        ModuleCat.of ℚ ℚ) (SSet.π₀.mk (standardFaceSimplex 0 i)) :=
+  SSet.liftCycles_ιChainComplex_homologyπ_homology₀Iso_hom
     (TopCat.toSSet.obj (standardPuncturedPair 1).snd) (ModuleCat.of ℚ ℚ)
       (standardFaceSimplex 0 i)
 

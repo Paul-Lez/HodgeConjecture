@@ -44,19 +44,14 @@ lemma sheafPullback_preservesMonomorphisms :
   constructor
   intro F G g hg
   letI : Mono g := hg
-  have hgHom' : Mono ((TopCat.Sheaf.forget AddCommGrpCat.{0} Y).map g) :=
-    Functor.map_mono _ g
-  have hgHom : Mono g.hom := by
-    exact hgHom'
-  let : Mono g.hom := hgHom
+  let : Mono g.hom := Functor.map_mono (TopCat.Sheaf.forget AddCommGrpCat.{0} Y) g
   let : Mono (Functor.whiskerLeft hf.functor.op g.hom) := by
     rw [NatTrans.mono_iff_mono_app]
     intro U
     exact (NatTrans.mono_iff_mono_app g.hom).mp inferInstance _
-  have hpres : Mono ((hf.sheafPullback AddCommGrpCat.{0}).map g).hom := by
+  let : Mono ((hf.sheafPullback AddCommGrpCat.{0}).map g).hom := by
     change Mono (Functor.whiskerLeft hf.functor.op g.hom)
     infer_instance
-  let := hpres
   exact CategoryTheory.Sheaf.Hom.mono_of_presheaf_mono
     (J := Opens.grothendieckTopology X) (A := AddCommGrpCat.{0})
       ((hf.sheafPullback AddCommGrpCat.{0}).map g)
@@ -194,144 +189,144 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 /-- The inclusion of the complement of a closed support is an open embedding. -/
 lemma analyticComplementInclusion_isOpenEmbedding
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
-    Topology.IsOpenEmbedding (analyticComplementInclusion structureMap Z) := by
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    Topology.IsOpenEmbedding (analyticComplementInclusion X Z) := by
   change Topology.IsOpenEmbedding
-    (Subtype.val : (Zᶜ : Set (ComplexPoint X structureMap)) → ComplexPoint X structureMap)
+    (Subtype.val : (Zᶜ : Set (ComplexPoint X)) → ComplexPoint X)
   exact hZ.isOpen_compl.isOpenEmbedding_subtypeVal
 
 /-- Every term of the chosen derived-pushforward model from an open complement is injective. -/
 theorem derivedPushforwardComplementConstantRationalComplexInt_injective
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) (n : ℤ) :
-    Injective ((derivedPushforwardComplementConstantRationalComplexInt structureMap Z).X n) := by
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    Injective ((derivedPushforwardComplementConstantRationalComplexInt X Z).X n) := by
   by_cases hn : ∃ m : ℕ, (m : ℤ) = n
   · obtain ⟨m, rfl⟩ := hn
-    let e := (derivedPushforwardComplementConstantRationalComplexNat structureMap Z).extendXIso
+    let e := (derivedPushforwardComplementConstantRationalComplexNat X Z).extendXIso
       ComplexShape.embeddingUpNat (i := m) rfl
     apply Injective.of_iso e.symm
     change Injective ((TopCat.Sheaf.pushforward AddCommGrpCat
-      (analyticComplementInclusion structureMap Z)).obj
-        ((complementConstantRationalInjectiveResolution structureMap Z).cocomplex.X m))
-    exact (analyticComplementInclusion_isOpenEmbedding structureMap Z hZ).pushforward_injective _
-  · exact (derivedPushforwardComplementConstantRationalComplexNat structureMap Z).isZero_extend_X
+      (analyticComplementInclusion X Z)).obj
+        ((complementConstantRationalInjectiveResolution X Z).cocomplex.X m))
+    exact (analyticComplementInclusion_isOpenEmbedding X Z hZ).pushforward_injective _
+  · exact (derivedPushforwardComplementConstantRationalComplexNat X Z).isZero_extend_X
       ComplexShape.embeddingUpNat n (fun i hi ↦ hn ⟨i, hi⟩) |>.injective
 
 /-- The rational constant-to-singular comparison is a monomorphism of integer-indexed sheaf
 complexes. -/
 lemma rationalToSingularCochainComplexInt_mono :
-    Mono (rationalToSingularCochainComplexInt structureMap) := by
+    Mono (rationalToSingularCochainComplexInt X) := by
   change Mono (HomologicalComplex.extendMap
     (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex ℚ
-      (TopCat.of (ComplexPoint X structureMap))) ComplexShape.embeddingUpNat)
+      (TopCat.of (ComplexPoint X))) ComplexShape.embeddingUpNat)
   exact AlgebraicTopology.Singular.constantsToSingularCochainComplexInt_mono ℚ _
 
-variable [IsIntegral X] [Smooth structureMap]
+variable [IsIntegral X.left] [Smooth X.hom]
 
 local instance bettiSupportComparisonHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf structureMap)
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 /-- A strict chain-level extension of restriction from rational constants to the chosen derived
 pushforward complex across the singular-cochain resolution. -/
 def singularResolutionRestriction
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
-    singularCochainSheafComplexInt structureMap ℚ ⟶
-      derivedPushforwardComplementConstantRationalComplexInt structureMap Z := by
-  let : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    singularCochainSheafComplexInt X ℚ ⟶
+      derivedPushforwardComplementConstantRationalComplexInt X Z := by
+  let : (constantFieldSheafComplexInt ℚ X).IsStrictlyGE 0 := by
     unfold constantFieldSheafComplexInt
     infer_instance
-  let : (singularCochainSheafComplexInt structureMap ℚ).IsStrictlyGE 0 := by
+  let : (singularCochainSheafComplexInt X ℚ).IsStrictlyGE 0 := by
     unfold singularCochainSheafComplexInt
     infer_instance
-  let : (derivedPushforwardComplementConstantRationalComplexInt structureMap Z).IsStrictlyGE
+  let : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE
       0 := by
     unfold derivedPushforwardComplementConstantRationalComplexInt
     infer_instance
-  let : Mono (rationalToSingularCochainComplexInt structureMap) :=
-    rationalToSingularCochainComplexInt_mono structureMap
-  let : QuasiIso (rationalToSingularCochainComplexInt structureMap) :=
-    rationalToSingularCochainComplexInt_quasiIso structureMap
+  let : Mono (rationalToSingularCochainComplexInt X) :=
+    rationalToSingularCochainComplexInt_mono X
+  let : QuasiIso (rationalToSingularCochainComplexInt X) :=
+    rationalToSingularCochainComplexInt_quasiIso X
   exact CochainComplex.liftToInjective
-    (rationalToSingularCochainComplexInt structureMap)
-    (rationalRestrictionComplexInt structureMap Z)
-    (derivedPushforwardComplementConstantRationalComplexInt_injective structureMap Z hZ)
+    (rationalToSingularCochainComplexInt X)
+    (rationalRestrictionComplexInt X Z)
+    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The singular-resolution restriction strictly extends restriction of rational constants. -/
 lemma rationalToSingular_comp_singularResolutionRestriction
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
-    rationalToSingularCochainComplexInt structureMap ≫
-        singularResolutionRestriction structureMap Z hZ =
-      rationalRestrictionComplexInt structureMap Z := by
-  let : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    rationalToSingularCochainComplexInt X ≫
+        singularResolutionRestriction X Z hZ =
+      rationalRestrictionComplexInt X Z := by
+  let : (constantFieldSheafComplexInt ℚ X).IsStrictlyGE 0 := by
     unfold constantFieldSheafComplexInt
     infer_instance
-  let : (singularCochainSheafComplexInt structureMap ℚ).IsStrictlyGE 0 := by
+  let : (singularCochainSheafComplexInt X ℚ).IsStrictlyGE 0 := by
     unfold singularCochainSheafComplexInt
     infer_instance
-  let : (derivedPushforwardComplementConstantRationalComplexInt structureMap Z).IsStrictlyGE
+  let : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE
       0 := by
     unfold derivedPushforwardComplementConstantRationalComplexInt
     infer_instance
-  let : Mono (rationalToSingularCochainComplexInt structureMap) :=
-    rationalToSingularCochainComplexInt_mono structureMap
-  let : QuasiIso (rationalToSingularCochainComplexInt structureMap) :=
-    rationalToSingularCochainComplexInt_quasiIso structureMap
+  let : Mono (rationalToSingularCochainComplexInt X) :=
+    rationalToSingularCochainComplexInt_mono X
+  let : QuasiIso (rationalToSingularCochainComplexInt X) :=
+    rationalToSingularCochainComplexInt_quasiIso X
   exact CochainComplex.comp_liftToInjective
-    (rationalToSingularCochainComplexInt structureMap)
-    (rationalRestrictionComplexInt structureMap Z)
-    (derivedPushforwardComplementConstantRationalComplexInt_injective structureMap Z hZ)
+    (rationalToSingularCochainComplexInt X)
+    (rationalRestrictionComplexInt X Z)
+    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
 
 /-- Replacing rational constants by their singular-cochain resolution gives a quasi-isomorphic
 mapping-cone model for supported cohomology. -/
 def rationalSupportConeToSingularResolutionCone
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
-    rationalCohomologyWithSupportComplex structureMap Z ⟶
-      CochainComplex.mappingCone (singularResolutionRestriction structureMap Z hZ) := by
-  let : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    rationalCohomologyWithSupportComplex X Z ⟶
+      CochainComplex.mappingCone (singularResolutionRestriction X Z hZ) := by
+  let : (constantFieldSheafComplexInt ℚ X).IsStrictlyGE 0 := by
     unfold constantFieldSheafComplexInt
     infer_instance
-  let : (singularCochainSheafComplexInt structureMap ℚ).IsStrictlyGE 0 := by
+  let : (singularCochainSheafComplexInt X ℚ).IsStrictlyGE 0 := by
     unfold singularCochainSheafComplexInt
     infer_instance
-  let : (derivedPushforwardComplementConstantRationalComplexInt structureMap Z).IsStrictlyGE
+  let : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE
       0 := by
     unfold derivedPushforwardComplementConstantRationalComplexInt
     infer_instance
-  let : Mono (rationalToSingularCochainComplexInt structureMap) :=
-    rationalToSingularCochainComplexInt_mono structureMap
-  let : QuasiIso (rationalToSingularCochainComplexInt structureMap) :=
-    rationalToSingularCochainComplexInt_quasiIso structureMap
+  let : Mono (rationalToSingularCochainComplexInt X) :=
+    rationalToSingularCochainComplexInt_mono X
+  let : QuasiIso (rationalToSingularCochainComplexInt X) :=
+    rationalToSingularCochainComplexInt_quasiIso X
   exact CochainComplex.sourceReplacementConeMap
-    (rationalToSingularCochainComplexInt structureMap)
-    (rationalRestrictionComplexInt structureMap Z)
-    (derivedPushforwardComplementConstantRationalComplexInt_injective structureMap Z hZ)
+    (rationalToSingularCochainComplexInt X)
+    (rationalRestrictionComplexInt X Z)
+    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
 
 noncomputable instance rationalSupportConeToSingularResolutionCone_quasiIso
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
-    QuasiIso (rationalSupportConeToSingularResolutionCone structureMap Z hZ) := by
-  let : (constantFieldSheafComplexInt ℚ structureMap).IsStrictlyGE 0 := by
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    QuasiIso (rationalSupportConeToSingularResolutionCone X Z hZ) := by
+  let : (constantFieldSheafComplexInt ℚ X).IsStrictlyGE 0 := by
     unfold constantFieldSheafComplexInt
     infer_instance
-  let : (singularCochainSheafComplexInt structureMap ℚ).IsStrictlyGE 0 := by
+  let : (singularCochainSheafComplexInt X ℚ).IsStrictlyGE 0 := by
     unfold singularCochainSheafComplexInt
     infer_instance
-  let : (derivedPushforwardComplementConstantRationalComplexInt structureMap Z).IsStrictlyGE
+  let : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE
       0 := by
     unfold derivedPushforwardComplementConstantRationalComplexInt
     infer_instance
-  let : Mono (rationalToSingularCochainComplexInt structureMap) :=
-    rationalToSingularCochainComplexInt_mono structureMap
-  let : QuasiIso (rationalToSingularCochainComplexInt structureMap) :=
-    rationalToSingularCochainComplexInt_quasiIso structureMap
+  let : Mono (rationalToSingularCochainComplexInt X) :=
+    rationalToSingularCochainComplexInt_mono X
+  let : QuasiIso (rationalToSingularCochainComplexInt X) :=
+    rationalToSingularCochainComplexInt_quasiIso X
   change QuasiIso (CochainComplex.sourceReplacementConeMap
-    (rationalToSingularCochainComplexInt structureMap)
-    (rationalRestrictionComplexInt structureMap Z)
-    (derivedPushforwardComplementConstantRationalComplexInt_injective structureMap Z hZ))
+    (rationalToSingularCochainComplexInt X)
+    (rationalRestrictionComplexInt X Z)
+    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ))
   infer_instance
 
 end AlgebraicGeometry.ComplexPoint

@@ -127,9 +127,8 @@ theorem neighborhoodSupportRelativeChains_isZero (V : Set X) (hV : ∀ x ∈ V, 
   change IsZero ((relativeChainFunctor ℚ).obj (TopPair.ofSubset (X := TopCat.of V) _))
   rw [hset]
   let P := TopPair.ofSubset (X := TopCat.of V) (Set.univ : Set V)
-  have hPi : IsIso P.map := by
-    apply (TopCat.isIso_iff_isHomeomorph P.map).mpr
-    exact (Homeomorph.Set.univ V).isHomeomorph
+  have hPi : IsIso P.map :=
+    (TopCat.isIso_iff_isHomeomorph P.map).mpr (Homeomorph.Set.univ V).isHomeomorph
   have hchain : IsIso ((chainPairFunctor ℚ).obj P).hom := by
     change IsIso (((singularChainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ)).map P.map)
     infer_instance

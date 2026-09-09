@@ -68,12 +68,10 @@ lemma biprod (F G : TopCat.Presheaf AddCommGrpCat.{u} X) [F.IsFlasque] [G.IsFlas
     let : PreservesLimit (pair F G) evalV := by
       letI : PreservesLimitsOfShape (Discrete WalkingPair) evalV := by infer_instance
       exact PreservesLimitsOfShape.preservesLimit
-    let : PreservesBinaryBiproduct F G
-        evalU := by
-      exact preservesBinaryBiproduct_of_preservesBinaryProduct _
-    let : PreservesBinaryBiproduct F G
-        evalV := by
-      exact preservesBinaryBiproduct_of_preservesBinaryProduct _
+    let : PreservesBinaryBiproduct F G evalU :=
+      preservesBinaryBiproduct_of_preservesBinaryProduct _
+    let : PreservesBinaryBiproduct F G evalV :=
+      preservesBinaryBiproduct_of_preservesBinaryProduct _
     let eU := evalU.mapBiprod F G
     let eV := evalV.mapBiprod F G
     let pF : (F ⊞ G) ⟶ F := Limits.biprod.fst
@@ -125,8 +123,7 @@ lemma of_iso {F G : TopCat.Sheaf AddCommGrpCat.{u} X} (e : F ≅ G)
     F.IsFlasque := by
   change TopCat.Presheaf.IsFlasque F.obj
   letI : TopCat.Presheaf.IsFlasque G.obj := hG
-  apply TopCat.Presheaf.IsFlasque.of_iso (G := G.obj)
-  exact
+  exact TopCat.Presheaf.IsFlasque.of_iso (G := G.obj)
     ((TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapIso e)
 
 set_option linter.style.haveILetI false in
@@ -141,10 +138,9 @@ lemma biprod (F G : TopCat.Sheaf AddCommGrpCat.{u} X)
   letI : TopCat.Presheaf.IsFlasque (F.obj ⊞ G.obj) :=
     TopCat.Presheaf.IsFlasque.biprod F.obj G.obj
   let forget := TopCat.Sheaf.forget AddCommGrpCat.{u} X
-  let : PreservesBinaryBiproduct F G forget := by
-    exact preservesBinaryBiproduct_of_preservesBinaryProduct forget
-  apply TopCat.Presheaf.IsFlasque.of_iso (G := F.obj ⊞ G.obj)
-  exact forget.mapBiprod F G
+  let : PreservesBinaryBiproduct F G forget :=
+    preservesBinaryBiproduct_of_preservesBinaryProduct forget
+  exact TopCat.Presheaf.IsFlasque.of_iso (G := F.obj ⊞ G.obj) (forget.mapBiprod F G)
 
 namespace BoundedBelowComplex
 
@@ -160,8 +156,7 @@ lemma mappingCone_acyclic_of_quasiIso
   rw [← HomotopyCategory.quasiIso_eq_trW_subcategoryAcyclic]
   change HomotopyCategory.quasiIso C (ComplexShape.up ℤ)
     ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).map f)
-  rw [HomotopyCategory.quotient_map_mem_quasiIso_iff]
-  rw [HomologicalComplex.mem_quasiIso_iff]
+  rw [HomotopyCategory.quotient_map_mem_quasiIso_iff, HomologicalComplex.mem_quasiIso_iff]
   infer_instance
 
 /-- A morphism whose mapping cone is acyclic is a quasi-isomorphism. -/
@@ -169,9 +164,8 @@ lemma quasiIso_of_mappingCone_acyclic
     {C : Type u} [Category C] [Abelian C]
     {K L : CochainComplex C ℤ} (f : K ⟶ L)
     (h : (CochainComplex.mappingCone f).Acyclic) : QuasiIso f := by
-  rw [← HomologicalComplex.mem_quasiIso_iff]
-  rw [← HomotopyCategory.quotient_map_mem_quasiIso_iff]
-  rw [HomotopyCategory.quasiIso_eq_trW_subcategoryAcyclic]
+  rw [← HomologicalComplex.mem_quasiIso_iff, ← HomotopyCategory.quotient_map_mem_quasiIso_iff,
+    HomotopyCategory.quasiIso_eq_trW_subcategoryAcyclic]
   apply ((HomotopyCategory.subcategoryAcyclic C).trW_iff_of_distinguished
     (CochainComplex.mappingCone.triangleh f)
     (HomotopyCategory.mappingCone_triangleh_distinguished f)).mpr
@@ -184,9 +178,8 @@ lemma quasiIso_of_mappingCone_acyclic
 /-- Acyclicity is invariant under isomorphism of cochain complexes. -/
 lemma acyclic_of_iso
     {C : Type u} [Category C] [Abelian C]
-    {K L : CochainComplex C ℤ} (h : K.Acyclic) (e : K ≅ L) : L.Acyclic := by
-  intro i
-  exact (h i).of_iso e
+    {K L : CochainComplex C ℤ} (h : K.Acyclic) (e : K ≅ L) : L.Acyclic :=
+  fun i => (h i).of_iso e
 
 variable {K L : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ}
 
@@ -224,9 +217,8 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
   let F := globalSectionsFunctor X
   have hcone :
       (CochainComplex.mappingCone
-        ((F.mapHomologicalComplex (ComplexShape.up ℤ)).map f)).Acyclic := by
-    apply acyclic_of_iso hglobal
-    exact CochainComplex.mappingCone.mapHomologicalComplexIso f F
+        ((F.mapHomologicalComplex (ComplexShape.up ℤ)).map f)).Acyclic :=
+    acyclic_of_iso hglobal (CochainComplex.mappingCone.mapHomologicalComplexIso f F)
   exact quasiIso_of_mappingCone_acyclic _ hcone
 
 end BoundedBelowComplex

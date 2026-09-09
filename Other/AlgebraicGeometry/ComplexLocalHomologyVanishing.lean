@@ -30,10 +30,8 @@ theorem chartModelEmbedding_relativeHomologyMap_bijective_degree
     (hx : x ∈ e.source) (n : ℕ) :
     Function.Bijective (relativeHomologyMap ℚ n (chartModelEmbeddingPair d e x hx)) := by
   have htarget : Function.Bijective
-      (relativeHomologyMap ℚ n (standardComplexChartTargetPairIso d e x hx).hom) := by
-    have : IsIso ((relativeHomologyFunctor ℚ n).map
-        (standardComplexChartTargetPairIso d e x hx).hom) := by infer_instance
-    exact (ConcreteCategory.isIso_iff_bijective _).mp this
+      (relativeHomologyMap ℚ n (standardComplexChartTargetPairIso d e x hx).hom) :=
+    (ConcreteCategory.isIso_iff_bijective _).mp inferInstance
   have hexcision := neighborhoodPointComplement_relativeHomologyMap_bijective
     (chartModelTarget d e x hx) x (chartModelTarget_isOpen d e x hx)
       (chartModelTarget_mem d e x hx) n
@@ -55,8 +53,8 @@ def chartModelEmbeddingRelativeHomologyIso
 
 /-- Complex coordinate space has local homology only in twice its complex dimension. -/
 theorem standardComplexLocalHomology_isZero_of_ne (d n : ℕ) (hn : n ≠ 2 * d) :
-    IsZero (RelativeHomology ℚ (standardComplexPuncturedPair d) n) := by
-  exact (standardLocalHomology_isZero_of_ne (d * 2) n (by omega)).of_iso
+    IsZero (RelativeHomology ℚ (standardComplexPuncturedPair d) n) :=
+  (standardLocalHomology_isZero_of_ne (d * 2) n (by omega)).of_iso
     ((relativeHomologyFunctor ℚ n).mapIso (standardComplexRealPairIso d))
 
 /-- A complex coordinate chart proves local homology vanishing outside its real dimension. -/
@@ -74,26 +72,26 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
 noncomputable local instance complexLocalHomologyAnalyticTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- Local homology of a smooth complex scheme is concentrated in its real dimension. -/
-theorem localHomology_isZero_of_ne [SmoothOfRelativeDimension d structureMap]
-    [T1Space (ComplexPoint X structureMap)] (z : ComplexPoint X structureMap)
+theorem localHomology_isZero_of_ne [SmoothOfRelativeDimension d X.hom]
+    [T1Space (ComplexPoint X)] (z : ComplexPoint X)
     (n : ℕ) (hn : n ≠ 2 * d) :
     IsZero (RelativeHomology ℚ (pointComplementPair z) n) :=
-  localHomology_isZero_of_complexChart d (localChart structureMap d z) z
-    (mem_localChart_source structureMap d z) n hn
+  localHomology_isZero_of_complexChart d (localChart X d z) z
+    (mem_localChart_source X d z) n hn
 
 /-- The homology sheaf of the actual relative-chain complex vanishes off the complex
 orientation degree. This supplies the concentration theorem needed by canonical truncation. -/
-theorem singularChainHomologySheaf_isZero_of_ne [SmoothOfRelativeDimension d structureMap]
-    [T2Space (ComplexPoint X structureMap)] (n : ℕ) (hn : n ≠ 2 * d) :
-    IsZero (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X structureMap)) n) :=
+theorem singularChainHomologySheaf_isZero_of_ne [SmoothOfRelativeDimension d X.hom]
+    [T2Space (ComplexPoint X)] (n : ℕ) (hn : n ≠ 2 * d) :
+    IsZero (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) n) :=
   singularChainHomologySheaf_isZero_of_localHomology_isZero ℚ
-    (TopCat.of (ComplexPoint X structureMap)) n
-      (fun z ↦ localHomology_isZero_of_ne structureMap d z n hn)
+    (TopCat.of (ComplexPoint X)) n
+      (fun z ↦ localHomology_isZero_of_ne X d z n hn)
 
 end AlgebraicGeometry.ComplexPoint

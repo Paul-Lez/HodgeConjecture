@@ -69,10 +69,10 @@ without any acyclicity or boundedness assumption on its coefficients. -/
 theorem supportedSections_top_homology_isZero (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (n : ℤ) :
     IsZero ((((supportEvaluation X W).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X ⊤).mapHomologicalComplex (.up ℤ)).obj K)).homology n) := by
-  apply ShortComplex.isZero_homology_of_isZero_X₂
-  exact (supportEvaluation X W).map_isZero
-    (isZero_sheafSectionsSupportedOutside_top X (K.X n))
+      (((sheafSectionsSupportedOutside X ⊤).mapHomologicalComplex (.up ℤ)).obj K)).homology n) :=
+  ShortComplex.isZero_homology_of_isZero_X₂ _
+    ((supportEvaluation X W).map_isZero
+      (isZero_sheafSectionsSupportedOutside_top X (K.X n)))
 
 variable {U V : Opens X} (h : V ≤ U)
 

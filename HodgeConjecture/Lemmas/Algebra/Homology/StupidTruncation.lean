@@ -86,9 +86,8 @@ noncomputable instance stupidTruncInclusion_isIso [K.IsStrictlySupported e] :
     · obtain ⟨i, hi⟩ := hj
       rw [stupidTruncInclusion_f K e hi]
       infer_instance
-    · apply IsZero.isIso
-      · exact K.isZero_stupidTrunc_X e j (by simpa using hj)
-      · exact K.isZero_X_of_isStrictlySupported e j (by simpa using hj)
+    · exact IsZero.isIso (K.isZero_stupidTrunc_X e j (by simpa using hj))
+        (K.isZero_X_of_isStrictlySupported e j (by simpa using hj)) _
   exact @Hom.isIso_of_components J C _ _ c' _ _
     (stupidTruncInclusion K e) componentIsIso
 

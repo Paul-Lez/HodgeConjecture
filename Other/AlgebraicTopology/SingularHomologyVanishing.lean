@@ -46,12 +46,8 @@ public theorem homology_isZero_of_exact_chainModel
     (X : TopCat) (C : ChainComplex (ModuleCat ℚ) ℕ)
     (f : C ⟶ ((singularChainComplexFunctor (ModuleCat ℚ)).obj
       (ModuleCat.of ℚ ℚ)).obj X) (n : ℕ) [QuasiIsoAt f n]
-    (hC : C.ExactAt n) : IsZero (Homology ℚ X n) := by
-  have htarget :
-      (((singularChainComplexFunctor (ModuleCat ℚ)).obj
-        (ModuleCat.of ℚ ℚ)).obj X).ExactAt n :=
-    (exactAt_iff_of_quasiIsoAt f n).mp hC
-  exact htarget.isZero_homology
+    (hC : C.ExactAt n) : IsZero (Homology ℚ X n) :=
+  ((exactAt_iff_of_quasiIsoAt f n).mp hC).isZero_homology
 
 /-- A chain model quasi-isomorphic to rational singular chains and having zero chain group in
 degree `n` proves vanishing of rational singular homology in degree `n`.  This is the convenient

@@ -27,48 +27,50 @@ open scoped ContDiff Manifold
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (s : X ⟶ Spec ↧ℂ) (d : ℕ) [SmoothOfRelativeDimension d s]
+open Point
+
+variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 /-- The value of a holomorphic unit is nonzero at every point. -/
 theorem holomorphicUnit_apply_ne_zero
-    (U : (Opens (TopCat.of (ComplexPoint X s)))ᵒᵖ)
-    (u : (OpenHolomorphicFunctions s d U)ˣ)
-    (x : (Opposite.unop U : Opens (ComplexPoint X s))) :
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (u : (OpenHolomorphicFunctions X d U)ˣ)
+    (x : (Opposite.unop U : Opens (ComplexPoint X))) :
     (u.val).1 x ≠ 0 := by
-  have h := congrArg (fun f : OpenHolomorphicFunctions s d U => f.1 x) u.val_inv
+  have h := congrArg (fun f : OpenHolomorphicFunctions X d U => f.1 x) u.val_inv
   exact left_ne_zero_of_mul_eq_one h
 
 /-- The principal logarithm of a holomorphic function with values in the slit plane. -/
-def holomorphicLog (U : (Opens (TopCat.of (ComplexPoint X s)))ᵒᵖ)
-    (f : OpenHolomorphicFunctions s d U)
-    (hf : ∀ x, f.1 x ∈ Complex.slitPlane) : OpenHolomorphicFunctions s d U := by
-  change C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X s)); ℂ⟯
+def holomorphicLog (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (f : OpenHolomorphicFunctions X d U)
+    (hf : ∀ x, f.1 x ∈ Complex.slitPlane) : OpenHolomorphicFunctions X d U := by
+  change C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯
   refine ⟨fun x => Complex.log (f.1 x), fun x => ?_⟩
   exact (Complex.contDiffAt_log (hf x)).contMDiffAt.comp x
-    (holomorphicFunctionSheaf_section_analytic s d f).contMDiffAt
+    (holomorphicFunctionSheaf_section_analytic X d f).contMDiffAt
 
 @[simp]
-theorem holomorphicExp_log (U : (Opens (TopCat.of (ComplexPoint X s)))ᵒᵖ)
-    (f : OpenHolomorphicFunctions s d U) (hf : ∀ x, f.1 x ∈ Complex.slitPlane) :
-    holomorphicExp s d U (holomorphicLog s d U f hf) = f := by
+theorem holomorphicExp_log (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (f : OpenHolomorphicFunctions X d U) (hf : ∀ x, f.1 x ∈ Complex.slitPlane) :
+    holomorphicExp X d U (holomorphicLog X d U f hf) = f := by
   apply ContMDiffMap.ext
   intro x
   exact Complex.exp_log (Complex.slitPlane_ne_zero (hf x))
 
 /-- A holomorphic unit admits an actual logarithm after restriction around any chosen point. -/
 theorem exists_holomorphicLog_neighborhood
-    (U : Opens (TopCat.of (ComplexPoint X s)))
-    (u : (OpenHolomorphicFunctions s d (Opposite.op U))ˣ) (x : U) :
-    ∃ (V : Opens (TopCat.of (ComplexPoint X s))) (hVU : V ≤ U),
-      x.1 ∈ V ∧ ∃ f : OpenHolomorphicFunctions s d (Opposite.op V),
-        holomorphicExpUnit s d (Opposite.op V) f =
-          Units.map (holomorphicRestrictionAlgHom s d (homOfLE hVU).op).toMonoidHom u := by
+    (U : Opens (TopCat.of (ComplexPoint X)))
+    (u : (OpenHolomorphicFunctions X d (Opposite.op U))ˣ) (x : U) :
+    ∃ (V : Opens (TopCat.of (ComplexPoint X))) (hVU : V ≤ U),
+      x.1 ∈ V ∧ ∃ f : OpenHolomorphicFunctions X d (Opposite.op V),
+        holomorphicExpUnit X d (Opposite.op V) f =
+          Units.map (holomorphicRestrictionAlgHom X d (homOfLE hVU).op).toMonoidHom u := by
   let c : ℂ := u.val.1 x
-  have hc : c ≠ 0 := holomorphicUnit_apply_ne_zero s d (Opposite.op U) u x
+  have hc : c ≠ 0 := holomorphicUnit_apply_ne_zero X d (Opposite.op U) u x
   let W : Set U := (fun y => c⁻¹ * u.val.1 y) ⁻¹' Complex.slitPlane
   have hW : IsOpen W := Complex.isOpen_slitPlane.preimage
-    ((holomorphicFunctionSheaf_section_analytic s d u.val).continuous.const_mul c⁻¹)
-  let V : Opens (TopCat.of (ComplexPoint X s)) :=
+    ((holomorphicFunctionSheaf_section_analytic X d u.val).continuous.const_mul c⁻¹)
+  let V : Opens (TopCat.of (ComplexPoint X)) :=
     ⟨Subtype.val '' W, U.isOpen.isOpenMap_subtype_val W hW⟩
   have hVU : V ≤ U := by
     rintro y ⟨z, hz, rfl⟩
@@ -78,8 +80,8 @@ theorem exists_holomorphicLog_neighborhood
     change c⁻¹ * c ∈ Complex.slitPlane
     rw [inv_mul_cancel₀ hc]
     exact Complex.one_mem_slitPlane
-  let g := holomorphicRestrictionAlgHom s d (homOfLE hVU).op u.val
-  let r : OpenHolomorphicFunctions s d (Opposite.op V) := c⁻¹ • g
+  let g := holomorphicRestrictionAlgHom X d (homOfLE hVU).op u.val
+  let r : OpenHolomorphicFunctions X d (Opposite.op V) := c⁻¹ • g
   have hr : ∀ y, r.1 y ∈ Complex.slitPlane := by
     intro y
     rcases y.2 with ⟨z, hz, heq⟩
@@ -88,9 +90,9 @@ theorem exists_holomorphicLog_neighborhood
     rw [hyz]
     exact hz
   refine ⟨V, hVU, hxV,
-    algebraMap ℂ _ (Complex.log c) + holomorphicLog s d (Opposite.op V) r hr, ?_⟩
+    algebraMap ℂ _ (Complex.log c) + holomorphicLog X d (Opposite.op V) r hr, ?_⟩
   apply Units.ext
-  change holomorphicExp s d (Opposite.op V) _ = g
+  change holomorphicExp X d (Opposite.op V) _ = g
   rw [holomorphicExp_add, holomorphicExp_log]
   apply ContMDiffMap.ext
   intro y
@@ -99,20 +101,20 @@ theorem exists_holomorphicLog_neighborhood
 
 /-- The actual exponential morphism is locally surjective on the analytic site. -/
 instance holomorphicExpPresheaf_isLocallySurjective :
-    Presheaf.IsLocallySurjective (Opens.grothendieckTopology (TopCat.of (ComplexPoint X s)))
-      (holomorphicExpPresheaf s d) where
+    Presheaf.IsLocallySurjective (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+      (holomorphicExpPresheaf X d) where
   imageSieve_mem {U} u := by
     intro x hx
     obtain ⟨V, hVU, hxV, f, hf⟩ :=
-      exists_holomorphicLog_neighborhood s d U u.toMul ⟨x, hx⟩
+      exists_holomorphicLog_neighborhood X d U u.toMul ⟨x, hx⟩
     exact ⟨V, homOfLE hVU, ⟨f, hf⟩, hxV⟩
 
 instance holomorphicExpSheaf_isLocallySurjective :
-    CategoryTheory.Sheaf.IsLocallySurjective (holomorphicExpSheaf s d) :=
-  holomorphicExpPresheaf_isLocallySurjective s d
+    CategoryTheory.Sheaf.IsLocallySurjective (holomorphicExpSheaf X d) :=
+  holomorphicExpPresheaf_isLocallySurjective X d
 
 /-- The exponential is an epimorphism of actual holomorphic sheaves. -/
-instance holomorphicExpSheaf_epi : Epi (holomorphicExpSheaf s d) :=
+instance holomorphicExpSheaf_epi : Epi (holomorphicExpSheaf X d) :=
   CategoryTheory.Sheaf.epi_of_isLocallySurjective _
 
 end AlgebraicGeometry.ComplexPoint

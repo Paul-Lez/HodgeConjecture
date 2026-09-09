@@ -42,10 +42,8 @@ def openRestrictionGlobalSectionsIso :
         IsFlasque.BoundedBelowComplex.globalSectionsFunctor (TopCat.of U) ≅
       supportEvaluation X U :=
   NatIso.ofComponents (fun F =>
-    F.obj.mapIso (eqToIso (congrArg op (Opens.isOpenEmbedding_obj_top U)))) (by
-      intro F G f
-      exact (f.hom.naturality
-        (eqToHom (congrArg op (Opens.isOpenEmbedding_obj_top U)))).symm)
+    F.obj.mapIso (eqToIso (congrArg op (Opens.isOpenEmbedding_obj_top U)))) (fun {_ _} f =>
+      (f.hom.naturality (eqToHom (congrArg op (Opens.isOpenEmbedding_obj_top U)))).symm)
 
 /-- Open-set sections preserve quasi-isomorphisms between bounded-below
 termwise-flasque complexes. All acyclicity is proved from flasqueness. -/
@@ -87,8 +85,7 @@ theorem pushforward_map_quasiIso_of_flasque
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
     QuasiIso (((pushforward AddCommGrpCat.{u} j).mapHomologicalComplex (.up ℤ)).map f) := by
   apply quasiIso_of_cofinal_section_quasiIso
-  intro y V hyV
-  exact ⟨V, le_rfl, hyV,
+  exact fun y V hyV => ⟨V, le_rfl, hyV,
     supportEvaluation_map_quasiIso_of_flasque X ((Opens.map j).obj V) f nK nL hK hL⟩
 
 /-- The actual supported-sections localization sequence is short exact for a
@@ -175,7 +172,7 @@ theorem sheafSectionsSupportedOutside_map_quasiIso_of_flasque
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
     QuasiIso (((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map f) := by
   apply quasiIso_of_cofinal_section_quasiIso
-  intro x V hxV
-  exact ⟨V, le_rfl, hxV, supportedSections_map_quasiIso_of_flasque X U V f nK nL hK hL⟩
+  exact fun x V hxV =>
+    ⟨V, le_rfl, hxV, supportedSections_map_quasiIso_of_flasque X U V f nK nL hK hL⟩
 
 end TopCat.Sheaf

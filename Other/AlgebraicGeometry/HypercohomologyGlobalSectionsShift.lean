@@ -38,8 +38,8 @@ lemma globalSectionsShiftShortComplex_homologyMap :
       ((((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
         (.up ℤ)).commShiftIso s).hom.app K) n ≫
       ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftIso
-        s n n' (by omega)).hom.app (globalSectionsComplexInt Y K) := by
-  exact (ShortComplex.homologyMap_comp _ _).trans
+        s n n' (by omega)).hom.app (globalSectionsComplexInt Y K) :=
+  (ShortComplex.homologyMap_comp _ _).trans
     (congrArg (fun f => HomologicalComplex.homologyMap
       ((((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
         (.up ℤ)).commShiftIso s).hom.app K) n ≫ f)
@@ -77,8 +77,8 @@ lemma homComplexSingleIntegerGlobalSections_rightUnshift_homology :
       ShortComplex.homologyMap (globalSectionsShiftShortComplex Y K s n n' h) =
     ShortComplex.homologyMap (CochainComplex.HomComplex.rightUnshiftShortComplex
       (integerConstantSingleComplex Y) K s n n' h) ≫
-      HomologicalComplex.homologyMap (homComplexSingleIntegerIsoGlobalSections Y K).hom n' := by
-  exact (ShortComplex.homologyMap_comp _ _).symm.trans
+      HomologicalComplex.homologyMap (homComplexSingleIntegerIsoGlobalSections Y K).hom n' :=
+  (ShortComplex.homologyMap_comp _ _).symm.trans
     ((ShortComplex.homologyMap_eq_of_middle_eq _ _
       (homComplexSingleIntegerGlobalSections_rightUnshift_middle Y K s n n' h)).trans
       (ShortComplex.homologyMap_comp _ _))
@@ -109,22 +109,22 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift
     ShiftedHom.map_comp]
   simp [ShiftedHom.map]
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 local instance hypercohomologyShiftSheafDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf structureMap)
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma hypercohomologyAddEquivDerived_rightUnshift
-    (K : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ)
+    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (s n n' : ℤ) (h : n + s = n')
-    (x : Hypercohomology structureMap (K⟦s⟧) n) :
-    hypercohomologyAddEquivDerived structureMap K n'
-      (x.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms structureMap)
+    (x : Hypercohomology X (K⟦s⟧) n) :
+    hypercohomologyAddEquivDerived X K n'
+      (x.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
         (show ShiftedHom (K⟦s⟧) K s from 𝟙 (K⟦s⟧))) (by omega)) =
-      (hypercohomologyAddEquivDerived structureMap (K⟦s⟧) n x).comp
+      (hypercohomologyAddEquivDerived X (K⟦s⟧) n x).comp
         ((DerivedCategory.Q.commShiftIso s).hom.app K) (by omega) := by
   change Localization.SmallShiftedHom.equiv _ DerivedCategory.Q _ =
     ShiftedHom.comp (Localization.SmallShiftedHom.equiv _ DerivedCategory.Q x) _ _
@@ -138,17 +138,17 @@ set_option maxHeartbeats 800000 in
 /-- The direct derived-morphism/global-section comparison commutes with
 target unshifting, with the canonical signed homology shift. -/
 lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
-    (K : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ) [K.IsKInjective]
+    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective]
     (s n n' : ℤ) (h : n + s = n')
     (x : ShiftedHom
       (DerivedCategory.Q.obj (TopCat.Sheaf.integerConstantSingleComplex
-        (TopCat.of (ComplexPoint X structureMap)))) (DerivedCategory.Q.obj (K⟦s⟧)) n) :
-    derivedHomAddEquivGlobalSectionsKInjective structureMap K n'
+        (TopCat.of (ComplexPoint X)))) (DerivedCategory.Q.obj (K⟦s⟧)) n) :
+    derivedHomAddEquivGlobalSectionsKInjective X K n'
       (x.comp ((DerivedCategory.Q.commShiftIso s).hom.app K) (by omega)) =
     ShortComplex.homologyMap (TopCat.Sheaf.globalSectionsShiftShortComplex
-      (TopCat.of (ComplexPoint X structureMap)) K s n n' h)
-      (derivedHomAddEquivGlobalSectionsKInjective structureMap (K⟦s⟧) n x) := by
-  let Y := TopCat.of (ComplexPoint X structureMap)
+      (TopCat.of (ComplexPoint X)) K s n n' h)
+      (derivedHomAddEquivGlobalSectionsKInjective X (K⟦s⟧) n x) := by
+  let Y := TopCat.of (ComplexPoint X)
   let A := TopCat.Sheaf.integerConstantSingleComplex Y
   let y := (CochainComplex.HomComplex.homologyAddEquiv A (K⟦s⟧) n).symm
     (kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n x)
@@ -175,22 +175,22 @@ set_option maxHeartbeats 800000 in
 global-section homology shift. The shifted morphism used here is literally
 the identity on `K⟦s⟧`, not an independently chosen group equivalence. -/
 lemma hypercohomologyAddEquivGlobalSectionsKInjective_rightUnshift
-    (K : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ) [K.IsKInjective]
+    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective]
     (s n n' : ℤ) (h : n + s = n')
-    (x : Hypercohomology structureMap (K⟦s⟧) n) :
-    hypercohomologyAddEquivGlobalSectionsKInjective structureMap K n'
-      (x.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms structureMap)
+    (x : Hypercohomology X (K⟦s⟧) n) :
+    hypercohomologyAddEquivGlobalSectionsKInjective X K n'
+      (x.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
         (show ShiftedHom (K⟦s⟧) K s from 𝟙 (K⟦s⟧))) (by omega)) =
     ShortComplex.homologyMap (TopCat.Sheaf.globalSectionsShiftShortComplex
-      (TopCat.of (ComplexPoint X structureMap)) K s n n' h)
-      (hypercohomologyAddEquivGlobalSectionsKInjective structureMap (K⟦s⟧) n x) := by
+      (TopCat.of (ComplexPoint X)) K s n n' h)
+      (hypercohomologyAddEquivGlobalSectionsKInjective X (K⟦s⟧) n x) := by
   dsimp only [hypercohomologyAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
   rw [hypercohomologyAddEquivDerived_rightUnshift _ _ s n n' h]
   simp only [isoHomCongrAddEquiv_apply, Iso.refl_hom, Functor.mapIso_inv, Category.comp_id]
   simpa only [ShiftedHom.comp, Category.assoc, Functor.map_id, Category.id_comp] using
-    derivedHomAddEquivGlobalSectionsKInjective_rightUnshift structureMap K s n n' h
-      (DerivedCategory.Q.map (constantIntegerSheafComplexIntIsoSingle structureMap).inv ≫
-        hypercohomologyAddEquivDerived structureMap (K⟦s⟧) n x)
+    derivedHomAddEquivGlobalSectionsKInjective_rightUnshift X K s n n' h
+      (DerivedCategory.Q.map (constantIntegerSheafComplexIntIsoSingle X).inv ≫
+        hypercohomologyAddEquivDerived X (K⟦s⟧) n x)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -198,25 +198,25 @@ set_option maxHeartbeats 800000 in
 /-- The hypercohomology/global-section comparison respects arbitrary
 degree-shifted chain maps, in particular the degree-one cone connecting map. -/
 lemma hypercohomologyAddEquivGlobalSectionsKInjective_shifted_naturality
-    (K L : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ)
+    (K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     [K.IsKInjective] [L.IsKInjective]
     (s n n' : ℤ) (h : n + s = n') (f : K ⟶ L⟦s⟧)
-    (x : Hypercohomology structureMap K n) :
-    hypercohomologyAddEquivGlobalSectionsKInjective structureMap L n'
+    (x : Hypercohomology X K n) :
+    hypercohomologyAddEquivGlobalSectionsKInjective X L n'
       (x.comp (Localization.SmallShiftedHom.mk
-        (analyticQuasiIsomorphisms structureMap) f) (by omega)) =
+        (analyticQuasiIsomorphisms X) f) (by omega)) =
     (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
       (ShiftedHom.map f
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X structureMap))).mapHomologicalComplex (.up ℤ)))
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)))
         n n' (by omega)
-      (hypercohomologyAddEquivGlobalSectionsKInjective structureMap K n x) := by
+      (hypercohomologyAddEquivGlobalSectionsKInjective X K n x) := by
   have hf : x.comp (Localization.SmallShiftedHom.mk
-      (analyticQuasiIsomorphisms structureMap) f) (show s + n = n' by omega) =
-      (hypercohomologyMap structureMap f n x).comp
-        (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms structureMap)
+      (analyticQuasiIsomorphisms X) f) (show s + n = n' by omega) =
+      (hypercohomologyMap X f n x).comp
+        (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
           (show ShiftedHom (L⟦s⟧) L s from 𝟙 (L⟦s⟧))) (by omega) := by
-    apply (hypercohomologyAddEquivDerived structureMap L n').injective
+    apply (hypercohomologyAddEquivDerived X L n').injective
     rw [hypercohomologyAddEquivDerived_rightUnshift _ _ s n n' h,
       hypercohomologyAddEquivDerived_naturality]
     change Localization.SmallShiftedHom.equiv _ DerivedCategory.Q _ = _

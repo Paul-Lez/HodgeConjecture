@@ -116,7 +116,7 @@ private lemma exists_constant_local_representation (A : AddCommGrpCat.{u})
     _ = Q.map iVU.op (η.app (op U) a) := hV.symm
     _ = η.app (op V) (P.map iVU.op a) := by
       rw [← ConcreteCategory.comp_apply, ← ConcreteCategory.comp_apply, η.naturality]
-    _ = η.app (op V) a := by rfl
+    _ = η.app (op V) a := rfl
 
 private lemma constant_local_representation_value_unique (A : AddCommGrpCat.{u})
     (s : (CategoryTheory.sheafify (Opens.grothendieckTopology X)
@@ -173,7 +173,7 @@ lemma constant_toSheafify_app_top_surjective [ConnectedSpace X] (A : AddCommGrpC
       Q.map (homOfLE le_top : U y ⟶ ⊤).op (η.app (op ⊤) (a x₀)) =
           η.app (op (U y)) (P.map (homOfLE le_top : U y ⟶ ⊤).op (a x₀)) := by
             rw [← ConcreteCategory.comp_apply, ← ConcreteCategory.comp_apply, η.naturality]
-      _ = η.app (op (U y)) (a x₀) := by rfl
+      _ = η.app (op (U y)) (a x₀) := rfl
   have hlocal : Q.map (homOfLE le_top : U y ⟶ ⊤).op (η.app (op ⊤) (a x₀)) =
       Q.map (homOfLE le_top : U y ⟶ ⊤).op s := by
     rw [hη, ha y, hay]

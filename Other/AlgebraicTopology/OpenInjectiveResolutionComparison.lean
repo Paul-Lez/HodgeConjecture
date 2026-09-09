@@ -29,7 +29,6 @@ lemma injective_extend_nat (I : CochainComplex C ℕ) (hI : ∀ n, Injective (I.
     (q : ℤ) : Injective ((I.extend ComplexShape.embeddingUpNat).X q) := by
   by_cases hq : ∃ n : ℕ, (n : ℤ) = q
   · obtain ⟨n, rfl⟩ := hq
-    let := hI n
     exact Injective.of_iso (I.extendXIso ComplexShape.embeddingUpNat (i := n) rfl).symm (hI n)
   · exact (I.isZero_extend_X ComplexShape.embeddingUpNat q (fun n hn => hq ⟨n, hn⟩)).injective
 
@@ -145,8 +144,8 @@ instance restrictedAmbientConstantAugmentation_quasiIso :
     (ambientConstantInjectiveResolution X A).quasiIso
   have : QuasiIso
       (((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex (.up ℕ)).map
-        (ambientConstantInjectiveResolution X A).ι) := by
-    exact HomologicalComplex.quasiIso_map_of_preservesHomology _ _
+        (ambientConstantInjectiveResolution X A).ι) :=
+    HomologicalComplex.quasiIso_map_of_preservesHomology _ _
   dsimp only [restrictedAmbientConstantAugmentation]
   infer_instance
 
@@ -273,9 +272,7 @@ theorem globalRestrictedAmbientToOpenResolution_quasiIso :
   let : QuasiIso (restrictedAmbientToOpenResolution X U A) :=
     restrictedAmbientToOpenResolution_quasiIso X U A
   apply AlgebraicGeometry.ComplexPoint.globalSectionsNat_map_quasiIso
-  · intro n
-    exact restrictedAmbientConstantResolution_isFlasque X U A n
-  · intro n
-    exact @injective_isFlasque _ _ ((openConstantInjectiveResolution X U A).injective n)
+  · exact restrictedAmbientConstantResolution_isFlasque X U A
+  · exact fun n => @injective_isFlasque _ _ ((openConstantInjectiveResolution X U A).injective n)
 
 end TopCat.Sheaf

@@ -28,37 +28,28 @@ Consequently the span indexed by codimension-`p` components is zero when `d < p`
 
 @[expose] public noncomputable section
 
-open Order
+open CategoryTheory Order
 
 namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 /-- A smooth complex `d`-fold has no algebraic points of codimension greater than `d`. -/
 lemma no_cycleComponent_of_lt
-    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (d p : ℕ)
-    [SmoothOfRelativeDimension d structureMap] (h : d < p) :
-    IsEmpty {x : X // coheight x = p} := by
-  constructor
-  intro x
-  exact (SmoothOfRelativeDimension.coheight_ne_of_lt
-    (f := structureMap) (d := d) x.1 h) x.2
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (d p : ℕ)
+    [SmoothOfRelativeDimension d X.hom] (h : d < p) :
+    IsEmpty {x : X.left // coheight x = p} :=
+  ⟨fun x ↦ SmoothOfRelativeDimension.coheight_ne_of_lt (f := X.hom) (d := d) x.1 h x.2⟩
 
 /-- The algebraic cycle-class span is zero above the dimension of a smooth complex variety. -/
 lemma algebraicCycleClassSpan_eq_bot_of_lt
-    [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] (d p : ℕ)
-    [SmoothOfRelativeDimension d structureMap] (h : d < p) :
-    algebraicCycleClassSpan structureMap p = ⊥ := by
-  rw [algebraicCycleClassSpan_of_ne_zero structureMap p (by lia)]
-  apply le_antisymm
-  · apply iSup_le
-    intro x
-    apply iSup_le
-    intro hx
-    exact (SmoothOfRelativeDimension.coheight_ne_of_lt
-      (f := structureMap) (d := d) x h hx).elim
-  · exact bot_le
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (d p : ℕ)
+    [SmoothOfRelativeDimension d X.hom] (h : d < p) :
+    algebraicCycleClassSpan X p = ⊥ := by
+  rw [algebraicCycleClassSpan_of_ne_zero X p (by lia)]
+  refine le_antisymm (iSup_le fun x ↦ iSup_le fun hx ↦ ?_) bot_le
+  exact (SmoothOfRelativeDimension.coheight_ne_of_lt (f := X.hom) (d := d) x h hx).elim
 
 end AlgebraicGeometry.ComplexPoint

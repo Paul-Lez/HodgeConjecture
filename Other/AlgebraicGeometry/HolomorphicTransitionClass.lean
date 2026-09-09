@@ -29,16 +29,18 @@ open CategoryTheory Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (s : X ⟶ Spec ↧ℂ)
+open Point
 
-local instance transitionSheafAbelian : Abelian (AnalyticAdditiveSheaf s) := CategoryTheory.sheafIsAbelian
+variable (X : Over (Spec ↧ℂ))
 
-local instance transitionHasExt : HasExt.{1} (AnalyticAdditiveSheaf s) := analyticHasExt s
+local instance transitionSheafAbelian : Abelian (AnalyticAdditiveSheaf X) := CategoryTheory.sheafIsAbelian
+
+local instance transitionHasExt : HasExt.{1} (AnalyticAdditiveSheaf X) := analyticHasExt X
 
 /-- A two-open analytic cover, with the whole variety as the last vertex. -/
-def analyticCoverMayerVietorisSquare (U V : Opens (TopCat.of (ComplexPoint X s)))
+def analyticCoverMayerVietorisSquare (U V : Opens (TopCat.of (ComplexPoint X)))
     (hcover : U ⊔ V = ⊤) :
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X s))).MayerVietorisSquare :=
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))).MayerVietorisSquare :=
   Opens.mayerVietorisSquare'
     { X₁ := U ⊓ V
       X₂ := U
@@ -51,69 +53,69 @@ def analyticCoverMayerVietorisSquare (U V : Opens (TopCat.of (ComplexPoint X s))
       fac := Subsingleton.elim _ _ } hcover.symm rfl
 
 /-- The actual Mayer-Vietoris class of a section on the overlap of a two-open cover. -/
-def analyticTransitionExtClass (F : AnalyticAdditiveSheaf s)
-    (U V : Opens (TopCat.of (ComplexPoint X s))) (hcover : U ⊔ V = ⊤)
-    (a : F.obj.obj (.op (U ⊓ V))) : Abelian.Ext.{1} (constantIntegerSheaf s) F 1 :=
-  let δ : Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf s ⊤)
-      (analyticOpenFreeAbelianSheaf s (U ⊓ V)) 1 :=
-    (analyticCoverMayerVietorisSquare s U V hcover).shortComplex_shortExact.extClass
-      (C := AnalyticAdditiveSheaf s)
-  let a₀ : Abelian.Ext.{1} (constantIntegerSheaf s) (analyticOpenFreeAbelianSheaf s ⊤) 0 :=
-    Abelian.Ext.mk₀ (analyticTopFreeAbelianSheafIso s).inv
-  let a₁ : Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf s (U ⊓ V)) F 0 :=
-    Abelian.Ext.mk₀ (analyticSectionSheafHom s F (U ⊓ V) a)
+def analyticTransitionExtClass (F : AnalyticAdditiveSheaf X)
+    (U V : Opens (TopCat.of (ComplexPoint X))) (hcover : U ⊔ V = ⊤)
+    (a : F.obj.obj (.op (U ⊓ V))) : Abelian.Ext.{1} (constantIntegerSheaf X) F 1 :=
+  let δ : Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf X ⊤)
+      (analyticOpenFreeAbelianSheaf X (U ⊓ V)) 1 :=
+    (analyticCoverMayerVietorisSquare X U V hcover).shortComplex_shortExact.extClass
+      (C := AnalyticAdditiveSheaf X)
+  let a₀ : Abelian.Ext.{1} (constantIntegerSheaf X) (analyticOpenFreeAbelianSheaf X ⊤) 0 :=
+    Abelian.Ext.mk₀ (analyticTopFreeAbelianSheafIso X).inv
+  let a₁ : Abelian.Ext.{1} (analyticOpenFreeAbelianSheaf X (U ⊓ V)) F 0 :=
+    Abelian.Ext.mk₀ (analyticSectionSheafHom X F (U ⊓ V) a)
   a₀.comp (δ.comp a₁ (show 1 + 0 = 1 from rfl)) (show 0 + 1 = 1 from rfl)
 
 @[simp]
-theorem analyticTransitionExtClass_zero (F : AnalyticAdditiveSheaf s)
-    (U V : Opens (TopCat.of (ComplexPoint X s))) (hcover : U ⊔ V = ⊤) :
-    analyticTransitionExtClass s F U V hcover 0 = 0 := by
+theorem analyticTransitionExtClass_zero (F : AnalyticAdditiveSheaf X)
+    (U V : Opens (TopCat.of (ComplexPoint X))) (hcover : U ⊔ V = ⊤) :
+    analyticTransitionExtClass X F U V hcover 0 = 0 := by
   simp [analyticTransitionExtClass]
 
-variable [IsIntegral X] [Smooth s]
+variable [IsIntegral X.left] [Smooth X.hom]
 
 /-- The units cohomology class defined by an actual holomorphic transition function. -/
 def holomorphicTransitionUnitsClass
-    (U V : Opens (TopCat.of (ComplexPoint X s))) (hcover : U ⊔ V = ⊤)
-    (u : (OpenHolomorphicFunctions s (dim X) (.op (U ⊓ V)))ˣ) :
-    Hypercohomology s (holomorphicUnitsComplexInt s) 2 :=
-  sheafExtHypercohomologyEquiv s (holomorphicUnitsSheaf s (dim X)) 1 1
-    (analyticTransitionExtClass s (holomorphicUnitsSheaf s (dim X)) U V hcover (Additive.ofMul u))
+    (U V : Opens (TopCat.of (ComplexPoint X))) (hcover : U ⊔ V = ⊤)
+    (u : (OpenHolomorphicFunctions X (dim X.left) (.op (U ⊓ V)))ˣ) :
+    Hypercohomology X (holomorphicUnitsComplexInt X) 2 :=
+  sheafExtHypercohomologyEquiv X (holomorphicUnitsSheaf X (dim X.left)) 1 1
+    (analyticTransitionExtClass X (holomorphicUnitsSheaf X (dim X.left)) U V hcover (Additive.ofMul u))
 
 @[simp]
 theorem holomorphicTransitionUnitsClass_one
-    (U V : Opens (TopCat.of (ComplexPoint X s))) (hcover : U ⊔ V = ⊤) :
-    holomorphicTransitionUnitsClass s U V hcover 1 = 0 := by
-  change sheafExtHypercohomologyEquiv s (holomorphicUnitsSheaf s (dim X)) 1 1
-    (analyticTransitionExtClass s (holomorphicUnitsSheaf s (dim X)) U V hcover 0) = 0
+    (U V : Opens (TopCat.of (ComplexPoint X))) (hcover : U ⊔ V = ⊤) :
+    holomorphicTransitionUnitsClass X U V hcover 1 = 0 := by
+  change sheafExtHypercohomologyEquiv X (holomorphicUnitsSheaf X (dim X.left)) 1 1
+    (analyticTransitionExtClass X (holomorphicUnitsSheaf X (dim X.left)) U V hcover 0) = 0
   rw [analyticTransitionExtClass_zero, sheafExtHypercohomologyEquiv_zero]
 
 /-- The integral exponential class of the actual transition function. -/
 def integralHolomorphicTransitionClass
-    (U V : Opens (TopCat.of (ComplexPoint X s))) (hcover : U ⊔ V = ⊤)
-    (u : (OpenHolomorphicFunctions s (dim X) (.op (U ⊓ V)))ˣ) :
-    Hypercohomology s (constantIntegerSheafComplexInt s) 2 :=
-  integralExponentialClass s 2 (holomorphicTransitionUnitsClass s U V hcover u)
+    (U V : Opens (TopCat.of (ComplexPoint X))) (hcover : U ⊔ V = ⊤)
+    (u : (OpenHolomorphicFunctions X (dim X.left) (.op (U ⊓ V)))ˣ) :
+    Hypercohomology X (constantIntegerSheafComplexInt X) 2 :=
+  integralExponentialClass X 2 (holomorphicTransitionUnitsClass X U V hcover u)
 
 /-- The rational class constructed from the actual transition function. -/
 def rationalHolomorphicTransitionClass
-    (U V : Opens (TopCat.of (ComplexPoint X s))) (hcover : U ⊔ V = ⊤)
-    (u : (OpenHolomorphicFunctions s (dim X) (.op (U ⊓ V)))ˣ) : FieldCohomology ℚ s 2 :=
-  rationalExponentialClass s 2 (holomorphicTransitionUnitsClass s U V hcover u)
+    (U V : Opens (TopCat.of (ComplexPoint X))) (hcover : U ⊔ V = ⊤)
+    (u : (OpenHolomorphicFunctions X (dim X.left) (.op (U ⊓ V)))ˣ) : FieldCohomology ℚ X 2 :=
+  rationalExponentialClass X 2 (holomorphicTransitionUnitsClass X U V hcover u)
 
 /-- The trivial transition function gives the zero rational class. -/
 @[simp]
 theorem rationalHolomorphicTransitionClass_one
-    (U V : Opens (TopCat.of (ComplexPoint X s))) (hcover : U ⊔ V = ⊤) :
-    rationalHolomorphicTransitionClass s U V hcover 1 = 0 := by
+    (U V : Opens (TopCat.of (ComplexPoint X))) (hcover : U ⊔ V = ⊤) :
+    rationalHolomorphicTransitionClass X U V hcover 1 = 0 := by
   simp [rationalHolomorphicTransitionClass]
 
 /-- The class constructed from a holomorphic transition function on an actual analytic open
 cover is a Hodge class of the underlying variety. -/
 theorem rationalHolomorphicTransitionClass_isHodge
-    (U V : Opens (TopCat.of (ComplexPoint X s))) (hcover : U ⊔ V = ⊤)
-    (u : (OpenHolomorphicFunctions s (dim X) (.op (U ⊓ V)))ˣ) :
-    IsHodgeClass ℚ s 1 (rationalHolomorphicTransitionClass s U V hcover u) :=
-  rationalExponentialClass_isHodge s _
+    (U V : Opens (TopCat.of (ComplexPoint X))) (hcover : U ⊔ V = ⊤)
+    (u : (OpenHolomorphicFunctions X (dim X.left) (.op (U ⊓ V)))ˣ) :
+    IsHodgeClass ℚ X 1 (rationalHolomorphicTransitionClass X U V hcover u) :=
+  rationalExponentialClass_isHodge X _
 
 end AlgebraicGeometry.ComplexPoint

@@ -124,20 +124,28 @@ instance surface_isProjective : IsProjective surfaceToBase :=
   ⟨⟨{ ambientDimension := 8, immersion := surfaceSegre,
         immersion_toBase := surfaceSegre_toBase }⟩⟩
 
-/-- The explicit smooth projective elliptic curve as a packaged integral complex variety. -/
-def curveVariety : IntegralProjectiveComplexVariety where
-  scheme := curve
-  structureMap := curveToBase
+/-- The explicit smooth projective elliptic curve as a scheme over the complex numbers. -/
+def curveVariety : Over (Spec (CommRingCat.of ℂ)) := Over.mk curveToBase
 
-/-- The explicit smooth projective surface as a packaged integral complex variety. -/
-def surfaceVariety : IntegralProjectiveComplexVariety where
-  scheme := surface
-  structureMap := surfaceToBase
+/-- The explicit smooth projective surface as a scheme over the complex numbers. -/
+def surfaceVariety : Over (Spec (CommRingCat.of ℂ)) := Over.mk surfaceToBase
 
-instance curveVariety_smooth : SmoothOfRelativeDimension 1 curveVariety.structureMap :=
+instance curveVariety_isIntegral : IsIntegral curveVariety.left :=
+  inferInstanceAs (IsIntegral curve)
+
+instance surfaceVariety_isIntegral : IsIntegral surfaceVariety.left :=
+  inferInstanceAs (IsIntegral surface)
+
+instance curveVariety_isProjective : IsProjective curveVariety.hom :=
+  inferInstanceAs (IsProjective curveToBase)
+
+instance surfaceVariety_isProjective : IsProjective surfaceVariety.hom :=
+  surface_isProjective
+
+instance curveVariety_smooth : SmoothOfRelativeDimension 1 curveVariety.hom :=
   curve_smoothOfRelativeDimension
 
-instance surfaceVariety_smooth : SmoothOfRelativeDimension 2 surfaceVariety.structureMap :=
+instance surfaceVariety_smooth : SmoothOfRelativeDimension 2 surfaceVariety.hom :=
   surface_smoothOfRelativeDimension
 
 end AlgebraicGeometry.ExplicitEllipticCandidate

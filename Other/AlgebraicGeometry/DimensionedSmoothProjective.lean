@@ -57,26 +57,40 @@ instance (V : SmoothProjectiveComplexVariety) : Smooth V.structureMap := V.smoot
 instance (V : SmoothProjectiveComplexVariety) : IsProjective V.structureMap := V.projective
 
 noncomputable instance (V : SmoothProjectiveComplexVariety) : IsNoetherian V.scheme :=
-  isNoetherian_of_isProjective V.structureMap
+  @isNoetherian_of_isProjective (Over.mk V.structureMap) V.projective
 
-/-- Forget smoothness while retaining the integral projective variety. -/
-def toIntegralProjective (V : SmoothProjectiveComplexVariety) :
-    IntegralProjectiveComplexVariety where
-  scheme := V.scheme
-  isIntegral := V.isIntegral
-  structureMap := V.structureMap
-  projective := V.projective
+/-- The variety regarded as the corresponding object over `Spec ℂ`. -/
+noncomputable abbrev over (V : SmoothProjectiveComplexVariety) : Over (Spec ↧ℂ) :=
+  Over.mk V.structureMap
+
+noncomputable instance (V : SmoothProjectiveComplexVariety) : IsIntegral V.over.left := by
+  change IsIntegral V.scheme
+  infer_instance
+
+noncomputable instance (V : SmoothProjectiveComplexVariety) : Smooth V.over.hom := by
+  change Smooth V.structureMap
+  infer_instance
+
+noncomputable instance (V : SmoothProjectiveComplexVariety) : IsProjective V.over.hom := by
+  change IsProjective V.structureMap
+  infer_instance
+
+noncomputable instance (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] :
+    SmoothOfRelativeDimension d V.over.hom := by
+  change SmoothOfRelativeDimension d V.structureMap
+  infer_instance
 
 /-- The analytic complex-point space. -/
 abbrev analyticPoint (V : SmoothProjectiveComplexVariety) :=
-  ComplexPoint V.scheme V.structureMap
+  ComplexPoint V.over
 
 noncomputable instance (V : SmoothProjectiveComplexVariety) :
     TopologicalSpace V.analyticPoint := Point.analyticTopology
 
 /-- The analytification as an object of `TopCat`. -/
 noncomputable def analytification (V : SmoothProjectiveComplexVariety) : TopCat :=
-  complexAnalytification.obj (Over.mk V.structureMap)
+  complexAnalytification.obj V.over
 
 end SmoothProjectiveComplexVariety
 
@@ -93,16 +107,16 @@ structure DimensionedSmoothProjectiveComplexVariety where
 
 namespace DimensionedSmoothProjectiveComplexVariety
 
-/-- Canonically package an unbundled smooth projective integral complex variety with its
-dimension. The relative-dimension certificate is the theorem that a smooth integral complex
-scheme has relative dimension `dim X`; it is not additional input. -/
-def ofStructureMap {X : Scheme} [IsIntegral X]
-    (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap] [IsProjective structureMap] :
+/-- Canonically package a smooth projective integral complex variety with its dimension. The
+relative-dimension certificate is the theorem that a smooth integral complex scheme has relative
+dimension `dim X`; it is not additional input. -/
+def ofOver (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] :
     DimensionedSmoothProjectiveComplexVariety where
   toSmoothProjectiveComplexVariety :=
-    { scheme := X
-      structureMap := structureMap }
-  dimension := TopologicalSpace.dim X
+    { scheme := X.left
+      structureMap := X.hom }
+  dimension := TopologicalSpace.dim X.left
 
 /-- The relative-dimension certificate stored in a dimensioned variety. -/
 instance (V : DimensionedSmoothProjectiveComplexVariety) :
@@ -117,6 +131,10 @@ abbrev scheme (V : DimensionedSmoothProjectiveComplexVariety) :=
 /-- The structure morphism to `Spec ℂ`. -/
 abbrev structureMap (V : DimensionedSmoothProjectiveComplexVariety) :=
   V.toSmoothProjectiveComplexVariety.structureMap
+
+/-- The variety regarded as the corresponding object over `Spec ℂ`. -/
+noncomputable abbrev over (V : DimensionedSmoothProjectiveComplexVariety) : Over (Spec ↧ℂ) :=
+  V.toSmoothProjectiveComplexVariety.over
 
 /-- The analytic complex-point space. -/
 abbrev analyticPoint (V : DimensionedSmoothProjectiveComplexVariety) :=

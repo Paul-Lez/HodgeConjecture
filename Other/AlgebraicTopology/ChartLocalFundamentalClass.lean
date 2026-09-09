@@ -70,13 +70,10 @@ lemma chartModelEmbedding_source :
   simp only [chartModelEmbedding, OpenPartialHomeomorph.trans_source,
     OpenPartialHomeomorph.univBall_source, Set.mem_inter_iff, Set.mem_univ,
     true_and, Set.mem_preimage, OpenPartialHomeomorph.symm_source]
-  constructor
-  · intro _
-    trivial
-  · intro _
-    apply ball_chartRadius_subset d e x hx
-    rw [← OpenPartialHomeomorph.univBall_target (e x) (chartRadius_pos d e x hx)]
-    exact (OpenPartialHomeomorph.univBall (e x) (chartRadius d e x hx)).map_source (by simp)
+  refine ⟨fun _ => trivial, fun _ => ?_⟩
+  apply ball_chartRadius_subset d e x hx
+  rw [← OpenPartialHomeomorph.univBall_target (e x) (chartRadius_pos d e x hx)]
+  exact (OpenPartialHomeomorph.univBall (e x) (chartRadius d e x hx)).map_source (by simp)
 
 @[simp]
 lemma chartModelEmbedding_zero : chartModelEmbedding d e x hx 0 = x := by
@@ -99,10 +96,9 @@ def puncturedChartModelEmbedding :
     exact h⟩
 
 lemma continuous_puncturedChartModelEmbedding :
-    Continuous (puncturedChartModelEmbedding d e x hx) := by
-  apply Continuous.subtype_mk
-  exact ((chartModelEmbedding d e x hx).isOpenEmbedding
-    (chartModelEmbedding_source d e x hx)).continuous.comp continuous_subtype_val
+    Continuous (puncturedChartModelEmbedding d e x hx) :=
+  Continuous.subtype_mk (((chartModelEmbedding d e x hx).isOpenEmbedding
+    (chartModelEmbedding_source d e x hx)).continuous.comp continuous_subtype_val) _
 
 /-- The map from the standard punctured complex affine space to the local pair at `x`. -/
 def chartModelEmbeddingPair : standardComplexPuncturedPair d ⟶ pointComplementPair x :=

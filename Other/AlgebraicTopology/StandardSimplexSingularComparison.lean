@@ -106,13 +106,8 @@ theorem simplicialHomologyZeroAugmentation_naturality
       SSet.ι_chainComplexMap_f X Y f R x
   rw [hlift]
   calc
-    _ = 𝟙 R := by
-      simpa only [] using
-        Y.liftCycles_ιChainComplex_homologyπ_homology₀ε R (f.app _ x)
-    _ = _ := by
-      symm
-      simpa only [] using
-        X.liftCycles_ιChainComplex_homologyπ_homology₀ε R x
+    _ = 𝟙 R := Y.liftCycles_ιChainComplex_homologyπ_homology₀ε R (f.app _ x)
+    _ = _ := (X.liftCycles_ιChainComplex_homologyπ_homology₀ε R x).symm
 
 /-- Every standard simplex is connected as a simplicial set. -/
 theorem standardSimplex_isConnected (n : ℕ) :
@@ -129,20 +124,16 @@ theorem standardSimplex_isConnected (n : ℕ) :
         let j := SSet.stdSimplex.obj₀Equiv y
         rcases le_total i j with hij | hji
         · let s := SSet.stdSimplex.edge n i j hij
-          have hsrc : (SSet.stdSimplex.obj (SimplexCategory.mk n)).δ 1 s = x := by
-            apply SSet.stdSimplex.obj₀Equiv.injective
-            rfl
-          have htgt : (SSet.stdSimplex.obj (SimplexCategory.mk n)).δ 0 s = y := by
-            apply SSet.stdSimplex.obj₀Equiv.injective
-            rfl
+          have hsrc : (SSet.stdSimplex.obj (SimplexCategory.mk n)).δ 1 s = x :=
+            SSet.stdSimplex.obj₀Equiv.injective rfl
+          have htgt : (SSet.stdSimplex.obj (SimplexCategory.mk n)).δ 0 s = y :=
+            SSet.stdSimplex.obj₀Equiv.injective rfl
           simpa only [hsrc, htgt] using SSet.π₀.sound (SSet.Edge.mk' s)
         · let s := SSet.stdSimplex.edge n j i hji
-          have hsrc : (SSet.stdSimplex.obj (SimplexCategory.mk n)).δ 1 s = y := by
-            apply SSet.stdSimplex.obj₀Equiv.injective
-            rfl
-          have htgt : (SSet.stdSimplex.obj (SimplexCategory.mk n)).δ 0 s = x := by
-            apply SSet.stdSimplex.obj₀Equiv.injective
-            rfl
+          have hsrc : (SSet.stdSimplex.obj (SimplexCategory.mk n)).δ 1 s = y :=
+            SSet.stdSimplex.obj₀Equiv.injective rfl
+          have htgt : (SSet.stdSimplex.obj (SimplexCategory.mk n)).δ 0 s = x :=
+            SSet.stdSimplex.obj₀Equiv.injective rfl
           symm
           simpa only [hsrc, htgt] using SSet.π₀.sound (SSet.Edge.mk' s)
   · exact ⟨SSet.stdSimplex.const n 0 _⟩
@@ -178,9 +169,8 @@ theorem standardSimplexRealization_singularChains_exactAt
   have hunit := isZero_singularHomologyFunctor_of_totallyDisconnectedSpace
     AddCommGrpCat k R (TopCat.of Unit) hk
   let E := singularChainHomotopyEquivOfHomotopyEquivAddCommGrp R e
-  have hzero := hunit.of_iso (E.toHomologyIso k)
   rw [HomologicalComplex.exactAt_iff_isZero_homology]
-  exact hzero
+  exact hunit.of_iso (E.toHomologyIso k)
 
 /-- The canonical comparison for a standard simplex is a quasi-isomorphism for every
 coefficient object in `AddCommGrpCat`. -/

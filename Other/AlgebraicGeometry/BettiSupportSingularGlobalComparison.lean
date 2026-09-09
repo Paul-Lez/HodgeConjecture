@@ -54,20 +54,15 @@ private lemma mapExtendIso_inv_naturality
       (HomologicalComplex.mapExtendXIsoAux F L (e.r q)).inv =
     (HomologicalComplex.mapExtendXIsoAux F K (e.r q)).inv ≫
       F.map (HomologicalComplex.extend.mapX f (e.r q))
-  have aux (x : Option i) :
-      HomologicalComplex.extend.mapX ((F.mapHomologicalComplex c).map f) x ≫
-          (HomologicalComplex.mapExtendXIsoAux F L x).inv =
-          (HomologicalComplex.mapExtendXIsoAux F K x).inv ≫
-          F.map (HomologicalComplex.extend.mapX f x) := by
-    cases x with
-    | none =>
-        dsimp [HomologicalComplex.extend.mapX, HomologicalComplex.mapExtendXIsoAux]
-        simp only [Functor.map_zero, Limits.zero_comp, Limits.comp_zero]
-    | some n =>
-        dsimp [HomologicalComplex.extend.mapX, HomologicalComplex.mapExtendXIsoAux]
-        change F.map (f.f n) ≫ 𝟙 _ = 𝟙 _ ≫ F.map (f.f n)
-        rw [Category.comp_id, Category.id_comp]
-  exact aux (e.r q)
+  generalize e.r q = x
+  cases x with
+  | none =>
+      dsimp [HomologicalComplex.extend.mapX, HomologicalComplex.mapExtendXIsoAux]
+      simp only [Functor.map_zero, Limits.zero_comp, Limits.comp_zero]
+  | some n =>
+      dsimp [HomologicalComplex.extend.mapX, HomologicalComplex.mapExtendXIsoAux]
+      change F.map (f.f n) ≫ 𝟙 _ = 𝟙 _ ≫ F.map (f.f n)
+      rw [Category.comp_id, Category.id_comp]
 
 variable (R : Type) [Field R] (X : TopCat.{0})
 

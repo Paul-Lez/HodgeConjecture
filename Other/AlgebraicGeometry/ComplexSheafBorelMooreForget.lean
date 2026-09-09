@@ -27,13 +27,13 @@ open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
 local instance complexSheafForgetAnalyticTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 local instance complexSheafForgetSheafDerivedCategory : HasDerivedCategory
-    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X structureMap))) :=
+    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) :=
   HasDerivedCategory.standard _
 
 local instance complexSheafForgetGroupDerivedCategory : HasDerivedCategory AddCommGrpCat :=
@@ -42,64 +42,64 @@ local instance complexSheafForgetGroupDerivedCategory : HasDerivedCategory AddCo
 /-- Ordinary rational sheaf cohomology in the actual derived-global-sections model. -/
 def ComplexDerivedCohomology (n : ℤ) : AddCommGrpCat :=
   (DerivedCategory.Plus.homologyFunctor AddCommGrpCat n).obj
-    ((TopCat.Sheaf.derivedGlobalSections (TopCat.of (ComplexPoint X structureMap))).obj
-      (complexConstantRationalSheafPlusObject structureMap))
+    ((TopCat.Sheaf.derivedGlobalSections (TopCat.of (ComplexPoint X))).obj
+      (complexConstantRationalSheafPlusObject X))
 
 /-- The actual derived inclusion of supported cohomology into ordinary cohomology. -/
 def complexDerivedSupportedCohomologyForgetSupport
-    (Z : Closeds (ComplexPoint X structureMap)) (n : ℤ) :
-    ComplexDerivedSupportedCohomology structureMap Z n ⟶
-      ComplexDerivedCohomology structureMap n :=
+    (Z : Closeds (ComplexPoint X)) (n : ℤ) :
+    ComplexDerivedSupportedCohomology X Z n ⟶
+      ComplexDerivedCohomology X n :=
   (DerivedCategory.Plus.homologyFunctor AddCommGrpCat n).map
     ((TopCat.Sheaf.derivedForgetClosedSupport
-      (TopCat.of (ComplexPoint X structureMap)) Z).app
-        (complexConstantRationalSheafPlusObject structureMap))
+      (TopCat.of (ComplexPoint X)) Z).app
+        (complexConstantRationalSheafPlusObject X))
 
 /-- Whole-space support is canonically ordinary cohomology through support forgetting. -/
 def complexDerivedSupportedCohomologyTopIso (n : ℤ) :
-    ComplexDerivedSupportedCohomology structureMap ⊤ n ≅
-      ComplexDerivedCohomology structureMap n :=
+    ComplexDerivedSupportedCohomology X ⊤ n ≅
+      ComplexDerivedCohomology X n :=
   (DerivedCategory.Plus.homologyFunctor AddCommGrpCat n).mapIso
     ((TopCat.Sheaf.derivedClosedSupportSectionsTopIso
-      (TopCat.of (ComplexPoint X structureMap))).app
-        (complexConstantRationalSheafPlusObject structureMap))
+      (TopCat.of (ComplexPoint X))).app
+        (complexConstantRationalSheafPlusObject X))
 
 @[simp]
 theorem complexDerivedSupportedCohomologyTopIso_hom (n : ℤ) :
-    (complexDerivedSupportedCohomologyTopIso structureMap n).hom =
-      complexDerivedSupportedCohomologyForgetSupport structureMap ⊤ n := rfl
+    (complexDerivedSupportedCohomologyTopIso X n).hom =
+      complexDerivedSupportedCohomologyForgetSupport X ⊤ n := rfl
 
 /-- Support enlargement and forgetting support induce the same ordinary class. -/
 @[reassoc (attr := simp)]
 theorem complexDerivedSupportedCohomologySupportMap_forget
-    {Z W : Closeds (ComplexPoint X structureMap)} (h : Z ≤ W) (n : ℤ) :
-    complexDerivedSupportedCohomologySupportMap structureMap h n ≫
-        complexDerivedSupportedCohomologyForgetSupport structureMap W n =
-      complexDerivedSupportedCohomologyForgetSupport structureMap Z n := by
+    {Z W : Closeds (ComplexPoint X)} (h : Z ≤ W) (n : ℤ) :
+    complexDerivedSupportedCohomologySupportMap X h n ≫
+        complexDerivedSupportedCohomologyForgetSupport X W n =
+      complexDerivedSupportedCohomologyForgetSupport X Z n := by
   unfold complexDerivedSupportedCohomologySupportMap complexDerivedSupportedCohomologyForgetSupport
   rw [← Functor.map_comp]
   congr 1
   exact NatTrans.congr_app (TopCat.Sheaf.derivedClosedSupportSectionsMap_forget
-    (TopCat.of (ComplexPoint X structureMap)) h) _
+    (TopCat.of (ComplexPoint X)) h) _
 
-variable [SmoothOfRelativeDimension d structureMap] [T2Space (ComplexPoint X structureMap)]
+variable [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
 
 /-- Transport an actual ambient Borel–Moore class to ordinary derived cohomology,
 using the constructed complex orientation and the actual support inclusion. -/
 def complexAmbientSheafBorelMooreToCohomology
-    (Z : Closeds (ComplexPoint X structureMap)) (i : ℤ) :
-    ComplexAmbientSheafBorelMooreHomology structureMap d Z i ⟶
-      ComplexDerivedCohomology structureMap (2 * (d : ℤ) - i) :=
-  (complexAmbientSheafBorelMooreHomologyIso structureMap d Z i).hom ≫
-    complexDerivedSupportedCohomologyForgetSupport structureMap Z (2 * (d : ℤ) - i)
+    (Z : Closeds (ComplexPoint X)) (i : ℤ) :
+    ComplexAmbientSheafBorelMooreHomology X d Z i ⟶
+      ComplexDerivedCohomology X (2 * (d : ℤ) - i) :=
+  (complexAmbientSheafBorelMooreHomologyIso X d Z i).hom ≫
+    complexDerivedSupportedCohomologyForgetSupport X Z (2 * (d : ℤ) - i)
 
 /-- Enlarging Borel–Moore support does not change the resulting ordinary cohomology class. -/
 @[reassoc (attr := simp)]
 theorem complexAmbientSheafBorelMooreToCohomology_naturality
-    {Z W : Closeds (ComplexPoint X structureMap)} (h : Z ≤ W) (i : ℤ) :
-    complexAmbientSheafBorelMooreSupportMap structureMap d h i ≫
-        complexAmbientSheafBorelMooreToCohomology structureMap d W i =
-      complexAmbientSheafBorelMooreToCohomology structureMap d Z i := by
+    {Z W : Closeds (ComplexPoint X)} (h : Z ≤ W) (i : ℤ) :
+    complexAmbientSheafBorelMooreSupportMap X d h i ≫
+        complexAmbientSheafBorelMooreToCohomology X d W i =
+      complexAmbientSheafBorelMooreToCohomology X d Z i := by
   unfold complexAmbientSheafBorelMooreToCohomology
   rw [complexAmbientSheafBorelMooreHomologyIso_naturality_assoc,
     complexDerivedSupportedCohomologySupportMap_forget]
@@ -107,20 +107,20 @@ theorem complexAmbientSheafBorelMooreToCohomology_naturality
 /-- Forgetting Borel–Moore support first, then applying whole-space duality, is exactly
 the supported-duality construction. No independent whole-space comparison is chosen. -/
 theorem complexAmbientSheafBorelMooreToCohomology_eq_forgetSupport
-    (Z : Closeds (ComplexPoint X structureMap)) (i : ℤ) :
-    complexAmbientSheafBorelMooreToCohomology structureMap d Z i =
-      complexAmbientSheafBorelMooreForgetSupport structureMap d Z i ≫
-        (complexAmbientSheafBorelMooreHomologyIso structureMap d ⊤ i).hom ≫
-        (complexDerivedSupportedCohomologyTopIso structureMap (2 * (d : ℤ) - i)).hom :=
-  (complexAmbientSheafBorelMooreToCohomology_naturality structureMap d le_top i).symm
+    (Z : Closeds (ComplexPoint X)) (i : ℤ) :
+    complexAmbientSheafBorelMooreToCohomology X d Z i =
+      complexAmbientSheafBorelMooreForgetSupport X d Z i ≫
+        (complexAmbientSheafBorelMooreHomologyIso X d ⊤ i).hom ≫
+        (complexDerivedSupportedCohomologyTopIso X (2 * (d : ℤ) - i)).hom :=
+  (complexAmbientSheafBorelMooreToCohomology_naturality X d le_top i).symm
 
 /-- The cycle-degree transport, with the dimension arithmetic already proved in duality. -/
 def complexAmbientSheafBorelMooreCycleDegreeToCohomology
-    (Z : Closeds (ComplexPoint X structureMap)) (p : ℕ) (hp : p ≤ d) :
-    ComplexAmbientSheafBorelMooreHomology structureMap d Z
+    (Z : Closeds (ComplexPoint X)) (p : ℕ) (hp : p ≤ d) :
+    ComplexAmbientSheafBorelMooreHomology X d Z
         (2 * ((d - p : ℕ) : ℤ)) ⟶
-      ComplexDerivedCohomology structureMap (2 * (p : ℤ)) :=
-  (complexAmbientSheafBorelMooreCycleDegreeIso structureMap d Z p hp).hom ≫
-    complexDerivedSupportedCohomologyForgetSupport structureMap Z (2 * (p : ℤ))
+      ComplexDerivedCohomology X (2 * (p : ℤ)) :=
+  (complexAmbientSheafBorelMooreCycleDegreeIso X d Z p hp).hom ≫
+    complexDerivedSupportedCohomologyForgetSupport X Z (2 * (p : ℤ))
 
 end AlgebraicGeometry.ComplexPoint

@@ -74,8 +74,7 @@ theorem mapHomologyIso_shiftMap {K L : CochainComplex C ℤ}
       F.map ((HomologicalComplex.homologyFunctor C (.up ℤ) 0).shiftMap f n n' h) := by
   dsimp only [Functor.shiftMap, ShiftedHom.map]
   rw [Functor.map_comp, Category.assoc, Category.assoc]
-  erw [
-    mapHomologyIso_shift]
+  erw [mapHomologyIso_shift]
   rw [← Category.assoc]
   have hn := ShortComplex.mapHomologyIso_hom_naturality
     ((HomologicalComplex.shortComplexFunctor C (.up ℤ) n).map f) F

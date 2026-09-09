@@ -113,8 +113,8 @@ public def face {s t : CoverSupport ι} (h : s.1 ⊆ t.1) : M.model t ⟶ M.mode
 
 omit [LinearOrder ι] in
 @[simp] public theorem face_id (s : CoverSupport ι) :
-    M.face (Finset.Subset.refl s.1) = 𝟙 (M.model s) := by
-  apply M.map_id
+    M.face (Finset.Subset.refl s.1) = 𝟙 (M.model s) :=
+  M.map_id _
 
 omit [LinearOrder ι] in
 public theorem face_comp {r s t : CoverSupport ι} (hrs : r.1 ⊆ s.1) (hst : s.1 ⊆ t.1) :
@@ -160,9 +160,8 @@ public theorem ι_realize (P Q : TupleClass ι) {n m : ℕ}
     (T : Formal ι (n + 1) →ₗ[ℤ] Formal ι (m + 1)) (a : {a : Fin (n + 1) → ι // P.mem n a}) :
     Sigma.ι (fun a : {a : Fin (n + 1) → ι // P.mem n a} ↦ M.model (tupleSupport a.1)) a ≫
         M.realize P Q T =
-      M.realizeAux a.1 Q (T (single a.1 1)) := by
-  unfold realize
-  exact Sigma.ι_desc _ _
+      M.realizeAux a.1 Q (T (single a.1 1)) :=
+  Sigma.ι_desc _ _
 
 public theorem realizeAux_single {n m : ℕ} (a : Fin (n + 1) → ι) (Q : TupleClass ι)
     (b : Fin (m + 1) → ι) :
@@ -183,9 +182,8 @@ public theorem faceOrZero_self {n : ℕ} (a : Fin (n + 1) → ι) : M.faceOrZero
 
 public theorem ιOrZero_of_mem (Q : TupleClass ι) {m : ℕ} {b : Fin (m + 1) → ι} (hb : Q.mem m b) :
     M.ιOrZero Q b =
-      Sigma.ι (fun a : {a : Fin (m + 1) → ι // Q.mem m a} ↦ M.model (tupleSupport a.1)) ⟨b, hb⟩ := by
-  unfold ιOrZero
-  exact dif_pos hb
+      Sigma.ι (fun a : {a : Fin (m + 1) → ι // Q.mem m a} ↦ M.model (tupleSupport a.1)) ⟨b, hb⟩ :=
+  dif_pos hb
 
 /-- Precomposing with a face map is compatible with realization, on combinations supported in the
 support of the source tuple. -/
@@ -193,13 +191,12 @@ public theorem faceOrZero_comp_realizeAux {n m k : ℕ} (a : Fin (n + 1) → ι)
     (hba : Set.range b ⊆ Set.range a) (R : TupleClass ι) (u : Formal ι (k + 1))
     (hu : ∀ c ∈ u.support, Set.range c ⊆ Set.range b) :
     M.faceOrZero a b ≫ M.realizeAux b R u = M.realizeAux a R u := by
-  have := linearMap_apply_eq_of_forall_mem_support
+  exact linearMap_apply_eq_of_forall_mem_support
     (L := (Preadditive.leftComp _ (M.faceOrZero a b)).toIntLinearMap ∘ₗ M.realizeAux b R)
     (R := M.realizeAux a R) (w := u) fun c hc ↦ by
       change M.faceOrZero a b ≫ M.realizeAux b R (single c 1) = M.realizeAux a R (single c 1)
       rw [realizeAux_single, realizeAux_single, ← Category.assoc,
         faceOrZero_comp_faceOrZero _ _ _ hba (hu c hc)]
-  exact this
 
 /-- Postcomposing a realized combination with a realized admissible operator is realizing the
 image combination. -/
@@ -207,13 +204,12 @@ public theorem realizeAux_comp_realize {n m k : ℕ} (a : Fin (n + 1) → ι) (Q
     (w : Formal ι (m + 1)) (hw : ∀ b ∈ w.support, Set.range b ⊆ Set.range a ∧ Q.mem m b)
     {S : Formal ι (m + 1) →ₗ[ℤ] Formal ι (k + 1)} (hS : Admissible Q R S) :
     M.realizeAux a Q w ≫ M.realize Q R S = M.realizeAux a R (S w) := by
-  have := linearMap_apply_eq_of_forall_mem_support
+  exact linearMap_apply_eq_of_forall_mem_support
     (L := (Preadditive.rightComp _ (M.realize Q R S)).toIntLinearMap ∘ₗ M.realizeAux a Q)
     (R := M.realizeAux a R ∘ₗ S) (w := w) fun b hb ↦ by
       change M.realizeAux a Q (single b 1) ≫ M.realize Q R S = M.realizeAux a R (S (single b 1))
       rw [realizeAux_single, ιOrZero_of_mem _ (hw b hb).2, Category.assoc, ι_realize,
         faceOrZero_comp_realizeAux _ _ (hw b hb).1 _ _ (hS.range_subset b (hw b hb).2)]
-  exact this
 
 public theorem realize_congr (P Q : TupleClass ι) {n m : ℕ}
     {T T' : Formal ι (n + 1) →ₗ[ℤ] Formal ι (m + 1)}
@@ -382,15 +378,13 @@ public def realizeHomotopyHom (P Q : TupleClass ι)
 
 public theorem realizeHomotopyHom_succ (P Q : TupleClass ι)
     (h : ∀ n, Formal ι (n + 1) →ₗ[ℤ] Formal ι (n + 2)) (i : ℕ) :
-    M.realizeHomotopyHom P Q h i (i + 1) = M.realize P Q (h i) := by
-  unfold realizeHomotopyHom
-  exact dif_pos rfl
+    M.realizeHomotopyHom P Q h i (i + 1) = M.realize P Q (h i) :=
+  dif_pos rfl
 
 public theorem realizeHomotopyHom_of_ne (P Q : TupleClass ι)
     (h : ∀ n, Formal ι (n + 1) →ₗ[ℤ] Formal ι (n + 2)) {i j : ℕ} (hij : i + 1 ≠ j) :
-    M.realizeHomotopyHom P Q h i j = 0 := by
-  unfold realizeHomotopyHom
-  exact dif_neg hij
+    M.realizeHomotopyHom P Q h i j = 0 :=
+  dif_neg hij
 
 /-- Realize a family of admissible formal homotopies satisfying the signed homotopy identity on
 the source class as a chain homotopy between realized chain maps. -/

@@ -85,7 +85,6 @@ public noncomputable def firstQuadrantColumnPrefixXIso
 public theorem firstQuadrantColumnPrefix_isZero_X
     (K : FirstQuadrantBicomplex) (n p : ℕ) (hp : n < p) :
     IsZero ((firstQuadrantColumnPrefix K n).X p) := by
-  unfold firstQuadrantColumnPrefix
   apply HomologicalComplex.isZero_stupidTrunc_X
   intro i hi
   change i.1 = p at hi

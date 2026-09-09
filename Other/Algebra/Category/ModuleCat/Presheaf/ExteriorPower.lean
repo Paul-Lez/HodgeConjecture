@@ -100,8 +100,7 @@ lemma exteriorPowerMap_mk (p : ℕ) {X Y : Cᵒᵖ} (f : X ⟶ Y)
     (x : Fin p → M.obj X) :
     exteriorPowerMap (M := M) p f (ModuleCat.exteriorPower.mk x) =
       ModuleCat.exteriorPower.mk (M := M.obj Y)
-        (fun i ↦ (M.map f (x i) : M.obj Y)) := by
-  apply ModuleCat.exteriorPower.desc_mk
+        (fun i ↦ (M.map f (x i) : M.obj Y)) := ModuleCat.exteriorPower.desc_mk _ _
 
 /-- The `p`th exterior power of a presheaf of modules over a presheaf of commutative rings. -/
 def exteriorPower (p : ℕ) :
@@ -119,9 +118,7 @@ def exteriorPower (p : ℕ) :
     apply ModuleCat.exteriorPower.hom_ext
     ext x
     simp only [ModuleCat.AlternatingMap.postcomp_apply, ConcreteCategory.comp_apply]
-    rw [exteriorPowerMap_mk]
-    rw [ModuleCat.restrictScalars.map_apply]
-    rw [exteriorPowerMap_mk]
+    rw [exteriorPowerMap_mk, ModuleCat.restrictScalars.map_apply, exteriorPowerMap_mk]
     erw [exteriorPowerMap_mk]
     simp
     congr 1

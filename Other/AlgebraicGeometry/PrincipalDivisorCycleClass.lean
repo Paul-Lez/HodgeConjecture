@@ -116,8 +116,8 @@ lemma principalDivisor_class_eq_gysin_carrier_divisor_class
     (gysin : N →+ M)
     (hpush : CycleClassCommutesWithPrincipalDivisorPushforwardVia
       D carrierClass ambientClass gysin) :
-    ambientClass D.pushforwardCycle = gysin (carrierClass D.divisor) := by
-  exact hpush D.divisor
+    ambientClass D.pushforwardCycle = gysin (carrierClass D.divisor) :=
+  hpush D.divisor
 
 /-- The ambient principal-divisor class vanishes if the intrinsic divisor class vanishes and
 cycle classes commute with the carrier's Gysin map. -/
@@ -143,8 +143,8 @@ lemma principalDivisor_class_eq_carrier_divisor_class
     (ambientClass : AlgebraicCycle X ℤ →+ M)
     (hpush : CycleClassCommutesWithPrincipalDivisorPushforward
       D carrierClass ambientClass) :
-    ambientClass D.pushforwardCycle = carrierClass D.divisor := by
-  exact hpush D.divisor
+    ambientClass D.pushforwardCycle = carrierClass D.divisor :=
+  hpush D.divisor
 
 /-- The ambient class of a principal divisor vanishes once proper-pushforward compatibility and
 the intrinsic codimension-one principal-divisor theorem on its carrier are known. -/
@@ -194,9 +194,8 @@ lemma rationalEquivalenceSubgroup_le_cycleClassOnCyclesOfComponents_ker_of_carri
       (cycleClassOnAlgebraicCyclesOfComponents componentClass))
     (hdivisor : ∀ D, carrierClass D D.divisor = 0) :
     rationalEquivalenceSubgroup X p ≤
-      (cycleClassOnCyclesOfComponents componentClass).ker := by
-  intro c hc
-  exact principalDivisorSubgroup_le_ker_of_carrier_divisor_classes
+      (cycleClassOnCyclesOfComponents componentClass).ker :=
+  fun _ hc ↦ principalDivisorSubgroup_le_ker_of_carrier_divisor_classes
     (cycleClassOnAlgebraicCyclesOfComponents componentClass)
     carrierClass hpush hdivisor hc
 
@@ -233,8 +232,8 @@ lemma cycleClassOfComponentsOfCarrierDivisors_mk
     (hdivisor : ∀ D, carrierClass D D.divisor = 0)
     (z : CodimensionCycle X p) :
     cycleClassOfComponentsOfCarrierDivisors componentClass carrierClass hpush hdivisor (mk z) =
-      cycleClassOnCyclesOfComponents componentClass z := by
-  exact liftCycleClass_mk _ _ _
+      cycleClassOnCyclesOfComponents componentClass z :=
+  liftCycleClass_mk _ _ _
 
 /-- Construct the rational Chow-group cycle-class map from carrierwise geometric theorems. -/
 def rationalCycleClassOfComponentsOfCarrierDivisors

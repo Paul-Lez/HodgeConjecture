@@ -54,9 +54,7 @@ def imageSupportPairMap {X Y : TopCat} (f : X ⟶ Y) (hf : Function.Injective f)
 def imagePointPairMap {X Y : TopCat} (f : X ⟶ Y) (hf : Function.Injective f) (x : X) :
     TopPair.ofSubset ({x}ᶜ : Set X) ⟶ TopPair.ofSubset ({f x}ᶜ : Set Y) := by
   refine TopPair.ofHom f ?_ ?_
-  · have hmem : ∀ v : ({x}ᶜ : Set X), f v.1 ∈ ({f x}ᶜ : Set Y) := by
-      intro v h
-      exact v.2 (hf h)
+  · have hmem : ∀ v : ({x}ᶜ : Set X), f v.1 ∈ ({f x}ᶜ : Set Y) := fun v h => v.2 (hf h)
     exact TopCat.ofHom ⟨fun v => ⟨f v.1, hmem v⟩,
       (f.hom.continuous.comp continuous_subtype_val).subtype_mk hmem⟩
   · rfl
@@ -123,12 +121,10 @@ lemma standardRealToComplexPair_translation (d : ℕ) (v : StandardRealModel (d 
   apply MorphismProperty.Arrow.Hom.ext
   · ext w
     apply Subtype.ext
-    apply funext
-    intro j
+    funext j
     apply Complex.ext <;> rfl
   · ext w
-    apply funext
-    intro j
+    funext j
     apply Complex.ext <;> rfl
 
 /-- Throughout the complex-coordinate neighborhood the same relative class restricts to the
