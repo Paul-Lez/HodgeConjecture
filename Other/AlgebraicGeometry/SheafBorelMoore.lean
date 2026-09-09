@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import Other.AlgebraicGeometry.BorelMooreCycleClass
+public import Other.AlgebraicTopology.IntrinsicBorelMoore
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 
@@ -41,9 +42,10 @@ degree-shifted comparison; identifying the supplied isomorphism with the normali
 orientation is a separate, presently unproved theorem.  No group-level duality equivalence is
 retained as input.
 
-The construction here is ambient.  `IntrinsicSheafBorelMooreHomology` separately records what
-the intrinsic definition on a space carrying its own dualizing complex means; no compactification
-independence or closed-embedding comparison is claimed.
+The input-based construction here is ambient. `IntrinsicSheafBorelMooreHomology` instead
+uses the actual chain sheaf on the analytic space, through the topological intrinsic definition.
+Hypercohomology of an externally supplied candidate is named `DualizingCandidateHyperhomology`;
+it is not the definition of intrinsic Borel–Moore homology.
 -/
 
 @[expose] public noncomputable section
@@ -128,9 +130,16 @@ abbrev DerivedHypercohomology
 /-- The group `𝕳⁻ⁱ(X, ω_X)` associated to the supplied intrinsic dualizing-object candidate.
 It is intentionally separate from an ambient support.  Calling it intrinsic Borel--Moore
 homology requires the still-unavailable theorem that the candidate is genuinely dualizing. -/
-abbrev IntrinsicSheafBorelMooreHomology
+abbrev DualizingCandidateHyperhomology
     (ω : RationalDualizingComplex X) (i : ℤ) :=
   DerivedHypercohomology X (DerivedCategory.Q.obj ω.dualizingComplex) (-i)
+
+/-- Intrinsic rational Borel–Moore homology of the analytic space itself.
+The chain sheaf is constructed, not an argument. No projective embedding,
+smoothness, relative dimension, or dualizing-object candidate is required. -/
+abbrev IntrinsicSheafBorelMooreHomology (i : ℤ) : AddCommGrpCat.{1} :=
+  AlgebraicTopology.Singular.BorelMooreHomology ℚ
+    (TopCat.of (ComplexPoint X)) i
 
 /-- The ambient Borel--Moore object `RΓ_Z(ω_X)` in the derived category. -/
 def ambientSheafBorelMooreObject

@@ -301,3 +301,5 @@ public import Other.Algebra.Homology.MapExtendBettiComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
 public import Other.AlgebraicGeometry.ComplexSupportedOrdinaryComparison
 public import Other.AlgebraicGeometry.CycleComponentPointOrdinarySign
+public import Other.AlgebraicTopology.IntrinsicBorelMoore
+public import Other.AlgebraicGeometry.IntrinsicComplexBorelMoore

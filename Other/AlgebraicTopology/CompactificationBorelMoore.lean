@@ -20,9 +20,11 @@ public import Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
 /-!
 # Borel--Moore homology through a compactification
 
-If `U` is the complement of a closed subset `S` in a compact Hausdorff space `X`, then
-Borel--Moore homology of `U` is computed by relative singular homology `H_*(X, S)`.  This file
-introduces the compactification-relative presentation needed for algebraic cycle components.
+This file introduces relative singular homology `H_*(X, S)` as a compactification-relative
+model for the complement `U = X ∖ S`. The intrinsic chain-sheaf definition is
+`AlgebraicTopology.Singular.BorelMooreHomology` in `IntrinsicBorelMoore.lean`.
+An identification of the two models is a comparison theorem under appropriate hypotheses
+on the pair (for example, a finite triangulated pair), not the definition of intrinsic homology.
 
 The local value of a class in `H_n(X, S)` at a point `x ∈ U` lies in
 `H_n(X, X ∖ {x})`.  A Borel--Moore fundamental class is characterized by requiring every one
@@ -30,9 +32,8 @@ of these local values to equal the prescribed oriented local class.  This is an 
 chosen orientation generator, rather than the scale-independent condition that it span a
 one-dimensional vector space.
 
-The definitions themselves do not require compactness or closedness.  Those hypotheses enter
-the comparison with locally finite chains and the existence and uniqueness theorem for manifold
-fundamental classes.
+The relative-model definitions themselves do not require compactness or closedness.
+They must not be used to infer a compactification comparison for arbitrary topological pairs.
 -/
 
 @[expose] public noncomputable section
@@ -127,9 +128,9 @@ lemma eq_integralCompactificationFundamentalClass
     c = integralCompactificationFundamentalClass U n orientation h :=
   h.unique hc (integralCompactificationFundamentalClass_isFundamental U n orientation h)
 
-/-- Relative singular homology of `(X, S)`, regarded as the compactification presentation of
-Borel--Moore homology of `X ∖ S`.  When `X` is compact Hausdorff and `S` is closed, this computes
-the usual Borel--Moore homology of the open complement. -/
+/-- Relative singular homology of `(X, S)`, the compactification-relative model.
+Comparison with intrinsic chain-sheaf Borel–Moore homology of `X ∖ S` is a theorem
+requiring additional hypotheses on the pair, not a consequence of this abbreviation. -/
 abbrev CompactificationBorelMooreHomology
     (R : Type) [Field R] {X : Type} [TopologicalSpace X]
     (S : Set X) (n : ℕ) : ModuleCat R :=
