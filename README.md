@@ -24,3 +24,17 @@ The remaining content of the project is sorted into four folders:
 - `HodgeConjecture/Lemmas`: Supporting results needed by those definitions;
 - `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
 
+## Formalization guide
+
+The repository includes a [Verso](https://github.com/leanprover/verso) guide that interleaves the
+mathematics with elaborated Lean declarations. Once GitHub Pages is enabled, the deployed guide is
+available at <https://paul-lez.github.io/HodgeConjecture/>. Build it locally with:
+
+```bash
+lake exe hodge-guide
+python3 -m http.server 8000 -d _out/html-multi
+```
+
+Then open <http://localhost:8000>. The workflow in `.github/workflows/guide.yml` builds every pull
+request and deploys pushes to `main` through GitHub Pages. In the repository settings, select
+**GitHub Actions** as the Pages source once before the first deployment.
