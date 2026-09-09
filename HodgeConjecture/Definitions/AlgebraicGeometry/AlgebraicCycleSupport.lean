@@ -150,24 +150,15 @@ noncomputable instance cycleComponent_locallyOfFinitePresentation
     LocallyOfFinitePresentation (cycleComponentι X.left x ≫ X.hom) :=
   inferInstance
 
-/-- The integral projective variety defined by one generic point of a smooth projective variety. -/
-def cycleComponentVariety
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IntegralProjectiveComplexVariety where
-  scheme := cycleComponent X.left x
-  isIntegral := inferInstance
-  structureMap := cycleComponentι X.left x ≫ X.hom
-  projective := cycleComponent_projective X x
-
 /-- The reduced closure of a point in a projective complex variety is Noetherian.
 
 This is not an instance: the component does not determine the structure morphism carrying the
 projectivity hypothesis. -/
 theorem cycleComponent_isNoetherian
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IsNoetherian (cycleComponent X.left x) := by
-  change IsNoetherian (cycleComponentVariety X x).scheme
-  infer_instance
+    IsNoetherian (cycleComponent X.left x) :=
+  @isNoetherian_of_isProjective (Over.mk (cycleComponentι X.left x ≫ X.hom))
+    (cycleComponent_projective X x)
 
 /-- The smooth locus of an integral cycle component is a smooth complex scheme. -/
 theorem cycleComponent_smoothLocus_smooth

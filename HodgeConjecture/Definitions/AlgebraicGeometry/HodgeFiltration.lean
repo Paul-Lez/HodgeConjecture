@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
+public import HodgeConjecture.Definitions.Algebra.IntegerMultiple
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Lemmas.Algebra.Homology.StupidTruncation
 public import Mathlib.Algebra.Homology.DerivedCategory.Basic
@@ -173,23 +174,6 @@ def constantIntegerSheafComplexInt :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
     (constantIntegerSheaf X)).extend ComplexShape.embeddingUpNat
-
-/-- The additive map `n ↦ n q` from the integers to the rationals. -/
-def integerMultipleAddHom (q : K) : ℤ →+ K where
-  toFun n := n * q
-  map_zero' := by simp
-  map_add' a b := by push_cast; ring
-
-omit [Algebra K ℂ] in
-@[simp] lemma integerMultipleAddHom_zero : integerMultipleAddHom K 0 = 0 := by
-  ext
-  simp [integerMultipleAddHom]
-
-omit [Algebra K ℂ] in
-@[simp] lemma integerMultipleAddHom_add (a b : K) :
-    integerMultipleAddHom K (a + b) = integerMultipleAddHom K a + integerMultipleAddHom K b := by
-  ext
-  simp [integerMultipleAddHom, mul_add]
 
 /-- A rational number as a morphism from the integer to the rational constant sheaf. -/
 def integerToFieldConstantSheaf (q : K) :

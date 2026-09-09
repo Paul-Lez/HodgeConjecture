@@ -52,9 +52,6 @@ invertibility.
 Complex points are the case `K = ℂ`. Analytification is then packaged as a functor from schemes
 over `Spec ℂ` to topological spaces, so that Betti (co)homology of a complex variety is Mathlib's
 singular (co)homology of the resulting space.
-
-`IntegralProjectiveComplexVariety` packages an integral projective scheme over `Spec ℂ`.
-Its `over` object supplies the bundled scheme used by the point and analytification constructions.
 -/
 
 @[expose] public section
@@ -514,51 +511,10 @@ noncomputable def complexAnalytification :
     ext z
     simp [Point.continuousMap, Point.map, Category.assoc]
 
-/-- An integral projective algebraic variety over `ℂ`. Projectivity is witnessed by an explicit
-closed embedding into a finite-dimensional projective space. -/
-structure IntegralProjectiveComplexVariety where
-  /-- The underlying scheme. -/
-  scheme : Scheme
-  [isIntegral : IsIntegral scheme]
-  /-- The structure morphism to `Spec ℂ`. -/
-  structureMap : scheme ⟶ Spec ↧ℂ
-  [projective : IsProjective structureMap]
-
 /-- A projective complex scheme is Noetherian. -/
 theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
     [IsProjective X.hom] : IsNoetherian X.left where
   toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian X.hom
   toCompactSpace := QuasiCompact.compactSpace_of_compactSpace X.hom
-
-namespace IntegralProjectiveComplexVariety
-
-/-- The integral structure carried by an integral projective complex variety. -/
-instance (V : IntegralProjectiveComplexVariety) : IsIntegral V.scheme := V.isIntegral
-
-/-- The projective presentation carried by an integral projective complex variety. -/
-instance (V : IntegralProjectiveComplexVariety) :
-    IsProjective V.structureMap := V.projective
-
-/-- An integral projective complex variety is Noetherian. -/
-noncomputable instance (V : IntegralProjectiveComplexVariety) : IsNoetherian V.scheme :=
-  @isNoetherian_of_isProjective (Over.mk V.structureMap) V.projective
-
-/-- The variety regarded as the corresponding object over `Spec ℂ`. -/
-noncomputable abbrev over (V : IntegralProjectiveComplexVariety) : Over (Spec ↧ℂ) :=
-  Over.mk V.structureMap
-
-/-- The complex points of an integral projective complex variety. -/
-abbrev analyticPoint (V : IntegralProjectiveComplexVariety) :=
-  ComplexPoint V.over
-
-noncomputable instance (V : IntegralProjectiveComplexVariety) :
-    TopologicalSpace V.analyticPoint :=
-  Point.analyticTopology
-
-/-- The analytification as a topological space. -/
-noncomputable def analytification (V : IntegralProjectiveComplexVariety) : TopCat :=
-  complexAnalytification.obj V.over
-
-end IntegralProjectiveComplexVariety
 
 end AlgebraicGeometry
