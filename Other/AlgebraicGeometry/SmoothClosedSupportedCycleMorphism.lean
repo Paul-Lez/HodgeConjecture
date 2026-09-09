@@ -32,86 +32,86 @@ set_option backward.isDefEq.respectTransparency false
 set_option backward.defeqAttrib.useBackward true
 
 noncomputable local instance smoothSupportedCycleAnalyticTopology
-    (Y : Scheme) (sY : Y ⟶ Spec (.of ℂ)) : TopologicalSpace (ComplexPoint Y sY) :=
+    (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=
   Point.analyticTopology
 
 local instance smoothSupportedCycleSheafDerivedCategory
-    (Y : Scheme) (sY : Y ⟶ Spec (.of ℂ)) :
-    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint Y sY))) :=
+    (Y : Over (Spec (.of ℂ))) :
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint Y))) :=
   HasDerivedCategory.standard _
 
-variable {X : Scheme} (sX : X ⟶ Spec (.of ℂ)) (d : ℕ)
-  [SmoothOfRelativeDimension d sX] [T2Space (ComplexPoint X sX)]
+variable (X : Over (Spec (.of ℂ))) (d : ℕ)
+  [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
 
 /-- The lower bound needed for good truncation is proved from local homology concentration. -/
 theorem complexChainSheaf_isGE :
-    (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X sX))).IsGE
+    (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X))).IsGE
       (-((2 * d : ℕ) : ℤ)) := by
   apply CochainComplex.isGE_of_homology_concentrated
   intro n hn
-  apply complexChainSheafCohomology_concentrated sX d n
+  apply complexChainSheafCohomology_concentrated X d n
   simpa only [Nat.cast_mul, Nat.cast_ofNat] using hn
 
 /-- The actual comparison from localized termwise support to the actual `D⁺` derived support
 of the smooth ambient chain model. It is a map, not an assumed equivalence. -/
-def complexChainTermwiseToDerivedSupport (S : Closeds (ComplexPoint X sX)) :
+def complexChainTermwiseToDerivedSupport (S : Closeds (ComplexPoint X)) :
     DerivedCategory.Q.obj
-      (((TopCat.Sheaf.sheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X sX)) S).mapHomologicalComplex
+      (((TopCat.Sheaf.sheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X)) S).mapHomologicalComplex
         (.up ℤ)).obj
-          (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X sX)))) ⟶
+          (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X)))) ⟶
     DerivedCategory.Plus.ι.obj
-      ((TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X sX)) S).obj
-        (complexChainSheafPlusObject sX d)) := by
-  have h := complexChainSheaf_isGE sX d
-  exact TopCat.Sheaf.termwiseToDerivedSheafSupport (TopCat.of (ComplexPoint X sX))
-    (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X sX)))
+      ((TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X)) S).obj
+        (complexChainSheafPlusObject X d)) := by
+  have h := complexChainSheaf_isGE X d
+  exact TopCat.Sheaf.termwiseToDerivedSheafSupport (TopCat.of (ComplexPoint X))
+    (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X)))
     (-((2 * d : ℕ) : ℤ)) S
 
-variable {Z : Scheme} (sZ : Z ⟶ Spec (.of ℂ)) (i : Z ⟶ X) (hi : i ≫ sX = sZ)
-  [IsClosedImmersion i] (e : ℕ) [SmoothOfRelativeDimension e sZ]
-  [T2Space (ComplexPoint Z sZ)]
+variable (Z : Over (Spec (.of ℂ))) (i : Z ⟶ X)
+  [IsClosedImmersion i.left] (e : ℕ) [SmoothOfRelativeDimension e Z.hom]
+  [T2Space (ComplexPoint Z)]
 
 /-- The normalized source orientation followed by actual closed-supported chain pushforward
 and the proved truncation bridge lands in genuine derived support, entirely in `D⁺`. -/
 def smoothClosedDerivedSupportedCycleMorphism :
-    (TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlus (closedCycleAnalyticMap sZ sX i hi)
-      (closedCycleAnalyticMap_isClosedEmbedding sZ sX i hi)).obj
-        ((complexConstantRationalSheafPlusObject sZ)⟦2 * (e : ℤ)⟧) ⟶
-    (TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X sX))
-      (closedEmbeddingSupport (closedCycleAnalyticMap sZ sX i hi)
-        (closedCycleAnalyticMap_isClosedEmbedding sZ sX i hi))).obj
-          (complexChainSheafPlusObject sX d) :=
+    (TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlus (closedCycleAnalyticMap Z X i)
+      (closedCycleAnalyticMap_isClosedEmbedding Z X i)).obj
+        ((complexConstantRationalSheafPlusObject Z)⟦2 * (e : ℤ)⟧) ⟶
+    (TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X))
+      (closedEmbeddingSupport (closedCycleAnalyticMap Z X i)
+        (closedCycleAnalyticMap_isClosedEmbedding Z X i))).obj
+          (complexChainSheafPlusObject X d) :=
   DerivedCategory.Plus.ι.preimage
-    (smoothClosedCycleTermwiseSupportedMorphism sZ sX i hi e ≫
-      complexChainTermwiseToDerivedSupport sX d
-        (closedEmbeddingSupport (closedCycleAnalyticMap sZ sX i hi)
-          (closedCycleAnalyticMap_isClosedEmbedding sZ sX i hi)))
+    (smoothClosedCycleTermwiseSupportedMorphism Z X i e ≫
+      complexChainTermwiseToDerivedSupport X d
+        (closedEmbeddingSupport (closedCycleAnalyticMap Z X i)
+          (closedCycleAnalyticMap_isClosedEmbedding Z X i)))
 
 /-- The full-inclusion lift introduces no new morphism data: its underlying map is precisely
 the normalized termwise supported map followed by the actual derived-support comparison. -/
 @[simp]
 lemma smoothClosedDerivedSupportedCycleMorphism_underlying :
-    DerivedCategory.Plus.ι.map (smoothClosedDerivedSupportedCycleMorphism sX d sZ i hi e) =
-      smoothClosedCycleTermwiseSupportedMorphism sZ sX i hi e ≫
-        complexChainTermwiseToDerivedSupport sX d
-          (closedEmbeddingSupport (closedCycleAnalyticMap sZ sX i hi)
-            (closedCycleAnalyticMap_isClosedEmbedding sZ sX i hi)) :=
+    DerivedCategory.Plus.ι.map (smoothClosedDerivedSupportedCycleMorphism X d Z i e) =
+      smoothClosedCycleTermwiseSupportedMorphism Z X i e ≫
+        complexChainTermwiseToDerivedSupport X d
+          (closedEmbeddingSupport (closedCycleAnalyticMap Z X i)
+            (closedCycleAnalyticMap_isClosedEmbedding Z X i)) :=
   Functor.map_preimage _ _
 
 /-- Applying the constructed ambient orientation gives the supported smooth-cycle morphism
 with rational constant coefficients. Both orientations are fixed by the exact local classes. -/
 def smoothClosedDerivedSupportedOrientedCycleMorphism :
-    (TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlus (closedCycleAnalyticMap sZ sX i hi)
-      (closedCycleAnalyticMap_isClosedEmbedding sZ sX i hi)).obj
-        ((complexConstantRationalSheafPlusObject sZ)⟦2 * (e : ℤ)⟧) ⟶
-    (TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X sX))
-      (closedEmbeddingSupport (closedCycleAnalyticMap sZ sX i hi)
-        (closedCycleAnalyticMap_isClosedEmbedding sZ sX i hi))).obj
-          ((complexConstantRationalSheafPlusObject sX)⟦2 * (d : ℤ)⟧) :=
-  smoothClosedDerivedSupportedCycleMorphism sX d sZ i hi e ≫
-    (TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X sX))
-      (closedEmbeddingSupport (closedCycleAnalyticMap sZ sX i hi)
-        (closedCycleAnalyticMap_isClosedEmbedding sZ sX i hi))).map
-          (complexChainSheafPlusOrientationIso sX d).hom
+    (TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlus (closedCycleAnalyticMap Z X i)
+      (closedCycleAnalyticMap_isClosedEmbedding Z X i)).obj
+        ((complexConstantRationalSheafPlusObject Z)⟦2 * (e : ℤ)⟧) ⟶
+    (TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X))
+      (closedEmbeddingSupport (closedCycleAnalyticMap Z X i)
+        (closedCycleAnalyticMap_isClosedEmbedding Z X i))).obj
+          ((complexConstantRationalSheafPlusObject X)⟦2 * (d : ℤ)⟧) :=
+  smoothClosedDerivedSupportedCycleMorphism X d Z i e ≫
+    (TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X))
+      (closedEmbeddingSupport (closedCycleAnalyticMap Z X i)
+        (closedCycleAnalyticMap_isClosedEmbedding Z X i))).map
+          (complexChainSheafPlusOrientationIso X d).hom
 
 end AlgebraicGeometry.ComplexPoint

@@ -502,61 +502,61 @@ open Point
 open CategoryTheory TopologicalSpace
 open scoped Manifold
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
+variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-local instance holomorphicPoincareIsManifold [SmoothOfRelativeDimension d structureMap] :
+local instance holomorphicPoincareIsManifold [SmoothOfRelativeDimension d X.hom] :
     IsManifold (modelWithCornersSelf ℂ (Fin d → ℂ)) ω
-      (ComplexPoint X structureMap) :=
-  isManifold_omega structureMap d
+      (ComplexPoint X) :=
+  isManifold_omega X d
 
 /-- Restricting a holomorphic function does not change its value in a fixed chart. -/
 lemma chartSection_holomorphicRestrictionAlgHom
-    [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X structureMap)
-    (f : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
-    (hy : y ∈ chartSectionDomain structureMap d V z) :
-    chartSection structureMap d V z (holomorphicRestrictionAlgHom structureMap d i f) y =
-      chartSection structureMap d U z f y := by
-  have hyU : y ∈ chartSectionDomain structureMap d U z :=
+    [SmoothOfRelativeDimension d X.hom]
+    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
+    (z : ComplexPoint X)
+    (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
+    (hy : y ∈ chartSectionDomain X d V z) :
+    chartSection X d V z (holomorphicRestrictionAlgHom X d i f) y =
+      chartSection X d U z f y := by
+  have hyU : y ∈ chartSectionDomain X d U z :=
     ⟨hy.1, leOfHom i.unop hy.2⟩
-  rw [chartSection_apply_of_mem structureMap d V z _ hy,
-    chartSection_apply_of_mem structureMap d U z _ hyU]
+  rw [chartSection_apply_of_mem X d V z _ hy,
+    chartSection_apply_of_mem X d U z _ hyU]
   rfl
 
 /-- Restricting a holomorphic function does not change its derivative in a fixed chart. -/
 lemma chartSectionDifferential_holomorphicRestrictionAlgHom
-    [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X structureMap)
-    (f : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
-    (hy : y ∈ chartSectionDomain structureMap d V z) :
-    chartSectionDifferential structureMap d V z
-        (holomorphicRestrictionAlgHom structureMap d i f) y =
-      chartSectionDifferential structureMap d U z f y := by
-  have hyU : y ∈ chartSectionDomain structureMap d U z :=
+    [SmoothOfRelativeDimension d X.hom]
+    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
+    (z : ComplexPoint X)
+    (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
+    (hy : y ∈ chartSectionDomain X d V z) :
+    chartSectionDifferential X d V z
+        (holomorphicRestrictionAlgHom X d i f) y =
+      chartSectionDifferential X d U z f y := by
+  have hyU : y ∈ chartSectionDomain X d U z :=
     ⟨hy.1, leOfHom i.unop hy.2⟩
   have heq : Filter.EventuallyEq (nhds y)
-      (chartSection structureMap d V z
-        (holomorphicRestrictionAlgHom structureMap d i f))
-      (chartSection structureMap d U z f) := by
-    filter_upwards [(isOpen_chartSectionDomain structureMap d V z).mem_nhds hy] with w hw
-    exact chartSection_holomorphicRestrictionAlgHom structureMap d i z f hw
+      (chartSection X d V z
+        (holomorphicRestrictionAlgHom X d i f))
+      (chartSection X d U z f) := by
+    filter_upwards [(isOpen_chartSectionDomain X d V z).mem_nhds hy] with w hw
+    exact chartSection_holomorphicRestrictionAlgHom X d i z f hw
   rw [chartSectionDifferential, chartSectionDifferential,
-    fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d V z) hy,
-    fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d U z) hyU]
+    fderivWithin_of_isOpen (isOpen_chartSectionDomain X d V z) hy,
+    fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z) hyU]
   exact heq.fderiv_eq
 
 /-- Fixed-chart evaluation of a raw form commutes with restriction. -/
 lemma chartRawEvaluation_rawRestriction
-    [SmoothOfRelativeDimension d structureMap]
-    {U V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X structureMap) (p : ℕ)
-    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p)
-    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d V z) :
-    chartRawEvaluation structureMap d V z p
-        (rawRestriction structureMap d i p x) y =
-      chartRawEvaluation structureMap d U z p x y := by
+    [SmoothOfRelativeDimension d X.hom]
+    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
+    (z : ComplexPoint X) (p : ℕ)
+    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions X d U) p)
+    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d V z) :
+    chartRawEvaluation X d V z p
+        (rawRestriction X d i p x) y =
+      chartRawEvaluation X d U z p x y := by
   classical
   induction x using Finsupp.induction with
   | zero => simp
@@ -565,112 +565,112 @@ lemma chartRawEvaluation_rawRestriction
       simp only [rawRestriction, Algebra.DeRham.rawMap_single,
         chartRawEvaluation_single, Pi.smul_apply]
       simp only [chartGeneratorEvaluation, Algebra.DeRham.generatorMap]
-      rw [chartSection_holomorphicRestrictionAlgHom structureMap d i z g.1 hy]
+      rw [chartSection_holomorphicRestrictionAlgHom X d i z g.1 hy]
       have hd :
-          (fun j ↦ chartSectionDifferential structureMap d V z
-            (holomorphicRestrictionAlgHom structureMap d i (g.2 j)) y) =
-          (fun j ↦ chartSectionDifferential structureMap d U z (g.2 j) y) := by
+          (fun j ↦ chartSectionDifferential X d V z
+            (holomorphicRestrictionAlgHom X d i (g.2 j)) y) =
+          (fun j ↦ chartSectionDifferential X d U z (g.2 j) y) := by
         funext j
         exact chartSectionDifferential_holomorphicRestrictionAlgHom
-          structureMap d i z (g.2 j) hy
+          X d i z (g.2 j) hy
       rw [hd]
 
 /-- For the analytic charted-space instance, `chartAt` is the algebraically constructed local
 chart. -/
-lemma chartAt_eq_localChart [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint X structureMap) :
-    chartAt (Fin d → ℂ) z = localChart structureMap d z := rfl
+lemma chartAt_eq_localChart [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
+    chartAt (Fin d → ℂ) z = localChart X d z := rfl
 
 /-- The change of coordinates from the chart at `z'` to the chart at `z`. -/
-def fixedChartTransition [SmoothOfRelativeDimension d structureMap]
-    (z z' : ComplexPoint X structureMap) : (Fin d → ℂ) → (Fin d → ℂ) :=
+def fixedChartTransition [SmoothOfRelativeDimension d X.hom]
+    (z z' : ComplexPoint X) : (Fin d → ℂ) → (Fin d → ℂ) :=
   fun y ↦ (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z)
     ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y)
 
 /-- A fixed-chart transition is complex analytic wherever the two charts overlap. -/
 lemma analyticAt_fixedChartTransition
-    [SmoothOfRelativeDimension d structureMap]
-    (z z' : ComplexPoint X structureMap) {y : Fin d → ℂ}
-    (hy : y ∈ ((localChart structureMap d z').symm.trans
-      (localChart structureMap d z)).source) :
-    AnalyticAt ℂ (fixedChartTransition structureMap d z z') y := by
+    [SmoothOfRelativeDimension d X.hom]
+    (z z' : ComplexPoint X) {y : Fin d → ℂ}
+    (hy : y ∈ ((localChart X d z').symm.trans
+      (localChart X d z)).source) :
+    AnalyticAt ℂ (fixedChartTransition X d z z') y := by
   change AnalyticAt ℂ
-    (fun v ↦ localChart structureMap d z ((localChart structureMap d z').symm v)) y
-  exact analyticAt_localChart_transition structureMap d z' z hy
+    (fun v ↦ localChart X d z ((localChart X d z').symm v)) y
+  exact analyticAt_localChart_transition X d z' z hy
 
 /-- Expressions of a section in two overlapping fixed charts are related by the chart
 transition. -/
 lemma chartSection_fixedChartTransition
-    [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z z' : ComplexPoint X structureMap)
-    (f : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z z' : ComplexPoint X)
+    (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
     (hy : (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source) :
-    chartSection structureMap d U z' f y =
-      chartSection structureMap d U z f (fixedChartTransition structureMap d z z' y) := by
+    chartSection X d U z' f y =
+      chartSection X d U z f (fixedChartTransition X d z z' y) := by
   simp only [chartSection, Function.comp_apply, fixedChartTransition]
   rw [(extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).left_inv hy]
 
 /-- The coordinate derivatives of a section obey the chain rule under a fixed-chart
 transition. -/
 lemma chartSectionDifferential_fixedChartTransition
-    [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z z' : ComplexPoint X structureMap)
-    (f : OpenHolomorphicFunctions structureMap d U) {y : Fin d → ℂ}
-    (hy : y ∈ chartSectionDomain structureMap d U z')
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z z' : ComplexPoint X)
+    (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
+    (hy : y ∈ chartSectionDomain X d U z')
     (hyz : (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source) :
-    chartSectionDifferential structureMap d U z' f y =
-      (chartSectionDifferential structureMap d U z f
-        (fixedChartTransition structureMap d z z' y)).comp
-          (fderiv ℂ (fixedChartTransition structureMap d z z') y) := by
-  have htransLocal : y ∈ ((localChart structureMap d z').symm.trans
-      (localChart structureMap d z)).source := by
+    chartSectionDifferential X d U z' f y =
+      (chartSectionDifferential X d U z f
+        (fixedChartTransition X d z z' y)).comp
+          (fderiv ℂ (fixedChartTransition X d z z') y) := by
+  have htransLocal : y ∈ ((localChart X d z').symm.trans
+      (localChart X d z)).source := by
     rw [OpenPartialHomeomorph.trans_source]
     constructor
-    · change y ∈ (localChart structureMap d z').target
+    · change y ∈ (localChart X d z').target
       simpa only [extChartAt_target, modelWithCornersSelf_coe_symm, Set.preimage_id,
         ModelWithCorners.range_eq_univ, Set.inter_univ,
-        chartAt_eq_localChart structureMap d] using hy.1
-    · change (localChart structureMap d z').symm y ∈
-        (localChart structureMap d z).source
+        chartAt_eq_localChart X d] using hy.1
+    · change (localChart X d z').symm y ∈
+        (localChart X d z).source
       simpa only [extChartAt_coe_symm, extChartAt_source,
         modelWithCornersSelf_coe_symm, Function.comp_id,
-        chartAt_eq_localChart structureMap d] using hyz
-  have hT : DifferentiableAt ℂ (fixedChartTransition structureMap d z z') y :=
-    (analyticAt_fixedChartTransition structureMap d z z' htransLocal).differentiableAt
-  have hTy : fixedChartTransition structureMap d z z' y ∈
-      chartSectionDomain structureMap d U z := by
+        chartAt_eq_localChart X d] using hyz
+  have hT : DifferentiableAt ℂ (fixedChartTransition X d z z') y :=
+    (analyticAt_fixedChartTransition X d z z' htransLocal).differentiableAt
+  have hTy : fixedChartTransition X d z z' y ∈
+      chartSectionDomain X d U z := by
     let ez := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z
     let ez' := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z'
     refine ⟨ez.map_source hyz, ?_⟩
-    change ez.symm (fixedChartTransition structureMap d z z' y) ∈
-      ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _)
-    rw [show fixedChartTransition structureMap d z z' y = ez (ez'.symm y) from rfl,
+    change ez.symm (fixedChartTransition X d z z' y) ∈
+      ((Opposite.unop U : Opens (ComplexPoint X)) : Set _)
+    rw [show fixedChartTransition X d z z' y = ez (ez'.symm y) from rfl,
       ez.left_inv hyz]
     exact hy.2
-  have hf : DifferentiableAt ℂ (chartSection structureMap d U z f)
-      (fixedChartTransition structureMap d z z' y) :=
-    ((chartSection_contDiffWithinAt structureMap d U z f hTy).contDiffAt
-      ((isOpen_chartSectionDomain structureMap d U z).mem_nhds hTy)).differentiableAt (by simp)
+  have hf : DifferentiableAt ℂ (chartSection X d U z f)
+      (fixedChartTransition X d z z' y) :=
+    ((chartSection_contDiffWithinAt X d U z f hTy).contDiffAt
+      ((isOpen_chartSectionDomain X d U z).mem_nhds hTy)).differentiableAt (by simp)
   have heq : Filter.EventuallyEq (nhds y)
-      (chartSection structureMap d U z' f)
-      (chartSection structureMap d U z f ∘ fixedChartTransition structureMap d z z') := by
-    filter_upwards [((localChart structureMap d z').symm.trans
-      (localChart structureMap d z)).open_source.mem_nhds htransLocal] with w hw
-    apply chartSection_fixedChartTransition structureMap d U z z' f
+      (chartSection X d U z' f)
+      (chartSection X d U z f ∘ fixedChartTransition X d z z') := by
+    filter_upwards [((localChart X d z').symm.trans
+      (localChart X d z)).open_source.mem_nhds htransLocal] with w hw
+    apply chartSection_fixedChartTransition X d U z z' f
     rw [OpenPartialHomeomorph.trans_source] at hw
     have hw2 := hw.2
-    change (localChart structureMap d z').symm w ∈
-      (localChart structureMap d z).source at hw2
+    change (localChart X d z').symm w ∈
+      (localChart X d z).source at hw2
     simpa only [extChartAt_coe_symm, extChartAt_source,
       modelWithCornersSelf_coe_symm, Function.comp_id,
-      chartAt_eq_localChart structureMap d] using hw2
+      chartAt_eq_localChart X d] using hw2
   rw [chartSectionDifferential, chartSectionDifferential,
-    fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d U z') hy,
-    fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d U z) hTy,
+    fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z') hy,
+    fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z) hTy,
     heq.fderiv_eq]
   exact fderiv_fun_comp y hf hT
 
@@ -708,17 +708,17 @@ lemma smul_compContinuousLinearMap
 
 /-- Evaluation of a raw form is covariant under a holomorphic fixed-chart transition. -/
 lemma chartRawEvaluation_fixedChartTransition
-    [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z z' : ComplexPoint X structureMap) (p : ℕ)
-    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p)
-    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d U z')
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z z' : ComplexPoint X) (p : ℕ)
+    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions X d U) p)
+    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z')
     (hyz : (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source) :
-    chartRawEvaluation structureMap d U z' p x y =
-      (chartRawEvaluation structureMap d U z p x
-        (fixedChartTransition structureMap d z z' y)).compContinuousLinearMap
-          (fderiv ℂ (fixedChartTransition structureMap d z z') y) := by
+    chartRawEvaluation X d U z' p x y =
+      (chartRawEvaluation X d U z p x
+        (fixedChartTransition X d z z' y)).compContinuousLinearMap
+          (fderiv ℂ (fixedChartTransition X d z z') y) := by
   classical
   induction x using Finsupp.induction with
   | zero =>
@@ -731,55 +731,55 @@ lemma chartRawEvaluation_fixedChartTransition
         add_compContinuousLinearMap, ih]
       simp only [chartRawEvaluation_single, Pi.smul_apply,
         chartGeneratorEvaluation]
-      rw [chartSection_fixedChartTransition structureMap d U z z' g.1 hyz]
+      rw [chartSection_fixedChartTransition X d U z z' g.1 hyz]
       have hd :
-          (fun j ↦ chartSectionDifferential structureMap d U z' (g.2 j) y) =
-          (fun j ↦ (chartSectionDifferential structureMap d U z (g.2 j)
-            (fixedChartTransition structureMap d z z' y)).comp
-              (fderiv ℂ (fixedChartTransition structureMap d z z') y)) := by
+          (fun j ↦ chartSectionDifferential X d U z' (g.2 j) y) =
+          (fun j ↦ (chartSectionDifferential X d U z (g.2 j)
+            (fixedChartTransition X d z z' y)).comp
+              (fderiv ℂ (fixedChartTransition X d z z') y)) := by
         funext j
         exact chartSectionDifferential_fixedChartTransition
-          structureMap d U z z' (g.2 j) hy hyz
+          X d U z z' (g.2 j) hy hyz
       rw [hd, wedgeCovectors_compContinuousLinearMap]
       rw [smul_compContinuousLinearMap, smul_compContinuousLinearMap]
 
 /-- Vanishing throughout one fixed chart detects a restriction-stable analytic relation, provided
 the open set lies in the source of that chart. -/
 lemma mem_restrictionStableAnalyticKernel_of_chartRawEvaluation_eq_zero
-    [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) :
-      Set (ComplexPoint X structureMap)) ⊆
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X) (p : ℕ)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) :
+      Set (ComplexPoint X)) ⊆
         (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
-    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p)
-    (hx : Set.EqOn (chartRawEvaluation structureMap d U z p x) 0
-      (chartSectionDomain structureMap d U z)) :
-    x ∈ restrictionStableAnalyticKernel structureMap d U p := by
+    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions X d U) p)
+    (hx : Set.EqOn (chartRawEvaluation X d U z p x) 0
+      (chartSectionDomain X d U z)) :
+    x ∈ restrictionStableAnalyticKernel X d U p := by
   rw [restrictionStableAnalyticKernel]
   simp only [Submodule.mem_iInf, Submodule.mem_comap]
   intro V i
-  apply (mem_chartEvaluationKernel_iff structureMap d V p _).2
+  apply (mem_chartEvaluationKernel_iff X d V p _).2
   intro z' y hy
-  rw [chartRawEvaluation_rawRestriction structureMap d i z' p x hy]
+  rw [chartRawEvaluation_rawRestriction X d i z' p x hy]
   have hyU :
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
-        ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) :=
+        ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) :=
     leOfHom i.unop hy.2
   have hyz :
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
         (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source :=
     hsource hyU
-  rw [chartRawEvaluation_fixedChartTransition structureMap d U z z' p x
+  rw [chartRawEvaluation_fixedChartTransition X d U z z' p x
     ⟨hy.1, hyU⟩ hyz]
-  have hTy : fixedChartTransition structureMap d z z' y ∈
-      chartSectionDomain structureMap d U z := by
+  have hTy : fixedChartTransition X d z z' y ∈
+      chartSectionDomain X d U z := by
     let ez := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z
     let ez' := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z'
     refine ⟨ez.map_source hyz, ?_⟩
-    change ez.symm (fixedChartTransition structureMap d z z' y) ∈
-      ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _)
-    rw [show fixedChartTransition structureMap d z z' y = ez (ez'.symm y) from rfl,
+    change ez.symm (fixedChartTransition X d z z' y) ∈
+      ((Opposite.unop U : Opens (ComplexPoint X)) : Set _)
+    rw [show fixedChartTransition X d z z' y = ez (ez'.symm y) from rfl,
       ez.left_inv hyz]
     exact hyU
   rw [hx hTy]
@@ -787,132 +787,132 @@ lemma mem_restrictionStableAnalyticKernel_of_chartRawEvaluation_eq_zero
   intro v
   simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
 
-lemma contMDiffAt_chartFunction [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+lemma contMDiffAt_chartFunction [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
-    (ha : AnalyticOnNhd ℂ a (chartSectionDomain structureMap d U z))
-    {q : ComplexPoint X structureMap} (hq : q ∈ Opposite.unop U) :
+    (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z))
+    {q : ComplexPoint X} (hq : q ∈ Opposite.unop U) :
     ContMDiffAt (modelWithCornersSelf ℂ (Fin d → ℂ))
       (modelWithCornersSelf ℂ ℂ) ω
       (fun x ↦ a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) x)) q := by
   have hqsource := hsource hq
   have hcoord :
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q ∈
-        chartSectionDomain structureMap d U z := by
+        chartSectionDomain X d U z := by
     refine ⟨(extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).map_source hqsource, ?_⟩
     change (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q) ∈
-        ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _)
+        ((Opposite.unop U : Opens (ComplexPoint X)) : Set _)
     rw [(extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).left_inv hqsource]
     exact hq
   exact (ha _ hcoord).contDiffAt.contMDiffAt.comp q
     (contMDiffAt_extChartAt' (by
       rwa [← extChartAt_source (modelWithCornersSelf ℂ (Fin d → ℂ))]))
 
-lemma contMDiff_chartFunction [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+lemma contMDiff_chartFunction [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
-    (ha : AnalyticOnNhd ℂ a (chartSectionDomain structureMap d U z)) :
+    (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z)) :
     ContMDiff (modelWithCornersSelf ℂ (Fin d → ℂ)) (modelWithCornersSelf ℂ ℂ) ω
-      (fun q : (Opposite.unop U : Opens (ComplexPoint X structureMap)) ↦
+      (fun q : (Opposite.unop U : Opens (ComplexPoint X)) ↦
         a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q)) := by
   intro q
   exact (contMDiffAt_subtype_iff
     (I := modelWithCornersSelf ℂ (Fin d → ℂ))
     (I' := modelWithCornersSelf ℂ ℂ)
-    (U := (Opposite.unop U : Opens (ComplexPoint X structureMap)))
-    (f := fun x : ComplexPoint X structureMap ↦
+    (U := (Opposite.unop U : Opens (ComplexPoint X)))
+    (f := fun x : ComplexPoint X ↦
       a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) x))
-    (x := q)).mpr (contMDiffAt_chartFunction structureMap d U z hsource a ha q.2)
+    (x := q)).mpr (contMDiffAt_chartFunction X d U z hsource a ha q.2)
 
 /-- An analytic scalar function in one chart, regarded as a holomorphic section on the chart
 source. -/
-def holomorphicSectionOfChart [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+def holomorphicSectionOfChart [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
-    (ha : AnalyticOnNhd ℂ a (chartSectionDomain structureMap d U z)) :
-    OpenHolomorphicFunctions structureMap d U := by
-  change C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X structureMap)); ℂ⟯
+    (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z)) :
+    OpenHolomorphicFunctions X d U := by
+  change C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯
   exact ⟨fun q ↦ a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q),
-    contMDiff_chartFunction structureMap d U z hsource a ha⟩
+    contMDiff_chartFunction X d U z hsource a ha⟩
 
-lemma chartSection_holomorphicSectionOfChart [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+lemma chartSection_holomorphicSectionOfChart [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
-    (ha : AnalyticOnNhd ℂ a (chartSectionDomain structureMap d U z))
-    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d U z) :
-    chartSection structureMap d U z
-        (holomorphicSectionOfChart structureMap d U z hsource a ha) y = a y := by
-  rw [chartSection_apply_of_mem structureMap d U z _ hy]
+    (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z))
+    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
+    chartSection X d U z
+        (holomorphicSectionOfChart X d U z hsource a ha) y = a y := by
+  rw [chartSection_apply_of_mem X d U z _ hy]
   change a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z)
     ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm y)) = a y
   rw [(extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).right_inv hy.1]
 
 lemma chartSectionDifferential_holomorphicSectionOfChart
-    [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
-    (ha : AnalyticOnNhd ℂ a (chartSectionDomain structureMap d U z))
-    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d U z) :
-    chartSectionDifferential structureMap d U z
-        (holomorphicSectionOfChart structureMap d U z hsource a ha) y =
-      fderivWithin ℂ a (chartSectionDomain structureMap d U z) y := by
+    (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z))
+    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
+    chartSectionDifferential X d U z
+        (holomorphicSectionOfChart X d U z hsource a ha) y =
+      fderivWithin ℂ a (chartSectionDomain X d U z) y := by
   rw [chartSectionDifferential]
   apply fderivWithin_congr'
   · intro w hw
-    exact chartSection_holomorphicSectionOfChart structureMap d U z hsource a ha hw
+    exact chartSection_holomorphicSectionOfChart X d U z hsource a ha hw
   · exact hy
 
 /-- The `i`-th fixed-chart coordinate as a holomorphic section. -/
-def chartCoordinateSection [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+def chartCoordinateSection [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
-    (i : Fin d) : OpenHolomorphicFunctions structureMap d U :=
-  holomorphicSectionOfChart structureMap d U z hsource
+    (i : Fin d) : OpenHolomorphicFunctions X d U :=
+  holomorphicSectionOfChart X d U z hsource
     (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin d ↦ ℂ) i)
     ((ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin d ↦ ℂ) i).analyticOnNhd _)
 
-lemma chartSection_chartCoordinateSection [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+lemma chartSection_chartCoordinateSection [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
-    (i : Fin d) {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d U z) :
-    chartSection structureMap d U z (chartCoordinateSection structureMap d U z hsource i) y =
+    (i : Fin d) {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
+    chartSection X d U z (chartCoordinateSection X d U z hsource i) y =
       y i := by
   unfold chartCoordinateSection
-  exact chartSection_holomorphicSectionOfChart structureMap d U z hsource _ _ hy
+  exact chartSection_holomorphicSectionOfChart X d U z hsource _ _ hy
 
 lemma chartSectionDifferential_chartCoordinateSection
-    [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
-    (i : Fin d) {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain structureMap d U z) :
-    chartSectionDifferential structureMap d U z
-        (chartCoordinateSection structureMap d U z hsource i) y =
+    (i : Fin d) {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
+    chartSectionDifferential X d U z
+        (chartCoordinateSection X d U z hsource i) y =
       ContinuousLinearMap.proj i := by
   unfold chartCoordinateSection
-  rw [chartSectionDifferential_holomorphicSectionOfChart structureMap d U z hsource _ _ hy,
-    fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d U z) hy]
+  rw [chartSectionDifferential_holomorphicSectionOfChart X d U z hsource _ _ hy,
+    fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z) hy]
   exact (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin d ↦ ℂ) i).hasFDerivAt.fderiv
 
 /-- The product of a tuple of coordinate covectors. -/
@@ -1055,115 +1055,115 @@ lemma analyticOnNhd_coordinateCoefficient (d p : ℕ)
   rfl
 
 /-- A finite raw form whose fixed-chart evaluation is a given analytic alternating-form field. -/
-def rawFormOfAnalyticField [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+def rawFormOfAnalyticField [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (p : ℕ) (θ : (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)
-    (hθ : AnalyticOnNhd ℂ θ (chartSectionDomain structureMap d U z)) :
-    Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p :=
+    (hθ : AnalyticOnNhd ℂ θ (chartSectionDomain X d U z)) :
+    Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions X d U) p :=
   ∑ I : Fin p → Fin d,
     Finsupp.single
-      (holomorphicSectionOfChart structureMap d U z hsource
+      (holomorphicSectionOfChart X d U z hsource
           (coordinateCoefficient d p θ I)
           (analyticOnNhd_coordinateCoefficient d p θ hθ I),
-        fun j ↦ chartCoordinateSection structureMap d U z hsource (I j)) 1
+        fun j ↦ chartCoordinateSection X d U z hsource (I j)) 1
 
 /-- The finite raw realization of an analytic alternating-form field evaluates to that field in
 the chosen chart. -/
 lemma chartRawEvaluation_rawFormOfAnalyticField
-    [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (p : ℕ) (θ : (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)
-    (hθ : AnalyticOnNhd ℂ θ (chartSectionDomain structureMap d U z)) :
-    Set.EqOn (chartRawEvaluation structureMap d U z p
-      (rawFormOfAnalyticField structureMap d U z hsource p θ hθ)) θ
-      (chartSectionDomain structureMap d U z) := by
+    (hθ : AnalyticOnNhd ℂ θ (chartSectionDomain X d U z)) :
+    Set.EqOn (chartRawEvaluation X d U z p
+      (rawFormOfAnalyticField X d U z hsource p θ hθ)) θ
+      (chartSectionDomain X d U z) := by
   intro y hy
   rw [rawFormOfAnalyticField, _root_.map_sum]
   simp_rw [chartRawEvaluation_single]
   simp only [one_smul]
   rw [Finset.sum_apply y Finset.univ]
   simp only [chartGeneratorEvaluation]
-  simp_rw [chartSection_holomorphicSectionOfChart structureMap d U z hsource _ _ hy,
-    chartSectionDifferential_chartCoordinateSection structureMap d U z hsource _ hy]
+  simp_rw [chartSection_holomorphicSectionOfChart X d U z hsource _ _ hy,
+    chartSectionDifferential_chartCoordinateSection X d U z hsource _ hy]
   exact (alternating_eq_sum_wedgeCovectors d p (θ y)).symm
 
 /-- A holomorphic section is complex analytic in every fixed chart. -/
-lemma analyticOnNhd_chartSection [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (f : OpenHolomorphicFunctions structureMap d U) :
-    AnalyticOnNhd ℂ (chartSection structureMap d U z f)
-      (chartSectionDomain structureMap d U z) := by
-  apply (isOpen_chartSectionDomain structureMap d U z).analyticOn_iff_analyticOnNhd.mp
-  exact (chartSection_contDiffOn structureMap d U z f).analyticOn
+lemma analyticOnNhd_chartSection [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (f : OpenHolomorphicFunctions X d U) :
+    AnalyticOnNhd ℂ (chartSection X d U z f)
+      (chartSectionDomain X d U z) := by
+  apply (isOpen_chartSectionDomain X d U z).analyticOn_iff_analyticOnNhd.mp
+  exact (chartSection_contDiffOn X d U z f).analyticOn
 
 /-- The coordinate differential of a holomorphic section is analytic. -/
 lemma analyticOnNhd_chartSectionDifferential
-    [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap)
-    (f : OpenHolomorphicFunctions structureMap d U) :
-    AnalyticOnNhd ℂ (chartSectionDifferential structureMap d U z f)
-      (chartSectionDomain structureMap d U z) := by
-  apply AnalyticOnNhd.congr (isOpen_chartSectionDomain structureMap d U z)
-    (analyticOnNhd_chartSection structureMap d U z f).fderiv
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X)
+    (f : OpenHolomorphicFunctions X d U) :
+    AnalyticOnNhd ℂ (chartSectionDifferential X d U z f)
+      (chartSectionDomain X d U z) := by
+  apply AnalyticOnNhd.congr (isOpen_chartSectionDomain X d U z)
+    (analyticOnNhd_chartSection X d U z f).fderiv
   intro y hy
   rw [chartSectionDifferential,
-    fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d U z) hy]
+    fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z) hy]
 
 lemma analyticOnNhd_chartGeneratorEvaluation_apply
-    [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ)
-    (g : Algebra.DeRham.Generator (OpenHolomorphicFunctions structureMap d U) p)
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X) (p : ℕ)
+    (g : Algebra.DeRham.Generator (OpenHolomorphicFunctions X d U) p)
     (v : Fin p → Fin d → ℂ) :
     AnalyticOnNhd ℂ
-      (fun y ↦ chartGeneratorEvaluation structureMap d U z p g y v)
-      (chartSectionDomain structureMap d U z) := by
-  let s := chartSectionDomain structureMap d U z
+      (fun y ↦ chartGeneratorEvaluation X d U z p g y v)
+      (chartSectionDomain X d U z) := by
+  let s := chartSectionDomain X d U z
   have hentry (i j : Fin p) : AnalyticOnNhd ℂ
-      (fun y ↦ chartSectionDifferential structureMap d U z (g.2 j) y (v i)) s := by
+      (fun y ↦ chartSectionDifferential X d U z (g.2 j) y (v i)) s := by
     exact (ContinuousLinearMap.apply ℂ ℂ (v i)).comp_analyticOnNhd
-      (analyticOnNhd_chartSectionDifferential structureMap d U z (g.2 j))
+      (analyticOnNhd_chartSectionDifferential X d U z (g.2 j))
   have hprod (e : Equiv.Perm (Fin p)) : AnalyticOnNhd ℂ
       (fun y ↦ ∏ j : Fin p,
-        chartSectionDifferential structureMap d U z (g.2 (e j)) y (v j)) s := by
+        chartSectionDifferential X d U z (g.2 (e j)) y (v j)) s := by
     exact Finset.univ.analyticOnNhd_fun_prod (fun j hj ↦ hentry j (e j))
   have hterm (e : Equiv.Perm (Fin p)) : AnalyticOnNhd ℂ
       (fun y ↦ (((e.sign : ℤ) : ℂ) * ∏ j : Fin p,
-        chartSectionDifferential structureMap d U z (g.2 (e j)) y (v j))) s := by
+        chartSectionDifferential X d U z (g.2 (e j)) y (v j))) s := by
     convert (hprod e).const_smul (c := ((e.sign : ℤ) : ℂ)) using 1
     funext y
     simp [Pi.smul_apply, smul_eq_mul]
   have hdet : AnalyticOnNhd ℂ
       (fun y ↦ ∑ e : Equiv.Perm (Fin p), (((e.sign : ℤ) : ℂ) * ∏ j : Fin p,
-        chartSectionDifferential structureMap d U z (g.2 (e j)) y (v j))) s := by
+        chartSectionDifferential X d U z (g.2 (e j)) y (v j))) s := by
     exact Finset.univ.analyticOnNhd_fun_sum (fun e he ↦ hterm e)
-  have hmul := (analyticOnNhd_chartSection structureMap d U z g.1).mul hdet
-  apply AnalyticOnNhd.congr (isOpen_chartSectionDomain structureMap d U z) hmul
+  have hmul := (analyticOnNhd_chartSection X d U z g.1).mul hdet
+  apply AnalyticOnNhd.congr (isOpen_chartSectionDomain X d U z) hmul
   intro y hy
   simp only [chartGeneratorEvaluation, ContinuousAlternatingMap.smul_apply, smul_eq_mul,
     wedgeCovectors_apply_eq_det, Matrix.det_apply]
-  apply congrArg (chartSection structureMap d U z g.1 y * ·)
+  apply congrArg (chartSection X d U z g.1 y * ·)
   apply Finset.sum_congr rfl
   intro e he
   rw [Units.smul_def, ← Int.cast_smul_eq_zsmul ℂ, smul_eq_mul]
   rfl
 
 lemma analyticOnNhd_chartRawEvaluation_apply
-    [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ)
-    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p)
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X) (p : ℕ)
+    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions X d U) p)
     (v : Fin p → Fin d → ℂ) :
-    AnalyticOnNhd ℂ (fun y ↦ chartRawEvaluation structureMap d U z p x y v)
-      (chartSectionDomain structureMap d U z) := by
+    AnalyticOnNhd ℂ (fun y ↦ chartRawEvaluation X d U z p x y v)
+      (chartSectionDomain X d U z) := by
   classical
   induction x using Finsupp.induction with
   | zero =>
@@ -1171,57 +1171,57 @@ lemma analyticOnNhd_chartRawEvaluation_apply
       exact analyticOnNhd_const
   | single_add g a x hg ha ih =>
       rw [map_add, chartRawEvaluation_single]
-      have h := ((analyticOnNhd_chartGeneratorEvaluation_apply structureMap d U z p g v).const_smul
+      have h := ((analyticOnNhd_chartGeneratorEvaluation_apply X d U z p g v).const_smul
         (c := a)).add ih
       convert h using 1
       funext y
       simp [Pi.add_apply, Pi.smul_apply, ContinuousAlternatingMap.smul_apply]
 
 /-- A raw holomorphic form has an analytic fixed-chart evaluation. -/
-lemma analyticOnNhd_chartRawEvaluation [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (z : ComplexPoint X structureMap) (p : ℕ)
-    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions structureMap d U) p) :
-    AnalyticOnNhd ℂ (chartRawEvaluation structureMap d U z p x)
-      (chartSectionDomain structureMap d U z) := by
+lemma analyticOnNhd_chartRawEvaluation [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X) (p : ℕ)
+    (x : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions X d U) p) :
+    AnalyticOnNhd ℂ (chartRawEvaluation X d U z p x)
+      (chartSectionDomain X d U z) := by
   classical
-  let s := chartSectionDomain structureMap d U z
+  let s := chartSectionDomain X d U z
   let e (I : Fin p → Fin d) : Fin p → Fin d → ℂ := fun j ↦ Pi.single (I j) 1
   let W (I : Fin p → Fin d) :=
     wedgeCovectors (Fin d → ℂ) p (fun j ↦ ContinuousLinearMap.proj (I j))
   have hc (I : Fin p → Fin d) : AnalyticOnNhd ℂ
-      (fun y ↦ (p.factorial : ℂ)⁻¹ * chartRawEvaluation structureMap d U z p x y (e I)) s := by
-    convert (analyticOnNhd_chartRawEvaluation_apply structureMap d U z p x (e I)).const_smul
+      (fun y ↦ (p.factorial : ℂ)⁻¹ * chartRawEvaluation X d U z p x y (e I)) s := by
+    convert (analyticOnNhd_chartRawEvaluation_apply X d U z p x (e I)).const_smul
       (c := (p.factorial : ℂ)⁻¹) using 1
     funext y
     simp [Pi.smul_apply, smul_eq_mul]
   have hterm (I : Fin p → Fin d) : AnalyticOnNhd ℂ
       (fun y ↦ ((p.factorial : ℂ)⁻¹ *
-        chartRawEvaluation structureMap d U z p x y (e I)) • W I) s :=
+        chartRawEvaluation X d U z p x y (e I)) • W I) s :=
     (hc I).smul analyticOnNhd_const
   have hsum : AnalyticOnNhd ℂ
       (fun y ↦ ∑ I : Fin p → Fin d,
-        ((p.factorial : ℂ)⁻¹ * chartRawEvaluation structureMap d U z p x y (e I)) • W I) s :=
+        ((p.factorial : ℂ)⁻¹ * chartRawEvaluation X d U z p x y (e I)) • W I) s :=
     Finset.univ.analyticOnNhd_fun_sum (fun I hI ↦ hterm I)
-  apply AnalyticOnNhd.congr (isOpen_chartSectionDomain structureMap d U z) hsum
+  apply AnalyticOnNhd.congr (isOpen_chartSectionDomain X d U z) hsum
   intro y hy
   exact (alternating_eq_sum_wedgeCovectors d p
-    (chartRawEvaluation structureMap d U z p x y)).symm
+    (chartRawEvaluation X d U z p x y)).symm
 
 /-- Every open neighborhood contains a smaller neighborhood that is exactly a Euclidean ball in
 the fixed chart at the chosen point. -/
-lemma exists_chartBall_le [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (x : ComplexPoint X structureMap) (hxU : x ∈ Opposite.unop U) :
-    ∃ (V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (_i : U ⟶ V)
+lemma exists_chartBall_le [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (x : ComplexPoint X) (hxU : x ∈ Opposite.unop U) :
+    ∃ (V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (_i : U ⟶ V)
       (r : ℝ),
       x ∈ Opposite.unop V ∧ 0 < r ∧
-      ((Opposite.unop V : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+      ((Opposite.unop V : Opens (ComplexPoint X)) : Set _) ⊆
         (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x).source ∧
-      chartSectionDomain structureMap d V x =
+      chartSectionDomain X d V x =
         Metric.ball ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r := by
-  let e := localChart structureMap d x
-  have hxsource : x ∈ e.source := mem_localChart_source structureMap d x
+  let e := localChart X d x
+  have hxsource : x ∈ e.source := mem_localChart_source X d x
   have hopen : IsOpen (e.target ∩ e.symm ⁻¹' ((Opposite.unop U : Opens _) : Set _)) :=
     e.isOpen_inter_preimage_symm (Opposite.unop U).2
   have hximage : e x ∈ e.target ∩ e.symm ⁻¹' ((Opposite.unop U : Opens _) : Set _) := by
@@ -1230,7 +1230,7 @@ lemma exists_chartBall_le [SmoothOfRelativeDimension d structureMap]
     rw [e.left_inv hxsource]
     exact hxU
   obtain ⟨r, hr, hball⟩ := Metric.nhds_basis_ball.mem_iff.mp (hopen.mem_nhds hximage)
-  let Vo : Opens (ComplexPoint X structureMap) :=
+  let Vo : Opens (ComplexPoint X) :=
     ⟨e.source ∩ e ⁻¹' Metric.ball (e x) r, e.isOpen_inter_preimage Metric.isOpen_ball⟩
   have hxV : x ∈ Vo := ⟨hxsource, Metric.mem_ball_self hr⟩
   have hVU : Vo ≤ Opposite.unop U := by
@@ -1245,11 +1245,11 @@ lemma exists_chartBall_le [SmoothOfRelativeDimension d structureMap]
   let i : U ⟶ V := (homOfLE hVU).op
   refine ⟨V, i, r, hxV, hr, ?_, ?_⟩
   · intro z hz
-    simpa only [extChartAt_source, chartAt_eq_localChart structureMap d] using hz.1
+    simpa only [extChartAt_source, chartAt_eq_localChart X d] using hz.1
   · unfold chartSectionDomain
     simp only [extChartAt_target, modelWithCornersSelf_coe_symm, Set.preimage_id,
       Set.range_id, Set.inter_univ, extChartAt_coe_symm, extChartAt_coe,
-      Function.comp_id, chartAt_eq_localChart structureMap d, modelWithCornersSelf_coe]
+      Function.comp_id, chartAt_eq_localChart X d, modelWithCornersSelf_coe]
     dsimp only [V, Opposite.unop_op]
     change e.target ∩ e.symm ⁻¹' (Vo : Set _) = Metric.ball (e x) r
     ext y
@@ -1266,28 +1266,28 @@ lemma exists_chartBall_le [SmoothOfRelativeDimension d structureMap]
       exact hy
 
 /-- Shrink a fixed chart ball to any smaller positive radius. -/
-lemma exists_smaller_chartBall [SmoothOfRelativeDimension d structureMap]
-    (V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (x : ComplexPoint X structureMap) (r : ℝ)
-    (hdom : chartSectionDomain structureMap d V x =
+lemma exists_smaller_chartBall [SmoothOfRelativeDimension d X.hom]
+    (V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (x : ComplexPoint X) (r : ℝ)
+    (hdom : chartSectionDomain X d V x =
       Metric.ball ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r)
     (ρ : NNReal) (hρ : 0 < ρ) (hρr : (ρ : ℝ) < r) :
-    ∃ (W : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (_j : V ⟶ W),
+    ∃ (W : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (_j : V ⟶ W),
       x ∈ Opposite.unop W ∧
-      ((Opposite.unop W : Opens (ComplexPoint X structureMap)) : Set _) ⊆
+      ((Opposite.unop W : Opens (ComplexPoint X)) : Set _) ⊆
         (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x).source ∧
-      chartSectionDomain structureMap d W x = Metric.ball
+      chartSectionDomain X d W x = Metric.ball
         ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) (ρ : ℝ) := by
-  let e := localChart structureMap d x
+  let e := localChart X d x
   have hdom' : e.target ∩ e.symm ⁻¹' ((Opposite.unop V : Opens _) : Set _) =
       Metric.ball (e x) r := by
     unfold chartSectionDomain at hdom
     simp only [extChartAt_target, modelWithCornersSelf_coe_symm, Set.preimage_id,
       Set.range_id, Set.inter_univ, extChartAt_coe_symm, extChartAt_coe,
-      Function.comp_id, chartAt_eq_localChart structureMap d, modelWithCornersSelf_coe] at hdom
+      Function.comp_id, chartAt_eq_localChart X d, modelWithCornersSelf_coe] at hdom
     exact hdom
-  have hxsource : x ∈ e.source := mem_localChart_source structureMap d x
-  let Wo : Opens (ComplexPoint X structureMap) :=
+  have hxsource : x ∈ e.source := mem_localChart_source X d x
+  let Wo : Opens (ComplexPoint X) :=
     ⟨e.source ∩ e ⁻¹' Metric.ball (e x) (ρ : ℝ),
       e.isOpen_inter_preimage Metric.isOpen_ball⟩
   have hxW : x ∈ Wo := ⟨hxsource, Metric.mem_ball_self (by exact_mod_cast hρ)⟩
@@ -1305,11 +1305,11 @@ lemma exists_smaller_chartBall [SmoothOfRelativeDimension d structureMap]
   let j : V ⟶ W := (homOfLE hWV).op
   refine ⟨W, j, hxW, ?_, ?_⟩
   · intro z hz
-    simpa only [extChartAt_source, chartAt_eq_localChart structureMap d] using hz.1
+    simpa only [extChartAt_source, chartAt_eq_localChart X d] using hz.1
   · unfold chartSectionDomain
     simp only [extChartAt_target, modelWithCornersSelf_coe_symm, Set.preimage_id,
       Set.range_id, Set.inter_univ, extChartAt_coe_symm, extChartAt_coe,
-      Function.comp_id, chartAt_eq_localChart structureMap d, modelWithCornersSelf_coe]
+      Function.comp_id, chartAt_eq_localChart X d, modelWithCornersSelf_coe]
     dsimp only [W, Opposite.unop_op]
     change e.target ∩ e.symm ⁻¹' (Wo : Set _) = Metric.ball (e x) (ρ : ℝ)
     ext y
@@ -1327,170 +1327,170 @@ lemma exists_smaller_chartBall [SmoothOfRelativeDimension d structureMap]
       exact hy
 
 /-- Every closed holomorphic form of positive degree is locally exact. -/
-theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (x : ComplexPoint X structureMap) (hxU : x ∈ Opposite.unop U) (p : ℕ)
-    (form : HolomorphicForm structureMap d U (p + 1))
-    (hclosed : holomorphicFormDifferential structureMap d U (p + 1) form = 0) :
-    ∃ (W : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (k : U ⟶ W)
-      (θ : HolomorphicForm structureMap d W p),
+theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (x : ComplexPoint X) (hxU : x ∈ Opposite.unop U) (p : ℕ)
+    (form : HolomorphicForm X d U (p + 1))
+    (hclosed : holomorphicFormDifferential X d U (p + 1) form = 0) :
+    ∃ (W : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (k : U ⟶ W)
+      (θ : HolomorphicForm X d W p),
       x ∈ Opposite.unop W ∧
-      holomorphicFormDifferential structureMap d W p θ =
-        holomorphicFormRestriction structureMap d k (p + 1) form := by
+      holomorphicFormDifferential X d W p θ =
+        holomorphicFormRestriction X d k (p + 1) form := by
   obtain ⟨a, rfl⟩ := Submodule.mkQ_surjective
-    (holomorphicFormRelations structureMap d U (p + 1)) form
+    (holomorphicFormRelations X d U (p + 1)) form
   have hrel : Algebra.DeRham.rawDifferential ℂ
-      (OpenHolomorphicFunctions structureMap d U) (p + 1) a ∈
-      holomorphicFormRelations structureMap d U (p + 2) := by
+      (OpenHolomorphicFunctions X d U) (p + 1) a ∈
+      holomorphicFormRelations X d U (p + 2) := by
     change Submodule.Quotient.mk (Algebra.DeRham.rawDifferential ℂ
-      (OpenHolomorphicFunctions structureMap d U) (p + 1) a) = 0 at hclosed
+      (OpenHolomorphicFunctions X d U) (p + 1) a) = 0 at hclosed
     rw [Submodule.Quotient.mk_eq_zero] at hclosed
     exact hclosed
   obtain ⟨V, i, r, hxV, hr, hsourceV, hdomV⟩ :=
-    exists_chartBall_le structureMap d U x hxU
-  let aV := rawRestriction structureMap d i (p + 1) a
-  let η := chartRawEvaluation structureMap d V x (p + 1) aV
+    exists_chartBall_le X d U x hxU
+  let aV := rawRestriction X d i (p + 1) a
+  let η := chartRawEvaluation X d V x (p + 1) aV
   have hη : AnalyticOnNhd ℂ η (Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
     rw [← hdomV]
-    exact analyticOnNhd_chartRawEvaluation structureMap d V x (p + 1) aV
+    exact analyticOnNhd_chartRawEvaluation X d V x (p + 1) aV
   have hrelV : Algebra.DeRham.rawDifferential ℂ
-      (OpenHolomorphicFunctions structureMap d V) (p + 1) aV ∈
-      holomorphicFormRelations structureMap d V (p + 2) := by
-    have h := rawRestriction_mem_holomorphicFormRelations structureMap d i (p + 2) hrel
+      (OpenHolomorphicFunctions X d V) (p + 1) aV ∈
+      holomorphicFormRelations X d V (p + 2) := by
+    have h := rawRestriction_mem_holomorphicFormRelations X d i (p + 2) hrel
     rw [rawRestriction, Algebra.DeRham.rawMap_rawDifferential] at h
     exact h
   have hclosedη : Set.EqOn (extDeriv η) 0 (Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
     intro y hy
-    have hyV : y ∈ chartSectionDomain structureMap d V x := hdomV.symm ▸ hy
+    have hyV : y ∈ chartSectionDomain X d V x := hdomV.symm ▸ hy
     have hkernel : Algebra.DeRham.rawDifferential ℂ
-        (OpenHolomorphicFunctions structureMap d V) (p + 1) aV ∈
-        restrictionStableAnalyticKernel structureMap d V (p + 2) := by
+        (OpenHolomorphicFunctions X d V) (p + 1) aV ∈
+        restrictionStableAnalyticKernel X d V (p + 2) := by
       rw [← holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
       exact hrelV
-    have hchart : chartRawEvaluation structureMap d V x (p + 2)
+    have hchart : chartRawEvaluation X d V x (p + 2)
         (Algebra.DeRham.rawDifferential ℂ
-          (OpenHolomorphicFunctions structureMap d V) (p + 1) aV) y = 0 := by
+          (OpenHolomorphicFunctions X d V) (p + 1) aV) y = 0 := by
       have hk := hkernel
       rw [restrictionStableAnalyticKernel] at hk
       simp only [Submodule.mem_iInf, Submodule.mem_comap] at hk
       specialize hk V (𝟙 V)
       rw [rawRestriction_id, LinearMap.id_apply] at hk
-      exact (mem_chartEvaluationKernel_iff structureMap d V (p + 2) _).1 hk x y hyV
-    rw [chartRawEvaluation_rawDifferential structureMap d V x (p + 1) aV hyV] at hchart
-    have hwithin : extDerivWithin η (chartSectionDomain structureMap d V x) y =
+      exact (mem_chartEvaluationKernel_iff X d V (p + 2) _).1 hk x y hyV
+    rw [chartRawEvaluation_rawDifferential X d V x (p + 1) aV hyV] at hchart
+    have hwithin : extDerivWithin η (chartSectionDomain X d V x) y =
         extDeriv η y := by
       rw [extDerivWithin, extDeriv,
-        fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d V x) hyV]
+        fderivWithin_of_isOpen (isOpen_chartSectionDomain X d V x) hyV]
     rw [hwithin] at hchart
     exact hchart
   obtain ⟨ρ, hρ, hρr, θfield, hθfield, hprim⟩ :=
     DifferentialForm.exists_analyticOnNhd_primitive_on_smaller_centered_ball p hr η hη hclosedη
   obtain ⟨W, j, hxW, hsourceW, hdomW⟩ :=
-    exists_smaller_chartBall structureMap d V x r hdomV ρ hρ hρr
-  have hθW : AnalyticOnNhd ℂ θfield (chartSectionDomain structureMap d W x) := by
+    exists_smaller_chartBall X d V x r hdomV ρ hρ hρr
+  have hθW : AnalyticOnNhd ℂ θfield (chartSectionDomain X d W x) := by
     rw [hdomW]
     exact hθfield
-  let b := rawFormOfAnalyticField structureMap d W x hsourceW p θfield hθW
-  let θ : HolomorphicForm structureMap d W p := Submodule.Quotient.mk b
+  let b := rawFormOfAnalyticField X d W x hsourceW p θfield hθW
+  let θ : HolomorphicForm X d W p := Submodule.Quotient.mk b
   refine ⟨W, i ≫ j, θ, hxW, ?_⟩
   change Submodule.Quotient.mk (Algebra.DeRham.rawDifferential ℂ
-      (OpenHolomorphicFunctions structureMap d W) p b) =
-    Submodule.Quotient.mk (rawRestriction structureMap d (i ≫ j) (p + 1) a)
-  apply (Submodule.Quotient.eq (holomorphicFormRelations structureMap d W (p + 1))).2
+      (OpenHolomorphicFunctions X d W) p b) =
+    Submodule.Quotient.mk (rawRestriction X d (i ≫ j) (p + 1) a)
+  apply (Submodule.Quotient.eq (holomorphicFormRelations X d W (p + 1))).2
   rw [holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
   apply mem_restrictionStableAnalyticKernel_of_chartRawEvaluation_eq_zero
-    structureMap d W x (p + 1) hsourceW
+    X d W x (p + 1) hsourceW
   intro y hy
   rw [_root_.map_sub, Pi.sub_apply,
-    chartRawEvaluation_rawDifferential structureMap d W x p b hy]
+    chartRawEvaluation_rawDifferential X d W x p b hy]
   rw [extDerivWithin_congr'
-    (chartRawEvaluation_rawFormOfAnalyticField structureMap d W x hsourceW p θfield hθW) hy]
-  have hwithin : extDerivWithin θfield (chartSectionDomain structureMap d W x) y =
+    (chartRawEvaluation_rawFormOfAnalyticField X d W x hsourceW p θfield hθW) hy]
+  have hwithin : extDerivWithin θfield (chartSectionDomain X d W x) y =
       extDeriv θfield y := by
     rw [extDerivWithin, extDeriv,
-      fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d W x) hy]
+      fderivWithin_of_isOpen (isOpen_chartSectionDomain X d W x) hy]
   rw [hwithin]
   have hyball : y ∈ Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) (ρ : ℝ) := hdomW ▸ hy
   rw [hprim hyball]
   rw [rawRestriction_comp, LinearMap.comp_apply,
-    chartRawEvaluation_rawRestriction structureMap d j x (p + 1) aV hy]
+    chartRawEvaluation_rawRestriction X d j x (p + 1) aV hy]
   simp [η]
 
 /-- In degree zero, the raw Kähler representative of a scalar evaluates to the constant
 alternating map with that scalar value. -/
-lemma chartRawEvaluation_rawConstant [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (x : ComplexPoint X structureMap) (c : ℂ) {y : Fin d → ℂ}
-    (hy : y ∈ chartSectionDomain structureMap d U x) :
-    chartRawEvaluation structureMap d U x 0
+lemma chartRawEvaluation_rawConstant [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (x : ComplexPoint X) (c : ℂ) {y : Fin d → ℂ}
+    (hy : y ∈ chartSectionDomain X d U x) :
+    chartRawEvaluation X d U x 0
         (Finsupp.single
-          (algebraMap ℂ (OpenHolomorphicFunctions structureMap d U) c, Fin.elim0) 1) y =
+          (algebraMap ℂ (OpenHolomorphicFunctions X d U) c, Fin.elim0) 1) y =
       ContinuousAlternatingMap.constOfIsEmpty ℂ (Fin d → ℂ) (Fin 0) c := by
   rw [chartRawEvaluation_single, one_smul]
-  simp only [chartGeneratorEvaluation, chartSection_apply_of_mem structureMap d U x _ hy]
+  simp only [chartGeneratorEvaluation, chartSection_apply_of_mem X d U x _ hy]
   change c • wedgeCovectors (Fin d → ℂ) 0 Fin.elim0 = _
   ext v
   simp [wedgeCovectors]
 
 /-- A closed holomorphic zero-form is locally the image of a complex constant. -/
-theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d structureMap]
-    (U : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ)
-    (x : ComplexPoint X structureMap) (hxU : x ∈ Opposite.unop U)
-    (form : HolomorphicForm structureMap d U 0)
-    (hclosed : holomorphicFormDifferential structureMap d U 0 form = 0) :
-    ∃ (V : (Opens (TopCat.of (ComplexPoint X structureMap)))ᵒᵖ) (i : U ⟶ V) (c : ℂ),
+theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (x : ComplexPoint X) (hxU : x ∈ Opposite.unop U)
+    (form : HolomorphicForm X d U 0)
+    (hclosed : holomorphicFormDifferential X d U 0 form = 0) :
+    ∃ (V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (i : U ⟶ V) (c : ℂ),
       x ∈ Opposite.unop V ∧
-      holomorphicFormRestriction structureMap d i 0 form =
-        holomorphicFormOfConstant structureMap d V c := by
+      holomorphicFormRestriction X d i 0 form =
+        holomorphicFormOfConstant X d V c := by
   obtain ⟨a, rfl⟩ := Submodule.mkQ_surjective
-    (holomorphicFormRelations structureMap d U 0) form
+    (holomorphicFormRelations X d U 0) form
   have hrel : Algebra.DeRham.rawDifferential ℂ
-      (OpenHolomorphicFunctions structureMap d U) 0 a ∈
-      holomorphicFormRelations structureMap d U 1 := by
+      (OpenHolomorphicFunctions X d U) 0 a ∈
+      holomorphicFormRelations X d U 1 := by
     change Submodule.Quotient.mk (Algebra.DeRham.rawDifferential ℂ
-      (OpenHolomorphicFunctions structureMap d U) 0 a) = 0 at hclosed
+      (OpenHolomorphicFunctions X d U) 0 a) = 0 at hclosed
     rw [Submodule.Quotient.mk_eq_zero] at hclosed
     exact hclosed
   obtain ⟨V, i, r, hxV, hr, hsourceV, hdomV⟩ :=
-    exists_chartBall_le structureMap d U x hxU
-  let aV := rawRestriction structureMap d i 0 a
-  let η := chartRawEvaluation structureMap d V x 0 aV
+    exists_chartBall_le X d U x hxU
+  let aV := rawRestriction X d i 0 a
+  let η := chartRawEvaluation X d V x 0 aV
   have hη : AnalyticOnNhd ℂ η (Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
     rw [← hdomV]
-    exact analyticOnNhd_chartRawEvaluation structureMap d V x 0 aV
+    exact analyticOnNhd_chartRawEvaluation X d V x 0 aV
   have hrelV : Algebra.DeRham.rawDifferential ℂ
-      (OpenHolomorphicFunctions structureMap d V) 0 aV ∈
-      holomorphicFormRelations structureMap d V 1 := by
-    have h := rawRestriction_mem_holomorphicFormRelations structureMap d i 1 hrel
+      (OpenHolomorphicFunctions X d V) 0 aV ∈
+      holomorphicFormRelations X d V 1 := by
+    have h := rawRestriction_mem_holomorphicFormRelations X d i 1 hrel
     rw [rawRestriction, Algebra.DeRham.rawMap_rawDifferential] at h
     exact h
   have hclosedη : Set.EqOn (extDeriv η) 0 (Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
     intro y hy
-    have hyV : y ∈ chartSectionDomain structureMap d V x := hdomV.symm ▸ hy
+    have hyV : y ∈ chartSectionDomain X d V x := hdomV.symm ▸ hy
     have hkernel : Algebra.DeRham.rawDifferential ℂ
-        (OpenHolomorphicFunctions structureMap d V) 0 aV ∈
-        restrictionStableAnalyticKernel structureMap d V 1 := by
+        (OpenHolomorphicFunctions X d V) 0 aV ∈
+        restrictionStableAnalyticKernel X d V 1 := by
       rw [← holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
       exact hrelV
-    have hchart : chartRawEvaluation structureMap d V x 1
+    have hchart : chartRawEvaluation X d V x 1
         (Algebra.DeRham.rawDifferential ℂ
-          (OpenHolomorphicFunctions structureMap d V) 0 aV) y = 0 := by
+          (OpenHolomorphicFunctions X d V) 0 aV) y = 0 := by
       have hk := hkernel
       rw [restrictionStableAnalyticKernel] at hk
       simp only [Submodule.mem_iInf, Submodule.mem_comap] at hk
       specialize hk V (𝟙 V)
       rw [rawRestriction_id, LinearMap.id_apply] at hk
-      exact (mem_chartEvaluationKernel_iff structureMap d V 1 _).1 hk x y hyV
-    rw [chartRawEvaluation_rawDifferential structureMap d V x 0 aV hyV] at hchart
-    have hwithin : extDerivWithin η (chartSectionDomain structureMap d V x) y =
+      exact (mem_chartEvaluationKernel_iff X d V 1 _).1 hk x y hyV
+    rw [chartRawEvaluation_rawDifferential X d V x 0 aV hyV] at hchart
+    have hwithin : extDerivWithin η (chartSectionDomain X d V x) y =
         extDeriv η y := by
       rw [extDerivWithin, extDeriv,
-        fderivWithin_of_isOpen (isOpen_chartSectionDomain structureMap d V x) hyV]
+        fderivWithin_of_isOpen (isOpen_chartSectionDomain X d V x) hyV]
     rw [hwithin] at hchart
     exact hchart
   have hconst :=
@@ -1500,19 +1500,19 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d st
   refine ⟨V, i, c, hxV, ?_⟩
   change Submodule.Quotient.mk aV = Submodule.Quotient.mk
     (Finsupp.single
-      (algebraMap ℂ (OpenHolomorphicFunctions structureMap d V) c, Fin.elim0) 1)
-  apply (Submodule.Quotient.eq (holomorphicFormRelations structureMap d V 0)).2
+      (algebraMap ℂ (OpenHolomorphicFunctions X d V) c, Fin.elim0) 1)
+  apply (Submodule.Quotient.eq (holomorphicFormRelations X d V 0)).2
   rw [holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
   apply mem_restrictionStableAnalyticKernel_of_chartRawEvaluation_eq_zero
-    structureMap d V x 0 hsourceV
+    X d V x 0 hsourceV
   intro y hy
   rw [_root_.map_sub, Pi.sub_apply]
   have hyball' : y ∈ Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r := hdomV ▸ hy
   have hyball : y ∈ Metric.ball center r := by simpa only [center] using hyball'
-  rw [show chartRawEvaluation structureMap d V x 0 aV y = η center by
+  rw [show chartRawEvaluation X d V x 0 aV y = η center by
     exact hconst hyball]
-  rw [chartRawEvaluation_rawConstant structureMap d V x c hy]
+  rw [chartRawEvaluation_rawConstant X d V x c hy]
   have hrepr := congrFun (DifferentialForm.zeroForm_eq_constOfIsEmpty η) center
   change η center =
     ContinuousAlternatingMap.constOfIsEmpty ℂ (Fin d → ℂ) (Fin 0) c at hrepr

@@ -26,33 +26,33 @@ open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 /-- Rational sheaf cohomology with support in a closed subset of the analytic complex-point space,
 using Ext. -/
 abbrev RationalCohomologyWithClosedSupport
-    (Z : Closeds (ComplexPoint X structureMap)) (n : ℕ) :=
-  TopCat.Sheaf.cohomologyWithSupport (TopCat.of (ComplexPoint X structureMap)) Z
-    (constantFieldSheaf ℚ structureMap) n
+    (Z : Closeds (ComplexPoint X)) (n : ℕ) :=
+  TopCat.Sheaf.cohomologyWithSupport (TopCat.of (ComplexPoint X)) Z
+    (constantFieldSheaf ℚ X) n
 
-instance (Z : Closeds (ComplexPoint X structureMap)) (n : ℕ) :
-    AddCommGroup (RationalCohomologyWithClosedSupport structureMap Z n) :=
+instance (Z : Closeds (ComplexPoint X)) (n : ℕ) :
+    AddCommGroup (RationalCohomologyWithClosedSupport X Z n) :=
   inferInstanceAs (AddCommGroup
     (((TopCat.Sheaf.cohomologyWithSupportFunctor
-      (TopCat.of (ComplexPoint X structureMap)) n).obj Z).obj
-        (constantFieldSheaf ℚ structureMap)))
+      (TopCat.of (ComplexPoint X)) n).obj Z).obj
+        (constantFieldSheaf ℚ X)))
 
 /-- Rational compactly supported cohomology of the analytic complex-point space. -/
 abbrev RationalCompactlySupportedCohomology (n : ℕ) : AddCommGrpCat :=
-  TopCat.Sheaf.compactlySupportedCohomology (TopCat.of (ComplexPoint X structureMap))
-    (constantFieldSheaf ℚ structureMap) n
+  TopCat.Sheaf.compactlySupportedCohomology (TopCat.of (ComplexPoint X))
+    (constantFieldSheaf ℚ X) n
 
 /-- A rational class with specified compact closed support defines a compactly supported class. -/
 def toRationalCompactlySupportedCohomology
-    (K : CompactCloseds (ComplexPoint X structureMap)) (n : ℕ) :
-    AddCommGrpCat.of (RationalCohomologyWithClosedSupport structureMap K.1 n) ⟶
-      RationalCompactlySupportedCohomology structureMap n :=
-  TopCat.Sheaf.toCompactlySupportedCohomology (TopCat.of (ComplexPoint X structureMap)) K
-    (constantFieldSheaf ℚ structureMap) n
+    (K : CompactCloseds (ComplexPoint X)) (n : ℕ) :
+    AddCommGrpCat.of (RationalCohomologyWithClosedSupport X K.1 n) ⟶
+      RationalCompactlySupportedCohomology X n :=
+  TopCat.Sheaf.toCompactlySupportedCohomology (TopCat.of (ComplexPoint X)) K
+    (constantFieldSheaf ℚ X) n
 
 end AlgebraicGeometry.ComplexPoint

@@ -255,45 +255,45 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 /-- The integer constant-sheaf complex used to define hypercohomology is the degree-zero
 integer constant sheaf, after extending its natural-number grading to integer degrees. -/
 def constantIntegerSheafComplexIntIsoSingle :
-    constantIntegerSheafComplexInt structureMap ≅
+    constantIntegerSheafComplexInt X ≅
       TopCat.Sheaf.integerConstantSingleComplex
-        (TopCat.of (ComplexPoint X structureMap)) :=
+        (TopCat.of (ComplexPoint X)) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    (constantIntegerSheaf structureMap) 0 0 rfl
+    (constantIntegerSheaf X) 0 0 rfl
 
 /-- Every integer-indexed term of the singular-cochain resolution is flasque on a hereditarily
 paracompact Hausdorff complex-point space. Negative terms are zero, and nonnegative terms are
 the corresponding natural-number-indexed singular-cochain sheaves. -/
 theorem singularCochainSheafComplexInt_isFlasque
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℤ) :
-    TopCat.Sheaf.IsFlasque ((singularCochainSheafComplexInt structureMap ℚ).X n) := by
+    TopCat.Sheaf.IsFlasque ((singularCochainSheafComplexInt X ℚ).X n) := by
   by_cases hn : ∃ m : ℕ, (m : ℤ) = n
   · obtain ⟨m, rfl⟩ := hn
     let e := (AlgebraicTopology.Singular.singularCochainSheafComplex ℚ
-      (TopCat.of (ComplexPoint X structureMap))).extendXIso
+      (TopCat.of (ComplexPoint X))).extendXIso
         ComplexShape.embeddingUpNat (i := m) rfl
     let hP : TopCat.Presheaf.IsFlasque
         ((AlgebraicTopology.Singular.singularCochainSheafComplex ℚ
-          (TopCat.of (ComplexPoint X structureMap))).X m).obj := by
+          (TopCat.of (ComplexPoint X))).X m).obj := by
       change TopCat.Sheaf.IsFlasque
         (AlgebraicTopology.Singular.singularCochainSheaf ℚ
-          (TopCat.of (ComplexPoint X structureMap)) m)
+          (TopCat.of (ComplexPoint X)) m)
       infer_instance
     change TopCat.Presheaf.IsFlasque
-      ((singularCochainSheafComplexInt structureMap ℚ).X (m : ℤ)).obj
+      ((singularCochainSheafComplexInt X ℚ).X (m : ℤ)).obj
     exact @AlgebraicTopology.Singular.presheaf_isFlasque_of_iso _ _ _
       ((TopCat.Sheaf.forget AddCommGrpCat
-        (TopCat.of (ComplexPoint X structureMap))).mapIso e.symm) hP
+        (TopCat.of (ComplexPoint X))).mapIso e.symm) hP
   · apply TopCat.Sheaf.IsFlasque.of_isZero
     exact (AlgebraicTopology.Singular.singularCochainSheafComplex ℚ
-      (TopCat.of (ComplexPoint X structureMap))).isZero_extend_X
+      (TopCat.of (ComplexPoint X))).isZero_extend_X
         ComplexShape.embeddingUpNat n (fun i hi ↦ hn ⟨i, hi⟩)
 
 set_option backward.isDefEq.respectTransparency.types false in
@@ -302,12 +302,12 @@ set_option backward.isDefEq.respectTransparency false in
 sheaf complex by zero to integer degrees. -/
 def globalSectionsSingularCochainComplexIntIsoExtend :
     TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X structureMap))
-        (singularCochainSheafComplexInt structureMap ℚ) ≅
+        (TopCat.of (ComplexPoint X))
+        (singularCochainSheafComplexInt X ℚ) ≅
       (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ
-        (TopCat.of (ComplexPoint X structureMap))).extend
+        (TopCat.of (ComplexPoint X))).extend
           ComplexShape.embeddingUpNat := by
-  let Y := TopCat.of (ComplexPoint X structureMap)
+  let Y := TopCat.of (ComplexPoint X)
   let F := TopCat.Sheaf.forget AddCommGrpCat Y
   let E := (evaluation (Opens Y)ᵒᵖ AddCommGrpCat).obj (.op ⊤)
   let G := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
@@ -324,28 +324,28 @@ the hypercohomology of the rational singular-cochain resolution is the homology 
 global-section complex. The hypotheses are the precise resolution properties needed by the
 construction; no acyclic-resolution theorem is assumed here. -/
 def rationalSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
-    (I : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ)
+    (I : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     [I.IsKInjective]
-    (i : singularCochainSheafComplexInt structureMap ℚ ⟶ I) [QuasiIso i]
+    (i : singularCochainSheafComplexInt X ℚ ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X structureMap))).mapHomologicalComplex
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map i)]
     (n : ℤ) :
-    RationalSingularCochainHypercohomology structureMap n ≃
+    RationalSingularCochainHypercohomology X n ≃
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X structureMap))
-        (singularCochainSheafComplexInt structureMap ℚ)).homology n := by
-  let Y := TopCat.of (ComplexPoint X structureMap)
-  let A := constantIntegerSheafComplexInt structureMap
+        (TopCat.of (ComplexPoint X))
+        (singularCochainSheafComplexInt X ℚ)).homology n := by
+  let Y := TopCat.of (ComplexPoint X)
+  let A := constantIntegerSheafComplexInt X
   let A' := TopCat.Sheaf.integerConstantSingleComplex Y
-  let S := singularCochainSheafComplexInt structureMap ℚ
+  let S := singularCochainSheafComplexInt X ℚ
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-  let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle structureMap
-  have hi : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf structureMap)
+  let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle X
+  have hi : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
       (ComplexShape.up ℤ) i := by
     rw [HomologicalComplex.mem_quasiIso_iff]
     infer_instance
-  have he : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf structureMap)
+  have he : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
       (ComplexShape.up ℤ) e.inv := by
     rw [HomologicalComplex.mem_quasiIso_iff]
     infer_instance
@@ -370,15 +370,15 @@ singular-cochain resolution is computed by its global-section complex. This choo
 bounded-below termwise-injective replacement and proves that global sections preserve the
 replacement quasi-isomorphism by the flasque mapping-cone argument. -/
 def rationalSingularCochainHypercohomologyEquivGlobalSections
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℤ) :
-    RationalSingularCochainHypercohomology structureMap n ≃
+    RationalSingularCochainHypercohomology X n ≃
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X structureMap))
-        (singularCochainSheafComplexInt structureMap ℚ)).homology n := by
-  let Y := TopCat.of (ComplexPoint X structureMap)
-  let S := singularCochainSheafComplexInt structureMap ℚ
+        (TopCat.of (ComplexPoint X))
+        (singularCochainSheafComplexInt X ℚ)).homology n := by
+  let Y := TopCat.of (ComplexPoint X)
+  let S := singularCochainSheafComplexInt X ℚ
   let : S.IsStrictlyGE 0 := by
     dsimp [S, singularCochainSheafComplexInt]
     infer_instance
@@ -399,7 +399,7 @@ def rationalSingularCochainHypercohomologyEquivGlobalSections
   have hSflasque : ∀ q, (S.X q).IsFlasque := by
     intro q
     dsimp [S]
-    exact singularCochainSheafComplexInt_isFlasque structureMap q
+    exact singularCochainSheafComplexInt_isFlasque X q
   have hIflasque : ∀ q, (I.X q).IsFlasque := by
     intro q
     infer_instance
@@ -409,7 +409,7 @@ def rationalSingularCochainHypercohomologyEquivGlobalSections
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i 0 0 hSflasque hIflasque
   exact rationalSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
-    structureMap I i n
+    X I i n
 
 end AlgebraicGeometry.ComplexPoint
 
@@ -545,26 +545,26 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 /-- On a hereditarily paracompact Hausdorff complex-point space, hypercohomology of the rational
 singular-cochain resolution is the repository's existing rational singular cohomology type. -/
 def rationalSingularCochainHypercohomologyEquivCohomology
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
-    RationalSingularCochainHypercohomology structureMap (n : ℤ) ≃
+    RationalSingularCochainHypercohomology X (n : ℤ) ≃
       AlgebraicTopology.Singular.Cohomology ℚ
-        (TopCat.of (ComplexPoint X structureMap)) n := by
-  let Y := TopCat.of (ComplexPoint X structureMap)
+        (TopCat.of (ComplexPoint X)) n := by
+  let Y := TopCat.of (ComplexPoint X)
   let K := AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y
-  letI : ParacompactSpace (ComplexPoint X structureMap) :=
-    (Homeomorph.Set.univ (ComplexPoint X structureMap)).paracompactSpace_iff.mp
-      (inferInstance : ParacompactSpace (⊤ : Opens (ComplexPoint X structureMap)))
+  letI : ParacompactSpace (ComplexPoint X) :=
+    (Homeomorph.Set.univ (ComplexPoint X)).paracompactSpace_iff.mp
+      (inferInstance : ParacompactSpace (⊤ : Opens (ComplexPoint X)))
   exact (rationalSingularCochainHypercohomologyEquivGlobalSections
-      structureMap (n : ℤ)).trans <|
+      X (n : ℤ)).trans <|
     (HomologicalComplex.homologyMapIso
-      (globalSectionsSingularCochainComplexIntIsoExtend structureMap)
+      (globalSectionsSingularCochainComplexIntIsoExtend X)
         (n : ℤ)).addCommGroupIsoToAddEquiv.toEquiv |>.trans <|
       (K.extendHomologyIso ComplexShape.embeddingUpNat rfl).addCommGroupIsoToAddEquiv.toEquiv
         |>.trans <|
@@ -574,14 +574,14 @@ def rationalSingularCochainHypercohomologyEquivCohomology
 /-- On a smooth complex scheme whose analytification is hereditarily paracompact Hausdorff,
 rational constant-sheaf cohomology agrees with the repository's rational singular cohomology. -/
 def rationalCohomologyEquivSingularCohomology
-    [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint X structureMap)]
-    [∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U]
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
-    FieldCohomology ℚ structureMap (n : ℤ) ≃
+    FieldCohomology ℚ X (n : ℤ) ≃
       AlgebraicTopology.Singular.Cohomology ℚ
-        (TopCat.of (ComplexPoint X structureMap)) n :=
-  (rationalCohomologySingularCochainEquiv structureMap (n : ℤ)).trans
-    (rationalSingularCochainHypercohomologyEquivCohomology structureMap n)
+        (TopCat.of (ComplexPoint X)) n :=
+  (rationalCohomologySingularCochainEquiv X (n : ℤ)).trans
+    (rationalSingularCochainHypercohomologyEquivCohomology X n)
 
 end AlgebraicGeometry.ComplexPoint

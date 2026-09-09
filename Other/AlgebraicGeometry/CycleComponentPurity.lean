@@ -144,21 +144,21 @@ namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 
 open AlgebraicTopology.Singular
 
-noncomputable local instance {Y : Scheme} {g : Y ⟶ Spec ↧ℂ} :
-    TopologicalSpace (ComplexPoint Y g) := Point.analyticTopology
+noncomputable local instance {Y : Over (Spec ↧ℂ)} :
+    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
-variable {d n : ℕ} {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ} [IsIntegral X]
-  [Smooth structureMap] [IsProjective structureMap] {x : X}
-  [SmoothOfRelativeDimension d structureMap]
-  (C : CycleComponentSeparateLocalCoordinates structureMap x d n)
+variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
+  [Smooth X.hom] [IsProjective X.hom] {x : X.left}
+  [SmoothOfRelativeDimension d X.hom]
+  (C : CycleComponentSeparateLocalCoordinates X x d n)
 
 /-- The local homology class transported from the exact component chart is nonzero. -/
 lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
-  let : IsAffine C.componentNeighborhood.toScheme :=
+  let : IsAffine C.neighborhoodScheme.left :=
     C.componentNeighborhood_isAffine
   let : T2Space
-      (ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap) :=
-    ComplexPoint.t2Space_of_isAffine C.neighborhoodStructureMap
+      (ComplexPoint C.neighborhoodScheme) :=
+    ComplexPoint.t2Space_of_isAffine C.neighborhoodScheme
   have hinjective : Function.Injective C.neighborhoodLocalHomologyMap :=
     (chartModelEmbedding_relativeHomologyMap_bijective
       n C.neighborhoodProjectionChart C.neighborhoodPoint
@@ -171,7 +171,7 @@ lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
 /-- Cohomology of the component neighborhood supported at its selected smooth point. -/
 abbrev neighborhoodPointSupportedCohomology :=
   CohomologyWithSupport ℚ
-    (TopCat.of (ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap))
+    (TopCat.of (ComplexPoint C.neighborhoodScheme))
     {C.neighborhoodPoint} (2 * n)
 
 /-- The unique local cohomology class normalized to evaluate to one on the transported local
@@ -203,14 +203,14 @@ lemma neighborhoodLocalCoclass_unique
 /-- Every codimension-`p` component of a smooth complex `d`-fold has an exact smooth local
 coordinate package whose normalized point-supported coclass generates local cohomology. -/
 lemma exists_span_neighborhoodLocalCoclass_eq_top
-    (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [IsProjective structureMap] (x : X) (d p : ℕ)
-    [SmoothOfRelativeDimension d structureMap]
+    (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom] (x : X.left) (d p : ℕ)
+    [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = p) :
-    ∃ C : CycleComponentSeparateLocalCoordinates structureMap x d (d - p),
+    ∃ C : CycleComponentSeparateLocalCoordinates X x d (d - p),
       C.neighborhoodLocalCoclass C.neighborhoodLocalClass = 1 ∧
         Submodule.span ℚ {C.neighborhoodLocalCoclass} = ⊤ := by
-  obtain ⟨C, -⟩ := exists_span_neighborhoodLocalClass_eq_top structureMap x d p hx
+  obtain ⟨C, -⟩ := exists_span_neighborhoodLocalClass_eq_top X x d p hx
   exact ⟨C, C.neighborhoodLocalCoclass_apply_localClass,
     C.span_neighborhoodLocalCoclass_eq_top⟩
 

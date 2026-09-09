@@ -52,119 +52,118 @@ end AlgebraicGeometry
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X Y : Scheme}
-  (structureMapX : X ⟶ Spec (.of ℂ)) (structureMapY : Y ⟶ Spec (.of ℂ))
-  (i : Y ⟶ X) (hi : i ≫ structureMapX = structureMapY) (m d : ℕ)
-  [SmoothOfRelativeDimension m structureMapY] [SmoothOfRelativeDimension d structureMapX]
+variable (X Y : Over (Spec (.of ℂ)))
+  (i : Y ⟶ X) (m d : ℕ)
+  [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
 
 /-- The actual inclusion written in the canonical intrinsic and ambient complex charts. -/
-def inclusionInComplexCharts (z : ComplexPoint Y structureMapY) :
+def inclusionInComplexCharts (z : ComplexPoint Y) :
     (Fin m → ℂ) → (Fin d → ℂ) :=
-  fun v => localChart structureMapX d (Point.map i hi z)
-    (Point.map i hi ((localChart structureMapY m z).symm v))
+  fun v => localChart X d (Point.map i z)
+    (Point.map i ((localChart Y m z).symm v))
 
-@[simp] theorem inclusionInComplexCharts_at_center (z : ComplexPoint Y structureMapY) :
-    inclusionInComplexCharts structureMapX structureMapY i hi m d z
-      (localChart structureMapY m z z) =
-        localChart structureMapX d (Point.map i hi z) (Point.map i hi z) := by
+@[simp] theorem inclusionInComplexCharts_at_center (z : ComplexPoint Y) :
+    inclusionInComplexCharts X Y i m d z
+      (localChart Y m z z) =
+        localChart X d (Point.map i z) (Point.map i z) := by
   unfold inclusionInComplexCharts
-  rw [(localChart structureMapY m z).left_inv (mem_localChart_source structureMapY m z)]
+  rw [(localChart Y m z).left_inv (mem_localChart_source Y m z)]
 
 /-- Analyticity is inherited from the actual morphism of smooth schemes. -/
-theorem analyticAt_inclusionInComplexCharts (z : ComplexPoint Y structureMapY) :
-    AnalyticAt ℂ (inclusionInComplexCharts structureMapX structureMapY i hi m d z)
-      (localChart structureMapY m z z) := by
-  apply analyticAt_localChart_symm_map structureMapY structureMapX i hi m d z
-    ((localChart structureMapY m z).map_source (mem_localChart_source structureMapY m z))
-  rw [(localChart structureMapY m z).left_inv (mem_localChart_source structureMapY m z)]
-  exact mem_localChart_source structureMapX d (Point.map i hi z)
+theorem analyticAt_inclusionInComplexCharts (z : ComplexPoint Y) :
+    AnalyticAt ℂ (inclusionInComplexCharts X Y i m d z)
+      (localChart Y m z z) := by
+  apply analyticAt_localChart_symm_map Y X i m d z
+    ((localChart Y m z).map_source (mem_localChart_source Y m z))
+  rw [(localChart Y m z).left_inv (mem_localChart_source Y m z)]
+  exact mem_localChart_source X d (Point.map i z)
 
 /-- A smooth closed immersion has an actual analytic local left inverse in complex
 coordinates. It is constructed by lifting the intrinsic coordinate sections, not assumed
 from an analytic-immersion structure. -/
-theorem exists_analytic_localLeftInverse_of_isClosedImmersion [IsClosedImmersion i]
-    (z : ComplexPoint Y structureMapY) :
+theorem exists_analytic_localLeftInverse_of_isClosedImmersion [IsClosedImmersion i.left]
+    (z : ComplexPoint Y) :
     ∃ L : (Fin d → ℂ) → (Fin m → ℂ),
       AnalyticAt ℂ L
-        (inclusionInComplexCharts structureMapX structureMapY i hi m d z
-          (localChart structureMapY m z z)) ∧
-      (L ∘ inclusionInComplexCharts structureMapX structureMapY i hi m d z) =ᶠ[
-        𝓝 (localChart structureMapY m z z)] id := by
-  let D := localEtaleCoordinates structureMapY m z
+        (inclusionInComplexCharts X Y i m d z
+          (localChart Y m z z)) ∧
+      (L ∘ inclusionInComplexCharts X Y i m d z) =ᶠ[
+        𝓝 (localChart Y m z z)] id := by
+  let D := localEtaleCoordinates Y m z
   have hzD : z.underlying ∈ D.ambientCoordinateOpen := by
     simpa only [D, LocalEtaleCoordinates.ambientCoordinateOpen, Scheme.Opens.ι_image_top,
       Point.overOpen, Set.mem_ofPred_eq] using
-      mem_localEtaleCoordinates structureMapY m z
-  obtain ⟨U, _hU, hUV, hzU, r, hr⟩ := i.exists_affine_local_section_lifts
+      mem_localEtaleCoordinates Y m z
+  obtain ⟨U, _hU, hUV, hzU, r, hr⟩ := i.left.exists_affine_local_section_lifts
     D.ambientCoordinateOpen D.ambientCoordinateSection z.underlying hzD
-  let eY := localChart structureMapY m z
-  let eX := localChart structureMapX d (Point.map i hi z)
+  let eY := localChart Y m z
+  let eX := localChart X d (Point.map i z)
   let L : (Fin d → ℂ) → (Fin m → ℂ) :=
     fun w j => Point.evaluate U (r j) (eX.symm w)
-  have hzY : z ∈ eY.source := mem_localChart_source structureMapY m z
-  have hzX : Point.map i hi z ∈ eX.source :=
-    mem_localChart_source structureMapX d (Point.map i hi z)
+  have hzY : z ∈ eY.source := mem_localChart_source Y m z
+  have hzX : Point.map i z ∈ eX.source :=
+    mem_localChart_source X d (Point.map i z)
   have hzYt : eY z ∈ eY.target := eY.map_source hzY
-  have hzXt : eX (Point.map i hi z) ∈ eX.target := eX.map_source hzX
+  have hzXt : eX (Point.map i z) ∈ eX.target := eX.map_source hzX
   refine ⟨L, ?_, ?_⟩
   · rw [inclusionInComplexCharts_at_center]
     apply AnalyticAt.pi
     intro j
-    apply analyticAt_localChart_symm_evaluate structureMapX d (Point.map i hi z) hzXt U (r j)
-    change eX.symm (eX (Point.map i hi z)) ∈ Point.overOpen U
+    apply analyticAt_localChart_symm_evaluate X d (Point.map i z) hzXt U (r j)
+    change eX.symm (eX (Point.map i z)) ∈ Point.overOpen U
     rw [eX.left_inv hzX]
     exact hzU
-  · have hc : ContinuousAt (fun v => Point.map i hi (eY.symm v)) (eY z) :=
-      (Point.continuous_map i hi).continuousAt.comp (eY.continuousAt_symm hzYt)
-    have hX : ∀ᶠ v in 𝓝 (eY z), Point.map i hi (eY.symm v) ∈ eX.source := by
+  · have hc : ContinuousAt (fun v => Point.map i (eY.symm v)) (eY z) :=
+      (Point.continuous_map i).continuousAt.comp (eY.continuousAt_symm hzYt)
+    have hX : ∀ᶠ v in 𝓝 (eY z), Point.map i (eY.symm v) ∈ eX.source := by
       apply hc (eX.open_source.mem_nhds _)
-      change Point.map i hi (eY.symm (eY z)) ∈ eX.source
+      change Point.map i (eY.symm (eY z)) ∈ eX.source
       rw [eY.left_inv hzY]
       exact hzX
-    have hU : ∀ᶠ v in 𝓝 (eY z), Point.map i hi (eY.symm v) ∈ Point.overOpen U := by
+    have hU : ∀ᶠ v in 𝓝 (eY z), Point.map i (eY.symm v) ∈ Point.overOpen U := by
       apply hc ((Point.isOpen_overOpen U).mem_nhds _)
-      change Point.map i hi (eY.symm (eY z)) ∈ Point.overOpen U
+      change Point.map i (eY.symm (eY z)) ∈ Point.overOpen U
       rw [eY.left_inv hzY]
       exact hzU
     filter_upwards [eY.open_target.mem_nhds hzYt, hX, hU] with v hvY hvX hvU
     funext j
     change Point.evaluate U (r j)
-      (eX.symm (eX (Point.map i hi (eY.symm v)))) = v j
+      (eX.symm (eX (Point.map i (eY.symm v)))) = v j
     rw [eX.left_inv hvX, Point.evaluate_map, hr]
     rw [← Point.evaluate_res hUV (D.ambientCoordinateSection j) (eY.symm v)
-      ((Point.mem_overOpen_map_iff i hi _ U).mp hvU)]
-    rw [← localChart_apply_component_eq_evaluate structureMapY m z (eY.symm v)
+      ((Point.mem_overOpen_map_iff i _ U).mp hvU)]
+    rw [← localChart_apply_component_eq_evaluate Y m z (eY.symm v)
       (eY.map_target hvY) j]
     exact congrFun (eY.right_inv hvY) j
 
 /-- The derivative of a smooth closed immersion has an actual continuous-linear left
 inverse, obtained by differentiating the constructed analytic local left inverse. -/
-theorem exists_leftInverse_fderiv_inclusionInComplexCharts [IsClosedImmersion i]
-    (z : ComplexPoint Y structureMapY) :
+theorem exists_leftInverse_fderiv_inclusionInComplexCharts [IsClosedImmersion i.left]
+    (z : ComplexPoint Y) :
     ∃ P : (Fin d → ℂ) →L[ℂ] (Fin m → ℂ),
-      P.comp (fderiv ℂ (inclusionInComplexCharts structureMapX structureMapY i hi m d z)
-        (localChart structureMapY m z z)) = ContinuousLinearMap.id ℂ (Fin m → ℂ) := by
+      P.comp (fderiv ℂ (inclusionInComplexCharts X Y i m d z)
+        (localChart Y m z z)) = ContinuousLinearMap.id ℂ (Fin m → ℂ) := by
   obtain ⟨L, hL, hleft⟩ :=
-    exists_analytic_localLeftInverse_of_isClosedImmersion structureMapX structureMapY i hi m d z
-  let φ := inclusionInComplexCharts structureMapX structureMapY i hi m d z
-  let a := localChart structureMapY m z z
+    exists_analytic_localLeftInverse_of_isClosedImmersion X Y i m d z
+  let φ := inclusionInComplexCharts X Y i m d z
+  let a := localChart Y m z z
   refine ⟨fderiv ℂ L (φ a), ?_⟩
-  have hφ := analyticAt_inclusionInComplexCharts structureMapX structureMapY i hi m d z
+  have hφ := analyticAt_inclusionInComplexCharts X Y i m d z
   have hc := hL.differentiableAt.hasFDerivAt.comp a hφ.differentiableAt.hasFDerivAt
   exact (hc.congr_of_eventuallyEq hleft.symm).unique (hasFDerivAt_id a)
 
 /-- Derivative injectivity for the actual chart-written closed immersion, with no
 assumed immersion, cotangent comparison, regular-sequence, or flattening data. -/
-theorem injective_fderiv_inclusionInComplexCharts [IsClosedImmersion i]
-    (z : ComplexPoint Y structureMapY) :
+theorem injective_fderiv_inclusionInComplexCharts [IsClosedImmersion i.left]
+    (z : ComplexPoint Y) :
     Function.Injective
-      (fderiv ℂ (inclusionInComplexCharts structureMapX structureMapY i hi m d z)
-        (localChart structureMapY m z z)) := by
+      (fderiv ℂ (inclusionInComplexCharts X Y i m d z)
+        (localChart Y m z z)) := by
   obtain ⟨P, hP⟩ :=
-    exists_leftInverse_fderiv_inclusionInComplexCharts structureMapX structureMapY i hi m d z
+    exists_leftInverse_fderiv_inclusionInComplexCharts X Y i m d z
   have hleft : Function.LeftInverse P
-      (fderiv ℂ (inclusionInComplexCharts structureMapX structureMapY i hi m d z)
-        (localChart structureMapY m z z)) :=
+      (fderiv ℂ (inclusionInComplexCharts X Y i m d z)
+        (localChart Y m z z)) :=
     fun v => DFunLike.congr_fun hP v
   exact hleft.injective
 

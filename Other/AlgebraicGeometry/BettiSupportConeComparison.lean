@@ -37,22 +37,22 @@ open Point
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 local instance bettiSupportConeComparisonHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf structureMap)
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Restriction through the natural singular resolution agrees strictly with restriction of
 rational constants before extending the complexes to integer degrees. -/
 lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     constantsToSingularCochainSheafComplex ℚ
-          (TopCat.of (ComplexPoint X structureMap)) ≫
-        naturalSingularResolutionRestrictionNat structureMap Z hZ =
-      rationalRestrictionComplexNat structureMap Z := by
+          (TopCat.of (ComplexPoint X)) ≫
+        naturalSingularResolutionRestrictionNat X Z hZ =
+      rationalRestrictionComplexNat X Z := by
   apply HomologicalComplex.Hom.ext
   funext n
   cases n with
@@ -62,88 +62,88 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
       unfold rationalRestrictionComplexNat
       rw [HomologicalComplex.comp_f, HomologicalComplex.comp_f]
       rw [show (constantsToSingularCochainSheafComplex ℚ
-          (TopCat.of (ComplexPoint X structureMap))).f 0 =
+          (TopCat.of (ComplexPoint X))).f 0 =
             constantsToSingularCochainZeroSheaf ℚ
-              (TopCat.of (ComplexPoint X structureMap)) by
+              (TopCat.of (ComplexPoint X)) by
         rfl]
       change constantsToSingularCochainZeroSheaf ℚ
-            (TopCat.of (ComplexPoint X structureMap)) ≫
+            (TopCat.of (ComplexPoint X)) ≫
           singularRestrictionSheaf ℚ
-              (analyticComplementInclusion structureMap Z) 0 ≫
+              (analyticComplementInclusion X Z) 0 ≫
             ((TopCat.Sheaf.pushforward AddCommGrpCat
-              (analyticComplementInclusion structureMap Z)).map
-                ((complementSingularToInjectiveResolution structureMap Z hZ).f 0)) = _
+              (analyticComplementInclusion X Z)).map
+                ((complementSingularToInjectiveResolution X Z hZ).f 0)) = _
       rw [← Category.assoc,
-        constantsToSingularCochainZeroSheaf_comp_singularRestriction structureMap Z,
+        constantsToSingularCochainZeroSheaf_comp_singularRestriction X Z,
         Category.assoc]
       rw [← Functor.map_comp]
       have hcomp := HomologicalComplex.congr_hom
         (complementConstants_comp_singularToInjectiveResolution
-          structureMap Z hZ) 0
+          X Z hZ) 0
       change constantsToSingularCochainZeroSheaf ℚ
-          (TopCat.of (AnalyticComplement structureMap Z)) ≫
-            (complementSingularToInjectiveResolution structureMap Z hZ).f 0 =
-          (complementConstantRationalInjectiveResolution structureMap Z).ι.f 0 at hcomp
+          (TopCat.of (AnalyticComplement X Z)) ≫
+            (complementSingularToInjectiveResolution X Z hZ).f 0 =
+          (complementConstantRationalInjectiveResolution X Z).ι.f 0 at hcomp
       rw [hcomp]
       rfl
   | succ n =>
       exact (HomologicalComplex.isZero_single_obj_X (ComplexShape.up ℕ) 0
-        (constantFieldSheaf ℚ structureMap) (n + 1) (by lia)).eq_of_src _ _
+        (constantFieldSheaf ℚ X) (n + 1) (by lia)).eq_of_src _ _
 
 /-- Restriction through the integer-indexed natural singular resolution agrees strictly with
 restriction of rational constants. -/
 lemma rationalToSingular_comp_naturalSingularResolutionRestriction
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
-    rationalToSingularCochainComplexInt structureMap ≫
-        naturalSingularResolutionRestriction structureMap Z hZ =
-      rationalRestrictionComplexInt structureMap Z := by
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    rationalToSingularCochainComplexInt X ≫
+        naturalSingularResolutionRestriction X Z hZ =
+      rationalRestrictionComplexInt X Z := by
   unfold rationalToSingularCochainComplexInt constantsToSingularCochainComplexInt
     naturalSingularResolutionRestriction rationalRestrictionComplexInt
   calc
     _ = HomologicalComplex.extendMap
         (constantsToSingularCochainSheafComplex ℚ
-            (TopCat.of (ComplexPoint X structureMap)) ≫
-          naturalSingularResolutionRestrictionNat structureMap Z hZ)
+            (TopCat.of (ComplexPoint X)) ≫
+          naturalSingularResolutionRestrictionNat X Z hZ)
         ComplexShape.embeddingUpNat :=
       (HomologicalComplex.extendMap_comp _ _ ComplexShape.embeddingUpNat).symm
     _ = _ := congrArg
       (fun f ↦ HomologicalComplex.extendMap f ComplexShape.embeddingUpNat)
       (rationalToSingular_comp_naturalSingularResolutionRestrictionNat
-        structureMap Z hZ)
+        X Z hZ)
 
 /-- Replacing rational constants by the natural singular-cochain resolution induces a map of
 support cones. -/
 def rationalSupportConeToNaturalSingularCone
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
-    rationalCohomologyWithSupportComplex structureMap Z ⟶
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    rationalCohomologyWithSupportComplex X Z ⟶
       CochainComplex.mappingCone
-        (naturalSingularResolutionRestriction structureMap Z hZ) :=
+        (naturalSingularResolutionRestriction X Z hZ) :=
   CochainComplex.mappingCone.map
-    (rationalRestrictionComplexInt structureMap Z)
-    (naturalSingularResolutionRestriction structureMap Z hZ)
-    (rationalToSingularCochainComplexInt structureMap) (𝟙 _)
+    (rationalRestrictionComplexInt X Z)
+    (naturalSingularResolutionRestriction X Z hZ)
+    (rationalToSingularCochainComplexInt X) (𝟙 _)
     (by rw [Category.comp_id,
-      rationalToSingular_comp_naturalSingularResolutionRestriction structureMap Z hZ])
+      rationalToSingular_comp_naturalSingularResolutionRestriction X Z hZ])
 
 /-- The natural singular-resolution replacement map between support cones is a
 quasi-isomorphism. -/
 noncomputable instance rationalSupportConeToNaturalSingularCone_quasiIso
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint X structureMap)) (hZ : IsClosed Z) :
-    QuasiIso (rationalSupportConeToNaturalSingularCone structureMap Z hZ) := by
-  let : QuasiIso (rationalToSingularCochainComplexInt structureMap) :=
-    rationalToSingularCochainComplexInt_quasiIso structureMap
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    QuasiIso (rationalSupportConeToNaturalSingularCone X Z hZ) := by
+  let : QuasiIso (rationalToSingularCochainComplexInt X) :=
+    rationalToSingularCochainComplexInt_quasiIso X
   change QuasiIso (CochainComplex.mappingCone.map
-    (rationalRestrictionComplexInt structureMap Z)
-    (naturalSingularResolutionRestriction structureMap Z hZ)
-    (rationalToSingularCochainComplexInt structureMap) (𝟙 _)
+    (rationalRestrictionComplexInt X Z)
+    (naturalSingularResolutionRestriction X Z hZ)
+    (rationalToSingularCochainComplexInt X) (𝟙 _)
     (by rw [Category.comp_id,
-      rationalToSingular_comp_naturalSingularResolutionRestriction structureMap Z hZ]))
+      rationalToSingular_comp_naturalSingularResolutionRestriction X Z hZ]))
   exact CochainComplex.mappingCone.map_quasiIso_of_vertical_quasiIso
-    (rationalRestrictionComplexInt structureMap Z)
-    (naturalSingularResolutionRestriction structureMap Z hZ)
-    (rationalToSingularCochainComplexInt structureMap) (𝟙 _) _
+    (rationalRestrictionComplexInt X Z)
+    (naturalSingularResolutionRestriction X Z hZ)
+    (rationalToSingularCochainComplexInt X) (𝟙 _) _
 
 end AlgebraicGeometry.ComplexPoint

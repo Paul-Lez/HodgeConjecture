@@ -29,61 +29,61 @@ set_option backward.isDefEq.respectTransparency false
 set_option backward.defeqAttrib.useBackward true
 
 noncomputable local instance smoothClosedRationalClassAnalyticTopology
-    (Y : Scheme) (sY : Y ⟶ Spec (.of ℂ)) : TopologicalSpace (ComplexPoint Y sY) :=
+    (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=
   Point.analyticTopology
 
-variable {Z X : Scheme} (sZ : Z ⟶ Spec (.of ℂ)) (sX : X ⟶ Spec (.of ℂ))
-  (i : Z ⟶ X) (hi : i ≫ sX = sZ) [IsClosedImmersion i]
-  (e d : ℕ) [SmoothOfRelativeDimension e sZ] [SmoothOfRelativeDimension d sX]
-  [T2Space (ComplexPoint Z sZ)] [T2Space (ComplexPoint X sX)]
+variable (Z X : Over (Spec (.of ℂ)))
+  (i : Z ⟶ X) [IsClosedImmersion i.left]
+  (e d : ℕ) [SmoothOfRelativeDimension e Z.hom] [SmoothOfRelativeDimension d X.hom]
+  [T2Space (ComplexPoint Z)] [T2Space (ComplexPoint X)]
 
 /-- The actual smooth closed-cycle construction, linear in its rational multiplicity,
 with the repository's ordinary rational cohomology as codomain. -/
 def smoothClosedRationalCycleClassMap :
-    ℚ →ₗ[ℚ] FieldCohomology ℚ sX (2 * (d : ℤ) - 2 * (e : ℤ)) :=
-  ((complexAmbientSheafBorelMooreToFieldCohomology sX d ⊤ (2 * (e : ℤ))).comp
-    (smoothClosedWholeSupportBorelMooreClassMap sZ sX i hi e d).hom).toRatLinearMap
+    ℚ →ₗ[ℚ] FieldCohomology ℚ X (2 * (d : ℤ) - 2 * (e : ℤ)) :=
+  ((complexAmbientSheafBorelMooreToFieldCohomology X d ⊤ (2 * (e : ℤ))).comp
+    (smoothClosedWholeSupportBorelMooreClassMap Z X i e d).hom).toRatLinearMap
 
 /-- Multiplicity one is the literal source constant-one section, with both complex
 orientations already constructed. -/
 def smoothClosedRationalCycleClass :
-    FieldCohomology ℚ sX (2 * (d : ℤ) - 2 * (e : ℤ)) :=
-  smoothClosedRationalCycleClassMap sZ sX i hi e d 1
+    FieldCohomology ℚ X (2 * (d : ℤ) - 2 * (e : ℤ)) :=
+  smoothClosedRationalCycleClassMap Z X i e d 1
 
 set_option maxRecDepth 2048 in
 /-- The ordinary rational class is obtained from the actual Borel–Moore class,
 without an independently specified class or comparison. -/
 @[simp]
 lemma smoothClosedRationalCycleClass_eq_borelMoore :
-    smoothClosedRationalCycleClass sZ sX i hi e d =
-      complexAmbientSheafBorelMooreToFieldCohomology sX d ⊤ (2 * (e : ℤ))
-        (smoothClosedWholeSupportBorelMooreClass sZ sX i hi e d) := rfl
+    smoothClosedRationalCycleClass Z X i e d =
+      complexAmbientSheafBorelMooreToFieldCohomology X d ⊤ (2 * (e : ℤ))
+        (smoothClosedWholeSupportBorelMooreClass Z X i e d) := rfl
 
 /-- Arbitrary rational multiplicities have their expected scalar action. -/
 @[simp]
 lemma smoothClosedRationalCycleClassMap_apply (q : ℚ) :
-    smoothClosedRationalCycleClassMap sZ sX i hi e d q =
-      q • smoothClosedRationalCycleClass sZ sX i hi e d := by
+    smoothClosedRationalCycleClassMap Z X i e d q =
+      q • smoothClosedRationalCycleClass Z X i e d := by
   simpa [smoothClosedRationalCycleClass] using
-    map_smul (smoothClosedRationalCycleClassMap sZ sX i hi e d) q (1 : ℚ)
+    map_smul (smoothClosedRationalCycleClassMap Z X i e d) q (1 : ℚ)
 
 /-- Specialize the proved dimension arithmetic to codimension `p`. -/
 def smoothClosedRationalCycleClassMapInCodimension (p : ℕ) (hdim : e + p = d) :
-    ℚ →ₗ[ℚ] FieldCohomology ℚ sX (2 * (p : ℤ)) := by
+    ℚ →ₗ[ℚ] FieldCohomology ℚ X (2 * (p : ℤ)) := by
   have hdeg : 2 * (d : ℤ) - 2 * (e : ℤ) = 2 * (p : ℤ) := by omega
-  exact hdeg ▸ smoothClosedRationalCycleClassMap sZ sX i hi e d
+  exact hdeg ▸ smoothClosedRationalCycleClassMap Z X i e d
 
 /-- The rational ordinary class of a smooth closed codimension-`p` immersion. -/
 def smoothClosedRationalCycleClassInCodimension (p : ℕ) (hdim : e + p = d) :
-    FieldCohomology ℚ sX (2 * (p : ℤ)) :=
-  smoothClosedRationalCycleClassMapInCodimension sZ sX i hi e d p hdim 1
+    FieldCohomology ℚ X (2 * (p : ℤ)) :=
+  smoothClosedRationalCycleClassMapInCodimension Z X i e d p hdim 1
 
 @[simp]
 lemma smoothClosedRationalCycleClassMapInCodimension_apply (p : ℕ) (hdim : e + p = d)
     (q : ℚ) :
-    smoothClosedRationalCycleClassMapInCodimension sZ sX i hi e d p hdim q =
-      q • smoothClosedRationalCycleClassInCodimension sZ sX i hi e d p hdim := by
+    smoothClosedRationalCycleClassMapInCodimension Z X i e d p hdim q =
+      q • smoothClosedRationalCycleClassInCodimension Z X i e d p hdim := by
   simpa [smoothClosedRationalCycleClassInCodimension] using
-    map_smul (smoothClosedRationalCycleClassMapInCodimension sZ sX i hi e d p hdim) q (1 : ℚ)
+    map_smul (smoothClosedRationalCycleClassMapInCodimension Z X i e d p hdim) q (1 : ℚ)
 
 end AlgebraicGeometry.ComplexPoint

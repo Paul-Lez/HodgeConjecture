@@ -42,112 +42,109 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) [IsIntegral X] [Smooth structureMap]
-  [IsProjective structureMap] (x : X)
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+  [IsProjective X.hom] (x : X.left)
 
 /-- The component stalk at a point in the component's smooth locus is regular local. -/
 lemma cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus
-    (z : cycleComponent X x)
-    (hz : z ∈ (cycleComponentι X x ≫ structureMap).smoothLocus) :
-    IsRegularLocalRing ((cycleComponent X x).presheaf.stalk z) := by
-  let c : cycleComponent X x ⟶ Spec ↧ℂ :=
-    cycleComponentι X x ≫ structureMap
-  let U : (cycleComponent X x).Opens := c.smoothLocus
+    (z : cycleComponent X.left x)
+    (hz : z ∈ (cycleComponentι X.left x ≫ X.hom).smoothLocus) :
+    IsRegularLocalRing ((cycleComponent X.left x).presheaf.stalk z) := by
+  let c : cycleComponent X.left x ⟶ Spec ↧ℂ :=
+    cycleComponentι X.left x ≫ X.hom
+  let U : (cycleComponent X.left x).Opens := c.smoothLocus
   let g : U.toScheme ⟶ Spec ↧ℂ := U.ι ≫ c
-  let : Smooth g := cycleComponent_smoothLocus_smooth structureMap x
+  let : Smooth g := cycleComponent_smoothLocus_smooth X x
   let zu : U.toScheme := ⟨z, hz⟩
   have hregular : IsRegularLocalRing (U.toScheme.presheaf.stalk zu) :=
     Smooth.isRegularLocalRing_stalk_complex (f := g) zu
   exact @IsRegularLocalRing.of_ringEquiv (U.toScheme.presheaf.stalk zu) _ hregular
-    ((cycleComponent X x).presheaf.stalk z) _
+    ((cycleComponent X.left x).presheaf.stalk z) _
     (U.stalkIso zu).commRingCatIsoToRingEquiv
 
-omit [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] in
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 /-- The ambient stalk at a point of a cycle component in a smooth complex variety is regular
 local. -/
 lemma cycleComponent_ambient_stalk_isRegularLocalRing
-    {d : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (z : cycleComponent X x) :
+    {d : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (z : cycleComponent X.left x) :
     IsRegularLocalRing
-      (X.presheaf.stalk (cycleComponentι X x z)) := by
+      (X.left.presheaf.stalk (cycleComponentι X.left x z)) := by
   exact SmoothOfRelativeDimension.isRegularLocalRing_stalk_complex
-    (d := d) (f := structureMap) (cycleComponentι X x z)
+    (d := d) (f := X.hom) (cycleComponentι X.left x z)
 
 /-- At a smooth component point, the quotient of the ambient stalk by the kernel of the
 closed-immersion stalk map is regular local. -/
 lemma cycleComponent_stalkMap_quotient_isRegularLocalRing_of_mem_smoothLocus
-    (z : cycleComponent X x)
-    (hz : z ∈ (cycleComponentι X x ≫ structureMap).smoothLocus) :
+    (z : cycleComponent X.left x)
+    (hz : z ∈ (cycleComponentι X.left x ≫ X.hom).smoothLocus) :
     IsRegularLocalRing
-      (X.presheaf.stalk (cycleComponentι X x z) ⧸
-        RingHom.ker ((cycleComponentι X x).stalkMap z).hom) := by
-  have hsurj := (cycleComponentι X x).stalkMap_surjective z
-  have hregular := cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus structureMap x z hz
+      (X.left.presheaf.stalk (cycleComponentι X.left x z) ⧸
+        RingHom.ker ((cycleComponentι X.left x).stalkMap z).hom) := by
+  have hsurj := (cycleComponentι X.left x).stalkMap_surjective z
+  have hregular := cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus X x z hz
   exact @IsRegularLocalRing.of_ringEquiv
-    ((cycleComponent X x).presheaf.stalk z) _ hregular _ _
+    ((cycleComponent X.left x).presheaf.stalk z) _ hregular _ _
     (RingHom.quotientKerEquivOfSurjective hsurj).symm
 
-omit [IsIntegral X] [Smooth structureMap] [IsProjective structureMap] in
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 /-- The kernel of the cycle-component stalk map is finitely generated. -/
 lemma cycleComponent_stalkMap_ker_fg
-    {d : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (z : cycleComponent X x) :
-    (RingHom.ker ((cycleComponentι X x).stalkMap z).hom).FG := by
+    {d : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (z : cycleComponent X.left x) :
+    (RingHom.ker ((cycleComponentι X.left x).stalkMap z).hom).FG := by
   have _ : IsRegularLocalRing
-      (X.presheaf.stalk (cycleComponentι X x z)) :=
-    cycleComponent_ambient_stalk_isRegularLocalRing (d := d) structureMap x z
+      (X.left.presheaf.stalk (cycleComponentι X.left x z)) :=
+    cycleComponent_ambient_stalk_isRegularLocalRing (d := d) X x z
   exact (RingHom.ker
-    ((cycleComponentι X x).stalkMap z).hom).fg_of_isNoetherianRing
+    ((cycleComponentι X.left x).stalkMap z).hom).fg_of_isNoetherianRing
 
-omit [IsIntegral X] in
 /-- The kernel of the cycle-component stalk map is prime. -/
-lemma cycleComponent_stalkMap_ker_isPrime (z : cycleComponent X x) :
+lemma cycleComponent_stalkMap_ker_isPrime {X : Scheme} (x : X) (z : cycleComponent X x) :
     (RingHom.ker ((cycleComponentι X x).stalkMap z).hom).IsPrime := by
   exact RingHom.ker_isPrime _
 
 /-- At a complex point of a codimension-`p` component in a smooth complex `d`-fold, the quotient
 of the ambient stalk by the stalk-map kernel has Krull dimension `d - p`. -/
 lemma ringKrullDim_cycleComponent_stalkMap_quotient
-    {d p : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap))
+    {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
     (hx : Order.coheight x = p) :
     ringKrullDim
-      (X.presheaf.stalk (cycleComponentι X x z.underlying) ⧸
-        RingHom.ker ((cycleComponentι X x).stalkMap z.underlying).hom) =
+      (X.left.presheaf.stalk (cycleComponentι X.left x z.underlying) ⧸
+        RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom) =
       d - p := by
-  have hsurj := (cycleComponentι X x).stalkMap_surjective z.underlying
+  have hsurj := (cycleComponentι X.left x).stalkMap_surjective z.underlying
   calc
     ringKrullDim
-        (X.presheaf.stalk (cycleComponentι X x z.underlying) ⧸
-          RingHom.ker ((cycleComponentι X x).stalkMap z.underlying).hom) =
-        ringKrullDim ((cycleComponent X x).presheaf.stalk z.underlying) :=
+        (X.left.presheaf.stalk (cycleComponentι X.left x z.underlying) ⧸
+          RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom) =
+        ringKrullDim ((cycleComponent X.left x).presheaf.stalk z.underlying) :=
       ringKrullDim_eq_of_ringEquiv (RingHom.quotientKerEquivOfSurjective hsurj)
     _ = Order.coheight z.underlying := ringKrullDim_stalk_eq_coheight z.underlying
     _ = d - p := congrArg (fun n : ℕ∞ ↦ (↑n : WithBot ℕ∞))
       (cycleComponent_complexPoint_coheight_eq_sub
-        (d := d) (p := p) structureMap x z hx)
+        (d := d) (p := p) X x z hx)
 
 /-- The ambient stalk at the image of a complex component point has Krull dimension `d`. -/
 lemma ringKrullDim_cycleComponent_ambient_stalk
-    {d : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap)) :
+    {d : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
     ringKrullDim
-      (X.presheaf.stalk (cycleComponentι X x z.underlying)) = d := by
+      (X.left.presheaf.stalk (cycleComponentι X.left x z.underlying)) = d := by
   rw [ringKrullDim_stalk_eq_coheight]
-  have hclosed := cycleComponent_complexPoint_ambient_underlying_isClosed structureMap x z
+  have hclosed := cycleComponent_complexPoint_ambient_underlying_isClosed X x z
   have hsum := SmoothOfRelativeDimension.height_add_coheight_eq_of_isClosed
-    (f := structureMap) (d := d)
-    (cycleComponentι X x z.underlying) hclosed
-  have hmin : IsMin (cycleComponentι X x z.underlying) := by
+    (f := X.hom) (d := d)
+    (cycleComponentι X.left x z.underlying) hclosed
+  have hmin : IsMin (cycleComponentι X.left x z.underlying) := by
     intro y hy
-    have hy' : y ∈ closure {cycleComponentι X x z.underlying} := by
+    have hy' : y ∈ closure {cycleComponentι X.left x z.underlying} := by
       rw [← specializes_iff_mem_closure, ← Scheme.le_iff_specializes]
       exact hy
     rw [hclosed.closure_eq] at hy'
     exact (Set.mem_singleton_iff.mp hy').ge
-  have hheight : Order.height (cycleComponentι X x z.underlying) = 0 :=
+  have hheight : Order.height (cycleComponentι X.left x z.underlying) = 0 :=
     Order.IsMin.height_eq_zero hmin
   rw [hheight, zero_add] at hsum
   exact_mod_cast hsum
@@ -155,27 +152,26 @@ lemma ringKrullDim_cycleComponent_ambient_stalk
 /-- The minimal number of generators of the stalk-map kernel is at least the geometric
 codimension `p`. -/
 lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
-    {d p : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap))
+    {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
     (hx : Order.coheight x = p) :
     (p : ℕ∞) ≤ Submodule.spanFinrank
-      (RingHom.ker ((cycleComponentι X x).stalkMap z.underlying).hom) := by
-  let R := X.presheaf.stalk (cycleComponentι X x z.underlying)
+      (RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom) := by
+  let R := X.left.presheaf.stalk (cycleComponentι X.left x z.underlying)
   let I : Ideal R :=
-    RingHom.ker ((cycleComponentι X x).stalkMap z.underlying).hom
+    RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom
   let : IsRegularLocalRing R :=
-    cycleComponent_ambient_stalk_isRegularLocalRing (d := d) structureMap x z.underlying
+    cycleComponent_ambient_stalk_isRegularLocalRing (d := d) X x z.underlying
   have hI : I ≤ Ring.jacobson R := by
     rw [IsLocalRing.ringJacobson_eq_maximalIdeal]
     exact IsLocalRing.le_maximalIdeal (RingHom.ker_ne_top _)
   have hle := ringKrullDim_le_ringKrullDim_quotient_add_spanFinrank I hI
-  rw [ringKrullDim_cycleComponent_ambient_stalk (d := d) structureMap x z,
+  rw [ringKrullDim_cycleComponent_ambient_stalk (d := d) X x z,
     ringKrullDim_cycleComponent_stalkMap_quotient
-      (d := d) (p := p) structureMap x z hx] at hle
+      (d := d) (p := p) X x z hx] at hle
   have hle' : (d : ℕ∞) ≤ ((d - p : ℕ) : ℕ∞) + I.spanFinrank := by
     exact WithBot.coe_le_coe.mp hle
-  have hp : p ≤ d := cycleComponent_codimension_le structureMap x hx
+  have hp : p ≤ d := cycleComponent_codimension_le X x hx
   have hdecomp : (d : ℕ∞) = ((d - p : ℕ) : ℕ∞) + (p : ℕ∞) := by
     exact_mod_cast (Nat.sub_add_cancel hp).symm
   rw [hdecomp] at hle'
@@ -184,25 +180,24 @@ lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
 /-- The stalk-map kernel has a finite generating set of minimal size, and that size is at least
 the geometric codimension. -/
 lemma exists_cycleComponent_stalkMap_ker_generators
-    {d p : ℕ} [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (cycleComponent X x)
-      (cycleComponentι X x ≫ structureMap))
+    {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
     (hx : Order.coheight x = p) :
-    ∃ s : Finset (X.presheaf.stalk
-        (cycleComponentι X x z.underlying)),
+    ∃ s : Finset (X.left.presheaf.stalk
+        (cycleComponentι X.left x z.underlying)),
       Ideal.span (s : Set _) =
-          RingHom.ker ((cycleComponentι X x).stalkMap z.underlying).hom ∧
+          RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom ∧
         s.card = Submodule.spanFinrank
-          (RingHom.ker ((cycleComponentι X x).stalkMap z.underlying).hom) ∧
+          (RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom) ∧
         p ≤ s.card := by
   obtain ⟨s, hcard, hspan⟩ :=
     Submodule.FG.exists_span_finset_card_eq_spanFinrank
-      (cycleComponent_stalkMap_ker_fg (d := d) structureMap x z.underlying)
+      (cycleComponent_stalkMap_ker_fg (d := d) X x z.underlying)
   refine ⟨s, ?_, hcard, ?_⟩
   · rw [← Ideal.submodule_span_eq]
     exact hspan
   · have hle := cycleComponent_codimension_le_stalkMap_ker_spanFinrank
-      (d := d) (p := p) structureMap x z hx
+      (d := d) (p := p) X x z hx
     rw [← hcard] at hle
     exact_mod_cast hle
 

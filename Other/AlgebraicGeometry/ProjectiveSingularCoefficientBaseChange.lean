@@ -48,30 +48,30 @@ open Point
 open AlgebraicTopology.Singular
 open scoped TensorProduct
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
-  [IsProjective structureMap]
+variable (X : Over (Spec ↧ℂ))
+  [IsProjective X.hom]
 
 /-- Zeroth rational singular homology of a smooth projective complex analytification is
 finite-dimensional, without assuming global connectedness. -/
-theorem finiteRationalSingularHomologyZero [IsIntegral X] [Smooth structureMap] :
-    Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) := by
-  let : Finite (ZerothHomotopy (ComplexPoint X structureMap)) :=
-    finiteZerothHomotopy structureMap
+theorem finiteRationalSingularHomologyZero [IsIntegral X.left] [Smooth X.hom] :
+    Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X)) 0) := by
+  let : Finite (ZerothHomotopy (ComplexPoint X)) :=
+    finiteZerothHomotopy X
   have hfinite : Module.Finite ℚ
-      (∐ fun _ : ZerothHomotopy (ComplexPoint X structureMap) ↦
+      (∐ fun _ : ZerothHomotopy (ComplexPoint X) ↦
         ModuleCat.of ℚ ℚ : ModuleCat ℚ) :=
     inferInstance
   exact Module.Finite.equiv
-    (TopCat.singularHomology₀Iso (TopCat.of (ComplexPoint X structureMap))
+    (TopCat.singularHomology₀Iso (TopCat.of (ComplexPoint X))
       (ModuleCat.of ℚ ℚ)).symm.toLinearEquiv
 
 /-- Rational-to-complex singular cohomology base change for projective analytifications in
 degree zero. -/
-def rationalToComplexCohomologyBaseChangeZero [IsIntegral X] [Smooth structureMap] :
-    ℂ ⊗[ℚ] Cohomology ℚ (TopCat.of (ComplexPoint X structureMap)) 0 ≃ₗ[ℂ]
-      Cohomology ℂ (TopCat.of (ComplexPoint X structureMap)) 0 :=
-  letI : Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X structureMap)) 0) :=
-    finiteRationalSingularHomologyZero structureMap
-  rationalToComplexCohomologyBaseChange (TopCat.of (ComplexPoint X structureMap)) 0
+def rationalToComplexCohomologyBaseChangeZero [IsIntegral X.left] [Smooth X.hom] :
+    ℂ ⊗[ℚ] Cohomology ℚ (TopCat.of (ComplexPoint X)) 0 ≃ₗ[ℂ]
+      Cohomology ℂ (TopCat.of (ComplexPoint X)) 0 :=
+  letI : Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X)) 0) :=
+    finiteRationalSingularHomologyZero X
+  rationalToComplexCohomologyBaseChange (TopCat.of (ComplexPoint X)) 0
 
 end AlgebraicGeometry.ComplexPoint

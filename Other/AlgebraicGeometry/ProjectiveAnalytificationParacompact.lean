@@ -41,34 +41,34 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
-  [IsProjective structureMap]
+variable (X : Over (Spec ↧ℂ))
+  [IsProjective X.hom]
 
 /-- Every open subset of a smooth projective complex analytification is paracompact. -/
-theorem openParacompactSpace [IsIntegral X] [Smooth structureMap]
-    (U : Opens (ComplexPoint X structureMap)) : ParacompactSpace U := by
-  exact opens_paracompactSpace_of_compact_chartedSpace (H := Fin (dim X) → ℂ) U
+theorem openParacompactSpace [IsIntegral X.left] [Smooth X.hom]
+    (U : Opens (ComplexPoint X)) : ParacompactSpace U := by
+  exact opens_paracompactSpace_of_compact_chartedSpace (H := Fin (dim X.left) → ℂ) U
 
 /-- Every term of the rational singular-cochain sheaf resolution on a smooth projective
 analytification is flasque. -/
-theorem rationalSingularCochainSheafIsFlasque [IsIntegral X] [Smooth structureMap]
+theorem rationalSingularCochainSheafIsFlasque [IsIntegral X.left] [Smooth X.hom]
     (n : ℕ) :
     TopCat.Sheaf.IsFlasque
       (AlgebraicTopology.Singular.singularCochainSheaf ℚ
-        (TopCat.of (ComplexPoint X structureMap)) n) := by
-  let : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
-    openParacompactSpace structureMap
+        (TopCat.of (ComplexPoint X)) n) := by
+  let : ∀ U : Opens (ComplexPoint X), ParacompactSpace U :=
+    openParacompactSpace X
   infer_instance
 
 /-- Ordinary rational singular cochains compute the global sections of the chosen
 singular-cochain sheaf complex on a smooth projective analytification. -/
 theorem rationalSingularCochain_globalComparison_quasiIso
-    [IsIntegral X] [Smooth structureMap] :
+    [IsIntegral X.left] [Smooth X.hom] :
     QuasiIso
       (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ
-        (TopCat.of (ComplexPoint X structureMap))) := by
-  let : ∀ U : Opens (ComplexPoint X structureMap), ParacompactSpace U :=
-    openParacompactSpace structureMap
+        (TopCat.of (ComplexPoint X))) := by
+  let : ∀ U : Opens (ComplexPoint X), ParacompactSpace U :=
+    openParacompactSpace X
   exact AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
 
 end AlgebraicGeometry.ComplexPoint

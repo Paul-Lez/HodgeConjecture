@@ -44,82 +44,79 @@ open scoped Manifold ContDiff
 namespace AlgebraicGeometry
 namespace CycleComponentSeparateLocalCoordinates
 
-noncomputable local instance componentImmersionTopology {Y : Scheme} {g : Y ⟶ Spec (.of ℂ)} :
-    TopologicalSpace (ComplexPoint Y g) := Point.analyticTopology
+noncomputable local instance componentImmersionTopology {Y : Over (Spec (.of ℂ))} :
+    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}
   [SmoothOfRelativeDimension d V.structureMap]
 
-variable (C : CycleComponentSeparateLocalCoordinates V.structureMap x d n)
+variable (C : CycleComponentSeparateLocalCoordinates V.over x d n)
 
 /-! ### Maps out of the exact component chart -/
 
 /-- Each coordinate of a morphism from the affine component neighborhood to a smooth complex
 scheme is analytic when the source is written in the retained exact component coordinates. -/
 lemma analyticAt_neighborhoodProjectionChart_symm_map_component
-    {Y : Scheme} (structureMapY : Y ⟶ Spec (.of ℂ))
-    (f : C.componentNeighborhood.toScheme ⟶ Y)
-    (hf : f ≫ structureMapY = C.neighborhoodStructureMap)
-    (e : ℕ) [SmoothOfRelativeDimension e structureMapY]
-    (y : ComplexPoint Y structureMapY) {w : Fin n → ℂ}
+    {Y : Over (Spec (.of ℂ))} (f : C.neighborhoodScheme ⟶ Y)
+    (e : ℕ) [SmoothOfRelativeDimension e Y.hom]
+    (y : ComplexPoint Y) {w : Fin n → ℂ}
     (hw : w ∈ C.neighborhoodProjectionChart.target)
-    (hmap : Point.map f hf (C.neighborhoodProjectionChart.symm w) ∈
-      (ComplexPoint.localChart structureMapY e y).source)
+    (hmap : Point.map f (C.neighborhoodProjectionChart.symm w) ∈
+      (ComplexPoint.localChart Y e y).source)
     (i : Fin e) :
     AnalyticAt ℂ
-      (fun v ↦ ComplexPoint.localChart structureMapY e y
-        (Point.map f hf (C.neighborhoodProjectionChart.symm v)) i) w := by
-  let D := ComplexPoint.localEtaleCoordinates structureMapY e y
-  have htargetOpen : Point.map f hf (C.neighborhoodProjectionChart.symm w) ∈
+      (fun v ↦ ComplexPoint.localChart Y e y
+        (Point.map f (C.neighborhoodProjectionChart.symm v)) i) w := by
+  let D := ComplexPoint.localEtaleCoordinates Y e y
+  have htargetOpen : Point.map f (C.neighborhoodProjectionChart.symm w) ∈
       Point.overOpen D.ambientCoordinateOpen := by
     have hmem := ComplexPoint.mem_coordinateNeighborhood_of_mem_localChart_source
-      structureMapY e y (Point.map f hf (C.neighborhoodProjectionChart.symm w)) hmap
+      Y e y (Point.map f (C.neighborhoodProjectionChart.symm w)) hmap
     simpa only [D, LocalEtaleCoordinates.ambientCoordinateOpen,
       Scheme.Opens.ι_image_top] using hmem
   have hsourceOpen : C.neighborhoodProjectionChart.symm w ∈
-      Point.overOpen (f ⁻¹ᵁ D.ambientCoordinateOpen) :=
-    (Point.mem_overOpen_map_iff f hf _ D.ambientCoordinateOpen).mp htargetOpen
+      Point.overOpen (f.left ⁻¹ᵁ D.ambientCoordinateOpen) :=
+    (Point.mem_overOpen_map_iff f _ D.ambientCoordinateOpen).mp htargetOpen
   have ha := C.analyticAt_neighborhoodProjectionChart_symm_evaluate hw
-    (f ⁻¹ᵁ D.ambientCoordinateOpen)
-    (f.app D.ambientCoordinateOpen (D.ambientCoordinateSection i)) hsourceOpen
+    (f.left ⁻¹ᵁ D.ambientCoordinateOpen)
+    (f.left.app D.ambientCoordinateOpen (D.ambientCoordinateSection i)) hsourceOpen
   have hcontinuous : ContinuousAt
-      (fun v ↦ Point.map f hf (C.neighborhoodProjectionChart.symm v)) w :=
-    (Point.continuous_map f hf).continuousAt.comp
+      (fun v ↦ Point.map f (C.neighborhoodProjectionChart.symm v)) w :=
+    (Point.continuous_map f).continuousAt.comp
       (C.neighborhoodProjectionChart.continuousAt_symm hw)
   have heventually :
-      (fun v ↦ Point.map f hf (C.neighborhoodProjectionChart.symm v)) ⁻¹'
-          (ComplexPoint.localChart structureMapY e y).source ∈ nhds w :=
-    hcontinuous ((ComplexPoint.localChart structureMapY e y).open_source.mem_nhds hmap)
+      (fun v ↦ Point.map f (C.neighborhoodProjectionChart.symm v)) ⁻¹'
+          (ComplexPoint.localChart Y e y).source ∈ nhds w :=
+    hcontinuous ((ComplexPoint.localChart Y e y).open_source.mem_nhds hmap)
   apply ha.congr
   filter_upwards [heventually] with v hv
-  rw [ComplexPoint.localChart_apply_component_eq_evaluate structureMapY e y
-    (Point.map f hf (C.neighborhoodProjectionChart.symm v)) hv i]
-  exact Point.evaluate_map f hf D.ambientCoordinateOpen
+  rw [ComplexPoint.localChart_apply_component_eq_evaluate Y e y
+    (Point.map f (C.neighborhoodProjectionChart.symm v)) hv i]
+  exact Point.evaluate_map f D.ambientCoordinateOpen
     (D.ambientCoordinateSection i) (C.neighborhoodProjectionChart.symm v) |>.symm
 
 /-- A morphism from the affine component neighborhood to a smooth complex scheme is analytic in
 the exact component chart and a canonical target chart. -/
 lemma analyticAt_neighborhoodProjectionChart_symm_map
-    {Y : Scheme} (structureMapY : Y ⟶ Spec (.of ℂ))
-    (f : C.componentNeighborhood.toScheme ⟶ Y)
-    (hf : f ≫ structureMapY = C.neighborhoodStructureMap)
-    (e : ℕ) [SmoothOfRelativeDimension e structureMapY]
-    (y : ComplexPoint Y structureMapY) {w : Fin n → ℂ}
+    {Y : Over (Spec (.of ℂ))} (f : C.neighborhoodScheme ⟶ Y)
+    (e : ℕ) [SmoothOfRelativeDimension e Y.hom]
+    (y : ComplexPoint Y) {w : Fin n → ℂ}
     (hw : w ∈ C.neighborhoodProjectionChart.target)
-    (hmap : Point.map f hf (C.neighborhoodProjectionChart.symm w) ∈
-      (ComplexPoint.localChart structureMapY e y).source) :
+    (hmap : Point.map f (C.neighborhoodProjectionChart.symm w) ∈
+      (ComplexPoint.localChart Y e y).source) :
     AnalyticAt ℂ
-      (fun v ↦ ComplexPoint.localChart structureMapY e y
-        (Point.map f hf (C.neighborhoodProjectionChart.symm v))) w :=
+      (fun v ↦ ComplexPoint.localChart Y e y
+        (Point.map f (C.neighborhoodProjectionChart.symm v))) w :=
   AnalyticAt.pi fun i ↦
     C.analyticAt_neighborhoodProjectionChart_symm_map_component
-      structureMapY f hf e y hw hmap i
+      f e y hw hmap i
 
 /-! ### The actual cycle-component inclusion -/
 
 /-- The scheme map from the affine component-coordinate neighborhood into the ambient variety. -/
-def neighborhoodToAmbientSchemeMap : C.componentNeighborhood.toScheme ⟶ V.scheme :=
-  C.componentNeighborhood.ι ≫ (componentSmoothLocus V.structureMap x).ι ≫ cycleComponentι V.scheme x
+def neighborhoodToAmbientSchemeMap : C.componentNeighborhood.toScheme ⟶ V.over.left :=
+  C.componentNeighborhood.ι ≫ (componentSmoothLocus V.over x).ι ≫
+    cycleComponentι V.over.left x
 
 /-- Algebraically, the neighborhood-to-ambient map is formally unramified: it is a composite of
 two open immersions and a closed immersion.  What is missing is the comparison identifying this
@@ -131,33 +128,36 @@ noncomputable instance neighborhoodToAmbientSchemeMap_formallyUnramified :
 
 /-- The neighborhood-to-ambient scheme map respects the complex structure maps. -/
 lemma neighborhoodToAmbientSchemeMap_over :
-    C.neighborhoodToAmbientSchemeMap ≫ V.structureMap = C.neighborhoodStructureMap := by
+    C.neighborhoodToAmbientSchemeMap ≫ V.over.hom = C.neighborhoodStructureMap := by
   simp only [neighborhoodToAmbientSchemeMap, neighborhoodStructureMap,
     componentSmoothStructureMap, Category.assoc]
+
+/-- The neighborhood-to-ambient morphism bundled over `Spec ℂ`. -/
+def neighborhoodToAmbientOver : C.neighborhoodScheme ⟶ V.over :=
+  Over.homMk C.neighborhoodToAmbientSchemeMap C.neighborhoodToAmbientSchemeMap_over
 
 /-- The map on complex points from the affine component-coordinate neighborhood to the ambient
 analytic variety. -/
 def neighborhoodToAmbientPoint :
-    ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap → V.analyticPoint :=
-  Point.map C.neighborhoodToAmbientSchemeMap C.neighborhoodToAmbientSchemeMap_over
+    ComplexPoint C.neighborhoodScheme → V.analyticPoint :=
+  Point.map C.neighborhoodToAmbientOver
 
 /-- Mapping from the affine neighborhood to the ambient variety factors through the reduced
 cycle component. -/
 lemma neighborhoodToAmbientPoint_eq_cycleComponentMap
-    (z : ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap) :
+    (z : ComplexPoint C.neighborhoodScheme) :
     C.neighborhoodToAmbientPoint z =
-      cycleComponentMap V.structureMap x (C.neighborhoodToComponentPoint z) := by
-  apply Subtype.ext
-  simp only [neighborhoodToAmbientPoint, neighborhoodToAmbientSchemeMap,
-    cycleComponentMap, neighborhoodToComponentPoint, Point.map, Category.assoc]
+      cycleComponentMap V.over x (C.neighborhoodToComponentPoint z) := by
+  apply Over.OverMorphism.ext
+  rfl
 
 /-- On analytic points, the neighborhood-to-ambient map is a topological embedding. -/
 lemma neighborhoodToAmbientPoint_isEmbedding :
     IsEmbedding C.neighborhoodToAmbientPoint := by
-  have h := (ComplexPoint.cycleComponentMap_isClosedEmbedding V.structureMap x).toIsEmbedding.comp
+  have h := (ComplexPoint.cycleComponentMap_isClosedEmbedding V.over x).toIsEmbedding.comp
     C.neighborhoodToComponentPoint_isOpenEmbedding.toIsEmbedding
   have heq : C.neighborhoodToAmbientPoint =
-      cycleComponentMap V.structureMap x ∘ C.neighborhoodToComponentPoint := by
+      cycleComponentMap V.over x ∘ C.neighborhoodToComponentPoint := by
     funext z
     exact C.neighborhoodToAmbientPoint_eq_cycleComponentMap z
   rw [heq]
@@ -169,28 +169,27 @@ injective-derivative assertion needed by `Manifold.IsImmersionAt`. -/
 theorem analyticAt_componentProjectionChart_symm_cycleComponentMap
     {w : Fin n → ℂ}
     (hw : w ∈ C.componentProjectionChart.target)
-    (hmap : cycleComponentMap V.structureMap x (C.componentProjectionChart.symm w) ∈
-      (ComplexPoint.localChart V.structureMap d (cycleComponentMap V.structureMap x C.point)).source) :
+    (hmap : cycleComponentMap V.over x (C.componentProjectionChart.symm w) ∈
+      (ComplexPoint.localChart V.over d (cycleComponentMap V.over x C.point)).source) :
     AnalyticAt ℂ
-      (fun v ↦ ComplexPoint.localChart V.structureMap d (cycleComponentMap V.structureMap x C.point)
-        (cycleComponentMap V.structureMap x (C.componentProjectionChart.symm v))) w := by
+      (fun v ↦ ComplexPoint.localChart V.over d (cycleComponentMap V.over x C.point)
+        (cycleComponentMap V.over x (C.componentProjectionChart.symm v))) w := by
   have hw' : w ∈ C.neighborhoodProjectionChart.target := by
     simpa only [componentProjectionChart,
       OpenPartialHomeomorph.lift_openEmbedding_target] using hw
   have hmap' : C.neighborhoodToAmbientPoint
       (C.neighborhoodProjectionChart.symm w) ∈
-        (ComplexPoint.localChart V.structureMap d (cycleComponentMap V.structureMap x C.point)).source := by
+        (ComplexPoint.localChart V.over d (cycleComponentMap V.over x C.point)).source := by
     rw [C.neighborhoodToAmbientPoint_eq_cycleComponentMap,
       ← C.componentProjectionChart_symm_apply]
     exact hmap
   have ha := C.analyticAt_neighborhoodProjectionChart_symm_map
-    V.structureMap C.neighborhoodToAmbientSchemeMap
-      C.neighborhoodToAmbientSchemeMap_over d (cycleComponentMap V.structureMap x C.point) hw' hmap'
+    C.neighborhoodToAmbientOver d (cycleComponentMap V.over x C.point) hw' hmap'
   apply ha.congr
   filter_upwards with v
-  have hv : Point.map C.neighborhoodToAmbientSchemeMap
-      C.neighborhoodToAmbientSchemeMap_over (C.neighborhoodProjectionChart.symm v) =
-        cycleComponentMap V.structureMap x (C.componentProjectionChart.symm v) := by
+  have hv : Point.map C.neighborhoodToAmbientOver
+      (C.neighborhoodProjectionChart.symm v) =
+        cycleComponentMap V.over x (C.componentProjectionChart.symm v) := by
     change C.neighborhoodToAmbientPoint (C.neighborhoodProjectionChart.symm v) = _
     rw [C.neighborhoodToAmbientPoint_eq_cycleComponentMap,
       ← C.componentProjectionChart_symm_apply]
@@ -200,16 +199,16 @@ theorem analyticAt_componentProjectionChart_symm_cycleComponentMap
 extra neighborhood premise. -/
 theorem analyticAt_componentProjectionChart_symm_cycleComponentMap_at_point :
     AnalyticAt ℂ
-      (fun v ↦ ComplexPoint.localChart V.structureMap d (cycleComponentMap V.structureMap x C.point)
-        (cycleComponentMap V.structureMap x (C.componentProjectionChart.symm v)))
+      (fun v ↦ ComplexPoint.localChart V.over d (cycleComponentMap V.over x C.point)
+        (cycleComponentMap V.over x (C.componentProjectionChart.symm v)))
       (C.componentProjectionChart C.point) := by
   apply C.analyticAt_componentProjectionChart_symm_cycleComponentMap
   · exact C.componentProjectionChart.map_source
       C.point_mem_componentProjectionChart_source
   · rw [C.componentProjectionChart.left_inv
       C.point_mem_componentProjectionChart_source]
-    exact ComplexPoint.mem_localChart_source V.structureMap d
-      (cycleComponentMap V.structureMap x C.point)
+    exact ComplexPoint.mem_localChart_source V.over d
+      (cycleComponentMap V.over x C.point)
 
 end CycleComponentSeparateLocalCoordinates
 end AlgebraicGeometry

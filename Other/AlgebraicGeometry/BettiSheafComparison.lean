@@ -34,64 +34,64 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 /-- The rational constant-sheaf comparison with the integer-indexed singular-cochain
 resolution. -/
 def rationalToSingularCochainComplexInt :
-    constantFieldSheafComplexInt ℚ structureMap ⟶
-      singularCochainSheafComplexInt structureMap ℚ :=
-  constantsToSingularCochainComplexInt structureMap ℚ
+    constantFieldSheafComplexInt ℚ X ⟶
+      singularCochainSheafComplexInt X ℚ :=
+  constantsToSingularCochainComplexInt X ℚ
 
 /-- The rational constant-to-singular comparison is a quasi-isomorphism on a smooth
 complex-point space. -/
 lemma rationalToSingularCochainComplexInt_quasiIso
-    [IsIntegral X] [Smooth structureMap] :
-    QuasiIso (rationalToSingularCochainComplexInt structureMap) := by
-  change QuasiIso (constantsToSingularCochainComplexInt structureMap ℚ)
-  exact constantsToSingularCochainComplexInt_quasiIso structureMap ℚ
+    [IsIntegral X.left] [Smooth X.hom] :
+    QuasiIso (rationalToSingularCochainComplexInt X) := by
+  change QuasiIso (constantsToSingularCochainComplexInt X ℚ)
+  exact constantsToSingularCochainComplexInt_quasiIso X ℚ
 
 /-- Hypercohomology of the integer-indexed rational singular-cochain sheaf complex. -/
 abbrev RationalSingularCochainHypercohomology (n : ℤ) : Type 1 :=
-  Hypercohomology structureMap (singularCochainSheafComplexInt structureMap ℚ) n
+  Hypercohomology X (singularCochainSheafComplexInt X ℚ) n
 
 /-- Rational constant-sheaf cohomology is canonically equivalent to the hypercohomology of its
 singular-cochain resolution. -/
 def rationalCohomologySingularCochainEquiv
-    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
-    FieldCohomology ℚ structureMap n ≃
-      RationalSingularCochainHypercohomology structureMap n :=
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    FieldCohomology ℚ X n ≃
+      RationalSingularCochainHypercohomology X n :=
   Localization.SmallShiftedHom.postcompEquiv
-    (rationalToSingularCochainComplexInt structureMap)
-    (rationalToSingularCochainComplexInt_quasiIso structureMap)
+    (rationalToSingularCochainComplexInt X)
+    (rationalToSingularCochainComplexInt_quasiIso X)
 
 /-- The comparison equivalence is the map on hypercohomology induced by the canonical
 constant-to-singular-cochain morphism. -/
 lemma rationalCohomologySingularCochainEquiv_apply
-    [IsIntegral X] [Smooth structureMap] (n : ℤ)
-    (α : FieldCohomology ℚ structureMap n) :
-    rationalCohomologySingularCochainEquiv structureMap n α =
-      hypercohomologyMap structureMap
-        (rationalToSingularCochainComplexInt structureMap) n α :=
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
+    (α : FieldCohomology ℚ X n) :
+    rationalCohomologySingularCochainEquiv X n α =
+      hypercohomologyMap X
+        (rationalToSingularCochainComplexInt X) n α :=
   rfl
 
 /-- The rational constant-to-singular comparison is additive. -/
 def rationalCohomologySingularCochainAddEquiv
-    [IsIntegral X] [Smooth structureMap] (n : ℤ) :
-    FieldCohomology ℚ structureMap n ≃+
-      RationalSingularCochainHypercohomology structureMap n where
-  toEquiv := rationalCohomologySingularCochainEquiv structureMap n
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    FieldCohomology ℚ X n ≃+
+      RationalSingularCochainHypercohomology X n where
+  toEquiv := rationalCohomologySingularCochainEquiv X n
   map_add' α β :=
-    (hypercohomologyMap structureMap
-      (rationalToSingularCochainComplexInt structureMap) n).map_add α β
+    (hypercohomologyMap X
+      (rationalToSingularCochainComplexInt X) n).map_add α β
 
 @[simp]
 lemma rationalCohomologySingularCochainAddEquiv_apply
-    [IsIntegral X] [Smooth structureMap] (n : ℤ)
-    (α : FieldCohomology ℚ structureMap n) :
-    rationalCohomologySingularCochainAddEquiv structureMap n α =
-      hypercohomologyMap structureMap
-        (rationalToSingularCochainComplexInt structureMap) n α :=
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
+    (α : FieldCohomology ℚ X n) :
+    rationalCohomologySingularCochainAddEquiv X n α =
+      hypercohomologyMap X
+        (rationalToSingularCochainComplexInt X) n α :=
   rfl
 
 end AlgebraicGeometry.ComplexPoint

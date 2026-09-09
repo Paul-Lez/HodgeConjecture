@@ -90,13 +90,14 @@ end AlgebraicGeometry
 
 namespace AlgebraicGeometry.ComplexPoint
 
-/-- The actual immersion image formula with an explicitly identified source structure map. -/
-theorem range_map_of_isImmersion_of_comm {X Y : Scheme}
-    (sX : X ⟶ Spec (.of ℂ)) (sY : Y ⟶ Spec (.of ℂ))
-    (i : Y ⟶ X) (hi : i ≫ sX = sY) [IsImmersion i] [LocallyOfFiniteType sX] :
-    Set.range (Point.map i hi) =
-      (Point.underlying : ComplexPoint X sX → X) ⁻¹' Set.range i := by
-  subst sY
-  exact range_map_of_isImmersion sX i
+/-- The actual immersion image formula, with structure-map compatibility bundled in `i`. -/
+theorem range_map_of_isImmersion_of_comm (X Y : Over (Spec (.of ℂ)))
+    (i : Y ⟶ X) [IsImmersion i.left] [LocallyOfFiniteType X.hom] :
+    Set.range (Point.map i) =
+      (Point.underlying : ComplexPoint X → X.left) ⁻¹' Set.range i.left := by
+  let : LocallyOfFiniteType Y.hom := by
+    rw [← i.w]
+    infer_instance
+  exact range_map_of_isImmersion X i
 
 end AlgebraicGeometry.ComplexPoint

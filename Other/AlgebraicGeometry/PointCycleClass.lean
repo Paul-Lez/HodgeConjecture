@@ -52,7 +52,7 @@ previous point coclass construction. -/
 geometric variety as input and uses its constructed complex-oriented point classes. -/
 def pointCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) :
     CodimensionCycle V.scheme V.dimension →+
-      FieldCohomology ℚ V.structureMap (2 * (V.dimension : ℤ)) :=
+      FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)) :=
   cycleClassOnCyclesOfComponents (maximalCodimensionComponentClass V)
 
 /-- An individual point with multiplicity `n` has exactly `n` times its normalized coclass. -/
@@ -80,8 +80,8 @@ lemma pointCycleClassOnCycles_single_eq_forgetSupport_pointCoclass
     (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
     (hx : coheight x = V.dimension) (n : ℤ) :
     pointCycleClassOnCycles V (CodimensionCycle.single x hx n) =
-      n • forgetSupport V.structureMap
-        (cycleComponentSupport V.structureMap x) (2 * (V.dimension : ℤ))
+      n • forgetSupport V.over
+        (cycleComponentSupport V.over x) (2 * (V.dimension : ℤ))
         ((auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
           V x hx).supportedComparison.symm (maximalCodimensionSupportedGenerator V x hx)) := by
   rw [pointCycleClassOnCycles_single,
@@ -112,7 +112,7 @@ coefficients. Its second argument is an integral cycle, not a Chow class. -/
 def pointCycleClassRationalExtensionBilinear
     (V : DimensionedSmoothProjectiveComplexVariety) :
     ℚ →ₗ[ℚ] CodimensionCycle V.scheme V.dimension →ₗ[ℤ]
-      FieldCohomology ℚ V.structureMap (2 * (V.dimension : ℤ)) where
+      FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)) where
   toFun q := q • (pointCycleClassOnCycles V).toIntLinearMap
   map_add' _ _ := by
     ext
@@ -126,7 +126,7 @@ represented by `ℚ ⊗[ℤ] CodimensionCycle V.scheme V.dimension`. No rational
 quotient is taken here. -/
 def rationalPointCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) :
     TensorProduct ℤ ℚ (CodimensionCycle V.scheme V.dimension) →ₗ[ℚ]
-      FieldCohomology ℚ V.structureMap (2 * (V.dimension : ℤ)) :=
+      FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)) :=
   TensorProduct.AlgebraTensorModule.lift (pointCycleClassRationalExtensionBilinear V)
 
 /-- Rational extension agrees with the integral class map on pure tensors. -/

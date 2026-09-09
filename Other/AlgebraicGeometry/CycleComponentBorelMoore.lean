@@ -46,8 +46,7 @@ open AlgebraicTopology.Singular
 /-- The analytic space underlying the reduced closure of one point of a projective variety. -/
 abbrev CycleComponentAnalyticPoint
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) :=
-  ComplexPoint (cycleComponent V.scheme x)
-    (cycleComponentι V.scheme x ≫ V.structureMap)
+  ComplexPoint (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
 
 noncomputable local instance cycleComponentAnalyticTopology
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
@@ -65,7 +64,7 @@ analytic locus. -/
 abbrev IntegralCycleComponentLocalOrientation
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ) :=
   ∀ (z : CycleComponentAnalyticPoint V x),
-    z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x →
+    z ∈ cycleComponentSmoothAnalyticLocus V.over x →
       IntegralRelativeHomology (pointComplementPair z) n
 
 /-- The local value of an integral Borel--Moore class of a compact cycle component. -/
@@ -83,7 +82,7 @@ def IsIntegralCycleComponentBorelMooreFundamentalClass
     (orientation : IntegralCycleComponentLocalOrientation V x n)
     (c : IntegralCycleComponentBorelMooreHomology V x n) : Prop :=
   ∀ (z : CycleComponentAnalyticPoint V x)
-      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x),
+      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
     integralCycleComponentBorelMooreToLocal V x n z c = orientation z hz
 
 /-- The uniquely normalized integral Borel--Moore fundamental class of a projective cycle
@@ -142,7 +141,7 @@ abbrev CycleComponentLocalOrientation
     (R : Type) [Field R] (V : SmoothProjectiveComplexVariety)
     (x : V.scheme) (n : ℕ) :=
   ∀ (z : CycleComponentAnalyticPoint V x),
-    z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x →
+    z ∈ cycleComponentSmoothAnalyticLocus V.over x →
       RelativeHomology R (pointComplementPair z) n
 
 /-- The local value of a Borel--Moore class of a compact cycle component. -/
@@ -161,7 +160,7 @@ def IsCycleComponentBorelMooreFundamentalClass
     (orientation : CycleComponentLocalOrientation R V x n)
     (c : CycleComponentBorelMooreHomology R V x n) : Prop :=
   ∀ (z : CycleComponentAnalyticPoint V x)
-      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x),
+      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
     cycleComponentBorelMooreToLocal R V x n z c = orientation z hz
 
 /-- The Borel--Moore fundamental class of a projective cycle component, selected after the
@@ -203,7 +202,7 @@ lemma cycleComponentBorelMooreToLocal_fundamentalClass
     (orientation : CycleComponentLocalOrientation R V x n)
     (h : ∃! c, IsCycleComponentBorelMooreFundamentalClass R V x n orientation c)
     (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x) :
+    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     cycleComponentBorelMooreToLocal R V x n z
         (cycleComponentBorelMooreFundamentalClass R V x n orientation h) =
       orientation z hz :=
@@ -221,7 +220,7 @@ lemma cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension
   have hdim : Order.krullDim (cycleComponent V.scheme x) = 0 := by
     simpa using orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
       (f := V.structureMap) (d := d) x hx
-  let : Subsingleton (cycleComponent V.scheme x) := by
+  let hcomponent : Subsingleton (cycleComponent V.scheme x) := by
     constructor
     intro a b
     have hallMin : ∀ q : cycleComponent V.scheme x, IsMin q :=
@@ -235,8 +234,16 @@ lemma cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension
     rw [inseparable_iff_specializes_and, ← Scheme.le_iff_specializes,
       ← Scheme.le_iff_specializes]
     exact ⟨hba, hab⟩
+  let : Subsingleton (Over.mk
+      (cycleComponentι V.over.left x ≫ V.over.hom)).left := by
+    change Subsingleton (cycleComponent V.scheme x)
+    exact hcomponent
   constructor
   intro a b
+  let : LocallyOfFiniteType
+      (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom)).hom :=
+    inferInstanceAs (LocallyOfFiniteType
+      (cycleComponentι V.over.left x ≫ V.over.hom))
   apply ComplexPoint.underlying_injective_of_locallyOfFiniteType
   exact Subsingleton.elim a.underlying b.underlying
 
@@ -255,7 +262,7 @@ theorem existsUnique_cycleComponentBorelMooreFundamentalClass_of_coheight_eq_dim
     Point.analyticTopology
   let : Subsingleton (CycleComponentAnalyticPoint V x) :=
     cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension V x d hx
-  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint V.structureMap x
+  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint V.over x
   let orientation := cycleComponentComplexLocalOrientation V x d d hx
   let e := compactificationBorelMooreToLocalEquivOfSubsingleton ℚ z (2 * (d - d))
   let c : CycleComponentBorelMooreHomology ℚ V x (2 * (d - d)) :=
@@ -317,7 +324,7 @@ theorem span_localOrientation_eq_top
     [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
     (D : RationalCycleComponentBorelMooreData V x d p hx)
     (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x) :
+    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     Submodule.span ℚ {D.localOrientation z hz} = ⊤ :=
   span_cycleComponentComplexLocalOrientation_eq_top V x d p hx z hz
 
@@ -361,7 +368,7 @@ lemma toLocal_fundamentalClass
     [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
     (D : RationalCycleComponentBorelMooreData V x d p hx)
     (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x) :
+    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     cycleComponentBorelMooreToLocal ℚ V x (2 * (d - p)) z D.fundamentalClass =
       D.localOrientation z hz :=
   D.fundamentalClass_isFundamental z hz
