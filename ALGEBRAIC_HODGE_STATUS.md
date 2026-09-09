@@ -62,6 +62,11 @@ additional axioms or assumed comparison maps:
   `2πi • fieldToDeRhamCohomology (rationalExponentialClass α) = logarithmicClass α`
   and consequently proves `rationalExponentialClass_isHodge` in degree two.
 
+- `HolomorphicTransitionClass.lean` constructs actual classes from a holomorphic
+  transition unit on the intersection of a two-open analytic cover, using the
+  actual Mayer–Vietoris extension and explicit sheaf/Ext/hypercohomology
+  comparisons. Their rational images are proved Hodge; the trivial transition
+  gives zero. No algebraic cycle comparison is assumed or asserted.
 - `HolomorphicZeroForms.lean` identifies the actual analytic quotient in degree
   zero with holomorphic functions, including the sheaf isomorphism.
 - `FirstHodgeObstruction.lean` constructs the short exact sequence
@@ -124,13 +129,19 @@ rings, and their shared explicit point proves irreducibility. Thus the displayed
 curve is smooth, integral, projective, and nonempty, and its actual self-product
 is smooth, integral, proper, and of relative dimension two.
 
+`ExplicitProjectiveSpaceChart.lean` and `ExplicitSegreCharts.lean` construct
+standard projective charts in arbitrary finite coordinate dimension and actual
+Segre closed immersions on product charts. Their kernels are exactly the ideals
+of matrix minors, and the overlap-open formula is proved. The global gluing
+and resulting projective presentation are not yet established.
+
 The self-product's explicit projective presentation and the cohomology/filtration
 computation needed for the non-Hodge example remain to be established. A non-Hodge
 class has not yet been constructed.
 
 ## Verification
 
-- `lake build` succeeds for both default library targets (4720 jobs).
+- `lake build` succeeds for both default library targets (4732 jobs).
 - The new cohomological theorems were checked with `#print axioms`; they use only
   `propext`, `Classical.choice`, and `Quot.sound`.
 - No `sorry`, `admit`, new axioms, or unsafe declarations were added.

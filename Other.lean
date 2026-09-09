@@ -325,3 +325,8 @@ import Other.AlgebraicGeometry.HypercohomologyExact
 import Other.AlgebraicGeometry.FirstHodgeObstruction
 import Other.AlgebraicGeometry.ExponentialClassImage
 import Other.AlgebraicGeometry.ExplicitEllipticSurface
+import Other.AlgebraicGeometry.AnalyticSheafSections
+import Other.AlgebraicGeometry.SheafExtHypercohomology
+import Other.AlgebraicGeometry.HolomorphicTransitionClass
+import Other.AlgebraicGeometry.ExplicitProjectiveSpaceChart
+import Other.AlgebraicGeometry.ExplicitSegreCharts
