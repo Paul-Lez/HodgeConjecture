@@ -69,6 +69,9 @@ public import Other.AlgebraicGeometry.DerivedSupportRationalComparison
 public import Other.AlgebraicGeometry.DerivedSupportRationalConeComparison
 public import Other.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
 public import Other.AlgebraicGeometry.HodgeCodimensionZero
+public import Other.AlgebraicGeometry.AlgebraicHodgeClasses
+public import Other.AlgebraicGeometry.NonHodgeClass
+public import Other.AlgebraicGeometry.ExplicitEllipticCandidate
 public import Other.AlgebraicGeometry.PrincipalDivisorCycleClass
 public import Other.AlgebraicGeometry.PrincipalDivisorDegreeReduction
 public import Other.AlgebraicGeometry.ProjectiveAnalytification
