@@ -1,265 +1,235 @@
 # Algebraic and non-Hodge classes
 
-This worktree starts from freshly fetched `origin/main` at
-`5c22fd9f08a3f19c9c44f23109dbaaea5c09057f`.
+## Current status
 
-## Handoff status
+**Neither requested final result is proved:** the inclusion of all rational
+algebraic cycle classes in Hodge classes, and a rational non-Hodge class in the
+actual cohomology of an explicit smooth projective variety. All filtrations here
+are the repository's actual analytic de Rham filtrations. The branch contains
+proved prerequisites and reductions, without admitting the missing conclusions.
 
-Work stopped at the user's request to open a handoff PR. **Neither requested
-final result is proved:** the general inclusion of algebraic classes in Hodge
-classes, and a rational non-Hodge class in the actual cohomology of an explicitly
-constructed variety. The results below are completed prerequisites and reductions,
-with no admitted proofs of the missing statements. The Hodge filtration used is
-the repository's actual analytic de Rham filtration of a scheme, not an
-independently supplied abstract Hodge structure.
+Current upstream `origin/main` at `023570e` has been merged in local commit
+`4c93fdb`, including the `CategoryTheory.Over` refactor and the Verso guide.
+The 21 PR modules requiring API changes now use `Over (Spec ℂ)`, with hypotheses
+on `X.left` and `X.hom`. The original scheme definitions, cycle-class maps, and
+theorem names are retained. `curveVariety` and `surfaceVariety` now package the
+explicit schemes as objects of `Over`, with integrality, projectivity, and
+smoothness instances. The branch is `codex/algebraic-and-non-hodge-classes`.
 
-The branch is `codex/algebraic-and-non-hodge-classes`, in the separate worktree
-`/tmp/hodge-algebraic-and-non-hodge-classes`. Its original upstream base was current
-when work began. At handoff, fetched `origin/main` is
-`2f3eb1af5ace261df369f390ac55a216c5964329`; this includes the `CategoryTheory.Over`
-refactor in PR #4 and the Verso guide in PR #6. This branch has **not** been rebased
-or merged onto those changes. Its successful build applies to its own checkout
-and original API, not to a merge with the newer main branch. Porting the new
-modules from separate scheme/structure-map arguments to the current `Over (Spec ℂ)`
-API is the first integration task.
+## Algebraic cycle classes
 
-## Algebraic classes
-
-`Other/AlgebraicGeometry/AlgebraicHodgeClasses.lean` records the general assertion as
+`AlgebraicHodgeClasses.lean` defines the unproved proposition
 `AlgebraicGeometry.ComplexPoint.AlgebraicClassesAreHodge`:
 
 ```lean
-∀ {X : Scheme} [IsIntegral X] (s : X ⟶ Spec ↧ℂ)
-    [Smooth s] [IsProjective s] (p : ℕ),
-  algebraicCycleClassSpan s p ≤ Hdg^p(ℚ; s)
+∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom] (p : ℕ),
+  algebraicCycleClassSpan X p ≤ Hdg^p(ℚ; X)
 ```
 
-This proposition is **not proved in arbitrary codimension**. The file proves:
+The file proves that the image of the actual rational cycle-class map is exactly
+`algebraicCycleClassSpan`, including arbitrary rational combinations. The inclusion
+holds in codimension zero and above the dimension, hence in every codimension
+on a zero-dimensional variety. General inclusion is equivalent to filtered de
+Rham lifts of the existing component classes; such lifts give a linear map into
+the Hodge subspace whose underlying map is the existing cycle-class map.
 
-- The image of the actual rational cycle-class map is exactly
-  `algebraicCycleClassSpan`, including arbitrary rational combinations.
-- The inclusion holds in codimension zero and above the dimension, hence in every
-  codimension on a zero-dimensional variety.
-- The general inclusion is equivalent to existence of filtered de Rham lifts for
-  the actual constructed component classes. Those lifts give a rational linear
-  map into the Hodge subspace whose underlying map is the existing cycle-class map.
-
-The remaining geometric step is to construct, for each codimension-`p` component
-`x`, an element `β : FilteredDeRhamHypercohomology s p (2 * (p : ℤ))` satisfying
+The remaining geometric theorem must construct, for every codimension-`p`
+component `x` with `hx : coheight x = p`, a class
+`β : FilteredDeRhamHypercohomology X p (2 * (p : ℤ))` satisfying:
 
 ```lean
-filteredToDeRhamCohomology s p (2 * (p : ℤ)) β =
-  fieldToDeRhamCohomology ℚ s (2 * (p : ℤ))
-    (cycleComponentSheafClass s x (d := dim X) hx)
+filteredToDeRhamCohomology X p (2 * (p : ℤ)) β =
+  fieldToDeRhamCohomology ℚ X (2 * (p : ℤ))
+    (cycleComponentSheafClass X x (d := dim X.left) hx)
 ```
 
-Upstream constructs the right-hand class using topological normal coclasses and
-extension across the singular locus. It does not yet provide the filtered
-holomorphic de Rham comparison needed for this equation. The classical argument
-uses the integration current of a complex subvariety and its Hodge type `(p,p)`;
-see [Deligne, *The Hodge Conjecture*, §§1 and 3](https://www.claymath.org/wp-content/uploads/2022/06/hodge.pdf).
-Implementing that route also requires comparing it with the existing normalized
-class and with the repository's holomorphic de Rham hypercohomology.
+The right-hand class uses normalized topological normal coclasses and extension
+across the singular locus. Its identification with a filtered holomorphic de
+Rham fundamental class remains missing. Products of divisor classes alone do
+not cover all algebraic cycles.
 
-The following analytic prerequisites are now proved and constructed, without
-additional axioms or assumed comparison maps:
+### Completed exponential comparison
 
-- `Other/Algebra/DeRham/Logarithmic.lean` constructs logarithmic forms in every
-  degree, proves they are closed, and proves `dlog(uv) = dlog(u) + dlog(v)`.
-- `HolomorphicLogarithmicForms.lean` constructs logarithmic forms on the actual
-  analytic variety and the `dlog` morphism of sheaves and cochain complexes.
-- `FilteredLogarithmicClass.lean` factors that morphism through the actual
-  first filtered de Rham complex and constructs filtered logarithmic classes.
-- `HolomorphicExponential.lean`, `HolomorphicLocalLogarithm.lean`, and
-  `HolomorphicExponentialSequence.lean` construct the holomorphic exponential,
-  prove `dlog(exp f) = df` using actual chart derivatives, construct local
-  logarithm branches, and prove the actual sequence
-  `0 → ℤ → O → Oˣ → 0` short exact, with integer map `n ↦ 2πi n`.
-- `HolomorphicExponentialResolution.lean` constructs its two-term resolution,
-  proves the augmentation a quasi-isomorphism, and constructs integral and
-  rational exponential classes in actual analytic cohomology.
-- `ExponentialClassHodge.lean` proves the precise comparison
-  `2πi • fieldToDeRhamCohomology (rationalExponentialClass α) = logarithmicClass α`
-  and consequently proves `rationalExponentialClass_isHodge` in degree two.
+The logarithmic and exponential modules construct actual analytic classes:
+closed logarithmic forms, their factorization through the first filtered de
+Rham complex, local logarithms, and the short exact sequence
+`0 → ℤ → O → Oˣ → 0` with integer map `n ↦ 2πi n`.
+`HolomorphicExponentialResolution.lean` constructs its two-term resolution.
+`ExponentialClassHodge.lean` proves the normalized logarithmic comparison and
+degree-two Hodge membership for its rational classes.
 
-- `HolomorphicTransitionClass.lean` constructs actual classes from a holomorphic
-  transition unit on the intersection of a two-open analytic cover, using the
-  actual Mayer–Vietoris extension and explicit sheaf/Ext/hypercohomology
-  comparisons. Their rational images are proved Hodge; the trivial transition
-  gives zero. No algebraic cycle comparison is assumed or asserted.
-- `AnalyticTransitionCoboundary.lean` proves that changing local trivializations
-  preserves the units, integral, and rational transition classes. It also proves
-  that the units class vanishes exactly when actual units on the two opens
-  trivialize the transition function, without assuming an acyclic cover.
-- `HolomorphicUnitObstruction.lean` constructs the actual degree-one integral
-  sheaf cohomology class of a holomorphic unit on any analytic open. It vanishes
-  exactly when a holomorphic logarithm exists there. A closed analytic loop on
-  which the unit makes one exponential turn proves that this class is nonzero.
-  This is a local prerequisite, not the requested global non-Hodge class.
-- `HolomorphicLogarithmTransition.lean` proves the exact comparison between the
-  integer Mayer–Vietoris cocycle of actual logarithm branches and the actual
-  exponential obstruction, retaining the displayed `2πi` period map.
-- `ShortExactComparisonCochain.lean` supplies an explicit cochain and proves the
-  sign of the connecting-map comparison in the homotopy and derived categories.
-  The library's mapping-cone triangle uses `-fst`; the proof accounts for this
-  convention rather than assuming a comparison identity.
-- `HolomorphicZeroForms.lean` identifies the actual analytic quotient in degree
-  zero with holomorphic functions, including the sheaf isomorphism.
-- `FirstHodgeObstruction.lean` constructs the short exact sequence
-  `0 → F¹Ω• → Ω• → O[0] → 0` and proves that a rational degree-two class is
-  Hodge exactly when its image in actual holomorphic-function cohomology vanishes.
-- `ExponentialClassImage.lean` proves the converse for integral classes:
-  `integralClass_isHodge_iff_exponential` identifies integral classes whose
-  rational images are Hodge with the image of the actual exponential class map.
-  The exactness needed here is proved for the repository's hypercohomology model
-  in `HypercohomologyExact.lean`.
+The bounded comparison step identified in PR #8 is now completed:
 
-These results establish Hodge membership for the actual exponential classes.
-They do **not yet identify an algebraic component class with an exponential
-class**, and they do not prove the requested inclusion in arbitrary codimension.
+1. `Other/Algebra/Homology/ShortExactComparisonExt.lean` cancels the actual cone
+   quasi-isomorphism and proves `comparisonTriangle_derived`,
+   `comparisonExt_hom`, and `comparisonExt`.
+2. `ExponentialConnectingComparison.lean` specializes to the actual exponential
+   sequence, proves `exponentialComparisonKernel_normalization`, and transports
+   the connecting morphism through Ext/hypercohomology.
+   `rationalExponentialConnectingClass_scaled_deRham` retains the `2πi` factor.
+3. `ExponentialConnectingResolution.lean` proves
+   `rationalExponentialConnectingClass_eq_neg` in every Ext degree: the rational
+   connecting class is the negative of the **existing** resolution class after
+   the established placement-degree equivalence. The mapping-cone convention
+   forces the minus sign. `rationalExponentialConnectingClass_isHodge` proves
+   degree-two Hodge membership.
 
-## Non-Hodge classes on an explicit variety
+These comparisons do **not** identify a divisor's existing topological component
+class with its exponential class. That identification and the general filtered
+fundamental-class comparison remain unproved.
 
-`Other/AlgebraicGeometry/NonHodgeClass.lean` proves the following criterion using
-the actual analytic cohomology and Hodge filtration of a scheme:
+### Existing obstruction and transition results
+
+`HolomorphicTransitionClass.lean` constructs classes from actual two-open
+transition units. `AnalyticTransitionCoboundary.lean` proves invariance under
+changes of trivialization and characterizes vanishing by actual trivializing
+units, without assuming an acyclic cover. `HolomorphicUnitObstruction.lean`
+characterizes existence of a holomorphic logarithm by vanishing of an integral
+cohomology class; an appropriate exponential-turn loop proves nonvanishing.
+`HolomorphicLogarithmTransition.lean` identifies the integer transition cocycle
+with this obstruction.
+
+`HolomorphicZeroForms.lean` identifies the analytic degree-zero quotient with
+holomorphic functions. `FirstHodgeObstruction.lean` constructs
+`0 → F¹Ω• → Ω• → O[0] → 0` and proves `isHodgeClass_one_iff`: a rational
+degree-two class is Hodge exactly when its actual `H²(O)` obstruction vanishes.
+`ExponentialClassImage.lean` proves `integralClass_isHodge_iff_exponential`, using
+the exactness established in `HypercohomologyExact.lean`.
+
+## The explicit elliptic curve and surface
+
+The actual schemes are `E: Y²Z = X³ − XZ²` and its scheme-theoretic self-product
+`S = E ×ℂ E`. The cubic has discriminant `64`. The original chart, integrality,
+smoothness, and Segre modules establish:
+
+- The Y and Z affine opens cover E; their actual section rings are the
+  dehomogenized polynomial quotients.
+- E and S are integral and smooth of relative dimensions one and two.
+- The actual Segre map embeds S as a closed subscheme of projective eight-space,
+  providing `surface_isProjective`.
+- `ExplicitEllipticDifferentials.lean` constructs nonzero Kähler differentials
+  on both actual curve chart rings, using explicit Bézout coefficients and a
+  descended Hamiltonian derivation.
+
+### Completed regular and holomorphic form constructions
+
+- `ExplicitEllipticDifferentialOverlap.lean` proves the actual coordinate
+  restriction formulas and `curveDifferential_overlap_on` on every common open.
+- `Other/Algebra/DeRham/Kaehler.lean` constructs the map from Kähler differentials
+  to degree-one algebraic de Rham forms. `KaehlerWedge.lean` constructs a
+  bilinear wedge into degree two from the two Kähler quotient presentations.
+  Both maps have proved generator formulas and naturality.
+- `RegularHolomorphicForms.lean` proves regular section evaluation holomorphic
+  in the canonical analytic charts. Its algebra homomorphism and regular-form
+  comparison commute with restrictions and de Rham differentials.
+- `ExplicitEllipticHolomorphicDifferentials.lean` glues the evaluated curve forms
+  **after sheafification**, constructing `curveGlobalHolomorphicDifferential`
+  in the actual holomorphic de Rham sheaf with both chart formulas.
+- `HolomorphicFormSheafification.lean` proves that the analytic relations equal
+  the chart-evaluation kernel and that `holomorphicDeRham_toSheafify_injective`
+  holds on every analytic open and in every degree.
+- `ExplicitEllipticInfinityCoordinates.lean` proves the two actual Y-chart
+  coordinate values at infinity are zero. `ExplicitEllipticAnalyticNonvanishing.lean`
+  differentiates the actual cubic to get `dv = 0`; smoothness and generation of
+  the affine section ring give `du ≠ 0`. Evaluating the form gives `−du`, proving
+  `curveGlobalHolomorphicDifferential_ne_zero`.
+- `RegularSectionPullback.lean` and `ExplicitEllipticSurfacePullback.lean`
+  construct actual section and Kähler differential pullbacks over the complex
+  base, with restriction and chart-overlap compatibility.
+- `ExplicitEllipticSurfaceDifferential.lean` constructs the two pulled-back
+  elliptic forms' wedge on all four product charts, proves compatibility, and
+  glues `surfaceGlobalHolomorphicTwoForm` in the actual holomorphic two-form
+  sheaf, with every product-chart formula proved.
+- `ExplicitEllipticSurfaceCoordinateRing.lean` proves the Y product chart affine
+  and its actual section ring generated by the four projection-pulled
+  coordinates, using the affine pullback's pushout of section rings.
+- `ExplicitEllipticSurfaceInfinity.lean` constructs the actual complex point
+  `(∞,∞)` and proves all four coordinate values are zero there.
+  `RegularDerivativeRank.lean` proves that derivatives of actual affine ring
+  generators separate tangent vectors. `ExplicitEllipticSurfaceNonvanishing.lean`
+  uses both cubic equations and the four-generator presentation to prove
+  `du₁ ∧ du₂ ≠ 0` at this point.
+- `RegularHolomorphicFormEvaluation.lean` compares actual quotient-form
+  evaluation with the determinant of the regular functions' analytic
+  derivatives. `ExplicitEllipticSurfaceFormEvaluation.lean` evaluates the actual
+  local surface form as `du₁ ∧ du₂`, proves it remains nonzero after
+  sheafification, and proves `surfaceGlobalHolomorphicTwoForm_ne_zero`.
+- `TopHodgeFilteredClass.lean` identifies global top forms with the top-degree
+  hypercohomology of the highest filtered complex, preserving zero and
+  nonvanishing. `ExplicitEllipticSurfaceFilteredClass.lean` constructs
+  `surfaceTopFilteredClass : FilteredDeRhamHypercohomology surfaceVariety 2 2`
+  and proves `surfaceTopFilteredClass_ne_zero`. This is nonvanishing in the
+  filtered source group; nonvanishing of its image in full de Rham cohomology
+  is not proved.
+
+### Remaining non-Hodge theorem
+
+`NonHodgeClass.lean` proves:
 
 ```lean
-(∃ α : FieldCohomology ℚ s (2 * (p : ℤ)), ¬ IsHodgeClass ℚ s p α) ↔
-  complexifiedFieldHodgeFiltration ℚ s p (2 * (p : ℤ)) ≠ ⊤
+(∃ α : FieldCohomology ℚ X (2 * (p : ℤ)), ¬ IsHodgeClass ℚ X p α) ↔
+  complexifiedFieldHodgeFiltration ℚ X p (2 * (p : ℤ)) ≠ ⊤
 ```
 
-Its proof uses the fact that rational vectors span their complexification. It
-does not assume a pure Hodge structure on the cohomology, and does not replace
-the variety's filtration with independently chosen linear algebra data.
+Rational vectors span their complexification, proving this criterion without
+assuming independent abstract Hodge data. Properness of the surface's actual
+filtration has **not** been established.
 
-An explicit variety with a **proved proper filtration is still required**.
-The criterion alone is not a counterexample to all classes being Hodge.
+The required continuation is a nonzero obstruction in actual cohomology and a
+rational class detecting that obstruction. Nonzero local or global holomorphic
+forms alone do not prove the cohomological assertion. The final step must apply `exists_not_isHodgeClass_iff`
+to `surfaceVariety` at `p = 1`, or `isHodgeClass_one_iff` to an actual rational
+class with nonzero `H²(O)` obstruction.
 
-`Other/AlgebraicGeometry/ExplicitEllipticCandidate.lean` constructs the projective
-cubic scheme with reduced closed locus `Y²Z = X³ − XZ²`, and its scheme-theoretic
-self-product over `ℂ`. It proves the cubic's projectivity and properness and the
-self-product's properness. The defining cubic is homogeneous of degree three
-and, after changing coefficients to `ℂ`, is exactly the projective polynomial
-of the displayed Weierstrass equation with discriminant `64`.
+In particular, the repository does not yet connect a nonzero holomorphic
+two-form with a nonzero `H²(O)` class by Dolbeault comparison, Hodge symmetry,
+or Serre duality. Neither surjectivity of `firstHodgeObstruction` nor
+surjectivity of `fieldToDeRhamComplexification` in degree two is proved.
+`ProjectiveSingularCoefficientBaseChange.lean` supplies unconditional projective
+coefficient base change only in degree zero; its higher-degree counterpart
+still requires finite-dimensional singular homology. These are additional
+mathematical steps, not consequences of local differential nonvanishing.
 
-The subsequent `ExplicitEllipticCharts.lean`, `ExplicitProjectivePlaneChart.lean`,
-`ExplicitEllipticChartRings.lean`, `ExplicitEllipticIntegrality.lean`, and
-`ExplicitEllipticSmoothness.lean` prove actual scheme geometry:
+A concrete missing target, followed by rational detection, is:
 
-- The `Y ≠ 0` and `Z ≠ 0` opens are affine and cover the cubic; actual complex
-  points are constructed, including the point at infinity and a point in their
-  intersection.
-- Standard projective-plane chart rings are explicitly identified with
-  two-variable polynomial rings; the actual curve charts are identified with
-  the corresponding reduced dehomogenized cubic quotients.
-- Both equations generate prime ideals, and the overlapping integral affine
-  charts prove that the actual projective cubic is integral.
-- A Jacobian argument on those identified charts, respecting their original
-  complex structure maps, proves `SmoothOfRelativeDimension 1 curveToBase`.
-- Base change and composition prove
-  `SmoothOfRelativeDimension 2 surfaceToBase` for the actual self-product.
+```lean
+∃ α : DeRhamHypercohomology surfaceVariety 2,
+  firstHodgeObstruction surfaceVariety 2 α ≠ 0
+```
 
-`ExplicitEllipticSurface.lean` further proves that the actual self-product is
-integral: all four affine product charts have domain tensor-product coordinate
-rings, and their shared explicit point proves irreducibility. Thus the displayed
-curve is smooth, integral, projective, and nonempty, and its actual self-product
-is smooth, integral, proper, and of relative dimension two; its explicit projectivity
-is established below.
-
-`ExplicitProjectiveSpaceChart.lean` and `ExplicitSegreCharts.lean` construct
-standard projective charts in arbitrary finite coordinate dimension and actual
-Segre closed immersions on product charts. Their kernels are exactly the ideals
-of matrix minors, and the overlap-open formula is proved. The global gluing
-is now constructed in `ExplicitProjectiveCoordinates.lean`,
-`ExplicitProjectiveRatioSections.lean`, and `ExplicitSegreMorphism.lean`, with
-coordinate relabeling in `ExplicitProjectiveRelabeling.lean`.
-`ExplicitEllipticSegre.lean` constructs the actual map
-`surfaceSegre : surface ⟶ ProjectiveSpace (Fin 9) base`, proves it is over the
-complex base, and proves its local coordinate formulas. The projection-recovery
-and cancellation results in `ExplicitSegreProjections.lean` and
-`ExplicitSegreCancellation.lean` prove this map is a monomorphism. Its properness
-then proves `surfaceSegre_isClosedImmersion`, and `surface_isProjective` gives
-the explicit projective presentation. `curveVariety` and `surfaceVariety` package
-the actual integral projective complex varieties with proved smooth relative
-dimensions one and two.
-
-`ExplicitEllipticDifferentials.lean` constructs `curveZDifferential` and
-`curveYDifferential` in the Kähler differential modules of the actual rings
-`Γ(curve, chart 2)` and `Γ(curve, chart 1)`. For a hypersurface equation `F` and
-Bézout identity `aF + bF_x + cF_y = 1`, it constructs `ω = c dx − b dy`, proves
-`F_y ω = dx` and `F_x ω = −dy`, and proves that contraction with the descended
-Hamiltonian derivation is one. Explicit coefficients on the cubic's two charts
-therefore prove `curveZDifferential_ne_zero` and `curveYDifferential_ne_zero`.
-These are local regular forms; their agreement on overlaps and their comparison
-with holomorphic forms have not been proved.
-
-The cohomology/filtration computation needed for the non-Hodge example remains
-to be established. A non-Hodge class has not yet been constructed.
-
-## Exact stopping points and continuation
-
-### Algebraic-class comparison
-
-The last completed general comparison is
-`CategoryTheory.ShortComplex.comparisonCone_derived` in
-`Other/Algebra/Homology/ShortExactComparisonCochain.lean`. It constructs an
-explicit cochain and proves the derived connecting-map identity with the minus
-sign imposed by the mapping-cone convention. It has **not** yet been transported
-to an identity for the short exact sequence's `Ext` class, specialized to the
-actual exponential sequence, or used to compare those classes with the existing
-topological cycle classes. A proposed `ShortExactComparisonExt.lean` was not
-created; there is no partial implementation to finish in that file.
-
-The next bounded step is to cancel the quasi-isomorphism
-`mappingCone.descShortComplex` in the derived identity and obtain the corresponding
-`Ext` comparison, preserving the sign. Then specialize it to the exponential
-sequence and transport through the actual Ext/hypercohomology equivalence,
-tracking the `2πi` normalization. This supplies a comparison prerequisite; it
-does not itself prove that a divisor's topological component class is its
-exponential class. That geometric identification still needs a proof, and the
-filtered fundamental-class comparison displayed above remains necessary for
-arbitrary codimension. Products of divisor classes do not cover all algebraic
-cycles.
-
-### Explicit non-Hodge example
-
-The last completed geometric step is the construction and nonvanishing of the
-two local regular differentials. The curve and its self-product already have
-proved smoothness, integrality, and explicit projectivity. Continue as follows:
-
-1. Prove the two differentials agree under actual restriction to the chart
-   overlap, using the coordinate relations `xv = u` and `yv = 1`.
-2. Construct the regular-to-holomorphic comparison using
-   `analyticAt_localChart_symm_evaluate` from
-   `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexManifold.lean` and the actual
-   naturality of section evaluation. Prove that the resulting analytic form is
-   nonzero; algebraic Kähler nonvanishing alone does not imply this comparison.
-   The intended local calculation is at infinity, where the form is `−du` and
-   the equation gives `dv = 0`; the derivative of the actual closed immersion
-   should supply the required nonvanishing argument.
-3. Glue in `holomorphicDeRhamSheaf` **after sheafification** and construct the
-   surface's holomorphic two-form. The raw global `HolomorphicForm` presheaf is
-   generated by global holomorphic functions and is insufficient for this step
-   on the compact curve.
-4. Establish a nonzero obstruction in the actual cohomology and show that a
-   rational class detects it. A nonzero local or global holomorphic form alone
-   is not a proof of this cohomological assertion. No such cohomology comparison,
-   nonvanishing computation, or rational witness has been supplied in this work.
-5. Apply `exists_not_isHodgeClass_iff` to `surfaceToBase` at `p = 1`, once its
-   actual first filtration is proved proper. Alternatively use
-   `isHodgeClass_one_iff` with a rational class whose actual `H²(O)` obstruction
-   is nonzero.
+The holomorphic two-form's own de Rham class lies in `F² ⊆ F¹`, so that class
+cannot itself witness the degree-two non-Hodge obstruction.
 
 ## Verification
 
-- `lake build` passed for both default library targets, `HodgeConjecture` and
-  `Other` (4771 jobs), including the final differential module.
-- `lake env lean checks/AlgebraicHodgeHandoff.lean` passed. This reproducible
-  `#print axioms` audit covers 22 principal reductions, comparisons, constructions,
-  projectivity, and nonvanishing results. Every audited declaration depends only
-  on `propext`, `Classical.choice`, and `Quot.sound`.
-- A keyword scan of all 43 added or modified Lean files found no `sorry`, `admit`,
-  new axioms, or unsafe declarations (the only matches were explanatory uses of
-  the word `axiom` in comments). `git diff --check` passed.
-- These checks were run on this branch before integration with the newer
-  upstream `CategoryTheory.Over` API; they must be rerun after that port.
+The integrated checkout has passed:
+
+- `lake build`: both default libraries, `HodgeConjecture` and `Other`, with
+  **4795 jobs**, including every new proof module.
+- `lake build HodgeGuide`: **4723 jobs**. The guide and its dependencies are
+  unchanged by the subsequent proof additions in `Other`.
+- `lake env lean checks/AlgebraicHodgeHandoff.lean`: **81 declarations**, each
+  depending only on `propext`, `Classical.choice`, and `Quot.sound`.
+- A scan of all **65 changed Lean files** relative to current main found no
+  `sorry`, `admit`, new axiom declarations, or unsafe declarations. The only
+  keyword matches are explanatory comments and the audit's error message.
+- `git diff --check` and `git diff --cached --check`.
+
+Every new module also passed direct compilation without warnings. There are no
+unfinished proof files in this checkpoint. The two final mathematical goals
+remain unproved as described above.
+
+Reproduce the checks with:
+
+```text
+lake build
+lake build HodgeGuide
+lake env lean checks/AlgebraicHodgeHandoff.lean
+git diff --check
+```
+
+The audit now **fails** if a listed declaration transitively depends on an axiom
+other than `propext`, `Classical.choice`, or `Quot.sound`; it no longer merely
+prints dependencies. Its rejection of `sorryAx` was checked with a separate
+untracked negative-control file. No admission of either final theorem is included.
