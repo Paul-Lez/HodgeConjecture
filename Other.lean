@@ -16,6 +16,8 @@ limitations under the License.
 module  -- shake: keep-all --deprecated_module: ignore
 
 public import HodgeConjecture
+public import Other.AlgebraicGeometry.AnalytificationModules
+public import Other.AlgebraicGeometry.AnalyticSheafCohomologyExt
 public import Other.AlgebraicGeometry.CompactlySupportedCohomology
 public import Other.AlgebraicGeometry.ComplexLocalHomologyVanishing
 public import Other.AlgebraicGeometry.ComplexLocalOrientationNeighborhood
@@ -35,6 +37,7 @@ public import Other.Algebra.Homology.MapExtend
 public import Other.Algebra.Homology.MapExtendNaturality
 public import Other.Algebra.Homology.HomComplexPostcompNaturality
 public import Other.CategoryTheory.Abelian.KernelCompositionShortExact
+public import Other.CategoryTheory.Abelian.ExtOneRepresentative
 public import Other.Topology.Category.TopCat.Basic
 public import Other.Algebra.Category.ModuleCat.Presheaf.ExteriorPower
 public import Other.Algebra.DeRham.Complex
@@ -69,6 +72,21 @@ public import Other.AlgebraicGeometry.DerivedSupportRationalComparison
 public import Other.AlgebraicGeometry.DerivedSupportRationalConeComparison
 public import Other.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
 public import Other.AlgebraicGeometry.HodgeCodimensionZero
+public import Other.AlgebraicGeometry.HolomorphicExponential
+public import Other.AlgebraicGeometry.HolomorphicExponentialSequence
+public import Other.AlgebraicGeometry.HolomorphicFirstChernClass
+public import Other.AlgebraicGeometry.HolomorphicHodgeProjection
+public import Other.AlgebraicGeometry.HolomorphicIntegralHodgeClass
+public import Other.AlgebraicGeometry.HolomorphicLineBundleCoordinates
+public import Other.AlgebraicGeometry.HolomorphicLineBundleInvertible
+public import Other.AlgebraicGeometry.HolomorphicLineBundleOfExtension
+public import Other.AlgebraicGeometry.HolomorphicLineBundleSections
+public import Other.AlgebraicGeometry.HolomorphicLineBundleModule
+public import Other.AlgebraicGeometry.HolomorphicLocallyRingedSpace
+public import Other.AlgebraicGeometry.HolomorphicUnitExtension
+public import Other.AlgebraicGeometry.HolomorphicUnitTransition
+public import Other.AlgebraicGeometry.HolomorphicZeroForms
+public import Other.AlgebraicGeometry.LefschetzOneOne
 public import Other.AlgebraicGeometry.PrincipalDivisorCycleClass
 public import Other.AlgebraicGeometry.PrincipalDivisorDegreeReduction
 public import Other.AlgebraicGeometry.ProjectiveAnalytification
@@ -79,6 +97,7 @@ public import Other.AlgebraicGeometry.ProjectiveAnalytificationParacompact
 public import Other.AlgebraicGeometry.ProjectiveAnalytificationSecondCountable
 public import Other.AlgebraicGeometry.ProjectiveSingularCoefficientBaseChange
 public import Other.AlgebraicGeometry.RationalCohomologyZero
+public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicGeometry.SheafBorelMoore
 public import Other.AlgebraicGeometry.ReducedSmoothStratification
 public import Other.AlgebraicGeometry.SingularLocusDimension
@@ -95,6 +114,8 @@ public import Other.AlgebraicGeometry.ClosedImmersionNormalCoordinates
 public import Other.AlgebraicTopology.SplitDerivativeNormalChart
 public import Other.AlgebraicTopology.BoundedBelowFlasqueComplex
 public import Other.AlgebraicTopology.CechNerveEvaluation
+public import Other.AlgebraicTopology.SheafExtensionCocycle
+public import Other.AlgebraicTopology.SheafExtensionLocalLifts
 public import Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
 public import Other.AlgebraicTopology.ChartLocalFundamentalClassInvariance
 public import Other.AlgebraicTopology.ChartNeighborhoodOrientation
@@ -301,3 +322,8 @@ public import Other.Algebra.Homology.MapExtendBettiComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
 public import Other.AlgebraicGeometry.ComplexSupportedOrdinaryComparison
 public import Other.AlgebraicGeometry.CycleComponentPointOrdinarySign
+public import Other.TauCeti.SheafOfModules.Free
+public import Other.TauCeti.SheafOfModules.Invertible
+public import Other.TauCeti.SheafOfModules.LocalTriviality
+public import Other.LinearAlgebra.RationalDenominators
+public import Other.Algebra.Homology.RationalCochainDenominators

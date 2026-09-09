@@ -116,6 +116,23 @@ theorem cycleComponentSheafClass_mem_algebraicCycleClassSpan
     exact le_iSup_of_le x (le_iSup_of_le hx le_rfl)
   exact hle (Submodule.subset_span (Set.mem_singleton _))
 
+set_option backward.isDefEq.respectTransparency false in
+/-- Every class in the algebraic cycle-class span is the class of an actual rational cycle.
+The canonical dimension ensures that the component classes in the span and in the map agree. -/
+theorem algebraicCycleClassSpan_le_range_rationalSheafCycleClassOnCycles
+    {X : Scheme} [IsIntegral X]
+    (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap] [IsProjective structureMap]
+    (p : ℕ) :
+    algebraicCycleClassSpan structureMap p ≤
+      LinearMap.range (rationalSheafCycleClassOnCycles
+        (DimensionedSmoothProjectiveComplexVariety.ofStructureMap structureMap) p) := by
+  refine iSup_le fun x ↦ iSup_le fun hx ↦ Submodule.span_le.mpr ?_
+  intro α hα
+  rcases Set.mem_singleton_iff.mp hα with rfl
+  exact ⟨1 ⊗ₜ[ℤ] CodimensionCycle.single x hx 1, by
+    simp
+    rfl⟩
+
 /-- Every finite rational combination is sent to the corresponding exact
 combination of the constructed ordinary cohomology classes. -/
 theorem rationalSheafCycleClassOnCycles_sum_tmul_single
