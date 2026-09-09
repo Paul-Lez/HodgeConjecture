@@ -910,6 +910,7 @@ lemma constantsToHolomorphicDeRhamComplex_quasiIsoAt_of_lt
   exact holomorphicDeRhamComplex_exactAt_of_lt X d hp
 
 /-- Scalar multiplication on the constant complex-valued complex concentrated in degree zero. -/
+@[implicit_reducible]
 def complexScalarComplex (c : ℂ) :
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
@@ -935,6 +936,7 @@ lemma constantsToHolomorphicDeRhamComplex_scalar
       (Nat.succ_ne_zero p)).eq_of_src
 
 /-- The constant sheaf complex, extended by zero from natural to integer degrees. -/
+@[implicit_reducible]
 def constantComplexSheafComplexInt :
     CochainComplex
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
