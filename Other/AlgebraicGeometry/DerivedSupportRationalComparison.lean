@@ -29,11 +29,11 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 local instance derivedRationalComparisonSheafCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf structureMap)
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 local instance derivedRationalComparisonGroupCategory : HasDerivedCategory AddCommGrpCat :=
   HasDerivedCategory.standard AddCommGrpCat
@@ -42,73 +42,73 @@ local instance derivedRationalComparisonGroupCategory : HasDerivedCategory AddCo
 objects. Its boundedness is inherited from extension of a nonnegative
 resolution, rather than supplied as a new assumption. -/
 def ambientRationalInjectivePlus :
-    CochainComplex.Plus (InjectiveObject (AnalyticAdditiveSheaf structureMap)) := by
+    CochainComplex.Plus (InjectiveObject (AnalyticAdditiveSheaf X)) := by
   let I := HomologicalComplex.liftObjectProperty
-    (Injective : AnalyticAdditiveSheaf structureMap → Prop)
-    (ambientRationalInjectiveComplex structureMap) (fun _ => inferInstance)
+    (Injective : AnalyticAdditiveSheaf X → Prop)
+    (ambientRationalInjectiveComplex X) (fun _ => inferInstance)
   have hI : CochainComplex.IsStrictlyGE I 0 := by
     rw [← CochainComplex.isStrictlyGE_mapHomologicalComplex_obj_iff
-      I (InjectiveObject.ι (AnalyticAdditiveSheaf structureMap))]
-    exact ambientRationalInjectiveComplex_isStrictlyGE structureMap
+      I (InjectiveObject.ι (AnalyticAdditiveSheaf X))]
+    exact ambientRationalInjectiveComplex_isStrictlyGE X
   exact ⟨I, 0, hI⟩
 
 /-- The actual `D⁺` object of the standard ambient injective resolution. -/
 def ambientRationalInjectiveDerivedPlus :
-    DerivedCategory.Plus (AnalyticAdditiveSheaf structureMap) :=
+    DerivedCategory.Plus (AnalyticAdditiveSheaf X) :=
   DerivedCategory.Plus.Qh.obj
-    ((InjectiveObject.ι (AnalyticAdditiveSheaf structureMap)).mapHomotopyCategoryPlus.obj
-      ((HomotopyCategory.Plus.quotient _).obj (ambientRationalInjectivePlus structureMap)))
+    ((InjectiveObject.ι (AnalyticAdditiveSheaf X)).mapHomotopyCategoryPlus.obj
+      ((HomotopyCategory.Plus.quotient _).obj (ambientRationalInjectivePlus X)))
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The augmentation provides the canonical isomorphism from actual constant
 rationals in `D⁺` to their standard injective model. -/
 def constantRationalToInjectiveDerivedPlusIso :
-    (DerivedCategory.Plus.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-      (constantFieldSheaf ℚ structureMap) ≅
-        ambientRationalInjectiveDerivedPlus structureMap :=
+    (DerivedCategory.Plus.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+      (constantFieldSheaf ℚ X) ≅
+        ambientRationalInjectiveDerivedPlus X :=
   DerivedCategory.Plus.ι.preimageIso
-    ((DerivedCategory.singleFunctorIsoCompQ (AnalyticAdditiveSheaf structureMap) 0).app _ ≪≫
-      DerivedCategory.Q.mapIso (constantRationalSheafComplexIntIsoSingleZero structureMap).symm ≪≫
-      asIso (DerivedCategory.Q.map (ambientRationalInjectiveAugmentation structureMap)) ≪≫
-      (DerivedCategory.quotientCompQhIso (AnalyticAdditiveSheaf structureMap)).symm.app _)
+    ((DerivedCategory.singleFunctorIsoCompQ (AnalyticAdditiveSheaf X) 0).app _ ≪≫
+      DerivedCategory.Q.mapIso (constantRationalSheafComplexIntIsoSingleZero X).symm ≪≫
+      asIso (DerivedCategory.Q.map (ambientRationalInjectiveAugmentation X)) ≪≫
+      (DerivedCategory.quotientCompQhIso (AnalyticAdditiveSheaf X)).symm.app _)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The actual derived unit computes supported sections of rational constants
 by the termwise kernel of restriction on the ambient injective resolution. -/
 def derivedRationalSupportInjectiveModelIso
-    (Z : Closeds (TopCat.of (ComplexPoint X structureMap))) :
+    (Z : Closeds (TopCat.of (ComplexPoint X))) :
     DerivedCategory.Plus.ι.obj
       ((TopCat.Sheaf.derivedClosedSupportSections
-        (TopCat.of (ComplexPoint X structureMap)) Z).obj
-        ((DerivedCategory.Plus.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-          (constantFieldSheaf ℚ structureMap))) ≅
+        (TopCat.of (ComplexPoint X)) Z).obj
+        ((DerivedCategory.Plus.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+          (constantFieldSheaf ℚ X))) ≅
     DerivedCategory.Q.obj
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X structureMap)) Z.compl ⊤
-        (ambientRationalInjectiveComplex structureMap)).X₁ :=
+        (TopCat.of (ComplexPoint X)) Z.compl ⊤
+        (ambientRationalInjectiveComplex X)).X₁ :=
   DerivedCategory.Plus.ι.mapIso
     ((TopCat.Sheaf.derivedClosedSupportSections
-      (TopCat.of (ComplexPoint X structureMap)) Z).mapIso
-      (constantRationalToInjectiveDerivedPlusIso structureMap)) ≪≫
+      (TopCat.of (ComplexPoint X)) Z).mapIso
+      (constantRationalToInjectiveDerivedPlusIso X)) ≪≫
     TopCat.Sheaf.derivedClosedSupportInjectiveModelIso
-      (TopCat.of (ComplexPoint X structureMap)) Z (ambientRationalInjectivePlus structureMap)
+      (TopCat.of (ComplexPoint X)) Z (ambientRationalInjectivePlus X)
 
 /-- The actual `D⁺` derived-support group agrees with the repository's rational
 support hypercohomology. This is constructed from the constant augmentation,
 derived unit, and normalized restriction-cone maps. -/
 def derivedRationalSupportAddEquiv
-    (Z : Closeds (TopCat.of (ComplexPoint X structureMap))) (n : ℤ) :
+    (Z : Closeds (TopCat.of (ComplexPoint X))) (n : ℤ) :
     ((DerivedCategory.Plus.homologyFunctor AddCommGrpCat n).obj
       ((TopCat.Sheaf.derivedClosedSupportSections
-        (TopCat.of (ComplexPoint X structureMap)) Z).obj
-        ((DerivedCategory.Plus.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-          (constantFieldSheaf ℚ structureMap)))) ≃+
-      RationalCohomologyWithSupport structureMap Z n :=
+        (TopCat.of (ComplexPoint X)) Z).obj
+        ((DerivedCategory.Plus.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+          (constantFieldSheaf ℚ X)))) ≃+
+      RationalCohomologyWithSupport X Z n :=
   (((DerivedCategory.homologyFunctor AddCommGrpCat n).mapIso
-    (derivedRationalSupportInjectiveModelIso structureMap Z) ≪≫
+    (derivedRationalSupportInjectiveModelIso X Z) ≪≫
       (DerivedCategory.homologyFunctorFactors AddCommGrpCat n).app _).addCommGroupIsoToAddEquiv).trans
-    (rationalSupportAddEquivSupportedInjectiveHomology structureMap Z Z.isClosed n).symm
+    (rationalSupportAddEquivSupportedInjectiveHomology X Z Z.isClosed n).symm
 
 end AlgebraicGeometry.ComplexPoint

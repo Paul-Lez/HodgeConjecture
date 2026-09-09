@@ -34,51 +34,51 @@ open AlgebraicTopology.Singular
 set_option backward.isDefEq.respectTransparency false
 set_option backward.defeqAttrib.useBackward true
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
 noncomputable local instance pointCoclassOrientationComparisonAnalyticTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
-variable [IsProjective structureMap] [SmoothOfRelativeDimension d structureMap]
-  (z : ComplexPoint X structureMap)
+variable [IsProjective X.hom] [SmoothOfRelativeDimension d X.hom]
+  (z : ComplexPoint X)
 
-omit [IsProjective structureMap] in
+omit [IsProjective X.hom] in
 /-- The old point-local class and the local class used by the sheaf orientation are identical. -/
 lemma analyticPointLocalHomologyClass_eq_complexLocalOrientation :
-    analyticPointLocalHomologyClass structureMap d z =
-      complexLocalOrientation structureMap d z := rfl
+    analyticPointLocalHomologyClass X d z =
+      complexLocalOrientation X d z := rfl
 
 /-- The old point coclass evaluates to exactly `1` on the new orientation's local class. -/
 @[simp]
 lemma analyticPointLocalCoclass_apply_complexLocalOrientation :
-    analyticPointLocalCoclass structureMap d z
-      (complexLocalOrientation structureMap d z) = 1 :=
-  analyticPointLocalCoclass_apply_localClass structureMap d z
+    analyticPointLocalCoclass X d z
+      (complexLocalOrientation X d z) = 1 :=
+  analyticPointLocalCoclass_apply_localClass X d z
 
 /-- The coefficient is preserved exactly, not just up to a nonzero factor. -/
 @[simp]
 lemma analyticPointLocalCoclass_apply_smul_complexLocalOrientation (q : ℚ) :
-    analyticPointLocalCoclass structureMap d z
-      (q • complexLocalOrientation structureMap d z) = q := by
+    analyticPointLocalCoclass X d z
+      (q • complexLocalOrientation X d z) = q := by
   rw [map_smul, analyticPointLocalCoclass_apply_complexLocalOrientation]
   exact mul_one q
 
 /-- In the explicitly point-supported group, evaluation on the exact orientation determines
 the coclass. This uniqueness lemma constructs no new general duality equivalence. -/
 lemma eq_analyticPointLocalCoclass_iff
-    (β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X structureMap)) {z} (2 * d)) :
-    β = analyticPointLocalCoclass structureMap d z ↔
-      β (complexLocalOrientation structureMap d z) = 1 := by
+    (β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) {z} (2 * d)) :
+    β = analyticPointLocalCoclass X d z ↔
+      β (complexLocalOrientation X d z) = 1 := by
   constructor
   · rintro rfl
-    exact analyticPointLocalCoclass_apply_complexLocalOrientation structureMap d z
+    exact analyticPointLocalCoclass_apply_complexLocalOrientation X d z
   · intro hβ
     apply LinearMap.ext
     intro c
     obtain ⟨q, rfl⟩ :=
       (Submodule.span_singleton_eq_top_iff ℚ
-        (complexLocalOrientation structureMap d z)).mp
-          (span_complexLocalOrientation_eq_top structureMap d z) c
+        (complexLocalOrientation X d z)).mp
+          (span_complexLocalOrientation_eq_top X d z) c
     rw [map_smul, hβ, analyticPointLocalCoclass_apply_smul_complexLocalOrientation]
     exact mul_one q
 
@@ -86,18 +86,18 @@ lemma eq_analyticPointLocalCoclass_iff
 on every stalk, with its coefficient map exactly the identity. -/
 @[reassoc]
 lemma complexOrientationHomologySheafIso_stalk_pointCoclass :
-    (TopCat.Sheaf.constantSheafStalkIso (X := TopCat.of (ComplexPoint X structureMap))
+    (TopCat.Sheaf.constantSheafStalkIso (X := TopCat.of (ComplexPoint X))
       (AddCommGrpCat.of ℚ) z).hom ≫
       (TopCat.Presheaf.stalkFunctor AddCommGrpCat z).map
-        (complexOrientationHomologySheafIso structureMap d).hom.hom ≫
-      (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X structureMap))
+        (complexOrientationHomologySheafIso X d).hom.hom ≫
+      (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X))
         z (2 * d)).hom ≫
       AddCommGrpCat.ofHom
-        (analyticPointLocalCoclass structureMap d z).toAddMonoidHom =
+        (analyticPointLocalCoclass X d z).toAddMonoidHom =
       𝟙 (AddCommGrpCat.of ℚ) := by
   erw [complexOrientationHomologySheafIso_stalk_assoc]
   apply ConcreteCategory.hom_ext
   intro q
-  exact analyticPointLocalCoclass_apply_smul_complexLocalOrientation structureMap d z q
+  exact analyticPointLocalCoclass_apply_smul_complexLocalOrientation X d z q
 
 end AlgebraicGeometry.ComplexPoint

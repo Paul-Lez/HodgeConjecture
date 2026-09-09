@@ -37,44 +37,44 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (s : X ⟶ Spec (.of ℂ))
-  [IsIntegral X] [Smooth s] [IsProjective s]
+variable (X : Over (Spec (.of ℂ)))
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 local instance cycleComponentSheafClassAnalyticTopology :
-    TopologicalSpace (ComplexPoint X s) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- The actual supported injective cohomology sheaf is the sheaf of local
 relative cohomology, by the constructed singular resolution and its literal
 restriction-natural comparison. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
-    (S : Closeds (ComplexPoint X s)) (n : ℕ) :
-    (complexSupportInjectiveComplex s S).homology (n : ℤ) ≅
-      supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X s)) S n := by
-  let : ∀ V : Opens (ComplexPoint X s), ParacompactSpace V := openParacompactSpace s
+    (S : Closeds (ComplexPoint X)) (n : ℕ) :
+    (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
+      supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n := by
+  let : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
   exact (asIso (HomologicalComplex.homologyMap
-    (complexSupportedSingularToAmbientInjective s S.compl) (n : ℤ))).symm ≪≫
+    (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
       supportedSingularCohomologySheafIsoRelative
-        (TopCat.of (ComplexPoint X s)) S S.isClosed n
+        (TopCat.of (ComplexPoint X)) S S.isClosed n
 
-variable (x : X) {d p : ℕ} [SmoothOfRelativeDimension d s]
+variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
   (hx : Order.coheight x = p)
 
 /-- Supported cohomology on the full component is identified with sections
 of the local relative-cohomology sheaf on its smooth-locus ambient open.
 Each of the three arrows is an actual proved isomorphism. -/
 def cycleComponentSupportedClassNormalizationIso :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X s)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex s
-        (cycleComponentAnalyticClosedSupport s x))).homology (2 * (p : ℤ))) ≅
-      (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X s))
-        (cycleComponentSupport s x) (2 * p)).obj.obj
-          (op (cycleComponentSmoothSupportAmbientOpen s x)) := by
-  refine cycleComponentSupportExtensionIso s x (d := d) hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso s x (d := d) hx ≪≫ ?_
-  let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X s))
-      (cycleComponentSmoothSupportAmbientOpen s x)).mapIso
-        (complexSupportInjectiveCohomologySheafIsoRelative s
-          (cycleComponentAnalyticClosedSupport s x) (2 * p))
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+      (.up ℤ)).obj (complexSupportInjectiveComplex X
+        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
+      (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+        (cycleComponentSupport X x) (2 * p)).obj.obj
+          (op (cycleComponentSmoothSupportAmbientOpen X x)) := by
+  refine cycleComponentSupportExtensionIso X x (d := d) hx ≪≫
+    cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := d) hx ≪≫ ?_
+  let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+      (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
+        (complexSupportInjectiveCohomologySheafIsoRelative X
+          (cycleComponentAnalyticClosedSupport X x) (2 * p))
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
   dsimp only [TopCat.Sheaf.supportEvaluation, Functor.comp_obj] at e
   rw [he] at e
@@ -83,68 +83,68 @@ def cycleComponentSupportedClassNormalizationIso :
 /-- The actual globally supported class extending the exact complex-normal
 coclass. The inverse is that of the proved normalization isomorphism. -/
 def cycleComponentSupportedInjectiveClass :
-    (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X s)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex s
-        (cycleComponentAnalyticClosedSupport s x))).homology (2 * (p : ℤ)) :=
-  (cycleComponentSupportedClassNormalizationIso s x (d := d) hx).inv
-    (cycleComponentSmoothSupportCoclassSection s x (d := d) hx)
+    (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+      (.up ℤ)).obj (complexSupportInjectiveComplex X
+        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ)) :=
+  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).inv
+    (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)
 
 /-- Exact smooth-locus normalization, not equality only up to a scalar. -/
 @[simp]
 theorem cycleComponentSupportedInjectiveClass_normalization :
-    (cycleComponentSupportedClassNormalizationIso s x (d := d) hx).hom
-      (cycleComponentSupportedInjectiveClass s x (d := d) hx) =
-    cycleComponentSmoothSupportCoclassSection s x (d := d) hx :=
-  (cycleComponentSupportedClassNormalizationIso s x (d := d) hx).addCommGroupIsoToAddEquiv.apply_symm_apply _
+    (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).hom
+      (cycleComponentSupportedInjectiveClass X x (d := d) hx) =
+    cycleComponentSmoothSupportCoclassSection X x (d := d) hx :=
+  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).addCommGroupIsoToAddEquiv.apply_symm_apply _
 
 /-- The normalized global extension is unique, by injectivity of the actual
 restriction/purity comparison. This is a theorem, not a supplied existence input. -/
 theorem cycleComponentSupportedInjectiveClass_unique
-    (a : (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X s)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex s
-        (cycleComponentAnalyticClosedSupport s x))).homology (2 * (p : ℤ)))
-    (ha : (cycleComponentSupportedClassNormalizationIso s x (d := d) hx).hom a =
-      cycleComponentSmoothSupportCoclassSection s x (d := d) hx) :
-    a = cycleComponentSupportedInjectiveClass s x (d := d) hx := by
-  apply (cycleComponentSupportedClassNormalizationIso s x (d := d) hx).addCommGroupIsoToAddEquiv.injective
-  exact ha.trans (cycleComponentSupportedInjectiveClass_normalization s x (d := d) hx).symm
+    (a : (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+      (.up ℤ)).obj (complexSupportInjectiveComplex X
+        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ)))
+    (ha : (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).hom a =
+      cycleComponentSmoothSupportCoclassSection X x (d := d) hx) :
+    a = cycleComponentSupportedInjectiveClass X x (d := d) hx := by
+  apply (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).addCommGroupIsoToAddEquiv.injective
+  exact ha.trans (cycleComponentSupportedInjectiveClass_normalization X x (d := d) hx).symm
 
 /-- The constructed class in the existing support-cone presentation. Its
 comparison includes the proved cone sign required by actual support forgetting. -/
 def cycleComponentSheafSupportedClass :
-    RationalCohomologyWithSupport s (cycleComponentSupport s x) (2 * (p : ℤ)) :=
-  (rationalSupportAddEquivSupportedInjectiveHomology s (cycleComponentSupport s x)
-    (cycleComponentAnalyticClosedSupport s x).isClosed (2 * (p : ℤ))).symm
-      (cycleComponentSupportedInjectiveClass s x (d := d) hx)
+    RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
+  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
+    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
+      (cycleComponentSupportedInjectiveClass X x (d := d) hx)
 
 /-- The unconditional ordinary class of an arbitrary integral component.
 This uses the literal inclusion of supported injective sections. -/
-def cycleComponentSheafClass : FieldCohomology ℚ s (2 * (p : ℤ)) :=
-  (rationalCohomologyAddEquivAmbientInjectiveHomology s (2 * (p : ℤ))).symm
+def cycleComponentSheafClass : FieldCohomology ℚ X (2 * (p : ℤ)) :=
+  (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
     (HomologicalComplex.homologyMap
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X s)) (cycleComponentAnalyticClosedSupport s x).compl ⊤
-        (ambientRationalInjectiveComplex s)).f (2 * (p : ℤ))
-      (cycleComponentSupportedInjectiveClass s x (d := d) hx))
+        (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
+        (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
+      (cycleComponentSupportedInjectiveClass X x (d := d) hx))
 
 /-- The ordinary class agrees with the repository's support-forgetting map,
 through the constructed, sign-correct support comparison. -/
 theorem cycleComponentSheafClass_eq_forgetSupport :
-    cycleComponentSheafClass s x (d := d) hx =
-      forgetSupport s (cycleComponentSupport s x) (2 * (p : ℤ))
-        (cycleComponentSheafSupportedClass s x (d := d) hx) := by
-  apply (rationalCohomologyAddEquivAmbientInjectiveHomology s (2 * (p : ℤ))).injective
-  rw [rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport s
-    (cycleComponentSupport s x) (cycleComponentAnalyticClosedSupport s x).isClosed]
+    cycleComponentSheafClass X x (d := d) hx =
+      forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
+        (cycleComponentSheafSupportedClass X x (d := d) hx) := by
+  apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).injective
+  rw [rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
+    (cycleComponentSupport X x) (cycleComponentAnalyticClosedSupport X x).isClosed]
   simp only [cycleComponentSheafClass, cycleComponentSheafSupportedClass,
     AddEquiv.apply_symm_apply]
   rfl
 
-include s hx in
-omit [IsIntegral X] [Smooth s] [IsProjective s] in
+include X hx in
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 /-- The actual dimension bound needed for the Borel–Moore degree, not an extra input. -/
 theorem cycleComponentSheafClass_codimension_le : p ≤ d := by
-  have h := SmoothOfRelativeDimension.coheight_le_complex (f := s) (d := d) x
+  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := d) x
   rw [hx] at h
   exact_mod_cast h
 
@@ -152,37 +152,37 @@ theorem cycleComponentSheafClass_codimension_le : p ≤ d := by
 Borel–Moore homology, obtained through the constructed orientation shift.
 It is not an element of a supplied replacement homology group. -/
 def cycleComponentSheafBorelMooreFundamentalClass :
-    ComplexAmbientSheafBorelMooreHomology s d (cycleComponentAnalyticClosedSupport s x)
+    ComplexAmbientSheafBorelMooreHomology X d (cycleComponentAnalyticClosedSupport X x)
       (2 * ((d - p : ℕ) : ℤ)) :=
-  (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport s d
-    (cycleComponentAnalyticClosedSupport s x) p
-    (cycleComponentSheafClass_codimension_le s x (d := d) hx)).symm
-      (cycleComponentSheafSupportedClass s x (d := d) hx)
+  (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X d
+    (cycleComponentAnalyticClosedSupport X x) p
+    (cycleComponentSheafClass_codimension_le X x (d := d) hx)).symm
+      (cycleComponentSheafSupportedClass X x (d := d) hx)
 
 /-- The constructed Alexander–Poincaré map sends the fundamental class to
 the exact normalized supported class, with no comparison hypothesis. -/
 @[simp]
 theorem cycleComponentSheafBorelMooreFundamentalClass_duality :
-    complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport s d
-      (cycleComponentAnalyticClosedSupport s x) p
-      (cycleComponentSheafClass_codimension_le s x (d := d) hx)
-      (cycleComponentSheafBorelMooreFundamentalClass s x (d := d) hx) =
-    cycleComponentSheafSupportedClass s x (d := d) hx :=
+    complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X d
+      (cycleComponentAnalyticClosedSupport X x) p
+      (cycleComponentSheafClass_codimension_le X x (d := d) hx)
+      (cycleComponentSheafBorelMooreFundamentalClass X x (d := d) hx) =
+    cycleComponentSheafSupportedClass X x (d := d) hx :=
   AddEquiv.apply_symm_apply _ _
 
 /-- The ordinary class is also exactly the actual ambient Borel–Moore
 cycle-class route. The ordinary-target comparison is proved, not an input. -/
 theorem cycleComponentSheafBorelMooreFundamentalClass_toFieldCohomology :
-    complexAmbientSheafBorelMooreCycleDegreeToFieldCohomology s d
-      (cycleComponentAnalyticClosedSupport s x) p
-      (cycleComponentSheafClass_codimension_le s x (d := d) hx)
-      (cycleComponentSheafBorelMooreFundamentalClass s x (d := d) hx) =
-    cycleComponentSheafClass s x (d := d) hx := by
-  change forgetSupport s (cycleComponentSupport s x) (2 * (p : ℤ))
-    (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport s d
-      (cycleComponentAnalyticClosedSupport s x) p
-      (cycleComponentSheafClass_codimension_le s x (d := d) hx)
-      (cycleComponentSheafBorelMooreFundamentalClass s x (d := d) hx)) = _
+    complexAmbientSheafBorelMooreCycleDegreeToFieldCohomology X d
+      (cycleComponentAnalyticClosedSupport X x) p
+      (cycleComponentSheafClass_codimension_le X x (d := d) hx)
+      (cycleComponentSheafBorelMooreFundamentalClass X x (d := d) hx) =
+    cycleComponentSheafClass X x (d := d) hx := by
+  change forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
+    (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X d
+      (cycleComponentAnalyticClosedSupport X x) p
+      (cycleComponentSheafClass_codimension_le X x (d := d) hx)
+      (cycleComponentSheafBorelMooreFundamentalClass X x (d := d) hx)) = _
   rw [cycleComponentSheafBorelMooreFundamentalClass_duality,
     cycleComponentSheafClass_eq_forgetSupport]
 

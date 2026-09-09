@@ -76,41 +76,41 @@ end AlgebraicGeometry
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable {X : Scheme} (s : X ⟶ Spec (.of ℂ))
-  [IsIntegral X] [Smooth s] [IsProjective s] (x : X) (d : ℕ)
-  [SmoothOfRelativeDimension d s]
-  (z : ComplexPoint (cycleComponent X x) (cycleComponentι X x ≫ s))
+variable (X : Over (Spec (.of ℂ)))
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) (d : ℕ)
+  [SmoothOfRelativeDimension d X.hom]
+  (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
 
 local instance cycleComponentPointOrdinarySignParacompact :
-    ∀ W : Opens (ComplexPoint X s), ParacompactSpace W := openParacompactSpace s
+    ∀ W : Opens (ComplexPoint X), ParacompactSpace W := openParacompactSpace X
 
 /-- The old exactly normalized local point coclass enlarged to the actual global
 component support by the literal inclusion of support-complement pairs. -/
 def analyticComponentPointGlobalRelativeCoclass :
-    CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X s)) (cycleComponentSupport s x) (2 * d) :=
+    CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x) (2 * d) :=
   relativeCohomologyMap ℚ (2 * d)
-    (supportInclusionPairMap (TopCat.of (ComplexPoint X s))
-      (Set.singleton_subset_iff.mpr (range_cycleComponentMap_subset s x ⟨z, rfl⟩)))
-    (analyticPointLocalCoclass s d (cycleComponentMap s x z))
+    (supportInclusionPairMap (TopCat.of (ComplexPoint X))
+      (Set.singleton_subset_iff.mpr (range_cycleComponentMap_subset X x ⟨z, rfl⟩)))
+    (analyticPointLocalCoclass X d (cycleComponentMap X x z))
 
 /-- Removing the top-open subtype witnesses gives the already normalized
 relative point coclass by literal composition of the actual pair maps. -/
 theorem analyticComponentPointGlobalRelativeCoclass_top :
     relativeCohomologyMap ℚ (2 * d)
-      (topOpenNeighborhoodSupportPairIso (TopCat.of (ComplexPoint X s))
-        (cycleComponentAnalyticClosedSupport s x)).hom
-      (analyticComponentPointGlobalRelativeCoclass s x d z) =
-        analyticComponentPointRelativeCoclass s x d z := by
-  let Y := TopCat.of (ComplexPoint X s)
-  let S := cycleComponentAnalyticClosedSupport s x
-  let y := cycleComponentMap s x z
-  have hy : y ∈ S := range_cycleComponentMap_subset s x ⟨z, rfl⟩
-  have h := congrArg (fun e => e (analyticPointLocalCoclass s d y))
+      (topOpenNeighborhoodSupportPairIso (TopCat.of (ComplexPoint X))
+        (cycleComponentAnalyticClosedSupport X x)).hom
+      (analyticComponentPointGlobalRelativeCoclass X x d z) =
+        analyticComponentPointRelativeCoclass X x d z := by
+  let Y := TopCat.of (ComplexPoint X)
+  let S := cycleComponentAnalyticClosedSupport X x
+  let y := cycleComponentMap X x z
+  have hy : y ∈ S := range_cycleComponentMap_subset X x ⟨z, rfl⟩
+  have h := congrArg (fun e => e (analyticPointLocalCoclass X d y))
     (relativeCohomologyMap_comp ℚ (2 * d)
       (topOpenNeighborhoodSupportPairIso Y S).hom
       (supportInclusionPairMap Y (Set.singleton_subset_iff.mpr hy)))
   have h' := congrArg (fun f => relativeCohomologyMap ℚ (2 * d) f
-      (analyticPointLocalCoclass s d y))
+      (analyticPointLocalCoclass X d y))
     (topOpenNeighborhoodSupportPairIso_toPoint Y S y hy)
   exact h.symm.trans h'
 
@@ -118,53 +118,53 @@ theorem analyticComponentPointGlobalRelativeCoclass_top :
 target is the old exact point coclass included as an ordinary raw relative
 cochain, then sent through actual sheafification and the ambient resolution. -/
 theorem analyticComponentPointPositiveKernelClass_raw_positive :
-    analyticComponentPointPositiveKernelClass s x d z =
-      (rationalCohomologyAddEquivAmbientInjectiveHomology s (2 * (d : ℤ))).symm
+    analyticComponentPointPositiveKernelClass X x d z =
+      (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (d : ℤ))).symm
         (HomologicalComplex.homologyMap
-          (globalRawToSingularSheafInt s ≫
+          (globalRawToSingularSheafInt X ≫
             ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-              (TopCat.of (ComplexPoint X s))).mapHomologicalComplex (.up ℤ)).map
-                (complexSingularToAmbientInjective s)) (2 * (d : ℤ))
-          (globalRawRelativeCochainClass ℚ (TopCat.of (ComplexPoint X s))
-            (cycleComponentAnalyticClosedSupport s x).compl (2 * d)
-            (analyticComponentPointGlobalRelativeCoclass s x d z))) := by
+              (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+                (complexSingularToAmbientInjective X)) (2 * (d : ℤ))
+          (globalRawRelativeCochainClass ℚ (TopCat.of (ComplexPoint X))
+            (cycleComponentAnalyticClosedSupport X x).compl (2 * d)
+            (analyticComponentPointGlobalRelativeCoclass X x d z))) := by
   unfold analyticComponentPointPositiveKernelClass analyticComponentPointSupportedInjectiveCoclass
   rw [← analyticComponentPointGlobalRelativeCoclass_top]
-  have h := complexSupportInjectiveSectionCohomologyEquiv_inclusion_positive s
-    (cycleComponentAnalyticClosedSupport s x) (2 * d)
-    (analyticComponentPointGlobalRelativeCoclass s x d z)
+  have h := complexSupportInjectiveSectionCohomologyEquiv_inclusion_positive X
+    (cycleComponentAnalyticClosedSupport X x) (2 * d)
+    (analyticComponentPointGlobalRelativeCoclass X x d z)
   have h' := congrArg
-    (rationalCohomologyAddEquivAmbientInjectiveHomology s (2 * (d : ℤ))).symm h
+    (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (d : ℤ))).symm h
   exact h'
 
 /-- The independent ordinary sign calculation specializes to the actual point
 target. The negative sign is a theorem about the legacy cone convention. -/
 theorem analyticComponentPointPositiveKernelClass_eq_neg_legacy :
-    analyticComponentPointPositiveKernelClass s x d z =
-      -(forgetSupport s (cycleComponentSupport s x) (2 * (d : ℤ))
-        ((rationalCohomologyWithSupportAddEquivSingular s
-          (cycleComponentSupport s x) (isClosed_cycleComponentSupport s x) (2 * d)).symm
-            (analyticComponentPointGlobalRelativeCoclass s x d z))) := by
+    analyticComponentPointPositiveKernelClass X x d z =
+      -(forgetSupport X (cycleComponentSupport X x) (2 * (d : ℤ))
+        ((rationalCohomologyWithSupportAddEquivSingular X
+          (cycleComponentSupport X x) (isClosed_cycleComponentSupport X x) (2 * d)).symm
+            (analyticComponentPointGlobalRelativeCoclass X x d z))) := by
   unfold analyticComponentPointPositiveKernelClass analyticComponentPointSupportedInjectiveCoclass
   rw [← analyticComponentPointGlobalRelativeCoclass_top]
-  exact complexSupportInjectiveSectionCohomologyEquiv_inclusion_eq_neg_legacy s
-    (cycleComponentAnalyticClosedSupport s x) (2 * d)
-    (analyticComponentPointGlobalRelativeCoclass s x d z)
+  exact complexSupportInjectiveSectionCohomologyEquiv_inclusion_eq_neg_legacy X
+    (cycleComponentAnalyticClosedSupport X x) (2 * d)
+    (analyticComponentPointGlobalRelativeCoclass X x d z)
 
 /-- The ACTUAL general component class, with no point branch, has the positive
 standard raw relative-cochain normalization at every point component. -/
 theorem cycleComponentSheafClass_point_raw_positive (hx : Order.coheight x = d) :
-    cycleComponentSheafClass s x (d := d) hx =
-      (rationalCohomologyAddEquivAmbientInjectiveHomology s (2 * (d : ℤ))).symm
+    cycleComponentSheafClass X x (d := d) hx =
+      (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (d : ℤ))).symm
         (HomologicalComplex.homologyMap
-          (globalRawToSingularSheafInt s ≫
+          (globalRawToSingularSheafInt X ≫
             ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-              (TopCat.of (ComplexPoint X s))).mapHomologicalComplex (.up ℤ)).map
-                (complexSingularToAmbientInjective s)) (2 * (d : ℤ))
-          (globalRawRelativeCochainClass ℚ (TopCat.of (ComplexPoint X s))
-            (cycleComponentAnalyticClosedSupport s x).compl (2 * d)
-            (analyticComponentPointGlobalRelativeCoclass s x d z))) := by
-  rw [cycleComponentSheafClass_point_normalization s x d z hx,
+              (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+                (complexSingularToAmbientInjective X)) (2 * (d : ℤ))
+          (globalRawRelativeCochainClass ℚ (TopCat.of (ComplexPoint X))
+            (cycleComponentAnalyticClosedSupport X x).compl (2 * d)
+            (analyticComponentPointGlobalRelativeCoclass X x d z))) := by
+  rw [cycleComponentSheafClass_point_normalization X x d z hx,
     analyticComponentPointPositiveKernelClass_raw_positive]
 
 /-- At the constructed geometric component point, the literal support-inclusion
@@ -172,15 +172,15 @@ class is the legacy supported generator's exact equality transport. -/
 theorem analyticComponentPointGlobalRelativeCoclass_eq_maximalCodimensionSupportedGenerator
     (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
     (hx : Order.coheight x = V.dimension) :
-    analyticComponentPointGlobalRelativeCoclass V.structureMap x V.dimension
+    analyticComponentPointGlobalRelativeCoclass V.over x V.dimension
       (maximalCodimensionCycleComponentPoint V x) =
       maximalCodimensionSupportedGenerator V x hx := by
-  exact enlargeSupport_eq_cast_of_eq ℚ (TopCat.of (ComplexPoint V.scheme V.structureMap))
+  exact enlargeSupport_eq_cast_of_eq ℚ (TopCat.of (ComplexPoint V.over))
     (maximalCodimensionCycleComponentSupport_eq_singleton V x hx).symm
-    (Set.singleton_subset_iff.mpr (range_cycleComponentMap_subset V.structureMap x
+    (Set.singleton_subset_iff.mpr (range_cycleComponentMap_subset V.over x
       ⟨maximalCodimensionCycleComponentPoint V x, rfl⟩)) (2 * V.dimension)
-    (analyticPointLocalCoclass V.structureMap V.dimension
-      (cycleComponentMap V.structureMap x (maximalCodimensionCycleComponentPoint V x)))
+    (analyticPointLocalCoclass V.over V.dimension
+      (cycleComponentMap V.over x (maximalCodimensionCycleComponentPoint V x)))
 
 set_option maxRecDepth 4096 in
 /-- The legacy component comparison is the literal existing Betti-support
@@ -189,11 +189,11 @@ theorem maximalCodimensionComponentClass_eq_directLegacyPoint
     (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
     (hx : Order.coheight x = V.dimension) :
     maximalCodimensionComponentClass V x hx =
-      forgetSupport V.structureMap (cycleComponentSupport V.structureMap x)
+      forgetSupport V.over (cycleComponentSupport V.over x)
         (2 * (V.dimension : ℤ))
-        ((rationalCohomologyWithSupportAddEquivSingular V.structureMap
-          (cycleComponentSupport V.structureMap x)
-          (isClosed_cycleComponentSupport V.structureMap x) (2 * V.dimension)).symm
+        ((rationalCohomologyWithSupportAddEquivSingular V.over
+          (cycleComponentSupport V.over x)
+          (isClosed_cycleComponentSupport V.over x) (2 * V.dimension)).symm
             (maximalCodimensionSupportedGenerator V x hx)) := by
   rw [maximalCodimensionComponentClass_eq_forgetSupport_pointCoclass]
   rfl
@@ -204,9 +204,9 @@ either definition or either exact local orientation. -/
 theorem cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass
     (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
     (hx : Order.coheight x = V.dimension) :
-    cycleComponentSheafClass V.structureMap x (d := V.dimension) hx =
+    cycleComponentSheafClass V.over x (d := V.dimension) hx =
       -maximalCodimensionComponentClass V x hx := by
-  rw [cycleComponentSheafClass_point_normalization V.structureMap x V.dimension
+  rw [cycleComponentSheafClass_point_normalization V.over x V.dimension
     (maximalCodimensionCycleComponentPoint V x) hx,
     analyticComponentPointPositiveKernelClass_eq_neg_legacy,
     analyticComponentPointGlobalRelativeCoclass_eq_maximalCodimensionSupportedGenerator V x hx,
@@ -218,12 +218,13 @@ theorem sheafCycleClassOnCycles_eq_neg_pointCycleClassOnCycles
     (V : DimensionedSmoothProjectiveComplexVariety) :
     sheafCycleClassOnCycles V V.dimension = -pointCycleClassOnCycles V := by
   have h : (fun (x : V.scheme) (hx : Order.coheight x = V.dimension) =>
-      cycleComponentSheafClass V.structureMap x (d := V.dimension) hx) =
+      cycleComponentSheafClass V.over x (d := V.dimension) hx) =
         fun x hx => -maximalCodimensionComponentClass V x hx := by
     funext x hx
     exact cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass V x hx
   unfold sheafCycleClassOnCycles pointCycleClassOnCycles
-  rw [h, cycleClassOnCyclesOfComponents_neg]
+  exact (congrArg cycleClassOnCyclesOfComponents h).trans
+    (cycleClassOnCyclesOfComponents_neg (maximalCodimensionComponentClass V))
 
 /-- Scalar extension preserves the actual signed comparison on ALL rational
 point cycles; in particular every finite rational combination has this sign. -/
@@ -243,10 +244,10 @@ theorem cycleComponentSheafClass_closedPoint_positiveKernel
     (hx : IsClosed ({x} : Set V.scheme)) :
     let hcodim := SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
       (f := V.structureMap) (d := V.dimension) x hx
-    cycleComponentSheafClass V.structureMap x (d := V.dimension) hcodim =
-      analyticComponentPointPositiveKernelClass V.structureMap x V.dimension
+    cycleComponentSheafClass V.over x (d := V.dimension) hcodim =
+      analyticComponentPointPositiveKernelClass V.over x V.dimension
         (maximalCodimensionCycleComponentPoint V x) := by
-  exact cycleComponentSheafClass_point_normalization V.structureMap x V.dimension
+  exact cycleComponentSheafClass_point_normalization V.over x V.dimension
     (maximalCodimensionCycleComponentPoint V x) _
 
 /-- The signed legacy comparison at a closed scheme point derives the needed
@@ -256,7 +257,7 @@ theorem cycleComponentSheafClass_closedPoint_eq_neg_legacy
     (hx : IsClosed ({x} : Set V.scheme)) :
     let hcodim := SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
       (f := V.structureMap) (d := V.dimension) x hx
-    cycleComponentSheafClass V.structureMap x (d := V.dimension) hcodim =
+    cycleComponentSheafClass V.over x (d := V.dimension) hcodim =
       -maximalCodimensionComponentClass V x hcodim := by
   exact cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass V x _
 

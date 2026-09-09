@@ -38,44 +38,44 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
 noncomputable local instance :
-    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 set_option backward.isDefEq.respectTransparency false
 
 /-- The normalized local homology classes obtained from any two preferred algebraic charts
 containing a point coincide. -/
 theorem localClassOfChart_localChart_eq
-    [SmoothOfRelativeDimension d structureMap]
-    (z z' q : ComplexPoint X structureMap)
-    (hq : q ∈ (localChart structureMap d z).source)
-    (hq' : q ∈ (localChart structureMap d z').source) :
-    localClassOfChart d (localChart structureMap d z) q hq =
-      localClassOfChart d (localChart structureMap d z') q hq' := by
-  let : ChartedSpace (Fin d → ℂ) (ComplexPoint X structureMap) :=
+    [SmoothOfRelativeDimension d X.hom]
+    (z z' q : ComplexPoint X)
+    (hq : q ∈ (localChart X d z).source)
+    (hq' : q ∈ (localChart X d z').source) :
+    localClassOfChart d (localChart X d z) q hq =
+      localClassOfChart d (localChart X d z') q hq' := by
+  let : ChartedSpace (Fin d → ℂ) (ComplexPoint X) :=
     inferInstance
-  let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X structureMap) :=
-    isManifold_omega structureMap d
+  let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X) :=
+    isManifold_omega X d
   let T : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     tangentCoordChange 𝓘(ℂ, Fin d → ℂ) z z' q
   have hoverlap : q ∈ (extChartAt 𝓘(ℂ, Fin d → ℂ) z).source ∩
       (extChartAt 𝓘(ℂ, Fin d → ℂ) z').source := by
     rw [extChartAt_source, extChartAt_source]
-    change q ∈ (localChart structureMap d z).source ∩
-      (localChart structureMap d z').source
+    change q ∈ (localChart X d z).source ∩
+      (localChart X d z').source
     exact ⟨hq, hq'⟩
   have hraw : HasFDerivAt
-      (fun v ↦ localChart structureMap d z' ((localChart structureMap d z).symm v)) T
-      (localChart structureMap d z q) := by
+      (fun v ↦ localChart X d z' ((localChart X d z).symm v)) T
+      (localChart X d z q) := by
     have h := hasFDerivWithinAt_tangentCoordChange
       (I := 𝓘(ℂ, Fin d → ℂ)) hoverlap
-    apply (piHasFDerivAt_iff_normed d _ T (localChart structureMap d z q)).mpr
+    apply (piHasFDerivAt_iff_normed d _ T (localChart X d z q)).mpr
     simp only [modelWithCornersSelf_coe, Set.range_id, hasFDerivWithinAt_univ] at h
     apply h.congr_of_eventuallyEq
     filter_upwards [] with v
-    change localChart structureMap d z' ((localChart structureMap d z).symm v) =
+    change localChart X d z' ((localChart X d z).symm v) =
       (chartAt (Fin d → ℂ) z') ((chartAt (Fin d → ℂ) z).symm v)
     rfl
   have hT : Function.Injective T := by
@@ -85,18 +85,18 @@ theorem localClassOfChart_localChart_eq
     have hqchart' : q ∈ (chartAt (Fin d → ℂ) z').source := by exact hq'
     simpa only [T, tangentCoordChangeEquiv_apply hqchart hqchart'] using hab
   exact localClassOfChart_eq_of_hasFDerivAt_transition d
-    (localChart structureMap d z) (localChart structureMap d z') q hq hq' T hT hraw
+    (localChart X d z) (localChart X d z') q hq hq' T hT hraw
 
 /-- The canonical pointwise class can equivalently be computed using the preferred algebraic
 chart centered at any other point whose source contains the point in question. -/
 theorem complexLocalOrientation_eq_localClassOfChart_localChart
-    [SmoothOfRelativeDimension d structureMap]
-    (z q : ComplexPoint X structureMap)
-    (hq : q ∈ (localChart structureMap d z).source) :
-    complexLocalOrientation structureMap d q =
-      localClassOfChart d (localChart structureMap d z) q hq := by
+    [SmoothOfRelativeDimension d X.hom]
+    (z q : ComplexPoint X)
+    (hq : q ∈ (localChart X d z).source) :
+    complexLocalOrientation X d q =
+      localClassOfChart d (localChart X d z) q hq := by
   rw [complexLocalOrientation_eq_localClassOfChart]
-  exact localClassOfChart_localChart_eq structureMap d q z q
-    (mem_localChart_source structureMap d q) hq
+  exact localClassOfChart_localChart_eq X d q z q
+    (mem_localChart_source X d q) hq
 
 end AlgebraicGeometry.ComplexPoint

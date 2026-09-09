@@ -29,27 +29,27 @@ open AlgebraicTopology.Singular
 set_option backward.defeqAttrib.useBackward true
 set_option backward.isDefEq.respectTransparency false
 
-variable {X : Scheme} (s : X ⟶ Spec (.of ℂ)) [IsIntegral X] [Smooth s]
-  [T2Space (ComplexPoint X s)] [∀ U : Opens (ComplexPoint X s), ParacompactSpace U]
+variable (X : Over (Spec (.of ℂ))) [IsIntegral X.left] [Smooth X.hom]
+  [T2Space (ComplexPoint X)] [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
 
 /-- The original ordinary coclass of an actual relative class has the negative
 of the positive relative cochain inclusion's sign. All augmentation, sheafification,
 resolution, and degree-shift maps are the actual previously constructed ones. -/
 theorem rationalCohomologyAmbient_forgetSupport_of_singular_signed
-    (Z : Set (ComplexPoint X s)) (hZ : IsClosed Z) (n : ℕ)
-    (a : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X s)) Z n) :
-    rationalCohomologyAddEquivAmbientInjectiveHomology s (n : ℤ)
-      (forgetSupport s Z (n : ℤ)
-        ((rationalCohomologyWithSupportAddEquivSingular s Z hZ n).symm a)) =
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℕ)
+    (a : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) Z n) :
+    rationalCohomologyAddEquivAmbientInjectiveHomology X (n : ℤ)
+      (forgetSupport X Z (n : ℤ)
+        ((rationalCohomologyWithSupportAddEquivSingular X Z hZ n).symm a)) =
     -(HomologicalComplex.homologyMap
-      (globalRawToSingularSheafInt s ≫
+      (globalRawToSingularSheafInt X ≫
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X s))).mapHomologicalComplex (.up ℤ)).map
-          (complexSingularToAmbientInjective s)) (n : ℤ)
-      (globalRawRelativeCochainClass ℚ (TopCat.of (ComplexPoint X s)) Zᶜ n a)) := by
-  rw [rationalCohomologyAmbient_forgetSupport_of_singular s Z hZ]
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+          (complexSingularToAmbientInjective X)) (n : ℤ)
+      (globalRawRelativeCochainClass ℚ (TopCat.of (ComplexPoint X)) Zᶜ n a)) := by
+  rw [rationalCohomologyAmbient_forgetSupport_of_singular X Z hZ]
   have h := globalRawSingularRestrictionCone_connecting_of_relative ℚ
-    (TopCat.of (ComplexPoint X s)) Zᶜ n a
+    (TopCat.of (ComplexPoint X)) Zᶜ n a
   change _ = _ at h
   erw [h]
   exact map_neg _ _

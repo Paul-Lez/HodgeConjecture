@@ -74,26 +74,26 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
 noncomputable local instance complexLocalHomologyAnalyticTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- Local homology of a smooth complex scheme is concentrated in its real dimension. -/
-theorem localHomology_isZero_of_ne [SmoothOfRelativeDimension d structureMap]
-    [T1Space (ComplexPoint X structureMap)] (z : ComplexPoint X structureMap)
+theorem localHomology_isZero_of_ne [SmoothOfRelativeDimension d X.hom]
+    [T1Space (ComplexPoint X)] (z : ComplexPoint X)
     (n : ℕ) (hn : n ≠ 2 * d) :
     IsZero (RelativeHomology ℚ (pointComplementPair z) n) :=
-  localHomology_isZero_of_complexChart d (localChart structureMap d z) z
-    (mem_localChart_source structureMap d z) n hn
+  localHomology_isZero_of_complexChart d (localChart X d z) z
+    (mem_localChart_source X d z) n hn
 
 /-- The homology sheaf of the actual relative-chain complex vanishes off the complex
 orientation degree. This supplies the concentration theorem needed by canonical truncation. -/
-theorem singularChainHomologySheaf_isZero_of_ne [SmoothOfRelativeDimension d structureMap]
-    [T2Space (ComplexPoint X structureMap)] (n : ℕ) (hn : n ≠ 2 * d) :
-    IsZero (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X structureMap)) n) :=
+theorem singularChainHomologySheaf_isZero_of_ne [SmoothOfRelativeDimension d X.hom]
+    [T2Space (ComplexPoint X)] (n : ℕ) (hn : n ≠ 2 * d) :
+    IsZero (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) n) :=
   singularChainHomologySheaf_isZero_of_localHomology_isZero ℚ
-    (TopCat.of (ComplexPoint X structureMap)) n
-      (fun z ↦ localHomology_isZero_of_ne structureMap d z n hn)
+    (TopCat.of (ComplexPoint X)) n
+      (fun z ↦ localHomology_isZero_of_ne X d z n hn)
 
 end AlgebraicGeometry.ComplexPoint

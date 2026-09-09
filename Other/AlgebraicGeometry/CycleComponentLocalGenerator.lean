@@ -260,6 +260,16 @@ lemma neighborhoodToSpecΓ_over :
   exact (ΓSpecIso_inv_ΓSpec_adjunction_homEquiv φ).trans
     C.C_comp_coordinateRingHomOnNeighborhood
 
+/-- The canonical affine-spectrum isomorphism, bundled over `Spec ℂ`. -/
+def neighborhoodToSpecΓIso : C.neighborhoodScheme ≅
+    Over.mk (ComplexPoint.affineSpecStructureMap Γ(C.componentNeighborhood.toScheme, ⊤)) := by
+  letI : IsAffine C.componentNeighborhood.toScheme :=
+    C.componentNeighborhood_isAffine
+  letI : IsIso C.componentNeighborhood.toScheme.toSpecΓ :=
+    IsAffine.affine
+  exact Over.isoMk (asIso C.componentNeighborhood.toScheme.toSpecΓ)
+    C.neighborhoodToSpecΓ_over
+
 /-- Complex points of the affine component neighborhood as complex algebra homomorphisms on its
 coordinate ring. -/
 def neighborhoodPointAlgHomHomeomorph :
@@ -268,34 +278,20 @@ def neighborhoodPointAlgHomHomeomorph :
       (Γ(C.componentNeighborhood.toScheme, ⊤) →ₐ[ℂ] ℂ)
       Point.analyticTopology
       (ComplexPoint.affineAlgebraHomTopology Γ(C.componentNeighborhood.toScheme, ⊤)) := by
-  let : IsAffine C.componentNeighborhood.toScheme :=
-    C.componentNeighborhood_isAffine
-  let schemeIso := asIso C.componentNeighborhood.toScheme.toSpecΓ
-  let e : C.neighborhoodScheme ≅
-      Over.mk (ComplexPoint.affineSpecStructureMap Γ(C.componentNeighborhood.toScheme, ⊤)) :=
-    Over.isoMk schemeIso C.neighborhoodToSpecΓ_over
-  exact (Point.isoMapHomeomorph e).trans
+  exact (Point.isoMapHomeomorph C.neighborhoodToSpecΓIso).trans
     (ComplexPoint.affineSpecHomeomorph Γ(C.componentNeighborhood.toScheme, ⊤))
 
 /-- The affine algebra-homomorphism coordinate of a neighborhood point evaluates global
 regular sections in the usual way. -/
 lemma neighborhoodPointAlgHomHomeomorph_apply
-    (z : ComplexPoint C.componentNeighborhood.toScheme C.neighborhoodStructureMap)
+    (z : ComplexPoint C.neighborhoodScheme)
     (r : Γ(C.componentNeighborhood.toScheme, ⊤)) :
     C.neighborhoodPointAlgHomHomeomorph z r = Point.evaluate ⊤ r z := by
-  let : IsAffine C.componentNeighborhood.toScheme :=
-    C.componentNeighborhood_isAffine
   rw [neighborhoodPointAlgHomHomeomorph, Homeomorph.trans_apply]
   change ComplexPoint.affineSpecEquiv Γ(C.componentNeighborhood.toScheme, ⊤)
-      (Point.isoMapHomeomorph
-        (asIso C.componentNeighborhood.toScheme.toSpecΓ)
-        C.neighborhoodToSpecΓ_over z) r = _
-  rw [ComplexPoint.affineSpecEquiv_apply]
-  change Point.evaluate ⊤
-      ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)
-      (Point.map C.componentNeighborhood.toScheme.toSpecΓ
-        C.neighborhoodToSpecΓ_over z) = _
-  rw [Point.evaluate_map]
+      (Point.isoMapHomeomorph C.neighborhoodToSpecΓIso z) r = _
+  rw [ComplexPoint.affineSpecEquiv_apply, Point.isoMapHomeomorph_apply,
+    Point.evaluate_map]
   change Point.evaluate ⊤
       (C.componentNeighborhood.toScheme.toSpecΓ.appTop
         ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)) z = _
@@ -375,17 +371,16 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
     (hW : C.neighborhoodProjectionChart.symm w ∈ Point.overOpen W) :
     AnalyticAt ℂ (fun v ↦ Point.evaluate W s
       (C.neighborhoodProjectionChart.symm v)) w := by
-  let Y := C.componentNeighborhood.toScheme
-  let : IsAffine Y := C.componentNeighborhood_isAffine
-  let y : ComplexPoint Y C.neighborhoodStructureMap := C.neighborhoodProjectionChart.symm w
+  let Y := C.neighborhoodScheme
+  let : IsAffine Y.left := C.componentNeighborhood_isAffine
+  let y : ComplexPoint Y := C.neighborhoodProjectionChart.symm w
   obtain ⟨g, hgW, hyg⟩ :=
-    (isAffineOpen_top Y).exists_basicOpen_le
+    (isAffineOpen_top Y.left).exists_basicOpen_le
       (V := W) ⟨y.underlying, hW⟩ trivial
-  let t : Γ(Y, Y.basicOpen g) := Y.presheaf.map (homOfLE hgW).op s
+  let t : Γ(Y.left, Y.left.basicOpen g) := Y.left.presheaf.map (homOfLE hgW).op s
   obtain ⟨k, a, hquot⟩ :=
-    ComplexPoint.exists_evaluate_affine_basicOpen_eq_div
-      (structureMap := C.neighborhoodStructureMap) g t
-  have hyg' : y ∈ Point.overOpen (Y.basicOpen g) := hyg
+    ComplexPoint.exists_evaluate_affine_basicOpen_eq_div (X := Y) g t
+  have hyg' : y ∈ Point.overOpen (Y.left.basicOpen g) := hyg
   have hgzero : Point.evaluate ⊤ g y ≠ 0 :=
     (Point.mem_overOpen_basicOpen_iff_evaluate_ne_zero g y trivial).mp hyg'
   have ha := C.analyticAt_neighborhoodProjectionChart_symm_evaluate_top hw a
@@ -398,10 +393,10 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
   have hcontinuous : ContinuousAt C.neighborhoodProjectionChart.symm w :=
     C.neighborhoodProjectionChart.continuousAt_symm hw
   have heventually : C.neighborhoodProjectionChart.symm ⁻¹'
-      Point.overOpen (Y.basicOpen g) ∈ 𝓝 w :=
-    hcontinuous ((Point.isOpen_overOpen (Y.basicOpen g)).mem_nhds hyg')
+      Point.overOpen (Y.left.basicOpen g) ∈ 𝓝 w :=
+    hcontinuous ((Point.isOpen_overOpen (Y.left.basicOpen g)).mem_nhds hyg')
   filter_upwards [heventually] with v hv
-  let yv : ComplexPoint Y C.neighborhoodStructureMap :=
+  let yv : ComplexPoint Y :=
     C.neighborhoodProjectionChart.symm v
   have hres := Point.evaluate_res hgW s yv hv
   exact (hres.trans (hquot yv hv)).symm

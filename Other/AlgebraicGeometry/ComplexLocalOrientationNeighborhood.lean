@@ -40,64 +40,64 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
 noncomputable local instance complexOrientationNeighborhood_analyticTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
-variable [SmoothOfRelativeDimension d structureMap]
+variable [SmoothOfRelativeDimension d X.hom]
 
 /-- An open neighborhood carrying a single exactly normalized relative orientation class. -/
-def complexLocalOrientationNeighborhood (x : ComplexPoint X structureMap) :
-    Opens (ComplexPoint X structureMap) :=
-  chartOrientationNeighborhood d (localChart structureMap d x) x
-    (mem_localChart_source structureMap d x)
+def complexLocalOrientationNeighborhood (x : ComplexPoint X) :
+    Opens (ComplexPoint X) :=
+  chartOrientationNeighborhood d (localChart X d x) x
+    (mem_localChart_source X d x)
 
-lemma mem_complexLocalOrientationNeighborhood (x : ComplexPoint X structureMap) :
-    x ∈ complexLocalOrientationNeighborhood structureMap d x :=
-  mem_chartOrientationNeighborhood d (localChart structureMap d x) x
-    (mem_localChart_source structureMap d x)
+lemma mem_complexLocalOrientationNeighborhood (x : ComplexPoint X) :
+    x ∈ complexLocalOrientationNeighborhood X d x :=
+  mem_chartOrientationNeighborhood d (localChart X d x) x
+    (mem_localChart_source X d x)
 
 /-- The actual relative singular homology class supported on the constructed neighborhood. -/
-def complexLocalOrientationNeighborhoodClass (x : ComplexPoint X structureMap) :
+def complexLocalOrientationNeighborhoodClass (x : ComplexPoint X) :
     RelativeHomology ℚ
-      (TopPair.ofSubset (X := TopCat.of (ComplexPoint X structureMap))
-        (complexLocalOrientationNeighborhood structureMap d x : Set (ComplexPoint X structureMap))ᶜ)
+      (TopPair.ofSubset (X := TopCat.of (ComplexPoint X))
+        (complexLocalOrientationNeighborhood X d x : Set (ComplexPoint X))ᶜ)
       (2 * d) :=
-  chartOrientationNeighborhoodClass d (localChart structureMap d x) x
-    (mem_localChart_source structureMap d x)
+  chartOrientationNeighborhoodClass d (localChart X d x) x
+    (mem_localChart_source X d x)
 
 /-- Every nearby point restriction is the exact existing complex orientation, with no scalar
 ambiguity or arbitrary generator choice. -/
 theorem complexLocalOrientationNeighborhoodClass_restrict
-    (x y : ComplexPoint X structureMap)
-    (hy : y ∈ complexLocalOrientationNeighborhood structureMap d x) :
+    (x y : ComplexPoint X)
+    (hy : y ∈ complexLocalOrientationNeighborhood X d x) :
     relativeHomologyMap ℚ (2 * d)
-      (supportInclusionPairMap (TopCat.of (ComplexPoint X structureMap))
+      (supportInclusionPairMap (TopCat.of (ComplexPoint X))
         (Set.singleton_subset_iff.mpr hy))
-      (complexLocalOrientationNeighborhoodClass structureMap d x) =
-      complexLocalOrientation structureMap d y := by
-  exact (chartOrientationNeighborhoodClass_restrict d (localChart structureMap d x) x
-    (mem_localChart_source structureMap d x) y hy).trans
-      (complexLocalOrientation_eq_localClassOfChart_localChart structureMap d x y
-        (chartOrientationNeighborhood_subset_source d (localChart structureMap d x) x
-          (mem_localChart_source structureMap d x) hy)).symm
+      (complexLocalOrientationNeighborhoodClass X d x) =
+      complexLocalOrientation X d y := by
+  exact (chartOrientationNeighborhoodClass_restrict d (localChart X d x) x
+    (mem_localChart_source X d x) y hy).trans
+      (complexLocalOrientation_eq_localClassOfChart_localChart X d x y
+        (chartOrientationNeighborhood_subset_source d (localChart X d x) x
+          (mem_localChart_source X d x) hy)).symm
 
 /-- Simultaneous local representability of the normalized pointwise orientation is a theorem,
 witnessed by the explicitly constructed neighborhood-relative class. -/
-theorem exists_neighborhood_complexLocalOrientation (x : ComplexPoint X structureMap) :
-    ∃ (U : Opens (ComplexPoint X structureMap)), x ∈ U ∧
+theorem exists_neighborhood_complexLocalOrientation (x : ComplexPoint X) :
+    ∃ (U : Opens (ComplexPoint X)), x ∈ U ∧
       ∃ c : RelativeHomology ℚ
-        (TopPair.ofSubset (X := TopCat.of (ComplexPoint X structureMap))
-          (U : Set (ComplexPoint X structureMap))ᶜ) (2 * d),
-        ∀ (y : ComplexPoint X structureMap) (hy : y ∈ U),
+        (TopPair.ofSubset (X := TopCat.of (ComplexPoint X))
+          (U : Set (ComplexPoint X))ᶜ) (2 * d),
+        ∀ (y : ComplexPoint X) (hy : y ∈ U),
           relativeHomologyMap ℚ (2 * d)
-            (supportInclusionPairMap (TopCat.of (ComplexPoint X structureMap))
+            (supportInclusionPairMap (TopCat.of (ComplexPoint X))
               (Set.singleton_subset_iff.mpr hy)) c =
-              complexLocalOrientation structureMap d y :=
-  ⟨complexLocalOrientationNeighborhood structureMap d x,
-    mem_complexLocalOrientationNeighborhood structureMap d x,
-    complexLocalOrientationNeighborhoodClass structureMap d x,
-    complexLocalOrientationNeighborhoodClass_restrict structureMap d x⟩
+              complexLocalOrientation X d y :=
+  ⟨complexLocalOrientationNeighborhood X d x,
+    mem_complexLocalOrientationNeighborhood X d x,
+    complexLocalOrientationNeighborhoodClass X d x,
+    complexLocalOrientationNeighborhoodClass_restrict X d x⟩
 
 end AlgebraicGeometry.ComplexPoint

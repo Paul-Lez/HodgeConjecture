@@ -33,8 +33,8 @@ namespace AlgebraicGeometry.ComplexPoint
 /-- An actual additive map from algebraic cycles to ordinary rational cohomology,
 using the constructed sheaf class in every codimension. -/
 def sheafCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
-    CodimensionCycle V.scheme p →+ FieldCohomology ℚ V.structureMap (2 * (p : ℤ)) :=
-  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.structureMap (d := V.dimension))
+    CodimensionCycle V.scheme p →+ FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := V.dimension))
 
 /-- An individual component carries its exact integer multiplicity. -/
 @[simp]
@@ -42,7 +42,7 @@ theorem sheafCycleClassOnCycles_single
     (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ)
     (x : V.scheme) (hx : coheight x = p) (n : ℤ) :
     sheafCycleClassOnCycles V p (CodimensionCycle.single x hx n) =
-      n • cycleComponentSheafClass V.structureMap x (d := V.dimension) hx := by
+      n • cycleComponentSheafClass V.over x (d := V.dimension) hx := by
   simp [sheafCycleClassOnCycles]
 
 /-- Evaluation on every finite integral linear combination, allowing repeated
@@ -52,7 +52,7 @@ theorem sheafCycleClassOnCycles_sum_single
     {ι : Type*} (t : Finset ι) (x : ι → V.scheme)
     (hx : ∀ i, coheight (x i) = p) (n : ι → ℤ) :
     sheafCycleClassOnCycles V p (∑ i ∈ t, CodimensionCycle.single (x i) (hx i) (n i)) =
-      ∑ i ∈ t, n i • cycleComponentSheafClass V.structureMap (x i) (d := V.dimension) (hx i) := by
+      ∑ i ∈ t, n i • cycleComponentSheafClass V.over (x i) (d := V.dimension) (hx i) := by
   simp
 
 /-- The explicit finite-support formula. The codimension test's zero branch
@@ -62,14 +62,14 @@ theorem sheafCycleClassOnCycles_apply
     sheafCycleClassOnCycles V p c =
       (compactCycleToFinsupp c.1).sum fun x n ↦
         n • if hx : coheight x = p then
-          cycleComponentSheafClass V.structureMap x (d := V.dimension) hx else 0 := rfl
+          cycleComponentSheafClass V.over x (d := V.dimension) hx else 0 := rfl
 
 /-- The actual scalar-extension bilinear map, with integral cycles as its
 second input, not a rational-equivalence quotient. -/
 def sheafCycleClassRationalExtensionBilinear
     (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
     ℚ →ₗ[ℚ] CodimensionCycle V.scheme p →ₗ[ℤ]
-      FieldCohomology ℚ V.structureMap (2 * (p : ℤ)) where
+      FieldCohomology ℚ V.over (2 * (p : ℤ)) where
   toFun q := q • (sheafCycleClassOnCycles V p).toIntLinearMap
   map_add' _ _ := by
     ext
@@ -83,7 +83,7 @@ arbitrary codimension. No unproved geometric data are arguments. -/
 def rationalSheafCycleClassOnCycles
     (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
     TensorProduct ℤ ℚ (CodimensionCycle V.scheme p) →ₗ[ℚ]
-      FieldCohomology ℚ V.structureMap (2 * (p : ℤ)) :=
+      FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
   TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 
 /-- Rational extension agrees with the constructed integral map on pure tensors. -/
@@ -99,19 +99,19 @@ theorem rationalSheafCycleClassOnCycles_tmul_single
     (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) (q : ℚ)
     (x : V.scheme) (hx : coheight x = p) :
     rationalSheafCycleClassOnCycles V p (q ⊗ₜ[ℤ] CodimensionCycle.single x hx 1) =
-      q • cycleComponentSheafClass V.structureMap x (d := V.dimension) hx := by
+      q • cycleComponentSheafClass V.over x (d := V.dimension) hx := by
   simp
 
 /-- Every actually constructed component class belongs to the algebraic cycle-class span. -/
 theorem cycleComponentSheafClass_mem_algebraicCycleClassSpan
-    {X : Scheme} [IsIntegral X]
-    (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap] [IsProjective structureMap]
-    (p : ℕ) (x : X) (hx : coheight x = p) :
-    cycleComponentSheafClass structureMap x (d := dim X) hx ∈
-      algebraicCycleClassSpan structureMap p := by
+    (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom]
+    (p : ℕ) (x : X.left) (hx : coheight x = p) :
+    cycleComponentSheafClass X x (d := dim X.left) hx ∈
+      algebraicCycleClassSpan X p := by
   have hle :
-      Submodule.span ℚ {cycleComponentSheafClass structureMap x (d := dim X) hx} ≤
-        algebraicCycleClassSpan structureMap p := by
+      Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx} ≤
+        algebraicCycleClassSpan X p := by
     unfold algebraicCycleClassSpan
     exact le_iSup_of_le x (le_iSup_of_le hx le_rfl)
   exact hle (Submodule.subset_span (Set.mem_singleton _))
@@ -124,7 +124,7 @@ theorem rationalSheafCycleClassOnCycles_sum_tmul_single
     (hx : ∀ i, coheight (x i) = p) (q : ι → ℚ) :
     rationalSheafCycleClassOnCycles V p
       (∑ i ∈ t, q i ⊗ₜ[ℤ] CodimensionCycle.single (x i) (hx i) 1) =
-      ∑ i ∈ t, q i • cycleComponentSheafClass V.structureMap (x i) (d := V.dimension) (hx i) := by
+      ∑ i ∈ t, q i • cycleComponentSheafClass V.over (x i) (d := V.dimension) (hx i) := by
   simp
 
 end AlgebraicGeometry.ComplexPoint

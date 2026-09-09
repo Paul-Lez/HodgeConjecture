@@ -54,18 +54,18 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ))
+variable (X : Over (Spec (.of ℂ)))
 
 local instance sheafBorelMooreTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 local instance sheafBorelMooreHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf structureMap)
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 /-- The derived category of additive sheaves on the analytic complex-point space. -/
 abbrev AnalyticDerivedCategory :=
-  DerivedCategory (AnalyticAdditiveSheaf structureMap)
+  DerivedCategory (AnalyticAdditiveSheaf X)
 
 /-- A rational dualizing object on the analytic complex-point space.
 
@@ -74,7 +74,7 @@ Verdier-duality predicate with which to express it.  Keeping the object in a nam
 that boundary explicit without fabricating a six-functor API. -/
 structure RationalDualizingComplex where
   /-- A complex representing the rational dualizing object `ω_X`. -/
-  dualizingComplex : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ
+  dualizingComplex : CochainComplex (AnalyticAdditiveSheaf X) ℤ
 
 /-- Explicit input consisting of a proposed rational dualizing complex and an isomorphism with
 the shifted constant sheaf in dimension `d`.
@@ -83,11 +83,11 @@ The field alone does **not** assert that the isomorphism is the one normalized b
 orientation: it may be rescaled by a rational automorphism.  A future Verdier-duality/costalk
 normalization theorem must construct this datum and prove that compatibility. -/
 structure RationalDualizingComplexOrientationInput (d : ℕ)
-    extends RationalDualizingComplex structureMap where
+    extends RationalDualizingComplex X where
   /-- The supplied derived-category isomorphism `ω_X ≅ ℚ_X[2d]`. -/
   orientationIso :
     DerivedCategory.Q.obj dualizingComplex ≅
-      (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ structureMap))⟦2 * (d : ℤ)⟧
+      (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X))⟦2 * (d : ℤ)⟧
 
 /-- The normalized derived object representing rational sections with support.
 
@@ -95,9 +95,9 @@ structure RationalDualizingComplexOrientationInput (d : ℕ)
 homotopy fiber only after shifting by `-1`, which is displayed here rather than hidden in a degree
 convention. -/
 def rationalDerivedSectionsWithSupportObject
-    (Z : Set (ComplexPoint X structureMap)) : AnalyticDerivedCategory structureMap :=
+    (Z : Set (ComplexPoint X)) : AnalyticDerivedCategory X :=
   (DerivedCategory.Q.obj
-    (rationalCohomologyWithSupportComplex structureMap Z))⟦(-1 : ℤ)⟧
+    (rationalCohomologyWithSupportComplex X Z))⟦(-1 : ℤ)⟧
 
 /-- Explicit input for the missing derived sections-with-support functor `RΓ_Z`.
 
@@ -108,60 +108,60 @@ automorphism in an arbitrary comparison isomorphism.  These are precisely the fa
 transport an orientation; no equivalence between Borel--Moore homology and supported cohomology
 is stored. -/
 structure DerivedSectionsWithSupportInput
-    (Z : Set (ComplexPoint X structureMap)) where
+    (Z : Set (ComplexPoint X)) where
   /-- The local-cohomology/derived-sections-with-support endofunctor. -/
-  functor : AnalyticDerivedCategory structureMap ⥤ AnalyticDerivedCategory structureMap
+  functor : AnalyticDerivedCategory X ⥤ AnalyticDerivedCategory X
   /-- Derived sections with support commute coherently with cohomological shifts. -/
   commShift : functor.CommShift ℤ
   /-- Normalization of `RΓ_Z(ℚ_X)` as the project's mapping-cone support object.  An equality is
   deliberately required here: an unconstrained isomorphism could rescale supported classes. -/
   constantObject_eq :
-    functor.obj (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ structureMap)) =
-      rationalDerivedSectionsWithSupportObject structureMap Z
+    functor.obj (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) =
+      rationalDerivedSectionsWithSupportObject X Z
 
 /-- Hypercohomology of an object already in the derived category. -/
 abbrev DerivedHypercohomology
-    (K : AnalyticDerivedCategory structureMap) (n : ℤ) :=
+    (K : AnalyticDerivedCategory X) (n : ℤ) :=
   ShiftedHom
-    (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap)) K n
+    (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X)) K n
 
 /-- The group `𝕳⁻ⁱ(X, ω_X)` associated to the supplied intrinsic dualizing-object candidate.
 It is intentionally separate from an ambient support.  Calling it intrinsic Borel--Moore
 homology requires the still-unavailable theorem that the candidate is genuinely dualizing. -/
 abbrev IntrinsicSheafBorelMooreHomology
-    (ω : RationalDualizingComplex structureMap) (i : ℤ) :=
-  DerivedHypercohomology structureMap (DerivedCategory.Q.obj ω.dualizingComplex) (-i)
+    (ω : RationalDualizingComplex X) (i : ℤ) :=
+  DerivedHypercohomology X (DerivedCategory.Q.obj ω.dualizingComplex) (-i)
 
 /-- The ambient Borel--Moore object `RΓ_Z(ω_X)` in the derived category. -/
 def ambientSheafBorelMooreObject
-    {Z : Set (ComplexPoint X structureMap)}
-    (ω : RationalDualizingComplex structureMap)
-    (support : DerivedSectionsWithSupportInput structureMap Z) :
-    AnalyticDerivedCategory structureMap :=
+    {Z : Set (ComplexPoint X)}
+    (ω : RationalDualizingComplex X)
+    (support : DerivedSectionsWithSupportInput X Z) :
+    AnalyticDerivedCategory X :=
   support.functor.obj (DerivedCategory.Q.obj ω.dualizingComplex)
 
 /-- The ambient group `𝕳⁻ⁱ_Z(X, ω_X)` associated to the supplied support and dualizing inputs. -/
 abbrev AmbientSheafBorelMooreHomology
-    {Z : Set (ComplexPoint X structureMap)}
-    (ω : RationalDualizingComplex structureMap)
-    (support : DerivedSectionsWithSupportInput structureMap Z) (i : ℤ) :=
-  DerivedHypercohomology structureMap
-    (ambientSheafBorelMooreObject structureMap ω support) (-i)
+    {Z : Set (ComplexPoint X)}
+    (ω : RationalDualizingComplex X)
+    (support : DerivedSectionsWithSupportInput X Z) (i : ℤ) :=
+  DerivedHypercohomology X
+    (ambientSheafBorelMooreObject X ω support) (-i)
 
 /-- Applying derived sections with support to the orientation gives
 `RΓ_Z(ω_X) ≅ RΓ_Z(ℚ_X)[2d]`.
 
 This is the categorical source of the degree-shifted Borel--Moore/cohomology equivalence below. -/
 def ambientSheafBorelMooreOrientationIso
-    {Z : Set (ComplexPoint X structureMap)} {d : ℕ}
-    (ω : RationalDualizingComplexOrientationInput structureMap d)
-    (support : DerivedSectionsWithSupportInput structureMap Z) :
-    ambientSheafBorelMooreObject structureMap ω.toRationalDualizingComplex support ≅
-      (rationalDerivedSectionsWithSupportObject structureMap Z)⟦2 * (d : ℤ)⟧ := by
+    {Z : Set (ComplexPoint X)} {d : ℕ}
+    (ω : RationalDualizingComplexOrientationInput X d)
+    (support : DerivedSectionsWithSupportInput X Z) :
+    ambientSheafBorelMooreObject X ω.toRationalDualizingComplex support ≅
+      (rationalDerivedSectionsWithSupportObject X Z)⟦2 * (d : ℤ)⟧ := by
   letI : support.functor.CommShift ℤ := support.commShift
   exact support.functor.mapIso ω.orientationIso ≪≫
     (support.functor.commShiftIso (2 * (d : ℤ))).app _ ≪≫
-      (shiftFunctor (AnalyticDerivedCategory structureMap) (2 * (d : ℤ))).mapIso
+      (shiftFunctor (AnalyticDerivedCategory X) (2 * (d : ℤ))).mapIso
         (eqToIso support.constantObject_eq)
 
 /-- The target-object isomorphism which displays all shifts in
@@ -170,31 +170,31 @@ def ambientSheafBorelMooreOrientationIso
 The final exponent `(2d-i)-1` is exactly the `-1` used by the mapping-cone definition of
 `RationalCohomologyWithSupport`. -/
 def ambientSheafBorelMooreTargetIso
-    {Z : Set (ComplexPoint X structureMap)} {d : ℕ}
-    (ω : RationalDualizingComplexOrientationInput structureMap d)
-    (support : DerivedSectionsWithSupportInput structureMap Z) (i : ℤ) :
-    (ambientSheafBorelMooreObject structureMap ω.toRationalDualizingComplex support)⟦-i⟧ ≅
+    {Z : Set (ComplexPoint X)} {d : ℕ}
+    (ω : RationalDualizingComplexOrientationInput X d)
+    (support : DerivedSectionsWithSupportInput X Z) (i : ℤ) :
+    (ambientSheafBorelMooreObject X ω.toRationalDualizingComplex support)⟦-i⟧ ≅
       (DerivedCategory.Q.obj
-        (rationalCohomologyWithSupportComplex structureMap Z))⟦
+        (rationalCohomologyWithSupportComplex X Z))⟦
           (2 * (d : ℤ) - i) - 1⟧ :=
-  (shiftFunctor (AnalyticDerivedCategory structureMap) (-i)).mapIso
-      (ambientSheafBorelMooreOrientationIso structureMap ω support) ≪≫
-    (shiftFunctorAdd' (AnalyticDerivedCategory structureMap)
+  (shiftFunctor (AnalyticDerivedCategory X) (-i)).mapIso
+      (ambientSheafBorelMooreOrientationIso X ω support) ≪≫
+    (shiftFunctorAdd' (AnalyticDerivedCategory X)
       (2 * (d : ℤ)) (-i) (2 * (d : ℤ) - i) (by omega)).symm.app _ ≪≫
-    (shiftFunctorAdd' (AnalyticDerivedCategory structureMap)
+    (shiftFunctorAdd' (AnalyticDerivedCategory X)
       (-1 : ℤ) (2 * (d : ℤ) - i) ((2 * (d : ℤ) - i) - 1) (by omega)).symm.app
         (DerivedCategory.Q.obj
-          (rationalCohomologyWithSupportComplex structureMap Z))
+          (rationalCohomologyWithSupportComplex X Z))
 
 /-- Derived hypercohomology is invariant under a possibly degree-reindexing isomorphism of its
 shifted target objects. -/
 def derivedHypercohomologyAddEquivOfShiftedTargetIso
-    {K L : AnalyticDerivedCategory structureMap} {n m : ℤ}
+    {K L : AnalyticDerivedCategory X} {n m : ℤ}
     (e : K⟦n⟧ ≅ L⟦m⟧) :
-    DerivedHypercohomology structureMap K n ≃+
-      DerivedHypercohomology structureMap L m where
+    DerivedHypercohomology X K n ≃+
+      DerivedHypercohomology X L m where
   toEquiv := (Iso.refl
-    (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))).homCongr e
+    (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))).homCongr e
   map_add' f g := by simp
 
 /-- The equivalence induced by the supplied orientation isomorphism
@@ -204,16 +204,16 @@ It is a composite of the supported isomorphism, categorical shift arithmetic, an
 small-hom presentation of hypercohomology.  Its construction is formal; its identification with
 normalized Alexander--Poincaré duality needs the missing orientation/costalk theorem. -/
 def ambientSheafBorelMooreEquivCohomologyWithSupport
-    {Z : Set (ComplexPoint X structureMap)} {d : ℕ}
-    (ω : RationalDualizingComplexOrientationInput structureMap d)
-    (support : DerivedSectionsWithSupportInput structureMap Z) (i : ℤ) :
-    AmbientSheafBorelMooreHomology structureMap
+    {Z : Set (ComplexPoint X)} {d : ℕ}
+    (ω : RationalDualizingComplexOrientationInput X d)
+    (support : DerivedSectionsWithSupportInput X Z) (i : ℤ) :
+    AmbientSheafBorelMooreHomology X
         ω.toRationalDualizingComplex support i ≃+
-      RationalCohomologyWithSupport structureMap Z (2 * (d : ℤ) - i) :=
-  (derivedHypercohomologyAddEquivOfShiftedTargetIso structureMap
-      (ambientSheafBorelMooreTargetIso structureMap ω support i)).trans
-    (hypercohomologyAddEquivDerived structureMap
-      (rationalCohomologyWithSupportComplex structureMap Z)
+      RationalCohomologyWithSupport X Z (2 * (d : ℤ) - i) :=
+  (derivedHypercohomologyAddEquivOfShiftedTargetIso X
+      (ambientSheafBorelMooreTargetIso X ω support i)).trans
+    (hypercohomologyAddEquivDerived X
+      (rationalCohomologyWithSupportComplex X Z)
       ((2 * (d : ℤ) - i) - 1)).symm
 
 /-- Arithmetic specialization of the orientation shift in cycle-class degree. -/
@@ -227,13 +227,13 @@ lemma borelMoore_cycle_degree {d p : ℕ} (hp : p ≤ d) :
 Unlike the old group-level comparison field, this is obtained functorially from the supplied
 derived-category orientation isomorphism.  Normalization of that input is not proved here. -/
 def ambientSheafBorelMooreCycleDegreeEquiv
-    {Z : Set (ComplexPoint X structureMap)} {d p : ℕ} (hp : p ≤ d)
-    (ω : RationalDualizingComplexOrientationInput structureMap d)
-    (support : DerivedSectionsWithSupportInput structureMap Z) :
-    AmbientSheafBorelMooreHomology structureMap ω.toRationalDualizingComplex support
+    {Z : Set (ComplexPoint X)} {d p : ℕ} (hp : p ≤ d)
+    (ω : RationalDualizingComplexOrientationInput X d)
+    (support : DerivedSectionsWithSupportInput X Z) :
+    AmbientSheafBorelMooreHomology X ω.toRationalDualizingComplex support
         ((2 * (d - p) : ℕ) : ℤ) ≃+
-      RationalCohomologyWithSupport structureMap Z (2 * (p : ℤ)) :=
-  (ambientSheafBorelMooreEquivCohomologyWithSupport structureMap ω support
+      RationalCohomologyWithSupport X Z (2 * (p : ℤ)) :=
+  (ambientSheafBorelMooreEquivCohomologyWithSupport X ω support
     ((2 * (d - p) : ℕ) : ℤ)).trans
       (AddEquiv.cast (borelMoore_cycle_degree hp))
 
@@ -253,24 +253,24 @@ structure RationalCycleComponentSheafBorelMooreComparisonInputs
   borelMoore : RationalCycleComponentBorelMooreData
     V.toSmoothProjectiveComplexVariety x V.dimension p hx
   /-- The proposed dualizing complex and its supplied shift isomorphism. -/
-  dualizing : RationalDualizingComplexOrientationInput V.structureMap V.dimension
+  dualizing : RationalDualizingComplexOrientationInput V.over V.dimension
   /-- Derived sections with support in the analytic cycle component. -/
-  support : DerivedSectionsWithSupportInput V.structureMap
-    (cycleComponentSupport V.structureMap x)
+  support : DerivedSectionsWithSupportInput V.over
+    (cycleComponentSupport V.over x)
   /-- The unconstructed comparison between the compactification-relative singular model and the
   ambient sheaf model.  This is the exact API boundary replacing an arbitrary Alexander-duality
   equivalence. -/
   compactificationComparison :
     CycleComponentBorelMooreHomology ℚ V.toSmoothProjectiveComplexVariety x
         (2 * (V.dimension - p)) ≃+
-      AmbientSheafBorelMooreHomology V.structureMap
+      AmbientSheafBorelMooreHomology V.over
         dualizing.toRationalDualizingComplex support
         ((2 * (V.dimension - p) : ℕ) : ℤ)
   /-- Costalk/local-homology evaluation of an ambient sheaf Borel--Moore class.  Constructing this
   map is part of the missing closed-embedding/costalk comparison. -/
   sheafToLocal : ∀ z : CycleComponentAnalyticPoint
       V.toSmoothProjectiveComplexVariety x,
-    AmbientSheafBorelMooreHomology V.structureMap
+    AmbientSheafBorelMooreHomology V.over
         dualizing.toRationalDualizingComplex support
         ((2 * (V.dimension - p) : ℕ) : ℤ) →+
       RelativeHomology ℚ (pointComplementPair z) (2 * (V.dimension - p))
@@ -311,7 +311,7 @@ def compactificationFundamentalClass
 local normalization relative to the supplied costalk map is proved below. -/
 def sheafBorelMooreClassOfComparisons
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    AmbientSheafBorelMooreHomology V.structureMap
+    AmbientSheafBorelMooreHomology V.over
       D.dualizing.toRationalDualizingComplex D.support
       ((2 * (V.dimension - p) : ℕ) : ℤ) :=
   D.compactificationComparison D.compactificationFundamentalClass
@@ -322,7 +322,7 @@ lemma sheafToLocal_sheafBorelMooreClassOfComparisons
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx)
     (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
     (hz : z ∈ cycleComponentSmoothAnalyticLocus
-      V.structureMap x) :
+      V.over x) :
     D.sheafToLocal z D.sheafBorelMooreClassOfComparisons =
       D.borelMoore.localOrientation z hz := by
   rw [sheafBorelMooreClassOfComparisons,
@@ -333,9 +333,9 @@ lemma sheafToLocal_sheafBorelMooreClassOfComparisons
 No canonicity or complex-orientation normalization is asserted at this boundary. -/
 def supportedClassOfComparisons
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    RationalCohomologyWithSupport V.structureMap
-      (cycleComponentSupport V.structureMap x) (2 * (p : ℤ)) :=
-  ambientSheafBorelMooreCycleDegreeEquiv V.structureMap
+    RationalCohomologyWithSupport V.over
+      (cycleComponentSupport V.over x) (2 * (p : ℤ)) :=
+  ambientSheafBorelMooreCycleDegreeEquiv V.over
     D.codimension_le_dimension D.dualizing D.support D.sheafBorelMooreClassOfComparisons
 
 /-- The additive equivalence obtained by composing the supplied compactification comparison,
@@ -356,12 +356,12 @@ def orientationInducedComparisonAddEquiv
     opens_paracompactSpace_of_compact_chartedSpace
       (H := Fin V.dimension → ℂ) U
   exact D.compactificationComparison |>.trans
-    (ambientSheafBorelMooreCycleDegreeEquiv V.structureMap
+    (ambientSheafBorelMooreCycleDegreeEquiv V.over
       D.codimension_le_dimension D.dualizing D.support) |>.trans
     (rationalCohomologyWithSupportAddEquivSingular
-      V.structureMap
-        (cycleComponentSupport V.structureMap x)
-        (isClosed_cycleComponentSupport V.structureMap x) (2 * p))
+      V.over
+        (cycleComponentSupport V.over x)
+        (isClosed_cycleComponentSupport V.over x) (2 * p))
 
 /-- The singular supported class obtained from all supplied comparisons. -/
 def singularSupportedClassOfComparisons
@@ -401,9 +401,9 @@ set_option maxRecDepth 5000 in
 /-- Forgetting support gives the comparison-dependent ordinary rational class. -/
 def ordinaryClassOfComparisons
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    FieldCohomology ℚ V.structureMap (2 * (p : ℤ)) :=
-  forgetSupport V.structureMap
-    (cycleComponentSupport V.structureMap x) (2 * (p : ℤ))
+    FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+  forgetSupport V.over
+    (cycleComponentSupport V.over x) (2 * (p : ℤ))
       D.supportedClassOfComparisons
 
 end RationalCycleComponentSheafBorelMooreComparisonInputs
@@ -425,7 +425,7 @@ structure ComplexOrientedRationalCycleComponentSheafBorelMooreData
       (c : CycleComponentBorelMooreHomology ℚ
         V.toSmoothProjectiveComplexVariety x (2 * (V.dimension - p)))
       (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
-      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x),
+      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
     localThomCap.capWithAmbientComplexOrientation z hz
         (comparisonInputs.orientationInducedComparisonAddEquiv c) =
       cycleComponentBorelMooreToLocal ℚ V.toSmoothProjectiveComplexVariety x
@@ -470,7 +470,7 @@ def supportedFundamentalClass
 theorem alexanderPoincare_fundamentalClass_local
     (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx)
     (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x) :
+    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     D.localThomCap.capWithAmbientComplexOrientation z hz D.supportedFundamentalClass =
       cycleComponentComplexLocalOrientation V.toSmoothProjectiveComplexVariety x
         V.dimension p hx z hz :=
@@ -482,7 +482,7 @@ theorem supportedFundamentalClass_unique
     (α : RationalSingularCycleComponentCohomologyWithSupport
       V.toSmoothProjectiveComplexVariety x (2 * p))
     (hα : ∀ (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
-      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x),
+      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
       D.localThomCap.capWithAmbientComplexOrientation z hz α =
         cycleComponentComplexLocalOrientation V.toSmoothProjectiveComplexVariety x
           V.dimension p hx z hz) :
@@ -531,7 +531,7 @@ def ofSheaf
           D.pushforwardCycle = 0)
     (x : V.scheme) (hx : coheight x = p) :
     (ofSheaf component hprincipal).cycleClass
-        (rationalComponentChowClass V.structureMap p x hx) =
+        (rationalComponentChowClass V.over p x hx) =
       (component x hx).ordinaryFundamentalClass := by
   exact (ofSheaf component hprincipal).cycleClass_component x hx
 

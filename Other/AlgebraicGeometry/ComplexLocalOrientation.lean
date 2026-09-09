@@ -43,55 +43,55 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
 noncomputable local instance :
-    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- The local fundamental class at a smooth complex point, constructed from its chosen algebraic
 étale chart and the standard complex orientation. -/
-def localFundamentalClass [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint X structureMap) :
+def localFundamentalClass [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
     RelativeHomology ℚ (pointComplementPair z) (2 * d) :=
-  localClassOfChart d (localChart structureMap d z) z
-    (mem_localChart_source structureMap d z)
+  localClassOfChart d (localChart X d z) z
+    (mem_localChart_source X d z)
 
 /-- A family of rational top-degree local homology classes on a complex analytic space. -/
 abbrev RationalLocalHomologyClassFamily :=
-  ∀ z : ComplexPoint X structureMap,
+  ∀ z : ComplexPoint X,
     RelativeHomology ℚ (pointComplementPair z) (2 * d)
 
 /-- The canonical pointwise local orientation of a smooth complex scheme, constructed from its
 algebraic étale charts and the standard complex local class. -/
-def complexLocalOrientation [SmoothOfRelativeDimension d structureMap] :
-    RationalLocalHomologyClassFamily structureMap d :=
-  fun z ↦ localFundamentalClass structureMap d z
+def complexLocalOrientation [SmoothOfRelativeDimension d X.hom] :
+    RationalLocalHomologyClassFamily X d :=
+  fun z ↦ localFundamentalClass X d z
 
 @[simp]
-lemma complexLocalOrientation_apply [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint X structureMap) :
-    complexLocalOrientation structureMap d z = localFundamentalClass structureMap d z :=
+lemma complexLocalOrientation_apply [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
+    complexLocalOrientation X d z = localFundamentalClass X d z :=
   rfl
 
 /-- The local orientation is exactly the standard complex class transported through the
 canonical algebraic étale chart at the point. -/
 lemma complexLocalOrientation_eq_localClassOfChart
-    [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint X structureMap) :
-    complexLocalOrientation structureMap d z =
-      localClassOfChart d (localChart structureMap d z) z
-        (mem_localChart_source structureMap d z) :=
+    [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
+    complexLocalOrientation X d z =
+      localClassOfChart d (localChart X d z) z
+        (mem_localChart_source X d z) :=
   rfl
 
 /-- At every point of a `T₁` smooth complex analytic space, the constructed local orientation
 class generates the full top local homology group. -/
 theorem span_complexLocalOrientation_eq_top
-    [SmoothOfRelativeDimension d structureMap]
-    [T1Space (ComplexPoint X structureMap)]
-    (z : ComplexPoint X structureMap) :
-    Submodule.span ℚ {complexLocalOrientation structureMap d z} = ⊤ := by
+    [SmoothOfRelativeDimension d X.hom]
+    [T1Space (ComplexPoint X)]
+    (z : ComplexPoint X) :
+    Submodule.span ℚ {complexLocalOrientation X d z} = ⊤ := by
   rw [complexLocalOrientation_eq_localClassOfChart]
-  exact span_localClassOfChart_eq_top d (localChart structureMap d z) z
-    (mem_localChart_source structureMap d z)
+  exact span_localClassOfChart_eq_top d (localChart X d z) z
+    (mem_localChart_source X d z)
 
 end AlgebraicGeometry.ComplexPoint

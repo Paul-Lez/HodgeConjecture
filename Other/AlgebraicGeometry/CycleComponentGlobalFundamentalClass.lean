@@ -125,11 +125,11 @@ def CycleComponentLocalOrientationPropagatesFrom
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ)
     (orientation : CycleComponentLocalOrientation ℚ V x n)
     (anchor : CycleComponentAnalyticPoint V x)
-    (hanchor : anchor ∈ cycleComponentSmoothAnalyticLocus V.structureMap x) : Prop :=
+    (hanchor : anchor ∈ cycleComponentSmoothAnalyticLocus V.over x) : Prop :=
   ∀ c : Homology ℚ (TopCat.of (CycleComponentAnalyticPoint V x)) n,
     pointLocalHomologyRestriction n anchor c = orientation anchor hanchor →
       ∀ (z : CycleComponentAnalyticPoint V x)
-        (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x),
+        (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
         pointLocalHomologyRestriction n z c = orientation z hz
 
 /-- Geometric context shared by the alternative global fundamental-class input packages.  It
@@ -142,7 +142,7 @@ structure RationalCycleComponentGlobalFundamentalClassCore
   /-- A smooth point at which the global class is first lifted. -/
   anchor : CycleComponentAnalyticPoint V x
   /-- The anchor lies in the smooth analytic locus. -/
-  anchor_mem_smoothLocus : anchor ∈ cycleComponentSmoothAnalyticLocus V.structureMap x
+  anchor_mem_smoothLocus : anchor ∈ cycleComponentSmoothAnalyticLocus V.over x
   /-- The degree immediately below the positive top degree. -/
   boundaryDegree : ℕ
   /-- The component top degree is the successor of the boundary degree. -/
@@ -275,8 +275,8 @@ lemma localOrientation_eq_componentLocalOrientationClass
     [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
     (D : RationalCycleComponentGlobalFundamentalClassInputs V x d p hx)
     (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x)
-    (C : CycleComponentSeparateLocalCoordinates V.structureMap x d (d - p))
+    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x)
+    (C : CycleComponentSeparateLocalCoordinates V.over x d (d - p))
     (hpoint : C.point = z) :
     D.localOrientation z hz = hpoint ▸ C.componentLocalOrientationClass :=
   (AlgebraicGeometry.CycleComponentSeparateLocalCoordinates.componentLocalOrientationClass_eq_cycleComponentComplexLocalOrientation
@@ -339,7 +339,7 @@ lemma pointLocalHomologyRestriction_ordinaryFundamentalClass
     [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
     (D : RationalCycleComponentGlobalFundamentalClassInputs V x d p hx)
     (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x) :
+    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     pointLocalHomologyRestriction (2 * (d - p)) z
         D.ordinaryFundamentalClass = D.localOrientation z hz :=
   D.localOrientation_propagates D.ordinaryFundamentalClass
@@ -362,7 +362,7 @@ lemma cycleComponentBorelMooreToLocal_fundamentalClass
     [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
     (D : RationalCycleComponentGlobalFundamentalClassInputs V x d p hx)
     (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.structureMap x) :
+    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     cycleComponentBorelMooreToLocal ℚ V x (2 * (d - p)) z D.fundamentalClass =
       D.localOrientation z hz := by
   rw [fundamentalClass,

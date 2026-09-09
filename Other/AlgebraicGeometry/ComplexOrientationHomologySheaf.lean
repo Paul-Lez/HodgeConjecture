@@ -39,118 +39,118 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec (.of ℂ)) (d : ℕ)
+variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
 noncomputable local instance complexOrientationHomologySheafAnalyticTopology :
-    TopologicalSpace (ComplexPoint X structureMap) := Point.analyticTopology
+    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
-variable [SmoothOfRelativeDimension d structureMap]
-  [T2Space (ComplexPoint X structureMap)]
+variable [SmoothOfRelativeDimension d X.hom]
+  [T2Space (ComplexPoint X)]
 
 /-- Scalar multiples of the exact normalized local orientation, viewed in the actual
 homology-sheaf stalk through its canonical local-homology comparison. -/
-def complexOrientationHomologyStalkMap (x : ComplexPoint X structureMap) :
+def complexOrientationHomologyStalkMap (x : ComplexPoint X) :
     AddCommGrpCat.of ℚ ⟶
-      (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X structureMap)) (2 * d)).presheaf.stalk x :=
+      (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d)).presheaf.stalk x :=
   AddCommGrpCat.ofHom
-    ((LinearMap.toSpanSingleton ℚ _ (complexLocalOrientation structureMap d x)).toAddMonoidHom) ≫
-      (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X structureMap)) x (2 * d)).inv
+    ((LinearMap.toSpanSingleton ℚ _ (complexLocalOrientation X d x)).toAddMonoidHom) ≫
+      (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X)) x (2 * d)).inv
 
 /-- Local representability is proved using the actual geometric neighborhood class,
 not assumed as an orientation-sheaf field. -/
 theorem complexOrientationHomologyStalkMap_locallyRepresentable :
-    ∀ (q : ℚ) (x : ComplexPoint X structureMap),
-      ∃ (U : Opens (ComplexPoint X structureMap)) (_ : x ∈ U)
-        (s : (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X structureMap))
+    ∀ (q : ℚ) (x : ComplexPoint X),
+      ∃ (U : Opens (ComplexPoint X)) (_ : x ∈ U)
+        (s : (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X))
           (2 * d)).presheaf.obj (op U)),
-        ∀ (y : ComplexPoint X structureMap) (hy : y ∈ U),
-          (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X structureMap))
+        ∀ (y : ComplexPoint X) (hy : y ∈ U),
+          (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X))
             (2 * d)).presheaf.germ U y hy s =
-              complexOrientationHomologyStalkMap structureMap d y q := by
+              complexOrientationHomologyStalkMap X d y q := by
   intro q x
-  let U := complexLocalOrientationNeighborhood structureMap d x
-  let c := complexLocalOrientationNeighborhoodClass structureMap d x
-  refine ⟨U, mem_complexLocalOrientationNeighborhood structureMap d x,
-    relativeHomologyToHomologySheafSection ℚ (TopCat.of (ComplexPoint X structureMap))
+  let U := complexLocalOrientationNeighborhood X d x
+  let c := complexLocalOrientationNeighborhoodClass X d x
+  refine ⟨U, mem_complexLocalOrientationNeighborhood X d x,
+    relativeHomologyToHomologySheafSection ℚ (TopCat.of (ComplexPoint X))
       U (2 * d) (q • c), ?_⟩
   intro y hy
   apply ((ConcreteCategory.isIso_iff_bijective
-    (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X structureMap))
+    (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X))
       y (2 * d)).hom).mp inferInstance).injective
   have hgerm := ConcreteCategory.congr_hom
     (relativeHomologyToHomologySheafSection_germ ℚ
-      (TopCat.of (ComplexPoint X structureMap)) U y hy (2 * d)) (q • c)
+      (TopCat.of (ComplexPoint X)) U y hy (2 * d)) (q • c)
   simp only [ConcreteCategory.comp_apply] at hgerm
   erw [hgerm]
   change relativeHomologyMap ℚ (2 * d) (supportInclusionPairMap _ _) (q • c) =
-    (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X structureMap))
+    (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X))
       y (2 * d)).hom ((singularChainHomologySheafStalkIso ℚ
-        (TopCat.of (ComplexPoint X structureMap)) y (2 * d)).inv
-          (q • complexLocalOrientation structureMap d y))
+        (TopCat.of (ComplexPoint X)) y (2 * d)).inv
+          (q • complexLocalOrientation X d y))
   rw [← ConcreteCategory.comp_apply, Iso.inv_hom_id]
   change relativeHomologyMap ℚ (2 * d) (supportInclusionPairMap _ _) (q • c) =
-    q • complexLocalOrientation structureMap d y
+    q • complexLocalOrientation X d y
   rw [map_smul]
-  exact congrArg (q • ·) (complexLocalOrientationNeighborhoodClass_restrict structureMap d x y hy)
+  exact congrArg (q • ·) (complexLocalOrientationNeighborhoodClass_restrict X d x y hy)
 
 /-- Each stalk map is an isomorphism by the already constructed, exactly normalized
 local generator theorem. -/
-theorem complexOrientationHomologyStalkMap_isIso (x : ComplexPoint X structureMap) :
-    IsIso (complexOrientationHomologyStalkMap structureMap d x) := by
-  have hne : complexLocalOrientation structureMap d x ≠ 0 :=
-    localClassOfChart_ne_zero d (localChart structureMap d x) x
-      (mem_localChart_source structureMap d x)
+theorem complexOrientationHomologyStalkMap_isIso (x : ComplexPoint X) :
+    IsIso (complexOrientationHomologyStalkMap X d x) := by
+  have hne : complexLocalOrientation X d x ≠ 0 :=
+    localClassOfChart_ne_zero d (localChart X d x) x
+      (mem_localChart_source X d x)
   have hbij : Function.Bijective (LinearMap.toSpanSingleton ℚ _
-      (complexLocalOrientation structureMap d x)) := by
+      (complexLocalOrientation X d x)) := by
     constructor
     · exact smul_left_injective ℚ hne
     · intro a
-      have ha : a ∈ Submodule.span ℚ {complexLocalOrientation structureMap d x} := by
+      have ha : a ∈ Submodule.span ℚ {complexLocalOrientation X d x} := by
         rw [span_complexLocalOrientation_eq_top]
         exact Submodule.mem_top
       exact Submodule.mem_span_singleton.mp ha
   let : IsIso (AddCommGrpCat.ofHom
-      ((LinearMap.toSpanSingleton ℚ _ (complexLocalOrientation structureMap d x)).toAddMonoidHom)) :=
+      ((LinearMap.toSpanSingleton ℚ _ (complexLocalOrientation X d x)).toAddMonoidHom)) :=
     (ConcreteCategory.isIso_iff_bijective _).mpr hbij
   unfold complexOrientationHomologyStalkMap
   infer_instance
 
 /-- The actual sheaf map obtained by gluing the geometric neighborhood orientations. -/
 def constantToComplexOrientationHomologySheaf :
-    singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X structureMap)) ⟶
-      singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X structureMap)) (2 * d) :=
+    singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X)) ⟶
+      singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d) :=
   TopCat.Sheaf.constantSheafMapOfLocallyRepresentable _ (AddCommGrpCat.of ℚ)
-    (complexOrientationHomologyStalkMap structureMap d)
-    (complexOrientationHomologyStalkMap_locallyRepresentable structureMap d)
+    (complexOrientationHomologyStalkMap X d)
+    (complexOrientationHomologyStalkMap_locallyRepresentable X d)
 
 /-- The constructed normalized orientation is an isomorphism of actual sheaves. -/
 def complexOrientationHomologySheafIso :
-    singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X structureMap)) ≅
-      singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X structureMap)) (2 * d) := by
-  letI : IsIso (constantToComplexOrientationHomologySheaf structureMap d) := by
+    singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X)) ≅
+      singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d) := by
+  letI : IsIso (constantToComplexOrientationHomologySheaf X d) := by
     unfold constantToComplexOrientationHomologySheaf
     exact TopCat.Sheaf.constantSheafMapOfLocallyRepresentable_isIso
-      (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X structureMap)) (2 * d))
+      (singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d))
       (AddCommGrpCat.of ℚ)
-      (complexOrientationHomologyStalkMap structureMap d)
-      (complexOrientationHomologyStalkMap_locallyRepresentable structureMap d)
-      (complexOrientationHomologyStalkMap_isIso structureMap d)
-  exact asIso (constantToComplexOrientationHomologySheaf structureMap d)
+      (complexOrientationHomologyStalkMap X d)
+      (complexOrientationHomologyStalkMap_locallyRepresentable X d)
+      (complexOrientationHomologyStalkMap_isIso X d)
+  exact asIso (constantToComplexOrientationHomologySheaf X d)
 
 /-- On every stalk the assembled sheaf isomorphism is scalar multiplication by the
 exact complex orientation, through the canonical constant and local-homology maps. -/
 @[reassoc]
-theorem complexOrientationHomologySheafIso_stalk (x : ComplexPoint X structureMap) :
-    (TopCat.Sheaf.constantSheafStalkIso (X := TopCat.of (ComplexPoint X structureMap))
+theorem complexOrientationHomologySheafIso_stalk (x : ComplexPoint X) :
+    (TopCat.Sheaf.constantSheafStalkIso (X := TopCat.of (ComplexPoint X))
       (AddCommGrpCat.of ℚ) x).hom ≫
       (TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map
-        (complexOrientationHomologySheafIso structureMap d).hom.hom ≫
-      (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X structureMap))
+        (complexOrientationHomologySheafIso X d).hom.hom ≫
+      (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X))
         x (2 * d)).hom =
       AddCommGrpCat.ofHom
-        ((LinearMap.toSpanSingleton ℚ _ (complexLocalOrientation structureMap d x)).toAddMonoidHom) := by
+        ((LinearMap.toSpanSingleton ℚ _ (complexLocalOrientation X d x)).toAddMonoidHom) := by
   change _ ≫ (TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map
-    (constantToComplexOrientationHomologySheaf structureMap d).hom ≫ _ = _
+    (constantToComplexOrientationHomologySheaf X d).hom ≫ _ = _
   unfold constantToComplexOrientationHomologySheaf
   rw [← Category.assoc]
   erw [TopCat.Sheaf.constantSheafMapOfLocallyRepresentable_stalk]
@@ -159,14 +159,14 @@ theorem complexOrientationHomologySheafIso_stalk (x : ComplexPoint X structureMa
 
 /-- In particular the isomorphism sends the germ of the constant section `1` to
 the exact normalized complex local fundamental class. -/
-theorem complexOrientationHomologySheafIso_stalk_one (x : ComplexPoint X structureMap) :
-    ((TopCat.Sheaf.constantSheafStalkIso (X := TopCat.of (ComplexPoint X structureMap))
+theorem complexOrientationHomologySheafIso_stalk_one (x : ComplexPoint X) :
+    ((TopCat.Sheaf.constantSheafStalkIso (X := TopCat.of (ComplexPoint X))
       (AddCommGrpCat.of ℚ) x).hom ≫
       (TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map
-        (complexOrientationHomologySheafIso structureMap d).hom.hom ≫
-      (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X structureMap))
-        x (2 * d)).hom) 1 = complexLocalOrientation structureMap d x := by
+        (complexOrientationHomologySheafIso X d).hom.hom ≫
+      (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X))
+        x (2 * d)).hom) 1 = complexLocalOrientation X d x := by
   rw [complexOrientationHomologySheafIso_stalk]
-  exact LinearMap.toSpanSingleton_apply_one ℚ _ (complexLocalOrientation structureMap d x)
+  exact LinearMap.toSpanSingleton_apply_one ℚ _ (complexLocalOrientation X d x)
 
 end AlgebraicGeometry.ComplexPoint
