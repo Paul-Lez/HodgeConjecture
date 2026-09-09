@@ -102,6 +102,20 @@ theorem rationalSheafCycleClassOnCycles_tmul_single
       q • cycleComponentSheafClass V.structureMap x (d := V.dimension) hx := by
   simp
 
+/-- Every actually constructed component class belongs to the algebraic cycle-class span. -/
+theorem cycleComponentSheafClass_mem_algebraicCycleClassSpan
+    {X : Scheme} [IsIntegral X]
+    (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap] [IsProjective structureMap]
+    (p : ℕ) (x : X) (hx : coheight x = p) :
+    cycleComponentSheafClass structureMap x (d := dim X) hx ∈
+      algebraicCycleClassSpan structureMap p := by
+  have hle :
+      Submodule.span ℚ {cycleComponentSheafClass structureMap x (d := dim X) hx} ≤
+        algebraicCycleClassSpan structureMap p := by
+    unfold algebraicCycleClassSpan
+    exact le_iSup_of_le x (le_iSup_of_le hx le_rfl)
+  exact hle (Submodule.subset_span (Set.mem_singleton _))
+
 /-- Every finite rational combination is sent to the corresponding exact
 combination of the constructed ordinary cohomology classes. -/
 theorem rationalSheafCycleClassOnCycles_sum_tmul_single

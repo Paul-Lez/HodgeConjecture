@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
@@ -91,6 +92,17 @@ structure DimensionedSmoothProjectiveComplexVariety where
     toSmoothProjectiveComplexVariety.structureMap]
 
 namespace DimensionedSmoothProjectiveComplexVariety
+
+/-- Canonically package an unbundled smooth projective integral complex variety with its
+dimension. The relative-dimension certificate is the theorem that a smooth integral complex
+scheme has relative dimension `dim X`; it is not additional input. -/
+def ofStructureMap {X : Scheme} [IsIntegral X]
+    (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap] [IsProjective structureMap] :
+    DimensionedSmoothProjectiveComplexVariety where
+  toSmoothProjectiveComplexVariety :=
+    { scheme := X
+      structureMap := structureMap }
+  dimension := TopologicalSpace.dim X
 
 /-- The relative-dimension certificate stored in a dimensioned variety. -/
 instance (V : DimensionedSmoothProjectiveComplexVariety) :
