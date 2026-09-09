@@ -24,5 +24,5 @@ The remaining content of the project is sorted into four folders:
 - `HodgeConjecture/Lemmas`: Supporting results needed by those definitions;
 - `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
 
-WIP formaliaation guide: <https://paul-lez.github.io/HodgeConjecture/>.
+WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
 
