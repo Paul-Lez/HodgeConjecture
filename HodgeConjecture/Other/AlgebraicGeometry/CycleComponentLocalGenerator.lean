@@ -43,6 +43,8 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry
 
+attribute [local instance] overSpecAlgebra
+
 noncomputable local instance {Y : Over (Spec ↧ℂ)} :
     TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
@@ -53,25 +55,6 @@ variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
 namespace CycleComponentSeparateLocalCoordinates
 
 variable (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-/-- The smooth locus of the reduced cycle component underlying an exact coordinate package. -/
-abbrev componentSmoothLocus
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) :=
-  (cycleComponentι X.left x ≫ X.hom).smoothLocus
-
-/-- The complex structure map on the component's smooth locus. -/
-abbrev componentSmoothStructureMap
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) :
-    (componentSmoothLocus X x).toScheme ⟶ Spec ↧ℂ :=
-  (componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom
-
-/-- The component's smooth locus, bundled over the complex base. -/
-abbrev componentSmoothScheme
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) : Over (Spec ↧ℂ) :=
-  Over.mk (componentSmoothStructureMap X x)
 
 /-- The selected smooth component point regarded as a complex point of the smooth locus. -/
 def smoothPoint : ComplexPoint (componentSmoothScheme X x) :=
@@ -135,8 +118,8 @@ lemma C_comp_coordinateRingHomOnNeighborhood :
   change CommRingCat.ofHom
       (C.componentCoordinateRingHom.comp MvPolynomial.C) =
     CommRingCat.ofHom
-      (complexRestrictionMap (componentSmoothStructureMap X x)
-        C.componentNeighborhood)
+      (algebraMap ℂ Γ((componentSmoothScheme X x).left,
+        C.componentNeighborhood))
   exact congrArg CommRingCat.ofHom C.componentCoordinateRingHom_comp_C
 
 /-- The transported exact coordinate map remains étale. -/

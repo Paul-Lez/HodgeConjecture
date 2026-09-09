@@ -286,8 +286,8 @@ lemma SmoothOfRelativeDimension.orderKrullDim_le_complex
       (d := d) f x
   refine ⟨U, hxU, ?_⟩
   rw [orderKrullDim_affineOpen_eq_ringKrullDim U hU]
-  exact (complexRestrictionMap_isStandardSmoothOfRelativeDimension
-    (d := d) f hsmooth).ringKrullDim_le_complex
+  exact (algebraMap_isStandardSmoothOfRelativeDimension
+    (d := d) (Over.mk f) hsmooth).ringKrullDim_le_complex
 
 /-- At every point of a smooth complex scheme of relative dimension `d`, the sum of the
 order-theoretic dimension and codimension is at most `d`. -/

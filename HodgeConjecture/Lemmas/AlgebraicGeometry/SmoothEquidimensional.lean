@@ -84,7 +84,7 @@ lemma orderKrullDim_eq_of_isStandardSmoothOfRelativeDimension {U : X.Opens} {n :
     (h : (f.appLE ⊤ U (by simp)).hom.IsStandardSmoothOfRelativeDimension n) :
     Order.krullDim U = n := by
   rw [orderKrullDim_affineOpen_eq_ringKrullDim U hU]
-  exact (complexRestrictionMap_isStandardSmoothOfRelativeDimension f h).ringKrullDim_eq_complex
+  exact (algebraMap_isStandardSmoothOfRelativeDimension (Over.mk f) h).ringKrullDim_eq_complex
 
 /-- The Krull dimension of an open subscheme does not exceed that of the ambient scheme. -/
 lemma orderKrullDim_mono {U V : X.Opens} (h : U ≤ V) : Order.krullDim U ≤ Order.krullDim V := by

@@ -132,8 +132,7 @@ lemma Smooth.isRegularLocalRing_stalk_complex [Smooth f] (x : X) :
   obtain ⟨V, hV, hxV, hf⟩ :=
     Smooth.exists_affine_isStandardSmooth f x
   let P : Ideal Γ(X, V) := (hV.primeIdealOf ⟨x, hxV⟩).asIdeal
-  have hstandard : (complexRestrictionMap f V).IsStandardSmooth :=
-    complexRestrictionMap_isStandardSmooth f hf
+  have hstandard := algebraMap_isStandardSmooth (Over.mk f) hf
   have hregular : IsRegularLocalRing (Localization.AtPrime P) :=
     RingHom.IsStandardSmooth.isRegularLocalRing_atPrime hstandard P
   let : Algebra Γ(X, V) (X.presheaf.stalk x) :=
