@@ -319,3 +319,9 @@ public import Other.AlgebraicGeometry.ExplicitEllipticSmoothness
 public import Other.Algebra.Homology.ShortExactResolution
 public import Other.AlgebraicGeometry.HolomorphicExponentialResolution
 public import Other.AlgebraicGeometry.ExponentialClassHodge
+import Other.Algebra.Homology.FirstStupidTruncation
+import Other.AlgebraicGeometry.HolomorphicZeroForms
+import Other.AlgebraicGeometry.HypercohomologyExact
+import Other.AlgebraicGeometry.FirstHodgeObstruction
+import Other.AlgebraicGeometry.ExponentialClassImage
+import Other.AlgebraicGeometry.ExplicitEllipticSurface

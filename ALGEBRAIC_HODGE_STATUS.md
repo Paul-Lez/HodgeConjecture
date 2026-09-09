@@ -62,6 +62,17 @@ additional axioms or assumed comparison maps:
   `2πi • fieldToDeRhamCohomology (rationalExponentialClass α) = logarithmicClass α`
   and consequently proves `rationalExponentialClass_isHodge` in degree two.
 
+- `HolomorphicZeroForms.lean` identifies the actual analytic quotient in degree
+  zero with holomorphic functions, including the sheaf isomorphism.
+- `FirstHodgeObstruction.lean` constructs the short exact sequence
+  `0 → F¹Ω• → Ω• → O[0] → 0` and proves that a rational degree-two class is
+  Hodge exactly when its image in actual holomorphic-function cohomology vanishes.
+- `ExponentialClassImage.lean` proves the converse for integral classes:
+  `integralClass_isHodge_iff_exponential` identifies integral classes whose
+  rational images are Hodge with the image of the actual exponential class map.
+  The exactness needed here is proved for the repository's hypercohomology model
+  in `HypercohomologyExact.lean`.
+
 These results establish Hodge membership for the actual exponential classes.
 They do **not yet identify an algebraic component class with an exponential
 class**, and they do not prove the requested inclusion in arbitrary codimension.
@@ -107,14 +118,19 @@ The subsequent `ExplicitEllipticCharts.lean`, `ExplicitProjectivePlaneChart.lean
 - Base change and composition prove
   `SmoothOfRelativeDimension 2 surfaceToBase` for the actual self-product.
 
-Thus the displayed curve is now proved smooth, integral, projective, and
-nonempty. The self-product's integrality and explicit projective presentation,
-and the cohomology/filtration computation needed for the non-Hodge example,
-remain to be established. A non-Hodge class has not yet been constructed.
+`ExplicitEllipticSurface.lean` further proves that the actual self-product is
+integral: all four affine product charts have domain tensor-product coordinate
+rings, and their shared explicit point proves irreducibility. Thus the displayed
+curve is smooth, integral, projective, and nonempty, and its actual self-product
+is smooth, integral, proper, and of relative dimension two.
+
+The self-product's explicit projective presentation and the cohomology/filtration
+computation needed for the non-Hodge example remain to be established. A non-Hodge
+class has not yet been constructed.
 
 ## Verification
 
-- `lake build` succeeds for both default library targets (4714 jobs).
+- `lake build` succeeds for both default library targets (4720 jobs).
 - The new cohomological theorems were checked with `#print axioms`; they use only
   `propext`, `Classical.choice`, and `Quot.sound`.
 - No `sorry`, `admit`, new axioms, or unsafe declarations were added.
