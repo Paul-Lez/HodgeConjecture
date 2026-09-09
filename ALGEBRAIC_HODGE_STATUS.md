@@ -41,6 +41,31 @@ see [Deligne, *The Hodge Conjecture*, §§1 and 3](https://www.claymath.org/wp-c
 Implementing that route also requires comparing it with the existing normalized
 class and with the repository's holomorphic de Rham hypercohomology.
 
+The following analytic prerequisites are now proved and constructed, without
+additional axioms or assumed comparison maps:
+
+- `Other/Algebra/DeRham/Logarithmic.lean` constructs logarithmic forms in every
+  degree, proves they are closed, and proves `dlog(uv) = dlog(u) + dlog(v)`.
+- `HolomorphicLogarithmicForms.lean` constructs logarithmic forms on the actual
+  analytic variety and the `dlog` morphism of sheaves and cochain complexes.
+- `FilteredLogarithmicClass.lean` factors that morphism through the actual
+  first filtered de Rham complex and constructs filtered logarithmic classes.
+- `HolomorphicExponential.lean`, `HolomorphicLocalLogarithm.lean`, and
+  `HolomorphicExponentialSequence.lean` construct the holomorphic exponential,
+  prove `dlog(exp f) = df` using actual chart derivatives, construct local
+  logarithm branches, and prove the actual sequence
+  `0 → ℤ → O → Oˣ → 0` short exact, with integer map `n ↦ 2πi n`.
+- `HolomorphicExponentialResolution.lean` constructs its two-term resolution,
+  proves the augmentation a quasi-isomorphism, and constructs integral and
+  rational exponential classes in actual analytic cohomology.
+- `ExponentialClassHodge.lean` proves the precise comparison
+  `2πi • fieldToDeRhamCohomology (rationalExponentialClass α) = logarithmicClass α`
+  and consequently proves `rationalExponentialClass_isHodge` in degree two.
+
+These results establish Hodge membership for the actual exponential classes.
+They do **not yet identify an algebraic component class with an exponential
+class**, and they do not prove the requested inclusion in arbitrary codimension.
+
 ## Non-Hodge classes on an explicit variety
 
 `Other/AlgebraicGeometry/NonHodgeClass.lean` proves the following criterion using
@@ -65,15 +90,31 @@ self-product's properness. The defining cubic is homogeneous of degree three
 and, after changing coefficients to `ℂ`, is exactly the projective polynomial
 of the displayed Weierstrass equation with discriminant `64`.
 
-Scheme smoothness and integrality, the self-product's explicit projective
-presentation, and its cohomology/filtration computation remain unproved.
-The pointwise Weierstrass nonsingularity result
-is not used as a substitute for a proof of scheme smoothness. Consequently this
-construction is a concrete candidate, not a completed geometric non-Hodge example.
+The subsequent `ExplicitEllipticCharts.lean`, `ExplicitProjectivePlaneChart.lean`,
+`ExplicitEllipticChartRings.lean`, `ExplicitEllipticIntegrality.lean`, and
+`ExplicitEllipticSmoothness.lean` prove actual scheme geometry:
+
+- The `Y ≠ 0` and `Z ≠ 0` opens are affine and cover the cubic; actual complex
+  points are constructed, including the point at infinity and a point in their
+  intersection.
+- Standard projective-plane chart rings are explicitly identified with
+  two-variable polynomial rings; the actual curve charts are identified with
+  the corresponding reduced dehomogenized cubic quotients.
+- Both equations generate prime ideals, and the overlapping integral affine
+  charts prove that the actual projective cubic is integral.
+- A Jacobian argument on those identified charts, respecting their original
+  complex structure maps, proves `SmoothOfRelativeDimension 1 curveToBase`.
+- Base change and composition prove
+  `SmoothOfRelativeDimension 2 surfaceToBase` for the actual self-product.
+
+Thus the displayed curve is now proved smooth, integral, projective, and
+nonempty. The self-product's integrality and explicit projective presentation,
+and the cohomology/filtration computation needed for the non-Hodge example,
+remain to be established. A non-Hodge class has not yet been constructed.
 
 ## Verification
 
-- `lake build` succeeds for both default library targets (4681 jobs).
+- `lake build` succeeds for both default library targets (4714 jobs).
 - The new cohomological theorems were checked with `#print axioms`; they use only
   `propext`, `Classical.choice`, and `Quot.sound`.
 - No `sorry`, `admit`, new axioms, or unsafe declarations were added.

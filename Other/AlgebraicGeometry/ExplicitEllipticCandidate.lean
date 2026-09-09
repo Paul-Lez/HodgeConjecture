@@ -17,9 +17,11 @@ This file constructs the closed subscheme of the complex projective plane cut ou
 by `Y²Z = X³ - XZ²`, with its induced vanishing-ideal subscheme structure. Its structure map is
 projective and proper. Its self-product is also an actual scheme, with a proper structure map.
 
-The associated Weierstrass equation has discriminant `64`. These constructions are preparation
-for a geometric non-Hodge example. This file does not prove smoothness of the scheme, compute
-its cohomology, or assign a Hodge structure to that cohomology.
+The associated Weierstrass equation has discriminant `64`. The companion files
+`ExplicitEllipticIntegrality` and `ExplicitEllipticSmoothness` prove that this actual scheme is
+integral and smooth of relative dimension one, using explicit affine chart rings. The self-product
+is smooth of relative dimension two. Computing the cohomology and its Hodge filtration remains
+a separate step toward a geometric non-Hodge example.
 -/
 
 @[expose] public noncomputable section
