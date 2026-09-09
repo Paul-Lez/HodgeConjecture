@@ -58,9 +58,7 @@ lemma stupidTrunc_d_comp_XIso {i j : I} (_hij : c'.Rel (e.f i) (e.f j)) :
     (K.stupidTrunc e).d (e.f i) (e.f j) ≫
         (K.stupidTruncXIso e (i := j) rfl).hom =
       (K.stupidTruncXIso e (i := i) rfl).hom ≫ K.d (e.f i) (e.f j) := by
-  dsimp [stupidTruncXIso, stupidTrunc]
-  rw [extend_d_eq (K.restriction e) e rfl rfl]
-  simp
+  simp [stupidTruncXIso, stupidTrunc, extend_d_eq (K.restriction e) e rfl rfl]
 
 /-- The canonical inclusion of a stupid truncation whose retained degrees are closed under the
 next differential. -/
@@ -70,8 +68,7 @@ def stupidTruncInclusion : K.stupidTrunc e ⟶ K where
     by_cases hi : ∃ i, e.f i = i'
     · obtain ⟨i, hi⟩ := hi
       obtain ⟨j, hj⟩ := e.mem_next (hi ▸ hij)
-      rw [stupidTruncInclusionApp_eq K e hi,
-        stupidTruncInclusionApp_eq K e hj]
+      rw [stupidTruncInclusionApp_eq K e hi, stupidTruncInclusionApp_eq K e hj]
       subst i' j'
       exact (stupidTrunc_d_comp_XIso K e hij).symm
     · exact (K.isZero_stupidTrunc_X e i' (by simpa using hi)).eq_of_src _ _
@@ -112,9 +109,6 @@ lemma stupidTruncMap_comp_stupidTruncInclusion (f : K ⟶ L) :
 def stupidTruncInclusionNatTrans :
     e.stupidTruncFunctor C ⟶ Functor.id (HomologicalComplex C c') where
   app K := stupidTruncInclusion K e
-  naturality {K L} f := by
-    change stupidTruncMap f e ≫ stupidTruncInclusion L e =
-      stupidTruncInclusion K e ≫ f
-    exact stupidTruncMap_comp_stupidTruncInclusion e f
+  naturality _ _ f := stupidTruncMap_comp_stupidTruncInclusion e f
 
 end HomologicalComplex
