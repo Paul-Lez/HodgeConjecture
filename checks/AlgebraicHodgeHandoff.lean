@@ -1,0 +1,33 @@
+import Other
+
+/-!
+Reproduce the axiom audit for the main handoff milestones with:
+
+    lake env lean checks/AlgebraicHodgeHandoff.lean
+
+The two requested final statements remain unproved; the checks below audit the
+proved reductions, analytic comparisons, and explicit scheme constructions.
+-/
+
+#print axioms AlgebraicGeometry.ComplexPoint.range_rationalSheafCycleClassOnCycles
+#print axioms AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan_le_hodgeClasses_iff_filtered_lifts
+#print axioms AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan_le_hodgeClasses_of_dimension_eq_zero
+#print axioms AlgebraicGeometry.ComplexPoint.rationalExponentialClass_isHodge
+#print axioms AlgebraicGeometry.ComplexPoint.isHodgeClass_one_iff
+#print axioms AlgebraicGeometry.ComplexPoint.integralClass_isHodge_iff_exponential
+#print axioms AlgebraicGeometry.ComplexPoint.analyticTransitionExtClass_eq_zero_iff
+#print axioms AlgebraicGeometry.ComplexPoint.holomorphicTransitionUnitsClass_eq_zero_iff
+#print axioms AlgebraicGeometry.ComplexPoint.rationalHolomorphicTransitionClass_changeTrivialization
+#print axioms AlgebraicGeometry.ComplexPoint.holomorphicUnitLogarithmObstruction_eq_zero_iff
+#print axioms AlgebraicGeometry.ComplexPoint.holomorphicUnitLogarithmObstruction_ne_zero_of_loop
+#print axioms AlgebraicGeometry.ComplexPoint.holomorphicLogarithmTransition_class
+#print axioms CategoryTheory.ShortComplex.comparisonCone_derived
+#print axioms AlgebraicGeometry.ComplexPoint.exists_not_isHodgeClass_iff
+#print axioms AlgebraicGeometry.ExplicitEllipticCandidate.surfaceSegre_isClosedImmersion
+#print axioms AlgebraicGeometry.ExplicitEllipticCandidate.surface_isProjective
+#print axioms AlgebraicGeometry.ExplicitEllipticCandidate.curveVariety
+#print axioms AlgebraicGeometry.ExplicitEllipticCandidate.surfaceVariety
+#print axioms AlgebraicGeometry.ExplicitEllipticCandidate.curveVariety_smooth
+#print axioms AlgebraicGeometry.ExplicitEllipticCandidate.surfaceVariety_smooth
+#print axioms AlgebraicGeometry.ExplicitEllipticCandidate.curveZDifferential_ne_zero
+#print axioms AlgebraicGeometry.ExplicitEllipticCandidate.curveYDifferential_ne_zero

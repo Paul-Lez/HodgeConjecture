@@ -337,3 +337,8 @@ import Other.AlgebraicGeometry.ExplicitProjectiveRatioSections
 import Other.AlgebraicGeometry.ExplicitProjectiveRelabeling
 import Other.AlgebraicGeometry.ExplicitSegreMorphism
 import Other.AlgebraicGeometry.ExplicitEllipticSegre
+import Other.Algebra.Homology.ShortExactComparisonCochain
+import Other.AlgebraicGeometry.HolomorphicLogarithmTransition
+import Other.AlgebraicGeometry.ExplicitSegreProjections
+import Other.AlgebraicGeometry.ExplicitSegreCancellation
+import Other.AlgebraicGeometry.ExplicitEllipticDifferentials

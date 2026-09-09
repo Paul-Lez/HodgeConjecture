@@ -145,6 +145,7 @@ theorem basicOpen_coordinate (p q : σ × τ) :
   simp only [coordinate, Scheme.basicOpen_mul, ProjectiveRatioSections.basicOpen_pullRatio]
   exact (inf_inf_distrib_left (chart R f g p) _ _).symm
 
+omit [DecidableEq σ] [DecidableEq τ] [Fintype σ] [Fintype τ] in
 /-- The local morphism has the expected preimage of each target coordinate chart. -/
 theorem localMap_preimage_coordinate (p q : σ × τ) :
     localMap R c f g p ⁻¹ᵁ Proj.basicOpen (homogeneousSubmodule (σ × τ) R) (X q) =
