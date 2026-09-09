@@ -138,6 +138,8 @@ end RingHom
 
 namespace AlgebraicGeometry
 
+attribute [local instance] overSpecAlgebra
+
 variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
 
 /-- Every closed point of the reduced closure of a codimension-`p` point in a smooth complex
@@ -314,9 +316,10 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
       componentNeighborhood := W
       componentNeighborhood_isAffine := hW
       point_mem_componentNeighborhood := hzsW
-      componentCoordinateRingHom := coordinateRingHom
-      componentCoordinateRingHom_comp_C := hcomp
-      componentCoordinateRingHom_etale := hetale
+      componentCoordinateAlgHom :=
+        { toRingHom := coordinateRingHom
+          commutes' := fun c ↦ DFunLike.congr_fun hcomp c }
+      componentCoordinateAlgHom_etale := hetale
       ambientCoordinates := localEtaleCoordinates X d
         (cycleComponentι X.left x z.underlying) }⟩
 

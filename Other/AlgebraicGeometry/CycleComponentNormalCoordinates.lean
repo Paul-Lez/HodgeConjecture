@@ -309,17 +309,13 @@ structure CycleComponentSeparateLocalCoordinates
       (CycleComponentSeparateLocalCoordinates.componentSmoothScheme
         (X := X) (x := x)).left) ∈
         componentNeighborhood
-  /-- An étale coordinate homomorphism with exactly `n` component coordinates. -/
-  componentCoordinateRingHom : MvPolynomial (Fin n) ℂ →+*
+  /-- An étale coordinate homomorphism of complex algebras with exactly `n` component
+  coordinates. -/
+  componentCoordinateAlgHom : MvPolynomial (Fin n) ℂ →ₐ[ℂ]
     Γ((CycleComponentSeparateLocalCoordinates.componentSmoothScheme
       (X := X) (x := x)).left, componentNeighborhood)
-  /-- The component coordinate map is a homomorphism of complex algebras. -/
-  componentCoordinateRingHom_comp_C :
-    componentCoordinateRingHom.comp MvPolynomial.C =
-      algebraMap ℂ Γ((CycleComponentSeparateLocalCoordinates.componentSmoothScheme
-        (X := X) (x := x)).left, componentNeighborhood)
   /-- The component coordinate homomorphism is étale. -/
-  componentCoordinateRingHom_etale : componentCoordinateRingHom.Etale
+  componentCoordinateAlgHom_etale : componentCoordinateAlgHom.toRingHom.Etale
   /-- Independently chosen étale coordinates on the ambient `d`-fold. -/
   ambientCoordinates : LocalEtaleCoordinates X d
     (cycleComponentι X.left x point.underlying)
@@ -379,9 +375,10 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
       componentNeighborhood := W
       componentNeighborhood_isAffine := hW
       point_mem_componentNeighborhood := hzsW
-      componentCoordinateRingHom := coordinateRingHom
-      componentCoordinateRingHom_comp_C := hcomp
-      componentCoordinateRingHom_etale := hetale
+      componentCoordinateAlgHom :=
+        { toRingHom := coordinateRingHom
+          commutes' := fun c ↦ DFunLike.congr_fun hcomp c }
+      componentCoordinateAlgHom_etale := hetale
       ambientCoordinates := localEtaleCoordinates X d
         (cycleComponentι X.left x z.underlying) }⟩
 

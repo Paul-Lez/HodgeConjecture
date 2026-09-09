@@ -132,9 +132,10 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
     componentNeighborhood := W
     componentNeighborhood_isAffine := hW
     point_mem_componentNeighborhood := hzsW
-    componentCoordinateRingHom := coordinateRingHom
-    componentCoordinateRingHom_comp_C := hcomp
-    componentCoordinateRingHom_etale := hetale
+    componentCoordinateAlgHom :=
+      { toRingHom := coordinateRingHom
+        commutes' := fun c ↦ DFunLike.congr_fun hcomp c }
+    componentCoordinateAlgHom_etale := hetale
     ambientCoordinates := localEtaleCoordinates V.over d
       (cycleComponentι V.scheme x z.underlying) }, rfl⟩
 
