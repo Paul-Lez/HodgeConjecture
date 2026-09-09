@@ -61,8 +61,11 @@ abbrev UniversalGrading (n : ℕ) :=
 
 attribute [local instance] MvPolynomial.gradedAlgebra
 
-/-- The standard quotient topology on finite-dimensional complex projective space. -/
-noncomputable instance instTopologicalSpace (n : ℕ) :
+/-- The standard quotient topology on finite-dimensional complex projective space.
+
+Scoped, so that it cannot form a diamond with a future Mathlib instance on
+`Projectivization`. -/
+noncomputable scoped instance instTopologicalSpace (n : ℕ) :
     TopologicalSpace (Projectivization ℂ (CoordinateSpace n)) :=
   instTopologicalSpaceQuotient
 
@@ -109,12 +112,6 @@ noncomputable instance instCompactSpace (n : ℕ) :
   constructor
   rw [← (surjective_sphereToProjectivization (n := n)).range_eq]
   exact isCompact_range continuous_sphereToProjectivization
-
-/-- A closed subset of finite-dimensional complex projective space is compact. -/
-lemma isCompact_of_isClosed {n : ℕ}
-    {Z : Set (Projectivization ℂ (CoordinateSpace n))} (hZ : IsClosed Z) :
-    IsCompact Z :=
-  hZ.isCompact
 
 /-- Evaluation at a coordinate vector, regarded as a map to the global functions on
 `Spec ℂ`. -/
@@ -511,12 +508,6 @@ lemma awayHomogeneousEvaluation_comp_awayMap_coordinate {n : ℕ}
     field_simp
     simp
 
-/-- A nonzero coordinate vector has a nonzero coordinate. -/
-lemma exists_coordinate_ne_zero {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
-    ∃ i, v i ≠ 0 := by
-  contrapose! hv
-  exact funext hv
-
 /-- The finite set of indices of the nonzero coordinates of a vector. -/
 noncomputable def coordinateSupport {n : ℕ} (v : CoordinateSpace n) :
     Finset (Fin (n + 1)) :=
@@ -524,7 +515,8 @@ noncomputable def coordinateSupport {n : ℕ} (v : CoordinateSpace n) :
 
 lemma coordinateSupport_nonempty {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
     (coordinateSupport v).Nonempty := by
-  obtain ⟨i, hi⟩ := exists_coordinate_ne_zero v hv
+  obtain ⟨i, hi⟩ := Function.ne_iff.mp hv
+  rw [Pi.zero_apply] at hi
   exact ⟨i, by simp [coordinateSupport, hi]⟩
 
 /-- The least index of a nonzero coordinate. This gives a scale-independent choice of a

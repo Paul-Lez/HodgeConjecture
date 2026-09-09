@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Mathlib.Topology.KrullDimension
 
 /-!
 # Dimension of a reduced cycle component
@@ -125,13 +126,6 @@ lemma cycleComponentGenericPoint_isMax (X : Scheme) (x : X) :
   rw [cycleComponentGenericPoint_eq_top]
   exact isMax_top
 
-/-- For a scheme, topological Krull dimension is the Krull dimension of its specialization
-preorder. -/
-lemma Scheme.topologicalKrullDim_eq_orderKrullDim (X : Scheme) :
-    topologicalKrullDim X = Order.krullDim X :=
-  Order.krullDim_eq_of_orderIso
-    (irreducibleSetEquivPoints (α := X))
-
 /-- The order-theoretic Krull dimension of the reduced closure of `x` is exactly the height of
 `x` in the ambient scheme. -/
 lemma orderKrullDim_cycleComponent (X : Scheme) (x : X) :
@@ -143,7 +137,7 @@ lemma orderKrullDim_cycleComponent (X : Scheme) (x : X) :
 height of `x` in the ambient scheme. -/
 lemma topologicalKrullDim_cycleComponent (X : Scheme) (x : X) :
     topologicalKrullDim (cycleComponent X x) = Order.height x := by
-  rw [Scheme.topologicalKrullDim_eq_orderKrullDim]
+  rw [topologicalKrullDim_eq_krullDim]
   exact orderKrullDim_cycleComponent X x
 
 /-- The height of the distinguished generic point inside the component equals the ambient height

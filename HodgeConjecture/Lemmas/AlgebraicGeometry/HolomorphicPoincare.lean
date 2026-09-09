@@ -18,6 +18,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
 
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.LinearAlgebra.ExteriorAlgebra.OfAlternating
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
@@ -138,22 +139,18 @@ theorem analyticOnNhd_radialPrimitiveSeries_sum (n : ℕ)
     (radialPrimitiveSeries_radius_pos n p hp)).analyticOnNhd.mono
     (Metric.eball_subset_eball (radius_le_radius_radialPrimitiveSeries n p))
 
-/-- The real interval integral of a complex monomial. -/
+/-- The real interval integral of a complex monomial.
+
+Reduces to Mathlib's real `integral_pow` by pushing `Complex.ofRealCLM` through the integral. -/
 lemma intervalIntegral_ofReal_pow (m : ℕ) :
     (∫ t : ℝ in 0..1, (t : ℂ) ^ m) = (((m + 1 : ℕ) : ℂ)⁻¹) := by
-  have hderiv (t : ℝ) : HasDerivAt
-      (fun s : ℝ ↦ (((m + 1 : ℕ) : ℂ)⁻¹) * (s : ℂ) ^ (m + 1))
-      ((t : ℂ) ^ m) t := by
-    have h : HasDerivAt (fun s : ℝ ↦ (s : ℂ)) 1 t := by
-      simpa only [Complex.ofRealCLM_apply, Complex.ofReal_one] using!
-        Complex.ofRealCLM.hasFDerivAt.hasDerivAt
-    have hn : (((m + 1 : ℕ) : ℂ)) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero m
-    convert (h.pow (m + 1)).const_mul (((m + 1 : ℕ) : ℂ)⁻¹) using 1
-    all_goals first | rfl | (rw [Nat.add_sub_cancel, mul_one, ← mul_assoc,
-      inv_mul_cancel₀ hn, one_mul])
-  simpa using intervalIntegral.integral_eq_sub_of_hasDerivAt
-    (a := (0 : ℝ)) (b := 1) (fun t _ ↦ hderiv t)
-    ((Complex.continuous_ofReal.pow m).intervalIntegrable 0 1)
+  have h : (fun t : ℝ ↦ (t : ℂ) ^ m) = fun t : ℝ ↦ Complex.ofRealCLM (t ^ m) := by
+    funext t
+    simp
+  rw [h, Complex.ofRealCLM.intervalIntegral_comp_comm
+    ((continuous_pow m).intervalIntegrable 0 1), integral_pow]
+  push_cast
+  simp
 
 /-- Integrating a complex monomial times a fixed vector gives the same scalar factor. -/
 lemma intervalIntegral_ofReal_pow_smul
@@ -669,22 +666,28 @@ lemma wedgeCovectors_compContinuousLinearMap
     wedgeCovectors_apply_eq_det]
   rfl
 
+/-- Precomposition with a continuous linear map is additive.
+
+This is `map_add` for `ContinuousAlternatingMap.compContinuousLinearMapₗ`; it is missing from
+Mathlib and should be upstreamed. -/
 lemma add_compContinuousLinearMap
     {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     [NormedAddCommGroup F] [NormedSpace ℂ F]
     {p : ℕ} (a b : F [⋀^Fin p]→L[ℂ] ℂ) (T : E →L[ℂ] F) :
     (a + b).compContinuousLinearMap T =
-      a.compContinuousLinearMap T + b.compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
+      a.compContinuousLinearMap T + b.compContinuousLinearMap T :=
+  map_add (ContinuousAlternatingMap.compContinuousLinearMapₗ T) a b
 
+/-- Precomposition with a continuous linear map commutes with scalars.
+
+This is `map_smul` for `ContinuousAlternatingMap.compContinuousLinearMapₗ`; it is missing from
+Mathlib and should be upstreamed. -/
 lemma smul_compContinuousLinearMap
     {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     [NormedAddCommGroup F] [NormedSpace ℂ F]
     {p : ℕ} (c : ℂ) (a : F [⋀^Fin p]→L[ℂ] ℂ) (T : E →L[ℂ] F) :
-    (c • a).compContinuousLinearMap T = c • a.compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
+    (c • a).compContinuousLinearMap T = c • a.compContinuousLinearMap T :=
+  map_smul (ContinuousAlternatingMap.compContinuousLinearMapₗ T) c a
 
 /-- Evaluation of a raw form is covariant under a holomorphic fixed-chart transition. -/
 lemma chartRawEvaluation_fixedChartTransition

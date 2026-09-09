@@ -95,8 +95,8 @@ lemma SmoothOfRelativeDimension.orderKrullDim_eq_complex [IsIntegral X]
     rw [orderKrullDim_affineOpen_eq_ringKrullDim U hU]
     exact (algebraMap_isStandardSmoothOfRelativeDimension
       (d := d) (Over.mk f) hsmooth).ringKrullDim_eq_complex
-  rw [← hUdim, ← Scheme.topologicalKrullDim_eq_orderKrullDim U.toScheme,
-    ← Scheme.topologicalKrullDim_eq_orderKrullDim X]
+  rw [← hUdim, ← topologicalKrullDim_eq_krullDim U.toScheme,
+    ← topologicalKrullDim_eq_krullDim X]
   exact U.ι.isOpenEmbedding.isInducing.topologicalKrullDim_le
 
 /-- The height of the generic point of an integral smooth complex `d`-fold is `d`. -/

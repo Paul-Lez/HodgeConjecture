@@ -41,28 +41,25 @@ noncomputable section
 
 variable {A B : Type} [CommRing A] [CommRing B] [Algebra ℂ A] [Algebra ℂ B]
 
-/-- Precomposition by a complex algebra equivalence, as an equivalence of complex-valued algebra
-homomorphisms. -/
-def precompAlgEquiv (e : A ≃ₐ[ℂ] B) : (B →ₐ[ℂ] ℂ) ≃ (A →ₐ[ℂ] ℂ) :=
-  AlgEquiv.arrowCongr e.symm (AlgEquiv.refl : ℂ ≃ₐ[ℂ] ℂ)
-
-lemma continuous_precompAlgEquiv (e : A ≃ₐ[ℂ] B) :
-    Continuous (precompAlgEquiv e) := by
+lemma continuous_arrowCongr_symm (e : A ≃ₐ[ℂ] B) :
+    Continuous (AlgEquiv.arrowCongr e.symm (AlgEquiv.refl : ℂ ≃ₐ[ℂ] ℂ)) := by
   rw [continuous_induced_rng]
   exact continuous_pi fun a ↦ continuous_affineAlgebraHom_apply B (e a)
 
-lemma continuous_precompAlgEquiv_symm (e : A ≃ₐ[ℂ] B) :
-    Continuous (precompAlgEquiv e).symm := by
+lemma continuous_arrowCongr_symm_symm (e : A ≃ₐ[ℂ] B) :
+    Continuous (AlgEquiv.arrowCongr e.symm (AlgEquiv.refl : ℂ ≃ₐ[ℂ] ℂ)).symm := by
   rw [continuous_induced_rng]
   exact continuous_pi fun b ↦ continuous_affineAlgebraHom_apply A (e.symm b)
 
 /-- Precomposition by a complex algebra equivalence is a homeomorphism for pointwise
-convergence. -/
+convergence.
+
+The underlying equivalence is Mathlib's `AlgEquiv.arrowCongr`. -/
 def precompAlgEquivHomeomorph (e : A ≃ₐ[ℂ] B) :
     (B →ₐ[ℂ] ℂ) ≃ₜ (A →ₐ[ℂ] ℂ) where
-  toEquiv := precompAlgEquiv e
-  continuous_toFun := continuous_precompAlgEquiv e
-  continuous_invFun := continuous_precompAlgEquiv_symm e
+  toEquiv := AlgEquiv.arrowCongr e.symm (AlgEquiv.refl : ℂ ≃ₐ[ℂ] ℂ)
+  continuous_toFun := continuous_arrowCongr_symm e
+  continuous_invFun := continuous_arrowCongr_symm_symm e
 
 variable (S : Type) [CommRing S] [Algebra ℂ S]
 

@@ -151,7 +151,9 @@ def PointExcisionSmallSimplex.AvoidsPoint (U : Set X) (x : X) {n : ℕ}
     (TopCat.toSSet.map (pointComplementAmbientInclusion x)).app _ a =
       σ.1
 
-instance (U : Set X) (x : X) {n : ℕ}
+/-- Classical decidability of `AvoidsPoint`, used only to define the excision retraction by
+cases below. Kept `local` so that it does not pollute global instance search. -/
+local instance (U : Set X) (x : X) {n : ℕ}
     (σ : (coverSmallSingularSubcomplex (TopCat.of X) (pointExcisionCover U x) : SSet)
       _⦋n⦌) : Decidable (PointExcisionSmallSimplex.AvoidsPoint U x σ) :=
   Classical.propDecidable _

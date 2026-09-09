@@ -167,16 +167,14 @@ theorem continuousOn_intervalIntegral_of_continuousOn
 end ParametricIntegral
 
 omit [Nontrivial E] in
-/-- Joint evaluation of the first curried variable is a bounded bilinear map. -/
+/-- Joint evaluation of the first curried variable is a bounded bilinear map.
+
+This is `ContinuousLinearMap.isBoundedBilinearMap` applied to
+`ContinuousAlternatingMap.curryLeftLI`. -/
 lemma isBoundedBilinearMap_curryLeft (n : ℕ) : IsBoundedBilinearMap ℂ
-    (fun p : (E [⋀^Fin (n + 1)]→L[ℂ] ℂ) × E ↦ p.1.curryLeft p.2) where
-  add_left f g x := by simp
-  smul_left c f x := by simp
-  add_right f x y := by simp
-  smul_right c f x := by simp
-  bound := ⟨1, one_pos, fun f x ↦ by
-    simpa only [one_mul, ContinuousAlternatingMap.norm_curryLeft] using
-      (f.curryLeft.le_opNorm x)⟩
+    (fun p : (E [⋀^Fin (n + 1)]→L[ℂ] ℂ) × E ↦ p.1.curryLeft p.2) :=
+  (ContinuousAlternatingMap.curryLeftLI (𝕜 := ℂ) (E := E) (F := ℂ)
+    (n := n)).toContinuousLinearMap.isBoundedBilinearMap
 
 /-- The integrand in the radial homotopy operator on an `(n + 1)`-form. -/
 def radialIntegrand (n : ℕ) (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ)

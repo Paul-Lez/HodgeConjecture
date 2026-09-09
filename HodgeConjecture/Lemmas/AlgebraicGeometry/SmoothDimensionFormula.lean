@@ -218,7 +218,7 @@ lemma orderKrullDim_affineOpen_eq_ringKrullDim (U : X.Opens) (hU : IsAffineOpen 
     Order.krullDim U = ringKrullDim Γ(X, U) := by
   calc
     Order.krullDim U = topologicalKrullDim U :=
-      (Scheme.topologicalKrullDim_eq_orderKrullDim U.toScheme).symm
+      (topologicalKrullDim_eq_krullDim U.toScheme).symm
     _ = topologicalKrullDim (PrimeSpectrum Γ(X, U)) :=
       hU.isoSpec.hom.homeomorph.isHomeomorph.topologicalKrullDim_eq
     _ = ringKrullDim Γ(X, U) :=

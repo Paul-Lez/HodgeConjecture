@@ -94,7 +94,7 @@ theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
   obtain ⟨n, hn⟩ := RingHom.IsStandardSmooth.exists_isStandardSmoothOfRelativeDimension hs
   have : Nonempty U := ⟨⟨z, hzU⟩⟩
   have hdimU : topologicalKrullDim U = n := by
-    rw [Scheme.topologicalKrullDim_eq_orderKrullDim U.toScheme]
+    rw [topologicalKrullDim_eq_krullDim U.toScheme]
     exact orderKrullDim_eq_of_isStandardSmoothOfRelativeDimension g hU hn
   have hlt := U.ι.isOpenEmbedding.isInducing.topologicalKrullDim_le.trans_lt hdim
   rw [hdimU] at hlt
