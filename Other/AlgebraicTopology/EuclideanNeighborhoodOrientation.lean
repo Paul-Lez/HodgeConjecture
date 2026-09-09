@@ -47,10 +47,8 @@ def standardAffineBoundarySupport (d : ℕ) : Set (StandardRealModel d) :=
     (fun t : stdSimplex ℝ (Fin (d + 1)) => t i) ⁻¹' {0}
 
 lemma isCompact_standardAffineBoundarySupport (d : ℕ) :
-    IsCompact (standardAffineBoundarySupport d) := by
-  apply isCompact_iUnion
-  intro i
-  exact (isClosed_eq ((continuous_apply i).comp continuous_subtype_val)
+    IsCompact (standardAffineBoundarySupport d) :=
+  isCompact_iUnion fun i => (isClosed_eq ((continuous_apply i).comp continuous_subtype_val)
     continuous_const).isCompact.image (continuous_standardAffineSimplex d)
 
 lemma zero_not_mem_standardAffineBoundarySupport (d : ℕ) :
@@ -62,8 +60,8 @@ lemma zero_not_mem_standardAffineBoundarySupport (d : ℕ) :
 
 lemma exists_standardOrientationRadius (d : ℕ) :
     ∃ r : ℝ, 0 < r ∧ Metric.ball (0 : StandardRealModel d) r ⊆
-      (standardAffineBoundarySupport d)ᶜ := by
-  exact Metric.isOpen_iff.mp (isCompact_standardAffineBoundarySupport d).isClosed.isOpen_compl
+      (standardAffineBoundarySupport d)ᶜ :=
+  Metric.isOpen_iff.mp (isCompact_standardAffineBoundarySupport d).isClosed.isOpen_compl
     0 (zero_not_mem_standardAffineBoundarySupport d)
 
 /-- A positive radius whose ball misses the boundary of the fixed standard simplex. -/

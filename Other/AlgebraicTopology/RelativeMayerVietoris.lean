@@ -99,11 +99,9 @@ def cokernelBiprodMapCofork_isColimit : IsColimit (cokernelBiprodMapCofork a b) 
   · intro s m hm
     apply biprod.hom_ext'
     · apply (cancel_epi (cokernel.π a)).mp
-      have h := biprod.inl ≫= hm
-      simpa [cokernelBiprodMapCofork] using h
+      simpa [cokernelBiprodMapCofork] using biprod.inl ≫= hm
     · apply (cancel_epi (cokernel.π b)).mp
-      have h := biprod.inr ≫= hm
-      simpa [cokernelBiprodMapCofork] using h
+      simpa [cokernelBiprodMapCofork] using biprod.inr ≫= hm
 
 /-- The canonical isomorphism `coker(a ⊞ b) ≅ coker(a) ⊞ coker(b)`. -/
 def cokernelBiprodMapIso : cokernel (biprod.map a b) ≅ cokernel a ⊞ cokernel b :=
@@ -260,8 +258,7 @@ def relativeMayerVietorisSmallRightIso :
   refine PreservesCokernel.iso ShortComplex.π₃ (subsetMayerVietorisToAmbient X U V) ≪≫
     (cokernelEpiComp (singularMayerVietorisShortComplex X U V).g
       (twoSubsetSmallChainInclusion X U V)).symm ≪≫ ?_
-  apply cokernelIsoOfEq
-  exact singularMayerVietorisSumChainMap_eq X U V
+  exact cokernelIsoOfEq (singularMayerVietorisSumChainMap_eq X U V)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The left endpoint comparison carries the componentwise cokernel projection to the actual

@@ -73,8 +73,7 @@ lemma eq_analyticPointLocalCoclass_iff
   · rintro rfl
     exact analyticPointLocalCoclass_apply_complexLocalOrientation X d z
   · intro hβ
-    apply LinearMap.ext
-    intro c
+    refine LinearMap.ext fun c ↦ ?_
     obtain ⟨q, rfl⟩ :=
       (Submodule.span_singleton_eq_top_iff ℚ
         (complexLocalOrientation X d z)).mp
@@ -96,8 +95,7 @@ lemma complexOrientationHomologySheafIso_stalk_pointCoclass :
         (analyticPointLocalCoclass X d z).toAddMonoidHom =
       𝟙 (AddCommGrpCat.of ℚ) := by
   erw [complexOrientationHomologySheafIso_stalk_assoc]
-  apply ConcreteCategory.hom_ext
-  intro q
-  exact analyticPointLocalCoclass_apply_smul_complexLocalOrientation X d z q
+  exact ConcreteCategory.hom_ext _ _
+    (analyticPointLocalCoclass_apply_smul_complexLocalOrientation X d z)
 
 end AlgebraicGeometry.ComplexPoint

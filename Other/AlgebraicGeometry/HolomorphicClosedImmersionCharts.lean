@@ -87,9 +87,9 @@ theorem closedImmersionNormalCoordinateChange_mem_source :
 
 theorem analyticAt_closedImmersionNormalCoordinateChange :
     AnalyticAt ℂ (closedImmersionNormalCoordinateChange X Y i m d z)
-      (localChart X d (Point.map i z) (Point.map i z)) := by
-  exact ((closedImmersionNormalCoordinatesLinearEquiv X Y i m d z).toContinuousLinearMap.analyticAt _).comp
-    (analyticAt_closedImmersionNormalChart_symm X Y i m d z)
+      (localChart X d (Point.map i z) (Point.map i z)) :=
+  ((closedImmersionNormalCoordinatesLinearEquiv X Y i m d z).toContinuousLinearMap.analyticAt
+    _).comp (analyticAt_closedImmersionNormalChart_symm X Y i m d z)
 
 theorem analyticAt_closedImmersionNormalCoordinateChange_symm :
     AnalyticAt ℂ (closedImmersionNormalCoordinateChange X Y i m d z).symm
@@ -97,9 +97,8 @@ theorem analyticAt_closedImmersionNormalCoordinateChange_symm :
   let K := closedImmersionNormalCoordinatesLinearEquiv X Y i m d z
   have hK : K.symm (localChart Y m z z, 0) = (localChart Y m z z, 0) := by
     simp [K, closedImmersionNormalCoordinatesLinearEquiv]
-  have hA := analyticAt_closedImmersionNormalChart X Y i m d z
   have hA' : AnalyticAt ℂ (closedImmersionNormalChart X Y i m d z)
-      (K.symm (localChart Y m z z, 0)) := hK ▸ hA
+      (K.symm (localChart Y m z z, 0)) := hK ▸ analyticAt_closedImmersionNormalChart X Y i m d z
   exact hA'.comp (K.symm.toContinuousLinearMap.analyticAt _)
 
 /-- An actual support-flattening chart whose normal coordinate change is holomorphic in
@@ -230,11 +229,10 @@ theorem analyticAt_closedImmersionNormalTransition_symm
     (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
     (hv : v ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
     AnalyticAt ℂ (closedImmersionNormalTransition X Y i m d z z').symm
-      (closedImmersionNormalTransition X Y i m d z z' v) := by
-  have h := analyticAt_closedImmersionNormalTransition X Y i m d z' z
+      (closedImmersionNormalTransition X Y i m d z z' v) :=
+  analyticAt_closedImmersionNormalTransition X Y i m d z' z
     (closedImmersionNormalTransition X Y i m d z z' v)
     ((closedImmersionNormalTransition X Y i m d z z').map_source hv)
-  exact h
 
 /-- For a point in a genuine overlap, the normal derivative has a constructed complex
 linear inverse. Only membership in the actual overlap is required. -/

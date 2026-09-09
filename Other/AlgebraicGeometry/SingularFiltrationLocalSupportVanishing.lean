@@ -67,8 +67,8 @@ theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
   let f := Point.map (openInclusion X O)
   have hS : f ⁻¹'
       (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X)) =
-        Set.range (Point.map i) := by
-    exact (cycleComponentSingularStratumClosedLift_complexPoints_range X x k).symm
+        Set.range (Point.map i) :=
+    (cycleComponentSingularStratumClosedLift_complexPoints_range X x k).symm
   have he : f (Point.map (openInclusion Y A ≫ i) zA) =
       Point.map (cycleComponentSingularFiltrationStratumOverι X x k) z := by
     apply Over.OverMorphism.ext
@@ -89,9 +89,8 @@ theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
     OX Y i m d f (isOpenEmbedding_map_open X O)
     (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X))
     hS A zA V' hzV'
-  refine ⟨W, hWV'.trans inf_le_left, hWV'.trans inf_le_right, he ▸ hzW, ?_⟩
-  intro n hn
-  exact hW n (by omega)
+  exact ⟨W, hWV'.trans inf_le_left, hWV'.trans inf_le_right, he ▸ hzW,
+    fun n hn ↦ hW n (by omega)⟩
 
 include d hx in
 /-- The original ambient supported injective complex has cofinally vanishing section
@@ -150,13 +149,12 @@ theorem cycleComponentSingularLayerSectionCohomology_isZero_of_lt
           (cycleComponentSingularAnalyticClosedFiltration X x k))).homology n) := by
   apply TopCat.Sheaf.sectionCohomology_isZero_of_cofinal_lower_vanishing
     (TopCat.of (ComplexPoint X)) _ _ 0 n
-  · intro j
-    exact TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+  · exact fun j ↦ TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
       (TopCat.of (ComplexPoint X))
       (cycleComponentSingularAnalyticClosedFiltration X x k).compl
       ((ambientRationalInjectiveComplex X).X j)
-  · intro j hj y hy V hyV
-    exact cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
-      X x (d := d) hx k j (hj.trans_lt hn) y hy V hyV
+  · exact fun j hj y hy V hyV ↦
+      cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
+        X x (d := d) hx k j (hj.trans_lt hn) y hy V hyV
 
 end AlgebraicGeometry.ComplexPoint

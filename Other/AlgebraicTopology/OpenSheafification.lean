@@ -28,16 +28,14 @@ open subspace. -/
 lemma functor_isCocontinuous :
     hf.functor.IsCocontinuous (Opens.grothendieckTopology X)
       (Opens.grothendieckTopology Y) where
-  cover_lift {U S} hS := by
-    intro x hx
+  cover_lift {U S} hS x hx := by
     obtain ⟨V, i, hV, hxV⟩ := hS (f x) ⟨x, hx, rfl⟩
     let V' := (Opens.map f).obj V
     have hle : V' ≤ U := by
       intro y hy
       obtain ⟨z, hz, hzy⟩ := i.le hy
       exact hf.injective hzy ▸ hz
-    refine ⟨V', homOfLE hle, ?_, hxV⟩
-    exact S.downward_closed hV (homOfLE (Set.image_preimage_subset f V))
+    exact ⟨V', homOfLE hle, S.downward_closed hV (homOfLE (Set.image_preimage_subset f V)), hxV⟩
 
 end Topology.IsOpenEmbedding
 

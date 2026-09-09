@@ -191,11 +191,8 @@ lemma exists_openSimplex_inf_of_eq {U A B : Opens X} (i : A ⟶ U) (j : B ⟶ U)
   let m := Opposite.op (SimplexCategory.mk n)
   let fs := (TopCat.of A).toSSetObjEquiv m s
   let ft := (TopCat.of B).toSSetObjEquiv m t
-  have hst : ∀ z, (fs z).1 = (ft z).1 := by
-    intro z
-    have hz := congrArg
-      (fun q ↦ (TopCat.of U).toSSetObjEquiv m q z) h
-    exact congrArg Subtype.val hz
+  have hst : ∀ z, (fs z).1 = (ft z).1 := fun z ↦
+    congrArg Subtype.val (congrArg (fun q ↦ (TopCat.of U).toSSetObjEquiv m q z) h)
   let f : C(stdSimplex ℝ (Fin (n + 1)), TopCat.of ↑(A ⊓ B)) :=
     ⟨fun z ↦ ⟨(fs z).1, (fs z).2, by rw [hst z]; exact (ft z).2⟩,
       Continuous.subtype_mk
@@ -441,11 +438,8 @@ noncomputable def singularZeroCochainPresheafIsoFunction :
   NatIso.ofComponents
     (fun U ↦ (singularZeroCochainEquivFunction R X U).toAddEquiv.toAddCommGrpIso)
     (fun i ↦ by
-      apply AddCommGrpCat.hom_ext
-      apply AddMonoidHom.ext
-      intro φ
-      apply funext
-      intro x
+      ext φ
+      funext x
       exact congrFun (singularZeroCochainToFunction_naturality R X i φ) x)
 
 /-- Arbitrary `R`-valued functions form an additive sheaf. -/

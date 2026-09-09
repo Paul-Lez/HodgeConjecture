@@ -76,8 +76,7 @@ lemma IsAffineOpen.primeIdealOf_height_eq_coheight {X : Scheme} {U : X.Opens}
     (hU.isoSpec.hom x : Spec ↧Γ(X, U)).asIdeal.height =
         Order.coheight (hU.isoSpec.hom x) :=
       idealHeight_eq_coheight ↧Γ(X, U) (hU.isoSpec.hom x)
-    _ = Order.coheight x := by
-      exact coheight_eq_of_isOpenImmersion hU.isoSpec.hom
+    _ = Order.coheight x := coheight_eq_of_isOpenImmersion hU.isoSpec.hom
 
 variable {X : Scheme} {f : X ⟶ Spec ↧ℂ} {d : ℕ}
 
@@ -128,8 +127,7 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_of_isClosed [IsIntegral X
   have hmin : IsMin x := by
     intro y hy
     have hy' : y ∈ closure {x} := by
-      rw [← specializes_iff_mem_closure, ← Scheme.le_iff_specializes]
-      exact hy
+      rwa [← specializes_iff_mem_closure, ← Scheme.le_iff_specializes]
     rw [hx.closure_eq] at hy'
     exact (Set.mem_singleton_iff.mp hy').ge
   have hheight : Order.height x = 0 := Order.IsMin.height_eq_zero hmin
@@ -144,10 +142,7 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_of_isClosed [IsIntegral X
       (d := d) f hsmooth).height_eq_of_isMaximal P
   have hcoheight : Order.coheight x = d := by
     calc
-      Order.coheight x = Order.coheight y := by
-        have h := coheight_eq_of_isOpenImmersion (x := y) U.ι
-        change Order.coheight x = Order.coheight y at h
-        exact h
+      Order.coheight x = Order.coheight y := coheight_eq_of_isOpenImmersion (x := y) U.ι
       _ = P.height := (hU.primeIdealOf_height_eq_coheight y).symm
       _ = d := hP
   rw [hheight, hcoheight, zero_add]
@@ -185,8 +180,7 @@ lemma Scheme.isClosed_singleton_of_isMin (x : X) (hx : IsMin x) : IsClosed {x} :
     apply Set.Subset.antisymm
     · intro y hy
       have hyx : y ≤ x := by
-        rw [Scheme.le_iff_specializes, specializes_iff_mem_closure]
-        exact hy
+        rwa [Scheme.le_iff_specializes, specializes_iff_mem_closure]
       apply Set.mem_singleton_iff.mpr
       apply inseparable_iff_eq.mp
       rw [inseparable_iff_specializes_and, ← Scheme.le_iff_specializes,
@@ -205,9 +199,8 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_of_coheight_eq_dimension
   have hsum := SmoothOfRelativeDimension.height_add_coheight_le_complex
     (f := f) (d := d) x
   rw [hx] at hsum ⊢
-  have hheight : Order.height x = 0 := by
-    apply bot_unique
-    exact (ENat.add_le_add_iff_right (ENat.natCast_ne_top d)).mp (by simpa using hsum)
+  have hheight : Order.height x = 0 :=
+    bot_unique ((ENat.add_le_add_iff_right (ENat.natCast_ne_top d)).mp (by simpa using hsum))
   rw [hheight, zero_add]
 
 /-- The pointwise dimension formula holds at a point whose coheight is one less than the ambient
@@ -281,9 +274,8 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_two [IsIntegral X]
     have hsum := SmoothOfRelativeDimension.height_add_coheight_le_complex
       (f := f) (d := 2) x
     rw [hcotwo] at hsum ⊢
-    have hheight : Order.height x = 0 := by
-      apply bot_unique
-      exact (ENat.add_le_add_iff_right (ENat.natCast_ne_top 2)).mp (by simpa using hsum)
+    have hheight : Order.height x = 0 :=
+      bot_unique ((ENat.add_le_add_iff_right (ENat.natCast_ne_top 2)).mp (by simpa using hsum))
     rw [hheight, zero_add]
 
 /-- The pointwise dimension formula holds everywhere in relative dimension at most two. -/

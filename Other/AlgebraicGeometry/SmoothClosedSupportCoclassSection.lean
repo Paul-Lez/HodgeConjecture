@@ -144,8 +144,7 @@ theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
     refine ⟨smoothClosedSupportChartOpen X Y i m d z,
       mem_smoothClosedSupportChartOpen X Y i m d z,
       smoothClosedSupportChartSheafSection X Y i m d z, ?_⟩
-    intro y hy
-    exact (smoothClosedSupportCoclassStalk_eq_chartGerm X Y i m d z y hy).symm
+    exact fun y hy ↦ (smoothClosedSupportCoclassStalk_eq_chartGerm X Y i m d z y hy).symm
   · let U : Opens (ComplexPoint X) :=
       ⟨(Set.range (Point.map i))ᶜ, (isClosed_range_map_of_closedImmersion i).isOpen_compl⟩
     refine ⟨U, hxS, 0, ?_⟩
@@ -205,8 +204,7 @@ theorem smoothClosedSupportCoclassSection_unique
         smoothClosedSupportCoclassStalk X Y i m d x) :
     s = smoothClosedSupportCoclassSection X Y i m d := by
   apply TopCat.Presheaf.section_ext (smoothClosedSupportCoclassSheaf X Y i m d)
-  intro x _
-  exact (hs x).trans (smoothClosedSupportCoclassSection_germ X Y i m d x).symm
+  exact fun x _ ↦ (hs x).trans (smoothClosedSupportCoclassSection_germ X Y i m d x).symm
 
 /-- At every center, the global section has exactly the germ of the previously
 constructed normal-slice coclass, on any prescribed local model neighborhood. -/

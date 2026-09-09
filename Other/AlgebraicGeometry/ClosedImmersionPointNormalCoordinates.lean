@@ -92,8 +92,7 @@ theorem closedImmersionPointStandardFlatteningChart_coordinates
 theorem univBall_zeroTangent_apply (r : ℝ) (hr : 0 < r) (w : Fin d → ℂ) :
     OpenPartialHomeomorph.univBall ((0 : Fin 0 → ℂ), (0 : Fin d → ℂ)) r (0, w) =
       ((0 : Fin 0 → ℂ), OpenPartialHomeomorph.univBall (0 : Fin d → ℂ) r w) := by
-  have hzero : ‖(![] : Fin 0 → ℂ)‖ = 0 := by
-    exact norm_eq_zero.mpr (Subsingleton.elim _ _)
+  have hzero : ‖(![] : Fin 0 → ℂ)‖ = 0 := norm_eq_zero.mpr (Subsingleton.elim _ _)
   simp [OpenPartialHomeomorph.univBall, hr, OpenPartialHomeomorph.univUnitBall_apply,
     Prod.norm_def, Prod.smul_mk, Prod.mk_add_mk]
   rw [hzero, max_eq_right (norm_nonneg w)]

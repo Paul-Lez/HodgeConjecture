@@ -75,8 +75,6 @@ public theorem singularSimplex_image_subset_cover_of_diam_lt
   obtain ⟨i, hi⟩ := hLeb w
   refine ⟨i, ?_⟩
   rintro _ ⟨y, hy, rfl⟩
-  apply hi
-  rw [Metric.mem_ball]
-  exact (Metric.dist_le_diam_of_mem hsbounded hy hw).trans_lt hdiam
+  exact hi (Metric.mem_ball.mpr ((Metric.dist_le_diam_of_mem hsbounded hy hw).trans_lt hdiam))
 
 end AlgebraicTopology.Singular

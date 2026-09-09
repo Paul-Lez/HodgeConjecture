@@ -90,12 +90,11 @@ def wholeSupportCohomologyLinearEquiv (n : ℕ) :
     CohomologyWithSupport R X Set.univ n ≃ₗ[R] Cohomology R X n :=
   LinearEquiv.ofBijective (forgetSupport R X Set.univ n) <| by
     let P : TopPair.{u} := TopPair.ofSubset ((Set.univ : Set X)ᶜ)
-    let hP : IsIso (relativeChainProjection R P) := by
+    let : IsIso (relativeChainProjection R P) := by
       change IsIso (relativeChainProjection R
         (TopPair.ofSubset ((Set.univ : Set X)ᶜ)))
       rw [Set.compl_univ]
       infer_instance
-    let := hP
     let e := HomologicalComplex.homologyMapIso
       (asIso (relativeChainProjection R P)) n
     have h : Function.Bijective (relativeHomologyProjection R P n).hom :=
@@ -109,16 +108,14 @@ lemma wholeSupportCohomologyLinearEquiv_apply (n : ℕ)
     wholeSupportCohomologyLinearEquiv R X n α z =
       α ((relativeHomologyProjection R
         (TopPair.ofSubset ((Set.univ : Set X)ᶜ)) n).hom z) :=
-  by
-    rfl
+  rfl
 
 /-- The canonical whole-support equivalence has the existing forget-support map as its underlying
 linear map. -/
 lemma wholeSupportCohomologyLinearEquiv_toLinearMap (n : ℕ) :
     (wholeSupportCohomologyLinearEquiv R X n).toLinearMap =
-      forgetSupport R X Set.univ n :=
-  by
-    ext α z
-    rfl
+      forgetSupport R X Set.univ n := by
+  ext α z
+  rfl
 
 end AlgebraicTopology.Singular

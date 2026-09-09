@@ -91,8 +91,7 @@ instance singularToConstantInjectiveResolution_quasiIso :
   let : QuasiIso a :=
     constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ hX
   have : QuasiIso (a ≫ singularToConstantInjectiveResolution X hX) := by
-    rw [show a = constantsToSingularCochainSheafComplex ℚ X from rfl,
-      constants_comp_singularToConstantInjectiveResolution]
+    rw [constants_comp_singularToConstantInjectiveResolution]
     exact (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).quasiIso
   exact quasiIso_of_comp_left a _
 

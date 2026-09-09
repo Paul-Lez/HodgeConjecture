@@ -46,9 +46,8 @@ theorem cohomologyMap_eq_of_homotopy
   intro z
   change α (homologyMap R n f z) = α (homologyMap R n g z)
   congr 1
-  have h := H.congr_homologyMap_singularChainComplexFunctor
-    (ModuleCat.of R R) n
-  exact ConcreteCategory.congr_hom h z
+  exact ConcreteCategory.congr_hom
+    (H.congr_homologyMap_singularChainComplexFunctor (ModuleCat.of R R) n) z
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Pullback in singular cohomology commutes with forgetting support. -/
@@ -90,8 +89,7 @@ theorem forgetSupport_cohomologyWithSupportMap_eq_of_homotopyToId
     forgetSupport R X (f ⁻¹' Z) n
         (cohomologyWithSupportMap R n f Z α) =
       forgetSupport R X Z n α := by
-  rw [← cohomologyMap_forgetSupport]
-  rw [cohomologyMap_eq_of_homotopy R n H, cohomologyMap_id]
+  rw [← cohomologyMap_forgetSupport, cohomologyMap_eq_of_homotopy R n H, cohomologyMap_id]
   rfl
 
 /-- If a map homotopic to the identity transports one supported class to another, the two
@@ -112,8 +110,6 @@ theorem forgetSupport_eq_of_supportedClass_transport
   have hβ' : cohomologyWithSupportMap R n f Z α = β := by
     simpa using hβ
   rw [← hβ']
-  exact
-    forgetSupport_cohomologyWithSupportMap_eq_of_homotopyToId
-      R X n f H Z α
+  exact forgetSupport_cohomologyWithSupportMap_eq_of_homotopyToId R X n f H Z α
 
 end AlgebraicTopology.Singular

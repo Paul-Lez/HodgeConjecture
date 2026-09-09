@@ -64,8 +64,7 @@ lemma openSheafRestriction_map_quasiIso
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
     (f : K ⟶ L) [QuasiIso f] :
     QuasiIso (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-      (.up ℤ)).map f) := by
-  infer_instance
+      (.up ℤ)).map f) := inferInstance
 
 /-- The actual counit of open restriction/direct image. -/
 def openSheafRestrictionCounit :

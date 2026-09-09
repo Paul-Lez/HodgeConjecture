@@ -201,8 +201,7 @@ omit [Nontrivial E] in
 @[simp] lemma radialIntegrand_apply (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (t : ℝ) (x : E) (v : Fin n → E) :
     radialIntegrand n η t x v =
-      ((t : ℂ) ^ n) • η ((t : ℂ) • x) (Matrix.vecCons x v) := by
-  rfl
+      ((t : ℂ) ^ n) • η ((t : ℂ) • x) (Matrix.vecCons x v) := rfl
 
 omit [Nontrivial E] in
 lemma radialIntegrand_differentiableAt (n : ℕ)
@@ -355,8 +354,8 @@ omit [Nontrivial E] in
 lemma radialHomotopy_hasFDerivAt [FiniteDimensional ℂ E] (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η) (x : E) :
     HasFDerivAt (radialHomotopy n η)
-      (∫ t : ℝ in 0..1, radialIntegrandFDeriv n η t x) x := by
-  exact hasFDerivAt_intervalIntegral_of_continuous
+      (∫ t : ℝ in 0..1, radialIntegrandFDeriv n η t x) x :=
+  hasFDerivAt_intervalIntegral_of_continuous
     (fun x t ↦ radialIntegrand n η t x) (fun x t ↦ radialIntegrandFDeriv n η t x) x
     (continuous_radialIntegrand n η hη.continuous)
     (continuous_radialIntegrandFDeriv n η hη)
@@ -370,8 +369,8 @@ lemma radialHomotopy_hasFDerivAt_of_contDiffOn [FiniteDimensional ℂ E] (n : �
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hs : IsOpen s)
     (hstar : StarConvex ℝ 0 s) (hη : ContDiffOn ℂ 1 η s) {x : E} (hx : x ∈ s) :
     HasFDerivAt (radialHomotopy n η)
-      (∫ t : ℝ in 0..1, radialIntegrandFDeriv n η t x) x := by
-  exact hasFDerivAt_intervalIntegral_of_continuousOn
+      (∫ t : ℝ in 0..1, radialIntegrandFDeriv n η t x) x :=
+  hasFDerivAt_intervalIntegral_of_continuousOn
     (fun y t ↦ radialIntegrand n η t y) (fun y t ↦ radialIntegrandFDeriv n η t y)
     x hs hx (continuousOn_radialIntegrand n η hstar hη.continuousOn)
     (continuousOn_radialIntegrandFDeriv n η hs hstar hη)
@@ -399,13 +398,10 @@ theorem radialHomotopy_contDiffOn_one [FiniteDimensional ℂ E] (n : ℕ) {s : S
       (continuousOn_radialIntegrandFDeriv n η hs hstar hη)
   rw [show (1 : ℕ∞ω) = 0 + 1 by rfl, contDiffOn_succ_iff_fderiv_of_isOpen hs]
   refine ⟨?_, by simp, ?_⟩
-  · intro x hx
-    exact (radialHomotopy_hasFDerivAt_of_contDiffOn n η hs hstar hη hx).differentiableAt
+  · exact fun x hx ↦ (radialHomotopy_hasFDerivAt_of_contDiffOn n η hs hstar hη hx).differentiableAt
       |>.differentiableWithinAt
   · rw [contDiffOn_zero]
-    apply hD.congr
-    intro x hx
-    exact (radialHomotopy_hasFDerivAt_of_contDiffOn n η hs hstar hη hx).fderiv
+    exact hD.congr fun x hx ↦ (radialHomotopy_hasFDerivAt_of_contDiffOn n η hs hstar hη hx).fderiv
 
 omit [Nontrivial E] in
 /-- Exterior differentiation commutes with the radial parameter integral. -/
@@ -554,8 +550,8 @@ def radialPullbackDeriv (n : ℕ) (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ)
 omit [Nontrivial E] in
 lemma continuous_radialPullback (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : Continuous η) (x : E) :
-    Continuous (radialPullback n η x) := by
-  exact (Complex.continuous_ofReal.pow (n + 1)).smul <|
+    Continuous (radialPullback n η x) :=
+  (Complex.continuous_ofReal.pow (n + 1)).smul <|
     hη.comp (Complex.continuous_ofReal.smul continuous_const)
 
 omit [Nontrivial E] in
@@ -631,8 +627,7 @@ lemma continuous_extDeriv (n : ℕ)
   change Continuous fun x ↦ ContinuousAlternatingMap.alternatizeUncurryFin (fderiv ℂ η x)
   convert (ContinuousAlternatingMap.alternatizeUncurryFinCLM ℂ E ℂ).continuous.comp
     (hη.continuous_fderiv one_ne_zero) using 1
-  funext x
-  exact ContinuousAlternatingMap.alternatizeUncurryFinCLM_apply _
+  exact funext fun x ↦ ContinuousAlternatingMap.alternatizeUncurryFinCLM_apply _
 
 omit [Nontrivial E] in
 lemma continuousOn_extDeriv (n : ℕ) {s : Set E}
@@ -642,8 +637,7 @@ lemma continuousOn_extDeriv (n : ℕ) {s : Set E}
   have h := (ContinuousAlternatingMap.alternatizeUncurryFinCLM ℂ E ℂ).continuous.comp_continuousOn
     (hη.continuousOn_fderiv_of_isOpen hs le_rfl)
   convert h using 1
-  funext x
-  exact ContinuousAlternatingMap.alternatizeUncurryFinCLM_apply _
+  exact funext fun x ↦ ContinuousAlternatingMap.alternatizeUncurryFinCLM_apply _
 
 omit [Nontrivial E] in
 /-- The integral of the derivative of the dilation pullback is evaluation at dilation one. -/
@@ -664,8 +658,7 @@ theorem integral_radialPullbackDeriv (n : ℕ)
   have hone : radialPullback n η x 1 = η x := by
     ext v
     simp [radialPullback]
-  rw [hzero, hone, sub_zero] at h
-  exact h
+  rwa [hzero, hone, sub_zero] at h
 
 omit [Nontrivial E] in
 /-- The fundamental theorem of calculus for radial pullback, assuming smoothness only on the
@@ -690,8 +683,7 @@ theorem integral_radialPullbackDeriv_of_contDiffOn (n : ℕ) {s : Set E}
   have hone : radialPullback n η x 1 = η x := by
     ext v
     simp [radialPullback]
-  rw [hzero, hone, sub_zero] at h
-  exact h
+  rwa [hzero, hone, sub_zero] at h
 
 omit [Nontrivial E] in
 /-- The radial chain-homotopy identity on a finite-dimensional complex normed space. -/
@@ -797,8 +789,7 @@ theorem extDeriv_radialHomotopy_of_closedOn [FiniteDimensional ℂ E] (n : ℕ) 
             simp
       _ = 0 := by simp
   have h := extDeriv_radialHomotopy_add_of_contDiffOn n η hs hstar hη hx
-  rw [hzero, add_zero] at h
-  exact h
+  rwa [hzero, add_zero] at h
 
 omit [Nontrivial E] in
 /-- A closed positive-degree form on an open star-convex set has the explicit radial primitive,
@@ -834,8 +825,7 @@ lemma zeroForm_eq_constOfIsEmpty (η : E → E [⋀^Fin 0]→L[ℂ] ℂ) :
     η = fun x ↦ ContinuousAlternatingMap.constOfIsEmpty ℂ E (Fin 0) (zeroFormCoeff η x) := by
   funext x
   ext v
-  have hv : v = 0 := Subsingleton.elim _ _
-  subst v
+  obtain rfl : v = 0 := Subsingleton.elim _ _
   rfl
 
 omit [Nontrivial E] in
@@ -847,8 +837,8 @@ theorem zeroForm_eq_at_zero_of_closedOn {s : Set E}
     (hclosed : Set.EqOn (extDeriv η) 0 s) :
     Set.EqOn η (fun _ ↦ η 0) s := by
   let f : E → ℂ := zeroFormCoeff η
-  have hηrepr : η = fun y ↦ ContinuousAlternatingMap.constOfIsEmpty ℂ E (Fin 0) (f y) := by
-    exact zeroForm_eq_constOfIsEmpty η
+  have hηrepr : η = fun y ↦ ContinuousAlternatingMap.constOfIsEmpty ℂ E (Fin 0) (f y) :=
+    zeroForm_eq_constOfIsEmpty η
   have hfderiv_zero {y : E} (hy : y ∈ s) : fderiv ℂ f y = 0 := by
     have hform := hclosed hy
     rw [hηrepr, extDeriv_constOfIsEmpty] at hform
@@ -884,9 +874,7 @@ theorem zeroForm_eq_at_zero_of_closedOn {s : Set E}
     have hfund := intervalIntegral.integral_eq_sub_of_hasDerivAt
       (a := (0 : ℝ)) (b := 1) (f := fun t : ℝ ↦ f ((t : ℂ) • x))
       (f' := fun _ : ℝ ↦ (0 : ℂ)) hderiv hint
-    have hsub : f x - f 0 = 0 := by
-      simpa using hfund.symm
-    exact sub_eq_zero.mp hsub
+    exact sub_eq_zero.mp (by simpa using hfund.symm)
   rw [hηrepr]
   exact congrArg (ContinuousAlternatingMap.constOfIsEmpty ℂ E (Fin 0)) hcoeff
 

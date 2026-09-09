@@ -68,7 +68,6 @@ lemma cycles_isFlasque_of_exact_le (N M : ℤ) [K.IsStrictlyGE N]
   · let m := (i - N).toNat
     have hm : i = N + (m : ℤ) := by
       dsimp [m]
-      rw [Int.toNat_of_nonneg (by omega)]
       omega
     rw [hm]
     exact cycles_isFlasque_add_nat_of_exact_le K N M hK hflasque m (by omega)
@@ -83,9 +82,8 @@ lemma globalSectionsComplex_exactAt_of_cycles_isFlasque (i : ℤ)
   let A : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
     ShortComplex.mk (K.iCycles i) (K.d i (i + 1)) (K.iCycles_d i (i + 1))
   have hA : A.Exact ∧ Mono A.f := by
-    have hker := K.cyclesIsKernel i (i + 1) (by simp)
     refine ⟨A.exact_of_f_is_kernel ?_, ?_⟩
-    · simpa only [A] using hker
+    · simpa only [A] using K.cyclesIsKernel i (i + 1) (by simp)
     · dsimp [A]
       infer_instance
   have hFA : (A.map F).Exact := by
@@ -100,7 +98,6 @@ lemma globalSectionsComplex_exactAt_of_cycles_isFlasque (i : ℤ)
   have hepiTop : Epi (Sprev.g.hom.app (op (⊤ : Opens X))) :=
     epi_of_shortExact (U := (⊤ : Opens X)) hSprev
   have hepi : Epi (F.map (K.toCycles (i - 1) i)) := by
-    change Epi ((K.toCycles (i - 1) i).hom.app (op (⊤ : Opens X)))
     have hi : i - 1 + 1 = i := by omega
     change Epi ((K.toCycles (i - 1) (i - 1 + 1)).hom.app (op (⊤ : Opens X))) at hepiTop
     rw [hi] at hepiTop

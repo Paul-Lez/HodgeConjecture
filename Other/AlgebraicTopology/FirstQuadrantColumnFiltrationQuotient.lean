@@ -81,8 +81,7 @@ public noncomputable def firstQuadrantColumnPrefixToLast
     change j + 1 = i at hij
     by_cases hi : i = p
     · subst i
-      have hj : j ≠ p := by
-        lia
+      have hj : j ≠ p := by lia
       rw [hi, firstQuadrantColumnPrefixToLastComponent_self,
         firstQuadrantColumnPrefixToLastComponent_eq_zero K p j hj,
         comp_zero]
@@ -92,8 +91,7 @@ public noncomputable def firstQuadrantColumnPrefixToLast
         zero_comp]
       by_cases hj : j = p
       · subst j
-        have hip : p < i := by
-          lia
+        have hip : p < i := by lia
         have hz : IsZero ((firstQuadrantColumnPrefix K p).X i) :=
           firstQuadrantColumnPrefix_isZero_X K p i hip
         exact hz.eq_of_src _ _

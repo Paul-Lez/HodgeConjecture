@@ -36,8 +36,7 @@ analytic topology. -/
 theorem continuous_underlying_to_zariski :
     Continuous (Point.underlying : ComplexPoint X → X.left) := by
   rw [continuous_def]
-  intro S hS
-  exact Point.isOpen_overOpen ⟨S, hS⟩
+  exact fun S hS => Point.isOpen_overOpen ⟨S, hS⟩
 
 /-- The complex points of a locally closed subscheme map onto exactly the complex points
 whose underlying scheme point belongs to its range. -/

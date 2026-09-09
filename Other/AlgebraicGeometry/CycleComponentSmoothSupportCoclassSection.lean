@@ -168,8 +168,8 @@ theorem cycleComponentSmoothSupportCoclassSection_restrict
         (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
         (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
         (2 * p)).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op
-        (cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx)) := by
-  exact supportRelativeCohomologySectionOnOpen_restrict
+        (cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx)) :=
+  supportRelativeCohomologySectionOnOpen_restrict
     (cycleComponentSmoothClosedLiftAmbientMap X x)
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
     (cycleComponentSupport X x)

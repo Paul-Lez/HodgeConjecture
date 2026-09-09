@@ -137,8 +137,7 @@ public theorem firstQuadrantColumnPrefixTotalToOriginal_hom_inv
     firstQuadrantColumnPrefixTotalToOriginalInverseComponent]
   rw [HomologicalComplex₂.ιTotal_map_assoc]
   change (firstQuadrantColumnPrefixToOriginalComponent K N p).f q ≫ _ = _
-  rw [
-    firstQuadrantColumnPrefixToOriginalComponent_of_le K N p hp,
+  rw [firstQuadrantColumnPrefixToOriginalComponent_of_le K N p hp,
     HomologicalComplex₂.ι_totalDesc]
   let e := firstQuadrantColumnPrefixXIso K N p hp
   have he : e.hom.f q ≫ e.inv.f q = 𝟙 _ :=
@@ -160,8 +159,8 @@ public theorem firstQuadrantColumnPrefixTotalToOriginal_inv_hom
     lia
   dsimp [firstQuadrantColumnPrefixTotalToOriginal,
     firstQuadrantColumnPrefixTotalToOriginalInverseComponent]
-  rw [HomologicalComplex₂.ι_totalDesc_assoc]
-  rw [Category.assoc, HomologicalComplex₂.ιTotal_map]
+  rw [HomologicalComplex₂.ι_totalDesc_assoc, Category.assoc,
+    HomologicalComplex₂.ιTotal_map]
   change (firstQuadrantColumnPrefixXIso K N p _).inv.f q ≫
     (firstQuadrantColumnPrefixToOriginalComponent K N p).f q ≫ _ = _
   rw [firstQuadrantColumnPrefixToOriginalComponent_of_le K N p hp]
@@ -408,12 +407,8 @@ public theorem firstQuadrantSingleColumnTotalXIso_d
         (ComplexShape.down ℕ) p i (p + j) = 0 := by
       dsimp [HomologicalComplex₂.d₁]
       simp
-    rw [hd₁, zero_add]
-    rw [HomologicalComplex₂.d₂_eq
-      (firstQuadrantSingleColumn K p) (ComplexShape.down ℕ)
-      p hij (p + j) (by
-        change p + j = p + j
-        rfl)]
+    rw [hd₁, zero_add, HomologicalComplex₂.d₂_eq
+      (firstQuadrantSingleColumn K p) (ComplexShape.down ℕ) p hij (p + j) rfl]
     dsimp [firstQuadrantSingleColumnTotalXIso,
       firstQuadrantSingleColumnTotalXHom]
     rw [Linear.units_smul_comp, Category.assoc,
@@ -585,15 +580,12 @@ public theorem firstQuadrantSingleColumnTotalExtendedXIsoOfEq_d
         ((K.X p).extend (firstQuadrantColumnDegreeEmbedding p)).d n m =
       ((firstQuadrantSingleColumn K p).total (ComplexShape.down ℕ)).d n m ≫
         (firstQuadrantSingleColumnTotalExtendedXIsoOfEq K p j m hj).hom := by
-  subst n
-  subst m
+  subst n m
   dsimp [firstQuadrantSingleColumnTotalExtendedXIsoOfEq]
   rw [(K.X p).extend_d_eq (firstQuadrantColumnDegreeEmbedding p) rfl rfl]
-  simp only [Category.assoc, Iso.inv_hom_id_assoc]
-  simp only [Category.id_comp]
-  rw [← Category.assoc,
-    firstQuadrantSingleColumnTotalScaledXIso_d K p i j hij]
-  rw [Category.assoc]
+  simp only [Category.assoc, Iso.inv_hom_id_assoc, Category.id_comp]
+  rw [← Category.assoc, firstQuadrantSingleColumnTotalScaledXIso_d K p i j hij,
+    Category.assoc]
 
 /-- The componentwise comparisons commute with all differentials, including the lower
 boundary where extension by zero supplies the missing target degree. -/
@@ -627,9 +619,7 @@ public theorem firstQuadrantSingleColumnTotalExtendedXIso_d
       rw [firstQuadrantSingleColumnTotalExtendedXIso_eq K p q n hnq,
         firstQuadrantSingleColumnTotalExtendedXIso_eq K p j m hmj]
       exact firstQuadrantSingleColumnTotalExtendedXIsoOfEq_d
-        K p q j n m hnq hmj (by
-          change j + 1 = q
-          exact hjq)
+        K p q j n m hnq hmj hjq
   · have hz : IsZero
         (((firstQuadrantSingleColumn K p).total
           (ComplexShape.down ℕ)).X n) :=
@@ -765,10 +755,9 @@ public theorem firstQuadrantColumnPrefixSuccInclusion_naturality
         firstQuadrantColumnPrefixSuccInclusionComponent K p q ≫
           (firstQuadrantColumnPrefixMap f (p + 1)).f q
     rw [firstQuadrantColumnPrefixSuccInclusionComponent_of_le L p q hq,
-      firstQuadrantColumnPrefixSuccInclusionComponent_of_le K p q hq]
-    rw [← Category.assoc,
-      firstQuadrantColumnPrefixMap_XIso_hom f p q hq]
-    rw [Category.assoc, Category.assoc]
+      firstQuadrantColumnPrefixSuccInclusionComponent_of_le K p q hq,
+      ← Category.assoc, firstQuadrantColumnPrefixMap_XIso_hom f p q hq,
+      Category.assoc, Category.assoc]
     apply (cancel_mono
       (firstQuadrantColumnPrefixXIso L (p + 1) q (by lia)).hom).1
     simp only [Category.assoc, Iso.inv_hom_id, Category.comp_id]
@@ -800,12 +789,10 @@ public theorem firstQuadrantColumnPrefixToLast_naturality
         firstQuadrantColumnPrefixToLastComponent K p p ≫
           (firstQuadrantSingleColumnMap f p).f p
     rw [firstQuadrantColumnPrefixToLastComponent_self,
-      firstQuadrantColumnPrefixToLastComponent_self]
-    rw [← Category.assoc,
+      firstQuadrantColumnPrefixToLastComponent_self, ← Category.assoc,
       firstQuadrantColumnPrefixMap_XIso_hom f p p le_rfl]
     dsimp only [firstQuadrantSingleColumnMap, firstQuadrantSingleColumnXIso]
-    rw [
-      HomologicalComplex.single_map_f_self]
+    rw [HomologicalComplex.single_map_f_self]
     simp
   · change (firstQuadrantColumnPrefixMap f p).f q ≫
       firstQuadrantColumnPrefixToLastComponent L p q =
@@ -928,9 +915,7 @@ public theorem firstQuadrantFinitePrefixTotal_quasiIso_of_singleColumns
           (HomologicalComplex₂.total.map (firstQuadrantSingleColumnMap f (N + 1))
             (ComplexShape.down ℕ))
         exact hsingle (N + 1)
-      have h₂ : QuasiIso φ.τ₂ :=
-        quasiIso_middle_of_shortExact φ hTS₁ hTS₂ h₁ h₃
-      exact h₂
+      exact quasiIso_middle_of_shortExact φ hTS₁ hTS₂ h₁ h₃
 
 /-- Columnwise quasi-isomorphisms after totalizing the individual layers imply a
 quasi-isomorphism on the full first-quadrant total. -/
@@ -973,8 +958,7 @@ public def firstQuadrantFlipMap
 /-- A column map of the flipped bicomplex is exactly the corresponding horizontal row map. -/
 public theorem firstQuadrantFlipMap_column_eq_horizontalRowMap
     {K L : FirstQuadrantBicomplex} (f : K ⟶ L) (q : ℕ) :
-    (firstQuadrantFlipMap f).f q = firstQuadrantHorizontalRowMap f q := by
-  rfl
+    (firstQuadrantFlipMap f).f q = firstQuadrantHorizontalRowMap f q := rfl
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
@@ -1026,18 +1010,13 @@ their direct-sum total complexes. -/
 public theorem firstQuadrantTotal_quasiIso_of_rows
     {K L : FirstQuadrantBicomplex} (f : K ⟶ L)
     (hrow : ∀ q : ℕ, QuasiIso (firstQuadrantHorizontalRowMap f q)) :
-    QuasiIso (HomologicalComplex₂.total.map f (ComplexShape.down ℕ)) := by
-  apply firstQuadrantTotal_quasiIso_of_flipped_singleColumns f
-  intro q
-  apply firstQuadrantSingleColumnTotal_quasiIso
-    (firstQuadrantFlipMap f) q
-  rw [firstQuadrantFlipMap_column_eq_horizontalRowMap]
-  exact hrow q
+    QuasiIso (HomologicalComplex₂.total.map f (ComplexShape.down ℕ)) :=
+  firstQuadrantTotal_quasiIso_of_flipped_singleColumns f fun q =>
+    firstQuadrantSingleColumnTotal_quasiIso (firstQuadrantFlipMap f) q (hrow q)
 
 /-- The generic rowwise-totalization proposition is unconditional. -/
 public theorem firstQuadrantRowwiseTotalization :
-    FirstQuadrantRowwiseTotalization := by
-  intro K L f hrow
-  exact firstQuadrantTotal_quasiIso_of_rows f hrow
+    FirstQuadrantRowwiseTotalization :=
+  fun f hrow => firstQuadrantTotal_quasiIso_of_rows f hrow
 
 end AlgebraicTopology

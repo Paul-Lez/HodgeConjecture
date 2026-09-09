@@ -57,8 +57,8 @@ public noncomputable def coverSmallPresentation :
 public theorem coverSmallPresentation_iota (i : ι) :
     Sigma.ι (fun j : ι ↦ TopCat.toSSet.obj (TopCat.of (U j))) i ≫
         coverSmallPresentation X U =
-      coverMemberToSmallSingularSet X U i := by
-  apply Sigma.ι_desc
+      coverMemberToSmallSingularSet X U i :=
+  Sigma.ι_desc _ _
 
 /-- The canonical cover-small presentation is surjective in every simplicial degree. -/
 public theorem coverSmallPresentation_app_surjective
@@ -77,8 +77,7 @@ public theorem coverSmallPresentation_app_surjective
         TopCat.toSSet.map (topologicalSubsetInclusion X (U i)) := by
     rw [← Category.assoc, coverSmallPresentation_iota,
       coverMemberToSmallSingularSet_comp_inclusion]
-  have happ := ConcreteCategory.congr_hom (congr_app hcat n) y
-  exact happ.trans hy
+  exact (ConcreteCategory.congr_hom (congr_app hcat n) y).trans hy
 
 /-- The canonical presentation is an epimorphism of simplicial sets. -/
 public instance coverSmallPresentation_epi : Epi (coverSmallPresentation X U) := by

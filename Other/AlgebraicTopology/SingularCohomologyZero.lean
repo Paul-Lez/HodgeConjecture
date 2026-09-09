@@ -48,9 +48,7 @@ lemma exists_smul_cohomologyUnitZero (φ : Cohomology R X 0) :
   refine ⟨φ (e.symm 1), ?_⟩
   apply LinearMap.ext
   intro z
-  have hz : (e z) • e.symm 1 = z := by
-    apply e.injective
-    simp
+  have hz : (e z) • e.symm 1 = z := e.injective (by simp)
   change φ (e.symm 1) * e z = φ z
   rw [mul_comm]
   conv_rhs => rw [← hz]

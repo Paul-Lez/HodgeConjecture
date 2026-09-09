@@ -83,10 +83,9 @@ lemma dense_cycleComponent_smooth_closedPoints
     LocallyOfFiniteType.jacobsonSpace f
   change Dense ((f.smoothLocus : Set (cycleComponent X.left x)) ∩
     closedPoints (cycleComponent X.left x))
-  apply dense_iff_closure_eq.mpr
-  exact (JacobsonSpace.closure_inter_closedPoints_eq_closure
+  exact dense_iff_closure_eq.mpr ((JacobsonSpace.closure_inter_closedPoints_eq_closure
     f.smoothLocus.2.isLocallyClosed).trans
-      (dense_iff_closure_eq.mp (dense_cycleComponent_smoothLocus X x))
+      (dense_iff_closure_eq.mp (dense_cycleComponent_smoothLocus X x)))
 
 /-- The underlying scheme point of a complex point of a cycle component is closed. -/
 lemma cycleComponent_complexPoint_underlying_isClosed

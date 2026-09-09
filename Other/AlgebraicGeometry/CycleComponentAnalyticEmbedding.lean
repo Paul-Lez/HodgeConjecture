@@ -77,10 +77,8 @@ constructed point equivalence. -/
 lemma cycleComponentPointHomeomorphSupport_toEquiv
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
     (cycleComponentPointHomeomorphSupport X x).toEquiv =
-      cycleComponentPointEquivSupport X x := by
-  apply Equiv.ext
-  intro z
-  rfl
+      cycleComponentPointEquivSupport X x :=
+  Equiv.ext fun _ ↦ rfl
 
 /-- The smooth analytic locus of a component is homeomorphic to its image in the ambient
 analytic variety. -/

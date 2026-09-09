@@ -54,17 +54,13 @@ theorem localClassOfChart_localChart_eq
     (hq' : q ∈ (localChart X d z').source) :
     localClassOfChart d (localChart X d z) q hq =
       localClassOfChart d (localChart X d z') q hq' := by
-  let : ChartedSpace (Fin d → ℂ) (ComplexPoint X) :=
-    inferInstance
-  let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X) :=
-    isManifold_omega X d
+  let : ChartedSpace (Fin d → ℂ) (ComplexPoint X) := inferInstance
+  let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X) := isManifold_omega X d
   let T : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     tangentCoordChange 𝓘(ℂ, Fin d → ℂ) z z' q
   have hoverlap : q ∈ (extChartAt 𝓘(ℂ, Fin d → ℂ) z).source ∩
       (extChartAt 𝓘(ℂ, Fin d → ℂ) z').source := by
     rw [extChartAt_source, extChartAt_source]
-    change q ∈ (localChart X d z).source ∩
-      (localChart X d z').source
     exact ⟨hq, hq'⟩
   have hraw : HasFDerivAt
       (fun v ↦ localChart X d z' ((localChart X d z).symm v)) T
@@ -81,8 +77,8 @@ theorem localClassOfChart_localChart_eq
   have hT : Function.Injective T := by
     intro a b hab
     apply (tangentCoordChangeEquiv 𝓘(ℂ, Fin d → ℂ) z z' q).injective
-    have hqchart : q ∈ (chartAt (Fin d → ℂ) z).source := by exact hq
-    have hqchart' : q ∈ (chartAt (Fin d → ℂ) z').source := by exact hq'
+    have hqchart : q ∈ (chartAt (Fin d → ℂ) z).source := hq
+    have hqchart' : q ∈ (chartAt (Fin d → ℂ) z').source := hq'
     simpa only [T, tangentCoordChangeEquiv_apply hqchart hqchart'] using hab
   exact localClassOfChart_eq_of_hasFDerivAt_transition d
     (localChart X d z) (localChart X d z') q hq hq' T hT hraw

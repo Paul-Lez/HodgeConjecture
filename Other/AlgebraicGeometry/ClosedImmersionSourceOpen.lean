@@ -42,7 +42,6 @@ def closedImmersionSourceOpenLift : (A : Scheme) ⟶ (closedImmersionSourceOpenT
   IsOpenImmersion.lift (closedImmersionSourceOpenTarget i A).ι (A.ι ≫ i) (by
     rw [Scheme.Opens.range_ι]
     rintro _ ⟨a, rfl⟩
-    change i a.1 ∈ (closedImmersionSourceOpenTarget i A : Set X)
     change a.1 ∈ i ⁻¹' (closedImmersionSourceOpenTarget i A : Set X)
     rw [closedImmersionSourceOpenTarget_preimage]
     exact a.2)

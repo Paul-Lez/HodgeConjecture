@@ -88,8 +88,7 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
   let ae₁ : RationalSingularCochainHypercohomology X n ≃+
       Hypercohomology X I n :=
     { toEquiv := e₁
-      map_add' := by
-        intro α β
+      map_add' α β := by
         apply (Localization.SmallShiftedHom.equiv
           (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
         rw [hypercohomologyEquiv_add X I n]
@@ -101,8 +100,7 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
       Localization.SmallShiftedHom
         (analyticQuasiIsomorphisms X) A' I n :=
     { toEquiv := e₂
-      map_add' := by
-        intro α β
+      map_add' α β := by
         apply (Localization.SmallShiftedHom.equiv
           (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
         rw [localizedEquiv_add]
@@ -114,8 +112,7 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
       Localization.SmallShiftedHom
         (analyticQuasiIsomorphisms X) A' I n :=
     { toEquiv := CochainComplex.HomComplex.CohomologyClass.equivOfIsKInjective
-      map_add' := by
-        intro α β
+      map_add' α β := by
         change
           CochainComplex.HomComplex.CohomologyClass.toSmallShiftedHom (α + β) =
             CochainComplex.HomComplex.CohomologyClass.toSmallShiftedHom α +
@@ -168,13 +165,9 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSections
   letI : ∀ q : ℤ, Injective (I.X q) := hI
   letI : I.IsStrictlyGE 0 := hIge
   letI : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
-  have hSflasque : ∀ q, (S.X q).IsFlasque := by
-    intro q
-    dsimp [S]
-    exact singularCochainSheafComplexInt_isFlasque X q
-  have hIflasque : ∀ q, (I.X q).IsFlasque := by
-    intro q
-    infer_instance
+  have hSflasque : ∀ q, (S.X q).IsFlasque :=
+    fun q ↦ singularCochainSheafComplexInt_isFlasque X q
+  have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
   letI : QuasiIso
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
         ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
@@ -190,18 +183,16 @@ lemma rationalSingularCochainHypercohomologyEquivGlobalSections_add
     (n : ℤ) (α β : RationalSingularCochainHypercohomology X n) :
     rationalSingularCochainHypercohomologyEquivGlobalSections X n (α + β) =
       rationalSingularCochainHypercohomologyEquivGlobalSections X n α +
-      rationalSingularCochainHypercohomologyEquivGlobalSections X n β := by
-  exact (rationalSingularCochainHypercohomologyAddEquivGlobalSections
-    X n).map_add α β
+      rationalSingularCochainHypercohomologyEquivGlobalSections X n β :=
+  (rationalSingularCochainHypercohomologyAddEquivGlobalSections X n).map_add α β
 
 /-- The forward map of the original global-sections comparison preserves zero. -/
 lemma rationalSingularCochainHypercohomologyEquivGlobalSections_zero
     [T2Space (ComplexPoint X)]
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℤ) :
-    rationalSingularCochainHypercohomologyEquivGlobalSections X n 0 = 0 := by
-  exact (rationalSingularCochainHypercohomologyAddEquivGlobalSections
-    X n).map_zero
+    rationalSingularCochainHypercohomologyEquivGlobalSections X n 0 = 0 :=
+  (rationalSingularCochainHypercohomologyAddEquivGlobalSections X n).map_zero
 
 /-- The comparison from rational singular-cochain hypercohomology to ordinary singular
 cohomology, bundled as an additive equivalence. -/
@@ -235,9 +226,8 @@ lemma rationalSingularCochainHypercohomologyEquivCohomology_add
     (n : ℕ) (α β : RationalSingularCochainHypercohomology X (n : ℤ)) :
     rationalSingularCochainHypercohomologyEquivCohomology X n (α + β) =
       rationalSingularCochainHypercohomologyEquivCohomology X n α +
-      rationalSingularCochainHypercohomologyEquivCohomology X n β := by
-  exact (rationalSingularCochainHypercohomologyAddEquivCohomology
-    X n).map_add α β
+      rationalSingularCochainHypercohomologyEquivCohomology X n β :=
+  (rationalSingularCochainHypercohomologyAddEquivCohomology X n).map_add α β
 
 /-- The forward map of the original hypercohomology-to-singular-cohomology comparison
 preserves zero. -/
@@ -245,9 +235,8 @@ lemma rationalSingularCochainHypercohomologyEquivCohomology_zero
     [T2Space (ComplexPoint X)]
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
-    rationalSingularCochainHypercohomologyEquivCohomology X n 0 = 0 := by
-  exact (rationalSingularCochainHypercohomologyAddEquivCohomology
-    X n).map_zero
+    rationalSingularCochainHypercohomologyEquivCohomology X n 0 = 0 :=
+  (rationalSingularCochainHypercohomologyAddEquivCohomology X n).map_zero
 
 /-- Rational constant-sheaf cohomology and rational singular cohomology are additively
 equivalent. -/
@@ -270,9 +259,8 @@ lemma rationalCohomologyEquivSingularCohomology_add
     (n : ℕ) (α β : FieldCohomology ℚ X (n : ℤ)) :
     rationalCohomologyEquivSingularCohomology X n (α + β) =
       rationalCohomologyEquivSingularCohomology X n α +
-      rationalCohomologyEquivSingularCohomology X n β := by
-  exact (rationalCohomologyAddEquivSingularCohomology
-    X n).map_add α β
+      rationalCohomologyEquivSingularCohomology X n β :=
+  (rationalCohomologyAddEquivSingularCohomology X n).map_add α β
 
 /-- The forward map of the original rational Betti comparison preserves zero. -/
 lemma rationalCohomologyEquivSingularCohomology_zero
@@ -280,8 +268,7 @@ lemma rationalCohomologyEquivSingularCohomology_zero
     [T2Space (ComplexPoint X)]
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
-    rationalCohomologyEquivSingularCohomology X n 0 = 0 := by
-  exact (rationalCohomologyAddEquivSingularCohomology
-    X n).map_zero
+    rationalCohomologyEquivSingularCohomology X n 0 = 0 :=
+  (rationalCohomologyAddEquivSingularCohomology X n).map_zero
 
 end AlgebraicGeometry.ComplexPoint

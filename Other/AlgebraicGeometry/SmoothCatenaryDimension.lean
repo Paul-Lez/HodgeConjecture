@@ -61,9 +61,7 @@ lemma FiniteType.exists_ringKrullDim_eq_and_trdeg_eq :
   let : FaithfulSMul (MvPolynomial (Fin n) k) A :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hg
   let : IsScalarTower k (MvPolynomial (Fin n) k) A :=
-    IsScalarTower.of_algebraMap_eq' (by
-      ext r
-      exact (g.commutes r).symm)
+    IsScalarTower.of_algebraMap_eq' (RingHom.ext fun r => (g.commutes r).symm)
   let : Algebra.IsIntegral (MvPolynomial (Fin n) k) A :=
     ⟨hfinite.to_isIntegral⟩
   refine ⟨n, ?_, ?_⟩
@@ -166,8 +164,7 @@ lemma ringKrullDim_quotient_le_height_spec {S : Type*} [CommRing S]
     _ = Order.krullDim ((PrimeSpectrum (S ⧸ x.asIdeal))ᵒᵈ) :=
       Order.krullDim_orderDual.symm
     _ ≤ Order.krullDim (Set.Iic x) := Order.krullDim_le_of_strictMono g hg
-    _ = (↑(Order.height x) : WithBot ℕ∞) :=
-      Order.height_eq_krullDim_Iic x |>.symm
+    _ = (↑(Order.height x) : WithBot ℕ∞) := (Order.height_eq_krullDim_Iic x).symm
 
 /-- An inducing map between schemes is strictly monotone for their specialization orders. -/
 private lemma Scheme.Hom.strictMono_base_of_isInducing {X Y : Scheme.{0}}
@@ -203,8 +200,8 @@ lemma IsAffineOpen.ringKrullDim_quotient_le_height {X : Scheme.{0}} {U : X.Opens
     _ = (↑(Order.height y) : WithBot ℕ∞) := by
       rw [show hU.isoSpec.hom.base y = e y from rfl,
         Order.height_orderIso]
-    _ ≤ (↑(Order.height (U.ι.base y)) : WithBot ℕ∞) := by
-      exact WithBot.coe_le_coe.mpr <| Order.height_le_height_apply_of_strictMono
+    _ ≤ (↑(Order.height (U.ι.base y)) : WithBot ℕ∞) :=
+      WithBot.coe_le_coe.mpr <| Order.height_le_height_apply_of_strictMono
         U.ι.base (Scheme.Hom.strictMono_base_of_isInducing U.ι
           U.isOpenEmbedding.isInducing) y
 
@@ -265,10 +262,7 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_complex
   have hPheight : P.height = Order.coheight x := by
     calc
       P.height = Order.coheight y := hU.primeIdealOf_height_eq_coheight y
-      _ = Order.coheight x := by
-        have h := coheight_eq_of_isOpenImmersion (x := y) U.ι
-        change Order.coheight x = Order.coheight y at h
-        exact h.symm
+      _ = Order.coheight x := (coheight_eq_of_isOpenImmersion (x := y) U.ι).symm
   have hquot : ringKrullDim (Γ(X, U) ⧸ P) ≤
       (↑(Order.height x) : WithBot ℕ∞) :=
     IsAffineOpen.ringKrullDim_quotient_le_height hU y

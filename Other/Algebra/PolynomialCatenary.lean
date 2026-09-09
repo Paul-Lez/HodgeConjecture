@@ -46,16 +46,12 @@ theorem ringKrullDim_eq_of_isIntegral_of_injective
   rw [ringKrullDim, ringKrullDim, Order.krullDim_eq_iSup_length,
     Order.krullDim_eq_iSup_length]
   apply le_antisymm
-  · apply WithBot.coe_le_coe.mpr
-    apply iSup_le
-    intro l
+  · refine WithBot.coe_le_coe.mpr (iSup_le fun l ↦ ?_)
     let mono : StrictMono (PrimeSpectrum.comap (algebraMap R S)) := fun _ _ h ↦
       Ideal.IsIntegral.comap_lt_comap h
     rw [← LTSeries.map_length l _ mono]
     exact le_iSup (fun p ↦ (p.length : ℕ∞)) (l.map _ mono)
-  · apply WithBot.coe_le_coe.mpr
-    apply iSup_le
-    intro l
+  · refine WithBot.coe_le_coe.mpr (iSup_le fun l ↦ ?_)
     obtain ⟨P, hP⟩ := Algebra.IsIntegral.comap_surjective R S l.head
     have : P.asIdeal.LiesOver l.head.asIdeal := ⟨by
       simpa [PrimeSpectrum.ext_iff] using hP.symm⟩
@@ -97,11 +93,8 @@ theorem Polynomial.height_eq_comap_height_add_one_of_monic_mem
   have disj : Disjoint (p.primeCompl.map Polynomial.C : Set (Polynomial R)) P := by
     simpa [p] using! Set.disjoint_image_left.mpr
       (Set.disjoint_compl_left_iff_subset.mpr (fun _ a ↦ a))
-  have hP'prime : P'.IsPrime :=
-    IsLocalization.isPrime_of_isPrime_disjoint _ _ P inferInstance disj
-  let : P'.IsPrime := hP'prime
-  have hPover : P.LiesOver p := ⟨rfl⟩
-  let : P.LiesOver p := hPover
+  let : P'.IsPrime := IsLocalization.isPrime_of_isPrime_disjoint _ _ P inferInstance disj
+  let : P.LiesOver p := ⟨rfl⟩
   have hP'over : P'.LiesOver p' :=
     IsLocalization.liesOver_of_isPrime_of_disjoint p.primeCompl _ _ disj
   let : P'.LiesOver p' := hP'over
@@ -274,8 +267,8 @@ theorem MvPolynomial.height_add_ringKrullDim_quotient_eq_fin {n : ℕ}
         let g : Polynomial (MvPolynomial (Fin n) k) := hunit.unit⁻¹ • e₂ (e₁ f)
         have hgmonic : g.Monic :=
           Polynomial.monic_of_isUnit_leadingCoeff_inv_smul hunit
-        have hgf : g ∈ Q := by
-          exact Submodule.smul_of_tower_mem Q hunit.unit⁻¹.val
+        have hgf : g ∈ Q :=
+          Submodule.smul_of_tower_mem Q hunit.unit⁻¹.val
             (Ideal.mem_map_of_mem e₂ (Ideal.mem_map_of_mem e₁ hfP))
         let q : Ideal (MvPolynomial (Fin n) k) := Q.comap Polynomial.C
         have : q.IsPrime := Ideal.IsPrime.comap Polynomial.C
@@ -316,8 +309,7 @@ theorem MvPolynomial.height_add_ringKrullDim_quotient_eq_fin {n : ℕ}
             _ = ringKrullDim (MvPolynomial (Fin (n + 1)) k ⧸ P₁) :=
               ringKrullDim_eq_of_ringEquiv quotientEquiv₁
             _ = _ := ringKrullDim_eq_of_ringEquiv quotientEquiv₂
-        rw [hheightP, hheightQ, hdimP, hdimQ]
-        rw [WithBot.coe_add, WithBot.coe_one]
+        rw [hheightP, hheightQ, hdimP, hdimQ, WithBot.coe_add, WithBot.coe_one]
         calc
           (q.height : WithBot ℕ∞) + 1 + ringKrullDim (MvPolynomial (Fin n) k ⧸ q) =
               ((q.height : WithBot ℕ∞) +
@@ -340,7 +332,7 @@ theorem MvPolynomial.ringKrullDim_quotient_eq_fin_sub_of_height_eq {n p : ℕ}
     rw [htop, add_top] at hab
     exact ENat.top_ne_natCast n hab
   lift b to ℕ using hbtop with m
-  have hpm : p + m = n := by exact_mod_cast hab
+  have hpm : p + m = n := mod_cast hab
   rw [← hb, WithBot.coe_natCast]
   congr
   lia

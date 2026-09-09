@@ -22,7 +22,7 @@ def postcompMap : HomComplex K L ⟶ HomComplex K M where
   f n := AddCommGrpCat.ofHom
     { toFun z := z.comp (Cochain.ofHom f) (add_zero n)
       map_zero' := by simp
-      map_add' := by intros; exact Cochain.add_comp _ _ _ _ }
+      map_add' _ _ := Cochain.add_comp _ _ _ _ }
   comm' n m _ := by
     ext z
     exact δ_comp_ofHom z f m

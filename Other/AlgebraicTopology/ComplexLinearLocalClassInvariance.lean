@@ -64,10 +64,7 @@ def mul {A B : Matrix n n ℂ}
     ComplexIsotopyToOne (A * B) where
   path :=
     ⟨fun t ↦ hA.path t * hB.path t, by
-      apply continuous_pi
-      intro i
-      apply continuous_pi
-      intro j
+      refine continuous_pi fun i ↦ continuous_pi fun j ↦ ?_
       simp only [Matrix.mul_apply]
       fun_prop⟩
   map_zero := by
@@ -84,9 +81,7 @@ def mul {A B : Matrix n n ℂ}
 /-- An invertible diagonal complex matrix is isotopic to the identity. -/
 def diagonal (D : n → ℂ) (hD : (Matrix.diagonal D).det ≠ 0) :
     ComplexIsotopyToOne (Matrix.diagonal D) := by
-  have hDi : ∀ i, D i ≠ 0 := by
-    intro i hi
-    apply hD
+  have hDi : ∀ i, D i ≠ 0 := fun i hi ↦ hD <| by
     rw [Matrix.det_diagonal]
     exact Finset.prod_eq_zero (Finset.mem_univ i) hi
   refine
@@ -96,10 +91,7 @@ def diagonal (D : n → ℂ) (hD : (Matrix.diagonal D).det ≠ 0) :
       map_zero := ?_
       map_one := ?_
       det_ne_zero := ?_ }
-  · apply continuous_pi
-    intro i
-    apply continuous_pi
-    intro j
+  · refine continuous_pi fun i ↦ continuous_pi fun j ↦ ?_
     change Continuous (fun a : unitInterval ↦ if i = j then
       Complex.exp (((a : ℝ) : ℂ) * Complex.log (D i)) else 0)
     by_cases hij : i = j
@@ -128,10 +120,7 @@ def transvection (t : Matrix.TransvectionStruct n ℂ) :
     ComplexIsotopyToOne t.toMatrix := by
   let P : C(unitInterval, Matrix n n ℂ) :=
     ⟨fun s ↦ Matrix.transvection t.i t.j (((s : ℝ) : ℂ) * t.c), by
-      apply continuous_pi
-      intro i
-      apply continuous_pi
-      intro j
+      refine continuous_pi fun i ↦ continuous_pi fun j ↦ ?_
       change Continuous (fun a : unitInterval ↦
         (1 : Matrix n n ℂ) i j +
           if t.i = i ∧ t.j = j then ((a : ℝ) : ℂ) * t.c else 0)
@@ -183,11 +172,9 @@ lemma continuous_complexMatrixPath_mulVec
     (H : C(unitInterval, Matrix (Fin d) (Fin d) ℂ)) :
     Continuous (fun tx : unitInterval × (Fin d → ℂ) ↦
       (H tx.1).mulVec tx.2) := by
-  apply continuous_pi
-  intro i
+  refine continuous_pi fun i ↦ ?_
   simp only [Matrix.mulVec, dotProduct]
-  apply continuous_finsetSum
-  intro j _
+  refine continuous_finsetSum _ fun j _ ↦ ?_
   exact
     ((continuous_apply j).comp
       ((continuous_apply i).comp (H.continuous.comp continuous_fst))).mul
@@ -209,11 +196,8 @@ def complexMatrixMap (A : Matrix (Fin d) (Fin d) ℂ) :
 /-- The restriction of an invertible complex matrix to the complement of the origin. -/
 lemma complexMatrix_mulVec_ne_zero
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0)
-    (z : ({0}ᶜ : Set (Fin d → ℂ))) : A.mulVec z.1 ≠ 0 := by
-  intro hz
-  apply z.2
-  apply A.mulVec_injective_of_det_ne_zero hA
-  simpa using hz
+    (z : ({0}ᶜ : Set (Fin d → ℂ))) : A.mulVec z.1 ≠ 0 := fun hz ↦
+  z.2 (A.mulVec_injective_of_det_ne_zero hA (by simpa using hz))
 
 /-- The restriction of an invertible complex matrix to the complement of the origin. -/
 def complexMatrixPuncturedMap (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0) :
@@ -254,14 +238,12 @@ def complexMatrixPuncturedPairHomotopy
       (complexMatrixPuncturedPairMap d A hA) where
   fst :=
     { toFun := fun tx ↦ (H.path tx.1).mulVec tx.2
-      continuous_toFun := by
-        exact continuous_complexMatrixPath_mulVec d H.path
+      continuous_toFun := continuous_complexMatrixPath_mulVec d H.path
       map_zero_left := fun x ↦ by
         simp only [H.map_zero]
         exact Matrix.one_mulVec x
       map_one_left := fun x ↦ by
         simp only [H.map_one]
-        change A.mulVec x = A.mulVec x
         rfl }
   snd :=
     { toFun := fun tx ↦
@@ -280,7 +262,6 @@ def complexMatrixPuncturedPairHomotopy
       map_one_left := fun x ↦ by
         apply Subtype.ext
         simp only [H.map_one]
-        change A.mulVec x.1 = A.mulVec x.1
         rfl }
   w := rfl
 

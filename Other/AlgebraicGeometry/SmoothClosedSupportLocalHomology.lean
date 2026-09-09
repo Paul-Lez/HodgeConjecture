@@ -70,9 +70,8 @@ theorem mem_smoothClosedSupportNeighborhood :
   mem_flattenedSupportNeighborhood _ _ _ _ _
 
 theorem smoothClosedSupportNeighborhood_le :
-    smoothClosedSupportNeighborhood X Y i m d z V hzV ≤ V := by
-  intro y hy
-  exact (flattenedSupportNeighborhood_subset_source (Fin m → ℂ) (d - m)
+    smoothClosedSupportNeighborhood X Y i m d z V hzV ≤ V :=
+  fun _ hy ↦ (flattenedSupportNeighborhood_subset_source (Fin m → ℂ) (d - m)
     (smoothClosedSupportRestrictionChart X Y i m d z V)
     (Point.map i z)
     (smoothClosedSupportRestrictionChart_mem_source X Y i m d z V hzV)
@@ -180,8 +179,8 @@ theorem smoothClosedSupportNormalCoclass_unique
       (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV)
         (2 * (d - m)))
     (hα : α (smoothClosedSupportNormalClass X Y i m d z V hzV) = 1) :
-    α = smoothClosedSupportNormalCoclass X Y i m d z V hzV := by
-  exact (normalizedDual_unique
+    α = smoothClosedSupportNormalCoclass X Y i m d z V hzV :=
+  (normalizedDual_unique
     (smoothClosedSupportNormalClass_ne_zero X Y i m d z V hzV)
     (span_smoothClosedSupportNormalClass_eq_top X Y i m d z V hzV) α hα).trans
       (normalizedDual_unique

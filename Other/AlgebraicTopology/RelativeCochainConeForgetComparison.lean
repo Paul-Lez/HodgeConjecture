@@ -39,8 +39,8 @@ theorem relativeDualShiftIsoCochainCone_hom_connecting :
     (relativeDualShiftIsoCochainCone R X).hom ≫
         (CochainComplex.mappingCone.triangleh (relativeCochainRestrictionInt R X)).mor₃ =
       -((HomotopyCategory.quotient (ModuleCat R) (.up ℤ)).map
-        (relativeDualCochainShortComplexInt R X).f)⟦(1 : ℤ)⟧' := by
-  exact relativeDualShiftIsoCochainCone_hom_comp_mor₃ R X
+        (relativeDualCochainShortComplexInt R X).f)⟦(1 : ℤ)⟧' :=
+  relativeDualShiftIsoCochainCone_hom_comp_mor₃ R X
 
 /-- Inverting the legacy completion retains the prescribed sign on the
 actual inclusion into ambient cochains. -/
@@ -78,9 +78,8 @@ theorem relativeCochainConeHomologyIsoDualRelativeInt_inclusion (n : ℕ) :
     (H.shift ((n : ℤ) - 1)).map e.inv ≫
     (H.shiftIso 1 ((n : ℤ) - 1) (n : ℤ) hn).hom.app (Q.obj S.X₁) ≫
     (F (n : ℤ)).hom.app S.X₁ ≫ HomologicalComplex.homologyMap S.f (n : ℤ)) = _
-  rw [hF]
-  rw [← H.shiftIso_hom_naturality_assoc 1 ((n : ℤ) - 1) (n : ℤ) hn (Q.map S.f)]
-  rw [← Functor.map_comp_assoc, relativeDualShiftIsoCochainCone_inv_inclusion]
+  rw [hF, ← H.shiftIso_hom_naturality_assoc 1 ((n : ℤ) - 1) (n : ℤ) hn (Q.map S.f),
+    ← Functor.map_comp_assoc, relativeDualShiftIsoCochainCone_inv_inclusion]
   simp only [Functor.map_neg, Preadditive.neg_comp, Preadditive.comp_neg, neg_neg]
   change (F ((n : ℤ) - 1)).inv.app C ≫
     H.shiftMap (ShiftedHom.map

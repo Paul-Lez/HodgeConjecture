@@ -239,9 +239,7 @@ lemma continuous_standardEtaleLocalizationEquation :
   have hcoord : Continuous (fun u : (Fin n → ℂ) × ℂ ↦
       ((mvPolynomialAlgHomHomeomorph n).symm u.1, u.2)) :=
     ((mvPolynomialAlgHomHomeomorph n).symm.continuous.comp continuous_fst).prodMk continuous_snd
-  convert (continuous_eval₂_varying P.g).comp hcoord using 1
-  ext u
-  rfl
+  exact (continuous_eval₂_varying P.g).comp hcoord
 
 /-- The source of the standard étale chart centered at `z`. -/
 def standardEtaleChartSource (z : standardEtaleCoordinateSpace P) :
@@ -350,10 +348,8 @@ lemma continuousOn_standardEtaleChartInverse (z : standardEtaleCoordinateSpace P
     hzero.subtype_mk hzeroTarget
   have hTinv : Continuous (T.target.domRestrict T.symm) :=
     continuousOn_iff_continuous_domRestrict.mp T.continuousOn_invFun
-  have hambient : Continuous (fun w : standardEtaleChartTarget P z ↦ T.symm (0, w.1)) := by
-    convert hTinv.comp hzeroRestrict using 1
-    funext w
-    rfl
+  have hambient : Continuous (fun w : standardEtaleChartTarget P z ↦ T.symm (0, w.1)) :=
+    hTinv.comp hzeroRestrict
   have hcoordinate : Continuous (fun w : standardEtaleChartTarget P z ↦
       (⟨T.symm (0, w.1), by
         have heq := congrArg Prod.fst (T.right_inv w.2.1)
@@ -363,9 +359,7 @@ lemma continuousOn_standardEtaleChartInverse (z : standardEtaleCoordinateSpace P
         standardEtaleCoordinateSpace P)) :=
     hambient.subtype_mk _
   convert hcoordinate using 1
-  funext w
-  apply Subtype.ext
-  exact standardEtaleChartInverse_of_mem P z w.2
+  exact funext fun w ↦ Subtype.ext (standardEtaleChartInverse_of_mem P z w.2)
 
 /-- The ambient inverse of a standard étale projection chart is analytic at every point of its
 target. The derivative of the implicit-function homeomorphism is invertible there because every
@@ -376,8 +370,7 @@ lemma analyticAt_standardEtaleImplicitOpenPartialHomeomorph_symm_zero
     AnalyticAt ℂ (standardEtaleImplicitOpenPartialHomeomorph P z).symm (0, w) := by
   let T := standardEtaleImplicitOpenPartialHomeomorph P z
   let q : standardEtaleCoordinateSpace P := standardEtaleChartInverse P z w
-  have hqval : q.1 = T.symm (0, w) := by
-    exact standardEtaleChartInverse_of_mem P z hw
+  have hqval : q.1 = T.symm (0, w) := standardEtaleChartInverse_of_mem P z hw
   let cdf := contDiffAt_standardEtaleEquation P q.1
   let hs := cdf.hasStrictFDerivAt (by simp)
   let φ := hs.implicitFunctionDataOfProdDomain (standardEtale_partial_isInvertible P q)
@@ -423,8 +416,7 @@ lemma analyticAt_standardEtaleChartInverse_val
   let T := standardEtaleImplicitOpenPartialHomeomorph P z
   have hT : AnalyticAt ℂ T.symm (0, w) :=
     analyticAt_standardEtaleImplicitOpenPartialHomeomorph_symm_zero P z hw
-  have hzero : AnalyticAt ℂ (fun v : Fin n → ℂ ↦ ((0 : ℂ), v)) w := by
-    fun_prop
+  have hzero : AnalyticAt ℂ (fun v : Fin n → ℂ ↦ ((0 : ℂ), v)) w := by fun_prop
   apply (hT.comp hzero).congr
   filter_upwards [(isOpen_standardEtaleChartTarget P z).eventually_mem hw] with v hv
   exact (standardEtaleChartInverse_of_mem P z hv).symm
@@ -434,9 +426,8 @@ holomorphic throughout its target. -/
 lemma contDiffOn_standardEtaleChartInverse_val
     (z : standardEtaleCoordinateSpace P) :
     ContDiffOn ℂ ω (fun v ↦ (standardEtaleChartInverse P z v).1)
-      (standardEtaleChartTarget P z) := by
-  intro w hw
-  exact (analyticAt_standardEtaleChartInverse_val P z hw).contDiffAt.contDiffWithinAt
+      (standardEtaleChartTarget P z) :=
+  fun _ hw ↦ (analyticAt_standardEtaleChartInverse_val P z hw).contDiffAt.contDiffWithinAt
 
 /-- Evaluation of a quotient representative in ordinary coordinates agrees with the explicit
 bivariate polynomial formula. -/
@@ -548,10 +539,8 @@ homeomorphism. -/
 lemma isLocalHomeomorph_standardEtaleCoordinateProjection :
     IsLocalHomeomorph (fun z : standardEtaleCoordinateSpace P ↦ z.1.1) := by
   rw [isLocalHomeomorph_iff_isLocalHomeomorphOn_univ]
-  apply IsLocalHomeomorphOn.mk
-  intro z _
-  exact ⟨standardEtaleProjectionChart P z, standardEtale_mem_implicit_source P z,
-    fun _ _ ↦ rfl⟩
+  exact IsLocalHomeomorphOn.mk _ _ fun z _ ↦
+    ⟨standardEtaleProjectionChart P z, standardEtale_mem_implicit_source P z, fun _ _ ↦ rfl⟩
 
 /-- Restriction of a complex point of a standard étale algebra to the polynomial base. -/
 def standardEtaleBaseAlgHom (u : P.Ring →ₐ[ℂ] ℂ) : complexPolynomialRing n →ₐ[ℂ] ℂ :=
@@ -565,13 +554,7 @@ lemma isLocalHomeomorph_standardEtaleBaseAlgHom :
     (standardEtaleCoordinateHomeomorph P).isLocalHomeomorph
   have h := (mvPolynomialAlgHomHomeomorph n).symm.isLocalHomeomorph.comp hcoordinates
   convert h using 1
-  funext u
-  apply AlgHom.ext
-  intro b
-  change (standardEtaleBaseAlgHom P u) b =
-    ((mvPolynomialAlgHomHomeomorph n).symm
-      (mvPolynomialAlgHomHomeomorph n (standardEtaleBaseAlgHom P u))) b
-  rw [Homeomorph.symm_apply_apply]
+  exact funext fun _ ↦ ((mvPolynomialAlgHomHomeomorph n).symm_apply_apply _).symm
 
 variable (S : Type) [CommRing S] [Algebra ℂ S]
   [Algebra (complexPolynomialRing n) S]
@@ -650,10 +633,8 @@ lemma analyticAt_isStandardEtaleAlgHomProjectionChart_symm_apply
   have hw' : w ∈ (standardEtaleAlgHomProjectionChart Q q).target := by
     rw [isStandardEtaleAlgHomProjectionChart, OpenPartialHomeomorph.trans_target] at hw
     exact hw.1
-  have h := analyticAt_standardEtaleAlgHomProjectionChart_symm_apply Q q hw' (e r)
-  apply h.congr
-  filter_upwards with v
-  rfl
+  exact (analyticAt_standardEtaleAlgHomProjectionChart_symm_apply Q q hw' (e r)).congr
+    (.of_forall fun _ ↦ rfl)
 
 /-- Restriction to the polynomial base is a local homeomorphism for every standard étale
 algebra. -/
@@ -711,11 +692,7 @@ lemma isLocalHomeomorph_etaleBaseAlgHom :
   have hj : IsLocalHomeomorph j := isLocalHomeomorph_localizationAwayAlgHomMap T f
   have hG : IsLocalHomeomorph G :=
     isLocalHomeomorph_isStandardEtaleBaseAlgHom (n := n) (Localization.Away f)
-  have hcomp : G = F ∘ j := by
-    funext v
-    apply AlgHom.ext
-    intro b
-    rfl
+  have hcomp : G = F ∘ j := funext fun _ ↦ AlgHom.ext fun _ ↦ rfl
   have hFG : IsLocalHomeomorph (F ∘ j) := hcomp ▸ hG
   have hFonImage : IsLocalHomeomorphOn F (j '' Set.univ) :=
     hFG.isLocalHomeomorphOn.of_comp_right (s := Set.univ) hj.isLocalHomeomorphOn
@@ -824,10 +801,7 @@ lemma analyticAt_etaleAlgHomProjectionChart_symm_apply
   have h := analyticAt_isStandardEtaleAlgHomProjectionChart_symm_apply
     (n := n) (Localization.Away D.element) q hw'
       (algebraMap T (Localization.Away D.element) r)
-  apply h.congr
-  filter_upwards with v
-  rw [etaleAlgHomProjectionChart, OpenPartialHomeomorph.lift_openEmbedding_symm]
-  rfl
+  exact h.congr (.of_forall fun _ ↦ rfl)
 
 variable {T}
 
@@ -891,15 +865,8 @@ lemma isLocalHomeomorph_standardEtaleComplexPointMap :
     ((isLocalHomeomorph_standardEtaleBaseAlgHom P).comp
       (affineSpecHomeomorph P.Ring).isLocalHomeomorph)
   convert h using 1
-  funext z
-  apply (affineSpecHomeomorph (complexPolynomialRing n)).injective
-  change (affineSpecHomeomorph (complexPolynomialRing n))
-      (standardEtaleComplexPointMap P z) =
-    (affineSpecHomeomorph (complexPolynomialRing n))
-      ((affineSpecHomeomorph (complexPolynomialRing n)).symm
-        (standardEtaleBaseAlgHom P (affineSpecHomeomorph P.Ring z)))
-  rw [Homeomorph.apply_symm_apply]
-  exact affineSpecEquiv_standardEtaleComplexPointMap P z
+  exact funext fun z ↦
+    (Homeomorph.eq_symm_apply _).mpr (affineSpecEquiv_standardEtaleComplexPointMap P z)
 
 end
 

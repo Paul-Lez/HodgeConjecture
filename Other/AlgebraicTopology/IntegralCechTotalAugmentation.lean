@@ -185,16 +185,6 @@ public noncomputable def integralCechRowArrowIso
           integralCechBicomplex, integralCechAugmentedChains,
           SSet.chainComplexFunctor,
           AlternatingFaceMapComplex.ε_app_f_zero]
-        change (AddCommGrpCat.Hom.hom
-            ((sigmaConst.obj (AddCommGrpCat.of ℤ)).map
-              ((A.augmentedCechNerve.hom.app
-                (Opposite.op (SimplexCategory.mk 0))).app
-                  (Opposite.op (SimplexCategory.mk q))))) x =
-          (AddCommGrpCat.Hom.hom
-            ((sigmaConst.obj (AddCommGrpCat.of ℤ)).map
-              ((A.augmentedCechNerve.hom.app
-                (Opposite.op (SimplexCategory.mk 0))).app
-                  (Opposite.op (SimplexCategory.mk q))))) x
         rfl
       · simp [l₀, r₀, X, F, Y, firstQuadrantHorizontalRowMap,
           firstQuadrantHorizontalRow, integralCechOuterAugmentation,
@@ -207,7 +197,7 @@ public noncomputable def integralCechRowArrowIso
       (SimplicialObject.Augmented.drop.mapIso e))
     ((ChainComplex.single₀ AddCommGrpCat).mapIso
       (SimplicialObject.Augmented.point.mapIso e))
-    (by exact AlternatingFaceMapComplex.ε.naturality e.hom)
+    (AlternatingFaceMapComplex.ε.naturality e.hom)
   exact e₀ ≪≫ e₁
 
 set_option linter.style.haveILetI false in
@@ -253,16 +243,12 @@ public noncomputable def firstQuadrantZeroColumnToTotal
        (firstQuadrantSingleZeroBicomplex K).D₂
         (ComplexShape.down ℕ) i j) =
       ((firstQuadrantSingleZeroBicomplex K).X 0).d i j ≫ _
-    rw [Preadditive.comp_add,
-      HomologicalComplex₂.ι_D₁,
-      HomologicalComplex₂.ι_D₂]
+    rw [Preadditive.comp_add, HomologicalComplex₂.ι_D₁, HomologicalComplex₂.ι_D₂]
     have hd₁ : (firstQuadrantSingleZeroBicomplex K).d₁
         (ComplexShape.down ℕ) 0 i j = 0 := by
       apply HomologicalComplex₂.d₁_eq_zero
       simp
-    rw [hd₁, zero_add]
-    rw [HomologicalComplex₂.d₂_eq
-      (firstQuadrantSingleZeroBicomplex K)
+    rw [hd₁, zero_add, HomologicalComplex₂.d₂_eq (firstQuadrantSingleZeroBicomplex K)
       (ComplexShape.down ℕ) 0 hij j (by simp)]
     change (ComplexShape.down ℕ).ε 0 • _ = _
     rw [ComplexShape.ε_zero, one_smul]
@@ -291,8 +277,7 @@ public noncomputable def firstQuadrantSingleZeroTotalComponent
 public theorem firstQuadrantSingleZeroTotalComponent_zero
     (K : FirstQuadrantChainComplex) (q : ℕ) :
     firstQuadrantSingleZeroTotalComponent K q 0 q (by simp) =
-      (firstQuadrantSingleZeroColumnIso K).hom.f q := by
-  rfl
+      (firstQuadrantSingleZeroColumnIso K).hom.f q := rfl
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Project the total complex supported in horizontal degree zero back to its unique column. -/
@@ -308,8 +293,7 @@ public noncomputable def firstQuadrantTotalToSingleZero
     rcases p with _ | p
     · have hqi : q = i := by simpa using hpq
       subst q
-      rw [← Category.assoc,
-        HomologicalComplex₂.ι_totalDesc]
+      rw [← Category.assoc, HomologicalComplex₂.ι_totalDesc]
       simp only [firstQuadrantSingleZeroTotalComponent_zero]
       rw [(firstQuadrantSingleZeroColumnIso K).hom.comm i j]
       change ((firstQuadrantSingleZeroBicomplex K).X 0).d i j ≫
@@ -320,16 +304,13 @@ public noncomputable def firstQuadrantTotalToSingleZero
                 (ComplexShape.down ℕ) i j +
               (firstQuadrantSingleZeroBicomplex K).D₂
                 (ComplexShape.down ℕ) i j) ≫ _
-      rw [← Category.assoc, Preadditive.comp_add,
-        HomologicalComplex₂.ι_D₁,
+      rw [← Category.assoc, Preadditive.comp_add, HomologicalComplex₂.ι_D₁,
         HomologicalComplex₂.ι_D₂]
       have hd₁ : (firstQuadrantSingleZeroBicomplex K).d₁
           (ComplexShape.down ℕ) 0 i j = 0 := by
         apply HomologicalComplex₂.d₁_eq_zero
         simp
-      rw [hd₁, zero_add]
-      rw [HomologicalComplex₂.d₂_eq
-        (firstQuadrantSingleZeroBicomplex K)
+      rw [hd₁, zero_add, HomologicalComplex₂.d₂_eq (firstQuadrantSingleZeroBicomplex K)
         (ComplexShape.down ℕ) 0 hij j (by simp)]
       simp
     · have hzcol : IsZero

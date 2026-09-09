@@ -58,9 +58,8 @@ public theorem quasiIso_finite_coproduct
     (ComplexShape.down ℕ) n
   let σK := sigmaComparison H K
   let σL := sigmaComparison H L
-  haveI hfi (i : I) : IsIso (H.map (f i)) := by
-    exact (quasiIsoAt_iff_isIso_homologyMap (f i) n).mp
-      ((hf i).quasiIsoAt n)
+  haveI hfi (i : I) : IsIso (H.map (f i)) :=
+    (quasiIsoAt_iff_isIso_homologyMap (f i) n).mp ((hf i).quasiIsoAt n)
   haveI : IsIso (Limits.Sigma.map fun i ↦ H.map (f i)) := inferInstance
   haveI : IsIso σK := by dsimp [σK]; infer_instance
   haveI : IsIso σL := by dsimp [σL]; infer_instance
@@ -197,9 +196,7 @@ public theorem goodCoverNerveLocalModel_X_module_finite
       (Opposite.op (SimplexCategory.mk q))) := Finite.of_subsingleton
   change Module.Finite ℤ ((∐ fun _ : (TopCat.toSSet.obj Y).obj
     (Opposite.op (SimplexCategory.mk q)) ↦ AddCommGrpCat.of ℤ : AddCommGrpCat) : Type)
-  apply module_finite_addCommGrp_finite_coproduct
-  intro
-  infer_instance
+  exact module_finite_addCommGrp_finite_coproduct _ fun _ ↦ inferInstance
 
 /-- Point-or-zero local models form a contravariant diagram on nonempty finite supports. -/
 public def goodCoverNerveChainModels : SupportChainModels ι where
@@ -291,7 +288,7 @@ public theorem realizeAux_naturality {n m : ℕ} (a : Fin (n + 1) → ι)
     (P : TupleClass ι) (w : OrderedCechTuple.Formal ι (m + 1)) :
     M.realizeAux a P w ≫ η.cechObjectMap P m =
       η.app (Opposite.op (tupleSupport a)) ≫ N.realizeAux a P w := by
-  have hw := OrderedCechTuple.linearMap_apply_eq_of_forall_mem_support
+  exact OrderedCechTuple.linearMap_apply_eq_of_forall_mem_support
     (L := (Preadditive.rightComp _ (η.cechObjectMap P m)).toIntLinearMap ∘ₗ
       M.realizeAux a P)
     (R := (Preadditive.leftComp _ (η.app (Opposite.op (tupleSupport a)))).toIntLinearMap ∘ₗ
@@ -306,7 +303,6 @@ public theorem realizeAux_naturality {n m : ℕ} (a : Fin (n + 1) → ι)
         rw [Category.assoc, Limits.Sigma.ι_map, ← Category.assoc,
           η.faceOrZero_naturality, Category.assoc]
       · simp [SupportChainModels.ιOrZero, hb]
-  exact hw
 
 @[reassoc]
 public theorem realize_naturality (P Q : TupleClass ι) {n m : ℕ}
@@ -365,10 +361,9 @@ public theorem nerveCechObject_X_module_finite (h : FiniteGoodCover X U)
     goodCoverNerveLocalModel (X := X) (U := U) (tupleSupport a.1)
   let F := HomologicalComplex.eval AddCommGrpCat (ComplexShape.down ℕ) q
   let σ := sigmaComparison F K
-  have hsource : Module.Finite ℤ ((∐ fun a ↦ F.obj (K a) : AddCommGrpCat) : Type) := by
-    apply module_finite_addCommGrp_finite_coproduct
-    intro a
-    exact goodCoverNerveLocalModel_X_module_finite X U (tupleSupport a.1) q
+  have hsource : Module.Finite ℤ ((∐ fun a ↦ F.obj (K a) : AddCommGrpCat) : Type) :=
+    module_finite_addCommGrp_finite_coproduct _ fun a ↦
+      goodCoverNerveLocalModel_X_module_finite X U (tupleSupport a.1) q
   let : Module.Finite ℤ ((∐ fun a ↦ F.obj (K a) : AddCommGrpCat) : Type) :=
     hsource
   let : IsIso σ := by dsimp [σ, F]; infer_instance
@@ -384,9 +379,8 @@ public theorem nerveTotal_X_module_finite (h : FiniteGoodCover X U) (n : ℕ) :
   change Module.Finite ℤ ((∐ fun pq : FirstQuadrantTotalFiber n ↦
     (((goodCoverNerveChainModels X U).cechObject
       TupleClass.strictMono pq.1.1).X pq.1.2) : AddCommGrpCat) : Type)
-  apply module_finite_addCommGrp_finite_coproduct
-  intro pq
-  exact h.nerveCechObject_X_module_finite pq.1.1 pq.1.2
+  exact module_finite_addCommGrp_finite_coproduct _ fun pq ↦
+    h.nerveCechObject_X_module_finite pq.1.1 pq.1.2
 
 omit [LinearOrder ι] in
 set_option linter.style.haveILetI false in
@@ -419,9 +413,8 @@ public theorem nerveBicomplexMap_column_quasiIso (h : FiniteGoodCover X U) (p : 
   change QuasiIso (Limits.Sigma.map fun a :
     {a : Fin (p + 1) → ι // TupleClass.strictMono.mem p a} ↦
       goodCoverLocalAugmentation X U (tupleSupport a.1))
-  apply quasiIso_finite_coproduct
-  intro a
-  exact h.localAugmentation_quasiIso (tupleSupport a.1)
+  exact quasiIso_finite_coproduct _ _ _ fun a ↦
+    h.localAugmentation_quasiIso (tupleSupport a.1)
 
 /-- The totalized normalized Čech comparison from intersection chains to the finite nerve
 model. -/
@@ -433,9 +426,8 @@ public def nerveTotalMap (_h : FiniteGoodCover X U) :
 
 /-- The normalized intersection-chain total is quasi-isomorphic to the finite nerve total. -/
 public theorem nerveTotalMap_quasiIso (h : FiniteGoodCover X U) :
-    QuasiIso (nerveTotalMap h) := by
-  apply firstQuadrantTotal_quasiIso_of_columns
-  exact h.nerveBicomplexMap_column_quasiIso
+    QuasiIso (nerveTotalMap h) :=
+  firstQuadrantTotal_quasiIso_of_columns _ h.nerveBicomplexMap_column_quasiIso
 
 /-- The finite nerve total has the integral homology of the ambient space. -/
 public def nerveHomologyIso (h : FiniteGoodCover X U) (n : ℕ) :

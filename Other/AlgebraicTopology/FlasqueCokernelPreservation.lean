@@ -108,7 +108,7 @@ lemma forget_preservesCokernel [A.IsFlasque] [(kernel f).IsFlasque] :
   have he : (T.map F).Exact :=
     (ShortComplex.exact_iff_of_epi_of_isIso_of_mono φ).mpr h2.exact
   let : Epi (T.map F).g := h2.epi_g
-  apply preservesColimit_of_preserves_colimit_cocone (cokernelIsCokernel f)
-  exact (isColimitMapCoconeCoforkEquiv' F (cokernel.condition f)).symm he.gIsCokernel
+  exact preservesColimit_of_preserves_colimit_cocone (cokernelIsCokernel f)
+    ((isColimitMapCoconeCoforkEquiv' F (cokernel.condition f)).symm he.gIsCokernel)
 
 end TopCat.Sheaf.IsFlasque

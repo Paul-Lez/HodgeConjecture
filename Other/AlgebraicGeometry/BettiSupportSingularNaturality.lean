@@ -112,12 +112,8 @@ lemma preimageOpenChainMap_naturality {V W : Opens X} (i : V ⟶ W) :
   change F.map ((Opens.toTopCat U).map ((Opens.map j).map i)) ≫
       F.map (preimageOpenToOpen j W) =
     F.map (preimageOpenToOpen j V) ≫ F.map ((Opens.toTopCat X).map i)
-  calc
-    _ = F.map ((Opens.toTopCat U).map ((Opens.map j).map i) ≫
-        preimageOpenToOpen j W) := (F.map_comp _ _).symm
-    _ = F.map (preimageOpenToOpen j V ≫ (Opens.toTopCat X).map i) := by
-      congr 1
-    _ = _ := F.map_comp _ _
+  rw [← F.map_comp, ← F.map_comp]
+  congr 1
 
 noncomputable def singularRestrictionToRawPushforward (n : ℕ) :
     singularCochainPresheaf R X n ⟶
@@ -162,8 +158,8 @@ lemma toSheafify_comp_singularRestrictionSheaf (n : ℕ) :
     toSheafify (Opens.grothendieckTopology X)
         (singularCochainPresheaf R X n) ≫
       (singularRestrictionSheaf R j n).hom =
-        singularRestrictionPresheaf R j n := by
-  exact toSheafify_sheafifyLift (J := Opens.grothendieckTopology X)
+        singularRestrictionPresheaf R j n :=
+  toSheafify_sheafifyLift (J := Opens.grothendieckTopology X)
     (singularRestrictionPresheaf R j n)
     (((TopCat.Sheaf.pushforward AddCommGrpCat j).obj
       (singularCochainSheaf R U n)).property)
@@ -357,18 +353,16 @@ def complementConstantsToSingularCochainInt
 
 lemma complementConstantsToSingularCochainInt_mono
     (Z : Set (ComplexPoint X)) :
-    Mono (complementConstantsToSingularCochainInt X Z) := by
-  exact constantsToSingularCochainComplexInt_mono ℚ
+    Mono (complementConstantsToSingularCochainInt X Z) :=
+  constantsToSingularCochainComplexInt_mono ℚ
     (TopCat.of (AnalyticComplement X Z))
 
 lemma complementConstantsToSingularCochainInt_quasiIso
     [IsIntegral X.left] [Smooth X.hom]
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    QuasiIso (complementConstantsToSingularCochainInt X Z) := by
-  apply (HomologicalComplex.quasiIso_extendMap_iff
-    (complementConstantsToSingularCochain X Z)
-      ComplexShape.embeddingUpNat).mpr
-  exact complementConstantsToSingularCochain_quasiIso X Z hZ
+    QuasiIso (complementConstantsToSingularCochainInt X Z) :=
+  (HomologicalComplex.quasiIso_extendMap_iff (complementConstantsToSingularCochain X Z)
+    ComplexShape.embeddingUpNat).mpr (complementConstantsToSingularCochain_quasiIso X Z hZ)
 
 def complementResolutionMapInt (Z : Set (ComplexPoint X)) :
     (complementConstantRationalSingleComplex X Z).extend
@@ -394,8 +388,7 @@ def complementSingularToInjectiveResolutionInt
   let : Mono a := complementConstantsToSingularCochainInt_mono X Z
   let : QuasiIso a :=
     complementConstantsToSingularCochainInt_quasiIso X Z hZ
-  have hI : ∀ n : ℤ, Injective (I.X n) := by
-    intro n
+  have hI : ∀ n : ℤ, Injective (I.X n) := fun n ↦ by
     dsimp [I]
     infer_instance
   exact CochainComplex.liftToInjective a r hI
@@ -414,8 +407,7 @@ lemma complementConstants_comp_singularToInjectiveResolutionInt
   let : Mono a := complementConstantsToSingularCochainInt_mono X Z
   let : QuasiIso a :=
     complementConstantsToSingularCochainInt_quasiIso X Z hZ
-  have hI : ∀ n : ℤ, Injective (I.X n) := by
-    intro n
+  have hI : ∀ n : ℤ, Injective (I.X n) := fun n ↦ by
     dsimp [I]
     infer_instance
   exact CochainComplex.comp_liftToInjective a r hI
@@ -445,12 +437,11 @@ lemma complementConstants_comp_singularToInjectiveResolution
     HomologicalComplex.extendMap
       (complementConstantRationalInjectiveResolution X Z).ι
         ComplexShape.embeddingUpNat
-  rw [HomologicalComplex.extendMap_comp]
-  rw [show HomologicalComplex.extendMap
+  rw [HomologicalComplex.extendMap_comp, show HomologicalComplex.extendMap
       (complementSingularToInjectiveResolution X Z hZ)
         ComplexShape.embeddingUpNat =
-      complementSingularToInjectiveResolutionInt X Z hZ by
-    exact (ComplexShape.embeddingUpNat.fullyFaithfulExtendFunctor
+      complementSingularToInjectiveResolutionInt X Z hZ from
+    (ComplexShape.embeddingUpNat.fullyFaithfulExtendFunctor
       (AnalyticComplementAdditiveSheaf X Z)).map_preimage _]
   exact complementConstants_comp_singularToInjectiveResolutionInt
     X Z hZ
@@ -485,8 +476,8 @@ lemma complementSingularToInjectiveResolution_quasiIso
   rw [show HomologicalComplex.extendMap
       (complementSingularToInjectiveResolution X Z hZ)
         ComplexShape.embeddingUpNat =
-      complementSingularToInjectiveResolutionInt X Z hZ by
-    exact (ComplexShape.embeddingUpNat.fullyFaithfulExtendFunctor
+      complementSingularToInjectiveResolutionInt X Z hZ from
+    (ComplexShape.embeddingUpNat.fullyFaithfulExtendFunctor
       (AnalyticComplementAdditiveSheaf X Z)).map_preimage _]
   exact complementSingularToInjectiveResolutionInt_quasiIso X Z hZ
 

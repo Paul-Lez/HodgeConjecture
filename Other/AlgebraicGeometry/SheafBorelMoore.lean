@@ -532,8 +532,8 @@ def ofSheaf
     (x : V.scheme) (hx : coheight x = p) :
     (ofSheaf component hprincipal).cycleClass
         (rationalComponentChowClass V.over p x hx) =
-      (component x hx).ordinaryFundamentalClass := by
-  exact (ofSheaf component hprincipal).cycleClass_component x hx
+      (component x hx).ordinaryFundamentalClass :=
+  (ofSheaf component hprincipal).cycleClass_component x hx
 
 end ComplexOrientedRationalBorelMooreCycleClassConstruction
 

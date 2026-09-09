@@ -110,7 +110,7 @@ lemma openRawToSingularSheafRestrictionCone_connecting {V W : Opens X} (i : W �
 def openInclusionPair {V W : Opens X} (i : W ⟶ V) : TopPair :=
   TopPair.of ((Opens.toTopCat X).map i)
     (Topology.IsEmbedding.of_comp ((Opens.toTopCat X).map i).hom.continuous
-      V.inclusion'.hom.continuous (by exact W.isOpenEmbedding.isEmbedding))
+      V.inclusion'.hom.continuous W.isOpenEmbedding.isEmbedding)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Raw sections are the actual dual singular complex of the open space. -/
@@ -127,9 +127,7 @@ def openRawSingularCochainComplexIsoDual (V : Opens X) :
         Functor.mapHomologicalComplex_obj_d,
         singularCochainPresheafComplex_d,
         HomologicalComplex.linearDualCochainComplex_d]
-      apply AddCommGrpCat.hom_ext
-      apply AddMonoidHom.ext
-      intro φ
+      ext φ
       rfl)
 
 /-- The preceding identification preserves the literal dual of the
@@ -172,9 +170,8 @@ lemma openRawSingularRestrictionInt_transport {V W : Opens X} (i : W ⟶ V) :
     Functor.mapIso_hom, Iso.symm_hom]
   change (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).map
     (openRawSingularRestriction R X i) ≫ _ = _
-  rw [← Category.assoc, ← Functor.map_comp]
-  rw [openRawSingularRestriction_transport, Functor.map_comp, Category.assoc,
-    Category.assoc]
+  rw [← Category.assoc, ← Functor.map_comp, openRawSingularRestriction_transport,
+    Functor.map_comp, Category.assoc, Category.assoc]
   exact congrArg
     (fun f => HomologicalComplex.extendMap
       (openRawSingularCochainComplexIsoDual R X V).hom ComplexShape.embeddingUpNat ≫ f)

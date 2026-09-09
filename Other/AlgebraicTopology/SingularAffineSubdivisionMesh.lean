@@ -328,11 +328,8 @@ public theorem affineFlagRelativeMeshContraction_at_identity
       barycentricContractionFactor n *
         Metric.diam (Set.range (ContinuousMap.id
           (stdSimplex ℝ (Fin (n + 1))))) := by
-  have hid : Set.range (ContinuousMap.id
-      (stdSimplex ℝ (Fin (n + 1)))) = Set.univ := by
-    ext w
-    simp
-  rw [ContinuousMap.id_comp, hid, diam_univ_stdSimplex n hn, mul_one]
+  rw [ContinuousMap.id_comp, ContinuousMap.coe_id, Set.range_id,
+    diam_univ_stdSimplex n hn, mul_one]
   exact diam_range_affineFlagContinuousMap_le n n hn F
 
 /-- Under relative contraction, an affine cell at ancestry depth `m` has diameter at most the
@@ -344,12 +341,8 @@ public theorem diam_range_iteratedAffineCellMap_le_pow
       barycentricContractionFactor n ^ ancestry.length := by
   induction ancestry with
   | nil =>
-      rw [iteratedAffineCellMap_nil, List.length_nil, pow_zero]
-      have hid : Set.range (ContinuousMap.id
-          (stdSimplex ℝ (Fin (n + 1)))) = Set.univ := by
-        ext w
-        simp
-      rw [hid, diam_univ_stdSimplex n hn]
+      rw [iteratedAffineCellMap_nil, List.length_nil, pow_zero,
+        ContinuousMap.coe_id, Set.range_id, diam_univ_stdSimplex n hn]
   | cons F ancestry ih =>
       calc
         Metric.diam (Set.range (iteratedAffineCellMap n (F :: ancestry))) ≤
@@ -444,9 +437,7 @@ public theorem coverSmallAffineSubdivisionEventuallySmall_of_iterate_mem_range
     (h : ∀ (n : ℕ) (x : (IntegralSingularChainComplexObj X).X n),
       ∃ m : ℕ, (affineSingularSubdivisionIterate X m).f n x ∈
         Set.range ((coverSmallIntegralSingularChainInclusion X U).f n)) :
-    CoverSmallAffineSubdivisionEventuallySmall X U := by
-  intro n x
-  obtain ⟨m, y, hy⟩ := h n x
-  exact ⟨m, y, hy⟩
+    CoverSmallAffineSubdivisionEventuallySmall X U :=
+  fun n x ↦ h n x
 
 end AlgebraicTopology.Singular

@@ -101,11 +101,9 @@ public theorem coverSmallAffinePrismSimplexChain_comp_inclusion
           (AddCommGrpCat.of ℤ)).f (n + 1)) ≫
       (SSet.chainComplexMap (coverSmallSingularSubcomplex X U).ι
         (AddCommGrpCat.of ℤ)).f (n + 1) = _
-  rw [Category.assoc, hcover]
-  rw [Category.assoc,
-    ← affineSingularSubdivisionPrismComponent_naturality]
-  rw [← Category.assoc, SSet.ι_chainComplexMap_f]
-  rw [show (TopCat.toSSet.map
+  rw [Category.assoc, hcover, Category.assoc,
+    ← affineSingularSubdivisionPrismComponent_naturality, ← Category.assoc,
+    SSet.ι_chainComplexMap_f, show (TopCat.toSSet.map
       (topologicalSubsetInclusion X (U j))).app _ y = x.1 from
     coverSmallSimplexPreimage_spec X U x]
 
@@ -156,54 +154,18 @@ public theorem coverSmallAffinePrismComponent_identity_succ
     I.f (n + 1) ≫ affineSingularSubdivisionComponent X (n + 1) at hA
   have hP (k : ℕ) :
       coverSmallAffinePrismComponent X U k ≫ I.f (k + 1) =
-        I.f k ≫ affineSingularSubdivisionPrismComponent X k := by
-    have hp := coverSmallAffinePrismComponent_comp_inclusion X U k
-    change coverSmallAffinePrismComponent X U k ≫ I.f (k + 1) =
-      I.f k ≫ affineSingularSubdivisionPrismComponent X k at hp
-    exact hp
+        I.f k ≫ affineSingularSubdivisionPrismComponent X k :=
+    coverSmallAffinePrismComponent_comp_inclusion X U k
   rw [hA]
   change I.f (n + 1) ≫
       (affineSingularSubdivisionChainMap X).f (n + 1) = _
-  rw [affineSingularSubdivisionPrismComponent_identity_succ]
-  rw [Preadditive.comp_add, Preadditive.comp_add]
+  rw [affineSingularSubdivisionPrismComponent_identity_succ,
+    Preadditive.comp_add, Preadditive.comp_add]
   simp only [Category.comp_id]
   apply congrArg₂ (fun a b ↦ a + b)
   · apply congrArg₂ (fun a b ↦ a + b)
-    · rw [← Category.assoc, I.comm]
-      symm
-      calc
-        ((CoverSmallIntegralSingularChainComplex X U).d (n + 1) n ≫
-              coverSmallAffinePrismComponent X U n) ≫ I.f (n + 1) =
-            (CoverSmallIntegralSingularChainComplex X U).d (n + 1) n ≫
-              (coverSmallAffinePrismComponent X U n ≫ I.f (n + 1)) :=
-          Category.assoc _ _ _
-        _ = (CoverSmallIntegralSingularChainComplex X U).d (n + 1) n ≫
-              (I.f n ≫ affineSingularSubdivisionPrismComponent X n) := by
-          rw [hP]
-        _ = ((CoverSmallIntegralSingularChainComplex X U).d (n + 1) n ≫
-              I.f n) ≫ affineSingularSubdivisionPrismComponent X n :=
-          (Category.assoc _ _ _).symm
-    · calc
-        (I.f (n + 1) ≫
-              affineSingularSubdivisionPrismComponent X (n + 1)) ≫
-            ((TopCat.toSSet.obj X).chainComplex
-              (AddCommGrpCat.of ℤ)).d (n + 2) (n + 1) =
-          (coverSmallAffinePrismComponent X U (n + 1) ≫ I.f (n + 2)) ≫
-            ((TopCat.toSSet.obj X).chainComplex
-              (AddCommGrpCat.of ℤ)).d (n + 2) (n + 1) := by
-                rw [hP]
-        _ = coverSmallAffinePrismComponent X U (n + 1) ≫
-            (I.f (n + 2) ≫
-              ((TopCat.toSSet.obj X).chainComplex
-                (AddCommGrpCat.of ℤ)).d (n + 2) (n + 1)) :=
-          Category.assoc _ _ _
-        _ = coverSmallAffinePrismComponent X U (n + 1) ≫
-            ((CoverSmallIntegralSingularChainComplex X U).d
-              (n + 2) (n + 1) ≫ I.f (n + 1)) := by rw [I.comm]
-        _ = (coverSmallAffinePrismComponent X U (n + 1) ≫
-              (CoverSmallIntegralSingularChainComplex X U).d
-                (n + 2) (n + 1)) ≫ I.f (n + 1) :=
-          (Category.assoc _ _ _).symm
+    · rw [← Category.assoc, I.comm, Category.assoc, ← hP, ← Category.assoc]
+    · rw [← Category.assoc, ← hP, Category.assoc, I.comm, ← Category.assoc]
   · rfl
 
 set_option linter.style.haveILetI false in
@@ -230,33 +192,15 @@ public theorem coverSmallAffinePrismComponent_identity_zero :
   change coverSmallAffineSubdivisionComponent X U 0 ≫ I.f 0 =
     I.f 0 ≫ affineSingularSubdivisionComponent X 0 at hA
   have hP : coverSmallAffinePrismComponent X U 0 ≫ I.f 1 =
-      I.f 0 ≫ affineSingularSubdivisionPrismComponent X 0 := by
-    have hp := coverSmallAffinePrismComponent_comp_inclusion X U 0
-    change coverSmallAffinePrismComponent X U 0 ≫ I.f 1 =
-      I.f 0 ≫ affineSingularSubdivisionPrismComponent X 0 at hp
-    exact hp
+      I.f 0 ≫ affineSingularSubdivisionPrismComponent X 0 :=
+    coverSmallAffinePrismComponent_comp_inclusion X U 0
   rw [hA]
   change I.f 0 ≫ (affineSingularSubdivisionChainMap X).f 0 = _
-  rw [affineSingularSubdivisionPrismComponent_identity_zero]
-  rw [Preadditive.comp_add]
+  rw [affineSingularSubdivisionPrismComponent_identity_zero,
+    Preadditive.comp_add]
   simp only [Category.comp_id]
   apply congrArg₂ (fun a b ↦ a + b)
-  · calc
-      (I.f 0 ≫ affineSingularSubdivisionPrismComponent X 0) ≫
-          ((TopCat.toSSet.obj X).chainComplex
-            (AddCommGrpCat.of ℤ)).d 1 0 =
-        (coverSmallAffinePrismComponent X U 0 ≫ I.f 1) ≫
-          ((TopCat.toSSet.obj X).chainComplex
-            (AddCommGrpCat.of ℤ)).d 1 0 := by rw [hP]
-      _ = coverSmallAffinePrismComponent X U 0 ≫
-          (I.f 1 ≫ ((TopCat.toSSet.obj X).chainComplex
-            (AddCommGrpCat.of ℤ)).d 1 0) := Category.assoc _ _ _
-      _ = coverSmallAffinePrismComponent X U 0 ≫
-          ((CoverSmallIntegralSingularChainComplex X U).d 1 0 ≫ I.f 0) := by
-        rw [I.comm]
-      _ = (coverSmallAffinePrismComponent X U 0 ≫
-          (CoverSmallIntegralSingularChainComplex X U).d 1 0) ≫ I.f 0 :=
-        (Category.assoc _ _ _).symm
+  · rw [← Category.assoc, ← hP, Category.assoc, I.comm, ← Category.assoc]
   · rfl
 
 /-- The degree-raising small-prism family. -/

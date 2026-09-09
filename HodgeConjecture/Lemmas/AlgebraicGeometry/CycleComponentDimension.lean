@@ -42,20 +42,13 @@ namespace AlgebraicGeometry
 lemma mem_cycleComponent_support_iff (X : Scheme) (x y : X) :
     y ∈ (Scheme.IdealSheafData.vanishingIdeal
         (X := X) ⟨closure {x}, isClosed_closure⟩).support ↔
-      y ∈ closure {x} := by
-  have h :
-      ((Scheme.IdealSheafData.vanishingIdeal
-          (X := X) ⟨closure {x}, isClosed_closure⟩).support : Set X) =
-        closure {x} :=
-    Scheme.IdealSheafData.coe_support_vanishingIdeal
-      ⟨closure {x}, isClosed_closure⟩
-  exact Set.ext_iff.mp h y
+      y ∈ closure {x} :=
+  Set.ext_iff.mp
+    (Scheme.IdealSheafData.coe_support_vanishingIdeal ⟨closure {x}, isClosed_closure⟩) y
 
 /-- The ambient point, regarded as a point of its reduced closure. -/
-def cycleComponentGenericPoint (X : Scheme) (x : X) : cycleComponent X x := by
-  refine ⟨x, ?_⟩
-  exact (mem_cycleComponent_support_iff X x x).mpr
-    (subset_closure (Set.mem_singleton x))
+def cycleComponentGenericPoint (X : Scheme) (x : X) : cycleComponent X x :=
+  ⟨x, (mem_cycleComponent_support_iff X x x).mpr (subset_closure (Set.mem_singleton x))⟩
 
 @[simp]
 lemma cycleComponentι_genericPoint (X : Scheme) (x : X) :
@@ -69,13 +62,9 @@ the dimension calculation for a cycle component. -/
 def cycleComponentOrderIsoIic (X : Scheme) (x : X) :
     cycleComponent X x ≃o Set.Iic x := by
   let e : cycleComponent X x ≃ Set.Iic x :=
-    { toFun := fun y ↦ ⟨cycleComponentι X x y, by
-        exact (show cycleComponentι X x y ≤ x from by
-          rw [Scheme.le_iff_specializes, specializes_iff_mem_closure]
-          exact (mem_cycleComponent_support_iff X x (cycleComponentι X x y)).mp
-            (show cycleComponentι X x y ∈
-                (Scheme.IdealSheafData.vanishingIdeal
-                  (X := X) ⟨closure {x}, isClosed_closure⟩).support from y.2))⟩
+    { toFun := fun y ↦ ⟨cycleComponentι X x y, show cycleComponentι X x y ≤ x by
+        rw [Scheme.le_iff_specializes, specializes_iff_mem_closure]
+        exact (mem_cycleComponent_support_iff X x (cycleComponentι X x y)).mp y.2⟩
       invFun := fun y ↦ ⟨y.1, by
         apply (mem_cycleComponent_support_iff X x y.1).mpr
         rw [← specializes_iff_mem_closure, ← Scheme.le_iff_specializes]
@@ -91,24 +80,19 @@ def cycleComponentOrderIsoIic (X : Scheme) (x : X) :
 @[simp]
 lemma cycleComponentOrderIsoIic_apply (X : Scheme) (x : X) (y : cycleComponent X x) :
     (cycleComponentOrderIsoIic X x y : X) = cycleComponentι X x y :=
-  by
-    unfold cycleComponentOrderIsoIic
-    rfl
+  rfl
 
 @[simp]
 lemma cycleComponentOrderIsoIic_symm_apply_coe
     (X : Scheme) (x : X) (y : Set.Iic x) :
     cycleComponentι X x ((cycleComponentOrderIsoIic X x).symm y) = y :=
-  by
-    unfold cycleComponentOrderIsoIic
-    rfl
+  rfl
 
 /-- The distinguished point of the reduced component corresponds to the top of the ambient
 specialization interval. -/
 lemma cycleComponentOrderIsoIic_genericPoint (X : Scheme) (x : X) :
     cycleComponentOrderIsoIic X x (cycleComponentGenericPoint X x) =
-      ⟨x, show x ≤ x from le_rfl⟩ := by
-  unfold cycleComponentOrderIsoIic cycleComponentGenericPoint
+      ⟨x, show x ≤ x from le_rfl⟩ :=
   rfl
 
 /-- The distinguished point is a generic point of the reduced component. -/
@@ -117,9 +101,8 @@ lemma cycleComponentGenericPoint_isGeneric (X : Scheme) (x : X) :
   rw [isGenericPoint_iff_specializes]
   intro y
   simp only [Set.mem_univ, iff_true]
-  rw [← Scheme.le_iff_specializes]
-  rw [← (cycleComponentOrderIsoIic X x).le_iff_le]
-  rw [cycleComponentOrderIsoIic_genericPoint]
+  rw [← Scheme.le_iff_specializes, ← (cycleComponentOrderIsoIic X x).le_iff_le,
+    cycleComponentOrderIsoIic_genericPoint]
   exact (cycleComponentOrderIsoIic X x y).2
 
 /-- The explicitly constructed point agrees with the canonical generic point supplied by
@@ -133,8 +116,8 @@ lemma cycleComponentGenericPoint_eq_genericPoint (X : Scheme) (x : X) :
 preorder. -/
 @[simp]
 lemma cycleComponentGenericPoint_eq_top (X : Scheme) (x : X) :
-    cycleComponentGenericPoint X x = ⊤ := by
-  exact cycleComponentGenericPoint_eq_genericPoint X x
+    cycleComponentGenericPoint X x = ⊤ :=
+  cycleComponentGenericPoint_eq_genericPoint X x
 
 /-- The distinguished generic point is maximal in the component's specialization preorder. -/
 lemma cycleComponentGenericPoint_isMax (X : Scheme) (x : X) :

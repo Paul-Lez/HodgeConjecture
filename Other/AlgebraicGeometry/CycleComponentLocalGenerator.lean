@@ -96,8 +96,8 @@ def neighborhoodPoint :
       change (smoothPoint C).underlying ∈ C.componentNeighborhood
       have hmap : Point.map (ComplexPoint.openInclusion (Over.mk (cycleComponentι X.left x ≫ X.hom))
           (componentSmoothLocus X x)) (smoothPoint C) =
-          C.point := by
-        exact congrArg Subtype.val
+          C.point :=
+        congrArg Subtype.val
           ((ComplexPoint.openEquiv (Over.mk (cycleComponentι X.left x ≫ X.hom))
             (componentSmoothLocus X x)).apply_symm_apply
               ⟨C.point, C.point_mem_smoothLocus⟩)
@@ -141,8 +141,8 @@ lemma C_comp_coordinateRingHomOnNeighborhood :
 
 /-- The transported exact coordinate map remains étale. -/
 lemma coordinateRingHomOnNeighborhood_etale :
-    C.coordinateRingHomOnNeighborhood.Etale := by
-  exact RingHom.Etale.respectsIso.1 C.componentCoordinateRingHom
+    C.coordinateRingHomOnNeighborhood.Etale :=
+  RingHom.Etale.respectsIso.1 C.componentCoordinateRingHom
     C.componentNeighborhood.topIso.symm.commRingCatIsoToRingEquiv
       C.componentCoordinateRingHom_etale
 
@@ -163,7 +163,7 @@ lemma mvPolynomial_C_isStandardSmoothOfRelativeDimension :
                 rw [Algebra.Generators.ker_mvPolynomial]
                 simp }
           map := Empty.elim
-          map_inj := by intro a; exact a.elim }
+          map_inj := fun a ↦ a.elim }
       jacobian_isUnit := by
         rw [Algebra.PreSubmersivePresentation.jacobian_eq_jacobiMatrix_det,
           Matrix.det_isEmpty]
@@ -239,9 +239,7 @@ noncomputable local instance coordinateRingScalarTower :
 noncomputable local instance coordinateRingEtale :
     Algebra.Etale (MvPolynomial (Fin n) ℂ)
       Γ(C.componentNeighborhood.toScheme, ⊤) :=
-  RingHom.etale_algebraMap.mp (by
-    change C.coordinateRingHomOnNeighborhood.Etale
-    exact C.coordinateRingHomOnNeighborhood_etale)
+  RingHom.etale_algebraMap.mp C.coordinateRingHomOnNeighborhood_etale
 
 /-- The affine neighborhood's canonical map to its spectrum respects the complex structure
 induced by the exact component coordinates. -/
@@ -256,9 +254,8 @@ lemma neighborhoodToSpecΓ_over :
     C.neighborhoodStructureMap
   change (ΓSpec.adjunction.homEquiv C.componentNeighborhood.toScheme
     (Opposite.op ↧ℂ)) φ.op = C.neighborhoodStructureMap
-  apply ext_to_Spec
-  exact (ΓSpecIso_inv_ΓSpec_adjunction_homEquiv φ).trans
-    C.C_comp_coordinateRingHomOnNeighborhood
+  exact ext_to_Spec ((ΓSpecIso_inv_ΓSpec_adjunction_homEquiv φ).trans
+    C.C_comp_coordinateRingHomOnNeighborhood)
 
 /-- The canonical affine-spectrum isomorphism, bundled over `Spec ℂ`. -/
 def neighborhoodToSpecΓIso : C.neighborhoodScheme ≅
@@ -277,8 +274,8 @@ def neighborhoodPointAlgHomHomeomorph :
       (ComplexPoint C.neighborhoodScheme)
       (Γ(C.componentNeighborhood.toScheme, ⊤) →ₐ[ℂ] ℂ)
       Point.analyticTopology
-      (ComplexPoint.affineAlgebraHomTopology Γ(C.componentNeighborhood.toScheme, ⊤)) := by
-  exact (Point.isoMapHomeomorph C.neighborhoodToSpecΓIso).trans
+      (ComplexPoint.affineAlgebraHomTopology Γ(C.componentNeighborhood.toScheme, ⊤)) :=
+  (Point.isoMapHomeomorph C.neighborhoodToSpecΓIso).trans
     (ComplexPoint.affineSpecHomeomorph Γ(C.componentNeighborhood.toScheme, ⊤))
 
 /-- The affine algebra-homomorphism coordinate of a neighborhood point evaluates global
@@ -317,11 +314,9 @@ def neighborhoodProjectionChart :
 lemma neighborhoodPoint_mem_projectionChart_source :
     C.neighborhoodPoint ∈ C.neighborhoodProjectionChart.source := by
   rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source]
-  constructor
-  · simp
-  · exact ComplexPoint.mem_etaleAlgHomProjectionChart_source
-      Γ(C.componentNeighborhood.toScheme, ⊤)
-        (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)
+  exact ⟨by simp, ComplexPoint.mem_etaleAlgHomProjectionChart_source
+    Γ(C.componentNeighborhood.toScheme, ⊤)
+      (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)⟩
 
 /-- On its source, the component chart is exactly restriction of a complex point along the
 retained polynomial coordinate map, followed by evaluation on the coordinate variables. -/

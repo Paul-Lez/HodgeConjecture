@@ -105,9 +105,9 @@ theorem cycleComponentSupportedInjectiveClass_unique
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ)))
     (ha : (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).hom a =
       cycleComponentSmoothSupportCoclassSection X x (d := d) hx) :
-    a = cycleComponentSupportedInjectiveClass X x (d := d) hx := by
-  apply (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).addCommGroupIsoToAddEquiv.injective
-  exact ha.trans (cycleComponentSupportedInjectiveClass_normalization X x (d := d) hx).symm
+    a = cycleComponentSupportedInjectiveClass X x (d := d) hx :=
+  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).addCommGroupIsoToAddEquiv.injective
+    (ha.trans (cycleComponentSupportedInjectiveClass_normalization X x (d := d) hx).symm)
 
 /-- The constructed class in the existing support-cone presentation. Its
 comparison includes the proved cone sign required by actual support forgetting. -/

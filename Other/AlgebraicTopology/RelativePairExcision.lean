@@ -121,8 +121,8 @@ lemma pointComplementToExcisionSmallSingularSet_comp_inclusion
     (U : Set X) (x : X) :
     pointComplementToExcisionSmallSingularSet U x ≫
         (coverSmallSingularSubcomplex (TopCat.of X) (pointExcisionCover U x)).ι =
-      TopCat.toSSet.map (pointComplementAmbientInclusion x) := by
-  exact SSet.Subcomplex.lift_ι _ _
+      TopCat.toSSet.map (pointComplementAmbientInclusion x) :=
+  SSet.Subcomplex.lift_ι _ _
 
 def pointComplementToExcisionSmallChains (U : Set X) (x : X) :
     (TopCat.toSSet.obj (pointComplementPair x).snd).chainComplex
@@ -164,9 +164,8 @@ lemma PointExcisionSmallSimplex.avoidsPoint_face (U : Set X) (x : X) {n : ℕ}
     PointExcisionSmallSimplex.AvoidsPoint U x
       ((coverSmallSingularSubcomplex (TopCat.of X) (pointExcisionCover U x) : SSet).δ i σ) := by
   obtain ⟨a, ha⟩ := hσ
-  refine ⟨(TopCat.toSSet.obj (pointComplementPair x).snd).δ i a, ?_⟩
-  have h := congrArg (fun z ↦ (TopCat.toSSet.obj (TopCat.of X)).δ i z) ha
-  exact h
+  exact ⟨(TopCat.toSSet.obj (pointComplementPair x).snd).δ i a,
+    congrArg (fun z ↦ (TopCat.toSSet.obj (TopCat.of X)).δ i z) ha⟩
 
 omit [T1Space X] in
 /-- A small simplex which does not avoid `x` comes from the neighborhood member of the cover. -/
@@ -201,9 +200,8 @@ lemma PointExcisionSmallSimplex.neighborhoodPreimage_map (U : Set X) (x : X) {n 
       _⦋n⦌)
     (hσ : ¬ PointExcisionSmallSimplex.AvoidsPoint U x σ) :
     (TopCat.toSSet.map (topologicalSubsetInclusion (TopCat.of X) U)).app _
-        (PointExcisionSmallSimplex.neighborhoodPreimage U x σ hσ) = σ.1 := by
-  exact Classical.choose_spec
-    (PointExcisionSmallSimplex.exists_neighborhoodPreimage U x σ hσ)
+        (PointExcisionSmallSimplex.neighborhoodPreimage U x σ hσ) = σ.1 :=
+  Classical.choose_spec (PointExcisionSmallSimplex.exists_neighborhoodPreimage U x σ hσ)
 
 /-- A singular simplex of `U` which avoids `x` lifts to the subspace `U ∖ {x}`. -/
 def neighborhoodPointComplementSimplexOfAvoids (U : Set X) (x : X) {n : ℕ}
@@ -277,15 +275,14 @@ lemma neighborhoodRelativeProjectionComponent_comm (U : Set X) (x : X) (n : ℕ)
           (neighborhoodPointComplementPair U x)).d (n + 1) n =
       ((TopCat.toSSet.obj (TopCat.of U)).chainComplex
         (ModuleCat.of ℚ ℚ)).d (n + 1) n ≫
-        neighborhoodRelativeProjectionComponent U x n := by
-  exact (relativeChainProjection ℚ
-    (neighborhoodPointComplementPair U x)).comm (n + 1) n
+        neighborhoodRelativeProjectionComponent U x n :=
+  (relativeChainProjection ℚ (neighborhoodPointComplementPair U x)).comm (n + 1) n
 
 omit [T1Space X] in
 lemma neighborhoodSubspaceChainMap_comp_relativeProjection (U : Set X) (x : X) :
     neighborhoodSubspaceChainMap U x ≫
-      neighborhoodRelativeProjection U x = 0 := by
-  exact subspaceChainMap_relativeChainProjection ℚ (neighborhoodPointComplementPair U x)
+      neighborhoodRelativeProjection U x = 0 :=
+  subspaceChainMap_relativeChainProjection ℚ (neighborhoodPointComplementPair U x)
 
 omit [T1Space X] in
 lemma neighborhoodSimplex_projection_zero_of_ambient_eq
@@ -351,8 +348,8 @@ lemma iota_pointExcisionSmallToNeighborhoodRelativeComponent
       if hσ : PointExcisionSmallSimplex.AvoidsPoint U x σ then 0 else
         (TopCat.toSSet.obj (TopCat.of U)).ιChainComplex
             (PointExcisionSmallSimplex.neighborhoodPreimage U x σ hσ) ≫
-          neighborhoodRelativeProjectionComponent U x n := by
-  exact ((coverSmallSingularSubcomplex (TopCat.of X)
+          neighborhoodRelativeProjectionComponent U x n :=
+  ((coverSmallSingularSubcomplex (TopCat.of X)
     (pointExcisionCover U x) : SSet).isColimitChainComplexXCofan
       (ModuleCat.of ℚ ℚ) n).fac _ (Discrete.mk σ)
 
@@ -369,8 +366,7 @@ lemma pointExcisionSmallToNeighborhoodRelativeComponent_comm
   by_cases hσ : PointExcisionSmallSimplex.AvoidsPoint U x σ
   · rw [← Category.assoc,
       iota_pointExcisionSmallToNeighborhoodRelativeComponent U x (n + 1) σ,
-      dif_pos hσ, zero_comp]
-    rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
+      dif_pos hσ, zero_comp, ← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
     symm
     apply Finset.sum_eq_zero
     intro i _
@@ -380,10 +376,9 @@ lemma pointExcisionSmallToNeighborhoodRelativeComponent_comm
     simp
   · rw [← Category.assoc,
       iota_pointExcisionSmallToNeighborhoodRelativeComponent U x (n + 1) σ,
-      dif_neg hσ]
-    rw [Category.assoc, neighborhoodRelativeProjectionComponent_comm U x n]
-    rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
-    rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
+      dif_neg hσ, Category.assoc, neighborhoodRelativeProjectionComponent_comm U x n,
+      ← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp,
+      ← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
     apply Finset.sum_congr rfl
     intro i _
     rw [Preadditive.zsmul_comp, Preadditive.zsmul_comp]
@@ -395,15 +390,13 @@ lemma pointExcisionSmallToNeighborhoodRelativeComponent_comm
       obtain ⟨a, ha⟩ := hi
       apply neighborhoodSimplex_projection_zero_of_ambient_eq U x _ a
       have hp := PointExcisionSmallSimplex.neighborhoodPreimage_map U x σ hσ
-      have hpface := congrArg (fun z ↦ (TopCat.toSSet.obj (TopCat.of X)).δ i z) hp
-      exact hpface.trans ha.symm
+      exact (congrArg (fun z ↦ (TopCat.toSSet.obj (TopCat.of X)).δ i z) hp).trans ha.symm
     · rw [iota_pointExcisionSmallToNeighborhoodRelativeComponent U x n, dif_neg hi]
       congr 1
       apply congrArg (fun z ↦ (TopCat.toSSet.obj (TopCat.of U)).ιChainComplex z)
       apply neighborhoodInclusion_singular_injective U
       have hp := PointExcisionSmallSimplex.neighborhoodPreimage_map U x σ hσ
-      have hpface := congrArg (fun z ↦ (TopCat.toSSet.obj (TopCat.of X)).δ i z) hp
-      exact hpface.trans
+      exact (congrArg (fun z ↦ (TopCat.toSSet.obj (TopCat.of X)).δ i z) hp).trans
         (PointExcisionSmallSimplex.neighborhoodPreimage_map U x _ hi).symm
 
 /-- The chain map from small relative chains to neighborhood relative chains obtained by
@@ -443,9 +436,8 @@ lemma pointComplementToExcisionSmallChains_comp_smallToNeighborhood
         pointExcisionSmallToNeighborhoodRelativeComponent U x n = 0
   apply SSet.chainComplex_hom_ext
   intro a
-  rw [← Category.assoc]
-  rw [SSet.ι_chainComplexMap_f]
-  rw [iota_pointExcisionSmallToNeighborhoodRelativeComponent,
+  rw [← Category.assoc, SSet.ι_chainComplexMap_f,
+    iota_pointExcisionSmallToNeighborhoodRelativeComponent,
     dif_pos (pointComplementCoverMember_avoidsPoint U x a)]
   rfl
 
@@ -469,8 +461,8 @@ lemma pointExcisionSmallRelativeProjection_comp_toNeighborhood
     (U : Set X) (x : X) :
     pointExcisionSmallRelativeProjection U x ≫
         pointExcisionSmallRelativeToNeighborhoodRelativeChainMap U x =
-      pointExcisionSmallToNeighborhoodRelativeChainMap U x := by
-  exact cokernel.π_desc _ _ _
+      pointExcisionSmallToNeighborhoodRelativeChainMap U x :=
+  cokernel.π_desc _ _ _
 
 /-- The inclusion from `U ∖ {x}` to `X ∖ {x}`. -/
 def neighborhoodPointComplementToPointComplement (U : Set X) (x : X) :
@@ -509,8 +501,8 @@ lemma neighborhoodToPointExcisionSmallSingularSet_comp_inclusion
     (U : Set X) (x : X) :
     neighborhoodToPointExcisionSmallSingularSet U x ≫
         (coverSmallSingularSubcomplex (TopCat.of X) (pointExcisionCover U x)).ι =
-      TopCat.toSSet.map (topologicalSubsetInclusion (TopCat.of X) U) := by
-  exact SSet.Subcomplex.lift_ι _ _
+      TopCat.toSSet.map (topologicalSubsetInclusion (TopCat.of X) U) :=
+  SSet.Subcomplex.lift_ι _ _
 
 def neighborhoodToPointExcisionSmallChains (U : Set X) (x : X) :
     (TopCat.toSSet.obj (TopCat.of U)).chainComplex (ModuleCat.of ℚ ℚ) ⟶
@@ -582,8 +574,8 @@ lemma neighborhoodRelativeProjection_comp_toPointExcisionSmall
     neighborhoodRelativeProjection U x ≫
         neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x =
       neighborhoodToPointExcisionSmallChains U x ≫
-        pointExcisionSmallRelativeProjection U x := by
-  exact ((coker.π (C := ChainCategory ℚ)).naturality
+        pointExcisionSmallRelativeProjection U x :=
+  ((coker.π (C := ChainCategory ℚ)).naturality
     (neighborhoodPairChainsToPointExcisionSmallArrow U x)).symm
 
 omit [T1Space X] in
@@ -631,14 +623,13 @@ lemma pointExcisionSmallToNeighborhood_comp_toSmallRelative
     (pointExcisionSmallRelativeProjection U x).f n
   apply SSet.chainComplex_hom_ext
   intro σ
-  rw [← Category.assoc]
-  rw [iota_pointExcisionSmallToNeighborhoodRelativeComponent]
+  rw [← Category.assoc, iota_pointExcisionSmallToNeighborhoodRelativeComponent]
   by_cases hσ : PointExcisionSmallSimplex.AvoidsPoint U x σ
   · rw [dif_pos hσ, zero_comp]
     symm
     obtain ⟨a, ha⟩ := hσ
-    rw [← pointComplementCoverMember_eq_of_avoidsPoint U x σ a ha]
-    rw [← SSet.ι_chainComplexMap_f, Category.assoc]
+    rw [← pointComplementCoverMember_eq_of_avoidsPoint U x σ a ha,
+      ← SSet.ι_chainComplexMap_f, Category.assoc]
     have hc := congrArg (fun f ↦ f.f n)
       (cokernel.condition (pointComplementToExcisionSmallChains U x))
     change (pointComplementToExcisionSmallChains U x).f n ≫
@@ -647,8 +638,7 @@ lemma pointExcisionSmallToNeighborhood_comp_toSmallRelative
       ((pointComplementToExcisionSmallChains U x).f n ≫
         (pointExcisionSmallRelativeProjection U x).f n) = 0
     rw [hc, comp_zero]
-  · rw [dif_neg hσ]
-    rw [Category.assoc]
+  · rw [dif_neg hσ, Category.assoc]
     have hc := congrArg (fun f ↦ f.f n)
       (neighborhoodRelativeProjection_comp_toPointExcisionSmall U x)
     change neighborhoodRelativeProjectionComponent U x n ≫
@@ -700,8 +690,7 @@ lemma neighborhoodToPointExcisionSmall_comp_smallToNeighborhood
   · rw [dif_pos hσ]
     symm
     obtain ⟨a, ha⟩ := hσ
-    apply neighborhoodSimplex_projection_zero_of_ambient_eq U x u a
-    exact hsu.symm.trans ha.symm
+    exact neighborhoodSimplex_projection_zero_of_ambient_eq U x u a (hsu.symm.trans ha.symm)
   · rw [dif_neg hσ]
     congr 1
     apply congrArg (fun z ↦ (TopCat.toSSet.obj (TopCat.of U)).ιChainComplex z)
@@ -861,11 +850,7 @@ def ambientPairLeftToPointComplementChains (x : X) :
 
 instance pointComplementChainsToAmbientPairLeft_isIso (x : X) :
     IsIso (pointComplementChainsToAmbientPairLeft x) := by
-  refine ⟨⟨ambientPairLeftToPointComplementChains x, ?_, ?_⟩⟩
-  · change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
-    simp
-  · change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
-    simp
+  exact ⟨⟨ambientPairLeftToPointComplementChains x, Category.comp_id _, Category.comp_id _⟩⟩
 
 omit [T1Space X] in
 lemma pointComplementChainsToAmbientPairLeft_comp
@@ -905,8 +890,8 @@ lemma pointExcisionSmallRelativeProjection_comp_toAmbient
         pointExcisionSmallRelativeToAmbientRelativeChainMap U x =
       coverSmallRationalSingularChainInclusion
           (TopCat.of X) (pointExcisionCover U x) ≫
-        ambientPointComplementRelativeProjection x := by
-  exact ((coker.π (C := ChainCategory ℚ)).naturality
+        ambientPointComplementRelativeProjection x :=
+  ((coker.π (C := ChainCategory ℚ)).naturality
     (pointExcisionSmallToAmbientPairArrow U x)).symm
 
 /-- The morphism between the two cokernel short complexes used in point excision. -/
@@ -944,8 +929,8 @@ lemma ambientPointComplementCokernelSequence_shortExact (x : X) :
 
 omit [T1Space X] in
 lemma pointComplementChainsToAmbientPairLeft_quasiIso (x : X) :
-    QuasiIso (pointComplementChainsToAmbientPairLeft x) := by
-  infer_instance
+    QuasiIso (pointComplementChainsToAmbientPairLeft x) :=
+  inferInstance
 
 /-- The small relative quotient is quasi-isomorphic to ambient relative chains when the
 two-set point-excision cover is open and covers the ambient space. -/
@@ -1018,9 +1003,8 @@ lemma neighborhoodToSmallProjection_comp_toAmbient
       pointExcisionSmallRelativeToAmbientRelativeChainMap U x =
         neighborhoodAmbientChainMap U ≫
           ambientPointComplementRelativeProjection x := by
-  rw [Category.assoc, pointExcisionSmallRelativeProjection_comp_toAmbient]
-  rw [← Category.assoc,
-    neighborhoodToPointExcisionSmallChains_comp_ambientInclusion]
+  rw [Category.assoc, pointExcisionSmallRelativeProjection_comp_toAmbient,
+    ← Category.assoc, neighborhoodToPointExcisionSmallChains_comp_ambientInclusion]
 
 omit [T1Space X] in
 /-- Factoring the neighborhood pair through point-excision-small relative chains gives the
@@ -1049,8 +1033,8 @@ theorem neighborhoodPointComplement_relativeChainMap_quasiIso
       ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) := by
   let : IsIso (neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x) :=
     (neighborhoodRelativePointExcisionSmallIso U x).isIso_hom
-  let : QuasiIso (neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x) := by
-    infer_instance
+  let : QuasiIso (neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x) :=
+    inferInstance
   let : QuasiIso (pointExcisionSmallRelativeToAmbientRelativeChainMap U x) :=
     pointExcisionSmallRelativeToAmbient_quasiIso U x hU hx
   rw [← neighborhoodToSmallRelative_comp_smallRelativeToAmbient]

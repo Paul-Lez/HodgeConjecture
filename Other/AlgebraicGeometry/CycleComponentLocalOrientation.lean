@@ -52,9 +52,8 @@ complex point. -/
 lemma ComplexPoint.map_asOpenPoint {X : Over (Spec ↧ℂ)} (U : X.left.Opens)
     (z : ComplexPoint X)
     (hz : z ∈ Point.overOpen U) :
-    Point.map (openInclusion X U) (asOpenPoint X U z hz) = z := by
-  apply Over.OverMorphism.ext
-  exact liftToOpen_fac X U z hz
+    Point.map (openInclusion X U) (asOpenPoint X U z hz) = z :=
+  Over.OverMorphism.ext (liftToOpen_fac X U z hz)
 
 variable {d p : ℕ}
 
@@ -90,8 +89,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
     cycleComponentι V.scheme x ≫ V.structureMap
   let S : (cycleComponent V.scheme x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec (.of ℂ) := S.ι ≫ c
-  let : Smooth g := by
-    exact cycleComponent_smoothLocus_smooth V.over x
+  let : Smooth g := cycleComponent_smoothLocus_smooth V.over x
   let zs : S.toScheme := ⟨z.underlying, hz⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
   have hstandardComplex : (complexRestrictionMap g W).IsStandardSmooth :=
@@ -113,14 +111,10 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
     RingHom.IsStandardSmoothOfRelativeDimension.height_eq_of_isMaximal hm P
   have hPcoheight : P.height = Order.coheight zw :=
     hW.primeIdealOf_height_eq_coheight zw
-  have hWcoheight : Order.coheight zs = Order.coheight zw := by
-    have h := coheight_eq_of_isOpenImmersion (x := zw) W.ι
-    change Order.coheight zs = Order.coheight zw at h
-    exact h
-  have hScoheight : Order.coheight z.underlying = Order.coheight zs := by
-    have h := coheight_eq_of_isOpenImmersion (x := zs) S.ι
-    change Order.coheight z.underlying = Order.coheight zs at h
-    exact h
+  have hWcoheight : Order.coheight zs = Order.coheight zw :=
+    coheight_eq_of_isOpenImmersion (x := zw) W.ι
+  have hScoheight : Order.coheight z.underlying = Order.coheight zs :=
+    coheight_eq_of_isOpenImmersion (x := zs) S.ι
   have hmEq : m = d - p := by
     exact_mod_cast calc
       (m : ℕ∞) = P.height := hPm.symm
@@ -189,8 +183,8 @@ def neighborhoodToComponentPoint :
 
 /-- The neighborhood-to-component map is an open embedding. -/
 lemma neighborhoodToComponentPoint_isOpenEmbedding :
-    IsOpenEmbedding C.neighborhoodToComponentPoint := by
-  exact (ComplexPoint.isOpenEmbedding_map_open
+    IsOpenEmbedding C.neighborhoodToComponentPoint :=
+  (ComplexPoint.isOpenEmbedding_map_open
       (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap))
       (componentSmoothLocus V.over x)).comp
     (ComplexPoint.isOpenEmbedding_map_open

@@ -181,23 +181,23 @@ def neighborhoodLocalCoclass : C.neighborhoodPointSupportedCohomology :=
 
 @[simp]
 lemma neighborhoodLocalCoclass_apply_localClass :
-    C.neighborhoodLocalCoclass C.neighborhoodLocalClass = 1 := by
-  exact normalizedDual_apply_self C.neighborhoodLocalClass
+    C.neighborhoodLocalCoclass C.neighborhoodLocalClass = 1 :=
+  normalizedDual_apply_self C.neighborhoodLocalClass
     C.neighborhoodLocalClass_ne_zero
 
 /-- The normalized local coclass generates cohomology supported at the selected smooth point of
 the component neighborhood. -/
 lemma span_neighborhoodLocalCoclass_eq_top :
-    Submodule.span ℚ {C.neighborhoodLocalCoclass} = ⊤ := by
-  exact span_normalizedDual_eq_top C.neighborhoodLocalClass_ne_zero
+    Submodule.span ℚ {C.neighborhoodLocalCoclass} = ⊤ :=
+  span_normalizedDual_eq_top C.neighborhoodLocalClass_ne_zero
     C.span_neighborhoodLocalClass_eq_top
 
 /-- The local normalization condition characterizes the component's local coclass. -/
 lemma neighborhoodLocalCoclass_unique
     (β : C.neighborhoodPointSupportedCohomology)
     (hβ : β C.neighborhoodLocalClass = 1) :
-    β = C.neighborhoodLocalCoclass := by
-  exact normalizedDual_unique C.neighborhoodLocalClass_ne_zero
+    β = C.neighborhoodLocalCoclass :=
+  normalizedDual_unique C.neighborhoodLocalClass_ne_zero
     C.span_neighborhoodLocalClass_eq_top β hβ
 
 /-- Every codimension-`p` component of a smooth complex `d`-fold has an exact smooth local

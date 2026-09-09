@@ -357,9 +357,8 @@ lemma analyticTopology_eq_generateFrom :
     obtain ⟨O', hO', rfl⟩ :=
       (CommRingCat.HomTopology.isEmbedding_hom ↧R Γ(X.left, U)).isInducing.isOpen_iff.mp hO
     have hzO : ⇑(evaluationHom U ⟨z, hzU⟩).hom ∈ O' := by
-      have : (⟨z, hzU⟩ : OverOpen (X := X) U) ∈ Subtype.val ⁻¹' W := hz
-      rw [← hWO] at this
-      exact this
+      have h : (⟨z, hzU⟩ : OverOpen (X := X) U) ∈ Subtype.val ⁻¹' W := hz
+      rwa [← hWO] at h
     obtain ⟨I, u, hu, hIO⟩ := isOpen_pi_iff.mp hO' _ hzO
     refine ⟨overOpen U ∩ ⋂ t ∈ (I : Set Γ(X.left, U)), (overOpen U ∩ evaluate U t ⁻¹' u t),
       ?_, ?_, ?_⟩
@@ -370,16 +369,14 @@ lemma analyticTopology_eq_generateFrom :
           exact (Set.mem_iInter₂.1 hyu t ht).2
       have hmem : (⟨y, hyU⟩ : OverOpen (X := X) U) ∈
           evaluationHom U ⁻¹' ((fun f : Γ(X.left, U) ⟶ ↧R ↦ ⇑f.hom) ⁻¹' O') := hy
-      rw [hWO] at hmem
-      exact hmem
+      rwa [hWO] at hmem
     · exact @IsOpen.inter _ (.generateFrom _) _ _
         (TopologicalSpace.isOpen_generateFrom_of_mem ⟨U, 0, Set.univ, isOpen_univ, by simp⟩)
         (@Set.Finite.isOpen_biInter _ _ (.generateFrom _) _ _ I.finite_toSet fun t ht ↦
           TopologicalSpace.isOpen_generateFrom_of_mem ⟨U, t, u t, (hu t ht).1, rfl⟩)
     · refine ⟨hzU, Set.mem_iInter₂.2 fun t ht ↦ ⟨hzU, ?_⟩⟩
       have h2 := (hu t ht).2
-      rw [evaluationHom_hom_apply] at h2
-      exact h2
+      rwa [evaluationHom_hom_apply] at h2
 
 /-- Continuity of a map into the `R`-points is tested on the defining subbasis. -/
 lemma continuous_iff_analyticSubbasis {Z : Type*} [TopologicalSpace Z]
@@ -396,13 +393,11 @@ lemma continuous_map {Y : Over (Spec ↧R)} (f : X ⟶ Y) :
   rw [continuous_iff_analyticSubbasis]
   rintro W ⟨U, s, V, hV, rfl⟩
   rw [Set.preimage_inter, Set.preimage_preimage]
-  have hover : map f ⁻¹' overOpen U = overOpen (f.left ⁻¹ᵁ U) := by
-    ext z
-    exact mem_overOpen_map_iff f z U
+  have hover : map f ⁻¹' overOpen U = overOpen (f.left ⁻¹ᵁ U) :=
+    Set.ext fun z ↦ mem_overOpen_map_iff f z U
   have heval : (fun z ↦ evaluate U s (map f z)) =
-      evaluate (f.left ⁻¹ᵁ U) (f.left.app U s) := by
-    funext z
-    exact evaluate_map f U s z
+      evaluate (f.left ⁻¹ᵁ U) (f.left.app U s) :=
+    funext fun z ↦ evaluate_map f U s z
   rw [hover, heval]
   exact isOpen_overOpen_inter_preimage _ _ _ hV
 

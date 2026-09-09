@@ -68,9 +68,8 @@ lemma sheafSectionsBetweenOpensOnOpenIso_hom_ι (W : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) :
     (sheafSectionsBetweenOpensOnOpenIso X h W F).hom ≫
         kernel.ι (((openRestrictionPushforwardMap X h).app F).hom.app (op W)) =
-      (kernel.ι ((openRestrictionPushforwardMap X h).app F)).hom.app (op W) := by
-  exact kernelComparison_comp_ι ((openRestrictionPushforwardMap X h).app F)
-    (supportEvaluation X W)
+      (kernel.ι ((openRestrictionPushforwardMap X h).app F)).hom.app (op W) :=
+  kernelComparison_comp_ι ((openRestrictionPushforwardMap X h).app F) (supportEvaluation X W)
 
 /-- Restrict an ambient section vanishing on `V` to its section on `U`. -/
 def toSheafSectionsBetweenOpens :
@@ -146,10 +145,9 @@ def nestedSupportRestrictionComplexShortComplex
 
 lemma nestedSupportRestrictionComplexShortComplex_shortExact
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :
-    (nestedSupportRestrictionComplexShortComplex X h K).ShortExact := by
-  apply HomologicalComplex.shortExact_of_degreewise_shortExact
-  intro n
-  exact nestedSupportRestrictionShortComplex_shortExact X h (K.X n)
+    (nestedSupportRestrictionComplexShortComplex X h K).ShortExact :=
+  HomologicalComplex.shortExact_of_degreewise_shortExact _
+    fun n => nestedSupportRestrictionShortComplex_shortExact X h (K.X n)
 
 /-- The actual nested-support sequence of section complexes on an open set. -/
 def nestedSupportRestrictionSectionsComplexShortComplex (W : Opens X)
@@ -160,10 +158,9 @@ def nestedSupportRestrictionSectionsComplexShortComplex (W : Opens X)
 
 lemma nestedSupportRestrictionSectionsComplexShortComplex_shortExact (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :
-    (nestedSupportRestrictionSectionsComplexShortComplex X h W K).ShortExact := by
-  apply HomologicalComplex.shortExact_of_degreewise_shortExact
-  intro n
-  exact nestedSupportRestrictionSectionsShortComplex_shortExact X h W (K.X n)
+    (nestedSupportRestrictionSectionsComplexShortComplex X h W K).ShortExact :=
+  HomologicalComplex.shortExact_of_degreewise_shortExact _
+    fun n => nestedSupportRestrictionSectionsShortComplex_shortExact X h W (K.X n)
 
 /-- The canonical comparison from sections with the smaller closed support to
 the homotopy fiber of restriction away from it inside the larger support. -/

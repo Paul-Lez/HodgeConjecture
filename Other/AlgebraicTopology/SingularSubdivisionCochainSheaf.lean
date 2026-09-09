@@ -80,9 +80,7 @@ def linearDualMap (f : K ⟶ L) :
     obtain rfl := hij
     rw [HomologicalComplex.linearDualCochainComplex_d,
       HomologicalComplex.linearDualCochainComplex_d]
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro φ
+    ext φ
     change Module.Dual R (L.X i) at φ
     apply LinearMap.ext
     intro x
@@ -93,22 +91,12 @@ def linearDualMap (f : K ⟶ L) :
 
 @[simp]
 lemma linearDualMap_id (K : ChainComplex (ModuleCat.{u} R) ℕ) :
-    linearDualMap (𝟙 K) = 𝟙 K.linearDualCochainComplex := by
-  apply HomologicalComplex.Hom.ext
-  funext n
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro φ
+    linearDualMap (𝟙 K) = 𝟙 K.linearDualCochainComplex :=
   rfl
 
 @[simp]
 lemma linearDualMap_comp (f : K ⟶ L) (g : L ⟶ M) :
-    linearDualMap (f ≫ g) = linearDualMap g ≫ linearDualMap f := by
-  apply HomologicalComplex.Hom.ext
-  funext n
-  apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro φ
+    linearDualMap (f ≫ g) = linearDualMap g ≫ linearDualMap f :=
   rfl
 
 /-- Algebraic duality sends an isomorphism of chain complexes to an isomorphism of cochain
@@ -137,9 +125,8 @@ def linearDualHomotopy {f g : K ⟶ L} (h : Homotopy f g) :
   comm i := by
     cases i with
     | zero =>
-        rw [Homotopy.dNext_cochainComplex,
-          Homotopy.prevD_zero_cochainComplex]
-        rw [HomologicalComplex.linearDualCochainComplex_d]
+        rw [Homotopy.dNext_cochainComplex, Homotopy.prevD_zero_cochainComplex,
+          HomologicalComplex.linearDualCochainComplex_d]
         dsimp only [HomologicalComplex.linearDualCochainComplex] at ⊢
         dsimp only [linearDualMap]
         apply ModuleCat.hom_ext
@@ -157,9 +144,8 @@ def linearDualHomotopy {f g : K ⟶ L} (h : Homotopy f g) :
           LinearMap.zero_apply, LinearMap.dualMap_apply] at ⊢
         simpa [add_assoc] using congrArg φ hi
     | succ n =>
-        rw [Homotopy.dNext_cochainComplex,
-          Homotopy.prevD_succ_cochainComplex]
-        rw [HomologicalComplex.linearDualCochainComplex_d,
+        rw [Homotopy.dNext_cochainComplex, Homotopy.prevD_succ_cochainComplex,
+          HomologicalComplex.linearDualCochainComplex_d,
           HomologicalComplex.linearDualCochainComplex_d]
         dsimp only [HomologicalComplex.linearDualCochainComplex] at ⊢
         dsimp only [linearDualMap]
@@ -285,7 +271,6 @@ lemma openSimplexMap_openSimplexLift {X : TopCat.{u}} {U V : Opens X} (i : V ⟶
     openSimplexMap X i.op n (openSimplexLift i n s h) = s := by
   apply (TopCat.of U).toSSetObjEquiv
     (Opposite.op (SimplexCategory.mk n)) |>.injective
-  ext z
   rfl
 
 variable (R : Type u) [Field R] (X : TopCat.{u})
@@ -315,8 +300,7 @@ noncomputable def singularCochainComplexIsoTopOpen :
 space, is the usual subspace inclusion. -/
 lemma openToTop_comp_inclusionTopIso {V : Opens X} (i : V ⟶ ⊤) :
     (Opens.toTopCat X).map i ≫ (Opens.inclusionTopIso X).hom =
-      topologicalSubsetInclusion X V := by
-  apply TopCat.hom_ext
+      topologicalSubsetInclusion X V :=
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
@@ -382,9 +366,7 @@ def globalRawSingularCochainComplexIso :
     (globalRawSingularCochainXIso R X) (by
       intro i j hij
       obtain rfl := hij
-      apply AddCommGrpCat.hom_ext
-      apply AddMonoidHom.ext
-      intro x
+      ext x
       dsimp only [globalRawSingularCochainComplex,
         topOpenForgottenSingularCochainComplex]
       rw [Functor.mapHomologicalComplex_obj_d,
@@ -571,10 +553,8 @@ def topOpenToGlobalSingularCochainSheafComplex :
 /-- Every global section of the first-plus term is represented by an ordinary cochain. -/
 lemma topOpenToGlobalSingularCochainPlusComplex_surjective (n : ℕ) :
     Function.Surjective
-      ((topOpenToGlobalSingularCochainPlusComplex R X).f n) := by
-  intro y
-  obtain ⟨φ, hφ⟩ := singularCochain_toPlus_exists_rep R X ⊤ n y
-  exact ⟨φ, hφ⟩
+      ((topOpenToGlobalSingularCochainPlusComplex R X).f n) :=
+  singularCochain_toPlus_exists_rep R X ⊤ n
 
 /-- The map from top-open cochains to global first-plus cochains is degreewise an epimorphism. -/
 instance topOpenToGlobalSingularCochainPlusComplex_epi_f (n : ℕ) :
@@ -847,13 +827,13 @@ lemma rationalCochainRestrictionToCoveringSieve_local_zero
         (((openSingularChainComplexFunctor ℚ Y).map I.f).f n c)) =
       φ ((SSet.chainComplexMap
         (TopCat.toSSet.map (topologicalSubsetInclusion Y I.Y))
-        (ModuleCat.of ℚ ℚ)).f n c) := by
-          exact congrArg φ (ConcreteCategory.congr_hom htop c)
+        (ModuleCat.of ℚ ℚ)).f n c) :=
+          congrArg φ (ConcreteCategory.congr_hom htop c)
     _ = φ ((coverSmallRationalSingularChainInclusion Y
           (coveringSieveOpenFamily Y S)).f n
         ((coverMemberToSmallRationalSingularChains Y
-          (coveringSieveOpenFamily Y S) I).f n c)) := by
-            exact congrArg φ (ConcreteCategory.congr_hom hmember c).symm
+          (coveringSieveOpenFamily Y S) I).f n c)) :=
+            congrArg φ (ConcreteCategory.congr_hom hmember c).symm
     _ = 0 := hc
 
 /-- Restriction to cover-small rational chains is surjective in every cochain degree. -/
@@ -1231,12 +1211,9 @@ def ambientOpen (U : Opens X) (V : Opens U) : Opens X :=
 lemma mem_ambientOpen_iff (U : Opens X) (V : Opens U) (x : U) :
     (x.1 : X) ∈ ambientOpen U V ↔ x ∈ V := by
   change x.1 ∈ Subtype.val '' (V : Set U) ↔ x ∈ V
-  constructor
-  · rintro ⟨y, hy, hxy⟩
-    have h : y = x := Subtype.ext hxy
-    exact show x ∈ (V : Set U) from h ▸ hy
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+  refine ⟨fun ⟨y, hy, hxy⟩ ↦ ?_, fun hx ↦ ⟨x, hx, rfl⟩⟩
+  have h : y = x := Subtype.ext hxy
+  exact show x ∈ (V : Set U) from h ▸ hy
 
 lemma ambientOpen_le (U : Opens X) (V : Opens U) : ambientOpen U V ≤ U := by
   change Subtype.val '' (V : Set U) ⊆ U
@@ -1288,8 +1265,8 @@ theorem singularCochain_plusToPlus_surjective_on
   have hlocalEq (x : U) (I : S.Arrow) (hxI : x ∈ closure (W I)) :
       ∃ (V : Opens X) (a : V ⟶ (b x).Y) (c : V ⟶ I.Y),
         (x.1 : X) ∈ V ∧
-          P.map a.op (φ (b x)) = P.map c.op (φ I) := by
-    exact exists_open_eq_of_plus_matchingFamily R X S n s φ hφ
+          P.map a.op (φ (b x)) = P.map c.op (φ I) :=
+    exists_open_eq_of_plus_matchingFamily R X S n s φ hφ
       (b x) I x.1 (hbY x) (hWsub I hxI)
   let E (x : U) (I : S.Arrow) : Opens X :=
     if h : x ∈ closure (W I) then (hlocalEq x I h).choose else ⊤
@@ -1320,8 +1297,8 @@ theorem singularCochain_plusToPlus_surjective_on
     exact Filter.inter_mem (Filter.inter_mem hWnhds hEqnhds) hAvoid
   let Nsub (x : U) : Opens U :=
     ⟨interior (Nset x), isOpen_interior⟩
-  have hxNsub (x : U) : x ∈ Nsub x := by
-    exact mem_interior_iff_mem_nhds.mpr (hNset_mem x)
+  have hxNsub (x : U) : x ∈ Nsub x :=
+    mem_interior_iff_mem_nhds.mpr (hNset_mem x)
   let N (x : U) : Opens X := ambientOpen U (Nsub x)
   have hxN (x : U) : (x.1 : X) ∈ N x :=
     (mem_ambientOpen_iff U (Nsub x) x).2 (hxNsub x)
@@ -1423,18 +1400,16 @@ theorem singularCochain_plusToPlus_surjective_on
   have htN (x : U) :
       (J.plusObj P).map (iNU x).op t =
         (J.plusObj P).map (iNB x).op (s (b x)) := by
-    have hψ' : P.map (iNU x).op ψ = φN x := by
-      exact hψ x
     let η := J.toPlus P
     calc
       (J.plusObj P).map (iNU x).op t =
-          η.app (.op (N x)) (P.map (iNU x).op ψ) := by
-            exact (ConcreteCategory.congr_hom (η.naturality (iNU x).op) ψ).symm
-      _ = η.app (.op (N x)) (φN x) := congrArg _ hψ'
+          η.app (.op (N x)) (P.map (iNU x).op ψ) :=
+            (ConcreteCategory.congr_hom (η.naturality (iNU x).op) ψ).symm
+      _ = η.app (.op (N x)) (φN x) := congrArg _ (hψ x)
       _ = η.app (.op (N x)) (P.map (iNB x).op (φ (b x))) := rfl
       _ = (J.plusObj P).map (iNB x).op
-          (η.app (.op (b x).Y) (φ (b x))) := by
-            exact ConcreteCategory.congr_hom (η.naturality (iNB x).op) (φ (b x))
+          (η.app (.op (b x).Y) (φ (b x))) :=
+            ConcreteCategory.congr_hom (η.naturality (iNB x).op) (φ (b x))
       _ = (J.plusObj P).map (iNB x).op (s (b x)) :=
         congrArg _ (hφ (b x))
   refine ⟨t, ?_⟩
@@ -1545,7 +1520,7 @@ noncomputable instance globalSingularCochainPlusToPlusPlusComplex_isIso
     IsIso (globalSingularCochainPlusToPlusPlusComplex R X) := by
   let : ParacompactSpace (Set.univ : Set X) :=
     (Homeomorph.Set.univ X).paracompactSpace_iff.mpr inferInstance
-  have hIso : ∀ n : ℕ,
+  let : ∀ n : ℕ,
       IsIso ((globalSingularCochainPlusToPlusPlusComplex R X).f n) := by
     intro n
     change IsIso
@@ -1561,8 +1536,6 @@ noncomputable instance globalSingularCochainPlusToPlusPlusComplex_isIso
       exact GrothendieckTopology.Plus.sep
         (singularCochainPresheaf R X n) S x y h
     · exact singularCochain_plusToPlus_surjective_on (⊤ : Opens X) n
-  let : ∀ n : ℕ,
-      IsIso ((globalSingularCochainPlusToPlusPlusComplex R X).f n) := hIso
   exact HomologicalComplex.Hom.isIso_of_components
     (globalSingularCochainPlusToPlusPlusComplex R X)
 

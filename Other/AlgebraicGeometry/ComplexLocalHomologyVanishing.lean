@@ -30,10 +30,8 @@ theorem chartModelEmbedding_relativeHomologyMap_bijective_degree
     (hx : x ∈ e.source) (n : ℕ) :
     Function.Bijective (relativeHomologyMap ℚ n (chartModelEmbeddingPair d e x hx)) := by
   have htarget : Function.Bijective
-      (relativeHomologyMap ℚ n (standardComplexChartTargetPairIso d e x hx).hom) := by
-    have : IsIso ((relativeHomologyFunctor ℚ n).map
-        (standardComplexChartTargetPairIso d e x hx).hom) := by infer_instance
-    exact (ConcreteCategory.isIso_iff_bijective _).mp this
+      (relativeHomologyMap ℚ n (standardComplexChartTargetPairIso d e x hx).hom) :=
+    (ConcreteCategory.isIso_iff_bijective _).mp inferInstance
   have hexcision := neighborhoodPointComplement_relativeHomologyMap_bijective
     (chartModelTarget d e x hx) x (chartModelTarget_isOpen d e x hx)
       (chartModelTarget_mem d e x hx) n
@@ -55,8 +53,8 @@ def chartModelEmbeddingRelativeHomologyIso
 
 /-- Complex coordinate space has local homology only in twice its complex dimension. -/
 theorem standardComplexLocalHomology_isZero_of_ne (d n : ℕ) (hn : n ≠ 2 * d) :
-    IsZero (RelativeHomology ℚ (standardComplexPuncturedPair d) n) := by
-  exact (standardLocalHomology_isZero_of_ne (d * 2) n (by omega)).of_iso
+    IsZero (RelativeHomology ℚ (standardComplexPuncturedPair d) n) :=
+  (standardLocalHomology_isZero_of_ne (d * 2) n (by omega)).of_iso
     ((relativeHomologyFunctor ℚ n).mapIso (standardComplexRealPairIso d))
 
 /-- A complex coordinate chart proves local homology vanishing outside its real dimension. -/

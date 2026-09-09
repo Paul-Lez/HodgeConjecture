@@ -145,8 +145,8 @@ def standardRelativeChainProjectionZero :
   relativeChainProjection ℚ (standardPuncturedPair 0)
 
 noncomputable instance standardRelativeChainProjectionZeroIsIso :
-    IsIso standardRelativeChainProjectionZero := by
-  exact cokernel.π_of_zero standardPairChainMap_zero
+    IsIso standardRelativeChainProjectionZero :=
+  cokernel.π_of_zero standardPairChainMap_zero
 
 def standardRelativeHomologyProjectionZeroIso :
     ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right.homology 0 ≅
@@ -187,10 +187,8 @@ lemma standardAmbientCycleZero_projection :
           standardRelativeChainProjectionZero 0 =
       standardLocalCycle 0 := by
   apply (cancel_mono ((standardLocalRelativeChainComplex 0).iCycles 0)).mp
-  rw [Category.assoc, HomologicalComplex.cyclesMap_i]
-  rw [standardLocalCycle_inclusion]
-  rw [← Category.assoc]
-  rw [standardAmbientCycleZero, HomologicalComplex.liftCycles_i]
+  rw [Category.assoc, HomologicalComplex.cyclesMap_i, standardLocalCycle_inclusion,
+    ← Category.assoc, standardAmbientCycleZero, HomologicalComplex.liftCycles_i]
   rfl
 
 lemma standardAmbientClassZero_projection :
@@ -205,8 +203,8 @@ lemma standardAmbientClassZero_projection :
     change standardAmbientCycleZero ≫
       ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right.homologyπ 0 ≫
         HomologicalComplex.homologyMap standardRelativeChainProjectionZero 0 = _
-    rw [HomologicalComplex.homologyπ_naturality]
-    rw [← Category.assoc, standardAmbientCycleZero_projection]
+    rw [HomologicalComplex.homologyπ_naturality, ← Category.assoc,
+      standardAmbientCycleZero_projection]
   change ((standardAmbientCycleZero ≫
     ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right.homologyπ 0 ≫
       standardRelativeHomologyProjectionZeroIso.hom).hom) 1 =
@@ -286,8 +284,7 @@ lemma span_standardLocalClass_zero_eq_top :
     exact ⟨q / e (standardLocalClass 0), by
       simpa only [smul_eq_mul] using div_mul_cancel₀ q he⟩
   apply Submodule.map_injective_of_injective e.injective
-  rw [hmap, hone]
-  rw [Submodule.map_top]
+  rw [hmap, hone, Submodule.map_top]
   exact (LinearMap.range_eq_top.mpr e.surjective).symm
 
 lemma standardComplexLocalClass_zero_ne_zero : standardComplexLocalClass 0 ≠ 0 := by

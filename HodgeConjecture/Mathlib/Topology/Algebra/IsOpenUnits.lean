@@ -33,9 +33,8 @@ are there.
 open Topology
 
 lemma Set.range_units_val {M : Type*} [Monoid M] :
-    Set.range (Units.val : Mˣ → M) = {x | IsUnit x} := by
-  ext x
-  exact ⟨fun ⟨u, hu⟩ ↦ hu ▸ u.isUnit, fun h ↦ ⟨h.unit, h.unit_spec⟩⟩
+    Set.range (Units.val : Mˣ → M) = {x | IsUnit x} :=
+  Set.ext fun _ ↦ ⟨fun ⟨u, hu⟩ ↦ hu ▸ u.isUnit, fun h ↦ ⟨h.unit, h.unit_spec⟩⟩
 
 variable (M : Type*) [Monoid M] [TopologicalSpace M] [IsOpenUnits M]
 

@@ -170,7 +170,6 @@ public theorem coverSmallIntegralSingularHomologyIso_hom
     (coverSmallIntegralSingularHomologyIso X U h n).hom =
       HomologicalComplex.homologyMap
         (coverSmallIntegralSingularChainInclusion X U) n := by
-  dsimp [coverSmallIntegralSingularHomologyIso]
   change HomologicalComplex.homologyMap (coverSmallChainHomotopyEquiv X U h).hom n = _
   rw [coverSmallChainHomotopyEquiv_hom]
 
@@ -195,10 +194,8 @@ public theorem coverSmallSingularSubcomplex_eq_top_of_member_eq_univ
   have hrange : SSet.Subcomplex.range
       (TopCat.toSSet.map (topologicalSubsetInclusion X (U j))) = ⊤ :=
     SSet.Subcomplex.range_eq_top _
-  apply top_unique
-  rw [← hrange]
-  exact le_iSup (fun k ↦ SSet.Subcomplex.range
-    (TopCat.toSSet.map (topologicalSubsetInclusion X (U k)))) j
+  exact top_unique (hrange ▸ le_iSup (fun k ↦ SSet.Subcomplex.range
+    (TopCat.toSSet.map (topologicalSubsetInclusion X (U k)))) j)
 
 /-- For a cover containing the whole space, the small-chain inclusion is an isomorphism. -/
 public theorem coverSmallIntegralSingularChainInclusion_isIso_of_member_eq_univ

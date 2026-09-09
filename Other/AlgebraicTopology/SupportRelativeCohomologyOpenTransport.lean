@@ -147,8 +147,8 @@ theorem supportRelativeCohomologySectionOpenImage_restrict (n : ℕ)
       (hf.functor.map (homOfLE (show V ≤ ⊤ from le_top))).op
       (supportRelativeCohomologySectionOpenImage f hf S B hB n s) =
     (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op V)
-      ((supportRelativeCohomologySheaf Y B n).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op s) := by
-  exact (ConcreteCategory.congr_hom
+      ((supportRelativeCohomologySheaf Y B n).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op s) :=
+  (ConcreteCategory.congr_hom
     ((supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.naturality
       (homOfLE (show V ≤ ⊤ from le_top)).op) s).symm
 

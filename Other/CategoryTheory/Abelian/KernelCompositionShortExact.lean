@@ -48,9 +48,7 @@ lemma kernelCompositionShortComplex_shortExact [Epi f] :
     apply h.epi_f
     change kernelCokernelCompSequence.δ f g = 0
     rw [kernelCokernelCompSequence.δ_fac]
-    have hπ : cokernel.π f = 0 := by
-      apply (cancel_epi f).1
-      simp
+    have hπ : cokernel.π f = 0 := (cancel_epi f).1 (by simp)
     simp [hπ]
 
 variable (k : A ⟶ D) (hk : f ≫ g = k)

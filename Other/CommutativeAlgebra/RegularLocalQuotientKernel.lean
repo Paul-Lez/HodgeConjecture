@@ -69,8 +69,7 @@ lemma exists_isRegular_of_isPrincipal [IsDomain R] [IsLocalRing R]
     ∃ rs : List R, Ideal.ofList rs = I ∧ rs.length = I.spanFinrank ∧
       RingTheory.Sequence.IsRegular R rs := by
   let r := Submodule.IsPrincipal.generator I
-  have hr0 : r ≠ 0 := by
-    rwa [ne_eq, ← Submodule.IsPrincipal.eq_bot_iff_generator_eq_zero]
+  have hr0 : r ≠ 0 := by rwa [ne_eq, ← Submodule.IsPrincipal.eq_bot_iff_generator_eq_zero]
   have hrI : r ∈ I := Submodule.IsPrincipal.generator_mem I
   have hrmax : r ∈ maximalIdeal R := IsLocalRing.le_maximalIdeal htop hrI
   have hfinrank : I.spanFinrank = 1 :=

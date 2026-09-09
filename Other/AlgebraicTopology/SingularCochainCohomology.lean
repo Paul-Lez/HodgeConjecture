@@ -42,10 +42,7 @@ variable {R : Type u} [Field R]
 def linearDual (S : ShortComplex (ModuleCat.{u} R)) :
     ShortComplex (ModuleCat.{u} R) :=
   ShortComplex.moduleCatMk S.g.hom.dualMap S.f.hom.dualMap (by
-    apply LinearMap.ext
-    intro φ
-    apply LinearMap.ext
-    intro x
+    ext φ x
     change φ (S.g.hom (S.f.hom x)) = 0
     rw [S.moduleCat_zero_apply, map_zero])
 
@@ -142,13 +139,10 @@ lemma dualHomologyComparisonExplicit_injective
       have hv : (φ - ψ).1 ∈ (LinearMap.ker S.g.hom).dualAnnihilator := by
         rw [Submodule.mem_dualAnnihilator]
         intro z hz
-        have := LinearMap.congr_fun hzero
-          (Submodule.Quotient.mk ⟨z, hz⟩)
-        exact this
+        exact LinearMap.congr_fun hzero (Submodule.Quotient.mk ⟨z, hz⟩)
       rw [← LinearMap.range_dualMap_eq_dualAnnihilator_ker] at hv
       obtain ⟨η, hη⟩ := hv
-      refine ⟨η, Subtype.ext ?_⟩
-      exact hη
+      exact ⟨η, Subtype.ext hη⟩
 
 /-- Universal coefficients for a short complex of vector spaces: the homology of its reversed
 dual is canonically linearly equivalent to the dual of its homology. -/
@@ -174,15 +168,10 @@ def linearDualCochainComplex (K : ChainComplex (ModuleCat.{u} R) ℕ) :
     (fun n ↦ ModuleCat.of R (Module.Dual R (K.X n)))
     (fun n ↦ ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap)
     (fun n ↦ by
-      apply ModuleCat.hom_ext
-      apply LinearMap.ext
-      intro φ
-      apply LinearMap.ext
-      intro c
+      ext φ c
       change φ ((K.d (n + 1) n).hom ((K.d (n + 2) (n + 1)).hom c)) = 0
-      have h := K.d_comp_d (n + 2) (n + 1) n
-      rw [show (K.d (n + 1) n).hom ((K.d (n + 2) (n + 1)).hom c) = 0 by
-        exact ConcreteCategory.congr_hom h c, map_zero])
+      rw [show (K.d (n + 1) n).hom ((K.d (n + 2) (n + 1)).hom c) = 0 from
+        ConcreteCategory.congr_hom (K.d_comp_d (n + 2) (n + 1) n) c, map_zero])
 
 @[simp]
 lemma linearDualCochainComplex_d (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
@@ -202,22 +191,18 @@ def linearDualCochainComplexScIso (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : 
   refine D.isoSc' ((ComplexShape.down ℕ).next n) n
       ((ComplexShape.down ℕ).prev n) hprev hnext ≪≫
     ShortComplex.isoMk (Iso.refl _) (Iso.refl _) (Iso.refl _) ?_ ?_
-  · cases n with
+  · simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
+      HomologicalComplex.shortComplexFunctor'_obj_f]
+    dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk, HomologicalComplex.sc,
+      HomologicalComplex.shortComplexFunctor, HomologicalComplex.shortComplexFunctor']
+    cases n with
     | zero =>
-        simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
-          HomologicalComplex.shortComplexFunctor'_obj_f]
-        dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk, HomologicalComplex.sc,
-          HomologicalComplex.shortComplexFunctor, HomologicalComplex.shortComplexFunctor']
         rw [ChainComplex.next_nat_zero]
         change ModuleCat.ofHom (K.d 0 0).hom.dualMap = D.d 0 0
         rw [K.shape 0 0 (by simp), D.shape 0 0 (by simp)]
         ext φ x
         exact map_zero φ
     | succ n =>
-        simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
-          HomologicalComplex.shortComplexFunctor'_obj_f]
-        dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk, HomologicalComplex.sc,
-          HomologicalComplex.shortComplexFunctor, HomologicalComplex.shortComplexFunctor']
         rw [ChainComplex.next_nat_succ]
         exact (linearDualCochainComplex_d K n).symm
   · simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,

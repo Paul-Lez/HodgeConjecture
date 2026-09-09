@@ -75,15 +75,10 @@ def puncturedChartModelTargetHomeomorph :
       {y : chartModelTarget d e x hx | y.1 ≠ x} :=
   (chartModelTargetHomeomorph d e x hx).subtype fun y ↦ by
     change y ≠ 0 ↔ chartModelEmbedding d e x hx y ≠ x
-    constructor
-    · intro hy hxy
-      apply hy
-      apply chartModelEmbedding_injective d e x hx
-      rw [chartModelEmbedding_zero d e x hx]
+    refine not_congr ⟨fun hzero ↦ ?_, fun hxy ↦ chartModelEmbedding_injective d e x hx ?_⟩
+    · rw [hzero, chartModelEmbedding_zero d e x hx]
+    · rw [chartModelEmbedding_zero d e x hx]
       exact hxy
-    · intro hy hzero
-      apply hy
-      rw [hzero, chartModelEmbedding_zero d e x hx]
 
 /-- The pair isomorphism from the standard complex local model to the open chart target. -/
 def standardComplexChartTargetPairIso :
@@ -136,9 +131,8 @@ theorem chartModelEmbedding_relativeHomologyMap_bijective :
   have htarget : Function.Bijective
       (relativeHomologyMap ℚ (2 * d)
         (standardComplexChartTargetPairIso d e x hx).hom) := by
-    have : IsIso ((relativeHomologyFunctor ℚ (2 * d)).map
-        (standardComplexChartTargetPairIso d e x hx).hom) := by infer_instance
-    exact (ConcreteCategory.isIso_iff_bijective _).mp this
+    exact (ConcreteCategory.isIso_iff_bijective ((relativeHomologyFunctor ℚ (2 * d)).map
+      (standardComplexChartTargetPairIso d e x hx).hom)).mp inferInstance
   have hexcision := neighborhoodPointComplement_relativeHomologyMap_bijective
     (chartModelTarget d e x hx) x (chartModelTarget_isOpen d e x hx)
       (chartModelTarget_mem d e x hx) (2 * d)

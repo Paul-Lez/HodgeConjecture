@@ -70,8 +70,7 @@ theorem smoothClosedPointNormalTargetPairMap_inverseChart :
         (Point.map i z) = smoothClosedPointNormalModelPairMap X Y i d z V hzV := by
   apply MorphismProperty.Arrow.Hom.ext
   · ext w
-    apply Subtype.ext
-    exact (smoothClosedPointNormalModelPairMap_apply X Y i d z V hzV w.1).symm
+    exact Subtype.ext (smoothClosedPointNormalModelPairMap_apply X Y i d z V hzV w.1).symm
   · ext w
     exact (smoothClosedPointNormalModelPairMap_apply X Y i d z V hzV w).symm
 
@@ -100,8 +99,7 @@ theorem smoothClosedPointNormalTargetPairMap_comp_inclusion :
     exact add_comm _ _
   apply MorphismProperty.Arrow.Hom.ext
   · ext w
-    apply Subtype.ext
-    exact h w.1
+    exact Subtype.ext (h w.1)
   · ext w
     exact h w
 
@@ -153,10 +151,9 @@ theorem smoothClosedPointNormalCoclass_eq_analyticPointLocalCoclass :
     smoothClosedSupportNormalCoclass X Y i 0 d z V hzV =
       relativeCohomologyMap ℚ (2 * d)
         (smoothClosedPointNeighborhoodPairMap X Y i d z V hzV)
-        (analyticPointLocalCoclass X d (Point.map i z)) := by
-  symm
-  apply smoothClosedSupportNormalCoclass_unique
-  exact analyticPointLocalCoclass_apply_smoothClosedPointNormalClass X Y i d z V hzV
+        (analyticPointLocalCoclass X d (Point.map i z)) :=
+  (smoothClosedSupportNormalCoclass_unique X Y i 0 d z V hzV _
+    (analyticPointLocalCoclass_apply_smoothClosedPointNormalClass X Y i d z V hzV)).symm
 
 /-- The exact comparison also preserves every rational multiplicity. -/
 theorem smoothClosedPointNormalCoclass_smul_eq_analyticPointLocalCoclass (q : ℚ) :
