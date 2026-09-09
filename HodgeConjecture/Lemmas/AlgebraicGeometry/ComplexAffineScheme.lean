@@ -117,7 +117,8 @@ lemma continuous_affineSpecEquiv :
   rw [continuous_induced_rng]
   exact continuous_pi fun r ↦ by
     simpa only [Function.comp_apply, affineSpecEquiv_apply] using
-      continuous_evaluate_top ((Scheme.ΓSpecIso ↧R).inv r)
+      continuous_evaluate_top (X := Over.mk (affineSpecStructureMap R))
+        ((Scheme.ΓSpecIso ↧R).inv r)
 
 lemma isOpen_affineSpecEquiv_symm_preimage_overOpen_basicOpen
     (s : Γ(Spec ↧R, ⊤)) :
@@ -137,12 +138,12 @@ lemma isOpen_affineSpecEquiv_symm_preimage_overOpen_basicOpen
 
 /-- On an affine scheme, evaluation of a section on a principal open is locally a quotient of
 evaluations of global sections. -/
-lemma exists_evaluate_affine_basicOpen_eq_div {X : Scheme} [IsAffine X]
-    {structureMap : X ⟶ Spec ↧ℂ} (f : Γ(X, ⊤)) (t : Γ(X, X.basicOpen f)) :
-    ∃ (k : ℕ) (a : Γ(X, ⊤)),
-      ∀ z : ComplexPoint (Over.mk structureMap), z ∈ overOpen (X.basicOpen f) →
-        evaluate (X.basicOpen f) t z = evaluate ⊤ a z / evaluate ⊤ f z ^ k :=
-  exists_evaluate_basicOpen_eq_div (X := Over.mk structureMap) (isAffineOpen_top X) f t
+lemma exists_evaluate_affine_basicOpen_eq_div {X : Over (Spec ↧ℂ)} [IsAffine X.left]
+    (f : Γ(X.left, ⊤)) (t : Γ(X.left, X.left.basicOpen f)) :
+    ∃ (k : ℕ) (a : Γ(X.left, ⊤)),
+      ∀ z : ComplexPoint X, z ∈ overOpen (X.left.basicOpen f) →
+        evaluate (X.left.basicOpen f) t z = evaluate ⊤ a z / evaluate ⊤ f z ^ k :=
+  exists_evaluate_basicOpen_eq_div (X := X) (isAffineOpen_top X.left) f t
 
 lemma exists_evaluate_affineSpec_basicOpen_eq_div
     (f : Γ(Spec ↧R, ⊤))
@@ -151,8 +152,10 @@ lemma exists_evaluate_affineSpec_basicOpen_eq_div
       ∀ z : ComplexPoint (Over.mk (affineSpecStructureMap R)),
         z ∈ overOpen ((Spec ↧R).basicOpen f) →
           evaluate ((Spec ↧R).basicOpen f) t z =
-            evaluate ⊤ a z / evaluate ⊤ f z ^ k :=
-  exists_evaluate_affine_basicOpen_eq_div f t
+            evaluate ⊤ a z / evaluate ⊤ f z ^ k := by
+  let : IsAffine (Over.mk (affineSpecStructureMap R)).left :=
+    inferInstanceAs (IsAffine (Spec ↧R))
+  exact exists_evaluate_affine_basicOpen_eq_div (X := Over.mk (affineSpecStructureMap R)) f t
 
 lemma continuousOn_evaluate_affineSpec_basicOpen_equiv_symm
     (f : Γ(Spec ↧R, ⊤))

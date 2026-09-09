@@ -42,22 +42,22 @@ open Point
 noncomputable section
 
 /-- Evaluation of a global section at a complex point is pullback of that section to `Spec ℂ`. -/
-lemma evaluate_top_eq_appTop {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ}
-    (s : Γ(X, ⊤)) (z : ComplexPoint (Over.mk structureMap)) :
+lemma evaluate_top_eq_appTop {X : Over (Spec ↧ℂ)}
+    (s : Γ(X.left, ⊤)) (z : ComplexPoint X) :
     evaluate ⊤ s z = (Scheme.ΓSpecIso ↧ℂ).hom (z.left.appTop s) := by
   rw [evaluate, dif_pos (by exact trivial)]
-  have h := Scheme.germ_stalkClosedPointTo (R := ↧ℂ) (X := X) z.left ⊤ trivial
+  have h := Scheme.germ_stalkClosedPointTo (R := ↧ℂ) (X := X.left) z.left ⊤ trivial
   exact DFunLike.congr_fun (congrArg CommRingCat.Hom.hom h) s
 
 /-- Evaluation of a global regular function is continuous in the analytic topology. -/
-lemma continuous_evaluate_top {X : Scheme} {structureMap : X ⟶ Spec ↧ℂ}
-    (s : Γ(X, ⊤)) :
-    @Continuous (ComplexPoint (Over.mk structureMap)) ℂ analyticTopology inferInstance
+lemma continuous_evaluate_top {X : Over (Spec ↧ℂ)}
+    (s : Γ(X.left, ⊤)) :
+    @Continuous (ComplexPoint X) ℂ analyticTopology inferInstance
       (evaluate ⊤ s) := by
   rw [continuous_def]
   intro V hV
   simpa [overOpen] using
-    isOpen_overOpen_inter_preimage (X := Over.mk structureMap) (⊤ : X.Opens) s V hV
+    isOpen_overOpen_inter_preimage (X := X) (⊤ : X.left.Opens) s V hV
 
 /-- Complex affine space as a scheme over `Spec ℂ`. -/
 abbrev complexAffineSpace (n : Type) : Scheme :=
@@ -104,7 +104,7 @@ lemma continuous_affineSpaceEquiv (n : Type) :
     funext z
     exact (evaluate_top_eq_appTop s z).symm
   rw [heq]
-  exact continuous_evaluate_top s
+  exact continuous_evaluate_top (X := Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) s
 
 /-- The polynomial represented by a global regular function on complex affine space. -/
 def affineGlobalPolynomial {n : Type} (s : Γ(complexAffineSpace n, ⊤)) :

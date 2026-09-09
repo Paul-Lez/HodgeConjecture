@@ -41,103 +41,103 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 /-- The natural-to-integer cochain embedding sends degree zero to degree zero. -/
 lemma embeddingUpNat_zero : ComplexShape.embeddingUpNat.f 0 = (0 : ℤ) := rfl
 
 /-- The extended integer constant-sheaf complex is the integer constant sheaf in degree zero. -/
 def constantIntegerSheafComplexIntIsoSingleZero :
-    constantIntegerSheafComplexInt structureMap ≅
-      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-        (constantIntegerSheaf structureMap) :=
+    constantIntegerSheafComplexInt X ≅
+      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+        (constantIntegerSheaf X) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    (constantIntegerSheaf structureMap) 0 0 embeddingUpNat_zero
+    (constantIntegerSheaf X) 0 0 embeddingUpNat_zero
 
 /-- The extended rational constant-sheaf complex is the rational constant sheaf in degree zero. -/
 def constantRationalSheafComplexIntIsoSingleZero :
-    constantFieldSheafComplexInt ℚ structureMap ≅
-      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-        (constantFieldSheaf ℚ structureMap) :=
+    constantFieldSheafComplexInt ℚ X ≅
+      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+        (constantFieldSheaf ℚ X) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    (constantFieldSheaf ℚ structureMap) 0 0 embeddingUpNat_zero
+    (constantFieldSheaf ℚ X) 0 0 embeddingUpNat_zero
 
 /-- The inverse of the integer extension/single comparison is a quasi-isomorphism. -/
 lemma constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso :
-    analyticQuasiIsomorphisms structureMap
-      (constantIntegerSheafComplexIntIsoSingleZero structureMap).inv := by
-  let : IsIso (constantIntegerSheafComplexIntIsoSingleZero structureMap).inv :=
-    (constantIntegerSheafComplexIntIsoSingleZero structureMap).isIso_inv
+    analyticQuasiIsomorphisms X
+      (constantIntegerSheafComplexIntIsoSingleZero X).inv := by
+  let : IsIso (constantIntegerSheafComplexIntIsoSingleZero X).inv :=
+    (constantIntegerSheafComplexIntIsoSingleZero X).isIso_inv
   exact ⟨fun _ ↦ inferInstance⟩
 
 /-- The rational extension/single comparison is a quasi-isomorphism. -/
 lemma constantRationalSheafComplexIntIsoSingleZero_hom_quasiIso :
-    analyticQuasiIsomorphisms structureMap
-      (constantRationalSheafComplexIntIsoSingleZero structureMap).hom := by
-  let : IsIso (constantRationalSheafComplexIntIsoSingleZero structureMap).hom :=
-    (constantRationalSheafComplexIntIsoSingleZero structureMap).isIso_hom
+    analyticQuasiIsomorphisms X
+      (constantRationalSheafComplexIntIsoSingleZero X).hom := by
+  let : IsIso (constantRationalSheafComplexIntIsoSingleZero X).hom :=
+    (constantRationalSheafComplexIntIsoSingleZero X).isIso_hom
   exact ⟨fun _ ↦ inferInstance⟩
 
 /-- Degree-zero rational cohomology after replacing both extended complexes by single
 complexes. -/
 def rationalCohomologyZeroEquivSingle :
-    FieldCohomology ℚ structureMap 0 ≃
-      Localization.SmallShiftedHom (analyticQuasiIsomorphisms structureMap)
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-          (constantIntegerSheaf structureMap))
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-          (constantFieldSheaf ℚ structureMap)) (0 : ℤ) :=
+    FieldCohomology ℚ X 0 ≃
+      Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+          (constantIntegerSheaf X))
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+          (constantFieldSheaf ℚ X)) (0 : ℤ) :=
   (Localization.SmallShiftedHom.precompEquiv
-      (constantIntegerSheafComplexIntIsoSingleZero structureMap).inv
-      (constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso structureMap)).trans
+      (constantIntegerSheafComplexIntIsoSingleZero X).inv
+      (constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso X)).trans
     (Localization.SmallShiftedHom.postcompEquiv
-      (constantRationalSheafComplexIntIsoSingleZero structureMap).hom
-      (constantRationalSheafComplexIntIsoSingleZero_hom_quasiIso structureMap))
+      (constantRationalSheafComplexIntIsoSingleZero X).hom
+      (constantRationalSheafComplexIntIsoSingleZero_hom_quasiIso X))
 
 /-- The single-complex shifted morphism group is definitionally the corresponding Ext group. -/
 def rationalCohomologyZeroSingleEquivExt :
-    Localization.SmallShiftedHom (analyticQuasiIsomorphisms structureMap)
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-          (constantIntegerSheaf structureMap))
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-          (constantFieldSheaf ℚ structureMap)) (0 : ℤ) ≃
-      Abelian.Ext (constantIntegerSheaf structureMap)
-        (constantFieldSheaf ℚ structureMap) 0 :=
+    Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+          (constantIntegerSheaf X))
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+          (constantFieldSheaf ℚ X)) (0 : ℤ) ≃
+      Abelian.Ext (constantIntegerSheaf X)
+        (constantFieldSheaf ℚ X) 0 :=
   Equiv.refl _
 
 /-- The definitional comparison from shifted Hom to Ext acts as the identity. -/
 @[simp] lemma rationalCohomologyZeroSingleEquivExt_apply
-    (a : Localization.SmallShiftedHom (analyticQuasiIsomorphisms structureMap)
-      ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-        (constantIntegerSheaf structureMap))
-      ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).obj
-        (constantFieldSheaf ℚ structureMap)) (0 : ℤ)) :
-    rationalCohomologyZeroSingleEquivExt structureMap a = a := rfl
+    (a : Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
+      ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+        (constantIntegerSheaf X))
+      ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+        (constantFieldSheaf ℚ X)) (0 : ℤ)) :
+    rationalCohomologyZeroSingleEquivExt X a = a := rfl
 
 /-- Degree-zero rational constant-sheaf cohomology is ordinary Hom from integer constants to
 rational constants. -/
 def rationalCohomologyZeroEquivSheafHom :
-    FieldCohomology ℚ structureMap 0 ≃
-      (constantIntegerSheaf structureMap ⟶ constantFieldSheaf ℚ structureMap) :=
-  ((rationalCohomologyZeroEquivSingle structureMap).trans
-    (rationalCohomologyZeroSingleEquivExt structureMap)).trans Abelian.Ext.homEquiv₀
+    FieldCohomology ℚ X 0 ≃
+      (constantIntegerSheaf X ⟶ constantFieldSheaf ℚ X) :=
+  ((rationalCohomologyZeroEquivSingle X).trans
+    (rationalCohomologyZeroSingleEquivExt X)).trans Abelian.Ext.homEquiv₀
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Replacing the extended complexes by single complexes sends a constant class to the
 corresponding single-complex morphism. -/
 lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
-    rationalCohomologyZeroEquivSingle structureMap
-        (fieldCohomologyClass ℚ structureMap q) =
+    rationalCohomologyZeroEquivSingle X
+        (fieldCohomologyClass ℚ X q) =
       Localization.SmallShiftedHom.mk₀
-        (analyticQuasiIsomorphisms structureMap) (0 : ℤ) rfl
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf structureMap) 0).map
-          (integerToFieldConstantSheaf ℚ structureMap q)) := by
+        (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map
+          (integerToFieldConstantSheaf ℚ X q)) := by
   simp only [rationalCohomologyZeroEquivSingle, fieldCohomologyClass, Equiv.trans_apply,
     Localization.SmallShiftedHom.precompEquiv_apply]
-  rw [← smallShiftedHomMkZero_comp structureMap]
+  rw [← smallShiftedHomMkZero_comp X]
   rw [Localization.SmallShiftedHom.postcompEquiv_apply]
-  rw [← smallShiftedHomMkZero_comp structureMap]
+  rw [← smallShiftedHomMkZero_comp X]
   congr 1
   unfold constantIntegerSheafComplexInt constantFieldSheafComplexInt
     integerToFieldConstantSheafComplexInt
@@ -152,18 +152,18 @@ lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
       HomologicalComplex.extendSingleIso_hom_f]
     simp
     exact (HomologicalComplex.single_map_f_self (ComplexShape.up ℤ) 0
-      (integerToFieldConstantSheaf ℚ structureMap q)).symm
+      (integerToFieldConstantSheaf ℚ X q)).symm
   · exact (HomologicalComplex.isZero_single_obj_X
-      (ComplexShape.up ℤ) 0 (constantIntegerSheaf structureMap) i hi).eq_of_src _ _
+      (ComplexShape.up ℤ) 0 (constantIntegerSheaf X) i hi).eq_of_src _ _
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The degree-zero comparison sends the constant class of `q` to the constant-sheaf morphism
 induced by `n ↦ n q`. -/
 @[simp] theorem rationalCohomologyZeroEquivSheafHom_class (q : ℚ) :
-    rationalCohomologyZeroEquivSheafHom structureMap
-        (fieldCohomologyClass ℚ structureMap q) =
-      integerToFieldConstantSheaf ℚ structureMap q := by
+    rationalCohomologyZeroEquivSheafHom X
+        (fieldCohomologyClass ℚ X q) =
+      integerToFieldConstantSheaf ℚ X q := by
   apply (Abelian.Ext.mk₀_bijective _ _).injective
   dsimp only [rationalCohomologyZeroEquivSheafHom, Equiv.trans_apply]
   rw [Abelian.Ext.mk₀_homEquiv₀_apply]
@@ -175,44 +175,44 @@ induced by `n ↦ n q`. -/
 degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective_of_constantSheaf_faithful
     [(constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
       AddCommGrpCat).Faithful] :
-    Function.Injective (fieldCohomologyClass ℚ structureMap) := by
+    Function.Injective (fieldCohomologyClass ℚ X) := by
   intro a b hab
-  have hs : integerToFieldConstantSheaf ℚ structureMap a =
-      integerToFieldConstantSheaf ℚ structureMap b := by
+  have hs : integerToFieldConstantSheaf ℚ X a =
+      integerToFieldConstantSheaf ℚ X b := by
     rw [← rationalCohomologyZeroEquivSheafHom_class,
       ← rationalCohomologyZeroEquivSheafHom_class, hab]
   unfold integerToFieldConstantSheaf at hs
   have hm := (constantSheaf
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     AddCommGrpCat).map_injective hs
   simpa [integerMultipleAddHom] using ConcreteCategory.congr_hom hm (1 : ℤ)
 
 /-- On a nonempty analytic complex-point space, distinct rational constants define distinct
 degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective
-    [Nonempty (ComplexPoint (Over.mk structureMap))] :
-    Function.Injective (fieldCohomologyClass ℚ structureMap) := by
+    [Nonempty (ComplexPoint X)] :
+    Function.Injective (fieldCohomologyClass ℚ X) := by
   let : (constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap))))
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
       AddCommGrpCat).Faithful :=
     TopCat.constantSheaf_faithful_of_nonempty _
-  exact rationalCohomologyClass_injective_of_constantSheaf_faithful structureMap
+  exact rationalCohomologyClass_injective_of_constantSheaf_faithful X
 
 /-- On a connected analytic complex-point space, every degree-zero rational cohomology class is
 a constant class. -/
 theorem rationalCohomologyClass_surjective
-    [ConnectedSpace (ComplexPoint (Over.mk structureMap))] :
-    Function.Surjective (fieldCohomologyClass ℚ structureMap) := by
+    [ConnectedSpace (ComplexPoint X)] :
+    Function.Surjective (fieldCohomologyClass ℚ X) := by
   intro α
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint (Over.mk structureMap)))
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   let F := constantSheaf J AddCommGrpCat
   let ff := TopCat.constantSheafFullyFaithfulOfConnected
-    (TopCat.of (ComplexPoint (Over.mk structureMap)))
+    (TopCat.of (ComplexPoint X))
   let : F.Full := ff.full
   let : F.Faithful := ff.faithful
-  let e := rationalCohomologyZeroEquivSheafHom structureMap
+  let e := rationalCohomologyZeroEquivSheafHom X
   obtain ⟨f, hf⟩ := F.map_surjective (e α)
   let q : ℚ := f (1 : ℤ)
   refine ⟨q, e.injective ?_⟩
@@ -231,44 +231,44 @@ theorem rationalCohomologyClass_surjective
 /-- Constant rational classes give a bijection onto degree-zero cohomology of a connected
 analytic complex-point space. -/
 theorem rationalCohomologyClass_bijective
-    [ConnectedSpace (ComplexPoint (Over.mk structureMap))] :
-    Function.Bijective (fieldCohomologyClass ℚ structureMap) := by
-  let : Nonempty (ComplexPoint (Over.mk structureMap)) := inferInstance
-  exact ⟨rationalCohomologyClass_injective structureMap,
-    rationalCohomologyClass_surjective structureMap⟩
+    [ConnectedSpace (ComplexPoint X)] :
+    Function.Bijective (fieldCohomologyClass ℚ X) := by
+  let : Nonempty (ComplexPoint X) := inferInstance
+  exact ⟨rationalCohomologyClass_injective X,
+    rationalCohomologyClass_surjective X⟩
 
 /-- On a connected analytic complex-point space, rational constants are linearly equivalent to
 degree-zero rational cohomology. -/
 def rationalCohomologyClassLinearEquiv
-    [ConnectedSpace (ComplexPoint (Over.mk structureMap))] :
-    ℚ ≃ₗ[ℚ] FieldCohomology ℚ structureMap 0 :=
-  LinearEquiv.ofBijective (fieldCohomologyClassLinear ℚ structureMap)
-    (rationalCohomologyClass_bijective structureMap)
+    [ConnectedSpace (ComplexPoint X)] :
+    ℚ ≃ₗ[ℚ] FieldCohomology ℚ X 0 :=
+  LinearEquiv.ofBijective (fieldCohomologyClassLinear ℚ X)
+    (rationalCohomologyClass_bijective X)
 
 /-- On a connected analytic complex-point space, the rational cohomology unit spans all of
 degree-zero rational cohomology. -/
 theorem span_rationalCohomologyUnit_eq_top
-    [ConnectedSpace (ComplexPoint (Over.mk structureMap))] :
-    Submodule.span ℚ {fieldCohomologyUnit ℚ structureMap} = ⊤ := by
+    [ConnectedSpace (ComplexPoint X)] :
+    Submodule.span ℚ {fieldCohomologyUnit ℚ X} = ⊤ := by
   apply le_antisymm le_top
   intro α _
-  obtain ⟨q, rfl⟩ := rationalCohomologyClass_surjective structureMap α
-  have hq : fieldCohomologyClass ℚ structureMap q =
-      q • fieldCohomologyUnit ℚ structureMap := by
+  obtain ⟨q, rfl⟩ := rationalCohomologyClass_surjective X α
+  have hq : fieldCohomologyClass ℚ X q =
+      q • fieldCohomologyUnit ℚ X := by
     simpa [fieldCohomologyUnit] using
-      fieldCohomologyClass_mul ℚ structureMap q 1
+      fieldCohomologyClass_mul ℚ X q 1
   rw [hq]
   exact Submodule.smul_mem _ q (Submodule.subset_span (Set.mem_singleton _))
 
 /-- The degree-zero rational cohomology unit is nonzero on a nonempty analytic complex-point
 space. -/
 theorem rationalCohomologyUnit_ne_zero
-    [Nonempty (ComplexPoint (Over.mk structureMap))] :
-    fieldCohomologyUnit ℚ structureMap ≠ 0 := by
+    [Nonempty (ComplexPoint X)] :
+    fieldCohomologyUnit ℚ X ≠ 0 := by
   intro h
-  have h10 : fieldCohomologyClass ℚ structureMap 1 =
-      fieldCohomologyClass ℚ structureMap 0 := by
+  have h10 : fieldCohomologyClass ℚ X 1 =
+      fieldCohomologyClass ℚ X 0 := by
     simpa [fieldCohomologyUnit] using h
-  exact one_ne_zero (rationalCohomologyClass_injective structureMap h10)
+  exact one_ne_zero (rationalCohomologyClass_injective X h10)
 
 end AlgebraicGeometry.ComplexPoint

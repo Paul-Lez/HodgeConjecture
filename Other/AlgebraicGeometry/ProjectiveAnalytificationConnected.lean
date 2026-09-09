@@ -49,57 +49,57 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ) (d : ℕ)
+variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 /-- A smooth projective complex variety has a complex point. -/
-noncomputable instance instNonemptyComplexPoint [IsIntegral X] [Smooth structureMap] :
-    Nonempty (ComplexPoint (Over.mk structureMap)) := by
-  let : LocallyOfFiniteType structureMap := inferInstance
-  let : JacobsonSpace X := LocallyOfFiniteType.jacobsonSpace structureMap
+noncomputable instance instNonemptyComplexPoint [IsIntegral X.left] [Smooth X.hom] :
+    Nonempty (ComplexPoint X) := by
+  let : LocallyOfFiniteType X.hom := inferInstance
+  let : JacobsonSpace X.left := LocallyOfFiniteType.jacobsonSpace X.hom
   obtain ⟨x, -, hx⟩ := nonempty_inter_closedPoints
-    (X := X) (Z := Set.univ) Set.univ_nonempty isOpen_univ.isLocallyClosed
-  let z := (pointEquivClosedPoint structureMap).symm ⟨x, hx⟩
+    (X := X.left) (Z := Set.univ) Set.univ_nonempty isOpen_univ.isLocallyClosed
+  let z := (pointEquivClosedPoint X.hom).symm ⟨x, hx⟩
   exact ⟨Over.homMk z.1 z.2⟩
 
 /-- A compact, locally path connected projective analytification has finitely many connected
 components. -/
-theorem finiteConnectedComponents [IsProjective structureMap]
-    [IsIntegral X] [Smooth structureMap] :
-    Finite (ConnectedComponents (ComplexPoint (Over.mk structureMap))) := by
-  let : LocallyPathConnectedSpace (ComplexPoint (Over.mk structureMap)) :=
-    locallyPathConnectedSpace structureMap
-  let : LocallyConnectedSpace (ComplexPoint (Over.mk structureMap)) := inferInstance
+theorem finiteConnectedComponents [IsProjective X.hom]
+    [IsIntegral X.left] [Smooth X.hom] :
+    Finite (ConnectedComponents (ComplexPoint X)) := by
+  let : LocallyPathConnectedSpace (ComplexPoint X) :=
+    locallyPathConnectedSpace X
+  let : LocallyConnectedSpace (ComplexPoint X) := inferInstance
   infer_instance
 
 /-- A compact, locally path connected projective analytification has finitely many path
 components. -/
-theorem finiteZerothHomotopy [IsProjective structureMap]
-    [IsIntegral X] [Smooth structureMap] :
-    Finite (ZerothHomotopy (ComplexPoint (Over.mk structureMap))) := by
-  let : LocallyPathConnectedSpace (ComplexPoint (Over.mk structureMap)) :=
-    locallyPathConnectedSpace structureMap
+theorem finiteZerothHomotopy [IsProjective X.hom]
+    [IsIntegral X.left] [Smooth X.hom] :
+    Finite (ZerothHomotopy (ComplexPoint X)) := by
+  let : LocallyPathConnectedSpace (ComplexPoint X) :=
+    locallyPathConnectedSpace X
   infer_instance
 
 /-- For a smooth projective complex analytification, connectedness is equivalent to path
 connectedness.  This theorem does not supply the global connectedness premise. -/
-theorem pathConnectedSpace_iff_connectedSpace [IsIntegral X] [Smooth structureMap] :
-    PathConnectedSpace (ComplexPoint (Over.mk structureMap)) ↔
-      ConnectedSpace (ComplexPoint (Over.mk structureMap)) := by
-  let : LocallyPathConnectedSpace (ComplexPoint (Over.mk structureMap)) :=
-    locallyPathConnectedSpace structureMap
+theorem pathConnectedSpace_iff_connectedSpace [IsIntegral X.left] [Smooth X.hom] :
+    PathConnectedSpace (ComplexPoint X) ↔
+      ConnectedSpace (ComplexPoint X) := by
+  let : LocallyPathConnectedSpace (ComplexPoint X) :=
+    locallyPathConnectedSpace X
   exact _root_.pathConnectedSpace_iff_connectedSpace
 
 /-- Every complex point of an integral smooth zero-dimensional variety lies over its generic
 point. -/
-lemma underlying_eq_genericPoint_of_dimension_eq_zero [IsIntegral X]
-    [SmoothOfRelativeDimension d structureMap] (hd : d = 0)
-    (z : ComplexPoint (Over.mk structureMap)) : z.underlying = genericPoint X := by
-  let x : X := z.underlying
-  change x = genericPoint X
+lemma underlying_eq_genericPoint_of_dimension_eq_zero [IsIntegral X.left]
+    [SmoothOfRelativeDimension d X.hom] (hd : d = 0)
+    (z : ComplexPoint X) : z.underlying = genericPoint X.left := by
+  let x : X.left := z.underlying
+  change x = genericPoint X.left
   have hzle : Order.coheight x ≤ (0 : ℕ) := by
     rw [← hd]
     exact SmoothOfRelativeDimension.coheight_le_complex
-      (f := structureMap) (d := d) x
+      (f := X.hom) (d := d) x
   apply inseparable_iff_eq.mp
   rw [inseparable_iff_specializes_and]
   exact ⟨(Order.coheight_eq_zero.mp (bot_unique hzle)) le_top,
@@ -107,36 +107,36 @@ lemma underlying_eq_genericPoint_of_dimension_eq_zero [IsIntegral X]
 
 /-- The analytification of an integral smooth projective complex variety of dimension zero has at
 most one point. -/
-theorem subsingletonComplexPointOfDimensionEqZero [IsIntegral X] [Smooth structureMap]
-    [IsProjective structureMap]
-    [SmoothOfRelativeDimension d structureMap] (hd : d = 0) :
-    Subsingleton (ComplexPoint (Over.mk structureMap)) := by
+theorem subsingletonComplexPointOfDimensionEqZero [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom]
+    [SmoothOfRelativeDimension d X.hom] (hd : d = 0) :
+    Subsingleton (ComplexPoint X) := by
   constructor
   intro z w
   apply ComplexPoint.underlying_injective_of_locallyOfFiniteType
-  rw [underlying_eq_genericPoint_of_dimension_eq_zero structureMap d hd z,
-    underlying_eq_genericPoint_of_dimension_eq_zero structureMap d hd w]
+  rw [underlying_eq_genericPoint_of_dimension_eq_zero X d hd z,
+    underlying_eq_genericPoint_of_dimension_eq_zero X d hd w]
 
 /-- The analytification of an integral smooth projective complex variety of dimension zero is
 connected. -/
-theorem connectedSpaceOfDimensionEqZero [IsIntegral X] [Smooth structureMap]
-    [IsProjective structureMap]
-    [SmoothOfRelativeDimension d structureMap] (hd : d = 0) :
-    ConnectedSpace (ComplexPoint (Over.mk structureMap)) := by
-  let : Subsingleton (ComplexPoint (Over.mk structureMap)) :=
-    subsingletonComplexPointOfDimensionEqZero structureMap d hd
+theorem connectedSpaceOfDimensionEqZero [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom]
+    [SmoothOfRelativeDimension d X.hom] (hd : d = 0) :
+    ConnectedSpace (ComplexPoint X) := by
+  let : Subsingleton (ComplexPoint X) :=
+    subsingletonComplexPointOfDimensionEqZero X d hd
   exact
     { toNonempty := inferInstance
       isPreconnected_univ := Set.Subsingleton.isPreconnected Set.subsingleton_univ }
 
 /-- The analytification of an integral smooth projective complex variety of dimension zero is path
 connected. -/
-theorem pathConnectedSpaceOfDimensionEqZero [IsIntegral X] [Smooth structureMap]
-    [IsProjective structureMap]
-    [SmoothOfRelativeDimension d structureMap] (hd : d = 0) :
-    PathConnectedSpace (ComplexPoint (Over.mk structureMap)) := by
-  let : ConnectedSpace (ComplexPoint (Over.mk structureMap)) :=
-    connectedSpaceOfDimensionEqZero structureMap d hd
-  exact (pathConnectedSpace_iff_connectedSpace structureMap).mpr inferInstance
+theorem pathConnectedSpaceOfDimensionEqZero [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom]
+    [SmoothOfRelativeDimension d X.hom] (hd : d = 0) :
+    PathConnectedSpace (ComplexPoint X) := by
+  let : ConnectedSpace (ComplexPoint X) :=
+    connectedSpaceOfDimensionEqZero X d hd
+  exact (pathConnectedSpace_iff_connectedSpace X).mpr inferInstance
 
 end AlgebraicGeometry.ComplexPoint
