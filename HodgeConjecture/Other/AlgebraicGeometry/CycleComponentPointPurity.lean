@@ -45,23 +45,23 @@ open Point
 
 open AlgebraicTopology.Singular
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
-  [IsProjective structureMap] (d : ℕ)
+variable (X : Over (Spec ↧ℂ))
+  [IsProjective X.hom] (d : ℕ)
 
 /-- The ambient chart-local homology class at an analytic point. -/
-def analyticPointLocalHomologyClass [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (Over.mk structureMap)) :
+def analyticPointLocalHomologyClass [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
     RelativeHomology ℚ (pointComplementPair z) (2 * d) :=
-  localClassOfChart d (ComplexPoint.localChart structureMap d z) z
-    (ComplexPoint.mem_localChart_source structureMap d z)
+  localClassOfChart d (ComplexPoint.localChart X d z) z
+    (ComplexPoint.mem_localChart_source X d z)
 
 /-- The ambient chart-local homology class is nonzero. -/
-lemma analyticPointLocalHomologyClass_ne_zero [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (Over.mk structureMap)) :
-    analyticPointLocalHomologyClass structureMap d z ≠ 0 := by
-  let e := ComplexPoint.localChart structureMap d z
-  let hz := ComplexPoint.mem_localChart_source structureMap d z
-  let : T1Space (ComplexPoint (Over.mk structureMap)) := inferInstance
+lemma analyticPointLocalHomologyClass_ne_zero [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
+    analyticPointLocalHomologyClass X d z ≠ 0 := by
+  let e := ComplexPoint.localChart X d z
+  let hz := ComplexPoint.mem_localChart_source X d z
+  let : T1Space (ComplexPoint X) := inferInstance
   have hinjective : Function.Injective
       (relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e z hz)) :=
     (chartModelEmbedding_relativeHomologyMap_bijective d e z hz).1
@@ -71,52 +71,52 @@ lemma analyticPointLocalHomologyClass_ne_zero [SmoothOfRelativeDimension d struc
   simpa only [analyticPointLocalHomologyClass, localClassOfChart, e, hz, map_zero] using hzero
 
 /-- The ambient chart-local homology class generates local homology at the point. -/
-lemma span_analyticPointLocalHomologyClass_eq_top [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (Over.mk structureMap)) :
-    Submodule.span ℚ {analyticPointLocalHomologyClass structureMap d z} = ⊤ := by
-  let : T1Space (ComplexPoint (Over.mk structureMap)) := inferInstance
-  exact span_localClassOfChart_eq_top d (ComplexPoint.localChart structureMap d z) z
-    (ComplexPoint.mem_localChart_source structureMap d z)
+lemma span_analyticPointLocalHomologyClass_eq_top [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
+    Submodule.span ℚ {analyticPointLocalHomologyClass X d z} = ⊤ := by
+  let : T1Space (ComplexPoint X) := inferInstance
+  exact span_localClassOfChart_eq_top d (ComplexPoint.localChart X d z) z
+    (ComplexPoint.mem_localChart_source X d z)
 
 /-- The normalized local cohomology class dual to the chart-local fundamental class. -/
-def analyticPointLocalCoclass [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (Over.mk structureMap)) :
-    CohomologyWithSupport ℚ (TopCat.of (ComplexPoint (Over.mk structureMap))) {z} (2 * d) :=
-  normalizedDual (analyticPointLocalHomologyClass structureMap d z)
-    (analyticPointLocalHomologyClass_ne_zero structureMap d z)
+def analyticPointLocalCoclass [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
+    CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) {z} (2 * d) :=
+  normalizedDual (analyticPointLocalHomologyClass X d z)
+    (analyticPointLocalHomologyClass_ne_zero X d z)
 
 @[simp]
-lemma analyticPointLocalCoclass_apply_localClass [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (Over.mk structureMap)) :
-    analyticPointLocalCoclass structureMap d z
-        (analyticPointLocalHomologyClass structureMap d z) = 1 :=
-  normalizedDual_apply_self (analyticPointLocalHomologyClass structureMap d z)
-    (analyticPointLocalHomologyClass_ne_zero structureMap d z)
+lemma analyticPointLocalCoclass_apply_localClass [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
+    analyticPointLocalCoclass X d z
+        (analyticPointLocalHomologyClass X d z) = 1 :=
+  normalizedDual_apply_self (analyticPointLocalHomologyClass X d z)
+    (analyticPointLocalHomologyClass_ne_zero X d z)
 
 /-- The normalized chart-local coclass generates rational cohomology supported at the point. -/
-lemma span_analyticPointLocalCoclass_eq_top [SmoothOfRelativeDimension d structureMap]
-    (z : ComplexPoint (Over.mk structureMap)) :
-    Submodule.span ℚ {analyticPointLocalCoclass structureMap d z} = ⊤ :=
+lemma span_analyticPointLocalCoclass_eq_top [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
+    Submodule.span ℚ {analyticPointLocalCoclass X d z} = ⊤ :=
   span_normalizedDual_eq_top
-    (analyticPointLocalHomologyClass_ne_zero structureMap d z)
-    (span_analyticPointLocalHomologyClass_eq_top structureMap d z)
+    (analyticPointLocalHomologyClass_ne_zero X d z)
+    (span_analyticPointLocalHomologyClass_eq_top X d z)
 
 /-- A maximal-codimension component of a smooth complex variety has a singleton analytic
 support. -/
-lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X]
-    [Smooth structureMap] [SmoothOfRelativeDimension d structureMap]
-    (x : X) (hx : coheight x = d)
-    (z : ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap))) :
-    cycleComponentSupport structureMap x = {cycleComponentMap structureMap x z} := by
-  have hdim : Order.krullDim (cycleComponent X x) = 0 := by
+lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.left]
+    [Smooth X.hom] [SmoothOfRelativeDimension d X.hom]
+    (x : X.left) (hx : coheight x = d)
+    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
+    cycleComponentSupport X x = {cycleComponentMap X x z} := by
+  have hdim : Order.krullDim (cycleComponent X.left x) = 0 := by
     simpa using orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
-      (f := structureMap) (d := d) x hx
-  let : Subsingleton (cycleComponent X x) := by
+      (f := X.hom) (d := d) x hx
+  let : Subsingleton (cycleComponent X.left x) := by
     constructor
     intro a b
-    have hallMin : ∀ q : cycleComponent X x, IsMin q :=
+    have hallMin : ∀ q : cycleComponent X.left x, IsMin q :=
       Order.krullDim_nonpos_iff_forall_isMin.mp hdim.le
-    have htopLe (q : cycleComponent X x) : (⊤ : cycleComponent X x) ≤ q :=
+    have htopLe (q : cycleComponent X.left x) : (⊤ : cycleComponent X.left x) ≤ q :=
       hallMin ⊤ le_top
     have hab : a ≤ b := le_top.trans (htopLe b)
     have hba : b ≤ a := le_top.trans (htopLe a)
@@ -125,11 +125,13 @@ lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X]
       ← Scheme.le_iff_specializes]
     exact ⟨hba, hab⟩
   have hpoints : Subsingleton
-      (ComplexPoint (Over.mk (cycleComponentι X x ≫ structureMap))) := by
+      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) := by
+    let : LocallyOfFiniteType (Over.mk (cycleComponentι X.left x ≫ X.hom)).hom :=
+      inferInstanceAs (LocallyOfFiniteType (cycleComponentι X.left x ≫ X.hom))
     constructor
     intro a b
     apply ComplexPoint.underlying_injective_of_locallyOfFiniteType
-    exact Subsingleton.elim (α := cycleComponent X x) a.underlying b.underlying
+    exact Subsingleton.elim (α := cycleComponent X.left x) a.underlying b.underlying
   rw [← range_cycleComponentMap]
   ext y
   constructor
@@ -141,20 +143,20 @@ lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X]
 
 /-- Every maximal-codimension component has a generator of its singular cohomology with
 support. -/
-theorem exists_singularComponentSupportedGenerator_of_coheight_eq_dimension [IsIntegral X]
-    [Smooth structureMap] [SmoothOfRelativeDimension d structureMap]
-    (x : X) (hx : coheight x = d) :
-    ∃ β : RationalSingularComponentCohomologyWithSupport structureMap x (2 * d),
+theorem exists_singularComponentSupportedGenerator_of_coheight_eq_dimension [IsIntegral X.left]
+    [Smooth X.hom] [SmoothOfRelativeDimension d X.hom]
+    (x : X.left) (hx : coheight x = d) :
+    ∃ β : RationalSingularComponentCohomologyWithSupport X x (2 * d),
       IsSupportedCohomologyGenerator β := by
-  obtain ⟨z, -⟩ := exists_cycleComponent_smooth_complexPoint structureMap x
-  let y := cycleComponentMap structureMap x z
-  have hsupport : cycleComponentSupport structureMap x = {y} :=
-    cycleComponentSupport_eq_singleton_of_coheight_eq_dimension structureMap d x hx z
-  change ∃ β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint (Over.mk structureMap)))
-      (cycleComponentSupport structureMap x) (2 * d),
+  obtain ⟨z, -⟩ := exists_cycleComponent_smooth_complexPoint X x
+  let y := cycleComponentMap X x z
+  have hsupport : cycleComponentSupport X x = {y} :=
+    cycleComponentSupport_eq_singleton_of_coheight_eq_dimension X d x hx z
+  change ∃ β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X))
+      (cycleComponentSupport X x) (2 * d),
     Submodule.span ℚ {β} = ⊤
   rw [hsupport]
-  exact ⟨analyticPointLocalCoclass structureMap d y,
-    span_analyticPointLocalCoclass_eq_top structureMap d y⟩
+  exact ⟨analyticPointLocalCoclass X d y,
+    span_analyticPointLocalCoclass_eq_top X d y⟩
 
 end AlgebraicGeometry.ComplexPoint

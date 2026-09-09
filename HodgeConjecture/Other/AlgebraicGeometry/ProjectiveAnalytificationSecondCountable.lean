@@ -43,43 +43,43 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
-  [IsProjective structureMap]
+variable (X : Over (Spec ↧ℂ))
+  [IsProjective X.hom]
 
 /-- A smooth projective complex analytification has a second-countable topology. -/
-theorem secondCountableTopology [IsIntegral X] [Smooth structureMap] :
-    SecondCountableTopology (ComplexPoint (Over.mk structureMap)) := by
-  let : SigmaCompactSpace (ComplexPoint (Over.mk structureMap)) := inferInstance
-  exact ChartedSpace.secondCountable_of_sigmaCompact (Fin (dim X) → ℂ) (ComplexPoint (Over.mk structureMap))
+theorem secondCountableTopology [IsIntegral X.left] [Smooth X.hom] :
+    SecondCountableTopology (ComplexPoint X) := by
+  let : SigmaCompactSpace (ComplexPoint X) := inferInstance
+  exact ChartedSpace.secondCountable_of_sigmaCompact (Fin (dim X.left) → ℂ) (ComplexPoint X)
 
 /-- A smooth projective complex analytification is separable. -/
-theorem separableSpace [IsIntegral X] [Smooth structureMap] :
-    TopologicalSpace.SeparableSpace (ComplexPoint (Over.mk structureMap)) := by
-  let : SecondCountableTopology (ComplexPoint (Over.mk structureMap)) :=
-    secondCountableTopology structureMap
+theorem separableSpace [IsIntegral X.left] [Smooth X.hom] :
+    TopologicalSpace.SeparableSpace (ComplexPoint X) := by
+  let : SecondCountableTopology (ComplexPoint X) :=
+    secondCountableTopology X
   infer_instance
 
 /-- A smooth projective complex analytification is first countable. -/
-theorem firstCountableTopology [IsIntegral X] [Smooth structureMap] :
-    FirstCountableTopology (ComplexPoint (Over.mk structureMap)) := by
-  let : SecondCountableTopology (ComplexPoint (Over.mk structureMap)) :=
-    secondCountableTopology structureMap
+theorem firstCountableTopology [IsIntegral X.left] [Smooth X.hom] :
+    FirstCountableTopology (ComplexPoint X) := by
+  let : SecondCountableTopology (ComplexPoint X) :=
+    secondCountableTopology X
   infer_instance
 
 /-- A smooth projective complex analytification is Lindelöf. -/
-theorem lindelofSpace [IsIntegral X] [Smooth structureMap] :
-    LindelofSpace (ComplexPoint (Over.mk structureMap)) := by
-  let : SecondCountableTopology (ComplexPoint (Over.mk structureMap)) :=
-    secondCountableTopology structureMap
+theorem lindelofSpace [IsIntegral X.left] [Smooth X.hom] :
+    LindelofSpace (ComplexPoint X) := by
+  let : SecondCountableTopology (ComplexPoint X) :=
+    secondCountableTopology X
   infer_instance
 
 /-- A smooth projective complex analytification is metrizable. -/
-theorem metrizableSpace [IsIntegral X] [Smooth structureMap] :
-    TopologicalSpace.MetrizableSpace (ComplexPoint (Over.mk structureMap)) := by
-  let : SigmaCompactSpace (ComplexPoint (Over.mk structureMap)) := inferInstance
-  let : SecondCountableTopology (ComplexPoint (Over.mk structureMap)) :=
-    secondCountableTopology structureMap
-  exact Manifold.metrizableSpace (modelWithCornersSelf ℝ (Fin (dim X) → ℂ))
-    (ComplexPoint (Over.mk structureMap))
+theorem metrizableSpace [IsIntegral X.left] [Smooth X.hom] :
+    TopologicalSpace.MetrizableSpace (ComplexPoint X) := by
+  let : SigmaCompactSpace (ComplexPoint X) := inferInstance
+  let : SecondCountableTopology (ComplexPoint X) :=
+    secondCountableTopology X
+  exact Manifold.metrizableSpace (modelWithCornersSelf ℝ (Fin (dim X.left) → ℂ))
+    (ComplexPoint X)
 
 end AlgebraicGeometry.ComplexPoint

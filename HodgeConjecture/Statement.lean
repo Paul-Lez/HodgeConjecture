@@ -38,7 +38,7 @@ as the surjectivity of this map.
 [P. Deligne, *The Hodge Conjecture*](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf)
 -/
 
-open AlgebraicGeometry ComplexPoint
+open CategoryTheory AlgebraicGeometry ComplexPoint
 
 /-- Statement of the **Hodge conjecture**.
 
@@ -46,6 +46,6 @@ For every nonsingular complex projective variety `X` and natural number `p`, eve
 class of degree `2p` on `X` is a rational linear combination of classes of algebraic subvarieties of
 `X` of codimension `p`. -/
 @[expose] public def HodgeConjecture : Prop :=
-  ∀ {X : Scheme} [IsIntegral X] (structureMap : X ⟶ Spec ↧ℂ) [Smooth structureMap]
-    [IsProjective structureMap] (p : ℕ),
-    Hdg^p(ℚ; structureMap) ≤ algebraicCycleClassSpan structureMap p
+  ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom] (p : ℕ),
+    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p

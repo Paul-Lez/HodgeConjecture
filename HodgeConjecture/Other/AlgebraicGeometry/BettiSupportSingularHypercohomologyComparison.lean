@@ -38,11 +38,11 @@ open Point
 
 universe u v
 
-variable {X : Scheme} (structureMap : X ⟶ Spec ↧ℂ)
+variable (X : Over (Spec ↧ℂ))
 
 local instance bettiSupportHypercohomologyComparisonHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf structureMap) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf structureMap)
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 local instance bettiSupportHypercohomologyAddCommGrpHasDerivedCategory :
     HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard AddCommGrpCat
@@ -171,14 +171,14 @@ def isoHomCongrAddEquiv
 /-- The chosen additive structure on hypercohomology is transported from shifted morphisms in
 the derived category. -/
 def hypercohomologyAddEquivDerived
-    (K : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ) (n : ℤ) :
-    Hypercohomology structureMap K n ≃+
+    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) :
+    Hypercohomology X K n ≃+
       ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt structureMap))
+        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
         (DerivedCategory.Q.obj K) n where
   toEquiv := Localization.SmallShiftedHom.equiv
-    (analyticQuasiIsomorphisms structureMap) DerivedCategory.Q
-  map_add' := hypercohomologyEquiv_add structureMap K n
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q
+  map_add' := hypercohomologyEquiv_add X K n
 
 /-- For a K-injective target, shifted derived morphisms are additively identified with
 cohomology classes in the Hom complex. -/
@@ -239,26 +239,26 @@ def kInjectiveDerivedHomAddEquivCohomologyClass
 /-- If a K-injective resolution of a sheaf complex remains a quasi-isomorphism after taking
 global sections, then hypercohomology is computed by the original global-section complex. -/
 def hypercohomologyEquivGlobalSectionsOfResolution
-    (K I : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ)
+    (K I : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     [I.IsKInjective]
     (i : K ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map i)]
     (n : ℤ) :
-    Hypercohomology structureMap K n ≃
+    Hypercohomology X K n ≃
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint (Over.mk structureMap))) K).homology n := by
-  let Y := TopCat.of (ComplexPoint (Over.mk structureMap))
-  let A := constantIntegerSheafComplexInt structureMap
+        (TopCat.of (ComplexPoint X)) K).homology n := by
+  let Y := TopCat.of (ComplexPoint X)
+  let A := constantIntegerSheafComplexInt X
   let A' := TopCat.Sheaf.integerConstantSingleComplex Y
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-  let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle structureMap
-  have hi : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf structureMap)
+  let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle X
+  have hi : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
       (ComplexShape.up ℤ) i := by
     rw [HomologicalComplex.mem_quasiIso_iff]
     infer_instance
-  have he : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf structureMap)
+  have he : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
       (ComplexShape.up ℤ) e.inv := by
     rw [HomologicalComplex.mem_quasiIso_iff]
     infer_instance
@@ -281,25 +281,25 @@ def hypercohomologyEquivGlobalSectionsOfResolution
 /-- Additive form of the hypercohomology/global-sections comparison for a fixed K-injective
 resolution. -/
 def hypercohomologyAddEquivGlobalSectionsOfResolution
-    (K I : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ)
+    (K I : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     [I.IsKInjective]
     (i : K ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map i)]
     (n : ℤ) :
-    Hypercohomology structureMap K n ≃+
+    Hypercohomology X K n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint (Over.mk structureMap))) K).homology n := by
-  let Y := TopCat.of (ComplexPoint (Over.mk structureMap))
-  let A := constantIntegerSheafComplexInt structureMap
+        (TopCat.of (ComplexPoint X)) K).homology n := by
+  let Y := TopCat.of (ComplexPoint X)
+  let A := constantIntegerSheafComplexInt X
   let A' := TopCat.Sheaf.integerConstantSingleComplex Y
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-  let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle structureMap
-  let e₀ := hypercohomologyAddEquivDerived structureMap K n
+  let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle X
+  let e₀ := hypercohomologyAddEquivDerived X K n
   let eI : (DerivedCategory.Q.obj K)⟦n⟧ ≅
       (DerivedCategory.Q.obj I)⟦n⟧ :=
-    (shiftFunctor (DerivedCategory (AnalyticAdditiveSheaf structureMap)) n).mapIso
+    (shiftFunctor (DerivedCategory (AnalyticAdditiveSheaf X)) n).mapIso
       (asIso (DerivedCategory.Q.map i))
   let e₁ : ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj K) n ≃+
       ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj I) n :=
@@ -321,13 +321,13 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
 /-- Hypercohomology of a bounded-below termwise-flasque sheaf complex is computed by its
 global-section complex. The proof uses an explicit bounded-below injective replacement. -/
 def hypercohomologyEquivGlobalSections
-    (K : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ)
+    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (N : ℤ) [K.IsStrictlyGE N]
     (hKflasque : ∀ q, (K.X q).IsFlasque) (n : ℤ) :
-    Hypercohomology structureMap K n ≃
+    Hypercohomology X K n ≃
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint (Over.mk structureMap))) K).homology n := by
-  let Y := TopCat.of (ComplexPoint (Over.mk structureMap))
+        (TopCat.of (ComplexPoint X)) K).homology n := by
+  let Y := TopCat.of (ComplexPoint X)
   let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective K N
   let I := Classical.choose hres
   let hresI := Classical.choose_spec hres
@@ -349,18 +349,18 @@ def hypercohomologyEquivGlobalSections
         ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i N N hKflasque hIflasque
-  exact hypercohomologyEquivGlobalSectionsOfResolution structureMap K I i n
+  exact hypercohomologyEquivGlobalSectionsOfResolution X K I i n
 
 /-- Additive hypercohomology/global-sections comparison for a bounded-below termwise-flasque
 complex. -/
 def hypercohomologyAddEquivGlobalSections
-    (K : CochainComplex (AnalyticAdditiveSheaf structureMap) ℤ)
+    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (N : ℤ) [K.IsStrictlyGE N]
     (hKflasque : ∀ q, (K.X q).IsFlasque) (n : ℤ) :
-    Hypercohomology structureMap K n ≃+
+    Hypercohomology X K n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint (Over.mk structureMap))) K).homology n := by
-  let Y := TopCat.of (ComplexPoint (Over.mk structureMap))
+        (TopCat.of (ComplexPoint X)) K).homology n := by
+  let Y := TopCat.of (ComplexPoint X)
   let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective K N
   let I := Classical.choose hres
   let hresI := Classical.choose_spec hres
@@ -383,66 +383,66 @@ def hypercohomologyAddEquivGlobalSections
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i N N hKflasque hIflasque
   exact hypercohomologyAddEquivGlobalSectionsOfResolution
-    structureMap K I i n
+    X K I i n
 
 open AlgebraicTopology.Singular
 
 /-- Global sections of the pushed-forward comparison from singular cochains on the complement
 to its chosen injective resolution. -/
 def globalComplementSingularToInjectiveResolutionNat
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     globalPushforwardSingularCochainSheafComplex ℚ
-        (analyticComplementInclusion structureMap Z) ⟶
+        (analyticComplementInclusion X Z) ⟶
       ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex
           (ComplexShape.up ℕ)).obj
-        (derivedPushforwardComplementConstantRationalComplexNat structureMap Z) :=
+        (derivedPushforwardComplementConstantRationalComplexNat X Z) :=
   ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-    (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+    (TopCat.of (ComplexPoint X))).mapHomologicalComplex
       (ComplexShape.up ℕ)).map
     (((TopCat.Sheaf.pushforward AddCommGrpCat
-      (analyticComplementInclusion structureMap Z)).mapHomologicalComplex
+      (analyticComplementInclusion X Z)).mapHomologicalComplex
         (ComplexShape.up ℕ)).map
-      (complementSingularToInjectiveResolution structureMap Z hZ))
+      (complementSingularToInjectiveResolution X Z hZ))
 
 /-- Raw singular cochains on the complement map to global sections of the chosen derived
 pushforward through sheafification and the injective-resolution comparison. -/
 def globalRawComplementToDerivedPushforwardNat
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     globalRawPushforwardSingularCochainComplex ℚ
-        (analyticComplementInclusion structureMap Z) ⟶
+        (analyticComplementInclusion X Z) ⟶
       ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex
           (ComplexShape.up ℕ)).obj
-        (derivedPushforwardComplementConstantRationalComplexNat structureMap Z) :=
+        (derivedPushforwardComplementConstantRationalComplexNat X Z) :=
   globalRawPushforwardToSingularSheaf ℚ
-      (analyticComplementInclusion structureMap Z) ≫
-    globalComplementSingularToInjectiveResolutionNat structureMap Z hZ
+      (analyticComplementInclusion X Z) ≫
+    globalComplementSingularToInjectiveResolutionNat X Z hZ
 
 /-- On a hereditarily paracompact Hausdorff ambient space, global sections of the complement
 singular-to-injective comparison are a quasi-isomorphism. -/
 theorem globalComplementSingularToInjectiveResolutionNat_quasiIso
-    [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [hpara : ∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [hpara : ∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalComplementSingularToInjectiveResolutionNat
-      structureMap Z hZ) := by
-  let U := TopCat.of (AnalyticComplement structureMap Z)
-  let j := analyticComplementInclusion structureMap Z
+      X Z hZ) := by
+  let U := TopCat.of (AnalyticComplement X Z)
+  let j := analyticComplementInclusion X Z
   let : T2Space U := by infer_instance
   let : ∀ W : Opens U, ParacompactSpace W := fun W ↦
     opens_paracompactSpace_of_isOpenEmbedding j
-      (analyticComplementInclusion_isOpenEmbedding structureMap Z hZ) hpara W
+      (analyticComplementInclusion_isOpenEmbedding X Z hZ) hpara W
   change QuasiIso
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor U
       ).mapHomologicalComplex (ComplexShape.up ℕ)).map
-      (complementSingularToInjectiveResolution structureMap Z hZ))
+      (complementSingularToInjectiveResolution X Z hZ))
   let : QuasiIso
-      (complementSingularToInjectiveResolution structureMap Z hZ) :=
-    complementSingularToInjectiveResolution_quasiIso structureMap Z hZ
+      (complementSingularToInjectiveResolution X Z hZ) :=
+    complementSingularToInjectiveResolution_quasiIso X Z hZ
   apply globalSectionsNat_map_quasiIso
   · intro m
     change TopCat.Sheaf.IsFlasque
@@ -464,15 +464,15 @@ lemma globalRawPushforwardToSingularSheaf_eq_topOpen
 
 /-- The raw-to-sheaf comparison on the complement is a quasi-isomorphism. -/
 theorem globalRawComplementToSingularSheaf_quasiIso
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [hpara : ∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [T2Space (ComplexPoint X)]
+    [hpara : ∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalRawPushforwardToSingularSheaf ℚ
-      (analyticComplementInclusion structureMap Z)) := by
-  let U := TopCat.of (AnalyticComplement structureMap Z)
-  let j := analyticComplementInclusion structureMap Z
+      (analyticComplementInclusion X Z)) := by
+  let U := TopCat.of (AnalyticComplement X Z)
+  let j := analyticComplementInclusion X Z
   let : T2Space U := by infer_instance
-  let Uopen : Opens (TopCat.of (ComplexPoint (Over.mk structureMap))) :=
+  let Uopen : Opens (TopCat.of (ComplexPoint X)) :=
     ⟨Zᶜ, hZ.isOpen_compl⟩
   let : ParacompactSpace U := by
     change ParacompactSpace Uopen
@@ -483,48 +483,48 @@ theorem globalRawComplementToSingularSheaf_quasiIso
 /-- Raw complement cochains map quasi-isomorphically to global sections of the chosen derived
 pushforward model. -/
 theorem globalRawComplementToDerivedPushforwardNat_quasiIso
-    [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalRawComplementToDerivedPushforwardNat
-      structureMap Z hZ) := by
+      X Z hZ) := by
   let : QuasiIso (globalRawPushforwardToSingularSheaf ℚ
-      (analyticComplementInclusion structureMap Z)) :=
-    globalRawComplementToSingularSheaf_quasiIso structureMap Z hZ
+      (analyticComplementInclusion X Z)) :=
+    globalRawComplementToSingularSheaf_quasiIso X Z hZ
   let : QuasiIso (globalComplementSingularToInjectiveResolutionNat
-      structureMap Z hZ) :=
+      X Z hZ) :=
     globalComplementSingularToInjectiveResolutionNat_quasiIso
-      structureMap Z hZ
+      X Z hZ
   unfold globalRawComplementToDerivedPushforwardNat
   infer_instance
 
 /-- Restriction on global sections of the natural singular-resolution map. -/
 def globalNaturalSingularResolutionRestrictionNat
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     globalSingularCochainSheafComplex ℚ
-        (TopCat.of (ComplexPoint (Over.mk structureMap))) ⟶
+        (TopCat.of (ComplexPoint X)) ⟶
       ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex
           (ComplexShape.up ℕ)).obj
-        (derivedPushforwardComplementConstantRationalComplexNat structureMap Z) :=
+        (derivedPushforwardComplementConstantRationalComplexNat X Z) :=
   ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-    (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+    (TopCat.of (ComplexPoint X))).mapHomologicalComplex
       (ComplexShape.up ℕ)).map
-    (naturalSingularResolutionRestrictionNat structureMap Z hZ)
+    (naturalSingularResolutionRestrictionNat X Z hZ)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The natural singular-resolution restriction square commutes after taking global sections. -/
 lemma globalNaturalSingularResolutionRestrictionNat_naturality
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     topOpenToGlobalSingularCochainSheafComplex ℚ
-          (TopCat.of (ComplexPoint (Over.mk structureMap))) ≫
-        globalNaturalSingularResolutionRestrictionNat structureMap Z hZ =
+          (TopCat.of (ComplexPoint X)) ≫
+        globalNaturalSingularResolutionRestrictionNat X Z hZ =
       globalRawSingularRestriction ℚ
-          (analyticComplementInclusion structureMap Z) ≫
-        globalRawComplementToDerivedPushforwardNat structureMap Z hZ := by
+          (analyticComplementInclusion X Z) ≫
+        globalRawComplementToDerivedPushforwardNat X Z hZ := by
   unfold globalNaturalSingularResolutionRestrictionNat
     naturalSingularResolutionRestrictionNat
     globalRawComplementToDerivedPushforwardNat
@@ -532,7 +532,7 @@ lemma globalNaturalSingularResolutionRestrictionNat_naturality
   rw [Functor.map_comp]
   change topOpenToGlobalSingularCochainSheafComplex ℚ _ ≫
         globalSingularSheafRestriction ℚ
-          (analyticComplementInclusion structureMap Z) ≫ _ = _
+          (analyticComplementInclusion X Z) ≫ _ = _
   rw [← Category.assoc, globalSingularSheafRestriction_naturality]
   rw [Category.assoc]
 
@@ -540,57 +540,57 @@ lemma globalNaturalSingularResolutionRestrictionNat_naturality
 complex. -/
 def globalRawToSingularSheafInt :
     globalRawSingularCochainComplexInt ℚ
-        (TopCat.of (ComplexPoint (Over.mk structureMap))) ⟶
+        (TopCat.of (ComplexPoint X)) ⟶
       TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint (Over.mk structureMap)))
-        (singularCochainSheafComplexInt structureMap ℚ) :=
+        (TopCat.of (ComplexPoint X))
+        (singularCochainSheafComplexInt X ℚ) :=
   HomologicalComplex.extendMap
       (topOpenToGlobalSingularCochainSheafComplex ℚ
-        (TopCat.of (ComplexPoint (Over.mk structureMap))))
+        (TopCat.of (ComplexPoint X)))
       ComplexShape.embeddingUpNat ≫
     (HomologicalComplex.mapExtendIso
       (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint (Over.mk structureMap))))
+        (TopCat.of (ComplexPoint X)))
       (singularCochainSheafComplex ℚ
-        (TopCat.of (ComplexPoint (Over.mk structureMap))))
+        (TopCat.of (ComplexPoint X)))
       ComplexShape.embeddingUpNat).inv
 
 /-- Raw complement cochains map to global sections of the integer-indexed derived-pushforward
 model. -/
 def globalRawComplementToDerivedPushforwardInt
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     globalRawPushforwardSingularCochainComplexInt ℚ
-        (TopCat.of (ComplexPoint (Over.mk structureMap)))
-        (AnalyticComplement structureMap Z) ⟶
+        (TopCat.of (ComplexPoint X))
+        (AnalyticComplement X Z) ⟶
       TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint (Over.mk structureMap)))
-        (derivedPushforwardComplementConstantRationalComplexInt structureMap Z) :=
+        (TopCat.of (ComplexPoint X))
+        (derivedPushforwardComplementConstantRationalComplexInt X Z) :=
   HomologicalComplex.extendMap
-      (globalRawComplementToDerivedPushforwardNat structureMap Z hZ)
+      (globalRawComplementToDerivedPushforwardNat X Z hZ)
       ComplexShape.embeddingUpNat ≫
     (HomologicalComplex.mapExtendIso
       (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint (Over.mk structureMap))))
-      (derivedPushforwardComplementConstantRationalComplexNat structureMap Z)
+        (TopCat.of (ComplexPoint X)))
+      (derivedPushforwardComplementConstantRationalComplexNat X Z)
       ComplexShape.embeddingUpNat).inv
 
 set_option linter.style.haveILetI false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The integer-indexed raw ambient-to-sheaf comparison is a quasi-isomorphism. -/
 theorem globalRawToSingularSheafInt_quasiIso
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [hpara : ∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U] :
-    QuasiIso (globalRawToSingularSheafInt structureMap) := by
-  let Y := TopCat.of (ComplexPoint (Over.mk structureMap))
+    [T2Space (ComplexPoint X)]
+    [hpara : ∀ U : Opens (ComplexPoint X), ParacompactSpace U] :
+    QuasiIso (globalRawToSingularSheafInt X) := by
+  let Y := TopCat.of (ComplexPoint X)
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let f := topOpenToGlobalSingularCochainSheafComplex ℚ Y
   let fInt := HomologicalComplex.extendMap f ComplexShape.embeddingUpNat
   let e := HomologicalComplex.mapExtendIso Γ
     (singularCochainSheafComplex ℚ Y) ComplexShape.embeddingUpNat
-  let : ParacompactSpace (ComplexPoint (Over.mk structureMap)) :=
-    (Homeomorph.Set.univ (ComplexPoint (Over.mk structureMap))).paracompactSpace_iff.mp
-      (hpara (⊤ : Opens (ComplexPoint (Over.mk structureMap))))
+  let : ParacompactSpace (ComplexPoint X) :=
+    (Homeomorph.Set.univ (ComplexPoint X)).paracompactSpace_iff.mp
+      (hpara (⊤ : Opens (ComplexPoint X)))
   let : QuasiIso f :=
     topOpenToGlobalSingularCochainSheafComplex_quasiIso
   let hfInt : QuasiIso fInt := by
@@ -609,22 +609,22 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The integer-indexed raw complement-to-derived-pushforward comparison is a
 quasi-isomorphism. -/
 theorem globalRawComplementToDerivedPushforwardInt_quasiIso
-    [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalRawComplementToDerivedPushforwardInt
-      structureMap Z hZ) := by
-  let Y := TopCat.of (ComplexPoint (Over.mk structureMap))
+      X Z hZ) := by
+  let Y := TopCat.of (ComplexPoint X)
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-  let f := globalRawComplementToDerivedPushforwardNat structureMap Z hZ
+  let f := globalRawComplementToDerivedPushforwardNat X Z hZ
   let fInt := HomologicalComplex.extendMap f ComplexShape.embeddingUpNat
   let e := HomologicalComplex.mapExtendIso Γ
-    (derivedPushforwardComplementConstantRationalComplexNat structureMap Z)
+    (derivedPushforwardComplementConstantRationalComplexNat X Z)
       ComplexShape.embeddingUpNat
   let : QuasiIso f :=
     globalRawComplementToDerivedPushforwardNat_quasiIso
-      structureMap Z hZ
+      X Z hZ
   let hfInt : QuasiIso fInt := by
     apply (HomologicalComplex.quasiIso_extendMap_iff
       f ComplexShape.embeddingUpNat).mpr
@@ -639,26 +639,26 @@ theorem globalRawComplementToDerivedPushforwardInt_quasiIso
 set_option backward.isDefEq.respectTransparency false in
 /-- The raw and sheaf-level restriction maps commute after extension to integer degrees. -/
 lemma globalNaturalSingularResolutionRestrictionInt_naturality
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
-    globalRawToSingularSheafInt structureMap ≫
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    globalRawToSingularSheafInt X ≫
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex
             (ComplexShape.up ℤ)).map
-          (naturalSingularResolutionRestriction structureMap Z hZ) =
+          (naturalSingularResolutionRestriction X Z hZ) =
       globalRawSingularRestrictionInt ℚ
-          (TopCat.of (ComplexPoint (Over.mk structureMap)))
-          (AnalyticComplement structureMap Z) ≫
-        globalRawComplementToDerivedPushforwardInt structureMap Z hZ := by
-  let Y := TopCat.of (ComplexPoint (Over.mk structureMap))
+          (TopCat.of (ComplexPoint X))
+          (AnalyticComplement X Z) ≫
+        globalRawComplementToDerivedPushforwardInt X Z hZ := by
+  let Y := TopCat.of (ComplexPoint X)
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let S := singularCochainSheafComplex ℚ Y
-  let D := derivedPushforwardComplementConstantRationalComplexNat structureMap Z
-  let g := naturalSingularResolutionRestrictionNat structureMap Z hZ
+  let D := derivedPushforwardComplementConstantRationalComplexNat X Z
+  let g := naturalSingularResolutionRestrictionNat X Z hZ
   let a := topOpenToGlobalSingularCochainSheafComplex ℚ Y
   let f := globalRawSingularRestriction ℚ
-    (analyticComplementInclusion structureMap Z)
-  let b := globalRawComplementToDerivedPushforwardNat structureMap Z hZ
+    (analyticComplementInclusion X Z)
+  let b := globalRawComplementToDerivedPushforwardNat X Z hZ
   let eS := HomologicalComplex.mapExtendIso Γ S ComplexShape.embeddingUpNat
   let eD := HomologicalComplex.mapExtendIso Γ D ComplexShape.embeddingUpNat
   have hg : HomologicalComplex.extendMap
@@ -670,7 +670,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
   have hab : a ≫
         (Γ.mapHomologicalComplex (ComplexShape.up ℕ)).map g = f ≫ b :=
     globalNaturalSingularResolutionRestrictionNat_naturality
-      structureMap Z hZ
+      X Z hZ
   change (HomologicalComplex.extendMap a ComplexShape.embeddingUpNat ≫ eS.inv) ≫
       (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map
         (HomologicalComplex.extendMap g ComplexShape.embeddingUpNat) =
@@ -683,247 +683,247 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
 /-- The commuting integer-indexed restriction square induces a map from the raw support cone to
 the cone of restriction on global sections. -/
 def globalRawSupportConeToGlobalNaturalSingularCone
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     CochainComplex.mappingCone
         (globalRawSingularRestrictionInt ℚ
-          (TopCat.of (ComplexPoint (Over.mk structureMap)))
-          (AnalyticComplement structureMap Z)) ⟶
+          (TopCat.of (ComplexPoint X))
+          (AnalyticComplement X Z)) ⟶
       CochainComplex.mappingCone
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex
             (ComplexShape.up ℤ)).map
-          (naturalSingularResolutionRestriction structureMap Z hZ)) :=
+          (naturalSingularResolutionRestriction X Z hZ)) :=
   CochainComplex.mappingCone.map
     (globalRawSingularRestrictionInt ℚ
-      (TopCat.of (ComplexPoint (Over.mk structureMap)))
-      (AnalyticComplement structureMap Z))
+      (TopCat.of (ComplexPoint X))
+      (AnalyticComplement X Z))
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map
-      (naturalSingularResolutionRestriction structureMap Z hZ))
-    (globalRawToSingularSheafInt structureMap)
-    (globalRawComplementToDerivedPushforwardInt structureMap Z hZ)
+      (naturalSingularResolutionRestriction X Z hZ))
+    (globalRawToSingularSheafInt X)
+    (globalRawComplementToDerivedPushforwardInt X Z hZ)
     (globalNaturalSingularResolutionRestrictionInt_naturality
-      structureMap Z hZ).symm
+      X Z hZ).symm
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The raw-to-global-sections map of support cones is a quasi-isomorphism. -/
 noncomputable instance globalRawSupportConeToGlobalNaturalSingularCone_quasiIso
-    [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalRawSupportConeToGlobalNaturalSingularCone
-      structureMap Z hZ) := by
-  let : QuasiIso (globalRawToSingularSheafInt structureMap) :=
-    globalRawToSingularSheafInt_quasiIso structureMap
+      X Z hZ) := by
+  let : QuasiIso (globalRawToSingularSheafInt X) :=
+    globalRawToSingularSheafInt_quasiIso X
   let : QuasiIso (globalRawComplementToDerivedPushforwardInt
-      structureMap Z hZ) :=
+      X Z hZ) :=
     globalRawComplementToDerivedPushforwardInt_quasiIso
-      structureMap Z hZ
+      X Z hZ
   change QuasiIso (CochainComplex.mappingCone.map
     (globalRawSingularRestrictionInt ℚ
-      (TopCat.of (ComplexPoint (Over.mk structureMap)))
-      (AnalyticComplement structureMap Z))
+      (TopCat.of (ComplexPoint X))
+      (AnalyticComplement X Z))
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map
-      (naturalSingularResolutionRestriction structureMap Z hZ))
-    (globalRawToSingularSheafInt structureMap)
-    (globalRawComplementToDerivedPushforwardInt structureMap Z hZ) _)
+      (naturalSingularResolutionRestriction X Z hZ))
+    (globalRawToSingularSheafInt X)
+    (globalRawComplementToDerivedPushforwardInt X Z hZ) _)
   exact CochainComplex.mappingCone.map_quasiIso_of_vertical_quasiIso _ _ _ _ _
 
 /-- Global sections of a mapping cone are canonically isomorphic to the mapping cone of the
 global-sections map. -/
 def globalSectionsNaturalSingularConeIsoMappingCone
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint (Over.mk structureMap)))
+        (TopCat.of (ComplexPoint X))
         (CochainComplex.mappingCone
-          (naturalSingularResolutionRestriction structureMap Z hZ)) ≅
+          (naturalSingularResolutionRestriction X Z hZ)) ≅
       CochainComplex.mappingCone
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapHomologicalComplex
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex
             (ComplexShape.up ℤ)).map
-          (naturalSingularResolutionRestriction structureMap Z hZ)) :=
+          (naturalSingularResolutionRestriction X Z hZ)) :=
   CochainComplex.mappingCone.mapHomologicalComplexIso
-    (naturalSingularResolutionRestriction structureMap Z hZ)
+    (naturalSingularResolutionRestriction X Z hZ)
     (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint (Over.mk structureMap))))
+      (TopCat.of (ComplexPoint X)))
 
 /-- Replacing rational constants by the natural singular resolution identifies the two support
 hypercohomology groups. -/
 def rationalSupportHypercohomologyEquivNaturalSingularCone
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) (n : ℤ) :
-    RationalCohomologyWithSupport structureMap Z n ≃
-      Hypercohomology structureMap
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    RationalCohomologyWithSupport X Z n ≃
+      Hypercohomology X
         (CochainComplex.mappingCone
-          (naturalSingularResolutionRestriction structureMap Z hZ)) (n - 1) :=
+          (naturalSingularResolutionRestriction X Z hZ)) (n - 1) :=
   Localization.SmallShiftedHom.postcompEquiv
-    (rationalSupportConeToNaturalSingularCone structureMap Z hZ)
-    (rationalSupportConeToNaturalSingularCone_quasiIso structureMap Z hZ)
+    (rationalSupportConeToNaturalSingularCone X Z hZ)
+    (rationalSupportConeToNaturalSingularCone_quasiIso X Z hZ)
 
 /-- Additive form of the quasi-isomorphism invariance comparison between the rational support
 cone and the natural singular support cone. -/
 def rationalSupportHypercohomologyAddEquivNaturalSingularCone
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) (n : ℤ) :
-    RationalCohomologyWithSupport structureMap Z n ≃+
-      Hypercohomology structureMap
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    RationalCohomologyWithSupport X Z n ≃+
+      Hypercohomology X
         (CochainComplex.mappingCone
-          (naturalSingularResolutionRestriction structureMap Z hZ)) (n - 1) where
+          (naturalSingularResolutionRestriction X Z hZ)) (n - 1) where
   toEquiv := rationalSupportHypercohomologyEquivNaturalSingularCone
-    structureMap Z hZ n
+    X Z hZ n
   map_add' α β := by
-    exact (hypercohomologyMap structureMap
-      (rationalSupportConeToNaturalSingularCone structureMap Z hZ) (n - 1)).map_add α β
+    exact (hypercohomologyMap X
+      (rationalSupportConeToNaturalSingularCone X Z hZ) (n - 1)).map_add α β
 
 /-- The natural singular support cone is concentrated in degrees at least `-1`. -/
 lemma naturalSingularSupportCone_isStrictlyGE
-    [IsIntegral X] [Smooth structureMap]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) :
+    [IsIntegral X.left] [Smooth X.hom]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     (CochainComplex.mappingCone
-      (naturalSingularResolutionRestriction structureMap Z hZ)).IsStrictlyGE (-1) := by
-  let : (singularCochainSheafComplexInt structureMap ℚ).IsStrictlyGE 0 := by
+      (naturalSingularResolutionRestriction X Z hZ)).IsStrictlyGE (-1) := by
+  let : (singularCochainSheafComplexInt X ℚ).IsStrictlyGE 0 := by
     dsimp [singularCochainSheafComplexInt]
     infer_instance
   let : (derivedPushforwardComplementConstantRationalComplexInt
-      structureMap Z).IsStrictlyGE 0 := by
+      X Z).IsStrictlyGE 0 := by
     dsimp [derivedPushforwardComplementConstantRationalComplexInt]
     infer_instance
   exact CochainComplex.isStrictlyGE_mappingCone
-    (naturalSingularResolutionRestriction structureMap Z hZ) 0 0 (-1)
+    (naturalSingularResolutionRestriction X Z hZ) 0 0 (-1)
       (by lia) (by lia)
 
 /-- Every term of the derived complement resolution is flasque. In nonnegative degrees it is
 the pushforward of an injective sheaf; in negative degrees it is zero. -/
 theorem derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (q : ℤ) :
-    (derivedPushforwardComplementConstantRationalComplexInt structureMap Z).X q |>.IsFlasque := by
+    (Z : Set (ComplexPoint X)) (q : ℤ) :
+    (derivedPushforwardComplementConstantRationalComplexInt X Z).X q |>.IsFlasque := by
   by_cases hq : ∃ m : ℕ, (m : ℤ) = q
   · obtain ⟨m, rfl⟩ := hq
-    let K := derivedPushforwardComplementConstantRationalComplexNat structureMap Z
+    let K := derivedPushforwardComplementConstantRationalComplexNat X Z
     let e := K.extendXIso ComplexShape.embeddingUpNat (i := m) rfl
     let hP : TopCat.Presheaf.IsFlasque (K.X m).obj := by
       let F :=
-        (complementConstantRationalInjectiveResolution structureMap Z).cocomplex.X m
+        (complementConstantRationalInjectiveResolution X Z).cocomplex.X m
       let : Injective F := by
         dsimp [F]
         infer_instance
       let : TopCat.Sheaf.IsFlasque F :=
         TopCat.Sheaf.injective_isFlasque _ F
       exact TopCat.Sheaf.IsFlasque.pushforward_isFlasque F
-        (analyticComplementInclusion structureMap Z)
+        (analyticComplementInclusion X Z)
     change TopCat.Presheaf.IsFlasque ((K.extend
       ComplexShape.embeddingUpNat).X (m : ℤ)).obj
     exact @TopCat.Presheaf.IsFlasque.of_iso _ _ _
       ((TopCat.Sheaf.forget AddCommGrpCat
-        (TopCat.of (ComplexPoint (Over.mk structureMap)))).mapIso e) hP
+        (TopCat.of (ComplexPoint X))).mapIso e) hP
   · apply TopCat.Sheaf.IsFlasque.of_isZero
-    exact (derivedPushforwardComplementConstantRationalComplexNat structureMap Z).isZero_extend_X
+    exact (derivedPushforwardComplementConstantRationalComplexNat X Z).isZero_extend_X
       ComplexShape.embeddingUpNat q (fun i hi ↦ hq ⟨i, hi⟩)
 
 /-- Every term of the natural singular support cone is flasque on a hereditarily paracompact
 Hausdorff analytic space. -/
 theorem naturalSingularSupportCone_term_isFlasque
-    [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) (q : ℤ) :
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (q : ℤ) :
     ((CochainComplex.mappingCone
-      (naturalSingularResolutionRestriction structureMap Z hZ)).X q).IsFlasque := by
+      (naturalSingularResolutionRestriction X Z hZ)).X q).IsFlasque := by
   apply TopCat.Sheaf.IsFlasque.BoundedBelowComplex.mappingCone_term_isFlasque
-    (naturalSingularResolutionRestriction structureMap Z hZ)
+    (naturalSingularResolutionRestriction X Z hZ)
   · intro i
-    exact singularCochainSheafComplexInt_isFlasque structureMap i
+    exact singularCochainSheafComplexInt_isFlasque X i
   · intro i
     exact derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque
-      structureMap Z i
+      X Z i
 
 /-- Rational constant-sheaf cohomology with support is computed by global sections of the
 natural singular support cone. -/
 def rationalSupportHypercohomologyEquivNaturalSingularConeGlobalSections
-    [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) (n : ℤ) :
-    RationalCohomologyWithSupport structureMap Z n ≃
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    RationalCohomologyWithSupport X Z n ≃
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint (Over.mk structureMap)))
+        (TopCat.of (ComplexPoint X))
         (CochainComplex.mappingCone
-          (naturalSingularResolutionRestriction structureMap Z hZ))).homology (n - 1) := by
+          (naturalSingularResolutionRestriction X Z hZ))).homology (n - 1) := by
   let K := CochainComplex.mappingCone
-    (naturalSingularResolutionRestriction structureMap Z hZ)
+    (naturalSingularResolutionRestriction X Z hZ)
   letI : K.IsStrictlyGE (-1) :=
-    naturalSingularSupportCone_isStrictlyGE structureMap Z hZ
+    naturalSingularSupportCone_isStrictlyGE X Z hZ
   exact (rationalSupportHypercohomologyEquivNaturalSingularCone
-      structureMap Z hZ n).trans
-    (hypercohomologyEquivGlobalSections structureMap K (-1)
-      (naturalSingularSupportCone_term_isFlasque structureMap Z hZ) (n - 1))
+      X Z hZ n).trans
+    (hypercohomologyEquivGlobalSections X K (-1)
+      (naturalSingularSupportCone_term_isFlasque X Z hZ) (n - 1))
 
 /-- Additive form of the computation of rational constant-sheaf cohomology with support by
 global sections of the natural singular support cone. -/
 def rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections
-    [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) (n : ℤ) :
-    RationalCohomologyWithSupport structureMap Z n ≃+
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    RationalCohomologyWithSupport X Z n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint (Over.mk structureMap)))
+        (TopCat.of (ComplexPoint X))
         (CochainComplex.mappingCone
-          (naturalSingularResolutionRestriction structureMap Z hZ))).homology (n - 1) := by
+          (naturalSingularResolutionRestriction X Z hZ))).homology (n - 1) := by
   let K := CochainComplex.mappingCone
-    (naturalSingularResolutionRestriction structureMap Z hZ)
+    (naturalSingularResolutionRestriction X Z hZ)
   letI : K.IsStrictlyGE (-1) :=
-    naturalSingularSupportCone_isStrictlyGE structureMap Z hZ
+    naturalSingularSupportCone_isStrictlyGE X Z hZ
   exact (rationalSupportHypercohomologyAddEquivNaturalSingularCone
-      structureMap Z hZ n).trans
-    (hypercohomologyAddEquivGlobalSections structureMap K (-1)
-      (naturalSingularSupportCone_term_isFlasque structureMap Z hZ) (n - 1))
+      X Z hZ n).trans
+    (hypercohomologyAddEquivGlobalSections X K (-1)
+      (naturalSingularSupportCone_term_isFlasque X Z hZ) (n - 1))
 
 /-- Rational constant-sheaf cohomology with closed support agrees with rational singular
 cohomology with the same support. -/
 def rationalCohomologyWithSupportEquivSingular
-    [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) (n : ℕ) :
-    RationalCohomologyWithSupport structureMap Z (n : ℤ) ≃
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℕ) :
+    RationalCohomologyWithSupport X Z (n : ℤ) ≃
       CohomologyWithSupport ℚ
-        (TopCat.of (ComplexPoint (Over.mk structureMap))) Z n :=
+        (TopCat.of (ComplexPoint X)) Z n :=
   (rationalSupportHypercohomologyEquivNaturalSingularConeGlobalSections
-      structureMap Z hZ (n : ℤ)).trans <|
+      X Z hZ (n : ℤ)).trans <|
     ((HomologicalComplex.homologyMapIso
       (globalSectionsNaturalSingularConeIsoMappingCone
-        structureMap Z hZ) ((n : ℤ) - 1)).addCommGroupIsoToAddEquiv.toEquiv).trans <|
+        X Z hZ) ((n : ℤ) - 1)).addCommGroupIsoToAddEquiv.toEquiv).trans <|
     ((asIso (HomologicalComplex.homologyMap
       (globalRawSupportConeToGlobalNaturalSingularCone
-        structureMap Z hZ) ((n : ℤ) - 1))).symm.addCommGroupIsoToAddEquiv.toEquiv).trans <|
+        X Z hZ) ((n : ℤ) - 1))).symm.addCommGroupIsoToAddEquiv.toEquiv).trans <|
     (globalRawSingularRestrictionConeCohomologyEquivSupport ℚ
-      (TopCat.of (ComplexPoint (Over.mk structureMap))) Z n).toEquiv
+      (TopCat.of (ComplexPoint X)) Z n).toEquiv
 
 /-- Additive Betti comparison for rational cohomology with closed support. -/
 def rationalCohomologyWithSupportAddEquivSingular
-    [IsIntegral X] [Smooth structureMap]
-    [T2Space (ComplexPoint (Over.mk structureMap))]
-    [∀ U : Opens (ComplexPoint (Over.mk structureMap)), ParacompactSpace U]
-    (Z : Set (ComplexPoint (Over.mk structureMap))) (hZ : IsClosed Z) (n : ℕ) :
-    RationalCohomologyWithSupport structureMap Z (n : ℤ) ≃+
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℕ) :
+    RationalCohomologyWithSupport X Z (n : ℤ) ≃+
       CohomologyWithSupport ℚ
-        (TopCat.of (ComplexPoint (Over.mk structureMap))) Z n :=
+        (TopCat.of (ComplexPoint X)) Z n :=
   (rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections
-      structureMap Z hZ (n : ℤ)).trans <|
+      X Z hZ (n : ℤ)).trans <|
     ((HomologicalComplex.homologyMapIso
       (globalSectionsNaturalSingularConeIsoMappingCone
-        structureMap Z hZ) ((n : ℤ) - 1)).addCommGroupIsoToAddEquiv).trans <|
+        X Z hZ) ((n : ℤ) - 1)).addCommGroupIsoToAddEquiv).trans <|
     ((asIso (HomologicalComplex.homologyMap
       (globalRawSupportConeToGlobalNaturalSingularCone
-        structureMap Z hZ) ((n : ℤ) - 1))).symm.addCommGroupIsoToAddEquiv).trans <|
+        X Z hZ) ((n : ℤ) - 1))).symm.addCommGroupIsoToAddEquiv).trans <|
     globalRawSingularRestrictionConeCohomologyEquivSupport ℚ
-      (TopCat.of (ComplexPoint (Over.mk structureMap))) Z n
+      (TopCat.of (ComplexPoint X)) Z n
 
 end AlgebraicGeometry.ComplexPoint
