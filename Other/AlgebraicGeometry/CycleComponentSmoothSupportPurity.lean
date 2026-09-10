@@ -28,9 +28,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
@@ -127,6 +124,8 @@ def cycleComponentSmoothRestrictedInjectiveComplex :
     AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
       (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 instance cycleComponentSmoothRestrictedInjectiveComplex_isStrictlyGE :
     (cycleComponentSmoothRestrictedInjectiveComplex X x).IsStrictlyGE 0 := by
   dsimp [cycleComponentSmoothRestrictedInjectiveComplex]

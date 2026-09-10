@@ -32,8 +32,6 @@ does not claim Verdier duality or the intrinsic Borel--Moore comparison.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 open CategoryTheory Limits TopologicalSpace HomologicalComplex
 
 universe u

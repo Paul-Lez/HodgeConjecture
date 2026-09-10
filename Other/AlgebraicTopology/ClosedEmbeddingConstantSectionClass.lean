@@ -26,9 +26,6 @@ namespace TopCat.Sheaf
 
 open AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable {Z X : TopCat.{u}} (i : Z ⟶ X) (R : Type u) [Field R]
 
 local instance closedConstantSectionSourceDerivedCategory :
@@ -67,6 +64,8 @@ def constantPushforwardTopSupportSection :
       ((pushforward AddCommGrpCat.{u} i).obj
         (singularOrientationConstantSheaf R Z))).hom.app (op ⊤)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Forgetting whole-space support recovers the literal constant section exactly. -/
 @[reassoc]
 lemma constantPushforwardTopSupportSection_forget :

@@ -18,9 +18,6 @@ proved, so the comparison introduces no independent normalization datum.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory TopologicalSpace
 
 universe u
@@ -35,6 +32,8 @@ def closedSupportSectionsInclusion (Z : Closeds X) :
   Functor.whiskerRight (sheafSectionsSupportedOutsideInclusion X Z.compl)
     (supportEvaluation X ⊤) ≫ (supportEvaluation X ⊤).leftUnitor.hom
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Enlarging support does not change the underlying global section. -/
 @[reassoc (attr := simp)]
 theorem closedSupportSectionsMap_inclusion {Z W : Closeds X} (h : Z ≤ W) :
@@ -50,6 +49,8 @@ theorem closedSupportSectionsMap_inclusion {Z W : Closeds X} (h : Z ≤ W) :
   exact NatTrans.congr_app (sheafSectionsSupportedOutsideMap_inclusion X
     (show W.compl ≤ Z.compl from fun _ hx hz ↦ hx (h hz))) F
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- In whole-space support the inclusion is the canonical kernel-of-zero isomorphism. -/
 instance closedSupportSectionsInclusion_top_isIso :
     IsIso (closedSupportSectionsInclusion X ⊤) := by
@@ -99,6 +100,8 @@ def derivedClosedSupportSectionsTopIso :
 theorem derivedClosedSupportSectionsTopIso_hom :
     (derivedClosedSupportSectionsTopIso X).hom = derivedForgetClosedSupport X ⊤ := rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Actual support forgetting factors through enlargement to the whole space. -/
 @[reassoc (attr := simp)]
 theorem derivedClosedSupportSectionsMap_forget {Z W : Closeds X} (h : Z ≤ W) :

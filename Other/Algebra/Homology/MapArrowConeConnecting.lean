@@ -14,12 +14,11 @@ open CategoryTheory CategoryTheory.Limits
 
 namespace CochainComplex.mappingCone
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable {C : Type*} [Category* C] [Abelian C]
   {K L K' L' : CochainComplex C ℤ} (f : K ⟶ L) (g : K' ⟶ L')
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- Mathlib's general homotopy-cofiber arrow map is the actual standard cone map
 for integer cochain complexes. -/
 theorem homotopyCofiber_mapArrowHom_eq (a : Arrow.mk f ⟶ Arrow.mk g) :

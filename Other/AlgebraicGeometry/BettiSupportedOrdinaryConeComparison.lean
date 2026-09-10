@@ -25,9 +25,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable (X : Over (Spec (.of ℂ))) [IsIntegral X.left] [Smooth X.hom]
 
 /-- The actual singular-to-injective comparison preserves the very augmentation used
@@ -44,6 +41,8 @@ theorem rationalToSingular_comp_complexSingularToAmbientInjective :
   rw [← HomologicalComplex.extendMap_comp, constants_comp_singularToConstantInjectiveResolution]
   rfl
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The original support-cone map commutes with the actual shifted ambient-injective
 connecting map, including its existing cone sign. -/
 @[reassoc]

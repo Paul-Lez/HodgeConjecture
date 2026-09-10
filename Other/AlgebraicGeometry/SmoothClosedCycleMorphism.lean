@@ -31,9 +31,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 noncomputable local instance smoothClosedCycleAnalyticTopology
     (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=
   Point.analyticTopology
@@ -130,6 +127,8 @@ def smoothClosedCycleTermwiseSupportedMorphism :
     singularChainSheafDerivedPushforwardWithClosedSupport (closedCycleAnalyticMap Z X i) ℚ
       (closedCycleAnalyticMap_isClosedEmbedding Z X i)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Forgetting actual termwise support gives precisely the normalized smooth-cycle
 morphism, not merely a scalar multiple of it. -/
 @[reassoc (attr := simp)]

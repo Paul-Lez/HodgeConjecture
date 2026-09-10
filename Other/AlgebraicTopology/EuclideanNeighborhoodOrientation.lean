@@ -39,8 +39,6 @@ open scoped Simplicial
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- The image of the boundary of the standard affine simplex. -/
 def standardAffineBoundarySupport (d : ℕ) : Set (StandardRealModel d) :=
   ⋃ i : Fin (d + 1), standardAffineSimplex d ''
@@ -124,6 +122,7 @@ def standardOrientationBallChain (d : ℕ) :
   standardAmbientSimplexChain d ≫
     (relativeChainProjection ℚ (standardOrientationBallPair d)).f d
 
+set_option backward.isDefEq.respectTransparency false in
 lemma standardOrientationBallChain_boundary (d : ℕ) :
     standardOrientationBallChain d ≫
       ((relativeChainFunctor ℚ).obj (standardOrientationBallPair d)).d
@@ -163,6 +162,7 @@ def standardOrientationBallPointMap (d : ℕ) (y : StandardRealModel d)
       ({y}ᶜ : Set (StandardRealModel d)) :=
   supportInclusionPairMap _ (Set.singleton_subset_iff.mpr hy)
 
+set_option backward.isDefEq.respectTransparency false in
 lemma standardOrientationBallCycle_restrict_zero (d : ℕ) :
     standardOrientationBallCycle d ≫ HomologicalComplex.cyclesMap
       ((relativeChainFunctor ℚ).map

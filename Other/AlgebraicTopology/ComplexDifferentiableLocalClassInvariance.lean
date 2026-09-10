@@ -153,8 +153,6 @@ theorem exists_open_straightLine_ne_zero
       _ = ‖f z - f' z‖ := one_mul _
   exact (not_lt_of_ge hle) herr_lt
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- A map defined continuously on a neighborhood and avoiding the origin off its distinguished
 point gives a map from that neighborhood pair to the standard punctured pair. -/
 def complexNeighborhoodPuncturedPairMapOf

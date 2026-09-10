@@ -19,11 +19,6 @@ branch in the general construction.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-set_option backward.defeqAttrib.useBackward true
-set_option maxRecDepth 4096
-
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
 
@@ -113,6 +108,10 @@ theorem analyticComponentPointGlobalRelativeCoclass_top :
     (topOpenNeighborhoodSupportPairIso_toPoint Y S y hy)
   exact h.symm.trans h'
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
+set_option backward.defeqAttrib.useBackward true in
+set_option maxRecDepth 4096 in
 /-- POSITIVE raw-cochain normalization: the literal supported-kernel point
 target is the old exact point coclass included as an ordinary raw relative
 cochain, then sent through actual sheafification and the ambient resolution. -/
@@ -135,6 +134,10 @@ theorem analyticComponentPointPositiveKernelClass_raw_positive :
   exact congrArg
     (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (d : ℤ))).symm h
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
+set_option backward.defeqAttrib.useBackward true in
+set_option maxRecDepth 4096 in
 /-- The independent ordinary sign calculation specializes to the actual point
 target. The negative sign is a theorem about the legacy cone convention. -/
 theorem analyticComponentPointPositiveKernelClass_eq_neg_legacy :

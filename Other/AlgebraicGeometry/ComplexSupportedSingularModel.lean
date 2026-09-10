@@ -22,9 +22,6 @@ rational support comparison.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory TopologicalSpace
 open AlgebraicTopology.Singular
 

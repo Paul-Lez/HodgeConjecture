@@ -21,9 +21,6 @@ open CategoryTheory Limits TopologicalSpace Topology Opposite HomologicalComplex
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable {X : TopCat} (U : Opens X)
 
 /-- The two presentations of the intrinsic punctured pair differ only by subtype equality.
@@ -63,6 +60,8 @@ theorem openSubsetPointPairMap_quasiIso [T2Space X] (y : (Opens.toTopCat X).obj 
     (U : Set X) y.val U.isOpen y.property
   infer_instance
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The actual chain map on each stalk is a quasi-isomorphism, by neighborhood excision.
 There is deliberately no assertion that this map is a chain-complex isomorphism. -/
 theorem singularChainSheafOpenRestriction_stalk_quasiIso [T2Space X]
@@ -79,6 +78,8 @@ theorem singularChainSheafOpenRestriction_stalk_quasiIso [T2Space X]
   rw [← singularChainSheafOpenRestriction_stalk] at hcomp
   exact (quasiIso_iff_comp_right _ _).mp hcomp
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Stalkwise quasi-isomorphisms of additive-group sheaf complexes are quasi-isomorphisms.
 This follows from exactness of stalks and detection of sheaf isomorphisms on stalks. -/
 theorem sheafChainMap_quasiIso_of_stalk {Y : TopCat}

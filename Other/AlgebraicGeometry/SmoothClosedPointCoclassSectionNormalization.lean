@@ -19,9 +19,6 @@ point theorem takes no singleton-image or smooth-source hypothesis as input.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
 open TopCat.Presheaf
@@ -77,6 +74,8 @@ theorem neighborhoodSupportToPointPairMap_eq_smoothClosedPointNeighborhoodPairMa
       smoothClosedPointNeighborhoodPairMap X Y i d z V hzV := by
   apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- At its distinguished point the old global coclass has exactly the germ of the
 general normal coclass, with coefficient one. -/
 theorem smoothClosedOldPointCoclassSection_germ_eq_normalCoclass

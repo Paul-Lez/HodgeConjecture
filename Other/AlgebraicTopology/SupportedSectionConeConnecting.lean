@@ -17,12 +17,11 @@ universe u
 
 namespace TopCat.Sheaf
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable (X : TopCat.{u}) (U V : Opens X)
   (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- Replacing the pushed-forward restriction target by the literal intersection
 does not change the actual cone connecting morphism. -/
 @[reassoc]
@@ -44,6 +43,8 @@ theorem supportRestrictionSectionsConeIso_connecting :
   erw [CategoryTheory.Functor.map_id, Category.comp_id] at h
   exact h
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The positive kernel-to-cone comparison followed by the standard connecting
 map is the negative actual inclusion of supported sections. -/
 theorem supportedSectionHomologyIsoRestrictionCone_connecting

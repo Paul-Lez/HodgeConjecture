@@ -21,9 +21,6 @@ open CategoryTheory Limits
 
 namespace HomologicalComplex
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable {C D : Type*} [Category* C] [Category* D] [Preadditive C] [Preadditive D]
   [HasZeroObject C] [HasZeroObject D] (F : C ⥤ D) [F.Additive]
   {I J : Type*} {c : ComplexShape I} {c' : ComplexShape J}
@@ -37,6 +34,8 @@ def mapExtendCanonicalXIso (a : Option I) :
   | some _ => Iso.refl _
   | none => (F.map_isZero (Limits.isZero_zero C)).isoZero
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 @[reassoc]
 lemma mapExtendCanonicalXIso_hom_d (a b : Option I) :
     (mapExtendCanonicalXIso F K a).hom ≫ extend.d ((F.mapHomologicalComplex c).obj K) a b =
@@ -51,6 +50,8 @@ def mapExtendCanonicalIso :
   Hom.isoOfComponents (fun j => mapExtendCanonicalXIso F K (e.r j))
     (fun j k _ => mapExtendCanonicalXIso_hom_d F K (e.r j) (e.r k))
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- In an old degree the comparison is the identity through the canonical extension
 identifications, including any grading transports. -/
 lemma mapExtendCanonicalIso_hom_f {i : I} {j : J} (h : e.f i = j) :
@@ -68,6 +69,8 @@ lemma mapExtendCanonicalIso_hom_f {i : I} {j : J} (h : e.f i = j) :
     rfl
   exact H _ _
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Naturality of the degreewise comparison in a chain map. -/
 lemma mapExtendCanonicalXIso_hom_mapX {L : HomologicalComplex C c} (f : K ⟶ L) (a : Option I) :
     F.map (extend.mapX f a) ≫ (mapExtendCanonicalXIso F L a).hom =
@@ -82,6 +85,8 @@ lemma mapExtendCanonicalIso_naturality {L : HomologicalComplex C c} (f : K ⟶ L
   ext j
   exact mapExtendCanonicalXIso_hom_mapX F K f (e.r j)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Compatibility with a natural transformation of additive coefficient functors. -/
 @[reassoc]
 lemma mapExtendCanonicalIso_natTrans {G : C ⥤ D} [G.Additive] (a : F ⟶ G) :

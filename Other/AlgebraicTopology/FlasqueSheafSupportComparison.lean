@@ -24,9 +24,6 @@ restriction even for the singular-cochain flasque model.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite HomologicalComplex
 
 universe u
@@ -45,6 +42,8 @@ def openRestrictionGlobalSectionsIso :
     F.obj.mapIso (eqToIso (congrArg op (Opens.isOpenEmbedding_obj_top U)))) (fun {_ _} f =>
       (f.hom.naturality (eqToHom (congrArg op (Opens.isOpenEmbedding_obj_top U)))).symm)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Open-set sections preserve quasi-isomorphisms between bounded-below
 termwise-flasque complexes. All acyclicity is proved from flasqueness. -/
 theorem supportEvaluation_map_quasiIso_of_flasque
@@ -88,6 +87,8 @@ theorem pushforward_map_quasiIso_of_flasque
   exact fun y V hyV => ⟨V, le_rfl, hyV,
     supportEvaluation_map_quasiIso_of_flasque X ((Opens.map j).obj V) f nK nL hK hL⟩
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The actual supported-sections localization sequence is short exact for a
 flasque coefficient sheaf, without an injectivity assumption. -/
 lemma supportRestrictionShortComplex_shortExact_of_flasque

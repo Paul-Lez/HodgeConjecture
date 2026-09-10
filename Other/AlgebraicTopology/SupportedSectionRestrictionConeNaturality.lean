@@ -24,9 +24,6 @@ universe u
 
 namespace TopCat.Sheaf
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable (X : TopCat.{u})
 
 /-- Actual section restriction around a rectangle of open inclusions. -/
@@ -94,6 +91,8 @@ lemma supportRestrictionSectionsIntersectionIso_naturality :
   HomologicalComplex.Hom.ext
     (funext fun n ↦ supportedOutsideIntersectionIso_naturality X U a (K.X n))
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The actual cone identification is a standard cone map with the specified components. -/
 lemma supportRestrictionSectionsConeIso_hom (V : Opens X) :
     (supportRestrictionSectionsConeIso X U V K).hom =
@@ -102,6 +101,8 @@ lemma supportRestrictionSectionsConeIso_hom (V : Opens X) :
         (by simpa using supportRestrictionSectionsIntersectionIso_restriction X U V K) :=
   CochainComplex.mappingCone.mapArrowHom_eq_map _ _ _ _ _
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The cone identification respects restriction of the entire supported-section sequence. -/
 @[reassoc]
 lemma supportRestrictionSectionsConeIso_naturality :
@@ -119,6 +120,8 @@ lemma supportRestrictionSectionsConeIso_naturality :
   congr 1
   exact supportRestrictionSectionsIntersectionIso_naturality X U K a
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The flasque kernel-to-cone comparison is natural on homology in the ambient open. -/
 @[reassoc]
 lemma supportedSectionHomologyIsoRestrictionCone_naturality

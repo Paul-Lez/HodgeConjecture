@@ -34,8 +34,6 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-
 variable {Z X : TopCat.{u}} (i : Z ⟶ X)
 
 /-- The actual image of a closed embedding, as a closed support. -/
@@ -125,6 +123,7 @@ variable (R : Type u) [Field R]
         ((singularChainSheafComplex R X).X n) = 0 :=
   mapFromPushforward_restrict_closedImage_zero i hi ((singularChainSheafPushforward R i hi).f n)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Pushed singular-chain sheaves land canonically in sections with the actual closed image
 as support. This definition imposes no smoothness or boundedness on `Z`. -/
 def singularChainSheafPushforwardWithClosedSupport (hi : IsClosedEmbedding i) :
@@ -206,6 +205,7 @@ theorem singularChainSheafPushforwardWithClosedSupport_unique
   rw [← HomologicalComplex.homologyMap_comp,
     singularChainSheafPushforwardWithClosedSupport_inclusion]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Even after adding genuine closed support, forgetting that support sends each original
 relative chain through the same pair-induced, exactly normalized sheafification map. -/
 @[reassoc] lemma singularChainSheafPushforwardWithClosedSupport_unit

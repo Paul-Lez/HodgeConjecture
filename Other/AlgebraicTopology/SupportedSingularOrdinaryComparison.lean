@@ -16,9 +16,6 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable (X : TopCat.{0})
 
 /-- The actual sheafification cone comparison sends the canonical relative
@@ -42,6 +39,8 @@ theorem openSingularSheafRestrictionConeCohomologyEquivRelative_symm
   rw [← ConcreteCategory.comp_apply, IsIso.hom_inv_id, ConcreteCategory.id_apply,
     AddEquiv.apply_symm_apply]
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 800000 in
 /-- The actual local sheaf-cone connecting map is minus the raw relative
 cochain inclusion followed by the literal sheafification unit. -/
@@ -77,9 +76,6 @@ end AlgebraicTopology.Singular
 
 namespace TopCat.Sheaf
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 /-- The literal grading comparison of open restriction cones preserves the
 connecting map with its actual ambient-section grading isomorphism. -/
 @[reassoc]
@@ -100,12 +96,11 @@ end TopCat.Sheaf
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable (X : TopCat.{0}) [T2Space X] [∀ V : Opens X, ParacompactSpace V]
   (U V : Opens X)
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 1200000 in
 /-- The actual supported singular section comparison has POSITIVE ordinary
 normalization: its inverse followed by kernel inclusion is the actual positive

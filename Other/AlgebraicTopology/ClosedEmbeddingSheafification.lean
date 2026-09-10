@@ -39,10 +39,9 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-
 variable {Z X : TopCat.{u}} (i : Z ⟶ X)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Naturality of the canonical map from a direct-image stalk to its source stalk. -/
 @[reassoc] lemma stalkPushforward_naturality_additive
     {P Q : TopCat.Presheaf AddCommGrpCat.{u} Z} (a : P ⟶ Q) (z : Z) :
@@ -106,6 +105,7 @@ def pushforwardSheafificationComparison (P : TopCat.Presheaf AddCommGrpCat.{u} Z
         (toSheafify (Opens.grothendieckTopology Z) P) :=
   toSheafify_sheafifyLift _ _ _
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The constructed comparison is natural in morphisms of presheaves. -/
 @[reassoc] lemma pushforwardSheafificationComparison_naturality
     {P Q : TopCat.Presheaf AddCommGrpCat.{u} Z} (a : P ⟶ Q) :
@@ -125,6 +125,7 @@ def pushforwardSheafificationComparison (P : TopCat.Presheaf AddCommGrpCat.{u} Z
   rw [sheafifyMap_sheafifyLift, ← sheafifyLift_comp,
     ← Functor.map_comp, ← Functor.map_comp, toSheafify_naturality]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- For an inducing map the direct image of the sheafification unit is an isomorphism on
 stalks at every point of the image. -/
 theorem pushforward_sheafificationUnit_stalk_isIso_on_range

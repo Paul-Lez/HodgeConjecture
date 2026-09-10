@@ -19,9 +19,6 @@ transports the normalized section, with the sheafification-unit square displayed
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Topology Opposite
 
 namespace AlgebraicTopology.Singular
@@ -51,6 +48,8 @@ theorem neighborhoodSupportPairImageCohomologyEquiv_apply (V : Opens Y) (n : ℕ
       (neighborhoodSupportPairImageIso f hf.isEmbedding (V : Set Y) B S
         (fun y _ => by rw [← hB]; rfl)).hom a := rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The presheaf comparison comes from the actual pair-image homeomorphisms. -/
 def supportRelativeCohomologyPresheafOpenIso (n : ℕ) :
     hf.functor.op ⋙ supportRelativeCohomologyPresheaf X S n ≅
@@ -120,6 +119,8 @@ def supportRelativeCohomologySheafOpenIso (n : ℕ) :
       (supportRelativeCohomologyPresheafOpenIso f hf S B hB n).symm ≪≫
     supportOpenEmbeddingSheafificationIso f hf (supportRelativeCohomologyPresheaf X S n)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The normalization square: actual classes are transported through their literal
 pair-homeomorphism pullbacks before application of the ambient sheafification unit. -/
 @[reassoc]

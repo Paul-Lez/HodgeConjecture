@@ -21,9 +21,6 @@ sheafification counit on the original coefficient complex.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite HomologicalComplex
 
 universe u
@@ -61,6 +58,8 @@ def sectionCohomologyToSheafSection (n : ℤ) (U : Opens X) :
   (sectionCohomologyPresheafOnOpenIso X K n U).hom ≫
     (sectionCohomologyPresheafToSheaf X K n).app (op U)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The canonical presheaf-to-sheaf class map induces an isomorphism on every
 stalk; it does not assert surjectivity of classes on a fixed open set. -/
 instance sectionCohomologyPresheafToSheaf_stalk_isIso (n : ℤ) (x : X) :

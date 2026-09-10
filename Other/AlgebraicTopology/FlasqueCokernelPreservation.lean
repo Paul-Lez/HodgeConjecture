@@ -19,9 +19,6 @@ exactness instance for the whole forgetful functor.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits Opposite TopologicalSpace
 
 universe u
@@ -53,6 +50,8 @@ def kernelImageShortComplex : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
     rw [← cancel_mono (Abelian.image.ι f), zero_comp, Category.assoc,
       Abelian.image.fac, kernel.condition])
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Kernel, source, and actual image form a short exact sequence. -/
 lemma kernelImageShortComplex_shortExact : (kernelImageShortComplex f).ShortExact := by
   let T := ShortComplex.mk (kernel.ι f) f (kernel.condition f)
@@ -85,6 +84,8 @@ lemma image_isFlasque [A.IsFlasque] [(kernel f).IsFlasque] : (Abelian.image f).I
   let : (kernelImageShortComplex f).X₂.IsFlasque := inferInstanceAs A.IsFlasque
   exact of_shortExact_of_isFlasque₁₂ (kernelImageShortComplex_shortExact f)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- For one map with flasque source and kernel, the forgetful functor preserves its
 actual cokernel. No exactness assertion is made for arbitrary sheaf maps. -/
 lemma forget_preservesCokernel [A.IsFlasque] [(kernel f).IsFlasque] :

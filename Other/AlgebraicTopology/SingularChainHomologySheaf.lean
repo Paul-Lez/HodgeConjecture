@@ -26,8 +26,6 @@ or constructing an orientation by choosing arbitrary generators.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 open CategoryTheory Limits TopologicalSpace
 
 universe u

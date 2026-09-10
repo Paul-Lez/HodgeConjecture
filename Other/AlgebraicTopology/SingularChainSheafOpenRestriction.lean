@@ -26,14 +26,13 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable {X : TopCat.{u}} (U : Opens X)
 
 instance singularChainOpenSubspace_t2 [T2Space X] :
     T2Space ((Opens.toTopCat X).obj U) := inferInstanceAs (T2Space U)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Inclusion of an open subspace gives an actual map of complement-support pairs. -/
 def openSubsetSupportPairMap (V : Opens ((Opens.toTopCat X).obj U)) :
     TopPair.ofSubset (X := (Opens.toTopCat X).obj U)
@@ -49,6 +48,8 @@ def openSubsetSupportPairMap (V : Opens ((Opens.toTopCat X).obj U)) :
       (continuous_subtype_val.comp continuous_subtype_val).subtype_mk hmem⟩
   · rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The point-complement version of the actual open inclusion. -/
 def openSubsetPointPairMap (y : (Opens.toTopCat X).obj U) :
     TopPair.ofSubset (X := (Opens.toTopCat X).obj U)
@@ -132,6 +133,8 @@ lemma singularChainPresheafOpenRestriction_boundary (n : ℕ) :
   NatTrans.ext (funext fun V ↦ congrArg ((forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map)
     (((relativeChainFunctor R).map (openSubsetSupportPairMap U V.unop)).comm (n + 1) n))
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The actual open-inclusion map commutes with the sheafified boundary. -/
 @[reassoc]
 lemma singularChainSheafOpenRestrictionDegree_boundary (n : ℕ) :
@@ -186,6 +189,8 @@ def openRestrictionSheafComplexStalkIso
     (fun n => TopCat.Presheaf.openRestrictionStalkIso U (K.X n).obj y)
     (fun n m _ => (TopCat.Presheaf.openRestrictionStalkHom_naturality U y (K.d n m).hom).symm)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The local relative-chain identification retains its exact normalization after the
 sheafification unit. -/
 @[reassoc]
@@ -201,6 +206,8 @@ lemma singularChainSheafStalkIso_unit {Y : TopCat.{u}} [T2Space Y] (y : Y) (n : 
     exact Iso.hom_inv_id_assoc _ _
   exact congrArg (fun f => f.f n) h
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Germ normalization for the actual sheaf-chain open comparison. -/
 @[reassoc]
 lemma singularChainSheafOpenRestriction_unit_germ
@@ -222,6 +229,8 @@ lemma singularChainSheafOpenRestriction_unit_germ
     ← NatTrans.comp_app, singularChainSheafOpenRestrictionDegree_unit]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The stalk map of open comparison, under the constructed local-chain identifications,
 is exactly inclusion of point-complement pairs. No chain-stalk isomorphism is claimed. -/
 lemma singularChainSheafOpenRestriction_stalk [T2Space X]

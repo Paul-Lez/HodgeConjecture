@@ -30,8 +30,6 @@ isomorphism from that existence theorem (copyright 2024 Joël Riou, Apache-2.0).
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 open CategoryTheory Limits HomologicalComplex
 
 universe w v u
@@ -127,6 +125,7 @@ namespace DerivedCategory
 variable {C : Type u} [Category.{v} C] [Abelian C] [HasDerivedCategory.{w} C]
   (K : CochainComplex C ℤ) (n : ℤ)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The canonical derived comparison with the actual homology object in the unique
 nonvanishing degree, constructed by inverting the canonical truncation roof. -/
 def concentratedHomologyIso
@@ -145,6 +144,7 @@ def concentratedOrientationIso
     Q.obj K ≅ (singleFunctor C n).obj A :=
   concentratedHomologyIso K n h ≪≫ (singleFunctor C n).mapIso orientation
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The derived map is represented by the canonical truncation roof. -/
 @[reassoc]
 theorem concentratedHomologyIso_roof
@@ -153,6 +153,7 @@ theorem concentratedHomologyIso_roof
       Q.map (CochainComplex.toSingleHomology K n) := by
   simp [concentratedHomologyIso]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The constructed derived comparison induces the identity of the actual top homology
 object, under Mathlib's canonical comparison with chain-level homology. -/
 @[reassoc]
@@ -169,6 +170,7 @@ theorem concentratedHomologyIso_homology
     CochainComplex.toSingleHomology_homology,
     homologyFunctorFactors_hom_naturality]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The derived orientation induces exactly the supplied orientation of the actual top
 homology object. This equality rules out an unnoticed scalar rescaling. -/
 @[reassoc]

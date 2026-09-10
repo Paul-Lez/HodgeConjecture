@@ -36,8 +36,6 @@ open CategoryTheory
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- A continuous injective map sends the complement of a support into the complement of its
 image, giving an actual covariant map of the relative pairs. -/
 def imageSupportPairMap {X Y : TopCat} (f : X ⟶ Y) (hf : Function.Injective f)
@@ -127,6 +125,7 @@ lemma standardRealToComplexPair_translation (d : ℕ) (v : StandardRealModel (d 
     funext j
     apply Complex.ext <;> rfl
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Throughout the complex-coordinate neighborhood the same relative class restricts to the
 exact translate of the prescribed complex orientation. -/
 theorem standardComplexOrientationNeighborhoodClass_restrict (d : ℕ) (y : Fin d → ℂ)

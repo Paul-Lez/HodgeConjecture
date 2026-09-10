@@ -165,8 +165,6 @@ namespace AlgebraicTopology.Singular
 
 variable (d : ℕ)
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- Joint continuity of matrix-vector multiplication along a continuous matrix path. -/
 lemma continuous_complexMatrixPath_mulVec
     (H : C(unitInterval, Matrix (Fin d) (Fin d) ℂ)) :

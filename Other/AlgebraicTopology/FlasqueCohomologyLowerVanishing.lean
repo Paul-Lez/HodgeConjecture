@@ -21,9 +21,6 @@ sequence or an exact global-sections functor.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits Opposite TopologicalSpace HomologicalComplex
 
 universe u

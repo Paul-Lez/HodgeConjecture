@@ -17,9 +17,6 @@ open CategoryTheory CategoryTheory.Limits
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable (R : Type) [Field R] (X : TopCat.{0}) (A : Set X)
 
 /-- The actual global raw restriction-cone isomorphism preserves its negative
@@ -34,6 +31,8 @@ theorem globalRawSingularRestrictionConeIsoRelative_connecting :
       (globalRawSingularCochainComplexIntIsoRelative R X).hom⟦(1 : ℤ)⟧' :=
   CochainComplex.mappingCone.homotopyCofiber_mapArrowIso_connecting _ _ _
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 800000 in
 /-- After all literal global-cochain and coefficient-forgetting identifications,
 the raw restriction-cone connecting map is the negative relative cochain inclusion.
@@ -99,6 +98,8 @@ def globalRawRelativeCochainClass (n : ℕ)
         (relativeDualCochainShortComplexInt R (TopPair.ofSubset A)).f (n : ℤ)
           ((relativeDualCochainCohomologyEquiv R (TopPair.ofSubset A) n).symm a)))
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 1000000 in
 /-- The original raw relative comparison followed by cone connecting is exactly
 the negative of the positive ordinary cochain class. -/

@@ -226,8 +226,6 @@ lemma compressedChartTransition_zero
       trivial)
   simpa only [chartModelEmbedding_zero] using hleft
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- On a subset of the transition domain, applying the transition and then the second compressed
 chart embedding is exactly the first compressed chart embedding, as maps of point-complement
 pairs. -/

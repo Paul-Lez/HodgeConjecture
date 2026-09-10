@@ -26,9 +26,6 @@ universe u
 
 namespace TopCat.Sheaf
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
   (U : Opens X)
 
@@ -60,6 +57,8 @@ theorem openRestriction_homology_isZero_of_cofinal_sections (n : ℤ)
       (.up ℤ)).obj K).homology n)
     rwa [he]
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- On a bounded-below flasque complex, actual lower local vanishing on `U`
 implies vanishing of the section-complex cohomology on `U`. -/
 theorem sectionCohomology_isZero_of_cofinal_lower_vanishing (N n : ℤ) [K.IsStrictlyGE N]

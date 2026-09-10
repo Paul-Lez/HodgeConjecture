@@ -28,10 +28,6 @@ independence or rational-equivalence invariance.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
 
@@ -127,6 +123,9 @@ def cycleComponentSheafClass : FieldCohomology ℚ X (2 * (p : ℤ)) :=
         (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
       (cycleComponentSupportedInjectiveClass X x (d := d) hx))
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The ordinary class agrees with the repository's support-forgetting map,
 through the constructed, sign-correct support comparison. -/
 theorem cycleComponentSheafClass_eq_forgetSupport :

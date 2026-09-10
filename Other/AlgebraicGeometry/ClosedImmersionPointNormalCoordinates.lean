@@ -25,9 +25,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (X Y : Over (Spec (.of ℂ)))
   (i : Y ⟶ X) (d : ℕ)
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
@@ -88,6 +85,8 @@ theorem closedImmersionPointStandardFlatteningChart_coordinates
   erw [ContinuousLinearEquiv.symm_apply_apply]
   exact h.symm
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Radial compression is unchanged by inserting the unique zero tangent coordinate. -/
 theorem univBall_zeroTangent_apply (r : ℝ) (hr : 0 < r) (w : Fin d → ℂ) :
     OpenPartialHomeomorph.univBall ((0 : Fin 0 → ℂ), (0 : Fin d → ℂ)) r (0, w) =

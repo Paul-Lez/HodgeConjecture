@@ -19,10 +19,6 @@ namespace AlgebraicTopology.Singular
 
 open TopCat.Sheaf
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-
 variable (X : TopCat.{0}) [T2Space X] [∀ V : Opens X, ParacompactSpace V]
   (U : Opens X) {V W : Opens X} (a : W ⟶ V)
 
@@ -36,6 +32,9 @@ def supportedSingularSectionConeHomologyIso (V : Opens X) (n : ℤ) :
   HomologicalComplex.homologyMapIso (sectionComplexRestrictionExtendConeIso X
     (singularCochainSheafComplex ℚ X) (Opens.infLELeft V U)) (n - 1)
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- The actual supported kernel-to-singular-cone comparison respects open restriction. -/
 @[reassoc]
 lemma supportedSingularSectionConeHomologyIso_naturality (n : ℤ) :

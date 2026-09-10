@@ -25,8 +25,6 @@ local relative chain complex to be identified with the colimit over open neighbo
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 open CategoryTheory Limits TopologicalSpace
 open scoped Simplicial
 
@@ -40,6 +38,7 @@ variable (R : Type u) [Field R] (X : TopCat.{u})
 def relativeChainNeighborhoodDiagram (x : X) : (OpenNhds x)ᵒᵖ ⥤ ChainCategory R :=
   (OpenNhds.inclusion x).op ⋙ openRelativeSingularChainComplexFunctor R X
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The map from ambient to relative chains commutes with restriction of the support. -/
 @[reassoc] lemma relativeChainProjection_supportInclusion {Z W : Set X} (h : Z ⊆ W) :
     relativeChainProjection R (TopPair.ofSubset Wᶜ) ≫
@@ -101,6 +100,7 @@ def absoluteChainMapOfNeighborhoodCocone (x : X)
   relativeChainProjection R (TopPair.ofSubset ((⊤ : Opens X) : Set X)ᶜ) ≫
     c.ι.app (.op ⟨⊤, trivial⟩)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- A neighborhood cocone induces the same ambient-chain map through each of its objects. -/
 lemma absoluteChainMapOfNeighborhoodCocone_eq (x : X)
     (c : Cocone (relativeChainNeighborhoodDiagram R X x)) (U : OpenNhds x) :
@@ -113,6 +113,7 @@ lemma absoluteChainMapOfNeighborhoodCocone_eq (x : X)
   rw [absoluteChainMapOfNeighborhoodCocone, ← h, ← Category.assoc,
     relativeChainProjection_supportInclusion]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- A simplex from the subspace vanishes under the relative-chain projection. -/
 lemma iota_subspace_relativeChainProjection (P : TopPair.{u}) {n : ℕ}
     (σ : (TopCat.toSSet.obj P.snd) _⦋n⦌) :
@@ -124,6 +125,7 @@ lemma iota_subspace_relativeChainProjection (P : TopPair.{u}) {n : ℕ}
     (relativeChainProjection R P).f n = 0 at h
   rw [h, comp_zero]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Compactness of each singular simplex shows that every neighborhood cocone kills the
 entire chain complex of the point complement. No finite-chain representatives are chosen. -/
 lemma subspaceChainMap_absoluteChainMapOfNeighborhoodCocone [T2Space X] (x : X)
@@ -164,6 +166,7 @@ def localRelativeChainCoconeDesc [T2Space X] (x : X)
       localRelativeChainCoconeDesc R X x c = absoluteChainMapOfNeighborhoodCocone R X x c :=
   cokernel.π_desc _ _ _
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The actual local relative chain complex is the colimit over open neighborhoods.
 The proof uses the quotient universal property and compactness of individual simplices. -/
 def localRelativeChainCoconeIsColimit [T2Space X] (x : X) :
@@ -229,6 +232,7 @@ def singularChainPresheafStalkIso [T2Space X] (x : X) (n : ℕ) :
     (isColimitOfPreserves (chainDegreeAdditiveFunctor R n)
       (localRelativeChainCoconeIsColimit R X x)) (.op ⟨U, hx⟩)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The stalk identification respects the actual local relative singular boundary. -/
 @[reassoc] lemma singularChainPresheafStalkIso_boundary [T2Space X] (x : X) (n : ℕ) :
     (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map (singularChainBoundary R X n) ≫

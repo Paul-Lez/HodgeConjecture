@@ -21,9 +21,6 @@ complex on the complement of the smaller closed support.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite
 
 universe u
@@ -87,6 +84,8 @@ def sheafSectionsBetweenOpensGlobalIso (F : Sheaf AddCommGrpCat.{u} X) :
       (nestedSupportRestrictionTargetIso_square X h F) ≪≫
     (sheafSectionsSupportedOutsideOnOpenIso X V U F).symm
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The comparison preserves the actual inclusion into sections on `U`. -/
 @[reassoc (attr := simp)]
 theorem sheafSectionsBetweenOpensGlobalIso_hom_inclusion
@@ -102,6 +101,8 @@ theorem sheafSectionsBetweenOpensGlobalIso_hom_inclusion
   rw [sheafSectionsBetweenOpensOnOpenIso_hom_ι_assoc]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Naturality in the actual coefficient sheaf. -/
 @[reassoc]
 theorem sheafSectionsBetweenOpensGlobalIso_naturality
@@ -149,6 +150,8 @@ def nestedSupportRestrictionLastComplexIso
         (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K) :=
   (NatIso.mapHomologicalComplex (sheafSectionsBetweenOpensGlobalNatIso X h) (.up ℤ)).app K
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The last localization map, under the proved kernel comparison, is
 literally restriction of the supported section to `U`. -/
 @[reassoc]

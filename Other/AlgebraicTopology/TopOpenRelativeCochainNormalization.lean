@@ -15,9 +15,6 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable (R : Type) [Field R] (X : TopCat.{0})
 
 /-- The actual pair of the top open and its intersection with U is the
@@ -53,6 +50,8 @@ theorem supportedSingularSupportComplementEquiv_apply
         (supportedRationalSingularSectionCohomologyEquivRelative X
           ⟨Sᶜ, hS.isOpen_compl⟩ V n a) := rfl
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The ordinary and local top-open raw cochain identifications retain the
 actual pullback along the top-open projection. -/
 theorem globalRawCochainIso_comp_topOpenDual (U : Opens X) :
@@ -69,6 +68,8 @@ theorem globalRawCochainIso_comp_topOpenDual (U : Opens X) :
   erw [CategoryTheory.Functor.map_id, Category.comp_id]
   rfl
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The preceding exact cochain normalization survives extension to integer
 degrees and the coefficient-forgetting grading comparison. -/
 theorem globalRawCochainIntIso_comp_topOpenDual (U : Opens X) :
@@ -89,6 +90,8 @@ theorem globalRawCochainIntIso_comp_topOpenDual (U : Opens X) :
   rw [globalRawCochainIso_comp_topOpenDual]
   rfl
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 1000000 in
 /-- Removing the literal top-open subtype witnesses preserves the positive
 ordinary class of a relative cochain, with the actual pair pullback displayed. -/
