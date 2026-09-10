@@ -275,15 +275,15 @@ omit [Algebra K ℂ] in
 
 /-- Multiplying by `q` in `K` before including into `ℂ` agrees with including first and then
 multiplying by `algebraMap K ℂ q`. -/
-lemma ofHom_algebraMap_comp_complexScalarAddHom (q : K) :
+lemma ofHom_algebraMap_comp_complexScalarSMul (q : K) :
     AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom ≫
-        AddCommGrpCat.ofHom (complexScalarAddHom (algebraMap K ℂ q)) =
+        AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ (algebraMap K ℂ q)) =
       AddCommGrpCat.ofHom (fieldScalarAddHom K q) ≫
         AddCommGrpCat.ofHom (@AddMonoidHomClass.toAddMonoidHom K ℂ (K →+* ℂ) Field.toSemifield.toNonAssocSemiring.toAddCommMonoidWithOne.toAddZeroClass.toAddZero
                 Complex.instSemiring.toNonAssocSemiring.toAddCommMonoidWithOne.toAddZeroClass.toAddZero RingHom.instFunLike _
         (algebraMap K ℂ)) := by
   ext r
-  simp [complexScalarAddHom, fieldScalarAddHom, map_mul]
+  simp [fieldScalarAddHom, map_mul]
 
 /-- The constant-presheaf map induced by the inclusion `K → ℂ`, followed by scalar multiplication
 by `algebraMap K ℂ q` on the constant complex presheaf, is the constant-presheaf map induced by the
@@ -291,7 +291,7 @@ composite additive map. -/
 lemma const_map_algebraMap_comp_complexScalarPresheaf (q : K) : (Functor.const (Opens (ComplexPoint X))ᵒᵖ).map (AddCommGrpCat.ofHom ↑(algebraMap K ℂ)) ≫
     complexScalarPresheaf X ((algebraMap K ℂ) q) =
   (Functor.const (Opens (ComplexPoint X))ᵒᵖ).map
-    (AddCommGrpCat.ofHom (algebraMap K ℂ : K →+ ℂ) ≫ AddCommGrpCat.ofHom (complexScalarAddHom ((algebraMap K ℂ) q))) := rfl
+    (AddCommGrpCat.ofHom (algebraMap K ℂ : K →+ ℂ) ≫ AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ ((algebraMap K ℂ) q))) := rfl
 
 set_option linter.auxLemma false in
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1 TopCat.instCategorySheaf._aux_3
@@ -304,7 +304,7 @@ lemma fieldToComplexConstantSheaf_scalar (q : K) :
     fieldScalarSheaf K X q ≫
       fieldToComplexConstantSheaf K X := by
   simp [fieldToComplexConstantSheaf, fieldScalarSheaf, complexScalarSheaf, constantSheaf,
-    constantComplexSheaf, constantFieldSheaf, ← Functor.map_comp, ← ofHom_algebraMap_comp_complexScalarAddHom,
+    constantComplexSheaf, constantFieldSheaf, ← Functor.map_comp, ← ofHom_algebraMap_comp_complexScalarSMul,
     const_map_algebraMap_comp_complexScalarPresheaf]
 
 omit [Algebra K ℂ] in
@@ -1208,7 +1208,8 @@ lemma fieldToComplexConstantSheaf_comp_conj
     (TopCat.of (ComplexPoint X))
   change (constantSheaf J AddCommGrpCat).map
       (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
-    (constantSheaf J AddCommGrpCat).map (AddCommGrpCat.ofHom conjAddHom) =
+    (constantSheaf J AddCommGrpCat).map
+      (AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom) =
     (constantSheaf J AddCommGrpCat).map
       (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
   rw [← Functor.map_comp]

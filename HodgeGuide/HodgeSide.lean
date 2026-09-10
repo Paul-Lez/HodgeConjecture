@@ -407,12 +407,17 @@ transported to de Rham cohomology across the comparison isomorphism of the first
 namespace Guide.Hodge.D12
 ```
 ```lean
-def conjAddHom : ℂ →+ ℂ :=
-  (starRingEnd ℂ).toAddMonoidHom
+def conjConstantComplexPresheaf (X : Over (Spec ↧ℂ)) :
+    constantComplexAddCommGrpPresheaf X ⟶ constantComplexAddCommGrpPresheaf X where
+  app _ := AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom
+  naturality {U V} i := by
+    ext x
+    rfl
 ```
 ```lean -show
 end Guide.Hodge.D12
-example : @Guide.Hodge.D12.conjAddHom = @AlgebraicGeometry.ComplexPoint.conjAddHom := rfl
+example : @Guide.Hodge.D12.conjConstantComplexPresheaf =
+  @AlgebraicGeometry.ComplexPoint.conjConstantComplexPresheaf := rfl
 ```
 ```lean -show
 namespace Guide.Hodge.D13

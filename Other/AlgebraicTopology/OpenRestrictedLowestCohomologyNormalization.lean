@@ -68,7 +68,7 @@ theorem openRestrictionTopSectionComplexIso_homology_section (U : Opens X) (n : 
       sectionCohomologyToSheafSection X K n U =
     sectionCohomologyToSheafSection X K n (U.isOpenEmbedding.functor.obj ⊤) ≫
       (openRestrictionTopSectionsIso X U).hom.app (K.homology n) :=
-  sectionComplexEqIso_homology_section X K (openRestrictionTopOpen_eq X U) n
+  sectionComplexEqIso_homology_section X K (Opens.isOpenEmbedding_obj_top U) n
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
