@@ -228,9 +228,8 @@ lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d X.hom]
   intro c c' hcc'
   have hzero : holomorphicFormOfConstant X d U (c - c') = 0 := by
     rw [map_sub, hcc', sub_self]
-  let a : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions X d U) 0 :=
-    Finsupp.single
-      (algebraMap ℂ (OpenHolomorphicFunctions X d U) (c - c'), Fin.elim0) 1
+  let a : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) 0 :=
+    Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d U) (c - c')
   have ha : a ∈ holomorphicFormRelations X d U 0 := by
     change Submodule.Quotient.mk a = 0 at hzero
     rwa [Submodule.Quotient.mk_eq_zero] at hzero
@@ -238,7 +237,7 @@ lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d X.hom]
     restrictionStableAnalyticKernel] at ha
   simp only [Submodule.mem_iInf, Submodule.mem_comap] at ha
   specialize ha U (𝟙 U)
-  rw [rawRestriction_id, LinearMap.id_apply] at ha
+  rw [formRestriction_id, LinearMap.id_apply] at ha
   let x : U.unop := Classical.arbitrary U.unop
   let e := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x.1
   have hxsource : x.1 ∈ e.source := mem_extChartAt_source x.1
@@ -249,7 +248,7 @@ lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d X.hom]
     exact x.2
   have heval := (mem_chartEvaluationKernel_iff X d U 0 a).1 ha
     x.1 (e x.1) hxe
-  rw [chartRawEvaluation_rawConstant X d U x.1 (c - c') hxe] at heval
+  rw [chartEvaluation_ofConstant X d U x.1 (c - c') hxe] at heval
   have hcoeff := congrArg
     (fun f : (Fin d → ℂ) [⋀^Fin 0]→L[ℂ] ℂ ↦ f Fin.elim0) heval
   exact sub_eq_zero.mp (by simpa using hcoeff)
