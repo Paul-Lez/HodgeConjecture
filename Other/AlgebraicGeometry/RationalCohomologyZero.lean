@@ -134,7 +134,7 @@ lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map
           (integerToFieldConstantSheaf ℚ X q)) := by
   simp only [rationalCohomologyZeroEquivSingle, fieldCohomologyClass, Equiv.trans_apply,
-    Localization.SmallShiftedHom.precompEquiv_apply]
+    Hypercohomology, Localization.SmallShiftedHom.precompEquiv_apply]
   rw [← smallShiftedHomMkZero_comp X, Localization.SmallShiftedHom.postcompEquiv_apply,
     ← smallShiftedHomMkZero_comp X]
   congr 1

@@ -119,6 +119,7 @@ lemma fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf :
   exact (constantSheaf J AddCommGrpCat).map_id (AddCommGrpCat.of K)
 
 /-- The constant rational sheaf complex, extended by zero to integer degrees. -/
+@[implicit_reducible]
 def constantFieldSheafComplexInt :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
@@ -170,6 +171,7 @@ def constantIntegerSheaf : AnalyticAdditiveSheaf X :=
   (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of ℤ)
 
 /-- The constant integer sheaf complex, extended by zero to integer degrees. -/
+@[implicit_reducible]
 def constantIntegerSheafComplexInt :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
@@ -219,7 +221,6 @@ omit [Algebra K ℂ] in
   unfold integerToFieldConstantSheafComplexInt
   rw [integerToFieldConstantSheaf_zero, Functor.map_zero,
     HomologicalComplex.extendMap_zero]
-  rfl
 
 omit [Algebra K ℂ] in
 @[simp] lemma integerToFieldConstantSheafComplexInt_add (a b : K) :
@@ -229,7 +230,6 @@ omit [Algebra K ℂ] in
   unfold integerToFieldConstantSheafComplexInt
   rw [integerToFieldConstantSheaf_add, Functor.map_add,
     HomologicalComplex.extendMap_add]
-  rfl
 
 /-- Multiplication by a rational scalar as an additive endomorphism of `K`. -/
 def fieldScalarAddHom (q : K) : K →+ K :=
@@ -383,7 +383,6 @@ omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarComplex_zero : fieldScalarComplex K X 0 = 0 := by
   unfold fieldScalarComplex
   rw [fieldScalarSheaf_zero, Functor.map_zero, HomologicalComplex.extendMap_zero]
-  rfl
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarComplex_one : fieldScalarComplex K X 1 = 𝟙 _ := by
@@ -409,7 +408,6 @@ omit [Algebra K ℂ] in
       fieldScalarComplex K X a + fieldScalarComplex K X b := by
   unfold fieldScalarComplex
   rw [fieldScalarSheaf_add, Functor.map_add, HomologicalComplex.extendMap_add]
-  rfl
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarComplex_mul (a b : K) :
@@ -417,7 +415,6 @@ omit [Algebra K ℂ] in
       fieldScalarComplex K X b ≫ fieldScalarComplex K X a := by
   unfold fieldScalarComplex
   rw [fieldScalarSheaf_mul, Functor.map_comp, HomologicalComplex.extendMap_comp]
-  rfl
 
 /-- The integer-indexed inclusion of rational constants into complex constants commutes with
 scalar multiplication. -/
@@ -426,23 +423,9 @@ lemma fieldToComplexConstantSheafComplexInt_scalar (q : K) :
       complexScalarComplexInt X (algebraMap K ℂ q) =
     fieldScalarComplex K X q ≫
       fieldToComplexConstantSheafComplexInt K X := by
-  unfold fieldToComplexConstantSheafComplexInt complexScalarComplexInt
-    fieldScalarComplex
-  change HomologicalComplex.extendMap
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-        (fieldToComplexConstantSheaf K X)) ComplexShape.embeddingUpNat ≫
-    HomologicalComplex.extendMap
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-        (complexScalarSheaf X (algebraMap K ℂ q))) ComplexShape.embeddingUpNat =
-    HomologicalComplex.extendMap
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-        (fieldScalarSheaf K X q)) ComplexShape.embeddingUpNat ≫
-    HomologicalComplex.extendMap
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-        (fieldToComplexConstantSheaf K X)) ComplexShape.embeddingUpNat
-  rw [← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp,
-    ← Functor.map_comp, ← Functor.map_comp,
-    fieldToComplexConstantSheaf_scalar]
+  rw [fieldToComplexConstantSheafComplexInt, complexScalarComplexInt, fieldScalarComplex,
+    ← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp, ← Functor.map_comp,
+    complexScalarComplex, ← Functor.map_comp, fieldToComplexConstantSheaf_scalar]
 
 /-- The rational-to-de Rham comparison of complexes commutes with rational scalar
 multiplication. -/
@@ -465,15 +448,6 @@ lemma integerToFieldConstantSheafComplexInt_comp_fieldScalarComplex (q r : K) :
       fieldScalarComplex K X q =
         integerToFieldConstantSheafComplexInt K X (q * r) := by
   unfold integerToFieldConstantSheafComplexInt fieldScalarComplex
-  change HomologicalComplex.extendMap
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-        (integerToFieldConstantSheaf K X r)) ComplexShape.embeddingUpNat ≫
-    HomologicalComplex.extendMap
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-        (fieldScalarSheaf K X q)) ComplexShape.embeddingUpNat =
-    HomologicalComplex.extendMap
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-        (integerToFieldConstantSheaf K X (q * r))) ComplexShape.embeddingUpNat
   rw [← HomologicalComplex.extendMap_comp, ← Functor.map_comp,
     integerToFieldConstantSheaf_comp_fieldScalarSheaf]
 
@@ -490,7 +464,8 @@ noncomputable instance analyticHasSmallLocalizedShiftedHom
     (analyticQuasiIsomorphisms X) DerivedCategory.Q
 
 /-- Hypercohomology of an analytic sheaf complex in integer degree `n`. -/
-abbrev Hypercohomology
+@[implicit_reducible]
+def Hypercohomology
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) : Type 1 :=
   Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
     (constantIntegerSheafComplexInt X) K n
@@ -506,7 +481,7 @@ abbrev ComplexConstantCohomology (n : ℤ) : Type 1 :=
 noncomputable instance hypercohomologyAddCommGroup
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) :
     AddCommGroup (Hypercohomology X K n) :=
-  (Localization.SmallShiftedHom.equiv
+  fast_instance% (Localization.SmallShiftedHom.equiv
     (analyticQuasiIsomorphisms X) DerivedCategory.Q).addCommGroup
 
 lemma hypercohomologyEquiv_zero
@@ -514,8 +489,7 @@ lemma hypercohomologyEquiv_zero
     (Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms X) DerivedCategory.Q)
         (0 : Hypercohomology X K n) = 0 := by
-  unfold hypercohomologyAddCommGroup
-  simp [Equiv.zero_def]
+  rw [Equiv.zero_def, Equiv.apply_symm_apply]
 
 lemma hypercohomologyEquiv_add
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ)
@@ -526,7 +500,6 @@ lemma hypercohomologyEquiv_add
         (analyticQuasiIsomorphisms X) DerivedCategory.Q) α +
       (Localization.SmallShiftedHom.equiv
         (analyticQuasiIsomorphisms X) DerivedCategory.Q) β := by
-  unfold hypercohomologyAddCommGroup
   simp [Equiv.add_def]
 
 /-- The constant rational class `q` in degree-zero rational cohomology. -/
@@ -537,28 +510,18 @@ def fieldCohomologyClass (q : K) : FieldCohomology K X 0 :=
 omit [Algebra K ℂ] in
 @[simp] lemma fieldCohomologyClass_zero :
     fieldCohomologyClass K X 0 = 0 := by
-  let e : FieldCohomology K X 0 ≃
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj (constantFieldSheafComplexInt K X)) (0 : ℤ) :=
-    Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  apply e.injective
-  simp [e, fieldCohomologyClass, hypercohomologyEquiv_zero,
+  apply (Localization.SmallShiftedHom.equiv
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+  simp [fieldCohomologyClass, hypercohomologyEquiv_zero,
     integerToFieldConstantSheafComplexInt_zero]
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldCohomologyClass_add (a b : K) :
     fieldCohomologyClass K X (a + b) =
       fieldCohomologyClass K X a + fieldCohomologyClass K X b := by
-  let e : FieldCohomology K X 0 ≃
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj (constantFieldSheafComplexInt K X)) (0 : ℤ) :=
-    Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  apply e.injective
-  simp [e, fieldCohomologyClass, hypercohomologyEquiv_add,
+  apply (Localization.SmallShiftedHom.equiv
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+  simp [fieldCohomologyClass, hypercohomologyEquiv_add,
     integerToFieldConstantSheafComplexInt_add]
 
 /-- Rational constants as an additive map into degree-zero rational cohomology. -/
@@ -593,25 +556,15 @@ def hypercohomologyMap
       (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl f)
       (zero_add n)
   map_zero' := by
-    let eL : Hypercohomology X L n ≃
-        ShiftedHom
-          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-          (DerivedCategory.Q.obj L) n :=
-      Localization.SmallShiftedHom.equiv
-        (analyticQuasiIsomorphisms X) DerivedCategory.Q
-    apply eL.injective
-    simp only [eL, Localization.SmallShiftedHom.equiv_comp,
+    apply (Localization.SmallShiftedHom.equiv
+      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+    simp only [Localization.SmallShiftedHom.equiv_comp,
       hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
 
   map_add' α β := by
-    let eL : Hypercohomology X L n ≃
-        ShiftedHom
-          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-          (DerivedCategory.Q.obj L) n :=
-      Localization.SmallShiftedHom.equiv
-        (analyticQuasiIsomorphisms X) DerivedCategory.Q
-    apply eL.injective
-    simp only [eL, Localization.SmallShiftedHom.equiv_comp,
+    apply (Localization.SmallShiftedHom.equiv
+      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+    simp only [Localization.SmallShiftedHom.equiv_comp,
       hypercohomologyEquiv_add, ShiftedHom.add_comp]
 
 /-- Postcomposition by the zero map of complexes is the zero map on hypercohomology. -/
@@ -619,16 +572,11 @@ def hypercohomologyMap
     {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (n : ℤ) :
     hypercohomologyMap X (0 : K ⟶ L) n = 0 := by
   refine AddMonoidHom.ext fun α ↦ ?_
-  let eL : Hypercohomology X L n ≃
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj L) n :=
-    Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  change (hypercohomologyMap X (0 : K ⟶ L) n) α = 0
-  apply eL.injective
+  rw [AddMonoidHom.zero_apply]
+  apply (Localization.SmallShiftedHom.equiv
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
   unfold hypercohomologyMap
-  simp [eL, Localization.SmallShiftedHom.equiv_comp,
+  simp [Localization.SmallShiftedHom.equiv_comp,
     hypercohomologyEquiv_zero]
 
 /-- Postcomposition by the identity map of complexes is the identity on hypercohomology. -/
@@ -762,15 +710,10 @@ lemma field_add_smul (n : ℤ) (a b : K)
     hypercohomologyMap X (fieldScalarComplex K X a) n α +
       hypercohomologyMap X (fieldScalarComplex K X b) n α
   rw [fieldScalarComplex_add]
-  let e : FieldCohomology K X n ≃
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj (constantFieldSheafComplexInt K X)) n :=
-    Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  apply e.injective
+  apply (Localization.SmallShiftedHom.equiv
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
   rw [hypercohomologyEquiv_add]
-  simp [e, hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
+  simp [hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
     Functor.map_add]
 
 omit [Algebra K ℂ] in
@@ -840,15 +783,10 @@ lemma deRham_complex_add_smul [IsIntegral X.left] [Smooth X.hom]
       hypercohomologyMap X
         (scalarHolomorphicDeRhamComplexInt X b) n α
   rw [scalarHolomorphicDeRhamComplexInt_add]
-  let e : DeRhamHypercohomology X n ≃
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj (holomorphicDeRhamComplexInt X)) n :=
-    Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  apply e.injective
+  apply (Localization.SmallShiftedHom.equiv
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
   rw [hypercohomologyEquiv_add]
-  simp [e, hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
+  simp [hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
     Functor.map_add]
 
 lemma deRham_complex_one_smul [IsIntegral X.left] [Smooth X.hom]
@@ -921,15 +859,10 @@ lemma deRham_field_add_smul [IsIntegral X.left] [Smooth X.hom]
       hypercohomologyMap X
         (scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ b)) n α
   rw [map_add, scalarHolomorphicDeRhamComplexInt_add]
-  let e : DeRhamHypercohomology X n ≃
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj (holomorphicDeRhamComplexInt X)) n :=
-    Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  apply e.injective
+  apply (Localization.SmallShiftedHom.equiv
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
   rw [hypercohomologyEquiv_add]
-  simp [e, hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
+  simp [hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
     Functor.map_add]
 
 lemma deRham_field_one_smul [IsIntegral X.left] [Smooth X.hom]
