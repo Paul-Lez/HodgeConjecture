@@ -1,0 +1,2 @@
+import Other.AlgebraicTopology.SingularProductDegreeOne
+#check LinearEquiv.ofLinearMap

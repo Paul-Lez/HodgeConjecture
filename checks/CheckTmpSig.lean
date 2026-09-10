@@ -1,0 +1,4 @@
+﻿import Other.AlgebraicGeometry.ExplicitEllipticCMOverlapFunctions
+open CategoryTheory AlgebraicGeometry
+#check @AlgebraicGeometry.Point.overOpen
+#check @AlgebraicGeometry.ComplexPoint.regularAnalyticOpen

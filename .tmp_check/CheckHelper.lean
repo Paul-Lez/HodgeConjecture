@@ -1,0 +1,7 @@
+import Other.AlgebraicGeometry.ExplicitEllipticCurveCechRepresentative
+open CategoryTheory TopologicalSpace
+namespace AlgebraicGeometry.ExplicitEllipticCandidate
+open ComplexPoint Point
+#check openHolomorphicFunctionAddEquivOfEq_apply
+#print openHolomorphicFunctionAddEquivOfEq_apply
+end AlgebraicGeometry.ExplicitEllipticCandidate

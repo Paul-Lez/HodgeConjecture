@@ -1,0 +1,16 @@
+import Mathlib.LinearAlgebra.Complex.Module
+#check eq_neg_of_add_eq_zero_left
+#check eq_neg_of_add_eq_zero_right
+#check neg_eq_of_add_eq_zero_left
+#check neg_eq_of_add_eq_zero_right
+#check eq_of_sub_eq_zero
+#check sub_eq_zero.mp
+#check smul_eq_zero.mp
+#check smul_left_injective
+#check smul_left_cancel
+#check Complex.conj
+#check starRingEnd
+#check map_neg
+#check star_I
+#check Complex.star_def
+#check Complex.conj_I

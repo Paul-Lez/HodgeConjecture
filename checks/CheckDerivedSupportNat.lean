@@ -1,0 +1,12 @@
+import Other.AlgebraicGeometry.SheafBorelMoorePointClass
+
+open CategoryTheory
+
+#check DerivedCategory.quotientCompQhIso_inv_naturality
+#check DerivedCategory.quotientCompQhIso_inv_naturality_assoc
+#check DerivedCategory.quotientCompQhIso_hom_naturality
+#check DerivedCategory.Plus.Qh.map_comp
+#check DerivedCategory.Plus.ι.map_comp
+#check Functor.map_comp_assoc
+#check DerivedCategory.singleFunctorCompHomologyFunctorIso
+#check DerivedCategory.Plus.homologyFunctor

@@ -1,0 +1,46 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["7490bf09da5f9a2a.olean"],
+  "m": false,
+  "i": "317ac0f9d71017c6.ilean",
+  "c": "ea3b51a2bbc1f641.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\packages\\Cli\\.lake\\build\\lib\\lean;C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\packages\\batteries\\.lake\\build\\lib\\lean;C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\packages\\Qq\\.lake\\build\\lib\\lean;C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\packages\\aesop\\.lake\\build\\lib\\lean;C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\packages\\proofwidgets\\.lake\\build\\lib\\lean;C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\packages\\importGraph\\.lake\\build\\lib\\lean;C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\packages\\LeanSearchClient\\.lake\\build\\lib\\lean;C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\packages\\plausible\\.lake\\build\\lib\\lean;C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.lake\\packages\\mathlib\\.lake\\build\\lib\\lean;C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\build\\lib\\lean c:\\Users\\bnuge\\.elan\\toolchains\\leanprover--lean4---v4.33.1\\bin\\lean.exe C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\KirovDolbeault\\Discharge\\Manifold\\Degree.lean -o C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\build\\lib\\lean\\KirovDolbeault\\Discharge\\Manifold\\Degree.olean -i C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\build\\lib\\lean\\KirovDolbeault\\Discharge\\Manifold\\Degree.ilean -c C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\build\\ir\\KirovDolbeault\\Discharge\\Manifold\\Degree.c --setup C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\.lake\\build\\ir\\KirovDolbeault\\Discharge\\Manifold\\Degree.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "KirovDolbeault/Discharge/Manifold/Degree.lean:177:0: Definition `fiber_finite` is a proposition; use `theorem` instead of `def`\n\nNote: This linter can be disabled with `set_option linter.defProp false`",
+   "level": "warning"},
+  {"message":
+   "KirovDolbeault/Discharge/Manifold/Degree.lean:417:6: `isDiscrete_iff_forall_exists_isOpen` has been deprecated: Use `isDiscrete_iff_forall_mem_exists_isOpen` instead",
+   "level": "warning"},
+  {"message":
+   "KirovDolbeault/Discharge/Manifold/Degree.lean:462:2: Try this: \n  haveI̵\n\nThe goal is a proposition, so `have` is preferred over `haveI`.\nThe difference between `have` and `haveI` is that `haveI` inlines the value.\nBut this is not relevant for proofs because of proof irrelevance.\n\nNote: This linter can be disabled with `set_option linter.style.haveILetI false`",
+   "level": "warning"}],
+ "inputs":
+ [["deps",
+   [["PortTest/KirovDolbeault:extraDep",
+     [["@PortTest:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["KirovDolbeault.Discharge.Manifold.LocalMultiplicity transitive imports (legacy)",
+       "e0fd70f29f060f1a"],
+      ["KirovDolbeault.Discharge.Manifold.LocalMultiplicity:importAllArts",
+       "1434f541d97c6394"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.1, commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6",
+   "0051240b7c23c453"],
+  ["C:\\Users\\bnuge\\Desktop\\HodgeConjecture\\.tmp_porttest\\KirovDolbeault\\Discharge\\Manifold\\Degree.lean",
+   "1bc518943f1a544e"],
+  ["options",
+   [["-DrelaxedAutoImplicit=false", "74a2b5546b55be80"],
+    ["-DautoImplicit=false", "4a85acb881fd49d0"]]],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: KirovDolbeault.Discharge.Manifold.Degree", "956faf378fbae97e"],
+  ["Package.id?: (some PortTest)", "0d1e7f9b3801ae09"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "1dc2c02152a54989"}

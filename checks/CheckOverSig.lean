@@ -1,0 +1,6 @@
+import Other.AlgebraicGeometry.ExplicitEllipticCMGlobal
+import Other.AlgebraicGeometry.ExplicitEllipticSegre
+open CategoryTheory AlgebraicGeometry
+#check Over.homMk
+#check Over.OverMorphism.mk
+#check ExplicitEllipticCandidate.curveVariety

@@ -1,0 +1,17 @@
+import Other.AlgebraicGeometry.AnalyticDerivedSupportLocalizationBoundary
+import Other.AlgebraicTopology.FlasqueSheafSupportComparison
+import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
+
+open CategoryTheory CategoryTheory.Limits TopologicalSpace
+open AlgebraicGeometry
+
+#check TopCat.Sheaf.supportRestrictionComplexShortComplexMap
+#check CochainComplex.mappingCocone.shortExactHomologyIsoCone_naturality
+#check CategoryTheory.Functor.rightDerivedFunctorPlusInjectiveModelIso_map_naturality
+#check AlgebraicGeometry.ComplexPoint.globalHypercohomologyCoefficientInjectiveIso_naturality
+#check AlgebraicGeometry.ComplexPoint.nonnegativeCoefficientPlusMap
+#check TopCat.Sheaf.closedSupportSections
+#check CochainComplex.mappingCone.triangleMap
+#check CochainComplex.mappingCone.triangleMap_comm₂
+#check CochainComplex.mappingCone.map_inr
+#check HomologicalComplex.homologyMap_comp

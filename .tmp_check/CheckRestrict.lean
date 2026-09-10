@@ -1,0 +1,11 @@
+import Other.AlgebraicGeometry.ExplicitEllipticSurfaceCechProduct
+open CategoryTheory TopologicalSpace
+open AlgebraicGeometry
+open AlgebraicGeometry.ExplicitEllipticCandidate
+open AlgebraicGeometry.ComplexPoint
+#check holomorphicRestrictionAlgHom
+#check map_smul
+#check RingHom.map_smul
+#check AlgHom.commutes
+#check map_algebraMap
+#check curveCechCoboundary

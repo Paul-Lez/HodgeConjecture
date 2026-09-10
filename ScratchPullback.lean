@@ -1,0 +1,23 @@
+import Other.AlgebraicGeometry.ComplexAnalyticMaps
+import Other.AlgebraicGeometry.HolomorphicExponential
+import Other.AlgebraicTopology.SingularCoefficientBaseChange
+open scoped Manifold ContDiff
+#check ContMDiff.subtypeVal_comp_iff
+#check ContMDiff.subtype_mk
+#check ContMDiff.codRestrict
+#check ContMDiff.restrict
+#check ContMDiff.contMDiffOn
+#check contMDiff_subtype_val
+#check Set.MapsTo.restrict
+#check Set.restrictPreimage
+#check Opens.comap
+#check Opens.map
+#check Opens.inclusion
+#check TopologicalSpace.Opens.comap
+#check IsBaseChange.toDual
+#check IsBaseChange.toDual_apply
+#check IsBaseChange.toDual_comp_apply
+#check LinearMap.dualMap
+#check IsBaseChange.inductionOn
+#check IsBaseChange.toDual_smul_comp_apply
+#check IsBaseChange.toDual_apply_algebraMap_smul

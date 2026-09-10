@@ -1,0 +1,12 @@
+import Other.AlgebraicGeometry.RationalComplexBettiCompatibility
+
+open CategoryTheory
+
+#check Iso.addCommGroupIsoToAddEquiv_apply
+#check Iso.addCommGroupIsoToAddEquiv_symm_apply
+#check HomologicalComplex.homologyMapIso_hom
+#check HomologicalComplex.homologyMapIso_inv
+#check Functor.mapIso_hom
+#check Functor.mapIso_inv
+#check ShortComplex.mapHomologyIso_hom_naturality
+#check ShortComplex.mapHomologyIso_inv_naturality

@@ -1,0 +1,21 @@
+module
+public import Other.AlgebraicGeometry.ExplicitEllipticCMTopology
+public import Other.AlgebraicGeometry.HolomorphicFunctionPullback
+public import Other.AlgebraicGeometry.CycleComponentLocalOrientation
+
+open CategoryTheory TopologicalSpace
+open AlgebraicGeometry AlgebraicGeometry.ComplexPoint
+open AlgebraicGeometry.ExplicitEllipticCandidate
+
+#check curveZCMChartIso_toBase
+#check curveYCMChartIso_toBase
+#check curveZOpen_ι_curveCMEnd
+#check curveVarietyCMEnd
+#check curveVarietyCMEnd_four
+#check ComplexPoint.map_asOpenPoint
+#check Point.map_comp_apply
+#check holomorphicFunctionSheafToPushforward
+#check analyticMapOpenRestriction
+#check contMDiff_restrictPreimage_analyticMap
+#check curveZCMEnd_four
+#check curveYCMEnd_four

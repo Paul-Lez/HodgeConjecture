@@ -1,0 +1,4 @@
+﻿import Other.AlgebraicGeometry.ExplicitEllipticSurfaceCotangentGeneration
+#check Submodule.span_induction
+#check Submodule.span_induction_left
+#check KaehlerDifferential.linearCombination_surjective

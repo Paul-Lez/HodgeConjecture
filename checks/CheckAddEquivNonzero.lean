@@ -1,0 +1,5 @@
+import Other.AlgebraicGeometry.BettiGlobalSectionsAdditivity
+#check AddEquiv.map_ne_zero_iff
+#check EquivLike.apply_eq_zero_iff_eq_zero
+#check AddEquiv.apply_eq_zero_iff_eq_zero
+#check AddEquiv.ne_zero_iff

@@ -1,0 +1,8 @@
+import Other.AlgebraicGeometry.RationalComplexBettiCompatibility
+import Other.AlgebraicTopology.SingularProductCoefficientChange
+
+#print AlgebraicTopology.Simplicial.Cochain
+#print AlgebraicTopology.Singular.SingularChainComplex
+#check Simplicial.cochainsIsoLinearDual
+#check Simplicial.cochainLinearEquiv
+#check AlgebraicTopology.Singular.singularChainComplexXLinearEquiv

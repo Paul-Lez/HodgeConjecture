@@ -1,0 +1,17 @@
+module
+public import Other.AlgebraicGeometry.ExplicitEllipticCurveCechRepresentative
+
+open CategoryTheory TopologicalSpace
+open AlgebraicGeometry
+open AlgebraicGeometry.ComplexPoint
+open AlgebraicGeometry.ExplicitEllipticCandidate
+
+#check regularToHolomorphic_restrict
+#check curveCechAdjustedRegularRepresentative_eq_add_y_restriction
+#check curveCMOverlapYV
+#check curveSectionRestriction
+#check curveYOpen
+#check curveCechOpen
+#check curveCechCoboundary
+#check analyticTransitionExtClass_add_coboundary
+#check analyticTransitionExtClass_eq_zero_iff

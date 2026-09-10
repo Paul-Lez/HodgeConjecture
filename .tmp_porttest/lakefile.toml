@@ -1,0 +1,12 @@
+name = "PortTest"
+
+[leanOptions]
+autoImplicit = false
+relaxedAutoImplicit = false
+
+[[require]]
+name = "mathlib"
+path = "../.lake/packages/mathlib"
+
+[[lean_lib]]
+name = "KirovDolbeault"

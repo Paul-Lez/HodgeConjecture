@@ -1,0 +1,10 @@
+import Other.AlgebraicTopology.SingularProductDegreeOne
+
+#check AlgebraicTopology.Singular.OneCycleCocycleRepresentativePairing
+#check AlgebraicTopology.Singular.oneCycleCocycleRepresentativePairingOfNonzero
+#check AlgebraicTopology.Singular.homologyLinearEquivOfIso
+#check AlgebraicTopology.Singular.cohomologyLinearEquivOfIso_apply_homologyLinearEquivOfIso
+#check AlgebraicTopology.Simplicial.cochainClassOfOneCocycle
+#check AlgebraicTopology.Simplicial.cochainClassOfOneCocycle_cohomologyCycleToCocycle
+#check AlgebraicTopology.Singular.OneCycleCocyclePairing
+#check AlgebraicTopology.Singular.oneCycleCocyclePairingOfNonzero

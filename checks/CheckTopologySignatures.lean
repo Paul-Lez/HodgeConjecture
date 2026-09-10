@@ -1,0 +1,13 @@
+import Other.AlgebraicGeometry.ExplicitEllipticCharts
+import Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+open CategoryTheory TopologicalSpace Topology
+open AlgebraicGeometry
+#check IsInducing.continuous_iff
+#check IsInducing.continuous_iff'
+#check AlgebraicGeometry.ComplexPoint.isInducing_map_of_closedImmersion
+#check AlgebraicGeometry.ComplexPoint.isEmbedding_map_of_closedImmersion
+#check AlgebraicGeometry.Point.analyticTopology
+#check continuous_induced_rng
+#check continuous_induced_dom
+#check Continuous.comp
+#check Continuous.subtype_mk

@@ -1,0 +1,7 @@
+import Other.AlgebraicGeometry.ExplicitEllipticGlobalOneForms
+import Other.AlgebraicGeometry.ExplicitEllipticIntegrality
+
+open AlgebraicGeometry
+open AlgebraicGeometry.ExplicitEllipticCandidate
+
+#synth ConnectedSpace (ComplexPoint curveAnalyticVariety)
