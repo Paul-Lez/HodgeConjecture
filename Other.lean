@@ -319,6 +319,7 @@ public import Other.AlgebraicGeometry.HolomorphicUnitExtension
 public import Other.AlgebraicGeometry.HolomorphicUnitTransition
 public import Other.AlgebraicGeometry.HolomorphicZeroForms
 public import Other.AlgebraicGeometry.LefschetzOneOne
+public import Other.AlgebraicGeometry.LefschetzOneOneReduction
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
