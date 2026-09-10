@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.OpenRawRelativeConnecting
-public import Other.AlgebraicTopology.SupportedSingularSectionCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSingularSectionCohomology
 
 /-! # Literal top-open normalization of relative cochain classes -/
 

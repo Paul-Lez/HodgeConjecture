@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicTopology.ChartLocalFundamentalClass
-public import Other.AlgebraicTopology.EuclideanLocalHomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
+public import HodgeConjecture.Lemmas.AlgebraicTopology.EuclideanLocalHomology
 public import Other.AlgebraicTopology.SingularHomologyVanishing
 public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 

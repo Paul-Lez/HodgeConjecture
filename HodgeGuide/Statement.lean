@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import VersoManual
 import HodgeConjecture.Statement
 import Other.AlgebraicGeometry.ChowCycleClassDescent
+import Other.AlgebraicGeometry.SheafCycleClass
 
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean

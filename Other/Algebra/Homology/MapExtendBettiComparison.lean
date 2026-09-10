@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.Algebra.Homology.MapExtend
-public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
+public import HodgeConjecture.Definitions.Algebra.Homology.MapExtend
+public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiGlobalSectionsComparison
 
 /-! # Agreement of the canonical and original Betti extension comparisons -/
 

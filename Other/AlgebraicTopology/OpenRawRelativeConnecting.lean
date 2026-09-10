@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.SingularCochainOpenCone
+public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainOpenCone
 public import Other.AlgebraicTopology.GlobalRawRelativeConnecting
 
 /-! # Exact ordinary normalization of the canonical open relative comparison -/

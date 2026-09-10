@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.DerivedSheafSectionClass
-public import Other.AlgebraicTopology.SingularChainSheafOrientation
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheafOrientation
 
 /-!+# The constant coefficient class on a closed direct image
 

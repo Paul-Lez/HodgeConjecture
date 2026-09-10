@@ -16,8 +16,8 @@ limitations under the License.
 module
 
 public import Other.AlgebraicTopology.SingularCapProduct
-public import Other.AlgebraicTopology.RelativeHomotopyInvariance
-public import Other.Algebra.Homology.LinearDualNaturality
+public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeHomotopyInvariance
+public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
 
 /-!
 # Naturality of cap product on homology

@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.ComplexPointCoclassSchemeIso
 public import Other.AlgebraicGeometry.SmoothClosedPointCoclassSectionNormalization
-public import Other.AlgebraicTopology.SupportRelativeCohomologyOpenTransport
+public import HodgeConjecture.Definitions.AlgebraicTopology.SupportRelativeCohomologyOpenTransport
 
 /-! # Exact transport of old point coclass sections through scheme isomorphisms
 

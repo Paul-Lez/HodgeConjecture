@@ -7,7 +7,7 @@ module
 public import Mathlib.Algebra.Homology.HomotopyCategory.ShiftSequence
 public import Mathlib.Algebra.Homology.Additive
 public import Mathlib.Algebra.Homology.ShortComplex.PreservesHomology
-public import Other.Algebra.Homology.HomComplexShiftNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexShiftNaturality
 
 /-! # Exact functors preserve the canonical homology shift -/
 

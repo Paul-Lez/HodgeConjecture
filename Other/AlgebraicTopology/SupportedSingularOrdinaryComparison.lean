@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicTopology.OpenRawRelativeConnecting
 public import Other.AlgebraicTopology.SupportedSectionConeConnecting
-public import Other.AlgebraicTopology.SupportedSingularSectionCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSingularSectionCohomology
 
 /-! # Positive ordinary normalization of actual supported singular sections -/
 

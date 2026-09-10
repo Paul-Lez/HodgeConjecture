@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance
+public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance
 
 /-! # Exact transport of chart-local fundamental classes by homeomorphisms
 

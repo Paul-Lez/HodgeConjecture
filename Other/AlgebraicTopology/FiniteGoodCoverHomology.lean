@@ -19,7 +19,7 @@ public import Other.AlgebraicTopology.OpenCoverOrderedCechBicomplex
 public import Mathlib.Topology.Homotopy.Contractible
 
 import Other.AlgebraicTopology.SingularContractibleMapQuasiIso
-import Other.AlgebraicTopology.SingularExcisionOpenCover
+import HodgeConjecture.Lemmas.AlgebraicTopology.SingularExcisionOpenCover
 
 /-!
 # Finite good covers and normalized singular Čech chains

@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.ChartLocalClassHomeomorph
-public import Other.AlgebraicGeometry.ComplexAnalyticMaps
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAnalyticMaps
 public import Other.AlgebraicGeometry.ComplexPointCoclassOrientationComparison
 
 /-! # Exact point-coclass naturality for actual complex scheme isomorphisms

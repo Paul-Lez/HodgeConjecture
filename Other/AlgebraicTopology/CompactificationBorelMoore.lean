@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClassGenerator
 
 /-!
 # Borel--Moore homology through a compactification

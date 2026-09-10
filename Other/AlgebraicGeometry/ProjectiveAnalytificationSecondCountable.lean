@@ -20,7 +20,7 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
-import Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 import Mathlib.Geometry.Manifold.Metrizable
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
