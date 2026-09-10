@@ -15,14 +15,14 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
+public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 public import Other.AlgebraicGeometry.CycleComponentBorelMoore
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
 public import Other.AlgebraicGeometry.PrincipalDivisorCycleClass
-public import Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-public import Other.AlgebraicGeometry.ProjectiveAnalytificationParacompact
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationParacompact
 import Lean.Elab.Tactic.Omega
 
 /-!

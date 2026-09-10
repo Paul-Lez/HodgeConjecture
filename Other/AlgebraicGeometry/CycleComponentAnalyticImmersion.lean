@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicGeometry.ComplexAnalyticMaps
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAnalyticMaps
 public import Other.AlgebraicGeometry.CycleComponentAnalyticEmbedding
 public import Other.AlgebraicGeometry.CycleComponentLocalOrientationCoherence
 public import Mathlib.AlgebraicGeometry.Morphisms.FormallyUnramified

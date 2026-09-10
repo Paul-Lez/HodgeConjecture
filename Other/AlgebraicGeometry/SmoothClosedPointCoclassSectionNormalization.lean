@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.SmoothClosedSupportCoclassSection
+public import HodgeConjecture.Definitions.AlgebraicGeometry.SmoothClosedSupportCoclassSection
 public import Other.AlgebraicGeometry.SmoothClosedPointPurityNormalization
 
 /-!
@@ -18,9 +18,6 @@ point theorem takes no singleton-image or smooth-source hypothesis as input.
 -/
 
 @[expose] public noncomputable section
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
@@ -77,6 +74,8 @@ theorem neighborhoodSupportToPointPairMap_eq_smoothClosedPointNeighborhoodPairMa
       smoothClosedPointNeighborhoodPairMap X Y i d z V hzV := by
   apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- At its distinguished point the old global coclass has exactly the germ of the
 general normal coclass, with coefficient one. -/
 theorem smoothClosedOldPointCoclassSection_germ_eq_normalCoclass

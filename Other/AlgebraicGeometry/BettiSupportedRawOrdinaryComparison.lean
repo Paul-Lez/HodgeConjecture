@@ -23,11 +23,10 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable (X : Over (Spec (.of ℂ))) [IsIntegral X.left] [Smooth X.hom]
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The prescribed global raw-to-natural cone map preserves the actual connecting
 map, followed by the prescribed ambient singular-to-injective comparison. -/
 @[reassoc]
@@ -63,6 +62,8 @@ theorem globalRawSupportConeToNatural_ambient_connecting
 
 variable [T2Space (ComplexPoint X)] [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 2400000 in
 /-- The old support-forgetting construction is the raw cone connecting map,
 followed by the actual raw-to-sheaf and singular-to-injective maps. -/

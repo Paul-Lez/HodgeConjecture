@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.ComplexPointCoclassSchemeIso
 public import Other.AlgebraicGeometry.SmoothClosedPointCoclassSectionNormalization
-public import Other.AlgebraicTopology.SupportRelativeCohomologyOpenTransport
+public import HodgeConjecture.Definitions.AlgebraicTopology.SupportRelativeCohomologyOpenTransport
 
 /-! # Exact transport of old point coclass sections through scheme isomorphisms
 
@@ -16,9 +16,6 @@ and complex orientation naturality prove its compatibility with open transport.
 -/
 
 @[expose] public noncomputable section
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 open CategoryTheory Limits TopologicalSpace Topology Opposite
 open AlgebraicTopology.Singular
@@ -37,6 +34,8 @@ def analyticPointCoclassSupportSection (S : Set (ComplexPoint X))
     (relativeCohomologyMap ℚ (2 * d) (neighborhoodSupportToPointPairMap (V : Set _) S z hz)
       (analyticPointLocalCoclass X d z))
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Its actual restriction is the same old coclass on the smaller neighborhood. -/
 theorem analyticPointCoclassSupportSection_restrict (S : Set (ComplexPoint X))
     (z : ComplexPoint X) (hz : z ∈ S) {U V : Opens (ComplexPoint X)} (hUV : U ≤ V) :
@@ -94,6 +93,8 @@ theorem neighborhoodSupportPairImageIso_inv_to_point
   rw [Iso.hom_inv_id_assoc]
   apply MorphismProperty.Arrow.Hom.ext <;> ext y <;> rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Exact compatibility of the old point coclass with the constructed sheaf
 open-isomorphism transport, on every actual neighborhood. -/
 theorem analyticPointCoclassSupportSection_schemeIso_transport

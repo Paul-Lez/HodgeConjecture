@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.Algebra.Homology.MapExtend
+public import HodgeConjecture.Definitions.Algebra.Homology.MapExtend
 public import Other.AlgebraicTopology.SingularChainSheafClosedSupport
 public import Other.AlgebraicTopology.ClosedEmbeddingDerivedPushforward
 
@@ -28,9 +28,6 @@ open CategoryTheory Limits TopologicalSpace Topology
 universe u
 
 namespace AlgebraicTopology.Singular
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 variable {Z X : TopCat.{u}} (i : Z ⟶ X) (R : Type u) [Field R]
 
@@ -79,6 +76,8 @@ def singularChainSheafCochainPushforwardWithClosedSupport (hi : IsClosedEmbeddin
         (TopCat.Sheaf.sheafSectionsWithClosedSupport X (closedEmbeddingSupport i hi))
         (singularChainSheafComplex R X) ComplexShape.embeddingDownNat).inv
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Forgetting support recovers exactly the previously constructed cochain pushforward. -/
 @[reassoc (attr := simp)]
 lemma singularChainSheafCochainPushforwardWithClosedSupport_inclusion (hi : IsClosedEmbedding i) :
@@ -91,6 +90,8 @@ lemma singularChainSheafCochainPushforwardWithClosedSupport_inclusion (hi : IsCl
     singularChainSheafPushforwardWithClosedSupportRegraded_inclusion]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- In each degree `-n` the cochain pushforward is the original normalized chain map. -/
 lemma singularChainSheafCochainPushforward_f (hi : IsClosedEmbedding i) (n : ℕ) :
     (singularChainSheafCochainPushforward i R hi).f (-((n : ℕ) : ℤ)) =

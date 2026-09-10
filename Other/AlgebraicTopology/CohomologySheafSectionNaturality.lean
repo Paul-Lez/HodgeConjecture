@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.CohomologySheafSection
+public import HodgeConjecture.Definitions.AlgebraicTopology.CohomologySheafSection
 
 /-! # Coefficient-map naturality of the canonical local cohomology-sheaf class -/
 
@@ -15,10 +15,6 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite HomologicalC
 universe u
 
 namespace TopCat.Sheaf
-
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
 
 variable (X : TopCat.{u}) {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
   (f : K ⟶ L) (n : ℤ)
@@ -40,6 +36,9 @@ lemma sectionCohomologyPresheafOnOpenIso_naturality (U : Opens X) :
       (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).map f))
     ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op U))
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 set_option maxHeartbeats 800000 in
 /-- Exact sheafification and its counit give a coefficient-natural cohomology isomorphism. -/
 @[reassoc]

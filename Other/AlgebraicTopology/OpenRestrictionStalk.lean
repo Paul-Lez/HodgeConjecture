@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.OpenSheafRestriction
+public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenSheafRestriction
 public import Mathlib.Topology.Sheaves.Stalks
 
 /-!
@@ -22,9 +22,6 @@ open CategoryTheory Limits TopologicalSpace Topology Opposite
 universe u
 
 namespace TopCat.Presheaf
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 variable {X : TopCat.{u}} (U : Opens X) (F : X.Presheaf AddCommGrpCat.{u})
   (y : (Opens.toTopCat X).obj U)
@@ -51,6 +48,8 @@ lemma germ_openRestrictionStalkHom (V : Opens ((Opens.toTopCat X).obj U)) (hy : 
         (Set.mem_image_of_mem U.inclusion' hy) :=
   colimit.ι_desc _ _
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Restricting an ambient section to its intersection with the subspace gives the inverse
 map on germs. -/
 def openRestrictionStalkInv : F.stalk y.val ⟶ (openRestriction U F).stalk y :=
@@ -78,6 +77,8 @@ lemma germ_openRestrictionStalkInv (V : Opens X) (hy : y.val ∈ V) :
         (openRestriction U F).germ ((Opens.map U.inclusion').obj V) y hy :=
   colimit.ι_desc _ _
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The canonical open-restriction stalk isomorphism, with explicit germ normalization. -/
 def openRestrictionStalkIso : (openRestriction U F).stalk y ≅ F.stalk y.val where
   hom := openRestrictionStalkHom U F y
@@ -103,6 +104,8 @@ def openRestrictionStalkIso : (openRestriction U F).stalk y ≅ F.stalk y.val wh
     rw [germ_openRestrictionStalkInv_assoc, germ_openRestrictionStalkHom, Category.comp_id]
     exact F.germ_res' _ y.val _
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 @[reassoc]
 lemma openRestrictionStalkHom_naturality {F G : X.Presheaf AddCommGrpCat.{u}}
     (a : F ⟶ G) :

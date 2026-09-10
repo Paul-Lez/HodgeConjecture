@@ -17,7 +17,7 @@ module
 
 public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 public import Other.AlgebraicTopology.SingularTriadCapProduct
-public import Other.AlgebraicTopology.SingularExcisionField
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularExcisionField
 public import Mathlib.Algebra.Homology.HomologySequenceLemmas
 
 /-!

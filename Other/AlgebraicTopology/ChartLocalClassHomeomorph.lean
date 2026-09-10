@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance
+public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance
 
 /-! # Exact transport of chart-local fundamental classes by homeomorphisms
 
@@ -15,9 +15,6 @@ class, not an assumption that arbitrary homeomorphisms preserve orientations.
 -/
 
 @[expose] public noncomputable section
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 open CategoryTheory Topology
 
@@ -42,6 +39,8 @@ theorem mem_homeomorphTransportedChart :
   change H.symm (H x) ∈ e.source
   simpa only [H.symm_apply_apply] using hx
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Transport does not change the chosen coordinate radius. -/
 theorem chartRadius_homeomorphTransport :
     chartRadius d (H.symm.transOpenPartialHomeomorph e) (H x)

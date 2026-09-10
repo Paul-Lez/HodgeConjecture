@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.SmoothClosedCycleClass
-public import Other.AlgebraicGeometry.ComplexSheafBorelMooreRationalComparison
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMooreRationalComparison
 public import Mathlib.Algebra.Module.LinearMap.Rat
 
 /-!
@@ -24,9 +24,6 @@ point-coclass comparison, or rational-equivalence descent is made here.
 open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 noncomputable local instance smoothClosedRationalClassAnalyticTopology
     (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=

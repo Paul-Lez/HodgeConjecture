@@ -15,7 +15,8 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicGeometry.SheafCycleClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 
 /-!
 # The Hodge conjecture

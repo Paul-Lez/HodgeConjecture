@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.ChartNeighborhoodOrientation
+public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartNeighborhoodOrientation
 
 /-!
 # Normalization of actual point parametrizations inside a complex chart
@@ -20,9 +20,6 @@ class, including its scale and sign.
 open CategoryTheory Topology
 
 namespace AlgebraicTopology.Singular
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 variable (d : ℕ)
 

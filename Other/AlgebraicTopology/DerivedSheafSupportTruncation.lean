@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.DerivedSheafSupport
+public import HodgeConjecture.Definitions.AlgebraicTopology.DerivedSheafSupport
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 
 /-!
@@ -29,9 +29,6 @@ universe u
 
 namespace TopCat.Sheaf
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (X : TopCat.{u})
 
 local instance supportTruncationSheafDerivedCategory :
@@ -51,6 +48,8 @@ variable [K.IsGE n]
 def supportCoefficientPlus : DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X) :=
   ⟨DerivedCategory.Q.obj K, n, inferInstance⟩
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The actual truncation projection induces this `D⁺` isomorphism. -/
 def supportCoefficientTruncationIso :
     supportCoefficientPlus X K n ≅
@@ -59,6 +58,8 @@ def supportCoefficientTruncationIso :
     (asIso (DerivedCategory.Q.map (K.πTruncGE n)) ≪≫
       ((DerivedCategory.quotientCompQhIso (Sheaf AddCommGrpCat.{u} X)).app (K.truncGE n)).symm)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Its normalization is the actual good-truncation map, not a chosen representative
 equivalence. -/
 @[reassoc]
@@ -94,6 +95,8 @@ def termwiseToDerivedSheafSupport (S : Closeds X) :
     DerivedCategory.Plus.ι.map
       ((derivedSheafSectionsWithClosedSupport X S).map (supportCoefficientTruncationIso X K n).inv)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Transporting the comparison to the truncated coefficient gives precisely the actual
 termwise truncation map followed by the actual derived-support unit. -/
 @[reassoc]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.CycleComponentSheafClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
 public import Other.AlgebraicGeometry.CycleComponentPointCoclassSectionNormalization
 public import Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization
 public import Other.AlgebraicGeometry.SheafCycleClass
@@ -21,10 +21,6 @@ The separate comparison with the legacy ordinary class has its own cone sign.
 -/
 
 @[expose] public noncomputable section
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-set_option backward.defeqAttrib.useBackward true
 
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
@@ -150,6 +146,9 @@ theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
     analyticComponentPointRelativeCoclass_toSheaf]
   exact cycleComponentSmoothSupportCoclassSection_global_point_normalization X x hx z
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The ACTUAL general supported component class is the old normalized point
 coclass transported through the actual relative/injective comparison. This is
 a uniqueness theorem about the general construction, not a point branch. -/

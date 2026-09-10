@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
+public import HodgeConjecture.Definitions.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
 public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
 public import Other.Algebra.Homology.MapExtendBettiComparison
@@ -17,9 +17,6 @@ public import Other.AlgebraicGeometry.BettiSupportedOrdinarySign
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicTopology.Singular
-
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
 
 /-- The literal top-open sheafification unit agrees with the original
 plus-construction global comparison, not just with some quasi-isomorphism. -/
@@ -36,9 +33,6 @@ end AlgebraicTopology.Singular
 namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
-
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
 
 variable (X : Over (Spec (.of ℂ)))
 
@@ -63,6 +57,8 @@ local instance complexSupportedOrdinaryComparisonAnalyticTopology :
 local instance complexSupportedOrdinaryComparisonOpenParacompact :
     ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The actual positive singular supported-kernel class on the whole ambient
 space agrees with the positive raw ambient relative inclusion. -/
 theorem complexSupportedSingularTop_inclusion_of_relative
@@ -84,6 +80,8 @@ theorem complexSupportedSingularTop_inclusion_of_relative
       (topOpenIntersectionPairIso (TopCat.of (ComplexPoint X)) S.compl).hom a)
   rwa [openRawRelativeCochainClass_top, complexOpenRawToSheafTop_eq_global] at h
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 1000000 in
 /-- The original ambient supported-injective inverse comparison on the top open
 is the actual supported singular-to-injective map of the prescribed relative class. -/
@@ -133,6 +131,8 @@ theorem complexSupportedSingularInjectiveHomologyIso_inclusion
   have h := congrArg (fun g => HomologicalComplex.homologyMap g n) f.comm₁₂
   rwa [HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp] at h
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 1200000 in
 /-- The actual supported-injective inverse-relative comparison followed by
 positive kernel inclusion is the actual positive raw relative inclusion followed
@@ -169,6 +169,8 @@ theorem complexSupportInjectiveSectionCohomologyEquiv_inclusion_positive
   rw [HomologicalComplex.homologyMap_comp]
   rfl
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 1000000 in
 /-- The definitive signed ordinary-target square: the newer actual positive
 supported-kernel class is the NEGATIVE of the old support-singular comparison

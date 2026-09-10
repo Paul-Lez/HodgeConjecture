@@ -31,9 +31,6 @@ open CategoryTheory TopologicalSpace Topology
 
 namespace AlgebraicGeometry.ComplexPoint
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 noncomputable local instance smoothClosedClassAnalyticTopology
     (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=
   Point.analyticTopology

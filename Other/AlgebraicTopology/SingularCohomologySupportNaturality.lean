@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicTopology.RelativeHomotopyInvariance
+public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeHomotopyInvariance
 
 /-!
 # Naturality of forgetting support in singular cohomology

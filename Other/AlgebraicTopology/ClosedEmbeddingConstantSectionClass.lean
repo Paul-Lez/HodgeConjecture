@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.DerivedSheafSectionClass
-public import Other.AlgebraicTopology.SingularChainSheafOrientation
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheafOrientation
 
 /-!+# The constant coefficient class on a closed direct image
 
@@ -25,9 +25,6 @@ universe u
 namespace TopCat.Sheaf
 
 open AlgebraicTopology.Singular
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 variable {Z X : TopCat.{u}} (i : Z ⟶ X) (R : Type u) [Field R]
 
@@ -67,6 +64,8 @@ def constantPushforwardTopSupportSection :
       ((pushforward AddCommGrpCat.{u} i).obj
         (singularOrientationConstantSheaf R Z))).hom.app (op ⊤)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Forgetting whole-space support recovers the literal constant section exactly. -/
 @[reassoc]
 lemma constantPushforwardTopSupportSection_forget :

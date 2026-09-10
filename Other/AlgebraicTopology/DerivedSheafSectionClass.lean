@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.DerivedSheafSupportShift
+public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportShift
 public import Other.AlgebraicTopology.ClosedEmbeddingDerivedPushforward
 public import Mathlib.Algebra.Homology.DerivedCategory.FullyFaithful
 
@@ -22,9 +22,6 @@ global-sections or pushforward comparison.
 open CategoryTheory Limits TopologicalSpace Topology Opposite
 
 universe u v w a
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 namespace CategoryTheory.Functor
 

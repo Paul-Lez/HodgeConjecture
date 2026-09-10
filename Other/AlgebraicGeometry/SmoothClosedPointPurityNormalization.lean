@@ -26,9 +26,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (X Y : Over (Spec (.of ℂ)))
   (i : Y ⟶ X) (d : ℕ)
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]

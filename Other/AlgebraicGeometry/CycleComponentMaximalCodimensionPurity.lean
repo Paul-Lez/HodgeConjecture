@@ -17,10 +17,10 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 
-import Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
+import HodgeConjecture.Definitions.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 import Other.AlgebraicGeometry.CycleComponentPointPurity
-import Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-import Other.AlgebraicGeometry.ProjectiveAnalytificationParacompact
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationParacompact
 
 /-!
 # Maximal-codimension component purity

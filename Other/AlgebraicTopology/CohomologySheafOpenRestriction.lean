@@ -16,13 +16,12 @@ universe u
 
 namespace TopCat.Sheaf
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-
 variable (X : TopCat.{u}) (U : Opens X)
   (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- The canonical local-class presheaf map commutes with actual open restriction. -/
 @[reassoc]
 lemma sectionCohomologyPresheafToSheaf_openRestriction (n : ℤ) :
@@ -59,6 +58,9 @@ lemma openRestrictionSectionCohomologyPresheafIso_onOpen (n : ℤ)
   exact (ShortComplex.mapHomologyIso_comp_hom S (cohomologyOpenPresheafRestriction X U)
     ((evaluation (Opens (TopCat.of U))ᵒᵖ AddCommGrpCat.{u}).obj (op W))).symm
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- The original-ambient canonical section map agrees with the one on the
 actual open-restricted coefficient complex, through its exact homology comparison. -/
 @[reassoc]

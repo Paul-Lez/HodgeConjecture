@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.RelativeCochainConeNaturality
-public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
+public import HodgeConjecture.Definitions.AlgebraicTopology.RelativeCochainConeNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
 
 /-!
 # Ordinary-target compatibility of the two relative cone comparisons
@@ -20,9 +20,6 @@ canonicity for the legacy completed triangle map.
 -/
 
 @[expose] public noncomputable section
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 open CategoryTheory Limits
 
@@ -42,6 +39,8 @@ theorem relativeDualShiftIsoCochainCone_hom_connecting :
         (relativeDualCochainShortComplexInt R X).f)⟦(1 : ℤ)⟧' :=
   relativeDualShiftIsoCochainCone_hom_comp_mor₃ R X
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Inverting the legacy completion retains the prescribed sign on the
 actual inclusion into ambient cochains. -/
 @[reassoc]
@@ -55,6 +54,8 @@ theorem relativeDualShiftIsoCochainCone_inv_inclusion :
   simp only [← Category.assoc, Iso.inv_hom_id, Category.id_comp, Preadditive.comp_neg] at h
   rw [h, neg_neg]
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- After passing to integer-graded homology, the legacy comparison followed
 by actual inclusion is exactly the negative cone connecting map. -/
 theorem relativeCochainConeHomologyIsoDualRelativeInt_inclusion (n : ℕ) :

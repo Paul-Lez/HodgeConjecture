@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.SupportedSingularCohomologySheafComparison
+public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSingularCohomologySheafComparison
 
 /-!
 # Open-restriction naturality of canonical cohomology-sheaf sections
@@ -15,10 +15,6 @@ restrictions, without assuming that evaluation on opens is exact.
 -/
 
 @[expose] public noncomputable section
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-set_option backward.defeqAttrib.useBackward true
 
 open CategoryTheory Limits TopologicalSpace Opposite
 

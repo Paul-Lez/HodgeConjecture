@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
+public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiGlobalSectionsComparison
 
 /-!
 # Additivity of the Betti global-sections comparison

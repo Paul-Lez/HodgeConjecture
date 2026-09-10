@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.OpenRestrictedLowestCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.OpenRestrictedLowestCohomology
 public import Other.AlgebraicTopology.CohomologySheafOpenRestriction
 
 /-!
@@ -22,10 +22,6 @@ open CategoryTheory Limits TopologicalSpace Opposite HomologicalComplex
 universe u
 
 namespace TopCat.Sheaf
-
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
 
 variable (X : TopCat.{u})
 
@@ -50,6 +46,9 @@ theorem sectionComplexEqIso_hom_refl (V : Opens X) :
   simp [sectionComplexEqIso, supportEvaluationEqIso]
   rfl
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- The canonical section map respects equality of the underlying opens. -/
 @[reassoc]
 theorem sectionComplexEqIso_homology_section {V W : Opens X} (h : V = W) (n : ℤ) :
@@ -71,6 +70,9 @@ theorem openRestrictionTopSectionComplexIso_homology_section (U : Opens X) (n : 
       (openRestrictionTopSectionsIso X U).hom.app (K.homology n) :=
   sectionComplexEqIso_homology_section X K (openRestrictionTopOpen_eq X U) n
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- The constructed lowest-degree isomorphism on an ambient open has
 EXACTLY the original ambient canonical section map as its forward map.
 The open restriction and its top-open transport introduce no normalization. -/

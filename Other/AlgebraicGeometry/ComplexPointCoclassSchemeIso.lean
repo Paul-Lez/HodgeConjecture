@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.ChartLocalClassHomeomorph
-public import Other.AlgebraicGeometry.ComplexAnalyticMaps
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAnalyticMaps
 public import Other.AlgebraicGeometry.ComplexPointCoclassOrientationComparison
 
 /-! # Exact point-coclass naturality for actual complex scheme isomorphisms
@@ -17,9 +17,6 @@ Dual normalization proves the point-coclass pullback identity with coefficient o
 -/
 
 @[expose] public noncomputable section
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 open CategoryTheory Topology
 open AlgebraicTopology.Singular

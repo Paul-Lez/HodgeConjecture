@@ -29,9 +29,6 @@ universe u
 
 namespace TopCat.Sheaf
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable {Z X : TopCat.{u}} (i : Z ⟶ X) (hi : IsClosedEmbedding i)
 
 local instance closedPushforwardSourceHasDerivedCategory :

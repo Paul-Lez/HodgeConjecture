@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.OpenSheafification
+public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenSheafification
 public import Other.AlgebraicTopology.CohomologySheafSectionNaturality
-public import Other.AlgebraicTopology.OpenRestrictedLowestCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.OpenRestrictedLowestCohomology
 
 /-! # The canonical local cohomology-sheaf map under actual open restriction -/
 
@@ -18,13 +18,12 @@ universe u
 
 namespace CategoryTheory.ShortComplex
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-
 variable {C D E A : Type*} [Category* C] [Category* D] [Category* E] [Category* A]
   [Abelian C] [Abelian D] [Abelian E] [Abelian A]
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- Homology comparisons around an actual square of exact functors. -/
 @[reassoc]
 lemma mapHomologyIso_exactSquare (S : ShortComplex C)
@@ -49,10 +48,6 @@ end CategoryTheory.ShortComplex
 
 namespace TopCat.Sheaf
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-
 variable (X : TopCat.{u}) (U : Opens X)
 
 /-- Actual restriction of additive presheaves to the open subspace. -/
@@ -61,6 +56,9 @@ def cohomologyOpenPresheafRestriction :
   (Functor.whiskeringLeft (Opens (TopCat.of U))ᵒᵖ (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj
     U.isOpenEmbedding.functor.op
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 instance cohomologyOpenPresheafRestriction_additive :
     (cohomologyOpenPresheafRestriction X U).Additive := by
   dsimp [cohomologyOpenPresheafRestriction]
@@ -70,11 +68,17 @@ instance cohomologyOpenPresheafRestriction_preservesZeroMorphisms :
     (cohomologyOpenPresheafRestriction X U).PreservesZeroMorphisms where
   map_zero := by intros; rfl
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 instance cohomologyOpenPresheafRestriction_preservesFiniteLimits :
     PreservesFiniteLimits (cohomologyOpenPresheafRestriction X U) := by
   dsimp [cohomologyOpenPresheafRestriction]
   infer_instance
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 instance cohomologyOpenPresheafRestriction_preservesFiniteColimits :
     PreservesFiniteColimits (cohomologyOpenPresheafRestriction X U) := by
   dsimp [cohomologyOpenPresheafRestriction]
@@ -89,6 +93,9 @@ def cohomologyOpenSheafificationIso :
   NatIso.ofComponents (openRestrictionSheafificationIso X U)
     (fun f => openRestrictionSheafificationIso_naturality X U f)
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- Open restriction of the actual sheafification counit is its actual subspace counit. -/
 @[reassoc]
 lemma openRestrictionSheafificationIso_counit (F : Sheaf AddCommGrpCat.{u} X) :
@@ -128,6 +135,9 @@ def openRestrictionSectionCohomologyPresheafIso (n : ℤ) :
     (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).sc n
   exact S.mapHomologyIso (cohomologyOpenPresheafRestriction X U)
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 set_option maxHeartbeats 800000 in
 /-- The exact sheafification/counit comparison respects open restriction. -/
 @[reassoc]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.SingularCochainOpenCone
+public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainOpenCone
 public import Other.AlgebraicTopology.GlobalRawRelativeConnecting
 
 /-! # Exact ordinary normalization of the canonical open relative comparison -/
@@ -14,9 +14,6 @@ public import Other.AlgebraicTopology.GlobalRawRelativeConnecting
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicTopology.Singular
-
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
 
 variable (R : Type) [Field R] (X : TopCat.{0}) {V W : Opens X} (i : W ⟶ V)
 
@@ -33,6 +30,8 @@ theorem openRawSingularRestrictionConeIsoRelative_connecting :
       (openRawSingularCochainComplexIntIsoDual R X V).hom⟦(1 : ℤ)⟧' :=
   CochainComplex.mappingCone.homotopyCofiber_mapArrowIso_connecting _ _ _
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 800000 in
 /-- The canonical open raw cone comparison has the same negative connecting
 sign as its actual positive dual-relative inclusion. -/
@@ -97,6 +96,8 @@ def openRawRelativeCochainClass (n : ℕ)
         (relativeDualCochainShortComplexInt R (openInclusionPair X i)).f (n : ℤ)
           ((relativeDualCochainCohomologyEquiv R (openInclusionPair X i) n).symm a)))
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 1000000 in
 /-- On a prescribed relative class, the canonical local cone connecting map is
 the negative of its actual positive ordinary cochain class. -/

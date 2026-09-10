@@ -24,5 +24,15 @@ The remaining content of the project is sorted into four folders:
 - `HodgeConjecture/Lemmas`: Supporting results needed by those definitions;
 - `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
 
-WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
+The dividing line is `HodgeConjecture/Statement.lean`: a module belongs in `Definitions` if it
+defines something the statement mentions, in `Lemmas` if it is needed only to build such a
+definition, and in `Other` otherwise. In particular nothing in `Other` may be reachable from the
+statement. Two checks keep this honest:
 
+- `lake build` builds `scripts/CheckStatementImports.lean`, which imports the statement and fails if
+  the resulting environment contains any module of `Other`;
+- `python3 scripts/check_import_layers.py` checks the converse — that every module of `Definitions`,
+  `Lemmas` and `Mathlib` really is used by the statement — plus that both umbrella modules are
+  complete.
+
+WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.

@@ -21,18 +21,21 @@ set_option pp.rawOnError true
 authors := ["The HodgeConjecture contributors"]
 %%%
 
-This is a mathematical and Lean guide to the formalization in the
-[`HodgeConjecture`](https://github.com/Paul-Lez/HodgeConjecture) repository.
-It follows the construction rather than the directory tree: rational classes are compared with
-filtered holomorphic de Rham cohomology; each irreducible component receives an exactly normalized
-supported class and the corresponding ambient Borel--Moore fundamental class; and the two sides
-meet in one inclusion of rational subspaces.
+This guide explains the formalization of the Hodge conjecture in the
+[`HodgeConjecture`](https://github.com/Paul-Lez/HodgeConjecture) repository, which will eventually
+appear in [Formal Conjectures](https://github.com/google-deepmind/formal-conjectures). The goal is
+to faithfully encode the statement of the
+[Clay Millennium Prize Problem](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=56)
+in Lean.
 
-The guide distinguishes two questions that are easy to conflate. The component class used in the
-statement is constructed for arbitrary codimension, including singular components. What is not yet
-proved is that the resulting map on cycles descends through rational equivalence, or that its values
-are Hodge classes. Those are the remaining comparison theorems, not hidden arguments to the
-definition.
+The conjecture is stated, not proved. A few classical theorems surrounding the statement are not
+yet formalized either; {ref "scope-and-status"}[Scope and status] lists them.
+
+The Lean code in this guide, including the terms that appear inside sentences, is elaborated when
+the site is built. Definitions are quoted in full, and the build checks that each quotation is
+definitionally equal to the declaration in the repository; theorems are listed with `#check`, and
+their statements appear on hover, as do the types and docstrings of all names. The site is
+generated with [Verso](https://github.com/leanprover/verso).
 
 {include 1 HodgeGuide.Overview}
 

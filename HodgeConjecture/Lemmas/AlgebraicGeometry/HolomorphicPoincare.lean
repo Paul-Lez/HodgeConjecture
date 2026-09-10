@@ -487,11 +487,6 @@ open scoped Manifold
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-local instance holomorphicPoincareIsManifold [SmoothOfRelativeDimension d X.hom] :
-    IsManifold (modelWithCornersSelf ℂ (Fin d → ℂ)) ω
-      (ComplexPoint X) :=
-  isManifold_omega X d
-
 /-- Restricting a holomorphic function does not change its value in a fixed chart. -/
 lemma chartSection_holomorphicRestrictionAlgHom
     [SmoothOfRelativeDimension d X.hom]

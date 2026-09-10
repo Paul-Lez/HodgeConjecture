@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicTopology.SingularStandardSimplexCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularStandardSimplexCone
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in

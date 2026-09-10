@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
-public import Other.AlgebraicGeometry.CycleComponentSheafClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
 
 /-!
 # Cycle classes and coniveau

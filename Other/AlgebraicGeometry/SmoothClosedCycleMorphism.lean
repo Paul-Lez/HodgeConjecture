@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.ComplexSheafBorelMoore
-public import Other.AlgebraicGeometry.ProjectiveAnalytification
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMoore
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytification
 public import Other.AlgebraicTopology.SingularChainSheafDerivedPushforward
 
 /-!
@@ -30,9 +30,6 @@ open CategoryTheory Limits TopologicalSpace Topology
 namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
-
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
 
 noncomputable local instance smoothClosedCycleAnalyticTopology
     (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=
@@ -130,6 +127,8 @@ def smoothClosedCycleTermwiseSupportedMorphism :
     singularChainSheafDerivedPushforwardWithClosedSupport (closedCycleAnalyticMap Z X i) ℚ
       (closedCycleAnalyticMap_isClosedEmbedding Z X i)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Forgetting actual termwise support gives precisely the normalized smooth-cycle
 morphism, not merely a scalar multiple of it. -/
 @[reassoc (attr := simp)]

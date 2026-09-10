@@ -25,9 +25,6 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (R : Type u) [Field R] (X : TopCat.{u}) [T1Space X] (x : X)
 
 /-- The actual singleton subspace used for the point's chain representative. -/

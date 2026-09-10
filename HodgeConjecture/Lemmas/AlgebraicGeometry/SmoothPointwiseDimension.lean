@@ -93,8 +93,8 @@ lemma SmoothOfRelativeDimension.orderKrullDim_eq_complex [IsIntegral X]
   let : Nonempty U := ⟨⟨x, hxU⟩⟩
   have hUdim : Order.krullDim U = d := by
     rw [orderKrullDim_affineOpen_eq_ringKrullDim U hU]
-    exact (complexRestrictionMap_isStandardSmoothOfRelativeDimension
-      (d := d) f hsmooth).ringKrullDim_eq_complex
+    exact (algebraMap_isStandardSmoothOfRelativeDimension
+      (d := d) (Over.mk f) hsmooth).ringKrullDim_eq_complex
   rw [← hUdim, ← Scheme.topologicalKrullDim_eq_orderKrullDim U.toScheme,
     ← Scheme.topologicalKrullDim_eq_orderKrullDim X]
   exact U.ι.isOpenEmbedding.isInducing.topologicalKrullDim_le
@@ -138,8 +138,8 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_of_isClosed [IsIntegral X
   let P : Ideal Γ(X, U) := (hU.primeIdealOf y).asIdeal
   let : P.IsMaximal := hU.primeIdealOf_isMaximal_of_isClosed y hx
   have hP : P.height = d :=
-    (complexRestrictionMap_isStandardSmoothOfRelativeDimension
-      (d := d) f hsmooth).height_eq_of_isMaximal P
+    (algebraMap_isStandardSmoothOfRelativeDimension
+      (d := d) (Over.mk f) hsmooth).height_eq_of_isMaximal P
   have hcoheight : Order.coheight x = d := by
     calc
       Order.coheight x = Order.coheight y := coheight_eq_of_isOpenImmersion (x := y) U.ι
