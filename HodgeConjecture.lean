@@ -16,8 +16,10 @@ limitations under the License.
 module  -- shake: keep-all --deprecated_module: ignore
 
 public import HodgeConjecture.Definitions.Algebra.DeRham.Basic
+public import HodgeConjecture.Definitions.Algebra.FieldToComplex
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
+public import HodgeConjecture.Definitions.Algebra.Homology.LinearDual
 public import HodgeConjecture.Definitions.Algebra.Homology.MapExtend
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
@@ -25,12 +27,14 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiCohomologyWithS
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiGlobalSectionsComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
+public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroupLift
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionAnalyticLeftInverse
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionNormalCoordinates
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionSourceOpen
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexSupportedSingularModel
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentPurity
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
@@ -45,6 +49,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicClosedImmersionCharts
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
+public import HodgeConjecture.Definitions.AlgebraicGeometry.IntegralProjectiveVariety
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ReducedSmoothClosedFiltration
@@ -99,6 +104,7 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.ShortExact
 public import HodgeConjecture.Lemmas.Algebra.Homology.DualExact
 public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexShiftNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
@@ -109,6 +115,8 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportConeCompariso
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularGlobalComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularNaturality
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionComplexPoint
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionResidueField
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineScheme
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineSpace
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAnalyticMaps
@@ -137,6 +145,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalFor
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HypercohomologyGlobalSectionsShift
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalyticImmersion
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytification
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationParacompact
@@ -223,14 +232,21 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularExcisionOpenCover
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularOpenCoverLebesgue
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularStandardSimplexCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularSubdivision
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularSubsetChains
 public import HodgeConjecture.Lemmas.AlgebraicTopology.StandardSphereAffineBoundary
 public import HodgeConjecture.Lemmas.AlgebraicTopology.StandardSphereSimplicialHomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSectionRestrictionConeNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSingularSectionNaturality
+public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWedge
+public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
+public import HodgeConjecture.Lemmas.Analysis.NormedSpace.WedgeCovectors
 public import HodgeConjecture.Lemmas.CategoryTheory.Abelian.KernelCompositionShortExact
 public import HodgeConjecture.Lemmas.Geometry.Manifold.Orientation
 public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
+public import HodgeConjecture.Lemmas.RingTheory.SmoothKrullDimension
+public import HodgeConjecture.Lemmas.RingTheory.TranscendenceDegreeKrullDimension
+public import HodgeConjecture.Lemmas.Topology.ChartedSpaceParacompact
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits

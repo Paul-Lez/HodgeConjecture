@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Lemmas.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueAcyclic
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainCohomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainSheafFlasque
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularExcisionField
-public import Mathlib.Geometry.Manifold.ChartedSpace
-public import Mathlib.Topology.Compactness.Paracompact
+public import HodgeConjecture.Lemmas.Topology.ChartedSpaceParacompact
 
 import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.Topology.ShrinkingLemma
@@ -45,166 +45,6 @@ open CategoryTheory Limits TopologicalSpace
 open scoped Simplicial
 
 universe u
-
-namespace TopologicalSpace
-
-/-- Every open subset of a compact Hausdorff charted space with locally compact,
-second-countable model is paracompact. This is the hereditary-paracompactness input used for
-compact analytic manifolds. -/
-theorem opens_paracompactSpace_of_compact_chartedSpace
-    {H M : Type u} [TopologicalSpace H] [TopologicalSpace M]
-    [ChartedSpace H M] [SecondCountableTopology H] [LocallyCompactSpace H]
-    [CompactSpace M] [T2Space M] (U : Opens M) :
-    ParacompactSpace U := by
-  let : SigmaCompactSpace M := inferInstance
-  let : SecondCountableTopology M :=
-    ChartedSpace.secondCountable_of_sigmaCompact H M
-  let : LocallyCompactSpace M := ChartedSpace.locallyCompactSpace H M
-  let : LocallyCompactSpace U := U.isOpen.locallyCompactSpace
-  let : SigmaCompactSpace U := inferInstance
-  infer_instance
-
-end TopologicalSpace
-
-namespace HomologicalComplex
-
-variable {R : Type u} [Field R]
-variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
-
-/-- Algebraic duality sends a map of nonnegative chain complexes contravariantly to a map of
-cochain complexes. -/
-def linearDualMap (f : K ⟶ L) :
-    L.linearDualCochainComplex ⟶ K.linearDualCochainComplex where
-  f n := ModuleCat.ofHom (f.f n).hom.dualMap
-  comm' i j hij := by
-    obtain rfl := hij
-    rw [HomologicalComplex.linearDualCochainComplex_d,
-      HomologicalComplex.linearDualCochainComplex_d]
-    ext φ
-    change Module.Dual R (L.X i) at φ
-    apply LinearMap.ext
-    intro x
-    change K.X (i + 1) at x
-    change φ ((f.f i).hom ((K.d (i + 1) i).hom x)) =
-      φ ((L.d (i + 1) i).hom ((f.f (i + 1)).hom x))
-    exact congrArg φ (ConcreteCategory.congr_hom (f.comm (i + 1) i) x).symm
-
-@[simp]
-lemma linearDualMap_id (K : ChainComplex (ModuleCat.{u} R) ℕ) :
-    linearDualMap (𝟙 K) = 𝟙 K.linearDualCochainComplex :=
-  rfl
-
-@[simp]
-lemma linearDualMap_comp (f : K ⟶ L) (g : L ⟶ M) :
-    linearDualMap (f ≫ g) = linearDualMap g ≫ linearDualMap f :=
-  rfl
-
-/-- Algebraic duality sends an isomorphism of chain complexes to an isomorphism of cochain
-complexes, reversing its direction. -/
-def linearDualIso (e : K ≅ L) :
-    L.linearDualCochainComplex ≅ K.linearDualCochainComplex where
-  hom := linearDualMap e.hom
-  inv := linearDualMap e.inv
-  hom_inv_id := by rw [← linearDualMap_comp, e.inv_hom_id, linearDualMap_id]
-  inv_hom_id := by rw [← linearDualMap_comp, e.hom_inv_id, linearDualMap_id]
-
-set_option backward.isDefEq.respectTransparency false in
-/-- Algebraic duality sends a chain homotopy contravariantly to a cochain homotopy. -/
-def linearDualHomotopy {f g : K ⟶ L} (h : Homotopy f g) :
-    Homotopy (linearDualMap f) (linearDualMap g) where
-  hom i j := ModuleCat.ofHom (h.hom j i).hom.dualMap
-  zero i j hij := by
-    change ¬(ComplexShape.down ℕ).Rel i j at hij
-    rw [h.zero j i hij]
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro φ
-    apply LinearMap.ext
-    intro x
-    simp
-  comm i := by
-    cases i with
-    | zero =>
-        rw [Homotopy.dNext_cochainComplex, Homotopy.prevD_zero_cochainComplex,
-          HomologicalComplex.linearDualCochainComplex_d]
-        dsimp only [HomologicalComplex.linearDualCochainComplex] at ⊢
-        dsimp only [linearDualMap]
-        apply ModuleCat.hom_ext
-        apply LinearMap.ext
-        intro φ
-        change Module.Dual R (L.X 0) at φ
-        apply LinearMap.ext
-        intro x
-        change K.X 0 at x
-        have hi := ConcreteCategory.congr_hom (h.comm 0) x
-        rw [Homotopy.dNext_zero_chainComplex,
-          Homotopy.prevD_chainComplex] at hi
-        simp only [ModuleCat.hom_ofHom, ModuleCat.hom_comp, ModuleCat.hom_add,
-          ModuleCat.hom_zero, LinearMap.comp_apply, LinearMap.add_apply,
-          LinearMap.zero_apply, LinearMap.dualMap_apply] at ⊢
-        simpa [add_assoc] using congrArg φ hi
-    | succ n =>
-        rw [Homotopy.dNext_cochainComplex, Homotopy.prevD_succ_cochainComplex,
-          HomologicalComplex.linearDualCochainComplex_d,
-          HomologicalComplex.linearDualCochainComplex_d]
-        dsimp only [HomologicalComplex.linearDualCochainComplex] at ⊢
-        dsimp only [linearDualMap]
-        apply ModuleCat.hom_ext
-        apply LinearMap.ext
-        intro φ
-        change Module.Dual R (L.X (n + 1)) at φ
-        apply LinearMap.ext
-        intro x
-        change K.X (n + 1) at x
-        have hi := ConcreteCategory.congr_hom (h.comm (n + 1)) x
-        rw [Homotopy.dNext_succ_chainComplex,
-          Homotopy.prevD_chainComplex] at hi
-        simp only [ModuleCat.hom_ofHom, ModuleCat.hom_comp, ModuleCat.hom_add,
-          LinearMap.comp_apply, LinearMap.add_apply, LinearMap.dualMap_apply] at ⊢
-        simpa [add_assoc, add_comm, add_left_comm] using congrArg φ hi
-
-/-- Algebraic duality sends a chain-homotopy equivalence contravariantly to a cochain-homotopy
-equivalence. -/
-def linearDualHomotopyEquiv (e : HomotopyEquiv K L) :
-    HomotopyEquiv L.linearDualCochainComplex K.linearDualCochainComplex where
-  hom := linearDualMap e.hom
-  inv := linearDualMap e.inv
-  homotopyHomInvId :=
-    (Homotopy.ofEq (linearDualMap_comp e.inv e.hom).symm).trans <|
-      (linearDualHomotopy e.homotopyInvHomId).trans <|
-        Homotopy.ofEq (linearDualMap_id L)
-  homotopyInvHomId :=
-    (Homotopy.ofEq (linearDualMap_comp e.hom e.inv).symm).trans <|
-      (linearDualHomotopy e.homotopyHomInvId).trans <|
-        Homotopy.ofEq (linearDualMap_id K)
-
-variable {C : Type*} [Category C] [Abelian C]
-variable {ι : Type*} {c : ComplexShape ι} {A B : HomologicalComplex C c}
-
-/-- The kernel of an epimorphic quasi-isomorphism of complexes is acyclic. -/
-lemma kernel_acyclic_of_epi_of_quasiIso (f : A ⟶ B) [Epi f] [QuasiIso f] :
-    (kernel f).Acyclic := by
-  let S := ShortComplex.mk (kernel.ι f) f (kernel.condition f)
-  have hS : S.ShortExact := { exact := ShortComplex.exact_kernel f }
-  exact hS.acyclic_X₁ (by dsimp [S]; infer_instance)
-
-/-- An epimorphism of nonnegative cochain complexes with acyclic kernel is a quasi-isomorphism. -/
-lemma quasiIso_of_epi_of_kernel_acyclic
-    {A B : CochainComplex C ℕ} (f : A ⟶ B) [Epi f]
-    (h : (kernel f).Acyclic) : QuasiIso f := by
-  rw [quasiIso_iff]
-  intro n
-  rw [quasiIsoAt_iff_isIso_homologyMap]
-  let S := ShortComplex.mk (kernel.ι f) f (kernel.condition f)
-  have hS : S.ShortExact := { exact := ShortComplex.exact_kernel f }
-  have hmono : Mono (homologyMap f n) :=
-    (hS.homology_exact₂ n).mono_g ((h n).isZero_homology.eq_of_src _ _)
-  have hepi : Epi (homologyMap f n) :=
-    (hS.homology_exact₃ n (n + 1) (by simp)).epi_f
-      ((h (n + 1)).isZero_homology.eq_of_tgt _ _)
-  exact @isIso_of_mono_of_epi C _ _ _ _ (homologyMap f n) hmono hepi
-
-end HomologicalComplex
 
 namespace AlgebraicTopology.Singular
 

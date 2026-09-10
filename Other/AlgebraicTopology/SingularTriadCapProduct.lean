@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicTopology.SingularCapProduct
+public import Other.AlgebraicTopology.SingularRelativeCapProduct
 public import Mathlib.Algebra.Homology.HomologicalComplexBiprod
 public import Mathlib.Algebra.Homology.QuasiIso
 

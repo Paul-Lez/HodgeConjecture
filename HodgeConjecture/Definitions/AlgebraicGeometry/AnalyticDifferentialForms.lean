@@ -17,14 +17,18 @@ module
 
 public import HodgeConjecture.Definitions.Algebra.DeRham.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
-public import Mathlib.Analysis.Calculus.DifferentialForm.Basic
+public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWedge
 
 /-!
 # Analytic differential forms
 
 This file constructs analytic differential forms from holomorphic functions and their actual
-manifold derivatives. A raw form is evaluated pointwise as an alternating continuous multilinear
-map. We quotient raw forms by the identities detected after every restriction and close those
+manifold derivatives. The pointwise algebra of wedges lives in
+`HodgeConjecture.Lemmas.Analysis.NormedSpace.WedgeCovectors` and
+`HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWedge`.
+
+A raw form is evaluated pointwise as an alternating continuous multilinear map. We quotient raw
+forms by the identities detected after every restriction and close those
 identities under the exterior derivative. This enforces analytic identities such as the chain
 rule, rather than only the algebraic identities of Kahler differentials.
 
@@ -34,7 +38,7 @@ vanish.
 
 @[expose] public noncomputable section
 
-open CategoryTheory TopologicalSpace
+open CategoryTheory DifferentialForm TopologicalSpace
 open scoped ContDiff Manifold
 
 namespace AlgebraicGeometry.ComplexPoint
@@ -42,209 +46,6 @@ namespace AlgebraicGeometry.ComplexPoint
 open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
-
-def wedgeCovectors (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E] :
-    (p : ℕ) → (Fin p → E →L[ℂ] ℂ) → E [⋀^Fin p]→L[ℂ] ℂ
-  | 0, _ => ContinuousAlternatingMap.constOfIsEmpty ℂ E (Fin 0) 1
-  | p + 1, L => ContinuousAlternatingMap.alternatizeUncurryFin
-      (ContinuousLinearMap.smulRight (L 0) (wedgeCovectors E p (fun i => L i.succ)))
-
-/-- Evaluation of a wedge of covectors is the determinant of their pairing matrix. -/
-lemma wedgeCovectors_apply_eq_det (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E] :
-    ∀ (p : ℕ) (L : Fin p → E →L[ℂ] ℂ) (v : Fin p → E),
-      wedgeCovectors E p L v = Matrix.det
-        (Matrix.of (fun i j ↦ L i (v j))) := by
-  intro p
-  induction p with
-  | zero =>
-      intro L v
-      simp [wedgeCovectors]
-  | succ p ih =>
-      intro L v
-      rw [wedgeCovectors, ContinuousAlternatingMap.alternatizeUncurryFin_apply,
-        Matrix.det_succ_row_zero]
-      refine Finset.sum_congr rfl fun j _ ↦ ?_
-      simp only [ContinuousLinearMap.smulRight_apply, Matrix.of_apply,
-        zsmul_eq_mul, Int.cast_pow, Int.cast_neg, Int.cast_one,
-        ContinuousAlternatingMap.smul_apply, smul_eq_mul]
-      rw [ih, mul_assoc]
-      congr 2
-
-/-- The wedge construction is additive in each covector. -/
-lemma wedgeCovectors_update_add (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
-    (p : ℕ) (L : Fin p → E →L[ℂ] ℂ) (i : Fin p) (a b : E →L[ℂ] ℂ) :
-    wedgeCovectors E p (Function.update L i (a + b)) =
-      wedgeCovectors E p (Function.update L i a) +
-        wedgeCovectors E p (Function.update L i b) := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [ContinuousAlternatingMap.add_apply]
-  simp only [wedgeCovectors_apply_eq_det]
-  let A : Matrix (Fin p) (Fin p) ℂ := Matrix.of (fun k j ↦ L k (v j))
-  have hAdd : Matrix.of (fun k j ↦ (Function.update L i (a + b)) k (v j)) =
-      A.updateRow i (fun j ↦ a (v j) + b (v j)) := by
-    ext k j
-    by_cases h : k = i <;> simp [A, h]
-  have ha : Matrix.of (fun k j ↦ (Function.update L i a) k (v j)) =
-      A.updateRow i (fun j ↦ a (v j)) := by
-    ext k j
-    by_cases h : k = i <;> simp [A, h]
-  have hb : Matrix.of (fun k j ↦ (Function.update L i b) k (v j)) =
-      A.updateRow i (fun j ↦ b (v j)) := by
-    ext k j
-    by_cases h : k = i <;> simp [A, h]
-  rw [hAdd, ha, hb]
-  exact Matrix.det_updateRow_add A i _ _
-
-/-- The wedge construction is homogeneous in each covector. -/
-lemma wedgeCovectors_update_smul (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
-    (p : ℕ) (L : Fin p → E →L[ℂ] ℂ) (i : Fin p) (c : ℂ) (a : E →L[ℂ] ℂ) :
-    wedgeCovectors E p (Function.update L i (c • a)) =
-      c • wedgeCovectors E p (Function.update L i a) := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [ContinuousAlternatingMap.smul_apply]
-  simp only [wedgeCovectors_apply_eq_det]
-  let A : Matrix (Fin p) (Fin p) ℂ := Matrix.of (fun k j ↦ L k (v j))
-  have hsmul : Matrix.of (fun k j ↦ (Function.update L i (c • a)) k (v j)) =
-      A.updateRow i (c • fun j ↦ a (v j)) := by
-    ext k j
-    by_cases h : k = i <;> simp [A, h]
-  have ha : Matrix.of (fun k j ↦ (Function.update L i a) k (v j)) =
-      A.updateRow i (fun j ↦ a (v j)) := by
-    ext k j
-    by_cases h : k = i <;> simp [A, h]
-  rw [hsmul, ha, Matrix.det_updateRow_smul]
-  simp
-
-/-- A wedge with two equal covectors vanishes. -/
-lemma wedgeCovectors_eq_zero_of_eq (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
-    (p : ℕ) (L : Fin p → E →L[ℂ] ℂ) (i j : Fin p)
-    (h : L i = L j) (hne : i ≠ j) :
-    wedgeCovectors E p L = 0 := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [wedgeCovectors_apply_eq_det]
-  apply Matrix.det_zero_of_row_eq hne
-  ext k
-  simp [h]
-
-/-- A wedge containing the zero covector vanishes. -/
-lemma wedgeCovectors_update_zero (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
-    (p : ℕ) (L : Fin p → E →L[ℂ] ℂ) (i : Fin p) :
-    wedgeCovectors E p (Function.update L i 0) = 0 := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [wedgeCovectors_apply_eq_det]
-  refine Matrix.det_eq_zero_of_row_eq_zero i fun j ↦ ?_
-  simp
-
-/-- The standard constant volume form on `ℂ^p`. -/
-def standardVolumeForm (p : ℕ) :
-    (Fin p → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
-  wedgeCovectors (Fin p → ℂ) p
-    (fun i ↦ ContinuousLinearMap.proj i)
-
-/-- A wedge of derivatives is the pullback of the standard constant volume form. -/
-lemma wedgeFDerivWithin_eq_standardVolumeForm_comp
-    (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
-    (p : ℕ) (f : Fin p → E → ℂ) (s : Set E) (x : E)
-    (hf : ∀ i, DifferentiableWithinAt ℂ (f i) s x)
-    (hs : UniqueDiffWithinAt ℂ s x) :
-    wedgeCovectors E p (fun i ↦ fderivWithin ℂ (f i) s x) =
-      (standardVolumeForm p).compContinuousLinearMap
-        (fderivWithin ℂ (fun y i ↦ f i y) s x) := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [wedgeCovectors_apply_eq_det,
-    ContinuousAlternatingMap.compContinuousLinearMap_apply,
-    standardVolumeForm, wedgeCovectors_apply_eq_det]
-  congr 1
-  ext i j
-  rw [fderivWithin_pi hf hs]
-  simp
-
-/-- A wedge of differentials of scalar functions, all differentiated within the same set. -/
-def exactWedgeWithin (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
-    (p : ℕ) (f : Fin p → E → ℂ) (s : Set E) :
-    E → E [⋀^Fin p]→L[ℂ] ℂ :=
-  fun x ↦ wedgeCovectors E p (fun i ↦ fderivWithin ℂ (f i) s x)
-
-/-- A wedge of exact one-forms is closed. The proof identifies it with the pullback of the
-constant volume form and applies naturality of the exterior derivative. -/
-lemma extDerivWithin_exactWedgeWithin_eq_zero
-    (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
-    (p : ℕ) (f : Fin p → E → ℂ) (s : Set E) (x : E)
-    (hs : IsOpen s) (hx : x ∈ s)
-    (hf : ∀ i, ContDiffOn ℂ ω (f i) s) :
-    extDerivWithin (exactWedgeWithin E p f s) s x = 0 := by
-  let F : E → (Fin p → ℂ) := fun y i ↦ f i y
-  let η : (Fin p → ℂ) → (Fin p → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
-    fun _ ↦ standardVolumeForm p
-  have hF : ContDiffWithinAt ℂ ω F s x := contDiffWithinAt_pi.2 fun i ↦ hf i x hx
-  have hEq : Set.EqOn (exactWedgeWithin E p f s)
-      (fun y ↦ (η (F y)).compContinuousLinearMap
-        (fderivWithin ℂ F s y)) s := by
-    intro y hy
-    exact wedgeFDerivWithin_eq_standardVolumeForm_comp E p f s y
-      (fun i ↦ (hf i y hy).differentiableWithinAt (by simp))
-      (hs.uniqueDiffWithinAt hy)
-  rw [extDerivWithin_congr' hEq hx]
-  rw [extDerivWithin_pullback
-    (hω := differentiableAt_const (x := F x) (standardVolumeForm p) |>.differentiableWithinAt)
-    (hf := hF) (hr := by simp) (hs := hs.uniqueDiffOn)
-    (hxc := by simpa [hs.interior_eq] using (show x ∈ closure s from subset_closure hx))
-    (hxs := hx) (hst := Set.mapsTo_univ F s)]
-  have hη : extDerivWithin η Set.univ (F x) = 0 := by
-    rw [extDerivWithin, show fderivWithin ℂ η Set.univ (F x) = 0 from
-      congrFun (fderivWithin_const (𝕜 := ℂ) (E := Fin p → ℂ)
-        (s := Set.univ) (standardVolumeForm p)) (F x)]
-    exact map_zero _
-  rw [hη]
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
-
-lemma exactWedgeWithin_differentiableWithinAt
-    (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
-    (p : ℕ) (f : Fin p → E → ℂ) (s : Set E) (x : E)
-    (hs : IsOpen s) (hx : x ∈ s)
-    (hf : ∀ i, ContDiffOn ℂ ω (f i) s) :
-    DifferentiableWithinAt ℂ (exactWedgeWithin E p f s) s x := by
-  let F : E → (Fin p → ℂ) := fun y i ↦ f i y
-  let η : (Fin p → ℂ) → (Fin p → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
-    fun _ ↦ standardVolumeForm p
-  have hF : ContDiffWithinAt ℂ ω F s x := contDiffWithinAt_pi.2 fun i ↦ hf i x hx
-  have hDF : DifferentiableWithinAt ℂ (fderivWithin ℂ F s) s x :=
-    (hF.fderivWithin_right (m := 1) hs.uniqueDiffOn (by simp) hx).differentiableWithinAt
-      one_ne_zero
-  have hPull : DifferentiableWithinAt ℂ
-      (fun y ↦ (η (F y)).compContinuousLinearMap (fderivWithin ℂ F s y)) s x :=
-    DifferentiableWithinAt.continuousAlternatingMapCompContinuousLinearMap
-      (differentiableWithinAt_const (c := standardVolumeForm p)) hDF
-  apply hPull.congr
-  · intro y hy
-    exact wedgeFDerivWithin_eq_standardVolumeForm_comp E p f s y
-      (fun i ↦ (hf i y hy).differentiableWithinAt (by simp))
-      (hs.uniqueDiffWithinAt hy)
-  · exact wedgeFDerivWithin_eq_standardVolumeForm_comp E p f s x
-      (fun i ↦ (hf i x hx).differentiableWithinAt (by simp))
-      (hs.uniqueDiffWithinAt hx)
-
-/-- Exterior differentiation of `a · df₁ ∧ ⋯ ∧ dfₚ` gives
-`da ∧ df₁ ∧ ⋯ ∧ dfₚ`. -/
-lemma extDerivWithin_smul_exactWedgeWithin
-    (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
-    (p : ℕ) (a : E → ℂ) (f : Fin p → E → ℂ) (s : Set E) (x : E)
-    (hs : IsOpen s) (hx : x ∈ s) (ha : ContDiffOn ℂ ω a s)
-    (hf : ∀ i, ContDiffOn ℂ ω (f i) s) :
-    extDerivWithin (fun y ↦ a y • exactWedgeWithin E p f s y) s x =
-      wedgeCovectors E (p + 1)
-        (Fin.cases (fderivWithin ℂ a s x)
-          (fun i ↦ fderivWithin ℂ (f i) s x)) := by
-  rw [extDerivWithin, fderivWithin_fun_smul
-    (hs.uniqueDiffWithinAt hx)
-    ((ha x hx).differentiableWithinAt (by simp))
-    (exactWedgeWithin_differentiableWithinAt E p f s x hs hx hf),
-    ContinuousAlternatingMap.alternatizeUncurryFin_add,
-    ContinuousAlternatingMap.alternatizeUncurryFin_smul]
-  change a x • extDerivWithin (exactWedgeWithin E p f s) s x + _ = _
-  rw [extDerivWithin_exactWedgeWithin_eq_zero E p f s x hs hx hf, smul_zero, zero_add]
-  simp [exactWedgeWithin, wedgeCovectors]
 
 noncomputable instance holomorphicFunctionPresheafAlgebra
     [SmoothOfRelativeDimension d X.hom]
@@ -462,7 +263,7 @@ def chartGeneratorEvaluation [SmoothOfRelativeDimension d X.hom]
     Algebra.DeRham.Generator (OpenHolomorphicFunctions X d U) p →
       (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
   fun g y ↦ chartSection X d U z g.1 y •
-    wedgeCovectors (Fin d → ℂ) p
+    ContinuousAlternatingMap.wedgeCovectors (Fin d → ℂ) p
       (fun i ↦ chartSectionDifferential X d U z (g.2 i) y)
 
 /-- Evaluation of a raw form in one fixed coordinate chart. -/
@@ -521,7 +322,7 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d X.hom]
         one_smul, Pi.sub_apply, chartGeneratorEvaluation]
       rw [hupdate, hupdate, hupdate,
         chartSectionDifferential_add X d U z a b hy,
-        wedgeCovectors_update_add]
+        ContinuousAlternatingMap.wedgeCovectors_update_add]
       module
   | diffSMul a₀ v i c a =>
       simp only [Algebra.DeRham.relationValue, map_sub, chartRawEvaluation_single,
@@ -529,7 +330,7 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d X.hom]
         chartGeneratorEvaluation]
       rw [hupdate, hupdate,
         chartSectionDifferential_smul X d U z c a hy,
-        wedgeCovectors_update_smul]
+        ContinuousAlternatingMap.wedgeCovectors_update_smul]
       module
   | diffMul a₀ v i a b =>
       simp only [Algebra.DeRham.relationValue, map_sub, chartRawEvaluation_single,
@@ -550,14 +351,15 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d X.hom]
           chartSection X d U z b y) • _ =
         (0 : (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)
       rw [chartSectionDifferential_mul X d U z a b hy,
-        wedgeCovectors_update_add, wedgeCovectors_update_smul,
-        wedgeCovectors_update_smul]
+        ContinuousAlternatingMap.wedgeCovectors_update_add,
+        ContinuousAlternatingMap.wedgeCovectors_update_smul,
+        ContinuousAlternatingMap.wedgeCovectors_update_smul]
       module
   | diffConst a₀ v i c =>
       simp only [Algebra.DeRham.relationValue, chartRawEvaluation_single, one_smul,
         chartGeneratorEvaluation]
       rw [hupdate, chartSectionDifferential_algebraMap X d U z c hy,
-        wedgeCovectors_update_zero]
+        ContinuousAlternatingMap.wedgeCovectors_update_zero]
       refine ContinuousAlternatingMap.ext fun w ↦ ?_
       simp
   | alt a₀ v i j h hne =>
@@ -565,7 +367,7 @@ lemma chartRawEvaluation_relationValue [SmoothOfRelativeDimension d X.hom]
         chartGeneratorEvaluation]
       have heq : chartSectionDifferential X d U z (v i) y =
           chartSectionDifferential X d U z (v j) y := by rw [h]
-      rw [wedgeCovectors_eq_zero_of_eq (Fin d → ℂ) p _ i j heq hne]
+      rw [ContinuousAlternatingMap.wedgeCovectors_eq_zero_of_eq (Fin d → ℂ) p _ i j heq hne]
       refine ContinuousAlternatingMap.ext fun w ↦ ?_
       simp
 

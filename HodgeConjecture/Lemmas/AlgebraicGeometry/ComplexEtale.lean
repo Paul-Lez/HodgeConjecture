@@ -35,6 +35,10 @@ one polynomial with nonzero derivative in its distinguished variable. The comple
 function theorem gives explicit local charts in which projection to the polynomial coordinates
 is a homeomorphism. This file constructs those charts and transports the result to the associated
 affine schemes.
+
+The charts themselves are statements about `ℂ`-algebra homomorphisms and live in namespace
+`AlgebraicGeometry.ComplexAlgHom`; only the last section, which transports them to schemes, is in
+`AlgebraicGeometry.ComplexPoint`.
 -/
 
 @[expose] public section
@@ -43,9 +47,9 @@ open scoped Polynomial Topology ContDiff
 
 open CategoryTheory Topology Filter
 
-namespace AlgebraicGeometry.ComplexPoint
+namespace AlgebraicGeometry.ComplexAlgHom
 
-open Point
+open ComplexPoint Point
 
 noncomputable section
 
@@ -803,7 +807,17 @@ lemma analyticAt_etaleAlgHomProjectionChart_symm_apply
       (algebraMap T (Localization.Away D.element) r)
   exact h.congr (.of_forall fun _ ↦ rfl)
 
-variable {T}
+end
+
+end AlgebraicGeometry.ComplexAlgHom
+
+namespace AlgebraicGeometry.ComplexPoint
+
+open ComplexAlgHom Point
+
+noncomputable section
+
+variable {n : ℕ} (P : StandardEtalePair (complexPolynomialRing n))
 
 /-- The complex-point map from the spectrum of a polynomial ring to algebraic affine space. -/
 def polynomialSpecToAffineSpacePointMap :
