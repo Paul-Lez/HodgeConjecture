@@ -15,6 +15,7 @@ set_option verso.code.warnLineLength 0
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+noncomputable section
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
@@ -31,7 +32,7 @@ The statement is a single proposition, comparing two subspaces of rational cohom
 as declared in `HodgeConjecture/Statement.lean`:
 
 ```lean -show
-namespace Overview
+namespace Guide.Overview.D1
 ```
 ```lean
 def HodgeConjecture : Prop :=
@@ -39,15 +40,38 @@ def HodgeConjecture : Prop :=
     Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p
 ```
 ```lean -show
-end Overview
-example : Overview.HodgeConjecture = HodgeConjecture := rfl
+end Guide.Overview.D1
+example : @Guide.Overview.D1.HodgeConjecture = @HodgeConjecture := rfl
 ```
 
-The two subspaces are the rational Hodge classes and the algebraic subspace:
+The two subspaces are the rational Hodge classes and the algebraic subspace. Their definitions,
+whose ingredients the following sections explain, read:
 
+```lean -show
+namespace Guide.Overview.D2
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses
-#check AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan
+def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] (p : ℕ) : Submodule K (FieldCohomology K X (2 * p)) :=
+  (hodgeFiltrationSubmodule K X p (2 * p)).comap
+    (fieldToDeRhamCohomologyLinear K X (2 * p))
+```
+```lean -show
+end Guide.Overview.D2
+example : @Guide.Overview.D2.hodgeClasses = @AlgebraicGeometry.ComplexPoint.hodgeClasses := rfl
+```
+```lean -show
+namespace Guide.Overview.D3
+```
+```lean
+def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (FieldCohomology ℚ X (2 * (p : ℤ))) :=
+  ⨆ (x : X.left) (hx : coheight x = p),
+    Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
+```
+```lean -show
+end Guide.Overview.D3
+example : @Guide.Overview.D3.algebraicCycleClassSpan = @AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan := rfl
 ```
 
 Mathematically it is the inclusion

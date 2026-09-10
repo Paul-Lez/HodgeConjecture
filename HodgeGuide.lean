@@ -32,9 +32,10 @@ The conjecture is stated, not proved. A few classical theorems surrounding the s
 yet formalized either; {ref "scope-and-status"}[Scope and status] lists them.
 
 The Lean code in this guide, including the terms that appear inside sentences, is elaborated when
-the site is built, so every declaration shown here exists in the repository with the displayed
-type. Hovering over a term or a name shows its type and docstring. The site is generated with
-[Verso](https://github.com/leanprover/verso).
+the site is built. Definitions are quoted in full, and the build checks that each quotation is
+definitionally equal to the declaration in the repository; theorems are listed with `#check`, and
+their statements appear on hover, as do the types and docstrings of all names. The site is
+generated with [Verso](https://github.com/leanprover/verso).
 
 {include 1 HodgeGuide.Overview}
 

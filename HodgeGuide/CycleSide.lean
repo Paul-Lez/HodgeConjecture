@@ -15,8 +15,14 @@ set_option verso.code.warnLineLength 0
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+noncomputable section
+universe u
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+
+local instance analyticSupportHasDerivedCategory (X : Over (Spec ↧ℂ)) :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 ```
 
 # Cycles are indexed by generic points
@@ -26,11 +32,54 @@ an irreducible closed subset with generic point $`x`. A codimension-$`p` cycle i
 integer combination of points of coheight $`p`. The formalization uses this description
 throughout, in place of a separate type of subvarieties.
 
+```lean -show
+namespace Guide.Cycles.D1
+```
 ```lean
-#check AlgebraicGeometry.CodimensionCycle
-#check AlgebraicGeometry.CodimensionCycle.single
-#check AlgebraicGeometry.ChowGroup
-#check AlgebraicGeometry.RationalChowGroup
+abbrev CodimensionCycle (X : Scheme.{u}) (p : ℕ) := codimensionCycleSubgroup X p
+```
+```lean -show
+end Guide.Cycles.D1
+example : @Guide.Cycles.D1.CodimensionCycle.{u} = @AlgebraicGeometry.CodimensionCycle.{u} := rfl
+```
+```lean -show
+namespace Guide.Cycles.D2
+```
+```lean
+noncomputable def CodimensionCycle.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
+    (n : ℤ) : CodimensionCycle X p := by
+  classical
+  exact ⟨Function.locallyFinsuppWithin.single x n, by
+    intro y hy
+    by_cases h : y = x
+    · simpa [h] using hx
+    · simp [Function.locallyFinsuppWithin.single_apply, h] at hy⟩
+```
+```lean -show
+end Guide.Cycles.D2
+example : @Guide.Cycles.D2.CodimensionCycle.single.{u} = @AlgebraicGeometry.CodimensionCycle.single.{u} := rfl
+```
+```lean -show
+namespace Guide.Cycles.D3
+```
+```lean
+abbrev ChowGroup (X : Scheme.{u}) (p : ℕ) :=
+  CodimensionCycle X p ⧸ rationalEquivalenceSubgroup X p
+```
+```lean -show
+end Guide.Cycles.D3
+example : @Guide.Cycles.D3.ChowGroup.{u} = @AlgebraicGeometry.ChowGroup.{u} := rfl
+```
+```lean -show
+namespace Guide.Cycles.D4
+```
+```lean
+noncomputable abbrev RationalChowGroup (X : Scheme.{u}) (p : ℕ) :=
+  TensorProduct ℤ ℚ (ChowGroup X p)
+```
+```lean -show
+end Guide.Cycles.D4
+example : @Guide.Cycles.D4.RationalChowGroup.{u} = @AlgebraicGeometry.RationalChowGroup.{u} := rfl
 ```
 
 Rational equivalence is defined in the usual way. For an integral Noetherian closed subscheme
@@ -49,10 +98,44 @@ immersion into {lean}`X.left`. The
 support of the subvariety in $`X(\mathbb C)` is the preimage of $`\overline{\{x\}}` under the map
 from complex points to scheme points, and it is closed in the analytic topology.
 
+```lean -show
+namespace Guide.Cycles.D5
+```
 ```lean
-#check AlgebraicGeometry.cycleComponent
-#check AlgebraicGeometry.cycleComponentι
-#check AlgebraicGeometry.cycleComponentSupport
+def cycleComponent (X : Scheme) (x : X) : Scheme :=
+  (Scheme.IdealSheafData.vanishingIdeal
+    (X := X) ⟨closure {x}, isClosed_closure⟩).subscheme
+```
+```lean -show
+end Guide.Cycles.D5
+example : @Guide.Cycles.D5.cycleComponent.{u} = @AlgebraicGeometry.cycleComponent.{u} := rfl
+```
+```lean -show
+namespace Guide.Cycles.D6
+```
+```lean
+def cycleComponentι (X : Scheme) (x : X) : cycleComponent X x ⟶ X :=
+  (Scheme.IdealSheafData.vanishingIdeal
+    (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι
+```
+```lean -show
+end Guide.Cycles.D6
+example : @Guide.Cycles.D6.cycleComponentι.{u} = @AlgebraicGeometry.cycleComponentι.{u} := rfl
+```
+```lean -show
+namespace Guide.Cycles.D7
+```
+```lean
+def cycleComponentSupport (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom] (x : X.left) : Set (ComplexPoint X) :=
+  Point.underlying ⁻¹' closure {x}
+```
+```lean -show
+end Guide.Cycles.D7
+example : @Guide.Cycles.D7.cycleComponentSupport = @AlgebraicGeometry.cycleComponentSupport := rfl
+```
+
+```lean
 #check AlgebraicGeometry.isClosed_cycleComponentSupport
 ```
 
@@ -73,10 +156,61 @@ $`\underline{\mathbb Q}_X` to the result, and takes the mapping cone shifted by 
 Hypercohomology of this complex is $`H^n_Z(X;\mathbb Q)`, and the connecting map of the triangle
 is {name}`forgetSupport`, the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
 
+```lean -show
+namespace Guide.Cycles.D8
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.rationalCohomologyWithSupportComplex
-#check AlgebraicGeometry.ComplexPoint.RationalCohomologyWithSupport
-#check AlgebraicGeometry.ComplexPoint.forgetSupport
+abbrev rationalCohomologyWithSupportComplex (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) :
+    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+  CochainComplex.mappingCone (rationalRestrictionComplexInt X Z)
+```
+```lean -show
+end Guide.Cycles.D8
+example : @Guide.Cycles.D8.rationalCohomologyWithSupportComplex = @AlgebraicGeometry.ComplexPoint.rationalCohomologyWithSupportComplex := rfl
+```
+```lean -show
+namespace Guide.Cycles.D9
+```
+```lean
+abbrev RationalCohomologyWithSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
+    Type 1 :=
+  Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)
+```
+```lean -show
+end Guide.Cycles.D9
+example : @Guide.Cycles.D9.RationalCohomologyWithSupport = @AlgebraicGeometry.ComplexPoint.RationalCohomologyWithSupport := rfl
+```
+```lean -show
+namespace Guide.Cycles.D10
+```
+```lean
+def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
+    RationalCohomologyWithSupport X Z n →+ FieldCohomology ℚ X n where
+  toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
+  map_zero' := by
+    let e : FieldCohomology ℚ X n ≃
+        ShiftedHom
+          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
+          (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=
+      Localization.SmallShiftedHom.equiv
+        (analyticQuasiIsomorphisms X) DerivedCategory.Q
+    apply e.injective
+    simp only [e, Localization.SmallShiftedHom.equiv_comp,
+      hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
+  map_add' α β := by
+    let eTarget : FieldCohomology ℚ X n ≃
+        ShiftedHom
+          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
+          (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=
+      Localization.SmallShiftedHom.equiv
+        (analyticQuasiIsomorphisms X) DerivedCategory.Q
+    apply eTarget.injective
+    simp only [eTarget, Localization.SmallShiftedHom.equiv_comp,
+      hypercohomologyEquiv_add, ShiftedHom.add_comp]
+```
+```lean -show
+end Guide.Cycles.D10
+example : @Guide.Cycles.D10.forgetSupport = @AlgebraicGeometry.ComplexPoint.forgetSupport := rfl
 ```
 
 For the triangle and the exact sequence of a pair see Goresky,
@@ -91,10 +225,39 @@ components of a cycle with their multiplicities gives an additive map on integra
 extension of scalars gives a $`\mathbb Q`-linear map on rational cycles. The evaluation formulas
 below hold for all integer and rational coefficients.
 
+```lean -show
+namespace Guide.Cycles.D11
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.sheafCycleClassOnCycles
+def sheafCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
+    CodimensionCycle V.scheme p →+ FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := V.dimension))
+```
+```lean -show
+end Guide.Cycles.D11
+example : @Guide.Cycles.D11.sheafCycleClassOnCycles = @AlgebraicGeometry.ComplexPoint.sheafCycleClassOnCycles := rfl
+```
+
+```lean
 #check AlgebraicGeometry.ComplexPoint.sheafCycleClassOnCycles_single
-#check AlgebraicGeometry.ComplexPoint.rationalSheafCycleClassOnCycles
+```
+
+```lean -show
+namespace Guide.Cycles.D12
+```
+```lean
+def rationalSheafCycleClassOnCycles
+    (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
+    TensorProduct ℤ ℚ (CodimensionCycle V.scheme p) →ₗ[ℚ]
+      FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+  TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
+```
+```lean -show
+end Guide.Cycles.D12
+example : @Guide.Cycles.D12.rationalSheafCycleClassOnCycles = @AlgebraicGeometry.ComplexPoint.rationalSheafCycleClassOnCycles := rfl
+```
+
+```lean
 #check AlgebraicGeometry.ComplexPoint.rationalSheafCycleClassOnCycles_tmul_single
 ```
 
@@ -102,13 +265,26 @@ These maps take a {name}`DimensionedSmoothProjectiveComplexVariety`, a smooth pr
 bundled with its dimension, which the construction of the class of a subvariety needs. The
 constructor {name DimensionedSmoothProjectiveComplexVariety.ofOver}`ofOver` packages {lean}`X` with
 {lean}`dim X.left` and the proof, from smoothness and integrality, that this is the relative
-dimension of {lean}`X` over $`\mathbb C`. The statement does not use the bundle:
-{name}`algebraicCycleClassSpan` evaluates each class at {lean}`dim X.left` directly.
+dimension of {lean}`X` over $`\mathbb C`.
 
-```lean
-#check AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety.ofOver
-#check AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan
+```lean -show
+namespace Guide.Cycles.D13
 ```
+```lean
+def DimensionedSmoothProjectiveComplexVariety.ofOver (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] : DimensionedSmoothProjectiveComplexVariety where
+  toSmoothProjectiveComplexVariety :=
+    { scheme := X.left
+      structureMap := X.hom }
+  dimension := TopologicalSpace.dim X.left
+```
+```lean -show
+end Guide.Cycles.D13
+example : @Guide.Cycles.D13.DimensionedSmoothProjectiveComplexVariety.ofOver = @AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety.ofOver := rfl
+```
+
+The statement does not use the bundle: {name}`algebraicCycleClassSpan`, quoted in the overview,
+evaluates each class at {lean}`dim X.left` directly.
 
 Whether these maps factor through rational equivalence is a separate question, taken up with the
 statement.

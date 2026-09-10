@@ -16,6 +16,9 @@ set_option verso.code.warnLineLength 0
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+noncomputable section
+universe u u_1
+open AlgebraicGeometry.ChowGroup
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
@@ -31,9 +34,21 @@ The algebraic subspace is the rational span of these classes:
 $$`A^p(X)=\sum_{\operatorname{coht}(x)=p}
   \mathbb Q\,\operatorname{cl}_X(\overline{\{x\}}).`
 
+```lean -show
+namespace Guide.Statement.D2
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass
-#check AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan
+def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (FieldCohomology ℚ X (2 * (p : ℤ))) :=
+  ⨆ (x : X.left) (hx : coheight x = p),
+    Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
+```
+```lean -show
+end Guide.Statement.D2
+example : @Guide.Statement.D2.algebraicCycleClassSpan = @AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan := rfl
+```
+
+```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_mem_algebraicCycleClassSpan
 ```
 
@@ -49,7 +64,7 @@ is elaborated when the site is built, and the build checks that it is definition
 declaration in the repository.
 
 ```lean -show
-namespace Statement
+namespace Guide.Statement.D1
 ```
 ```lean
 def HodgeConjecture : Prop :=
@@ -57,8 +72,8 @@ def HodgeConjecture : Prop :=
     Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p
 ```
 ```lean -show
-end Statement
-example : Statement.HodgeConjecture = HodgeConjecture := rfl
+end Guide.Statement.D1
+example : @Guide.Statement.D1.HodgeConjecture = @HodgeConjecture := rfl
 ```
 
 It quantifies over a scheme {lean}`X` over $`\mathbb C` that is integral with smooth and projective
@@ -81,9 +96,42 @@ every principal-divisor relation. The descent itself is formalized as a construc
 this vanishing as a hypothesis, but the vanishing has not been proved for the classes constructed
 here.
 
+```lean -show
+namespace Guide.Statement.D3
+```
 ```lean
-#check AlgebraicGeometry.ChowGroup.cycleClassOfComponents
-#check AlgebraicGeometry.ChowGroup.rationalCycleClassOfComponents
+def ChowGroup.cycleClassOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
+    {M : Type*} [AddCommGroup M]
+    (componentClass : ∀ (x : X), coheight x = p → M)
+    (hprincipal : ∀ D : PrincipalDivisor X p,
+      cycleClassOnAlgebraicCyclesOfComponents componentClass D.pushforwardCycle = 0) :
+    ChowGroup X p →+ M :=
+  liftCycleClass (cycleClassOnCyclesOfComponents componentClass)
+    (rationalEquivalenceSubgroup_le_cycleClassOnCyclesOfComponents_ker
+      componentClass hprincipal)
+```
+```lean -show
+end Guide.Statement.D3
+example : @Guide.Statement.D3.ChowGroup.cycleClassOfComponents.{u, u_1} = @AlgebraicGeometry.ChowGroup.cycleClassOfComponents.{u, u_1} := rfl
+```
+```lean -show
+namespace Guide.Statement.D4
+```
+```lean
+def ChowGroup.rationalCycleClassOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
+    {M : Type*} [AddCommGroup M] [Module ℚ M]
+    (componentClass : ∀ (x : X), coheight x = p → M)
+    (hprincipal : ∀ D : PrincipalDivisor X p,
+      cycleClassOnAlgebraicCyclesOfComponents componentClass D.pushforwardCycle = 0) :
+    RationalChowGroup X p →ₗ[ℚ] M :=
+  rationalExtension (cycleClassOfComponents componentClass hprincipal)
+```
+```lean -show
+end Guide.Statement.D4
+example : @Guide.Statement.D4.ChowGroup.rationalCycleClassOfComponents.{u, u_1} = @AlgebraicGeometry.ChowGroup.rationalCycleClassOfComponents.{u, u_1} := rfl
+```
+
+```lean
 #check AlgebraicGeometry.ChowGroup.cycleClassOfComponents_mk
 ```
 

@@ -15,8 +15,16 @@ set_option verso.code.warnLineLength 0
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+noncomputable section
+open CategoryTheory.Limits Opposite AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+
+local instance complexSheafBorelMooreSheafDerivedCategory (X : Over (Spec ↧ℂ)) : HasDerivedCategory
+    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) :=
+  HasDerivedCategory.standard _
+local instance complexSheafBorelMooreGroupsDerivedCategory : HasDerivedCategory AddCommGrpCat :=
+  HasDerivedCategory.standard _
 ```
 
 # The class to be constructed
@@ -53,9 +61,53 @@ natural-number subtraction in the types exact. Normal charts give local classes 
 these classes agree on overlaps, and they glue to a section of the sheaf of relative cohomology
 over $`X\setminus Z_{\mathrm{sing}}`.
 
+```lean -show
+namespace Guide.Subvariety.D1
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothClosedLiftCoclassSection
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection
+def cycleComponentSmoothClosedLiftCoclassSection (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (hx : coheight x = p) :
+    (supportRelativeCohomologySheaf
+      (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
+      (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+      (2 * p)).obj.obj (op ⊤) := by
+  let := cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension X x (d := d) hx
+  have hdeg := cycleComponentSmoothClosedLift_codimension X x (d := d) hx
+  exact hdeg ▸ smoothClosedSupportCoclassSection
+    (cycleComponentSmoothLocusAmbientOpenOver X x)
+    (cycleComponentSmoothLocusOver X x)
+    (cycleComponentSmoothLocusClosedLiftOver X x) (d - p) d
+```
+```lean -show
+end Guide.Subvariety.D1
+example : @Guide.Subvariety.D1.cycleComponentSmoothClosedLiftCoclassSection = @AlgebraicGeometry.ComplexPoint.cycleComponentSmoothClosedLiftCoclassSection := rfl
+```
+```lean -show
+namespace Guide.Subvariety.D2
+```
+```lean
+def cycleComponentSmoothSupportCoclassSection (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (hx : coheight x = p) :
+    (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+      (cycleComponentSupport X x) (2 * p)).obj.obj
+      (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
+  supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)
+    (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
+    (cycleComponentSupport X x)
+    (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+    (cycleComponentSmoothClosedLiftAmbientMap_support X x)
+    (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
+    (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
+    (cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx)
+```
+```lean -show
+end Guide.Subvariety.D2
+example : @Guide.Subvariety.D2.cycleComponentSmoothSupportCoclassSection = @AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection := rfl
+```
+
+```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection_restrict
 ```
 
@@ -77,8 +129,59 @@ all of $`Z`.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSupportExtensionIso
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSupportedClassNormalizationIso
+```
+
+```lean -show
+namespace Guide.Subvariety.D3
+```
+```lean
+def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (hx : coheight x = p) :
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+      (.up ℤ)).obj (complexSupportInjectiveComplex X
+        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
+        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
+          (2 * (p : ℤ))) := by
+  let := cycleComponentSupportSectionRestriction_homology_isIso X x (d := d) hx
+  exact asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
+```
+```lean -show
+end Guide.Subvariety.D3
+example : @Guide.Subvariety.D3.cycleComponentSupportExtensionIso = @AlgebraicGeometry.ComplexPoint.cycleComponentSupportExtensionIso := rfl
+```
+```lean -show
+namespace Guide.Subvariety.D4
+```
+```lean
+def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (hx : coheight x = p) :
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+      (.up ℤ)).obj (complexSupportInjectiveComplex X
+        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
+      (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+        (cycleComponentSupport X x) (2 * p)).obj.obj
+          (op (cycleComponentSmoothSupportAmbientOpen X x)) := by
+  refine cycleComponentSupportExtensionIso X x (d := d) hx ≪≫
+    cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := d) hx ≪≫ ?_
+  let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+      (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
+        (complexSupportInjectiveCohomologySheafIsoRelative X
+          (cycleComponentAnalyticClosedSupport X x) (2 * p))
+  have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
+  dsimp only [TopCat.Sheaf.supportEvaluation, Functor.comp_obj] at e
+  rw [he] at e
+  exact e
+```
+```lean -show
+end Guide.Subvariety.D4
+example : @Guide.Subvariety.D4.cycleComponentSupportedClassNormalizationIso = @AlgebraicGeometry.ComplexPoint.cycleComponentSupportedClassNormalizationIso := rfl
+```
+
+```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSupportedInjectiveClass_unique
 ```
 
@@ -87,9 +190,42 @@ it through the comparison with the mapping-cone model of the previous section gi
 the subvariety in cohomology with support, and forgetting the support gives its class in ordinary
 cohomology.
 
+```lean -show
+namespace Guide.Subvariety.D5
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafSupportedClass
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass
+def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (hx : coheight x = p) :
+    RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
+  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
+    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
+      (cycleComponentSupportedInjectiveClass X x (d := d) hx)
+```
+```lean -show
+end Guide.Subvariety.D5
+example : @Guide.Subvariety.D5.cycleComponentSheafSupportedClass = @AlgebraicGeometry.ComplexPoint.cycleComponentSheafSupportedClass := rfl
+```
+```lean -show
+namespace Guide.Subvariety.D6
+```
+```lean
+def cycleComponentSheafClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (hx : coheight x = p) : FieldCohomology ℚ X (2 * (p : ℤ)) :=
+  (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
+    (HomologicalComplex.homologyMap
+      (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
+        (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
+        (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
+      (cycleComponentSupportedInjectiveClass X x (d := d) hx))
+```
+```lean -show
+end Guide.Subvariety.D6
+example : @Guide.Subvariety.D6.cycleComponentSheafClass = @AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass := rfl
+```
+
+```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_eq_forgetSupport
 ```
 
@@ -111,11 +247,67 @@ $`Z` relative to the ambient space, and the isomorphism above gives duality in e
 $$`H_i^{\mathrm{BM}}(Z\subset X;\mathbb Q)
   \simeq H_Z^{2d-i}(X;\mathbb Q).`
 
+```lean -show
+namespace Guide.Subvariety.D7
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.ComplexAmbientSheafBorelMooreHomology
-#check AlgebraicGeometry.ComplexPoint.complexChainSheafPlusOrientationIso
-#check AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreHomologyIso
-#check AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport
+def ComplexAmbientSheafBorelMooreHomology (X : Over (Spec ↧ℂ)) (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
+    (Z : Closeds (ComplexPoint X)) (i : ℤ) : AddCommGrpCat :=
+  (DerivedCategory.Plus.homologyFunctor AddCommGrpCat (-i)).obj
+    (complexAmbientSheafBorelMooreObject X d Z)
+```
+```lean -show
+end Guide.Subvariety.D7
+example : @Guide.Subvariety.D7.ComplexAmbientSheafBorelMooreHomology = @AlgebraicGeometry.ComplexPoint.ComplexAmbientSheafBorelMooreHomology := rfl
+```
+```lean -show
+namespace Guide.Subvariety.D8
+```
+```lean
+def complexChainSheafPlusOrientationIso (X : Over (Spec ↧ℂ)) (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)] :
+    complexChainSheafPlusObject X d ≅
+      (complexConstantRationalSheafPlusObject X)⟦2 * (d : ℤ)⟧ :=
+  complexChainSheafPlusIsoOfOrientation X d
+    (complexOrientationHomologySheafIso X d).symm
+```
+```lean -show
+end Guide.Subvariety.D8
+example : @Guide.Subvariety.D8.complexChainSheafPlusOrientationIso = @AlgebraicGeometry.ComplexPoint.complexChainSheafPlusOrientationIso := rfl
+```
+```lean -show
+namespace Guide.Subvariety.D9
+```
+```lean
+def complexAmbientSheafBorelMooreHomologyIso (X : Over (Spec ↧ℂ)) (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
+    (Z : Closeds (ComplexPoint X)) (i : ℤ) :
+    ComplexAmbientSheafBorelMooreHomology X d Z i ≅
+      ComplexDerivedSupportedCohomology X Z (2 * (d : ℤ) - i) :=
+  complexAmbientSheafBorelMooreHomologyIsoOfOrientation X d
+    (complexOrientationHomologySheafIso X d).symm Z i
+```
+```lean -show
+end Guide.Subvariety.D9
+example : @Guide.Subvariety.D9.complexAmbientSheafBorelMooreHomologyIso = @AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreHomologyIso := rfl
+```
+```lean -show
+namespace Guide.Subvariety.D10
+```
+```lean
+def complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport (X : Over (Spec ↧ℂ)) (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
+    (Z : Closeds (ComplexPoint X)) (p : ℕ) (hp : p ≤ d) :
+    ComplexAmbientSheafBorelMooreHomology X d Z
+        (2 * ((d - p : ℕ) : ℤ)) ≃+
+      RationalCohomologyWithSupport X Z (2 * (p : ℤ)) :=
+  (complexAmbientSheafBorelMooreCycleDegreeIso X d Z p hp).addCommGroupIsoToAddEquiv.trans
+    (complexDerivedSupportedCohomologyAddEquivRationalSupport X Z (2 * (p : ℤ)))
+```
+```lean -show
+end Guide.Subvariety.D10
+example : @Guide.Subvariety.D10.complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport = @AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport := rfl
 ```
 
 The fundamental class $`[Z]_{\mathrm{BM}}` is defined as the image of the class of Step 2 under
@@ -123,8 +315,26 @@ the inverse of this duality, in degree $`i=2(d-p)`. Two theorems confirm that it
 object: duality sends $`[Z]_{\mathrm{BM}}` back to the class with support, and the route through
 Borel–Moore homology to ordinary cohomology gives the same class $`\operatorname{cl}_X(Z)`.
 
+```lean -show
+namespace Guide.Subvariety.D11
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafBorelMooreFundamentalClass
+def cycleComponentSheafBorelMooreFundamentalClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (hx : coheight x = p) :
+    ComplexAmbientSheafBorelMooreHomology X d (cycleComponentAnalyticClosedSupport X x)
+      (2 * ((d - p : ℕ) : ℤ)) :=
+  (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X d
+    (cycleComponentAnalyticClosedSupport X x) p
+    (cycleComponentSheafClass_codimension_le X x (d := d) hx)).symm
+      (cycleComponentSheafSupportedClass X x (d := d) hx)
+```
+```lean -show
+end Guide.Subvariety.D11
+example : @Guide.Subvariety.D11.cycleComponentSheafBorelMooreFundamentalClass = @AlgebraicGeometry.ComplexPoint.cycleComponentSheafBorelMooreFundamentalClass := rfl
+```
+
+```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafBorelMooreFundamentalClass_duality
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafBorelMooreFundamentalClass_toFieldCohomology
 ```

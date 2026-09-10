@@ -15,6 +15,7 @@ set_option verso.code.warnLineLength 0
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+noncomputable section
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
@@ -32,15 +33,43 @@ Sheafifying degree by degree gives the holomorphic de Rham complex. It is indexe
 and vanishes in negative degrees, because the shifts used later act on $`\mathbb Z`-indexed
 complexes.
 
+```lean -show
+namespace Guide.Hodge.D1
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.holomorphicDeRhamComplexInt
-#check AlgebraicGeometry.ComplexPoint.constantsToHolomorphicDeRhamComplexInt
-#check AlgebraicGeometry.ComplexPoint.constantsToHolomorphicDeRhamComplexInt_quasiIso
+def holomorphicDeRhamComplexInt (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] :
+    CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(ComplexPoint X)) ℤ :=
+  (holomorphicDeRhamComplex X (dim X.left)).extend ComplexShape.embeddingUpNat
+```
+```lean -show
+end Guide.Hodge.D1
+example : @Guide.Hodge.D1.holomorphicDeRhamComplexInt = @AlgebraicGeometry.ComplexPoint.holomorphicDeRhamComplexInt := rfl
 ```
 
 Constant functions give a morphism to the de Rham complex from the constant sheaf
-$`\underline{\mathbb C}_X`, placed in degree zero. The last declaration is the holomorphic Poincaré
-lemma: on stalks, a closed holomorphic form of positive degree is exact, and the closed holomorphic
+$`\underline{\mathbb C}_X`, placed in degree zero.
+
+```lean -show
+namespace Guide.Hodge.D2
+```
+```lean
+def constantsToHolomorphicDeRhamComplexInt (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] : constantComplexSheafComplexInt X ⟶ holomorphicDeRhamComplexInt X :=
+  HomologicalComplex.extendMap
+    (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat
+```
+```lean -show
+end Guide.Hodge.D2
+example : @Guide.Hodge.D2.constantsToHolomorphicDeRhamComplexInt = @AlgebraicGeometry.ComplexPoint.constantsToHolomorphicDeRhamComplexInt := rfl
+```
+
+The instance below is the holomorphic Poincaré lemma:
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.constantsToHolomorphicDeRhamComplexInt_quasiIso
+```
+
+It says that, on stalks, a closed holomorphic form of positive degree is exact, and the closed holomorphic
 functions are the locally constant ones, so
 
 $$`\underline{\mathbb C}_X \longrightarrow \Omega_X^\bullet`
@@ -64,11 +93,56 @@ localization of complexes at quasi-isomorphisms without choosing a model for it.
 cohomology and de Rham cohomology are the cases $`K^\bullet=\underline{\mathbb Q}_X` and
 $`K^\bullet=\Omega_X^\bullet`.
 
+```lean -show
+namespace Guide.Hodge.D3
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.Hypercohomology
-#check AlgebraicGeometry.ComplexPoint.FieldCohomology
-#check AlgebraicGeometry.ComplexPoint.DeRhamHypercohomology
-#check AlgebraicGeometry.ComplexPoint.fieldToDeRhamCohomologyLinear
+abbrev Hypercohomology (X : Over (Spec ↧ℂ)) (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+    (n : ℤ) : Type 1 :=
+  Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
+    (constantIntegerSheafComplexInt X) K n
+```
+```lean -show
+end Guide.Hodge.D3
+example : @Guide.Hodge.D3.Hypercohomology = @AlgebraicGeometry.ComplexPoint.Hypercohomology := rfl
+```
+```lean -show
+namespace Guide.Hodge.D4
+```
+```lean
+abbrev FieldCohomology (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℤ) : Type 1 :=
+  Hypercohomology X (constantFieldSheafComplexInt K X) n
+```
+```lean -show
+end Guide.Hodge.D4
+example : @Guide.Hodge.D4.FieldCohomology = @AlgebraicGeometry.ComplexPoint.FieldCohomology := rfl
+```
+```lean -show
+namespace Guide.Hodge.D5
+```
+```lean
+abbrev DeRhamHypercohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    Type 1 :=
+  Hypercohomology X (holomorphicDeRhamComplexInt X) n
+```
+```lean -show
+end Guide.Hodge.D5
+example : @Guide.Hodge.D5.DeRhamHypercohomology = @AlgebraicGeometry.ComplexPoint.DeRhamHypercohomology := rfl
+```
+```lean -show
+namespace Guide.Hodge.D6
+```
+```lean
+def fieldToDeRhamCohomologyLinear (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    FieldCohomology K X n →ₗ[K] DeRhamHypercohomology X n where
+  toFun := fieldToDeRhamCohomology K X n
+  map_add' := (fieldToDeRhamCohomology K X n).map_add
+  map_smul' := fieldToDeRhamCohomology_smul K X n
+```
+```lean -show
+end Guide.Hodge.D6
+example : @Guide.Hodge.D6.fieldToDeRhamCohomologyLinear = @AlgebraicGeometry.ComplexPoint.fieldToDeRhamCohomologyLinear := rfl
 ```
 
 The comparison map $`H^n(X;\mathbb Q)\to H^n_{\mathrm{dR}}(X)` is induced by the composite
@@ -90,11 +164,57 @@ $`F^pH^n_{\mathrm{dR}}(X)` is the image of that map. This is the standard defini
 [p. 51](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=59), where the same
 truncated complex appears.
 
+```lean -show
+namespace Guide.Hodge.D7
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeFilteredDeRhamComplex
-#check AlgebraicGeometry.ComplexPoint.hodgeFilteredDeRhamInclusion
-#check AlgebraicGeometry.ComplexPoint.filteredToDeRhamCohomology
-#check AlgebraicGeometry.ComplexPoint.hodgeFiltrationSubmodule
+def hodgeFilteredDeRhamComplex (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
+    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+  (holomorphicDeRhamComplexInt X).stupidTrunc (ComplexShape.embeddingUpIntGE p)
+```
+```lean -show
+end Guide.Hodge.D7
+example : @Guide.Hodge.D7.hodgeFilteredDeRhamComplex = @AlgebraicGeometry.ComplexPoint.hodgeFilteredDeRhamComplex := rfl
+```
+```lean -show
+namespace Guide.Hodge.D8
+```
+```lean
+def hodgeFilteredDeRhamInclusion (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    (p : ℤ) : hodgeFilteredDeRhamComplex X p ⟶ holomorphicDeRhamComplexInt X :=
+  HomologicalComplex.stupidTruncInclusion
+    (holomorphicDeRhamComplexInt X) (ComplexShape.embeddingUpIntGE p)
+```
+```lean -show
+end Guide.Hodge.D8
+example : @Guide.Hodge.D8.hodgeFilteredDeRhamInclusion = @AlgebraicGeometry.ComplexPoint.hodgeFilteredDeRhamInclusion := rfl
+```
+```lean -show
+namespace Guide.Hodge.D9
+```
+```lean
+def filteredToDeRhamCohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    (p n : ℤ) : FilteredDeRhamHypercohomology X p n →+ DeRhamHypercohomology X n :=
+  hypercohomologyMap X (hodgeFilteredDeRhamInclusion X p) n
+```
+```lean -show
+end Guide.Hodge.D9
+example : @Guide.Hodge.D9.filteredToDeRhamCohomology = @AlgebraicGeometry.ComplexPoint.filteredToDeRhamCohomology := rfl
+```
+```lean -show
+namespace Guide.Hodge.D10
+```
+```lean
+def hodgeFiltrationSubmodule (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
+    [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) : Submodule K (DeRhamHypercohomology X n) where
+  carrier := hodgeFiltration X p n
+  zero_mem' := (hodgeFiltration X p n).zero_mem
+  add_mem' := (hodgeFiltration X p n).add_mem
+  smul_mem' := fun q _ h => hodgeFiltration_smul_mem K X p n q h
+```
+```lean -show
+end Guide.Hodge.D10
+example : @Guide.Hodge.D10.hodgeFiltrationSubmodule = @AlgebraicGeometry.ComplexPoint.hodgeFiltrationSubmodule := rfl
 ```
 
 The image is a priori an additive subgroup. Compatibility with scalars is proved, and
@@ -113,8 +233,21 @@ $$`\operatorname{Hdg}^p(X;\mathbb Q)
 In Lean this is the preimage of {name}`hodgeFiltrationSubmodule` under the comparison map, and the
 notation {lean}`Hdg^p(ℚ; X)` abbreviates it.
 
+```lean -show
+namespace Guide.Hodge.D11
+```
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses
+def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] (p : ℕ) : Submodule K (FieldCohomology K X (2 * p)) :=
+  (hodgeFiltrationSubmodule K X p (2 * p)).comap
+    (fieldToDeRhamCohomologyLinear K X (2 * p))
+```
+```lean -show
+end Guide.Hodge.D11
+example : @Guide.Hodge.D11.hodgeClasses = @AlgebraicGeometry.ComplexPoint.hodgeClasses := rfl
+```
+
+```lean
 #check HodgeStructure.Pure.ofBase_mem_filtration_iff
 ```
 
