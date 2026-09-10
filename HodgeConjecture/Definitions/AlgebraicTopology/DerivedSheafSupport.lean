@@ -18,7 +18,7 @@ Its kernel is the sheaf of sections supported on the closed complement of `U`.
 This file constructs that additive functor and its right derived functor on the
 bounded-below derived category using Mathlib's injective-resolution machinery.
 
-Both the sheaf-valued local cohomology operation, conventionally `RΓ̲_Z`, and
+Both the sheaf-valued local cohomology operation, conventionally `RΓ_Z`, and
 the abelian-group-valued derived global sections `RΓ_Z` are constructed, with
 different source and target categories displayed explicitly.
 No dualizing complex or orientation is assumed or constructed. In particular, this

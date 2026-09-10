@@ -25,7 +25,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 This file isolates the presently missing six-functor input needed for the sheaf-theoretic
 definition
 
-`Hᵇᵐ_i(Z ⊂ X; ℚ) = 𝕳⁻ⁱ_Z(X, ω_X)`.
+`Hᵇᵐ_i(Z ⊂ X; ℚ) = ℌ⁻ⁱ_Z(X, ω_X)`.
 
 Mathlib currently supplies derived categories, shifts, and sheaf pushforward, but not dualizing
 complexes, exceptional pullback, Verdier duality, or a derived sections-with-support functor.
@@ -125,7 +125,7 @@ abbrev DerivedHypercohomology
   ShiftedHom
     (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X)) K n
 
-/-- The group `𝕳⁻ⁱ(X, ω_X)` associated to the supplied intrinsic dualizing-object candidate.
+/-- The group `ℌ⁻ⁱ(X, ω_X)` associated to the supplied intrinsic dualizing-object candidate.
 It is intentionally separate from an ambient support.  Calling it intrinsic Borel--Moore
 homology requires the still-unavailable theorem that the candidate is genuinely dualizing. -/
 abbrev IntrinsicSheafBorelMooreHomology
@@ -140,7 +140,7 @@ def ambientSheafBorelMooreObject
     AnalyticDerivedCategory X :=
   support.functor.obj (DerivedCategory.Q.obj ω.dualizingComplex)
 
-/-- The ambient group `𝕳⁻ⁱ_Z(X, ω_X)` associated to the supplied support and dualizing inputs. -/
+/-- The ambient group `ℌ⁻ⁱ_Z(X, ω_X)` associated to the supplied support and dualizing inputs. -/
 abbrev AmbientSheafBorelMooreHomology
     {Z : Set (ComplexPoint X)}
     (ω : RationalDualizingComplex X)
