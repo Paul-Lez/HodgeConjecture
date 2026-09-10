@@ -1,4 +1,10 @@
-# Handoff: finite generation of `H₂(X^an, ℤ)` (`HasFiniteSecondHomology`)
+# Finite generation of `H₂(X^an, ℤ)` (`HasFiniteSecondHomology`) — completed
+
+**Status: proved.** `AlgebraicGeometry.ComplexPoint.hasFiniteSecondHomology` in
+`Other/AlgebraicGeometry/ProjectiveFiniteHomology.lean`, following route 1 below
+(`Other/Geometry/Manifold/TubularNeighbourhood.lean`, `Other/AlgebraicTopology/RetractFiniteHomology.lean`,
+`Other/Geometry/Manifold/CompactManifoldFiniteHomology.lean`). The rest of this document is kept
+as the original scoping note.
 
 This scopes the remaining *topological* obligation for the unconditional rational Lefschetz
 `(1, 1)` theorem (see [LEFSCHETZ_HANDOFF.md](LEFSCHETZ_HANDOFF.md)). It is independent of the

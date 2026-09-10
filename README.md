@@ -38,6 +38,9 @@ analytification functor on sheaves of modules are constructed in the `Holomorphi
 (integral denominator clearing, projective GAGA for line bundles, and the divisor/cycle-class
 comparison) as explicit propositions and proves that they imply the theorem;
 `Other/AlgebraicGeometry/IntegralDenominatorClearing.lean` reduces denominator clearing to finite
-generation of `H²(X^an, ℤ)` through the integral singular comparison.
+generation of `H²(X^an, ℤ)` through the integral singular comparison, and
+`Other/AlgebraicGeometry/ProjectiveFiniteHomology.lean` proves that finiteness (compact manifolds are
+neighbourhood retracts of Euclidean spaces), so only the line-bundle GAGA and divisor/cycle-class
+obligations remain.
 See [the Lefschetz handoff](docs/LEFSCHETZ_HANDOFF.md) for the status, file map and
 verification commands.

@@ -331,6 +331,10 @@ public import Other.AlgebraicGeometry.HolomorphicUnitTransition
 public import Other.AlgebraicGeometry.HolomorphicZeroForms
 public import Other.AlgebraicGeometry.LefschetzOneOne
 public import Other.AlgebraicGeometry.LefschetzOneOneReduction
+public import Other.AlgebraicGeometry.DivisorOfRationalSection
+public import Other.AlgebraicGeometry.InvertibleSheafRationalSection
+public import Other.AlgebraicGeometry.CartierDataOfTrivializingCover
+public import Other.AlgebraicGeometry.DivisorObligations
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
@@ -341,3 +345,8 @@ public import Other.LinearAlgebra.RationalDenominators
 public import Other.Algebra.Homology.RationalCochainDenominators
 public import Other.AlgebraicTopology.SimplicialCochainExtension
 public import Other.AlgebraicTopology.SimplicialCochainCoefficientChange
+public import Other.Geometry.Manifold.ChartDifferential
+public import Other.Geometry.Manifold.NormalReach
+public import Other.Geometry.Manifold.TubularNeighbourhood
+public import Other.Geometry.Manifold.CompactManifoldFiniteHomology
+public import Other.AlgebraicGeometry.ProjectiveFiniteHomology

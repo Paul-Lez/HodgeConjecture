@@ -9,6 +9,8 @@ import Other.AlgebraicGeometry.LefschetzOneOne
 import Other.AlgebraicGeometry.LefschetzOneOneReduction
 import Other.AlgebraicGeometry.BettiScalarComparison
 import Other.AlgebraicGeometry.IntegralDenominatorClearing
+import Other.AlgebraicGeometry.ProjectiveFiniteHomology
+import Other.AlgebraicGeometry.DivisorObligations
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.localCoordinateEquiv
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.sectionSheafOfModules_isInvertible
 #print axioms AlgebraicGeometry.ComplexPoint.contMDiffAt_evaluate
@@ -34,3 +36,8 @@ import Other.AlgebraicGeometry.IntegralDenominatorClearing
 #print axioms SSet.exists_integer_multiple_of_finite_homology
 #print axioms AlgebraicGeometry.ComplexPoint.scalarCohomologyEquivOrdinarySingularCohomology_coefficientChange
 #print axioms RationalLefschetzOneOne.of_finiteSecondHomology_of_divisor
+#print axioms AlgebraicGeometry.ComplexPoint.hasIntegralDenominatorClearing
+#print axioms RationalLefschetzOneOne.of_divisor
+#print axioms AlgebraicTopology.Singular.module_finite_homology_of_compactSpace_isManifold
+#print axioms exists_retraction_of_compact_embedding
+#print axioms AlgebraicGeometry.ComplexPoint.hasDivisorOfAlgebraicModel_of_divisorClass

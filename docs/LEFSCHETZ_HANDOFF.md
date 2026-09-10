@@ -80,14 +80,16 @@ states, for a single smooth projective integral complex variety `X`:
      a rational cocycle that is integer-valued on integral cycles is cohomologous to an integral
      cocycle, using divisibility of `ℚ/ℤ`; finite generation bounds the denominators).
 
-   What remains for (1) is therefore only `HasFiniteSecondHomology X` (finite generation of
-   `H₂(X^an, ℤ)`; implied by `HasFiniteGoodCover X`) for every smooth projective
-   integral complex variety, scoped for independent work in
-   [FINITENESS_HANDOFF.md](FINITENESS_HANDOFF.md) — a statement of differential topology about compact complex
-   manifolds (standard proofs use geodesically convex neighbourhoods of a Riemannian metric, or
-   a tubular-neighbourhood retraction of a Whitney embedding; Mathlib has neither convexity
-   radii nor tubular neighbourhoods, but it does have `exists_embedding_euclidean_of_compact` and
-   the inverse function theorem).
+   **Obligation (1) is discharged.** `Other/AlgebraicGeometry/ProjectiveFiniteHomology.lean`
+   proves `hasIntegralDenominatorClearing X` for every smooth projective integral complex
+   variety: the analytic space is a compact Hausdorff real `C^∞` manifold
+   (`ComplexPointRealManifold.lean`), a compact manifold embeds in a Euclidean space as a retract
+   of an open neighbourhood (`Other/Geometry/Manifold/TubularNeighbourhood.lean`, proved through a
+   uniform reach estimate for nearest points, with `ChartDifferential.lean` and
+   `NormalReach.lean`), and compact neighbourhood retracts have finitely generated integral
+   singular homology (`Other/AlgebraicTopology/RetractFiniteHomology.lean`, via a finite good cover
+   of a union of balls). Hence `RationalLefschetzOneOne.of_divisor`: the theorem follows from
+   `HasDivisorOfUnitExtension` alone.
 2. `HasAlgebraicModel X`: for every `E : HolomorphicUnitExtension X (dim X.left)` there is an
    invertible `L : X.left.Modules` with `(moduleAnalytification X (dim X.left)).obj L ≅
    E.sectionSheafOfModules`. This is projective GAGA for line bundles. Its extension-free
@@ -97,16 +99,21 @@ states, for a single smooth projective integral complex variety `X`:
    independent work in [GAGA_HANDOFF.md](GAGA_HANDOFF.md).
 3. `HasDivisorOfAlgebraicModel X`: such an `L` is represented by `D : CodimensionCycle X.left 1`
    with `sheafCycleClassOnCycles (ofOver X) 1 D = integralToRationalCohomology X 2
-   E.firstChernClass`. This combines the divisor/line-bundle dictionary on a smooth projective
-   variety with the comparison between the constructed cycle class and the exponential connecting
-   map. Since `D` is existential, sign and `2πi` normalisation conventions do not affect the
-   statement.
+   E.firstChernClass`. Since `D` is existential, sign and `2πi` normalisation conventions do not
+   affect the statement. The algebraic half is proved: every invertible algebraic sheaf is
+   represented by Cartier data (a cover with local equations) whose divisor is a
+   `CodimensionCycle X.left 1` (`DivisorOfRationalSection.lean`,
+   `InvertibleSheafRationalSection.lean`, `CartierDataOfTrivializingCover.lean`), and
+   `hasDivisorOfAlgebraicModel_of_divisorClass` (`DivisorObligations.lean`) reduces the obligation
+   to `HasDivisorClassOfSomeCartierData X`: the constructed class of the divisor of some Cartier
+   datum representing `L` is the rational first Chern class of `E`. This comparison is scoped in
+   [DIVISOR_HANDOFF.md](DIVISOR_HANDOFF.md).
 
 `RationalLefschetzOneOne.of_obligations` proves the target from (1) and
 `HasDivisorOfUnitExtension`, which follows from (2) and (3) by
-`hasDivisorOfUnitExtension_of_algebraicModel`; `RationalLefschetzOneOne.of_finiteSecondHomology_of_divisor`
-(`IntegralDenominatorClearing.lean`) proves it from `HasFiniteSecondHomology` and
-`HasDivisorOfUnitExtension` alone. The bookkeeping proved there is: rational Hodge
+`hasDivisorOfUnitExtension_of_algebraicModel`. Since (1) is now a theorem,
+`RationalLefschetzOneOne.of_divisor` (`ProjectiveFiniteHomology.lean`) proves it from
+`HasDivisorOfUnitExtension` alone, i.e. from (2) and (3). The bookkeeping proved there is: rational Hodge
 classes are stable under integer scaling, integral Hodge classes lift to unit-sheaf extensions,
 and the resulting integral divisor is divided by the denominator.
 
