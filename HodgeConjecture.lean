@@ -236,6 +236,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.StandardSphereAffineBound
 public import HodgeConjecture.Lemmas.AlgebraicTopology.StandardSphereSimplicialHomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSectionRestrictionConeNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSingularSectionNaturality
+public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
 public import HodgeConjecture.Lemmas.CategoryTheory.Abelian.KernelCompositionShortExact
 public import HodgeConjecture.Lemmas.Geometry.Manifold.Orientation
