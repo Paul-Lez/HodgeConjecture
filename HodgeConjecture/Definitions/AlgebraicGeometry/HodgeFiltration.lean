@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.Algebra.FieldToComplex
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Definitions.Algebra.IntegerMultiple
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
@@ -71,27 +72,6 @@ abbrev fieldToComplexConstantSheaf :
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   (constantSheaf J AddCommGrpCat).map
     (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
-
-/-- The inclusion of `K` into `ℂ`, regarded as a rational-linear map. -/
-def fieldToComplexLinear : K →ₗ[K] ℂ :=
-  Algebra.linearMap K ℂ
-
-/-- A rational-linear retraction of the inclusion `K → ℂ`. Such a retraction exists because an
-injective linear map of vector spaces over a field splits. -/
-noncomputable def complexToFieldLinear : ℂ →ₗ[K] K :=
-  Classical.choose <| (fieldToComplexLinear K).exists_leftInverse_of_injective
-    (LinearMap.ker_eq_bot.mpr (algebraMap K ℂ).injective)
-
-/-- The chosen rational-linear retraction is a left inverse to `K → ℂ`. -/
-lemma complexToFieldLinear_comp_fieldToComplexLinear :
-    complexToFieldLinear K ∘ₗ fieldToComplexLinear K = LinearMap.id :=
-  Classical.choose_spec <| (fieldToComplexLinear K).exists_leftInverse_of_injective
-    (LinearMap.ker_eq_bot.mpr (algebraMap K ℂ).injective)
-
-@[simp] lemma complexToFieldLinear_algebraMap (q : K) :
-    complexToFieldLinear K (algebraMap K ℂ q) = q := by
-  have h := LinearMap.congr_fun (complexToFieldLinear_comp_fieldToComplexLinear K) q
-  simpa [fieldToComplexLinear] using h
 
 /-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
 def complexToFieldConstantSheaf :
@@ -230,37 +210,6 @@ omit [Algebra K ℂ] in
   unfold integerToFieldConstantSheafComplexInt
   rw [integerToFieldConstantSheaf_add, Functor.map_add,
     HomologicalComplex.extendMap_add]
-
-/-- Multiplication by a rational scalar as an additive endomorphism of `K`. -/
-def fieldScalarAddHom (q : K) : K →+ K :=
-  DistribSMul.toAddMonoidHom K q
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_apply (q x : K) :
-    fieldScalarAddHom K q x = q * x := rfl
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_zero : fieldScalarAddHom K 0 = 0 := by
-  ext
-  simp
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_one : fieldScalarAddHom K 1 = AddMonoidHom.id K := by
-  ext
-  simp
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_add (a b : K) :
-    fieldScalarAddHom K (a + b) = fieldScalarAddHom K a + fieldScalarAddHom K b := by
-  ext
-  simp [add_mul]
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_mul (a b : K) :
-    fieldScalarAddHom K (a * b) =
-      (fieldScalarAddHom K a).comp (fieldScalarAddHom K b) := by
-  ext
-  simp [fieldScalarAddHom, mul_assoc]
 
 /-- Scalar multiplication on the rational constant sheaf. -/
 abbrev fieldScalarSheaf (q : K) :

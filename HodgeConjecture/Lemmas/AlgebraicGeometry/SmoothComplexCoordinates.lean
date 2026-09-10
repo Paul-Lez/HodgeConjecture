@@ -37,6 +37,8 @@ open CategoryTheory Topology Filter
 
 namespace AlgebraicGeometry
 
+open ComplexAlgHom
+
 noncomputable section
 
 attribute [local instance] overSpecAlgebra
@@ -253,7 +255,7 @@ lemma continuous_ambientAnalyticCoordinates :
     (ComplexPoint.continuous_openEquiv_symm X D.neighborhood)
 
 noncomputable local instance coordinateRingAlgebra :
-    Algebra (ComplexPoint.complexPolynomialRing d)
+    Algebra (ComplexAlgHom.complexPolynomialRing d)
       Γ(D.neighborhood.toScheme, ⊤) :=
   D.coordinateRingHomOnOpen.toAlgebra
 
@@ -262,12 +264,12 @@ noncomputable local instance coordinateRingComplexAlgebra :
   (D.coordinateRingHomOnOpen.comp MvPolynomial.C).toAlgebra
 
 noncomputable local instance coordinateRingScalarTower :
-    IsScalarTower ℂ (ComplexPoint.complexPolynomialRing d)
+    IsScalarTower ℂ (ComplexAlgHom.complexPolynomialRing d)
       Γ(D.neighborhood.toScheme, ⊤) :=
   IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
 
 noncomputable local instance coordinateRingEtale :
-    Algebra.Etale (ComplexPoint.complexPolynomialRing d)
+    Algebra.Etale (ComplexAlgHom.complexPolynomialRing d)
       Γ(D.neighborhood.toScheme, ⊤) :=
   RingHom.etale_algebraMap.mp D.coordinateRingHomOnOpen_etale
 
@@ -348,14 +350,14 @@ subalgebra. -/
 def algebraicCoordinates :
     ComplexPoint (ComplexPoint.openScheme X D.neighborhood) →
       Fin d → ℂ :=
-  ComplexPoint.mvPolynomialAlgHomHomeomorph d ∘
-    ComplexPoint.etaleBaseAlgHom Γ(D.neighborhood.toScheme, ⊤) ∘
+  ComplexAlgHom.mvPolynomialAlgHomHomeomorph d ∘
+    ComplexAlgHom.etaleBaseAlgHom Γ(D.neighborhood.toScheme, ⊤) ∘
       D.pointAlgHomHomeomorph
 
 lemma isLocalHomeomorph_algebraicCoordinates :
     IsLocalHomeomorph D.algebraicCoordinates :=
-  (ComplexPoint.mvPolynomialAlgHomHomeomorph d).isLocalHomeomorph.comp
-    ((ComplexPoint.isLocalHomeomorph_etaleBaseAlgHom
+  (ComplexAlgHom.mvPolynomialAlgHomHomeomorph d).isLocalHomeomorph.comp
+    ((ComplexAlgHom.isLocalHomeomorph_etaleBaseAlgHom
       Γ(D.neighborhood.toScheme, ⊤)).comp
         D.pointAlgHomHomeomorph.isLocalHomeomorph)
 
@@ -363,15 +365,15 @@ lemma isLocalHomeomorph_algebraicCoordinates :
 the scheme morphism to affine space. -/
 lemma algebraicCoordinates_eq_analyticCoordinates :
     D.algebraicCoordinates = D.analyticCoordinates := by
-  let g : ComplexPoint.complexPolynomialRing d →ₐ[ℂ]
+  let g : ComplexAlgHom.complexPolynomialRing d →ₐ[ℂ]
       Γ(D.neighborhood.toScheme, ⊤) :=
-    IsScalarTower.toAlgHom ℂ (ComplexPoint.complexPolynomialRing d)
+    IsScalarTower.toAlgHom ℂ (ComplexAlgHom.complexPolynomialRing d)
       Γ(D.neighborhood.toScheme, ⊤)
   funext z
   calc
     D.algebraicCoordinates z =
-        ComplexPoint.mvPolynomialAlgHomHomeomorph d
-          (ComplexPoint.affineSpecEquiv (ComplexPoint.complexPolynomialRing d)
+        ComplexAlgHom.mvPolynomialAlgHomHomeomorph d
+          (ComplexPoint.affineSpecEquiv (ComplexAlgHom.complexPolynomialRing d)
             (ComplexPoint.affineSpecComplexPointMap g (D.affineSpecPointHomeomorph z))) := by
       rw [ComplexPoint.affineSpecEquiv_affineSpecComplexPointMap]
       rfl
@@ -448,7 +450,7 @@ noncomputable def ambientProjectionChart
   let u := D.pointAlgHomHomeomorph z'
   (ComplexPoint.openHomeomorph X D.neighborhood).symm.toOpenPartialHomeomorph |>.trans
     D.pointAlgHomHomeomorph.toOpenPartialHomeomorph |>.trans
-      (ComplexPoint.etaleAlgHomProjectionChart (n := d) Γ(D.neighborhood.toScheme, ⊤) u)
+      (ComplexAlgHom.etaleAlgHomProjectionChart (n := d) Γ(D.neighborhood.toScheme, ⊤) u)
 
 lemma mem_ambientProjectionChart_source
     (z : {z : ComplexPoint X // z ∈ Point.overOpen D.neighborhood}) :
@@ -460,9 +462,9 @@ lemma mem_ambientProjectionChart_source
   · rw [OpenPartialHomeomorph.trans_source]
     simp
   · change u ∈
-      (ComplexPoint.etaleAlgHomProjectionChart (n := d)
+      (ComplexAlgHom.etaleAlgHomProjectionChart (n := d)
         Γ(D.neighborhood.toScheme, ⊤) u).source
-    exact ComplexPoint.mem_etaleAlgHomProjectionChart_source
+    exact ComplexAlgHom.mem_etaleAlgHomProjectionChart_source
       (n := d) Γ(D.neighborhood.toScheme, ⊤) u
 
 lemma ambientProjectionChart_apply_of_mem
@@ -475,17 +477,17 @@ lemma ambientProjectionChart_apply_of_mem
   have hu := hy.2
   have hu' : D.pointAlgHomHomeomorph
       ((ComplexPoint.openHomeomorph X D.neighborhood).symm y) ∈
-        (ComplexPoint.etaleAlgHomProjectionChart (n := d)
+        (ComplexAlgHom.etaleAlgHomProjectionChart (n := d)
           Γ(D.neighborhood.toScheme, ⊤) u).source := by
     simpa only [Set.mem_preimage, OpenPartialHomeomorph.coe_trans, Function.comp_apply,
       Homeomorph.toOpenPartialHomeomorph_apply] using hu
   rw [ambientProjectionChart, OpenPartialHomeomorph.trans_apply,
     OpenPartialHomeomorph.trans_apply]
-  change ComplexPoint.etaleAlgHomProjectionChart (n := d)
+  change ComplexAlgHom.etaleAlgHomProjectionChart (n := d)
       Γ(D.neighborhood.toScheme, ⊤) u
         (D.pointAlgHomHomeomorph
           ((ComplexPoint.openHomeomorph X D.neighborhood).symm y)) = _
-  have hcoord := ComplexPoint.etaleAlgHomProjectionChart_apply_of_mem (n := d)
+  have hcoord := ComplexAlgHom.etaleAlgHomProjectionChart_apply_of_mem (n := d)
     Γ(D.neighborhood.toScheme, ⊤) u
       (D.pointAlgHomHomeomorph
         ((ComplexPoint.openHomeomorph X D.neighborhood).symm y)) hu'
@@ -509,11 +511,11 @@ lemma analyticAt_ambientProjectionChart_symm_pointAlgHom_apply
   let z' := (ComplexPoint.openHomeomorph X D.neighborhood).symm z
   let u := D.pointAlgHomHomeomorph z'
   have hw' : w ∈
-      (ComplexPoint.etaleAlgHomProjectionChart (n := d)
+      (ComplexAlgHom.etaleAlgHomProjectionChart (n := d)
         Γ(D.neighborhood.toScheme, ⊤) u).target := by
     rw [ambientProjectionChart, OpenPartialHomeomorph.trans_target] at hw
     exact hw.1
-  have h := ComplexPoint.analyticAt_etaleAlgHomProjectionChart_symm_apply
+  have h := ComplexAlgHom.analyticAt_etaleAlgHomProjectionChart_symm_apply
     (n := d) Γ(D.neighborhood.toScheme, ⊤) u hw' r
   apply h.congr
   filter_upwards with v

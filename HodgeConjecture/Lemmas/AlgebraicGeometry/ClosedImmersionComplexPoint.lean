@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionResidueField
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineSpace
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
@@ -24,14 +25,12 @@ import Mathlib.Analysis.Complex.Polynomial.Basic
 /-!
 # Complex points of a closed subscheme
 
-This file describes the complex points of a closed subscheme of a complex scheme. A closed
-immersion induces a surjection on stalks and hence on residue fields, so a section of the closed
-subscheme is locally the restriction of an ambient section.
-
-That local lifting identifies the analytic subbasis of the closed subscheme with the subbasis
-induced from the ambient scheme. Its analytic image is the set of complex points supported on the
-closed subscheme, which is closed, so a closed immersion induces a closed topological embedding on
-complex points.
+This file describes the complex points of a closed subscheme of a complex scheme. The local
+lifting of sections proved in
+`HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionResidueField` identifies the analytic
+subbasis of the closed subscheme with the subbasis induced from the ambient scheme. Its analytic
+image is the set of complex points supported on the closed subscheme, which is closed, so a closed
+immersion induces a closed topological embedding on complex points.
 -/
 
 @[expose] public section
@@ -57,68 +56,6 @@ lemma underlying_injective_of_locallyOfFiniteType
 lemma map_injective_of_mono (i : X ⟶ Y) [Mono i] :
     Function.Injective (map i) := fun _ _ h ↦ (cancel_mono i).mp h
 
-section ClosedImmersion
-
-variable {A B : Scheme} {i : A ⟶ B}
-
-/-- A closed immersion induces a surjection on residue fields. Since a map of fields is
-injective, this identifies the residue fields at corresponding points. -/
-lemma residueFieldMap_surjective_of_closedImmersion [IsClosedImmersion i] (x : A) :
-    Function.Surjective (i.residueFieldMap x) := by
-  intro y
-  obtain ⟨r, rfl⟩ := A.residue_surjective x y
-  obtain ⟨s, hs⟩ := i.stalkMap_surjective x r
-  refine ⟨B.residue (i x) s, ?_⟩
-  change (B.residue (i x) ≫ i.residueFieldMap x) s = _
-  rw [Scheme.residue_residueFieldMap]
-  exact congrArg (A.residue x) hs
-
-/-- The residue-field isomorphism induced by a closed immersion. -/
-noncomputable def residueFieldIsoOfClosedImmersion [IsClosedImmersion i] (x : A) :
-    B.residueField (i x) ≅ A.residueField x :=
-  (RingEquiv.ofBijective (i.residueFieldMap x).hom
-    ⟨RingHom.injective _, residueFieldMap_surjective_of_closedImmersion x⟩).toCommRingCatIso
-
-lemma residueFieldIsoOfClosedImmersion_hom [IsClosedImmersion i] (x : A) :
-    (residueFieldIsoOfClosedImmersion x).hom = i.residueFieldMap x :=
-  rfl
-
-/-- The map on stalks of structure sheaves induced by a closed immersion is surjective. This
-version removes the pushforward-stalk comparison from the usual statement. -/
-lemma stalkMap_c_surjective [IsClosedImmersion i] (x : A) :
-    Function.Surjective ((TopCat.Presheaf.stalkFunctor CommRingCat (i x)).map i.c) := by
-  let p := A.presheaf.stalkPushforward CommRingCat i.base x
-  let : IsIso p :=
-    TopCat.Presheaf.stalkPushforward.stalkPushforward_iso_of_isInducing
-      CommRingCat i.isClosedEmbedding.isInducing A.presheaf x
-  intro y
-  obtain ⟨s, hs⟩ := i.stalkMap_surjective x (p y)
-  exact ⟨s, (ConcreteCategory.bijective_of_isIso p).1 hs⟩
-
-/-- A section of the closed subscheme is locally the restriction of a section on the ambient
-scheme, near each point of its domain. -/
-lemma exists_local_ambient_lift [IsClosedImmersion i] (U : B.Opens)
-    (t : ((TopCat.Presheaf.pushforward CommRingCat i.base).obj A.presheaf).obj (op U))
-    (x : A) (hx : i x ∈ U) :
-    ∃ (V : B.Opens) (hVU : V ⟶ U),
-      (∃ s : Γ(B, V), (i.c.app (op V)) s =
-        (((TopCat.Presheaf.pushforward CommRingCat i.base).obj A.presheaf).map hVU.op) t) ∧
-          i x ∈ V := by
-  set t_x := ((TopCat.Presheaf.pushforward CommRingCat i.base).obj A.presheaf).germ
-    U (i x) hx t with ht_x
-  obtain ⟨s_x, hs_x : ((TopCat.Presheaf.stalkFunctor CommRingCat (i x)).map i.c) s_x =
-      t_x⟩ := stalkMap_c_surjective x t_x
-  obtain ⟨V, hxV, s, rfl⟩ := B.presheaf.exists_germ_eq s_x
-  rw [TopCat.Presheaf.stalkFunctor_map_germ_apply, ht_x] at hs_x
-  have key_W := ((TopCat.Presheaf.pushforward CommRingCat i.base).obj A.presheaf).germ_eq
-    (i x) hxV hx (i.c.app _ s) t hs_x
-  obtain ⟨W, hxW, hWV, hWU, h_eq⟩ := key_W
-  refine ⟨W, hWU, ⟨B.presheaf.map hWV.op s, ?_⟩, hxW⟩
-  convert! h_eq using 1
-  simp only [← ConcreteCategory.comp_apply, i.c.naturality]
-
-end ClosedImmersion
-
 section AnalyticClosedImmersion
 
 variable {A B : Over (Spec ↧ℂ)} (i : A ⟶ B)
@@ -135,7 +72,7 @@ lemma range_map_of_closedImmersion [IsClosedImmersion i.left] :
   · rintro ⟨x, hx⟩
     change i.left x = y.residueData.1 at hx
     let φ : A.left.residueField x ⟶ ↧ℂ :=
-      (residueFieldIsoOfClosedImmersion x).inv ≫
+      (IsClosedImmersion.residueFieldIso x).inv ≫
         (B.left.residueFieldCongr hx).hom ≫ y.residueData.2
     let zHom : Spec ↧ℂ ⟶ A.left :=
       (Scheme.SpecToEquivOfField ℂ A.left).symm ⟨x, φ⟩
@@ -145,7 +82,7 @@ lemma range_map_of_closedImmersion [IsClosedImmersion i.left] :
         ← Scheme.Hom.SpecMap_residueFieldMap_fromSpecResidueField]
       rw [← Category.assoc, ← Spec.map_comp]
       dsimp [φ]
-      rw [← residueFieldIsoOfClosedImmersion_hom,
+      rw [← IsClosedImmersion.residueFieldIso_hom,
         Iso.hom_inv_id_assoc, Spec.map_comp, Category.assoc,
         Scheme.residueFieldCongr_fromSpecResidueField]
       exact (Scheme.SpecToEquivOfField ℂ B.left).symm_apply_apply y.left
@@ -182,7 +119,7 @@ lemma isOpen_induced_chartSubbasic [IsClosedImmersion i.left]
   rw [isOpen_iff_forall_mem_open]
   rintro z ⟨hzU, hzO⟩
   obtain ⟨V, hVU, ⟨r, hr⟩, hzV⟩ :=
-    exists_local_ambient_lift U s z.underlying hzU
+    IsClosedImmersion.exists_local_ambient_lift U s z.underlying hzU
   let T : Set (ComplexPoint B) :=
     overOpen V ∩ evaluate V r ⁻¹' O
   refine ⟨map i ⁻¹' T, ?_, ?_, ?_⟩

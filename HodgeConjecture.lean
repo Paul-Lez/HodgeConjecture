@@ -16,6 +16,7 @@ limitations under the License.
 module  -- shake: keep-all --deprecated_module: ignore
 
 public import HodgeConjecture.Definitions.Algebra.DeRham.Basic
+public import HodgeConjecture.Definitions.Algebra.FieldToComplex
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 public import HodgeConjecture.Definitions.Algebra.Homology.LinearDual
@@ -116,6 +117,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularCompa
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularGlobalComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionComplexPoint
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionResidueField
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineScheme
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineSpace
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAnalyticMaps
@@ -236,8 +238,10 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.StandardSphereAffineBound
 public import HodgeConjecture.Lemmas.AlgebraicTopology.StandardSphereSimplicialHomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSectionRestrictionConeNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSingularSectionNaturality
+public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWedge
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
+public import HodgeConjecture.Lemmas.Analysis.NormedSpace.WedgeCovectors
 public import HodgeConjecture.Lemmas.CategoryTheory.Abelian.KernelCompositionShortExact
 public import HodgeConjecture.Lemmas.Geometry.Manifold.Orientation
 public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation

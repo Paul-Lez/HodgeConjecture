@@ -288,7 +288,7 @@ def neighborhoodProjectionChart :
       (ComplexPoint C.neighborhoodScheme)
       (Fin n → ℂ) :=
   C.neighborhoodPointAlgHomHomeomorph.toOpenPartialHomeomorph |>.trans
-    (ComplexPoint.etaleAlgHomProjectionChart
+    (ComplexAlgHom.etaleAlgHomProjectionChart
       Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint))
 
@@ -296,7 +296,7 @@ def neighborhoodProjectionChart :
 lemma neighborhoodPoint_mem_projectionChart_source :
     C.neighborhoodPoint ∈ C.neighborhoodProjectionChart.source := by
   rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source]
-  exact ⟨by simp, ComplexPoint.mem_etaleAlgHomProjectionChart_source
+  exact ⟨by simp, ComplexAlgHom.mem_etaleAlgHomProjectionChart_source
     Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)⟩
 
@@ -306,12 +306,12 @@ lemma neighborhoodProjectionChart_apply_of_mem
     (z : ComplexPoint C.neighborhoodScheme)
     (hz : z ∈ C.neighborhoodProjectionChart.source) :
     C.neighborhoodProjectionChart z =
-      ComplexPoint.mvPolynomialAlgHomHomeomorph n
-        (ComplexPoint.etaleBaseAlgHom Γ(C.componentNeighborhood.toScheme, ⊤)
+      ComplexAlgHom.mvPolynomialAlgHomHomeomorph n
+        (ComplexAlgHom.etaleBaseAlgHom Γ(C.componentNeighborhood.toScheme, ⊤)
           (C.neighborhoodPointAlgHomHomeomorph z)) := by
   rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source] at hz
   rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_apply]
-  exact ComplexPoint.etaleAlgHomProjectionChart_apply_of_mem (n := n)
+  exact ComplexAlgHom.etaleAlgHomProjectionChart_apply_of_mem (n := n)
     Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)
       (C.neighborhoodPointAlgHomHomeomorph z) hz.2
@@ -324,11 +324,11 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate_top
     AnalyticAt ℂ (fun v ↦ Point.evaluate ⊤ r
       (C.neighborhoodProjectionChart.symm v)) w := by
   let u := C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint
-  have hw' : w ∈ (ComplexPoint.etaleAlgHomProjectionChart
+  have hw' : w ∈ (ComplexAlgHom.etaleAlgHomProjectionChart
       Γ(C.componentNeighborhood.toScheme, ⊤) u).target := by
     rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_target] at hw
     exact hw.1
-  have h := ComplexPoint.analyticAt_etaleAlgHomProjectionChart_symm_apply
+  have h := ComplexAlgHom.analyticAt_etaleAlgHomProjectionChart_symm_apply
     Γ(C.componentNeighborhood.toScheme, ⊤) u hw' r
   have h' : AnalyticAt ℂ (fun v ↦ C.neighborhoodPointAlgHomHomeomorph
       (C.neighborhoodProjectionChart.symm v) r) w := by

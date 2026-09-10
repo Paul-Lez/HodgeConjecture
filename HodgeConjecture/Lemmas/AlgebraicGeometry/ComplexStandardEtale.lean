@@ -28,6 +28,9 @@ A complex point of a standard étale algebra over a polynomial ring is a base po
 a root of the defining polynomial at which the localization polynomial does not vanish. This file
 constructs that correspondence as a homeomorphism. The inverse continuity proof evaluates an
 arbitrary representative in the explicit bivariate-polynomial quotient presentation.
+
+Like `ComplexLocalization`, this works throughout with `ℂ`-algebra homomorphisms rather than with
+complex points of schemes, so it lives in namespace `AlgebraicGeometry.ComplexAlgHom`.
 -/
 
 @[expose] public section
@@ -36,9 +39,9 @@ open scoped Polynomial
 
 open CategoryTheory Topology
 
-namespace AlgebraicGeometry.ComplexPoint
+namespace AlgebraicGeometry.ComplexAlgHom
 
-open Point
+open ComplexPoint Point
 
 noncomputable section
 
@@ -305,4 +308,4 @@ def standardEtaleCoordinateHomeomorph :
 
 end
 
-end AlgebraicGeometry.ComplexPoint
+end AlgebraicGeometry.ComplexAlgHom
