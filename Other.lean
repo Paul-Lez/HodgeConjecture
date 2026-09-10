@@ -121,6 +121,7 @@ public import Other.AlgebraicTopology.EuclideanLocalHomology
 public import Other.AlgebraicTopology.FiniteGoodCoverHomology
 public import Other.AlgebraicTopology.FiniteGoodCoverNerveHomology
 public import Other.AlgebraicTopology.IntegralSingularHomologyFinite
+public import Other.AlgebraicTopology.RetractFiniteHomology
 public import Other.AlgebraicTopology.SimplicialCochainDenominators
 public import Other.AlgebraicTopology.FirstQuadrantColumnFiltration
 public import Other.AlgebraicTopology.FirstQuadrantColumnFiltrationQuotient
