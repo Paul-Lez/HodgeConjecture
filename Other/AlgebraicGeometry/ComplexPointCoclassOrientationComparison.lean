@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.ComplexOrientationHomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOrientationHomologySheaf
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 
-public import Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 
 /-!
 # Exact point-coclass normalization of the constructed orientation sheaf

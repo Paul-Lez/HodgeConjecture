@@ -1,6 +1,6 @@
 name = "HodgeConjecture"
 keywords = ["math", "algebraic-geometry", "hodge-theory"]
-defaultTargets = ["HodgeConjecture", "Other"]
+defaultTargets = ["HodgeConjecture", "Other", "CheckStatementImports"]
 
 [leanOptions]
 pp.unicode.fun = true
@@ -25,6 +25,11 @@ name = "Other"
 
 [[lean_lib]]
 name = "HodgeGuide"
+
+# Fails the build if `HodgeConjecture.Statement` depends on the `Other` library.
+[[lean_lib]]
+name = "CheckStatementImports"
+srcDir = "scripts"
 
 [[lean_exe]]
 name = "hodge-guide"

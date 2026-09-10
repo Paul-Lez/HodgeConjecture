@@ -5,8 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.OpenRestrictionStalk
-public import Other.AlgebraicTopology.SingularChainSheafStalk
-public import Other.AlgebraicTopology.RelativePairExcision
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheafStalk
+public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativePairExcision
 
 /-!
 # Excision and the open restriction of the actual singular-chain sheaf

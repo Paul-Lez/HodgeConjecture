@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
-public import Other.AlgebraicTopology.FlasqueSupportedSections
-public import Other.AlgebraicTopology.LowestFlasqueCohomology
+public import HodgeConjecture.Definitions.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
+public import HodgeConjecture.Definitions.AlgebraicTopology.FlasqueSupportedSections
+public import HodgeConjecture.Definitions.AlgebraicTopology.LowestFlasqueCohomology
 
 /-!
 # Actual lowest-degree globalization for smooth closed supports

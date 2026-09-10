@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.SmoothClosedSupportLocalHomology
-public import Other.AlgebraicTopology.ChartNeighborhoodOrientation
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportLocalHomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartNeighborhoodOrientation
 
 /-!
 # The actual zero-dimensional normal parametrization

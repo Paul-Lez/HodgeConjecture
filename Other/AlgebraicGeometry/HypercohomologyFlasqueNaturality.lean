@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
-public import Other.AlgebraicGeometry.HypercohomologyGlobalSectionsShift
+public import HodgeConjecture.Definitions.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.HypercohomologyGlobalSectionsShift
 
 /-!
 # Naturality through actual flasque and injective resolution comparisons

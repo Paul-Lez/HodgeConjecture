@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.OpenSheafification
+public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenSheafification
 public import Other.AlgebraicTopology.CohomologySheafSectionNaturality
-public import Other.AlgebraicTopology.OpenRestrictedLowestCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.OpenRestrictedLowestCohomology
 
 /-! # The canonical local cohomology-sheaf map under actual open restriction -/
 

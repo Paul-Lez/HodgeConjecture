@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.SmoothClosedCycleClass
-public import Other.AlgebraicGeometry.ComplexSheafBorelMooreRationalComparison
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMooreRationalComparison
 public import Mathlib.Algebra.Module.LinearMap.Rat
 
 /-!

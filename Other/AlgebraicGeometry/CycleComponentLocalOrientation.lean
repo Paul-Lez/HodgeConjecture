@@ -15,14 +15,14 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicGeometry.CycleComponentClosedPointDimension
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentClosedPointDimension
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
 public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
-import Other.AlgebraicGeometry.CycleComponentNormalGeometry
-import Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-import Other.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentNormalGeometry
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClassGenerator
 
 /-!
 # Local complex orientation of a cycle component

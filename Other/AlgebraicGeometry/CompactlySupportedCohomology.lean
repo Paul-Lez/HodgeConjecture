@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
-public import Other.AlgebraicTopology.SheafCohomologyWithSupport
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SheafCohomologyWithSupport
 
 /-!
 # Compactly supported rational cohomology of the analytic complex-point space

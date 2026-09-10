@@ -18,7 +18,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
-import Other.AlgebraicGeometry.ProjectiveAnalytification
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytification
 
 /-!
 # Analytic embedding of a cycle component

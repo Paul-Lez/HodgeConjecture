@@ -19,8 +19,8 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSuppor
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
-import Other.AlgebraicGeometry.CycleComponentClosedPointDimension
-import Other.AlgebraicGeometry.CycleComponentNormalGeometry
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentClosedPointDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentNormalGeometry
 import Other.AlgebraicGeometry.SmoothRegularLocal
 
 /-!

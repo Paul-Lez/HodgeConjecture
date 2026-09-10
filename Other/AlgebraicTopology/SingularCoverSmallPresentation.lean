@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicTopology.SingularCoverSmall
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCoverSmall
 public import Mathlib.Algebra.Homology.QuasiIso
 
 /-!

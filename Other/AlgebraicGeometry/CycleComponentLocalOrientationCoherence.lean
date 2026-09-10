@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import Other.AlgebraicGeometry.CycleComponentLocalOrientation
-public import Other.AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance
+public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance
 
 /-!
 # Coherence of exact cycle-component local orientations
