@@ -21,13 +21,12 @@ set_option pp.rawOnError true
 authors := ["The HodgeConjecture contributors"]
 %%%
 
-This guide explains the statement of the Hodge conjecture formalized in the
-[`HodgeConjecture`](https://github.com/Paul-Lez/HodgeConjecture) repository: the mathematics behind
-each definition, the Lean declarations that implement it, and the points where the implementation
-departs from the textbook presentation. It follows the construction rather than the directory
-tree. The Hodge side compares rational cohomology with the Hodge filtration on holomorphic de Rham
-cohomology; the cycle side attaches a cohomology class to every irreducible subvariety; and the
-statement is the inclusion of one rational subspace in the other.
+This guide explains the formalization of the Hodge conjecture in the
+[`HodgeConjecture`](https://github.com/Paul-Lez/HodgeConjecture) repository, which will eventually
+appear in [Formal Conjectures](https://github.com/google-deepmind/formal-conjectures). The goal is
+to faithfully encode the statement of the
+[Clay Millennium Prize Problem](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=56)
+in Lean.
 
 The conjecture is stated, not proved. A few classical theorems surrounding the statement are not
 yet formalized either; {ref "scope-and-status"}[Scope and status] lists them.
