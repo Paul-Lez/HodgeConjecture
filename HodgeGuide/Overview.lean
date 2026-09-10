@@ -55,7 +55,7 @@ namespace Guide.Overview.D2
 ```
 ```lean
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] (p : ℕ) : Submodule K (FieldCohomology K X (2 * p)) :=
+    [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 ```
@@ -68,7 +68,7 @@ namespace Guide.Overview.D3
 ```
 ```lean
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (FieldCohomology ℚ X (2 * (p : ℤ))) :=
+    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
     Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
 ```

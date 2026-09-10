@@ -567,7 +567,7 @@ def rationalCohomologyEquivSingularCohomology
     [T2Space (ComplexPoint X)]
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
-    FieldCohomology ℚ X (n : ℤ) ≃
+    H^(n : ℤ)(X; ℚ) ≃
       AlgebraicTopology.Singular.Cohomology ℚ
         (TopCat.of (ComplexPoint X)) n :=
   (rationalCohomologySingularCochainEquiv X (n : ℤ)).trans

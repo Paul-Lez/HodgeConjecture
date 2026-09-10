@@ -215,7 +215,7 @@ namespace Guide.Subvariety.D6
 ```lean
 def cycleComponentSheafClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (hx : coheight x = p) : FieldCohomology ℚ X (2 * (p : ℤ)) :=
+    (hx : coheight x = p) : H^(2 * (p : ℤ))(X; ℚ) :=
   (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
     (HomologicalComplex.homologyMap
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex

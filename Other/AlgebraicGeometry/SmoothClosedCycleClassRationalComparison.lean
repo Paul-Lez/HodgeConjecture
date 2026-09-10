@@ -13,7 +13,7 @@ public import Mathlib.Algebra.Module.LinearMap.Rat
 
 The literal source section is transported through the constructed chain-sheaf
 pushforward, normalized ambient orientation, and proved support-cone comparison.
-Thus the output is the existing `FieldCohomology`, not a supplied target group.
+Thus the output is the existing `H^n(X; ℚ)`, not a supplied target group.
 
 This is the smooth closed-immersion case. No assertion about singular components,
 point-coclass comparison, or rational-equivalence descent is made here.
@@ -37,14 +37,14 @@ variable (Z X : Over (Spec (.of ℂ)))
 /-- The actual smooth closed-cycle construction, linear in its rational multiplicity,
 with the repository's ordinary rational cohomology as codomain. -/
 def smoothClosedRationalCycleClassMap :
-    ℚ →ₗ[ℚ] FieldCohomology ℚ X (2 * (d : ℤ) - 2 * (e : ℤ)) :=
+    ℚ →ₗ[ℚ] H^(2 * (d : ℤ) - 2 * (e : ℤ))(X; ℚ) :=
   ((complexAmbientSheafBorelMooreToFieldCohomology X d ⊤ (2 * (e : ℤ))).comp
     (smoothClosedWholeSupportBorelMooreClassMap Z X i e d).hom).toRatLinearMap
 
 /-- Multiplicity one is the literal source constant-one section, with both complex
 orientations already constructed. -/
 def smoothClosedRationalCycleClass :
-    FieldCohomology ℚ X (2 * (d : ℤ) - 2 * (e : ℤ)) :=
+    H^(2 * (d : ℤ) - 2 * (e : ℤ))(X; ℚ) :=
   smoothClosedRationalCycleClassMap Z X i e d 1
 
 set_option maxRecDepth 2048 in
@@ -66,13 +66,13 @@ lemma smoothClosedRationalCycleClassMap_apply (q : ℚ) :
 
 /-- Specialize the proved dimension arithmetic to codimension `p`. -/
 def smoothClosedRationalCycleClassMapInCodimension (p : ℕ) (hdim : e + p = d) :
-    ℚ →ₗ[ℚ] FieldCohomology ℚ X (2 * (p : ℤ)) := by
+    ℚ →ₗ[ℚ] H^(2 * (p : ℤ))(X; ℚ) := by
   have hdeg : 2 * (d : ℤ) - 2 * (e : ℤ) = 2 * (p : ℤ) := by omega
   exact hdeg ▸ smoothClosedRationalCycleClassMap Z X i e d
 
 /-- The rational ordinary class of a smooth closed codimension-`p` immersion. -/
 def smoothClosedRationalCycleClassInCodimension (p : ℕ) (hdim : e + p = d) :
-    FieldCohomology ℚ X (2 * (p : ℤ)) :=
+    H^(2 * (p : ℤ))(X; ℚ) :=
   smoothClosedRationalCycleClassMapInCodimension Z X i e d p hdim 1
 
 @[simp]
