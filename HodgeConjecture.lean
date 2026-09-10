@@ -19,7 +19,6 @@ public import HodgeConjecture.Definitions.Algebra.DeRham.Basic
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 public import HodgeConjecture.Definitions.Algebra.Homology.MapExtend
-public import HodgeConjecture.Definitions.Algebra.IntegerMultiple
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiCohomologyWithSupportComparison

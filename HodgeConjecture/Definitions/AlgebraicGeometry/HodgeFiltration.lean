@@ -16,13 +16,13 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
-public import HodgeConjecture.Definitions.Algebra.IntegerMultiple
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Lemmas.Algebra.Homology.StupidTruncation
 public import Mathlib.Algebra.Homology.DerivedCategory.Basic
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Algebra.Module.MinimalAxioms
 public import Mathlib.CategoryTheory.Localization.SmallShiftedHom
+public import Mathlib.Data.Int.Cast.Lemmas
 
 /-!
 # The Hodge filtration
@@ -181,13 +181,13 @@ def constantIntegerSheafComplexInt :
 def integerToFieldConstantSheaf (q : K) :
     constantIntegerSheaf X ⟶ constantFieldSheaf K X :=
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
-  (constantSheaf J AddCommGrpCat).map (AddCommGrpCat.ofHom (integerMultipleAddHom K q))
+  (constantSheaf J AddCommGrpCat).map (AddCommGrpCat.ofHom (zmultiplesAddHom K q))
 
 omit [Algebra K ℂ] in
 @[simp] lemma integerToFieldConstantSheaf_zero :
     integerToFieldConstantSheaf K X 0 = 0 := by
   unfold integerToFieldConstantSheaf
-  rw [integerMultipleAddHom_zero]
+  rw [map_zero (zmultiplesAddHom K)]
   have h : AddCommGrpCat.ofHom (0 : ℤ →+ K) = 0 := AddCommGrpCat.hom_ext rfl
   rw [h, Functor.map_zero]
   rfl
@@ -198,11 +198,11 @@ omit [Algebra K ℂ] in
       integerToFieldConstantSheaf K X a +
         integerToFieldConstantSheaf K X b := by
   unfold integerToFieldConstantSheaf
-  rw [integerMultipleAddHom_add]
+  rw [map_add (zmultiplesAddHom K)]
   have h : AddCommGrpCat.ofHom
-      (integerMultipleAddHom K a + integerMultipleAddHom K b) =
-      AddCommGrpCat.ofHom (integerMultipleAddHom K a) +
-        AddCommGrpCat.ofHom (integerMultipleAddHom K b) :=
+      (zmultiplesAddHom K a + zmultiplesAddHom K b) =
+      AddCommGrpCat.ofHom (zmultiplesAddHom K a) +
+        AddCommGrpCat.ofHom (zmultiplesAddHom K b) :=
     AddCommGrpCat.hom_ext rfl
   rw [h, Functor.map_add]
   rfl
@@ -360,12 +360,12 @@ lemma fieldToComplexConstantSheaf_scalar (q : K) :
 
 omit [Algebra K ℂ] in
 /-- Multiplying an integer by `r` and then by `q` is multiplying it by `q * r`. -/
-lemma ofHom_integerMultipleAddHom_comp_fieldScalarAddHom (q r : K) :
-    AddCommGrpCat.ofHom (integerMultipleAddHom K r) ≫
+lemma ofHom_zmultiplesAddHom_comp_fieldScalarAddHom (q r : K) :
+    AddCommGrpCat.ofHom (zmultiplesAddHom K r) ≫
         AddCommGrpCat.ofHom (fieldScalarAddHom K q) =
-      AddCommGrpCat.ofHom (integerMultipleAddHom K (q * r)) := by
+      AddCommGrpCat.ofHom (zmultiplesAddHom K (q * r)) := by
   ext
-  simp [integerMultipleAddHom, fieldScalarAddHom]
+  simp
 
 set_option linter.auxLemma false in
 omit [Algebra K ℂ] in
@@ -377,7 +377,7 @@ lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
       fieldScalarSheaf K X q =
         integerToFieldConstantSheaf K X (q * r) := by
   rw [integerToFieldConstantSheaf, fieldScalarSheaf, integerToFieldConstantSheaf,
-    ← Functor.map_comp, ofHom_integerMultipleAddHom_comp_fieldScalarAddHom]
+    ← Functor.map_comp, ofHom_zmultiplesAddHom_comp_fieldScalarAddHom]
 
 /-- Scalar multiplication on the rational constant sheaf complex. -/
 def fieldScalarComplex (q : K) :
