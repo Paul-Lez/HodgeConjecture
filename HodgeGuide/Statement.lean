@@ -164,6 +164,9 @@ formalized, so the formulation as an equality $`\operatorname{Hdg}^p(X;\mathbb Q
 yet available.
 
 # Why a span rather than a map on Chow groups
+%%%
+tag := "why-a-span"
+%%%
 
 The repository defines {name}`ChowGroup` and {name}`RationalChowGroup`, and the classes of subvarieties give an
 additive map on cycles. To descend this map to the Chow group, one must show that it vanishes on
@@ -223,12 +226,12 @@ The shortest route through the implementation is:
    filtration;
 3. `HodgeConjecture/Definitions/AlgebraicGeometry/CohomologyWithSupport.lean`, the mapping-cone
    model of cohomology with support;
-4. `Other/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`, the class on the
-   smooth locus;
-5. `Other/AlgebraicGeometry/CycleComponentSupportExtension.lean`, its extension across the
-   singular locus;
-6. `Other/AlgebraicGeometry/CycleComponentSheafClass.lean`, the class of a subvariety;
-7. `Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
+4. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`, the class
+   on the smooth locus;
+5. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSupportExtension.lean`, its extension across
+   the singular locus;
+6. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`, the class of a subvariety;
+7. `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
    `ComplexSheafBorelMooreRationalComparison.lean`, Borel–Moore homology and duality;
 8. `Other/AlgebraicGeometry/SheafCycleClass.lean`, the maps on cycles;
 9. `Other/AlgebraicGeometry/ChowCycleClassDescent.lean`, descent to Chow groups.
