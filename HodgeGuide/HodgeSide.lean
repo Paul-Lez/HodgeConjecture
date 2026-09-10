@@ -90,25 +90,32 @@ Two sanity checks are proved in Lean: $`F^0` is the whole de Rham group, and $`F
 $`p>\dim X`. Scalar compatibility is proved before the additive image is bundled as a complex or
 rational submodule.
 
-# Why one filtration condition detects type `(p,p)`
+# Type `(p,p)`, and why one filtration condition suffices over `ℚ`
 
-The final definition pulls the filtered de Rham subspace back along the rational comparison:
+Conjugation is not $`\mathbb C`-linear, so it acts on the constant sheaf $`\mathbb C` rather than
+on the holomorphic de Rham complex, and is transported across the constant-to-de Rham comparison.
+The $`(p,q)` piece is then *defined* as $`F^p\cap\overline{F^q}`, which needs no Hodge
+decomposition theorem:
 
 ```lean
+#check AlgebraicGeometry.ComplexPoint.deRhamConj
+#check AlgebraicGeometry.ComplexPoint.hodgePiece
 #check AlgebraicGeometry.ComplexPoint.hodgeClasses
 #check HodgeStructure.Pure.ofBase_mem_filtration_iff
 ```
 
 In symbols,
 
-$$`\operatorname{Hdg}^p(X;\mathbb Q)
- =\{\alpha\in H^{2p}(X;\mathbb Q):\alpha_{\mathrm{dR}}\in F^p\}.`
+$$`\operatorname{Hdg}^p(X;K)
+ =\{\alpha\in H^{2p}(X;K):\alpha_{\mathrm{dR}}\in F^p\cap\overline{F^p}\}.`
 
-Classically one expects a rational class of Hodge type `(p,p)`. Why is there no explicit
-condition involving $`\overline{F^p}`? In a pure weight-$`2p` Hodge structure, complex
-conjugation fixes a rational vector and exchanges $`H^{a,b}` with $`H^{b,a}`. Membership in
-$`F^p` forces both indices to be at least $`p`; because they sum to $`2p`, only $`(p,p)`
-remains. `Pure.ofBase_mem_filtration_iff` proves precisely this linear-algebra statement.
+Over $`\mathbb Q` the conjugation condition is free. In a pure weight-$`2p` Hodge structure,
+complex conjugation fixes a rational vector and exchanges $`H^{a,b}` with $`H^{b,a}`. Membership
+in $`F^p` forces both indices to be at least $`p`; because they sum to $`2p`, only $`(p,p)`
+remains. `Pure.ofBase_mem_filtration_iff` proves this for the linear algebra, and
+`hodgeClasses_rat_eq_comap_hodgeFiltrationSubmodule` for the geometric definition. Reality of the
+coefficients is essential: over $`\mathbb Q(i)` the class $`dz\wedge dz` on a product of Gaussian
+elliptic curves lies in $`F^1H^2` but has type $`(2,0)`.
 
 The final cohomology type does not bundle a `Pure` instance. The abstract theorem validates the
 filtration criterion, while identifying the geometric cohomology with a full pure Hodge structure
