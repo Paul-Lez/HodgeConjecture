@@ -155,6 +155,7 @@ public import Other.AlgebraicTopology.RelativeHomotopyInvariance
 public import Other.AlgebraicTopology.RelativeMayerVietoris
 public import Other.AlgebraicTopology.RelativePairExcision
 public import Other.AlgebraicTopology.SheafMapOfLocallyRepresentableStalks
+public import Other.AlgebraicTopology.SheafEvaluation
 public import Other.AlgebraicTopology.SingularAffineSubdivision
 public import Other.AlgebraicTopology.SingularAffineSubdivisionIteration
 public import Other.AlgebraicTopology.SingularAffineSubdivisionMesh

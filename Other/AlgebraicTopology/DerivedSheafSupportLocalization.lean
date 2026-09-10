@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import Other.AlgebraicTopology.SheafEvaluation
 public import Other.AlgebraicTopology.DerivedSheafSupport
 public import Other.AlgebraicTopology.InjectiveFlasque
 public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
@@ -72,14 +73,6 @@ lemma supportRestrictionShortComplex_shortExact (F : Sheaf AddCommGrpCat.{u} X)
   exact := ShortComplex.exact_kernel _
   mono_f := inferInstanceAs (Mono (kernel.ι _))
   epi_g := inferInstanceAs (Epi ((toOpenRestrictionPushforward X U).app F))
-
-/-- Evaluation of an additive sheaf on an ambient open set. -/
-def supportEvaluation (V : Opens X) : Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
-  sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat ⋙
-    (evaluation _ AddCommGrpCat).obj (op V)
-
-instance (V : Opens X) : (supportEvaluation X V).Additive where
-  map_add := by intros; rfl
 
 set_option backward.isDefEq.respectTransparency false in
 instance (V : Opens X) :

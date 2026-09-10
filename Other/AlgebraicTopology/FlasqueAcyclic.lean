@@ -54,7 +54,13 @@ abbrev globalSectionsSource : TopCat.Sheaf AddCommGrpCat.{u} X :=
 
 /-- The degree-zero `Ext` group from `globalSectionsSource` is the group of global sections,
 viewed here only as an equivalence of types so that no reducibility-sensitive typeclass search is
-needed. -/
+needed.
+
+This is the underlying equivalence of Mathlib's `CategoryTheory.Sheaf.H.equiv₀` at the terminal
+open `⊤`, spelled out rather than reused: elaborating `Sheaf.H.equiv₀` here needs
+`Add (Sheaf.H F 0)`, which instance search does not find for
+`Opens.grothendieckTopology X` even with `Abelian.Ext.instAddCommGroup` available as a local
+instance. The naturality lemma below does reuse `Sheaf.H.equiv₀_naturality`. -/
 def globalSectionsEquiv (F : TopCat.Sheaf AddCommGrpCat.{u} X) :
     Abelian.Ext (globalSectionsSource (X := X)) F 0 ≃
       F.obj.obj (op (⊤ : Opens X)) :=

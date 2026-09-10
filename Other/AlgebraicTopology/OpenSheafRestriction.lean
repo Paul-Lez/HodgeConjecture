@@ -6,7 +6,6 @@ module
 
 public import Other.AlgebraicTopology.DerivedSheafSupportLocalization
 public import Other.AlgebraicTopology.SheafCohomologyWithSupport
-public import Mathlib.CategoryTheory.Sites.GlobalSections
 
 /-!
 # Exact open restriction with its actual adjunction

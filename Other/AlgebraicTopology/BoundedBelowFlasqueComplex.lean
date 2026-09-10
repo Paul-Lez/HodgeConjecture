@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import Other.AlgebraicTopology.SheafEvaluation
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Topology.Sheaves.Flasque
 
@@ -138,11 +139,12 @@ lemma cycles_isFlasque (N : ℤ) [K.IsStrictlyGE N]
     rw [hm]
     exact cycles_isFlasque_add_nat K N hK hflasque m
 
-/-- Evaluation of a sheaf on the top open subset, viewed as a functor. -/
+/-- Evaluation of a sheaf on the top open subset, viewed as a functor.
+
+This is `TopCat.Sheaf.supportEvaluation X ⊤`. -/
 def globalSectionsFunctor (X : TopCat.{u}) :
     TopCat.Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
-  TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
-    (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op (⊤ : Opens X))
+  TopCat.Sheaf.supportEvaluation X ⊤
 
 noncomputable instance globalSectionsFunctor_additive :
     (globalSectionsFunctor X).Additive := by
