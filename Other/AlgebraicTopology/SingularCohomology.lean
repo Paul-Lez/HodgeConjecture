@@ -125,7 +125,7 @@ lemma extendFunctional_injective (K L : Type u) [Field K] [Field L] [Algebra K L
   intro φ ψ h
   ext x
   apply FaithfulSMul.algebraMap_injective K L
-  exact LinearMap.congr_fun h x
+  with_implicit exact LinearMap.congr_fun h x
 
 /-- Complex-valued rational-linear periods on a rational vector space. -/
 abbrev ComplexPeriodSpace (M : Type) [AddCommGroup M] [Module ℚ M] :=

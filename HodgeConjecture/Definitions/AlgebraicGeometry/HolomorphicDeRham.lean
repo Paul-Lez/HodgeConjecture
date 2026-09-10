@@ -638,6 +638,7 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom]
   rfl
 
 /-- The constant sheaf with value the additive group of complex numbers. -/
+@[implicit_reducible]
 def constantComplexSheaf :
     TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
