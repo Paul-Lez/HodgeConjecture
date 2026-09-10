@@ -68,8 +68,7 @@ theorem cycleClassOnCyclesOfComponents_neg {X : Scheme} [CompactSpace X] {p : �
     -((compactCycleToFinsupp c.1).sum
       (fun x n => n • if hx : Order.coheight x = p then f x hx else 0))
   rw [Finsupp.sum, Finsupp.sum, ← Finset.sum_neg_distrib]
-  apply Finset.sum_congr rfl
-  intro x hx
+  refine Finset.sum_congr rfl fun x _ ↦ ?_
   split_ifs <;> simp
 
 end AlgebraicGeometry
@@ -133,9 +132,8 @@ theorem analyticComponentPointPositiveKernelClass_raw_positive :
   have h := complexSupportInjectiveSectionCohomologyEquiv_inclusion_positive X
     (cycleComponentAnalyticClosedSupport X x) (2 * d)
     (analyticComponentPointGlobalRelativeCoclass X x d z)
-  have h' := congrArg
+  exact congrArg
     (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (d : ℤ))).symm h
-  exact h'
 
 /-- The independent ordinary sign calculation specializes to the actual point
 target. The negative sign is a theorem about the legacy cone convention. -/
@@ -174,8 +172,8 @@ theorem analyticComponentPointGlobalRelativeCoclass_eq_maximalCodimensionSupport
     (hx : Order.coheight x = V.dimension) :
     analyticComponentPointGlobalRelativeCoclass V.over x V.dimension
       (maximalCodimensionCycleComponentPoint V x) =
-      maximalCodimensionSupportedGenerator V x hx := by
-  exact enlargeSupport_eq_cast_of_eq ℚ (TopCat.of (ComplexPoint V.over))
+      maximalCodimensionSupportedGenerator V x hx :=
+  enlargeSupport_eq_cast_of_eq ℚ (TopCat.of (ComplexPoint V.over))
     (maximalCodimensionCycleComponentSupport_eq_singleton V x hx).symm
     (Set.singleton_subset_iff.mpr (range_cycleComponentMap_subset V.over x
       ⟨maximalCodimensionCycleComponentPoint V x, rfl⟩)) (2 * V.dimension)
@@ -231,8 +229,7 @@ point cycles; in particular every finite rational combination has this sign. -/
 theorem rationalSheafCycleClassOnCycles_eq_neg_rationalPointCycleClassOnCycles
     (V : DimensionedSmoothProjectiveComplexVariety) :
     rationalSheafCycleClassOnCycles V V.dimension = -rationalPointCycleClassOnCycles V := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro q c
+  refine TensorProduct.AlgebraTensorModule.ext fun q c ↦ ?_
   change q • sheafCycleClassOnCycles V V.dimension c = -(q • pointCycleClassOnCycles V c)
   rw [sheafCycleClassOnCycles_eq_neg_pointCycleClassOnCycles]
   simp only [AddMonoidHom.neg_apply, smul_neg]
@@ -246,8 +243,8 @@ theorem cycleComponentSheafClass_closedPoint_positiveKernel
       (f := V.structureMap) (d := V.dimension) x hx
     cycleComponentSheafClass V.over x (d := V.dimension) hcodim =
       analyticComponentPointPositiveKernelClass V.over x V.dimension
-        (maximalCodimensionCycleComponentPoint V x) := by
-  exact cycleComponentSheafClass_point_normalization V.over x V.dimension
+        (maximalCodimensionCycleComponentPoint V x) :=
+  cycleComponentSheafClass_point_normalization V.over x V.dimension
     (maximalCodimensionCycleComponentPoint V x) _
 
 /-- The signed legacy comparison at a closed scheme point derives the needed
@@ -258,7 +255,7 @@ theorem cycleComponentSheafClass_closedPoint_eq_neg_legacy
     let hcodim := SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
       (f := V.structureMap) (d := V.dimension) x hx
     cycleComponentSheafClass V.over x (d := V.dimension) hcodim =
-      -maximalCodimensionComponentClass V x hcodim := by
-  exact cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass V x _
+      -maximalCodimensionComponentClass V x hcodim :=
+  cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass V x _
 
 end AlgebraicGeometry.ComplexPoint

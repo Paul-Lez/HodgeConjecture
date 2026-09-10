@@ -92,8 +92,8 @@ theorem complexAmbientSheafBorelMooreToFieldCohomology_eq_derivedForget
     (x : ComplexAmbientSheafBorelMooreHomology X d Z i) :
     complexAmbientSheafBorelMooreToFieldCohomology X d Z i x =
       derivedRationalCohomologyAddEquiv X (2 * (d : ℤ) - i)
-        (complexAmbientSheafBorelMooreToCohomology X d Z i x) := by
-  exact (derivedRationalSupportAddEquiv_forgetSupport X Z (2 * (d : ℤ) - i)
+        (complexAmbientSheafBorelMooreToCohomology X d Z i x) :=
+  (derivedRationalSupportAddEquiv_forgetSupport X Z (2 * (d : ℤ) - i)
     ((complexAmbientSheafBorelMooreHomologyIso X d Z i).hom x)).symm
 
 end AlgebraicGeometry.ComplexPoint

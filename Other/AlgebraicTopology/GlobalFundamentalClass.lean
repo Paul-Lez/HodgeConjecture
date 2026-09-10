@@ -74,8 +74,7 @@ public theorem relativeHomologyProjection_injective_of_isZero_subspace
       (relativeSingular_homology_exact_ambient X (n + 1))
   obtain ⟨a, ha⟩ := hexact (z - z') hker
   have ha0 : a = 0 := (ModuleCat.subsingleton_of_isZero hA).elim _ _
-  have hsub : z - z' = 0 :=
-    ha.symm.trans (by simp [ha0])
+  have hsub : z - z' = 0 := ha.symm.trans (by simp [ha0])
   exact sub_eq_zero.mp hsub
 
 set_option backward.isDefEq.respectTransparency false in
@@ -113,11 +112,9 @@ public theorem exists_absoluteClass_of_boundary_eq_zero
     (X : TopPair) (n : ℕ) (c : RelativeHomology ℚ X (n + 1))
     (hc : (relativeSingularBoundary X n).hom c = 0) :
     ∃ z : Homology ℚ X.fst (n + 1),
-      (relativeHomologyProjection ℚ X (n + 1)).hom z = c := by
-  have hexact :=
-    (ShortComplex.moduleCat_exact_iff _).mp
-      (relativeSingular_homology_exact_relative X n)
-  exact hexact c hc
+      (relativeHomologyProjection ℚ X (n + 1)).hom z = c :=
+  (ShortComplex.moduleCat_exact_iff _).mp
+    (relativeSingular_homology_exact_relative X n) c hc
 
 /-- A linear map out of a cyclic relative homology group vanishes as soon as it vanishes on the
 specified generator. Applied to the connecting morphism, this turns the boundary calculation
@@ -147,9 +144,7 @@ public theorem relativeSingularBoundary_eq_zero_of_injective_subspaceMap
     relativeSingularBoundary X n = 0 := by
   let i := HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n
   let : Mono i := (ModuleCat.mono_iff_injective i).mpr hinjective
-  have hcomp :
-      relativeSingularBoundary X n ≫
-        i = 0 :=
+  have hcomp : relativeSingularBoundary X n ≫ i = 0 :=
     (relativeSingularChainShortComplex_shortExact X).δ_comp
       (n + 1) n (ComplexShape.down_mk (n + 1) n (by omega))
   apply (cancel_mono i).mp
@@ -290,9 +285,7 @@ public theorem eq_globalClassOfPointLocalClass_of_restrict_eq
     z = globalClassOfPointLocalClass n x c hc := by
   apply relativeHomologyProjection_injective_of_isZero_subspace
     (pointComplementPair x) n hpunctured
-  exact hz.trans
-    (pointLocalHomologyRestriction_globalClassOfPointLocalClass
-      n x c hc).symm
+  exact hz.trans (pointLocalHomologyRestriction_globalClassOfPointLocalClass n x c hc).symm
 
 /-- A bounded chain model for the punctured space supplies the top-homology vanishing needed
 for uniqueness of a global lift. -/

@@ -33,10 +33,8 @@ theorem centeredComplexLinear_preserves_standardComplexLocalClass
       (standardComplexLocalClass d) = standardComplexLocalClass d := by
   let A := complexMatrixOfContinuousLinearMap d L
   have hAL : (A.mulVecLin.toContinuousLinearMap :
-      (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) = L := by
-    apply ContinuousLinearMap.ext
-    intro w
-    exact complexMatrixOfContinuousLinearMap_mulVec d L w
+      (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) = L :=
+    ContinuousLinearMap.ext (complexMatrixOfContinuousLinearMap_mulVec d L)
   apply relativeHomologyMap_complexDifferentiable_standardComplexLocalClass d A
     (complexMatrixOfContinuousLinearMap_det_ne_zero d L hL)
   rw [hAL]

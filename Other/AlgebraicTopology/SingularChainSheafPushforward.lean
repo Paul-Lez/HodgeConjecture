@@ -57,9 +57,7 @@ def openComplementPairPushforward :
     (Opens.map i).op ⋙ openComplementPairFunctor Z ⟶ openComplementPairFunctor X where
   app U := preimageSupportPairMap i (U.unop : Set X)
   naturality {U V} a := by
-    apply MorphismProperty.Arrow.Hom.ext
-    · ext z; rfl
-    · ext z; rfl
+    apply MorphismProperty.Arrow.Hom.ext <;> rfl
 
 /-- Covariance of relative singular chains gives the presheaf-level pushforward chain map. -/
 def openRelativeSingularChainPushforward :
@@ -107,9 +105,8 @@ theorem relativeSingularChains_emptySupport_isZero (Z : TopCat.{u}) :
       (TopPair.ofSubset (X := Z) ((⊥ : Opens Z) : Set Z)ᶜ)) := by
   rw [show ((⊥ : Opens Z) : Set Z)ᶜ = Set.univ by simp]
   let P := TopPair.ofSubset (X := Z) (Set.univ : Set Z)
-  have hPi : IsIso P.map := by
-    apply (TopCat.isIso_iff_isHomeomorph P.map).mpr
-    exact (Homeomorph.Set.univ Z).isHomeomorph
+  have hPi : IsIso P.map :=
+    (TopCat.isIso_iff_isHomeomorph P.map).mpr (Homeomorph.Set.univ Z).isHomeomorph
   have hchain : IsIso ((chainPairFunctor R).obj P).hom := by
     change IsIso (((singularChainComplexFunctor (ModuleCat.{u} R)).obj
       (ModuleCat.of R R)).map P.map)

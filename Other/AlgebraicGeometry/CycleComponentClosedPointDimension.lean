@@ -82,15 +82,9 @@ lemma FiniteType.height_eq_ringKrullDim_of_isMaximal
       _ = Order.height (PrimeSpectrum.comap
           (algebraMap (MvPolynomial (Fin n) k) A)
           (⟨P, inferInstance⟩ : PrimeSpectrum A)) := by
-        have hstrict : StrictMono
-            (PrimeSpectrum.comap (algebraMap (MvPolynomial (Fin n) k) A)) := by
-          intro Q Q' hQQ'
-          change Q.asIdeal.under (MvPolynomial (Fin n) k) <
-            Q'.asIdeal.under (MvPolynomial (Fin n) k)
-          exact Ideal.IsIntegral.comap_lt_comap hQQ'
         apply Order.height_eq_of_strictMono
           (PrimeSpectrum.comap (algebraMap (MvPolynomial (Fin n) k) A))
-          hstrict
+          (fun _ _ hQQ' ↦ Ideal.IsIntegral.comap_lt_comap hQQ')
         intro Q q hq
         have hq' : q.asIdeal < Q.asIdeal.under (MvPolynomial (Fin n) k) := by
           change q.asIdeal <
@@ -156,8 +150,7 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
     Order.coheight z = d - p := by
   let c : cycleComponent X.left x ⟶ X.left := cycleComponentι X.left x
   let y : X.left := c z
-  have hyx : y ≤ x := by
-    exact (cycleComponentOrderIsoIic X.left x z).2
+  have hyx : y ≤ x := (cycleComponentOrderIsoIic X.left x z).2
   obtain ⟨U, hU, hyU, hstandard⟩ :=
     SmoothOfRelativeDimension.exists_affine_isStandardSmoothOfRelativeDimension
       (d := d) X.hom y
@@ -181,13 +174,10 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
       ({hU.primeIdealOf xu} : Set (Spec Γ(X.left, U))) := by
     ext Q
     simp only [Set.mem_preimage, Set.mem_singleton_iff]
-    constructor
-    · intro hQ
-      apply hU.fromSpec.isOpenEmbedding.injective
-      exact hQ.trans (hU.fromSpec_primeIdealOf xu).symm
-    · intro hQ
-      subst Q
-      exact hU.fromSpec_primeIdealOf xu
+    refine ⟨fun hQ ↦ hU.fromSpec.isOpenEmbedding.injective
+      (hQ.trans (hU.fromSpec_primeIdealOf xu).symm), ?_⟩
+    rintro rfl
+    exact hU.fromSpec_primeIdealOf xu
   have hpreimage : hU.fromSpec ⁻¹' closure {x} =
       closure {hU.primeIdealOf xu} := by
     have hclosure := congrArg
@@ -282,8 +272,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
     cycleComponentι X.left x ≫ X.hom
   let S : (cycleComponent X.left x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
-  let : Smooth g := by
-    exact cycleComponent_smoothLocus_smooth X x
+  let : Smooth g := cycleComponent_smoothLocus_smooth X x
   obtain ⟨z, hzsmooth, hzclosed⟩ :=
     exists_cycleComponent_smooth_closed_complexPoint X x
   let zs : S.toScheme := ⟨z.underlying, hzsmooth⟩
@@ -306,14 +295,10 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
     RingHom.IsStandardSmoothOfRelativeDimension.height_eq_of_isMaximal hm P
   have hPcoheight : P.height = Order.coheight zw :=
     hW.primeIdealOf_height_eq_coheight zw
-  have hWcoheight : Order.coheight zs = Order.coheight zw := by
-    have h := coheight_eq_of_isOpenImmersion (x := zw) W.ι
-    change Order.coheight zs = Order.coheight zw at h
-    exact h
-  have hScoheight : Order.coheight z.underlying = Order.coheight zs := by
-    have h := coheight_eq_of_isOpenImmersion (x := zs) S.ι
-    change Order.coheight z.underlying = Order.coheight zs at h
-    exact h
+  have hWcoheight : Order.coheight zs = Order.coheight zw :=
+    coheight_eq_of_isOpenImmersion (x := zw) W.ι
+  have hScoheight : Order.coheight z.underlying = Order.coheight zs :=
+    coheight_eq_of_isOpenImmersion (x := zs) S.ι
   have hmEq : m = d - p := by
     exact_mod_cast calc
       (m : ℕ∞) = P.height := hPm.symm

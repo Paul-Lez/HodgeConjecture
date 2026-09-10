@@ -52,13 +52,9 @@ def openIntersectionPairIsoSupportComplement (S : Set X) (hS : IsClosed S) (V : 
     (TopCat.ofHom ⟨(openIntersectionSupportComplementHomeomorph X S hS V).symm,
       (openIntersectionSupportComplementHomeomorph X S hS V).symm.continuous⟩) rfl
   hom_inv_id := by
-    apply MorphismProperty.Arrow.Hom.ext
-    · ext w; rfl
-    · ext w; rfl
+    apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
   inv_hom_id := by
-    apply MorphismProperty.Arrow.Hom.ext
-    · ext w; rfl
-    · ext w; rfl
+    apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
 
 variable [T2Space X] [∀ V : Opens X, ParacompactSpace V] (U V : Opens X)
 

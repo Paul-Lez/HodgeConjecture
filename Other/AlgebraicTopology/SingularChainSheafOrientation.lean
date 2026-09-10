@@ -59,8 +59,7 @@ theorem singularChainSheafCochainHomology_concentrated [T2Space X] (N : ℕ)
   intro i hi
   by_cases hpos : 0 < i
   · exact (singularChainSheafCochainComplex R X).isZero_of_isLE 0 i hpos
-  · obtain ⟨m, rfl⟩ : ∃ m : ℕ, i = -(m : ℤ) := by
-      exact ⟨(-i).toNat, by omega⟩
+  · obtain ⟨m, rfl⟩ : ∃ m : ℕ, i = -(m : ℤ) := ⟨(-i).toNat, by omega⟩
     exact (singularChainSheafCochainHomologyIso R X m).isZero_iff.mpr
       (singularChainHomologySheaf_isZero_of_localHomology_isZero R X m
         (hlocal m (by omega)))

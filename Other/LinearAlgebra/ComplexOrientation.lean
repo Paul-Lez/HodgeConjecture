@@ -87,9 +87,9 @@ def piOrientation (n : ℕ) : Orientation ℝ (Fin n → ℂ) (Fin (n * 2)) :=
 /-- Complex-linear automorphisms of `Fin n → ℂ` preserve its canonical complex orientation. -/
 theorem map_piOrientation (n : ℕ) (f : (Fin n → ℂ) ≃ₗ[ℂ] (Fin n → ℂ)) :
     Orientation.map (Fin (n * 2)) (f.restrictScalars ℝ) (piOrientation n) =
-      piOrientation n := by
-  apply (Orientation.map_eq_iff_det_pos _ _
+      piOrientation n :=
+  (Orientation.map_eq_iff_det_pos _ _
     (by rw [Module.finrank_eq_card_basis (piBasisOneI n)])).2
-  exact f.det_restrictScalars_complex_pos
+    f.det_restrictScalars_complex_pos
 
 end Complex

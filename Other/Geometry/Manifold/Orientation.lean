@@ -65,9 +65,8 @@ noncomputable def tangentCoordChangeEquiv (x y z : M) : E ≃ₗ[𝕜] E :=
 
 lemma tangentCoordChangeEquiv_apply {x y z : M}
     (hx : z ∈ (chartAt H x).source) (hy : z ∈ (chartAt H y).source) (v : E) :
-    tangentCoordChangeEquiv I x y z v = tangentCoordChange I x y z v := by
-  apply (tangentBundleCore I M).localTriv_coordChange_eq
-  exact ⟨hx, hy⟩
+    tangentCoordChangeEquiv I x y z v = tangentCoordChange I x y z v :=
+  (tangentBundleCore I M).localTriv_coordChange_eq _ _ ⟨hx, hy⟩ v
 
 lemma tangentCoordChangeEquiv_toLinearMap {x y z : M}
     (hx : z ∈ (chartAt H x).source) (hy : z ∈ (chartAt H y).source) :
@@ -219,10 +218,8 @@ theorem compatible_det (o : OrientationLift I M ι) {x y z : M}
       (signedOrientation (o.chartSign x z) o.modelOrientation)
       (tangentCoordChangeEquiv I x y z) Fact.out,
     o.compatible x y z hx hy]
-  constructor
-  · exact fun h ↦ (signedOrientation_injective o.modelOrientation h).symm
-  · intro h
-    rw [h]
+  exact ⟨fun h ↦ (signedOrientation_injective o.modelOrientation h).symm,
+    fun h ↦ by rw [h]⟩
 
 /-- Build orientation transport from the determinant/sign criterion. This is useful for migrating
 constructions expressed using the former definition of manifold orientation. -/
@@ -441,9 +438,8 @@ orientations. -/
 @[simp]
 theorem deltaLC_apply (o₀ o : Orientation I M ι) (z : M) :
     deltaLC o₀ o z = orientationSign (o₀.orientationAt z) (o.orientationAt z) := by
-  refine Quotient.inductionOn₂' o₀ o ?_
-  intro l₀ l
-  exact OrientationLift.deltaLC_eq_orientationSign l₀ l z
+  exact Quotient.inductionOn₂' o₀ o fun l₀ l ↦
+    OrientationLift.deltaLC_eq_orientationSign l₀ l z
 
 @[simp]
 theorem deltaLC_self (o : Orientation I M ι) :
@@ -464,9 +460,7 @@ theorem twist_mk (o : OrientationLift I M ι) (δ : LocallyConstant M ℤˣ) :
 @[simp]
 theorem orientationAt_twist (o : Orientation I M ι) (δ : LocallyConstant M ℤˣ) (z : M) :
     (o.twist δ).orientationAt z = signedOrientation (δ z) (o.orientationAt z) := by
-  refine Quotient.inductionOn' o ?_
-  intro l
-  exact OrientationLift.orientationAt_twist l δ z
+  exact Quotient.inductionOn' o fun l ↦ OrientationLift.orientationAt_twist l δ z
 
 @[simp]
 theorem deltaLC_twist (o : Orientation I M ι) (δ : LocallyConstant M ℤˣ) :
@@ -496,9 +490,8 @@ private theorem twist_deltaLC_mk (o₀ o : OrientationLift I M ι) :
     _ = mk o := congrArg mk hLift
 
 @[simp]
-theorem twist_deltaLC (o₀ o : Orientation I M ι) : o₀.twist (deltaLC o₀ o) = o := by
-  refine Quotient.inductionOn₂' o₀ o ?_
-  exact twist_deltaLC_mk
+theorem twist_deltaLC (o₀ o : Orientation I M ι) : o₀.twist (deltaLC o₀ o) = o :=
+  Quotient.inductionOn₂' o₀ o twist_deltaLC_mk
 
 /-- Relative to a fixed base orientation, manifold orientations are equivalent to locally
 constant sign functions. -/
@@ -513,8 +506,7 @@ noncomputable def equivLocallyConstant (o₀ : Orientation I M ι) :
 instance : InvolutiveNeg (Orientation I M ι) where
   neg o := o.twist (LocallyConstant.const M (-1))
   neg_neg o := by
-    refine Quotient.inductionOn' o ?_
-    intro l
+    refine Quotient.inductionOn' o fun l ↦ ?_
     change twist (twist (mk l) (LocallyConstant.const M (-1)))
       (LocallyConstant.const M (-1)) = mk l
     rw [twist_mk, twist_mk]

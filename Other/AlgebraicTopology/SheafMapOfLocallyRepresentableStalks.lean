@@ -157,8 +157,7 @@ def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
       exact hij
     · intro t
       obtain ⟨U, hx, a, rfl⟩ := P.exists_germ_eq t
-      refine ⟨a, ?_⟩
-      exact (P.Γgerm_res_apply (i := homOfLE (show U ≤ ⊤ from le_top)) x hx a).symm
+      exact ⟨a, (P.Γgerm_res_apply (i := homOfLE (show U ≤ ⊤ from le_top)) x hx a).symm⟩
   letI := TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u} P
   exact asIso (P.Γgerm x) ≪≫
     asIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map

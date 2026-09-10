@@ -45,9 +45,8 @@ pushforward with sections of the original sheaf on that open. -/
 def openRestrictionPushforwardTopEvaluationIso (U : Opens X) :
     openRestrictionPushforward X U ⋙ supportEvaluation X ⊤ ≅ supportEvaluation X U :=
   NatIso.ofComponents (fun F =>
-    F.obj.mapIso (eqToIso (congrArg op (openRestrictionImage_top X U)))) (by
-      intro F G f
-      exact (f.hom.naturality _).symm)
+    F.obj.mapIso (eqToIso (congrArg op (openRestrictionImage_top X U))))
+    (fun f => (f.hom.naturality _).symm)
 
 /-- The last localization kernel includes into the actual sections on `U`. -/
 def sheafSectionsBetweenOpensInclusion {U V : Opens X} (h : V ≤ U) :

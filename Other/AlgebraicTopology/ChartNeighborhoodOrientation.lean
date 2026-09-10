@@ -48,19 +48,16 @@ def radialTargetPointPairMap (U : Set (Fin d → ℂ)) (c : Fin d → ℂ) (r : 
   have hne (w : ({0}ᶜ : Set (Fin d → ℂ))) :
       OpenPartialHomeomorph.univBall c r (w.1 + v) ≠ q := by
     intro h
-    apply w.2
-    exact add_right_cancel (show w.1 + v = 0 + v by
-      simpa using injective_complexUnivBall d c r (h.trans hq.symm))
+    exact w.2 (add_right_cancel (show w.1 + v = 0 + v by
+      simpa using injective_complexUnivBall d c r (h.trans hq.symm)))
   refine TopPair.ofHom
     (TopCat.ofHom ⟨fun w => ⟨OpenPartialHomeomorph.univBall c r (w + v), hmem w⟩,
       ((continuous_complexUnivBall d c r).comp
         (continuous_id.add continuous_const)).subtype_mk hmem⟩) ?_ ?_
   · refine TopCat.ofHom ⟨fun w => ⟨⟨OpenPartialHomeomorph.univBall c r (w.1 + v),
         hmem w.1⟩, hne w⟩, ?_⟩
-    apply Continuous.subtype_mk
-    apply Continuous.subtype_mk
-    exact (continuous_complexUnivBall d c r).comp
-      (continuous_subtype_val.add continuous_const)
+    exact (((continuous_complexUnivBall d c r).comp
+      (continuous_subtype_val.add continuous_const)).subtype_mk _).subtype_mk _
   · rfl
 
 /-- Forgetting the target restriction displays exactly the centered radial map followed by
@@ -130,9 +127,8 @@ variable {M : Type} [TopologicalSpace M]
 def chartTargetInversePointPairMap (e : OpenPartialHomeomorph M (Fin d → ℂ))
     (q : Fin d → ℂ) (hq : q ∈ e.target) :
     neighborhoodPointComplementPair e.target q ⟶ pointComplementPair (e.symm q) := by
-  have hne (w : {w : e.target | w.1 ≠ q}) : e.symm w.1.1 ≠ e.symm q := by
-    intro h
-    exact w.2 (e.symm.injOn w.1.2 hq h)
+  have hne (w : {w : e.target | w.1 ≠ q}) : e.symm w.1.1 ≠ e.symm q := fun h ↦
+    w.2 (e.symm.injOn w.1.2 hq h)
   refine TopPair.ofHom
     (TopCat.ofHom ⟨fun w => e.symm w.1, e.symm.continuousOn.domRestrict⟩) ?_ ?_
   · exact TopCat.ofHom ⟨fun w => ⟨e.symm w.1.1, hne w⟩,
@@ -229,8 +225,8 @@ def chartOrientationNeighborhood : TopologicalSpace.Opens M :=
       _ (standardComplexOrientationNeighborhood d).isOpen⟩
 
 lemma mem_chartOrientationNeighborhood : x ∈ chartOrientationNeighborhood d e x hx := by
-  refine ⟨0, zero_mem_standardComplexOrientationNeighborhood d, ?_⟩
-  exact chartModelEmbedding_zero d e x hx
+  exact ⟨0, zero_mem_standardComplexOrientationNeighborhood d,
+    chartModelEmbedding_zero d e x hx⟩
 
 lemma chartOrientationNeighborhood_subset_source :
     (chartOrientationNeighborhood d e x hx : Set M) ⊆ e.source := by

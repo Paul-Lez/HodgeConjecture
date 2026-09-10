@@ -100,9 +100,8 @@ lemma continuous_affineSpaceEquiv (n : Type) :
   intro i
   let s := AffineSpace.coord (Spec ↧ℂ) i
   have heq : (fun z : ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) ↦
-      affineSpaceEquiv n z i) = evaluate ⊤ s := by
-    funext z
-    exact (evaluate_top_eq_appTop s z).symm
+      affineSpaceEquiv n z i) = evaluate ⊤ s :=
+    funext fun z ↦ (evaluate_top_eq_appTop s z).symm
   rw [heq]
   exact continuous_evaluate_top (X := Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) s
 

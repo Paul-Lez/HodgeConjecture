@@ -35,15 +35,10 @@ theorem Scheme.Hom.exists_affine_local_section_lifts
       i y ∈ U ∧ ∃ r : J → Γ(X, U),
         ∀ j, i.app U (r j) = Y.presheaf.map (homOfLE hUV).op (s j) := by
   obtain ⟨W, hW, hpre⟩ := i.isClosedEmbedding.isInducing.isOpen_iff.mp V.isOpen
-  have hyW : i y ∈ W := by
-    have : y ∈ i ⁻¹' W := hpre ▸ hy
-    exact this
+  have hyW : i y ∈ W := show y ∈ ⇑i ⁻¹' W from hpre ▸ hy
   obtain ⟨_, ⟨U, hU, rfl⟩, hyU, hUW⟩ :=
     X.isBasis_affineOpens.exists_subset_of_mem_open hyW hW
-  have hUV : i ⁻¹ᵁ U ≤ V := by
-    intro z hz
-    have : z ∈ i ⁻¹' W := hUW hz
-    exact (show z ∈ (V : Set Y) from hpre ▸ this)
+  have hUV : i ⁻¹ᵁ U ≤ V := fun z hz ↦ show z ∈ (V : Set Y) from hpre ▸ hUW hz
   choose r hr using fun j => i.app_surjective U hU
     (Y.presheaf.map (homOfLE hUV).op (s j))
   exact ⟨U, hU, hUV, hyU, r, hr⟩
@@ -107,8 +102,7 @@ theorem exists_analytic_localLeftInverse_of_isClosedImmersion [IsClosedImmersion
   have hzXt : eX (Point.map i z) ∈ eX.target := eX.map_source hzX
   refine ⟨L, ?_, ?_⟩
   · rw [inclusionInComplexCharts_at_center]
-    apply AnalyticAt.pi
-    intro j
+    refine AnalyticAt.pi fun j ↦ ?_
     apply analyticAt_localChart_symm_evaluate X d (Point.map i z) hzXt U (r j)
     change eX.symm (eX (Point.map i z)) ∈ Point.overOpen U
     rw [eX.left_inv hzX]
@@ -129,11 +123,10 @@ theorem exists_analytic_localLeftInverse_of_isClosedImmersion [IsClosedImmersion
     funext j
     change Point.evaluate U (r j)
       (eX.symm (eX (Point.map i (eY.symm v)))) = v j
-    rw [eX.left_inv hvX, Point.evaluate_map, hr]
-    rw [← Point.evaluate_res hUV (D.ambientCoordinateSection j) (eY.symm v)
-      ((Point.mem_overOpen_map_iff i _ U).mp hvU)]
-    rw [← localChart_apply_component_eq_evaluate Y m z (eY.symm v)
-      (eY.map_target hvY) j]
+    rw [eX.left_inv hvX, Point.evaluate_map, hr,
+      ← Point.evaluate_res hUV (D.ambientCoordinateSection j) (eY.symm v)
+        ((Point.mem_overOpen_map_iff i _ U).mp hvU),
+      ← localChart_apply_component_eq_evaluate Y m z (eY.symm v) (eY.map_target hvY) j]
     exact congrFun (eY.right_inv hvY) j
 
 /-- The derivative of a smooth closed immersion has an actual continuous-linear left
@@ -161,10 +154,6 @@ theorem injective_fderiv_inclusionInComplexCharts [IsClosedImmersion i.left]
         (localChart Y m z z)) := by
   obtain ⟨P, hP⟩ :=
     exists_leftInverse_fderiv_inclusionInComplexCharts X Y i m d z
-  have hleft : Function.LeftInverse P
-      (fderiv ℂ (inclusionInComplexCharts X Y i m d z)
-        (localChart Y m z z)) :=
-    fun v => DFunLike.congr_fun hP v
-  exact hleft.injective
+  exact Function.LeftInverse.injective (g := P) fun v ↦ DFunLike.congr_fun hP v
 
 end AlgebraicGeometry.ComplexPoint

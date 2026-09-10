@@ -106,9 +106,8 @@ theorem exists_smoothClosedSourceOpenNeighborhood
   have he : f (Point.map jOver z) = Point.map (openInclusion Y A ≫ i) z := by
     change Point.map (openInclusion X T) (Point.map jOver z) = _
     rw [← Point.map_comp_apply]
-    apply congrArg (fun k ↦ Point.map k z)
-    apply Over.OverMorphism.ext
-    exact closedImmersionSourceOpenLift_ι i.left A
+    exact congrArg (fun k ↦ Point.map k z)
+      (Over.OverMorphism.ext (closedImmersionSourceOpenLift_ι i.left A))
   obtain ⟨W, hWV, hzW, hW⟩ := exists_smoothClosedSupportImageNeighborhood
     (openScheme X T) (openScheme Y A) jOver m d f
     (isOpenEmbedding_map_open X T) (Set.range (Point.map i)) hS z V (he ▸ hzV)

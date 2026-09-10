@@ -56,9 +56,8 @@ lemma standardSimplexSucc_normalizedChains_exactAt (n k : ℕ) (hk : k ≠ 0) :
     (SimplexCategory.mk (n + 2))).map ((sigmaConst.obj (ModuleCat.of ℚ ℚ)))
   let e := ed.homotopyEquiv
   have hchains : ((Δ[n + 2] : SSet.{0}).chainComplex
-      (ModuleCat.of ℚ ℚ)).ExactAt k := by
-    exact (exactAt_iff_of_quasiIsoAt e.hom k).mpr
-      (exactAt_single_obj _ _ _ _ hk)
+      (ModuleCat.of ℚ ℚ)).ExactAt k :=
+    (exactAt_iff_of_quasiIsoAt e.hom k).mpr (exactAt_single_obj _ _ _ _ hk)
   exact (exactAt_iff_of_quasiIsoAt
     ((Δ[n + 2] : SSet.{0}).toNormalizedChainComplex (ModuleCat.of ℚ ℚ)) k).mp hchains
 
@@ -80,8 +79,8 @@ lemma ιNormalizedChainComplex_standardSimplexSuccNormalizedChainsToBoundary
     (Δ[n + 2] : SSet.{0}).ιNormalizedChainComplex x ≫
         standardSimplexSuccNormalizedChainsToBoundary n k hk =
       (∂Δ[n + 2] : SSet.{0}).ιNormalizedChainComplex
-        ⟨x, by rw [SSet.boundary_obj_eq_univ k (n + 2) hk]; trivial⟩ := by
-  exact ((Δ[n + 2] : SSet.{0}).isColimitCofanNormalizedChainComplex
+        ⟨x, by rw [SSet.boundary_obj_eq_univ k (n + 2) hk]; trivial⟩ :=
+  ((Δ[n + 2] : SSet.{0}).isColimitCofanNormalizedChainComplex
     (ModuleCat.of ℚ ℚ) k).fac
       (Cofan.mk _ (fun x ↦
         (∂Δ[n + 2] : SSet.{0}).ιNormalizedChainComplex
@@ -127,12 +126,8 @@ def standardSphereSuccTopCyclesIsoStandardSimplexSuccTopCycles (n : ℕ) :
       (ModuleCat.of ℚ ℚ)
   let eTop := standardSphereSuccNormalizedChainsXIsoStandard n (n + 1) (by lia)
   let eBelow := standardSphereSuccNormalizedChainsXIsoStandard n n (by lia)
-  letI : IsIso (f.f (n + 1)) := by
-    change IsIso eTop.hom
-    infer_instance
-  letI : IsIso (f.f n) := by
-    change IsIso eBelow.hom
-    infer_instance
+  letI : IsIso (f.f (n + 1)) := eTop.isIso_hom
+  letI : IsIso (f.f n) := eBelow.isIso_hom
   let φ := (shortComplexFunctor' (ModuleCat ℚ) (ComplexShape.down ℕ)
     (n + 2) (n + 1) n).map f
   letI : IsIso φ.τ₂ := by
@@ -157,13 +152,12 @@ def standardSimplexSuccNormalizedChainsXTopIsoRat (n : ℕ) :
     { default := top
       uniq := fun x ↦ by
         apply Subtype.ext
-        have hx := x.2
         have hx' : x.1 ∈
             ({SSet.stdSimplex.objEquiv.symm (𝟙 (SimplexCategory.mk (n + 2)))} :
               Set ((Δ[n + 2] : SSet.{0}).obj
                 (Opposite.op (SimplexCategory.mk (n + 2))))) := by
           rw [← SSet.stdSimplex.nonDegenerate_top_dim]
-          exact hx
+          exact x.2
         simpa [top] using hx' }
   exact IsColimit.coconePointUniqueUpToIso
     ((Δ[n + 2] : SSet.{0}).isColimitCofanNormalizedChainComplex
@@ -183,8 +177,7 @@ lemma standardSimplexSucc_normalized_d_top_mono (n : ℕ) :
   have hAbove : IsZero ((standardSimplexSuccNormalizedRationalChains n).X (n + 3)) :=
     (Δ[n + 2] : SSet.{0}).isZero_normalizedChainComplex_X_of_hasDimensionLT
       (ModuleCat.of ℚ ℚ) (n + 3) (n + 3)
-  apply hTop'.mono_g
-  exact hAbove.eq_of_src _ _
+  exact hTop'.mono_g (hAbove.eq_of_src _ _)
 
 /-- Exactness identifies the top group of a full standard simplex with the cycle kernel one
 degree below. -/
@@ -200,9 +193,7 @@ def standardSimplexSuccNormalizedChainsXTopIsoTopCycles (n : ℕ) :
       ((standardSimplexSuccNormalizedRationalChains n).isoSc'
         (n + 2) (n + 1) n (by simp) (by simp)) h
   letI : Mono ((standardSimplexSuccNormalizedRationalChains n).sc'
-      (n + 2) (n + 1) n).f := by
-    change Mono ((standardSimplexSuccNormalizedRationalChains n).d (n + 2) (n + 1))
-    exact standardSimplexSucc_normalized_d_top_mono n
+      (n + 2) (n + 1) n).f := standardSimplexSucc_normalized_d_top_mono n
   exact IsLimit.conePointUniqueUpToIso h'.fIsKernel
     (limit.isLimit (parallelPair
       ((standardSimplexSuccNormalizedRationalChains n).d (n + 1) n) 0))

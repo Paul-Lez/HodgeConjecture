@@ -131,10 +131,8 @@ theorem centeredComplexUnivBall_preserves_standardComplexLocalClass
   let A := complexMatrixOfContinuousLinearMap d L
   have hA : A.det ≠ 0 := complexMatrixOfContinuousLinearMap_det_ne_zero d L hL
   have hAL : (A.mulVecLin.toContinuousLinearMap :
-      (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) = L := by
-    apply ContinuousLinearMap.ext
-    intro w
-    exact complexMatrixOfContinuousLinearMap_mulVec d L w
+      (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) = L :=
+    ContinuousLinearMap.ext (complexMatrixOfContinuousLinearMap_mulVec d L)
   apply relativeHomologyMap_complexDifferentiable_standardComplexLocalClass d A hA
   rw [hAL]
   simpa only [add_zero] using

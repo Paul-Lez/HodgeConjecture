@@ -117,9 +117,8 @@ lemma liftSheafSectionsSupportedOutside_unique (U : Opens X)
     (hf : f ≫ (toOpenRestrictionPushforward X U).app G = 0)
     (g : F ⟶ (sheafSectionsSupportedOutside X U).obj G)
     (hg : g ≫ (sheafSectionsSupportedOutsideInclusion X U).app G = f) :
-    g = liftSheafSectionsSupportedOutside X U f hf := by
-  apply (cancel_mono (kernel.ι _)).1
-  exact hg.trans (kernel.lift_ι _ _ _).symm
+    g = liftSheafSectionsSupportedOutside X U f hf :=
+  (cancel_mono (kernel.ι _)).1 (hg.trans (kernel.lift_ι _ _ _).symm)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -166,10 +165,8 @@ lemma sheafSectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
 /-- Restriction to the empty open subspace and pushforward gives the zero sheaf. -/
 lemma isZero_openRestrictionPushforward_bot (F : Sheaf AddCommGrpCat.{u} X) :
     IsZero ((openRestrictionPushforward X ⊥).obj F) := by
-  apply (pushforward AddCommGrpCat (⊥ : Opens X).inclusion').map_isZero
-  apply (isZero_iff_stalkFunctor_obj_isZero _).2
-  intro x
-  exact False.elim x.property
+  exact (pushforward AddCommGrpCat (⊥ : Opens X).inclusion').map_isZero
+    ((isZero_iff_stalkFunctor_obj_isZero _).2 fun x => False.elim x.property)
 
 instance (F : Sheaf AddCommGrpCat.{u} X) :
     IsIso ((sheafSectionsSupportedOutsideInclusion X ⊥).app F) := by
@@ -254,8 +251,8 @@ sections with support by applying the concrete support functor termwise. -/
 instance derivedSheafSectionsWithClosedSupportUnit_isIso_injectiveComplex (Z : Closeds X)
     (K : HomotopyCategory.Plus (InjectiveObject (Sheaf AddCommGrpCat.{u} X))) :
     IsIso ((derivedSheafSectionsWithClosedSupportUnit X Z).app
-      ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj K)) := by
-  exact (HomotopyCategory.Plus.localizerMorphism_derives
+      ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj K)) :=
+  (HomotopyCategory.Plus.localizerMorphism_derives
     ((sheafSectionsWithClosedSupport X Z).mapHomotopyCategoryPlus ⋙
       DerivedCategory.Plus.Qh)).isIso_of_isRightDerivedFunctor
         (derivedSheafSectionsWithClosedSupportUnit X Z) K
@@ -289,8 +286,8 @@ sections with support by taking supported global sections termwise. -/
 instance derivedClosedSupportSectionsUnit_isIso_injectiveComplex (Z : Closeds X)
     (K : HomotopyCategory.Plus (InjectiveObject (Sheaf AddCommGrpCat.{u} X))) :
     IsIso ((derivedClosedSupportSectionsUnit X Z).app
-      ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj K)) := by
-  exact (HomotopyCategory.Plus.localizerMorphism_derives
+      ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj K)) :=
+  (HomotopyCategory.Plus.localizerMorphism_derives
     ((closedSupportSections X Z).mapHomotopyCategoryPlus ⋙
       DerivedCategory.Plus.Qh)).isIso_of_isRightDerivedFunctor
         (derivedClosedSupportSectionsUnit X Z) K

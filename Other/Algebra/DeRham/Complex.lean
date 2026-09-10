@@ -41,11 +41,7 @@ def complex : CochainComplex (ModuleCat.{u} R) ℕ :=
   CochainComplex.of
     (fun p => ModuleCat.of R (Form R A p))
     (fun p => ModuleCat.ofHom (differential R A p))
-    (fun p => by
-      apply ModuleCat.hom_ext
-      apply LinearMap.ext
-      intro x
-      exact differential_squared R A p x)
+    (fun p => ModuleCat.hom_ext (LinearMap.ext (differential_squared R A p)))
 
 @[simp] lemma complex_X (p : ℕ) : (complex R A).X p = ModuleCat.of R (Form R A p) := rfl
 
@@ -59,10 +55,7 @@ variable {A} {B : Type u} [CommRing B] [Algebra R B]
 def complexMap (f : A →ₐ[R] B) : complex R A ⟶ complex R B :=
   CochainComplex.ofHom (fun p => ModuleCat.ofHom (map R f p)) fun p => by
     rw [complex_d, complex_d]
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro x
-    exact (map_differential R f p x).symm
+    exact ModuleCat.hom_ext (LinearMap.ext fun x => (map_differential R f p x).symm)
 
 @[simp] lemma complexMap_f (f : A →ₐ[R] B) (p : ℕ) :
     (complexMap R f).f p = ModuleCat.ofHom (map R f p) := rfl

@@ -93,9 +93,7 @@ public noncomputable def barycentricSubdivisionEndomorphismIterateHomotopy
     (X : SSet.{0}) : ∀ n : ℕ,
     Homotopy (barycentricSubdivisionEndomorphismIterate X n)
       (𝟙 (X.chainComplex (AddCommGrpCat.of ℤ)))
-  | 0 => by
-      change Homotopy (𝟙 (X.chainComplex (AddCommGrpCat.of ℤ))) (𝟙 _)
-      exact Homotopy.refl _
+  | 0 => Homotopy.refl _
   | n + 1 => by
       simpa [barycentricSubdivisionEndomorphismIterate] using
         (barycentricSubdivisionEndomorphismIterateHomotopy X n).comp

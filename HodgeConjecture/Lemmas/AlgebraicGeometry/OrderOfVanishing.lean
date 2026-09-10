@@ -68,8 +68,8 @@ theorem Scheme.ord_support_finite [IsIntegral X] [IsNoetherian X]
   let T' : S := ⟨T, hTS⟩
   refine ⟨T', ?_⟩
   let y : X := g T'
-  have hyclosure : closure ({y} : Set X) = T := by
-    exact (hSirred T hTS).closure_genericPoint (hSclosed T hTS)
+  have hyclosure : closure ({y} : Set X) = T :=
+    (hSirred T hTS).closure_genericPoint (hSclosed T hTS)
   have hyx : y ⤳ x := by
     rw [specializes_iff_mem_closure, hyclosure]
     exact hxT
@@ -79,14 +79,13 @@ theorem Scheme.ord_support_finite [IsIntegral X] [IsNoetherian X]
   · by_contra hnyx
     have hxy_ne : x ≠ y := fun h ↦ hnyx (h ▸ le_rfl)
     have hxylt : x < y := lt_of_le_of_ne hxy hxy_ne
-    have hycodim_le : coheight y ≤ 0 := by
-      exact ((Order.coheight_eq_coe_add_one_iff (x := x) (n := 0)).mp hxcodim).2.2 y hxylt
+    have hycodim_le : coheight y ≤ 0 :=
+      ((Order.coheight_eq_coe_add_one_iff (x := x) (n := 0)).mp hxcodim).2.2 y hxylt
     have hycodim : coheight y = 0 := bot_unique hycodim_le
     have hymax : IsMax y := Order.coheight_eq_zero.mp hycodim
     have hytop : y = (⊤ : X) := hymax.eq_of_le (le_top : y ≤ (⊤ : X))
     have hTuniv : T = Set.univ := by
       rw [← hyclosure, hytop]
-      change closure ({genericPoint X} : Set X) = Set.univ
       exact genericPoint_closure X
     have hTZ : T ⊆ Z := by
       intro z hz
@@ -102,9 +101,7 @@ cycle without an additional finiteness hypothesis. -/
 theorem Scheme.ord_locallyFiniteSupport [IsIntegral X] [IsNoetherian X]
     (f : X.functionField) : LocallyFiniteSupport (X.ord f) := by
   by_cases hf : f = 0
-  · intro x
-    exact ⟨Set.univ, Filter.univ_mem, by simp [hf]⟩
-  intro x
-  exact ⟨Set.univ, Filter.univ_mem, by simpa using X.ord_support_finite f hf⟩
+  · exact fun _ ↦ ⟨Set.univ, Filter.univ_mem, by simp [hf]⟩
+  exact fun _ ↦ ⟨Set.univ, Filter.univ_mem, by simpa using X.ord_support_finite f hf⟩
 
 end AlgebraicGeometry

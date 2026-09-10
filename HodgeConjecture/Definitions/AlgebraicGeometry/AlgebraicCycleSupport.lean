@@ -48,9 +48,8 @@ lemma algebraicCycle_support_finite {R : Type*} [Zero R]
     [IsProjective X.hom] (c : AlgebraicCycle X.left R) :
     c.support.Finite := by
   let : CompactSpace X.left := QuasiCompact.compactSpace_of_compactSpace X.hom
-  have h := c.locallyFiniteSupport.finite_inter_support_of_isCompact
+  simpa using c.locallyFiniteSupport.finite_inter_support_of_isCompact
     (W := Set.univ) isCompact_univ
-  simpa using h
 
 /-- The reduced closed subscheme whose underlying space is the closure of `x`. -/
 def cycleComponent (X : Scheme) (x : X) : Scheme :=
@@ -80,11 +79,8 @@ instance (X : Scheme) (x : X) : IsReduced (cycleComponent X x) := by
   change (PrimeSpectrum.vanishingIdeal (U'.2.fromSpec ⁻¹' closure {x})).IsRadical
   exact PrimeSpectrum.isRadical_vanishingIdeal _
 
-instance (X : Scheme) (x : X) : IrreducibleSpace (cycleComponent X x) := by
-  let I := Scheme.IdealSheafData.vanishingIdeal
-    (X := X) ⟨closure {x}, isClosed_closure⟩
-  change IrreducibleSpace I.subscheme
-  exact Subtype.irreducibleSpace isIrreducible_singleton.closure
+instance (X : Scheme) (x : X) : IrreducibleSpace (cycleComponent X x) :=
+  Subtype.irreducibleSpace isIrreducible_singleton.closure
 
 instance (X : Scheme) (x : X) : IsIntegral (cycleComponent X x) :=
   isIntegral_of_irreducibleSpace_of_isReduced _
@@ -125,8 +121,7 @@ lemma complexPoint_ker_eq_vanishingIdeal_closure
   have himage : f '' (↑(⊤ : TopologicalSpace.Closeds (Spec ↧ℂ)) :
       Set (Spec ↧ℂ)) = {z.underlying} := by
     simpa only [TopologicalSpace.Closeds.coe_top, Set.image_univ] using hrange
-  rw [himage] at h
-  exact h
+  rwa [himage] at h
 
 /-- A cycle component of a projective variety is projective over `ℂ`. -/
 instance cycleComponent_projective
@@ -155,24 +150,15 @@ noncomputable instance cycleComponent_locallyOfFinitePresentation
     LocallyOfFinitePresentation (cycleComponentι X.left x ≫ X.hom) :=
   inferInstance
 
-/-- The integral projective variety defined by one generic point of a smooth projective variety. -/
-def cycleComponentVariety
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IntegralProjectiveComplexVariety where
-  scheme := cycleComponent X.left x
-  isIntegral := inferInstance
-  structureMap := cycleComponentι X.left x ≫ X.hom
-  projective := cycleComponent_projective X x
-
 /-- The reduced closure of a point in a projective complex variety is Noetherian.
 
 This is not an instance: the component does not determine the structure morphism carrying the
 projectivity hypothesis. -/
 theorem cycleComponent_isNoetherian
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IsNoetherian (cycleComponent X.left x) := by
-  change IsNoetherian (cycleComponentVariety X x).scheme
-  infer_instance
+    IsNoetherian (cycleComponent X.left x) :=
+  @isNoetherian_of_isProjective (Over.mk (cycleComponentι X.left x ≫ X.hom))
+    (cycleComponent_projective X x)
 
 /-- The smooth locus of an integral cycle component is a smooth complex scheme. -/
 theorem cycleComponent_smoothLocus_smooth
@@ -289,9 +275,8 @@ def cycleComponentComplexPointLift
 lemma cycleComponentMap_lift
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
     (z : (ComplexPoint X)) (hz : z ∈ cycleComponentSupport X x) :
-    cycleComponentMap X x (cycleComponentComplexPointLift X x z hz) = z := by
-  apply Over.OverMorphism.ext
-  exact IsClosedImmersion.lift_fac (cycleComponentι X.left x) z.left _
+    cycleComponentMap X x (cycleComponentComplexPointLift X x z hz) = z :=
+  Over.OverMorphism.ext (IsClosedImmersion.lift_fac (cycleComponentι X.left x) z.left _)
 
 /-- The complex points of a reduced cycle component map onto exactly its closed analytic
 support. -/
@@ -306,11 +291,9 @@ lemma range_cycleComponentMap
 /-- A closed immersion of a cycle component is injective on complex points. -/
 lemma cycleComponentMap_injective
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Function.Injective (cycleComponentMap X x) := by
-  intro a b hab
-  apply Over.OverMorphism.ext
-  apply (cancel_mono (cycleComponentι X.left x)).mp
-  exact congrArg (fun z => z.left) hab
+    Function.Injective (cycleComponentMap X x) := fun _ _ hab =>
+  Over.OverMorphism.ext ((cancel_mono (cycleComponentι X.left x)).mp
+    (congrArg (fun z => z.left) hab))
 
 /-- Map the complex points of a cycle component into its analytic support. -/
 def cycleComponentSupportMap
@@ -328,9 +311,8 @@ def cycleComponentPointEquivSupport
       cycleComponentSupport X x :=
   Equiv.ofBijective (cycleComponentSupportMap X x) ⟨
     fun _ _ h => cycleComponentMap_injective X x (congrArg Subtype.val h),
-    fun z => ⟨cycleComponentComplexPointLift X x z z.2, by
-      apply Subtype.ext
-      exact cycleComponentMap_lift X x z z.2⟩⟩
+    fun z => ⟨cycleComponentComplexPointLift X x z z.2,
+      Subtype.ext (cycleComponentMap_lift X x z z.2)⟩⟩
 
 /-- The analytic complex points in the smooth locus of a reduced cycle component. -/
 def cycleComponentSmoothAnalyticLocus
@@ -351,9 +333,8 @@ lemma isOpen_cycleComponentSmoothAnalyticLocus
 /-- The analytic smooth locus of every reduced integral cycle component is nonempty. -/
 lemma cycleComponentSmoothAnalyticLocus_nonempty
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    (cycleComponentSmoothAnalyticLocus X x).Nonempty := by
-  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint X x
-  exact ⟨z, hz⟩
+    (cycleComponentSmoothAnalyticLocus X x).Nonempty :=
+  exists_cycleComponent_smooth_complexPoint X x
 
 /-- The image in the ambient analytic space of the smooth locus of a cycle component. -/
 def cycleComponentSmoothSupport
@@ -413,21 +394,17 @@ lemma PrincipalDivisor.pushforwardCycle_support_subset_range
   apply Function.locallyFinsupp.support_map_subset_of_forall_mem
     (s := Set.univ) (t := Set.range D.inclusion)
   · exact Set.subset_univ _
-  · intro x _ _
-    exact ⟨x, rfl⟩
+  · exact fun x _ _ => ⟨x, rfl⟩
 
 /-- The geometric support of a pushed-forward principal divisor lies in its closed carrier. -/
 lemma PrincipalDivisor.algebraicCycleSupport_pushforwardCycle_subset_range
     {X : Scheme} {p : ℕ} (D : PrincipalDivisor X p) :
     algebraicCycleSupport X D.pushforwardCycle ⊆ Set.range D.inclusion := by
   let := D.isClosedImmersion
-  rw [algebraicCycleSupport]
-  rw [Set.iUnion₂_subset_iff]
+  rw [algebraicCycleSupport, Set.iUnion₂_subset_iff]
   intro x hx
-  apply closure_minimal
-  · simpa only [Set.singleton_subset_iff] using
-      D.pushforwardCycle_support_subset_range hx
-  · exact D.inclusion.isClosedEmbedding.isClosed_range
+  refine closure_minimal ?_ D.inclusion.isClosedEmbedding.isClosed_range
+  simpa only [Set.singleton_subset_iff] using D.pushforwardCycle_support_subset_range hx
 
 /-- The complex points lying over the geometric support of an algebraic cycle. -/
 def analyticCycleSupport {R : Type*} [Zero R]
@@ -456,9 +433,8 @@ lemma analyticCycleSupport_pushforwardCycle_subset_carrierSupport
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
     {p : ℕ} (D : PrincipalDivisor X.left p) :
     analyticCycleSupport X D.pushforwardCycle ⊆
-      principalDivisorCarrierSupport X D := by
-  intro z hz
-  exact D.algebraicCycleSupport_pushforwardCycle_subset_range hz
+      principalDivisorCarrierSupport X D :=
+  fun _ hz => D.algebraicCycleSupport_pushforwardCycle_subset_range hz
 
 /-- The analytic support of a cycle is the union of the analytic supports of its nonzero
 components. -/
@@ -483,20 +459,14 @@ lemma cycleComponentSupport_subset_analyticCycleSupport {R : Type*} [Zero R]
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (c : AlgebraicCycle X.left R)
     (x : X.left) (hx : c x ≠ 0) :
-    cycleComponentSupport X x ⊆ analyticCycleSupport X c := by
-  intro z hz
-  change z.underlying ∈ ⋃ y ∈ c.support, closure {y}
-  exact Set.mem_iUnion₂.mpr ⟨x, Function.mem_support.mpr hx, hz⟩
+    cycleComponentSupport X x ⊆ analyticCycleSupport X c :=
+  fun _ hz => Set.mem_iUnion₂.mpr ⟨x, Function.mem_support.mpr hx, hz⟩
 
 @[simp]
 lemma algebraicCycleSupport_zero {R : Type*} [Zero R] (X : Scheme) :
     algebraicCycleSupport X (0 : AlgebraicCycle X R) = ∅ := by
-  have hs : (0 : AlgebraicCycle X R).support = ∅ := by
-    ext x
-    change (0 : R) ≠ 0 ↔ False
-    simp
-  rw [algebraicCycleSupport, hs]
-  simp
+  simp [algebraicCycleSupport]
+  exact fun _ => rfl
 
 @[simp]
 lemma analyticCycleSupport_zero {R : Type*} [Zero R]

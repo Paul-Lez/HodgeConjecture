@@ -64,11 +64,8 @@ lemma triadUnionCover_iUnion :
 lemma triadUnionCover_isOpen
     (hA : IsOpen (triadUnionCover X A B true))
     (hB : IsOpen (triadUnionCover X A B false)) :
-    ∀ b, IsOpen (triadUnionCover X A B b) := by
-  intro b
-  cases b with
-  | false => exact hB
-  | true => exact hA
+    ∀ b, IsOpen (triadUnionCover X A B b) :=
+  fun b ↦ Bool.rec hB hA b
 
 /-- Identify `A` with the `true` member of the induced cover of `A ∪ B`. -/
 def triadLeftToUnionCoverMember :
@@ -163,8 +160,7 @@ lemma triadUnionSmallSimplex_exists_left_or_right {n : SimplexCategoryᵒᵖ}
         ext t
         rfl
       rw [hback]
-      apply Subtype.ext
-      exact hy
+      exact Subtype.ext hy
   | true =>
       left
       let a := (TopCat.toSSet.map (triadUnionCoverMemberToLeft X A B)).app n y
@@ -178,8 +174,7 @@ lemma triadUnionSmallSimplex_exists_left_or_right {n : SimplexCategoryᵒᵖ}
         ext t
         rfl
       rw [hback]
-      apply Subtype.ext
-      exact hy
+      exact Subtype.ext hy
 
 /-- In each degree, the sum of the two cover-member chain groups surjects onto the small-chain
 group. -/
@@ -276,8 +271,8 @@ lemma triadLeftToUnionSmallSingularSet_comp_inclusion :
           (triadUnionCover X A B)).ι =
       TopCat.toSSet.map (subsetToUnionLeft X A B) := by
   rw [triadLeftToUnionSmallSingularSet, Category.assoc,
-    coverMemberToSmallSingularSet_comp_inclusion]
-  rw [← Functor.map_comp, triadLeftToUnionCoverMember_comp_inclusion]
+    coverMemberToSmallSingularSet_comp_inclusion, ← Functor.map_comp,
+    triadLeftToUnionCoverMember_comp_inclusion]
 
 @[reassoc]
 lemma triadRightToUnionSmallSingularSet_comp_inclusion :
@@ -286,8 +281,8 @@ lemma triadRightToUnionSmallSingularSet_comp_inclusion :
           (triadUnionCover X A B)).ι =
       TopCat.toSSet.map (subsetToUnionRight X A B) := by
   rw [triadRightToUnionSmallSingularSet, Category.assoc,
-    coverMemberToSmallSingularSet_comp_inclusion]
-  rw [← Functor.map_comp, triadRightToUnionCoverMember_comp_inclusion]
+    coverMemberToSmallSingularSet_comp_inclusion, ← Functor.map_comp,
+    triadRightToUnionCoverMember_comp_inclusion]
 
 /-- Inclusion of the two-set small chains into all chains on `A ∪ B`. -/
 abbrev triadUnionSmallChainInclusion :
@@ -415,14 +410,12 @@ lemma triadCoverMembersToUnionSmallChains_comp_ambient :
   apply HomologicalComplex.biprodX_ext_from
   · rw [HomologicalComplex.comp_f, ← Category.assoc]
     dsimp [triadCoverMembersToUnionSmallChains]
-    rw [HomologicalComplex.biprod_inl_desc_f]
-    rw [HomologicalComplex.biprod_inl_desc_f]
+    rw [HomologicalComplex.biprod_inl_desc_f, HomologicalComplex.biprod_inl_desc_f]
     exact congrArg (fun f ↦ f.f n)
       (triadLeftToUnionSmallChains_comp_ambient X A B)
   · rw [HomologicalComplex.comp_f, ← Category.assoc]
     dsimp [triadCoverMembersToUnionSmallChains]
-    rw [HomologicalComplex.biprod_inr_desc_f]
-    rw [HomologicalComplex.biprod_inr_desc_f]
+    rw [HomologicalComplex.biprod_inr_desc_f, HomologicalComplex.biprod_inr_desc_f]
     exact congrArg (fun f ↦ f.f n)
       (triadRightToUnionSmallChains_comp_ambient X A B)
 
@@ -479,8 +472,8 @@ instance triadUnionSubspaceChainMap_mono :
   exact triadUnionAmbientChainMap_mono X A B
 
 instance triadUnionSmallToAmbientChains_mono :
-    Mono (triadUnionSmallToAmbientChains X A B) := by
-  exact mono_comp'
+    Mono (triadUnionSmallToAmbientChains X A B) :=
+  mono_comp'
     (coverSmallRationalSingularChainInclusion_mono
       (TopPair.ofSubset (A ∪ B)).snd (triadUnionCover X A B))
     (triadUnionAmbientChainMap_mono X A B)
@@ -510,8 +503,8 @@ def triadUnionSmallRelativeToUnionRelativeChainMap :
 lemma triadUnionSmallRelativeProjection_comp_toUnion :
     triadUnionSmallRelativeProjection X A B ≫
         triadUnionSmallRelativeToUnionRelativeChainMap X A B =
-      relativeChainProjection ℚ (TopPair.ofSubset (A ∪ B)) := by
-  exact ((coker.π (C := ChainCategory ℚ)).naturality
+      relativeChainProjection ℚ (TopPair.ofSubset (A ∪ B)) :=
+  ((coker.π (C := ChainCategory ℚ)).naturality
     (triadUnionSmallToUnionPairArrow X A B)).symm
 
 /-- The morphism between the small and ordinary cokernel short exact sequences. -/
@@ -534,19 +527,14 @@ lemma triadUnionSmallCokernelSequence_shortExact :
     (ShortComplex.cokernelSequence
       (triadUnionSmallToAmbientChains X A B)).ShortExact where
   exact := ShortComplex.cokernelSequence_exact _
-  mono_f := by
-    change Mono (triadUnionSmallToAmbientChains X A B)
-    exact triadUnionSmallToAmbientChains_mono X A B
+  mono_f := triadUnionSmallToAmbientChains_mono X A B
   epi_g := by infer_instance
 
 lemma triadUnionCokernelSequence_shortExact :
     (ShortComplex.cokernelSequence
       ((chainPairFunctor ℚ).obj (TopPair.ofSubset (A ∪ B))).hom).ShortExact where
   exact := ShortComplex.cokernelSequence_exact _
-  mono_f := by
-    change Mono (((chainPairFunctor ℚ).obj
-      (TopPair.ofSubset (A ∪ B))).hom)
-    exact triadUnionSubspaceChainMap_mono X A B
+  mono_f := triadUnionSubspaceChainMap_mono X A B
   epi_g := by infer_instance
 
 /-- The small-relative quotient is quasi-isomorphic to ordinary relative chains whenever `A`
@@ -560,15 +548,12 @@ theorem triadUnionSmallRelativeToUnionRelative_quasiIso
       (triadUnionCover_isOpen X A B hA hB) (triadUnionCover_iUnion X A B)
   have hsmall : QuasiIso e.hom := e.quasiIso_hom
   rw [coverSmallRationalChainHomotopyEquiv_of_openCover_hom] at hsmall
-  have hambient : QuasiIso
-      (𝟙 (((singularChainComplexFunctor (ModuleCat ℚ)).obj
-        (ModuleCat.of ℚ ℚ)).obj X)) := by
-    infer_instance
   exact HomologicalComplex.HomologySequence.quasiIso_τ₃
     (triadUnionSmallToUnionCokernelSequenceHom X A B)
     (triadUnionSmallCokernelSequence_shortExact X A B)
     (triadUnionCokernelSequence_shortExact X A B)
-    hsmall hambient
+    hsmall (inferInstanceAs (QuasiIso (𝟙 (((singularChainComplexFunctor
+      (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ)).obj X))))
 
 /-- Factoring through the two-set small-relative quotient recovers the canonical map from the
 sum-relative triad complex to ordinary chains relative to `A ∪ B`. -/
@@ -593,8 +578,7 @@ theorem triadToUnionRelativeChainMap_quasiIso_of_openCover
     QuasiIso (triadToUnionRelativeChainMap ℚ X A B) := by
   let : IsIso (triadRelativeUnionSmallIso X A B).hom :=
     (triadRelativeUnionSmallIso X A B).isIso_hom
-  let : QuasiIso (triadRelativeUnionSmallIso X A B).hom := by
-    infer_instance
+  let : QuasiIso (triadRelativeUnionSmallIso X A B).hom := inferInstance
   let : QuasiIso
       (triadUnionSmallRelativeToUnionRelativeChainMap X A B) :=
     triadUnionSmallRelativeToUnionRelative_quasiIso X A B hA hB
@@ -606,9 +590,7 @@ theorem triadToUnionRelativeChainMap_quasiIso_of_isOpen
     (hA : IsOpen A) (hB : IsOpen B) :
     QuasiIso (triadToUnionRelativeChainMap ℚ X A B) := by
   apply triadToUnionRelativeChainMap_quasiIso_of_openCover X A B
-  · change IsOpen (Subtype.val ⁻¹' A)
-    exact hA.preimage continuous_subtype_val
-  · change IsOpen (Subtype.val ⁻¹' B)
-    exact hB.preimage continuous_subtype_val
+  · exact hA.preimage continuous_subtype_val
+  · exact hB.preimage continuous_subtype_val
 
 end AlgebraicTopology.Singular

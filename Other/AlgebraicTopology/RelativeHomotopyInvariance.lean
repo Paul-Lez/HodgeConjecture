@@ -141,8 +141,8 @@ noncomputable def relativeChainProjectionComponentIsCokernel (X : TopPair.{u}) (
         (subspaceChainMap_relativeChainProjection R X)
       change ((chainPairFunctor R).obj X).hom.f i ≫
         (relativeChainProjection R X).f i = 0 at h
-      exact h)) := by
-  exact CokernelCofork.mapIsColimit _
+      exact h)) :=
+  CokernelCofork.mapIsColimit _
     (cokernelIsCokernel ((chainPairFunctor R).obj X).hom)
     (HomologicalComplex.eval (ModuleCat R) (ComplexShape.down ℕ) i)
 
@@ -164,13 +164,8 @@ noncomputable def relativeChainHomotopyComponent (H : TopPair.Homotopy f g) (i j
         have hz :
             ((((singularChainComplexFunctor (ModuleCat.{u} R)).obj
               (ModuleCat.of R R)).map Y.map).f j ≫
-                (relativeChainProjection R Y).f j) = 0 := by
-          have hz' := congrArg (fun q ↦ q.f j)
-            (subspaceChainMap_relativeChainProjection R Y)
-          change ((((singularChainComplexFunctor (ModuleCat.{u} R)).obj
-            (ModuleCat.of R R)).map Y.map).f j ≫
-              (relativeChainProjection R Y).f j) = 0 at hz'
-          exact hz'
+                (relativeChainProjection R Y).f j) = 0 :=
+          congrArg (fun q ↦ q.f j) (subspaceChainMap_relativeChainProjection R Y)
         rw [hz, comp_zero]))
 
 set_option backward.isDefEq.respectTransparency false in
@@ -284,8 +279,7 @@ noncomputable def relativeChainHomotopy (H : TopPair.Homotopy f g) :
           (relativeChainProjection R Y).f i at hg
     rw [hf, hg,
       (H.fst.singularChainComplexFunctorObjMap (ModuleCat.of R R)).comm i,
-      Preadditive.add_comp]
-    rw [Preadditive.add_comp]
+      Preadditive.add_comp, Preadditive.add_comp]
 
 /-- Homotopic maps of topological pairs induce equal maps on relative singular homology. -/
 theorem congr_relativeHomologyMap (H : TopPair.Homotopy f g) (n : ℕ) :

@@ -75,11 +75,10 @@ quasi-isomorphism, the same holds for its extension to integer degrees. -/
 lemma quasiIso_map_extendMap_nat :
     QuasiIso ((F.mapHomologicalComplex (.up ℤ)).map
       (HomologicalComplex.extendMap f ComplexShape.embeddingUpNat)) := by
-  have h := HomologicalComplex.mapExtendIso_inv_naturality F f ComplexShape.embeddingUpNat
   have : QuasiIso ((HomologicalComplex.mapExtendIso F K ComplexShape.embeddingUpNat).inv ≫
       (F.mapHomologicalComplex (.up ℤ)).map
         (HomologicalComplex.extendMap f ComplexShape.embeddingUpNat)) := by
-    rw [← h]
+    rw [← HomologicalComplex.mapExtendIso_inv_naturality F f ComplexShape.embeddingUpNat]
     infer_instance
   exact quasiIso_of_comp_left
     (HomologicalComplex.mapExtendIso F K ComplexShape.embeddingUpNat).inv _

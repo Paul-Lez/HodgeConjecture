@@ -88,18 +88,14 @@ public def firstQuadrantTotalFiberEvaluationIso (n : ℕ)
   NatIso.ofComponents (fun _ => Iso.refl _)
 
 noncomputable instance (n : ℕ) :
-    PreservesFiniteLimits (firstQuadrantTotalFiberDiagramFunctor n) := by
-  apply preservesFiniteLimits_of_evaluation
-  intro pq
-  exact preservesFiniteLimits_of_natIso
-    (firstQuadrantTotalFiberEvaluationIso n pq).symm
+    PreservesFiniteLimits (firstQuadrantTotalFiberDiagramFunctor n) :=
+  preservesFiniteLimits_of_evaluation _ fun pq =>
+    preservesFiniteLimits_of_natIso (firstQuadrantTotalFiberEvaluationIso n pq).symm
 
 noncomputable instance (n : ℕ) :
-    PreservesFiniteColimits (firstQuadrantTotalFiberDiagramFunctor n) := by
-  apply preservesFiniteColimits_of_evaluation
-  intro pq
-  exact preservesFiniteColimits_of_natIso
-    (firstQuadrantTotalFiberEvaluationIso n pq).symm
+    PreservesFiniteColimits (firstQuadrantTotalFiberDiagramFunctor n) :=
+  preservesFiniteColimits_of_evaluation _ fun pq =>
+    preservesFiniteColimits_of_natIso (firstQuadrantTotalFiberEvaluationIso n pq).symm
 
 /-- The exact functor which takes the finite coproduct of all entries in total degree `n`. -/
 public noncomputable def firstQuadrantTotalDegreeFunctor (n : ℕ) :
@@ -289,13 +285,11 @@ public theorem firstQuadrantTotal_quasiIso_of_successive_extensions
           (f n).τ₂) := by
   let T := HomologicalComplex₂.totalFunctor AddCommGrpCat
     (ComplexShape.down ℕ) (ComplexShape.down ℕ) (ComplexShape.down ℕ)
-  apply quasiIso_of_successive_shortExact_extensions
+  exact quasiIso_of_successive_shortExact_extensions
     (fun n => (A n).map T) (fun n => (B n).map T)
     (fun n => T.mapShortComplex.map (f n))
-  · exact fun n => firstQuadrantTotal_shortExact (A n) (hA n)
-  · exact fun n => firstQuadrantTotal_shortExact (B n) (hB n)
-  · exact hbase
-  · exact hgraded
-  · exact fun n => T.mapArrow.mapIso (glue n)
+    (fun n => firstQuadrantTotal_shortExact (A n) (hA n))
+    (fun n => firstQuadrantTotal_shortExact (B n) (hB n))
+    hbase hgraded fun n => T.mapArrow.mapIso (glue n)
 
 end AlgebraicTopology

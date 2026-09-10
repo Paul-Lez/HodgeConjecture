@@ -76,8 +76,8 @@ theorem complexLocalOrientationNeighborhoodClass_restrict
       (supportInclusionPairMap (TopCat.of (ComplexPoint X))
         (Set.singleton_subset_iff.mpr hy))
       (complexLocalOrientationNeighborhoodClass X d x) =
-      complexLocalOrientation X d y := by
-  exact (chartOrientationNeighborhoodClass_restrict d (localChart X d x) x
+      complexLocalOrientation X d y :=
+  (chartOrientationNeighborhoodClass_restrict d (localChart X d x) x
     (mem_localChart_source X d x) y hy).trans
       (complexLocalOrientation_eq_localClassOfChart_localChart X d x y
         (chartOrientationNeighborhood_subset_source d (localChart X d x) x

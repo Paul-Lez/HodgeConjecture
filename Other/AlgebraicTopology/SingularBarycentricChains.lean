@@ -94,9 +94,9 @@ public theorem subdivisionLastVertex_barycentricSubdivisionVertex
     (X : SSet.{0}) (x : X.obj (Opposite.op (SimplexCategory.mk 0))) :
     (subdivisionLastVertex.app X).app _ (barycentricSubdivisionVertex X x) = x := by
   let f : (Δ[0] : SSet.{0}) ⟶ X := SSet.yonedaEquiv.symm x
-  have h := subdivisionLastVertex.naturality f
-  have h₀ := NatTrans.congr_app h (Opposite.op (SimplexCategory.mk 0))
-  have hx := ConcreteCategory.congr_hom h₀ subdividedStandardZeroVertex
+  have hx := ConcreteCategory.congr_hom (NatTrans.congr_app
+    (subdivisionLastVertex.naturality f)
+    (Opposite.op (SimplexCategory.mk 0))) subdividedStandardZeroVertex
   change (subdivisionLastVertex.app X).app _
       ((SSet.sd.map f).app _ subdividedStandardZeroVertex) =
     f.app _ ((subdivisionLastVertex.app (Δ[0] : SSet.{0})).app _
@@ -114,8 +114,8 @@ public theorem barycentricSubdivisionVertex_naturality
     (x : X.obj (Opposite.op (SimplexCategory.mk 0))) :
     barycentricSubdivisionVertex Y (f.app _ x) =
       (SSet.sd.map f).app _ (barycentricSubdivisionVertex X x) := by
-  rw [barycentricSubdivisionVertex, barycentricSubdivisionVertex]
-  rw [← SSet.yonedaEquiv_symm_comp]
+  rw [barycentricSubdivisionVertex, barycentricSubdivisionVertex,
+    ← SSet.yonedaEquiv_symm_comp]
   have h := SSet.sd.map_comp (SSet.yonedaEquiv.symm x) f
   have h₀ := NatTrans.congr_app h (Opposite.op (SimplexCategory.mk 0))
   exact ConcreteCategory.congr_hom h₀ subdividedStandardZeroVertex

@@ -83,8 +83,8 @@ public theorem chainComplex_quasiIso_of_eventually_factors
       exact hqmap
     let T : ShortComplex AddCommGrpCat :=
       ShortComplex.mk (L.toCycles (n + 1) n) (L.homologyπ n) (by simp)
-    have hT : T.Exact := by
-      exact T.exact_of_g_is_cokernel (L.homologyIsCokernel (n + 1) n (by simp))
+    have hT : T.Exact :=
+      T.exact_of_g_is_cokernel (L.homologyIsCokernel (n + 1) n (by simp))
     obtain ⟨w, hw⟩ := (T.ab_exact_iff.mp hT)
       (HomologicalComplex.cyclesMap I n z) hzmap
     obtain ⟨m, w', hw'⟩ := heventually (n + 1) w
@@ -131,8 +131,8 @@ public theorem chainComplex_quasiIso_of_eventually_factors
               (HomologicalComplex.toCycles_i K (n + 1) n) w'
           _ = (smallIterate m).f n (K.iCycles n z) := hboundary.symm
           _ = K.iCycles n
-              (HomologicalComplex.cyclesMap (smallIterate m) n z) := by
-            exact ConcreteCategory.congr_hom
+              (HomologicalComplex.cyclesMap (smallIterate m) n z) :=
+            ConcreteCategory.congr_hom
               (HomologicalComplex.cyclesMap_i (smallIterate m) n).symm z
       rw [← hB, ← ConcreteCategory.comp_apply,
         HomologicalComplex.toCycles_comp_homologyπ]
@@ -190,8 +190,8 @@ public theorem chainComplex_quasiIso_of_eventually_factors
         _ = (largeIterate m).f n x := hx'
         _ = (largeIterate m).f n (L.iCycles n z) := rfl
         _ = L.iCycles n
-            (HomologicalComplex.cyclesMap (largeIterate m) n z) := by
-          exact ConcreteCategory.congr_hom
+            (HomologicalComplex.cyclesMap (largeIterate m) n z) :=
+          ConcreteCategory.congr_hom
             (HomologicalComplex.cyclesMap_i (largeIterate m) n).symm z
     rw [hcycles, ← ConcreteCategory.comp_apply,
       ← HomologicalComplex.homologyπ_naturality,
@@ -218,15 +218,14 @@ public def CoverSmallAffineSubdivisionEventuallySmall : Prop :=
 quasi-isomorphism. -/
 public theorem coverSmallChainQuasiIsomorphism_of_eventuallySmall
     (h : CoverSmallAffineSubdivisionEventuallySmall X U) :
-    CoverSmallChainQuasiIsomorphism X U := by
-  apply chainComplex_quasiIso_of_eventually_factors
+    CoverSmallChainQuasiIsomorphism X U :=
+  chainComplex_quasiIso_of_eventually_factors
     (coverSmallIntegralSingularChainInclusion X U)
     (coverSmallAffineSubdivisionIterate X U)
     (affineSingularSubdivisionIterate X)
-  · exact coverSmallAffineSubdivisionIterate_comp_inclusion X U
-  · exact coverSmallAffineSubdivisionIterateHomotopy X U
-  · exact affineSingularSubdivisionIterateHomotopy X
-  · exact h
+    (coverSmallAffineSubdivisionIterate_comp_inclusion X U)
+    (coverSmallAffineSubdivisionIterateHomotopy X U)
+    (affineSingularSubdivisionIterateHomotopy X) h
 
 /-- The same geometric input supplies the stronger chain-homotopy approximation interface via
 projectivity of integral singular chain groups. -/

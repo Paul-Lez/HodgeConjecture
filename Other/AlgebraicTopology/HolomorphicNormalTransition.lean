@@ -191,10 +191,9 @@ theorem exists_open_normalTransition_localClass_invariance :
   have hA : A.det ≠ 0 :=
     complexMatrixOfContinuousLinearMap_det_ne_zero c L.toContinuousLinearMap L.injective
   have hAL : (A.mulVecLin.toContinuousLinearMap : (Fin c → ℂ) →L[ℂ] (Fin c → ℂ)) =
-      L.toContinuousLinearMap := by
-    apply ContinuousLinearMap.ext
-    intro v
-    exact complexMatrixOfContinuousLinearMap_mulVec c L.toContinuousLinearMap v
+      L.toContinuousLinearMap :=
+    ContinuousLinearMap.ext fun v =>
+      complexMatrixOfContinuousLinearMap_mulVec c L.toContinuousLinearMap v
   apply exists_open_complexDifferentiable_localClass_invariance c A hA
     (normalTransitionDomain c e a) (normalTransitionDomain_isOpen c e a) ha
     (normalTransitionMap c e a) (normalTransitionMap_continuousOn c e a)

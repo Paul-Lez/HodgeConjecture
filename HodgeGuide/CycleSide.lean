@@ -93,7 +93,7 @@ span likewise evaluates each component at this canonical dimension, so it does n
 arbitrary dimension witness.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety.ofStructureMap
+#check AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety.ofOver
 #check AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan
 ```
 

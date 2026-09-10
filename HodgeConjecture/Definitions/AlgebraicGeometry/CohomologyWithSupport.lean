@@ -119,15 +119,12 @@ lemma isZero_sheaf_on_complement_univ
     (F : TopCat.Sheaf AddCommGrpCat.{0}
       (TopCat.of (AnalyticComplement X
         (Set.univ : Set (ComplexPoint X))))) :
-    IsZero F := by
-  apply (TopCat.Sheaf.isZero_iff_stalkFunctor_obj_isZero
+    IsZero F :=
+  (TopCat.Sheaf.isZero_iff_stalkFunctor_obj_isZero
     (C := AddCommGrpCat.{0})
     (X := TopCat.of (AnalyticComplement X
       (Set.univ : Set (ComplexPoint X)))) F).2
-  intro x
-  have hx : False := by
-    simpa [AnalyticComplement] using x.property
-  exact hx.elim
+    fun x ↦ (show False by simpa [AnalyticComplement] using x.property).elim
 
 /-- Every term of the derived pushforward from the empty complement is zero. -/
 lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
@@ -144,16 +141,10 @@ lemma isZero_derivedPushforwardComplement_univ :
     IsZero (derivedPushforwardComplementConstantRationalComplexNat X
       (Set.univ : Set (ComplexPoint X))) := by
   constructor
-  · intro K
-    refine ⟨⟨⟨0⟩, fun f => ?_⟩⟩
-    apply HomologicalComplex.hom_ext
-    intro n
-    exact (isZero_derivedPushforwardComplement_univ_X X n).eq_zero_of_src _
-  · intro K
-    refine ⟨⟨⟨0⟩, fun f => ?_⟩⟩
-    apply HomologicalComplex.hom_ext
-    intro n
-    exact (isZero_derivedPushforwardComplement_univ_X X n).eq_zero_of_tgt _
+  · exact fun K ↦ ⟨⟨⟨0⟩, fun f ↦ HomologicalComplex.hom_ext _ _ fun n ↦
+      (isZero_derivedPushforwardComplement_univ_X X n).eq_zero_of_src _⟩⟩
+  · exact fun K ↦ ⟨⟨⟨0⟩, fun f ↦ HomologicalComplex.hom_ext _ _ fun n ↦
+      (isZero_derivedPushforwardComplement_univ_X X n).eq_zero_of_tgt _⟩⟩
 
 /-- The derived pushforward complex, extended by zero to integer degrees. -/
 def derivedPushforwardComplementConstantRationalComplexInt
@@ -222,10 +213,9 @@ noncomputable instance isIso_mappingConeTriangleh_mor₃_univ :
       HomotopyCategory.Pretriangulated.distinguishedTriangles
         (AnalyticAdditiveSheaf X) :=
     ⟨_, _, f, ⟨Iso.refl _⟩⟩
-  apply (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _ hdist).1
-  exact (HomotopyCategory.quotient
-    (AnalyticAdditiveSheaf X) (ComplexShape.up ℤ)).map_isZero
-      (isZero_derivedPushforwardComplement_univ_int X)
+  exact (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _ hdist).1
+    ((HomotopyCategory.quotient (AnalyticAdditiveSheaf X) (ComplexShape.up ℤ)).map_isZero
+      (isZero_derivedPushforwardComplement_univ_int X))
 
 /-- The same whole-support connecting morphism is an isomorphism in the derived category used by
 hypercohomology. -/
@@ -236,10 +226,9 @@ noncomputable instance isIso_derivedMappingConeTriangle_mor₃_univ :
           (Set.univ : Set (ComplexPoint X))))).mor₃) := by
   let f := rationalRestrictionComplexInt X
     (Set.univ : Set (ComplexPoint X))
-  apply (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _
+  exact (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _
     (DerivedCategory.mappingCone_triangle_distinguished f)).1
-  exact DerivedCategory.Q.map_isZero
-    (isZero_derivedPushforwardComplement_univ_int X)
+    (DerivedCategory.Q.map_isZero (isZero_derivedPushforwardComplement_univ_int X))
 
 /-- The mapping-cone model for the homotopy fiber defining rational cohomology with support. -/
 abbrev rationalCohomologyWithSupportComplex
@@ -269,24 +258,14 @@ def forgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
       FieldCohomology ℚ X n where
   toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
   map_zero' := by
-    let e : FieldCohomology ℚ X n ≃
-        ShiftedHom
-          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-          (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=
-      Localization.SmallShiftedHom.equiv
-        (analyticQuasiIsomorphisms X) DerivedCategory.Q
-    apply e.injective
-    simp only [e, Localization.SmallShiftedHom.equiv_comp,
+    apply (Localization.SmallShiftedHom.equiv
+      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+    simp only [Localization.SmallShiftedHom.equiv_comp,
       hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
   map_add' α β := by
-    let eTarget : FieldCohomology ℚ X n ≃
-        ShiftedHom
-          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-          (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=
-      Localization.SmallShiftedHom.equiv
-        (analyticQuasiIsomorphisms X) DerivedCategory.Q
-    apply eTarget.injective
-    simp only [eTarget, Localization.SmallShiftedHom.equiv_comp,
+    apply (Localization.SmallShiftedHom.equiv
+      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+    simp only [Localization.SmallShiftedHom.equiv_comp,
       hypercohomologyEquiv_add, ShiftedHom.add_comp]
 
 section
@@ -351,19 +330,16 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
       invFun := fun α => eSource.symm (eComp.symm (eTarget α))
       left_inv := ?_
       right_inv := ?_ }
-  · intro α
-    apply eSource.injective
+  · refine fun α ↦ eSource.injective ?_
     rw [eSource.apply_symm_apply, hcomp, eComp.symm_apply_apply]
-  · intro α
-    apply eTarget.injective
+  · refine fun α ↦ eTarget.injective ?_
     rw [hcomp, eSource.apply_symm_apply, eComp.apply_symm_apply]
 
 @[simp] lemma forgetSupportEquivUniv_apply (n : ℤ)
     (α : RationalCohomologyWithSupport X
       (Set.univ : Set (ComplexPoint X)) n) :
     forgetSupportEquivUniv X n α =
-      forgetSupport X Set.univ n α := by
-  rfl
+      forgetSupport X Set.univ n α := rfl
 
 /-- Forgetting whole-space support is surjective. -/
 lemma forgetSupport_surjective_univ (n : ℤ) :

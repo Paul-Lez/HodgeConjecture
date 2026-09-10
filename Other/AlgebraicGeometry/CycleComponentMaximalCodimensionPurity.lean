@@ -47,21 +47,18 @@ private lemma span_singleton_image_eq_span_range_of_span_eq_top
     {M N : Type*} [AddCommGroup M] [Module ℚ M] [AddCommGroup N] [Module ℚ N]
     (f : M →+ N) (x : M) (hx : Submodule.span ℚ {x} = ⊤) :
     Submodule.span ℚ {f x} = Submodule.span ℚ (Set.range f) := by
-  apply le_antisymm
-  · apply Submodule.span_mono
-    exact fun y hy ↦ ⟨x, Set.mem_singleton_iff.mp hy ▸ rfl⟩
-  · apply Submodule.span_le.mpr
-    rintro y ⟨z, rfl⟩
-    obtain ⟨q, rfl⟩ := (Submodule.span_singleton_eq_top_iff ℚ x).mp hx z
-    rw [map_rat_smul]
-    exact Submodule.smul_mem _ _ (Submodule.subset_span (Set.mem_singleton _))
+  refine le_antisymm (Submodule.span_mono fun y hy ↦ ⟨x, Set.mem_singleton_iff.mp hy ▸ rfl⟩)
+    (Submodule.span_le.mpr ?_)
+  rintro y ⟨z, rfl⟩
+  obtain ⟨q, rfl⟩ := (Submodule.span_singleton_eq_top_iff ℚ x).mp hx z
+  rw [map_rat_smul]
+  exact Submodule.smul_mem _ _ (Submodule.subset_span (Set.mem_singleton _))
 
 private lemma span_addEquiv_apply_eq_top
     {M N : Type*} [AddCommGroup M] [Module ℚ M] [AddCommGroup N] [Module ℚ N]
     (e : M ≃+ N) (x : M) (hx : Submodule.span ℚ {x} = ⊤) :
     Submodule.span ℚ {e x} = ⊤ := by
-  apply top_unique
-  intro y _
+  refine top_unique fun y _ ↦ ?_
   obtain ⟨q, hq⟩ :=
     (Submodule.span_singleton_eq_top_iff ℚ x).mp hx (e.symm y)
   rw [← e.apply_symm_apply y, ← hq, map_rat_smul]
@@ -90,15 +87,11 @@ theorem rationalComponentCycleClassPurity_of_coheight_eq_dimension
   obtain ⟨β, hβ⟩ :=
     exists_singularComponentSupportedGenerator_of_coheight_eq_dimension X d x hx
   let γ : RationalCohomologyWithSupport X Z ((2 * d : ℕ) : ℤ) := e.symm β
-  have hγ : Submodule.span ℚ {γ} = ⊤ := by
-    change Submodule.span ℚ {e.symm β} = ⊤
-    exact span_addEquiv_apply_eq_top e.symm β hβ
+  have hγ : Submodule.span ℚ {γ} = ⊤ := span_addEquiv_apply_eq_top e.symm β hβ
   let α := forgetSupport X Z ((2 * d : ℕ) : ℤ) γ
-  have hα : IsRationalComponentCycleClass X d x α := by
-    constructor
-    · exact Submodule.subset_span ⟨γ, rfl⟩
-    · exact span_singleton_image_eq_span_range_of_span_eq_top
-        (forgetSupport X Z ((2 * d : ℕ) : ℤ)) γ hγ
+  have hα : IsRationalComponentCycleClass X d x α :=
+    ⟨Submodule.subset_span ⟨γ, rfl⟩, span_singleton_image_eq_span_range_of_span_eq_top
+      (forgetSupport X Z ((2 * d : ℕ) : ℤ)) γ hγ⟩
   simpa only [Nat.cast_mul, Nat.cast_ofNat] using
     (rationalComponentCycleClassLine_eq_span X d x α hα).trans hα.2
 

@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
+public import HodgeConjecture.Definitions.Algebra.IntegerMultiple
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Lemmas.Algebra.Homology.StupidTruncation
 public import Mathlib.Algebra.Homology.DerivedCategory.Basic
@@ -112,9 +113,7 @@ lemma fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf :
   have h : AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom ≫
       AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom =
       𝟙 (AddCommGrpCat.of K) := by
-    apply AddCommGrpCat.hom_ext
-    apply AddMonoidHom.ext
-    intro q
+    ext q
     exact complexToFieldLinear_algebraMap K q
   rw [h]
   exact (constantSheaf J AddCommGrpCat).map_id (AddCommGrpCat.of K)
@@ -178,25 +177,6 @@ def constantIntegerSheafComplexInt :
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
     (constantIntegerSheaf X)).extend ComplexShape.embeddingUpNat
 
-/-- The additive map `n ↦ n q` from the integers to the rationals. -/
-def integerMultipleAddHom (q : K) : ℤ →+ K where
-  toFun n := n * q
-  map_zero' := by simp
-  map_add' a b := by push_cast; ring
-
-omit [Algebra K ℂ] in
-@[simp] lemma integerMultipleAddHom_zero : integerMultipleAddHom K 0 = 0 := by
-  apply AddMonoidHom.ext
-  intro n
-  simp [integerMultipleAddHom]
-
-omit [Algebra K ℂ] in
-@[simp] lemma integerMultipleAddHom_add (a b : K) :
-    integerMultipleAddHom K (a + b) = integerMultipleAddHom K a + integerMultipleAddHom K b := by
-  apply AddMonoidHom.ext
-  intro n
-  simp [integerMultipleAddHom, mul_add]
-
 /-- A rational number as a morphism from the integer to the rational constant sheaf. -/
 def integerToFieldConstantSheaf (q : K) :
     constantIntegerSheaf X ⟶ constantFieldSheaf K X :=
@@ -208,9 +188,7 @@ omit [Algebra K ℂ] in
     integerToFieldConstantSheaf K X 0 = 0 := by
   unfold integerToFieldConstantSheaf
   rw [integerMultipleAddHom_zero]
-  have h : AddCommGrpCat.ofHom (0 : ℤ →+ K) = 0 := by
-    apply AddCommGrpCat.hom_ext
-    rfl
+  have h : AddCommGrpCat.ofHom (0 : ℤ →+ K) = 0 := AddCommGrpCat.hom_ext rfl
   rw [h, Functor.map_zero]
   rfl
 
@@ -224,9 +202,8 @@ omit [Algebra K ℂ] in
   have h : AddCommGrpCat.ofHom
       (integerMultipleAddHom K a + integerMultipleAddHom K b) =
       AddCommGrpCat.ofHom (integerMultipleAddHom K a) +
-        AddCommGrpCat.ofHom (integerMultipleAddHom K b) := by
-    apply AddCommGrpCat.hom_ext
-    rfl
+        AddCommGrpCat.ofHom (integerMultipleAddHom K b) :=
+    AddCommGrpCat.hom_ext rfl
   rw [h, Functor.map_add]
   rfl
 
@@ -296,9 +273,7 @@ omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarSheaf_zero : fieldScalarSheaf K X 0 = 0 := by
   unfold fieldScalarSheaf
   rw [fieldScalarAddHom_zero]
-  have h : AddCommGrpCat.ofHom (0 : K →+ K) = 0 := by
-    apply AddCommGrpCat.hom_ext
-    rfl
+  have h : AddCommGrpCat.ofHom (0 : K →+ K) = 0 := AddCommGrpCat.hom_ext rfl
   rw [h, Functor.map_zero]
   rfl
 
@@ -324,9 +299,8 @@ omit [Algebra K ℂ] in
       fieldScalarSheaf K X a + fieldScalarSheaf K X b := by
   have h : AddCommGrpCat.ofHom (fieldScalarAddHom K a + fieldScalarAddHom K b) =
       AddCommGrpCat.ofHom (fieldScalarAddHom K a) +
-        AddCommGrpCat.ofHom (fieldScalarAddHom K b) := by
-    apply AddCommGrpCat.hom_ext
-    rfl
+        AddCommGrpCat.ofHom (fieldScalarAddHom K b) :=
+    AddCommGrpCat.hom_ext rfl
   change (constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
       AddCommGrpCat).map
@@ -341,9 +315,8 @@ omit [Algebra K ℂ] in
   have h : AddCommGrpCat.ofHom
       ((fieldScalarAddHom K a).comp (fieldScalarAddHom K b)) =
       AddCommGrpCat.ofHom (fieldScalarAddHom K b) ≫
-        AddCommGrpCat.ofHom (fieldScalarAddHom K a) := by
-    apply AddCommGrpCat.hom_ext
-    rfl
+        AddCommGrpCat.ofHom (fieldScalarAddHom K a) :=
+    AddCommGrpCat.hom_ext rfl
   change (constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
       AddCommGrpCat).map
@@ -374,9 +347,7 @@ lemma fieldToComplexConstantSheaf_scalar (q : K) :
       (AddCommGrpCat.ofHom (complexScalarAddHom (algebraMap K ℂ q))) = _
   rw [← Functor.map_comp, ← Functor.map_comp]
   congr 1
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro r
+  ext r
   change algebraMap K ℂ q * algebraMap K ℂ r = algebraMap K ℂ (q * r)
   rw [map_mul]
 
@@ -397,11 +368,8 @@ lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
       (AddCommGrpCat.ofHom (integerMultipleAddHom K (q * r)))
   rw [← Functor.map_comp]
   congr 1
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro n
+  ext
   simp [integerMultipleAddHom, fieldScalarAddHom]
-  ring
 
 /-- Scalar multiplication on the rational constant sheaf complex. -/
 def fieldScalarComplex (q : K) :
@@ -603,8 +571,7 @@ def hypercohomologyMap
 @[simp] lemma hypercohomologyMap_zero
     {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (n : ℤ) :
     hypercohomologyMap X (0 : K ⟶ L) n = 0 := by
-  apply AddMonoidHom.ext
-  intro α
+  refine AddMonoidHom.ext fun α ↦ ?_
   rw [AddMonoidHom.zero_apply]
   apply (Localization.SmallShiftedHom.equiv
     (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
@@ -616,8 +583,7 @@ def hypercohomologyMap
 @[simp] lemma hypercohomologyMap_id
     {K : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (n : ℤ) :
     hypercohomologyMap X (𝟙 K) n = AddMonoidHom.id _ := by
-  apply AddMonoidHom.ext
-  intro α
+  refine AddMonoidHom.ext fun α ↦ ?_
   let eK : Hypercohomology X K n ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
@@ -732,9 +698,8 @@ lemma field_smul_eq (n : ℤ) (q : K) (α : FieldCohomology K X n) :
 omit [Algebra K ℂ] in
 lemma field_smul_add (n : ℤ) (q : K)
     (α β : FieldCohomology K X n) :
-    q • (α + β) = q • α + q • β := by
-  exact (hypercohomologyMap X
-    (fieldScalarComplex K X q) n).map_add α β
+    q • (α + β) = q • α + q • β :=
+  (hypercohomologyMap X (fieldScalarComplex K X q) n).map_add α β
 
 omit [Algebra K ℂ] in
 lemma field_add_smul (n : ℤ) (a b : K)
@@ -805,9 +770,8 @@ lemma deRham_complex_smul_eq [IsIntegral X.left] [Smooth X.hom]
 
 lemma deRham_complex_smul_add [IsIntegral X.left] [Smooth X.hom]
     (n : ℤ) (c : ℂ) (α β : DeRhamHypercohomology X n) :
-    c • (α + β) = c • α + c • β := by
-  exact (hypercohomologyMap X
-    (scalarHolomorphicDeRhamComplexInt X c) n).map_add α β
+    c • (α + β) = c • α + c • β :=
+  (hypercohomologyMap X (scalarHolomorphicDeRhamComplexInt X c) n).map_add α β
 
 lemma deRham_complex_add_smul [IsIntegral X.left] [Smooth X.hom]
     (n : ℤ) (a b : ℂ) (α : DeRhamHypercohomology X n) :
@@ -881,8 +845,8 @@ lemma deRham_field_smul_eq [IsIntegral X.left] [Smooth X.hom]
 
 lemma deRham_field_smul_add [IsIntegral X.left] [Smooth X.hom]
     (n : ℤ) (q : K) (α β : DeRhamHypercohomology X n) :
-    q • (α + β) = q • α + q • β := by
-  exact (hypercohomologyMap X
+    q • (α + β) = q • α + q • β :=
+  (hypercohomologyMap X
     (scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q)) n).map_add α β
 
 lemma deRham_field_add_smul [IsIntegral X.left] [Smooth X.hom]
@@ -1125,8 +1089,8 @@ lemma hodgeFilteredDeRhamScalar_comp_inclusion
     hodgeFilteredDeRhamScalar K X p q ≫
       hodgeFilteredDeRhamInclusion X p =
     hodgeFilteredDeRhamInclusion X p ≫
-      scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q) := by
-  exact HomologicalComplex.stupidTruncMap_comp_stupidTruncInclusion
+      scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q) :=
+  HomologicalComplex.stupidTruncMap_comp_stupidTruncInclusion
     (ComplexShape.embeddingUpIntGE p)
     (scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q))
 
@@ -1137,8 +1101,8 @@ lemma hodgeFilteredDeRhamComplexScalar_comp_inclusion
     hodgeFilteredDeRhamComplexScalar X p c ≫
       hodgeFilteredDeRhamInclusion X p =
     hodgeFilteredDeRhamInclusion X p ≫
-      scalarHolomorphicDeRhamComplexInt X c := by
-  exact HomologicalComplex.stupidTruncMap_comp_stupidTruncInclusion
+      scalarHolomorphicDeRhamComplexInt X c :=
+  HomologicalComplex.stupidTruncMap_comp_stupidTruncInclusion
     (ComplexShape.embeddingUpIntGE p)
     (scalarHolomorphicDeRhamComplexInt X c)
 
@@ -1255,8 +1219,7 @@ lemma hodgeFiltration_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
 /-- The rational submodule underlying `F⁰` is the whole de Rham hypercohomology group. -/
 lemma hodgeFiltrationSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     hodgeFiltrationSubmodule K X 0 n = ⊤ := by
-  apply SetLike.ext
-  intro α
+  refine SetLike.ext fun α ↦ ?_
   change α ∈ hodgeFiltration X 0 n ↔ α ∈ (⊤ :
     Submodule K (DeRhamHypercohomology X n))
   rw [hodgeFiltration_zero_eq_top X n]
@@ -1286,8 +1249,7 @@ lemma hodgeClasses_eq_ker_of_lt [IsIntegral X.left] [Smooth X.hom] {p : ℕ} (hp
       LinearMap.ker (fieldToDeRhamCohomologyLinear K X (2 * p)) := by
   rw [hodgeClasses, ← Submodule.comap_bot]
   congr 1
-  apply SetLike.ext
-  intro α
+  refine SetLike.ext fun α ↦ ?_
   change α ∈ hodgeFiltration X (p : ℤ) (2 * (p : ℤ)) ↔ α ∈ (⊥ :
     Submodule ℂ (DeRhamHypercohomology X (2 * (p : ℤ))))
   rw [hodgeFiltration_eq_bot_of_lt X (by exact_mod_cast hp)]
@@ -1300,8 +1262,7 @@ lemma hodgeClasses_eq_bot_of_lt_of_quasiIso [IsIntegral X.left] [Smooth X.hom]
     {p : ℕ} (hp : dim X.left < p) :
     Hdg^p(K; X) = ⊥ := by
   rw [hodgeClasses_eq_ker_of_lt K X hp]
-  apply LinearMap.ker_eq_bot.mpr
-  exact fieldToDeRhamCohomology_injective_of_quasiIso K X h (2 * p)
+  exact LinearMap.ker_eq_bot.mpr (fieldToDeRhamCohomology_injective_of_quasiIso K X h (2 * p))
 
 /-- Rational Hodge classes vanish above the complex dimension. -/
 lemma hodgeClasses_eq_bot_of_lt
@@ -1350,8 +1311,7 @@ lemma mem_hodgeClasses_iff [IsIntegral X.left] [Smooth X.hom]
 lemma hodgeClasses_zero_eq_top [IsIntegral X.left] [Smooth X.hom]
     :
     Hdg^0(K; X) = ⊤ := by
-  apply SetLike.ext
-  intro α
+  refine SetLike.ext fun α ↦ ?_
   change fieldToDeRhamCohomology K X (2 * (0 : ℕ)) α ∈
       hodgeFiltration X (0 : ℕ) (2 * (0 : ℕ)) ↔ True
   simp only [Nat.cast_zero]

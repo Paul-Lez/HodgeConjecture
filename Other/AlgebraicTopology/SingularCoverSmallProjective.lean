@@ -56,9 +56,9 @@ public theorem coverSmallChainApproximation_of_quasiIso
     (h : CoverSmallChainQuasiIsomorphism X U) :
     CoverSmallChainApproximation X U := by
   letI : QuasiIso (coverSmallIntegralSingularChainInclusion X U) := h
-  letI projectiveInteger : Projective (AddCommGrpCat.of ℤ) := by
-    exact ((forget₂ (ModuleCat ℤ) AddCommGrpCat).asEquivalence.map_projective_iff
-      (ModuleCat.of ℤ ℤ)).mpr (by infer_instance)
+  letI projectiveInteger : Projective (AddCommGrpCat.of ℤ) :=
+    ((forget₂ (ModuleCat ℤ) AddCommGrpCat).asEquivalence.map_projective_iff
+      (ModuleCat.of ℤ ℤ)).mpr inferInstance
   letI projectiveSmall (n : ℕ) :
       Projective ((CoverSmallIntegralSingularChainComplex X U).X n) := by
     change Projective

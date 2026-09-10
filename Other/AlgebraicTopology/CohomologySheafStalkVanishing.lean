@@ -106,9 +106,8 @@ lemma cohomologySheaf_isZero_of_cofinal_sections (n : ℤ)
       ∃ (V : Opens X), V ≤ U ∧ x ∈ V ∧
         IsZero ((((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj K).homology n)) :
     IsZero (K.homology n) := by
-  apply (isZero_iff_stalkFunctor_obj_isZero _).mpr
-  intro x
-  exact cohomologySheaf_stalk_isZero_of_cofinal_sections X K n x (hlocal x)
+  exact (isZero_iff_stalkFunctor_obj_isZero _).mpr fun x =>
+    cohomologySheaf_stalk_isZero_of_cofinal_sections X K n x (hlocal x)
 
 /-- A map that is a quasi-isomorphism on sections on cofinally small opens is
 a sheaf quasi-isomorphism. This uses the actual mapping cone, not exactness of

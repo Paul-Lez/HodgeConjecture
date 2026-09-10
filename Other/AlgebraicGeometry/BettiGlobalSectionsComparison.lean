@@ -382,8 +382,7 @@ def rationalSingularCochainHypercohomologyEquivGlobalSections
   let : S.IsStrictlyGE 0 := by
     dsimp [S, singularCochainSheafComplexInt]
     infer_instance
-  let hres :=
-    CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
+  let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
   let I := Classical.choose hres
   let hresI := Classical.choose_spec hres
   let i := Classical.choose hresI
@@ -396,13 +395,9 @@ def rationalSingularCochainHypercohomologyEquivGlobalSections
   letI : ∀ q : ℤ, Injective (I.X q) := hI
   letI : I.IsStrictlyGE 0 := hIge
   letI : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
-  have hSflasque : ∀ q, (S.X q).IsFlasque := by
-    intro q
-    dsimp [S]
-    exact singularCochainSheafComplexInt_isFlasque X q
-  have hIflasque : ∀ q, (I.X q).IsFlasque := by
-    intro q
-    infer_instance
+  have hSflasque : ∀ q, (S.X q).IsFlasque :=
+    fun q ↦ singularCochainSheafComplexInt_isFlasque X q
+  have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
   letI : QuasiIso
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
         ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
@@ -428,8 +423,7 @@ def linearDualCochainComplexScIso
   let D := K.linearDualCochainComplex
   have hprev : (ComplexShape.up ℕ).prev n = (ComplexShape.down ℕ).next n := by
     cases n <;> simp
-  have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by
-    simp
+  have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by simp
   refine D.isoSc' ((ComplexShape.down ℕ).next n) n
       ((ComplexShape.down ℕ).prev n) hprev hnext ≪≫
     ShortComplex.isoMk (Iso.refl _) (Iso.refl _) (Iso.refl _) ?_ ?_
@@ -443,12 +437,7 @@ def linearDualCochainComplexScIso
         rw [ChainComplex.next_nat_zero]
         change ModuleCat.ofHom (K.d 0 0).hom.dualMap = D.d 0 0
         rw [K.shape 0 0 (by simp), D.shape 0 0 (by simp)]
-        apply ModuleCat.hom_ext
-        apply LinearMap.ext
-        intro φ
-        apply LinearMap.ext
-        intro x
-        exact map_zero φ
+        exact ModuleCat.hom_ext (LinearMap.ext fun φ ↦ LinearMap.ext fun _ ↦ map_zero φ)
     | succ n =>
         simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
           HomologicalComplex.shortComplexFunctor'_obj_f]

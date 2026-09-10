@@ -81,14 +81,6 @@ noncomputable instance (V : SmoothProjectiveComplexVariety) (d : ℕ)
   change SmoothOfRelativeDimension d V.structureMap
   infer_instance
 
-/-- Forget smoothness while retaining the integral projective variety. -/
-def toIntegralProjective (V : SmoothProjectiveComplexVariety) :
-    IntegralProjectiveComplexVariety where
-  scheme := V.scheme
-  isIntegral := V.isIntegral
-  structureMap := V.structureMap
-  projective := V.projective
-
 /-- The analytic complex-point space. -/
 abbrev analyticPoint (V : SmoothProjectiveComplexVariety) :=
   ComplexPoint V.over

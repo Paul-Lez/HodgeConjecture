@@ -120,12 +120,10 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
       (analyticComplementInclusion X Z)).obj
         (singularCochainSheaf ℚ
           (TopCat.of (AnalyticComplement X Z)) 0)).property
-  rw [← Category.assoc]
-  rw [← toSheafify_naturality]
-  rw [Category.assoc, toSheafify_comp_singularRestrictionSheaf]
+  rw [← Category.assoc, ← toSheafify_naturality, Category.assoc,
+    toSheafify_comp_singularRestrictionSheaf]
   unfold rationalRestrictionSheaf
-  rw [← Category.assoc]
-  rw [toSheafify_sheafifyLift]
+  rw [← Category.assoc, toSheafify_sheafifyLift]
   unfold singularRestrictionPresheaf rationalRestrictionPresheaf
   rw [← Functor.whiskerLeft_comp]
   change _ = Functor.whiskerLeft
@@ -143,9 +141,7 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
       (TopCat.of (AnalyticComplement X Z)))
     (constantsToSingularCochainZero ℚ
       (TopCat.of (AnalyticComplement X Z)))
-  rw [← hunit]
-  rw [Functor.whiskerLeft_comp]
-  rw [← Category.assoc,
+  rw [← hunit, Functor.whiskerLeft_comp, ← Category.assoc,
     constantsToSingularCochainZero_comp_singularRestrictionToRawPushforward]
 
 end AlgebraicGeometry.ComplexPoint

@@ -73,8 +73,7 @@ omit [Nontrivial E] in
 lemma norm_radialPrimitiveSeries_succ_le (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ)) (k : ℕ) :
     ‖radialPrimitiveSeries n p (k + 1)‖ ≤ ‖p k‖ := by
-  apply ContinuousMultilinearMap.opNorm_le_bound (norm_nonneg (p k))
-  intro v
+  refine ContinuousMultilinearMap.opNorm_le_bound (norm_nonneg (p k)) fun v ↦ ?_
   rw [radialPrimitiveSeries, continuousMultilinearCurryRightEquiv_symm_apply']
   simp only [_root_.smul_apply, ContinuousLinearMap.compContinuousMultilinearMap_coe,
     Function.comp_apply]
@@ -89,19 +88,15 @@ lemma norm_radialPrimitiveSeries_succ_le (n : ℕ)
       rw [ContinuousAlternatingMap.toContinuousMultilinearMap_smul]
       exact ContinuousMultilinearMap.opNorm_smul_le _ _
     _ ≤ 1 * (‖p k (Fin.init v)‖ * ‖v (Fin.last k)‖) := by
-      apply mul_le_mul
+      refine mul_le_mul ?_ ?_ (norm_nonneg _) zero_le_one
       · rw [norm_inv, norm_natCast]
-        apply inv_le_one_of_one_le₀
-        exact_mod_cast Nat.succ_le_succ (Nat.zero_le (k + n))
+        exact inv_le_one_of_one_le₀ (by exact_mod_cast Nat.succ_le_succ (Nat.zero_le (k + n)))
       · simpa only [ContinuousAlternatingMap.norm_curryLeft] using
           (p k (Fin.init v)).curryLeft.le_opNorm (v (Fin.last k))
-      · exact norm_nonneg _
-      · exact zero_le_one
     _ ≤ ‖p k‖ * ((∏ i : Fin k, ‖v (Fin.castSucc i)‖) * ‖v (Fin.last k)‖) := by
       rw [one_mul, ← mul_assoc]
-      apply mul_le_mul_of_nonneg_right
-      · simpa only [Fin.init_def] using ContinuousMultilinearMap.le_opNorm (p k) (Fin.init v)
-      · exact norm_nonneg _
+      refine mul_le_mul_of_nonneg_right ?_ (norm_nonneg _)
+      simpa only [Fin.init_def] using ContinuousMultilinearMap.le_opNorm (p k) (Fin.init v)
     _ = ‖p k‖ * ∏ i : Fin (k + 1), ‖v i‖ := by
       rw [Fin.prod_univ_castSucc]
 
@@ -138,10 +133,10 @@ original differential form. -/
 theorem analyticOnNhd_radialPrimitiveSeries_sum (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ))
     (hp : 0 < p.radius) :
-    AnalyticOnNhd ℂ (radialPrimitiveSeries n p).sum (Metric.eball 0 p.radius) := by
-  apply ((radialPrimitiveSeries n p).hasFPowerSeriesOnBall
+    AnalyticOnNhd ℂ (radialPrimitiveSeries n p).sum (Metric.eball 0 p.radius) :=
+  ((radialPrimitiveSeries n p).hasFPowerSeriesOnBall
     (radialPrimitiveSeries_radius_pos n p hp)).analyticOnNhd.mono
-  exact Metric.eball_subset_eball (radius_le_radius_radialPrimitiveSeries n p)
+    (Metric.eball_subset_eball (radius_le_radius_radialPrimitiveSeries n p))
 
 /-- The real interval integral of a complex monomial. -/
 lemma intervalIntegral_ofReal_pow (m : ℕ) :
@@ -156,10 +151,9 @@ lemma intervalIntegral_ofReal_pow (m : ℕ) :
     convert (h.pow (m + 1)).const_mul (((m + 1 : ℕ) : ℂ)⁻¹) using 1
     all_goals first | rfl | (rw [Nat.add_sub_cancel, mul_one, ← mul_assoc,
       inv_mul_cancel₀ hn, one_mul])
-  have h := intervalIntegral.integral_eq_sub_of_hasDerivAt
+  simpa using intervalIntegral.integral_eq_sub_of_hasDerivAt
     (a := (0 : ℝ)) (b := 1) (fun t _ ↦ hderiv t)
-      ((Complex.continuous_ofReal.pow m).intervalIntegrable 0 1)
-  simpa using h
+    ((Complex.continuous_ofReal.pow m).intervalIntegrable 0 1)
 
 /-- Integrating a complex monomial times a fixed vector gives the same scalar factor. -/
 lemma intervalIntegral_ofReal_pow_smul
@@ -182,9 +176,7 @@ lemma radialPrimitiveSeries_sum_eq_tsum (n : ℕ)
   rw [FormalMultilinearSeries.sum, ← hsum.sum_add_tsum_nat_add 1]
   simp only [Finset.sum_range_one, radialPrimitiveSeries_zero,
     zero_apply, zero_add]
-  apply tsum_congr
-  intro k
-  exact radialPrimitiveSeries_succ_apply n p k x
+  exact tsum_congr fun k ↦ radialPrimitiveSeries_succ_apply n p k x
 
 omit [Nontrivial E] in
 /-- The homogeneous expansion of a form can be contracted term by term along a real radial
@@ -220,10 +212,9 @@ lemma hasSum_radialIntegrand_of_hasFPowerSeriesOnBall (n : ℕ)
   refine HasSum.congr_fun hst' (fun k ↦ ?_)
   change ((t : ℂ) ^ (k + n)) • (p k (fun _ ↦ x)).curryLeft x =
     ((t : ℂ) ^ n) • (p k (fun _ ↦ (t : ℂ) • x)).curryLeft x
-  rw [ContinuousMultilinearMap.map_smul_univ]
-  rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin]
-  apply ContinuousAlternatingMap.ext
-  intro v
+  rw [ContinuousMultilinearMap.map_smul_univ, Finset.prod_const, Finset.card_univ,
+    Fintype.card_fin]
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   change (t : ℂ) ^ (k + n) * (p k (fun _ ↦ x)).curryLeft x v =
     (t : ℂ) ^ n * ((t : ℂ) ^ k * (p k (fun _ ↦ x)).curryLeft x v)
   rw [← mul_assoc, ← pow_add, add_comm n k]
@@ -263,11 +254,9 @@ lemma hasSum_intervalIntegral_radialTerms_of_hasFPowerSeriesOnBall (n : ℕ)
     exact hsmul.trans <| calc
       ‖(t : ℂ) ^ (k + n)‖ * ‖(p k (fun _ ↦ x)).curryLeft x‖ ≤
           1 * (‖p k (fun _ ↦ x)‖ * ‖x‖) := by
-        apply mul_le_mul hpow
-        · simpa only [ContinuousAlternatingMap.norm_curryLeft] using
-            (p k (fun _ ↦ x)).curryLeft.le_opNorm x
-        · exact norm_nonneg _
-        · exact zero_le_one
+        refine mul_le_mul hpow ?_ (norm_nonneg _) zero_le_one
+        simpa only [ContinuousAlternatingMap.norm_curryLeft] using
+          (p k (fun _ ↦ x)).curryLeft.le_opNorm x
       _ = bound k t := by simp [bound]
   · filter_upwards [] with t ht
     exact ((p.summable_norm_apply
@@ -287,8 +276,8 @@ theorem radialHomotopy_eq_radialPrimitiveSeries_sum (n : ℕ)
   have hs := hasSum_intervalIntegral_radialTerms_of_hasFPowerSeriesOnBall n p η hp hx
   have hs' : HasSum (fun k : ℕ ↦
       (((k + n + 1 : ℕ) : ℂ)⁻¹) • (p k (fun _ ↦ x)).curryLeft x)
-      (radialHomotopy n η x) := HasSum.congr_fun hs (fun k ↦ by
-    exact (intervalIntegral_ofReal_pow_smul (k + n) ((p k (fun _ ↦ x)).curryLeft x)).symm)
+      (radialHomotopy n η x) := HasSum.congr_fun hs fun k ↦
+    (intervalIntegral_ofReal_pow_smul (k + n) ((p k (fun _ ↦ x)).curryLeft x)).symm
   calc
     radialHomotopy n η x = ∑' k : ℕ,
         (((k + n + 1 : ℕ) : ℂ)⁻¹) • (p k (fun _ ↦ x)).curryLeft x := hs'.tsum_eq.symm
@@ -303,12 +292,11 @@ theorem analyticOnNhd_radialHomotopy_of_hasFPowerSeriesOnBall (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ))
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) {R : ENNReal}
     (hp : HasFPowerSeriesOnBall η p 0 R) :
-    AnalyticOnNhd ℂ (radialHomotopy n η) (Metric.eball 0 R) := by
-  apply AnalyticOnNhd.congr Metric.isOpen_eball
+    AnalyticOnNhd ℂ (radialHomotopy n η) (Metric.eball 0 R) :=
+  AnalyticOnNhd.congr Metric.isOpen_eball
     ((analyticOnNhd_radialPrimitiveSeries_sum n p hp.radius_pos).mono
       (Metric.eball_subset_eball hp.r_le))
-  intro x hx
-  exact (radialHomotopy_eq_radialPrimitiveSeries_sum n p η hp hx).symm
+    fun _ hx ↦ (radialHomotopy_eq_radialPrimitiveSeries_sum n p η hp hx).symm
 
 omit [Nontrivial E] in
 /-- The analytic Poincaré lemma on a complex normed-space ball. The primitive is the explicit
@@ -357,13 +345,12 @@ theorem exists_analyticOnNhd_primitive_on_smaller_ball
   have hρr : (ρ : ℝ) < r := by
     have hlt : (ρ : ENNReal) < (Real.toNNReal r : ENNReal) :=
       hρ.trans_le (min_le_left (Real.toNNReal r : ENNReal) R)
-    have hlt' : (ρ : ℝ) < (Real.toNNReal r : ℝ) := by
-      exact_mod_cast ENNReal.coe_lt_coe.mp hlt
+    have hlt' : (ρ : ℝ) < (Real.toNNReal r : ℝ) := by exact_mod_cast ENNReal.coe_lt_coe.mp hlt
     simpa only [Real.coe_toNNReal r hr.le] using hlt'
-  refine ⟨ρ, by exact_mod_cast hρpos, hρr, ?_⟩
-  exact exists_analyticOnNhd_primitive_on_ball_of_hasFPowerSeriesOnBall n
-    (by exact_mod_cast hρpos) p η (hp.mono (by exact_mod_cast hρpos) hρR)
-      (hclosed.mono (Metric.ball_subset_ball hρr.le))
+  exact ⟨ρ, by exact_mod_cast hρpos, hρr,
+    exists_analyticOnNhd_primitive_on_ball_of_hasFPowerSeriesOnBall n
+      (by exact_mod_cast hρpos) p η (hp.mono (by exact_mod_cast hρpos) hρR)
+      (hclosed.mono (Metric.ball_subset_ball hρr.le))⟩
 
 omit [Nontrivial E] in
 /-- Translate the base point of a differential form field to the origin. -/
@@ -395,11 +382,9 @@ omit [Nontrivial E] in
 lemma analyticOnNhd_translateForm {p : ℕ} (c : E) (r : ℝ)
     (A : E → E [⋀^Fin p]→L[ℂ] ℂ)
     (hA : AnalyticOnNhd ℂ A (Metric.ball c r)) :
-    AnalyticOnNhd ℂ (translateForm c A) (Metric.ball 0 r) := by
-  apply hA.comp
-  · exact analyticOnNhd_const.add analyticOnNhd_id
-  · intro x hx
-    exact (add_mem_ball_iff c x r).2 hx
+    AnalyticOnNhd ℂ (translateForm c A) (Metric.ball 0 r) :=
+  hA.comp (analyticOnNhd_const.add analyticOnNhd_id) fun x hx ↦
+    (add_mem_ball_iff c x r).2 hx
 
 omit [Nontrivial E] in
 /-- Translate a differential form field from origin-centered coordinates back to a center. -/
@@ -431,11 +416,9 @@ omit [Nontrivial E] in
 lemma analyticOnNhd_untranslateForm {p : ℕ} (c : E) (r : ℝ)
     (A : E → E [⋀^Fin p]→L[ℂ] ℂ)
     (hA : AnalyticOnNhd ℂ A (Metric.ball 0 r)) :
-    AnalyticOnNhd ℂ (untranslateForm c A) (Metric.ball c r) := by
-  apply hA.comp
-  · exact analyticOnNhd_id.sub analyticOnNhd_const
-  · intro x hx
-    exact (mem_ball_iff_sub_mem_ball c x r).1 hx
+    AnalyticOnNhd ℂ (untranslateForm c A) (Metric.ball c r) :=
+  hA.comp (analyticOnNhd_id.sub analyticOnNhd_const) fun x hx ↦
+    (mem_ball_iff_sub_mem_ball c x r).1 hx
 
 omit [Nontrivial E] in
 /-- The analytic Poincaré lemma on a ball with arbitrary center, after shrinking the radius. -/
@@ -681,8 +664,7 @@ lemma wedgeCovectors_compContinuousLinearMap
     (p : ℕ) (L : Fin p → F →L[ℂ] ℂ) (T : E →L[ℂ] F) :
     wedgeCovectors E p (fun i ↦ (L i).comp T) =
       (wedgeCovectors F p L).compContinuousLinearMap T := by
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   rw [wedgeCovectors_apply_eq_det, ContinuousAlternatingMap.compContinuousLinearMap_apply,
     wedgeCovectors_apply_eq_det]
   rfl
@@ -693,8 +675,7 @@ lemma add_compContinuousLinearMap
     {p : ℕ} (a b : F [⋀^Fin p]→L[ℂ] ℂ) (T : E →L[ℂ] F) :
     (a + b).compContinuousLinearMap T =
       a.compContinuousLinearMap T + b.compContinuousLinearMap T := by
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
 
 lemma smul_compContinuousLinearMap
@@ -702,8 +683,7 @@ lemma smul_compContinuousLinearMap
     [NormedAddCommGroup F] [NormedSpace ℂ F]
     {p : ℕ} (c : ℂ) (a : F [⋀^Fin p]→L[ℂ] ℂ) (T : E →L[ℂ] F) :
     (c • a).compContinuousLinearMap T = c • a.compContinuousLinearMap T := by
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
 
 /-- Evaluation of a raw form is covariant under a holomorphic fixed-chart transition. -/
@@ -723,8 +703,7 @@ lemma chartRawEvaluation_fixedChartTransition
   induction x using Finsupp.induction with
   | zero =>
       rw [_root_.map_zero, Pi.zero_apply]
-      apply ContinuousAlternatingMap.ext
-      intro v
+      refine ContinuousAlternatingMap.ext fun v ↦ ?_
       simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
   | single_add g c x hg hc ih =>
       rw [map_add, Pi.add_apply, map_add, Pi.add_apply,
@@ -783,8 +762,7 @@ lemma mem_restrictionStableAnalyticKernel_of_chartRawEvaluation_eq_zero
       ez.left_inv hyz]
     exact hyU
   rw [hx hTy]
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
 
 lemma contMDiffAt_chartFunction [SmoothOfRelativeDimension d X.hom]
@@ -821,9 +799,8 @@ lemma contMDiff_chartFunction [SmoothOfRelativeDimension d X.hom]
     (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z)) :
     ContMDiff (modelWithCornersSelf ℂ (Fin d → ℂ)) (modelWithCornersSelf ℂ ℂ) ω
       (fun q : (Opposite.unop U : Opens (ComplexPoint X)) ↦
-        a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q)) := by
-  intro q
-  exact (contMDiffAt_subtype_iff
+        a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q)) :=
+  fun q ↦ (contMDiffAt_subtype_iff
     (I := modelWithCornersSelf ℂ (Fin d → ℂ))
     (I' := modelWithCornersSelf ℂ ℂ)
     (U := (Opposite.unop U : Opens (ComplexPoint X)))
@@ -873,10 +850,8 @@ lemma chartSectionDifferential_holomorphicSectionOfChart
         (holomorphicSectionOfChart X d U z hsource a ha) y =
       fderivWithin ℂ a (chartSectionDomain X d U z) y := by
   rw [chartSectionDifferential]
-  apply fderivWithin_congr'
-  · intro w hw
-    exact chartSection_holomorphicSectionOfChart X d U z hsource a ha hw
-  · exact hy
+  exact fderivWithin_congr'
+    (fun w hw ↦ chartSection_holomorphicSectionOfChart X d U z hsource a ha hw) hy
 
 /-- The `i`-th fixed-chart coordinate as a holomorphic section. -/
 def chartCoordinateSection [SmoothOfRelativeDimension d X.hom]
@@ -940,8 +915,7 @@ lemma multilinear_eq_sum_covectorProduct (d p : ℕ)
         A (fun j ↦ Pi.single (I j) 1) • covectorProduct d p I)
   rw [_root_.map_sum]
   simp_rw [_root_.map_smul]
-  apply Module.Basis.ext_multilinear (fun _ : Fin p ↦ Pi.basisFun ℂ (Fin d))
-  intro v
+  refine Module.Basis.ext_multilinear (fun _ : Fin p ↦ Pi.basisFun ℂ (Fin d)) fun v ↦ ?_
   simp only [_root_.sum_apply, _root_.smul_apply, smul_eq_mul]
   rw [Finset.sum_eq_single v]
   · simp [Pi.basisFun_apply]
@@ -959,12 +933,10 @@ lemma multilinear_eq_sum_covectorProduct (d p : ℕ)
 lemma alternatization_covectorProduct (d p : ℕ) (I : Fin p → Fin d) :
     ContinuousMultilinearMap.alternatization (covectorProduct d p I) =
       wedgeCovectors (Fin d → ℂ) p (fun j ↦ ContinuousLinearMap.proj (I j)) := by
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   rw [ContinuousMultilinearMap.alternatization_apply_apply,
     wedgeCovectors_apply_eq_det, ← Matrix.det_transpose, Matrix.det_apply]
-  apply Finset.sum_congr rfl
-  intro σ hσ
+  refine Finset.sum_congr rfl fun σ _ ↦ ?_
   rw [covectorProduct_apply]
   congr 1
 
@@ -972,13 +944,11 @@ lemma alternatization_smul (d p : ℕ) (c : ℂ)
     (M : ContinuousMultilinearMap ℂ (fun _ : Fin p ↦ Fin d → ℂ) ℂ) :
     ContinuousMultilinearMap.alternatization (c • M) =
       c • ContinuousMultilinearMap.alternatization M := by
-  apply ContinuousAlternatingMap.ext
-  intro v
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
   simp only [ContinuousMultilinearMap.alternatization_apply_apply, _root_.smul_apply,
     ContinuousAlternatingMap.smul_apply]
   rw [Finset.smul_sum]
-  apply Finset.sum_congr rfl
-  intro σ hσ
+  refine Finset.sum_congr rfl fun σ _ ↦ ?_
   rw [smul_comm]
 
 lemma alternatization_toContinuousMultilinearMap (d p : ℕ)
@@ -1010,8 +980,7 @@ lemma alternating_eq_sum_wedgeCovectors (d p : ℕ)
     ∑ I : Fin p → Fin d, A (fun j ↦ Pi.single (I j) 1) •
       wedgeCovectors (Fin d → ℂ) p
         (fun j ↦ ContinuousLinearMap.proj (I j)) at hAlt
-  have hfac : (p.factorial : ℂ) ≠ 0 := by
-    exact_mod_cast Nat.factorial_ne_zero p
+  have hfac : (p.factorial : ℂ) ≠ 0 := by exact_mod_cast Nat.factorial_ne_zero p
   calc
     A = (p.factorial : ℂ)⁻¹ • ((p.factorial : ℂ) • A) := by
       rw [← mul_smul, inv_mul_cancel₀ hfac, one_smul]
@@ -1021,9 +990,7 @@ lemma alternating_eq_sum_wedgeCovectors (d p : ℕ)
             (fun j ↦ ContinuousLinearMap.proj (I j)) := by rw [hAlt]
     _ = _ := by
       rw [Finset.smul_sum]
-      apply Finset.sum_congr rfl
-      intro I hI
-      rw [smul_smul]
+      exact Finset.sum_congr rfl fun I _ ↦ smul_smul _ _ _
 
 /-- Evaluation at a fixed tuple is a continuous linear functional on continuous alternating
 forms. -/
@@ -1048,11 +1015,8 @@ lemma analyticOnNhd_coordinateCoefficient (d p : ℕ)
     {s : Set (Fin d → ℂ)} (hθ : AnalyticOnNhd ℂ θ s) (I : Fin p → Fin d) :
     AnalyticOnNhd ℂ (coordinateCoefficient d p θ I) s := by
   let e : Fin p → Fin d → ℂ := fun j ↦ Pi.single (I j) 1
-  have h := (alternatingFormEvaluation d p e).comp_analyticOnNhd hθ
-  have hs := h.const_smul (c := (p.factorial : ℂ)⁻¹)
-  convert hs using 1
-  funext y
-  rfl
+  exact ((alternatingFormEvaluation d p e).comp_analyticOnNhd hθ).const_smul
+    (c := (p.factorial : ℂ)⁻¹)
 
 /-- A finite raw form whose fixed-chart evaluation is a given analytic alternating-form field. -/
 def rawFormOfAnalyticField [SmoothOfRelativeDimension d X.hom]
@@ -1099,9 +1063,9 @@ lemma analyticOnNhd_chartSection [SmoothOfRelativeDimension d X.hom]
     (z : ComplexPoint X)
     (f : OpenHolomorphicFunctions X d U) :
     AnalyticOnNhd ℂ (chartSection X d U z f)
-      (chartSectionDomain X d U z) := by
-  apply (isOpen_chartSectionDomain X d U z).analyticOn_iff_analyticOnNhd.mp
-  exact (chartSection_contDiffOn X d U z f).analyticOn
+      (chartSectionDomain X d U z) :=
+  (isOpen_chartSectionDomain X d U z).analyticOn_iff_analyticOnNhd.mp
+    (chartSection_contDiffOn X d U z f).analyticOn
 
 /-- The coordinate differential of a holomorphic section is analytic. -/
 lemma analyticOnNhd_chartSectionDifferential
@@ -1111,9 +1075,8 @@ lemma analyticOnNhd_chartSectionDifferential
     (f : OpenHolomorphicFunctions X d U) :
     AnalyticOnNhd ℂ (chartSectionDifferential X d U z f)
       (chartSectionDomain X d U z) := by
-  apply AnalyticOnNhd.congr (isOpen_chartSectionDomain X d U z)
-    (analyticOnNhd_chartSection X d U z f).fderiv
-  intro y hy
+  refine AnalyticOnNhd.congr (isOpen_chartSectionDomain X d U z)
+    (analyticOnNhd_chartSection X d U z f).fderiv fun y hy ↦ ?_
   rw [chartSectionDifferential,
     fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z) hy]
 
@@ -1128,13 +1091,13 @@ lemma analyticOnNhd_chartGeneratorEvaluation_apply
       (chartSectionDomain X d U z) := by
   let s := chartSectionDomain X d U z
   have hentry (i j : Fin p) : AnalyticOnNhd ℂ
-      (fun y ↦ chartSectionDifferential X d U z (g.2 j) y (v i)) s := by
-    exact (ContinuousLinearMap.apply ℂ ℂ (v i)).comp_analyticOnNhd
+      (fun y ↦ chartSectionDifferential X d U z (g.2 j) y (v i)) s :=
+    (ContinuousLinearMap.apply ℂ ℂ (v i)).comp_analyticOnNhd
       (analyticOnNhd_chartSectionDifferential X d U z (g.2 j))
   have hprod (e : Equiv.Perm (Fin p)) : AnalyticOnNhd ℂ
       (fun y ↦ ∏ j : Fin p,
-        chartSectionDifferential X d U z (g.2 (e j)) y (v j)) s := by
-    exact Finset.univ.analyticOnNhd_fun_prod (fun j hj ↦ hentry j (e j))
+        chartSectionDifferential X d U z (g.2 (e j)) y (v j)) s :=
+    Finset.univ.analyticOnNhd_fun_prod (fun j hj ↦ hentry j (e j))
   have hterm (e : Equiv.Perm (Fin p)) : AnalyticOnNhd ℂ
       (fun y ↦ (((e.sign : ℤ) : ℂ) * ∏ j : Fin p,
         chartSectionDifferential X d U z (g.2 (e j)) y (v j))) s := by
@@ -1143,16 +1106,14 @@ lemma analyticOnNhd_chartGeneratorEvaluation_apply
     simp [Pi.smul_apply, smul_eq_mul]
   have hdet : AnalyticOnNhd ℂ
       (fun y ↦ ∑ e : Equiv.Perm (Fin p), (((e.sign : ℤ) : ℂ) * ∏ j : Fin p,
-        chartSectionDifferential X d U z (g.2 (e j)) y (v j))) s := by
-    exact Finset.univ.analyticOnNhd_fun_sum (fun e he ↦ hterm e)
+        chartSectionDifferential X d U z (g.2 (e j)) y (v j))) s :=
+    Finset.univ.analyticOnNhd_fun_sum (fun e he ↦ hterm e)
   have hmul := (analyticOnNhd_chartSection X d U z g.1).mul hdet
-  apply AnalyticOnNhd.congr (isOpen_chartSectionDomain X d U z) hmul
-  intro y hy
+  refine AnalyticOnNhd.congr (isOpen_chartSectionDomain X d U z) hmul fun y _ ↦ ?_
   simp only [chartGeneratorEvaluation, ContinuousAlternatingMap.smul_apply, smul_eq_mul,
     wedgeCovectors_apply_eq_det, Matrix.det_apply]
   apply congrArg (chartSection X d U z g.1 y * ·)
-  apply Finset.sum_congr rfl
-  intro e he
+  refine Finset.sum_congr rfl fun e _ ↦ ?_
   rw [Units.smul_def, ← Int.cast_smul_eq_zsmul ℂ, smul_eq_mul]
   rfl
 
@@ -1203,10 +1164,8 @@ lemma analyticOnNhd_chartRawEvaluation [SmoothOfRelativeDimension d X.hom]
       (fun y ↦ ∑ I : Fin p → Fin d,
         ((p.factorial : ℂ)⁻¹ * chartRawEvaluation X d U z p x y (e I)) • W I) s :=
     Finset.univ.analyticOnNhd_fun_sum (fun I hI ↦ hterm I)
-  apply AnalyticOnNhd.congr (isOpen_chartSectionDomain X d U z) hsum
-  intro y hy
-  exact (alternating_eq_sum_wedgeCovectors d p
-    (chartRawEvaluation X d U z p x y)).symm
+  exact AnalyticOnNhd.congr (isOpen_chartSectionDomain X d U z) hsum fun y _ ↦
+    (alternating_eq_sum_wedgeCovectors d p (chartRawEvaluation X d U z p x y)).symm
 
 /-- Every open neighborhood contains a smaller neighborhood that is exactly a Euclidean ball in
 the fixed chart at the chosen point. -/
@@ -1226,8 +1185,7 @@ lemma exists_chartBall_le [SmoothOfRelativeDimension d X.hom]
     e.isOpen_inter_preimage_symm (Opposite.unop U).2
   have hximage : e x ∈ e.target ∩ e.symm ⁻¹' ((Opposite.unop U : Opens _) : Set _) := by
     refine ⟨e.map_source hxsource, ?_⟩
-    change e.symm (e x) ∈ ((Opposite.unop U : Opens _) : Set _)
-    rw [e.left_inv hxsource]
+    rw [Set.mem_preimage, e.left_inv hxsource]
     exact hxU
   obtain ⟨r, hr, hball⟩ := Metric.nhds_basis_ball.mem_iff.mp (hopen.mem_nhds hximage)
   let Vo : Opens (ComplexPoint X) :=
@@ -1235,10 +1193,7 @@ lemma exists_chartBall_le [SmoothOfRelativeDimension d X.hom]
   have hxV : x ∈ Vo := ⟨hxsource, Metric.mem_ball_self hr⟩
   have hVU : Vo ≤ Opposite.unop U := by
     intro z hz
-    have hze : e z ∈ e.target ∩ e.symm ⁻¹' ((Opposite.unop U : Opens _) : Set _) :=
-      hball hz.2
-    change z ∈ ((Opposite.unop U : Opens _) : Set _)
-    have hzU : e.symm (e z) ∈ ((Opposite.unop U : Opens _) : Set _) := hze.2
+    have hzU : e.symm (e z) ∈ ((Opposite.unop U : Opens _) : Set _) := (hball hz.2).2
     rw [e.left_inv hz.1] at hzU
     exact hzU
   let V := Opposite.op Vo
@@ -1255,14 +1210,12 @@ lemma exists_chartBall_le [SmoothOfRelativeDimension d X.hom]
     ext y
     constructor
     · rintro ⟨hytarget, hysource, hyball⟩
-      change e (e.symm y) ∈ Metric.ball (e x) r at hyball
-      rw [e.right_inv hytarget] at hyball
+      rw [Set.mem_preimage, e.right_inv hytarget] at hyball
       exact hyball
     · intro hy
       have hytarget : y ∈ e.target := (hball hy).1
       refine ⟨hytarget, e.map_target hytarget, ?_⟩
-      change e (e.symm y) ∈ Metric.ball (e x) r
-      rw [e.right_inv hytarget]
+      rw [Set.mem_preimage, e.right_inv hytarget]
       exact hy
 
 /-- Shrink a fixed chart ball to any smaller positive radius. -/
@@ -1293,13 +1246,11 @@ lemma exists_smaller_chartBall [SmoothOfRelativeDimension d X.hom]
   have hxW : x ∈ Wo := ⟨hxsource, Metric.mem_ball_self (by exact_mod_cast hρ)⟩
   have hWV : Wo ≤ Opposite.unop V := by
     intro z hz
-    have hezball : e z ∈ Metric.ball (e x) r :=
-      Metric.ball_subset_ball hρr.le hz.2
     have hezdom : e z ∈ e.target ∩ e.symm ⁻¹'
-        ((Opposite.unop V : Opens _) : Set _) := hdom'.symm ▸ hezball
+        ((Opposite.unop V : Opens _) : Set _) :=
+      hdom'.symm ▸ Metric.ball_subset_ball hρr.le hz.2
     have hzV := hezdom.2
-    change e.symm (e z) ∈ ((Opposite.unop V : Opens _) : Set _) at hzV
-    rw [e.left_inv hz.1] at hzV
+    rw [Set.mem_preimage, e.left_inv hz.1] at hzV
     exact hzV
   let W := Opposite.op Wo
   let j : V ⟶ W := (homOfLE hWV).op
@@ -1315,15 +1266,13 @@ lemma exists_smaller_chartBall [SmoothOfRelativeDimension d X.hom]
     ext y
     constructor
     · rintro ⟨hytarget, hysource, hyball⟩
-      change e (e.symm y) ∈ Metric.ball (e x) (ρ : ℝ) at hyball
-      rw [e.right_inv hytarget] at hyball
+      rw [Set.mem_preimage, e.right_inv hytarget] at hyball
       exact hyball
     · intro hy
       have hyr : y ∈ Metric.ball (e x) r := Metric.ball_subset_ball hρr.le hy
       have hytarget : y ∈ e.target := (hdom'.symm ▸ hyr).1
       refine ⟨hytarget, e.map_target hytarget, ?_⟩
-      change e (e.symm y) ∈ Metric.ball (e x) (ρ : ℝ)
-      rw [e.right_inv hytarget]
+      rw [Set.mem_preimage, e.right_inv hytarget]
       exact hy
 
 /-- Every closed holomorphic form of positive degree is locally exact. -/
@@ -1344,8 +1293,7 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
       holomorphicFormRelations X d U (p + 2) := by
     change Submodule.Quotient.mk (Algebra.DeRham.rawDifferential ℂ
       (OpenHolomorphicFunctions X d U) (p + 1) a) = 0 at hclosed
-    rw [Submodule.Quotient.mk_eq_zero] at hclosed
-    exact hclosed
+    rwa [Submodule.Quotient.mk_eq_zero] at hclosed
   obtain ⟨V, i, r, hxV, hr, hsourceV, hdomV⟩ :=
     exists_chartBall_le X d U x hxU
   let aV := rawRestriction X d i (p + 1) a
@@ -1358,8 +1306,7 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
       (OpenHolomorphicFunctions X d V) (p + 1) aV ∈
       holomorphicFormRelations X d V (p + 2) := by
     have h := rawRestriction_mem_holomorphicFormRelations X d i (p + 2) hrel
-    rw [rawRestriction, Algebra.DeRham.rawMap_rawDifferential] at h
-    exact h
+    rwa [rawRestriction, Algebra.DeRham.rawMap_rawDifferential] at h
   have hclosedη : Set.EqOn (extDeriv η) 0 (Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
     intro y hy
@@ -1383,8 +1330,7 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
         extDeriv η y := by
       rw [extDerivWithin, extDeriv,
         fderivWithin_of_isOpen (isOpen_chartSectionDomain X d V x) hyV]
-    rw [hwithin] at hchart
-    exact hchart
+    rwa [hwithin] at hchart
   obtain ⟨ρ, hρ, hρr, θfield, hθfield, hprim⟩ :=
     DifferentialForm.exists_analyticOnNhd_primitive_on_smaller_centered_ball p hr η hη hclosedη
   obtain ⟨W, j, hxW, hsourceW, hdomW⟩ :=
@@ -1404,9 +1350,9 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
     X d W x (p + 1) hsourceW
   intro y hy
   rw [_root_.map_sub, Pi.sub_apply,
-    chartRawEvaluation_rawDifferential X d W x p b hy]
-  rw [extDerivWithin_congr'
-    (chartRawEvaluation_rawFormOfAnalyticField X d W x hsourceW p θfield hθW) hy]
+    chartRawEvaluation_rawDifferential X d W x p b hy,
+    extDerivWithin_congr'
+      (chartRawEvaluation_rawFormOfAnalyticField X d W x hsourceW p θfield hθW) hy]
   have hwithin : extDerivWithin θfield (chartSectionDomain X d W x) y =
       extDeriv θfield y := by
     rw [extDerivWithin, extDeriv,
@@ -1414,8 +1360,7 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
   rw [hwithin]
   have hyball : y ∈ Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) (ρ : ℝ) := hdomW ▸ hy
-  rw [hprim hyball]
-  rw [rawRestriction_comp, LinearMap.comp_apply,
+  rw [hprim hyball, rawRestriction_comp, LinearMap.comp_apply,
     chartRawEvaluation_rawRestriction X d j x (p + 1) aV hy]
   simp [η]
 
@@ -1452,8 +1397,7 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
       holomorphicFormRelations X d U 1 := by
     change Submodule.Quotient.mk (Algebra.DeRham.rawDifferential ℂ
       (OpenHolomorphicFunctions X d U) 0 a) = 0 at hclosed
-    rw [Submodule.Quotient.mk_eq_zero] at hclosed
-    exact hclosed
+    rwa [Submodule.Quotient.mk_eq_zero] at hclosed
   obtain ⟨V, i, r, hxV, hr, hsourceV, hdomV⟩ :=
     exists_chartBall_le X d U x hxU
   let aV := rawRestriction X d i 0 a
@@ -1466,8 +1410,7 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
       (OpenHolomorphicFunctions X d V) 0 aV ∈
       holomorphicFormRelations X d V 1 := by
     have h := rawRestriction_mem_holomorphicFormRelations X d i 1 hrel
-    rw [rawRestriction, Algebra.DeRham.rawMap_rawDifferential] at h
-    exact h
+    rwa [rawRestriction, Algebra.DeRham.rawMap_rawDifferential] at h
   have hclosedη : Set.EqOn (extDeriv η) 0 (Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
     intro y hy
@@ -1491,8 +1434,7 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
         extDeriv η y := by
       rw [extDerivWithin, extDeriv,
         fderivWithin_of_isOpen (isOpen_chartSectionDomain X d V x) hyV]
-    rw [hwithin] at hchart
-    exact hchart
+    rwa [hwithin] at hchart
   have hconst :=
     DifferentialForm.zeroForm_eq_at_center_of_closedOn_ball hr η hη hclosedη
   let center := (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x
@@ -1510,8 +1452,7 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
   have hyball' : y ∈ Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r := hdomV ▸ hy
   have hyball : y ∈ Metric.ball center r := by simpa only [center] using hyball'
-  rw [show chartRawEvaluation X d V x 0 aV y = η center by
-    exact hconst hyball]
+  rw [show chartRawEvaluation X d V x 0 aV y = η center from hconst hyball]
   rw [chartRawEvaluation_rawConstant X d V x c hy]
   have hrepr := congrFun (DifferentialForm.zeroForm_eq_constOfIsEmpty η) center
   change η center =

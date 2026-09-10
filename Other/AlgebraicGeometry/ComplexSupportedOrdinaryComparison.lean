@@ -82,8 +82,7 @@ theorem complexSupportedSingularTop_inclusion_of_relative
     (TopCat.of (ComplexPoint X)) S.compl ⊤ n
     (relativeCohomologyMap ℚ n
       (topOpenIntersectionPairIso (TopCat.of (ComplexPoint X)) S.compl).hom a)
-  rw [openRawRelativeCochainClass_top, complexOpenRawToSheafTop_eq_global] at h
-  exact h
+  rwa [openRawRelativeCochainClass_top, complexOpenRawToSheafTop_eq_global] at h
 
 set_option maxHeartbeats 1000000 in
 /-- The original ambient supported-injective inverse comparison on the top open
@@ -106,8 +105,7 @@ theorem complexSupportInjectiveSectionCohomologyEquiv_symm_top
   change relativeCohomologyMap ℚ n (topOpenNeighborhoodSupportPairIso Y S).hom a =
     supportedRationalSingularSectionCohomologyEquivSupportComplement Y S S.isClosed ⊤ n
       (e.inv (e.hom _))
-  rw [Iso.hom_inv_id_apply]
-  rw [supportedSingularSupportComplementEquiv_apply]
+  rw [Iso.hom_inv_id_apply, supportedSingularSupportComplementEquiv_apply]
   erw [AddEquiv.apply_symm_apply]
   exact congrArg (fun f => f a)
     (relativeCohomologyMap_comp ℚ n
@@ -133,8 +131,7 @@ theorem complexSupportedSingularInjectiveHomologyIso_inclusion
   let f := (((TopCat.Sheaf.supportEvaluation Y V).mapHomologicalComplex (.up ℤ)).mapShortComplex).map
     (TopCat.Sheaf.supportRestrictionComplexShortComplexMap Y U (complexSingularToAmbientInjective X))
   have h := congrArg (fun g => HomologicalComplex.homologyMap g n) f.comm₁₂
-  rw [HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp] at h
-  exact h
+  rwa [HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp] at h
 
 set_option maxHeartbeats 1200000 in
 /-- The actual supported-injective inverse-relative comparison followed by

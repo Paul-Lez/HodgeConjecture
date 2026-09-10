@@ -72,8 +72,7 @@ lemma freeAbelianYonedaSheafHomEquiv_naturality
             ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).map
               (((Functor.whiskeringRight (Opens X)ᵒᵖ (Type u)
                 AddCommGrpCat.{u}).obj AddCommGrpCat.free).map (yoneda.map i)) ≫ g))) = _
-  rw [Adjunction.homEquiv_naturality_left,
-    Adjunction.homEquiv_naturality_left]
+  rw [Adjunction.homEquiv_naturality_left, Adjunction.homEquiv_naturality_left]
   exact (yonedaEquiv_naturality _ i).symm
 
 set_option backward.isDefEq.respectTransparency false in

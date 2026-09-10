@@ -147,21 +147,18 @@ cycle component. -/
 lemma neighborhoodToAmbientPoint_eq_cycleComponentMap
     (z : ComplexPoint C.neighborhoodScheme) :
     C.neighborhoodToAmbientPoint z =
-      cycleComponentMap V.over x (C.neighborhoodToComponentPoint z) := by
-  apply Over.OverMorphism.ext
-  rfl
+      cycleComponentMap V.over x (C.neighborhoodToComponentPoint z) :=
+  Over.OverMorphism.ext rfl
 
 /-- On analytic points, the neighborhood-to-ambient map is a topological embedding. -/
 lemma neighborhoodToAmbientPoint_isEmbedding :
     IsEmbedding C.neighborhoodToAmbientPoint := by
-  have h := (ComplexPoint.cycleComponentMap_isClosedEmbedding V.over x).toIsEmbedding.comp
-    C.neighborhoodToComponentPoint_isOpenEmbedding.toIsEmbedding
   have heq : C.neighborhoodToAmbientPoint =
-      cycleComponentMap V.over x ∘ C.neighborhoodToComponentPoint := by
-    funext z
-    exact C.neighborhoodToAmbientPoint_eq_cycleComponentMap z
+      cycleComponentMap V.over x ∘ C.neighborhoodToComponentPoint :=
+    funext C.neighborhoodToAmbientPoint_eq_cycleComponentMap
   rw [heq]
-  exact h
+  exact (ComplexPoint.cycleComponentMap_isClosedEmbedding V.over x).toIsEmbedding.comp
+    C.neighborhoodToComponentPoint_isOpenEmbedding.toIsEmbedding
 
 /-- The actual cycle-component inclusion is analytic in an exact intrinsic component chart and
 the canonical ambient chart centered at the same point.  This proves analyticity, but not the

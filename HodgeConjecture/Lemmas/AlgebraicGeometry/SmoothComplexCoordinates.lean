@@ -65,19 +65,16 @@ lemma Smooth.exists_affine_isStandardSmooth [Smooth f] (x : X) :
     ∃ (V : X.Opens) (_ : IsAffineOpen V), x ∈ V ∧
       (f.appLE ⊤ V (by simp)).hom.IsStandardSmooth := by
   obtain ⟨U, hU, V, hV, hxV, e, hf⟩ := Smooth.exists_isStandardSmooth f x
-  have hUtop : U = ⊤ := by
-    apply le_antisymm le_top
-    intro y _
-    have hy : y = f x := Subsingleton.elim _ _
-    rw [hy]
+  have hUtop : U = ⊤ := le_antisymm le_top fun y _ ↦ by
+    rw [show y = f x from Subsingleton.elim _ _]
     exact e hxV
   subst U
   exact ⟨V, hV, hxV, hf⟩
 
 lemma complexRestrictionMap_isStandardSmooth {V : X.Opens}
     (h : (f.appLE ⊤ V (by simp)).hom.IsStandardSmooth) :
-    (complexRestrictionMap f V).IsStandardSmooth := by
-  exact RingHom.isStandardSmooth_respectsIso.2 _
+    (complexRestrictionMap f V).IsStandardSmooth :=
+  RingHom.isStandardSmooth_respectsIso.2 _
     (Scheme.ΓSpecIso ↧ℂ).symm.commRingCatIsoToRingEquiv h
 
 lemma SmoothOfRelativeDimension.exists_affine_isStandardSmoothOfRelativeDimension
@@ -86,19 +83,16 @@ lemma SmoothOfRelativeDimension.exists_affine_isStandardSmoothOfRelativeDimensio
       (f.appLE ⊤ V (by simp)).hom.IsStandardSmoothOfRelativeDimension d := by
   obtain ⟨U, hU, V, hV, hxV, e, hf⟩ :=
     SmoothOfRelativeDimension.exists_isStandardSmoothOfRelativeDimension (n := d) (f := f) x
-  have hUtop : U = ⊤ := by
-    apply le_antisymm le_top
-    intro y _
-    have hy : y = f x := Subsingleton.elim _ _
-    rw [hy]
+  have hUtop : U = ⊤ := le_antisymm le_top fun y _ ↦ by
+    rw [show y = f x from Subsingleton.elim _ _]
     exact e hxV
   subst U
   exact ⟨V, hV, hxV, hf⟩
 
 lemma complexRestrictionMap_isStandardSmoothOfRelativeDimension {d : ℕ} {V : X.Opens}
     (h : (f.appLE ⊤ V (by simp)).hom.IsStandardSmoothOfRelativeDimension d) :
-    (complexRestrictionMap f V).IsStandardSmoothOfRelativeDimension d := by
-  exact RingHom.isStandardSmoothOfRelativeDimension_respectsIso.2 _
+    (complexRestrictionMap f V).IsStandardSmoothOfRelativeDimension d :=
+  RingHom.isStandardSmoothOfRelativeDimension_respectsIso.2 _
     (Scheme.ΓSpecIso ↧ℂ).symm.commRingCatIsoToRingEquiv h
 
 end SchemeStructure
@@ -150,8 +144,8 @@ def coordinateRingHomOnOpen :
     MvPolynomial (Fin d) ℂ →+* Γ(D.neighborhood.toScheme, ⊤) :=
   D.neighborhood.topIso.inv.hom.comp D.coordinateRingHom
 
-lemma coordinateRingHomOnOpen_etale : D.coordinateRingHomOnOpen.Etale := by
-  exact RingHom.Etale.respectsIso.1 D.coordinateRingHom
+lemma coordinateRingHomOnOpen_etale : D.coordinateRingHomOnOpen.Etale :=
+  RingHom.Etale.respectsIso.1 D.coordinateRingHom
     D.neighborhood.topIso.symm.commRingCatIsoToRingEquiv D.etale
 
 lemma C_comp_coordinateRingHomOnOpen :
@@ -183,15 +177,8 @@ lemma etale_toAffineSpace : Etale D.toAffineSpace := by
     infer_instance
   have h₂ : Etale (Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen)) :=
     HasRingHomProperty.Spec_iff.mpr D.coordinateRingHomOnOpen_etale
-  have h₃ : Etale (AffineSpace.SpecIso (Fin d) ↧ℂ).inv := by
-    infer_instance
-  have h₁₂ : Etale (D.neighborhood.toScheme.toSpecΓ ≫
-      Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen)) := by
-    exact @Etale.etale_comp _ _ _ _ _ h₁ h₂
-  change Etale ((D.neighborhood.toScheme.toSpecΓ ≫
-    Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen)) ≫
-      (AffineSpace.SpecIso (Fin d) ↧ℂ).inv)
-  exact @Etale.etale_comp _ _ _ _ _ h₁₂ h₃
+  have h₃ : Etale (AffineSpace.SpecIso (Fin d) ↧ℂ).inv := inferInstance
+  exact @Etale.etale_comp _ _ _ _ _ h₁ (@Etale.etale_comp _ _ _ _ _ h₂ h₃)
 
 /-- The étale coordinate morphism respects the structure maps to `Spec ℂ`. -/
 lemma toAffineSpace_over :
@@ -243,8 +230,8 @@ lemma continuous_analyticCoordinates :
     @Continuous
       (ComplexPoint (ComplexPoint.openScheme X D.neighborhood))
       (Fin d → ℂ) Point.analyticTopology inferInstance
-      D.analyticCoordinates := by
-  exact (ComplexPoint.continuous_affineSpaceEquiv (Fin d)).comp
+      D.analyticCoordinates :=
+  (ComplexPoint.continuous_affineSpaceEquiv (Fin d)).comp
     D.continuous_pointMap
 
 /-- Étale coordinates written on the corresponding open subset of the ambient complex points. -/
@@ -259,8 +246,8 @@ lemma continuous_ambientAnalyticCoordinates :
       {z : ComplexPoint X // z ∈ Point.overOpen D.neighborhood}
       (Fin d → ℂ)
       (TopologicalSpace.induced Subtype.val Point.analyticTopology) inferInstance
-      D.ambientAnalyticCoordinates := by
-  exact D.continuous_analyticCoordinates.comp
+      D.ambientAnalyticCoordinates :=
+  D.continuous_analyticCoordinates.comp
     (ComplexPoint.continuous_openEquiv_symm X D.neighborhood)
 
 noncomputable local instance coordinateRingAlgebra :
@@ -280,9 +267,7 @@ noncomputable local instance coordinateRingScalarTower :
 noncomputable local instance coordinateRingEtale :
     Algebra.Etale (ComplexPoint.complexPolynomialRing d)
       Γ(D.neighborhood.toScheme, ⊤) :=
-  RingHom.etale_algebraMap.mp (by
-    change D.coordinateRingHomOnOpen.Etale
-    exact D.coordinateRingHomOnOpen_etale)
+  RingHom.etale_algebraMap.mp D.coordinateRingHomOnOpen_etale
 
 /-- The canonical map from an affine neighborhood to the spectrum of its global sections respects
 the complex structure morphisms. -/
@@ -292,7 +277,6 @@ lemma toSpecΓ_over :
       D.neighborhood.ι ≫ X.hom := by
   let φ : ↧ℂ ⟶ Γ(D.neighborhood.toScheme, ⊤) :=
     CommRingCat.ofHom MvPolynomial.C ≫ CommRingCat.ofHom D.coordinateRingHomOnOpen
-  change D.neighborhood.toScheme.toSpecΓ ≫ Spec.map φ = D.neighborhood.ι ≫ X.hom
   change (ΓSpec.adjunction.homEquiv D.neighborhood.toScheme
     (Opposite.op ↧ℂ)) φ.op = D.neighborhood.ι ≫ X.hom
   apply ext_to_Spec
@@ -306,8 +290,7 @@ def affineSpecPointHomeomorph :
       (ComplexPoint (ComplexPoint.openScheme X D.neighborhood))
       (ComplexPoint (Over.mk (ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤))))
       Point.analyticTopology Point.analyticTopology := by
-  let : IsAffine D.neighborhood.toScheme :=
-    show IsAffine D.neighborhood.toScheme from D.isAffine
+  let : IsAffine D.neighborhood.toScheme := D.isAffine
   let e := asIso D.neighborhood.toScheme.toSpecΓ
   have he : e.hom ≫ ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤) =
       D.neighborhood.ι ≫ X.hom := by
@@ -320,8 +303,7 @@ lemma affineSpecPointHomeomorph_apply
     (z : ComplexPoint (ComplexPoint.openScheme X D.neighborhood)) :
     D.affineSpecPointHomeomorph z =
       Point.map (Over.homMk D.neighborhood.toScheme.toSpecΓ D.toSpecΓ_over) z := by
-  let : IsAffine D.neighborhood.toScheme :=
-    show IsAffine D.neighborhood.toScheme from D.isAffine
+  let : IsAffine D.neighborhood.toScheme := D.isAffine
   rw [affineSpecPointHomeomorph, Point.isoMapHomeomorph_apply]
   rfl
 
@@ -345,9 +327,7 @@ lemma pointAlgHomHomeomorph_apply
   rw [pointAlgHomHomeomorph, Homeomorph.trans_apply]
   change ComplexPoint.affineSpecEquiv Γ(D.neighborhood.toScheme, ⊤)
       (D.affineSpecPointHomeomorph z) r = _
-  rw [ComplexPoint.affineSpecEquiv_apply]
-  rw [affineSpecPointHomeomorph_apply]
-  rw [Point.evaluate_map]
+  rw [ComplexPoint.affineSpecEquiv_apply, affineSpecPointHomeomorph_apply, Point.evaluate_map]
   change Point.evaluate ⊤
       (D.neighborhood.toScheme.toSpecΓ.appTop
         ((Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).inv r)) z = _
@@ -369,8 +349,8 @@ def algebraicCoordinates :
       D.pointAlgHomHomeomorph
 
 lemma isLocalHomeomorph_algebraicCoordinates :
-    IsLocalHomeomorph D.algebraicCoordinates := by
-  exact (ComplexPoint.mvPolynomialAlgHomHomeomorph d).isLocalHomeomorph.comp
+    IsLocalHomeomorph D.algebraicCoordinates :=
+  (ComplexPoint.mvPolynomialAlgHomHomeomorph d).isLocalHomeomorph.comp
     ((ComplexPoint.isLocalHomeomorph_etaleBaseAlgHom
       Γ(D.neighborhood.toScheme, ⊤)).comp
         D.pointAlgHomHomeomorph.isLocalHomeomorph)
@@ -449,8 +429,8 @@ lemma isLocalHomeomorph_analyticCoordinates :
 /-- The same coordinates are a local homeomorphism on the corresponding analytic open subset of
 the ambient complex-point space. -/
 lemma isLocalHomeomorph_ambientAnalyticCoordinates :
-    IsLocalHomeomorph D.ambientAnalyticCoordinates := by
-  exact D.isLocalHomeomorph_analyticCoordinates.comp
+    IsLocalHomeomorph D.ambientAnalyticCoordinates :=
+  D.isLocalHomeomorph_analyticCoordinates.comp
     (ComplexPoint.openHomeomorph X D.neighborhood).symm.isLocalHomeomorph
 
 /-- The explicit analytic projection chart centered at a point of the ambient coordinate
@@ -534,8 +514,7 @@ lemma analyticAt_ambientProjectionChart_symm_pointAlgHom_apply
   apply h.congr
   filter_upwards with v
   simp only [ambientProjectionChart, OpenPartialHomeomorph.coe_trans_symm,
-    Function.comp_apply, Homeomorph.toOpenPartialHomeomorph_symm_apply]
-  simp only [Homeomorph.symm_symm]
+    Function.comp_apply, Homeomorph.toOpenPartialHomeomorph_symm_apply, Homeomorph.symm_symm]
   rw [Homeomorph.symm_apply_apply, Homeomorph.apply_symm_apply]
 
 /-- Evaluation of a global regular function on the affine neighborhood is analytic along the
@@ -563,14 +542,13 @@ lemma analyticAt_ambientProjectionChart_symm_evaluate
       (fun v ↦ Point.evaluate V s ((D.ambientProjectionChart z).symm v).1) w := by
   let Y := D.neighborhood.toScheme
   let W : Y.Opens := D.neighborhood.ι ⁻¹ᵁ V
-  let : IsAffine Y :=
-    show IsAffine D.neighborhood.toScheme from D.isAffine
+  let : IsAffine Y := D.isAffine
   let y : ComplexPoint (ComplexPoint.openScheme X D.neighborhood) :=
     (ComplexPoint.openHomeomorph X D.neighborhood).symm
       ((D.ambientProjectionChart z).symm w)
   have hymap : Point.map (ComplexPoint.openInclusion X D.neighborhood) y =
-      ((D.ambientProjectionChart z).symm w).1 := by
-    exact congrArg Subtype.val
+      ((D.ambientProjectionChart z).symm w).1 :=
+    congrArg Subtype.val
       ((ComplexPoint.openHomeomorph X D.neighborhood).apply_symm_apply
         ((D.ambientProjectionChart z).symm w))
   have hyW : y ∈ Point.overOpen W := by
@@ -617,8 +595,8 @@ lemma analyticAt_ambientProjectionChart_symm_evaluate
     (ComplexPoint.openHomeomorph X D.neighborhood).symm
       ((D.ambientProjectionChart z).symm v)
   have hymapv : Point.map (ComplexPoint.openInclusion X D.neighborhood) yv =
-      ((D.ambientProjectionChart z).symm v).1 := by
-    exact congrArg Subtype.val
+      ((D.ambientProjectionChart z).symm v).1 :=
+    congrArg Subtype.val
       ((ComplexPoint.openHomeomorph X D.neighborhood).apply_symm_apply
         ((D.ambientProjectionChart z).symm v))
   have hmap := Point.evaluate_map (ComplexPoint.openInclusion X D.neighborhood) V s yv

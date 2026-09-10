@@ -47,13 +47,9 @@ lemma isOpen_openCoverSubset (i : ι) : IsOpen (openCoverSubset X U V i) := by
 /-- If the opens have supremum `U`, their induced subsets cover the subspace `U`. -/
 lemma iUnion_openCoverSubset_eq_univ (hV : ⨆ i, V i = U) :
     ⋃ i, openCoverSubset X U V i = Set.univ := by
-  apply Set.eq_univ_of_forall
-  intro x
-  have hx : x.1 ∈ ⨆ i, V i := by
-    rw [hV]
-    exact x.2
-  obtain ⟨i, hi⟩ := Opens.mem_iSup.mp hx
-  exact Set.mem_iUnion.2 ⟨i, hi⟩
+  refine Set.eq_univ_of_forall fun x ↦ ?_
+  have hx : x.1 ∈ ⨆ i, V i := by rw [hV]; exact x.2
+  exact Set.mem_iUnion.2 (Opens.mem_iSup.mp hx)
 
 /-- The cover-small inclusion for a cover of an open subspace is a quasi-isomorphism. -/
 theorem openCoverSmallChainQuasiIsomorphism (hV : ⨆ i, V i = U) :

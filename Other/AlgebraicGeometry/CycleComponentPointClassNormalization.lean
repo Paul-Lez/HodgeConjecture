@@ -199,8 +199,7 @@ theorem sheafCycleClassOnCycles_sum_single_point_normalization
       ∑ i ∈ t, n i • analyticComponentPointPositiveKernelClass
         V.over (x i) V.dimension (z i) := by
   rw [sheafCycleClassOnCycles_sum_single]
-  apply Finset.sum_congr rfl
-  intro i hi
+  refine Finset.sum_congr rfl fun i _ ↦ ?_
   rw [cycleComponentSheafClass_point_normalization V.over (x i) V.dimension (z i) (hx i)]
 
 /-- Exact rational point multiplicity after scalar extension of the general map. -/
@@ -226,8 +225,7 @@ theorem rationalSheafCycleClassOnCycles_sum_tmul_single_point_normalization
       ∑ i ∈ t, q i • analyticComponentPointPositiveKernelClass
         V.over (x i) V.dimension (z i) := by
   rw [rationalSheafCycleClassOnCycles_sum_tmul_single]
-  apply Finset.sum_congr rfl
-  intro i hi
+  refine Finset.sum_congr rfl fun i _ ↦ ?_
   rw [cycleComponentSheafClass_point_normalization V.over (x i) V.dimension (z i) (hx i)]
 
 end AlgebraicGeometry.ComplexPoint

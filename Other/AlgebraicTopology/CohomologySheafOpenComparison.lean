@@ -40,8 +40,7 @@ lemma mapHomologyIso_exactSquare (S : ShortComplex C)
         ((S.map G).mapHomologyIso Q).hom := by
   rw [← cancel_epi ((S.map F).mapHomologyIso P).hom]
   simp only [Iso.hom_inv_id_assoc]
-  rw [← mapHomologyIso_comp_hom_assoc]
-  rw [NatTrans.app_homology]
+  rw [← mapHomologyIso_comp_hom_assoc, NatTrans.app_homology]
   simp only [Category.assoc, Iso.hom_inv_id_assoc]
   rw [mapHomologyIso_comp_hom]
   simp only [Category.assoc, ← Q.map_comp, Iso.hom_inv_id, Q.map_id, Category.comp_id]

@@ -100,9 +100,8 @@ lemma surjective_sphereToProjectivization {n : ℕ} :
   intro p
   induction p using Projectivization.ind with
   | _ v hv =>
-      refine ⟨normalize v hv, ?_⟩
-      apply (Projectivization.mk_eq_mk_iff' ℂ _ _ (sphere_ne_zero _) hv).2
-      exact ⟨((‖v‖ : ℝ) : ℂ)⁻¹, rfl⟩
+      exact ⟨normalize v hv, (Projectivization.mk_eq_mk_iff' ℂ _ _ (sphere_ne_zero _) hv).2
+        ⟨((‖v‖ : ℝ) : ℂ)⁻¹, rfl⟩⟩
 
 /-- Finite-dimensional complex projective space is compact in its quotient topology. -/
 noncomputable instance instCompactSpace (n : ℕ) :
@@ -259,8 +258,7 @@ noncomputable def awayHomogeneousEvaluation {n d : ℕ} (v : CoordinateSpace n)
     HomogeneousLocalization.Away (UniversalGrading n) f →+* ℂ :=
   (IsLocalization.Away.lift
     (S := Localization.Away f) f
-    (show IsUnit (coordinateEvaluationHom v f) by
-      exact isUnit_iff_ne_zero.mpr hv)).comp
+    (show IsUnit (coordinateEvaluationHom v f) from isUnit_iff_ne_zero.mpr hv)).comp
       (algebraMap
         (HomogeneousLocalization.Away (UniversalGrading n) f)
         (Localization.Away f))
@@ -328,9 +326,8 @@ lemma chartGenerator_eq_prod {n a : ℕ} (i : Fin (n + 1))
               (fun j _ ↦ MvPolynomial.isHomogeneous_X (ULift ℤ) j) using 1;
             simp [hai]) =
       ∏ j, chartCoordinate i j ^ ai j := by
-  rw [HomogeneousLocalization.ext_iff_val]
-  rw [HomogeneousLocalization.Away.val_mk]
-  rw [show (∏ j, chartCoordinate i j ^ ai j).val =
+  rw [HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.Away.val_mk,
+    show (∏ j, chartCoordinate i j ^ ai j).val =
       ∏ j, (chartCoordinate i j).val ^ ai j by
     induction (Finset.univ : Finset (Fin (n + 1))) using Finset.induction with
     | empty => exact HomogeneousLocalization.val_one
@@ -505,13 +502,11 @@ lemma awayHomogeneousEvaluation_comp_awayMap_coordinate {n : ℕ}
         (MvPolynomial.isHomogeneous_X (ULift ℤ) j) rfl (chartCoordinate i k)) =
       awayCoordinateEvaluation v i hi (chartCoordinate i k)
     unfold chartCoordinate
-    rw [HomogeneousLocalization.awayMap_mk]
-    rw [awayHomogeneousEvaluation_mk (k := 1)
+    rw [HomogeneousLocalization.awayMap_mk, awayHomogeneousEvaluation_mk (k := 1)
       (hr := by simpa using (SetLike.mul_mem_graded (A := UniversalGrading n)
         (MvPolynomial.isHomogeneous_X (ULift ℤ) k)
-        (MvPolynomial.isHomogeneous_X (ULift ℤ) j)))]
-    rw [awayCoordinateEvaluation_mk
-      (hr := MvPolynomial.isHomogeneous_X (ULift ℤ) k)]
+        (MvPolynomial.isHomogeneous_X (ULift ℤ) j))),
+      awayCoordinateEvaluation_mk (hr := MvPolynomial.isHomogeneous_X (ULift ℤ) k)]
     simp only [map_mul, coordinateEvaluationHom_X]
     field_simp
     simp
@@ -520,8 +515,7 @@ lemma awayHomogeneousEvaluation_comp_awayMap_coordinate {n : ℕ}
 lemma exists_coordinate_ne_zero {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
     ∃ i, v i ≠ 0 := by
   contrapose! hv
-  funext i
-  exact hv i
+  exact funext hv
 
 /-- The finite set of indices of the nonzero coordinates of a vector. -/
 noncomputable def coordinateSupport {n : ℕ} (v : CoordinateSpace n) :
@@ -587,9 +581,7 @@ lemma exists_coordinates_of_range_subset_chart {n : ℕ}
       (MvPolynomial.X i) →+* ℂ := (Spec.preimage l).hom
   let v := vectorOfAwayRingHom i φ
   have hv : v ≠ 0 := vectorOfAwayRingHom_ne_zero i φ
-  have hi : v i ≠ 0 := by
-    rw [show v i = 1 by exact vectorOfAwayRingHom_self i φ]
-    exact one_ne_zero
+  have hi : v i ≠ 0 := (vectorOfAwayRingHom_self i φ).trans_ne one_ne_zero
   refine ⟨v, hv, hi, ?_⟩
   unfold chartIntegralProjAt
   rw [awayCoordinateEvaluation_vectorOfAwayRingHom]
@@ -618,8 +610,8 @@ lemma chartIntegralProjAt_independent {n : ℕ} (v : CoordinateSpace n)
   have hfi : φij.comp
         (HomogeneousLocalization.awayMap (UniversalGrading n)
           (MvPolynomial.isHomogeneous_X (ULift ℤ) j) rfl) =
-      awayCoordinateEvaluation v i hi := by
-    exact awayHomogeneousEvaluation_comp_awayMap_coordinate v i j hi hj
+      awayCoordinateEvaluation v i hi :=
+    awayHomogeneousEvaluation_comp_awayMap_coordinate v i j hi hj
   have hfj : φij.comp
         (HomogeneousLocalization.awayMap (UniversalGrading n)
           (MvPolynomial.isHomogeneous_X (ULift ℤ) i) (mul_comm _ _)) =
@@ -642,14 +634,12 @@ lemma chartIntegralProjAt_independent {n : ℕ} (v : CoordinateSpace n)
             (chartCoordinate j k)) =
         awayCoordinateEvaluation v j hj (chartCoordinate j k)
       unfold chartCoordinate
-      rw [HomogeneousLocalization.awayMap_mk]
-      rw [awayHomogeneousEvaluation_mk (k := 1)
+      rw [HomogeneousLocalization.awayMap_mk, awayHomogeneousEvaluation_mk (k := 1)
         (hr := by simpa [mul_comm] using
           (SetLike.mul_mem_graded (A := UniversalGrading n)
             (MvPolynomial.isHomogeneous_X (ULift ℤ) k)
-            (MvPolynomial.isHomogeneous_X (ULift ℤ) i)))]
-      rw [awayCoordinateEvaluation_mk
-        (hr := MvPolynomial.isHomogeneous_X (ULift ℤ) k)]
+            (MvPolynomial.isHomogeneous_X (ULift ℤ) i))),
+        awayCoordinateEvaluation_mk (hr := MvPolynomial.isHomogeneous_X (ULift ℤ) k)]
       simp only [map_mul, coordinateEvaluationHom_X]
       field_simp
       simp
@@ -668,21 +658,19 @@ lemma chartIntegralProjAt_preimage_coordinateBasicOpen {n : ℕ}
       Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i) =
         if v i = 0 then ⊥ else ⊤ := by
   unfold chartIntegralProjAt
-  rw [Scheme.Hom.comp_preimage]
-  rw [show Proj.awayι (UniversalGrading n) (MvPolynomial.X k)
+  rw [Scheme.Hom.comp_preimage, show Proj.awayι (UniversalGrading n) (MvPolynomial.X k)
       (MvPolynomial.isHomogeneous_X (ULift ℤ) k) zero_lt_one ⁻¹ᵁ
         Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i) =
       PrimeSpectrum.basicOpen
         (HomogeneousLocalization.Away.isLocalizationElem
           (MvPolynomial.isHomogeneous_X (ULift ℤ) k)
-          (MvPolynomial.isHomogeneous_X (ULift ℤ) i)) by
-    exact Proj.awayι_preimage_basicOpen
+          (MvPolynomial.isHomogeneous_X (ULift ℤ) i)) from
+    Proj.awayι_preimage_basicOpen
       (𝒜 := UniversalGrading n) (f := MvPolynomial.X k) (g := MvPolynomial.X i)
       (m := 1) (m' := 1)
       (MvPolynomial.isHomogeneous_X (ULift ℤ) k) zero_lt_one
       (MvPolynomial.isHomogeneous_X (ULift ℤ) i) zero_lt_one]
-  rw [SpecMap_preimage_basicOpen]
-  rw [show HomogeneousLocalization.Away.isLocalizationElem
+  rw [SpecMap_preimage_basicOpen, show HomogeneousLocalization.Away.isLocalizationElem
       (MvPolynomial.isHomogeneous_X (ULift ℤ) k)
       (MvPolynomial.isHomogeneous_X (ULift ℤ) i) = chartCoordinate k i by
     rw [HomogeneousLocalization.ext_iff_val]
@@ -732,8 +720,8 @@ lemma chartIntegralProj_smul {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0)
 /-- The selected-chart construction agrees with evaluation in every nonzero coordinate chart. -/
 lemma chartIntegralProj_eq_chartIntegralProjAt {n : ℕ} (v : CoordinateSpace n)
     (hv : v ≠ 0) (i : Fin (n + 1)) (hi : v i ≠ 0) :
-    chartIntegralProj v hv = chartIntegralProjAt v i hi := by
-  exact chartIntegralProjAt_independent v (coordinateIndex v hv) i
+    chartIntegralProj v hv = chartIntegralProjAt v i hi :=
+  chartIntegralProjAt_independent v (coordinateIndex v hv) i
     (coordinateIndex_ne_zero v hv) hi
 
 /-- The irrelevant ideal of the homogeneous coordinate ring is contained in the ideal generated
@@ -756,8 +744,8 @@ lemma irrelevant_le_span_coordinates (n : ℕ) :
 projective space. -/
 lemma iSup_coordinateBasicOpen_eq_top (n : ℕ) :
     ⨆ i : Fin (n + 1),
-      Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i) = ⊤ := by
-  exact Proj.iSup_basicOpen_eq_top _ _ (irrelevant_le_span_coordinates n)
+      Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i) = ⊤ :=
+  Proj.iSup_basicOpen_eq_top _ _ (irrelevant_le_span_coordinates n)
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option linter.style.haveILetI false in
@@ -839,8 +827,8 @@ lemma projectivization_mk_eq_of_chartIntegralProj_eq {n : ℕ}
   have hcat : CommRingCat.ofHom (awayCoordinateEvaluation v i hi) =
       CommRingCat.ofHom (awayCoordinateEvaluation w i hwi) :=
     Spec.map_injective hspec
-  have heval : awayCoordinateEvaluation v i hi = awayCoordinateEvaluation w i hwi := by
-    exact congrArg ConcreteCategory.hom hcat
+  have heval : awayCoordinateEvaluation v i hi = awayCoordinateEvaluation w i hwi :=
+    congrArg ConcreteCategory.hom hcat
   apply (Projectivization.mk_eq_mk_iff' ℂ v w hv hw).2
   refine ⟨v i * (w i)⁻¹, ?_⟩
   funext j
@@ -866,10 +854,7 @@ lemma coordinate_irrelevant_map_eq_top {n : ℕ} (v : CoordinateSpace n) (hv : v
     Ideal.map (coordinateGlobalSectionsHom v)
       (HomogeneousIdeal.irrelevant (UniversalGrading n)).toIdeal = ⊤ := by
   classical
-  obtain ⟨i, hi⟩ : ∃ i, v i ≠ 0 := by
-    contrapose! hv
-    funext i
-    exact hv i
+  obtain ⟨i, hi⟩ := exists_coordinate_ne_zero v hv
   apply Ideal.eq_top_of_isUnit_mem _
   · apply Ideal.mem_map_of_mem
     exact HomogeneousIdeal.mem_irrelevant_of_mem _ zero_lt_one
@@ -903,8 +888,7 @@ lemma toIntegralProj_preimage_basicOpen {n d : ℕ}
     exact PrimeSpectrum.basicOpen_zero
   · apply top_unique
     intro x hx
-    rw [PrimeSpectrum.mem_basicOpen]
-    rw [Subsingleton.elim x (⊥ : PrimeSpectrum ℂ)]
+    rw [PrimeSpectrum.mem_basicOpen, Subsingleton.elim x (⊥ : PrimeSpectrum ℂ)]
     simpa using h
 
 /-- The coordinate chart met by the point constructed from a vector is exactly the chart on
@@ -928,8 +912,7 @@ lemma toIntegralProj_preimage_coordinateBasicOpen {n : ℕ}
     exact PrimeSpectrum.basicOpen_zero
   · apply top_unique
     intro x hx
-    rw [PrimeSpectrum.mem_basicOpen]
-    rw [Subsingleton.elim x (⊥ : PrimeSpectrum ℂ)]
+    rw [PrimeSpectrum.mem_basicOpen, Subsingleton.elim x (⊥ : PrimeSpectrum ℂ)]
     simpa using h
 
 /-- Rescaling nonzero homogeneous coordinates does not change the underlying point of the
@@ -938,10 +921,7 @@ lemma toIntegralProj_apply_smul {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0)
     (c : ℂ) (hc : c ≠ 0) (x : Spec ↧ℂ) :
     toIntegralProj (c • v) (smul_ne_zero hc hv) x = toIntegralProj v hv x := by
   classical
-  obtain ⟨i, hi⟩ : ∃ i, v i ≠ 0 := by
-    contrapose! hv
-    funext i
-    exact hv i
+  obtain ⟨i, hi⟩ := exists_coordinate_ne_zero v hv
   apply ProjectiveSpectrum.ext
   ext r
   rw [(toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal.isHomogeneous.mem_iff,
@@ -950,8 +930,7 @@ lemma toIntegralProj_apply_smul {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0)
   intro d
   let s : UniversalRing n :=
     GradedRing.proj (UniversalGrading n) d r
-  have hs : s ∈ UniversalGrading n d := by
-    exact SetLike.coe_mem _
+  have hs : s ∈ UniversalGrading n d := SetLike.coe_mem _
   let t : UniversalRing n := s * MvPolynomial.X i
   have ht : t ∈ UniversalGrading n (d + 1) :=
     SetLike.mul_mem_graded hs (MvPolynomial.isHomogeneous_X _ i)
@@ -975,37 +954,23 @@ lemma toIntegralProj_apply_smul {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0)
   have htmem (w : CoordinateSpace n) (hw : w ≠ 0) :
       t ∈ (toIntegralProj w hw x).asHomogeneousIdeal ↔
         (Scheme.ΓSpecIso ↧ℂ).hom (coordinateGlobalSectionsHom w t) = 0 := by
-    rw [← not_iff_not]
-    rw [← Proj.mem_basicOpen]
+    rw [← not_iff_not, ← Proj.mem_basicOpen]
     change x ∈ toIntegralProj w hw ⁻¹ᵁ
       Proj.basicOpen (UniversalGrading n) t ↔ _
     rw [toIntegralProj_preimage_basicOpen w hw t (Nat.zero_lt_succ d) ht]
-    split_ifs with h
-    · simp [h]
-    · simp [h]
+    split_ifs with h <;> simp [h]
   change s ∈ (toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal ↔
     s ∈ (toIntegralProj v hv x).asHomogeneousIdeal
   have hmul_cv : t ∈
       (toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal ↔
-        s ∈ (toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal := by
-    constructor
-    · intro h
-      rcases (toIntegralProj (c • v) (smul_ne_zero hc hv) x).isPrime.mem_or_mem h with h | h
-      · exact h
-      · exact (hXi_cv h).elim
-    · intro h
-      exact Ideal.mul_mem_right _ _ h
+        s ∈ (toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal :=
+    ⟨fun h ↦ ((toIntegralProj (c • v) (smul_ne_zero hc hv) x).isPrime.mem_or_mem
+      h).resolve_right hXi_cv, fun h ↦ Ideal.mul_mem_right _ _ h⟩
   have hmul_v : t ∈ (toIntegralProj v hv x).asHomogeneousIdeal ↔
-      s ∈ (toIntegralProj v hv x).asHomogeneousIdeal := by
-    constructor
-    · intro h
-      rcases (toIntegralProj v hv x).isPrime.mem_or_mem h with h | h
-      · exact h
-      · exact (hXi_v h).elim
-    · intro h
-      exact Ideal.mul_mem_right _ _ h
-  rw [← hmul_cv, ← hmul_v]
-  rw [htmem, htmem, coordinateGlobalSectionsHom_smul t ht c v]
+      s ∈ (toIntegralProj v hv x).asHomogeneousIdeal :=
+    ⟨fun h ↦ ((toIntegralProj v hv x).isPrime.mem_or_mem h).resolve_right hXi_v,
+      fun h ↦ Ideal.mul_mem_right _ _ h⟩
+  rw [← hmul_cv, ← hmul_v, htmem, htmem, coordinateGlobalSectionsHom_smul t ht c v]
   simp [hc]
 
 /-- Homogeneous coordinates give a scale-independent map to the underlying projective spectrum.
@@ -1048,8 +1013,8 @@ lemma vectorToProjectiveSpace_smul {n : ℕ} (v : CoordinateSpace n) (hv : v ≠
 @[simp]
 lemma vectorToProjectiveSpace_toBase {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
     vectorToProjectiveSpace v hv ≫
-      ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ) = 𝟙 _ := by
-  exact Limits.pullback.lift_fst _ _ _
+      ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ) = 𝟙 _ :=
+  Limits.pullback.lift_fst _ _ _
 
 /-- Nonzero homogeneous coordinates define a complex point of scheme-theoretic projective
 space. -/
@@ -1060,9 +1025,8 @@ noncomputable def vectorToComplexPoint {n : ℕ} (v : CoordinateSpace n) (hv : v
 /-- Rescaling homogeneous coordinates does not change the resulting complex point. -/
 lemma vectorToComplexPoint_smul {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0)
     (c : ℂ) (hc : c ≠ 0) :
-    vectorToComplexPoint (c • v) (smul_ne_zero hc hv) = vectorToComplexPoint v hv := by
-  apply Over.OverMorphism.ext
-  exact vectorToProjectiveSpace_smul v hv c hc
+    vectorToComplexPoint (c • v) (smul_ne_zero hc hv) = vectorToComplexPoint v hv :=
+  Over.OverMorphism.ext (vectorToProjectiveSpace_smul v hv c hc)
 
 set_option backward.isDefEq.respectTransparency.types false in
 /-- Every complex point of scheme-theoretic projective space is represented by a nonzero
@@ -1194,8 +1158,8 @@ noncomputable def chartAffineToProjectiveSpace {n : ℕ} (i : Fin (n + 1)) :
 lemma chartAffineToProjectiveSpace_over {n : ℕ} (i : Fin (n + 1)) :
     chartAffineToProjectiveSpace i ≫
       ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ) =
-    ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ := by
-  exact Limits.pullback.lift_fst _ _ _
+    ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ :=
+  Limits.pullback.lift_fst _ _ _
 
 @[reassoc]
 lemma chartAffineToProjectiveSpace_toProj {n : ℕ} (i : Fin (n + 1)) :
@@ -1203,8 +1167,8 @@ lemma chartAffineToProjectiveSpace_toProj {n : ℕ} (i : Fin (n + 1)) :
       Limits.pullback.snd
         (Limits.terminal.from (Spec ↧ℂ))
         (Limits.terminal.from (Proj (UniversalGrading n))) =
-    chartAffineToProj i := by
-  exact Limits.pullback.lift_snd _ _ _
+    chartAffineToProj i :=
+  Limits.pullback.lift_snd _ _ _
 
 noncomputable def chartAffineComplexPointMap {n : ℕ} (i : Fin (n + 1)) :
     ComplexPoint (Over.mk (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)) →
@@ -1245,8 +1209,8 @@ lemma continuous_vectorChartToAffinePoint {n : ℕ} (i : Fin (n + 1)) :
     @Continuous {v : CoordinateSpace n // v i ≠ 0}
       (ComplexPoint (Over.mk (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)))
       inferInstance Point.analyticTopology
-      (vectorChartToAffinePoint i) := by
-  exact (ComplexPoint.affineSpaceHomeomorph (Fin (n + 1))).symm.continuous.comp
+      (vectorChartToAffinePoint i) :=
+  (ComplexPoint.affineSpaceHomeomorph (Fin (n + 1))).symm.continuous.comp
     (continuous_vectorChartRatios i)
 
 lemma continuous_chartVectorToComplexPoint {n : ℕ} (i : Fin (n + 1)) :
@@ -1293,8 +1257,7 @@ lemma vectorChartToAffinePoint_comp_SpecIso {n : ℕ} (i : Fin (n + 1))
       ((((ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ).appTop ≫
         (vectorChartToAffinePoint i v).left.appTop))
           ((Scheme.ΓSpecIso ↧ℂ).inv c)) = _
-    rw [← Scheme.Hom.comp_appTop]
-    rw [show (vectorChartToAffinePoint i v).left ≫
+    rw [← Scheme.Hom.comp_appTop, show (vectorChartToAffinePoint i v).left ≫
       (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ) = 𝟙 _ from
         Over.w (vectorChartToAffinePoint i v)]
     simp
@@ -1343,19 +1306,16 @@ lemma vectorChartToAffinePoint_comp_chartAffineToProj {n : ℕ} (i : Fin (n + 1)
     (vectorChartToAffinePoint i v).left ≫ chartAffineToProj i =
       chartIntegralProjAt v.1 i v.2 := by
   unfold chartAffineToProj chartIntegralProjAt
-  rw [← Category.assoc, vectorChartToAffinePoint_comp_SpecIso]
-  rw [← Category.assoc, ← Spec.map_comp]
-  rw [show CommRingCat.ofHom (chartAwayPolynomialHom i) ≫
+  rw [← Category.assoc, vectorChartToAffinePoint_comp_SpecIso, ← Category.assoc,
+    ← Spec.map_comp, show CommRingCat.ofHom (chartAwayPolynomialHom i) ≫
       CommRingCat.ofHom
         (MvPolynomial.eval₂Hom (RingHom.id ℂ) (vectorChartRatios i v)) =
-      CommRingCat.ofHom (awayCoordinateEvaluation v.1 i v.2) by
-    apply CommRingCat.hom_ext
-    exact chartAwayPolynomialHom_evaluate_ratios i v]
+      CommRingCat.ofHom (awayCoordinateEvaluation v.1 i v.2) from
+    CommRingCat.hom_ext (chartAwayPolynomialHom_evaluate_ratios i v)]
 
 lemma vector_ne_zero_of_coordinate {n : ℕ} (v : CoordinateSpace n)
-    (i : Fin (n + 1)) (hi : v i ≠ 0) : v ≠ 0 := by
-  intro h
-  exact hi (congrFun h i)
+    (i : Fin (n + 1)) (hi : v i ≠ 0) : v ≠ 0 :=
+  fun h ↦ hi (congrFun h i)
 
 @[reassoc]
 lemma vectorToProjectiveSpace_toProj {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
@@ -1363,8 +1323,8 @@ lemma vectorToProjectiveSpace_toProj {n : ℕ} (v : CoordinateSpace n) (hv : v �
       Limits.pullback.snd
         (Limits.terminal.from (Spec ↧ℂ))
         (Limits.terminal.from (Proj (UniversalGrading n))) =
-    chartIntegralProj v hv := by
-  exact Limits.pullback.lift_snd _ _ _
+    chartIntegralProj v hv :=
+  Limits.pullback.lift_snd _ _ _
 
 set_option backward.isDefEq.respectTransparency.types false in
 lemma chartVectorToComplexPoint_eq {n : ℕ} (i : Fin (n + 1))
@@ -1419,9 +1379,8 @@ lemma continuous_toVectorChart {n : ℕ} (i : Fin (n + 1)) :
   continuous_subtype_val.comp continuous_subtype_val |>.subtype_mk _
 
 lemma isOpen_nonzeroVectorChart {n : ℕ} (i : Fin (n + 1)) :
-    IsOpen (nonzeroVectorChart i) := by
-  exact isOpen_ne.preimage
-    ((continuous_apply i).comp continuous_subtype_val)
+    IsOpen (nonzeroVectorChart i) :=
+  isOpen_ne.preimage ((continuous_apply i).comp continuous_subtype_val)
 
 lemma iUnion_nonzeroVectorChart {n : ℕ} :
     ⋃ i : Fin (n + 1), nonzeroVectorChart i = Set.univ := by
@@ -1445,9 +1404,7 @@ lemma continuousOn_vectorToComplexPoint_chart {n : ℕ} (i : Fin (n + 1)) :
   rw [continuousOn_iff_continuous_domRestrict]
   have h := (continuous_chartVectorToComplexPoint i).comp
     (continuous_toVectorChart i)
-  apply h.congr
-  intro v
-  exact chartVectorToComplexPoint_eq i (toVectorChart i v)
+  exact h.congr fun v ↦ chartVectorToComplexPoint_eq i (toVectorChart i v)
 
 lemma continuous_vectorToComplexPoint {n : ℕ} :
     @Continuous {v : CoordinateSpace n // v ≠ 0}
@@ -1500,27 +1457,23 @@ variable {X Y : Over (Spec ↧ℂ)}
 closed point. -/
 lemma underlying_injective_of_locallyOfFiniteType
     [LocallyOfFiniteType X.hom] :
-    Function.Injective (@underlying ℂ _ _ X) := by
-  intro z w h
-  apply Over.OverMorphism.ext
-  exact ext_of_apply_closedPoint_eq X.hom (Over.w z) (Over.w w) h
+    Function.Injective (@underlying ℂ _ _ X) := fun z w h ↦
+  Over.OverMorphism.ext (ext_of_apply_closedPoint_eq X.hom (Over.w z) (Over.w w) h)
 
 /-- A complex point of finite-dimensional scheme-theoretic projective space is determined by its
 underlying closed point. -/
 lemma projectiveSpace_underlying_injective (n : ℕ) :
     Function.Injective
       (@underlying ℂ _ _
-        (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) := by
-  exact @underlying_injective_of_locallyOfFiniteType
+        (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) :=
+  @underlying_injective_of_locallyOfFiniteType
     (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
     (inferInstanceAs (LocallyOfFiniteType
       (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
 
 /-- A monomorphism of schemes induces an injection on complex points. -/
 lemma map_injective_of_mono (i : X ⟶ Y) [Mono i] :
-    Function.Injective (map i) := by
-  intro z w h
-  exact (cancel_mono i).mp h
+    Function.Injective (map i) := fun _ _ h ↦ (cancel_mono i).mp h
 
 section ClosedImmersion
 
@@ -1545,7 +1498,7 @@ noncomputable def residueFieldIsoOfClosedImmersion [IsClosedImmersion i] (x : A)
     ⟨RingHom.injective _, residueFieldMap_surjective_of_closedImmersion x⟩).toCommRingCatIso
 
 lemma residueFieldIsoOfClosedImmersion_hom [IsClosedImmersion i] (x : A) :
-    (residueFieldIsoOfClosedImmersion x).hom = i.residueFieldMap x := by
+    (residueFieldIsoOfClosedImmersion x).hom = i.residueFieldMap x :=
   rfl
 
 /-- The map on stalks of structure sheaves induced by a closed immersion is surjective. This
@@ -1558,9 +1511,7 @@ lemma stalkMap_c_surjective [IsClosedImmersion i] (x : A) :
       CommRingCat i.isClosedEmbedding.isInducing A.presheaf x
   intro y
   obtain ⟨s, hs⟩ := i.stalkMap_surjective x (p y)
-  refine ⟨s, ?_⟩
-  apply (ConcreteCategory.bijective_of_isIso p).1
-  exact hs
+  exact ⟨s, (ConcreteCategory.bijective_of_isIso p).1 hs⟩
 
 /-- A section of the closed subscheme is locally the restriction of a section on the ambient
 scheme, near each point of its domain. -/
@@ -1619,9 +1570,7 @@ lemma range_map_of_closedImmersion [IsClosedImmersion i.left] :
     have hz : zHom ≫ A.hom = 𝟙 _ := by
       rw [← Over.w i, ← Category.assoc, hzmap]
       exact Over.w y
-    refine ⟨Over.homMk zHom hz, ?_⟩
-    apply Over.OverMorphism.ext
-    exact hzmap
+    exact ⟨Over.homMk zHom hz, Over.OverMorphism.ext hzmap⟩
 
 /-- The analytic image of a closed immersion is closed. -/
 lemma isClosed_range_map_of_closedImmersion [IsClosedImmersion i.left] :
@@ -1656,8 +1605,8 @@ lemma isOpen_induced_chartSubbasic [IsClosedImmersion i.left]
     overOpen V ∩ evaluate V r ⁻¹' O
   refine ⟨map i ⁻¹' T, ?_, ?_, ?_⟩
   · rintro w ⟨hwV, hwO⟩
-    have hwV' : w.underlying ∈ i.left ⁻¹ᵁ V := by
-      exact (mem_overOpen_map_iff i w V).mp hwV
+    have hwV' : w.underlying ∈ i.left ⁻¹ᵁ V :=
+      (mem_overOpen_map_iff i w V).mp hwV
     have hpre : i.left ⁻¹ᵁ V ≤ i.left ⁻¹ᵁ U :=
       leOfHom ((Opens.map i.left.base).map hVU)
     refine ⟨hpre hwV', ?_⟩
@@ -1669,8 +1618,7 @@ lemma isOpen_induced_chartSubbasic [IsClosedImmersion i.left]
       (U := i.left ⁻¹ᵁ U) (V := i.left ⁻¹ᵁ V) hpre s w hwV'
     have hsection :
         (((TopCat.Presheaf.pushforward CommRingCat i.left.base).obj A.left.presheaf).map hVU.op) s =
-          A.left.presheaf.map (homOfLE hpre).op s := by
-      rfl
+          A.left.presheaf.map (homOfLE hpre).op s := rfl
     rw [hsection] at hmap
     change evaluate (i.left ⁻¹ᵁ U) s w ∈ O
     rw [hres]
@@ -1689,8 +1637,7 @@ lemma isOpen_induced_chartSubbasic [IsClosedImmersion i.left]
         (U := i.left ⁻¹ᵁ U) (V := i.left ⁻¹ᵁ V) hpre s z hzV
       have hsection :
           (((TopCat.Presheaf.pushforward CommRingCat i.left.base).obj A.left.presheaf).map hVU.op) s =
-            A.left.presheaf.map (homOfLE hpre).op s := by
-        rfl
+            A.left.presheaf.map (homOfLE hpre).op s := rfl
       rw [hsection] at hmap
       change evaluate V r (map i z) ∈ O
       rw [hmap]

@@ -96,7 +96,7 @@ lemma cycleComponentBorelMooreToLocal_relativeHomologyProjection
     (relativeHomologyProjection ℚ (pointComplementPair z) n).hom
       (homologyMap ℚ n (TopPair.Hom.fst a) c) at happ
   have hafst : TopPair.Hom.fst a =
-      𝟙 (TopCat.of (CycleComponentAnalyticPoint V x)) := by rfl
+      𝟙 (TopCat.of (CycleComponentAnalyticPoint V x)) := rfl
   rw [hafst] at happ
   have hid : homologyMap ℚ n
       (𝟙 (TopCat.of (CycleComponentAnalyticPoint V x))) c = c := by
@@ -412,11 +412,11 @@ theorem eq_fundamentalClass
     (c : CycleComponentBorelMooreHomology ℚ V x (2 * (d - p)))
     (hc : IsCycleComponentBorelMooreFundamentalClass ℚ V x (2 * (d - p))
       D.localOrientation c) :
-    c = D.fundamentalClass := by
-  apply D.cycleComponentBorelMooreToLocal_anchor_injective
-  exact (hc D.anchor D.anchor_mem_smoothLocus).trans
-    (D.cycleComponentBorelMooreToLocal_fundamentalClass
-      D.anchor D.anchor_mem_smoothLocus).symm
+    c = D.fundamentalClass :=
+  D.cycleComponentBorelMooreToLocal_anchor_injective
+    ((hc D.anchor D.anchor_mem_smoothLocus).trans
+      (D.cycleComponentBorelMooreToLocal_fundamentalClass
+        D.anchor D.anchor_mem_smoothLocus).symm)
 
 /-- The explicit geometric inputs imply existence and uniqueness of the normalized
 Borel--Moore fundamental class. -/
@@ -425,9 +425,8 @@ theorem existsUnique_fundamentalClass
     [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
     (D : RationalCycleComponentGlobalFundamentalClassInputs V x d p hx) :
     ∃! c, IsCycleComponentBorelMooreFundamentalClass ℚ V x (2 * (d - p))
-      D.localOrientation c := by
-  refine ⟨D.fundamentalClass, D.fundamentalClass_isFundamental, ?_⟩
-  exact D.eq_fundamentalClass
+      D.localOrientation c :=
+  ⟨D.fundamentalClass, D.fundamentalClass_isFundamental, D.eq_fundamentalClass⟩
 
 end RationalCycleComponentGlobalFundamentalClassInputs
 
@@ -467,10 +466,9 @@ lemma ofGlobalInputs_fundamentalClass
     {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
     [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
     (D : RationalCycleComponentGlobalFundamentalClassInputs V x d p hx) :
-    (ofGlobalInputs D).fundamentalClass = D.fundamentalClass := by
-  symm
-  apply (ofGlobalInputs D).eq_fundamentalClass
-  exact D.fundamentalClass_isFundamental
+    (ofGlobalInputs D).fundamentalClass = D.fundamentalClass :=
+  ((ofGlobalInputs D).eq_fundamentalClass D.fundamentalClass
+    D.fundamentalClass_isFundamental).symm
 
 /-- The injective-boundary adapter selects the exactness-and-propagation construction. -/
 lemma ofInjectiveBoundaryInputs_fundamentalClass

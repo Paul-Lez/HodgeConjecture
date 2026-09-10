@@ -121,8 +121,8 @@ public abbrev openCoverTupleIntersection {n : SimplexCategoryᵒᵖ}
 @[simp]
 public theorem openCoverCechTuple_mem_support {n : SimplexCategoryᵒᵖ}
     (a : OpenCoverCechTuple (ι := ι) n) (i : Fin (n.unop.len + 1)) :
-    a.1 i ∈ (tupleSupport a.1).1 := by
-  exact Finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩
+    a.1 i ∈ (tupleSupport a.1).1 :=
+  Finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩
 
 /-- Inclusion of a tuple intersection into the cover member selected in slot `i`. -/
 public def openCoverTupleIntersectionToMember {n : SimplexCategoryᵒᵖ}
@@ -523,9 +523,8 @@ public theorem openCoverCechProjection_comp_presentation
     (n : SimplexCategoryᵒᵖ) (j : Fin (n.unop.len + 1)) :
     openCoverCechProjection X U n j ≫ coverSmallPresentation X U =
       WidePullback.base
-        (fun _ : Fin (n.unop.len + 1) ↦ coverSmallPresentation X U) := by
-  exact WidePullback.π_arrow
-    (fun _ : Fin (n.unop.len + 1) ↦ coverSmallPresentation X U) j
+        (fun _ : Fin (n.unop.len + 1) ↦ coverSmallPresentation X U) :=
+  WidePullback.π_arrow (fun _ : Fin (n.unop.len + 1) ↦ coverSmallPresentation X U) j
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The ordered-intersection summands commute with every outer face of the actual Čech nerve. -/
@@ -664,8 +663,7 @@ public theorem openCoverOrderedCechColumnIso_hom_ι (p : ℕ)
         (openCoverOrderedCechIso X U
           (Opposite.op (SimplexCategory.mk p))).hom
         (AddCommGrpCat.of ℤ) = _
-  rw [← Functor.map_comp]
-  rw [openCoverOrderedCechIso_hom, openCoverOrderedCechMap, Sigma.ι_desc]
+  rw [← Functor.map_comp, openCoverOrderedCechIso_hom, openCoverOrderedCechMap, Sigma.ι_desc]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The summand formula for the column isomorphism, stated in the exact
@@ -702,21 +700,17 @@ public theorem openCoverIntersectionChainModels_ι_comp_d (p : ℕ)
           Sigma.ι (fun b : {_b : Fin (p + 1) → ι // TupleClass.all.mem p _b} ↦
             (openCoverIntersectionChainModels X U).model (tupleSupport b.1))
               (openCoverCechTupleFace a i)) := by
-  rw [SupportChainModels.cechComplex_d]
-  rw [SupportChainModels.ι_realize]
-  rw [boundary_single, map_sum]
+  rw [SupportChainModels.cechComplex_d, SupportChainModels.ι_realize, boundary_single, map_sum]
   apply Finset.sum_congr rfl
   intro i _
   rw [show Finsupp.single (Fin.removeNth i a.1) ((-1 : ℤ) ^ i.val * 1) =
-      ((-1 : ℤ) ^ i.val) • Finsupp.single (Fin.removeNth i a.1) 1 by simp]
-  rw [map_zsmul]
+      ((-1 : ℤ) ^ i.val) • Finsupp.single (Fin.removeNth i a.1) 1 by simp, map_zsmul]
   congr 1
   rw [SupportChainModels.realizeAux_single]
   unfold SupportChainModels.faceOrZero
   rw [dif_pos (by
     rw [tupleSupport_subset_iff]
-    exact Set.range_comp_subset_range i.succAbove a.1)]
-  rw [SupportChainModels.ιOrZero_of_mem]
+    exact Set.range_comp_subset_range i.succAbove a.1), SupportChainModels.ιOrZero_of_mem]
   rfl
 
 omit [LinearOrder ι] in
@@ -818,9 +812,9 @@ public theorem openCoverOrderedCechColumnIso_comm_ι (p : ℕ)
           (openCoverIntersectionChainModels X U).model (tupleSupport b.1)) a ≫
         (((openCoverIntersectionChainModels X U).cechComplex TupleClass.all).d (p + 1) p ≫
           (openCoverOrderedCechColumnIso X U p).hom) := by
-  rw [← Category.assoc, openCoverOrderedCechColumnIso_hom_ι_chainMap]
-  rw [integralCechBicomplex_d_eq_sum_faces, Preadditive.comp_sum]
-  rw [openCoverIntersectionChainModels_ι_comp_d, Preadditive.sum_comp]
+  rw [← Category.assoc, openCoverOrderedCechColumnIso_hom_ι_chainMap,
+    integralCechBicomplex_d_eq_sum_faces, Preadditive.comp_sum,
+    openCoverIntersectionChainModels_ι_comp_d, Preadditive.sum_comp]
   apply Finset.sum_congr rfl
   intro i _
   rw [Preadditive.comp_zsmul, Preadditive.zsmul_comp]

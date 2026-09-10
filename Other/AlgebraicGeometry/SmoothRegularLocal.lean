@@ -61,8 +61,8 @@ lemma of_formallyUnramified_of_flat_of_quasiFinite
   rw [(isRegularLocalRing_iff R).mp inferInstance]
   have hheight := Algebra.QuasiFinite.height_eq_height_under
     (R := R) (S := S) (maximalIdeal S)
-  rw [show (maximalIdeal S).under R = maximalIdeal R by
-    exact IsLocalRing.maximalIdeal_comap (algebraMap R S)] at hheight
+  rw [show (maximalIdeal S).under R = maximalIdeal R from
+    IsLocalRing.maximalIdeal_comap (algebraMap R S)] at hheight
   calc
     ringKrullDim R = (↑(maximalIdeal R).height : WithBot ℕ∞) :=
       IsLocalRing.maximalIdeal_height_eq_ringKrullDim.symm
@@ -117,8 +117,8 @@ lemma IsStandardSmooth.isRegularLocalRing_atPrime
 /-- Every localization at a prime of a standard-smooth algebra over a field is regular local. -/
 lemma IsStandardSmoothOfRelativeDimension.isRegularLocalRing_atPrime
     {f : K →+* S} {d : ℕ} (hf : f.IsStandardSmoothOfRelativeDimension d)
-    (P : Ideal S) [P.IsPrime] : IsRegularLocalRing (Localization.AtPrime P) := by
-  exact hf.isStandardSmooth.isRegularLocalRing_atPrime P
+    (P : Ideal S) [P.IsPrime] : IsRegularLocalRing (Localization.AtPrime P) :=
+  hf.isStandardSmooth.isRegularLocalRing_atPrime P
 
 end RingHom
 
@@ -129,8 +129,7 @@ variable {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 /-- Every scheme-theoretic stalk of a smooth complex scheme is a regular local ring. -/
 lemma Smooth.isRegularLocalRing_stalk_complex [Smooth f] (x : X) :
     IsRegularLocalRing (X.presheaf.stalk x) := by
-  obtain ⟨V, hV, hxV, hf⟩ :=
-    Smooth.exists_affine_isStandardSmooth f x
+  obtain ⟨V, hV, hxV, hf⟩ := Smooth.exists_affine_isStandardSmooth f x
   let P : Ideal Γ(X, V) := (hV.primeIdealOf ⟨x, hxV⟩).asIdeal
   have hstandard : (complexRestrictionMap f V).IsStandardSmooth :=
     complexRestrictionMap_isStandardSmooth f hf

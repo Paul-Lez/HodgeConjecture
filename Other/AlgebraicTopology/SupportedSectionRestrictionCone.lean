@@ -91,10 +91,9 @@ def supportRestrictionSectionsIntersectionIso :
 theorem supportRestrictionSectionsIntersectionIso_restriction :
     (supportRestrictionSectionsComplexShortComplex X U V K).g ≫
       (supportRestrictionSectionsIntersectionIso X U V K).hom =
-        sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U) := by
-  apply HomologicalComplex.Hom.ext
-  funext n
-  exact toOpenRestrictionPushforward_intersection X U V (K.X n)
+        sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U) :=
+  HomologicalComplex.Hom.ext (funext fun n ↦
+    toOpenRestrictionPushforward_intersection X U V (K.X n))
 
 /-- The cone of the actual support-sequence arrow is the cone of actual open restriction. -/
 def supportRestrictionSectionsConeIso :

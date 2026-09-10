@@ -71,8 +71,8 @@ lemma sectionCohomologyPresheafSheafificationIso_naturality :
         H.map (e.app K).hom) ≫ H.map f
   calc
     _ = (((((F.mapHomologicalComplex (.up ℤ)).obj K).sc n).mapHomologyIso P).inv ≫
-        H.map ((P.mapHomologicalComplex (.up ℤ)).map g)) ≫ H.map (e.app L).hom := by
-      exact congrArg (fun t => t ≫ H.map (e.app L).hom)
+        H.map ((P.mapHomologicalComplex (.up ℤ)).map g)) ≫ H.map (e.app L).hom :=
+      congrArg (fun t => t ≫ H.map (e.app L).hom)
         (ShortComplex.mapHomologyIso_inv_naturality
           ((shortComplexFunctor _ (.up ℤ) n).map g) P)
     _ = _ := by

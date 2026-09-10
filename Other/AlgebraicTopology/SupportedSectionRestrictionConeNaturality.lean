@@ -90,10 +90,9 @@ lemma supportRestrictionSectionsIntersectionIso_naturality :
       (supportRestrictionSectionsIntersectionIso X U W K).hom =
     (supportRestrictionSectionsIntersectionIso X U V K).hom ≫
       sectionComplexRestriction X (.up ℤ) K
-        (homOfLE (inf_le_inf_right U (leOfHom a))) := by
-  apply HomologicalComplex.Hom.ext
-  funext n
-  exact supportedOutsideIntersectionIso_naturality X U a (K.X n)
+        (homOfLE (inf_le_inf_right U (leOfHom a))) :=
+  HomologicalComplex.Hom.ext
+    (funext fun n ↦ supportedOutsideIntersectionIso_naturality X U a (K.X n))
 
 /-- The actual cone identification is a standard cone map with the specified components. -/
 lemma supportRestrictionSectionsConeIso_hom (V : Opens X) :

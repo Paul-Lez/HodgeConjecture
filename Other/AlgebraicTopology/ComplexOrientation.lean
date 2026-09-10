@@ -114,9 +114,8 @@ def puncturedRealToComplex (p : ℕ) :
         fin_cases l <;> rfl⟩
 
 /-- The restricted inverse coordinate map is continuous. -/
-lemma continuous_puncturedRealToComplex (p : ℕ) : Continuous (puncturedRealToComplex p) := by
-  apply Continuous.subtype_mk
-  exact (complexRealHomeomorph p).symm.continuous.comp continuous_subtype_val
+lemma continuous_puncturedRealToComplex (p : ℕ) : Continuous (puncturedRealToComplex p) :=
+  ((complexRealHomeomorph p).symm.continuous.comp continuous_subtype_val).subtype_mk _
 
 /-- The inverse coordinate homeomorphism as a morphism of punctured pairs. -/
 def standardRealToComplexPair (p : ℕ) :
@@ -143,9 +142,8 @@ def puncturedComplexToReal (p : ℕ) :
         apply Complex.ext <;> simp [complexRealHomeomorph, realCoordinatesToComplex]⟩
 
 /-- The restricted complex-to-real coordinate map is continuous. -/
-lemma continuous_puncturedComplexToReal (p : ℕ) : Continuous (puncturedComplexToReal p) := by
-  apply Continuous.subtype_mk
-  exact (complexRealHomeomorph p).continuous.comp continuous_subtype_val
+lemma continuous_puncturedComplexToReal (p : ℕ) : Continuous (puncturedComplexToReal p) :=
+  ((complexRealHomeomorph p).continuous.comp continuous_subtype_val).subtype_mk _
 
 /-- The coordinate homeomorphism as a morphism from the complex pair to the real pair. -/
 def standardComplexToRealPair (p : ℕ) :
@@ -163,15 +161,13 @@ def standardComplexRealPairIso (p : ℕ) :
   hom_inv_id := by
     apply MorphismProperty.Arrow.Hom.ext
     · ext z
-      apply Subtype.ext
-      exact (complexRealHomeomorph p).left_inv z.1
+      exact Subtype.ext ((complexRealHomeomorph p).left_inv z.1)
     · ext z
       exact (complexRealHomeomorph p).left_inv z
   inv_hom_id := by
     apply MorphismProperty.Arrow.Hom.ext
     · ext x
-      apply Subtype.ext
-      exact (complexRealHomeomorph p).right_inv x.1
+      exact Subtype.ext ((complexRealHomeomorph p).right_inv x.1)
     · ext x
       exact (complexRealHomeomorph p).right_inv x
 

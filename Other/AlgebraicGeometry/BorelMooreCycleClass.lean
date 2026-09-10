@@ -205,12 +205,8 @@ theorem complexOrientedAlexanderPoincare_unique
       RationalSingularCycleComponentCohomologyWithSupport
         V.toSmoothProjectiveComplexVariety x (2 * p))
     (he : IsComplexOrientedAlexanderPoincare D T e)
-    (he' : IsComplexOrientedAlexanderPoincare D T e') : e = e' := by
-  apply LinearEquiv.ext
-  intro c
-  apply T.local_ext
-  intro z hz
-  exact (he c z hz).trans (he' c z hz).symm
+    (he' : IsComplexOrientedAlexanderPoincare D T e') : e = e' :=
+  LinearEquiv.ext fun c ↦ T.local_ext _ _ fun z hz ↦ (he c z hz).trans (he' c z hz).symm
 
 /-- Conditional normalized component cycle-class data.
 
@@ -261,8 +257,8 @@ theorem alexanderPoincare_fundamentalClass_local
       V.over x) :
     D.localThomCap.capWithAmbientComplexOrientation z hz D.supportedFundamentalClass =
       cycleComponentComplexLocalOrientation V.toSmoothProjectiveComplexVariety x
-        V.dimension p hx z hz := by
-  exact (D.comparison_isComplexOriented D.fundamentalClass z hz).trans
+        V.dimension p hx z hz :=
+  (D.comparison_isComplexOriented D.fundamentalClass z hz).trans
     (D.borelMoore.toLocal_fundamentalClass z hz)
 
 /-- Local Thom-cap normalization uniquely determines the supported fundamental class. -/
@@ -275,10 +271,9 @@ theorem supportedFundamentalClass_unique
       D.localThomCap.capWithAmbientComplexOrientation z hz α =
         cycleComponentComplexLocalOrientation V.toSmoothProjectiveComplexVariety x
           V.dimension p hx z hz) :
-    α = D.supportedFundamentalClass := by
-  apply D.localThomCap.local_ext
-  intro z hz
-  exact (hα z hz).trans (D.alexanderPoincare_fundamentalClass_local z hz).symm
+    α = D.supportedFundamentalClass :=
+  D.localThomCap.local_ext _ _ fun z hz ↦
+    (hα z hz).trans (D.alexanderPoincare_fundamentalClass_local z hz).symm
 
 /-- Forgetting the conditional wrapper recovers only auxiliary comparison data. -/
 def toAuxiliaryComparisonData
@@ -390,9 +385,7 @@ lemma maximalCodimensionSupportedGenerator_ne_zero
     rw [hzero, LinearMap.zero_apply] at hone
     exact zero_ne_one hone
   intro hzero
-  apply hsource
-  apply e.injective
-  simpa using hzero
+  exact hsource (e.injective (by simpa using hzero))
 
 /-- The explicitly constructed Borel--Moore fundamental class of a maximal-codimension
 component. -/
@@ -484,8 +477,8 @@ ambient point coclass. -/
     (hx : coheight x = V.dimension) :
     maximalCodimensionAlexanderDuality V x hx
         (maximalCodimensionBorelMooreFundamentalClass V x hx) =
-      maximalCodimensionSupportedGenerator V x hx := by
-  exact linearEquivOfNormalizedGenerators_apply_generator _ _ _ _ _ _
+      maximalCodimensionSupportedGenerator V x hx :=
+  linearEquivOfNormalizedGenerators_apply_generator _ _ _ _ _ _
 
 /-- The point-case duality equivalence is uniquely determined by its orientation
 normalization. -/
@@ -498,8 +491,8 @@ lemma maximalCodimensionAlexanderDuality_unique
           V.toSmoothProjectiveComplexVariety x (2 * V.dimension))
     (he : e (maximalCodimensionBorelMooreFundamentalClass V x hx) =
       maximalCodimensionSupportedGenerator V x hx) :
-    e = maximalCodimensionAlexanderDuality V x hx := by
-  exact linearEquivOfNormalizedGenerators_unique
+    e = maximalCodimensionAlexanderDuality V x hx :=
+  linearEquivOfNormalizedGenerators_unique
     (maximalCodimensionBorelMooreFundamentalClass V x hx)
     (maximalCodimensionBorelMooreFundamentalClass_ne_zero V x hx)
     (span_maximalCodimensionBorelMooreFundamentalClass_eq_top V x hx)
@@ -614,8 +607,8 @@ coclass, not merely a nonzero rational multiple of it. -/
     (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
     (hx : coheight x = V.dimension) :
     (maximalCodimensionComplexOrientedComponentClassData V x hx).supportedFundamentalClass =
-      maximalCodimensionSupportedGenerator V x hx := by
-  exact maximalCodimensionAlexanderDuality_fundamentalClass V x hx
+      maximalCodimensionSupportedGenerator V x hx :=
+  maximalCodimensionAlexanderDuality_fundamentalClass V x hx
 
 /-- The complete Borel--Moore and point-duality package in maximal codimension. -/
 def auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
@@ -632,8 +625,8 @@ def auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
     (hx : coheight x = V.dimension) :
     AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliarySingularSupportedClass
         (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V x hx) =
-      maximalCodimensionSupportedGenerator V x hx := by
-  exact maximalCodimensionAlexanderDuality_fundamentalClass V x hx
+      maximalCodimensionSupportedGenerator V x hx :=
+  maximalCodimensionAlexanderDuality_fundamentalClass V x hx
 
 /-- The fully constructed ordinary class of a maximal-codimension irreducible component. -/
 def maximalCodimensionComponentClass
@@ -831,8 +824,8 @@ def auxiliaryCycleClass
     (C : AuxiliaryRationalBorelMooreCycleClassDescent V p)
     (x : V.scheme) (hx : coheight x = p) :
     C.auxiliaryCycleClass (rationalComponentChowClass
-      V.over p x hx) = C.auxiliaryComponentClass x hx := by
-  exact ChowGroup.rationalCycleClassOfComponents_component
+      V.over p x hx) = C.auxiliaryComponentClass x hx :=
+  ChowGroup.rationalCycleClassOfComponents_component
     C.auxiliaryComponentClass C.principalDivisor_class x hx
 
 /-- The maximal-codimension rational Chow cycle-class map, with every local, Borel--Moore, and
@@ -870,8 +863,8 @@ Borel--Moore point class. -/
     (x : V.scheme) (hx : coheight x = V.dimension) :
     maximalCodimensionCycleClass V hprincipal
         (rationalComponentChowClass V.over V.dimension x hx) =
-      maximalCodimensionComponentClass V x hx := by
-  exact (ofMaximalCodimension V hprincipal).auxiliaryCycleClass_component x hx
+      maximalCodimensionComponentClass V x hx :=
+  (ofMaximalCodimension V hprincipal).auxiliaryCycleClass_component x hx
 
 /-- The carrierwise construction has the same normalized component formula. -/
 @[simp] lemma maximalCodimensionCycleClassOfCarrierDivisors_component
@@ -888,19 +881,17 @@ Borel--Moore point class. -/
     (x : V.scheme) (hx : coheight x = V.dimension) :
     maximalCodimensionCycleClassOfCarrierDivisors V carrierClass hpush hdivisor
         (rationalComponentChowClass V.over V.dimension x hx) =
-      maximalCodimensionComponentClass V x hx := by
-  exact (ofMaximalCodimensionOfCarrierDivisors V carrierClass hpush hdivisor).auxiliaryCycleClass_component
-    x hx
+      maximalCodimensionComponentClass V x hx :=
+  (ofMaximalCodimensionOfCarrierDivisors V carrierClass hpush
+    hdivisor).auxiliaryCycleClass_component x hx
 
 /-- The auxiliary component class is in the range of the auxiliary descended map. -/
 lemma auxiliaryOrdinaryClass_mem_range
     {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
     (C : AuxiliaryRationalBorelMooreCycleClassDescent V p)
     (x : V.scheme) (hx : coheight x = p) :
-    (C.component x hx).auxiliaryOrdinaryClass ∈ LinearMap.range C.auxiliaryCycleClass := by
-  refine ⟨rationalComponentChowClass
-    V.over p x hx, ?_⟩
-  exact C.auxiliaryCycleClass_component x hx
+    (C.component x hx).auxiliaryOrdinaryClass ∈ LinearMap.range C.auxiliaryCycleClass :=
+  ⟨rationalComponentChowClass V.over p x hx, C.auxiliaryCycleClass_component x hx⟩
 
 end AuxiliaryRationalBorelMooreCycleClassDescent
 
@@ -949,8 +940,8 @@ def cycleClass
     (C : ComplexOrientedRationalBorelMooreCycleClassConstruction V p)
     (x : V.scheme) (hx : coheight x = p) :
     C.cycleClass (rationalComponentChowClass
-      V.over p x hx) = C.componentClass x hx := by
-  exact ChowGroup.rationalCycleClassOfComponents_component
+      V.over p x hx) = C.componentClass x hx :=
+  ChowGroup.rationalCycleClassOfComponents_component
     C.componentClass C.principalDivisor_class x hx
 
 /-- Every normalized component class lies in the range of the descended Chow map. -/
@@ -958,9 +949,8 @@ theorem componentClass_mem_range
     {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
     (C : ComplexOrientedRationalBorelMooreCycleClassConstruction V p)
     (x : V.scheme) (hx : coheight x = p) :
-    C.componentClass x hx ∈ LinearMap.range C.cycleClass := by
-  exact ⟨rationalComponentChowClass V.over p x hx,
-    C.cycleClass_component x hx⟩
+    C.componentClass x hx ∈ LinearMap.range C.cycleClass :=
+  ⟨rationalComponentChowClass V.over p x hx, C.cycleClass_component x hx⟩
 
 end ComplexOrientedRationalBorelMooreCycleClassConstruction
 

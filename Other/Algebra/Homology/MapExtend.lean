@@ -48,9 +48,8 @@ lemma mapExtendCanonicalXIso_hom_d (a b : Option I) :
 def mapExtendCanonicalIso :
     (F.mapHomologicalComplex c').obj (K.extend e) ≅
       ((F.mapHomologicalComplex c).obj K).extend e :=
-  Hom.isoOfComponents (fun j => mapExtendCanonicalXIso F K (e.r j)) (by
-    intro j k hjk
-    exact mapExtendCanonicalXIso_hom_d F K (e.r j) (e.r k))
+  Hom.isoOfComponents (fun j => mapExtendCanonicalXIso F K (e.r j))
+    (fun j k _ => mapExtendCanonicalXIso_hom_d F K (e.r j) (e.r k))
 
 /-- In an old degree the comparison is the identity through the canonical extension
 identifications, including any grading transports. -/

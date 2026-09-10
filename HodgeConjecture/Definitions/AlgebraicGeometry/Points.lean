@@ -52,9 +52,6 @@ invertibility.
 Complex points are the case `K = ℂ`. Analytification is then packaged as a functor from schemes
 over `Spec ℂ` to topological spaces, so that Betti (co)homology of a complex variety is Mathlib's
 singular (co)homology of the resulting space.
-
-`IntegralProjectiveComplexVariety` packages an integral projective scheme over `Spec ℂ`.
-Its `over` object supplies the bundled scheme used by the point and analytification constructions.
 -/
 
 @[expose] public section
@@ -357,9 +354,8 @@ lemma analyticTopology_eq_generateFrom :
     obtain ⟨O', hO', rfl⟩ :=
       (CommRingCat.HomTopology.isEmbedding_hom ↧R Γ(X.left, U)).isInducing.isOpen_iff.mp hO
     have hzO : ⇑(evaluationHom U ⟨z, hzU⟩).hom ∈ O' := by
-      have : (⟨z, hzU⟩ : OverOpen (X := X) U) ∈ Subtype.val ⁻¹' W := hz
-      rw [← hWO] at this
-      exact this
+      have h : (⟨z, hzU⟩ : OverOpen (X := X) U) ∈ Subtype.val ⁻¹' W := hz
+      rwa [← hWO] at h
     obtain ⟨I, u, hu, hIO⟩ := isOpen_pi_iff.mp hO' _ hzO
     refine ⟨overOpen U ∩ ⋂ t ∈ (I : Set Γ(X.left, U)), (overOpen U ∩ evaluate U t ⁻¹' u t),
       ?_, ?_, ?_⟩
@@ -370,16 +366,14 @@ lemma analyticTopology_eq_generateFrom :
           exact (Set.mem_iInter₂.1 hyu t ht).2
       have hmem : (⟨y, hyU⟩ : OverOpen (X := X) U) ∈
           evaluationHom U ⁻¹' ((fun f : Γ(X.left, U) ⟶ ↧R ↦ ⇑f.hom) ⁻¹' O') := hy
-      rw [hWO] at hmem
-      exact hmem
+      rwa [hWO] at hmem
     · exact @IsOpen.inter _ (.generateFrom _) _ _
         (TopologicalSpace.isOpen_generateFrom_of_mem ⟨U, 0, Set.univ, isOpen_univ, by simp⟩)
         (@Set.Finite.isOpen_biInter _ _ (.generateFrom _) _ _ I.finite_toSet fun t ht ↦
           TopologicalSpace.isOpen_generateFrom_of_mem ⟨U, t, u t, (hu t ht).1, rfl⟩)
     · refine ⟨hzU, Set.mem_iInter₂.2 fun t ht ↦ ⟨hzU, ?_⟩⟩
       have h2 := (hu t ht).2
-      rw [evaluationHom_hom_apply] at h2
-      exact h2
+      rwa [evaluationHom_hom_apply] at h2
 
 /-- Continuity of a map into the `R`-points is tested on the defining subbasis. -/
 lemma continuous_iff_analyticSubbasis {Z : Type*} [TopologicalSpace Z]
@@ -396,13 +390,11 @@ lemma continuous_map {Y : Over (Spec ↧R)} (f : X ⟶ Y) :
   rw [continuous_iff_analyticSubbasis]
   rintro W ⟨U, s, V, hV, rfl⟩
   rw [Set.preimage_inter, Set.preimage_preimage]
-  have hover : map f ⁻¹' overOpen U = overOpen (f.left ⁻¹ᵁ U) := by
-    ext z
-    exact mem_overOpen_map_iff f z U
+  have hover : map f ⁻¹' overOpen U = overOpen (f.left ⁻¹ᵁ U) :=
+    Set.ext fun z ↦ mem_overOpen_map_iff f z U
   have heval : (fun z ↦ evaluate U s (map f z)) =
-      evaluate (f.left ⁻¹ᵁ U) (f.left.app U s) := by
-    funext z
-    exact evaluate_map f U s z
+      evaluate (f.left ⁻¹ᵁ U) (f.left.app U s) :=
+    funext fun z ↦ evaluate_map f U s z
   rw [hover, heval]
   exact isOpen_overOpen_inter_preimage _ _ _ hV
 
@@ -519,51 +511,10 @@ noncomputable def complexAnalytification :
     ext z
     simp [Point.continuousMap, Point.map, Category.assoc]
 
-/-- An integral projective algebraic variety over `ℂ`. Projectivity is witnessed by an explicit
-closed embedding into a finite-dimensional projective space. -/
-structure IntegralProjectiveComplexVariety where
-  /-- The underlying scheme. -/
-  scheme : Scheme
-  [isIntegral : IsIntegral scheme]
-  /-- The structure morphism to `Spec ℂ`. -/
-  structureMap : scheme ⟶ Spec ↧ℂ
-  [projective : IsProjective structureMap]
-
 /-- A projective complex scheme is Noetherian. -/
 theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
     [IsProjective X.hom] : IsNoetherian X.left where
   toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian X.hom
   toCompactSpace := QuasiCompact.compactSpace_of_compactSpace X.hom
-
-namespace IntegralProjectiveComplexVariety
-
-/-- The integral structure carried by an integral projective complex variety. -/
-instance (V : IntegralProjectiveComplexVariety) : IsIntegral V.scheme := V.isIntegral
-
-/-- The projective presentation carried by an integral projective complex variety. -/
-instance (V : IntegralProjectiveComplexVariety) :
-    IsProjective V.structureMap := V.projective
-
-/-- An integral projective complex variety is Noetherian. -/
-noncomputable instance (V : IntegralProjectiveComplexVariety) : IsNoetherian V.scheme :=
-  @isNoetherian_of_isProjective (Over.mk V.structureMap) V.projective
-
-/-- The variety regarded as the corresponding object over `Spec ℂ`. -/
-noncomputable abbrev over (V : IntegralProjectiveComplexVariety) : Over (Spec ↧ℂ) :=
-  Over.mk V.structureMap
-
-/-- The complex points of an integral projective complex variety. -/
-abbrev analyticPoint (V : IntegralProjectiveComplexVariety) :=
-  ComplexPoint V.over
-
-noncomputable instance (V : IntegralProjectiveComplexVariety) :
-    TopologicalSpace V.analyticPoint :=
-  Point.analyticTopology
-
-/-- The analytification as a topological space. -/
-noncomputable def analytification (V : IntegralProjectiveComplexVariety) : TopCat :=
-  complexAnalytification.obj V.over
-
-end IntegralProjectiveComplexVariety
 
 end AlgebraicGeometry
