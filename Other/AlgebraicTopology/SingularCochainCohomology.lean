@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import Other.Algebra.Homology.LinearDual
 public import Other.AlgebraicTopology.SingularCohomology
 public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 
@@ -36,15 +37,7 @@ universe u
 
 namespace CategoryTheory.ShortComplex
 
-variable {R : Type u} [Field R]
-
-/-- The reversed algebraic-dual short complex. -/
-def linearDual (S : ShortComplex (ModuleCat.{u} R)) :
-    ShortComplex (ModuleCat.{u} R) :=
-  ShortComplex.moduleCatMk S.g.hom.dualMap S.f.hom.dualMap (by
-    ext φ x
-    change φ (S.g.hom (S.f.hom x)) = 0
-    rw [S.moduleCat_zero_apply, map_zero])
+variable {R : Type u} [CommRing R]
 
 /-- A dual cycle evaluates on a cycle of the original short complex and descends to its
 homology. -/
@@ -92,6 +85,12 @@ lemma dualHomologyComparisonExplicit_mk_apply_mk
     S.dualHomologyComparisonExplicit (Submodule.Quotient.mk φ)
         (Submodule.Quotient.mk z) = φ.1 z.1 :=
   rfl
+
+end CategoryTheory.ShortComplex
+
+namespace CategoryTheory.ShortComplex
+
+variable {R : Type u} [Field R]
 
 lemma dualHomologyComparisonExplicit_surjective
     (S : ShortComplex (ModuleCat.{u} R)) :
@@ -156,64 +155,6 @@ def linearDualHomologyEquiv (S : ShortComplex (ModuleCat.{u} R)) :
 
 end CategoryTheory.ShortComplex
 
-namespace HomologicalComplex
-
-variable {R : Type u} [Field R]
-
-/-- The algebraic-dual cochain complex of a nonnegatively graded chain complex of vector
-spaces. -/
-def linearDualCochainComplex (K : ChainComplex (ModuleCat.{u} R) ℕ) :
-    CochainComplex (ModuleCat.{u} R) ℕ :=
-  CochainComplex.of
-    (fun n ↦ ModuleCat.of R (Module.Dual R (K.X n)))
-    (fun n ↦ ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap)
-    (fun n ↦ by
-      ext φ c
-      change φ ((K.d (n + 1) n).hom ((K.d (n + 2) (n + 1)).hom c)) = 0
-      rw [show (K.d (n + 1) n).hom ((K.d (n + 2) (n + 1)).hom c) = 0 from
-        ConcreteCategory.congr_hom (K.d_comp_d (n + 2) (n + 1) n) c, map_zero])
-
-@[simp]
-lemma linearDualCochainComplex_d (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
-    (K.linearDualCochainComplex).d n (n + 1) =
-      ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap := by
-  simp [linearDualCochainComplex]
-
-set_option backward.isDefEq.respectTransparency false in
-/-- The degree-`n` short complex of a linear-dual cochain complex is the reversed dual of the
-degree-`n` short complex of the original chain complex. -/
-def linearDualCochainComplexScIso (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
-    K.linearDualCochainComplex.sc n ≅ (K.sc n).linearDual := by
-  let D := K.linearDualCochainComplex
-  have hprev : (ComplexShape.up ℕ).prev n = (ComplexShape.down ℕ).next n := by
-    cases n <;> simp
-  have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by simp
-  refine D.isoSc' ((ComplexShape.down ℕ).next n) n
-      ((ComplexShape.down ℕ).prev n) hprev hnext ≪≫
-    ShortComplex.isoMk (Iso.refl _) (Iso.refl _) (Iso.refl _) ?_ ?_
-  · simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
-      HomologicalComplex.shortComplexFunctor'_obj_f]
-    dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk, HomologicalComplex.sc,
-      HomologicalComplex.shortComplexFunctor, HomologicalComplex.shortComplexFunctor']
-    cases n with
-    | zero =>
-        rw [ChainComplex.next_nat_zero]
-        change ModuleCat.ofHom (K.d 0 0).hom.dualMap = D.d 0 0
-        rw [K.shape 0 0 (by simp), D.shape 0 0 (by simp)]
-        ext φ x
-        exact map_zero φ
-    | succ n =>
-        rw [ChainComplex.next_nat_succ]
-        exact (linearDualCochainComplex_d K n).symm
-  · simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
-      HomologicalComplex.shortComplexFunctor'_obj_g]
-    dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk, HomologicalComplex.sc,
-      HomologicalComplex.shortComplexFunctor, HomologicalComplex.shortComplexFunctor']
-    rw [ChainComplex.prev]
-    exact (linearDualCochainComplex_d K n).symm
-
-end HomologicalComplex
-
 namespace HomologicalComplex.HomotopyEquiv
 
 variable {R : Type u} [Field R]
@@ -231,7 +172,7 @@ end HomologicalComplex.HomotopyEquiv
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Ordinary singular cochain cohomology in degree `n`, expressed as the homology of the
 algebraic-dual short complex centered on the singular chain group in degree `n`. -/
@@ -239,6 +180,12 @@ abbrev CochainCohomology (n : ℕ) : ModuleCat.{u} R :=
   let K :=
     ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X
   (K.sc n).linearDual.homology
+
+end AlgebraicTopology.Singular
+
+namespace AlgebraicTopology.Singular
+
+variable (R : Type u) [Field R] (X : TopCat.{u})
 
 /-- The universal-coefficient equivalence from ordinary singular cochain cohomology to the
 linear dual of singular homology. -/

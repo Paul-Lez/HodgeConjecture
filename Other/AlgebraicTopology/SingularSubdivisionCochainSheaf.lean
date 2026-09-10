@@ -15,9 +15,12 @@ limitations under the License.
 -/
 module
 
+public import Other.Algebra.Homology.LinearDual
 public import Other.AlgebraicTopology.FlasqueAcyclic
 public import Other.AlgebraicTopology.SingularCochainCohomology
 public import Other.AlgebraicTopology.SingularCochainSheafFlasque
+public import Other.AlgebraicTopology.SimplicialCochainExtension
+public import Other.AlgebraicTopology.SingularExcisionScalar
 public import Other.AlgebraicTopology.SingularExcisionField
 public import Mathlib.Geometry.Manifold.ChartedSpace
 public import Mathlib.Topology.Compactness.Paracompact
@@ -67,116 +70,6 @@ theorem opens_paracompactSpace_of_compact_chartedSpace
 end TopologicalSpace
 
 namespace HomologicalComplex
-
-variable {R : Type u} [Field R]
-variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
-
-/-- Algebraic duality sends a map of nonnegative chain complexes contravariantly to a map of
-cochain complexes. -/
-def linearDualMap (f : K ⟶ L) :
-    L.linearDualCochainComplex ⟶ K.linearDualCochainComplex where
-  f n := ModuleCat.ofHom (f.f n).hom.dualMap
-  comm' i j hij := by
-    obtain rfl := hij
-    rw [HomologicalComplex.linearDualCochainComplex_d,
-      HomologicalComplex.linearDualCochainComplex_d]
-    ext φ
-    change Module.Dual R (L.X i) at φ
-    apply LinearMap.ext
-    intro x
-    change K.X (i + 1) at x
-    change φ ((f.f i).hom ((K.d (i + 1) i).hom x)) =
-      φ ((L.d (i + 1) i).hom ((f.f (i + 1)).hom x))
-    exact congrArg φ (ConcreteCategory.congr_hom (f.comm (i + 1) i) x).symm
-
-@[simp]
-lemma linearDualMap_id (K : ChainComplex (ModuleCat.{u} R) ℕ) :
-    linearDualMap (𝟙 K) = 𝟙 K.linearDualCochainComplex :=
-  rfl
-
-@[simp]
-lemma linearDualMap_comp (f : K ⟶ L) (g : L ⟶ M) :
-    linearDualMap (f ≫ g) = linearDualMap g ≫ linearDualMap f :=
-  rfl
-
-/-- Algebraic duality sends an isomorphism of chain complexes to an isomorphism of cochain
-complexes, reversing its direction. -/
-def linearDualIso (e : K ≅ L) :
-    L.linearDualCochainComplex ≅ K.linearDualCochainComplex where
-  hom := linearDualMap e.hom
-  inv := linearDualMap e.inv
-  hom_inv_id := by rw [← linearDualMap_comp, e.inv_hom_id, linearDualMap_id]
-  inv_hom_id := by rw [← linearDualMap_comp, e.hom_inv_id, linearDualMap_id]
-
-set_option backward.isDefEq.respectTransparency false in
-/-- Algebraic duality sends a chain homotopy contravariantly to a cochain homotopy. -/
-def linearDualHomotopy {f g : K ⟶ L} (h : Homotopy f g) :
-    Homotopy (linearDualMap f) (linearDualMap g) where
-  hom i j := ModuleCat.ofHom (h.hom j i).hom.dualMap
-  zero i j hij := by
-    change ¬(ComplexShape.down ℕ).Rel i j at hij
-    rw [h.zero j i hij]
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro φ
-    apply LinearMap.ext
-    intro x
-    simp
-  comm i := by
-    cases i with
-    | zero =>
-        rw [Homotopy.dNext_cochainComplex, Homotopy.prevD_zero_cochainComplex,
-          HomologicalComplex.linearDualCochainComplex_d]
-        dsimp only [HomologicalComplex.linearDualCochainComplex] at ⊢
-        dsimp only [linearDualMap]
-        apply ModuleCat.hom_ext
-        apply LinearMap.ext
-        intro φ
-        change Module.Dual R (L.X 0) at φ
-        apply LinearMap.ext
-        intro x
-        change K.X 0 at x
-        have hi := ConcreteCategory.congr_hom (h.comm 0) x
-        rw [Homotopy.dNext_zero_chainComplex,
-          Homotopy.prevD_chainComplex] at hi
-        simp only [ModuleCat.hom_ofHom, ModuleCat.hom_comp, ModuleCat.hom_add,
-          ModuleCat.hom_zero, LinearMap.comp_apply, LinearMap.add_apply,
-          LinearMap.zero_apply, LinearMap.dualMap_apply] at ⊢
-        simpa [add_assoc] using congrArg φ hi
-    | succ n =>
-        rw [Homotopy.dNext_cochainComplex, Homotopy.prevD_succ_cochainComplex,
-          HomologicalComplex.linearDualCochainComplex_d,
-          HomologicalComplex.linearDualCochainComplex_d]
-        dsimp only [HomologicalComplex.linearDualCochainComplex] at ⊢
-        dsimp only [linearDualMap]
-        apply ModuleCat.hom_ext
-        apply LinearMap.ext
-        intro φ
-        change Module.Dual R (L.X (n + 1)) at φ
-        apply LinearMap.ext
-        intro x
-        change K.X (n + 1) at x
-        have hi := ConcreteCategory.congr_hom (h.comm (n + 1)) x
-        rw [Homotopy.dNext_succ_chainComplex,
-          Homotopy.prevD_chainComplex] at hi
-        simp only [ModuleCat.hom_ofHom, ModuleCat.hom_comp, ModuleCat.hom_add,
-          LinearMap.comp_apply, LinearMap.add_apply, LinearMap.dualMap_apply] at ⊢
-        simpa [add_assoc, add_comm, add_left_comm] using congrArg φ hi
-
-/-- Algebraic duality sends a chain-homotopy equivalence contravariantly to a cochain-homotopy
-equivalence. -/
-def linearDualHomotopyEquiv (e : HomotopyEquiv K L) :
-    HomotopyEquiv L.linearDualCochainComplex K.linearDualCochainComplex where
-  hom := linearDualMap e.hom
-  inv := linearDualMap e.inv
-  homotopyHomInvId :=
-    (Homotopy.ofEq (linearDualMap_comp e.inv e.hom).symm).trans <|
-      (linearDualHomotopy e.homotopyInvHomId).trans <|
-        Homotopy.ofEq (linearDualMap_id L)
-  homotopyInvHomId :=
-    (Homotopy.ofEq (linearDualMap_comp e.hom e.inv).symm).trans <|
-      (linearDualHomotopy e.homotopyHomInvId).trans <|
-        Homotopy.ofEq (linearDualMap_id K)
 
 variable {C : Type*} [Category C] [Abelian C]
 variable {ι : Type*} {c : ComplexShape ι} {A B : HomologicalComplex C c}
@@ -273,7 +166,7 @@ lemma openSimplexMap_openSimplexLift {X : TopCat.{u}} {U V : Opens X} (i : V ⟶
     (Opposite.op (SimplexCategory.mk n)) |>.injective
   rfl
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The ordinary singular chain complex of `X` with coefficients in `R`. -/
 abbrev SingularChainComplex : ChainComplex (ModuleCat.{u} R) ℕ :=
@@ -323,8 +216,13 @@ cochains on the top open subset. -/
 noncomputable def cochainCohomologyEquivTopOpen (n : ℕ) :
     CochainCohomology R X n ≃ₗ[R]
       ((TopOpenSingularChainComplex R X).sc n).linearDual.homology :=
-  HomologicalComplex.HomotopyEquiv.linearDualCohomologyEquiv
-    (HomotopyEquiv.ofIso (topOpenSingularChainComplexIso R X)) n
+  (ShortComplex.homologyMapIso
+      ((SingularChainComplex R X).linearDualCochainComplexScIso n)).symm.toLinearEquiv.trans <|
+    (HomologicalComplex.homologyMapIso
+      (HomologicalComplex.linearDualIso (topOpenSingularChainComplexIso R X))
+        n).toLinearEquiv.trans <|
+      (ShortComplex.homologyMapIso
+        ((TopOpenSingularChainComplex R X).linearDualCochainComplexScIso n)).toLinearEquiv
 
 /-- The singular-cochain presheaf complex evaluated on the top open subset. -/
 def globalRawSingularCochainComplex : CochainComplex AddCommGrpCat ℕ :=
@@ -660,9 +558,15 @@ lemma exists_open_eq_of_plus_matchingFamily
   simpa only [δ, Functor.map_comp, op_comp,
     ConcreteCategory.comp_apply] using hz
 
-section RationalCover
+/-- The map from top-open cochains to global first-plus cochains is an epimorphism of complexes.
+-/
+instance topOpenToGlobalSingularCochainPlusComplex_epi :
+    Epi (topOpenToGlobalSingularCochainPlusComplex R X) :=
+  HomologicalComplex.epi_of_epi_f _ fun _ ↦ inferInstance
 
-variable {κ : Type} (Y : TopCat.{0}) (U : κ → Set Y)
+section ScalarCover
+
+variable (R : Type) [CommRing R] {κ : Type} (Y : TopCat.{0}) (U : κ → Set Y)
 
 /-- The family of open subsets appearing as the domains of the arrows in a covering sieve of the
 top open subset. -/
@@ -686,46 +590,46 @@ lemma coveringSieveOpenFamily_iUnion
   exact Set.mem_iUnion.mpr ⟨GrothendieckTopology.Cover.Arrow.mk V f hf, hy⟩
 
 /-- Restriction of rational singular cochains to chains subordinate to a family of subsets. -/
-def rationalCochainRestrictionToCoverSmall :
+def scalarCochainRestrictionToCoverSmall :
     ((TopCat.toSSet.obj Y).chainComplex
-        (ModuleCat.of ℚ ℚ)).linearDualCochainComplex ⟶
-      (CoverSmallRationalSingularChainComplex Y U).linearDualCochainComplex :=
-  HomologicalComplex.linearDualMap (coverSmallRationalSingularChainInclusion Y U)
+        (ModuleCat.of R R)).linearDualCochainComplex ⟶
+      (CoverSmallScalarSingularChainComplex R Y U).linearDualCochainComplex :=
+  HomologicalComplex.linearDualMap (coverSmallScalarSingularChainInclusion R Y U)
 
 /-- The chain map from one member of a family into the cover-small rational chains. -/
-def coverMemberToSmallRationalSingularChains (j : κ) :
-    (TopCat.toSSet.obj (TopCat.of (U j))).chainComplex (ModuleCat.of ℚ ℚ) ⟶
-      CoverSmallRationalSingularChainComplex Y U :=
-  SSet.chainComplexMap (coverMemberToSmallSingularSet Y U j) (ModuleCat.of ℚ ℚ)
+def coverMemberToSmallScalarSingularChains (j : κ) :
+    (TopCat.toSSet.obj (TopCat.of (U j))).chainComplex (ModuleCat.of R R) ⟶
+      CoverSmallScalarSingularChainComplex R Y U :=
+  SSet.chainComplexMap (coverMemberToSmallSingularSet Y U j) (ModuleCat.of R R)
 
 @[reassoc]
-lemma coverMemberToSmallRationalSingularChains_comp_inclusion (j : κ) :
-    coverMemberToSmallRationalSingularChains Y U j ≫
-        coverSmallRationalSingularChainInclusion Y U =
+lemma coverMemberToSmallScalarSingularChains_comp_inclusion (j : κ) :
+    coverMemberToSmallScalarSingularChains R Y U j ≫
+        coverSmallScalarSingularChainInclusion R Y U =
       SSet.chainComplexMap
         (TopCat.toSSet.map (topologicalSubsetInclusion Y (U j)))
-        (ModuleCat.of ℚ ℚ) := by
-  change ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj
-      (ModuleCat.of ℚ ℚ)).map (coverMemberToSmallSingularSet Y U j) ≫
-    ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj
-      (ModuleCat.of ℚ ℚ)).map (coverSmallSingularSubcomplex Y U).ι = _
+        (ModuleCat.of R R) := by
+  change ((SSet.chainComplexFunctor (ModuleCat R)).obj
+      (ModuleCat.of R R)).map (coverMemberToSmallSingularSet Y U j) ≫
+    ((SSet.chainComplexFunctor (ModuleCat R)).obj
+      (ModuleCat.of R R)).map (coverSmallSingularSubcomplex Y U).ι = _
   rw [← Functor.map_comp, coverMemberToSmallSingularSet_comp_inclusion]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Vanishing on every member of a covering sieve implies vanishing on all chains subordinate
 to the associated family of open subsets. -/
-lemma rationalCochainRestrictionToCoveringSieve_eq_zero
+lemma scalarCochainRestrictionToCoveringSieve_eq_zero
     (S : (Opens.grothendieckTopology Y).Cover (⊤ : Opens Y)) (n : ℕ)
     (φ : ((TopCat.toSSet.obj Y).chainComplex
-      (ModuleCat.of ℚ ℚ)).linearDualCochainComplex.X n)
+      (ModuleCat.of R R)).linearDualCochainComplex.X n)
     (hφ : ∀ I : S.Arrow,
-      (singularCochainPresheaf ℚ Y n).map I.f.op
-        ((singularCochainComplexIsoTopOpen ℚ Y).hom.f n φ) = 0) :
-    (rationalCochainRestrictionToCoverSmall Y
+      (singularCochainPresheaf R Y n).map I.f.op
+        ((singularCochainComplexIsoTopOpen R Y).hom.f n φ) = 0) :
+    (scalarCochainRestrictionToCoverSmall R Y
       (coveringSieveOpenFamily Y S)).f n φ = 0 := by
-  change Module.Dual ℚ
-    (((TopCat.toSSet.obj Y).chainComplex (ModuleCat.of ℚ ℚ)).X n) at φ
-  change ((coverSmallRationalSingularChainInclusion Y
+  change Module.Dual R
+    (((TopCat.toSSet.obj Y).chainComplex (ModuleCat.of R R)).X n) at φ
+  change ((coverSmallScalarSingularChainInclusion R Y
     (coveringSieveOpenFamily Y S)).f n).hom.dualMap φ = 0
   apply_fun ModuleCat.ofHom
   apply SSet.chainComplex_hom_ext
@@ -737,25 +641,25 @@ lemma rationalCochainRestrictionToCoveringSieve_eq_zero
   apply LinearMap.ext
   intro a
   have hI := congrArg
-    (fun ψ : OpenCochains ℚ Y (.op I.Y) n ↦ ψ
+    (fun ψ : OpenCochains R Y (.op I.Y) n ↦ ψ
       (((TopCat.toSSet.obj (TopCat.of (coveringSieveOpenFamily Y S I))).ιChainComplex
-        (R := ModuleCat.of ℚ ℚ) y).hom a))
+        (R := ModuleCat.of R R) y).hom a))
     (hφ I)
   dsimp only [singularCochainPresheaf, singularCochainComplexIsoTopOpen,
     HomologicalComplex.linearDualIso, HomologicalComplex.linearDualMap] at hI
   change φ (ModuleCat.Hom.hom
-      (((openSingularChainComplexFunctor ℚ Y).map I.f).f n ≫
-        (topOpenSingularChainComplexIso ℚ Y).hom.f n)
+      (((openSingularChainComplexFunctor R Y).map I.f).f n ≫
+        (topOpenSingularChainComplexIso R Y).hom.f n)
       (((TopCat.toSSet.obj (TopCat.of (coveringSieveOpenFamily Y S I))).ιChainComplex
-        (R := ModuleCat.of ℚ ℚ) y).hom a)) = 0 at hI
+        (R := ModuleCat.of R R) y).hom a)) = 0 at hI
   have hchain := HomologicalComplex.congr_hom
-    (openSingularChainToTop_comp_topOpenIso ℚ Y I.f) n
+    (openSingularChainToTop_comp_topOpenIso R Y I.f) n
   have hchain' :
-      ((openSingularChainComplexFunctor ℚ Y).map I.f).f n ≫
-          (topOpenSingularChainComplexIso ℚ Y).hom.f n =
+      ((openSingularChainComplexFunctor R Y).map I.f).f n ≫
+          (topOpenSingularChainComplexIso R Y).hom.f n =
         (SSet.chainComplexMap
           (TopCat.toSSet.map (topologicalSubsetInclusion Y I.Y))
-          (ModuleCat.of ℚ ℚ)).f n := by
+          (ModuleCat.of R R)).f n := by
     simpa only [HomologicalComplex.comp_f] using hchain
   rw [hchain'] at hI
   have hiota := ConcreteCategory.congr_hom
@@ -764,29 +668,29 @@ lemma rationalCochainRestrictionToCoveringSieve_eq_zero
       (TopCat.toSSet.obj Y)
       (TopCat.toSSet.map (topologicalSubsetInclusion Y
         (coveringSieveOpenFamily Y S I)))
-      (ModuleCat.of ℚ ℚ) y) a
+      (ModuleCat.of R R) y) a
   simp only [ConcreteCategory.comp_apply] at hiota
   have hI' : φ
       (((TopCat.toSSet.obj Y).ιChainComplex
-        (R := ModuleCat.of ℚ ℚ)
+        (R := ModuleCat.of R R)
         ((TopCat.toSSet.map (topologicalSubsetInclusion Y
           (coveringSieveOpenFamily Y S I))).app _ y)).hom a) = 0 := by
     calc
       _ = φ ((SSet.chainComplexMap
           (TopCat.toSSet.map (topologicalSubsetInclusion Y
             (coveringSieveOpenFamily Y S I)))
-          (ModuleCat.of ℚ ℚ)).f n
+          (ModuleCat.of R R)).f n
           (((TopCat.toSSet.obj
             (TopCat.of (coveringSieveOpenFamily Y S I))).ιChainComplex
-              (R := ModuleCat.of ℚ ℚ) y).hom a)) := congrArg φ hiota.symm
+              (R := ModuleCat.of R R) y).hom a)) := congrArg φ hiota.symm
       _ = 0 := hI
   change φ (ModuleCat.Hom.hom
     (((coverSmallSingularSubcomplex Y
       (coveringSieveOpenFamily Y S) : SSet).ιChainComplex
-        (R := ModuleCat.of ℚ ℚ) x) ≫
-      (coverSmallRationalSingularChainInclusion Y
+        (R := ModuleCat.of R R) x) ≫
+      (coverSmallScalarSingularChainInclusion R Y
         (coveringSieveOpenFamily Y S)).f n) a) = 0
-  dsimp only [coverSmallRationalSingularChainInclusion] at ⊢
+  dsimp only [coverSmallScalarSingularChainInclusion] at ⊢
   rw [SSet.ι_chainComplexMap_f]
   simpa [hy] using hI'
   · intro f g h
@@ -795,101 +699,97 @@ lemma rationalCochainRestrictionToCoveringSieve_eq_zero
 set_option backward.isDefEq.respectTransparency false in
 /-- Conversely, vanishing on the cover-small chains associated to a covering sieve implies
 vanishing after restriction along every arrow of that sieve. -/
-lemma rationalCochainRestrictionToCoveringSieve_local_zero
+lemma scalarCochainRestrictionToCoveringSieve_local_zero
     (S : (Opens.grothendieckTopology Y).Cover (⊤ : Opens Y)) (n : ℕ)
     (φ : ((TopCat.toSSet.obj Y).chainComplex
-      (ModuleCat.of ℚ ℚ)).linearDualCochainComplex.X n)
-    (hφ : (rationalCochainRestrictionToCoverSmall Y
+      (ModuleCat.of R R)).linearDualCochainComplex.X n)
+    (hφ : (scalarCochainRestrictionToCoverSmall R Y
       (coveringSieveOpenFamily Y S)).f n φ = 0) :
     ∀ I : S.Arrow,
-      (singularCochainPresheaf ℚ Y n).map I.f.op
-        ((singularCochainComplexIsoTopOpen ℚ Y).hom.f n φ) = 0 := by
+      (singularCochainPresheaf R Y n).map I.f.op
+        ((singularCochainComplexIsoTopOpen R Y).hom.f n φ) = 0 := by
   intro I
-  change Module.Dual ℚ
-    (((TopCat.toSSet.obj Y).chainComplex (ModuleCat.of ℚ ℚ)).X n) at φ
-  change ((coverSmallRationalSingularChainInclusion Y
+  change Module.Dual R
+    (((TopCat.toSSet.obj Y).chainComplex (ModuleCat.of R R)).X n) at φ
+  change ((coverSmallScalarSingularChainInclusion R Y
     (coveringSieveOpenFamily Y S)).f n).hom.dualMap φ = 0 at hφ
-  change (((openSingularChainComplexFunctor ℚ Y).map I.f).f n).hom.dualMap
-    (((topOpenSingularChainComplexIso ℚ Y).hom.f n).hom.dualMap φ) = 0
+  change (((openSingularChainComplexFunctor R Y).map I.f).f n).hom.dualMap
+    (((topOpenSingularChainComplexIso R Y).hom.f n).hom.dualMap φ) = 0
   apply LinearMap.ext
   intro c
   have hc := LinearMap.congr_fun hφ
-    (((coverMemberToSmallRationalSingularChains Y
+    (((coverMemberToSmallScalarSingularChains R Y
       (coveringSieveOpenFamily Y S) I).f n).hom c)
   have htop := HomologicalComplex.congr_hom
-    (openSingularChainToTop_comp_topOpenIso ℚ Y I.f) n
+    (openSingularChainToTop_comp_topOpenIso R Y I.f) n
   have hmember := HomologicalComplex.congr_hom
-    (coverMemberToSmallRationalSingularChains_comp_inclusion Y
+    (coverMemberToSmallScalarSingularChains_comp_inclusion R Y
       (coveringSieveOpenFamily Y S) I) n
   simp only [LinearMap.dualMap_apply, LinearMap.zero_apply] at hc ⊢
   calc
-    φ ((topOpenSingularChainComplexIso ℚ Y).hom.f n
-        (((openSingularChainComplexFunctor ℚ Y).map I.f).f n c)) =
+    φ ((topOpenSingularChainComplexIso R Y).hom.f n
+        (((openSingularChainComplexFunctor R Y).map I.f).f n c)) =
       φ ((SSet.chainComplexMap
         (TopCat.toSSet.map (topologicalSubsetInclusion Y I.Y))
-        (ModuleCat.of ℚ ℚ)).f n c) :=
+        (ModuleCat.of R R)).f n c) :=
           congrArg φ (ConcreteCategory.congr_hom htop c)
-    _ = φ ((coverSmallRationalSingularChainInclusion Y
+    _ = φ ((coverSmallScalarSingularChainInclusion R Y
           (coveringSieveOpenFamily Y S)).f n
-        ((coverMemberToSmallRationalSingularChains Y
+        ((coverMemberToSmallScalarSingularChains R Y
           (coveringSieveOpenFamily Y S) I).f n c)) :=
             congrArg φ (ConcreteCategory.congr_hom hmember c).symm
     _ = 0 := hc
 
 /-- Restriction to cover-small rational chains is surjective in every cochain degree. -/
-lemma rationalCochainRestrictionToCoverSmall_surjective (n : ℕ) :
-    Function.Surjective ((rationalCochainRestrictionToCoverSmall Y U).f n) := by
-  apply LinearMap.dualMap_surjective_of_injective
-  rw [← ModuleCat.mono_iff_injective]
-  exact Functor.map_mono
-    (HomologicalComplex.eval (ModuleCat ℚ) (ComplexShape.down ℕ) n)
-    (coverSmallRationalSingularChainInclusion Y U)
+lemma scalarCochainRestrictionToCoverSmall_surjective (n : ℕ) :
+    Function.Surjective ((scalarCochainRestrictionToCoverSmall R Y U).f n) := by
+  exact SSet.Subcomplex.dualMap_surjective R (coverSmallSingularSubcomplex Y U) n
 
 /-- Restriction to cover-small rational chains is an epimorphism of cochain complexes. -/
-instance rationalCochainRestrictionToCoverSmall_epi :
-    Epi (rationalCochainRestrictionToCoverSmall Y U) :=
+instance scalarCochainRestrictionToCoverSmall_epi :
+    Epi (scalarCochainRestrictionToCoverSmall R Y U) :=
   HomologicalComplex.epi_of_epi_f _ fun n ↦ by
     rw [ModuleCat.epi_iff_surjective]
-    exact rationalCochainRestrictionToCoverSmall_surjective Y U n
+    exact scalarCochainRestrictionToCoverSmall_surjective R Y U n
 
 /-- An open cover gives a homotopy equivalence from all rational cochains to its cover-small
 cochains. -/
-def rationalCochainHomotopyEquivCoverSmall
+def scalarCochainHomotopyEquivCoverSmall
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
     HomotopyEquiv
       ((TopCat.toSSet.obj Y).chainComplex
-        (ModuleCat.of ℚ ℚ)).linearDualCochainComplex
-      (CoverSmallRationalSingularChainComplex Y U).linearDualCochainComplex :=
+        (ModuleCat.of R R)).linearDualCochainComplex
+      (CoverSmallScalarSingularChainComplex R Y U).linearDualCochainComplex :=
   HomologicalComplex.linearDualHomotopyEquiv
-    (coverSmallRationalChainHomotopyEquiv_of_openCover Y U hUopen hUcover)
+    (coverSmallScalarChainHomotopyEquiv_of_openCover R Y U hUopen hUcover)
 
-lemma rationalCochainHomotopyEquivCoverSmall_hom
+lemma scalarCochainHomotopyEquivCoverSmall_hom
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    (rationalCochainHomotopyEquivCoverSmall Y U hUopen hUcover).hom =
-      rationalCochainRestrictionToCoverSmall Y U := by
-  dsimp [rationalCochainHomotopyEquivCoverSmall,
-    rationalCochainRestrictionToCoverSmall]
+    (scalarCochainHomotopyEquivCoverSmall R Y U hUopen hUcover).hom =
+      scalarCochainRestrictionToCoverSmall R Y U := by
+  dsimp [scalarCochainHomotopyEquivCoverSmall,
+    scalarCochainRestrictionToCoverSmall]
   change HomologicalComplex.linearDualMap
-      (coverSmallRationalChainHomotopyEquiv_of_openCover
+      (coverSmallScalarChainHomotopyEquiv_of_openCover R
         Y U hUopen hUcover).hom = _
-  rw [coverSmallRationalChainHomotopyEquiv_of_openCover_hom]
+  rw [coverSmallScalarChainHomotopyEquiv_of_openCover_hom]
 
 /-- Restriction from all rational cochains to cover-small cochains is a quasi-isomorphism for an
 open cover. -/
-theorem rationalCochainRestrictionToCoverSmall_quasiIso
+theorem scalarCochainRestrictionToCoverSmall_quasiIso
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    QuasiIso (rationalCochainRestrictionToCoverSmall Y U) := by
-  rw [← rationalCochainHomotopyEquivCoverSmall_hom Y U hUopen hUcover]
+    QuasiIso (scalarCochainRestrictionToCoverSmall R Y U) := by
+  rw [← scalarCochainHomotopyEquivCoverSmall_hom R Y U hUopen hUcover]
   infer_instance
 
 /-- The complex of rational cochains vanishing on every chain subordinate to an open cover is
 acyclic. -/
-theorem rationalCoverSmallCochainKernel_acyclic
+theorem scalarCoverSmallCochainKernel_acyclic
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    (kernel (rationalCochainRestrictionToCoverSmall Y U)).Acyclic := by
-  let := rationalCochainRestrictionToCoverSmall_quasiIso Y U hUopen hUcover
+    (kernel (scalarCochainRestrictionToCoverSmall R Y U)).Acyclic := by
+  let := scalarCochainRestrictionToCoverSmall_quasiIso R Y U hUopen hUcover
   exact HomologicalComplex.kernel_acyclic_of_epi_of_quasiIso
-    (rationalCochainRestrictionToCoverSmall Y U)
+    (scalarCochainRestrictionToCoverSmall R Y U)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- A closed rational cochain which vanishes on all cover-small chains has a primitive which
@@ -897,27 +797,27 @@ also vanishes on all cover-small chains. -/
 theorem exists_coverSmallKernel_primitive
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) (n : ℕ)
     (φ : ((TopCat.toSSet.obj Y).chainComplex
-      (ModuleCat.of ℚ ℚ)).linearDualCochainComplex.X n)
-    (hφsmall : (rationalCochainRestrictionToCoverSmall Y U).f n φ = 0)
+      (ModuleCat.of R R)).linearDualCochainComplex.X n)
+    (hφsmall : (scalarCochainRestrictionToCoverSmall R Y U).f n φ = 0)
     (hφclosed : (((TopCat.toSSet.obj Y).chainComplex
-      (ModuleCat.of ℚ ℚ)).linearDualCochainComplex.d n (n + 1)) φ = 0) :
+      (ModuleCat.of R R)).linearDualCochainComplex.d n (n + 1)) φ = 0) :
     ∃ ψ : ((TopCat.toSSet.obj Y).chainComplex
-        (ModuleCat.of ℚ ℚ)).linearDualCochainComplex.X
+        (ModuleCat.of R R)).linearDualCochainComplex.X
           ((ComplexShape.up ℕ).prev n),
       (((TopCat.toSSet.obj Y).chainComplex
-          (ModuleCat.of ℚ ℚ)).linearDualCochainComplex.sc n).f ψ = φ ∧
-        (rationalCochainRestrictionToCoverSmall Y U).f
+          (ModuleCat.of R R)).linearDualCochainComplex.sc n).f ψ = φ ∧
+        (scalarCochainRestrictionToCoverSmall R Y U).f
           ((ComplexShape.up ℕ).prev n) ψ = 0 := by
   let F := ((TopCat.toSSet.obj Y).chainComplex
-    (ModuleCat.of ℚ ℚ)).linearDualCochainComplex
-  let q := rationalCochainRestrictionToCoverSmall Y U
+    (ModuleCat.of R R)).linearDualCochainComplex
+  let q := scalarCochainRestrictionToCoverSmall R Y U
   let K := kernel q
-  let E : (kernel q).X n ≅ ModuleCat.of ℚ (q.f n).hom.ker :=
-    asIso (kernelComparison q (HomologicalComplex.eval (ModuleCat ℚ)
+  let E : (kernel q).X n ≅ ModuleCat.of R (q.f n).hom.ker :=
+    asIso (kernelComparison q (HomologicalComplex.eval (ModuleCat R)
       (ComplexShape.up ℕ) n)) ≪≫ ModuleCat.kernelIsoKer (q.f n)
   let z : (kernel q).X n := E.inv ⟨φ, hφsmall⟩
   have hzmap : (kernel.ι q).f n z = φ := by
-    let ev := HomologicalComplex.eval (ModuleCat ℚ) (ComplexShape.up ℕ) n
+    let ev := HomologicalComplex.eval (ModuleCat R) (ComplexShape.up ℕ) n
     have hc := ConcreteCategory.congr_hom (kernelComparison_comp_ι q ev) z
     have hk := ModuleCat.kernelIsoKer_hom_ker_subtype_apply
       (q.f n) ((kernelComparison q ev) z)
@@ -938,7 +838,7 @@ theorem exists_coverSmallKernel_primitive
     change F.d n (n + 1) ((kernel.ι q).f n z) = 0
     rw [hzmap]
     exact hφclosed
-  have hacyclic := rationalCoverSmallCochainKernel_acyclic Y U hUopen hUcover
+  have hacyclic := scalarCoverSmallCochainKernel_acyclic R Y U hUopen hUcover
   obtain ⟨p, hp⟩ := (ShortComplex.moduleCat_exact_iff (K.sc n)).mp
     (hacyclic n) z hzclosed
   change K.X ((ComplexShape.up ℕ).prev n) at p
@@ -963,19 +863,19 @@ set_option backward.isDefEq.respectTransparency false in
 still vanishes along the same sieve. -/
 theorem exists_topOpenLocallyZero_primitive
     (S : (Opens.grothendieckTopology Y).Cover (⊤ : Opens Y)) (n : ℕ)
-    (φ : (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex.X n)
+    (φ : (TopOpenSingularChainComplex R Y).linearDualCochainComplex.X n)
     (hφlocal : ∀ I : S.Arrow,
-      (singularCochainPresheaf ℚ Y n).map I.f.op φ = 0)
-    (hφclosed : ((TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex.d
+      (singularCochainPresheaf R Y n).map I.f.op φ = 0)
+    (hφclosed : ((TopOpenSingularChainComplex R Y).linearDualCochainComplex.d
       n (n + 1)) φ = 0) :
-    ∃ ψ : (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex.X
+    ∃ ψ : (TopOpenSingularChainComplex R Y).linearDualCochainComplex.X
         ((ComplexShape.up ℕ).prev n),
-      ((TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex.sc n).f ψ = φ ∧
+      ((TopOpenSingularChainComplex R Y).linearDualCochainComplex.sc n).f ψ = φ ∧
         ∀ I : S.Arrow,
-          (singularCochainPresheaf ℚ Y ((ComplexShape.up ℕ).prev n)).map I.f.op ψ = 0 := by
-  let A := (SingularChainComplex ℚ Y).linearDualCochainComplex
-  let B := (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex
-  let e := singularCochainComplexIsoTopOpen ℚ Y
+          (singularCochainPresheaf R Y ((ComplexShape.up ℕ).prev n)).map I.f.op ψ = 0 := by
+  let A := (SingularChainComplex R Y).linearDualCochainComplex
+  let B := (TopOpenSingularChainComplex R Y).linearDualCochainComplex
+  let e := singularCochainComplexIsoTopOpen R Y
   let φ' : A.X n := e.inv.f n φ
   have heφ : e.hom.f n φ' = φ := by
     have hc := ConcreteCategory.congr_hom
@@ -983,13 +883,13 @@ theorem exists_topOpenLocallyZero_primitive
     simpa only [HomologicalComplex.comp_f, ConcreteCategory.comp_apply,
       HomologicalComplex.id_f, ConcreteCategory.id_apply, φ'] using hc
   have hlocal' : ∀ I : S.Arrow,
-      (singularCochainPresheaf ℚ Y n).map I.f.op (e.hom.f n φ') = 0 := by
+      (singularCochainPresheaf R Y n).map I.f.op (e.hom.f n φ') = 0 := by
     intro I
     rw [heφ]
     exact hφlocal I
-  have hsmall : (rationalCochainRestrictionToCoverSmall Y
+  have hsmall : (scalarCochainRestrictionToCoverSmall R Y
       (coveringSieveOpenFamily Y S)).f n φ' = 0 :=
-    rationalCochainRestrictionToCoveringSieve_eq_zero Y S n φ' hlocal'
+    scalarCochainRestrictionToCoveringSieve_eq_zero R Y S n φ' hlocal'
   have hclosed' : A.d n (n + 1) φ' = 0 := by
     change A.d n (n + 1) (e.inv.f n φ) = 0
     have hc := ConcreteCategory.congr_hom (e.inv.comm n (n + 1)) φ
@@ -997,7 +897,7 @@ theorem exists_topOpenLocallyZero_primitive
       _ = e.inv.f (n + 1) (B.d n (n + 1) φ) := by
         simpa only [ConcreteCategory.comp_apply, A, B] using hc
       _ = 0 := by rw [hφclosed, map_zero]
-  obtain ⟨ψ, hψ, hψsmall⟩ := exists_coverSmallKernel_primitive Y
+  obtain ⟨ψ, hψ, hψsmall⟩ := exists_coverSmallKernel_primitive R Y
     (coveringSieveOpenFamily Y S)
     (coveringSieveOpenFamily_isOpen Y S)
     (coveringSieveOpenFamily_iUnion Y S) n φ' hsmall hclosed'
@@ -1014,31 +914,31 @@ theorem exists_topOpenLocallyZero_primitive
       _ = e.hom.f n φ' := congrArg (e.hom.f n) hψ
       _ = φ := heφ
   · simpa only [e] using
-      (rationalCochainRestrictionToCoveringSieve_local_zero
+      (scalarCochainRestrictionToCoveringSieve_local_zero R
         Y S ((ComplexShape.up ℕ).prev n) ψ hψsmall)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The actual kernel of the map from top-open rational cochains to global first-plus cochains is
 acyclic. -/
 theorem topOpenToGlobalSingularCochainPlusComplex_kernel_acyclic :
-    (kernel (topOpenToGlobalSingularCochainPlusComplex ℚ Y)).Acyclic := by
-  let C := globalRawSingularCochainComplex ℚ Y
-  let B := topOpenForgottenSingularCochainComplex ℚ Y
-  let e := globalRawSingularCochainComplexIso ℚ Y
-  let f := topOpenToGlobalSingularCochainPlusComplex ℚ Y
+    (kernel (topOpenToGlobalSingularCochainPlusComplex R Y)).Acyclic := by
+  let C := globalRawSingularCochainComplex R Y
+  let B := topOpenForgottenSingularCochainComplex R Y
+  let e := globalRawSingularCochainComplexIso R Y
+  let f := topOpenToGlobalSingularCochainPlusComplex R Y
   let K := kernel f
   intro n
   rw [K.exactAt_iff, ShortComplex.ab_exact_iff]
   intro z hzclosed
-  let φ : OpenCochains ℚ Y (.op ⊤) n := (kernel.ι f).f n z
+  let φ : OpenCochains R Y (.op ⊤) n := (kernel.ι f).f n z
   have hφplus : f.f n φ = 0 := by
     have hcondition := HomologicalComplex.congr_hom (kernel.condition f) n
     exact ConcreteCategory.congr_hom hcondition z
   change ((Opens.grothendieckTopology Y).toPlus
-    (singularCochainPresheaf ℚ Y n)).app (.op ⊤) φ = 0 at hφplus
+    (singularCochainPresheaf R Y n)).app (.op ⊤) φ = 0 at hφplus
   obtain ⟨S, hφlocal⟩ :=
-    (singularCochain_toPlus_eq_zero_iff ℚ Y ⊤ n φ).mp hφplus
-  have hφclosed : ((TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex.d
+    (singularCochain_toPlus_eq_zero_iff R Y ⊤ n φ).mp hφplus
+  have hφclosed : ((TopOpenSingularChainComplex R Y).linearDualCochainComplex.d
       n (n + 1)) φ = 0 := by
     change K.d n ((ComplexShape.up ℕ).next n) z = 0 at hzclosed
     rw [show (ComplexShape.up ℕ).next n = n + 1 by simp] at hzclosed
@@ -1058,12 +958,12 @@ theorem topOpenToGlobalSingularCochainPlusComplex_kernel_acyclic :
         globalRawSingularCochainComplexIso_hom_f_apply] using hc
     rw [hc', hC]
   obtain ⟨ψ, hψ, hψlocal⟩ :=
-    exists_topOpenLocallyZero_primitive Y S n φ hφlocal hφclosed
+    exists_topOpenLocallyZero_primitive R Y S n φ hφlocal hφclosed
   have hψplus : f.f ((ComplexShape.up ℕ).prev n) ψ = 0 := by
     change ((Opens.grothendieckTopology Y).toPlus
-      (singularCochainPresheaf ℚ Y ((ComplexShape.up ℕ).prev n))).app
+      (singularCochainPresheaf R Y ((ComplexShape.up ℕ).prev n))).app
         (.op ⊤) ψ = 0
-    exact (singularCochain_toPlus_eq_zero_iff ℚ Y ⊤
+    exact (singularCochain_toPlus_eq_zero_iff R Y ⊤
       ((ComplexShape.up ℕ).prev n) ψ).mpr ⟨S, hψlocal⟩
   let ev := HomologicalComplex.eval AddCommGrpCat (ComplexShape.up ℕ)
     ((ComplexShape.up ℕ).prev n)
@@ -1111,96 +1011,90 @@ theorem topOpenToGlobalSingularCochainPlusComplex_kernel_acyclic :
     _ = φ := hψC
     _ = (kernel.ι f).f n z := rfl
 
-/-- The map from top-open cochains to global first-plus cochains is an epimorphism of complexes.
--/
-instance topOpenToGlobalSingularCochainPlusComplex_epi :
-    Epi (topOpenToGlobalSingularCochainPlusComplex R X) :=
-  HomologicalComplex.epi_of_epi_f _ fun _ ↦ inferInstance
-
 /-- The map from top-open rational cochains to global first-plus cochains is a
 quasi-isomorphism. -/
 theorem topOpenToGlobalSingularCochainPlusComplex_quasiIso :
-    QuasiIso (topOpenToGlobalSingularCochainPlusComplex ℚ Y) :=
+    QuasiIso (topOpenToGlobalSingularCochainPlusComplex R Y) :=
   HomologicalComplex.quasiIso_of_epi_of_kernel_acyclic
-    (topOpenToGlobalSingularCochainPlusComplex ℚ Y)
-    (topOpenToGlobalSingularCochainPlusComplex_kernel_acyclic Y)
+    (topOpenToGlobalSingularCochainPlusComplex R Y)
+    (topOpenToGlobalSingularCochainPlusComplex_kernel_acyclic R Y)
 
 /-- Restriction from cochains on the top open subset to chains subordinate to a family of
 subsets. -/
-def topOpenRationalCochainRestrictionToCoverSmall :
-    (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex ⟶
-      (CoverSmallRationalSingularChainComplex Y U).linearDualCochainComplex :=
-  (singularCochainComplexIsoTopOpen ℚ Y).inv ≫
-    rationalCochainRestrictionToCoverSmall Y U
+def topOpenScalarCochainRestrictionToCoverSmall :
+    (TopOpenSingularChainComplex R Y).linearDualCochainComplex ⟶
+      (CoverSmallScalarSingularChainComplex R Y U).linearDualCochainComplex :=
+  (singularCochainComplexIsoTopOpen R Y).inv ≫
+    scalarCochainRestrictionToCoverSmall R Y U
 
-instance topOpenRationalCochainRestrictionToCoverSmall_epi :
-    Epi (topOpenRationalCochainRestrictionToCoverSmall Y U) := by
+instance topOpenScalarCochainRestrictionToCoverSmall_epi :
+    Epi (topOpenScalarCochainRestrictionToCoverSmall R Y U) := by
   apply HomologicalComplex.epi_of_epi_f _ fun n ↦ ?_
   rw [ModuleCat.epi_iff_surjective]
   have h₁ : Function.Surjective
-      ((singularCochainComplexIsoTopOpen ℚ Y).inv.f n) := by
+      ((singularCochainComplexIsoTopOpen R Y).inv.f n) := by
     rw [← ModuleCat.epi_iff_surjective]
     infer_instance
-  have h₂ := rationalCochainRestrictionToCoverSmall_surjective Y U n
+  have h₂ := scalarCochainRestrictionToCoverSmall_surjective R Y U n
   intro z
   obtain ⟨y, hy⟩ := h₂ z
   obtain ⟨x, hx⟩ := h₁ y
   refine ⟨x, ?_⟩
-  change (rationalCochainRestrictionToCoverSmall Y U).f n
-      ((singularCochainComplexIsoTopOpen ℚ Y).inv.f n x) = z
+  change (scalarCochainRestrictionToCoverSmall R Y U).f n
+      ((singularCochainComplexIsoTopOpen R Y).inv.f n x) = z
   rw [hx, hy]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The cover-small homotopy equivalence, with its source written as cochains on the top open
 subset. -/
-def topOpenRationalCochainHomotopyEquivCoverSmall
+def topOpenScalarCochainHomotopyEquivCoverSmall
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
     HomotopyEquiv
-      (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex
-      (CoverSmallRationalSingularChainComplex Y U).linearDualCochainComplex :=
+      (TopOpenSingularChainComplex R Y).linearDualCochainComplex
+      (CoverSmallScalarSingularChainComplex R Y U).linearDualCochainComplex :=
   by
     let e₁ : HomotopyEquiv
-        (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex
+        (TopOpenSingularChainComplex R Y).linearDualCochainComplex
         ((TopCat.toSSet.obj Y).chainComplex
-          (ModuleCat.of ℚ ℚ)).linearDualCochainComplex :=
-      HomotopyEquiv.ofIso (singularCochainComplexIsoTopOpen ℚ Y).symm
+          (ModuleCat.of R R)).linearDualCochainComplex :=
+      HomotopyEquiv.ofIso (singularCochainComplexIsoTopOpen R Y).symm
     exact e₁.trans
-      (rationalCochainHomotopyEquivCoverSmall Y U hUopen hUcover)
+      (scalarCochainHomotopyEquivCoverSmall R Y U hUopen hUcover)
 
 set_option backward.isDefEq.respectTransparency false in
-lemma topOpenRationalCochainHomotopyEquivCoverSmall_hom
+lemma topOpenScalarCochainHomotopyEquivCoverSmall_hom
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    (topOpenRationalCochainHomotopyEquivCoverSmall Y U hUopen hUcover).hom =
-      topOpenRationalCochainRestrictionToCoverSmall Y U := by
-  change (singularCochainComplexIsoTopOpen ℚ Y).inv ≫
-      (rationalCochainHomotopyEquivCoverSmall Y U hUopen hUcover).hom =
-    (singularCochainComplexIsoTopOpen ℚ Y).inv ≫
-      rationalCochainRestrictionToCoverSmall Y U
-  rw [rationalCochainHomotopyEquivCoverSmall_hom]
+    (topOpenScalarCochainHomotopyEquivCoverSmall R Y U hUopen hUcover).hom =
+      topOpenScalarCochainRestrictionToCoverSmall R Y U := by
+  change (singularCochainComplexIsoTopOpen R Y).inv ≫
+      (scalarCochainHomotopyEquivCoverSmall R Y U hUopen hUcover).hom =
+    (singularCochainComplexIsoTopOpen R Y).inv ≫
+      scalarCochainRestrictionToCoverSmall R Y U
+  rw [scalarCochainHomotopyEquivCoverSmall_hom]
 
 /-- For an open cover, restriction from top-open rational cochains to cover-small cochains is a
 quasi-isomorphism. -/
-theorem topOpenRationalCochainRestrictionToCoverSmall_quasiIso
+theorem topOpenScalarCochainRestrictionToCoverSmall_quasiIso
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    QuasiIso (topOpenRationalCochainRestrictionToCoverSmall Y U) := by
-  rw [← topOpenRationalCochainHomotopyEquivCoverSmall_hom Y U hUopen hUcover]
+    QuasiIso (topOpenScalarCochainRestrictionToCoverSmall R Y U) := by
+  rw [← topOpenScalarCochainHomotopyEquivCoverSmall_hom R Y U hUopen hUcover]
   infer_instance
 
 /-- The complex of top-open rational cochains vanishing on all chains subordinate to an open
 cover is acyclic. -/
-theorem topOpenRationalCoverSmallCochainKernel_acyclic
+theorem topOpenScalarCoverSmallCochainKernel_acyclic
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    (kernel (topOpenRationalCochainRestrictionToCoverSmall Y U)).Acyclic := by
-  let := topOpenRationalCochainRestrictionToCoverSmall_quasiIso
+    (kernel (topOpenScalarCochainRestrictionToCoverSmall R Y U)).Acyclic := by
+  let := topOpenScalarCochainRestrictionToCoverSmall_quasiIso R
     Y U hUopen hUcover
   exact HomologicalComplex.kernel_acyclic_of_epi_of_quasiIso
-    (topOpenRationalCochainRestrictionToCoverSmall Y U)
+    (topOpenScalarCochainRestrictionToCoverSmall R Y U)
 
-end RationalCover
+end ScalarCover
 
 section HereditarilyParacompact
 
-variable {R : Type u} [Field R] {X : TopCat.{u}}
+variable {R : Type u} [CommRing R] {X : TopCat.{u}}
 
 /-- Regard an open subset of an open subspace as an open subset of the ambient space. -/
 def ambientOpen (U : Opens X) (V : Opens U) : Opens X :=
@@ -1539,28 +1433,34 @@ noncomputable instance globalSingularCochainPlusToPlusPlusComplex_isIso
   exact HomologicalComplex.Hom.isIso_of_components
     (globalSingularCochainPlusToPlusPlusComplex R X)
 
+end HereditarilyParacompact
+
+section Final
+
+variable (R : Type) [CommRing R]
+
 /-- On a paracompact Hausdorff space, ordinary cochains map quasi-isomorphically to global
 sections of the double-plus singular-cochain complex. -/
 theorem topOpenToGlobalSingularCochainPlusPlusComplex_quasiIso
     {Y : TopCat.{0}} [ParacompactSpace Y] [T2Space Y] :
-    QuasiIso (topOpenToGlobalSingularCochainPlusPlusComplex ℚ Y) := by
+    QuasiIso (topOpenToGlobalSingularCochainPlusPlusComplex R Y) := by
   change QuasiIso
-    (topOpenToGlobalSingularCochainPlusComplex ℚ Y ≫
-      globalSingularCochainPlusToPlusPlusComplex ℚ Y)
-  let := topOpenToGlobalSingularCochainPlusComplex_quasiIso Y
+    (topOpenToGlobalSingularCochainPlusComplex R Y ≫
+      globalSingularCochainPlusToPlusPlusComplex R Y)
+  let := topOpenToGlobalSingularCochainPlusComplex_quasiIso R Y
   infer_instance
 
 /-- On a paracompact Hausdorff space, ordinary rational singular cochains compute the global
 section complex of the chosen singular-cochain sheaf resolution. -/
 theorem topOpenToGlobalSingularCochainSheafComplex_quasiIso
     {Y : TopCat.{0}} [ParacompactSpace Y] [T2Space Y] :
-    QuasiIso (topOpenToGlobalSingularCochainSheafComplex ℚ Y) := by
+    QuasiIso (topOpenToGlobalSingularCochainSheafComplex R Y) := by
   change QuasiIso
-    (topOpenToGlobalSingularCochainPlusPlusComplex ℚ Y ≫
-      (globalSingularCochainPlusPlusComplexIsoSheafComplex ℚ Y).hom)
-  let := topOpenToGlobalSingularCochainPlusPlusComplex_quasiIso (Y := Y)
+    (topOpenToGlobalSingularCochainPlusPlusComplex R Y ≫
+      (globalSingularCochainPlusPlusComplexIsoSheafComplex R Y).hom)
+  let := topOpenToGlobalSingularCochainPlusPlusComplex_quasiIso R (Y := Y)
   infer_instance
 
-end HereditarilyParacompact
+end Final
 
 end AlgebraicTopology.Singular

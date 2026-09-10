@@ -26,3 +26,5 @@ import Other.AlgebraicGeometry.LefschetzOneOneReduction
 #print axioms RationalLefschetzOneOne.of_obligations
 #print axioms AlgebraicGeometry.ComplexPoint.hasDivisorOfUnitExtension_of_algebraicModel
 #print axioms AlgebraicGeometry.ComplexPoint.hasAlgebraicModel_of_analyticLineBundlesAlgebraize
+import Other.AlgebraicGeometry.BettiScalarComparison
+#print axioms AlgebraicGeometry.ComplexPoint.integralCohomologyEquivOrdinarySingularCohomology

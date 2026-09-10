@@ -111,7 +111,7 @@ No separation or paracompactness assumption is made on the rest of `X`. -/
 theorem openRawToSingularCochainSheafComplex_quasiIso (V : Opens X)
     [ParacompactSpace V] [T2Space V] :
     QuasiIso (openRawToSingularCochainSheafComplex ℚ X V) := by
-  have := topOpenToGlobalSingularCochainSheafComplex_quasiIso (Y := TopCat.of V)
+  have := topOpenToGlobalSingularCochainSheafComplex_quasiIso ℚ (Y := TopCat.of V)
   have : QuasiIso
       ((openRawSingularCochainComplexIsoGlobal ℚ X V).hom ≫
         topOpenToGlobalSingularCochainSheafComplex ℚ (TopCat.of V)) := inferInstance

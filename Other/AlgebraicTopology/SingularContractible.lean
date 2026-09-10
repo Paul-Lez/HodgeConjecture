@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import Other.Algebra.Homology.LinearDual
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
 public import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
 public import Mathlib.Topology.Homotopy.Contractible
@@ -40,7 +41,7 @@ universe u
 
 namespace AlgebraicTopology
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-- A topological homotopy equivalence induces a homotopy equivalence of singular chain
 complexes. -/
@@ -95,5 +96,19 @@ lemma singularChainComplex_exactAt_of_contractible
   rw [exactAt_iff_of_quasiIsoAt e.hom n]
   exact singularChainComplexFunctor_exactAt_of_totallyDisconnectedSpace
     (ModuleCat.{u} R) n (ModuleCat.of R R) (TopCat.of (ULift.{u} Unit)) hn
+
+/-- The algebraic-dual cochain complex of the singular chains of a contractible space is exact
+in every positive degree, over any commutative coefficient ring. -/
+lemma singularChainComplex_linearDual_exactAt_of_contractible
+    (X : Type u) [TopologicalSpace X] [ContractibleSpace X] (n : ℕ) :
+    (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj
+      (TopCat.of X)).linearDualCochainComplex.ExactAt (n + 1) := by
+  rw [HomologicalComplex.linearDualCochainComplex_exactAt_iff_of_homotopyEquiv
+    (contractibleSingularChainHomotopyEquiv R X)]
+  let i := singularChainComplexFunctorIsoOfTotallyDisconnectedSpace
+    (ModuleCat.{u} R) (ModuleCat.of R R) (TopCat.of (ULift.{u} Unit))
+  rw [← exactAt_iff_of_quasiIsoAt
+    (HomologicalComplex.linearDualIso i).hom (n + 1)]
+  exact HomologicalComplex.alternatingConst_linearDual_exactAt _ n
 
 end AlgebraicTopology

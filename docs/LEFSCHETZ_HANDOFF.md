@@ -68,16 +68,18 @@ states, for a single smooth projective integral complex variety `X`:
    Mathlib has neither, but has the Whitney embedding `exists_embedding_euclidean_of_compact`
    and the inverse function theorem);
    (β) the comparison of the derived integral cohomology `IntegralCohomology X n` with integral
-   singular cohomology. The field-coefficient comparison
-   `rationalCohomologyEquivSingularCohomology` (`Other/AlgebraicGeometry/BettiGlobalSectionsComparison.lean`)
-   uses `[Field R]` in only nine files of its 67-file import closure, and essentially in only
-   three places (`Other/Algebra/Homology/DualExact.lean`, dualising exactness on contractible
-   opens at `SingularCochainSheaf.lean` ≈ line 749; `openSingularCochainRestriction_surjective`
-   in `SingularCochainFlasque.lean`; `rationalCochainRestrictionToCoverSmall_surjective` in
-   `SingularSubdivisionCochainSheaf.lean`), each replaceable over `ℤ` by dualising the existing
-   chain homotopy equivalences and by basis-splitting arguments. The integral statement must be
-   phrased with `OrdinarySingularCohomology` (homology of the dual cochain complex), since
-   `Cohomology R X n := Module.Dual R (Homology R X n)` is only correct over a field.
+   singular cohomology. **Done**: the singular-cochain machinery is now stated over an arbitrary
+   commutative ring (`Other/Algebra/Homology/LinearDual.lean`,
+   `Other/AlgebraicTopology/SimplicialCochainExtension.lean`, `SingularExcisionScalar.lean`, and
+   the generalised `SingularCochain*`/`SingularSubdivisionCochainSheaf` files), and
+   `integralCohomologyEquivOrdinarySingularCohomology` in
+   `Other/AlgebraicGeometry/BettiScalarComparison.lean` identifies `IntegralCohomology X n` with
+   `OrdinarySingularCohomology ℤ (TopCat.of (ComplexPoint X)) n`, the homology of the integral
+   dual singular cochain complex. What remains for (1) beyond (α) is the compatibility of this
+   comparison and the rational one with the coefficient map `ℤ → ℚ`, together with the
+   elementary denominator-clearing argument on singular cochains (a rational cocycle that is
+   integer-valued on integral cycles is cohomologous to an integral cocycle, using divisibility
+   of `ℚ/ℤ`; finite generation of `H_n(X^an, ℤ)` bounds the denominators).
 2. `HasAlgebraicModel X`: for every `E : HolomorphicUnitExtension X (dim X.left)` there is an
    invertible `L : X.left.Modules` with `(moduleAnalytification X (dim X.left)).obj L ≅
    E.sectionSheafOfModules`. This is projective GAGA for line bundles. Its extension-free

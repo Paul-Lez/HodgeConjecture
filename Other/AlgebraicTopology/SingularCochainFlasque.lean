@@ -15,21 +15,23 @@ limitations under the License.
 -/
 module
 
+public import Other.AlgebraicTopology.SimplicialCochainExtension
 public import Other.AlgebraicTopology.SingularCochainSheaf
 public import Mathlib.Algebra.Module.Projective -- shake: keep
 public import Mathlib.Topology.Sheaves.Flasque
 
 import Mathlib.Algebra.Homology.HomologicalComplexLimits
-import Mathlib.LinearAlgebra.Dual.Lemmas
 
 /-!
 # Flasqueness of open singular cochains
 
-Restriction of a singular cochain to an open subset is surjective: the inclusion on singular
-chains is injective, and a linear functional on a subspace of a vector space extends to the whole
-space. Consequently, the presheaf of singular cochains in each fixed degree is flasque.
+Restriction of a singular cochain to an open subset is surjective: the inclusion is injective on
+singular simplices, and a cochain, being an arbitrary function on singular simplices, extends by
+zero on the simplices not contained in the smaller open subset. This works over any commutative
+ring of coefficients. Consequently, the presheaf of singular cochains in each fixed degree is
+flasque.
 
-The extension may be chosen linearly. We also identify the cochains on the top open set with the
+The extension by zero is linear. We also identify the cochains on the top open set with the
 ordinary singular cochains of the ambient space. These statements concern the presheaf before
 sheafification; no claim that sheafification preserves flasqueness is used.
 -/
@@ -42,7 +44,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Inclusion of open subsets induces a monomorphism of singular chain complexes. -/
 lemma openSingularChainComplexMap_mono {U V : Opens X} (i : U ⟶ V) :
@@ -62,30 +64,33 @@ lemma openSingularChainMap_injective {U V : Opens X} (i : U ⟶ V) (n : ℕ) :
   exact Functor.map_mono (HomologicalComplex.eval (ModuleCat R) _ n)
     ((openSingularChainComplexFunctor R X).map i)
 
+/-- The inclusion of open subsets is an injective continuous map. -/
+lemma openInclusion_injective {U V : Opens X} (i : U ⟶ V) :
+    Function.Injective ((Opens.toTopCat X).map i) :=
+  fun _ _ h ↦ Subtype.ext (congrArg (fun z : V ↦ z.1) h)
+
 /-- Every cochain on an open subset extends linearly to a containing open subset. -/
 lemma openSingularCochainRestriction_surjective
     {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) :
     Function.Surjective
       ((singularCochainPresheaf R X n).map i) :=
-  LinearMap.dualMap_surjective_of_injective
-    (openSingularChainMap_injective R X i.unop n)
+  TopCat.singularChainComplexFunctor_dualMap_surjective R ((Opens.toTopCat X).map i.unop)
+    (openInclusion_injective X i.unop) n
 
-/-- A linear choice of extension of cochains along an inclusion of open subsets. -/
+/-- The linear extension of cochains by zero along an inclusion of open subsets: a cochain on
+the smaller open subset is extended by zero on the singular simplices not contained in it. -/
 noncomputable def openSingularCochainExtension
     {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) :
     OpenCochains R X V n →ₗ[R] OpenCochains R X U n :=
-  Classical.choose <| LinearMap.exists_rightInverse_of_surjective
-    (((openSingularChainComplexFunctor R X).map i.unop).f n).hom.dualMap
-    (LinearMap.range_eq_top.mpr <| openSingularCochainRestriction_surjective R X i n)
+  TopCat.singularCochainExtension R ((Opens.toTopCat X).map i.unop) n
 
-/-- Restricting a chosen extension recovers the original cochain. -/
+/-- Restricting the extension by zero recovers the original cochain. -/
 lemma openSingularCochainRestriction_comp_extension
     {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) :
     (((openSingularChainComplexFunctor R X).map i.unop).f n).hom.dualMap.comp
         (openSingularCochainExtension R X i n) = LinearMap.id :=
-  Classical.choose_spec <| LinearMap.exists_rightInverse_of_surjective
-    (((openSingularChainComplexFunctor R X).map i.unop).f n).hom.dualMap
-    (LinearMap.range_eq_top.mpr <| openSingularCochainRestriction_surjective R X i n)
+  TopCat.singularChainComplexFunctor_dualMap_comp_singularCochainExtension R
+    ((Opens.toTopCat X).map i.unop) (openInclusion_injective X i.unop) n
 
 @[simp]
 lemma openSingularCochainRestriction_extension

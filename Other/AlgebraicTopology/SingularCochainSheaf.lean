@@ -24,7 +24,6 @@ public import Mathlib.Topology.Connected.LocallyPathConnected
 public import Mathlib.Topology.Homotopy.Contractible
 public import Mathlib.Topology.Sheaves.Abelian
 
-import Other.Algebra.Homology.DualExact
 import Other.AlgebraicTopology.SingularContractible
 import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
 import Mathlib.Topology.Homotopy.TopCat.ZerothHomotopy
@@ -53,7 +52,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The singular chain complex, functorially restricted to the open subsets of `X`. -/
 def openSingularChainComplexFunctor :
@@ -737,17 +736,15 @@ lemma exists_local_singularCochain_primitive_of_contractibleOpenBasis
   let φV : OpenCochains R X (.op V) (n + 1) :=
     (singularCochainPresheaf R X (n + 1)).map i.op φ
   let : ContractibleSpace V := hVcontractible
-  have hK : K.ExactAt (n + 1) :=
-    singularChainComplex_exactAt_of_contractible R V (n + 1) (by lia)
+  have hK : K.linearDualCochainComplex.ExactAt (n + 1) :=
+    singularChainComplex_linearDual_exactAt_of_contractible R V n
   have hφV : (K.d (n + 2) (n + 1)).hom.dualMap φV = 0 := by
     change (singularCochainCoboundary R X (n + 1)).app (.op V) φV = 0
     dsimp [φV]
     rw [← ConcreteCategory.comp_apply,
       (singularCochainCoboundary R X (n + 1)).naturality,
       ConcreteCategory.comp_apply, hφ, map_zero]
-  have hker : φV ∈ LinearMap.ker (K.d (n + 2) (n + 1)).hom.dualMap := hφV
-  rw [← K.dual_differentials_range_eq_ker_of_exactAt n hK] at hker
-  obtain ⟨ψ, hψ⟩ := hker
+  obtain ⟨ψ, hψ⟩ := K.exists_dual_primitive_of_exactAt n hK φV hφV
   exact ⟨V, hxV, i, ψ, hψ⟩
 
 /-- On a space with a basis of open contractible neighborhoods, the constant-to-singular

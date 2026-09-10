@@ -39,10 +39,12 @@ public import Other.Topology.Category.TopCat.Basic
 public import Other.Algebra.Category.ModuleCat.Presheaf.ExteriorPower
 public import Other.Algebra.DeRham.Complex
 public import Other.Algebra.Homology.DualExact
+public import Other.Algebra.Homology.LinearDual
 public import Other.Algebra.PolynomialCatenary
 public import Other.AlgebraicGeometry.BettiCohomologyWithSupportComparison
 public import Other.AlgebraicGeometry.BettiGlobalSectionsAdditivity
 public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
+public import Other.AlgebraicGeometry.BettiScalarComparison
 public import Other.AlgebraicGeometry.BettiSheafComparison
 public import Other.AlgebraicGeometry.BettiSupportConeComparison
 public import Other.AlgebraicGeometry.BettiSupportSingularComparison
@@ -190,6 +192,7 @@ public import Other.AlgebraicTopology.SingularCoverSmall
 public import Other.AlgebraicTopology.SingularCoverSmallPresentation
 public import Other.AlgebraicTopology.SingularCoverSmallProjective
 public import Other.AlgebraicTopology.SingularCoverSmallQuasiIso
+public import Other.AlgebraicTopology.SingularExcisionScalar
 public import Other.AlgebraicTopology.SingularExcisionField
 public import Other.AlgebraicTopology.SingularExcisionOpenCover
 public import Other.AlgebraicTopology.SingularHomologyVanishing

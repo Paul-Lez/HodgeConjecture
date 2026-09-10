@@ -456,7 +456,7 @@ theorem globalRawComplementToSingularSheaf_quasiIso
     ⟨Zᶜ, hZ.isOpen_compl⟩
   let : ParacompactSpace U := hpara Uopen
   rw [globalRawPushforwardToSingularSheaf_eq_topOpen j]
-  exact topOpenToGlobalSingularCochainSheafComplex_quasiIso
+  exact topOpenToGlobalSingularCochainSheafComplex_quasiIso ℚ
 
 /-- Raw complement cochains map quasi-isomorphically to global sections of the chosen derived
 pushforward model. -/
@@ -570,7 +570,7 @@ theorem globalRawToSingularSheafInt_quasiIso
     (Homeomorph.Set.univ (ComplexPoint X)).paracompactSpace_iff.mp
       (hpara (⊤ : Opens (ComplexPoint X)))
   let : QuasiIso f :=
-    topOpenToGlobalSingularCochainSheafComplex_quasiIso
+    topOpenToGlobalSingularCochainSheafComplex_quasiIso ℚ
   let hfInt : QuasiIso fInt :=
     (HomologicalComplex.quasiIso_extendMap_iff f ComplexShape.embeddingUpNat).mpr
       inferInstance

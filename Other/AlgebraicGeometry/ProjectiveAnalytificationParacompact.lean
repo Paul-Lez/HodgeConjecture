@@ -69,6 +69,6 @@ theorem rationalSingularCochain_globalComparison_quasiIso
         (TopCat.of (ComplexPoint X))) := by
   let : ∀ U : Opens (ComplexPoint X), ParacompactSpace U :=
     openParacompactSpace X
-  exact AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
+  exact AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso ℚ
 
 end AlgebraicGeometry.ComplexPoint

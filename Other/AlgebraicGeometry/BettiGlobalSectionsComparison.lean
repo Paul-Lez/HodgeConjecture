@@ -412,7 +412,7 @@ namespace AlgebraicTopology.Singular
 
 universe u
 
-variable (R : Type u) [Field R] (Y : TopCat.{u})
+variable (R : Type u) [CommRing R] (Y : TopCat.{u})
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The short complex controlling degree-`n` cohomology of the full linear-dual cochain complex
@@ -461,14 +461,6 @@ cochain complex. -/
 abbrev OrdinarySingularCohomology (n : ℕ) : ModuleCat.{u} R :=
   (SingularChainComplex R Y).linearDualCochainComplex.homology n
 
-/-- Universal coefficients identify the full-complex presentation of ordinary singular
-cohomology with the repository's existing dual-of-singular-homology type. -/
-def ordinarySingularCohomologyEquivCohomology (n : ℕ) :
-    OrdinarySingularCohomology R Y n ≃ₗ[R] Cohomology R Y n :=
-  (ShortComplex.homologyMapIso
-    (linearDualCochainComplexScIso R (SingularChainComplex R Y) n)).toLinearEquiv.trans
-      ((SingularChainComplex R Y).sc n).linearDualHomologyEquiv
-
 /-- Forgetting scalar multiplication commutes with taking the homology of the top-open singular
 cochain complex. -/
 def topOpenForgottenSingularCochainHomologyIso (n : ℕ) :
@@ -493,6 +485,22 @@ def ordinarySingularCohomologyEquivGlobalRaw (n : ℕ) :
 
 end AlgebraicTopology.Singular
 
+namespace AlgebraicTopology.Singular
+
+universe u
+
+variable (R : Type u) [Field R] (Y : TopCat.{u})
+
+/-- Universal coefficients identify the full-complex presentation of ordinary singular
+cohomology with the repository's existing dual-of-singular-homology type. -/
+def ordinarySingularCohomologyEquivCohomology (n : ℕ) :
+    OrdinarySingularCohomology R Y n ≃ₗ[R] Cohomology R Y n :=
+  (ShortComplex.homologyMapIso
+    (linearDualCochainComplexScIso R (SingularChainComplex R Y) n)).toLinearEquiv.trans
+      ((SingularChainComplex R Y).sc n).linearDualHomologyEquiv
+
+end AlgebraicTopology.Singular
+
 namespace AlgebraicTopology.Singular.HereditarilyParacompact
 
 /-- On a paracompact Hausdorff space, ordinary rational singular cohomology is the cohomology of
@@ -501,7 +509,7 @@ def ordinaryRationalSingularCohomologyEquivGlobalSections
     (Y : TopCat.{0}) [ParacompactSpace Y] [T2Space Y] (n : ℕ) :
     AlgebraicTopology.Singular.OrdinarySingularCohomology ℚ Y n ≃+
       (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y).homology n := by
-  let := AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
+  let := AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso ℚ
     (Y := Y)
   exact
     AlgebraicTopology.Singular.ordinarySingularCohomologyEquivGlobalRaw ℚ Y n |>.trans <|
