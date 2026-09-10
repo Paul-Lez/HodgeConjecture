@@ -14,7 +14,9 @@ set_option verso.code.warnLineLength 0
 #doc (Manual) "The class of a subvariety" =>
 
 ```lean -show
-open AlgebraicGeometry CategoryTheory ComplexPoint
+open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
 
 # The class to be constructed

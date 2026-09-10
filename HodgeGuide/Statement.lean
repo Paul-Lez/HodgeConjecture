@@ -15,12 +15,14 @@ set_option verso.code.warnLineLength 0
 #doc (Manual) "The statement" =>
 
 ```lean -show
-open AlgebraicGeometry CategoryTheory ComplexPoint
+open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
 
 # The algebraic subspace
 
-For every point `x : X.left` of coheight $`p`, the previous section gives a class
+For every point {lean}`x` of coheight $`p` in {lean}`X.left`, the previous section gives a class
 
 $$`\operatorname{cl}_X(\overline{\{x\}})\in H^{2p}(X;\mathbb Q).`
 
@@ -35,9 +37,10 @@ $$`A^p(X)=\sum_{\operatorname{coht}(x)=p}
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_mem_algebraicCycleClassSpan
 ```
 
-In Lean the span is the supremum, over all points `x` and all proofs `hx : coheight x = p`, of the
-line spanned by `cycleComponentSheafClass X x hx`, with the dimension argument set to
-`dim X.left`.
+In Lean the span is the supremum, over all points {lean}`x` and all proofs {lean}`hx` of
+{lean}`coheight x = p`, of the line spanned by
+{lean}`cycleComponentSheafClass X x (d := dim X.left) hx`, where the named argument fixes the
+dimension at {lean}`dim X.left`.
 
 # The proposition
 
@@ -47,8 +50,8 @@ Here is the full statement, elaborated when this page is built:
 #print HodgeConjecture
 ```
 
-It quantifies over a scheme `X` over $`\mathbb C` that is integral with smooth and projective
-structure morphism, and over a natural number `p`. The conclusion is the inclusion of subspaces
+It quantifies over a scheme {lean}`X` over $`\mathbb C` that is integral with smooth and projective
+structure morphism, and over a natural number {lean}`p`. The conclusion is the inclusion of subspaces
 
 $$`\operatorname{Hdg}^p(X;\mathbb Q)\le A^p(X):`
 
@@ -61,7 +64,7 @@ yet available.
 
 # Why a span rather than a map on Chow groups
 
-The repository defines `ChowGroup` and `RationalChowGroup`, and the classes of subvarieties give an
+The repository defines {name}`ChowGroup` and {name}`RationalChowGroup`, and the classes of subvarieties give an
 additive map on cycles. To descend this map to the Chow group, one must show that it vanishes on
 every principal-divisor relation. The descent itself is formalized as a construction that takes
 this vanishing as a hypothesis, but the vanishing has not been proved for the classes constructed

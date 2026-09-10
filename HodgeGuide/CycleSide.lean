@@ -14,7 +14,9 @@ set_option verso.code.warnLineLength 0
 #doc (Manual) "Cycles and cohomology with support" =>
 
 ```lean -show
-open AlgebraicGeometry CategoryTheory ComplexPoint
+open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
 
 # Cycles are indexed by generic points
@@ -41,8 +43,9 @@ Project on [cycles of given codimension](https://stacks.math.columbia.edu/tag/0F
 
 # The support of a subvariety
 
-For a point `x : X.left`, `cycleComponent X.left x` is the reduced closed subscheme with underlying
-space $`\overline{\{x\}}`, and `cycleComponentι` is its closed immersion into `X.left`. The
+For a point {lean}`x` of {lean}`X.left`, {lean}`cycleComponent X.left x` is the reduced closed
+subscheme with underlying space $`\overline{\{x\}}`, and {name}`cycleComponentι` is its closed
+immersion into {lean}`X.left`. The
 support of the subvariety in $`X(\mathbb C)` is the preimage of $`\overline{\{x\}}` under the map
 from complex points to scheme points, and it is closed in the analytic topology.
 
@@ -68,7 +71,7 @@ The formalization builds the first term as a homotopy fibre. It resolves the con
 $`\underline{\mathbb Q}_U` injectively, pushes the resolution forward along $`j`, maps
 $`\underline{\mathbb Q}_X` to the result, and takes the mapping cone shifted by $`-1`.
 Hypercohomology of this complex is $`H^n_Z(X;\mathbb Q)`, and the connecting map of the triangle
-is `forgetSupport`, the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
+is {name}`forgetSupport`, the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.rationalCohomologyWithSupportComplex
@@ -95,11 +98,12 @@ below hold for all integer and rational coefficients.
 #check AlgebraicGeometry.ComplexPoint.rationalSheafCycleClassOnCycles_tmul_single
 ```
 
-These maps take a `DimensionedSmoothProjectiveComplexVariety`, a smooth projective variety
+These maps take a {name}`DimensionedSmoothProjectiveComplexVariety`, a smooth projective variety
 bundled with its dimension, which the construction of the class of a subvariety needs. The
-constructor `ofOver` packages `X` with `dim X.left` and the proof, from smoothness and
-integrality, that this is the relative dimension of `X` over $`\mathbb C`. The statement does not
-use the bundle: `algebraicCycleClassSpan` evaluates each class at `dim X.left` directly.
+constructor {name DimensionedSmoothProjectiveComplexVariety.ofOver}`ofOver` packages {lean}`X` with
+{lean}`dim X.left` and the proof, from smoothness and integrality, that this is the relative
+dimension of {lean}`X` over $`\mathbb C`. The statement does not use the bundle:
+{name}`algebraicCycleClassSpan` evaluates each class at {lean}`dim X.left` directly.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety.ofOver

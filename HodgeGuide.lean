@@ -31,8 +31,9 @@ in Lean.
 The conjecture is stated, not proved. A few classical theorems surrounding the statement are not
 yet formalized either; {ref "scope-and-status"}[Scope and status] lists them.
 
-The Lean snippets in this guide are elaborated when the site is built, so every declaration shown
-here exists in the repository with the displayed type. The site is generated with
+The Lean code in this guide, including the terms that appear inside sentences, is elaborated when
+the site is built, so every declaration shown here exists in the repository with the displayed
+type. Hovering over a term or a name shows its type and docstring. The site is generated with
 [Verso](https://github.com/leanprover/verso).
 
 {include 1 HodgeGuide.Overview}

@@ -14,7 +14,9 @@ set_option verso.code.warnLineLength 0
 #doc (Manual) "Hodge classes" =>
 
 ```lean -show
-open AlgebraicGeometry CategoryTheory ComplexPoint
+open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
 
 # The holomorphic de Rham complex
@@ -57,7 +59,7 @@ $$`\mathbb H^n(X,K^\bullet)
   =\operatorname{Hom}_{D(X)}(\underline{\mathbb Z}_X,K^\bullet[n]),`
 
 where $`\underline{\mathbb Z}_X` is the constant sheaf in degree zero. The derived category is never
-constructed: Mathlib's `Localization.SmallShiftedHom` provides these morphism groups in the
+constructed: Mathlib's {name}`Localization.SmallShiftedHom` provides these morphism groups in the
 localization of complexes at quasi-isomorphisms without choosing a model for it. Rational
 cohomology and de Rham cohomology are the cases $`K^\bullet=\underline{\mathbb Q}_X` and
 $`K^\bullet=\Omega_X^\bullet`.
@@ -96,7 +98,7 @@ truncated complex appears.
 ```
 
 The image is a priori an additive subgroup. Compatibility with scalars is proved, and
-`hodgeFiltrationSubmodule` bundles the image as a subspace over any coefficient field contained
+{name}`hodgeFiltrationSubmodule` bundles the image as a subspace over any coefficient field contained
 in $`\mathbb C`. Two sanity checks are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and
 $`F^p=0` for $`p>\dim X`.
 
@@ -108,8 +110,8 @@ $`F^p`:
 $$`\operatorname{Hdg}^p(X;\mathbb Q)
  =\{\alpha\in H^{2p}(X;\mathbb Q):\alpha_{\mathrm{dR}}\in F^pH^{2p}_{\mathrm{dR}}(X)\}.`
 
-In Lean this is the preimage of `hodgeFiltrationSubmodule` under the comparison map, and the
-notation `Hdg^p(ℚ; X)` abbreviates it.
+In Lean this is the preimage of {name}`hodgeFiltrationSubmodule` under the comparison map, and the
+notation {lean}`Hdg^p(ℚ; X)` abbreviates it.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.hodgeClasses
@@ -121,7 +123,8 @@ the conjugate filtration $`\overline{F^p}` as well. The two definitions agree. I
 structure of weight $`2p`, complex conjugation fixes rational vectors and exchanges $`H^{a,b}`
 with $`H^{b,a}`, so a rational vector in $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in
 $`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`, and the only summand common to both is $`H^{p,p}`.
-The lemma `Pure.ofBase_mem_filtration_iff` is this argument for an abstract pure Hodge structure,
+The lemma {name HodgeStructure.Pure.ofBase_mem_filtration_iff}`Pure.ofBase_mem_filtration_iff` is
+this argument for an abstract pure Hodge structure,
 as defined in `HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`.
 
 The cohomology of $`X` is not equipped with a pure Hodge structure in the formalization; that

@@ -14,15 +14,18 @@ set_option verso.code.warnLineLength 0
 #doc (Manual) "Overview" =>
 
 ```lean -show
-open AlgebraicGeometry CategoryTheory ComplexPoint
+open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
 
 The conjecture concerns a smooth projective variety over $`\mathbb C`. In Lean such a variety is an
-object `X : Over (Spec ℂ)` of the over category: a scheme `X.left` together with its structure
-morphism `X.hom : X.left ⟶ Spec ℂ`. The hypotheses are the instance arguments `IsIntegral X.left`,
-`Smooth X.hom` and `IsProjective X.hom`. A codimension is a natural number `p`, while cohomological
-degrees are integers, so the class of a codimension-$`p` cycle lives in degree `2 * (p : ℤ)`; the
-coercion is visible in the types below.
+object {lean}`X` of the over category {lean}`Over (Spec ↧ℂ)`: a scheme {lean}`X.left` together with
+its structure morphism {lean}`X.hom`, a morphism {lean}`X.left ⟶ Spec ↧ℂ`. The hypotheses are the
+instance arguments {lean}`IsIntegral X.left`, {lean}`Smooth X.hom` and {lean}`IsProjective X.hom`.
+A codimension is a natural number {lean}`p`, while cohomological degrees are integers, so the class
+of a codimension-$`p` cycle lives in degree {lean}`2 * (p : ℤ)`; the coercion is visible in the
+types below.
 
 The statement is a single proposition, comparing two subspaces of rational cohomology.
 
@@ -54,7 +57,7 @@ irreducible subvarieties of codimension $`p`.
    $`\Omega_X^{\ge p}`. The Hodge classes $`\operatorname{Hdg}^p(X;\mathbb Q)` are the rational
    classes of degree $`2p` whose image under the comparison map lies in $`F^p`.
 3. Represent an irreducible subvariety $`Z\subseteq X` of codimension $`p` by its generic point, a
-   point of the scheme `X.left` of coheight $`p`.
+   point of the scheme {lean}`X.left` of coheight $`p`.
 4. On the smooth locus of $`Z`, the complex orientation of the normal directions singles out a
    generator of the cohomology with support in $`Z` in degree $`2p`, locally in charts, and these
    local generators glue.
@@ -107,6 +110,7 @@ ambient space $`X` identifies
 $$`H^{\mathrm{BM}}_{2(d-p)}(Z\subset X;\mathbb Q)
   \simeq H_Z^{2d-2(d-p)}(X;\mathbb Q)=H_Z^{2p}(X;\mathbb Q).`
 
-This is the origin of the indices `2 * (d - p)` and `2 * p` in the code. A class with support in
-$`Z` lies in $`H_Z^{2p}(X;\mathbb Q)`; the map `forgetSupport` sends it to the ordinary group
+This is the origin of the indices {lean}`2 * ((d - p : ℕ) : ℤ)` and {lean}`2 * (p : ℤ)` in the
+code. A class with support in
+$`Z` lies in $`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the ordinary group
 $`H^{2p}(X;\mathbb Q)`, in which the conjecture is stated.
