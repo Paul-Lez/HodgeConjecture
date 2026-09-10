@@ -846,7 +846,8 @@ lemma coordinate_irrelevant_map_eq_top {n : ℕ} (v : CoordinateSpace n) (hv : v
     Ideal.map (coordinateGlobalSectionsHom v)
       (HomogeneousIdeal.irrelevant (UniversalGrading n)).toIdeal = ⊤ := by
   classical
-  obtain ⟨i, hi⟩ := exists_coordinate_ne_zero v hv
+  obtain ⟨i, hi⟩ := Function.ne_iff.mp hv
+  rw [Pi.zero_apply] at hi
   apply Ideal.eq_top_of_isUnit_mem _
   · apply Ideal.mem_map_of_mem
     exact HomogeneousIdeal.mem_irrelevant_of_mem _ zero_lt_one
@@ -913,7 +914,8 @@ lemma toIntegralProj_apply_smul {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0)
     (c : ℂ) (hc : c ≠ 0) (x : Spec ↧ℂ) :
     toIntegralProj (c • v) (smul_ne_zero hc hv) x = toIntegralProj v hv x := by
   classical
-  obtain ⟨i, hi⟩ := exists_coordinate_ne_zero v hv
+  obtain ⟨i, hi⟩ := Function.ne_iff.mp hv
+  rw [Pi.zero_apply] at hi
   apply ProjectiveSpectrum.ext
   ext r
   rw [(toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal.isHomogeneous.mem_iff,
