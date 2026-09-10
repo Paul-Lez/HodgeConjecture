@@ -216,3 +216,69 @@ def integralCohomologyEquivOrdinarySingularCohomology
   scalarCohomologyEquivOrdinarySingularCohomology X ℤ n
 
 end AlgebraicGeometry.ComplexPoint
+
+namespace AlgebraicGeometry.ComplexPoint
+
+open Point
+
+variable (X : Over (Spec ↧ℂ)) (R : Type) [CommRing R]
+
+/-- The constant-to-singular comparison on hypercohomology is additive. -/
+def scalarCohomologySingularCochainAddEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    ScalarCohomology X R n ≃+ ScalarSingularCochainHypercohomology X R n where
+  toEquiv := scalarCohomologySingularCochainEquiv X R n
+  map_add' α β := (hypercohomologyMap X (constantsToSingularCochainComplexInt X R) n).map_add α β
+
+/-- Additive form of `scalarSingularCochainHypercohomologyEquivOrdinaryCohomology`. -/
+def scalarSingularCochainHypercohomologyAddEquivOrdinaryCohomology
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (n : ℕ) :
+    ScalarSingularCochainHypercohomology X R (n : ℤ) ≃+
+      AlgebraicTopology.Singular.OrdinarySingularCohomology R
+        (TopCat.of (ComplexPoint X)) n := by
+  let Y := TopCat.of (ComplexPoint X)
+  let K := AlgebraicTopology.Singular.globalSingularCochainSheafComplex R Y
+  letI : ParacompactSpace (ComplexPoint X) :=
+    (Homeomorph.Set.univ (ComplexPoint X)).paracompactSpace_iff.mp
+      (inferInstance : ParacompactSpace (⊤ : Opens (ComplexPoint X)))
+  exact (scalarSingularCochainHypercohomologyAddEquivGlobalSections
+      X R (n : ℤ)).trans <|
+    (HomologicalComplex.homologyMapIso
+      (globalSectionsSingularCochainComplexIntIsoExtend_scalar X R)
+        (n : ℤ)).addCommGroupIsoToAddEquiv |>.trans <|
+      (K.extendHomologyIso ComplexShape.embeddingUpNat rfl).addCommGroupIsoToAddEquiv
+        |>.trans <|
+        (AlgebraicTopology.Singular.HereditarilyParacompact.ordinaryScalarSingularCohomologyEquivGlobalSections
+          R Y n).symm
+
+lemma scalarSingularCochainHypercohomologyAddEquivOrdinaryCohomology_apply
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (n : ℕ) (α : ScalarSingularCochainHypercohomology X R (n : ℤ)) :
+    scalarSingularCochainHypercohomologyAddEquivOrdinaryCohomology X R n α =
+      scalarSingularCochainHypercohomologyEquivOrdinaryCohomology X R n α :=
+  rfl
+
+/-- Additive form of `scalarCohomologyEquivOrdinarySingularCohomology`. -/
+def scalarCohomologyAddEquivOrdinarySingularCohomology
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (n : ℕ) :
+    ScalarCohomology X R (n : ℤ) ≃+
+      AlgebraicTopology.Singular.OrdinarySingularCohomology R
+        (TopCat.of (ComplexPoint X)) n :=
+  (scalarCohomologySingularCochainAddEquiv X R (n : ℤ)).trans
+    (scalarSingularCochainHypercohomologyAddEquivOrdinaryCohomology X R n)
+
+lemma scalarCohomologyAddEquivOrdinarySingularCohomology_apply
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (n : ℕ) (α : ScalarCohomology X R (n : ℤ)) :
+    scalarCohomologyAddEquivOrdinarySingularCohomology X R n α =
+      scalarCohomologyEquivOrdinarySingularCohomology X R n α :=
+  rfl
+
+end AlgebraicGeometry.ComplexPoint
