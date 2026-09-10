@@ -102,12 +102,6 @@ theorem contMDiff_analyticMap
     [SmoothOfRelativeDimension d X.hom]
     [SmoothOfRelativeDimension e Y.hom] :
     ContMDiff 𝓘(ℂ, Fin d → ℂ) 𝓘(ℂ, Fin e → ℂ) ω (map f) := by
-  let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω
-      (ComplexPoint X) :=
-    isManifold_omega X d
-  let : IsManifold 𝓘(ℂ, Fin e → ℂ) ω
-      (ComplexPoint Y) :=
-    isManifold_omega Y e
   intro z
   let z' := map f z
   have hz : z ∈ (localChart X d z).source :=

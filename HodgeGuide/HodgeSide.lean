@@ -100,7 +100,7 @@ $`K^\bullet=\Omega_X^\bullet`.
 namespace Guide.Hodge.D3
 ```
 ```lean
-abbrev Hypercohomology (X : Over (Spec ↧ℂ)) (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+def Hypercohomology (X : Over (Spec ↧ℂ)) (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (n : ℤ) : Type 1 :=
   Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
     (constantIntegerSheafComplexInt X) K n
@@ -219,22 +219,156 @@ def hodgeFiltrationSubmodule (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spe
 end Guide.Hodge.D10
 example : @Guide.Hodge.D10.hodgeFiltrationSubmodule = @AlgebraicGeometry.ComplexPoint.hodgeFiltrationSubmodule := rfl
 ```
+```lean -show
+namespace Guide.Hodge.D19
+```
+```lean
+def hodgeFiltrationComplexSubmodule (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) where
+  carrier := hodgeFiltration X p n
+  zero_mem' := (hodgeFiltration X p n).zero_mem
+  add_mem' := (hodgeFiltration X p n).add_mem
+  smul_mem' := fun c _ h => hodgeFiltration_complex_smul_mem X p n c h
+```
+```lean -show
+end Guide.Hodge.D19
+example : @Guide.Hodge.D19.hodgeFiltrationComplexSubmodule = @AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule := rfl
+```
 
 The image is a priori an additive subgroup. Compatibility with scalars is proved, and
 {name}`hodgeFiltrationSubmodule` bundles the image as a subspace over any coefficient field contained
-in $`\mathbb C`. Two sanity checks are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and
+in $`\mathbb C`; {name}`hodgeFiltrationComplexSubmodule` is the case of $`\mathbb C` itself, used
+below. Two sanity checks are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and
 $`F^p=0` for $`p>\dim X`.
+
+# Complex conjugation and the Hodge pieces
+
+The Hodge pieces $`H^{p,q}` are defined by the identity
+
+$$`H^{p,q}=F^p\cap\overline{F^q},`
+
+which holds in any pure Hodge structure and needs no Hodge decomposition theorem. Complex
+conjugation is not $`\mathbb C`-linear, so it does not act on the holomorphic de Rham complex. It
+acts on the constant sheaf $`\underline{\mathbb C}_X` by conjugating coefficients, and it is
+transported to de Rham cohomology across the comparison isomorphism of the first subsection.
+
+```lean -show
+namespace Guide.Hodge.D12
+```
+```lean
+def conjAddHom : ℂ →+ ℂ :=
+  (starRingEnd ℂ).toAddMonoidHom
+```
+```lean -show
+end Guide.Hodge.D12
+example : @Guide.Hodge.D12.conjAddHom = @AlgebraicGeometry.ComplexPoint.conjAddHom := rfl
+```
+```lean -show
+namespace Guide.Hodge.D13
+```
+```lean
+def conjConstantComplexSheafComplexInt (X : Over (Spec ↧ℂ)) :
+    constantComplexSheafComplexInt X ⟶ constantComplexSheafComplexInt X :=
+  HomologicalComplex.extendMap (conjConstantComplexComplex X)
+    ComplexShape.embeddingUpNat
+```
+```lean -show
+end Guide.Hodge.D13
+example : @Guide.Hodge.D13.conjConstantComplexSheafComplexInt = @AlgebraicGeometry.ComplexPoint.conjConstantComplexSheafComplexInt := rfl
+```
+```lean -show
+namespace Guide.Hodge.D14
+```
+```lean
+def complexConstantCohomologyDeRhamAddEquiv (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
+    ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
+  { complexConstantCohomologyDeRhamEquiv X h n with
+    map_add' := fun α β ↦ by
+      change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
+        hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α +
+          hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n β
+      exact map_add _ α β }
+```
+```lean -show
+end Guide.Hodge.D14
+example : @Guide.Hodge.D14.complexConstantCohomologyDeRhamAddEquiv = @AlgebraicGeometry.ComplexPoint.complexConstantCohomologyDeRhamAddEquiv := rfl
+```
+```lean -show
+namespace Guide.Hodge.D15
+```
+```lean
+def deRhamConj (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
+  ((complexConstantCohomologyDeRhamAddEquiv X inferInstance n).toAddMonoidHom).comp
+    ((hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n).comp
+      (complexConstantCohomologyDeRhamAddEquiv X inferInstance n).symm.toAddMonoidHom)
+```
+```lean -show
+end Guide.Hodge.D15
+example : @Guide.Hodge.D15.deRhamConj = @AlgebraicGeometry.ComplexPoint.deRhamConj := rfl
+```
+
+The result is an involution and is conjugate-linear, so it can be bundled as a semilinear map;
+$`\overline{F^q}` is then the preimage of $`F^q` under it.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.deRhamConj_involutive
+#check AlgebraicGeometry.ComplexPoint.deRhamConj_smul
+```
+
+```lean -show
+namespace Guide.Hodge.D16
+```
+```lean
+def deRhamConjSemilinear (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    DeRhamHypercohomology X n →ₛₗ[starRingEnd ℂ] DeRhamHypercohomology X n where
+  toFun := deRhamConj X n
+  map_add' := (deRhamConj X n).map_add
+  map_smul' := deRhamConj_smul X n
+```
+```lean -show
+end Guide.Hodge.D16
+example : @Guide.Hodge.D16.deRhamConjSemilinear = @AlgebraicGeometry.ComplexPoint.deRhamConjSemilinear := rfl
+```
+```lean -show
+namespace Guide.Hodge.D17
+```
+```lean
+def conjHodgeFiltrationComplexSubmodule (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) :=
+  (hodgeFiltrationComplexSubmodule X p n).comap (deRhamConjSemilinear X n)
+```
+```lean -show
+end Guide.Hodge.D17
+example : @Guide.Hodge.D17.conjHodgeFiltrationComplexSubmodule = @AlgebraicGeometry.ComplexPoint.conjHodgeFiltrationComplexSubmodule := rfl
+```
+```lean -show
+namespace Guide.Hodge.D18
+```
+```lean
+def hodgePiece (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
+    Submodule ℂ (DeRhamHypercohomology X n) :=
+  hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
+```
+```lean -show
+end Guide.Hodge.D18
+example : @Guide.Hodge.D18.hodgePiece = @AlgebraicGeometry.ComplexPoint.hodgePiece := rfl
+```
+
+The degree $`n` is an independent index, as for the filtration; when $`p+q=n` this is the usual
+$`(p,q)` piece.
 
 # Hodge classes
 
-The rational Hodge classes of degree $`2p` are the rational classes whose de Rham image lies in
-$`F^p`:
+The Hodge classes of degree $`2p` with coefficients in a field $`K\subseteq\mathbb C` are the
+classes whose de Rham image lies in the $`(p,p)` piece:
 
-$$`\operatorname{Hdg}^p(X;\mathbb Q)
- =\{\alpha\in H^{2p}(X;\mathbb Q):\alpha_{\mathrm{dR}}\in F^pH^{2p}_{\mathrm{dR}}(X)\}.`
+$$`\operatorname{Hdg}^p(X;K)
+ =\{\alpha\in H^{2p}(X;K):\alpha_{\mathrm{dR}}\in H^{p,p}\}.`
 
-In Lean this is the preimage of {name}`hodgeFiltrationSubmodule` under the comparison map, and the
-notation {lean}`Hdg^p(ℚ; X)` abbreviates it.
+In Lean this is the preimage of {name}`hodgePiece` under the comparison map, and the notation
+{lean}`Hdg^p(ℚ; X)` abbreviates the case $`K=\mathbb Q`.
 
 ```lean -show
 namespace Guide.Hodge.D11
@@ -242,7 +376,7 @@ namespace Guide.Hodge.D11
 ```lean
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (p : ℕ) : Submodule K (FieldCohomology K X (2 * p)) :=
-  (hodgeFiltrationSubmodule K X p (2 * p)).comap
+  ((hodgePiece X p p (2 * p)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 ```
 ```lean -show
@@ -250,21 +384,37 @@ end Guide.Hodge.D11
 example : @Guide.Hodge.D11.hodgeClasses = @AlgebraicGeometry.ComplexPoint.hodgeClasses := rfl
 ```
 
+The cohomology of $`X` is not equipped with a pure Hodge structure in the formalization; that
+would require the Hodge decomposition. The $`(p,p)` piece is instead defined directly by the
+formula above, which is why the conjugation had to be constructed.
+
+# Why the filtration alone suffices over the rationals
+
+Deligne states the conjecture with the condition $`\alpha_{\mathrm{dR}}\in F^p` alone,
+[p. 46](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=57), and over
+$`\mathbb Q` the two conditions agree. When complex conjugation fixes $`K`, a $`K`-rational class
+is its own conjugate, so lying in $`F^p` already forces lying in $`\overline{F^p}`. The first
+lemma below proves this for any such $`K`; the second specializes it to $`\mathbb Q`, the
+coefficient field of the conjecture.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_comap_hodgeFiltrationSubmodule
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_rat_eq_comap_hodgeFiltrationSubmodule
+```
+
+The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from
+`HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
+vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector in
+$`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in $`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`,
+and the only summand common to both is $`H^{p,p}`.
+
 ```lean
 #check HodgeStructure.Pure.ofBase_mem_filtration_iff
 ```
 
-The textbook definition asks instead for a rational class of Hodge type $`(p,p)`, which involves
-the conjugate filtration $`\overline{F^p}` as well. The two definitions agree. In a pure Hodge
-structure of weight $`2p`, complex conjugation fixes rational vectors and exchanges $`H^{a,b}`
-with $`H^{b,a}`, so a rational vector in $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in
-$`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`, and the only summand common to both is $`H^{p,p}`.
-The lemma {name HodgeStructure.Pure.ofBase_mem_filtration_iff}`Pure.ofBase_mem_filtration_iff` is
-this argument for an abstract pure Hodge structure,
-as defined in `HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`.
-
-The cohomology of $`X` is not equipped with a pure Hodge structure in the formalization; that
-would require the Hodge decomposition. The filtration condition is therefore taken as the
-definition, and the lemma shows that it is the right one. Deligne likewise identifies the two
-descriptions when stating the conjecture,
-[p. 46](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=57).
+The conjugation condition cannot be dropped for other coefficient fields. Let $`E` be the
+elliptic curve $`\mathbb C/(\mathbb Z+\mathbb Z i)`. The periods of $`dz` are $`1` and $`i`, so
+$`dz` is a $`\mathbb Q(i)`-rational class spanning $`H^{1,0}(E)`, and on $`E\times E` the class
+$`\mathrm{pr}_1^*dz\wedge\mathrm{pr}_2^*dz` is $`\mathbb Q(i)`-rational of type $`(2,0)`. It
+lies in $`F^1H^2` but not in $`H^{1,1}`, so a definition by $`F^p` alone would count it as a
+Hodge class of codimension one, although no algebraic class can reach it.

@@ -43,11 +43,6 @@ open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-local instance analyticEvalIsManifold [SmoothOfRelativeDimension d X.hom] :
-    IsManifold (modelWithCornersSelf ℂ (Fin d → ℂ)) ω
-      (ComplexPoint X) :=
-  isManifold_omega X d
-
 def wedgeCovectors (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E] :
     (p : ℕ) → (Fin p → E →L[ℂ] ℂ) → E [⋀^Fin p]→L[ℂ] ℂ
   | 0, _ => ContinuousAlternatingMap.constOfIsEmpty ℂ E (Fin 0) 1

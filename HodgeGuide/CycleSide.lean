@@ -191,24 +191,14 @@ def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) 
     RationalCohomologyWithSupport X Z n →+ FieldCohomology ℚ X n where
   toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
   map_zero' := by
-    let e : FieldCohomology ℚ X n ≃
-        ShiftedHom
-          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-          (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=
-      Localization.SmallShiftedHom.equiv
-        (analyticQuasiIsomorphisms X) DerivedCategory.Q
-    apply e.injective
-    simp only [e, Localization.SmallShiftedHom.equiv_comp,
+    apply (Localization.SmallShiftedHom.equiv
+      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+    simp only [Localization.SmallShiftedHom.equiv_comp,
       hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
   map_add' α β := by
-    let eTarget : FieldCohomology ℚ X n ≃
-        ShiftedHom
-          (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-          (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=
-      Localization.SmallShiftedHom.equiv
-        (analyticQuasiIsomorphisms X) DerivedCategory.Q
-    apply eTarget.injective
-    simp only [eTarget, Localization.SmallShiftedHom.equiv_comp,
+    apply (Localization.SmallShiftedHom.equiv
+      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+    simp only [Localization.SmallShiftedHom.equiv_comp,
       hypercohomologyEquiv_add, ShiftedHom.add_comp]
 ```
 ```lean -show

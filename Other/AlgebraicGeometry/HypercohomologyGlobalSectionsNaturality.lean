@@ -184,7 +184,7 @@ lemma hypercohomologyAddEquivDerived_naturality
     (f : K ⟶ L) (n : ℤ) (x : Hypercohomology X K n) :
     hypercohomologyAddEquivDerived X L n (hypercohomologyMap X f n x) =
     hypercohomologyAddEquivDerived X K n x ≫ (DerivedCategory.Q.map f)⟦n⟧' := by
-  simp [hypercohomologyAddEquivDerived, hypercohomologyMap,
+  simp [hypercohomologyAddEquivDerived, hypercohomologyMap, Hypercohomology,
     Localization.SmallShiftedHom.equiv_comp, ShiftedHom.comp_mk₀]
 
 set_option backward.defeqAttrib.useBackward true in

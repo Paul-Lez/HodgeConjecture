@@ -53,7 +53,7 @@ namespace Guide.Overview.D2
 ```lean
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (p : ℕ) : Submodule K (FieldCohomology K X (2 * p)) :=
-  (hodgeFiltrationSubmodule K X p (2 * p)).comap
+  ((hodgePiece X p p (2 * p)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 ```
 ```lean -show
@@ -93,8 +93,10 @@ irreducible subvarieties of codimension $`p`.
    $`\underline{\mathbb Q}_X\to\underline{\mathbb C}_X\to\Omega_X^\bullet` induce a comparison map
    from the first to the second.
 2. Define $`F^pH^n_{\mathrm{dR}}(X)` as the image of the hypercohomology of the truncated complex
-   $`\Omega_X^{\ge p}`. The Hodge classes $`\operatorname{Hdg}^p(X;\mathbb Q)` are the rational
-   classes of degree $`2p` whose image under the comparison map lies in $`F^p`.
+   $`\Omega_X^{\ge p}`, transport complex conjugation to de Rham cohomology, and set
+   $`H^{p,q}=F^p\cap\overline{F^q}`. The Hodge classes $`\operatorname{Hdg}^p(X;\mathbb Q)` are the
+   rational classes of degree $`2p` whose image under the comparison map lies in $`H^{p,p}`; over
+   $`\mathbb Q` this is the same as lying in $`F^p`.
 3. Represent an irreducible subvariety $`Z\subseteq X` of codimension $`p` by its generic point, a
    point of the scheme {lean}`X.left` of coheight $`p`, and form the cohomology of $`X(\mathbb C)`
    with support in $`Z`.
@@ -139,9 +141,10 @@ conjecture, but they are needed for the usual equivalent formulations.
   support in $`Z`, and written $`H^{\mathrm{BM}}_i(Z\subset X;\mathbb Q)`. It has not been
   identified with an intrinsic Borel–Moore homology of $`Z`, independent of the embedding.
 
-One consistency theorem is proved: in a pure Hodge structure of weight $`2p`, a rational vector
-lies in $`F^p` if and only if it has Hodge type $`(p,p)`. This justifies defining Hodge classes
-through the filtration alone.
+One consistency theorem is proved, in two forms. For coefficients fixed by complex conjugation,
+in particular over $`\mathbb Q`, the $`(p,p)` condition defining Hodge classes is equivalent to
+lying in $`F^p` alone, which is how Deligne states the conjecture; and in an abstract pure Hodge
+structure of weight $`2p`, a rational vector lies in $`F^p` if and only if it has type $`(p,p)`.
 
 # Degree and support conventions
 
