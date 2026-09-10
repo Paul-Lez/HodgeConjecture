@@ -25,3 +25,4 @@ import Other.AlgebraicGeometry.LefschetzOneOneReduction
 #print axioms AlgebraicGeometry.ComplexPoint.exists_rationalSheafCycleClassOnCycles_eq_of_obligations
 #print axioms RationalLefschetzOneOne.of_obligations
 #print axioms AlgebraicGeometry.ComplexPoint.hasDivisorOfUnitExtension_of_algebraicModel
+#print axioms AlgebraicGeometry.ComplexPoint.hasAlgebraicModel_of_analyticLineBundlesAlgebraize

@@ -60,13 +60,31 @@ states, for a single smooth projective integral complex variety `X`:
 1. `HasIntegralDenominatorClearing X`: for every `α : FieldCohomology ℚ X 2` there are `m ≠ 0`
    and `β : IntegralCohomology X 2` with `integralToRationalCohomology X 2 β = m • α`.
    Mathematically this is finite generation of `H²(X^an, ℤ)` together with the universal
-   coefficient comparison. Neither is available: the finite-good-cover homology model in
-   `Other/AlgebraicTopology/FiniteGoodCover*.lean` assumes a cover, whose existence for the
-   analytification is unproved, and the sheaf/singular comparison in
-   `Other/AlgebraicGeometry/BettiGlobalSectionsComparison.lean` is stated for field coefficients.
+   coefficient comparison. Neither is available. Two independent pieces are missing:
+   (α) finite generation of integral singular homology of `X^an`: the finite-good-cover model
+   `integralSingularHomology_module_finite` in `Other/AlgebraicTopology/FiniteGoodCoverNerveHomology.lean`
+   assumes a `FiniteGoodCover`, whose existence for the analytification is unproved (the
+   standard proofs use geodesically convex neighbourhoods or a tubular-neighbourhood retraction;
+   Mathlib has neither, but has the Whitney embedding `exists_embedding_euclidean_of_compact`
+   and the inverse function theorem);
+   (β) the comparison of the derived integral cohomology `IntegralCohomology X n` with integral
+   singular cohomology. The field-coefficient comparison
+   `rationalCohomologyEquivSingularCohomology` (`Other/AlgebraicGeometry/BettiGlobalSectionsComparison.lean`)
+   uses `[Field R]` in only nine files of its 67-file import closure, and essentially in only
+   three places (`Other/Algebra/Homology/DualExact.lean`, dualising exactness on contractible
+   opens at `SingularCochainSheaf.lean` ≈ line 749; `openSingularCochainRestriction_surjective`
+   in `SingularCochainFlasque.lean`; `rationalCochainRestrictionToCoverSmall_surjective` in
+   `SingularSubdivisionCochainSheaf.lean`), each replaceable over `ℤ` by dualising the existing
+   chain homotopy equivalences and by basis-splitting arguments. The integral statement must be
+   phrased with `OrdinarySingularCohomology` (homology of the dual cochain complex), since
+   `Cohomology R X n := Module.Dual R (Homology R X n)` is only correct over a field.
 2. `HasAlgebraicModel X`: for every `E : HolomorphicUnitExtension X (dim X.left)` there is an
    invertible `L : X.left.Modules` with `(moduleAnalytification X (dim X.left)).obj L ≅
-   E.sectionSheafOfModules`. This is projective GAGA for line bundles.
+   E.sectionSheafOfModules`. This is projective GAGA for line bundles. Its extension-free
+   form `AnalyticLineBundlesAlgebraize X` (every invertible analytic sheaf is the
+   analytification of an invertible algebraic one) implies it by
+   `hasAlgebraicModel_of_analyticLineBundlesAlgebraize`. This obligation is scoped for
+   independent work in [GAGA_HANDOFF.md](GAGA_HANDOFF.md).
 3. `HasDivisorOfAlgebraicModel X`: such an `L` is represented by `D : CodimensionCycle X.left 1`
    with `sheafCycleClassOnCycles (ofOver X) 1 D = integralToRationalCohomology X 2
    E.firstChernClass`. This combines the divisor/line-bundle dictionary on a smooth projective

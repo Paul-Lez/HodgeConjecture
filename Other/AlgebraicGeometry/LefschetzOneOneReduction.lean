@@ -22,7 +22,8 @@ that progress on any one of them can be checked independently.
   multiplication by a nonzero integer. Mathematically this is finite generation of `H²(X, ℤ)`.
 * `HasAlgebraicModel X`: the invertible holomorphic section sheaf constructed from a unit-sheaf
   extension is the analytification of an algebraic invertible sheaf. This is the projective
-  GAGA statement for line bundles.
+  GAGA statement for line bundles; `AnalyticLineBundlesAlgebraize X` is its natural general
+  form (every invertible analytic sheaf algebraizes), from which it follows.
 * `HasDivisorOfAlgebraicModel X`: an algebraic invertible sheaf analytifying to that section
   sheaf is represented by a codimension-one cycle whose constructed cycle class is the rational
   image of the extension's first Chern class. This combines the divisor/line-bundle dictionary
@@ -55,6 +56,22 @@ def HasAlgebraicModel : Prop :=
   ∀ E : HolomorphicUnitExtension X (dim X.left),
     ∃ L : X.left.Modules, TauCeti.SheafOfModules.IsInvertible L ∧
       Nonempty ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules)
+
+/-- Projective GAGA for line bundles, stated for an arbitrary invertible sheaf of modules over
+the holomorphic structure sheaf: it is the analytification of an algebraic invertible sheaf.
+This is the form of the obligation that does not mention the exponential sequence at all. -/
+def AnalyticLineBundlesAlgebraize : Prop :=
+  ∀ M : SheafOfModules.{0} (holomorphicRingSheaf X (dim X.left)),
+    TauCeti.SheafOfModules.IsInvertible M →
+    ∃ L : X.left.Modules, TauCeti.SheafOfModules.IsInvertible L ∧
+      Nonempty ((moduleAnalytification X (dim X.left)).obj L ≅ M)
+
+omit [IsProjective X.hom] in
+/-- The general line-bundle GAGA statement specialises to the section sheaves of unit-sheaf
+extensions, which are invertible by `sectionSheafOfModules_isInvertible`. -/
+theorem hasAlgebraicModel_of_analyticLineBundlesAlgebraize
+    (h : AnalyticLineBundlesAlgebraize X) : HasAlgebraicModel X :=
+  fun E ↦ h E.sectionSheafOfModules E.sectionSheafOfModules_isInvertible
 
 /-- An algebraic invertible sheaf analytifying to the section sheaf of a unit-sheaf extension
 is represented by an integral codimension-one cycle whose constructed class is the rational
