@@ -108,7 +108,8 @@ irreducible subvarieties of codimension $`p`.
    Forgetting the support gives $`\operatorname{cl}_X(Z)\in H^{2p}(X;\mathbb Q)`.
 6. Identify the class with support with a fundamental class in Borel–Moore homology through the
    duality $`H^{\mathrm{BM}}_{2(d-p)}(Z\subset X;\mathbb Q)\simeq H^{2p}_Z(X;\mathbb Q)`, where
-   $`d=\dim X`.
+   $`d=\dim X`; this is
+   {ref "borel-moore-fundamental-class"}[Step 3: the Borel–Moore fundamental class].
 7. Extend $`\operatorname{cl}_X` additively to cycles and $`\mathbb Q`-linearly to rational cycles.
    The statement itself uses only the span of the classes of individual subvarieties.
 
@@ -139,7 +140,9 @@ conjecture, but they are needed for the usual equivalent formulations.
   subvarieties rather than the image of a map out of the Chow group.
 * The Borel–Moore homology used here is defined through the ambient space, as homology with
   support in $`Z`, and written $`H^{\mathrm{BM}}_i(Z\subset X;\mathbb Q)`. It has not been
-  identified with an intrinsic Borel–Moore homology of $`Z`, independent of the embedding.
+  identified with an intrinsic Borel–Moore homology of $`Z`, independent of the embedding;
+  {ref "what-borel-moore-means"}[What Borel–Moore homology means here] says what is and is not
+  claimed.
 
 One consistency theorem is proved, in two forms. For coefficients fixed by complex conjugation,
 in particular over $`\mathbb Q`, the $`(p,p)` condition defining Hodge classes is equivalent to
@@ -147,6 +150,9 @@ lying in $`F^p` alone, which is how Deligne states the conjecture; and in an abs
 structure of weight $`2p`, a rational vector lies in $`F^p` if and only if it has type $`(p,p)`.
 
 # Degree and support conventions
+%%%
+tag := "degree-and-support-conventions"
+%%%
 
 A complex manifold of complex dimension $`d` has real dimension $`2d`, and a subvariety $`Z` of
 complex codimension $`p` has real dimension $`2(d-p)`. Alexander–Poincaré duality in the smooth
@@ -156,6 +162,7 @@ $$`H^{\mathrm{BM}}_{2(d-p)}(Z\subset X;\mathbb Q)
   \simeq H_Z^{2d-2(d-p)}(X;\mathbb Q)=H_Z^{2p}(X;\mathbb Q).`
 
 This is the origin of the indices {lean}`2 * ((d - p : ℕ) : ℤ)` and {lean}`2 * (p : ℤ)` in the
-code. A class with support in
-$`Z` lies in $`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the ordinary group
-$`H^{2p}(X;\mathbb Q)`, in which the conjecture is stated.
+code; the duality itself is constructed in
+{ref "borel-moore-fundamental-class"}[Step 3: the Borel–Moore fundamental class]. A class with
+support in $`Z` lies in $`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the
+ordinary group $`H^{2p}(X;\mathbb Q)`, in which the conjecture is stated.

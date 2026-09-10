@@ -33,6 +33,6 @@ statement. Two checks keep this honest:
   the resulting environment contains any module of `Other`;
 - `python3 scripts/check_import_layers.py` checks the converse — that every module of `Definitions`,
   `Lemmas` and `Mathlib` really is used by the statement — plus that both umbrella modules are
-  complete.
+  complete, and that every source path the Verso guide names in prose still exists.
 
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
