@@ -62,7 +62,6 @@ theorem holomorphicStalk_isUnit_iff (x : ComplexPoint X)
   · intro hf
     exact (hf.map (holomorphicStalkEvaluation X d x).hom).ne_zero
   · intro hf
-    let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X) := isManifold_omega X d
     obtain ⟨U, hx, g, rfl⟩ := (holomorphicFunctionSheaf X d).presheaf.exists_germ_eq f
     have hg : g.1 ⟨x, hx⟩ ≠ 0 := by
       exact (holomorphicStalkEvaluation_germ X d U x hx g) ▸ hf

@@ -87,7 +87,8 @@ holomorphic functions under the canonical de Rham comparison. -/
 theorem hodgeClass_one_toHolomorphicFunctionCohomology_eq_zero
     [IsIntegral X.left] [Smooth X.hom] (α : FieldCohomology ℚ X 2)
     (hα : α ∈ hodgeClasses ℚ X 1) :
-    deRhamToHolomorphicFunctionCohomology X 2 (fieldToDeRhamCohomology ℚ X 2 α) = 0 :=
-  deRhamToHolomorphicFunctionCohomology_eq_zero_of_mem X 2 _ hα
+    deRhamToHolomorphicFunctionCohomology X 2 (fieldToDeRhamCohomology ℚ X 2 α) = 0 := by
+  rw [hodgeClasses_rat_eq_comap_hodgeFiltrationSubmodule] at hα
+  exact deRhamToHolomorphicFunctionCohomology_eq_zero_of_mem X 2 _ hα
 
 end AlgebraicGeometry.ComplexPoint

@@ -36,9 +36,6 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 local instance holomorphicExponentialTopology : TopologicalSpace (ComplexPoint X) :=
   Point.analyticTopology
 
-local instance holomorphicExponentialIsManifold :
-    IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X) := isManifold_omega X d
-
 /-- The additive sheaf underlying the holomorphic-function sheaf. -/
 def holomorphicAdditiveSheaf :
     TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=

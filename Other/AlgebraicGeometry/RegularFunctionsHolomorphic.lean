@@ -52,7 +52,6 @@ variable (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 theorem contMDiffAt_evaluate (U : X.left.Opens) (a : Γ(X.left, U))
     (x : ComplexPoint X) (hx : x ∈ Point.overOpen U) :
     ContMDiffAt 𝓘(ℂ, Fin d → ℂ) 𝓘(ℂ) ω (Point.evaluate U a) x := by
-  let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X) := isManifold_omega X d
   have hxc : x ∈ (localChart X d x).source := mem_localChart_source X d x
   rw [contMDiffAt_iff_of_mem_source (I := 𝓘(ℂ, Fin d → ℂ)) (I' := 𝓘(ℂ))
     (x := x) (y := Point.evaluate U a x) hxc (by simp)]
