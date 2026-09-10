@@ -353,3 +353,4 @@ public import Other.Geometry.Manifold.NormalReach
 public import Other.Geometry.Manifold.TubularNeighbourhood
 public import Other.Geometry.Manifold.CompactManifoldFiniteHomology
 public import Other.AlgebraicGeometry.ProjectiveFiniteHomology
+public import Other.AlgebraicGeometry.CohomologyWithSupportExact
