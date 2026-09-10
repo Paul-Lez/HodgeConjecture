@@ -26,6 +26,9 @@ import Other.AlgebraicGeometry.FiniteFreeAnalytification
 import Other.AlgebraicGeometry.ProjectiveTwistDegreeZeroRelations
 import Other.TauCeti.SheafOfModules.FiniteLocalTriviality
 import Other.TauCeti.SheafOfModules.CechTransition
+import Other.AlgebraicGeometry.AnalytificationGenerates
+import Other.AlgebraicGeometry.UnitExtensionClassOfSectionSheaf
+import Other.AlgebraicGeometry.CohomologyWithSupportExact
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.localCoordinateEquiv
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.sectionSheafOfModules_isInvertible
 #print axioms AlgebraicGeometry.ComplexPoint.contMDiffAt_evaluate
@@ -100,3 +103,6 @@ import Other.TauCeti.SheafOfModules.CechTransition
 #print axioms AlgebraicGeometry.ComplexPoint.finiteFreeHom_analytification_surjective
 #print axioms AlgebraicGeometry.ComplexPoint.ProjectiveTwist.analyticTwistRelationsAlgebraize_zero
 #print axioms AlgebraicGeometry.ComplexProjectiveSpace.instPathConnectedSpace
+#print axioms AlgebraicGeometry.ComplexPoint.analytificationGenerates
+#print axioms AlgebraicGeometry.ComplexPoint.sectionSheafDeterminesClass
+#print axioms AlgebraicGeometry.ComplexPoint.exact_forgetSupport_restrictToComplement
