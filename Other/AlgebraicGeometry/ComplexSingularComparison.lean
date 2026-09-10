@@ -74,11 +74,9 @@ lemma constantsToSingularCochain_quasiIso
     (R : Type) [Field R] :
     QuasiIso
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-        (TopCat.of (ComplexPoint X))) := by
-  refine ⟨fun n ↦ ?_⟩
-  cases n with
-  | zero => exact constantsToSingularCochain_quasiIsoAt_zero X R
-  | succ n => exact constantsToSingularCochain_quasiIsoAt_succ X R n
+        (TopCat.of (ComplexPoint X))) :=
+  AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis
+    R _ fun x U hxU ↦ exists_contractibleOpen_le X x U hxU
 
 /-- The sheafified singular-cochain complex, extended by zero to integer degrees. -/
 def singularCochainSheafComplexInt (R : Type) [Field R] :

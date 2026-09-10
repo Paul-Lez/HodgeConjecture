@@ -65,7 +65,7 @@ def singularToConstantInjectiveResolution :
   let : Mono (constantsToSingularCochainSheafComplex ℚ X) :=
     constantsToSingularCochainSheafComplex_mono ℚ X
   let : QuasiIso (constantsToSingularCochainSheafComplex ℚ X) :=
-    constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ hX
+    constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ _ hX
   exact CochainComplex.liftToInjectiveNat (constantsToSingularCochainSheafComplex ℚ X)
     (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).ι
     (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).injective
@@ -78,7 +78,7 @@ lemma constants_comp_singularToConstantInjectiveResolution :
   let : Mono (constantsToSingularCochainSheafComplex ℚ X) :=
     constantsToSingularCochainSheafComplex_mono ℚ X
   let : QuasiIso (constantsToSingularCochainSheafComplex ℚ X) :=
-    constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ hX
+    constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ _ hX
   exact CochainComplex.comp_liftToInjectiveNat _ _
     (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).injective
 
@@ -86,7 +86,7 @@ instance singularToConstantInjectiveResolution_quasiIso :
     QuasiIso (singularToConstantInjectiveResolution X hX) := by
   let a := constantsToSingularCochainSheafComplex ℚ X
   let : QuasiIso a :=
-    constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ hX
+    constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ _ hX
   have : QuasiIso (a ≫ singularToConstantInjectiveResolution X hX) := by
     rw [constants_comp_singularToConstantInjectiveResolution]
     exact (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).quasiIso

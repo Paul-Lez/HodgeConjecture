@@ -63,34 +63,6 @@ lemma contractibleOpenBasis_of_isOpenEmbedding
   obtain ⟨z, hz, hzy⟩ := hWVi hy
   exact hj.toIsEmbedding.injective hzy ▸ hz
 
-lemma locallyPathConnectedSpace_of_contractibleOpenBasis
-    (hX : ∀ (x : X) (V : Opens X), x ∈ V →
-      ∃ (W : Opens X), x ∈ W ∧ ContractibleSpace W ∧ W ≤ V) :
-    LocallyPathConnectedSpace X := by
-  refine ⟨fun x ↦ hasBasis_self.mpr fun S hS ↦ ?_⟩
-  obtain ⟨V, hVS, hVopen, hxV⟩ := mem_nhds_iff.mp hS
-  let Vo : Opens X := ⟨V, hVopen⟩
-  obtain ⟨W, hxW, hWcontractible, hWVo⟩ := hX x Vo hxV
-  let : ContractibleSpace W := hWcontractible
-  refine ⟨(W : Set X), W.2.mem_nhds hxW, ?_, ?_⟩
-  · rw [isPathConnected_iff_pathConnectedSpace]
-    infer_instance
-  · exact fun y hy ↦ hVS (hWVo hy)
-
-lemma constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis
-    (hX : ∀ (x : X) (V : Opens X), x ∈ V →
-      ∃ (W : Opens X), x ∈ W ∧ ContractibleSpace W ∧ W ≤ V) :
-    QuasiIso (constantsToSingularCochainSheafComplex R X) := by
-  let : LocallyPathConnectedSpace X :=
-    locallyPathConnectedSpace_of_contractibleOpenBasis hX
-  constructor
-  intro n
-  cases n with
-  | zero => exact constantsToSingularCochainSheafComplex_quasiIsoAt_zero R X
-  | succ n =>
-      exact constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_contractibleOpenBasis
-        R X hX n
-
 def preimageOpenToOpen (V : Opens X) :
     (Opens.toTopCat U).obj ((Opens.map j).obj V) ⟶ (Opens.toTopCat X).obj V :=
   TopCat.ofHom
@@ -320,7 +292,7 @@ lemma complementConstantsToSingularCochain_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (constantsToSingularCochainSheafComplex ℚ
       (TopCat.of (AnalyticComplement X Z))) :=
-  constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ
+  constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ _
     (analyticComplement_contractibleOpenBasis X Z hZ)
 
 def complementConstantRationalSingleComplex

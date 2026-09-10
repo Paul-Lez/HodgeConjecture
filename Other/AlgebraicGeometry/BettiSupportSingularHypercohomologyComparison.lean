@@ -192,48 +192,6 @@ def kInjectiveDerivedHomAddEquivCohomologyClass
   exact eDerived.trans <| eQh.symm.trans <|
     CochainComplex.HomComplex.CohomologyClass.homAddEquiv.symm
 
-/-- If a K-injective resolution of a sheaf complex remains a quasi-isomorphism after taking
-global sections, then hypercohomology is computed by the original global-section complex. -/
-def hypercohomologyEquivGlobalSectionsOfResolution
-    (K I : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
-    [I.IsKInjective]
-    (i : K ⟶ I) [QuasiIso i]
-    [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map i)]
-    (n : ℤ) :
-    Hypercohomology X K n ≃
-      (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X)) K).homology n := by
-  let Y := TopCat.of (ComplexPoint X)
-  let A := constantIntegerSheafComplexInt X
-  let A' := TopCat.Sheaf.integerConstantSingleComplex Y
-  let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-  let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle X
-  have hi : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
-      (ComplexShape.up ℤ) i := by
-    rw [HomologicalComplex.mem_quasiIso_iff]
-    infer_instance
-  have he : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
-      (ComplexShape.up ℤ) e.inv := by
-    rw [HomologicalComplex.mem_quasiIso_iff]
-    infer_instance
-  let e₁ := Localization.SmallShiftedHom.postcompEquiv
-    (X := A) (Y := K) (Z := I) (a := n) i hi
-  let e₂ := Localization.SmallShiftedHom.precompEquiv
-    (X := A') (Y := A) (Z := I) (a := n) e.inv he
-  let e₃ := (CochainComplex.HomComplex.CohomologyClass.equivOfIsKInjective
-    (K := A') (L := I) (n := n)).symm
-  let e₄ := (CochainComplex.HomComplex.homologyAddEquiv A' I n).symm.toEquiv
-  let e₅ := (HomologicalComplex.homologyMapIso
-    (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
-      |>.addCommGroupIsoToAddEquiv.toEquiv
-  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
-  let e₆ := (asIso (HomologicalComplex.homologyMap
-    ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
-      |>.addCommGroupIsoToAddEquiv.toEquiv
-  exact e₁.trans (e₂.trans (e₃.trans (e₄.trans (e₅.trans e₆))))
-
 /-- Additive form of the hypercohomology/global-sections comparison for a fixed K-injective
 resolution. -/
 def hypercohomologyAddEquivGlobalSectionsOfResolution

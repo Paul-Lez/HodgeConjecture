@@ -319,26 +319,24 @@ def globalSectionsSingularCochainComplexIntIsoExtend :
     (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
       ((Functor.mapHomologicalComplexCompIso eComp (ComplexShape.up ℕ)).app K).symm
 
-/-- If a K-injective resolution remains a quasi-isomorphism after taking global sections, then
-the hypercohomology of the rational singular-cochain resolution is the homology of its own
-global-section complex. The hypotheses are the precise resolution properties needed by the
-construction; no acyclic-resolution theorem is assumed here. -/
-def rationalSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
-    (I : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+/-- If a K-injective resolution of a sheaf complex remains a quasi-isomorphism after taking
+global sections, then hypercohomology is computed by the original global-section complex. The
+hypotheses are the precise resolution properties needed by the construction; no
+acyclic-resolution theorem is assumed here. -/
+def hypercohomologyEquivGlobalSectionsOfResolution
+    (K I : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     [I.IsKInjective]
-    (i : singularCochainSheafComplexInt X ℚ ⟶ I) [QuasiIso i]
+    (i : K ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map i)]
     (n : ℤ) :
-    RationalSingularCochainHypercohomology X n ≃
+    Hypercohomology X K n ≃
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X))
-        (singularCochainSheafComplexInt X ℚ)).homology n := by
+        (TopCat.of (ComplexPoint X)) K).homology n := by
   let Y := TopCat.of (ComplexPoint X)
   let A := constantIntegerSheafComplexInt X
   let A' := TopCat.Sheaf.integerConstantSingleComplex Y
-  let S := singularCochainSheafComplexInt X ℚ
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle X
   have hi : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
@@ -350,7 +348,7 @@ def rationalSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
     rw [HomologicalComplex.mem_quasiIso_iff]
     infer_instance
   let e₁ := Localization.SmallShiftedHom.postcompEquiv
-    (X := A) (Y := S) (Z := I) (a := n) i hi
+    (X := A) (Y := K) (Z := I) (a := n) i hi
   let e₂ := Localization.SmallShiftedHom.precompEquiv
     (X := A') (Y := A) (Z := I) (a := n) e.inv he
   let e₃ := (CochainComplex.HomComplex.CohomologyClass.equivOfIsKInjective
@@ -403,8 +401,7 @@ def rationalSingularCochainHypercohomologyEquivGlobalSections
         ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i 0 0 hSflasque hIflasque
-  exact rationalSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
-    X I i n
+  exact hypercohomologyEquivGlobalSectionsOfResolution X S I i n
 
 end AlgebraicGeometry.ComplexPoint
 

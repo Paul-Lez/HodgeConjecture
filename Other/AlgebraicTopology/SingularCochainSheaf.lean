@@ -47,7 +47,7 @@ No local acyclicity statement is assumed.
 
 @[expose] public noncomputable section
 
-open CategoryTheory Limits TopologicalSpace
+open CategoryTheory Filter Limits TopologicalSpace
 
 universe u
 
@@ -759,5 +759,35 @@ lemma constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_contractibleOpen
     QuasiIsoAt (constantsToSingularCochainSheafComplex R X) (n + 1) :=
   constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_locallyPrimitive R X n
     (exists_local_singularCochain_primitive_of_contractibleOpenBasis R X hbasis n)
+
+/-- A basis of open contractible neighborhoods makes the space locally path connected. -/
+lemma locallyPathConnectedSpace_of_contractibleOpenBasis
+    (hX : ∀ (x : X) (V : Opens X), x ∈ V →
+      ∃ (W : Opens X), x ∈ W ∧ ContractibleSpace W ∧ W ≤ V) :
+    LocallyPathConnectedSpace X := by
+  refine ⟨fun x ↦ hasBasis_self.mpr fun S hS ↦ ?_⟩
+  obtain ⟨V, hVS, hVopen, hxV⟩ := mem_nhds_iff.mp hS
+  let Vo : Opens X := ⟨V, hVopen⟩
+  obtain ⟨W, hxW, hWcontractible, hWVo⟩ := hX x Vo hxV
+  let : ContractibleSpace W := hWcontractible
+  refine ⟨(W : Set X), W.2.mem_nhds hxW, ?_, ?_⟩
+  · rw [isPathConnected_iff_pathConnectedSpace]
+    infer_instance
+  · exact fun y hy ↦ hVS (hWVo hy)
+
+/-- On a space with a basis of open contractible neighborhoods, the constant-to-singular
+comparison is a quasi-isomorphism in every degree. -/
+lemma constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis
+    (hX : ∀ (x : X) (V : Opens X), x ∈ V →
+      ∃ (W : Opens X), x ∈ W ∧ ContractibleSpace W ∧ W ≤ V) :
+    QuasiIso (constantsToSingularCochainSheafComplex R X) := by
+  let : LocallyPathConnectedSpace X := locallyPathConnectedSpace_of_contractibleOpenBasis X hX
+  constructor
+  intro n
+  cases n with
+  | zero => exact constantsToSingularCochainSheafComplex_quasiIsoAt_zero R X
+  | succ n =>
+      exact constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_contractibleOpenBasis
+        R X hX n
 
 end AlgebraicTopology.Singular
