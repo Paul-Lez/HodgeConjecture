@@ -2,9 +2,15 @@
 
 This document scopes the third of the three remaining obligations for the unconditional
 rational Lefschetz `(1, 1)` theorem (see [LEFSCHETZ_HANDOFF.md](LEFSCHETZ_HANDOFF.md); the
-second is scoped in [GAGA_HANDOFF.md](GAGA_HANDOFF.md)). Half of it is now **proved**; what is
-left is one precisely stated comparison theorem, `HasDivisorClassOfCartierData`, described in
-§3 below. Nothing here depends on the other two obligations.
+second is scoped in [GAGA_HANDOFF.md](GAGA_HANDOFF.md)). Nothing here depends on the other two
+obligations.
+
+The algebraic half is **proved**: every invertible sheaf of modules on `X.left` is represented by
+Cartier data, whose Weil divisor is the divisor of a rational section (§2.1–§2.3). The transport
+of that data to the analytic space is proved up to one isolated statement,
+`AnalytificationGenerates` (§2.4, §4.2(b)). What is left is the comparison of the resulting cycle
+class with the first Chern class, `HasDivisorClassOfSomeCartierData` (§3), whose route is planned
+in §4.3 and whose first step, `SectionSheafDeterminesClass`, is stated in Lean.
 
 ## 1. The exact target
 
@@ -129,6 +135,54 @@ theorem exists_cartierData_represents (L : X.left.Modules)
 
 with `#print axioms` reporting only `propext`, `Classical.choice`, `Quot.sound`.
 
+### 2.4 Analytification of sections, and analytic frames — proved
+
+[`Other/AlgebraicGeometry/HolomorphicSheafGenerators.lean`](../Other/AlgebraicGeometry/HolomorphicSheafGenerators.lean),
+[`Other/AlgebraicGeometry/AnalyticSectionOfAlgebraic.lean`](../Other/AlgebraicGeometry/AnalyticSectionOfAlgebraic.lean)
+
+The analytic counterpart of §2.2, and the transport of the algebraic local data to the analytic
+space.
+
+* `holRes`, `HolomorphicGenerates` — restriction and generation for sheaves of modules over
+  `holomorphicRingSheaf X d`; the same definitions as §2.2, on the analytic space. Note that
+  `RingCat` is not commutative, so `HolomorphicGenerates.exists_isUnit_smul_eq` proves both
+  unit identities from the two generation hypotheses.
+* `HolomorphicGenerates.map_iso`, `smul_holRes_map_iso` — generation and identities
+  `u • a = b` between restrictions transport along an isomorphism of holomorphic sheaves of
+  modules.
+* `holomorphicUnitIsoSection`, `holomorphicGenerates_unitIsoSection`,
+  `HolomorphicTrivializingCover` (with `ofLocalTrivializations`, `transport`) and
+  `nonempty_holomorphicTrivializingCover_of_isInvertible` — an invertible holomorphic sheaf of
+  modules has a cover by opens with a generating frame on each; in particular
+  `E.sectionSheafOfModules` does, through `E.sectionLocalTrivializations`
+  (`HolomorphicUnitExtension.frames`).
+* `HolomorphicTrivializingCover.exists_isUnit_frameChange` — **frame change**: on an open
+  contained in a member of each of two trivializing covers of the same sheaf, the two frames
+  differ by a unit of the holomorphic structure sheaf, i.e. by a nowhere-vanishing holomorphic
+  function.
+* `analyticFunction X d U r` — a regular function on `U` as a section of the holomorphic
+  structure sheaf on `U^an`, with `analyticFunction_one`, `analyticFunction_mul`,
+  `analyticFunction_res` and `isUnit_analyticFunction` (the evaluation of a unit is a
+  nowhere-vanishing holomorphic function).
+* `analyticSection X d L U g` — the analytification of a section, defined as the image of `g`
+  under the unit of `moduleAnalytificationAdjunction`, with
+  `analyticSection_smul` (semilinearity over `analyticFunction`) and `analyticSection_res`
+  (compatibility with restriction).
+* **`analyticSection_smul_res`** — the transport of transition identities:
+  `u • a|_W = b|_W` implies `u^an • a^an|_{W^an} = b^an|_{W^an}`. This is unconditional and is
+  the fact the cocycle comparison rests on.
+* Given the obligation `AnalytificationGenerates` of §4.2(b):
+  `analyticTrivializingCover` (the analytified algebraic cover),
+  `extensionFramesOfAlgebraic` (transported along an isomorphism with
+  `E.sectionSheafOfModules`),
+  **`analyticSection_transitionUnit`** and **`extensionFramesOfAlgebraic_transitionUnit`** (the
+  transition functions of those frames are the evaluations `uᵢ^an` of the algebraic transition
+  units, hence the analytifications of the local equations `fᵢ`), and
+  **`exists_isUnit_frameChange_extension`** (on any open contained in `Uᵢ^an` and in one of the
+  local-lift neighbourhoods of `E`, the analytified algebraic frame and `E`'s own frame differ
+  by a nowhere-vanishing holomorphic function — so the two cocycles are cohomologous on the
+  common refinement of the covers).
+
 ## 3. What remains
 
 [`Other/AlgebraicGeometry/DivisorObligations.lean`](../Other/AlgebraicGeometry/DivisorObligations.lean):
@@ -248,18 +302,55 @@ model of `H¹(𝒪ˣ) → H²(ℤ)`. The repository has the local lifts and thei
 `Ext`-representative with the Čech representative, not of new analysis. It is nevertheless a
 substantial piece: there is no Čech-to-derived-functor comparison in the repository.
 
-**Missing (b): the analytic transition functions of an algebraic model.** The hypothesis of the
-obligation is an isomorphism `(moduleAnalytification X d).obj L ≅ E.sectionSheafOfModules`.
-From `c.Represents L` one gets algebraic generators `gᵢ` of `L` on `Uᵢ` and their transition
-units `u_{ij} ∈ Γ(Uᵢ ⊓ Uⱼ, 𝒪ˣ)` with `germ(u_{ij}) = fᵢ/fⱼ`. What is needed is: the
-analytification of `gᵢ` generates `(moduleAnalytification X d).obj L` on `analyticOpen X Uᵢ`,
-so that the analytic transition units of `E.sectionSheafOfModules` are — after the given
-isomorphism and a refinement of the two covers — the evaluations of `u_{ij}` (holomorphic by
-`contMDiffAt_evaluate`, `RegularFunctionsHolomorphic.lean`). The ingredients are
-`moduleAnalytification`, `moduleAnalytificationUnitIso` and Mathlib's `pullbackObjFreeIso`
-(`AnalytificationModules.lean`, `Mathlib/Algebra/Category/ModuleCat/Sheaf/PullbackFree.lean`);
-the statement "analytification of a generating section generates" is not yet proved and is a
-good self-contained warm-up.
+**Missing (b): `AnalytificationGenerates` — the analytification of a generating section
+generates.** Stated in
+[`Other/AlgebraicGeometry/AnalyticSectionOfAlgebraic.lean`](../Other/AlgebraicGeometry/AnalyticSectionOfAlgebraic.lean):
+
+```lean
+def AnalytificationGenerates : Prop :=
+  ∀ (L : X.left.Modules) (U : X.left.Opens) (g : Γ(L, U)),
+    Scheme.Modules.Generates g →
+      HolomorphicGenerates (M := (moduleAnalytification X d).obj L) (analyticSection X d L U g)
+```
+
+Everything else on the analytic side of §2.4 is derived from it. Mathematically it is the base
+change
+
+  `((pullback φ).obj L).over U^an ≅ (pullback (φ.over U)).obj (L.over U)`
+
+for `φ = regularToHolomorphicRingSheaf X d` and the induced functor
+`Opens U ⥤ Opens U^an`, combined with Mathlib's `SheafOfModules.pullbackObjUnitToUnit` for that
+restricted morphism of ringed sites (which is an isomorphism because `U ↦ U^an` is a final
+functor — the proof of `underlyingContinuousMap_opensMap_final` in `AnalytificationModules.lean`
+works verbatim over `U`). Concretely:
+
+1. `Generates g` is the same as an isomorphism `unit (𝒪_X.over U) ≅ L.over U` carrying `1` to
+   `g` — the two directions are `generates_unitIsoSection` and the fact that the morphism
+   determined by `g` has bijective components.
+2. Mathlib has no Beck–Chevalley statement for `SheafOfModules.pullback` and `overFunctor`.
+   Both `overFunctor R U = pushforward (𝟙)` along `Over.forget U` and `pushforward φ` along `F`
+   are pushforwards, and `pushforwardComp` identifies
+   `pushforward φ ⋙ overFunctor R U ≅ overFunctor R' (F U) ⋙ pushforward (φ.over U)`
+   because both are pushforward along `Over.forget U ⋙ F = F_U ⋙ Over.forget (F U)`. The mate
+   of that isomorphism is the base change wanted; it is an isomorphism because `overFunctor` is
+   *also* a left adjoint (`SheafOfModules.overPushforwardOverAdj`, and the instance
+   `IsLeftAdjoint (pushforward (𝟙 (R.over x)))` in `Mathlib/Algebra/Category/ModuleCat/Sheaf/
+   PushforwardContinuous.lean`), so open restriction satisfies base change on both sides.
+3. An alternative, avoiding Beck–Chevalley: redo the Yoneda argument of
+   `SheafOfModules.pullbackObjUnitToUnit` directly for the morphism
+   `unit (𝒪^an.over U^an) ⟶ ((pullback φ).obj L).over U^an` determined by `g^an`, using that
+   `overFunctor` is a left adjoint to express `Hom(N.over U^an, M)` as
+   `Hom_{𝒪_X}(L, pushforward φ (pushforward (pushforwardOver U^an) M))` and the algebraic
+   `overFunctor` adjunction to reduce to `Generates g`. This is the same content with less
+   general machinery.
+4. A third route is stalkwise: `((pullback φ).obj L)_z ≅ 𝒪^an_z ⊗_{𝒪_{X,x}} L_x`, and a
+   generating section becomes a basis of a free rank-one module. Mathlib has module structures
+   on stalks (`Mathlib/Algebra/Category/ModuleCat/Stalk.lean`) but no computation of the stalks
+   of a pullback along a morphism of ringed sites, so this route needs the most new material.
+
+Warm-up lemmas that are true, useful and independent of the choice: `moduleAnalytification`
+preserves invertibility; the analytification of a free sheaf on an algebraic open is free on the
+corresponding analytic open (`pullbackObjFreeIso`, `moduleAnalytificationUnitIso`).
 
 **Missing (c): the local computation.** Near a smooth point `p` of one component `Z` of `|D|`,
 choose an algebraic open `U ∋ p` on which `Z` is cut out by a regular function `h` with
@@ -289,23 +380,75 @@ coboundary on `X \ |D|` lifts through `forgetSupport`. Cohomology with support a
 `forgetSupport` exist (`CohomologyWithSupport.lean`, `CycleComponentSupportExtension.lean`);
 the supported exponential sequence does not.
 
-### 4.3 Suggested order of work
+### 4.3 Plan and order of work
 
-1. *Warm-up, no analysis:* analytification of a generating section generates; the analytic
-   trivializing cover of `(moduleAnalytification X d).obj L` indexed by the algebraic one.
-2. Čech model of `H¹(𝒪ˣ)` and of the connecting map to `H²(ℤ)`, compared with
-   `holomorphicFirstChernClass` — missing (a).
-3. The supported refinement — missing (d).
-4. The one-variable local computation — missing (c) — and the conclusion by
-   `cycleComponentSupportedInjectiveClass_unique` plus additivity of
-   `sheafCycleClassOnCycles` over the components of `c.divisor`
-   (`sheafCycleClassOnCycles_sum_single`).
+**Step 1 — the algebraic data on the analytic space.** Done except for
+`AnalytificationGenerates` (missing (b)); see §2.4. Its output is: frames `γᵢ` of
+`E.sectionSheafOfModules` on the analytic opens `Uᵢ^an`, with transition functions the
+evaluations `uᵢ^an` of the algebraic transition units — equivalently the analytifications of the
+local equations `fᵢ` of the rational section whose divisor is `c.divisor` — and a unit frame
+change to `E`'s own frames on any common open.
 
-An alternative that avoids (a) and (d) is to compare *both* sides with the topological
-intersection-theoretic description through `cycleComponentSheafBorelMooreFundamentalClass`
-(`CycleComponentSheafClass.lean`) and the Poincaré dual of the divisor as a `2d−2` cycle. That
-route needs a Borel–Moore statement for the analytic divisor of a holomorphic section, which the
-repository does not have either; the estimate is not obviously smaller.
+**Step 2 — from the line bundle back to the extension class.** Two pieces.
+
+*2a. `SectionSheafDeterminesClass`* (stated in
+[`Other/AlgebraicGeometry/UnitExtensionClassObligations.lean`](../Other/AlgebraicGeometry/UnitExtensionClassObligations.lean)):
+two unit-sheaf extensions with isomorphic sheaves of sections have the same class in
+`Ext¹(ℤ, 𝒪ˣ)`. This is injectivity of `H¹(X^an, 𝒪ˣ) → Pic(X^an)`, and it is what allows
+`E.firstChernClass` to be computed from the algebraic data at all
+(`firstChernClass_eq_of_sectionSheafOfModules_iso`). Route: pass to a common refinement of the
+two trivializing covers; `HolomorphicTrivializingCover.exists_isUnit_frameChange` gives unit
+frame changes `c_z`; correcting the local lifts of the integer section `1` by `c_z` makes the two
+cocycles of `Other/AlgebraicTopology/SheafExtensionCocycle.lean` agree, the resulting local
+isomorphisms `E.middle|_W ≅ E'.middle|_W` agree on overlaps and glue, and
+`ShortComplex.ShortExact.extClass` is invariant under an isomorphism of short exact sequences.
+No comparison of cohomology theories is involved.
+
+*2b. Realization of a cocycle.* For a `1`-cocycle of holomorphic units on an open cover, an
+extension whose local lifts have that cocycle. The repository builds the bundle from the
+extension (`HolomorphicUnitTransition.lean`, `HolomorphicLineBundleOfExtension.lean`); the
+converse glues `𝒪ˣ ⊕ ℤ` along the cocycle. Together with 2a this makes the assignment
+"cocycle ↦ extension class" well defined, which is the practical substitute for a Čech-to-derived
+comparison.
+
+**Do not build general Čech cohomology of sheaves.** The repository's Čech development
+(`Other/AlgebraicTopology/OpenCoverOrderedCechBicomplex.lean`, `OrderedCechRealization.lean`,
+`OrderedCechNormalization.lean`, `CechNerveEvaluation.lean`, `IntegralCechTotalAugmentation.lean`)
+is about the singular chains of a cover, built for the Betti comparison; it is not a Čech complex
+of an abstract sheaf, and there is no Čech-to-derived-functor comparison anywhere in the
+repository or in Mathlib. Building one — plus the comparison with
+`Abelian.Ext` and with `Hypercohomology` — is a project of the size of the whole present
+obligation. The route below is designed to avoid it: the only handle needed on `H²(X^an, ℤ)` is
+`hypercohomologyAddEquivGlobalSectionsKInjective` (`HypercohomologyGlobalSectionsNaturality.lean`)
+together with the supported/relative comparisons that already exist.
+
+**Step 3 — localize the class on the divisor** (missing (d)). The rational section `s` frames
+the bundle on `Ω := X^an \ |D|^an`, so `E|_Ω` splits: a global frame over `Ω` gives, through 2a/2b,
+a global lift over `Ω` of the constant integer section `1`, i.e. a splitting of the restricted
+extension, i.e. the vanishing of `E.cohomologyClass|_Ω`. Hence `E.firstChernClass` is in the
+image of `forgetSupport X (cycleComponentSupport …) 2` — a class in cohomology with support in
+`|D|^an`. Formally, what is needed is the connecting/exact sequence
+`H²_{|D|}(X, ℤ) → H²(X, ℤ) → H²(Ω, ℤ)` and the vanishing of the restriction; both the supported
+groups (`HodgeConjecture/Definitions/AlgebraicGeometry/CohomologyWithSupport.lean`) and the
+restriction maps exist, but the exactness statement in this presentation does not yet.
+
+**Step 4 — the local model** (missing (c)) **and conclusion.** On the smooth locus of a component
+`Z` with multiplicity `n_Z`, in a normal chart the divisor is `{z₁ = 0}` and the transition
+cocycle is that of `z₁^{n_Z}`; the supported class is `n_Z` times the normalised normal-chart
+coclass `cycleComponentSmoothSupportCoclassSection`. Then
+`cycleComponentSupportedInjectiveClass_unique` identifies the supported lift of `E.firstChernClass`
+with `∑ n_Z · cycleComponentSupportedInjectiveClass`, and forgetting support
+(`cycleComponentSheafClass_eq_forgetSupport`) together with additivity
+(`sheafCycleClassOnCycles_sum_single`) gives exactly the equation of §3. This step fixes the sign.
+
+Summary of the named obligations, in dependency order:
+
+| Name | File | Content |
+| --- | --- | --- |
+| `AnalytificationGenerates` | `AnalyticSectionOfAlgebraic.lean` | analytification of a generating section generates |
+| `SectionSheafDeterminesClass` | `UnitExtensionClassObligations.lean` | `H¹(𝒪ˣ) → Pic` is injective |
+| — (not yet stated) | — | realization of a cocycle by an extension; supported exactness; the local model |
+| `HasDivisorClassOfSomeCartierData` | `DivisorObligations.lean` | the target of §3 |
 
 ## 5. Interface reference
 
@@ -336,10 +479,14 @@ lake env lean Other/AlgebraicGeometry/DivisorOfRationalSection.lean
 lake env lean Other/AlgebraicGeometry/InvertibleSheafRationalSection.lean
 lake env lean Other/AlgebraicGeometry/CartierDataOfTrivializingCover.lean
 lake env lean Other/AlgebraicGeometry/DivisorObligations.lean
+lake env lean Other/AlgebraicGeometry/HolomorphicSheafGenerators.lean
+lake env lean Other/AlgebraicGeometry/AnalyticSectionOfAlgebraic.lean
+lake env lean Other/AlgebraicGeometry/UnitExtensionClassObligations.lean
 lake build Other.AlgebraicGeometry.DivisorObligations
+lake build Other.AlgebraicGeometry.UnitExtensionClassObligations
 ```
 
-All four modules are imported by `Other.lean`. Repository conventions: files start with
+All seven modules are imported by `Other.lean`. Repository conventions: files start with
 `module`, use `public import`, `@[expose] public noncomputable section`; local topology
 instances need unique names; `set_option backward.isDefEq.respectTransparency false in` is often
 needed to `change`/`rw` through bundled categories, and `omit [...] in` before the docstring

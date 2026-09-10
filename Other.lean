@@ -335,6 +335,9 @@ public import Other.AlgebraicGeometry.DivisorOfRationalSection
 public import Other.AlgebraicGeometry.InvertibleSheafRationalSection
 public import Other.AlgebraicGeometry.CartierDataOfTrivializingCover
 public import Other.AlgebraicGeometry.DivisorObligations
+public import Other.AlgebraicGeometry.HolomorphicSheafGenerators
+public import Other.AlgebraicGeometry.AnalyticSectionOfAlgebraic
+public import Other.AlgebraicGeometry.UnitExtensionClassObligations
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
