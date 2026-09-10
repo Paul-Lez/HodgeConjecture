@@ -61,12 +61,12 @@ local instance analyticHasDerivedCategory :
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 /-- The constant rational sheaf on the analytic complex-point space. -/
-def constantFieldSheaf : AnalyticAdditiveSheaf X :=
+abbrev constantFieldSheaf : AnalyticAdditiveSheaf X :=
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of K)
 
 /-- The inclusion of the rational constant sheaf into the complex constant sheaf. -/
-def fieldToComplexConstantSheaf :
+abbrev fieldToComplexConstantSheaf :
     constantFieldSheaf K X ⟶ constantComplexSheaf X :=
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   (constantSheaf J AddCommGrpCat).map
@@ -263,7 +263,7 @@ omit [Algebra K ℂ] in
   simp [fieldScalarAddHom, mul_assoc]
 
 /-- Scalar multiplication on the rational constant sheaf. -/
-def fieldScalarSheaf (q : K) :
+abbrev fieldScalarSheaf (q : K) :
     constantFieldSheaf K X ⟶ constantFieldSheaf K X :=
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   (constantSheaf J AddCommGrpCat).map
@@ -324,6 +324,29 @@ omit [Algebra K ℂ] in
   rw [fieldScalarAddHom_mul, h, Functor.map_comp]
   rfl
 
+/-- Multiplying by `q` in `K` before including into `ℂ` agrees with including first and then
+multiplying by `algebraMap K ℂ q`. -/
+lemma ofHom_algebraMap_comp_complexScalarAddHom (q : K) :
+    AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom ≫
+        AddCommGrpCat.ofHom (complexScalarAddHom (algebraMap K ℂ q)) =
+      AddCommGrpCat.ofHom (fieldScalarAddHom K q) ≫
+        AddCommGrpCat.ofHom (@AddMonoidHomClass.toAddMonoidHom K ℂ (K →+* ℂ) Field.toSemifield.toNonAssocSemiring.toAddCommMonoidWithOne.toAddZeroClass.toAddZero
+                Complex.instSemiring.toNonAssocSemiring.toAddCommMonoidWithOne.toAddZeroClass.toAddZero RingHom.instFunLike _
+        (algebraMap K ℂ)) := by
+  ext r
+  simp [complexScalarAddHom, fieldScalarAddHom, map_mul]
+
+/-- The constant-presheaf map induced by the inclusion `K → ℂ`, followed by scalar multiplication
+by `algebraMap K ℂ q` on the constant complex presheaf, is the constant-presheaf map induced by the
+composite additive map. -/
+lemma const_map_algebraMap_comp_complexScalarPresheaf (q : K) : (Functor.const (Opens (ComplexPoint X))ᵒᵖ).map (AddCommGrpCat.ofHom ↑(algebraMap K ℂ)) ≫
+    complexScalarPresheaf X ((algebraMap K ℂ) q) =
+  (Functor.const (Opens (ComplexPoint X))ᵒᵖ).map
+    (AddCommGrpCat.ofHom (algebraMap K ℂ : K →+ ℂ) ≫ AddCommGrpCat.ofHom (complexScalarAddHom ((algebraMap K ℂ) q))) := rfl
+
+set_option linter.auxLemma false in
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1 TopCat.instCategorySheaf._aux_3
+  TopCat.instCategorySheaf._aux_5 constantComplexAddCommGrpPresheaf in
 /-- The inclusion of rational constants into complex constants commutes with scalar
 multiplication. -/
 lemma fieldToComplexConstantSheaf_scalar (q : K) :
@@ -331,45 +354,30 @@ lemma fieldToComplexConstantSheaf_scalar (q : K) :
       complexScalarSheaf X (algebraMap K ℂ q) =
     fieldScalarSheaf K X q ≫
       fieldToComplexConstantSheaf K X := by
-  let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
-  change (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
-    (presheafToSheaf J AddCommGrpCat).map
-      (complexScalarPresheaf X (algebraMap K ℂ q)) =
-    (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (fieldScalarAddHom K q)) ≫
-    (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
-  change (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
-    (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (complexScalarAddHom (algebraMap K ℂ q))) = _
-  rw [← Functor.map_comp, ← Functor.map_comp]
-  congr 1
-  ext r
-  change algebraMap K ℂ q * algebraMap K ℂ r = algebraMap K ℂ (q * r)
-  rw [map_mul]
+  simp [fieldToComplexConstantSheaf, fieldScalarSheaf, complexScalarSheaf, constantSheaf,
+    constantComplexSheaf, constantFieldSheaf, ← Functor.map_comp, ← ofHom_algebraMap_comp_complexScalarAddHom,
+    const_map_algebraMap_comp_complexScalarPresheaf]
 
 omit [Algebra K ℂ] in
+/-- Multiplying an integer by `r` and then by `q` is multiplying it by `q * r`. -/
+lemma ofHom_integerMultipleAddHom_comp_fieldScalarAddHom (q r : K) :
+    AddCommGrpCat.ofHom (integerMultipleAddHom K r) ≫
+        AddCommGrpCat.ofHom (fieldScalarAddHom K q) =
+      AddCommGrpCat.ofHom (integerMultipleAddHom K (q * r)) := by
+  ext
+  simp [integerMultipleAddHom, fieldScalarAddHom]
+
+set_option linter.auxLemma false in
+omit [Algebra K ℂ] in
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 constantIntegerSheaf in
 /-- Applying a rational scalar after the constant class `r` gives the constant class `q * r`. -/
 lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
     integerToFieldConstantSheaf K X r ≫
       fieldScalarSheaf K X q =
         integerToFieldConstantSheaf K X (q * r) := by
-  unfold integerToFieldConstantSheaf fieldScalarSheaf
-  let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
-  change (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (integerMultipleAddHom K r)) ≫
-    (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (fieldScalarAddHom K q)) =
-    (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (integerMultipleAddHom K (q * r)))
-  rw [← Functor.map_comp]
-  congr 1
-  ext
-  simp [integerMultipleAddHom, fieldScalarAddHom]
+  rw [integerToFieldConstantSheaf, fieldScalarSheaf, integerToFieldConstantSheaf,
+    ← Functor.map_comp, ofHom_integerMultipleAddHom_comp_fieldScalarAddHom]
 
 /-- Scalar multiplication on the rational constant sheaf complex. -/
 def fieldScalarComplex (q : K) :
@@ -386,21 +394,9 @@ omit [Algebra K ℂ] in
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarComplex_one : fieldScalarComplex K X 1 = 𝟙 _ := by
-  unfold fieldScalarComplex
-  change HomologicalComplex.extendMap
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-        (fieldScalarSheaf K X 1)) ComplexShape.embeddingUpNat =
-    𝟙 (HomologicalComplex.extend
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        (constantFieldSheaf K X)) ComplexShape.embeddingUpNat)
-  rw [fieldScalarSheaf_one]
-  have hm : (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-      (𝟙 (constantFieldSheaf K X)) =
-      𝟙 ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        (constantFieldSheaf K X)) :=
-    (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map_id _
-  rw [hm]
-  exact HomologicalComplex.extendMap_id _ _
+  unfold fieldScalarComplex constantFieldSheafComplexInt
+  rw [fieldScalarSheaf_one, (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map_id,
+    HomologicalComplex.extendMap_id]
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarComplex_add (a b : K) :
@@ -436,8 +432,7 @@ lemma fieldToHolomorphicDeRhamComplexInt_scalar
     fieldScalarComplex K X q ≫
       fieldToHolomorphicDeRhamComplexInt K X := by
   unfold fieldToHolomorphicDeRhamComplexInt
-  rw [Category.assoc, constantsToHolomorphicDeRhamComplexInt_scalar]
-  rw [← Category.assoc,
+  rw [Category.assoc, constantsToHolomorphicDeRhamComplexInt_scalar, ← Category.assoc,
     fieldToComplexConstantSheafComplexInt_scalar, Category.assoc]
 
 omit [Algebra K ℂ] in
