@@ -119,6 +119,12 @@ def extendFunctional (K L : Type u) [Field K] [Field L] [Algebra K L]
     ext x
     simp [Algebra.smul_def]
 
+@[simp]
+lemma extendFunctional_apply (K L : Type u) [Field K] [Field L] [Algebra K L]
+    (M : Type u) [AddCommGroup M] [Module K M] (φ : Module.Dual K M) (x : M) :
+    extendFunctional K L M φ x = algebraMap K L (φ x) :=
+  rfl
+
 lemma extendFunctional_injective (K L : Type u) [Field K] [Field L] [Algebra K L]
     (M : Type u) [AddCommGroup M] [Module K M] :
     Function.Injective (extendFunctional K L M) := by
