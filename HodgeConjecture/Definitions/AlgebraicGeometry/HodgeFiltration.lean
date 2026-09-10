@@ -1223,11 +1223,9 @@ def hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
 
 /-! ### Complex conjugation and the `(p,p)` part
 
-Complex conjugation is not `ℂ`-linear, so it does not act on the holomorphic de Rham complex. It
-acts on the constant sheaf `ℂ`, where it is the ring automorphism `starRingEnd ℂ` applied to
-coefficients, and is transported to de Rham hypercohomology across the constant-to-de Rham
-comparison. The `(p,q)` piece is then *defined* as `F^p ⊓ conj F^q`; in weight `p + q` this is the
-usual Hodge piece, and no Hodge decomposition theorem is needed to state it. -/
+Conjugation is not `ℂ`-linear, so it acts on the constant sheaf `ℂ` rather than on the holomorphic
+de Rham complex, and is transported across the constant-to-de Rham comparison. The `(p,q)` piece
+is then *defined* as `F^p ⊓ conj F^q`, which needs no Hodge decomposition theorem. -/
 
 /-- The constant-to-de Rham comparison equivalence, upgraded to an additive equivalence. -/
 def complexConstantCohomologyDeRhamAddEquiv [IsIntegral X.left] [Smooth X.hom]
@@ -1270,8 +1268,7 @@ lemma complexConstantCohomologyDeRhamAddEquiv_symm_scalar [IsIntegral X.left] [S
   rw [AddEquiv.apply_symm_apply, complexConstantCohomologyDeRhamAddEquiv_scalar,
     AddEquiv.apply_symm_apply]
 
-/-- Complex conjugation on de Rham hypercohomology, transported from the constant sheaf `ℂ`
-across the constant-to-de Rham comparison. -/
+/-- Complex conjugation on de Rham hypercohomology, transported from the constant sheaf `ℂ`. -/
 def deRhamConj [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
   ((complexConstantCohomologyDeRhamAddEquiv X inferInstance n).toAddMonoidHom).comp
@@ -1317,9 +1314,8 @@ def deRhamConjSemilinear [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
 
 /-! #### Real coefficient fields
 
-Everything below is conditional on `hK`, which says that complex conjugation fixes the image of
-`K` in `ℂ` — equivalently that the structure map `K → ℂ` lands in `ℝ`. It holds for `ℚ`, hence for
-the Hodge conjecture, and fails for a non-real embedding such as `ℚ(i) ⊆ ℂ`. -/
+The hypothesis `hK` below says conjugation fixes the image of `K` in `ℂ`, equivalently that
+`K → ℂ` lands in `ℝ`. It holds for `ℚ` and fails for `ℚ(i) ⊆ ℂ`. -/
 
 /-- If conjugation fixes the image of `K` in `ℂ`, it fixes the constant `K`-sheaf sitting inside
 the constant `ℂ`-sheaf. -/
@@ -1350,8 +1346,7 @@ lemma fieldToComplexConstantSheafComplexInt_comp_conj
   rw [← HomologicalComplex.extendMap_comp, ← Functor.map_comp,
     fieldToComplexConstantSheaf_comp_conj K X hK]
 
-/-- Classes coming from a real coefficient field are their own conjugates in complex
-constant-sheaf cohomology. -/
+/-- Such classes are their own conjugates in complex constant-sheaf cohomology. -/
 lemma conj_fieldToComplexCohomology
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q)
     (n : ℤ) (α : FieldCohomology K X n) :
@@ -1362,8 +1357,8 @@ lemma conj_fieldToComplexCohomology
   rw [← hypercohomologyMap_comp_apply,
     fieldToComplexConstantSheafComplexInt_comp_conj K X hK]
 
-/-- Classes coming from a real coefficient field are their own conjugates in de Rham
-hypercohomology. This is the step that makes `F^p` alone the right condition over `ℚ`. -/
+/-- Such classes are their own conjugates in de Rham hypercohomology. This is the step that
+makes `F^p` alone the right condition over `ℚ`. -/
 lemma deRhamConj_fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom]
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q)
     (n : ℤ) (α : FieldCohomology K X n) :
@@ -1376,8 +1371,8 @@ lemma deRhamConj_fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom]
   rw [he, deRhamConj_apply, AddEquiv.symm_apply_apply,
     conj_fieldToComplexCohomology K X hK]
 
-/-- The conjugate Hodge filtration `conj F^p`, as a complex subspace of de Rham
-hypercohomology. Conjugation is an involution, so the preimage of `F^p` is also its image. -/
+/-- The conjugate Hodge filtration `conj F^p`. Conjugation is an involution, so the preimage of
+`F^p` is also its image. -/
 def conjHodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) :=
   (hodgeFiltrationComplexSubmodule X p n).comap (deRhamConjSemilinear X n)
@@ -1388,11 +1383,8 @@ lemma mem_conjHodgeFiltrationComplexSubmodule_iff [IsIntegral X.left] [Smooth X.
       deRhamConj X n α ∈ hodgeFiltration X p n :=
   Iff.rfl
 
-/-- The Hodge piece `H^{p,q}` in degree `n`, defined as `F^p ⊓ conj F^q`.
-
-The degree is an independent index, exactly as it is for `hodgeFiltration`. When `p + q = n` this
-is the usual `(p,q)` piece of a pure Hodge structure of weight `n`; writing it as an intersection
-of the filtration with its conjugate means the pieces need no Hodge decomposition to define. -/
+/-- The Hodge piece `H^{p,q}` in degree `n`, defined as `F^p ⊓ conj F^q`. The degree is an
+independent index, as for `hodgeFiltration`; when `p + q = n` this is the usual `(p,q)` piece. -/
 def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ (DeRhamHypercohomology X n) :=
   hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
@@ -1507,15 +1499,10 @@ lemma hodgeFiltrationSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n
   simp
 
 /-- Cohomology classes with coefficients in `K` whose de Rham images lie in the `(p,p)` piece
-`H^{p,p} = F^p ⊓ conj F^p` of `H^{2p}`.
+`F^p ⊓ conj F^p` of `H^{2p}`.
 
-The membership condition is `(p,p)`, not merely `F^p`. The two agree for coefficient fields
-contained in `ℝ` — a real class is its own conjugate, so `F^p` already forces `conj F^p` — and the
-Hodge conjecture is a statement about `K = ℚ`, where they do agree. They come apart for a
-non-real `K`: for `K = ℚ(i)` and `E = ℂ/(ℤ + ℤi)`, the class `dz` on `E` is `ℚ(i)`-rational, so
-`pr₁^* dz ∧ pr₂^* dz` on `E × E` is a nonzero `ℚ(i)`-rational class of type `(2,0)`. It lies in
-`F¹H²` but has zero `(1,1)`-component, and no combination of algebraic cycle classes — which are
-`ℚ`-rational of type `(1,1)` — can reach it.
+The condition is `(p,p)`, not merely `F^p`; the two agree exactly when `K → ℂ` lands in `ℝ`, by
+`hodgeClasses_eq_comap_hodgeFiltrationSubmodule`.
 
 The Hodge filtration is indexed by a relative dimension, but the dimension is not a choice: it is
 `dim X.left`, recovered from the scheme itself. -/
@@ -1530,10 +1517,8 @@ The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the v
 structure morphism `f`, and the coefficient field is named. -/
 scoped notation:max "Hdg^" p:max "(" K "; " f ")" => hodgeClasses K f p
 
-/-- For a coefficient field that complex conjugation fixes — any subfield of `ℝ`, in particular
-`ℚ` — the `(p,p)` condition is implied by the `F^p` condition, so the Hodge classes are cut out by
-the Hodge filtration alone. This is the precise sense in which the older `F^p`-only definition was
-correct for `ℚ`, and it is what keeps the statement of the Hodge conjecture unchanged. -/
+/-- When conjugation fixes `K`, a `K`-class is its own conjugate, so `F^p` already implies
+`(p,p)` and the Hodge filtration alone cuts out the Hodge classes. -/
 lemma hodgeClasses_eq_comap_hodgeFiltrationSubmodule [IsIntegral X.left] [Smooth X.hom]
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q) (p : ℕ) :
     Hdg^p(K; X) =
@@ -1547,8 +1532,8 @@ lemma hodgeClasses_eq_comap_hodgeFiltrationSubmodule [IsIntegral X.left] [Smooth
   rw [mem_hodgePiece_iff, deRhamConj_fieldToDeRhamCohomology K X hK]
   exact ⟨fun h ↦ h.1, fun h ↦ ⟨h, h⟩⟩
 
-/-- Over `ℚ`, the coefficient field the Hodge conjecture is stated for, the `(p,p)` definition and
-the `F^p` definition agree: a rational class equals its own conjugate. -/
+/-- Over `ℚ`, the coefficient field the Hodge conjecture is stated for, the `(p,p)` and `F^p`
+definitions agree. -/
 lemma hodgeClasses_rat_eq_comap_hodgeFiltrationSubmodule [IsIntegral X.left] [Smooth X.hom]
     (p : ℕ) :
     Hdg^p(ℚ; X) =
