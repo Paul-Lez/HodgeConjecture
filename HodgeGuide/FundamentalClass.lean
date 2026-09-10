@@ -11,37 +11,45 @@ open Verso.Genre.Manual.InlineLean
 set_option pp.rawOnError true
 set_option verso.code.warnLineLength 0
 
-#doc (Manual) "The normalized component class and its Borel--Moore dual" =>
+#doc (Manual) "The class of a subvariety" =>
 
-# The mathematical target
+```lean -show
+open AlgebraicGeometry CategoryTheory ComplexPoint
+```
 
-Let $`X` be smooth of complex dimension $`d`, and let $`Z` be an irreducible component of
-codimension $`p`. On the smooth locus $`Z_{\mathrm{reg}}`, complex coordinates canonically orient
-the normal directions. The associated local Thom coclass has degree $`2p`. Equivalently, under
-Alexander--Poincaré duality it corresponds to the top Borel--Moore class
+# The class to be constructed
+
+Let $`X` be smooth of complex dimension $`d`, and let $`Z\subseteq X` be an irreducible closed
+subvariety of codimension $`p`, with smooth locus $`Z_{\mathrm{reg}}` and singular locus
+$`Z_{\mathrm{sing}}`. Near a point of $`Z_{\mathrm{reg}}`, holomorphic coordinates identify the pair
+$`(X,Z)` with $`(\mathbb C^d,\mathbb C^{d-p})`, so the cohomology of $`X` with support in
+$`Z_{\mathrm{reg}}` is locally one-dimensional in degree $`2p` and zero below. The complex structure
+orients the normal directions, and the orientation picks out a generator, the Thom class of the
+normal bundle. Under Alexander–Poincaré duality this generator corresponds to the fundamental class
 
 $$`[Z]_{\mathrm{BM}}\in
   H^{\mathrm{BM}}_{2(d-p)}(Z\subset X;\mathbb Q).`
 
-The normalization is essential. Merely knowing that a critical local group is one-dimensional
-determines only a line; it does not choose the multiplicity-one generator needed for a cycle-class
-map. The code fixes the generator chart by chart using the complex orientation.
+The choice of generator is the essential point. Purity alone says that the local cohomology with
+support in degree $`2p` is one-dimensional, which fixes a line but not the multiplicity-one
+generator that a cycle class map needs. The formalization fixes the generator chart by chart using
+the complex orientation.
 
-For the topology behind this construction, see Goresky
-[§§5.2--5.3](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=21) on Borel--Moore chains and local
-orientations, and
-[§§8.10--8.11](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=36) on fundamental classes of
+For the topology see Goresky, [§5.2](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=22), on
+Borel–Moore homology and the orientation sheaf, and
+[§8.11](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=37), on fundamental classes of
 oriented pseudomanifolds. Lee's
 [Proposition 1.49](https://sites.math.washington.edu/~lee/Books/ICM/gsm-244-prev.pdf#page=32)
-proves that a complex manifold has the canonical real orientation used in the normalization.
+shows that a complex manifold carries a canonical orientation.
 
-# Step 1: build the normalized class on the smooth locus
+# Step 1: the class on the smooth locus
 
-The component's smooth locus is realized as a smooth closed immersion into the complement of its
-singular boundary. Its relative dimension is $`d-p`; the proof that
-$`d-(d-p)=p` uses the coheight bound supplied by smoothness rather than truncated subtraction by
-fiat. Normal charts provide local coclasses, and their compatibility glues them to a section of
-the relative-cohomology sheaf on that open set.
+The smooth locus $`Z_{\mathrm{reg}}` is closed in the open set $`X\setminus Z_{\mathrm{sing}}`,
+where it is a smooth closed immersion of relative dimension $`d-p`. Its codimension is recovered
+as $`d-(d-p)=p`, which uses $`p\le d`, a consequence of smoothness; this is what makes the
+natural-number subtraction in the types exact. Normal charts give local classes in degree $`2p`,
+these classes agree on overlaps, and they glue to a section of the sheaf of relative cohomology
+over $`X\setminus Z_{\mathrm{sing}}`.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothClosedLiftCoclassSection
@@ -49,20 +57,21 @@ the relative-cohomology sheaf on that open set.
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection_restrict
 ```
 
-The restriction theorem records exact equality with the chart coclass. This is stronger than
-nonvanishing or agreement up to an unspecified rational scalar.
+The restriction theorem says that on each chart the glued section is the class of that chart,
+exactly and not merely up to a nonzero rational multiple.
 
-# Step 2: extend uniquely across the singular boundary
+# Step 2: extension across the singular locus
 
-The singular boundary is filtered by finitely many smooth locally closed layers. Every layer has
-codimension at least $`p+1`, so its supported cohomology vanishes below $`2(p+1)`. In particular,
-the groups in degrees $`2p` and $`2p+1` vanish. The long exact localization sequence for nested
-supports therefore makes restriction
+The singular locus $`Z_{\mathrm{sing}}` has a finite filtration by closed subsets whose successive
+differences are smooth. Each layer has codimension at least $`p+1` in $`X`, so its cohomology with
+support vanishes in degrees below $`2(p+1)`, in particular in degrees $`2p` and $`2p+1`. The long
+exact sequence for the nested supports $`Z_{\mathrm{sing}}\subseteq Z` then shows that restriction
 
 $$`H_Z^{2p}(X;\mathbb Q)\longrightarrow
   H_{Z_{\mathrm{reg}}}^{2p}(X\setminus Z_{\mathrm{sing}};\mathbb Q)`
 
-an isomorphism. Its inverse is the unique extension operation used by the definition.
+is an isomorphism. Its inverse extends the class of Step 1 uniquely to a class with support in
+all of $`Z`.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree
@@ -71,8 +80,10 @@ an isomorphism. Its inverse is the unique extension operation used by the defini
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSupportedInjectiveClass_unique
 ```
 
-After transport through the proved injective-resolution and restriction-cone comparison, this
-gives the public supported class and then the ordinary class obtained by forgetting support.
+The extension is a class in the cohomology of an injective resolution with supports. Transporting
+it through the comparison with the mapping-cone model of the previous section gives the class of
+the subvariety in cohomology with support, and forgetting the support gives its class in ordinary
+cohomology.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafSupportedClass
@@ -80,20 +91,20 @@ gives the public supported class and then the ordinary class obtained by forgett
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_eq_forgetSupport
 ```
 
-No fundamental-class, orientation, purity, extension, or vanishing structure occurs as an argument
-to these definitions.
+Both definitions take only the variety, the generic point, its coheight, and the dimension $`d` as
+arguments.
 
-# Step 3: recover the ambient Borel--Moore fundamental class
+# Step 3: the Borel–Moore fundamental class
 
-The implementation also constructs the chain-sheaf side. Let $`\mathcal C_X^{\mathrm{BM}}` be the
-sheafification of relative singular chains. Its local homology on a smooth complex $`d`-fold is
-concentrated in cohomological degree $`-2d`. The exact local complex orientations give a derived
-isomorphism
+The formalization also constructs the homological side. Let $`\mathcal C_X^{\mathrm{BM}}` be the
+sheafification of the presheaf of relative singular chains on $`X(\mathbb C)`. On a smooth complex
+$`d`-fold its local homology is concentrated in degree $`2d`, cohomological degree $`-2d`, and the
+complex orientations give an isomorphism in the derived category
 
-$$`\mathcal C_X^{\mathrm{BM}}\simeq \mathbb Q_X[2d].`
+$$`\mathcal C_X^{\mathrm{BM}}\simeq \underline{\mathbb Q}_X[2d].`
 
-Applying actual derived sections with closed support $`Z` and taking homology yields, in every
-integer degree,
+Taking derived sections with support in $`Z` and then homology defines the Borel–Moore homology of
+$`Z` relative to the ambient space, and the isomorphism above gives duality in every degree:
 
 $$`H_i^{\mathrm{BM}}(Z\subset X;\mathbb Q)
   \simeq H_Z^{2d-i}(X;\mathbb Q).`
@@ -105,10 +116,10 @@ $$`H_i^{\mathrm{BM}}(Z\subset X;\mathbb Q)
 #check AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport
 ```
 
-The formal construction first obtains the normalized supported coclass, then applies the inverse of
-this normalized duality to define its Borel--Moore fundamental class. The two following theorems
-show that duality returns the supported class exactly and that the resulting cycle-class route
-lands at the same ordinary class.
+The fundamental class $`[Z]_{\mathrm{BM}}` is defined as the image of the class of Step 2 under
+the inverse of this duality, in degree $`i=2(d-p)`. Two theorems confirm that it is the expected
+object: duality sends $`[Z]_{\mathrm{BM}}` back to the class with support, and the route through
+Borel–Moore homology to ordinary cohomology gives the same class $`\operatorname{cl}_X(Z)`.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafBorelMooreFundamentalClass
@@ -116,19 +127,17 @@ lands at the same ordinary class.
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafBorelMooreFundamentalClass_toFieldCohomology
 ```
 
-This order is mathematically equivalent to starting from the fundamental class, but it is better
-suited to the proved purity-and-extension API: normalization is established where the local Thom
-coclass lives, then transported across a constructed equivalence.
+Textbooks usually go the other way, from the fundamental class to the cycle class. The order here
+is equivalent and suits the available tools: the normalization is carried out where the local Thom
+class lives, in cohomology with support, and then transported.
 
-# Precisely what “Borel--Moore” means here
+# What Borel–Moore homology means here
 
-The group above is defined by derived closed-support sections of the actual chain sheaf in the
-specified smooth ambient space. It allows singular $`Z` and needs no supplied dualizing object or
-group-level duality. It is nevertheless an *ambient-supported* theory. The current code does not
-prove that it is independent of the chosen closed embedding, nor identify it with a separately
-defined intrinsic compactification-relative homology of $`Z`.
-
-Goresky's treatment of the Borel--Moore chain sheaf and its dualizing role is in
-[§§12.4--12.6](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=58). That reference contains the
-sheaf-theoretic development reflected by the derived shift above, not merely the definition of
-locally finite chains.
+The group $`H_i^{\mathrm{BM}}(Z\subset X;\mathbb Q)` is defined through the ambient space, as
+derived sections of the chain sheaf of $`X` with support in $`Z`. This makes sense for singular
+$`Z` and needs no dualizing complex, but it is a theory of the pair $`Z\subset X`. That it does not
+depend on the embedding, and agrees with the Borel–Moore homology of $`Z` defined through a
+compactification, is not proved; see {ref "scope-and-status"}[Scope and status]. Goresky,
+[§§12.4–12.5](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=59), gives the sheaf-theoretic
+account of the Borel–Moore chain sheaf and the dualizing complex that the shift by $`2d` above
+reflects.

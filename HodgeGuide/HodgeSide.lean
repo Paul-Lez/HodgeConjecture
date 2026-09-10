@@ -11,20 +11,24 @@ open Verso.Genre.Manual.InlineLean
 set_option pp.rawOnError true
 set_option verso.code.warnLineLength 0
 
-#doc (Manual) "The Hodge side" =>
+#doc (Manual) "Hodge classes" =>
 
-# From complex points to a de Rham complex
+```lean -show
+open AlgebraicGeometry CategoryTheory ComplexPoint
+```
 
-For a smooth complex scheme $`X`, the formalization works on its analytic complex-point space
-$`X(\mathbb C)`. Holomorphic differential forms are first organized as presheaves. Exterior
-differentiation gives the cochain complex
+# The holomorphic de Rham complex
+
+Let $`X` be a smooth complex scheme. The formalization works on the space $`X(\mathbb C)` of its
+complex points with the analytic topology. Holomorphic differential forms on this space are first
+assembled into presheaves, and exterior differentiation makes them a complex of presheaves
 
 $$`\mathcal O_X \xrightarrow{d} \Omega_X^1 \xrightarrow{d}
-  \Omega_X^2 \xrightarrow{d}\cdots,`
+  \Omega_X^2 \xrightarrow{d}\cdots.`
 
-and degreewise sheafification produces `holomorphicDeRhamComplexInt`. The integer indexing is
-important because later constructions use derived shifts, even though the complex itself is zero
-in negative degrees.
+Sheafifying degree by degree gives the holomorphic de Rham complex. It is indexed by the integers
+and vanishes in negative degrees, because the shifts used later act on $`\mathbb Z`-indexed
+complexes.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.holomorphicDeRhamComplexInt
@@ -32,28 +36,31 @@ in negative degrees.
 #check AlgebraicGeometry.ComplexPoint.constantsToHolomorphicDeRhamComplexInt_quasiIso
 ```
 
-The last declaration is the holomorphic Poincaré lemma at the level of stalks: locally closed
-holomorphic forms are exact, and locally constant holomorphic functions are precisely the kernel
-in degree zero. Thus
+Constant functions give a morphism to the de Rham complex from the constant sheaf
+$`\underline{\mathbb C}_X`, placed in degree zero. The last declaration is the holomorphic Poincaré
+lemma: on stalks, a closed holomorphic form of positive degree is exact, and the closed holomorphic
+functions are the locally constant ones, so
 
 $$`\underline{\mathbb C}_X \longrightarrow \Omega_X^\bullet`
 
-is a quasi-isomorphism, not a definitional identification.
+is a quasi-isomorphism. This is the analytic de Rham theorem in the form used below. Goresky's
+notes, [§3.10](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=17), explain how the Poincaré
+lemma exhibits the de Rham complex as a resolution of the constant sheaf and thereby computes its
+cohomology.
 
-This is the analytic de Rham theorem in the exact form the code needs. See Goresky,
-[§§3.10--3.11](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=16), for the Poincaré lemma,
-the de Rham sheaf resolution, and its hypercohomology consequence.
+# Cohomology as morphisms in the derived category
 
-# Cohomology without choosing a concrete derived category
-
-The public cohomology types are small shifted morphisms in the localization of complexes at
-quasi-isomorphisms. If $`\mathbb Z_X` denotes the constant integer sheaf, then the model is
+For a complex of sheaves $`K^\bullet` on $`X(\mathbb C)`, hypercohomology is defined as a group of
+morphisms in the derived category,
 
 $$`\mathbb H^n(X,K^\bullet)
-  =\operatorname{Hom}_{D(X)}(\mathbb Z_X,K^\bullet[n]).`
+  =\operatorname{Hom}_{D(X)}(\underline{\mathbb Z}_X,K^\bullet[n]),`
 
-Using the localization interface keeps a noncanonical derived-category implementation out of the
-type. Rational cohomology and de Rham hypercohomology are special cases.
+where $`\underline{\mathbb Z}_X` is the constant sheaf in degree zero. The derived category is never
+constructed: Mathlib's `Localization.SmallShiftedHom` provides these morphism groups in the
+localization of complexes at quasi-isomorphisms without choosing a model for it. Rational
+cohomology and de Rham cohomology are the cases $`K^\bullet=\underline{\mathbb Q}_X` and
+$`K^\bullet=\Omega_X^\bullet`.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.Hypercohomology
@@ -62,22 +69,24 @@ type. Rational cohomology and de Rham hypercohomology are special cases.
 #check AlgebraicGeometry.ComplexPoint.fieldToDeRhamCohomologyLinear
 ```
 
-The comparison map starts with the inclusion of constant sheaves
-$`\underline{\mathbb Q}_X\to\underline{\mathbb C}_X` and then uses the proved
-constant-to-de Rham quasi-isomorphism. The map is proved $`\mathbb Q`-linear; no equality between
-rational and de Rham cohomology is asserted.
+The comparison map $`H^n(X;\mathbb Q)\to H^n_{\mathrm{dR}}(X)` is induced by the composite
+$`\underline{\mathbb Q}_X\to\underline{\mathbb C}_X\to\Omega_X^\bullet`. It is $`\mathbb Q`-linear
+and injective; injectivity combines the quasi-isomorphism above with the injectivity of extending
+scalars from $`\mathbb Q` to $`\mathbb C`. Nothing more is needed, since Hodge classes are defined
+as a preimage along this map.
 
-# The filtration is an image, not a predicate invented afterward
+# The Hodge filtration
 
-The Hodge filtration is obtained from the stupid truncation
+The Hodge filtration comes from the stupid truncation of the de Rham complex,
 
 $$`F^p\Omega_X^\bullet=\sigma_{\ge p}\Omega_X^\bullet
   =[0\to\cdots\to0\to\Omega_X^p\to\Omega_X^{p+1}\to\cdots].`
 
-The inclusion into the full complex induces a map on hypercohomology, and $`F^pH^n` is its image.
-That definition is exactly the standard one; compare the
-[Stacks Project, §50.7](https://stacks.math.columbia.edu/tag/0FM7) and Deligne's
-[§1, especially pp. 45--46](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=56).
+Its inclusion into $`\Omega_X^\bullet` induces a map on hypercohomology, and
+$`F^pH^n_{\mathrm{dR}}(X)` is the image of that map. This is the standard definition; compare the
+[Stacks Project, §50.7](https://stacks.math.columbia.edu/tag/0FM7), and Deligne's article,
+[p. 51](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=59), where the same
+truncated complex appears.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.hodgeFilteredDeRhamComplex
@@ -86,32 +95,37 @@ That definition is exactly the standard one; compare the
 #check AlgebraicGeometry.ComplexPoint.hodgeFiltrationSubmodule
 ```
 
-Two sanity checks are proved in Lean: $`F^0` is the whole de Rham group, and $`F^p=0` when
-$`p>\dim X`. Scalar compatibility is proved before the additive image is bundled as a complex or
-rational submodule.
+The image is a priori an additive subgroup. Compatibility with scalars is proved, and
+`hodgeFiltrationSubmodule` bundles the image as a subspace over any coefficient field contained
+in $`\mathbb C`. Two sanity checks are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and
+$`F^p=0` for $`p>\dim X`.
 
-# Why one filtration condition detects type `(p,p)`
+# Hodge classes
 
-The final definition pulls the filtered de Rham subspace back along the rational comparison:
+The rational Hodge classes of degree $`2p` are the rational classes whose de Rham image lies in
+$`F^p`:
+
+$$`\operatorname{Hdg}^p(X;\mathbb Q)
+ =\{\alpha\in H^{2p}(X;\mathbb Q):\alpha_{\mathrm{dR}}\in F^pH^{2p}_{\mathrm{dR}}(X)\}.`
+
+In Lean this is the preimage of `hodgeFiltrationSubmodule` under the comparison map, and the
+notation `Hdg^p(ℚ; X)` abbreviates it.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.hodgeClasses
 #check HodgeStructure.Pure.ofBase_mem_filtration_iff
 ```
 
-In symbols,
+The textbook definition asks instead for a rational class of Hodge type $`(p,p)`, which involves
+the conjugate filtration $`\overline{F^p}` as well. The two definitions agree. In a pure Hodge
+structure of weight $`2p`, complex conjugation fixes rational vectors and exchanges $`H^{a,b}`
+with $`H^{b,a}`, so a rational vector in $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in
+$`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`, and the only summand common to both is $`H^{p,p}`.
+The lemma `Pure.ofBase_mem_filtration_iff` is this argument for an abstract pure Hodge structure,
+as defined in `HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`.
 
-$$`\operatorname{Hdg}^p(X;\mathbb Q)
- =\{\alpha\in H^{2p}(X;\mathbb Q):\alpha_{\mathrm{dR}}\in F^p\}.`
-
-Classically one expects a rational class of Hodge type `(p,p)`. Why is there no explicit
-condition involving $`\overline{F^p}`? In a pure weight-$`2p` Hodge structure, complex
-conjugation fixes a rational vector and exchanges $`H^{a,b}` with $`H^{b,a}`. Membership in
-$`F^p` forces both indices to be at least $`p`; because they sum to $`2p`, only $`(p,p)`
-remains. `Pure.ofBase_mem_filtration_iff` proves precisely this linear-algebra statement.
-
-The final cohomology type does not bundle a `Pure` instance. The abstract theorem validates the
-filtration criterion, while identifying the geometric cohomology with a full pure Hodge structure
-is logically additional structure. Deligne’s formulation likewise identifies rational
-$`F^p`-classes in degree $`2p` with rational classes of type $`(p,p)`; see
-[§1, p. 46](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=56).
+The cohomology of $`X` is not equipped with a pure Hodge structure in the formalization; that
+would require the Hodge decomposition. The filtration condition is therefore taken as the
+definition, and the lemma shows that it is the right one. Deligne likewise identifies the two
+descriptions when stating the conjecture,
+[p. 46](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=57).

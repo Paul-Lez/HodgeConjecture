@@ -12,15 +12,19 @@ open Verso.Genre.Manual.InlineLean
 set_option pp.rawOnError true
 set_option verso.code.warnLineLength 0
 
-#doc (Manual) "Assembling the statement" =>
+#doc (Manual) "The statement" =>
+
+```lean -show
+open AlgebraicGeometry CategoryTheory ComplexPoint
+```
 
 # The algebraic subspace
 
-For every point `x : X` of coheight $`p`, the preceding construction gives an ordinary class
+For every point `x : X.left` of coheight $`p`, the previous section gives a class
 
 $$`\operatorname{cl}_X(\overline{\{x\}})\in H^{2p}(X;\mathbb Q).`
 
-The algebraic subspace is their rational span:
+The algebraic subspace is the rational span of these classes:
 
 $$`A^p(X)=\sum_{\operatorname{coht}(x)=p}
   \mathbb Q\,\operatorname{cl}_X(\overline{\{x\}}).`
@@ -31,34 +35,37 @@ $$`A^p(X)=\sum_{\operatorname{coht}(x)=p}
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_mem_algebraicCycleClassSpan
 ```
 
-This is exactly the span of the values of the constructed map on individual components. It does
-not use the older fallback of quantifying over elements that might generate the image of supported
-cohomology.
+In Lean the span is the supremum, over all points `x` and all proofs `hx : coheight x = p`, of the
+line spanned by `cycleComponentSheafClass X x hx`, with the dimension argument set to
+`dim X.left`.
 
 # The proposition
 
-Here is the complete Lean statement, elaborated while this page is built:
+Here is the full statement, elaborated when this page is built:
 
 ```lean
 #print HodgeConjecture
 ```
 
-It quantifies over an integral scheme `X`, a morphism to `Spec ℂ`, smoothness and projectivity of
-that morphism, and `p : ℕ`. The conclusion is the submodule inclusion
+It quantifies over a scheme `X` over $`\mathbb C` that is integral with smooth and projective
+structure morphism, and over a natural number `p`. The conclusion is the inclusion of subspaces
 
-$$`\operatorname{Hdg}^p(X;\mathbb Q)\le A^p(X).`
+$$`\operatorname{Hdg}^p(X;\mathbb Q)\le A^p(X):`
 
-This is the difficult direction of the classical formulation: every rational Hodge class is a
-rational combination of classes of algebraic subvarieties. Deligne develops the Hodge filtration,
-the cycle-class construction, and this formulation in
-[§1, especially pp. 45--46](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=56).
+every rational Hodge class of degree $`2p` is a rational linear combination of classes of
+algebraic subvarieties of codimension $`p`. This is the conjecture as Deligne states it,
+[pp. 45–46](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=56). The reverse
+inclusion, that every algebraic class is a Hodge class, is a theorem that has not yet been
+formalized, so the formulation as an equality $`\operatorname{Hdg}^p(X;\mathbb Q)=A^p(X)` is not
+yet available.
 
-# Why the statement uses a span rather than a Chow map
+# Why a span rather than a map on Chow groups
 
-The repository already has the algebraic definitions of `ChowGroup` and `RationalChowGroup`, and
-the component construction gives an additive map on cycles. To descend this map to the quotient,
-one must prove that every principal-divisor relation maps to zero. The general descent interface is
-present, but that geometric vanishing theorem is not yet proved for the new sheaf class.
+The repository defines `ChowGroup` and `RationalChowGroup`, and the classes of subvarieties give an
+additive map on cycles. To descend this map to the Chow group, one must show that it vanishes on
+every principal-divisor relation. The descent itself is formalized as a construction that takes
+this vanishing as a hypothesis, but the vanishing has not been proved for the classes constructed
+here.
 
 ```lean
 #check AlgebraicGeometry.ChowGroup.cycleClassOfComponents
@@ -66,40 +73,29 @@ present, but that geometric vanishing theorem is not yet proved for the new shea
 #check AlgebraicGeometry.ChowGroup.cycleClassOfComponents_mk
 ```
 
-Using the span is therefore logically exact: it expresses “rational linear combinations of the
-constructed component classes” without claiming a factorization through rational equivalence.
+The span of the classes of subvarieties is exactly the image that the descended map would have,
+so nothing is lost by using it. The statement says "rational linear combinations of classes of
+subvarieties" without claiming a factorization through rational equivalence.
 
-# Status ledger
+# Reading the source
 
-The following is the shortest accurate summary of the development.
+The shortest route through the implementation is:
 
-* *Constructed:* analytic complex points; the holomorphic de Rham complex and its constant-sheaf
-  quasi-isomorphism; rational and de Rham hypercohomology; the truncation definition of $`F^p`;
-  mapping-cone cohomology with support; scheme-theoretic component supports; normalized
-  smooth-locus coclasses; purity and unique extension across arbitrary component singularities;
-  actual ambient chain-sheaf Borel--Moore duality; component classes in every codimension; and
-  additive/rational-linear maps on cycles.
-* *Proved as a consistency theorem:* for a pure Hodge structure of weight $`2p`, a rational vector
-  belongs to $`F^p` exactly when it has Hodge type `(p,p)`.
-* *Not yet proved:* principal-divisor vanishing for the constructed map; the theorem that its
-  values have Hodge type `(p,p)`; intrinsic compactification independence of the ambient-supported
-  Borel--Moore group; and, of course, the conjectural inclusion itself.
-
-# A productive source order
-
-For the shortest route through the implementation, read:
-
-1. `HodgeConjecture/Statement.lean`;
-2. `Definitions/AlgebraicGeometry/HodgeFiltration.lean`;
-3. `Definitions/AlgebraicGeometry/CohomologyWithSupport.lean`;
-4. `Other/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`;
-5. `Other/AlgebraicGeometry/CycleComponentSupportExtension.lean`;
-6. `Other/AlgebraicGeometry/CycleComponentSheafClass.lean`;
+1. `HodgeConjecture/Statement.lean`, the statement;
+2. `HodgeConjecture/Definitions/AlgebraicGeometry/HodgeFiltration.lean`, cohomology and the Hodge
+   filtration;
+3. `HodgeConjecture/Definitions/AlgebraicGeometry/CohomologyWithSupport.lean`, the mapping-cone
+   model of cohomology with support;
+4. `Other/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`, the class on the
+   smooth locus;
+5. `Other/AlgebraicGeometry/CycleComponentSupportExtension.lean`, its extension across the
+   singular locus;
+6. `Other/AlgebraicGeometry/CycleComponentSheafClass.lean`, the class of a subvariety;
 7. `Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
-   `ComplexSheafBorelMooreRationalComparison.lean`;
-8. `Other/AlgebraicGeometry/SheafCycleClass.lean`;
-9. `Other/AlgebraicGeometry/ChowCycleClassDescent.lean`.
+   `ComplexSheafBorelMooreRationalComparison.lean`, Borel–Moore homology and duality;
+8. `Other/AlgebraicGeometry/SheafCycleClass.lean`, the maps on cycles;
+9. `Other/AlgebraicGeometry/ChowCycleClassDescent.lean`, descent to Chow groups.
 
-The invariants to track are the integer shifts, real versus complex dimensions, exact local
-normalization, whether support has been forgotten, and whether a map is on cycles or on their
-rational-equivalence quotient.
+Things to keep track of while reading: integer versus natural-number degrees, real versus complex
+dimension, whether a class has been normalized, whether its support has been forgotten, and
+whether a map is defined on cycles or on their quotient by rational equivalence.

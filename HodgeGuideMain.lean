@@ -11,6 +11,6 @@ def config : RenderConfig where
   emitTeX := false
   emitHtmlSingle := .no
   emitHtmlMulti := .immediately
-  htmlDepth := 2
+  htmlDepth := 1
 
 def main := manualMain (%doc HodgeGuide) (config := config)

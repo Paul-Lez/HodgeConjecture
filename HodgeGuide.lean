@@ -21,18 +21,20 @@ set_option pp.rawOnError true
 authors := ["The HodgeConjecture contributors"]
 %%%
 
-This is a mathematical and Lean guide to the formalization in the
-[`HodgeConjecture`](https://github.com/Paul-Lez/HodgeConjecture) repository.
-It follows the construction rather than the directory tree: rational classes are compared with
-filtered holomorphic de Rham cohomology; each irreducible component receives an exactly normalized
-supported class and the corresponding ambient Borel--Moore fundamental class; and the two sides
-meet in one inclusion of rational subspaces.
+This guide explains the statement of the Hodge conjecture formalized in the
+[`HodgeConjecture`](https://github.com/Paul-Lez/HodgeConjecture) repository: the mathematics behind
+each definition, the Lean declarations that implement it, and the points where the implementation
+departs from the textbook presentation. It follows the construction rather than the directory
+tree. The Hodge side compares rational cohomology with the Hodge filtration on holomorphic de Rham
+cohomology; the cycle side attaches a cohomology class to every irreducible subvariety; and the
+statement is the inclusion of one rational subspace in the other.
 
-The guide distinguishes two questions that are easy to conflate. The component class used in the
-statement is constructed for arbitrary codimension, including singular components. What is not yet
-proved is that the resulting map on cycles descends through rational equivalence, or that its values
-are Hodge classes. Those are the remaining comparison theorems, not hidden arguments to the
-definition.
+The conjecture is stated, not proved. A few classical theorems surrounding the statement are not
+yet formalized either; {ref "scope-and-status"}[Scope and status] lists them.
+
+The Lean snippets in this guide are elaborated when the site is built, so every declaration shown
+here exists in the repository with the displayed type. The site is generated with
+[Verso](https://github.com/leanprover/verso).
 
 {include 1 HodgeGuide.Overview}
 
