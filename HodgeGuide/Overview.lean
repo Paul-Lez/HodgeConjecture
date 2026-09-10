@@ -96,7 +96,8 @@ irreducible subvarieties of codimension $`p`.
    $`\Omega_X^{\ge p}`. The Hodge classes $`\operatorname{Hdg}^p(X;\mathbb Q)` are the rational
    classes of degree $`2p` whose image under the comparison map lies in $`F^p`.
 3. Represent an irreducible subvariety $`Z\subseteq X` of codimension $`p` by its generic point, a
-   point of the scheme {lean}`X.left` of coheight $`p`.
+   point of the scheme {lean}`X.left` of coheight $`p`, and form the cohomology of $`X(\mathbb C)`
+   with support in $`Z`.
 4. On the smooth locus of $`Z`, the complex orientation of the normal directions singles out a
    generator of the cohomology with support in $`Z` in degree $`2p`, locally in charts, and these
    local generators glue.
@@ -109,8 +110,10 @@ irreducible subvarieties of codimension $`p`.
 7. Extend $`\operatorname{cl}_X` additively to cycles and $`\mathbb Q`-linearly to rational cycles.
    The statement itself uses only the span of the classes of individual subvarieties.
 
-Steps 1 and 2 are the subject of the section on Hodge classes, steps 3 to 6 of the two sections on
-cycles, and step 7 of the section on the statement.
+The guide follows this order: steps 1 and 2 are the subject of {ref "hodge-classes"}[Hodge classes],
+step 3 of {ref "cycles"}[Cycles and cohomology with support], steps 4 to 6 of
+{ref "class-of-a-subvariety"}[The class of a subvariety], and step 7 of
+{ref "the-statement"}[The statement].
 
 # Scope and status
 %%%

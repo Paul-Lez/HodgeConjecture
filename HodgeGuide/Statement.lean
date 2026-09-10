@@ -13,6 +13,9 @@ set_option pp.rawOnError true
 set_option verso.code.warnLineLength 0
 
 #doc (Manual) "The statement" =>
+%%%
+tag := "the-statement"
+%%%
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
@@ -23,9 +26,80 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
 
+# From subvarieties to cycles
+
+With the class of a subvariety in hand, summing over the components of a cycle with their
+multiplicities gives an additive map on integral cycles, and extension of scalars gives a
+$`\mathbb Q`-linear map on rational cycles. The evaluation formulas
+below hold for all integer and rational coefficients.
+
+```lean -show
+namespace Guide.Statement.D5
+```
+```lean
+def sheafCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
+    CodimensionCycle V.scheme p →+ FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := V.dimension))
+```
+```lean -show
+end Guide.Statement.D5
+example : @Guide.Statement.D5.sheafCycleClassOnCycles = @AlgebraicGeometry.ComplexPoint.sheafCycleClassOnCycles := rfl
+```
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.sheafCycleClassOnCycles_single
+```
+
+```lean -show
+namespace Guide.Statement.D6
+```
+```lean
+def rationalSheafCycleClassOnCycles
+    (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
+    TensorProduct ℤ ℚ (CodimensionCycle V.scheme p) →ₗ[ℚ]
+      FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+  TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
+```
+```lean -show
+end Guide.Statement.D6
+example : @Guide.Statement.D6.rationalSheafCycleClassOnCycles = @AlgebraicGeometry.ComplexPoint.rationalSheafCycleClassOnCycles := rfl
+```
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.rationalSheafCycleClassOnCycles_tmul_single
+```
+
+These maps take a {name}`DimensionedSmoothProjectiveComplexVariety`, a smooth projective variety
+bundled with its dimension, which the construction of the class of a subvariety needs. The
+constructor {name DimensionedSmoothProjectiveComplexVariety.ofOver}`ofOver` packages {lean}`X` with
+{lean}`dim X.left` and the proof, from smoothness and integrality, that this is the relative
+dimension of {lean}`X` over $`\mathbb C`.
+
+```lean -show
+namespace Guide.Statement.D7
+```
+```lean
+def DimensionedSmoothProjectiveComplexVariety.ofOver (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] : DimensionedSmoothProjectiveComplexVariety where
+  toSmoothProjectiveComplexVariety :=
+    { scheme := X.left
+      structureMap := X.hom }
+  dimension := TopologicalSpace.dim X.left
+```
+```lean -show
+end Guide.Statement.D7
+example : @Guide.Statement.D7.DimensionedSmoothProjectiveComplexVariety.ofOver = @AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety.ofOver := rfl
+```
+
+The statement does not use the bundle: {name}`algebraicCycleClassSpan`, defined next, evaluates
+each class at {lean}`dim X.left` directly.
+
+Whether these maps factor through rational equivalence is a separate question, taken up below.
+
 # The algebraic subspace
 
-For every point {lean}`x` of coheight $`p` in {lean}`X.left`, the previous section gives a class
+For every point {lean}`x` of coheight $`p` in {lean}`X.left`, the construction of the previous
+section gives a class
 
 $$`\operatorname{cl}_X(\overline{\{x\}})\in H^{2p}(X;\mathbb Q).`
 

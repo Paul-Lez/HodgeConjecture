@@ -12,6 +12,9 @@ set_option pp.rawOnError true
 set_option verso.code.warnLineLength 0
 
 #doc (Manual) "The class of a subvariety" =>
+%%%
+tag := "class-of-a-subvariety"
+%%%
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace

@@ -12,6 +12,9 @@ set_option pp.rawOnError true
 set_option verso.code.warnLineLength 0
 
 #doc (Manual) "Hodge classes" =>
+%%%
+tag := "hodge-classes"
+%%%
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
