@@ -6,6 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.SmoothClosedSupportedCycleMorphism
 public import Other.AlgebraicTopology.ClosedEmbeddingConstantSectionClass
+public import Other.AlgebraicGeometry.IntrinsicComplexBorelMoore
 
 /-!
 # Actual ordinary classes of smooth closed complex subvarieties
@@ -64,6 +65,22 @@ def smoothClosedWholeSupportBorelMooreClassMap :
 def smoothClosedWholeSupportBorelMooreClass :
     ComplexAmbientSheafBorelMooreHomology X d ⊤ (2 * (e : ℤ)) :=
   smoothClosedWholeSupportBorelMooreClassMap Z X i e d 1
+
+/-- The constructed smooth closed-component class in intrinsic chain-sheaf
+Borel–Moore homology of the ambient analytic space. The comparison used here is
+constructed from complex orientation; it is not an additional input. -/
+def smoothClosedIntrinsicBorelMooreClass :
+    IntrinsicSheafBorelMooreHomology X (2 * (e : ℤ)) :=
+  (intrinsicComplexBorelMooreAddEquivAmbientTop X d (2 * (e : ℤ))).symm
+    (smoothClosedWholeSupportBorelMooreClass Z X i e d)
+
+/-- The intrinsic class recovers the existing normalized whole-support class. -/
+@[simp]
+lemma smoothClosedIntrinsicBorelMooreClass_comparison :
+    intrinsicComplexBorelMooreAddEquivAmbientTop X d (2 * (e : ℤ))
+      (smoothClosedIntrinsicBorelMooreClass Z X i e d) =
+      smoothClosedWholeSupportBorelMooreClass Z X i e d :=
+  (intrinsicComplexBorelMooreAddEquivAmbientTop X d (2 * (e : ℤ))).apply_symm_apply _
 
 /-- Actual ordinary cohomology classes of smooth closed subvarieties, with no comparison
 input; the displayed ambient orientation supplies the degree shift. -/
