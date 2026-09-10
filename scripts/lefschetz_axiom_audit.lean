@@ -1,0 +1,28 @@
+/- Representative axiom checks for the incomplete Lefschetz development.
+Run: lake env lean scripts/lefschetz_axiom_audit.lean
+See docs/LEFSCHETZ_HANDOFF.md for the full goal and remaining obligations. -/
+import Other.Algebra.Homology.RationalCochainDenominators
+import Other.AlgebraicGeometry.HolomorphicLocallyRingedSpace
+import Other.AlgebraicGeometry.AnalytificationModules
+import Other.AlgebraicGeometry.HolomorphicLineBundleInvertible
+import Other.AlgebraicGeometry.LefschetzOneOne
+import Other.AlgebraicGeometry.LefschetzOneOneReduction
+#print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.localCoordinateEquiv
+#print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.sectionSheafOfModules_isInvertible
+#print axioms AlgebraicGeometry.ComplexPoint.contMDiffAt_evaluate
+#print axioms AlgebraicGeometry.ComplexPoint.regularToHolomorphicSheaf
+#print axioms AlgebraicGeometry.ComplexPoint.moduleAnalytificationAdjunction
+#print axioms AlgebraicGeometry.ComplexPoint.moduleAnalytificationUnitIso
+#print axioms AlgebraicGeometry.ComplexPoint.exists_holomorphicUnitExtension_of_integral_hodgeClass
+#print axioms HodgeConjecture.rationalLefschetzOneOne
+#print axioms HodgeConjecture.rationalLefschetzOneOne_direct
+#print axioms AlgebraicGeometry.ComplexPoint.holomorphicStalk_isLocalRing
+#print axioms AlgebraicGeometry.ComplexPoint.analytification_stalkMap_comp_evaluation
+#print axioms AlgebraicGeometry.ComplexPoint.analytificationToAlgebraic
+#print axioms LinearMap.exists_integer_multiple_isInteger
+#print axioms LinearMap.exists_integer_multiple
+#print axioms CategoryTheory.ShortComplex.homologyMap_exists_integer_multiple
+#print axioms AlgebraicGeometry.ComplexPoint.exists_rationalSheafCycleClassOnCycles_eq_of_obligations
+#print axioms RationalLefschetzOneOne.of_obligations
+#print axioms AlgebraicGeometry.ComplexPoint.hasDivisorOfUnitExtension_of_algebraicModel
+#print axioms AlgebraicGeometry.ComplexPoint.hasAlgebraicModel_of_analyticLineBundlesAlgebraize

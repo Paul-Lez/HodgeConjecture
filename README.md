@@ -25,3 +25,17 @@ The remaining content of the project is sorted into four folders:
 - `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
 
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
+
+## Lefschetz (1, 1) development
+
+`Other/AlgebraicGeometry/LefschetzOneOne.lean` states the rational Lefschetz `(1, 1)` theorem
+and proves it assuming `HodgeConjecture`. The unconditional proof is in progress: the holomorphic
+exponential sequence, its connecting map, the vanishing of Hodge classes in `H²(𝒪)`, the
+resulting unit-sheaf extensions and their invertible holomorphic section sheaves, and the
+analytification functor on sheaves of modules are constructed in the `Holomorphic*` and
+`Analytification*` files of `Other/AlgebraicGeometry`.
+`Other/AlgebraicGeometry/LefschetzOneOneReduction.lean` states the remaining obligations
+(integral denominator clearing, projective GAGA for line bundles, and the divisor/cycle-class
+comparison) as explicit propositions and proves that they imply the theorem.
+See [the Lefschetz handoff](docs/LEFSCHETZ_HANDOFF.md) for the status, file map and
+verification commands.
