@@ -59,16 +59,19 @@ example : @Guide.Cycles.D1.codimensionCycleSubgroup.{u} = @AlgebraicGeometry.cod
 ```
 ```lean -show
 namespace Guide.Cycles.D2
+/-- The membership proof, hidden from the quotation because it carries no information. -/
+theorem single_mem {X : Scheme.{u}} [DecidableEq X] {p : ℕ} (x : X) (hx : coheight x = p)
+    (n : ℤ) : Function.locallyFinsuppWithin.single x n ∈ codimensionCycleSubgroup X p := by
+  intro y hy
+  by_cases h : y = x
+  · simpa [h] using hx
+  · simp [Function.locallyFinsuppWithin.single_apply, h] at hy
 ```
 ```lean
 noncomputable def codimensionCycleSubgroup.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
     (n : ℤ) : codimensionCycleSubgroup X p := by
   classical
-  exact ⟨Function.locallyFinsuppWithin.single x n, by
-    intro y hy
-    by_cases h : y = x
-    · simpa [h] using hx
-    · simp [Function.locallyFinsuppWithin.single_apply, h] at hy⟩
+  exact ⟨Function.locallyFinsuppWithin.single x n, single_mem x hx n⟩
 ```
 ```lean -show
 end Guide.Cycles.D2
