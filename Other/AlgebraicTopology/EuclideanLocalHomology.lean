@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
 public import Other.AlgebraicTopology.LocalFundamentalClass
 public import Mathlib.Algebra.Homology.HomologySequence
 public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
@@ -191,20 +192,11 @@ lemma relativeSingularBoundary_standardLocalClass (n : ℕ) :
 /-! ### Contractibility of the ambient Euclidean space -/
 
 /-- A specified homotopy equivalence induces an isomorphism on rational singular homology. -/
-def rationalSingularHomologyIsoOfHomotopyEquiv
+noncomputable def rationalSingularHomologyIsoOfHomotopyEquiv
     {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y]
     (k : ℕ) (e : X ≃ₕ Y) :
-    Homology ℚ (TopCat.of X) k ≅ Homology ℚ (TopCat.of Y) k := by
-  let F := (singularHomologyFunctor (ModuleCat ℚ) k).obj (ModuleCat.of ℚ ℚ)
-  let f : TopCat.of X ⟶ TopCat.of Y := TopCat.ofHom e.toFun
-  let g : TopCat.of Y ⟶ TopCat.of X := TopCat.ofHom e.invFun
-  exact CategoryTheory.Iso.mk (F.map f) (F.map g) (by
-    rw [← F.map_comp, ← F.map_id]
-    exact TopCat.Homotopy.congr_homologyMap_singularChainComplexFunctor
-      e.left_inv.some (ModuleCat.of ℚ ℚ) k) (by
-    rw [← F.map_comp, ← F.map_id]
-    exact TopCat.Homotopy.congr_homologyMap_singularChainComplexFunctor
-      e.right_inv.some (ModuleCat.of ℚ ℚ) k)
+    Homology ℚ (TopCat.of X) k ≅ Homology ℚ (TopCat.of Y) k :=
+  AlgebraicTopology.singularHomologyIsoOfHomotopyEquiv (ModuleCat.of ℚ ℚ) k e
 
 /-- Positive-degree rational singular homology of a real coordinate space vanishes. -/
 lemma standardRealModel_homology_isZero (d k : ℕ) (hk : k ≠ 0) :

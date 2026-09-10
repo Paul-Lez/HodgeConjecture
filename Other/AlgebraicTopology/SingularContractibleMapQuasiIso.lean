@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
 public import Mathlib.Algebra.Category.Grp.Abelian
 public import Mathlib.Algebra.Homology.QuasiIso
 public import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
@@ -68,39 +69,13 @@ def homotopyEquivOfMapBetweenContractibleSpaces
       ContinuousMap.Homotopic.comp hy (.refl e.toFun)
   exact homotopyEquivOfHomotopicTo f e (hf.trans he.symm)
 
-/-- A topological homotopy equivalence induces a homotopy equivalence between singular chain
-complexes with an arbitrary coefficient object in `AddCommGrpCat`. -/
-def singularChainHomotopyEquivOfHomotopyEquivAddCommGrp
-    (R : AddCommGrpCat) (e : X ≃ₕ Y) :
-    HomotopyEquiv
-      (((singularChainComplexFunctor AddCommGrpCat).obj R).obj (TopCat.of X))
-      (((singularChainComplexFunctor AddCommGrpCat).obj R).obj (TopCat.of Y)) := by
-  let F := (singularChainComplexFunctor AddCommGrpCat).obj R
-  let f : TopCat.of X ⟶ TopCat.of Y := TopCat.ofHom e.toFun
-  let g : TopCat.of Y ⟶ TopCat.of X := TopCat.ofHom e.invFun
-  have hX : TopCat.Homotopy (f ≫ g) (𝟙 (TopCat.of X)) :=
-    Classical.choice e.left_inv
-  have hY : TopCat.Homotopy (g ≫ f) (𝟙 (TopCat.of Y)) :=
-    Classical.choice e.right_inv
-  refine
-    { hom := F.map f
-      inv := F.map g
-      homotopyHomInvId := ?_
-      homotopyInvHomId := ?_ }
-  · exact (Homotopy.ofEq (F.map_comp f g).symm).trans
-      (hX.singularChainComplexFunctorObjMap R |>.trans
-        (Homotopy.ofEq (F.map_id (TopCat.of X))))
-  · exact (Homotopy.ofEq (F.map_comp g f).symm).trans
-      (hY.singularChainComplexFunctorObjMap R |>.trans
-        (Homotopy.ofEq (F.map_id (TopCat.of Y))))
-
 /-- Applying singular chains with arbitrary abelian-group coefficients to the forward map of a
 homotopy equivalence gives a quasi-isomorphism. -/
 theorem singularChainMap_quasiIso_of_homotopyEquiv
     (R : AddCommGrpCat) (e : X ≃ₕ Y) :
     QuasiIso (SSet.chainComplexMap
       (TopCat.toSSet.map (TopCat.ofHom e.toFun)) R) := by
-  let E := singularChainHomotopyEquivOfHomotopyEquivAddCommGrp R e
+  let E := singularChainHomotopyEquivOfHomotopyEquiv R e
   rw [quasiIso_iff]
   intro k
   rw [quasiIsoAt_iff_isIso_homologyMap]

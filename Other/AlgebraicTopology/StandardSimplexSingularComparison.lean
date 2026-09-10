@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
 public import Mathlib.Algebra.Category.Grp.Abelian
 public import Mathlib.Algebra.Homology.QuasiIso
 public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
@@ -168,7 +169,7 @@ theorem standardSimplexRealization_singularChains_exactAt
     (SSet.toTop.obj (Δ[n] : SSet.{0}) : Type)
   have hunit := isZero_singularHomologyFunctor_of_totallyDisconnectedSpace
     AddCommGrpCat k R (TopCat.of Unit) hk
-  let E := singularChainHomotopyEquivOfHomotopyEquivAddCommGrp R e
+  let E := AlgebraicTopology.singularChainHomotopyEquivOfHomotopyEquiv R e
   rw [HomologicalComplex.exactAt_iff_isZero_homology]
   exact hunit.of_iso (E.toHomologyIso k)
 

@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
 public import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
 public import Mathlib.Topology.Homotopy.Contractible
@@ -42,35 +43,6 @@ namespace AlgebraicTopology
 
 variable (R : Type u) [Field R]
 
-/-- A topological homotopy equivalence induces a homotopy equivalence of singular chain
-complexes. -/
-def singularChainHomotopyEquivOfHomotopyEquiv
-    {X Y : Type u} [TopologicalSpace X] [TopologicalSpace Y]
-    (e : X ≃ₕ Y) :
-    HomotopyEquiv
-      (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj
-        (TopCat.of X))
-      (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj
-        (TopCat.of Y)) := by
-  let F := (singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)
-  let f : TopCat.of X ⟶ TopCat.of Y := TopCat.ofHom e.toFun
-  let g : TopCat.of Y ⟶ TopCat.of X := TopCat.ofHom e.invFun
-  have hX : TopCat.Homotopy (f ≫ g) (𝟙 (TopCat.of X)) :=
-    Classical.choice e.left_inv
-  have hY : TopCat.Homotopy (g ≫ f) (𝟙 (TopCat.of Y)) :=
-    Classical.choice e.right_inv
-  refine
-    { hom := F.map f
-      inv := F.map g
-      homotopyHomInvId := ?_
-      homotopyInvHomId := ?_ }
-  · exact (Homotopy.ofEq (F.map_comp f g).symm).trans
-      ((hX.singularChainComplexFunctorObjMap (ModuleCat.of R R)).trans
-        (Homotopy.ofEq (F.map_id (TopCat.of X))))
-  · exact (Homotopy.ofEq (F.map_comp g f).symm).trans
-      ((hY.singularChainComplexFunctorObjMap (ModuleCat.of R R)).trans
-        (Homotopy.ofEq (F.map_id (TopCat.of Y))))
-
 /-- The singular chain complex of a contractible space is homotopy equivalent to that of a
 point. -/
 def contractibleSingularChainHomotopyEquiv
@@ -83,7 +55,7 @@ def contractibleSingularChainHomotopyEquiv
   let e : X ≃ₕ ULift.{u} Unit :=
     (Classical.choice (ContractibleSpace.hequiv_unit X)).trans
       (Homeomorph.ulift.{u, 0}.symm.toHomotopyEquiv)
-  exact singularChainHomotopyEquivOfHomotopyEquiv R e
+  exact singularChainHomotopyEquivOfHomotopyEquiv (ModuleCat.of R R) e
 
 /-- Positive-degree singular chains of a contractible space are exact. -/
 lemma singularChainComplex_exactAt_of_contractible
