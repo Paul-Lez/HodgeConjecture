@@ -39,7 +39,7 @@ namespace Guide.Statement.D5
 ```
 ```lean
 def sheafCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
-    CodimensionCycle V.scheme p →+ FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+    codimensionCycleSubgroup V.scheme p →+ FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
   cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := V.dimension))
 ```
 ```lean -show
@@ -57,7 +57,7 @@ namespace Guide.Statement.D6
 ```lean
 def rationalSheafCycleClassOnCycles
     (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
-    TensorProduct ℤ ℚ (CodimensionCycle V.scheme p) →ₗ[ℚ]
+    TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme p) →ₗ[ℚ]
       FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
   TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 ```

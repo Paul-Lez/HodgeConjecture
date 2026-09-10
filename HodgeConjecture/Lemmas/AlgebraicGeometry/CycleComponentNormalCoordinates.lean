@@ -231,7 +231,7 @@ lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
           (f := X.hom) (d := 1) x hx)
   · obtain ⟨rfl, rfl⟩ := h20
     have hxgeneric : x = genericPoint X.left :=
-      CodimensionCycle.eq_genericPoint_of_coheight_zero x hx
+      codimensionCycleSubgroup.eq_genericPoint_of_coheight_zero x hx
     subst x
     let e : cycleComponent X.left (genericPoint X.left) ≃o X.left :=
       (cycleComponentOrderIsoIic X.left (genericPoint X.left)).trans OrderIso.IicTop

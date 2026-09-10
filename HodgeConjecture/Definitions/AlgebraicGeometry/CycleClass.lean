@@ -72,11 +72,11 @@ def compactCycleToFinsupp {X : Scheme.{u}} [CompactSpace X] :
 
 /-- Extend prescribed classes of irreducible codimension-`p` components additively to integral
 codimension-`p` cycles. Values away from codimension `p` are set to zero; the support condition on
-a `CodimensionCycle` ensures that this branch is never used by a nonzero coefficient. -/
+a `codimensionCycleSubgroup` ensures that this branch is never used by a nonzero coefficient. -/
 def cycleClassOnCyclesOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
     {M : Type*} [AddCommGroup M]
     (componentClass : ∀ (x : X), coheight x = p → M) :
-    CodimensionCycle X p →+ M := by
+    codimensionCycleSubgroup X p →+ M := by
   classical
   let componentValue : X → M := fun x ↦
     if hx : coheight x = p then componentClass x hx else 0
@@ -91,19 +91,19 @@ component class. -/
     (componentClass : ∀ (x : X), coheight x = p → M)
     (x : X) (hx : coheight x = p) (n : ℤ) :
     cycleClassOnCyclesOfComponents componentClass
-        (CodimensionCycle.single x hx n) =
+        (codimensionCycleSubgroup.single x hx n) =
       n • componentClass x hx := by
   classical
   change (Finsupp.linearCombination ℤ (fun y ↦
       if hy : coheight y = p then componentClass y hy else 0))
     (compactCycleToFinsupp ((codimensionCycleInclusion X p)
-      (CodimensionCycle.single x hx n))) = n • componentClass x hx
+      (codimensionCycleSubgroup.single x hx n))) = n • componentClass x hx
   have hsingle : compactCycleToFinsupp
-      ((codimensionCycleInclusion X p) (CodimensionCycle.single x hx n)) =
+      ((codimensionCycleInclusion X p) (codimensionCycleSubgroup.single x hx n)) =
       Finsupp.single x n := by
     ext y
-    change CodimensionCycle.single x hx n y = Finsupp.single x n y
-    rw [CodimensionCycle.single_apply, Finsupp.single_apply]
+    change codimensionCycleSubgroup.single x hx n y = Finsupp.single x n y
+    rw [codimensionCycleSubgroup.single_apply, Finsupp.single_apply]
     by_cases h : y = x
     · simp [h]
     · simp [h, Ne.symm h]
@@ -114,14 +114,14 @@ namespace ChowGroup
 /-- An additive map on codimension cycles that vanishes on rational equivalences descends to the
 Chow group. -/
 def liftCycleClass {X : Scheme.{u}} {p : ℕ} {M : Type*} [AddCommGroup M]
-    (f : CodimensionCycle X p →+ M)
+    (f : codimensionCycleSubgroup X p →+ M)
     (h : rationalEquivalenceSubgroup X p ≤ f.ker) : ChowGroup X p →+ M :=
   QuotientAddGroup.lift (rationalEquivalenceSubgroup X p) f h
 
 /-- Evaluation of a descended additive map on a represented Chow class. -/
 @[simp] lemma liftCycleClass_mk {X : Scheme.{u}} {p : ℕ} {M : Type*} [AddCommGroup M]
-    (f : CodimensionCycle X p →+ M)
-    (h : rationalEquivalenceSubgroup X p ≤ f.ker) (z : CodimensionCycle X p) :
+    (f : codimensionCycleSubgroup X p →+ M)
+    (h : rationalEquivalenceSubgroup X p ≤ f.ker) (z : codimensionCycleSubgroup X p) :
     liftCycleClass f h (mk z) = f z :=
   QuotientAddGroup.lift_mk' _ h z
 
@@ -164,7 +164,7 @@ coefficient one. -/
 def rationalComponentChowClass
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ)
     (x : X.left) (hx : coheight x = p) : RationalChowGroup X.left p :=
-  ChowGroup.toRational (ChowGroup.mk (CodimensionCycle.single x hx 1))
+  ChowGroup.toRational (ChowGroup.mk (codimensionCycleSubgroup.single x hx 1))
 
 /-! ### The genuine codimension-zero cycle class -/
 
@@ -172,9 +172,9 @@ def rationalComponentChowClass
 the generic component. -/
 def codimensionZeroCycleClassOnCycles
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
-    CodimensionCycle X.left 0 →+ FieldCohomology ℚ X 0 :=
+    codimensionCycleSubgroup X.left 0 →+ FieldCohomology ℚ X 0 :=
   (fieldCohomologyClassAddHom ℚ X).comp
-    ((Int.castAddHom ℚ).comp CodimensionCycle.integralEquiv.toAddMonoidHom)
+    ((Int.castAddHom ℚ).comp codimensionCycleSubgroup.integralEquiv.toAddMonoidHom)
 
 /-- Codimension-zero rational equivalences map to zero. Here this is a theorem rather than part
 of the data of the cycle-class map: the rational-equivalence subgroup is trivial in codimension
@@ -196,7 +196,7 @@ def codimensionZeroChowCycleClass
 /-- Evaluation of the integral codimension-zero class map on a represented cycle. -/
 @[simp] lemma codimensionZeroChowCycleClass_mk
     [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (z : CodimensionCycle X.left 0) :
+    [IsProjective X.hom] (z : codimensionCycleSubgroup X.left 0) :
     codimensionZeroChowCycleClass X (ChowGroup.mk z) =
       codimensionZeroCycleClassOnCycles X z :=
   ChowGroup.liftCycleClass_mk _ _ _
@@ -213,21 +213,21 @@ def codimensionZeroCycleClass
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
     codimensionZeroCycleClass X
         (ChowGroup.toRational
-          (ChowGroup.mk (CodimensionCycle.single (genericPoint X.left)
+          (ChowGroup.mk (codimensionCycleSubgroup.single (genericPoint X.left)
             (Order.IsMax.coheight_eq_zero isMax_top) 1))) =
       fieldCohomologyUnit ℚ X := by
   unfold codimensionZeroCycleClass
   rw [ChowGroup.toRational_apply, ChowGroup.rationalExtension_tmul, one_smul,
     codimensionZeroChowCycleClass_mk]
-  let z : CodimensionCycle X.left 0 :=
-    CodimensionCycle.single (genericPoint X.left)
+  let z : codimensionCycleSubgroup X.left 0 :=
+    codimensionCycleSubgroup.single (genericPoint X.left)
       (Order.IsMax.coheight_eq_zero isMax_top) 1
-  have hz : CodimensionCycle.integralEquiv z = 1 := by
+  have hz : codimensionCycleSubgroup.integralEquiv z = 1 := by
     change z (genericPoint X.left) = 1
     dsimp [z]
-    exact CodimensionCycle.single_same (p := 0) (genericPoint X.left) _ 1
+    exact codimensionCycleSubgroup.single_same (p := 0) (genericPoint X.left) _ 1
   change fieldCohomologyClass ℚ X
-      ((CodimensionCycle.integralEquiv z : ℤ) : ℚ) =
+      ((codimensionCycleSubgroup.integralEquiv z : ℤ) : ℚ) =
     fieldCohomologyClass ℚ X 1
   rw [hz]
   norm_num
@@ -252,7 +252,7 @@ lemma codimensionZeroCycleClassSpan_eq_span_unit
     exact Submodule.smul_mem _ _ (Submodule.subset_span (Set.mem_singleton _))
   · exact Submodule.span_le.mpr (Set.singleton_subset_iff.mpr
       ⟨ChowGroup.toRational
-        (ChowGroup.mk (CodimensionCycle.single (genericPoint X.left)
+        (ChowGroup.mk (codimensionCycleSubgroup.single (genericPoint X.left)
           (Order.IsMax.coheight_eq_zero isMax_top) 1)),
         codimensionZeroCycleClass_genericPoint X⟩)
 
