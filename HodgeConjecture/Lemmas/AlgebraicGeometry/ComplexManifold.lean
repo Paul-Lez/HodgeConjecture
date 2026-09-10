@@ -30,8 +30,9 @@ import Mathlib.Geometry.Manifold.Complex
 
 If a complex scheme is smooth of relative dimension `d`, its constructed analytic complex-point
 space is locally homeomorphic to `ℂ^d`. This file turns the chosen algebraic étale coordinates into
-an actual `ChartedSpace (Fin d → ℂ)` structure. In particular, the complex points form a
-topological manifold of real dimension `2 * d`.
+an actual `ChartedSpace (Fin d → ℂ)` structure and proves that its transition maps are
+holomorphic. So the complex points form a complex-analytic manifold of complex dimension `d`, in
+particular a topological manifold of real dimension `2 * d`; both structures are instances.
 
 The charts are not extra input. At a complex point we choose the affine étale coordinates supplied
 by relative-dimensional smoothness, take a local inverse for the proven local homeomorphism, and
@@ -214,8 +215,11 @@ lemma contDiffOn_localChart_transition
   intro w hw
   exact (analyticAt_localChart_transition X d z z' hw).contDiffAt.contDiffWithinAt
 
-/-- Smooth complex points form a holomorphic complex manifold of the specified dimension. -/
-theorem isManifold_omega [SmoothOfRelativeDimension d X.hom] :
+/-- Smooth complex points form a holomorphic complex manifold of the specified dimension.
+
+This is an instance. Through `IsManifold.of_le` it makes the complex points a `C^n` manifold for
+every `n`, so no downstream file needs a local `IsManifold` instance. -/
+instance isManifold_omega [SmoothOfRelativeDimension d X.hom] :
     IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X) := by
   apply isManifold_of_contDiffOn
   rintro _ _ ⟨z, rfl⟩ ⟨z', rfl⟩

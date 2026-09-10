@@ -52,8 +52,6 @@ theorem localClassOfChart_localChart_eq
     (hq' : q ∈ (localChart X d z').source) :
     localClassOfChart d (localChart X d z) q hq =
       localClassOfChart d (localChart X d z') q hq' := by
-  let : ChartedSpace (Fin d → ℂ) (ComplexPoint X) := inferInstance
-  let : IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X) := isManifold_omega X d
   let T : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     tangentCoordChange 𝓘(ℂ, Fin d → ℂ) z z' q
   have hoverlap : q ∈ (extChartAt 𝓘(ℂ, Fin d → ℂ) z).source ∩

@@ -43,7 +43,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 /-- After restricting scalars, smooth complex points form a real `C¹` manifold on the same
 underlying charts. This is the real-manifold structure to which the orientation API of
 [mathlib4 PR #35376](https://github.com/leanprover-community/mathlib4/pull/35376) applies. -/
-theorem isRealManifold_one [SmoothOfRelativeDimension d X.hom] :
+instance isRealManifold_one [SmoothOfRelativeDimension d X.hom] :
     IsManifold 𝓘(ℝ, Fin d → ℂ) 1 (ComplexPoint X) := by
   apply isManifold_of_contDiffOn
   intro e e' he he'
@@ -53,21 +53,6 @@ theorem isRealManifold_one [SmoothOfRelativeDimension d X.hom] :
   simpa only [modelWithCornersSelf_coe, modelWithCornersSelf_coe_symm,
     CompTriple.comp_eq, Function.id_comp, Function.comp_id, Set.preimage_id,
     Set.range_id, Set.inter_univ] using h.of_le (by simp)
-
-local instance analyticChartedSpaceForTangentComparison
-    [SmoothOfRelativeDimension d X.hom] :
-    ChartedSpace (Fin d → ℂ) (ComplexPoint X) :=
-  inferInstance
-
-local instance complexManifoldForTangentComparison
-    [SmoothOfRelativeDimension d X.hom] :
-    IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X) :=
-  isManifold_omega X d
-
-local instance realManifoldForTangentComparison
-    [SmoothOfRelativeDimension d X.hom] :
-    IsManifold 𝓘(ℝ, Fin d → ℂ) 1 (ComplexPoint X) :=
-  isRealManifold_one X d
 
 /-- On the overlap of two algebraic complex charts, the real tangent coordinate change is the
 restriction of scalars of the complex tangent coordinate change. -/
