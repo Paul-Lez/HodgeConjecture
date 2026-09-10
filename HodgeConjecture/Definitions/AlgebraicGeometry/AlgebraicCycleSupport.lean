@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import HodgeConjecture.Definitions.AlgebraicGeometry.ReducedClosedSubscheme
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
@@ -51,33 +52,21 @@ lemma algebraicCycle_support_finite {R : Type*} [Zero R]
   simpa using c.locallyFiniteSupport.finite_inter_support_of_isCompact
     (W := Set.univ) isCompact_univ
 
-/-- The reduced closed subscheme whose underlying space is the closure of `x`. -/
+/-- The reduced closed subscheme whose underlying space is the closure of `x`.
+
+This is `reducedClosedSubscheme` on the closed subset `closure {x}`. -/
 def cycleComponent (X : Scheme) (x : X) : Scheme :=
-  (Scheme.IdealSheafData.vanishingIdeal
-    (X := X) ⟨closure {x}, isClosed_closure⟩).subscheme
+  reducedClosedSubscheme (X := X) ⟨closure {x}, isClosed_closure⟩
 
 /-- The canonical closed immersion of the reduced closure of `x`. -/
 def cycleComponentι (X : Scheme) (x : X) : cycleComponent X x ⟶ X :=
-  (Scheme.IdealSheafData.vanishingIdeal
-    (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι
+  reducedClosedSubschemeι (X := X) ⟨closure {x}, isClosed_closure⟩
 
-instance (X : Scheme) (x : X) : IsClosedImmersion (cycleComponentι X x) := by
-  change IsClosedImmersion
-    ((Scheme.IdealSheafData.vanishingIdeal
-      (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι)
-  infer_instance
+instance (X : Scheme) (x : X) : IsClosedImmersion (cycleComponentι X x) :=
+  reducedClosedSubschemeι_isClosedImmersion _
 
-instance (X : Scheme) (x : X) : IsReduced (cycleComponent X x) := by
-  let I := Scheme.IdealSheafData.vanishingIdeal
-    (X := X) ⟨closure {x}, isClosed_closure⟩
-  change IsReduced I.subscheme
-  rw [IsReduced.iff_of_openCover I.subscheme I.subschemeCover.openCover]
-  intro U
-  let U' : X.affineOpens := U
-  change IsReduced (Spec ↧(Γ(X, U') ⧸ I.ideal U'))
-  rw [affine_isReduced_iff, ← Ideal.isRadical_iff_quotient_reduced]
-  change (PrimeSpectrum.vanishingIdeal (U'.2.fromSpec ⁻¹' closure {x})).IsRadical
-  exact PrimeSpectrum.isRadical_vanishingIdeal _
+instance (X : Scheme) (x : X) : IsReduced (cycleComponent X x) :=
+  reducedClosedSubscheme_isReduced _
 
 instance (X : Scheme) (x : X) : IrreducibleSpace (cycleComponent X x) :=
   Subtype.irreducibleSpace isIrreducible_singleton.closure
@@ -87,12 +76,8 @@ instance (X : Scheme) (x : X) : IsIntegral (cycleComponent X x) :=
 
 @[simp]
 lemma range_cycleComponentι (X : Scheme) (x : X) :
-    Set.range (cycleComponentι X x) = closure {x} := by
-  change Set.range
-    ((Scheme.IdealSheafData.vanishingIdeal
-      (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι) = closure {x}
-  rw [Scheme.IdealSheafData.range_subschemeι]
-  rfl
+    Set.range (cycleComponentι X x) = closure {x} :=
+  range_reducedClosedSubschemeι (X := X) ⟨closure {x}, isClosed_closure⟩
 
 /-- The kernel of a complex point is the vanishing ideal of the closure of its underlying scheme
 point. -/
@@ -260,7 +245,7 @@ lemma cycleComponent_vanishingIdeal_le_complexPoint_ker
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
     (z : (ComplexPoint X)) (hz : z.underlying ∈ closure {x}) :
     (cycleComponentι X.left x).ker ≤ z.left.ker := by
-  unfold cycleComponentι
+  unfold cycleComponentι reducedClosedSubschemeι
   rw [Scheme.IdealSheafData.ker_subschemeι]
   change Scheme.IdealSheafData.vanishingIdeal
       ⟨closure {x}, isClosed_closure⟩ ≤ z.left.ker
