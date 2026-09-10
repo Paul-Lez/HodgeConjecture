@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.ExplicitEllipticCandidate
-public import Other.AlgebraicGeometry.ProjectiveAnalytification
+public import Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 
 /-!
 # Affine charts of the explicit projective cubic
@@ -93,13 +93,12 @@ theorem chart_one_sup_chart_two : chart 1 ⊔ chart 2 = ⊤ := by
 /-- Homogeneous coordinates define a complex point of the ambient scheme-theoretic plane. -/
 def homogeneousPlanePoint (P : Fin 3 → ℂ) (hP : P ≠ 0) :
     ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin 3) base)) :=
-  Over.homMk (pullback.lift (𝟙 base) (toIntegralProj P hP) (Subsingleton.elim _ _))
-    (pullback.lift_fst _ _ _)
+  vectorToComplexPoint P hP
 
 @[reassoc]
-theorem homogeneousPlanePoint_toIntegralProj (P : Fin 3 → ℂ) (hP : P ≠ 0) :
-    (homogeneousPlanePoint P hP).left ≫ planeToIntegerPlane = toIntegralProj P hP := by
-  exact pullback.lift_snd _ _ _
+theorem homogeneousPlanePoint_toChartIntegralProj (P : Fin 3 → ℂ) (hP : P ≠ 0) :
+    (homogeneousPlanePoint P hP).left ≫ planeToIntegerPlane = chartIntegralProj P hP := by
+  exact vectorToProjectiveSpace_toProj P hP
 
 /-- Evaluating the integral cubic in complex coordinates gives the displayed Weierstrass
 equation. -/
@@ -118,16 +117,14 @@ theorem homogeneousPlanePoint_mem_cubicLocus_iff (P : Fin 3 → ℂ) (hP : P ≠
     ProjectiveSpectrum.zeroLocus (UniversalGrading 2) {cubic} ↔ _
   change ((homogeneousPlanePoint P hP).left ≫ planeToIntegerPlane)
     (IsLocalRing.closedPoint ℂ) ∈ ProjectiveSpectrum.zeroLocus (UniversalGrading 2) {cubic} ↔ _
-  rw [homogeneousPlanePoint_toIntegralProj]
+  rw [homogeneousPlanePoint_toChartIntegralProj]
   change ({cubic} : Set (UniversalRing 2)) ⊆
-    (toIntegralProj P hP (IsLocalRing.closedPoint ℂ)).asHomogeneousIdeal ↔ _
+    (chartIntegralProj P hP (IsLocalRing.closedPoint ℂ)).asHomogeneousIdeal ↔ _
   rw [Set.singleton_subset_iff]
   rw [← not_iff_not]
   change IsLocalRing.closedPoint ℂ ∈
-    toIntegralProj P hP ⁻¹ᵁ Proj.basicOpen (UniversalGrading 2) cubic ↔ _
-  rw [toIntegralProj_preimage_basicOpen P hP cubic (by decide : 0 < 3) cubic_homogeneous]
-  change IsLocalRing.closedPoint ℂ ∈
-    (if coordinateEvaluationHom P cubic = 0 then ⊥ else ⊤) ↔ _
+    chartIntegralProj P hP ⁻¹ᵁ Proj.basicOpen (UniversalGrading 2) cubic ↔ _
+  rw [chartIntegralProj_preimage_basicOpen P hP cubic (by decide : 0 < 3) cubic_homogeneous]
   rw [coordinateEvaluationHom_cubic]
   change IsLocalRing.closedPoint ℂ ∈
     (if equation.toProjective.Equation P then ⊥ else ⊤) ↔ _
@@ -160,6 +157,17 @@ theorem curvePoint_map (P : Fin 3 → ℂ) (hP : P ≠ 0)
     Point.map (Over.homMk curveToPlane rfl) (curvePoint P hP heq) = homogeneousPlanePoint P hP :=
   (exists_curvePoint_of_equation P hP heq).choose_spec
 
+/-- Under the projective embedding, the point constructed from homogeneous coordinates is the
+analytic coordinate point used by `ProjectiveAnalytification`. -/
+@[simp]
+theorem curvePoint_map_vectorToComplexPoint (P : Fin 3 → ℂ) (hP : P ≠ 0)
+    (heq : equation.toProjective.Equation P) :
+    Point.map (Over.homMk curveToPlane rfl) (curvePoint P hP heq) =
+      vectorToComplexPoint P hP := by
+  rw [curvePoint_map]
+  unfold homogeneousPlanePoint
+  congr
+
 /-- Membership in the actual affine chart is detected by the corresponding homogeneous
 coordinate. -/
 theorem curvePoint_mem_chart_iff (P : Fin 3 → ℂ) (hP : P ≠ 0)
@@ -173,8 +181,9 @@ theorem curvePoint_mem_chart_iff (P : Fin 3 → ℂ) (hP : P ≠ 0)
   change IsLocalRing.closedPoint ℂ ∈
     ((homogeneousPlanePoint P hP).left ≫ planeToIntegerPlane) ⁻¹ᵁ
       Proj.basicOpen (UniversalGrading 2) (X i) ↔ _
-  rw [homogeneousPlanePoint_toIntegralProj,
-    toIntegralProj_preimage_coordinateBasicOpen]
+  rw [homogeneousPlanePoint_toChartIntegralProj,
+    chartIntegralProj_preimage_basicOpen P hP (X i) zero_lt_one
+      (MvPolynomial.isHomogeneous_X _ i), coordinateEvaluationHom_X]
   split_ifs <;> simp_all
 
 /-- The point at infinity `[0:1:0]`, as a point of the actual cubic scheme. -/

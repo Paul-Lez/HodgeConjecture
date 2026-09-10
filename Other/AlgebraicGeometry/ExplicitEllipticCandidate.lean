@@ -89,7 +89,7 @@ theorem projective_nonsingular (P : Fin 3 → ℂ) (hP0 : P ≠ 0)
     exact (WeierstrassCurve.Projective.equation_of_Z_ne_zero hz).1 hP
 
 /-- The complex base scheme. -/
-def base : Scheme := Spec (CommRingCat.of ℂ)
+abbrev base : Scheme := Spec (CommRingCat.of ℂ)
 
 /-- The projective plane over the integers used by `ProjectiveSpace`. -/
 def integerPlane : Scheme := Proj (homogeneousSubmodule (Fin 3) (ULift ℤ))
