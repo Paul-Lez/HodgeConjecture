@@ -48,6 +48,7 @@ public import Other.AlgebraicGeometry.BettiScalarComparison
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueMapNaturality
 public import Other.AlgebraicGeometry.BettiScalarNaturality
 public import Other.AlgebraicGeometry.IntegralDenominatorClearing
+public import Other.AlgebraicGeometry.ComplexPointRealManifold
 public import Other.AlgebraicGeometry.BettiSheafComparison
 public import Other.AlgebraicGeometry.BettiSupportConeComparison
 public import Other.AlgebraicGeometry.BettiSupportSingularComparison
