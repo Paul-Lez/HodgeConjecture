@@ -136,7 +136,7 @@ def auxiliarySupportedClass
 /-- The comparison-dependent ordinary rational cohomology class. -/
 def auxiliaryOrdinaryClass
     (D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V p x hx) :
-    FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+    H^(2 * (p : ℤ))(V.over; ℚ) :=
   forgetSupport V.over
     (cycleComponentSupport V.over x) (2 * (p : ℤ))
     D.auxiliarySupportedClass
@@ -293,7 +293,7 @@ def constantSheafSupportedFundamentalClass
 /-- The conditional normalized ordinary rational component class. -/
 def ordinaryFundamentalClass
     (D : ComplexOrientedRationalCycleComponentClassData V p x hx) :
-    FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+    H^(2 * (p : ℤ))(V.over; ℚ) :=
   forgetSupport V.over
     (cycleComponentSupport V.over x) (2 * (p : ℤ))
       D.constantSheafSupportedFundamentalClass
@@ -632,7 +632,7 @@ def auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
 def maximalCodimensionComponentClass
     (V : DimensionedSmoothProjectiveComplexVariety)
     (x : V.scheme) (hx : coheight x = V.dimension) :
-    FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)) :=
+    H^(2 * (V.dimension : ℤ))(V.over; ℚ) :=
   AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliaryOrdinaryClass
     (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V x hx)
 
@@ -693,7 +693,7 @@ def ofCarrierDivisors
       AuxiliaryRationalCycleComponentBorelMooreComparisonData V p x hx)
     (carrierClass : ∀ D : PrincipalDivisor V.scheme p,
       AlgebraicCycle D.carrier ℤ →+
-        FieldCohomology ℚ V.over (2 * (p : ℤ)))
+        H^(2 * (p : ℤ))(V.over; ℚ))
     (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforward D
       (carrierClass D)
       (cycleClassOnAlgebraicCyclesOfComponents
@@ -722,7 +722,7 @@ def ofCarrierDivisorsViaGysin
       AlgebraicCycle D.carrier ℤ →+ carrierTarget D)
     (gysin : ∀ D : PrincipalDivisor V.scheme p,
       carrierTarget D →+
-        FieldCohomology ℚ V.over (2 * (p : ℤ)))
+        H^(2 * (p : ℤ))(V.over; ℚ))
     (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforwardVia D
       (carrierClass D)
       (cycleClassOnAlgebraicCyclesOfComponents
@@ -756,7 +756,7 @@ def ofMaximalCodimensionOfCarrierDivisors
     (V : DimensionedSmoothProjectiveComplexVariety)
     (carrierClass : ∀ D : PrincipalDivisor V.scheme V.dimension,
       AlgebraicCycle D.carrier ℤ →+
-        FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)))
+        H^(2 * (V.dimension : ℤ))(V.over; ℚ))
     (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforward D
       (carrierClass D)
       (cycleClassOnAlgebraicCyclesOfComponents
@@ -779,7 +779,7 @@ def ofMaximalCodimensionViaGysin
       AlgebraicCycle D.carrier ℤ →+ carrierTarget D)
     (gysin : ∀ D : PrincipalDivisor V.scheme V.dimension,
       carrierTarget D →+
-        FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)))
+        H^(2 * (V.dimension : ℤ))(V.over; ℚ))
     (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforwardVia D
       (carrierClass D)
       (cycleClassOnAlgebraicCyclesOfComponents
@@ -797,7 +797,7 @@ def auxiliaryComponentClass
     {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
     (C : AuxiliaryRationalBorelMooreCycleClassDescent V p)
     (x : V.scheme) (hx : coheight x = p) :
-    FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+    H^(2 * (p : ℤ))(V.over; ℚ) :=
   (C.component x hx).auxiliaryOrdinaryClass
 
 @[simp] lemma ofMaximalCodimension_auxiliaryComponentClass
@@ -815,7 +815,7 @@ def auxiliaryCycleClass
     {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
     (C : AuxiliaryRationalBorelMooreCycleClassDescent V p) :
     RationalChowGroup V.scheme p →ₗ[ℚ]
-      FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+      H^(2 * (p : ℤ))(V.over; ℚ) :=
   ChowGroup.rationalCycleClassOfComponents C.auxiliaryComponentClass C.principalDivisor_class
 
 /-- The auxiliary descended map sends a component to its comparison-dependent ordinary class. -/
@@ -835,7 +835,7 @@ def maximalCodimensionCycleClass
     (V : DimensionedSmoothProjectiveComplexVariety)
     (hprincipal : MaximalCodimensionPrincipalDivisorClassVanishes V) :
     RationalChowGroup V.scheme V.dimension →ₗ[ℚ]
-      FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)) :=
+      H^(2 * (V.dimension : ℤ))(V.over; ℚ) :=
   (ofMaximalCodimension V hprincipal).auxiliaryCycleClass
 
 /-- The maximal-codimension rational Chow cycle-class map constructed from the carrierwise
@@ -844,7 +844,7 @@ def maximalCodimensionCycleClassOfCarrierDivisors
     (V : DimensionedSmoothProjectiveComplexVariety)
     (carrierClass : ∀ D : PrincipalDivisor V.scheme V.dimension,
       AlgebraicCycle D.carrier ℤ →+
-        FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)))
+        H^(2 * (V.dimension : ℤ))(V.over; ℚ))
     (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforward D
       (carrierClass D)
       (cycleClassOnAlgebraicCyclesOfComponents
@@ -852,7 +852,7 @@ def maximalCodimensionCycleClassOfCarrierDivisors
           V x hx).auxiliaryOrdinaryClass)))
     (hdivisor : ∀ D, carrierClass D D.divisor = 0) :
     RationalChowGroup V.scheme V.dimension →ₗ[ℚ]
-      FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)) :=
+      H^(2 * (V.dimension : ℤ))(V.over; ℚ) :=
   (ofMaximalCodimensionOfCarrierDivisors V carrierClass hpush hdivisor).auxiliaryCycleClass
 
 /-- The resulting maximal-codimension Chow map sends a component to the explicitly normalized
@@ -871,7 +871,7 @@ Borel--Moore point class. -/
     (V : DimensionedSmoothProjectiveComplexVariety)
     (carrierClass : ∀ D : PrincipalDivisor V.scheme V.dimension,
       AlgebraicCycle D.carrier ℤ →+
-        FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)))
+        H^(2 * (V.dimension : ℤ))(V.over; ℚ))
     (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforward D
       (carrierClass D)
       (cycleClassOnAlgebraicCyclesOfComponents
@@ -922,7 +922,7 @@ def componentClass
     {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
     (C : ComplexOrientedRationalBorelMooreCycleClassConstruction V p)
     (x : V.scheme) (hx : coheight x = p) :
-    FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+    H^(2 * (p : ℤ))(V.over; ℚ) :=
   (C.component x hx).ordinaryFundamentalClass
 
 /-- Descent of the locally normalized component classes to a rational linear map on the Chow
@@ -931,7 +931,7 @@ def cycleClass
     {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
     (C : ComplexOrientedRationalBorelMooreCycleClassConstruction V p) :
     RationalChowGroup V.scheme p →ₗ[ℚ]
-      FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+      H^(2 * (p : ℤ))(V.over; ℚ) :=
   ChowGroup.rationalCycleClassOfComponents C.componentClass C.principalDivisor_class
 
 /-- The descended map sends an irreducible component to its locally normalized class. -/

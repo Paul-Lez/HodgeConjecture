@@ -98,7 +98,7 @@ The second item is precisely the scalar degree-zero theorem for principal diviso
 one-dimensional carriers occurring here (together with the relevant dimension formula). -/
 theorem maximalCodimensionPrincipalDivisorClassVanishes_of_coefficientSum
     (V : DimensionedSmoothProjectiveComplexVariety)
-    (m : FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)))
+    (m : H^(2 * (V.dimension : ℤ))(V.over; ℚ))
     (hconstant : ∀ x hx, maximalCodimensionComponentClass V x hx = m)
     (hdegree : ∀ D : PrincipalDivisor V.scheme V.dimension,
       codimensionCoefficientSum V.dimension D.pushforwardCycle = 0) :

@@ -401,7 +401,7 @@ set_option maxRecDepth 5000 in
 /-- Forgetting support gives the comparison-dependent ordinary rational class. -/
 def ordinaryClassOfComparisons
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+    H^(2 * (p : ℤ))(V.over; ℚ) :=
   forgetSupport V.over
     (cycleComponentSupport V.over x) (2 * (p : ℤ))
       D.supportedClassOfComparisons
