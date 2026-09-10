@@ -44,10 +44,21 @@ dimension at {lean}`dim X.left`.
 
 # The proposition
 
-Here is the full statement, elaborated when this page is built:
+Here is the full statement, as declared in `HodgeConjecture/Statement.lean`. The copy shown here
+is elaborated when the site is built, and the build checks that it is definitionally equal to the
+declaration in the repository.
 
+```lean -show
+namespace Statement
+```
 ```lean
-#print HodgeConjecture
+def HodgeConjecture : Prop :=
+  ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ),
+    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p
+```
+```lean -show
+end Statement
+example : Statement.HodgeConjecture = HodgeConjecture := rfl
 ```
 
 It quantifies over a scheme {lean}`X` over $`\mathbb C` that is integral with smooth and projective

@@ -27,10 +27,25 @@ A codimension is a natural number {lean}`p`, while cohomological degrees are int
 of a codimension-$`p` cycle lives in degree {lean}`2 * (p : ℤ)`; the coercion is visible in the
 types below.
 
-The statement is a single proposition, comparing two subspaces of rational cohomology.
+The statement is a single proposition, comparing two subspaces of rational cohomology. Here it is
+as declared in `HodgeConjecture/Statement.lean`:
+
+```lean -show
+namespace Overview
+```
+```lean
+def HodgeConjecture : Prop :=
+  ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ),
+    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p
+```
+```lean -show
+end Overview
+example : Overview.HodgeConjecture = HodgeConjecture := rfl
+```
+
+The two subspaces are the rational Hodge classes and the algebraic subspace:
 
 ```lean
-#check HodgeConjecture
 #check AlgebraicGeometry.ComplexPoint.hodgeClasses
 #check AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan
 ```
