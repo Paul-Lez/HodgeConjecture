@@ -1478,7 +1478,8 @@ lemma hodgeFiltration_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     filteredToDeRhamCohomology_zero_apply X n _ |>.trans
       ((hodgeFiltrationZeroEquiv X n).apply_symm_apply α)⟩
 
-/-- The `(0,0)` piece is everything, because `F⁰` is. -/
+/-- `F⁰ ⊓ conj F⁰` is everything, in every degree, because `F⁰` is. In degree `0` this says the
+`(0,0)` piece is everything; in other degrees it is not a statement about a Hodge piece. -/
 lemma hodgePiece_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     hodgePiece X 0 0 n = ⊤ := by
   refine eq_top_iff.mpr fun α _ ↦ ⟨?_, ?_⟩
