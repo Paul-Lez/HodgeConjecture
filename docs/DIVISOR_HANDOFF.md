@@ -7,10 +7,11 @@ obligations.
 
 The algebraic half is **proved**: every invertible sheaf of modules on `X.left` is represented by
 Cartier data, whose Weil divisor is the divisor of a rational section (§2.1–§2.3). The transport
-of that data to the analytic space is proved up to one isolated statement,
-`AnalytificationGenerates` (§2.4, §4.2(b)). What is left is the comparison of the resulting cycle
+of that data to the analytic space is also **proved**: `AnalytificationGenerates` is now the
+theorem `analytificationGenerates` (§2.4, §4.2(b)). What is left is the comparison of the resulting cycle
 class with the first Chern class, `HasDivisorClassOfSomeCartierData` (§3), whose route is planned
-in §4.3 and whose first step, `SectionSheafDeterminesClass`, is stated in Lean.
+in §4.3 and whose first step, `SectionSheafDeterminesClass`, is now **proved**
+(`sectionSheafDeterminesClass`, §4.3 step 2a).
 
 ## 1. The exact target
 
@@ -171,7 +172,7 @@ space.
 * **`analyticSection_smul_res`** — the transport of transition identities:
   `u • a|_W = b|_W` implies `u^an • a^an|_{W^an} = b^an|_{W^an}`. This is unconditional and is
   the fact the cocycle comparison rests on.
-* Given the obligation `AnalytificationGenerates` of §4.2(b):
+* Given `AnalytificationGenerates` of §4.2(b) (now the theorem `analytificationGenerates`):
   `analyticTrivializingCover` (the analytified algebraic cover),
   `extensionFramesOfAlgebraic` (transported along an isomorphism with
   `E.sectionSheafOfModules`),
@@ -302,7 +303,7 @@ model of `H¹(𝒪ˣ) → H²(ℤ)`. The repository has the local lifts and thei
 `Ext`-representative with the Čech representative, not of new analysis. It is nevertheless a
 substantial piece: there is no Čech-to-derived-functor comparison in the repository.
 
-**Missing (b): `AnalytificationGenerates` — the analytification of a generating section
+**Proved (b): `AnalytificationGenerates` — the analytification of a generating section
 generates.** Stated in
 [`Other/AlgebraicGeometry/AnalyticSectionOfAlgebraic.lean`](../Other/AlgebraicGeometry/AnalyticSectionOfAlgebraic.lean):
 
@@ -313,8 +314,46 @@ def AnalytificationGenerates : Prop :=
       HolomorphicGenerates (M := (moduleAnalytification X d).obj L) (analyticSection X d L U g)
 ```
 
-Everything else on the analytic side of §2.4 is derived from it. Mathematically it is the base
-change
+and **proved** in
+[`Other/AlgebraicGeometry/AnalytificationGenerates.lean`](../Other/AlgebraicGeometry/AnalytificationGenerates.lean)
+as
+
+```lean
+theorem analytificationGenerates (X : Over (Spec ↧ℂ)) (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom] : AnalytificationGenerates X d
+```
+
+The proof follows **none** of the three routes listed below: it needs no base-change theorem at
+all. Writing `φ := regularToHolomorphicRingSheaf X d`, `M := (pullback φ).obj L` and `A := U^an`,
+it uses the two sheaves of `𝒪^an`-modules `starUnitSheaf X d A : V ↦ 𝒪^an(A ⨯ V)` and
+`starModuleSheaf X d A M : V ↦ M(A ⨯ V)`, obtained as pushforwards along `Over.star A` of
+`unit (𝒪^an.over A)` and of `M.over A` (so the sheaf condition is free), together with:
+
+* `Scheme.Modules.Generates.coeff`
+  ([`GeneratingSectionCoefficient.lean`](../Other/AlgebraicGeometry/GeneratingSectionCoefficient.lean)):
+  the unique `c : Γ(𝒪_X, W ⊓ U)` with `c • g|_{W ⊓ U} = t|_{W ⊓ U}`, and its four structural
+  identities (`coeff_res`, `coeff_smul`, `coeff_add`, `coeff_self`);
+* `coeffHom : L ⟶ (pushforward φ).obj (starUnitSheaf X d A)`, `t ↦ (hg.coeff W t)^an`, an
+  *explicit* morphism of algebraic sheaves of modules, and its adjoint
+  `analyticCoeffHom : M ⟶ starUnitSheaf X d A`, which satisfies
+  `analyticCoeffHom (t^an) = coeffHom t` (`analyticCoeffHom_analyticSection`, the triangle
+  identity);
+* `smulSectionHom : unit (𝒪^an.over A) ⟶ M.over A`, multiplication by
+  `s := analyticSection X d L U g`, whose components are bijective exactly when
+  `HolomorphicGenerates s` holds;
+* `analyticCoeffHom_comp_smulSectionHom :
+  analyticCoeffHom ≫ (starPushforward A).map smulSectionHom = toStarModuleSheaf`, where
+  `toStarModuleSheaf : M ⟶ starModuleSheaf X d A M` is `m ↦ m|_{A ⨯ V}`. Because morphisms out
+  of a pullback are determined by their adjoints, this identity reduces to the algebraic
+  `hg.coeff W t • g|_{W ⊓ U} = t|_{W ⊓ U}` transported by the already-proved
+  `analyticSection_smul_res`.
+
+Evaluating `analyticCoeffHom_comp_smulSectionHom` on an analytic open `V ≤ A` produces a
+two-sided inverse to multiplication by `s|_V`, which is
+`holomorphicGenerates_analyticSection`.
+
+For the record, the routes originally suggested were the following. Mathematically the statement
+is the base change
 
   `((pullback φ).obj L).over U^an ≅ (pullback (φ.over U)).obj (L.over U)`
 
@@ -382,8 +421,8 @@ the supported exponential sequence does not.
 
 ### 4.3 Plan and order of work
 
-**Step 1 — the algebraic data on the analytic space.** Done except for
-`AnalytificationGenerates` (missing (b)); see §2.4. Its output is: frames `γᵢ` of
+**Step 1 — the algebraic data on the analytic space.** Done, including
+`AnalytificationGenerates` (§4.2(b), `analytificationGenerates`); see §2.4. Its output is: frames `γᵢ` of
 `E.sectionSheafOfModules` on the analytic opens `Uᵢ^an`, with transition functions the
 evaluations `uᵢ^an` of the algebraic transition units — equivalently the analytifications of the
 local equations `fᵢ` of the rational section whose divisor is `c.divisor` — and a unit frame
@@ -396,13 +435,37 @@ change to `E`'s own frames on any common open.
 two unit-sheaf extensions with isomorphic sheaves of sections have the same class in
 `Ext¹(ℤ, 𝒪ˣ)`. This is injectivity of `H¹(X^an, 𝒪ˣ) → Pic(X^an)`, and it is what allows
 `E.firstChernClass` to be computed from the algebraic data at all
-(`firstChernClass_eq_of_sectionSheafOfModules_iso`). Route: pass to a common refinement of the
-two trivializing covers; `HolomorphicTrivializingCover.exists_isUnit_frameChange` gives unit
-frame changes `c_z`; correcting the local lifts of the integer section `1` by `c_z` makes the two
-cocycles of `Other/AlgebraicTopology/SheafExtensionCocycle.lean` agree, the resulting local
-isomorphisms `E.middle|_W ≅ E'.middle|_W` agree on overlaps and glue, and
-`ShortComplex.ShortExact.extClass` is invariant under an isomorphism of short exact sequences.
-No comparison of cohomology theories is involved.
+(`firstChernClass_eq_of_sectionSheafOfModules_iso`).
+
+**Done**, as the theorem `AlgebraicGeometry.ComplexPoint.sectionSheafDeterminesClass` in
+[`Other/AlgebraicGeometry/UnitExtensionClassOfSectionSheaf.lean`](../Other/AlgebraicGeometry/UnitExtensionClassOfSectionSheaf.lean).
+No comparison of cohomology theories is involved. The pieces, in dependency order, are:
+
+* [`HolomorphicLineBundleFrame.lean`](../Other/AlgebraicGeometry/HolomorphicLineBundleFrame.lean) —
+  the canonical frame `E.frame i U hU` of the line bundle over an open subset of the `i`-th
+  lifting neighbourhood, with fibre coordinates `x ↦ E.transitionValue i x x`; it generates
+  (`holomorphicGenerates_frame`) and two such frames differ by the transition unit of the
+  extension (`smul_frame`).
+* [`UnitExtensionCorrectedLifts.lean`](../Other/AlgebraicGeometry/UnitExtensionCorrectedLifts.lean) —
+  the datum `CorrectedLifts E E'`: opens `W z ∋ z` inside `E.localLifts.opens z`, lifts of the
+  integer section `1` in `E'` over `W z` whose differences are *`E`'s* transition sections. Plus
+  the local models `sourceModel`/`targetModel` (`i(a) + n • lift`) and their calculus.
+* [`SheafHomOfLocalStalkMaps.lean`](../Other/AlgebraicGeometry/SheafHomOfLocalStalkMaps.lean) and
+  [`UnitExtensionIntegerStalk.lean`](../Other/AlgebraicGeometry/UnitExtensionIntegerStalk.lean) —
+  gluing a morphism of sheaves of abelian groups from a family of stalk maps that is locally
+  represented by sections, and the local constancy of sections of the constant integer sheaf.
+* [`UnitExtensionMiddleHom.lean`](../Other/AlgebraicGeometry/UnitExtensionMiddleHom.lean) — from
+  `CorrectedLifts E E'`, the morphism `E.middle ⟶ E'.middle` under `𝒪ˣ` and over `ℤ`
+  (`CorrectedLifts.middleHom`), hence `CorrectedLifts.cohomologyClass_eq`.
+* [`UnitExtensionClassOfMiddleHom.lean`](../Other/AlgebraicGeometry/UnitExtensionClassOfMiddleHom.lean) —
+  `ShortComplex.ShortExact.extClass_eq_of_middleHom`: a *morphism* (invertibility is not needed)
+  of the middle terms commuting with the inclusions and the projections already equates the two
+  `extClass`es, via `extClass_naturality`.
+* [`UnitExtensionCorrectedLiftsOfIso.lean`](../Other/AlgebraicGeometry/UnitExtensionCorrectedLiftsOfIso.lean) —
+  the frame changes `c_z` on `W z = E.localLifts.opens z ⊓ E'.localLifts.opens z` obtained from
+  the isomorphism of section sheaves, the cocycle identity they satisfy
+  (`frameChange_cocycle`), and the resulting `CorrectedLifts` datum
+  (`CorrectedLifts.nonempty_correctedLifts`, via `CorrectedLifts.ofUnitCochain`).
 
 *2b. Realization of a cocycle.* For a `1`-cocycle of holomorphic units on an open cover, an
 extension whose local lifts have that cocycle. The repository builds the bundle from the
@@ -445,7 +508,7 @@ Summary of the named obligations, in dependency order:
 
 | Name | File | Content |
 | --- | --- | --- |
-| `AnalytificationGenerates` | `AnalyticSectionOfAlgebraic.lean` | analytification of a generating section generates |
+| ~~`AnalytificationGenerates`~~ | `AnalytificationGenerates.lean` | **proved**: `analytificationGenerates` |
 | `SectionSheafDeterminesClass` | `UnitExtensionClassObligations.lean` | `H¹(𝒪ˣ) → Pic` is injective |
 | — (not yet stated) | — | realization of a cocycle by an extension; supported exactness; the local model |
 | `HasDivisorClassOfSomeCartierData` | `DivisorObligations.lean` | the target of §3 |
