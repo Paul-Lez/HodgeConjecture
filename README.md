@@ -25,4 +25,3 @@ The remaining content of the project is sorted into four folders:
 - `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
 
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
-

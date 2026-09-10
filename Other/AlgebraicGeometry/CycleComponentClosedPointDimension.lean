@@ -138,6 +138,8 @@ end RingHom
 
 namespace AlgebraicGeometry
 
+attribute [local instance] overSpecAlgebra
+
 variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
 
 /-- Every closed point of the reduced closure of a codimension-`p` point in a smooth complex
@@ -208,8 +210,8 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
         simpa [xu] using h.symm
       _ = p := hx
   have hquotient : ringKrullDim (Γ(X.left, U) ⧸ P) = d - p :=
-    (complexRestrictionMap_isStandardSmoothOfRelativeDimension
-      (d := d) X.hom hstandard).ringKrullDim_quotient_eq_sub_complex
+    (algebraMap_isStandardSmoothOfRelativeDimension
+      (d := d) X hstandard).ringKrullDim_quotient_eq_sub_complex
         P hPheight
   have hringW : ringKrullDim Γ(cycleComponent X.left x, W) = d - p := by
     calc
@@ -221,10 +223,10 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
       _ = d - p := hquotient
   let s : cycleComponent X.left x ⟶ Spec ↧ℂ := c ≫ X.hom
   let : Algebra ℂ Γ(cycleComponent X.left x, W) :=
-    (complexRestrictionMap s W).toAlgebra
+    overSpecAlgebra (Over.mk s) W
   let : Algebra.FiniteType ℂ Γ(cycleComponent X.left x, W) := by
     rw [← RingHom.finiteType_algebraMap]
-    change (complexRestrictionMap s W).FiniteType
+    change (algebraMap ℂ Γ(cycleComponent X.left x, W)).FiniteType
     apply (s.finiteType_appLE (isAffineOpen_top (Spec ↧ℂ)) hW (by simp)).comp
     exact RingHom.FiniteType.of_surjective _
       (Scheme.ΓSpecIso ↧ℂ).symm.commRingCatIsoToRingEquiv.surjective
@@ -277,8 +279,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
     exists_cycleComponent_smooth_closed_complexPoint X x
   let zs : S.toScheme := ⟨z.underlying, hzsmooth⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
-  have hstandardComplex : (complexRestrictionMap g W).IsStandardSmooth :=
-    complexRestrictionMap_isStandardSmooth g hstandard
+  have hstandardComplex := algebraMap_isStandardSmooth (Over.mk g) hstandard
   obtain ⟨m, hm⟩ :=
     hstandardComplex.exists_isStandardSmoothOfRelativeDimension
   have hzsClosed : IsClosed {zs} := by
@@ -315,9 +316,10 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
       componentNeighborhood := W
       componentNeighborhood_isAffine := hW
       point_mem_componentNeighborhood := hzsW
-      componentCoordinateRingHom := coordinateRingHom
-      componentCoordinateRingHom_comp_C := hcomp
-      componentCoordinateRingHom_etale := hetale
+      componentCoordinateAlgHom :=
+        { toRingHom := coordinateRingHom
+          commutes' := fun c ↦ DFunLike.congr_fun hcomp c }
+      componentCoordinateAlgHom_etale := hetale
       ambientCoordinates := localEtaleCoordinates X d
         (cycleComponentι X.left x z.underlying) }⟩
 

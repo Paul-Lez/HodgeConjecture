@@ -257,8 +257,8 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_complex
   let P : Ideal Γ(X, U) := (hU.primeIdealOf y).asIdeal
   have hsum : (↑P.height : WithBot ℕ∞) +
       ringKrullDim (Γ(X, U) ⧸ P) = d :=
-    (complexRestrictionMap_isStandardSmoothOfRelativeDimension
-      (d := d) f hsmooth).height_add_ringKrullDim_quotient_eq_complex P
+    (algebraMap_isStandardSmoothOfRelativeDimension
+      (d := d) (Over.mk f) hsmooth).height_add_ringKrullDim_quotient_eq_complex P
   have hPheight : P.height = Order.coheight x := by
     calc
       P.height = Order.coheight y := hU.primeIdealOf_height_eq_coheight y

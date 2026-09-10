@@ -43,6 +43,8 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry
 
+attribute [local instance] overSpecAlgebra
+
 noncomputable local instance {Y : Over (Spec ↧ℂ)} :
     TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
@@ -53,26 +55,6 @@ variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
 namespace CycleComponentSeparateLocalCoordinates
 
 variable (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-/-- The smooth locus of the reduced cycle component underlying an exact coordinate package. -/
-abbrev componentSmoothLocus
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) :=
-  (cycleComponentι X.left x ≫ X.hom).smoothLocus
-
-/-- The complex structure map on the component's smooth locus. -/
-abbrev componentSmoothStructureMap
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) :
-    (componentSmoothLocus X x).toScheme ⟶ Spec ↧ℂ :=
-  (componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom
-
-/-- The component's smooth locus, bundled over the complex base. -/
-abbrev componentSmoothScheme
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) : Over (Spec ↧ℂ) :=
-  Over.mk (componentSmoothStructureMap X x)
-
 /-- The selected smooth component point regarded as a complex point of the smooth locus. -/
 def smoothPoint : ComplexPoint (componentSmoothScheme X x) :=
   ComplexPoint.asOpenPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))
@@ -113,7 +95,7 @@ def neighborhoodPoint :
 neighborhood itself. -/
 def coordinateRingHomOnNeighborhood :
     MvPolynomial (Fin n) ℂ →+* Γ(C.componentNeighborhood.toScheme, ⊤) :=
-  C.componentNeighborhood.topIso.inv.hom.comp C.componentCoordinateRingHom
+  C.componentNeighborhood.topIso.inv.hom.comp C.componentCoordinateAlgHom.toRingHom
 
 /-- The transported coordinate map is compatible with the neighborhood's complex structure
 map. -/
@@ -123,7 +105,7 @@ lemma C_comp_coordinateRingHomOnNeighborhood :
       (Scheme.ΓSpecIso ↧ℂ).inv ≫ C.neighborhoodStructureMap.appTop := by
   apply (cancel_mono C.componentNeighborhood.topIso.hom).mp
   change (((CommRingCat.ofHom MvPolynomial.C) ≫
-      CommRingCat.ofHom C.componentCoordinateRingHom) ≫
+      CommRingCat.ofHom C.componentCoordinateAlgHom.toRingHom) ≫
         C.componentNeighborhood.topIso.inv) ≫
           C.componentNeighborhood.topIso.hom =
     (((Scheme.ΓSpecIso ↧ℂ).inv ≫
@@ -133,18 +115,18 @@ lemma C_comp_coordinateRingHomOnNeighborhood :
   simp only [neighborhoodStructureMap, Scheme.Hom.comp_appTop, Category.assoc]
   rw [Scheme.Opens.ι_appTop_topIso_hom]
   change CommRingCat.ofHom
-      (C.componentCoordinateRingHom.comp MvPolynomial.C) =
+      (C.componentCoordinateAlgHom.toRingHom.comp MvPolynomial.C) =
     CommRingCat.ofHom
-      (complexRestrictionMap (componentSmoothStructureMap X x)
-        C.componentNeighborhood)
-  exact congrArg CommRingCat.ofHom C.componentCoordinateRingHom_comp_C
+      (algebraMap ℂ Γ((componentSmoothScheme X x).left,
+        C.componentNeighborhood))
+  exact congrArg CommRingCat.ofHom C.componentCoordinateAlgHom.comp_algebraMap
 
 /-- The transported exact coordinate map remains étale. -/
 lemma coordinateRingHomOnNeighborhood_etale :
     C.coordinateRingHomOnNeighborhood.Etale :=
-  RingHom.Etale.respectsIso.1 C.componentCoordinateRingHom
+  RingHom.Etale.respectsIso.1 C.componentCoordinateAlgHom.toRingHom
     C.componentNeighborhood.topIso.symm.commRingCatIsoToRingEquiv
-      C.componentCoordinateRingHom_etale
+      C.componentCoordinateAlgHom_etale
 
 /-- Complex affine `n`-space is standard smooth of relative dimension `n`, using its presentation
 with `n` variables and no relations. -/

@@ -61,6 +61,8 @@ end RingHom
 
 namespace AlgebraicGeometry
 
+attribute [local instance] overSpecAlgebra
+
 section SchemeGeometry
 
 variable {X : Scheme} {f : X ⟶ Spec ↧ℂ} {d p : ℕ}
@@ -258,6 +260,28 @@ lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
       x z.underlying hzclosed
         (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
           (f := X.hom) (d := 2) x hx)
+namespace CycleComponentSeparateLocalCoordinates
+
+/-- The smooth locus of the reduced cycle component underlying an exact coordinate package. -/
+abbrev componentSmoothLocus
+    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
+    [IsProjective X.hom] (x : X.left) :=
+  (cycleComponentι X.left x ≫ X.hom).smoothLocus
+
+/-- The complex structure map on the component's smooth locus. -/
+abbrev componentSmoothStructureMap
+    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
+    [IsProjective X.hom] (x : X.left) :
+    (componentSmoothLocus X x).toScheme ⟶ Spec ↧ℂ :=
+  (componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom
+
+/-- The component's smooth locus, bundled over the complex base. -/
+abbrev componentSmoothScheme
+    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
+    [IsProjective X.hom] (x : X.left) : Over (Spec ↧ℂ) :=
+  Over.mk (componentSmoothStructureMap X x)
+
+end CycleComponentSeparateLocalCoordinates
 
 /-- Separate exact local coordinates on a smooth cycle component and on its smooth ambient
 variety.  The component coordinates use exactly `n` variables.  This package does not assert
@@ -275,26 +299,23 @@ structure CycleComponentSeparateLocalCoordinates
   point_isClosed : IsClosed {point.underlying}
   /-- An affine neighborhood in the smooth locus of the component. -/
   componentNeighborhood :
-    (cycleComponentι X.left x ≫ X.hom).smoothLocus.toScheme.Opens
+    (CycleComponentSeparateLocalCoordinates.componentSmoothScheme
+      (X := X) (x := x)).left.Opens
   /-- The component neighborhood is affine. -/
   componentNeighborhood_isAffine : IsAffineOpen componentNeighborhood
   /-- The chosen point belongs to the component neighborhood. -/
   point_mem_componentNeighborhood :
     (⟨point.underlying, point_mem_smoothLocus⟩ :
-      (cycleComponentι X.left x ≫ X.hom).smoothLocus.toScheme) ∈
+      (CycleComponentSeparateLocalCoordinates.componentSmoothScheme
+        (X := X) (x := x)).left) ∈
         componentNeighborhood
-  /-- An étale coordinate homomorphism with exactly `n` component coordinates. -/
-  componentCoordinateRingHom : MvPolynomial (Fin n) ℂ →+*
-    Γ((cycleComponentι X.left x ≫ X.hom).smoothLocus.toScheme,
-      componentNeighborhood)
-  /-- The component coordinate map is a homomorphism of complex algebras. -/
-  componentCoordinateRingHom_comp_C :
-    componentCoordinateRingHom.comp MvPolynomial.C =
-      complexRestrictionMap
-        ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
-          (cycleComponentι X.left x ≫ X.hom)) componentNeighborhood
+  /-- An étale coordinate homomorphism of complex algebras with exactly `n` component
+  coordinates. -/
+  componentCoordinateAlgHom : MvPolynomial (Fin n) ℂ →ₐ[ℂ]
+    Γ((CycleComponentSeparateLocalCoordinates.componentSmoothScheme
+      (X := X) (x := x)).left, componentNeighborhood)
   /-- The component coordinate homomorphism is étale. -/
-  componentCoordinateRingHom_etale : componentCoordinateRingHom.Etale
+  componentCoordinateAlgHom_etale : componentCoordinateAlgHom.toRingHom.Etale
   /-- Independently chosen étale coordinates on the ambient `d`-fold. -/
   ambientCoordinates : LocalEtaleCoordinates X d
     (cycleComponentι X.left x point.underlying)
@@ -317,8 +338,7 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
     exists_cycleComponent_smooth_closed_complexPoint X x
   let zs : S.toScheme := ⟨z.underlying, hzsmooth⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
-  have hstandardComplex : (complexRestrictionMap g W).IsStandardSmooth :=
-    complexRestrictionMap_isStandardSmooth g hstandard
+  have hstandardComplex := algebraMap_isStandardSmooth (Over.mk g) hstandard
   obtain ⟨m, hm⟩ :=
     hstandardComplex.exists_isStandardSmoothOfRelativeDimension
   have hzsClosed : IsClosed {zs} := by
@@ -355,9 +375,10 @@ private lemma nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coh
       componentNeighborhood := W
       componentNeighborhood_isAffine := hW
       point_mem_componentNeighborhood := hzsW
-      componentCoordinateRingHom := coordinateRingHom
-      componentCoordinateRingHom_comp_C := hcomp
-      componentCoordinateRingHom_etale := hetale
+      componentCoordinateAlgHom :=
+        { toRingHom := coordinateRingHom
+          commutes' := fun c ↦ DFunLike.congr_fun hcomp c }
+      componentCoordinateAlgHom_etale := hetale
       ambientCoordinates := localEtaleCoordinates X d
         (cycleComponentι X.left x z.underlying) }⟩
 

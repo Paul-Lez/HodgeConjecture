@@ -46,6 +46,8 @@ open CategoryTheory Ideal MvPolynomial Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
+attribute [local instance] overSpecAlgebra
+
 /-- Mapping a point lifted to an open subscheme back to the ambient scheme recovers the original
 complex point. -/
 @[simp]
@@ -92,8 +94,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
   let : Smooth g := cycleComponent_smoothLocus_smooth V.over x
   let zs : S.toScheme := ⟨z.underlying, hz⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
-  have hstandardComplex : (complexRestrictionMap g W).IsStandardSmooth :=
-    complexRestrictionMap_isStandardSmooth g hstandard
+  have hstandardComplex := algebraMap_isStandardSmooth (Over.mk g) hstandard
   obtain ⟨m, hm⟩ := hstandardComplex.exists_isStandardSmoothOfRelativeDimension
   have hzclosed : IsClosed {z.underlying} :=
     cycleComponent_complexPoint_underlying_isClosed V.over x z
@@ -131,9 +132,10 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
     componentNeighborhood := W
     componentNeighborhood_isAffine := hW
     point_mem_componentNeighborhood := hzsW
-    componentCoordinateRingHom := coordinateRingHom
-    componentCoordinateRingHom_comp_C := hcomp
-    componentCoordinateRingHom_etale := hetale
+    componentCoordinateAlgHom :=
+      { toRingHom := coordinateRingHom
+        commutes' := fun c ↦ DFunLike.congr_fun hcomp c }
+    componentCoordinateAlgHom_etale := hetale
     ambientCoordinates := localEtaleCoordinates V.over d
       (cycleComponentι V.scheme x z.underlying) }, rfl⟩
 
