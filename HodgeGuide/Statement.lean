@@ -226,11 +226,12 @@ The shortest route through the implementation is:
    filtration;
 3. `HodgeConjecture/Definitions/AlgebraicGeometry/CohomologyWithSupport.lean`, the mapping-cone
    model of cohomology with support;
-4. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`, the class
-   on the smooth locus;
-5. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSupportExtension.lean`, its extension across
-   the singular locus;
-6. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`, the class of a subvariety;
+4. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`,
+   the class on the smooth locus;
+5. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSupportExtension.lean`, its
+   extension across the singular locus;
+6. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`, the class of a
+   subvariety;
 7. `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
    `ComplexSheafBorelMooreRationalComparison.lean`, Borel–Moore homology and duality;
 8. `Other/AlgebraicGeometry/SheafCycleClass.lean`, the maps on cycles;

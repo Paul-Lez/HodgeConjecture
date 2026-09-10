@@ -30,11 +30,7 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
 tag := "complex-points"
 %%%
 
-The over category {name CategoryTheory.Over}`Over`, the spectrum {name AlgebraicGeometry.Spec}`Spec`
-of a ring, integral schemes {name AlgebraicGeometry.IsIntegral}`IsIntegral`, and smooth morphisms,
-{name AlgebraicGeometry.Smooth}`Smooth` and
-{name AlgebraicGeometry.SmoothOfRelativeDimension}`SmoothOfRelativeDimension`, are Mathlib's. Projectivity is the repository's own notion: a morphism is projective if it admits
-a projective presentation, a closed immersion into a projective space over the base.
+We begin with the definition of a projective morphism of schemes.
 
 ```lean -show
 namespace Guide.Hodge.D20

@@ -51,12 +51,13 @@ formalization.
   `HodgeFiltration.lean`: the de Rham complex, hypercohomology, and the Hodge filtration;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/ChowGroup.lean`, `AlgebraicCycleSupport.lean`,
   and `CohomologyWithSupport.lean`: cycles, their supports, and cohomology with support;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean` and
-  `CycleComponentSupportExtension.lean`: the class on the smooth locus and its extension across
-  the singular locus;
+* `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`
+  and `CycleComponentSupportExtension.lean`: the class on the smooth locus and its extension
+  across the singular locus;
 * `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
   `ComplexSheafBorelMooreRationalComparison.lean`: Borel–Moore homology and duality;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`: the class of a subvariety;
+* `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`: the class of a
+  subvariety;
 * `Other/AlgebraicGeometry/SheafCycleClass.lean`: the maps on cycles;
 * `HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures and the
   $`(p,p)` criterion.

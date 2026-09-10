@@ -3,15 +3,19 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
-import HodgeConjecture
-import Other
+import HodgeGuide.Overview
+import HodgeGuide.HodgeSide
+import HodgeGuide.CycleSide
+import HodgeGuide.FundamentalClass
+import HodgeGuide.Statement
 
 /-!
 # Marking the declarations that belong to this repository
 
 The guide quotes Lean code freely, and a reader cannot tell from a name alone whether it is
 defined in Mathlib or in this repository. When this module is compiled, `repoDeclsJson%`
-enumerates every declaration whose defining module belongs to the repository. The
+enumerates every declaration whose defining module belongs to the repository. The module imports
+the sections of the guide, so its environment is exactly what the pages can mention. The
 `fcProvenance` directive ships that list to every page of the site together with a small script
 that underlines those names wherever they appear: in code blocks, in the terms inside sentences,
 and in the hover tooltips.
@@ -94,7 +98,8 @@ def markerCss : String := "
 
 block_extension Block.fcProvenance where
   extraJsFiles := Std.HashSet.ofList [
-    { filename := "fc-decls.js", contents := s!"window.fcDecls = {repoDeclsJson};\n", sourceMap? := none },
+    { filename := "fc-decls.js", contents := s!"window.fcDecls = {repoDeclsJson};\n", defer := true,
+      sourceMap? := none },
     { filename := "fc-mark.js", contents := markerJs, defer := true, after := #["fc-decls.js"],
       sourceMap? := none }]
   extraCssFiles := Std.HashSet.ofList [{ filename := "fc-mark.css", contents := markerCss }]
