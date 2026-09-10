@@ -33,3 +33,4 @@ import Other.AlgebraicGeometry.IntegralDenominatorClearing
 #print axioms RationalLefschetzOneOne.of_finiteGoodCover_of_divisor
 #print axioms SSet.exists_integer_multiple_of_finite_homology
 #print axioms AlgebraicGeometry.ComplexPoint.scalarCohomologyEquivOrdinarySingularCohomology_coefficientChange
+#print axioms RationalLefschetzOneOne.of_finiteSecondHomology_of_divisor

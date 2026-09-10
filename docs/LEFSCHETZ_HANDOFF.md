@@ -80,8 +80,10 @@ states, for a single smooth projective integral complex variety `X`:
      a rational cocycle that is integer-valued on integral cycles is cohomologous to an integral
      cocycle, using divisibility of `ℚ/ℤ`; finite generation bounds the denominators).
 
-   What remains for (1) is therefore only `HasFiniteGoodCover X` for every smooth projective
-   integral complex variety — a statement of differential topology about compact complex
+   What remains for (1) is therefore only `HasFiniteSecondHomology X` (finite generation of
+   `H₂(X^an, ℤ)`; implied by `HasFiniteGoodCover X`) for every smooth projective
+   integral complex variety, scoped for independent work in
+   [FINITENESS_HANDOFF.md](FINITENESS_HANDOFF.md) — a statement of differential topology about compact complex
    manifolds (standard proofs use geodesically convex neighbourhoods of a Riemannian metric, or
    a tubular-neighbourhood retraction of a Whitney embedding; Mathlib has neither convexity
    radii nor tubular neighbourhoods, but it does have `exists_embedding_euclidean_of_compact` and
@@ -102,8 +104,8 @@ states, for a single smooth projective integral complex variety `X`:
 
 `RationalLefschetzOneOne.of_obligations` proves the target from (1) and
 `HasDivisorOfUnitExtension`, which follows from (2) and (3) by
-`hasDivisorOfUnitExtension_of_algebraicModel`; `RationalLefschetzOneOne.of_finiteGoodCover_of_divisor`
-(`IntegralDenominatorClearing.lean`) proves it from `HasFiniteGoodCover` and
+`hasDivisorOfUnitExtension_of_algebraicModel`; `RationalLefschetzOneOne.of_finiteSecondHomology_of_divisor`
+(`IntegralDenominatorClearing.lean`) proves it from `HasFiniteSecondHomology` and
 `HasDivisorOfUnitExtension` alone. The bookkeeping proved there is: rational Hodge
 classes are stable under integer scaling, integral Hodge classes lift to unit-sheaf extensions,
 and the resulting integral divisor is divided by the denominator.

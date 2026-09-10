@@ -36,6 +36,8 @@ analytification functor on sheaves of modules are constructed in the `Holomorphi
 `Analytification*` files of `Other/AlgebraicGeometry`.
 `Other/AlgebraicGeometry/LefschetzOneOneReduction.lean` states the remaining obligations
 (integral denominator clearing, projective GAGA for line bundles, and the divisor/cycle-class
-comparison) as explicit propositions and proves that they imply the theorem.
+comparison) as explicit propositions and proves that they imply the theorem;
+`Other/AlgebraicGeometry/IntegralDenominatorClearing.lean` reduces denominator clearing to finite
+generation of `H²(X^an, ℤ)` through the integral singular comparison.
 See [the Lefschetz handoff](docs/LEFSCHETZ_HANDOFF.md) for the status, file map and
 verification commands.
