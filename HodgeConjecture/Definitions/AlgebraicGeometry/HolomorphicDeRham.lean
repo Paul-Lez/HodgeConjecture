@@ -664,6 +664,85 @@ def complexScalarSheaf (c : ℂ) :
   exact (presheafToSheaf J AddCommGrpCat).map
     (complexScalarPresheaf X c)
 
+/-- Complex conjugation as an additive endomorphism of `ℂ`.
+
+Conjugation is a ring automorphism of `ℂ`, so it acts on the constant complex sheaf exactly the
+way a scalar does; unlike a scalar it is only additive over `ℂ`, which is what makes the induced
+map on cohomology conjugate-linear rather than linear. -/
+def conjAddHom : ℂ →+ ℂ :=
+  (starRingEnd ℂ).toAddMonoidHom
+
+/-- Complex conjugation on the constant complex presheaf. -/
+def conjConstantComplexPresheaf :
+    constantComplexAddCommGrpPresheaf X ⟶
+      constantComplexAddCommGrpPresheaf X where
+  app _ := AddCommGrpCat.ofHom conjAddHom
+  naturality {U V} i := by
+    ext x
+    rfl
+
+/-- Conjugating twice is the identity on the constant complex presheaf. -/
+lemma conjConstantComplexPresheaf_comp_self :
+    conjConstantComplexPresheaf X ≫ conjConstantComplexPresheaf X =
+      𝟙 (constantComplexAddCommGrpPresheaf X) := by
+  apply NatTrans.ext
+  funext U
+  apply AddCommGrpCat.hom_ext
+  change conjAddHom.comp conjAddHom = AddMonoidHom.id ℂ
+  apply AddMonoidHom.ext
+  intro x
+  exact Complex.conj_conj x
+
+/-- Complex conjugation on the constant complex sheaf. -/
+def conjConstantComplexSheaf :
+    constantComplexSheaf X ⟶ constantComplexSheaf X := by
+  let J := Opens.grothendieckTopology
+    (TopCat.of (ComplexPoint X))
+  exact (presheafToSheaf J AddCommGrpCat).map
+    (conjConstantComplexPresheaf X)
+
+/-- Conjugating twice is the identity on the constant complex sheaf. -/
+lemma conjConstantComplexSheaf_comp_self :
+    conjConstantComplexSheaf X ≫ conjConstantComplexSheaf X =
+      𝟙 (constantComplexSheaf X) := by
+  let J := Opens.grothendieckTopology
+    (TopCat.of (ComplexPoint X))
+  change (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) ≫
+    (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) = _
+  rw [← Functor.map_comp, conjConstantComplexPresheaf_comp_self]
+  exact (presheafToSheaf J AddCommGrpCat).map_id _
+
+/-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the constant
+complex presheaf. This is the presheaf-level source of conjugate-linearity. -/
+lemma complexScalarPresheaf_comp_conj (c : ℂ) :
+    complexScalarPresheaf X c ≫ conjConstantComplexPresheaf X =
+      conjConstantComplexPresheaf X ≫
+        complexScalarPresheaf X (starRingEnd ℂ c) := by
+  apply NatTrans.ext
+  funext U
+  apply AddCommGrpCat.hom_ext
+  change conjAddHom.comp (complexScalarAddHom c) =
+    (complexScalarAddHom (starRingEnd ℂ c)).comp conjAddHom
+  apply AddMonoidHom.ext
+  intro x
+  change (starRingEnd ℂ) (c * x) = (starRingEnd ℂ) c * (starRingEnd ℂ) x
+  exact map_mul (starRingEnd ℂ) c x
+
+/-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the constant
+complex sheaf. -/
+lemma complexScalarSheaf_comp_conj (c : ℂ) :
+    complexScalarSheaf X c ≫ conjConstantComplexSheaf X =
+      conjConstantComplexSheaf X ≫
+        complexScalarSheaf X (starRingEnd ℂ c) := by
+  let J := Opens.grothendieckTopology
+    (TopCat.of (ComplexPoint X))
+  change (presheafToSheaf J AddCommGrpCat).map (complexScalarPresheaf X c) ≫
+      (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) =
+    (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) ≫
+      (presheafToSheaf J AddCommGrpCat).map
+        (complexScalarPresheaf X (starRingEnd ℂ c))
+  rw [← Functor.map_comp, ← Functor.map_comp, complexScalarPresheaf_comp_conj]
+
 /-- The sheafified inclusion of constants as de Rham zero-forms. -/
 def constantsToHolomorphicDeRhamZeroSheaf [SmoothOfRelativeDimension d X.hom] :
     constantComplexSheaf X ⟶ holomorphicDeRhamSheaf X d 0 :=
@@ -911,6 +990,58 @@ def complexScalarComplexInt (c : ℂ) :
       constantComplexSheafComplexInt X :=
   HomologicalComplex.extendMap (complexScalarComplex X c)
     ComplexShape.embeddingUpNat
+
+/-- Complex conjugation on the constant complex-valued complex concentrated in degree zero. -/
+def conjConstantComplexComplex :
+    (CochainComplex.single₀
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
+        (constantComplexSheaf X) ⟶
+    (CochainComplex.single₀
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
+        (constantComplexSheaf X) :=
+  (CochainComplex.single₀ _).map (conjConstantComplexSheaf X)
+
+/-- Conjugating twice is the identity in degree zero. -/
+lemma conjConstantComplexComplex_comp_self :
+    conjConstantComplexComplex X ≫ conjConstantComplexComplex X = 𝟙 _ := by
+  unfold conjConstantComplexComplex
+  rw [← Functor.map_comp, conjConstantComplexSheaf_comp_self]
+  exact (CochainComplex.single₀ _).map_id _
+
+/-- Conjugation intertwines the two scalar multiplications in degree zero. -/
+lemma complexScalarComplex_comp_conj (c : ℂ) :
+    complexScalarComplex X c ≫ conjConstantComplexComplex X =
+      conjConstantComplexComplex X ≫
+        complexScalarComplex X (starRingEnd ℂ c) := by
+  unfold complexScalarComplex conjConstantComplexComplex
+  rw [← Functor.map_comp, ← Functor.map_comp, complexScalarSheaf_comp_conj]
+
+/-- Complex conjugation on the integer-indexed constant complex-valued complex.
+
+The holomorphic de Rham complex carries no such map: conjugation is not `ℂ`-linear, so it exists
+only on the constant-sheaf side of the comparison. -/
+def conjConstantComplexSheafComplexInt :
+    constantComplexSheafComplexInt X ⟶ constantComplexSheafComplexInt X :=
+  HomologicalComplex.extendMap (conjConstantComplexComplex X)
+    ComplexShape.embeddingUpNat
+
+/-- Conjugating twice is the identity on the integer-indexed constant complex. -/
+lemma conjConstantComplexSheafComplexInt_comp_self :
+    conjConstantComplexSheafComplexInt X ≫ conjConstantComplexSheafComplexInt X = 𝟙 _ := by
+  unfold conjConstantComplexSheafComplexInt constantComplexSheafComplexInt
+  rw [← HomologicalComplex.extendMap_comp, conjConstantComplexComplex_comp_self]
+  exact HomologicalComplex.extendMap_id _ _
+
+/-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the
+integer-indexed constant complex. -/
+lemma complexScalarComplexInt_comp_conj (c : ℂ) :
+    complexScalarComplexInt X c ≫ conjConstantComplexSheafComplexInt X =
+      conjConstantComplexSheafComplexInt X ≫
+        complexScalarComplexInt X (starRingEnd ℂ c) := by
+  unfold complexScalarComplexInt conjConstantComplexSheafComplexInt
+    constantComplexSheafComplexInt
+  rw [← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp,
+    complexScalarComplex_comp_conj]
 
 /-- The holomorphic de Rham complex, extended by zero to negative degrees. -/
 def holomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :

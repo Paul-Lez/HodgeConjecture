@@ -90,25 +90,48 @@ Two sanity checks are proved in Lean: $`F^0` is the whole de Rham group, and $`F
 $`p>\dim X`. Scalar compatibility is proved before the additive image is bundled as a complex or
 rational submodule.
 
-# Why one filtration condition detects type `(p,p)`
+# Type `(p,p)`, and why one filtration condition suffices over `ℚ`
 
-The final definition pulls the filtered de Rham subspace back along the rational comparison:
+Complex conjugation is not $`\mathbb C`-linear, so it does not act on the holomorphic de Rham
+complex. It acts on the constant sheaf $`\mathbb C`, where it is just the ring automorphism
+applied to coefficients, and is transported to de Rham hypercohomology across the
+constant-to-de Rham comparison. The $`(p,q)` piece is then *defined* as
+$`F^p\cap\overline{F^q}` — an equality that holds in any pure Hodge structure, and that needs no
+Hodge decomposition theorem to write down. Hodge classes are the classes landing in the $`(p,p)`
+piece:
 
 ```lean
+#check AlgebraicGeometry.ComplexPoint.deRhamConj
+#check AlgebraicGeometry.ComplexPoint.hodgePiece
 #check AlgebraicGeometry.ComplexPoint.hodgeClasses
 #check HodgeStructure.Pure.ofBase_mem_filtration_iff
 ```
 
 In symbols,
 
-$$`\operatorname{Hdg}^p(X;\mathbb Q)
- =\{\alpha\in H^{2p}(X;\mathbb Q):\alpha_{\mathrm{dR}}\in F^p\}.`
+$$`\operatorname{Hdg}^p(X;K)
+ =\{\alpha\in H^{2p}(X;K):\alpha_{\mathrm{dR}}\in F^p\cap\overline{F^p}\}.`
 
-Classically one expects a rational class of Hodge type `(p,p)`. Why is there no explicit
-condition involving $`\overline{F^p}`? In a pure weight-$`2p` Hodge structure, complex
-conjugation fixes a rational vector and exchanges $`H^{a,b}` with $`H^{b,a}`. Membership in
-$`F^p` forces both indices to be at least $`p`; because they sum to $`2p`, only $`(p,p)`
-remains. `Pure.ofBase_mem_filtration_iff` proves precisely this linear-algebra statement.
+Over $`\mathbb Q` the conjugation condition is free, and the filtration condition alone cuts out
+the Hodge classes. In a pure weight-$`2p` Hodge structure, complex conjugation fixes a rational
+vector and exchanges $`H^{a,b}` with $`H^{b,a}`. Membership in $`F^p` forces both indices to be at
+least $`p`; because they sum to $`2p`, only $`(p,p)` remains.
+`Pure.ofBase_mem_filtration_iff` proves precisely this linear-algebra statement, and
+`hodgeClasses_rat_eq_comap_hodgeFiltrationSubmodule` proves the corresponding statement for the
+geometric definition.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_rat_eq_comap_hodgeFiltrationSubmodule
+```
+
+The reality of the coefficients is essential, and this is why the coefficient field is not left
+arbitrary in that lemma. For a non-real $`K` the two conditions differ. Take $`K=\mathbb Q(i)` and
+$`E=\mathbb C/(\mathbb Z+\mathbb Z i)`: the periods of $`dz` are $`1` and $`i`, so $`dz` is a
+$`\mathbb Q(i)`-rational class spanning $`H^{1,0}(E)`, and on $`E\times E` the class
+$`\mathrm{pr}_1^*dz\wedge \mathrm{pr}_2^*dz` is a nonzero $`\mathbb Q(i)`-rational class of type
+$`(2,0)`. It lies in $`F^1H^2` but has zero $`(1,1)`-component, so an $`F^p`-only definition would
+call it a Hodge class of codimension $`1`; since algebraic cycle classes are $`\mathbb Q`-rational
+of type $`(1,1)`, no combination of them can reach it.
 
 The final cohomology type does not bundle a `Pure` instance. The abstract theorem validates the
 filtration criterion, while identifying the geometric cohomology with a full pure Hodge structure
