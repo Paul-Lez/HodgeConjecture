@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
+public import Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 public import Other.AlgebraicGeometry.HolomorphicIntegralHodgeClass
 
 /-!
@@ -108,54 +109,25 @@ def globalSectionsSingularCochainComplexIntIsoExtend_scalar :
     (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
       ((Functor.mapHomologicalComplexCompIso eComp (ComplexShape.up ℕ)).app K).symm
 
-/-- Hypercohomology of the singular-cochain resolution is the homology of its own
-global-section complex, given a K-injective resolution that remains a quasi-isomorphism after
-taking global sections. -/
-def scalarSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
-    (I : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
-    [I.IsKInjective]
-    (i : singularCochainSheafComplexInt X R ⟶ I) [QuasiIso i]
-    [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map i)]
-    (n : ℤ) :
-    ScalarSingularCochainHypercohomology X R n ≃
-      (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X))
-        (singularCochainSheafComplexInt X R)).homology n := by
-  let Y := TopCat.of (ComplexPoint X)
-  let A := constantIntegerSheafComplexInt X
-  let A' := TopCat.Sheaf.integerConstantSingleComplex Y
-  let S := singularCochainSheafComplexInt X R
-  let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-  let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle X
-  have hi : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
-      (ComplexShape.up ℤ) i := by
-    rw [HomologicalComplex.mem_quasiIso_iff]
-    infer_instance
-  have he : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
-      (ComplexShape.up ℤ) e.inv := by
-    rw [HomologicalComplex.mem_quasiIso_iff]
-    infer_instance
-  let e₁ := Localization.SmallShiftedHom.postcompEquiv
-    (X := A) (Y := S) (Z := I) (a := n) i hi
-  let e₂ := Localization.SmallShiftedHom.precompEquiv
-    (X := A') (Y := A) (Z := I) (a := n) e.inv he
-  let e₃ := (CochainComplex.HomComplex.CohomologyClass.equivOfIsKInjective
-    (K := A') (L := I) (n := n)).symm
-  let e₄ := (CochainComplex.HomComplex.homologyAddEquiv A' I n).symm.toEquiv
-  let e₅ := (HomologicalComplex.homologyMapIso
-    (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
-      |>.addCommGroupIsoToAddEquiv.toEquiv
-  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
-  let e₆ := (asIso (HomologicalComplex.homologyMap
-    ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
-      |>.addCommGroupIsoToAddEquiv.toEquiv
-  exact e₁.trans (e₂.trans (e₃.trans (e₄.trans (e₅.trans e₆))))
-
 /-- On a hereditarily paracompact Hausdorff complex-point space, hypercohomology of the
 singular-cochain resolution with coefficients in `R` is computed by its global-section
-complex. -/
+complex. This is the general bounded-below flasque comparison
+`hypercohomologyAddEquivGlobalSections`, applied to the termwise flasque resolution. -/
+def scalarSingularCochainHypercohomologyAddEquivGlobalSections
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (n : ℤ) :
+    ScalarSingularCochainHypercohomology X R n ≃+
+      (TopCat.Sheaf.globalSectionsComplexInt
+        (TopCat.of (ComplexPoint X))
+        (singularCochainSheafComplexInt X R)).homology n :=
+  letI : (singularCochainSheafComplexInt X R).IsStrictlyGE 0 := by
+    dsimp [singularCochainSheafComplexInt]
+    infer_instance
+  hypercohomologyAddEquivGlobalSections X (singularCochainSheafComplexInt X R) 0
+    (singularCochainSheafComplexInt_isFlasque_scalar X R) n
+
+/-- The underlying equivalence of `scalarSingularCochainHypercohomologyAddEquivGlobalSections`. -/
 def scalarSingularCochainHypercohomologyEquivGlobalSections
     [T2Space (ComplexPoint X)]
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
@@ -163,35 +135,8 @@ def scalarSingularCochainHypercohomologyEquivGlobalSections
     ScalarSingularCochainHypercohomology X R n ≃
       (TopCat.Sheaf.globalSectionsComplexInt
         (TopCat.of (ComplexPoint X))
-        (singularCochainSheafComplexInt X R)).homology n := by
-  let Y := TopCat.of (ComplexPoint X)
-  let S := singularCochainSheafComplexInt X R
-  let : S.IsStrictlyGE 0 := by
-    dsimp [S, singularCochainSheafComplexInt]
-    infer_instance
-  let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
-  let I := Classical.choose hres
-  let hresI := Classical.choose_spec hres
-  let i := Classical.choose hresI
-  let hresi := Classical.choose_spec hresI
-  let hi : QuasiIso i := Classical.choose hresi
-  let hresiHi := Classical.choose_spec hresi
-  let hI : ∀ q : ℤ, Injective (I.X q) := Classical.choose hresiHi
-  let hIge : I.IsStrictlyGE 0 := Classical.choose_spec hresiHi
-  letI : QuasiIso i := hi
-  letI : ∀ q : ℤ, Injective (I.X q) := hI
-  letI : I.IsStrictlyGE 0 := hIge
-  letI : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
-  have hSflasque : ∀ q, (S.X q).IsFlasque :=
-    fun q ↦ singularCochainSheafComplexInt_isFlasque_scalar X R q
-  have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
-  letI : QuasiIso
-      (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-        ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
-    TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
-      i 0 0 hSflasque hIflasque
-  exact scalarSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
-    X R I i n
+        (singularCochainSheafComplexInt X R)).homology n :=
+  (scalarSingularCochainHypercohomologyAddEquivGlobalSections X R n).toEquiv
 
 end AlgebraicGeometry.ComplexPoint
 

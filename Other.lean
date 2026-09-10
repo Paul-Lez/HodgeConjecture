@@ -45,6 +45,7 @@ public import Other.AlgebraicGeometry.BettiCohomologyWithSupportComparison
 public import Other.AlgebraicGeometry.BettiGlobalSectionsAdditivity
 public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
 public import Other.AlgebraicGeometry.BettiScalarComparison
+public import Other.AlgebraicGeometry.HypercohomologyFlasqueMapNaturality
 public import Other.AlgebraicGeometry.BettiSheafComparison
 public import Other.AlgebraicGeometry.BettiSupportConeComparison
 public import Other.AlgebraicGeometry.BettiSupportSingularComparison
@@ -116,6 +117,7 @@ public import Other.AlgebraicTopology.ConstantSheafDegreeZero
 public import Other.AlgebraicTopology.EuclideanLocalHomology
 public import Other.AlgebraicTopology.FiniteGoodCoverHomology
 public import Other.AlgebraicTopology.FiniteGoodCoverNerveHomology
+public import Other.AlgebraicTopology.IntegralSingularHomologyFinite
 public import Other.AlgebraicTopology.FirstQuadrantColumnFiltration
 public import Other.AlgebraicTopology.FirstQuadrantColumnFiltrationQuotient
 public import Other.AlgebraicTopology.FirstQuadrantColumnFiltrationShortExact
