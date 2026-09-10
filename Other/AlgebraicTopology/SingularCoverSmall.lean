@@ -139,40 +139,6 @@ public theorem coverMemberToSmallIntegralSingularChains_comp_inclusion (j : ι) 
         (TopCat.toSSet.map (topologicalSubsetInclusion X (U j)))
   rw [← Functor.map_comp, coverMemberToSmallSingularSet_comp_inclusion]
 
-/-- The exact small-chain approximation assertion supplied classically by iterated barycentric
-subdivision and its prism chain homotopy. -/
-public def CoverSmallChainApproximation : Prop :=
-  HomologicalComplex.homotopyEquivalences AddCommGrpCat (ComplexShape.down ℕ)
-    (coverSmallIntegralSingularChainInclusion X U)
-
-/-- A selected chain-homotopy equivalence witnessing small-chain approximation. -/
-public noncomputable def coverSmallChainHomotopyEquiv
-    (h : CoverSmallChainApproximation X U) :
-    HomotopyEquiv (CoverSmallIntegralSingularChainComplex X U)
-      (IntegralSingularChainComplexObj X) :=
-  h.choose
-
-public theorem coverSmallChainHomotopyEquiv_hom
-    (h : CoverSmallChainApproximation X U) :
-    (coverSmallChainHomotopyEquiv X U h).hom =
-      coverSmallIntegralSingularChainInclusion X U :=
-  h.choose_spec
-
-/-- Small-chain approximation gives the expected homology isomorphism in every degree. -/
-public noncomputable def coverSmallIntegralSingularHomologyIso
-    (h : CoverSmallChainApproximation X U) (n : ℕ) :
-    (CoverSmallIntegralSingularChainComplex X U).homology n ≅
-      (IntegralSingularChainComplexObj X).homology n :=
-  (coverSmallChainHomotopyEquiv X U h).toHomologyIso n
-
-public theorem coverSmallIntegralSingularHomologyIso_hom
-    (h : CoverSmallChainApproximation X U) (n : ℕ) :
-    (coverSmallIntegralSingularHomologyIso X U h n).hom =
-      HomologicalComplex.homologyMap
-        (coverSmallIntegralSingularChainInclusion X U) n := by
-  change HomologicalComplex.homologyMap (coverSmallChainHomotopyEquiv X U h).hom n = _
-  rw [coverSmallChainHomotopyEquiv_hom]
-
 /-- A subspace equal to the whole space is homeomorphic to the ambient space by its inclusion. -/
 public noncomputable def topologicalSubsetHomeomorphOfEqUniv
     (s : Set X) (hs : s = Set.univ) : s ≃ₜ X :=
@@ -216,7 +182,8 @@ public theorem coverSmallIntegralSingularChainInclusion_isIso_of_member_eq_univ
 space, without subdivision. -/
 public theorem coverSmallChainApproximation_of_member_eq_univ
     (j : ι) (hj : U j = Set.univ) :
-    CoverSmallChainApproximation X U := by
+    HomologicalComplex.homotopyEquivalences AddCommGrpCat (ComplexShape.down ℕ)
+      (coverSmallIntegralSingularChainInclusion X U) := by
   let := coverSmallIntegralSingularChainInclusion_isIso_of_member_eq_univ X U j hj
   exact HomologicalComplex.homotopyEquivalences.of_isIso _
 

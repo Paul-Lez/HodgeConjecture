@@ -276,8 +276,8 @@ public theorem permutationMaximalFlagSimplex_outerFace_insert {n : ℕ}
   · apply Subsingleton.elim
 
 /-- The surviving outer faces reindex to the alternating sum of subdivided simplex faces. -/
-public theorem barycentricOuterFaceIdentity : BarycentricOuterFaceIdentity := by
-  intro n
+public theorem barycentricOuterFaceIdentity (n : ℕ) :
+    subdividedSimplexOuterFaceSum n = subdividedSimplexAlternatingFaceChain n := by
   rw [subdividedSimplexOuterFaceSum, subdividedSimplexAlternatingFaceChain,
     ← Equiv.sum_comp (insertOmittedVertexLastEquiv n), Fintype.sum_prod_type]
   simp only [insertOmittedVertexLastEquiv_apply, smul_smul, Fin.val_last,
@@ -288,18 +288,102 @@ public theorem barycentricOuterFaceIdentity : BarycentricOuterFaceIdentity := by
   simp only [smul_smul]
 
 /-- The signed maximal-flag fundamental chains satisfy the complete alternating boundary
-identity in every degree. -/
-public theorem barycentricFundamentalBoundaryIdentity :
-    BarycentricFundamentalBoundaryIdentity :=
-  barycentricFundamentalBoundaryIdentity_of_outerFaceIdentity
-    barycentricOuterFaceIdentity
+identity in every degree: all interior faces cancel, and the surviving outer faces reindex by
+the previous theorem. -/
+public theorem barycentricFundamentalBoundaryIdentity (n : ℕ) :
+    subdividedSimplexFundamentalChain (n + 1) ≫
+        ((SimplexCategory.sd.{0}.obj (SimplexCategory.mk (n + 1))).chainComplex
+          (AddCommGrpCat.of ℤ)).d (n + 1) n =
+      subdividedSimplexAlternatingFaceChain n := by
+  rw [subdividedSimplexFundamentalChain_boundary_eq_outer n]
+  exact barycentricOuterFaceIdentity n
+
+/-- The boundary identity transports to the left-Kan-extension standard simplices. -/
+public theorem subdividedStandardSimplexFundamentalChain_boundary (n : ℕ) :
+    subdividedStandardSimplexFundamentalChain (n + 1) ≫
+        ((SSet.sd.obj (Δ[n + 1] : SSet.{0})).chainComplex
+          (AddCommGrpCat.of ℤ)).d (n + 1) n =
+      subdividedStandardSimplexAlternatingFaceChain n := by
+  let F := SSet.chainComplexMap
+    (SSet.stdSimplex.sdIso.inv.app (SimplexCategory.mk (n + 1)))
+    (AddCommGrpCat.of ℤ)
+  change (subdividedSimplexFundamentalChain (n + 1) ≫ F.f (n + 1)) ≫ _ = _
+  have hcomm := F.comm (n + 1) n
+  have hpre := congrArg
+    (fun k ↦ subdividedSimplexFundamentalChain (n + 1) ≫ k) hcomm
+  calc
+    _ = subdividedSimplexFundamentalChain (n + 1) ≫
+        (F.f (n + 1) ≫ _) := Category.assoc _ _ _
+    _ = subdividedSimplexFundamentalChain (n + 1) ≫
+        (_ ≫ F.f n) := hpre
+    _ = (subdividedSimplexFundamentalChain (n + 1) ≫
+        ((SimplexCategory.sd.{0}.obj (SimplexCategory.mk (n + 1))).chainComplex
+          (AddCommGrpCat.of ℤ)).d (n + 1) n) ≫ F.f n := (Category.assoc _ _ _).symm
+    _ = subdividedSimplexAlternatingFaceChain n ≫ F.f n := by
+      rw [barycentricFundamentalBoundaryIdentity n]
+    _ = _ := by
+      rw [subdividedSimplexAlternatingFaceChain, Preadditive.sum_comp]
+      simp only [Preadditive.zsmul_comp, Category.assoc]
+      rw [subdividedStandardSimplexAlternatingFaceChain]
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [subdividedStandardSimplexFundamentalChain, Category.assoc,
+        subdividedStandardSimplexFace_naturality]
+
+/-- The subdivided chain of an arbitrary simplex has the expected alternating boundary. -/
+public theorem barycentricSubdivisionSimplexChain_boundary
+    (X : SSet.{0}) (n : ℕ)
+    (x : X.obj (Opposite.op (SimplexCategory.mk (n + 1)))) :
+    barycentricSubdivisionSimplexChain X (n + 1) x ≫
+        ((SSet.sd.obj X).chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n =
+      barycentricSubdivisionAlternatingFaceChain X n x := by
+  let F := SSet.chainComplexMap (SSet.sd.map (SSet.yonedaEquiv.symm x))
+    (AddCommGrpCat.of ℤ)
+  change (subdividedStandardSimplexFundamentalChain (n + 1) ≫ F.f (n + 1)) ≫
+    _ = _
+  have hcomm := F.comm (n + 1) n
+  have hpre := congrArg
+    (fun k ↦ subdividedStandardSimplexFundamentalChain (n + 1) ≫ k) hcomm
+  calc
+    _ = subdividedStandardSimplexFundamentalChain (n + 1) ≫
+        (F.f (n + 1) ≫ _) := Category.assoc _ _ _
+    _ = subdividedStandardSimplexFundamentalChain (n + 1) ≫
+        (_ ≫ F.f n) := hpre
+    _ = (subdividedStandardSimplexFundamentalChain (n + 1) ≫
+        ((SSet.sd.obj (Δ[n + 1] : SSet.{0})).chainComplex
+          (AddCommGrpCat.of ℤ)).d (n + 1) n) ≫ F.f n := (Category.assoc _ _ _).symm
+    _ = subdividedStandardSimplexAlternatingFaceChain n ≫ F.f n := by
+      rw [subdividedStandardSimplexFundamentalChain_boundary n]
+    _ = _ := by
+      rw [subdividedStandardSimplexAlternatingFaceChain, Preadditive.sum_comp]
+      simp only [Preadditive.zsmul_comp, Category.assoc]
+      rw [barycentricSubdivisionAlternatingFaceChain]
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [barycentricSubdivisionSimplexChain]
+      apply congrArg (fun k ↦ ((-1 : ℤ) ^ i.val) • k)
+      rw [subdividedFace_then_simplex_naturality]
+
+/-- The degreewise barycentric subdivision components commute with the differentials. -/
+public theorem barycentricSubdivisionComponent_comp_d (X : SSet.{0}) (n : ℕ) :
+    barycentricSubdivisionComponent X (n + 1) ≫
+        ((SSet.sd.obj X).chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n =
+      (X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n ≫
+        barycentricSubdivisionComponent X n := by
+  apply X.chainComplex_hom_ext
+  intro x
+  rw [← Category.assoc, iota_barycentricSubdivisionComponent,
+    barycentricSubdivisionSimplexChain_boundary]
+  rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
+  simp only [Preadditive.zsmul_comp, iota_barycentricSubdivisionComponent]
+  rfl
 
 /-- The unconditional natural barycentric subdivision chain morphism. -/
 public noncomputable def barycentricSubdivisionChainMapCanonical (X : SSet.{0}) :
     X.chainComplex (AddCommGrpCat.of ℤ) ⟶
       (SSet.sd.obj X).chainComplex (AddCommGrpCat.of ℤ) :=
-  barycentricSubdivisionChainMapOfOuterFaceIdentity
-    barycentricOuterFaceIdentity X
+  ChainComplex.ofHom (barycentricSubdivisionComponent X)
+    (barycentricSubdivisionComponent_comp_d X)
 
 @[simp]
 public theorem barycentricSubdivisionChainMapCanonical_f
@@ -314,8 +398,9 @@ public theorem barycentricSubdivisionChainMapCanonical_naturality
     SSet.chainComplexMap f (AddCommGrpCat.of ℤ) ≫
         barycentricSubdivisionChainMapCanonical Y =
       barycentricSubdivisionChainMapCanonical X ≫
-        SSet.chainComplexMap (SSet.sd.map f) (AddCommGrpCat.of ℤ) :=
-  barycentricSubdivisionChainMapOfOuterFaceIdentity_naturality
-    barycentricOuterFaceIdentity f
+        SSet.chainComplexMap (SSet.sd.map f) (AddCommGrpCat.of ℤ) := by
+  apply HomologicalComplex.Hom.ext
+  funext n
+  exact barycentricSubdivisionComponent_naturality f n
 
 end AlgebraicTopology.Singular

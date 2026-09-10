@@ -206,19 +206,15 @@ section Singular
 
 variable {iota : Type} (X : TopCat) (U : iota → Set X)
 
-/-- The geometric input still needed by the small-chain proof: every finite singular chain is
-carried into the cover-small subcomplex by some finite affine-subdivision iterate. -/
-public def CoverSmallAffineSubdivisionEventuallySmall : Prop :=
-  ∀ (n : ℕ) (x : (IntegralSingularChainComplexObj X).X n),
-    ∃ (m : ℕ) (y : (CoverSmallIntegralSingularChainComplex X U).X n),
-      (coverSmallIntegralSingularChainInclusion X U).f n y =
-        (affineSingularSubdivisionIterate X m).f n x
-
-/-- Eventual smallness of every finite singular chain implies the cover-small inclusion is a
-quasi-isomorphism. -/
+/-- Eventual smallness of every finite singular chain -- each is carried into the cover-small
+subcomplex by some finite affine-subdivision iterate -- implies that the cover-small inclusion is
+a quasi-isomorphism. -/
 public theorem coverSmallChainQuasiIsomorphism_of_eventuallySmall
-    (h : CoverSmallAffineSubdivisionEventuallySmall X U) :
-    CoverSmallChainQuasiIsomorphism X U :=
+    (h : ∀ (n : ℕ) (x : (IntegralSingularChainComplexObj X).X n),
+      ∃ (m : ℕ) (y : (CoverSmallIntegralSingularChainComplex X U).X n),
+        (coverSmallIntegralSingularChainInclusion X U).f n y =
+          (affineSingularSubdivisionIterate X m).f n x) :
+    QuasiIso (coverSmallIntegralSingularChainInclusion X U) :=
   chainComplex_quasiIso_of_eventually_factors
     (coverSmallIntegralSingularChainInclusion X U)
     (coverSmallAffineSubdivisionIterate X U)
@@ -227,11 +223,15 @@ public theorem coverSmallChainQuasiIsomorphism_of_eventuallySmall
     (coverSmallAffineSubdivisionIterateHomotopy X U)
     (affineSingularSubdivisionIterateHomotopy X) h
 
-/-- The same geometric input supplies the stronger chain-homotopy approximation interface via
-projectivity of integral singular chain groups. -/
+/-- The same geometric input supplies the stronger chain-homotopy equivalence, via projectivity
+of integral singular chain groups. -/
 public theorem coverSmallChainApproximation_of_eventuallySmall
-    (h : CoverSmallAffineSubdivisionEventuallySmall X U) :
-    CoverSmallChainApproximation X U :=
+    (h : ∀ (n : ℕ) (x : (IntegralSingularChainComplexObj X).X n),
+      ∃ (m : ℕ) (y : (CoverSmallIntegralSingularChainComplex X U).X n),
+        (coverSmallIntegralSingularChainInclusion X U).f n y =
+          (affineSingularSubdivisionIterate X m).f n x) :
+    HomologicalComplex.homotopyEquivalences AddCommGrpCat (ComplexShape.down ℕ)
+      (coverSmallIntegralSingularChainInclusion X U) :=
   coverSmallChainApproximation_of_quasiIso X U
     (coverSmallChainQuasiIsomorphism_of_eventuallySmall X U h)
 

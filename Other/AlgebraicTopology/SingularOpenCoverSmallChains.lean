@@ -53,13 +53,16 @@ lemma iUnion_openCoverSubset_eq_univ (hV : ⨆ i, V i = U) :
 
 /-- The cover-small inclusion for a cover of an open subspace is a quasi-isomorphism. -/
 theorem openCoverSmallChainQuasiIsomorphism (hV : ⨆ i, V i = U) :
-    CoverSmallChainQuasiIsomorphism (TopCat.of U) (openCoverSubset X U V) :=
+    QuasiIso (coverSmallIntegralSingularChainInclusion
+      (TopCat.of U) (openCoverSubset X U V)) :=
   coverSmallChainQuasiIsomorphism_of_openCover (TopCat.of U) (openCoverSubset X U V)
     (isOpen_openCoverSubset X U V) (iUnion_openCoverSubset_eq_univ X U V hV)
 
 /-- The cover-small inclusion for a cover of an open subspace is a chain-homotopy equivalence. -/
 theorem openCoverSmallChainApproximation (hV : ⨆ i, V i = U) :
-    CoverSmallChainApproximation (TopCat.of U) (openCoverSubset X U V) :=
+    HomologicalComplex.homotopyEquivalences AddCommGrpCat (ComplexShape.down ℕ)
+      (coverSmallIntegralSingularChainInclusion
+        (TopCat.of U) (openCoverSubset X U V)) :=
   coverSmallChainApproximation_of_openCover (TopCat.of U) (openCoverSubset X U V)
     (isOpen_openCoverSubset X U V) (iUnion_openCoverSubset_eq_univ X U V hV)
 

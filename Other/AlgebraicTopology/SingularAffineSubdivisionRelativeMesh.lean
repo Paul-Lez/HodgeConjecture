@@ -19,6 +19,7 @@ public import Other.AlgebraicTopology.SingularAffineSubdivisionMesh
 public import Mathlib.Analysis.Normed.Module.Basic
 
 import Mathlib.Analysis.Normed.Module.Convex
+import Other.AlgebraicTopology.SingularOpenCoverLebesgue
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in
@@ -457,27 +458,47 @@ public theorem iteratedAffineCellMap_eq_affineParentContinuousMap_vertices
       funext i
       simp [affineParentContinuousMap]
 
-/-- The relative mesh contraction property required by the iterated-cell argument holds
-unconditionally for every positive-dimensional standard simplex. -/
+/-- The relative mesh contraction estimate required by the iterated-cell argument: subdividing
+inside an affine parent cell built from a flag ancestry multiplies that parent's diameter by at
+most the standard barycentric factor.  It holds unconditionally for every standard simplex. -/
 public theorem affineFlagRelativeMeshContraction
-    (n : ℕ) : AffineFlagRelativeMeshContraction n := by
-  intro ancestry F
+    (n : ℕ) (ancestry : List (TopAffineFlag n)) (F : TopAffineFlag n) :
+    Metric.diam (Set.range
+      ((iteratedAffineCellMap n ancestry).comp
+        (affineFlagContinuousMap n n F))) ≤
+      barycentricContractionFactor n *
+        Metric.diam (Set.range (iteratedAffineCellMap n ancestry)) := by
   rw [iteratedAffineCellMap_eq_affineParentContinuousMap_vertices n ancestry]
   exact diam_range_affineParentContinuousMap_comp_affineFlag_le n n
     (fun i ↦ iteratedAffineCellMap n ancestry (stdSimplex.vertex i)) F
 
-/-- Every iterated affine cell satisfies the power-law diameter bound, with no relative-mesh
-hypothesis left to discharge. -/
-public theorem diam_range_iteratedAffineCellMap_le_pow_unconditional
+/-- An affine cell at ancestry depth `m` has diameter at most the `m`th power of the barycentric
+factor. -/
+public theorem diam_range_iteratedAffineCellMap_le_pow
     (n : ℕ) (hn : 1 ≤ n) (ancestry : List (TopAffineFlag n)) :
     Metric.diam (Set.range (iteratedAffineCellMap n ancestry)) ≤
-      barycentricContractionFactor n ^ ancestry.length :=
-  diam_range_iteratedAffineCellMap_le_pow n hn
-    (affineFlagRelativeMeshContraction n) ancestry
+      barycentricContractionFactor n ^ ancestry.length := by
+  induction ancestry with
+  | nil =>
+      rw [iteratedAffineCellMap_nil, List.length_nil, pow_zero,
+        ContinuousMap.coe_id, Set.range_id, diam_univ_stdSimplex n hn]
+  | cons F ancestry ih =>
+      calc
+        Metric.diam (Set.range (iteratedAffineCellMap n (F :: ancestry))) ≤
+            barycentricContractionFactor n *
+              Metric.diam (Set.range (iteratedAffineCellMap n ancestry)) := by
+          simpa only [iteratedAffineCellMap_cons] using
+            affineFlagRelativeMeshContraction n ancestry F
+        _ ≤ barycentricContractionFactor n *
+              barycentricContractionFactor n ^ ancestry.length :=
+          mul_le_mul_of_nonneg_left ih (barycentricContractionFactor_nonneg n)
+        _ = barycentricContractionFactor n ^ (F :: ancestry).length := by
+          simp only [List.length_cons, pow_succ]
+          ring
 
-/-- At a common sufficiently large ancestry depth, every iterated affine cell of a singular
-simplex is subordinate to a prescribed open cover. -/
-public theorem exists_iteratedAffineCell_depth_subordinate_unconditional
+/-- At a common sufficiently large ancestry depth, every iterated affine cell of a fixed singular
+simplex is carried into one member of an arbitrary open cover. -/
+public theorem exists_iteratedAffineCell_depth_subordinate
     {ι : Type} (X : TopCat.{0}) (U : ι → Set X)
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ)
     (n : ℕ) (hn : 1 ≤ n)
@@ -485,8 +506,25 @@ public theorem exists_iteratedAffineCell_depth_subordinate_unconditional
       (Opposite.op (SimplexCategory.mk n))) :
     ∃ m : ℕ, ∀ ancestry : List (TopAffineFlag n), ancestry.length = m →
       ∃ i, X.toSSetObjEquiv _ x ''
-        Set.range (iteratedAffineCellMap n ancestry) ⊆ U i :=
-  exists_iteratedAffineCell_depth_subordinate X U hUopen hUcover n hn
-    (affineFlagRelativeMeshContraction n) x
+        Set.range (iteratedAffineCellMap n ancestry) ⊆ U i := by
+  obtain ⟨δ, hδ, hLeb⟩ :=
+    singularSimplex_openCover_lebesgueNumber X U hUopen hUcover n x
+  obtain ⟨m, hm⟩ := exists_barycentricContractionFactor_pow_lt n hδ
+  refine ⟨m, fun ancestry hlength ↦ ?_⟩
+  let s : Set (stdSimplex ℝ (Fin (n + 1))) :=
+    Set.range (iteratedAffineCellMap n ancestry)
+  let w₀ : stdSimplex ℝ (Fin (n + 1)) := Classical.arbitrary _
+  obtain ⟨i, hi⟩ := hLeb (iteratedAffineCellMap n ancestry w₀)
+  refine ⟨i, ?_⟩
+  rintro _ ⟨y, ⟨w, rfl⟩, rfl⟩
+  apply hi
+  rw [Metric.mem_ball]
+  have hsbounded : Bornology.IsBounded s :=
+    isCompact_univ.isBounded.subset (Set.subset_univ s)
+  exact (Metric.dist_le_diam_of_mem hsbounded
+    (show iteratedAffineCellMap n ancestry w ∈ s from ⟨w, rfl⟩)
+    (show iteratedAffineCellMap n ancestry w₀ ∈ s from ⟨w₀, rfl⟩)).trans_lt
+      ((diam_range_iteratedAffineCellMap_le_pow n hn ancestry).trans_lt
+        (hlength.symm ▸ hm))
 
 end AlgebraicTopology.Singular

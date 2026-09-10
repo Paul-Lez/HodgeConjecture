@@ -17,6 +17,8 @@ module
 
 public import Other.AlgebraicTopology.SingularAffineSubdivisionMesh
 
+import Other.AlgebraicTopology.SingularAffineSubdivisionRelativeMesh
+
 /-!
 This module is ported from Paul Lezeau's corresponding file in
 `sphere-six-complex` pull request #49, under the Apache-2.0 license.
@@ -473,7 +475,10 @@ public theorem coverSmallAffineSubdivisionEventuallySmall_of_ancestries
         ancestry.length = m →
           ∃ i, X.toSSetObjEquiv _ x ''
             Set.range (iteratedAffineCellMap n ancestry) ⊆ U i) :
-    CoverSmallAffineSubdivisionEventuallySmall X U := by
+    ∀ (n : ℕ) (x : (IntegralSingularChainComplexObj X).X n),
+      ∃ (m : ℕ) (y : (CoverSmallIntegralSingularChainComplex X U).X n),
+        (coverSmallIntegralSingularChainInclusion X U).f n y =
+          (affineSingularSubdivisionIterate X m).f n x := by
   apply coverSmallAffineSubdivisionEventuallySmall_of_iterate_mem_range X U
   intro n c
   exact exists_affineSubdivisionIterate_mem_range_of_ancestries
@@ -511,12 +516,15 @@ public theorem exists_zero_dimensional_ancestry_depth_subordinate
     exact hwone.trans hw₀one.symm
   simpa [hw] using hi
 
-/-- Relative mesh contraction in every positive degree supplies the ancestry-subordination
-hypothesis, while degree zero is already small. -/
-public theorem coverSmallAffineSubdivisionEventuallySmall_of_relativeMesh
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ)
-    (hrelative : ∀ n : ℕ, 1 ≤ n → AffineFlagRelativeMeshContraction n) :
-    CoverSmallAffineSubdivisionEventuallySmall X U := by
+/-- Every finite singular chain becomes subordinate to an open cover after enough genuine affine
+barycentric subdivisions: the proved relative mesh contraction handles the positive degrees, and
+degree zero is already small. -/
+public theorem coverSmallAffineSubdivisionEventuallySmall_of_openCover
+    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
+    ∀ (n : ℕ) (x : (IntegralSingularChainComplexObj X).X n),
+      ∃ (m : ℕ) (y : (CoverSmallIntegralSingularChainComplex X U).X n),
+        (coverSmallIntegralSingularChainInclusion X U).f n y =
+          (affineSingularSubdivisionIterate X m).f n x := by
   apply coverSmallAffineSubdivisionEventuallySmall_of_ancestries X U
   intro n x
   cases n with
@@ -524,8 +532,7 @@ public theorem coverSmallAffineSubdivisionEventuallySmall_of_relativeMesh
       exact exists_zero_dimensional_ancestry_depth_subordinate X U hUcover x
   | succ n =>
       exact exists_iteratedAffineCell_depth_subordinate X U hUopen hUcover
-        (n + 1) (Nat.succ_le_succ (Nat.zero_le n))
-        (hrelative (n + 1) (Nat.succ_le_succ (Nat.zero_le n))) x
+        (n + 1) (Nat.succ_le_succ (Nat.zero_le n)) x
 
 end CoverSmall
 

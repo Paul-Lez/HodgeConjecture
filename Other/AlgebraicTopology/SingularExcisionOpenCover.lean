@@ -41,18 +41,10 @@ namespace AlgebraicTopology.Singular
 
 variable {ι : Type} (X : TopCat) (U : ι → Set X)
 
-/-- Every finite singular chain becomes subordinate to an open cover after sufficiently many
-genuine affine barycentric subdivisions. -/
-public theorem coverSmallAffineSubdivisionEventuallySmall_of_openCover
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    CoverSmallAffineSubdivisionEventuallySmall X U :=
-  coverSmallAffineSubdivisionEventuallySmall_of_relativeMesh X U hUopen hUcover
-    (fun n _ ↦ affineFlagRelativeMeshContraction n)
-
 /-- The cover-small inclusion is a quasi-isomorphism for every open cover. -/
 public theorem coverSmallChainQuasiIsomorphism_of_openCover
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    CoverSmallChainQuasiIsomorphism X U :=
+    QuasiIso (coverSmallIntegralSingularChainInclusion X U) :=
   coverSmallChainQuasiIsomorphism_of_eventuallySmall X U
     (coverSmallAffineSubdivisionEventuallySmall_of_openCover X U hUopen hUcover)
 
@@ -60,9 +52,39 @@ public theorem coverSmallChainQuasiIsomorphism_of_openCover
 a chain-homotopy equivalence for integral singular chains. -/
 public theorem coverSmallChainApproximation_of_openCover
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    CoverSmallChainApproximation X U :=
+    HomologicalComplex.homotopyEquivalences AddCommGrpCat (ComplexShape.down ℕ)
+      (coverSmallIntegralSingularChainInclusion X U) :=
   coverSmallChainApproximation_of_eventuallySmall X U
     (coverSmallAffineSubdivisionEventuallySmall_of_openCover X U hUopen hUcover)
+
+/-- A selected chain-homotopy equivalence witnessing small-chain approximation. -/
+public noncomputable def coverSmallChainHomotopyEquiv_of_openCover
+    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
+    HomotopyEquiv (CoverSmallIntegralSingularChainComplex X U)
+      (IntegralSingularChainComplexObj X) :=
+  (coverSmallChainApproximation_of_openCover X U hUopen hUcover).choose
+
+public theorem coverSmallChainHomotopyEquiv_of_openCover_hom
+    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
+    (coverSmallChainHomotopyEquiv_of_openCover X U hUopen hUcover).hom =
+      coverSmallIntegralSingularChainInclusion X U :=
+  (coverSmallChainApproximation_of_openCover X U hUopen hUcover).choose_spec
+
+/-- Small-chain approximation gives the expected homology isomorphism in every degree. -/
+public noncomputable def coverSmallIntegralSingularHomologyIso_of_openCover
+    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) (n : ℕ) :
+    (CoverSmallIntegralSingularChainComplex X U).homology n ≅
+      (IntegralSingularChainComplexObj X).homology n :=
+  (coverSmallChainHomotopyEquiv_of_openCover X U hUopen hUcover).toHomologyIso n
+
+public theorem coverSmallIntegralSingularHomologyIso_of_openCover_hom
+    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) (n : ℕ) :
+    (coverSmallIntegralSingularHomologyIso_of_openCover X U hUopen hUcover n).hom =
+      HomologicalComplex.homologyMap
+        (coverSmallIntegralSingularChainInclusion X U) n := by
+  change HomologicalComplex.homologyMap
+    (coverSmallChainHomotopyEquiv_of_openCover X U hUopen hUcover).hom n = _
+  rw [coverSmallChainHomotopyEquiv_of_openCover_hom]
 
 
 end AlgebraicTopology.Singular

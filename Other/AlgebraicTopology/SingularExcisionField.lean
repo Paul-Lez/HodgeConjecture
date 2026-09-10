@@ -394,24 +394,20 @@ instance coverSmallRationalSingularChainInclusion_mono :
   dsimp [SSet, SimplicialObject.whiskering, SimplicialObject]
   infer_instance
 
-/-- The all-open-cover small-chain theorem with rational coefficients. -/
-def CoverSmallRationalChainApproximation : Prop :=
-  HomologicalComplex.homotopyEquivalences (ModuleCat ℚ) (ComplexShape.down ℕ)
-    (coverSmallRationalSingularChainInclusion X U)
-
-/-- The proven integral subdivision-and-prism homotopy transports to rational coefficients. -/
+/-- The proven integral subdivision-and-prism homotopy transports to rational coefficients:
+the all-open-cover small-chain theorem with rational coefficients. -/
 theorem coverSmallRationalChainApproximation_of_openCover
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    CoverSmallRationalChainApproximation X U := by
-  let hZ := coverSmallChainApproximation_of_openCover X U hUopen hUcover
-  let eZ := coverSmallChainHomotopyEquiv X U hZ
+    HomologicalComplex.homotopyEquivalences (ModuleCat ℚ) (ComplexShape.down ℕ)
+      (coverSmallRationalSingularChainInclusion X U) := by
+  let eZ := coverSmallChainHomotopyEquiv_of_openCover X U hUopen hUcover
   refine ⟨rationalizeSimplicialChainHomotopyEquiv
     (coverSmallSingularSubcomplex X U : SSet) (TopCat.toSSet.obj X) eZ, ?_⟩
   change rationalizeSimplicialChainMap
       (coverSmallSingularSubcomplex X U : SSet) (TopCat.toSSet.obj X) eZ.hom =
     coverSmallRationalSingularChainInclusion X U
   rw [show eZ.hom = coverSmallIntegralSingularChainInclusion X U from
-    coverSmallChainHomotopyEquiv_hom X U hZ]
+    coverSmallChainHomotopyEquiv_of_openCover_hom X U hUopen hUcover]
   exact rationalizeSimplicialChainMap_chainComplexMap
     (coverSmallSingularSubcomplex X U).ι
 

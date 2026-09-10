@@ -308,18 +308,6 @@ public theorem iteratedAffineCellMap_cons
         (affineFlagContinuousMap n n F) :=
   rfl
 
-/-- The exact relative contraction assertion needed to iterate the one-cell estimate.  It is
-restricted to the explicitly affine parent maps built from flag ancestries: subdividing inside
-such a parent cell multiplies that parent's diameter by at most the standard barycentric factor.
-No assertion is made for arbitrary continuous parent maps. -/
-public def AffineFlagRelativeMeshContraction (n : ℕ) : Prop :=
-  ∀ (ancestry : List (TopAffineFlag n)) (F : TopAffineFlag n),
-    Metric.diam (Set.range
-      ((iteratedAffineCellMap n ancestry).comp
-        (affineFlagContinuousMap n n F))) ≤
-      barycentricContractionFactor n *
-        Metric.diam (Set.range (iteratedAffineCellMap n ancestry))
-
 /-- The proven one-step estimate is the root case of relative mesh contraction. -/
 public theorem affineFlagRelativeMeshContraction_at_identity
     (n : ℕ) (hn : 1 ≤ n) (F : TopAffineFlag n) :
@@ -331,63 +319,6 @@ public theorem affineFlagRelativeMeshContraction_at_identity
   rw [ContinuousMap.id_comp, ContinuousMap.coe_id, Set.range_id,
     diam_univ_stdSimplex n hn, mul_one]
   exact diam_range_affineFlagContinuousMap_le n n hn F
-
-/-- Under relative contraction, an affine cell at ancestry depth `m` has diameter at most the
-`m`th power of the barycentric factor. -/
-public theorem diam_range_iteratedAffineCellMap_le_pow
-    (n : ℕ) (hn : 1 ≤ n) (hrelative : AffineFlagRelativeMeshContraction n)
-    (ancestry : List (TopAffineFlag n)) :
-    Metric.diam (Set.range (iteratedAffineCellMap n ancestry)) ≤
-      barycentricContractionFactor n ^ ancestry.length := by
-  induction ancestry with
-  | nil =>
-      rw [iteratedAffineCellMap_nil, List.length_nil, pow_zero,
-        ContinuousMap.coe_id, Set.range_id, diam_univ_stdSimplex n hn]
-  | cons F ancestry ih =>
-      calc
-        Metric.diam (Set.range (iteratedAffineCellMap n (F :: ancestry))) ≤
-            barycentricContractionFactor n *
-              Metric.diam (Set.range (iteratedAffineCellMap n ancestry)) := by
-          simpa only [iteratedAffineCellMap_cons] using
-            hrelative ancestry F
-        _ ≤ barycentricContractionFactor n *
-              barycentricContractionFactor n ^ ancestry.length :=
-          mul_le_mul_of_nonneg_left ih (barycentricContractionFactor_nonneg n)
-        _ = barycentricContractionFactor n ^ (F :: ancestry).length := by
-          simp only [List.length_cons, pow_succ]
-          ring
-
-/-- Relative mesh contraction gives a common ancestry depth at which every iterated affine cell
-of a fixed singular simplex is carried into one member of an arbitrary open cover. -/
-public theorem exists_iteratedAffineCell_depth_subordinate
-    {ι : Type} (X : TopCat.{0}) (U : ι → Set X)
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ)
-    (n : ℕ) (hn : 1 ≤ n)
-    (hrelative : AffineFlagRelativeMeshContraction n)
-    (x : (TopCat.toSSet.obj X).obj
-      (Opposite.op (SimplexCategory.mk n))) :
-    ∃ m : ℕ, ∀ ancestry : List (TopAffineFlag n), ancestry.length = m →
-      ∃ i, X.toSSetObjEquiv _ x ''
-        Set.range (iteratedAffineCellMap n ancestry) ⊆ U i := by
-  obtain ⟨δ, hδ, hLeb⟩ :=
-    singularSimplex_openCover_lebesgueNumber X U hUopen hUcover n x
-  obtain ⟨m, hm⟩ := exists_barycentricContractionFactor_pow_lt n hδ
-  refine ⟨m, fun ancestry hlength ↦ ?_⟩
-  let s : Set (stdSimplex ℝ (Fin (n + 1))) :=
-    Set.range (iteratedAffineCellMap n ancestry)
-  let w₀ : stdSimplex ℝ (Fin (n + 1)) := Classical.arbitrary _
-  obtain ⟨i, hi⟩ := hLeb (iteratedAffineCellMap n ancestry w₀)
-  refine ⟨i, ?_⟩
-  rintro _ ⟨y, ⟨w, rfl⟩, rfl⟩
-  apply hi
-  rw [Metric.mem_ball]
-  have hsbounded : Bornology.IsBounded s :=
-    isCompact_univ.isBounded.subset (Set.subset_univ s)
-  exact (Metric.dist_le_diam_of_mem hsbounded
-    (show iteratedAffineCellMap n ancestry w ∈ s from ⟨w, rfl⟩)
-    (show iteratedAffineCellMap n ancestry w₀ ∈ s from ⟨w₀, rfl⟩)).trans_lt
-      ((diam_range_iteratedAffineCellMap_le_pow n hn hrelative ancestry).trans_lt
-        (hlength.symm ▸ hm))
 
 /-- Abstract eventual-smallness theorem for iterated cells.  Once a concrete subdivision model
 supplies nonempty cells with the displayed power-law diameter bound, a single depth works for all
@@ -437,7 +368,10 @@ public theorem coverSmallAffineSubdivisionEventuallySmall_of_iterate_mem_range
     (h : ∀ (n : ℕ) (x : (IntegralSingularChainComplexObj X).X n),
       ∃ m : ℕ, (affineSingularSubdivisionIterate X m).f n x ∈
         Set.range ((coverSmallIntegralSingularChainInclusion X U).f n)) :
-    CoverSmallAffineSubdivisionEventuallySmall X U :=
+    ∀ (n : ℕ) (x : (IntegralSingularChainComplexObj X).X n),
+      ∃ (m : ℕ) (y : (CoverSmallIntegralSingularChainComplex X U).X n),
+        (coverSmallIntegralSingularChainInclusion X U).f n y =
+          (affineSingularSubdivisionIterate X m).f n x :=
   fun n x ↦ h n x
 
 end AlgebraicTopology.Singular

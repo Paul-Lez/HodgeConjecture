@@ -29,8 +29,8 @@ This module is ported from Paul Lezeau's corresponding file in
 
 Integral simplicial chain groups are free abelian and hence projective.  Consequently, for the
 nonnegatively graded singular chain complexes used by the excision development, it is enough to
-prove that the cover-small inclusion is a quasi-isomorphism: projectivity upgrades it to the
-chain-homotopy equivalence packaged by `CoverSmallChainApproximation`.
+prove that the cover-small inclusion is a quasi-isomorphism: projectivity upgrades it to a
+chain-homotopy equivalence.
 -/
 
 @[expose] public section
@@ -42,19 +42,14 @@ open scoped Simplicial
 
 namespace AlgebraicTopology.Singular
 
-/-- The homological form of the small-chain theorem: the cover-small inclusion induces an
-isomorphism on homology in every degree. -/
-public def CoverSmallChainQuasiIsomorphism
-    {i : Type} (X : TopCat) (U : i → Set X) : Prop :=
-  QuasiIso (coverSmallIntegralSingularChainInclusion X U)
-
 set_option linter.style.haveILetI false in
-/-- A quasi-isomorphism from cover-small to full singular chains supplies the existing
-small-chain approximation interface. -/
+/-- If the cover-small inclusion is a quasi-isomorphism, then it is a chain-homotopy
+equivalence, because all the chain groups involved are projective. -/
 public theorem coverSmallChainApproximation_of_quasiIso
     {i : Type} (X : TopCat) (U : i → Set X)
-    (h : CoverSmallChainQuasiIsomorphism X U) :
-    CoverSmallChainApproximation X U := by
+    (h : QuasiIso (coverSmallIntegralSingularChainInclusion X U)) :
+    HomologicalComplex.homotopyEquivalences AddCommGrpCat (ComplexShape.down ℕ)
+      (coverSmallIntegralSingularChainInclusion X U) := by
   letI : QuasiIso (coverSmallIntegralSingularChainInclusion X U) := h
   letI projectiveInteger : Projective (AddCommGrpCat.of ℤ) :=
     ((forget₂ (ModuleCat ℤ) AddCommGrpCat).asEquivalence.map_projective_iff
