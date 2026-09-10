@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import HodgeConjecture.Definitions.AlgebraicGeometry.IntegralProjectiveVariety
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus

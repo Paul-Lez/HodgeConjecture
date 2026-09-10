@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
 
 /-!
 # Unconditional integral and rational algebraic-cycle class maps

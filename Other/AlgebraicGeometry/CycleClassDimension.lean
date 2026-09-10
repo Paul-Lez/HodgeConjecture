@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 
