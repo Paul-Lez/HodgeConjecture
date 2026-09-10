@@ -46,6 +46,8 @@ public import Other.AlgebraicGeometry.BettiGlobalSectionsAdditivity
 public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
 public import Other.AlgebraicGeometry.BettiScalarComparison
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueMapNaturality
+public import Other.AlgebraicGeometry.BettiScalarNaturality
+public import Other.AlgebraicGeometry.IntegralDenominatorClearing
 public import Other.AlgebraicGeometry.BettiSheafComparison
 public import Other.AlgebraicGeometry.BettiSupportConeComparison
 public import Other.AlgebraicGeometry.BettiSupportSingularComparison
@@ -118,6 +120,7 @@ public import Other.AlgebraicTopology.EuclideanLocalHomology
 public import Other.AlgebraicTopology.FiniteGoodCoverHomology
 public import Other.AlgebraicTopology.FiniteGoodCoverNerveHomology
 public import Other.AlgebraicTopology.IntegralSingularHomologyFinite
+public import Other.AlgebraicTopology.SimplicialCochainDenominators
 public import Other.AlgebraicTopology.FirstQuadrantColumnFiltration
 public import Other.AlgebraicTopology.FirstQuadrantColumnFiltrationQuotient
 public import Other.AlgebraicTopology.FirstQuadrantColumnFiltrationShortExact
@@ -203,6 +206,7 @@ public import Other.AlgebraicTopology.SingularOpenCoverSmallChains
 public import Other.AlgebraicTopology.SingularStandardSimplexCone
 public import Other.AlgebraicTopology.SingularSubdivision
 public import Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
+public import Other.AlgebraicTopology.SingularCochainCoefficientChange
 public import Other.AlgebraicTopology.SingularSubdivisionIteration
 public import Other.AlgebraicTopology.SingularSupportCapProduct
 public import Other.AlgebraicTopology.StandardSimplexSingularComparison
@@ -333,3 +337,5 @@ public import Other.TauCeti.SheafOfModules.Invertible
 public import Other.TauCeti.SheafOfModules.LocalTriviality
 public import Other.LinearAlgebra.RationalDenominators
 public import Other.Algebra.Homology.RationalCochainDenominators
+public import Other.AlgebraicTopology.SimplicialCochainExtension
+public import Other.AlgebraicTopology.SimplicialCochainCoefficientChange

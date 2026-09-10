@@ -59,27 +59,33 @@ states, for a single smooth projective integral complex variety `X`:
 
 1. `HasIntegralDenominatorClearing X`: for every `α : FieldCohomology ℚ X 2` there are `m ≠ 0`
    and `β : IntegralCohomology X 2` with `integralToRationalCohomology X 2 β = m • α`.
-   Mathematically this is finite generation of `H²(X^an, ℤ)` together with the universal
-   coefficient comparison. Neither is available. Two independent pieces are missing:
-   (α) finite generation of integral singular homology of `X^an`: the finite-good-cover model
-   `integralSingularHomology_module_finite` in `Other/AlgebraicTopology/FiniteGoodCoverNerveHomology.lean`
-   assumes a `FiniteGoodCover`, whose existence for the analytification is unproved (the
-   standard proofs use geodesically convex neighbourhoods or a tubular-neighbourhood retraction;
-   Mathlib has neither, but has the Whitney embedding `exists_embedding_euclidean_of_compact`
-   and the inverse function theorem);
-   (β) the comparison of the derived integral cohomology `IntegralCohomology X n` with integral
-   singular cohomology. **Done**: the singular-cochain machinery is now stated over an arbitrary
-   commutative ring (`Other/Algebra/Homology/LinearDual.lean`,
-   `Other/AlgebraicTopology/SimplicialCochainExtension.lean`, `SingularExcisionScalar.lean`, and
-   the generalised `SingularCochain*`/`SingularSubdivisionCochainSheaf` files), and
-   `integralCohomologyEquivOrdinarySingularCohomology` in
-   `Other/AlgebraicGeometry/BettiScalarComparison.lean` identifies `IntegralCohomology X n` with
-   `OrdinarySingularCohomology ℤ (TopCat.of (ComplexPoint X)) n`, the homology of the integral
-   dual singular cochain complex. What remains for (1) beyond (α) is the compatibility of this
-   comparison and the rational one with the coefficient map `ℤ → ℚ`, together with the
-   elementary denominator-clearing argument on singular cochains (a rational cocycle that is
-   integer-valued on integral cycles is cohomologous to an integral cocycle, using divisibility
-   of `ℚ/ℤ`; finite generation of `H_n(X^an, ℤ)` bounds the denominators).
+   **Reduced to geometry.** `Other/AlgebraicGeometry/IntegralDenominatorClearing.lean` proves
+   `hasIntegralDenominatorClearing_of_hasFiniteGoodCover`: it suffices that the analytic space
+   has a finite good cover (`HasFiniteGoodCover X`: finitely many opens whose nonempty finite
+   intersections are contractible, `AlgebraicTopology.Singular.FiniteGoodCover`). The proof
+   goes through
+   - the integral Betti comparison `integralCohomologyEquivOrdinarySingularCohomology`
+     (`BettiScalarComparison.lean`; the singular-cochain development is now generic over a
+     commutative ring: `Other/Algebra/Homology/LinearDual.lean`,
+     `Other/AlgebraicTopology/SimplicialCochainExtension.lean`, `SingularExcisionScalar.lean`,
+     and the generalised `SingularCochain*`/`SingularSubdivisionCochainSheaf` files);
+   - its naturality in the coefficient ring (`SimplicialCochainCoefficientChange.lean`,
+     `SingularCochainCoefficientChange.lean`, `HypercohomologyFlasqueMapNaturality.lean`,
+     `BettiScalarNaturality.lean`: `scalarCohomologyEquivOrdinarySingularCohomology_coefficientChange`);
+   - finite generation of integral singular homology from a finite good cover
+     (`FiniteGoodCoverNerveHomology.lean`, transported to the `ModuleCat ℤ` chain model in
+     `IntegralSingularHomologyFinite.lean`);
+   - the elementary denominator-clearing theorem on simplicial cochains
+     (`SimplicialCochainDenominators.lean`, `SSet.exists_integer_multiple_of_finite_homology`:
+     a rational cocycle that is integer-valued on integral cycles is cohomologous to an integral
+     cocycle, using divisibility of `ℚ/ℤ`; finite generation bounds the denominators).
+
+   What remains for (1) is therefore only `HasFiniteGoodCover X` for every smooth projective
+   integral complex variety — a statement of differential topology about compact complex
+   manifolds (standard proofs use geodesically convex neighbourhoods of a Riemannian metric, or
+   a tubular-neighbourhood retraction of a Whitney embedding; Mathlib has neither convexity
+   radii nor tubular neighbourhoods, but it does have `exists_embedding_euclidean_of_compact` and
+   the inverse function theorem).
 2. `HasAlgebraicModel X`: for every `E : HolomorphicUnitExtension X (dim X.left)` there is an
    invertible `L : X.left.Modules` with `(moduleAnalytification X (dim X.left)).obj L ≅
    E.sectionSheafOfModules`. This is projective GAGA for line bundles. Its extension-free
@@ -96,7 +102,9 @@ states, for a single smooth projective integral complex variety `X`:
 
 `RationalLefschetzOneOne.of_obligations` proves the target from (1) and
 `HasDivisorOfUnitExtension`, which follows from (2) and (3) by
-`hasDivisorOfUnitExtension_of_algebraicModel`. The bookkeeping proved there is: rational Hodge
+`hasDivisorOfUnitExtension_of_algebraicModel`; `RationalLefschetzOneOne.of_finiteGoodCover_of_divisor`
+(`IntegralDenominatorClearing.lean`) proves it from `HasFiniteGoodCover` and
+`HasDivisorOfUnitExtension` alone. The bookkeeping proved there is: rational Hodge
 classes are stable under integer scaling, integral Hodge classes lift to unit-sheaf extensions,
 and the resulting integral divisor is divided by the denominator.
 
