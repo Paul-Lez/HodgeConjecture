@@ -26,9 +26,9 @@ injective linear map of vector spaces over a field has a left inverse. Choosing 
 `K`-linear retraction `ℂ → K`, which is what lets a complex cohomology class be pushed back to
 `K`-coefficients.
 
-Multiplication by a scalar, as an additive endomorphism, is recorded here alongside it. Like
-`integerMultipleAddHom` it is kept free of the geometry so the constant-sheaf and cohomology
-developments can use it without carrying field or algebra hypotheses.
+Multiplication by a scalar, as an additive endomorphism, is recorded here alongside it. It is
+kept free of the geometry so the constant-sheaf and cohomology developments can use it without
+carrying the algebra hypothesis.
 -/
 
 @[expose] public noncomputable section

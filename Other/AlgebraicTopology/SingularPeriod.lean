@@ -49,13 +49,19 @@ def extendFunctional (K L : Type u) [Field K] [Field L] [Algebra K L]
     ext x
     simp [Algebra.smul_def]
 
+@[simp]
+lemma extendFunctional_apply (K L : Type u) [Field K] [Field L] [Algebra K L]
+    (M : Type u) [AddCommGroup M] [Module K M] (φ : Module.Dual K M) (x : M) :
+    extendFunctional K L M φ x = algebraMap K L (φ x) :=
+  rfl
+
 lemma extendFunctional_injective (K L : Type u) [Field K] [Field L] [Algebra K L]
     (M : Type u) [AddCommGroup M] [Module K M] :
     Function.Injective (extendFunctional K L M) := by
   intro φ ψ h
   ext x
   apply FaithfulSMul.algebraMap_injective K L
-  simpa [extendFunctional] using LinearMap.congr_fun h x
+  exact LinearMap.congr_fun h x
 
 /-- Complex-valued rational-linear periods on a rational vector space. -/
 abbrev ComplexPeriodSpace (M : Type) [AddCommGroup M] [Module ℚ M] :=
@@ -95,6 +101,6 @@ lemma conjugatePeriod_rationalPeriod (M : Type) [AddCommGroup M] [Module ℚ M]
     (φ : Module.Dual ℚ M) :
     conjugatePeriod M (rationalPeriod M φ) = rationalPeriod M φ := by
   ext x
-  simp [extendFunctional]
+  simp
 
 end AlgebraicTopology.Singular
