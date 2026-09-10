@@ -47,6 +47,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import HodgeConjecture.Mathlib.RingTheory.Smooth.StandardSmooth
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 public import HodgeConjecture.Mathlib.Topology.KrullDimension
 public import HodgeConjecture.Statement

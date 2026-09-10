@@ -47,35 +47,6 @@ local instance bettiSupportHypercohomologyComparisonHasDerivedCategory :
 local instance bettiSupportHypercohomologyAddCommGrpHasDerivedCategory :
     HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard AddCommGrpCat
 
-set_option backward.isDefEq.respectTransparency false in
-private lemma mapExtendIso_inv_naturality
-    {C D : Type u} [Category C] [Category D] [Preadditive C] [Preadditive D]
-    [HasZeroObject C] [HasZeroObject D]
-    {i i' : Type v} {c : ComplexShape i} {c' : ComplexShape i'}
-    (F : Functor C D) [F.Additive] (K L : HomologicalComplex C c) (f : K ⟶ L)
-    (e : c.Embedding c') [e.IsRelIff] :
-    HomologicalComplex.extendMap
-          ((F.mapHomologicalComplex c).map f) e ≫
-        (HomologicalComplex.mapExtendIso F L e).inv =
-      (HomologicalComplex.mapExtendIso F K e).inv ≫
-        (F.mapHomologicalComplex c').map (HomologicalComplex.extendMap f e) := by
-  apply HomologicalComplex.Hom.ext
-  funext q
-  change HomologicalComplex.extend.mapX
-        ((F.mapHomologicalComplex c).map f) (e.r q) ≫
-      (HomologicalComplex.mapExtendXIsoAux F L (e.r q)).inv =
-    (HomologicalComplex.mapExtendXIsoAux F K (e.r q)).inv ≫
-      F.map (HomologicalComplex.extend.mapX f (e.r q))
-  generalize e.r q = x
-  cases x with
-  | none =>
-      dsimp [HomologicalComplex.extend.mapX, HomologicalComplex.mapExtendXIsoAux]
-      simp only [Functor.map_zero, Limits.zero_comp, Limits.comp_zero]
-  | some n =>
-      dsimp [HomologicalComplex.extend.mapX, HomologicalComplex.mapExtendXIsoAux]
-      change F.map (f.f n) ≫ 𝟙 _ = 𝟙 _ ≫ F.map (f.f n)
-      rw [Category.comp_id, Category.id_comp]
-
 /-- Extension by zero of a natural-number-indexed termwise-flasque complex remains
 termwise flasque. -/
 theorem extendNat_term_isFlasque
@@ -129,7 +100,7 @@ theorem globalSectionsNat_map_quasiIso
         ((Γ.mapHomologicalComplex (ComplexShape.up ℕ)).map f)
           ComplexShape.embeddingUpNat ≫ eL.inv =
       eK.inv ≫ (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map fInt :=
-    mapExtendIso_inv_naturality Γ K L f ComplexShape.embeddingUpNat
+    HomologicalComplex.mapExtendIso_inv_naturality Γ f ComplexShape.embeddingUpNat
   have hcomp : QuasiIso
       (HomologicalComplex.extendMap
         ((Γ.mapHomologicalComplex (ComplexShape.up ℕ)).map f)
@@ -642,7 +613,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
           ComplexShape.embeddingUpNat ≫ eD.inv =
       eS.inv ≫ (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map
         (HomologicalComplex.extendMap g ComplexShape.embeddingUpNat) :=
-    mapExtendIso_inv_naturality Γ S D g ComplexShape.embeddingUpNat
+    HomologicalComplex.mapExtendIso_inv_naturality Γ g ComplexShape.embeddingUpNat
   have hab : a ≫
         (Γ.mapHomologicalComplex (ComplexShape.up ℕ)).map g = f ≫ b :=
     globalNaturalSingularResolutionRestrictionNat_naturality

@@ -50,15 +50,6 @@ namespace AlgebraicGeometry
 
 variable {X : Scheme} (f : X ⟶ Spec ↧ℂ)
 
-/-- A standard-smooth ring map is standard smooth of some relative dimension, read off from any
-submersive presentation. -/
-lemma RingHom.IsStandardSmooth.exists_isStandardSmoothOfRelativeDimension {R S : Type*}
-    [CommRing R] [CommRing S] {φ : R →+* S} (h : φ.IsStandardSmooth) :
-    ∃ n : ℕ, φ.IsStandardSmoothOfRelativeDimension n := by
-  let := φ.toAlgebra
-  obtain ⟨ι, σ, _, _, ⟨P⟩⟩ := h
-  exact ⟨P.dimension, P.isStandardSmoothOfRelativeDimension rfl⟩
-
 /-- Shrinking an affine chart to a basic open preserves the relative dimension, because sections
 over the basic open are a localization away of the sections over the chart. -/
 lemma isStandardSmoothOfRelativeDimension_appLE_basicOpen {U : X.Opens} {n : ℕ}

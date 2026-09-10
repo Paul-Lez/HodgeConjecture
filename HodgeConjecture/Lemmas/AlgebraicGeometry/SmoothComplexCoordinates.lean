@@ -18,6 +18,7 @@ module
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexEtale
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
+public import HodgeConjecture.Mathlib.RingTheory.Smooth.StandardSmooth
 public import Mathlib.AlgebraicGeometry.Morphisms.Etale
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation

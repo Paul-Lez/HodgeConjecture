@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import Other.AlgebraicTopology.StandardSimplexBasic
 public import Other.AlgebraicTopology.LocalFundamentalClass
 public import Other.AlgebraicTopology.StandardSphereSimplicialHomology
 
@@ -34,17 +35,6 @@ open CategoryTheory Limits Simplicial Opposite
 open scoped Simplicial
 
 namespace AlgebraicTopology.Singular
-
-lemma stdSimplex_map_apply_eq_zero_of_notMem_range
-    {X Y : Type*} [Fintype X] [Fintype Y]
-    (f : X → Y) (w : stdSimplex ℝ X) (y : Y)
-    (hy : y ∉ Set.range f) :
-    stdSimplex.map f w y = 0 := by
-  classical
-  simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
-  apply Finset.sum_eq_zero
-  intro x hx
-  exact (hy ⟨x, (Finset.mem_filter.mp hx).2⟩).elim
 
 /-- A simplex in the simplicial boundary, realized affinely in punctured coordinate space. -/
 def standardAffineBoundarySimplex (d k : ℕ)
@@ -82,15 +72,10 @@ def standardAffineBoundarySimplicialMap (d : ℕ) :
         (X := (standardPuncturedPair d).snd) (f := f.unop)
         (g := standardAffineBoundarySimplex d n.unop.len x)).symm
 
-/-- The unique nondegenerate simplex in the top dimension of a standard simplex. -/
-def standardSimplexTopSimplexForLocalClass (n : ℕ) :
-    (Δ[n] : SSet.{0}).obj (op (SimplexCategory.mk n)) :=
-  SSet.stdSimplex.objEquiv.symm (𝟙 (SimplexCategory.mk n))
-
 /-- A top-dimensional face of the simplicial boundary of the standard `(n + 1)`-simplex. -/
 def standardSphereBoundaryFaceSimplex (n : ℕ) (i : Fin (n + 2)) :
     (∂Δ[n + 1] : SSet.{0}).obj (op (SimplexCategory.mk n)) :=
-  (SSet.boundary.ι i).app _ (standardSimplexTopSimplexForLocalClass n)
+  (SSet.boundary.ι i).app _ (standardSimplexTopSimplex n)
 
 lemma standardSphereBoundaryFaceSimplex_nonDegenerate (n : ℕ) (i : Fin (n + 2)) :
     standardSphereBoundaryFaceSimplex n i ∈
@@ -107,13 +92,13 @@ lemma standardSphereBoundaryFaceSimplex_injective (n : ℕ) :
   apply SimplexCategory.δ_injective
   have h' := congrArg Subtype.val h
   change (SSet.stdSimplex.map (SimplexCategory.δ i)).app _
-      (standardSimplexTopSimplexForLocalClass n) =
+      (standardSimplexTopSimplex n) =
     (SSet.stdSimplex.map (SimplexCategory.δ j)).app _
-      (standardSimplexTopSimplexForLocalClass n) at h'
+      (standardSimplexTopSimplex n) at h'
   have key : ∀ k : Fin (n + 2), (SSet.stdSimplex.map (SimplexCategory.δ k)).app _
-      (standardSimplexTopSimplexForLocalClass n) =
+      (standardSimplexTopSimplex n) =
         SSet.stdSimplex.objEquiv.symm (SimplexCategory.δ k) := fun k ↦ by
-    simpa [standardSimplexTopSimplexForLocalClass] using
+    simpa [standardSimplexTopSimplex] using
       (SSet.stdSimplex.objEquiv_symm_comp
         (𝟙 (SimplexCategory.mk n)) (SimplexCategory.δ k)).symm
   rw [key i, key j] at h'
@@ -193,7 +178,7 @@ lemma standardSphereSimplicialBoundaryChain_inclusion (n : ℕ) :
           (SSet.boundary (n + 1) : SSet.Subcomplex (Δ[n + 1] : SSet.{0})).ι
           (ModuleCat.of ℚ ℚ)).f n =
       (Δ[n + 1] : SSet.{0}).ιChainComplex
-          (standardSimplexTopSimplexForLocalClass (n + 1)) ≫
+          (standardSimplexTopSimplex (n + 1)) ≫
         ((Δ[n + 1] : SSet.{0}).chainComplex
           (ModuleCat.of ℚ ℚ)).d (n + 1) n := by
   rw [standardSphereSimplicialBoundaryChain, Preadditive.sum_comp,

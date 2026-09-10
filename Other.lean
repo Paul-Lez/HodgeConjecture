@@ -201,6 +201,7 @@ public import Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
 public import Other.AlgebraicTopology.SingularSubdivisionIteration
 public import Other.AlgebraicTopology.SingularSupportCapProduct
 public import Other.AlgebraicTopology.StandardSimplexSingularComparison
+public import Other.AlgebraicTopology.StandardSimplexBasic
 public import Other.AlgebraicTopology.StandardSphereAffineBoundary
 public import Other.AlgebraicTopology.StandardSphereSimplicialHomology
 public import Other.CommutativeAlgebra.RegularLocalQuotientKernel

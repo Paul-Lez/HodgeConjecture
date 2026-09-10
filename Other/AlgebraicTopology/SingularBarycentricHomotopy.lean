@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import Other.AlgebraicTopology.StandardSimplexBasic
 public import Other.AlgebraicTopology.SingularBarycentricOuterFaces
 
 /-!
@@ -37,11 +38,6 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits PartialOrder Simplicial
 
 namespace AlgebraicTopology.Singular
-
-/-- The universal top-dimensional simplex of `Δ[n]`. -/
-public noncomputable def standardSimplexTopSimplex (n : ℕ) :
-    (Δ[n] : SSet.{0}).obj (Opposite.op (SimplexCategory.mk n)) :=
-  SSet.stdSimplex.objEquiv.symm (𝟙 (SimplexCategory.mk n))
 
 /-- On the universal simplex, subdivision followed by last vertex minus the identity. -/
 public noncomputable def standardBarycentricLastVertexDiscrepancy (n : ℕ) :

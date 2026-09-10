@@ -43,22 +43,6 @@ proved here.
 
 open CategoryTheory Topology TopologicalSpace
 
-namespace RingHom
-
-/-- A standard-smooth ring map is standard smooth of some relative dimension. -/
-lemma IsStandardSmooth.exists_isStandardSmoothOfRelativeDimension
-    {R S : Type*} [CommRing R] [CommRing S] {f : R →+* S}
-    (hf : f.IsStandardSmooth) :
-    ∃ n, f.IsStandardSmoothOfRelativeDimension n := by
-  let : Algebra R S := f.toAlgebra
-  change Algebra.IsStandardSmooth R S at hf
-  obtain ⟨ι, σ, hσ, hι, ⟨P⟩⟩ := hf.out
-  refine ⟨P.dimension, ?_⟩
-  change Algebra.IsStandardSmoothOfRelativeDimension P.dimension R S
-  exact ⟨ι, σ, hσ, hι, P, rfl⟩
-
-end RingHom
-
 namespace AlgebraicGeometry
 
 attribute [local instance] overSpecAlgebra

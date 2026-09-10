@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import Other.AlgebraicTopology.StandardSimplexBasic
 public import Other.AlgebraicTopology.SingularBarycentricAllDegrees
 
 import Other.AlgebraicTopology.SingularBarycentricOuterFaces
@@ -106,18 +107,6 @@ public theorem stdSimplex_map_apply_injective
     simp [eq_comm]
   rw [hfilter]
   simp
-
-/-- An injective reindexing has zero coefficient away from its image. -/
-public theorem stdSimplex_map_apply_eq_zero_of_not_mem_range
-    {X Y : Type*} [Fintype X] [Fintype Y]
-    (f : X → Y) (w : stdSimplex ℝ X) (y : Y)
-    (hy : y ∉ Set.range f) :
-    stdSimplex.map f w y = 0 := by
-  classical
-  simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
-  apply Finset.sum_eq_zero
-  intro x hx
-  exact (hy ⟨x, (Finset.mem_filter.mp hx).2⟩).elim
 
 /-- Mapping a standard simplex commutes with taking a finite affine combination. -/
 public theorem stdSimplex_map_affineCombination
@@ -245,7 +234,7 @@ public theorem nonemptyFiniteChainBarycenter_face
     · have hx' : ULift.up (p.succAbove x) ∉ (A.map g).finset :=
         fun h ↦ hx (hmem.mp h)
       simp [hx, hx']
-  · rw [stdSimplex_map_apply_eq_zero_of_not_mem_range p.succAbove _ y hy,
+  · rw [stdSimplex_map_apply_eq_zero_of_notMem_range p.succAbove _ y hy,
       nonemptyFiniteChainBarycenter_apply, if_neg]
     intro hmem
     rw [NonemptyFiniteChains.mem_map_iff] at hmem
