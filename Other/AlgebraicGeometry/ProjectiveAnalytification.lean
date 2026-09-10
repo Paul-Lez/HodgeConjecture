@@ -18,6 +18,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAffineSpace
 public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Basic
 public import Mathlib.LinearAlgebra.Projectivization.Basic
+public import Mathlib.Analysis.Normed.Module.Connected
 public import Mathlib.Tactic.Bound
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
@@ -1444,6 +1445,26 @@ noncomputable instance instCompactSpaceProjectiveSpaceComplexPoint (n : ℕ) :
   constructor
   rw [← (surjective_projectivizationToComplexPoint (n := n)).range_eq]
   exact isCompact_range continuous_projectivizationToComplexPoint
+
+/-- The analytic space of complex points of finite-dimensional projective space is path
+connected.  The unit sphere in its complex coordinate space is path connected as a real sphere;
+the two continuous coordinate quotient maps are surjective. -/
+noncomputable instance instPathConnectedSpace (n : ℕ) :
+    PathConnectedSpace
+      (ComplexPoint
+        (Over.mk
+          (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) := by
+  have hrank : 1 < Module.rank ℝ (CoordinateSpace n) := by
+    rw [rank_real_of_complex, rank_fun', Fintype.card_fin]
+    exact_mod_cast (by omega : 1 < 2 * (n + 1))
+  let : PathConnectedSpace (sphere (0 : CoordinateSpace n) 1) :=
+    isPathConnected_iff_pathConnectedSpace.mp
+      (isPathConnected_sphere hrank 0 (by norm_num))
+  let : PathConnectedSpace (Projectivization ℂ (CoordinateSpace n)) :=
+    (surjective_sphereToProjectivization (n := n)).pathConnectedSpace
+      continuous_sphereToProjectivization
+  exact (surjective_projectivizationToComplexPoint (n := n)).pathConnectedSpace
+    continuous_projectivizationToComplexPoint
 
 end ComplexProjectiveSpace
 
