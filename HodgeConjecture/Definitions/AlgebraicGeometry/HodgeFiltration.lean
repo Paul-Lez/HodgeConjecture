@@ -344,6 +344,7 @@ lemma const_map_algebraMap_comp_complexScalarPresheaf (q : K) : (Functor.const (
   (Functor.const (Opens (ComplexPoint X))ᵒᵖ).map
     (AddCommGrpCat.ofHom (algebraMap K ℂ : K →+ ℂ) ≫ AddCommGrpCat.ofHom (complexScalarAddHom ((algebraMap K ℂ) q))) := rfl
 
+set_option linter.auxLemma false in
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1 TopCat.instCategorySheaf._aux_3
   TopCat.instCategorySheaf._aux_5 constantComplexAddCommGrpPresheaf in
 /-- The inclusion of rational constants into complex constants commutes with scalar
@@ -366,6 +367,7 @@ lemma ofHom_integerMultipleAddHom_comp_fieldScalarAddHom (q r : K) :
   ext
   simp [integerMultipleAddHom, fieldScalarAddHom]
 
+set_option linter.auxLemma false in
 omit [Algebra K ℂ] in
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
   TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 constantIntegerSheaf in
@@ -392,21 +394,9 @@ omit [Algebra K ℂ] in
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarComplex_one : fieldScalarComplex K X 1 = 𝟙 _ := by
-  unfold fieldScalarComplex
-  change HomologicalComplex.extendMap
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-        (fieldScalarSheaf K X 1)) ComplexShape.embeddingUpNat =
-    𝟙 (HomologicalComplex.extend
-      ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        (constantFieldSheaf K X)) ComplexShape.embeddingUpNat)
-  rw [fieldScalarSheaf_one]
-  have hm : (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-      (𝟙 (constantFieldSheaf K X)) =
-      𝟙 ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        (constantFieldSheaf K X)) :=
-    (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map_id _
-  rw [hm]
-  exact HomologicalComplex.extendMap_id _ _
+  unfold fieldScalarComplex constantFieldSheafComplexInt
+  rw [fieldScalarSheaf_one, (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map_id,
+    HomologicalComplex.extendMap_id]
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarComplex_add (a b : K) :
@@ -442,8 +432,7 @@ lemma fieldToHolomorphicDeRhamComplexInt_scalar
     fieldScalarComplex K X q ≫
       fieldToHolomorphicDeRhamComplexInt K X := by
   unfold fieldToHolomorphicDeRhamComplexInt
-  rw [Category.assoc, constantsToHolomorphicDeRhamComplexInt_scalar]
-  rw [← Category.assoc,
+  rw [Category.assoc, constantsToHolomorphicDeRhamComplexInt_scalar, ← Category.assoc,
     fieldToComplexConstantSheafComplexInt_scalar, Category.assoc]
 
 omit [Algebra K ℂ] in
