@@ -35,7 +35,7 @@ def openRawToSingularCochainSheafComplex (V : Opens X) :
 
 /-- The image of the top open of a subspace is that ambient open itself. -/
 def openSubspaceImageTopIso (V : Opens X) : V.isOpenEmbedding.functor.obj ⊤ ≅ V :=
-  eqToIso (by ext x; simp)
+  eqToIso (Opens.isOpenEmbedding_obj_top V)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

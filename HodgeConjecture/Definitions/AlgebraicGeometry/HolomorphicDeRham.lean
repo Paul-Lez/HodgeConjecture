@@ -644,15 +644,11 @@ def constantComplexSheaf :
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of ℂ)
 
-/-- Multiplication by a complex scalar as an additive endomorphism of `ℂ`. -/
-def complexScalarAddHom (c : ℂ) : ℂ →+ ℂ :=
-  DistribSMul.toAddMonoidHom ℂ c
-
 /-- Scalar multiplication on the constant complex presheaf. -/
 def complexScalarPresheaf (c : ℂ) :
     constantComplexAddCommGrpPresheaf X ⟶
       constantComplexAddCommGrpPresheaf X where
-  app _ := AddCommGrpCat.ofHom (complexScalarAddHom c)
+  app _ := AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ c)
   naturality {U V} i := by
     ext x
     rfl
@@ -665,19 +661,15 @@ def complexScalarSheaf (c : ℂ) :
   exact (presheafToSheaf J AddCommGrpCat).map
     (complexScalarPresheaf X c)
 
-/-- Complex conjugation as an additive endomorphism of `ℂ`.
+/-- Complex conjugation on the constant complex presheaf.
 
 Conjugation is a ring automorphism of `ℂ`, so it acts on the constant complex sheaf exactly the
 way a scalar does; unlike a scalar it is only additive over `ℂ`, which is what makes the induced
 map on cohomology conjugate-linear rather than linear. -/
-def conjAddHom : ℂ →+ ℂ :=
-  (starRingEnd ℂ).toAddMonoidHom
-
-/-- Complex conjugation on the constant complex presheaf. -/
 def conjConstantComplexPresheaf :
     constantComplexAddCommGrpPresheaf X ⟶
       constantComplexAddCommGrpPresheaf X where
-  app _ := AddCommGrpCat.ofHom conjAddHom
+  app _ := AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom
   naturality {U V} i := by
     ext x
     rfl
@@ -689,10 +681,8 @@ lemma conjConstantComplexPresheaf_comp_self :
   apply NatTrans.ext
   funext U
   apply AddCommGrpCat.hom_ext
-  change conjAddHom.comp conjAddHom = AddMonoidHom.id ℂ
-  apply AddMonoidHom.ext
-  intro x
-  exact Complex.conj_conj x
+  change (starRingEnd ℂ).toAddMonoidHom.comp (starRingEnd ℂ).toAddMonoidHom = AddMonoidHom.id ℂ
+  exact AddMonoidHom.ext Complex.conj_conj
 
 /-- Complex conjugation on the constant complex sheaf. -/
 def conjConstantComplexSheaf :
@@ -722,12 +712,9 @@ lemma complexScalarPresheaf_comp_conj (c : ℂ) :
   apply NatTrans.ext
   funext U
   apply AddCommGrpCat.hom_ext
-  change conjAddHom.comp (complexScalarAddHom c) =
-    (complexScalarAddHom (starRingEnd ℂ c)).comp conjAddHom
-  apply AddMonoidHom.ext
-  intro x
-  change (starRingEnd ℂ) (c * x) = (starRingEnd ℂ) c * (starRingEnd ℂ) x
-  exact map_mul (starRingEnd ℂ) c x
+  change (starRingEnd ℂ).toAddMonoidHom.comp (DistribSMul.toAddMonoidHom ℂ c) =
+    (DistribSMul.toAddMonoidHom ℂ (starRingEnd ℂ c)).comp (starRingEnd ℂ).toAddMonoidHom
+  exact AddMonoidHom.ext (map_mul (starRingEnd ℂ) c)
 
 /-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the constant
 complex sheaf. -/
