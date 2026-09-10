@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMoore
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytification
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionComplexPoint
 public import Other.AlgebraicTopology.SingularChainSheafDerivedPushforward
 
 /-!

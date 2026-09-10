@@ -107,66 +107,6 @@ lemma cohomologyMap_comp (R : Type u) [Field R] {X Y Z : TopCat.{u}} (n : ℕ)
   rw [cohomologyMap, cohomologyMap, cohomologyMap, homologyMap_comp,
     LinearMap.dualMap_comp_dualMap]
 
-/-- Extend the values of a linear functional along a field extension. -/
-def extendFunctional (K L : Type u) [Field K] [Field L] [Algebra K L]
-    (M : Type u) [AddCommGroup M] [Module K M] :
-    Module.Dual K M →ₗ[K] (M →ₗ[K] L) where
-  toFun φ := (Algebra.linearMap K L).comp φ
-  map_add' φ ψ := by
-    ext x
-    simp
-  map_smul' a φ := by
-    ext x
-    simp [Algebra.smul_def]
-
-lemma extendFunctional_injective (K L : Type u) [Field K] [Field L] [Algebra K L]
-    (M : Type u) [AddCommGroup M] [Module K M] :
-    Function.Injective (extendFunctional K L M) := by
-  intro φ ψ h
-  ext x
-  apply FaithfulSMul.algebraMap_injective K L
-  with_implicit exact LinearMap.congr_fun h x
-
-/-- Complex-valued rational-linear periods on a rational vector space. -/
-abbrev ComplexPeriodSpace (M : Type) [AddCommGroup M] [Module ℚ M] :=
-  M →ₗ[ℚ] ℂ
-
-/-- Complex conjugation of a complex-valued rational-linear period functional. -/
-def conjugatePeriod (M : Type) [AddCommGroup M] [Module ℚ M] :
-    ComplexPeriodSpace M →ₗ[ℚ] ComplexPeriodSpace M where
-  toFun φ := (Complex.conjAe.restrictScalars ℚ).toLinearMap.comp φ
-  map_add' φ ψ := by ext; simp
-  map_smul' q φ := by ext; simp
-
-@[simp]
-lemma conjugatePeriod_apply (M : Type) [AddCommGroup M] [Module ℚ M]
-    (φ : ComplexPeriodSpace M) (x : M) :
-    conjugatePeriod M φ x = Complex.conjAe (φ x) :=
-  rfl
-
-@[simp]
-lemma conjugatePeriod_involutive (M : Type) [AddCommGroup M] [Module ℚ M]
-    (φ : ComplexPeriodSpace M) :
-    conjugatePeriod M (conjugatePeriod M φ) = φ := by
-  ext
-  simp
-
-/-- A rational functional, viewed as a complex-valued period functional. -/
-abbrev rationalPeriod (M : Type) [AddCommGroup M] [Module ℚ M] :
-    Module.Dual ℚ M →ₗ[ℚ] ComplexPeriodSpace M :=
-  extendFunctional ℚ ℂ M
-
-lemma rationalPeriod_injective (M : Type) [AddCommGroup M] [Module ℚ M] :
-    Function.Injective (rationalPeriod M) :=
-  extendFunctional_injective ℚ ℂ M
-
-@[simp]
-lemma conjugatePeriod_rationalPeriod (M : Type) [AddCommGroup M] [Module ℚ M]
-    (φ : Module.Dual ℚ M) :
-    conjugatePeriod M (rationalPeriod M φ) = rationalPeriod M φ := by
-  ext x
-  simp [extendFunctional]
-
 /-- The category containing field-valued singular chain complexes. -/
 abbrev ChainCategory (R : Type u) [Field R] :=
   ChainComplex (ModuleCat.{u} R) ℕ

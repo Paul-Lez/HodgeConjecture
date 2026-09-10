@@ -127,6 +127,7 @@ public import Other.AlgebraicTopology.SingularCoverSmallPresentation
 public import Other.AlgebraicTopology.SingularHomologyVanishing
 public import Other.AlgebraicTopology.SingularMayerVietoris
 public import Other.AlgebraicTopology.SingularOpenCoverSmallChains
+public import Other.AlgebraicTopology.SingularPeriod
 public import Other.AlgebraicTopology.SingularSubdivisionIteration
 public import Other.AlgebraicTopology.SingularSupportCapProduct
 public import Other.AlgebraicTopology.SingularTriadCapProduct

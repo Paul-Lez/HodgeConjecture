@@ -21,7 +21,7 @@ public import Mathlib.Topology.Connected.PathConnected
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytification
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalyticImmersion
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
