@@ -18,9 +18,6 @@ sheafification. This module also proves local vanishing away from closed support
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite HomologicalComplex
 open TopCat.Presheaf
 
@@ -91,6 +88,8 @@ def supportRelativeCohomologyGerm (V : Opens X) (x : X) (hx : x ∈ V)
   (supportRelativeCohomologySheaf X S n).presheaf.germ V x hx
     ((supportRelativeCohomologyToSheaf X S n).app (op V) a)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Restriction followed by germ is the original germ; the restriction is the
 literal pair-inclusion pullback. -/
 theorem supportRelativeCohomologyGerm_restrict {U V : Opens X} (hUV : U ≤ V)
@@ -144,6 +143,8 @@ theorem neighborhoodSupportRelativeCohomology_subsingleton
   let := ModuleCat.subsingleton_of_isZero hh
   infer_instance
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Off closed support, every actual local relative class has zero sheaf germ. -/
 theorem supportRelativeCohomologyGerm_eq_zero_of_not_mem (hS : IsClosed S)
     (V : Opens X) (x : X) (hx : x ∈ V) (hxS : x ∉ S)

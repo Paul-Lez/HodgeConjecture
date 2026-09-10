@@ -22,9 +22,8 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace CochainComplex
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- A map to an actual K-injective complex lifts across a quasi-isomorphism up to
 a genuine chain homotopy, by the proved fully faithful derived-category comparison. -/
 theorem exists_homotopyLift_of_quasiIso_to_isKInjective
@@ -46,14 +45,13 @@ end CochainComplex
 
 namespace AlgebraicGeometry.ComplexPoint
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable (X : Over (Spec (.of ℂ)))
 
 local instance hypercohomologyFlasqueNaturalitySheafDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) := HasDerivedCategory.standard _
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The resolution comparison, followed by its actual global-section map, is precisely
 the direct comparison after applying the resolution morphism in hypercohomology. -/
 theorem hypercohomologyAddEquivGlobalSectionsOfResolution_map

@@ -37,8 +37,6 @@ open CategoryTheory
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-
 variable (d : ℕ)
 
 /-- Recenter a continuous injection at a chosen source point. -/

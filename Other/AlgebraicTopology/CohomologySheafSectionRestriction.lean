@@ -16,10 +16,6 @@ restrictions, without assuming that evaluation on opens is exact.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite
 
 namespace TopCat.Sheaf

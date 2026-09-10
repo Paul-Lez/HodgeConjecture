@@ -22,9 +22,6 @@ an existence or duality assumption.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
@@ -111,6 +108,8 @@ def cycleComponentSupportSectionRestriction :
   TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) (.up ℤ)
     (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) (homOfLE le_top)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 include d hx in
 /-- The actual restriction map is an isomorphism in cycle degree, by the
 two proved boundary vanishings and the actual localization sequence. -/

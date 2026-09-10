@@ -25,9 +25,6 @@ homology, which is essential for preserving normalized fundamental classes.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace HomologicalComplex Opposite
 
 universe u
@@ -37,6 +34,8 @@ namespace CategoryTheory.ShortComplex
 variable {C D E : Type*} [Category* C] [Category* D] [Category* E]
   [Abelian C] [Abelian D] [Abelian E]
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The canonical homology comparison is compatible with composition of exact functors. -/
 @[reassoc]
 theorem mapHomologyIso_comp_hom (S : ShortComplex C) (F : C ⥤ D) (G : D ⥤ E)
@@ -57,6 +56,8 @@ theorem mapHomologyIso_comp_hom (S : ShortComplex C) (F : C ⥤ D) (G : D ⥤ E)
   simpa only [γ, homologyMap_id, Category.id_comp, Category.comp_id] using
     γ.homologyMap_comm.symm
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- A natural transformation into a composite exact functor respects the two successive
 canonical homology comparisons. -/
 @[reassoc]
@@ -115,6 +116,8 @@ instance additiveSheafStalkFunctor_preservesFiniteLimits (x : X) :
     TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x)
   infer_instance
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Sheafification leaves stalks unchanged, naturally in the additive presheaf. -/
 def additivePresheafStalkSheafificationIso (x : X) :
     additivePresheafStalkFunctor X x ≅
@@ -235,6 +238,8 @@ theorem singularChainPresheafComplexEvaluationIso_germ [T2Space X]
   rw [Category.id_comp, singularChainPresheafStalkIso_germ]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The germ of a relative class in the homology presheaf is exactly its actual
 restriction to the local pair. -/
 @[reassoc]
@@ -269,6 +274,8 @@ theorem relativeHomologyPresheafSectionIso_germ [T2Space X]
   erw [hmap, Iso.inv_hom_id_assoc]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 set_option maxHeartbeats 800000 in
 /-- The homology sheafification unit is compatible with the actual local-homology
 identifications on stalks. -/
@@ -302,6 +309,8 @@ theorem singularChainHomologyPresheafToSheaf_stalk [T2Space X] (x : X) (n : ℕ)
     (singularChainSheafificationStalkIso R X x).inv, Iso.hom_inv_id,
     HomologicalComplex.homologyMap_id, Category.id_comp]
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The constructed sheaf section has, under the canonical stalk identification,
 exactly the local restriction of the original relative homology class. -/
 @[reassoc]

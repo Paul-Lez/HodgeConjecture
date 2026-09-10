@@ -17,9 +17,6 @@ whole scheme. No smoothness or emptiness of the component is assumed.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory TopologicalSpace Topology Opposite
 
 namespace AlgebraicGeometry

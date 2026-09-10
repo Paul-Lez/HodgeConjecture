@@ -23,9 +23,6 @@ open CategoryTheory Limits TopologicalSpace Topology Opposite
 
 universe u v w a
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 namespace CategoryTheory.Functor
 
 variable {C : Type u} [Category.{v} C] [Abelian C] [EnoughInjectives C]

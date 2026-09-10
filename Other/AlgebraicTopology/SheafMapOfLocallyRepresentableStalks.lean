@@ -30,8 +30,6 @@ isomorphism. Geometric applications must prove the local representability hypoth
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 open CategoryTheory Limits TopologicalSpace Opposite
 
 universe u
@@ -142,6 +140,7 @@ theorem constantSheafMapOfLocallyRepresentable_unit :
 
 variable {F}
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The canonical constant-sheaf stalk identification, directed from the coefficient
 group to the stalk. Its map is the germ of an actual constant section. -/
 def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
@@ -165,6 +164,7 @@ def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
 
 variable (F)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Exact stalk normalization of the assembled sheaf map. -/
 @[reassoc]
 theorem constantSheafMapOfLocallyRepresentable_stalk (x : X) :

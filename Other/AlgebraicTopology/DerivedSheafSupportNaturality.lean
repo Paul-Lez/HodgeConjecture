@@ -17,8 +17,6 @@ support; no cohomology-level comparison morphism is supplied.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 open CategoryTheory Limits TopologicalSpace Opposite
 
 universe u
@@ -129,6 +127,7 @@ theorem closedSupportSectionsMap_refl (Z : Closeds X) :
   simp [closedSupportSectionsMap, sheafSectionsWithClosedSupportMap]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
 theorem closedSupportSectionsMap_comp {Z W T : Closeds X} (h : Z ≤ W) (h' : W ≤ T) :
     closedSupportSectionsMap X h ≫ closedSupportSectionsMap X h' =
@@ -168,6 +167,7 @@ theorem derivedClosedSupportSectionsMap_refl (Z : Closeds X) :
       𝟙 (derivedClosedSupportSections X Z) := by
   simp [derivedClosedSupportSectionsMap, derivedClosedSupportSections]
 
+set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
 theorem derivedClosedSupportSectionsMap_comp {Z W T : Closeds X}
     (h : Z ≤ W) (h' : W ≤ T) :

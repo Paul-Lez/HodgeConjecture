@@ -16,10 +16,6 @@ open AlgebraicTopology.Singular TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
@@ -42,6 +38,9 @@ lemma complexSupportInjectiveCohomologySheafIsoRelative_comp
     ((asIso (homologyMap (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).inv ≫ _) = _
   rw [Iso.hom_inv_id_assoc]
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- The actual supported injective cohomology-sheaf comparison takes the
 canonical original-ambient section to the prescribed relative sheafification unit. -/
 @[reassoc]

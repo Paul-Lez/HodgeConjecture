@@ -15,9 +15,6 @@ open CategoryTheory CategoryTheory.Limits
 
 namespace HomologicalComplex
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 universe u v
 
 variable {C D : Type u} [Category C] [Category D] [Preadditive C] [Preadditive D]

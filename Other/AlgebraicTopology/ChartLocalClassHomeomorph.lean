@@ -16,9 +16,6 @@ class, not an assumption that arbitrary homeomorphisms preserve orientations.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Topology
 
 namespace AlgebraicTopology.Singular
@@ -42,6 +39,8 @@ theorem mem_homeomorphTransportedChart :
   change H.symm (H x) ∈ e.source
   simpa only [H.symm_apply_apply] using hx
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Transport does not change the chosen coordinate radius. -/
 theorem chartRadius_homeomorphTransport :
     chartRadius d (H.symm.transOpenPartialHomeomorph e) (H x)

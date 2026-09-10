@@ -17,12 +17,11 @@ open CategoryTheory CategoryTheory.Limits
 
 namespace CochainComplex
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-
 variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
   (F : C ⥤ D) [F.Additive] [F.PreservesHomology]
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 omit [F.PreservesHomology] in
 /-- Applying an exact additive functor commutes with the middle component of
 the canonical three-term homology shift. This fixes the shift sign without
@@ -38,6 +37,8 @@ theorem map_shiftShortComplex_middle (K : CochainComplex C ℤ)
   simp [shiftShortComplexFunctorIso, shiftShortComplexFunctor', shiftEval,
     HomologicalComplex.XIsoOfEq, eqToHom_map]
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- The canonical homology comparison for an exact additive functor preserves
 the prescribed homology shift, including the signs of adjacent differentials. -/
 theorem mapHomologyIso_shift (K : CochainComplex C ℤ)
@@ -63,6 +64,8 @@ theorem mapHomologyIso_shift (K : CochainComplex C ℤ)
   exact congrArg (fun f => (((K⟦t⟧).sc n).mapHomologyIso F).hom ≫ F.map f)
     (ShiftSequence.shiftIso_hom_app t n n' h K).symm
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
 /-- Exact additive functors commute with the shifted homology map of an actual
 shifted chain morphism. In particular this applies to cone connecting maps. -/
 theorem mapHomologyIso_shiftMap {K L : CochainComplex C ℤ}

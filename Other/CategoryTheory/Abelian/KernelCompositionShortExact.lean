@@ -21,9 +21,6 @@ open CategoryTheory Limits
 
 namespace CategoryTheory
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable {C : Type*} [Category* C] [Abelian C]
   {A B D : C} (f : A ⟶ B) (g : B ⟶ D)
 
@@ -85,6 +82,8 @@ lemma kernelFactorizationShortComplex_shortExact [Epi f] :
 variable {E : Type*} [Category* E] [Abelian E]
   (F : C ⥤ E) [F.Additive] [PreservesLimitsOfShape WalkingParallelPair F]
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Kernel-preserving functors identify the actual sequence with that of the mapped
 restriction maps. This does not require them to preserve epimorphisms in general. -/
 def kernelFactorizationShortComplexMapIso :

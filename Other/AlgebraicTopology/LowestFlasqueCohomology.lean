@@ -24,9 +24,6 @@ No new group equivalence or exactness of arbitrary sheaf evaluation is assumed.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite HomologicalComplex
 
 universe u
@@ -78,6 +75,8 @@ theorem sectionCohomologyPresheaf_isSheaf_lowest (N n : ℤ) [K.IsStrictlyGE N]
     (K.sc n).mapHomologyIso (forget AddCommGrpCat.{u} X)
   exact (CategoryTheory.Presheaf.isSheaf_of_iso_iff e).mpr (K.homology n).property
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The actual presheaf-to-cohomology-sheaf comparison is an isomorphism, because
 its literal sheafification unit is an isomorphism in this degree. -/
 theorem sectionCohomologyPresheafToSheaf_isIso_lowest (N n : ℤ) [K.IsStrictlyGE N]

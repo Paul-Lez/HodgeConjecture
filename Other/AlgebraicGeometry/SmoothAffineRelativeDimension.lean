@@ -25,8 +25,6 @@ open _root_.RingHom
 
 universe u
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- The restriction to actual affine source and target charts is smooth of the relative
 dimension proved by its standard-smooth ring presentation. -/
 theorem smoothOfRelativeDimension_resLE_of_isStandardSmooth
@@ -45,6 +43,7 @@ theorem smoothOfRelativeDimension_resLE_of_isStandardSmooth
       (arrowResLEAppIso f U V e)).mpr
         (locally_of isStandardSmoothOfRelativeDimension_respectsIso _ hstd)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- A standard-smooth affine open of a complex scheme is an actual smooth complex
 scheme of that precise relative dimension. -/
 theorem smoothOfRelativeDimension_affineOpen_of_isStandardSmooth

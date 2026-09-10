@@ -27,9 +27,6 @@ algebraic localization step needed when extending over singular strata.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite
 
 universe u
@@ -51,6 +48,8 @@ def sheafSectionsBetweenOpens : Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCa
     apply (cancel_mono (kernel.ι _)).1
     simp
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 instance : (sheafSectionsBetweenOpens X h).Additive where
   map_add {F G} f g := by
     apply (cancel_mono (kernel.ι _)).1
@@ -87,6 +86,8 @@ def toSheafSectionsBetweenOpens :
       (fun q => kernel.ι ((toOpenRestrictionPushforward X V).app F) ≫ q)
       ((toOpenRestrictionPushforward X U).naturality f)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Restricting a section supported outside `U` to `U` gives zero. -/
 @[reassoc (attr := simp)]
 lemma sheafSectionsSupportedOutsideMap_toBetween :

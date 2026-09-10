@@ -20,9 +20,6 @@ complement. No section, purity comparison, or orientation coherence is an input.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Topology Opposite
 open AlgebraicTopology.Singular
 

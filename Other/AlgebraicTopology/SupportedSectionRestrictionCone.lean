@@ -25,9 +25,6 @@ universe u
 
 namespace TopCat.Sheaf
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (X : TopCat.{u})
 
 /-- Restriction between the actual open-section evaluation functors. -/
@@ -95,6 +92,8 @@ theorem supportRestrictionSectionsIntersectionIso_restriction :
   HomologicalComplex.Hom.ext (funext fun n ↦
     toOpenRestrictionPushforward_intersection X U V (K.X n))
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The cone of the actual support-sequence arrow is the cone of actual open restriction. -/
 def supportRestrictionSectionsConeIso :
     CochainComplex.mappingCone (supportRestrictionSectionsComplexShortComplex X U V K).g ≅
@@ -105,6 +104,8 @@ def supportRestrictionSectionsConeIso :
     (Arrow.isoMk (Iso.refl _) (supportRestrictionSectionsIntersectionIso X U V K)
       (by simpa using (supportRestrictionSectionsIntersectionIso_restriction X U V K).symm))
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- A flasque supported-section kernel computes the true restriction cone, with
 supported degree `n` corresponding to cone degree `n - 1`. -/
 def supportedSectionHomologyIsoRestrictionCone

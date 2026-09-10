@@ -22,9 +22,6 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable {X Y : Scheme} (i : Y ⟶ X) [IsClosedImmersion i] (A : Y.Opens)
 
 /-- Delete the actual closed image of the discarded source complement. -/

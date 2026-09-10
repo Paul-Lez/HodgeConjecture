@@ -24,9 +24,6 @@ universe u
 
 namespace TopCat.Sheaf
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (X : TopCat.{u})
 
 local instance closedSupportTruncationSheafDerivedCategory :
@@ -53,6 +50,8 @@ def termwiseToDerivedClosedSupport (S : Closeds X) :
     DerivedCategory.Plus.ι.map
       ((derivedClosedSupportSections X S).map (supportCoefficientTruncationIso X K n).inv)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- After transport to the truncated coefficient, the comparison is exactly termwise
 truncation followed by the actual group-valued derived unit. -/
 @[reassoc]

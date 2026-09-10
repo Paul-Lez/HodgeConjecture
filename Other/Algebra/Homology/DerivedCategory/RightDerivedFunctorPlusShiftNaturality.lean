@@ -18,9 +18,6 @@ injective-resolution comparison, not supplied as data.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory
 
 namespace CategoryTheory.NatTrans
@@ -70,12 +67,16 @@ end Detect
 variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
   {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Termwise coefficient transformations commute with cohomological shifts. -/
 instance mapCochainComplexCommShift : CommShift (α.mapHomologicalComplex (.up ℤ)) ℤ where
   shift_comm a := by
     ext K i
     simp
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The induced transformation on homotopy categories retains the actual shifts. -/
 instance mapHomotopyCategoryCommShift : CommShift (α.mapHomotopyCategory (.up ℤ)) ℤ := by
   have h : Functor.whiskerLeft (HomotopyCategory.quotient C (.up ℤ))
@@ -93,6 +94,8 @@ instance mapHomotopyCategoryCommShift : CommShift (α.mapHomotopyCategory (.up �
     infer_instance
   exact commShift_of_whiskerLeft ℤ (HomotopyCategory.quotient C (.up ℤ)) _
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Restricting to bounded-below homotopy complexes preserves shift compatibility. -/
 instance mapHomotopyCategoryPlusCommShift : CommShift α.mapHomotopyCategoryPlus ℤ := by
   let eF : F.mapHomotopyCategoryPlus ⋙ HomotopyCategory.Plus.ι D ≅
@@ -117,6 +120,8 @@ instance mapHomotopyCategoryPlusCommShift : CommShift α.mapHomotopyCategoryPlus
 
 variable [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- On injective complexes the derived transformation is the actual termwise map,
 conjugated by the canonical derived-unit isomorphisms. -/
 theorem rightDerivedFunctorPlus_onInjectives :
@@ -133,6 +138,8 @@ theorem rightDerivedFunctorPlus_onInjectives :
     Functor.rightDerivedFunctorPlusOnInjectivesUnit,
     HomotopyCategory.Plus.injectiveToDerived]
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Coherent shift compatibility of the actual derived transformation. No shift
 compatibility of the coefficient map is supplied: it was proved termwise above. -/
 instance rightDerivedFunctorPlusCommShift : CommShift α.rightDerivedFunctorPlus ℤ := by

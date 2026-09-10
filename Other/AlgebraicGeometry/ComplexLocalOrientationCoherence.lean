@@ -43,8 +43,6 @@ variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 noncomputable local instance :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- The normalized local homology classes obtained from any two preferred algebraic charts
 containing a point coincide. -/
 theorem localClassOfChart_localChart_eq

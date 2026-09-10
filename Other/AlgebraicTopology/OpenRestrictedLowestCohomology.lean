@@ -23,9 +23,6 @@ universe u
 
 namespace TopCat.Sheaf
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (X : TopCat.{u}) (U : Opens X)
 
 /-- The image of the top open of the subspace is literally its ambient open. -/
@@ -44,6 +41,8 @@ def openRestrictionTopSectionsIso :
 
 variable (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The same actual open equality applied to coefficient complexes. -/
 def openRestrictionTopSectionComplexIso :
     ((supportEvaluation (TopCat.of U) ⊤).mapHomologicalComplex (.up ℤ)).obj
@@ -61,6 +60,8 @@ def openRestrictionHomologyTopSectionsIso (n : ℤ) :
     ((K.sc n).mapHomologyIso (U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u})) ≪≫
       (openRestrictionTopSectionsIso X U).app (K.homology n)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Actual lowest-degree comparison on an open where lower cohomology sheaves vanish.
 Its maps are fixed by restriction, sheafification, and exact homology functoriality. -/
 def openRestrictedLowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]

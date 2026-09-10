@@ -23,9 +23,6 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
@@ -60,6 +57,8 @@ def cycleComponentSmoothLocusClosedLift :
       (cycleComponentSmoothLocusAmbientOpen X x).toScheme :=
   closedImmersionSourceOpenLift (cycleComponentι X.left x) (cycleComponentι X.left x ≫ X.hom).smoothLocus
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 instance cycleComponentSmoothLocusClosedLift_isClosedImmersion :
     IsClosedImmersion (cycleComponentSmoothLocusClosedLift X x) := by
   dsimp [cycleComponentSmoothLocusClosedLift]

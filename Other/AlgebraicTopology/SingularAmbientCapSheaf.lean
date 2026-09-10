@@ -29,9 +29,6 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable (R : Type u) [Field R]
 
 /-- The ambient cap product followed by the actual relative projection. -/
@@ -41,6 +38,8 @@ def ambientCapRelativeLift (P : TopPair.{u}) (p q : ℕ)
       RelativeChainGroup R P q :=
   Simplicial.capHom R p q φ ≫ (relativeChainProjection R P).f q
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The cap lift kills every chain in the relative subspace, by actual cap naturality. -/
 lemma subspaceChain_ambientCapRelativeLift (P : TopPair.{u}) (p q : ℕ)
     (φ : Simplicial.Cochain R (TopCat.toSSet.obj P.fst) p) :
@@ -65,6 +64,8 @@ def relativeAmbientCapHom (P : TopPair.{u}) (p q : ℕ)
     (CokernelCofork.ofπ (ambientCapRelativeLift R P p q φ)
       (subspaceChain_ambientCapRelativeLift R P p q φ))
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The quotient cap retains the exact Alexander–Whitney formula on every representative. -/
 @[reassoc (attr := simp)]
 lemma relativeChainProjection_relativeAmbientCapHom (P : TopPair.{u}) (p q : ℕ)
@@ -78,6 +79,8 @@ lemma relativeChainProjection_relativeAmbientCapHom (P : TopPair.{u}) (p q : ℕ
 variable (X : TopCat.{u}) (p q : ℕ)
   (φ : Simplicial.Cochain R (TopCat.toSSet.obj X) p)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Restriction of the relative support commutes with the actual ambient-cochain cap. -/
 @[reassoc]
 lemma relativeAmbientCapHom_supportInclusion {Z W : Set X} (h : Z ⊆ W) :
@@ -170,6 +173,8 @@ lemma singularChainPresheafAmbientCap_boundary
   exact congrArg ((forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map)
     (relativeAmbientCapHom_boundary R (TopPair.ofSubset (U.unop : Set X)ᶜ) p q φ hφ)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Sheafification preserves the exact signed differential compatibility. -/
 lemma singularChainSheafAmbientCap_boundary
     (hφ : Simplicial.coboundary R p φ = 0) :

@@ -32,8 +32,6 @@ open CategoryTheory Topology
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-
 variable (d : ℕ)
 
 /-- A radial compression, with arbitrary source center, factored through an open target. -/
@@ -162,6 +160,7 @@ lemma chartOrientationEmbeddingMap_coordinates (v : Fin d → ℂ) :
   rw [← OpenPartialHomeomorph.univBall_target (e x) (chartRadius_pos d e x hx)]
   exact (OpenPartialHomeomorph.univBall (e x) (chartRadius d e x hx)).map_source (by simp)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Translating in the compressed chart model and then transporting gives precisely the
 existing chart-local orientation at the image point. -/
 theorem chartOrientationEmbeddingMap_translate_standardComplexLocalClass (v : Fin d → ℂ) :

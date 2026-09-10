@@ -24,10 +24,6 @@ presheaf gluing or local-purity theorem assumed.
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite HomologicalComplex
 
-set_option backward.defeqAttrib.useBackward true
-set_option backward.isDefEq.respectTransparency false
-set_option backward.isDefEq.respectTransparency.types false
-
 universe u
 
 namespace TopCat.Sheaf
@@ -101,6 +97,9 @@ def supportedSingularCohomologySheafIsoRelative :
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).mapIso
     (supportedSingularCohomologyPresheafIsoRelative X S hS n)
 
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- The sheaf comparison preserves the actual sheafification unit. -/
 @[reassoc]
 lemma supportedSingularCohomologySheafIsoRelative_unit :

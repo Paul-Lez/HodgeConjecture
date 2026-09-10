@@ -20,9 +20,6 @@ or constructed by the transport map alone.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
@@ -69,6 +66,8 @@ theorem complexDerivedSupportedCohomologyTopIso_hom (n : ℤ) :
     (complexDerivedSupportedCohomologyTopIso X n).hom =
       complexDerivedSupportedCohomologyForgetSupport X ⊤ n := rfl
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Support enlargement and forgetting support induce the same ordinary class. -/
 @[reassoc (attr := simp)]
 theorem complexDerivedSupportedCohomologySupportMap_forget

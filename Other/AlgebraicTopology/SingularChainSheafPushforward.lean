@@ -40,8 +40,6 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false
-
 variable (R : Type u) [Field R] {Z X : TopCat.{u}} (i : Z ⟶ X)
 
 instance singularChain_presheafPushforward_additive :
@@ -161,6 +159,7 @@ def singularChainSheafPushforward (hi : IsClosedEmbedding i) :
     ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).mapHomologicalComplex
       (ComplexShape.down ℕ)).map (singularChainPresheafPushforwardComplex R i)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The sheaf chain map is obtained from the actual presheaf map through the canonical
 comparison, not through an independently supplied equivalence. -/
 @[reassoc] lemma singularChainSheafPushforward_comparison (hi : IsClosedEmbedding i) :
@@ -172,6 +171,7 @@ comparison, not through an independently supplied equivalence. -/
     ((singularChainPushforwardSheafificationIso R i hi).inv ≫ _) = _
   rw [Iso.hom_inv_id_assoc]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- On original relative-chain sections, the sheaf pushforward is precisely the pair-induced
 chain map followed by sheafification. This fixes the complete chain normalization. -/
 @[reassoc] lemma singularChainSheafPushforward_unit (hi : IsClosedEmbedding i) (n : ℕ) :

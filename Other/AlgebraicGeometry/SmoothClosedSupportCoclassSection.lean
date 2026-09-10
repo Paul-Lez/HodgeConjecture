@@ -19,9 +19,6 @@ complex normalization. No local representability or overlap coherence is supplie
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
 open TopCat.Presheaf
@@ -69,6 +66,8 @@ def smoothClosedSupportChartCoclassGerm (z : ComplexPoint Y)
     (smoothClosedSupportChartCoclass X Y i m d z
       (smoothClosedSupportChartOpen X Y i m d z) (le_refl _))
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The actual ambient overlap theorem proves equality of chart germs on support. -/
 theorem smoothClosedSupportChartCoclassGerm_eq
     (z z' : ComplexPoint Y) (x : ComplexPoint X)
@@ -206,6 +205,8 @@ theorem smoothClosedSupportCoclassSection_unique
   apply TopCat.Presheaf.section_ext (smoothClosedSupportCoclassSheaf X Y i m d)
   exact fun x _ ↦ (hs x).trans (smoothClosedSupportCoclassSection_germ X Y i m d x).symm
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- At every center, the global section has exactly the germ of the previously
 constructed normal-slice coclass, on any prescribed local model neighborhood. -/
 theorem smoothClosedSupportCoclassSection_germ_eq_normalCoclass

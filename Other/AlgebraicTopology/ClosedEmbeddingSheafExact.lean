@@ -26,13 +26,12 @@ universe u
 
 namespace TopCat.Sheaf
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 variable {Z X : TopCat.{u}} (i : Z ⟶ X) (hi : IsClosedEmbedding i)
 
 include hi
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The canonical direct-image stalk identification on the image of a closed embedding. -/
 def closedEmbeddingPushforwardStalkIso (F : Sheaf AddCommGrpCat.{u} Z) (z : Z) :
     (forget AddCommGrpCat.{u} X ⋙ Presheaf.stalkFunctor AddCommGrpCat.{u} (i z)).obj
@@ -42,6 +41,8 @@ def closedEmbeddingPushforwardStalkIso (F : Sheaf AddCommGrpCat.{u} Z) (z : Z) :
     AddCommGrpCat.{u} hi.isEmbedding.isInducing F.obj z
   exact asIso (Presheaf.stalkPushforward AddCommGrpCat.{u} i F.obj z)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The image-stalk isomorphism preserves the actual representative germ. -/
 @[reassoc]
 lemma closedEmbeddingPushforwardStalkIso_germ (F : Sheaf AddCommGrpCat.{u} Z)
@@ -51,6 +52,8 @@ lemma closedEmbeddingPushforwardStalkIso_germ (F : Sheaf AddCommGrpCat.{u} Z)
       Presheaf.germ F.obj ((Opens.map i).obj V) z hz :=
   Presheaf.stalkPushforward_germ AddCommGrpCat.{u} i F.obj V z hz
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The image-stalk identification is natural in the coefficient sheaf. -/
 def closedEmbeddingPushforwardStalkFunctorIso (z : Z) :
     pushforward AddCommGrpCat.{u} i ⋙ forget AddCommGrpCat.{u} X ⋙

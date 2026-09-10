@@ -30,9 +30,6 @@ datum is assumed.
 
 @[expose] public noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-set_option backward.defeqAttrib.useBackward true
-
 open CategoryTheory Limits TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
@@ -93,6 +90,8 @@ theorem complexOrientationHomologyStalkMap_locallyRepresentable :
   rw [map_smul]
   exact congrArg (q • ·) (complexLocalOrientationNeighborhoodClass_restrict X d x y hy)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- Each stalk map is an isomorphism by the already constructed, exactly normalized
 local generator theorem. -/
 theorem complexOrientationHomologyStalkMap_isIso (x : ComplexPoint X) :
@@ -133,6 +132,8 @@ def complexOrientationHomologySheafIso :
       (complexOrientationHomologyStalkMap_isIso X d)
   exact asIso (constantToComplexOrientationHomologySheaf X d)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- On every stalk the assembled sheaf isomorphism is scalar multiplication by the
 exact complex orientation, through the canonical constant and local-homology maps. -/
 @[reassoc]
