@@ -68,10 +68,10 @@ namespace TopCat.Sheaf
 open _root_.Opens
 
 @[inherit_doc grothendieckTopology]
-notation "𝓖[" X "]" => grothendieckTopology X
+scoped notation "𝓖[" X "]" => grothendieckTopology X
 
 @[inherit_doc constantSheaf]
-notation3 "𝓒[" Y "; " A "]" => (constantSheaf 𝓖[Y] AddCommGrpCat).obj A
+scoped notation3 "𝓒[" Y "; " A "]" => (constantSheaf 𝓖[Y] AddCommGrpCat).obj A
 
 /-- Constant sheaves restrict along a continuous map. -/
 def constantRestriction {X Y : TopCat.{u}} (f : X ⟶ Y) (A : AddCommGrpCat.{u}) :
