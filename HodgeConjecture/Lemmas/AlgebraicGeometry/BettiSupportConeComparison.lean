@@ -79,7 +79,7 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
         (complementConstants_comp_singularToInjectiveResolution
           X Z hZ) 0
       change constantsToSingularCochainZeroSheaf ℚ
-          (TopCat.of (AnalyticComplement X Z)) ≫
+          (TopCat.of ↥Zᶜ) ≫
             (complementSingularToInjectiveResolution X Z hZ).f 0 =
           (complementConstantRationalInjectiveResolution X Z).ι.f 0 at hcomp
       rw [hcomp]
