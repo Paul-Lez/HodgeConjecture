@@ -4,10 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.CohomologySheafStalkVanishing
+public import HodgeConjecture.Lemmas.AlgebraicTopology.CohomologySheafStalkVanishing
 public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenSheafRestriction
-public import HodgeConjecture.Definitions.AlgebraicTopology.LowestFlasqueCohomology
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LowestFlasqueCohomology
 /-!
 # Local vanishing on an open subset and actual restricted section complexes
 

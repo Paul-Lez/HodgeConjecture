@@ -4,10 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Coniveau
 /-!
 # Unconditional integral and rational algebraic-cycle class maps
 

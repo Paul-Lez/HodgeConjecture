@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Analysis.NormedSpace.WedgeCovectors
+public import HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors
 public import Mathlib.Analysis.Calculus.DifferentialForm.Basic
 
 /-!

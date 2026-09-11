@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.Topology.Dimension
+public import HodgeConjecture.Lemmas.Topology.Dimension
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Data.Complex.Basic
 
