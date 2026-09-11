@@ -17,9 +17,11 @@ is exact (`exact_forgetSupport_restrictToComplement`), an extension that splits 
 and the compatibility of the exponential connecting map with restriction to `Ω` is
 `hasRestrictedChernFactorization` / `restrictedChernClassVanishes` (§4.3 step 3c); only the
 splitting datum `ℓ` (a frame of the line bundle on `X^an ∖ |D|^an`) is still to be produced. Step 4 has been restated correctly and its
-**assembly is proved** (`hasDivisorClassOfSomeCartierData_of_localModel`, §4.3 step 4): what is
-left of it is the codimension-one excision statement `HasComponentSupportDecomposition` and the
-local model `HasChernLocalModel`.
+**assembly is proved** (`hasDivisorClassOfSomeCartierData_of_localModel`, §4.3 step 4); its
+codimension-one excision statement `HasComponentSupportDecomposition` is now **proved** as well
+(`hasComponentSupportDecomposition`, §4.3 step 4), from the codimension-two vanishing
+`HasCodimensionTwoSupportedVanishing`, so what is left of step 4 is that vanishing and the local
+model `HasChernLocalModel`.
 
 ## 1. The exact target
 
@@ -754,8 +756,11 @@ def HasSupportedChernLift : Prop :=
         forgetSupport X _ (2 * ((1 : ℕ) : ℤ)) β =
           integralToRationalCohomology X 2 E.firstChernClass
 
-/-- **Obligation: excision in codimension one.** A degree-two class supported on a finite union of
-codimension-one component supports is a sum of classes supported on the individual components. -/
+/-- **Excision in codimension one** (no longer an obligation: proved in
+`Other/AlgebraicGeometry/ComponentSupportDecomposition.lean` from the codimension-two vanishing
+`HasCodimensionTwoSupportedVanishing`, see below). A degree-two class supported on a finite union
+of codimension-one component supports is a sum of classes supported on the individual
+components. -/
 def HasComponentSupportDecomposition : Prop :=
   ∀ (s : Finset X.left), (∀ x ∈ s, coheight x = ((1 : ℕ) : ℕ∞)) →
     ∀ β : SupportedInjectiveHomology X (componentsAnalyticClosedSupport X s)
@@ -840,30 +845,84 @@ which the rational section provides but which has not been formalised — stands
 `HasSupportedChernLift`: its other hypothesis `hvan` is now the theorem
 `restrictedChernClassVanishes` (§4.3 step 3c).
 
-*What `HasComponentSupportDecomposition` needs.* Nothing about Chern classes. By induction on the
-finite set it is enough to treat `C = A ∪ B` with `A = Z_x` one component and `B` the union of the
-others, and to show that
+*`HasComponentSupportDecomposition` is proved*, in
+[`Other/AlgebraicGeometry/ComponentSupportDecomposition.lean`](../Other/AlgebraicGeometry/ComponentSupportDecomposition.lean),
+from a single vanishing statement:
 
-  `H²_A(X) ⊕ H²_B(X) → H²_C(X)`
+```lean
+/-- **Obligation: vanishing of supported cohomology in complex codimension two.** -/
+def HasCodimensionTwoSupportedVanishing : Prop :=
+  ∀ W : Closeds X.left, (∀ z ∈ W, (2 : ℕ∞) ≤ coheight z) →
+    IsZero (SupportedInjectiveHomology X (analyticClosedSupport X W) (2 * ((1 : ℕ) : ℤ) + 1))
 
-is onto. The nested-support localization sequence
-(`TopCat.Sheaf.nestedSupportRestrictionShortComplex`, `nestedSupportRestrictionLastComplexIso`,
-`nestedSupportRestriction_homologyMap_isIso_of_vanishing`, in
-`Other/AlgebraicTopology/NestedSheafSupportLocalization.lean` and `NestedSheafSupportOnOpen.lean`)
-reduces this to the vanishing of supported cohomology in degrees `2` and `3` along
-`A ∩ B`, a closed algebraic subset of **complex codimension at least two** (two distinct prime
-divisors of an integral scheme meet in codimension `≥ 2`), i.e. real codimension at least four.
-The repository proves exactly this shape of statement for the singular boundary of a single
-component — `cycleComponentSingularBoundarySectionCohomology_isZero_of_lt` in
+theorem hasComponentSupportDecomposition (hvan : HasCodimensionTwoSupportedVanishing X) :
+    HasComponentSupportDecomposition X
+
+theorem hasDivisorClassOfSomeCartierData_of_localModel_of_vanishing
+    (hlift : HasSupportedChernLift X) (hvan : HasCodimensionTwoSupportedVanishing X)
+    (hloc : HasChernLocalModel X) : HasDivisorClassOfSomeCartierData X
+```
+
+Here `analyticClosedSupport X W := Point.underlying ⁻¹' W` is the analytic support of a
+Zariski-closed subset, and the hypothesis `∀ z ∈ W, 2 ≤ coheight z` is exactly "`W` has
+codimension at least two" (`coheight` is antitone, so it suffices to check it at the generic
+points of the components of `W`). Only degree `2·1 + 1 = 3` is needed; mathematically the
+vanishing holds in all degrees `< 4`, by the stratification argument described below. `#print
+axioms` reports only `propext`, `Classical.choice`, `Quot.sound` for both theorems.
+
+The proof has two halves.
+
+*(i) Mayer–Vietoris for two closed supports*, proved in full generality (any topological space,
+any termwise flasque coefficient complex) in
+[`Other/AlgebraicGeometry/SupportUnionSplitting.lean`](../Other/AlgebraicGeometry/SupportUnionSplitting.lean).
+The engine is the splitting short exact sequence of section complexes
+
+`0 → Γ(X, Γ̲_{X∖W} K) → Γ(X, Γ̲_{X∖U} K) → Γ(U', Γ̲_{X∖U} K) → 0`  for `U, U' ≤ W ≤ U ⊔ U'`,
+
+whose surjectivity is `sheafSectionsSupportedOutside_restriction_surjective` (flasqueness of the
+supported-sections sheaf, `FlasqueSupportedSections.lean`) and whose exactness in the middle is
+the two-open gluing `eq_of_locally_eq₂` plus
+`exists_supportedOutsideSection_of_restrict_eq_zero`. Applying it twice — once with
+`(U, U') = (X∖Z₁, X∖Z₂)` and once with `(U, U') = (X∖(Z₁ ∪ Z₂), X∖Z₂)`, the two third terms
+being identified by `supportedOutsideMap_app_bijective` (over `X ∖ Z₂` the supports `Z₁` and
+`Z₁ ∪ Z₂` have the same trace) — gives
+
+```lean
+theorem exists_supportedSectionsEnlarge_add_eq … (hvan : IsZero (supportedSectionsHomology X K Ui m))
+    (β : supportedSectionsHomology X K Uu n) :
+    ∃ a b, β = supportedSectionsEnlarge X K h₁ n a + supportedSectionsEnlarge X K h₂ n b
+```
+
+i.e. `H^n_{Z₁} ⊕ H^n_{Z₂} → H^n_{Z₁ ∪ Z₂}` is onto as soon as `H^{n+1}_{Z₁ ∩ Z₂} = 0`. The four
+opens are taken as separate variables with inequality hypotheses, so that no transport along
+equalities of supports is needed at the point of use; instantiated at `Z.compl` the statement is
+*definitionally* about `SupportedInjectiveHomology` and `enlargeSupportedInjectiveHomology`. No
+Mayer–Vietoris sequence for sheaf-theoretic supports existed in the repository before; the
+singular one in `RelativeMayerVietoris.lean` is about singular chains.
+
+*(ii) The codimension estimate.* Two distinct prime divisors meet in codimension at least two:
+`two_le_coheight_of_mem_closure_inter` proves that a point `z` of `closure {x} ∩ closure {y}`
+with `x ≠ y` of coheight one has `coheight z ≥ 2`. Either `z < x` (and then
+`coheight x + 1 ≤ coheight z` by `Order.coheight_add_one_le`), or `z < y`, or else `x ≤ z ≤ y`
+and `y ≤ z ≤ x`, whence `x = y` by `Specializes.antisymm` and the `T0Space` instance of a
+scheme. The induction on the finite set of components then only needs that the intersection
+`Z_a ∩ ⋃_{y ∈ t} Z_y` is the analytic support of a Zariski-closed set all of whose points have
+coheight at least two (`analyticClosedSupport_componentsZariskiSupport`,
+`mem_componentsZariskiSupport`), and the empty case, which is the vanishing
+`isZero_supportedInjectiveHomology_bot` (proved, from `supportedSections_top_homology_isZero`).
+
+*What is left for `HasCodimensionTwoSupportedVanishing`.* Exactly the two ingredients described
+in the previous version of this section: (i) a *general* version, for an arbitrary closed subset
+of codimension `≥ q`, of the vanishing already proved for the singular boundary of one component
+(`cycleComponentSingularBoundarySectionCohomology_isZero_of_lt` in
 `CycleComponentSupportExtension.lean`, from the finite smooth filtration
-(`ReducedSmoothClosedFiltration.lean`, `CycleComponentSingularClosedFiltration.lean`), the
-layerwise local vanishing (`SingularFiltrationLocalSupportVanishing.lean`) and the induction
-`TopCat.Sheaf.finiteNestedSupport_homology_isZero`
-(`Other/AlgebraicTopology/FiniteSheafSupportVanishing.lean`). The missing ingredients are
-therefore: (i) a *general* version of that vanishing for an arbitrary closed subset of
-codimension `≥ q` — the general stratification machinery is already there
-(`ReducedSmoothStratification.lean`, `ReducedSmoothClosedFiltrationDimension.lean`); and (ii) the
-codimension bound `codim (Z_x ∩ Z_y) ≥ 2` for distinct prime divisors.
+`ReducedSmoothClosedFiltration.lean`, the layerwise local vanishing
+`SingularFiltrationLocalSupportVanishing.lean` and the induction
+`TopCat.Sheaf.finiteNestedSupport_homology_isZero` of
+`Other/AlgebraicTopology/FiniteSheafSupportVanishing.lean` — that induction is already stated for
+an arbitrary finite chain of closed sets, so what is missing is only the analytic wrapper of the
+generic stratification and its dimension bound). The codimension bound
+`codim (Z_x ∩ Z_y) ≥ 2` is no longer needed as a separate input: it is proved.
 
 *What `HasChernLocalModel` needs.* This is missing (c) of §4.2 and it still rests on missing (a)
 of §4.2: there is no description of `E.firstChernClass` by the Čech cocycle of the transition
@@ -921,7 +980,9 @@ Summary of the named obligations, in dependency order:
 | ~~vanishing of the restricted extension class~~ | `UnitExtensionOpenRestriction.lean` | **proved**: `cohomologyClass_comp_restrictionUnit_eq_zero` |
 | ~~`HasRestrictedChernFactorization`, `RestrictedChernClassVanishes`~~ | `ChernClassRestrictionVanishing.lean` | **proved**: `hasRestrictedChernFactorization`, `restrictedChernClassVanishes` (§4.3 step 3c), via `OpenRestrictionLocalSheaf.lean` and `OpenRestrictionDerivedFactorization.lean` |
 | `HasSupportedChernLift` | `ChernLocalModel.lean` | §4.3 step 4: the step-3 conclusion, packaged for `|D|^an` |
-| `HasComponentSupportDecomposition` | `ChernLocalModel.lean` | §4.3 step 4: excision in codimension one |
+| ~~`HasComponentSupportDecomposition`~~ | `ComponentSupportDecomposition.lean` | **proved**: `hasComponentSupportDecomposition`, from `HasCodimensionTwoSupportedVanishing` |
+| `HasCodimensionTwoSupportedVanishing` | `ComponentSupportDecomposition.lean` | §4.3 step 4: `H³` with support in a Zariski-closed set of codimension ≥ 2 vanishes |
+| ~~Mayer–Vietoris for two closed supports~~ | `SupportUnionSplitting.lean` | **proved**: `exists_supportedSectionsEnlarge_add_eq` |
 | `HasChernLocalModel` | `ChernLocalModel.lean` | §4.3 step 4: the local model (needs §4.2(a) first) |
 | — (not yet stated) | — | realization of a cocycle by an extension; the Čech description of the connecting map, §4.2(a) |
 | ~~step 4 assembly~~ | `ChernLocalModel.lean` | **proved**: `hasDivisorClassOfSomeCartierData_of_localModel` |
