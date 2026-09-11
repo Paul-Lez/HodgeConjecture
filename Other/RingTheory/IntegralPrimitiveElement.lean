@@ -175,6 +175,42 @@ end Algebra
 
 namespace Algebra
 
+/-- An algebra equivalence transports localization away from the image of a base element.
+
+This is kept explicit rather than installed as an instance, so that uses in a chain of
+localizations do not introduce competing algebra structures. -/
+noncomputable def localizationAwayAlgEquivOfAlgEquiv
+    {R B C : Type*} [CommRing R] [CommRing B] [CommRing C]
+    [Algebra R B] [Algebra R C] (e : B ≃ₐ[R] C) (r : R) :
+    Localization.Away (algebraMap R B r) ≃ₐ[R]
+      Localization.Away (algebraMap R C r) :=
+  IsLocalization.algEquivOfAlgEquiv
+    (M := Submonoid.powers (algebraMap R B r))
+    (T := Submonoid.powers (algebraMap R C r))
+    (Localization.Away (algebraMap R B r))
+    (Localization.Away (algebraMap R C r)) e
+    (by
+      simpa only [Submonoid.map_powers] using
+        congrArg Submonoid.powers (e.commutes r))
+
+end Algebra
+
+namespace AdjoinRoot
+
+/-- The monogenic minimal-polynomial presentation remains an explicit presentation after
+localizing away from any base element. -/
+noncomputable def localizationAwayAlgEquivAdjoin
+    {P L : Type*} [CommRing P] [IsDomain P] [IsIntegrallyClosed P]
+    [CommRing L] [IsDomain L] [Algebra P L] [Module.IsTorsionFree P L]
+    (y : L) (hy : IsIntegral P y) (r : P) :
+    Localization.Away (algebraMap P (AdjoinRoot (minpoly P y)) r) ≃ₐ[P]
+      Localization.Away (algebraMap P (Algebra.adjoin P ({y} : Set L)) r) :=
+  Algebra.localizationAwayAlgEquivOfAlgEquiv (minpoly.equivAdjoin hy) r
+
+end AdjoinRoot
+
+namespace Algebra
+
 /-- A Noether-normalization map for a finite-type integral complex algebra, together with
 the finiteness datum used to transport the algebra structure downstream. -/
 structure ComplexNoetherNormalization (A : Type*) [CommRing A] [Algebra ℂ A] where
