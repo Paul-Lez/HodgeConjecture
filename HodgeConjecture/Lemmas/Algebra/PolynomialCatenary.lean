@@ -27,6 +27,11 @@ import Mathlib.RingTheory.KrullDimension.Polynomial
 # Dimension formulas for polynomial rings
 
 This file develops dimension results for prime quotients of polynomial rings over a field.
+
+The `Triangular` section is copied from `Mathlib/RingTheory/NoetherNormalization.lean`, where
+`lt_up`, `t1_comp_t1_neg`, `T`, `sum_r_mul_ne`, `degreeOf_zero_t`, `degreeOf_t_ne_of_ne`,
+`leadingCoeff_finSuccEquiv_t` and `T_leadingcoeff_isUnit` are `private`. Once `T` and
+`T_leadingcoeff_isUnit` are public in Mathlib, this section can cite them.
 -/
 
 @[expose] public section
