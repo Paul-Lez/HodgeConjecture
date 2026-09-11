@@ -158,22 +158,4 @@ def flattenedSupportNormalClass :
   (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).inv.hom
     (standardComplexLocalClass c)
 
-/-- The corresponding cohomology isomorphism dualises those same actual chain maps, so it is an
-isomorphism of the cohomology of the dual cochain complexes. -/
-def flattenedSupportRelativeCohomologyIso (n : ℕ) :
-    RelativeCohomology ℚ (standardComplexPuncturedPair c) n ≅
-      RelativeCohomology ℚ
-        (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n :=
-  normalSliceRelativeCohomologyIso E c n ≪≫
-    (HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.up ℕ) n).mapIso
-      (HomologicalComplex.linearDualIso
-        ((relativeChainFunctor ℚ).mapIso (flattenedSupportPairIso E c e x hx S hS h0).symm))
-
-/-- The corresponding cohomology equivalence. -/
-def flattenedSupportRelativeCohomologyEquiv (n : ℕ) :
-    RelativeCohomology ℚ (standardComplexPuncturedPair c) n ≃ₗ[ℚ]
-      RelativeCohomology ℚ
-        (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n :=
-  (flattenedSupportRelativeCohomologyIso E c e x hx S hS h0 n).toLinearEquiv
-
 end AlgebraicTopology.Singular

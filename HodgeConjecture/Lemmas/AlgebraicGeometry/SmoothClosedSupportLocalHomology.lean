@@ -125,24 +125,6 @@ def smoothClosedSupportNormalClass :
     (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
       (2 * (d - m))).inv_hom_id _
 
-/-- Relative cohomology dualises the same actual chain maps, so it is an isomorphism of the
-cohomology of the dual cochain complexes rather than of the dual of homology. -/
-def smoothClosedSupportRelativeCohomologyIso (n : ℕ) :
-    RelativeCohomology ℚ (standardComplexPuncturedPair (d - m)) n ≅
-      RelativeCohomology ℚ
-        (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n :=
-  normalSliceRelativeCohomologyIso (Fin m → ℂ) (d - m) n ≪≫
-    (HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.up ℕ) n).mapIso
-      (HomologicalComplex.linearDualIso ((relativeChainFunctor ℚ).mapIso
-        (smoothClosedSupportNeighborhoodPairIso X Y i m d z V hzV).symm))
-
-/-- Relative cohomology transport as a linear equivalence. -/
-def smoothClosedSupportRelativeCohomologyEquiv (n : ℕ) :
-    RelativeCohomology ℚ (standardComplexPuncturedPair (d - m)) n ≃ₗ[ℚ]
-      RelativeCohomology ℚ
-        (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n :=
-  (smoothClosedSupportRelativeCohomologyIso X Y i m d z V hzV n).toLinearEquiv
-
 theorem smoothClosedSupportNormalClass_ne_zero :
     smoothClosedSupportNormalClass X Y i m d z V hzV ≠ 0 := by
   intro hzero
