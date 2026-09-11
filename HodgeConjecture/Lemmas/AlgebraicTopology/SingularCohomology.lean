@@ -62,12 +62,6 @@ lemma homologyMap_comp (R : Type u) [Field R] {X Y Z : TopCat.{u}} (n : ℕ)
       (((singularHomologyFunctor (ModuleCat.{u} R) n).obj (ModuleCat.of R R)).map_comp f g)
     _ = _ := rfl
 
-/-- Singular homology is computed by the singular chain complex. -/
-lemma homologyMap_eq (R : Type u) [Field R] {X Y : TopCat.{u}} (n : ℕ) (f : X ⟶ Y) :
-    homologyMap R n f =
-      (HomologicalComplex.homologyMap (singularChainComplexMap R f) n).hom :=
-  rfl
-
 /-- Pulling a cohomology class back and then pairing it with a homology class is the same as
 pushing the homology class forward and pairing there: the universal-coefficient equivalence is
 natural. -/
@@ -124,12 +118,6 @@ lemma relativeHomologyMap_comp (R : Type u) [Field R] {X Y Z : TopPair.{u}} (n :
         (relativeHomologyFunctor R n).map g).hom :=
       congrArg ModuleCat.Hom.hom ((relativeHomologyFunctor R n).map_comp f g)
     _ = _ := rfl
-
-/-- Relative singular homology is computed by the relative singular chain complex. -/
-lemma relativeHomologyMap_eq (R : Type u) [Field R] {X Y : TopPair.{u}} (n : ℕ) (f : X ⟶ Y) :
-    relativeHomologyMap R n f =
-      (HomologicalComplex.homologyMap ((relativeChainFunctor R).map f) n).hom :=
-  rfl
 
 /-- The universal-coefficient equivalence for pairs is natural in the pair. -/
 @[simp]
@@ -202,16 +190,6 @@ lemma preimageSupportPairMap_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ 
   apply MorphismProperty.Arrow.Hom.ext <;> rfl
 
 @[simp]
-lemma relativeCohomologyEquivDualHomology_cohomologyWithSupportMap (R : Type u) [Field R]
-    {X Y : TopCat.{u}} (n : ℕ) (f : X ⟶ Y) (Z : Set Y) (α : CohomologyWithSupport R Y Z n)
-    (z : RelativeHomology R (TopPair.ofSubset (f ⁻¹' Z)ᶜ) n) :
-    relativeCohomologyEquivDualHomology R (TopPair.ofSubset (f ⁻¹' Z)ᶜ) n
-        (cohomologyWithSupportMap R n f Z α) z =
-      relativeCohomologyEquivDualHomology R (TopPair.ofSubset Zᶜ) n α
-        (relativeHomologyMap R n (preimageSupportPairMap f Z) z) :=
-  relativeCohomologyEquivDualHomology_relativeCohomologyMap R n (preimageSupportPairMap f Z) α z
-
-@[simp]
 lemma cohomologyWithSupportMap_id (R : Type u) [Field R] (X : TopCat.{u})
     (Z : Set X) (n : ℕ) :
     cohomologyWithSupportMap R n (𝟙 X) Z = LinearMap.id := by
@@ -237,15 +215,6 @@ lemma supportInclusionPairMap_trans (X : TopCat.{u}) {Z W U : Set X}
     supportInclusionPairMap X (hZW.trans hWU) =
       supportInclusionPairMap X hWU ≫ supportInclusionPairMap X hZW := by
   apply MorphismProperty.Arrow.Hom.ext <;> rfl
-
-@[simp]
-lemma relativeCohomologyEquivDualHomology_enlargeSupport (R : Type u) [Field R] (X : TopCat.{u})
-    {Z W : Set X} (h : Z ⊆ W) (n : ℕ) (α : CohomologyWithSupport R X Z n)
-    (z : RelativeHomology R (TopPair.ofSubset Wᶜ) n) :
-    relativeCohomologyEquivDualHomology R (TopPair.ofSubset Wᶜ) n (enlargeSupport R X h n α) z =
-      relativeCohomologyEquivDualHomology R (TopPair.ofSubset Zᶜ) n α
-        (relativeHomologyMap R n (supportInclusionPairMap X h) z) :=
-  relativeCohomologyEquivDualHomology_relativeCohomologyMap R n (supportInclusionPairMap X h) α z
 
 @[simp]
 lemma enlargeSupport_rfl (R : Type u) [Field R] (X : TopCat.{u}) (Z : Set X) (n : ℕ) :
@@ -294,12 +263,5 @@ lemma relativeCohomology_isZero (R : Type u) [Field R] (X : TopPair.{u}) (n : �
     (h : IsZero (RelativeHomology R X n)) : IsZero (RelativeCohomology R X n) :=
   have := relativeCohomology_subsingleton R X n (ModuleCat.subsingleton_of_isZero h)
   ModuleCat.isZero_of_subsingleton _
-
-/-- Cohomology vanishes wherever homology does. -/
-lemma cohomology_subsingleton (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ)
-    (h : Subsingleton (Homology R X n)) : Subsingleton (Cohomology R X n) :=
-  have : Subsingleton (Module.Dual R (Homology R X n)) :=
-    ⟨fun φ ψ => LinearMap.ext fun x => by rw [h.elim x 0, map_zero, map_zero]⟩
-  (cohomologyEquivDualHomology R X n).toEquiv.subsingleton
 
 end AlgebraicTopology.Singular
