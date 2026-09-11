@@ -110,8 +110,7 @@ def globalMapOfLocallyRepresentable : A ⟶ F.presheaf.obj (op ⊤) :=
 theorem globalMapOfLocallyRepresentable_germ (x : X) :
     globalMapOfLocallyRepresentable F A g hlocal ≫ F.presheaf.Γgerm x = g x := by
   apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro a
+  ext a
   exact sectionOfLocallyRepresentable_germ F (fun x ↦ g x a) (hlocal a) x
 
 /-- The actual presheaf map from constants, prior to sheafification. -/

@@ -109,8 +109,7 @@ def holomorphicDeRhamModuleDifferential [SmoothOfRelativeDimension d X.hom] (p :
     holomorphicFormDifferential X d U p
   naturality {U V} i := by
     apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro x
+    ext x
     exact (holomorphicFormRestriction_differential X d i p x).symm
 
 lemma holomorphicDeRhamModuleDifferential_comp
@@ -128,8 +127,7 @@ def holomorphicDeRhamDifferential [SmoothOfRelativeDimension d X.hom] (p : ℕ) 
     (holomorphicFormDifferential X d U p).toAddMonoidHom
   naturality {U V} i := by
     apply AddCommGrpCat.hom_ext
-    apply AddMonoidHom.ext
-    intro x
+    ext x
     exact (holomorphicFormRestriction_differential X d i p x).symm
 
 lemma holomorphicDeRhamDifferential_comp [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
@@ -217,8 +215,7 @@ def constantsToHolomorphicDeRhamZero [SmoothOfRelativeDimension d X.hom] :
     (holomorphicFormOfConstant X d U).toAddMonoidHom
   naturality {U V} i := by
     apply AddCommGrpCat.hom_ext
-    apply AddMonoidHom.ext
-    intro c
+    ext c
     exact (holomorphicFormRestriction_ofConstant X d i c).symm
 
 /-- On a nonempty open set, distinct complex constants define distinct holomorphic zero-forms. -/
@@ -485,11 +482,7 @@ def scalarHolomorphicDeRhamPresheaf [SmoothOfRelativeDimension d X.hom]
 @[simp] lemma scalarHolomorphicDeRhamPresheaf_zero
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     scalarHolomorphicDeRhamPresheaf X d p 0 = 0 := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro x
+  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp
   rfl
@@ -497,11 +490,7 @@ def scalarHolomorphicDeRhamPresheaf [SmoothOfRelativeDimension d X.hom]
 @[simp] lemma scalarHolomorphicDeRhamPresheaf_one
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     scalarHolomorphicDeRhamPresheaf X d p 1 = 𝟙 _ := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro x
+  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp
   rfl
@@ -511,11 +500,7 @@ def scalarHolomorphicDeRhamPresheaf [SmoothOfRelativeDimension d X.hom]
     scalarHolomorphicDeRhamPresheaf X d p (a + b) =
       scalarHolomorphicDeRhamPresheaf X d p a +
         scalarHolomorphicDeRhamPresheaf X d p b := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro x
+  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp [add_smul]
   rfl
@@ -525,11 +510,7 @@ def scalarHolomorphicDeRhamPresheaf [SmoothOfRelativeDimension d X.hom]
     scalarHolomorphicDeRhamPresheaf X d p (a * b) =
       scalarHolomorphicDeRhamPresheaf X d p b ≫
         scalarHolomorphicDeRhamPresheaf X d p a := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro x
+  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp [mul_smul]
   rfl
@@ -677,9 +658,7 @@ def conjConstantComplexPresheaf :
 lemma conjConstantComplexPresheaf_comp_self :
     conjConstantComplexPresheaf X ≫ conjConstantComplexPresheaf X =
       𝟙 (constantComplexAddCommGrpPresheaf X) := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
+  ext U : 2
   change (starRingEnd ℂ).toAddMonoidHom.comp (starRingEnd ℂ).toAddMonoidHom = AddMonoidHom.id ℂ
   exact AddMonoidHom.ext Complex.conj_conj
 
@@ -708,9 +687,7 @@ lemma complexScalarPresheaf_comp_conj (c : ℂ) :
     complexScalarPresheaf X c ≫ conjConstantComplexPresheaf X =
       conjConstantComplexPresheaf X ≫
         complexScalarPresheaf X (starRingEnd ℂ c) := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
+  ext U : 2
   change (starRingEnd ℂ).toAddMonoidHom.comp (DistribSMul.toAddMonoidHom ℂ c) =
     (DistribSMul.toAddMonoidHom ℂ (starRingEnd ℂ c)).comp (starRingEnd ℂ).toAddMonoidHom
   exact AddMonoidHom.ext (map_mul (starRingEnd ℂ) c)
@@ -880,8 +857,7 @@ lemma constantsToHolomorphicDeRhamZero_scalar
   let f := holomorphicFormOfConstant X d U
   change (c • LinearMap.id).toAddMonoidHom.comp f.toAddMonoidHom =
     f.toAddMonoidHom.comp (DistribSMul.toAddMonoidHom ℂ c)
-  apply AddMonoidHom.ext
-  intro x
+  ext x
   change c • f x = f (c • x)
   exact (f.map_smul c x).symm
 

@@ -58,8 +58,7 @@ def toOpenRestrictionPushforward (U : Opens X) :
       congr 1 }⟩
   naturality F G f := by
     apply CategoryTheory.Sheaf.hom_ext_iff.mpr
-    apply NatTrans.ext
-    funext V
+    ext V : 2
     exact (f.hom.naturality _).symm
 
 /-- The sheaf of sections vanishing on `U`, defined as the kernel of the
