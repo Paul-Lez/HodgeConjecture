@@ -961,14 +961,96 @@ fed into the cohomology class at all. In dependency order the sub-obligations ar
    coheights of points by `idealHeight_eq_coheight`); and `Scheme.ord_support_finite`, used to
    shrink `V` until the only codimension-one zero of `h` left is `x` itself. No analytic input.
    Unused for the moment by anything else: it is the algebraic half of what step 3 below consumes.
-3. *The one-variable Lelong–Poincaré computation.* In the normal chart of
-   `CycleComponentNormalCoordinates.lean` the function `h` becomes the coordinate `z₁`, the divisor
-   is `{z₁ = 0}`, and the supported class of the cocycle of `z₁^n` on the chart is `n` times the
-   normalised normal-chart coclass `cycleComponentSmoothSupportCoclassSection`. The repository's
-   normalisation is fixed by `ComplexLocalOrientation*.lean`, `NormalProjectionCoclass.lean`,
+3. *The one-variable Lelong–Poincaré computation.* In a normal chart the function `h` becomes the
+   coordinate `z₁`, the divisor is `{z₁ = 0}`, and the supported class of the cocycle of `z₁^n` on
+   the chart is `n` times the normalised normal-chart coclass
+   `cycleComponentSmoothSupportCoclassSection`. The repository's normalisation is fixed by
+   `ComplexLocalOrientation*.lean`, `Other/AlgebraicTopology/NormalProjectionCoclass.lean`,
    `ChartLocalFundamentalClass*.lean`, and this is where the sign is determined: if it comes out
    inverted, negate `Scheme.CartierData.Represents` by exchanging `i` and `j` in its transition
    condition, as explained in §3. Only steps 1 and 3 are analytic; step 3 is one variable.
+
+   **This item is now reduced**, in
+   [`Other/AlgebraicGeometry/ChernLocalModelWinding.lean`](../Other/AlgebraicGeometry/ChernLocalModelWinding.lean),
+   to two named obligations, by making the *winding homomorphism of a chart* explicit. The chart
+   datum is
+
+   ```lean
+   structure ChernWindingChart (q : ComplexPoint X) where
+     index : c.ι
+     localForm : c.LocalForm index x          -- the algebraic local form `c.fn i = u · h ^ n`
+     carrier : Opens (ComplexPoint X)         -- the analytic chart `V ∋ q`
+     mem : q ∈ carrier
+     le : carrier ≤ cycleComponentSmoothSupportAmbientOpen X x
+     le_analytic : carrier ≤ analyticOpen X localForm.opens
+     coord : (holomorphicUnitSheaf X d).obj.obj (op (carrier ⊓ (…).compl))
+     coord_eq : …                             -- `coord` is the analytification `h^an` of `h`
+     winding : (holomorphicUnitSheaf X d).obj.obj (op (carrier ⊓ (…).compl)) →+
+       (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x)
+         (2 * p)).obj.obj (op carrier)
+     exists_log : …                           -- every unit on `V` is an exponential (`V` a polydisc)
+   ```
+
+   `winding` is the composite `∂ ∘ δ` of the exponential connecting map on the punctured chart (the
+   winding number `(1/2πi) ∮ d log`) with the connecting map `H¹(V ∖ Z) → H²_Z(V)` of the pair. It is
+   *data* in the structure because neither map exists in the repository: the repository's
+   `RelativeCohomology` has no long exact sequence of a pair, and `δ` needs the exponential sequence
+   on an open subspace together with the Betti comparison. Constructing `w = ∂ ∘ δ` is the first
+   step of any attack on the obligations below. Note that `localForm` is required to live on an
+   affine open containing the *given* point of `Z_x`, so a version of
+   `Scheme.CartierData.exists_localForm` starting from an arbitrary affine open meeting `Z_x` is
+   needed (harmless: any open meeting `Z_x` contains its generic point).
+
+   The three facts of the computation are the per-chart predicates
+
+   * `ChernWindingChart.ComputesClass n a` — **(a) naturality**:
+     `a|_V = winding (u^an + n • coord)` for some unit `u` on `V` (the group of the unit sheaf is
+     written additively, so `n • coord` is `h^n`);
+   * `ChernWindingChart.HasTrivialUnitWinding` — **(b) winding**: `winding` kills the restriction of
+     every unit defined on all of `V`, because such a unit has a holomorphic logarithm
+     (`ContMDiffAt.exists_holomorphic_log`, `Other/Geometry/Manifold/HolomorphicLogarithm.lean`);
+   * `ChernWindingChart.NormalizesCoclass hx` — **(c) normalisation**:
+     `winding coord = cycleComponentSmoothSupportCoclassSection|_V`, the sign-fixing statement.
+
+   `ChernWindingChart.restrict_eq_zsmul_coclass` **proves** that (a) + (b) + (c) give
+   `a|_V = (n • coclass)|_V`. The two remaining obligations are
+
+   ```lean
+   /-- (b) + (c): normalised winding charts exist at every point of the component inside its
+   smooth-support open. No line bundle and no Chern class occur; this is the pure analysis. -/
+   def HasNormalizedWindingCharts : Prop :=
+     ∀ (c : Scheme.CartierData X.left) (x : X.left) (hx : coheight x = ((1 : ℕ) : ℕ∞)),
+       ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
+         ∃ ch : ChernWindingChart X c x (dim X.left) 1 q,
+           ch.HasTrivialUnitWinding ∧ ch.NormalizesCoclass hx
+
+   /-- (a): every normalised winding chart computes the supported first Chern class. This is where
+   §4.2(a) — a cocycle description of the connecting map `H¹(𝒪ˣ) → H²(ℤ)` — is needed. -/
+   def HasChernWindingNaturality : Prop := … ch.ComputesClass (c.divisor x) (… (γ x))
+   ```
+
+   and
+
+   ```lean
+   theorem hasChernLocalModel_of_winding (h₁ : HasNormalizedWindingCharts X)
+       (h₂ : HasChernWindingNaturality X) : HasChernLocalModel X
+   ```
+
+   is **proved** (`#print axioms`: `propext`, `Classical.choice`, `Quot.sound`). The gluing from
+   charts to the whole smooth-support open is sheaf separatedness for
+   `supportRelativeCohomologySheaf`; off the component the comparison is trivial, because
+   `AlgebraicTopology.Singular.supportRelativeCohomologySheaf_section_eq_zero` — also **proved**
+   here — says that every section of that sheaf over an open set disjoint from the (closed) support
+   vanishes, via `TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso` and the repository's
+   `supportRelativeCohomologyGerm_eq_zero_of_not_mem`.
+
+   The reduction is faithful: `hasChernWindingNaturality_of_localModel` proves the converse
+   implication for (a), so that, granted `HasNormalizedWindingCharts X`, obligation (a) is
+   *equivalent* to `HasChernLocalModel X`. `computesClass_of_restrict_eq` is the corresponding
+   non-vacuity check for the per-chart predicate `ComputesClass`.
+
+   Verification: `lake build Other.AlgebraicGeometry.ChernLocalModelWinding` (the module is
+   registered in `Other.lean`).
 
 Summary of the named obligations, in dependency order:
 
