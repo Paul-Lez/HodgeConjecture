@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Lemmas.RingTheory.TranscendenceDegreeKrullDimension
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
@@ -23,7 +23,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
-import HodgeConjecture.Lemmas.Algebra.PolynomialCatenary
+import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
 import Mathlib.RingTheory.KrullDimension.Field
 import Mathlib.RingTheory.KrullDimension.Polynomial
 import Mathlib.RingTheory.NoetherNormalization

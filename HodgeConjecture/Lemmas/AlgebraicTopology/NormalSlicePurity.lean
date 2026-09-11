@@ -8,16 +8,13 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalHomologyVanis
 public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeHomotopyInvariance
 
 /-!
-# Actual normal-slice reduction for a product support
+# Normal-slice reduction for a product support
 
-Contracting the tangent coordinate constructs a chain homotopy equivalence from
-`(E × ℂ^c, E × (ℂ^c \ {0}))` to the normal point-complement pair. The resulting homology
-and cohomology identifications therefore come from the actual projection and zero section.
-They are not manufactured from one-dimensionality. The distinguished relative class is the
-image of the exactly normalized `standardComplexLocalClass`.
-
-This is the product-model computation for smooth-support purity. No claim that an arbitrary
-algebraic immersion has already been flattened into this model is made here.
+Contracting the tangent coordinate gives a chain homotopy equivalence from
+`(E × ℂ^c, E × (ℂ^c \ {0}))` to the normal point-complement pair, so the homology and
+cohomology identifications come from the projection and the zero section. The distinguished
+relative class is the image of the normalized `standardComplexLocalClass`. This is the
+product-model computation for smooth-support purity.
 -/
 
 @[expose] public noncomputable section
@@ -36,13 +33,12 @@ abbrev normalSlicePair : TopPair :=
 def normalSliceProjection : normalSlicePair E c ⟶ standardComplexPuncturedPair c :=
   TopPair.ofHom (TopCat.ofHom ⟨Prod.snd, continuous_snd⟩)
     (TopCat.ofHom ⟨fun z => ⟨z.1.2, z.2⟩,
-      (continuous_snd.comp continuous_subtype_val).subtype_mk _⟩) (by ext z; rfl)
+      by fun_prop⟩) (by ext z; rfl)
 
 /-- The zero tangent section preserves the punctured normal coordinate. -/
 def normalSliceSection : standardComplexPuncturedPair c ⟶ normalSlicePair E c :=
   TopPair.ofHom (TopCat.ofHom ⟨fun z => (0, z), continuous_const.prodMk continuous_id⟩)
-    (TopCat.ofHom ⟨fun z => ⟨(0, z.1), z.2⟩,
-      (continuous_const.prodMk continuous_subtype_val).subtype_mk _⟩) (by ext z; rfl)
+    (TopCat.ofHom ⟨fun z => ⟨(0, z.1), z.2⟩, by fun_prop⟩) (by ext z; rfl)
 
 omit [NormedSpace ℝ E] in
 @[simp] theorem normalSliceSection_projection :
@@ -57,16 +53,12 @@ def normalSliceContraction :
   fst :=
     { toFun := fun tz : unitInterval × (E × (Fin c → ℂ)) =>
         ((tz.1 : ℝ) • tz.2.1, tz.2.2)
-      continuous_toFun :=
-        ((continuous_subtype_val.comp continuous_fst).smul
-          (continuous_fst.comp continuous_snd)).prodMk (continuous_snd.comp continuous_snd)
+      continuous_toFun := by fun_prop
       map_zero_left := fun z => Prod.ext (zero_smul ℝ z.1) rfl
       map_one_left := fun z => Prod.ext (one_smul ℝ z.1) rfl }
   snd :=
     { toFun := fun tz => ⟨((tz.1 : ℝ) • tz.2.1.1, tz.2.1.2), tz.2.2⟩
-      continuous_toFun := (((continuous_subtype_val.comp continuous_fst).smul
-        (continuous_fst.comp (continuous_subtype_val.comp continuous_snd))).prodMk
-          (continuous_snd.comp (continuous_subtype_val.comp continuous_snd))).subtype_mk _
+      continuous_toFun := by fun_prop
       map_zero_left := fun z => Subtype.ext (Prod.ext (zero_smul ℝ z.1.1) rfl)
       map_one_left := fun z => Subtype.ext (Prod.ext (one_smul ℝ z.1.1) rfl) }
   w := rfl
@@ -132,21 +124,19 @@ theorem normalSliceClass_ne_zero : normalSliceClass E c ≠ 0 := by
 def normalSliceSectionAt (a : E) : standardComplexPuncturedPair c ⟶ normalSlicePair E c :=
   TopPair.ofHom (TopCat.ofHom ⟨fun z => (a, z), continuous_const.prodMk continuous_id⟩)
     (TopCat.ofHom ⟨fun z => ⟨(a, z.1), z.2⟩,
-      (continuous_const.prodMk continuous_subtype_val).subtype_mk _⟩) (by ext z; rfl)
+      by fun_prop⟩) (by ext z; rfl)
 
 /-- Moving the normal fiber in the tangent direction is an explicit pair homotopy. -/
 def normalSliceSectionAtHomotopy (a : E) :
     TopPair.Homotopy (normalSliceSection E c) (normalSliceSectionAt E c a) where
   fst :=
     { toFun := fun tz : unitInterval × (Fin c → ℂ) => ((tz.1 : ℝ) • a, tz.2)
-      continuous_toFun := ((continuous_subtype_val.comp continuous_fst).smul
-        continuous_const).prodMk continuous_snd
+      continuous_toFun := by fun_prop
       map_zero_left := fun _ => Prod.ext (zero_smul ℝ a) rfl
       map_one_left := fun _ => Prod.ext (one_smul ℝ a) rfl }
   snd :=
     { toFun := fun tz => ⟨((tz.1 : ℝ) • a, tz.2.1), tz.2.2⟩
-      continuous_toFun := (((continuous_subtype_val.comp continuous_fst).smul
-        continuous_const).prodMk (continuous_subtype_val.comp continuous_snd)).subtype_mk _
+      continuous_toFun := by fun_prop
       map_zero_left := fun _ => Subtype.ext (Prod.ext (zero_smul ℝ a) rfl)
       map_one_left := fun _ => Subtype.ext (Prod.ext (one_smul ℝ a) rfl) }
   w := rfl

@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSingularCohomologySheafComparison
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSingularCohomologySheafComparison
 /-!
 # Open-restriction naturality of canonical cohomology-sheaf sections
 

@@ -433,8 +433,7 @@ lemma coboundary_chainOfSimplex {X : SSet.{u}} {n : ℕ} (phi : Cochain R X n)
 /-- Consecutive coboundaries vanish. -/
 lemma coboundary_coboundary {X : SSet.{u}} (n : ℕ) (phi : Cochain R X n) :
     coboundary R (n + 1) (coboundary R n phi) = 0 := by
-  apply LinearMap.ext
-  intro c
+  ext c
   change phi (boundary R n (boundary R (n + 1) c)) = 0
   have h := (X.chainComplex (ModuleCat.of R R)).d_comp_d (n + 2) (n + 1) n
   rw [show boundary R n (boundary R (n + 1) c) = 0 from
@@ -968,8 +967,7 @@ def cohomologyCycleToCocycle {X : SSet.{u}} (p : ℕ) :
   toFun phi := ⟨phi.1, by
     let phi' : Cochain R X p := phi.1
     change coboundary R p phi' = 0
-    apply LinearMap.ext
-    intro c
+    ext c
     simp only [LinearMap.zero_apply]
     have hphi := phi.2
     change
@@ -1045,8 +1043,7 @@ lemma cohomologyCycleCapLinear_vanishes_on_boundaries {X : SSet.{u}}
           rw [ChainComplex.next_nat_zero]
           simp
         rw [hg]
-        apply LinearMap.ext
-        intro c
+        ext c
         let etaF : Module.Dual R (K.sc 0).X₃ := eta
         change etaF (0 : (K.sc 0).X₃) = 0
         exact map_zero etaF

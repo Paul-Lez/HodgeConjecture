@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularFlasqueSupportModel
-public import HodgeConjecture.Definitions.AlgebraicGeometry.DerivedSupportRationalConeComparison
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalConeComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationParacompact
 
@@ -63,18 +63,6 @@ instance complexSupportedSingularToAmbientInjective_quasiIso
     openParacompactSpace X
   exact supportedSingularToInjectiveComplex_quasiIso
     (TopCat.of (ComplexPoint X)) (exists_contractibleOpen_le X) U
-
-/-- The same comparison computes supported cohomology on every actual analytic
-open, with no locally supplied comparison or acyclicity input. -/
-theorem complexSupportedSingularToAmbientInjective_onOpen_quasiIso
-    (U V : Opens (ComplexPoint X)) :
-    QuasiIso (((TopCat.Sheaf.supportEvaluation
-      (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex (.up ℤ)).map
-        (complexSupportedSingularToAmbientInjective X U)) := by
-  let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=
-    openParacompactSpace X
-  exact supportedSingularToInjectiveComplex_onOpen_quasiIso
-    (TopCat.of (ComplexPoint X)) (exists_contractibleOpen_le X) U V
 
 /-- Local supported singular cohomology and the literal supported injective
 model are canonically isomorphic in every integer degree. -/

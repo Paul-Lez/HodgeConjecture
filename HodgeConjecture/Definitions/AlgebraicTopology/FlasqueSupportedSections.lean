@@ -9,13 +9,11 @@ public import Mathlib.Topology.Sheaves.Flasque
 public import Mathlib.Topology.Sheaves.SheafCondition.PairwiseIntersections
 
 /-!
-# Actual supported sections preserve flasqueness
+# Supported sections preserve flasqueness
 
-For a supported section over `V`, glue its underlying section with zero on the excluded
-open `U`. The result is an actual section on `V ⊔ U`. Flasqueness extends this to `W ⊔ U`
-when `V ≤ W`; restriction to `W` is still zero on `W ⊓ U`, and hence lies in the actual
-kernel defining supported sections. No exactness of supported sections on arbitrary
-sheaves, or unproved acyclicity theorem, is used.
+A supported section over `V` glues with zero on the excluded open `U` to a section on
+`V ⊔ U`. Flasqueness extends that section to `W ⊔ U` when `V ≤ W`, and its restriction to
+`W` vanishes on `W ⊓ U`, so it lies in the kernel defining supported sections.
 -/
 
 @[expose] public noncomputable section
