@@ -93,6 +93,31 @@ private lemma growth_fin_cons {n : ℕ} {f : (Fin (n + 1) → ℂ) → ℂ} {C :
       have := mul_nonneg (norm_nonneg t) (norm_nonneg y)
       nlinarith
     _ = _ := by rw [mul_pow, mul_assoc]
+
+/-- Evaluation of a complex multivariate polynomial is an entire function. -/
+theorem differentiable_mvPolynomial_eval {n : ℕ} (p : MvPolynomial (Fin n) ℂ) :
+    Differentiable ℂ (fun z : Fin n → ℂ => MvPolynomial.eval z p) := by
+  refine MvPolynomial.induction_on
+    (motive := fun q : MvPolynomial (Fin n) ℂ =>
+      Differentiable ℂ (fun z : Fin n → ℂ => MvPolynomial.eval z q))
+    p (fun a => ?_) (fun p q hp hq => ?_) (fun p i hp => ?_)
+  · simpa using differentiable_const (c := a)
+  · have hfun : (fun z : Fin n → ℂ => MvPolynomial.eval z (p + q)) =
+        (fun z => MvPolynomial.eval z p) + fun z => MvPolynomial.eval z q := by
+      funext z; simp
+    rw [hfun]
+    exact hp.add hq
+  · have hfun : (fun z : Fin n → ℂ => MvPolynomial.eval z (p * MvPolynomial.X i)) =
+        (fun z => MvPolynomial.eval z p) * fun z => z i := by
+      funext z; simp
+    rw [hfun]
+    exact hp.mul (differentiable_apply i)
+
+/-- The nonvanishing locus of a complex multivariate polynomial is open. -/
+theorem isOpen_eval_ne_zero {n : ℕ} (p : MvPolynomial (Fin n) ℂ) :
+    IsOpen {z : Fin n → ℂ | MvPolynomial.eval z p ≠ 0} := by
+  exact isClosed_singleton.isOpen_compl.preimage
+    (differentiable_mvPolynomial_eval p).continuous
 /-- A nonzero multivariate polynomial has arbitrarily many distinct first-coordinate slices
 which are still nonzero. -/
 theorem exists_nodes_slice_ne_zero {n k : ℕ} {p : MvPolynomial (Fin (n + 1)) ℂ}
