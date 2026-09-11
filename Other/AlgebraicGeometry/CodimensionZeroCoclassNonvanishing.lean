@@ -52,8 +52,8 @@ theorem cycleComponentSheafClass_genericPoint_ne_zero
   fun h ↦ cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X d
     ((cycleComponentSheafClass_genericPoint_eq_zero_iff X d).mp h)
 
-/-- On a connected analytification, the constructed codimension-zero span agrees with the unit
-span without any additional comparison or nonvanishing assumption. -/
+/-- On a connected analytification, the constructed codimension-zero span agrees with the span
+of the cohomological unit. -/
 theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan
     [ConnectedSpace (ComplexPoint X)] :
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X :=
