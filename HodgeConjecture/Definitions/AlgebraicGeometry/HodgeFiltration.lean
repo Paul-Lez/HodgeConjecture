@@ -622,18 +622,11 @@ noncomputable instance deRhamHypercohomologyComplexModule
     (scalarHolomorphicDeRhamComplexInt_one X)
     (scalarHolomorphicDeRhamComplexInt_mul X)
 
-/-- The rational action on de Rham hypercohomology, induced by multiplication by the corresponding
-complex scalar on the de Rham complex. -/
-def deRhamFieldSMul [IsIntegral X.left] [Smooth X.hom]
-    (n : ℤ) (q : K) (α : DeRhamHypercohomology X n) :
-    DeRhamHypercohomology X n :=
-  hypercohomologyMap X
-    (scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q)) n α
-
-noncomputable instance
+/-- De Rham hypercohomology as a vector space over `K`, by restriction of complex scalars. -/
+noncomputable instance deRhamHypercohomologyModule
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    SMul K (DeRhamHypercohomology X n) :=
-  ⟨deRhamFieldSMul K X n⟩
+    Module K (DeRhamHypercohomology X n) :=
+  Module.restrictScalars K ℂ (DeRhamHypercohomology X n)
 
 lemma deRham_field_smul_eq [IsIntegral X.left] [Smooth X.hom]
     (n : ℤ) (q : K) (α : DeRhamHypercohomology X n) :
@@ -641,31 +634,18 @@ lemma deRham_field_smul_eq [IsIntegral X.left] [Smooth X.hom]
       (scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q)) n α :=
   rfl
 
-/-- Holomorphic de Rham hypercohomology is canonically a rational vector space. -/
-noncomputable instance deRhamHypercohomologyModule
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    Module K (DeRhamHypercohomology X n) :=
-  hypercohomologyModule X
-    (fun q : K => scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q)) n
-    (deRham_field_smul_eq K X n)
-    (fun a b => by rw [map_add, scalarHolomorphicDeRhamComplexInt_add])
-    (by rw [map_one, scalarHolomorphicDeRhamComplexInt_one])
-    (fun a b => by rw [map_mul, scalarHolomorphicDeRhamComplexInt_mul])
-
-/-- The independently constructed rational and complex scalar actions on de Rham
-hypercohomology agree through the canonical embedding `K → ℂ`. -/
+/-- Scalar multiplication over `K` agrees with multiplication by its image in `ℂ`. -/
 lemma deRham_field_smul_eq_complex_smul
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
     (q : K) (α : DeRhamHypercohomology X n) :
     q • α = (algebraMap K ℂ q) • α :=
   rfl
 
-/-- Rational, complex, and de Rham scalar multiplication form the expected scalar tower. -/
+/-- Restriction of complex scalars gives the scalar tower on de Rham hypercohomology. -/
 noncomputable instance deRhamHypercohomologyIsScalarTower
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     IsScalarTower K ℂ (DeRhamHypercohomology X n) :=
-  IsScalarTower.of_algebraMap_smul fun q α =>
-    deRham_field_smul_eq_complex_smul K X n q α
+  IsScalarTower.restrictScalars K ℂ (DeRhamHypercohomology X n)
 
 omit [Algebra K ℂ] in
 /-- Constant degree-zero cohomology classes respect rational scalar multiplication. -/
@@ -746,15 +726,6 @@ def hodgeFilteredDeRhamInclusion [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
   HomologicalComplex.stupidTruncInclusion
     (holomorphicDeRhamComplexInt X) (ComplexShape.embeddingUpIntGE p)
 
-/-- Rational scalar multiplication on the filtered de Rham complex. -/
-def hodgeFilteredDeRhamScalar [IsIntegral X.left] [Smooth X.hom]
-    (p : ℤ) (q : K) :
-    hodgeFilteredDeRhamComplex X p ⟶
-      hodgeFilteredDeRhamComplex X p :=
-  HomologicalComplex.stupidTruncMap
-    (scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q))
-    (ComplexShape.embeddingUpIntGE p)
-
 /-- Complex scalar multiplication on the filtered de Rham complex. -/
 def hodgeFilteredDeRhamComplexScalar [IsIntegral X.left] [Smooth X.hom]
     (p : ℤ) (c : ℂ) :
@@ -763,18 +734,6 @@ def hodgeFilteredDeRhamComplexScalar [IsIntegral X.left] [Smooth X.hom]
   HomologicalComplex.stupidTruncMap
     (scalarHolomorphicDeRhamComplexInt X c)
     (ComplexShape.embeddingUpIntGE p)
-
-/-- Scalar multiplication on the filtered complex commutes with its inclusion into the full de
-Rham complex. -/
-private lemma hodgeFilteredDeRhamScalar_comp_inclusion
-    [IsIntegral X.left] [Smooth X.hom] (p : ℤ) (q : K) :
-    hodgeFilteredDeRhamScalar K X p q ≫
-      hodgeFilteredDeRhamInclusion X p =
-    hodgeFilteredDeRhamInclusion X p ≫
-      scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q) :=
-  HomologicalComplex.stupidTruncMap_comp_stupidTruncInclusion
-    (ComplexShape.embeddingUpIntGE p)
-    (scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q))
 
 /-- Complex scalar multiplication on the filtered complex commutes with inclusion into the full
 de Rham complex. -/
@@ -909,8 +868,8 @@ def conjHodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) :=
   (hodgeFiltrationComplexSubmodule X p n).comap (deRhamConjSemilinear X n)
 
-/-- The Hodge piece `H^{p,q}` in degree `n`, defined as `F^p ⊓ conj F^q`. The degree is an
-independent index, as for `hodgeFiltration`; when `p + q = n` this is the usual `(p,q)` piece. -/
+/-- The intersection `F^p ⊓ conj F^q` in degree `n`. For smooth projective varieties and
+`p + q = n`, this is the usual `(p,q)` Hodge piece. -/
 def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ (DeRhamHypercohomology X n) :=
   hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
@@ -931,26 +890,10 @@ def complexifiedFieldHodgePiece [IsIntegral X.left] [Smooth X.hom]
     Submodule ℂ (ℂ ⊗[K] H^n(X; K)) :=
   (hodgePiece X p q n).comap (fieldToDeRhamComplexification K X n)
 
-/-- The Hodge filtration is stable under rational scalar multiplication. -/
-lemma hodgeFiltration_smul_mem [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) (q : K) {α : DeRhamHypercohomology X n}
-    (hα : α ∈ hodgeFiltration X p n) :
-    q • α ∈ hodgeFiltration X p n := by
-  rcases hα with ⟨β, rfl⟩
-  refine ⟨hypercohomologyMap X
-    (hodgeFilteredDeRhamScalar K X p q) n β, ?_⟩
-  rw [deRham_field_smul_eq]
-  unfold filteredToDeRhamCohomology
-  rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
-  rw [hodgeFilteredDeRhamScalar_comp_inclusion]
-
-/-- The Hodge filtration bundled as a rational subspace of de Rham hypercohomology. -/
+/-- The Hodge filtration as a subspace over `K`, by restriction of complex scalars. -/
 def hodgeFiltrationSubmodule [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) :
-    Submodule K (DeRhamHypercohomology X n) where
-  carrier := hodgeFiltration X p n
-  zero_mem' := (hodgeFiltration X p n).zero_mem
-  add_mem' := (hodgeFiltration X p n).add_mem
-  smul_mem' := fun q _ h => hodgeFiltration_smul_mem K X p n q h
+    Submodule K (DeRhamHypercohomology X n) :=
+  (hodgeFiltrationComplexSubmodule X p n).restrictScalars K
 
 /-- In degree filtration `F⁰`, the filtered and full de Rham hypercohomology groups are
 canonically equivalent. -/
@@ -966,14 +909,9 @@ def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
       change QuasiIso (hodgeFilteredDeRhamInclusion X 0)
       infer_instance)
 
-/-- Cohomology classes with coefficients in `K` whose de Rham images lie in the `(p,p)` piece
-`F^p ⊓ conj F^p` of `H^{2p}`.
-
-The condition is `(p,p)`, not merely `F^p`; the two agree exactly when `K → ℂ` lands in `ℝ`, by
-`hodgeClasses_eq_comap_hodgeFiltrationSubmodule`.
-
-The Hodge filtration is indexed by a relative dimension, but the dimension is not a choice: it is
-`dim X.left`, recovered from the scheme itself. -/
+/-- Cohomology classes with coefficients in `K` whose de Rham images lie in `F^p ⊓ conj F^p`
+in degree `2p`. When conjugation fixes the image of `K` in `ℂ`, see
+`hodgeClasses_eq_comap_hodgeFiltrationSubmodule` for the equivalent `F^p` condition. -/
 def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
     Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap

@@ -39,18 +39,30 @@ throughout, in place of a separate type of subvarieties.
 namespace Guide.Cycles.D1
 ```
 ```lean
-abbrev CodimensionCycle (X : Scheme.{u}) (p : ℕ) := codimensionCycleSubgroup X p
+def codimensionCycleSubgroup (X : Scheme.{u}) (p : ℕ) : AddSubgroup (AlgebraicCycle X ℤ) where
+  carrier c := ∀ x, c x ≠ 0 → coheight x = p
+  zero_mem' x hx := (hx rfl).elim
+  add_mem' := by
+    intro a b ha hb x hx
+    by_cases hax : a x = 0
+    · exact hb x (by simpa [hax] using hx)
+    · exact ha x hax
+  neg_mem' := by
+    intro a ha x hx
+    refine ha x fun h ↦ hx ?_
+    change -(a x) = 0
+    simp [h]
 ```
 ```lean -show
 end Guide.Cycles.D1
-example : @Guide.Cycles.D1.CodimensionCycle.{u} = @AlgebraicGeometry.CodimensionCycle.{u} := rfl
+example : @Guide.Cycles.D1.codimensionCycleSubgroup.{u} = @AlgebraicGeometry.codimensionCycleSubgroup.{u} := rfl
 ```
 ```lean -show
 namespace Guide.Cycles.D2
 ```
 ```lean
-noncomputable def CodimensionCycle.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
-    (n : ℤ) : CodimensionCycle X p := by
+noncomputable def codimensionCycleSubgroup.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
+    (n : ℤ) : codimensionCycleSubgroup X p := by
   classical
   exact ⟨Function.locallyFinsuppWithin.single x n, by
     intro y hy
@@ -60,14 +72,14 @@ noncomputable def CodimensionCycle.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx
 ```
 ```lean -show
 end Guide.Cycles.D2
-example : @Guide.Cycles.D2.CodimensionCycle.single.{u} = @AlgebraicGeometry.CodimensionCycle.single.{u} := rfl
+example : @Guide.Cycles.D2.codimensionCycleSubgroup.single.{u} = @AlgebraicGeometry.codimensionCycleSubgroup.single.{u} := rfl
 ```
 ```lean -show
 namespace Guide.Cycles.D3
 ```
 ```lean
 abbrev ChowGroup (X : Scheme.{u}) (p : ℕ) :=
-  CodimensionCycle X p ⧸ rationalEquivalenceSubgroup X p
+  codimensionCycleSubgroup X p ⧸ rationalEquivalenceSubgroup X p
 ```
 ```lean -show
 end Guide.Cycles.D3

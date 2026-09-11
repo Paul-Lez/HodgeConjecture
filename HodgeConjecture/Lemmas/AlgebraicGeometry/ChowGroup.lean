@@ -35,11 +35,11 @@ universe u
 
 namespace AlgebraicGeometry
 
-namespace CodimensionCycle
+namespace codimensionCycleSubgroup
 
 variable {X : Scheme.{u}} {p : ℕ}
 
-end CodimensionCycle
+end codimensionCycleSubgroup
 
 namespace PrincipalDivisor
 
@@ -51,7 +51,7 @@ lemma divisor_apply (x : D.carrier) : D.divisor x = D.orderFunction x := rfl
 end PrincipalDivisor
 
 lemma mem_rationalEquivalenceSubgroup_iff {X : Scheme.{u}} {p : ℕ}
-    (c : CodimensionCycle X p) :
+    (c : codimensionCycleSubgroup X p) :
     c ∈ rationalEquivalenceSubgroup X p ↔
       c.1 ∈ principalDivisorSubgroup X p :=
   Iff.rfl
@@ -61,23 +61,23 @@ namespace ChowGroup
 variable {X : Scheme.{u}} {p : ℕ}
 
 @[simp]
-lemma mk_zero : mk (0 : CodimensionCycle X p) = 0 := rfl
+lemma mk_zero : mk (0 : codimensionCycleSubgroup X p) = 0 := rfl
 
 @[simp]
-lemma mk_add (a b : CodimensionCycle X p) : mk (a + b) = mk a + mk b := rfl
+lemma mk_add (a b : codimensionCycleSubgroup X p) : mk (a + b) = mk a + mk b := rfl
 
 @[simp]
-lemma mk_neg (a : CodimensionCycle X p) : mk (-a) = -mk a := rfl
+lemma mk_neg (a : codimensionCycleSubgroup X p) : mk (-a) = -mk a := rfl
 
 /-- Two cycles have the same Chow class exactly when their difference is rationally equivalent
 to zero. -/
-lemma mk_eq_mk_iff {a b : CodimensionCycle X p} :
+lemma mk_eq_mk_iff {a b : codimensionCycleSubgroup X p} :
     mk a = mk b ↔ a - b ∈ rationalEquivalenceSubgroup X p :=
   QuotientAddGroup.eq_iff_sub_mem
 
 /-- A cycle represents zero exactly when it is rationally equivalent to zero. -/
 @[simp]
-lemma mk_eq_zero_iff (a : CodimensionCycle X p) :
+lemma mk_eq_zero_iff (a : codimensionCycleSubgroup X p) :
     mk a = 0 ↔ a ∈ rationalEquivalenceSubgroup X p :=
   QuotientAddGroup.eq_zero_iff a
 
@@ -112,19 +112,19 @@ lemma rational_eq_zero_of_isEmpty [IsEmpty X] (z : RationalChowGroup X p) : z = 
 /-- The generic-point generator maps to its coefficient under `CH⁰(X) ≃ ℤ`. -/
 @[simp] lemma integralEquiv_mk_single (X : Scheme.{u}) [IsIntegral X] (n : ℤ) :
     integralEquiv X
-      (mk (CodimensionCycle.single (genericPoint X)
+      (mk (codimensionCycleSubgroup.single (genericPoint X)
         (Order.IsMax.coheight_eq_zero isMax_top) n)) = n := by
-  change CodimensionCycle.single (genericPoint X)
+  change codimensionCycleSubgroup.single (genericPoint X)
     (Order.IsMax.coheight_eq_zero isMax_top) n (genericPoint X) = n
-  exact CodimensionCycle.single_same (genericPoint X) _ _
+  exact codimensionCycleSubgroup.single_same (genericPoint X) _ _
 
 /-- The rational generic-point generator maps to its coefficient under `CH⁰(X)_ℚ ≃ ℚ`. -/
 @[simp] lemma rationalIntegralEquiv_toRational_single
     (X : Scheme.{u}) [IsIntegral X] (n : ℤ) :
     rationalIntegralEquiv X
-      (toRational (mk (CodimensionCycle.single (genericPoint X)
+      (toRational (mk (codimensionCycleSubgroup.single (genericPoint X)
         (Order.IsMax.coheight_eq_zero isMax_top) n))) = n := by
-  change (integralEquiv X (mk (CodimensionCycle.single (genericPoint X)
+  change (integralEquiv X (mk (codimensionCycleSubgroup.single (genericPoint X)
     (Order.IsMax.coheight_eq_zero isMax_top) n)) : ℤ) • (1 : ℚ) = n
   rw [integralEquiv_mk_single]
   simp
@@ -135,7 +135,7 @@ lemma rational_eq_smul_genericPoint (X : Scheme.{u}) [IsIntegral X]
     (z : RationalChowGroup X 0) :
     z = rationalIntegralEquiv X z •
       toRational
-        (mk (CodimensionCycle.single (genericPoint X)
+        (mk (codimensionCycleSubgroup.single (genericPoint X)
           (Order.IsMax.coheight_eq_zero isMax_top) 1)) := by
   apply (rationalIntegralEquiv X).injective
   rw [map_smul, rationalIntegralEquiv_toRational_single]
@@ -146,20 +146,20 @@ lemma rational_eq_smul_genericPoint (X : Scheme.{u}) [IsIntegral X]
 @[simp]
 lemma specFieldEquiv_mk_single (K : Type u) [Field K] (n : ℤ) :
     specFieldEquiv K
-      (mk (CodimensionCycle.single default
-        (CodimensionCycle.specField_coheight K default) n)) = n := by
-  change CodimensionCycle.single default
-    (CodimensionCycle.specField_coheight K default) n default = n
-  exact CodimensionCycle.single_same default _ _
+      (mk (codimensionCycleSubgroup.single default
+        (codimensionCycleSubgroup.specField_coheight K default) n)) = n := by
+  change codimensionCycleSubgroup.single default
+    (codimensionCycleSubgroup.specField_coheight K default) n default = n
+  exact codimensionCycleSubgroup.single_same default _ _
 
 /-- The same generator maps to `n : ℚ` after extending coefficients. -/
 @[simp]
 lemma rationalSpecFieldEquiv_toRational_single (K : Type u) [Field K] (n : ℤ) :
     rationalSpecFieldEquiv K
-      (toRational (mk (CodimensionCycle.single default
-        (CodimensionCycle.specField_coheight K default) n))) = n := by
-  change (specFieldEquiv K (mk (CodimensionCycle.single default
-    (CodimensionCycle.specField_coheight K default) n)) : ℤ) • (1 : ℚ) = n
+      (toRational (mk (codimensionCycleSubgroup.single default
+        (codimensionCycleSubgroup.specField_coheight K default) n))) = n := by
+  change (specFieldEquiv K (mk (codimensionCycleSubgroup.single default
+    (codimensionCycleSubgroup.specField_coheight K default) n)) : ℤ) • (1 : ℚ) = n
   rw [specFieldEquiv_mk_single]
   simp
 
