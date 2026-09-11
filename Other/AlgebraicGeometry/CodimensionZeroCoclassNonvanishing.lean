@@ -13,7 +13,8 @@ public import Other.AlgebraicGeometry.SmoothClosedSupportCoclassNonzero
 
 A complex point of the component's smooth locus detects its nonzero normal coclass germ.
 For the generic component, forgetting support is injective, so the ordinary cycle class
-is nonzero in every dimension. Connectedness then gives the codimension-zero Hodge conjecture.
+is nonzero in every dimension. Analytic connectedness now follows from smoothness and integrality,
+which gives the codimension-zero Hodge conjecture.
 -/
 
 @[expose] public noncomputable section
@@ -52,25 +53,22 @@ theorem cycleComponentSheafClass_genericPoint_ne_zero
   fun h ↦ cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X d
     ((cycleComponentSheafClass_genericPoint_eq_zero_iff X d).mp h)
 
-/-- On a connected analytification, the constructed codimension-zero span agrees with the span
-of the cohomological unit. -/
-theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan
-    [ConnectedSpace (ComplexPoint X)] :
+/-- The constructed codimension-zero span agrees with the span of the cohomological unit. -/
+theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan :
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X :=
   (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff X).mpr
     (cycleComponentSheafClass_genericPoint_ne_zero X (dim X.left))
 
-/-- Connectedness alone suffices for the constructed codimension-zero classes to span cohomology. -/
-theorem algebraicCycleClassSpan_zero_eq_top [ConnectedSpace (ComplexPoint X)] :
+/-- The constructed codimension-zero classes span degree-zero cohomology. -/
+theorem algebraicCycleClassSpan_zero_eq_top :
     algebraicCycleClassSpan X 0 = ⊤ :=
-  algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero X inferInstance
+  algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero X
     (cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X (dim X.left))
 
-/-- The codimension-zero Hodge conjecture on a connected analytification, in every dimension. -/
-theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan
-    [ConnectedSpace (ComplexPoint X)] :
+/-- The codimension-zero Hodge conjecture in every dimension. -/
+theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan :
     Hdg^0(ℚ; X) = algebraicCycleClassSpan X 0 :=
-  rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero X inferInstance
+  rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero X
     (cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X (dim X.left))
 
 end AlgebraicGeometry.ComplexPoint
