@@ -6,7 +6,7 @@ Authors: Bhavik Mehta
 module
 
 public import Other.Analysis.Complex.PolynomialGrowth
-public import HodgeConjecture.Lemmas.Analysis.PolynomialComplement
+public import Other.Analysis.Complex.PolynomialComplement
 public import Mathlib.Analysis.Complex.RemovableSingularity
 
 /-!

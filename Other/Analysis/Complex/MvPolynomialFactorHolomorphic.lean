@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Analysis.PolynomialFactorGrowth
+public import Other.Analysis.Complex.PolynomialFactorGrowth
 public import Other.Analysis.Complex.FiniteSingularityPolynomial
 public import Mathlib.Analysis.Analytic.Polynomial
 public import Mathlib.Analysis.Calculus.ContDiff.RCLike

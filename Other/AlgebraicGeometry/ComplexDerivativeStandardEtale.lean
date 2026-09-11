@@ -6,7 +6,7 @@ Authors: Bhavik Mehta
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexStandardEtale
-public import HodgeConjecture.Lemmas.Analysis.MvPolynomialFactorHolomorphic
+public import Other.Analysis.Complex.MvPolynomialFactorHolomorphic
 
 @[expose] public section
 
