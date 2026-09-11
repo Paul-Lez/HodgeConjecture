@@ -391,7 +391,7 @@ theorem globalComplementSingularToInjectiveResolutionNat_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalComplementSingularToInjectiveResolutionNat
       X Z hZ) := by
-  let U := TopCat.of (AnalyticComplement X Z)
+  let U := TopCat.of ↥Zᶜ
   let j := analyticComplementInclusion X Z
   let : T2Space U := inferInstance
   let : ∀ W : Opens U, ParacompactSpace W := fun W ↦
@@ -429,7 +429,7 @@ theorem globalRawComplementToSingularSheaf_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalRawPushforwardToSingularSheaf ℚ
       (analyticComplementInclusion X Z)) := by
-  let U := TopCat.of (AnalyticComplement X Z)
+  let U := TopCat.of ↥Zᶜ
   let j := analyticComplementInclusion X Z
   let : T2Space U := inferInstance
   let Uopen : Opens (TopCat.of (ComplexPoint X)) :=
@@ -520,7 +520,7 @@ def globalRawComplementToDerivedPushforwardInt
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     globalRawPushforwardSingularCochainComplexInt ℚ
         (TopCat.of (ComplexPoint X))
-        (AnalyticComplement X Z) ⟶
+        Zᶜ ⟶
       TopCat.Sheaf.globalSectionsComplexInt
         (TopCat.of (ComplexPoint X))
         (derivedPushforwardComplementConstantRationalComplexInt X Z) :=
@@ -604,7 +604,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
           (naturalSingularResolutionRestriction X Z hZ) =
       globalRawSingularRestrictionInt ℚ
           (TopCat.of (ComplexPoint X))
-          (AnalyticComplement X Z) ≫
+          Zᶜ ≫
         globalRawComplementToDerivedPushforwardInt X Z hZ := by
   let Y := TopCat.of (ComplexPoint X)
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
@@ -644,7 +644,7 @@ def globalRawSupportConeToGlobalNaturalSingularCone
     CochainComplex.mappingCone
         (globalRawSingularRestrictionInt ℚ
           (TopCat.of (ComplexPoint X))
-          (AnalyticComplement X Z)) ⟶
+          Zᶜ) ⟶
       CochainComplex.mappingCone
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex
@@ -653,7 +653,7 @@ def globalRawSupportConeToGlobalNaturalSingularCone
   CochainComplex.mappingCone.map
     (globalRawSingularRestrictionInt ℚ
       (TopCat.of (ComplexPoint X))
-      (AnalyticComplement X Z))
+      Zᶜ)
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map
@@ -681,7 +681,7 @@ noncomputable instance globalRawSupportConeToGlobalNaturalSingularCone_quasiIso
   change QuasiIso (CochainComplex.mappingCone.map
     (globalRawSingularRestrictionInt ℚ
       (TopCat.of (ComplexPoint X))
-      (AnalyticComplement X Z))
+      Zᶜ)
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map

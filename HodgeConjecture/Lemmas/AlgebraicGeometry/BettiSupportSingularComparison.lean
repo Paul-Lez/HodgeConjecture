@@ -96,7 +96,7 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
         (TopCat.Sheaf.pushforward AddCommGrpCat
           (analyticComplementInclusion X Z)).map
             (constantsToSingularCochainZeroSheaf ℚ
-              (TopCat.of (AnalyticComplement X Z))) := by
+              (TopCat.of ↥Zᶜ)) := by
   apply Sheaf.hom_ext
   change sheafifyMap (Opens.grothendieckTopology
         (TopCat.of (ComplexPoint X)))
@@ -108,9 +108,9 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
       Functor.whiskerLeft
         (Opens.map (analyticComplementInclusion X Z)).op
         (sheafifyMap (Opens.grothendieckTopology
-          (TopCat.of (AnalyticComplement X Z)))
+          (TopCat.of ↥Zᶜ))
           (constantsToSingularCochainZero ℚ
-            (TopCat.of (AnalyticComplement X Z))))
+            (TopCat.of ↥Zᶜ)))
   apply sheafify_hom_ext
     (J := Opens.grothendieckTopology
       (TopCat.of (ComplexPoint X)))
@@ -119,7 +119,7 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
     ((TopCat.Sheaf.pushforward AddCommGrpCat
       (analyticComplementInclusion X Z)).obj
         (singularCochainSheaf ℚ
-          (TopCat.of (AnalyticComplement X Z)) 0)).property
+          (TopCat.of ↥Zᶜ) 0)).property
   rw [← Category.assoc, ← toSheafify_naturality, Category.assoc,
     toSheafify_comp_singularRestrictionSheaf]
   unfold rationalRestrictionSheaf
@@ -129,18 +129,18 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
   change _ = Functor.whiskerLeft
     (Opens.map (analyticComplementInclusion X Z)).op
       (toSheafify (Opens.grothendieckTopology
-          (TopCat.of (AnalyticComplement X Z)))
+          (TopCat.of ↥Zᶜ))
           (constantCoefficientPresheaf ℚ
-            (TopCat.of (AnalyticComplement X Z))) ≫
+            (TopCat.of ↥Zᶜ)) ≫
         sheafifyMap (Opens.grothendieckTopology
-          (TopCat.of (AnalyticComplement X Z)))
+          (TopCat.of ↥Zᶜ))
           (constantsToSingularCochainZero ℚ
-            (TopCat.of (AnalyticComplement X Z))))
+            (TopCat.of ↥Zᶜ)))
   have hunit := toSheafify_naturality
     (Opens.grothendieckTopology
-      (TopCat.of (AnalyticComplement X Z)))
+      (TopCat.of ↥Zᶜ))
     (constantsToSingularCochainZero ℚ
-      (TopCat.of (AnalyticComplement X Z)))
+      (TopCat.of ↥Zᶜ))
   rw [← hunit, Functor.whiskerLeft_comp, ← Category.assoc,
     constantsToSingularCochainZero_comp_singularRestrictionToRawPushforward]
 
