@@ -44,6 +44,77 @@ retained as input.
 The construction here is ambient.  `IntrinsicSheafBorelMooreHomology` separately records what
 the intrinsic definition on a space carrying its own dualizing complex means; no compactification
 independence or closed-embedding comparison is claimed.
+
+## Inventory: the hypothesis structures of the Borel--Moore layer
+
+The Borel--Moore development is this file together with `BorelMooreCycleClass.lean`,
+`CycleComponentBorelMoore.lean` and `CycleComponentGlobalFundamentalClass.lean`, all under
+`Other/AlgebraicGeometry/`.  Everything proved there is conditional on the fifteen hypothesis
+structures listed below: each packages data and theorems Mathlib does not supply, so the results
+read "given such a package, ...".  The grouping is by producer -- which packages some declaration
+actually builds, and out of what.  Issue #57 tracks this inventory; issue #14 tracks redefining
+Borel--Moore homology through hypercohomology, after which how many of the fifteen become
+constructible measures the progress made.
+
+### Instantiated, but only in maximal codimension `p = d`
+
+* `CycleComponentBorelMoore.lean`: `RationalCycleComponentBorelMooreData`, by
+  `rationalCycleComponentBorelMooreDataOfCoheightEqDimension`
+* `BorelMooreCycleClass.lean`: `AuxiliaryRationalCycleComponentBorelMooreComparisonData`, by
+  `auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension`
+* `BorelMooreCycleClass.lean`: `RationalCycleComponentLocalThomCapInput`, by
+  `maximalCodimensionLocalThomCapInput`
+* `BorelMooreCycleClass.lean`: `ComplexOrientedRationalCycleComponentClassData`, by
+  `maximalCodimensionComplexOrientedComponentClassData`
+* `BorelMooreCycleClass.lean`: `AuxiliaryRationalBorelMooreCycleClassDescent`, by
+  `ofMaximalCodimension`, which in addition assumes the unproved
+  `MaximalCodimensionPrincipalDivisorClassVanishes`
+
+For a point component the Borel--Moore group, the local orientation and Alexander duality are
+computed outright, so the first four witnesses take no input beyond the variety and the point,
+and the fifth adds only the named principal-divisor statement.  Away from `p = d` the same
+packages await the global Borel--Moore fundamental-class theorem for oriented manifolds and the
+Thom/costalk operation normalizing the comparison, neither of which Mathlib provides.  Three of
+the five -- `RationalCycleComponentBorelMooreData`,
+`AuxiliaryRationalCycleComponentBorelMooreComparisonData` and
+`ComplexOrientedRationalCycleComponentClassData` -- also have adapters out of other packages of
+this list, which add nothing their source package does not already provide.
+
+### Constructible only from other structures of this list
+
+* `BorelMooreCycleClass.lean`: `ComplexOrientedRationalBorelMooreCycleClassConstruction`, whose
+  only producer is `ofSheaf` in this file, out of
+  `ComplexOrientedRationalCycleComponentSheafBorelMooreData` and principal-divisor vanishing
+* `CycleComponentGlobalFundamentalClass.lean`:
+  `RationalCycleComponentGlobalFundamentalClassInputs`, out of
+  `RationalCycleComponentInjectiveBoundaryInputs` or `RationalCycleComponentBoundedModelInputs`
+* `CycleComponentGlobalFundamentalClass.lean`: `RationalCycleComponentInjectiveBoundaryInputs`,
+  out of `RationalCycleComponentBoundedModelInputs`
+
+These producers only move work between packages -- boundary vanishing is derived from injectivity
+of the punctured-space inclusion, and that in turn from a bounded chain model -- so each inherits
+whatever its source package is still missing, and every source package is itself in this list.
+
+### No producer
+
+* `SheafBorelMoore.lean`: `RationalDualizingComplex`
+* `SheafBorelMoore.lean`: `RationalDualizingComplexOrientationInput`
+* `SheafBorelMoore.lean`: `DerivedSectionsWithSupportInput`
+* `SheafBorelMoore.lean`: `RationalCycleComponentSheafBorelMooreComparisonInputs`
+* `SheafBorelMoore.lean`: `ComplexOrientedRationalCycleComponentSheafBorelMooreData`
+* `CycleComponentGlobalFundamentalClass.lean`: `RationalCycleComponentGlobalFundamentalClassCore`,
+  reached only through the `extends` clauses of the three packages sharing it
+* `CycleComponentGlobalFundamentalClass.lean`: `RationalCycleComponentBoundedModelInputs`
+
+The five in this file await the six-functor input described above: a dualizing complex, the
+Verdier-duality predicate with which to say that it is dualizing, the orientation isomorphism
+`ω_X ≅ ℚ_X[2d]` together with its normalization by the complex orientation, derived sections with
+support, and the costalk comparison identifying the sheaf model with the compactification-relative
+one.  For the first two, inhabitation would be weaker than construction: nothing in their fields
+asserts that the object is dualizing or that the isomorphism is the normalized one.  The last two
+await the local-to-global geometry of a positive-dimensional component: relative Mayer--Vietoris
+propagation of the local orientation from one smooth anchor point, and a dimension-bounded chain
+model for the punctured component.
 -/
 
 @[expose] public noncomputable section
