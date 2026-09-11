@@ -106,18 +106,24 @@ end GeometricWindingChartData
 variable {X}
 
 /-- **What is left of `HasNormalizedWindingCharts`.**  Purely geometric chart data at every point
-of the smooth-support open lying on the component, whose constructed winding homomorphism
-normalises the coclass. -/
+of the smooth-support open lying on the component *off a Zariski-closed subset `B ⊆ Z_x` not
+containing the generic point `x`* (chosen by the obligation; see the docstring of
+`HasNormalizedWindingCharts` for why such an exceptional set is unavoidable), whose constructed
+winding homomorphism normalises the coclass. -/
 def HasGeometricWindingCharts : Prop :=
   ∀ (c : Scheme.CartierData X.left) (x : X.left) (hx : coheight x = ((1 : ℕ) : ℕ∞)),
-    ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
-      ∃ G : GeometricWindingChartData X c x (dim X.left) q, G.toChart.NormalizesCoclass hx
+    ∃ B : Closeds X.left, (B : Set X.left) ⊆ closure ({x} : Set X.left) ∧ x ∉ B ∧
+      ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
+        Point.underlying q ∉ B →
+        ∃ G : GeometricWindingChartData X c x (dim X.left) q, G.toChart.NormalizesCoclass hx
 
 /-- **The reduction.** -/
 theorem hasNormalizedWindingCharts_of_geometricWindingCharts
     (h : HasGeometricWindingCharts (X := X)) : HasNormalizedWindingCharts X := by
-  intro c x hx q hq hqS
-  obtain ⟨G, hG⟩ := h c x hx q hq hqS
+  intro c x hx
+  obtain ⟨B, hB, hxB, hG⟩ := h c x hx
+  refine ⟨B, hB, hxB, fun q hq hqS hqB => ?_⟩
+  obtain ⟨G, hG⟩ := hG q hq hqS hqB
   exact ⟨G.toChart, G.hasTrivialUnitWinding, hG⟩
 
 end AlgebraicGeometry.ComplexPoint

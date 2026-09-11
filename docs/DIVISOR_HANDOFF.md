@@ -1277,12 +1277,15 @@ fed into the cohomology class at all. In dependency order the sub-obligations ar
 
    ```lean
    /-- (b) + (c): normalised winding charts exist at every point of the component inside its
-   smooth-support open. No line bundle and no Chern class occur; this is the pure analysis. -/
+   smooth-support open, off a Zariski-closed `B ⊆ Z_x` with `x ∉ B` chosen by the obligation.
+   No line bundle and no Chern class occur; this is the pure analysis. -/
    def HasNormalizedWindingCharts : Prop :=
      ∀ (c : Scheme.CartierData X.left) (x : X.left) (hx : coheight x = ((1 : ℕ) : ℕ∞)),
-       ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
-         ∃ ch : ChernWindingChart X c x (dim X.left) 1 q,
-           ch.HasTrivialUnitWinding ∧ ch.NormalizesCoclass hx
+       ∃ B : Closeds X.left, (B : Set X.left) ⊆ closure ({x} : Set X.left) ∧ x ∉ B ∧
+         ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
+           Point.underlying q ∉ B →
+           ∃ ch : ChernWindingChart X c x (dim X.left) 1 q,
+             ch.HasTrivialUnitWinding ∧ ch.NormalizesCoclass hx
 
    /-- (a): there *exists* a supported lift `β` of the first Chern class — the relative first
    Chern class cut out by the frame of the bundle off `|D|^an` — for which every normalised winding
@@ -1306,8 +1309,17 @@ fed into the cohomology class at all. In dependency order the sub-obligations ar
        (h₂ : HasChernWindingNaturality X) : HasChernLocalModel X
    ```
 
-   is **proved** (`#print axioms`: `propext`, `Classical.choice`, `Quot.sound`). The gluing from
-   charts to the whole smooth-support open is sheaf separatedness for
+   is **proved** (`#print axioms`: `propext`, `Classical.choice`, `Quot.sound`). The equality of
+   sections over the smooth-support open `U` is first reduced to one over `U ∖ B^an` by the
+   **gluing lemma** `cycleComponentSmoothSupport_restriction_injective`
+   (`Other/AlgebraicGeometry/CycleComponentRestrictionInjective.lean`, proved): for a
+   Zariski-closed `B ⊆ Z_x` with `x ∉ B`, restriction of `supportRelativeCohomologySheaf … (2p)`
+   from `U` to `U ∖ B^an` is injective — every point of `B` is a proper specialisation of `x`,
+   so has coheight `≥ p + 1`, the supported cohomology along `(singular boundary of Z_x) ⊔ B` vanishes
+   below `2(p+1)` (`closedSupportSectionCohomology_isZero_of_lt`), the nested-support localisation
+   sequence makes restriction from `Γ_Z(X, I•)` to `Γ_Z(U ∖ B^an, I•)` injective on `H^{2p}`,
+   and the section comparison `sectionCohomologyToSheafSection` is an isomorphism on both opens.
+   The gluing from charts to `U ∖ B^an` is then sheaf separatedness for
    `supportRelativeCohomologySheaf`; off the component the comparison is trivial, because
    `AlgebraicTopology.Singular.supportRelativeCohomologySheaf_section_eq_zero` — also **proved**
    here — says that every section of that sheaf over an open set disjoint from the (closed) support
@@ -1481,18 +1493,24 @@ fed into the cohomology class at all. In dependency order the sub-obligations ar
    locus of each line.  So the proposition is unprovable as written, and no strengthening of
    `Scheme.CartierData.exists_localForm` can repair it.
 
-   **The correction** (to be made in `ChernLocalModelWinding.lean`, not done here): the charts
-   should only be required to cover
-   `cycleComponentSmoothSupportAmbientOpen X x ∖ ⋃_{y ≠ x} Z_y`, and the gluing in
-   `hasChernLocalModel_of_winding` should use the fact that the removed locus
-   `Z_x ∩ ⋃_{y ≠ x} Z_y` is closed of codimension at least two, together with the already proved
-   `hasCodimensionTwoSupportedVanishing` (`ClosedSupportCoheightDimension.lean`).  Mathematically
-   nothing is lost; the statement simply has to exclude the pairwise intersections of the
-   components, exactly as the local model does.
+   **The correction (done).** `HasNormalizedWindingCharts` (and likewise
+   `HasGeometricWindingCharts`) now has the *generic* form displayed above: for each `c`, `x`
+   the obligation chooses a Zariski-closed `B ⊆ Z_x` with `x ∉ B` and only has to produce charts
+   at the points of `cycleComponentSmoothSupportAmbientOpen X x ∩ Z_x` whose underlying scheme
+   point is not in `B`. The intended choice is `B = Z_x ∖ V₀` for the affine open `V₀` of a
+   single local form (`Scheme.CartierData.exists_localForm`), which is dense open in `Z_x`; this
+   excludes the other components automatically and needs **no** local form at points other than
+   the generic point (in particular no algebraic Hartogs). The reduction
+   `hasChernLocalModel_of_winding` is re-proved with the gluing lemma
+   `cycleComponentSmoothSupport_restriction_injective`
+   (`CycleComponentRestrictionInjective.lean`): restriction of the local relative-cohomology
+   sheaf from `U` to `U ∖ B^an` is injective, because every point of `B` has codimension `≥ 2`
+   in `X`. The old pointwise form still implies the new one (`hasNormalizedWindingCharts_of_forall`,
+   with `B = ∅`), so nothing proved before is lost.
 
-   With `q` off the other components the remaining existence problem is the standard one (shrink
-   the affine open of `exists_localForm` around `q` instead of around `x`; note that every open
-   containing `q` automatically contains the generic point `x`, since `q ∈ closure {x}`).
+   With `q` off `B` the remaining existence problem is the standard one: `q` lies in the
+   analytification of the affine open of the chosen local form, and a polydisc chart around `q`
+   inside it is required.
 
    ### (2) `exists_log` on a simply connected chart: **proved**
 
@@ -1606,14 +1624,14 @@ Summary of the named obligations, in dependency order:
 | ~~`HasCodimensionTwoSupportedVanishing`~~ | `ClosedSupportCoheightDimension.lean` | **proved**: `hasCodimensionTwoSupportedVanishing`, via the generic smooth filtration of any `Closeds X.left` |
 | ~~Mayer–Vietoris for two closed supports~~ | `SupportUnionSplitting.lean` | **proved**: `exists_supportedSectionsEnlarge_add_eq` |
 | `HasChernLocalModel` | `ChernLocalModel.lean` | §4.3 step 4: the local model, **existential in the lift** (an arbitrary lift has the wrong multiplicities — `ℙ¹` counterexample in §4.3 step 4); needs §4.2(a) and the canonical relative class |
-| `HasNormalizedWindingCharts` | `ChernLocalModelWinding.lean` | §4.3 step 4 item 3: (b) + (c), existence of normalised winding charts; **reduced** to `HasWindingChartData` by `hasNormalizedWindingCharts_of_windingChartData` — (b) is now a theorem |
+| `HasNormalizedWindingCharts` | `ChernLocalModelWinding.lean` | §4.3 step 4 item 3: (b) + (c), existence of normalised winding charts **off a Zariski-closed `B ⊆ Z_x`, `x ∉ B`, chosen by the obligation** (generic form; gluing by `cycleComponentSmoothSupport_restriction_injective`, `CycleComponentRestrictionInjective.lean`); **reduced** to `HasGeometricWindingCharts` — (b) is now a theorem |
 | ~~the winding homomorphism `∂ ∘ δ`~~ | `ChernWindingLift.lean`, `ChernWindingCochain.lean`, `ChernWindingBoundary.lean`, `ChernWindingUnitClass.lean` | **constructed**: `ChernWinding.windingPeriod`, `ChernWinding.relativeWindingPeriod`, `windingSheafHom`; plus `windingSheafHom_restrict_eq_zero` (obligation (b)) and the normalisation criterion `windingRelativeClass_eq_chartNormalProjectionCoclass` |
 | `HasWindingChartData` | `ChernWindingNormalizedCharts.lean` | §4.3 step 4 item 3: what is left of (b) + (c) — a normal chart with a local form, a holomorphic logarithm on the chart, rational winding periods, and the single winding-number equation |
-| `HasGeometricWindingCharts` | `ChernWindingChartPeriods.lean` | §4.3 step 4 item 3: `HasWindingChartData` with the rationality of the periods removed (now a theorem); reduces to `HasNormalizedWindingCharts` by `hasNormalizedWindingCharts_of_geometricWindingCharts` |
+| `HasGeometricWindingCharts` | `ChernWindingChartPeriods.lean` | §4.3 step 4 item 3: `HasWindingChartData` with the rationality of the periods removed (now a theorem), in the same generic `∃ B` form; reduces to `HasNormalizedWindingCharts` by `hasNormalizedWindingCharts_of_geometricWindingCharts` |
 | ~~rationality of the winding periods~~ | `ChernWindingRational.lean`, `ChernWindingChartPeriods.lean` | **proved**: `hasRationalWindingPeriod`, `hasWindingPeriods` |
 | ~~`exists_log` on a chart~~ | `ChernWindingHolomorphicLog.lean` | **proved**: `exists_holomorphicExponential_of_simplyConnected` (simply connected, locally path connected chart) |
 | ~~the sign of the normalisation~~ | `ChernWindingStandardTriangle.lean` | **proved**: `windingPeriod_standardPuncturedBoundaryClass = 1` — the repository's orientation gives `+1` |
-| **correction needed** | `ChernLocalModelWinding.lean` | `HasNormalizedWindingCharts` is **false** as stated at points where two components of `D` meet (`ChernWindingLocalFormObstruction.lean`); the quantifier over `q` must exclude the pairwise intersections of components, which are closed of codimension ≥ 2 |
+| ~~correction needed~~ | `ChernLocalModelWinding.lean`, `CycleComponentRestrictionInjective.lean` | **done**: the pointwise form was **false** at points where two components of `D` meet (`ChernWindingLocalFormObstruction.lean`); the obligation now quantifies only over `q` off a Zariski-closed `B ⊆ Z_x` with `x ∉ B`, and the reduction is re-proved via the injectivity of restriction away from `B^an` |
 | `HasChernWindingNaturality` | `ChernLocalModelWinding.lean` | §4.3 step 4 item 3: (a), the canonical relative class and its computation by winding numbers; **reduces to it**: `hasChernLocalModel_of_winding` |
 | ~~winding reduction~~ | `ChernLocalModelWinding.lean` | **proved**: `hasChernLocalModel_of_winding`, `hasChernWindingNaturality_of_localModel`, `supportRelativeCohomologySheaf_section_eq_zero` |
 | — (not yet stated) | — | realization of a cocycle by an extension; the Čech description of the connecting map, §4.2(a) |

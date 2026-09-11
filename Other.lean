@@ -430,6 +430,7 @@ public import Other.AlgebraicGeometry.ComponentSupportDecomposition
 public import Other.AlgebraicGeometry.ClosedSupportSmoothFiltration
 public import Other.AlgebraicGeometry.ClosedSupportCodimensionVanishing
 public import Other.AlgebraicGeometry.ClosedSupportCoheightDimension
+public import Other.AlgebraicGeometry.CycleComponentRestrictionInjective
 public import Other.AlgebraicGeometry.ChernLocalModelWinding
 public import Other.AlgebraicGeometry.ChernWindingLift
 public import Other.AlgebraicGeometry.ChernWindingCochain

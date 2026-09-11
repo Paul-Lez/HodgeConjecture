@@ -121,9 +121,9 @@ def HasWindingChartData : Prop :=
 
 /-- **The reduction.**  Geometric winding chart data give normalised winding charts. -/
 theorem hasNormalizedWindingCharts_of_windingChartData (h : HasWindingChartData (X := X)) :
-    HasNormalizedWindingCharts X := by
-  intro c x hx q hq hqS
-  obtain ⟨D, hD⟩ := h c x hx q hq hqS
-  exact ⟨D.toChart, D.hasTrivialUnitWinding, hD⟩
+    HasNormalizedWindingCharts X :=
+  hasNormalizedWindingCharts_of_forall X fun c x hx q hq hqS =>
+    let ⟨D, hD⟩ := h c x hx q hq hqS
+    ⟨D.toChart, D.hasTrivialUnitWinding, hD⟩
 
 end AlgebraicGeometry.ComplexPoint

@@ -7,6 +7,7 @@ module
 public import Other.AlgebraicGeometry.ChernLocalModel
 public import Other.AlgebraicGeometry.AnalyticSectionOfAlgebraic
 public import Other.AlgebraicGeometry.CartierLocalForm
+public import Other.AlgebraicGeometry.CycleComponentRestrictionInjective
 
 /-!
 # The winding-number reduction of the local model of the first Chern class
@@ -70,11 +71,21 @@ and `ChernWindingChart.restrict_eq_zsmul_coclass` **proves** that (a) + (b) + (c
 form of the conclusion. The two remaining obligations are
 
 * `HasNormalizedWindingCharts X` — normalised winding charts exist at every point of the component
-  inside its smooth-support open ((b) and (c)); this mentions no line bundle and no Chern class,
-  and is the pure one-variable analysis. Note that it asks for an algebraic local form whose affine
-  open contains the given point, i.e. for a version of `Scheme.CartierData.exists_localForm`
-  localised at an arbitrary point of `Z_x` rather than only at its generic point; this is harmless,
-  because any open meeting `Z_x` contains its generic point.
+  inside its smooth-support open *off a Zariski-closed subset `B ⊊ Z_x` not containing the generic
+  point* ((b) and (c)); this mentions no line bundle and no Chern class, and is the pure
+  one-variable analysis. The exceptional set `B` is forced:
+  `Other/AlgebraicGeometry/ChernWindingLocalFormObstruction.lean` shows
+  (`exists_chernWindingChart_imp_divisor_eq_zero`) that a chart at `q` can exist only if `q` lies
+  on no other component of the divisor, because the affine open of an algebraic `LocalForm` never
+  meets another component; and, more generally, the affine open of any given local form only
+  covers a dense open of `Z_x`. Requiring charts on the complement of a proper Zariski-closed
+  subset of `Z_x` is exactly what a single local form (`Scheme.CartierData.exists_localForm`)
+  can deliver, and it costs nothing, by the gluing lemma
+  `cycleComponentSmoothSupport_restriction_injective`
+  (`Other/AlgebraicGeometry/CycleComponentRestrictionInjective.lean`): since every point of `B`
+  has codimension at least two in `X`, restriction of sections of the local relative-cohomology
+  sheaf from the smooth-support open `U` to `U ∖ B^an` is injective, so an equality of sections
+  over `U` may be checked over `U ∖ B^an`.
 * `HasChernWindingNaturality X` — there *exists* a supported lift `β` of the first Chern class for
   which (a) holds on *every* normalised winding chart; this is the Chern-class half, and is where
   §4.2(a) of the handoff (a cocycle description of the connecting map `H¹(𝒪ˣ) → H²(ℤ)`) is needed.
@@ -280,12 +291,39 @@ exponential sequence on the punctured chart (the winding number `(1/2πi) ∮ d 
 connecting map `H¹(V ∖ Z) → H²_Z(V)` of the pair. (b) is then the statement that a unit on a
 polydisc has a holomorphic logarithm (`ContMDiffAt.exists_holomorphic_log`), and (c) is the
 one-variable computation `∂ δ z₁ = ` normal coclass. This obligation involves no line bundle and
-no Chern class. -/
+no Chern class.
+
+**The exceptional set.** The charts are only required at the points of the smooth-support open
+lying on `Z_x` *and off a Zariski-closed subset `B ⊆ Z_x` not containing the generic point `x`*,
+which the obligation may choose (depending on `c` and `x`). This is forced by
+`Other/AlgebraicGeometry/ChernWindingLocalFormObstruction.lean`
+(`exists_chernWindingChart_imp_divisor_eq_zero`): the affine open of an algebraic local form of
+`c` at `x` never meets another component of the divisor, so no chart can exist at a point of
+`Z_x ∩ Z_y`, `y ≠ x`; and the affine open of a single local form only covers a dense open of
+`Z_x` anyway. Taking `B = Z_x ∖ (affine open of the local form)` is the intended choice. The
+reduction still goes through because every point of `B` is a proper specialisation of `x`, hence
+has codimension at least two in `X`, and restriction of the local relative-cohomology sheaf from
+the smooth-support open to the complement of `B^an` is injective
+(`cycleComponentSmoothSupport_restriction_injective`). -/
 def HasNormalizedWindingCharts : Prop :=
   ∀ (c : Scheme.CartierData X.left) (x : X.left) (hx : coheight x = ((1 : ℕ) : ℕ∞)),
-    ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
-      ∃ ch : ChernWindingChart X c x (dim X.left) 1 q,
-        ch.HasTrivialUnitWinding ∧ ch.NormalizesCoclass hx
+    ∃ B : Closeds X.left, (B : Set X.left) ⊆ closure ({x} : Set X.left) ∧ x ∉ B ∧
+      ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
+        Point.underlying q ∉ B →
+        ∃ ch : ChernWindingChart X c x (dim X.left) 1 q,
+          ch.HasTrivialUnitWinding ∧ ch.NormalizesCoclass hx
+
+/-- The previous, pointwise form of the obligation — charts at *every* point of the
+smooth-support open lying on the component — implies the generic one (take `B = ∅`). It is
+false in general (`ChernWindingLocalFormObstruction.lean`), so this is only a compatibility
+lemma. -/
+theorem hasNormalizedWindingCharts_of_forall
+    (h : ∀ (c : Scheme.CartierData X.left) (x : X.left) (hx : coheight x = ((1 : ℕ) : ℕ∞)),
+      ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
+        ∃ ch : ChernWindingChart X c x (dim X.left) 1 q,
+          ch.HasTrivialUnitWinding ∧ ch.NormalizesCoclass hx) :
+    HasNormalizedWindingCharts X :=
+  fun c x hx => ⟨⊥, Set.empty_subset _, Set.notMem_empty x, fun q hq hqS _ => h c x hx q hq hqS⟩
 
 /-- **Obligation (a): naturality of the supported first Chern class.**
 
@@ -344,39 +382,59 @@ theorem hasChernWindingNaturality_of_localModel (h : HasChernLocalModel X) :
     (cycleComponentSupport X x) (2 * 1)).obj.map (homOfLE ch.le).op)
     (hlocal γ hγ x hxs hx)
 
+/-- Restriction along a composite of open inclusions, for sections of a sheaf on a space. -/
+theorem sheaf_map_map_eq {M : TopCat.{0}} (F : TopCat.Sheaf AddCommGrpCat M)
+    {U V W : Opens M} (f : W ⟶ V) (g : V ⟶ U) (h : W ⟶ U) (a : F.obj.obj (op U)) :
+    F.obj.map f.op (F.obj.map g.op a) = F.obj.map h.op a := by
+  rw [← ConcreteCategory.comp_apply, ← Functor.map_comp]
+  congr 2
+
 /-- **The reduction.** The existence of normalised winding charts (obligations (b) and (c)) and
 the naturality of the supported first Chern class on them (obligation (a)) together imply the
 local model `HasChernLocalModel X`, hence, with `hasDivisorClassOfSomeCartierData_of_localModel`,
-the remaining obligation of `docs/DIVISOR_HANDOFF.md` §3. -/
+the remaining obligation of `docs/DIVISOR_HANDOFF.md` §3.
+
+The equality of sections over the smooth-support open `U` is first reduced, by the injectivity
+of restriction `cycleComponentSmoothSupport_restriction_injective`, to an equality over
+`U ∖ B^an`, `B` the exceptional set of the charts; that open is covered by the charts (at its
+points on `Z_x`, all of which lie off `B`) together with its part off `Z_x`, where every section
+of the sheaf vanishes. -/
 theorem hasChernLocalModel_of_winding (h₁ : HasNormalizedWindingCharts X)
     (h₂ : HasChernWindingNaturality X) : HasChernLocalModel X := by
   intro E L hL iso c hc
   obtain ⟨β, hβ, hnat⟩ := h₂ E L hL iso c hc
   refine ⟨β, hβ, ?_⟩
   intro γ hγ x hxs hx
+  obtain ⟨B, hB, hxB, hch⟩ := h₁ c x hx
   choose ch hunit hnorm using
     fun q : {q : ComplexPoint X // q ∈ cycleComponentSmoothSupportAmbientOpen X x ∧
-        q ∈ cycleComponentSupport X x} => h₁ c x hx q.1 q.2.1 q.2.2
-  -- the charts cover the part of the smooth-support open lying on the component; the rest is
-  -- covered by the complement of the component, where the whole sheaf vanishes.
+        q ∈ cycleComponentSupport X x ∧ Point.underlying q ∉ B} =>
+      hch q.1 q.2.1 q.2.2.1 q.2.2.2
+  -- reduce to the complement of the exceptional set, where restriction is injective
+  refine cycleComponentSmoothSupport_restriction_injective X x (d := dim X.left) hx B hB hxB ?_
+  -- the charts cover the part of that open lying on the component; the rest is covered by the
+  -- complement of the component, where the whole sheaf vanishes.
   refine TopCat.Sheaf.eq_of_locally_eq'
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x)
       (2 * 1))
     (fun q : Option {q : ComplexPoint X // q ∈ cycleComponentSmoothSupportAmbientOpen X x ∧
-        q ∈ cycleComponentSupport X x} =>
-      q.elim (cycleComponentSmoothSupportAmbientOpen X x ⊓
-        (cycleComponentAnalyticClosedSupport X x).compl) fun q => (ch q).carrier)
-    (cycleComponentSmoothSupportAmbientOpen X x)
+        q ∈ cycleComponentSupport X x ∧ Point.underlying q ∉ B} =>
+      q.elim ((cycleComponentSmoothSupportAmbientOpen X x ⊓ (analyticClosedSupport X B).compl) ⊓
+        (cycleComponentAnalyticClosedSupport X x).compl)
+        fun q => (ch q).carrier ⊓
+          (cycleComponentSmoothSupportAmbientOpen X x ⊓ (analyticClosedSupport X B).compl))
+    (cycleComponentSmoothSupportAmbientOpen X x ⊓ (analyticClosedSupport X B).compl)
     (fun q => match q with
       | none => homOfLE inf_le_left
-      | some q => homOfLE (ch q).le) ?_ _ _ ?_
+      | some _ => homOfLE inf_le_right) ?_ _ _ ?_
   · intro y hy
     rw [Opens.mem_iSup]
     by_cases hyS : y ∈ cycleComponentSupport X x
-    · exact ⟨some ⟨y, hy, hyS⟩, (ch ⟨y, hy, hyS⟩).mem⟩
+    · exact ⟨some ⟨y, hy.1, hyS, hy.2⟩, (ch ⟨y, hy.1, hyS, hy.2⟩).mem, hy⟩
     · exact ⟨none, hy, hyS⟩
   · rintro (_ | q)
-    · have hVS : ∀ y ∈ (cycleComponentSmoothSupportAmbientOpen X x ⊓
+    · have hVS : ∀ y ∈ ((cycleComponentSmoothSupportAmbientOpen X x ⊓
+          (analyticClosedSupport X B).compl) ⊓
           (cycleComponentAnalyticClosedSupport X x).compl :
             Opens (TopCat.of (ComplexPoint X))), y ∉ cycleComponentSupport X x :=
         fun _ hy => hy.2
@@ -386,7 +444,21 @@ theorem hasChernLocalModel_of_winding (h₁ : HasNormalizedWindingCharts X)
         (AlgebraicTopology.Singular.supportRelativeCohomologySheaf_section_eq_zero
           (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x) (2 * 1)
           (cycleComponentAnalyticClosedSupport X x).isClosed _ hVS _).symm
-    · exact (ch q).restrict_eq_zsmul_coclass hx (c.divisor x) _
+    · have key := (ch q).restrict_eq_zsmul_coclass hx (c.divisor x) _
         (hnat γ hγ x hxs hx q.1 (ch q) (hunit q) (hnorm q)) (hunit q) (hnorm q)
+      let F := supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+        (cycleComponentSupport X x) (2 * 1)
+      let U' : Opens (ComplexPoint X) :=
+        cycleComponentSmoothSupportAmbientOpen X x ⊓ (analyticClosedSupport X B).compl
+      let i : (ch q).carrier ⊓ U' ⟶ U' := homOfLE inf_le_right
+      let j : U' ⟶ cycleComponentSmoothSupportAmbientOpen X x := homOfLE inf_le_left
+      let k : (ch q).carrier ⊓ U' ⟶ (ch q).carrier := homOfLE inf_le_left
+      let l : (ch q).carrier ⟶ cycleComponentSmoothSupportAmbientOpen X x := homOfLE (ch q).le
+      let m : (ch q).carrier ⊓ U' ⟶ cycleComponentSmoothSupportAmbientOpen X x :=
+        homOfLE (le_trans inf_le_left (ch q).le)
+      have key' := congrArg (F.obj.map k.op) key
+      exact (sheaf_map_map_eq F i j m _).trans
+        ((sheaf_map_map_eq F k l m _).symm.trans (key'.trans
+          ((sheaf_map_map_eq F k l m _).trans (sheaf_map_map_eq F i j m _).symm)))
 
 end AlgebraicGeometry.ComplexPoint
