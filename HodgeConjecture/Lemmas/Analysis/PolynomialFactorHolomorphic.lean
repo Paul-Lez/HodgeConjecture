@@ -166,24 +166,45 @@ theorem roots_card_nodup_of_mem_simpleRootBase {p : Polynomial (Polynomial ℂ)}
 /-- An explicit enumeration of the roots of a simple fiber. -/
 noncomputable def simpleRootEnumeration {p : Polynomial (Polynomial ℂ)}
     (hp : p.Monic) (z : SimpleRootBase p) : Fin p.natDegree → ℂ :=
-  fun i ↦ (familySpecialization p z.1).roots.get ⟨i, by
-    rw [(roots_card_nodup_of_mem_simpleRootBase hp z).1]
-  ⟩
+  let r := (familySpecialization p z.1).roots
+  let hcard : r.toFinset.card = p.natDegree :=
+    (Multiset.toFinset_card_of_nodup
+      (roots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+      (roots_card_nodup_of_mem_simpleRootBase hp z).1
+  fun i ↦ ((r.toFinset.equivFinOfCardEq hcard).symm i : ℂ)
 
 theorem simpleRootEnumeration_isRoot {p : Polynomial (Polynomial ℂ)}
     (hp : p.Monic) (z : SimpleRootBase p) (i : Fin p.natDegree) :
     (familySpecialization p z.1).eval (simpleRootEnumeration hp z i) = 0 := by
   apply (mem_roots (hp.map (Polynomial.evalRingHom z.1)).ne_zero).mp
-  exact Multiset.get_mem _ _
+  change simpleRootEnumeration hp z i ∈
+    (familySpecialization p z.1).roots
+  let e := ((familySpecialization p z.1).roots.toFinset.equivFinOfCardEq
+      ((Multiset.toFinset_card_of_nodup
+        (roots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+        (roots_card_nodup_of_mem_simpleRootBase hp z).1)).symm
+  refine Multiset.mem_toFinset.mp ?_
+  change (((familySpecialization p z.1).roots.toFinset.equivFinOfCardEq
+    ((Multiset.toFinset_card_of_nodup
+      (roots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+      (roots_card_nodup_of_mem_simpleRootBase hp z).1)).symm i : ℂ) ∈
+    (familySpecialization p z.1).roots.toFinset
+  exact (e i).property
 
 theorem simpleRootEnumeration_injective {p : Polynomial (Polynomial ℂ)}
     (hp : p.Monic) (z : SimpleRootBase p) :
     Function.Injective (simpleRootEnumeration hp z) := by
   intro i j hij
-  apply Fin.ext
-  apply (Multiset.nodup_iff_injective_get.mp
-    (roots_card_nodup_of_mem_simpleRootBase hp z).2)
-  simpa [simpleRootEnumeration] using hij
+  have hsub : ((familySpecialization p z.1).roots.toFinset.equivFinOfCardEq
+      ((Multiset.toFinset_card_of_nodup
+        (roots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+        (roots_card_nodup_of_mem_simpleRootBase hp z).1)).symm i =
+      ((familySpecialization p z.1).roots.toFinset.equivFinOfCardEq
+      ((Multiset.toFinset_card_of_nodup
+        (roots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+        (roots_card_nodup_of_mem_simpleRootBase hp z).1)).symm j := by
+    exact Subtype.ext (by simpa [simpleRootEnumeration] using hij)
+  exact (Equiv.injective _ hsub)
 
 theorem exists_simpleRootEnumeration {p : Polynomial (Polynomial ℂ)}
     (hp : p.Monic) (z : SimpleRootBase p) (w : ℂ)
@@ -191,9 +212,14 @@ theorem exists_simpleRootEnumeration {p : Polynomial (Polynomial ℂ)}
     ∃ i : Fin p.natDegree, simpleRootEnumeration hp z i = w := by
   have hmem : w ∈ (familySpecialization p z.1).roots :=
     (mem_roots (hp.map (Polynomial.evalRingHom z.1)).ne_zero).mpr hw
-  obtain ⟨i, hi⟩ := Multiset.exists_get_of_mem hmem
-  refine ⟨⟨i, by rw [(roots_card_nodup_of_mem_simpleRootBase hp z).1]⟩, ?_⟩
-  simpa [simpleRootEnumeration] using hi
+  let e := ((familySpecialization p z.1).roots.toFinset.equivFinOfCardEq
+    ((Multiset.toFinset_card_of_nodup
+      (roots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+      (roots_card_nodup_of_mem_simpleRootBase hp z).1)).symm
+  have hwfin : w ∈ (familySpecialization p z.1).roots.toFinset := by
+    simpa using hmem
+  refine ⟨e.symm ⟨w, hwfin⟩, ?_⟩
+  simp [simpleRootEnumeration, e]
 
 /-- The point of the root cover attached to an enumerated root of a simple fiber. -/
 noncomputable def simpleRootCoverPoint {p : Polynomial (Polynomial ℂ)}
@@ -218,14 +244,30 @@ theorem eventually_injective_localRootBranches {p : Polynomial (Polynomial ℂ)}
         localRootBranch (simpleRootCoverPoint hp z i) z' ≠
           localRootBranch (simpleRootCoverPoint hp z j) z' := by
     intro i j hij
-    apply (differentiableAt_localRootBranch (simpleRootCoverPoint hp z i)).continuousAt.eventually_ne
-      (differentiableAt_localRootBranch (simpleRootCoverPoint hp z j)).continuousAt
-    simpa [simpleRootCoverPoint, localRootBranch_apply_base] using
-      (simpleRootEnumeration_injective hp z hij)
+    have hne : localRootBranch (simpleRootCoverPoint hp z i) z.1 -
+        localRootBranch (simpleRootCoverPoint hp z j) z.1 ≠ 0 := by
+      have hi : localRootBranch (simpleRootCoverPoint hp z i) z.1 =
+          simpleRootEnumeration hp z i := by
+        change localRootBranch (simpleRootCoverPoint hp z i)
+          (simpleRootCoverPoint hp z i).1.1.1 = _
+        exact localRootBranch_apply_base _
+      have hj : localRootBranch (simpleRootCoverPoint hp z j) z.1 =
+          simpleRootEnumeration hp z j := by
+        change localRootBranch (simpleRootCoverPoint hp z j)
+          (simpleRootCoverPoint hp z j).1.1.1 = _
+        exact localRootBranch_apply_base _
+      rw [hi, hj]
+      exact sub_ne_zero.mpr (fun h ↦ hij (simpleRootEnumeration_injective hp z h))
+    have hcont :=
+      (differentiableAt_localRootBranch (simpleRootCoverPoint hp z i)).continuousAt.sub
+        (differentiableAt_localRootBranch (simpleRootCoverPoint hp z j)).continuousAt
+    filter_upwards [hcont.eventually (isOpen_compl_singleton.mem_nhds hne)] with z' hz
+    exact sub_ne_zero.mp hz
   filter_upwards [eventually_all.2 fun i ↦ eventually_all.2 fun j ↦
-    if hij : i = j then Eventually.of_forall (fun _ ↦ not_imp_not.mpr hij)
-    else hpair i j hij] with z' hz i j hij
-  exact hz i j hij
+    eventually_all.2 fun hij : i ≠ j ↦ hpair i j hij] with z' hz
+  intro i j heq
+  by_contra hij
+  exact hz i j hij heq
 
 /-- On a common neighborhood, the local branches exhaust every root of every fiber. -/
 theorem eventually_exists_localRootBranch_eq_of_familyEquation_eq_zero
@@ -242,8 +284,8 @@ theorem eventually_exists_localRootBranch_eq_of_familyEquation_eq_zero
   have hq : q.Monic := hp.map (Polynomial.evalRingHom z')
   have hdegree : q.natDegree = p.natDegree := hp.natDegree_map (Polynomial.evalRingHom z')
   have hBcard : B.card = p.natDegree := by
-    rw [Finset.card_image_iff.mpr hinj]
-    simp [B]
+    rw [Finset.card_image_iff.mpr hinj.injOn]
+    simp
   have hBroot : ∀ a ∈ B, q.eval a = 0 := by
     intro a ha
     obtain ⟨i, -, rfl⟩ := Finset.mem_image.mp ha
@@ -253,8 +295,9 @@ theorem eventually_exists_localRootBranch_eq_of_familyEquation_eq_zero
     simpa [hdegree] using hBcard.ge
     exact hq.ne_zero
   have hmem : w ∈ B := by
-    rw [← hroots]
-    exact (mem_roots hq.ne_zero).mpr hw
+    have hwroot : w ∈ q.roots := (mem_roots hq.ne_zero).mpr hw
+    have : w ∈ B.val := by rwa [hroots] at hwroot
+    simpa using this
   obtain ⟨i, -, hi⟩ := Finset.mem_image.mp hmem
   exact ⟨i, hi⟩
 
