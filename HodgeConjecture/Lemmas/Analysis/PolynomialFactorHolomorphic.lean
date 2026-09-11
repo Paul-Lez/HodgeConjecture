@@ -118,6 +118,18 @@ theorem hasStrictFDerivAt_localRootBranch {p : Polynomial (Polynomial ℂ)}
     (hasStrictFDerivAt_familyEquation p (zw.1.1.1, zw.1.2)).hasStrictFDerivAt_implicitFunctionOfProdDomain
       (simpleRootCover_rootDirection_isInvertible zw)
 
+theorem localRootBranch_apply_base {p : Polynomial (Polynomial ℂ)}
+    (zw : SimpleRootCover p) : localRootBranch zw zw.1.1.1 = zw.1.2 := by
+  let hs := hasStrictFDerivAt_familyEquation p (zw.1.1.1, zw.1.2)
+  have h := (hs.eventually_apply_eq_iff_implicitFunctionOfProdDomain
+    (simpleRootCover_rootDirection_isInvertible zw)).self_of_nhds
+  apply h.mp
+  rfl
+
+theorem differentiableAt_localRootBranch {p : Polynomial (Polynomial ℂ)}
+    (zw : SimpleRootCover p) : DifferentiableAt ℂ (localRootBranch zw) zw.1.1.1 :=
+  (hasStrictFDerivAt_localRootBranch zw).differentiableAt
+
 /-- Near its center, the implicit branch consists of roots of the specialized family. -/
 theorem eventually_familyEquation_localRootBranch {p : Polynomial (Polynomial ℂ)}
     (zw : SimpleRootCover p) :
