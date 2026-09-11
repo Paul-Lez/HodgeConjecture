@@ -4,10 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
 public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
-public import Other.Algebra.Homology.MapExtendBettiComparison
 public import Other.AlgebraicGeometry.BettiSupportedOrdinarySign
 
 /-! # Actual positive ordinary normalization of the ambient supported injective model -/
@@ -45,8 +44,7 @@ theorem complexOpenRawToSheafTop_eq_global :
         (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤)
         (singularCochainSheafComplex ℚ (TopCat.of (ComplexPoint X)))
         ComplexShape.embeddingUpNat).inv = globalRawToSingularSheafInt X := by
-  rw [openRawToSingularCochainSheafComplex_top,
-    HomologicalComplex.mapExtendCanonicalIso_eq_bettiMapExtendIso]
+  rw [openRawToSingularCochainSheafComplex_top]
   rfl
 
 variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
@@ -82,7 +80,6 @@ theorem complexSupportedSingularTop_inclusion_of_relative
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 1000000 in
 /-- The original ambient supported-injective inverse comparison on the top open
 is the actual supported singular-to-injective map of the prescribed relative class. -/
 theorem complexSupportInjectiveSectionCohomologyEquiv_symm_top
@@ -133,7 +130,6 @@ theorem complexSupportedSingularInjectiveHomologyIso_inclusion
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 1200000 in
 /-- The actual supported-injective inverse-relative comparison followed by
 positive kernel inclusion is the actual positive raw relative inclusion followed
 by the prescribed sheafification and ambient injective comparison. -/
@@ -171,7 +167,6 @@ theorem complexSupportInjectiveSectionCohomologyEquiv_inclusion_positive
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 1000000 in
 /-- The definitive signed ordinary-target square: the newer actual positive
 supported-kernel class is the NEGATIVE of the old support-singular comparison
 followed by its cone-defined support-forgetting map. -/

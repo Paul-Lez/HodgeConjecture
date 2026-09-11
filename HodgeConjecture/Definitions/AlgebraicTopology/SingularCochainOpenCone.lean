@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainOpenSections
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainOpenSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.MappingConeQuasiIso
-public import HodgeConjecture.Definitions.AlgebraicTopology.RelativeCochainCone
-public import HodgeConjecture.Definitions.AlgebraicTopology.RelativeCochainConeNaturality
+public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeCochainCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeCochainConeNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularGlobalComparison
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 
@@ -42,22 +42,6 @@ def openSingularSheafRestrictionCone {V W : Opens X} (i : W ⟶ V) :
     (HomologicalComplex.extendMap (openSingularSheafRestriction R X i)
       ComplexShape.embeddingUpNat)
 
-/-- Local supported cohomology in negative degrees vanishes already
-termwise in this nonnegative sheaf-cochain model. The cone index is `n - 1`. -/
-lemma openSingularSheafRestrictionCone_homology_isZero_negative
-    {V W : Opens X} (i : W ⟶ V) (n : ℤ) (hn : n < 0) :
-    IsZero ((openSingularSheafRestrictionCone R X i).homology (n - 1)) := by
-  apply ShortComplex.isZero_homology_of_isZero_X₂
-  change IsZero ((CochainComplex.mappingCone
-    (HomologicalComplex.extendMap (openSingularSheafRestriction R X i)
-      ComplexShape.embeddingUpNat)).X (n - 1))
-  rw [CochainComplex.mappingCone.isZero_X_iff]
-  constructor
-  · exact (openSingularCochainSheafComplex R X V).isZero_extend_X
-      ComplexShape.embeddingUpNat _ (by intro m; change (m : ℤ) ≠ n - 1 + 1; omega)
-  · exact (openSingularCochainSheafComplex R X W).isZero_extend_X
-      ComplexShape.embeddingUpNat _ (by intro m; change (m : ℤ) ≠ n - 1; omega)
-
 /-- The actual local sheafification restriction square, after extension by zero. -/
 lemma openSingularSheafRestrictionInt_naturality {V W : Opens X} (i : W ⟶ V) :
     HomologicalComplex.extendMap (openRawSingularRestriction R X i)
@@ -90,22 +74,6 @@ theorem openRawToSingularSheafRestrictionCone_quasiIso {V W : Opens X} (i : W �
   let := openRawToSingularCochainSheafComplex_quasiIso X W
   exact CochainComplex.mappingCone.map_quasiIso_of_vertical_quasiIso _ _ _ _ _
 
-/-- The local cone comparison preserves Mathlib's connecting morphism,
-including its negative-first-projection convention. -/
-@[reassoc]
-lemma openRawToSingularSheafRestrictionCone_connecting {V W : Opens X} (i : W ⟶ V) :
-    openRawToSingularSheafRestrictionCone R X i ≫
-      (CochainComplex.mappingCone.triangle
-        (HomologicalComplex.extendMap (openSingularSheafRestriction R X i)
-          ComplexShape.embeddingUpNat)).mor₃ =
-    (CochainComplex.mappingCone.triangle
-        (HomologicalComplex.extendMap (openRawSingularRestriction R X i)
-          ComplexShape.embeddingUpNat)).mor₃ ≫
-      (HomologicalComplex.extendMap (openRawToSingularCochainSheafComplex R X V)
-        ComplexShape.embeddingUpNat)⟦(1 : ℤ)⟧' :=
-  (CochainComplex.mappingCone.triangleMap _ _ _ _
-    (openSingularSheafRestrictionInt_naturality R X i)).comm₃.symm
-
 /-- The actual topological pair consisting of two nested ambient opens. -/
 def openInclusionPair {V W : Opens X} (i : W ⟶ V) : TopPair :=
   TopPair.of ((Opens.toTopCat X).map i)
@@ -132,7 +100,7 @@ def openRawSingularCochainComplexIsoDual (V : Opens X) :
 
 /-- The preceding identification preserves the literal dual of the
 singular-chain inclusion of nested opens. -/
-lemma openRawSingularRestriction_transport {V W : Opens X} (i : W ⟶ V) :
+private lemma openRawSingularRestriction_transport {V W : Opens X} (i : W ⟶ V) :
     openRawSingularRestriction R X i ≫ (openRawSingularCochainComplexIsoDual R X W).hom =
       (openRawSingularCochainComplexIsoDual R X V).hom ≫
         ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℕ)).map
@@ -151,7 +119,7 @@ def openRawSingularCochainComplexIntIsoDual (V : Opens X) :
           ComplexShape.embeddingUpNat) :=
   (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
     (openRawSingularCochainComplexIsoDual R X V) ≪≫
-      (HomologicalComplex.mapExtendIso (forget₂ (ModuleCat R) AddCommGrpCat)
+      (HomologicalComplex.mapExtendCanonicalIso (forget₂ (ModuleCat R) AddCommGrpCat)
         (SingularChainComplex R (TopCat.of V)).linearDualCochainComplex
         ComplexShape.embeddingUpNat).symm
 
@@ -175,7 +143,7 @@ lemma openRawSingularRestrictionInt_transport {V W : Opens X} (i : W ⟶ V) :
   exact congrArg
     (fun f => HomologicalComplex.extendMap
       (openRawSingularCochainComplexIsoDual R X V).hom ComplexShape.embeddingUpNat ≫ f)
-    (HomologicalComplex.mapExtendIso_inv_naturality
+    (HomologicalComplex.mapExtendCanonicalIso_inv_naturality
       (forget₂ (ModuleCat R) AddCommGrpCat)
       (HomologicalComplex.linearDualMap
         ((chainPairFunctor R).obj (openInclusionPair X i)).hom)

@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.CohomologySheafStalkVanishing
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.CohomologySheafStalkVanishing
 /-!
 # Canonical cohomology-sheaf sections from local section-complex classes
 
