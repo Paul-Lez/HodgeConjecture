@@ -142,6 +142,212 @@ theorem eventually_mvFamilyEquation_mvLocalRootBranch {n : ℕ}
   have hzero : mvFamilyEquation p (zw.1.1.1, zw.1.2) = 0 := zw.2
   simpa [mvLocalRootBranch, hzero] using h
 
+
+/-- A fiber over the simple-root locus has the expected number of distinct roots. -/
+theorem mvRoots_card_nodup_of_mem_simpleRootBase {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (hp : p.Monic) (z : MvSimpleRootBase p) :
+    (mvFamilySpecialization p z.1).roots.card = p.natDegree ∧
+      (mvFamilySpecialization p z.1).roots.Nodup := by
+  let q := mvFamilySpecialization p z.1
+  have hq : q.Monic := by
+    exact hp.map (MvPolynomial.eval z.1)
+  have hsplit : q.Splits := IsAlgClosed.splits q
+  have hcard : q.roots.card = q.natDegree :=
+    hsplit.natDegree_eq_card_roots.symm
+  have hdegree : q.natDegree = p.natDegree := by
+    exact hp.natDegree_map (MvPolynomial.eval z.1)
+  refine ⟨hcard.trans hdegree, ?_⟩
+  rw [nodup_roots_iff_of_splits hq.ne_zero hsplit]
+  rw [Separable, ← gcd_isUnit_iff, isUnit_iff_degree_eq_zero]
+  by_contra hnot
+  obtain ⟨w, hw⟩ := Splits.exists_eval_eq_zero
+    (Splits.of_dvd hsplit hq.ne_zero (gcd_dvd_left q q.derivative)) hnot
+  exact z.2 w
+    (eval_eq_zero_of_dvd_of_eval_eq_zero (gcd_dvd_left q q.derivative) hw)
+    (eval_eq_zero_of_dvd_of_eval_eq_zero (gcd_dvd_right q q.derivative) hw)
+
+/-- An explicit enumeration of the roots of a simple fiber. -/
+noncomputable def mvSimpleRootEnumeration {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (hp : p.Monic) (z : MvSimpleRootBase p) : Fin p.natDegree → ℂ :=
+  let r := (mvFamilySpecialization p z.1).roots
+  let hcard : r.toFinset.card = p.natDegree :=
+    (Multiset.toFinset_card_of_nodup
+      (mvRoots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+      (mvRoots_card_nodup_of_mem_simpleRootBase hp z).1
+  fun i ↦ ((r.toFinset.equivFinOfCardEq hcard).symm i : ℂ)
+
+theorem mvSimpleRootEnumeration_isRoot {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (hp : p.Monic) (z : MvSimpleRootBase p) (i : Fin p.natDegree) :
+    (mvFamilySpecialization p z.1).eval (mvSimpleRootEnumeration hp z i) = 0 := by
+  apply (mem_roots (hp.map (MvPolynomial.eval z.1)).ne_zero).mp
+  change mvSimpleRootEnumeration hp z i ∈
+    (mvFamilySpecialization p z.1).roots
+  let e := ((mvFamilySpecialization p z.1).roots.toFinset.equivFinOfCardEq
+      ((Multiset.toFinset_card_of_nodup
+        (mvRoots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+        (mvRoots_card_nodup_of_mem_simpleRootBase hp z).1)).symm
+  refine Multiset.mem_toFinset.mp ?_
+  change (((mvFamilySpecialization p z.1).roots.toFinset.equivFinOfCardEq
+    ((Multiset.toFinset_card_of_nodup
+      (mvRoots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+      (mvRoots_card_nodup_of_mem_simpleRootBase hp z).1)).symm i : ℂ) ∈
+    (mvFamilySpecialization p z.1).roots.toFinset
+  exact (e i).property
+
+theorem mvSimpleRootEnumeration_injective {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (hp : p.Monic) (z : MvSimpleRootBase p) :
+    Function.Injective (mvSimpleRootEnumeration hp z) := by
+  intro i j hij
+  have hsub : ((mvFamilySpecialization p z.1).roots.toFinset.equivFinOfCardEq
+      ((Multiset.toFinset_card_of_nodup
+        (mvRoots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+        (mvRoots_card_nodup_of_mem_simpleRootBase hp z).1)).symm i =
+      ((mvFamilySpecialization p z.1).roots.toFinset.equivFinOfCardEq
+      ((Multiset.toFinset_card_of_nodup
+        (mvRoots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+        (mvRoots_card_nodup_of_mem_simpleRootBase hp z).1)).symm j := by
+    exact Subtype.ext (by simpa [mvSimpleRootEnumeration] using hij)
+  exact (Equiv.injective _ hsub)
+
+theorem exists_mvSimpleRootEnumeration {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (hp : p.Monic) (z : MvSimpleRootBase p) (w : ℂ)
+    (hw : (mvFamilySpecialization p z.1).eval w = 0) :
+    ∃ i : Fin p.natDegree, mvSimpleRootEnumeration hp z i = w := by
+  have hmem : w ∈ (mvFamilySpecialization p z.1).roots :=
+    (mem_roots (hp.map (MvPolynomial.eval z.1)).ne_zero).mpr hw
+  let e := ((mvFamilySpecialization p z.1).roots.toFinset.equivFinOfCardEq
+    ((Multiset.toFinset_card_of_nodup
+      (mvRoots_card_nodup_of_mem_simpleRootBase hp z).2).trans
+      (mvRoots_card_nodup_of_mem_simpleRootBase hp z).1)).symm
+  have hwfin : w ∈ (mvFamilySpecialization p z.1).roots.toFinset := by
+    simpa using hmem
+  refine ⟨e.symm ⟨w, hwfin⟩, ?_⟩
+  simp [mvSimpleRootEnumeration, e]
+
+/-- The point of the root cover attached to an enumerated root of a simple fiber. -/
+noncomputable def mvSimpleRootCoverPoint {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (hp : p.Monic) (z : MvSimpleRootBase p) (i : Fin p.natDegree) : MvSimpleRootCover p :=
+  ⟨(z, mvSimpleRootEnumeration hp z i), mvSimpleRootEnumeration_isRoot hp z i⟩
+
+/-- One neighborhood of the base point supports all the finitely many local root branches. -/
+theorem eventually_all_mvFamilyEquation_mvLocalRootBranch {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (hp : p.Monic) (z : MvSimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ i : Fin p.natDegree,
+      mvFamilyEquation p (z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z') = 0 := by
+  exact eventually_all.2 fun i ↦
+    eventually_mvFamilyEquation_mvLocalRootBranch (mvSimpleRootCoverPoint hp z i)
+
+/-- Near the center, the finitely many root branches remain pairwise distinct. -/
+theorem eventually_injective_mvLocalRootBranches {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (hp : p.Monic) (z : MvSimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, Function.Injective
+      (fun i : Fin p.natDegree ↦ mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z') := by
+  have hpair : ∀ i j : Fin p.natDegree, i ≠ j →
+      ∀ᶠ z' in 𝓝 z.1,
+        mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z' ≠
+          mvLocalRootBranch (mvSimpleRootCoverPoint hp z j) z' := by
+    intro i j hij
+    have hne : mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z.1 -
+        mvLocalRootBranch (mvSimpleRootCoverPoint hp z j) z.1 ≠ 0 := by
+      have hi : mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z.1 =
+          mvSimpleRootEnumeration hp z i := by
+        change mvLocalRootBranch (mvSimpleRootCoverPoint hp z i)
+          (mvSimpleRootCoverPoint hp z i).1.1.1 = _
+        exact mvLocalRootBranch_apply_base _
+      have hj : mvLocalRootBranch (mvSimpleRootCoverPoint hp z j) z.1 =
+          mvSimpleRootEnumeration hp z j := by
+        change mvLocalRootBranch (mvSimpleRootCoverPoint hp z j)
+          (mvSimpleRootCoverPoint hp z j).1.1.1 = _
+        exact mvLocalRootBranch_apply_base _
+      rw [hi, hj]
+      exact sub_ne_zero.mpr (fun h ↦ hij (mvSimpleRootEnumeration_injective hp z h))
+    have hcont :=
+      (differentiableAt_mvLocalRootBranch (mvSimpleRootCoverPoint hp z i)).continuousAt.sub
+        (differentiableAt_mvLocalRootBranch (mvSimpleRootCoverPoint hp z j)).continuousAt
+    filter_upwards [hcont.eventually (isOpen_compl_singleton.mem_nhds hne)] with z' hz
+    exact sub_ne_zero.mp hz
+  filter_upwards [eventually_all.2 fun i ↦ eventually_all.2 fun j ↦
+    eventually_all.2 fun hij : i ≠ j ↦ hpair i j hij] with z' hz
+  intro i j heq
+  by_contra hij
+  exact hz i j hij heq
+
+/-- On a common neighborhood, the local branches exhaust every root of every fiber. -/
+theorem eventually_exists_mvLocalRootBranch_eq_of_mvFamilyEquation_eq_zero
+    {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic) (z : MvSimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ w : ℂ, mvFamilyEquation p (z', w) = 0 →
+      ∃ i : Fin p.natDegree, mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z' = w := by
+  filter_upwards [eventually_all_mvFamilyEquation_mvLocalRootBranch hp z,
+    eventually_injective_mvLocalRootBranches hp z] with z' hroot hinj
+  intro w hw
+  let q := mvFamilySpecialization p z'
+  let f : Fin p.natDegree → ℂ :=
+    fun i ↦ mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z'
+  let B : Finset ℂ := Finset.univ.image f
+  have hq : q.Monic := hp.map (MvPolynomial.eval z')
+  have hdegree : q.natDegree = p.natDegree := hp.natDegree_map (MvPolynomial.eval z')
+  have hBcard : B.card = p.natDegree := by
+    rw [Finset.card_image_iff.mpr hinj.injOn]
+    simp
+  have hBroot : ∀ a ∈ B, q.eval a = 0 := by
+    intro a ha
+    obtain ⟨i, -, rfl⟩ := Finset.mem_image.mp ha
+    exact hroot i
+  have hroots : q.roots = B.val := by
+    apply roots_eq_of_natDegree_le_card_of_ne_zero hBroot
+    simpa [hdegree] using hBcard.ge
+    exact hq.ne_zero
+  have hmem : w ∈ B := by
+    have hwroot : w ∈ q.roots := (mem_roots hq.ne_zero).mpr hw
+    have : w ∈ B.val := by rwa [hroots] at hwroot
+    simpa using this
+  obtain ⟨i, -, hi⟩ := Finset.mem_image.mp hmem
+  exact ⟨i, hi⟩
+
+/-- The simple-root base contains a neighborhood of each of its points. -/
+theorem eventually_mem_mvSimpleRootBase {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (hp : p.Monic) (z : MvSimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
+      (mvFamilySpecialization p z').derivative.eval w ≠ 0 := by
+  filter_upwards [eventually_all_mvFamilyEquation_mvLocalRootBranch hp z,
+    eventually_injective_mvLocalRootBranches hp z] with z' hroot hinj
+  let q := mvFamilySpecialization p z'
+  let f : Fin p.natDegree → ℂ :=
+    fun i ↦ mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z'
+  let B : Finset ℂ := Finset.univ.image f
+  have hq : q.Monic := hp.map (MvPolynomial.eval z')
+  have hdegree : q.natDegree = p.natDegree := hp.natDegree_map (MvPolynomial.eval z')
+  have hBcard : B.card = p.natDegree := by
+    rw [Finset.card_image_iff.mpr hinj.injOn]
+    simp
+  have hBroot : ∀ a ∈ B, q.eval a = 0 := by
+    intro a ha
+    obtain ⟨i, -, rfl⟩ := Finset.mem_image.mp ha
+    exact hroot i
+  have hroots : q.roots = B.val := by
+    apply roots_eq_of_natDegree_le_card_of_ne_zero hBroot
+    simpa [hdegree] using hBcard.ge
+    exact hq.ne_zero
+  intro w hw
+  have hnodup : q.roots.Nodup := by rw [hroots]; exact B.nodup
+  have hseparable : q.Separable :=
+    (nodup_roots_iff_of_splits hq.ne_zero (IsAlgClosed.splits q)).mp hnodup
+  intro hderiv
+  have hdiv : X - C w ∣ gcd q q.derivative :=
+    dvd_gcd (dvd_iff_isRoot.mpr hw) (dvd_iff_isRoot.mpr hderiv)
+  exact not_isUnit_X_sub_C w
+    (isUnit_of_dvd_unit hdiv ((gcd_isUnit_iff q q.derivative).mpr hseparable))
+
+
+
+theorem isOpen_mvSimpleRootBase {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (hp : p.Monic) :
+    IsOpen {z : Fin n → ℂ | ∀ w : ℂ, (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0} := by
+  rw [isOpen_iff_mem_nhds]
+  intro z hz
+  exact eventually_mem_mvSimpleRootBase hp ⟨z, hz⟩
+
 end
 
 end Polynomial
