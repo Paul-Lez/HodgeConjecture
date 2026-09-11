@@ -223,12 +223,9 @@ def affineSpecHomeomorph :
 
 variable {A B : Type} [CommRing A] [CommRing B] [Algebra ℂ A] [Algebra ℂ B]
 
-/-- The affine scheme morphism contravariantly associated to a complex algebra homomorphism. -/
-abbrev affineSpecMap (g : A →ₐ[ℂ] B) : Spec ↧B ⟶ Spec ↧A :=
-  Spec.map (CommRingCat.ofHom g.toRingHom)
-
-lemma affineSpecMap_over (g : A →ₐ[ℂ] B) :
-    affineSpecMap g ≫ affineSpecStructureMap A = affineSpecStructureMap B := by
+lemma specMap_comp_affineSpecStructureMap (g : A →ₐ[ℂ] B) :
+    Spec.map (CommRingCat.ofHom g.toRingHom) ≫ affineSpecStructureMap A =
+      affineSpecStructureMap B := by
   rw [← Spec.map_comp]
   congr 1
   ext c
@@ -238,7 +235,8 @@ lemma affineSpecMap_over (g : A →ₐ[ℂ] B) :
 def affineSpecComplexPointMap (g : A →ₐ[ℂ] B) :
     ComplexPoint (Over.mk (affineSpecStructureMap B)) →
       ComplexPoint (Over.mk (affineSpecStructureMap A)) :=
-  map (Over.homMk (affineSpecMap g) (affineSpecMap_over g))
+  map (Over.homMk (Spec.map (CommRingCat.ofHom g.toRingHom))
+    (specMap_comp_affineSpecStructureMap g))
 
 /-- Under the affine-point equivalence, an affine scheme map acts by precomposition of algebra
 homomorphisms. -/
@@ -247,8 +245,7 @@ lemma affineSpecEquiv_affineSpecComplexPointMap (g : A →ₐ[ℂ] B)
     affineSpecEquiv A (affineSpecComplexPointMap g z) =
       (affineSpecEquiv B z).comp g := by
   ext a
-  simp [affineSpecComplexPointMap, map, affineSpecEquiv, affineSpecMap,
-    Spec.preimage_comp]
+  simp [affineSpecComplexPointMap, map, affineSpecEquiv, Spec.preimage_comp]
 
 end
 
