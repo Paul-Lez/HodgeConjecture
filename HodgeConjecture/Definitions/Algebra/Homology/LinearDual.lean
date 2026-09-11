@@ -55,9 +55,6 @@ abbrev linearDual (S : ShortComplex (ModuleCat.{u} R)) :
     ShortComplex (ModuleCat.{u} R) :=
   ShortComplex.moduleCatMk S.g.hom.dualMap S.f.hom.dualMap (by ext; simp)
 
-lemma linearDual_X₁ (S : ShortComplex (ModuleCat.{u} R)) :
-    (S.linearDual).X₁ = ModuleCat.of R (Module.Dual R S.X₃) := by with_implicit rfl
-
 @[simps]
 def dualCycleToHomologyFunctional (S : ShortComplex (ModuleCat.{u} R)) :
     LinearMap.ker S.f.hom.dualMap →ₗ[R]
