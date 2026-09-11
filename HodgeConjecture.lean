@@ -277,6 +277,7 @@ public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
+public import HodgeConjecture.Mathlib.Algebra.Module.LinearMap.Rat
 public import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
