@@ -1384,8 +1384,10 @@ lemma hodgeFiltrationSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n
 /-- Cohomology classes with coefficients in `K` whose de Rham images lie in the `(p,p)` piece
 `F^p ⊓ conj F^p` of `H^{2p}`.
 
-The condition is `(p,p)`, not merely `F^p`; the two agree exactly when `K → ℂ` lands in `ℝ`, by
-`hodgeClasses_eq_comap_hodgeFiltrationSubmodule`.
+The condition is `(p,p)`, not merely `F^p`. When the image of `K → ℂ` is fixed by complex
+conjugation, in particular for `K = ℚ`, the two agree, by
+`hodgeClasses_eq_comap_hodgeFiltrationSubmodule`. This is not an equivalence: at `p = 0` both
+submodules are `⊤` for every `K`.
 
 The Hodge filtration is indexed by a relative dimension, but the dimension is not a choice: it is
 `dim X.left`, recovered from the scheme itself. -/
