@@ -33,6 +33,18 @@ available.
 For a smooth projective complex variety of complex dimension zero, analytic connectedness is
 already known.  Combining the codimension-zero calculation with the dimension
 bounds proves the Hodge-conjecture inclusion in every codimension for such a variety.
+
+In general the codimension-zero case is now reduced to exactly two unproved facts.  The generic
+point is the only point of coheight zero, so the constructed cycle-class span in codimension zero
+is the span of the single class attached to it.  What remains is, first, connectedness of
+the analytification of an integral projective variety, and second, nonvanishing of that
+constructed generic-point class; equivalently, under connectedness, that it is a nonzero multiple
+of the degree-zero cohomological unit.  Neither is proved here, and both appear as explicit
+hypotheses of `rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_ne_zero`.
+
+As groundwork for the second of these, the generic component is identified with the ambient
+variety: its canonical closed immersion is an isomorphism and its structure morphism is smooth
+everywhere.
 -/
 
 @[expose] public noncomputable section
@@ -99,5 +111,86 @@ theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero
   · have hdim : dim X.left < p := by lia
     rw [hodgeClasses_eq_bot_of_lt ℚ X hdim,
       algebraicCycleClassSpan_eq_bot_of_lt X (dim X.left) p hdim]
+
+/-- In codimension zero the constructed algebraic cycle-class span is the span of the single
+class attached to the generic point: on an integral scheme the generic point is the only point of
+coheight zero, so the defining supremum has a single index. -/
+theorem algebraicCycleClassSpan_zero_eq_span_genericPoint :
+    algebraicCycleClassSpan X 0 =
+      Submodule.span ℚ {cycleComponentSheafClass X (genericPoint X.left) (d := dim X.left)
+        (Order.IsMax.coheight_eq_zero isMax_top)} := by
+  rw [algebraicCycleClassSpan]
+  refine le_antisymm (iSup_le fun x ↦ iSup_le fun hx ↦ ?_) ?_
+  · obtain rfl := CodimensionCycle.eq_genericPoint_of_coheight_zero x hx
+    exact le_rfl
+  · exact le_iSup_of_le (genericPoint X.left)
+      (le_iSup_of_le (Order.IsMax.coheight_eq_zero isMax_top) le_rfl)
+
+/-- If the constructed generic-point class is nonzero, then on a connected analytification the
+codimension-zero algebraic cycle-class span is all of degree-zero rational cohomology: that group
+is one-dimensional over `ℚ`, so any nonzero vector spans it. -/
+theorem algebraicCycleClassSpan_zero_eq_top_of_ne_zero
+    (hV : ConnectedSpace (ComplexPoint X))
+    (h : cycleComponentSheafClass X (genericPoint X.left) (d := dim X.left)
+      (Order.IsMax.coheight_eq_zero isMax_top) ≠ 0) :
+    algebraicCycleClassSpan X 0 = ⊤ := by
+  let : ConnectedSpace (ComplexPoint X) := hV
+  rw [algebraicCycleClassSpan_zero_eq_span_genericPoint]
+  set e := rationalCohomologyClassLinearEquiv X
+  obtain ⟨q, hq⟩ := e.surjective (cycleComponentSheafClass X (genericPoint X.left)
+    (d := dim X.left) (Order.IsMax.coheight_eq_zero isMax_top))
+  have hq0 : q ≠ 0 := by
+    rintro rfl
+    exact h (by rw [← hq, map_zero])
+  refine top_unique fun β _ ↦ ?_
+  obtain ⟨r, rfl⟩ := e.surjective β
+  have hsmul : e r = (r / q) • e q := by
+    rw [← map_smul, smul_eq_mul, div_mul_cancel₀ r hq0]
+  rw [hsmul, hq]
+  exact Submodule.smul_mem _ _ (Submodule.subset_span rfl)
+
+/-- Nonvanishing of the generic-point class discharges, under analytic connectedness, the
+comparison hypothesis between the constructed codimension-zero algebraic cycle-class span and the
+genuine codimension-zero Chow-class span: both are then the whole cohomology group. -/
+theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_ne_zero
+    (hV : ConnectedSpace (ComplexPoint X))
+    (h : cycleComponentSheafClass X (genericPoint X.left) (d := dim X.left)
+      (Order.IsMax.coheight_eq_zero isMax_top) ≠ 0) :
+    algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X := by
+  rw [algebraicCycleClassSpan_zero_eq_top_of_ne_zero X hV h,
+    codimensionZeroCycleClassSpan_eq_top_of_connected X hV]
+
+/-- The Hodge-conjecture inclusion holds in codimension zero as soon as the analytification is
+connected and the constructed generic-point class is nonzero. -/
+theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_ne_zero
+    (hV : ConnectedSpace (ComplexPoint X))
+    (h : cycleComponentSheafClass X (genericPoint X.left) (d := dim X.left)
+      (Order.IsMax.coheight_eq_zero isMax_top) ≠ 0) :
+    Hdg^0(ℚ; X) ≤ algebraicCycleClassSpan X 0 :=
+  rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected X hV
+    (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_ne_zero X hV h)
+
+omit [Smooth X.hom] [IsProjective X.hom] in
+/-- Geometric groundwork at the generic point: the reduced closed subscheme cut out by the
+closure of the generic point is the whole integral scheme, so its canonical closed immersion is an
+isomorphism. -/
+theorem isIso_cycleComponentι_genericPoint :
+    IsIso (cycleComponentι X.left (genericPoint X.left)) := by
+  have hclosed : (⟨closure {genericPoint X.left}, isClosed_closure⟩ :
+      TopologicalSpace.Closeds X.left) = ⊤ :=
+    TopologicalSpace.Closeds.ext (genericPoint_closure (α := X.left))
+  change IsIso (Scheme.IdealSheafData.vanishingIdeal
+    (X := X.left) ⟨closure {genericPoint X.left}, isClosed_closure⟩).subschemeι
+  rw [Scheme.isIso_subschemeι_iff_eq_bot, hclosed,
+    Scheme.IdealSheafData.vanishingIdeal_top, Scheme.nilradical_eq_bot]
+
+/-- The generic component is smooth over `ℂ` everywhere: its structure morphism factors the
+smooth structure morphism of `X` through an isomorphism, so its smooth locus is the whole
+component. -/
+theorem smoothLocus_cycleComponentι_genericPoint_eq_top :
+    (cycleComponentι X.left (genericPoint X.left) ≫ X.hom).smoothLocus = ⊤ := by
+  have : IsIso (cycleComponentι X.left (genericPoint X.left)) :=
+    isIso_cycleComponentι_genericPoint X
+  exact Scheme.Hom.smoothLocus_eq_top _
 
 end AlgebraicGeometry.ComplexPoint

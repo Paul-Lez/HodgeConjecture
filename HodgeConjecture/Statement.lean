@@ -35,6 +35,12 @@ is proved to kill principal-divisor relations, it should be descended to the rat
 After separately proving that its values are Hodge classes, the conjecture can equivalently be
 restated as surjectivity onto the rational Hodge classes.
 
+Even the instance `p = 0`, which asserts that `H^0(X(ℂ); ℚ)` is spanned by the class of `X`
+itself, is not yet proved. It is reduced in `Other/AlgebraicGeometry/HodgeCodimensionZero.lean` to
+two unproved facts: connectedness of `X(ℂ)` for integral `X`, and nonvanishing of the constructed
+generic-point class. Until the latter, that class is not certified to be a nonzero multiple of the
+degree-zero cohomological unit.
+
 ## References
 
 [P. Deligne, *The Hodge Conjecture*](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf)
