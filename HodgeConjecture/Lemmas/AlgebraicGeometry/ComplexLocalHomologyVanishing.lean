@@ -33,8 +33,8 @@ theorem chartModelEmbedding_relativeHomologyMap_bijective_degree
       (relativeHomologyMap ℚ n (standardComplexChartTargetPairIso d e x hx).hom) :=
     (ConcreteCategory.isIso_iff_bijective _).mp inferInstance
   have hexcision := neighborhoodPointComplement_relativeHomologyMap_bijective
-    (chartModelTarget d e x hx) x (chartModelTarget_isOpen d e x hx)
-      (chartModelTarget_mem d e x hx) n
+    (chartModelEmbedding d e x hx).target x (chartModelEmbedding d e x hx).open_target
+      (chartModelEmbedding_mem_target d e x hx) n
   rw [← standardComplexChartTargetPairIso_hom_comp_neighborhoodMap d e x hx,
     relativeHomologyMap_comp]
   exact hexcision.comp htarget
