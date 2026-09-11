@@ -45,7 +45,6 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicClosedImmersionCharts
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
-public import HodgeConjecture.Definitions.AlgebraicGeometry.IntegralProjectiveVariety
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ReducedSmoothClosedFiltration
@@ -279,6 +278,7 @@ public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
 public import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
+public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
 public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart
