@@ -16,8 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.Algebra.Homology.LinearDual
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCohomology
 /-!
 # Cohomology of singular cochains
 

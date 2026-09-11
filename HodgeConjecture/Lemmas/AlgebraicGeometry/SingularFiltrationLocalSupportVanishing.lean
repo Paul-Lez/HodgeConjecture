@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSingularClosedFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSingularClosedFiltration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportOpenTransport
-public import HodgeConjecture.Definitions.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
 public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenRestrictedCohomologyVanishing
 
 /-!

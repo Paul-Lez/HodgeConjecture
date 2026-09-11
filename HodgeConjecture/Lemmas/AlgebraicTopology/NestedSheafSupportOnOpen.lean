@@ -6,8 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.NestedSheafSupportLocalization
 public import HodgeConjecture.Definitions.AlgebraicTopology.FlasqueSupportedSections
-public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSectionRestrictionCone
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSectionRestrictionCone
 /-!
 # The open-set model of the last localization term
 

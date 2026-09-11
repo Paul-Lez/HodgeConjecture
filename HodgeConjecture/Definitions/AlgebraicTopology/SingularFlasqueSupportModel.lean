@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueSheafSupportComparison
-public import HodgeConjecture.Definitions.AlgebraicTopology.OpenInjectiveResolutionComparison
+public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenInjectiveResolutionComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularNaturality
 
 /-!

@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainSheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Points
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainSheaf
 public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionNormalCoordinates
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionNormalCoordinates
 public import HodgeConjecture.Lemmas.AlgebraicTopology.HolomorphicNormalTransition
 
 /-!
@@ -35,9 +35,6 @@ theorem biAnalyticLocus_isOpen : IsOpen e.biAnalyticLocus :=
 /-- Restricting to this proved open set introduces no analytic-equivalence input. -/
 def biAnalyticRestrict : OpenPartialHomeomorph E F :=
   e.restrOpen e.biAnalyticLocus e.biAnalyticLocus_isOpen
-
-@[simp] theorem biAnalyticRestrict_apply (x : E) : e.biAnalyticRestrict x = e x := rfl
-@[simp] theorem biAnalyticRestrict_symm_apply (y : F) : e.biAnalyticRestrict.symm y = e.symm y := rfl
 
 theorem biAnalyticRestrict_mem_source_iff (x : E) :
     x ∈ e.biAnalyticRestrict.source ↔
@@ -70,36 +67,6 @@ def closedImmersionNormalCoordinateChange :
   (closedImmersionNormalChart X Y i m d z).symm.trans
     (closedImmersionNormalCoordinatesLinearEquiv X Y i m d z).toHomeomorph.toOpenPartialHomeomorph
 
-theorem closedImmersionNormalCoordinateChange_mem_source :
-    localChart X d (Point.map i z) (Point.map i z) ∈
-      (closedImmersionNormalCoordinateChange X Y i m d z).source :=
-  ⟨closedImmersionNormalChart_mem_target X Y i m d z, trivial⟩
-
-@[simp] theorem closedImmersionNormalCoordinateChange_center :
-    closedImmersionNormalCoordinateChange X Y i m d z
-      (localChart X d (Point.map i z) (Point.map i z)) =
-        (localChart Y m z z, 0) := by
-  change closedImmersionNormalCoordinatesLinearEquiv X Y i m d z
-    ((closedImmersionNormalChart X Y i m d z).symm _) = _
-  rw [closedImmersionNormalChart_symm_center]
-  simp [closedImmersionNormalCoordinatesLinearEquiv]
-
-theorem analyticAt_closedImmersionNormalCoordinateChange :
-    AnalyticAt ℂ (closedImmersionNormalCoordinateChange X Y i m d z)
-      (localChart X d (Point.map i z) (Point.map i z)) :=
-  ((closedImmersionNormalCoordinatesLinearEquiv X Y i m d z).toContinuousLinearMap.analyticAt
-    _).comp (analyticAt_closedImmersionNormalChart_symm X Y i m d z)
-
-theorem analyticAt_closedImmersionNormalCoordinateChange_symm :
-    AnalyticAt ℂ (closedImmersionNormalCoordinateChange X Y i m d z).symm
-      (localChart Y m z z, 0) := by
-  let K := closedImmersionNormalCoordinatesLinearEquiv X Y i m d z
-  have hK : K.symm (localChart Y m z z, 0) = (localChart Y m z z, 0) := by
-    simp [K, closedImmersionNormalCoordinatesLinearEquiv]
-  have hA' : AnalyticAt ℂ (closedImmersionNormalChart X Y i m d z)
-      (K.symm (localChart Y m z z, 0)) := hK ▸ analyticAt_closedImmersionNormalChart X Y i m d z
-  exact hA'.comp (K.symm.toContinuousLinearMap.analyticAt _)
-
 /-- An actual support-flattening chart whose normal coordinate change is holomorphic in
 both directions throughout its source. It contains the distinguished support point. -/
 def closedImmersionHolomorphicFlatteningChart :
@@ -110,33 +77,6 @@ def closedImmersionHolomorphicFlatteningChart :
       (closedImmersionStandardFlatteningChart X Y i m d z).source
       (closedImmersionStandardFlatteningChart X Y i m d z).open_source
 
-@[simp] theorem closedImmersionHolomorphicFlatteningChart_apply (y : ComplexPoint X) :
-    closedImmersionHolomorphicFlatteningChart X Y i m d z y =
-      closedImmersionStandardFlatteningChart X Y i m d z y := rfl
-
-@[simp] theorem closedImmersionHolomorphicFlatteningChart_symm_apply
-    (v : (Fin m → ℂ) × (Fin (d - m) → ℂ)) :
-    (closedImmersionHolomorphicFlatteningChart X Y i m d z).symm v =
-      (localChart X d (Point.map i z)).symm
-        ((closedImmersionNormalCoordinateChange X Y i m d z).symm v) := rfl
-
-theorem closedImmersionHolomorphicFlatteningChart_mem_source :
-    Point.map i z ∈
-      (closedImmersionHolomorphicFlatteningChart X Y i m d z).source := by
-  refine ⟨⟨mem_localChart_source X d (Point.map i z), ?_⟩,
-    closedImmersionStandardFlatteningChart_mem_source X Y i m d z⟩
-  apply (OpenPartialHomeomorph.biAnalyticRestrict_mem_source_iff _ _).mpr
-  refine ⟨closedImmersionNormalCoordinateChange_mem_source X Y i m d z,
-    analyticAt_closedImmersionNormalCoordinateChange X Y i m d z, ?_⟩
-  simp only [OpenPartialHomeomorph.symm_symm]
-  rw [closedImmersionNormalCoordinateChange_center]
-  exact analyticAt_closedImmersionNormalCoordinateChange_symm X Y i m d z
-
-@[simp] theorem closedImmersionHolomorphicFlatteningChart_center :
-    closedImmersionHolomorphicFlatteningChart X Y i m d z (Point.map i z) =
-      (localChart Y m z z, 0) :=
-  closedImmersionStandardFlatteningChart_center X Y i m d z
-
 theorem closedImmersionHolomorphicFlatteningChart_mem_range_iff (y : ComplexPoint X)
     (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     y ∈ Set.range (Point.map i) ↔
@@ -145,7 +85,7 @@ theorem closedImmersionHolomorphicFlatteningChart_mem_range_iff (y : ComplexPoin
 
 /-- At every selected ambient source point, the underlying normal coordinate change and
 its inverse are analytic, not only at the initially distinguished center. -/
-theorem closedImmersionHolomorphicFlatteningChart_analytic (y : ComplexPoint X)
+private theorem closedImmersionHolomorphicFlatteningChart_analytic (y : ComplexPoint X)
     (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     AnalyticAt ℂ (closedImmersionNormalCoordinateChange X Y i m d z)
       (localChart X d (Point.map i z) y) ∧
@@ -153,7 +93,7 @@ theorem closedImmersionHolomorphicFlatteningChart_analytic (y : ComplexPoint X)
       (closedImmersionHolomorphicFlatteningChart X Y i m d z y) :=
   ((OpenPartialHomeomorph.biAnalyticRestrict_mem_source_iff _ _).mp hy.1.2).2
 
-theorem closedImmersionNormalCoordinateChange_symm_at_chart (y : ComplexPoint X)
+private theorem closedImmersionNormalCoordinateChange_symm_at_chart (y : ComplexPoint X)
     (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     (closedImmersionNormalCoordinateChange X Y i m d z).symm
       (closedImmersionHolomorphicFlatteningChart X Y i m d z y) =
@@ -239,35 +179,6 @@ def closedImmersionNormalTransitionDerivativeEquiv (a : Fin m → ℂ)
     (ha : (a, 0) ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
     (Fin (d - m) → ℂ) ≃L[ℂ] (Fin (d - m) → ℂ) :=
   normalTransitionDerivativeEquiv
-    (closedImmersionNormalTransition X Y i m d z z') a ha
-    (closedImmersionNormalTransition_preserves_support X Y i m d z z')
-    (analyticAt_closedImmersionNormalTransition X Y i m d z z' (a, 0) ha)
-    (analyticAt_closedImmersionNormalTransition_symm X Y i m d z z' (a, 0) ha)
-
-@[simp] theorem closedImmersionNormalTransitionDerivativeEquiv_apply (a : Fin m → ℂ)
-    (ha : (a, 0) ∈ (closedImmersionNormalTransition X Y i m d z z').source)
-    (v : Fin (d - m) → ℂ) :
-    closedImmersionNormalTransitionDerivativeEquiv X Y i m d z z' a ha v =
-      (fderiv ℂ (closedImmersionNormalTransition X Y i m d z z')
-        (a, 0) (0, v)).2 := rfl
-
-/-- On a smaller transverse normal neighborhood in a genuine overlap, transition and
-inclusion have exactly the same top relative-cohomology pullback. All holomorphic and
-normal-derivative facts are obtained from the constructed closed-immersion charts. -/
-theorem exists_open_closedImmersionNormalTransition_coclass_invariance (a : Fin m → ℂ)
-    (ha : (a, 0) ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
-    let T := closedImmersionNormalTransition X Y i m d z z'
-    let h0 : normalTransitionMap (d - m) T a 0 = 0 :=
-      (closedImmersionNormalTransition_preserves_support X Y i m d z z'
-        (a, 0) ha).mpr rfl
-    ∃ (W : Set (Fin (d - m) → ℂ)) (hW : W ⊆ normalTransitionDomain (d - m) T a)
-      (hne : ∀ v, v ∈ W → v ≠ 0 → normalTransitionMap (d - m) T a v ≠ 0),
-      IsOpen W ∧ 0 ∈ W ∧
-      relativeCohomologyMap ℚ (2 * (d - m))
-        (complexNeighborhoodPuncturedPairMapOf (d - m) W (normalTransitionMap (d - m) T a)
-          ((normalTransitionMap_continuousOn (d - m) T a).mono hW) h0 hne) =
-        relativeCohomologyMap ℚ (2 * (d - m)) (neighborhoodPointComplementPairMap W 0) :=
-  exists_open_normalTransition_relativeCohomologyMap_eq (d - m)
     (closedImmersionNormalTransition X Y i m d z z') a ha
     (closedImmersionNormalTransition_preserves_support X Y i m d z z')
     (analyticAt_closedImmersionNormalTransition X Y i m d z z' (a, 0) ha)

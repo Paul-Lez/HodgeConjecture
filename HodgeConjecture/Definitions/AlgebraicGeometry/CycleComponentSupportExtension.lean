@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SingularFiltrationLocalSupportVanishing
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSmoothSupportPurity
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSmoothSupportPurity
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FiniteSheafSupportVanishing
 
 /-!
@@ -34,7 +34,7 @@ local instance cycleComponentSupportExtensionAnalyticTopology :
 include d hx in
 /-- Every actual closed remainder in the finite singular filtration has
 vanishing supported section-complex cohomology below `2(p+1)`. -/
-theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
+private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
     (k : ℕ) (hk : k ≤ cycleComponentSingularFiltrationLength X x)
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
@@ -59,7 +59,7 @@ theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
 include d hx in
 /-- The actual singular boundary has the required lower supported
 cohomological bound. All geometric and finite-filtration inputs are proved. -/
-theorem cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
+private theorem cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X
@@ -75,14 +75,14 @@ theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree :
   cycleComponentSingularBoundarySectionCohomology_isZero_of_lt X x (d := d) hx _ (by omega)
 
 include d hx in
-theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ :
+private theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X
         (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology (2 * (p : ℤ) + 1)) :=
   cycleComponentSingularBoundarySectionCohomology_isZero_of_lt X x (d := d) hx _ (by omega)
 
 /-- Every point of the singular boundary belongs to the full component support. -/
-theorem cycleComponentSingularBoundary_le_support :
+private theorem cycleComponentSingularBoundary_le_support :
     cycleComponentSingularAnalyticClosedFiltration X x 0 ≤ cycleComponentAnalyticClosedSupport X x := by
   intro y hy
   obtain ⟨z, _, hz⟩ := hy
@@ -91,7 +91,7 @@ theorem cycleComponentSingularBoundary_le_support :
   exact ⟨z, hz⟩
 
 /-- The actual complement inclusion determining the localization sequence. -/
-theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
+private theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
     (cycleComponentAnalyticClosedSupport X x).compl ≤ cycleComponentSmoothSupportAmbientOpen X x :=
   fun _ hy hyS ↦ hy (cycleComponentSingularBoundary_le_support X x hyS)
 
@@ -143,10 +143,5 @@ def cycleComponentSupportExtensionIso :
           (2 * (p : ℤ))) := by
   let := cycleComponentSupportSectionRestriction_homology_isIso X x (d := d) hx
   exact asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
-
-@[simp]
-theorem cycleComponentSupportExtensionIso_hom :
-    (cycleComponentSupportExtensionIso X x (d := d) hx).hom =
-      HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)) := rfl
 
 end AlgebraicGeometry.ComplexPoint
