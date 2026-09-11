@@ -111,7 +111,6 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 800000 in
 /-- The normalized support equivalence intertwines the existing
 `forgetSupport` with the actual inclusion of supported injective sections.
 No compatibility or choice of a sign is supplied as an input. -/

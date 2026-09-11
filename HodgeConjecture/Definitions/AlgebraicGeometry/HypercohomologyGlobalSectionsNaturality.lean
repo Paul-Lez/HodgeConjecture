@@ -37,7 +37,6 @@ end CochainComplex.HomComplex
 
 namespace TopCat.Sheaf
 
-set_option maxHeartbeats 800000 in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
 lemma homComplexSingleIntegerIsoGlobalSections_naturality

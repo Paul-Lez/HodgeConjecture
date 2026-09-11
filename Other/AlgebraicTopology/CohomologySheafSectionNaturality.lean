@@ -39,7 +39,6 @@ lemma sectionCohomologyPresheafOnOpenIso_naturality (U : Opens X) :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-set_option maxHeartbeats 800000 in
 /-- Exact sheafification and its counit give a coefficient-natural cohomology isomorphism. -/
 @[reassoc]
 lemma sectionCohomologyPresheafSheafificationIso_naturality :

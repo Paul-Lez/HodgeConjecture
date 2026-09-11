@@ -69,7 +69,6 @@ omit [Nontrivial E] in
   simp [radialPrimitiveSeries]
   congr 2
 
-set_option maxHeartbeats 2000000 in
 omit [Nontrivial E] in
 lemma norm_radialPrimitiveSeries_succ_le (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ)) (k : ℕ) :
