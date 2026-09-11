@@ -433,9 +433,9 @@ namespace Guide.Hodge.D14
 ```
 ```lean
 def complexConstantCohomologyDeRhamAddEquiv (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
+    [Smooth X.hom] (n : ℤ) :
     ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
-  { complexConstantCohomologyDeRhamEquiv X h n with
+  { complexConstantCohomologyDeRhamEquiv X n with
     map_add' := fun α β ↦ by
       change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
         hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α +
@@ -452,9 +452,9 @@ namespace Guide.Hodge.D15
 ```lean
 def deRhamConj (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
-  ((complexConstantCohomologyDeRhamAddEquiv X inferInstance n).toAddMonoidHom).comp
+  ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
     ((hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n).comp
-      (complexConstantCohomologyDeRhamAddEquiv X inferInstance n).symm.toAddMonoidHom)
+      (complexConstantCohomologyDeRhamAddEquiv X n).symm.toAddMonoidHom)
 ```
 ```lean -show
 end Guide.Hodge.D15

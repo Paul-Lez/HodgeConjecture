@@ -120,10 +120,9 @@ omit [Algebra K ℂ] in
   simp [eK]
 
 lemma complexConstantCohomologyDeRhamEquiv_apply
-    [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ)
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
     (α : ComplexConstantCohomology X n) :
-    complexConstantCohomologyDeRhamEquiv X h n α =
+    complexConstantCohomologyDeRhamEquiv X n α =
       hypercohomologyMap X
         (constantsToHolomorphicDeRhamComplexInt X) n α :=
   rfl
@@ -158,26 +157,17 @@ lemma fieldToDeRhamCohomology_factor
     (fieldToComplexConstantSheafComplexInt K X)
     (constantsToHolomorphicDeRhamComplexInt X) n α
 
-/-- Once the analytic Poincare comparison is proved to be a quasi-isomorphism, the
-rational-to-de Rham comparison is injective. This uses the explicit splitting of `K → ℂ`, not a
-finite-dimensionality assumption. -/
-lemma fieldToDeRhamCohomology_injective_of_quasiIso
-    [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
+/-- The rational-to-de Rham comparison is injective. The holomorphic Poincaré lemma supplies
+the analytic quasi-isomorphism, while the explicit splitting of `K → ℂ` proves that extending
+scalars is injective; no finite-dimensionality assumption is needed. -/
+lemma fieldToDeRhamCohomology_injective
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     Function.Injective (fieldToDeRhamCohomology K X n) := by
   intro α β hαβ
   apply fieldToComplexCohomology_injective K X n
-  apply (complexConstantCohomologyDeRhamEquiv X h n).injective
+  apply (complexConstantCohomologyDeRhamEquiv X n).injective
   simpa only [complexConstantCohomologyDeRhamEquiv_apply,
     fieldToDeRhamCohomology_factor K X n] using hαβ
-
-/-- The rational-to-de Rham comparison is injective. The holomorphic Poincaré lemma supplies
-the analytic quasi-isomorphism, while the explicit coefficient splitting proves that extending
-scalars from `K` to `ℂ` is injective. -/
-lemma fieldToDeRhamCohomology_injective
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    Function.Injective (fieldToDeRhamCohomology K X n) :=
-  fieldToDeRhamCohomology_injective_of_quasiIso K X inferInstance n
 
 @[simp] lemma fieldToDeRhamComplexification_tmul
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
@@ -291,7 +281,7 @@ lemma deRhamConj_fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom]
     deRhamConj X n (fieldToDeRhamCohomology K X n α) =
       fieldToDeRhamCohomology K X n α := by
   have he : fieldToDeRhamCohomology K X n α =
-      complexConstantCohomologyDeRhamAddEquiv X inferInstance n
+      complexConstantCohomologyDeRhamAddEquiv X n
         (fieldToComplexCohomology K X n α) :=
     fieldToDeRhamCohomology_factor K X n α
   rw [he, deRhamConj_apply, AddEquiv.symm_apply_apply,
@@ -393,21 +383,13 @@ lemma hodgeClasses_eq_ker_of_lt [IsIntegral X.left] [Smooth X.hom] {p : ℕ} (hp
     hodgePiece_eq_bot_of_lt X (by exact_mod_cast hp : (dim X.left : ℤ) < (p : ℤ)),
     Submodule.restrictScalars_bot, Submodule.comap_bot]
 
-/-- If the analytic constant-to-holomorphic de Rham comparison is a quasi-isomorphism, rational
-Hodge classes vanish above the complex dimension. -/
-lemma hodgeClasses_eq_bot_of_lt_of_quasiIso [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X))
-    {p : ℕ} (hp : dim X.left < p) :
-    Hdg^p(K; X) = ⊥ := by
-  rw [hodgeClasses_eq_ker_of_lt K X hp]
-  exact LinearMap.ker_eq_bot.mpr (fieldToDeRhamCohomology_injective_of_quasiIso K X h (2 * p))
-
 /-- Rational Hodge classes vanish above the complex dimension. -/
 lemma hodgeClasses_eq_bot_of_lt
     [IsIntegral X.left] [Smooth X.hom]
     {p : ℕ} (hp : dim X.left < p) :
-    Hdg^p(K; X) = ⊥ :=
-  hodgeClasses_eq_bot_of_lt_of_quasiIso K X inferInstance hp
+    Hdg^p(K; X) = ⊥ := by
+  rw [hodgeClasses_eq_ker_of_lt K X hp]
+  exact LinearMap.ker_eq_bot.mpr (fieldToDeRhamCohomology_injective K X (2 * p))
 
 /-- The direct definition of rational Hodge classes agrees with the definition using the
 complexified rational lattice. -/
