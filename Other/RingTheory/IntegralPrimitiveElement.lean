@@ -379,7 +379,10 @@ theorem ComplexNoetherNormalization.exists_primitive_numerator_localized_present
       Algebra.adjoin P ((S : Set L) ∪ {(algebraMap P L (r : P))⁻¹}) =
         Algebra.adjoin P ({y} ∪ {(algebraMap P L (r : P))⁻¹}) ∧
       (minpoly P y).Monic ∧
-      Nonempty (AdjoinRoot (minpoly P y) ≃ₐ[P] Algebra.adjoin P ({y} : Set L)) := by
+      Irreducible (minpoly P y) ∧
+      Nonempty (AdjoinRoot (minpoly P y) ≃ₐ[P] Algebra.adjoin P ({y} : Set L)) ∧
+      Nonempty (Localization.Away (N.hom (r : P)) ≃ₐ[P]
+        Localization.Away (algebraMap P (AdjoinRoot (minpoly P y)) (r : P))) := by
   let P := MvPolynomial (Fin N.dimension) ℂ
   let K := FractionRing P
   let L := FractionRing A
@@ -436,5 +439,26 @@ theorem ComplexNoetherNormalization.exists_primitive_numerator_localized_present
   obtain ⟨r', hr'eq, hr'monic, hr'equiv⟩ :=
     exists_adjoin_inverse_eq_and_minpoly_quotient_of_finite P K L S
       (algebraMap A L a) hmem hint hprim
-  exact ⟨a, algebraMap A L a, r', rfl, hint, hprim, hmem, hr'eq, hr'monic, hr'equiv⟩
+  have hr'L : algebraMap P L (r' : P) ≠ 0 := by
+    simpa only [map_zero] using (FaithfulSMul.algebraMap_injective P L).ne
+      (nonZeroDivisors.ne_zero r'.property)
+  let Sy := Algebra.adjoin P ({algebraMap A L a} : Set L)
+  let eA := localizationAwayAlgEquivAdjoinRange f
+    (FaithfulSMul.algebraMap_injective A L) (r' : P) hr'L
+  let eSy := localizationAwayAlgEquivAdjoinRange (Subalgebra.val Sy)
+    Subtype.val_injective (r' : P) hr'L
+  have htargets :
+      Algebra.adjoin P (((f.range : Subalgebra P L) : Set L) ∪
+          {(algebraMap P L (r' : P))⁻¹}) =
+        Algebra.adjoin P (((Subalgebra.val Sy).range : Set L) ∪
+          {(algebraMap P L (r' : P))⁻¹}) := by
+    rw [Subalgebra.range_val]
+    simpa [S, Sy, Algebra.adjoin_union] using hr'eq
+  let elocal : Localization.Away (N.hom (r' : P)) ≃ₐ[P]
+      Localization.Away
+        (algebraMap P (AdjoinRoot (minpoly P (algebraMap A L a))) (r' : P)) :=
+    eA.trans (Subalgebra.equivOfEq _ _ htargets) |>.trans eSy.symm |>.trans
+      (AdjoinRoot.localizationAwayAlgEquivAdjoin (algebraMap A L a) hint (r' : P)).symm
+  exact ⟨a, algebraMap A L a, r', rfl, hint, hprim, hmem, hr'eq, hr'monic,
+    minpoly.irreducible hint, hr'equiv, ⟨elocal⟩⟩
 end Algebra
