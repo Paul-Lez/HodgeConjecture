@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.Analysis.PolynomialFactorGrowth
+public import Other.Analysis.Complex.FiniteSingularityPolynomial
 public import Mathlib.Analysis.Analytic.Polynomial
 public import Mathlib.Analysis.Calculus.ContDiff.RCLike
 public import Mathlib.Analysis.Calculus.Deriv.Polynomial
@@ -591,6 +592,67 @@ theorem differentiableAt_coeff_localBranchFactor {p : Polynomial (Polynomial ℂ
       apply DifferentiableAt.fun_sum
       intro ij hij
       exact (differentiableAt_coeff_X_sub_C_localRootBranch hp z i ij.1).mul (hI ij.2)
+
+/-- Parameters at which the specialized family has a multiple root. -/
+def nonsimpleParameters (p : Polynomial (Polynomial ℂ)) : Set ℂ :=
+  {z | ¬ ∀ w : ℂ, (familySpecialization p z).eval w = 0 →
+    (familySpecialization p z).derivative.eval w ≠ 0}
+
+/-- Extend one coefficient of a clopen-selected factor by zero at nonsimple parameters. -/
+noncomputable def selectedFactorCoeffTotal {p : Polynomial (Polynomial ℂ)} (hp : p.Monic)
+    (S : Set (SimpleRootCover p)) (k : ℕ) (z : ℂ) : ℂ := by
+  classical
+  exact if hz : z ∉ nonsimpleParameters p then
+    (selectedFactor hp S ⟨z, not_not.mp hz⟩).coeff k else 0
+
+theorem selectedFactorCoeffTotal_eq {p : Polynomial (Polynomial ℂ)} (hp : p.Monic)
+    (S : Set (SimpleRootCover p)) (k : ℕ) (z : ℂ) (hz : z ∉ nonsimpleParameters p) :
+    selectedFactorCoeffTotal hp S k z = (selectedFactor hp S ⟨z, not_not.mp hz⟩).coeff k := by
+  simp [selectedFactorCoeffTotal, hz]
+
+/-- Away from the nonsimple fibers, coefficients selected by a clopen set are holomorphic. -/
+theorem differentiableOn_selectedFactorCoeffTotal {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (S : Set (SimpleRootCover p)) (hSopen : IsOpen S)
+    (hSclosed : IsClosed S) (k : ℕ) :
+    DifferentiableOn ℂ (selectedFactorCoeffTotal hp S k) (nonsimpleParameters p)ᶜ := by
+  intro z hz
+  have hzsimple : z ∉ nonsimpleParameters p := hz
+  let zbase : SimpleRootBase p := ⟨z, not_not.mp hzsimple⟩
+  let I := selectedBranchIndices hp S zbase
+  have heq : ∀ᶠ z' in 𝓝 z,
+      selectedFactorCoeffTotal hp S k z' = (localBranchFactor hp zbase I z').coeff k := by
+    filter_upwards [eventually_mem_simpleRootBase hp zbase,
+      eventually_selectedFactor_eq_localBranchFactor hp S hSopen hSclosed zbase]
+      with z' hbase hfactor
+    have hz' : z' ∉ nonsimpleParameters p := by
+      simpa [nonsimpleParameters] using hbase
+    rw [selectedFactorCoeffTotal_eq hp S k z' hz']
+    simpa only [I, Subtype.ext_iff] using congrArg (fun q : Polynomial ℂ ↦ q.coeff k) (hfactor hbase)
+  exact ((differentiableAt_coeff_localBranchFactor hp zbase I k).congr_of_eventuallyEq
+    heq).differentiableWithinAt
+
+/-- The coefficients of a clopen-selected factor satisfy one uniform polynomial-growth bound. -/
+theorem exists_selectedFactorCoeffTotal_growth {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (S : Set (SimpleRootCover p)) :
+    ∃ (C : ℝ) (N : ℕ), 0 ≤ C ∧ ∀ k z, z ∉ nonsimpleParameters p →
+      ‖selectedFactorCoeffTotal hp S k z‖ ≤ C * (1 + ‖z‖) ^ N := by
+  obtain ⟨C, N, hC, hbound⟩ := exists_monic_factor_coeff_growth p hp
+  refine ⟨C, N, hC, fun k z hz ↦ ?_⟩
+  rw [selectedFactorCoeffTotal_eq hp S k z hz]
+  exact hbound z _ (selectedFactor_monic hp S ⟨z, not_not.mp hz⟩)
+    (selectedFactor_dvd hp S ⟨z, not_not.mp hz⟩) k
+
+/-- If only finitely many fibers have multiple roots, every selected coefficient algebraizes. -/
+theorem exists_polynomial_selectedFactorCoeff {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (S : Set (SimpleRootCover p)) (hSopen : IsOpen S)
+    (hSclosed : IsClosed S) (hfinite : (nonsimpleParameters p).Finite) (k : ℕ) :
+    ∃ a : Polynomial ℂ, ∀ z (hz : z ∉ nonsimpleParameters p),
+      a.eval z = (selectedFactor hp S ⟨z, not_not.mp hz⟩).coeff k := by
+  obtain ⟨C, N, hC, hbound⟩ := exists_selectedFactorCoeffTotal_growth hp S
+  obtain ⟨a, -, ha⟩ := Complex.exists_polynomial_of_polynomial_growth_off_finite hfinite
+    (differentiableOn_selectedFactorCoeffTotal hp S hSopen hSclosed k) hC N
+    (fun z hz ↦ hbound k z hz)
+  exact ⟨a, fun z hz ↦ (ha z hz).trans (selectedFactorCoeffTotal_eq hp S k z hz)⟩
 
 end
 
