@@ -14,6 +14,8 @@ public import Mathlib.RingTheory.Adjoin.FG
 public import Mathlib.RingTheory.Localization.Integral
 public import Mathlib.RingTheory.Localization.Finiteness
 public import Mathlib.RingTheory.NoetherNormalization
+public import Mathlib.RingTheory.Polynomial.UniqueFactorization
+public import Mathlib.RingTheory.Polynomial.RationalRoot
 
 @[expose] public section
 
