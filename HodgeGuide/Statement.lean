@@ -38,9 +38,10 @@ below hold for all integer and rational coefficients.
 namespace Guide.Statement.D5
 ```
 ```lean
-def sheafCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
+def sheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (p : ℕ) :
     CodimensionCycle V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
-  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := V.dimension))
+  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := d))
 ```
 ```lean -show
 end Guide.Statement.D5
@@ -56,10 +57,11 @@ namespace Guide.Statement.D6
 ```
 ```lean
 def rationalSheafCycleClassOnCycles
-    (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (p : ℕ) :
     TensorProduct ℤ ℚ (CodimensionCycle V.scheme p) →ₗ[ℚ]
       H^(2 * (p : ℤ))(V.over; ℚ) :=
-  TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
+  TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V d p)
 ```
 ```lean -show
 end Guide.Statement.D6
@@ -70,30 +72,15 @@ example : @Guide.Statement.D6.rationalSheafCycleClassOnCycles = @AlgebraicGeomet
 #check AlgebraicGeometry.ComplexPoint.rationalSheafCycleClassOnCycles_tmul_single
 ```
 
-These maps take a {name}`DimensionedSmoothProjectiveComplexVariety`, a smooth projective variety
-bundled with its dimension, which the construction of the class of a subvariety needs. The
-constructor {name DimensionedSmoothProjectiveComplexVariety.ofOver}`ofOver` packages {lean}`X` with
-{lean}`dim X.left` and the proof, from smoothness and integrality, that this is the relative
-dimension of {lean}`X` over $`\mathbb C`.
+These maps take a {name}`SmoothProjectiveComplexVariety`, a scheme with its structure morphism to
+$`\operatorname{Spec}\mathbb C`, together with a natural number {lean}`d` and an instance saying
+that the structure morphism is smooth of relative dimension {lean}`d`. The construction of the
+class of a subvariety needs that dimension. For a smooth integral complex scheme the instance
+holds at {lean}`dim X.left`, so a caller supplies {lean}`dim X.left` and typeclass search finds the
+certificate.
 
-```lean -show
-namespace Guide.Statement.D7
-```
-```lean
-def DimensionedSmoothProjectiveComplexVariety.ofOver (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] : DimensionedSmoothProjectiveComplexVariety where
-  toSmoothProjectiveComplexVariety :=
-    { scheme := X.left
-      structureMap := X.hom }
-  dimension := TopologicalSpace.dim X.left
-```
-```lean -show
-end Guide.Statement.D7
-example : @Guide.Statement.D7.DimensionedSmoothProjectiveComplexVariety.ofOver = @AlgebraicGeometry.ComplexPoint.DimensionedSmoothProjectiveComplexVariety.ofOver := rfl
-```
-
-The statement does not use the bundle: {name}`algebraicCycleClassSpan`, defined next, evaluates
-each class at {lean}`dim X.left` directly.
+{name}`algebraicCycleClassSpan`, defined next, evaluates each class at {lean}`dim X.left` directly,
+so the statement mentions the scheme and its structure morphism alone.
 
 Whether these maps factor through rational equivalence is a separate question, taken up below.
 

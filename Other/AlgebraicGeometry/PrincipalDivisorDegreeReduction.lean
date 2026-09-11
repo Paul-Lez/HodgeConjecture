@@ -97,14 +97,15 @@ principal-divisor hypothesis follows from two independent focused statements:
 The second item is precisely the scalar degree-zero theorem for principal divisors on the
 one-dimensional carriers occurring here (together with the relevant dimension formula). -/
 theorem maximalCodimensionPrincipalDivisorClassVanishes_of_coefficientSum
-    (V : DimensionedSmoothProjectiveComplexVariety)
-    (m : H^(2 * (V.dimension : ℤ))(V.over; ℚ))
-    (hconstant : ∀ x hx, maximalCodimensionComponentClass V x hx = m)
-    (hdegree : ∀ D : PrincipalDivisor V.scheme V.dimension,
-      codimensionCoefficientSum V.dimension D.pushforwardCycle = 0) :
-    MaximalCodimensionPrincipalDivisorClassVanishes V :=
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
+    (m : H^(2 * (d : ℤ))(V.over; ℚ))
+    (hconstant : ∀ x hx, maximalCodimensionComponentClass V d x hx = m)
+    (hdegree : ∀ D : PrincipalDivisor V.scheme d,
+      codimensionCoefficientSum d D.pushforwardCycle = 0) :
+    MaximalCodimensionPrincipalDivisorClassVanishes V d :=
   fun D ↦ principalDivisor_class_eq_zero_of_coefficientSum_eq_zero
-    (maximalCodimensionComponentClass V) m hconstant D (hdegree D)
+    (maximalCodimensionComponentClass V d) m hconstant D (hdegree D)
 
 end ComplexPoint
 

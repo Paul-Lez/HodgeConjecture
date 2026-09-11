@@ -170,31 +170,33 @@ theorem cycleComponentSheafClass_point_raw_positive (hx : Order.coheight x = d) 
 /-- At the constructed geometric component point, the literal support-inclusion
 class is the legacy supported generator's exact equality transport. -/
 theorem analyticComponentPointGlobalRelativeCoclass_eq_maximalCodimensionSupportedGenerator
-    (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
-    (hx : Order.coheight x = V.dimension) :
-    analyticComponentPointGlobalRelativeCoclass V.over x V.dimension
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (x : V.scheme)
+    (hx : Order.coheight x = d) :
+    analyticComponentPointGlobalRelativeCoclass V.over x d
       (maximalCodimensionCycleComponentPoint V x) =
-      maximalCodimensionSupportedGenerator V x hx :=
+      maximalCodimensionSupportedGenerator V d x hx :=
   enlargeSupport_eq_cast_of_eq ℚ (TopCat.of (ComplexPoint V.over))
-    (maximalCodimensionCycleComponentSupport_eq_singleton V x hx).symm
+    (maximalCodimensionCycleComponentSupport_eq_singleton V d x hx).symm
     (Set.singleton_subset_iff.mpr (range_cycleComponentMap_subset V.over x
-      ⟨maximalCodimensionCycleComponentPoint V x, rfl⟩)) (2 * V.dimension)
-    (analyticPointLocalCoclass V.over V.dimension
+      ⟨maximalCodimensionCycleComponentPoint V x, rfl⟩)) (2 * d)
+    (analyticPointLocalCoclass V.over d
       (cycleComponentMap V.over x (maximalCodimensionCycleComponentPoint V x)))
 
 set_option maxRecDepth 4096 in
 /-- The legacy component comparison is the literal existing Betti-support
 comparison, after its already proved supported-generator normalization. -/
 theorem maximalCodimensionComponentClass_eq_directLegacyPoint
-    (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
-    (hx : Order.coheight x = V.dimension) :
-    maximalCodimensionComponentClass V x hx =
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (x : V.scheme)
+    (hx : Order.coheight x = d) :
+    maximalCodimensionComponentClass V d x hx =
       forgetSupport V.over (cycleComponentSupport V.over x)
-        (2 * (V.dimension : ℤ))
+        (2 * (d : ℤ))
         ((rationalCohomologyWithSupportAddEquivSingular V.over
           (cycleComponentSupport V.over x)
-          (isClosed_cycleComponentSupport V.over x) (2 * V.dimension)).symm
-            (maximalCodimensionSupportedGenerator V x hx)) := by
+          (isClosed_cycleComponentSupport V.over x) (2 * d)).symm
+            (maximalCodimensionSupportedGenerator V d x hx)) := by
   rw [maximalCodimensionComponentClass_eq_forgetSupport_pointCoclass]
   rfl
 
@@ -202,62 +204,67 @@ theorem maximalCodimensionComponentClass_eq_directLegacyPoint
 legacy ordinary point class. This records the proved cone sign without changing
 either definition or either exact local orientation. -/
 theorem cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass
-    (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
-    (hx : Order.coheight x = V.dimension) :
-    cycleComponentSheafClass V.over x (d := V.dimension) hx =
-      -maximalCodimensionComponentClass V x hx := by
-  rw [cycleComponentSheafClass_point_normalization V.over x V.dimension
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (x : V.scheme)
+    (hx : Order.coheight x = d) :
+    cycleComponentSheafClass V.over x (d := d) hx =
+      -maximalCodimensionComponentClass V d x hx := by
+  rw [cycleComponentSheafClass_point_normalization V.over x d
     (maximalCodimensionCycleComponentPoint V x) hx,
     analyticComponentPointPositiveKernelClass_eq_neg_legacy,
-    analyticComponentPointGlobalRelativeCoclass_eq_maximalCodimensionSupportedGenerator V x hx,
+    analyticComponentPointGlobalRelativeCoclass_eq_maximalCodimensionSupportedGenerator V d x hx,
     maximalCodimensionComponentClass_eq_directLegacyPoint]
 
 /-- The entire integral point-cycle map, not just an individual generator,
 has the independently proved negative legacy comparison. -/
 theorem sheafCycleClassOnCycles_eq_neg_pointCycleClassOnCycles
-    (V : DimensionedSmoothProjectiveComplexVariety) :
-    sheafCycleClassOnCycles V V.dimension = -pointCycleClassOnCycles V := by
-  have h : (fun (x : V.scheme) (hx : Order.coheight x = V.dimension) =>
-      cycleComponentSheafClass V.over x (d := V.dimension) hx) =
-        fun x hx => -maximalCodimensionComponentClass V x hx := by
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] :
+    sheafCycleClassOnCycles V d d = -pointCycleClassOnCycles V d := by
+  have h : (fun (x : V.scheme) (hx : Order.coheight x = d) =>
+      cycleComponentSheafClass V.over x (d := d) hx) =
+        fun x hx => -maximalCodimensionComponentClass V d x hx := by
     funext x hx
-    exact cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass V x hx
+    exact cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass V d x hx
   unfold sheafCycleClassOnCycles pointCycleClassOnCycles
   exact (congrArg cycleClassOnCyclesOfComponents h).trans
-    (cycleClassOnCyclesOfComponents_neg (maximalCodimensionComponentClass V))
+    (cycleClassOnCyclesOfComponents_neg (maximalCodimensionComponentClass V d))
 
 /-- Scalar extension preserves the actual signed comparison on ALL rational
 point cycles; in particular every finite rational combination has this sign. -/
 theorem rationalSheafCycleClassOnCycles_eq_neg_rationalPointCycleClassOnCycles
-    (V : DimensionedSmoothProjectiveComplexVariety) :
-    rationalSheafCycleClassOnCycles V V.dimension = -rationalPointCycleClassOnCycles V := by
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] :
+    rationalSheafCycleClassOnCycles V d d = -rationalPointCycleClassOnCycles V d := by
   refine TensorProduct.AlgebraTensorModule.ext fun q c ↦ ?_
-  change q • sheafCycleClassOnCycles V V.dimension c = -(q • pointCycleClassOnCycles V c)
+  change q • sheafCycleClassOnCycles V d d c = -(q • pointCycleClassOnCycles V d c)
   rw [sheafCycleClassOnCycles_eq_neg_pointCycleClassOnCycles]
   simp only [AddMonoidHom.neg_apply, smul_neg]
 
 /-- A closed scheme point requires neither a supplied codimension proof nor a
 chosen analytic point: both are constructed from the actual geometry. -/
 theorem cycleComponentSheafClass_closedPoint_positiveKernel
-    (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (x : V.scheme)
     (hx : IsClosed ({x} : Set V.scheme)) :
     let hcodim := SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
-      (f := V.structureMap) (d := V.dimension) x hx
-    cycleComponentSheafClass V.over x (d := V.dimension) hcodim =
-      analyticComponentPointPositiveKernelClass V.over x V.dimension
+      (f := V.structureMap) (d := d) x hx
+    cycleComponentSheafClass V.over x (d := d) hcodim =
+      analyticComponentPointPositiveKernelClass V.over x d
         (maximalCodimensionCycleComponentPoint V x) :=
-  cycleComponentSheafClass_point_normalization V.over x V.dimension
+  cycleComponentSheafClass_point_normalization V.over x d
     (maximalCodimensionCycleComponentPoint V x) _
 
 /-- The signed legacy comparison at a closed scheme point derives the needed
 codimension from geometry. No point, purity, or comparison data are supplied. -/
 theorem cycleComponentSheafClass_closedPoint_eq_neg_legacy
-    (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap] (x : V.scheme)
     (hx : IsClosed ({x} : Set V.scheme)) :
     let hcodim := SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
-      (f := V.structureMap) (d := V.dimension) x hx
-    cycleComponentSheafClass V.over x (d := V.dimension) hcodim =
-      -maximalCodimensionComponentClass V x hcodim :=
-  cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass V x _
+      (f := V.structureMap) (d := d) x hx
+    cycleComponentSheafClass V.over x (d := d) hcodim =
+      -maximalCodimensionComponentClass V d x hcodim :=
+  cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass V d x _
 
 end AlgebraicGeometry.ComplexPoint
