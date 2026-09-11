@@ -130,14 +130,11 @@ Everything that enters the statement is constructed. The class of a subvariety o
 singular or not, is defined outright, with no hypotheses beyond the smoothness, projectivity, and
 integrality of the ambient variety that the statement itself assumes.
 
-Three classical facts about this construction are not yet formalized. None is needed to state the
+Two classical facts about this construction are not yet formalized. Neither is needed to state the
 conjecture, but they are needed for the usual equivalent formulations.
 
 * The class of a subvariety is a Hodge class:
   $`\operatorname{cl}_X(Z)\in\operatorname{Hdg}^p(X;\mathbb Q)`.
-* The map on cycles kills principal divisors, so that it descends to the rational Chow group
-  $`\mathrm{CH}^p(X)_{\mathbb Q}`. Instead we use the span of the classes of subvarieties; see
-  {ref "why-a-span"}[Why a span rather than a map on Chow groups] for further discussion.
 * The Borel–Moore homology used here, $`H^{\mathrm{BM}}_i(Z\subset X;\mathbb Q)`, is defined
   through the ambient space and has not been shown to be independent of the embedding;
   {ref "what-borel-moore-means"}[What Borel–Moore homology means here] says what is and is not

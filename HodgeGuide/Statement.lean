@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
 import HodgeConjecture.Statement
-import Other.AlgebraicGeometry.ChowCycleClassDescent
 import Other.AlgebraicGeometry.SheafCycleClass
 
 open Verso.Genre Manual
@@ -22,7 +21,6 @@ tag := "the-statement"
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
 noncomputable section
 universe u u_1
-open AlgebraicGeometry.ChowGroup
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
@@ -95,8 +93,6 @@ example : @Guide.Statement.D7.DimensionedSmoothProjectiveComplexVariety.ofOver =
 The statement does not use the bundle: {name}`algebraicCycleClassSpan`, defined next, evaluates
 each class at {lean}`dim X.left` directly.
 
-Whether these maps factor through rational equivalence is a separate question, taken up below.
-
 # The algebraic subspace
 
 For every point {lean}`x` of coheight $`p` in {lean}`X.left`, the construction of the previous
@@ -163,60 +159,6 @@ inclusion, that every algebraic class is a Hodge class, is a theorem that has no
 formalized, so the formulation as an equality $`\operatorname{Hdg}^p(X;\mathbb Q)=A^p(X)` is not
 yet available.
 
-# Why a span rather than a map on Chow groups
-%%%
-tag := "why-a-span"
-%%%
-
-The repository defines {name}`ChowGroup` and {name}`RationalChowGroup`, and the classes of subvarieties give an
-additive map on cycles. To descend this map to the Chow group, one must show that it vanishes on
-every principal-divisor relation. The descent itself is formalized as a construction that takes
-this vanishing as a hypothesis, but the vanishing has not been proved for the classes constructed
-here.
-
-```lean -show
-namespace Guide.Statement.D3
-```
-```lean
-def ChowGroup.cycleClassOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
-    {M : Type*} [AddCommGroup M]
-    (componentClass : ∀ (x : X), coheight x = p → M)
-    (hprincipal : ∀ D : PrincipalDivisor X p,
-      cycleClassOnAlgebraicCyclesOfComponents componentClass D.pushforwardCycle = 0) :
-    ChowGroup X p →+ M :=
-  liftCycleClass (cycleClassOnCyclesOfComponents componentClass)
-    (rationalEquivalenceSubgroup_le_cycleClassOnCyclesOfComponents_ker
-      componentClass hprincipal)
-```
-```lean -show
-end Guide.Statement.D3
-example : @Guide.Statement.D3.ChowGroup.cycleClassOfComponents.{u, u_1} = @AlgebraicGeometry.ChowGroup.cycleClassOfComponents.{u, u_1} := rfl
-```
-```lean -show
-namespace Guide.Statement.D4
-```
-```lean
-def ChowGroup.rationalCycleClassOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
-    {M : Type*} [AddCommGroup M] [Module ℚ M]
-    (componentClass : ∀ (x : X), coheight x = p → M)
-    (hprincipal : ∀ D : PrincipalDivisor X p,
-      cycleClassOnAlgebraicCyclesOfComponents componentClass D.pushforwardCycle = 0) :
-    RationalChowGroup X p →ₗ[ℚ] M :=
-  rationalExtension (cycleClassOfComponents componentClass hprincipal)
-```
-```lean -show
-end Guide.Statement.D4
-example : @Guide.Statement.D4.ChowGroup.rationalCycleClassOfComponents.{u, u_1} = @AlgebraicGeometry.ChowGroup.rationalCycleClassOfComponents.{u, u_1} := rfl
-```
-
-```lean
-#check AlgebraicGeometry.ChowGroup.cycleClassOfComponents_mk
-```
-
-The span of the classes of subvarieties is exactly the image that the descended map would have,
-so nothing is lost by using it. The statement says "rational linear combinations of classes of
-subvarieties" without claiming a factorization through rational equivalence.
-
 # Reading the source
 
 The shortest route through the implementation is:
@@ -232,11 +174,10 @@ The shortest route through the implementation is:
    extension across the singular locus;
 6. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`, the class of a
    subvariety;
-7. `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
+7. `Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
    `ComplexSheafBorelMooreRationalComparison.lean`, Borel–Moore homology and duality;
-8. `Other/AlgebraicGeometry/SheafCycleClass.lean`, the maps on cycles;
-9. `Other/AlgebraicGeometry/ChowCycleClassDescent.lean`, descent to Chow groups.
+8. `Other/AlgebraicGeometry/SheafCycleClass.lean`, the maps on cycles.
 
 Things to keep track of while reading: integer versus natural-number degrees, real versus complex
 dimension, whether a class has been normalized, whether its support has been forgotten, and
-whether a map is defined on cycles or on their quotient by rational equivalence.
+whether a class is supported or ordinary.

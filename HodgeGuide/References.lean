@@ -24,10 +24,8 @@ formalization.
   $`\sigma_{\ge p}\Omega^\bullet`.
 
 * The Stacks Project,
-  [§42.42, “Cycles of given codimension”](https://stacks.math.columbia.edu/tag/0FE2)
-  and [§42.19, “Rational equivalence”](https://stacks.math.columbia.edu/tag/02RW): cycles as
-  combinations of generic points, and rational equivalence through principal divisors and proper
-  pushforward.
+  [§42.42, “Cycles of given codimension”](https://stacks.math.columbia.edu/tag/0FE2):
+  cycles as combinations of generic points.
 
 * The Stacks Project,
   [§20.21, “Cohomology with support in a closed subset”](https://stacks.math.columbia.edu/tag/0A39):
@@ -49,12 +47,13 @@ formalization.
 
 * `HodgeConjecture/Definitions/AlgebraicGeometry/HolomorphicDeRham.lean` and
   `HodgeFiltration.lean`: the de Rham complex, hypercohomology, and the Hodge filtration;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/ChowGroup.lean`, `AlgebraicCycleSupport.lean`,
+* `Other/AlgebraicGeometry/CodimensionCycle.lean`,
+  `HodgeConjecture/Definitions/AlgebraicGeometry/AlgebraicCycleSupport.lean`,
   and `CohomologyWithSupport.lean`: cycles, their supports, and cohomology with support;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`
   and `CycleComponentSupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;
-* `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
+* `Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
   `ComplexSheafBorelMooreRationalComparison.lean`: Borel–Moore homology and duality;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`: the class of a
   subvariety and its Borel–Moore fundamental class;

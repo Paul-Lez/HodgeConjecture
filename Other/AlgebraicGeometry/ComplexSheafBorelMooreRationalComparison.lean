@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMooreForget
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalForget
+public import Other.AlgebraicGeometry.ComplexSheafBorelMooreForget
+public import Other.AlgebraicGeometry.DerivedSupportRationalForget
 
 /-!
 # The constructed ambient Borel–Moore map into the existing rational cohomology API
