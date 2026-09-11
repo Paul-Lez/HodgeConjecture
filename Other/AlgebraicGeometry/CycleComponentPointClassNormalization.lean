@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
 public import Other.AlgebraicGeometry.CycleComponentPointCoclassSectionNormalization
 public import Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization
 public import Other.AlgebraicGeometry.SheafCycleClass
@@ -181,7 +181,7 @@ theorem sheafCycleClassOnCycles_single_point_normalization
     (hx : Order.coheight x = V.dimension)
     (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
     (n : ℤ) :
-    sheafCycleClassOnCycles V V.dimension (CodimensionCycle.single x hx n) =
+    sheafCycleClassOnCycles V V.dimension (codimensionCycleSubgroup.single x hx n) =
       n • analyticComponentPointPositiveKernelClass V.over x V.dimension z := by
   rw [sheafCycleClassOnCycles_single,
     cycleComponentSheafClass_point_normalization V.over x V.dimension z hx]
@@ -194,7 +194,7 @@ theorem sheafCycleClassOnCycles_sum_single_point_normalization
     (z : ∀ i, ComplexPoint (Over.mk
       (cycleComponentι V.scheme (x i) ≫ V.structureMap))) (n : ι → ℤ) :
     sheafCycleClassOnCycles V V.dimension
-      (∑ i ∈ t, CodimensionCycle.single (x i) (hx i) (n i)) =
+      (∑ i ∈ t, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
       ∑ i ∈ t, n i • analyticComponentPointPositiveKernelClass
         V.over (x i) V.dimension (z i) := by
   rw [sheafCycleClassOnCycles_sum_single]
@@ -207,7 +207,7 @@ theorem rationalSheafCycleClassOnCycles_tmul_single_point_normalization
     (hx : Order.coheight x = V.dimension)
     (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
     (q : ℚ) :
-    rationalSheafCycleClassOnCycles V V.dimension (q ⊗ₜ[ℤ] CodimensionCycle.single x hx 1) =
+    rationalSheafCycleClassOnCycles V V.dimension (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
       q • analyticComponentPointPositiveKernelClass V.over x V.dimension z := by
   rw [rationalSheafCycleClassOnCycles_tmul_single,
     cycleComponentSheafClass_point_normalization V.over x V.dimension z hx]
@@ -220,7 +220,7 @@ theorem rationalSheafCycleClassOnCycles_sum_tmul_single_point_normalization
     (z : ∀ i, ComplexPoint (Over.mk
       (cycleComponentι V.scheme (x i) ≫ V.structureMap))) (q : ι → ℚ) :
     rationalSheafCycleClassOnCycles V V.dimension
-      (∑ i ∈ t, q i ⊗ₜ[ℤ] CodimensionCycle.single (x i) (hx i) 1) =
+      (∑ i ∈ t, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
       ∑ i ∈ t, q i • analyticComponentPointPositiveKernelClass
         V.over (x i) V.dimension (z i) := by
   rw [rationalSheafCycleClassOnCycles_sum_tmul_single]

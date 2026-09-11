@@ -111,7 +111,8 @@ irreducible subvarieties of codimension $`p`.
    Forgetting the support gives $`\operatorname{cl}_X(Z)\in H^{2p}(X;\mathbb Q)`.
 6. Identify the class with support with a fundamental class in Borel–Moore homology through the
    duality $`H^{\mathrm{BM}}_{2(d-p)}(Z\subset X;\mathbb Q)\simeq H^{2p}_Z(X;\mathbb Q)`, where
-   $`d=\dim X`.
+   $`d=\dim X`; this is
+   {ref "borel-moore-fundamental-class"}[Step 3: the Borel–Moore fundamental class].
 7. Extend $`\operatorname{cl}_X` additively to cycles and $`\mathbb Q`-linearly to rational cycles.
    The statement itself uses only the span of the classes of individual subvarieties.
 
@@ -138,9 +139,14 @@ conjecture, but they are needed for the usual equivalent formulations.
   $`\mathrm{CH}^p(X)_{\mathbb Q}`. Instead we use the span of the classes of subvarieties; see
   {ref "why-a-span"}[Why a span rather than a map on Chow groups] for further discussion.
 * The Borel–Moore homology used here, $`H^{\mathrm{BM}}_i(Z\subset X;\mathbb Q)`, is defined
-  through the ambient space and has not been shown to be independent of the embedding.
+  through the ambient space and has not been shown to be independent of the embedding;
+  {ref "what-borel-moore-means"}[What Borel–Moore homology means here] says what is and is not
+  claimed.
 
 # Degree and support conventions
+%%%
+tag := "degree-and-support-conventions"
+%%%
 
 A subvariety $`Z` of codimension $`p` in a smooth variety $`X` of dimension $`d` has real
 dimension $`2(d-p)`, and Alexander–Poincaré duality in $`X` identifies
@@ -149,6 +155,7 @@ $$`H^{\mathrm{BM}}_{2(d-p)}(Z\subset X;\mathbb Q)
   \simeq H_Z^{2d-2(d-p)}(X;\mathbb Q)=H_Z^{2p}(X;\mathbb Q).`
 
 This is the origin of the indices {lean}`2 * ((d - p : ℕ) : ℤ)` and {lean}`2 * (p : ℤ)` in the
-code. A class with support in
-$`Z` lies in $`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the ordinary group
-$`H^{2p}(X;\mathbb Q)`, in which the conjecture is stated.
+code; the duality itself is constructed in
+{ref "borel-moore-fundamental-class"}[Step 3: the Borel–Moore fundamental class]. A class with
+support in $`Z` lies in $`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the
+ordinary group $`H^{2p}(X;\mathbb Q)`, in which the conjecture is stated.

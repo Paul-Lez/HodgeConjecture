@@ -66,8 +66,7 @@ def relativeCoboundary (X : TopPair.{u}) (n : ℕ) :
 lemma relativeCoboundary_relativeCoboundary (X : TopPair.{u}) (n : ℕ)
     (phi : RelativeCochain R X n) :
     relativeCoboundary R X (n + 1) (relativeCoboundary R X n phi) = 0 := by
-  apply LinearMap.ext
-  intro c
+  ext c
   change phi (((((relativeChainFunctor R).obj X).d (n + 2) (n + 1) ≫
     ((relativeChainFunctor R).obj X).d (n + 1) n).hom) c) = 0
   rw [((relativeChainFunctor R).obj X).d_comp_d, ModuleCat.hom_zero,
@@ -93,8 +92,7 @@ lemma relativeCochainToAbsolute_coboundary (X : TopPair.{u}) (n : ℕ)
     (phi : RelativeCochain R X n) :
     relativeCochainToAbsolute R X (n + 1) (relativeCoboundary R X n phi) =
       Simplicial.coboundary R n (relativeCochainToAbsolute R X n phi) := by
-  apply LinearMap.ext
-  intro c
+  ext c
   let K := ((singularChainComplexFunctor (ModuleCat.{u} R)).obj
     (ModuleCat.of R R)).obj X.fst
   change phi ((((relativeChainFunctor R).obj X).d (n + 1) n).hom
@@ -118,8 +116,7 @@ lemma cochainMap_relativeCochainToAbsolute_eq_zero (X : TopPair.{u}) (n : ℕ)
     (phi : RelativeCochain R X n) :
     Simplicial.cochainMap R (TopCat.toSSet.map X.map) n
       (relativeCochainToAbsolute R X n phi) = 0 := by
-  apply LinearMap.ext
-  intro c
+  ext c
   have hz := congrArg (fun f ↦ f.f n)
     (subspaceChainMap_relativeChainProjection R X)
   have hc := ConcreteCategory.congr_hom hz c
@@ -291,8 +288,7 @@ theorem boundary_relativeCap_eq_of_cocycle (X : TopPair.{u}) (p q : ℕ)
     (Simplicial.boundary R q).comp (relativeCap R X p (q + 1) phi) =
       (-1 : R) ^ p •
         (relativeCap R X p q phi).comp (relativeBoundary R X (p + q)) := by
-  apply LinearMap.ext
-  intro z
+  ext z
   let π := (relativeChainProjection R X).f (p + q + 1)
   let : Epi π := Cofork.IsColimit.epi
     (relativeChainProjectionComponentIsCokernelForCap R X (p + q + 1))
@@ -490,8 +486,7 @@ theorem relativeCap_coboundary_eq (X : TopPair.{u}) (p q : ℕ)
       (relativeCap R X p q phi).comp (relativeBoundary R X (p + q)) -
         (-1 : R) ^ p •
           (Simplicial.boundary R q).comp (relativeCap R X p (q + 1) phi) := by
-  apply LinearMap.ext
-  intro z
+  ext z
   let π := (relativeChainProjection R X).f (p + q + 1)
   let : Epi π := Cofork.IsColimit.epi
     (relativeChainProjectionComponentIsCokernelForCap R X (p + q + 1))
@@ -642,8 +637,7 @@ def relativeCohomologyCycleToCocycle (X : TopPair.{u}) (p : ℕ) :
   toFun phi := ⟨phi.1, by
     let phi' : RelativeCochain R X p := phi.1
     change relativeCoboundary R X p phi' = 0
-    apply LinearMap.ext
-    intro c
+    ext c
     simp only [LinearMap.zero_apply]
     have hphi := phi.2
     change (((((relativeChainFunctor R).obj X).sc p).f.hom.dualMap) phi') = 0 at hphi
@@ -719,8 +713,7 @@ lemma relativeCohomologyCycleCapLinear_vanishes_on_boundaries
           rw [ChainComplex.next_nat_zero]
           simp
         rw [hg]
-        apply LinearMap.ext
-        intro c
+        ext c
         let etaF : Module.Dual R (K.sc 0).X₃ := eta
         change etaF (0 : (K.sc 0).X₃) = 0
         exact map_zero etaF

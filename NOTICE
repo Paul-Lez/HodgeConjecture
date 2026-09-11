@@ -19,8 +19,8 @@ mathlib4 project:
 The adapted material is a block copied from
 Mathlib/RingTheory/NoetherNormalization.lean, by Riccardo Brasca, Sihan Su,
 Wan Lin, and Xiaoyang Su, reproduced in
-HodgeConjecture/Lemmas/Algebra/PolynomialCatenary.lean. The source-level notice
-in that file's module docstring identifies the copied section, the upstream
-copyright line, and the changes made to it.
+HodgeConjecture/Mathlib/Algebra/PolynomialCatenary.lean. The source-level
+notice in that file's module docstring identifies the copied section, the
+upstream copyright line, and the changes made to it.
 
 This NOTICE is informational. The licensing terms are in LICENSE.

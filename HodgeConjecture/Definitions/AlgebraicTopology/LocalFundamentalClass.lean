@@ -15,8 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCohomology
 /-!
 # A standard local fundamental cycle
 
@@ -49,6 +48,10 @@ def standardAffineSimplex (d : ℕ) (t : stdSimplex ℝ (Fin (d + 1))) :
     StandardRealModel d :=
   fun j => t (Fin.castSucc j) - t (Fin.last d)
 
+-- Mathlib proves this but does not tag it, so `fun_prop` cannot see through `stdSimplex.map`.
+attribute [fun_prop] stdSimplex.continuous_map
+
+@[fun_prop]
 lemma continuous_standardAffineSimplex (d : ℕ) : Continuous (standardAffineSimplex d) :=
   continuous_pi fun j =>
     ((continuous_apply (Fin.castSucc j)).comp continuous_subtype_val).sub
@@ -81,37 +84,6 @@ lemma standardAffineSimplex_ne_zero_of_coord_zero (d : ℕ)
     Finset.sum_eq_zero fun j _ => hall j
   exact zero_ne_one (hzero.symm.trans hsum)
 
-lemma standardAffineSimplex_eq_zero_iff (d : ℕ)
-    (t : stdSimplex ℝ (Fin (d + 1))) :
-    standardAffineSimplex d t = 0 ↔ t = stdSimplex.barycenter := by
-  constructor
-  · intro h
-    have hcoord (j : Fin d) : t (Fin.castSucc j) = t (Fin.last d) := by
-      have hj := congr_fun h j
-      simpa [standardAffineSimplex] using sub_eq_zero.mp hj
-    have hall (j : Fin (d + 1)) : t j = t (Fin.last d) := by
-      rcases Fin.eq_castSucc_or_eq_last j with ⟨k, rfl⟩ | rfl
-      · exact hcoord k
-      · rfl
-    have hsum : ∑ _ : Fin (d + 1), t (Fin.last d) = 1 := by
-      rw [← t.2.2]
-      exact Finset.sum_congr rfl fun j _ => (hall j).symm
-    have hcard : (Fintype.card (Fin (d + 1)) : ℝ) ≠ 0 := by
-      simp only [Fintype.card_fin]
-      positivity
-    have hlast : t (Fin.last d) = (Fintype.card (Fin (d + 1)) : ℝ)⁻¹ := by
-      rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at hsum
-      exact ((mul_eq_one_iff_inv_eq₀ hcard).mp hsum).symm
-    apply stdSimplex.ext
-    funext j
-    rw [hall j, hlast]
-    exact stdSimplex.barycenter_apply j |>.symm
-  · rintro rfl
-    ext j
-    change (stdSimplex.barycenter : stdSimplex ℝ (Fin (d + 1)))
-      (Fin.castSucc j) - stdSimplex.barycenter (Fin.last d) = 0
-    exact sub_self _
-
 /-- The continuous affine simplex underlying the standard local cycle. -/
 def standardAffineSimplexMap (d : ℕ) :
     C(stdSimplex ℝ (Fin (d + 1)), StandardRealModel d) where
@@ -131,9 +103,7 @@ def standardFaceMap (n : ℕ) (i : Fin (n + 2)) :
   toFun t := ⟨standardAffineSimplex (n + 1) (stdSimplex.map i.succAbove t),
     standardAffineSimplex_ne_zero_of_coord_zero (n + 1) _ i
       (stdSimplex_map_succAbove_self_zero n i t)⟩
-  continuous_toFun := Continuous.subtype_mk
-    ((continuous_standardAffineSimplex (n + 1)).comp
-      (stdSimplex.continuous_map i.succAbove)) _
+  continuous_toFun := by fun_prop
 
 /-- A face of the positive-dimensional standard simplex as a singular simplex of the
 punctured space. -/
@@ -142,7 +112,7 @@ def standardFaceSimplex (n : ℕ) (i : Fin (n + 2)) :
   ((standardPuncturedPair (n + 1)).snd.toSSetObjEquiv _).symm
     (standardFaceMap n i)
 
-lemma standardFaceSimplex_map (n : ℕ) (i : Fin (n + 2)) :
+private lemma standardFaceSimplex_map (n : ℕ) (i : Fin (n + 2)) :
     (TopCat.toSSet.map (standardPuncturedPair (n + 1)).map).app _
       (standardFaceSimplex n i) =
     (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).fst).δ i
@@ -201,7 +171,7 @@ lemma standardFaceChain_inclusion (n : ℕ) (i : Fin (n + 2)) :
   rw [SSet.ι_chainComplexMap_f, standardFaceSimplex_map]
   rfl
 
-lemma standardPairChain_projection (d k : ℕ) :
+private lemma standardPairChain_projection (d k : ℕ) :
     ((chainPairFunctor ℚ).obj (standardPuncturedPair d)).hom.f k ≫
       standardLocalProjectionComponent d k = 0 := by
   have h := congrArg (fun f :
@@ -212,7 +182,7 @@ lemma standardPairChain_projection (d k : ℕ) :
     (relativeChainProjection ℚ (standardPuncturedPair d)).f k = 0 at h
   exact h
 
-lemma standardFaceChain_projection (n : ℕ) (i : Fin (n + 2)) :
+private lemma standardFaceChain_projection (n : ℕ) (i : Fin (n + 2)) :
     standardAmbientFaceChain n i ≫ standardLocalProjectionComponent (n + 1) n = 0 := by
   rw [← standardFaceChain_inclusion, Category.assoc, standardPairChain_projection, comp_zero]
 
@@ -229,7 +199,7 @@ lemma standardAmbientSimplexChain_boundary (n : ℕ) :
     (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).fst)
     (ModuleCat.of ℚ ℚ) (standardSingularSimplex (n + 1))
 
-lemma standardLocalProjectionComponent_comm (n : ℕ) :
+private lemma standardLocalProjectionComponent_comm (n : ℕ) :
     standardLocalProjectionComponent (n + 1) (n + 1) ≫
       (standardLocalRelativeChainComplex (n + 1)).d (n + 1) n =
     ((chainPairFunctor ℚ).obj
@@ -270,11 +240,5 @@ def standardLocalCycle (d : ℕ) :
 def standardLocalClass (d : ℕ) :
     RelativeHomology ℚ (standardPuncturedPair d) d :=
   ((standardLocalCycle d ≫ (standardLocalRelativeChainComplex d).homologyπ d).hom) 1
-
-lemma standardLocalCycle_inclusion (d : ℕ) :
-    standardLocalCycle d ≫ (standardLocalRelativeChainComplex d).iCycles d =
-      standardLocalChain d :=
-  (standardLocalRelativeChainComplex d).liftCycles_i (standardLocalChain d)
-    ((ComplexShape.down ℕ).next d) rfl (standardLocalChain_boundary d)
 
 end AlgebraicTopology.Singular

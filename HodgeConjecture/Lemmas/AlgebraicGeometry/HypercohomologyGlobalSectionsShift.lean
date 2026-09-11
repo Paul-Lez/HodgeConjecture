@@ -5,8 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexShiftNaturality
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
 /-! # Shift normalization of hypercohomology and global sections -/
 
 @[expose] public noncomputable section
@@ -170,7 +169,6 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 800000 in
 /-- Hypercohomology unshifting is carried to the canonical, signed
 global-section homology shift. The shifted morphism used here is literally
 the identity on `K⟦s⟧`, not an independently chosen group equivalence. -/
@@ -194,7 +192,6 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_rightUnshift
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 800000 in
 /-- The hypercohomology/global-section comparison respects arbitrary
 degree-shifted chain maps, in particular the degree-one cone connecting map. -/
 lemma hypercohomologyAddEquivGlobalSectionsKInjective_shifted_naturality

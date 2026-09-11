@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.OpenInjectiveResolutionComparison
-public import HodgeConjecture.Definitions.AlgebraicTopology.DerivedSheafSupportLocalization
+public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenInjectiveResolutionComparison
+public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportLocalization
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
 /-!
 # Normalized injective models for the rational support cone
 
@@ -107,20 +106,6 @@ instance rationalSupportConeToAmbientInjectiveCone_quasiIso
     QuasiIso (rationalSupportConeToAmbientInjectiveCone X Z hZ) :=
   CochainComplex.mappingCone.quasiIso_map_of_quasiIso _ _ _ _ _
 
-/-- The old-cone comparison preserves the actual connecting morphism used to
-forget support, with the ambient augmentation on its target. -/
-@[reassoc]
-lemma rationalSupportConeToAmbientInjectiveCone_connecting
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    rationalSupportConeToAmbientInjectiveCone X Z hZ ≫
-      (CochainComplex.mappingCone.triangle
-        (ambientRationalInjectiveRestriction X Z hZ)).mor₃ =
-    (CochainComplex.mappingCone.triangle (rationalRestrictionComplexInt X Z)).mor₃ ≫
-      (ambientRationalInjectiveAugmentation X)⟦(1 : ℤ)⟧' :=
-  (CochainComplex.mappingCone.triangleMap _ _
-    (ambientRationalInjectiveAugmentation X) (𝟙 _)
-    (by simpa using (ambientRationalAugmentation_comp_restriction X Z hZ).symm)).comm₃.symm
-
 /-- The replacement cone is bounded below. -/
 instance ambientRationalInjectiveCone_isStrictlyGE
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
@@ -130,16 +115,6 @@ instance ambientRationalInjectiveCone_isStrictlyGE
     dsimp only [derivedPushforwardComplementConstantRationalComplexInt]
     infer_instance
   exact CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1) (by omega) (by omega)
-
-/-- Both resolutions, and hence their cone, are termwise flasque. -/
-lemma ambientRationalInjectiveCone_isFlasque
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (q : ℤ) :
-    ((CochainComplex.mappingCone
-      (ambientRationalInjectiveRestriction X Z hZ)).X q).IsFlasque := by
-  apply TopCat.Sheaf.IsFlasque.BoundedBelowComplex.mappingCone_term_isFlasque
-    (ambientRationalInjectiveRestriction X Z hZ)
-  · exact fun _ ↦ TopCat.Sheaf.injective_isFlasque _ _
-  · exact derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque X Z
 
 /-- The replacement cone is genuinely termwise injective: its terms are
 finite biproducts of ambient injectives and open direct images of injectives. -/
@@ -188,7 +163,7 @@ def ambientRationalOpenResolutionComparison
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩).mapHomologicalComplex
       (.up ℤ)).obj (ambientRationalInjectiveComplex X) ⟶
         derivedPushforwardComplementConstantRationalComplexInt X Z :=
-  (HomologicalComplex.mapExtendIso
+  (HomologicalComplex.mapExtendCanonicalIso
     (TopCat.Sheaf.openRestrictionPushforward
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩)
     (TopCat.Sheaf.ambientConstantInjectiveResolution
@@ -213,8 +188,8 @@ lemma actualRestriction_comp_openResolutionComparison
   dsimp only [ambientRationalOpenResolutionComparison]
   rw [← Category.assoc]
   change ((TopCat.Sheaf.toOpenRestrictionPushforward _ _).mapHomologicalComplex _).app _ ≫
-    (HomologicalComplex.mapExtendIso _ _ _).hom ≫ _ = _
-  rw [HomologicalComplex.mapExtendIso_hom_naturality_from_id_assoc]
+    (HomologicalComplex.mapExtendCanonicalIso _ _ _).hom ≫ _ = _
+  rw [HomologicalComplex.mapExtendCanonicalIso_hom_naturality_from_id_assoc]
   exact (ComplexShape.embeddingUpNat.extendFunctor (AnalyticAdditiveSheaf X)).map_comp _ _
     |>.symm
 
@@ -275,43 +250,6 @@ instance actualSupportConeToAmbientInjectiveGlobalCone_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) :=
   CochainComplex.mappingCone.quasiIso_map_of_quasiIso _ _ _ _ _
-
-set_option backward.isDefEq.respectTransparency false in
-/-- The group-cone comparison preserves its connecting morphism with the
-identity on the ambient global sections. -/
-@[reassoc]
-lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    actualSupportConeToAmbientInjectiveGlobalCone X Z hZ ≫
-      (CochainComplex.mappingCone.triangle
-        (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
-            (ambientRationalInjectiveRestriction X Z hZ))).mor₃ =
-    (CochainComplex.mappingCone.triangle
-      (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
-        (ambientRationalInjectiveComplex X)).g).mor₃ := by
-  have h := (CochainComplex.mappingCone.triangleMap
-    (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-      (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
-      (ambientRationalInjectiveComplex X)).g
-    (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
-        (ambientRationalInjectiveRestriction X Z hZ)) (𝟙 _)
-    (globalAmbientRationalOpenResolutionComparison X Z hZ)
-    (show _ = _ from by
-      let Γ := (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)
-      change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
-      rw [Category.id_comp, ← Functor.map_comp,
-        actualRestriction_comp_openResolutionComparison])).comm₃
-  exact h.symm.trans ((congrArg (fun f =>
-    (CochainComplex.mappingCone.triangle
-      (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
-        (ambientRationalInjectiveComplex X)).g).mor₃ ≫ f)
-    ((shiftFunctor (CochainComplex AddCommGrpCat ℤ) (1 : ℤ)).map_id _)).trans
-      (Category.comp_id _))
 
 /-- The existing rational support group is the homology of the actual
 kernel-defined supported sections of the ambient rational injective
