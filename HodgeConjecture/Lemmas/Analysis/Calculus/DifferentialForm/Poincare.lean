@@ -378,19 +378,26 @@ lemma radialHomotopy_hasFDerivAt_of_contDiffOn [FiniteDimensional ℂ E] (n : �
       (hη.contDiffAt (hs.mem_nhds (smul_mem_of_starConvex_zero hstar hy ht))).differentiableAt
         one_ne_zero)
 
+section CurriedDerivative
+
+/-- The space the radial derivative takes values in is a complex normed space. -/
+local instance (n : ℕ) : NormedAddCommGroup (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
+  with_reducible_and_instances exact ContinuousLinearMap.toNormedAddCommGroup
+
+local instance (n : ℕ) : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
+  with_reducible_and_instances exact ContinuousLinearMap.toNormedSpace
+
+local instance (n : ℕ) : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
+  NormedSpace.restrictScalars ℝ ℂ _
+
+local instance (n : ℕ) : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
+
 omit [Nontrivial E] in
 /-- First-order regularity of the radial homotopy on an open star-convex domain. -/
 theorem radialHomotopy_contDiffOn_one [FiniteDimensional ℂ E] (n : ℕ) {s : Set E}
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hs : IsOpen s)
     (hstar : StarConvex ℝ 0 s) (hη : ContDiffOn ℂ 1 η s) :
     ContDiffOn ℂ 1 (radialHomotopy n η) s := by
-  let : NormedAddCommGroup (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
-    with_reducible_and_instances exact ContinuousLinearMap.toNormedAddCommGroup
-  let : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
-    with_reducible_and_instances exact ContinuousLinearMap.toNormedSpace
-  let : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
-    NormedSpace.restrictScalars ℝ ℂ _
-  let : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
   have hD : ContinuousOn
       (fun x ↦ ∫ t : ℝ in 0..1, radialIntegrandFDeriv n η t x) s :=
     continuousOn_intervalIntegral_of_continuousOn
@@ -409,13 +416,6 @@ theorem extDeriv_radialHomotopy [FiniteDimensional ℂ E] (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η) (x : E) :
     extDeriv (radialHomotopy n η) x =
       ∫ t : ℝ in 0..1, extDeriv (radialIntegrand n η t) x := by
-  let : NormedAddCommGroup (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
-    with_reducible_and_instances exact ContinuousLinearMap.toNormedAddCommGroup
-  let : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
-    with_reducible_and_instances exact ContinuousLinearMap.toNormedSpace
-  let : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
-    NormedSpace.restrictScalars ℝ ℂ _
-  let : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
   have hF' : Continuous fun t : ℝ ↦ radialIntegrandFDeriv n η t x :=
     (continuous_radialIntegrandFDeriv n η hη).comp (continuous_const.prodMk continuous_id)
   with_reducible_and_instances
@@ -440,13 +440,6 @@ theorem extDeriv_radialHomotopy_of_contDiffOn [FiniteDimensional ℂ E] (n : ℕ
     (hstar : StarConvex ℝ 0 s) (hη : ContDiffOn ℂ 1 η s) {x : E} (hx : x ∈ s) :
     extDeriv (radialHomotopy n η) x =
       ∫ t : ℝ in 0..1, extDeriv (radialIntegrand n η t) x := by
-  let : NormedAddCommGroup (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
-    with_reducible_and_instances exact ContinuousLinearMap.toNormedAddCommGroup
-  let : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by
-    with_reducible_and_instances exact ContinuousLinearMap.toNormedSpace
-  let : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
-    NormedSpace.restrictScalars ℝ ℂ _
-  let : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
   have hF' : ContinuousOn (fun t : ℝ ↦ radialIntegrandFDeriv n η t x) (Set.Icc 0 1) := by
     have h := (continuousOn_radialIntegrandFDeriv n η hs hstar hη).comp
       (continuousOn_const.prodMk continuousOn_id) (fun t ht ↦ ⟨hx, ht⟩)
@@ -467,6 +460,8 @@ theorem extDeriv_radialHomotopy_of_contDiffOn [FiniteDimensional ℂ E] (n : ℕ
   rw [(radialIntegrand_hasFDerivAt n η t x <|
     (hη.contDiffAt (hs.mem_nhds (smul_mem_of_starConvex_zero hstar hx ht'))).differentiableAt
       one_ne_zero).fderiv]
+
+end CurriedDerivative
 
 /-- The part of the derivative of a contraction that differentiates the alternating form. -/
 def curryDerivativeAt (n : ℕ) (L : E →L[ℂ] E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (x : E) :
