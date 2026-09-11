@@ -97,13 +97,10 @@ end SmoothProjectiveComplexVariety
 namespace ComplexPoint
 
 /-- A smooth projective complex variety together with its complex dimension. -/
-structure DimensionedSmoothProjectiveComplexVariety where
-  /-- The underlying smooth projective complex variety. -/
-  toSmoothProjectiveComplexVariety : SmoothProjectiveComplexVariety
+structure DimensionedSmoothProjectiveComplexVariety extends SmoothProjectiveComplexVariety where
   /-- The complex dimension. -/
   dimension : ℕ
-  [smoothOfRelativeDimension : SmoothOfRelativeDimension dimension
-    toSmoothProjectiveComplexVariety.structureMap]
+  [smoothOfRelativeDimension : SmoothOfRelativeDimension dimension structureMap]
 
 namespace DimensionedSmoothProjectiveComplexVariety
 
@@ -120,25 +117,8 @@ def ofOver (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
 
 /-- The relative-dimension certificate stored in a dimensioned variety. -/
 instance (V : DimensionedSmoothProjectiveComplexVariety) :
-    SmoothOfRelativeDimension V.dimension
-      V.toSmoothProjectiveComplexVariety.structureMap :=
+    SmoothOfRelativeDimension V.dimension V.structureMap :=
   V.smoothOfRelativeDimension
-
-/-- The underlying scheme. -/
-abbrev scheme (V : DimensionedSmoothProjectiveComplexVariety) :=
-  V.toSmoothProjectiveComplexVariety.scheme
-
-/-- The structure morphism to `Spec ℂ`. -/
-abbrev structureMap (V : DimensionedSmoothProjectiveComplexVariety) :=
-  V.toSmoothProjectiveComplexVariety.structureMap
-
-/-- The variety regarded as the corresponding object over `Spec ℂ`. -/
-noncomputable abbrev over (V : DimensionedSmoothProjectiveComplexVariety) : Over (Spec ↧ℂ) :=
-  V.toSmoothProjectiveComplexVariety.over
-
-/-- The analytic complex-point space. -/
-abbrev analyticPoint (V : DimensionedSmoothProjectiveComplexVariety) :=
-  V.toSmoothProjectiveComplexVariety.analyticPoint
 
 end DimensionedSmoothProjectiveComplexVariety
 
