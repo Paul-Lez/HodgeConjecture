@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainSheaf
+public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
@@ -86,6 +87,11 @@ def singularCochainSheafComplexInt (R : Type) [Field R] :
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
   (AlgebraicTopology.Singular.singularCochainSheafComplex R
     (TopCat.of (ComplexPoint X))).extend ComplexShape.embeddingUpNat
+
+instance (R : Type) [Field R] :
+    CochainComplex.IsStrictlyGE (singularCochainSheafComplexInt X R) 0 := by
+  unfold singularCochainSheafComplexInt
+  infer_instance
 
 /-- The constant coefficient sheaf complex, extended by zero to integer degrees. -/
 def constantCoefficientSheafComplexInt (R : Type) [Field R] :
