@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.Topology.Sheaves.Abelian
@@ -766,6 +767,11 @@ def conjConstantComplexSheafComplexInt :
 def holomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
     CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(ComplexPoint X)) ℤ :=
   (holomorphicDeRhamComplex X (dim X.left)).extend ComplexShape.embeddingUpNat
+
+instance [IsIntegral X.left] [Smooth X.hom] :
+    CochainComplex.IsStrictlyGE (holomorphicDeRhamComplexInt X) 0 := by
+  unfold holomorphicDeRhamComplexInt
+  infer_instance
 
 /-- The integer-indexed holomorphic de Rham complex vanishes in every degree above the complex
 dimension. -/

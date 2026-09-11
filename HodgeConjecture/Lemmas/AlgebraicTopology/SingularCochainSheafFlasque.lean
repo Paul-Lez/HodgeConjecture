@@ -326,8 +326,6 @@ instance singularCochainPlus_isFlasque (n : ℕ) :
         (singularCochainPresheaf R X n)).naturality i,
       ConcreteCategory.comp_apply, hφU, hφV]
 
-abbrev ZeroSimplex (U : (Opens X)ᵒᵖ) := OpenSimplex X U 0
-
 /-- The degree-zero singular chain associated to a point of an open subset. -/
 noncomputable def singularZeroChainOfPoint (U : (Opens X)ᵒᵖ) (x : U.unop) :
     OpenChains R X U 0 :=
