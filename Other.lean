@@ -71,8 +71,6 @@ public import Other.AlgebraicGeometry.CycleComponentNormalGeometry
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 public import Other.AlgebraicGeometry.CycleComponentPurity
 public import Other.AlgebraicGeometry.CycleComponentRegularImmersion
-public import Other.AlgebraicGeometry.DiscreteValuationLocalRing
-public import Other.AlgebraicGeometry.CartierLocalForm
 public import Other.AlgebraicGeometry.DerivedSupportRationalComparison
 public import Other.AlgebraicGeometry.DerivedSupportRationalConeComparison
 public import Other.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
