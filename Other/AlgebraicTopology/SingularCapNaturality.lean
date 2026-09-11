@@ -160,9 +160,9 @@ theorem cochainCohomologyEquiv_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p : 
     cochainCohomologyEquiv R X p (cochainCohomologyMap R f p alpha) =
       cohomologyMap R p f (cochainCohomologyEquiv R Y p alpha) := by
   set eX := (ShortComplex.homologyMapIso
-    (HomologicalComplex.linearDualCochainComplexScIso (chainComplex R X) p)).toLinearEquiv with heX
+    (HomologicalComplex.linearDualCochainComplexScIso (chainComplex R X) p)).toLinearEquiv
   set eY := (ShortComplex.homologyMapIso
-    (HomologicalComplex.linearDualCochainComplexScIso (chainComplex R Y) p)).toLinearEquiv with heY
+    (HomologicalComplex.linearDualCochainComplexScIso (chainComplex R Y) p)).toLinearEquiv
   have hnat := congrArg (ShortComplex.homologyFunctor (ModuleCat.{u} R)).map
     (HomologicalComplex.linearDualCochainComplexScIso_naturality (chainComplexMap R f) p)
   rw [Functor.map_comp, Functor.map_comp] at hnat
