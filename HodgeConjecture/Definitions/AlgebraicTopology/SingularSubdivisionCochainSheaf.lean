@@ -115,10 +115,6 @@ lemma openSimplexMap_openSimplexLift {X : TopCat.{u}} {U V : Opens X} (i : V ⟶
 
 variable (R : Type u) [Field R] (X : TopCat.{u})
 
-/-- The ordinary singular chain complex of `X` with coefficients in `R`. -/
-abbrev SingularChainComplex : ChainComplex (ModuleCat.{u} R) ℕ :=
-  ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X
-
 /-- The singular chain complex of the top open subset of `X`. -/
 abbrev TopOpenSingularChainComplex : ChainComplex (ModuleCat.{u} R) ℕ :=
   (openSingularChainComplexFunctor R X).obj ⊤
