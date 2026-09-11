@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bhargav Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bhargav Mehta
+Authors: Bhavik Mehta
 -/
 module
 
