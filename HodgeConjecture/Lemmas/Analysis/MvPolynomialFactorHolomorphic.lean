@@ -1030,6 +1030,101 @@ theorem exists_monic_dvd_mvPolynomialFamily_mvSelectedFactorOn {n : ℕ}
   rw [hq z hz]
   exact mvSelectedFactorOn_dvd r S ⟨z, hsimple z hz⟩ hz
 
+
+private theorem mvSimpleRootCoverOn_set_eq_empty_of_factor_eq_one {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0)
+    (hfactor : ∀ z (hr : MvPolynomial.eval z r ≠ 0),
+      mvSelectedFactorOn r S ⟨z, hsimple z hr⟩ hr = 1) : S = ∅ := by
+  classical
+  ext x
+  simp only [Set.mem_empty_iff_false, iff_false]
+  intro hx
+  have hr : MvPolynomial.eval x.1.1 r ≠ 0 :=
+    left_ne_zero_of_mul x.2.2
+  have hroot : (mvFamilySpecialization p x.1.1).eval x.1.2 = 0 := x.2.1
+  have hmem : x.1.2 ∈ mvSelectedRootsOn r S ⟨x.1.1, hsimple x.1.1 hr⟩ hr := by
+    rw [mvSelectedRootsOn, Multiset.mem_filter]
+    refine ⟨(mem_roots ?_).mpr hroot, ⟨hroot, ?_⟩⟩
+    · exact (hp.map (MvPolynomial.eval x.1.1)).ne_zero
+    · convert hx using 1
+  have hcard : 0 < (mvSelectedRootsOn r S ⟨x.1.1, hsimple x.1.1 hr⟩ hr).card :=
+    Multiset.card_pos.mpr (by intro hzero; have := hmem; rw [hzero] at this; simp at this)
+  have hdegree := natDegree_mvSelectedFactorOn r S ⟨x.1.1, hsimple x.1.1 hr⟩ hr
+  rw [hfactor x.1.1 hr, natDegree_one] at hdegree
+  omega
+
+private theorem mvSimpleRootCoverOn_set_eq_univ_of_factor_eq_family {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0)
+    (hfactor : ∀ z (hr : MvPolynomial.eval z r ≠ 0),
+      mvSelectedFactorOn r S ⟨z, hsimple z hr⟩ hr = mvFamilySpecialization p z) :
+    S = Set.univ := by
+  classical
+  ext x
+  simp only [Set.mem_univ, iff_true]
+  have hr : MvPolynomial.eval x.1.1 r ≠ 0 := left_ne_zero_of_mul x.2.2
+  have hroot : (mvFamilySpecialization p x.1.1).eval x.1.2 = 0 := x.2.1
+  have hfactorRoot :
+      (mvSelectedFactorOn r S ⟨x.1.1, hsimple x.1.1 hr⟩ hr).eval x.1.2 = 0 := by
+    rw [hfactor x.1.1 hr]
+    exact hroot
+  have hrootmem : x.1.2 ∈
+      (mvSelectedFactorOn r S ⟨x.1.1, hsimple x.1.1 hr⟩ hr).roots :=
+    (mem_roots (mvSelectedFactorOn_monic r S ⟨x.1.1, hsimple x.1.1 hr⟩ hr).ne_zero).mpr
+      hfactorRoot
+  have hselected : x.1.2 ∈ mvSelectedRootsOn r S ⟨x.1.1, hsimple x.1.1 hr⟩ hr := by
+    simpa [mvSelectedFactorOn] using hrootmem
+  rw [mvSelectedRootsOn, Multiset.mem_filter] at hselected
+  obtain ⟨_, hxS⟩ := hselected.2
+  convert hxS using 1
+
+/-- The root cover over a simple principal open is connected for an irreducible monic family. -/
+theorem connectedSpace_mvSimpleRootCoverOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic) (hirr : Irreducible p)
+    (hpdeg : 0 < p.natDegree) (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
+    ConnectedSpace (MvSimpleRootCoverOn p r) := by
+  rw [connectedSpace_iff_clopen]
+  constructor
+  · obtain ⟨z, hz⟩ := (MvPolynomial.isPathConnected_complex_nonzero r hr0).nonempty
+    let f := mvFamilySpecialization p z
+    have hfmonic : f.Monic := hp.map (MvPolynomial.eval z)
+    have hfdegree : f.natDegree = p.natDegree := hp.natDegree_map (MvPolynomial.eval z)
+    have hfroots : f.roots.card = f.natDegree :=
+      (IsAlgClosed.splits f).natDegree_eq_card_roots.symm
+    have hnonempty : f.roots ≠ 0 := by
+      intro hzero
+      have : f.roots.card = 0 := by simp [hzero]
+      omega
+    obtain ⟨w, hw⟩ := Multiset.exists_mem_of_ne_zero hnonempty
+    have hwroot : f.eval w = 0 := (mem_roots hfmonic.ne_zero).mp hw
+    refine ⟨⟨(z, w), hwroot, ?_⟩⟩
+    exact mul_ne_zero hz (hsimple z hz w hwroot)
+  · intro S hS
+    obtain ⟨q, hqmonic, hqdvd, hq⟩ :=
+      exists_monic_dvd_mvPolynomialFamily_mvSelectedFactorOn hp r hr0 S hS hsimple
+    rcases hirr.dvd_iff.mp hqdvd with hqunit | hpq
+    · left
+      apply mvSimpleRootCoverOn_set_eq_empty_of_factor_eq_one hp r S hsimple
+      intro z hz
+      rw [← hq z hz, hqmonic.eq_one_of_isUnit hqunit]
+      simp
+    · right
+      have hpqeq : p = q := eq_of_monic_of_associated hp hqmonic hpq
+      apply mvSimpleRootCoverOn_set_eq_univ_of_factor_eq_family r S hsimple
+      intro z hz
+      rw [← hq z hz, ← hpqeq]
+      rfl
+
 end
 
 end Polynomial
