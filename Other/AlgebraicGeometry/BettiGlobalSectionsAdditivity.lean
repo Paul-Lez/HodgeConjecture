@@ -22,6 +22,8 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiGlobalSectionsCompar
 This file upgrades the rational Betti comparison equivalences to additive equivalences.  The
 group law on hypercohomology is transported from morphisms in the derived category, so
 additivity of the localized-Hom steps is checked after applying the defining equivalence.
+Because both sides are `ℚ`-vector spaces and every additive map between `ℚ`-modules is
+`ℚ`-linear, the comparison is also recorded here as a `ℚ`-linear equivalence.
 -/
 
 @[expose] public noncomputable section
@@ -259,5 +261,42 @@ lemma rationalCohomologyEquivSingularCohomology_zero
     (n : ℕ) :
     rationalCohomologyEquivSingularCohomology X n 0 = 0 :=
   (rationalCohomologyAddEquivSingularCohomology X n).map_zero
+
+/-- Rational constant-sheaf cohomology and rational singular cohomology are equivalent as
+`ℚ`-vector spaces.  Both sides are `ℚ`-modules, and every additive map between `ℚ`-modules
+is automatically `ℚ`-linear, so the additive comparison upgrades to a linear equivalence with
+no further work. -/
+def rationalCohomologyLinearEquivSingularCohomology
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (n : ℕ) :
+    H^(n : ℤ)(X; ℚ) ≃ₗ[ℚ]
+      AlgebraicTopology.Singular.Cohomology ℚ
+        (TopCat.of (ComplexPoint X)) n :=
+  (rationalCohomologyAddEquivSingularCohomology X n).toLinearEquiv
+    (map_rat_smul (rationalCohomologyAddEquivSingularCohomology X n))
+
+/-- The `ℚ`-linear Betti comparison has the same underlying function as the additive one. -/
+@[simp]
+lemma coe_rationalCohomologyLinearEquivSingularCohomology
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (n : ℕ) :
+    ⇑(rationalCohomologyLinearEquivSingularCohomology X n) =
+      ⇑(rationalCohomologyAddEquivSingularCohomology X n) :=
+  rfl
+
+/-- The `ℚ`-linear Betti comparison has the same underlying function as the original bare
+equivalence `rationalCohomologyEquivSingularCohomology`. -/
+lemma rationalCohomologyLinearEquivSingularCohomology_apply
+    [IsIntegral X.left] [Smooth X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (n : ℕ) (α : H^(n : ℤ)(X; ℚ)) :
+    rationalCohomologyLinearEquivSingularCohomology X n α =
+      rationalCohomologyEquivSingularCohomology X n α :=
+  rfl
 
 end AlgebraicGeometry.ComplexPoint

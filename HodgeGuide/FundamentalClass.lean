@@ -279,36 +279,23 @@ example : cycleComponentSheafClass X (genericPoint X.left)
 ```
 
 # Step 3: the Borel–Moore fundamental class
+%%%
+tag := "borel-moore-fundamental-class"
+%%%
 
 The formalization also constructs the homological side. Let $`\mathcal C_X^{\mathrm{BM}}` be the
 sheafification of the presheaf of relative singular chains on $`X(\mathbb C)`. On a smooth complex
-$`d`-fold its local homology is concentrated in degree $`2d`, cohomological degree $`-2d`, and the
-complex orientations give an isomorphism in the derived category
+$`d`-fold its local homology is concentrated in degree $`2d`, cohomological degree $`-2d`, so the
+sheaf is determined by its top homology sheaf, and the complex orientation trivializes that sheaf.
+This gives an isomorphism in the derived category
 
-$$`\mathcal C_X^{\mathrm{BM}}\simeq \underline{\mathbb Q}_X[2d].`
+$$`\mathcal C_X^{\mathrm{BM}}\simeq \underline{\mathbb Q}_X[2d],`
 
-Taking derived sections with support in $`Z` and then homology defines the Borel–Moore homology of
-$`Z` relative to the ambient space, and the isomorphism above gives duality in every degree:
-
-$$`H_i^{\mathrm{BM}}(Z\subset X;\mathbb Q)
-  \simeq H_Z^{2d-i}(X;\mathbb Q).`
+with no orientation supplied as an argument: the one used is the orientation constructed from the
+complex structure.
 
 ```lean -show
 namespace Guide.Subvariety.D7
-```
-```lean
-def ComplexAmbientSheafBorelMooreHomology (X : Over (Spec ↧ℂ)) (d : ℕ)
-    [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
-    (Z : Closeds (ComplexPoint X)) (i : ℤ) : AddCommGrpCat :=
-  (DerivedCategory.Plus.homologyFunctor AddCommGrpCat (-i)).obj
-    (complexAmbientSheafBorelMooreObject X d Z)
-```
-```lean -show
-end Guide.Subvariety.D7
-example : @Guide.Subvariety.D7.ComplexAmbientSheafBorelMooreHomology = @AlgebraicGeometry.ComplexPoint.ComplexAmbientSheafBorelMooreHomology := rfl
-```
-```lean -show
-namespace Guide.Subvariety.D8
 ```
 ```lean
 def complexChainSheafPlusOrientationIso (X : Over (Spec ↧ℂ)) (d : ℕ)
@@ -319,9 +306,35 @@ def complexChainSheafPlusOrientationIso (X : Over (Spec ↧ℂ)) (d : ℕ)
     (complexOrientationHomologySheafIso X d).symm
 ```
 ```lean -show
-end Guide.Subvariety.D8
-example : @Guide.Subvariety.D8.complexChainSheafPlusOrientationIso = @AlgebraicGeometry.ComplexPoint.complexChainSheafPlusOrientationIso := rfl
+end Guide.Subvariety.D7
+example : @Guide.Subvariety.D7.complexChainSheafPlusOrientationIso = @AlgebraicGeometry.ComplexPoint.complexChainSheafPlusOrientationIso := rfl
 ```
+
+Taking derived sections with support in a closed set $`Z` and then homology defines the
+Borel–Moore homology of $`Z` relative to the ambient space. Homological degree $`i` is
+cohomological degree $`-i`:
+
+```lean -show
+namespace Guide.Subvariety.D8
+```
+```lean
+def ComplexAmbientSheafBorelMooreHomology (X : Over (Spec ↧ℂ)) (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
+    (Z : Closeds (ComplexPoint X)) (i : ℤ) : AddCommGrpCat :=
+  (DerivedCategory.Plus.homologyFunctor AddCommGrpCat (-i)).obj
+    (complexAmbientSheafBorelMooreObject X d Z)
+```
+```lean -show
+end Guide.Subvariety.D8
+example : @Guide.Subvariety.D8.ComplexAmbientSheafBorelMooreHomology = @AlgebraicGeometry.ComplexPoint.ComplexAmbientSheafBorelMooreHomology := rfl
+```
+
+Feeding the same orientation through the derived support functor and then through homology turns
+the isomorphism above into duality in every degree, with no smoothness assumed on $`Z`:
+
+$$`H_i^{\mathrm{BM}}(Z\subset X;\mathbb Q)
+  \simeq H_Z^{2d-i}(X;\mathbb Q).`
+
 ```lean -show
 namespace Guide.Subvariety.D9
 ```
@@ -338,6 +351,13 @@ def complexAmbientSheafBorelMooreHomologyIso (X : Over (Spec ↧ℂ)) (d : ℕ)
 end Guide.Subvariety.D9
 example : @Guide.Subvariety.D9.complexAmbientSheafBorelMooreHomologyIso = @AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreHomologyIso := rfl
 ```
+
+In the degree a codimension-$`p` cycle occupies, $`i=2(d-p)`, the right-hand side is the group
+$`H_Z^{2p}(X;\mathbb Q)` where Step 2 left the class; {ref "degree-and-support-conventions"}[Degree
+and support conventions] collects the index arithmetic. Specializing to that degree and passing to
+the rational model of cohomology with support gives the equivalence the fundamental class is
+defined by:
+
 ```lean -show
 namespace Guide.Subvariety.D10
 ```
@@ -390,6 +410,9 @@ is equivalent and suits the available tools: the normalization is carried out wh
 class lives, in cohomology with support, and then transported.
 
 # What Borel–Moore homology means here
+%%%
+tag := "what-borel-moore-means"
+%%%
 
 The group $`H_i^{\mathrm{BM}}(Z\subset X;\mathbb Q)` is defined through the ambient space, as
 derived sections of the chain sheaf of $`X` with support in $`Z`. This makes sense for singular

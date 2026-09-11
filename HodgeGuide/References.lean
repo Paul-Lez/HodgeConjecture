@@ -56,7 +56,7 @@ formalization.
 * `Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
   `ComplexSheafBorelMooreRationalComparison.lean`: Borel–Moore homology and duality;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`: the class of a
-  subvariety;
+  subvariety and its Borel–Moore fundamental class;
 * `Other/AlgebraicGeometry/SheafCycleClass.lean`: the maps on cycles;
 * `HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures and the
   $`(p,p)` criterion.

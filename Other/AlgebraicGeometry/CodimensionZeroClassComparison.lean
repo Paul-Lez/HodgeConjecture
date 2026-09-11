@@ -19,7 +19,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleClassS
 import Other.AlgebraicGeometry.CodimensionCycle
 
 import Other.AlgebraicGeometry.RationalCohomologyZero
-import Other.AlgebraicGeometry.HodgeCodimensionZero
+public import Other.AlgebraicGeometry.HodgeCodimensionZero
 import Other.AlgebraicGeometry.SmoothAnalytificationConnected
 
 /-!

@@ -7,7 +7,6 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
 public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
-public import Other.Algebra.Homology.MapExtendBettiComparison
 public import Other.AlgebraicGeometry.BettiSupportedOrdinarySign
 
 /-! # Actual positive ordinary normalization of the ambient supported injective model -/
@@ -45,8 +44,7 @@ theorem complexOpenRawToSheafTop_eq_global :
         (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤)
         (singularCochainSheafComplex ℚ (TopCat.of (ComplexPoint X)))
         ComplexShape.embeddingUpNat).inv = globalRawToSingularSheafInt X := by
-  rw [openRawToSingularCochainSheafComplex_top,
-    HomologicalComplex.mapExtendCanonicalIso_eq_bettiMapExtendIso]
+  rw [openRawToSingularCochainSheafComplex_top]
   rfl
 
 variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
