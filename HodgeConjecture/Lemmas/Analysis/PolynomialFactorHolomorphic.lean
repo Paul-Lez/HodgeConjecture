@@ -74,12 +74,12 @@ theorem hasStrictFDerivAt_familyEquation (p : Polynomial (Polynomial ℂ)) (zw :
   (analyticAt_familyEquation p zw).hasStrictFDerivAt
 
 /-- The parameter locus on which all roots of a polynomial family are simple. -/
-def SimpleRootBase (p : Polynomial (Polynomial ℂ)) :=
+abbrev SimpleRootBase (p : Polynomial (Polynomial ℂ)) :=
   {z : ℂ // ∀ w : ℂ, (familySpecialization p z).eval w = 0 →
     (familySpecialization p z).derivative.eval w ≠ 0}
 
 /-- The simple-root cover of a one-parameter polynomial family. -/
-def SimpleRootCover (p : Polynomial (Polynomial ℂ)) :=
+abbrev SimpleRootCover (p : Polynomial (Polynomial ℂ)) :=
   {zw : SimpleRootBase p × ℂ // (familySpecialization p zw.1.1).eval zw.2 = 0}
 
 /-- Projection of the simple-root cover to its parameter. -/
@@ -408,6 +408,71 @@ theorem eventually_mem_simpleRootBase {p : Polynomial (Polynomial ℂ)}
     dvd_gcd (dvd_iff_isRoot.mpr hw) (dvd_iff_isRoot.mpr hderiv)
   exact not_isUnit_X_sub_C w
     (isUnit_of_dvd_unit hdiv ((gcd_isUnit_iff q q.derivative).mpr hseparable))
+
+/-- Membership of a local root branch in a clopen part of the root cover is locally constant. -/
+theorem eventually_mem_clopen_localRootBranch_iff {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (S : Set (SimpleRootCover p)) (hSopen : IsOpen S)
+    (hSclosed : IsClosed S) (z : SimpleRootBase p) (i : Fin p.natDegree) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ (hbase : ∀ w : ℂ, (familySpecialization p z').eval w = 0 →
+        (familySpecialization p z').derivative.eval w ≠ 0)
+      (hroot : familyEquation p
+        (z', localRootBranch (simpleRootCoverPoint hp z i) z') = 0),
+      (⟨(⟨z', hbase⟩, localRootBranch (simpleRootCoverPoint hp z i) z'), hroot⟩ :
+          SimpleRootCover p) ∈ S ↔ simpleRootCoverPoint hp z i ∈ S := by
+  let U : Set ℂ := {z' | (∀ w : ℂ, (familySpecialization p z').eval w = 0 →
+      (familySpecialization p z').derivative.eval w ≠ 0) ∧
+    familyEquation p (z', localRootBranch (simpleRootCoverPoint hp z i) z') = 0}
+  have hU : U ∈ 𝓝 z.1 := inter_mem (eventually_mem_simpleRootBase hp z)
+    (eventually_familyEquation_localRootBranch (simpleRootCoverPoint hp z i))
+  have hzU : z.1 ∈ U := by
+    refine ⟨z.2, ?_⟩
+    have hbranch : localRootBranch (simpleRootCoverPoint hp z i) z.1 =
+        simpleRootEnumeration hp z i := by
+      simpa [simpleRootCoverPoint] using
+        localRootBranch_apply_base (simpleRootCoverPoint hp z i)
+    rw [familyEquation, hbranch]
+    exact simpleRootEnumeration_isRoot hp z i
+  let g : U → SimpleRootCover p := fun x ↦
+    ⟨(⟨x.1, x.2.1⟩, localRootBranch (simpleRootCoverPoint hp z i) x.1), x.2.2⟩
+  have hg : ContinuousAt g ⟨z.1, hzU⟩ := by
+    apply ContinuousAt.codRestrict
+    apply ContinuousAt.prodMk
+    · exact continuousAt_subtype_val.codRestrict fun x ↦ x.2.1
+    · have hbranch :=
+        (differentiableAt_localRootBranch (simpleRootCoverPoint hp z i)).continuousAt
+      have hbranch' : ContinuousAt (localRootBranch (simpleRootCoverPoint hp z i)) z.1 := by
+        simpa [simpleRootCoverPoint] using hbranch
+      have hval : ContinuousAt ((↑) : U → ℂ) ⟨z.1, hzU⟩ := continuousAt_subtype_val
+      change ContinuousAt
+        (localRootBranch (simpleRootCoverPoint hp z i) ∘ ((↑) : U → ℂ)) ⟨z.1, hzU⟩
+      exact hbranch'.comp_of_eq hval rfl
+  have hg_center : g ⟨z.1, hzU⟩ = simpleRootCoverPoint hp z i := by
+    apply Subtype.ext
+    apply Prod.ext
+    · rfl
+    · change localRootBranch (simpleRootCoverPoint hp z i) z.1 = simpleRootEnumeration hp z i
+      exact localRootBranch_apply_base _
+  have hmap : Filter.map ((↑) : U → ℂ) (𝓝 ⟨z.1, hzU⟩) = 𝓝 z.1 :=
+    map_nhds_subtype_coe_eq_nhds hzU hU
+  by_cases hi : simpleRootCoverPoint hp z i ∈ S
+  · have hevent : ∀ᶠ x in 𝓝 (⟨z.1, hzU⟩ : U), g x ∈ S :=
+      hg (hSopen.mem_nhds (hg_center.symm ▸ hi))
+    have hevent' : ∀ᶠ z' in 𝓝 z.1, ∀ hz' : z' ∈ U, g ⟨z', hz'⟩ ∈ S := by
+      rw [← hmap, eventually_map]
+      filter_upwards [hevent] with x hx
+      intro hx'
+      convert hx using 1
+    filter_upwards [hU, hevent'] with z' hz' hmem hbase hroot
+    exact ⟨fun _ ↦ hi, fun _ ↦ by simpa only [g, Subtype.ext_iff] using hmem hz'⟩
+  · have hevent : ∀ᶠ x in 𝓝 (⟨z.1, hzU⟩ : U), g x ∈ Sᶜ :=
+      hg (hSclosed.isOpen_compl.mem_nhds (by simpa [hg_center] using hi))
+    have hevent' : ∀ᶠ z' in 𝓝 z.1, ∀ hz' : z' ∈ U, g ⟨z', hz'⟩ ∈ Sᶜ := by
+      rw [← hmap, eventually_map]
+      filter_upwards [hevent] with x hx
+      intro hx'
+      convert hx using 1
+    filter_upwards [hU, hevent'] with z' hz' hmem hbase hroot
+    exact ⟨fun h ↦ ((hmem hz') h).elim, fun h ↦ (hi h).elim⟩
 
 end
 
