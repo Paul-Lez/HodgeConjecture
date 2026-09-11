@@ -3,20 +3,50 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-module
-
-public import Other.AlgebraicGeometry.ComplexIteratedLocalization
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalization
-
-@[expose] public section
+import Other.AlgebraicGeometry.ComplexIteratedLocalization
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalization
+import Other.AlgebraicGeometry.SmoothLocalNonvanishing
 
 open scoped Polynomial Topology
 
 namespace AlgebraicGeometry.ComplexAlgHom
 
-open Polynomial Set
+open CategoryTheory Polynomial Set
 
 noncomputable section
+
+/-- A nonzero function on a smooth integral affine complex algebra has dense nonvanishing locus
+in its complex algebra-hom space. -/
+lemma dense_eval_ne_zero_of_smooth
+    (B : Type) [CommRing B] [IsDomain B] [Algebra ℂ B] [Algebra.Smooth ℂ B]
+    (y : B) (hy : y ≠ 0) :
+    Dense {u : B →ₐ[ℂ] ℂ | u y ≠ 0} := by
+  let X := Over.mk (ComplexPoint.affineSpecStructureMap B)
+  let t : Γ(X.left, ⊤) := (Scheme.ΓSpecIso ↧B).inv y
+  have ht : t ≠ 0 := by
+    intro h
+    apply hy
+    simpa [t] using congrArg (Scheme.ΓSpecIso ↧B).hom h
+  let hschemeSmooth : Smooth X.hom := by
+    change Smooth (ComplexPoint.affineSpecStructureMap B)
+    apply (HasRingHomProperty.Spec_iff (P := @Smooth)).2
+    change (algebraMap ℂ B).Smooth
+    exact RingHom.smooth_algebraMap.mpr inferInstance
+  let _ : Smooth X.hom := hschemeSmooth
+  let _ : IsIntegral X.left := by
+    change IsIntegral (Spec ↧B)
+    infer_instance
+  let _ : QuasiSeparatedSpace X.left := by
+    change QuasiSeparatedSpace (Spec ↧B)
+    infer_instance
+  have hdense := ComplexPoint.dense_evaluate_ne_zero X t ht
+  rw [show {z : ComplexPoint X | Point.evaluate ⊤ t z ≠ 0} =
+      (ComplexPoint.affineSpecHomeomorph B) ⁻¹'
+        {u : B →ₐ[ℂ] ℂ | u y ≠ 0} by
+    ext z
+    change Point.evaluate ⊤ t z ≠ 0 ↔ ComplexPoint.affineSpecEquiv B z y ≠ 0
+    rw [ComplexPoint.affineSpecEquiv_apply]] at hdense
+  exact (ComplexPoint.affineSpecHomeomorph B).isOpenQuotientMap.dense_preimage_iff.mp hdense
 
 /-- The derivative times a nonzero base polynomial remains nonzero in the monogenic quotient.
 Irreducibility of `p` is not needed for this degree argument. -/
@@ -111,6 +141,24 @@ lemma connectedSpace_affineAlgHom_of_two_dense_localizations
     connectedSpace_affineAlgHom_of_dense_nonvanishing_of_localization
       (Localization.Away y) z hdense₂
   exact connectedSpace_affineAlgHom_of_dense_nonvanishing_of_localization B y hdense₁
+
+/-- For a smooth integral affine algebra, connectedness descends through two localizations at
+nonzero elements. Smoothness of the first localization follows from smoothness of the original
+algebra and stability under localization. -/
+lemma connectedSpace_affineAlgHom_of_two_smooth_localizations
+    (B : Type) [CommRing B] [IsDomain B] [Algebra ℂ B] [Algebra.Smooth ℂ B]
+    (y : B) (hy : y ≠ 0) (z : Localization.Away y) (hz : z ≠ 0)
+    [ConnectedSpace (Localization.Away z →ₐ[ℂ] ℂ)] :
+    ConnectedSpace (B →ₐ[ℂ] ℂ) := by
+  let _ : IsDomain (Localization.Away y) :=
+    IsLocalization.Away.isDomain (S := Localization.Away y) hy
+  let _ : Algebra.Smooth B (Localization.Away y) :=
+    Algebra.Smooth.of_isLocalization_Away y
+  let _ : Algebra.Smooth ℂ (Localization.Away y) :=
+    Algebra.Smooth.comp ℂ B (Localization.Away y)
+  exact connectedSpace_affineAlgHom_of_two_dense_localizations B y z
+    (dense_eval_ne_zero_of_smooth B y hy)
+    (dense_eval_ne_zero_of_smooth (Localization.Away y) z hz)
 
 end
 
