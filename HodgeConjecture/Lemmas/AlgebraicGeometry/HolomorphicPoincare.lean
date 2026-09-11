@@ -15,9 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.HolomorphicPoincare
-public import HodgeConjecture.Lemmas.Analysis.NormedSpace.WedgeCovectors
+public import HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors
 
 import Mathlib.LinearAlgebra.ExteriorAlgebra.OfAlternating
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
@@ -207,35 +207,6 @@ lemma chartSectionDifferential_fixedChartTransition
     fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z) hTy,
     heq.fderiv_eq]
   exact fderiv_fun_comp y hf hT
-
-/-- Wedges of covectors commute with pullback along a continuous linear map. -/
-lemma wedgeCovectors_compContinuousLinearMap
-    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
-    [NormedAddCommGroup F] [NormedSpace ℂ F]
-    (p : ℕ) (L : Fin p → F →L[ℂ] ℂ) (T : E →L[ℂ] F) :
-    wedgeCovectors E p (fun i ↦ (L i).comp T) =
-      (wedgeCovectors F p L).compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [wedgeCovectors_apply_eq_det, ContinuousAlternatingMap.compContinuousLinearMap_apply,
-    wedgeCovectors_apply_eq_det]
-  rfl
-
-lemma add_compContinuousLinearMap
-    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
-    [NormedAddCommGroup F] [NormedSpace ℂ F]
-    {p : ℕ} (a b : F [⋀^Fin p]→L[ℂ] ℂ) (T : E →L[ℂ] F) :
-    (a + b).compContinuousLinearMap T =
-      a.compContinuousLinearMap T + b.compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
-
-lemma smul_compContinuousLinearMap
-    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
-    [NormedAddCommGroup F] [NormedSpace ℂ F]
-    {p : ℕ} (c : ℂ) (a : F [⋀^Fin p]→L[ℂ] ℂ) (T : E →L[ℂ] F) :
-    (c • a).compContinuousLinearMap T = c • a.compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
 
 /-- Evaluation of a differential form is covariant under a holomorphic fixed-chart
 transition. -/
@@ -449,134 +420,6 @@ lemma chartSectionDifferential_chartCoordinateSection
   rw [chartSectionDifferential_holomorphicSectionOfChart X d U z hsource _ _ hy,
     fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z) hy]
   exact (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin d ↦ ℂ) i).hasFDerivAt.fderiv
-
-/-- The product of a tuple of coordinate covectors. -/
-def covectorProduct (d p : ℕ) (I : Fin p → Fin d) :
-    ContinuousMultilinearMap ℂ (fun _ : Fin p ↦ Fin d → ℂ) ℂ :=
-  (ContinuousMultilinearMap.mkPiAlgebra ℂ (Fin p) ℂ).compContinuousLinearMap
-    (fun j ↦ ContinuousLinearMap.proj (I j))
-
-@[simp] lemma covectorProduct_apply (d p : ℕ) (I : Fin p → Fin d)
-    (v : Fin p → Fin d → ℂ) :
-    covectorProduct d p I v = ∏ j, v j (I j) := by
-  simp [covectorProduct, ContinuousMultilinearMap.compContinuousLinearMap_apply,
-    ContinuousMultilinearMap.mkPiAlgebra_apply]
-
-/-- A multilinear form on a finite product is the sum of its coordinate monomials. -/
-lemma multilinear_eq_sum_covectorProduct (d p : ℕ)
-    (A : ContinuousMultilinearMap ℂ (fun _ : Fin p ↦ Fin d → ℂ) ℂ) :
-    A = ∑ I : Fin p → Fin d,
-      A (fun j ↦ Pi.single (I j) 1) • covectorProduct d p I := by
-  classical
-  apply ContinuousMultilinearMap.toMultilinearMap_injective
-  change A.toMultilinearMap =
-    ContinuousMultilinearMap.toMultilinearMapLinear
-      (R' := ℂ) (∑ I : Fin p → Fin d,
-        A (fun j ↦ Pi.single (I j) 1) • covectorProduct d p I)
-  rw [_root_.map_sum]
-  simp_rw [_root_.map_smul]
-  refine Module.Basis.ext_multilinear (fun _ : Fin p ↦ Pi.basisFun ℂ (Fin d)) fun v ↦ ?_
-  simp only [_root_.sum_apply, _root_.smul_apply, smul_eq_mul]
-  rw [Finset.sum_eq_single v]
-  · simp [Pi.basisFun_apply]
-  · intro I hI hne
-    change A (fun j ↦ Pi.single (I j) 1) *
-      covectorProduct d p I (fun j ↦ Pi.basisFun ℂ (Fin d) (v j)) = 0
-    rw [covectorProduct_apply]
-    obtain ⟨j, hj⟩ := Function.ne_iff.mp hne
-    have hz : (Pi.basisFun ℂ (Fin d) (v j)) (I j) = 0 := by
-      simp [Pi.basisFun_apply, hj.symm]
-    rw [Finset.prod_eq_zero (Finset.mem_univ j) hz, mul_zero]
-  · simp
-
-/-- Alternatizing a coordinate monomial gives the wedge of its coordinate covectors. -/
-lemma alternatization_covectorProduct (d p : ℕ) (I : Fin p → Fin d) :
-    ContinuousMultilinearMap.alternatization (covectorProduct d p I) =
-      wedgeCovectors (Fin d → ℂ) p (fun j ↦ ContinuousLinearMap.proj (I j)) := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [ContinuousMultilinearMap.alternatization_apply_apply,
-    wedgeCovectors_apply_eq_det, ← Matrix.det_transpose, Matrix.det_apply]
-  refine Finset.sum_congr rfl fun σ _ ↦ ?_
-  rw [covectorProduct_apply]
-  congr 1
-
-lemma alternatization_smul (d p : ℕ) (c : ℂ)
-    (M : ContinuousMultilinearMap ℂ (fun _ : Fin p ↦ Fin d → ℂ) ℂ) :
-    ContinuousMultilinearMap.alternatization (c • M) =
-      c • ContinuousMultilinearMap.alternatization M := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp only [ContinuousMultilinearMap.alternatization_apply_apply, _root_.smul_apply,
-    ContinuousAlternatingMap.smul_apply]
-  rw [Finset.smul_sum]
-  refine Finset.sum_congr rfl fun σ _ ↦ ?_
-  rw [smul_comm]
-
-lemma alternatization_toContinuousMultilinearMap (d p : ℕ)
-    (A : (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) :
-    ContinuousMultilinearMap.alternatization A.toContinuousMultilinearMap =
-      (p.factorial : ℂ) • A := by
-  apply ContinuousAlternatingMap.toAlternatingMap_injective
-  rw [ContinuousMultilinearMap.alternatization_apply_toAlternatingMap]
-  change MultilinearMap.alternatization A.toAlternatingMap.toMultilinearMap =
-    (p.factorial : ℂ) • A.toAlternatingMap
-  simpa only [Fintype.card_fin, Nat.cast_smul_eq_nsmul] using
-    AlternatingMap.coe_alternatization A.toAlternatingMap
-
-/-- A continuous alternating form on `Fin d → ℂ` is the finite coordinate-wedge expansion
-of its values on the standard coordinate vectors. -/
-lemma alternating_eq_sum_wedgeCovectors (d p : ℕ)
-    (A : (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) :
-    A = ∑ I : Fin p → Fin d,
-      ((p.factorial : ℂ)⁻¹ * A (fun j ↦ Pi.single (I j) 1)) •
-        wedgeCovectors (Fin d → ℂ) p
-          (fun j ↦ ContinuousLinearMap.proj (I j)) := by
-  classical
-  have hM := multilinear_eq_sum_covectorProduct d p A.toContinuousMultilinearMap
-  have hAlt := congrArg ContinuousMultilinearMap.alternatization hM
-  rw [alternatization_toContinuousMultilinearMap d p A] at hAlt
-  simp only [_root_.map_sum] at hAlt
-  simp_rw [alternatization_smul, alternatization_covectorProduct] at hAlt
-  change (p.factorial : ℂ) • A =
-    ∑ I : Fin p → Fin d, A (fun j ↦ Pi.single (I j) 1) •
-      wedgeCovectors (Fin d → ℂ) p
-        (fun j ↦ ContinuousLinearMap.proj (I j)) at hAlt
-  have hfac : (p.factorial : ℂ) ≠ 0 := by exact_mod_cast Nat.factorial_ne_zero p
-  calc
-    A = (p.factorial : ℂ)⁻¹ • ((p.factorial : ℂ) • A) := by
-      rw [← mul_smul, inv_mul_cancel₀ hfac, one_smul]
-    _ = (p.factorial : ℂ)⁻¹ • ∑ I : Fin p → Fin d,
-        A (fun j ↦ Pi.single (I j) 1) •
-          wedgeCovectors (Fin d → ℂ) p
-            (fun j ↦ ContinuousLinearMap.proj (I j)) := by rw [hAlt]
-    _ = _ := by
-      rw [Finset.smul_sum]
-      exact Finset.sum_congr rfl fun I _ ↦ smul_smul _ _ _
-
-/-- Evaluation at a fixed tuple is a continuous linear functional on continuous alternating
-forms. -/
-def alternatingFormEvaluation (d p : ℕ) (v : Fin p → Fin d → ℂ) :
-    ((Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) →L[ℂ] ℂ :=
-  let L : ((Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) →ₗ[ℂ] ℂ :=
-    { toFun := fun A ↦ A v
-      map_add' := fun A B ↦ by simp
-      map_smul' := fun a A ↦ by simp [ContinuousAlternatingMap.smul_apply] }
-  LinearMap.mkContinuous L (∏ j, ‖v j‖) (fun A ↦ by
-    change ‖A v‖ ≤ (∏ j, ‖v j‖) * ‖A‖
-    simpa only [mul_comm] using A.le_opNorm v)
-
-/-- The coefficient of an alternating form field in its finite coordinate-wedge expansion. -/
-def coordinateCoefficient (d p : ℕ)
-    (θ : (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)
-    (I : Fin p → Fin d) (y : Fin d → ℂ) : ℂ :=
-  (p.factorial : ℂ)⁻¹ * θ y (fun j ↦ Pi.single (I j) 1)
-
-lemma analyticOnNhd_coordinateCoefficient (d p : ℕ)
-    (θ : (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)
-    {s : Set (Fin d → ℂ)} (hθ : AnalyticOnNhd ℂ θ s) (I : Fin p → Fin d) :
-    AnalyticOnNhd ℂ (coordinateCoefficient d p θ I) s := by
-  let e : Fin p → Fin d → ℂ := fun j ↦ Pi.single (I j) 1
-  exact ((alternatingFormEvaluation d p e).comp_analyticOnNhd hθ).const_smul
-    (c := (p.factorial : ℂ)⁻¹)
 
 /-- A finite differential form whose fixed-chart evaluation is a given analytic
 alternating-form field. -/

@@ -15,10 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiGlobalSectionsComparison
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiGlobalSectionsComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.GlobalSingularRestriction
-public import HodgeConjecture.Definitions.AlgebraicTopology.RelativeCochainCone
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeCochainCone
 /-!
 # Global singular restriction and relative cohomology
 

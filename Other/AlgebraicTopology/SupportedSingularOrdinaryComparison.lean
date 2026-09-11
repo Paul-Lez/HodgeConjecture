@@ -41,7 +41,6 @@ theorem openSingularSheafRestrictionConeCohomologyEquivRelative_symm
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 800000 in
 /-- The actual local sheaf-cone connecting map is minus the raw relative
 cochain inclusion followed by the literal sheafification unit. -/
 theorem openSingularSheafRestrictionCone_connecting_of_relative

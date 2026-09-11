@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.RingTheory.SmoothKrullDimension
+public import HodgeConjecture.Mathlib.RingTheory.SmoothKrullDimension
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
@@ -30,7 +30,7 @@ import Mathlib.RingTheory.Unramified.LocalStructure
 
 This file proves the dimension-theoretic consequences of smooth complex coordinates that do not
 require a catenary dimension formula.  Its commutative-algebra input is
-`HodgeConjecture.Lemmas.RingTheory.SmoothKrullDimension`, which bounds the Krull dimension of a
+`HodgeConjecture.Mathlib.RingTheory.SmoothKrullDimension`, which bounds the Krull dimension of a
 standard-smooth complex algebra of relative dimension `d` by `d`.
 
 For a smooth complex scheme, the affine coordinate neighborhoods therefore give the global bound

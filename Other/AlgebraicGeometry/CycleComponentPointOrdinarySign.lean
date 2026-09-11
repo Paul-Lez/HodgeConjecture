@@ -9,12 +9,11 @@ public import Other.AlgebraicGeometry.PointCycleClass
 public import Other.AlgebraicGeometry.ComplexSupportedOrdinaryComparison
 
 /-!
-# Actual raw-cochain point normalization and the legacy ordinary sign
+# Raw-cochain point normalization and the ordinary point sign
 
-The general class is compared through literal pair maps and the positive raw
-relative-cochain inclusion. The comparison with the legacy ordinary point class
-is a theorem about existing definitions, not a change of orientation or a point
-branch in the general construction.
+The general class is compared through pair maps and the positive raw relative-cochain
+inclusion. The resulting agreement with the earlier ordinary point class is a theorem
+about the existing definitions on both sides.
 -/
 
 @[expose] public noncomputable section

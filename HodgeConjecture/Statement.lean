@@ -15,9 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Coniveau
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
 /-!
 # The Hodge conjecture
 
