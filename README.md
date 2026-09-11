@@ -59,3 +59,9 @@ tracks that inventory; issue #14 tracks redefining Borel–Moore homology throug
 after which how many of the fifteen become constructible is the measure of progress.
 
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
+
+Dependency graph of the statement: <https://paul-lez.github.io/HodgeConjecture/blueprint/dep_graph_document.html>.
+It is a [leanblueprint](https://github.com/PatrickMassot/leanblueprint) document generated from the
+compiled declarations: one node for each definition the statement transitively uses, with the
+dependencies extracted from Lean. See [`scripts/BlueprintGraph.lean`](scripts/BlueprintGraph.lean)
+for how to regenerate it and [`blueprint/`](blueprint/) for the sources.

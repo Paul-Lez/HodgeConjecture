@@ -1,0 +1,22 @@
+% Web version of the blueprint: `leanblueprint web` compiles this file with plasTeX
+% into `blueprint/web/`, including the interactive dependency graph.
+
+\documentclass{report}
+
+\usepackage{amssymb, amsthm, amsmath}
+\usepackage{hyperref}
+\usepackage[showmore, dep_graph, thms=conjecture+definition+lemma+theorem]{blueprint}
+
+\input{macros}
+
+\home{https://paul-lez.github.io/HodgeConjecture/}
+\github{https://github.com/Paul-Lez/HodgeConjecture}
+\dochome{https://paul-lez.github.io/HodgeConjecture/docs}
+
+\title{The Hodge conjecture: dependency graph of the statement}
+\author{The Formal Conjectures Authors}
+
+\begin{document}
+\maketitle
+\input{content}
+\end{document}
