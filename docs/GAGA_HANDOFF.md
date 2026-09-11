@@ -369,11 +369,12 @@ and `surjective_sphereToProjectivization`.
 **Corrected list of remaining inputs.** In dependency order, and stated for the ambient `ℙᴺ`
 wherever possible:
 
-0. *(topology: **done** 2026-09-11)* the standard charts `{x_i ≠ 0} ≅ ℂᴺ` of `ℙᴺ(ℂ)^an` as
-   homeomorphisms — `ComplexProjectiveSpace.chartHomeomorph`, `complexPointChartHomeomorph`.
-   Their *holomorphic* compatibility with the repository's atlas is gap (G1), blocked by (G0):
-   `ℙᴺ_ℂ` carries no `SmoothOfRelativeDimension` instance in this repository, so its holomorphic
-   structure sheaf does not yet exist;
+0. *(topology and smoothness: **done** 2026-09-11)* the standard charts `{x_i ≠ 0} ≅ ℂᴺ` of
+   `ℙᴺ(ℂ)^an` as homeomorphisms — `ComplexProjectiveSpace.chartHomeomorph`,
+   `complexPointChartHomeomorph` — and the `SmoothOfRelativeDimension N` instance on `ℙᴺ`
+   (`Other.ProjectiveChart.smoothOfRelativeDimension_projectiveSpaceToBase`), which makes
+   `holomorphicRingSheaf`, `moduleAnalytification` and `localChart` exist on `ℙᴺ` with `d = N`.
+   Their *holomorphic* compatibility with the repository's atlas is gap (G1), now unblocked;
 1. *(constructive, no analysis)* gap (G2): a chartwise/holomorphic model of `𝒪(-n)^an` on
    `ℙᴺ(ℂ)` with transition units `(x_i/x_j)^n`, and its comparison with `moduleAnalytification`
    of the algebraic twist;
@@ -453,6 +454,9 @@ namespace `Complex.PolynomialGrowth`:
   twist is trivial, so any statement of it must assume `N ≥ 1`.
 
 ### Newly discovered prerequisite: `ℙᴺ_ℂ` carries none of the repository's analytic structure
+*(Resolved on 2026-09-11 — see the second-pass progress section below.  The paragraph is kept
+because it records why the obligations below were stated in prose rather than as compiling
+`def … : Prop` declarations.)*
 
 `holomorphicFunctionSheaf X d`, `holomorphicRingSheaf X d` and `moduleAnalytification X d` all
 require `[SmoothOfRelativeDimension d X.hom]`.  For `X = Over.mk (ProjectiveSpace.toBase (Fin (N+1))
@@ -467,7 +471,9 @@ sits *before* everything else in the reorganised plan.
 
 ### The remaining gaps, stated
 
-**(G0) `ℙᴺ_ℂ` is a smooth integral complex variety of dimension `N`.**
+**(G0) `ℙᴺ_ℂ` is a smooth integral complex variety of dimension `N`.**  *(Smoothness of relative
+dimension `N` is now **proved** — see the progress section below; only `IsIntegral` and
+`dim = N` remain, and neither blocks (G1)–(G3).)*
 ```lean
 instance : IsIntegral (ProjectiveSpace (Fin (N + 1)) (Spec ↧ℂ))
 instance : Smooth (ProjectiveSpace.toBase (Fin (N + 1)) (Spec ↧ℂ))
@@ -529,6 +535,91 @@ of analytic pushforward along the closed immersion, and `i^an_*(M^an) ≅ (i_* M
 **(G5), (G6), (G7)**: Oka coherence, Cartan A/B, and the stalkwise base change plus flatness for
 reflection of invertibility — unchanged, and still the three genuinely hard analytic/algebraic
 inputs.
+
+## Progress 2026-09-11 (second pass): (G0) — `ℙᴺ` is smooth of relative dimension `N`
+
+**(G0) is closed for all practical purposes.**  Three further `sorry`-free, axiom-clean files
+(all in `scripts/lefschetz_axiom_audit.lean`).  Together they supply the
+`SmoothOfRelativeDimension N` instance on projective space, which is what
+`holomorphicFunctionSheaf`, `holomorphicRingSheaf`, `moduleAnalytification`, `localChart` and the
+`ChartedSpace`/`IsManifold` instances actually require.  All of these now typecheck on
+`Over.mk (ProjectiveSpace.toBase (Fin (N + 1)) (Spec ↧ℂ))` with `d = N` — checked directly; before
+this pass none of them did.
+
+Mathlib turned out to contain none of the needed ingredients: there is no `ProjectiveSpace`
+directory in this version, no smoothness statement for affine or projective space, no standard
+smooth presentation of a polynomial algebra, and nothing computing the degree-zero part of a
+homogeneous localization.  Everything below is built from scratch.
+
+### 1. Polynomial algebras are standard smooth
+
+[`Other/AlgebraicGeometry/MvPolynomialStandardSmooth.lean`](../Other/AlgebraicGeometry/MvPolynomialStandardSmooth.lean),
+namespace `Other.MvPolynomialStandardSmooth`:
+
+- `presentation`, `preSubmersive`, `submersive` — the tautological presentation of
+  `MvPolynomial (Fin n) R` over `R`: variables `Fin n`, relations `Empty`, built on Mathlib's
+  `Algebra.Generators.mvPolynomial` and `Generators.ker_mvPolynomial`.  The Jacobian is the
+  determinant of the empty matrix, hence `1`.
+- **`isStandardSmoothOfRelativeDimension`** (an `instance`):
+  `Algebra.IsStandardSmoothOfRelativeDimension n R (MvPolynomial (Fin n) R)`.
+
+### 2. The standard affine chart of `Proj` of a polynomial ring
+
+[`Other/AlgebraicGeometry/ProjectiveChartIso.lean`](../Other/AlgebraicGeometry/ProjectiveChartIso.lean),
+namespace `Other.ProjectiveChart`.  Write `A = R[X₀, …, X_N]` with its standard grading `𝒜`.
+
+- `eval₂_mul_of_isHomogeneous` — a general rescaling lemma: for `a` homogeneous of degree `n`,
+  `eval₂ f (t • g) a = tⁿ · eval₂ f g a`.
+- `deh i` — dehomogenisation `Xᵢ ↦ 1`, `X_{i.succAbove j} ↦ Yⱼ`; `gen i j` — the affine
+  coordinate `X_{i.succAbove j} / Xᵢ` in `A⁰_{Xᵢ}`; `chartHom i : R[Y₁,…,Y_N] →+* A⁰_{Xᵢ}`.
+- `theta i` — the substitution `X l ↦ X l / Xᵢ` into `Localization.Away (Xᵢ)`, and
+  `theta_of_isHomogeneous`: on a degree-`n` homogeneous polynomial it is division by `Xᵢⁿ`.
+  This replaces any monomial bookkeeping: `algebraMap_chartHom_deh` identifies
+  `val ∘ chartHom ∘ deh` with `theta` by `MvPolynomial.ringHom_ext` plus `Fin.succAboveCases`.
+- `chartHom_deh_eq`, `chartHom_surjective` (via Mathlib's `Away.mk_surjective`),
+  `dehLift`/`chartInv`/`chartInv_chartHom`, `chartHom_injective`.
+- **`chartRingEquiv i : MvPolynomial (Fin N) R ≃+* A⁰_{Xᵢ}`** — the standard chart
+  `D₊(Xᵢ) ≅ 𝔸ᴺ_R` at the ring level.
+- `cZeroEquiv : R ≃+* 𝒜 0`, `fromZeroRingHom_eq`, and
+  **`isStandardSmoothOfRelativeDimension_fromZeroRingHom`**: the structure map
+  `𝒜 0 → A⁰_{Xᵢ}` is standard smooth of relative dimension `N`.
+
+### 3. Projective space is smooth of relative dimension `N`
+
+[`Other/AlgebraicGeometry/ProjectiveSpaceSmooth.lean`](../Other/AlgebraicGeometry/ProjectiveSpaceSmooth.lean),
+namespace `Other.ProjectiveChart`:
+
+- `irrelevant_le_span_X`, `iSup_basicOpen_X_eq_top` — the charts `D₊(Xᵢ)` cover `Proj A`
+  (the irrelevant ideal is generated by the variables; uses Mathlib's `idealOfVars` machinery
+  and `Proj.iSup_basicOpen_eq_top`).
+- **`smoothOfRelativeDimension_toSpecZero`** — `Proj R[X₀,…,X_N] ⟶ Spec (𝒜 0)` is smooth of
+  relative dimension `N`.  `SmoothOfRelativeDimension n` is local at the source via the generic
+  `HasRingHomProperty.instIsZariskiLocalAtSource` (note: this instance is *not* found by
+  typeclass search, because `Q` is not an out-param — it has to be supplied by name).  The chart
+  comparison is `Proj.basicOpenIsoSpec_inv_ι` together with `Proj.awayι_toSpecZero`.
+- `specDegreeZeroIsTerminal`, **`smoothOfRelativeDimension_terminalFromProj`**, and
+  **`smoothOfRelativeDimension_projectiveSpaceToBase`**: base change along
+  `ProjectiveSpace.toBase n S = pullback.fst (terminal.from S) (terminal.from (Proj ℤ[n]))`.
+- The `instance smoothOfRelativeDimension_projectiveSpaceOver` puts this on
+  `(Over.mk (ProjectiveSpace.toBase (Fin (N + 1)) S)).hom`, so the analytic machinery is
+  available on `ℙᴺ` with no further work.
+
+### What is left of (G0)
+
+Only `IsIntegral (ProjectiveSpace (Fin (N + 1)) (Spec ↧ℂ))` and `dim ℙᴺ = N`.  Neither is needed
+for (G1)–(G3): the holomorphic structure sheaf and the analytification functor take the relative
+dimension as a parameter, and `N` is now available directly, matching the model space `Fin N → ℂ`
+of `ComplexProjectiveSpace.complexPointChartHomeomorph`.  `IsIntegral` is needed only if one
+wants to instantiate the `dim X.left`-phrased statements (`AnalyticLineBundlesAlgebraize`,
+`DimensionedSmoothProjectiveComplexVariety`) at `X = ℙᴺ`; it is an independent and much smaller
+obligation than the smoothness just proved (irreducibility and reducedness of `Proj` of a
+polynomial ring over a domain).
+
+**(G1) is therefore now unblocked** and is the next step: show that
+`complexPointChartHomeomorph i` is a chart of the analytic structure on `ComplexPoint ℙᴺ`, i.e.
+that pulling a section of `holomorphicFunctionSheaf ℙᴺ N` back along it gives an entire function
+on `ℂᴺ`, and conversely.  With (G1), (G2) and (G3) in place,
+`Complex.PolynomialGrowth.analyticOnNhd_homogeneous_iff` computes `H⁰(ℙᴺ(ℂ)^an, 𝒪(m)^an)`.
 
 ## Mathematical routes, and what is missing
 

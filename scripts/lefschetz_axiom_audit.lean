@@ -22,6 +22,9 @@ import Other.AlgebraicGeometry.PolynomialGrowthLiouville
 import Other.AlgebraicGeometry.ProjectiveAnalytificationHomeomorph
 import Other.AlgebraicGeometry.ProjectiveAnalytificationCharts
 import Other.AlgebraicGeometry.HomogeneousEntireFunctions
+import Other.AlgebraicGeometry.MvPolynomialStandardSmooth
+import Other.AlgebraicGeometry.ProjectiveChartIso
+import Other.AlgebraicGeometry.ProjectiveSpaceSmooth
 import Other.AlgebraicGeometry.GAGASerreReduction
 import Other.AlgebraicGeometry.ProjectiveHolomorphicFunctions
 import Other.AlgebraicGeometry.ProjectiveTwistDegreeZero
@@ -128,3 +131,12 @@ import Other.AlgebraicGeometry.CohomologyWithSupportExact
 #print axioms Complex.PolynomialGrowth.exists_isHomogeneous_eq_of_homogeneous
 #print axioms Complex.PolynomialGrowth.analyticOnNhd_homogeneous_iff
 #print axioms Complex.PolynomialGrowth.eq_zero_of_homogeneous_neg
+#print axioms Other.MvPolynomialStandardSmooth.isStandardSmoothOfRelativeDimension
+#print axioms Other.ProjectiveChart.eval₂_mul_of_isHomogeneous
+#print axioms Other.ProjectiveChart.chartHom_surjective
+#print axioms Other.ProjectiveChart.chartHom_injective
+#print axioms Other.ProjectiveChart.chartRingEquiv
+#print axioms Other.ProjectiveChart.isStandardSmoothOfRelativeDimension_fromZeroRingHom
+#print axioms Other.ProjectiveChart.irrelevant_le_span_X
+#print axioms Other.ProjectiveChart.smoothOfRelativeDimension_toSpecZero
+#print axioms Other.ProjectiveChart.smoothOfRelativeDimension_projectiveSpaceToBase
