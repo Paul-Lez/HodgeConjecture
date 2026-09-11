@@ -40,7 +40,7 @@ lemma iteratedAwayAlgEquivOfAlgEquiv_symm_ne_zero
 
 variable {n : ℕ}
 
-abbrev derivativeAdjoinRootElement
+def derivativeAdjoinRootElement
     (p : Polynomial (complexPolynomialRing n)) (t : complexPolynomialRing n) :
     AdjoinRoot p :=
   AdjoinRoot.mk p (p.derivative * Polynomial.C t)
