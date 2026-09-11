@@ -94,6 +94,21 @@ private lemma growth_fin_cons {n : ℕ} {f : (Fin (n + 1) → ℂ) → ℂ} {C :
       nlinarith
     _ = _ := by rw [mul_pow, mul_assoc]
 
+/-- A polynomial growth bound at one cons point separates into head and tail bounds. -/
+lemma growth_fin_cons_of_bound {n : ℕ} {f : (Fin (n + 1) → ℂ) → ℂ} {C : ℝ}
+    (hC : 0 ≤ C) {N : ℕ} (t : ℂ) (y : Fin n → ℂ)
+    (h : ‖f (Fin.cons t y)‖ ≤
+      C * (1 + ‖(Fin.cons t y : Fin (n + 1) → ℂ)‖) ^ N) :
+    ‖f (Fin.cons t y)‖ ≤ (C * (1 + ‖t‖) ^ N) * (1 + ‖y‖) ^ N := by
+  calc
+    ‖f (Fin.cons t y)‖ ≤ C * (1 + ‖(Fin.cons t y : Fin (n + 1) → ℂ)‖) ^ N := h
+    _ ≤ C * ((1 + ‖t‖) * (1 + ‖y‖)) ^ N := by
+      gcongr
+      have := norm_fin_cons_le t y
+      have := mul_nonneg (norm_nonneg t) (norm_nonneg y)
+      nlinarith
+    _ = _ := by rw [mul_pow, mul_assoc]
+
 /-- Evaluation of a complex multivariate polynomial is an entire function. -/
 theorem differentiable_mvPolynomial_eval {n : ℕ} (p : MvPolynomial (Fin n) ℂ) :
     Differentiable ℂ (fun z : Fin n → ℂ => MvPolynomial.eval z p) := by
