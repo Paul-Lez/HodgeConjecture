@@ -18,6 +18,8 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import Mathlib.AlgebraicGeometry.Properties
 public import Mathlib.Algebra.Ring.Idempotent
+public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
+public import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Algebraic idempotents and subsets of complex points
@@ -31,6 +33,58 @@ a subset whose characteristic function is the evaluation of such a section is em
 open CategoryTheory
 
 namespace AlgebraicGeometry.Point
+
+/-- A regular function on a reduced complex scheme locally of finite type is determined by
+its values at complex points. -/
+theorem section_eq_zero_of_evaluate_eq_zero
+    {X : Over (Spec (CommRingCat.of ℂ))} [IsReduced X.left]
+    [LocallyOfFiniteType X.hom] {U : X.left.Opens} (s : Γ(X.left, U))
+    (hs : ∀ z : Point ℂ X, z ∈ overOpen U → evaluate U s z = 0) : s = 0 := by
+  let : JacobsonSpace X.left := LocallyOfFiniteType.jacobsonSpace X.hom
+  apply eq_zero_of_basicOpen_eq_bot s
+  apply TopologicalSpace.Opens.ext
+  apply Set.eq_empty_iff_forall_notMem.mpr
+  intro x hx
+  obtain ⟨y, hy, hyclosed⟩ := nonempty_inter_closedPoints
+    (X := X.left) (Z := (X.left.basicOpen s : Set X.left)) ⟨x, hx⟩
+    (X.left.basicOpen s).isOpen.isLocallyClosed
+  let p := (pointEquivClosedPoint X.hom).symm ⟨y, hyclosed⟩
+  let z : Point ℂ X := Over.homMk p.1 p.2
+  have hz : z.underlying = y := congrArg Subtype.val
+    ((pointEquivClosedPoint X.hom).apply_symm_apply ⟨y, hyclosed⟩)
+  have hzbasic : z ∈ overOpen (X.left.basicOpen s) := by
+    change z.underlying ∈ X.left.basicOpen s
+    rwa [hz]
+  have hzU : z ∈ overOpen U := X.left.basicOpen_le s hzbasic
+  exact (mem_overOpen_basicOpen_iff_evaluate_ne_zero s z hzU).mp hzbasic (hs z hzU)
+
+/-- Evaluation on complex points detects equality of regular functions on a reduced scheme
+locally of finite type. -/
+theorem evaluateOnOpen_injective
+    {X : Over (Spec (CommRingCat.of ℂ))} [IsReduced X.left]
+    [LocallyOfFiniteType X.hom] (U : X.left.Opens) :
+    Function.Injective (fun s : Γ(X.left, U) => evaluateOnOpen U s) := by
+  intro s t h
+  apply sub_eq_zero.mp
+  apply section_eq_zero_of_evaluate_eq_zero (s - t)
+  intro z hz
+  rw [← evaluationHom_hom_apply U ⟨z, hz⟩, map_sub]
+  apply sub_eq_zero.mpr
+  exact congrFun h ⟨z, hz⟩
+
+/-- Pointwise idempotence of a regular function implies algebraic idempotence. -/
+theorem isIdempotentElem_of_evaluate
+    {X : Over (Spec (CommRingCat.of ℂ))} [IsReduced X.left]
+    [LocallyOfFiniteType X.hom] {U : X.left.Opens} (s : Γ(X.left, U))
+    (hs : ∀ z : Point ℂ X, z ∈ overOpen U →
+      evaluate U s z * evaluate U s z = evaluate U s z) : IsIdempotentElem s := by
+  apply evaluateOnOpen_injective U
+  funext z
+  change (evaluationHom U z).hom (s * s) = (evaluationHom U z).hom s
+  rw [map_mul]
+  rw [show (evaluationHom U z).hom s = evaluate U s z.1 from
+    evaluationHom_hom_apply U z s]
+  exact hs z.1 z.2
 
 variable {X : Over (Spec (CommRingCat.of ℂ))} [IsIntegral X.left]
 
@@ -69,5 +123,18 @@ theorem eq_empty_or_univ_of_indicator_eq_evaluate
     by_contra hz
     have := heval z
     simp [hone z, hz] at this
+
+/-- An indicator represented by a global regular function on an integral complex scheme
+locally of finite type is trivial; algebraic idempotence follows from its pointwise values. -/
+theorem eq_empty_or_univ_of_indicator_eq_regular
+    [LocallyOfFiniteType X.hom] (U : Set (Point ℂ X)) (s : Γ(X.left, ⊤))
+    (heval : ∀ z, evaluate ⊤ s z = U.indicator (fun _ ↦ (1 : ℂ)) z) :
+    U = ∅ ∨ U = Set.univ := by
+  classical
+  apply eq_empty_or_univ_of_indicator_eq_evaluate U s ?_ heval
+  apply isIdempotentElem_of_evaluate
+  intro z _
+  rw [heval]
+  by_cases hz : z ∈ U <;> simp [hz]
 
 end AlgebraicGeometry.Point
