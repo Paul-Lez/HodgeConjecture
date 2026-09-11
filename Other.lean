@@ -460,3 +460,4 @@ public import Other.AlgebraicGeometry.ChernWindingNormalChartUnit
 public import Other.AlgebraicGeometry.ChernWindingGenericChartData
 public import Other.AlgebraicGeometry.ChernWindingGenericChartExistence
 public import Other.AlgebraicGeometry.ChernWindingNormalChartTransport
+public import Other.AlgebraicGeometry.SupportEnlargementCodimTwo
