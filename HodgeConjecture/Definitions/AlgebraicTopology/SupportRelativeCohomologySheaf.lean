@@ -8,12 +8,12 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.NormalProjectionCocl
 public import HodgeConjecture.Definitions.AlgebraicTopology.SheafMapOfLocallyRepresentableStalks
 
 /-!
-# The actual local relative-cohomology presheaf and its sheafification
+# The local relative-cohomology presheaf and its sheafification
 
-For a support `S ⊆ X`, the value on `V` is the rational relative cohomology of
-the actual pair `(V, V \ S)`, viewed as an additive group. Restrictions are
-the pullbacks along literal inclusions of these pairs. The sheaf is its actual
-sheafification. This module also proves local vanishing away from closed support.
+For a support `S ⊆ X`, the value on `V` is the rational relative cohomology of the pair
+`(V, V \ S)` as an additive group, with restrictions the pullbacks along inclusions of
+these pairs, and the sheaf is its sheafification. This module also proves local vanishing
+away from a closed support.
 -/
 
 @[expose] public noncomputable section

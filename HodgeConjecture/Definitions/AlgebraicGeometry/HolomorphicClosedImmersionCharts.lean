@@ -8,12 +8,11 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionNorma
 public import HodgeConjecture.Lemmas.AlgebraicTopology.HolomorphicNormalTransition
 
 /-!
-# Actual holomorphic support-flattening charts
+# Holomorphic support-flattening charts
 
 Restricting to the open loci where a normal coordinate change and its inverse are analytic
 upgrades centerwise analyticity to analyticity throughout each selected chart. All coordinate
-changes come from the previously constructed smooth closed immersion; no holomorphic chart
-compatibility or normal-orientation coherence is supplied.
+changes come from the smooth closed immersion constructed earlier.
 -/
 
 @[expose] public noncomputable section

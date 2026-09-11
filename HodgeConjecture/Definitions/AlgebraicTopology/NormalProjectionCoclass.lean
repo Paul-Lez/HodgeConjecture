@@ -9,12 +9,11 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.CenteredComplexEmbeddingO
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentPurity
 
 /-!
-# Actual normal projections and the local support coclass
+# Normal projections and the local support coclass
 
-The normal projection of a support-flattening chart is a genuine map of pairs on every open
-subset of its source. Pulling back the fixed normal coclass along this map is compatible with
-restriction. The explicit radial-fiber factorization below identifies this coclass with the
-previously constructed exactly normalized local coclass.
+The normal projection of a support-flattening chart is a map of pairs on every open subset of
+its source, and pulling the fixed normal coclass back along it is compatible with restriction.
+The radial-fiber factorization below identifies that coclass with the normalized local coclass.
 -/
 
 @[expose] public noncomputable section

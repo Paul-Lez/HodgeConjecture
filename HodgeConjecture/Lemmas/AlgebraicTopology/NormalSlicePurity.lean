@@ -8,16 +8,13 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalHomologyVanis
 public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeHomotopyInvariance
 
 /-!
-# Actual normal-slice reduction for a product support
+# Normal-slice reduction for a product support
 
-Contracting the tangent coordinate constructs a chain homotopy equivalence from
-`(E × ℂ^c, E × (ℂ^c \ {0}))` to the normal point-complement pair. The resulting homology
-and cohomology identifications therefore come from the actual projection and zero section.
-They are not manufactured from one-dimensionality. The distinguished relative class is the
-image of the exactly normalized `standardComplexLocalClass`.
-
-This is the product-model computation for smooth-support purity. No claim that an arbitrary
-algebraic immersion has already been flattened into this model is made here.
+Contracting the tangent coordinate gives a chain homotopy equivalence from
+`(E × ℂ^c, E × (ℂ^c \ {0}))` to the normal point-complement pair, so the homology and
+cohomology identifications come from the projection and the zero section. The distinguished
+relative class is the image of the normalized `standardComplexLocalClass`. This is the
+product-model computation for smooth-support purity.
 -/
 
 @[expose] public noncomputable section

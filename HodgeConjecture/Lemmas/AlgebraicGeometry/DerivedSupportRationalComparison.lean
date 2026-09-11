@@ -8,18 +8,14 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.DerivedSupportRation
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.RationalCohomologyZero
 
 /-!
-# Actual derived supported sections and rational support hypercohomology
+# Derived supported sections and rational support hypercohomology
 
-The comparison below starts with the actual right-derived supported-sections
-functor on `D⁺`. The standard rational injective resolution is used through its
-proved augmentation quasi-isomorphism and the derived unit, then through the
-normalized cone comparison. No replacement functor or support comparison is
-an input.
-
-The underlying cone comparisons preserve the actual connecting morphisms,
-with the standard cone triangle's negative projection corrected explicitly.
-The support-forgetting square, including the actual derived-unit and ordinary
-rational-cohomology comparison, is proved separately in
+The comparison below starts from the right-derived supported-sections functor on `D⁺` and
+passes through the standard rational injective resolution, via its augmentation
+quasi-isomorphism, the derived unit, and the normalized cone comparison. The underlying
+cone comparisons preserve the connecting morphisms, with the standard cone triangle's
+negative projection corrected explicitly. The support-forgetting square, with its
+derived-unit and ordinary rational-cohomology comparison, is in
 `DerivedSupportRationalForget`.
 -/
 

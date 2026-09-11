@@ -9,27 +9,20 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.InjectiveFlasque
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 
 /-!
-# The actual localization sequence on injective coefficient complexes
+# The localization sequence on injective coefficient complexes
 
-The kernel defining sections supported outside `U` fits into a short exact
-sequence with the coefficient sheaf and its restriction-pushforward whenever
-the coefficient is injective. Surjectivity is proved using the existing theorem
-that injective sheaves are flasque. In particular, it is not an extra certificate.
+For an injective coefficient sheaf, the kernel defining sections supported outside `U` fits
+into a short exact sequence with the coefficient sheaf and its restriction-pushforward, with
+surjectivity coming from flasqueness of injective sheaves. The sequence stays short exact
+after evaluation on an arbitrary open set, giving the complex of supported sections in the
+localization calculation. The comparison with the mapping cocone is a quasi-isomorphism
+normalized by its projection to the coefficient complex, and the resulting isomorphisms are
+built from the `D⁺` right-derived functors and their canonical units on bounded-below
+injective models, then displayed in `D` along the full inclusion `D⁺ → D`.
 
-Evaluation of this sequence on an arbitrary open set is also short exact. This
-is stronger than sheaf-level exactness alone: it supplies the actual complex of
-supported sections in the localization calculation.
-
-The comparison with the mapping cocone is an explicit quasi-isomorphism,
-normalized by its projection to the coefficient complex. The final isomorphisms
-start from the actual `D⁺` right-derived functors, using their canonical units on
-bounded-below injective models. They are displayed in the ambient derived
-category using the full inclusion `D⁺ → D`.
-
-This file does not yet compare restriction of the ambient injective model with
-an independently chosen injective resolution on the complement. That normalized
-resolution comparison is still needed to identify these fibers with the
-repository's separate constant-rational restriction-cone model.
+Identifying these fibers with the repository's constant-rational restriction-cone model
+requires a normalized comparison between restriction of the ambient injective model and an
+independently chosen injective resolution on the complement, which is still to be supplied.
 -/
 
 @[expose] public noncomputable section

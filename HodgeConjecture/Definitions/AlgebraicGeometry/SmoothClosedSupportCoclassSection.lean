@@ -8,13 +8,12 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.SmoothClosedSupportC
 public import HodgeConjecture.Definitions.AlgebraicTopology.SupportRelativeCohomologySheaf
 
 /-!
-# The actual global exactly normalized smooth-support coclass section
+# The global normalized smooth-support coclass section
 
-The actual holomorphic normal charts supply local relative coclasses. Their
-proved ambient overlap agreement identifies their sheaf germs. Off the closed
-image the actual relative complexes vanish, so those same chart germs are zero.
-Unique sheaf gluing therefore constructs the global section, retaining its exact
-complex normalization. No local representability or overlap coherence is supplied.
+Holomorphic normal charts supply local relative coclasses whose ambient overlap agreement
+identifies their sheaf germs, and those germs vanish off the closed image because the
+relative complexes do. Unique sheaf gluing then produces the global section, with its
+complex normalization.
 -/
 
 @[expose] public noncomputable section

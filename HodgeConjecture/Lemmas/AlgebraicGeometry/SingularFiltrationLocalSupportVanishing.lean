@@ -10,16 +10,14 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.SmoothClosedSupportC
 public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenRestrictedCohomologyVanishing
 
 /-!
-# Actual local support vanishing on canonical singular-filtration layers
+# Local support vanishing on canonical singular-filtration layers
 
-Every point of an actual smooth layer has a fixed-dimensional affine source neighborhood.
-Its dimension is strictly less than that of the original cycle component. By deleting
-the image of the discarded source complement, that source neighborhood is closed in
-a smaller ambient open. Actual normal neighborhoods there transport to the original
-projective ambient space and its fixed supported injective resolution.
-
-The local lower vanishing used here is proved from those maps and dimension bounds;
-it is not supplied as a stratification or semipurity hypothesis.
+Every point of a smooth layer has a fixed-dimensional affine source neighborhood, of
+dimension strictly less than that of the original cycle component. Deleting the image of
+the discarded source complement makes that neighborhood closed in a smaller ambient open,
+and normal neighborhoods there transport to the original projective ambient space and its
+fixed supported injective resolution. The local lower vanishing follows from those maps
+and the dimension bounds.
 -/
 
 @[expose] public noncomputable section

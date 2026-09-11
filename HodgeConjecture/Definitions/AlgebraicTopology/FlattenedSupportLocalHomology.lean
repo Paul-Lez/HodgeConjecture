@@ -8,12 +8,12 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.NormalSlicePurity
 public import Mathlib.Analysis.Normed.Module.Ball.Homeomorph
 
 /-!
-# Actual relative homology near a flattened support
+# Relative homology near a flattened support
 
 Radial compression into a small product-norm ball preserves the zero-normal plane.
-Composing with the inverse flattening chart gives a genuine pair homeomorphism from
-the full normal-slice model to a small open neighborhood paired with its support complement.
-The homology calculation and exactly normalized class are transported along this map.
+Composing with the inverse flattening chart gives a pair homeomorphism from the normal-slice
+model to a small open neighborhood paired with its support complement, along which the
+homology calculation and the normalized class are transported.
 -/
 
 @[expose] public noncomputable section

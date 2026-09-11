@@ -8,17 +8,16 @@ public import Other.AlgebraicTopology.SingularCapNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheafStalk
 
 /-!
-# The actual ambient-cochain cap action on the relative-chain sheaf
+# The ambient-cochain cap action on the relative-chain sheaf
 
 A fixed singular cochain on the ambient space acts on relative chains `(X,A)` by the
-Alexander–Whitney cap product followed by the relative projection. Naturality makes
-this action descend through the quotient by chains in `A`. It commutes with restriction
-of the open support, and hence sheafifies on the actual relative-chain sheaves.
+Alexander–Whitney cap product followed by the relative projection, and naturality makes
+the action descend through the quotient by chains in `A`. It commutes with restriction of
+the open support, so it sheafifies on the relative-chain sheaves.
 
-The cochain here is genuinely ambient. We do not claim that this immediately defines
-an action of the sheaf of local singular cochains: large relative-chain simplices can
-leave the cochain's domain. That stronger local action requires the small-chain/excision
-comparison and is the next boundary in comparing the derived orientation with cap trace.
+The cochain is defined on the whole ambient space, since large relative-chain simplices can
+leave the domain of a merely local cochain. Upgrading this to an action of the sheaf of
+local singular cochains needs the small-chain/excision comparison.
 -/
 
 @[expose] public noncomputable section

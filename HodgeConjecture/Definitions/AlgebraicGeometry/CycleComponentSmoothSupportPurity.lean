@@ -11,13 +11,12 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.OpenRestrictedLowest
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 
 /-!
-# Actual purity along the smooth locus of an integral cycle component
+# Purity along the smooth locus of an integral cycle component
 
-The coefficient complex is the original ambient injective resolution, with support in
-the full cycle component, restricted to the complement of the canonical singular
-boundary. Actual normal neighborhoods of the smooth-locus closed lift prove that its
-cohomology sheaves are concentrated in degree `2p`. No projectivity of the open ambient,
-local purity data, or comparison equivalence is assumed.
+The coefficient complex is the ambient injective resolution, with support in the full cycle
+component, restricted to the complement of the canonical singular boundary. Normal
+neighborhoods of the smooth-locus closed lift show its cohomology sheaves are concentrated
+in degree `2p`.
 -/
 
 @[expose] public noncomputable section

@@ -9,14 +9,13 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.FlasqueSupportedSect
 public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSectionRestrictionCone
 
 /-!
-# The actual open-set model of the last localization term
+# The open-set model of the last localization term
 
-For `V ≤ U`, global sections of the sheaf of sections on `U` vanishing on `V`
-are canonically sections on `U` of the sheaf of ambient sections vanishing on
-`V`. Both sides are the actual kernel of restriction `F(U) → F(V)`.
-The comparison is functorial in the coefficient sheaf, so it identifies the
-last complex in nested-support localization with the actual supported-section
-complex on the complement of the smaller closed support.
+For `V ≤ U`, global sections of the sheaf of sections on `U` vanishing on `V` are
+canonically sections on `U` of the sheaf of ambient sections vanishing on `V`, both sides
+being the kernel of restriction `F(U) → F(V)`. The comparison is functorial in the
+coefficient sheaf, so it identifies the last complex in nested-support localization with
+the supported-section complex on the complement of the smaller closed support.
 -/
 
 @[expose] public noncomputable section
