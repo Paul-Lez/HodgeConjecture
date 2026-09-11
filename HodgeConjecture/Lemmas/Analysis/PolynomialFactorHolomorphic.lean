@@ -227,6 +227,37 @@ theorem eventually_injective_localRootBranches {p : Polynomial (Polynomial ℂ)}
     else hpair i j hij] with z' hz i j hij
   exact hz i j hij
 
+/-- On a common neighborhood, the local branches exhaust every root of every fiber. -/
+theorem eventually_exists_localRootBranch_eq_of_familyEquation_eq_zero
+    {p : Polynomial (Polynomial ℂ)} (hp : p.Monic) (z : SimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ w : ℂ, familyEquation p (z', w) = 0 →
+      ∃ i : Fin p.natDegree, localRootBranch (simpleRootCoverPoint hp z i) z' = w := by
+  filter_upwards [eventually_all_familyEquation_localRootBranch hp z,
+    eventually_injective_localRootBranches hp z] with z' hroot hinj
+  intro w hw
+  let q := familySpecialization p z'
+  let f : Fin p.natDegree → ℂ :=
+    fun i ↦ localRootBranch (simpleRootCoverPoint hp z i) z'
+  let B : Finset ℂ := Finset.univ.image f
+  have hq : q.Monic := hp.map (Polynomial.evalRingHom z')
+  have hdegree : q.natDegree = p.natDegree := hp.natDegree_map (Polynomial.evalRingHom z')
+  have hBcard : B.card = p.natDegree := by
+    rw [Finset.card_image_iff.mpr hinj]
+    simp [B]
+  have hBroot : ∀ a ∈ B, q.eval a = 0 := by
+    intro a ha
+    obtain ⟨i, -, rfl⟩ := Finset.mem_image.mp ha
+    exact hroot i
+  have hroots : q.roots = B.val := by
+    apply roots_eq_of_natDegree_le_card_of_ne_zero hBroot
+    simpa [hdegree] using hBcard.ge
+    exact hq.ne_zero
+  have hmem : w ∈ B := by
+    rw [← hroots]
+    exact (mem_roots hq.ne_zero).mpr hw
+  obtain ⟨i, -, hi⟩ := Finset.mem_image.mp hmem
+  exact ⟨i, hi⟩
+
 /-- The multiset of roots in a fiber which belong to a specified subset of the root cover. -/
 def selectedRoots {p : Polynomial (Polynomial ℂ)}
     (S : Set (SimpleRootCover p)) (z : SimpleRootBase p) : Multiset ℂ := by
