@@ -1103,14 +1103,13 @@ fed into the cohomology class at all. In dependency order the sub-obligations ar
    ```
 
    `winding` is the composite `∂ ∘ δ` of the exponential connecting map on the punctured chart (the
-   winding number `(1/2πi) ∮ d log`) with the connecting map `H¹(V ∖ Z) → H²_Z(V)` of the pair. It is
-   *data* in the structure because neither map exists in the repository: the repository's
-   `RelativeCohomology` has no long exact sequence of a pair, and `δ` needs the exponential sequence
-   on an open subspace together with the Betti comparison. Constructing `w = ∂ ∘ δ` is the first
-   step of any attack on the obligations below. Note that `localForm` is required to live on an
-   affine open containing the *given* point of `Z_x`, so a version of
-   `Scheme.CartierData.exists_localForm` starting from an arbitrary affine open meeting `Z_x` is
-   needed (harmless: any open meeting `Z_x` contains its generic point).
+   winding number `(1/2πi) ∮ d log`) with the connecting map `H¹(V ∖ Z) → H²_Z(V)` of the pair.
+   It is *data* in the structure for historical reasons; **both maps are now constructed**, see
+   "the winding homomorphism, constructed" below, and a chart can be built from geometric data
+   alone (`WindingChartData`). Note that `localForm` is required to live on an affine open
+   containing the *given* point of `Z_x`, so a version of `Scheme.CartierData.exists_localForm`
+   starting from an arbitrary affine open meeting `Z_x` is needed (harmless: any open meeting
+   `Z_x` contains its generic point).
 
    The three facts of the computation are the per-chart predicates
 
@@ -1118,8 +1117,10 @@ fed into the cohomology class at all. In dependency order the sub-obligations ar
      `a|_V = winding (u^an + n • coord)` for some unit `u` on `V` (the group of the unit sheaf is
      written additively, so `n • coord` is `h^n`);
    * `ChernWindingChart.HasTrivialUnitWinding` — **(b) winding**: `winding` kills the restriction of
-     every unit defined on all of `V`, because such a unit has a holomorphic logarithm
-     (`ContMDiffAt.exists_holomorphic_log`, `Other/Geometry/Manifold/HolomorphicLogarithm.lean`);
+     every unit defined on all of `V`, because such a unit has a holomorphic logarithm. For the
+     *constructed* winding homomorphism this is now the **theorem**
+     `WindingChartData.hasTrivialUnitWinding` (see below), so (b) has disappeared as an
+     obligation;
    * `ChernWindingChart.NormalizesCoclass hx` — **(c) normalisation**:
      `winding coord = cycleComponentSmoothSupportCoclassSection|_V`, the sign-fixing statement.
 
@@ -1173,6 +1174,148 @@ fed into the cohomology class at all. In dependency order the sub-obligations ar
    Verification: `lake build Other.AlgebraicGeometry.ChernLocalModelWinding` (the module is
    registered in `Other.lean`).
 
+   ### The winding homomorphism, constructed
+
+   The two connecting maps that `ChernWindingChart.winding` assumed are now **built**, in four
+   new modules (all registered in `Other.lean`, all `#print axioms`-clean: `propext`,
+   `Classical.choice`, `Quot.sound`). The construction is elementary and uses no sheaf theory:
+   it produces the winding *cocycle* directly on singular chains.
+
+   * [`Other/AlgebraicGeometry/ChernWindingLift.lean`](../Other/AlgebraicGeometry/ChernWindingLift.lean)
+     — logarithmic increments. On a simply connected, locally path connected space `A`, every
+     continuous nowhere vanishing `g : A → ℂ` is `exp ∘ L` (Mathlib's
+     `Complex.isCoveringMapOn_exp` and `IsCoveringMapOn.existsUnique_continuousMap_lifts`), and
+     `ChernWinding.logIncrement g hg a b := L b - L a` is independent of the lift
+     (`sub_eq_sub_of_exp_eq`). It is additive in the endpoints
+     (`logIncrement_add_logIncrement`), additive in `g` under multiplication
+     (`logIncrement_mul`), natural in `A` (`logIncrement_comp`), and equal to `f b - f a` when
+     `g = exp ∘ f` (`logIncrement_of_exp`). The file also supplies the missing instance
+     `ChernWinding.Convex.locallyPathConnectedSpace`: a convex subset of a real normed space is
+     locally path connected.
+
+   * [`Other/AlgebraicGeometry/ChernWindingCochain.lean`](../Other/AlgebraicGeometry/ChernWindingCochain.lean)
+     — the winding cocycle. A singular `n`-simplex of `Y` is a continuous map out of
+     `stdSimplex ℝ (Fin (n+1))`, which is convex, hence contractible, hence simply connected, and
+     locally path connected; so `logIncrement` applies to it. `ChernWinding.simplexIncrement g hg σ`
+     is the increment of `g` along a singular `1`-simplex, and
+     `simplexIncrement_boundary` — the cocycle identity — is the telescoping of the increments of
+     *one* logarithm of `g ∘ τ` between the three vertices of `stdSimplex ℝ (Fin 3)`. Dividing by
+     `2πi` and descending along `CokernelCofork.IsColimit.desc'` gives
+
+     ```lean
+     def ChernWinding.windingPeriod (g : C(Y, ℂ)) (hg : ∀ y, g y ≠ 0) :
+         AlgebraicTopology.Singular.Homology ℚ Y 1 →ₗ[ℚ] ℂ
+     ```
+
+     the honest winding number `(1/2πi) ∮ d log g`, with `windingPeriod_mul` (additivity in `g`),
+     `windingPeriod_eq_zero_of_exp` (vanishing when `g` has a global continuous logarithm — the
+     `0`-cochain of the logarithm is a primitive of the cocycle) and `windingPeriod_map`
+     (naturality in `Y`). This is `δ`; it is the degree-`0 → 1` connecting map of the exponential
+     sequence, obtained without any comparison of cohomology theories.
+
+   * [`Other/AlgebraicGeometry/ChernWindingBoundary.lean`](../Other/AlgebraicGeometry/ChernWindingBoundary.lean)
+     — `∂`, and the supported class. The key observation is that the repository's relative
+     cohomology *is* the linear dual of relative homology, and the homology connecting map of a
+     pair already exists (`AlgebraicTopology.Singular.relativeSingularBoundary`, in
+     `Other/AlgebraicTopology/EuclideanLocalHomology.lean`); so `∂` is simply precomposition,
+     and no long exact sequence in cohomology has to be built. Writing `P := (W, W ∖ S)`,
+
+     ```lean
+     def ChernWinding.relativeWindingPeriod (g : C(puncturedSpace W S, ℂ)) (hg : ∀ y, g y ≠ 0) :
+         ComplexPeriodSpace (RelativeHomology ℚ (supportPair W S) 2) :=
+       (windingPeriod g hg).comp (relativeSingularBoundary (supportPair W S) 1).hom
+     ```
+
+     with `relativeWindingPeriod_mul` and `relativeWindingPeriod_eq_zero_of_exp`. This is the full
+     composite `∂ ∘ δ` — at the level of **complex** periods.
+
+   * The one remaining input is the **rationality (integrality) of the periods**, isolated as
+
+     ```lean
+     def ChernWinding.HasRationalWindingPeriod (g) (hg) : Prop :=
+       ∃ a : RelativeCohomology ℚ (supportPair W S) 2,
+         rationalPeriod _ a = relativeWindingPeriod W S g hg
+     ```
+
+     Mathematically this is the statement that the winding number of `g` along an integral cycle
+     is an integer; on the normal chart it should follow from the fact that
+     `H₂(V, V ∖ Z; ℚ)` is spanned by `flattenedSupportNormalClass`, whose boundary is the class of
+     an explicit *loop*, together with the fact that the increment of a logarithm along a loop lies
+     in `2πi ℤ` — the latter is proved, as `ChernWinding.exists_int_logIncrement`. Granted it,
+     `ChernWinding.windingRelativeClass` is the honest rational class, with
+     `windingRelativeClass_mul` and `windingRelativeClass_eq_zero_of_exp`.
+
+   * **The normalisation obligation (c) is reduced to one number.** By
+     `AlgebraicTopology.Singular.chartNormalProjectionCoclass_unique`, a class on a flattening
+     chart is the normalised normal-chart coclass exactly when it pairs to `1` with
+     `flattenedSupportNormalClass`. Hence
+     `ChernWinding.windingRelativeClass_eq_chartNormalProjectionCoclass`: in codimension one the
+     winding class of `g` **is** the coclass as soon as
+
+     ```lean
+     windingPeriod g hg ((relativeSingularBoundary (supportPair …) 1).hom
+       (flattenedSupportNormalClass E 1 e x hx S hS h0)) = 1
+     ```
+
+     i.e. as soon as the winding number of `g` around the normal circle of the support is `1`.
+     That single equation is the whole of the Lelong–Poincaré computation, and it is where the
+     sign is fixed.
+
+   * [`Other/AlgebraicGeometry/ChernWindingUnitClass.lean`](../Other/AlgebraicGeometry/ChernWindingUnitClass.lean)
+     — from units to sheaf sections. A section of `holomorphicUnitSheaf X d` over `V ⊓ Sᶜ` is an
+     invertible element of the ring of holomorphic functions there, hence has an underlying
+     continuous nowhere vanishing function (`windingUnitFunction`, `windingUnitFunction_ne_zero`,
+     `windingUnitFunction_add`). Under `HasWindingPeriods X d V S` (the rationality above, for
+     every unit on the punctured chart) this gives
+
+     ```lean
+     def windingSheafHom (h : HasWindingPeriods X d V S) :
+         (holomorphicUnitSheaf X d).obj.obj (op (windingPuncturedOpen X V S)) →+
+           (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) ↑S 2).obj.obj (op V)
+     ```
+
+     — exactly the shape of the `winding` field — together with
+     `windingSheafHom_restrict_eq_zero`: a unit on all of `V` which is `exp(2πi f)` there
+     restricts to a unit with a global continuous logarithm on `V ∖ S`, so its winding class
+     vanishes.
+
+   * [`Other/AlgebraicGeometry/ChernWindingNormalizedCharts.lean`](../Other/AlgebraicGeometry/ChernWindingNormalizedCharts.lean)
+     — the resulting reduction. `WindingChartData X c x d q` is `ChernWindingChart` with the
+     `winding` field deleted and `HasWindingPeriods` added; `WindingChartData.toChart` fills in
+     `windingSheafHom`, and
+
+     ```lean
+     theorem WindingChartData.hasTrivialUnitWinding : D.toChart.HasTrivialUnitWinding
+     theorem hasNormalizedWindingCharts_of_windingChartData
+         (h : HasWindingChartData (X := X)) : HasNormalizedWindingCharts X
+     ```
+
+     are proved, where
+
+     ```lean
+     def HasWindingChartData : Prop :=
+       ∀ (c : Scheme.CartierData X.left) (x : X.left) (hx : coheight x = ((1 : ℕ) : ℕ∞)),
+         ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
+           ∃ D : WindingChartData X c x (dim X.left) q, D.toChart.NormalizesCoclass hx
+     ```
+
+   So `HasNormalizedWindingCharts` has been reduced to `HasWindingChartData`, i.e. to the
+   following four purely geometric statements about a normal chart `V` at a smooth point of
+   `Z_x`, with obligation (b) removed:
+
+   1. an algebraic local form of `c` at `x` on an affine open containing the given point, with
+      `V` inside its analytification (`Scheme.CartierData.exists_localForm` localised at an
+      arbitrary point of `Z_x`);
+   2. `exists_log`: every invertible holomorphic function on `V` is `exp(2πi f)`. The repository
+      only has the germ-local `ContMDiffAt.exists_holomorphic_log`
+      (`Other/Geometry/Manifold/HolomorphicLogarithm.lean`); what is needed is the statement on a
+      polydisc, e.g. from simple connectedness plus `ChernWinding.exists_expLift` and holomorphy
+      of the resulting branch;
+   3. `HasWindingPeriods`: rationality of the winding periods on `V` (see above);
+   4. `NormalizesCoclass`: the single winding-number equation above.
+
+   Verification: `lake build Other.AlgebraicGeometry.ChernWindingNormalizedCharts`.
+
 Summary of the named obligations, in dependency order:
 
 | Name | File | Content |
@@ -1187,7 +1330,9 @@ Summary of the named obligations, in dependency order:
 | ~~`HasCodimensionTwoSupportedVanishing`~~ | `ClosedSupportCoheightDimension.lean` | **proved**: `hasCodimensionTwoSupportedVanishing`, via the generic smooth filtration of any `Closeds X.left` |
 | ~~Mayer–Vietoris for two closed supports~~ | `SupportUnionSplitting.lean` | **proved**: `exists_supportedSectionsEnlarge_add_eq` |
 | `HasChernLocalModel` | `ChernLocalModel.lean` | §4.3 step 4: the local model, **existential in the lift** (an arbitrary lift has the wrong multiplicities — `ℙ¹` counterexample in §4.3 step 4); needs §4.2(a) and the canonical relative class |
-| `HasNormalizedWindingCharts` | `ChernLocalModelWinding.lean` | §4.3 step 4 item 3: (b) + (c), existence of normalised winding charts; pure one-variable analysis, no Chern class |
+| `HasNormalizedWindingCharts` | `ChernLocalModelWinding.lean` | §4.3 step 4 item 3: (b) + (c), existence of normalised winding charts; **reduced** to `HasWindingChartData` by `hasNormalizedWindingCharts_of_windingChartData` — (b) is now a theorem |
+| ~~the winding homomorphism `∂ ∘ δ`~~ | `ChernWindingLift.lean`, `ChernWindingCochain.lean`, `ChernWindingBoundary.lean`, `ChernWindingUnitClass.lean` | **constructed**: `ChernWinding.windingPeriod`, `ChernWinding.relativeWindingPeriod`, `windingSheafHom`; plus `windingSheafHom_restrict_eq_zero` (obligation (b)) and the normalisation criterion `windingRelativeClass_eq_chartNormalProjectionCoclass` |
+| `HasWindingChartData` | `ChernWindingNormalizedCharts.lean` | §4.3 step 4 item 3: what is left of (b) + (c) — a normal chart with a local form, a holomorphic logarithm on the chart, rational winding periods, and the single winding-number equation |
 | `HasChernWindingNaturality` | `ChernLocalModelWinding.lean` | §4.3 step 4 item 3: (a), the canonical relative class and its computation by winding numbers; **reduces to it**: `hasChernLocalModel_of_winding` |
 | ~~winding reduction~~ | `ChernLocalModelWinding.lean` | **proved**: `hasChernLocalModel_of_winding`, `hasChernWindingNaturality_of_localModel`, `supportRelativeCohomologySheaf_section_eq_zero` |
 | — (not yet stated) | — | realization of a cocycle by an extension; the Čech description of the connecting map, §4.2(a) |

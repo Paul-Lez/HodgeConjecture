@@ -424,3 +424,8 @@ public import Other.AlgebraicGeometry.ClosedSupportSmoothFiltration
 public import Other.AlgebraicGeometry.ClosedSupportCodimensionVanishing
 public import Other.AlgebraicGeometry.ClosedSupportCoheightDimension
 public import Other.AlgebraicGeometry.ChernLocalModelWinding
+public import Other.AlgebraicGeometry.ChernWindingLift
+public import Other.AlgebraicGeometry.ChernWindingCochain
+public import Other.AlgebraicGeometry.ChernWindingBoundary
+public import Other.AlgebraicGeometry.ChernWindingUnitClass
+public import Other.AlgebraicGeometry.ChernWindingNormalizedCharts
