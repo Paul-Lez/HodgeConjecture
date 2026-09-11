@@ -12,6 +12,7 @@ public import Mathlib.Analysis.Calculus.Deriv.Polynomial
 public import Mathlib.Analysis.Calculus.ImplicitFunction.ProdDomain
 public import Mathlib.Algebra.Polynomial.Splits
 public import Mathlib.RingTheory.Polynomial.Resultant.Basic
+public import Mathlib.RingTheory.Localization.FractionRing
 
 /-!
 # Factors selected on the simple-root cover
@@ -767,6 +768,35 @@ theorem ramificationPolynomial_ne_zero_of_isCoprime {p : Polynomial (Polynomial 
     (hcoprime : IsCoprime p p.derivative) : ramificationPolynomial p ≠ 0 := by
   simpa [ramificationPolynomial, natDegree_derivative] using
     resultant_ne_zero p p.derivative hcoprime
+
+/-- Generic squarefreeness over the rational function field makes the resultant polynomial
+nonzero. -/
+theorem ramificationPolynomial_ne_zero_of_isCoprime_fractionRing
+    {p : Polynomial (Polynomial ℂ)} (hp : p.Monic)
+    (hcoprime : IsCoprime
+      (p.map (algebraMap (Polynomial ℂ) (FractionRing (Polynomial ℂ))))
+      (p.map (algebraMap (Polynomial ℂ) (FractionRing (Polynomial ℂ)))).derivative) :
+    ramificationPolynomial p ≠ 0 := by
+  let K := FractionRing (Polynomial ℂ)
+  let φ : Polynomial ℂ →+* K := algebraMap (Polynomial ℂ) K
+  let pK : Polynomial K := p.map φ
+  have hdegree : pK.natDegree = p.natDegree := by
+    exact hp.natDegree_map φ
+  have hres : resultant pK pK.derivative p.natDegree (p.natDegree - 1) ≠ 0 := by
+    simpa only [hdegree, natDegree_derivative] using resultant_ne_zero pK pK.derivative hcoprime
+  intro hzero
+  apply hres
+  have hmap : φ (ramificationPolynomial p) =
+      resultant pK pK.derivative p.natDegree (p.natDegree - 1) := by
+    rw [ramificationPolynomial]
+    calc
+      _ = resultant (p.map φ) (p.derivative.map φ) p.natDegree (p.natDegree - 1) :=
+        (resultant_map_map p p.derivative p.natDegree (p.natDegree - 1) φ).symm
+      _ = _ := by
+        change resultant pK (p.derivative.map φ) p.natDegree (p.natDegree - 1) = _
+        rw [derivative_map]
+  rw [hzero, map_zero] at hmap
+  exact hmap.symm
 
 end
 
