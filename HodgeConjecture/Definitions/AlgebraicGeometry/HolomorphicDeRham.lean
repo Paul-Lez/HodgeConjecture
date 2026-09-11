@@ -223,11 +223,7 @@ private lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d X
   have ha : a ∈ holomorphicFormRelations X d U 0 := by
     change Submodule.Quotient.mk a = 0 at hzero
     rwa [Submodule.Quotient.mk_eq_zero] at hzero
-  rw [holomorphicFormRelations_eq_restrictionStableAnalyticKernel,
-    restrictionStableAnalyticKernel] at ha
-  simp only [Submodule.mem_iInf, Submodule.mem_comap] at ha
-  specialize ha U (𝟙 U)
-  rw [formRestriction_id, LinearMap.id_apply] at ha
+  rw [holomorphicFormRelations_eq_chartEvaluationKernel] at ha
   let x : U.unop := Classical.arbitrary U.unop
   let e := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x.1
   have hxsource : x.1 ∈ e.source := mem_extChartAt_source x.1

@@ -44,71 +44,6 @@ open scoped Manifold
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-/-- Restricting a holomorphic function does not change its value in a fixed chart. -/
-lemma chartSection_holomorphicRestrictionAlgHom
-    [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X)
-    (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
-    (hy : y ∈ chartSectionDomain X d V z) :
-    chartSection X d V z (holomorphicRestrictionAlgHom X d i f) y =
-      chartSection X d U z f y := by
-  have hyU : y ∈ chartSectionDomain X d U z :=
-    ⟨hy.1, leOfHom i.unop hy.2⟩
-  rw [chartSection_apply_of_mem X d V z _ hy,
-    chartSection_apply_of_mem X d U z _ hyU]
-  rfl
-
-/-- Restricting a holomorphic function does not change its derivative in a fixed chart. -/
-lemma chartSectionDifferential_holomorphicRestrictionAlgHom
-    [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X)
-    (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
-    (hy : y ∈ chartSectionDomain X d V z) :
-    chartSectionDifferential X d V z
-        (holomorphicRestrictionAlgHom X d i f) y =
-      chartSectionDifferential X d U z f y := by
-  have hyU : y ∈ chartSectionDomain X d U z :=
-    ⟨hy.1, leOfHom i.unop hy.2⟩
-  have heq : Filter.EventuallyEq (nhds y)
-      (chartSection X d V z
-        (holomorphicRestrictionAlgHom X d i f))
-      (chartSection X d U z f) := by
-    filter_upwards [(isOpen_chartSectionDomain X d V z).mem_nhds hy] with w hw
-    exact chartSection_holomorphicRestrictionAlgHom X d i z f hw
-  rw [chartSectionDifferential, chartSectionDifferential,
-    fderivWithin_of_isOpen (isOpen_chartSectionDomain X d V z) hy,
-    fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z) hyU]
-  exact heq.fderiv_eq
-
-/-- Fixed-chart evaluation of a differential form commutes with restriction. -/
-lemma chartEvaluation_formRestriction
-    [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X) (p : ℕ)
-    (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
-    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d V z) :
-    chartEvaluation X d V z p (formRestriction X d i p θ) y =
-      chartEvaluation X d U z p θ y := by
-  have hyU : y ∈ chartSectionDomain X d U z := ⟨hy.1, leOfHom i.unop hy.2⟩
-  induction θ using Algebra.DeRham.mk_induction with
-  | mk a₀ v =>
-      rw [formRestriction_mk, chartEvaluation_mk X d V z p _ _ hy,
-        chartEvaluation_mk X d U z p a₀ v hyU]
-      simp only [chartGeneratorEvaluation]
-      rw [chartSection_holomorphicRestrictionAlgHom X d i z a₀ hy]
-      have hd :
-          (fun j ↦ chartSectionDifferential X d V z
-            (holomorphicRestrictionAlgHom X d i (v j)) y) =
-          (fun j ↦ chartSectionDifferential X d U z (v j) y) := by
-        funext j
-        exact chartSectionDifferential_holomorphicRestrictionAlgHom X d i z (v j) hy
-      rw [hd]
-  | zero => simp
-  | add a b ha hb => simp [ha, hb]
-  | smul c a ha => simp [ha]
-
 /-- For the analytic charted-space instance, `chartAt` is the algebraically constructed local
 chart. -/
 lemma chartAt_eq_localChart [SmoothOfRelativeDimension d X.hom]
@@ -254,9 +189,9 @@ lemma chartEvaluation_fixedChartTransition
   | smul c a ha =>
       simp only [chartEvaluation_smul, Pi.smul_apply, ha, smul_compContinuousLinearMap]
 
-/-- Vanishing throughout one fixed chart detects a restriction-stable analytic relation, provided
+/-- Vanishing throughout one fixed chart detects an analytic relation, provided
 the open set lies in the source of that chart. -/
-lemma mem_restrictionStableAnalyticKernel_of_chartEvaluation_eq_zero
+lemma mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     (z : ComplexPoint X) (p : ℕ)
@@ -266,17 +201,10 @@ lemma mem_restrictionStableAnalyticKernel_of_chartEvaluation_eq_zero
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
     (hθ : Set.EqOn (chartEvaluation X d U z p θ) 0
       (chartSectionDomain X d U z)) :
-    θ ∈ restrictionStableAnalyticKernel X d U p := by
-  rw [restrictionStableAnalyticKernel]
-  simp only [Submodule.mem_iInf, Submodule.mem_comap]
-  intro V i
-  apply (mem_chartEvaluationKernel_iff X d V p _).2
+    θ ∈ chartEvaluationKernel X d U p := by
+  apply (mem_chartEvaluationKernel_iff X d U p _).2
   intro z' y hy
-  rw [chartEvaluation_formRestriction X d i z' p θ hy]
-  have hyU :
-      (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
-        ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) :=
-    leOfHom i.unop hy.2
+  have hyU := hy.2
   have hyz :
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
         (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source :=
@@ -746,20 +674,10 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
     intro y hy
     have hyV : y ∈ chartSectionDomain X d V x := hdomV.symm ▸ hy
-    have hkernel : Algebra.DeRham.differential ℂ
-        (OpenHolomorphicFunctions X d V) (p + 1) aV ∈
-        restrictionStableAnalyticKernel X d V (p + 2) := by
-      rw [← holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
-      exact hrelV
     have hchart : chartEvaluation X d V x (p + 2)
         (Algebra.DeRham.differential ℂ
           (OpenHolomorphicFunctions X d V) (p + 1) aV) y = 0 := by
-      have hk := hkernel
-      rw [restrictionStableAnalyticKernel] at hk
-      simp only [Submodule.mem_iInf, Submodule.mem_comap] at hk
-      specialize hk V (𝟙 V)
-      rw [formRestriction_id, LinearMap.id_apply] at hk
-      exact (mem_chartEvaluationKernel_iff X d V (p + 2) _).1 hk x y hyV
+      exact (mem_chartEvaluationKernel_iff X d V (p + 2) _).1 hrelV x y hyV
     rw [chartEvaluation_differential X d V x (p + 1) aV hyV] at hchart
     have hwithin : extDerivWithin η (chartSectionDomain X d V x) y =
         extDeriv η y := by
@@ -780,8 +698,8 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
       (OpenHolomorphicFunctions X d W) p b) =
     Submodule.Quotient.mk (formRestriction X d (i ≫ j) (p + 1) a)
   apply (Submodule.Quotient.eq (holomorphicFormRelations X d W (p + 1))).2
-  rw [holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
-  apply mem_restrictionStableAnalyticKernel_of_chartEvaluation_eq_zero
+  rw [holomorphicFormRelations_eq_chartEvaluationKernel]
+  apply mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     X d W x (p + 1) hsourceW
   intro y hy
   rw [chartEvaluation_sub, Pi.sub_apply,
@@ -850,20 +768,10 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
     intro y hy
     have hyV : y ∈ chartSectionDomain X d V x := hdomV.symm ▸ hy
-    have hkernel : Algebra.DeRham.differential ℂ
-        (OpenHolomorphicFunctions X d V) 0 aV ∈
-        restrictionStableAnalyticKernel X d V 1 := by
-      rw [← holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
-      exact hrelV
     have hchart : chartEvaluation X d V x 1
         (Algebra.DeRham.differential ℂ
           (OpenHolomorphicFunctions X d V) 0 aV) y = 0 := by
-      have hk := hkernel
-      rw [restrictionStableAnalyticKernel] at hk
-      simp only [Submodule.mem_iInf, Submodule.mem_comap] at hk
-      specialize hk V (𝟙 V)
-      rw [formRestriction_id, LinearMap.id_apply] at hk
-      exact (mem_chartEvaluationKernel_iff X d V 1 _).1 hk x y hyV
+      exact (mem_chartEvaluationKernel_iff X d V 1 _).1 hrelV x y hyV
     rw [chartEvaluation_differential X d V x 0 aV hyV] at hchart
     have hwithin : extDerivWithin η (chartSectionDomain X d V x) y =
         extDeriv η y := by
@@ -878,8 +786,8 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
   change Submodule.Quotient.mk aV = Submodule.Quotient.mk
     (Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d V) c)
   apply (Submodule.Quotient.eq (holomorphicFormRelations X d V 0)).2
-  rw [holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
-  apply mem_restrictionStableAnalyticKernel_of_chartEvaluation_eq_zero
+  rw [holomorphicFormRelations_eq_chartEvaluationKernel]
+  apply mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     X d V x 0 hsourceV
   intro y hy
   rw [chartEvaluation_sub, Pi.sub_apply]
