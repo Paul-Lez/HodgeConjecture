@@ -5,10 +5,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.IntrinsicBorelMoore
-public import Other.AlgebraicGeometry.ComplexSheafBorelMoore
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMoore
 public import Other.AlgebraicGeometry.SheafBorelMoore
-public import Other.AlgebraicGeometry.DerivedSupportRationalForget
-public import Other.AlgebraicGeometry.ComplexSheafBorelMooreForget
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalForget
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMooreForget
 
 /-!
 # Intrinsic Borel–Moore homology and the constructed complex orientation
