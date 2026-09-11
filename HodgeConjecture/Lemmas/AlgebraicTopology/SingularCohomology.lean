@@ -75,28 +75,14 @@ lemma cohomologyEquivDualHomology_cohomologyMap (R : Type u) [Field R] {X Y : To
 @[simp]
 lemma cohomologyMap_id (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) :
     cohomologyMap R n (𝟙 X) = LinearMap.id := by
-  have h : singularCochainComplexMap R (𝟙 X) = 𝟙 (SingularCochainComplex R X) := by
-    show HomologicalComplex.linearDualMap (singularChainComplexMap R (𝟙 X)) = _
-    rw [show singularChainComplexMap R (𝟙 X) = 𝟙 (SingularChainComplex R X) from
-      ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).map_id X]
-    exact HomologicalComplex.linearDualMap_id _
-  rw [cohomologyMap, h, HomologicalComplex.homologyMap_id]
-  rfl
+  simp [cohomologyMap, singularCochainComplexMap]
 
 @[simp]
 lemma cohomologyMap_comp (R : Type u) [Field R] {X Y Z : TopCat.{u}} (n : ℕ)
     (f : X ⟶ Y) (g : Y ⟶ Z) :
     cohomologyMap R n (f ≫ g) =
       (cohomologyMap R n f).comp (cohomologyMap R n g) := by
-  have h : singularCochainComplexMap R (f ≫ g) =
-      singularCochainComplexMap R g ≫ singularCochainComplexMap R f := by
-    show HomologicalComplex.linearDualMap (singularChainComplexMap R (f ≫ g)) = _
-    rw [show singularChainComplexMap R (f ≫ g) =
-      singularChainComplexMap R f ≫ singularChainComplexMap R g from
-      ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).map_comp f g]
-    exact HomologicalComplex.linearDualMap_comp _ _
-  rw [cohomologyMap, cohomologyMap, cohomologyMap, h, HomologicalComplex.homologyMap_comp]
-  rfl
+  simp [cohomologyMap, singularCochainComplexMap, HomologicalComplex.homologyMap_comp]
 
 @[simp]
 lemma relativeHomologyMap_id (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ) :
@@ -131,29 +117,15 @@ lemma relativeCohomologyEquivDualHomology_relativeCohomologyMap (R : Type u) [Fi
 @[simp]
 lemma relativeCohomologyMap_id (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ) :
     relativeCohomologyMap R n (𝟙 X) = LinearMap.id := by
-  have h : relativeCochainComplexMap R (𝟙 X) = 𝟙 (RelativeCochainComplex R X) := by
-    show HomologicalComplex.linearDualMap ((relativeChainFunctor R).map (𝟙 X)) = _
-    rw [show (relativeChainFunctor R).map (𝟙 X) = 𝟙 ((relativeChainFunctor R).obj X) from
-      (relativeChainFunctor R).map_id X]
-    exact HomologicalComplex.linearDualMap_id _
-  rw [relativeCohomologyMap, h, HomologicalComplex.homologyMap_id]
-  rfl
+  simp [relativeCohomologyMap, relativeCochainComplexMap]
 
 @[simp]
 lemma relativeCohomologyMap_comp (R : Type u) [Field R] {X Y Z : TopPair.{u}} (n : ℕ)
     (f : X ⟶ Y) (g : Y ⟶ Z) :
     relativeCohomologyMap R n (f ≫ g) =
       (relativeCohomologyMap R n f).comp (relativeCohomologyMap R n g) := by
-  have h : relativeCochainComplexMap R (f ≫ g) =
-      relativeCochainComplexMap R g ≫ relativeCochainComplexMap R f := by
-    show HomologicalComplex.linearDualMap ((relativeChainFunctor R).map (f ≫ g)) = _
-    rw [show (relativeChainFunctor R).map (f ≫ g) =
-      (relativeChainFunctor R).map f ≫ (relativeChainFunctor R).map g from
-        (relativeChainFunctor R).map_comp f g]
-    exact HomologicalComplex.linearDualMap_comp _ _
-  rw [relativeCohomologyMap, relativeCohomologyMap, relativeCohomologyMap, h,
+  simp [relativeCohomologyMap, relativeCochainComplexMap,
     HomologicalComplex.homologyMap_comp]
-  rfl
 
 @[reassoc (attr := simp)]
 lemma subspaceChainMap_relativeChainProjection (R : Type u) [Field R]

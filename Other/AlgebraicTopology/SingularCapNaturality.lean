@@ -170,7 +170,7 @@ theorem cochainCohomologyEquiv_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p : 
       cochainCohomologyMap R f p (eY (eY.symm alpha)) :=
     LinearMap.congr_fun (congrArg ModuleCat.Hom.hom hnat) (eY.symm alpha)
   rw [eY.apply_symm_apply] at ha
-  exact eX.injective ((eX.apply_symm_apply (cochainCohomologyMap R f p alpha)).trans ha.symm)
+  exact eX.symm_apply_eq.2 ha.symm
 
 /-- The singular cap projection formula is independent of both representatives. -/
 theorem capCohomologyLinear_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p q : ℕ)
