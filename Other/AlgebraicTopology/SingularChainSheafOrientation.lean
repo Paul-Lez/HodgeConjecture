@@ -12,7 +12,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedConcentratedOrientation
+public import Other.AlgebraicTopology.DerivedConcentratedOrientation
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainHomologySheaf
 
 /-!

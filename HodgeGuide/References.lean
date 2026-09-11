@@ -54,7 +54,7 @@ formalization.
 * `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`
   and `CycleComponentSupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;
-* `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
+* `Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
   `ComplexSheafBorelMooreRationalComparison.lean`: Borel–Moore homology and duality;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`: the class of a
   subvariety;

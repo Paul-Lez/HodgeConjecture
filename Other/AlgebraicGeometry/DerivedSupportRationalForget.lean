@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusInjectiveModel
-public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportForget
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalComparison
+public import Other.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusInjectiveModel
+public import Other.AlgebraicTopology.DerivedSheafSupportForget
+public import Other.AlgebraicGeometry.DerivedSupportRationalComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalConeForget
 /-! # The actual derived support-forgetting square for rational coefficients -/
 
