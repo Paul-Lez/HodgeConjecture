@@ -53,11 +53,11 @@ def cyclesShortComplex (i : ℤ) :
     rw [← cancel_mono (K.iCycles (i + 1))]
     simp)
 
-/-- Evaluation of a sheaf on the top open subset, viewed as a functor. -/
+/-- Evaluation of a sheaf on the top open subset, viewed as a functor. This is
+`CategoryTheory.sheafSections` at the top open, stated with the domain spelled `TopCat.Sheaf`. -/
 def globalSectionsFunctor (X : TopCat.{u}) :
     TopCat.Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
-  TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
-    (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op (⊤ : Opens X))
+  (sheafSections (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj (op (⊤ : Opens X))
 
 noncomputable instance globalSectionsFunctor_additive :
     (globalSectionsFunctor X).Additive := by
