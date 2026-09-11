@@ -42,14 +42,14 @@ theorem globalRawSupportConeToNatural_ambient_connecting
         (complexSingularToAmbientInjective X)))⟦(1 : ℤ)⟧' =
     (CochainComplex.mappingCone.triangle
       (globalRawSingularRestrictionInt ℚ (TopCat.of (ComplexPoint X))
-        (AnalyticComplement X Z))).mor₃ ≫
+        Zᶜ)).mor₃ ≫
       (globalRawToSingularSheafInt X ≫
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
           (complexSingularToAmbientInjective X))⟦(1 : ℤ)⟧' := by
   have h := (CochainComplex.mappingCone.triangleMap
     (globalRawSingularRestrictionInt ℚ (TopCat.of (ComplexPoint X))
-      (AnalyticComplement X Z))
+      Zᶜ)
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
       (naturalSingularResolutionRestriction X Z hZ))
@@ -79,7 +79,7 @@ theorem rationalCohomologyAmbient_forgetSupport_rawSingularCone
         ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
           (CochainComplex.mappingCone.triangle
             (globalRawSingularRestrictionInt ℚ (TopCat.of (ComplexPoint X))
-              (AnalyticComplement X Z))).mor₃ (n - 1) n (by omega)
+              Zᶜ)).mor₃ (n - 1) n (by omega)
           ((inv (HomologicalComplex.homologyMap
             (globalRawSupportConeToGlobalNaturalSingularCone X Z hZ) (n - 1)))
             (HomologicalComplex.homologyMap
@@ -95,7 +95,7 @@ theorem rationalCohomologyAmbient_forgetSupport_rawSingularCone
   let c := globalRawSupportConeToGlobalNaturalSingularCone X Z hZ
   let e := globalSectionsNaturalSingularConeIsoMappingCone X Z hZ
   let r := globalRawSingularRestrictionInt ℚ (TopCat.of (ComplexPoint X))
-    (AnalyticComplement X Z)
+    Zᶜ
   let y := rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections X Z hZ n a
   have hmap : ShiftedHom.map ((CochainComplex.mappingCone.triangle b).mor₃ ≫ u⟦(1 : ℤ)⟧') F =
       ShiftedHom.map (CochainComplex.mappingCone.triangle b).mor₃ F ≫ (F.map u)⟦(1 : ℤ)⟧' := by
@@ -149,7 +149,7 @@ theorem rationalCohomologyAmbient_forgetSupport_of_singular
         ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
           (CochainComplex.mappingCone.triangle
             (globalRawSingularRestrictionInt ℚ (TopCat.of (ComplexPoint X))
-              (AnalyticComplement X Z))).mor₃ ((n : ℤ) - 1) (n : ℤ) (by omega)
+              Zᶜ)).mor₃ ((n : ℤ) - 1) (n : ℤ) (by omega)
           ((globalRawSingularRestrictionConeCohomologyEquivSupport ℚ
             (TopCat.of (ComplexPoint X)) Z n).symm a)) := by
   rw [rationalCohomologyAmbient_forgetSupport_rawSingularCone X Z hZ]

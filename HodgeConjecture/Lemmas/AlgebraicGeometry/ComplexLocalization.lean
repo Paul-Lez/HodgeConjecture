@@ -25,6 +25,10 @@ Complex algebra homomorphisms from `S[1/f]` are canonically homeomorphic to the 
 complex algebra homomorphisms from `S` at which `f` is nonzero. The forward map is restriction.
 Continuity of the extension map follows by representing a localized element as a quotient whose
 denominator is a power of `f`.
+
+Nothing here mentions a complex point of a scheme, so it lives in namespace
+`AlgebraicGeometry.ComplexAlgHom`: the algebraic model of the complex points of an affine scheme,
+as the space of `ℂ`-algebra homomorphisms out of its ring of sections.
 -/
 
 @[expose] public section
@@ -33,9 +37,9 @@ open scoped Topology
 
 open Topology
 
-namespace AlgebraicGeometry.ComplexPoint
+namespace AlgebraicGeometry.ComplexAlgHom
 
-open Point
+open ComplexPoint Point
 
 noncomputable section
 
@@ -174,4 +178,4 @@ lemma isLocalHomeomorph_localizationAwayAlgHomMap (f : S) :
 end
 
 
-end AlgebraicGeometry.ComplexPoint
+end AlgebraicGeometry.ComplexAlgHom

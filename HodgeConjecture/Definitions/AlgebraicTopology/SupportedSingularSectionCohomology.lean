@@ -4,18 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSectionRestrictionCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSectionRestrictionCone
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularFlasqueSupportModel
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainOpenCone
-public import HodgeConjecture.Definitions.AlgebraicTopology.FlattenedSupportLocalHomology
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainOpenCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.FlattenedSupportLocalHomology
 /-!
-# Actual supported singular-section cohomology on arbitrary opens
+# Supported singular-section cohomology on arbitrary opens
 
-The actual kernel of restriction on singular cochain sheaves is compared to the literal
-relative singular pair on an arbitrary open neighborhood. The construction composes the
-proved flasque kernel/cone comparison, canonical grading comparison, and the actual
-sheafification-unit cone comparison. It assumes no local purity or orientation theorem.
+The kernel of restriction on singular cochain sheaves is compared to the relative singular
+pair on an arbitrary open neighborhood. The construction composes the flasque kernel/cone
+comparison, the canonical grading comparison, and the sheafification-unit cone comparison.
 -/
 
 @[expose] public noncomputable section
@@ -30,10 +28,7 @@ variable (X : TopCat.{0})
 are homeomorphic by regrouping subtype witnesses. -/
 def openIntersectionSupportComplementHomeomorph (S : Set X) (hS : IsClosed S) (V : Opens X) :
     ↥(V ⊓ (⟨Sᶜ, hS.isOpen_compl⟩ : Opens X)) ≃ₜ {v : V | v.1 ∉ S} where
-  toFun w := ⟨⟨w.1, w.2.1⟩, w.2.2⟩
-  invFun v := ⟨v.1.1, ⟨v.1.2, v.2⟩⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
+  toEquiv := (Equiv.subtypeSubtypeEquivSubtypeInter (· ∈ V) (· ∉ S)).symm
   continuous_toFun := (continuous_subtype_val.subtype_mk _).subtype_mk _
   continuous_invFun := (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
 

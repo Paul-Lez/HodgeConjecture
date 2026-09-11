@@ -92,7 +92,6 @@ theorem globalRawCochainIntIso_comp_topOpenDual (U : Opens X) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 1000000 in
 /-- Removing the literal top-open subtype witnesses preserves the positive
 ordinary class of a relative cochain, with the actual pair pullback displayed. -/
 theorem openRawRelativeCochainClass_top (U : Opens X) (n : ℕ)

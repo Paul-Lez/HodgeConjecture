@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.DerivedSheafSupport
+public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupport
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 
 /-!
@@ -14,7 +14,7 @@ For a coefficient complex cohomologically bounded below by `n`, its good truncat
 `τ≥n K` is termwise bounded below and `K → τ≥n K` is a proved quasi-isomorphism.
 Applying termwise support to this actual map, then the actual `D⁺` derived-support unit,
 and finally inverting derived support of the truncation isomorphism, constructs
-`Q(Γ̲_S K) → RΓ̲_S(QK)` in the ambient derived category.
+`Q(Γ_S K) → RΓ_S(QK)` in the ambient derived category.
 
 The construction does not assume that termwise support preserves quasi-isomorphisms.
 It does not assert that the constructed comparison is an isomorphism. In particular,

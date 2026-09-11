@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 public import Mathlib.CategoryTheory.Abelian.Injective.Resolution
@@ -49,25 +49,21 @@ local instance analyticSupportHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-/-- The analytic complement of a subset of the complex-point space. -/
-abbrev AnalyticComplement (Z : Set (ComplexPoint X)) :=
-  Zᶜ
-
-/-- The inclusion of the analytic complement into the complex-point space. -/
+/-- The inclusion of the complement of a subset into the complex-point space. -/
 def analyticComplementInclusion (Z : Set (ComplexPoint X)) :
-    TopCat.of (AnalyticComplement X Z) ⟶
+    TopCat.of ↥Zᶜ ⟶
       TopCat.of (ComplexPoint X) :=
   TopCat.ofHom ⟨Subtype.val, continuous_subtype_val⟩
 
-/-- Sheaves of additive groups on the analytic complement. -/
+/-- Sheaves of additive groups on the complement of a subset. -/
 abbrev AnalyticComplementAdditiveSheaf (Z : Set (ComplexPoint X)) :=
-  TopCat.Sheaf AddCommGrpCat (TopCat.of (AnalyticComplement X Z))
+  TopCat.Sheaf AddCommGrpCat (TopCat.of ↥Zᶜ)
 
-/-- The rational constant sheaf on the analytic complement. -/
+/-- The rational constant sheaf on the complement. -/
 def complementConstantRationalSheaf (Z : Set (ComplexPoint X)) :
     AnalyticComplementAdditiveSheaf X Z :=
   let J := Opens.grothendieckTopology
-    (TopCat.of (AnalyticComplement X Z))
+    (TopCat.of ↥Zᶜ)
   (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of ℚ)
 
 /-- The rational constant sheaf on the complement, pushed forward to the ambient space. -/
@@ -83,7 +79,7 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
     (Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).obj
         (AddCommGrpCat.of ℚ) ⟶
       (pushforwardComplementConstantRationalSheaf X Z).obj :=
-  let U := TopCat.of (AnalyticComplement X Z)
+  let U := TopCat.of ↥Zᶜ
   let J := Opens.grothendieckTopology U
   Functor.whiskerLeft (Opens.map (analyticComplementInclusion X Z)).op
     ((sheafificationAdjunction J AddCommGrpCat).unit.app
@@ -114,20 +110,18 @@ def derivedPushforwardComplementConstantRationalComplexNat
       (ComplexShape.up ℕ)).obj
     (complementConstantRationalInjectiveResolution X Z).cocomplex
 
-/-- Every additive sheaf on the empty analytic complement is a zero object. -/
-lemma isZero_sheaf_on_complement_univ
+/-- Every additive sheaf on the empty complement is a zero object. -/
+private lemma isZero_sheaf_on_complement_univ
     (F : TopCat.Sheaf AddCommGrpCat.{0}
-      (TopCat.of (AnalyticComplement X
-        (Set.univ : Set (ComplexPoint X))))) :
+      (TopCat.of ↥((Set.univ : Set (ComplexPoint X))ᶜ))) :
     IsZero F :=
   (TopCat.Sheaf.isZero_iff_stalkFunctor_obj_isZero
     (C := AddCommGrpCat.{0})
-    (X := TopCat.of (AnalyticComplement X
-      (Set.univ : Set (ComplexPoint X)))) F).2
-    fun x ↦ (show False by simpa [AnalyticComplement] using x.property).elim
+    (X := TopCat.of ↥((Set.univ : Set (ComplexPoint X))ᶜ)) F).2
+    fun x ↦ (show False by simpa using x.property).elim
 
 /-- Every term of the derived pushforward from the empty complement is zero. -/
-lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
+private lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
     IsZero ((derivedPushforwardComplementConstantRationalComplexNat X
       (Set.univ : Set (ComplexPoint X))).X n) :=
   (TopCat.Sheaf.pushforward AddCommGrpCat
@@ -137,7 +131,7 @@ lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
 
 /-- The complex representing derived pushforward from the empty complement is itself a zero
 object, not merely acyclic. -/
-lemma isZero_derivedPushforwardComplement_univ :
+private lemma isZero_derivedPushforwardComplement_univ :
     IsZero (derivedPushforwardComplementConstantRationalComplexNat X
       (Set.univ : Set (ComplexPoint X))) := by
   constructor
@@ -152,6 +146,11 @@ def derivedPushforwardComplementConstantRationalComplexInt
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   (derivedPushforwardComplementConstantRationalComplexNat X Z).extend
     ComplexShape.embeddingUpNat
+
+instance (Z : Set (ComplexPoint X)) :
+    (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE 0 := by
+  unfold derivedPushforwardComplementConstantRationalComplexInt
+  infer_instance
 
 /-- Extending the zero derived pushforward from the empty complement to integer degrees remains a
 zero complex. -/
@@ -255,7 +254,7 @@ def forgetSupportShiftedHom (Z : Set (ComplexPoint X)) :
 /-- Forget support, using the connecting morphism of the mapping-cone triangle. -/
 def forgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+
-      FieldCohomology ℚ X n where
+      H^n(X; ℚ) where
   toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
   map_zero' := by
     apply (Localization.SmallShiftedHom.equiv
@@ -288,7 +287,7 @@ ordinary rational cohomology. Its forward map is definitionally the support-forg
 noncomputable def forgetSupportEquivUniv (n : ℤ) :
     RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
-      FieldCohomology ℚ X n := by
+      H^n(X; ℚ) := by
   let eSource : RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
       ShiftedHom
@@ -297,7 +296,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
         (n - 1) :=
     Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  let eTarget : FieldCohomology ℚ X n ≃
+  let eTarget : H^n(X; ℚ) ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
         (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=
@@ -334,19 +333,5 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
     rw [eSource.apply_symm_apply, hcomp, eComp.symm_apply_apply]
   · refine fun α ↦ eTarget.injective ?_
     rw [hcomp, eSource.apply_symm_apply, eComp.apply_symm_apply]
-
-@[simp] lemma forgetSupportEquivUniv_apply (n : ℤ)
-    (α : RationalCohomologyWithSupport X
-      (Set.univ : Set (ComplexPoint X)) n) :
-    forgetSupportEquivUniv X n α =
-      forgetSupport X Set.univ n α := rfl
-
-/-- Forgetting whole-space support is surjective. -/
-lemma forgetSupport_surjective_univ (n : ℤ) :
-    Function.Surjective
-      (forgetSupport X (Set.univ : Set (ComplexPoint X)) n) := by
-  intro α
-  obtain ⟨β, hβ⟩ := (forgetSupportEquivUniv X n).surjective α
-  exact ⟨β, (forgetSupportEquivUniv_apply X n β).symm.trans hβ⟩
 
 end AlgebraicGeometry.ComplexPoint

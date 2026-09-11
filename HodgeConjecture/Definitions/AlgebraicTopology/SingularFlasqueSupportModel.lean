@@ -5,22 +5,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueSheafSupportComparison
-public import HodgeConjecture.Definitions.AlgebraicTopology.OpenInjectiveResolutionComparison
+public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenInjectiveResolutionComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularNaturality
 
 /-!
-# Actual singular-cochain models for supported injective resolutions
+# Singular-cochain models for supported injective resolutions
 
-On a space with a contractible open basis, the constructed singular-cochain
-augmentation resolves the constant rational sheaf. We extend that augmentation
-to the fixed injective resolution, with a proved strict normalization.
-
-On a hereditarily paracompact Hausdorff space the singular model is termwise
-flasque. The supported comparison is therefore a quasi-isomorphism both on
-sheaves and on every open set, by the proved flasque support theorem. No
-local-purity or supported-comparison theorem is assumed. The local contractible
-basis is explicitly an input to this generic topological lemma; applications
-must construct it, as the smooth complex-point application does below.
+On a space with a contractible open basis, the singular-cochain augmentation resolves the
+constant rational sheaf, and we extend that augmentation to the fixed injective resolution
+with a strict normalization. On a hereditarily paracompact Hausdorff space the singular model
+is termwise flasque, so the supported comparison is a quasi-isomorphism on sheaves and on
+every open set. The contractible basis is a hypothesis of these generic topological lemmas,
+constructed for the smooth complex-point application below.
 -/
 
 @[expose] public noncomputable section

@@ -7,8 +7,13 @@ The basis for this is a 50k lines of code autoformalisation due to Codex, of whi
 transitively used in the statement. The code is being cleaned up by
 [Paul Lezeau](https://sites.google.com/view/paul-lezeau/home/),
 [Yaël Dillies](https://www.su.se/english/profiles/y/yadi8568),
-[Roktim Mascharak](https://roktimmascharak.github.io/) and
-[Jack McCarthy](https://jackmccarthy.org/) during the Formal Conjectures workshop hosted
+[Roktim Mascharak](https://roktimmascharak.github.io/), 
+[Jack McCarthy](https://jackmccarthy.org/), 
+[Edison Xie](https://github.com/Whysoserioushah), 
+[Brian Nugent](https://github.com/Brian-Nugent),
+[Archie Browne](https://github.com/archiebrowne) and 
+[Bhavik Mehta](https://github.com/b-mehta).
+during the Formal Conjectures workshop hosted
 by Imperial College London 7-11 September 2026 thanks to a generous donation from Google DeepMind.
 
 The short-term goal of this project is to be integrated to the Formal Conjectures repository.
@@ -21,7 +26,7 @@ The remaining content of the project is sorted into four folders:
 
 - `HodgeConjecture/Mathlib`: Content that is on track to be upstreamed to Mathlib;
 - `HodgeConjecture/Definitions`: Definitions used in the statement of the conjecture;
-- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions;
+- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions. If these aren't used in `Lemmas` then they should go in `Other`;
 - `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
 
 The dividing line is `HodgeConjecture/Statement.lean`: a module belongs in `Definitions` if it

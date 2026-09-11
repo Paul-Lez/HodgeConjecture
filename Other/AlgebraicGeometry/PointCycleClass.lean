@@ -52,7 +52,7 @@ previous point coclass construction. -/
 geometric variety as input and uses its constructed complex-oriented point classes. -/
 def pointCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) :
     codimensionCycleSubgroup V.scheme V.dimension →+
-      FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)) :=
+      H^(2 * (V.dimension : ℤ))(V.over; ℚ) :=
   cycleClassOnCyclesOfComponents (maximalCodimensionComponentClass V)
 
 /-- An individual point with multiplicity `n` has exactly `n` times its normalized coclass. -/
@@ -112,7 +112,7 @@ coefficients. Its second argument is an integral cycle, not a Chow class. -/
 def pointCycleClassRationalExtensionBilinear
     (V : DimensionedSmoothProjectiveComplexVariety) :
     ℚ →ₗ[ℚ] codimensionCycleSubgroup V.scheme V.dimension →ₗ[ℤ]
-      FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)) where
+      H^(2 * (V.dimension : ℤ))(V.over; ℚ) where
   toFun q := q • (pointCycleClassOnCycles V).toIntLinearMap
   map_add' _ _ := by
     ext
@@ -126,7 +126,7 @@ represented by `ℚ ⊗[ℤ] codimensionCycleSubgroup V.scheme V.dimension`. No 
 quotient is taken here. -/
 def rationalPointCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) :
     TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme V.dimension) →ₗ[ℚ]
-      FieldCohomology ℚ V.over (2 * (V.dimension : ℤ)) :=
+      H^(2 * (V.dimension : ℤ))(V.over; ℚ) :=
   TensorProduct.AlgebraTensorModule.lift (pointCycleClassRationalExtensionBilinear V)
 
 /-- Rational extension agrees with the integral class map on pure tensors. -/

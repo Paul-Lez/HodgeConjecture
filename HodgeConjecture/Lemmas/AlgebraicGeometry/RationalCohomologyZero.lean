@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
 public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Basic
 
 import HodgeConjecture.Lemmas.AlgebraicTopology.ConstantSheafDegreeZero
@@ -81,7 +81,7 @@ lemma constantRationalSheafComplexIntIsoSingleZero_hom_quasiIso :
 /-- Degree-zero rational cohomology after replacing both extended complexes by single
 complexes. -/
 def rationalCohomologyZeroEquivSingle :
-    FieldCohomology ℚ X 0 ≃
+    H^0(X; ℚ) ≃
       Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
           (constantIntegerSheaf X))
@@ -117,7 +117,7 @@ def rationalCohomologyZeroSingleEquivExt :
 /-- Degree-zero rational constant-sheaf cohomology is ordinary Hom from integer constants to
 rational constants. -/
 def rationalCohomologyZeroEquivSheafHom :
-    FieldCohomology ℚ X 0 ≃
+    H^0(X; ℚ) ≃
       (constantIntegerSheaf X ⟶ constantFieldSheaf ℚ X) :=
   ((rationalCohomologyZeroEquivSingle X).trans
     (rationalCohomologyZeroSingleEquivExt X)).trans Abelian.Ext.homEquiv₀
@@ -185,7 +185,7 @@ theorem rationalCohomologyClass_injective_of_constantSheaf_faithful
   have hm := (constantSheaf
     (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     AddCommGrpCat).map_injective hs
-  simpa [integerMultipleAddHom] using ConcreteCategory.congr_hom hm (1 : ℤ)
+  simpa using ConcreteCategory.congr_hom hm (1 : ℤ)
 
 /-- On a nonempty analytic complex-point space, distinct rational constants define distinct
 degree-zero cohomology classes. -/
@@ -216,10 +216,10 @@ theorem rationalCohomologyClass_surjective
   refine ⟨q, e.injective ?_⟩
   rw [rationalCohomologyZeroEquivSheafHom_class, ← hf]
   unfold integerToFieldConstantSheaf
-  change F.map (AddCommGrpCat.ofHom (integerMultipleAddHom ℚ q)) = F.map f
+  change F.map (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ q)) = F.map f
   congr 1
   refine AddCommGrpCat.hom_ext (AddMonoidHom.ext fun n ↦ ?_)
-  change n * q = f n
+  change n • q = f n
   rw [show n = n • (1 : ℤ) by simp, map_zsmul]
   simp [q]
 
@@ -236,7 +236,7 @@ theorem rationalCohomologyClass_bijective
 degree-zero rational cohomology. -/
 def rationalCohomologyClassLinearEquiv
     [ConnectedSpace (ComplexPoint X)] :
-    ℚ ≃ₗ[ℚ] FieldCohomology ℚ X 0 :=
+    ℚ ≃ₗ[ℚ] H^0(X; ℚ) :=
   LinearEquiv.ofBijective (fieldCohomologyClassLinear ℚ X)
     (rationalCohomologyClass_bijective X)
 

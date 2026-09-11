@@ -20,7 +20,7 @@ public import Other.AlgebraicGeometry.CycleComponentLocalOrientation
 public import Other.AlgebraicTopology.CompactificationBorelMoore
 public import Other.AlgebraicTopology.RelativeHomologyEmpty
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytification
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalyticImmersion
 
 /-!
 # Borel--Moore fundamental classes of cycle components

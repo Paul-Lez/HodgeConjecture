@@ -200,7 +200,7 @@ namespace Guide.Cycles.D10
 ```
 ```lean
 def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
-    RationalCohomologyWithSupport X Z n →+ FieldCohomology ℚ X n where
+    RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) where
   toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
   map_zero' := by
     apply (Localization.SmallShiftedHom.equiv

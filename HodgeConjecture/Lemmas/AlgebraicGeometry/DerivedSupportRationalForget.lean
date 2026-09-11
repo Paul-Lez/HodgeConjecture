@@ -7,8 +7,7 @@ module
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusInjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalComparison
-public import HodgeConjecture.Definitions.AlgebraicGeometry.DerivedSupportRationalConeForget
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalConeForget
 /-! # The actual derived support-forgetting square for rational coefficients -/
 
 @[expose] public noncomputable section
@@ -54,7 +53,7 @@ def derivedRationalCohomologyAddEquiv (n : ℤ) :
       ((TopCat.Sheaf.derivedGlobalSections (TopCat.of (ComplexPoint X))).obj
         ((DerivedCategory.Plus.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
           (constantFieldSheaf ℚ X)))) ≃+
-      FieldCohomology ℚ X n :=
+      H^n(X; ℚ) :=
   (((DerivedCategory.homologyFunctor AddCommGrpCat n).mapIso
     (derivedRationalGlobalInjectiveModelIso X) ≪≫
       (DerivedCategory.homologyFunctorFactors AddCommGrpCat n).app _).addCommGroupIsoToAddEquiv).trans
@@ -103,7 +102,6 @@ lemma derivedRationalSupportInjectiveModelIso_forget
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 800000 in
 set_option maxRecDepth 4000 in
 /-- The actual `D⁺` support-forgetting inclusion agrees with the repository's
 existing `forgetSupport`, under the constructed supported and ordinary

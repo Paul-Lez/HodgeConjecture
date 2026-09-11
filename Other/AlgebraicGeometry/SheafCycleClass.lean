@@ -4,10 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Coniveau
 /-!
 # Unconditional integral and rational algebraic-cycle class maps
 
@@ -33,7 +32,7 @@ namespace AlgebraicGeometry.ComplexPoint
 /-- An actual additive map from algebraic cycles to ordinary rational cohomology,
 using the constructed sheaf class in every codimension. -/
 def sheafCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
-    codimensionCycleSubgroup V.scheme p →+ FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+    codimensionCycleSubgroup V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
   cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := V.dimension))
 
 /-- An individual component carries its exact integer multiplicity. -/
@@ -69,7 +68,7 @@ second input, not a rational-equivalence quotient. -/
 def sheafCycleClassRationalExtensionBilinear
     (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
     ℚ →ₗ[ℚ] codimensionCycleSubgroup V.scheme p →ₗ[ℤ]
-      FieldCohomology ℚ V.over (2 * (p : ℤ)) where
+      H^(2 * (p : ℤ))(V.over; ℚ) where
   toFun q := q • (sheafCycleClassOnCycles V p).toIntLinearMap
   map_add' _ _ := by
     ext
@@ -83,7 +82,7 @@ arbitrary codimension. No unproved geometric data are arguments. -/
 def rationalSheafCycleClassOnCycles
     (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
     TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme p) →ₗ[ℚ]
-      FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+      H^(2 * (p : ℤ))(V.over; ℚ) :=
   TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 
 /-- Rational extension agrees with the constructed integral map on pure tensors. -/

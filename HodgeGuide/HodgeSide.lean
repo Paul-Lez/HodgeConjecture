@@ -3,8 +3,7 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
-import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
-
+import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
 
@@ -257,16 +256,19 @@ def Hypercohomology (X : Over (Spec ↧ℂ)) (K : CochainComplex (AnalyticAdditi
 end Guide.Hodge.D3
 example : @Guide.Hodge.D3.Hypercohomology = @AlgebraicGeometry.ComplexPoint.Hypercohomology := rfl
 ```
+
+Cohomology with coefficients in a field `K` is the case of the constant sheaf `K`, and it is
+written with the notation $`H^n(X;K)`:
+
 ```lean -show
 namespace Guide.Hodge.D4
 ```
 ```lean
-abbrev FieldCohomology (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℤ) : Type 1 :=
-  Hypercohomology X (constantFieldSheafComplexInt K X) n
+example (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℤ) :
+    H^n(X; K) = Hypercohomology X (constantFieldSheafComplexInt K X) n := rfl
 ```
 ```lean -show
 end Guide.Hodge.D4
-example : @Guide.Hodge.D4.FieldCohomology = @AlgebraicGeometry.ComplexPoint.FieldCohomology := rfl
 ```
 ```lean -show
 namespace Guide.Hodge.D5
@@ -286,7 +288,7 @@ namespace Guide.Hodge.D6
 ```lean
 def fieldToDeRhamCohomologyLinear (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    FieldCohomology K X n →ₗ[K] DeRhamHypercohomology X n where
+    H^n(X; K) →ₗ[K] DeRhamHypercohomology X n where
   toFun := fieldToDeRhamCohomology K X n
   map_add' := (fieldToDeRhamCohomology K X n).map_add
   map_smul' := fieldToDeRhamCohomology_smul K X n
@@ -404,12 +406,17 @@ transported to de Rham cohomology across the comparison isomorphism of the first
 namespace Guide.Hodge.D12
 ```
 ```lean
-def conjAddHom : ℂ →+ ℂ :=
-  (starRingEnd ℂ).toAddMonoidHom
+def conjConstantComplexPresheaf (X : Over (Spec ↧ℂ)) :
+    constantComplexAddCommGrpPresheaf X ⟶ constantComplexAddCommGrpPresheaf X where
+  app _ := AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom
+  naturality {U V} i := by
+    ext x
+    rfl
 ```
 ```lean -show
 end Guide.Hodge.D12
-example : @Guide.Hodge.D12.conjAddHom = @AlgebraicGeometry.ComplexPoint.conjAddHom := rfl
+example : @Guide.Hodge.D12.conjConstantComplexPresheaf =
+  @AlgebraicGeometry.ComplexPoint.conjConstantComplexPresheaf := rfl
 ```
 ```lean -show
 namespace Guide.Hodge.D13
@@ -523,7 +530,7 @@ namespace Guide.Hodge.D11
 ```
 ```lean
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] (p : ℕ) : Submodule K (FieldCohomology K X (2 * p)) :=
+    [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 ```

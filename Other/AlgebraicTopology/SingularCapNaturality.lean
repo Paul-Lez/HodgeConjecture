@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicTopology.SingularCapProduct
+public import Other.AlgebraicTopology.SingularRelativeCapProduct
 public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeHomotopyInvariance
 public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
 
