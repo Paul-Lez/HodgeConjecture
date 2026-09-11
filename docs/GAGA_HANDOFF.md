@@ -1069,6 +1069,103 @@ chartwise, using `existsUnique_canonicalChartMultiplier` and
 `twistTrivializations`) are superseded for (G3) purposes by `anChartFrame`, whose transition unit
 is explicit.
 
+## Progress 2026-09-11 (eighth pass): **the chart evaluation formula is proved**
+
+Six further `sorry`-free, axiom-clean files.  Gap (1) of the seventh pass — the chart-coordinate
+formula for the transition units — is now a **theorem**, not an obligation, and with it the whole
+chart dictionary of (G3) is complete.  Also, a **correctness fix**: the seventh pass's
+`TwistRankOneVanishesNeg N` is *false for `N = 0`* (`ℙ⁰ ≅ Spec ℂ`, where every twist is trivial and
+`Hom(𝒪(−a), 𝒪(−b)) ≅ ℂ`); it has been replaced by the true statement
+`TwistRankOneAlgebraizesNeg N`.
+
+### 1. Evaluation of a regular function through `app`
+
+[`Other/AlgebraicGeometry/PointEvaluationApp.lean`](../Other/AlgebraicGeometry/PointEvaluationApp.lean):
+
+- **`ComplexPoint.evaluate_eq_appLE_top`** — if the preimage of `U` under a complex point is all of
+  `Spec ℂ`, then `Point.evaluate U s z = (ΓSpecIso ℂ).hom (z.left.appLE U ⊤ h s)`.  (The proof
+  writes `z` as `Point.map z (𝟙 …)` and uses `evaluate_map`, `evaluate_res` and the repository's
+  `evaluate_top_eq_appTop`; no stalk manipulation is needed.)
+- **`ComplexPoint.evaluate_app_eq_appLE_top`** — the value of `g^* u` at `z`, for an *arbitrary*
+  scheme morphism `g : X.left ⟶ Y` (not necessarily over `Spec ℂ`), is read through the composite
+  `z.left ≫ g`.  This is what `Point.evaluate_map` cannot do, because `toUniversalProj` is not a
+  morphism over `Spec ℂ`.
+
+### 2. Evaluation on `Proj` through the away localisation
+
+[`Other/AlgebraicGeometry/ProjAwayEvaluation.lean`](../Other/AlgebraicGeometry/ProjAwayEvaluation.lean):
+
+- **`ΓSpecIso_appLE_top_of_fromSpec`** — a `ℂ`-point of `Y` factoring as `Spec χ ≫ hW.fromSpec`
+  through an affine open `W` reads a regular function on `W` by applying `χ`.
+- **`Proj.awayι_eq_SpecMap_fromSpec`** — `Proj.awayι 𝒜 f = Spec (awayToSection⁻¹) ≫ fromSpec`;
+  i.e. the standard affine chart of `Proj` *is* `IsAffineOpen.fromSpec` of `D₊(f)`, up to the
+  isomorphism `A⁰_f ≅ Γ(Proj, D₊ f)`.
+- **`Proj.ΓSpecIso_appLE_top_awayToSection`** — combining the two: a point given by a ring map
+  `ψ : A⁰_f ⟶ ℂ` evaluates the section attached to `t : A⁰_f` as `ψ t`.
+- `Proj.top_le_preimage_basicOpen_of_awayι`, `Proj.isIso_awayToSection`.
+
+### 3. **`HomogeneousRatioEvaluation N` is a theorem**
+
+[`Other/AlgebraicGeometry/ProjectiveChartRatioEvaluation.lean`](../Other/AlgebraicGeometry/ProjectiveChartRatioEvaluation.lean)
+states it and reduces the transition-unit formula to it;
+[`Other/AlgebraicGeometry/ProjectiveHomogeneousRatioEvaluation.lean`](../Other/AlgebraicGeometry/ProjectiveHomogeneousRatioEvaluation.lean)
+proves it:
+
+- `universalRatioBig N k G i` / `spaceRatioBig N k G i` — the regular function `G / Xᵢᵏ` on
+  `D₊(Xᵢ)` (universally, and on `ℙᴺ`), for `G` homogeneous of degree `k`;
+- `awayElt`, `awayElt_eq_mk`, `universalRatioBig_eq_awayToSection` — `G / Xᵢᵏ` is the section
+  attached to the away element `G / Xᵢᵏ`;
+- **`homogeneousRatioEvaluation (N : ℕ) : HomogeneousRatioEvaluation N`**:
+  `Point.evaluate (D₊(Xᵢ)) (G/Xᵢᵏ) [v] = G(v) / (vᵢ)ᵏ`.
+  The proof factors `[v]` through `chartIntegralProjAt v i = Spec (awayCoordinateEvaluation v i) ≫
+  awayι` and applies §2, finishing with `awayCoordinateEvaluation_mk`.
+- **`chartRatioEvaluation (N n : ℕ) : ChartRatioEvaluation N n`** — gap (1), *closed*.
+
+[`Other/AlgebraicGeometry/ProjectiveTwistRatioPower.lean`](../Other/AlgebraicGeometry/ProjectiveTwistRatioPower.lean)
+supplies the degree reduction used above: `homogeneousRatio_pow`, `universalRatio_pow`,
+**`spaceRatio_pow`**, **`analyticSpaceRatio_pow`** (`ρ_n = ρ_1ⁿ` at every stage),
+`chartPoint_mem_overOpen_self`, `chartPoint_mem_overOpen_of_ne_zero`, and
+`chartRatioEvaluation_of_one`.
+
+### 4. Naturality of inverse-image sections
+
+[`Other/AlgebraicGeometry/PullbackSectionNaturality.lean`](../Other/AlgebraicGeometry/PullbackSectionNaturality.lean):
+**`Scheme.Modules.pullbackSection_map`** and **`ComplexPoint.analyticSection_map`** — a morphism of
+sheaves of modules commutes with `pullbackSection` / `analyticSection`.  These are what will turn
+the *algebraic* identity "multiplication by `F` sends `1/Xᵢᵃ` to `(F/Xᵢ^{a−b}) • (1/Xᵢᵇ)`" into the
+statement that the analytified morphism has the prescribed chart multipliers.
+
+### 5. What is left, precisely
+
+`TwistRelationsAlgebraizeProj N` (obligation (iii) on `ℙᴺ`) is
+`twistRelationsAlgebraizeProj_of_parts` applied to
+
+* **`TwistRankOneAlgebraizesNonneg N`** (`b ≤ a`).  Remaining steps, in order:
+  1. `ChartMultiplierGrowth N a b` — now purely analytic: combine
+     `canonicalChartMultiplier_transition` (the cocycle `hᵢ ρ_b = ρ_a hⱼ`),
+     `analyticSpaceRatio_pow` (`ρ_n = ρ_1ⁿ`) and `chartRatioEvaluation` (`ρ_1` is the coordinate
+     `z ↦ (insertNth i 1 z) j`) with compactness of `ℙᴺ(ℂ)`: bound `hⱼ` on the compact part
+     `‖w‖ ≤ 1` of each chart, cover `ℙᴺ(ℂ)` by the `N + 1` charts.
+  2. `existsUnique_isHomogeneous_of_chart_growth` then gives a unique degree-`(a − b)` form `F`.
+  3. **Reconstruction.**  Generalise `ProjectiveSpectrum.NegativeTwist.HomogeneousShift.multiply`
+     (currently `𝒪(−k) ⟶ 𝒪(0)`) to a morphism of sheaves of modules
+     `𝒪(−(b+k)) ⟶ 𝒪(−b)`, "multiplication by `q : 𝒜 k`"; on the explicit frames it sends
+     `projFrame (Xᵢ^{b+k}) = 1/Xᵢ^{b+k}` to `(q/Xᵢᵏ) • projFrame (Xᵢᵇ)` — an identity of the same
+     shape as `projRatio_smul_projFrame`, provable the same way.  Transport it to `ℙᴺ` with
+     `Scheme.Modules.pullback`, analytify, and use `pullbackSection_map` /
+     `analyticSection_map` (§4) to see that its chart multiplier is
+     `analyticFunction (spaceRatioBig N (a−b) F i)`, whose chart expression is
+     `z ↦ F(insertNth i 1 z)` by `homogeneousRatioEvaluation`.  Conclude by uniqueness of chart
+     multipliers (`existsUnique_canonicalChartMultiplier`) and `iUnion_complexPointChartSet`.
+* **`TwistRankOneAlgebraizesNeg N`** (`a < b`).  For `0 < N` use
+  `twistRankOneAlgebraizesNeg_of_vanishing` and the maximum-modulus argument: for each degree-`k`
+  form `G` (`k = b − a`), the functions `hᵢ · (G/Xᵢᵏ)^an` agree on overlaps (by the cocycle and
+  `ρ^{k}`-cancellation), hence glue to a global holomorphic function on the compact connected
+  `ℙᴺ(ℂ)`, hence a constant `c_G`; taking `G = Xᵢᵏ` gives `hᵢ = c` constant, and then `c · u_G`
+  constant for every `G` forces `c = 0` because `(Xⱼ/Xᵢ)ᵏ` is non-constant on the chart (which is
+  exactly `chartRatioEvaluation`).  For `N = 0` the twists are trivial (`D₊(X₀) = ⊤`), and the
+  degree-zero comparison `ComplexPoint.unitEndomorphism_analytification_surjective` applies.
+
 ## Mathematical routes, and what is missing
 
 The statement is Serre's GAGA (essential surjectivity of analytification) restricted to

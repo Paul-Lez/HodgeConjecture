@@ -16,7 +16,8 @@ public import Other.AlgebraicGeometry.ProjectiveTwistObligations
 
 * `TwistRankOneAlgebraizesNonneg N` — the case `b ≤ a`, where the chart multipliers of a
   morphism `𝒪(−a)^an ⟶ 𝒪(−b)^an` have to be recognised as a degree-`(a − b)` form, and
-* `TwistRankOneVanishesNeg N` — the case `a < b`, where they have to vanish.
+* `TwistRankOneAlgebraizesNeg N` — the case `a < b`, where for `0 < N` they have to vanish
+  (for `N = 0` they do not: `ℙ⁰ ≅ Spec ℂ`).
 
 Both are stated here, together with two finer intermediate obligations that the present
 development reduces the first one to:
@@ -55,11 +56,19 @@ def TwistRankOneAlgebraizesNonneg (N : ℕ) : Prop :=
         ProjectiveTwist.algebraic (projectiveSpaceOver N) (projPresentation N) b,
       (moduleAnalytification (projectiveSpaceOver N) N).map g = φ
 
-/-- **Rank one, negative degree.**  For `a < b` there is no nonzero morphism
-`𝒪(−a)^an ⟶ 𝒪(−b)^an` on `ℙᴺ`.  (A chart multiplier would be a global holomorphic section of a
-negative twist; by compactness and the maximum principle it vanishes.) -/
-def TwistRankOneVanishesNeg (N : ℕ) : Prop :=
-  ∀ a b : ℕ, a < b → ∀ φ : analyticTwist N a ⟶ analyticTwist N b, φ = 0
+/-- **Rank one, negative degree.**  For `a < b`, every morphism `𝒪(−a)^an ⟶ 𝒪(−b)^an` on `ℙᴺ`
+is the analytification of an algebraic morphism.
+
+For `0 < N` the expected proof is that there is no nonzero such morphism
+(`twistRankOneAlgebraizesNeg_of_vanishing`): the maximum-modulus argument below.  For `N = 0`
+there *are* nonzero morphisms — `ℙ⁰ ≅ Spec ℂ` and every twist is trivial there — so that case
+has to be treated by the degree-zero comparison instead
+(`ComplexPoint.unitEndomorphism_analytification_surjective`). -/
+def TwistRankOneAlgebraizesNeg (N : ℕ) : Prop :=
+  ∀ a b : ℕ, a < b → ∀ φ : analyticTwist N a ⟶ analyticTwist N b,
+    ∃ g : ProjectiveTwist.algebraic (projectiveSpaceOver N) (projPresentation N) a ⟶
+        ProjectiveTwist.algebraic (projectiveSpaceOver N) (projPresentation N) b,
+      (moduleAnalytification (projectiveSpaceOver N) N).map g = φ
 
 /-! ### Two intermediate obligations for the non-negative case -/
 
@@ -103,19 +112,27 @@ local instance projModuleAnalytification_additive (N : ℕ) :
 /-- The rank-one case of the relation obligation on `ℙᴺ`, in the form consumed by
 `ProjectiveTwist.analyticTwistRelationsAlgebraize_of_rankOne`. -/
 theorem analyticTwistRelationsAlgebraizeRankOne_of_parts (N : ℕ)
-    (hnonneg : TwistRankOneAlgebraizesNonneg N) (hneg : TwistRankOneVanishesNeg N) :
+    (hnonneg : TwistRankOneAlgebraizesNonneg N) (hneg : TwistRankOneAlgebraizesNeg N) :
     ProjectiveTwist.AnalyticTwistRelationsAlgebraizeRankOne (projectiveSpaceOver N) N
       (projPresentation N) := by
   intro a b φ
   rcases le_or_gt b a with hba | hab
   · exact hnonneg a b hba φ
-  · refine ⟨0, ?_⟩
-    rw [hneg a b hab φ]
-    exact CategoryTheory.Functor.map_zero _ _ _
+  · exact hneg a b hab φ
+
+/-- Vanishing gives algebraization in the negative-degree case.  (The hypothesis is provable only
+for `0 < N`; see `TwistRankOneAlgebraizesNeg`.) -/
+theorem twistRankOneAlgebraizesNeg_of_vanishing (N : ℕ)
+    (h : ∀ a b : ℕ, a < b → ∀ φ : analyticTwist N a ⟶ analyticTwist N b, φ = 0) :
+    TwistRankOneAlgebraizesNeg N := by
+  intro a b hab φ
+  refine ⟨0, ?_⟩
+  rw [h a b hab φ]
+  exact CategoryTheory.Functor.map_zero _ _ _
 
 /-- **The relation obligation on `ℙᴺ` from the two rank-one obligations.** -/
 theorem twistRelationsAlgebraizeProj_of_parts (N : ℕ)
-    (hnonneg : TwistRankOneAlgebraizesNonneg N) (hneg : TwistRankOneVanishesNeg N) :
+    (hnonneg : TwistRankOneAlgebraizesNonneg N) (hneg : TwistRankOneAlgebraizesNeg N) :
     TwistRelationsAlgebraizeProj N :=
   ProjectiveTwist.analyticTwistRelationsAlgebraize_of_rankOne (projectiveSpaceOver N) N
     (projPresentation N) (analyticTwistRelationsAlgebraizeRankOne_of_parts N hnonneg hneg)

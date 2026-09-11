@@ -391,6 +391,12 @@ public import Other.AlgebraicGeometry.ProjectiveTwistCanonicalMultipliers
 public import Other.AlgebraicGeometry.FiniteSumHomSurjective
 public import Other.AlgebraicGeometry.TwistRelationsFromRankOne
 public import Other.AlgebraicGeometry.ProjectiveTwistRelationObligations
+public import Other.AlgebraicGeometry.PointEvaluationApp
+public import Other.AlgebraicGeometry.ProjAwayEvaluation
+public import Other.AlgebraicGeometry.PullbackSectionNaturality
+public import Other.AlgebraicGeometry.ProjectiveTwistRatioPower
+public import Other.AlgebraicGeometry.ProjectiveChartRatioEvaluation
+public import Other.AlgebraicGeometry.ProjectiveHomogeneousRatioEvaluation
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
@@ -416,6 +422,7 @@ public import Other.AlgebraicGeometry.UnitExtensionOpenRestriction
 public import Other.AlgebraicGeometry.OpenRestrictionLocalSheaf
 public import Other.AlgebraicGeometry.OpenRestrictionDerivedFactorization
 public import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
+public import Other.AlgebraicGeometry.ChernRelativeClass
 public import Other.AlgebraicGeometry.DivisorClassComparisonSupport
 public import Other.AlgebraicGeometry.ChernLocalModel
 public import Other.AlgebraicGeometry.SupportUnionSplitting
@@ -428,4 +435,10 @@ public import Other.AlgebraicGeometry.ChernWindingLift
 public import Other.AlgebraicGeometry.ChernWindingCochain
 public import Other.AlgebraicGeometry.ChernWindingBoundary
 public import Other.AlgebraicGeometry.ChernWindingUnitClass
+public import Other.AlgebraicGeometry.ChernRelativeClassNaturality
 public import Other.AlgebraicGeometry.ChernWindingNormalizedCharts
+public import Other.AlgebraicGeometry.ChernWindingRational
+public import Other.AlgebraicGeometry.ChernWindingChartPeriods
+public import Other.AlgebraicGeometry.ChernWindingHolomorphicLog
+public import Other.AlgebraicGeometry.ChernWindingLocalFormObstruction
+public import Other.AlgebraicGeometry.ChernWindingStandardTriangle
