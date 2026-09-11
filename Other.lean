@@ -381,6 +381,8 @@ public import Other.AlgebraicGeometry.ProjectiveChartFormComparison
 public import Other.AlgebraicGeometry.ProjectiveTwistObligations
 public import Other.AlgebraicGeometry.ProjectiveTwistChartFrames
 public import Other.AlgebraicGeometry.ProjectiveTwistAnalyticFrames
+public import Other.AlgebraicGeometry.HolomorphicMultiplierTransition
+public import Other.AlgebraicGeometry.ProjectiveTwistMultipliers
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
@@ -408,3 +410,5 @@ public import Other.AlgebraicGeometry.OpenRestrictionDerivedFactorization
 public import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 public import Other.AlgebraicGeometry.DivisorClassComparisonSupport
 public import Other.AlgebraicGeometry.ChernLocalModel
+public import Other.AlgebraicGeometry.SupportUnionSplitting
+public import Other.AlgebraicGeometry.ComponentSupportDecomposition

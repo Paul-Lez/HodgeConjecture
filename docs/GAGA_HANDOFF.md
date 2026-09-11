@@ -875,6 +875,54 @@ section by each degree-`k` form to get a degree-`0` homogeneous holomorphic func
 constant by compactness and connectedness of `ℙᴺ(ℂ)` (both instances now), and compare the
 constants obtained from `x₀ᵏ` and `x₁ᵏ`.
 
+## Progress 2026-09-11 (sixth pass): the multiplier cocycle
+
+Two further `sorry`-free, axiom-clean files: the general transition law for chart multipliers, and
+its equal-degree specialisation on `ℙᴺ`.
+
+### The transition law
+
+[`Other/AlgebraicGeometry/HolomorphicMultiplierTransition.lean`](../Other/AlgebraicGeometry/HolomorphicMultiplierTransition.lean),
+namespace `AlgebraicGeometry.ComplexPoint`:
+
+- `holomorphic_mul_comm` — the section rings of `holomorphicRingSheaf` are commutative (the
+  `RingCat`-valued sheaf is the image of the `CommRingCat`-valued one, but the `CommRing` instance
+  is not found automatically).
+- `holRingRes` — restriction of a section of the holomorphic structure sheaf.
+- `holRes_app` — a morphism of sheaves of modules commutes with restriction of sections.
+- **`multiplier_transition`** — if `sU, sV` are sections of `M` over `U, V` with
+  `u • sV|_W = sU|_W`, if `tU, tV` are sections of `M'` with `v • tV|_W = tU|_W`, if `φ` sends
+  `sU ↦ hU • tU` and `sV ↦ hV • tV`, and if `tV` generates on `W`, then `hU|_W · v = u · hV|_W`.
+  This is the cocycle relation in the only form it is ever used, and it needs no commutativity.
+- **`multiplier_eq_of_same_transition`** — when the two frame changes coincide (`u = v`) and `u`
+  is a unit, `hU|_W = hV|_W`.
+
+### The equal-degree case on `ℙᴺ`
+
+[`Other/AlgebraicGeometry/ProjectiveTwistMultipliers.lean`](../Other/AlgebraicGeometry/ProjectiveTwistMultipliers.lean):
+
+- **`chartMultiplier_eq_on_overlap`** — for an endomorphism of `𝒪(−a)^an` on `ℙᴺ`, the chart
+  multipliers agree on the overlap of any two standard charts.  Here the frames of source and
+  target are literally the same, so the frame changes cancel and no explicit identification of the
+  transition unit with `(xᵢ/xⱼ)ⁿ` is needed.
+
+### What is still missing for (G3)
+
+1. **The explicit transition unit.**  For `a ≠ b` the ratio of the two frame changes has to be
+   identified with the evaluation of `(xᵢ/xⱼ)^{a−b}`.  With the frames produced by (G2) this means
+   unfolding `Scheme.Modules.localTrivializationsPullback` to see that the transported frame is the
+   pullback of the universal frame, and computing the universal transition unit from
+   `HomogeneousShift.basicOpenUnitIso` (there it is literally multiplication/division by `Xᵢⁿ`).
+   This is the one genuinely heavy remaining piece.
+2. **Gluing and the growth bound.**  For `a = b`, `chartMultiplier_eq_on_overlap` plus the sheaf
+   condition gives a global holomorphic function on `ℙᴺ(ℂ)`, hence a constant by
+   `globalHolomorphic_eq_const` (compactness and path-connectedness of `ℙᴺ(ℂ)` are instances since
+   the third pass).  For `a > b` the cocycle from step 1 gives the bound
+   `‖f_i z‖ ≤ C (1 + ‖z‖)^{a−b}` and then
+   `Other.ProjectiveChart.existsUnique_isHomogeneous_of_chart_growth` gives a unique degree-`(a−b)`
+   form.
+3. **Reconstruction and the matrix extension**, as described in the fifth pass.
+
 ## Mathematical routes, and what is missing
 
 The statement is Serre's GAGA (essential surjectivity of analytification) restricted to

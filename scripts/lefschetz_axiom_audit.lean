@@ -33,6 +33,8 @@ import Other.AlgebraicGeometry.ProjectiveChartFormComparison
 import Other.AlgebraicGeometry.ProjectiveTwistObligations
 import Other.AlgebraicGeometry.ProjectiveTwistChartFrames
 import Other.AlgebraicGeometry.ProjectiveTwistAnalyticFrames
+import Other.AlgebraicGeometry.HolomorphicMultiplierTransition
+import Other.AlgebraicGeometry.ProjectiveTwistMultipliers
 import Other.AlgebraicGeometry.GAGASerreReduction
 import Other.AlgebraicGeometry.ProjectiveHolomorphicFunctions
 import Other.AlgebraicGeometry.ProjectiveTwistDegreeZero
@@ -176,3 +178,6 @@ import Other.AlgebraicGeometry.CartierLocalForm
 #print axioms AlgebraicGeometry.ComplexPoint.restrictedChernClassVanishes
 #print axioms AlgebraicGeometry.ComplexPoint.hasDivisorClassOfSomeCartierData_of_localModel
 #print axioms AlgebraicGeometry.Scheme.CartierData.exists_localForm
+#print axioms AlgebraicGeometry.ComplexPoint.multiplier_transition
+#print axioms AlgebraicGeometry.ComplexPoint.multiplier_eq_of_same_transition
+#print axioms AlgebraicGeometry.ComplexProjectiveSpace.chartMultiplier_eq_on_overlap
