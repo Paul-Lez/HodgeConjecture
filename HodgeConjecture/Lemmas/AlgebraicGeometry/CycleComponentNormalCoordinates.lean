@@ -21,6 +21,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentNormalGeometry
 
@@ -231,7 +232,7 @@ lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
           (f := X.hom) (d := 1) x hx)
   · obtain ⟨rfl, rfl⟩ := h20
     have hxgeneric : x = genericPoint X.left :=
-      CodimensionCycle.eq_genericPoint_of_coheight_zero x hx
+      eq_genericPoint_of_coheight_zero x hx
     subst x
     let e : cycleComponent X.left (genericPoint X.left) ≃o X.left :=
       (cycleComponentOrderIsoIic X.left (genericPoint X.left)).trans OrderIso.IicTop
