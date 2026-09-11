@@ -923,6 +923,152 @@ namespace `AlgebraicGeometry.ComplexPoint`:
    form.
 3. **Reconstruction and the matrix extension**, as described in the fifth pass.
 
+## Progress 2026-09-11 (seventh pass): the explicit transition unit, and the matrix reduction
+
+Eight further `sorry`-free, axiom-clean files.  The "one genuinely heavy remaining piece" flagged
+in the sixth pass — the identification of the frame change with `(Xⱼ/Xᵢ)ⁿ` — is **done**, and the
+passage from rank one to arbitrary finite twist sums is **done**.  What is left of (G3) is now
+purely the analysis: the chart-coordinate formula for the transition unit, the growth bound, the
+reconstruction of a morphism from a form, and the negative-degree vanishing.
+
+### 1. Inverse image of sections along a morphism of schemes
+
+[`Other/AlgebraicGeometry/SchemePullbackSection.lean`](../Other/AlgebraicGeometry/SchemePullbackSection.lean),
+namespace `AlgebraicGeometry.Scheme.Modules` — the scheme analogue of
+`AnalyticSectionOfAlgebraic.lean`:
+
+- `pullbackFunction f U r : Γ(X, f ⁻¹ᵁ U)` (`= f.app U r`) and `pullbackSection f M U g :
+  Γ((Scheme.Modules.pullback f).obj M, f ⁻¹ᵁ U)` (the unit of
+  `pullbackPushforwardAdjunction`), with `resRing`, `preimage_mono`, and the structural lemmas
+  `pullbackFunction_one/_mul/_add/_pow/_res`, `isUnit_pullbackFunction`,
+  `pullbackSection_smul` (semilinearity) and `pullbackSection_res`.
+- **`pullbackSection_smul_res`** — transport of transition identities:
+  `u • a|_W = b|_W  ⟹  f^*u • (f^*a)|_{f⁻¹W} = (f^*b)|_{f⁻¹W}`.
+
+[`Other/AlgebraicGeometry/SchemePullbackGenerates.lean`](../Other/AlgebraicGeometry/SchemePullbackGenerates.lean):
+
+- **`Scheme.Modules.generates_pullbackSection`** — *the inverse image of a generating section
+  generates*: if `g : Γ(M, U)` generates then `pullbackSection f M U g` generates
+  `f^* M` on `f ⁻¹ᵁ U`.  This is the scheme analogue of `analytificationGenerates`, proved by the
+  same argument (`starUnitSheaf`, `starModuleSheaf`, `coeffHom`, `pullbackCoeffHom`,
+  `pullbackCoeffHom_comp_smulSectionHom`); no base-change theorem is needed.
+  It makes `Scheme.Modules.localTrivializationsPullback` unnecessary for computations: one can
+  take the *canonical* inverse image of an explicit frame instead of the transported
+  trivialisation, and then transition identities come for free.
+
+### 2. The explicit universal frames and their transition unit
+
+[`Other/AlgebraicGeometry/ProjectiveSpectrumTwistFrames.lean`](../Other/AlgebraicGeometry/ProjectiveSpectrumTwistFrames.lean),
+namespace `AlgebraicGeometry.ProjectiveSpectrum.NegativeTwist`:
+
+- `homogeneousRatio 𝒜 num den U h` / `projRatio` — the regular function `num / den` on an open
+  where the degree-`n` element `den` does not vanish, with `homogeneousRatio_val`.
+- `basicOpenFrame 𝒜 q` / `projFrame 𝒜 q` — the frame `1 / q` of `𝒪(−n)` on `D₊(q)`, computed
+  explicitly (`basicOpenFrame_apply : (1/q)(x) = Localization.mk 1 ⟨q, _⟩`), together with
+  **`generates_projFrame`**: it *is* `Scheme.Modules.unitIsoSection (HomogeneousShift.basicOpenUnitIso 𝒜 q)`,
+  hence generates.
+- **`projRatio_smul_projFrame`** — the transition unit: on any open contained in `D₊(q₁)` and
+  `D₊(q₂)`, `(q₂/q₁) • (1/q₂) = (1/q₁)`.
+
+### 3. Canonical chart frames on `ℙᴺ` and the analytic cocycle
+
+[`Other/AlgebraicGeometry/ProjectiveTwistCanonicalFrames.lean`](../Other/AlgebraicGeometry/ProjectiveTwistCanonicalFrames.lean),
+namespace `AlgebraicGeometry.ComplexProjectiveSpace`:
+
+- `coordPower N n i = Xᵢⁿ` in degree `n`; `universalChartFrame N n i = 1/Xᵢⁿ` on `D₊(Xᵢⁿ)`.
+- `spaceChartFrameBig`, `algChartFrameBig`, and **`algChartFrame N n i`** — the inverse image of
+  the universal frame along `toUniversalProj N` and along the (identity) immersion of the
+  tautological presentation, restricted to `D₊(Xᵢ)`; `generates_algChartFrame` follows from
+  `generates_pullbackSection` twice and `Generates.restrict`.
+- **`anChartFrame N n i`** and **`holomorphicGenerates_anChartFrame`** — the analytification, a
+  frame of `𝒪(−n)^an` on the `i`-th homogeneous chart `chartOpen N i`.
+- `universalRatio N n i j` (the regular function `Xⱼⁿ/Xᵢⁿ` on the universal chart overlap) and
+  its inverse image `spaceRatio N n i j : Γ(ℙᴺ, D₊(Xᵢ) ⊓ D₊(Xⱼ))`, with
+  **`universalRatio_smul_universalChartFrame`**, **`spaceRatio_smul_algChartFrameBig`**,
+  **`spaceRatio_smul_algChartFrame`** and finally
+  **`analyticFunction_spaceRatio_smul_anChartFrame`**:
+  `(Xⱼⁿ/Xᵢⁿ)^an • anChartFrameⱼ|_W = anChartFrameᵢ|_W` on `W = chartOpen i ⊓ chartOpen j`.
+
+  This is the identification the sixth pass asked for.  Note it is obtained **without unfolding
+  `localTrivializationsPullback`**: the frames are canonical inverse images, so the algebraic
+  identity transports through `pullbackSection_smul_res` twice and then through
+  `analyticSection_smul_res`.
+
+[`Other/AlgebraicGeometry/ProjectiveTwistCanonicalMultipliers.lean`](../Other/AlgebraicGeometry/ProjectiveTwistCanonicalMultipliers.lean):
+
+- `analyticTwist N n` (abbreviation), `analyticSpaceRatio N n i j` (the transition unit as a
+  section of `𝒪^an` on the chart overlap), `analyticSpaceRatio_smul_anChartFrame`;
+- **`existsUnique_canonicalChartMultiplier`** — a morphism `𝒪(−a)^an ⟶ 𝒪(−b)^an` is on each chart
+  multiplication by a unique holomorphic function;
+- **`canonicalChartMultiplier_transition`** — **the chart cocycle**
+  `hᵢ · (Xⱼ/Xᵢ)ᵇ = (Xⱼ/Xᵢ)ᵃ · hⱼ` on chart overlaps, for arbitrary `a`, `b`.
+
+### 4. From rank one to finite sums (the matrix argument)
+
+[`Other/AlgebraicGeometry/FiniteSumHomSurjective.lean`](../Other/AlgebraicGeometry/FiniteSumHomSurjective.lean),
+namespace `CategoryTheory.Limits` — stated for an arbitrary additive functor:
+
+- `sumι`, `sumπ`, `sum_sumπ_sumι`, `sumMatrix`, `sumι_sumMatrix_sumπ`, `hom_ext_sumMatrix`;
+- `sumι_preservesCoproductIso_inv`, `preservesCoproductIso_hom_sumπ`;
+- **`exists_sumMatrix_of_hom_surjective`** — if every `F A ⟶ F B` is `F g`, then every
+  `∐ᵢ F A ⟶ ∐ₖ F B` is the transported image of some `∐ᵢ A ⟶ ∐ₖ B`.
+
+[`Other/AlgebraicGeometry/TwistRelationsFromRankOne.lean`](../Other/AlgebraicGeometry/TwistRelationsFromRankOne.lean):
+
+- `ProjectiveTwist.AnalyticTwistRelationsAlgebraizeRankOne X d P` — the rank-one obligation;
+- **`ProjectiveTwist.analyticTwistRelationsAlgebraize_of_rankOne`** — it implies the full
+  `AnalyticTwistRelationsAlgebraize X d P`.  (`sumAnalytificationIso` *is*
+  `PreservesCoproduct.iso`, so no extra comparison is needed.)
+
+### 5. What (G3) has been reduced to
+
+[`Other/AlgebraicGeometry/ProjectiveTwistRelationObligations.lean`](../Other/AlgebraicGeometry/ProjectiveTwistRelationObligations.lean),
+namespace `Other.ProjectiveChart`:
+
+- **`twistRelationsAlgebraizeProj_of_parts (N) : TwistRankOneAlgebraizesNonneg N →
+  TwistRankOneVanishesNeg N → TwistRelationsAlgebraizeProj N`** — proved.  So obligation (iii)
+  on `ℙᴺ` is now exactly these two statements:
+  * `TwistRankOneAlgebraizesNonneg N`: for `b ≤ a`, every `φ : 𝒪(−a)^an ⟶ 𝒪(−b)^an` is
+    `(moduleAnalytification _ N).map g` for an algebraic `g : 𝒪(−a) ⟶ 𝒪(−b)`;
+  * `TwistRankOneVanishesNeg N`: for `a < b`, every such `φ` is `0`.
+- Two finer stepping stones for the first one are stated in the same file:
+  * **`ChartRatioEvaluation N n`** — the chart-coordinate formula
+    `Point.evaluate _ (spaceRatio N n i j) [insertNth i 1 z] = ((insertNth i 1 z) j)ⁿ`
+    (under `(insertNth i 1 z) j ≠ 0`).  This is the only remaining *computation*: it needs the
+    evaluation of a homogeneous ratio of the `Proj` structure sheaf at the coordinate point
+    `vectorToComplexPoint`, i.e. the dictionary `coordinateEvaluationHom` /
+    `awayCoordinateEvaluation_mk` / `chartIntegralProj` of `ProjectiveAnalytification.lean`,
+    transported through `toUniversalProj` (`Point.evaluate_map` does not apply verbatim because
+    `toUniversalProj` is not a morphism over `Spec ℂ`; the argument should go through
+    `chartIntegralProj` instead).
+  * **`ChartMultiplierGrowth N a b`** — `‖hᵢ(chartPointIn i z)‖ ≤ C (1 + ‖z‖)^{a−b}`.  Given
+    `ChartRatioEvaluation`, this follows from `canonicalChartMultiplier_transition` together
+    with compactness of `ℙᴺ(ℂ)` exactly as sketched in the fifth pass: bound each `hⱼ` on the
+    compact part `‖w‖ ≤ 1` of the `j`-th chart, cover `ℙᴺ(ℂ)` by the `N + 1` charts, and use the
+    cocycle to compare.
+  * `holSectionFun` is the (definitional) reading of a section of `𝒪^an` as a function.
+
+After `ChartMultiplierGrowth`, `Other.ProjectiveChart.existsUnique_isHomogeneous_of_chart_growth`
+gives a unique degree-`(a − b)` form `F` with `hᵢ = F(insertNth i 1 ·)`; what then remains for
+`TwistRankOneAlgebraizesNonneg` is **reconstruction**: turning `F` into an algebraic morphism
+`𝒪(−a) ⟶ 𝒪(−b)` (multiplication by `F` in the homogeneous localisations — note
+`ProjectiveSpectrum.NegativeTwist.HomogeneousShift.multiply`/`divide` already provide the
+degree-shifting maps, and `projFrame`/`projRatio` the frames to compare against) and checking
+chartwise, using `existsUnique_canonicalChartMultiplier` and
+`iUnion_complexPointChartSet`, that its analytification is `φ`.
+
+`TwistRankOneVanishesNeg` still needs the maximum-modulus argument recorded in the fifth pass
+(`globalHolomorphic_eq_const` plus comparison of the constants obtained from `x₀ᵏ` and `x₁ᵏ`).
+
+### Superseded
+
+`ProjectiveTwistChartFrames.lean` / `ProjectiveTwistAnalyticFrames.lean` (fifth pass) and
+`ProjectiveTwistMultipliers.lean` (sixth pass) remain valid and are still used for
+`chartOpen`, `coe_chartOpen`, `chartPointIn`, `analyticOnNhd_comp_chartPointIn` and
+`overOpen_projectiveSpaceBasicOpen_X`; but their frames `analyticChartFrame` (built from
+`twistTrivializations`) are superseded for (G3) purposes by `anChartFrame`, whose transition unit
+is explicit.
+
 ## Mathematical routes, and what is missing
 
 The statement is Serre's GAGA (essential surjectivity of analytification) restricted to
