@@ -20,7 +20,6 @@ public import Other.Algebra.Category.ModuleCat.Presheaf.ExteriorPower
 public import Other.Algebra.Category.Ring.Basic
 public import Other.Algebra.DeRham.Complex
 public import Other.Algebra.Homology.MapArrowConeConnecting
-public import Other.Algebra.Homology.MapExtendBettiComparison
 public import Other.Algebra.Homology.MapHomologyShift
 public import Other.AlgebraicGeometry.BettiGlobalSectionsAdditivity
 public import Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison

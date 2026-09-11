@@ -48,7 +48,7 @@ coefficient one. -/
 def rationalComponentChowClass
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ)
     (x : X.left) (hx : coheight x = p) : RationalChowGroup X.left p :=
-  ChowGroup.toRational (ChowGroup.mk (CodimensionCycle.single x hx 1))
+  ChowGroup.toRational (ChowGroup.mk (codimensionCycleSubgroup.single x hx 1))
 
 /-! ### The genuine codimension-zero cycle class -/
 
@@ -56,9 +56,9 @@ def rationalComponentChowClass
 the generic component. -/
 def codimensionZeroCycleClassOnCycles
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
-    CodimensionCycle X.left 0 →+ H^0(X; ℚ) :=
+    codimensionCycleSubgroup X.left 0 →+ H^0(X; ℚ) :=
   (fieldCohomologyClassAddHom ℚ X).comp
-    ((Int.castAddHom ℚ).comp CodimensionCycle.integralEquiv.toAddMonoidHom)
+    ((Int.castAddHom ℚ).comp codimensionCycleSubgroup.integralEquiv.toAddMonoidHom)
 
 /-- Codimension-zero rational equivalences map to zero. Here this is a theorem rather than part
 of the data of the cycle-class map: the rational-equivalence subgroup is trivial in codimension

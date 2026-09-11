@@ -44,19 +44,19 @@ component class. -/
     (componentClass : ∀ (x : X), coheight x = p → M)
     (x : X) (hx : coheight x = p) (n : ℤ) :
     cycleClassOnCyclesOfComponents componentClass
-        (CodimensionCycle.single x hx n) =
+        (codimensionCycleSubgroup.single x hx n) =
       n • componentClass x hx := by
   classical
   change (Finsupp.linearCombination ℤ (fun y ↦
       if hy : coheight y = p then componentClass y hy else 0))
     (compactCycleToFinsupp ((codimensionCycleInclusion X p)
-      (CodimensionCycle.single x hx n))) = n • componentClass x hx
+      (codimensionCycleSubgroup.single x hx n))) = n • componentClass x hx
   have hsingle : compactCycleToFinsupp
-      ((codimensionCycleInclusion X p) (CodimensionCycle.single x hx n)) =
+      ((codimensionCycleInclusion X p) (codimensionCycleSubgroup.single x hx n)) =
       Finsupp.single x n := by
     ext y
-    change CodimensionCycle.single x hx n y = Finsupp.single x n y
-    rw [CodimensionCycle.single_apply, Finsupp.single_apply]
+    change codimensionCycleSubgroup.single x hx n y = Finsupp.single x n y
+    rw [codimensionCycleSubgroup.single_apply, Finsupp.single_apply]
     by_cases h : y = x
     · simp [h]
     · simp [h, Ne.symm h]
@@ -66,8 +66,8 @@ namespace ChowGroup
 
 /-- Evaluation of a descended additive map on a represented Chow class. -/
 @[simp] lemma liftCycleClass_mk {X : Scheme.{u}} {p : ℕ} {M : Type*} [AddCommGroup M]
-    (f : CodimensionCycle X p →+ M)
-    (h : rationalEquivalenceSubgroup X p ≤ f.ker) (z : CodimensionCycle X p) :
+    (f : codimensionCycleSubgroup X p →+ M)
+    (h : rationalEquivalenceSubgroup X p ≤ f.ker) (z : codimensionCycleSubgroup X p) :
     liftCycleClass f h (mk z) = f z :=
   QuotientAddGroup.lift_mk' _ h z
 

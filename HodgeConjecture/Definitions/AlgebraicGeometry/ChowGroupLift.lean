@@ -53,11 +53,11 @@ def compactCycleToFinsupp {X : Scheme.{u}} [CompactSpace X] :
 
 /-- Extend prescribed classes of irreducible codimension-`p` components additively to integral
 codimension-`p` cycles. Values away from codimension `p` are set to zero; the support condition on
-a `CodimensionCycle` ensures that this branch is never used by a nonzero coefficient. -/
+a `codimensionCycleSubgroup` ensures that this branch is never used by a nonzero coefficient. -/
 def cycleClassOnCyclesOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
     {M : Type*} [AddCommGroup M]
     (componentClass : ∀ (x : X), coheight x = p → M) :
-    CodimensionCycle X p →+ M := by
+    codimensionCycleSubgroup X p →+ M := by
   classical
   let componentValue : X → M := fun x ↦
     if hx : coheight x = p then componentClass x hx else 0
@@ -69,7 +69,7 @@ namespace ChowGroup
 /-- An additive map on codimension cycles that vanishes on rational equivalences descends to the
 Chow group. -/
 def liftCycleClass {X : Scheme.{u}} {p : ℕ} {M : Type*} [AddCommGroup M]
-    (f : CodimensionCycle X p →+ M)
+    (f : codimensionCycleSubgroup X p →+ M)
     (h : rationalEquivalenceSubgroup X p ≤ f.ker) : ChowGroup X p →+ M :=
   QuotientAddGroup.lift (rationalEquivalenceSubgroup X p) f h
 

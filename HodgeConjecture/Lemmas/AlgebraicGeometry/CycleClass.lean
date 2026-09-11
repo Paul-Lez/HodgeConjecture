@@ -37,7 +37,7 @@ variable (X : Over (Spec ↧ℂ))
 /-- Evaluation of the integral codimension-zero class map on a represented cycle. -/
 @[simp] lemma codimensionZeroChowCycleClass_mk
     [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (z : CodimensionCycle X.left 0) :
+    [IsProjective X.hom] (z : codimensionCycleSubgroup X.left 0) :
     codimensionZeroChowCycleClass X (ChowGroup.mk z) =
       codimensionZeroCycleClassOnCycles X z :=
   ChowGroup.liftCycleClass_mk _ _ _
@@ -47,21 +47,21 @@ variable (X : Over (Spec ↧ℂ))
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
     codimensionZeroCycleClass X
         (ChowGroup.toRational
-          (ChowGroup.mk (CodimensionCycle.single (genericPoint X.left)
+          (ChowGroup.mk (codimensionCycleSubgroup.single (genericPoint X.left)
             (Order.IsMax.coheight_eq_zero isMax_top) 1))) =
       fieldCohomologyUnit ℚ X := by
   unfold codimensionZeroCycleClass
   rw [ChowGroup.toRational_apply, ChowGroup.rationalExtension_tmul, one_smul,
     codimensionZeroChowCycleClass_mk]
-  let z : CodimensionCycle X.left 0 :=
-    CodimensionCycle.single (genericPoint X.left)
+  let z : codimensionCycleSubgroup X.left 0 :=
+    codimensionCycleSubgroup.single (genericPoint X.left)
       (Order.IsMax.coheight_eq_zero isMax_top) 1
-  have hz : CodimensionCycle.integralEquiv z = 1 := by
+  have hz : codimensionCycleSubgroup.integralEquiv z = 1 := by
     change z (genericPoint X.left) = 1
     dsimp [z]
-    exact CodimensionCycle.single_same (p := 0) (genericPoint X.left) _ 1
+    exact codimensionCycleSubgroup.single_same (p := 0) (genericPoint X.left) _ 1
   change fieldCohomologyClass ℚ X
-      ((CodimensionCycle.integralEquiv z : ℤ) : ℚ) =
+      ((codimensionCycleSubgroup.integralEquiv z : ℤ) : ℚ) =
     fieldCohomologyClass ℚ X 1
   rw [hz]
   norm_num
@@ -80,7 +80,7 @@ lemma codimensionZeroCycleClassSpan_eq_span_unit
     exact Submodule.smul_mem _ _ (Submodule.subset_span (Set.mem_singleton _))
   · exact Submodule.span_le.mpr (Set.singleton_subset_iff.mpr
       ⟨ChowGroup.toRational
-        (ChowGroup.mk (CodimensionCycle.single (genericPoint X.left)
+        (ChowGroup.mk (codimensionCycleSubgroup.single (genericPoint X.left)
           (Order.IsMax.coheight_eq_zero isMax_top) 1)),
         codimensionZeroCycleClass_genericPoint X⟩)
 

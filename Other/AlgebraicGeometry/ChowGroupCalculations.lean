@@ -37,14 +37,14 @@ example (p : ℕ) : Subsingleton (RationalChowGroup (Spec ↧PUnit) p) := by
 
 /-- A nonempty calculation: `CH⁰(Spec ℚ) ≃ ℤ`, including its distinguished generator. -/
 example : specFieldEquiv ℚ
-    (mk (CodimensionCycle.single default
-      (CodimensionCycle.specField_coheight ℚ default) 1)) = 1 := by
+    (mk (codimensionCycleSubgroup.single default
+      (codimensionCycleSubgroup.specField_coheight ℚ default) 1)) = 1 := by
   simp
 
 /-- The rational-coefficient calculation sends the same generator to `1 : ℚ`. -/
 example : rationalSpecFieldEquiv ℚ
-    (toRational (mk (CodimensionCycle.single default
-      (CodimensionCycle.specField_coheight ℚ default) 1))) = 1 :=
+    (toRational (mk (codimensionCycleSubgroup.single default
+      (codimensionCycleSubgroup.specField_coheight ℚ default) 1))) = 1 :=
   rationalSpecFieldEquiv_toRational_single ℚ 1
 
 end ChowGroup

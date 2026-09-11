@@ -183,7 +183,7 @@ theorem sheafCycleClassOnCycles_single_point_normalization
     (x : V.scheme) (hx : Order.coheight x = d)
     (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
     (n : ℤ) :
-    sheafCycleClassOnCycles V d d (CodimensionCycle.single x hx n) =
+    sheafCycleClassOnCycles V d d (codimensionCycleSubgroup.single x hx n) =
       n • analyticComponentPointPositiveKernelClass V.over x d z := by
   rw [sheafCycleClassOnCycles_single,
     cycleComponentSheafClass_point_normalization V.over x d z hx]
@@ -196,7 +196,7 @@ theorem sheafCycleClassOnCycles_sum_single_point_normalization
     (z : ∀ i, ComplexPoint (Over.mk
       (cycleComponentι V.scheme (x i) ≫ V.structureMap))) (n : ι → ℤ) :
     sheafCycleClassOnCycles V d d
-      (∑ i ∈ t, CodimensionCycle.single (x i) (hx i) (n i)) =
+      (∑ i ∈ t, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
       ∑ i ∈ t, n i • analyticComponentPointPositiveKernelClass
         V.over (x i) d (z i) := by
   rw [sheafCycleClassOnCycles_sum_single]
@@ -208,7 +208,7 @@ theorem rationalSheafCycleClassOnCycles_tmul_single_point_normalization
     (x : V.scheme) (hx : Order.coheight x = d)
     (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
     (q : ℚ) :
-    rationalSheafCycleClassOnCycles V d d (q ⊗ₜ[ℤ] CodimensionCycle.single x hx 1) =
+    rationalSheafCycleClassOnCycles V d d (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
       q • analyticComponentPointPositiveKernelClass V.over x d z := by
   rw [rationalSheafCycleClassOnCycles_tmul_single,
     cycleComponentSheafClass_point_normalization V.over x d z hx]
@@ -221,7 +221,7 @@ theorem rationalSheafCycleClassOnCycles_sum_tmul_single_point_normalization
     (z : ∀ i, ComplexPoint (Over.mk
       (cycleComponentι V.scheme (x i) ≫ V.structureMap))) (q : ι → ℚ) :
     rationalSheafCycleClassOnCycles V d d
-      (∑ i ∈ t, q i ⊗ₜ[ℤ] CodimensionCycle.single (x i) (hx i) 1) =
+      (∑ i ∈ t, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
       ∑ i ∈ t, q i • analyticComponentPointPositiveKernelClass
         V.over (x i) d (z i) := by
   rw [rationalSheafCycleClassOnCycles_sum_tmul_single]
