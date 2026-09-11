@@ -195,6 +195,19 @@ theorem exists_simpleRootEnumeration {p : Polynomial (Polynomial ℂ)}
   refine ⟨⟨i, by rw [(roots_card_nodup_of_mem_simpleRootBase hp z).1]⟩, ?_⟩
   simpa [simpleRootEnumeration] using hi
 
+/-- The point of the root cover attached to an enumerated root of a simple fiber. -/
+noncomputable def simpleRootCoverPoint {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) (i : Fin p.natDegree) : SimpleRootCover p :=
+  ⟨(z, simpleRootEnumeration hp z i), simpleRootEnumeration_isRoot hp z i⟩
+
+/-- One neighborhood of the base point supports all the finitely many local root branches. -/
+theorem eventually_all_familyEquation_localRootBranch {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ i : Fin p.natDegree,
+      familyEquation p (z', localRootBranch (simpleRootCoverPoint hp z i) z') = 0 := by
+  exact eventually_all.2 fun i ↦
+    eventually_familyEquation_localRootBranch (simpleRootCoverPoint hp z i)
+
 /-- The multiset of roots in a fiber which belong to a specified subset of the root cover. -/
 def selectedRoots {p : Polynomial (Polynomial ℂ)}
     (S : Set (SimpleRootCover p)) (z : SimpleRootBase p) : Multiset ℂ := by
