@@ -456,3 +456,7 @@ public import Other.AlgebraicGeometry.ChernWindingNormalChartData
 public import Other.AlgebraicGeometry.ChernWindingNormalChartLog
 public import Other.AlgebraicGeometry.ChernWindingNormalChartExistence
 public import Other.AlgebraicGeometry.ComplementFrameGeneric
+public import Other.AlgebraicGeometry.ChernWindingNormalChartUnit
+public import Other.AlgebraicGeometry.ChernWindingGenericChartData
+public import Other.AlgebraicGeometry.ChernWindingGenericChartExistence
+public import Other.AlgebraicGeometry.ChernWindingNormalChartTransport
