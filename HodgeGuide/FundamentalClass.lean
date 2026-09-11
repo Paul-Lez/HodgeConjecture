@@ -120,8 +120,8 @@ exactly and not merely up to a nonzero rational multiple.
 
 This section is nonzero whenever the smooth support has a complex point. Every neighborhood of
 that point contains a smaller normal chart, where the coclass evaluates to one on the normal
-class. It therefore stays nonzero under every restriction, giving a nonzero germ and hence a
-nonzero glued section.
+class. It therefore stays nonzero under restriction to any neighborhood of that point, giving a
+nonzero germ and hence a nonzero glued section.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.smoothClosedSupportCoclassSection_ne_zero
