@@ -51,10 +51,10 @@ open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-/-- A smooth projective complex variety has a complex point. -/
-noncomputable instance instNonemptyComplexPoint [IsIntegral X.left] [Smooth X.hom] :
-    Nonempty (ComplexPoint X) := by
-  let : LocallyOfFiniteType X.hom := inferInstance
+/-- An integral complex scheme locally of finite type has a complex point: its space is Jacobson,
+so it has a closed point, and the Nullstellensatz makes the residue field there `ℂ`. -/
+noncomputable instance instNonemptyComplexPoint [IsIntegral X.left]
+    [LocallyOfFiniteType X.hom] : Nonempty (ComplexPoint X) := by
   let : JacobsonSpace X.left := LocallyOfFiniteType.jacobsonSpace X.hom
   obtain ⟨x, -, hx⟩ := nonempty_inter_closedPoints
     (X := X.left) (Z := Set.univ) Set.univ_nonempty isOpen_univ.isLocallyClosed
