@@ -17,6 +17,8 @@ module
 
 public import Mathlib.Algebra.Homology.Homotopy
 public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
+public import HodgeConjecture.Mathlib.LinearAlgebra.Quotient.Basic
+public import HodgeConjecture.Mathlib.LinearAlgebra.Dual.Defs
 
 import Mathlib.LinearAlgebra.Dual.Lemmas
 
@@ -55,27 +57,6 @@ abbrev linearDual (S : ShortComplex (ModuleCat.{u} R)) :
 
 lemma linearDual_X₁ (S : ShortComplex (ModuleCat.{u} R)) :
     (S.linearDual).X₁ = ModuleCat.of R (Module.Dual R S.X₃) := by with_implicit rfl
-
-namespace Submodule
-
-variable {R M R₂ M₂ : Type*} [Ring R] [AddCommGroup M] [Module R M]
-  [Ring R₂] [AddCommGroup M₂] [Module R₂ M₂] {τ₁₂ : R →+* R₂}
-
-/-- Lifting a sum of maps to the quotient is the sum of the lifts. -/
-theorem liftQ_add (p : Submodule R M) {f g : M →ₛₗ[τ₁₂] M₂}
-    (hf : p ≤ LinearMap.ker f) (hg : p ≤ LinearMap.ker g)
-    {h : p ≤ LinearMap.ker (f + g)} :
-    p.liftQ (f + g) h = p.liftQ f hf + p.liftQ g hg :=
-  p.linearMap_qext (by ext; simp)
-
-/-- Lifting a scalar multiple of a map to the quotient is the scalar multiple of the lift. -/
-theorem liftQ_smul {S : Type*} [Monoid S] [DistribMulAction S M₂] [SMulCommClass R₂ S M₂]
-    (p : Submodule R M) {f : M →ₛₗ[τ₁₂] M₂} (hf : p ≤ LinearMap.ker f) (c : S)
-    {h : p ≤ LinearMap.ker (c • f)} :
-    p.liftQ (c • f) h = c • p.liftQ f hf :=
-  p.linearMap_qext (by ext; simp)
-
-end Submodule
 
 @[simps]
 def dualCycleToHomologyFunctional (S : ShortComplex (ModuleCat.{u} R)) :
@@ -173,24 +154,6 @@ def linearDualHomologyEquiv (S : ShortComplex (ModuleCat.{u} R)) :
 
 end CategoryTheory.ShortComplex
 
-/-- The dual of the zero map is zero. -/
-@[simp]
-theorem LinearMap.dualMap_zero {R M₁ M₂ : Type*} [CommSemiring R] [AddCommMonoid M₁] [Module R M₁]
-    [AddCommMonoid M₂] [Module R M₂] : (0 : M₁ →ₗ[R] M₂).dualMap = 0 := by
-  rw [LinearMap.dualMap_def, map_zero]
-
-/-- The dual of a difference of maps is the difference of the duals. -/
-theorem LinearMap.dualMap_add {R M₁ M₂ : Type*} [CommRing R] [AddCommGroup M₁] [Module R M₁]
-    [AddCommGroup M₂] [Module R M₂] (f g : M₁ →ₗ[R] M₂) :
-    (f + g).dualMap = f.dualMap + g.dualMap := by
-  rw [LinearMap.dualMap_def, LinearMap.dualMap_def, LinearMap.dualMap_def, map_add]
-
-/-- The dual of a difference of maps is the difference of the duals. -/
-theorem LinearMap.dualMap_sub {R M₁ M₂ : Type*} [CommRing R] [AddCommGroup M₁] [Module R M₁]
-    [AddCommGroup M₂] [Module R M₂] (f g : M₁ →ₗ[R] M₂) :
-    (f - g).dualMap = f.dualMap - g.dualMap := by
-  rw [LinearMap.dualMap_def, LinearMap.dualMap_def, LinearMap.dualMap_def, map_sub]
-
 namespace HomologicalComplex
 
 variable {R : Type u} [Field R]
@@ -227,7 +190,7 @@ variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
 
 /-- Algebraic duality sends a map of nonnegative chain complexes contravariantly to a map of
 cochain complexes. -/
-@[implicit_reducible]
+@[implicit_reducible, simps f]
 def linearDualMap (f : K ⟶ L) :
     L.linearDualCochainComplex ⟶ K.linearDualCochainComplex where
   f n := ModuleCat.ofHom (f.f n).hom.dualMap
@@ -273,16 +236,15 @@ def linearDualHomotopy {f g : K ⟶ L} (h : Homotopy f g) :
       have h' : f.f 0 - g.f 0 = h.hom 0 1 ≫ L.d 1 0 := by
         simpa [dNext_zero_chainComplex _, prevD_chainComplex _, ← sub_eq_iff_eq_add] using h.comm 0
       simp [← ModuleCat.ofHom_comp, LinearMap.dualMap_comp_dualMap, ← ModuleCat.hom_comp, ← h',
-        linearDualMap, LinearMap.dualMap_sub, ModuleCat.ofHom_sub]
+        LinearMap.dualMap_sub, ModuleCat.ofHom_sub]
     | succ n =>
         rw [Homotopy.dNext_cochainComplex, Homotopy.prevD_succ_cochainComplex]
         have h': f.f (n + 1) - g.f (n + 1) = h.hom (n + 1) (n + 1 + 1) ≫
             L.d (n + 1 + 1) (n + 1) + K.d (n + 1) n ≫ h.hom n (n + 1) := by
           simpa [dNext_succ_chainComplex _, prevD_chainComplex _, ← sub_eq_iff_eq_add,
             add_comm (K.d _ _ ≫ _)] using h.comm (n + 1)
-        simp [linearDualMap, ← ModuleCat.ofHom_comp, ← ModuleCat.ofHom_add,
-          LinearMap.dualMap_comp_dualMap, ← ModuleCat.hom_comp, ← LinearMap.dualMap_add,
-          ← ModuleCat.hom_add, ← h']
+        simp [← ModuleCat.ofHom_comp, ← ModuleCat.ofHom_add, LinearMap.dualMap_comp_dualMap,
+          ← ModuleCat.hom_comp, ← LinearMap.dualMap_add, ← ModuleCat.hom_add, ← h']
 
 /-- Algebraic duality sends a chain-homotopy equivalence contravariantly to a cochain-homotopy
 equivalence. -/
