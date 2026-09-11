@@ -696,6 +696,178 @@ theorem eventually_natDegree_mvSelectedFactorOn_eq_card {n : ℕ}
   rw [natDegree_mvSelectedFactorOn, hz hbase hr, Multiset.card_map]
   rfl
 
+
+noncomputable def mvLocalBranchFactor {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic) (z : MvSimpleRootBase p)
+    (I : Finset (Fin p.natDegree)) : (Fin n → ℂ) → Polynomial ℂ := fun z' ↦
+  (I.1.map fun i ↦ X - C (mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z')).prod
+
+private theorem differentiableAt_coeff_X_sub_C_mvLocalRootBranch {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic) (z : MvSimpleRootBase p)
+    (i : Fin p.natDegree) (k : ℕ) : DifferentiableAt ℂ
+      (fun z' ↦ (X - C (mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z')).coeff k) z.1 := by
+  rcases k with _ | k
+  · simpa [mvSimpleRootCoverPoint] using
+      (differentiableAt_mvLocalRootBranch (mvSimpleRootCoverPoint hp z i)).neg
+  rcases k with _ | k <;> simp
+
+theorem differentiableAt_coeff_mvLocalBranchFactor {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic) (z : MvSimpleRootBase p)
+    (I : Finset (Fin p.natDegree)) (k : ℕ) :
+    DifferentiableAt ℂ (fun z' ↦ (mvLocalBranchFactor hp z I z').coeff k) z.1 := by
+  induction I using Finset.induction_on generalizing k with
+  | empty => simp [mvLocalBranchFactor]
+  | @insert i I hi hI =>
+      have hfactor : mvLocalBranchFactor hp z (insert i I) = fun z' ↦
+          (X - C (mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z')) *
+            mvLocalBranchFactor hp z I z' := by
+        funext z'
+        simp [mvLocalBranchFactor, hi]
+      rw [hfactor]
+      simp_rw [coeff_mul]
+      apply DifferentiableAt.fun_sum
+      intro ij hij
+      exact (differentiableAt_coeff_X_sub_C_mvLocalRootBranch hp z i ij.1).mul (hI ij.2)
+
+theorem eventually_mvSelectedFactorOn_eq_mvLocalBranchFactor {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ (hbase : ∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
+        (mvFamilySpecialization p z').derivative.eval w ≠ 0)
+      (hr : MvPolynomial.eval z' r ≠ 0),
+      mvSelectedFactorOn r S ⟨z', hbase⟩ hr =
+        mvLocalBranchFactor hp z (mvSelectedBranchIndicesOn hp r S z hzr) z' := by
+  filter_upwards [eventually_mvSelectedRootsOn_eq_map_mvLocalRootBranches hp r S hS z hzr]
+    with z' hz hbase hr
+  rw [mvSelectedFactorOn, mvLocalBranchFactor, hz hbase hr, Multiset.map_map]
+  rfl
+
+noncomputable def mvSelectedFactorCoeffOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (r : MvPolynomial (Fin n) ℂ)
+    (S : Set (MvSimpleRootCoverOn p r))
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0)
+    (k : ℕ) (z : Fin n → ℂ) : ℂ := by
+  classical
+  exact if hr : MvPolynomial.eval z r ≠ 0 then
+    (mvSelectedFactorOn r S ⟨z, hsimple z hr⟩ hr).coeff k else 0
+
+theorem mvSelectedFactorCoeffOn_eq {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (r : MvPolynomial (Fin n) ℂ)
+    (S : Set (MvSimpleRootCoverOn p r)) (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 →
+      ∀ w : ℂ, (mvFamilySpecialization p z).eval w = 0 →
+        (mvFamilySpecialization p z).derivative.eval w ≠ 0)
+    (k : ℕ) (z : Fin n → ℂ) (hr : MvPolynomial.eval z r ≠ 0) :
+    mvSelectedFactorCoeffOn r S hsimple k z =
+      (mvSelectedFactorOn r S ⟨z, hsimple z hr⟩ hr).coeff k := by
+  simp [mvSelectedFactorCoeffOn, hr]
+
+theorem differentiableOn_mvSelectedFactorCoeffOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0) (k : ℕ) :
+    DifferentiableOn ℂ (mvSelectedFactorCoeffOn r S hsimple k)
+      {z | MvPolynomial.eval z r ≠ 0} := by
+  intro z hz
+  let zbase : MvSimpleRootBase p := ⟨z, hsimple z hz⟩
+  let I := mvSelectedBranchIndicesOn hp r S zbase hz
+  have heq : ∀ᶠ z' in 𝓝 z,
+      mvSelectedFactorCoeffOn r S hsimple k z' =
+        (mvLocalBranchFactor hp zbase I z').coeff k := by
+    filter_upwards [eventually_mem_mvSimpleRootBase hp zbase,
+      (AnalyticOnNhd.eval_mvPolynomial r z (Set.mem_univ _)).continuousAt.eventually
+        (isOpen_compl_singleton.mem_nhds hz),
+      eventually_mvSelectedFactorOn_eq_mvLocalBranchFactor hp r S hS zbase hz]
+      with z' hbase hr hfactor
+    rw [mvSelectedFactorCoeffOn_eq r S hsimple k z' hr]
+    simpa only [I, Subtype.ext_iff] using
+      congrArg (fun q : Polynomial ℂ ↦ q.coeff k) (hfactor hbase hr)
+  exact ((differentiableAt_coeff_mvLocalBranchFactor hp zbase I k).congr_of_eventuallyEq heq).differentiableWithinAt
+
+
+theorem exists_mvSelectedFactorCoeffOn_growth {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
+    ∃ (C : ℝ) (N : ℕ), 0 ≤ C ∧ ∀ k z, MvPolynomial.eval z r ≠ 0 →
+      ‖mvSelectedFactorCoeffOn r S hsimple k z‖ ≤ C * (1 + ‖z‖) ^ N := by
+  obtain ⟨C, N, hC, hbound⟩ := exists_monic_factor_coeff_mvPolynomial_growth p hp
+  refine ⟨C, N, hC, fun k z hr ↦ ?_⟩
+  rw [mvSelectedFactorCoeffOn_eq r S hsimple k z hr]
+  exact hbound z _ (mvSelectedFactorOn_monic r S ⟨z, hsimple z hr⟩ hr)
+    (mvSelectedFactorOn_dvd r S ⟨z, hsimple z hr⟩ hr) k
+
+theorem exists_mvPolynomial_mvSelectedFactorCoeffOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
+    (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0) (k : ℕ) :
+    ∃ a : MvPolynomial (Fin n) ℂ, ∀ z (hr : MvPolynomial.eval z r ≠ 0),
+      MvPolynomial.eval z a = (mvSelectedFactorOn r S ⟨z, hsimple z hr⟩ hr).coeff k := by
+  obtain ⟨C, N, hC, hbound⟩ := exists_mvSelectedFactorCoeffOn_growth hp r S hsimple
+  obtain ⟨a, ha⟩ := Complex.exists_mvPolynomial_of_polynomial_growth_on_nonzero r hr0
+    (differentiableOn_mvSelectedFactorCoeffOn hp r S hS hsimple k) hC N
+    (fun z hz ↦ hbound k z hz)
+  exact ⟨a, fun z hr ↦ (ha z hr).trans (mvSelectedFactorCoeffOn_eq r S hsimple k z hr)⟩
+
+/-- The selected fiber factors on `D(r)` are specializations of one polynomial family. -/
+theorem exists_mvPolynomialFamily_mvSelectedFactorOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
+    (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
+    ∃ q : Polynomial (MvPolynomial (Fin n) ℂ), q.natDegree ≤ p.natDegree ∧
+      ∀ z (hr : MvPolynomial.eval z r ≠ 0),
+        q.map (MvPolynomial.eval z) = mvSelectedFactorOn r S ⟨z, hsimple z hr⟩ hr := by
+  classical
+  choose a ha using fun k ↦
+    exists_mvPolynomial_mvSelectedFactorCoeffOn hp r hr0 S hS hsimple k
+  let q : Polynomial (MvPolynomial (Fin n) ℂ) :=
+    ∑ k ∈ Finset.range (p.natDegree + 1), Polynomial.monomial k (a k)
+  have hqdegree : q.natDegree ≤ p.natDegree := by
+    apply natDegree_le_iff_coeff_eq_zero.mpr
+    intro k hk
+    rw [show q.coeff k = ∑ x ∈ Finset.range (p.natDegree + 1),
+      (Polynomial.monomial x (a x)).coeff k by simp [q]]
+    apply Finset.sum_eq_zero
+    intro x hx
+    apply coeff_monomial_of_ne
+    exact ne_of_gt (lt_of_le_of_lt (Nat.le_of_lt_succ (Finset.mem_range.mp hx)) hk)
+  refine ⟨q, hqdegree, fun z hr ↦ ?_⟩
+  ext k
+  rw [coeff_map]
+  rw [show q.coeff k = ∑ x ∈ Finset.range (p.natDegree + 1),
+    (Polynomial.monomial x (a x)).coeff k by simp [q], map_sum]
+  by_cases hk : k ≤ p.natDegree
+  · rw [Finset.sum_eq_single k]
+    · rw [coeff_monomial_same]
+      exact ha k z hr
+    · intro x hx hxk
+      rw [coeff_monomial_of_ne _ hxk.symm]
+      simp
+    · exact fun h ↦ (h (Finset.mem_range.mpr (Nat.lt_succ_iff.mpr hk))).elim
+  · have hdegree : (mvSelectedFactorOn r S ⟨z, hsimple z hr⟩ hr).natDegree ≤
+        p.natDegree :=
+      (natDegree_le_of_dvd (mvSelectedFactorOn_dvd r S ⟨z, hsimple z hr⟩ hr)
+        (hp.map (MvPolynomial.eval z)).ne_zero).trans_eq
+          (hp.natDegree_map (MvPolynomial.eval z))
+    rw [coeff_eq_zero_of_natDegree_lt (lt_of_le_of_lt hdegree (lt_of_not_ge hk))]
+    apply Finset.sum_eq_zero
+    intro x hx
+    have hxk : x ≠ k := fun h ↦ hk (h ▸ Nat.le_of_lt_succ (Finset.mem_range.mp hx))
+    rw [coeff_monomial_of_ne _ hxk.symm]
+    simp
+
 end
 
 end Polynomial
