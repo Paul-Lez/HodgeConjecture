@@ -151,7 +151,7 @@ def openRawSingularCochainComplexIntIsoDual (V : Opens X) :
           ComplexShape.embeddingUpNat) :=
   (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
     (openRawSingularCochainComplexIsoDual R X V) ≪≫
-      (HomologicalComplex.mapExtendIso (forget₂ (ModuleCat R) AddCommGrpCat)
+      (HomologicalComplex.mapExtendCanonicalIso (forget₂ (ModuleCat R) AddCommGrpCat)
         (SingularChainComplex R (TopCat.of V)).linearDualCochainComplex
         ComplexShape.embeddingUpNat).symm
 
@@ -175,7 +175,7 @@ lemma openRawSingularRestrictionInt_transport {V W : Opens X} (i : W ⟶ V) :
   exact congrArg
     (fun f => HomologicalComplex.extendMap
       (openRawSingularCochainComplexIsoDual R X V).hom ComplexShape.embeddingUpNat ≫ f)
-    (HomologicalComplex.mapExtendIso_inv_naturality
+    (HomologicalComplex.mapExtendCanonicalIso_inv_naturality
       (forget₂ (ModuleCat R) AddCommGrpCat)
       (HomologicalComplex.linearDualMap
         ((chainPairFunctor R).obj (openInclusionPair X i)).hom)
