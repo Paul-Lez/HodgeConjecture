@@ -996,13 +996,19 @@ of `|D|^an` (uniqueness being the codimension-two vanishing again). Route A abov
 unnecessary for the *existence* of the witness; the gluing statement is exactly what
 `HasRelativeChernChartFormula` now asserts for the already-constructed class.
 
-So **what is left of §4.3 step 4 is: `HasComplementFrame`, `HasNormalizedWindingCharts`, and
-`HasRelativeChernChartFormula`.** The first is the frame of the line bundle off the support of the
-divisor (§2.4 gives the frames `γᵢ` on the members `Uᵢ^an` of the Cartier cover and the transition
-functions `fᵢ`; the rational section is `fᵢ · γᵢ`, which is a *global* frame on `X^an ∖ |D|^an`
-because the `fᵢ` are units there). The second is the pure one-variable analysis, scoped in
-`ChernLocalModelWinding.lean` and `ChernWinding*.lean`. The third is the Chern-class half, now
+So **what is left of §4.3 step 4 is: `HasNormalizedWindingCharts` and
+`HasRelativeChernChartFormulaGeneric`** (see the codimension-two subsection below: the frame
+input `HasComplementFrame` has been replaced by the unconditional
+`hasComplementFrameOffCodimTwo`, and the resulting change of support is absorbed by the proved
+excision `enlargeSurjectiveCodimTwo`). The first is the pure one-variable analysis, scoped in
+`ChernLocalModelWinding.lean` and `ChernWinding*.lean`. The second is the Chern-class half, now
 stated about a single explicit class rather than about an existentially quantified lift.
+
+In the `|D|^an`-supported form stated just above, the three inputs were `HasComplementFrame`,
+`HasNormalizedWindingCharts` and `HasRelativeChernChartFormula`; that form is kept because it is
+the cleanest statement, and because `HasComplementFrame` is proved from the algebraic Hartogs
+statement `HasStalkUnitOfOrdEqZero` (next subsection). The unconditional route runs through the
+codimension-two enlargement instead.
 
 *`HasComplementFrame`, reduced to algebraic Hartogs.* In
 [`Other/AlgebraicGeometry/ComplementFrame.lean`](../Other/AlgebraicGeometry/ComplementFrame.lean)
@@ -1073,9 +1079,100 @@ theorem cycleAnalyticClosedSupport_le_analyticClosedSupport (c) (Z')
     cycleAnalyticClosedSupport X c.divisor ≤ analyticClosedSupport X Z'
 ```
 
-The relative Chern class must then be taken with support in `|Z'|^an ⊇ |D|^an`; the extra
-support has real codimension `≥ 4`, so the chart formula and the component decomposition are
-unaffected (this restatement is being carried out separately).
+*The relative Chern class for the enlarged support, and the restatement — done.* In
+[`Other/AlgebraicGeometry/ChernRelativeClassGeneric.lean`](../Other/AlgebraicGeometry/ChernRelativeClassGeneric.lean).
+Nothing in `ChernRelativeClass.lean` refers to the divisor: the canonical relative class is built
+from a frame over the complement of an *arbitrary* open set, so it applies verbatim to
+`Ω' := (analyticClosedSupport X Z').compl`. The generic forms are
+
+```lean
+def relativeChernClassOnClosed (S : Closeds (ComplexPoint X)) (E ℓ hℓ)
+    (cmp : RelativeChernComparison X (dim X.left) S.compl) :
+    RationalCohomologyWithSupport X (S : Set (ComplexPoint X)) 2 :=
+  supportedClassTransport X (compl_compl _) 2 (E.relativeChernClass S.compl ℓ hℓ cmp)
+
+def relativeChernSupportedClassOnClosed (S E ℓ hℓ cmp) :
+    SupportedInjectiveHomology X S (2 * (1 : ℤ)) :=
+  rationalSupportAddEquivSupportedInjectiveHomology X ↑S S.isClosed _
+    (relativeChernClassOnClosed S E ℓ hℓ cmp)
+
+theorem supportedInjectiveToAmbient_relativeChernSupportedClassOnClosed :
+    supportedInjectiveToAmbient X S (2 * (1 : ℤ)) (relativeChernSupportedClassOnClosed S E ℓ hℓ cmp)
+      = rationalCohomologyAddEquivAmbientInjectiveHomology X _
+          (integralToRationalCohomology X 2 E.firstChernClass)
+```
+
+(`supportedClassTransport` is the transport of `RationalCohomologyWithSupport` along an equality
+of supports, proved by `subst`; the whole generalisation is that bookkeeping plus `compl_compl`.)
+
+The class supported on `|D|^an` is then recovered from the class supported on `(Z')^an` by
+*excision in codimension two*, which is the only extra input the enlargement costs:
+
+```lean
+def EnlargeSurjectiveCodimTwo : Prop :=
+  ∀ (Z Z' : Closeds X.left) (hZZ' : Z ≤ Z'),
+    (∀ z ∈ Z', z ∉ Z → (2 : ℕ∞) ≤ coheight z) →
+    ∀ β' : SupportedInjectiveHomology X (analyticClosedSupport X Z') (2 * (1 : ℤ)),
+      ∃ β : SupportedInjectiveHomology X (analyticClosedSupport X Z) (2 * (1 : ℤ)),
+        enlargeSupportedInjectiveHomology X (analyticClosedSupport_le_of_le X hZZ') _ β = β'
+
+theorem enlargeSurjectiveCodimTwo : EnlargeSurjectiveCodimTwo X   -- proved
+```
+
+the last being `exists_enlarge_eq_of_codimTwo` of
+[`SupportEnlargementCodimTwo.lean`](../Other/AlgebraicGeometry/SupportEnlargementCodimTwo.lean).
+(`exists_enlarge_of_analyticClosedSupport_eq` restates it with the two analytic supports supplied
+as closed analytic sets together with equalities, so that no transport is needed at the point of
+use; the equality used is `analyticClosedSupport_componentsZariskiSupport`, which identifies the
+analytic support of the Zariski support of the divisor with `cycleAnalyticClosedSupport`.)
+
+The chart formula is restated for this situation — same shape as
+`HasRelativeChernChartFormula`, with the extra `Z'`, the class `β` supported on `|D|^an`, and the
+equation pinning `β` by its enlargement:
+
+```lean
+def HasRelativeChernChartFormulaGeneric : Prop :=
+  ∀ (c) (E) (Z' : Closeds X.left)
+    (hle : cycleAnalyticClosedSupport X c.divisor ≤ analyticClosedSupport X Z')
+    (ℓ : E.middle.obj.obj (op (analyticClosedSupport X Z').compl)) (hℓ)
+    (cmp : RelativeChernComparison X (dim X.left) (analyticClosedSupport X Z').compl)
+    (β : SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor) (2 * (1 : ℤ))),
+    enlargeSupportedInjectiveHomology X hle (2 * (1 : ℤ)) β =
+        relativeChernSupportedClassOnClosed (analyticClosedSupport X Z') E ℓ hℓ cmp →
+      ∀ γ, β = ∑ x ∈ cycleComponents X c.divisor, componentContribution X _ x _ (γ x) →
+      ∀ x ∈ cycleComponents X c.divisor, ∀ hx : coheight x = 1,
+      ∀ q (ch : ChernWindingChart X c x (dim X.left) 1 q),
+        ch.HasTrivialUnitWinding → ch.NormalizesCoclass hx →
+        ch.ComputesClass (c.divisor x)
+          ((cycleComponentSupportedClassNormalizationIso X x hx).hom (γ x))
+```
+
+and the reductions are proved, **with both the frame and the excision inputs discharged**:
+
+```lean
+theorem hasChernWindingNaturality_of_generic
+    (hframe : HasComplementFrameOffCodimTwo X) (henl : EnlargeSurjectiveCodimTwo X)
+    (hchart : HasRelativeChernChartFormulaGeneric X) : HasChernWindingNaturality X
+
+theorem hasDivisorClassOfSomeCartierData_of_generic
+    (hframe) (henl) (hcharts : HasNormalizedWindingCharts X) (hchart) :
+    HasDivisorClassOfSomeCartierData X
+
+theorem hasChernWindingNaturality_of_relativeChernChartFormulaGeneric
+    (hchart : HasRelativeChernChartFormulaGeneric X) : HasChernWindingNaturality X
+
+theorem hasDivisorClassOfSomeCartierData_of_relativeChernChartFormulaGeneric
+    (hcharts : HasNormalizedWindingCharts X) (hchart : HasRelativeChernChartFormulaGeneric X) :
+    HasDivisorClassOfSomeCartierData X
+```
+
+The witness `β` is the pullback along the enlargement map of the relative first Chern class of the
+frame; the first clause of `HasChernWindingNaturality` is `supportedInjectiveToAmbient_enlarge`
+together with `supportedInjectiveToAmbient_relativeChernSupportedClassOnClosed`. `#print axioms`
+reports only `propext`, `Classical.choice`, `Quot.sound` for all of these.
+
+**So step 4 no longer needs `HasComplementFrame` (hence no algebraic Hartogs): what is left of it
+is `HasNormalizedWindingCharts` and `HasRelativeChernChartFormulaGeneric`.**
 
 
 *Non-vacuity.* The previous draft of this step was vacuous, so the new statements come with a
@@ -1954,6 +2051,8 @@ Summary of the named obligations, in dependency order:
 | `HasGenericFlatteningCharts` | `ChernWindingGenericChartExistence.lean` | §4.3 step 4 item 3: **all that is left of (b) + (c)** — a flattening chart at `q` off a Zariski-closed `B ⊆ Z_x` with `x ∉ B`, a unit comparing `h^an` with the chart's normal coordinate, and the germ-level coclass transport; reduces to the two obligations by `hasGeometricWindingCharts_of_genericFlatteningCharts` and `hasNormalizedWindingCharts_of_genericFlatteningCharts` |
 | ~~correction needed~~ | `ChernLocalModelWinding.lean`, `CycleComponentRestrictionInjective.lean` | **done**: the pointwise form was **false** at points where two components of `D` meet (`ChernWindingLocalFormObstruction.lean`); the obligation now quantifies only over `q` off a Zariski-closed `B ⊆ Z_x` with `x ∉ B`, and the reduction is re-proved via the injectivity of restriction away from `B^an` |
 | ~~`HasComplementFrame` off `\|D\|^an`~~ | `ComplementFrameGeneric.lean` | **proved** off a codimension-two enlargement: `hasComplementFrameOffCodimTwo` |
+| ~~excision in codimension two~~ | `SupportEnlargementCodimTwo.lean` | **proved**: `exists_enlarge_eq_of_codimTwo`; packaged as `enlargeSurjectiveCodimTwo` in `ChernRelativeClassGeneric.lean` |
+| `HasRelativeChernChartFormulaGeneric` | `ChernRelativeClassGeneric.lean` | §4.3 step 4 item 3: (a) for the **canonical** relative first Chern class of a frame defined off a codimension-two enlargement of `\|D\|`; the frame and the excision inputs are discharged, so `hasDivisorClassOfSomeCartierData_of_relativeChernChartFormulaGeneric` needs only this and `HasNormalizedWindingCharts` |
 | `HasStalkUnitOfOrdEqZero`, `HasUnitOffDivisor` | `ComplementFrame.lean` | §4.3 step 3/4: algebraic Hartogs at the stalks (`𝒪_{X,p}` normal); **`HasComplementFrame` reduces to it**: `hasComplementFrame_of_stalkUnit` |
 | `HasChernWindingNaturality` | `ChernLocalModelWinding.lean` | §4.3 step 4 item 3: (a), the canonical relative class and its computation by winding numbers; **reduces to it**: `hasChernLocalModel_of_winding` |
 | ~~winding reduction~~ | `ChernLocalModelWinding.lean` | **proved**: `hasChernLocalModel_of_winding`, `hasChernWindingNaturality_of_localModel`, `supportRelativeCohomologySheaf_section_eq_zero` |
