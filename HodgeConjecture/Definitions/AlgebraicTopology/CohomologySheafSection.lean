@@ -32,14 +32,14 @@ variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 sheaf, by exact sheafification and its counit. -/
 def sectionCohomologyPresheafSheafificationIso (n : ℤ) :
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
-      (sectionCohomologyPresheaf X K n) ≅ K.homology n := by
+      (sectionCohomologyPresheaf X K n) ≅ K.homology n :=
   let P : CochainComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) ℤ :=
     ((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) := P.sc n
   let e := NatIso.mapHomologicalComplex
     (asIso (sheafificationAdjunction (Opens.grothendieckTopology X) AddCommGrpCat.{u}).counit)
     (.up ℤ)
-  exact (S.mapHomologyIso
+  (S.mapHomologyIso
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})).symm ≪≫
       homologyMapIso (e.app K) n
 

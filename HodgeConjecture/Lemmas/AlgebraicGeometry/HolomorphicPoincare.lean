@@ -397,7 +397,7 @@ lemma chartEvaluation_formOfAnalyticField
             (analyticOnNhd_coordinateCoefficient d p θ hθ I))
           fun j ↦ chartCoordinateSection X d U z hsource (I j)) =
       ((p.factorial : ℂ)⁻¹ * θ y fun j ↦ Pi.single (I j) 1) •
-        wedgeCovectors (Fin d → ℂ) p fun j ↦ ContinuousLinearMap.proj (I j) := by
+        wedgeCovectors ℂ (Fin d → ℂ) p fun j ↦ ContinuousLinearMap.proj (I j) := by
     intro I
     rw [show ((p.factorial : ℂ)⁻¹ * θ y fun j ↦ Pi.single (I j) 1) =
       coordinateCoefficient d p θ I y from rfl]
@@ -512,7 +512,7 @@ lemma analyticOnNhd_chartEvaluation [SmoothOfRelativeDimension d X.hom]
   let s := chartSectionDomain X d U z
   let e (I : Fin p → Fin d) : Fin p → Fin d → ℂ := fun j ↦ Pi.single (I j) 1
   let W (I : Fin p → Fin d) :=
-    wedgeCovectors (Fin d → ℂ) p (fun j ↦ ContinuousLinearMap.proj (I j))
+    wedgeCovectors ℂ (Fin d → ℂ) p (fun j ↦ ContinuousLinearMap.proj (I j))
   have hc (I : Fin p → Fin d) : AnalyticOnNhd ℂ
       (fun y ↦ (p.factorial : ℂ)⁻¹ * chartEvaluation X d U z p θ y (e I)) s := by
     convert (analyticOnNhd_chartEvaluation_apply X d U z p θ (e I)).const_smul
@@ -729,7 +729,7 @@ lemma chartEvaluation_ofConstant [SmoothOfRelativeDimension d X.hom]
   rw [Algebra.DeRham.ofConstant_apply, Algebra.DeRham.ofFunction_apply,
     chartEvaluation_mk X d U x 0 _ _ hy]
   simp only [chartGeneratorEvaluation, chartSection_apply_of_mem X d U x _ hy]
-  change c • wedgeCovectors (Fin d → ℂ) 0 Fin.elim0 = _
+  change c • wedgeCovectors ℂ (Fin d → ℂ) 0 Fin.elim0 = _
   ext v
   simp [wedgeCovectors]
 

@@ -32,8 +32,9 @@ to faithfully encode the statement of the
 [Clay Millennium Prize Problem](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=56)
 in Lean.
 
-The conjecture is stated, not proved. A few classical theorems surrounding the statement are not
-yet formalized either; {ref "scope-and-status"}[Scope and status] lists them.
+The conjecture is stated, not proved, though two of its cases are: codimension zero, and every
+codimension above the dimension. A few classical theorems surrounding the statement are not yet
+formalized either; {ref "scope-and-status"}[Scope and status] lists both sides of this.
 
 The Lean code in this guide, including the terms that appear inside sentences, is elaborated when
 the site is built. Definitions are quoted in full, and the build checks that each quotation is

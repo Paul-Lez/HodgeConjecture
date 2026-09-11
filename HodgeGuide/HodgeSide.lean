@@ -373,8 +373,14 @@ example : @Guide.Hodge.D19.hodgeFiltrationComplexSubmodule = @AlgebraicGeometry.
 The image is a priori an additive subgroup. Compatibility with complex scalars is proved, and
 {name}`hodgeFiltrationComplexSubmodule` bundles the image as a $`\mathbb C`-subspace, which
 restricts to a subspace over any coefficient field contained in $`\mathbb C`. Two sanity checks
-are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and
-$`F^p=0` for $`p>\dim X`.
+are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and $`F^p=0` for $`p>\dim X`. Both are
+used later — the first is what makes every degree-zero class a Hodge class, the second is what
+makes the conjecture vacuous above the dimension.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.hodgeFiltration_eq_bot_of_lt
+```
 
 # Complex conjugation and the Hodge pieces
 
@@ -527,6 +533,15 @@ example : @Guide.Hodge.D11.hodgeClasses = @AlgebraicGeometry.ComplexPoint.hodgeC
 The cohomology of $`X` is not equipped with a pure Hodge structure in the formalization; that
 would require the Hodge decomposition. The $`(p,p)` piece is instead defined directly by the
 formula above, which is why the conjugation had to be constructed.
+
+The two sanity checks on the filtration pass to the Hodge classes: every degree-zero class is a
+Hodge class, and there are none above the dimension. These are the two ends of the conjecture that
+the repository settles; see {ref "what-is-proved"}[What the repository proves about the statement].
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_bot_of_lt
+```
 
 # Why the filtration alone suffices over the rationals
 
