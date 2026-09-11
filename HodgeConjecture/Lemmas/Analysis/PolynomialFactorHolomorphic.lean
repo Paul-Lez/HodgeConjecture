@@ -11,6 +11,7 @@ public import Mathlib.Analysis.Calculus.ContDiff.RCLike
 public import Mathlib.Analysis.Calculus.Deriv.Polynomial
 public import Mathlib.Analysis.Calculus.ImplicitFunction.ProdDomain
 public import Mathlib.Algebra.Polynomial.Splits
+public import Mathlib.RingTheory.Polynomial.Resultant.Basic
 
 /-!
 # Factors selected on the simple-root cover
@@ -704,6 +705,68 @@ theorem exists_polynomialFamily_selectedFactor_dvd_on_simple
       q.map (Polynomial.evalRingHom z) ∣ p.map (Polynomial.evalRingHom z) := by
   obtain ⟨q, hq⟩ := exists_polynomialFamily_selectedFactor hp S hSopen hSclosed hfinite
   exact ⟨q, fun z hz ↦ (hq z hz).symm ▸ selectedFactor_dvd hp S ⟨z, not_not.mp hz⟩⟩
+
+/-- A resultant whose zeros contain every parameter with a multiple root. -/
+noncomputable def ramificationPolynomial (p : Polynomial (Polynomial ℂ)) : Polynomial ℂ :=
+  resultant p p.derivative p.natDegree (p.natDegree - 1)
+
+theorem eval_ramificationPolynomial {p : Polynomial (Polynomial ℂ)} (z : ℂ) :
+    (ramificationPolynomial p).eval z =
+      resultant (familySpecialization p z) (familySpecialization p z).derivative
+        p.natDegree (p.natDegree - 1) := by
+  change (Polynomial.evalRingHom z) (resultant p p.derivative p.natDegree
+    (p.natDegree - 1)) = _
+  calc
+    _ = resultant (p.map (Polynomial.evalRingHom z))
+        (p.derivative.map (Polynomial.evalRingHom z)) p.natDegree (p.natDegree - 1) :=
+      (resultant_map_map p p.derivative p.natDegree (p.natDegree - 1)
+        (Polynomial.evalRingHom z)).symm
+    _ = _ := by
+      simp only [familySpecialization]
+      rw [derivative_map]
+
+/-- Every nonsimple parameter is a zero of the resultant polynomial. -/
+theorem nonsimpleParameters_subset_ramificationPolynomial_zero {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) :
+    nonsimpleParameters p ⊆ {z | (ramificationPolynomial p).eval z = 0} := by
+  intro z hz
+  rw [nonsimpleParameters] at hz
+  push Not at hz
+  obtain ⟨w, hw, hwd⟩ := hz
+  let q := familySpecialization p z
+  have hq : q.Monic := hp.map (Polynomial.evalRingHom z)
+  have hncp : ¬IsCoprime q q.derivative := by
+    intro hc
+    obtain ⟨a, b, hab⟩ := hc
+    have heval := congrArg (Polynomial.eval w) hab
+    have hwq : q.eval w = 0 := by simpa [q] using hw
+    have hwdq : q.derivative.eval w = 0 := by simpa [q] using hwd
+    rw [eval_add, eval_mul, eval_mul, hwq, hwdq] at heval
+    simp at heval
+  have hres : resultant q q.derivative = 0 :=
+    resultant_eq_zero_iff.mpr ⟨Or.inl hq.ne_zero, hncp⟩
+  have hdegree : q.natDegree = p.natDegree := by
+    simpa [q, familySpecialization] using hp.natDegree_map (Polynomial.evalRingHom z)
+  rw [hdegree, natDegree_derivative, hdegree] at hres
+  change (ramificationPolynomial p).eval z = 0
+  rw [eval_ramificationPolynomial]
+  exact hres
+
+/-- Generic squarefreeness makes the set of nonsimple parameters finite. -/
+theorem finite_nonsimpleParameters_of_ramificationPolynomial_ne_zero
+    {p : Polynomial (Polynomial ℂ)} (hp : p.Monic) (hram : ramificationPolynomial p ≠ 0) :
+    (nonsimpleParameters p).Finite := by
+  apply (ramificationPolynomial p).rootSet_finite ℂ |>.subset
+  intro z hz
+  apply (mem_rootSet_of_ne hram).mpr
+  simpa using nonsimpleParameters_subset_ramificationPolynomial_zero hp hz
+
+/-- Coprimality with the derivative over the coefficient ring is one sufficient generic
+squarefreeness hypothesis. -/
+theorem ramificationPolynomial_ne_zero_of_isCoprime {p : Polynomial (Polynomial ℂ)}
+    (hcoprime : IsCoprime p p.derivative) : ramificationPolynomial p ≠ 0 := by
+  simpa [ramificationPolynomial, natDegree_derivative] using
+    resultant_ne_zero p p.derivative hcoprime
 
 end
 
