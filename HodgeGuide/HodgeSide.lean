@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
 import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
-import Other.AlgebraicGeometry.HodgeDecomposition
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
 
@@ -544,14 +543,11 @@ The formalization does not equip the cohomology of $`X` with a pure Hodge struct
 require the Hodge decomposition theorem. The $`(p,p)` piece is instead defined directly by the
 formula above, which is why the conjugation had to be constructed. The file
 `Other/AlgebraicGeometry/HodgeDecomposition.lean` takes the Hodge decomposition as a hypothesis,
-builds the pure Hodge structure on $`H^n(X;\mathbb Q)` that it provides, and proves that the Hodge
-classes above are then its rational $`(p,p)`-classes. So the definition through the filtration is
-the classical one whenever the Hodge decomposition is available.
-
-```lean
-#check AlgebraicGeometry.ComplexPoint.HasHodgeDecomposition
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_hodgeClasses_hodgeStructure
-```
+`HasHodgeDecomposition X n`, builds the pure Hodge structure on $`H^n(X;\mathbb Q)` that it
+provides, and proves in `hodgeClasses_eq_hodgeClasses_hodgeStructure` that the Hodge classes above
+are then its rational $`(p,p)`-classes. So the definition through the filtration is the classical
+one whenever the Hodge decomposition is available. That file is not imported here: the guide only
+imports the modules the statement depends on.
 
 # Why the filtration alone suffices over the rationals
 
@@ -567,15 +563,12 @@ coefficient field of the conjecture.
 #check AlgebraicGeometry.ComplexPoint.hodgeClasses_rat_eq_comap_hodgeFiltrationSubmodule
 ```
 
-The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from
-`Other/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
-vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector in
-$`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in $`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`,
-and the only summand common to both is $`H^{p,p}`.
-
-```lean
-#check HodgeStructure.ofBase_mem_filtration_iff
-```
+The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma
+`HodgeStructure.ofBase_mem_filtration_iff` in `Other/LinearAlgebra/HodgeStructure.lean`:
+conjugation fixes rational vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector
+in $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in
+$`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`, and the only summand common to both is
+$`H^{p,p}`.
 
 The conjugation condition cannot be dropped for other coefficient fields. Let $`E` be the
 elliptic curve $`\mathbb C/(\mathbb Z+\mathbb Z i)`. The periods of $`dz` are $`1` and $`i`, so
