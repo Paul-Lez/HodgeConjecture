@@ -900,6 +900,136 @@ theorem dvd_of_map_dvd_on_mvPolynomial_nonzero {n : ℕ}
     trivial
   exact MvPolynomial.funext (fun z ↦ by simpa using hall z)
 
+
+noncomputable def mvSelectedDegreeOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0)
+    (z : {z : Fin n → ℂ // MvPolynomial.eval z r ≠ 0}) : ℕ :=
+  (mvSelectedFactorOn r S ⟨z.1, hsimple z.1 z.2⟩ z.2).natDegree
+
+theorem isLocallyConstant_mvSelectedDegreeOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
+    IsLocallyConstant (mvSelectedDegreeOn r S hsimple) := by
+  rw [IsLocallyConstant.iff_eventually_eq]
+  intro z
+  let zbase : MvSimpleRootBase p := ⟨z.1, hsimple z.1 z.2⟩
+  have hdeg := eventually_natDegree_mvSelectedFactorOn_eq_card hp r S hS zbase z.2
+  have hcenter := hdeg.self_of_nhds (hsimple z.1 z.2) z.2
+  filter_upwards [continuousAt_subtype_val.eventually hdeg] with y hy
+  change (mvSelectedFactorOn r S ⟨y.1, hsimple y.1 y.2⟩ y.2).natDegree =
+    (mvSelectedFactorOn r S ⟨z.1, hsimple z.1 z.2⟩ z.2).natDegree
+  exact (hy (hsimple y.1 y.2) y.2).trans hcenter.symm
+
+theorem mvSelectedDegreeOn_eq {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
+    (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0)
+    (x y : {z : Fin n → ℂ // MvPolynomial.eval z r ≠ 0}) :
+    mvSelectedDegreeOn r S hsimple x = mvSelectedDegreeOn r S hsimple y := by
+  let _ : PreconnectedSpace {z : Fin n → ℂ // MvPolynomial.eval z r ≠ 0} :=
+    Subtype.preconnectedSpace
+      (MvPolynomial.isPathConnected_complex_nonzero r hr0).isConnected.isPreconnected
+  exact (isLocallyConstant_mvSelectedDegreeOn hp r S hS hsimple).apply_eq_of_preconnectedSpace x y
+
+
+theorem mvPolynomial_eq_of_eval_eq_on_nonzero {n : ℕ}
+    (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0) (a b : MvPolynomial (Fin n) ℂ)
+    (h : ∀ z, MvPolynomial.eval z r ≠ 0 → MvPolynomial.eval z a = MvPolynomial.eval z b) :
+    a = b := by
+  apply MvPolynomial.funext
+  intro z
+  have hclosed : IsClosed {x : Fin n → ℂ | MvPolynomial.eval x (a - b) = 0} :=
+    isClosed_singleton.preimage
+      (AnalyticOnNhd.eval_mvPolynomial (a - b)).continuous
+  have hsubset : {x : Fin n → ℂ | MvPolynomial.eval x r ≠ 0} ⊆
+      {x : Fin n → ℂ | MvPolynomial.eval x (a - b) = 0} := by
+    intro x hx
+    simpa using sub_eq_zero.mpr (h x hx)
+  have hz := closure_minimal hsubset hclosed
+  have : MvPolynomial.eval z (a - b) = 0 := by
+    apply hz
+    rw [(MvPolynomial.dense_complex_nonzero r hr0).closure_eq]
+    trivial
+  rw [map_sub] at this
+  exact sub_eq_zero.mp this
+
+/-- The algebraized selected family can be chosen monic because its degree is constant on `D(r)`. -/
+theorem exists_monic_mvPolynomialFamily_mvSelectedFactorOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
+    (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
+    ∃ q : Polynomial (MvPolynomial (Fin n) ℂ), q.Monic ∧
+      ∀ z (hr : MvPolynomial.eval z r ≠ 0),
+        q.map (MvPolynomial.eval z) = mvSelectedFactorOn r S ⟨z, hsimple z hr⟩ hr := by
+  obtain ⟨q, hqbound, hq⟩ :=
+    exists_mvPolynomialFamily_mvSelectedFactorOn hp r hr0 S hS hsimple
+  obtain ⟨x, hx⟩ := (MvPolynomial.isPathConnected_complex_nonzero r hr0).nonempty
+  let xb : {z : Fin n → ℂ // MvPolynomial.eval z r ≠ 0} := ⟨x, hx⟩
+  let d := mvSelectedDegreeOn r S hsimple xb
+  have hdegree : ∀ z (hz : MvPolynomial.eval z r ≠ 0),
+      (mvSelectedFactorOn r S ⟨z, hsimple z hz⟩ hz).natDegree = d := by
+    intro z hz
+    exact mvSelectedDegreeOn_eq hp r hr0 S hS hsimple ⟨z, hz⟩ xb
+  have hdle : d ≤ p.natDegree := by
+    rw [← hdegree x hx]
+    exact (natDegree_le_of_dvd (mvSelectedFactorOn_dvd r S ⟨x, hsimple x hx⟩ hx)
+      (hp.map (MvPolynomial.eval x)).ne_zero).trans_eq
+        (hp.natDegree_map (MvPolynomial.eval x))
+  have habove : ∀ k, d < k → q.coeff k = 0 := by
+    intro k hk
+    apply mvPolynomial_eq_of_eval_eq_on_nonzero r hr0
+    intro z hz
+    have hc := congrArg (fun t : Polynomial ℂ ↦ t.coeff k) (hq z hz)
+    rw [coeff_map] at hc
+    have hzero : (mvSelectedFactorOn r S ⟨z, hsimple z hz⟩ hz).coeff k = 0 :=
+      coeff_eq_zero_of_natDegree_lt (by simpa [hdegree z hz] using hk)
+    simpa [hzero] using hc
+  have hqle : q.natDegree ≤ d := natDegree_le_iff_coeff_eq_zero.mpr habove
+  have hcoeffd : q.coeff d = 1 := by
+    apply mvPolynomial_eq_of_eval_eq_on_nonzero r hr0
+    intro z hz
+    have hc := congrArg (fun t : Polynomial ℂ ↦ t.coeff d) (hq z hz)
+    rw [coeff_map] at hc
+    have hm := (mvSelectedFactorOn_monic r S ⟨z, hsimple z hz⟩ hz).coeff_natDegree
+    rw [hdegree z hz] at hm
+    simpa [hm] using hc
+  have hqnat : q.natDegree = d :=
+    natDegree_eq_of_le_of_coeff_ne_zero hqle (hcoeffd.symm ▸ one_ne_zero)
+  have hqmonic : q.Monic := by
+    rw [Monic, leadingCoeff, hqnat, hcoeffd]
+  exact ⟨q, hqmonic, hq⟩
+
+/-- The monic algebraized selected family divides the original polynomial family. -/
+theorem exists_monic_dvd_mvPolynomialFamily_mvSelectedFactorOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
+    (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
+      (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
+    ∃ q : Polynomial (MvPolynomial (Fin n) ℂ), q.Monic ∧ q ∣ p ∧
+      ∀ z (hr : MvPolynomial.eval z r ≠ 0),
+        q.map (MvPolynomial.eval z) = mvSelectedFactorOn r S ⟨z, hsimple z hr⟩ hr := by
+  obtain ⟨q, hqmonic, hq⟩ :=
+    exists_monic_mvPolynomialFamily_mvSelectedFactorOn hp r hr0 S hS hsimple
+  refine ⟨q, hqmonic, dvd_of_map_dvd_on_mvPolynomial_nonzero p q hqmonic r hr0 ?_, hq⟩
+  intro z hz
+  rw [hq z hz]
+  exact mvSelectedFactorOn_dvd r S ⟨z, hsimple z hz⟩ hz
+
 end
 
 end Polynomial
