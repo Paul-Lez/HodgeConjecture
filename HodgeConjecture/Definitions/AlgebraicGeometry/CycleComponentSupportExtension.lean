@@ -9,15 +9,13 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSmooth
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FiniteSheafSupportVanishing
 
 /-!
-# Actual unique extension across a cycle component's singular boundary
+# Unique extension across a cycle component's singular boundary
 
-The canonical finite smooth filtration and its proved layerwise vanishing
-show that the singular boundary has zero supported cohomology below
-`2(p+1)`. In particular the two degrees `2p` and `2p+1` vanish. The actual
-nested-support localization sequence then makes restriction from the full
-component support to its smooth-locus ambient open an isomorphism in degree
-`2p`. The inverse is therefore an actual unique extension operation, not
-an existence or duality assumption.
+The canonical finite smooth filtration and its layerwise vanishing give the singular
+boundary zero supported cohomology below `2(p+1)`, in particular in degrees `2p` and
+`2p+1`. The nested-support localization sequence then makes restriction from the full
+component support to its smooth-locus ambient open an isomorphism in degree `2p`, whose
+inverse is the unique extension operation.
 -/
 
 @[expose] public noncomputable section

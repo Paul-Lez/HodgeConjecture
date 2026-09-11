@@ -10,12 +10,11 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainOpenC
 public import HodgeConjecture.Definitions.AlgebraicTopology.FlattenedSupportLocalHomology
 
 /-!
-# Actual supported singular-section cohomology on arbitrary opens
+# Supported singular-section cohomology on arbitrary opens
 
-The actual kernel of restriction on singular cochain sheaves is compared to the literal
-relative singular pair on an arbitrary open neighborhood. The construction composes the
-proved flasque kernel/cone comparison, canonical grading comparison, and the actual
-sheafification-unit cone comparison. It assumes no local purity or orientation theorem.
+The kernel of restriction on singular cochain sheaves is compared to the relative singular
+pair on an arbitrary open neighborhood. The construction composes the flasque kernel/cone
+comparison, the canonical grading comparison, and the sheafification-unit cone comparison.
 -/
 
 @[expose] public noncomputable section

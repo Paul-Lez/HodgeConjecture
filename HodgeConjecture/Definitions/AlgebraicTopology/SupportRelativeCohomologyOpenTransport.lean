@@ -9,12 +9,12 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.NeighborhoodSupportP
 public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenSheafification
 
 /-!
-# Actual open-embedding transport of the relative-cohomology sheaf
+# Open-embedding transport of the relative-cohomology sheaf
 
-Neighborhood/support pairs are identified with their images by the actual
-embedding homeomorphisms. These identifications commute with literal pair
-inclusions and hence give a presheaf isomorphism. Actual sheafification then
-transports the normalized section, with the sheafification-unit square displayed.
+The embedding homeomorphisms identify neighborhood/support pairs with their images, and
+these identifications commute with pair inclusions, giving a presheaf isomorphism.
+Sheafification then transports the normalized section, with the sheafification-unit
+square displayed.
 -/
 
 @[expose] public noncomputable section

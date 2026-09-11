@@ -9,17 +9,13 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueCohomologyLowerVan
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueCokernelPreservation
 
 /-!
-# The actual lowest-degree cohomology comparison for flasque complexes
+# Lowest-degree cohomology comparison for flasque complexes
 
-For a bounded-below termwise-flasque sheaf complex with cohomology sheaves zero
-below `n`, the canonical map from cohomology of sections on any open `U` to
-sections of its degree-`n` cohomology sheaf is an isomorphism.
-
-The proof shows something stronger: the degree-`n` cohomology presheaf is already
-a sheaf. Flasqueness of the preceding cycles is proved from the stated lower
-vanishing; the resulting cokernel preservation is proved for this actual map.
-The isomorphism is the existing sheafification-unit/counit comparison itself.
-No new group equivalence or exactness of arbitrary sheaf evaluation is assumed.
+For a bounded-below termwise-flasque sheaf complex with cohomology sheaves zero below `n`,
+the canonical map from cohomology of sections on any open `U` to sections of its degree-`n`
+cohomology sheaf is an isomorphism, exhibited as the sheafification unit/counit comparison.
+The proof shows the degree-`n` cohomology presheaf is already a sheaf, deriving flasqueness
+of the preceding cycles from the lower vanishing and cokernel preservation from that.
 -/
 
 @[expose] public noncomputable section

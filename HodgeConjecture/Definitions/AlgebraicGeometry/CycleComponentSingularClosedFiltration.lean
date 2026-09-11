@@ -10,15 +10,13 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothAffineRelativeDimen
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
 
 /-!
-# Actual ambient closed supports for singular-component localization induction
+# Ambient closed supports for singular-component localization induction
 
-The singular boundary of an integral cycle component has its canonical finite reduced
-smooth filtration. Its images are closed both algebraically and analytically in the
-ambient variety, and successive differences are exactly the complex-point images of
-actual smooth locally closed strata. Their local relative dimensions are strictly below
-`d - p`, hence their ambient normal codimensions are at least `p + 1`.
-
-No analytic cohomological-dimension or support-extension theorem is assumed here.
+The singular boundary of an integral cycle component carries its canonical finite reduced
+smooth filtration, whose images are closed both algebraically and analytically in the ambient
+variety, and whose successive differences are the complex-point images of smooth locally
+closed strata. Their local relative dimensions are strictly below `d - p`, so their ambient
+normal codimensions are at least `p + 1`.
 -/
 
 @[expose] public noncomputable section

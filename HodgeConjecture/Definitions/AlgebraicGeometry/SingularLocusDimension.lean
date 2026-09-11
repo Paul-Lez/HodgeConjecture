@@ -13,14 +13,12 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
 
 /-!
-# The actual singular locus has smaller algebraic dimension
+# The singular locus has smaller algebraic dimension
 
 Over a perfect field the complement of the smooth locus of a reduced irreducible scheme is
 a proper closed subset. This file constructs that reduced closed subscheme and proves its
-strict Krull-dimension bound, including the `d - p` bound for cycle components.
-
-This is an algebraic dimension theorem. It is not the missing comparison with analytic
-homological dimension and does not by itself extend the smooth orientation.
+strict Krull-dimension bound, including the `d - p` bound for cycle components. The bounds
+are on algebraic dimension throughout.
 -/
 
 @[expose] public noncomputable section

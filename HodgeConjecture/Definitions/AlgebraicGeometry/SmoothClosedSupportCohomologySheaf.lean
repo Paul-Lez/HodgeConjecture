@@ -9,17 +9,13 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportLocalH
 public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSingularSectionCohomology
 
 /-!
-# Actual cohomology-sheaf concentration for smooth closed supports
+# Cohomology-sheaf concentration for smooth closed supports
 
-The complex is the literal supported-sections kernel applied to the fixed ambient
-rational injective resolution. Its open-section homology is compared to relative
-singular cohomology by the actual singular resolution and restriction-cone maps.
-The constructed cofinal normal neighborhoods then imply stalkwise and sheafwise
-concentration in degree twice the complex codimension.
-
-No local purity, comparison, or orientation class is supplied to the geometric theorem.
-This proves concentration, not yet the normalized identification of the surviving
-cohomology sheaf with rational constants on the support.
+The complex is the supported-sections kernel applied to the fixed ambient rational injective
+resolution. Its open-section homology is compared to relative singular cohomology by the
+singular resolution and restriction-cone maps, and cofinal normal neighborhoods then give
+stalkwise and sheafwise concentration in degree twice the complex codimension. Identifying
+the surviving cohomology sheaf with rational constants on the support is left to a later file.
 -/
 
 @[expose] public noncomputable section

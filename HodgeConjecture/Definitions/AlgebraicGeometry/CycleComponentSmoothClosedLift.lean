@@ -9,12 +9,12 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionSourc
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentClosedPointDimension
 
 /-!
-# The actual smooth-locus closed lift of an integral cycle component
+# The smooth-locus closed lift of an integral cycle component
 
-The ambient open is exactly the complement of the first canonical singular-boundary
-support. The smooth locus embeds closed in that open. Its constant relative dimension
-is proved to be `d-p` using smooth equidimensionality and the already proved coheight
-formula for a closed point of the integral component.
+The ambient open is the complement of the first canonical singular-boundary support, and
+the smooth locus embeds closed in it. Its constant relative dimension is `d-p`, by smooth
+equidimensionality together with the coheight formula for a closed point of the integral
+component.
 -/
 
 @[expose] public noncomputable section

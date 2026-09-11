@@ -9,12 +9,11 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueSheafSupportCompar
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 
 /-!
-# Actual supported-section kernels and open restriction cones
+# Supported-section kernels and open restriction cones
 
-For a termwise flasque coefficient complex, the literal kernel-defined supported section
-complex computes the cone of restriction from `V` to `V ∩ U`, with the conventional degree
-shift. The arrow identification displays the actual open-intersection map. No arbitrary
-local comparison, acyclicity, or purity equivalence is supplied.
+For a termwise flasque coefficient complex, the kernel-defined supported section complex
+computes the cone of restriction from `V` to `V ∩ U`, with the conventional degree shift.
+The arrow identification displays the open-intersection map.
 -/
 
 @[expose] public noncomputable section

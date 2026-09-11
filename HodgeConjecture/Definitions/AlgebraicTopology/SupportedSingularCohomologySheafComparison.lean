@@ -8,16 +8,12 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSingularSectionN
 public import HodgeConjecture.Definitions.AlgebraicTopology.CohomologySheafSection
 
 /-!
-# The actual supported singular cohomology sheaf and local relative cohomology
+# The supported singular cohomology sheaf and local relative cohomology
 
-The previously constructed, restriction-natural local comparison is an
-isomorphism of presheaves. Exact sheafification and its actual counit then
-identify its sheafification with the cohomology sheaf of the kernel-defined
-supported singular complex. The local class and unit equations fix this
+The restriction-natural local comparison is an isomorphism of presheaves, and exact
+sheafification with its counit identifies the sheafification with the cohomology sheaf of
+the kernel-defined supported singular complex. The local class and unit equations fix this
 identification, including the positive short-exact-sequence lift normalization.
-
-No assertion that open evaluation is exact on sheaves is used. Nor is a
-presheaf gluing or local-purity theorem assumed.
 -/
 
 @[expose] public noncomputable section

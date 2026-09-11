@@ -18,14 +18,13 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.SheafMapOfLocallyRep
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheafOrientation
 
 /-!
-# The actual normalized complex orientation of the singular homology sheaf
+# The normalized complex orientation of the singular homology sheaf
 
-The exact complex local classes are represented by genuine relative homology classes on
-open neighborhoods. The canonical relative-homology-to-sheaf-section map proves their
-local representability in the actual homology sheaf. Unique sheaf gluing constructs the
-map from the constant rational sheaf, and the previously proved normalized local
-generator theorem proves it is an isomorphism. No orientation or local-representability
-datum is assumed.
+The complex local classes are represented by relative homology classes on open
+neighborhoods, and the canonical relative-homology-to-sheaf-section map makes them locally
+representable in the homology sheaf. Unique sheaf gluing constructs the map from the
+constant rational sheaf, and the normalized local generator theorem shows it is an
+isomorphism.
 -/
 
 @[expose] public noncomputable section
