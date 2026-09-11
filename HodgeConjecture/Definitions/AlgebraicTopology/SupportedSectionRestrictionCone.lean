@@ -9,12 +9,11 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueSheafSupportCompar
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 
 /-!
-# Actual supported-section kernels and open restriction cones
+# Supported-section kernels and open restriction cones
 
-For a termwise flasque coefficient complex, the literal kernel-defined supported section
-complex computes the cone of restriction from `V` to `V ∩ U`, with the conventional degree
-shift. The arrow identification displays the actual open-intersection map. No arbitrary
-local comparison, acyclicity, or purity equivalence is supplied.
+For a termwise flasque coefficient complex, the kernel-defined supported section complex
+computes the cone of restriction from `V` to `V ∩ U`, with the conventional degree shift.
+The arrow identification displays the open-intersection map.
 -/
 
 @[expose] public noncomputable section
@@ -123,22 +122,5 @@ def supportedSectionHomologyIsoRestrictionCone
     asIso (HomologicalComplex.homologyMap
       (CochainComplex.mappingCocone.shiftedLiftShortComplex S) (n - 1)) ≪≫
     HomologicalComplex.homologyMapIso (supportRestrictionSectionsConeIso X U V K) (n - 1)
-
-/-- On an open contained in the excluded open, the actual supported-section group is
-zero because its defining restriction map is an isomorphism. -/
-theorem supportedOutsideSections_isZero_of_le (F : Sheaf AddCommGrpCat.{u} X)
-    (hVU : V ≤ U) :
-    IsZero (((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V)) := by
-  have he : U.isOpenEmbedding.functor.obj ((Opens.map U.inclusion').obj V) = V := by
-    rw [Opens.functor_map_eq_inf, inf_eq_left.mpr hVU]
-  have hi : IsIso (U.isOpenEmbedding.isOpenMap.adjunction.counit.app V) := by
-    rw [show U.isOpenEmbedding.isOpenMap.adjunction.counit.app V = eqToHom he from
-      Subsingleton.elim _ _]
-    infer_instance
-  let r := ((toOpenRestrictionPushforward X U).app F).hom.app (op V)
-  have : IsIso r := by
-    change IsIso (F.obj.map (U.isOpenEmbedding.isOpenMap.adjunction.counit.app V).op)
-    infer_instance
-  exact (isZero_kernel_of_mono r).of_iso (sheafSectionsSupportedOutsideOnOpenIso X U V F)
 
 end TopCat.Sheaf

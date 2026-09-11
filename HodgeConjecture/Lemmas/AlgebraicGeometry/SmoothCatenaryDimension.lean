@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Lemmas.RingTheory.TranscendenceDegreeKrullDimension
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension

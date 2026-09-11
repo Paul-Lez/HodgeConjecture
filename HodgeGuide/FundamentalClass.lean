@@ -3,7 +3,8 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
-import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
+import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
+import Other.AlgebraicGeometry.CodimensionZeroCoclassNonvanishing
 
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
@@ -116,6 +117,15 @@ example : @Guide.Subvariety.D2.cycleComponentSmoothSupportCoclassSection = @Alge
 
 The restriction theorem says that on each chart the glued section is the class of that chart,
 exactly and not merely up to a nonzero rational multiple.
+
+This section is nonzero whenever the smooth support has a complex point. Every neighborhood of
+that point contains a smaller normal chart, where the coclass evaluates to one on the normal
+class. It therefore stays nonzero under restriction to any neighborhood of that point, giving a
+nonzero germ and hence a nonzero glued section.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.smoothClosedSupportCoclassSection_ne_zero
+```
 
 # Step 2: extension across the singular locus
 
@@ -234,6 +244,19 @@ example : @Guide.Subvariety.D6.cycleComponentSheafClass = @AlgebraicGeometry.Com
 
 Both definitions take only the variety, the generic point, its coheight, and the dimension $`d` as
 arguments.
+
+For the generic point of $`X` itself, the support is all of $`X(\mathbb C)`, so forgetting support
+is an isomorphism. The nonzero normalized section therefore gives a nonzero class in
+$`H^0(X;\mathbb Q)` in every dimension, without assuming analytic connectedness.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_genericPoint_ne_zero
+```
+```lean -show
+example : cycleComponentSheafClass X (genericPoint X.left)
+    (d := dim X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
+  cycleComponentSheafClass_genericPoint_ne_zero X (dim X.left)
+```
 
 # Step 3: the Borel–Moore fundamental class
 

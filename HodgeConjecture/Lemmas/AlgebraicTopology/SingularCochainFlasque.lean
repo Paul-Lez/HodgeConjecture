@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainSheaf
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainSheaf
 public import Mathlib.Algebra.Module.Projective -- shake: keep
 public import Mathlib.Topology.Sheaves.Flasque
 

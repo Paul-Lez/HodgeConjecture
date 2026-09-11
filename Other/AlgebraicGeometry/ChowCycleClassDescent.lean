@@ -16,7 +16,6 @@ limitations under the License.
 module
 
 public import Other.AlgebraicGeometry.CycleClass
-
 /-!
 # Descent of componentwise cycle classes to Chow groups
 
@@ -133,7 +132,7 @@ def cycleClassOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
     (componentClass : ∀ (x : X), coheight x = p → M)
     (hprincipal : ∀ D : PrincipalDivisor X p,
       cycleClassOnAlgebraicCyclesOfComponents componentClass D.pushforwardCycle = 0)
-    (z : CodimensionCycle X p) :
+    (z : codimensionCycleSubgroup X p) :
     cycleClassOfComponents componentClass hprincipal (mk z) =
       cycleClassOnCyclesOfComponents componentClass z :=
   liftCycleClass_mk _ _ _
@@ -158,7 +157,7 @@ rational componentwise cycle-class map. -/
       cycleClassOnAlgebraicCyclesOfComponents componentClass D.pushforwardCycle = 0)
     (x : X) (hx : coheight x = p) :
     rationalCycleClassOfComponents componentClass hprincipal
-        (toRational (mk (CodimensionCycle.single x hx 1))) =
+        (toRational (mk (codimensionCycleSubgroup.single x hx 1))) =
       componentClass x hx := by
   rw [rationalCycleClassOfComponents, toRational_apply, rationalExtension_tmul,
     cycleClassOfComponents_mk, cycleClassOnCyclesOfComponents_single]

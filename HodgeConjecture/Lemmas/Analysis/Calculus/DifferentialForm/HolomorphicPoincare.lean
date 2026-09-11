@@ -38,7 +38,7 @@ open scoped ContDiff Interval
 
 namespace DifferentialForm
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [Nontrivial E]
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 /-- The formal power series of the radial primitive. -/
 def radialPrimitiveSeries (n : ℕ)
@@ -55,12 +55,10 @@ def radialPrimitiveSeries (n : ℕ)
             (ContinuousAlternatingMap.curryLeftLI
               (n := n) (𝕜 := ℂ) (E := E) (F := ℂ)).toContinuousLinearMap (p k))
 
-omit [Nontrivial E] in
 @[simp] lemma radialPrimitiveSeries_zero (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ)) :
     radialPrimitiveSeries n p 0 = 0 := rfl
 
-omit [Nontrivial E] in
 @[simp] lemma radialPrimitiveSeries_succ_apply (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ))
     (k : ℕ) (x : E) :
@@ -69,8 +67,6 @@ omit [Nontrivial E] in
   simp [radialPrimitiveSeries]
   congr 2
 
-set_option maxHeartbeats 2000000 in
-omit [Nontrivial E] in
 lemma norm_radialPrimitiveSeries_succ_le (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ)) (k : ℕ) :
     ‖radialPrimitiveSeries n p (k + 1)‖ ≤ ‖p k‖ := by
@@ -101,7 +97,6 @@ lemma norm_radialPrimitiveSeries_succ_le (n : ℕ)
     _ = ‖p k‖ * ∏ i : Fin (k + 1), ‖v i‖ := by
       rw [Fin.prod_univ_castSucc]
 
-omit [Nontrivial E] in
 lemma radius_le_radius_radialPrimitiveSeries (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ)) :
     p.radius ≤ (radialPrimitiveSeries n p).radius := by
@@ -121,14 +116,12 @@ lemma radius_le_radius_radialPrimitiveSeries (n : ℕ)
               exact norm_radialPrimitiveSeries_succ_le n p k
         _ = (r : ℝ) * (‖p k‖ * (r : ℝ) ^ k) := by ring)
 
-omit [Nontrivial E] in
 /-- The formal radial primitive has positive convergence radius whenever the original series does. -/
 lemma radialPrimitiveSeries_radius_pos (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ))
     (hp : 0 < p.radius) : 0 < (radialPrimitiveSeries n p).radius :=
   hp.trans_le (radius_le_radius_radialPrimitiveSeries n p)
 
-omit [Nontrivial E] in
 /-- The sum of the formal radial primitive is analytic throughout the convergence ball of the
 original differential form. -/
 theorem analyticOnNhd_radialPrimitiveSeries_sum (n : ℕ)
@@ -163,7 +156,6 @@ lemma intervalIntegral_ofReal_pow_smul
     (∫ t : ℝ in 0..1, ((t : ℂ) ^ m) • v) = (((m + 1 : ℕ) : ℂ)⁻¹) • v := by
   rw [intervalIntegral.integral_smul_const, intervalIntegral_ofReal_pow]
 
-omit [Nontrivial E] in
 /-- On the convergence ball, the sum of the primitive series is the expected series of contracted
 homogeneous coefficients. -/
 lemma radialPrimitiveSeries_sum_eq_tsum (n : ℕ)
@@ -179,7 +171,6 @@ lemma radialPrimitiveSeries_sum_eq_tsum (n : ℕ)
     zero_apply, zero_add]
   exact tsum_congr fun k ↦ radialPrimitiveSeries_succ_apply n p k x
 
-omit [Nontrivial E] in
 /-- The homogeneous expansion of a form can be contracted term by term along a real radial
 segment. -/
 lemma hasSum_radialIntegrand_of_hasFPowerSeriesOnBall (n : ℕ)
@@ -220,7 +211,6 @@ lemma hasSum_radialIntegrand_of_hasFPowerSeriesOnBall (n : ℕ)
     (t : ℂ) ^ n * ((t : ℂ) ^ k * (p k (fun _ ↦ x)).curryLeft x v)
   rw [← mul_assoc, ← pow_add, add_comm n k]
 
-omit [Nontrivial E] in
 /-- The homogeneous expansion of a form may be integrated term by term along a real radial
 segment. -/
 lemma hasSum_intervalIntegral_radialTerms_of_hasFPowerSeriesOnBall (n : ℕ)
@@ -267,7 +257,6 @@ lemma hasSum_intervalIntegral_radialTerms_of_hasFPowerSeriesOnBall (n : ℕ)
     rw [Set.uIoc_of_le (by norm_num : (0 : ℝ) ≤ 1)] at ht
     exact hasSum_radialIntegrand_of_hasFPowerSeriesOnBall n p η hp hx ⟨ht.1.le, ht.2⟩
 
-omit [Nontrivial E] in
 /-- On a power-series ball, the radial homotopy is exactly the sum of the formal primitive series. -/
 theorem radialHomotopy_eq_radialPrimitiveSeries_sum (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ))
@@ -286,7 +275,6 @@ theorem radialHomotopy_eq_radialPrimitiveSeries_sum (n : ℕ)
       (radialPrimitiveSeries_sum_eq_tsum n p
         (Metric.eball_subset_eball hp.r_le hx)).symm
 
-omit [Nontrivial E] in
 /-- Integrating a complex-analytic differential form over the real radial parameter preserves
 complex analyticity. -/
 theorem analyticOnNhd_radialHomotopy_of_hasFPowerSeriesOnBall (n : ℕ)
@@ -299,7 +287,6 @@ theorem analyticOnNhd_radialHomotopy_of_hasFPowerSeriesOnBall (n : ℕ)
       (Metric.eball_subset_eball hp.r_le))
     fun _ hx ↦ (radialHomotopy_eq_radialPrimitiveSeries_sum n p η hp hx).symm
 
-omit [Nontrivial E] in
 /-- The analytic Poincaré lemma on a complex normed-space ball. The primitive is the explicit
 radial homotopy, and no exactness assumption is used. -/
 theorem exists_analyticOnNhd_primitive_on_ball_of_hasFPowerSeriesOnBall
@@ -322,7 +309,6 @@ theorem exists_analyticOnNhd_primitive_on_ball_of_hasFPowerSeriesOnBall
   simpa only [Metric.eball_coe] using
     analyticOnNhd_radialHomotopy_of_hasFPowerSeriesOnBall n p η hp
 
-omit [Nontrivial E] in
 /-- The analytic Poincaré lemma after shrinking an arbitrary analytic ball around the origin.
 The smaller radius is chosen inside both the original ball and the convergence ball of the power
 series of the form at the origin. -/
@@ -353,12 +339,10 @@ theorem exists_analyticOnNhd_primitive_on_smaller_ball
       (by exact_mod_cast hρpos) p η (hp.mono (by exact_mod_cast hρpos) hρR)
       (hclosed.mono (Metric.ball_subset_ball hρr.le))⟩
 
-omit [Nontrivial E] in
 /-- Translate the base point of a differential form field to the origin. -/
 def translateForm {p : ℕ} (c : E) (A : E → E [⋀^Fin p]→L[ℂ] ℂ) :
     E → E [⋀^Fin p]→L[ℂ] ℂ := fun x ↦ A (c + x)
 
-omit [Nontrivial E] in
 lemma fderiv_translateForm {p : ℕ} (c : E)
     (A : E → E [⋀^Fin p]→L[ℂ] ℂ) (x : E)
     (hA : DifferentiableAt ℂ A (c + x)) :
@@ -367,19 +351,17 @@ lemma fderiv_translateForm {p : ℕ} (c : E)
     (hasFDerivAt_id x).const_add c
   exact (hA.hasFDerivAt.comp x ht).fderiv.trans (ContinuousLinearMap.comp_id _)
 
-omit [Nontrivial E] in
 lemma extDeriv_translateForm {p : ℕ} (c : E)
     (A : E → E [⋀^Fin p]→L[ℂ] ℂ) (x : E)
     (hA : DifferentiableAt ℂ A (c + x)) :
     extDeriv (translateForm c A) x = extDeriv A (c + x) := by
   rw [extDeriv, extDeriv, fderiv_translateForm c A x hA]
 
-omit [Nontrivial E] [NormedSpace ℂ E] in
+omit [NormedSpace ℂ E] in
 lemma add_mem_ball_iff (c x : E) (r : ℝ) :
     c + x ∈ Metric.ball c r ↔ x ∈ Metric.ball 0 r := by
   simp [Metric.mem_ball, dist_eq_norm]
 
-omit [Nontrivial E] in
 lemma analyticOnNhd_translateForm {p : ℕ} (c : E) (r : ℝ)
     (A : E → E [⋀^Fin p]→L[ℂ] ℂ)
     (hA : AnalyticOnNhd ℂ A (Metric.ball c r)) :
@@ -387,12 +369,10 @@ lemma analyticOnNhd_translateForm {p : ℕ} (c : E) (r : ℝ)
   hA.comp (analyticOnNhd_const.add analyticOnNhd_id) fun x hx ↦
     (add_mem_ball_iff c x r).2 hx
 
-omit [Nontrivial E] in
 /-- Translate a differential form field from origin-centered coordinates back to a center. -/
 def untranslateForm {p : ℕ} (c : E) (A : E → E [⋀^Fin p]→L[ℂ] ℂ) :
     E → E [⋀^Fin p]→L[ℂ] ℂ := fun x ↦ A (x - c)
 
-omit [Nontrivial E] in
 lemma fderiv_untranslateForm {p : ℕ} (c : E)
     (A : E → E [⋀^Fin p]→L[ℂ] ℂ) (x : E)
     (hA : DifferentiableAt ℂ A (x - c)) :
@@ -401,19 +381,17 @@ lemma fderiv_untranslateForm {p : ℕ} (c : E)
     hasFDerivAt_sub_const c
   exact (hA.hasFDerivAt.comp x ht).fderiv.trans (ContinuousLinearMap.comp_id _)
 
-omit [Nontrivial E] in
 lemma extDeriv_untranslateForm {p : ℕ} (c : E)
     (A : E → E [⋀^Fin p]→L[ℂ] ℂ) (x : E)
     (hA : DifferentiableAt ℂ A (x - c)) :
     extDeriv (untranslateForm c A) x = extDeriv A (x - c) := by
   rw [extDeriv, extDeriv, fderiv_untranslateForm c A x hA]
 
-omit [Nontrivial E] [NormedSpace ℂ E] in
+omit [NormedSpace ℂ E] in
 lemma mem_ball_iff_sub_mem_ball (c x : E) (r : ℝ) :
     x ∈ Metric.ball c r ↔ x - c ∈ Metric.ball 0 r := by
   simp [Metric.mem_ball, dist_eq_norm]
 
-omit [Nontrivial E] in
 lemma analyticOnNhd_untranslateForm {p : ℕ} (c : E) (r : ℝ)
     (A : E → E [⋀^Fin p]→L[ℂ] ℂ)
     (hA : AnalyticOnNhd ℂ A (Metric.ball 0 r)) :
@@ -421,7 +399,6 @@ lemma analyticOnNhd_untranslateForm {p : ℕ} (c : E) (r : ℝ)
   hA.comp (analyticOnNhd_id.sub analyticOnNhd_const) fun x hx ↦
     (mem_ball_iff_sub_mem_ball c x r).1 hx
 
-omit [Nontrivial E] in
 /-- The analytic Poincaré lemma on a ball with arbitrary center, after shrinking the radius. -/
 theorem exists_analyticOnNhd_primitive_on_smaller_centered_ball
     [FiniteDimensional ℂ E] (n : ℕ) {c : E} {r : ℝ} (hr : 0 < r)
@@ -453,7 +430,6 @@ theorem exists_analyticOnNhd_primitive_on_smaller_centered_ball
   congr 1
   abel
 
-omit [Nontrivial E] in
 /-- A closed analytic zero-form is constant on a ball with arbitrary center. -/
 theorem zeroForm_eq_at_center_of_closedOn_ball {c : E} {r : ℝ} (hr : 0 < r)
     (η : E → E [⋀^Fin 0]→L[ℂ] ℂ)

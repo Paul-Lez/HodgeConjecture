@@ -156,17 +156,15 @@ lemma add_compContinuousLinearMap
     [NormedAddCommGroup F] [NormedSpace ℂ F]
     {p : ℕ} (a b : F [⋀^Fin p]→L[ℂ] ℂ) (T : E →L[ℂ] F) :
     (a + b).compContinuousLinearMap T =
-      a.compContinuousLinearMap T + b.compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
+      a.compContinuousLinearMap T + b.compContinuousLinearMap T :=
+  map_add (ContinuousAlternatingMap.compContinuousLinearMapₗ T) a b
 
 lemma smul_compContinuousLinearMap
     {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     [NormedAddCommGroup F] [NormedSpace ℂ F]
     {p : ℕ} (c : ℂ) (a : F [⋀^Fin p]→L[ℂ] ℂ) (T : E →L[ℂ] F) :
-    (c • a).compContinuousLinearMap T = c • a.compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
+    (c • a).compContinuousLinearMap T = c • a.compContinuousLinearMap T :=
+  map_smul (ContinuousAlternatingMap.compContinuousLinearMapₗ T) c a
 
 
 /-- The product of a tuple of coordinate covectors. -/
@@ -261,8 +259,7 @@ lemma alternating_eq_sum_wedgeCovectors (d p : ℕ)
         (fun j ↦ ContinuousLinearMap.proj (I j)) at hAlt
   have hfac : (p.factorial : ℂ) ≠ 0 := by exact_mod_cast Nat.factorial_ne_zero p
   calc
-    A = (p.factorial : ℂ)⁻¹ • ((p.factorial : ℂ) • A) := by
-      rw [← mul_smul, inv_mul_cancel₀ hfac, one_smul]
+    A = (p.factorial : ℂ)⁻¹ • ((p.factorial : ℂ) • A) := (inv_smul_smul₀ hfac A).symm
     _ = (p.factorial : ℂ)⁻¹ • ∑ I : Fin p → Fin d,
         A (fun j ↦ Pi.single (I j) 1) •
           wedgeCovectors (Fin d → ℂ) p
@@ -275,13 +272,7 @@ lemma alternating_eq_sum_wedgeCovectors (d p : ℕ)
 forms. -/
 def alternatingFormEvaluation (d p : ℕ) (v : Fin p → Fin d → ℂ) :
     ((Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) →L[ℂ] ℂ :=
-  let L : ((Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) →ₗ[ℂ] ℂ :=
-    { toFun := fun A ↦ A v
-      map_add' := fun A B ↦ by simp
-      map_smul' := fun a A ↦ by simp [ContinuousAlternatingMap.smul_apply] }
-  LinearMap.mkContinuous L (∏ j, ‖v j‖) (fun A ↦ by
-    change ‖A v‖ ≤ (∏ j, ‖v j‖) * ‖A‖
-    simpa only [mul_comm] using A.le_opNorm v)
+  ContinuousAlternatingMap.apply ℂ (Fin d → ℂ) ℂ v
 
 /-- The coefficient of an alternating form field in its finite coordinate-wedge expansion. -/
 def coordinateCoefficient (d p : ℕ)

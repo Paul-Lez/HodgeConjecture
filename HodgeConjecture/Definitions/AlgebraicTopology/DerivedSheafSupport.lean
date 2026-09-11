@@ -110,15 +110,6 @@ lemma liftSheafSectionsSupportedOutside_inclusion (U : Opens X)
       (sheafSectionsSupportedOutsideInclusion X U).app G = f :=
   kernel.lift_ι _ _ _
 
-/-- Uniqueness in the universal property of supported sections. -/
-lemma liftSheafSectionsSupportedOutside_unique (U : Opens X)
-    {F G : Sheaf AddCommGrpCat.{u} X} (f : F ⟶ G)
-    (hf : f ≫ (toOpenRestrictionPushforward X U).app G = 0)
-    (g : F ⟶ (sheafSectionsSupportedOutside X U).obj G)
-    (hg : g ≫ (sheafSectionsSupportedOutsideInclusion X U).app G = f) :
-    g = liftSheafSectionsSupportedOutside X U f hf :=
-  (cancel_mono (kernel.ι _)).1 (hg.trans (kernel.lift_ι _ _ _).symm)
-
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- On every ambient open set, supported sections are exactly the kernel of

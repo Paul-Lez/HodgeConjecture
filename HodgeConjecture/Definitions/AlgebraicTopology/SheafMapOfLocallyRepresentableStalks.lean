@@ -105,14 +105,6 @@ def globalMapOfLocallyRepresentable : A ⟶ F.presheaf.obj (op ⊤) :=
         change F.presheaf.Γgerm x _ = F.presheaf.Γgerm x (_ + _)
         simp only [map_add, sectionOfLocallyRepresentable_germ] }
 
-/-- The global additive map has exactly the specified stalk maps. -/
-@[reassoc]
-theorem globalMapOfLocallyRepresentable_germ (x : X) :
-    globalMapOfLocallyRepresentable F A g hlocal ≫ F.presheaf.Γgerm x = g x := by
-  apply AddCommGrpCat.hom_ext
-  ext a
-  exact sectionOfLocallyRepresentable_germ F (fun x ↦ g x a) (hlocal a) x
-
 /-- The actual presheaf map from constants, prior to sheafification. -/
 def constantPresheafMapOfLocallyRepresentable :
     (Functor.const (Opens X)ᵒᵖ).obj A ⟶ F.presheaf where
@@ -128,14 +120,6 @@ def constantSheafMapOfLocallyRepresentable :
     (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj A ⟶ F :=
   ⟨sheafifyLift (Opens.grothendieckTopology X)
     (constantPresheafMapOfLocallyRepresentable F A g hlocal) F.property⟩
-
-/-- The sheaf map agrees with the explicitly constructed map on constant sections. -/
-@[reassoc]
-theorem constantSheafMapOfLocallyRepresentable_unit :
-    toSheafify (Opens.grothendieckTopology X) ((Functor.const (Opens X)ᵒᵖ).obj A) ≫
-      (constantSheafMapOfLocallyRepresentable F A g hlocal).hom =
-      constantPresheafMapOfLocallyRepresentable F A g hlocal :=
-  toSheafify_sheafifyLift _ _ _
 
 variable {F}
 
@@ -162,34 +146,5 @@ def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
       (toSheafify (Opens.grothendieckTopology X) P))
 
 variable (F)
-
-set_option backward.isDefEq.respectTransparency false in
-/-- Exact stalk normalization of the assembled sheaf map. -/
-@[reassoc]
-theorem constantSheafMapOfLocallyRepresentable_stalk (x : X) :
-    (constantSheafStalkIso A x).hom ≫
-      (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
-        (constantSheafMapOfLocallyRepresentable F A g hlocal).hom = g x := by
-  simp only [constantSheafStalkIso, Iso.trans_hom, asIso_hom, Category.assoc]
-  rw [← Functor.map_comp, constantSheafMapOfLocallyRepresentable_unit]
-  dsimp only [TopCat.Presheaf.Γgerm]
-  erw [TopCat.Presheaf.stalkFunctor_map_germ]
-  change globalMapOfLocallyRepresentable F A g hlocal ≫ F.presheaf.map (𝟙 _) ≫
-    F.presheaf.Γgerm x = g x
-  rw [CategoryTheory.Functor.map_id, Category.id_comp, globalMapOfLocallyRepresentable_germ]
-
-/-- If the specified stalk maps are isomorphisms, the assembled sheaf map is an
-isomorphism. This uses the actual stalk formula, not a chosen sheaf equivalence. -/
-theorem constantSheafMapOfLocallyRepresentable_isIso (hg : ∀ x : X, IsIso (g x)) :
-    IsIso (constantSheafMapOfLocallyRepresentable F A g hlocal) := by
-  apply (TopCat.Presheaf.isIso_iff_stalkFunctor_map_iso _).2
-  intro x
-  have hfac := constantSheafMapOfLocallyRepresentable_stalk F A g hlocal x
-  have : IsIso ((constantSheafStalkIso A x).hom ≫
-      (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
-        (constantSheafMapOfLocallyRepresentable F A g hlocal).hom) := by
-    rw [hfac]
-    exact hg x
-  exact IsIso.of_isIso_comp_left (constantSheafStalkIso A x).hom _
 
 end TopCat.Sheaf

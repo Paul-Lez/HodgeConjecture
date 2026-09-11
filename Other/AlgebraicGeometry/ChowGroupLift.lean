@@ -58,11 +58,11 @@ def compactCycleToFinsupp {X : Scheme.{u}} [CompactSpace X] :
 
 /-- Extend prescribed classes of irreducible codimension-`p` components additively to integral
 codimension-`p` cycles. Values away from codimension `p` are set to zero; the support condition on
-a `CodimensionCycle` ensures that this branch is never used by a nonzero coefficient. -/
+a `codimensionCycleSubgroup` ensures that this branch is never used by a nonzero coefficient. -/
 def cycleClassOnCyclesOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
     {M : Type*} [AddCommGroup M]
     (componentClass : ∀ (x : X), coheight x = p → M) :
-    CodimensionCycle X p →+ M := by
+    codimensionCycleSubgroup X p →+ M := by
   classical
   let componentValue : X → M := fun x ↦
     if hx : coheight x = p then componentClass x hx else 0
@@ -77,19 +77,19 @@ component class. -/
     (componentClass : ∀ (x : X), coheight x = p → M)
     (x : X) (hx : coheight x = p) (n : ℤ) :
     cycleClassOnCyclesOfComponents componentClass
-        (CodimensionCycle.single x hx n) =
+        (codimensionCycleSubgroup.single x hx n) =
       n • componentClass x hx := by
   classical
   change (Finsupp.linearCombination ℤ (fun y ↦
       if hy : coheight y = p then componentClass y hy else 0))
     (compactCycleToFinsupp ((codimensionCycleInclusion X p)
-      (CodimensionCycle.single x hx n))) = n • componentClass x hx
+      (codimensionCycleSubgroup.single x hx n))) = n • componentClass x hx
   have hsingle : compactCycleToFinsupp
-      ((codimensionCycleInclusion X p) (CodimensionCycle.single x hx n)) =
+      ((codimensionCycleInclusion X p) (codimensionCycleSubgroup.single x hx n)) =
       Finsupp.single x n := by
     ext y
-    change CodimensionCycle.single x hx n y = Finsupp.single x n y
-    rw [CodimensionCycle.single_apply, Finsupp.single_apply]
+    change codimensionCycleSubgroup.single x hx n y = Finsupp.single x n y
+    rw [codimensionCycleSubgroup.single_apply, Finsupp.single_apply]
     by_cases h : y = x
     · simp [h]
     · simp [h, Ne.symm h]
@@ -100,14 +100,14 @@ namespace ChowGroup
 /-- An additive map on codimension cycles that vanishes on rational equivalences descends to the
 Chow group. -/
 def liftCycleClass {X : Scheme.{u}} {p : ℕ} {M : Type*} [AddCommGroup M]
-    (f : CodimensionCycle X p →+ M)
+    (f : codimensionCycleSubgroup X p →+ M)
     (h : rationalEquivalenceSubgroup X p ≤ f.ker) : ChowGroup X p →+ M :=
   QuotientAddGroup.lift (rationalEquivalenceSubgroup X p) f h
 
 /-- Evaluation of a descended additive map on a represented Chow class. -/
 @[simp] lemma liftCycleClass_mk {X : Scheme.{u}} {p : ℕ} {M : Type*} [AddCommGroup M]
-    (f : CodimensionCycle X p →+ M)
-    (h : rationalEquivalenceSubgroup X p ≤ f.ker) (z : CodimensionCycle X p) :
+    (f : codimensionCycleSubgroup X p →+ M)
+    (h : rationalEquivalenceSubgroup X p ≤ f.ker) (z : codimensionCycleSubgroup X p) :
     liftCycleClass f h (mk z) = f z :=
   QuotientAddGroup.lift_mk' _ h z
 

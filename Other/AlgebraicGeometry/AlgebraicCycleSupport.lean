@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.AlgebraicCycleSupport
 public import Other.AlgebraicGeometry.ChowGroup
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
@@ -42,15 +42,6 @@ open CategoryTheory Topology TopologicalSpace
 namespace AlgebraicGeometry
 
 variable (X : Over (Spec ↧ℂ))
-
-/-- The integral projective variety defined by one generic point of a smooth projective variety. -/
-def cycleComponentVariety
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IntegralProjectiveComplexVariety where
-  scheme := cycleComponent X.left x
-  isIntegral := inferInstance
-  structureMap := cycleComponentι X.left x ≫ X.hom
-  projective := cycleComponent_projective X x
 
 /-- An algebraic cycle on a projective complex variety has finite support. Algebraic cycles are
 locally finite by definition, and the underlying Zariski space is compact. -/

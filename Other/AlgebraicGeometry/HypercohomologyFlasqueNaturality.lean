@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HypercohomologyGlobalSectionsShift
 
 /-!
@@ -149,7 +149,6 @@ theorem hypercohomologyAddEquivGlobalSections_naturality_to_kInjective
   exact hypercohomologyAddEquivGlobalSectionsOfResolution_naturality_to_kInjective
     X K I L i f n a
 
-set_option maxHeartbeats 800000 in
 /-- The flasque comparison preserves actual shifted maps into K-injective targets,
 including the exact cone-connecting sign used by support-forgetting. -/
 theorem hypercohomologyAddEquivGlobalSections_shifted_naturality_to_kInjective
