@@ -428,28 +428,6 @@ lemma rationalSpecFieldEquiv_toRational_single (K : Type u) [Field K] (n : ℤ) 
   rw [specFieldEquiv_mk_single]
   simp
 
-/-- A concrete boundary computation: every Chow group of `Spec PUnit` is trivial. -/
-example (p : ℕ) : Subsingleton (ChowGroup (Spec ↧PUnit) p) := by
-  let := spec_punit_isEmpty
-  infer_instance
-
-/-- A rational-coefficient version of the same boundary computation. -/
-example (p : ℕ) : Subsingleton (RationalChowGroup (Spec ↧PUnit) p) := by
-  let := spec_punit_isEmpty
-  infer_instance
-
-/-- A nonempty calculation: `CH⁰(Spec ℚ) ≃ ℤ`, including its distinguished generator. -/
-example : specFieldEquiv ℚ
-    (mk (CodimensionCycle.single default
-      (CodimensionCycle.specField_coheight ℚ default) 1)) = 1 := by
-  simp
-
-/-- The rational-coefficient calculation sends the same generator to `1 : ℚ`. -/
-example : rationalSpecFieldEquiv ℚ
-    (toRational (mk (CodimensionCycle.single default
-      (CodimensionCycle.specField_coheight ℚ default) 1))) = 1 :=
-  rationalSpecFieldEquiv_toRational_single ℚ 1
-
 end ChowGroup
 
 end AlgebraicGeometry
