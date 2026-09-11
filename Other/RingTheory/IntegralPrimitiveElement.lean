@@ -7,9 +7,11 @@ module
 
 public import Mathlib.FieldTheory.PrimitiveElement
 public import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
+public import Mathlib.Data.Complex.Basic
 public import Mathlib.RingTheory.Adjoin.FG
 public import Mathlib.RingTheory.Localization.Integral
 public import Mathlib.RingTheory.Localization.Finiteness
+public import Mathlib.RingTheory.NoetherNormalization
 
 @[expose] public section
 
@@ -147,5 +149,27 @@ theorem exists_adjoin_inverse_eq_and_minpoly_quotient_of_finite
     Subalgebra.fg_of_submodule_fg (Module.Finite.fg_top (R := R) (M := S))
   obtain ⟨r, hr⟩ := exists_adjoin_inverse_eq_of_fg R K L S hS y hy hy_primitive
   exact ⟨r, hr, minpoly.monic hy_integral, ⟨minpoly.equivAdjoin hy_integral⟩⟩
+
+end Algebra
+
+namespace Algebra
+
+/-- A Noether-normalization map for a finite-type integral complex algebra, together with
+the finiteness datum used to transport the algebra structure downstream. -/
+structure ComplexNoetherNormalization (A : Type*) [CommRing A] [Algebra ℂ A] where
+  dimension : ℕ
+  hom : MvPolynomial (Fin dimension) ℂ →ₐ[ℂ] A
+  injective : Function.Injective hom
+  finite : hom.Finite
+
+variable (A : Type*) [CommRing A] [IsDomain A] [Algebra ℂ A]
+  [Algebra.FiniteType ℂ A]
+
+/-- Every finite-type integral complex algebra has a polynomial subalgebra over which it is
+finite. The bundled result retains both the chosen map and its injectivity, which are needed
+when passing to fraction fields. -/
+theorem exists_complexNoetherNormalization : Nonempty (ComplexNoetherNormalization A) := by
+  obtain ⟨n, g, hinj, hfinite⟩ := exists_finite_inj_algHom_of_fg ℂ A
+  exact ⟨⟨n, g, hinj, hfinite⟩⟩
 
 end Algebra
