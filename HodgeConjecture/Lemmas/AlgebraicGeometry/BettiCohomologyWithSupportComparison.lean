@@ -65,6 +65,7 @@ variable (X : Over (Spec ↧ℂ))
 variable [IsIntegral X.left] [Smooth X.hom]
 
 attribute [local instance] bettiSupportComparisonHasDerivedCategory
+  bettiSupportComparisonMono bettiSupportComparisonQuasiIso
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The singular-resolution restriction strictly extends restriction of rational constants. -/
@@ -72,22 +73,8 @@ lemma rationalToSingular_comp_singularResolutionRestriction
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     rationalToSingularCochainComplexInt X ≫
         singularResolutionRestriction X Z hZ =
-      rationalRestrictionComplexInt X Z := by
-  let : (constantFieldSheafComplexInt ℚ X).IsStrictlyGE 0 := by
-    unfold constantFieldSheafComplexInt
-    infer_instance
-  let : (singularCochainSheafComplexInt X ℚ).IsStrictlyGE 0 := by
-    unfold singularCochainSheafComplexInt
-    infer_instance
-  let : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE
-      0 := by
-    unfold derivedPushforwardComplementConstantRationalComplexInt
-    infer_instance
-  let : Mono (rationalToSingularCochainComplexInt X) :=
-    rationalToSingularCochainComplexInt_mono X
-  let : QuasiIso (rationalToSingularCochainComplexInt X) :=
-    rationalToSingularCochainComplexInt_quasiIso X
-  exact CochainComplex.comp_liftToInjective
+      rationalRestrictionComplexInt X Z :=
+  CochainComplex.comp_liftToInjective
     (rationalToSingularCochainComplexInt X)
     (rationalRestrictionComplexInt X Z)
     (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)

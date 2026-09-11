@@ -87,6 +87,10 @@ def constantFieldSheafComplexInt :
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
     (constantFieldSheaf K X)).extend ComplexShape.embeddingUpNat
 
+instance : (constantFieldSheafComplexInt K X).IsStrictlyGE 0 := by
+  unfold constantFieldSheafComplexInt
+  infer_instance
+
 /-- Extension of rational constants to complex constants as a map of integer complexes. -/
 def fieldToComplexConstantSheafComplexInt :
     constantFieldSheafComplexInt K X ⟶
@@ -953,9 +957,6 @@ canonically equivalent. -/
 def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     FilteredDeRhamHypercohomology X 0 n ≃
       DeRhamHypercohomology X n := by
-  letI : (holomorphicDeRhamComplexInt X).IsStrictlyGE 0 := by
-    unfold holomorphicDeRhamComplexInt
-    infer_instance
   letI : IsIso (hodgeFilteredDeRhamInclusion X 0) := by
     unfold hodgeFilteredDeRhamInclusion hodgeFilteredDeRhamComplex
     infer_instance

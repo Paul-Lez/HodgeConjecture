@@ -742,13 +742,6 @@ lemma naturalSingularSupportCone_isStrictlyGE
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     (CochainComplex.mappingCone
       (naturalSingularResolutionRestriction X Z hZ)).IsStrictlyGE (-1) := by
-  let : (singularCochainSheafComplexInt X ℚ).IsStrictlyGE 0 := by
-    dsimp [singularCochainSheafComplexInt]
-    infer_instance
-  let : (derivedPushforwardComplementConstantRationalComplexInt
-      X Z).IsStrictlyGE 0 := by
-    dsimp [derivedPushforwardComplementConstantRationalComplexInt]
-    infer_instance
   exact CochainComplex.isStrictlyGE_mappingCone
     (naturalSingularResolutionRestriction X Z hZ) 0 0 (-1)
       (by lia) (by lia)

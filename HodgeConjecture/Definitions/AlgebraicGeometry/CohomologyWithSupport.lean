@@ -147,6 +147,11 @@ def derivedPushforwardComplementConstantRationalComplexInt
   (derivedPushforwardComplementConstantRationalComplexNat X Z).extend
     ComplexShape.embeddingUpNat
 
+instance (Z : Set (ComplexPoint X)) :
+    (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE 0 := by
+  unfold derivedPushforwardComplementConstantRationalComplexInt
+  infer_instance
+
 /-- Extending the zero derived pushforward from the empty complement to integer degrees remains a
 zero complex. -/
 lemma isZero_derivedPushforwardComplement_univ_int :
