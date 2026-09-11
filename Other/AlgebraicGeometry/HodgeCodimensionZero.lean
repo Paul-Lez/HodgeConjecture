@@ -19,7 +19,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleClassS
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
 import Other.AlgebraicGeometry.CycleClassDimension
 import Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
-import HodgeConjecture.Lemmas.AlgebraicGeometry.RationalCohomologyZero
+import Other.AlgebraicGeometry.RationalCohomologyZero
 
 /-!
 # The Hodge conjecture in codimension zero

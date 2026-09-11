@@ -174,7 +174,7 @@ The shortest route through the implementation is:
    extension across the singular locus;
 6. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`, the class of a
    subvariety;
-7. `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
+7. `Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
    `ComplexSheafBorelMooreRationalComparison.lean`, Borel–Moore homology and duality;
 8. `Other/AlgebraicGeometry/SheafCycleClass.lean`, the maps on cycles.
 

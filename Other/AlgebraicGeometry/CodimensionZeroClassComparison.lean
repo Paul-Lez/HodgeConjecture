@@ -18,7 +18,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleClassSpan
 import Other.AlgebraicGeometry.CodimensionCycle
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.RationalCohomologyZero
+import Other.AlgebraicGeometry.RationalCohomologyZero
 import Other.AlgebraicGeometry.HodgeCodimensionZero
 import Other.AlgebraicGeometry.SmoothAnalytificationConnected
 

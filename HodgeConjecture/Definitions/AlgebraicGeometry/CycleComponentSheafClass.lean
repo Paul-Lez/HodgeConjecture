@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicGeometry.DerivedSupportRationalConeForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSupportExtension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSmoothSupportCoclassSection
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMooreRationalComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSingularCohomologySheafComparison
 /-!
 # Constructed sheaf cycle classes in arbitrary codimension
@@ -122,16 +122,5 @@ theorem cycleComponentSheafClass_codimension_le : p ≤ d := by
   have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := d) x
   rw [hx] at h
   exact_mod_cast h
-
-/-- The normalized fundamental class in ACTUAL ambient chain-sheaf
-Borel–Moore homology, obtained through the constructed orientation shift.
-It is not an element of a supplied replacement homology group. -/
-def cycleComponentSheafBorelMooreFundamentalClass :
-    ComplexAmbientSheafBorelMooreHomology X d (cycleComponentAnalyticClosedSupport X x)
-      (2 * ((d - p : ℕ) : ℤ)) :=
-  (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X d
-    (cycleComponentAnalyticClosedSupport X x) p
-    (cycleComponentSheafClass_codimension_le X x (d := d) hx)).symm
-      (cycleComponentSheafSupportedClass X x (d := d) hx)
 
 end AlgebraicGeometry.ComplexPoint

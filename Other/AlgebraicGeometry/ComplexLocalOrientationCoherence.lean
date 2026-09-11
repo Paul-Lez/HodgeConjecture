@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalOrientation
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifoldOrientation
+public import Other.AlgebraicGeometry.ComplexManifoldOrientation
 public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance
 
 /-!
