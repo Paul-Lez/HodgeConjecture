@@ -43,14 +43,6 @@ lemma rationalComponentCycleClassLine_eq_span
   le_antisymm (Submodule.span_le.mpr fun _ hβ ↦ hα.2.ge hβ.1)
     (Submodule.span_mono (Set.singleton_subset_iff.mpr hα))
 
-lemma rationalComponentCycleClassLine_eq_supportedOn_of_purity
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) (x : X.left)
-    (h : RationalComponentCycleClassPurity X p x) :
-    rationalComponentCycleClassLine X p x =
-      rationalCohomologySupportedOn X
-        (cycleComponentSupport X x) (2 * (p : ℤ)) :=
-  h
-
 /-- The component cycle-class line lies in the image of cohomology supported on that component. -/
 lemma rationalComponentCycleClassLine_le_supportedOn
     [IsIntegral X.left] [Smooth X.hom]
@@ -60,17 +52,10 @@ lemma rationalComponentCycleClassLine_le_supportedOn
         (cycleComponentSupport X x) (2 * (p : ℤ)) :=
   Submodule.span_le.mpr fun _ hα ↦ hα.1
 
+/-- The defining supremum of `algebraicCycleClassSpan`. -/
 @[simp]
-lemma algebraicCycleClassSpan_zero
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
-    algebraicCycleClassSpan X 0 =
-      ⨆ (x : X.left) (hx : coheight x = 0),
-        Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx} :=
-  rfl
-
-lemma algebraicCycleClassSpan_of_ne_zero
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (p : ℕ) (_hp : p ≠ 0) :
+lemma algebraicCycleClassSpan_eq_iSup
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) :
     algebraicCycleClassSpan X p =
       ⨆ (x : X.left) (hx : coheight x = p),
         Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx} :=
@@ -115,7 +100,7 @@ coniveau subspace. -/
 lemma forgetSupport_mem_rationalConiveauSubspace
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ)
     (x : X.left) (hx : coheight x = p)
-    (α : RationalConstantSheafCohomologyWithSupport X
+    (α : RationalCohomologyWithSupport X
       (cycleComponentSupport X x) (2 * (p : ℤ))) :
     forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) α ∈
       rationalConiveauSubspace X p := by

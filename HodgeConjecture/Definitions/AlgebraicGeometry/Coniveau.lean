@@ -42,12 +42,6 @@ open Point
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- Rational constant-sheaf cohomology supported on a closed subset of an analytification. -/
-abbrev RationalConstantSheafCohomologyWithSupport
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (Z : Set (ComplexPoint X)) (n : ℤ) :=
-  RationalCohomologyWithSupport X Z n
-
 /-- The rational span in ordinary cohomology of classes supported on `Z`. -/
 def rationalCohomologySupportedOn
     [IsIntegral X.left] [Smooth X.hom]
@@ -85,20 +79,17 @@ def RationalComponentCycleClassPurity
   rationalComponentCycleClassLine X p x =
     rationalCohomologySupportedOn X (cycleComponentSupport X x) (2 * (p : ℤ))
 
-/-- The rational span of the actually constructed codimension-`p` component classes.
-
-The relative dimension is the canonical `dim X`, whose certificate is proved from smoothness and
-integrality. This definition spans explicit class terms; it does not quantify over hypothetical
-generators and does not assume descent to the Chow group. -/
+/-- The rational span of the classes of the irreducible codimension-`p` closed subvarieties of
+`X`, indexed by the points of codimension `p`. The relative dimension is `dim X.left`, supplied by
+`SmoothOfRelativeDimension.of_isIntegral`. -/
 def algebraicCycleClassSpan
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) :
     Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
     Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
 
-/-- The degree-`2p` rational coniveau subspace obtained from all cohomology classes supported on
-irreducible algebraic subvarieties of codimension `p`. This is not the cycle-class span unless a
-purity theorem identifying each relevant image with its fundamental-class line is supplied. -/
+/-- The degree-`2p` rational coniveau subspace: the sum of the images of the cohomology supported
+on the irreducible algebraic subvarieties of codimension `p`. -/
 def rationalConiveauSubspace
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) :
     Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
