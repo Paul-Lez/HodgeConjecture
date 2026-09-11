@@ -19,6 +19,7 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Data.Complex.Basic
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
@@ -163,7 +164,7 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_one [IsIntegral X]
     SmoothOfRelativeDimension.coheight_le_complex (f := f) (d := 1) x
   obtain hzero | hone := Order.le_one_iff.mp hcoheight
   · have hx : x = genericPoint X :=
-      codimensionCycleSubgroup.eq_genericPoint_of_coheight_zero x hzero
+      eq_genericPoint_of_coheight_zero x hzero
     subst x
     exact SmoothOfRelativeDimension.height_add_coheight_genericPoint
       (f := f) (d := 1)
@@ -247,7 +248,7 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_two [IsIntegral X]
       rw [← ENat.natCast_toNat hne, hzero]
       rfl
     have hx : x = genericPoint X :=
-      codimensionCycleSubgroup.eq_genericPoint_of_coheight_zero x hcozero
+      eq_genericPoint_of_coheight_zero x hcozero
     subst x
     exact SmoothOfRelativeDimension.height_add_coheight_genericPoint
       (f := f) (d := 2)

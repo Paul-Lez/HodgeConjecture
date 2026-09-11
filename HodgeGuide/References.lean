@@ -49,8 +49,9 @@ formalization.
 
 * `HodgeConjecture/Definitions/AlgebraicGeometry/HolomorphicDeRham.lean` and
   `HodgeFiltration.lean`: the de Rham complex, hypercohomology, and the Hodge filtration;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/ChowGroup.lean`, `AlgebraicCycleSupport.lean`,
-  and `CohomologyWithSupport.lean`: cycles, their supports, and cohomology with support;
+* `HodgeConjecture/Definitions/AlgebraicGeometry/AlgebraicCycleSupport.lean` and
+  `CohomologyWithSupport.lean`, and `Other/AlgebraicGeometry/ChowGroup.lean`: cycles, their
+  supports, and cohomology with support;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`
   and `CycleComponentSupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;

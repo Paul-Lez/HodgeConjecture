@@ -15,7 +15,6 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ChowGroup
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Points
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
@@ -29,8 +28,8 @@ import Mathlib.Analysis.Complex.Polynomial.Basic
 
 An algebraic cycle in Mathlib is indexed by the generic points of its irreducible components.
 This file constructs the reduced integral closed subscheme attached to such a point and the
-corresponding closed subset of complex points. It also constructs the geometric support of a
-whole cycle as the union of the closures of the generic points with nonzero coefficient.
+corresponding closed subset of complex points. The support of a whole cycle, which the statement
+does not use, is in `Other.AlgebraicGeometry.AlgebraicCycleSupport`.
 -/
 
 @[expose] public noncomputable section
@@ -241,23 +240,5 @@ def cycleComponentSmoothSupport
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (x : X.left) : Set (ComplexPoint X) :=
   cycleComponentMap X x '' cycleComponentSmoothAnalyticLocus X x
-
-/-- The underlying closed support of an algebraic cycle: the union of the closures of all generic
-points having nonzero coefficient. -/
-def algebraicCycleSupport {R : Type*} [Zero R] (X : Scheme)
-    (c : AlgebraicCycle X R) : Set X :=
-  ⋃ x ∈ c.support, closure {x}
-
-/-- The complex points lying over the geometric support of an algebraic cycle. -/
-def analyticCycleSupport {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    (c : AlgebraicCycle X.left R) : Set (ComplexPoint X) :=
-  Point.underlying ⁻¹' algebraicCycleSupport X.left c
-
-/-- The complex points lying over the closed carrier of a principal divisor. -/
-def principalDivisorCarrierSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    {p : ℕ} (D : PrincipalDivisor X.left p) : Set (ComplexPoint X) :=
-  (@Point.underlying ℂ _ _ X) ⁻¹' Set.range D.inclusion
 
 end AlgebraicGeometry

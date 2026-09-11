@@ -25,8 +25,6 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferential
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiCohomologyWithSupportComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiGlobalSectionsComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroupLift
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionAnalyticLeftInverse
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionNormalCoordinates
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionSourceOpen
@@ -34,7 +32,6 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSuppor
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexSupportedSingularModel
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentPurity
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSingularClosedFiltration
@@ -114,8 +111,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportConeCompariso
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularGlobalComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularNaturality
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ChowGroup
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ChowGroupLift
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionAnalyticLeftInverse
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionComplexPoint
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionNormalCoordinates
@@ -143,7 +138,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSingularComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexStandardEtale
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Coniveau
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentClosedPointDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentLocalGenerator
@@ -166,7 +160,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HypercohomologyGlobalSectionsShift
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Points
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalyticImmersion
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytification
@@ -302,6 +295,7 @@ public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
 public import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
+public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
 public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart

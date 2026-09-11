@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
+public import Other.AlgebraicGeometry.CycleClassLemmas
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.RationalCohomologyZero
 import Other.AlgebraicGeometry.HodgeCodimensionZero
@@ -71,7 +72,7 @@ theorem algebraicCycleClassSpan_zero_eq_span_genericPoint :
   refine le_antisymm (iSup_le fun x ↦ iSup_le fun hx ↦ ?_)
     (le_iSup_of_le (genericPoint X.left)
       (le_iSup_of_le (coheight_genericPoint_eq_zero X) le_rfl))
-  obtain rfl := codimensionCycleSubgroup.eq_genericPoint_of_coheight_zero x (by simpa using hx)
+  obtain rfl := eq_genericPoint_of_coheight_zero x (by simpa using hx)
   exact le_rfl
 
 /-! ### Degree-zero cohomology is a line on a connected analytification -/

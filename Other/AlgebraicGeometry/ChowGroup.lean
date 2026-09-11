@@ -17,8 +17,9 @@ module
 
 public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 public import Mathlib.AlgebraicGeometry.OrderOfVanishing
+public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
+import Other.AlgebraicGeometry.OrderOfVanishing
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
@@ -99,13 +100,6 @@ lemma single_zero (x : X) (hx : coheight x = p) : single x hx 0 = 0 := by
 lemma specField_coheight (K : Type u) [Field K] (x : Spec ↧K) : coheight x = 0 := by
   refine Order.IsMax.coheight_eq_zero fun y _ ↦ ?_
   rw [Subsingleton.elim y x]
-
-/-- A codimension-zero point of an integral scheme is its generic point. -/
-lemma eq_genericPoint_of_coheight_zero [IsIntegral X] (x : X) (hx : coheight x = 0) :
-    x = genericPoint X := by
-  apply inseparable_iff_eq.mp
-  rw [inseparable_iff_specializes_and]
-  exact ⟨Order.coheight_eq_zero.mp hx le_top, genericPoint_specializes x⟩
 
 /-- Codimension-zero cycles on an integral scheme are determined by their generic coefficient. -/
 noncomputable def integralEquiv [IsIntegral X] : codimensionCycleSubgroup X 0 ≃+ ℤ where

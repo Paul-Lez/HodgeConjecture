@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ChowGroup
+public import Other.AlgebraicGeometry.ChowGroupLemmas
 /-!
 # Descending a map on cycles to the Chow group
 

@@ -15,16 +15,16 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
+public import Other.AlgebraicGeometry.ChowGroup
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
+import Other.AlgebraicGeometry.OrderOfVanishing
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Chow groups of schemes
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup`.
+`Other.AlgebraicGeometry.ChowGroup`.
 -/
 
 @[expose] public section

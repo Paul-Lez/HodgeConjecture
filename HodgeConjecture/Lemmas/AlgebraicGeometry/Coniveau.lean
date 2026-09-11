@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
 
 /-!
 # The coniveau subspace

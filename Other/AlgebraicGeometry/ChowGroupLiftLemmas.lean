@@ -15,13 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroupLift
+public import Other.AlgebraicGeometry.ChowGroupLift
 
 /-!
 # Descending a map on cycles to the Chow group
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroupLift`.
+`Other.AlgebraicGeometry.ChowGroupLift`.
 -/
 
 @[expose] public noncomputable section

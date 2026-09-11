@@ -15,13 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
+public import Other.AlgebraicGeometry.CycleClass
 
 /-!
 # The cycle class in codimension zero
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass`.
+`Other.AlgebraicGeometry.CycleClass`.
 -/
 
 @[expose] public noncomputable section

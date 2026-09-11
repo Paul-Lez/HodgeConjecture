@@ -24,6 +24,9 @@ import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentNormalGeometry
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothCatenaryDimension
 import Mathlib.RingTheory.IntegralClosure.GoingDown
+-- Supplies `IsIntegrallyClosed (MvPolynomial (Fin n) k)`, hence going-down for the
+-- Noether normalisation below; previously reached through the Chow-group imports.
+import Mathlib.RingTheory.Polynomial.RationalRoot -- shake: keep
 import Mathlib.RingTheory.KrullDimension.Field
 import Mathlib.RingTheory.KrullDimension.Polynomial
 import Mathlib.RingTheory.NoetherNormalization
