@@ -474,6 +474,124 @@ theorem eventually_mem_clopen_localRootBranch_iff {p : Polynomial (Polynomial �
     filter_upwards [hU, hevent'] with z' hz' hmem hbase hroot
     exact ⟨fun h ↦ ((hmem hz') h).elim, fun h ↦ (hi h).elim⟩
 
+/-- The branch indices selected by `S` in the fiber over `z`. -/
+noncomputable def selectedBranchIndices {p : Polynomial (Polynomial ℂ)} (hp : p.Monic)
+    (S : Set (SimpleRootCover p)) (z : SimpleRootBase p) : Finset (Fin p.natDegree) :=
+  by
+    classical
+    exact Finset.univ.filter fun i ↦ simpleRootCoverPoint hp z i ∈ S
+
+/-- Near a fiber, a clopen selection consists of the same fixed set of local branches. -/
+theorem eventually_selectedRoots_eq_map_localRootBranches {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (S : Set (SimpleRootCover p)) (hSopen : IsOpen S)
+    (hSclosed : IsClosed S) (z : SimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ hbase : ∀ w : ℂ, (familySpecialization p z').eval w = 0 →
+        (familySpecialization p z').derivative.eval w ≠ 0,
+      selectedRoots S ⟨z', hbase⟩ =
+        (selectedBranchIndices hp S z).1.map fun i ↦
+          localRootBranch (simpleRootCoverPoint hp z i) z' := by
+  classical
+  have hselection : ∀ᶠ z' in 𝓝 z.1, ∀ i : Fin p.natDegree,
+      ∀ (hbase : ∀ w : ℂ, (familySpecialization p z').eval w = 0 →
+          (familySpecialization p z').derivative.eval w ≠ 0)
+        (hroot : familyEquation p
+          (z', localRootBranch (simpleRootCoverPoint hp z i) z') = 0),
+        (⟨(⟨z', hbase⟩, localRootBranch (simpleRootCoverPoint hp z i) z'), hroot⟩ :
+            SimpleRootCover p) ∈ S ↔ simpleRootCoverPoint hp z i ∈ S :=
+    eventually_all.2 fun i ↦ eventually_mem_clopen_localRootBranch_iff hp S hSopen hSclosed z i
+  filter_upwards [eventually_mem_simpleRootBase hp z,
+    eventually_all_familyEquation_localRootBranch hp z,
+    eventually_injective_localRootBranches hp z,
+    eventually_exists_localRootBranch_eq_of_familyEquation_eq_zero hp z,
+    hselection] with z' hbase hroot hinj hexhaust hselect
+  intro hbase'
+  let q := familySpecialization p z'
+  let f : Fin p.natDegree → ℂ :=
+    fun i ↦ localRootBranch (simpleRootCoverPoint hp z i) z'
+  rw [selectedRoots]
+  apply (Multiset.Nodup.ext (s := _) (t := _)
+    ((roots_card_nodup_of_mem_simpleRootBase hp ⟨z', hbase'⟩).2.filter _)
+    ((Multiset.nodup_map_iff_of_injective hinj).2 (selectedBranchIndices hp S z).nodup)).2
+  intro w
+  constructor
+  · intro hw
+    rw [Multiset.mem_filter] at hw
+    obtain ⟨hwroot, hmem⟩ := hw
+    have hweval : q.eval w = 0 :=
+      (mem_roots (hp.map (Polynomial.evalRingHom z')).ne_zero).mp hwroot
+    obtain ⟨i, hi⟩ := hexhaust w hweval
+    rw [Multiset.mem_map]
+    refine ⟨i, ?_, hi⟩
+    obtain ⟨hwproof, hwS⟩ := hmem
+    have hbranchS :
+        (⟨(⟨z', hbase'⟩, localRootBranch (simpleRootCoverPoint hp z i) z'), hroot i⟩ :
+          SimpleRootCover p) ∈ S := by
+      convert hwS using 1
+      all_goals simp [hi]
+    change i ∈ selectedBranchIndices hp S z
+    simpa [selectedBranchIndices] using (hselect i hbase' (hroot i)).mp hbranchS
+  · intro hw
+    rw [Multiset.mem_map] at hw
+    obtain ⟨i, hiI, rfl⟩ := hw
+    rw [Multiset.mem_filter]
+    refine ⟨(mem_roots (hp.map (Polynomial.evalRingHom z')).ne_zero).mpr (hroot i), ?_⟩
+    refine ⟨hroot i, ?_⟩
+    apply (hselect i hbase' (hroot i)).mpr
+    simpa [selectedBranchIndices] using hiI
+
+/-- Near a fiber, the selected factor is the product of a fixed set of local branches. -/
+theorem eventually_selectedFactor_eq_localBranchFactor {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (S : Set (SimpleRootCover p)) (hSopen : IsOpen S)
+    (hSclosed : IsClosed S) (z : SimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ hbase : ∀ w : ℂ, (familySpecialization p z').eval w = 0 →
+        (familySpecialization p z').derivative.eval w ≠ 0,
+      selectedFactor hp S ⟨z', hbase⟩ =
+        localBranchFactor hp z (selectedBranchIndices hp S z) z' := by
+  filter_upwards [eventually_selectedRoots_eq_map_localRootBranches hp S hSopen hSclosed z]
+    with z' hz' hbase
+  rw [selectedFactor, localBranchFactor, hz' hbase, Multiset.map_map]
+  rfl
+
+/-- The degree of the factor selected by a clopen set is locally constant. -/
+theorem eventually_natDegree_selectedFactor_eq_card_selectedBranchIndices
+    {p : Polynomial (Polynomial ℂ)} (hp : p.Monic) (S : Set (SimpleRootCover p))
+    (hSopen : IsOpen S) (hSclosed : IsClosed S) (z : SimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ hbase : ∀ w : ℂ, (familySpecialization p z').eval w = 0 →
+        (familySpecialization p z').derivative.eval w ≠ 0,
+      (selectedFactor hp S ⟨z', hbase⟩).natDegree = (selectedBranchIndices hp S z).card := by
+  filter_upwards [eventually_selectedFactor_eq_localBranchFactor hp S hSopen hSclosed z]
+    with z' hz' hbase
+  rw [hz' hbase, natDegree_localBranchFactor]
+
+private theorem differentiableAt_coeff_X_sub_C_localRootBranch {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) (i : Fin p.natDegree) (k : ℕ) :
+    DifferentiableAt ℂ
+      (fun z' ↦ (X - C (localRootBranch (simpleRootCoverPoint hp z i) z')).coeff k) z.1 := by
+  rcases k with _ | k
+  · simpa [simpleRootCoverPoint] using
+      (differentiableAt_localRootBranch (simpleRootCoverPoint hp z i)).neg
+  rcases k with _ | k
+  · simp
+  · simp
+
+/-- Every coefficient of a fixed product of local root branches is holomorphic at its center. -/
+theorem differentiableAt_coeff_localBranchFactor {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) (I : Finset (Fin p.natDegree)) (k : ℕ) :
+    DifferentiableAt ℂ (fun z' ↦ (localBranchFactor hp z I z').coeff k) z.1 := by
+  induction I using Finset.induction_on generalizing k with
+  | empty => simp [localBranchFactor]
+  | @insert i I hi hI =>
+      have hfactor : localBranchFactor hp z (insert i I) = fun z' ↦
+          (X - C (localRootBranch (simpleRootCoverPoint hp z i) z')) *
+            localBranchFactor hp z I z' := by
+        funext z'
+        simp [localBranchFactor, hi]
+      rw [hfactor]
+      simp_rw [coeff_mul]
+      apply DifferentiableAt.fun_sum
+      intro ij hij
+      exact (differentiableAt_coeff_X_sub_C_localRootBranch hp z i ij.1).mul (hI ij.2)
+
 end
 
 end Polynomial
