@@ -326,6 +326,42 @@ theorem dense_overOpen_basicOpen_affineGlobalSection {n : Type}
   change affineSpaceEquiv n z = v at hzv
   rwa [hzv]
 
+/-- A polynomial whose associated regular function vanishes on a nonempty analytic open subset
+of complex affine space is zero. -/
+theorem mvPolynomial_eq_zero_of_evaluate_eq_zero_on_open {n : Type}
+    (p : MvPolynomial n ℂ)
+    (U : Set (ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ))))
+    (hU : IsOpen U) (hUne : U.Nonempty)
+    (hp : ∀ z ∈ U, evaluate ⊤ (affineGlobalSection p) z = 0) :
+    p = 0 := by
+  by_contra hp0
+  obtain ⟨z, hzU, hzopen⟩ :=
+    (dense_overOpen_basicOpen_affineGlobalSection p hp0).inter_open_nonempty U hU hUne
+  have hz_ne : evaluate ⊤ (affineGlobalSection p) z ≠ 0 :=
+    (mem_overOpen_basicOpen_iff_evaluate_ne_zero
+      (X := Over.mk (complexAffineSpace n ↘ Spec ↧ℂ))
+      (U := ⊤) (affineGlobalSection p) z trivial).mp hzopen
+  exact hz_ne (hp z hzU)
+
+/-- A global regular function on complex affine space is determined by its values on every
+nonempty analytic open subset. -/
+theorem affineGlobalSection_eq_zero_of_evaluate_eq_zero_on_open {n : Type}
+    (s : Γ(complexAffineSpace n, ⊤))
+    (U : Set (ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ))))
+    (hU : IsOpen U) (hUne : U.Nonempty)
+    (hs : ∀ z ∈ U, evaluate ⊤ s z = 0) :
+    s = 0 := by
+  have hs_repr : affineGlobalSection (affineGlobalPolynomial s) = s :=
+    SpecIso_hom_appTop_affineGlobalPolynomial s
+  have hp : affineGlobalPolynomial s = 0 :=
+    mvPolynomial_eq_zero_of_evaluate_eq_zero_on_open
+      (affineGlobalPolynomial s) U hU hUne (by
+        intro z hz
+        rw [hs_repr]
+        exact hs z hz)
+  rw [← hs_repr, hp]
+  simp [affineGlobalSection]
+
 end
 
 
