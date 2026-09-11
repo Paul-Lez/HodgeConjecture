@@ -21,7 +21,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 attribute [local instance] smoothClosedSupportCohomologySheafAnalyticTopology
@@ -50,7 +50,7 @@ theorem complexSupportInjectiveComplex_homology_stalk_isZero_of_not_mem
       (TopCat.of (ComplexPoint X)) S.compl (V ⊓ S.compl)
       ((ambientRationalInjectiveComplex X).X n) inf_le_right)
 
-variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
+variable (Y : Over (Spec ↧ℂ)) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 

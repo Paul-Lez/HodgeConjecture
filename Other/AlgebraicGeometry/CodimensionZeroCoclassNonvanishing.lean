@@ -23,7 +23,7 @@ open CategoryTheory Order TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 /-- Every component's normalized coclass section is nonzero, as detected on its smooth locus. -/

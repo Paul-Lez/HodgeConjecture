@@ -87,10 +87,10 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
     (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
     (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     ∃ C : CycleComponentSeparateLocalCoordinates V.over x d (d - p), C.point = z := by
-  let c : cycleComponent V.scheme x ⟶ Spec (.of ℂ) :=
+  let c : cycleComponent V.scheme x ⟶ Spec ↧ℂ :=
     cycleComponentι V.scheme x ≫ V.structureMap
   let S : (cycleComponent V.scheme x).Opens := c.smoothLocus
-  let g : S.toScheme ⟶ Spec (.of ℂ) := S.ι ≫ c
+  let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
   let : Smooth g := cycleComponent_smoothLocus_smooth V.over x
   let zs : S.toScheme := ⟨z.underlying, hz⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
@@ -165,7 +165,7 @@ namespace CycleComponentSeparateLocalCoordinates
 open AlgebraicTopology.Singular
 
 noncomputable local instance cycleComponentLocalOrientationTopology
-    {Y : Over (Spec (.of ℂ))} :
+    {Y : Over (Spec ↧ℂ)} :
     TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}

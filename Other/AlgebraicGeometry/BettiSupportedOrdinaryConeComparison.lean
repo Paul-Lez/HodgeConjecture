@@ -24,7 +24,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ))) [IsIntegral X.left] [Smooth X.hom]
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
 
 /-- The actual singular-to-injective comparison preserves the very augmentation used
 by the original rational Betti support cone. -/

@@ -29,15 +29,15 @@ namespace AlgebraicGeometry.ComplexPoint
 open AlgebraicTopology.Singular
 
 noncomputable local instance smoothSupportedCycleAnalyticTopology
-    (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=
+    (Y : Over (Spec ↧ℂ)) : TopologicalSpace (ComplexPoint Y) :=
   Point.analyticTopology
 
 local instance smoothSupportedCycleSheafDerivedCategory
-    (Y : Over (Spec (.of ℂ))) :
+    (Y : Over (Spec ↧ℂ)) :
     HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint Y))) :=
   HasDerivedCategory.standard _
 
-variable (X : Over (Spec (.of ℂ))) (d : ℕ)
+variable (X : Over (Spec ↧ℂ)) (d : ℕ)
   [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
 
 /-- The lower bound needed for good truncation is proved from local homology concentration. -/
@@ -64,7 +64,7 @@ def complexChainTermwiseToDerivedSupport (S : Closeds (ComplexPoint X)) :
     (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X)))
     (-((2 * d : ℕ) : ℤ)) S
 
-variable (Z : Over (Spec (.of ℂ))) (i : Z ⟶ X)
+variable (Z : Over (Spec ↧ℂ)) (i : Z ⟶ X)
   [IsClosedImmersion i.left] (e : ℕ) [SmoothOfRelativeDimension e Z.hom]
   [T2Space (ComplexPoint Z)]
 

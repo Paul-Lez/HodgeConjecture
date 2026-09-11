@@ -22,7 +22,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 section GeneralOpenTransport
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
@@ -54,7 +54,7 @@ end GeneralOpenTransport
 
 section Component
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
 

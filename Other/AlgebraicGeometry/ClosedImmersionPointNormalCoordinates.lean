@@ -25,7 +25,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (d : ℕ)
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)

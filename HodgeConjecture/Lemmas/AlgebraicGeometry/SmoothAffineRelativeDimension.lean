@@ -6,6 +6,8 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Equidimensional smooth affine neighborhoods
 
@@ -47,13 +49,13 @@ set_option backward.isDefEq.respectTransparency false in
 /-- A standard-smooth affine open of a complex scheme is an actual smooth complex
 scheme of that precise relative dimension. -/
 theorem smoothOfRelativeDimension_affineOpen_of_isStandardSmooth
-    {X : Scheme} (f : X ⟶ Spec (.of ℂ)) {U : X.Opens} (hU : IsAffineOpen U) {n : ℕ}
+    {X : Scheme} (f : X ⟶ Spec ↧ℂ) {U : X.Opens} (hU : IsAffineOpen U) {n : ℕ}
     (hstd : (f.appLE ⊤ U (by simp)).hom.IsStandardSmoothOfRelativeDimension n) :
     SmoothOfRelativeDimension n (U.ι ≫ f) := by
   let g := f.resLE ⊤ U (by simp)
   let : SmoothOfRelativeDimension n g :=
     smoothOfRelativeDimension_resLE_of_isStandardSmooth f (isAffineOpen_top _) hU _ hstd
-  have h := smoothOfRelativeDimension_comp n 0 g (⊤ : (Spec (.of ℂ)).Opens).ι
+  have h := smoothOfRelativeDimension_comp n 0 g (⊤ : (Spec ↧ℂ).Opens).ι
   simpa only [Nat.add_zero, g, Scheme.Hom.resLE_comp_ι] using h
 
 end AlgebraicGeometry

@@ -54,7 +54,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
 
 local instance sheafBorelMooreTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology

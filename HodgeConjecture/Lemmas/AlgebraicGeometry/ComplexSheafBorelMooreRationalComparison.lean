@@ -27,7 +27,7 @@ open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ))) (d : ℕ)
+variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 local instance complexBorelMooreRationalComparisonAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology

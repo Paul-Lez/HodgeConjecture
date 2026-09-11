@@ -9,6 +9,8 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothStratificationAnaly
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothAffineRelativeDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexOpen
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Ambient closed supports for singular-component localization induction
 
@@ -25,7 +27,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
 /-- The canonical closed remainders inside the integral component's singular boundary. -/
@@ -49,7 +51,7 @@ def cycleComponentSingularFiltrationStratumι (k : ℕ) :
     (cycleComponentSingularClosedFiltration X x k) ≫ cycleComponentι X.left x
 
 /-- A singular-filtration stratum with its induced structure map to `Spec ℂ`. -/
-abbrev cycleComponentSingularFiltrationStratumOver (k : ℕ) : Over (Spec (.of ℂ)) :=
+abbrev cycleComponentSingularFiltrationStratumOver (k : ℕ) : Over (Spec ↧ℂ) :=
   Over.mk (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom)
 
 /-- The stratum immersion bundled over `Spec ℂ`. -/
@@ -112,7 +114,7 @@ def cycleComponentSingularStratumClosedLift (k : ℕ) :
       exact ((cycleComponentSingularAmbientClosedFiltration_layer X x k).le hy).2)
 
 /-- The localization open with its induced structure map to `Spec ℂ`. -/
-abbrev cycleComponentSingularStratumAmbientOpenOver (k : ℕ) : Over (Spec (.of ℂ)) :=
+abbrev cycleComponentSingularStratumAmbientOpenOver (k : ℕ) : Over (Spec ↧ℂ) :=
   ComplexPoint.openScheme X (cycleComponentSingularStratumAmbientOpen X x k)
 
 instance cycleComponentSingularStratumAmbientOpenOver_locallyOfFiniteType (k : ℕ) :
@@ -205,7 +207,7 @@ def cycleComponentSingularAnalyticClosedFiltration (k : ℕ) : Closeds (ComplexP
       (continuous_underlying_to_zariski X)⟩
 
 /-- The smooth locus of the component, bundled over `Spec ℂ`. -/
-abbrev cycleComponentSmoothLocusOver : Over (Spec (.of ℂ)) :=
+abbrev cycleComponentSmoothLocusOver : Over (Spec ↧ℂ) :=
   Over.mk (((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
     cycleComponentι X.left x) ≫ X.hom)
 

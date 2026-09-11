@@ -45,7 +45,7 @@ end CochainComplex
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
 
 local instance hypercohomologyFlasqueNaturalitySheafDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) := HasDerivedCategory.standard _

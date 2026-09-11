@@ -6,6 +6,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionSourceOpen
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Restricting the source of a closed immersion without losing closedness
 
@@ -26,7 +28,7 @@ end AlgebraicGeometry
 namespace AlgebraicGeometry.ComplexPoint
 
 /-- The actual immersion image formula, with structure-map compatibility bundled in `i`. -/
-theorem range_map_of_isImmersion_of_comm (X Y : Over (Spec (.of ℂ)))
+theorem range_map_of_isImmersion_of_comm (X Y : Over (Spec ↧ℂ))
     (i : Y ⟶ X) [IsImmersion i.left] [LocallyOfFiniteType X.hom] :
     Set.range (Point.map i) =
       (Point.underlying : ComplexPoint X → X.left) ⁻¹' Set.range i.left := by

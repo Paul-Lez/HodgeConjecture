@@ -32,15 +32,15 @@ namespace AlgebraicGeometry.ComplexPoint
 open AlgebraicTopology.Singular
 
 noncomputable local instance smoothClosedCycleAnalyticTopology
-    (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=
+    (Y : Over (Spec ↧ℂ)) : TopologicalSpace (ComplexPoint Y) :=
   Point.analyticTopology
 
 local instance smoothClosedCycleSheafDerivedCategory
-    (Y : Over (Spec (.of ℂ))) :
+    (Y : Over (Spec ↧ℂ)) :
     HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint Y))) :=
   HasDerivedCategory.standard _
 
-variable (Z X : Over (Spec (.of ℂ))) (i : Z ⟶ X)
+variable (Z X : Over (Spec ↧ℂ)) (i : Z ⟶ X)
 
 /-- The actual continuous map of analytifications induced by the scheme morphism. -/
 def closedCycleAnalyticMap :

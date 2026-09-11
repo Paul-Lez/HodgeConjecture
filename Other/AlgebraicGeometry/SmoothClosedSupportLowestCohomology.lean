@@ -23,7 +23,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
 
 local instance smoothClosedSupportLowestAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
@@ -37,7 +37,7 @@ theorem complexSupportInjectiveComplex_isFlasque
     (TopCat.of (ComplexPoint X)) S.compl ((ambientRationalInjectiveComplex X).X n)
 
 variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-  (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
+  (Y : Over (Spec ↧ℂ)) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
