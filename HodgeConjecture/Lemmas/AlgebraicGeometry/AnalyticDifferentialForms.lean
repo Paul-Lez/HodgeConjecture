@@ -57,20 +57,31 @@ lemma chartEvaluationKernel_eq_top_of_lt [SmoothOfRelativeDimension d X.hom]
   rw [Fintype.card_fin, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hcard
   lia
 
-lemma holomorphicFormRelations_eq_restrictionStableAnalyticKernel
+/-- Vanishing in every chart is equivalent to vanishing after every restriction. -/
+lemma chartEvaluationKernel_eq_iInf_comap
     [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
-    holomorphicFormRelations X d U p = restrictionStableAnalyticKernel X d U p := rfl
+    chartEvaluationKernel X d U p =
+      ⨅ (V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ), ⨅ (i : U ⟶ V),
+        (chartEvaluationKernel X d V p).comap (formRestriction X d i p) := by
+  ext θ
+  simp only [Submodule.mem_iInf, Submodule.mem_comap]
+  constructor
+  · intro hθ V i
+    exact formRestriction_mem_chartEvaluationKernel X d i p hθ
+  · intro hθ
+    have h := hθ U (𝟙 U)
+    rwa [formRestriction_id, LinearMap.id_apply] at h
+
+lemma holomorphicFormRelations_eq_chartEvaluationKernel
+    [SmoothOfRelativeDimension d X.hom]
+    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
+    holomorphicFormRelations X d U p = chartEvaluationKernel X d U p := rfl
 
 lemma holomorphicFormRelations_eq_top_of_lt [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    {p : ℕ} (hp : d < p) : holomorphicFormRelations X d U p = ⊤ := by
-  refine top_unique fun θ _ ↦ ?_
-  rw [holomorphicFormRelations, restrictionStableAnalyticKernel]
-  simp only [Submodule.mem_iInf, Submodule.mem_comap]
-  intro V i
-  rw [chartEvaluationKernel_eq_top_of_lt X d V hp]
-  trivial
+    {p : ℕ} (hp : d < p) : holomorphicFormRelations X d U p = ⊤ :=
+  chartEvaluationKernel_eq_top_of_lt X d U hp
 
 lemma holomorphicForm_eq_zero_of_lt [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
