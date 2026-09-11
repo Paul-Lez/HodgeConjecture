@@ -80,8 +80,7 @@ lemma dualCycleToHomologyFunctional_vanishes_on_boundaries
   simp [dualCycleToHomologyFunctional]
   ext z
   induction z using Submodule.Quotient.induction_on with
-  | H z =>
-  simp [moduleCatToCycles, S.g.hom.dualMap_apply]
+  | H z => simp [moduleCatToCycles, S.g.hom.dualMap_apply]
 
 /-- The canonical pairing from the explicit homology of the dual complex to the dual of the
 explicit homology of the original complex. -/
@@ -104,10 +103,8 @@ lemma dualHomologyComparisonExplicit_surjective
     (S : ShortComplex (ModuleCat.{u} R)) :
     Function.Surjective S.dualHomologyComparisonExplicit := by
   intro α
-  let αcycles : Module.Dual R (LinearMap.ker S.g.hom) :=
-    α.comp (LinearMap.range S.moduleCatToCycles).mkQ
   let φ : Module.Dual R S.X₂ :=
-    Subspace.dualLift (LinearMap.ker S.g.hom) αcycles
+    Subspace.dualLift (LinearMap.ker S.g.hom) <| α.comp (LinearMap.range S.moduleCatToCycles).mkQ
   have hφ : φ ∈ LinearMap.ker S.f.hom.dualMap := LinearMap.mem_ker.2 <| LinearMap.ext fun x ↦ by
     simpa [φ, Subspace.dualLift_of_mem (LinearMap.mem_ker.2 <| S.moduleCat_zero_apply x)] using!
       congr(α $((Submodule.Quotient.mk_eq_zero _).2 <| S.moduleCatToCycles.mem_range_self x))
@@ -124,13 +121,9 @@ lemma dualHomologyComparisonExplicit_injective
   | _ φ =>
     induction b using Submodule.Quotient.induction_on with
     | _ ψ =>
-      change LinearMap.ker S.f.hom.dualMap at φ ψ
-      apply (Submodule.Quotient.eq _).mpr
-      have hzero : S.dualCycleToHomologyFunctional (φ - ψ) = 0 := by
-        change S.dualCycleToHomologyFunctional φ =
-          S.dualCycleToHomologyFunctional ψ at hab
-        exact (S.dualCycleToHomologyFunctional.map_sub φ ψ).trans
-          (sub_eq_zero.mpr hab)
+      rw [Submodule.Quotient.eq]
+      have hzero : S.dualCycleToHomologyFunctional (φ - ψ) = 0 :=
+        (S.dualCycleToHomologyFunctional.map_sub φ ψ).trans (sub_eq_zero.2 hab)
       have hv : (φ - ψ).1 ∈ (LinearMap.ker S.g.hom).dualAnnihilator := by
         rw [Submodule.mem_dualAnnihilator]
         intro z hz
