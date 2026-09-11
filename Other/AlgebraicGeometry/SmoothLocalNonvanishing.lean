@@ -5,7 +5,7 @@ Authors: Bhavik Mehta
 -/
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
-import Other.AlgebraicGeometry.EtaleCoordinateInjection
+import Other.AlgebraicGeometry.EtaleNonvanishingDensity
 import Mathlib.AlgebraicGeometry.Morphisms.QuasiSeparated
 
 /-!

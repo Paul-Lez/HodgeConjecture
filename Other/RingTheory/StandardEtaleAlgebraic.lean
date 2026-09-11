@@ -48,29 +48,3 @@ theorem IsStandardEtale.isAlgebraic [IsStandardEtale K S] : Algebra.IsAlgebraic 
   exact (heval p).isAlgebraic.mul (hginv.pow n)
 
 end Algebra
-
-namespace Algebra
-
-variable {R S K L : Type*} [CommRing R] [IsDomain R] [CommRing S]
-  [Field K] [Field L] [Algebra R S] [Algebra R K] [IsFractionRing R K]
-  [Algebra R L] [Algebra S L] [IsFractionRing S L] [Algebra K L]
-  [IsScalarTower R S L] [IsScalarTower R K L]
-
-/-- The fraction field of a standard étale domain is algebraic over the fraction field of its
-base domain. -/
-theorem IsStandardEtale.isAlgebraic_fractionRing [IsStandardEtale R S] :
-    Algebra.IsAlgebraic K L := by
-  let _ : Algebra.IsAlgebraic R S := IsStandardEtale.isAlgebraic R S
-  have hRL : Algebra.IsAlgebraic R L := by
-    constructor
-    intro z
-    obtain ⟨x, y, hy, hxy⟩ := IsFractionRing.div_surjective S z
-    have hx : IsAlgebraic R (algebraMap S L x) :=
-      (Algebra.IsAlgebraic.isAlgebraic x).algHom (IsScalarTower.toAlgHom R S L)
-    have hyalg : IsAlgebraic R (algebraMap S L y) :=
-      (Algebra.IsAlgebraic.isAlgebraic y).algHom (IsScalarTower.toAlgHom R S L)
-    rw [← hxy, div_eq_mul_inv]
-    exact hx.mul hyalg.inv
-  exact (IsFractionRing.comap_isAlgebraic_iff (A := R) (K := K) (C := L)).1 hRL
-
-end Algebra
