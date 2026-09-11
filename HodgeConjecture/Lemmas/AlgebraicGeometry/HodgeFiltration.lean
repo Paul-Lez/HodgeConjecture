@@ -351,8 +351,9 @@ lemma hodgePiece_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     trivial
 
 /-- The rational submodule underlying `F⁰` is the whole de Rham hypercohomology group. -/
-lemma hodgeFiltrationSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    hodgeFiltrationSubmodule K X 0 n = ⊤ := by
+lemma restrictScalars_hodgeFiltrationComplexSubmodule_zero_eq_top [IsIntegral X.left]
+    [Smooth X.hom] (n : ℤ) :
+    (hodgeFiltrationComplexSubmodule X 0 n).restrictScalars K = ⊤ := by
   refine SetLike.ext fun α ↦ ?_
   change α ∈ hodgeFiltration X 0 n ↔ α ∈ (⊤ :
     Submodule K (DeRhamHypercohomology X n))
@@ -361,10 +362,10 @@ lemma hodgeFiltrationSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n
 
 /-- When conjugation fixes `K`, a `K`-class is its own conjugate, so `F^p` already implies
 `(p,p)` and the Hodge filtration alone cuts out the Hodge classes. -/
-lemma hodgeClasses_eq_comap_hodgeFiltrationSubmodule [IsIntegral X.left] [Smooth X.hom]
+lemma hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q) (p : ℕ) :
     Hdg^p(K; X) =
-      (hodgeFiltrationSubmodule K X p (2 * p)).comap
+      ((hodgeFiltrationComplexSubmodule X p (2 * p)).restrictScalars K).comap
         (fieldToDeRhamCohomologyLinear K X (2 * p)) := by
   refine SetLike.ext fun α ↦ ?_
   show fieldToDeRhamCohomology K X (2 * (p : ℤ)) α ∈
@@ -376,12 +377,12 @@ lemma hodgeClasses_eq_comap_hodgeFiltrationSubmodule [IsIntegral X.left] [Smooth
 
 /-- Over `ℚ`, the coefficient field the Hodge conjecture is stated for, the `(p,p)` and `F^p`
 definitions agree. -/
-lemma hodgeClasses_rat_eq_comap_hodgeFiltrationSubmodule [IsIntegral X.left] [Smooth X.hom]
-    (p : ℕ) :
+lemma hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left]
+    [Smooth X.hom] (p : ℕ) :
     Hdg^p(ℚ; X) =
-      (hodgeFiltrationSubmodule ℚ X p (2 * p)).comap
+      ((hodgeFiltrationComplexSubmodule X p (2 * p)).restrictScalars ℚ).comap
         (fieldToDeRhamCohomologyLinear ℚ X (2 * p)) :=
-  hodgeClasses_eq_comap_hodgeFiltrationSubmodule ℚ X (fun q ↦ by simp) p
+  hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule ℚ X (fun q ↦ by simp) p
 
 /-- Above the complex dimension, the rational Hodge subgroup is exactly the kernel of the
 rational-to-de Rham comparison. In particular, showing that comparison injective makes the
@@ -409,27 +410,6 @@ lemma hodgeClasses_eq_bot_of_lt
     Hdg^p(K; X) = ⊥ :=
   hodgeClasses_eq_bot_of_lt_of_quasiIso K X inferInstance hp
 
-/-- The direct definition of rational Hodge classes agrees with the definition using the
-complexified rational lattice. -/
-lemma hodgeClassesViaComplexification_eq [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
-    hodgeClassesViaComplexification K X p =
-      Hdg^p(K; X) := by
-  ext α
-  change fieldToDeRhamComplexification K X (2 * (p : ℤ))
-      (HodgeStructure.ofBase K
-        (H^(2 * (p : ℤ))(X; K)) α) ∈
-        hodgePiece X p p (2 * (p : ℤ)) ↔
-    fieldToDeRhamCohomology K X (2 * (p : ℤ)) α ∈
-      hodgePiece X p p (2 * (p : ℤ))
-  rw [HodgeStructure.ofBase_apply,
-    fieldToDeRhamComplexification_ofField]
-
-lemma mem_hodgeClasses_iff [IsIntegral X.left] [Smooth X.hom]
-    (p : ℕ) (α : H^(2 * p)(X; K)) :
-    α ∈ Hdg^p(K; X) ↔
-      IsHodgeClass K X p α :=
-  Iff.rfl
-
 /-- Every rational degree-zero cohomology class belongs to the rational Hodge subgroup. -/
 lemma hodgeClasses_zero_eq_top [IsIntegral X.left] [Smooth X.hom]
     :
@@ -439,14 +419,6 @@ lemma hodgeClasses_zero_eq_top [IsIntegral X.left] [Smooth X.hom]
       hodgePiece X ((0 : ℕ) : ℤ) ((0 : ℕ) : ℤ) (2 * (0 : ℕ)) ↔ True
   simp only [Nat.cast_zero]
   rw [hodgePiece_zero_eq_top]
-  trivial
-
-/-- Every rational degree-zero class has Hodge type `(0,0)`. -/
-lemma isHodgeClass_zero [IsIntegral X.left] [Smooth X.hom]
-    (α : H^0(X; K)) :
-    IsHodgeClass K X 0 α := by
-  change α ∈ Hdg^0(K; X)
-  rw [hodgeClasses_zero_eq_top]
   trivial
 
 end AlgebraicGeometry.ComplexPoint
