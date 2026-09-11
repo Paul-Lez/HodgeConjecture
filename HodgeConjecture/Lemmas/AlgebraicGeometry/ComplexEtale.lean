@@ -570,13 +570,9 @@ def chosenStandardEtalePresentation :
     StandardEtalePresentation (complexPolynomialRing n) S :=
   Algebra.IsStandardEtale.nonempty_standardEtalePresentation.some
 
-/-- The standard étale pair in the chosen presentation. -/
-abbrev chosenStandardEtalePair : StandardEtalePair (complexPolynomialRing n) :=
-  (chosenStandardEtalePresentation (n := n) S).P
-
 /-- The chosen presentation is also an equivalence of complex algebras. -/
 def standardEtalePresentationComplexAlgEquiv :
-    S ≃ₐ[ℂ] (chosenStandardEtalePair (n := n) S).Ring :=
+    S ≃ₐ[ℂ] (chosenStandardEtalePresentation (n := n) S).P.Ring :=
   (chosenStandardEtalePresentation (n := n) S).equivRing.restrictScalars ℂ
 
 /-- Restriction of a complex point of a standard étale algebra to its polynomial base. -/
@@ -589,7 +585,7 @@ standard étale presentation. -/
 noncomputable def isStandardEtaleAlgHomProjectionChart (u : S →ₐ[ℂ] ℂ) :
     OpenPartialHomeomorph (S →ₐ[ℂ] ℂ) (Fin n → ℂ) :=
   let e := standardEtalePresentationComplexAlgEquiv (n := n) S
-  let Q := chosenStandardEtalePair (n := n) S
+  let Q := (chosenStandardEtalePresentation (n := n) S).P
   let q := (precompAlgEquivHomeomorph e).symm u
   (precompAlgEquivHomeomorph e).symm.toOpenPartialHomeomorph.trans
     (standardEtaleAlgHomProjectionChart Q q)
@@ -597,7 +593,7 @@ noncomputable def isStandardEtaleAlgHomProjectionChart (u : S →ₐ[ℂ] ℂ) :
 lemma mem_isStandardEtaleAlgHomProjectionChart_source (u : S →ₐ[ℂ] ℂ) :
     u ∈ (isStandardEtaleAlgHomProjectionChart (n := n) S u).source := by
   let e := standardEtalePresentationComplexAlgEquiv (n := n) S
-  let Q := chosenStandardEtalePair (n := n) S
+  let Q := (chosenStandardEtalePresentation (n := n) S).P
   let q := (precompAlgEquivHomeomorph e).symm u
   rw [isStandardEtaleAlgHomProjectionChart, OpenPartialHomeomorph.trans_source]
   constructor
@@ -609,7 +605,7 @@ lemma isStandardEtaleAlgHomProjectionChart_apply (u v : S →ₐ[ℂ] ℂ) :
     isStandardEtaleAlgHomProjectionChart (n := n) S u v =
       mvPolynomialAlgHomHomeomorph n (isStandardEtaleBaseAlgHom (n := n) S v) := by
   let e := standardEtalePresentationComplexAlgEquiv (n := n) S
-  let Q := chosenStandardEtalePair (n := n) S
+  let Q := (chosenStandardEtalePresentation (n := n) S).P
   let q := (precompAlgEquivHomeomorph e).symm u
   rw [isStandardEtaleAlgHomProjectionChart, OpenPartialHomeomorph.trans_apply,
     standardEtaleAlgHomProjectionChart_apply]
@@ -632,7 +628,7 @@ lemma analyticAt_isStandardEtaleAlgHomProjectionChart_symm_apply
     AnalyticAt ℂ
       (fun v ↦ (isStandardEtaleAlgHomProjectionChart (n := n) S u).symm v r) w := by
   let e := standardEtalePresentationComplexAlgEquiv (n := n) S
-  let Q := chosenStandardEtalePair (n := n) S
+  let Q := (chosenStandardEtalePresentation (n := n) S).P
   let q := (precompAlgEquivHomeomorph e).symm u
   have hw' : w ∈ (standardEtaleAlgHomProjectionChart Q q).target := by
     rw [isStandardEtaleAlgHomProjectionChart, OpenPartialHomeomorph.trans_target] at hw
@@ -645,7 +641,7 @@ algebra. -/
 lemma isLocalHomeomorph_isStandardEtaleBaseAlgHom :
     IsLocalHomeomorph (isStandardEtaleBaseAlgHom (n := n) S) := by
   let e := standardEtalePresentationComplexAlgEquiv (n := n) S
-  let Q := chosenStandardEtalePair (n := n) S
+  let Q := (chosenStandardEtalePresentation (n := n) S).P
   have h := (isLocalHomeomorph_standardEtaleBaseAlgHom Q).comp
     (precompAlgEquivHomeomorph e).symm.isLocalHomeomorph
   convert h using 1
@@ -839,13 +835,9 @@ lemma affineSpaceEquiv_polynomialSpecToAffineSpacePointMap
   rw [AffineSpace.SpecIso_inv_appTop_coord]
   rw [affineSpecEquiv_apply, evaluate_top_eq_appTop]
 
-/-- The affine scheme morphism associated to a standard étale algebra. -/
-abbrev standardEtaleSpecMap :
-    Spec ↧P.Ring ⟶ Spec ↧(complexPolynomialRing n) :=
-  Spec.map (CommRingCat.ofHom (algebraMap (complexPolynomialRing n) P.Ring))
-
-lemma standardEtaleSpecMap_over :
-    standardEtaleSpecMap P ≫ affineSpecStructureMap (complexPolynomialRing n) =
+lemma specMap_algebraMap_comp_affineSpecStructureMap :
+    Spec.map (CommRingCat.ofHom (algebraMap (complexPolynomialRing n) P.Ring)) ≫
+        affineSpecStructureMap (complexPolynomialRing n) =
       affineSpecStructureMap P.Ring := by
   rw [← Spec.map_comp]
   congr 1
@@ -854,7 +846,8 @@ lemma standardEtaleSpecMap_over :
 def standardEtaleComplexPointMap :
     ComplexPoint (Over.mk (affineSpecStructureMap P.Ring)) →
       ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n))) :=
-  Point.map (Over.homMk (standardEtaleSpecMap P) (standardEtaleSpecMap_over P))
+  Point.map (Over.homMk (Spec.map (CommRingCat.ofHom (algebraMap (complexPolynomialRing n) P.Ring)))
+    (specMap_algebraMap_comp_affineSpecStructureMap P))
 
 lemma affineSpecEquiv_standardEtaleComplexPointMap
     (z : ComplexPoint (Over.mk (affineSpecStructureMap P.Ring))) :
@@ -862,7 +855,7 @@ lemma affineSpecEquiv_standardEtaleComplexPointMap
       standardEtaleBaseAlgHom P (affineSpecEquiv P.Ring z) := by
   ext b
   simp [standardEtaleComplexPointMap, Point.map, affineSpecEquiv,
-    standardEtaleBaseAlgHom, standardEtaleSpecMap, Spec.preimage_comp]
+    standardEtaleBaseAlgHom, Spec.preimage_comp]
 
 /-- A standard étale morphism of affine complex schemes is a local homeomorphism on complex
 points. -/
