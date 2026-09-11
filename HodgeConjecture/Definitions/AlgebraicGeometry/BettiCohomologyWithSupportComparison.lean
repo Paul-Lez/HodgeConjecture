@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CohomologyWithSupport
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.MappingConeQuasiIso
 public import Mathlib.Algebra.Homology.ModelCategory.Injective
@@ -39,7 +39,7 @@ variable {X Y : TopCat.{0}} {f : X ⟶ Y} (hf : IsOpenEmbedding f)
 
 set_option linter.style.haveILetI false in
 /-- Naive pullback along an open embedding preserves monomorphisms of additive sheaves. -/
-lemma sheafPullback_preservesMonomorphisms :
+private lemma sheafPullback_preservesMonomorphisms :
     Functor.PreservesMonomorphisms (hf.sheafPullback AddCommGrpCat.{0}) := by
   constructor
   intro F G g hg
@@ -58,7 +58,7 @@ lemma sheafPullback_preservesMonomorphisms :
 
 set_option linter.style.haveILetI false in
 /-- Sheaf pullback along an open embedding preserves monomorphisms. -/
-lemma pullback_preservesMonomorphisms (hf : IsOpenEmbedding f) :
+private lemma pullback_preservesMonomorphisms (hf : IsOpenEmbedding f) :
     Functor.PreservesMonomorphisms (TopCat.Sheaf.pullback AddCommGrpCat.{0} f) := by
   letI := sheafPullback_preservesMonomorphisms hf
   exact Functor.PreservesMonomorphisms.of_iso
@@ -66,7 +66,7 @@ lemma pullback_preservesMonomorphisms (hf : IsOpenEmbedding f) :
 
 set_option linter.style.haveILetI false in
 /-- Direct image along an open embedding preserves injective additive sheaves. -/
-theorem pushforward_injective (hf : IsOpenEmbedding f)
+private theorem pushforward_injective (hf : IsOpenEmbedding f)
     (I : TopCat.Sheaf AddCommGrpCat.{0} X) [Injective I] :
     Injective ((TopCat.Sheaf.pushforward AddCommGrpCat.{0} f).obj I) := by
   letI := pullback_preservesMonomorphisms hf
@@ -230,10 +230,10 @@ local instance bettiSupportComparisonHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-local instance : Mono (rationalToSingularCochainComplexInt X) :=
+local instance bettiSupportComparisonMono : Mono (rationalToSingularCochainComplexInt X) :=
   rationalToSingularCochainComplexInt_mono X
 
-local instance : QuasiIso (rationalToSingularCochainComplexInt X) :=
+local instance bettiSupportComparisonQuasiIso : QuasiIso (rationalToSingularCochainComplexInt X) :=
   rationalToSingularCochainComplexInt_quasiIso X
 
 /-- A strict chain-level extension of restriction from rational constants to the chosen derived
@@ -243,18 +243,6 @@ def singularResolutionRestriction
     singularCochainSheafComplexInt X ℚ ⟶
       derivedPushforwardComplementConstantRationalComplexInt X Z :=
   CochainComplex.liftToInjective
-    (rationalToSingularCochainComplexInt X)
-    (rationalRestrictionComplexInt X Z)
-    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
-
-set_option backward.isDefEq.respectTransparency false in
-/-- The singular-resolution restriction strictly extends restriction of rational constants. -/
-lemma rationalToSingular_comp_singularResolutionRestriction
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    rationalToSingularCochainComplexInt X ≫
-        singularResolutionRestriction X Z hZ =
-      rationalRestrictionComplexInt X Z :=
-  CochainComplex.comp_liftToInjective
     (rationalToSingularCochainComplexInt X)
     (rationalRestrictionComplexInt X Z)
     (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)

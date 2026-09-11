@@ -7,8 +7,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSectionRestrictionConeNaturality
 public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSingularSectionCohomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainOpenConeNaturality
-public import HodgeConjecture.Definitions.AlgebraicTopology.SupportRelativeCohomologySheaf
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportRelativeCohomologySheaf
 /-! # Naturality of actual supported singular-section relative cohomology -/
 
 @[expose] public noncomputable section

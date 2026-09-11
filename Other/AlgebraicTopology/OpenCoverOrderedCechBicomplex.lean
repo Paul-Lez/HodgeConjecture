@@ -254,8 +254,7 @@ private theorem openCoverCech_app_ext {n q : SimplexCategoryᵒᵖ}
   have hlim : IsLimit (Functor.mapCone ev (limit.cone D)) :=
     isLimitOfPreserves ev (limit.isLimit D)
   apply (Types.isLimitEquivSections hlim).injective
-  apply Subtype.ext
-  funext j
+  ext j
   cases j with
   | none =>
       have hx := congrArg (fun k ↦ k.app q x) (WidePullback.π_arrow arrows 0)
@@ -300,8 +299,7 @@ public theorem openCoverOrderedCechMap_app_injective (n q : SimplexCategoryᵒ�
       (openCoverOrderedCechMap_projection X U b i)
     exact ha.symm.trans (hproj.trans hb)
   have hab : a = b := by
-    apply Subtype.ext
-    funext i
+    ext i
     exact openCoverSSetCoproduct_app_index_eq B q _ _ (hcoord i)
   subst b
   have hmember :

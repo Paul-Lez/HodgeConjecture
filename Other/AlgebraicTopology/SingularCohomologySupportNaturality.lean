@@ -42,8 +42,7 @@ theorem cohomologyMap_eq_of_homotopy
     cohomologyMap R n f = cohomologyMap R n g := by
   apply LinearMap.ext
   intro α
-  apply LinearMap.ext
-  intro z
+  ext z
   change α (homologyMap R n f z) = α (homologyMap R n g z)
   congr 1
   exact ConcreteCategory.congr_hom
