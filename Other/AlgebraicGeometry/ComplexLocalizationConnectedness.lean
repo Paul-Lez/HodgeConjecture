@@ -86,21 +86,6 @@ lemma algebraMap_derivativeAdjoinRootElement_ne_zero {n : ℕ}
     (powers_le_nonZeroDivisors_of_noZeroDivisors hrAR)).ne
       (derivativeAdjoinRootElement_ne_zero p hp hdeg ρ hρ)
 
-/-- The element pulled back for the second localization is nonzero for any first-stage
-normalization equivalence. -/
-lemma symm_algebraMap_derivativeAdjoinRootElement_ne_zero {n : ℕ}
-    {B : Type*} [CommRing B] [Algebra (complexPolynomialRing n) B]
-    (p : Polynomial (complexPolynomialRing n)) (hp : p.Monic)
-    (hirr : Irreducible p) (hdeg : 0 < p.natDegree)
-    (r ρ : complexPolynomialRing n) (hr : r ≠ 0) (hρ : ρ ≠ 0)
-    (e : B ≃ₐ[complexPolynomialRing n]
-      Localization.Away (algebraMap (complexPolynomialRing n) (AdjoinRoot p) r)) :
-    e.symm (algebraMap (AdjoinRoot p)
-      (Localization.Away (algebraMap (complexPolynomialRing n) (AdjoinRoot p) r))
-      (derivativeAdjoinRootElement p ρ)) ≠ 0 :=
-  iteratedAwayAlgEquivOfAlgEquiv_symm_ne_zero e
-    (algebraMap_derivativeAdjoinRootElement_ne_zero p hp hirr hdeg r ρ hr hρ)
-
 /-- A dense nonvanishing locus is connected when the complex points of its localization are
 connected. Therefore the whole affine complex point space is connected. -/
 lemma isConnected_affineAlgHom_of_dense_nonvanishing_of_localization

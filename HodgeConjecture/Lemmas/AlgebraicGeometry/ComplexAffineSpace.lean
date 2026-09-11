@@ -19,7 +19,6 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
 public import Mathlib.AlgebraicGeometry.AffineSpace
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
-import HodgeConjecture.Lemmas.Analysis.PolynomialComplement
 import Mathlib.Logic.Equiv.PartialEquiv
 import Mathlib.Topology.Algebra.MvPolynomial
 
@@ -111,22 +110,6 @@ def affineGlobalPolynomial {n : Type} (s : Γ(complexAffineSpace n, ⊤)) :
     MvPolynomial n ℂ :=
   (Scheme.ΓSpecIso ↧(MvPolynomial n ℂ)).hom
     ((AffineSpace.SpecIso n ↧ℂ).inv.appTop s)
-
-/-- The global regular section of complex affine space represented by a polynomial. -/
-def affineGlobalSection {n : Type} (p : MvPolynomial n ℂ) :
-    Γ(complexAffineSpace n, ⊤) :=
-  (AffineSpace.SpecIso n ↧ℂ).hom.appTop
-    ((Scheme.ΓSpecIso ↧(MvPolynomial n ℂ)).inv p)
-
-lemma affineGlobalPolynomial_affineGlobalSection {n : Type} (p : MvPolynomial n ℂ) :
-    affineGlobalPolynomial (affineGlobalSection p) = p := by
-  simp only [affineGlobalPolynomial, affineGlobalSection]
-  change (Scheme.ΓSpecIso ↧(MvPolynomial n ℂ)).hom
-    (((AffineSpace.SpecIso n ↧ℂ).hom.appTop ≫
-      (AffineSpace.SpecIso n ↧ℂ).inv.appTop)
-        ((Scheme.ΓSpecIso ↧(MvPolynomial n ℂ)).inv p)) = p
-  rw [← Scheme.Hom.comp_appTop, Iso.inv_hom_id, Scheme.Hom.id_appTop]
-  simp
 
 lemma SpecIso_hom_appTop_affineGlobalPolynomial {n : Type}
     (s : Γ(complexAffineSpace n, ⊤)) :
@@ -291,76 +274,6 @@ def affineSpaceHomeomorph (n : Type) :
   toEquiv := affineSpaceEquiv n
   continuous_toFun := continuous_affineSpaceEquiv n
   continuous_invFun := continuous_affineSpaceEquiv_symm n
-
-lemma mem_overOpen_basicOpen_affineGlobalSection_iff {n : Type}
-    (p : MvPolynomial n ℂ) (v : n → ℂ) :
-    (affineSpaceEquiv n).symm v ∈
-      overOpen ((complexAffineSpace n).basicOpen (affineGlobalSection p)) ↔
-        p.eval v ≠ 0 := by
-  change (affineSpaceEquiv n).symm v ∈ overOpen
-      ((Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)).left.basicOpen (affineGlobalSection p)) ↔ _
-  rw [mem_overOpen_basicOpen_iff_evaluate_ne_zero (X := Over.mk
-    (complexAffineSpace n ↘ Spec ↧ℂ)) (U := ⊤) (affineGlobalSection p)
-    ((affineSpaceEquiv n).symm v) trivial,
-    evaluate_affineSpaceEquiv_symm_top,
-    affineGlobalPolynomial_affineGlobalSection]
-
-/-- A nonzero polynomial defines a dense principal open subset of complex affine space. -/
-theorem dense_overOpen_basicOpen_affineGlobalSection {n : Type}
-    (p : MvPolynomial n ℂ) (hp : p ≠ 0) :
-    Dense (overOpen ((complexAffineSpace n).basicOpen (affineGlobalSection p)) :
-      Set (ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)))) := by
-  rw [dense_iff_inter_open]
-  intro U hU hUne
-  let e := affineSpaceHomeomorph n
-  have heU : IsOpen (e '' U) := e.isOpenMap U hU
-  obtain ⟨v, hvU, hvp⟩ := MvPolynomial.dense_complex_nonzero p hp |>.inter_open_nonempty
-    (e '' U) heU (Set.image_nonempty.mpr hUne)
-  obtain ⟨z, hzU, hzv⟩ := hvU
-  refine ⟨z, hzU, ?_⟩
-  have hm := mem_overOpen_basicOpen_affineGlobalSection_iff p (e z)
-  dsimp [e, affineSpaceHomeomorph] at hm
-  rw [(affineSpaceEquiv n).symm_apply_apply z] at hm
-  apply hm.mpr
-  change p.eval v ≠ 0 at hvp
-  change affineSpaceEquiv n z = v at hzv
-  rwa [hzv]
-
-/-- A polynomial whose associated regular function vanishes on a nonempty analytic open subset
-of complex affine space is zero. -/
-theorem mvPolynomial_eq_zero_of_evaluate_eq_zero_on_open {n : Type}
-    (p : MvPolynomial n ℂ)
-    (U : Set (ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ))))
-    (hU : IsOpen U) (hUne : U.Nonempty)
-    (hp : ∀ z ∈ U, evaluate ⊤ (affineGlobalSection p) z = 0) :
-    p = 0 := by
-  by_contra hp0
-  obtain ⟨z, hzU, hzopen⟩ :=
-    (dense_overOpen_basicOpen_affineGlobalSection p hp0).inter_open_nonempty U hU hUne
-  have hz_ne : evaluate ⊤ (affineGlobalSection p) z ≠ 0 :=
-    (mem_overOpen_basicOpen_iff_evaluate_ne_zero
-      (X := Over.mk (complexAffineSpace n ↘ Spec ↧ℂ))
-      (U := ⊤) (affineGlobalSection p) z trivial).mp hzopen
-  exact hz_ne (hp z hzU)
-
-/-- A global regular function on complex affine space is determined by its values on every
-nonempty analytic open subset. -/
-theorem affineGlobalSection_eq_zero_of_evaluate_eq_zero_on_open {n : Type}
-    (s : Γ(complexAffineSpace n, ⊤))
-    (U : Set (ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ))))
-    (hU : IsOpen U) (hUne : U.Nonempty)
-    (hs : ∀ z ∈ U, evaluate ⊤ s z = 0) :
-    s = 0 := by
-  have hs_repr : affineGlobalSection (affineGlobalPolynomial s) = s :=
-    SpecIso_hom_appTop_affineGlobalPolynomial s
-  have hp : affineGlobalPolynomial s = 0 :=
-    mvPolynomial_eq_zero_of_evaluate_eq_zero_on_open
-      (affineGlobalPolynomial s) U hU hUne (by
-        intro z hz
-        rw [hs_repr]
-        exact hs z hz)
-  rw [← hs_repr, hp]
-  simp [affineGlobalSection]
 
 end
 

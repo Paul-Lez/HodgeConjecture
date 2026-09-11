@@ -94,9 +94,6 @@ abbrev MvSimpleRootBase {n : ℕ} (p : Polynomial (MvPolynomial (Fin n) ℂ)) :=
 abbrev MvSimpleRootCover {n : ℕ} (p : Polynomial (MvPolynomial (Fin n) ℂ)) :=
   {zw : MvSimpleRootBase p × ℂ // (mvFamilySpecialization p zw.1.1).eval zw.2 = 0}
 
-def MvSimpleRootCover.proj {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)} :
-    MvSimpleRootCover p → MvSimpleRootBase p := fun zw ↦ zw.1.1
-
 lemma mvSimpleRootCover_rootDirection_isInvertible {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (zw : MvSimpleRootCover p) :
     (fderiv ℂ (mvFamilyEquation p) (zw.1.1.1, zw.1.2) ∘L
@@ -220,21 +217,6 @@ theorem mvSimpleRootEnumeration_injective {n : ℕ} {p : Polynomial (MvPolynomia
     exact Subtype.ext (by simpa [mvSimpleRootEnumeration] using hij)
   exact (Equiv.injective _ hsub)
 
-theorem exists_mvSimpleRootEnumeration {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
-    (hp : p.Monic) (z : MvSimpleRootBase p) (w : ℂ)
-    (hw : (mvFamilySpecialization p z.1).eval w = 0) :
-    ∃ i : Fin p.natDegree, mvSimpleRootEnumeration hp z i = w := by
-  have hmem : w ∈ (mvFamilySpecialization p z.1).roots :=
-    (mem_roots (hp.map (MvPolynomial.eval z.1)).ne_zero).mpr hw
-  let e := ((mvFamilySpecialization p z.1).roots.toFinset.equivFinOfCardEq
-    ((Multiset.toFinset_card_of_nodup
-      (mvRoots_card_nodup_of_mem_simpleRootBase hp z).2).trans
-      (mvRoots_card_nodup_of_mem_simpleRootBase hp z).1)).symm
-  have hwfin : w ∈ (mvFamilySpecialization p z.1).roots.toFinset := by
-    simpa using hmem
-  refine ⟨e.symm ⟨w, hwfin⟩, ?_⟩
-  simp [mvSimpleRootEnumeration, e]
-
 /-- The point of the root cover attached to an enumerated root of a simple fiber. -/
 noncomputable def mvSimpleRootCoverPoint {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
     (hp : p.Monic) (z : MvSimpleRootBase p) (i : Fin p.natDegree) : MvSimpleRootCover p :=
@@ -349,15 +331,6 @@ theorem eventually_mem_mvSimpleRootBase {n : ℕ} {p : Polynomial (MvPolynomial 
   exact not_isUnit_X_sub_C w
     (isUnit_of_dvd_unit hdiv ((gcd_isUnit_iff q q.derivative).mpr hseparable))
 
-
-
-theorem isOpen_mvSimpleRootBase {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
-    (hp : p.Monic) :
-    IsOpen {z : Fin n → ℂ | ∀ w : ℂ, (mvFamilySpecialization p z).eval w = 0 →
-      (mvFamilySpecialization p z).derivative.eval w ≠ 0} := by
-  rw [isOpen_iff_mem_nhds]
-  intro z hz
-  exact eventually_mem_mvSimpleRootBase hp ⟨z, hz⟩
 
 
 /-- The locus of individual simple roots over a principal open, in the form used by standard

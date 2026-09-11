@@ -30,14 +30,6 @@ def iteratedAwayAlgEquivOfAlgEquiv
       rw [Submonoid.map_powers]
       simp)
 
-/-- Nonvanishing of the element used for the second localization transports back across the
-normalization equivalence. -/
-lemma iteratedAwayAlgEquivOfAlgEquiv_symm_ne_zero
-    {R B C : Type*} [CommRing R] [CommRing B] [CommRing C]
-    [Algebra R B] [Algebra R C] (e : B ≃ₐ[R] C) {y : C} (hy : y ≠ 0) :
-    e.symm y ≠ 0 := by
-  simpa only [map_zero] using e.symm.injective.ne hy
-
 variable {n : ℕ}
 
 def derivativeAdjoinRootElement

@@ -39,8 +39,10 @@ theorem connectedSpace_of_localized_irreducible_hypersurface
     (algebraMap (complexPolynomialRing n) (AdjoinRoot p) r)
   let y : C := algebraMap (AdjoinRoot p) C (derivativeAdjoinRootElement p ρ)
   let z : Localization.Away a := e.symm y
-  have hz : z ≠ 0 :=
-    symm_algebraMap_derivativeAdjoinRootElement_ne_zero p hp hirr hdeg r ρ hr hρ e
+  have hz : z ≠ 0 := by
+    dsimp only [z, y, C]
+    simpa only [map_zero] using e.symm.injective.ne
+      (algebraMap_derivativeAdjoinRootElement_ne_zero p hp hirr hdeg r ρ hr hρ)
   let e₂P := transportedIteratedAwayEquivDerivativeStandardEtale p hp r ρ e
   let e₂ : Localization.Away z ≃ₐ[ℂ]
       (derivativeStandardEtalePair p hp (r * ρ)).Ring :=

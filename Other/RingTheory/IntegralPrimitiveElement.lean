@@ -25,32 +25,6 @@ variable (R K L : Type*) [CommRing R] [IsDomain R] [Field K] [Field L]
   [Algebra R K] [IsFractionRing R K] [Algebra K L] [Algebra R L]
   [IsScalarTower R K L] [FiniteDimensional K L] [Algebra.IsSeparable K L]
 
-/-- A finite separable extension of the fraction field admits an integral primitive generator. -/
-theorem exists_integral_primitive_element :
-    ∃ y : L, IsIntegral R y ∧ Algebra.adjoin K {y} = ⊤ := by
-  let b := Field.powerBasisOfFiniteOfSeparable K L
-  obtain ⟨m, hm⟩ := (b.isIntegral_gen).exists_multiple_integral_of_isLocalization
-    (R := R) (nonZeroDivisors R) b.gen
-  refine ⟨m • b.gen, hm, ?_⟩
-  apply top_unique
-  rw [← b.adjoin_gen_eq_top]
-  apply Algebra.adjoin_le
-  intro x hx
-  obtain rfl : x = b.gen := Set.mem_singleton_iff.mp hx
-  have hmem := (Algebra.adjoin K {m • b.gen}).smul_mem
-    (Algebra.subset_adjoin (Set.mem_singleton _))
-    ((algebraMap R K (m : R))⁻¹)
-  have hne : algebraMap R K (m : R) ≠ 0 :=
-    by
-      rw [← map_zero (algebraMap R K)]
-      exact (IsFractionRing.injective R K).ne (nonZeroDivisors.ne_zero m.property)
-  have hy : m • b.gen = (algebraMap R K (m : R)) • b.gen := by
-    rw [Submonoid.smul_def]
-    exact (IsScalarTower.algebraMap_smul K (m : R) b.gen).symm
-  rw [hy] at hmem ⊢
-  simp only [smul_smul, inv_mul_cancel₀ hne, one_smul] at hmem
-  exact hmem
-
 /-- Multiplying a primitive generator by a nonzero base-field scalar preserves the field
 it generates. -/
 lemma adjoin_smul_eq_top_of_ne {K L : Type*} [Field K] [Field L] [Algebra K L]
@@ -92,17 +66,6 @@ theorem exists_common_denominator_of_adjoin_eq_top (y : L)
         apply (Algebra.adjoin R {y}).smul_mem
         simpa only [Submonoid.smul_def] using hrs x hx
 
-
-/-- The integral primitive generator can be chosen so that every element of the extension
-can be cleared into the order it generates over the base domain. -/
-theorem exists_integral_primitive_element_and_denominators :
-    ∃ y : L, IsIntegral R y ∧ Algebra.adjoin K {y} = ⊤ ∧
-      ∀ x : L, ∃ r : nonZeroDivisors R, r • x ∈ Algebra.adjoin R {y} := by
-  obtain ⟨y, hy_int, hy⟩ := exists_integral_primitive_element R K L
-  refine ⟨y, hy_int, hy, fun x ↦ ?_⟩
-  apply multiple_mem_adjoin_of_mem_localization_adjoin (nonZeroDivisors R) K {y} x
-  rw [hy]
-  trivial
 
 omit [FiniteDimensional K L] [Algebra.IsSeparable K L] in
 /-- If a finitely generated order contains a primitive element, then after inverting one
@@ -251,28 +214,6 @@ noncomputable def localizationAwayAlgEquivAdjoinRange
   exact (AlgEquiv.ofBijective q ⟨hq_injective, hq_surjective⟩).restrictScalars R
 
 end Algebra
-
-namespace AdjoinRoot
-
-/-- The monogenic minimal-polynomial presentation remains an explicit presentation after
-localizing away from any base element. -/
-noncomputable def localizationAwayAlgEquivAdjoin
-    {P L : Type*} [CommRing P] [IsDomain P] [IsIntegrallyClosed P]
-    [CommRing L] [IsDomain L] [Algebra P L] [Module.IsTorsionFree P L]
-    (y : L) (hy : IsIntegral P y) (r : P) :
-    Localization.Away (algebraMap P (AdjoinRoot (minpoly P y)) r) ≃ₐ[P]
-      Localization.Away (algebraMap P (Algebra.adjoin P ({y} : Set L)) r) :=
-  IsLocalization.algEquivOfAlgEquiv
-    (M := Submonoid.powers (algebraMap P (AdjoinRoot (minpoly P y)) r))
-    (T := Submonoid.powers (algebraMap P (Algebra.adjoin P ({y} : Set L)) r))
-    (Localization.Away (algebraMap P (AdjoinRoot (minpoly P y)) r))
-    (Localization.Away (algebraMap P (Algebra.adjoin P ({y} : Set L)) r))
-    (minpoly.equivAdjoin hy)
-    (by
-      simpa only [Submonoid.map_powers] using congrArg Submonoid.powers
-        ((minpoly.equivAdjoin hy).commutes r))
-
-end AdjoinRoot
 
 namespace Algebra
 
@@ -458,7 +399,19 @@ theorem ComplexNoetherNormalization.exists_primitive_numerator_localized_present
       Localization.Away
         (algebraMap P (AdjoinRoot (minpoly P (algebraMap A L a))) (r' : P)) :=
     eA.trans (Subalgebra.equivOfEq _ _ htargets) |>.trans eSy.symm |>.trans
-      (AdjoinRoot.localizationAwayAlgEquivAdjoin (algebraMap A L a) hint (r' : P)).symm
+      (IsLocalization.algEquivOfAlgEquiv
+        (M := Submonoid.powers
+          (algebraMap P (AdjoinRoot (minpoly P (algebraMap A L a))) (r' : P)))
+        (T := Submonoid.powers
+          (algebraMap P (Algebra.adjoin P ({algebraMap A L a} : Set L)) (r' : P)))
+        (Localization.Away
+          (algebraMap P (AdjoinRoot (minpoly P (algebraMap A L a))) (r' : P)))
+        (Localization.Away
+          (algebraMap P (Algebra.adjoin P ({algebraMap A L a} : Set L)) (r' : P)))
+        (minpoly.equivAdjoin hint)
+        (by
+          simpa only [Submonoid.map_powers] using congrArg Submonoid.powers
+            ((minpoly.equivAdjoin hint).commutes (r' : P)))).symm
   exact ⟨a, algebraMap A L a, r', rfl, hint, hprim, hmem, hr'eq, hr'monic,
     minpoly.irreducible hint, hr'equiv, ⟨elocal⟩⟩
 end Algebra

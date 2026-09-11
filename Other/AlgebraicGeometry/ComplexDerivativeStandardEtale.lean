@@ -28,18 +28,6 @@ def derivativeStandardEtalePair {n : ℕ}
   g := p.derivative * Polynomial.C t
   cond := ⟨Polynomial.C t, 0, 1, by simp⟩
 
-@[simp]
-lemma derivativeStandardEtalePair_f {n : ℕ}
-    (p : Polynomial (complexPolynomialRing n)) (hp : p.Monic)
-    (t : complexPolynomialRing n) :
-    (derivativeStandardEtalePair p hp t).f = p := rfl
-
-@[simp]
-lemma derivativeStandardEtalePair_g {n : ℕ}
-    (p : Polynomial (complexPolynomialRing n)) (hp : p.Monic)
-    (t : complexPolynomialRing n) :
-    (derivativeStandardEtalePair p hp t).g = p.derivative * Polynomial.C t := rfl
-
 /-- The equations attached to `derivativeStandardEtalePair` are exactly the equation of the
 polynomial family together with nonvanishing of the base function times the root derivative. -/
 lemma derivativeStandardEtalePair_coordinate_condition {n : ℕ}

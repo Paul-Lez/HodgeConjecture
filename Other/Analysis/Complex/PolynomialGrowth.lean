@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Analysis.Complex.Liouville
 public import Mathlib.Analysis.Complex.TaylorSeries
+public import Mathlib.Analysis.Analytic.Polynomial
 public import Mathlib.Algebra.Polynomial.Degree.Operations
 public import Mathlib.LinearAlgebra.Lagrange
 public import Mathlib.Analysis.Calculus.FDeriv.Pi
@@ -112,21 +113,8 @@ lemma growth_fin_cons_of_bound {n : ℕ} {f : (Fin (n + 1) → ℂ) → ℂ} {C 
 /-- Evaluation of a complex multivariate polynomial is an entire function. -/
 theorem differentiable_mvPolynomial_eval {n : ℕ} (p : MvPolynomial (Fin n) ℂ) :
     Differentiable ℂ (fun z : Fin n → ℂ => MvPolynomial.eval z p) := by
-  refine MvPolynomial.induction_on
-    (motive := fun q : MvPolynomial (Fin n) ℂ =>
-      Differentiable ℂ (fun z : Fin n → ℂ => MvPolynomial.eval z q))
-    p (fun a => ?_) (fun p q hp hq => ?_) (fun p i hp => ?_)
-  · simpa only [MvPolynomial.eval_C] using differentiable_const (c := a)
-  · have hfun : (fun z : Fin n → ℂ => MvPolynomial.eval z (p + q)) =
-        (fun z => MvPolynomial.eval z p) + fun z => MvPolynomial.eval z q := by
-      funext z; simp
-    rw [hfun]
-    exact hp.add hq
-  · have hfun : (fun z : Fin n → ℂ => MvPolynomial.eval z (p * MvPolynomial.X i)) =
-        (fun z => MvPolynomial.eval z p) * fun z => z i := by
-      funext z; simp
-    rw [hfun]
-    exact hp.mul (differentiable_apply i)
+  intro z
+  exact (AnalyticOnNhd.eval_mvPolynomial p z (Set.mem_univ z)).differentiableAt
 
 /-- The nonvanishing locus of a complex multivariate polynomial is open. -/
 theorem isOpen_eval_ne_zero {n : ℕ} (p : MvPolynomial (Fin n) ℂ) :

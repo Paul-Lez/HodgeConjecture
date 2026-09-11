@@ -107,37 +107,3 @@ theorem dense_eval_ne_zero (n : ℕ) [Algebra (complexPolynomialRing n) T]
 end
 
 end AlgebraicGeometry.ComplexAlgHom
-
-namespace AlgebraicGeometry.ComplexPoint
-
-open Point
-
-open CategoryTheory
-noncomputable section
-
-variable (T : Type) [CommRing T] [Algebra ℂ T] (n : ℕ)
-  [Algebra (ComplexAlgHom.complexPolynomialRing n) T]
-  [IsScalarTower ℂ (ComplexAlgHom.complexPolynomialRing n) T]
-  [Algebra.Etale (ComplexAlgHom.complexPolynomialRing n) T]
-  [IsDomain T]
-
-/-- A nonzero global function on an affine pointed étale domain has analytically dense principal
-open subset. -/
-theorem dense_overOpen_basicOpen_of_etale (n : ℕ)
-    [Algebra (ComplexAlgHom.complexPolynomialRing n) T]
-    [IsScalarTower ℂ (ComplexAlgHom.complexPolynomialRing n) T]
-    [Algebra.Etale (ComplexAlgHom.complexPolynomialRing n) T] (b : T) (hb : b ≠ 0) :
-    Dense (overOpen ((Spec (CommRingCat.of T)).basicOpen ((Scheme.ΓSpecIso (CommRingCat.of T)).inv b)) :
-      Set (ComplexPoint (Over.mk (affineSpecStructureMap T)))) := by
-  rw [show (overOpen ((Spec (CommRingCat.of T)).basicOpen ((Scheme.ΓSpecIso (CommRingCat.of T)).inv b)) :
-      Set (ComplexPoint (Over.mk (affineSpecStructureMap T)))) =
-      (affineSpecEquiv T) ⁻¹' {φ : T →ₐ[ℂ] ℂ | φ b ≠ 0} by
-    ext z
-    change z ∈ overOpen ((Over.mk (affineSpecStructureMap T)).left.basicOpen
-      ((Scheme.ΓSpecIso (CommRingCat.of T)).inv b)) ↔ affineSpecEquiv T z b ≠ 0
-    rw [mem_overOpen_basicOpen_iff_evaluate_ne_zero
-      (X := Over.mk (affineSpecStructureMap T)) (U := ⊤)
-      ((Scheme.ΓSpecIso (CommRingCat.of T)).inv b) z trivial]
-    rw [affineSpecEquiv_apply]]
-  exact (affineSpecHomeomorph T).isOpenQuotientMap.dense_preimage_iff.2
-    (ComplexAlgHom.dense_eval_ne_zero T n b hb)
