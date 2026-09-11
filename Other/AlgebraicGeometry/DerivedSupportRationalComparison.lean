@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalConeComparison
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.RationalCohomologyZero
+public import Other.AlgebraicGeometry.RationalCohomologyZero
 
 /-!
 # Derived supported sections and rational support hypercohomology

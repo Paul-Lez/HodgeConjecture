@@ -18,7 +18,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Coniveau
 import Other.AlgebraicGeometry.CycleClassDimension
 import Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
-import HodgeConjecture.Lemmas.AlgebraicGeometry.RationalCohomologyZero
+import Other.AlgebraicGeometry.RationalCohomologyZero
 
 /-!
 # The Hodge conjecture in codimension zero
