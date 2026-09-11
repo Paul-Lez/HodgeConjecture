@@ -11,6 +11,7 @@ public import Mathlib.Algebra.Polynomial.Degree.Operations
 public import Mathlib.LinearAlgebra.Lagrange
 public import Mathlib.Analysis.Calculus.FDeriv.Pi
 public import Mathlib.Algebra.MvPolynomial.Equiv
+public import Mathlib.Algebra.MvPolynomial.Funext
 
 /-!
 # Entire functions of polynomial growth
@@ -83,6 +84,7 @@ private lemma growth_fin_cons {n : ℕ} {f : (Fin (n + 1) → ℂ) → ℂ} {C :
     (hC : 0 ≤ C) {N : ℕ} (h : ∀ z, ‖f z‖ ≤ C * (1 + ‖z‖) ^ N)
     (t : ℂ) (y : Fin n → ℂ) :
     ‖f (Fin.cons t y)‖ ≤ (C * (1 + ‖t‖) ^ N) * (1 + ‖y‖) ^ N := by
+
   calc
     ‖f (Fin.cons t y)‖ ≤ C * (1 + ‖(Fin.cons t y : Fin (n + 1) → ℂ)‖) ^ N := h _
     _ ≤ C * ((1 + ‖t‖) * (1 + ‖y‖)) ^ N := by
@@ -91,6 +93,44 @@ private lemma growth_fin_cons {n : ℕ} {f : (Fin (n + 1) → ℂ) → ℂ} {C :
       have := mul_nonneg (norm_nonneg t) (norm_nonneg y)
       nlinarith
     _ = _ := by rw [mul_pow, mul_assoc]
+/-- A nonzero multivariate polynomial has arbitrarily many distinct first-coordinate slices
+which are still nonzero. -/
+private lemma exists_nodes_slice_ne_zero {n k : ℕ} {p : MvPolynomial (Fin (n + 1)) ℂ}
+    (hp : p ≠ 0) : ∃ nodes : Fin k → ℂ, Function.Injective nodes ∧
+      ∀ i, Polynomial.eval (MvPolynomial.C (nodes i)) (MvPolynomial.finSuccEquiv ℂ n p) ≠ 0 := by
+  classical
+  have hex : ∃ z : Fin (n + 1) → ℂ, MvPolynomial.eval z p ≠ 0 := by
+    contrapose! hp
+    exact MvPolynomial.funext (fun z => by simpa using hp z)
+  obtain ⟨z, hz⟩ := hex
+  let y : Fin n → ℂ := fun j => z j.succ
+  let q : ℂ[X] := Polynomial.map (MvPolynomial.eval y)
+    (MvPolynomial.finSuccEquiv ℂ n p)
+  have hq : q ≠ 0 := by
+    intro hq
+    have heval := congrArg (Polynomial.eval (z 0)) hq
+    simp only [Polynomial.eval_zero] at heval
+    apply hz
+    have hzcons : Fin.cons (z 0) y = z := by
+      ext i
+      exact Fin.cases rfl (fun _ => rfl) i
+    rw [← hzcons, MvPolynomial.eval_eq_eval_mv_eval' y (z 0) p]
+    exact heval
+  obtain ⟨s, hs, hscard⟩ :=
+    (Polynomial.rootSet_finite q ℂ).infinite_compl.exists_subset_card_eq k
+  let e : Fin k ≃ s := (s.equivFinOfCardEq hscard).symm
+  let nodes : Fin k → ℂ := fun i => (e i : ℂ)
+  refine ⟨nodes, ?_, ?_⟩
+  · exact (e.toEmbedding.trans (Function.Embedding.subtype _)).injective
+  · intro i hi
+    have hnotroot : nodes i ∉ q.rootSet ℂ := hs (e i).property
+    have hqeval : Polynomial.eval (nodes i) q ≠ 0 := by
+      simpa [Polynomial.mem_rootSet_of_ne hq] using hnotroot
+    apply hqeval
+    simp only [q, Polynomial.eval_map]
+    rw [show nodes i = MvPolynomial.eval y (MvPolynomial.C (nodes i)) by simp,
+      Polynomial.eval₂_at_apply]
+    exact congrArg (MvPolynomial.eval y) hi
 
 /-- An entire function of finitely many complex variables with polynomial growth is a
 multivariate polynomial. The proof uses interpolation, so needs no mixed derivative API. -/
