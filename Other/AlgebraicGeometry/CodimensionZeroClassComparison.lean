@@ -35,8 +35,8 @@ built from, because every step of the normalization chain is injective: the two 
 comparisons are isomorphisms, and forgetting support is a bijection because the generic component
 is supported on the whole analytic space.
 
-The codimension-zero case of the Hodge conjecture therefore follows from nonvanishing of that one
-local normalized section, which replaces the comparison of the two spans as the remaining input.
+Thus, assuming the analytification is connected, it suffices to prove that the normalized coclass
+section is nonzero to establish the codimension-zero case of the Hodge conjecture.
 -/
 
 @[expose] public noncomputable section
