@@ -5,6 +5,7 @@ Authors: Bhavik Mehta
 -/
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexEtale
 import HodgeConjecture.Lemmas.Analysis.PolynomialComplement
+import Other.RingTheory.StandardEtaleAlgebraic
 
 /-!
 # Injectivity of pointed étale coordinate maps
@@ -61,6 +62,31 @@ theorem injective_algebraMap_of_etale_of_point (u : T →ₐ[ℂ] ℂ) :
   rw [hcoordinates] at heval
   exact hwp heval
 
+
+variable [IsDomain T]
+
+/-- The polynomial base remains injective after passing to the standard étale neighborhood chosen
+at a complex point. -/
+theorem injective_algebraMap_etaleStandardNeighborhood (u : T →ₐ[ℂ] ℂ) :
+    Function.Injective (algebraMap (complexPolynomialRing n)
+      (Localization.Away (etaleStandardNeighborhood (n := n) T u).element)) := by
+  let D := etaleStandardNeighborhood (n := n) T u
+  have hbase : Function.Injective (algebraMap (complexPolynomialRing n) T) :=
+    injective_algebraMap_of_etale_of_point T u
+  have helement : D.element ≠ 0 := by
+    intro h
+    exact D.nonzero (by rw [h, map_zero])
+  have hlocal : Function.Injective (algebraMap T (Localization.Away D.element)) := by
+    apply IsLocalization.injective (M := Submonoid.powers D.element) _
+    rintro x ⟨m, rfl⟩
+    exact pow_mem (mem_nonZeroDivisors_of_ne_zero helement) m
+  change Function.Injective
+    (algebraMap (complexPolynomialRing n) (Localization.Away D.element))
+  intro p q hpq
+  apply hbase
+  apply hlocal
+  rw [IsScalarTower.algebraMap_apply (complexPolynomialRing n) T] at hpq
+  exact hpq
 end
 
 end AlgebraicGeometry.ComplexAlgHom
