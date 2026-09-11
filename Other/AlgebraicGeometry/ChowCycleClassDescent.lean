@@ -15,8 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleClass
 /-!
 # Descent of componentwise cycle classes to Chow groups
 

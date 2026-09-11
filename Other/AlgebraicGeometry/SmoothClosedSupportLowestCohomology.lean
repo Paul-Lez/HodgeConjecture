@@ -4,19 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
 public import HodgeConjecture.Definitions.AlgebraicTopology.FlasqueSupportedSections
-public import HodgeConjecture.Definitions.AlgebraicTopology.LowestFlasqueCohomology
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LowestFlasqueCohomology
 /-!
-# Actual lowest-degree globalization for smooth closed supports
+# Lowest-degree globalization for smooth closed supports
 
-The geometric cohomology-sheaf concentration theorem supplies the lower
-vanishing needed by the canonical lowest-degree comparison. Flasqueness of
-the supported injective model is proved from its actual kernel definition.
-Thus the comparison below has no purity, acyclicity, or group-equivalence
-input: its forward map is the already constructed sheafification comparison.
-This still does not define the normalized section of the surviving sheaf.
+The geometric cohomology-sheaf concentration theorem supplies the lower vanishing needed by
+the canonical lowest-degree comparison, and flasqueness of the supported injective model
+follows from its kernel definition. The forward map of the comparison below is the
+sheafification comparison. Defining the normalized section of the surviving sheaf is left
+to a later file.
 -/
 
 @[expose] public noncomputable section

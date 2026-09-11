@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiGlobalSectionsComparison
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiGlobalSectionsComparison
+public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 /-! # Naturality of the additive map/extension comparison -/
 
 @[expose] public noncomputable section

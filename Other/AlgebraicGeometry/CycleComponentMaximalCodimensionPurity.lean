@@ -15,8 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Coniveau
 import HodgeConjecture.Definitions.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 import Other.AlgebraicGeometry.CycleComponentPointPurity
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff

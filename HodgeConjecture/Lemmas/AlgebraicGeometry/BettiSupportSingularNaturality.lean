@@ -15,8 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiCohomologyWithSupportComparison
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiCohomologyWithSupportComparison
 /-!
 # Naturality of the supported Betti comparison
 
