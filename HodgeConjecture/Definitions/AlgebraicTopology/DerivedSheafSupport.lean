@@ -45,8 +45,6 @@ def openRestrictionPushforward (U : Opens X) :
   U.isOpenEmbedding.sheafPullback AddCommGrpCat ⋙
     pushforward AddCommGrpCat U.inclusion'
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
 /-- The actual restriction morphism, functorial in the coefficient sheaf. -/
 def toOpenRestrictionPushforward (U : Opens X) :
     𝟭 (Sheaf AddCommGrpCat.{u} X) ⟶ openRestrictionPushforward X U where
@@ -110,15 +108,13 @@ lemma liftSheafSectionsSupportedOutside_inclusion (U : Opens X)
       (sheafSectionsSupportedOutsideInclusion X U).app G = f :=
   kernel.lift_ι _ _ _
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
 /-- On every ambient open set, supported sections are exactly the kernel of
 restriction to its intersection with `U`. This is the canonical kernel
 comparison, not a supplied equivalence. -/
 def sheafSectionsSupportedOutsideOnOpenIso (U V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) :
     ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V) ≅
-      kernel (((toOpenRestrictionPushforward X U).app F).hom.app (op V)) := by
+      kernel (((toOpenRestrictionPushforward X U).app F).hom.app (op V)) :=
   let ev : Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
     sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat ⋙
       (evaluation _ AddCommGrpCat).obj (op V)
@@ -127,10 +123,8 @@ def sheafSectionsSupportedOutsideOnOpenIso (U V : Opens X)
     comp_preservesLimitsOfShape
       (sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op V))
-  exact PreservesKernel.iso ev ((toOpenRestrictionPushforward X U).app F)
+  PreservesKernel.iso ev ((toOpenRestrictionPushforward X U).app F)
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
 /-- The kernel comparison preserves the actual inclusion of supported sections
 into all sections. -/
 @[reassoc (attr := simp)]
@@ -154,8 +148,8 @@ lemma sheafSectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
 
 /-- Restriction to the empty open subspace and pushforward gives the zero sheaf. -/
 lemma isZero_openRestrictionPushforward_bot (F : Sheaf AddCommGrpCat.{u} X) :
-    IsZero ((openRestrictionPushforward X ⊥).obj F) := by
-  exact (pushforward AddCommGrpCat (⊥ : Opens X).inclusion').map_isZero
+    IsZero ((openRestrictionPushforward X ⊥).obj F) :=
+  (pushforward AddCommGrpCat (⊥ : Opens X).inclusion').map_isZero
     ((isZero_iff_stalkFunctor_obj_isZero _).2 fun x => False.elim x.property)
 
 instance (F : Sheaf AddCommGrpCat.{u} X) :
