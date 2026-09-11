@@ -1037,6 +1037,35 @@ intersection description of a Noetherian normal domain; neither is in Mathlib. N
 a closed point off `|D|` need not lie in any such neighbourhood; the unit statement at a closed
 point of a variety of dimension `≥ 2` genuinely needs normality.
 
+*Avoiding Hartogs: enlarge the closed set.* In
+[`Other/AlgebraicGeometry/ComplementFrameGeneric.lean`](../Other/AlgebraicGeometry/ComplementFrameGeneric.lean)
+the frame is obtained **unconditionally** off a larger closed set. The *good locus*
+`goodLocus c` (points carrying unit data) is Zariski open; its complement `badLocus c` contains
+every component of the divisor (`closure_subset_badLocus`) and, off those components, consists of
+points of coheight `≥ 2` (`two_le_coheight_of_mem_badLocus`: the generic point is good, and a
+codimension-one point off the divisor is good because its stalk is a DVR in which a rational
+function of order zero is a unit, which spreads to a basic open). The gluing of
+`ComplementFrame.lean` then applies on the analytic complement (`exists_lift_of_goodLocus`):
+
+```lean
+def HasComplementFrameOffCodimTwo : Prop :=
+  ∀ E L, IsInvertible L → (L^an ≅ E.sectionSheafOfModules) → ∀ c, c.Represents L →
+    ∃ Z' : Closeds X.left,
+      (∀ y, c.divisor y ≠ 0 → closure {y} ⊆ Z') ∧
+      (∀ z ∈ Z', (∀ y, c.divisor y ≠ 0 → z ∉ closure {y}) → (2 : ℕ∞) ≤ coheight z) ∧
+      ∃ ℓ : E.middle.obj.obj (op (analyticClosedSupport X Z').compl),
+        E.projection.hom.app _ ℓ = (constantIntegerSheaf X).obj.map (homOfLE le_top).op integerOneSection
+
+theorem hasComplementFrameOffCodimTwo : HasComplementFrameOffCodimTwo X   -- proved
+theorem cycleAnalyticClosedSupport_le_analyticClosedSupport (c) (Z')
+    (h : ∀ y, c.divisor y ≠ 0 → closure {y} ⊆ Z') :
+    cycleAnalyticClosedSupport X c.divisor ≤ analyticClosedSupport X Z'
+```
+
+The relative Chern class must then be taken with support in `|Z'|^an ⊇ |D|^an`; the extra
+support has real codimension `≥ 4`, so the chart formula and the component decomposition are
+unaffected (this restatement is being carried out separately).
+
 
 *Non-vacuity.* The previous draft of this step was vacuous, so the new statements come with a
 check: `exists_componentContribution_sum_singleton` proves
@@ -1833,6 +1862,7 @@ Summary of the named obligations, in dependency order:
 | ~~`exists_log` on a flattening chart~~ | `ChernWindingNormalChartLog.lean` | **proved**: `exists_holomorphicExponential_flattenedSupportNeighborhood` |
 | `HasNormalFlatteningCharts` | `ChernWindingNormalChartExistence.lean` | §4.3 step 4 item 3: all that is left of (b) + (c) — existence of a flattening chart at `q` whose normal coordinate is the analytified local equation, off a proper closed subset `B` of `Z_x`, plus the coclass transport `coclass_restrict` |
 | ~~correction needed~~ | `ChernLocalModelWinding.lean`, `CycleComponentRestrictionInjective.lean` | **done**: the pointwise form was **false** at points where two components of `D` meet (`ChernWindingLocalFormObstruction.lean`); the obligation now quantifies only over `q` off a Zariski-closed `B ⊆ Z_x` with `x ∉ B`, and the reduction is re-proved via the injectivity of restriction away from `B^an` |
+| ~~`HasComplementFrame` off `\|D\|^an`~~ | `ComplementFrameGeneric.lean` | **proved** off a codimension-two enlargement: `hasComplementFrameOffCodimTwo` |
 | `HasStalkUnitOfOrdEqZero`, `HasUnitOffDivisor` | `ComplementFrame.lean` | §4.3 step 3/4: algebraic Hartogs at the stalks (`𝒪_{X,p}` normal); **`HasComplementFrame` reduces to it**: `hasComplementFrame_of_stalkUnit` |
 | `HasChernWindingNaturality` | `ChernLocalModelWinding.lean` | §4.3 step 4 item 3: (a), the canonical relative class and its computation by winding numbers; **reduces to it**: `hasChernLocalModel_of_winding` |
 | ~~winding reduction~~ | `ChernLocalModelWinding.lean` | **proved**: `hasChernLocalModel_of_winding`, `hasChernWindingNaturality_of_localModel`, `supportRelativeCohomologySheaf_section_eq_zero` |

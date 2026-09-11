@@ -64,6 +64,7 @@ import Other.AlgebraicGeometry.ChernWindingLocalFormObstruction
 import Other.AlgebraicGeometry.ChernWindingHolomorphicLog
 import Other.AlgebraicGeometry.ChernWindingNormalChartExistence
 import Other.AlgebraicGeometry.ComplementFrame
+import Other.AlgebraicGeometry.ComplementFrameGeneric
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.localCoordinateEquiv
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.sectionSheafOfModules_isInvertible
 #print axioms AlgebraicGeometry.ComplexPoint.contMDiffAt_evaluate
@@ -256,3 +257,4 @@ import Other.AlgebraicGeometry.ComplementFrame
 #print axioms AlgebraicGeometry.ComplexPoint.hasComplementFrame_of_unitOffDivisor
 #print axioms AlgebraicGeometry.ComplexPoint.hasComplementFrame_of_stalkUnit
 #print axioms AlgebraicGeometry.ComplexPoint.hasDivisorClassOfSomeCartierData_of_unitOffDivisor
+#print axioms AlgebraicGeometry.ComplexPoint.hasComplementFrameOffCodimTwo
