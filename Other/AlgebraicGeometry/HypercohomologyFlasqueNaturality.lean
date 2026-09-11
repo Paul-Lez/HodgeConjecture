@@ -146,7 +146,6 @@ theorem hypercohomologyAddEquivGlobalSections_naturality_to_kInjective
   exact hypercohomologyAddEquivGlobalSectionsOfResolution_naturality_to_kInjective
     X K I L i f n a
 
-set_option maxHeartbeats 800000 in
 /-- The flasque comparison preserves actual shifted maps into K-injective targets,
 including the exact cone-connecting sign used by support-forgetting. -/
 theorem hypercohomologyAddEquivGlobalSections_shifted_naturality_to_kInjective
