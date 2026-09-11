@@ -289,4 +289,5 @@ public import HodgeConjecture.Mathlib.RingTheory.SmoothKrullDimension
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 public import HodgeConjecture.Mathlib.Topology.ChartedSpaceParacompact
 public import HodgeConjecture.Mathlib.Topology.KrullDimension
+public import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 public import HodgeConjecture.Statement
