@@ -401,6 +401,8 @@ public import Other.Geometry.Manifold.CompactManifoldFiniteHomology
 public import Other.AlgebraicGeometry.ProjectiveFiniteHomology
 public import Other.AlgebraicGeometry.CohomologyWithSupportExact
 public import Other.AlgebraicGeometry.UnitExtensionOpenRestriction
+public import Other.AlgebraicGeometry.OpenRestrictionLocalSheaf
+public import Other.AlgebraicGeometry.OpenRestrictionDerivedFactorization
 public import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 public import Other.AlgebraicGeometry.DivisorClassComparisonSupport
 public import Other.AlgebraicGeometry.ChernLocalModel
