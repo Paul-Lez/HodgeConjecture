@@ -35,8 +35,8 @@ theorem cycleComponentExtendSmoothCoclass_normalization
     (s : CycleComponentSmoothCoclassSections X x p) :
     (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).hom
       (cycleComponentExtendSmoothCoclass X x (d := d) hx s) = s :=
-  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).addCommGroupIsoToAddEquiv
-    .apply_symm_apply s
+  AddEquiv.apply_symm_apply
+    (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).addCommGroupIsoToAddEquiv s
 
 /-- The prescribed smooth-locus section determines the extension uniquely. -/
 theorem cycleComponentExtendSmoothCoclass_unique
