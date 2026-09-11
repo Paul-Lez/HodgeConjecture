@@ -396,7 +396,6 @@ set_option maxRecDepth 5000 in
     D.toAuxiliaryBorelMooreComparisonData.auxiliarySingularSupportedClass =
       D.singularSupportedClassOfComparisons := rfl
 
-set_option maxRecDepth 5000 in
 /-- Sheaf-theoretic comparison inputs for a component supply the auxiliary comparison data of the
 earlier cycle-class package, through the adapter. -/
 theorem nonempty_auxiliaryRationalCycleComponentBorelMooreComparisonData
@@ -454,7 +453,6 @@ def toComplexOrientedComponentClassData
     (map_rat_smul D.comparisonInputs.orientationInducedComparisonAddEquiv)
   comparison_isComplexOriented := D.orientationComparison_local
 
-set_option maxRecDepth 5000 in
 /-- The sheaf route together with the local Verdier/Thom normalization theorem supplies the general
 complex-oriented component class data. -/
 theorem nonempty_complexOrientedRationalCycleComponentClassData
