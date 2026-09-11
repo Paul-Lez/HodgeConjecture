@@ -572,6 +572,130 @@ theorem eventually_mem_clopen_mvSimpleRootCoverOn_iff {n : ℕ}
     filter_upwards [hU, hevent'] with z' hz' hmem hbase hroot hr
     exact ⟨fun h ↦ ((hmem hz') h).elim, fun h ↦ (hi h).elim⟩
 
+
+/-- Roots selected in a simple fiber by a subset of the principal-open root cover. -/
+def mvSelectedRootsOn {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) : Multiset ℂ := by
+  classical
+  exact (mvFamilySpecialization p z.1).roots.filter fun w ↦
+    ∃ h : (mvFamilySpecialization p z.1).eval w = 0,
+      (⟨(z.1, w), h, mul_ne_zero hzr (z.2 w h)⟩ : MvSimpleRootCoverOn p r) ∈ S
+
+/-- The monic fiber factor selected on the principal-open root cover. -/
+def mvSelectedFactorOn {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) : Polynomial ℂ :=
+  ((mvSelectedRootsOn r S z hzr).map fun w ↦ X - C w).prod
+
+theorem mvSelectedFactorOn_monic {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
+    (mvSelectedFactorOn r S z hzr).Monic :=
+  monic_multisetProd_X_sub_C (mvSelectedRootsOn r S z hzr)
+
+theorem mvSelectedFactorOn_dvd {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
+    mvSelectedFactorOn r S z hzr ∣ mvFamilySpecialization p z.1 := by
+  classical
+  rw [mvSelectedFactorOn, mvSelectedRootsOn]
+  exact (Multiset.prod_dvd_prod_of_le
+    (Multiset.map_le_map (Multiset.filter_le _ _))).trans
+      (mvFamilySpecialization p z.1).prod_multiset_X_sub_C_dvd
+
+theorem natDegree_mvSelectedFactorOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)}
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
+    (mvSelectedFactorOn r S z hzr).natDegree = (mvSelectedRootsOn r S z hzr).card := by
+  simp [mvSelectedFactorOn]
+
+
+noncomputable def mvSelectedBranchIndicesOn {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
+    Finset (Fin p.natDegree) := by
+  classical
+  exact Finset.univ.filter fun i ↦ mvSimpleRootCoverOnPoint hp r z hzr i ∈ S
+
+/-- Near a center fiber, the restricted selection is a fixed set of local branches. -/
+theorem eventually_mvSelectedRootsOn_eq_map_mvLocalRootBranches {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ (hbase : ∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
+        (mvFamilySpecialization p z').derivative.eval w ≠ 0)
+      (hr : MvPolynomial.eval z' r ≠ 0),
+      mvSelectedRootsOn r S ⟨z', hbase⟩ hr =
+        (mvSelectedBranchIndicesOn hp r S z hzr).1.map fun i ↦
+          mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z' := by
+  classical
+  have hselection : ∀ᶠ z' in 𝓝 z.1, ∀ i : Fin p.natDegree,
+      ∀ (hbase : ∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
+          (mvFamilySpecialization p z').derivative.eval w ≠ 0)
+        (hroot : mvFamilyEquation p
+          (z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z') = 0)
+        (hr : MvPolynomial.eval z' r ≠ 0),
+        ((⟨(z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z'), hroot,
+            mul_ne_zero hr (hbase _ hroot)⟩ : MvSimpleRootCoverOn p r) ∈ S ↔
+          mvSimpleRootCoverOnPoint hp r z hzr i ∈ S) :=
+    eventually_all.2 fun i ↦ eventually_mem_clopen_mvSimpleRootCoverOn_iff hp r S hS z hzr i
+  filter_upwards [eventually_all_mvFamilyEquation_mvLocalRootBranch hp z,
+    eventually_injective_mvLocalRootBranches hp z,
+    eventually_exists_mvLocalRootBranch_eq_of_mvFamilyEquation_eq_zero hp z,
+    hselection] with z' hroot hinj hexhaust hselect
+  intro hbase hr
+  let q := mvFamilySpecialization p z'
+  rw [mvSelectedRootsOn]
+  apply (Multiset.Nodup.ext (s := _) (t := _)
+    ((mvRoots_card_nodup_of_mem_simpleRootBase hp ⟨z', hbase⟩).2.filter _)
+    ((Multiset.nodup_map_iff_of_injective hinj).2
+      (mvSelectedBranchIndicesOn hp r S z hzr).nodup)).2
+  intro w
+  constructor
+  · intro hw
+    rw [Multiset.mem_filter] at hw
+    obtain ⟨hwroot, hmem⟩ := hw
+    have hweval : q.eval w = 0 :=
+      (mem_roots (hp.map (MvPolynomial.eval z')).ne_zero).mp hwroot
+    obtain ⟨i, hi⟩ := hexhaust w hweval
+    rw [Multiset.mem_map]
+    refine ⟨i, ?_, hi⟩
+    obtain ⟨hwproof, hwS⟩ := hmem
+    have hbranchS :
+        (⟨(z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z'), hroot i,
+          mul_ne_zero hr (hbase _ (hroot i))⟩ : MvSimpleRootCoverOn p r) ∈ S := by
+      convert hwS using 1
+      all_goals simp [hi]
+    change i ∈ mvSelectedBranchIndicesOn hp r S z hzr
+    simpa [mvSelectedBranchIndicesOn] using
+      (hselect i hbase (hroot i) hr).mp hbranchS
+  · intro hw
+    rw [Multiset.mem_map] at hw
+    obtain ⟨i, hiI, rfl⟩ := hw
+    rw [Multiset.mem_filter]
+    refine ⟨(mem_roots (hp.map (MvPolynomial.eval z')).ne_zero).mpr (hroot i), ?_⟩
+    refine ⟨hroot i, ?_⟩
+    apply (hselect i hbase (hroot i) hr).mpr
+    simpa [mvSelectedBranchIndicesOn] using hiI
+
+/-- The degree of a clopen-selected restricted fiber factor is locally constant. -/
+theorem eventually_natDegree_mvSelectedFactorOn_eq_card {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ (hbase : ∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
+        (mvFamilySpecialization p z').derivative.eval w ≠ 0)
+      (hr : MvPolynomial.eval z' r ≠ 0),
+      (mvSelectedFactorOn r S ⟨z', hbase⟩ hr).natDegree =
+        (mvSelectedBranchIndicesOn hp r S z hzr).card := by
+  filter_upwards [eventually_mvSelectedRootsOn_eq_map_mvLocalRootBranches hp r S hS z hzr]
+    with z' hz hbase hr
+  rw [natDegree_mvSelectedFactorOn, hz hbase hr, Multiset.card_map]
+  rfl
+
 end
 
 end Polynomial
