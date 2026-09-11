@@ -124,6 +124,9 @@ theorem hypercohomologyAddEquivGlobalSections_naturality_to_kInjective
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map f) n
         (hypercohomologyAddEquivGlobalSections X K N hKflasque n a) := by
   let Y := TopCat.of (ComplexPoint X)
+  -- This ladder mirrors the choices made inside `hypercohomologyAddEquivGlobalSections`
+  -- term for term, which is what makes the two sides definitionally equal below. Replacing
+  -- it with `choose` makes `I` and `i` opaque and breaks that defeq.
   let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective K N
   let I := Classical.choose hres
   let hresI := Classical.choose_spec hres
