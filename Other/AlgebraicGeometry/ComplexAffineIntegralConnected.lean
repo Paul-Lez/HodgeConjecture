@@ -3,9 +3,11 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
+module
 
-import Other.AlgebraicGeometry.ComplexLocalizationConnectedness
-import Other.RingTheory.IntegralPrimitiveElement
+
+public import Other.AlgebraicGeometry.ComplexLocalizationConnectedness
+public import Other.RingTheory.IntegralPrimitiveElement
 
 @[expose] public section
 

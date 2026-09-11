@@ -3,10 +3,12 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
+module
 
-import Other.AlgebraicGeometry.ComplexAffineIntegralConnected
-import Other.AlgebraicGeometry.SmoothLocalNonvanishing
-import Mathlib.AlgebraicGeometry.AlgClosed.Basic
+
+public import Other.AlgebraicGeometry.ComplexAffineIntegralConnected
+public import Other.AlgebraicGeometry.SmoothLocalNonvanishing
+public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 
 /-!
 # Connectedness of smooth integral complex schemes
@@ -16,6 +18,8 @@ from Noether normalization and the connected root cover of an irreducible polyno
 étale coordinate chart supplies a connected nonempty open in the general case, and its complex
 points are dense in the whole scheme.
 -/
+
+@[expose] public section
 
 open CategoryTheory TopologicalSpace
 
@@ -27,7 +31,7 @@ noncomputable section
 
 /-- The complex points of a smooth integral quasi-separated complex scheme form a connected
 space. -/
-theorem connectedSpace (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+theorem connectedSpace (X : Over (Spec (CommRingCat.of ℂ))) [IsIntegral X.left] [Smooth X.hom]
     [QuasiSeparatedSpace X.left] : ConnectedSpace (ComplexPoint X) := by
   let _ : LocallyOfFiniteType X.hom := inferInstance
   let _ : JacobsonSpace X.left := LocallyOfFiniteType.jacobsonSpace X.hom

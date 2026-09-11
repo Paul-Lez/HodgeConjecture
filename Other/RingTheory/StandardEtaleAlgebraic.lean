@@ -3,9 +3,11 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathlib.RingTheory.Algebraic.Integral
-import Mathlib.RingTheory.Etale.StandardEtale
-import Mathlib.RingTheory.Localization.Integral
+module
+
+public import Mathlib.RingTheory.Algebraic.Integral
+public import Mathlib.RingTheory.Etale.StandardEtale
+public import Mathlib.RingTheory.Localization.Integral
 
 /-!
 # Standard étale algebras are algebraic over a domain
@@ -13,6 +15,8 @@ import Mathlib.RingTheory.Localization.Integral
 A standard étale algebra is a localization of a monogenic finite algebra. It need not be finite as
 a module, but every one of its elements remains algebraic over the base field.
 -/
+
+@[expose] public section
 
 open Polynomial
 

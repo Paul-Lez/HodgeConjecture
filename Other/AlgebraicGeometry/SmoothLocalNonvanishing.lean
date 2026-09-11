@@ -3,10 +3,12 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
-import Other.AlgebraicGeometry.EtaleNonvanishingDensity
-import Mathlib.AlgebraicGeometry.Morphisms.QuasiSeparated
+module
+
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+public import Other.AlgebraicGeometry.EtaleNonvanishingDensity
+public import Mathlib.AlgebraicGeometry.Morphisms.QuasiSeparated
 
 /-!
 # Local analytic density of nonvanishing loci
@@ -14,6 +16,8 @@ import Mathlib.AlgebraicGeometry.Morphisms.QuasiSeparated
 On an affine étale coordinate neighborhood in a smooth integral complex scheme, the nonvanishing
 locus of a nonzero regular function is analytically dense.
 -/
+
+@[expose] public section
 
 open scoped Topology
 
@@ -25,7 +29,7 @@ open ComplexAlgHom
 
 noncomputable section
 
-variable {X : Over (Spec ↧ℂ)} {d : ℕ} [SmoothOfRelativeDimension d X.hom]
+variable {X : Over (Spec (CommRingCat.of ℂ))} {d : ℕ} [SmoothOfRelativeDimension d X.hom]
   {x : X.left} (D : LocalEtaleCoordinates X d x)
 
 noncomputable local instance coordinateRingAlgebra :
@@ -71,7 +75,7 @@ open CategoryTheory
 
 noncomputable section
 
-variable {X : Over (Spec ↧ℂ)} {d : ℕ} [SmoothOfRelativeDimension d X.hom]
+variable {X : Over (Spec (CommRingCat.of ℂ))} {d : ℕ} [SmoothOfRelativeDimension d X.hom]
   {x : X.left} (D : LocalEtaleCoordinates X d x)
 
 lemma LocalEtaleCoordinates.injective_appTop [IsIntegral X.left]
@@ -108,7 +112,7 @@ open CategoryTheory Set Topology
 
 noncomputable section
 
-variable (X : Over (Spec ↧ℂ))
+variable (X : Over (Spec (CommRingCat.of ℂ)))
 
 /-- On a smooth integral quasi-separated complex scheme, the nonvanishing locus of a nonzero
 global regular function is analytically dense. -/
@@ -151,7 +155,7 @@ open CategoryTheory Set Topology
 
 noncomputable section
 
-variable (X : Over (Spec ↧ℂ))
+variable (X : Over (Spec (CommRingCat.of ℂ)))
 
 /-- Every nonempty Zariski open subset of a smooth integral quasi-separated complex scheme has
 dense complex points in the analytic topology. -/
@@ -214,7 +218,7 @@ open CategoryTheory Set Topology
 
 noncomputable section
 
-variable (X : Over (Spec ↧ℂ))
+variable (X : Over (Spec (CommRingCat.of ℂ)))
 
 /-- A connected nonempty Zariski open with dense complex points forces the entire analytic complex
 point space to be connected. -/

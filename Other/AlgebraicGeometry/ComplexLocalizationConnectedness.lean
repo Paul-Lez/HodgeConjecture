@@ -3,9 +3,13 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Other.AlgebraicGeometry.ComplexIteratedLocalization
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalization
-import Other.AlgebraicGeometry.SmoothLocalNonvanishing
+module
+
+public import Other.AlgebraicGeometry.ComplexIteratedLocalization
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalization
+public import Other.AlgebraicGeometry.SmoothLocalNonvanishing
+
+@[expose] public section
 
 open scoped Polynomial Topology
 
@@ -22,11 +26,11 @@ lemma dense_eval_ne_zero_of_smooth
     (y : B) (hy : y ≠ 0) :
     Dense {u : B →ₐ[ℂ] ℂ | u y ≠ 0} := by
   let X := Over.mk (ComplexPoint.affineSpecStructureMap B)
-  let t : Γ(X.left, ⊤) := (Scheme.ΓSpecIso ↧B).inv y
+  let t : Γ(X.left, ⊤) := (Scheme.ΓSpecIso (CommRingCat.of B)).inv y
   have ht : t ≠ 0 := by
     intro h
     apply hy
-    simpa [t] using congrArg (Scheme.ΓSpecIso ↧B).hom h
+    simpa [t] using congrArg (Scheme.ΓSpecIso (CommRingCat.of B)).hom h
   let hschemeSmooth : Smooth X.hom := by
     change Smooth (ComplexPoint.affineSpecStructureMap B)
     apply (HasRingHomProperty.Spec_iff (P := @Smooth)).2
@@ -34,10 +38,10 @@ lemma dense_eval_ne_zero_of_smooth
     exact RingHom.smooth_algebraMap.mpr inferInstance
   let _ : Smooth X.hom := hschemeSmooth
   let _ : IsIntegral X.left := by
-    change IsIntegral (Spec ↧B)
+    change IsIntegral (Spec (CommRingCat.of B))
     infer_instance
   let _ : QuasiSeparatedSpace X.left := by
-    change QuasiSeparatedSpace (Spec ↧B)
+    change QuasiSeparatedSpace (Spec (CommRingCat.of B))
     infer_instance
   have hdense := ComplexPoint.dense_evaluate_ne_zero X t ht
   rw [show {z : ComplexPoint X | Point.evaluate ⊤ t z ≠ 0} =
