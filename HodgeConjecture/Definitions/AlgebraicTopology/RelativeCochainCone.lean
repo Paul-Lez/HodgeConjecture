@@ -27,8 +27,8 @@ public import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 For a topological pair `A ⊆ X`, restriction of singular cochains is the algebraic dual of
 the inclusion `C_*(A) ⟶ C_*(X)`.  This file proves, without a finite-dimensionality
-hypothesis, that the cohomology in degree `n - 1` of its mapping cone is the algebraic dual of
-`H_n(X, A)`.
+hypothesis, that the cohomology in degree `n - 1` of its mapping cone is `H^n(X, A)`, the
+degree-`n` cohomology of the dual relative cochain complex.
 
 The proof dualizes the degreewise short exact sequence
 `C_*(A) ⟶ C_*(X) ⟶ C_*(X, A)`, extends the resulting cochain complexes by zero to
@@ -306,12 +306,8 @@ def relativeCochainConeCohomologyEquiv (X : TopPair.{u}) (n : ℕ) :
     (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)).homology
         ((n : ℤ) - 1) ≃ₗ[R]
       RelativeCohomology R X n :=
-  (relativeCochainConeHomologyIsoDualRelativeInt R X n).toLinearEquiv |>.trans <|
+  (relativeCochainConeHomologyIsoDualRelativeInt R X n).toLinearEquiv.trans
     (((relativeChainFunctor R).obj X).linearDualCochainComplex.extendHomologyIso
-      ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).toLinearEquiv |>.trans <|
-      (ShortComplex.homologyMapIso
-        (HomologicalComplex.linearDualCochainComplexScIso ((relativeChainFunctor R).obj X) n)
-          |>.toLinearEquiv.trans <|
-        (((relativeChainFunctor R).obj X).sc n).linearDualHomologyEquiv)
+      ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).toLinearEquiv
 
 end AlgebraicTopology.Singular

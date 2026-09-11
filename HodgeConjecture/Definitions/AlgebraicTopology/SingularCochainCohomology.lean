@@ -18,13 +18,17 @@ module
 public import HodgeConjecture.Definitions.Algebra.Homology.LinearDual
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCohomology
 /-!
-# Cohomology of singular cochains
+# The short-complex model of singular cochain cohomology
 
-This file defines ordinary singular cochain cohomology as the homology of the algebraic dual of
-the singular chain complex. The universal-coefficient identification of
-`HodgeConjecture.Definitions.Algebra.Homology.LinearDual` then identifies it with the singular
-cohomology of `HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology`, which is defined
-directly as the dual of homology.
+Singular cohomology is *defined* in
+`HodgeConjecture.Definitions.AlgebraicTopology.SingularCohomology` as the homology of the singular
+cochain complex, that is by dualising the chain complex. This file records the equivalent
+description that only mentions the degree-`n` short complex of the singular chain complex: its
+reversed linear dual has the same homology.
+
+That short-complex model is what the chain-homotopy machinery of
+`HodgeConjecture.Definitions.Algebra.Homology.LinearDual` produces, so it is the convenient shape
+for comparison results such as subdivision invariance.
 -/
 
 @[expose] public noncomputable section
@@ -37,19 +41,17 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R] (X : TopCat.{u})
 
-/-- Ordinary singular cochain cohomology in degree `n`, expressed as the homology of the
-algebraic-dual short complex centered on the singular chain group in degree `n`. -/
+/-- Singular cochain cohomology in degree `n`, expressed through the reversed algebraic-dual of
+the degree-`n` short complex of the singular chain complex. -/
 abbrev CochainCohomology (n : ℕ) : ModuleCat.{u} R :=
-  let K :=
-    ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X
-  (K.sc n).linearDual.homology
+  ((chainComplex R X).sc n).linearDual.homology
 
-/-- The universal-coefficient equivalence from ordinary singular cochain cohomology to the
-linear dual of singular homology. -/
+/-- The short-complex model computes singular cohomology: the degree-`n` short complex of the
+singular cochain complex is the reversed dual of the degree-`n` short complex of the singular
+chain complex. -/
 def cochainCohomologyEquiv (n : ℕ) :
     CochainCohomology R X n ≃ₗ[R] Cohomology R X n :=
-  let K :=
-    ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X
-  (K.sc n).linearDualHomologyEquiv
+  (ShortComplex.homologyMapIso
+    (HomologicalComplex.linearDualCochainComplexScIso (chainComplex R X) n)).toLinearEquiv.symm
 
 end AlgebraicTopology.Singular

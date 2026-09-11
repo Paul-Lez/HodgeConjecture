@@ -125,23 +125,40 @@ theorem graphNormalFiber_class (a : E) :
   rw [graphNormalFiber, relativeHomologyMap_comp, LinearMap.comp_apply, normalSliceSectionAt_class]
   rfl
 
-/-- Actual normal projection determines graph relative cohomology by linear duality. -/
+/-- Dualising the graph chain-homotopy equivalence determines graph relative cohomology. -/
+def graphNormalRelativeCohomologyIso (n : ℕ) :
+    RelativeCohomology ℚ (standardComplexPuncturedPair c) n ≅
+      RelativeCohomology ℚ (graphComplementPair E c F) n :=
+  (HomologicalComplex.linearDualHomotopyEquiv
+    (graphNormalRelativeChainHomotopyEquiv E c F hF)).toHomologyIso n
+
+/-- Actual normal projection determines graph relative cohomology. -/
 def graphNormalRelativeCohomologyEquiv (n : ℕ) :
     RelativeCohomology ℚ (standardComplexPuncturedPair c) n ≃ₗ[ℚ]
       RelativeCohomology ℚ (graphComplementPair E c F) n :=
-  (graphNormalRelativeHomologyIso E c F hF n).toLinearEquiv.dualMap
+  (graphNormalRelativeCohomologyIso E c F hF n).toLinearEquiv
+
+theorem graphNormalRelativeHomologyIso_hom (n : ℕ) :
+    (graphNormalRelativeHomologyIso E c F hF n).hom =
+      HomologicalComplex.homologyMap (graphNormalRelativeChainHomotopyEquiv E c F hF).hom n := by
+  show HomologicalComplex.homologyMap
+      ((relativeChainFunctor ℚ).map (graphFlattenPairIso E c F hF).hom) n ≫
+    HomologicalComplex.homologyMap (normalSliceRelativeChainHomotopyEquiv E c).hom n = _
+  rw [← HomologicalComplex.homologyMap_comp]
+  rfl
 
 @[simp] theorem graphNormalRelativeCohomologyEquiv_evaluate_class
     (α : RelativeCohomology ℚ (standardComplexPuncturedPair c) (2 * c)) :
-    graphNormalRelativeCohomologyEquiv E c F hF (2 * c) α (graphNormalClass E c F hF) =
-      α (standardComplexLocalClass c) := by
-  change α ((graphNormalRelativeHomologyIso E c F hF (2 * c)).hom.hom
-    (graphNormalClass E c F hF)) = _
-  rw [graphNormalClass_normalization]
+    relativeCohomologyEquivDualHomology ℚ (graphComplementPair E c F) (2 * c)
+        (graphNormalRelativeCohomologyEquiv E c F hF (2 * c) α) (graphNormalClass E c F hF) =
+      relativeCohomologyEquivDualHomology ℚ (standardComplexPuncturedPair c) (2 * c) α
+        (standardComplexLocalClass c) := by
+  rw [← graphNormalClass_normalization E c F hF, graphNormalRelativeHomologyIso_hom]
+  exact HomologicalComplex.linearDualHomologyEquiv_naturality
+    (graphNormalRelativeChainHomotopyEquiv E c F hF).hom (2 * c) α (graphNormalClass E c F hF)
 
 theorem graphRelativeCohomology_isZero_of_ne (hF : Continuous F) (n : ℕ) (hn : n ≠ 2 * c) :
-    IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ (graphComplementPair E c F) n)) := by
-  have := ModuleCat.subsingleton_of_isZero (graphRelativeHomology_isZero_of_ne E c F hF n hn)
-  exact ModuleCat.isZero_of_subsingleton _
+    IsZero (RelativeCohomology ℚ (graphComplementPair E c F) n) :=
+  relativeCohomology_isZero ℚ _ n (graphRelativeHomology_isZero_of_ne E c F hF n hn)
 
 end AlgebraicTopology.Singular

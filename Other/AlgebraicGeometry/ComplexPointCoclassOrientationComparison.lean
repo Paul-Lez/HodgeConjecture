@@ -48,14 +48,14 @@ lemma analyticPointLocalHomologyClass_eq_complexLocalOrientation :
 /-- The old point coclass evaluates to exactly `1` on the new orientation's local class. -/
 @[simp]
 lemma analyticPointLocalCoclass_apply_complexLocalOrientation :
-    analyticPointLocalCoclass X d z
+    analyticPointLocalCoclassDual X d z
       (complexLocalOrientation X d z) = 1 :=
   analyticPointLocalCoclass_apply_localClass X d z
 
 /-- The coefficient is preserved exactly, not just up to a nonzero factor. -/
 @[simp]
 lemma analyticPointLocalCoclass_apply_smul_complexLocalOrientation (q : ℚ) :
-    analyticPointLocalCoclass X d z
+    analyticPointLocalCoclassDual X d z
       (q • complexLocalOrientation X d z) = q := by
   rw [map_smul, analyticPointLocalCoclass_apply_complexLocalOrientation]
   exact mul_one q
@@ -65,12 +65,14 @@ the coclass. This uniqueness lemma constructs no new general duality equivalence
 lemma eq_analyticPointLocalCoclass_iff
     (β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) {z} (2 * d)) :
     β = analyticPointLocalCoclass X d z ↔
-      β (complexLocalOrientation X d z) = 1 := by
+      relativeCohomologyEquivDualHomology ℚ (pointComplementPair z) (2 * d) β
+        (complexLocalOrientation X d z) = 1 := by
   constructor
   · rintro rfl
     exact analyticPointLocalCoclass_apply_complexLocalOrientation X d z
   · intro hβ
-    refine LinearMap.ext fun c ↦ ?_
+    refine (relativeCohomologyEquivDualHomology ℚ (pointComplementPair z) (2 * d)).injective
+      (LinearMap.ext fun c ↦ ?_)
     obtain ⟨q, rfl⟩ :=
       (Submodule.span_singleton_eq_top_iff ℚ
         (complexLocalOrientation X d z)).mp
@@ -89,7 +91,7 @@ lemma complexOrientationHomologySheafIso_stalk_pointCoclass :
       (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X))
         z (2 * d)).hom ≫
       AddCommGrpCat.ofHom
-        (analyticPointLocalCoclass X d z).toAddMonoidHom =
+        (analyticPointLocalCoclassDual X d z).toAddMonoidHom =
       𝟙 (AddCommGrpCat.of ℚ) := by
   erw [complexOrientationHomologySheafIso_stalk_assoc]
   exact ConcreteCategory.hom_ext _ _

@@ -58,10 +58,9 @@ theorem flattenedSupportRelativeHomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * 
     (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).inv_hom_id _
 
 theorem flattenedSupportRelativeCohomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * c) :
-    IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
-      (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n)) := by
-  have := ModuleCat.subsingleton_of_isZero
+    IsZero (RelativeCohomology ℚ
+      (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n) :=
+  relativeCohomology_isZero ℚ _ n
     (flattenedSupportRelativeHomology_isZero_of_ne E c e x hx S hS h0 n hn)
-  exact ModuleCat.isZero_of_subsingleton _
 
 end AlgebraicTopology.Singular

@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic -- shake: keep
+public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
 public import Mathlib.Algebra.Algebra.Rat
 public import Mathlib.Algebra.Category.ModuleCat.Abelian
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
@@ -28,12 +29,26 @@ public import Mathlib.Topology.Category.TopPair
 # Singular cohomology over a field
 
 This file constructs field-valued singular cohomology from Mathlib's singular chain complex.
-Over a field, the universal coefficient theorem canonically identifies cohomology with the linear
-dual of homology, so this description avoids a noncanonical choice of representatives.
+
+**Cohomology is defined by dualising the chain complex, not by dualising homology.** The singular
+cochain complex `C^*(X; R)` is the degreewise `R`-linear dual of the singular chain complex
+`C_*(X; R)`, and `Cohomology R X n` is the degree-`n` homology of that cochain complex, exactly as
+Mathlib defines the homology of any `HomologicalComplex`. Pullback in cohomology is the map on
+homology induced by the dualised chain map; the definition never mentions singular homology.
+
+Dualising homology instead would be wrong in general: over a ring it silently discards the `Ext`
+term of the universal coefficient theorem, and even over a field it produces an object with no
+cochain-level representative, so cochain-level constructions — cup products, mapping cones of
+restriction, comparisons with sheaf cohomology — cannot be expressed against it. The coefficients
+are a field throughout this development, and there the universal coefficient theorem does identify
+the two; that identification is recorded as `cohomologyEquivDualHomology` (and
+`relativeCohomologyEquivDualHomology`) rather than being taken as the definition, so every
+statement that pairs a cohomology class with a homology class goes through it explicitly.
 
 For a topological pair `A ⊆ X`, the relative chain complex is the cokernel of the actual chain map
-`C_*(A) ⟶ C_*(X)`. Relative cohomology, cohomology with support, and the map that forgets support
-are derived from this construction.
+`C_*(A) ⟶ C_*(X)`; the relative cochain complex is its dual, and relative cohomology is again the
+homology of that complex. Cohomology with support and the map that forgets support are derived
+from this construction.
 -/
 
 @[expose] public noncomputable section
@@ -44,28 +59,58 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
+/-- The category containing field-valued singular chain complexes. -/
+abbrev ChainCategory (R : Type u) [Field R] :=
+  ChainComplex (ModuleCat.{u} R) ℕ
+
+/-- The category containing field-valued singular cochain complexes. -/
+abbrev CochainCategory (R : Type u) [Field R] :=
+  CochainComplex (ModuleCat.{u} R) ℕ
+
+/-- The singular chain complex `C_*(X; R)` of a topological space. -/
+abbrev chainComplex (R : Type u) [Field R] (X : TopCat.{u}) : ChainCategory R :=
+  ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X
+
+/-- The singular chain map induced by a continuous map. -/
+abbrev chainComplexMap (R : Type u) [Field R] {X Y : TopCat.{u}} (f : X ⟶ Y) :
+    chainComplex R X ⟶ chainComplex R Y :=
+  ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).map f
+
 /-- Singular homology of a topological space with coefficients in a field. -/
 abbrev Homology (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) : ModuleCat.{u} R :=
   ((singularHomologyFunctor (ModuleCat.{u} R) n).obj (ModuleCat.of R R)).obj X
 
-/-- Singular cohomology with coefficients in a field, using the universal-coefficient
-identification with the linear dual of singular homology. -/
-abbrev Cohomology (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) :=
-  Module.Dual R (Homology R X n)
+/-- The singular cochain complex `C^*(X; R)`, the degreewise `R`-linear dual of the singular
+chain complex. -/
+abbrev cochainComplex (R : Type u) [Field R] (X : TopCat.{u}) : CochainCategory R :=
+  (chainComplex R X).linearDualCochainComplex
+
+/-- The singular cochain map induced by a continuous map, obtained by dualising the chain map. -/
+abbrev cochainComplexMap (R : Type u) [Field R] {X Y : TopCat.{u}} (f : X ⟶ Y) :
+    cochainComplex R Y ⟶ cochainComplex R X :=
+  HomologicalComplex.linearDualMap (chainComplexMap R f)
+
+/-- Singular cohomology with coefficients in a field, defined as the homology of the singular
+cochain complex — that is, by dualising the chain complex, not by dualising homology. -/
+abbrev Cohomology (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) : ModuleCat.{u} R :=
+  (cochainComplex R X).homology n
 
 /-- The map on singular homology induced by a continuous map. -/
 def homologyMap (R : Type u) [Field R] {X Y : TopCat.{u}} (n : ℕ) (f : X ⟶ Y) :
     Homology R X n →ₗ[R] Homology R Y n :=
   (((singularHomologyFunctor (ModuleCat.{u} R) n).obj (ModuleCat.of R R)).map f).hom
 
-/-- Pullback in singular cohomology. -/
+/-- Pullback in singular cohomology, induced by the dualised chain map. -/
 def cohomologyMap (R : Type u) [Field R] {X Y : TopCat.{u}} (n : ℕ) (f : X ⟶ Y) :
     Cohomology R Y n →ₗ[R] Cohomology R X n :=
-  (homologyMap R n f).dualMap
+  (HomologicalComplex.homologyMap (cochainComplexMap R f) n).hom
 
-/-- The category containing field-valued singular chain complexes. -/
-abbrev ChainCategory (R : Type u) [Field R] :=
-  ChainComplex (ModuleCat.{u} R) ℕ
+/-- Universal coefficients over a field: singular cohomology, defined by dualising the chain
+complex, is canonically the linear dual of singular homology. This is a theorem here, not the
+definition of cohomology. -/
+def cohomologyEquivDualHomology (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) :
+    Cohomology R X n ≃ₗ[R] Module.Dual R (Homology R X n) :=
+  (chainComplex R X).linearDualHomologyEquiv n
 
 /-- A topological pair `A ⊆ X`, sent to the induced arrow `C_*(A) ⟶ C_*(X)` of singular
 chain complexes. -/
@@ -95,19 +140,36 @@ def relativeHomologyMap (R : Type u) [Field R] {X Y : TopPair.{u}} (n : ℕ)
     (f : X ⟶ Y) : RelativeHomology R X n →ₗ[R] RelativeHomology R Y n :=
   ((relativeHomologyFunctor R n).map f).hom
 
-/-- Relative singular cohomology over a field. -/
-abbrev RelativeCohomology (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ) :=
-  Module.Dual R (RelativeHomology R X n)
+/-- The relative singular cochain complex `C^*(X, A)`, the degreewise `R`-linear dual of the
+relative singular chain complex. -/
+abbrev relativeCochainComplex (R : Type u) [Field R] (X : TopPair.{u}) : CochainCategory R :=
+  ((relativeChainFunctor R).obj X).linearDualCochainComplex
 
-/-- Pullback in relative singular cohomology. -/
+/-- The relative singular cochain map induced by a map of pairs, obtained by dualising the
+relative chain map. -/
+abbrev relativeCochainComplexMap (R : Type u) [Field R] {X Y : TopPair.{u}} (f : X ⟶ Y) :
+    relativeCochainComplex R Y ⟶ relativeCochainComplex R X :=
+  HomologicalComplex.linearDualMap ((relativeChainFunctor R).map f)
+
+/-- Relative singular cohomology over a field, defined as the homology of the relative singular
+cochain complex — again by dualising the chain complex, not by dualising homology. -/
+abbrev RelativeCohomology (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ) : ModuleCat.{u} R :=
+  (relativeCochainComplex R X).homology n
+
+/-- Pullback in relative singular cohomology, induced by the dualised relative chain map. -/
 def relativeCohomologyMap (R : Type u) [Field R] {X Y : TopPair.{u}} (n : ℕ)
     (f : X ⟶ Y) : RelativeCohomology R Y n →ₗ[R] RelativeCohomology R X n :=
-  (relativeHomologyMap R n f).dualMap
+  (HomologicalComplex.homologyMap (relativeCochainComplexMap R f) n).hom
+
+/-- Universal coefficients over a field for a pair: relative singular cohomology is canonically
+the linear dual of relative singular homology. -/
+def relativeCohomologyEquivDualHomology (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ) :
+    RelativeCohomology R X n ≃ₗ[R] Module.Dual R (RelativeHomology R X n) :=
+  ((relativeChainFunctor R).obj X).linearDualHomologyEquiv n
 
 /-- The quotient map from absolute singular chains of `X` to relative chains of `(X, A)`. -/
 def relativeChainProjection (R : Type u) [Field R] (X : TopPair.{u}) :
-    ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X.fst ⟶
-      (relativeChainFunctor R).obj X :=
+    chainComplex R X.fst ⟶ (relativeChainFunctor R).obj X :=
   cokernel.π ((chainPairFunctor R).obj X).hom
 
 /-- The quotient map from absolute homology to relative homology. -/
@@ -115,14 +177,20 @@ def relativeHomologyProjection (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ
     Homology R X.fst n ⟶ RelativeHomology R X n :=
   HomologicalComplex.homologyMap (relativeChainProjection R X) n
 
+/-- The canonical map from relative cochains to absolute cochains, dual to the projection from
+absolute chains to relative chains. -/
+abbrev relativeCochainComplexToAbsolute (R : Type u) [Field R] (X : TopPair.{u}) :
+    relativeCochainComplex R X ⟶ cochainComplex R X.fst :=
+  HomologicalComplex.linearDualMap (relativeChainProjection R X)
+
 /-- The canonical map from relative cohomology to absolute cohomology. -/
 def relativeCohomologyToAbsolute (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ) :
     RelativeCohomology R X n →ₗ[R] Cohomology R X.fst n :=
-  (relativeHomologyProjection R X n).hom.dualMap
+  (HomologicalComplex.homologyMap (relativeCochainComplexToAbsolute R X) n).hom
 
 /-- Singular cohomology of `X` with support in `Z`, defined as `H^n(X, X ∖ Z)`. -/
 abbrev CohomologyWithSupport (R : Type u) [Field R] (X : TopCat.{u})
-    (Z : Set X) (n : ℕ) :=
+    (Z : Set X) (n : ℕ) : ModuleCat.{u} R :=
   RelativeCohomology R (TopPair.ofSubset Zᶜ) n
 
 /-- Forget support in `Z`, mapping a supported class to ordinary singular cohomology. -/

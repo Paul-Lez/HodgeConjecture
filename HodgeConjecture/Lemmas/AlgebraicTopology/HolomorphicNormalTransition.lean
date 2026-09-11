@@ -241,7 +241,8 @@ theorem exists_open_normalTransition_relativeCohomologyMap_eq :
         relativeCohomologyMap ℚ (2 * c) (neighborhoodPointComplementPairMap W 0) := by
   obtain ⟨W, hW, hne, hWo, h0W, heq⟩ :=
     exists_open_normalTransition_relativeHomologyMap_eq c e a ha hplane he hei
-  exact ⟨W, hW, hne, hWo, h0W, congrArg LinearMap.dualMap heq⟩
+  exact ⟨W, hW, hne, hWo, h0W,
+    relativeCohomologyMap_eq_of_relativeHomologyMap_eq ℚ (2 * c) heq⟩
 
 end StandardNormal
 

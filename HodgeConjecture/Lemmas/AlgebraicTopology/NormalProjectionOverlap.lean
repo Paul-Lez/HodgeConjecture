@@ -178,12 +178,13 @@ theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
       (chartNormalFiberPair c e S hS a W V hfiber ≫ chartNormalProjectionPair E c e S hS W _) z = _
     rw [chartNormalFiber_comp_projection]
     exact hz
-  have hvalue : chartNormalProjectionCoclass E c e' S hS' W hW'
+  have hvalue : relativeCohomologyEquivDualHomology ℚ
+      (neighborhoodSupportComplementPair (W : Set M) S) (2 * c)
+      (chartNormalProjectionCoclass E c e' S hS' W hW')
       (flattenedSupportNormalClass E c e x hx S hS h0) = 1 := by
-    rw [← hFz]
-    change normalizedDual (standardComplexLocalClass c) (standardComplexLocalClass_ne_zero_for_chart c)
-      (relativeHomologyMap ℚ (2 * c) (chartNormalProjectionPair E c e' S hS' W hW')
-        (relativeHomologyMap ℚ (2 * c) F z)) = 1
+    rw [← hFz, chartNormalProjectionCoclass,
+      relativeCohomologyEquivDualHomology_relativeCohomologyMap,
+      relativeCohomologyEquivDualHomology_normalizedRelativeCoclass]
     rw [← LinearMap.comp_apply (relativeHomologyMap ℚ (2 * c)
       (chartNormalProjectionPair E c e' S hS' W hW')), ← relativeHomologyMap_comp]
     change normalizedDual (standardComplexLocalClass c) (standardComplexLocalClass_ne_zero_for_chart c)
