@@ -22,10 +22,11 @@ Four modules state the Borel--Moore route to the cycle class relative to named h
 structures: `Other.AlgebraicGeometry.SheafBorelMoore`,
 `Other.AlgebraicGeometry.BorelMooreCycleClass`,
 `Other.AlgebraicGeometry.CycleComponentBorelMoore` and
-`Other.AlgebraicGeometry.CycleComponentGlobalFundamentalClass`. Together they hold about 2400
-lines, of which about 1400 mention one of the fifteen structures listed here. Each structure
-stands for mathematics Mathlib currently lacks, so a theorem taking one as an argument holds
-conditionally on it. This module lists them in one place and states nothing itself.
+`Other.AlgebraicGeometry.CycleComponentGlobalFundamentalClass`. Together they hold about 2300
+lines; the declarations depending on one of the fifteen structures listed here span about 1400.
+Thirteen of the structures stand for mathematics Mathlib currently lacks, so a theorem taking one
+as an argument holds conditionally on it. This module lists them in one place and states nothing
+itself.
 
 ## Maximal codimension is constructed
 
@@ -38,18 +39,21 @@ built from the one-point calculation in `Other.AlgebraicGeometry.CycleComponentB
 statement, `MaximalCodimensionPrincipalDivisorClassVanishes`: a principal divisor has zero
 componentwise class.
 
-In codimension below the dimension, every structure listed here is open.
+In codimension below the dimension, every structure listed here is open, with two exceptions:
+`RationalDualizingComplex` carries no predicate, so it and its extension
+`RationalDualizingComplexOrientationInput` are inhabited by trivial terms (issue #100) and stand
+for no missing mathematics; the notes on them below say what is missing instead.
 
 ## Sheaf-theoretic inputs
 
 In `Other.AlgebraicGeometry.SheafBorelMoore`.
 
-* `RationalDualizingComplex` (line 75) holds a cochain complex of analytic additive sheaves
-  proposed as `ω_X`. Constructing it asks for a dualizing complex together with the
-  Verdier-duality predicate that gives the word dualizing its meaning.
+* `RationalDualizingComplex` (line 75) holds a bare cochain complex of analytic additive sheaves
+  proposed as `ω_X`, with no predicate on it, so the zero complex inhabits it (issue #100). What
+  is missing is the Verdier-duality predicate that gives the word dualizing its meaning.
 * `RationalDualizingComplexOrientationInput` (line 85) adds the derived-category isomorphism
-  `ω_X ≅ ℚ_X[2d]`. Constructing it asks for the complex-orientation normalization that pins that
-  isomorphism down to a single choice.
+  `ω_X ≅ ℚ_X[2d]`, which `ℚ_X[2d]` itself satisfies, so it is inhabited too. What is missing
+  is the complex-orientation normalization that pins that isomorphism down to a single choice.
 * `DerivedSectionsWithSupportInput` (line 110) holds the functor `RΓ_Z`, its shift compatibility,
   and the equation identifying `RΓ_Z(ℚ_X)` with the mapping-cone support object of this project.
   Constructing it asks for the six-functor local-cohomology formalism.
