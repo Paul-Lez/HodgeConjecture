@@ -397,6 +397,11 @@ public import Other.AlgebraicGeometry.PullbackSectionNaturality
 public import Other.AlgebraicGeometry.ProjectiveTwistRatioPower
 public import Other.AlgebraicGeometry.ProjectiveChartRatioEvaluation
 public import Other.AlgebraicGeometry.ProjectiveHomogeneousRatioEvaluation
+public import Other.AlgebraicGeometry.ProjectiveChartMultiplierGrowth
+public import Other.AlgebraicGeometry.ProjectiveChartLocality
+public import Other.AlgebraicGeometry.ProjectiveSpectrumTwistMultiply
+public import Other.AlgebraicGeometry.ProjectiveTwistMultiplyTransport
+public import Other.AlgebraicGeometry.ProjectiveTwistNegativeVanishing
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
@@ -443,3 +448,10 @@ public import Other.AlgebraicGeometry.ChernWindingChartPeriods
 public import Other.AlgebraicGeometry.ChernWindingHolomorphicLog
 public import Other.AlgebraicGeometry.ChernWindingLocalFormObstruction
 public import Other.AlgebraicGeometry.ChernWindingStandardTriangle
+public import Other.AlgebraicGeometry.ChernWindingNormalChartBoundary
+public import Other.AlgebraicGeometry.ComplementFrame
+public import Other.AlgebraicGeometry.ChernWindingNormalChartValue
+public import Other.AlgebraicGeometry.ChernWindingNormalChartClass
+public import Other.AlgebraicGeometry.ChernWindingNormalChartData
+public import Other.AlgebraicGeometry.ChernWindingNormalChartLog
+public import Other.AlgebraicGeometry.ChernWindingNormalChartExistence

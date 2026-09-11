@@ -993,6 +993,50 @@ because the `fᵢ` are units there). The second is the pure one-variable analysi
 `ChernLocalModelWinding.lean` and `ChernWinding*.lean`. The third is the Chern-class half, now
 stated about a single explicit class rather than about an existentially quantified lift.
 
+*`HasComplementFrame`, reduced to algebraic Hartogs.* In
+[`Other/AlgebraicGeometry/ComplementFrame.lean`](../Other/AlgebraicGeometry/ComplementFrame.lean)
+the frame off the divisor is **proved from a single algebraic statement**:
+
+```lean
+/-- the local equations are units off the divisor -/
+def HasUnitOffDivisor : Prop :=
+  ∀ (c : Scheme.CartierData X.left) (i : c.ι) (p : X.left), p ∈ c.opens i →
+    (∀ y, c.divisor y ≠ 0 → p ∉ closure {y}) →
+    ∃ (V : X.left.Opens) (hp : p ∈ V), V ≤ c.opens i ∧
+      ∃ v : Γ(X.left, V), IsUnit v ∧ X.left.germToFunctionField V v = c.fn i
+
+/-- its stalk-level form: algebraic Hartogs at `𝒪_{X,p}` -/
+def HasStalkUnitOfOrdEqZero : Prop :=
+  ∀ (p : X.left) (f : X.left.functionField), f ≠ 0 →
+    (∀ y, coheight y = 1 → y ⤳ p → X.left.ord f y = 0) →
+    ∃ u : (X.left.presheaf.stalk p)ˣ, algebraMap _ X.left.functionField u = f
+
+theorem hasUnitOffDivisor_of_stalkUnit : HasStalkUnitOfOrdEqZero X → HasUnitOffDivisor X
+theorem hasComplementFrame_of_unitOffDivisor : HasUnitOffDivisor X → HasComplementFrame X
+theorem hasComplementFrame_of_stalkUnit : HasStalkUnitOfOrdEqZero X → HasComplementFrame X
+theorem hasChernWindingNaturality_of_unitOffDivisor (hunit : HasUnitOffDivisor X)
+    (hchart : HasRelativeChernChartFormula X) : HasChernWindingNaturality X
+theorem hasDivisorClassOfSomeCartierData_of_unitOffDivisor (hunit : HasUnitOffDivisor X)
+    (hcharts : HasNormalizedWindingCharts X) (hchart : HasRelativeChernChartFormula X) :
+    HasDivisorClassOfSomeCartierData X
+```
+
+Everything analytic is done there: the local sections `v • gᵢ|_V` of `L` are restrictions of one
+rational section (`UnitDatum.localSection_agree`, from `Represents` and the injectivity of the
+germ map on nonempty opens), they analytify to generating frames of `E.sectionSheafOfModules`
+(`analytificationGenerates`) agreeing on overlaps, each differs from `E.frame z` by a
+nowhere-vanishing holomorphic function (`frameUnit`), the corrected local lifts
+`lift_z − ι(frameUnit)` of `1` agree on overlaps (`frameUnit_cocycle`, `localLift_compatible`),
+and they glue in the sheaf `E.middle` (`existsUnique_gluing'`). **What is missing is exactly
+`HasStalkUnitOfOrdEqZero`**: for the regular local ring `𝒪_{X,p}`, a rational function which is a
+unit at every height-one prime is a unit. This is `𝒪_{X,p} = ⋂_{ht 𝔮 = 1} (𝒪_{X,p})_𝔮`, i.e. the
+normality of regular local rings (Auslander–Buchsbaum, or Serre's `R₁ + S₂`) together with the
+intersection description of a Noetherian normal domain; neither is in Mathlib. Note that the
+"unit off the support" statement cannot be obtained from `CartierLocalForm.lean`: the local form
+`c.fn i = u · h^{c.divisor x}` exists only on a neighbourhood of a *codimension-one* point `x`, and
+a closed point off `|D|` need not lie in any such neighbourhood; the unit statement at a closed
+point of a variety of dimension `≥ 2` genuinely needs normality.
+
 
 *Non-vacuity.* The previous draft of this step was vacuous, so the new statements come with a
 check: `exists_componentContribution_sum_singleton` proves
@@ -1606,9 +1650,162 @@ fed into the cohomology class at all. In dependency order the sub-obligations ar
    normal coordinate of the chart (which needs `dh ≠ 0` along `Z_x`, i.e. that `h` is part of a
    holomorphic coordinate system — the analytic content of `ord_x h = 1` at a smooth point).
 
+   ### (4) continued: `NormalizesCoclass` is now **proved** for a normal winding chart
+
+   The geometric transport promised above is carried out in five further modules.
+
+   * [`ChernWindingNormalChartBoundary.lean`](../Other/AlgebraicGeometry/ChernWindingNormalChartBoundary.lean)
+     supplies the missing **naturality of the connecting map of a pair**, which the repository did
+     not have, by building the morphism of short exact sequences of chains and invoking Mathlib's
+     `HomologicalComplex.HomologySequence.δ_naturality`:
+
+     ```lean
+     def AlgebraicTopology.Singular.relativeSingularChainShortComplexMap {P Q : TopPair} (f : P ⟶ Q) :
+         relativeSingularChainShortComplex P ⟶ relativeSingularChainShortComplex Q
+
+     theorem AlgebraicTopology.Singular.relativeSingularBoundary_naturality
+         {P Q : TopPair} (f : P ⟶ Q) (n : ℕ) :
+         relativeSingularBoundary P n ≫
+             HomologicalComplex.homologyMap ((chainPairFunctor ℚ).map f).left n =
+           HomologicalComplex.homologyMap ((relativeChainFunctor ℚ).map f) (n + 1) ≫
+             relativeSingularBoundary Q n
+     ```
+
+     and deduces `relativeSingularBoundary_standardComplexLocalClass`, that
+     `∂ (standardComplexLocalClass 1)` is the image of the explicit oriented boundary
+     `standardPuncturedBoundaryClass 1` under the real-to-complex coordinate map.
+
+   * [`ChernWindingNormalChartValue.lean`](../Other/AlgebraicGeometry/ChernWindingNormalChartValue.lean)
+     computes the number:
+
+     ```lean
+     theorem ChernWinding.windingPeriod_flattenedNormalClass
+         (g : C((neighborhoodSupportComplementPair ↑(flattenedSupportNeighborhood E 1 e x hx) S).snd, ℂ))
+         (hg : ∀ y, g y ≠ 0)
+         (hcoord : ∀ w, g w =
+           complexLineCoordinate ((flattenedNormalProjection E e S hS x hx).left w)) :
+         windingPeriod g hg ((relativeSingularBoundary _ 1).hom
+           (flattenedNormalClass E e S hS x hx h0)) = 1
+     ```
+
+     — *the winding number of the normal coordinate around the normal sphere of the support is
+     `+1`.*  The radial compression built into `flattenedSupportEmbedding` costs nothing, because
+     the repository's own `centeredComplexUnivBall_preserves_standardComplexLocalClass` says the
+     recentred compression fixes `standardComplexLocalClass 1`; the chain is
+     `flattenedSupportNormalClass_eq_normalFiber` → δ-naturality →
+     `normalFiber_comp_chartNormalProjection` → the compression invariance →
+     `relativeSingularBoundary_standardComplexLocalClass` →
+     `windingPeriod_standardPuncturedBoundaryClass`.
+
+     *Elaboration note.* The degrees `2 * 1` (used by `flattenedSupportNormalClass`) and `1 + 1`
+     (used by `relativeSingularBoundary … 1`) are definitionally equal but their unification over
+     the expensive `flattenedSupportNeighborhood` is very slow; `ChernWinding.flattenedNormalClass`
+     pays that cost once, in a `def` with the expected type given, and everything downstream is
+     fast.
+
+   * [`ChernWindingNormalChartClass.lean`](../Other/AlgebraicGeometry/ChernWindingNormalChartClass.lean)
+     combines it with the unconditional rationality of the periods:
+
+     ```lean
+     theorem ChernWinding.windingClass_eq_chartNormalProjectionCoclass
+         (g) (hg) (hcoord) :
+         windingClass ↑(flattenedSupportNeighborhood E 1 e x hx) S g hg =
+           chartNormalProjectionCoclass E 1 e S hS (flattenedSupportNeighborhood E 1 e x hx) _
+     ```
+
+   * [`ChernWindingNormalChartData.lean`](../Other/AlgebraicGeometry/ChernWindingNormalChartData.lean)
+     packages the geometry.  `NormalWindingChartData X c x d q` is `GeometricWindingChartData` with
+     the chart pinned to a **flattening chart** of the component at `q`:
+
+     ```lean
+     structure NormalWindingChartData (q : ComplexPoint X) where
+       index : c.ι
+       localForm : c.LocalForm index x
+       chart : OpenPartialHomeomorph (ComplexPoint X) ((Fin (d - 1) → ℂ) × (Fin 1 → ℂ))
+       mem_source : q ∈ chart.source
+       flattens : ∀ y ∈ chart.source, y ∈ cycleComponentSupport X x ↔ (chart y).2 = 0
+       center : (chart q).2 = 0
+       le : flattenedSupportNeighborhood (Fin (d-1) → ℂ) 1 chart q mem_source ≤
+         cycleComponentSmoothSupportAmbientOpen X x
+       le_analytic : flattenedSupportNeighborhood … ≤ analyticOpen X localForm.opens
+       coord : (holomorphicUnitSheaf X d).obj.obj (op (flattenedSupportNeighborhood … ⊓ (…).compl))
+       coord_eq : …                    -- `coord` is the analytification of `localForm.equation`
+       exists_log : …                  -- automatic, see `exists_log_of_flattening`
+       normal_coordinate : ∀ w, windingUnitFunction X d … coord w =
+         ChernWinding.complexLineCoordinate ((ChernWinding.flattenedNormalProjection …).left w)
+       coclass_restrict : ∀ hx, (supportRelativeCohomologySheaf … (2*1)).obj.map (homOfLE le).op
+           (cycleComponentSmoothSupportCoclassSection X x (d := d) hx) =
+         (supportRelativeCohomologyToSheaf … (2*1)).app (op (flattenedSupportNeighborhood …))
+           (chartNormalProjectionCoclass (Fin (d-1) → ℂ) 1 chart … )
+     ```
+
+     with `toGeometric`, `toChart`, and
+
+     ```lean
+     theorem NormalWindingChartData.normalizesCoclass (hx : coheight x = ((1 : ℕ) : ℕ∞)) :
+         G.toChart.NormalizesCoclass hx
+     ```
+
+     **This is obligation (c), proved.**  Its two inputs are the winding computation above and the
+     field `coclass_restrict`.
+
+   * [`ChernWindingNormalChartLog.lean`](../Other/AlgebraicGeometry/ChernWindingNormalChartLog.lean)
+     removes the `exists_log` field: a flattened-support neighbourhood is homeomorphic to the whole
+     model vector space (`flattenedSupportHomeomorph`), hence contractible and locally path
+     connected, so
+
+     ```lean
+     theorem AlgebraicGeometry.ComplexPoint.exists_holomorphicExponential_flattenedSupportNeighborhood
+         (E) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
+         (e : OpenPartialHomeomorph (ComplexPoint X) (E × (Fin c → ℂ)))
+         (z : ComplexPoint X) (hz : z ∈ e.source)
+         (u : (holomorphicUnitSheaf X d).obj.obj (op (flattenedSupportNeighborhood E c e z hz))) :
+         ∃ f, (holomorphicExponential X d).hom.app _ f = u
+     ```
+
+   * [`ChernWindingNormalChartExistence.lean`](../Other/AlgebraicGeometry/ChernWindingNormalChartExistence.lean)
+     states what is left, in the `∃ B` shape forced by the obstruction of item (1):
+
+     ```lean
+     def HasNormalFlatteningCharts : Prop :=
+       ∀ (c : Scheme.CartierData X.left) (x : X.left), coheight x = ((1 : ℕ) : ℕ∞) →
+         ∃ B : Set X.left, IsClosed B ∧ B ⊆ closure ({x} : Set X.left) ∧ x ∉ B ∧
+           ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
+             Point.underlying q ∉ B →
+             Nonempty (NormalWindingChartData X c x (dim X.left) q)
+
+     theorem exists_closed_normalizedWindingCharts (h : HasNormalFlatteningCharts (X := X))
+         (c) (x) (hx : coheight x = ((1 : ℕ) : ℕ∞)) :
+         ∃ B : Set X.left, IsClosed B ∧ B ⊆ closure ({x} : Set X.left) ∧ x ∉ B ∧
+           ∀ q ∈ cycleComponentSmoothSupportAmbientOpen X x, q ∈ cycleComponentSupport X x →
+             Point.underlying q ∉ B →
+             ∃ ch : ChernWindingChart X c x (dim X.left) 1 q,
+               ch.HasTrivialUnitWinding ∧ ch.NormalizesCoclass hx
+     ```
+
+   **So both obligations (b) and (c) are now theorems**, and `HasNormalFlatteningCharts` is all
+   that remains of §4.3 step 4 item 3 apart from the Chern-class half (a).  Constructing the data
+   it asks for needs exactly three things, none of which involves cohomology:
+
+   1. a local form of `c` at `x` whose affine open contains `q` — available off the other
+      components of `|D|`, which is why `B` is needed (item (1) above);
+   2. a holomorphic chart at `q` flattening `Z_x` **whose normal coordinate is the analytified
+      local equation** — the holomorphic implicit function theorem applied to `h^an`, valid where
+      `d h^an ≠ 0` along the normal direction, i.e. off a further proper closed subset of `Z_x`
+      (`HasStrictFDerivAt.normalChart` in `Other/AlgebraicTopology/SplitDerivativeNormalChart.lean`
+      is the repository's tool);
+   3. `coclass_restrict` — a transport statement identifying the restriction of
+      `cycleComponentSmoothSupportCoclassSection` to the chart with the chart's own
+      `chartNormalProjectionCoclass`.  The repository has this at germ level
+      (`smoothClosedSupportCoclassSection_germ_eq_normalCoclass`,
+      `smoothClosedSupportNormalCoclass_restrict_eq_chart`); what is missing is only the passage
+      through `supportRelativeCohomologySheafOpenIso` (the open-embedding transport of
+      `cycleComponentSmoothSupportCoclassSection`) and sheaf separatedness.
+
    Verification: `lake build Other.AlgebraicGeometry.ChernWindingNormalizedCharts`,
    `… ChernWindingChartPeriods`, `… ChernWindingHolomorphicLog`,
-   `… ChernWindingStandardTriangle`, `… ChernWindingLocalFormObstruction`.
+   `… ChernWindingStandardTriangle`, `… ChernWindingLocalFormObstruction`,
+   `… ChernWindingNormalChartExistence`; `lake env lean scripts/lefschetz_axiom_audit.lean`.
 
 Summary of the named obligations, in dependency order:
 
@@ -1631,7 +1828,12 @@ Summary of the named obligations, in dependency order:
 | ~~rationality of the winding periods~~ | `ChernWindingRational.lean`, `ChernWindingChartPeriods.lean` | **proved**: `hasRationalWindingPeriod`, `hasWindingPeriods` |
 | ~~`exists_log` on a chart~~ | `ChernWindingHolomorphicLog.lean` | **proved**: `exists_holomorphicExponential_of_simplyConnected` (simply connected, locally path connected chart) |
 | ~~the sign of the normalisation~~ | `ChernWindingStandardTriangle.lean` | **proved**: `windingPeriod_standardPuncturedBoundaryClass = 1` — the repository's orientation gives `+1` |
+| ~~naturality of the connecting map of a pair~~ | `ChernWindingNormalChartBoundary.lean` | **proved**: `relativeSingularBoundary_naturality`, `relativeSingularBoundary_standardComplexLocalClass` |
+| ~~`NormalizesCoclass` for a normal chart~~ | `ChernWindingNormalChartValue.lean`, `…Class.lean`, `…Data.lean` | **proved**: `windingPeriod_flattenedNormalClass`, `windingClass_eq_chartNormalProjectionCoclass`, `NormalWindingChartData.normalizesCoclass` |
+| ~~`exists_log` on a flattening chart~~ | `ChernWindingNormalChartLog.lean` | **proved**: `exists_holomorphicExponential_flattenedSupportNeighborhood` |
+| `HasNormalFlatteningCharts` | `ChernWindingNormalChartExistence.lean` | §4.3 step 4 item 3: all that is left of (b) + (c) — existence of a flattening chart at `q` whose normal coordinate is the analytified local equation, off a proper closed subset `B` of `Z_x`, plus the coclass transport `coclass_restrict` |
 | ~~correction needed~~ | `ChernLocalModelWinding.lean`, `CycleComponentRestrictionInjective.lean` | **done**: the pointwise form was **false** at points where two components of `D` meet (`ChernWindingLocalFormObstruction.lean`); the obligation now quantifies only over `q` off a Zariski-closed `B ⊆ Z_x` with `x ∉ B`, and the reduction is re-proved via the injectivity of restriction away from `B^an` |
+| `HasStalkUnitOfOrdEqZero`, `HasUnitOffDivisor` | `ComplementFrame.lean` | §4.3 step 3/4: algebraic Hartogs at the stalks (`𝒪_{X,p}` normal); **`HasComplementFrame` reduces to it**: `hasComplementFrame_of_stalkUnit` |
 | `HasChernWindingNaturality` | `ChernLocalModelWinding.lean` | §4.3 step 4 item 3: (a), the canonical relative class and its computation by winding numbers; **reduces to it**: `hasChernLocalModel_of_winding` |
 | ~~winding reduction~~ | `ChernLocalModelWinding.lean` | **proved**: `hasChernLocalModel_of_winding`, `hasChernWindingNaturality_of_localModel`, `supportRelativeCohomologySheaf_section_eq_zero` |
 | — (not yet stated) | — | realization of a cocycle by an extension; the Čech description of the connecting map, §4.2(a) |

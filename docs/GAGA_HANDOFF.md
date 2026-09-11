@@ -1166,6 +1166,118 @@ statement that the analytified morphism has the prescribed chart multipliers.
   exactly `chartRatioEvaluation`).  For `N = 0` the twists are trivial (`D₊(X₀) = ⊤`), and the
   degree-zero comparison `ComplexPoint.unitEndomorphism_analytification_surjective` applies.
 
+## Progress 2026-09-11 (ninth pass): growth, locality, multiplication morphisms, negative-degree vanishing
+
+Five further `sorry`-free, axiom-clean files.  Two of the four items of the eighth pass's "what is
+left" are now **theorems**; the third has its algebraic core done; the fourth is done except for
+`N = 0`.
+
+### 1. `ChartMultiplierGrowth` — **proved**
+
+[`Other/AlgebraicGeometry/ProjectiveChartMultiplierGrowth.lean`](../Other/AlgebraicGeometry/ProjectiveChartMultiplierGrowth.lean):
+
+- `holSectionFun_mul`, `holSectionFun_holRingRes`, `holSectionFun_analyticFunction`,
+  `continuous_holSectionFun` — values of sections of `𝒪^an`;
+- `chartFun N i u` (the chart expression of a section) and `continuous_chartFun`;
+- `chartPointIn_mem_inf`, `holSectionFun_analyticSpaceRatio` (the transition unit at a chart point
+  is `((insertNth i 1 z) j)ⁿ`), `chartPointIn_chartRatio_eq`;
+- **`chartMultiplierGrowth (N a b : ℕ) : Other.ProjectiveChart.ChartMultiplierGrowth N a b`** —
+  choose `j` with `|wⱼ| = max_l |w_l| ≥ 1` for `w = insertNth i 1 z`; then the chart coordinates
+  of `[w]` in the `j`-th chart lie in the closed unit polydisc, where `hⱼ` is bounded by
+  compactness, and the cocycle gives `‖fᵢ z‖ ≤ C (1 + ‖z‖)^{a−b}`.
+
+### 2. Locality on the charts
+
+[`Other/AlgebraicGeometry/ProjectiveChartLocality.lean`](../Other/AlgebraicGeometry/ProjectiveChartLocality.lean):
+
+- `surjective_chartPointIn`, **`holSection_ext`** (a section of `𝒪^an` on a chart is determined by
+  its chart expression), `exists_mem_chartOpen`;
+- **`hom_eq_zero_of_anChartFrame`** — a morphism `𝒪(−a)^an ⟶ M'` whose value on every canonical
+  chart frame vanishes is zero (via `TopCat.Presheaf.IsSheaf.section_ext` and
+  `holomorphicGenerates_anChartFrame`).  This is the local-to-global step both remaining
+  obligations need.
+
+### 3. Multiplication morphisms (the algebraic core of the reconstruction)
+
+[`Other/AlgebraicGeometry/ProjectiveSpectrumTwistMultiply.lean`](../Other/AlgebraicGeometry/ProjectiveSpectrumTwistMultiply.lean),
+generic in the graded ring `𝒜`:
+
+- `multiplyShift`, `multiplyShiftLinear`, `multiplyShiftPresheafHom`,
+  **`multiplyShiftHom 𝒜 q b : 𝒪(−(b+k)) ⟶ 𝒪(−b)`** (multiplication by `q : 𝒜 k`), and its scheme
+  form `schemeMultiplyShiftHom`;
+- **`multiplyShiftHom_projFrame`** — on the standard frames, if `q₁ = q₂ * q₃` then
+  `q · (1/q₁) = (q/q₂) · (1/q₃)`.
+
+[`Other/AlgebraicGeometry/ProjectiveTwistMultiplyTransport.lean`](../Other/AlgebraicGeometry/ProjectiveTwistMultiplyTransport.lean):
+
+- `multiplyShiftHom_universalChartFrame`, **`algMulHom N b k G : 𝒪(−(b+k)) ⟶ 𝒪(−b)`** on `ℙᴺ`
+  (inverse image of `multiplyShiftHom`), **`algMulHom_algChartFrame`** (the frame identity on
+  `ℙᴺ`, obtained from the universal one by `pullbackSection_map` / `_smul` / `_res`), and
+- **`analytified_algMulHom_anChartFrame`** — the chart multiplier of the analytification of
+  `algMulHom N b k G` is `analyticFunction (spaceRatioBig N k G i)`, whose chart expression is
+  `z ↦ G(insertNth i 1 z)` by `homogeneousRatioEvaluation`.
+
+### 4. Negative degree: `TwistRankOneAlgebraizesNeg N` for `0 < N` — **proved**
+
+[`Other/AlgebraicGeometry/ProjectiveTwistNegativeVanishing.lean`](../Other/AlgebraicGeometry/ProjectiveTwistNegativeVanishing.lean):
+
+- **`chartMultiplier_decay`** — for `a ≤ b`, `‖fᵢ z‖ · max(1, ‖z‖)^{b−a} ≤ C`.  (Same choice of
+  `j`; now the transition unit is in the numerator.)
+- **`twistRankOneVanishesNeg_of_pos`** — for `0 < N` and `a < b`, every
+  `φ : 𝒪(−a)^an ⟶ 𝒪(−b)^an` is `0`: the decay estimate makes each `fᵢ` bounded, hence the chart
+  expression of a degree-`0` form (`existsUnique_isHomogeneous_of_growth`), hence constant; the
+  decay estimate along `z = (R, …, R)` with `R → ∞` forces the constant to vanish; then
+  `holSection_ext` and `hom_eq_zero_of_anChartFrame`.  (This replaces the max-modulus/gluing route
+  of the fifth pass: no gluing of global holomorphic functions is needed.)
+- **`twistRankOneAlgebraizesNeg_of_pos (hN : 0 < N) : TwistRankOneAlgebraizesNeg N`**.
+
+### 5. What is left
+
+Obligation (iii) on `ℙᴺ` is `twistRelationsAlgebraizeProj_of_parts` applied to
+`TwistRankOneAlgebraizesNonneg N` and `TwistRankOneAlgebraizesNeg N`.  What remains:
+
+1. **`TwistRankOneAlgebraizesNeg 0`** (the case `N = 0`, where the vanishing statement is *false*).
+   `ℙ⁰ ≅ Spec ℂ`: `D₊(X₀) = ⊤` on `Proj ℤ[X₀]` (`iSup_coordinateBasicOpen_eq_top 0`), so
+   `projectiveSpaceBasicOpen 0 (X 0) = ⊤` and `algChartFrame 0 n 0` generates `𝒪(−n)` globally;
+   hence `𝒪(−n) ≅ unit` for every `n` and the claim is
+   `ComplexPoint.unitEndomorphism_analytification_surjective`.  Only the transport of `Generates`
+   on `⊤` into an isomorphism `unit ≅ 𝒪(−n)` has to be written
+   (`Scheme.Modules.smulSectionHom` of `SchemePullbackGenerates.lean` plus
+   `Scheme.Opens.sheafOfModulesEquivOverUnit` at `U = ⊤`).
+2. **`TwistRankOneAlgebraizesNonneg N`.**  Everything analytic is done
+   (`chartMultiplierGrowth`, `existsUnique_isHomogeneous_of_growth`,
+   `existsUnique_canonicalChartMultiplier`, `hom_eq_zero_of_anChartFrame`), and so is the
+   construction of algebraic morphisms from **ℤ**-forms (`algMulHom`, §3).  Two steps remain:
+   * **ℂ-coefficients.**  `existsUnique_isHomogeneous_of_growth` produces a form
+     `Q : MvPolynomial (Fin (N+1)) ℂ`, while `algMulHom` only accepts `G : UniversalGrading N k`
+     (coefficients in `ULift ℤ`), because `ℙᴺ_ℂ` is the base change of `Proj ℤ[X]`.  Write
+     `Q = ∑_{α ∈ Q.support} c_α · Xᵅ` and set
+     `g_Q := ∑_α globalSmulHom (𝒪(−b)) (constantRegularSection _ c_α) ∘ algMulHom N b k ⟨monomial α 1, _⟩`,
+     where `globalSmulHom M c : M ⟶ M` is multiplication by a global regular function (a
+     `PresheafOfModules.Hom` with `app U := M.smul (res c)`, naturality `Scheme.Modules.map_comp_smul`).
+     Its chart multiplier is `∑_α c_α · spaceRatioBig N k ⟨monomial α 1,_⟩ i`, whose chart
+     expression is `∑_α c_α w^α = MvPolynomial.eval w Q` with `w = insertNth i 1 z`; the identity
+     `MvPolynomial.eval (insertNth i 1 z) Q = MvPolynomial.eval z (deh ℂ i Q)` is the remaining
+     `deh` lemma (`MvPolynomialHomogenisation.lean` has `deh_monomial`, so it is a `Finsupp` sum
+     computation).
+   * **One chart suffices.**  `chartMultiplierGrowth` produces the form `Q` from *one* chart `i₀`;
+     one then needs that `ψ := φ − (moduleAnalytification _ N).map g_Q` has *all* chart multipliers
+     zero, to apply `hom_eq_zero_of_anChartFrame`.  Precise statement:
+
+     ```
+     ∀ (ψ : 𝒪(−a)^an ⟶ 𝒪(−b)^an) (i₀ : Fin (N+1)) (v : ∀ i, Γ(𝒪^an, chartOpen N i)),
+       (∀ i, ψ.val.app (op (chartOpen N i)) (anChartFrame N a i) = v i • anChartFrame N b i) →
+       (∀ z, chartFun N i₀ (v i₀) z = 0) → ψ = 0
+     ```
+
+     Proof sketch: `canonicalChartMultiplier_transition` plus invertibility of
+     `analyticSpaceRatio` on the overlap (`spaceRatio N a i j * spaceRatio N a j i = 1`, so
+     `isUnit_analyticFunction` applies) gives `v j = 0` on `chartOpen i₀ ⊓ chartOpen j`; in the
+     `j`-th chart coordinates that overlap is the nonempty open complement of a hyperplane, so the
+     entire function `chartFun N j (v j)` vanishes on a neighbourhood of a point and hence
+     identically (`AnalyticOnNhd.eqOn_zero_of_preconnected_of_eventuallyEq_zero`,
+     `analyticOnNhd_chartFun`); then `holSection_ext`.
+
 ## Mathematical routes, and what is missing
 
 The statement is Serre's GAGA (essential surjectivity of analytification) restricted to
