@@ -140,6 +140,29 @@ theorem eventually_familyEquation_localRootBranch {p : Polynomial (Polynomial �
   have hzero : familyEquation p (zw.1.1.1, zw.1.2) = 0 := zw.2
   simpa [localRootBranch, hzero] using h
 
+/-- A fiber over the simple-root locus has the expected number of distinct roots. -/
+theorem roots_card_nodup_of_mem_simpleRootBase {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) :
+    (familySpecialization p z.1).roots.card = p.natDegree ∧
+      (familySpecialization p z.1).roots.Nodup := by
+  let q := familySpecialization p z.1
+  have hq : q.Monic := by
+    exact hp.map (Polynomial.evalRingHom z.1)
+  have hsplit : q.Splits := IsAlgClosed.splits q
+  have hcard : q.roots.card = q.natDegree :=
+    hsplit.natDegree_eq_card_roots.symm
+  have hdegree : q.natDegree = p.natDegree := by
+    exact hp.natDegree_map (Polynomial.evalRingHom z.1)
+  refine ⟨hcard.trans hdegree, ?_⟩
+  rw [nodup_roots_iff_of_splits hq.ne_zero hsplit]
+  rw [Separable, ← gcd_isUnit_iff, isUnit_iff_degree_eq_zero]
+  by_contra hnot
+  obtain ⟨w, hw⟩ := Splits.exists_eval_eq_zero
+    (Splits.of_dvd hsplit hq.ne_zero (gcd_dvd_left q q.derivative)) hnot
+  exact z.2 w
+    (eval_eq_zero_of_dvd_of_eval_eq_zero (gcd_dvd_left q q.derivative) hw)
+    (eval_eq_zero_of_dvd_of_eval_eq_zero (gcd_dvd_right q q.derivative) hw)
+
 /-- The multiset of roots in a fiber which belong to a specified subset of the root cover. -/
 def selectedRoots {p : Polynomial (Polynomial ℂ)}
     (S : Set (SimpleRootCover p)) (z : SimpleRootBase p) : Multiset ℂ := by
