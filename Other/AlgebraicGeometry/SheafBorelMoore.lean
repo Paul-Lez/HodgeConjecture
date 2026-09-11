@@ -398,6 +398,14 @@ set_option maxRecDepth 5000 in
     D.toAuxiliaryBorelMooreComparisonData.auxiliarySingularSupportedClass =
       D.singularSupportedClassOfComparisons := rfl
 
+set_option maxRecDepth 5000 in
+/-- Sheaf-theoretic comparison inputs for a component supply the auxiliary comparison data of the
+earlier cycle-class package, through the adapter. -/
+theorem nonempty_auxiliaryRationalCycleComponentBorelMooreComparisonData
+    (h : Nonempty (RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx)) :
+    Nonempty (AuxiliaryRationalCycleComponentBorelMooreComparisonData V p x hx) :=
+  h.map toAuxiliaryBorelMooreComparisonData
+
 /-- Forgetting support gives the comparison-dependent ordinary rational class. -/
 def ordinaryClassOfComparisons
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
@@ -447,6 +455,14 @@ def toComplexOrientedComponentClassData
   comparison := D.comparisonInputs.orientationInducedComparisonAddEquiv.toLinearEquiv
     (map_rat_smul D.comparisonInputs.orientationInducedComparisonAddEquiv)
   comparison_isComplexOriented := D.orientationComparison_local
+
+set_option maxRecDepth 5000 in
+/-- The sheaf route together with the local Verdier/Thom normalization theorem supplies the general
+complex-oriented component class data. -/
+theorem nonempty_complexOrientedRationalCycleComponentClassData
+    (h : Nonempty (ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx)) :
+    Nonempty (ComplexOrientedRationalCycleComponentClassData V p x hx) :=
+  h.map toComplexOrientedComponentClassData
 
 /-- The normalized Alexander--Poincaré equivalence obtained from the sheaf construction and the
 explicit local Verdier/Thom compatibility theorem. -/
