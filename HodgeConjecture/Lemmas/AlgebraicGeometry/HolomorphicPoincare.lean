@@ -362,8 +362,8 @@ def formOfAnalyticField [SmoothOfRelativeDimension d X.hom]
   ∑ I : Fin p → Fin d,
     Algebra.DeRham.mk ℂ (OpenHolomorphicFunctions X d U) p
       (holomorphicSectionOfChart X d U z hsource
-        (coordinateCoefficient d p θ I)
-        (analyticOnNhd_coordinateCoefficient d p θ hθ I))
+        (coordinateCoefficient θ I)
+        (analyticOnNhd_coordinateCoefficient θ hθ I))
       fun j ↦ chartCoordinateSection X d U z hsource (I j)
 
 /-- The finite realization of an analytic alternating-form field evaluates to that field in the
@@ -383,8 +383,8 @@ lemma chartEvaluation_formOfAnalyticField
   have hsum := map_sum (chartEvaluationAt X d U z p y)
     (fun I : Fin p → Fin d => Algebra.DeRham.mk ℂ (OpenHolomorphicFunctions X d U) p
       (holomorphicSectionOfChart X d U z hsource
-        (coordinateCoefficient d p θ I)
-        (analyticOnNhd_coordinateCoefficient d p θ hθ I))
+        (coordinateCoefficient θ I)
+        (analyticOnNhd_coordinateCoefficient θ hθ I))
       fun j ↦ chartCoordinateSection X d U z hsource (I j)) Finset.univ
   change chartEvaluationAt X d U z p y
     (formOfAnalyticField X d U z hsource p θ hθ) = _
@@ -393,14 +393,12 @@ lemma chartEvaluation_formOfAnalyticField
       chartEvaluationAt X d U z p y
         (Algebra.DeRham.mk ℂ (OpenHolomorphicFunctions X d U) p
           (holomorphicSectionOfChart X d U z hsource
-            (coordinateCoefficient d p θ I)
-            (analyticOnNhd_coordinateCoefficient d p θ hθ I))
+            (coordinateCoefficient θ I)
+            (analyticOnNhd_coordinateCoefficient θ hθ I))
           fun j ↦ chartCoordinateSection X d U z hsource (I j)) =
-      ((p.factorial : ℂ)⁻¹ * θ y fun j ↦ Pi.single (I j) 1) •
-        wedgeCovectors ℂ (Fin d → ℂ) p fun j ↦ ContinuousLinearMap.proj (I j) := by
+      coordinateCoefficient θ I y •
+        wedgeCovectors ℂ (Fin d → ℂ) fun j ↦ ContinuousLinearMap.proj (I j) := by
     intro I
-    rw [show ((p.factorial : ℂ)⁻¹ * θ y fun j ↦ Pi.single (I j) 1) =
-      coordinateCoefficient d p θ I y from rfl]
     change chartEvaluation X d U z p _ y = _
     rw [chartEvaluation_mk X d U z p _ _ hy]
     simp only [chartGeneratorEvaluation]
@@ -412,7 +410,7 @@ lemma chartEvaluation_formOfAnalyticField
       exact chartSectionDifferential_chartCoordinateSection X d U z hsource _ hy
     rw [hd]
   simp_rw [hterm]
-  exact (alternating_eq_sum_wedgeCovectors d p (θ y)).symm
+  exact (alternating_eq_sum_wedgeCovectors (θ y)).symm
 
 /-- A holomorphic section is complex analytic in every fixed chart. -/
 lemma analyticOnNhd_chartSection [SmoothOfRelativeDimension d X.hom]
@@ -512,23 +510,23 @@ lemma analyticOnNhd_chartEvaluation [SmoothOfRelativeDimension d X.hom]
   let s := chartSectionDomain X d U z
   let e (I : Fin p → Fin d) : Fin p → Fin d → ℂ := fun j ↦ Pi.single (I j) 1
   let W (I : Fin p → Fin d) :=
-    wedgeCovectors ℂ (Fin d → ℂ) p (fun j ↦ ContinuousLinearMap.proj (I j))
+    wedgeCovectors ℂ (Fin d → ℂ) (fun j ↦ ContinuousLinearMap.proj (I j))
+  let c : ℂ := ((Fintype.card (Fin p)).factorial : ℂ)⁻¹
   have hc (I : Fin p → Fin d) : AnalyticOnNhd ℂ
-      (fun y ↦ (p.factorial : ℂ)⁻¹ * chartEvaluation X d U z p θ y (e I)) s := by
+      (fun y ↦ c * chartEvaluation X d U z p θ y (e I)) s := by
     convert (analyticOnNhd_chartEvaluation_apply X d U z p θ (e I)).const_smul
-      (c := (p.factorial : ℂ)⁻¹) using 1
+      (c := c) using 1
     funext y
     simp [Pi.smul_apply, smul_eq_mul]
   have hterm (I : Fin p → Fin d) : AnalyticOnNhd ℂ
-      (fun y ↦ ((p.factorial : ℂ)⁻¹ *
-        chartEvaluation X d U z p θ y (e I)) • W I) s :=
+      (fun y ↦ (c * chartEvaluation X d U z p θ y (e I)) • W I) s :=
     (hc I).smul analyticOnNhd_const
   have hsum : AnalyticOnNhd ℂ
       (fun y ↦ ∑ I : Fin p → Fin d,
-        ((p.factorial : ℂ)⁻¹ * chartEvaluation X d U z p θ y (e I)) • W I) s :=
+        (c * chartEvaluation X d U z p θ y (e I)) • W I) s :=
     Finset.univ.analyticOnNhd_fun_sum (fun I hI ↦ hterm I)
   exact AnalyticOnNhd.congr (isOpen_chartSectionDomain X d U z) hsum fun y _ ↦
-    (alternating_eq_sum_wedgeCovectors d p (chartEvaluation X d U z p θ y)).symm
+    (alternating_eq_sum_wedgeCovectors (chartEvaluation X d U z p θ y)).symm
 
 /-- Every open neighborhood contains a smaller neighborhood that is exactly a Euclidean ball in
 the fixed chart at the chosen point. -/
@@ -729,9 +727,9 @@ lemma chartEvaluation_ofConstant [SmoothOfRelativeDimension d X.hom]
   rw [Algebra.DeRham.ofConstant_apply, Algebra.DeRham.ofFunction_apply,
     chartEvaluation_mk X d U x 0 _ _ hy]
   simp only [chartGeneratorEvaluation, chartSection_apply_of_mem X d U x _ hy]
-  change c • wedgeCovectors ℂ (Fin d → ℂ) 0 Fin.elim0 = _
+  change c • wedgeCovectors ℂ (Fin d → ℂ) Fin.elim0 = _
   ext v
-  simp [wedgeCovectors]
+  simp
 
 /-- A closed holomorphic zero-form is locally the image of a complex constant. -/
 theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.hom]

@@ -44,8 +44,8 @@ lemma wedgeFDerivWithin_eq_standardVolumeForm_comp
     (p : ℕ) (f : Fin p → E → ℂ) (s : Set E) (x : E)
     (hf : ∀ i, DifferentiableWithinAt ℂ (f i) s x)
     (hs : UniqueDiffWithinAt ℂ s x) :
-    wedgeCovectors ℂ E p (fun i ↦ fderivWithin ℂ (f i) s x) =
-      (standardVolumeForm p).compContinuousLinearMap
+    wedgeCovectors ℂ E (fun i ↦ fderivWithin ℂ (f i) s x) =
+      (standardVolumeForm (Fin p)).compContinuousLinearMap
         (fderivWithin ℂ (fun y i ↦ f i y) s x) := by
   refine ContinuousAlternatingMap.ext fun v ↦ ?_
   rw [wedgeCovectors_apply_eq_det,
@@ -60,7 +60,7 @@ lemma wedgeFDerivWithin_eq_standardVolumeForm_comp
 def exactWedgeWithin (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
     (p : ℕ) (f : Fin p → E → ℂ) (s : Set E) :
     E → E [⋀^Fin p]→L[ℂ] ℂ :=
-  fun x ↦ wedgeCovectors ℂ E p (fun i ↦ fderivWithin ℂ (f i) s x)
+  fun x ↦ wedgeCovectors ℂ E (fun i ↦ fderivWithin ℂ (f i) s x)
 
 /-- A wedge of exact one-forms is closed. The proof identifies it with the pullback of the
 constant volume form and applies naturality of the exterior derivative. -/
@@ -72,7 +72,7 @@ lemma extDerivWithin_exactWedgeWithin_eq_zero
     extDerivWithin (exactWedgeWithin E p f s) s x = 0 := by
   let F : E → (Fin p → ℂ) := fun y i ↦ f i y
   let η : (Fin p → ℂ) → (Fin p → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
-    fun _ ↦ standardVolumeForm p
+    fun _ ↦ standardVolumeForm (Fin p)
   have hF : ContDiffWithinAt ℂ ω F s x := contDiffWithinAt_pi.2 fun i ↦ hf i x hx
   have hEq : Set.EqOn (exactWedgeWithin E p f s)
       (fun y ↦ (η (F y)).compContinuousLinearMap
@@ -83,14 +83,14 @@ lemma extDerivWithin_exactWedgeWithin_eq_zero
       (hs.uniqueDiffWithinAt hy)
   rw [extDerivWithin_congr' hEq hx]
   rw [extDerivWithin_pullback
-    (hω := differentiableAt_const (x := F x) (standardVolumeForm p) |>.differentiableWithinAt)
+    (hω := differentiableAt_const (x := F x) (standardVolumeForm (Fin p)) |>.differentiableWithinAt)
     (hf := hF) (hr := by simp) (hs := hs.uniqueDiffOn)
     (hxc := by simpa [hs.interior_eq] using (show x ∈ closure s from subset_closure hx))
     (hxs := hx) (hst := Set.mapsTo_univ F s)]
   have hη : extDerivWithin η Set.univ (F x) = 0 := by
     rw [extDerivWithin, show fderivWithin ℂ η Set.univ (F x) = 0 from
       congrFun (fderivWithin_const (𝕜 := ℂ) (E := Fin p → ℂ)
-        (s := Set.univ) (standardVolumeForm p)) (F x)]
+        (s := Set.univ) (standardVolumeForm (Fin p))) (F x)]
     exact map_zero _
   rw [hη]
   refine ContinuousAlternatingMap.ext fun v ↦ ?_
@@ -104,7 +104,7 @@ lemma exactWedgeWithin_differentiableWithinAt
     DifferentiableWithinAt ℂ (exactWedgeWithin E p f s) s x := by
   let F : E → (Fin p → ℂ) := fun y i ↦ f i y
   let η : (Fin p → ℂ) → (Fin p → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
-    fun _ ↦ standardVolumeForm p
+    fun _ ↦ standardVolumeForm (Fin p)
   have hF : ContDiffWithinAt ℂ ω F s x := contDiffWithinAt_pi.2 fun i ↦ hf i x hx
   have hDF : DifferentiableWithinAt ℂ (fderivWithin ℂ F s) s x :=
     (hF.fderivWithin_right (m := 1) hs.uniqueDiffOn (by simp) hx).differentiableWithinAt
@@ -112,7 +112,7 @@ lemma exactWedgeWithin_differentiableWithinAt
   have hPull : DifferentiableWithinAt ℂ
       (fun y ↦ (η (F y)).compContinuousLinearMap (fderivWithin ℂ F s y)) s x :=
     DifferentiableWithinAt.continuousAlternatingMapCompContinuousLinearMap
-      (differentiableWithinAt_const (c := standardVolumeForm p)) hDF
+      (differentiableWithinAt_const (c := standardVolumeForm (Fin p))) hDF
   apply hPull.congr
   · intro y hy
     exact wedgeFDerivWithin_eq_standardVolumeForm_comp E p f s y
@@ -130,7 +130,7 @@ lemma extDerivWithin_smul_exactWedgeWithin
     (hs : IsOpen s) (hx : x ∈ s) (ha : ContDiffOn ℂ ω a s)
     (hf : ∀ i, ContDiffOn ℂ ω (f i) s) :
     extDerivWithin (fun y ↦ a y • exactWedgeWithin E p f s y) s x =
-      wedgeCovectors ℂ E (p + 1)
+      wedgeCovectors ℂ E
         (Fin.cases (fderivWithin ℂ a s x)
           (fun i ↦ fderivWithin ℂ (f i) s x)) := by
   rw [extDerivWithin, fderivWithin_fun_smul
@@ -141,6 +141,7 @@ lemma extDerivWithin_smul_exactWedgeWithin
     ContinuousAlternatingMap.alternatizeUncurryFin_smul]
   change a x • extDerivWithin (exactWedgeWithin E p f s) s x + _ = _
   rw [extDerivWithin_exactWedgeWithin_eq_zero E p f s x hs hx hf, smul_zero, zero_add]
-  simp [exactWedgeWithin, wedgeCovectors]
+  rw [wedgeCovectors_succ p]
+  rfl
 
 end DifferentialForm
