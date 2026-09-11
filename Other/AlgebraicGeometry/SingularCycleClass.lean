@@ -43,21 +43,16 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- The analytic complex-point space as an object of `TopCat`. -/
-abbrev AnalyticPointTopCat
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] : TopCat :=
-  TopCat.of (ComplexPoint X)
-
 /-- Singular cohomology of the analytic complex-point space. -/
 abbrev RationalSingularCohomology
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (n : ℕ) :=
-  Cohomology ℚ (AnalyticPointTopCat X) n
+  Cohomology ℚ (TopCat.of (ComplexPoint X)) n
 
 /-- Singular cohomology supported on an irreducible algebraic component. -/
 abbrev RationalSingularComponentCohomologyWithSupport
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (x : X.left) (n : ℕ) :=
-  CohomologyWithSupport ℚ (AnalyticPointTopCat X)
+  CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X))
     (cycleComponentSupport X x) n
 
 /-- A class generates its supported cohomology group over `ℚ`. This is a property, not an
@@ -77,7 +72,7 @@ def singularComponentCycleClassLine
     Submodule ℚ (RationalSingularCohomology X (2 * p)) :=
   Submodule.span ℚ {α | ∃ β : RationalSingularComponentCohomologyWithSupport X x (2 * p),
     IsSupportedCohomologyGenerator β ∧
-      forgetSupport ℚ (AnalyticPointTopCat X)
+      forgetSupport ℚ (TopCat.of (ComplexPoint X))
           (cycleComponentSupport X x) (2 * p) β = α}
 
 /-- The rational span of the guarded singular component-class lines in codimension `p`.
@@ -93,7 +88,7 @@ lemma forgetSupport_mem_singularComponentCycleClassLine
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) (x : X.left)
     (β : RationalSingularComponentCohomologyWithSupport X x (2 * p))
     (hβ : IsSupportedCohomologyGenerator β) :
-    forgetSupport ℚ (AnalyticPointTopCat X)
+    forgetSupport ℚ (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * p) β ∈
       singularComponentCycleClassLine X p x :=
   Submodule.subset_span ⟨β, hβ, rfl⟩
@@ -105,13 +100,13 @@ lemma singularComponentCycleClassLine_eq_span
     (hβ : IsSupportedCohomologyGenerator β) :
     singularComponentCycleClassLine X p x =
       Submodule.span ℚ
-        {forgetSupport ℚ (AnalyticPointTopCat X)
+        {forgetSupport ℚ (TopCat.of (ComplexPoint X))
           (cycleComponentSupport X x) (2 * p) β} := by
   apply le_antisymm
   · apply Submodule.span_le.mpr
     intro α hα
     obtain ⟨γ, -, rfl⟩ := hα
-    let f := forgetSupport ℚ (AnalyticPointTopCat X)
+    let f := forgetSupport ℚ (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * p)
     have hγ : γ ∈ Submodule.span ℚ {β} := by
       rw [hβ]
@@ -132,7 +127,7 @@ lemma forgetSupport_mem_rationalSingularAlgebraicCycleClassSpan
     (hx : coheight x = p)
     (β : RationalSingularComponentCohomologyWithSupport X x (2 * p))
     (hβ : IsSupportedCohomologyGenerator β) :
-    forgetSupport ℚ (AnalyticPointTopCat X)
+    forgetSupport ℚ (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * p) β ∈
       rationalSingularAlgebraicCycleClassSpan X p := by
   apply (le_iSup (fun y : X.left => ⨆ hy : coheight y = p,

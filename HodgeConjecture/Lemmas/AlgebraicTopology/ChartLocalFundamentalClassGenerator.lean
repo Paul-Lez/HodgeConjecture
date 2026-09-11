@@ -39,27 +39,23 @@ variable {M : Type} [TopologicalSpace M]
 variable (d : ℕ) (e : OpenPartialHomeomorph M (Fin d → ℂ)) (x : M)
   (hx : x ∈ e.source)
 
-/-- The image of the compressed inverse chart, regarded as an open neighborhood of `x`. -/
-abbrev chartModelTarget : Set M :=
-  (chartModelEmbedding d e x hx).target
-
 lemma chartModelEmbedding_range_eq_target :
-    Set.range (chartModelEmbedding d e x hx) = chartModelTarget d e x hx := by
+    Set.range (chartModelEmbedding d e x hx) = (chartModelEmbedding d e x hx).target := by
   rw [← Set.image_univ, ← chartModelEmbedding_source d e x hx]
   exact (chartModelEmbedding d e x hx).image_source_eq_target
 
-lemma chartModelTarget_isOpen : IsOpen (chartModelTarget d e x hx) :=
+lemma chartModelTarget_isOpen : IsOpen (chartModelEmbedding d e x hx).target :=
   (chartModelEmbedding d e x hx).open_target
 
-lemma chartModelTarget_mem : x ∈ chartModelTarget d e x hx := by
-  have hzero : chartModelEmbedding d e x hx 0 ∈ chartModelTarget d e x hx :=
+lemma chartModelTarget_mem : x ∈ (chartModelEmbedding d e x hx).target := by
+  have hzero : chartModelEmbedding d e x hx 0 ∈ (chartModelEmbedding d e x hx).target :=
     (chartModelEmbedding d e x hx).map_source
       (by rw [chartModelEmbedding_source]; trivial)
   simpa only [chartModelEmbedding_zero] using hzero
 
 /-- The compressed inverse chart as a homeomorphism onto its open target. -/
 def chartModelTargetHomeomorph :
-    (Fin d → ℂ) ≃ₜ chartModelTarget d e x hx :=
+    (Fin d → ℂ) ≃ₜ (chartModelEmbedding d e x hx).target :=
   ((chartModelEmbedding d e x hx).isOpenEmbedding
       (chartModelEmbedding_source d e x hx)).isEmbedding.toHomeomorph |>.trans
     (Homeomorph.setCongr (chartModelEmbedding_range_eq_target d e x hx))
@@ -72,7 +68,7 @@ lemma chartModelTargetHomeomorph_apply_val (y : Fin d → ℂ) :
 /-- The target homeomorphism restricted away from the distinguished points. -/
 def puncturedChartModelTargetHomeomorph :
     ({0}ᶜ : Set (Fin d → ℂ)) ≃ₜ
-      {y : chartModelTarget d e x hx | y.1 ≠ x} :=
+      {y : (chartModelEmbedding d e x hx).target | y.1 ≠ x} :=
   (chartModelTargetHomeomorph d e x hx).subtype fun y ↦ by
     change y ≠ 0 ↔ chartModelEmbedding d e x hx y ≠ x
     refine not_congr ⟨fun hzero ↦ ?_, fun hxy ↦ chartModelEmbedding_injective d e x hx ?_⟩
@@ -83,7 +79,7 @@ def puncturedChartModelTargetHomeomorph :
 /-- The pair isomorphism from the standard complex local model to the open chart target. -/
 def standardComplexChartTargetPairIso :
     standardComplexPuncturedPair d ≅
-      neighborhoodPointComplementPair (chartModelTarget d e x hx) x where
+      neighborhoodPointComplementPair (chartModelEmbedding d e x hx).target x where
   hom := TopPair.ofHom
     (TopCat.ofHom ⟨chartModelTargetHomeomorph d e x hx,
       (chartModelTargetHomeomorph d e x hx).continuous⟩)
@@ -112,7 +108,7 @@ def standardComplexChartTargetPairIso :
 /-- The original chart map factors through its open target and the neighborhood inclusion. -/
 lemma standardComplexChartTargetPairIso_hom_comp_neighborhoodMap :
     (standardComplexChartTargetPairIso d e x hx).hom ≫
-        neighborhoodPointComplementPairMap (chartModelTarget d e x hx) x =
+        neighborhoodPointComplementPairMap (chartModelEmbedding d e x hx).target x =
       chartModelEmbeddingPair d e x hx := by
   apply MorphismProperty.Arrow.Hom.ext
   · ext y
@@ -134,7 +130,7 @@ theorem chartModelEmbedding_relativeHomologyMap_bijective :
     exact (ConcreteCategory.isIso_iff_bijective ((relativeHomologyFunctor ℚ (2 * d)).map
       (standardComplexChartTargetPairIso d e x hx).hom)).mp inferInstance
   have hexcision := neighborhoodPointComplement_relativeHomologyMap_bijective
-    (chartModelTarget d e x hx) x (chartModelTarget_isOpen d e x hx)
+    (chartModelEmbedding d e x hx).target x (chartModelTarget_isOpen d e x hx)
       (chartModelTarget_mem d e x hx) (2 * d)
   rw [← standardComplexChartTargetPairIso_hom_comp_neighborhoodMap d e x hx,
     relativeHomologyMap_comp]
