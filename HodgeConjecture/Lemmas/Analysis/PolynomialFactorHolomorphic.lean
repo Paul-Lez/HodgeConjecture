@@ -208,6 +208,25 @@ theorem eventually_all_familyEquation_localRootBranch {p : Polynomial (Polynomia
   exact eventually_all.2 fun i ↦
     eventually_familyEquation_localRootBranch (simpleRootCoverPoint hp z i)
 
+/-- Near the center, the finitely many root branches remain pairwise distinct. -/
+theorem eventually_injective_localRootBranches {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, Function.Injective
+      (fun i : Fin p.natDegree ↦ localRootBranch (simpleRootCoverPoint hp z i) z') := by
+  have hpair : ∀ i j : Fin p.natDegree, i ≠ j →
+      ∀ᶠ z' in 𝓝 z.1,
+        localRootBranch (simpleRootCoverPoint hp z i) z' ≠
+          localRootBranch (simpleRootCoverPoint hp z j) z' := by
+    intro i j hij
+    apply (differentiableAt_localRootBranch (simpleRootCoverPoint hp z i)).continuousAt.eventually_ne
+      (differentiableAt_localRootBranch (simpleRootCoverPoint hp z j)).continuousAt
+    simpa [simpleRootCoverPoint, localRootBranch_apply_base] using
+      (simpleRootEnumeration_injective hp z hij)
+  filter_upwards [eventually_all.2 fun i ↦ eventually_all.2 fun j ↦
+    if hij : i = j then Eventually.of_forall (fun _ ↦ not_imp_not.mpr hij)
+    else hpair i j hij] with z' hz i j hij
+  exact hz i j hij
+
 /-- The multiset of roots in a fiber which belong to a specified subset of the root cover. -/
 def selectedRoots {p : Polynomial (Polynomial ℂ)}
     (S : Set (SimpleRootCover p)) (z : SimpleRootBase p) : Multiset ℂ := by
