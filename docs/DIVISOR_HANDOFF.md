@@ -10,8 +10,13 @@ Cartier data, whose Weil divisor is the divisor of a rational section (§2.1–�
 of that data to the analytic space is also **proved**: `AnalytificationGenerates` is now the
 theorem `analytificationGenerates` (§2.4, §4.2(b)). What is left is the comparison of the resulting cycle
 class with the first Chern class, `HasDivisorClassOfSomeCartierData` (§3), whose route is planned
-in §4.3 and whose first step, `SectionSheafDeterminesClass`, is now **proved**
-(`sectionSheafDeterminesClass`, §4.3 step 2a).
+in §4.3. Of that route, step 2a (`SectionSheafDeterminesClass`) is **proved**
+(`sectionSheafDeterminesClass`), and so is the whole of step 3 except for one named obligation:
+the support sequence is exact (`exact_forgetSupport_restrictToComplement`) and an extension that
+splits over an open set `Ω` has vanishing restricted extension class
+(`cohomologyClass_comp_restrictionUnit_eq_zero`); what remains there is the compatibility of the
+exponential connecting map with restriction to `Ω`, stated as `RestrictedChernClassVanishes` /
+`HasRestrictedChernFactorization` (§4.3 step 3c).
 
 ## 1. The exact target
 
@@ -489,11 +494,124 @@ together with the supported/relative comparisons that already exist.
 the bundle on `Ω := X^an \ |D|^an`, so `E|_Ω` splits: a global frame over `Ω` gives, through 2a/2b,
 a global lift over `Ω` of the constant integer section `1`, i.e. a splitting of the restricted
 extension, i.e. the vanishing of `E.cohomologyClass|_Ω`. Hence `E.firstChernClass` is in the
-image of `forgetSupport X (cycleComponentSupport …) 2` — a class in cohomology with support in
-`|D|^an`. Formally, what is needed is the connecting/exact sequence
-`H²_{|D|}(X, ℤ) → H²(X, ℤ) → H²(Ω, ℤ)` and the vanishing of the restriction; both the supported
-groups (`HodgeConjecture/Definitions/AlgebraicGeometry/CohomologyWithSupport.lean`) and the
-restriction maps exist, but the exactness statement in this presentation does not yet.
+image of `forgetSupport X |D|^an 2` — a class in cohomology with support in `|D|^an`.
+
+*3a. Exactness of the support sequence.* **Done**, in
+[`Other/AlgebraicGeometry/CohomologyWithSupportExact.lean`](../Other/AlgebraicGeometry/CohomologyWithSupportExact.lean):
+`restrictToComplement X Z n := hypercohomologyMap X (rationalRestrictionComplexInt X Z) n` and
+`exact_forgetSupport_restrictToComplement : Function.Exact (forgetSupport X Z n)
+(restrictToComplement X Z n)`, from the mapping-cone triangle of `rationalRestrictionComplexInt`
+and `Hom_D(ℤ_X, −)`.
+
+*3b. The splitting kills the restricted extension class.* **Done**, in
+[`Other/AlgebraicGeometry/UnitExtensionOpenRestriction.lean`](../Other/AlgebraicGeometry/UnitExtensionOpenRestriction.lean)
+and its support file
+[`Other/AlgebraicTopology/ConstantSheafGlobalSection.lean`](../Other/AlgebraicTopology/ConstantSheafGlobalSection.lean).
+Write `T := j_* j^*` for `openRestrictionFunctor Ω` (the composite
+`openRestrictionPushforward`, restriction to `Ω` followed by direct image, from
+`Other/AlgebraicTopology/DerivedSheafSupport.lean`) and `η` for `restrictionUnit Ω`, its
+canonical map `F ⟶ T F` (`toOpenRestrictionPushforward`). The theorem is
+
+```lean
+theorem HolomorphicUnitExtension.cohomologyClass_comp_restrictionUnit_eq_zero
+    (E : HolomorphicUnitExtension X d) (Ω : Opens (TopCat.of (ComplexPoint X)))
+    (ℓ : E.middle.obj.obj (op Ω))
+    (hℓ : E.projection.hom.app (op Ω) ℓ =
+      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
+    E.cohomologyClass.comp
+      (Abelian.Ext.mk₀ (restrictionUnit Ω (holomorphicUnitSheaf X d))) (add_zero 1) = 0
+```
+
+The hypothesis `hℓ` is exactly "`E` splits over `Ω`": a global lift over `Ω` of the constant
+integer section `1`, equivalently (`HolomorphicLineBundleFrame.lean`) a frame of
+`E.sectionSheafOfModules` over `Ω`. No short exactness of `T` applied to the sequence is used.
+The proof instead produces a *factorisation of `η` through the inclusion* and appeals to
+`ShortComplex.ShortExact.extClass_comp`: an extension class dies against any morphism out of
+`X₁` that factors through `X₂`. The factorisation is built as follows.
+
+* `TopCat.Sheaf.constHomOfSection F t` — the morphism `ℤ_Y ⟶ F` determined by a global section
+  `t` of `F`, sending the constant `n` to `n · t|_V`; `constHomOfSection_comp` (naturality in
+  `F`) and `constHomOfSection_integerOne` (the section `1` gives `𝟙`). This is the only
+  ingredient about constant sheaves that is needed; there is no need for the abstract
+  `constantSheaf ⊣ Γ` adjunction.
+* `HolomorphicUnitExtension.liftHom E Ω ℓ : ℤ_X ⟶ T E.middle` — `constHomOfSection` applied to
+  `ℓ`, transported along `openRestrictionPushforwardTopEvaluationIso`
+  (`Other/AlgebraicTopology/NestedSheafSupportOnOpen.lean`), which identifies `Γ(X, T F)` with
+  `F(Ω)`. `liftHom_comp_projection` says `liftHom ≫ T(E.projection) = η_{ℤ}`; this is exactly
+  `hℓ` read through that identification (`projection_liftSection`).
+* `restrictedSection` — the adjoint of `liftHom` under `openSheafRestrictionAdjunction`
+  (`Other/AlgebraicTopology/OpenSheafRestriction.lean`), a section of `j^*E.projection` over
+  `Ω`; `restrictedSection_comp_projection` is the triangle identity.
+* `shortExact_map_restrictToOpen` — `j^*` is exact (`openSheafRestriction_preservesFiniteLimits`
+  and `…_preservesFiniteColimits`), so `j^*E` is short exact, and
+  `ShortComplex.Splitting.ofExactOfSection` turns the section into a full splitting
+  `restrictedSplitting`, whose retraction `r` satisfies `j^*(E.inclusion) ≫ r = 𝟙`.
+* `restrictionFactorisation` — the adjoint of `r`, a morphism `E.middle ⟶ T 𝒪ˣ` with
+  `inclusion_comp_restrictionFactorisation : E.inclusion ≫ restrictionFactorisation = η_{𝒪ˣ}`.
+
+*3c. What is still missing: the exponential sequence on `Ω`.* Stated in
+[`Other/AlgebraicGeometry/ChernClassRestrictionVanishing.lean`](../Other/AlgebraicGeometry/ChernClassRestrictionVanishing.lean),
+where `restrictedRationalChernClass X d Ω e` abbreviates
+`restrictToComplement X (↑Ω)ᶜ 2 (integralToRationalCohomology X 2 ((analyticSheafCohomologyEquivExt
+X (constantIntegerSheaf X) 2).symm (holomorphicFirstChernClass X d e)))`:
+
+```lean
+def HasRestrictedChernFactorization : Prop :=
+  ∃ Φ : Abelian.Ext.{1} (constantIntegerSheaf X)
+        ((openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d)) 1 →+
+      Hypercohomology X
+        (derivedPushforwardComplementConstantRationalComplexInt X ((Ω : Set (ComplexPoint X))ᶜ)) 2,
+    ∀ e, restrictedRationalChernClass X d Ω e =
+      Φ (e.comp (Abelian.Ext.mk₀ (restrictionUnit Ω (holomorphicUnitSheaf X d))) (add_zero 1))
+
+def RestrictedChernClassVanishes : Prop :=
+  ∀ e, e.comp (Abelian.Ext.mk₀ (restrictionUnit Ω (holomorphicUnitSheaf X d))) (add_zero 1) = 0 →
+    restrictedRationalChernClass X d Ω e = 0
+```
+
+with `restrictedChernClassVanishes_of_factorization` deriving the second from the first. Both are
+true: the restricted Chern class is the connecting map of the exponential sequence *on `Ω`*
+applied to `e|_Ω`, and `j_*` preserves injectives, so
+`Ext¹_X(ℤ_X, j_*(𝒪ˣ|_Ω)) ≅ Ext¹_Ω(ℤ_Ω, 𝒪ˣ_Ω)`; the image of `e` there is `e|_Ω`, which 3b shows
+to vanish. Formalising it needs the comparison of the target of `restrictToComplement` — the
+hypercohomology of `derivedPushforwardComplementConstantRationalComplexInt`, i.e. of `j_*I^•`
+for a chosen injective resolution `I^•` of `ℚ_Ω` on `Ω` — with `Ext²_Ω(ℤ_Ω, ℚ_Ω)`. Since `j_*I^•`
+is a bounded-below complex of injectives on `X` (`j_*` is right adjoint to the exact `j^*`), it
+is K-injective, so `Hom_{D(X)}(ℤ_X, j_*I^•[n]) = Hom_{K(X)}(ℤ_X, j_*I^•[n]) =
+Hom_{K(Ω)}(ℤ_Ω, I^•[n]) = H^n(Ω, ℚ)`; the repository's K-injective machinery
+(`hypercohomologyAddEquivGlobalSectionsKInjective`,
+`Other/AlgebraicGeometry/DerivedSupportRationalConeComparison.lean`) and the open-restriction
+resolution comparisons (`Other/AlgebraicTopology/OpenInjectiveResolutionComparison.lean`) are the
+right starting point.
+
+> **Warning.** Do *not* reduce the problem to the underived group `Ext²_X(ℤ_X, j_*ℚ_Ω)`. The map
+> `restrictToComplement ∘ integralToRationalCohomology` does factor through it — because
+> `rationalRestrictionComplexInt X Z` factors as `analyticSheafComplexIntMap X
+> (rationalRestrictionSheaf X Z)` followed by the resolution map — but vanishing in
+> `Ext²_X(ℤ_X, j_*ℚ_Ω)` is *strictly stronger* than vanishing in `H²(Ω, ℚ)` and there is no
+> reason for it to hold: the kernel of `Ext²_X(ℤ_X, j_*ℚ_Ω) → Ext²_X(ℤ_X, Rj_*ℚ_Ω)` is not zero.
+> The correspondingly-shaped factorisation of the exponential connecting class through
+> `𝒪ˣ_X → j_*(𝒪ˣ|_Ω)` at the *underived* level would need `j_*` of the exponential sequence on
+> `Ω` to be right exact, which fails (`R¹j_*ℤ ≠ 0`).
+
+*3d. The conclusion of step 3.* Also in `ChernClassRestrictionVanishing.lean`, from 3a, 3b, 3c:
+
+```lean
+theorem restrictToComplement_integralToRational_firstChernClass_eq_zero
+    (hvan : RestrictedChernClassVanishes X d Ω) (E : HolomorphicUnitExtension X d)
+    (ℓ : E.middle.obj.obj (op Ω)) (hℓ : …) :
+    restrictToComplement X ((Ω : Set (ComplexPoint X))ᶜ) 2
+      (integralToRationalCohomology X 2 E.firstChernClass) = 0
+
+theorem exists_forgetSupport_eq_integralToRational_firstChernClass
+    (hvan : RestrictedChernClassVanishes X d Ω) (E : HolomorphicUnitExtension X d)
+    (ℓ : E.middle.obj.obj (op Ω)) (hℓ : …) :
+    ∃ β : RationalCohomologyWithSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2,
+      forgetSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2 β =
+        integralToRationalCohomology X 2 E.firstChernClass
+```
+
+In the application `Ω` is the analytic complement of `|D|^an`, so `Z = (↑Ω)ᶜ = |D|^an`.
 
 **Step 4 — the local model** (missing (c)) **and conclusion.** On the smooth locus of a component
 `Z` with multiplicity `n_Z`, in a normal chart the divisor is `{z₁ = 0}` and the transition
@@ -504,13 +622,67 @@ with `∑ n_Z · cycleComponentSupportedInjectiveClass`, and forgetting support
 (`cycleComponentSheafClass_eq_forgetSupport`) together with additivity
 (`sheafCycleClassOnCycles_sum_single`) gives exactly the equation of §3. This step fixes the sign.
 
+*The precise statement to start from.* Step 3 hands over a supported class
+`β : RationalCohomologyWithSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2` with
+`forgetSupport X (↑Ω)ᶜ 2 β = integralToRationalCohomology X 2 E.firstChernClass`, where
+`Ω` is the analytic complement of `|c.divisor|^an`. What step 4 must prove about `β` is the
+normalisation on the smooth locus of each component, in the presentation of
+[`CycleComponentSheafClass.lean`](../Other/AlgebraicGeometry/CycleComponentSheafClass.lean):
+
+```lean
+/-- The supported lift of the first Chern class is, on the smooth locus of the component of a
+codimension-one point `x`, the multiplicity `c.divisor x` times the normalised normal-chart
+coclass. -/
+def HasChernLocalModel (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom] : Prop :=
+  ∀ (E : HolomorphicUnitExtension X (dim X.left)) (L : X.left.Modules),
+    TauCeti.SheafOfModules.IsInvertible L →
+    ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules) →
+    ∀ (c : Scheme.CartierData X.left), c.Represents L →
+    ∀ (x : X.left) (hx : Order.coheight x = 1)
+      (β : RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * ((1 : ℕ) : ℤ))),
+      forgetSupport X (cycleComponentSupport X x) (2 * ((1 : ℕ) : ℤ)) β =
+          integralToRationalCohomology X 2 E.firstChernClass →
+        (cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom
+            ((rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
+              (cycleComponentAnalyticClosedSupport X x).isClosed (2 * ((1 : ℕ) : ℤ))) β) =
+          (c.divisor x) • cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx
+```
+
+Given this, `cycleComponentSupportedInjectiveClass_unique` (applied to `β` divided by the
+multiplicity, or directly to the additive form) identifies the component contribution with
+`(c.divisor x) • cycleComponentSupportedInjectiveClass X x hx`, and
+`cycleComponentSheafClass_eq_forgetSupport` plus `sheafCycleClassOnCycles_sum_single` give §3.
+
+Two pieces of plumbing sit between step 3 and this statement and should be done first, since they
+are formal:
+
+1. **Support transport `|D|^an ⊇ cycleComponentSupport X x`.** Step 3 produces a class supported
+   on the whole of `|D|^an`; the normalisation isomorphism above is stated for the support of a
+   single component. The transport is restriction to an open set meeting only that component;
+   `Other/AlgebraicGeometry/SmoothClosedSupportOpenTransport.lean` and
+   `Other/AlgebraicTopology/NestedSheafSupportOnOpen.lean` are the relevant tools, and
+   `Scheme.ord_support_finite` gives that `|D|` has finitely many components.
+2. **Additivity over components.** `β` is a single class; the right-hand side of §3 is a finite
+   sum. `sheafCycleClassOnCycles` is `cycleClassOnCyclesOfComponents`, already a finite sum with
+   the multiplicities `c.divisor x`, so only the decomposition of `β` is missing.
+
+The genuinely analytic content is the one-variable computation described in §4.2(c): in a normal
+chart at a smooth point of `Z` the divisor is `{z₁ = 0}`, the Čech transition cocycle of `𝒪(D)`
+is that of `z₁^{n_Z}`, and `(1/2πi) d log z₁` generates `H¹` of the punctured disc. This is where
+the sign is fixed; if it comes out inverted, negate `Scheme.CartierData.Represents` as explained
+in §3.
+
 Summary of the named obligations, in dependency order:
 
 | Name | File | Content |
 | --- | --- | --- |
 | ~~`AnalytificationGenerates`~~ | `AnalytificationGenerates.lean` | **proved**: `analytificationGenerates` |
-| `SectionSheafDeterminesClass` | `UnitExtensionClassObligations.lean` | `H¹(𝒪ˣ) → Pic` is injective |
-| — (not yet stated) | — | realization of a cocycle by an extension; supported exactness; the local model |
+| ~~`SectionSheafDeterminesClass`~~ | `UnitExtensionClassOfSectionSheaf.lean` | **proved**: `sectionSheafDeterminesClass` |
+| ~~supported exactness~~ | `CohomologyWithSupportExact.lean` | **proved**: `exact_forgetSupport_restrictToComplement` |
+| ~~vanishing of the restricted extension class~~ | `UnitExtensionOpenRestriction.lean` | **proved**: `cohomologyClass_comp_restrictionUnit_eq_zero` |
+| `HasRestrictedChernFactorization`, `RestrictedChernClassVanishes` | `ChernClassRestrictionVanishing.lean` | §4.3 step 3c: the exponential sequence on `Ω`, i.e. `Rj_*` |
+| — (not yet stated) | — | realization of a cocycle by an extension; the local model of §4.3 step 4 |
 | `HasDivisorClassOfSomeCartierData` | `DivisorObligations.lean` | the target of §3 |
 
 ## 5. Interface reference
@@ -545,11 +717,15 @@ lake env lean Other/AlgebraicGeometry/DivisorObligations.lean
 lake env lean Other/AlgebraicGeometry/HolomorphicSheafGenerators.lean
 lake env lean Other/AlgebraicGeometry/AnalyticSectionOfAlgebraic.lean
 lake env lean Other/AlgebraicGeometry/UnitExtensionClassObligations.lean
+lake env lean Other/AlgebraicTopology/ConstantSheafGlobalSection.lean
+lake env lean Other/AlgebraicGeometry/UnitExtensionOpenRestriction.lean
+lake env lean Other/AlgebraicGeometry/ChernClassRestrictionVanishing.lean
 lake build Other.AlgebraicGeometry.DivisorObligations
 lake build Other.AlgebraicGeometry.UnitExtensionClassObligations
+lake build Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 ```
 
-All seven modules are imported by `Other.lean`. Repository conventions: files start with
+All of these modules are imported by `Other.lean`. Repository conventions: files start with
 `module`, use `public import`, `@[expose] public noncomputable section`; local topology
 instances need unique names; `set_option backward.isDefEq.respectTransparency false in` is often
 needed to `change`/`rw` through bundled categories, and `omit [...] in` before the docstring

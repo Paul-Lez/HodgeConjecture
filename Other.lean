@@ -117,6 +117,7 @@ public import Other.AlgebraicTopology.CompactificationBorelMoore
 public import Other.AlgebraicTopology.ComplexDifferentiableLocalClassInvariance
 public import Other.AlgebraicTopology.ComplexLinearLocalClassInvariance
 public import Other.AlgebraicTopology.ConstantSheafDegreeZero
+public import Other.AlgebraicTopology.ConstantSheafGlobalSection
 public import Other.AlgebraicTopology.EuclideanLocalHomology
 public import Other.AlgebraicTopology.FiniteGoodCoverHomology
 public import Other.AlgebraicTopology.FiniteGoodCoverNerveHomology
@@ -365,6 +366,8 @@ public import Other.AlgebraicGeometry.ProjectiveTwistDegreeZeroRelations
 public import Other.AlgebraicGeometry.ProjectiveHolomorphicFunctions
 public import Other.AlgebraicGeometry.PolynomialGrowthLiouville
 public import Other.AlgebraicGeometry.ProjectiveAnalytificationHomeomorph
+public import Other.AlgebraicGeometry.ProjectiveAnalytificationCharts
+public import Other.AlgebraicGeometry.HomogeneousEntireFunctions
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
@@ -386,3 +389,5 @@ public import Other.Geometry.Manifold.TubularNeighbourhood
 public import Other.Geometry.Manifold.CompactManifoldFiniteHomology
 public import Other.AlgebraicGeometry.ProjectiveFiniteHomology
 public import Other.AlgebraicGeometry.CohomologyWithSupportExact
+public import Other.AlgebraicGeometry.UnitExtensionOpenRestriction
+public import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
