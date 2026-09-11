@@ -95,7 +95,7 @@ private lemma growth_fin_cons {n : ℕ} {f : (Fin (n + 1) → ℂ) → ℂ} {C :
     _ = _ := by rw [mul_pow, mul_assoc]
 /-- A nonzero multivariate polynomial has arbitrarily many distinct first-coordinate slices
 which are still nonzero. -/
-private lemma exists_nodes_slice_ne_zero {n k : ℕ} {p : MvPolynomial (Fin (n + 1)) ℂ}
+theorem exists_nodes_slice_ne_zero {n k : ℕ} {p : MvPolynomial (Fin (n + 1)) ℂ}
     (hp : p ≠ 0) : ∃ nodes : Fin k → ℂ, Function.Injective nodes ∧
       ∀ i, Polynomial.eval (MvPolynomial.C (nodes i)) (MvPolynomial.finSuccEquiv ℂ n p) ≠ 0 := by
   classical
