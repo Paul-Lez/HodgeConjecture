@@ -379,6 +379,8 @@ public import Other.AlgebraicGeometry.ProjectiveChartHolomorphic
 public import Other.AlgebraicGeometry.MvPolynomialHomogenisation
 public import Other.AlgebraicGeometry.ProjectiveChartFormComparison
 public import Other.AlgebraicGeometry.ProjectiveTwistObligations
+public import Other.AlgebraicGeometry.ProjectiveTwistChartFrames
+public import Other.AlgebraicGeometry.ProjectiveTwistAnalyticFrames
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts

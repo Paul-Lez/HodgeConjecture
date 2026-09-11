@@ -767,7 +767,8 @@ presentation `projPresentation N = ComplexProjectiveSpace.selfPresentation N`:
 - **`algebraizes_of_serreData_proj`** — the conditional theorem: the four give line-bundle GAGA on
   `ℙᴺ` (every invertible analytic module on `ℙᴺ(ℂ)^an` is an analytification).  Note this does not
   need `IsIntegral ℙᴺ`, which is still open but only matters for the `dim X.left`-phrased target;
-- **`TwistChartFramesProj N n`** — the isolated **(G2)** obligation: `𝒪(−n)` on `ℙᴺ` has a
+- **`TwistChartFramesProj N n`** — the isolated **(G2)** obligation, **proved in the fifth pass
+  below** as `ComplexProjectiveSpace.twistChartFramesProj`: `𝒪(−n)` on `ℙᴺ` has a
   generating section on each standard homogeneous chart, and those analytic opens are exactly the
   `ComplexProjectiveSpace.complexPointChartSet i`.  Via `analytificationGenerates` this yields
   analytic frames for `𝒪(−n)^an` on the chart sets.  The algebraic half exists
@@ -799,6 +800,80 @@ available in this repository.
 `IsIntegral (ProjectiveSpace (Fin (N + 1)) (Spec ℂ))` and `dim ℙᴺ = N`.  Neither is needed for
 (G2)/(G3) or for `algebraizes_of_serreData_proj`; they are needed only to instantiate the
 `dim X.left`-phrased `AnalyticLineBundlesAlgebraize` at `X = ℙᴺ`.
+
+## Progress 2026-09-11 (fifth pass): **(G2) is proved**, and the chart dictionary is started
+
+Two further `sorry`-free, axiom-clean files.  The (G2) obligation stated in the previous pass is
+now a theorem, and the first two steps of the (G3) chart dictionary are in place.
+
+### (G2): chartwise frames for the projective twists
+
+[`Other/AlgebraicGeometry/ProjectiveTwistChartFrames.lean`](../Other/AlgebraicGeometry/ProjectiveTwistChartFrames.lean),
+namespace `AlgebraicGeometry.ComplexProjectiveSpace`:
+
+- `vectorToComplexPoint_mem_projectiveSpaceBasicOpen_iff` — the missing *converse* of the
+  repository's membership lemma: a coordinate point lies in a positive-degree basic open iff the
+  defining form does not vanish on its coordinates (the `if`-formula
+  `chartIntegralProj_preimage_basicOpen` gives both directions).
+- **`overOpen_projectiveSpaceBasicOpen_X`** — the topological half of (G2): the analytic open
+  attached to `D₊(Xᵢ) ⊆ ℙᴺ` *is* the chart set `complexPointChartSet i`.
+- `universalTwistTrivializations N n` — the standard degree-`n` trivialising family of `𝒪(−n)` on
+  the universal `Proj` model, with members the coordinate basic opens (uniformly in `n`,
+  including `n = 0`).
+- `twistTrivializations N n` — its transport to `ℙᴺ` through the *two* pullbacks defining
+  `ProjectiveTwist.algebraic` (`toUniversalProj`, then `P.immersion`), using
+  `Scheme.Modules.localTrivializationsPullback`.  This is where `InvertiblePullback.lean` does all
+  the work: it already pulls a local trivialisation through the Cartesian square of open
+  subschemes.
+- `projectiveSpaceBasicOpen_le_twistTrivializations` — `D₊(Xᵢ) ≤ D₊(Xᵢⁿ)` in every degree.
+- **`twistChartFramesProj (N n : ℕ) : Other.ProjectiveChart.TwistChartFramesProj N n`** — (G2).
+  The frame is `Scheme.Modules.unitIsoSection` of the transported trivialisation, restricted to
+  `D₊(Xᵢ)`; it generates by `generates_unitIsoSection` and `Generates.restrict`.
+
+### The first steps of the (G3) chart dictionary
+
+[`Other/AlgebraicGeometry/ProjectiveTwistAnalyticFrames.lean`](../Other/AlgebraicGeometry/ProjectiveTwistAnalyticFrames.lean):
+
+- `algebraicChartFrame N n i` / `generates_algebraicChartFrame` — the (G2) frame, named.
+- `chartOpen N i` (the `i`-th homogeneous chart as an open of the analytification) with
+  `coe_chartOpen : ↑(chartOpen N i) = complexPointChartSet i`.
+- `analyticChartFrame N n i` and **`holomorphicGenerates_analyticChartFrame`** — `𝒪(−n)^an` is
+  trivialised on each standard homogeneous chart of `ℙᴺ(ℂ)^an`; this is (G2) pushed through
+  `analytificationGenerates`.
+- **`existsUnique_chartMultiplier`** — a morphism `𝒪(−a)^an ⟶ 𝒪(−b)^an` is, on each chart,
+  multiplication by a *unique* holomorphic function.
+- `chartPointIn`, `contMDiff_chartPointIn`, **`analyticOnNhd_comp_chartPointIn`** (and its bundled
+  `C^ω` form) — a holomorphic function on the chart open becomes an *entire* function on `ℂᴺ` in
+  the chart coordinates.  (Mathlib's `ContMDiff.subtypeVal_comp_iff` is stated only for `∞`; the
+  general `ChartedSpace.liftPropWithinAt_subtypeVal_comp_iff` gives the `ω` version.)
+
+### What remains for (G3)
+
+Given `φ : 𝒪(−a)^an ⟶ 𝒪(−b)^an`, the above produce a unique holomorphic multiplier `h_i` on each
+chart and an entire function `f_i = h_i ∘ chartPointIn` on `ℂᴺ`.  Three steps remain:
+
+1. **The cocycle.**  Compute the frame change between `analyticChartFrame N n i` and
+   `analyticChartFrame N n j` on the overlap — it is the analytification of the algebraic
+   transition unit `(x_i/x_j)ⁿ`, and `HolomorphicGenerates.exists_isUnit_smul_eq` already produces
+   the unit abstractly; what is needed is its *identification* with the evaluation of
+   `(x_i/x_j)^{a−b}`, i.e. the analogue of `analyticSection_smul_res` for the explicit algebraic
+   identity `(x_i/x_j)ⁿ • gⱼ = gᵢ`.
+2. **The growth bound.**  From the cocycle plus compactness of `ℙᴺ(ℂ)` (an instance since the
+   third pass) one gets `‖f_i z‖ ≤ C (1 + ‖z‖)^{a−b}`; then
+   `Other.ProjectiveChart.existsUnique_isHomogeneous_of_chart_growth` produces a *unique*
+   degree-`(a−b)` form `Q`.
+3. **Reconstruction.**  Turn `Q` into an algebraic morphism `𝒪(−a) ⟶ 𝒪(−b)` and check that its
+   analytification is `φ`; the charts cover (`iUnion_complexPointChartSet`) and the multipliers are
+   unique, so the comparison is chartwise.
+
+Together these give `TwistRelationsAlgebraizeProj N` in rank one; the passage to arbitrary finite
+sums `analyticSum a r ⟶ analyticSum b s` is the matrix argument already carried out for free
+sheaves in `FiniteFreeAnalytification.lean`, transported along `sumAnalytificationIso`.
+
+The negative-degree case (`a < b`) still needs the maximum-modulus argument: multiply a degree-`k`
+section by each degree-`k` form to get a degree-`0` homogeneous holomorphic function, hence a
+constant by compactness and connectedness of `ℙᴺ(ℂ)` (both instances now), and compare the
+constants obtained from `x₀ᵏ` and `x₁ᵏ`.
 
 ## Mathematical routes, and what is missing
 
