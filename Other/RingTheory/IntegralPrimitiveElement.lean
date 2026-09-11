@@ -173,3 +173,44 @@ theorem exists_complexNoetherNormalization : Nonempty (ComplexNoetherNormalizati
   exact ⟨⟨n, g, hinj, hfinite⟩⟩
 
 end Algebra
+namespace Algebra
+variable (A : Type*) [CommRing A] [IsDomain A] [Algebra ℂ A]
+
+@[instance_reducible] noncomputable def ComplexNoetherNormalization.fractionFieldAlgebra
+    (N : ComplexNoetherNormalization A) :
+    Algebra (FractionRing (MvPolynomial (Fin N.dimension) ℂ)) (FractionRing A) := by
+  let P := MvPolynomial (Fin N.dimension) ℂ
+  letI : Algebra P A := N.hom.toAlgebra
+  letI : Module.Finite P A := N.finite
+  letI : FaithfulSMul P A :=
+    (faithfulSMul_iff_algebraMap_injective P A).mpr N.injective
+  letI : SMul P (FractionRing A) :=
+    (Algebra.compHom (FractionRing A) N.hom.toRingHom).toSMul
+  letI : Algebra P (FractionRing A) :=
+    Algebra.compHom (FractionRing A) N.hom.toRingHom
+  letI : FaithfulSMul P (FractionRing A) :=
+    (faithfulSMul_iff_algebraMap_injective P (FractionRing A)).mpr
+      ((FaithfulSMul.algebraMap_injective A (FractionRing A)).comp N.injective)
+  exact FractionRing.liftAlgebra P (FractionRing A)
+
+theorem ComplexNoetherNormalization.finiteDimensionalFractionFields
+    (N : ComplexNoetherNormalization A) :
+    @FiniteDimensional (FractionRing (MvPolynomial (Fin N.dimension) ℂ)) (FractionRing A)
+      _ _ N.fractionFieldAlgebra.toModule := by
+  let P := MvPolynomial (Fin N.dimension) ℂ
+  let : Algebra P A := N.hom.toAlgebra
+  let : Module.Finite P A := N.finite
+  let : FaithfulSMul P A :=
+    (faithfulSMul_iff_algebraMap_injective P A).mpr N.injective
+  let : SMul P (FractionRing A) :=
+    (Algebra.compHom (FractionRing A) N.hom.toRingHom).toSMul
+  let : Algebra P (FractionRing A) :=
+    Algebra.compHom (FractionRing A) N.hom.toRingHom
+  let : FaithfulSMul P (FractionRing A) :=
+    (faithfulSMul_iff_algebraMap_injective P (FractionRing A)).mpr
+      ((FaithfulSMul.algebraMap_injective A (FractionRing A)).comp N.injective)
+  let : Algebra (FractionRing P) (FractionRing A) :=
+    FractionRing.liftAlgebra P (FractionRing A)
+  exact (inferInstance : @FiniteDimensional (FractionRing P) (FractionRing A) _ _
+    (FractionRing.liftAlgebra P (FractionRing A)).toModule)
+end Algebra
