@@ -868,6 +868,38 @@ theorem exists_mvPolynomialFamily_mvSelectedFactorOn {n : ℕ}
     rw [coeff_monomial_of_ne _ hxk.symm]
     simp
 
+
+/-- Fiberwise divisibility on a nonempty principal open implies divisibility of polynomial
+families, provided the divisor family is monic. -/
+theorem dvd_of_map_dvd_on_mvPolynomial_nonzero {n : ℕ}
+    (p q : Polynomial (MvPolynomial (Fin n) ℂ)) (hq : q.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
+    (hdiv : ∀ z, MvPolynomial.eval z r ≠ 0 →
+      q.map (MvPolynomial.eval z) ∣ p.map (MvPolynomial.eval z)) : q ∣ p := by
+  rw [← modByMonic_eq_zero_iff_dvd hq]
+  let s := p %ₘ q
+  change s = 0
+  apply Polynomial.ext
+  intro k
+  have hclosed : IsClosed {z : Fin n → ℂ | MvPolynomial.eval z (s.coeff k) = 0} :=
+    isClosed_singleton.preimage
+      (AnalyticOnNhd.eval_mvPolynomial (s.coeff k)).continuous
+  have hsubset : {z : Fin n → ℂ | MvPolynomial.eval z r ≠ 0} ⊆
+      {z : Fin n → ℂ | MvPolynomial.eval z (s.coeff k) = 0} := by
+    intro z hz
+    have hsmap : s.map (MvPolynomial.eval z) = 0 := by
+      change (p %ₘ q).map (MvPolynomial.eval z) = 0
+      rw [map_modByMonic _ hq,
+        (modByMonic_eq_zero_iff_dvd (hq.map (MvPolynomial.eval z))).2 (hdiv z hz)]
+    have hc := congrArg (fun t : Polynomial ℂ ↦ t.coeff k) hsmap
+    simpa [coeff_map] using hc
+  have hall : ∀ z : Fin n → ℂ, MvPolynomial.eval z (s.coeff k) = 0 := by
+    intro z
+    apply (closure_minimal hsubset hclosed)
+    rw [(MvPolynomial.dense_complex_nonzero r hr0).closure_eq]
+    trivial
+  exact MvPolynomial.funext (fun z ↦ by simpa using hall z)
+
 end
 
 end Polynomial
