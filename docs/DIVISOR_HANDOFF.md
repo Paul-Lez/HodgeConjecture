@@ -16,7 +16,10 @@ the support sequence is exact (`exact_forgetSupport_restrictToComplement`) and a
 splits over an open set `Ω` has vanishing restricted extension class
 (`cohomologyClass_comp_restrictionUnit_eq_zero`); what remains there is the compatibility of the
 exponential connecting map with restriction to `Ω`, stated as `RestrictedChernClassVanishes` /
-`HasRestrictedChernFactorization` (§4.3 step 3c).
+`HasRestrictedChernFactorization` (§4.3 step 3c). Step 4 has been restated correctly and its
+**assembly is proved** (`hasDivisorClassOfSomeCartierData_of_localModel`, §4.3 step 4): what is
+left of it is the codimension-one excision statement `HasComponentSupportDecomposition` and the
+local model `HasChernLocalModel`.
 
 ## 1. The exact target
 
@@ -617,61 +620,245 @@ In the application `Ω` is the analytic complement of `|D|^an`, so `Z = (↑Ω)�
 `Z` with multiplicity `n_Z`, in a normal chart the divisor is `{z₁ = 0}` and the transition
 cocycle is that of `z₁^{n_Z}`; the supported class is `n_Z` times the normalised normal-chart
 coclass `cycleComponentSmoothSupportCoclassSection`. Then
-`cycleComponentSupportedInjectiveClass_unique` identifies the supported lift of `E.firstChernClass`
-with `∑ n_Z · cycleComponentSupportedInjectiveClass`, and forgetting support
-(`cycleComponentSheafClass_eq_forgetSupport`) together with additivity
-(`sheafCycleClassOnCycles_sum_single`) gives exactly the equation of §3. This step fixes the sign.
+`cycleComponentSupportedInjectiveClass_unique` identifies the component contributions of the
+supported lift of `E.firstChernClass` with `n_Z · cycleComponentSupportedInjectiveClass`, and
+forgetting support together with additivity gives exactly the equation of §3. This step fixes the
+sign.
 
-*The precise statement to start from.* Step 3 hands over a supported class
-`β : RationalCohomologyWithSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2` with
-`forgetSupport X (↑Ω)ᶜ 2 β = integralToRationalCohomology X 2 E.firstChernClass`, where
-`Ω` is the analytic complement of `|c.divisor|^an`. What step 4 must prove about `β` is the
-normalisation on the smooth locus of each component, in the presentation of
-[`CycleComponentSheafClass.lean`](../Other/AlgebraicGeometry/CycleComponentSheafClass.lean):
+Step 4 is now carried out in two files:
+
+* [`Other/AlgebraicGeometry/DivisorClassComparisonSupport.lean`](../Other/AlgebraicGeometry/DivisorClassComparisonSupport.lean)
+  — the support bookkeeping, **entirely proved**;
+* [`Other/AlgebraicGeometry/ChernLocalModel.lean`](../Other/AlgebraicGeometry/ChernLocalModel.lean)
+  — the two remaining propositions and the **proved** assembly
+  `hasDivisorClassOfSomeCartierData_of_localModel`.
+
+*A correction to the statement drafted here previously.* The earlier draft of `HasChernLocalModel`
+quantified over a class `β : RationalCohomologyWithSupport X (cycleComponentSupport X x) 2`
+supported on a **single** component with `forgetSupport β = c₁`. That is wrong: when `D` has more
+than one component no such `β` exists — `c₁` restricted to the complement of one component need
+not vanish — so the drafted proposition was vacuous, and useless. What step 3 delivers is a class
+supported on the analytic support `|D|^an` of the **whole** divisor, and the comparison target is
+the finite sum `∑_x n_x · cycleComponentSheafClass X x`. The statement is therefore split into a
+*decomposition* obligation and a *local model* obligation. The route taken is variant (ii) of the
+three considered — a Mayer–Vietoris/excision decomposition — because variants (i) and (iii) need
+the same codimension-two vanishing anyway: `cycleComponentSmoothSupportAmbientOpen X x` is
+`X^an ∖ Sing(Z_x)`, which still meets every other component of `D`, so neither the restriction of
+`β` to it nor the uniqueness theorem `cycleComponentSupportedInjectiveClass_unique` sees a single
+component until the other components have been removed, and removing them is exactly the
+codimension-two excision.
+
+*The support bookkeeping (proved).* All of it is stated inside the concrete "supported injective
+sections" model, which is where both `cycleComponentSupportedInjectiveClass` and
+`rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport` already live, so no further
+comparison of models is needed:
 
 ```lean
-/-- The supported lift of the first Chern class is, on the smooth locus of the component of a
-codimension-one point `x`, the multiplicity `c.divisor x` times the normalised normal-chart
-coclass. -/
-def HasChernLocalModel (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] : Prop :=
+abbrev SupportedInjectiveHomology (S : Closeds (ComplexPoint X)) (n : ℤ) :=
+  ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+    (.up ℤ)).obj (complexSupportInjectiveComplex X S)).homology n)
+
+def enlargeSupportedInjectiveHomology {S T : Closeds (ComplexPoint X)} (h : S ≤ T) (n : ℤ) :
+    SupportedInjectiveHomology X S n ⟶ SupportedInjectiveHomology X T n
+
+def supportedInjectiveToAmbient (S : Closeds (ComplexPoint X)) (n : ℤ) :
+    SupportedInjectiveHomology X S n ⟶
+      (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex (TopCat.of (ComplexPoint X))
+        S.compl ⊤ (ambientRationalInjectiveComplex X)).X₂.homology n
+
+theorem supportedInjectiveToAmbient_enlarge {S T : Closeds (ComplexPoint X)} (h : S ≤ T) (n : ℤ)
+    (a : SupportedInjectiveHomology X S n) :
+    supportedInjectiveToAmbient X T n (enlargeSupportedInjectiveHomology X h n a) =
+      supportedInjectiveToAmbient X S n a
+```
+
+The enlargement map is the coefficient-level `TopCat.Sheaf.sheafSectionsWithClosedSupportMap`
+(support-enlargement is the inclusion of kernels of restriction maps), and
+`supportedInjectiveToAmbient_enlarge` is `sheafSectionsSupportedOutsideMap_inclusion` transported
+through `mapHomologicalComplex` and `homologyMap`. Two identifications make the two sides of §3
+computable in this model, and both hold by `rfl`:
+
+* `cycleComponentSheafClass X x hx =
+  (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
+    (supportedInjectiveToAmbient X (cycleComponentAnalyticClosedSupport X x) (2 * (p : ℤ))
+      (cycleComponentSupportedInjectiveClass X x hx))` — this *is* the definition of
+  `cycleComponentSheafClass`;
+* `rationalCohomologyAddEquivAmbientInjectiveHomology X n (forgetSupport X ↑S n β) =
+  supportedInjectiveToAmbient X S n (rationalSupportAddEquivSupportedInjectiveHomology X ↑S S.isClosed n β)`
+  — this is `rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport`.
+
+Also proved there: the analytic support of a finite family of components,
+`componentsAnalyticClosedSupport X s := s.sup (fun x ↦ cycleComponentAnalyticClosedSupport X x)`,
+its one-component enlargements `componentContribution X s x n a` (zero off `s`), the finite
+component set `cycleComponents D := (compactCycleToFinsupp D.1).support` of a codimension-one
+cycle with `coheight_of_mem_cycleComponents`, and the explicit finite-sum formula
+
+```lean
+theorem sheafCycleClassOnCycles_eq_sum (D : CodimensionCycle X.left 1) :
+    sheafCycleClassOnCycles (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1 D =
+      ∑ x ∈ cycleComponents X D, D.1 x •
+        (if hx : coheight x = ((1 : ℕ) : ℕ∞) then
+            cycleComponentSheafClass X x (d := dim X.left) hx else 0)
+```
+
+*The corrected propositions.* In
+[`ChernLocalModel.lean`](../Other/AlgebraicGeometry/ChernLocalModel.lean), writing
+`cycleAnalyticClosedSupport X D := componentsAnalyticClosedSupport X (cycleComponents X D)` for
+`|D|^an`:
+
+```lean
+/-- **Hypothesis (step 3).** The supported lift exists. This is exactly the conclusion of
+`exists_forgetSupport_eq_integralToRational_firstChernClass` for
+`Ω := (cycleAnalyticClosedSupport X c.divisor).compl`. -/
+def HasSupportedChernLift : Prop :=
   ∀ (E : HolomorphicUnitExtension X (dim X.left)) (L : X.left.Modules),
     TauCeti.SheafOfModules.IsInvertible L →
     ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules) →
-    ∀ (c : Scheme.CartierData X.left), c.Represents L →
-    ∀ (x : X.left) (hx : Order.coheight x = 1)
-      (β : RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * ((1 : ℕ) : ℤ))),
-      forgetSupport X (cycleComponentSupport X x) (2 * ((1 : ℕ) : ℤ)) β =
-          integralToRationalCohomology X 2 E.firstChernClass →
-        (cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom
-            ((rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-              (cycleComponentAnalyticClosedSupport X x).isClosed (2 * ((1 : ℕ) : ℤ))) β) =
-          (c.divisor x) • cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx
+    ∀ c : Scheme.CartierData X.left, c.Represents L →
+      ∃ β : RationalCohomologyWithSupport X
+          ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
+            Set (ComplexPoint X)) (2 * ((1 : ℕ) : ℤ)),
+        forgetSupport X _ (2 * ((1 : ℕ) : ℤ)) β =
+          integralToRationalCohomology X 2 E.firstChernClass
+
+/-- **Obligation: excision in codimension one.** A degree-two class supported on a finite union of
+codimension-one component supports is a sum of classes supported on the individual components. -/
+def HasComponentSupportDecomposition : Prop :=
+  ∀ (s : Finset X.left), (∀ x ∈ s, coheight x = ((1 : ℕ) : ℕ∞)) →
+    ∀ β : SupportedInjectiveHomology X (componentsAnalyticClosedSupport X s)
+        (2 * ((1 : ℕ) : ℤ)),
+      ∃ γ : ∀ x : X.left,
+          SupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
+            (2 * ((1 : ℕ) : ℤ)),
+        β = ∑ x ∈ s, componentContribution X s x (2 * ((1 : ℕ) : ℤ)) (γ x)
+
+/-- **Obligation: the local model.** In any decomposition of a supported lift of the first Chern
+class, the piece supported on the component of `x` normalises, on the smooth locus of that
+component, to `c.divisor x` times the normal-chart coclass. -/
+def HasChernLocalModel : Prop :=
+  ∀ (E : HolomorphicUnitExtension X (dim X.left)) (L : X.left.Modules),
+    TauCeti.SheafOfModules.IsInvertible L →
+    ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules) →
+    ∀ c : Scheme.CartierData X.left, c.Represents L →
+    ∀ β : SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor)
+        (2 * ((1 : ℕ) : ℤ)),
+      supportedInjectiveToAmbient X (cycleAnalyticClosedSupport X c.divisor)
+          (2 * ((1 : ℕ) : ℤ)) β =
+        rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))
+          (integralToRationalCohomology X 2 E.firstChernClass) →
+    ∀ γ : ∀ x : X.left,
+        SupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
+          (2 * ((1 : ℕ) : ℤ)),
+      β = ∑ x ∈ cycleComponents X c.divisor,
+        componentContribution X (cycleComponents X c.divisor) x (2 * ((1 : ℕ) : ℤ)) (γ x) →
+    ∀ x ∈ cycleComponents X c.divisor, ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
+      (cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom (γ x) =
+        (c.divisor x) • cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx
 ```
 
-Given this, `cycleComponentSupportedInjectiveClass_unique` (applied to `β` divided by the
-multiplicity, or directly to the additive form) identifies the component contribution with
-`(c.divisor x) • cycleComponentSupportedInjectiveClass X x hx`, and
-`cycleComponentSheafClass_eq_forgetSupport` plus `sheafCycleClassOnCycles_sum_single` give §3.
+*Non-vacuity.* The previous draft of this step was vacuous, so the new statements come with a
+check: `exists_componentContribution_sum_singleton` proves
+`HasComponentSupportDecomposition`'s conclusion for a one-element family, from
+`componentsAnalyticClosedSupport_singleton` and `enlargeSupportedInjectiveHomology_refl`
+(enlargement along the identity is the identity). In particular the obligation is satisfiable, and
+it is exactly the multi-component content that is missing.
 
-Two pieces of plumbing sit between step 3 and this statement and should be done first, since they
-are formal:
+Note that `HasChernLocalModel` quantifies over *every* decomposition `γ` of `β`. That is the
+honest statement: mathematically the decomposition is unique (the enlargement maps are jointly
+*bijective*, not merely surjective, again by the codimension-two vanishing), so nothing is lost,
+and phrasing it this way avoids having to state and prove injectivity separately.
 
-1. **Support transport `|D|^an ⊇ cycleComponentSupport X x`.** Step 3 produces a class supported
-   on the whole of `|D|^an`; the normalisation isomorphism above is stated for the support of a
-   single component. The transport is restriction to an open set meeting only that component;
-   `Other/AlgebraicGeometry/SmoothClosedSupportOpenTransport.lean` and
-   `Other/AlgebraicTopology/NestedSheafSupportOnOpen.lean` are the relevant tools, and
-   `Scheme.ord_support_finite` gives that `|D|` has finitely many components.
-2. **Additivity over components.** `β` is a single class; the right-hand side of §3 is a finite
-   sum. `sheafCycleClassOnCycles` is `cycleClassOnCyclesOfComponents`, already a finite sum with
-   the multiplicities `c.divisor x`, so only the decomposition of `β` is missing.
+*The assembly, proved.*
 
-The genuinely analytic content is the one-variable computation described in §4.2(c): in a normal
-chart at a smooth point of `Z` the divisor is `{z₁ = 0}`, the Čech transition cocycle of `𝒪(D)`
-is that of `z₁^{n_Z}`, and `(1/2πi) d log z₁` generates `H¹` of the punctured disc. This is where
-the sign is fixed; if it comes out inverted, negate `Scheme.CartierData.Represents` as explained
-in §3.
+```lean
+theorem hasDivisorClassOfSomeCartierData_of_localModel
+    (hlift : HasSupportedChernLift X)
+    (hdec : HasComponentSupportDecomposition X)
+    (hloc : HasChernLocalModel X) :
+    HasDivisorClassOfSomeCartierData X
+```
+
+`#print axioms` reports only `propext`, `Classical.choice`, `Quot.sound`. The proof: pick the
+Cartier data from `exists_cartierData_represents`; transport the lift `β` into the supported
+injective model; decompose it with `hdec`; use `hloc` and the injectivity of
+`cycleComponentSupportedClassNormalizationIso` (packaged as
+`eq_zsmul_cycleComponentSupportedInjectiveClass`, the additive form of
+`cycleComponentSupportedInjectiveClass_unique`) to identify each piece with
+`c.divisor x • cycleComponentSupportedInjectiveClass X x hx`; and finish with
+`supportedInjectiveToAmbient_enlarge` and `sheafCycleClassOnCycles_eq_sum`. Combined with
+`hasDivisorOfAlgebraicModel_of_divisorClass` this reduces `HasDivisorOfAlgebraicModel X` to
+`HasSupportedChernLift`, `HasComponentSupportDecomposition` and `HasChernLocalModel`. The first of
+these is discharged by step 3, through the proved bridge
+
+```lean
+theorem exists_supportedChernLift_of_splitting
+    (E : HolomorphicUnitExtension X (dim X.left)) (c : Scheme.CartierData X.left)
+    (hvan : RestrictedChernClassVanishes X (dim X.left)
+      (cycleAnalyticClosedSupport X c.divisor).compl)
+    (ℓ : E.middle.obj.obj (op ((cycleAnalyticClosedSupport X c.divisor).compl)))
+    (hℓ : …) :
+    ∃ β : RationalCohomologyWithSupport X
+        ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
+          Set (ComplexPoint X)) (2 * ((1 : ℕ) : ℤ)), forgetSupport X _ _ β = …
+```
+
+so that only the splitting datum `ℓ` over `X^an ∖ |D|^an` — a frame of the line bundle there,
+which the rational section provides but which has not been formalised — and
+`RestrictedChernClassVanishes` stand between step 3 and `HasSupportedChernLift`.
+
+*What `HasComponentSupportDecomposition` needs.* Nothing about Chern classes. By induction on the
+finite set it is enough to treat `C = A ∪ B` with `A = Z_x` one component and `B` the union of the
+others, and to show that
+
+  `H²_A(X) ⊕ H²_B(X) → H²_C(X)`
+
+is onto. The nested-support localization sequence
+(`TopCat.Sheaf.nestedSupportRestrictionShortComplex`, `nestedSupportRestrictionLastComplexIso`,
+`nestedSupportRestriction_homologyMap_isIso_of_vanishing`, in
+`Other/AlgebraicTopology/NestedSheafSupportLocalization.lean` and `NestedSheafSupportOnOpen.lean`)
+reduces this to the vanishing of supported cohomology in degrees `2` and `3` along
+`A ∩ B`, a closed algebraic subset of **complex codimension at least two** (two distinct prime
+divisors of an integral scheme meet in codimension `≥ 2`), i.e. real codimension at least four.
+The repository proves exactly this shape of statement for the singular boundary of a single
+component — `cycleComponentSingularBoundarySectionCohomology_isZero_of_lt` in
+`CycleComponentSupportExtension.lean`, from the finite smooth filtration
+(`ReducedSmoothClosedFiltration.lean`, `CycleComponentSingularClosedFiltration.lean`), the
+layerwise local vanishing (`SingularFiltrationLocalSupportVanishing.lean`) and the induction
+`TopCat.Sheaf.finiteNestedSupport_homology_isZero`
+(`Other/AlgebraicTopology/FiniteSheafSupportVanishing.lean`). The missing ingredients are
+therefore: (i) a *general* version of that vanishing for an arbitrary closed subset of
+codimension `≥ q` — the general stratification machinery is already there
+(`ReducedSmoothStratification.lean`, `ReducedSmoothClosedFiltrationDimension.lean`); and (ii) the
+codimension bound `codim (Z_x ∩ Z_y) ≥ 2` for distinct prime divisors.
+
+*What `HasChernLocalModel` needs.* This is missing (c) of §4.2 and it still rests on missing (a)
+of §4.2: there is no description of `E.firstChernClass` by the Čech cocycle of the transition
+units, so the analytic transition data provided by step 1
+(`extensionFramesOfAlgebraic_transitionUnit`, `exists_isUnit_frameChange_extension`) cannot yet be
+fed into the cohomology class at all. In dependency order the sub-obligations are:
+
+1. *Cocycle description of the connecting map* (§4.2(a)). A statement of the form
+   "`E.firstChernClass` is the image of the `1`-cocycle `(g_{ij})` of `E.transitionUnit` under a
+   Čech model of `H¹(𝒪ˣ) → H²(ℤ)`", or any statement of equal strength, e.g. that the *supported*
+   class attached to a cocycle which is a coboundary off `|D|^an` is computed by
+   `(1/2πi)(log g_{jk} − log g_{ik} + log g_{ij})` on a cover refining both the `U_i^an` and the
+   lifting neighbourhoods of `E`. The local logarithms are
+   `Other/Geometry/Manifold/HolomorphicLogarithm.lean`.
+2. *The algebraic local form of the local equation.* On the smooth locus of `Z_x`, after shrinking
+   to an affine open `U`, the Cartier local equation `c.fn i` is `h^{c.divisor x} · unit` for a
+   regular `h` cutting out `Z_x ∩ U` with `Scheme.ord h x = 1`. This is pure commutative algebra:
+   `𝒪_{X,x}` is a DVR because `X.left` is smooth (hence regular) and `x` has coheight one, and
+   `Scheme.ord` is its valuation (`Mathlib/AlgebraicGeometry/OrderOfVanishing.lean`,
+   `HodgeConjecture/Lemmas/AlgebraicGeometry/OrderOfVanishing.lean`). It is independent of
+   everything analytic and can be done in isolation.
+3. *The one-variable Lelong–Poincaré computation.* In the normal chart of
+   `CycleComponentNormalCoordinates.lean` the function `h` becomes the coordinate `z₁`, the divisor
+   is `{z₁ = 0}`, and the supported class of the cocycle of `z₁^n` on the chart is `n` times the
+   normalised normal-chart coclass `cycleComponentSmoothSupportCoclassSection`. The repository's
+   normalisation is fixed by `ComplexLocalOrientation*.lean`, `NormalProjectionCoclass.lean`,
+   `ChartLocalFundamentalClass*.lean`, and this is where the sign is determined: if it comes out
+   inverted, negate `Scheme.CartierData.Represents` by exchanging `i` and `j` in its transition
+   condition, as explained in §3. Only steps 1 and 3 are analytic; step 3 is one variable.
 
 Summary of the named obligations, in dependency order:
 
@@ -682,7 +869,12 @@ Summary of the named obligations, in dependency order:
 | ~~supported exactness~~ | `CohomologyWithSupportExact.lean` | **proved**: `exact_forgetSupport_restrictToComplement` |
 | ~~vanishing of the restricted extension class~~ | `UnitExtensionOpenRestriction.lean` | **proved**: `cohomologyClass_comp_restrictionUnit_eq_zero` |
 | `HasRestrictedChernFactorization`, `RestrictedChernClassVanishes` | `ChernClassRestrictionVanishing.lean` | §4.3 step 3c: the exponential sequence on `Ω`, i.e. `Rj_*` |
-| — (not yet stated) | — | realization of a cocycle by an extension; the local model of §4.3 step 4 |
+| `HasSupportedChernLift` | `ChernLocalModel.lean` | §4.3 step 4: the step-3 conclusion, packaged for `|D|^an` |
+| `HasComponentSupportDecomposition` | `ChernLocalModel.lean` | §4.3 step 4: excision in codimension one |
+| `HasChernLocalModel` | `ChernLocalModel.lean` | §4.3 step 4: the local model (needs §4.2(a) first) |
+| — (not yet stated) | — | realization of a cocycle by an extension; the Čech description of the connecting map, §4.2(a) |
+| ~~step 4 assembly~~ | `ChernLocalModel.lean` | **proved**: `hasDivisorClassOfSomeCartierData_of_localModel` |
+| ~~step 4 support bookkeeping~~ | `DivisorClassComparisonSupport.lean` | **proved**: `supportedInjectiveToAmbient_enlarge`, `sheafCycleClassOnCycles_eq_sum` |
 | `HasDivisorClassOfSomeCartierData` | `DivisorObligations.lean` | the target of §3 |
 
 ## 5. Interface reference
@@ -722,7 +914,10 @@ lake env lean Other/AlgebraicGeometry/UnitExtensionOpenRestriction.lean
 lake env lean Other/AlgebraicGeometry/ChernClassRestrictionVanishing.lean
 lake build Other.AlgebraicGeometry.DivisorObligations
 lake build Other.AlgebraicGeometry.UnitExtensionClassObligations
+lake env lean Other/AlgebraicGeometry/DivisorClassComparisonSupport.lean
+lake env lean Other/AlgebraicGeometry/ChernLocalModel.lean
 lake build Other.AlgebraicGeometry.ChernClassRestrictionVanishing
+lake build Other.AlgebraicGeometry.ChernLocalModel
 ```
 
 All of these modules are imported by `Other.lean`. Repository conventions: files start with
