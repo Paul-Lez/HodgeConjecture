@@ -662,14 +662,25 @@ theorem exists_polynomialFamily_selectedFactor {p : Polynomial (Polynomial ℂ)}
     (hp : p.Monic) (S : Set (SimpleRootCover p)) (hSopen : IsOpen S)
     (hSclosed : IsClosed S) (hfinite : (nonsimpleParameters p).Finite) :
     ∃ q : Polynomial (Polynomial ℂ),
-      ∀ z (hz : z ∉ nonsimpleParameters p),
+      q.natDegree ≤ p.natDegree ∧ ∀ z (hz : z ∉ nonsimpleParameters p),
         q.map (Polynomial.evalRingHom z) = selectedFactor hp S ⟨z, not_not.mp hz⟩ := by
   classical
   choose a ha using fun k ↦
     exists_polynomial_selectedFactorCoeff hp S hSopen hSclosed hfinite k
   let q : Polynomial (Polynomial ℂ) :=
     ∑ k ∈ Finset.range (p.natDegree + 1), Polynomial.monomial k (a k)
-  refine ⟨q, fun z hz ↦ ?_⟩
+  have hqdegree : q.natDegree ≤ p.natDegree := by
+    apply natDegree_le_iff_coeff_eq_zero.mpr
+    intro k hk
+    have hqcoeff : q.coeff k =
+        ∑ x ∈ Finset.range (p.natDegree + 1), (Polynomial.monomial x (a x)).coeff k := by
+      simp [q]
+    rw [hqcoeff]
+    apply Finset.sum_eq_zero
+    intro x hx
+    apply coeff_monomial_of_ne
+    exact ne_of_gt (lt_of_le_of_lt (Nat.le_of_lt_succ (Finset.mem_range.mp hx)) hk)
+  refine ⟨q, hqdegree, fun z hz ↦ ?_⟩
   ext k
   rw [coeff_map]
   have hqcoeff : q.coeff k =
@@ -704,8 +715,51 @@ theorem exists_polynomialFamily_selectedFactor_dvd_on_simple
     (hSopen : IsOpen S) (hSclosed : IsClosed S) (hfinite : (nonsimpleParameters p).Finite) :
     ∃ q : Polynomial (Polynomial ℂ), ∀ z (_hz : z ∉ nonsimpleParameters p),
       q.map (Polynomial.evalRingHom z) ∣ p.map (Polynomial.evalRingHom z) := by
-  obtain ⟨q, hq⟩ := exists_polynomialFamily_selectedFactor hp S hSopen hSclosed hfinite
+  obtain ⟨q, -, hq⟩ := exists_polynomialFamily_selectedFactor hp S hSopen hSclosed hfinite
   exact ⟨q, fun z hz ↦ (hq z hz).symm ▸ selectedFactor_dvd hp S ⟨z, not_not.mp hz⟩⟩
+
+/-- If the selected fiber degree is constant, its algebraization can be chosen monic. -/
+theorem exists_monic_polynomialFamily_selectedFactor_of_constant_degree
+    {p : Polynomial (Polynomial ℂ)} (hp : p.Monic) (S : Set (SimpleRootCover p))
+    (hSopen : IsOpen S) (hSclosed : IsClosed S) (hfinite : (nonsimpleParameters p).Finite)
+    (d : ℕ) (hdegree : ∀ z (hz : z ∉ nonsimpleParameters p),
+      (selectedFactor hp S ⟨z, not_not.mp hz⟩).natDegree = d) :
+    ∃ q : Polynomial (Polynomial ℂ), q.Monic ∧ ∀ z (hz : z ∉ nonsimpleParameters p),
+      q.map (Polynomial.evalRingHom z) = selectedFactor hp S ⟨z, not_not.mp hz⟩ := by
+  obtain ⟨q, hqdegree, hq⟩ :=
+    exists_polynomialFamily_selectedFactor hp S hSopen hSclosed hfinite
+  have hdle : d ≤ p.natDegree := by
+    obtain ⟨z, hz⟩ := hfinite.infinite_compl.nonempty
+    rw [← hdegree z hz]
+    exact (natDegree_le_of_dvd (selectedFactor_dvd hp S ⟨z, not_not.mp hz⟩)
+      (hp.map (Polynomial.evalRingHom z)).ne_zero).trans_eq
+        (hp.natDegree_map (Polynomial.evalRingHom z))
+  have habove : ∀ k, d < k → q.coeff k = 0 := by
+    intro k hk
+    apply eq_zero_of_infinite_isRoot
+    apply hfinite.infinite_compl.mono
+    intro z hz
+    have hcoeff := congrArg (fun r : Polynomial ℂ ↦ r.coeff k) (hq z hz)
+    rw [coeff_map] at hcoeff
+    have hzero : (selectedFactor hp S ⟨z, not_not.mp hz⟩).coeff k = 0 :=
+      coeff_eq_zero_of_natDegree_lt (by simpa [hdegree z hz] using hk)
+    simpa [IsRoot, hzero] using hcoeff
+  have hqle : q.natDegree ≤ d := natDegree_le_iff_coeff_eq_zero.mpr habove
+  have hcoeffd : q.coeff d = 1 := by
+    have heq : q.coeff d = (1 : Polynomial ℂ) := by
+      apply (q.coeff d).eq_of_infinite_eval_eq 1
+      apply hfinite.infinite_compl.mono
+      intro z hz
+      have hcoeff := congrArg (fun r : Polynomial ℂ ↦ r.coeff d) (hq z hz)
+      rw [coeff_map] at hcoeff
+      have hmonic := (selectedFactor_monic hp S ⟨z, not_not.mp hz⟩).coeff_natDegree
+      rw [hdegree z hz] at hmonic
+      simpa [hmonic] using hcoeff
+    exact heq
+  have hqnatDegree : q.natDegree = d :=
+    natDegree_eq_of_le_of_coeff_ne_zero hqle (hcoeffd.symm ▸ one_ne_zero)
+  refine ⟨q, ?_, hq⟩
+  rw [Monic, leadingCoeff, hqnatDegree, hcoeffd]
 
 /-- A resultant whose zeros contain every parameter with a multiple root. -/
 noncomputable def ramificationPolynomial (p : Polynomial (Polynomial ℂ)) : Polynomial ℂ :=
