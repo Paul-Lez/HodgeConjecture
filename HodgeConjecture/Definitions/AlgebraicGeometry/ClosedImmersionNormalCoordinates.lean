@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionAnalyticLeftInverse
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionComplexPoint
-public import HodgeConjecture.Definitions.AlgebraicTopology.SplitDerivativeNormalChart
+public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart
 
 /-!
 # Constructed normal coordinates for smooth closed immersions

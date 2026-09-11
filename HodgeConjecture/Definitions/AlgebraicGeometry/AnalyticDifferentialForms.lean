@@ -24,7 +24,7 @@ public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWed
 
 This file constructs analytic differential forms from holomorphic functions and their actual
 manifold derivatives. The pointwise algebra of wedges lives in
-`HodgeConjecture.Lemmas.Analysis.NormedSpace.WedgeCovectors` and
+`HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors` and
 `HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWedge`.
 
 The starting point is `Algebra.DeRham.Form ℂ 𝒪(U) p`, the Kähler differential forms of the

@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Algebra.Homology.KernelAcyclic
+public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueAcyclic
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainCohomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainSheafFlasque
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularExcisionField
-public import HodgeConjecture.Lemmas.Topology.ChartedSpaceParacompact
+public import HodgeConjecture.Mathlib.Topology.ChartedSpaceParacompact
 
 import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.Topology.ShrinkingLemma

@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportNaturality
 public import HodgeConjecture.Definitions.AlgebraicTopology.DerivedSheafSupportLocalization
-public import HodgeConjecture.Lemmas.CategoryTheory.Abelian.KernelCompositionShortExact
+public import HodgeConjecture.Mathlib.CategoryTheory.Abelian.KernelCompositionShortExact
 public import Mathlib.Algebra.Homology.HomologySequence
 
 /-!

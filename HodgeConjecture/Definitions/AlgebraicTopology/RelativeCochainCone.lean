@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Algebra.Homology.DualExact
+public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularSubdivisionCochainSheaf
 public import Mathlib.Algebra.Category.ModuleCat.Projective
 public import Mathlib.Analysis.Normed.Group.Basic

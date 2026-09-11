@@ -18,7 +18,7 @@ module
 public import HodgeConjecture.Definitions.Algebra.FieldToComplex
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
 public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
-public import HodgeConjecture.Lemmas.Algebra.Homology.StupidTruncation
+public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
 public import Mathlib.Algebra.Homology.DerivedCategory.Basic
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Algebra.Module.MinimalAxioms

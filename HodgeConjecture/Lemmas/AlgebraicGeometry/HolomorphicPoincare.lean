@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.HolomorphicPoincare
-public import HodgeConjecture.Lemmas.Analysis.NormedSpace.WedgeCovectors
+public import HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors
 
 import Mathlib.LinearAlgebra.ExteriorAlgebra.OfAlternating
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
