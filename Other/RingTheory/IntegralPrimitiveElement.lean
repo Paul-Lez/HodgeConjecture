@@ -6,6 +6,8 @@ Authors: Bhavik Mehta
 module
 
 public import Mathlib.FieldTheory.PrimitiveElement
+public import Mathlib.RingTheory.MvPolynomial.Basic
+public import Mathlib.FieldTheory.Perfect
 public import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
 public import Mathlib.Data.Complex.Basic
 public import Mathlib.RingTheory.Adjoin.FG
@@ -213,4 +215,27 @@ theorem ComplexNoetherNormalization.finiteDimensionalFractionFields
     FractionRing.liftAlgebra P (FractionRing A)
   exact (inferInstance : @FiniteDimensional (FractionRing P) (FractionRing A) _ _
     (FractionRing.liftAlgebra P (FractionRing A)).toModule)
+end Algebra
+namespace Algebra
+variable (A : Type*) [CommRing A] [IsDomain A] [Algebra ℂ A]
+
+theorem ComplexNoetherNormalization.separableFractionFields
+    (N : ComplexNoetherNormalization A) :
+    @Algebra.IsSeparable (FractionRing (MvPolynomial (Fin N.dimension) ℂ)) (FractionRing A)
+      _ _ N.fractionFieldAlgebra := by
+  let P := MvPolynomial (Fin N.dimension) ℂ
+  let : Algebra P A := N.hom.toAlgebra
+  let : Module.Finite P A := N.finite
+  let : FaithfulSMul P A := (faithfulSMul_iff_algebraMap_injective P A).mpr N.injective
+  let : SMul P (FractionRing A) := (Algebra.compHom (FractionRing A) N.hom.toRingHom).toSMul
+  let : Algebra P (FractionRing A) := Algebra.compHom (FractionRing A) N.hom.toRingHom
+  let : FaithfulSMul P (FractionRing A) := (faithfulSMul_iff_algebraMap_injective P (FractionRing A)).mpr ((FaithfulSMul.algebraMap_injective A (FractionRing A)).comp N.injective)
+  let : Algebra (FractionRing P) (FractionRing A) := FractionRing.liftAlgebra P (FractionRing A)
+  let : FiniteDimensional (FractionRing P) (FractionRing A) := N.finiteDimensionalFractionFields
+  let : Module.Finite (FractionRing P) (FractionRing A) := inferInstance
+  let : CharZero P := by infer_instance
+  let : CharZero (FractionRing P) := IsFractionRing.charZero P
+  let : PerfectField (FractionRing P) := PerfectField.ofCharZero
+  let : Algebra.IsAlgebraic (FractionRing P) (FractionRing A) := Algebra.IsAlgebraic.of_finite _ _
+  exact inferInstance
 end Algebra
