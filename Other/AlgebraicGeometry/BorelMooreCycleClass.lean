@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleClass
 public import Other.AlgebraicGeometry.CycleComponentBorelMoore
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
@@ -59,14 +59,6 @@ noncomputable local instance cycleComponentBorelMooreClassTopology
     TopologicalSpace (CycleComponentAnalyticPoint V x) :=
   Point.analyticTopology
 
-/-- Rational singular cohomology of the ambient analytic space supported on one irreducible
-cycle component. -/
-abbrev RationalSingularCycleComponentCohomologyWithSupport
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ) :=
-  CohomologyWithSupport ℚ
-    (@TopCat.of V.analyticPoint Point.analyticTopology)
-    (cycleComponentSupport V.over x) n
-
 /-- Auxiliary comparison data for one irreducible codimension-`p` component.
 
 The Borel--Moore class is exactly normalized, but `auxiliaryComparison` is an arbitrary linear
@@ -82,8 +74,7 @@ structure AuxiliaryRationalCycleComponentBorelMooreComparisonData
   auxiliaryComparison :
     CycleComponentBorelMooreHomology ℚ
         V.toSmoothProjectiveComplexVariety x (2 * (V.dimension - p)) ≃ₗ[ℚ]
-      RationalSingularCycleComponentCohomologyWithSupport
-        V.toSmoothProjectiveComplexVariety x (2 * p)
+      RationalSingularComponentCohomologyWithSupport V.over x (2 * p)
 
 namespace AuxiliaryRationalCycleComponentBorelMooreComparisonData
 
@@ -100,8 +91,7 @@ def fundamentalClass
 /-- The comparison-dependent singular supported class. -/
 def auxiliarySingularSupportedClass
     (D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V p x hx) :
-    RationalSingularCycleComponentCohomologyWithSupport
-      V.toSmoothProjectiveComplexVariety x (2 * p) :=
+    RationalSingularComponentCohomologyWithSupport V.over x (2 * p) :=
   D.auxiliaryComparison D.fundamentalClass
 
 /-- The comparison between rational constant-sheaf cohomology with support and rational
@@ -110,8 +100,7 @@ def supportedComparison
     (_D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V p x hx) :
     RationalCohomologyWithSupport V.over
         (cycleComponentSupport V.over x) (2 * (p : ℤ)) ≃+
-      RationalSingularCycleComponentCohomologyWithSupport
-        V.toSmoothProjectiveComplexVariety x (2 * p) := by
+      RationalSingularComponentCohomologyWithSupport V.over x (2 * p) := by
   let : TopologicalSpace V.analyticPoint := Point.analyticTopology
   let : T2Space V.analyticPoint := inferInstance
   let : CompactSpace V.analyticPoint := inferInstance
@@ -160,13 +149,11 @@ structure RationalCycleComponentLocalThomCapInput
     ∀ (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
       (_hz : z ∈ cycleComponentSmoothAnalyticLocus
         V.over x),
-      RationalSingularCycleComponentCohomologyWithSupport
-          V.toSmoothProjectiveComplexVariety x (2 * p) →ₗ[ℚ]
+      RationalSingularComponentCohomologyWithSupport V.over x (2 * p) →ₗ[ℚ]
         RelativeHomology ℚ (pointComplementPair z) (2 * (V.dimension - p))
   /-- Supported classes are detected by all complex-oriented local Thom-cap evaluations. -/
   local_ext : ∀
-      (α β : RationalSingularCycleComponentCohomologyWithSupport
-        V.toSmoothProjectiveComplexVariety x (2 * p)),
+      (α β : RationalSingularComponentCohomologyWithSupport V.over x (2 * p)),
     (∀ (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
       (hz : z ∈ cycleComponentSmoothAnalyticLocus
         V.over x),
@@ -183,8 +170,7 @@ def IsComplexOrientedAlexanderPoincare
     (T : RationalCycleComponentLocalThomCapInput V p x hx)
     (e : CycleComponentBorelMooreHomology ℚ
         V.toSmoothProjectiveComplexVariety x (2 * (V.dimension - p)) ≃ₗ[ℚ]
-      RationalSingularCycleComponentCohomologyWithSupport
-        V.toSmoothProjectiveComplexVariety x (2 * p)) : Prop :=
+      RationalSingularComponentCohomologyWithSupport V.over x (2 * p)) : Prop :=
   ∀ (c) (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
     (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
     T.capWithAmbientComplexOrientation z hz (e c) =
@@ -202,8 +188,7 @@ theorem complexOrientedAlexanderPoincare_unique
     (T : RationalCycleComponentLocalThomCapInput V p x hx)
     (e e' : CycleComponentBorelMooreHomology ℚ
         V.toSmoothProjectiveComplexVariety x (2 * (V.dimension - p)) ≃ₗ[ℚ]
-      RationalSingularCycleComponentCohomologyWithSupport
-        V.toSmoothProjectiveComplexVariety x (2 * p))
+      RationalSingularComponentCohomologyWithSupport V.over x (2 * p))
     (he : IsComplexOrientedAlexanderPoincare D T e)
     (he' : IsComplexOrientedAlexanderPoincare D T e') : e = e' :=
   LinearEquiv.ext fun c ↦ T.local_ext _ _ fun z hz ↦ (he c z hz).trans (he' c z hz).symm
@@ -224,8 +209,7 @@ structure ComplexOrientedRationalCycleComponentClassData
   comparison :
     CycleComponentBorelMooreHomology ℚ V.toSmoothProjectiveComplexVariety x
         (2 * (V.dimension - p)) ≃ₗ[ℚ]
-      RationalSingularCycleComponentCohomologyWithSupport
-        V.toSmoothProjectiveComplexVariety x (2 * p)
+      RationalSingularComponentCohomologyWithSupport V.over x (2 * p)
   comparison_isComplexOriented :
     IsComplexOrientedAlexanderPoincare borelMoore localThomCap comparison
 
@@ -264,8 +248,7 @@ theorem alexanderPoincare_fundamentalClass_local
 /-- Local Thom-cap normalization uniquely determines the supported fundamental class. -/
 theorem supportedFundamentalClass_unique
     (D : ComplexOrientedRationalCycleComponentClassData V p x hx)
-    (α : RationalSingularCycleComponentCohomologyWithSupport
-      V.toSmoothProjectiveComplexVariety x (2 * p))
+    (α : RationalSingularComponentCohomologyWithSupport V.over x (2 * p))
     (hα : ∀ (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
       (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
       D.localThomCap.capWithAmbientComplexOrientation z hz α =
@@ -332,8 +315,7 @@ lemma maximalCodimensionCycleComponentSupport_eq_singleton
 def maximalCodimensionSupportedGenerator
     (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
     (hx : coheight x = V.dimension) :
-    RationalSingularCycleComponentCohomologyWithSupport
-      V.toSmoothProjectiveComplexVariety x (2 * V.dimension) := by
+    RationalSingularComponentCohomologyWithSupport V.over x (2 * V.dimension) := by
   let F := fun Z : Set V.analyticPoint ↦ CohomologyWithSupport ℚ
     (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * V.dimension)
   exact LinearEquiv.cast (R := ℚ) (M := F)
@@ -460,8 +442,7 @@ def maximalCodimensionAlexanderDuality
     (hx : coheight x = V.dimension) :
     CycleComponentBorelMooreHomology ℚ V.toSmoothProjectiveComplexVariety x
         (2 * (V.dimension - V.dimension)) ≃ₗ[ℚ]
-      RationalSingularCycleComponentCohomologyWithSupport
-        V.toSmoothProjectiveComplexVariety x (2 * V.dimension) :=
+      RationalSingularComponentCohomologyWithSupport V.over x (2 * V.dimension) :=
   linearEquivOfNormalizedGenerators
     (maximalCodimensionBorelMooreFundamentalClass V x hx)
     (maximalCodimensionBorelMooreFundamentalClass_ne_zero V x hx)
@@ -487,8 +468,7 @@ lemma maximalCodimensionAlexanderDuality_unique
     (hx : coheight x = V.dimension)
     (e : CycleComponentBorelMooreHomology ℚ V.toSmoothProjectiveComplexVariety x
           (2 * (V.dimension - V.dimension)) ≃ₗ[ℚ]
-        RationalSingularCycleComponentCohomologyWithSupport
-          V.toSmoothProjectiveComplexVariety x (2 * V.dimension))
+        RationalSingularComponentCohomologyWithSupport V.over x (2 * V.dimension))
     (he : e (maximalCodimensionBorelMooreFundamentalClass V x hx) =
       maximalCodimensionSupportedGenerator V x hx) :
     e = maximalCodimensionAlexanderDuality V x hx :=
@@ -509,8 +489,7 @@ def maximalCodimensionLocalThomCapEquiv
     (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
     (hz : z ∈ cycleComponentSmoothAnalyticLocus
       V.over x) :
-    RationalSingularCycleComponentCohomologyWithSupport
-        V.toSmoothProjectiveComplexVariety x (2 * V.dimension) ≃ₗ[ℚ]
+    RationalSingularComponentCohomologyWithSupport V.over x (2 * V.dimension) ≃ₗ[ℚ]
       RelativeHomology ℚ (pointComplementPair z)
         (2 * (V.dimension - V.dimension)) :=
   let D := rationalCycleComponentBorelMooreDataOfCoheightEqDimension

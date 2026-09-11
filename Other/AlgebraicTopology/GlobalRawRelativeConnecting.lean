@@ -33,7 +33,6 @@ theorem globalRawSingularRestrictionConeIsoRelative_connecting :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 800000 in
 /-- After all literal global-cochain and coefficient-forgetting identifications,
 the raw restriction-cone connecting map is the negative relative cochain inclusion.
 No arbitrary comparison, purity, or one-dimensionality is used. -/
@@ -100,7 +99,6 @@ def globalRawRelativeCochainClass (n : ℕ)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 1000000 in
 /-- The original raw relative comparison followed by cone connecting is exactly
 the negative of the positive ordinary cochain class. -/
 theorem globalRawSingularRestrictionCone_connecting_of_relative (n : ℕ)

@@ -8,21 +8,19 @@ public import Other.AlgebraicGeometry.SmoothClosedSupportedCycleMorphism
 public import Other.AlgebraicTopology.ClosedEmbeddingConstantSectionClass
 
 /-!
-# Actual ordinary classes of smooth closed complex subvarieties
+# Ordinary classes of smooth closed complex subvarieties
 
 For a smooth closed immersion of an `e`-dimensional smooth complex scheme into a
-`d`-dimensional smooth complex scheme, the literal constant-one section on the source
-is sent through the normalized source orientation and the actual singular-chain sheaf
-pushforward. Actual derived whole-space sections give a Borel–Moore class with whole
-ambient support; the constructed ambient orientation gives an ordinary cohomology class
-in degree `2d - 2e`. Whole-space supported cohomology is used as the derived presentation
-of ordinary cohomology here.
+`d`-dimensional one, the constant-one section on the source passes through the normalized
+source orientation and the singular-chain sheaf pushforward. Derived whole-space sections
+give a Borel–Moore class with whole ambient support, and the ambient orientation turns it
+into an ordinary cohomology class in degree `2d - 2e`, whole-space supported cohomology
+serving here as the derived presentation of ordinary cohomology.
 
-All coefficients are additive, and the specialization to codimension `p` proves the
-degree arithmetic. Neither an orientation nor a comparison is an input. These are
-smooth closed-component classes, not classes for singular components or a Chow map.
-Relating this global construction to the group-valued class supported on the exact
-closed image is a further compatibility theorem for the two derived support operations.
+All coefficients are additive, and the specialization to codimension `p` proves the degree
+arithmetic. The construction covers smooth closed components. Its relation to the
+group-valued class supported on the closed image is a compatibility theorem for the two
+derived support operations, proved elsewhere.
 -/
 
 @[expose] public noncomputable section

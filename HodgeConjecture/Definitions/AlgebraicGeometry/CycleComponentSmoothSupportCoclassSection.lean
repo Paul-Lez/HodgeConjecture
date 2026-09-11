@@ -4,10 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.SmoothClosedSupportCoclassSection
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSmoothSupportPurity
-public import HodgeConjecture.Definitions.AlgebraicTopology.SupportRelativeCohomologyOpenTransport
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportCoclassSection
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSmoothSupportPurity
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportRelativeCohomologyOpenTransport
 /-!
 # The normalized component coclass on the original ambient smooth-support open
 
@@ -41,26 +40,6 @@ def smoothClosedSupportOpenImageCoclassSection :
   (supportRelativeCohomologySheaf M S (2 * (d - m))).obj.obj (op (hf.functor.obj ⊤)) :=
   supportRelativeCohomologySectionOpenImage f hf S (Set.range (Point.map i)) hS
     (2 * (d - m)) (smoothClosedSupportCoclassSection X Y i m d)
-
-/-- On every transported chart, the section is precisely the unit image of the
-actual transported normal-projection coclass. This displays exact normalization. -/
-theorem smoothClosedSupportOpenImageCoclassSection_restrict_chart
-    (z : ComplexPoint Y) :
-    (supportRelativeCohomologySheaf M S (2 * (d - m))).obj.map
-      (hf.functor.map (homOfLE (show
-        smoothClosedSupportChartOpen X Y i m d z ≤ ⊤ from le_top))).op
-      (smoothClosedSupportOpenImageCoclassSection X Y i m d f hf S hS) =
-    (supportRelativeCohomologyToSheaf M S (2 * (d - m))).app
-      (op (hf.functor.obj (smoothClosedSupportChartOpen X Y i m d z)))
-      ((supportRelativeCohomologyPresheafOpenIso f hf S (Set.range (Point.map i)) hS
-          (2 * (d - m))).inv.app (op (smoothClosedSupportChartOpen X Y i m d z))
-        (smoothClosedSupportChartCoclass X Y i m d z
-          (smoothClosedSupportChartOpen X Y i m d z) (le_refl _))) := by
-  rw [smoothClosedSupportOpenImageCoclassSection,
-    supportRelativeCohomologySectionOpenImage_restrict,
-    smoothClosedSupportCoclassSection_restrict_chart]
-  exact supportRelativeCohomologySheafOpenIso_unit_apply f hf S (Set.range (Point.map i))
-    hS (2 * (d - m)) (smoothClosedSupportChartOpen X Y i m d z) _
 
 end GeneralOpenTransport
 
@@ -146,35 +125,6 @@ def cycleComponentSmoothSupportCoclassSection :
     (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
     (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
     (cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx)
-
-/-- Restriction to each actual image neighborhood agrees with transport of the
-constructed auxiliary normalized section. No ambient section comparison is supplied. -/
-theorem cycleComponentSmoothSupportCoclassSection_restrict
-    (V : Opens (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
-    (hV : (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x).functor.obj V ≤
-      cycleComponentSmoothSupportAmbientOpen X x) :
-    (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-      (cycleComponentSupport X x) (2 * p)).obj.map (homOfLE hV).op
-        (cycleComponentSmoothSupportCoclassSection X x (d := d) hx) =
-    (supportRelativeCohomologySheafOpenIso (cycleComponentSmoothClosedLiftAmbientMap X x)
-      (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-      (cycleComponentSupport X x)
-      (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
-      (cycleComponentSmoothClosedLiftAmbientMap_support X x) (2 * p)).hom.hom.app (op V)
-      ((supportRelativeCohomologySheaf
-        (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
-        (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
-        (2 * p)).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op
-        (cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx)) :=
-  supportRelativeCohomologySectionOnOpen_restrict
-    (cycleComponentSmoothClosedLiftAmbientMap X x)
-    (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-    (cycleComponentSupport X x)
-    (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
-    (cycleComponentSmoothClosedLiftAmbientMap_support X x)
-    (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
-    (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
-    (cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx) V hV
 
 end Component
 
