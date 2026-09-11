@@ -538,7 +538,7 @@ lemma hypercohomologyMap_add_apply
 
 /-- Scalars acting on a coefficient complex by an additive, unital and antimultiplicative family
 of endomorphisms act on its hypercohomology. -/
-@[reducible] noncomputable def hypercohomologyModule {R : Type*} [Semiring R]
+noncomputable abbrev hypercohomologyModule {R : Type*} [Semiring R]
     {C : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (s : R → (C ⟶ C)) (n : ℤ)
     [SMul R (Hypercohomology X C n)]
     (smul_eq : ∀ (r : R) (α : Hypercohomology X C n),
