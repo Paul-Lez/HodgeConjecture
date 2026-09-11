@@ -1002,8 +1002,8 @@ def conjHodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) :=
   (hodgeFiltrationComplexSubmodule X p n).comap (deRhamConjSemilinear X n)
 
-/-- The Hodge piece `H^{p,q}` in degree `n`, defined as `F^p ⊓ conj F^q`. The degree is an
-independent index, as for `hodgeFiltration`; when `p + q = n` this is the usual `(p,q)` piece. -/
+/-- The intersection `F^p ⊓ conj F^q` in degree `n`. For smooth projective varieties and
+`p + q = n`, this is the usual `(p,q)` Hodge piece. -/
 def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ (DeRhamHypercohomology X n) :=
   hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
@@ -1062,14 +1062,9 @@ def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
       change QuasiIso (hodgeFilteredDeRhamInclusion X 0)
       infer_instance)
 
-/-- Cohomology classes with coefficients in `K` whose de Rham images lie in the `(p,p)` piece
-`F^p ⊓ conj F^p` of `H^{2p}`.
-
-The condition is `(p,p)`, not merely `F^p`; the two agree exactly when `K → ℂ` lands in `ℝ`, by
-`hodgeClasses_eq_comap_hodgeFiltrationSubmodule`.
-
-The Hodge filtration is indexed by a relative dimension, but the dimension is not a choice: it is
-`dim X.left`, recovered from the scheme itself. -/
+/-- Cohomology classes with coefficients in `K` whose de Rham images lie in `F^p ⊓ conj F^p`
+in degree `2p`. When conjugation fixes the image of `K` in `ℂ`, see
+`hodgeClasses_eq_comap_hodgeFiltrationSubmodule` for the equivalent `F^p` condition. -/
 def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
     Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
