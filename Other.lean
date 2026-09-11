@@ -29,6 +29,9 @@ public import Other.AlgebraicGeometry.BettiSupportedRawOrdinaryComparison
 public import Other.AlgebraicGeometry.BorelMooreCycleClass
 public import Other.AlgebraicGeometry.ClosedImmersionPointNormalCoordinates
 public import Other.AlgebraicGeometry.CodimensionCycle
+public import Other.AlgebraicGeometry.CodimensionZeroClassComparison
+public import Other.AlgebraicGeometry.CodimensionZeroCoclassNonvanishing
+public import Other.AlgebraicGeometry.CodimensionZeroDimensionZero
 public import Other.AlgebraicGeometry.CompactlySupportedCohomology
 public import Other.AlgebraicGeometry.ComplexPointCoclassOrientationComparison
 public import Other.AlgebraicGeometry.ComplexPointCoclassSchemeIso
@@ -40,6 +43,7 @@ public import Other.AlgebraicGeometry.CycleClassOnCycles
 public import Other.AlgebraicGeometry.CycleComponentAnalyticEmbedding
 public import Other.AlgebraicGeometry.CycleComponentAnalyticImmersion
 public import Other.AlgebraicGeometry.CycleComponentBorelMoore
+public import Other.AlgebraicGeometry.CycleComponentCoclassNonzeroTransfer
 public import Other.AlgebraicGeometry.CycleComponentGlobalFundamentalClass
 public import Other.AlgebraicGeometry.CycleComponentLocalOrientation
 public import Other.AlgebraicGeometry.CycleComponentLocalOrientationCoherence
@@ -50,6 +54,7 @@ public import Other.AlgebraicGeometry.CycleComponentPointOrdinarySign
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 public import Other.AlgebraicGeometry.CycleComponentRegularImmersion
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
+public import Other.AlgebraicGeometry.HodgeCodimensionZero
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality
 public import Other.AlgebraicGeometry.PointCycleClass
 public import Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
@@ -65,6 +70,8 @@ public import Other.AlgebraicGeometry.SmoothClosedCycleClassRationalComparison
 public import Other.AlgebraicGeometry.SmoothClosedCycleMorphism
 public import Other.AlgebraicGeometry.SmoothClosedPointCoclassSectionNormalization
 public import Other.AlgebraicGeometry.SmoothClosedPointPurityNormalization
+public import Other.AlgebraicGeometry.SmoothClosedSupportCoclassNonzero
+public import Other.AlgebraicGeometry.SmoothClosedSupportCoclassRestrictionNonzero
 public import Other.AlgebraicGeometry.SmoothClosedSupportLowestCohomology
 public import Other.AlgebraicGeometry.SmoothClosedSupportedCycleMorphism
 public import Other.AlgebraicGeometry.SmoothRegularLocal
@@ -131,6 +138,7 @@ public import Other.AlgebraicTopology.SingularSupportCapProduct
 public import Other.AlgebraicTopology.SingularTriadCapProduct
 public import Other.AlgebraicTopology.SingularTriadExcision
 public import Other.AlgebraicTopology.StandardSimplexSingularComparison
+public import Other.AlgebraicTopology.SupportRelativeCohomologyGermNonzero
 public import Other.AlgebraicTopology.SupportedSectionConeConnecting
 public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
