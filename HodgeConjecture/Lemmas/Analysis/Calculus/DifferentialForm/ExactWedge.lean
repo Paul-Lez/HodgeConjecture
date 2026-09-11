@@ -141,6 +141,7 @@ lemma extDerivWithin_smul_exactWedgeWithin
     ContinuousAlternatingMap.alternatizeUncurryFin_smul]
   change a x • extDerivWithin (exactWedgeWithin E p f s) s x + _ = _
   rw [extDerivWithin_exactWedgeWithin_eq_zero E p f s x hs hx hf, smul_zero, zero_add]
-  simp [exactWedgeWithin, wedgeCovectors]
+  rw [wedgeCovectors_succ]
+  rfl
 
 end DifferentialForm

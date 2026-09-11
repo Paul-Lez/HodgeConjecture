@@ -27,7 +27,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Pi
 
 The wedge of `p` continuous linear functionals on a complex normed space is the alternating
 `p`-form whose value on a family of vectors is the determinant of the matrix of pairings. This
-file builds it by iterated alternatizing uncurry, proves the determinant formula, and derives the
+file builds it by alternatizing the covector product, proves the determinant formula, and derives the
 multilinearity and alternation properties in each covector slot.
 
 On `𝕜^d` the coordinate projections wedge to the standard volume form, and every continuous
@@ -43,28 +43,42 @@ namespace ContinuousAlternatingMap
 variable {𝕜 E : Type*} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 variable (𝕜 E) in
-/-- The wedge of `p` continuous linear functionals, built by iterated alternatizing uncurry. -/
-def wedgeCovectors : (p : ℕ) → (Fin p → E →L[𝕜] 𝕜) → E [⋀^Fin p]→L[𝕜] 𝕜
-  | 0, _ => ContinuousAlternatingMap.constOfIsEmpty 𝕜 E (Fin 0) 1
-  | p + 1, L => ContinuousAlternatingMap.alternatizeUncurryFin
-      (ContinuousLinearMap.smulRight (L 0) (wedgeCovectors p (fun i => L i.succ)))
+/-- The wedge of `p` continuous linear functionals, built by alternatization. -/
+def wedgeCovectors (p : ℕ) (L : Fin p → E →L[𝕜] 𝕜) : E [⋀^Fin p]→L[𝕜] 𝕜 :=
+  ContinuousMultilinearMap.alternatization
+    ((ContinuousMultilinearMap.mkPiAlgebra 𝕜 (Fin p) 𝕜).compContinuousLinearMap L)
 
 /-- Evaluation of a wedge of covectors is the determinant of their pairing matrix. -/
 lemma wedgeCovectors_apply_eq_det (p : ℕ) (L : Fin p → E →L[𝕜] 𝕜) (v : Fin p → E) :
       wedgeCovectors 𝕜 E p L v = Matrix.det
         (Matrix.of (fun i j ↦ L i (v j))) := by
-  induction p with
-  | zero =>
-      simp [wedgeCovectors]
-  | succ p ih =>
-      rw [wedgeCovectors, ContinuousAlternatingMap.alternatizeUncurryFin_apply,
-        Matrix.det_succ_row_zero]
-      refine Finset.sum_congr rfl fun j _ ↦ ?_
-      simp only [ContinuousLinearMap.smulRight_apply, Matrix.of_apply,
-        zsmul_eq_mul, Int.cast_pow, Int.cast_neg, Int.cast_one,
-        ContinuousAlternatingMap.smul_apply, smul_eq_mul]
-      rw [ih, mul_assoc]
-      congr 2
+  rw [wedgeCovectors, ContinuousMultilinearMap.alternatization_apply_apply,
+    ← Matrix.det_transpose, Matrix.det_apply]
+  refine Finset.sum_congr rfl fun σ _ ↦ ?_
+  simp
+
+/-- In degree zero, the wedge of covectors is the constant form `1`. -/
+@[simp]
+lemma wedgeCovectors_zero (L : Fin 0 → E →L[𝕜] 𝕜) :
+    wedgeCovectors 𝕜 E 0 L = ContinuousAlternatingMap.constOfIsEmpty 𝕜 E (Fin 0) 1 := by
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
+  rw [wedgeCovectors_apply_eq_det, Matrix.det_fin_zero]
+  rfl
+
+/-- Expanding a wedge along the first covector gives an alternatizing uncurry. -/
+lemma wedgeCovectors_succ (p : ℕ) (L : Fin (p + 1) → E →L[𝕜] 𝕜) :
+    wedgeCovectors 𝕜 E (p + 1) L =
+      ContinuousAlternatingMap.alternatizeUncurryFin
+        (ContinuousLinearMap.smulRight (L 0) (wedgeCovectors 𝕜 E p (fun i ↦ L i.succ))) := by
+  refine ContinuousAlternatingMap.ext fun v ↦ ?_
+  rw [wedgeCovectors_apply_eq_det, ContinuousAlternatingMap.alternatizeUncurryFin_apply,
+    Matrix.det_succ_row_zero]
+  refine Finset.sum_congr rfl fun j _ ↦ ?_
+  simp only [ContinuousLinearMap.smulRight_apply, Matrix.of_apply,
+    zsmul_eq_mul, Int.cast_pow, Int.cast_neg, Int.cast_one,
+    ContinuousAlternatingMap.smul_apply, smul_eq_mul]
+  rw [wedgeCovectors_apply_eq_det, mul_assoc]
+  congr 2
 
 /-- The wedge construction is additive in each covector. -/
 lemma wedgeCovectors_update_add
@@ -207,13 +221,8 @@ lemma multilinear_eq_sum_covectorProduct (d p : ℕ)
 /-- Alternatizing a coordinate monomial gives the wedge of its coordinate covectors. -/
 lemma alternatization_covectorProduct (d p : ℕ) (I : Fin p → Fin d) :
     ContinuousMultilinearMap.alternatization (covectorProduct d p I) =
-      wedgeCovectors 𝕜 (Fin d → 𝕜) p (fun j ↦ ContinuousLinearMap.proj (I j)) := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [ContinuousMultilinearMap.alternatization_apply_apply,
-    wedgeCovectors_apply_eq_det, ← Matrix.det_transpose, Matrix.det_apply]
-  refine Finset.sum_congr rfl fun σ _ ↦ ?_
-  rw [covectorProduct_apply]
-  congr 1
+      wedgeCovectors 𝕜 (Fin d → 𝕜) p (fun j ↦ ContinuousLinearMap.proj (I j)) :=
+  rfl
 
 lemma alternatization_smul (d p : ℕ) (c : 𝕜)
     (M : ContinuousMultilinearMap 𝕜 (fun _ : Fin p ↦ Fin d → 𝕜) 𝕜) :

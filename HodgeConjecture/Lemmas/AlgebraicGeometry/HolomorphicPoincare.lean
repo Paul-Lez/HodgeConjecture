@@ -731,7 +731,7 @@ lemma chartEvaluation_ofConstant [SmoothOfRelativeDimension d X.hom]
   simp only [chartGeneratorEvaluation, chartSection_apply_of_mem X d U x _ hy]
   change c • wedgeCovectors ℂ (Fin d → ℂ) 0 Fin.elim0 = _
   ext v
-  simp [wedgeCovectors]
+  simp
 
 /-- A closed holomorphic zero-form is locally the image of a complex constant. -/
 theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.hom]
