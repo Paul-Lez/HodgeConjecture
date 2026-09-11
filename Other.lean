@@ -364,6 +364,7 @@ public import Other.AlgebraicGeometry.FiniteFreeAnalytification
 public import Other.AlgebraicGeometry.ProjectiveTwistDegreeZeroRelations
 public import Other.AlgebraicGeometry.ProjectiveHolomorphicFunctions
 public import Other.AlgebraicGeometry.PolynomialGrowthLiouville
+public import Other.AlgebraicGeometry.ProjectiveAnalytificationHomeomorph
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts

@@ -199,20 +199,210 @@ presentation of the first kernel), algebraization of relation morphisms between 
 twisted summands via the relevant nonzero-degree `H⁰` comparisons, connectedness (or a
 componentwise replacement) for the degree-zero comparison, and descent/reflection of
 invertibility for the resulting algebraic cokernel. None is present in Mathlib, this repository,
-or Tau Ceti.
+or Tau Ceti. **See the re-assessment below (2026-09-10) for a corrected weighting of these four
+inputs and for two constructive prerequisites that must come first.**
 
 These declarations are included in `scripts/lefschetz_axiom_audit.lean` and use only `propext`,
 `Classical.choice`, and `Quot.sound`. They do not address the positive-dimensional gluing step:
 there an invertible analytic sheaf need not be globally trivial.
 
+## Added 2026-09-10: the several-variables polynomial-growth Liouville theorem
+
+[`Other/AlgebraicGeometry/PolynomialGrowthLiouville.lean`](../Other/AlgebraicGeometry/PolynomialGrowthLiouville.lean)
+proves, with no `sorry` and no new axiom (checked in `scripts/lefschetz_axiom_audit.lean`), the
+analytic theorem at the bottom of the `H⁰` half of GAGA for twists. All names live in namespace
+`Complex.PolynomialGrowth`.
+
+- `exists_isHomogeneous_eval_eq_diag`: the diagonal restriction `z ↦ T (z, …, z)` of a continuous
+  `k`-multilinear map on `ℂⁿ` is `MvPolynomial.eval z P` for a `P` that is *homogeneous* of
+  degree `k` (expansion in the standard basis via `MultilinearMap.map_sum`).
+- `iteratedDeriv_line_eq_zero`: Cauchy's estimates along complex lines. If `f` is entire on `ℂⁿ`
+  with `‖f z‖ ≤ C · (1 + ‖z‖) ^ m`, then `iteratedDeriv k (fun t ↦ f (t • z)) 0 = 0` for `k > m`.
+- `iteratedDeriv_line_eq_iteratedFDeriv`: those line derivatives are the diagonal values
+  `iteratedFDeriv ℂ k f 0 (z, …, z)` of the iterated derivative of `f` at the origin (chain rule
+  along `ContinuousLinearMap.smulRight`, so no several-variables power series are needed).
+- `exists_isHomogeneous_sum_eq`: such an `f` is the sum of its first `m + 1` diagonal Taylor
+  terms, each of which is a homogeneous polynomial function of its degree.
+- **`exists_mvPolynomial_eq_of_growth`**: an entire `f : ℂⁿ → ℂ` with `‖f z‖ ≤ C · (1 + ‖z‖) ^ m`
+  satisfies `f = MvPolynomial.eval · P` for some `P` with `P.totalDegree ≤ m`.
+- `analyticOnNhd_eval`, `norm_eval_le_of_totalDegree`, `analyticOnNhd_and_growth_iff`: the
+  converse and hence the exact characterisation — the entire functions of polynomial growth of
+  order `m` on `ℂⁿ` are *exactly* the polynomial functions of total degree at most `m`.
+- `exists_eq_const_of_bounded_of_analytic`: degree `0` recovers Liouville on `ℂⁿ`.
+- `exists_mvPolynomial_eq_of_contMDiff_of_growth`: the same statement phrased with
+  `ContMDiff 𝓘(ℂ, Fin n → ℂ) 𝓘(ℂ, ℂ) ω f`, i.e. with the exact smoothness predicate that
+  `holomorphicFunctionSheaf` uses for its sections, so that a chart restriction of a holomorphic
+  section can be fed in directly.
+- `norm_cons_le_of_homogeneous_of_bounded_sphere` and
+  `exists_mvPolynomial_eq_of_homogeneous_of_bounded_sphere`: the bridge from *compactness*. A
+  function `F` on `ℂ^{N+1}` that is homogeneous of degree `m` (`F (t • x) = t ^ m * F x`) and
+  bounded on the unit sphere satisfies `‖F (Fin.cons 1 z)‖ ≤ C · (1 + ‖z‖) ^ m`; if in addition
+  its restriction to the chart `x₀ = 1` is entire, that restriction is a polynomial of total
+  degree at most `m`.
+
+This is not in Mathlib: Mathlib's Liouville theorems (`Differentiable.apply_eq_apply_of_bounded`,
+`Complex.liouville_theorem_aux`) cover bounded functions only, and it has no polynomial-growth or
+several-variables statement. The proof uses only Mathlib's one-variable Cauchy estimate
+`Complex.norm_iteratedDeriv_le_of_forall_mem_sphere_norm_le`, `Complex.taylorSeries_eq_of_entire`
+and `ContinuousLinearMap.iteratedFDeriv_comp_right`; the hypothesis is `AnalyticOnNhd ℂ f univ`
+rather than `Differentiable ℂ f`, which is the honest hypothesis in several variables (Mathlib
+has no Hartogs theorem) and is exactly what the repository's `C^ω` sections provide.
+
+The last two items are the shape in which this enters `H⁰(ℙᴺ, 𝒪(m))`: a global holomorphic
+section of `𝒪(m)^an`, read in homogeneous coordinates, is a degree-`m` homogeneous function on
+the punctured cone, bounded on the unit sphere because `ℙᴺ(ℂ)` is compact; its restriction to an
+affine chart is entire; the theorem makes that restriction a polynomial of total degree at most
+`m`; homogenising back recovers a degree-`m` form. What is *not* yet bridged is the sheaf model:
+see the re-assessment below.
+
+## Critical re-assessment of the Serre-presentation reduction (2026-09-10)
+
+`analyticLineBundlesAlgebraize_of_serreData` is a correct and honest theorem, and its categorical
+content (`GAGATwistPresentation.lean`) is complete. But the four hypotheses it consumes are not
+of comparable size, and one of them is much larger than the surrounding prose suggested. The
+following corrections should be read together with the definitions in `GAGASerreReduction.lean`;
+none of them requires changing the existing statements, only the plan for discharging them.
+
+**(iii) `AnalyticTwistRelationsAlgebraize` is itself full `H⁰`-GAGA for all twists of `𝒪_X`.**
+The proposition quantifies over morphisms `analyticSum X d P a r ⟶ analyticSum X d P b s` for
+*arbitrary* `a, b, r, s : ℕ`. Since the presentation-induced twists are invertible
+(`ProjectiveTwist.analytic_isInvertible`), such a morphism is an `r × s` matrix of global
+sections of `𝒪_X(a - b)^an`, and its algebraic counterpart is an `r × s` matrix of global
+sections of `𝒪_X(a - b)`. So (iii) is equivalent to:
+
+> for every `k ∈ ℤ`, the comparison `H⁰(X, 𝒪_X(k)) → H⁰(X^an, 𝒪_X(k)^an)` is surjective,
+
+with `k = a - b` ranging over all of `ℤ` (the negative `k` instances are the vanishing statement
+`H⁰(X^an, 𝒪_X(k)^an) = 0`). This is not circular with respect to the target — the target is
+essential surjectivity of analytification on invertible sheaves, which is strictly stronger — but
+it is *not* a small or elementary input: it is the degree-zero half of Serre's comparison
+theorem, for a subvariety `X ⊆ ℙᴺ` and for all twists at once, and on `X` it is of the same order
+of difficulty as (i). The earlier description of it as "an `H⁰` comparison" that the
+degree-zero finite-free case in `FiniteFreeAnalytification.lean` begins to discharge understates
+it: that file settles only `k = 0`, where the analytic side is the constants.
+
+**Consequence: the reduction should be reorganised to live on `ℙᴺ`, not on `X`.** On `ℙᴺ` both
+sides of (iii) are explicit — `H⁰(ℙᴺ, 𝒪(m))` is the degree-`m` forms and, by the theorem added
+above, so is `H⁰(ℙᴺ(ℂ)^an, 𝒪(m)^an)` once the analytic twist has a chartwise model. On a
+subvariety they are not. The classical organisation therefore is:
+
+1. prove analytic Serre generation and the `H⁰` comparison **on `ℙᴺ`**;
+2. transport the problem for `X ⊆ ℙᴺ` to `ℙᴺ` along the closed immersion `i` of
+   `ProjectiveSpace.Presentation`, by applying (i)–(iv) to `i_*M` rather than to `M`, and
+   recovering `M` from `i^* i_* M ≅ M`.
+
+Step 2 needs two things that are absent from this repository and from Mathlib: exactness of
+analytic pushforward along a closed immersion of analytic spaces, and its compatibility with
+`moduleAnalytification` (`i^an_* (M^an) ≅ (i_* M)^an`). Those should be stated as explicit
+`def … : Prop` obligations if the reorganised route is taken; deducing (iii) on `X` from (iii)
+on `ℙᴺ` *without* them is not possible, because `H⁰(X, 𝒪_X(k))` is not a subquotient of
+`H⁰(ℙᴺ, 𝒪(k))` in any way visible to the current interface.
+
+**(i) `AnalyticSerreGeneration` presupposes coherence theory.** As stated it asks that every
+finitely presented analytic module be a quotient of `𝒪(-n)^r`. That is Cartan's Theorem A for
+the compact space `ℙᴺ(ℂ)` together with the ampleness of `𝒪(1)`; its usual proof needs Oka
+coherence and Cartan's Theorem B. Nothing of that exists here.
+
+**(ii) `AnalyticTwistPresentationKernelsFinite` is Oka coherence.** Finite presentation of the
+kernel of a map of finitely presented analytic modules is exactly the coherence of `𝒪^an`; it
+cannot be obtained from the categorical interface.
+
+**(iv) `AlgebraicTwistCokernelsReflectInvertibility` needs a stalk comparison.** The intended
+proof is faithful flatness of `𝒪^an_z` over `𝒪_{X, i(z)}`. Two separate ingredients are missing:
+an identification of the stalk of `(moduleAnalytification X d).obj L` at `z` with
+`𝒪^an_z ⊗_{𝒪_{X, i(z)}} L_{i(z)}` (the repository has `analytificationToAlgebraic` and
+`analytification_stalkMap_comp_evaluation`, but no stalkwise base-change formula for modules),
+and flatness itself.
+
+**Missing prerequisites that are not any of (i)–(iv), and that block *any* analytic input.**
+Two purely constructive things are absent, and until they exist no statement about
+`H⁰(X^an, 𝒪(k)^an)` can even be *stated in computable form*, however much complex analysis is
+available.
+
+*(P1) No standard affine chart of `ℙᴺ(ℂ)^an`.* `ProjectiveAnalytification.lean` has the
+homogeneous-coordinate machinery — `sphereToProjectivization`, `vectorToComplexPoint`,
+`projectivizationToComplexPoint` (continuous, injective and surjective, but **never packaged as
+a homeomorphism**), `nonzeroVectorChart i = {v | v i ≠ 0}` with `isOpen_nonzeroVectorChart` and
+`iUnion_nonzeroVectorChart`, and `chartAffineComplexPointMap i` from
+`ComplexPoint (𝔸^{Fin (N+1)}_ℂ)` (note: index type `Fin (N + 1)`, not `Fin N`), proved only
+continuous. There is **no** homeomorphism between the open set `{x_i ≠ 0} ⊆ ComplexPoint ℙᴺ`
+and `Fin N → ℂ`. The only genuine coordinate homeomorphism in the repository is for affine
+space, `ComplexPoint.affineSpaceHomeomorph`
+(`HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexAffineSpace.lean`). Note also that
+`localChart X d z` (`HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexManifold.lean`) is built
+from *étale* coordinates for a general smooth `X` and has nothing to do with homogeneous
+coordinates, so it cannot serve as the chart here.
+
+*(P2) No chartwise model of the analytic twist.* `ProjectiveTwist.analytic X d P n` is *defined*
+as `(moduleAnalytification X d).obj` of the algebraic twist, i.e. as a sheafified pullback; the
+only value of `moduleAnalytification` ever computed is on the unit
+(`moduleAnalytificationUnitIso`), and `AnalytificationRestriction.moduleAnalytificationOverIso`
+only compares restrictions. So the first two concrete tasks on the critical path are:
+
+> **Task A.** Package `{x_i ≠ 0} ⊆ ComplexPoint ℙᴺ(ℂ)` as biholomorphic to `Fin N → ℂ`.
+> *Step 1 is done*: `ComplexProjectiveSpace.projectivizationHomeomorph`
+> ([`Other/AlgebraicGeometry/ProjectiveAnalytificationHomeomorph.lean`](../Other/AlgebraicGeometry/ProjectiveAnalytificationHomeomorph.lean))
+> promotes `projectivizationToComplexPoint` to a homeomorphism
+> `Projectivization ℂ (CoordinateSpace N) ≃ₜ ComplexPoint ℙᴺ`, using
+> `Continuous.homeoOfEquivCompactToT2` with `instCompactSpace` and
+> `instT2SpaceProjectiveSpaceComplexPoint`. Every topological question about `ℙᴺ(ℂ)^an` can now
+> be transported to the concrete quotient model.
+> *Step 2 remains*: charts on `Projectivization ℂ (CoordinateSpace N)` itself. Mathlib has no
+> topology or charts for `Projectivization`, so this must be built here. The efficient order is:
+> (a) prove that the quotient map `{v ≠ 0} → Projectivization ℂ (CoordinateSpace N)` is an *open*
+> map (the saturation of an open `W` is `⋃_{c ≠ 0} c • W`); (b) with that, the restriction of the
+> quotient map over the open set `nonzeroVectorChart i` is a quotient map, so the chart
+> `[v] ↦ (v (i.succAbove j) / v i)_j` is continuous; (c) its inverse `z ↦ [Fin.insertNth i 1 z]`
+> is continuous by composition, giving the homeomorphism with `Fin N → ℂ`; (d) holomorphy of the
+> transition maps `(x_j / x_i)` then follows from the explicit formulas.
+>
+> **Task B.** Construct the sheaf of holomorphic sections of `𝒪(-n)` on `ℙᴺ(ℂ)^an` directly — as
+> degree `-n` homogeneous holomorphic functions on the punctured cone, or by gluing the charts of
+> Task A with transition functions `(x_i / x_j)^n` — and produce an isomorphism with
+> `(moduleAnalytification _ _).obj (ComplexProjectiveSpace.negativeTwist N n)`.
+
+Task B mirrors, on the analytic side, what `ProjectiveSpectrumNegativeTwist.lean` already does
+algebraically (`IsFractionOrZero`, `sectionModule n U`, `HomogeneousShift.basicOpenUnitIso`
+trivialising on the basic opens `D₊(x_i)`), and it is purely constructive: no hard analysis, but
+a substantial amount of sheaf bookkeeping. Once A and B exist,
+`exists_mvPolynomial_eq_of_homogeneous_of_bounded_sphere` computes `H⁰(ℙᴺ(ℂ)^an, 𝒪(m)^an)` for
+`m ≥ 0`, with boundedness on the sphere supplied by `instCompactSpaceProjectiveSpaceComplexPoint`
+and `surjective_sphereToProjectivization`.
+
+**Corrected list of remaining inputs.** In dependency order, and stated for the ambient `ℙᴺ`
+wherever possible:
+
+0. *(constructive, no analysis)* Task A above: a biholomorphism `{x_i ≠ 0} ≅ ℂᴺ` for the
+   standard charts of `ℙᴺ(ℂ)^an`;
+1. *(constructive, no analysis)* Task B above: a chartwise/holomorphic model of `𝒪(-n)^an` on
+   `ℙᴺ(ℂ)` and its comparison with `moduleAnalytification` of the algebraic twist;
+2. *(done, modulo 1)* `H⁰(ℙᴺ(ℂ)^an, 𝒪(m)^an) = H⁰(ℙᴺ, 𝒪(m))` for `m ≥ 0`, and `= 0` for `m < 0`:
+   the analysis is `PolynomialGrowthLiouville.lean`, the algebra is the identification of
+   degree-`m` forms with polynomials of total degree `≤ m` in an affine chart (homogenisation;
+   not in Mathlib, but elementary);
+3. *(hard analysis)* Oka coherence of `𝒪^an`, giving (ii);
+4. *(hard analysis)* Cartan A/B on `ℙᴺ(ℂ)`, giving (i);
+5. *(sheaf theory)* exactness and analytification-compatibility of pushforward along the closed
+   immersion `X ↪ ℙᴺ`, to transport (i)–(iii) from `ℙᴺ` to `X`;
+6. *(commutative algebra)* the stalkwise base-change formula for `moduleAnalytification` plus
+   flatness of `𝒪_{X,x} → 𝒪^an_z`, giving (iv);
+7. *(topology, only if the degree-zero comparison is used on `X` itself)* connectedness of
+   `X^an` for integral `X`. This is a genuine theorem (irreducible ⇒ analytically connected) and
+   should not be assumed; `ProjectiveTwistDegreeZeroRelations.analyticTwistRelationsAlgebraize_zero`
+   still carries `[PreconnectedSpace (ComplexPoint X)]` for this reason. If the reorganisation
+   onto `ℙᴺ` above is carried out it is not needed, since `ℙᴺ(ℂ)` is path connected
+   (`ComplexProjectiveSpace.instPathConnectedSpace`).
+
 ## Mathematical routes, and what is missing
 
 The statement is Serre's GAGA (essential surjectivity of analytification) restricted to
-invertible sheaves on a smooth projective variety. Nothing towards its analytic input exists
-in Mathlib or in this repository: there are no coherent analytic sheaves, no Oka coherence, no
-Cartan Theorems A/B, no finiteness of coherent cohomology on compact complex manifolds, and no
-Kodaira embedding. Whichever route is chosen, that theory has to be built; the choice should
-be made on the basis of what is smallest for line bundles.
+invertible sheaves on a smooth projective variety. Apart from the several-variables
+polynomial-growth Liouville theorem recorded above (which is the `q = 0` analysis for twists on
+`ℙᴺ`), nothing towards its analytic input exists in Mathlib or in this repository: there are no
+coherent analytic sheaves, no Oka coherence, no Cartan Theorems A/B, no finiteness of coherent
+cohomology on compact complex manifolds, and no Kodaira embedding. Whichever route is chosen,
+that theory has to be built; the choice should be made on the basis of what is smallest for line
+bundles.
 
 1. **Classical GAGA.** Prove finiteness and the comparison `H^q(X, F) ≅ H^q(X^an, F^an)` for
    coherent `F` on `ℙ^N`, then essential surjectivity by the Serre/Chow induction. This is the

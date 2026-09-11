@@ -18,6 +18,8 @@ import Other.AlgebraicGeometry.ProjectivePresentationTwist
 import Other.AlgebraicGeometry.AnalyticLineBundleFiniteAtlas
 import Other.AlgebraicGeometry.AnalyticSerreGeneration
 import Other.AlgebraicGeometry.GAGATwistPresentation
+import Other.AlgebraicGeometry.PolynomialGrowthLiouville
+import Other.AlgebraicGeometry.ProjectiveAnalytificationHomeomorph
 import Other.AlgebraicGeometry.GAGASerreReduction
 import Other.AlgebraicGeometry.ProjectiveHolomorphicFunctions
 import Other.AlgebraicGeometry.ProjectiveTwistDegreeZero
@@ -106,3 +108,11 @@ import Other.AlgebraicGeometry.CohomologyWithSupportExact
 #print axioms AlgebraicGeometry.ComplexPoint.analytificationGenerates
 #print axioms AlgebraicGeometry.ComplexPoint.sectionSheafDeterminesClass
 #print axioms AlgebraicGeometry.ComplexPoint.exact_forgetSupport_restrictToComplement
+#print axioms Complex.PolynomialGrowth.exists_isHomogeneous_eval_eq_diag
+#print axioms Complex.PolynomialGrowth.iteratedDeriv_line_eq_zero
+#print axioms Complex.PolynomialGrowth.exists_isHomogeneous_sum_eq
+#print axioms Complex.PolynomialGrowth.exists_mvPolynomial_eq_of_growth
+#print axioms Complex.PolynomialGrowth.analyticOnNhd_and_growth_iff
+#print axioms Complex.PolynomialGrowth.exists_mvPolynomial_eq_of_contMDiff_of_growth
+#print axioms Complex.PolynomialGrowth.exists_mvPolynomial_eq_of_homogeneous_of_bounded_sphere
+#print axioms AlgebraicGeometry.ComplexProjectiveSpace.projectivizationHomeomorph
