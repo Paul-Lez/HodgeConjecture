@@ -359,11 +359,8 @@ namespace Guide.Hodge.D10
 ```
 ```lean
 def hodgeFiltrationSubmodule (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
-    [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) : Submodule K (DeRhamHypercohomology X n) where
-  carrier := hodgeFiltration X p n
-  zero_mem' := (hodgeFiltration X p n).zero_mem
-  add_mem' := (hodgeFiltration X p n).add_mem
-  smul_mem' := fun q _ h => hodgeFiltration_smul_mem K X p n q h
+    [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) : Submodule K (DeRhamHypercohomology X n) :=
+  (hodgeFiltrationComplexSubmodule X p n).restrictScalars K
 ```
 ```lean -show
 end Guide.Hodge.D10
