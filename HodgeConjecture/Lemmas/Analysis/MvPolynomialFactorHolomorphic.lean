@@ -492,6 +492,86 @@ theorem eventually_card_selected_mvLocalRootBranches {n : ℕ}
     Finset.mem_univ, true_and]
   exact hz i hbase (hroot i)
 
+
+noncomputable def mvSimpleRootCoverOnPoint {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (z : MvSimpleRootBase p)
+    (hzr : MvPolynomial.eval z.1 r ≠ 0) (i : Fin p.natDegree) : MvSimpleRootCoverOn p r := by
+  refine ⟨(z.1, mvSimpleRootEnumeration hp z i), mvSimpleRootEnumeration_isRoot hp z i, ?_⟩
+  exact mul_ne_zero hzr (z.2 _ (mvSimpleRootEnumeration_isRoot hp z i))
+
+/-- Membership in a clopen part of the restricted cover is constant along each local branch. -/
+theorem eventually_mem_clopen_mvSimpleRootCoverOn_iff {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (hS : IsClopen S) (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0)
+    (i : Fin p.natDegree) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ (hbase : ∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
+        (mvFamilySpecialization p z').derivative.eval w ≠ 0)
+      (hroot : mvFamilyEquation p
+        (z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z') = 0)
+      (hr : MvPolynomial.eval z' r ≠ 0),
+      (⟨(z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z'), hroot,
+          mul_ne_zero hr (hbase _ hroot)⟩ : MvSimpleRootCoverOn p r) ∈ S ↔
+        mvSimpleRootCoverOnPoint hp r z hzr i ∈ S := by
+  let U : Set (Fin n → ℂ) := {z' | (∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
+      (mvFamilySpecialization p z').derivative.eval w ≠ 0) ∧
+    mvFamilyEquation p (z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z') = 0 ∧
+    MvPolynomial.eval z' r ≠ 0}
+  have hnonzero : ∀ᶠ z' in 𝓝 z.1, MvPolynomial.eval z' r ≠ 0 :=
+    (AnalyticOnNhd.eval_mvPolynomial r z.1 (Set.mem_univ _)).continuousAt.eventually
+      (isOpen_compl_singleton.mem_nhds hzr)
+  have hU : U ∈ 𝓝 z.1 := inter_mem (eventually_mem_mvSimpleRootBase hp z)
+    (inter_mem (eventually_mvFamilyEquation_mvLocalRootBranch (mvSimpleRootCoverPoint hp z i))
+      hnonzero)
+  have hzU : z.1 ∈ U := by
+    refine ⟨z.2, ?_, hzr⟩
+    change (mvFamilySpecialization p z.1).eval
+      (mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z.1) = 0
+    have hbranch : mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z.1 =
+        mvSimpleRootEnumeration hp z i := by
+      simpa [mvSimpleRootCoverPoint] using
+        mvLocalRootBranch_apply_base (mvSimpleRootCoverPoint hp z i)
+    rw [hbranch]
+    exact mvSimpleRootEnumeration_isRoot hp z i
+  let g : U → MvSimpleRootCoverOn p r := fun x ↦
+    ⟨(x.1, mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) x.1), x.2.2.1,
+      mul_ne_zero x.2.2.2 (x.2.1 _ x.2.2.1)⟩
+  have hg : ContinuousAt g ⟨z.1, hzU⟩ := by
+    apply ContinuousAt.codRestrict
+    apply ContinuousAt.prodMk
+    · exact continuousAt_subtype_val
+    · exact (differentiableAt_mvLocalRootBranch (mvSimpleRootCoverPoint hp z i)).continuousAt.comp_of_eq
+        continuousAt_subtype_val rfl
+  have hg_center : g ⟨z.1, hzU⟩ = mvSimpleRootCoverOnPoint hp r z hzr i := by
+    apply Subtype.ext
+    apply Prod.ext
+    · rfl
+    · change mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z.1 =
+          mvSimpleRootEnumeration hp z i
+      exact mvLocalRootBranch_apply_base _
+  have hmap : Filter.map ((↑) : U → (Fin n → ℂ)) (𝓝 ⟨z.1, hzU⟩) = 𝓝 z.1 :=
+    map_nhds_subtype_coe_eq_nhds hzU hU
+  by_cases hi : mvSimpleRootCoverOnPoint hp r z hzr i ∈ S
+  · have hevent : ∀ᶠ x in 𝓝 (⟨z.1, hzU⟩ : U), g x ∈ S :=
+      hg (hS.isOpen.mem_nhds (hg_center.symm ▸ hi))
+    have hevent' : ∀ᶠ z' in 𝓝 z.1, ∀ hz' : z' ∈ U, g ⟨z', hz'⟩ ∈ S := by
+      rw [← hmap, eventually_map]
+      filter_upwards [hevent] with x hx
+      intro hx'
+      convert hx using 1
+    filter_upwards [hU, hevent'] with z' hz' hmem hbase hroot hr
+    exact ⟨fun _ ↦ hi, fun _ ↦ by simpa only [g, Subtype.ext_iff] using hmem hz'⟩
+  · have hevent : ∀ᶠ x in 𝓝 (⟨z.1, hzU⟩ : U), g x ∈ Sᶜ :=
+      hg (hS.isClosed.isOpen_compl.mem_nhds (by simpa [hg_center] using hi))
+    have hevent' : ∀ᶠ z' in 𝓝 z.1, ∀ hz' : z' ∈ U, g ⟨z', hz'⟩ ∈ Sᶜ := by
+      rw [← hmap, eventually_map]
+      filter_upwards [hevent] with x hx
+      intro hx'
+      convert hx using 1
+    filter_upwards [hU, hevent'] with z' hz' hmem hbase hroot hr
+    exact ⟨fun h ↦ ((hmem hz') h).elim, fun h ↦ (hi h).elim⟩
+
 end
 
 end Polynomial
