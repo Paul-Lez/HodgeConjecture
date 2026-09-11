@@ -347,14 +347,11 @@ only compares restrictions. So the first two concrete tasks on the critical path
 > `Continuous.homeoOfEquivCompactToT2` with `instCompactSpace` and
 > `instT2SpaceProjectiveSpaceComplexPoint`. Every topological question about `ℙᴺ(ℂ)^an` can now
 > be transported to the concrete quotient model.
-> *Step 2 remains*: charts on `Projectivization ℂ (CoordinateSpace N)` itself. Mathlib has no
-> topology or charts for `Projectivization`, so this must be built here. The efficient order is:
-> (a) prove that the quotient map `{v ≠ 0} → Projectivization ℂ (CoordinateSpace N)` is an *open*
-> map (the saturation of an open `W` is `⋃_{c ≠ 0} c • W`); (b) with that, the restriction of the
-> quotient map over the open set `nonzeroVectorChart i` is a quotient map, so the chart
-> `[v] ↦ (v (i.succAbove j) / v i)_j` is continuous; (c) its inverse `z ↦ [Fin.insertNth i 1 z]`
-> is continuous by composition, giving the homeomorphism with `Fin N → ℂ`; (d) holomorphy of the
-> transition maps `(x_j / x_i)` then follows from the explicit formulas.
+> *Step 2 is also done* (2026-09-11): see the progress section below —
+> `ComplexProjectiveSpace.chartHomeomorph` and `complexPointChartHomeomorph` in
+> [`ProjectiveAnalytificationCharts.lean`](../Other/AlgebraicGeometry/ProjectiveAnalytificationCharts.lean).
+> What is *not* done is their holomorphic compatibility with the repository's `localChart` /
+> `ChartedSpace` structure; that is gap (G1) below, and it is blocked by (G0).
 >
 > **Task B.** Construct the sheaf of holomorphic sections of `𝒪(-n)` on `ℙᴺ(ℂ)^an` directly — as
 > degree `-n` homogeneous holomorphic functions on the punctured cone, or by gluing the charts of
@@ -372,14 +369,18 @@ and `surjective_sphereToProjectivization`.
 **Corrected list of remaining inputs.** In dependency order, and stated for the ambient `ℙᴺ`
 wherever possible:
 
-0. *(constructive, no analysis)* Task A above: a biholomorphism `{x_i ≠ 0} ≅ ℂᴺ` for the
-   standard charts of `ℙᴺ(ℂ)^an`;
-1. *(constructive, no analysis)* Task B above: a chartwise/holomorphic model of `𝒪(-n)^an` on
-   `ℙᴺ(ℂ)` and its comparison with `moduleAnalytification` of the algebraic twist;
-2. *(done, modulo 1)* `H⁰(ℙᴺ(ℂ)^an, 𝒪(m)^an) = H⁰(ℙᴺ, 𝒪(m))` for `m ≥ 0`, and `= 0` for `m < 0`:
-   the analysis is `PolynomialGrowthLiouville.lean`, the algebra is the identification of
-   degree-`m` forms with polynomials of total degree `≤ m` in an affine chart (homogenisation;
-   not in Mathlib, but elementary);
+0. *(topology: **done** 2026-09-11)* the standard charts `{x_i ≠ 0} ≅ ℂᴺ` of `ℙᴺ(ℂ)^an` as
+   homeomorphisms — `ComplexProjectiveSpace.chartHomeomorph`, `complexPointChartHomeomorph`.
+   Their *holomorphic* compatibility with the repository's atlas is gap (G1), blocked by (G0):
+   `ℙᴺ_ℂ` carries no `SmoothOfRelativeDimension` instance in this repository, so its holomorphic
+   structure sheaf does not yet exist;
+1. *(constructive, no analysis)* gap (G2): a chartwise/holomorphic model of `𝒪(-n)^an` on
+   `ℙᴺ(ℂ)` with transition units `(x_i/x_j)^n`, and its comparison with `moduleAnalytification`
+   of the algebraic twist;
+2. *(analysis **done** 2026-09-11 at function level; sheaf level is gap (G3))*
+   `H⁰(ℙᴺ(ℂ)^an, 𝒪(m)^an) = H⁰(ℙᴺ, 𝒪(m))` for `m ≥ 0` follows from
+   `Complex.PolynomialGrowth.analyticOnNhd_homogeneous_iff`; the `m < 0` vanishing additionally
+   needs a Hartogs/maximum-modulus argument and is false for `N = 0`;
 3. *(hard analysis)* Oka coherence of `𝒪^an`, giving (ii);
 4. *(hard analysis)* Cartan A/B on `ℙᴺ(ℂ)`, giving (i);
 5. *(sheaf theory)* exactness and analytification-compatibility of pushforward along the closed
@@ -392,6 +393,142 @@ wherever possible:
    still carries `[PreconnectedSpace (ComplexPoint X)]` for this reason. If the reorganisation
    onto `ℙᴺ` above is carried out it is not needed, since `ℙᴺ(ℂ)` is path connected
    (`ComplexProjectiveSpace.instPathConnectedSpace`).
+
+## Progress 2026-09-11: affine charts on `ℙᴺ(ℂ)` and the cone-function comparison
+
+Two further files, both `sorry`-free and axiom-clean (added to `scripts/lefschetz_axiom_audit.lean`).
+
+### Item 0 — the standard affine charts (topological half: **done**)
+
+[`Other/AlgebraicGeometry/ProjectiveAnalytificationCharts.lean`](../Other/AlgebraicGeometry/ProjectiveAnalytificationCharts.lean),
+namespace `AlgebraicGeometry.ComplexProjectiveSpace`:
+
+- `projMk : {v : CoordinateSpace N // v ≠ 0} → Projectivization ℂ (CoordinateSpace N)`, with
+  `isQuotientMap_projMk`, `preimage_image_projMk`
+  (`projMk ⁻¹' (projMk '' W) = ⋃ a : ℂˣ, (a • ·) ⁻¹' W`), `isOpenMap_projMk` and
+  **`isOpenQuotientMap_projMk`**. This is the missing topological input the previous handoff
+  asked for; Mathlib puts no topology on `Projectivization` at all.
+- `chartRatio i v j = v (i.succAbove j) / v i` and `chartRatio_smul` — note the formula is
+  scale-invariant *everywhere*, including off the chart, because `x / 0 = 0` in Lean, so it
+  descends through `Projectivization.lift` to `chartMap i` with no side condition.
+- `chartPoint i z = [i.insertNth 1 z]`, `chartSet i = Set.range (chartPoint i)`,
+  `preimage_chartSet : projMk ⁻¹' chartSet i = nonzeroVectorChart i`, `isOpen_chartSet`,
+  `iUnion_chartSet : ⋃ i, chartSet i = univ`, `chartMap_chartPoint`, `chartPoint_chartRatio`.
+- `isOpenMap_chartPoint`: the cone over an open subset of the affine slice `x_i = 1` is open
+  among the nonzero vectors, because `projMk ⁻¹' (chartPoint i '' W) =
+  nonzeroVectorChart i ∩ (chartRatio i ·) ⁻¹' W` and `chartRatio i` is continuous there.
+- **`chartHomeomorph i : (Fin N → ℂ) ≃ₜ chartSet i`** — the `i`-th standard affine chart.
+- Transported to the scheme-theoretic analytification along `projectivizationHomeomorph`:
+  `complexPointChartSet i`, `isOpen_complexPointChartSet`, `iUnion_complexPointChartSet`, and
+  **`complexPointChartHomeomorph i : (Fin N → ℂ) ≃ₜ complexPointChartSet i`**.
+
+### Item 2 — the cone-function comparison (**done** at the level of functions)
+
+[`Other/AlgebraicGeometry/HomogeneousEntireFunctions.lean`](../Other/AlgebraicGeometry/HomogeneousEntireFunctions.lean),
+namespace `Complex.PolynomialGrowth`:
+
+- `iteratedDeriv_line_eq_zero_of_lt`: the *small-radius* Cauchy estimate.  If `F` is entire on
+  `ℂⁿ` with `‖F w‖ ≤ C ‖w‖ᵐ`, then `iteratedDeriv k (fun t ↦ F (t • z)) 0 = 0` for `k < m`
+  (letting `R → 0`).  Together with the large-radius estimate already proved, only the order-`m`
+  coefficient can survive.
+- `exists_bound_of_homogeneous`: a continuous degree-`m` homogeneous function on `ℂ^{N+1}`
+  satisfies `‖F x‖ ≤ C ‖x‖ᵐ`, with `C` a bound on the unit sphere (compactness).
+- **`exists_isHomogeneous_eq_of_homogeneous`**: an entire `F : ℂ^{N+1} → ℂ` with
+  `F (t • x) = tᵐ · F x` equals `MvPolynomial.eval · Q` for a `Q` that is *homogeneous of degree
+  `m`*.
+- `eval_smul_of_isHomogeneous`: the converse scaling law for a homogeneous polynomial.
+- **`analyticOnNhd_homogeneous_iff`**: hence the exact characterisation — on the coordinate cone
+  `ℂ^{N+1}`, the entire functions homogeneous of degree `m` are *exactly* the degree-`m` forms.
+  This is the whole mathematical content of `H⁰(ℙᴺ(ℂ)^an, 𝒪(m)^an) = H⁰(ℙᴺ, 𝒪(m))` for `m ≥ 0`;
+  what remains between it and the sheaf statement is bookkeeping (G1)–(G3) below, not analysis.
+- `eq_zero_of_homogeneous_neg`: an *entire* function on `ℂ^{N+1}` homogeneous of strictly
+  negative degree is `0`.  **This is deliberately weaker than the sheaf-level vanishing**
+  `H⁰(ℙᴺ(ℂ)^an, 𝒪(−k)^an) = 0`: a section of a negative twist is homogeneous on the *punctured*
+  cone and need not extend over the origin.  The sheaf-level vanishing needs, in addition, either
+  a Riemann/Hartogs extension theorem in `N + 1 ≥ 2` variables, or the elementary argument
+  "multiply a degree-`(−k)` section by each degree-`k` form; the product is a degree-`0`
+  homogeneous holomorphic function, hence constant by compactness + maximum modulus
+  (`globalHolomorphic_eq_const`); comparing the constants obtained from `x_0^k` and `x_1^k`
+  forces them to vanish".  Note that it is **false for `N = 0`**, where `ℙ⁰` is a point and every
+  twist is trivial, so any statement of it must assume `N ≥ 1`.
+
+### Newly discovered prerequisite: `ℙᴺ_ℂ` carries none of the repository's analytic structure
+
+`holomorphicFunctionSheaf X d`, `holomorphicRingSheaf X d` and `moduleAnalytification X d` all
+require `[SmoothOfRelativeDimension d X.hom]`.  For `X = Over.mk (ProjectiveSpace.toBase (Fin (N+1))
+(Spec ℂ))` this instance is **not** available: `IsIntegral (ProjectiveSpace (Fin (N+1)) (Spec ℂ))`,
+`Smooth (ProjectiveSpace.toBase (Fin (N+1)) (Spec ℂ))` and `dim = N` are all absent from this
+repository and from Mathlib (checked directly: all three `infer_instance` calls fail).  Until they
+exist, *no statement at all* about `H⁰(ℙᴺ(ℂ)^an, …)` can even be typed, which is why the
+obligations below are stated in the handoff rather than as compiling `def … : Prop` declarations.
+This is a genuine, self-contained, and quite large sub-project (smoothness of projective space
+over a field, integrality of `Proj` of a polynomial ring, and the dimension computation), and it
+sits *before* everything else in the reorganised plan.
+
+### The remaining gaps, stated
+
+**(G0) `ℙᴺ_ℂ` is a smooth integral complex variety of dimension `N`.**
+```lean
+instance : IsIntegral (ProjectiveSpace (Fin (N + 1)) (Spec ↧ℂ))
+instance : Smooth (ProjectiveSpace.toBase (Fin (N + 1)) (Spec ↧ℂ))
+theorem dim_projectiveSpace : dim (ProjectiveSpace (Fin (N + 1)) (Spec ↧ℂ)) = N
+```
+Only with these does `SmoothOfRelativeDimension N` — and hence `holomorphicRingSheaf`,
+`moduleAnalytification` and the target statements — exist for `ℙᴺ`.
+
+**(G1) The standard homogeneous charts are holomorphic charts.**  Writing `ℙᴺ` for the object of
+(G0) and `d = N`:
+```lean
+def StandardChartsHolomorphic (N : ℕ) : Prop :=
+  ∀ (i : Fin (N + 1)) (f : C^ω⟮𝓘(ℂ, Fin N → ℂ), ComplexPoint ℙᴺ; ℂ⟯),
+    AnalyticOnNhd ℂ
+      (fun z : Fin N → ℂ ↦ f (ComplexProjectiveSpace.complexPointChartHomeomorph i z))
+      Set.univ
+```
+together with the converse (an entire function on `ℂᴺ` transported to the chart is a section of
+`holomorphicFunctionSheaf` over `complexPointChartSet i`).  Equivalently: the homeomorphisms
+`complexPointChartHomeomorph i` belong to the analytic atlas generated by `localChart`.  Since
+`localChart` is built from *étale* coordinates, proving this means comparing the étale chart at a
+point with the homogeneous chart — the natural route is that both are charts of the affine open
+`D₊(x_i) ≅ 𝔸ᴺ`, using `ComplexPoint.affineSpaceHomeomorph` and `contMDiffAt_evaluate`.
+
+**(G2) A chartwise holomorphic model of the analytified twist.**
+```lean
+def HasHolomorphicTwistFrames (N n : ℕ) : Prop :=
+  ∃ e : ∀ i : Fin (N + 1),
+      SheafOfModules.unit ((holomorphicRingSheaf ℙᴺ N).over (complexPointChartOpen i)) ≅
+        (ProjectiveTwist.analytic ℙᴺ N P n).over (complexPointChartOpen i),
+    ∀ i j, TauCeti.SheafOfModules.transitionUnit (e i) (e j) = (x_i / x_j) ^ n
+```
+i.e. `𝒪(−n)^an` is the line bundle glued from the standard charts with transition functions
+`(x_i / x_j)^n`.  The algebraic side of this already exists
+(`ProjectiveSpectrum.NegativeTwist.HomogeneousShift.basicOpenUnitIso`, trivialising `𝒪(−n)` on
+`D₊(x_i)` by multiplication/division by `x_i^n`), and `analytificationGenerates`
+(`Other/AlgebraicGeometry/AnalytificationGenerates.lean`) transports a generating algebraic
+section to a generating analytic section; so (G2) should be obtainable by *transport*, once (G0)
+and the identification of `analyticOpen (D₊(x_i))` with `complexPointChartSet i` are available.
+
+**(G3) The section/cone-function dictionary.**
+```lean
+def TwistHomsAreConeFunctions (N a b : ℕ) : Prop :=
+  Nonempty ((ProjectiveTwist.analytic ℙᴺ N P a ⟶ ProjectiveTwist.analytic ℙᴺ N P b) ≃
+    {F : (Fin (N + 1) → ℂ) → ℂ //
+       AnalyticOnNhd ℂ F Set.univ ∧ ∀ t x, F (t • x) = t ^ (a - b) * F x})
+```
+for `b ≤ a`, and the corresponding statement that the set is a singleton `{0}` when `a < b` and
+`N ≥ 1`.  Given (G1) and (G2) this is gluing: a morphism of twists is a family of holomorphic
+functions on the charts satisfying the `(x_i/x_j)^{a-b}` cocycle, which is the same as one
+degree-`(a−b)` homogeneous holomorphic function on the cone.  Combining (G3) with
+`analyticOnNhd_homogeneous_iff` and with the algebraic computation of
+`Hom(𝒪(−a), 𝒪(−b)) = H⁰(ℙᴺ, 𝒪(a−b)) =` degree-`(a−b)` forms then gives
+`AnalyticTwistRelationsAlgebraize` **on `ℙᴺ`**.
+
+**(G4) Descent to a subvariety `X ⊆ ℙᴺ`** (unchanged from the previous re-assessment): exactness
+of analytic pushforward along the closed immersion, and `i^an_*(M^an) ≅ (i_* M)^an`.
+
+**(G5), (G6), (G7)**: Oka coherence, Cartan A/B, and the stalkwise base change plus flatness for
+reflection of invertibility — unchanged, and still the three genuinely hard analytic/algebraic
+inputs.
 
 ## Mathematical routes, and what is missing
 
