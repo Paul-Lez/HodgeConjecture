@@ -69,23 +69,12 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{0}) (U : Opens X) (A : AddCommGrpCat.{0})
 
-/-- Constant coefficients with the topological-sheaf category displayed explicitly. -/
-abbrev resolutionConstantSheaf (Y : TopCat.{0}) : Sheaf AddCommGrpCat.{0} Y :=
-  (constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj A
-
 set_option backward.isDefEq.respectTransparency false in
-/-- The fixed ambient injective resolution of the constant coefficient sheaf. -/
+/-- The fixed injective resolution of the constant coefficient sheaf. -/
 def ambientConstantInjectiveResolution :
     InjectiveResolution (C := Sheaf AddCommGrpCat.{0} X)
-      (resolutionConstantSheaf A X) :=
+      ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj A) :=
   injectiveResolution (C := Sheaf AddCommGrpCat.{0} X) _
-
-set_option backward.isDefEq.respectTransparency false in
-/-- The separately chosen injective resolution on the open subspace. -/
-def openConstantInjectiveResolution :
-    InjectiveResolution (C := Sheaf AddCommGrpCat.{0} (TopCat.of U))
-      (resolutionConstantSheaf A (TopCat.of U)) :=
-  injectiveResolution (C := Sheaf AddCommGrpCat.{0} (TopCat.of U)) _
 
 /-- Restrict the ambient injective resolution termwise. It is flasque, but no
 assertion that its terms are injective on the subspace is required. -/
@@ -130,10 +119,12 @@ instance restrictedAmbientConstantAugmentation_quasiIso :
 open-subspace resolution, extending the prescribed constant augmentation. -/
 def restrictedAmbientToOpenResolution :
     restrictedAmbientConstantResolution X U A ⟶
-      (openConstantInjectiveResolution X U A).cocomplex :=
+      (ambientConstantInjectiveResolution (TopCat.of U) A).cocomplex :=
   CochainComplex.liftToInjectiveNat (restrictedAmbientConstantAugmentation X U A)
-    (openConstantInjectiveResolution X U A).ι
-      (fun n => (openConstantInjectiveResolution X U A).injective n)
+    (ambientConstantInjectiveResolution (TopCat.of U) A).ι
+      (fun n => (ambientConstantInjectiveResolution (TopCat.of U) A).injective n)
+
+
 
 instance restrictedAmbientConstantResolution_isFlasque (n : ℕ) :
     ((restrictedAmbientConstantResolution X U A).X n).IsFlasque := by
@@ -158,10 +149,12 @@ chosen open-subspace resolution, through actual open restriction. -/
 def ambientToOpenInjectiveResolution :
     (ambientConstantInjectiveResolution X A).cocomplex ⟶
       ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
-        (openConstantInjectiveResolution X U A).cocomplex :=
+        (ambientConstantInjectiveResolution (TopCat.of U) A).cocomplex :=
   ambientInjectiveRestriction X U A ≫
     ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).map
       (restrictedAmbientToOpenResolution X U A)
+
+
 
 /-- Global sections of the pushed-forward comparison. Its source uses the
 actual open restriction of the ambient resolution, not a supplied model. -/
@@ -173,10 +166,12 @@ def globalRestrictedAmbientToOpenResolution :
     ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
       (.up ℕ)).obj
         (((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
-          (openConstantInjectiveResolution X U A).cocomplex) :=
+          (ambientConstantInjectiveResolution (TopCat.of U) A).cocomplex) :=
   ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
     (.up ℕ)).map
       (((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).map
         (restrictedAmbientToOpenResolution X U A))
+
+
 
 end TopCat.Sheaf
