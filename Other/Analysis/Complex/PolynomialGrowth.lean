@@ -116,7 +116,7 @@ theorem differentiable_mvPolynomial_eval {n : ℕ} (p : MvPolynomial (Fin n) ℂ
     (motive := fun q : MvPolynomial (Fin n) ℂ =>
       Differentiable ℂ (fun z : Fin n → ℂ => MvPolynomial.eval z q))
     p (fun a => ?_) (fun p q hp hq => ?_) (fun p i hp => ?_)
-  · simpa using differentiable_const (c := a)
+  · simpa only [MvPolynomial.eval_C] using differentiable_const (c := a)
   · have hfun : (fun z : Fin n → ℂ => MvPolynomial.eval z (p + q)) =
         (fun z => MvPolynomial.eval z p) + fun z => MvPolynomial.eval z q := by
       funext z; simp
