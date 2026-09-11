@@ -37,17 +37,30 @@ two propositions:
   such a vanishing into a decomposition. It is stated here for a general finite set of
   codimension-one points, since nothing about the Chern class is involved.
 
-* `HasChernLocalModel X` — **the one-variable Lelong–Poincaré computation**: in any such
-  decomposition of a supported lift of the first Chern class, the piece supported on the component
-  of `x` restricts, on the smooth locus of that component, to `c.divisor x` times the normalised
-  normal-chart coclass `cycleComponentSmoothSupportCoclassSection`. This is the only genuinely
-  analytic input, and it is what fixes the sign.
+* `HasChernLocalModel X` — **the one-variable Lelong–Poincaré computation**: there *exists* a
+  supported lift `β` of the first Chern class such that in any decomposition of it, the piece
+  supported on the component of `x` restricts, on the smooth locus of that component, to
+  `c.divisor x` times the normalised normal-chart coclass
+  `cycleComponentSmoothSupportCoclassSection`. This is the only genuinely analytic input, and it
+  is what fixes the sign.
 
-The hypothesis that the supported lift exists is
-`HasSupportedChernLift X`; it is exactly the conclusion of
-`exists_forgetSupport_eq_integralToRational_firstChernClass` (step 3) applied to the open
-complement of `|D|^an`, and it is taken as a hypothesis here because step 3 still rests on
-`RestrictedChernClassVanishes`.
+## A second correction: the quantifier over the lift must be existential
+
+A previous form of `HasChernLocalModel` quantified *universally* over every `β` lifting the first
+Chern class. That is false, and made the whole assembly rest on an unprovable hypothesis. The lift
+is not unique: by the exactness of the support sequence two lifts differ by the image of
+`H¹(X^an ∖ |D|^an, ℚ)`, and such a difference does change the local multiplicities. Concretely,
+for `X = ℙ¹`, `L = 𝒪` and the rational section `s = z`, the divisor is `D = [0] − [∞]` and
+`c₁(L) = 0`, while `H²_{\{0,∞\}}(ℙ¹, ℚ) ≅ ℚ²` with `forgetSupport` the sum map; both `(1, −1)`
+and `(2, −2)` lift `c₁ = 0`, and only the first is the divisor. The statement is therefore
+existential in `β`, and the witness is the **relative first Chern class** `c₁(L, s)` cut out by
+the splitting of `E` over `X^an ∖ |D|^an`.
+
+As a consequence, `HasSupportedChernLift X` — the bare existence of a lift, which is what step 3
+produces — is **no longer a hypothesis of the assembly**: it is implied by, and strictly weaker
+than, `HasChernLocalModel X`. It is kept below because it records the conclusion of step 3 and its
+bridge `exists_supportedChernLift_of_splitting`, which is where the splitting datum that should
+produce the canonical lift enters.
 
 ## What is proved here
 
@@ -80,8 +93,14 @@ the divisor of any Cartier datum representing `L`.
 
 This is the conclusion of `exists_forgetSupport_eq_integralToRational_firstChernClass` for the
 open set `Ω := (cycleAnalyticClosedSupport X c.divisor).compl`: the rational section frames the
-bundle off the support of its divisor, so the extension splits there. It is stated as a
-hypothesis because step 3 still depends on `RestrictedChernClassVanishes`. -/
+bundle off the support of its divisor, so the extension splits there.
+
+**This is weaker than what the assembly needs**, and is no longer one of its hypotheses: it
+produces *some* lift, by exactness, whereas `HasChernLocalModel` requires the *canonical*,
+normalised one (see its docstring for the `ℙ¹` counterexample showing that an arbitrary lift has
+the wrong local multiplicities). It is retained because it is the exact output of step 3 and
+because its proof `exists_supportedChernLift_of_splitting` is where the splitting datum — the
+frame of the bundle off `|D|^an`, which is what should cut out the canonical lift — enters. -/
 def HasSupportedChernLift : Prop :=
   ∀ (E : HolomorphicUnitExtension X (dim X.left)) (L : X.left.Modules),
     TauCeti.SheafOfModules.IsInvertible L →
@@ -152,40 +171,58 @@ def HasComponentSupportDecomposition : Prop :=
 
 /-- **Obligation: the local model of the first Chern class along a divisor.**
 
-Let `c` be Cartier data representing `L`, let `β` be a class supported on the analytic support of
-`c.divisor` lifting the rational first Chern class of `E`, and let `γ` be any decomposition of `β`
-into classes supported on the individual components. Then, on the smooth locus of the component of
-a codimension-one point `x` of the divisor, the piece `γ x` is exactly the multiplicity
-`c.divisor x` times the normalised normal-chart coclass.
+Let `c` be Cartier data representing `L`. Then there **exists** a class `β` supported on the
+analytic support of `c.divisor` whose ordinary class is the rational first Chern class of `E`, and
+which is *normalised*: in any decomposition `γ` of `β` into classes supported on the individual
+components, the piece `γ x` is, on the smooth locus of the component of a codimension-one point
+`x` of the divisor, exactly the multiplicity `c.divisor x` times the normalised normal-chart
+coclass.
 
-This is the corrected form of the statement drafted at the end of §4.3 of
-`docs/DIVISOR_HANDOFF.md`: the lift `β` lives on the whole of `|D|^an`, not on a single component,
-and the normalisation is asserted for the components of a decomposition.
+**Why the quantifier over `β` is existential.** An earlier form of this statement quantified
+universally over every `β` lifting the first Chern class. That is *false*. The lift is not unique:
+by the exactness of the support sequence, two lifts differ by the image of
+`H¹(X^an ∖ |D|^an, ℚ)` under the connecting map, and such a difference does change the local
+multiplicities. Take `X = ℙ¹`, `L = 𝒪`, the rational section `s = z`, so `D = [0] − [∞]` and
+`c₁(L) = 0`. Then `H²_{\{0, ∞\}}(ℙ¹, ℚ) ≅ ℚ²` by the two local coclasses, `forgetSupport` is the
+sum map `ℚ² → ℚ`, and *both* `β = (1, −1)` and `β = (2, −2)` lift `c₁ = 0`; only the first has the
+local multiplicities `(1, −1)` of `D`. So a universally quantified statement is refutable, and any
+theorem resting on it rests on an unprovable hypothesis.
 
-Mathematically this is the one-variable Lelong–Poincaré computation: in a normal chart at a smooth
-point of the component the divisor is `{z₁ = 0}`, the transition cocycle of the line bundle is
-that of `z₁^{c.divisor x}` (the local equation of the rational section, by `Represents` and
-`extensionFramesOfAlgebraic_transitionUnit`), and `(1/2πi) d log z₁` generates the first cohomology
-of the punctured disc. It is where the sign of `Scheme.CartierData.Represents` is fixed. -/
+The witness `β` is the **relative first Chern class** `c₁(L, s) ∈ H²_{|D|^an}(X^an, ℚ)` of the
+pair (line bundle, rational section): the frame of `L^an` on `X^an ∖ |D|^an` supplied by `s`
+splits the extension `E` there, and that *splitting*, not merely the vanishing of the restricted
+class, determines a canonical lift. Step 3 of §4.3 of `docs/DIVISOR_HANDOFF.md`
+(`exists_forgetSupport_eq_integralToRational_firstChernClass`, packaged here as
+`HasSupportedChernLift`) only produces *some* lift, by exactness; it is therefore **not** enough
+to prove this obligation, and the construction of the canonical lift out of the splitting datum is
+part of what is left.
+
+Mathematically the normalisation is the one-variable Lelong–Poincaré computation: in a normal
+chart at a smooth point of the component the divisor is `{z₁ = 0}`, the transition cocycle of the
+line bundle is that of `z₁^{c.divisor x}` (the local equation of the rational section, by
+`Represents` and `extensionFramesOfAlgebraic_transitionUnit`), and `(1/2πi) d log z₁` generates
+the first cohomology of the punctured disc. It is where the sign of
+`Scheme.CartierData.Represents` is fixed. The reduction of this obligation to the winding
+homomorphism of a chart is `Other/AlgebraicGeometry/ChernLocalModelWinding.lean`. -/
 def HasChernLocalModel : Prop :=
   ∀ (E : HolomorphicUnitExtension X (dim X.left)) (L : X.left.Modules),
     TauCeti.SheafOfModules.IsInvertible L →
     ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules) →
     ∀ c : Scheme.CartierData X.left, c.Represents L →
-    ∀ β : SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor)
-        (2 * ((1 : ℕ) : ℤ)),
-      supportedInjectiveToAmbient X (cycleAnalyticClosedSupport X c.divisor)
-          (2 * ((1 : ℕ) : ℤ)) β =
-        rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))
-          (integralToRationalCohomology X 2 E.firstChernClass) →
-    ∀ γ : ∀ x : X.left,
-        SupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
+      ∃ β : SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor)
           (2 * ((1 : ℕ) : ℤ)),
-      β = ∑ x ∈ cycleComponents X c.divisor,
-        componentContribution X (cycleComponents X c.divisor) x (2 * ((1 : ℕ) : ℤ)) (γ x) →
-    ∀ x ∈ cycleComponents X c.divisor, ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
-      (cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom (γ x) =
-        (c.divisor x) • cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx
+        supportedInjectiveToAmbient X (cycleAnalyticClosedSupport X c.divisor)
+            (2 * ((1 : ℕ) : ℤ)) β =
+          rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))
+            (integralToRationalCohomology X 2 E.firstChernClass) ∧
+        ∀ γ : ∀ x : X.left,
+            SupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
+              (2 * ((1 : ℕ) : ℤ)),
+          β = ∑ x ∈ cycleComponents X c.divisor,
+              componentContribution X (cycleComponents X c.divisor) x (2 * ((1 : ℕ) : ℤ)) (γ x) →
+          ∀ x ∈ cycleComponents X c.divisor, ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
+            (cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom (γ x) =
+              (c.divisor x) • cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx
 
 /-! ### The assembly -/
 
@@ -210,36 +247,23 @@ theorem eq_zsmul_cycleComponentSupportedInjectiveClass {x : X.left}
 variable (X)
 
 set_option maxHeartbeats 1000000 in
-/-- **The assembly.** The supported lift of step 3, the codimension-one excision statement and the
-local model together prove the remaining obligation `HasDivisorClassOfSomeCartierData X` of
-`docs/DIVISOR_HANDOFF.md` §3. -/
+/-- **The assembly.** The codimension-one excision statement and the local model together prove
+the remaining obligation `HasDivisorClassOfSomeCartierData X` of `docs/DIVISOR_HANDOFF.md` §3.
+
+Note that `HasSupportedChernLift` is *not* a hypothesis: the existence of a supported lift is part
+of `HasChernLocalModel`, which asks for a *normalised* one. The bare existence supplied by step 3
+would not suffice, because the lift is not unique (see the docstring of `HasChernLocalModel`). -/
 theorem hasDivisorClassOfSomeCartierData_of_localModel
-    (hlift : HasSupportedChernLift X)
     (hdec : HasComponentSupportDecomposition X)
     (hloc : HasChernLocalModel X) :
     HasDivisorClassOfSomeCartierData X := by
   intro E L hL iso
   obtain ⟨c, hc⟩ := exists_cartierData_represents X L hL
   refine ⟨c, hc, ?_⟩
-  obtain ⟨β, hβ⟩ := hlift E L hL iso c hc
-  obtain ⟨b, hb⟩ : ∃ b : SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor)
-      (2 * ((1 : ℕ) : ℤ)),
-      supportedInjectiveToAmbient X (cycleAnalyticClosedSupport X c.divisor)
-          (2 * ((1 : ℕ) : ℤ)) b =
-        rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))
-          (integralToRationalCohomology X 2 E.firstChernClass) := by
-    refine ⟨rationalSupportAddEquivSupportedInjectiveHomology X
-      ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
-        Set (ComplexPoint X))
-      (cycleAnalyticClosedSupport X c.divisor).isClosed (2 * ((1 : ℕ) : ℤ)) β, ?_⟩
-    rw [← hβ]
-    exact (rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
-      ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
-        Set (ComplexPoint X))
-      (cycleAnalyticClosedSupport X c.divisor).isClosed (2 * ((1 : ℕ) : ℤ)) β).symm
+  obtain ⟨b, hb, hlocal⟩ := hloc E L hL iso c hc
   obtain ⟨γ, hγ⟩ := hdec (cycleComponents X c.divisor)
     (fun x hx => coheight_of_mem_cycleComponents X hx) b
-  have hnorm := hloc E L hL iso c hc b hb γ hγ
+  have hnorm := hlocal γ hγ
   have key : ∀ x ∈ cycleComponents X c.divisor,
       supportedInjectiveToAmbient X (componentsAnalyticClosedSupport X
           (cycleComponents X c.divisor)) (2 * ((1 : ℕ) : ℤ))

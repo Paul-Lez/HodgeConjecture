@@ -412,4 +412,7 @@ public import Other.AlgebraicGeometry.DivisorClassComparisonSupport
 public import Other.AlgebraicGeometry.ChernLocalModel
 public import Other.AlgebraicGeometry.SupportUnionSplitting
 public import Other.AlgebraicGeometry.ComponentSupportDecomposition
+public import Other.AlgebraicGeometry.ClosedSupportSmoothFiltration
+public import Other.AlgebraicGeometry.ClosedSupportCodimensionVanishing
+public import Other.AlgebraicGeometry.ClosedSupportCoheightDimension
 public import Other.AlgebraicGeometry.ChernLocalModelWinding

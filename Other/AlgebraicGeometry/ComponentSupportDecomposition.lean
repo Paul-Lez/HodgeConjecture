@@ -292,12 +292,11 @@ theorem hasComponentSupportDecomposition (hvan : HasCodimensionTwoSupportedVanis
 /-- **The step-4 assembly, with the decomposition obligation discharged.** Combined with
 `hasDivisorOfAlgebraicModel_of_divisorClass`, the remaining obligation
 `HasDivisorClassOfSomeCartierData X` of `docs/DIVISOR_HANDOFF.md` §3 now follows from the
-supported lift of step 3, the codimension-two vanishing, and the local model. -/
+codimension-two vanishing and the local model. -/
 theorem hasDivisorClassOfSomeCartierData_of_localModel_of_vanishing
-    (hlift : HasSupportedChernLift X) (hvan : HasCodimensionTwoSupportedVanishing X)
-    (hloc : HasChernLocalModel X) :
+    (hvan : HasCodimensionTwoSupportedVanishing X) (hloc : HasChernLocalModel X) :
     HasDivisorClassOfSomeCartierData X :=
-  hasDivisorClassOfSomeCartierData_of_localModel X hlift
+  hasDivisorClassOfSomeCartierData_of_localModel X
     (hasComponentSupportDecomposition X hvan) hloc
 
 end AlgebraicGeometry.ComplexPoint

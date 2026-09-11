@@ -49,6 +49,8 @@ import Other.AlgebraicGeometry.CohomologyWithSupportExact
 import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 import Other.AlgebraicGeometry.ChernLocalModel
 import Other.AlgebraicGeometry.CartierLocalForm
+import Other.AlgebraicGeometry.ClosedSupportCoheightDimension
+import Other.AlgebraicGeometry.ChernLocalModelWinding
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.localCoordinateEquiv
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.sectionSheafOfModules_isInvertible
 #print axioms AlgebraicGeometry.ComplexPoint.contMDiffAt_evaluate
@@ -181,3 +183,7 @@ import Other.AlgebraicGeometry.CartierLocalForm
 #print axioms AlgebraicGeometry.ComplexPoint.multiplier_transition
 #print axioms AlgebraicGeometry.ComplexPoint.multiplier_eq_of_same_transition
 #print axioms AlgebraicGeometry.ComplexProjectiveSpace.chartMultiplier_eq_on_overlap
+#print axioms AlgebraicGeometry.ComplexPoint.hasComponentSupportDecomposition_unconditional
+#print axioms AlgebraicGeometry.ComplexPoint.hasCodimensionTwoSupportedVanishing
+#print axioms AlgebraicGeometry.ComplexPoint.hasDivisorClassOfSomeCartierData_of_supportedChernLift_of_localModel
+#print axioms AlgebraicGeometry.ComplexPoint.hasChernLocalModel_of_winding

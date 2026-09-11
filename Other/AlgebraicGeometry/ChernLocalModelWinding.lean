@@ -75,9 +75,14 @@ form of the conclusion. The two remaining obligations are
   open contains the given point, i.e. for a version of `Scheme.CartierData.exists_localForm`
   localised at an arbitrary point of `Z_x` rather than only at its generic point; this is harmless,
   because any open meeting `Z_x` contains its generic point.
-* `HasChernWindingNaturality X` — (a) holds for *every* normalised winding chart; this is the
-  Chern-class half, and is where §4.2(a) of the handoff (a cocycle description of the connecting
-  map `H¹(𝒪ˣ) → H²(ℤ)`) is needed.
+* `HasChernWindingNaturality X` — there *exists* a supported lift `β` of the first Chern class for
+  which (a) holds on *every* normalised winding chart; this is the Chern-class half, and is where
+  §4.2(a) of the handoff (a cocycle description of the connecting map `H¹(𝒪ˣ) → H²(ℤ)`) is needed.
+  The lift must be quantified existentially: an arbitrary lift of `c₁` has the wrong local
+  multiplicities — for `X = ℙ¹`, `L = 𝒪`, `s = z`, `D = [0] − [∞]`, `c₁ = 0`, both `(1, −1)` and
+  `(2, −2)` lift `c₁` in `H²_{\{0,∞\}}(ℙ¹, ℚ) ≅ ℚ²` — so the obligation includes constructing the
+  canonical one, the relative first Chern class cut out by the frame of the bundle off `|D|^an`.
+  The decomposition `γ` is still quantified universally, which is harmless because it is unique.
 
 `hasChernLocalModel_of_winding` **proves** that the two together give `HasChernLocalModel X`, and
 `hasChernWindingNaturality_of_localModel` proves the converse implication for the second one, so
@@ -284,9 +289,16 @@ def HasNormalizedWindingCharts : Prop :=
 
 /-- **Obligation (a): naturality of the supported first Chern class.**
 
-For *every* normalised winding chart in the sense above, the restriction to the chart of the
-component piece `γ x` of a supported lift of the rational first Chern class is the winding class
-of the local equation `u · h ^ (c.divisor x)` of the bundle.
+There is a supported lift `β` of the rational first Chern class — the *relative* first Chern class
+cut out by the frame of the bundle off `|D|^an` — such that for *every* normalised winding chart,
+the restriction to the chart of the component piece `γ x` of any decomposition of `β` is the
+winding class of the local equation `u · h ^ (c.divisor x)` of the bundle.
+
+The lift is quantified **existentially**: an arbitrary lift of the first Chern class does not have
+the right local multiplicities (see the docstring of `HasChernLocalModel` for the `ℙ¹`
+counterexample), so this obligation includes the construction of the canonical one. The
+decomposition `γ` is quantified universally, which is harmless: it is unique, because the
+codimension-two vanishing makes the enlargement maps jointly bijective, not merely surjective.
 
 This is the Chern-class half of the local model: it is where §4.2(a) of
 `docs/DIVISOR_HANDOFF.md` — a description of the connecting map `H¹(𝒪ˣ) → H²(ℤ)` by the cocycle of
@@ -299,34 +311,38 @@ def HasChernWindingNaturality : Prop :=
     TauCeti.SheafOfModules.IsInvertible L →
     ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules) →
     ∀ c : Scheme.CartierData X.left, c.Represents L →
-    ∀ β : SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor)
-        (2 * ((1 : ℕ) : ℤ)),
-      supportedInjectiveToAmbient X (cycleAnalyticClosedSupport X c.divisor)
-          (2 * ((1 : ℕ) : ℤ)) β =
-        rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))
-          (integralToRationalCohomology X 2 E.firstChernClass) →
-    ∀ γ : ∀ x : X.left,
-        SupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
+      ∃ β : SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor)
           (2 * ((1 : ℕ) : ℤ)),
-      β = ∑ x ∈ cycleComponents X c.divisor,
-        componentContribution X (cycleComponents X c.divisor) x (2 * ((1 : ℕ) : ℤ)) (γ x) →
-    ∀ x ∈ cycleComponents X c.divisor, ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
-    ∀ (q : ComplexPoint X) (ch : ChernWindingChart X c x (dim X.left) 1 q),
-      ch.HasTrivialUnitWinding → ch.NormalizesCoclass hx →
-      ch.ComputesClass (c.divisor x)
-        ((cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom (γ x))
+        supportedInjectiveToAmbient X (cycleAnalyticClosedSupport X c.divisor)
+            (2 * ((1 : ℕ) : ℤ)) β =
+          rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))
+            (integralToRationalCohomology X 2 E.firstChernClass) ∧
+        ∀ γ : ∀ x : X.left,
+            SupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
+              (2 * ((1 : ℕ) : ℤ)),
+          β = ∑ x ∈ cycleComponents X c.divisor,
+              componentContribution X (cycleComponents X c.divisor) x (2 * ((1 : ℕ) : ℤ)) (γ x) →
+          ∀ x ∈ cycleComponents X c.divisor, ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
+          ∀ (q : ComplexPoint X) (ch : ChernWindingChart X c x (dim X.left) 1 q),
+            ch.HasTrivialUnitWinding → ch.NormalizesCoclass hx →
+            ch.ComputesClass (c.divisor x)
+              ((cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom (γ x))
 
-/-- Obligation (a) is no stronger than the target: if the local model holds, then every
-normalised winding chart computes the class. Together with `hasChernLocalModel_of_winding` this
-shows that, granted `HasNormalizedWindingCharts X`, obligation (a) is *equivalent* to
-`HasChernLocalModel X`; in particular the reduction does not weaken the target. -/
+/-- Obligation (a) is no stronger than the target: if the local model holds, then its normalised
+lift makes every normalised winding chart compute the class. Together with
+`hasChernLocalModel_of_winding` this shows that, granted `HasNormalizedWindingCharts X`,
+obligation (a) is *equivalent* to `HasChernLocalModel X`; in particular the reduction does not
+weaken the target. -/
 theorem hasChernWindingNaturality_of_localModel (h : HasChernLocalModel X) :
     HasChernWindingNaturality X := by
-  intro E L hL iso c hc β hβ γ hγ x hxs hx q ch hb hcn
+  intro E L hL iso c hc
+  obtain ⟨β, hβ, hlocal⟩ := h E L hL iso c hc
+  refine ⟨β, hβ, ?_⟩
+  intro γ hγ x hxs hx q ch hb hcn
   refine computesClass_of_restrict_eq X ch hx (c.divisor x) hb hcn _ ?_
   exact congrArg ((supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
     (cycleComponentSupport X x) (2 * 1)).obj.map (homOfLE ch.le).op)
-    (h E L hL iso c hc β hβ γ hγ x hxs hx)
+    (hlocal γ hγ x hxs hx)
 
 /-- **The reduction.** The existence of normalised winding charts (obligations (b) and (c)) and
 the naturality of the supported first Chern class on them (obligation (a)) together imply the
@@ -334,7 +350,10 @@ local model `HasChernLocalModel X`, hence, with `hasDivisorClassOfSomeCartierDat
 the remaining obligation of `docs/DIVISOR_HANDOFF.md` §3. -/
 theorem hasChernLocalModel_of_winding (h₁ : HasNormalizedWindingCharts X)
     (h₂ : HasChernWindingNaturality X) : HasChernLocalModel X := by
-  intro E L hL iso c hc β hβ γ hγ x hxs hx
+  intro E L hL iso c hc
+  obtain ⟨β, hβ, hnat⟩ := h₂ E L hL iso c hc
+  refine ⟨β, hβ, ?_⟩
+  intro γ hγ x hxs hx
   choose ch hunit hnorm using
     fun q : {q : ComplexPoint X // q ∈ cycleComponentSmoothSupportAmbientOpen X x ∧
         q ∈ cycleComponentSupport X x} => h₁ c x hx q.1 q.2.1 q.2.2
@@ -368,7 +387,6 @@ theorem hasChernLocalModel_of_winding (h₁ : HasNormalizedWindingCharts X)
           (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x) (2 * 1)
           (cycleComponentAnalyticClosedSupport X x).isClosed _ hVS _).symm
     · exact (ch q).restrict_eq_zsmul_coclass hx (c.divisor x) _
-        (h₂ E L hL iso c hc β hβ γ hγ x hxs hx q.1 (ch q) (hunit q) (hnorm q))
-        (hunit q) (hnorm q)
+        (hnat γ hγ x hxs hx q.1 (ch q) (hunit q) (hnorm q)) (hunit q) (hnorm q)
 
 end AlgebraicGeometry.ComplexPoint
