@@ -368,7 +368,7 @@ def linearDualCochainComplexScIso
           HomologicalComplex.shortComplexFunctor']
         rw [ChainComplex.next_nat_succ]
         change ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap = D.d n (n + 1)
-        exact (HomologicalComplex.linearDualCochainComplex_d K n).symm
+        exact (HomologicalComplex.linearDualCochainComplex_d_succ K n).symm
   · simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
       HomologicalComplex.shortComplexFunctor'_obj_g]
     dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk,
@@ -376,7 +376,7 @@ def linearDualCochainComplexScIso
       HomologicalComplex.shortComplexFunctor']
     rw [ChainComplex.prev]
     change ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap = D.d n (n + 1)
-    exact (HomologicalComplex.linearDualCochainComplex_d K n).symm
+    exact (HomologicalComplex.linearDualCochainComplex_d_succ K n).symm
 
 /-- Ordinary singular cohomology, presented as the homology of the algebraic-dual singular
 cochain complex. -/
