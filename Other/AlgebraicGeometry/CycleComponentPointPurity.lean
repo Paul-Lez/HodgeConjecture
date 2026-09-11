@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentPurity
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentPurity
 public import Other.AlgebraicGeometry.SingularCycleClass
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff

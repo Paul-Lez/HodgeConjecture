@@ -4,21 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.Algebra.Homology.MapExtend
+public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import Other.AlgebraicTopology.SingularChainSheafClosedSupport
 public import Other.AlgebraicTopology.ClosedEmbeddingDerivedPushforward
 
 /-!
-# The actual supported chain map in the derived pushforward interface
+# The supported chain map in the derived pushforward interface
 
-The canonical additive-functor/extension comparison puts the existing closed-embedding
-chain map in cohomological grading, with source the actual termwise direct image of the
-intrinsic cochain sheaf and target the actual termwise closed-support sheaf functor.
-Localization then gives the corresponding map out of the constructed derived direct image.
-
-The supported target in this file is explicitly the localization of **termwise** supported
-chains. It is not silently identified with the right-derived support functor. This construction
-requires no boundedness, smoothness, or intrinsic-to-ambient quasi-isomorphism.
+The canonical additive-functor/extension comparison puts the closed-embedding chain map in
+cohomological grading, with source the termwise direct image of the intrinsic cochain sheaf
+and target the termwise closed-support sheaf functor. Localization then gives the
+corresponding map out of the derived direct image. The supported target throughout is the
+localization of **termwise** supported chains.
 -/
 
 @[expose] public noncomputable section

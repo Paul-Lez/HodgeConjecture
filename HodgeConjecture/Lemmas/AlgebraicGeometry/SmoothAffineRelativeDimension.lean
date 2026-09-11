@@ -7,12 +7,12 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
 
 /-!
-# Actual equidimensional smooth affine neighborhoods
+# Equidimensional smooth affine neighborhoods
 
-A proved standard-smooth affine presentation induces a genuine scheme morphism smooth
-of that same relative dimension. This small adapter turns the local dimension bounds of
-the canonical singular stratification into inputs for the constructed normal-coordinate
-theorems, without assuming global equidimensionality of a stratum.
+A standard-smooth affine presentation induces a scheme morphism smooth of that same
+relative dimension. This adapter turns the local dimension bounds of the canonical
+singular stratification into inputs for the normal-coordinate theorems, using
+equidimensionality only on each affine chart.
 -/
 
 @[expose] public noncomputable section

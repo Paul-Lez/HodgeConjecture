@@ -5,8 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportNaturality
-public import HodgeConjecture.Definitions.AlgebraicTopology.DerivedSheafSupportLocalization
-public import HodgeConjecture.Lemmas.CategoryTheory.Abelian.KernelCompositionShortExact
+public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportLocalization
+public import HodgeConjecture.Mathlib.CategoryTheory.Abelian.KernelCompositionShortExact
 public import Mathlib.Algebra.Homology.HomologySequence
 
 /-!
@@ -92,8 +92,7 @@ set_option backward.defeqAttrib.useBackward true in
 @[reassoc (attr := simp)]
 lemma sheafSectionsSupportedOutsideMap_toBetween :
     sheafSectionsSupportedOutsideMap X h ≫ toSheafSectionsBetweenOpens X h = 0 := by
-  apply NatTrans.ext
-  funext F
+  ext F : 2
   apply (cancel_mono (kernel.ι _)).1
   simp [toSheafSectionsBetweenOpens, sheafSectionsSupportedOutsideMap,
     liftSheafSectionsSupportedOutside, sheafSectionsSupportedOutsideInclusion]

@@ -58,8 +58,7 @@ def toOpenRestrictionPushforward (U : Opens X) :
       congr 1 }⟩
   naturality F G f := by
     apply CategoryTheory.Sheaf.hom_ext_iff.mpr
-    apply NatTrans.ext
-    funext V
+    ext V : 2
     exact (f.hom.naturality _).symm
 
 /-- The sheaf of sections vanishing on `U`, defined as the kernel of the
@@ -110,15 +109,6 @@ lemma liftSheafSectionsSupportedOutside_inclusion (U : Opens X)
     liftSheafSectionsSupportedOutside X U f hf ≫
       (sheafSectionsSupportedOutsideInclusion X U).app G = f :=
   kernel.lift_ι _ _ _
-
-/-- Uniqueness in the universal property of supported sections. -/
-lemma liftSheafSectionsSupportedOutside_unique (U : Opens X)
-    {F G : Sheaf AddCommGrpCat.{u} X} (f : F ⟶ G)
-    (hf : f ≫ (toOpenRestrictionPushforward X U).app G = 0)
-    (g : F ⟶ (sheafSectionsSupportedOutside X U).obj G)
-    (hg : g ≫ (sheafSectionsSupportedOutsideInclusion X U).app G = f) :
-    g = liftSheafSectionsSupportedOutside X U f hf :=
-  (cancel_mono (kernel.ι _)).1 (hg.trans (kernel.lift_ι _ _ _).symm)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
