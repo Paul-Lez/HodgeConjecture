@@ -71,6 +71,8 @@ public import Other.AlgebraicGeometry.CycleComponentNormalGeometry
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 public import Other.AlgebraicGeometry.CycleComponentPurity
 public import Other.AlgebraicGeometry.CycleComponentRegularImmersion
+public import Other.AlgebraicGeometry.DiscreteValuationLocalRing
+public import Other.AlgebraicGeometry.CartierLocalForm
 public import Other.AlgebraicGeometry.DerivedSupportRationalComparison
 public import Other.AlgebraicGeometry.DerivedSupportRationalConeComparison
 public import Other.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
@@ -377,6 +379,7 @@ public import Other.AlgebraicGeometry.ProjectiveChartHolomorphic
 public import Other.AlgebraicGeometry.MvPolynomialHomogenisation
 public import Other.AlgebraicGeometry.ProjectiveChartFormComparison
 public import Other.AlgebraicGeometry.ProjectiveTwistObligations
+public import Other.AlgebraicGeometry.ProjectiveTwistChartFrames
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
@@ -399,6 +402,8 @@ public import Other.Geometry.Manifold.CompactManifoldFiniteHomology
 public import Other.AlgebraicGeometry.ProjectiveFiniteHomology
 public import Other.AlgebraicGeometry.CohomologyWithSupportExact
 public import Other.AlgebraicGeometry.UnitExtensionOpenRestriction
+public import Other.AlgebraicGeometry.OpenRestrictionLocalSheaf
+public import Other.AlgebraicGeometry.OpenRestrictionDerivedFactorization
 public import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 public import Other.AlgebraicGeometry.DivisorClassComparisonSupport
 public import Other.AlgebraicGeometry.ChernLocalModel

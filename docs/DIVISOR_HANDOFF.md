@@ -11,12 +11,12 @@ of that data to the analytic space is also **proved**: `AnalytificationGenerates
 theorem `analytificationGenerates` (§2.4, §4.2(b)). What is left is the comparison of the resulting cycle
 class with the first Chern class, `HasDivisorClassOfSomeCartierData` (§3), whose route is planned
 in §4.3. Of that route, step 2a (`SectionSheafDeterminesClass`) is **proved**
-(`sectionSheafDeterminesClass`), and so is the whole of step 3 except for one named obligation:
-the support sequence is exact (`exact_forgetSupport_restrictToComplement`) and an extension that
-splits over an open set `Ω` has vanishing restricted extension class
-(`cohomologyClass_comp_restrictionUnit_eq_zero`); what remains there is the compatibility of the
-exponential connecting map with restriction to `Ω`, stated as `RestrictedChernClassVanishes` /
-`HasRestrictedChernFactorization` (§4.3 step 3c). Step 4 has been restated correctly and its
+(`sectionSheafDeterminesClass`), and **the whole of step 3 is now proved**: the support sequence
+is exact (`exact_forgetSupport_restrictToComplement`), an extension that splits over an open set
+`Ω` has vanishing restricted extension class (`cohomologyClass_comp_restrictionUnit_eq_zero`),
+and the compatibility of the exponential connecting map with restriction to `Ω` is
+`hasRestrictedChernFactorization` / `restrictedChernClassVanishes` (§4.3 step 3c); only the
+splitting datum `ℓ` (a frame of the line bundle on `X^an ∖ |D|^an`) is still to be produced. Step 4 has been restated correctly and its
 **assembly is proved** (`hasDivisorClassOfSomeCartierData_of_localModel`, §4.3 step 4): what is
 left of it is the codimension-one excision statement `HasComponentSupportDecomposition` and the
 local model `HasChernLocalModel`.
@@ -552,7 +552,7 @@ The proof instead produces a *factorisation of `η` through the inclusion* and a
 * `restrictionFactorisation` — the adjoint of `r`, a morphism `E.middle ⟶ T 𝒪ˣ` with
   `inclusion_comp_restrictionFactorisation : E.inclusion ≫ restrictionFactorisation = η_{𝒪ˣ}`.
 
-*3c. What is still missing: the exponential sequence on `Ω`.* Stated in
+*3c. The restricted Chern class factors through the restricted extension class — proved.* In
 [`Other/AlgebraicGeometry/ChernClassRestrictionVanishing.lean`](../Other/AlgebraicGeometry/ChernClassRestrictionVanishing.lean),
 where `restrictedRationalChernClass X d Ω e` abbreviates
 `restrictToComplement X (↑Ω)ᶜ 2 (integralToRationalCohomology X 2 ((analyticSheafCohomologyEquivExt
@@ -572,30 +572,63 @@ def RestrictedChernClassVanishes : Prop :=
     restrictedRationalChernClass X d Ω e = 0
 ```
 
-with `restrictedChernClassVanishes_of_factorization` deriving the second from the first. Both are
-true: the restricted Chern class is the connecting map of the exponential sequence *on `Ω`*
-applied to `e|_Ω`, and `j_*` preserves injectives, so
-`Ext¹_X(ℤ_X, j_*(𝒪ˣ|_Ω)) ≅ Ext¹_Ω(ℤ_Ω, 𝒪ˣ_Ω)`; the image of `e` there is `e|_Ω`, which 3b shows
-to vanish. Formalising it needs the comparison of the target of `restrictToComplement` — the
-hypercohomology of `derivedPushforwardComplementConstantRationalComplexInt`, i.e. of `j_*I^•`
-for a chosen injective resolution `I^•` of `ℚ_Ω` on `Ω` — with `Ext²_Ω(ℤ_Ω, ℚ_Ω)`. Since `j_*I^•`
-is a bounded-below complex of injectives on `X` (`j_*` is right adjoint to the exact `j^*`), it
-is K-injective, so `Hom_{D(X)}(ℤ_X, j_*I^•[n]) = Hom_{K(X)}(ℤ_X, j_*I^•[n]) =
-Hom_{K(Ω)}(ℤ_Ω, I^•[n]) = H^n(Ω, ℚ)`; the repository's K-injective machinery
-(`hypercohomologyAddEquivGlobalSectionsKInjective`,
-`Other/AlgebraicGeometry/DerivedSupportRationalConeComparison.lean`) and the open-restriction
-resolution comparisons (`Other/AlgebraicTopology/OpenInjectiveResolutionComparison.lean`) are the
-right starting point.
+with `restrictedChernClassVanishes_of_factorization` deriving the second from the first. **Both
+are now theorems**, `hasRestrictedChernFactorization` and `restrictedChernClassVanishes`, with
+`#print axioms` reporting only `propext`, `Classical.choice`, `Quot.sound`. So the hypothesis
+`hvan` of the two theorems of 3d (and of `exists_supportedChernLift_of_splitting`) is
+dischargeable and only the splitting datum `ℓ` remains between step 3 and
+`HasSupportedChernLift`.
 
-> **Warning.** Do *not* reduce the problem to the underived group `Ext²_X(ℤ_X, j_*ℚ_Ω)`. The map
-> `restrictToComplement ∘ integralToRationalCohomology` does factor through it — because
-> `rationalRestrictionComplexInt X Z` factors as `analyticSheafComplexIntMap X
-> (rationalRestrictionSheaf X Z)` followed by the resolution map — but vanishing in
+The proof does **not** restrict the exponential sequence to `Ω` — that would need `Rj_*` of a
+short exact sequence, which is the difficulty. It works entirely on `X`, as follows.
+
+* Everything after the connecting map is postcomposition with a *morphism of complexes*
+  `w : ℤ_X^• ⟶ j_*I^•` (`chernRestrictionTargetMap`, the rationalisation followed by
+  `rationalRestrictionComplexInt`), so by associativity of `Localization.SmallShiftedHom.comp`
+  and `analyticSheafCohomologyEquivExt_apply`,
+  `restrictedRationalChernClass X d Ω e` is, up to the fixed isomorphism identifying the two
+  presentations of the source `ℤ_X` (`analyticSheafComplexIntIsoSingle`), the composite of `e`
+  with the *single* class
+  `ζ' := ε.comp (mk₀ (isoℤ.inv ≫ w)) ∈ Hom_{D(X)}(𝒪ˣ, (j_*I^•)[1])`,
+  where `ε` is the exponential extension class. This is
+  `restrictedRationalChernClass_eq` and `analyticSheafCohomologyEquivExt_comp`.
+* `ζ'` factors through `η : 𝒪ˣ ⟶ j_*(𝒪ˣ|_Ω)`. This is the new input, proved in
+  [`Other/AlgebraicGeometry/OpenRestrictionDerivedFactorization.lean`](../Other/AlgebraicGeometry/OpenRestrictionDerivedFactorization.lean)
+  as `exists_comp_restrictionUnit_eq`, from two facts:
+  * `derivedPushforwardComplementConstantRationalComplexInt X Z` is K-injective
+    (`CochainComplex.isKInjective_of_injective`, using the already proved termwise injectivity
+    `derivedPushforwardComplementConstantRationalComplexInt_injective`), so a derived morphism
+    from `single₀ 𝒪ˣ` into it is the class of an honest cocycle
+    (`CochainComplex.HomComplex.CohomologyClass.equivOfIsKInjective`), and a cocycle from a
+    single complex is just a morphism `𝒪ˣ ⟶ (j_*I^•)^n` killed by the differential
+    (`Cocycle.fromSingleMk_surjective`);
+  * each term `j_* I^n` is *local on `Ω`*: precomposition with `η` is a **bijection**
+    `Hom(j_*j^*F, j_*S) ≅ Hom(F, j_*S)`. This is `TopCat.Sheaf.isOpenRestrictionLocal_pushforward`
+    in [`Other/AlgebraicGeometry/OpenRestrictionLocalSheaf.lean`](../Other/AlgebraicGeometry/OpenRestrictionLocalSheaf.lean),
+    proved from the adjunction `j^* ⊣ j_*` (`openSheafRestrictionAdjunction`, whose unit *is*
+    `restrictionUnit`) together with `IsIso (j^* η)`, which follows from the counit of that
+    adjunction being an isomorphism (`isIso_openSheafRestrictionCounit_app`; on an open `V ⊆ Ω`
+    the counit is restriction of sections along `j^{-1}(j(V)) = V`). The terms of the complex in
+    degrees outside `ℕ` are zero, hence trivially local; the terms in degree `n` are direct
+    images along `Ω.inclusion'` because the inclusion of `Zᶜ` factors through `Ω` whenever
+    `↑Ω = Zᶜ` (`complementToOpen`, `analyticComplementInclusion_eq`, both `rfl`-level).
+  Surjectivity of the precomposition produces the cocycle on `j_*(𝒪ˣ|_Ω)`; injectivity in the
+  next degree gives its cocycle condition.
+* Then `Φ` is composition with the resulting class `ζ`, read through
+  `analyticSheafCohomologyAddEquivExt` (the additive form of `analyticSheafCohomologyEquivExt`,
+  `analyticSheafCohomologyEquivExt_add`) and `hypercohomologyCompHom`; the required identity is
+  associativity of `SmallShiftedHom.comp` three times.
+
+> **Warning (still relevant).** Do *not* reduce the problem to the underived group
+> `Ext²_X(ℤ_X, j_*ℚ_Ω)`. The map `restrictToComplement ∘ integralToRationalCohomology` does factor
+> through it — because `rationalRestrictionComplexInt X Z` factors as `analyticSheafComplexIntMap
+> X (rationalRestrictionSheaf X Z)` followed by the resolution map — but vanishing in
 > `Ext²_X(ℤ_X, j_*ℚ_Ω)` is *strictly stronger* than vanishing in `H²(Ω, ℚ)` and there is no
 > reason for it to hold: the kernel of `Ext²_X(ℤ_X, j_*ℚ_Ω) → Ext²_X(ℤ_X, Rj_*ℚ_Ω)` is not zero.
 > The correspondingly-shaped factorisation of the exponential connecting class through
 > `𝒪ˣ_X → j_*(𝒪ˣ|_Ω)` at the *underived* level would need `j_*` of the exponential sequence on
-> `Ω` to be right exact, which fails (`R¹j_*ℤ ≠ 0`).
+> `Ω` to be right exact, which fails (`R¹j_*ℤ ≠ 0`). The proof above avoids it by working with
+> the K-injective model `j_*I^•` throughout.
 
 *3d. The conclusion of step 3.* Also in `ChernClassRestrictionVanishing.lean`, from 3a, 3b, 3c:
 
@@ -803,8 +836,9 @@ theorem exists_supportedChernLift_of_splitting
 ```
 
 so that only the splitting datum `ℓ` over `X^an ∖ |D|^an` — a frame of the line bundle there,
-which the rational section provides but which has not been formalised — and
-`RestrictedChernClassVanishes` stand between step 3 and `HasSupportedChernLift`.
+which the rational section provides but which has not been formalised — stands between step 3 and
+`HasSupportedChernLift`: its other hypothesis `hvan` is now the theorem
+`restrictedChernClassVanishes` (§4.3 step 3c).
 
 *What `HasComponentSupportDecomposition` needs.* Nothing about Chern classes. By induction on the
 finite set it is enough to treat `C = A ∪ B` with `A = Z_x` one component and `B` the union of the
@@ -844,13 +878,30 @@ fed into the cohomology class at all. In dependency order the sub-obligations ar
    `(1/2πi)(log g_{jk} − log g_{ik} + log g_{ij})` on a cover refining both the `U_i^an` and the
    lifting neighbourhoods of `E`. The local logarithms are
    `Other/Geometry/Manifold/HolomorphicLogarithm.lean`.
-2. *The algebraic local form of the local equation.* On the smooth locus of `Z_x`, after shrinking
-   to an affine open `U`, the Cartier local equation `c.fn i` is `h^{c.divisor x} · unit` for a
-   regular `h` cutting out `Z_x ∩ U` with `Scheme.ord h x = 1`. This is pure commutative algebra:
-   `𝒪_{X,x}` is a DVR because `X.left` is smooth (hence regular) and `x` has coheight one, and
-   `Scheme.ord` is its valuation (`Mathlib/AlgebraicGeometry/OrderOfVanishing.lean`,
-   `HodgeConjecture/Lemmas/AlgebraicGeometry/OrderOfVanishing.lean`). It is independent of
-   everything analytic and can be done in isolation.
+2. ~~*The algebraic local form of the local equation.*~~ **Done**, in
+   [`Other/AlgebraicGeometry/DiscreteValuationLocalRing.lean`](../Other/AlgebraicGeometry/DiscreteValuationLocalRing.lean)
+   and [`Other/AlgebraicGeometry/CartierLocalForm.lean`](../Other/AlgebraicGeometry/CartierLocalForm.lean),
+   as `Scheme.CartierData.exists_localForm`: for `x` of coheight one in `c.opens i` there is a
+   `Scheme.CartierData.LocalForm c i x`, i.e. an affine open `V ∋ x` with `V ≤ c.opens i`, a
+   regular `h : Γ(X.left, V)` and a unit `u : Γ(X.left, V)ˣ` with
+
+   * `Scheme.ord (germToFunctionField V h) x = 1` (`ord_equation`),
+   * `c.fn i = u · h ^ (c.divisor x)` in `X.left.functionField` (`fn_eq`),
+   * `(V : Set X.left) \ X.left.basicOpen h = closure {x} ∩ V` (`zeroLocus_eq`, from the two
+     fields `notMem_basicOpen` and `mem_closure_of_notMem_basicOpen`): `h` cuts out `Z_x` on `V`
+     exactly.
+
+   The ingredients, all proved: `isDiscreteValuationRing_stalk_of_coheight_eq_one` (the stalk is
+   regular by `Smooth.isRegularLocalRing_stalk_complex` and of dimension one by
+   `ringKrullDim_stalk_eq_coheight`, hence a DVR by the cotangent-space characterisation
+   `IsLocalRing.finrank_CotangentSpace_eq_one_iff`); `Scheme.exists_unit_mul_zpow_eq`, the
+   factorisation `c.fn i = u · π^n` in the function field, from `Ring.ordFrac_irreducible` and
+   `Ring.associated_of_ordFrac_eq` with `Scheme.ordHom = Ring.ordFrac` of the stalk;
+   `exists_coheight_eq_one_of_not_isUnit_germ`, Krull's principal ideal theorem in geometric form
+   (a minimal prime over `(h)` in `Γ(X.left, V)` has height one, and heights of primes are
+   coheights of points by `idealHeight_eq_coheight`); and `Scheme.ord_support_finite`, used to
+   shrink `V` until the only codimension-one zero of `h` left is `x` itself. No analytic input.
+   Unused for the moment by anything else: it is the algebraic half of what step 3 below consumes.
 3. *The one-variable Lelong–Poincaré computation.* In the normal chart of
    `CycleComponentNormalCoordinates.lean` the function `h` becomes the coordinate `z₁`, the divisor
    is `{z₁ = 0}`, and the supported class of the cocycle of `z₁^n` on the chart is `n` times the
@@ -868,7 +919,7 @@ Summary of the named obligations, in dependency order:
 | ~~`SectionSheafDeterminesClass`~~ | `UnitExtensionClassOfSectionSheaf.lean` | **proved**: `sectionSheafDeterminesClass` |
 | ~~supported exactness~~ | `CohomologyWithSupportExact.lean` | **proved**: `exact_forgetSupport_restrictToComplement` |
 | ~~vanishing of the restricted extension class~~ | `UnitExtensionOpenRestriction.lean` | **proved**: `cohomologyClass_comp_restrictionUnit_eq_zero` |
-| `HasRestrictedChernFactorization`, `RestrictedChernClassVanishes` | `ChernClassRestrictionVanishing.lean` | §4.3 step 3c: the exponential sequence on `Ω`, i.e. `Rj_*` |
+| ~~`HasRestrictedChernFactorization`, `RestrictedChernClassVanishes`~~ | `ChernClassRestrictionVanishing.lean` | **proved**: `hasRestrictedChernFactorization`, `restrictedChernClassVanishes` (§4.3 step 3c), via `OpenRestrictionLocalSheaf.lean` and `OpenRestrictionDerivedFactorization.lean` |
 | `HasSupportedChernLift` | `ChernLocalModel.lean` | §4.3 step 4: the step-3 conclusion, packaged for `|D|^an` |
 | `HasComponentSupportDecomposition` | `ChernLocalModel.lean` | §4.3 step 4: excision in codimension one |
 | `HasChernLocalModel` | `ChernLocalModel.lean` | §4.3 step 4: the local model (needs §4.2(a) first) |
@@ -918,6 +969,8 @@ lake env lean Other/AlgebraicGeometry/DivisorClassComparisonSupport.lean
 lake env lean Other/AlgebraicGeometry/ChernLocalModel.lean
 lake build Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 lake build Other.AlgebraicGeometry.ChernLocalModel
+lake env lean Other/AlgebraicGeometry/DiscreteValuationLocalRing.lean
+lake env lean Other/AlgebraicGeometry/CartierLocalForm.lean
 ```
 
 All of these modules are imported by `Other.lean`. Repository conventions: files start with
