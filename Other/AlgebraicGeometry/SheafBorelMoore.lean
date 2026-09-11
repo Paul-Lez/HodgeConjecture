@@ -498,40 +498,4 @@ def ordinaryFundamentalClass
 
 end ComplexOrientedRationalCycleComponentSheafBorelMooreData
 
-namespace ComplexOrientedRationalBorelMooreCycleClassConstruction
-
-/-- Construct the normalized Chow-group cycle-class package from the sheaf-theoretic component
-data and the remaining geometric principal-divisor theorem.
-
-The resulting linear map is obtained from `cycleClass`; neither the map nor quotient descent is
-supplied here as data. -/
-def ofSheaf
-    {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
-    (component : ∀ (x : V.scheme) (hx : coheight x = p),
-      ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx)
-    (hprincipal : ∀ D : PrincipalDivisor V.scheme p,
-      cycleClassOnAlgebraicCyclesOfComponents
-          (fun x hx ↦ (component x hx).ordinaryFundamentalClass)
-          D.pushforwardCycle = 0) :
-    ComplexOrientedRationalBorelMooreCycleClassConstruction V p where
-  component := fun x hx ↦ (component x hx).toComplexOrientedComponentClassData
-  principalDivisor_class := hprincipal
-
-/-- The sheaf-induced Chow map sends each component to its locally normalized sheaf class. -/
-@[simp] theorem ofSheaf_cycleClass_component
-    {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
-    (component : ∀ (x : V.scheme) (hx : coheight x = p),
-      ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx)
-    (hprincipal : ∀ D : PrincipalDivisor V.scheme p,
-      cycleClassOnAlgebraicCyclesOfComponents
-          (fun x hx ↦ (component x hx).ordinaryFundamentalClass)
-          D.pushforwardCycle = 0)
-    (x : V.scheme) (hx : coheight x = p) :
-    (ofSheaf component hprincipal).cycleClass
-        (rationalComponentChowClass V.over p x hx) =
-      (component x hx).ordinaryFundamentalClass :=
-  (ofSheaf component hprincipal).cycleClass_component x hx
-
-end ComplexOrientedRationalBorelMooreCycleClassConstruction
-
 end AlgebraicGeometry.ComplexPoint

@@ -109,16 +109,17 @@ irreducible subvarieties of codimension $`p`.
 5. Extend the resulting class uniquely across the singular locus of $`Z`, which has codimension at
    least $`p+1`, so that its cohomology with support vanishes in degrees $`2p` and $`2p+1`.
    Forgetting the support gives $`\operatorname{cl}_X(Z)\in H^{2p}(X;\mathbb Q)`.
-6. Identify the class with support with a fundamental class in Borel–Moore homology through the
-   duality $`H^{\mathrm{BM}}_{2(d-p)}(Z\subset X;\mathbb Q)\simeq H^{2p}_Z(X;\mathbb Q)`, where
-   $`d=\dim X`.
-7. Extend $`\operatorname{cl}_X` additively to cycles and $`\mathbb Q`-linearly to rational cycles.
+6. Extend $`\operatorname{cl}_X` additively to cycles and $`\mathbb Q`-linearly to rational cycles.
    The statement itself uses only the span of the classes of individual subvarieties.
 
 The guide follows this order: steps 1 and 2 are the subject of {ref "hodge-classes"}[Hodge classes],
-step 3 of {ref "cycles"}[Cycles and cohomology with support], steps 4 to 6 of
-{ref "class-of-a-subvariety"}[The class of a subvariety], and step 7 of
+step 3 of {ref "cycles"}[Cycles and cohomology with support], steps 4 and 5 of
+{ref "class-of-a-subvariety"}[The class of a subvariety], and step 6 of
 {ref "the-statement"}[The statement].
+
+Everything happens in cohomology with support. `Other/` also builds a Borel–Moore homology of the
+pair $`Z\subset X` and the duality that identifies the class above with a fundamental class, but
+nothing in the statement passes through it, so this guide leaves it aside.
 
 # Scope and status
 %%%
@@ -129,26 +130,47 @@ Everything that enters the statement is constructed. The class of a subvariety o
 singular or not, is defined outright, with no hypotheses beyond the smoothness, projectivity, and
 integrality of the ambient variety that the statement itself assumes.
 
-Three classical facts about this construction are not yet formalized. None is needed to state the
-conjecture, but they are needed for the usual equivalent formulations.
+Two cases of the conjecture itself are proved, both unconditionally, and both in
+`Other/AlgebraicGeometry/`.
 
+* Codimension zero. Every degree-zero class is a Hodge class, and the class of $`X` itself spans
+  $`H^0(X;\mathbb Q)`, so $`\operatorname{Hdg}^0(X;\mathbb Q)=A^0(X)`. The two inputs are that
+  the analytification of a smooth integral complex scheme is connected and that the constructed
+  class of the whole variety is nonzero; both are proved here. The second is the useful one: it
+  shows that the construction of
+  {ref "class-of-a-subvariety"}[the class of a subvariety] does not return zero, which is the way
+  a statement of this shape can hold for the wrong reason.
+* Above the dimension. For $`p>\dim X` both sides are $`\bot`: there is no point of coheight
+  $`p`, and the Hodge classes vanish because $`F^p` does. The inclusion is then vacuous, but it
+  does check that the two sides degenerate in the same place.
+
+See {ref "what-is-proved"}[What the repository proves about the statement] for the declarations.
+
+Three classical facts about the construction are not formalized. None is needed to state the
+conjecture, but they are needed for the usual equivalent formulations, and the first is what
+stands between the two cases above and the general one.
+
+* Cohomological purity: $`H^{2p}_Z(X;\mathbb Q)` is the line on the fundamental class, so that
+  forgetting support is injective on it and $`\operatorname{cl}_X(Z)\ne0` for every subvariety
+  $`Z`. The normalized local section the class is built from is proved nonzero for every
+  component; purity is what would carry that through to ordinary cohomology. Without it the span
+  $`A^p(X)` is not known to be as large as the classes generating it suggest.
 * The class of a subvariety is a Hodge class:
-  $`\operatorname{cl}_X(Z)\in\operatorname{Hdg}^p(X;\mathbb Q)`.
-* The map on cycles kills principal divisors, so that it descends to the rational Chow group
-  $`\mathrm{CH}^p(X)_{\mathbb Q}`. Instead we use the span of the classes of subvarieties; see
-  {ref "why-a-span"}[Why a span rather than a map on Chow groups] for further discussion.
-* The Borel–Moore homology used here, $`H^{\mathrm{BM}}_i(Z\subset X;\mathbb Q)`, is defined
-  through the ambient space and has not been shown to be independent of the embedding.
+  $`\operatorname{cl}_X(Z)\in\operatorname{Hdg}^p(X;\mathbb Q)`. This is the reverse inclusion,
+  and it is what would turn the statement into the usual equality.
+* The comparison between constant-sheaf and singular cohomology is not known to commute with
+  forgetting support.
 
 # Degree and support conventions
+%%%
+tag := "degree-and-support-conventions"
+%%%
 
-A subvariety $`Z` of codimension $`p` in a smooth variety $`X` of dimension $`d` has real
-dimension $`2(d-p)`, and Alexander–Poincaré duality in $`X` identifies
-
-$$`H^{\mathrm{BM}}_{2(d-p)}(Z\subset X;\mathbb Q)
-  \simeq H_Z^{2d-2(d-p)}(X;\mathbb Q)=H_Z^{2p}(X;\mathbb Q).`
-
-This is the origin of the indices {lean}`2 * ((d - p : ℕ) : ℤ)` and {lean}`2 * (p : ℤ)` in the
-code. A class with support in
-$`Z` lies in $`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the ordinary group
+A subvariety $`Z` of codimension $`p` in a smooth variety $`X` of dimension $`d` has $`p` complex
+normal directions, so its class sits in the cohomological degree $`2p` that the complex
+orientation of those directions can generate. This is the origin of the index
+{lean}`2 * (p : ℤ)` throughout the code; the complementary index
+{lean}`2 * ((d - p : ℕ) : ℤ)`, the real dimension of $`Z`, appears wherever a construction is
+indexed by $`Z` rather than by its codimension. A class with support in $`Z` lies in
+$`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the ordinary group
 $`H^{2p}(X;\mathbb Q)`, in which the conjecture is stated.

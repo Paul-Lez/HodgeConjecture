@@ -230,27 +230,19 @@ local instance bettiSupportComparisonHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
+local instance bettiSupportComparisonMono : Mono (rationalToSingularCochainComplexInt X) :=
+  rationalToSingularCochainComplexInt_mono X
+
+local instance bettiSupportComparisonQuasiIso : QuasiIso (rationalToSingularCochainComplexInt X) :=
+  rationalToSingularCochainComplexInt_quasiIso X
+
 /-- A strict chain-level extension of restriction from rational constants to the chosen derived
 pushforward complex across the singular-cochain resolution. -/
 def singularResolutionRestriction
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     singularCochainSheafComplexInt X ℚ ⟶
-      derivedPushforwardComplementConstantRationalComplexInt X Z := by
-  let : (constantFieldSheafComplexInt ℚ X).IsStrictlyGE 0 := by
-    unfold constantFieldSheafComplexInt
-    infer_instance
-  let : (singularCochainSheafComplexInt X ℚ).IsStrictlyGE 0 := by
-    unfold singularCochainSheafComplexInt
-    infer_instance
-  let : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE
-      0 := by
-    unfold derivedPushforwardComplementConstantRationalComplexInt
-    infer_instance
-  let : Mono (rationalToSingularCochainComplexInt X) :=
-    rationalToSingularCochainComplexInt_mono X
-  let : QuasiIso (rationalToSingularCochainComplexInt X) :=
-    rationalToSingularCochainComplexInt_quasiIso X
-  exact CochainComplex.liftToInjective
+      derivedPushforwardComplementConstantRationalComplexInt X Z :=
+  CochainComplex.liftToInjective
     (rationalToSingularCochainComplexInt X)
     (rationalRestrictionComplexInt X Z)
     (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
@@ -260,22 +252,8 @@ mapping-cone model for supported cohomology. -/
 def rationalSupportConeToSingularResolutionCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     rationalCohomologyWithSupportComplex X Z ⟶
-      CochainComplex.mappingCone (singularResolutionRestriction X Z hZ) := by
-  let : (constantFieldSheafComplexInt ℚ X).IsStrictlyGE 0 := by
-    unfold constantFieldSheafComplexInt
-    infer_instance
-  let : (singularCochainSheafComplexInt X ℚ).IsStrictlyGE 0 := by
-    unfold singularCochainSheafComplexInt
-    infer_instance
-  let : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE
-      0 := by
-    unfold derivedPushforwardComplementConstantRationalComplexInt
-    infer_instance
-  let : Mono (rationalToSingularCochainComplexInt X) :=
-    rationalToSingularCochainComplexInt_mono X
-  let : QuasiIso (rationalToSingularCochainComplexInt X) :=
-    rationalToSingularCochainComplexInt_quasiIso X
-  exact CochainComplex.sourceReplacementConeMap
+      CochainComplex.mappingCone (singularResolutionRestriction X Z hZ) :=
+  CochainComplex.sourceReplacementConeMap
     (rationalToSingularCochainComplexInt X)
     (rationalRestrictionComplexInt X Z)
     (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
@@ -283,20 +261,6 @@ def rationalSupportConeToSingularResolutionCone
 noncomputable instance rationalSupportConeToSingularResolutionCone_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (rationalSupportConeToSingularResolutionCone X Z hZ) := by
-  let : (constantFieldSheafComplexInt ℚ X).IsStrictlyGE 0 := by
-    unfold constantFieldSheafComplexInt
-    infer_instance
-  let : (singularCochainSheafComplexInt X ℚ).IsStrictlyGE 0 := by
-    unfold singularCochainSheafComplexInt
-    infer_instance
-  let : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE
-      0 := by
-    unfold derivedPushforwardComplementConstantRationalComplexInt
-    infer_instance
-  let : Mono (rationalToSingularCochainComplexInt X) :=
-    rationalToSingularCochainComplexInt_mono X
-  let : QuasiIso (rationalToSingularCochainComplexInt X) :=
-    rationalToSingularCochainComplexInt_quasiIso X
   change QuasiIso (CochainComplex.sourceReplacementConeMap
     (rationalToSingularCochainComplexInt X)
     (rationalRestrictionComplexInt X Z)

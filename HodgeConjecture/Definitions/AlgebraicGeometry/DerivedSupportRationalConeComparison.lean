@@ -163,7 +163,7 @@ def ambientRationalOpenResolutionComparison
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩).mapHomologicalComplex
       (.up ℤ)).obj (ambientRationalInjectiveComplex X) ⟶
         derivedPushforwardComplementConstantRationalComplexInt X Z :=
-  (HomologicalComplex.mapExtendIso
+  (HomologicalComplex.mapExtendCanonicalIso
     (TopCat.Sheaf.openRestrictionPushforward
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩)
     (TopCat.Sheaf.ambientConstantInjectiveResolution
@@ -188,8 +188,8 @@ lemma actualRestriction_comp_openResolutionComparison
   dsimp only [ambientRationalOpenResolutionComparison]
   rw [← Category.assoc]
   change ((TopCat.Sheaf.toOpenRestrictionPushforward _ _).mapHomologicalComplex _).app _ ≫
-    (HomologicalComplex.mapExtendIso _ _ _).hom ≫ _ = _
-  rw [HomologicalComplex.mapExtendIso_hom_naturality_from_id_assoc]
+    (HomologicalComplex.mapExtendCanonicalIso _ _ _).hom ≫ _ = _
+  rw [HomologicalComplex.mapExtendCanonicalIso_hom_naturality_from_id_assoc]
   exact (ComplexShape.embeddingUpNat.extendFunctor (AnalyticAdditiveSheaf X)).map_comp _ _
     |>.symm
 

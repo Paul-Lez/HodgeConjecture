@@ -52,6 +52,8 @@ invertibility.
 Complex points are the case `K = ℂ`. Analytification is then packaged as a functor from schemes
 over `Spec ℂ` to topological spaces, so that Betti (co)homology of a complex variety is Mathlib's
 singular (co)homology of the resulting space.
+
+`isNoetherian_of_isProjective` records that a projective complex scheme is Noetherian.
 -/
 
 @[expose] public section
@@ -174,11 +176,6 @@ lemma evaluationHom_apply (U : X.left.Opens) (z : OverOpen (X := X) U)
     (s : Γ(X.left, U)) : evaluationHom U z s = evaluate U s z.1 := by
   rw [evaluate, dif_pos z.2]
   rfl
-
-/-- The underlying ring homomorphism of `evaluationHom` is evaluation. -/
-private lemma evaluationHom_hom_apply (U : X.left.Opens) (z : OverOpen (X := X) U)
-    (s : Γ(X.left, U)) : (evaluationHom U z).hom s = evaluate U s z.1 :=
-  evaluationHom_apply U z s
 
 /-- On an affine open, a regular function on a principal open is, at every `R`-point of that
 principal open, a regular function on the whole affine open divided by a power of the defining
@@ -351,7 +348,7 @@ lemma analyticTopology_eq_generateFrom :
     · rintro y ⟨hyU, hyu⟩
       have hy : ⇑(evaluationHom U ⟨y, hyU⟩).hom ∈ O' :=
         hIO fun t ht ↦ by
-          rw [evaluationHom_hom_apply]
+          rw [evaluationHom_apply]
           exact (Set.mem_iInter₂.1 hyu t ht).2
       have hmem : (⟨y, hyU⟩ : OverOpen (X := X) U) ∈
           evaluationHom U ⁻¹' ((fun f : Γ(X.left, U) ⟶ ↧R ↦ ⇑f.hom) ⁻¹' O') := hy
@@ -362,7 +359,7 @@ lemma analyticTopology_eq_generateFrom :
           TopologicalSpace.isOpen_generateFrom_of_mem ⟨U, t, u t, (hu t ht).1, rfl⟩)
     · refine ⟨hzU, Set.mem_iInter₂.2 fun t ht ↦ ⟨hzU, ?_⟩⟩
       have h2 := (hu t ht).2
-      rwa [evaluationHom_hom_apply] at h2
+      rwa [evaluationHom_apply] at h2
 
 /-- Continuity of a map into the `R`-points is tested on the defining subbasis. -/
 lemma continuous_iff_analyticSubbasis {Z : Type*} [TopologicalSpace Z]
@@ -451,5 +448,11 @@ noncomputable def complexAnalytification :
   map_comp f g := by
     ext z
     simp [Point.continuousMap, Point.map, Category.assoc]
+
+/-- A projective complex scheme is Noetherian. -/
+theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
+    [IsProjective X.hom] : IsNoetherian X.left where
+  toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian X.hom
+  toCompactSpace := QuasiCompact.compactSpace_of_compactSpace X.hom
 
 end AlgebraicGeometry

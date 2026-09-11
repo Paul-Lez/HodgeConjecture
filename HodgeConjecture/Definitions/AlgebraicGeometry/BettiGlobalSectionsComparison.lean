@@ -19,6 +19,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueQuasiIsoGlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.InjectiveFlasque
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularSubdivisionCochainSheaf
+public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import Mathlib.Algebra.Homology.Factorizations.CM5a
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
@@ -39,75 +40,6 @@ theorem is assumed.
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace
-
-namespace HomologicalComplex
-
-universe u v
-
-variable {C D : Type u} [Category C] [Category D]
-  [Preadditive C] [Preadditive D] [HasZeroObject C] [HasZeroObject D]
-  {i i' : Type v} {c : ComplexShape i} {c' : ComplexShape i'}
-  (F : C ⥤ D) [F.Additive] (K : HomologicalComplex C c)
-  (e : c.Embedding c') [e.IsRelIff]
-
-set_option backward.isDefEq.respectTransparency.types false in
-/-- Componentwise form of the fact that an additive functor preserves extension by zero. -/
-def mapExtendXIsoAux : (x : Option i) →
-    F.obj (HomologicalComplex.extend.X K x) ≅
-      HomologicalComplex.extend.X ((F.mapHomologicalComplex c).obj K) x
-  | some _ => Iso.refl _
-  | none => F.mapZeroObject
-
-set_option backward.isDefEq.respectTransparency.types false in
-set_option backward.isDefEq.respectTransparency false in
-lemma mapExtendXIsoAux_d (x y : Option i) :
-    (mapExtendXIsoAux F K x).hom ≫
-        HomologicalComplex.extend.d ((F.mapHomologicalComplex c).obj K) x y =
-      F.map (HomologicalComplex.extend.d K x y) ≫
-        (mapExtendXIsoAux F K y).hom := by
-  cases x with
-  | none =>
-      cases y with
-      | none =>
-          dsimp [mapExtendXIsoAux, HomologicalComplex.extend.d]
-          rw [Functor.map_zero, Limits.comp_zero, Limits.zero_comp]
-      | some y =>
-          dsimp [mapExtendXIsoAux, HomologicalComplex.extend.d]
-          rw [Functor.map_zero, Limits.comp_zero, Limits.zero_comp]
-  | some x =>
-      cases y with
-      | none =>
-          dsimp [mapExtendXIsoAux, HomologicalComplex.extend.d]
-          rw [Functor.map_zero, Category.id_comp, Limits.zero_comp]
-      | some y =>
-          dsimp [mapExtendXIsoAux, HomologicalComplex.extend.d]
-          rw [Category.id_comp, Category.comp_id]
-          exact Functor.mapHomologicalComplex_obj_d F c K x y
-
-set_option backward.isDefEq.respectTransparency.types false in
-/-- An additive functor commutes degreewise with extension of a homological complex by zero. -/
-def mapExtendXIso (q : i') :
-    ((F.mapHomologicalComplex c').obj (K.extend e)).X q ≅
-      (((F.mapHomologicalComplex c).obj K).extend e).X q :=
-  mapExtendXIsoAux F K (e.r q)
-
-set_option backward.isDefEq.respectTransparency.types false in
-set_option backward.isDefEq.respectTransparency false in
-/-- An additive functor commutes with extension of a homological complex by zero. -/
-def mapExtendIso :
-    (F.mapHomologicalComplex c').obj (K.extend e) ≅
-      ((F.mapHomologicalComplex c).obj K).extend e :=
-  HomologicalComplex.Hom.isoOfComponents (mapExtendXIso F K e) (by
-    intro p q hpq
-    change (mapExtendXIso F K e p).hom ≫
-          HomologicalComplex.extend.d ((F.mapHomologicalComplex c).obj K)
-            (e.r p) (e.r q) =
-        F.map (HomologicalComplex.extend.d K (e.r p) (e.r q)) ≫
-          (mapExtendXIso F K e q).hom
-    dsimp only [mapExtendXIso]
-    exact mapExtendXIsoAux_d F K (e.r p) (e.r q))
-
-end HomologicalComplex
 
 namespace CochainComplex.HomComplex
 
@@ -315,7 +247,7 @@ def globalSectionsSingularCochainComplexIntIsoExtend :
   let : F.Additive := by dsimp [F]; infer_instance
   let : E.Additive := by dsimp [E]; infer_instance
   let eComp : F ⋙ E ≅ G := Iso.refl _
-  exact HomologicalComplex.mapExtendIso G K ComplexShape.embeddingUpNat ≪≫
+  exact HomologicalComplex.mapExtendCanonicalIso G K ComplexShape.embeddingUpNat ≪≫
     (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
       ((Functor.mapHomologicalComplexCompIso eComp (ComplexShape.up ℕ)).app K).symm
 
@@ -436,7 +368,7 @@ def linearDualCochainComplexScIso
           HomologicalComplex.shortComplexFunctor']
         rw [ChainComplex.next_nat_succ]
         change ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap = D.d n (n + 1)
-        exact (HomologicalComplex.linearDualCochainComplex_d K n).symm
+        exact (HomologicalComplex.linearDualCochainComplex_d_succ K n).symm
   · simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
       HomologicalComplex.shortComplexFunctor'_obj_g]
     dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk,
@@ -444,7 +376,7 @@ def linearDualCochainComplexScIso
       HomologicalComplex.shortComplexFunctor']
     rw [ChainComplex.prev]
     change ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap = D.d n (n + 1)
-    exact (HomologicalComplex.linearDualCochainComplex_d K n).symm
+    exact (HomologicalComplex.linearDualCochainComplex_d_succ K n).symm
 
 /-- Ordinary singular cohomology, presented as the homology of the algebraic-dual singular
 cochain complex. -/

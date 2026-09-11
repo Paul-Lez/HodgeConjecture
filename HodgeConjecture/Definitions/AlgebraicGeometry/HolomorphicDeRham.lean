@@ -17,11 +17,13 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.Topology.Sheaves.Abelian
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
+import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 import Mathlib.Algebra.Category.Grp.Zero
 import Mathlib.Algebra.Homology.Embedding.ExtendHomology
 import Mathlib.Topology.Sheaves.Sheafify
@@ -223,11 +225,7 @@ private lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d X
   have ha : a ∈ holomorphicFormRelations X d U 0 := by
     change Submodule.Quotient.mk a = 0 at hzero
     rwa [Submodule.Quotient.mk_eq_zero] at hzero
-  rw [holomorphicFormRelations_eq_restrictionStableAnalyticKernel,
-    restrictionStableAnalyticKernel] at ha
-  simp only [Submodule.mem_iInf, Submodule.mem_comap] at ha
-  specialize ha U (𝟙 U)
-  rw [formRestriction_id, LinearMap.id_apply] at ha
+  rw [holomorphicFormRelations_eq_chartEvaluationKernel] at ha
   let x : U.unop := Classical.arbitrary U.unop
   let e := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x.1
   have hxsource : x.1 ∈ e.source := mem_extChartAt_source x.1
@@ -349,41 +347,6 @@ def holomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom] :
       holomorphicDeRhamSheafDifferential X d p := by
   simp [holomorphicDeRhamComplex]
 
-/-- A neighborhood-wise primitive for every local kernel section gives exactness on a stalk.
-The primitive may be taken after shrinking the original neighborhood. -/
-private lemma holomorphicStalkExact_of_locallyPrimitive
-    (S : ShortComplex (TopCat.Presheaf AddCommGrpCat
-      (TopCat.of (ComplexPoint X))))
-    (hlocal : ∀ (x : ComplexPoint X)
-      (U : Opens (TopCat.of (ComplexPoint X))) (_hx : x ∈ U)
-      (s : S.X₂.obj (.op U)), S.g.app (.op U) s = 0 →
-        ∃ (V : Opens (TopCat.of (ComplexPoint X))) (_hxV : x ∈ V)
-          (i : V ⟶ U) (t : S.X₁.obj (.op V)),
-          S.f.app (.op V) t = S.X₂.map i.op s)
-    (x : ComplexPoint X) :
-    (S.map (TopCat.Presheaf.stalkFunctor AddCommGrpCat x)).Exact := by
-  rw [ShortComplex.ab_exact_iff]
-  intro z hz
-  obtain ⟨U, hxU, s, rfl⟩ := S.X₂.exists_germ_eq z
-  change (TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map S.g
-      (S.X₂.germ U x hxU s) = 0 at hz
-  rw [TopCat.Presheaf.stalkFunctor_map_germ_apply] at hz
-  have hz' : S.X₃.germ U x hxU (S.g.app (.op U) s) =
-      S.X₃.germ U x hxU 0 := by
-    rwa [map_zero]
-  obtain ⟨W, hxW, iWU, iWU', hW⟩ :=
-    S.X₃.germ_eq x hxU hxU (S.g.app (.op U) s) 0 hz'
-  have hWs : S.g.app (.op W) (S.X₂.map iWU.op s) = 0 := by
-    rw [← ConcreteCategory.comp_apply, S.g.naturality, ConcreteCategory.comp_apply]
-    simpa using hW
-  obtain ⟨V, hxV, iVW, t, ht⟩ :=
-    hlocal x W hxW (S.X₂.map iWU.op s) hWs
-  refine ⟨S.X₁.germ V x hxV t, ?_⟩
-  change (TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map S.f
-      (S.X₁.germ V x hxV t) = S.X₂.germ U x hxU s
-  rw [TopCat.Presheaf.stalkFunctor_map_germ_apply, ht,
-    S.X₂.germ_res_apply iVW x hxV, S.X₂.germ_res_apply iWU x hxW]
-
 set_option backward.isDefEq.respectTransparency false in
 /-- The degreewise sheafification unit from holomorphic forms to the underlying presheaf of the
 holomorphic de Rham sheaf complex. -/
@@ -418,7 +381,7 @@ private lemma holomorphicDeRhamComplex_exactAt_succ
   let stalk := TopCat.Presheaf.stalkFunctor AddCommGrpCat x
   let P := holomorphicDeRhamPresheafComplex X d
   have hP : (P.sc' p (p + 1) ((p + 1) + 1)).map stalk |>.Exact :=
-    holomorphicStalkExact_of_locallyPrimitive X
+    TopCat.Presheaf.stalkExact_of_locallyPrimitive
       (P.sc' p (p + 1) ((p + 1) + 1)) (by
         intro y U hyU form hform
         dsimp [P, HomologicalComplex.sc', HomologicalComplex.shortComplexFunctor'] at hform ⊢
@@ -624,7 +587,7 @@ private lemma constantsToHolomorphicDeRhamSheafShortComplex_exact
   let stalk := TopCat.Presheaf.stalkFunctor AddCommGrpCat x
   have hP : ((constantsToHolomorphicDeRhamPresheafShortComplex X d).map
       stalk).Exact :=
-    holomorphicStalkExact_of_locallyPrimitive X
+    TopCat.Presheaf.stalkExact_of_locallyPrimitive
       (constantsToHolomorphicDeRhamPresheafShortComplex X d) (by
         intro y U hyU form hform
         change holomorphicFormDifferential X d (.op U) 0 form = 0 at hform
@@ -766,6 +729,11 @@ def conjConstantComplexSheafComplexInt :
 def holomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
     CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(ComplexPoint X)) ℤ :=
   (holomorphicDeRhamComplex X (dim X.left)).extend ComplexShape.embeddingUpNat
+
+instance [IsIntegral X.left] [Smooth X.hom] :
+    CochainComplex.IsStrictlyGE (holomorphicDeRhamComplexInt X) 0 := by
+  unfold holomorphicDeRhamComplexInt
+  infer_instance
 
 /-- The integer-indexed holomorphic de Rham complex vanishes in every degree above the complex
 dimension. -/

@@ -21,11 +21,13 @@ public import Other.LinearAlgebra.HodgeStructure
 /-!
 # Sanity checks on the Hodge filtration
 
-The Hodge filtration is decreasing. The complexified comparison map
-`ℂ ⊗[ℚ] H^n(X; ℚ) → H^n_dR(X)` intertwines the conjugation of the complexification with the
-conjugation of de Rham hypercohomology, so the pulled-back Hodge piece `F^p ⊓ conj F^q` is cut out
-by the pulled-back filtration alone. Finally, the Hodge classes of the statement are the rational
-classes whose complexifications lie in the pulled-back `(p,p)` piece.
+The Hodge filtration is decreasing. The comparison map `H^n(X; K) → H^n_dR(X)` extends to a
+complex-linear map `fieldToDeRhamComplexification` on `ℂ ⊗[K] H^n(X; K)`, along which the Hodge
+filtration and the Hodge pieces of de Rham hypercohomology pull back to the complexification. Over
+`ℚ` this map intertwines the conjugation of the complexification with the conjugation of de Rham
+hypercohomology, so the pulled-back Hodge piece `F^p ⊓ conj F^q` is cut out by the pulled-back
+filtration alone. Finally, the Hodge classes of the statement are the rational classes whose
+complexifications lie in the pulled-back `(p,p)` piece.
 
 None of this is needed to state the conjecture. `Other.AlgebraicGeometry.HodgeDecomposition` uses
 it to relate the statement's Hodge classes to pure Hodge structures.
@@ -63,6 +65,42 @@ lemma hodgeFiltration_antitone (n : ℤ) : Antitone fun p ↦ hodgeFiltration X 
 lemma hodgeFiltrationComplexSubmodule_antitone (n : ℤ) :
     Antitone fun p ↦ hodgeFiltrationComplexSubmodule X p n :=
   fun _ _ h _ hα ↦ hodgeFiltration_antitone X n h hα
+
+/-- The balanced map that extends the comparison map after scalar extension from `K` to `ℂ`. -/
+def fieldToDeRhamComplexificationBilinear (n : ℤ) :
+    ℂ →ₗ[ℂ] H^n(X; K) →ₗ[K] DeRhamHypercohomology X n where
+  toFun c := c • (fieldToDeRhamCohomologyLinear K X n)
+  map_add' a b := by
+    ext α
+    simp [add_smul]
+  map_smul' a b := by
+    ext α
+    simp [mul_smul]
+
+/-- The complex-linear comparison from the complexification of constant-sheaf cohomology to
+holomorphic de Rham hypercohomology. -/
+def fieldToDeRhamComplexification (n : ℤ) :
+    ℂ ⊗[K] H^n(X; K) →ₗ[ℂ] DeRhamHypercohomology X n :=
+  TensorProduct.AlgebraTensorModule.lift (fieldToDeRhamComplexificationBilinear K X n)
+
+@[simp] lemma fieldToDeRhamComplexification_tmul (n : ℤ) (c : ℂ) (α : H^n(X; K)) :
+    fieldToDeRhamComplexification K X n (c ⊗ₜ[K] α) = c • fieldToDeRhamCohomology K X n α :=
+  rfl
+
+/-- On the rational lattice, the complexified comparison agrees with the original map. -/
+@[simp] lemma fieldToDeRhamComplexification_ofField (n : ℤ) (α : H^n(X; K)) :
+    fieldToDeRhamComplexification K X n (1 ⊗ₜ[K] α) = fieldToDeRhamCohomology K X n α := by
+  simp
+
+/-- The de Rham Hodge filtration pulled back to the complexification of constant-sheaf
+cohomology along the comparison map. -/
+def complexifiedFieldHodgeFiltration (p n : ℤ) : Submodule ℂ (ℂ ⊗[K] H^n(X; K)) :=
+  (hodgeFiltrationComplexSubmodule X p n).comap (fieldToDeRhamComplexification K X n)
+
+/-- The de Rham Hodge piece `F^p ⊓ conj F^q` pulled back to the complexification of
+constant-sheaf cohomology along the comparison map. -/
+def complexifiedFieldHodgePiece (p q n : ℤ) : Submodule ℂ (ℂ ⊗[K] H^n(X; K)) :=
+  (hodgePiece X p q n).comap (fieldToDeRhamComplexification K X n)
 
 /-- Pulled back to the complexification and indexed by naturals, the Hodge filtration is still
 decreasing. -/

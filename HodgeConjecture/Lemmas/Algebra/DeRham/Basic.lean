@@ -30,6 +30,8 @@ universe u
 
 namespace Algebra.DeRham
 
+open CliffordAlgebra (involute involute_ι)
+
 variable (R A : Type u) [CommRing R] [CommRing A] [Algebra R A]
 
 variable {R A}
@@ -61,7 +63,7 @@ lemma deRhamHom_apply (x : ExtAlg R A) :
 /-- The exterior derivative anticommutes with the grade involution, since it raises the degree
 by one. -/
 lemma extDeriv_involute (x : ExtAlg R A) :
-    extDeriv R A (involute R A x) = -involute R A (extDeriv R A x) := by
+    extDeriv R A (involute x) = -involute (extDeriv R A x) := by
   induction x using ExteriorAlgebra.induction with
   | algebraMap a => simp
   | ι ω => simp [involute_snd_phi]
@@ -78,7 +80,7 @@ lemma extDeriv_snd_phi (ω : Ω[A⁄R]) : extDeriv R A (Sq.snd (phi R A ω)) = 0
   | add x y hx hy => rw [map_add, Sq.snd_add, map_add, hx, hy, add_zero]
   | smul a x hx =>
       rw [snd_phi_smul, map_add, Algebra.smul_def, extDeriv_mul, extDeriv_mul, hx,
-        involute_algebraMap, extDeriv_algebraMap, mul_zero, zero_add, involute_ι]
+        AlgHom.commutes, extDeriv_algebraMap, mul_zero, zero_add, involute_ι]
       simp only [extDeriv_ι, phi_D, Sq.snd_mk, zero_mul, add_zero, neg_mul]
       abel
 
@@ -104,7 +106,7 @@ section Tower
 variable (B : Type u) [CommRing B] [Algebra R B] [Algebra A B] [IsScalarTower R A B]
 
 lemma extAlgMap_involute (x : ExtAlg R A) :
-    extAlgMap R A B (involute R A x) = involute R B (extAlgMap R A B x) := by
+    extAlgMap R A B (involute x) = involute (extAlgMap R A B x) := by
   induction x using ExteriorAlgebra.induction with
   | algebraMap a => simp
   | ι ω => simp

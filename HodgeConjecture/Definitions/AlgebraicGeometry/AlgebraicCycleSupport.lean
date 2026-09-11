@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ChowGroup
-public import HodgeConjecture.Definitions.AlgebraicGeometry.IntegralProjectiveVariety
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Points
+public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
@@ -140,15 +140,6 @@ noncomputable instance cycleComponent_locallyOfFinitePresentation
     LocallyOfFinitePresentation (cycleComponentι X.left x ≫ X.hom) :=
   inferInstance
 
-/-- The integral projective variety defined by one generic point of a smooth projective variety. -/
-def cycleComponentVariety
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IntegralProjectiveComplexVariety where
-  scheme := cycleComponent X.left x
-  isIntegral := inferInstance
-  structureMap := cycleComponentι X.left x ≫ X.hom
-  projective := cycleComponent_projective X x
-
 /-- The complex points supported on the irreducible closed subset with generic point `x`. -/
 def cycleComponentSupport
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
@@ -262,11 +253,5 @@ def analyticCycleSupport {R : Type*} [Zero R]
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
     (c : AlgebraicCycle X.left R) : Set (ComplexPoint X) :=
   Point.underlying ⁻¹' algebraicCycleSupport X.left c
-
-/-- The complex points lying over the closed carrier of a principal divisor. -/
-def principalDivisorCarrierSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    {p : ℕ} (D : PrincipalDivisor X.left p) : Set (ComplexPoint X) :=
-  (@Point.underlying ℂ _ _ X) ⁻¹' Set.range D.inclusion
 
 end AlgebraicGeometry
