@@ -334,6 +334,46 @@ theorem natDegree_selectedFactor {p : Polynomial (Polynomial ℂ)} (hp : p.Monic
       (selectedRoots S z).card := by
   simp [selectedFactor]
 
+/-- The factor formed from a fixed finite set of the local root branches at `z`. -/
+noncomputable def localBranchFactor {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) (I : Finset (Fin p.natDegree)) :
+    ℂ → Polynomial ℂ :=
+  fun z' ↦ (I.1.map fun i ↦ X - C (localRootBranch (simpleRootCoverPoint hp z i) z')).prod
+
+theorem localBranchFactor_monic {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) (I : Finset (Fin p.natDegree)) (z' : ℂ) :
+    (localBranchFactor hp z I z').Monic := by
+  unfold localBranchFactor
+  simpa only [Multiset.map_map, Function.comp_apply] using
+    monic_multisetProd_X_sub_C (I.1.map fun i : Fin p.natDegree ↦
+      localRootBranch (simpleRootCoverPoint hp z i) z')
+
+theorem natDegree_localBranchFactor {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) (I : Finset (Fin p.natDegree)) (z' : ℂ) :
+    (localBranchFactor hp z I z').natDegree = I.card := by
+  simp [localBranchFactor]
+
+/-- On the common branch neighborhood, a factor from any fixed branch subset divides the fiber. -/
+theorem eventually_localBranchFactor_dvd {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) (I : Finset (Fin p.natDegree)) :
+    ∀ᶠ z' in 𝓝 z.1, localBranchFactor hp z I z' ∣ familySpecialization p z' := by
+  filter_upwards [eventually_all_familyEquation_localRootBranch hp z,
+    eventually_injective_localRootBranches hp z] with z' hroot hinj
+  let q := familySpecialization p z'
+  let f : Fin p.natDegree → ℂ :=
+    fun i ↦ localRootBranch (simpleRootCoverPoint hp z i) z'
+  have hsubset : I.1.map f ⊆ q.roots := by
+    intro w hw
+    obtain ⟨i, hi, rfl⟩ := Multiset.mem_map.mp hw
+    exact (mem_roots (hp.map (Polynomial.evalRingHom z')).ne_zero).mpr (hroot i)
+  have hnodup : (I.1.map f).Nodup :=
+    (Multiset.nodup_map_iff_of_injective hinj).2 I.nodup
+  have hle : I.1.map f ≤ q.roots := (Multiset.le_iff_subset hnodup).2 hsubset
+  change (I.1.map fun i ↦ X - C (localRootBranch (simpleRootCoverPoint hp z i) z')).prod ∣ q
+  simpa only [Multiset.map_map, Function.comp_apply, f] using
+    (Multiset.prod_dvd_prod_of_le (Multiset.map_le_map hle)).trans
+      q.prod_multiset_X_sub_C_dvd
+
 end
 
 end Polynomial
