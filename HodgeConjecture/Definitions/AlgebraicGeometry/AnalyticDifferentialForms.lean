@@ -379,7 +379,7 @@ def chartWedge [SmoothOfRelativeDimension d X.hom]
       ContinuousAlternatingMap.wedgeCovectors_update_smul]
   map_eq_zero_of_eq' L i j h hij := by
     funext y
-    exact ContinuousAlternatingMap.wedgeCovectors_eq_zero_of_eq (Fin d → ℂ) p _ i j (congrFun h y) hij
+    exact ContinuousAlternatingMap.wedgeCovectors_eq_zero_of_eq p _ i j (congrFun h y) hij
 
 @[simp] lemma chartWedge_apply [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)

@@ -11,8 +11,9 @@ transitively used in the statement. The code is being cleaned up by
 [Jack McCarthy](https://jackmccarthy.org/), 
 [Edison Xie](https://github.com/Whysoserioushah), 
 [Brian Nugent](https://github.com/Brian-Nugent),
-[Archie Browne](https://github.com/archiebrowne) and 
-[Bhavik Mehta](https://github.com/b-mehta).
+[Archie Browne](https://github.com/archiebrowne),
+[Bhavik Mehta](https://github.com/b-mehta), and
+[Eric Wieser](https://github.com/eric-wieser).
 during the Formal Conjectures workshop hosted
 by Imperial College London 7-11 September 2026 thanks to a generous donation from Google DeepMind.
 
