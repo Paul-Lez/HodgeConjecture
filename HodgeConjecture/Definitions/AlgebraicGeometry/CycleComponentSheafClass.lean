@@ -55,16 +55,25 @@ def complexSupportInjectiveCohomologySheafIsoRelative
 variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
   (hx : Order.coheight x = p)
 
+/-- Degree-`2p` cohomology of global sections supported on the component,
+computed in the fixed ambient injective resolution. -/
+abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
+  (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+    (.up ℤ)).obj (complexSupportInjectiveComplex X
+      (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))
+
+/-- Sections of the local relative-cohomology sheaf on the smooth-locus ambient open. -/
+abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
+  (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+    (cycleComponentSupport X x) (2 * p)).obj.obj
+      (op (cycleComponentSmoothSupportAmbientOpen X x))
+
 /-- Supported cohomology on the full component is identified with sections
 of the local relative-cohomology sheaf on its smooth-locus ambient open.
 Each of the three arrows is an actual proved isomorphism. -/
 def cycleComponentSupportedClassNormalizationIso :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
-      (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-        (cycleComponentSupport X x) (2 * p)).obj.obj
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) := by
+    CycleComponentSupportedCohomology X x p ≅
+      CycleComponentSmoothCoclassSections X x p := by
   refine cycleComponentSupportExtensionIso X x (d := d) hx ≪≫
     cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := d) hx ≪≫ ?_
   let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
@@ -76,13 +85,34 @@ def cycleComponentSupportedClassNormalizationIso :
   rw [he] at e
   exact e
 
+/-- Extend a smooth-locus coclass uniquely across the singular boundary.
+The inverse comes from proved purity and boundary vanishing; no extension datum is supplied. -/
+def cycleComponentExtendSmoothCoclass :
+    CycleComponentSmoothCoclassSections X x p →+
+      CycleComponentSupportedCohomology X x p :=
+  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).inv.hom
+
+/-- Extension recovers exactly the prescribed smooth-locus section. -/
+@[simp]
+theorem cycleComponentExtendSmoothCoclass_normalization
+    (s : CycleComponentSmoothCoclassSections X x p) :
+    (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).hom
+      (cycleComponentExtendSmoothCoclass X x (d := d) hx s) = s :=
+  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).addCommGroupIsoToAddEquiv.apply_symm_apply s
+
+/-- The prescribed smooth-locus section determines the extension uniquely. -/
+theorem cycleComponentExtendSmoothCoclass_unique
+    (s : CycleComponentSmoothCoclassSections X x p)
+    (a : CycleComponentSupportedCohomology X x p)
+    (ha : (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).hom a = s) :
+    a = cycleComponentExtendSmoothCoclass X x (d := d) hx s :=
+  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).addCommGroupIsoToAddEquiv.injective
+    (ha.trans (cycleComponentExtendSmoothCoclass_normalization X x (d := d) hx s).symm)
+
 /-- The actual globally supported class extending the exact complex-normal
 coclass. The inverse is that of the proved normalization isomorphism. -/
-def cycleComponentSupportedInjectiveClass :
-    (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ)) :=
-  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).inv
+def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
+  cycleComponentExtendSmoothCoclass X x (d := d) hx
     (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)
 
 /-- Exact smooth-locus normalization, not equality only up to a scalar. -/
@@ -91,19 +121,16 @@ theorem cycleComponentSupportedInjectiveClass_normalization :
     (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).hom
       (cycleComponentSupportedInjectiveClass X x (d := d) hx) =
     cycleComponentSmoothSupportCoclassSection X x (d := d) hx :=
-  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).addCommGroupIsoToAddEquiv.apply_symm_apply _
+  cycleComponentExtendSmoothCoclass_normalization X x (d := d) hx _
 
 /-- The normalized global extension is unique, by injectivity of the actual
 restriction/purity comparison. This is a theorem, not a supplied existence input. -/
 theorem cycleComponentSupportedInjectiveClass_unique
-    (a : (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ)))
+    (a : CycleComponentSupportedCohomology X x p)
     (ha : (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).hom a =
       cycleComponentSmoothSupportCoclassSection X x (d := d) hx) :
     a = cycleComponentSupportedInjectiveClass X x (d := d) hx :=
-  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).addCommGroupIsoToAddEquiv.injective
-    (ha.trans (cycleComponentSupportedInjectiveClass_normalization X x (d := d) hx).symm)
+  cycleComponentExtendSmoothCoclass_unique X x (d := d) hx _ a ha
 
 /-- The constructed class in the existing support-cone presentation. Its
 comparison includes the proved cone sign required by actual support forgetting. -/

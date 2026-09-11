@@ -188,6 +188,26 @@ example : @Guide.Subvariety.D4.cycleComponentSupportedClassNormalizationIso = @A
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSupportedInjectiveClass_unique
 ```
 
+The compact interface names the supported group and the smooth-locus section group.
+The extension map takes any such section to its unique global supported class, using
+the proved isomorphism above. Applying it to the normalized smooth-locus section gives
+the component class.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.CycleComponentSupportedCohomology
+#check AlgebraicGeometry.ComplexPoint.CycleComponentSmoothCoclassSections
+#check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass
+#check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass_normalization
+#check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass_unique
+```
+
+```lean
+example [SmoothOfRelativeDimension d X.hom] :
+    CycleComponentSupportedCohomology X x p :=
+  cycleComponentExtendSmoothCoclass X x (d := d) hx
+    (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)
+```
+
 The extension is a class in the cohomology of an injective resolution with supports. Transporting
 it through the comparison with the mapping-cone model of the previous section gives the class of
 the subvariety in cohomology with support, and forgetting the support gives its class in ordinary

@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
+public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.IntegralProjectiveVariety
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
@@ -395,55 +395,11 @@ def algebraicCycleSupport {R : Type*} [Zero R] (X : Scheme)
     (c : AlgebraicCycle X R) : Set X :=
   ⋃ x ∈ c.support, closure {x}
 
-/-- The support of the pushforward of a principal divisor lies in the image of its carrier. -/
-lemma PrincipalDivisor.pushforwardCycle_support_subset_range
-    {X : Scheme} {p : ℕ} (D : PrincipalDivisor X p) :
-    D.pushforwardCycle.support ⊆ Set.range D.inclusion := by
-  unfold PrincipalDivisor.pushforwardCycle AlgebraicCycle.map
-  apply Function.locallyFinsupp.support_map_subset_of_forall_mem
-    (s := Set.univ) (t := Set.range D.inclusion)
-  · exact Set.subset_univ _
-  · exact fun x _ _ => ⟨x, rfl⟩
-
-/-- The geometric support of a pushed-forward principal divisor lies in its closed carrier. -/
-lemma PrincipalDivisor.algebraicCycleSupport_pushforwardCycle_subset_range
-    {X : Scheme} {p : ℕ} (D : PrincipalDivisor X p) :
-    algebraicCycleSupport X D.pushforwardCycle ⊆ Set.range D.inclusion := by
-  let := D.isClosedImmersion
-  rw [algebraicCycleSupport, Set.iUnion₂_subset_iff]
-  intro x hx
-  refine closure_minimal ?_ D.inclusion.isClosedEmbedding.isClosed_range
-  simpa only [Set.singleton_subset_iff] using D.pushforwardCycle_support_subset_range hx
-
 /-- The complex points lying over the geometric support of an algebraic cycle. -/
 def analyticCycleSupport {R : Type*} [Zero R]
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
     (c : AlgebraicCycle X.left R) : Set (ComplexPoint X) :=
   Point.underlying ⁻¹' algebraicCycleSupport X.left c
-
-/-- The complex points lying over the closed carrier of a principal divisor. -/
-def principalDivisorCarrierSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    {p : ℕ} (D : PrincipalDivisor X.left p) : Set (ComplexPoint X) :=
-  (@Point.underlying ℂ _ _ X) ⁻¹' Set.range D.inclusion
-
-/-- The analytic support of a principal-divisor carrier is closed. -/
-lemma isClosed_principalDivisorCarrierSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    {p : ℕ} (D : PrincipalDivisor X.left p) :
-    IsClosed (principalDivisorCarrierSupport X D) := by
-  let := D.isClosedImmersion
-  let Z : TopologicalSpace.Closeds X.left :=
-    ⟨Set.range D.inclusion, D.inclusion.isClosedEmbedding.isClosed_range⟩
-  exact isClosed_complexPoint_underlying_preimage X Z
-
-/-- The analytic support of a pushed-forward principal divisor lies over its carrier. -/
-lemma analyticCycleSupport_pushforwardCycle_subset_carrierSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    {p : ℕ} (D : PrincipalDivisor X.left p) :
-    analyticCycleSupport X D.pushforwardCycle ⊆
-      principalDivisorCarrierSupport X D :=
-  fun _ hz => D.algebraicCycleSupport_pushforwardCycle_subset_range hz
 
 /-- The analytic support of a cycle is the union of the analytic supports of its nonzero
 components. -/
