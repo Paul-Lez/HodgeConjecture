@@ -52,16 +52,14 @@ abbrev globalSectionsSource : TopCat.Sheaf AddCommGrpCat.{u} X :=
   (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
     (AddCommGrpCat.of (ULift ℤ))
 
-/-- The degree-zero `Ext` group from `globalSectionsSource` is the group of global sections,
-viewed here only as an equivalence of types so that no reducibility-sensitive typeclass search is
-needed. -/
+/-- The degree-zero `Ext` group from `globalSectionsSource` is the group of global sections. This
+is `CategoryTheory.Sheaf.H.equiv₀` as an equivalence of types, so that no
+reducibility-sensitive typeclass search is needed. -/
 def globalSectionsEquiv (F : TopCat.Sheaf AddCommGrpCat.{u} X) :
     Abelian.Ext (globalSectionsSource (X := X)) F 0 ≃
       F.obj.obj (op (⊤ : Opens X)) :=
-  Abelian.Ext.homEquiv₀.trans <|
-    ((constantSheafAdj (Opens.grothendieckTopology X) AddCommGrpCat isTerminalTop).homEquiv
-      _ F).trans
-        (AddCommGrpCat.uliftZMultiplesAddEquiv _).toEquiv
+  letI : AddCommGroup (CategoryTheory.Sheaf.H F 0) := extAddCommGroup
+  (CategoryTheory.Sheaf.H.equiv₀ F isTerminalTop).toEquiv
 
 /-- `globalSectionsEquiv` carries postcomposition to the map on global sections. -/
 lemma globalSectionsEquiv_naturality {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
