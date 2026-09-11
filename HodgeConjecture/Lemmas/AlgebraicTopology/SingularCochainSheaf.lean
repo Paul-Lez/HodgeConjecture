@@ -18,6 +18,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainSheaf
 
 import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
+import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 import HodgeConjecture.Lemmas.AlgebraicTopology.SingularContractible
 import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
 import Mathlib.Topology.Homotopy.TopCat.ZerothHomotopy
@@ -40,39 +41,6 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R] (X : TopCat.{u})
 
-/-- A neighborhood-wise lifting of every local kernel section gives exactness after passing to
-the stalk. The lift may be taken after shrinking the original neighborhood. -/
-lemma stalkExact_of_locallyPrimitive
-    (S : ShortComplex (TopCat.Presheaf AddCommGrpCat.{u} X))
-    (hlocal : ∀ (x : X) (U : Opens X) (_hx : x ∈ U)
-      (s : S.X₂.obj (.op U)), S.g.app (.op U) s = 0 →
-        ∃ (V : Opens X) (_hxV : x ∈ V) (i : V ⟶ U) (t : S.X₁.obj (.op V)),
-          S.f.app (.op V) t = S.X₂.map i.op s)
-    (x : X) :
-    (S.map (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x)).Exact := by
-  rw [ShortComplex.ab_exact_iff]
-  intro z hz
-  obtain ⟨U, hxU, s, rfl⟩ := S.X₂.exists_germ_eq z
-  change (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g
-      (S.X₂.germ U x hxU s) = 0 at hz
-  rw [TopCat.Presheaf.stalkFunctor_map_germ_apply] at hz
-  have hz' : S.X₃.germ U x hxU (S.g.app (.op U) s) =
-      S.X₃.germ U x hxU 0 := by
-    rw [map_zero]
-    exact hz
-  obtain ⟨W, hxW, iWU, iWU', hW⟩ :=
-    S.X₃.germ_eq x hxU hxU (S.g.app (.op U) s) 0 hz'
-  have hWs : S.g.app (.op W) (S.X₂.map iWU.op s) = 0 := by
-    rw [← ConcreteCategory.comp_apply, S.g.naturality, ConcreteCategory.comp_apply]
-    simpa using hW
-  obtain ⟨V, hxV, iVW, t, ht⟩ :=
-    hlocal x W hxW (S.X₂.map iWU.op s) hWs
-  refine ⟨S.X₁.germ V x hxV t, ?_⟩
-  change (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.f
-      (S.X₁.germ V x hxV t) = S.X₂.germ U x hxU s
-  rw [TopCat.Presheaf.stalkFunctor_map_germ_apply, ht,
-    S.X₂.germ_res_apply iVW x hxV, S.X₂.germ_res_apply iWU x hxW]
-
 set_option backward.isDefEq.respectTransparency false in
 /-- If every closed singular `(n + 1)`-cochain has a primitive near each point, then the
 sheafified singular-cochain complex is exact in degree `n + 1`. The hypothesis explicitly gives
@@ -94,7 +62,7 @@ lemma singularCochainSheafComplex_exactAt_succ_of_locallyPrimitive (n : ℕ)
   let stalk := TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x
   let P := singularCochainPresheafComplex R X
   have hP : (P.sc' n (n + 1) ((n + 1) + 1)).map stalk |>.Exact :=
-    stalkExact_of_locallyPrimitive X (P.sc' n (n + 1) ((n + 1) + 1)) (by
+    TopCat.Presheaf.stalkExact_of_locallyPrimitive (P.sc' n (n + 1) ((n + 1) + 1)) (by
       intro y U hyU φ hφ
       dsimp [P, HomologicalComplex.sc', HomologicalComplex.shortComplexFunctor'] at hφ ⊢
       rw [singularCochainPresheafComplex_d] at hφ
@@ -318,7 +286,7 @@ lemma constantsToSingularCochainSheafShortComplex_exact [LocallyPathConnectedSpa
   intro x
   let stalk := TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x
   have hP : ((constantsToSingularCochainPresheafShortComplex R X).map stalk).Exact :=
-    stalkExact_of_locallyPrimitive X
+    TopCat.Presheaf.stalkExact_of_locallyPrimitive
       (constantsToSingularCochainPresheafShortComplex R X) (by
         intro y U hyU φ hφ
         change (singularCochainCoboundary R X 0).app (.op U) φ = 0 at hφ

@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCohomology
+
 /-!
 # A standard local fundamental cycle
 
@@ -79,10 +80,9 @@ lemma standardAffineSimplex_ne_zero_of_coord_zero (d : ℕ)
     rcases Fin.eq_castSucc_or_eq_last j with ⟨k, rfl⟩ | rfl
     · exact (hcoord k).trans hlast
     · exact hlast
-  have hsum := t.2.2
   have hzero : ∑ j, (t : Fin (d + 1) → ℝ) j = 0 :=
     Finset.sum_eq_zero fun j _ => hall j
-  exact zero_ne_one (hzero.symm.trans hsum)
+  exact zero_ne_one (hzero.symm.trans t.2.2)
 
 /-- The continuous affine simplex underlying the standard local cycle. -/
 def standardAffineSimplexMap (d : ℕ) :

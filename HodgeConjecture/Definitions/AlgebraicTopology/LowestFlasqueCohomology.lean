@@ -30,12 +30,12 @@ variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
 /-- The kernel of the actual boundary-to-cycles map is the preceding cycle sheaf. -/
 def kernelBoundaryToCyclesIso (n : ℤ) :
-    kernel (K.sc n).toCycles ≅ K.cycles ((ComplexShape.up ℤ).prev n) := by
-  let p := (ComplexShape.up ℤ).prev n
-  have hp : p = n - 1 := (ComplexShape.up ℤ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
-  have hnext : (ComplexShape.up ℤ).next p = n :=
+    kernel (K.sc n).toCycles ≅ K.cycles ((ComplexShape.up ℤ).prev n) :=
+  letI p := (ComplexShape.up ℤ).prev n
+  letI hp : p = n - 1 := (ComplexShape.up ℤ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
+  letI hnext : (ComplexShape.up ℤ).next p = n :=
     (ComplexShape.up ℤ).next_eq' (ComplexShape.up_mk _ _ (by rw [hp]; omega))
-  exact (kernelCompMono (K.sc n).toCycles (K.sc n).iCycles).symm ≪≫
+  (kernelCompMono (K.sc n).toCycles (K.sc n).iCycles).symm ≪≫
     kernelIsoOfEq (K.sc n).toCycles_i ≪≫
     IsLimit.conePointUniqueUpToIso (kernelIsKernel (K.sc n).f) (K.cyclesIsKernel p n hnext)
 
@@ -72,7 +72,6 @@ private theorem sectionCohomologyPresheaf_isSheaf_lowest (N n : ℤ) [K.IsStrict
   exact (CategoryTheory.Presheaf.isSheaf_of_iso_iff e).mpr (K.homology n).property
 
 set_option backward.isDefEq.respectTransparency false in
-set_option backward.defeqAttrib.useBackward true in
 /-- The actual presheaf-to-cohomology-sheaf comparison is an isomorphism, because
 its literal sheafification unit is an isomorphism in this degree. -/
 private theorem sectionCohomologyPresheafToSheaf_isIso_lowest (N n : ℤ) [K.IsStrictlyGE N]
@@ -98,9 +97,9 @@ def lowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque)
     (U : Opens X) :
     (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ≅
-      (K.homology n).obj.obj (op U) := by
+      (K.homology n).obj.obj (op U) :=
   let := sectionCohomologyToSheafSection_isIso_lowest X K N n hK hflasque U
-  exact asIso (sectionCohomologyToSheafSection X K n U)
+  asIso (sectionCohomologyToSheafSection X K n U)
 
 /-- In particular, the actual lowest-degree global section-complex cohomology
 is canonically isomorphic to global sections of the cohomology sheaf. -/

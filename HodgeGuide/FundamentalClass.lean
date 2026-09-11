@@ -3,7 +3,6 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
-import Other.AlgebraicGeometry.CycleComponentSheafBorelMooreClass
 import Other.AlgebraicGeometry.CodimensionZeroCoclassNonvanishing
 
 open Verso.Genre Manual
@@ -23,12 +22,6 @@ noncomputable section
 open CategoryTheory.Limits Opposite AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
-
-local instance complexSheafBorelMooreSheafDerivedCategory (X : Over (Spec ↧ℂ)) : HasDerivedCategory
-    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) :=
-  HasDerivedCategory.standard _
-local instance complexSheafBorelMooreGroupsDerivedCategory : HasDerivedCategory AddCommGrpCat :=
-  HasDerivedCategory.standard _
 ```
 
 # The class to be constructed
@@ -39,20 +32,22 @@ $`Z_{\mathrm{sing}}`. Near a point of $`Z_{\mathrm{reg}}`, holomorphic coordinat
 $`(X,Z)` with $`(\mathbb C^d,\mathbb C^{d-p})`, so the cohomology of $`X` with support in
 $`Z_{\mathrm{reg}}` is locally one-dimensional in degree $`2p` and zero below. The complex structure
 orients the normal directions, and the orientation picks out a generator, the Thom class of the
-normal bundle. Under Alexander–Poincaré duality this generator corresponds to the fundamental class
+normal bundle. The class to be constructed is the global section of degree $`2p` that restricts to
+that generator in every chart,
 
-$$`[Z]_{\mathrm{BM}}\in
-  H^{\mathrm{BM}}_{2(d-p)}(Z\subset X;\mathbb Q).`
+$$`\operatorname{cl}_X(Z)\in H^{2p}_Z(X;\mathbb Q),`
+
+and then, after forgetting the support, in $`H^{2p}(X;\mathbb Q)`.
 
 The choice of generator is the essential point. Purity alone says that the local cohomology with
 support in degree $`2p` is one-dimensional, which fixes a line but not the multiplicity-one
 generator that a cycle class map needs. The formalization fixes the generator chart by chart using
 the complex orientation.
 
-For the topology see Goresky, [§5.2](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=22), on
-Borel–Moore homology and the orientation sheaf, and
-[§8.11](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=37), on fundamental classes of
-oriented pseudomanifolds. Lee's
+The whole construction stays in cohomology with support; no homology theory is involved, and the
+statement of the conjecture does not depend on one. Goresky,
+[§8.11](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=37), gives the topological picture of a
+fundamental class this normalizes. Lee's
 [Proposition 1.49](https://sites.math.washington.edu/~lee/Books/ICM/gsm-244-prev.pdf#page=32)
 shows that a complex manifold carries a canonical orientation.
 
@@ -126,6 +121,18 @@ nonzero germ and hence a nonzero glued section.
 ```lean
 #check AlgebraicGeometry.ComplexPoint.smoothClosedSupportCoclassSection_ne_zero
 ```
+
+The smooth locus of a component always has a complex point, so this applies to every component,
+in every codimension: the normalization does not silently produce zero anywhere.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection_ne_zero
+```
+
+Whether the resulting class in *ordinary* cohomology is nonzero is a different question, because
+forgetting support may kill it. That step is settled only for the generic point, at the end of
+this chapter, and in general it is cohomological purity; see
+{ref "what-is-proved"}[What the repository proves about the statement].
 
 # Step 2: extension across the singular locus
 
@@ -218,10 +225,12 @@ example [SmoothOfRelativeDimension d X.hom] :
     (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)
 ```
 
+# Step 3: from support to ordinary cohomology
+
 The extension is a class in the cohomology of an injective resolution with supports. Transporting
 it through the comparison with the mapping-cone model of the previous section gives the class of
 the subvariety in cohomology with support, and forgetting the support gives its class in ordinary
-cohomology.
+cohomology, which is the class the statement uses.
 
 ```lean -show
 namespace Guide.Subvariety.D5
@@ -277,148 +286,3 @@ example : cycleComponentSheafClass X (genericPoint X.left)
     (d := dim X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
   cycleComponentSheafClass_genericPoint_ne_zero X (dim X.left)
 ```
-
-# Step 3: the Borel–Moore fundamental class
-%%%
-tag := "borel-moore-fundamental-class"
-%%%
-
-The formalization also constructs the homological side. Let $`\mathcal C_X^{\mathrm{BM}}` be the
-sheafification of the presheaf of relative singular chains on $`X(\mathbb C)`. On a smooth complex
-$`d`-fold its local homology is concentrated in degree $`2d`, cohomological degree $`-2d`, so the
-sheaf is determined by its top homology sheaf, and the complex orientation trivializes that sheaf.
-This gives an isomorphism in the derived category
-
-$$`\mathcal C_X^{\mathrm{BM}}\simeq \underline{\mathbb Q}_X[2d],`
-
-with no orientation supplied as an argument: the one used is the orientation constructed from the
-complex structure.
-
-```lean -show
-namespace Guide.Subvariety.D7
-```
-```lean
-def complexChainSheafPlusOrientationIso (X : Over (Spec ↧ℂ)) (d : ℕ)
-    [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)] :
-    complexChainSheafPlusObject X d ≅
-      (complexConstantRationalSheafPlusObject X)⟦2 * (d : ℤ)⟧ :=
-  complexChainSheafPlusIsoOfOrientation X d
-    (complexOrientationHomologySheafIso X d).symm
-```
-```lean -show
-end Guide.Subvariety.D7
-example : @Guide.Subvariety.D7.complexChainSheafPlusOrientationIso = @AlgebraicGeometry.ComplexPoint.complexChainSheafPlusOrientationIso := rfl
-```
-
-Taking derived sections with support in a closed set $`Z` and then homology defines the
-Borel–Moore homology of $`Z` relative to the ambient space. Homological degree $`i` is
-cohomological degree $`-i`:
-
-```lean -show
-namespace Guide.Subvariety.D8
-```
-```lean
-def ComplexAmbientSheafBorelMooreHomology (X : Over (Spec ↧ℂ)) (d : ℕ)
-    [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
-    (Z : Closeds (ComplexPoint X)) (i : ℤ) : AddCommGrpCat :=
-  (DerivedCategory.Plus.homologyFunctor AddCommGrpCat (-i)).obj
-    (complexAmbientSheafBorelMooreObject X d Z)
-```
-```lean -show
-end Guide.Subvariety.D8
-example : @Guide.Subvariety.D8.ComplexAmbientSheafBorelMooreHomology = @AlgebraicGeometry.ComplexPoint.ComplexAmbientSheafBorelMooreHomology := rfl
-```
-
-Feeding the same orientation through the derived support functor and then through homology turns
-the isomorphism above into duality in every degree, with no smoothness assumed on $`Z`:
-
-$$`H_i^{\mathrm{BM}}(Z\subset X;\mathbb Q)
-  \simeq H_Z^{2d-i}(X;\mathbb Q).`
-
-```lean -show
-namespace Guide.Subvariety.D9
-```
-```lean
-def complexAmbientSheafBorelMooreHomologyIso (X : Over (Spec ↧ℂ)) (d : ℕ)
-    [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
-    (Z : Closeds (ComplexPoint X)) (i : ℤ) :
-    ComplexAmbientSheafBorelMooreHomology X d Z i ≅
-      ComplexDerivedSupportedCohomology X Z (2 * (d : ℤ) - i) :=
-  complexAmbientSheafBorelMooreHomologyIsoOfOrientation X d
-    (complexOrientationHomologySheafIso X d).symm Z i
-```
-```lean -show
-end Guide.Subvariety.D9
-example : @Guide.Subvariety.D9.complexAmbientSheafBorelMooreHomologyIso = @AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreHomologyIso := rfl
-```
-
-In the degree a codimension-$`p` cycle occupies, $`i=2(d-p)`, the right-hand side is the group
-$`H_Z^{2p}(X;\mathbb Q)` where Step 2 left the class; {ref "degree-and-support-conventions"}[Degree
-and support conventions] collects the index arithmetic. Specializing to that degree and passing to
-the rational model of cohomology with support gives the equivalence the fundamental class is
-defined by:
-
-```lean -show
-namespace Guide.Subvariety.D10
-```
-```lean
-def complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport (X : Over (Spec ↧ℂ)) (d : ℕ)
-    [SmoothOfRelativeDimension d X.hom] [T2Space (ComplexPoint X)]
-    (Z : Closeds (ComplexPoint X)) (p : ℕ) (hp : p ≤ d) :
-    ComplexAmbientSheafBorelMooreHomology X d Z
-        (2 * ((d - p : ℕ) : ℤ)) ≃+
-      RationalCohomologyWithSupport X Z (2 * (p : ℤ)) :=
-  (complexAmbientSheafBorelMooreCycleDegreeIso X d Z p hp).addCommGroupIsoToAddEquiv.trans
-    (complexDerivedSupportedCohomologyAddEquivRationalSupport X Z (2 * (p : ℤ)))
-```
-```lean -show
-end Guide.Subvariety.D10
-example : @Guide.Subvariety.D10.complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport = @AlgebraicGeometry.ComplexPoint.complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport := rfl
-```
-
-The fundamental class $`[Z]_{\mathrm{BM}}` is defined as the image of the class of Step 2 under
-the inverse of this duality, in degree $`i=2(d-p)`. Two theorems confirm that it is the expected
-object: duality sends $`[Z]_{\mathrm{BM}}` back to the class with support, and the route through
-Borel–Moore homology to ordinary cohomology gives the same class $`\operatorname{cl}_X(Z)`.
-
-```lean -show
-namespace Guide.Subvariety.D11
-```
-```lean
-def cycleComponentSheafBorelMooreFundamentalClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (hx : coheight x = p) :
-    ComplexAmbientSheafBorelMooreHomology X d (cycleComponentAnalyticClosedSupport X x)
-      (2 * ((d - p : ℕ) : ℤ)) :=
-  (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X d
-    (cycleComponentAnalyticClosedSupport X x) p
-    (cycleComponentSheafClass_codimension_le X x (d := d) hx)).symm
-      (cycleComponentSheafSupportedClass X x (d := d) hx)
-```
-```lean -show
-end Guide.Subvariety.D11
-example : @Guide.Subvariety.D11.cycleComponentSheafBorelMooreFundamentalClass = @AlgebraicGeometry.ComplexPoint.cycleComponentSheafBorelMooreFundamentalClass := rfl
-```
-
-```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafBorelMooreFundamentalClass_duality
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafBorelMooreFundamentalClass_toFieldCohomology
-```
-
-Textbooks usually go the other way, from the fundamental class to the cycle class. The order here
-is equivalent and suits the available tools: the normalization is carried out where the local Thom
-class lives, in cohomology with support, and then transported.
-
-# What Borel–Moore homology means here
-%%%
-tag := "what-borel-moore-means"
-%%%
-
-The group $`H_i^{\mathrm{BM}}(Z\subset X;\mathbb Q)` is defined through the ambient space, as
-derived sections of the chain sheaf of $`X` with support in $`Z`. This makes sense for singular
-$`Z` and needs no dualizing complex, but it is a theory of the pair $`Z\subset X`. That it does not
-depend on the embedding, and agrees with the Borel–Moore homology of $`Z` defined through a
-compactification, is not proved; see {ref "scope-and-status"}[Scope and status]. Goresky,
-[§§12.4–12.5](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=59), gives the sheaf-theoretic
-account of the Borel–Moore chain sheaf and the dualizing complex that the shift by $`2d` above
-reflects.

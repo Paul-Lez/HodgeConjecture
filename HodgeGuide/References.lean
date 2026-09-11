@@ -33,10 +33,9 @@ formalization.
 
 * Mark Goresky,
   [*Lecture Notes on Sheaves and Perverse Sheaves*](https://www.math.ias.edu/~goresky/pdf/all.pdf):
-  §3.10 (p. 17), the de Rham complex as a resolution of the constant sheaf; §5.2 (p. 22),
-  Borel–Moore homology and the orientation sheaf; §§7.14–7.15 (pp. 31–32), the exact sequence of a
-  pair and the support triangle; §8.11 (p. 37), fundamental classes and Poincaré duality for
-  pseudomanifolds; §§12.4–12.5 (p. 59), the Borel–Moore chain sheaf and the dualizing complex.
+  §3.10 (p. 17), the de Rham complex as a resolution of the constant sheaf; §§7.14–7.15
+  (pp. 31–32), the exact sequence of a pair and the support triangle; §8.11 (p. 37), fundamental
+  classes and Poincaré duality for pseudomanifolds.
 
 * John M. Lee,
   [*Introduction to Complex Manifolds*](https://sites.math.washington.edu/~lee/Books/ICM/gsm-244-prev.pdf#page=32),
@@ -53,10 +52,15 @@ formalization.
 * `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`
   and `CycleComponentSupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;
-* `Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
-  `ComplexSheafBorelMooreRationalComparison.lean`: Borel–Moore homology and duality;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`: the class of a
-  subvariety and its Borel–Moore fundamental class;
+  subvariety;
+* `HodgeConjecture/Definitions/AlgebraicGeometry/AlgebraicCycleClassSpan.lean`: the span of those
+  classes, which is the right-hand side of the statement;
 * `Other/AlgebraicGeometry/SheafCycleClass.lean`: the maps on cycles;
+* `Other/AlgebraicGeometry/SmoothAnalytificationConnected.lean`: connectedness of the
+  analytification of a smooth integral complex scheme;
+* `Other/AlgebraicGeometry/CodimensionZeroClassComparison.lean` and
+  `CodimensionZeroCoclassNonvanishing.lean`: nonvanishing of the class of the whole variety and
+  the codimension-zero case of the conjecture;
 * `HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures and the
   $`(p,p)` criterion.
