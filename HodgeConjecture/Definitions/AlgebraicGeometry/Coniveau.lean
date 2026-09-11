@@ -23,14 +23,11 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 For a projective complex variety, a class supported on a closed set `Z` belongs to the homotopy
 fiber of `RΓ(X, ℚ) → RΓ(X ∖ Z, ℚ)`, and its image in ordinary cohomology is the canonical
 connecting map. The sum of these images over codimension-`p` algebraic subsets is the coniveau
-subspace.
+subspace `rationalConiveauSubspace`.
 
-It is only an upper bound for the span of cycle classes until cohomological purity has been
-proved: an arbitrary supported cohomology class is not, by definition, a fundamental class. The
-construction is therefore kept explicitly named as such, alongside an intrinsic component line
-defined from generators of the entire supported image, for stating comparison theorems. The
-algebraic cycle-class span itself is defined from the actual normalized component classes of
-`CycleComponentSheafClass`, and the two agree once purity holds.
+`algebraicCycleClassSpan` is the span of the normalized component classes of
+`CycleComponentSheafClass`. It lies in the coniveau subspace, and cohomological purity for each
+component makes the two equal.
 -/
 
 @[expose] public noncomputable section
@@ -50,10 +47,9 @@ def rationalCohomologySupportedOn
     Submodule ℚ (H^n(X; ℚ)) :=
   Submodule.span ℚ (Set.range (forgetSupport X Z n))
 
-/-- A class which generates the whole degree-`2p` image of cohomology supported on one
-irreducible component. This is a property inside ordinary rational cohomology; it does not assume
-that the supported image is one-dimensional. Cohomological purity proves that such a generator
-is precisely a nonzero rational multiple of the component's fundamental class. -/
+/-- A class in ordinary rational cohomology whose span is the whole degree-`2p` image of the
+cohomology supported on the component of `x`. Cohomological purity makes such a class a nonzero
+rational multiple of that component's fundamental class. -/
 def IsRationalComponentCycleClass
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
     (p : ℕ) (x : X.left) (α : H^(2 * (p : ℤ))(X; ℚ)) : Prop :=
@@ -63,8 +59,8 @@ def IsRationalComponentCycleClass
       rationalCohomologySupportedOn X
         (cycleComponentSupport X x) (2 * (p : ℤ))
 
-/-- The intrinsic cycle-class line of an irreducible codimension-`p` component. Taking the span
-of all generators removes the arbitrary choice of generator and its rational scaling. -/
+/-- The cycle-class line of an irreducible codimension-`p` component: the span of every class
+generating the supported image, so a line depending only on the component. -/
 def rationalComponentCycleClassLine
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ) (x : X.left) :
@@ -80,9 +76,8 @@ lemma rationalComponentCycleClassLine_eq_span
   le_antisymm (Submodule.span_le.mpr fun _ hβ ↦ hα.2.ge hβ.1)
     (Submodule.span_mono (Set.singleton_subset_iff.mpr hα))
 
-/-- Cohomological purity for a component, stated independently of the construction of any
-particular supported class: its fundamental-class line is the whole supported image in the
-critical degree. -/
+/-- Cohomological purity for the component of `x`: its cycle-class line is the whole image in
+degree `2p` of the cohomology supported on it. -/
 def RationalComponentCycleClassPurity
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ) (x : X.left) : Prop :=
@@ -98,17 +93,16 @@ lemma rationalComponentCycleClassLine_le_supportedOn
         (cycleComponentSupport X x) (2 * (p : ℤ)) :=
   Submodule.span_le.mpr fun _ hα ↦ hα.1
 
-/-- The rational span of the actually constructed codimension-`p` component classes.
-
-The relative dimension is the canonical `dim X`, whose certificate is proved from smoothness and
-integrality. This definition spans explicit class terms; it does not quantify over hypothetical
-generators and does not assume descent to the Chow group. -/
+/-- The rational span of the classes of the irreducible codimension-`p` closed subvarieties of
+`X`, indexed by the points of codimension `p`. The relative dimension is `dim X.left`, supplied by
+`SmoothOfRelativeDimension.of_isIntegral`. -/
 def algebraicCycleClassSpan
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) :
     Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
     Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
 
+/-- The defining supremum of `algebraicCycleClassSpan`. -/
 lemma algebraicCycleClassSpan_eq_iSup
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) :
     algebraicCycleClassSpan X p =
@@ -137,18 +131,16 @@ lemma cycleComponentSupport_genericPoint_eq_univ
   rw [genericPoint_closure (α := X.left)]
   exact Set.preimage_univ
 
-/-- The degree-`2p` rational coniveau subspace obtained from all cohomology classes supported on
-irreducible algebraic subvarieties of codimension `p`. This is not the cycle-class span unless a
-purity theorem identifying each relevant image with its fundamental-class line is supplied. -/
+/-- The degree-`2p` rational coniveau subspace: the sum of the images of the cohomology supported
+on the irreducible algebraic subvarieties of codimension `p`. -/
 def rationalConiveauSubspace
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) :
     Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
   ⨆ (x : X.left) (_ : coheight x = p),
     rationalCohomologySupportedOn X (cycleComponentSupport X x) (2 * (p : ℤ))
 
-/-- In codimension zero, the degree-zero coniveau subspace is all rational cohomology because
-support on the whole space imposes no condition. This is a statement about coniveau, not about
-the span of the codimension-zero cycle class. -/
+/-- In codimension zero the coniveau subspace is all of degree-zero rational cohomology, since
+support on the whole space imposes no condition. -/
 lemma rationalConiveauSubspace_zero_eq_top
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
     rationalConiveauSubspace X 0 = ⊤ := by
@@ -195,9 +187,8 @@ lemma algebraicCycleClassSpan_le_rationalConiveauSubspace
   exact Submodule.subset_span ⟨cycleComponentSheafSupportedClass
     X x (d := dim X.left) hx, rfl⟩
 
-/-- If every constructed component class spans its entire supported image, the algebraic
-cycle-class span agrees with the coniveau subspace. The equality for each component is an
-explicit hypothesis; it is not built into either construction. -/
+/-- If every component class spans its entire supported image, the algebraic cycle-class span
+agrees with the coniveau subspace. -/
 lemma algebraicCycleClassSpan_eq_rationalConiveauSubspace_of_purity
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ)
     (h : ∀ (x : X.left) (hx : coheight x = p),
