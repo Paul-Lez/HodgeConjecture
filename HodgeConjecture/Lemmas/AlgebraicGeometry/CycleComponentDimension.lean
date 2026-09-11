@@ -15,8 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.AlgebraicCycleSupport
 /-!
 # Dimension of a reduced cycle component
 

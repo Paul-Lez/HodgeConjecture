@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Points
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold

@@ -15,8 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Coniveau
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 
 /-!

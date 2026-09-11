@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSectionRestrictionCone
-public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSectionRestrictionCone
+public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
 
 /-!

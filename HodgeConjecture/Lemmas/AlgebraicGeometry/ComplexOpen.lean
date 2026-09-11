@@ -15,8 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Points
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!

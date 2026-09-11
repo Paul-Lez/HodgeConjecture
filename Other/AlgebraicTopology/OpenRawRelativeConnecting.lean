@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainOpenCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainOpenCone
 public import Other.AlgebraicTopology.GlobalRawRelativeConnecting
 
 /-! # Exact ordinary normalization of the canonical open relative comparison -/
@@ -32,7 +32,6 @@ theorem openRawSingularRestrictionConeIsoRelative_connecting :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 800000 in
 /-- The canonical open raw cone comparison has the same negative connecting
 sign as its actual positive dual-relative inclusion. -/
 theorem openRawSingularRestrictionCone_signed_inclusion (n : ℕ) :
@@ -98,7 +97,6 @@ def openRawRelativeCochainClass (n : ℕ)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 1000000 in
 /-- On a prescribed relative class, the canonical local cone connecting map is
 the negative of its actual positive ordinary cochain class. -/
 theorem openRawSingularRestrictionCone_connecting_of_relative (n : ℕ)
