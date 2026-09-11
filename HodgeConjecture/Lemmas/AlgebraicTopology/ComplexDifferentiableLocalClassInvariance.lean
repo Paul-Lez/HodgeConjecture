@@ -70,8 +70,7 @@ theorem relativeHomologyMap_eq_of_neighborhood_pairHomotopy
       (neighborhoodPointComplementPairMap U 0 ≫ F)
       (neighborhoodPointComplementPairMap U 0 ≫ G)) :
     relativeHomologyMap ℚ n F = relativeHomologyMap ℚ n G := by
-  apply LinearMap.ext
-  intro a
+  ext a
   obtain ⟨b, rfl⟩ := neighborhoodPointComplement_relativeHomologyMap_surjective
     U 0 hU h0U n a
   have h := H.relativeHomologyMap_apply_eq (R := ℚ) n b

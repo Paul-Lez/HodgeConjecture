@@ -49,8 +49,7 @@ lemma subspaceChain_ambientCapRelativeLift (P : TopPair.{u}) (p q : ℕ)
         (Simplicial.cochainMap R (TopCat.toSSet.map P.map) p φ) ≫
           ((chainPairFunctor R).obj P).hom.f q := by
     apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
+    ext c
     exact (Simplicial.cap_naturality R (TopCat.toSSet.map P.map) p q φ c).symm
   have hz := congrArg (fun f => f.f q) (subspaceChainMap_relativeChainProjection R P)
   change ((chainPairFunctor R).obj P).hom.f q ≫ (relativeChainProjection R P).f q = 0 at hz
@@ -155,8 +154,7 @@ lemma relativeAmbientCapHom_boundary (P : TopPair.{u}) (p q : ℕ)
         (((relativeChainFunctor R).obj P).d (p + q + 1) (p + q) ≫
           relativeAmbientCapHom R P p q φ) := by
   apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro c
+  ext c
   change relativeBoundary R P q ((relativeAmbientCapHom R P p (q + 1) φ).hom c) =
     (-1 : ℤ) ^ p • (relativeAmbientCapHom R P p q φ).hom (relativeBoundary R P (p + q) c)
   rw [← Int.cast_smul_eq_zsmul R, Int.cast_pow, Int.cast_neg, Int.cast_one]

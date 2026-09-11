@@ -46,8 +46,7 @@ lemma exists_smul_cohomologyUnitZero (φ : Cohomology R X 0) :
     ∃ r : R, r • cohomologyUnitZero R X = φ := by
   let e := (asIso (X.singularHomology₀ε (ModuleCat.of R R))).toLinearEquiv
   refine ⟨φ (e.symm 1), ?_⟩
-  apply LinearMap.ext
-  intro z
+  ext z
   have hz : (e z) • e.symm 1 = z := e.injective (by simp)
   change φ (e.symm 1) * e z = φ z
   rw [mul_comm]
