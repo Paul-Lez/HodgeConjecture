@@ -374,7 +374,9 @@ wherever possible:
    `complexPointChartHomeomorph` — and the `SmoothOfRelativeDimension N` instance on `ℙᴺ`
    (`Other.ProjectiveChart.smoothOfRelativeDimension_projectiveSpaceToBase`), which makes
    `holomorphicRingSheaf`, `moduleAnalytification` and `localChart` exist on `ℙᴺ` with `d = N`.
-   Their *holomorphic* compatibility with the repository's atlas is gap (G1), now unblocked;
+   Their *holomorphic* compatibility with the repository's atlas is gap (G1), **proved**
+   (in the direction needed downstream) by
+   `ComplexProjectiveSpace.contMDiff_projectivizationToComplexPoint_chartPoint`;
 1. *(constructive, no analysis)* gap (G2): a chartwise/holomorphic model of `𝒪(-n)^an` on
    `ℙᴺ(ℂ)` with transition units `(x_i/x_j)^n`, and its comparison with `moduleAnalytification`
    of the algebraic twist;
@@ -482,7 +484,9 @@ theorem dim_projectiveSpace : dim (ProjectiveSpace (Fin (N + 1)) (Spec ↧ℂ)) 
 Only with these does `SmoothOfRelativeDimension N` — and hence `holomorphicRingSheaf`,
 `moduleAnalytification` and the target statements — exist for `ℙᴺ`.
 
-**(G1) The standard homogeneous charts are holomorphic charts.**  Writing `ℙᴺ` for the object of
+**(G1) The standard homogeneous charts are holomorphic charts.**  *(The direction needed
+downstream is now **proved** — `contMDiff_projectivizationToComplexPoint_chartPoint`; see the
+third-pass progress section below.)*  Writing `ℙᴺ` for the object of
 (G0) and `d = N`:
 ```lean
 def StandardChartsHolomorphic (N : ℕ) : Prop :=
@@ -620,6 +624,100 @@ polynomial ring over a domain).
 that pulling a section of `holomorphicFunctionSheaf ℙᴺ N` back along it gives an entire function
 on `ℂᴺ`, and conversely.  With (G1), (G2) and (G3) in place,
 `Complex.PolynomialGrowth.analyticOnNhd_homogeneous_iff` computes `H⁰(ℙᴺ(ℂ)^an, 𝒪(m)^an)`.
+
+## Progress 2026-09-11 (third pass): (G1) — the homogeneous charts are holomorphic
+
+Three further `sorry`-free, axiom-clean files.  **(G1) is closed in the direction that (G2)/(G3)
+need**: a holomorphic function on `ℙᴺ(ℂ)^an` pulls back along a homogeneous chart to an *entire*
+function on `ℂᴺ`, so `Complex.PolynomialGrowth` applies directly to sections of
+`holomorphicFunctionSheaf`.
+
+### The obstruction, and how it was removed
+
+The repository's atlas on `ComplexPoint X` is *by definition* the étale `localChart X d z`, and
+the only interface to it is: chart coordinates are `Point.evaluate` of regular sections
+(`localChart_apply_component_eq_evaluate`), evaluation is analytic along the inverse chart
+(`analyticAt_localChart_symm_evaluate`), regular functions are holomorphic
+(`contMDiffAt_evaluate`), and scheme morphisms are holomorphic (`contMDiff_analyticMap`).  Showing
+a *non-étale* chart compatible is therefore not formal: one has to produce analyticity of
+`evaluate ∘ chart⁻¹` from scratch.  Crucially, one cannot bootstrap from `contMDiffAt_evaluate` —
+that would be circular.
+
+The way in is that the homogeneous chart factors through *affine space*:
+
+```
+ℂᴺ  --(x_i = 1)-->  ℂ^{N+1}  --affineSpaceEquiv.symm-->  ComplexPoint 𝔸^{N+1}
+    --Point.map (chartAffineToProjectiveSpace i)-->  ComplexPoint ℙᴺ
+```
+
+the last arrow being the ℂ-points of a *scheme morphism*, hence holomorphic for free by
+`contMDiff_analyticMap`.  So everything reduces to the affine case, where the missing analytic
+input is available: `evaluate_affineSpaceEquiv_symm_top` says a *global* regular function on `𝔸ⁿ`
+becomes literally a polynomial in the affine coordinates.
+
+### 1. Affine space is smooth of relative dimension `N`
+
+[`Other/AlgebraicGeometry/AffineSpaceSmooth.lean`](../Other/AlgebraicGeometry/AffineSpaceSmooth.lean):
+`Other.AffineSpaceSmooth.smoothOfRelativeDimension_affineSpace` (over any affine base, via
+`AffineSpace.SpecIso_inv_over` and the polynomial presentation of
+`MvPolynomialStandardSmooth`), and the instance
+`smoothOfRelativeDimension_complexAffineSpace`.  Before this, `ComplexPoint 𝔸ⁿ` carried **no**
+`ChartedSpace`/`IsManifold` structure at all.
+
+### 2. Affine coordinates are a holomorphic chart
+
+[`Other/AlgebraicGeometry/AffineSpaceHolomorphicChart.lean`](../Other/AlgebraicGeometry/AffineSpaceHolomorphicChart.lean),
+namespace `AlgebraicGeometry.ComplexPoint`:
+
+- `analyticAt_evaluate_top_affineSpaceEquiv_symm` — a *global* regular function in affine
+  coordinates is `MvPolynomial.eval`, hence analytic (`Complex.PolynomialGrowth.analyticOnNhd_eval`).
+- `analyticAt_evaluate_affineSpaceEquiv_symm` — an *arbitrary* regular section is analytic in
+  affine coordinates: shrink to a principal open (`IsAffineOpen.exists_basicOpen_le`), write the
+  restriction as `a / f ^ k` with `a, f` global
+  (`exists_evaluate_affine_basicOpen_eq_div`), and divide.  The repository previously had only
+  the *continuity* version of this (`continuousOn_evaluate_basicOpen_affineSpaceEquiv_symm`).
+- **`contMDiff_affineSpaceEquiv_symm (N)`** — `(affineSpaceEquiv (Fin N)).symm` is
+  `ContMDiff 𝓘(ℂ, Fin N → ℂ) 𝓘(ℂ, Fin N → ℂ) ω`.  Its chart components are evaluations of the
+  étale coordinate sections, so the previous item applies.
+
+### 3. The homogeneous charts of `ℙᴺ(ℂ)`
+
+[`Other/AlgebraicGeometry/ProjectiveChartHolomorphic.lean`](../Other/AlgebraicGeometry/ProjectiveChartHolomorphic.lean),
+namespace `AlgebraicGeometry.ComplexProjectiveSpace`:
+
+- `contMDiff_insertNth_one` — the affine slice `x_i = 1` is analytic.
+- **`contMDiff_projectivizationToComplexPoint_chartPoint (N) (i)`** — the homogeneous chart map
+  `ℂᴺ → ComplexPoint ℙᴺ`, `z ↦ [insertNth i 1 z]`, is holomorphic.  Proof: compose the three
+  arrows above and identify the composite with the chart map using the repository's
+  `chartVectorToComplexPoint_eq` and `vectorChartRatios`.
+- **`analyticOnNhd_comp_chartPoint`** and `analyticOnNhd_contMDiffMap_comp_chartPoint` — a
+  holomorphic function (or a bundled `C^ω` section of `holomorphicFunctionSheaf`) on `ℙᴺ(ℂ)^an`
+  pulls back to an entire function on `ℂᴺ`.
+- **`exists_mvPolynomial_of_growth`** — combining with the polynomial-growth Liouville theorem:
+  a holomorphic function on `ℙᴺ(ℂ)^an` whose chart pullback grows like `C (1 + ‖z‖)ᵐ` *is* a
+  polynomial of total degree at most `m` on that chart.  This is the `H⁰` bridge that (G3) needs.
+- `selfPresentation` and the instance `isProjective_projectiveSpace` — `ℙᴺ` is projective over
+  its base via the identity closed immersion, so `CompactSpace`, `T2Space` and
+  `PathConnectedSpace` for `ComplexPoint ℙᴺ` are now instances (checked), as are the
+  maximum-modulus results of `ProjectiveHolomorphicFunctions.lean`.
+
+### What remains of (G1)
+
+Only the *other* direction: that the chart map `ComplexPoint ℙᴺ ⊇ {x_i ≠ 0} → ℂᴺ` is
+`ContMDiffOn`.  It is not needed for (G3) as reorganised — the chart *pullback* is what turns
+analytic sections into entire functions, and the charts cover `ℙᴺ` (`iUnion_chartSet`), so two
+sections agreeing after pullback along all charts are equal.  It *is* needed to go the other way,
+i.e. to build an analytic section out of a homogeneous polynomial; proving it requires the one
+remaining missing computation, namely
+
+> `Point.evaluate U s (vectorToComplexPoint v hv)` in terms of `awayCoordinateEvaluation v i hi`,
+
+for which the repository already has the scheme-level factorisation
+(`vectorChartToAffinePoint_comp_chartAffineToProj`, `chartAwayPolynomialHom_evaluate_ratios`,
+`awayCoordinateEvaluation_mk`) — it has to be transported through `Point.evaluate_map` and
+`ComplexPoint.affineSpecEquiv_apply`.  Alternatively, the *algebraic* twist sections can be
+analytified directly with `AnalyticSectionOfAlgebraic`/`AnalytificationGenerates`, which bypasses
+the computation entirely; that is the recommended route for (G2).
 
 ## Mathematical routes, and what is missing
 

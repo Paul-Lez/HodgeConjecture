@@ -371,6 +371,9 @@ public import Other.AlgebraicGeometry.HomogeneousEntireFunctions
 public import Other.AlgebraicGeometry.MvPolynomialStandardSmooth
 public import Other.AlgebraicGeometry.ProjectiveChartIso
 public import Other.AlgebraicGeometry.ProjectiveSpaceSmooth
+public import Other.AlgebraicGeometry.AffineSpaceSmooth
+public import Other.AlgebraicGeometry.AffineSpaceHolomorphicChart
+public import Other.AlgebraicGeometry.ProjectiveChartHolomorphic
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
