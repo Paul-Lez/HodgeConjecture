@@ -360,23 +360,24 @@ theorem isOpen_mvSimpleRootBase {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) 
   exact eventually_mem_mvSimpleRootBase hp ⟨z, hz⟩
 
 
-/-- The root cover on the principal open, in the form used by standard étale coordinates. -/
-abbrev MvSimpleRootCoverOn {n : ℕ} (p : Polynomial (MvPolynomial (Fin n) ℂ))
+/-- The locus of individual simple roots over a principal open, in the form used by standard
+étale coordinates. Other roots in the same fiber need not be simple. -/
+abbrev MvSimpleRootLocusOn {n : ℕ} (p : Polynomial (MvPolynomial (Fin n) ℂ))
     (r : MvPolynomial (Fin n) ℂ) :=
   {zw : (Fin n → ℂ) × ℂ // mvFamilyEquation p zw = 0 ∧
     MvPolynomial.eval zw.1 r * (mvFamilySpecialization p zw.1).derivative.eval zw.2 ≠ 0}
 
-noncomputable def mvSimpleRootCoverOnPoint {n : ℕ}
+noncomputable def mvSimpleRootLocusOnPoint {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
     (r : MvPolynomial (Fin n) ℂ) (z : MvSimpleRootBase p)
-    (hzr : MvPolynomial.eval z.1 r ≠ 0) (i : Fin p.natDegree) : MvSimpleRootCoverOn p r := by
+    (hzr : MvPolynomial.eval z.1 r ≠ 0) (i : Fin p.natDegree) : MvSimpleRootLocusOn p r := by
   refine ⟨(z.1, mvSimpleRootEnumeration hp z i), mvSimpleRootEnumeration_isRoot hp z i, ?_⟩
   exact mul_ne_zero hzr (z.2 _ (mvSimpleRootEnumeration_isRoot hp z i))
 
 /-- Membership in a clopen part of the restricted cover is constant along each local branch. -/
-theorem eventually_mem_clopen_mvSimpleRootCoverOn_iff {n : ℕ}
+theorem eventually_mem_clopen_mvSimpleRootLocusOn_iff {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (hS : IsClopen S) (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0)
     (i : Fin p.natDegree) :
     ∀ᶠ z' in 𝓝 z.1, ∀ (hbase : ∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
@@ -385,8 +386,8 @@ theorem eventually_mem_clopen_mvSimpleRootCoverOn_iff {n : ℕ}
         (z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z') = 0)
       (hr : MvPolynomial.eval z' r ≠ 0),
       (⟨(z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z'), hroot,
-          mul_ne_zero hr (hbase _ hroot)⟩ : MvSimpleRootCoverOn p r) ∈ S ↔
-        mvSimpleRootCoverOnPoint hp r z hzr i ∈ S := by
+          mul_ne_zero hr (hbase _ hroot)⟩ : MvSimpleRootLocusOn p r) ∈ S ↔
+        mvSimpleRootLocusOnPoint hp r z hzr i ∈ S := by
   let U : Set (Fin n → ℂ) := {z' | (∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
       (mvFamilySpecialization p z').derivative.eval w ≠ 0) ∧
     mvFamilyEquation p (z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z') = 0 ∧
@@ -407,7 +408,7 @@ theorem eventually_mem_clopen_mvSimpleRootCoverOn_iff {n : ℕ}
         mvLocalRootBranch_apply_base (mvSimpleRootCoverPoint hp z i)
     rw [hbranch]
     exact mvSimpleRootEnumeration_isRoot hp z i
-  let g : U → MvSimpleRootCoverOn p r := fun x ↦
+  let g : U → MvSimpleRootLocusOn p r := fun x ↦
     ⟨(x.1, mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) x.1), x.2.2.1,
       mul_ne_zero x.2.2.2 (x.2.1 _ x.2.2.1)⟩
   have hg : ContinuousAt g ⟨z.1, hzU⟩ := by
@@ -416,7 +417,7 @@ theorem eventually_mem_clopen_mvSimpleRootCoverOn_iff {n : ℕ}
     · exact continuousAt_subtype_val
     · exact (differentiableAt_mvLocalRootBranch (mvSimpleRootCoverPoint hp z i)).continuousAt.comp_of_eq
         continuousAt_subtype_val rfl
-  have hg_center : g ⟨z.1, hzU⟩ = mvSimpleRootCoverOnPoint hp r z hzr i := by
+  have hg_center : g ⟨z.1, hzU⟩ = mvSimpleRootLocusOnPoint hp r z hzr i := by
     apply Subtype.ext
     apply Prod.ext
     · rfl
@@ -425,7 +426,7 @@ theorem eventually_mem_clopen_mvSimpleRootCoverOn_iff {n : ℕ}
       exact mvLocalRootBranch_apply_base _
   have hmap : Filter.map ((↑) : U → (Fin n → ℂ)) (𝓝 ⟨z.1, hzU⟩) = 𝓝 z.1 :=
     map_nhds_subtype_coe_eq_nhds hzU hU
-  by_cases hi : mvSimpleRootCoverOnPoint hp r z hzr i ∈ S
+  by_cases hi : mvSimpleRootLocusOnPoint hp r z hzr i ∈ S
   · have hevent : ∀ᶠ x in 𝓝 (⟨z.1, hzU⟩ : U), g x ∈ S :=
       hg (hS.isOpen.mem_nhds (hg_center.symm ▸ hi))
     have hevent' : ∀ᶠ z' in 𝓝 z.1, ∀ hz' : z' ∈ U, g ⟨z', hz'⟩ ∈ S := by
@@ -448,27 +449,27 @@ theorem eventually_mem_clopen_mvSimpleRootCoverOn_iff {n : ℕ}
 
 /-- Roots selected in a simple fiber by a subset of the principal-open root cover. -/
 def mvSelectedRootsOn {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) : Multiset ℂ := by
   classical
   exact (mvFamilySpecialization p z.1).roots.filter fun w ↦
     ∃ h : (mvFamilySpecialization p z.1).eval w = 0,
-      (⟨(z.1, w), h, mul_ne_zero hzr (z.2 w h)⟩ : MvSimpleRootCoverOn p r) ∈ S
+      (⟨(z.1, w), h, mul_ne_zero hzr (z.2 w h)⟩ : MvSimpleRootLocusOn p r) ∈ S
 
 /-- The monic fiber factor selected on the principal-open root cover. -/
 def mvSelectedFactorOn {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) : Polynomial ℂ :=
   ((mvSelectedRootsOn r S z hzr).map fun w ↦ X - C w).prod
 
 theorem mvSelectedFactorOn_monic {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
     (mvSelectedFactorOn r S z hzr).Monic :=
   monic_multisetProd_X_sub_C (mvSelectedRootsOn r S z hzr)
 
 theorem mvSelectedFactorOn_dvd {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
     mvSelectedFactorOn r S z hzr ∣ mvFamilySpecialization p z.1 := by
   classical
@@ -479,7 +480,7 @@ theorem mvSelectedFactorOn_dvd {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) �
 
 theorem natDegree_mvSelectedFactorOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)}
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
     (mvSelectedFactorOn r S z hzr).natDegree = (mvSelectedRootsOn r S z hzr).card := by
   simp [mvSelectedFactorOn]
@@ -487,16 +488,16 @@ theorem natDegree_mvSelectedFactorOn {n : ℕ}
 
 noncomputable def mvSelectedBranchIndicesOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
     Finset (Fin p.natDegree) := by
   classical
-  exact Finset.univ.filter fun i ↦ mvSimpleRootCoverOnPoint hp r z hzr i ∈ S
+  exact Finset.univ.filter fun i ↦ mvSimpleRootLocusOnPoint hp r z hzr i ∈ S
 
 /-- Near a center fiber, the restricted selection is a fixed set of local branches. -/
 theorem eventually_mvSelectedRootsOn_eq_map_mvLocalRootBranches {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r)) (hS : IsClopen S)
     (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
     ∀ᶠ z' in 𝓝 z.1, ∀ (hbase : ∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
         (mvFamilySpecialization p z').derivative.eval w ≠ 0)
@@ -512,9 +513,9 @@ theorem eventually_mvSelectedRootsOn_eq_map_mvLocalRootBranches {n : ℕ}
           (z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z') = 0)
         (hr : MvPolynomial.eval z' r ≠ 0),
         ((⟨(z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z'), hroot,
-            mul_ne_zero hr (hbase _ hroot)⟩ : MvSimpleRootCoverOn p r) ∈ S ↔
-          mvSimpleRootCoverOnPoint hp r z hzr i ∈ S) :=
-    eventually_all.2 fun i ↦ eventually_mem_clopen_mvSimpleRootCoverOn_iff hp r S hS z hzr i
+            mul_ne_zero hr (hbase _ hroot)⟩ : MvSimpleRootLocusOn p r) ∈ S ↔
+          mvSimpleRootLocusOnPoint hp r z hzr i ∈ S) :=
+    eventually_all.2 fun i ↦ eventually_mem_clopen_mvSimpleRootLocusOn_iff hp r S hS z hzr i
   filter_upwards [eventually_all_mvFamilyEquation_mvLocalRootBranch hp z,
     eventually_injective_mvLocalRootBranches hp z,
     eventually_exists_mvLocalRootBranch_eq_of_mvFamilyEquation_eq_zero hp z,
@@ -539,7 +540,7 @@ theorem eventually_mvSelectedRootsOn_eq_map_mvLocalRootBranches {n : ℕ}
     obtain ⟨hwproof, hwS⟩ := hmem
     have hbranchS :
         (⟨(z', mvLocalRootBranch (mvSimpleRootCoverPoint hp z i) z'), hroot i,
-          mul_ne_zero hr (hbase _ (hroot i))⟩ : MvSimpleRootCoverOn p r) ∈ S := by
+          mul_ne_zero hr (hbase _ (hroot i))⟩ : MvSimpleRootLocusOn p r) ∈ S := by
       convert hwS using 1
       all_goals simp [hi]
     change i ∈ mvSelectedBranchIndicesOn hp r S z hzr
@@ -557,7 +558,7 @@ theorem eventually_mvSelectedRootsOn_eq_map_mvLocalRootBranches {n : ℕ}
 /-- The degree of a clopen-selected restricted fiber factor is locally constant. -/
 theorem eventually_natDegree_mvSelectedFactorOn_eq_card {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r)) (hS : IsClopen S)
     (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
     ∀ᶠ z' in 𝓝 z.1, ∀ (hbase : ∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
         (mvFamilySpecialization p z').derivative.eval w ≠ 0)
@@ -604,7 +605,7 @@ theorem differentiableAt_coeff_mvLocalBranchFactor {n : ℕ}
 
 theorem eventually_mvSelectedFactorOn_eq_mvLocalBranchFactor {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r)) (hS : IsClopen S)
     (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
     ∀ᶠ z' in 𝓝 z.1, ∀ (hbase : ∀ w : ℂ, (mvFamilySpecialization p z').eval w = 0 →
         (mvFamilySpecialization p z').derivative.eval w ≠ 0)
@@ -618,7 +619,7 @@ theorem eventually_mvSelectedFactorOn_eq_mvLocalBranchFactor {n : ℕ}
 
 noncomputable def mvSelectedFactorCoeffOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (r : MvPolynomial (Fin n) ℂ)
-    (S : Set (MvSimpleRootCoverOn p r))
+    (S : Set (MvSimpleRootLocusOn p r))
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0)
@@ -629,7 +630,7 @@ noncomputable def mvSelectedFactorCoeffOn {n : ℕ}
 
 theorem mvSelectedFactorCoeffOn_eq {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (r : MvPolynomial (Fin n) ℂ)
-    (S : Set (MvSimpleRootCoverOn p r)) (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 →
+    (S : Set (MvSimpleRootLocusOn p r)) (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 →
       ∀ w : ℂ, (mvFamilySpecialization p z).eval w = 0 →
         (mvFamilySpecialization p z).derivative.eval w ≠ 0)
     (k : ℕ) (z : Fin n → ℂ) (hr : MvPolynomial.eval z r ≠ 0) :
@@ -639,7 +640,7 @@ theorem mvSelectedFactorCoeffOn_eq {n : ℕ}
 
 theorem differentiableOn_mvSelectedFactorCoeffOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r)) (hS : IsClopen S)
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0) (k : ℕ) :
@@ -664,7 +665,7 @@ theorem differentiableOn_mvSelectedFactorCoeffOn {n : ℕ}
 
 theorem exists_mvSelectedFactorCoeffOn_growth {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
@@ -679,7 +680,7 @@ theorem exists_mvSelectedFactorCoeffOn_growth {n : ℕ}
 theorem exists_mvPolynomial_mvSelectedFactorCoeffOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
     (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
-    (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (S : Set (MvSimpleRootLocusOn p r)) (hS : IsClopen S)
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0) (k : ℕ) :
@@ -695,7 +696,7 @@ theorem exists_mvPolynomial_mvSelectedFactorCoeffOn {n : ℕ}
 theorem exists_mvPolynomialFamily_mvSelectedFactorOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
     (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
-    (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (S : Set (MvSimpleRootLocusOn p r)) (hS : IsClopen S)
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
@@ -776,7 +777,7 @@ theorem dvd_of_map_dvd_on_mvPolynomial_nonzero {n : ℕ}
 
 noncomputable def mvSelectedDegreeOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)}
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0)
@@ -785,7 +786,7 @@ noncomputable def mvSelectedDegreeOn {n : ℕ}
 
 theorem isLocallyConstant_mvSelectedDegreeOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r)) (hS : IsClopen S)
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
@@ -803,7 +804,7 @@ theorem isLocallyConstant_mvSelectedDegreeOn {n : ℕ}
 theorem mvSelectedDegreeOn_eq {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
     (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
-    (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (S : Set (MvSimpleRootLocusOn p r)) (hS : IsClopen S)
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0)
@@ -840,7 +841,7 @@ theorem mvPolynomial_eq_of_eval_eq_on_nonzero {n : ℕ}
 theorem exists_monic_mvPolynomialFamily_mvSelectedFactorOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
     (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
-    (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (S : Set (MvSimpleRootLocusOn p r)) (hS : IsClopen S)
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
@@ -889,7 +890,7 @@ theorem exists_monic_mvPolynomialFamily_mvSelectedFactorOn {n : ℕ}
 theorem exists_monic_dvd_mvPolynomialFamily_mvSelectedFactorOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
     (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
-    (S : Set (MvSimpleRootCoverOn p r)) (hS : IsClopen S)
+    (S : Set (MvSimpleRootLocusOn p r)) (hS : IsClopen S)
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
@@ -904,9 +905,9 @@ theorem exists_monic_dvd_mvPolynomialFamily_mvSelectedFactorOn {n : ℕ}
   exact mvSelectedFactorOn_dvd r S ⟨z, hsimple z hz⟩ hz
 
 
-private theorem mvSimpleRootCoverOn_set_eq_empty_of_factor_eq_one {n : ℕ}
+private theorem mvSimpleRootLocusOn_set_eq_empty_of_factor_eq_one {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0)
@@ -930,9 +931,9 @@ private theorem mvSimpleRootCoverOn_set_eq_empty_of_factor_eq_one {n : ℕ}
   rw [hfactor x.1.1 hr, natDegree_one] at hdegree
   omega
 
-private theorem mvSimpleRootCoverOn_set_eq_univ_of_factor_eq_family {n : ℕ}
+private theorem mvSimpleRootLocusOn_set_eq_univ_of_factor_eq_family {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)}
-    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootCoverOn p r))
+    (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0)
@@ -959,13 +960,13 @@ private theorem mvSimpleRootCoverOn_set_eq_univ_of_factor_eq_family {n : ℕ}
   convert hxS using 1
 
 /-- The root cover over a simple principal open is connected for an irreducible monic family. -/
-theorem connectedSpace_mvSimpleRootCoverOn {n : ℕ}
+theorem connectedSpace_mvSimpleRootLocusOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic) (hirr : Irreducible p)
     (hpdeg : 0 < p.natDegree) (r : MvPolynomial (Fin n) ℂ) (hr0 : r ≠ 0)
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0) :
-    ConnectedSpace (MvSimpleRootCoverOn p r) := by
+    ConnectedSpace (MvSimpleRootLocusOn p r) := by
   rw [connectedSpace_iff_clopen]
   constructor
   · obtain ⟨z, hz⟩ := (MvPolynomial.isPathConnected_complex_nonzero r hr0).nonempty
@@ -987,13 +988,13 @@ theorem connectedSpace_mvSimpleRootCoverOn {n : ℕ}
       exists_monic_dvd_mvPolynomialFamily_mvSelectedFactorOn hp r hr0 S hS hsimple
     rcases hirr.dvd_iff.mp hqdvd with hqunit | hpq
     · left
-      apply mvSimpleRootCoverOn_set_eq_empty_of_factor_eq_one hp r S hsimple
+      apply mvSimpleRootLocusOn_set_eq_empty_of_factor_eq_one hp r S hsimple
       intro z hz
       rw [← hq z hz, hqmonic.eq_one_of_isUnit hqunit]
       simp
     · right
       have hpqeq : p = q := eq_of_monic_of_associated hp hqmonic hpq
-      apply mvSimpleRootCoverOn_set_eq_univ_of_factor_eq_family r S hsimple
+      apply mvSimpleRootLocusOn_set_eq_univ_of_factor_eq_family r S hsimple
       intro z hz
       rw [← hq z hz, ← hpqeq]
       rfl
@@ -1082,12 +1083,12 @@ theorem mvRamificationPolynomial_ne_zero_of_irreducible {n : ℕ}
 
 /-- Multiplying any nonzero normalization denominator by the ramification resultant gives a
 principal open whose complex root cover is connected. -/
-theorem connectedSpace_mvSimpleRootCoverOn_mul_mvRamificationPolynomial {n : ℕ}
+theorem connectedSpace_mvSimpleRootLocusOn_mul_mvRamificationPolynomial {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic) (hirr : Irreducible p)
     (r₀ : MvPolynomial (Fin n) ℂ) (hr₀ : r₀ ≠ 0) :
-    ConnectedSpace (MvSimpleRootCoverOn p (r₀ * mvRamificationPolynomial p)) := by
+    ConnectedSpace (MvSimpleRootLocusOn p (r₀ * mvRamificationPolynomial p)) := by
   have hram := mvRamificationPolynomial_ne_zero_of_irreducible hp hirr
-  apply connectedSpace_mvSimpleRootCoverOn hp hirr
+  apply connectedSpace_mvSimpleRootLocusOn hp hirr
     (hp.natDegree_pos_of_not_isUnit hirr.not_isUnit) _ (mul_ne_zero hr₀ hram)
   intro z hz
   have hzram : MvPolynomial.eval z (mvRamificationPolynomial p) ≠ 0 := by

@@ -45,8 +45,8 @@ theorem connectedSpace_of_localized_irreducible_hypersurface
   let e₂ : Localization.Away z ≃ₐ[ℂ]
       (derivativeStandardEtalePair p hp (r * ρ)).Ring :=
     e₂P.restrictScalars ℂ
-  let _ : ConnectedSpace (MvSimpleRootCoverOn p (r * ρ)) :=
-    connectedSpace_mvSimpleRootCoverOn_mul_mvRamificationPolynomial hp hirr r hr
+  let _ : ConnectedSpace (MvSimpleRootLocusOn p (r * ρ)) :=
+    connectedSpace_mvSimpleRootLocusOn_mul_mvRamificationPolynomial hp hirr r hr
   let _ : ConnectedSpace
       ((derivativeStandardEtalePair p hp (r * ρ)).Ring →ₐ[ℂ] ℂ) :=
     (derivativeStandardEtaleCoordinateHomeomorph p hp (r * ρ)).connectedSpace_iff.mpr

@@ -55,13 +55,13 @@ lemma derivativeStandardEtalePair_coordinate_condition {n : ℕ}
   simp [derivativeStandardEtalePair, mvFamilyEquation, mvFamilySpecialization,
     Polynomial.eval_map, mul_comm]
 
-/-- Complex points of the derivative standard étale algebra are the simple-root cover over the
-chosen principal open. -/
+/-- Complex points of the derivative standard étale algebra form the locus of individual simple
+roots over the chosen principal open. -/
 def derivativeStandardEtaleCoordinateHomeomorph {n : ℕ}
     (p : Polynomial (complexPolynomialRing n)) (hp : p.Monic)
     (t : complexPolynomialRing n) :
     ((derivativeStandardEtalePair p hp t).Ring →ₐ[ℂ] ℂ) ≃ₜ
-      MvSimpleRootCoverOn p t :=
+      MvSimpleRootLocusOn p t :=
   (standardEtaleCoordinateHomeomorph (derivativeStandardEtalePair p hp t)).trans <|
     Homeomorph.setCongr <| Set.ext fun zw ↦
       derivativeStandardEtalePair_coordinate_condition p hp t zw
