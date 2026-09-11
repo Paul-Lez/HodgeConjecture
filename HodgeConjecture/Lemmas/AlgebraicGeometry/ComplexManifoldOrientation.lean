@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Lemmas.Geometry.Manifold.Orientation
+public import HodgeConjecture.Mathlib.Geometry.Manifold.Orientation
 public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
 public import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
 public import Mathlib.Geometry.Manifold.VectorBundle.Tangent

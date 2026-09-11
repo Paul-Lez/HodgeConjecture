@@ -18,7 +18,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueQuasiIsoGlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.InjectiveFlasque
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularSubdivisionCochainSheaf
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularSubdivisionCochainSheaf
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import Mathlib.Algebra.Homology.Factorizations.CM5a
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
@@ -382,18 +382,8 @@ def rationalSingularCochainHypercohomologyEquivGlobalSections
   let : S.IsStrictlyGE 0 := by
     dsimp [S, singularCochainSheafComplexInt]
     infer_instance
-  let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
-  let I := Classical.choose hres
-  let hresI := Classical.choose_spec hres
-  let i := Classical.choose hresI
-  let hresi := Classical.choose_spec hresI
-  let hi : QuasiIso i := Classical.choose hresi
-  let hresiHi := Classical.choose_spec hresi
-  let hI : ∀ q : ℤ, Injective (I.X q) := Classical.choose hresiHi
-  let hIge : I.IsStrictlyGE 0 := Classical.choose_spec hresiHi
-  letI : QuasiIso i := hi
-  letI : ∀ q : ℤ, Injective (I.X q) := hI
-  letI : I.IsStrictlyGE 0 := hIge
+  choose I i _ _ _ using
+    CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
   letI : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
   have hSflasque : ∀ q, (S.X q).IsFlasque :=
     fun q ↦ singularCochainSheafComplexInt_isFlasque X q
@@ -517,16 +507,6 @@ def rationalSingularCohomologyEquivGlobalSections
       (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y).homology n :=
   (AlgebraicTopology.Singular.ordinarySingularCohomologyEquivCohomology ℚ Y n).symm.toAddEquiv
     |>.trans (ordinaryRationalSingularCohomologyEquivGlobalSections Y n)
-
-/-- Every positive sheaf-cohomology class of every term of the rational singular-cochain
-resolution vanishes on a hereditarily paracompact Hausdorff space. -/
-theorem rationalSingularCochainTerm_cohomology_succ_eq_zero
-    (Y : TopCat.{0}) [T2Space Y] [∀ U : Opens Y, ParacompactSpace U]
-    (p q : ℕ) (x : Abelian.Ext
-      (TopCat.Sheaf.IsFlasque.globalSectionsSource (X := Y))
-      (AlgebraicTopology.Singular.singularCochainSheaf ℚ Y p) (q + 1)) :
-    x = 0 :=
-  AlgebraicTopology.Singular.singularCochainSheaf_cohomology_succ_eq_zero p q x
 
 end AlgebraicTopology.Singular.HereditarilyParacompact
 

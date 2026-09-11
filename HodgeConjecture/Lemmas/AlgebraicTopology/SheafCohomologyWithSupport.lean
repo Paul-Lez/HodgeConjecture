@@ -110,8 +110,7 @@ lemma constantRestriction_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
       Functor.whiskerLeft (Opens.map g).op (constantRestriction f A).hom
     rw [toSheafify_constantRestriction]
     erw [← Category.assoc, toSheafify_constantRestriction]
-    apply NatTrans.ext
-    funext U
+    ext U : 2
     exact (NatTrans.congr_app (toSheafify_constantRestriction f A)
       ((Opens.map g).op.obj U)).symm
 

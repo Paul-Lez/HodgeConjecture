@@ -8,12 +8,12 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.NormalSlicePurity
 public import Mathlib.Analysis.Normed.Module.Ball.Homeomorph
 
 /-!
-# Actual relative homology near a flattened support
+# Relative homology near a flattened support
 
 Radial compression into a small product-norm ball preserves the zero-normal plane.
-Composing with the inverse flattening chart gives a genuine pair homeomorphism from
-the full normal-slice model to a small open neighborhood paired with its support complement.
-The homology calculation and exactly normalized class are transported along this map.
+Composing with the inverse flattening chart gives a pair homeomorphism from the normal-slice
+model to a small open neighborhood paired with its support complement, along which the
+homology calculation and the normalized class are transported.
 -/
 
 @[expose] public noncomputable section
@@ -30,7 +30,7 @@ abbrev neighborhoodSupportComplementPair (W S : Set M) : TopPair :=
   TopPair.ofSubset (X := TopCat.of W) {w | w.1 ∉ S}
 
 /-- Radial compression centered on the zero-normal plane preserves that plane exactly. -/
-theorem univBall_normal_eq_zero_iff (a : E) (r : ℝ) (hr : 0 < r)
+private theorem univBall_normal_eq_zero_iff (a : E) (r : ℝ) (hr : 0 < r)
     (v : E × (Fin c → ℂ)) :
     (OpenPartialHomeomorph.univBall (a, (0 : Fin c → ℂ)) r v).2 = 0 ↔ v.2 = 0 := by
   rw [OpenPartialHomeomorph.univBall, dif_pos hr]
@@ -55,7 +55,7 @@ theorem flattenedSupportRadius_pos : 0 < flattenedSupportRadius E c e x hx :=
   (exists_flattenedSupportRadius E c e x hx).choose_spec.1
 
 omit [NormedSpace ℝ E] in
-theorem ball_flattenedSupportRadius_subset :
+private theorem ball_flattenedSupportRadius_subset :
     Metric.ball (e x) (flattenedSupportRadius E c e x hx) ⊆ e.target :=
   (exists_flattenedSupportRadius E c e x hx).choose_spec.2
 
@@ -72,21 +72,10 @@ theorem flattenedSupportEmbedding_source :
   exact (OpenPartialHomeomorph.univBall (e x)
     (flattenedSupportRadius E c e x hx)).map_source (by simp)
 
-@[simp] theorem flattenedSupportEmbedding_zero : flattenedSupportEmbedding E c e x hx 0 = x := by
-  change e.symm (OpenPartialHomeomorph.univBall (e x) _ 0) = x
-  rw [OpenPartialHomeomorph.univBall_apply_zero, e.left_inv hx]
-
 /-- The actual open neighborhood on which the support has the normal-slice pair model. -/
 def flattenedSupportNeighborhood : TopologicalSpace.Opens M :=
   ⟨(flattenedSupportEmbedding E c e x hx).target,
     (flattenedSupportEmbedding E c e x hx).open_target⟩
-
-theorem mem_flattenedSupportNeighborhood : x ∈ flattenedSupportNeighborhood E c e x hx := by
-  have h := (flattenedSupportEmbedding E c e x hx).map_source
-    (show 0 ∈ (flattenedSupportEmbedding E c e x hx).source by
-      rw [flattenedSupportEmbedding_source]; trivial)
-  change x ∈ (flattenedSupportEmbedding E c e x hx).target
-  simpa only [flattenedSupportEmbedding_zero] using h
 
 theorem flattenedSupportNeighborhood_subset_source :
     (flattenedSupportNeighborhood E c e x hx : Set M) ⊆ e.source :=
@@ -98,10 +87,6 @@ def flattenedSupportHomeomorph :
   (((Homeomorph.setCongr (flattenedSupportEmbedding_source E c e x hx)).trans
     (Homeomorph.Set.univ _)).symm).trans
       (flattenedSupportEmbedding E c e x hx).toHomeomorphSourceTarget
-
-@[simp] theorem flattenedSupportHomeomorph_apply (v : E × (Fin c → ℂ)) :
-    (flattenedSupportHomeomorph E c e x hx v : M) =
-      flattenedSupportEmbedding E c e x hx v := rfl
 
 theorem flattenedSupportHomeomorph_coordinates (v : E × (Fin c → ℂ)) :
     e (flattenedSupportHomeomorph E c e x hx v) =
@@ -166,12 +151,6 @@ def flattenedSupportRelativeHomologyIso (n : ℕ) :
   ((relativeHomologyFunctor ℚ n).mapIso (flattenedSupportPairIso E c e x hx S hS h0).symm) ≪≫
     normalSliceRelativeHomologyIso E c n
 
-theorem flattenedSupportRelativeHomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * c) :
-    IsZero (RelativeHomology ℚ
-      (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n) :=
-  (standardComplexLocalHomology_isZero_of_ne c n hn).of_iso
-    (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 n)
-
 /-- The local class is the transport of the fixed, exactly normalized complex normal class. -/
 def flattenedSupportNormalClass :
     RelativeHomology ℚ
@@ -179,24 +158,11 @@ def flattenedSupportNormalClass :
   (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).inv.hom
     (standardComplexLocalClass c)
 
-@[simp] theorem flattenedSupportNormalClass_normalization :
-    (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).hom.hom
-      (flattenedSupportNormalClass E c e x hx S hS h0) = standardComplexLocalClass c :=
-  ConcreteCategory.congr_hom
-    (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).inv_hom_id _
-
 /-- The corresponding cohomology equivalence is the dual of those same actual maps. -/
 def flattenedSupportRelativeCohomologyEquiv (n : ℕ) :
     RelativeCohomology ℚ (standardComplexPuncturedPair c) n ≃ₗ[ℚ]
       RelativeCohomology ℚ
         (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n :=
   (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 n).toLinearEquiv.dualMap
-
-theorem flattenedSupportRelativeCohomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * c) :
-    IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
-      (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n)) := by
-  have := ModuleCat.subsingleton_of_isZero
-    (flattenedSupportRelativeHomology_isZero_of_ne E c e x hx S hS h0 n hn)
-  exact ModuleCat.isZero_of_subsingleton _
 
 end AlgebraicTopology.Singular

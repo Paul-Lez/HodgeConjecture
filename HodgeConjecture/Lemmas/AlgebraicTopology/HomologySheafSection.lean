@@ -276,7 +276,6 @@ theorem relativeHomologyPresheafSectionIso_germ [T2Space X]
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-set_option maxHeartbeats 800000 in
 /-- The homology sheafification unit is compatible with the actual local-homology
 identifications on stalks. -/
 @[reassoc]
