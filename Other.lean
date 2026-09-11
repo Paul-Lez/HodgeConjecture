@@ -30,6 +30,7 @@ public import Other.AlgebraicGeometry.BorelMooreCycleClass
 public import Other.AlgebraicGeometry.ChowCycleClassDescent
 public import Other.AlgebraicGeometry.ClosedImmersionPointNormalCoordinates
 public import Other.AlgebraicGeometry.CodimensionZeroClassComparison
+public import Other.AlgebraicGeometry.CodimensionZeroDimensionZero
 public import Other.AlgebraicGeometry.CompactlySupportedCohomology
 public import Other.AlgebraicGeometry.ComplexPointCoclassOrientationComparison
 public import Other.AlgebraicGeometry.ComplexPointCoclassSchemeIso
