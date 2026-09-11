@@ -61,10 +61,8 @@ lemma wedgeCovectors_apply_eq_det (L : ι → E →L[𝕜] 𝕜) (v : ι → E) 
 /-- For an empty index type, the wedge of covectors is the constant form `1`. -/
 @[simp]
 lemma wedgeCovectors_of_isEmpty [IsEmpty ι] (L : ι → E →L[𝕜] 𝕜) :
-    wedgeCovectors 𝕜 E L = ContinuousAlternatingMap.constOfIsEmpty 𝕜 E ι 1 := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [wedgeCovectors_apply_eq_det, Matrix.det_isEmpty]
-  rfl
+    wedgeCovectors 𝕜 E L = ContinuousAlternatingMap.constOfIsEmpty 𝕜 E ι 1 :=
+  ContinuousAlternatingMap.ext fun _ ↦ by simp [wedgeCovectors_apply_eq_det]
 
 /-- In degree zero, the wedge of covectors is the constant form `1`. -/
 lemma wedgeCovectors_zero (L : Fin 0 → E →L[𝕜] 𝕜) :
@@ -93,23 +91,12 @@ lemma wedgeCovectors_update_add
       wedgeCovectors 𝕜 E (Function.update L i a) +
         wedgeCovectors 𝕜 E (Function.update L i b) := by
   refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [ContinuousAlternatingMap.add_apply]
-  simp only [wedgeCovectors_apply_eq_det]
-  let A : Matrix ι ι 𝕜 := Matrix.of (fun k j ↦ L k (v j))
-  have hAdd : Matrix.of (fun k j ↦ (Function.update L i (a + b)) k (v j)) =
-      A.updateRow i (fun j ↦ a (v j) + b (v j)) := by
-    ext k j
-    by_cases h : k = i <;> simp [A, h]
-  have ha : Matrix.of (fun k j ↦ (Function.update L i a) k (v j)) =
-      A.updateRow i (fun j ↦ a (v j)) := by
-    ext k j
-    by_cases h : k = i <;> simp [A, h]
-  have hb : Matrix.of (fun k j ↦ (Function.update L i b) k (v j)) =
-      A.updateRow i (fun j ↦ b (v j)) := by
-    ext k j
-    by_cases h : k = i <;> simp [A, h]
-  rw [hAdd, ha, hb]
-  exact Matrix.det_updateRow_add A i _ _
+  simp only [ContinuousAlternatingMap.add_apply, wedgeCovectors_apply_eq_det]
+  have h (x : E →L[𝕜] 𝕜) : Matrix.of (fun k j ↦ (Function.update L i x) k (v j)) =
+      (Matrix.of (fun k j ↦ L k (v j))).updateRow i (fun j ↦ x (v j)) := by
+    ext k j; obtain rfl | h := eq_or_ne k i <;> simp [*]
+  rw [h (a + b), h a, h b]
+  exact Matrix.det_updateRow_add _ i _ _
 
 /-- The wedge construction is homogeneous in each covector. -/
 lemma wedgeCovectors_update_smul
@@ -117,39 +104,30 @@ lemma wedgeCovectors_update_smul
     wedgeCovectors 𝕜 E (Function.update L i (c • a)) =
       c • wedgeCovectors 𝕜 E (Function.update L i a) := by
   refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [ContinuousAlternatingMap.smul_apply]
-  simp only [wedgeCovectors_apply_eq_det]
-  let A : Matrix ι ι 𝕜 := Matrix.of (fun k j ↦ L k (v j))
-  have hsmul : Matrix.of (fun k j ↦ (Function.update L i (c • a)) k (v j)) =
-      A.updateRow i (c • fun j ↦ a (v j)) := by
-    ext k j
-    by_cases h : k = i <;> simp [A, h]
-  have ha : Matrix.of (fun k j ↦ (Function.update L i a) k (v j)) =
-      A.updateRow i (fun j ↦ a (v j)) := by
-    ext k j
-    by_cases h : k = i <;> simp [A, h]
-  rw [hsmul, ha, Matrix.det_updateRow_smul]
-  simp
+  simp only [ContinuousAlternatingMap.smul_apply, wedgeCovectors_apply_eq_det]
+  have h (x : E →L[𝕜] 𝕜) : Matrix.of (fun k j ↦ (Function.update L i x) k (v j)) =
+      (Matrix.of (fun k j ↦ L k (v j))).updateRow i (fun j ↦ x (v j)) := by
+    ext k j; obtain rfl | h := eq_or_ne k i <;> simp [*]
+  rw [h (c • a), h a]
+  simp only [_root_.smul_apply]
+  exact Matrix.det_updateRow_smul _ i c _
 
 /-- A wedge with two equal covectors vanishes. -/
 lemma wedgeCovectors_eq_zero_of_eq
     (L : ι → E →L[𝕜] 𝕜) (i j : ι)
     (h : L i = L j) (hne : i ≠ j) :
-    wedgeCovectors 𝕜 E L = 0 := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [wedgeCovectors_apply_eq_det]
-  apply Matrix.det_zero_of_row_eq hne
-  ext k
-  simp [h]
+    wedgeCovectors 𝕜 E L = 0 :=
+  ContinuousAlternatingMap.ext fun _ ↦ by
+    rw [wedgeCovectors_apply_eq_det]
+    exact Matrix.det_zero_of_row_eq hne (by ext; simp [h])
 
 /-- A wedge containing the zero covector vanishes. -/
 lemma wedgeCovectors_update_zero
     (L : ι → E →L[𝕜] 𝕜) (i : ι) :
-    wedgeCovectors 𝕜 E (Function.update L i 0) = 0 := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [wedgeCovectors_apply_eq_det]
-  refine Matrix.det_eq_zero_of_row_eq_zero i fun j ↦ ?_
-  simp
+    wedgeCovectors 𝕜 E (Function.update L i 0) = 0 :=
+  ContinuousAlternatingMap.ext fun _ ↦ by
+    rw [wedgeCovectors_apply_eq_det]
+    exact Matrix.det_eq_zero_of_row_eq_zero i fun _ ↦ by simp
 
 /-- The standard constant volume form on `ι → 𝕜`. -/
 def standardVolumeForm (ι : Type*) [Fintype ι] [DecidableEq ι] :
@@ -162,11 +140,8 @@ lemma wedgeCovectors_compContinuousLinearMap
     [NormedAddCommGroup F] [NormedSpace 𝕜 F]
     (L : ι → F →L[𝕜] 𝕜) (T : E →L[𝕜] F) :
     wedgeCovectors 𝕜 E (fun i ↦ (L i).comp T) =
-      (wedgeCovectors 𝕜 F L).compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [wedgeCovectors_apply_eq_det, ContinuousAlternatingMap.compContinuousLinearMap_apply,
-    wedgeCovectors_apply_eq_det]
-  rfl
+      (wedgeCovectors 𝕜 F L).compContinuousLinearMap T :=
+  ContinuousAlternatingMap.ext fun _ ↦ by simp [wedgeCovectors_apply_eq_det]
 
 omit [Fintype ι] [DecidableEq ι] in
 lemma add_compContinuousLinearMap
@@ -238,12 +213,9 @@ lemma alternatization_smul (c : 𝕜)
     (M : ContinuousMultilinearMap 𝕜 (fun _ : ι ↦ E) 𝕜) :
     ContinuousMultilinearMap.alternatization (c • M) =
       c • ContinuousMultilinearMap.alternatization M := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
+  ext v
   simp only [ContinuousMultilinearMap.alternatization_apply_apply, _root_.smul_apply,
-    ContinuousAlternatingMap.smul_apply]
-  rw [Finset.smul_sum]
-  refine Finset.sum_congr rfl fun σ _ ↦ ?_
-  rw [smul_comm]
+    ContinuousAlternatingMap.smul_apply, Finset.smul_sum, smul_comm c]
 
 lemma alternatization_toContinuousMultilinearMap
     (A : E [⋀^ι]→L[𝕜] 𝕜) :
@@ -275,15 +247,9 @@ lemma alternating_eq_sum_wedgeCovectors [CharZero 𝕜]
       wedgeCovectors 𝕜 (ι' → 𝕜)
         (fun j ↦ ContinuousLinearMap.proj (I j)) at hAlt
   have hfac : ((Fintype.card ι).factorial : 𝕜) ≠ 0 := by exact_mod_cast Nat.factorial_ne_zero _
-  calc
-    A = ((Fintype.card ι).factorial : 𝕜)⁻¹ • (((Fintype.card ι).factorial : 𝕜) • A) := (inv_smul_smul₀ hfac A).symm
-    _ = ((Fintype.card ι).factorial : 𝕜)⁻¹ • ∑ I : ι → ι',
-        A (fun j ↦ Pi.single (I j) 1) •
-          wedgeCovectors 𝕜 (ι' → 𝕜)
-            (fun j ↦ ContinuousLinearMap.proj (I j)) := by rw [hAlt]
-    _ = _ := by
-      rw [Finset.smul_sum]
-      exact Finset.sum_congr rfl fun I _ ↦ smul_smul _ _ _
+  nth_rw 1 [← inv_smul_smul₀ hfac A]
+  rw [hAlt, Finset.smul_sum]
+  simp_rw [smul_smul]
 
 /-- Evaluation at a fixed tuple is a continuous linear functional on continuous alternating
 forms. -/
