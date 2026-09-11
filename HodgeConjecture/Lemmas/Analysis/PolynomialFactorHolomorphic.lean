@@ -374,6 +374,41 @@ theorem eventually_localBranchFactor_dvd {p : Polynomial (Polynomial ℂ)}
     (Multiset.prod_dvd_prod_of_le (Multiset.map_le_map hle)).trans
       q.prod_multiset_X_sub_C_dvd
 
+/-- The simple-root base contains a neighborhood of each of its points. -/
+theorem eventually_mem_simpleRootBase {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) :
+    ∀ᶠ z' in 𝓝 z.1, ∀ w : ℂ, (familySpecialization p z').eval w = 0 →
+      (familySpecialization p z').derivative.eval w ≠ 0 := by
+  filter_upwards [eventually_all_familyEquation_localRootBranch hp z,
+    eventually_injective_localRootBranches hp z,
+    eventually_exists_localRootBranch_eq_of_familyEquation_eq_zero hp z] with z' hroot hinj hexhaust
+  let q := familySpecialization p z'
+  let f : Fin p.natDegree → ℂ :=
+    fun i ↦ localRootBranch (simpleRootCoverPoint hp z i) z'
+  let B : Finset ℂ := Finset.univ.image f
+  have hq : q.Monic := hp.map (Polynomial.evalRingHom z')
+  have hdegree : q.natDegree = p.natDegree := hp.natDegree_map (Polynomial.evalRingHom z')
+  have hBcard : B.card = p.natDegree := by
+    rw [Finset.card_image_iff.mpr hinj.injOn]
+    simp
+  have hBroot : ∀ a ∈ B, q.eval a = 0 := by
+    intro a ha
+    obtain ⟨i, -, rfl⟩ := Finset.mem_image.mp ha
+    exact hroot i
+  have hroots : q.roots = B.val := by
+    apply roots_eq_of_natDegree_le_card_of_ne_zero hBroot
+    simpa [hdegree] using hBcard.ge
+    exact hq.ne_zero
+  intro w hw
+  have hnodup : q.roots.Nodup := by rw [hroots]; exact B.nodup
+  have hseparable : q.Separable :=
+    (nodup_roots_iff_of_splits hq.ne_zero (IsAlgClosed.splits q)).mp hnodup
+  intro hderiv
+  have hdiv : X - C w ∣ gcd q q.derivative :=
+    dvd_gcd (dvd_iff_isRoot.mpr hw) (dvd_iff_isRoot.mpr hderiv)
+  exact not_isUnit_X_sub_C w
+    (isUnit_of_dvd_unit hdiv ((gcd_isUnit_iff q q.derivative).mpr hseparable))
+
 end
 
 end Polynomial
