@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
+public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
 
 import Mathlib.LinearAlgebra.ExteriorAlgebra.OfAlternating
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus

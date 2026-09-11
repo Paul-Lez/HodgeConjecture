@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.Algebra.Homology.MapExtend
+public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import Other.AlgebraicTopology.SingularChainSheafClosedSupport
 public import Other.AlgebraicTopology.ClosedEmbeddingDerivedPushforward
 
