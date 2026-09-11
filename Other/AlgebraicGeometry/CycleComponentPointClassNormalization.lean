@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
 public import Other.AlgebraicGeometry.CycleComponentPointCoclassSectionNormalization
 public import Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization
 public import Other.AlgebraicGeometry.SheafCycleClass
@@ -91,7 +91,7 @@ def analyticComponentPointSupportedInjectiveCoclass :
 
 /-- The positive literal supported-kernel inclusion of the old point coclass, in
 the repository's ordinary rational cohomology. No legacy cone-sign equality is claimed. -/
-def analyticComponentPointPositiveKernelClass : FieldCohomology ℚ X (2 * (d : ℤ)) :=
+def analyticComponentPointPositiveKernelClass : H^(2 * (d : ℤ))(X; ℚ) :=
   (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (d : ℤ))).symm
     (HomologicalComplex.homologyMap
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex

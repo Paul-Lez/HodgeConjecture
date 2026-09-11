@@ -25,7 +25,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 This file isolates the presently missing six-functor input needed for the sheaf-theoretic
 definition
 
-`Hᵇᵐ_i(Z ⊂ X; ℚ) = 𝕳⁻ⁱ_Z(X, ω_X)`.
+`Hᵇᵐ_i(Z ⊂ X; ℚ) = ℌ⁻ⁱ_Z(X, ω_X)`.
 
 Mathlib currently supplies derived categories, shifts, and sheaf pushforward, but not dualizing
 complexes, exceptional pullback, Verdier duality, or a derived sections-with-support functor.
@@ -125,7 +125,7 @@ abbrev DerivedHypercohomology
   ShiftedHom
     (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X)) K n
 
-/-- The group `𝕳⁻ⁱ(X, ω_X)` associated to the supplied intrinsic dualizing-object candidate.
+/-- The group `ℌ⁻ⁱ(X, ω_X)` associated to the supplied intrinsic dualizing-object candidate.
 It is intentionally separate from an ambient support.  Calling it intrinsic Borel--Moore
 homology requires the still-unavailable theorem that the candidate is genuinely dualizing. -/
 abbrev IntrinsicSheafBorelMooreHomology
@@ -140,7 +140,7 @@ def ambientSheafBorelMooreObject
     AnalyticDerivedCategory X :=
   support.functor.obj (DerivedCategory.Q.obj ω.dualizingComplex)
 
-/-- The ambient group `𝕳⁻ⁱ_Z(X, ω_X)` associated to the supplied support and dualizing inputs. -/
+/-- The ambient group `ℌ⁻ⁱ_Z(X, ω_X)` associated to the supplied support and dualizing inputs. -/
 abbrev AmbientSheafBorelMooreHomology
     {Z : Set (ComplexPoint X)}
     (ω : RationalDualizingComplex X)
@@ -345,8 +345,7 @@ def orientationInducedComparisonAddEquiv
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
     CycleComponentBorelMooreHomology ℚ V.toSmoothProjectiveComplexVariety x
         (2 * (V.dimension - p)) ≃+
-      RationalSingularCycleComponentCohomologyWithSupport
-        V.toSmoothProjectiveComplexVariety x (2 * p) := by
+      RationalSingularComponentCohomologyWithSupport V.over x (2 * p) := by
   let : TopologicalSpace V.analyticPoint := Point.analyticTopology
   let : T2Space V.analyticPoint := inferInstance
   let : CompactSpace V.analyticPoint := inferInstance
@@ -366,8 +365,7 @@ def orientationInducedComparisonAddEquiv
 /-- The singular supported class obtained from all supplied comparisons. -/
 def singularSupportedClassOfComparisons
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    RationalSingularCycleComponentCohomologyWithSupport
-      V.toSmoothProjectiveComplexVariety x (2 * p) :=
+    RationalSingularComponentCohomologyWithSupport V.over x (2 * p) :=
   D.orientationInducedComparisonAddEquiv D.compactificationFundamentalClass
 
 /-- The comparison composite sends the compactification-relative fundamental class to the
@@ -401,7 +399,7 @@ set_option maxRecDepth 5000 in
 /-- Forgetting support gives the comparison-dependent ordinary rational class. -/
 def ordinaryClassOfComparisons
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+    H^(2 * (p : ℤ))(V.over; ℚ) :=
   forgetSupport V.over
     (cycleComponentSupport V.over x) (2 * (p : ℤ))
       D.supportedClassOfComparisons
@@ -479,8 +477,7 @@ theorem alexanderPoincare_fundamentalClass_local
 /-- Local Thom-cap normalization uniquely determines the sheaf-route supported class. -/
 theorem supportedFundamentalClass_unique
     (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx)
-    (α : RationalSingularCycleComponentCohomologyWithSupport
-      V.toSmoothProjectiveComplexVariety x (2 * p))
+    (α : RationalSingularComponentCohomologyWithSupport V.over x (2 * p))
     (hα : ∀ (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
       (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
       D.localThomCap.capWithAmbientComplexOrientation z hz α =

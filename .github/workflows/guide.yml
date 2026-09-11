@@ -19,6 +19,12 @@ jobs:
       - uses: leanprover/lean-action@v1
         with:
           build: false
+      - name: Check the style
+        run: lake exe lint-style HodgeConjecture Other HodgeGuide
+      - name: Build the Lean libraries and the statement-import check
+        run: lake build
+      - name: Check the import layering
+        run: python3 scripts/check_import_layers.py
       - name: Build the Verso guide
         run: lake exe hodge-guide
       - uses: actions/configure-pages@v5

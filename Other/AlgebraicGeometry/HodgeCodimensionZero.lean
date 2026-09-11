@@ -15,8 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Coniveau
 import Other.AlgebraicGeometry.CycleClassDimension
 import Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
 import HodgeConjecture.Lemmas.AlgebraicGeometry.RationalCohomologyZero

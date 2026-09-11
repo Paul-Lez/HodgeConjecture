@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainSheaf
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainSheaf
 public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
 public import Mathlib.Topology.Sheaves.Flasque
 
@@ -325,8 +325,6 @@ instance singularCochainPlus_isFlasque (n : ℕ) :
       ← ((Opens.grothendieckTopology X).toPlus
         (singularCochainPresheaf R X n)).naturality i,
       ConcreteCategory.comp_apply, hφU, hφV]
-
-abbrev ZeroSimplex (U : (Opens X)ᵒᵖ) := OpenSimplex X U 0
 
 /-- The degree-zero singular chain associated to a point of an open subset. -/
 noncomputable def singularZeroChainOfPoint (U : (Opens X)ᵒᵖ) (x : U.unop) :

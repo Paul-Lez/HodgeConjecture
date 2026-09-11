@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import HodgeConjecture.Definitions.AlgebraicGeometry.IntegralProjectiveVariety
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth

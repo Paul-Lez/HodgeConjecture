@@ -288,7 +288,7 @@ def neighborhoodProjectionChart :
       (ComplexPoint C.neighborhoodScheme)
       (Fin n → ℂ) :=
   C.neighborhoodPointAlgHomHomeomorph.toOpenPartialHomeomorph |>.trans
-    (ComplexPoint.etaleAlgHomProjectionChart
+    (ComplexAlgHom.etaleAlgHomProjectionChart
       Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint))
 
@@ -296,7 +296,7 @@ def neighborhoodProjectionChart :
 lemma neighborhoodPoint_mem_projectionChart_source :
     C.neighborhoodPoint ∈ C.neighborhoodProjectionChart.source := by
   rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source]
-  exact ⟨by simp, ComplexPoint.mem_etaleAlgHomProjectionChart_source
+  exact ⟨by simp, ComplexAlgHom.mem_etaleAlgHomProjectionChart_source
     Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)⟩
 
@@ -306,12 +306,12 @@ lemma neighborhoodProjectionChart_apply_of_mem
     (z : ComplexPoint C.neighborhoodScheme)
     (hz : z ∈ C.neighborhoodProjectionChart.source) :
     C.neighborhoodProjectionChart z =
-      ComplexPoint.mvPolynomialAlgHomHomeomorph n
-        (ComplexPoint.etaleBaseAlgHom Γ(C.componentNeighborhood.toScheme, ⊤)
+      ComplexAlgHom.mvPolynomialAlgHomHomeomorph n
+        (ComplexAlgHom.etaleBaseAlgHom Γ(C.componentNeighborhood.toScheme, ⊤)
           (C.neighborhoodPointAlgHomHomeomorph z)) := by
   rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source] at hz
   rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_apply]
-  exact ComplexPoint.etaleAlgHomProjectionChart_apply_of_mem (n := n)
+  exact ComplexAlgHom.etaleAlgHomProjectionChart_apply_of_mem (n := n)
     Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)
       (C.neighborhoodPointAlgHomHomeomorph z) hz.2
@@ -324,11 +324,11 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate_top
     AnalyticAt ℂ (fun v ↦ Point.evaluate ⊤ r
       (C.neighborhoodProjectionChart.symm v)) w := by
   let u := C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint
-  have hw' : w ∈ (ComplexPoint.etaleAlgHomProjectionChart
+  have hw' : w ∈ (ComplexAlgHom.etaleAlgHomProjectionChart
       Γ(C.componentNeighborhood.toScheme, ⊤) u).target := by
     rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_target] at hw
     exact hw.1
-  have h := ComplexPoint.analyticAt_etaleAlgHomProjectionChart_symm_apply
+  have h := ComplexAlgHom.analyticAt_etaleAlgHomProjectionChart_symm_apply
     Γ(C.componentNeighborhood.toScheme, ⊤) u hw' r
   have h' : AnalyticAt ℂ (fun v ↦ C.neighborhoodPointAlgHomHomeomorph
       (C.neighborhoodProjectionChart.symm v) r) w := by
@@ -464,90 +464,5 @@ lemma span_neighborhoodLocalClass_eq_top :
   exact AlgebraicTopology.Singular.span_localClassOfChart_eq_top
     n C.neighborhoodProjectionChart C.neighborhoodPoint
       C.neighborhoodPoint_mem_projectionChart_source
-
-/-- In ambient dimension at most two, the established exact component coordinates provide an
-actual analytic chart whose transported class generates the chart map's image. -/
-lemma exists_span_neighborhoodLocalClass_eq_range_of_le_two
-    (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (d p : ℕ)
-    [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = p) (hd : d ≤ 2) :
-    ∃ C : CycleComponentSeparateLocalCoordinates X x d (d - p),
-      Submodule.span ℚ {C.neighborhoodLocalClass} =
-        LinearMap.range C.neighborhoodLocalHomologyMap := by
-  obtain ⟨C⟩ := nonempty_cycleComponentSeparateLocalCoordinates_of_le_two
-    X x d p hx hd
-  exact ⟨C, C.span_neighborhoodLocalClass_eq_range⟩
-
-/-- In ambient dimension at most two, exact component coordinates give an actual generator of
-the full local homology at the selected smooth component point. -/
-lemma exists_span_neighborhoodLocalClass_eq_top_of_le_two
-    (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (d p : ℕ)
-    [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = p) (hd : d ≤ 2) :
-    ∃ C : CycleComponentSeparateLocalCoordinates X x d (d - p),
-      Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
-  obtain ⟨C⟩ := nonempty_cycleComponentSeparateLocalCoordinates_of_le_two
-    X x d p hx hd
-  exact ⟨C, C.span_neighborhoodLocalClass_eq_top⟩
-
-/-- A codimension-`d` component has an exact zero-dimensional component chart whose transported
-class generates the chart map's image. -/
-lemma exists_span_neighborhoodLocalClass_eq_range_of_coheight_eq_dimension
-    (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (d : ℕ)
-    [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = d) :
-    ∃ C : CycleComponentSeparateLocalCoordinates X x d 0,
-      Submodule.span ℚ {C.neighborhoodLocalClass} =
-        LinearMap.range C.neighborhoodLocalHomologyMap := by
-  obtain ⟨C⟩ :=
-    nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_eq_dimension
-      X x d hx
-  exact ⟨C, C.span_neighborhoodLocalClass_eq_range⟩
-
-/-- A codimension-`d` component has an actual generator of its zero-dimensional local homology
-at the selected smooth point. -/
-lemma exists_span_neighborhoodLocalClass_eq_top_of_coheight_eq_dimension
-    (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (d : ℕ)
-    [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = d) :
-    ∃ C : CycleComponentSeparateLocalCoordinates X x d 0,
-      Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
-  obtain ⟨C⟩ :=
-    nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_eq_dimension
-      X x d hx
-  exact ⟨C, C.span_neighborhoodLocalClass_eq_top⟩
-
-/-- A one-dimensional component has an exact one-dimensional component chart whose transported
-class generates the chart map's image. -/
-lemma exists_span_neighborhoodLocalClass_eq_range_of_coheight_succ_eq_dimension
-    (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (d p : ℕ)
-    [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = p) (hd : p + 1 = d) :
-    ∃ C : CycleComponentSeparateLocalCoordinates X x d 1,
-      Submodule.span ℚ {C.neighborhoodLocalClass} =
-        LinearMap.range C.neighborhoodLocalHomologyMap := by
-  obtain ⟨C⟩ :=
-    nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_succ_eq_dimension
-      X x d p hx hd
-  exact ⟨C, C.span_neighborhoodLocalClass_eq_range⟩
-
-/-- A one-dimensional component has an actual generator of its local homology at the selected
-smooth point. -/
-lemma exists_span_neighborhoodLocalClass_eq_top_of_coheight_succ_eq_dimension
-    (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (d p : ℕ)
-    [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = p) (hd : p + 1 = d) :
-    ∃ C : CycleComponentSeparateLocalCoordinates X x d 1,
-      Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
-  obtain ⟨C⟩ :=
-    nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_succ_eq_dimension
-      X x d p hx hd
-  exact ⟨C, C.span_neighborhoodLocalClass_eq_top⟩
 
 end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

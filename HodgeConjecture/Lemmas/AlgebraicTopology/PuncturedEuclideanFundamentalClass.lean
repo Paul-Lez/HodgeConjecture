@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.EuclideanLocalHomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularExcisionField
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularSubsetChains
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularStandardSimplexCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.StandardSphereAffineBoundary
 public import Mathlib.Topology.Homotopy.Contractible
@@ -241,16 +242,6 @@ lemma standardPuncturedFacetIntersection_contractibleSpace (d : ℕ)
     ⟨standardFacetIntersectionCenter d I,
       standardFacetIntersectionCenter_mem d I hI⟩
 
-/-- A nonempty facet intersection includes continuously into punctured coordinate space. -/
-def standardPuncturedFacetIntersectionInclusion (d : ℕ)
-    (I : Finset (Fin (d + 1))) (hI : I.Nonempty) :
-    TopCat.of (StandardPuncturedFacetIntersection d I) ⟶
-      (standardPuncturedPair d).snd :=
-  TopCat.ofHom
-    ⟨fun x ↦ ⟨x.1,
-        standardPuncturedFacetIntersectionSet_ne_zero d I hI x.2⟩,
-      Continuous.subtype_mk continuous_subtype_val _⟩
-
 /-- The same facet intersection, now presented as a subspace of punctured coordinate space. -/
 def standardPuncturedFacetIntersectionSubspace (d : ℕ)
     (I : Finset (Fin (d + 1))) : Set ((standardPuncturedPair d).snd) :=
@@ -267,13 +258,8 @@ def standardPuncturedFacetIntersectionHomeomorph (d : ℕ)
   invFun x := ⟨x.1.1, x.2⟩
   left_inv _ := rfl
   right_inv _ := rfl
-  continuous_toFun := by
-    apply Continuous.subtype_mk
-    apply Continuous.subtype_mk
-    exact continuous_subtype_val
-  continuous_invFun := by
-    apply Continuous.subtype_mk
-    exact continuous_subtype_val.comp continuous_subtype_val
+  continuous_toFun := by fun_prop
+  continuous_invFun := by fun_prop
 
 /-- A nonempty proper facet intersection is contractible in its nested-subspace presentation. -/
 lemma standardPuncturedFacetIntersectionSubspace_contractibleSpace (d : ℕ)
@@ -313,79 +299,6 @@ lemma standardPuncturedFacetIntersection_exactAt (d : ℕ)
     standardPuncturedFacetIntersection_contractibleSpace d I hI
   exact AlgebraicTopology.singularChainComplex_exactAt_of_contractible
     ℚ (StandardPuncturedFacetIntersection d I) k hk
-
-/-- Every positive-degree rational cycle in a proper facet intersection has a rational chain
-filler in that same intersection. -/
-lemma exists_standardPuncturedFacetIntersection_cycleFiller
-    (d n : ℕ) (I : Finset (Fin (d + 1))) (hI : I ≠ Finset.univ)
-    (z : ModuleCat.of ℚ ℚ ⟶
-      ((TopCat.toSSet.obj
-        (TopCat.of (StandardPuncturedFacetIntersection d I))).chainComplex
-          (ModuleCat.of ℚ ℚ)).X (n + 1))
-    (hz : z ≫
-      ((TopCat.toSSet.obj
-        (TopCat.of (StandardPuncturedFacetIntersection d I))).chainComplex
-          (ModuleCat.of ℚ ℚ)).d (n + 1) n = 0) :
-    ∃ p : ModuleCat.of ℚ ℚ ⟶
-        ((TopCat.toSSet.obj
-          (TopCat.of (StandardPuncturedFacetIntersection d I))).chainComplex
-            (ModuleCat.of ℚ ℚ)).X (n + 2),
-      p ≫
-        ((TopCat.toSSet.obj
-          (TopCat.of (StandardPuncturedFacetIntersection d I))).chainComplex
-            (ModuleCat.of ℚ ℚ)).d (n + 2) (n + 1) = z := by
-  let K := (TopCat.toSSet.obj
-    (TopCat.of (StandardPuncturedFacetIntersection d I))).chainComplex
-      (ModuleCat.of ℚ ℚ)
-  have hexact : (K.sc' (n + 2) (n + 1) n).Exact :=
-    (K.exactAt_iff' (i := n + 2) (j := n + 1) (k := n)
-      (by simp) (by simp)).mp
-        (standardPuncturedFacetIntersection_exactAt d I hI (n + 1) (by lia))
-  have hz1 : K.d (n + 1) n (z 1) = 0 := by
-    simpa using ConcreteCategory.congr_hom hz 1
-  obtain ⟨p, hp⟩ := ((K.sc' (n + 2) (n + 1) n).moduleCat_exact_iff).mp
-    hexact (z 1) hz1
-  change K.X (n + 2) at p
-  change K.d (n + 2) (n + 1) p = z 1 at hp
-  refine ⟨ModuleCat.ofHom (LinearMap.toSpanSingleton ℚ _ p), ?_⟩
-  apply ModuleCat.hom_ext
-  refine LinearMap.ext fun q ↦ ?_
-  change K.d (n + 2) (n + 1) (q • p) = z q
-  rw [map_smul, hp]
-  simpa using (z.hom.map_smul q (1 : ℚ)).symm
-
-/-- A rational zero-chain with zero component-wise augmentation is the boundary of a rational
-one-chain. -/
-lemma exists_rationalSingularZeroChain_filler
-    (X : TopCat.{0})
-    (z : ModuleCat.of ℚ ℚ ⟶
-      ((TopCat.toSSet.obj X).chainComplex (ModuleCat.of ℚ ℚ)).X 0)
-    (hz : z ≫ SSet.π₀.fromChainComplexXZero
-      (TopCat.toSSet.obj X) (ModuleCat.of ℚ ℚ) = 0) :
-    ∃ p : ModuleCat.of ℚ ℚ ⟶
-        ((TopCat.toSSet.obj X).chainComplex (ModuleCat.of ℚ ℚ)).X 1,
-      p ≫ ((TopCat.toSSet.obj X).chainComplex
-        (ModuleCat.of ℚ ℚ)).d 1 0 = z := by
-  let K := (TopCat.toSSet.obj X).chainComplex (ModuleCat.of ℚ ℚ)
-  let q := SSet.π₀.fromChainComplexXZero
-    (TopCat.toSSet.obj X) (ModuleCat.of ℚ ℚ)
-  let S : ShortComplex (ModuleCat ℚ) :=
-    ShortComplex.mk (K.d 1 0) q (SSet.π₀.d_fromChainComplexXZero
-      (TopCat.toSSet.obj X) (ModuleCat.of ℚ ℚ) 1)
-  have hexact : S.Exact := ShortComplex.exact_of_g_is_cokernel S
-    (SSet.isColimitCokernelCoforkChainComplexDOneZero
-      (TopCat.toSSet.obj X) (ModuleCat.of ℚ ℚ))
-  have hz1 : q (z 1) = 0 := by
-    simpa [q] using ConcreteCategory.congr_hom hz 1
-  obtain ⟨p, hp⟩ := (S.moduleCat_exact_iff).mp hexact (z 1) hz1
-  change K.X 1 at p
-  change K.d 1 0 p = z 1 at hp
-  refine ⟨ModuleCat.ofHom (LinearMap.toSpanSingleton ℚ _ p), ?_⟩
-  apply ModuleCat.hom_ext
-  refine LinearMap.ext fun r ↦ ?_
-  change K.d 1 0 (r • p) = z r
-  rw [map_smul, hp]
-  simpa using (z.hom.map_smul r (1 : ℚ)).symm
 
 /-- Positive-degree integral singular homology of a nonempty proper facet intersection
 vanishes. -/
@@ -496,171 +409,6 @@ lemma exists_integralSingularZeroChain_filler
   apply AddCommGrpCat.int_hom_ext
   change K.d 1 0 ((AddCommGrpCat.asHom p) 1) = z 1
   rwa [AddCommGrpCat.asHom_hom_apply, one_zsmul]
-
-/-- A singular simplex factors through a subspace exactly when its topological image is
-contained in that subspace. -/
-lemma singularSimplex_mem_range_subset
-    (X : TopCat.{0}) (s : Set X) {n : SimplexCategoryᵒᵖ}
-    (x : (TopCat.toSSet.obj X).obj n) :
-    x ∈ (SSet.Subcomplex.range
-        (TopCat.toSSet.map (topologicalSubsetInclusion X s))).obj n ↔
-      Set.range (X.toSSetObjEquiv n x) ⊆ s := by
-  simp only [Subfunctor.range_obj]
-  constructor
-  · rintro ⟨y, rfl⟩ _ ⟨t, rfl⟩
-    exact (TopCat.of s).toSSetObjEquiv n y t |>.2
-  · intro h
-    let f : C(stdSimplex ℝ (Fin (n.unop.len + 1)), TopCat.of s) :=
-      ⟨fun t ↦ ⟨X.toSSetObjEquiv n x t, h ⟨t, rfl⟩⟩,
-        Continuous.subtype_mk (X.toSSetObjEquiv n x).continuous _⟩
-    refine ⟨((TopCat.of s).toSSetObjEquiv n).symm f, ?_⟩
-    apply (X.toSSetObjEquiv n).injective
-    ext t
-    rfl
-
-/-- A simplicial map to a singular simplicial set lifts to a topological subspace when every
-represented continuous simplex has image in that subspace. -/
-def singularSimplicialMapLiftToSubset
-    (X : SSet.{0}) (Y : TopCat.{0}) (s : Set Y)
-    (f : X ⟶ TopCat.toSSet.obj Y)
-    (hf : ∀ (n : SimplexCategoryᵒᵖ) (x : X.obj n),
-      Set.range (Y.toSSetObjEquiv n (f.app n x)) ⊆ s) :
-    X ⟶ TopCat.toSSet.obj (TopCat.of s) where
-  app n := ↾ fun x ↦
-    ((TopCat.of s).toSSetObjEquiv n).symm
-      ⟨fun t ↦ ⟨Y.toSSetObjEquiv n (f.app n x) t,
-          hf n x ⟨t, rfl⟩⟩,
-        Continuous.subtype_mk
-          (Y.toSSetObjEquiv n (f.app n x)).continuous _⟩
-  naturality n m g := by
-    ext x
-    apply ((TopCat.of s).toSSetObjEquiv m).injective
-    apply ContinuousMap.ext
-    intro t
-    apply Subtype.ext
-    change (Y.toSSetObjEquiv m (f.app m (X.map g x))) t =
-      (Y.toSSetObjEquiv m
-        ((TopCat.toSSet.obj Y).map g (f.app n x))) t
-    have h := ConcreteCategory.congr_hom (f.naturality g) x
-    apply_fun fun z ↦ Y.toSSetObjEquiv m z t at h
-    simpa only [ConcreteCategory.comp_apply] using h
-
-@[reassoc (attr := simp)]
-lemma singularSimplicialMapLiftToSubset_comp_inclusion
-    (X : SSet.{0}) (Y : TopCat.{0}) (s : Set Y)
-    (f : X ⟶ TopCat.toSSet.obj Y)
-    (hf : ∀ (n : SimplexCategoryᵒᵖ) (x : X.obj n),
-      Set.range (Y.toSSetObjEquiv n (f.app n x)) ⊆ s) :
-    singularSimplicialMapLiftToSubset X Y s f hf ≫
-        TopCat.toSSet.map (topologicalSubsetInclusion Y s) = f := by
-  ext n x
-  apply (Y.toSSetObjEquiv n).injective
-  apply ContinuousMap.ext
-  intro t
-  change ((((TopCat.of s).toSSetObjEquiv n)
-    ((singularSimplicialMapLiftToSubset X Y s f hf).app n x)) t).1 =
-      (Y.toSSetObjEquiv n (f.app n x)) t
-  rfl
-
-/-- Maps into a topological subspace are equal when their composites with the subspace
-inclusion are equal. -/
-lemma singularSimplicialMapToSubset_ext
-    (X : SSet.{0}) (Y : TopCat.{0}) (s : Set Y)
-    (f g : X ⟶ TopCat.toSSet.obj (TopCat.of s))
-    (h : f ≫ TopCat.toSSet.map (topologicalSubsetInclusion Y s) =
-      g ≫ TopCat.toSSet.map (topologicalSubsetInclusion Y s)) : f = g := by
-  ext n x
-  apply ((TopCat.of s).toSSetObjEquiv n).injective
-  apply ContinuousMap.ext
-  intro t
-  apply Subtype.ext
-  change (Y.toSSetObjEquiv n
-      ((TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (f.app n x))) t =
-    (Y.toSSetObjEquiv n
-      ((TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (g.app n x))) t
-  have hx := congrArg (fun k : X ⟶ TopCat.toSSet.obj Y ↦ k.app n x) h
-  change (TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (f.app n x) =
-    (TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (g.app n x) at hx
-  exact congrArg (fun z ↦ Y.toSSetObjEquiv n z t) hx
-
-/-- A singular simplex whose image lies in a subspace, regarded as a simplex of that
-subspace. -/
-def singularSimplexLiftToSubset
-    (X : TopCat.{0}) (s : Set X) {n : SimplexCategoryᵒᵖ}
-    (x : (TopCat.toSSet.obj X).obj n)
-    (hx : Set.range (X.toSSetObjEquiv n x) ⊆ s) :
-    (TopCat.toSSet.obj (TopCat.of s)).obj n :=
-  ((TopCat.of s).toSSetObjEquiv n).symm
-    ⟨fun t ↦ ⟨X.toSSetObjEquiv n x t, hx ⟨t, rfl⟩⟩,
-      Continuous.subtype_mk (X.toSSetObjEquiv n x).continuous _⟩
-
-@[simp]
-lemma singularSimplexLiftToSubset_comp_inclusion
-    (X : TopCat.{0}) (s : Set X) {n : SimplexCategoryᵒᵖ}
-    (x : (TopCat.toSSet.obj X).obj n)
-    (hx : Set.range (X.toSSetObjEquiv n x) ⊆ s) :
-    (TopCat.toSSet.map (topologicalSubsetInclusion X s)).app n
-      (singularSimplexLiftToSubset X s x hx) = x := by
-  apply (X.toSSetObjEquiv n).injective
-  ext t
-  rfl
-
-/-- A degreewise retraction of integral singular chains along a topological subspace
-inclusion.  It sends a simplex outside the subspace to zero. -/
-def singularSubsetIntegralChainRetractionComponent
-    (X : TopCat.{0}) (s : Set X) (n : ℕ) :
-    ((TopCat.toSSet.obj X).chainComplex (AddCommGrpCat.of ℤ)).X n ⟶
-      ((TopCat.toSSet.obj (TopCat.of s)).chainComplex
-        (AddCommGrpCat.of ℤ)).X n := by
-  classical
-  exact (TopCat.toSSet.obj X).isColimitChainComplexXCofan
-    (AddCommGrpCat.of ℤ) n |>.desc
-      (Cofan.mk _ (fun x ↦
-        if hx : Set.range ((X.toSSetObjEquiv _ x)) ⊆ s then
-          (TopCat.toSSet.obj (TopCat.of s)).ιChainComplex
-            (singularSimplexLiftToSubset X s x hx)
-        else 0))
-
-set_option backward.isDefEq.respectTransparency false in
-lemma singularSubsetIntegralChainInclusion_comp_retraction
-    (X : TopCat.{0}) (s : Set X) (n : ℕ) :
-    (SSet.chainComplexMap
-        (TopCat.toSSet.map (topologicalSubsetInclusion X s))
-        (AddCommGrpCat.of ℤ)).f n ≫
-      singularSubsetIntegralChainRetractionComponent X s n = 𝟙 _ := by
-  apply (TopCat.toSSet.obj (TopCat.of s)).chainComplex_hom_ext
-  intro x
-  rw [← Category.assoc, SSet.ι_chainComplexMap_f]
-  change ((TopCat.toSSet.obj X).chainComplexXCofan
-      (AddCommGrpCat.of ℤ) n).inj
-        ((TopCat.toSSet.map (topologicalSubsetInclusion X s)).app _ x) ≫
-      singularSubsetIntegralChainRetractionComponent X s n = _
-  have hx : Set.range (X.toSSetObjEquiv _
-      ((TopCat.toSSet.map (topologicalSubsetInclusion X s)).app _ x)) ⊆ s := by
-    rintro _ ⟨t, rfl⟩
-    exact ((TopCat.of s).toSSetObjEquiv _ x t).2
-  simp [singularSubsetIntegralChainRetractionComponent, hx]
-  congr
-
-/-- Integral singular chains of a topological subspace inject degreewise into ambient
-singular chains. -/
-lemma singularSubsetIntegralChainInclusionComponent_mono
-    (X : TopCat.{0}) (s : Set X) (n : ℕ) :
-    Mono ((SSet.chainComplexMap
-      (TopCat.toSSet.map (topologicalSubsetInclusion X s))
-      (AddCommGrpCat.of ℤ)).f n) := by
-  constructor
-  intro Z f g h
-  let inc := (SSet.chainComplexMap
-    (TopCat.toSSet.map (topologicalSubsetInclusion X s))
-    (AddCommGrpCat.of ℤ)).f n
-  let ret := singularSubsetIntegralChainRetractionComponent X s n
-  have hret : inc ≫ ret = 𝟙 _ :=
-    singularSubsetIntegralChainInclusion_comp_retraction X s n
-  calc
-    f = (f ≫ inc) ≫ ret := by rw [Category.assoc, hret, Category.comp_id]
-    _ = (g ≫ inc) ≫ ret := by rw [h]
-    _ = g := by rw [Category.assoc, hret, Category.comp_id]
 
 /-- Cover indices through which a cover-small singular simplex factors. -/
 def standardFacetCarrier (d : ℕ) {n : SimplexCategoryᵒᵖ}
@@ -926,16 +674,6 @@ lemma standardFacetComplementCarrier_nonempty (d : ℕ) {n : ℕ}
   rw [standardFacetComplementCarrier, Finset.nonempty_iff_ne_empty,
     ne_eq, Finset.compl_eq_empty_iff]
   exact standardFacetCarrierAtFace_ne_univ d x A
-
-lemma standardFacetComplementCarrier_ne_univ (d : ℕ) {n : ℕ}
-    (x : (coverSmallSingularSubcomplex
-      (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n⦌)
-    (A : NonemptyFiniteChains (ULift.{0} (Fin (n + 1)))) :
-    standardFacetComplementCarrier d x A ≠ Finset.univ := by
-  classical
-  rw [standardFacetComplementCarrier,
-    Finset.compl_ne_univ_iff_nonempty]
-  exact standardFacetCarrierAtFace_nonempty d x A
 
 lemma standardFacetComplementCarrier_mono (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
@@ -2090,27 +1828,6 @@ lemma standardFacetCarrierPrismResidual_cycle_of_equation
   · rintro k rfl
     exact h
 
-lemma exists_standardFacetCarrierPrismResidual_filler_of_equation
-    (d : ℕ) (P : StandardFacetCarrierPrismFamily d) (n : ℕ)
-    (h : StandardFacetCarrierPrismEquation d P n)
-    (x : (coverSmallSingularSubcomplex
-      (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n + 1⦌) :
-    ∃ p : AddCommGrpCat.of ℤ ⟶
-        ((TopCat.toSSet.obj (TopCat.of
-          (standardPuncturedFacetIntersectionSubspace d
-            (standardFacetCarrier d x)))).chainComplex
-              (AddCommGrpCat.of ℤ)).X (n + 2),
-      p ≫ ((TopCat.toSSet.obj (TopCat.of
-        (standardPuncturedFacetIntersectionSubspace d
-          (standardFacetCarrier d x)))).chainComplex
-            (AddCommGrpCat.of ℤ)).d (n + 2) (n + 1) =
-        standardFacetCarrierPrismResidual d P n x := by
-  apply exists_standardFacetCarrierPrismResidual_filler d P n
-  · rintro rfl
-    exact h
-  · rintro k rfl
-    exact h
-
 /-- A total selected filler for a positive-degree cycle in a proper facet intersection.  It
 returns zero when its input is not a cycle, so it can be used in a structural recursion whose
 cycle proof is established afterwards. -/
@@ -2932,15 +2649,6 @@ lemma standardAffineBoundaryHomologyMap_comp_retraction (n : ℕ) :
     (standardAffineBoundaryChainRetractionHomotopy (n + 2)).homologyMap_eq,
     HomologicalComplex.homologyMap_id]
 
-lemma standardAffineBoundaryHomologyRetraction_comp_map (n : ℕ) :
-    standardAffineBoundaryHomologyRetraction n ≫
-        standardAffineBoundaryHomologyMap n = 𝟙 _ := by
-  rw [standardAffineBoundaryHomologyMap,
-    standardAffineBoundaryHomologyRetraction,
-    ← HomologicalComplex.homologyMap_comp,
-    (standardAffineBoundaryChainCoretractionHomotopy (n + 2)).homologyMap_eq,
-    HomologicalComplex.homologyMap_id]
-
 /-- The homology isomorphism induced by affine realization of the standard simplicial
 boundary. -/
 def standardAffineBoundaryHomologyIso (n : ℕ) :
@@ -2963,11 +2671,6 @@ noncomputable instance standardAffineBoundaryHomologyMap_isIso (n : ℕ) :
     (standardAffineBoundaryChainHomotopyEquiv (n + 2)).hom (n + 1))
   exact ((standardAffineBoundaryChainHomotopyEquiv (n + 2)).toHomologyIso
     (n + 1)).isIso_hom
-
-/-- The affine boundary comparison is surjective on rational homology. -/
-lemma standardAffineBoundaryHomologyMap_surjective (n : ℕ) :
-    Function.Surjective (standardAffineBoundaryHomologyMap n).hom :=
-  (asIso (standardAffineBoundaryHomologyMap n)).toLinearEquiv.surjective
 
 lemma standardAffineBoundaryHomologyMap_injective (n : ℕ) :
     Function.Injective (standardAffineBoundaryHomologyMap n).hom := by
@@ -3082,13 +2785,6 @@ lemma standardPuncturedBoundaryClass_succ_ne_zero (n : ℕ) :
   standardPuncturedBoundaryClass_succ_ne_zero_of_affine_injective n
     (standardAffineBoundaryHomologyMap_injective n)
 
-/-- The explicit oriented boundary class is nonzero in every punctured Euclidean space. -/
-lemma standardPuncturedBoundaryClass_ne_zero (n : ℕ) :
-    standardPuncturedBoundaryClass n ≠ 0 := by
-  cases n with
-  | zero => exact standardPuncturedBoundaryClass_zero_ne_zero
-  | succ n => exact standardPuncturedBoundaryClass_succ_ne_zero n
-
 /-- If the affine boundary comparison is an isomorphism, its explicit punctured class spans
 top homology. -/
 lemma span_standardPuncturedBoundaryClass_succ_eq_top_of_affine_isIso
@@ -3109,20 +2805,6 @@ lemma span_standardPuncturedBoundaryClass_succ_eq_top_of_affine_isIso
     exact LinearMap.range_eq_top.mpr e.surjective
   rw [← hmap, span_standardSphereSimplicialBoundaryClass_eq_top, etop]
   rfl
-
-/-- The explicit oriented boundary class generates the top rational homology of every
-positive-dimensional punctured Euclidean space. -/
-lemma span_standardPuncturedBoundaryClass_succ_eq_top (n : ℕ) :
-    Submodule.span ℚ {standardPuncturedBoundaryClass (n + 1)} = ⊤ :=
-  span_standardPuncturedBoundaryClass_succ_eq_top_of_affine_isIso n
-
-/-- In dimensions at least two, injectivity of the affine boundary comparison implies
-nonvanishing of the standard relative local class. -/
-lemma standardLocalClass_add_two_ne_zero_of_affine_injective
-    (n : ℕ) (h : Function.Injective (standardAffineBoundaryHomologyMap n).hom) :
-    standardLocalClass (n + 2) ≠ 0 := by
-  rw [standardLocalClass_succ_ne_zero_iff (n + 1) (by lia)]
-  exact standardPuncturedBoundaryClass_succ_ne_zero_of_affine_injective n h
 
 /-- The explicit standard local class is nonzero in every positive dimension. -/
 lemma standardLocalClass_ne_zero_of_pos (d : ℕ) (hd : 0 < d) :

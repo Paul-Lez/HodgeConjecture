@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.BoundedBelowFlasqueComplex
+public import HodgeConjecture.Lemmas.AlgebraicTopology.BoundedBelowFlasqueComplex
 public import Mathlib.Algebra.Homology.HomotopyCategory.MappingCone
 
 import Mathlib.Algebra.Homology.HomotopyCategory.Plus

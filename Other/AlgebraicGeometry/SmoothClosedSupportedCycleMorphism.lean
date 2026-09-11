@@ -13,7 +13,7 @@ public import Other.AlgebraicTopology.DerivedSheafSupportTruncation
 The actual termwise supported chain map is followed by good truncation of the smooth
 ambient chain model and the genuine derived-support unit. Transporting back along
 derived support of the proved truncation isomorphism gives a morphism into actual
-`RΓ̲_image(K_X)` in `D⁺`. No support-acyclicity or intrinsic-to-ambient quasi-isomorphism
+`RΓ_image(K_X)` in `D⁺`. No support-acyclicity or intrinsic-to-ambient quasi-isomorphism
 is assumed, and both complex orientations are the existing geometrically normalized ones.
 
 This constructs the sheaf-level morphism underlying a smooth closed-component class.

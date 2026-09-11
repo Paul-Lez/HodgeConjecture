@@ -24,6 +24,9 @@ The conjecture concerns a smooth projective variety over $`\mathbb C`. In Lean s
 object {lean}`X` of the over category {lean}`Over (Spec ↧ℂ)`: a scheme {lean}`X.left` together with
 its structure morphism {lean}`X.hom`, a morphism {lean}`X.left ⟶ Spec ↧ℂ`. The hypotheses are the
 instance arguments {lean}`IsIntegral X.left`, {lean}`Smooth X.hom` and {lean}`IsProjective X.hom`.
+The over category, the spectrum, integral schemes and smooth morphisms are Mathlib's;
+projectivity and the complex points of {lean}`X` are defined in the repository, see
+{ref "complex-points"}[The variety and its complex points].
 A codimension is a natural number {lean}`p`, while cohomological degrees are integers, so the class
 of a codimension-$`p` cycle lives in degree {lean}`2 * (p : ℤ)`; the coercion is visible in the
 types below.
@@ -52,7 +55,7 @@ namespace Guide.Overview.D2
 ```
 ```lean
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] (p : ℕ) : Submodule K (FieldCohomology K X (2 * p)) :=
+    [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 ```
@@ -65,7 +68,7 @@ namespace Guide.Overview.D3
 ```
 ```lean
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (FieldCohomology ℚ X (2 * (p : ℤ))) :=
+    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
     Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
 ```
@@ -123,40 +126,30 @@ step 3 of {ref "cycles"}[Cycles and cohomology with support], steps 4 to 6 of
 tag := "scope-and-status"
 %%%
 
-Everything that enters the statement is constructed, for subvarieties of arbitrary codimension
-and with arbitrary singularities. The class of a subvariety in cohomology with support, its image
-in ordinary cohomology, and its Borel–Moore fundamental class are all defined in Lean from the
-variety and the subvariety alone, with no hypotheses beyond smoothness, projectivity, and
-integrality of the ambient variety.
+Everything that enters the statement is constructed. The class of a subvariety of any codimension,
+singular or not, is defined outright, with no hypotheses beyond the smoothness, projectivity, and
+integrality of the ambient variety that the statement itself assumes.
 
 Three classical facts about this construction are not yet formalized. None is needed to state the
 conjecture, but they are needed for the usual equivalent formulations.
 
 * The class of a subvariety is a Hodge class:
-  $`\operatorname{cl}_X(Z)\in\operatorname{Hdg}^p(X;\mathbb Q)`. With it, the conjecture becomes
-  the classical equality between the rational Hodge classes and the span of the algebraic classes.
+  $`\operatorname{cl}_X(Z)\in\operatorname{Hdg}^p(X;\mathbb Q)`.
 * The map on cycles kills principal divisors, so that it descends to the rational Chow group
-  $`\mathrm{CH}^p(X)_{\mathbb Q}`. Until then the statement uses the span of the classes of
-  subvarieties rather than the image of a map out of the Chow group.
-* The Borel–Moore homology used here is defined through the ambient space, as homology with
-  support in $`Z`, and written $`H^{\mathrm{BM}}_i(Z\subset X;\mathbb Q)`. It has not been
-  identified with an intrinsic Borel–Moore homology of $`Z`, independent of the embedding;
+  $`\mathrm{CH}^p(X)_{\mathbb Q}`. Instead we use the span of the classes of subvarieties; see
+  {ref "why-a-span"}[Why a span rather than a map on Chow groups] for further discussion.
+* The Borel–Moore homology used here, $`H^{\mathrm{BM}}_i(Z\subset X;\mathbb Q)`, is defined
+  through the ambient space and has not been shown to be independent of the embedding;
   {ref "what-borel-moore-means"}[What Borel–Moore homology means here] says what is and is not
   claimed.
-
-One consistency theorem is proved, in two forms. For coefficients fixed by complex conjugation,
-in particular over $`\mathbb Q`, the $`(p,p)` condition defining Hodge classes is equivalent to
-lying in $`F^p` alone, which is how Deligne states the conjecture; and in an abstract pure Hodge
-structure of weight $`2p`, a rational vector lies in $`F^p` if and only if it has type $`(p,p)`.
 
 # Degree and support conventions
 %%%
 tag := "degree-and-support-conventions"
 %%%
 
-A complex manifold of complex dimension $`d` has real dimension $`2d`, and a subvariety $`Z` of
-complex codimension $`p` has real dimension $`2(d-p)`. Alexander–Poincaré duality in the smooth
-ambient space $`X` identifies
+A subvariety $`Z` of codimension $`p` in a smooth variety $`X` of dimension $`d` has real
+dimension $`2(d-p)`, and Alexander–Poincaré duality in $`X` identifies
 
 $$`H^{\mathrm{BM}}_{2(d-p)}(Z\subset X;\mathbb Q)
   \simeq H_Z^{2d-2(d-p)}(X;\mathbb Q)=H_Z^{2p}(X;\mathbb Q).`

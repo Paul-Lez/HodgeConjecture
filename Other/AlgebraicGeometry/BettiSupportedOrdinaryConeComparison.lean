@@ -5,9 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality
-public import HodgeConjecture.Definitions.AlgebraicGeometry.DerivedSupportRationalConeForget
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexSupportedSingularModel
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalConeForget
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSupportedSingularModel
 /-!
 # Ordinary-target normalization of the original Betti support-cone pipeline
 

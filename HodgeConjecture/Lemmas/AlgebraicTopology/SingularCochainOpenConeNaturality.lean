@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainOpenCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainOpenCone
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
 
 /-! # Actual local restriction-cone naturality -/

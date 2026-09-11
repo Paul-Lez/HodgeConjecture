@@ -39,9 +39,8 @@ open scoped ContDiff Interval
 
 namespace DifferentialForm
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [Nontrivial E]
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
-omit [Nontrivial E] in
 /-- A point of a real radial segment stays in a star-convex set. -/
 lemma smul_mem_of_starConvex_zero {s : Set E} (hstar : StarConvex ℝ 0 s)
     {x : E} (hx : x ∈ s) {t : ℝ} (ht : t ∈ Set.Icc 0 1) : (t : ℂ) • x ∈ s := by
@@ -53,7 +52,7 @@ section ParametricIntegral
 variable {G : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G] [NormedSpace ℂ G]
   [CompleteSpace G] [FiniteDimensional ℂ E]
 
-omit [Nontrivial E] [CompleteSpace G] in
+omit [CompleteSpace G] in
 /-- A continuously varying family of complex Fréchet derivatives can be integrated over a
 compact real interval.  This is the compact-parameter specialization of differentiation under the
 integral sign needed below. -/
@@ -82,7 +81,7 @@ theorem hasFDerivAt_intervalIntegral_of_continuous
   · filter_upwards [] with t ht x hx
     exact hdiff x t
 
-omit [Nontrivial E] [CompleteSpace G] in
+omit [CompleteSpace G] in
 /-- A local version of differentiation under a compact parameter integral.  The functions and
 their space derivatives need only be continuous on an open neighborhood, uniformly for parameters
 in `[0, 1]`. -/
@@ -127,7 +126,7 @@ theorem hasFDerivAt_intervalIntegral_of_continuousOn
     rw [Set.uIoc_of_le (by norm_num : (0 : ℝ) ≤ 1)] at ht
     exact hdiff x (hεs (Metric.ball_subset_closedBall hx)) t ⟨ht.1.le, ht.2⟩
 
-omit [Nontrivial E] [NormedSpace ℂ G] [CompleteSpace G] in
+omit [NormedSpace ℂ G] [CompleteSpace G] in
 /-- A compact parameter integral is continuous on an open parameter domain when its integrand is
 jointly continuous there. -/
 theorem continuousOn_intervalIntegral_of_continuousOn
@@ -166,7 +165,6 @@ theorem continuousOn_intervalIntegral_of_continuousOn
 
 end ParametricIntegral
 
-omit [Nontrivial E] in
 /-- Joint evaluation of the first curried variable is a bounded bilinear map. -/
 lemma isBoundedBilinearMap_curryLeft (n : ℕ) : IsBoundedBilinearMap ℂ
     (fun p : (E [⋀^Fin (n + 1)]→L[ℂ] ℂ) × E ↦ p.1.curryLeft p.2) where
@@ -197,13 +195,11 @@ def radialIntegrandFDeriv (n : ℕ) (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ
       (((fderiv ℂ η ((t : ℂ) • x)).comp
         ((t : ℂ) • ContinuousLinearMap.id ℂ E)).prod (ContinuousLinearMap.id ℂ E))
 
-omit [Nontrivial E] in
 @[simp] lemma radialIntegrand_apply (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (t : ℝ) (x : E) (v : Fin n → E) :
     radialIntegrand n η t x v =
       ((t : ℂ) ^ n) • η ((t : ℂ) • x) (Matrix.vecCons x v) := rfl
 
-omit [Nontrivial E] in
 lemma radialIntegrand_differentiableAt (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : Differentiable ℂ η)
     (t : ℝ) (x : E) : DifferentiableAt ℂ (radialIntegrand n η t) x := by
@@ -217,7 +213,6 @@ lemma radialIntegrand_differentiableAt (n : ℕ)
   exact (((isBoundedBilinearMap_curryLeft (E := E) n).differentiableAt _).comp x hp).const_smul
     ((t : ℂ) ^ n)
 
-omit [Nontrivial E] in
 lemma radialIntegrand_contDiff (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ ω η)
     (t : ℝ) : ContDiff ℂ ω (radialIntegrand n η t) := by
@@ -229,7 +224,6 @@ lemma radialIntegrand_contDiff (n : ℕ)
   exact (isBoundedBilinearMap_curryLeft (E := E) n).contDiff.comp
     (hcomp.prodMk contDiff_id) |>.const_smul ((t : ℂ) ^ n)
 
-omit [Nontrivial E] in
 lemma radialIntegrand_hasFDerivAt (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ)
     (t : ℝ) (x : E) (hη : DifferentiableAt ℂ η ((t : ℂ) • x)) :
@@ -244,7 +238,6 @@ lemma radialIntegrand_hasFDerivAt (n : ℕ)
   exact (((isBoundedBilinearMap_curryLeft (E := E) n).hasFDerivAt _).comp x hpair).const_smul
     ((t : ℂ) ^ n)
 
-omit [Nontrivial E] in
 lemma continuous_radialIntegrand (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : Continuous η) :
     Continuous fun p : E × ℝ ↦ radialIntegrand n η p.2 p.1 := by
@@ -254,7 +247,6 @@ lemma continuous_radialIntegrand (n : ℕ)
     (isBoundedBilinearMap_curryLeft (E := E) n).continuous.comp
       ((hη.comp hs).prodMk continuous_fst)
 
-omit [Nontrivial E] in
 lemma continuous_radialIntegrandFDeriv (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η) :
     Continuous fun p : E × ℝ ↦ radialIntegrandFDeriv n η p.2 p.1 := by
@@ -278,7 +270,6 @@ lemma continuous_radialIntegrandFDeriv (n : ℕ)
   exact (Complex.continuous_ofReal.comp continuous_snd).pow n |>.smul
     (houter.clm_comp hinner)
 
-omit [Nontrivial E] in
 lemma continuousOn_radialIntegrand (n : ℕ) {s : Set E}
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hstar : StarConvex ℝ 0 s)
     (hη : ContinuousOn η s) :
@@ -303,7 +294,6 @@ lemma continuousOn_radialIntegrand (n : ℕ) {s : Set E}
     (Complex.continuous_ofReal.comp continuous_snd).pow n |>.continuousOn
   exact hpow.smul hcurry
 
-omit [Nontrivial E] in
 lemma continuousOn_radialIntegrandFDeriv (n : ℕ) {s : Set E}
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hs : IsOpen s)
     (hstar : StarConvex ℝ 0 s) (hη : ContDiffOn ℂ 1 η s) :
@@ -350,7 +340,6 @@ lemma continuousOn_radialIntegrandFDeriv (n : ℕ) {s : Set E}
     (Complex.continuous_ofReal.comp continuous_snd).pow n |>.continuousOn
   exact hpow.smul (houter.clm_comp hinner)
 
-omit [Nontrivial E] in
 lemma radialHomotopy_hasFDerivAt [FiniteDimensional ℂ E] (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η) (x : E) :
     HasFDerivAt (radialHomotopy n η)
@@ -362,7 +351,6 @@ lemma radialHomotopy_hasFDerivAt [FiniteDimensional ℂ E] (n : ℕ)
     (fun x t ↦ radialIntegrand_hasFDerivAt n η t x
       (hη.differentiable one_ne_zero ((t : ℂ) • x)))
 
-omit [Nontrivial E] in
 /-- The radial homotopy is differentiable at an interior point using only first-order smoothness on
 an open star-convex domain. -/
 lemma radialHomotopy_hasFDerivAt_of_contDiffOn [FiniteDimensional ℂ E] (n : ℕ) {s : Set E}
@@ -378,7 +366,6 @@ lemma radialHomotopy_hasFDerivAt_of_contDiffOn [FiniteDimensional ℂ E] (n : �
       (hη.contDiffAt (hs.mem_nhds (smul_mem_of_starConvex_zero hstar hy ht))).differentiableAt
         one_ne_zero)
 
-omit [Nontrivial E] in
 /-- First-order regularity of the radial homotopy on an open star-convex domain. -/
 theorem radialHomotopy_contDiffOn_one [FiniteDimensional ℂ E] (n : ℕ) {s : Set E}
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hs : IsOpen s)
@@ -403,7 +390,6 @@ theorem radialHomotopy_contDiffOn_one [FiniteDimensional ℂ E] (n : ℕ) {s : S
   · rw [contDiffOn_zero]
     exact hD.congr fun x hx ↦ (radialHomotopy_hasFDerivAt_of_contDiffOn n η hs hstar hη hx).fderiv
 
-omit [Nontrivial E] in
 /-- Exterior differentiation commutes with the radial parameter integral. -/
 theorem extDeriv_radialHomotopy [FiniteDimensional ℂ E] (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η) (x : E) :
@@ -432,7 +418,6 @@ theorem extDeriv_radialHomotopy [FiniteDimensional ℂ E] (n : ℕ)
   rw [(radialIntegrand_hasFDerivAt n η t x
     (hη.differentiable one_ne_zero ((t : ℂ) • x))).fderiv]
 
-omit [Nontrivial E] in
 /-- Exterior differentiation commutes with the radial integral at points of an open star-convex
 domain.  Only the restriction of the form to the domain is assumed continuously differentiable. -/
 theorem extDeriv_radialHomotopy_of_contDiffOn [FiniteDimensional ℂ E] (n : ℕ) {s : Set E}
@@ -474,13 +459,11 @@ def curryDerivativeAt (n : ℕ) (L : E →L[ℂ] E [⋀^Fin (n + 1)]→L[ℂ] �
   ((isBoundedBilinearMap_curryLeft (E := E) n).deriv (0, x)).comp
     (L.prod (0 : E →L[ℂ] E))
 
-omit [Nontrivial E] in
 @[simp] lemma curryDerivativeAt_apply (n : ℕ)
     (L : E →L[ℂ] E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (x h : E) :
     curryDerivativeAt n L x h = (L h).curryLeft x := by
   simp [curryDerivativeAt, IsBoundedBilinearMap.deriv_apply]
 
-omit [Nontrivial E] in
 /-- The algebraic cancellation at the heart of Cartan's radial homotopy formula. -/
 theorem alternatize_curryDerivativeAt_add (n : ℕ)
     (L : E →L[ℂ] E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (x : E) :
@@ -495,7 +478,6 @@ theorem alternatize_curryDerivativeAt_add (n : ℕ)
     hremove]
   abel
 
-omit [Nontrivial E] in
 lemma radialIntegrandFDeriv_eq (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (t : ℝ) (x : E) :
     radialIntegrandFDeriv n η t x =
@@ -506,7 +488,6 @@ lemma radialIntegrandFDeriv_eq (n : ℕ)
     smul_add, smul_smul]
   ring
 
-omit [Nontrivial E] in
 /-- Exterior derivative of the radial integrand, before adding the contraction of `dη`. -/
 theorem extDeriv_radialIntegrand (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (t : ℝ) (x : E)
@@ -523,7 +504,6 @@ theorem extDeriv_radialIntegrand (n : ℕ)
     smul_add, smul_smul, pow_succ']
   module
 
-omit [Nontrivial E] in
 /-- Pointwise Cartan formula for dilation along the radial vector field. -/
 theorem extDeriv_radialIntegrand_add (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (t : ℝ) (x : E)
@@ -547,14 +527,12 @@ def radialPullbackDeriv (n : ℕ) (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ)
   (((n + 1 : ℕ) : ℂ) * (t : ℂ) ^ n) • η ((t : ℂ) • x) +
     (t : ℂ) ^ (n + 1) • fderiv ℂ η ((t : ℂ) • x) x
 
-omit [Nontrivial E] in
 lemma continuous_radialPullback (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : Continuous η) (x : E) :
     Continuous (radialPullback n η x) :=
   (Complex.continuous_ofReal.pow (n + 1)).smul <|
     hη.comp (Complex.continuous_ofReal.smul continuous_const)
 
-omit [Nontrivial E] in
 lemma continuous_radialPullbackDeriv (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η) (x : E) :
     Continuous (radialPullbackDeriv n η x) := by
@@ -566,7 +544,6 @@ lemma continuous_radialPullbackDeriv (n : ℕ)
     (hη.continuous.comp hline)).add <|
       (Complex.continuous_ofReal.pow (n + 1)).smul hDf)
 
-omit [Nontrivial E] in
 lemma continuousOn_radialPullback (n : ℕ) {s : Set E}
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hstar : StarConvex ℝ 0 s)
     (hη : ContinuousOn η s) {x : E} (hx : x ∈ s) :
@@ -579,7 +556,6 @@ lemma continuousOn_radialPullback (n : ℕ) {s : Set E}
     simpa only [Function.comp_def] using hη.comp hline hmap
   exact (Complex.continuous_ofReal.pow (n + 1)).continuousOn.smul hform
 
-omit [Nontrivial E] in
 lemma continuousOn_radialPullbackDeriv (n : ℕ) {s : Set E}
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hs : IsOpen s)
     (hstar : StarConvex ℝ 0 s) (hη : ContDiffOn ℂ 1 η s) {x : E} (hx : x ∈ s) :
@@ -597,7 +573,6 @@ lemma continuousOn_radialPullbackDeriv (n : ℕ) {s : Set E}
   exact (((continuousOn_const.mul (Complex.continuous_ofReal.pow n).continuousOn).smul
     hform).add <| (Complex.continuous_ofReal.pow (n + 1)).continuousOn.smul hDf)
 
-omit [Nontrivial E] in
 /-- Derivative in the dilation parameter of the pullback of a form. -/
 theorem radialPullback_hasDerivAt (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (x : E) (t : ℝ)
@@ -620,7 +595,6 @@ theorem radialPullback_hasDerivAt (n : ℕ)
   simpa only [radialPullback, radialPullbackDeriv, Pi.smul_apply, add_comm] using!
     hpow.smul hform
 
-omit [Nontrivial E] in
 lemma continuous_extDeriv (n : ℕ)
     (η : E → E [⋀^Fin n]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η) :
     Continuous (extDeriv η) := by
@@ -629,7 +603,6 @@ lemma continuous_extDeriv (n : ℕ)
     (hη.continuous_fderiv one_ne_zero) using 1
   exact funext fun x ↦ ContinuousAlternatingMap.alternatizeUncurryFinCLM_apply _
 
-omit [Nontrivial E] in
 lemma continuousOn_extDeriv (n : ℕ) {s : Set E}
     (η : E → E [⋀^Fin n]→L[ℂ] ℂ) (hs : IsOpen s) (hη : ContDiffOn ℂ 1 η s) :
     ContinuousOn (extDeriv η) s := by
@@ -639,7 +612,6 @@ lemma continuousOn_extDeriv (n : ℕ) {s : Set E}
   convert h using 1
   exact funext fun x ↦ ContinuousAlternatingMap.alternatizeUncurryFinCLM_apply _
 
-omit [Nontrivial E] in
 /-- The integral of the derivative of the dilation pullback is evaluation at dilation one. -/
 theorem integral_radialPullbackDeriv (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η) (x : E) :
@@ -660,7 +632,6 @@ theorem integral_radialPullbackDeriv (n : ℕ)
     simp [radialPullback]
   rwa [hzero, hone, sub_zero] at h
 
-omit [Nontrivial E] in
 /-- The fundamental theorem of calculus for radial pullback, assuming smoothness only on the
 star-convex domain containing the radial segment. -/
 theorem integral_radialPullbackDeriv_of_contDiffOn (n : ℕ) {s : Set E}
@@ -685,7 +656,6 @@ theorem integral_radialPullbackDeriv_of_contDiffOn (n : ℕ) {s : Set E}
     simp [radialPullback]
   rwa [hzero, hone, sub_zero] at h
 
-omit [Nontrivial E] in
 /-- The radial chain-homotopy identity on a finite-dimensional complex normed space. -/
 theorem extDeriv_radialHomotopy_add [FiniteDimensional ℂ E] (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η) (x : E) :
@@ -720,7 +690,6 @@ theorem extDeriv_radialHomotopy_add [FiniteDimensional ℂ E] (n : ℕ)
             (hη.differentiable one_ne_zero ((t : ℂ) • x))
     _ = η x := integral_radialPullbackDeriv n η hη x
 
-omit [Nontrivial E] in
 /-- The radial chain-homotopy identity on an open set star-convex about the origin.  The total
 function representing the form is required to be smooth only on that set. -/
 theorem extDeriv_radialHomotopy_add_of_contDiffOn [FiniteDimensional ℂ E] (n : ℕ) {s : Set E}
@@ -766,7 +735,6 @@ theorem extDeriv_radialHomotopy_add_of_contDiffOn [FiniteDimensional ℂ E] (n :
                 one_ne_zero
     _ = η x := integral_radialPullbackDeriv_of_contDiffOn n η hs hstar hη hx
 
-omit [Nontrivial E] in
 /-- Local Poincaré lemma in positive degree on an open set star-convex about the origin. -/
 theorem extDeriv_radialHomotopy_of_closedOn [FiniteDimensional ℂ E] (n : ℕ) {s : Set E}
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hs : IsOpen s)
@@ -791,7 +759,6 @@ theorem extDeriv_radialHomotopy_of_closedOn [FiniteDimensional ℂ E] (n : ℕ) 
   have h := extDeriv_radialHomotopy_add_of_contDiffOn n η hs hstar hη hx
   rwa [hzero, add_zero] at h
 
-omit [Nontrivial E] in
 /-- A closed positive-degree form on an open star-convex set has the explicit radial primitive,
 which is itself continuously differentiable on that set. -/
 theorem exists_contDiffOn_primitive_of_closedOn [FiniteDimensional ℂ E] (n : ℕ) {s : Set E}
@@ -803,7 +770,6 @@ theorem exists_contDiffOn_primitive_of_closedOn [FiniteDimensional ℂ E] (n : �
   ⟨radialHomotopy n η, radialHomotopy_contDiffOn_one n η hs hstar hη,
     extDeriv_radialHomotopy_of_closedOn n η hs hstar hη hclosed⟩
 
-omit [Nontrivial E] in
 /-- Open-ball form of the local positive-degree Poincaré lemma. -/
 theorem exists_contDiffOn_primitive_on_ball [FiniteDimensional ℂ E] (n : ℕ) {r : ℝ}
     (hr : 0 < r) (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ)
@@ -818,7 +784,6 @@ theorem exists_contDiffOn_primitive_on_ball [FiniteDimensional ℂ E] (n : ℕ) 
 /-- The scalar coefficient of a differential `0`-form. -/
 def zeroFormCoeff (η : E → E [⋀^Fin 0]→L[ℂ] ℂ) (x : E) : ℂ := η x 0
 
-omit [Nontrivial E] in
 /-- Every differential `0`-form is the constant alternating map associated to its unique scalar
 coefficient. -/
 lemma zeroForm_eq_constOfIsEmpty (η : E → E [⋀^Fin 0]→L[ℂ] ℂ) :
@@ -828,7 +793,6 @@ lemma zeroForm_eq_constOfIsEmpty (η : E → E [⋀^Fin 0]→L[ℂ] ℂ) :
   obtain rfl : v = 0 := Subsingleton.elim _ _
   rfl
 
-omit [Nontrivial E] in
 /-- The degree-zero part of the local Poincaré lemma: a closed `0`-form on an open set
 star-convex about the origin is constant there. -/
 theorem zeroForm_eq_at_zero_of_closedOn {s : Set E}
@@ -878,7 +842,6 @@ theorem zeroForm_eq_at_zero_of_closedOn {s : Set E}
   rw [hηrepr]
   exact congrArg (ContinuousAlternatingMap.constOfIsEmpty ℂ E (Fin 0)) hcoeff
 
-omit [Nontrivial E] in
 /-- Global degree-zero Poincaré lemma: a closed continuously differentiable `0`-form is constant. -/
 theorem zeroForm_eq_at_zero_of_closed
     (η : E → E [⋀^Fin 0]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η)
@@ -888,7 +851,6 @@ theorem zeroForm_eq_at_zero_of_closed
     (convex_univ.starConvex (Set.mem_univ 0)) hη.contDiffOn
     (fun _ _ ↦ by rw [hclosed]) (Set.mem_univ x)
 
-omit [Nontrivial E] in
 /-- Global Poincaré lemma in positive degree on a finite-dimensional complex normed space. -/
 theorem extDeriv_radialHomotopy_of_closed [FiniteDimensional ℂ E] (n : ℕ)
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hη : ContDiff ℂ 1 η)

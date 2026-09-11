@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.DerivedSheafSupport
+public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupport
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift
 
 /-!
@@ -46,7 +46,7 @@ instance derivedSheafSectionsWithClosedSupportUnit_commShift (Z : Closeds X) :
     NatTrans.CommShift (derivedSheafSectionsWithClosedSupportUnit X Z) ℤ :=
   Functor.rightDerivedFunctorPlusUnitCommShift (sheafSectionsWithClosedSupport X Z)
 
-/-- The canonical natural isomorphism `RΓ̲_Z(K[n]) ≅ (RΓ̲_Z K)[n]`. -/
+/-- The canonical natural isomorphism `RΓ_Z(K[n]) ≅ (RΓ_Z K)[n]`. -/
 def derivedSheafSectionsWithClosedSupportShiftIso (Z : Closeds X) (n : ℤ) :
     shiftFunctor (DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X)) n ⋙
         derivedSheafSectionsWithClosedSupport X Z ≅

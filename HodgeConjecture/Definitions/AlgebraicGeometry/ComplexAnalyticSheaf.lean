@@ -77,12 +77,4 @@ def holomorphicFunctionSheaf [SmoothOfRelativeDimension d X.hom] :
       (CategoryTheory.forget CommRingCat)]
     exact (holomorphicFunctionSheafToTypes X d).property
 
-/-- A section of the holomorphic-function sheaf is an analytic map to `ℂ` in the constructed
-charted-space structure. -/
-lemma holomorphicFunctionSheaf_section_analytic [SmoothOfRelativeDimension d X.hom]
-    {U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ}
-    (s : (holomorphicFunctionSheaf X d).presheaf.obj U) :
-    ContMDiff 𝓘(ℂ, Fin d → ℂ) 𝓘(ℂ) ω s.1 :=
-  (contDiffWithinAt_localInvariantProp ω).section_spec _ _ _ _
-
 end AlgebraicGeometry.ComplexPoint

@@ -39,7 +39,7 @@ namespace Guide.Statement.D5
 ```
 ```lean
 def sheafCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
-    CodimensionCycle V.scheme p →+ FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+    CodimensionCycle V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
   cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := V.dimension))
 ```
 ```lean -show
@@ -58,7 +58,7 @@ namespace Guide.Statement.D6
 def rationalSheafCycleClassOnCycles
     (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ) :
     TensorProduct ℤ ℚ (CodimensionCycle V.scheme p) →ₗ[ℚ]
-      FieldCohomology ℚ V.over (2 * (p : ℤ)) :=
+      H^(2 * (p : ℤ))(V.over; ℚ) :=
   TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 ```
 ```lean -show
@@ -114,7 +114,7 @@ namespace Guide.Statement.D2
 ```
 ```lean
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (FieldCohomology ℚ X (2 * (p : ℤ))) :=
+    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
     Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
 ```
@@ -164,6 +164,9 @@ formalized, so the formulation as an equality $`\operatorname{Hdg}^p(X;\mathbb Q
 yet available.
 
 # Why a span rather than a map on Chow groups
+%%%
+tag := "why-a-span"
+%%%
 
 The repository defines {name}`ChowGroup` and {name}`RationalChowGroup`, and the classes of subvarieties give an
 additive map on cycles. To descend this map to the Chow group, one must show that it vanishes on
