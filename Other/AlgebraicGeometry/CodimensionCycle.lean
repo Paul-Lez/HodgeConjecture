@@ -21,7 +21,8 @@ universe u
 
 namespace AlgebraicGeometry
 
-/-- The subgroup of algebraic cycles supported at points of codimension `p`. -/
+/-- The additive group of codimension-`p` algebraic cycles on `X`: the subgroup of algebraic cycles
+whose points with nonzero coefficient all have coheight `p`. -/
 def codimensionCycleSubgroup (X : Scheme.{u}) (p : ℕ) : AddSubgroup (AlgebraicCycle X ℤ) where
   carrier c := ∀ x, c x ≠ 0 → coheight x = p
   zero_mem' x hx := (hx rfl).elim
@@ -36,22 +37,19 @@ def codimensionCycleSubgroup (X : Scheme.{u}) (p : ℕ) : AddSubgroup (Algebraic
     change -(a x) = 0
     simp [h]
 
-/-- The additive group of codimension-`p` algebraic cycles on `X`. -/
-abbrev CodimensionCycle (X : Scheme.{u}) (p : ℕ) := codimensionCycleSubgroup X p
-
-instance (X : Scheme.{u}) (p : ℕ) : CoeFun (CodimensionCycle X p) (fun _ ↦ X → ℤ) where
+instance (X : Scheme.{u}) (p : ℕ) : CoeFun (codimensionCycleSubgroup X p) (fun _ ↦ X → ℤ) where
   coe c := c.1
 
-namespace CodimensionCycle
+namespace codimensionCycleSubgroup
 
 variable {X : Scheme.{u}} {p : ℕ}
 
 @[ext]
-lemma ext {a b : CodimensionCycle X p} (h : ∀ x, a.1 x = b.1 x) : a = b :=
+lemma ext {a b : codimensionCycleSubgroup X p} (h : ∀ x, a.1 x = b.1 x) : a = b :=
   Subtype.ext (Function.locallyFinsuppWithin.ext h)
 
 /-- The cycle with coefficient `n` at one point and zero elsewhere. -/
-noncomputable def single (x : X) (hx : coheight x = p) (n : ℤ) : CodimensionCycle X p :=
+noncomputable def single (x : X) (hx : coheight x = p) (n : ℤ) : codimensionCycleSubgroup X p :=
   by
     classical
     exact ⟨Function.locallyFinsuppWithin.single x n, by
@@ -82,7 +80,7 @@ lemma specField_coheight (K : Type u) [Field K] (x : Spec ↧K) : coheight x = 0
   rw [Subsingleton.elim y x]
 
 /-- Codimension-zero cycles on an integral scheme are determined by their generic coefficient. -/
-noncomputable def integralEquiv [IsIntegral X] : CodimensionCycle X 0 ≃+ ℤ where
+noncomputable def integralEquiv [IsIntegral X] : codimensionCycleSubgroup X 0 ≃+ ℤ where
   toFun c := c (genericPoint X)
   invFun n := single (genericPoint X) (Order.IsMax.coheight_eq_zero isMax_top) n
   left_inv c := by
@@ -106,7 +104,7 @@ noncomputable def integralEquiv [IsIntegral X] : CodimensionCycle X 0 ≃+ ℤ w
 /-- Codimension-zero cycles on the spectrum of a field are determined by the coefficient of its
 unique point. -/
 noncomputable def specFieldEquiv (K : Type u) [Field K] :
-    CodimensionCycle (Spec ↧K) 0 ≃+ ℤ where
+    codimensionCycleSubgroup (Spec ↧K) 0 ≃+ ℤ where
   toFun c := c default
   invFun n := single default (specField_coheight K default) n
   left_inv c := by
@@ -116,11 +114,11 @@ noncomputable def specFieldEquiv (K : Type u) [Field K] :
   right_inv n := single_same default _ _
   map_add' _ _ := rfl
 
-end CodimensionCycle
+end codimensionCycleSubgroup
 
 /-- The inclusion of pure codimension cycles into all algebraic cycles. -/
 def codimensionCycleInclusion (X : Scheme.{u}) (p : ℕ) :
-    CodimensionCycle X p →+ AlgebraicCycle X ℤ :=
+    codimensionCycleSubgroup X p →+ AlgebraicCycle X ℤ :=
   (codimensionCycleSubgroup X p).subtype
 
 end AlgebraicGeometry
