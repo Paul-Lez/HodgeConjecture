@@ -163,6 +163,38 @@ theorem roots_card_nodup_of_mem_simpleRootBase {p : Polynomial (Polynomial ℂ)}
     (eval_eq_zero_of_dvd_of_eval_eq_zero (gcd_dvd_left q q.derivative) hw)
     (eval_eq_zero_of_dvd_of_eval_eq_zero (gcd_dvd_right q q.derivative) hw)
 
+/-- An explicit enumeration of the roots of a simple fiber. -/
+noncomputable def simpleRootEnumeration {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) : Fin p.natDegree → ℂ :=
+  fun i ↦ (familySpecialization p z.1).roots.get ⟨i, by
+    rw [(roots_card_nodup_of_mem_simpleRootBase hp z).1]
+  ⟩
+
+theorem simpleRootEnumeration_isRoot {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) (i : Fin p.natDegree) :
+    (familySpecialization p z.1).eval (simpleRootEnumeration hp z i) = 0 := by
+  apply (mem_roots (hp.map (Polynomial.evalRingHom z.1)).ne_zero).mp
+  exact Multiset.get_mem _ _
+
+theorem simpleRootEnumeration_injective {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) :
+    Function.Injective (simpleRootEnumeration hp z) := by
+  intro i j hij
+  apply Fin.ext
+  apply (Multiset.nodup_iff_injective_get.mp
+    (roots_card_nodup_of_mem_simpleRootBase hp z).2)
+  simpa [simpleRootEnumeration] using hij
+
+theorem exists_simpleRootEnumeration {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (z : SimpleRootBase p) (w : ℂ)
+    (hw : (familySpecialization p z.1).eval w = 0) :
+    ∃ i : Fin p.natDegree, simpleRootEnumeration hp z i = w := by
+  have hmem : w ∈ (familySpecialization p z.1).roots :=
+    (mem_roots (hp.map (Polynomial.evalRingHom z.1)).ne_zero).mpr hw
+  obtain ⟨i, hi⟩ := Multiset.exists_get_of_mem hmem
+  refine ⟨⟨i, by rw [(roots_card_nodup_of_mem_simpleRootBase hp z).1]⟩, ?_⟩
+  simpa [simpleRootEnumeration] using hi
+
 /-- The multiset of roots in a fiber which belong to a specified subset of the root cover. -/
 def selectedRoots {p : Polynomial (Polynomial ℂ)}
     (S : Set (SimpleRootCover p)) (z : SimpleRootBase p) : Multiset ℂ := by
