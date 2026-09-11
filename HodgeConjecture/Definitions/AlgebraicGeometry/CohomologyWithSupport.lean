@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 public import Mathlib.CategoryTheory.Abelian.Injective.Resolution
@@ -111,7 +111,7 @@ def derivedPushforwardComplementConstantRationalComplexNat
     (complementConstantRationalInjectiveResolution X Z).cocomplex
 
 /-- Every additive sheaf on the empty complement is a zero object. -/
-lemma isZero_sheaf_on_complement_univ
+private lemma isZero_sheaf_on_complement_univ
     (F : TopCat.Sheaf AddCommGrpCat.{0}
       (TopCat.of ↥((Set.univ : Set (ComplexPoint X))ᶜ))) :
     IsZero F :=
@@ -121,7 +121,7 @@ lemma isZero_sheaf_on_complement_univ
     fun x ↦ (show False by simpa using x.property).elim
 
 /-- Every term of the derived pushforward from the empty complement is zero. -/
-lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
+private lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
     IsZero ((derivedPushforwardComplementConstantRationalComplexNat X
       (Set.univ : Set (ComplexPoint X))).X n) :=
   (TopCat.Sheaf.pushforward AddCommGrpCat
@@ -131,7 +131,7 @@ lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
 
 /-- The complex representing derived pushforward from the empty complement is itself a zero
 object, not merely acyclic. -/
-lemma isZero_derivedPushforwardComplement_univ :
+private lemma isZero_derivedPushforwardComplement_univ :
     IsZero (derivedPushforwardComplementConstantRationalComplexNat X
       (Set.univ : Set (ComplexPoint X))) := by
   constructor
@@ -328,19 +328,5 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
     rw [eSource.apply_symm_apply, hcomp, eComp.symm_apply_apply]
   · refine fun α ↦ eTarget.injective ?_
     rw [hcomp, eSource.apply_symm_apply, eComp.apply_symm_apply]
-
-@[simp] lemma forgetSupportEquivUniv_apply (n : ℤ)
-    (α : RationalCohomologyWithSupport X
-      (Set.univ : Set (ComplexPoint X)) n) :
-    forgetSupportEquivUniv X n α =
-      forgetSupport X Set.univ n α := rfl
-
-/-- Forgetting whole-space support is surjective. -/
-lemma forgetSupport_surjective_univ (n : ℤ) :
-    Function.Surjective
-      (forgetSupport X (Set.univ : Set (ComplexPoint X)) n) := by
-  intro α
-  obtain ⟨β, hβ⟩ := (forgetSupportEquivUniv X n).surjective α
-  exact ⟨β, (forgetSupportEquivUniv_apply X n β).symm.trans hβ⟩
 
 end AlgebraicGeometry.ComplexPoint

@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
-
+public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 /-! # Exact normalization of the cone connecting map
 
 Mathlib's standard cone triangle uses the negative first projection. These

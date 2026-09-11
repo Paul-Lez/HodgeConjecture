@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Algebra.PolynomialCatenary
+public import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
 public import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
 public import Mathlib.RingTheory.QuasiFinite.Basic
 

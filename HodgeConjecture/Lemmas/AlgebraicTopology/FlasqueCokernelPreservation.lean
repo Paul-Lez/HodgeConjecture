@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.BoundedBelowFlasqueComplex
+public import HodgeConjecture.Lemmas.AlgebraicTopology.BoundedBelowFlasqueComplex
 public import Mathlib.CategoryTheory.Abelian.Exact
 
 /-!
