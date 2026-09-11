@@ -66,16 +66,6 @@ def derivativeStandardEtaleCoordinateHomeomorph {n : ℕ}
     Homeomorph.setCongr <| Set.ext fun zw ↦
       derivativeStandardEtalePair_coordinate_condition p hp t zw
 
-/-- The algebra of the derivative standard étale pair is the indicated localization of the
-monogenic hypersurface algebra. -/
-def derivativeStandardEtaleEquivAwayAdjoinRoot {n : ℕ}
-    (p : Polynomial (complexPolynomialRing n)) (hp : p.Monic)
-    (t : complexPolynomialRing n) :
-    (derivativeStandardEtalePair p hp t).Ring ≃ₐ[complexPolynomialRing n]
-      Localization.Away
-        (AdjoinRoot.mk p (p.derivative * Polynomial.C t)) :=
-  (derivativeStandardEtalePair p hp t).equivAwayAdjoinRoot
-
 end
 
 end AlgebraicGeometry.ComplexAlgHom
