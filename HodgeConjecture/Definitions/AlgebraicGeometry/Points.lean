@@ -52,6 +52,8 @@ invertibility.
 Complex points are the case `K = ℂ`. Analytification is then packaged as a functor from schemes
 over `Spec ℂ` to topological spaces, so that Betti (co)homology of a complex variety is Mathlib's
 singular (co)homology of the resulting space.
+
+`isNoetherian_of_isProjective` records that a projective complex scheme is Noetherian.
 -/
 
 @[expose] public section
@@ -451,5 +453,11 @@ noncomputable def complexAnalytification :
   map_comp f g := by
     ext z
     simp [Point.continuousMap, Point.map, Category.assoc]
+
+/-- A projective complex scheme is Noetherian. -/
+theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
+    [IsProjective X.hom] : IsNoetherian X.left where
+  toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian X.hom
+  toCompactSpace := QuasiCompact.compactSpace_of_compactSpace X.hom
 
 end AlgebraicGeometry
