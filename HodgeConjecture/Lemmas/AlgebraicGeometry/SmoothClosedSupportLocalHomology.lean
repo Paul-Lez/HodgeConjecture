@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionNormalCoordinates
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentPurity
-public import HodgeConjecture.Definitions.AlgebraicTopology.FlattenedSupportLocalHomology
-public import HodgeConjecture.Definitions.AlgebraicTopology.RelativeCochainCone
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionNormalCoordinates
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentPurity
+public import HodgeConjecture.Lemmas.AlgebraicTopology.FlattenedSupportLocalHomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeCochainCone
 /-!
 # Constructed local relative homology for smooth closed supports
 

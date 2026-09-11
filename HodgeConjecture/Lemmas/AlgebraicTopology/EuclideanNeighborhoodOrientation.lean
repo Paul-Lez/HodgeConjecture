@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.LocalFundamentalClass
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalFundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheafStalk
 public import Mathlib.Analysis.Normed.Module.Convex
 

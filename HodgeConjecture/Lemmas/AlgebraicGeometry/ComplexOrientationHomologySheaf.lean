@@ -14,7 +14,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalOrientationNeighborhood
 public import HodgeConjecture.Lemmas.AlgebraicTopology.HomologySheafSection
-public import HodgeConjecture.Definitions.AlgebraicTopology.SheafMapOfLocallyRepresentableStalks
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SheafMapOfLocallyRepresentableStalks
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheafOrientation
 
 /-!

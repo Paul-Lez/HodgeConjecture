@@ -38,11 +38,4 @@ dimensions of its irreducible components. -/
 def dim (X : Type*) [TopologicalSpace X] [IrreducibleSpace X] : ℕ :=
   ((topologicalKrullDim X).unbotD 0).toNat
 
-attribute [local instance] specializationOrder in
-/-- On a sober space, and in particular on a scheme, the dimension counts chains of points under
-specialisation. -/
-lemma dim_eq_krullDim (X : Type*) [TopologicalSpace X] [IrreducibleSpace X] [T0Space X]
-    [QuasiSober X] : dim X = ((Order.krullDim X).unbotD 0).toNat := by
-  rw [dim, topologicalKrullDim_eq_krullDim]
-
 end TopologicalSpace

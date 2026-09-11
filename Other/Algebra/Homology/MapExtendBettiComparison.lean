@@ -5,8 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
-public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiGlobalSectionsComparison
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiGlobalSectionsComparison
 /-! # Agreement of the canonical and original Betti extension comparisons -/
 
 @[expose] public noncomputable section

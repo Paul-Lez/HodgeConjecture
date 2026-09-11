@@ -7,8 +7,7 @@ module
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusInjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalComparison
-public import HodgeConjecture.Definitions.AlgebraicGeometry.DerivedSupportRationalConeForget
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalConeForget
 /-! # The actual derived support-forgetting square for rational coefficients -/
 
 @[expose] public noncomputable section

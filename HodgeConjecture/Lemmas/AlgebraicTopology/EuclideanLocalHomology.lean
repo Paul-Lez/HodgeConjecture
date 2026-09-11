@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.LocalFundamentalClass
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalFundamentalClass
 public import Mathlib.Algebra.Homology.HomologySequence
 public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
 public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj

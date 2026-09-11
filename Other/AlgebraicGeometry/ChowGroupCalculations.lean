@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ChowGroup
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 

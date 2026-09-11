@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportLocalHomology
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionSourceOpen
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionSourceOpen
 public import HodgeConjecture.Definitions.AlgebraicTopology.NeighborhoodSupportPairImage
 
 /-!
