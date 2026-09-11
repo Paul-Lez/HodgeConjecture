@@ -92,8 +92,7 @@ set_option backward.defeqAttrib.useBackward true in
 @[reassoc (attr := simp)]
 lemma sheafSectionsSupportedOutsideMap_toBetween :
     sheafSectionsSupportedOutsideMap X h ≫ toSheafSectionsBetweenOpens X h = 0 := by
-  apply NatTrans.ext
-  funext F
+  ext F : 2
   apply (cancel_mono (kernel.ι _)).1
   simp [toSheafSectionsBetweenOpens, sheafSectionsSupportedOutsideMap,
     liftSheafSectionsSupportedOutside, sheafSectionsSupportedOutsideInclusion]
