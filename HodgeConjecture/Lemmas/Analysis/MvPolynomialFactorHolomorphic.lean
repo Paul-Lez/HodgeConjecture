@@ -5,6 +5,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.Analysis.PolynomialFactorHolomorphic
+public import Mathlib.RingTheory.Polynomial.GaussLemma
+public import Mathlib.RingTheory.Polynomial.UniqueFactorization
+public import Mathlib.RingTheory.Polynomial.RationalRoot
 
 /-!
 # Factors in multivariable polynomial families
@@ -1124,6 +1127,103 @@ theorem connectedSpace_mvSimpleRootCoverOn {n : ℕ}
       intro z hz
       rw [← hq z hz, ← hpqeq]
       rfl
+
+
+/-- The resultant cutting out fibers with a multiple root. -/
+noncomputable def mvRamificationPolynomial {n : ℕ}
+    (p : Polynomial (MvPolynomial (Fin n) ℂ)) : MvPolynomial (Fin n) ℂ :=
+  resultant p p.derivative p.natDegree (p.natDegree - 1)
+
+theorem eval_mvRamificationPolynomial {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (z : Fin n → ℂ) :
+    MvPolynomial.eval z (mvRamificationPolynomial p) =
+      resultant (mvFamilySpecialization p z) (mvFamilySpecialization p z).derivative
+        p.natDegree (p.natDegree - 1) := by
+  change (MvPolynomial.eval z) (resultant p p.derivative p.natDegree
+    (p.natDegree - 1)) = _
+  calc
+    _ = resultant (p.map (MvPolynomial.eval z))
+        (p.derivative.map (MvPolynomial.eval z)) p.natDegree (p.natDegree - 1) :=
+      (resultant_map_map p p.derivative p.natDegree (p.natDegree - 1)
+        (MvPolynomial.eval z)).symm
+    _ = _ := by
+      simp only [mvFamilySpecialization]
+      rw [derivative_map]
+
+theorem simple_fiber_of_eval_mvRamificationPolynomial_ne_zero {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic) (z : Fin n → ℂ)
+    (hz : MvPolynomial.eval z (mvRamificationPolynomial p) ≠ 0) :
+    ∀ w : ℂ, (mvFamilySpecialization p z).eval w = 0 →
+      (mvFamilySpecialization p z).derivative.eval w ≠ 0 := by
+  intro w hw hwd
+  let q := mvFamilySpecialization p z
+  have hq : q.Monic := hp.map (MvPolynomial.eval z)
+  have hncp : ¬IsCoprime q q.derivative := by
+    intro hc
+    obtain ⟨a, b, hab⟩ := hc
+    have heval := congrArg (Polynomial.eval w) hab
+    rw [eval_add, eval_mul, eval_mul, hw, hwd] at heval
+    simp at heval
+  have hres : resultant q q.derivative = 0 :=
+    resultant_eq_zero_iff.mpr ⟨Or.inl hq.ne_zero, hncp⟩
+  have hdegree : q.natDegree = p.natDegree := hp.natDegree_map (MvPolynomial.eval z)
+  rw [hdegree, natDegree_derivative, hdegree] at hres
+  apply hz
+  rw [eval_mvRamificationPolynomial]
+  exact hres
+
+theorem mvRamificationPolynomial_ne_zero_of_isCoprime_fractionRing {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
+    (hcoprime : IsCoprime
+      (p.map (algebraMap (MvPolynomial (Fin n) ℂ)
+        (FractionRing (MvPolynomial (Fin n) ℂ))))
+      (p.map (algebraMap (MvPolynomial (Fin n) ℂ)
+        (FractionRing (MvPolynomial (Fin n) ℂ)))).derivative) :
+    mvRamificationPolynomial p ≠ 0 := by
+  let K := FractionRing (MvPolynomial (Fin n) ℂ)
+  let φ : MvPolynomial (Fin n) ℂ →+* K := algebraMap _ K
+  let pK : Polynomial K := p.map φ
+  have hdegree : pK.natDegree = p.natDegree := hp.natDegree_map φ
+  have hres : resultant pK pK.derivative p.natDegree (p.natDegree - 1) ≠ 0 := by
+    simpa only [hdegree, natDegree_derivative] using
+      resultant_ne_zero pK pK.derivative hcoprime
+  intro hzero
+  apply hres
+  have hmap : φ (mvRamificationPolynomial p) =
+      resultant pK pK.derivative p.natDegree (p.natDegree - 1) := by
+    rw [mvRamificationPolynomial]
+    calc
+      _ = resultant (p.map φ) (p.derivative.map φ) p.natDegree (p.natDegree - 1) :=
+        (resultant_map_map p p.derivative p.natDegree (p.natDegree - 1) φ).symm
+      _ = _ := by
+        change resultant pK (p.derivative.map φ) p.natDegree (p.natDegree - 1) = _
+        rw [derivative_map]
+  rw [hzero, map_zero] at hmap
+  exact hmap.symm
+
+theorem mvRamificationPolynomial_ne_zero_of_irreducible {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic) (hirr : Irreducible p) :
+    mvRamificationPolynomial p ≠ 0 := by
+  let _ : IsIntegrallyClosed (MvPolynomial (Fin n) ℂ) :=
+    UniqueFactorizationMonoid.instIsIntegrallyClosed
+  apply mvRamificationPolynomial_ne_zero_of_isCoprime_fractionRing hp
+  rw [← separable_def]
+  exact ((hp.irreducible_iff_irreducible_map_fraction_map).mp hirr).separable
+
+/-- Multiplying any nonzero normalization denominator by the ramification resultant gives a
+principal open whose complex root cover is connected. -/
+theorem connectedSpace_mvSimpleRootCoverOn_mul_mvRamificationPolynomial {n : ℕ}
+    {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic) (hirr : Irreducible p)
+    (r₀ : MvPolynomial (Fin n) ℂ) (hr₀ : r₀ ≠ 0) :
+    ConnectedSpace (MvSimpleRootCoverOn p (r₀ * mvRamificationPolynomial p)) := by
+  have hram := mvRamificationPolynomial_ne_zero_of_irreducible hp hirr
+  apply connectedSpace_mvSimpleRootCoverOn hp hirr
+    (hp.natDegree_pos_of_not_isUnit hirr.not_isUnit) _ (mul_ne_zero hr₀ hram)
+  intro z hz
+  have hzram : MvPolynomial.eval z (mvRamificationPolynomial p) ≠ 0 := by
+    rw [map_mul] at hz
+    exact right_ne_zero_of_mul hz
+  exact simple_fiber_of_eval_mvRamificationPolynomial_ne_zero hp z hzram
 
 end
 
