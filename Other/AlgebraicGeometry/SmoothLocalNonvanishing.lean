@@ -144,3 +144,96 @@ theorem ComplexPoint.dense_evaluate_ne_zero [IsIntegral X.left] [Smooth X.hom]
 end
 
 end AlgebraicGeometry
+
+namespace AlgebraicGeometry
+
+open CategoryTheory Set Topology
+
+noncomputable section
+
+variable (X : Over (Spec ↧ℂ))
+
+/-- Every nonempty Zariski open subset of a smooth integral quasi-separated complex scheme has
+dense complex points in the analytic topology. -/
+theorem ComplexPoint.dense_overOpen [IsIntegral X.left] [Smooth X.hom]
+    [QuasiSeparatedSpace X.left] (U : X.left.Opens) [Nonempty U] :
+    Dense (Point.overOpen U : Set (ComplexPoint X)) := by
+  rw [dense_iff_inter_open]
+  intro O hO hOne
+  obtain ⟨z, hzO⟩ := hOne
+  let D := ComplexPoint.localEtaleCoordinates X (TopologicalSpace.dim X.left) z
+  have hzD : z ∈ Point.overOpen D.neighborhood :=
+    ComplexPoint.mem_localEtaleCoordinates X (TopologicalSpace.dim X.left) z
+  let zD := ComplexPoint.asOpenPoint X D.neighborhood z hzD
+  have hmapzD : Point.map (ComplexPoint.openInclusion X D.neighborhood) zD = z := by
+    exact congrArg Subtype.val
+      ((ComplexPoint.openHomeomorph X D.neighborhood).apply_symm_apply ⟨z, hzD⟩)
+  let W : Set (ComplexPoint (ComplexPoint.openScheme X D.neighborhood)) :=
+    Point.map (ComplexPoint.openInclusion X D.neighborhood) ⁻¹' O
+  have hWopen : IsOpen W :=
+    hO.preimage (ComplexPoint.isOpenEmbedding_map_open X D.neighborhood).continuous
+  have hzDW : zD ∈ W := by
+    change Point.map (ComplexPoint.openInclusion X D.neighborhood) zD ∈ O
+    rwa [hmapzD]
+  obtain ⟨uU⟩ : Nonempty U := inferInstance
+  obtain ⟨u, huD, huU⟩ : ((D.neighborhood : Set X.left) ∩ U).Nonempty :=
+    nonempty_preirreducible_inter D.neighborhood.2 U.2
+      ⟨z.underlying, D.mem⟩ ⟨uU.1, uU.2⟩
+  let uD : D.neighborhood := ⟨u, huD⟩
+  have huPre : uD ∈ D.neighborhood.ι ⁻¹ᵁ U := huU
+  let : IsAffine D.neighborhood.toScheme := D.isAffine
+  obtain ⟨r, hrle, hur⟩ :=
+    (isAffineOpen_top D.neighborhood.toScheme).exists_basicOpen_le
+      (V := D.neighborhood.ι ⁻¹ᵁ U) ⟨uD, huPre⟩ trivial
+  have hopen : D.neighborhood.toScheme.basicOpen r ≠ ⊥ := by
+    intro hbot
+    rw [hbot] at hur
+    exact hur
+  have hr : r ≠ 0 := by
+    intro h
+    apply hopen
+    subst r
+    exact Scheme.basicOpen_zero _ _
+  obtain ⟨y, hyW, hynz⟩ :=
+    (D.dense_evaluate_ne_zero r hr).inter_open_nonempty W hWopen ⟨zD, hzDW⟩
+  have hyBasic : y ∈ Point.overOpen (D.neighborhood.toScheme.basicOpen r) :=
+    (Point.mem_overOpen_basicOpen_iff_evaluate_ne_zero
+      (X := ComplexPoint.openScheme X D.neighborhood) (U := ⊤) r y trivial).2 hynz
+  refine ⟨Point.map (ComplexPoint.openInclusion X D.neighborhood) y, hyW, ?_⟩
+  change (Point.map (ComplexPoint.openInclusion X D.neighborhood) y).underlying ∈ U
+  rw [Point.underlying_map]
+  exact hrle hyBasic
+
+end
+
+end AlgebraicGeometry
+
+namespace AlgebraicGeometry
+
+open CategoryTheory Set Topology
+
+noncomputable section
+
+variable (X : Over (Spec ↧ℂ))
+
+/-- A connected nonempty Zariski open with dense complex points forces the entire analytic complex
+point space to be connected. -/
+theorem ComplexPoint.connectedSpace_of_open [IsIntegral X.left] [Smooth X.hom]
+    [QuasiSeparatedSpace X.left] (U : X.left.Opens) [Nonempty U]
+    [ConnectedSpace (ComplexPoint (ComplexPoint.openScheme X U))] :
+    ConnectedSpace (ComplexPoint X) := by
+  let e := ComplexPoint.openHomeomorph X U
+  let w : {z : ComplexPoint X // z ∈ Point.overOpen U} :=
+    e (Classical.choice (inferInstance : Nonempty
+      (ComplexPoint (ComplexPoint.openScheme X U))))
+  let : PreconnectedSpace {z : ComplexPoint X // z ∈ Point.overOpen U} := ⟨by
+    rw [← Set.image_univ_of_surjective e.surjective]
+    exact isPreconnected_univ.image e e.continuous.continuousOn⟩
+  let : Nonempty {z : ComplexPoint X // z ∈ Point.overOpen U} := ⟨w⟩
+  let : PreconnectedSpace (ComplexPoint X) :=
+    (ComplexPoint.dense_overOpen X U).denseRange_val.preconnectedSpace continuous_subtype_val
+  exact connectedSpace_iff (ComplexPoint X) |>.2 ⟨inferInstance, ⟨w.1⟩⟩
+
+end
+
+end AlgebraicGeometry
