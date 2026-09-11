@@ -20,7 +20,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentLocalGenera
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
-import HodgeConjecture.Lemmas.Algebra.PolynomialCatenary
+import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentNormalGeometry
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothCatenaryDimension
 import Mathlib.RingTheory.IntegralClosure.GoingDown

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSmoothSupportCoclassSection
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSmoothSupportCoclassSection
 public import Other.AlgebraicGeometry.SmoothClosedPointCoclassSectionNormalization
 
 /-! # The singular boundary of a maximal-codimension component is empty

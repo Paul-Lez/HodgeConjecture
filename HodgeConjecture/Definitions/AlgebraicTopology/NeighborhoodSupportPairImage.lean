@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.FlattenedSupportLocalHomology
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.FlattenedSupportLocalHomology
 /-!
 # Transporting actual neighborhood-support pairs through embeddings
 

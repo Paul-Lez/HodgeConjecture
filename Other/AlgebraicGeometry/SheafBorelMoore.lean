@@ -345,8 +345,7 @@ def orientationInducedComparisonAddEquiv
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
     CycleComponentBorelMooreHomology ℚ V.toSmoothProjectiveComplexVariety x
         (2 * (V.dimension - p)) ≃+
-      RationalSingularCycleComponentCohomologyWithSupport
-        V.toSmoothProjectiveComplexVariety x (2 * p) := by
+      RationalSingularComponentCohomologyWithSupport V.over x (2 * p) := by
   let : TopologicalSpace V.analyticPoint := Point.analyticTopology
   let : T2Space V.analyticPoint := inferInstance
   let : CompactSpace V.analyticPoint := inferInstance
@@ -366,8 +365,7 @@ def orientationInducedComparisonAddEquiv
 /-- The singular supported class obtained from all supplied comparisons. -/
 def singularSupportedClassOfComparisons
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    RationalSingularCycleComponentCohomologyWithSupport
-      V.toSmoothProjectiveComplexVariety x (2 * p) :=
+    RationalSingularComponentCohomologyWithSupport V.over x (2 * p) :=
   D.orientationInducedComparisonAddEquiv D.compactificationFundamentalClass
 
 /-- The comparison composite sends the compactification-relative fundamental class to the
@@ -479,8 +477,7 @@ theorem alexanderPoincare_fundamentalClass_local
 /-- Local Thom-cap normalization uniquely determines the sheaf-route supported class. -/
 theorem supportedFundamentalClass_unique
     (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx)
-    (α : RationalSingularCycleComponentCohomologyWithSupport
-      V.toSmoothProjectiveComplexVariety x (2 * p))
+    (α : RationalSingularComponentCohomologyWithSupport V.over x (2 * p))
     (hα : ∀ (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
       (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
       D.localThomCap.capWithAmbientComplexOrientation z hz α =
