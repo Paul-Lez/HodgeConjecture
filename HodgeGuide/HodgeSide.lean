@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
 import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
+import Other.AlgebraicGeometry.HodgeDecomposition
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
 
@@ -539,9 +540,18 @@ end Guide.Hodge.D11
 example : @Guide.Hodge.D11.hodgeClasses = @AlgebraicGeometry.ComplexPoint.hodgeClasses := rfl
 ```
 
-The cohomology of $`X` is not equipped with a pure Hodge structure in the formalization; that
-would require the Hodge decomposition. The $`(p,p)` piece is instead defined directly by the
-formula above, which is why the conjugation had to be constructed.
+The formalization does not equip the cohomology of $`X` with a pure Hodge structure: that would
+require the Hodge decomposition theorem. The $`(p,p)` piece is instead defined directly by the
+formula above, which is why the conjugation had to be constructed. The file
+`Other/AlgebraicGeometry/HodgeDecomposition.lean` takes the Hodge decomposition as a hypothesis,
+builds the pure Hodge structure on $`H^n(X;\mathbb Q)` that it provides, and proves that the Hodge
+classes above are then its rational $`(p,p)`-classes. So the definition through the filtration is
+the classical one whenever the Hodge decomposition is available.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.HasHodgeDecomposition
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_hodgeClasses_hodgeStructure
+```
 
 # Why the filtration alone suffices over the rationals
 
@@ -558,13 +568,13 @@ coefficient field of the conjecture.
 ```
 
 The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from
-`HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
+`Other/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
 vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector in
 $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in $`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`,
 and the only summand common to both is $`H^{p,p}`.
 
 ```lean
-#check HodgeStructure.Pure.ofBase_mem_filtration_iff
+#check HodgeStructure.ofBase_mem_filtration_iff
 ```
 
 The conjugation condition cannot be dropped for other coefficient fields. Let $`E` be the

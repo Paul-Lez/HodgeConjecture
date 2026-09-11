@@ -52,6 +52,8 @@ public import Other.AlgebraicGeometry.CycleComponentPointPurity
 public import Other.AlgebraicGeometry.CycleComponentRegularImmersion
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
 public import Other.AlgebraicGeometry.HodgeCodimensionZero
+public import Other.AlgebraicGeometry.HodgeDecomposition
+public import Other.AlgebraicGeometry.HodgeFiltration
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality
 public import Other.AlgebraicGeometry.PointCycleClass
 public import Other.AlgebraicGeometry.PrincipalDivisorCycleClass
@@ -139,4 +141,5 @@ public import Other.AlgebraicTopology.SupportedSectionConeConnecting
 public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
 public import Other.CommutativeAlgebra.RegularLocalQuotientKernel
+public import Other.LinearAlgebra.HodgeStructure
 public import Other.Topology.Category.TopCat.Basic

@@ -409,21 +409,6 @@ lemma hodgeClasses_eq_bot_of_lt
     Hdg^p(K; X) = ⊥ :=
   hodgeClasses_eq_bot_of_lt_of_quasiIso K X inferInstance hp
 
-/-- The direct definition of rational Hodge classes agrees with the definition using the
-complexified rational lattice. -/
-lemma hodgeClassesViaComplexification_eq [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
-    hodgeClassesViaComplexification K X p =
-      Hdg^p(K; X) := by
-  ext α
-  change fieldToDeRhamComplexification K X (2 * (p : ℤ))
-      (HodgeStructure.ofBase K
-        (H^(2 * (p : ℤ))(X; K)) α) ∈
-        hodgePiece X p p (2 * (p : ℤ)) ↔
-    fieldToDeRhamCohomology K X (2 * (p : ℤ)) α ∈
-      hodgePiece X p p (2 * (p : ℤ))
-  rw [HodgeStructure.ofBase_apply,
-    fieldToDeRhamComplexification_ofField]
-
 lemma mem_hodgeClasses_iff [IsIntegral X.left] [Smooth X.hom]
     (p : ℕ) (α : H^(2 * p)(X; K)) :
     α ∈ Hdg^p(K; X) ↔

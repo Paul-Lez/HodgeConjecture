@@ -59,5 +59,6 @@ formalization.
 * `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`: the class of a
   subvariety;
 * `Other/AlgebraicGeometry/SheafCycleClass.lean`: the maps on cycles;
-* `HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures and the
-  $`(p,p)` criterion.
+* `Other/LinearAlgebra/HodgeStructure.lean`, `Other/AlgebraicGeometry/HodgeFiltration.lean`, and
+  `Other/AlgebraicGeometry/HodgeDecomposition.lean`: pure Hodge structures, the $`(p,p)`
+  criterion, and the Hodge decomposition as a hypothesis.

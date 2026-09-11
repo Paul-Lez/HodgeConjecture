@@ -17,7 +17,6 @@ module
 
 public import HodgeConjecture.Lemmas.Algebra.FieldToComplex
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicDeRham
-public import HodgeConjecture.Lemmas.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
 public import Mathlib.Algebra.Homology.DerivedCategory.Basic
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
@@ -1080,15 +1079,6 @@ def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
 The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the variety is presented by its
 structure morphism `f`, and the coefficient field is named. -/
 scoped notation:max "Hdg^" p:max "(" K "; " f ")" => hodgeClasses K f p
-
-/-- Rational Hodge classes described through the rational lattice inside its actual
-complexification. -/
-def hodgeClassesViaComplexification
-    [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
-    Submodule K (H^(2 * p)(X; K)) :=
-  Submodule.comap
-    (HodgeStructure.ofBase K (H^(2 * p)(X; K)))
-    ((complexifiedFieldHodgePiece K X p p (2 * p)).restrictScalars K)
 
 /-- A rational cohomology class is a Hodge class of codimension `p` when it belongs to the
 canonical subgroup of rational Hodge classes. -/
