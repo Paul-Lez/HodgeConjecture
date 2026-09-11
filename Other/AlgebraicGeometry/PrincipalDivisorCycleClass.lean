@@ -51,7 +51,7 @@ variable {X : Scheme.{u}} {p : ℕ} (D : PrincipalDivisor X p)
 /-- The divisor of a nonzero rational function is canonically a codimension-one cycle on its
 integral carrier.  No purity datum is needed: the order-of-vanishing function is zero at every
 point whose coheight is not one. -/
-def codimensionOneDivisor : CodimensionCycle D.carrier 1 :=
+def codimensionOneDivisor : codimensionCycleSubgroup D.carrier 1 :=
   let := D.isIntegral
   let := D.isNoetherian
   ⟨D.divisor, by
@@ -230,7 +230,7 @@ lemma cycleClassOfComponentsOfCarrierDivisors_mk
       (carrierClass D)
       (cycleClassOnAlgebraicCyclesOfComponents componentClass))
     (hdivisor : ∀ D, carrierClass D D.divisor = 0)
-    (z : CodimensionCycle X p) :
+    (z : codimensionCycleSubgroup X p) :
     cycleClassOfComponentsOfCarrierDivisors componentClass carrierClass hpush hdivisor (mk z) =
       cycleClassOnCyclesOfComponents componentClass z :=
   liftCycleClass_mk _ _ _
@@ -264,7 +264,7 @@ lemma rationalCycleClassOfComponentsOfCarrierDivisors_component
     (x : X) (hx : coheight x = p) :
     rationalCycleClassOfComponentsOfCarrierDivisors
         componentClass carrierClass hpush hdivisor
-        (toRational (mk (CodimensionCycle.single x hx 1))) =
+        (toRational (mk (codimensionCycleSubgroup.single x hx 1))) =
       componentClass x hx := by
   rw [rationalCycleClassOfComponentsOfCarrierDivisors, toRational_apply,
     rationalExtension_tmul, one_smul,
