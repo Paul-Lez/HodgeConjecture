@@ -33,6 +33,7 @@ public import Other.AlgebraicGeometry.CompactlySupportedCohomology
 public import Other.AlgebraicGeometry.ComplexPointCoclassOrientationComparison
 public import Other.AlgebraicGeometry.ComplexPointCoclassSchemeIso
 public import Other.AlgebraicGeometry.ComplexPointCoclassSheafIso
+public import Other.AlgebraicGeometry.ComplexPointNonempty
 public import Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization
 public import Other.AlgebraicGeometry.ComplexSupportedOrdinaryComparison
 public import Other.AlgebraicGeometry.CycleClassDimension

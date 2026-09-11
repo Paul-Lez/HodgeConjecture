@@ -22,6 +22,7 @@ public import Mathlib.Topology.Connected.PathConnected
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalyticImmersion
+import Other.AlgebraicGeometry.ComplexPointNonempty
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
@@ -50,16 +51,6 @@ namespace AlgebraicGeometry.ComplexPoint
 open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
-
-/-- A smooth projective complex variety has a complex point. -/
-noncomputable instance instNonemptyComplexPoint [IsIntegral X.left] [Smooth X.hom] :
-    Nonempty (ComplexPoint X) := by
-  let : LocallyOfFiniteType X.hom := inferInstance
-  let : JacobsonSpace X.left := LocallyOfFiniteType.jacobsonSpace X.hom
-  obtain ⟨x, -, hx⟩ := nonempty_inter_closedPoints
-    (X := X.left) (Z := Set.univ) Set.univ_nonempty isOpen_univ.isLocallyClosed
-  let z := (pointEquivClosedPoint X.hom).symm ⟨x, hx⟩
-  exact ⟨Over.homMk z.1 z.2⟩
 
 /-- A compact, locally path connected projective analytification has finitely many connected
 components. -/
