@@ -719,6 +719,87 @@ for which the repository already has the scheme-level factorisation
 analytified directly with `AnalyticSectionOfAlgebraic`/`AnalytificationGenerates`, which bypasses
 the computation entirely; that is the recommended route for (G2).
 
+## Progress 2026-09-11 (fourth pass): homogenisation, the `H⁰` comparison on charts, and the `ℙᴺ` obligations
+
+Three further `sorry`-free, axiom-clean files.  The **entire `H⁰(ℙᴺ, 𝒪(m))` comparison for `m ≥ 0`
+is now proved at the level of chart functions**, both halves: the analytic half (an entire
+function of polynomial growth is a polynomial) and the algebraic half (polynomials of total degree
+`≤ m` in `N` variables are exactly the degree-`m` forms in `N + 1` variables).  What remains
+between this and `AnalyticTwistRelationsAlgebraize` is *only* the sheaf bookkeeping (G2).
+
+### 1. Homogenisation
+
+[`Other/AlgebraicGeometry/MvPolynomialHomogenisation.lean`](../Other/AlgebraicGeometry/MvPolynomialHomogenisation.lean),
+namespace `Other.ProjectiveChart` — Mathlib has homogeneous components but no homogenisation.
+
+- `restrictExponent i α` (delete the `i`-th entry) and `homExponent i m d` (insert `m − |d|`),
+  with `degree_eq_add_restrictExponent`, `degree_homExponent`, and `restrictExponent_injOn`
+  (deleting the `i`-th entry is injective on exponents of a fixed degree).
+- `deh_monomial` — dehomogenisation on a monomial is the monomial on the restricted exponent.
+- `homogenise i m P = ∑_{d ∈ supp P} monomial (homExponent i m d) (coeff d P)`, with
+  `deh_homogenise` and `isHomogeneous_homogenise`.
+- `coeff_deh_of_isHomogeneous`, `eq_zero_of_deh_eq_zero` (dehomogenisation is injective on
+  degree-`m` forms), and `totalDegree_deh_le`.
+- **`existsUnique_isHomogeneous_deh_eq`** — for `P.totalDegree ≤ m` there is a *unique* degree-`m`
+  form `Q` in `N + 1` variables with `deh i Q = P`.  This is `H⁰(ℙᴺ, 𝒪(m)) =` degree-`m` forms on
+  the algebraic side.
+
+### 2. The `H⁰` comparison on charts
+
+[`Other/AlgebraicGeometry/ProjectiveChartFormComparison.lean`](../Other/AlgebraicGeometry/ProjectiveChartFormComparison.lean):
+
+- **`existsUnique_isHomogeneous_of_growth`** — an entire `f : ℂᴺ → ℂ` with
+  `‖f z‖ ≤ C (1 + ‖z‖)ᵐ` is the chart expression `z ↦ eval z (deh i Q)` of a *unique* degree-`m`
+  form `Q`.
+- `analyticOnNhd_and_growth_of_isHomogeneous` — the converse, so the correspondence is exact.
+- **`existsUnique_isHomogeneous_of_chart_growth`** — the same for a holomorphic function on
+  `ℙᴺ(ℂ)^an` whose `i`-th chart expression has growth of order `m`, via the (G1) bridge.
+
+### 3. The Serre-presentation obligations, stated on `ℙᴺ`
+
+[`Other/AlgebraicGeometry/ProjectiveTwistObligations.lean`](../Other/AlgebraicGeometry/ProjectiveTwistObligations.lean).
+Because `ℙᴺ` now carries `SmoothOfRelativeDimension N` *and* `IsProjective`, the four obligations
+of `GAGASerreReduction.lean` can finally be *typed* on `ℙᴺ` itself, with the tautological
+presentation `projPresentation N = ComplexProjectiveSpace.selfPresentation N`:
+
+- `SerreGenerationProj N`, `TwistKernelsFiniteProj N`, `TwistRelationsAlgebraizeProj N`,
+  `TwistCokernelsReflectInvertibilityProj N` — the ℙᴺ instances of (i)–(iv);
+- **`algebraizes_of_serreData_proj`** — the conditional theorem: the four give line-bundle GAGA on
+  `ℙᴺ` (every invertible analytic module on `ℙᴺ(ℂ)^an` is an analytification).  Note this does not
+  need `IsIntegral ℙᴺ`, which is still open but only matters for the `dim X.left`-phrased target;
+- **`TwistChartFramesProj N n`** — the isolated **(G2)** obligation: `𝒪(−n)` on `ℙᴺ` has a
+  generating section on each standard homogeneous chart, and those analytic opens are exactly the
+  `ComplexProjectiveSpace.complexPointChartSet i`.  Via `analytificationGenerates` this yields
+  analytic frames for `𝒪(−n)^an` on the chart sets.  The algebraic half exists
+  (`ProjectiveSpectrum.NegativeTwist.HomogeneousShift.basicOpenUnitIso`); what is missing is its
+  transport through the two pullbacks in `ProjectiveTwist.algebraic`
+  (`toUniversalProj` then `P.immersion`), and the identification of `analyticOpen (D₊(x_i))` with
+  `complexPointChartSet i`.
+
+### Where (G3) now stands
+
+With (G2), a morphism `𝒪(−a)^an ⟶ 𝒪(−b)^an` becomes a family of holomorphic functions `f_i` on the
+chart sets with the `(x_i/x_j)^{a−b}` cocycle; `existsUnique_isHomogeneous_of_chart_growth` turns
+each into a degree-`(a−b)` form once the growth bound is known, and the growth bound comes from
+compactness of `ℙᴺ(ℂ)` (now an instance) exactly as in
+`Complex.PolynomialGrowth.norm_cons_le_of_homogeneous_of_bounded_sphere`.  Uniqueness in
+`existsUnique_isHomogeneous_deh_eq` then gives a single form, i.e. an algebraic morphism, and the
+charts cover (`iUnion_complexPointChartSet`) so the two morphisms agree.  **Every analytic and
+algebraic ingredient of that argument is now proved; only the frames (G2) are missing.**
+
+The negative-degree case (`a < b`) still needs the punctured-cone/vanishing argument flagged
+earlier: `Complex.PolynomialGrowth.eq_zero_of_homogeneous_neg` covers only *entire* functions, and
+for `N ≥ 1` the sheaf-level vanishing needs either Hartogs or the maximum-modulus argument
+"multiply by each degree-`k` form, get a degree-`0` homogeneous holomorphic function, hence a
+constant by compactness".  With `ℙᴺ` now compact and connected as instances, the second route is
+available in this repository.
+
+### Still open from (G0)
+
+`IsIntegral (ProjectiveSpace (Fin (N + 1)) (Spec ℂ))` and `dim ℙᴺ = N`.  Neither is needed for
+(G2)/(G3) or for `algebraizes_of_serreData_proj`; they are needed only to instantiate the
+`dim X.left`-phrased `AnalyticLineBundlesAlgebraize` at `X = ℙᴺ`.
+
 ## Mathematical routes, and what is missing
 
 The statement is Serre's GAGA (essential surjectivity of analytification) restricted to

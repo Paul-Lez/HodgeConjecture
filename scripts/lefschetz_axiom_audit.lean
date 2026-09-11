@@ -28,6 +28,9 @@ import Other.AlgebraicGeometry.ProjectiveSpaceSmooth
 import Other.AlgebraicGeometry.AffineSpaceSmooth
 import Other.AlgebraicGeometry.AffineSpaceHolomorphicChart
 import Other.AlgebraicGeometry.ProjectiveChartHolomorphic
+import Other.AlgebraicGeometry.MvPolynomialHomogenisation
+import Other.AlgebraicGeometry.ProjectiveChartFormComparison
+import Other.AlgebraicGeometry.ProjectiveTwistObligations
 import Other.AlgebraicGeometry.GAGASerreReduction
 import Other.AlgebraicGeometry.ProjectiveHolomorphicFunctions
 import Other.AlgebraicGeometry.ProjectiveTwistDegreeZero
@@ -150,3 +153,11 @@ import Other.AlgebraicGeometry.CohomologyWithSupportExact
 #print axioms AlgebraicGeometry.ComplexProjectiveSpace.analyticOnNhd_comp_chartPoint
 #print axioms AlgebraicGeometry.ComplexProjectiveSpace.isProjective_projectiveSpace
 #print axioms AlgebraicGeometry.ComplexProjectiveSpace.exists_mvPolynomial_of_growth
+#print axioms Other.ProjectiveChart.deh_homogenise
+#print axioms Other.ProjectiveChart.isHomogeneous_homogenise
+#print axioms Other.ProjectiveChart.eq_zero_of_deh_eq_zero
+#print axioms Other.ProjectiveChart.existsUnique_isHomogeneous_deh_eq
+#print axioms Other.ProjectiveChart.totalDegree_deh_le
+#print axioms Other.ProjectiveChart.existsUnique_isHomogeneous_of_growth
+#print axioms Other.ProjectiveChart.existsUnique_isHomogeneous_of_chart_growth
+#print axioms Other.ProjectiveChart.algebraizes_of_serreData_proj

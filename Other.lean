@@ -71,6 +71,8 @@ public import Other.AlgebraicGeometry.CycleComponentNormalGeometry
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 public import Other.AlgebraicGeometry.CycleComponentPurity
 public import Other.AlgebraicGeometry.CycleComponentRegularImmersion
+public import Other.AlgebraicGeometry.DiscreteValuationLocalRing
+public import Other.AlgebraicGeometry.CartierLocalForm
 public import Other.AlgebraicGeometry.DerivedSupportRationalComparison
 public import Other.AlgebraicGeometry.DerivedSupportRationalConeComparison
 public import Other.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
@@ -374,6 +376,9 @@ public import Other.AlgebraicGeometry.ProjectiveSpaceSmooth
 public import Other.AlgebraicGeometry.AffineSpaceSmooth
 public import Other.AlgebraicGeometry.AffineSpaceHolomorphicChart
 public import Other.AlgebraicGeometry.ProjectiveChartHolomorphic
+public import Other.AlgebraicGeometry.MvPolynomialHomogenisation
+public import Other.AlgebraicGeometry.ProjectiveChartFormComparison
+public import Other.AlgebraicGeometry.ProjectiveTwistObligations
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
