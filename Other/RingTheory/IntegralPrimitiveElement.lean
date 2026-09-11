@@ -6,6 +6,7 @@ Authors: Bhavik Mehta
 module
 
 public import Mathlib.FieldTheory.PrimitiveElement
+public import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
 public import Mathlib.RingTheory.Adjoin.FG
 public import Mathlib.RingTheory.Localization.Integral
 public import Mathlib.RingTheory.Localization.Finiteness
@@ -128,5 +129,23 @@ theorem exists_adjoin_inverse_eq_of_fg (S : Subalgebra R L) (hS : S.FG) (y : L)
       subst x
       exact Algebra.subset_adjoin (Set.mem_union_left _ hy)
     · exact Algebra.subset_adjoin (Set.mem_union_right _ hx)
+
+omit [FiniteDimensional K L] [Algebra.IsSeparable K L] in
+/-- A finite order containing an integral primitive element becomes monogenic after one
+localization, and its monogenic model is the quotient by the monic minimal polynomial. -/
+theorem exists_adjoin_inverse_eq_and_minpoly_quotient_of_finite
+    [IsIntegrallyClosed R] [Module.IsTorsionFree R L]
+    (S : Subalgebra R L) [Module.Finite R S] (y : L)
+    (hy : y ∈ S) (hy_integral : IsIntegral R y)
+    (hy_primitive : Algebra.adjoin K {y} = ⊤) :
+    ∃ r : nonZeroDivisors R,
+      Algebra.adjoin R ((S : Set L) ∪ {(algebraMap R L (r : R))⁻¹}) =
+          Algebra.adjoin R ({y} ∪ {(algebraMap R L (r : R))⁻¹}) ∧
+        (minpoly R y).Monic ∧
+        Nonempty (AdjoinRoot (minpoly R y) ≃ₐ[R] Algebra.adjoin R ({y} : Set L)) := by
+  have hS : S.FG := (Subalgebra.fg_top S).mp <|
+    Subalgebra.fg_of_submodule_fg (Module.Finite.fg_top (R := R) (M := S))
+  obtain ⟨r, hr⟩ := exists_adjoin_inverse_eq_of_fg R K L S hS y hy hy_primitive
+  exact ⟨r, hr, minpoly.monic hy_integral, ⟨minpoly.equivAdjoin hy_integral⟩⟩
 
 end Algebra
