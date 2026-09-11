@@ -654,6 +654,57 @@ theorem exists_polynomial_selectedFactorCoeff {p : Polynomial (Polynomial ℂ)}
     (fun z hz ↦ hbound k z hz)
   exact ⟨a, fun z hz ↦ (ha z hz).trans (selectedFactorCoeffTotal_eq hp S k z hz)⟩
 
+/-- With finitely many nonsimple fibers, a clopen-selected fiber factor is the specialization
+of a polynomial family. -/
+theorem exists_polynomialFamily_selectedFactor {p : Polynomial (Polynomial ℂ)}
+    (hp : p.Monic) (S : Set (SimpleRootCover p)) (hSopen : IsOpen S)
+    (hSclosed : IsClosed S) (hfinite : (nonsimpleParameters p).Finite) :
+    ∃ q : Polynomial (Polynomial ℂ),
+      ∀ z (hz : z ∉ nonsimpleParameters p),
+        q.map (Polynomial.evalRingHom z) = selectedFactor hp S ⟨z, not_not.mp hz⟩ := by
+  classical
+  choose a ha using fun k ↦
+    exists_polynomial_selectedFactorCoeff hp S hSopen hSclosed hfinite k
+  let q : Polynomial (Polynomial ℂ) :=
+    ∑ k ∈ Finset.range (p.natDegree + 1), Polynomial.monomial k (a k)
+  refine ⟨q, fun z hz ↦ ?_⟩
+  ext k
+  rw [coeff_map]
+  have hqcoeff : q.coeff k =
+      ∑ x ∈ Finset.range (p.natDegree + 1), (Polynomial.monomial x (a x)).coeff k := by
+    simp [q]
+  rw [hqcoeff, map_sum]
+  by_cases hk : k ≤ p.natDegree
+  · rw [Finset.sum_eq_single k]
+    · rw [coeff_monomial_same]
+      simpa only [coe_evalRingHom] using ha k z hz
+    · intro x hx hxk
+      rw [coeff_monomial_of_ne _ hxk.symm]
+      simp
+    · exact fun h ↦ (h (Finset.mem_range.mpr (Nat.lt_succ_iff.mpr hk))).elim
+  · have hdegree : (selectedFactor hp S ⟨z, not_not.mp hz⟩).natDegree ≤ p.natDegree :=
+      (natDegree_le_of_dvd (selectedFactor_dvd hp S ⟨z, not_not.mp hz⟩)
+        (hp.map (Polynomial.evalRingHom z)).ne_zero).trans_eq
+          (hp.natDegree_map (Polynomial.evalRingHom z))
+    have hcoeff : (selectedFactor hp S ⟨z, not_not.mp hz⟩).coeff k = 0 :=
+      coeff_eq_zero_of_natDegree_lt (lt_of_le_of_lt hdegree (lt_of_not_ge hk))
+    rw [hcoeff]
+    apply Finset.sum_eq_zero
+    intro x hx
+    have hxk : x ≠ k := fun h ↦ hk (h ▸ Nat.le_of_lt_succ (Finset.mem_range.mp hx))
+    rw [coeff_monomial_of_ne _ hxk.symm]
+    simp
+
+/-- The algebraized selected family divides the original family after every simple
+specialization. -/
+theorem exists_polynomialFamily_selectedFactor_dvd_on_simple
+    {p : Polynomial (Polynomial ℂ)} (hp : p.Monic) (S : Set (SimpleRootCover p))
+    (hSopen : IsOpen S) (hSclosed : IsClosed S) (hfinite : (nonsimpleParameters p).Finite) :
+    ∃ q : Polynomial (Polynomial ℂ), ∀ z (_hz : z ∉ nonsimpleParameters p),
+      q.map (Polynomial.evalRingHom z) ∣ p.map (Polynomial.evalRingHom z) := by
+  obtain ⟨q, hq⟩ := exists_polynomialFamily_selectedFactor hp S hSopen hSclosed hfinite
+  exact ⟨q, fun z hz ↦ (hq z hz).symm ▸ selectedFactor_dvd hp S ⟨z, not_not.mp hz⟩⟩
+
 end
 
 end Polynomial
