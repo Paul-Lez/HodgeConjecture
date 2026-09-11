@@ -26,6 +26,7 @@ public import Other.AlgebraicGeometry.BettiGlobalSectionsAdditivity
 public import Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison
 public import Other.AlgebraicGeometry.BettiSupportedOrdinarySign
 public import Other.AlgebraicGeometry.BettiSupportedRawOrdinaryComparison
+public import Other.AlgebraicGeometry.BorelMooreConditional
 public import Other.AlgebraicGeometry.BorelMooreCycleClass
 public import Other.AlgebraicGeometry.ChowCycleClassDescent
 public import Other.AlgebraicGeometry.ClosedImmersionPointNormalCoordinates

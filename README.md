@@ -39,4 +39,12 @@ statement. Two checks keep this honest:
   `Lemmas` and `Mathlib` really is used by the statement — plus that both umbrella modules are
   complete.
 
+The Borel–Moore route to the cycle class, in `Other/AlgebraicGeometry/SheafBorelMoore.lean`,
+`BorelMooreCycleClass.lean`, `CycleComponentBorelMoore.lean` and
+`CycleComponentGlobalFundamentalClass.lean`, is stated relative to fifteen named hypothesis
+structures, each standing for mathematics Mathlib currently lacks. Results there taking one as an
+argument hold conditionally on it. In maximal codimension four of the fifteen are constructed from
+the one-point calculation. `Other/AlgebraicGeometry/BorelMooreConditional.lean` lists all fifteen
+with the construction each one waits on.
+
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
