@@ -24,7 +24,7 @@ public import Mathlib.Topology.Connected.LocallyPathConnected
 public import Mathlib.Topology.Homotopy.Contractible
 public import Mathlib.Topology.Sheaves.Abelian
 
-import HodgeConjecture.Lemmas.Algebra.Homology.DualExact
+import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 import HodgeConjecture.Lemmas.AlgebraicTopology.SingularContractible
 import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
 import Mathlib.Topology.Homotopy.TopCat.ZerothHomotopy
