@@ -38,6 +38,10 @@ statement. Two checks keep this honest:
   the resulting environment contains any module of `Other`;
 - `python3 scripts/check_import_layers.py` checks the converse — that every module of `Definitions`,
   `Lemmas` and `Mathlib` really is used by the statement — plus that both umbrella modules are
-  complete, and that every source path the Verso guide names in prose still exists.
+  complete, and that every source path the Verso guide names in prose still exists;
+- `lake env lean scripts/CheckStatementDeclarations.lean` is a manual, declaration-level audit. It
+  follows constants in the type and value of `HodgeConjecture` recursively and reports public local
+  declarations that are not reached, grouped by their source module. It is informational by default;
+  prefix the command with `HODGE_DECLARATION_AUDIT_STRICT=1` to make findings an error.
 
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
