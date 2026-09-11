@@ -48,7 +48,7 @@ lemma algebraicCycleClassSpan_eq_bot_of_lt
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (d p : ℕ)
     [SmoothOfRelativeDimension d X.hom] (h : d < p) :
     algebraicCycleClassSpan X p = ⊥ := by
-  rw [algebraicCycleClassSpan_of_ne_zero X p (by lia)]
+  rw [algebraicCycleClassSpan_eq_iSup X p]
   refine le_antisymm (iSup_le fun x ↦ iSup_le fun hx ↦ ?_) bot_le
   exact (SmoothOfRelativeDimension.coheight_ne_of_lt (f := X.hom) (d := d) x h hx).elim
 

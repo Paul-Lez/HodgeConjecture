@@ -43,12 +43,6 @@ open Point
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- Rational constant-sheaf cohomology supported on a closed subset of an analytification. -/
-abbrev RationalConstantSheafCohomologyWithSupport
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (Z : Set (ComplexPoint X)) (n : ℤ) :=
-  RationalCohomologyWithSupport X Z n
-
 /-- The rational span in ordinary cohomology of classes supported on `Z`. -/
 def rationalCohomologySupportedOn
     [IsIntegral X.left] [Smooth X.hom]
@@ -95,14 +89,6 @@ def RationalComponentCycleClassPurity
   rationalComponentCycleClassLine X p x =
     rationalCohomologySupportedOn X (cycleComponentSupport X x) (2 * (p : ℤ))
 
-lemma rationalComponentCycleClassLine_eq_supportedOn_of_purity
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) (x : X.left)
-    (h : RationalComponentCycleClassPurity X p x) :
-    rationalComponentCycleClassLine X p x =
-      rationalCohomologySupportedOn X
-        (cycleComponentSupport X x) (2 * (p : ℤ)) :=
-  h
-
 /-- The component cycle-class line lies in the image of cohomology supported on that component. -/
 lemma rationalComponentCycleClassLine_le_supportedOn
     [IsIntegral X.left] [Smooth X.hom]
@@ -123,17 +109,8 @@ def algebraicCycleClassSpan
   ⨆ (x : X.left) (hx : coheight x = p),
     Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
 
-@[simp]
-lemma algebraicCycleClassSpan_zero
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
-    algebraicCycleClassSpan X 0 =
-      ⨆ (x : X.left) (hx : coheight x = 0),
-        Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx} :=
-  rfl
-
-lemma algebraicCycleClassSpan_of_ne_zero
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (p : ℕ) (_hp : p ≠ 0) :
+lemma algebraicCycleClassSpan_eq_iSup
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) :
     algebraicCycleClassSpan X p =
       ⨆ (x : X.left) (hx : coheight x = p),
         Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx} :=
@@ -187,7 +164,7 @@ coniveau subspace. -/
 lemma forgetSupport_mem_rationalConiveauSubspace
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ)
     (x : X.left) (hx : coheight x = p)
-    (α : RationalConstantSheafCohomologyWithSupport X
+    (α : RationalCohomologyWithSupport X
       (cycleComponentSupport X x) (2 * (p : ℤ))) :
     forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) α ∈
       rationalConiveauSubspace X p := by
