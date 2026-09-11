@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentLocalGenerator
+public import Mathlib.LinearAlgebra.Dual.Lemmas
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentClosedPointDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff

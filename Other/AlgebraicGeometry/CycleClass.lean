@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroupLift
+public import Other.AlgebraicGeometry.ChowGroupLift
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
 

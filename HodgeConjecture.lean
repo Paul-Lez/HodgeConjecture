@@ -25,8 +25,6 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferential
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiCohomologyWithSupportComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiGlobalSectionsComparison
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroupLift
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionAnalyticLeftInverse
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionNormalCoordinates
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionSourceOpen
@@ -34,7 +32,6 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSuppor
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexSupportedSingularModel
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleClass
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentPurity
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSheafClass
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSingularClosedFiltration
@@ -136,7 +133,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalCom
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HypercohomologyGlobalSectionsShift
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalyticImmersion
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytification
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
@@ -240,6 +236,7 @@ public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
 public import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
+public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
 public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart

@@ -27,6 +27,7 @@ import Mathlib.RingTheory.IntegralClosure.GoingDown
 import Mathlib.RingTheory.KrullDimension.Field
 import Mathlib.RingTheory.KrullDimension.Polynomial
 import Mathlib.RingTheory.NoetherNormalization
+import Mathlib.RingTheory.Polynomial.RationalRoot
 
 /-!
 # Dimensions at closed points of cycle components

@@ -15,7 +15,6 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
 public import HodgeConjecture.Definitions.AlgebraicGeometry.IntegralProjectiveVariety
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
@@ -25,12 +24,15 @@ import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
-# Geometric support of algebraic cycles
+# Geometric support of one cycle component
 
 An algebraic cycle in Mathlib is indexed by the generic points of its irreducible components.
 This file constructs the reduced integral closed subscheme attached to such a point and the
-corresponding closed subset of complex points. It also constructs the geometric support of a
-whole cycle as the union of the closures of the generic points with nonzero coefficient.
+corresponding closed subset of complex points, which is what the statement of the conjecture spans
+component classes over.
+
+Assembling these into the support of a whole cycle needs `AlgebraicCycle` and `PrincipalDivisor`,
+which the statement does not mention; that lives in `Other.AlgebraicGeometry.AlgebraicCycleSupport`.
 -/
 
 @[expose] public noncomputable section
@@ -40,16 +42,6 @@ open CategoryTheory Topology TopologicalSpace
 namespace AlgebraicGeometry
 
 variable (X : Over (Spec ↧ℂ))
-
-/-- An algebraic cycle on a projective complex variety has finite support. Algebraic cycles are
-locally finite by definition, and the underlying Zariski space is compact. -/
-lemma algebraicCycle_support_finite {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (c : AlgebraicCycle X.left R) :
-    c.support.Finite := by
-  let : CompactSpace X.left := QuasiCompact.compactSpace_of_compactSpace X.hom
-  simpa using c.locallyFiniteSupport.finite_inter_support_of_isCompact
-    (W := Set.univ) isCompact_univ
 
 /-- The reduced closed subscheme whose underlying space is the closure of `x`. -/
 def cycleComponent (X : Scheme) (x : X) : Scheme :=
@@ -149,15 +141,6 @@ noncomputable instance cycleComponent_locallyOfFinitePresentation
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
     LocallyOfFinitePresentation (cycleComponentι X.left x ≫ X.hom) :=
   inferInstance
-
-/-- The integral projective variety defined by one generic point of a smooth projective variety. -/
-def cycleComponentVariety
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IntegralProjectiveComplexVariety where
-  scheme := cycleComponent X.left x
-  isIntegral := inferInstance
-  structureMap := cycleComponentι X.left x ≫ X.hom
-  projective := cycleComponent_projective X x
 
 /-- The reduced closure of a point in a projective complex variety is Noetherian.
 
@@ -388,99 +371,5 @@ lemma mem_cycleComponentSmoothSupport_iff
   · rintro ⟨hz, hsmooth⟩
     exact ⟨cycleComponentComplexPointLift X x z hz, hsmooth,
       cycleComponentMap_lift X x z hz⟩
-
-/-- The underlying closed support of an algebraic cycle: the union of the closures of all generic
-points having nonzero coefficient. -/
-def algebraicCycleSupport {R : Type*} [Zero R] (X : Scheme)
-    (c : AlgebraicCycle X R) : Set X :=
-  ⋃ x ∈ c.support, closure {x}
-
-/-- The support of the pushforward of a principal divisor lies in the image of its carrier. -/
-lemma PrincipalDivisor.pushforwardCycle_support_subset_range
-    {X : Scheme} {p : ℕ} (D : PrincipalDivisor X p) :
-    D.pushforwardCycle.support ⊆ Set.range D.inclusion := by
-  unfold PrincipalDivisor.pushforwardCycle AlgebraicCycle.map
-  apply Function.locallyFinsupp.support_map_subset_of_forall_mem
-    (s := Set.univ) (t := Set.range D.inclusion)
-  · exact Set.subset_univ _
-  · exact fun x _ _ => ⟨x, rfl⟩
-
-/-- The geometric support of a pushed-forward principal divisor lies in its closed carrier. -/
-lemma PrincipalDivisor.algebraicCycleSupport_pushforwardCycle_subset_range
-    {X : Scheme} {p : ℕ} (D : PrincipalDivisor X p) :
-    algebraicCycleSupport X D.pushforwardCycle ⊆ Set.range D.inclusion := by
-  let := D.isClosedImmersion
-  rw [algebraicCycleSupport, Set.iUnion₂_subset_iff]
-  intro x hx
-  refine closure_minimal ?_ D.inclusion.isClosedEmbedding.isClosed_range
-  simpa only [Set.singleton_subset_iff] using D.pushforwardCycle_support_subset_range hx
-
-/-- The complex points lying over the geometric support of an algebraic cycle. -/
-def analyticCycleSupport {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    (c : AlgebraicCycle X.left R) : Set (ComplexPoint X) :=
-  Point.underlying ⁻¹' algebraicCycleSupport X.left c
-
-/-- The complex points lying over the closed carrier of a principal divisor. -/
-def principalDivisorCarrierSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    {p : ℕ} (D : PrincipalDivisor X.left p) : Set (ComplexPoint X) :=
-  (@Point.underlying ℂ _ _ X) ⁻¹' Set.range D.inclusion
-
-/-- The analytic support of a principal-divisor carrier is closed. -/
-lemma isClosed_principalDivisorCarrierSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    {p : ℕ} (D : PrincipalDivisor X.left p) :
-    IsClosed (principalDivisorCarrierSupport X D) := by
-  let := D.isClosedImmersion
-  let Z : TopologicalSpace.Closeds X.left :=
-    ⟨Set.range D.inclusion, D.inclusion.isClosedEmbedding.isClosed_range⟩
-  exact isClosed_complexPoint_underlying_preimage X Z
-
-/-- The analytic support of a pushed-forward principal divisor lies over its carrier. -/
-lemma analyticCycleSupport_pushforwardCycle_subset_carrierSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    {p : ℕ} (D : PrincipalDivisor X.left p) :
-    analyticCycleSupport X D.pushforwardCycle ⊆
-      principalDivisorCarrierSupport X D :=
-  fun _ hz => D.algebraicCycleSupport_pushforwardCycle_subset_range hz
-
-/-- The analytic support of a cycle is the union of the analytic supports of its nonzero
-components. -/
-lemma analyticCycleSupport_eq_iUnion {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (c : AlgebraicCycle X.left R) :
-    analyticCycleSupport X c =
-      ⋃ x ∈ c.support, cycleComponentSupport X x := by
-  ext z
-  simp [analyticCycleSupport, algebraicCycleSupport, cycleComponentSupport]
-
-/-- The analytic support of an algebraic cycle on a projective variety is closed. -/
-lemma isClosed_analyticCycleSupport {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (c : AlgebraicCycle X.left R) :
-    IsClosed (analyticCycleSupport X c) := by
-  rw [analyticCycleSupport_eq_iUnion]
-  exact (algebraicCycle_support_finite X c).isClosed_biUnion fun x _ =>
-    isClosed_cycleComponentSupport X x
-
-lemma cycleComponentSupport_subset_analyticCycleSupport {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (c : AlgebraicCycle X.left R)
-    (x : X.left) (hx : c x ≠ 0) :
-    cycleComponentSupport X x ⊆ analyticCycleSupport X c :=
-  fun _ hz => Set.mem_iUnion₂.mpr ⟨x, Function.mem_support.mpr hx, hz⟩
-
-@[simp]
-lemma algebraicCycleSupport_zero {R : Type*} [Zero R] (X : Scheme) :
-    algebraicCycleSupport X (0 : AlgebraicCycle X R) = ∅ := by
-  simp [algebraicCycleSupport]
-  exact fun _ => rfl
-
-@[simp]
-lemma analyticCycleSupport_zero {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
-    analyticCycleSupport X (0 : AlgebraicCycle X.left R) = ∅ := by
-  simp [analyticCycleSupport]
 
 end AlgebraicGeometry

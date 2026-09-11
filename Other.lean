@@ -22,12 +22,15 @@ public import Other.Algebra.DeRham.Complex
 public import Other.Algebra.Homology.MapArrowConeConnecting
 public import Other.Algebra.Homology.MapExtendBettiComparison
 public import Other.Algebra.Homology.MapHomologyShift
+public import Other.AlgebraicGeometry.AlgebraicCycleSupport
 public import Other.AlgebraicGeometry.BettiGlobalSectionsAdditivity
 public import Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison
 public import Other.AlgebraicGeometry.BettiSupportedOrdinarySign
 public import Other.AlgebraicGeometry.BettiSupportedRawOrdinaryComparison
 public import Other.AlgebraicGeometry.BorelMooreCycleClass
 public import Other.AlgebraicGeometry.ChowCycleClassDescent
+public import Other.AlgebraicGeometry.ChowGroup
+public import Other.AlgebraicGeometry.ChowGroupLift
 public import Other.AlgebraicGeometry.ClosedImmersionPointNormalCoordinates
 public import Other.AlgebraicGeometry.CompactlySupportedCohomology
 public import Other.AlgebraicGeometry.ComplexPointCoclassOrientationComparison
@@ -35,6 +38,7 @@ public import Other.AlgebraicGeometry.ComplexPointCoclassSchemeIso
 public import Other.AlgebraicGeometry.ComplexPointCoclassSheafIso
 public import Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization
 public import Other.AlgebraicGeometry.ComplexSupportedOrdinaryComparison
+public import Other.AlgebraicGeometry.CycleClass
 public import Other.AlgebraicGeometry.CycleClassDimension
 public import Other.AlgebraicGeometry.CycleComponentAnalyticEmbedding
 public import Other.AlgebraicGeometry.CycleComponentAnalyticImmersion
@@ -52,6 +56,7 @@ public import Other.AlgebraicGeometry.CycleComponentRegularImmersion
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
 public import Other.AlgebraicGeometry.HodgeCodimensionZero
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality
+public import Other.AlgebraicGeometry.OrderOfVanishing
 public import Other.AlgebraicGeometry.PointCycleClass
 public import Other.AlgebraicGeometry.PrincipalDivisorCycleClass
 public import Other.AlgebraicGeometry.PrincipalDivisorDegreeReduction
