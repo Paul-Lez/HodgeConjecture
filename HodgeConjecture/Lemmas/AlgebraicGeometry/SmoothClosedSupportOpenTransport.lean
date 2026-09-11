@@ -5,17 +5,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportLocalHomology
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionSourceOpen
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionSourceOpen
 public import HodgeConjecture.Definitions.AlgebraicTopology.NeighborhoodSupportPairImage
 
 /-!
-# Actual local purity neighborhoods transported out of ambient opens
+# Local purity neighborhoods transported out of ambient opens
 
-The normal-neighborhood construction requires smooth geometry but no projectivity.
-This module transports its literal support pairs along an open embedding, allowing
-cohomology to continue to be computed using a resolution on the original ambient
-space. The support-membership identity is purely topological; no local cohomology
-or purity statement is an input.
+The normal-neighborhood construction uses smooth geometry alone. This module transports
+its support pairs along an open embedding, so cohomology can still be computed with a
+resolution on the original ambient space. The support-membership identity is purely
+topological.
 -/
 
 @[expose] public noncomputable section

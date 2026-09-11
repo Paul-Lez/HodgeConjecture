@@ -26,7 +26,7 @@ open Lean Verso Doc Elab Genre Manual
 namespace HodgeGuide
 
 /-- Module-name prefixes that count as "this repository". -/
-def repositoryPrefixes : List Name := [`HodgeConjecture, `Other, `Challenge]
+def repositoryPrefixes : List Name := [`HodgeConjecture, `Other]
 
 /-- Whether `m` is a module of this repository. -/
 def isRepositoryModule (m : Name) : Bool :=

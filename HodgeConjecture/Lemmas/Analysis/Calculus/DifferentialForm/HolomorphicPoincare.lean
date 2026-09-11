@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.Poincare
+public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
 
 import Mathlib.LinearAlgebra.ExteriorAlgebra.OfAlternating
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
@@ -67,7 +67,6 @@ def radialPrimitiveSeries (n : ℕ)
   simp [radialPrimitiveSeries]
   congr 2
 
-set_option maxHeartbeats 2000000 in
 lemma norm_radialPrimitiveSeries_succ_le (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ)) (k : ℕ) :
     ‖radialPrimitiveSeries n p (k + 1)‖ ≤ ‖p k‖ := by

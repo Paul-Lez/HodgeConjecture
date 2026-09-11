@@ -8,17 +8,16 @@ public import Other.AlgebraicTopology.SingularCapNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheafStalk
 
 /-!
-# The actual ambient-cochain cap action on the relative-chain sheaf
+# The ambient-cochain cap action on the relative-chain sheaf
 
 A fixed singular cochain on the ambient space acts on relative chains `(X,A)` by the
-Alexander–Whitney cap product followed by the relative projection. Naturality makes
-this action descend through the quotient by chains in `A`. It commutes with restriction
-of the open support, and hence sheafifies on the actual relative-chain sheaves.
+Alexander–Whitney cap product followed by the relative projection, and naturality makes
+the action descend through the quotient by chains in `A`. It commutes with restriction of
+the open support, so it sheafifies on the relative-chain sheaves.
 
-The cochain here is genuinely ambient. We do not claim that this immediately defines
-an action of the sheaf of local singular cochains: large relative-chain simplices can
-leave the cochain's domain. That stronger local action requires the small-chain/excision
-comparison and is the next boundary in comparing the derived orientation with cap trace.
+The cochain is defined on the whole ambient space, since large relative-chain simplices can
+leave the domain of a merely local cochain. Upgrading this to an action of the sheaf of
+local singular cochains needs the small-chain/excision comparison.
 -/
 
 @[expose] public noncomputable section
@@ -49,8 +48,7 @@ lemma subspaceChain_ambientCapRelativeLift (P : TopPair.{u}) (p q : ℕ)
         (Simplicial.cochainMap R (TopCat.toSSet.map P.map) p φ) ≫
           ((chainPairFunctor R).obj P).hom.f q := by
     apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
+    ext c
     exact (Simplicial.cap_naturality R (TopCat.toSSet.map P.map) p q φ c).symm
   have hz := congrArg (fun f => f.f q) (subspaceChainMap_relativeChainProjection R P)
   change ((chainPairFunctor R).obj P).hom.f q ≫ (relativeChainProjection R P).f q = 0 at hz
@@ -155,8 +153,7 @@ lemma relativeAmbientCapHom_boundary (P : TopPair.{u}) (p q : ℕ)
         (((relativeChainFunctor R).obj P).d (p + q + 1) (p + q) ≫
           relativeAmbientCapHom R P p q φ) := by
   apply ModuleCat.hom_ext
-  apply LinearMap.ext
-  intro c
+  ext c
   change relativeBoundary R P q ((relativeAmbientCapHom R P p (q + 1) φ).hom c) =
     (-1 : ℤ) ^ p • (relativeAmbientCapHom R P p q φ).hom (relativeBoundary R P (p + q) c)
   rw [← Int.cast_smul_eq_zsmul R, Int.cast_pow, Int.cast_neg, Int.cast_one]
