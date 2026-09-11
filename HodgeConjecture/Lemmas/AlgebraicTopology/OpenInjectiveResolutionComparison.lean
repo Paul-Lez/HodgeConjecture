@@ -56,13 +56,13 @@ variable (X : TopCat.{0}) (U : Opens X) (A : AddCommGrpCat.{0})
 @[reassoc (attr := simp)]
 lemma restrictedAmbientAugmentation_comp_comparison :
     restrictedAmbientConstantAugmentation X U A ≫
-      restrictedAmbientToOpenResolution X U A = (openConstantInjectiveResolution X U A).ι :=
+      restrictedAmbientToOpenResolution X U A = (ambientConstantInjectiveResolution (TopCat.of U) A).ι :=
   CochainComplex.comp_liftToInjectiveNat _ _ _
 
 lemma restrictedAmbientToOpenResolution_quasiIso :
     QuasiIso (restrictedAmbientToOpenResolution X U A) := by
-  let : QuasiIso (openConstantInjectiveResolution X U A).ι :=
-    (openConstantInjectiveResolution X U A).quasiIso
+  let : QuasiIso (ambientConstantInjectiveResolution (TopCat.of U) A).ι :=
+    (ambientConstantInjectiveResolution (TopCat.of U) A).quasiIso
   exact CochainComplex.liftToInjectiveNat_quasiIso _ _ _
 
 set_option backward.defeqAttrib.useBackward true in
@@ -76,7 +76,7 @@ lemma ambientAugmentation_comp_openResolution :
         (HomologicalComplex.singleMapHomologicalComplex
           (pushforward AddCommGrpCat U.inclusion') (.up ℕ) 0).inv.app _ ≫
         ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).map
-          (openConstantInjectiveResolution X U A).ι := by
+          (ambientConstantInjectiveResolution (TopCat.of U) A).ι := by
   apply HomologicalComplex.Hom.ext
   funext n
   cases n with
@@ -87,7 +87,7 @@ lemma ambientAugmentation_comp_openResolution :
             ((restrictedAmbientToOpenResolution X U A).f 0)) =
       constantRestriction U.inclusion' A ≫
         (pushforward AddCommGrpCat U.inclusion').map
-          ((openConstantInjectiveResolution X U A).ι.f 0)
+          ((ambientConstantInjectiveResolution (TopCat.of U) A).ι.f 0)
     have hnat := (toOpenRestrictionPushforward X U).naturality
       ((ambientConstantInjectiveResolution X A).ι.f 0)
     dsimp only [Functor.id_map] at hnat
@@ -104,7 +104,7 @@ lemma ambientAugmentation_comp_openResolution :
         (U.isOpenEmbedding.sheafPullback AddCommGrpCat).map
           ((ambientConstantInjectiveResolution X A).ι.f 0) ≫
         (restrictedAmbientToOpenResolution X U A).f 0 =
-      (openConstantInjectiveResolution X U A).ι.f 0 at h
+      (ambientConstantInjectiveResolution (TopCat.of U) A).ι.f 0 at h
     dsimp only [constantOpenSheafRestrictionIso] at h
     exact congrArg (fun f => constantRestriction U.inclusion' A ≫
       (pushforward AddCommGrpCat U.inclusion').map f) h
@@ -124,6 +124,6 @@ theorem globalRestrictedAmbientToOpenResolution_quasiIso :
     restrictedAmbientToOpenResolution_quasiIso X U A
   apply AlgebraicGeometry.ComplexPoint.globalSectionsNat_map_quasiIso
   · exact restrictedAmbientConstantResolution_isFlasque X U A
-  · exact fun n => @injective_isFlasque _ _ ((openConstantInjectiveResolution X U A).injective n)
+  · exact fun n => @injective_isFlasque _ _ ((ambientConstantInjectiveResolution (TopCat.of U) A).injective n)
 
 end TopCat.Sheaf

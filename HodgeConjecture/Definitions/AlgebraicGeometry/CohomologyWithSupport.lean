@@ -49,25 +49,21 @@ local instance analyticSupportHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-/-- The analytic complement of a subset of the complex-point space. -/
-abbrev AnalyticComplement (Z : Set (ComplexPoint X)) :=
-  Zᶜ
-
-/-- The inclusion of the analytic complement into the complex-point space. -/
+/-- The inclusion of the complement of a subset into the complex-point space. -/
 def analyticComplementInclusion (Z : Set (ComplexPoint X)) :
-    TopCat.of (AnalyticComplement X Z) ⟶
+    TopCat.of ↥Zᶜ ⟶
       TopCat.of (ComplexPoint X) :=
   TopCat.ofHom ⟨Subtype.val, continuous_subtype_val⟩
 
-/-- Sheaves of additive groups on the analytic complement. -/
+/-- Sheaves of additive groups on the complement of a subset. -/
 abbrev AnalyticComplementAdditiveSheaf (Z : Set (ComplexPoint X)) :=
-  TopCat.Sheaf AddCommGrpCat (TopCat.of (AnalyticComplement X Z))
+  TopCat.Sheaf AddCommGrpCat (TopCat.of ↥Zᶜ)
 
-/-- The rational constant sheaf on the analytic complement. -/
+/-- The rational constant sheaf on the complement. -/
 def complementConstantRationalSheaf (Z : Set (ComplexPoint X)) :
     AnalyticComplementAdditiveSheaf X Z :=
   let J := Opens.grothendieckTopology
-    (TopCat.of (AnalyticComplement X Z))
+    (TopCat.of ↥Zᶜ)
   (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of ℚ)
 
 /-- The rational constant sheaf on the complement, pushed forward to the ambient space. -/
@@ -83,7 +79,7 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
     (Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).obj
         (AddCommGrpCat.of ℚ) ⟶
       (pushforwardComplementConstantRationalSheaf X Z).obj :=
-  let U := TopCat.of (AnalyticComplement X Z)
+  let U := TopCat.of ↥Zᶜ
   let J := Opens.grothendieckTopology U
   Functor.whiskerLeft (Opens.map (analyticComplementInclusion X Z)).op
     ((sheafificationAdjunction J AddCommGrpCat).unit.app
@@ -114,17 +110,15 @@ def derivedPushforwardComplementConstantRationalComplexNat
       (ComplexShape.up ℕ)).obj
     (complementConstantRationalInjectiveResolution X Z).cocomplex
 
-/-- Every additive sheaf on the empty analytic complement is a zero object. -/
+/-- Every additive sheaf on the empty complement is a zero object. -/
 private lemma isZero_sheaf_on_complement_univ
     (F : TopCat.Sheaf AddCommGrpCat.{0}
-      (TopCat.of (AnalyticComplement X
-        (Set.univ : Set (ComplexPoint X))))) :
+      (TopCat.of ↥((Set.univ : Set (ComplexPoint X))ᶜ))) :
     IsZero F :=
   (TopCat.Sheaf.isZero_iff_stalkFunctor_obj_isZero
     (C := AddCommGrpCat.{0})
-    (X := TopCat.of (AnalyticComplement X
-      (Set.univ : Set (ComplexPoint X)))) F).2
-    fun x ↦ (show False by simpa [AnalyticComplement] using x.property).elim
+    (X := TopCat.of ↥((Set.univ : Set (ComplexPoint X))ᶜ)) F).2
+    fun x ↦ (show False by simpa using x.property).elim
 
 /-- Every term of the derived pushforward from the empty complement is zero. -/
 private lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
@@ -152,6 +146,11 @@ def derivedPushforwardComplementConstantRationalComplexInt
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   (derivedPushforwardComplementConstantRationalComplexNat X Z).extend
     ComplexShape.embeddingUpNat
+
+instance (Z : Set (ComplexPoint X)) :
+    (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE 0 := by
+  unfold derivedPushforwardComplementConstantRationalComplexInt
+  infer_instance
 
 /-- Extending the zero derived pushforward from the empty complement to integer degrees remains a
 zero complex. -/

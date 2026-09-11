@@ -50,7 +50,8 @@ and fixes every rational vector. -/
 def conjugate : ℂ ⊗[ℚ] V →ₗ[ℚ] ℂ ⊗[ℚ] V :=
   TensorProduct.map (Complex.conjAe.restrictScalars ℚ).toLinearMap LinearMap.id
 
-/-- A pure rational Hodge structure of weight `n` on `V`.
+/-- A pure decomposition of weight `n` with natural-number bidegrees on a rational vector
+space `V` of arbitrary dimension.
 
 The pieces are indexed by pairs `(p,q)`. They form an internal direct sum, only pieces with
 `p + q = n` can be nonzero, and complex conjugation exchanges the `(p,q)` and `(q,p)` pieces. -/
