@@ -59,16 +59,19 @@ example : @Guide.Cycles.D1.codimensionCycleSubgroup.{u} = @AlgebraicGeometry.cod
 ```
 ```lean -show
 namespace Guide.Cycles.D2
+/-- The membership proof, hidden from the quotation because it carries no information. -/
+theorem single_mem {X : Scheme.{u}} [DecidableEq X] {p : ℕ} (x : X) (hx : coheight x = p)
+    (n : ℤ) : Function.locallyFinsuppWithin.single x n ∈ codimensionCycleSubgroup X p := by
+  intro y hy
+  by_cases h : y = x
+  · simpa [h] using hx
+  · simp [Function.locallyFinsuppWithin.single_apply, h] at hy
 ```
 ```lean
 noncomputable def codimensionCycleSubgroup.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
     (n : ℤ) : codimensionCycleSubgroup X p := by
   classical
-  exact ⟨Function.locallyFinsuppWithin.single x n, by
-    intro y hy
-    by_cases h : y = x
-    · simpa [h] using hx
-    · simp [Function.locallyFinsuppWithin.single_apply, h] at hy⟩
+  exact ⟨Function.locallyFinsuppWithin.single x n, single_mem x hx n⟩
 ```
 ```lean -show
 end Guide.Cycles.D2
@@ -197,21 +200,31 @@ example : @Guide.Cycles.D9.RationalCohomologyWithSupport = @AlgebraicGeometry.Co
 ```
 ```lean -show
 namespace Guide.Cycles.D10
+/-- The map, named so that its additivity can be stated in the hidden lemmas below. -/
+def forgetSupportFun (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
+    RationalCohomologyWithSupport X Z n → FieldCohomology ℚ X n :=
+  fun α => α.comp (forgetSupportShiftedHom X Z) (by lia)
+/-- Additivity proofs, hidden from the quotation because they carry no information. -/
+theorem forgetSupport_map_zero (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
+    forgetSupportFun X Z n 0 = 0 := by
+  apply (Localization.SmallShiftedHom.equiv
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+  simp only [forgetSupportFun, Localization.SmallShiftedHom.equiv_comp,
+    hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
+theorem forgetSupport_map_add (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ)
+    (α β : RationalCohomologyWithSupport X Z n) :
+    forgetSupportFun X Z n (α + β) = forgetSupportFun X Z n α + forgetSupportFun X Z n β := by
+  apply (Localization.SmallShiftedHom.equiv
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+  simp only [forgetSupportFun, Localization.SmallShiftedHom.equiv_comp,
+    hypercohomologyEquiv_add, ShiftedHom.add_comp]
 ```
 ```lean
 def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) where
   toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
-  map_zero' := by
-    apply (Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    simp only [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
-  map_add' α β := by
-    apply (Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    simp only [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_add, ShiftedHom.add_comp]
+  map_zero' := forgetSupport_map_zero X Z n
+  map_add' := forgetSupport_map_add X Z n
 ```
 ```lean -show
 end Guide.Cycles.D10
