@@ -168,21 +168,6 @@ lemma fieldToDeRhamCohomology_injective
   simpa only [complexConstantCohomologyDeRhamEquiv_apply,
     fieldToDeRhamCohomology_factor K X n] using hαβ
 
-@[simp] lemma fieldToDeRhamComplexification_tmul
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (c : ℂ) (α : H^n(X; K)) :
-    fieldToDeRhamComplexification K X n (c ⊗ₜ[K] α) =
-      c • fieldToDeRhamCohomology K X n α :=
-  rfl
-
-/-- On the rational lattice, the complexified comparison agrees with the original map. -/
-@[simp] lemma fieldToDeRhamComplexification_ofField
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : H^n(X; K)) :
-    fieldToDeRhamComplexification K X n (1 ⊗ₜ[K] α) =
-      fieldToDeRhamCohomology K X n α := by
-  simp
-
 /-- The part of the holomorphic de Rham complex in form degrees at least `p` is zero when `p`
 is above the complex dimension. -/
 lemma hodgeFilteredDeRhamComplex_isZero_of_lt
