@@ -87,6 +87,8 @@ public import Other.AlgebraicGeometry.DerivedSupportRationalComparison
 public import Other.AlgebraicGeometry.DerivedSupportRationalForget
 public import Other.AlgebraicGeometry.EtaleLocalHomeomorph
 public import Other.AlgebraicGeometry.HodgeCodimensionZero
+public import Other.AlgebraicGeometry.HodgeDecomposition
+public import Other.AlgebraicGeometry.HodgeFiltration
 public import Other.AlgebraicGeometry.HolomorphicClosedImmersionCharts
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality
 public import Other.AlgebraicGeometry.PointCycleClass
@@ -194,5 +196,6 @@ public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
 public import Other.CommutativeAlgebra.RegularLocalQuotientKernel
 public import Other.Geometry.Manifold.Orientation
+public import Other.LinearAlgebra.HodgeStructure
 public import Other.Mathlib.Algebra.Module.LinearMap.Rat
 public import Other.Topology.Category.TopCat.Basic

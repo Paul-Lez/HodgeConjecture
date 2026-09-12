@@ -83,7 +83,6 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCoho
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SectionRestrictionCone
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCohomologySheafComparison
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
-public import HodgeConjecture.Definitions.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Definitions.Topology.Dimension.Basic
 public import HodgeConjecture.Lemmas.Algebra.DeRham.Basic
 public import HodgeConjecture.Lemmas.Algebra.FieldToComplex
@@ -266,7 +265,6 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularSectionNa
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWedge
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
-public import HodgeConjecture.Lemmas.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Lemmas.RingTheory.TranscendenceDegreeKrullDimension
 public import HodgeConjecture.Lemmas.Topology.Dimension.Basic
 public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact

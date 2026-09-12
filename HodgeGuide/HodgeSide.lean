@@ -376,10 +376,11 @@ The image is a priori an additive subgroup. Compatibility with complex scalars i
 restricts to a subspace over any coefficient field contained in $`\mathbb C`. Two sanity checks
 are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and $`F^p=0` for $`p>\dim X`. Both are
 used later — the first is what makes every degree-zero class a Hodge class, the second is what
-makes the conjecture vacuous above the dimension.
+makes the conjecture vacuous above the dimension. The first,
+`hodgeFiltrationComplexSubmodule_zero_eq_top`, is not needed by the statement and lives in
+`Other/AlgebraicGeometry/HodgeFiltration.lean`; the second is checked below.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule_zero_eq_top
 #check AlgebraicGeometry.ComplexPoint.hodgeFiltration_eq_bot_of_lt
 ```
 
@@ -531,16 +532,23 @@ end Guide.Hodge.D11
 example : @Guide.Hodge.D11.hodgeClasses = @AlgebraicGeometry.ComplexPoint.hodgeClasses := rfl
 ```
 
-The cohomology of $`X` is not equipped with a pure Hodge structure in the formalization; that
-would require the Hodge decomposition. The $`(p,p)` piece is instead defined directly by the
-formula above, which is why the conjugation had to be constructed.
+The formalization does not equip the cohomology of $`X` with a pure Hodge structure: that would
+require the Hodge decomposition theorem. The $`(p,p)` piece is instead defined directly by the
+formula above, which is why the conjugation had to be constructed. The file
+`Other/AlgebraicGeometry/HodgeDecomposition.lean` takes the Hodge decomposition as a hypothesis,
+`HasHodgeDecomposition X n`, builds the pure Hodge structure on $`H^n(X;\mathbb Q)` that it
+provides, and proves in `hodgeClasses_eq_hodgeClasses_hodgeStructure` that the Hodge classes above
+are then its rational $`(p,p)`-classes. So the definition through the filtration is the classical
+one whenever the Hodge decomposition is available. That file is not imported here: the guide only
+imports the modules the statement depends on.
 
 The two sanity checks on the filtration pass to the Hodge classes: every degree-zero class is a
 Hodge class, and there are none above the dimension. These are the two ends of the conjecture that
 the repository settles; see {ref "what-is-proved"}[What the repository proves about the statement].
+The degree-zero statement, `hodgeClasses_zero_eq_top`, lives in
+`Other/AlgebraicGeometry/HodgeFiltration.lean` since the statement does not need it.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_zero_eq_top
 #check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_bot_of_lt
 ```
 
@@ -558,15 +566,12 @@ coefficient field of the conjecture.
 #check AlgebraicGeometry.ComplexPoint.hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule
 ```
 
-The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from
-`HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
-vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector in
-$`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in $`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`,
-and the only summand common to both is $`H^{p,p}`.
-
-```lean
-#check HodgeStructure.Pure.ofBase_mem_filtration_iff
-```
+The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma
+`HodgeStructure.ofBase_mem_filtration_iff` in `Other/LinearAlgebra/HodgeStructure.lean`:
+conjugation fixes rational vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector
+in $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in
+$`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`, and the only summand common to both is
+$`H^{p,p}`.
 
 The conjugation condition cannot be dropped for other coefficient fields. Let $`E` be the
 elliptic curve $`\mathbb C/(\mathbb Z+\mathbb Z i)`. The periods of $`dz` are $`1` and $`i`, so
