@@ -192,8 +192,8 @@ def complexAmbientSheafBorelMooreIsoOfOrientation
   (TopCat.Sheaf.derivedClosedSupportSections
     (TopCat.of (ComplexPoint X)) Z).mapIso
       (complexChainSheafPlusIsoOfOrientation X d orientation) ≪≫
-    (TopCat.Sheaf.derivedClosedSupportSectionsShiftIso
-      (TopCat.of (ComplexPoint X)) Z (2 * (d : ℤ))).app _
+    ((TopCat.Sheaf.derivedClosedSupportSections
+      (TopCat.of (ComplexPoint X)) Z).commShiftIso (2 * (d : ℤ))).app _
 
 /-- The actual ambient chain-sheaf group maps isomorphically to supported cohomology
 in degree `2d-i`, via the displayed orientation shift. This transport lemma still takes

@@ -175,42 +175,4 @@ lemma mem_cycleComponentSmoothSupport_iff
     exact ⟨cycleComponentComplexPointLift X x z hz, hsmooth,
       cycleComponentMap_lift X x z hz⟩
 
-/-- The analytic support of a cycle is the union of the analytic supports of its nonzero
-components. -/
-lemma analyticCycleSupport_eq_iUnion {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (c : AlgebraicCycle X.left R) :
-    analyticCycleSupport X c =
-      ⋃ x ∈ c.support, cycleComponentSupport X x := by
-  ext z
-  simp [analyticCycleSupport, algebraicCycleSupport, cycleComponentSupport]
-
-/-- The analytic support of an algebraic cycle on a projective variety is closed. -/
-lemma isClosed_analyticCycleSupport {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (c : AlgebraicCycle X.left R) :
-    IsClosed (analyticCycleSupport X c) := by
-  rw [analyticCycleSupport_eq_iUnion]
-  exact (algebraicCycle_support_finite X c).isClosed_biUnion fun x _ =>
-    isClosed_cycleComponentSupport X x
-
-lemma cycleComponentSupport_subset_analyticCycleSupport {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (c : AlgebraicCycle X.left R)
-    (x : X.left) (hx : c x ≠ 0) :
-    cycleComponentSupport X x ⊆ analyticCycleSupport X c :=
-  fun _ hz => Set.mem_iUnion₂.mpr ⟨x, Function.mem_support.mpr hx, hz⟩
-
-@[simp]
-lemma algebraicCycleSupport_zero {R : Type*} [Zero R] (X : Scheme) :
-    algebraicCycleSupport X (0 : AlgebraicCycle X R) = ∅ := by
-  simp [algebraicCycleSupport]
-  exact fun _ => rfl
-
-@[simp]
-lemma analyticCycleSupport_zero {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
-    analyticCycleSupport X (0 : AlgebraicCycle X.left R) = ∅ := by
-  simp [analyticCycleSupport]
-
 end AlgebraicGeometry

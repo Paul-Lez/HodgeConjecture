@@ -88,31 +88,6 @@ private theorem exists_coveringSieve_locallyFinite_closedRefinement
   refine ⟨W, hWopen, hWcover, ?_, fun I ↦ (hWsub I).trans (hVsub I)⟩
   exact (hVfinite.subset fun I ↦ subset_closure.trans (hWsub I)).closure
 
-/-- Lift a singular simplex through an inclusion of open subsets, provided all of its values lie
-in the smaller open subset. -/
-noncomputable def openSimplexLift {X : TopCat.{u}} {U V : Opens X} (n : ℕ)
-    (s : OpenSimplex X (.op U) n)
-    (h : ∀ z, (((TopCat.of U).toSSetObjEquiv
-      (Opposite.op (SimplexCategory.mk n)) s z : U) : X) ∈ V) :
-    OpenSimplex X (.op V) n := by
-  let m := Opposite.op (SimplexCategory.mk n)
-  let fs := (TopCat.of U).toSSetObjEquiv m s
-  let f : C(stdSimplex ℝ (Fin (n + 1)), TopCat.of V) :=
-    ⟨fun z ↦ ⟨((fs z : U) : X), h z⟩,
-      Continuous.subtype_mk
-        (continuous_subtype_val.comp fs.continuous) _⟩
-  exact (TopCat.of V).toSSetObjEquiv m |>.symm f
-
-@[simp]
-lemma openSimplexMap_openSimplexLift {X : TopCat.{u}} {U V : Opens X} (i : V ⟶ U) (n : ℕ)
-    (s : OpenSimplex X (.op U) n)
-    (h : ∀ z, (((TopCat.of U).toSSetObjEquiv
-      (Opposite.op (SimplexCategory.mk n)) s z : U) : X) ∈ V) :
-    openSimplexMap X i.op n (openSimplexLift n s h) = s := by
-  apply (TopCat.of U).toSSetObjEquiv
-    (Opposite.op (SimplexCategory.mk n)) |>.injective
-  rfl
-
 variable (R : Type u) [Field R] (X : TopCat.{u})
 
 /-- The singular chain complex of the top open subset of `X`. -/
@@ -131,14 +106,6 @@ noncomputable def singularCochainComplexIsoTopOpen :
     (SingularChainComplex R X).linearDualCochainComplex ≅
       (TopOpenSingularChainComplex R X).linearDualCochainComplex :=
   HomologicalComplex.linearDualIso (topOpenSingularChainComplexIso R X)
-
-/-- Ordinary singular cochain cohomology is canonically linearly equivalent to the cohomology of
-cochains on the top open subset. -/
-noncomputable def cochainCohomologyEquivTopOpen (n : ℕ) :
-    CochainCohomology R X n ≃ₗ[R]
-      ((TopOpenSingularChainComplex R X).sc n).linearDual.homology :=
-  HomologicalComplex.HomotopyEquiv.linearDualCohomologyEquiv
-    (HomotopyEquiv.ofIso (topOpenSingularChainComplexIso R X)) n
 
 /-- The singular-cochain presheaf complex evaluated on the top open subset. -/
 def globalRawSingularCochainComplex : CochainComplex AddCommGrpCat ℕ :=
@@ -543,23 +510,6 @@ instance topOpenRationalCochainRestrictionToCoverSmall_epi :
   change (rationalCochainRestrictionToCoverSmall Y U).f n
       ((singularCochainComplexIsoTopOpen ℚ Y).inv.f n x) = z
   rw [hx, hy]
-
-set_option backward.isDefEq.respectTransparency false in
-/-- The cover-small homotopy equivalence, with its source written as cochains on the top open
-subset. -/
-def topOpenRationalCochainHomotopyEquivCoverSmall
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    HomotopyEquiv
-      (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex
-      (CoverSmallRationalSingularChainComplex Y U).linearDualCochainComplex :=
-  by
-    let e₁ : HomotopyEquiv
-        (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex
-        ((TopCat.toSSet.obj Y).chainComplex
-          (ModuleCat.of ℚ ℚ)).linearDualCochainComplex :=
-      HomotopyEquiv.ofIso (singularCochainComplexIsoTopOpen ℚ Y).symm
-    exact e₁.trans
-      (rationalCochainHomotopyEquivCoverSmall Y U hUopen hUcover)
 
 end RationalCover
 

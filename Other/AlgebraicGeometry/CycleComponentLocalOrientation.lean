@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
-public import Other.AlgebraicGeometry.DimensionedSmoothProjective
+public import Other.AlgebraicGeometry.SmoothProjective
 public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension

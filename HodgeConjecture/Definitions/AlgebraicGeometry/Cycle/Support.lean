@@ -152,14 +152,6 @@ def cycleComponentMap
     ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) → (ComplexPoint X) :=
   Point.map (Over.homMk (cycleComponentι X.left x) rfl)
 
-/-- The inclusion of a cycle component on complex points, bundled as a continuous map. -/
-def cycleComponentContinuousMap
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    @ContinuousMap
-      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
-      (ComplexPoint X) Point.analyticTopology Point.analyticTopology :=
-  Point.continuousMap (Over.homMk (cycleComponentι X.left x) rfl)
-
 lemma range_cycleComponentMap_subset
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
     Set.range (cycleComponentMap X x) ⊆ cycleComponentSupport X x := by
@@ -241,17 +233,5 @@ def cycleComponentSmoothSupport
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (x : X.left) : Set (ComplexPoint X) :=
   cycleComponentMap X x '' cycleComponentSmoothAnalyticLocus X x
-
-/-- The underlying closed support of an algebraic cycle: the union of the closures of all generic
-points having nonzero coefficient. -/
-def algebraicCycleSupport {R : Type*} [Zero R] (X : Scheme)
-    (c : AlgebraicCycle X R) : Set X :=
-  ⋃ x ∈ c.support, closure {x}
-
-/-- The complex points lying over the geometric support of an algebraic cycle. -/
-def analyticCycleSupport {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    (c : AlgebraicCycle X.left R) : Set (ComplexPoint X) :=
-  Point.underlying ⁻¹' algebraicCycleSupport X.left c
 
 end AlgebraicGeometry

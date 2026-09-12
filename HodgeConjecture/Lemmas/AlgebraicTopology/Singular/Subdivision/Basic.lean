@@ -104,12 +104,6 @@ public noncomputable def simplexSubdivisionMaximumNatTrans :
         (nonemptyFiniteChainMaximum (ULift.{u} (Fin (n.len + 1))) A)
     exact nonemptyFiniteChainMaximum_map _ A
 
-/-- Taking nerves gives the last-vertex map on the subdivision model of standard simplices. -/
-public noncomputable def simplexSubdivisionLastVertexToNerve :
-    SimplexCategory.sd.{u} ⟶
-      SimplexCategory.toPartOrd.{u} ⋙ PartOrd.nerveFunctor :=
-  Functor.whiskerRight simplexSubdivisionMaximumNatTrans PartOrd.nerveFunctor
-
 /-- The objectwise identification of the standard simplex with the nerve of its vertex order is
 natural in the simplex category. -/
 public noncomputable def standardSimplexNerveIso :
@@ -120,7 +114,8 @@ public noncomputable def standardSimplexNerveIso :
 /-- The last-vertex map from the subdivision model of standard simplices to standard simplices. -/
 public noncomputable def simplexSubdivisionLastVertex :
     SimplexCategory.sd.{u} ⟶ SSet.stdSimplex.{u} :=
-  simplexSubdivisionLastVertexToNerve ≫ standardSimplexNerveIso.inv
+  Functor.whiskerRight simplexSubdivisionMaximumNatTrans PartOrd.nerveFunctor ≫
+    standardSimplexNerveIso.inv
 
 /-- The last-vertex map, viewed with the codomain required by the left Kan extension universal
 property. -/
@@ -172,85 +167,9 @@ public theorem subdivisionLastVertexChainMap_naturality
   rw [← Functor.map_comp, ← Functor.map_comp, subdivisionLastVertex.naturality]
   rfl
 
-/-- The concrete condition that every simplex produced by the last-vertex map lands in a chosen
-subcomplex. -/
-public def SubdivisionLastVertexLandsInSubcomplex {X : SSet.{0}}
-    (A : X.Subcomplex) : Prop :=
-  SSet.Subcomplex.range (subdivisionLastVertex.app X) ≤ A
-
-/-- If last vertices land in `A`, the last-vertex map itself lifts coherently through `A`. -/
-public noncomputable def subdivisionLastVertexLiftToSubcomplex
-    {X : SSet.{0}} (A : X.Subcomplex)
-    (h : SubdivisionLastVertexLandsInSubcomplex A) :
-    SSet.sd.obj X ⟶ A :=
-  SSet.Subcomplex.lift (subdivisionLastVertex.app X) h
-
-@[reassoc (attr := simp)]
-public theorem subdivisionLastVertexLiftToSubcomplex_comp_inclusion
-    {X : SSet.{0}} (A : X.Subcomplex)
-    (h : SubdivisionLastVertexLandsInSubcomplex A) :
-    subdivisionLastVertexLiftToSubcomplex A h ≫ A.ι =
-      subdivisionLastVertex.app X :=
-  SSet.Subcomplex.lift_ι _ _
-
-/-- The lifted last-vertex chain map into a chosen subcomplex. -/
-public noncomputable def subdivisionLastVertexLiftChainMap
-    {X : SSet.{0}} (A : X.Subcomplex)
-    (h : SubdivisionLastVertexLandsInSubcomplex A) :
-    (SSet.sd.obj X).chainComplex (AddCommGrpCat.of ℤ) ⟶
-      (A : SSet).chainComplex (AddCommGrpCat.of ℤ) :=
-  SSet.chainComplexMap (subdivisionLastVertexLiftToSubcomplex A h)
-    (AddCommGrpCat.of ℤ)
-
-/-- The lifted chain map factors the last-vertex chain map through subcomplex chains. -/
-@[reassoc]
-public theorem subdivisionLastVertexLiftChainMap_comp_inclusion
-    {X : SSet.{0}} (A : X.Subcomplex)
-    (h : SubdivisionLastVertexLandsInSubcomplex A) :
-    subdivisionLastVertexLiftChainMap A h ≫
-        SSet.chainComplexMap A.ι (AddCommGrpCat.of ℤ) =
-      subdivisionLastVertexChainMap X := by
-  change
-    ((SSet.chainComplexFunctor AddCommGrpCat).obj (AddCommGrpCat.of ℤ)).map
-          (subdivisionLastVertexLiftToSubcomplex A h) ≫
-        ((SSet.chainComplexFunctor AddCommGrpCat).obj (AddCommGrpCat.of ℤ)).map A.ι =
-      ((SSet.chainComplexFunctor AddCommGrpCat).obj (AddCommGrpCat.of ℤ)).map
-        (subdivisionLastVertex.app X)
-  rw [← Functor.map_comp, subdivisionLastVertexLiftToSubcomplex_comp_inclusion]
-
 section CoverSmallSubdivision
 
 variable {i : Type} (X : TopCat) (U : i → Set X)
-
-/-- The precise one-subdivision smallness condition for a topological cover. -/
-public def OneSubdivisionMakesCoverSmall : Prop :=
-  SubdivisionLastVertexLandsInSubcomplex (coverSmallSingularSubcomplex X U)
-
-/-- Under the concrete one-subdivision smallness condition, last-vertex chains land in the
-cover-small singular chain complex. -/
-public noncomputable def oneSubdivisionToCoverSmallChains
-    (h : OneSubdivisionMakesCoverSmall X U) :
-    (SSet.sd.obj (TopCat.toSSet.obj X)).chainComplex (AddCommGrpCat.of ℤ) ⟶
-      CoverSmallIntegralSingularChainComplex X U :=
-  subdivisionLastVertexLiftChainMap (coverSmallSingularSubcomplex X U) h
-
-/-- The cover-small lift recovers the last-vertex chain map after inclusion. -/
-@[reassoc]
-public theorem oneSubdivisionToCoverSmallChains_comp_inclusion
-    (h : OneSubdivisionMakesCoverSmall X U) :
-    oneSubdivisionToCoverSmallChains X U h ≫
-        coverSmallIntegralSingularChainInclusion X U =
-      subdivisionLastVertexChainMap (TopCat.toSSet.obj X) :=
-  subdivisionLastVertexLiftChainMap_comp_inclusion
-    (coverSmallSingularSubcomplex X U) h
-
-/-- A cover containing the whole space satisfies one-subdivision smallness trivially. -/
-public theorem oneSubdivisionMakesCoverSmall_of_member_eq_univ
-    (j : i) (hj : U j = Set.univ) :
-    OneSubdivisionMakesCoverSmall X U := by
-  rw [OneSubdivisionMakesCoverSmall,
-    coverSmallSingularSubcomplex_eq_top_of_member_eq_univ X U j hj]
-  exact le_top
 
 end CoverSmallSubdivision
 

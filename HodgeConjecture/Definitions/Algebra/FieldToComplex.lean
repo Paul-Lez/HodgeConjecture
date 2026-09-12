@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Algebra.Ring.Basic
 public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.LinearAlgebra.Basis.VectorSpace
 
@@ -26,10 +27,6 @@ embedding splits: an
 injective linear map of vector spaces over a field has a left inverse. Choosing one gives a
 `K`-linear retraction `ℂ → K`, which is what lets a complex cohomology class be pushed back to
 `K`-coefficients.
-
-Multiplication by a scalar, as an additive endomorphism, is recorded here alongside it. It is
-kept free of the geometry so the constant-sheaf and cohomology developments can use it without
-carrying the algebra hypothesis.
 -/
 
 @[expose] public noncomputable section
@@ -41,7 +38,3 @@ injective linear map of vector spaces over a field splits. -/
 noncomputable def complexToFieldLinear : ℂ →ₗ[K] K :=
   Classical.choose <| (Algebra.linearMap K ℂ).exists_leftInverse_of_injective
     (LinearMap.ker_eq_bot.mpr (algebraMap K ℂ).injective)
-
-/-- Multiplication by a rational scalar as an additive endomorphism of `K`. -/
-def fieldScalarAddHom (q : K) : K →+ K :=
-  DistribSMul.toAddMonoidHom K q

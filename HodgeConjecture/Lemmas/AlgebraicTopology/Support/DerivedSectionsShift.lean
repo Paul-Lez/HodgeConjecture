@@ -46,14 +46,6 @@ instance derivedSheafSectionsWithClosedSupportUnit_commShift (Z : Closeds X) :
     NatTrans.CommShift (derivedSheafSectionsWithClosedSupportUnit X Z) ℤ :=
   Functor.rightDerivedFunctorPlusUnitCommShift (sheafSectionsWithClosedSupport X Z)
 
-/-- The canonical natural isomorphism `RΓ_Z(K[n]) ≅ (RΓ_Z K)[n]`. -/
-def derivedSheafSectionsWithClosedSupportShiftIso (Z : Closeds X) (n : ℤ) :
-    shiftFunctor (DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X)) n ⋙
-        derivedSheafSectionsWithClosedSupport X Z ≅
-      derivedSheafSectionsWithClosedSupport X Z ⋙
-        shiftFunctor (DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X)) n :=
-  (derivedSheafSectionsWithClosedSupport X Z).commShiftIso n
-
 /-- Group-valued derived sections with support commute coherently with shifts. -/
 instance derivedClosedSupportSections_commShift (Z : Closeds X) :
     (derivedClosedSupportSections X Z).CommShift ℤ := by
@@ -66,13 +58,5 @@ set_option backward.isDefEq.respectTransparency false in
 instance derivedClosedSupportSectionsUnit_commShift (Z : Closeds X) :
     NatTrans.CommShift (derivedClosedSupportSectionsUnit X Z) ℤ :=
   Functor.rightDerivedFunctorPlusUnitCommShift (closedSupportSections X Z)
-
-/-- The canonical natural isomorphism `RΓ_Z(K[n]) ≅ (RΓ_Z K)[n]`. -/
-def derivedClosedSupportSectionsShiftIso (Z : Closeds X) (n : ℤ) :
-    shiftFunctor (DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X)) n ⋙
-        derivedClosedSupportSections X Z ≅
-      derivedClosedSupportSections X Z ⋙
-        shiftFunctor (DerivedCategory.Plus AddCommGrpCat.{u}) n :=
-  (derivedClosedSupportSections X Z).commShiftIso n
 
 end TopCat.Sheaf

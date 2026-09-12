@@ -21,11 +21,12 @@ public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 /-!
-# Dimensioned smooth projective complex varieties
+# Smooth projective complex varieties
 
-This auxiliary wrapper packages a nonsingular projective complex variety with a chosen relative
-dimension. It belongs in `Other`: the Hodge-conjecture statement itself uses the unbundled scheme,
-structure morphism, and typeclass hypotheses from `ComplexPoint.Basic`.
+This auxiliary wrapper packages a nonsingular projective complex variety as a single object. It
+belongs in `Other`: the Hodge-conjecture statement itself uses the unbundled scheme, structure
+morphism, and typeclass hypotheses from `ComplexPoint.Basic`. A relative dimension is supplied at
+each use site as a natural number together with a `SmoothOfRelativeDimension` instance.
 -/
 
 @[expose] public noncomputable section
@@ -93,35 +94,5 @@ noncomputable def analytification (V : SmoothProjectiveComplexVariety) : TopCat 
   complexAnalytification.obj V.over
 
 end SmoothProjectiveComplexVariety
-
-namespace ComplexPoint
-
-/-- A smooth projective complex variety together with its complex dimension. -/
-structure DimensionedSmoothProjectiveComplexVariety extends SmoothProjectiveComplexVariety where
-  /-- The complex dimension. -/
-  dimension : ℕ
-  [smoothOfRelativeDimension : SmoothOfRelativeDimension dimension structureMap]
-
-namespace DimensionedSmoothProjectiveComplexVariety
-
-/-- Canonically package a smooth projective integral complex variety with its dimension. The
-relative-dimension certificate is the theorem that a smooth integral complex scheme has relative
-dimension `dim X`; it is not additional input. -/
-def ofOver (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] :
-    DimensionedSmoothProjectiveComplexVariety where
-  toSmoothProjectiveComplexVariety :=
-    { scheme := X.left
-      structureMap := X.hom }
-  dimension := TopologicalSpace.dim X.left
-
-/-- The relative-dimension certificate stored in a dimensioned variety. -/
-instance (V : DimensionedSmoothProjectiveComplexVariety) :
-    SmoothOfRelativeDimension V.dimension V.structureMap :=
-  V.smoothOfRelativeDimension
-
-end DimensionedSmoothProjectiveComplexVariety
-
-end ComplexPoint
 
 end AlgebraicGeometry

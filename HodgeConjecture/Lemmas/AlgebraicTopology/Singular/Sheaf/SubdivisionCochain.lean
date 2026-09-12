@@ -484,35 +484,6 @@ theorem topOpenToGlobalSingularCochainPlusComplex_quasiIso :
     (topOpenToGlobalSingularCochainPlusComplex ℚ Y)
     (topOpenToGlobalSingularCochainPlusComplex_kernel_acyclic Y)
 
-set_option backward.isDefEq.respectTransparency false in
-lemma topOpenRationalCochainHomotopyEquivCoverSmall_hom
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    (topOpenRationalCochainHomotopyEquivCoverSmall Y U hUopen hUcover).hom =
-      topOpenRationalCochainRestrictionToCoverSmall Y U := by
-  change (singularCochainComplexIsoTopOpen ℚ Y).inv ≫
-      (rationalCochainHomotopyEquivCoverSmall Y U hUopen hUcover).hom =
-    (singularCochainComplexIsoTopOpen ℚ Y).inv ≫
-      rationalCochainRestrictionToCoverSmall Y U
-  rw [rationalCochainHomotopyEquivCoverSmall_hom]
-
-/-- For an open cover, restriction from top-open rational cochains to cover-small cochains is a
-quasi-isomorphism. -/
-theorem topOpenRationalCochainRestrictionToCoverSmall_quasiIso
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    QuasiIso (topOpenRationalCochainRestrictionToCoverSmall Y U) := by
-  rw [← topOpenRationalCochainHomotopyEquivCoverSmall_hom Y U hUopen hUcover]
-  infer_instance
-
-/-- The complex of top-open rational cochains vanishing on all chains subordinate to an open
-cover is acyclic. -/
-theorem topOpenRationalCoverSmallCochainKernel_acyclic
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    (kernel (topOpenRationalCochainRestrictionToCoverSmall Y U)).Acyclic := by
-  let := topOpenRationalCochainRestrictionToCoverSmall_quasiIso
-    Y U hUopen hUcover
-  exact HomologicalComplex.kernel_acyclic_of_epi_of_quasiIso
-    (topOpenRationalCochainRestrictionToCoverSmall Y U)
-
 end RationalCover
 
 section HereditarilyParacompact

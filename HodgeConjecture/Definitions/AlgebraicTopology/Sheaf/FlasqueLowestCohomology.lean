@@ -101,12 +101,4 @@ def lowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
   let := sectionCohomologyToSheafSection_isIso_lowest X K N n hK hflasque U
   asIso (sectionCohomologyToSheafSection X K n U)
 
-/-- In particular, the actual lowest-degree global section-complex cohomology
-is canonically isomorphic to global sections of the cohomology sheaf. -/
-def lowestGlobalSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
-    (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :
-    (IsFlasque.BoundedBelowComplex.globalSectionsComplex K).homology n ≅
-      (K.homology n).obj.obj (op (⊤ : Opens X)) :=
-  lowestSectionCohomologyIso X K N n hK hflasque ⊤
-
 end TopCat.Sheaf

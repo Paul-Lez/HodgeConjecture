@@ -650,10 +650,10 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
       holomorphicFormDifferential X d W p θ =
         holomorphicFormRestriction X d k (p + 1) form := by
   obtain ⟨a, rfl⟩ := Submodule.mkQ_surjective
-    (holomorphicFormRelations X d U (p + 1)) form
+    (chartEvaluationKernel X d U (p + 1)) form
   have hrel : Algebra.DeRham.differential ℂ
       (OpenHolomorphicFunctions X d U) (p + 1) a ∈
-      holomorphicFormRelations X d U (p + 2) := by
+      chartEvaluationKernel X d U (p + 2) := by
     change Submodule.Quotient.mk (Algebra.DeRham.differential ℂ
       (OpenHolomorphicFunctions X d U) (p + 1) a) = 0 at hclosed
     rwa [Submodule.Quotient.mk_eq_zero] at hclosed
@@ -667,8 +667,8 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
     exact analyticOnNhd_chartEvaluation X d V x (p + 1) aV
   have hrelV : Algebra.DeRham.differential ℂ
       (OpenHolomorphicFunctions X d V) (p + 1) aV ∈
-      holomorphicFormRelations X d V (p + 2) := by
-    have h := formRestriction_mem_holomorphicFormRelations X d i (p + 2) hrel
+      chartEvaluationKernel X d V (p + 2) := by
+    have h := formRestriction_mem_chartEvaluationKernel X d i (p + 2) hrel
     rwa [formRestriction_differential] at h
   have hclosedη : Set.EqOn (extDeriv η) 0 (Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
@@ -697,8 +697,7 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
   change Submodule.Quotient.mk (Algebra.DeRham.differential ℂ
       (OpenHolomorphicFunctions X d W) p b) =
     Submodule.Quotient.mk (formRestriction X d (i ≫ j) (p + 1) a)
-  apply (Submodule.Quotient.eq (holomorphicFormRelations X d W (p + 1))).2
-  rw [holomorphicFormRelations_eq_chartEvaluationKernel]
+  apply (Submodule.Quotient.eq (chartEvaluationKernel X d W (p + 1))).2
   apply mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     X d W x (p + 1) hsourceW
   intro y hy
@@ -744,10 +743,10 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
       holomorphicFormRestriction X d i 0 form =
         holomorphicFormOfConstant X d V c := by
   obtain ⟨a, rfl⟩ := Submodule.mkQ_surjective
-    (holomorphicFormRelations X d U 0) form
+    (chartEvaluationKernel X d U 0) form
   have hrel : Algebra.DeRham.differential ℂ
       (OpenHolomorphicFunctions X d U) 0 a ∈
-      holomorphicFormRelations X d U 1 := by
+      chartEvaluationKernel X d U 1 := by
     change Submodule.Quotient.mk (Algebra.DeRham.differential ℂ
       (OpenHolomorphicFunctions X d U) 0 a) = 0 at hclosed
     rwa [Submodule.Quotient.mk_eq_zero] at hclosed
@@ -761,8 +760,8 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
     exact analyticOnNhd_chartEvaluation X d V x 0 aV
   have hrelV : Algebra.DeRham.differential ℂ
       (OpenHolomorphicFunctions X d V) 0 aV ∈
-      holomorphicFormRelations X d V 1 := by
-    have h := formRestriction_mem_holomorphicFormRelations X d i 1 hrel
+      chartEvaluationKernel X d V 1 := by
+    have h := formRestriction_mem_chartEvaluationKernel X d i 1 hrel
     rwa [formRestriction_differential] at h
   have hclosedη : Set.EqOn (extDeriv η) 0 (Metric.ball
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
@@ -785,8 +784,7 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
   refine ⟨V, i, c, hxV, ?_⟩
   change Submodule.Quotient.mk aV = Submodule.Quotient.mk
     (Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d V) c)
-  apply (Submodule.Quotient.eq (holomorphicFormRelations X d V 0)).2
-  rw [holomorphicFormRelations_eq_chartEvaluationKernel]
+  apply (Submodule.Quotient.eq (chartEvaluationKernel X d V 0)).2
   apply mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     X d V x 0 hsourceV
   intro y hy

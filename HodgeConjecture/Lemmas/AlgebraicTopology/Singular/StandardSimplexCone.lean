@@ -514,15 +514,9 @@ public theorem canonicalBarycentricLastVertexPrism_boundary
       rw [canonicalBarycentricLastVertexPrism_succ, Category.assoc, hfill]
       abel
 
-/-- The explicit recursively coned universal prisms supply the formerly missing acyclic-model
-datum. -/
-public noncomputable def barycentricLastVertexPrismDataCanonical :
-    BarycentricLastVertexPrismData where
-  prism := canonicalBarycentricLastVertexPrism
-  boundary := canonicalBarycentricLastVertexPrism_boundary
-
 /-- The explicit canonical chain homotopy from subdivision followed by last vertex to the
-identity. -/
+identity. The explicit recursively coned universal prisms supply the formerly missing
+acyclic-model datum. -/
 public noncomputable def barycentricSubdivisionLastVertexHomotopyCanonical
     (X : SSet.{0}) :
     Homotopy
@@ -530,6 +524,7 @@ public noncomputable def barycentricSubdivisionLastVertexHomotopyCanonical
         subdivisionLastVertexChainMap X)
       (𝟙 (X.chainComplex (AddCommGrpCat.of ℤ))) :=
   barycentricSubdivisionLastVertexHomotopy
-    barycentricLastVertexPrismDataCanonical X
+    { prism := canonicalBarycentricLastVertexPrism
+      boundary := canonicalBarycentricLastVertexPrism_boundary } X
 
 end AlgebraicTopology.Singular

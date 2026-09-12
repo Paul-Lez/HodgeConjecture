@@ -50,12 +50,6 @@ section IsLocalRing
 
 variable [IsLocalRing R] {X : Over (Spec ↧R)}
 
-lemma evaluate_eq_evaluateOnOpen (U : X.left.Opens) (s : Γ(X.left, U))
-    (z : OverOpen (X := X) U) :
-    evaluate U s z.1 = evaluateOnOpen U s z := by
-  rw [evaluate, dif_pos z.2]
-  rfl
-
 section Topology
 
 variable [TopologicalSpace R]

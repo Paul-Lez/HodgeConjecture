@@ -658,7 +658,7 @@ lemma mem_chartEvaluationKernel_iff [SmoothOfRelativeDimension d X.hom]
   rfl
 
 /-- Coordinate-zero identities remain coordinate-zero after exterior differentiation. -/
-private lemma differential_mem_chartEvaluationKernel
+lemma differential_mem_chartEvaluationKernel
     [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ)
     {θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p}
@@ -787,63 +787,40 @@ lemma formRestriction_mem_chartEvaluationKernel
   exact (mem_chartEvaluationKernel_iff X d U p θ).1 hθ z y
     ⟨hy.1, leOfHom i.unop hy.2⟩
 
-/-- Relations for analytic de Rham forms detected by actual complex derivatives. -/
-def holomorphicFormRelations [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
-    Submodule ℂ (Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :=
-  chartEvaluationKernel X d U p
-
-lemma differential_mem_holomorphicFormRelations
-    [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ)
-    {θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p}
-    (hθ : θ ∈ holomorphicFormRelations X d U p) :
-    Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) p θ ∈
-      holomorphicFormRelations X d U (p + 1) :=
-  differential_mem_chartEvaluationKernel X d U p hθ
-
-lemma formRestriction_mem_holomorphicFormRelations
-    [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
-    {θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p}
-    (hθ : θ ∈ holomorphicFormRelations X d U p) :
-    formRestriction X d i p θ ∈ holomorphicFormRelations X d V p :=
-  formRestriction_mem_chartEvaluationKernel X d i p hθ
-
 /-- Analytic differential forms of degree `p` on `U`: Kähler differential forms of the
 holomorphic functions, modulo the identities that actual complex derivatives detect. -/
 abbrev HolomorphicForm [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :=
   Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p ⧸
-    holomorphicFormRelations X d U p
+    chartEvaluationKernel X d U p
 
 /-- A complex constant regarded as an analytic differential zero-form. -/
 def holomorphicFormOfConstant [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
     ℂ →ₗ[ℂ] HolomorphicForm X d U 0 :=
-  (holomorphicFormRelations X d U 0).mkQ.comp
+  (chartEvaluationKernel X d U 0).mkQ.comp
     (Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d U))
 
 def holomorphicFormDifferential [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
     HolomorphicForm X d U p →ₗ[ℂ] HolomorphicForm X d U (p + 1) :=
-  (holomorphicFormRelations X d U p).liftQ
-    ((holomorphicFormRelations X d U (p + 1)).mkQ.comp
+  (chartEvaluationKernel X d U p).liftQ
+    ((chartEvaluationKernel X d U (p + 1)).mkQ.comp
       (Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) p)) (by
         intro θ hθ
         rw [LinearMap.mem_ker, LinearMap.comp_apply, Submodule.mkQ_apply,
           Submodule.Quotient.mk_eq_zero]
-        exact differential_mem_holomorphicFormRelations X d U p hθ)
+        exact differential_mem_chartEvaluationKernel X d U p hθ)
 
 def holomorphicFormRestriction [SmoothOfRelativeDimension d X.hom]
     {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
     HolomorphicForm X d U p →ₗ[ℂ] HolomorphicForm X d V p :=
-  (holomorphicFormRelations X d U p).liftQ
-    ((holomorphicFormRelations X d V p).mkQ.comp (formRestriction X d i p)) (by
+  (chartEvaluationKernel X d U p).liftQ
+    ((chartEvaluationKernel X d V p).mkQ.comp (formRestriction X d i p)) (by
       intro θ hθ
       rw [LinearMap.mem_ker, LinearMap.comp_apply, Submodule.mkQ_apply,
         Submodule.Quotient.mk_eq_zero]
-      exact formRestriction_mem_holomorphicFormRelations X d i p hθ)
+      exact formRestriction_mem_chartEvaluationKernel X d i p hθ)
 
 @[simp] lemma holomorphicFormRestriction_ofConstant
     [SmoothOfRelativeDimension d X.hom]
@@ -871,7 +848,7 @@ def holomorphicFormRestriction [SmoothOfRelativeDimension d X.hom]
     holomorphicFormRestriction X d (𝟙 U) p = LinearMap.id := by
   apply LinearMap.ext
   intro θ
-  obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (holomorphicFormRelations X d U p) θ
+  obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (chartEvaluationKernel X d U p) θ
   change Submodule.Quotient.mk (formRestriction X d (𝟙 U) p θ) = _
   rw [formRestriction_id]
   rfl
@@ -884,7 +861,7 @@ def holomorphicFormRestriction [SmoothOfRelativeDimension d X.hom]
         (holomorphicFormRestriction X d i p) := by
   apply LinearMap.ext
   intro θ
-  obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (holomorphicFormRelations X d U p) θ
+  obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (chartEvaluationKernel X d U p) θ
   change Submodule.Quotient.mk (formRestriction X d (i ≫ j) p θ) = _
   rw [formRestriction_comp]
   rfl

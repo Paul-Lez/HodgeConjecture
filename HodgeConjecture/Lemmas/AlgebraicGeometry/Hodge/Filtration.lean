@@ -78,7 +78,7 @@ lemma fieldToComplexConstantSheafComplexInt_comp_complexToField :
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarSheaf_zero : fieldScalarSheaf K X 0 = 0 := by
   unfold fieldScalarSheaf
-  rw [fieldScalarAddHom_zero]
+  rw [AddMonoidHom.mulLeft_zero]
   have h : AddCommGrpCat.ofHom (0 : K →+ K) = 0 := AddCommGrpCat.hom_ext rfl
   rw [h, Functor.map_zero]
   rfl
@@ -119,15 +119,6 @@ omit [Algebra K ℂ] in
   rw [Localization.SmallShiftedHom.equiv_comp]
   simp [eK]
 
-lemma complexConstantCohomologyDeRhamEquiv_apply
-    [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ)
-    (α : ComplexConstantCohomology X n) :
-    complexConstantCohomologyDeRhamEquiv X h n α =
-      hypercohomologyMap X
-        (constantsToHolomorphicDeRhamComplexInt X) n α :=
-  rfl
-
 /-- The rational-to-complex cohomology map has the displayed cohomological left inverse. -/
 lemma complexToFieldCohomology_leftInverse (n : ℤ) :
     Function.LeftInverse (complexToFieldCohomology K X n)
@@ -167,8 +158,8 @@ lemma fieldToDeRhamCohomology_injective_of_quasiIso
     Function.Injective (fieldToDeRhamCohomology K X n) := by
   intro α β hαβ
   apply fieldToComplexCohomology_injective K X n
-  apply (complexConstantCohomologyDeRhamEquiv X h n).injective
-  simpa only [complexConstantCohomologyDeRhamEquiv_apply,
+  apply (complexConstantCohomologyDeRhamAddEquiv X h n).injective
+  simpa only [complexConstantCohomologyDeRhamAddEquiv_apply,
     fieldToDeRhamCohomology_factor K X n] using hαβ
 
 /-- The rational-to-de Rham comparison is injective. The holomorphic Poincaré lemma supplies

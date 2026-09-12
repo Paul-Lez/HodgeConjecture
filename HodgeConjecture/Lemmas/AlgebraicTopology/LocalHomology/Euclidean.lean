@@ -117,13 +117,6 @@ lemma relativeSingular_homology_exact_subspace (X : TopPair) (n : ℕ) :
   (relativeSingularChainShortComplex_shortExact X).homology_exact₁
     (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
 
-/-- The alternating sum of the faces of the standard affine `(n + 1)`-simplex, regarded as a
-chain in punctured Euclidean space. -/
-def standardSubspaceBoundaryChain (n : ℕ) :
-    ModuleCat.of ℚ ℚ ⟶
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).left.X n :=
-  ∑ i : Fin (n + 2), (-1) ^ i.val • standardSubspaceFaceChain n i
-
 lemma standardSubspaceBoundaryChain_inclusion (n : ℕ) :
     standardSubspaceBoundaryChain n ≫
       ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).hom.f n =

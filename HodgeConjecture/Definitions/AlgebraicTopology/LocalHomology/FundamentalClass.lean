@@ -84,17 +84,11 @@ lemma standardAffineSimplex_ne_zero_of_coord_zero (d : ℕ)
     Finset.sum_eq_zero fun j _ => hall j
   exact zero_ne_one (hzero.symm.trans t.2.2)
 
-/-- The continuous affine simplex underlying the standard local cycle. -/
-def standardAffineSimplexMap (d : ℕ) :
-    C(stdSimplex ℝ (Fin (d + 1)), StandardRealModel d) where
-  toFun := standardAffineSimplex d
-  continuous_toFun := continuous_standardAffineSimplex d
-
 /-- The affine simplex as a singular simplex of real coordinate space. -/
 def standardSingularSimplex (d : ℕ) :
     (TopCat.toSSet.obj (standardPuncturedPair d).fst) _⦋d⦌ :=
   ((standardPuncturedPair d).fst.toSSetObjEquiv _).symm
-    (standardAffineSimplexMap d)
+    ⟨standardAffineSimplex d, continuous_standardAffineSimplex d⟩
 
 /-- A face of the positive-dimensional standard simplex, lifted to the punctured space. -/
 def standardFaceMap (n : ℕ) (i : Fin (n + 2)) :
@@ -158,6 +152,13 @@ def standardSubspaceFaceChain (n : ℕ) (i : Fin (n + 2)) :
       ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).left.X n :=
   (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).snd).ιChainComplex
     (standardFaceSimplex n i)
+
+/-- The alternating sum of the faces of the standard affine `(n + 1)`-simplex, regarded as a
+chain in punctured Euclidean space. -/
+def standardSubspaceBoundaryChain (n : ℕ) :
+    ModuleCat.of ℚ ℚ ⟶
+      ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).left.X n :=
+  ∑ i : Fin (n + 2), (-1) ^ i.val • standardSubspaceFaceChain n i
 
 lemma standardFaceChain_inclusion (n : ℕ) (i : Fin (n + 2)) :
     standardSubspaceFaceChain n i ≫

@@ -96,13 +96,6 @@ theorem closedImmersionHolomorphicFlatteningChart_mem_source :
 
 variable (z' : ComplexPoint Y)
 
-@[simp] theorem closedImmersionNormalTransitionDerivativeEquiv_apply (a : Fin m → ℂ)
-    (ha : (a, 0) ∈ (closedImmersionNormalTransition X Y i m d z z').source)
-    (v : Fin (d - m) → ℂ) :
-    closedImmersionNormalTransitionDerivativeEquiv X Y i m d z z' a ha v =
-      (fderiv ℂ (closedImmersionNormalTransition X Y i m d z z')
-        (a, 0) (0, v)).2 := rfl
-
 /-- On a smaller transverse normal neighborhood in a genuine overlap, transition and
 inclusion have exactly the same top relative-cohomology pullback. All holomorphic and
 normal-derivative facts are obtained from the constructed closed-immersion charts. -/

@@ -293,18 +293,6 @@ lemma constantsToSingularCochainZero_comp_coboundary :
       _ = 0 := rfl
   rw [hc, mul_zero]
 
-/-- The canonical augmentation from the constant presheaf complex to singular cochains. -/
-def constantsToSingularCochainPresheafComplex :
-    (CochainComplex.single₀ (TopCat.Presheaf AddCommGrpCat X)).obj
-        (constantCoefficientPresheaf R X) ⟶ singularCochainPresheafComplex R X :=
-  HomologicalComplex.mkHomFromSingle (constantsToSingularCochainZero R X) <| by
-    intro k hk
-    obtain rfl : k = 1 := by simpa using hk.symm
-    change constantsToSingularCochainZero R X ≫
-      (singularCochainPresheafComplex R X).d 0 1 = 0
-    rw [singularCochainPresheafComplex_d]
-    exact constantsToSingularCochainZero_comp_coboundary R X
-
 /-- The constant sheaf with value the additive group of `R`. -/
 def constantCoefficientSheaf : TopCat.Sheaf AddCommGrpCat X :=
   let J := Opens.grothendieckTopology X

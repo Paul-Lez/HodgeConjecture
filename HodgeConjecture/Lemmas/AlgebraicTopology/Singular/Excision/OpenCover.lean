@@ -70,21 +70,4 @@ public theorem coverSmallChainHomotopyEquiv_of_openCover_hom
       coverSmallIntegralSingularChainInclusion X U :=
   (coverSmallChainApproximation_of_openCover X U hUopen hUcover).choose_spec
 
-/-- Small-chain approximation gives the expected homology isomorphism in every degree. -/
-public noncomputable def coverSmallIntegralSingularHomologyIso_of_openCover
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) (n : ℕ) :
-    (CoverSmallIntegralSingularChainComplex X U).homology n ≅
-      (IntegralSingularChainComplexObj X).homology n :=
-  (coverSmallChainHomotopyEquiv_of_openCover X U hUopen hUcover).toHomologyIso n
-
-public theorem coverSmallIntegralSingularHomologyIso_of_openCover_hom
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) (n : ℕ) :
-    (coverSmallIntegralSingularHomologyIso_of_openCover X U hUopen hUcover n).hom =
-      HomologicalComplex.homologyMap
-        (coverSmallIntegralSingularChainInclusion X U) n := by
-  change HomologicalComplex.homologyMap
-    (coverSmallChainHomotopyEquiv_of_openCover X U hUopen hUcover).hom n = _
-  rw [coverSmallChainHomotopyEquiv_of_openCover_hom]
-
-
 end AlgebraicTopology.Singular

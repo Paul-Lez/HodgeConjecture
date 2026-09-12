@@ -490,4 +490,109 @@ lemma ofBoundedModelInputs_fundamentalClass
 
 end RationalCycleComponentBorelMooreData
 
+/-! ### Inhabitation of the input packages
+
+The three local-to-global packages convert into one another and into
+`RationalCycleComponentBorelMooreData`, so each conversion transports an existence statement
+along the chain.  In maximal codimension the top degree `2 * (d - p)` is zero, which the
+successor witness of the shared core contradicts, so there the whole chain is empty and the
+one-point construction
+`nonempty_rationalCycleComponentBorelMooreData_of_coheight_eq_dimension` is the route to the
+fundamental class. -/
+
+/-- Injective puncture-inclusion data yields boundary-cycle data. -/
+theorem nonempty_rationalCycleComponentGlobalFundamentalClassInputs_of_injectiveBoundary
+    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
+    (h : Nonempty (RationalCycleComponentInjectiveBoundaryInputs V x d p hx)) :
+    Nonempty (RationalCycleComponentGlobalFundamentalClassInputs V x d p hx) :=
+  h.map RationalCycleComponentInjectiveBoundaryInputs.toGlobalInputs
+
+/-- A bounded punctured-space chain model yields injective-boundary data. -/
+theorem nonempty_rationalCycleComponentInjectiveBoundaryInputs_of_boundedModel
+    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
+    (h : Nonempty (RationalCycleComponentBoundedModelInputs V x d p hx)) :
+    Nonempty (RationalCycleComponentInjectiveBoundaryInputs V x d p hx) :=
+  h.map RationalCycleComponentBoundedModelInputs.toInjectiveBoundaryInputs
+
+/-- A bounded punctured-space chain model yields boundary-cycle data. -/
+theorem nonempty_rationalCycleComponentGlobalFundamentalClassInputs_of_boundedModel
+    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
+    (h : Nonempty (RationalCycleComponentBoundedModelInputs V x d p hx)) :
+    Nonempty (RationalCycleComponentGlobalFundamentalClassInputs V x d p hx) :=
+  h.map RationalCycleComponentBoundedModelInputs.toGlobalInputs
+
+/-- Boundary-cycle data yields rational Borel--Moore data. -/
+theorem nonempty_rationalCycleComponentBorelMooreData_of_globalInputs
+    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
+    (h : Nonempty (RationalCycleComponentGlobalFundamentalClassInputs V x d p hx)) :
+    Nonempty (RationalCycleComponentBorelMooreData V x d p hx) :=
+  h.map RationalCycleComponentBorelMooreData.ofGlobalInputs
+
+/-- Injective puncture-inclusion data yields rational Borel--Moore data. -/
+theorem nonempty_rationalCycleComponentBorelMooreData_of_injectiveBoundary
+    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
+    (h : Nonempty (RationalCycleComponentInjectiveBoundaryInputs V x d p hx)) :
+    Nonempty (RationalCycleComponentBorelMooreData V x d p hx) :=
+  h.map RationalCycleComponentBorelMooreData.ofInjectiveBoundaryInputs
+
+/-- A bounded punctured-space chain model yields rational Borel--Moore data. -/
+theorem nonempty_rationalCycleComponentBorelMooreData_of_boundedModel
+    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
+    (h : Nonempty (RationalCycleComponentBoundedModelInputs V x d p hx)) :
+    Nonempty (RationalCycleComponentBorelMooreData V x d p hx) :=
+  h.map RationalCycleComponentBorelMooreData.ofBoundedModelInputs
+
+/-- When the coheight reaches the dimension the top degree `2 * (d - p)` is zero, so the
+successor witness `boundaryDegree + 1 = 2 * (d - p)` of the shared core is contradictory and the
+core is empty. -/
+theorem isEmpty_rationalCycleComponentGlobalFundamentalClassCore_of_dimension_le_coheight
+    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
+    (hx : Order.coheight x = p) (hdp : d ≤ p) :
+    IsEmpty (RationalCycleComponentGlobalFundamentalClassCore V x d p hx) := by
+  constructor
+  intro D
+  have h : D.boundaryDegree + 1 = 0 := by
+    rw [D.boundaryDegree_succ, Nat.sub_eq_zero_of_le hdp]
+  exact Nat.succ_ne_zero _ h
+
+/-- The boundary-cycle package is empty once the coheight reaches the dimension. -/
+theorem isEmpty_rationalCycleComponentGlobalFundamentalClassInputs_of_dimension_le_coheight
+    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
+    (hx : Order.coheight x = p) (hdp : d ≤ p) :
+    IsEmpty (RationalCycleComponentGlobalFundamentalClassInputs V x d p hx) := by
+  have := isEmpty_rationalCycleComponentGlobalFundamentalClassCore_of_dimension_le_coheight
+    V x d p hx hdp
+  exact Function.isEmpty
+    (fun D ↦ D.toRationalCycleComponentGlobalFundamentalClassCore)
+
+/-- The injective-boundary package is empty once the coheight reaches the dimension. -/
+theorem isEmpty_rationalCycleComponentInjectiveBoundaryInputs_of_dimension_le_coheight
+    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
+    (hx : Order.coheight x = p) (hdp : d ≤ p) :
+    IsEmpty (RationalCycleComponentInjectiveBoundaryInputs V x d p hx) := by
+  have := isEmpty_rationalCycleComponentGlobalFundamentalClassCore_of_dimension_le_coheight
+    V x d p hx hdp
+  exact Function.isEmpty
+    (fun D ↦ D.toRationalCycleComponentGlobalFundamentalClassCore)
+
+/-- The bounded-model package is empty once the coheight reaches the dimension. -/
+theorem isEmpty_rationalCycleComponentBoundedModelInputs_of_dimension_le_coheight
+    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
+    (hx : Order.coheight x = p) (hdp : d ≤ p) :
+    IsEmpty (RationalCycleComponentBoundedModelInputs V x d p hx) := by
+  have := isEmpty_rationalCycleComponentGlobalFundamentalClassCore_of_dimension_le_coheight
+    V x d p hx hdp
+  exact Function.isEmpty
+    (fun D ↦ D.toRationalCycleComponentGlobalFundamentalClassCore)
+
 end AlgebraicGeometry.ComplexPoint

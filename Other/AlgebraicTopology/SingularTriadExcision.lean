@@ -328,40 +328,26 @@ lemma triadUnionAmbientChainMap_eq_subspaceChainMap :
       ((chainPairFunctor ℚ).obj (TopPair.ofSubset (A ∪ B))).hom :=
   rfl
 
-/-- The explicit singular-chain map for `A ⊆ X`. -/
-def triadLeftAmbientChainMap :
+/-- The explicit singular-chain map for a subspace `S ⊆ X`. -/
+def triadAmbientChainMap (S : Set X) :
     ((singularChainComplexFunctor (ModuleCat ℚ)).obj
-        (ModuleCat.of ℚ ℚ)).obj (TopPair.ofSubset A).snd ⟶
+        (ModuleCat.of ℚ ℚ)).obj (TopPair.ofSubset S).snd ⟶
       ((singularChainComplexFunctor (ModuleCat ℚ)).obj
         (ModuleCat.of ℚ ℚ)).obj X :=
-  SSet.chainComplexMap (TopCat.toSSet.map (TopPair.ofSubset A).map)
+  SSet.chainComplexMap (TopCat.toSSet.map (TopPair.ofSubset S).map)
     (ModuleCat.of ℚ ℚ)
 
-/-- The explicit singular-chain map for `B ⊆ X`. -/
-def triadRightAmbientChainMap :
-    ((singularChainComplexFunctor (ModuleCat ℚ)).obj
-        (ModuleCat.of ℚ ℚ)).obj (TopPair.ofSubset B).snd ⟶
-      ((singularChainComplexFunctor (ModuleCat ℚ)).obj
-        (ModuleCat.of ℚ ℚ)).obj X :=
-  SSet.chainComplexMap (TopCat.toSSet.map (TopPair.ofSubset B).map)
-    (ModuleCat.of ℚ ℚ)
-
-lemma triadLeftAmbientChainMap_eq_subspaceChainMap :
-    triadLeftAmbientChainMap X A =
-      ((chainPairFunctor ℚ).obj (TopPair.ofSubset A)).hom :=
-  rfl
-
-lemma triadRightAmbientChainMap_eq_subspaceChainMap :
-    triadRightAmbientChainMap X B =
-      ((chainPairFunctor ℚ).obj (TopPair.ofSubset B)).hom :=
+lemma triadAmbientChainMap_eq_subspaceChainMap (S : Set X) :
+    triadAmbientChainMap X S =
+      ((chainPairFunctor ℚ).obj (TopPair.ofSubset S)).hom :=
   rfl
 
 lemma triadSubspaceChainMap_eq_explicit :
     triadSubspaceChainMap ℚ X A B =
-      biprod.desc (triadLeftAmbientChainMap X A)
-        (triadRightAmbientChainMap X B) := by
-  rw [triadSubspaceChainMap, triadLeftAmbientChainMap_eq_subspaceChainMap,
-    triadRightAmbientChainMap_eq_subspaceChainMap]
+      biprod.desc (triadAmbientChainMap X A)
+        (triadAmbientChainMap X B) := by
+  rw [triadSubspaceChainMap, triadAmbientChainMap_eq_subspaceChainMap,
+    triadAmbientChainMap_eq_subspaceChainMap]
 
 /-- Include cover-small chains of `A ∪ B` into ambient chains on `X`. -/
 def triadUnionSmallToAmbientChains :
@@ -374,7 +360,7 @@ def triadUnionSmallToAmbientChains :
 lemma triadLeftToUnionSmallChains_comp_ambient :
     triadLeftToUnionSmallChains X A B ≫
         triadUnionSmallToAmbientChains X A B =
-      triadLeftAmbientChainMap X A := by
+      triadAmbientChainMap X A := by
   rw [triadUnionSmallToAmbientChains, ← Category.assoc,
     triadLeftToUnionSmallChains_comp_inclusion]
   let F := (SSet.chainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ)
@@ -388,7 +374,7 @@ lemma triadLeftToUnionSmallChains_comp_ambient :
 lemma triadRightToUnionSmallChains_comp_ambient :
     triadRightToUnionSmallChains X A B ≫
         triadUnionSmallToAmbientChains X A B =
-      triadRightAmbientChainMap X B := by
+      triadAmbientChainMap X B := by
   rw [triadUnionSmallToAmbientChains, ← Category.assoc,
     triadRightToUnionSmallChains_comp_inclusion]
   let F := (SSet.chainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ)

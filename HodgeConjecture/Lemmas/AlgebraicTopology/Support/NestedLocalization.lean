@@ -162,29 +162,6 @@ lemma nestedSupportRestrictionSectionsComplexShortComplex_shortExact (W : Opens 
   HomologicalComplex.shortExact_of_degreewise_shortExact _
     fun n => nestedSupportRestrictionSectionsShortComplex_shortExact X h W (K.X n)
 
-/-- The canonical comparison from sections with the smaller closed support to
-the homotopy fiber of restriction away from it inside the larger support. -/
-def nestedSupportRestrictionToFiber (W : Opens X)
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
-    (nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁ ⟶
-      CochainComplex.mappingCocone
-        (nestedSupportRestrictionSectionsComplexShortComplex X h W K).g :=
-  CochainComplex.mappingCocone.liftShortComplex _
-
-lemma nestedSupportRestrictionToFiber_quasiIso (W : Opens X)
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :
-    QuasiIso (nestedSupportRestrictionToFiber X h W K) :=
-  CochainComplex.mappingCocone.quasiIso_liftShortComplex _
-    (nestedSupportRestrictionSectionsComplexShortComplex_shortExact X h W K)
-
-/-- The fiber comparison preserves the literal support-enlargement map. -/
-@[reassoc (attr := simp)]
-lemma nestedSupportRestrictionToFiber_fst (W : Opens X)
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
-    nestedSupportRestrictionToFiber X h W K ≫ CochainComplex.mappingCocone.fst _ =
-      (nestedSupportRestrictionSectionsComplexShortComplex X h W K).f :=
-  CochainComplex.mappingCocone.liftShortComplex_fst _
-
 /-- Removing the smaller support preserves degree `n` cohomology if its two
 adjacent groups vanish. These are explicit hypotheses of the extension lemma;
 no vanishing statement about a singular locus is asserted here. -/
@@ -203,30 +180,5 @@ lemma nestedSupportRestriction_homologyMap_isIso_of_vanishing (W : Opens X)
   have : Epi (HomologicalComplex.homologyMap S.g n) :=
     (hS.homology_exact₃ n (n + 1) (by simp)).epi_f (hn₁.eq_zero_of_tgt _)
   exact isIso_of_mono_of_epi _
-
-/-- The extension equivalence is the inverse of actual restriction, rather
-than an arbitrarily chosen linear equivalence between cohomology groups. -/
-def nestedSupportRestrictionHomologyIsoOfVanishing (W : Opens X)
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)]
-    (n : ℤ)
-    (hn : IsZero ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology n))
-    (hn₁ : IsZero
-      ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology (n + 1))) :
-    (nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₂.homology n ≅
-      (nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₃.homology n := by
-  have := nestedSupportRestriction_homologyMap_isIso_of_vanishing X h W K n hn hn₁
-  exact asIso (HomologicalComplex.homologyMap
-    (nestedSupportRestrictionSectionsComplexShortComplex X h W K).g n)
-
-@[simp]
-lemma nestedSupportRestrictionHomologyIsoOfVanishing_hom (W : Opens X)
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)]
-    (n : ℤ)
-    (hn : IsZero ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology n))
-    (hn₁ : IsZero
-      ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology (n + 1))) :
-    (nestedSupportRestrictionHomologyIsoOfVanishing X h W K n hn hn₁).hom =
-      HomologicalComplex.homologyMap
-        (nestedSupportRestrictionSectionsComplexShortComplex X h W K).g n := rfl
 
 end TopCat.Sheaf

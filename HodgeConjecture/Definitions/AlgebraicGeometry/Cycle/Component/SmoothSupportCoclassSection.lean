@@ -34,13 +34,6 @@ variable (X Y : Over (Spec (.of ℂ)))
   (hf : IsOpenEmbedding f) (S : Set M)
   (hS : f ⁻¹' S = Set.range (Point.map i))
 
-/-- The constructed normalized smooth-support section transported to an actual
-larger ambient space through an open embedding. -/
-def smoothClosedSupportOpenImageCoclassSection :
-  (supportRelativeCohomologySheaf M S (2 * (d - m))).obj.obj (op (hf.functor.obj ⊤)) :=
-  supportRelativeCohomologySectionOpenImage f hf S (Set.range (Point.map i)) hS
-    (2 * (d - m)) (smoothClosedSupportCoclassSection X Y i m d)
-
 end GeneralOpenTransport
 
 section Component

@@ -70,61 +70,11 @@ lemma openSingularCochainRestriction_surjective
   LinearMap.dualMap_surjective_of_injective
     (openSingularChainMap_injective R X i.unop n)
 
-/-- A linear choice of extension of cochains along an inclusion of open subsets. -/
-noncomputable def openSingularCochainExtension
-    {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) :
-    OpenCochains R X V n →ₗ[R] OpenCochains R X U n :=
-  Classical.choose <| LinearMap.exists_rightInverse_of_surjective
-    (((openSingularChainComplexFunctor R X).map i.unop).f n).hom.dualMap
-    (LinearMap.range_eq_top.mpr <| openSingularCochainRestriction_surjective R X i n)
-
-/-- Restricting a chosen extension recovers the original cochain. -/
-lemma openSingularCochainRestriction_comp_extension
-    {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) :
-    (((openSingularChainComplexFunctor R X).map i.unop).f n).hom.dualMap.comp
-        (openSingularCochainExtension R X i n) = LinearMap.id :=
-  Classical.choose_spec <| LinearMap.exists_rightInverse_of_surjective
-    (((openSingularChainComplexFunctor R X).map i.unop).f n).hom.dualMap
-    (LinearMap.range_eq_top.mpr <| openSingularCochainRestriction_surjective R X i n)
-
-@[simp]
-lemma openSingularCochainRestriction_extension
-    {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) (φ : OpenCochains R X V n) :
-    (singularCochainPresheaf R X n).map i
-        (openSingularCochainExtension R X i n φ) = φ :=
-  LinearMap.congr_fun (openSingularCochainRestriction_comp_extension R X i n) φ
-
 /-- Every cochain on an open subset extends to a cochain on the whole space. -/
 lemma globalOpenSingularCochainRestriction_surjective (U : Opens X) (n : ℕ) :
     Function.Surjective
       ((singularCochainPresheaf R X n).map (homOfLE (le_top : U ≤ ⊤)).op) :=
   openSingularCochainRestriction_surjective R X _ n
-
-/-- Singular cochains on `X`, defined as the linear duals of its singular chains. -/
-abbrev SingularCochains (n : ℕ) :=
-  Module.Dual R
-    ((((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X).X n)
-
-/-- Cochains on the top open subset are linearly equivalent to cochains on the ambient space. -/
-noncomputable def singularCochainsEquivTopOpen (n : ℕ) :
-    SingularCochains R X n ≃ₗ[R] OpenCochains R X (.op ⊤) n :=
-  ((HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.down ℕ) n).mapIso
-    (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).mapIso
-      (Opens.inclusionTopIso X))).toLinearEquiv.dualMap
-
-/-- The top-open identification intertwines the ordinary and open singular coboundaries. -/
-lemma singularCochainsEquivTopOpen_coboundary (n : ℕ) (φ : SingularCochains R X n) :
-    singularCochainsEquivTopOpen R X (n + 1)
-        (((((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X).d
-          (n + 1) n).hom.dualMap φ) =
-      (singularCochainCoboundary R X n).app (.op ⊤)
-        (singularCochainsEquivTopOpen R X n φ) := by
-  ext c
-  let C := (singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)
-  let e := C.mapIso (Opens.inclusionTopIso X)
-  change φ ((C.obj X).d (n + 1) n |>.hom ((e.hom.f (n + 1)).hom c)) =
-    φ ((e.hom.f n).hom ((C.obj ((Opens.toTopCat X).obj ⊤)).d (n + 1) n |>.hom c))
-  exact congrArg (fun z ↦ φ (ModuleCat.Hom.hom z c)) (e.hom.comm (n + 1) n)
 
 /-- The presheaf of singular cochains in every fixed degree is flasque. -/
 instance singularCochainPresheaf_isFlasque (n : ℕ) :

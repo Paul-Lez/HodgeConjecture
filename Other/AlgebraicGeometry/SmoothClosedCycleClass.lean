@@ -106,11 +106,4 @@ lemma smoothClosedCohomologyClassMap_sum {ι : Type*} (s : Finset ι) (q : ι �
       ∑ j ∈ s, smoothClosedCohomologyClassMap Z X i e d (q j) :=
   map_sum _ _ _
 
-/-- The codimension specialization proves the arithmetic from the actual dimension equality. -/
-def smoothClosedCohomologyClassInCodimension (p : ℕ) (hdim : e + p = d) :
-    ComplexDerivedSupportedCohomology X ⊤ (2 * (p : ℤ)) :=
-  (eqToIso (congrArg (ComplexDerivedSupportedCohomology X ⊤)
-    (show 2 * (d : ℤ) - 2 * (e : ℤ) = 2 * (p : ℤ) by omega))).hom
-      (smoothClosedCohomologyClass Z X i e d)
-
 end AlgebraicGeometry.ComplexPoint

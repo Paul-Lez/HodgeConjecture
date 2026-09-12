@@ -119,15 +119,6 @@ lemma supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque
   let := hK n
   exact supportRestrictionSectionsShortComplex_shortExact_of_flasque X U V (K.X n)
 
-/-- The canonical inclusion into the restriction fiber is a quasi-isomorphism
-for actual flasque coefficient complexes. -/
-lemma supportRestrictionToFiber_quasiIso_of_flasque
-    (V : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
-    (hK : ∀ n, (K.X n).IsFlasque) :
-    QuasiIso (supportRestrictionToFiber X U V K) :=
-  CochainComplex.mappingCocone.quasiIso_liftShortComplex _
-    (supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque X U V K hK)
-
 /-- A coefficient-complex map induces the actual map of localization sequences. -/
 def supportRestrictionComplexShortComplexMap
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ} (f : K ⟶ L) :

@@ -44,18 +44,17 @@ statement. Two checks keep this honest:
 
 The Borel–Moore homology development under `Other/AlgebraicGeometry/` — `SheafBorelMoore.lean`,
 `BorelMooreCycleClass.lean`, `CycleComponentBorelMoore.lean` and
-`CycleComponentGlobalFundamentalClass.lean` — is stated relative to fifteen bespoke hypothesis
+`CycleComponentGlobalFundamentalClass.lean` — is stated relative to thirteen bespoke hypothesis
 structures. They package what Mathlib does not yet provide: dualizing complexes and Verdier
 duality, derived sections with support, the Thom/costalk cap operation that normalises
 Alexander–Poincaré duality, and the local-to-global input for a Borel–Moore fundamental class.
 Its results therefore read "given such a package, ..." rather than asserting anything
-unconditional about complex varieties. Five of the fifteen can be instantiated today, and only in
-maximal codimension, that is for point components — and one of those five needs a further
-unproved statement about principal divisors. The other ten are never constructed.
+unconditional about complex varieties. Four of the thirteen can be instantiated today, and only in
+maximal codimension, that is for point components. The other nine are never constructed.
 
-The module docstring of `Other/AlgebraicGeometry/SheafBorelMoore.lean` inventories all fifteen,
+The module docstring of `Other/AlgebraicGeometry/SheafBorelMoore.lean` inventories all thirteen,
 grouped by construction status, and records the mathematical input each group awaits. Issue #57
 tracks that inventory; issue #14 tracks redefining Borel–Moore homology through hypercohomology,
-after which how many of the fifteen become constructible is the measure of progress.
+after which how many of the thirteen become constructible is the measure of progress.
 
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.

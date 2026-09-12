@@ -73,22 +73,12 @@ lemma chartEvaluationKernel_eq_iInf_comap
     have h := hθ U (𝟙 U)
     rwa [formRestriction_id, LinearMap.id_apply] at h
 
-lemma holomorphicFormRelations_eq_chartEvaluationKernel
-    [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
-    holomorphicFormRelations X d U p = chartEvaluationKernel X d U p := rfl
-
-lemma holomorphicFormRelations_eq_top_of_lt [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    {p : ℕ} (hp : d < p) : holomorphicFormRelations X d U p = ⊤ :=
-  chartEvaluationKernel_eq_top_of_lt X d U hp
-
 lemma holomorphicForm_eq_zero_of_lt [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     {p : ℕ} (hp : d < p) (θ : HolomorphicForm X d U p) : θ = 0 := by
-  obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (holomorphicFormRelations X d U p) θ
+  obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (chartEvaluationKernel X d U p) θ
   change Submodule.Quotient.mk θ = 0
-  rw [Submodule.Quotient.mk_eq_zero, holomorphicFormRelations_eq_top_of_lt X d U hp]
+  rw [Submodule.Quotient.mk_eq_zero, chartEvaluationKernel_eq_top_of_lt X d U hp]
   trivial
 
 lemma holomorphicFormDifferential_squared [SmoothOfRelativeDimension d X.hom]
@@ -96,7 +86,7 @@ lemma holomorphicFormDifferential_squared [SmoothOfRelativeDimension d X.hom]
     (θ : HolomorphicForm X d U p) :
     holomorphicFormDifferential X d U (p + 1)
       (holomorphicFormDifferential X d U p θ) = 0 := by
-  obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (holomorphicFormRelations X d U p) θ
+  obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (chartEvaluationKernel X d U p) θ
   change Submodule.Quotient.mk
     (Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) (p + 1)
       (Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) p θ)) = 0
@@ -110,7 +100,7 @@ lemma holomorphicFormRestriction_differential [SmoothOfRelativeDimension d X.hom
         (holomorphicFormDifferential X d U p θ) =
       holomorphicFormDifferential X d V p
         (holomorphicFormRestriction X d i p θ) := by
-  obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (holomorphicFormRelations X d U p) θ
+  obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (chartEvaluationKernel X d U p) θ
   change Submodule.Quotient.mk
       (formRestriction X d i (p + 1)
         (Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) p θ)) =
