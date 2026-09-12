@@ -21,7 +21,7 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ))) (d : ℕ)
+variable (X : Over (Spec ↧ℂ)) (d : ℕ)
   [SmoothOfRelativeDimension d X.hom] [IsProjective X.hom]
 
 /-- The old exactly normalized point coclass, included in a larger support and
@@ -59,7 +59,7 @@ theorem analyticPointCoclassSupportSection_restrict (S : Set (ComplexPoint X))
 
 section Iso
 
-variable (Y : Over (Spec (.of ℂ)))
+variable (Y : Over (Spec ↧ℂ))
   (e : Y ≅ X)
   [SmoothOfRelativeDimension d Y.hom] [IsProjective Y.hom]
 

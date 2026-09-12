@@ -44,7 +44,7 @@ open scoped Manifold ContDiff
 namespace AlgebraicGeometry
 namespace CycleComponentSeparateLocalCoordinates
 
-noncomputable local instance componentImmersionTopology {Y : Over (Spec (.of ℂ))} :
+noncomputable local instance componentImmersionTopology {Y : Over (Spec ↧ℂ)} :
     TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}
@@ -57,7 +57,7 @@ variable (C : CycleComponentSeparateLocalCoordinates V.over x d n)
 /-- Each coordinate of a morphism from the affine component neighborhood to a smooth complex
 scheme is analytic when the source is written in the retained exact component coordinates. -/
 lemma analyticAt_neighborhoodProjectionChart_symm_map_component
-    {Y : Over (Spec (.of ℂ))} (f : C.neighborhoodScheme ⟶ Y)
+    {Y : Over (Spec ↧ℂ)} (f : C.neighborhoodScheme ⟶ Y)
     (e : ℕ) [SmoothOfRelativeDimension e Y.hom]
     (y : ComplexPoint Y) {w : Fin n → ℂ}
     (hw : w ∈ C.neighborhoodProjectionChart.target)
@@ -98,7 +98,7 @@ lemma analyticAt_neighborhoodProjectionChart_symm_map_component
 /-- A morphism from the affine component neighborhood to a smooth complex scheme is analytic in
 the exact component chart and a canonical target chart. -/
 lemma analyticAt_neighborhoodProjectionChart_symm_map
-    {Y : Over (Spec (.of ℂ))} (f : C.neighborhoodScheme ⟶ Y)
+    {Y : Over (Spec ↧ℂ)} (f : C.neighborhoodScheme ⟶ Y)
     (e : ℕ) [SmoothOfRelativeDimension e Y.hom]
     (y : ComplexPoint Y) {w : Fin n → ℂ}
     (hw : w ∈ C.neighborhoodProjectionChart.target)

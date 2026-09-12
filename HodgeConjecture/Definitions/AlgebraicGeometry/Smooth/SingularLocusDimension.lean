@@ -11,6 +11,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # The singular locus has smaller algebraic dimension
@@ -49,7 +50,7 @@ instance reducedSingularLocusι_isClosedImmersion :
     IsClosedImmersion (reducedSingularLocusι f) :=
   inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f)))
 
-variable (Y : Over (Spec (.of ℂ)))
+variable (Y : Over (Spec ↧ℂ))
   [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
 
 /-- The singular locus of every cycle component admits the actual finite smooth

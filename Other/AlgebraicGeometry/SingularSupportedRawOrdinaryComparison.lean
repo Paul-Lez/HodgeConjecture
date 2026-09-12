@@ -23,7 +23,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ))) [IsIntegral X.left] [Smooth X.hom]
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

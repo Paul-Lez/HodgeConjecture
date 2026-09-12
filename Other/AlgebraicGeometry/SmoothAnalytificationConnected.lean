@@ -10,6 +10,8 @@ public import Other.AlgebraicGeometry.ComplexAffineIntegralConnected
 public import Other.AlgebraicGeometry.SmoothLocalNonvanishing
 public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Connectedness of smooth integral complex schemes
 
@@ -31,7 +33,7 @@ noncomputable section
 
 /-- The complex points of a smooth integral quasi-separated complex scheme form a connected
 space. -/
-theorem connectedSpace (X : Over (Spec (CommRingCat.of ℂ))) [IsIntegral X.left] [Smooth X.hom]
+theorem connectedSpace (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [QuasiSeparatedSpace X.left] : ConnectedSpace (ComplexPoint X) := by
   let _ : LocallyOfFiniteType X.hom := inferInstance
   let _ : JacobsonSpace X.left := LocallyOfFiniteType.jacobsonSpace X.hom

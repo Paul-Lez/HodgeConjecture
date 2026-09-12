@@ -47,7 +47,7 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (d : ℕ)
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] [IsProjective X.hom]
@@ -134,21 +134,21 @@ theorem smoothClosedSupportCoclassSection_eq_oldPoint_of_singleton
 
 section ActualPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
 
 /-- The identity complex point of the base scheme over itself. -/
-def complexSpecIdentityPoint : ComplexPoint (Over.mk (𝟙 (Spec (.of ℂ)))) :=
+def complexSpecIdentityPoint : ComplexPoint (Over.mk (𝟙 (Spec ↧ℂ))) :=
   𝟙 _
 
 local instance complexSpecIdentitySmooth :
-    SmoothOfRelativeDimension 0 (Over.mk (𝟙 (Spec (.of ℂ)))).hom := by
-  change SmoothOfRelativeDimension 0 (𝟙 (Spec (.of ℂ)))
+    SmoothOfRelativeDimension 0 (Over.mk (𝟙 (Spec ↧ℂ))).hom := by
+  change SmoothOfRelativeDimension 0 (𝟙 (Spec ↧ℂ))
   infer_instance
 
 /-- There is just one complex point of the base over itself. -/
-theorem complexSpecPoint_eq_identity (w : ComplexPoint (Over.mk (𝟙 (Spec (.of ℂ))))) :
+theorem complexSpecPoint_eq_identity (w : ComplexPoint (Over.mk (𝟙 (Spec ↧ℂ)))) :
     w = complexSpecIdentityPoint :=
-  (Over.mkIdTerminal (X := Spec (.of ℂ))).hom_ext w complexSpecIdentityPoint
+  (Over.mkIdTerminal (X := Spec ↧ℂ)).hom_ext w complexSpecIdentityPoint
 
 /-- The actual scheme morphism represented by any complex point is a closed
 immersion; no point-immersion input is supplied. -/

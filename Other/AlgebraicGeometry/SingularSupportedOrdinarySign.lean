@@ -26,7 +26,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ))) [IsIntegral X.left] [Smooth X.hom]
+variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
   [T2Space (ComplexPoint X)] [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
 
 /-- The original ordinary coclass of an actual relative class has the negative

@@ -19,7 +19,7 @@ open CategoryTheory Limits TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
 

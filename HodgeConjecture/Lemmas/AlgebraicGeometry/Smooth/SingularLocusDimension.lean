@@ -8,6 +8,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.Smooth.SingularLocus
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # The actual singular locus has smaller algebraic dimension
@@ -61,7 +62,7 @@ theorem topologicalKrullDim_reducedClosedSmoothPiece_le {S T : Closeds X} (hTS :
 actual standard-smooth affine neighborhood of some relative dimension below `m`.
 No global equidimensionality assumption is needed. -/
 theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
-    {Z : Scheme} (g : Z ⟶ Spec (.of ℂ)) [Smooth g] {m : ℕ}
+    {Z : Scheme} (g : Z ⟶ Spec ↧ℂ) [Smooth g] {m : ℕ}
     (hdim : topologicalKrullDim Z < m) (z : Z) :
     ∃ (U : Z.Opens) (_ : IsAffineOpen U), z ∈ U ∧
       ∃ n : ℕ, n < m ∧
@@ -76,7 +77,7 @@ theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
   rw [hdimU] at hlt
   exact ⟨U, hU, hzU, n, by exact_mod_cast hlt, hn⟩
 
-variable (Y : Over (Spec (.of ℂ)))
+variable (Y : Over (Spec ↧ℂ))
   [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
 
 /-- For a codimension-`p` component of a smooth projective complex `d`-fold, the reduced

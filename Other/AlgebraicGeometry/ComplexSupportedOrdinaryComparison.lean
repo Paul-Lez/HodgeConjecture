@@ -33,7 +33,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
 
 /-- Top-open raw-to-sheaf normalization survives both actual grading comparisons. -/
 theorem complexOpenRawToSheafTop_eq_global :

@@ -6,6 +6,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Actual ambient closed supports for singular-component localization induction
 
@@ -19,7 +21,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
 theorem cycleComponentSingularClosedFiltration_length :

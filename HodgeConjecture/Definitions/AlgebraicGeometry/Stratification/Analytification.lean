@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.SingularLocusDimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
@@ -25,7 +26,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ))) {Y : Over (Spec (.of ℂ))}
+variable (X : Over (Spec ↧ℂ)) {Y : Over (Spec ↧ℂ)}
 
 local instance smoothStratificationAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology

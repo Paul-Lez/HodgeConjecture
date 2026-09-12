@@ -37,7 +37,7 @@ namespace CycleComponentSeparateLocalCoordinates
 
 open AlgebraicTopology.Singular
 
-noncomputable local instance componentCoherenceTopology {Y : Over (Spec (.of ℂ))} :
+noncomputable local instance componentCoherenceTopology {Y : Over (Spec ↧ℂ)} :
     TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}

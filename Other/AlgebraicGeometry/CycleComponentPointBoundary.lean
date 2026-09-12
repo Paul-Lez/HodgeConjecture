@@ -21,7 +21,7 @@ open CategoryTheory TopologicalSpace Topology Opposite
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {d : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = d)
 
