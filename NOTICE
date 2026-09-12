@@ -7,9 +7,9 @@ sphere-six-complex project:
   https://github.com/deancureton/sphere-six-complex
 
 The adapted material includes contributions by Paul Lezeau, Rado Kirov,
-Chris Birkbeck, and Dean Cureton, principally from pull requests #49, #103,
-and #185 and from the files and revisions identified in individual Lean
-module docstrings. Those source-level notices are retained.
+Chris Birkbeck, and Dean Cureton, principally from pull requests #49 and #103
+and from the files and revisions identified in individual Lean module
+docstrings. Those source-level notices are retained.
 
 This distribution also contains material adapted from the Apache-2.0-licensed
 mathlib4 project:

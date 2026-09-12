@@ -14,7 +14,8 @@ continuous map between path-connected spaces induces an isomorphism on degree-ze
 for a nonempty source and path-connected target the induced map is an epimorphism.
 
 The augmentation proof generalizes the additive-group-valued proof in
-`StandardSimplexSingularComparison` to arbitrary coefficient objects.
+[`SphereSixComplex/Topology/StandardSimplexSimplicialSingularComparisonGeneral.lean`](https://github.com/deancureton/sphere-six-complex/blob/895c0a0/SphereSixComplex/Topology/StandardSimplexSimplicialSingularComparisonGeneral.lean)
+to arbitrary coefficient objects.
 -/
 
 @[expose] public noncomputable section
