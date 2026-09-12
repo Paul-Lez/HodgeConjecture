@@ -31,6 +31,12 @@ name = "HodgeGuide"
 name = "CheckStatementImports"
 srcDir = "scripts"
 
+# Manual declaration-level diagnostic. This is intentionally not a default target while its current
+# findings are informational.
+[[lean_lib]]
+name = "CheckStatementDeclarations"
+srcDir = "scripts"
+
 [[lean_exe]]
 name = "hodge-guide"
 root = "HodgeGuideMain"
