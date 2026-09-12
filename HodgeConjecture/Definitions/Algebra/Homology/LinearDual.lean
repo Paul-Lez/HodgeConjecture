@@ -176,6 +176,13 @@ def linearDualCochainComplexScIso (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : 
   have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by simp
   K.linearDualCochainComplex.isoSc' (c := ComplexShape.up ℕ) _ _ _ hprev hnext --≪≫
 
+/-- Universal coefficients for a complex of vector spaces: the degree-`n` cohomology of the
+linear-dual cochain complex is canonically the linear dual of the degree-`n` homology. -/
+def linearDualHomologyEquiv (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
+    K.linearDualCochainComplex.homology n ≃ₗ[R] Module.Dual R (K.homology n) :=
+  (ShortComplex.homologyMapIso (linearDualCochainComplexScIso K n)).toLinearEquiv.trans
+    (K.sc n).linearDualHomologyEquiv
+
 variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
 
 /-- Algebraic duality sends a map of nonnegative chain complexes contravariantly to a map of

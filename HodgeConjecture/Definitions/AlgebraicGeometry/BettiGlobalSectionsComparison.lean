@@ -336,61 +336,6 @@ universe u
 
 variable (R : Type u) [Field R] (Y : TopCat.{u})
 
-set_option backward.isDefEq.respectTransparency false in
-/-- The short complex controlling degree-`n` cohomology of the full linear-dual cochain complex
-is the reversed dual of the degree-`n` singular-chain short complex. -/
-def linearDualCochainComplexScIso
-    (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
-    K.linearDualCochainComplex.sc n ≅ (K.sc n).linearDual := by
-  let D := K.linearDualCochainComplex
-  have hprev : (ComplexShape.up ℕ).prev n = (ComplexShape.down ℕ).next n := by
-    cases n <;> simp
-  have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by simp
-  refine D.isoSc' ((ComplexShape.down ℕ).next n) n
-      ((ComplexShape.down ℕ).prev n) hprev hnext ≪≫
-    ShortComplex.isoMk (Iso.refl _) (Iso.refl _) (Iso.refl _) ?_ ?_
-  · cases n with
-    | zero =>
-        simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
-          HomologicalComplex.shortComplexFunctor'_obj_f]
-        dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk,
-          HomologicalComplex.sc, HomologicalComplex.shortComplexFunctor,
-          HomologicalComplex.shortComplexFunctor']
-        rw [ChainComplex.next_nat_zero]
-        change ModuleCat.ofHom (K.d 0 0).hom.dualMap = D.d 0 0
-        rw [K.shape 0 0 (by simp), D.shape 0 0 (by simp)]
-        exact ModuleCat.hom_ext (LinearMap.ext fun φ ↦ LinearMap.ext fun _ ↦ map_zero φ)
-    | succ n =>
-        simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
-          HomologicalComplex.shortComplexFunctor'_obj_f]
-        dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk,
-          HomologicalComplex.sc, HomologicalComplex.shortComplexFunctor,
-          HomologicalComplex.shortComplexFunctor']
-        rw [ChainComplex.next_nat_succ]
-        change ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap = D.d n (n + 1)
-        exact (HomologicalComplex.linearDualCochainComplex_d_succ K n).symm
-  · simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
-      HomologicalComplex.shortComplexFunctor'_obj_g]
-    dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk,
-      HomologicalComplex.sc, HomologicalComplex.shortComplexFunctor,
-      HomologicalComplex.shortComplexFunctor']
-    rw [ChainComplex.prev]
-    change ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap = D.d n (n + 1)
-    exact (HomologicalComplex.linearDualCochainComplex_d_succ K n).symm
-
-/-- Ordinary singular cohomology, presented as the homology of the algebraic-dual singular
-cochain complex. -/
-abbrev OrdinarySingularCohomology (n : ℕ) : ModuleCat.{u} R :=
-  (SingularChainComplex R Y).linearDualCochainComplex.homology n
-
-/-- Universal coefficients identify the full-complex presentation of ordinary singular
-cohomology with the repository's existing dual-of-singular-homology type. -/
-def ordinarySingularCohomologyEquivCohomology (n : ℕ) :
-    OrdinarySingularCohomology R Y n ≃ₗ[R] Cohomology R Y n :=
-  (ShortComplex.homologyMapIso
-    (linearDualCochainComplexScIso R (SingularChainComplex R Y) n)).toLinearEquiv.trans
-      ((SingularChainComplex R Y).sc n).linearDualHomologyEquiv
-
 /-- Forgetting scalar multiplication commutes with taking the homology of the top-open singular
 cochain complex. -/
 def topOpenForgottenSingularCochainHomologyIso (n : ℕ) :
@@ -404,7 +349,7 @@ def topOpenForgottenSingularCochainHomologyIso (n : ℕ) :
 /-- Ordinary singular cohomology agrees with the homology of the raw singular-cochain
 presheaf evaluated on the top open subset. -/
 def ordinarySingularCohomologyEquivGlobalRaw (n : ℕ) :
-    OrdinarySingularCohomology R Y n ≃+
+    Cohomology R Y n ≃+
       (globalRawSingularCochainComplex R Y).homology n :=
   ((forget₂ (ModuleCat.{u} R) AddCommGrpCat).mapIso
       (HomologicalComplex.homologyMapIso
@@ -417,11 +362,11 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicTopology.Singular.HereditarilyParacompact
 
-/-- On a paracompact Hausdorff space, ordinary rational singular cohomology is the cohomology of
-the global-section complex of the chosen singular-cochain sheaf resolution. -/
+/-- On a paracompact Hausdorff space, rational singular cohomology is the cohomology of the
+global-section complex of the chosen singular-cochain sheaf resolution. -/
 def ordinaryRationalSingularCohomologyEquivGlobalSections
     (Y : TopCat.{0}) [ParacompactSpace Y] [T2Space Y] (n : ℕ) :
-    AlgebraicTopology.Singular.OrdinarySingularCohomology ℚ Y n ≃+
+    AlgebraicTopology.Singular.Cohomology ℚ Y n ≃+
       (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y).homology n := by
   let := AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
     (Y := Y)
@@ -437,8 +382,7 @@ def rationalSingularCohomologyEquivGlobalSections
     (Y : TopCat.{0}) [ParacompactSpace Y] [T2Space Y] (n : ℕ) :
     AlgebraicTopology.Singular.Cohomology ℚ Y n ≃+
       (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y).homology n :=
-  (AlgebraicTopology.Singular.ordinarySingularCohomologyEquivCohomology ℚ Y n).symm.toAddEquiv
-    |>.trans (ordinaryRationalSingularCohomologyEquivGlobalSections Y n)
+  ordinaryRationalSingularCohomologyEquivGlobalSections Y n
 
 end AlgebraicTopology.Singular.HereditarilyParacompact
 

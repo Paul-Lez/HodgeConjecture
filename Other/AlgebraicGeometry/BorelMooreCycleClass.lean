@@ -321,8 +321,8 @@ def maximalCodimensionSupportedGenerator
     (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
     (hx : coheight x = V.dimension) :
     RationalSingularComponentCohomologyWithSupport V.over x (2 * V.dimension) := by
-  let F := fun Z : Set V.analyticPoint ↦ CohomologyWithSupport ℚ
-    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * V.dimension)
+  let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
+    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * V.dimension))
   exact LinearEquiv.cast (R := ℚ) (M := F)
     (maximalCodimensionCycleComponentSupport_eq_singleton V x hx).symm
       (analyticPointLocalCoclass V.over V.dimension
@@ -336,8 +336,8 @@ lemma span_maximalCodimensionSupportedGenerator_eq_top
     Submodule.span ℚ {maximalCodimensionSupportedGenerator V x hx} = ⊤ := by
   let z := maximalCodimensionCycleComponentPoint V x
   let y := cycleComponentMap V.over x z
-  let F := fun Z : Set V.analyticPoint ↦ CohomologyWithSupport ℚ
-    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * V.dimension)
+  let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
+    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * V.dimension))
   let e := LinearEquiv.cast (R := ℚ) (M := F)
     (maximalCodimensionCycleComponentSupport_eq_singleton V x hx).symm
   change Submodule.span ℚ {e
@@ -359,8 +359,8 @@ lemma maximalCodimensionSupportedGenerator_ne_zero
     maximalCodimensionSupportedGenerator V x hx ≠ 0 := by
   let z := maximalCodimensionCycleComponentPoint V x
   let y := cycleComponentMap V.over x z
-  let F := fun Z : Set V.analyticPoint ↦ CohomologyWithSupport ℚ
-    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * V.dimension)
+  let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
+    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * V.dimension))
   let e := LinearEquiv.cast (R := ℚ) (M := F)
     (maximalCodimensionCycleComponentSupport_eq_singleton V x hx).symm
   change e (analyticPointLocalCoclass V.over V.dimension y) ≠ 0
@@ -369,7 +369,8 @@ lemma maximalCodimensionSupportedGenerator_ne_zero
     intro hzero
     have hone :=
       analyticPointLocalCoclass_apply_localClass V.over V.dimension y
-    rw [hzero, LinearMap.zero_apply] at hone
+    unfold analyticPointLocalCoclassDual at hone
+    rw [hzero, map_zero, LinearMap.zero_apply] at hone
     exact zero_ne_one hone
   intro hzero
   exact hsource (e.injective (by simpa using hzero))

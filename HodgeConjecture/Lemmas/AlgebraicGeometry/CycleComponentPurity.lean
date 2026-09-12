@@ -58,6 +58,30 @@ lemma span_normalizedDual_eq_top {z : M} (hz : z ≠ 0)
   obtain ⟨a, rfl⟩ := (Submodule.span_singleton_eq_top_iff R z).mp hzspan y
   simp
 
+section Coclass
+
+variable {R : Type*} [Field R] {X : TopPair} {n : ℕ}
+
+/-- The normalized coclass generates relative cohomology when its class generates relative
+homology. -/
+lemma span_normalizedRelativeCoclass_eq_top {z : RelativeHomology R X n} (hz : z ≠ 0)
+    (hzspan : Submodule.span R {z} = ⊤) :
+    Submodule.span R {normalizedRelativeCoclass z hz} = ⊤ := by
+  have h := congrArg (Submodule.map (relativeCohomologyEquivDualHomology R X n).symm.toLinearMap)
+    (span_normalizedDual_eq_top hz hzspan)
+  rwa [Submodule.map_span, Set.image_singleton, Submodule.map_top, LinearEquiv.range] at h
+
+/-- The normalization condition characterizes the normalized coclass. -/
+lemma normalizedRelativeCoclass_unique {z : RelativeHomology R X n} (hz : z ≠ 0)
+    (hzspan : Submodule.span R {z} = ⊤) (β : RelativeCohomology R X n)
+    (hβ : relativeCohomologyEquivDualHomology R X n β z = 1) :
+    β = normalizedRelativeCoclass z hz :=
+  (relativeCohomologyEquivDualHomology R X n).injective <| by
+    rw [relativeCohomologyEquivDualHomology_normalizedRelativeCoclass]
+    exact normalizedDual_unique hz hzspan _ hβ
+
+end Coclass
+
 @[simp]
 lemma linearEquivOfNormalizedGenerators_apply
     {N : Type*} [AddCommGroup N] [Module R N]
@@ -105,23 +129,24 @@ variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
 
 @[simp]
 lemma neighborhoodLocalCoclass_apply_localClass :
-    C.neighborhoodLocalCoclass C.neighborhoodLocalClass = 1 :=
-  normalizedDual_apply_self C.neighborhoodLocalClass
+    relativeCohomologyEquivDualHomology ℚ _ (2 * n) C.neighborhoodLocalCoclass
+      C.neighborhoodLocalClass = 1 :=
+  normalizedRelativeCoclass_pairing_self C.neighborhoodLocalClass
     C.neighborhoodLocalClass_ne_zero
 
 /-- The normalized local coclass generates cohomology supported at the selected smooth point of
 the component neighborhood. -/
 lemma span_neighborhoodLocalCoclass_eq_top :
     Submodule.span ℚ {C.neighborhoodLocalCoclass} = ⊤ :=
-  span_normalizedDual_eq_top C.neighborhoodLocalClass_ne_zero
+  span_normalizedRelativeCoclass_eq_top C.neighborhoodLocalClass_ne_zero
     C.span_neighborhoodLocalClass_eq_top
 
 /-- The local normalization condition characterizes the component's local coclass. -/
 lemma neighborhoodLocalCoclass_unique
     (β : C.neighborhoodPointSupportedCohomology)
-    (hβ : β C.neighborhoodLocalClass = 1) :
+    (hβ : relativeCohomologyEquivDualHomology ℚ _ (2 * n) β C.neighborhoodLocalClass = 1) :
     β = C.neighborhoodLocalCoclass :=
-  normalizedDual_unique C.neighborhoodLocalClass_ne_zero
+  normalizedRelativeCoclass_unique C.neighborhoodLocalClass_ne_zero
     C.span_neighborhoodLocalClass_eq_top β hβ
 
 /-- Every codimension-`p` component of a smooth complex `d`-fold has an exact smooth local
@@ -132,7 +157,8 @@ lemma exists_span_neighborhoodLocalCoclass_eq_top
     [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = p) :
     ∃ C : CycleComponentSeparateLocalCoordinates X x d (d - p),
-      C.neighborhoodLocalCoclass C.neighborhoodLocalClass = 1 ∧
+      relativeCohomologyEquivDualHomology ℚ _ (2 * (d - p)) C.neighborhoodLocalCoclass
+          C.neighborhoodLocalClass = 1 ∧
         Submodule.span ℚ {C.neighborhoodLocalCoclass} = ⊤ := by
   obtain ⟨C, -⟩ := exists_span_neighborhoodLocalClass_eq_top X x d p hx
   exact ⟨C, C.neighborhoodLocalCoclass_apply_localClass,
