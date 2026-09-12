@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SheafCohomologyWithSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SheafCohomology
 
 /-!
 # Compactly supported rational cohomology of the analytic complex-point space
@@ -15,7 +15,7 @@ rational constant sheaf on the analytic complex-point space. They require no smo
 properness, or separation hypotheses. The closed-support API uses nonnegative degrees,
 as does Mathlib's sheaf cohomology.
 
-The arbitrary-subset, integer-degree cone model in `CohomologyWithSupport` remains a separate
+The arbitrary-subset, integer-degree cone model in `Cohomology.WithSupport` remains a separate
 API; identifying its closed-support specialization with this Ext model requires a comparison
 theorem.
 -/

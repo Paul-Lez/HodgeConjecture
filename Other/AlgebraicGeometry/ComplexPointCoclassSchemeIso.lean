@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.ChartLocalClassHomeomorph
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexAnalyticMaps
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AnalyticMap
 public import Other.AlgebraicGeometry.ComplexPointCoclassOrientationComparison
 
 /-! # Exact point-coclass naturality for actual complex scheme isomorphisms
@@ -71,8 +71,8 @@ theorem analyticPointLocalCoclass_schemeIso_pullback :
       (analyticPointLocalCoclass X d (Point.map e.hom z)) =
       analyticPointLocalCoclass Y d z := by
   apply (eq_analyticPointLocalCoclass_iff Y d z _).mpr
-  rw [relativeCohomologyMap_apply]
-  change analyticPointLocalCoclass X d (Point.map e.hom z)
+  rw [relativeCohomologyEquivDualHomology_relativeCohomologyMap]
+  change analyticPointLocalCoclassDual X d (Point.map e.hom z)
     (relativeHomologyMap ℚ (2 * d) (complexSchemeIsoPointPairMap X Y e z)
       (analyticPointLocalHomologyClass Y d z)) = 1
   rw [complexSchemeIsoPointPairMap_localClass, analyticPointLocalCoclass_apply_localClass]

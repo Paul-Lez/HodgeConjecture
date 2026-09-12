@@ -85,31 +85,4 @@ lemma sheafBorelMoorePointMorphism_underlying :
   unfold sheafBorelMoorePointMorphism
   exact Functor.map_preimage _ _
 
-/-- The singleton-supported Borel–Moore point class, additive in its literal chain coefficient. -/
-def sheafBorelMoorePointClassMap :
-    AddCommGrpCat.of ℚ ⟶
-      ComplexAmbientSheafBorelMooreHomology X d
-        (sheafBorelMoorePointSupport X x) 0 :=
-  ((DerivedCategory.singleFunctorCompHomologyFunctorIso AddCommGrpCat 0).app
-    (AddCommGrpCat.of ℚ)).inv ≫
-      (DerivedCategory.Plus.homologyFunctor AddCommGrpCat 0).map
-        (sheafBorelMoorePointMorphism X d x)
-
-/-- The supported point class starts with exactly the coefficient `1`. -/
-def sheafBorelMoorePointClass :
-    ComplexAmbientSheafBorelMooreHomology X d
-      (sheafBorelMoorePointSupport X x) 0 :=
-  sheafBorelMoorePointClassMap X d x 1
-
-/-- The constructed orientation transports the actual point class to degree `2d`. -/
-def sheafBorelMoorePointSupportedCohomologyClass :
-    ComplexDerivedSupportedCohomology X
-      (sheafBorelMoorePointSupport X x) (2 * (d : ℤ)) :=
-  (eqToIso (congrArg
-    (ComplexDerivedSupportedCohomology X (sheafBorelMoorePointSupport X x))
-      (sub_zero (2 * (d : ℤ))))).hom
-        ((complexAmbientSheafBorelMooreHomologyIso X d
-          (sheafBorelMoorePointSupport X x) 0).hom
-            (sheafBorelMoorePointClass X d x))
-
 end AlgebraicGeometry.ComplexPoint

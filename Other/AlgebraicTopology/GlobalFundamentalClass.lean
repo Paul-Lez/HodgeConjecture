@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
-public import HodgeConjecture.Lemmas.AlgebraicTopology.EuclideanLocalHomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.Euclidean
 public import Other.AlgebraicTopology.SingularHomologyVanishing
 public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 
@@ -184,16 +184,6 @@ public def relativeHomologyProjectionLinearEquiv
   LinearEquiv.ofBijective (relativeHomologyProjection ℚ X (n + 1)).hom
     ⟨relativeHomologyProjection_injective_of_isZero_subspace X n hA,
       relativeHomologyProjection_surjective_of_boundary_eq_zero X n hδ⟩
-
-/-- Generator-level form of `relativeHomologyProjectionLinearEquiv`: it is enough to calculate
-that the connecting map kills one spanning local orientation class. -/
-public def relativeHomologyProjectionLinearEquivOfGenerator
-    (X : TopPair) (n : ℕ) (hA : IsZero (Homology ℚ X.snd (n + 1)))
-    (c : RelativeHomology ℚ X (n + 1)) (hspan : Submodule.span ℚ {c} = ⊤)
-    (hc : (relativeSingularBoundary X n).hom c = 0) :
-    Homology ℚ X.fst (n + 1) ≃ₗ[ℚ] RelativeHomology ℚ X (n + 1) :=
-  relativeHomologyProjectionLinearEquiv X n hA
-    (relativeSingularBoundary_eq_zero_of_span_eq_top X n c hspan hc)
 
 @[simp]
 public theorem relativeHomologyProjectionLinearEquiv_apply

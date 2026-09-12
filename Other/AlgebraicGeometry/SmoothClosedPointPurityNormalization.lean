@@ -135,10 +135,13 @@ variable [IsProjective X.hom]
 This theorem computes the normalization; it does not postulate a trace comparison. -/
 @[simp]
 theorem analyticPointLocalCoclass_apply_smoothClosedPointNormalClass :
-    relativeCohomologyMap ℚ (2 * d) (smoothClosedPointNeighborhoodPairMap X Y i d z V hzV)
-      (analyticPointLocalCoclass X d (Point.map i z))
+    relativeCohomologyEquivDualHomology ℚ
+        (smoothClosedSupportNeighborhoodPair X Y i 0 d z V hzV) (2 * d)
+        (relativeCohomologyMap ℚ (2 * d)
+          (smoothClosedPointNeighborhoodPairMap X Y i d z V hzV)
+          (analyticPointLocalCoclass X d (Point.map i z)))
       (smoothClosedSupportNormalClass X Y i 0 d z V hzV) = 1 := by
-  rw [relativeCohomologyMap_apply,
+  rw [relativeCohomologyEquivDualHomology_relativeCohomologyMap,
     smoothClosedPointNormalClass_to_analyticPointLocalHomologyClass,
     analyticPointLocalCoclass_apply_localClass]
 

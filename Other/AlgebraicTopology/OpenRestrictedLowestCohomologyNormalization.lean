@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.OpenRestrictedLowestCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
 public import Other.AlgebraicTopology.CohomologySheafOpenRestriction
 
 /-!

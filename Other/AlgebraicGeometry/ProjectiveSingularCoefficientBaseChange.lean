@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Points
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 public import Other.AlgebraicTopology.SingularCoefficientBaseChange
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
@@ -64,14 +64,5 @@ theorem finiteRationalSingularHomologyZero [IsIntegral X.left] [Smooth X.hom] :
   exact Module.Finite.equiv
     (TopCat.singularHomology₀Iso (TopCat.of (ComplexPoint X))
       (ModuleCat.of ℚ ℚ)).symm.toLinearEquiv
-
-/-- Rational-to-complex singular cohomology base change for projective analytifications in
-degree zero. -/
-def rationalToComplexCohomologyBaseChangeZero [IsIntegral X.left] [Smooth X.hom] :
-    ℂ ⊗[ℚ] Cohomology ℚ (TopCat.of (ComplexPoint X)) 0 ≃ₗ[ℂ]
-      Cohomology ℂ (TopCat.of (ComplexPoint X)) 0 :=
-  letI : Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X)) 0) :=
-    finiteRationalSingularHomologyZero X
-  rationalToComplexCohomologyBaseChange (TopCat.of (ComplexPoint X)) 0
 
 end AlgebraicGeometry.ComplexPoint

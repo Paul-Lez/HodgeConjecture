@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportCoclassOverlap
-public import HodgeConjecture.Definitions.AlgebraicTopology.SupportRelativeCohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.CoclassOverlap
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologySheaf
 
 /-!
 # Nonvanishing of normal coclasses after restriction
@@ -32,7 +32,7 @@ theorem smoothClosedSupportNormalCoclass_ne_zero :
     smoothClosedSupportNormalCoclass X Y i m d z V hzV ≠ 0 := by
   intro h
   have heval := smoothClosedSupportNormalCoclass_apply_class X Y i m d z V hzV
-  rw [h, LinearMap.zero_apply] at heval
+  rw [h, map_zero, LinearMap.zero_apply] at heval
   exact zero_ne_one heval
 
 /-- Restricting a normal coclass to any open neighborhood of its center preserves nonvanishing. -/

@@ -129,7 +129,7 @@ Recorded so nobody spends time re-checking them. Several were artifacts of revie
 - `Nonempty (ComplexPoint X)` is proved, in `Other/AlgebraicGeometry/ProjectiveAnalytificationConnected.lean`.
 - The constant-sheaf to singular comparison is proved, and its additive upgrade
   `rationalCohomologyAddEquivSingularCohomology` is in
-  `Other/AlgebraicGeometry/BettiGlobalSectionsAdditivity.lean`.
+  `Other/AlgebraicGeometry/SingularGlobalSectionsAdditivity.lean`.
 - `Definitions/Algebra/Homology/LinearDual.lean` does not duplicate `Functor.mapHomotopy` or
   `ChainComplex.linearYonedaObj`; Mathlib has no `ModuleCat` dual functor.
 - `Lemmas/Analysis/NormedSpace/WedgeCovectors.lean` already calls Mathlib's determinant lemmas. The
