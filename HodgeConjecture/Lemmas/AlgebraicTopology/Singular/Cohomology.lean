@@ -151,7 +151,9 @@ lemma relativeChainMap_mono (R : Type u) [Field R] (X : TopPair.{u}) :
     (ModuleCat.of R R)).map X.hom)
   apply Functor.map_mono
 
-/-- Singular chains of a pair form a short exact sequence. -/
+/-- Singular chains of a pair form a short exact sequence.
+
+See mathlib PR https://github.com/leanprover-community/mathlib4/pull/37659. -/
 lemma relativeChainShortComplex_shortExact (R : Type u) [Field R] (X : TopPair.{u}) :
     (relativeChainShortComplex R X).ShortExact := by
   let : Mono ((chainPairFunctor R).obj X).hom := relativeChainMap_mono R X
