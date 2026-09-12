@@ -145,7 +145,7 @@ public theorem relativeSingularBoundary_eq_zero_of_injective_subspaceMap
   let i := HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n
   let : Mono i := (ModuleCat.mono_iff_injective i).mpr hinjective
   have hcomp : relativeSingularBoundary X n ≫ i = 0 :=
-    (relativeSingularChainShortComplex_shortExact X).δ_comp
+    (relativeChainShortComplex_shortExact ℚ X).δ_comp
       (n + 1) n (ComplexShape.down_mk (n + 1) n (by omega))
   apply (cancel_mono i).mp
   rw [hcomp, zero_comp]
