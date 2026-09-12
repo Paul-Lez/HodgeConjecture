@@ -158,11 +158,4 @@ def flattenedSupportNormalClass :
   (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).inv.hom
     (standardComplexLocalClass c)
 
-/-- The corresponding cohomology equivalence is the dual of those same actual maps. -/
-def flattenedSupportRelativeCohomologyEquiv (n : ℕ) :
-    RelativeCohomology ℚ (standardComplexPuncturedPair c) n ≃ₗ[ℚ]
-      RelativeCohomology ℚ
-        (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n :=
-  (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 n).toLinearEquiv.dualMap
-
 end AlgebraicTopology.Singular

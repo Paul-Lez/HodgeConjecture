@@ -158,10 +158,19 @@ def cochainCohomologyMap {X Y : TopCat.{u}} (f : X ⟶ Y) (p : ℕ) :
 theorem cochainCohomologyEquiv_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p : ℕ)
     (alpha : CochainCohomology R Y p) :
     cochainCohomologyEquiv R X p (cochainCohomologyMap R f p alpha) =
-      cohomologyMap R p f (cochainCohomologyEquiv R Y p alpha) :=
-  ShortComplex.linearDualHomologyEquiv_naturality
-    ((HomologicalComplex.shortComplexFunctor (ModuleCat.{u} R) (ComplexShape.down ℕ) p).map
-      (SSet.chainComplexMap (TopCat.toSSet.map f) (ModuleCat.of R R))) alpha
+      cohomologyMap R p f (cochainCohomologyEquiv R Y p alpha) := by
+  set eX := (ShortComplex.homologyMapIso
+    (HomologicalComplex.linearDualCochainComplexScIso (SingularChainComplex R X) p)).toLinearEquiv
+  set eY := (ShortComplex.homologyMapIso
+    (HomologicalComplex.linearDualCochainComplexScIso (SingularChainComplex R Y) p)).toLinearEquiv
+  have hnat := congrArg (ShortComplex.homologyFunctor (ModuleCat.{u} R)).map
+    (HomologicalComplex.linearDualCochainComplexScIso_naturality (singularChainComplexMap R f) p)
+  rw [Functor.map_comp, Functor.map_comp] at hnat
+  have ha : eX (cohomologyMap R p f (eY.symm alpha)) =
+      cochainCohomologyMap R f p (eY (eY.symm alpha)) :=
+    LinearMap.congr_fun (congrArg ModuleCat.Hom.hom hnat) (eY.symm alpha)
+  rw [eY.apply_symm_apply] at ha
+  exact eX.symm_apply_eq.2 ha.symm
 
 /-- The singular cap projection formula is independent of both representatives. -/
 theorem capCohomologyLinear_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p q : ℕ)

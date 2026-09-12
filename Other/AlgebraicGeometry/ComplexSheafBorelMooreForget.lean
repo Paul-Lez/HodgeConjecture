@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMoore
-public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportForget
+public import Other.AlgebraicGeometry.ComplexSheafBorelMoore
+public import Other.AlgebraicTopology.DerivedSheafSupportForget
 
 /-!
 # From ambient Borel–Moore classes to actual derived ordinary cohomology

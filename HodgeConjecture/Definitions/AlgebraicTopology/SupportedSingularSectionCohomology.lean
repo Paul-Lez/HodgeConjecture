@@ -73,7 +73,8 @@ def supportedRationalSingularSectionCohomologyEquivSupportComplement
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ) ≃+
         RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n :=
   (supportedRationalSingularSectionCohomologyEquivRelative X ⟨Sᶜ, hS.isOpen_compl⟩ V n).trans
-    (((relativeHomologyFunctor ℚ n).mapIso
-      (openIntersectionPairIsoSupportComplement X S hS V).symm).toLinearEquiv.dualMap.toAddEquiv)
+    (((HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.up ℕ) n).mapIso
+      (HomologicalComplex.linearDualIso ((relativeChainFunctor ℚ).mapIso
+        (openIntersectionPairIsoSupportComplement X S hS V).symm))).toLinearEquiv.toAddEquiv)
 
 end AlgebraicTopology.Singular

@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeCochainCone
-public import HodgeConjecture.Lemmas.AlgebraicTopology.LinearDualHomologyNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 /-! # Canonical natural relative-cochain cone comparison
 
@@ -85,8 +85,7 @@ def relativeDualCochainCohomologyEquiv (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X).X₁.homology (n : ℤ) ≃ₗ[R]
       RelativeCohomology R X n :=
   (((relativeChainFunctor R).obj X).linearDualCochainComplex.extendHomologyIso
-    ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).toLinearEquiv.trans
-      (HomologicalComplex.linearDualHomologyEquiv ((relativeChainFunctor R).obj X) n)
+    ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).toLinearEquiv
 
 /-- Relative cohomology computed from the explicit canonical cone lift.
 No arbitrary completion of a triangle map enters this equivalence. -/

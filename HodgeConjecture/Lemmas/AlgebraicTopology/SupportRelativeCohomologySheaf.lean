@@ -82,8 +82,7 @@ theorem neighborhoodSupportRelativeCohomology_subsingleton
   have hh : IsZero (RelativeHomology ℚ (neighborhoodSupportComplementPair V S) n) :=
     (homologyFunctor (ModuleCat ℚ) (ComplexShape.down ℕ) n).map_isZero
       (neighborhoodSupportRelativeChains_isZero X S V hV)
-  let := ModuleCat.subsingleton_of_isZero hh
-  infer_instance
+  exact relativeCohomology_subsingleton ℚ _ n (ModuleCat.subsingleton_of_isZero hh)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
