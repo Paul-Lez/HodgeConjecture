@@ -226,17 +226,17 @@ the statement stronger than the conjecture rather than weaker.
 The shortest route through the implementation is:
 
 1. `HodgeConjecture/Statement.lean`, the statement;
-2. `HodgeConjecture/Definitions/AlgebraicGeometry/HodgeFiltration.lean`, cohomology and the Hodge
+2. `HodgeConjecture/Definitions/AlgebraicGeometry/Hodge/Filtration.lean`, cohomology and the Hodge
    filtration;
-3. `HodgeConjecture/Definitions/AlgebraicGeometry/CohomologyWithSupport.lean`, the mapping-cone
+3. `HodgeConjecture/Definitions/AlgebraicGeometry/Cohomology/WithSupport.lean`, the mapping-cone
    model of cohomology with support;
-4. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`,
+4. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`,
    the class on the smooth locus;
-5. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSupportExtension.lean`, its
+5. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SupportExtension.lean`, its
    extension across the singular locus;
-6. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`, the class of a
+6. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SheafClass.lean`, the class of a
    subvariety;
-7. `HodgeConjecture/Definitions/AlgebraicGeometry/AlgebraicCycleClassSpan.lean`, the span the
+7. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`, the span the
    statement compares against;
 8. `Other/AlgebraicGeometry/SheafCycleClass.lean`, the maps on cycles;
 9. `Other/AlgebraicGeometry/CodimensionZeroClassComparison.lean` and

@@ -15,9 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalOrientation
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.LocalOrientation
 public import Other.AlgebraicGeometry.ComplexManifoldOrientation
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClassDifferentiableInvariance
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvariance
 
 /-!
 # Coherence of the complex local orientation

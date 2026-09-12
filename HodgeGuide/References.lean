@@ -44,17 +44,18 @@ formalization.
 
 # Where the constructions live
 
-* `HodgeConjecture/Definitions/AlgebraicGeometry/HolomorphicDeRham.lean` and
-  `HodgeFiltration.lean`: the de Rham complex, hypercohomology, and the Hodge filtration;
+* `HodgeConjecture/Definitions/AlgebraicGeometry/Hodge/HolomorphicDeRham.lean` and
+  `Filtration.lean`: the de Rham complex, hypercohomology, and the Hodge filtration;
 * `Other/AlgebraicGeometry/CodimensionCycle.lean`,
-  `HodgeConjecture/Definitions/AlgebraicGeometry/AlgebraicCycleSupport.lean`,
-  and `CohomologyWithSupport.lean`: cycles, their supports, and cohomology with support;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSmoothSupportCoclassSection.lean`
-  and `CycleComponentSupportExtension.lean`: the class on the smooth locus and its extension
+  `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Support.lean`,
+  and `HodgeConjecture/Definitions/AlgebraicGeometry/Cohomology/WithSupport.lean`: cycles, their
+  supports, and cohomology with support;
+* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`
+  and `SupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`: the class of a
+* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SheafClass.lean`: the class of a
   subvariety;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/AlgebraicCycleClassSpan.lean`: the span of those
+* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`: the span of those
   classes, which is the right-hand side of the statement;
 * `Other/AlgebraicGeometry/SheafCycleClass.lean`: the maps on cycles;
 * `Other/AlgebraicGeometry/SmoothAnalytificationConnected.lean`: connectedness of the

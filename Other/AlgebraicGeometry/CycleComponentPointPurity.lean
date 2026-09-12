@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentPurity
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Purity
 public import Other.AlgebraicGeometry.SingularCycleClass
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
+import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
 
 /-!
 # Purity for point supports

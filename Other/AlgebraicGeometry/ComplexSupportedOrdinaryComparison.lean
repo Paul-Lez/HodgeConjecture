@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf
 public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
-public import Other.AlgebraicGeometry.BettiSupportedOrdinarySign
+public import Other.AlgebraicGeometry.SingularSupportedOrdinarySign
 
 /-! # Actual positive ordinary normalization of the ambient supported injective model -/
 

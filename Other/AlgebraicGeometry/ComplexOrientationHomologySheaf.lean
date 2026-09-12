@@ -13,8 +13,8 @@ limitations under the License.
 module
 
 public import Other.AlgebraicGeometry.ComplexLocalOrientationNeighborhood
-public import HodgeConjecture.Lemmas.AlgebraicTopology.HomologySheafSection
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SheafMapOfLocallyRepresentableStalks
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.HomologySection
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.MapOfLocalStalks
 public import Other.AlgebraicTopology.SingularChainSheafOrientation
 
 /-!

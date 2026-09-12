@@ -13,7 +13,7 @@ limitations under the License.
 module
 
 public import Other.AlgebraicTopology.DerivedConcentratedOrientation
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainHomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainHomology
 
 /-!
 # From local singular homology to the derived orientation

@@ -18,7 +18,7 @@ module
 public import Other.AlgebraicGeometry.CycleComponentBorelMoore
 public import Other.AlgebraicGeometry.CycleComponentLocalOrientationCoherence
 public import Other.AlgebraicTopology.GlobalFundamentalClass
-public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeHomotopyInvariance
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeHomotopyInvariance
 
 /-!
 # Global cycle-component classes from one local class

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportNaturality
-public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportLocalization
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsNaturality
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
 /-!
 # Forgetting closed support in actual derived sections
 

@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.AlgebraicCycleSupport
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCohomology
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 /-!
 # Algebraic cycle-class lines in singular cohomology
 

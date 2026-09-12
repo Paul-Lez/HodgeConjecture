@@ -15,14 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SheafClass
 public import Other.AlgebraicGeometry.CycleComponentBorelMoore
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
 public import Other.AlgebraicGeometry.CycleClassOnCycles
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationParacompact
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveParacompact
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -270,7 +270,7 @@ def toAuxiliaryComparisonData
   borelMoore := D.borelMoore
   auxiliaryComparison := D.alexanderPoincare
 
-/-- The rational constant-sheaf supported fundamental class, obtained through the proved Betti
+/-- The rational constant-sheaf supported fundamental class, obtained through the proved singular
 comparison after local Thom-cap normalization. -/
 def constantSheafSupportedFundamentalClass
     (D : ComplexOrientedRationalCycleComponentClassData V p x hx) :

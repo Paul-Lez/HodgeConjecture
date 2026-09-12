@@ -183,7 +183,7 @@ theorem analyticComponentPointGlobalRelativeCoclass_eq_maximalCodimensionSupport
       (cycleComponentMap V.over x (maximalCodimensionCycleComponentPoint V x)))
 
 set_option maxRecDepth 4096 in
-/-- The legacy component comparison is the literal existing Betti-support
+/-- The legacy component comparison is the literal existing singular-support
 comparison, after its already proved supported-generator normalization. -/
 theorem maximalCodimensionComponentClass_eq_directLegacyPoint
     (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)

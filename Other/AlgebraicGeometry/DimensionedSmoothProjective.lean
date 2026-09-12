@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.Basic
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
@@ -25,7 +25,7 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 This auxiliary wrapper packages a nonsingular projective complex variety with a chosen relative
 dimension. It belongs in `Other`: the Hodge-conjecture statement itself uses the unbundled scheme,
-structure morphism, and typeclass hypotheses from `Points`.
+structure morphism, and typeclass hypotheses from `ComplexPoint.Basic`.
 -/
 
 @[expose] public noncomputable section

@@ -22,10 +22,10 @@ public import Other.Algebra.DeRham.Complex
 public import Other.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusInjectiveModel
 public import Other.Algebra.Homology.MapArrowConeConnecting
 public import Other.Algebra.Homology.MapHomologyShift
-public import Other.AlgebraicGeometry.BettiGlobalSectionsAdditivity
-public import Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison
-public import Other.AlgebraicGeometry.BettiSupportedOrdinarySign
-public import Other.AlgebraicGeometry.BettiSupportedRawOrdinaryComparison
+public import Other.AlgebraicGeometry.SingularGlobalSectionsAdditivity
+public import Other.AlgebraicGeometry.SingularSupportedOrdinaryConeComparison
+public import Other.AlgebraicGeometry.SingularSupportedOrdinarySign
+public import Other.AlgebraicGeometry.SingularSupportedRawOrdinaryComparison
 public import Other.AlgebraicGeometry.BorelMooreCycleClass
 public import Other.AlgebraicGeometry.ClosedImmersionPointNormalCoordinates
 public import Other.AlgebraicGeometry.CodimensionCycle

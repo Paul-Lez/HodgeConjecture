@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.NormalSlicePurity
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalSlicePurity
 
 /-!
 # Explicit flattening and normal purity for graphs
