@@ -185,7 +185,7 @@ theorem exists_open_normalTransition_localClass_invariance :
         relativeHomologyMap ℚ (2 * c)
           (complexNeighborhoodPuncturedPairMapOf c W (normalTransitionMap c e a)
             ((normalTransitionMap_continuousOn c e a).mono hW)
-            (normalTransitionMap_zero c e a ha hplane) hne) z = standardComplexLocalClass c := by
+            hne) z = standardComplexLocalClass c := by
   let L := normalTransitionDerivativeEquiv e a ha hplane he hei
   let A := complexMatrixOfContinuousLinearMap c L.toContinuousLinearMap
   have hA : A.det ≠ 0 :=
@@ -212,7 +212,7 @@ theorem exists_open_normalTransition_relativeHomologyMap_eq :
       relativeHomologyMap ℚ (2 * c)
         (complexNeighborhoodPuncturedPairMapOf c W (normalTransitionMap c e a)
           ((normalTransitionMap_continuousOn c e a).mono hW)
-          (normalTransitionMap_zero c e a ha hplane) hne) =
+          hne) =
         relativeHomologyMap ℚ (2 * c) (neighborhoodPointComplementPairMap W 0) := by
   obtain ⟨W, hW, hne, hWo, h0W, hclass⟩ :=
     exists_open_normalTransition_localClass_invariance c e a ha hplane he hei
@@ -237,7 +237,7 @@ theorem exists_open_normalTransition_relativeCohomologyMap_eq :
       relativeCohomologyMap ℚ (2 * c)
         (complexNeighborhoodPuncturedPairMapOf c W (normalTransitionMap c e a)
           ((normalTransitionMap_continuousOn c e a).mono hW)
-          (normalTransitionMap_zero c e a ha hplane) hne) =
+          hne) =
         relativeCohomologyMap ℚ (2 * c) (neighborhoodPointComplementPairMap W 0) := by
   obtain ⟨W, hW, hne, hWo, h0W, heq⟩ :=
     exists_open_normalTransition_relativeHomologyMap_eq c e a ha hplane he hei
