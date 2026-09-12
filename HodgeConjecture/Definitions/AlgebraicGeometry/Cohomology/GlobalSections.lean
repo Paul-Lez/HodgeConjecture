@@ -420,14 +420,6 @@ def ordinaryRationalSingularCohomologyEquivGlobalSections
         (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ Y) n))
           |>.addCommGroupIsoToAddEquiv
 
-/-- On a paracompact Hausdorff space, the repository's singular cohomology type is the cohomology
-of the global-section complex of the singular-cochain sheaf resolution. -/
-def rationalSingularCohomologyEquivGlobalSections
-    (Y : TopCat.{0}) [ParacompactSpace Y] [T2Space Y] (n : ℕ) :
-    AlgebraicTopology.Singular.Cohomology ℚ Y n ≃+
-      (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y).homology n :=
-  ordinaryRationalSingularCohomologyEquivGlobalSections Y n
-
 end AlgebraicTopology.Singular.HereditarilyParacompact
 
 namespace AlgebraicGeometry.ComplexPoint
@@ -457,7 +449,7 @@ def rationalSingularCochainHypercohomologyAddEquivCohomology
         (n : ℤ)).addCommGroupIsoToAddEquiv |>.trans <|
       (K.extendHomologyIso ComplexShape.embeddingUpNat rfl).addCommGroupIsoToAddEquiv
         |>.trans <|
-        (AlgebraicTopology.Singular.HereditarilyParacompact.rationalSingularCohomologyEquivGlobalSections
+        (AlgebraicTopology.Singular.HereditarilyParacompact.ordinaryRationalSingularCohomologyEquivGlobalSections
           Y n).symm
 
 /-- Rational constant-sheaf cohomology and rational singular cohomology are additively
