@@ -22,7 +22,6 @@ public import Other.Algebra.DeRham.Complex
 public import Other.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusInjectiveModel
 public import Other.Algebra.Homology.MapArrowConeConnecting
 public import Other.Algebra.Homology.MapHomologyShift
-public import Other.Algebra.Module.LinearMap.Rat
 public import Other.AlgebraicGeometry.BettiGlobalSectionsAdditivity
 public import Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison
 public import Other.AlgebraicGeometry.BettiSupportedOrdinarySign
@@ -161,4 +160,5 @@ public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
 public import Other.CommutativeAlgebra.RegularLocalQuotientKernel
 public import Other.Geometry.Manifold.Orientation
+public import Other.Mathlib.Algebra.Module.LinearMap.Rat
 public import Other.Topology.Category.TopCat.Basic

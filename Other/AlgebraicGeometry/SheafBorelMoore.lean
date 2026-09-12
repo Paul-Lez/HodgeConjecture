@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import Other.AlgebraicGeometry.BorelMooreCycleClass
-public import Other.Algebra.Module.LinearMap.Rat
+public import Other.Mathlib.Algebra.Module.LinearMap.Rat
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 
