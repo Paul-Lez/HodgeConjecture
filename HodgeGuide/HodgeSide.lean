@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
+import Other.AlgebraicGeometry.HodgeFiltration
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
 
