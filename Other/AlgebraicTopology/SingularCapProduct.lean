@@ -22,12 +22,12 @@ public import Mathlib.Algebra.Category.ModuleCat.Abelian
 public import Mathlib.Algebra.Homology.ShortComplex.Linear
 public import Mathlib.Algebra.Module.BigOperators
 public import Mathlib.LinearAlgebra.Dual.Defs
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.CochainCohomology
 
 /-!
 # The simplicial cap product
 
-This file starts the chain-level foundation for Alexander--Poincare duality.  It defines the
+This file starts the chain-level foundation for Alexander--Poincaré duality.  It defines the
 front and back faces of a simplex and the cap product of a simplicial cochain with a simplicial
 chain.  The construction uses the coproduct universal property of the unnormalised simplicial
 chain group, so it does not choose chain representatives or a basis equivalence.

@@ -95,20 +95,4 @@ lemma smoothClosedDerivedSupportedCycleMorphism_underlying :
             (closedCycleAnalyticMap_isClosedEmbedding Z X i)) :=
   Functor.map_preimage _ _
 
-/-- Applying the constructed ambient orientation gives the supported smooth-cycle morphism
-with rational constant coefficients. Both orientations are fixed by the exact local classes. -/
-def smoothClosedDerivedSupportedOrientedCycleMorphism :
-    (TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlus (closedCycleAnalyticMap Z X i)
-      (closedCycleAnalyticMap_isClosedEmbedding Z X i)).obj
-        ((complexConstantRationalSheafPlusObject Z)⟦2 * (e : ℤ)⟧) ⟶
-    (TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X))
-      (closedEmbeddingSupport (closedCycleAnalyticMap Z X i)
-        (closedCycleAnalyticMap_isClosedEmbedding Z X i))).obj
-          ((complexConstantRationalSheafPlusObject X)⟦2 * (d : ℤ)⟧) :=
-  smoothClosedDerivedSupportedCycleMorphism X d Z i e ≫
-    (TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X))
-      (closedEmbeddingSupport (closedCycleAnalyticMap Z X i)
-        (closedCycleAnalyticMap_isClosedEmbedding Z X i))).map
-          (complexChainSheafPlusOrientationIso X d).hom
-
 end AlgebraicGeometry.ComplexPoint

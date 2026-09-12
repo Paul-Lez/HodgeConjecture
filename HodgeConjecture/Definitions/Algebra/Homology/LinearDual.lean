@@ -176,6 +176,13 @@ def linearDualCochainComplexScIso (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : 
   have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by simp
   K.linearDualCochainComplex.isoSc' (c := ComplexShape.up ℕ) _ _ _ hprev hnext --≪≫
 
+/-- Universal coefficients for a complex of vector spaces: the degree-`n` cohomology of the
+linear-dual cochain complex is canonically the linear dual of the degree-`n` homology. -/
+def linearDualHomologyEquiv (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
+    K.linearDualCochainComplex.homology n ≃ₗ[R] Module.Dual R (K.homology n) :=
+  (ShortComplex.homologyMapIso (linearDualCochainComplexScIso K n)).toLinearEquiv.trans
+    (K.sc n).linearDualHomologyEquiv
+
 variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
 
 /-- Algebraic duality sends a map of nonnegative chain complexes contravariantly to a map of
@@ -257,13 +264,5 @@ namespace HomologicalComplex.HomotopyEquiv
 
 variable {R : Type u} [Field R]
 variable {K L : ChainComplex (ModuleCat.{u} R) ℕ}
-
-/-- A chain-homotopy equivalence induces, contravariantly, a linear equivalence on the
-cohomology of the algebraic-dual short complexes. -/
-def linearDualCohomologyEquiv (h : HomotopyEquiv K L) (n : ℕ) :
-    (L.sc n).linearDual.homology ≃ₗ[R] (K.sc n).linearDual.homology :=
-  (L.sc n).linearDualHomologyEquiv |>.trans <|
-    h.toHomologyIso n |>.toLinearEquiv.dualMap |>.trans <|
-      (K.sc n).linearDualHomologyEquiv.symm
 
 end HomologicalComplex.HomotopyEquiv

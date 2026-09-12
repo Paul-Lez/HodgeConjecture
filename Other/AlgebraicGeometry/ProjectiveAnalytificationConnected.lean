@@ -15,13 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Points
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Topology.Connected.PathConnected
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalyticImmersion
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveCompact
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 

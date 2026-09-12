@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalHomologyVanishing
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.LocalHomologyVanishing
 public import Other.AlgebraicGeometry.ComplexOrientationHomologySheaf
-public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportShift
-public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportNaturality
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsShift
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsNaturality
 public import Other.AlgebraicTopology.SingularChainSheafOrientation
 
 /-!
@@ -192,8 +192,8 @@ def complexAmbientSheafBorelMooreIsoOfOrientation
   (TopCat.Sheaf.derivedClosedSupportSections
     (TopCat.of (ComplexPoint X)) Z).mapIso
       (complexChainSheafPlusIsoOfOrientation X d orientation) ≪≫
-    (TopCat.Sheaf.derivedClosedSupportSectionsShiftIso
-      (TopCat.of (ComplexPoint X)) Z (2 * (d : ℤ))).app _
+    ((TopCat.Sheaf.derivedClosedSupportSections
+      (TopCat.of (ComplexPoint X)) Z).commShiftIso (2 * (d : ℤ))).app _
 
 /-- The actual ambient chain-sheaf group maps isomorphically to supported cohomology
 in degree `2d-i`, via the displayed orientation shift. This transport lemma still takes

@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClass
-public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeHomotopyInvariance
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeHomotopyInvariance
 
 /-!
 # Homotopy invariance of chart-local fundamental classes

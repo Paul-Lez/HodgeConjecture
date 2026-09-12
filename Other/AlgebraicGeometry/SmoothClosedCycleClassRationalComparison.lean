@@ -47,14 +47,16 @@ def smoothClosedRationalCycleClass :
     H^(2 * (d : ℤ) - 2 * (e : ℤ))(X; ℚ) :=
   smoothClosedRationalCycleClassMap Z X i e d 1
 
-set_option maxRecDepth 2048 in
 /-- The ordinary rational class is obtained from the actual Borel–Moore class,
 without an independently specified class or comparison. -/
 @[simp]
 lemma smoothClosedRationalCycleClass_eq_borelMoore :
     smoothClosedRationalCycleClass Z X i e d =
       complexAmbientSheafBorelMooreToFieldCohomology X d ⊤ (2 * (e : ℤ))
-        (smoothClosedWholeSupportBorelMooreClass Z X i e d) := rfl
+        (smoothClosedWholeSupportBorelMooreClass Z X i e d) := by
+  simp only [smoothClosedRationalCycleClass, smoothClosedRationalCycleClassMap,
+    smoothClosedWholeSupportBorelMooreClass, AddMonoidHom.coe_toRatLinearMap,
+    AddMonoidHom.comp_apply]
 
 /-- Arbitrary rational multiplicities have their expected scalar action. -/
 @[simp]

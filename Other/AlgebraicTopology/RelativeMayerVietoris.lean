@@ -541,14 +541,6 @@ local instance relativeHomologyFunctor_preservesBinaryBiproducts (n : ℕ) :
       (HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.down ℕ) n) :=
   preservesBinaryBiproducts_of_preservesBiproducts _
 
-/-- The middle term is canonically the direct sum of the two relative homology groups. -/
-def relativeMayerVietorisHomologySumIso (n : ℕ) :
-    ((relativeChainFunctor ℚ).obj (TopPair.ofSubset U) ⊞
-      (relativeChainFunctor ℚ).obj (TopPair.ofSubset V)).homology n ≅
-        RelativeHomology ℚ (TopPair.ofSubset U) n ⊞
-          RelativeHomology ℚ (TopPair.ofSubset V) n :=
-  (HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.down ℕ) n).mapBiprod _ _
-
 end Subsets
 
 section ClosedSupports

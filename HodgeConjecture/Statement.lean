@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleClassSpan
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 
 /-!
 # The Hodge conjecture
@@ -39,7 +39,7 @@ open CategoryTheory AlgebraicGeometry ComplexPoint
 For every nonsingular complex projective variety `X` and natural number `p`, every rational Hodge
 class of degree `2p` on `X` is a rational linear combination of classes of algebraic subvarieties of
 `X` of codimension `p`. The algebraic subspace is `algebraicCycleClassSpan`, the span of the
-component classes of `CycleComponentSheafClass` indexed by the points of codimension `p`. -/
+component classes of `Cycle.Component.SheafClass` indexed by the points of codimension `p`. -/
 @[expose] public def HodgeConjecture : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ),
