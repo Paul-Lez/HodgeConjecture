@@ -283,6 +283,16 @@ def ordinaryFundamentalClass
 
 end ComplexOrientedRationalCycleComponentClassData
 
+/-- Complex-oriented component class data yields auxiliary comparison data by forgetting the
+Thom-cap square, so inhabitation transfers along `toAuxiliaryComparisonData`. -/
+theorem nonempty_auxiliaryRationalCycleComponentBorelMooreComparisonData_of_complexOriented
+    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap]
+    {x : V.scheme} {hx : coheight x = p}
+    (h : Nonempty (ComplexOrientedRationalCycleComponentClassData V d p x hx)) :
+    Nonempty (AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :=
+  h.map ComplexOrientedRationalCycleComponentClassData.toAuxiliaryComparisonData
+
 /-! ### The complete construction in maximal codimension -/
 
 /-- A canonical smooth analytic point of a maximal-codimension cycle component. -/
@@ -534,6 +544,15 @@ def maximalCodimensionLocalThomCapInput
     let hz := maximalCodimensionCycleComponentPoint_mem_smooth V x
     exact (maximalCodimensionLocalThomCapEquiv V d x hx z hz).injective (h z hz)
 
+/-- A maximal-codimension component carries a local Thom-cap package, built from the normalized
+point-coclass equivalence of `maximalCodimensionLocalThomCapEquiv`. -/
+theorem nonempty_rationalCycleComponentLocalThomCapInput_of_coheight_eq_dimension
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
+    (x : V.scheme) (hx : coheight x = d) :
+    Nonempty (RationalCycleComponentLocalThomCapInput V d d x hx) :=
+  ⟨maximalCodimensionLocalThomCapInput V d x hx⟩
+
 /-- The constructed point-case duality satisfies the full exact local Thom-cap square. -/
 lemma maximalCodimensionAlexanderDuality_isComplexOriented
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
@@ -582,6 +601,15 @@ coclass, not merely a nonzero rational multiple of it. -/
       maximalCodimensionSupportedGenerator V d x hx :=
   maximalCodimensionAlexanderDuality_fundamentalClass V d x hx
 
+/-- A maximal-codimension component carries complex-oriented class data, with the Thom-cap square
+supplied by `maximalCodimensionAlexanderDuality_isComplexOriented`. -/
+theorem nonempty_complexOrientedRationalCycleComponentClassData_of_coheight_eq_dimension
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
+    (x : V.scheme) (hx : coheight x = d) :
+    Nonempty (ComplexOrientedRationalCycleComponentClassData V d d x hx) :=
+  ⟨maximalCodimensionComplexOrientedComponentClassData V d x hx⟩
+
 /-- The complete Borel--Moore and point-duality package in maximal codimension. -/
 def auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
@@ -600,6 +628,15 @@ def auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
         (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx) =
       maximalCodimensionSupportedGenerator V d x hx :=
   maximalCodimensionAlexanderDuality_fundamentalClass V d x hx
+
+/-- A maximal-codimension component carries auxiliary comparison data, with the comparison given
+by the normalized point-case Alexander duality. -/
+theorem nonempty_auxiliaryRationalCycleComponentBorelMooreComparisonData_of_coheight_eq_dimension
+    (V : SmoothProjectiveComplexVariety) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
+    (x : V.scheme) (hx : coheight x = d) :
+    Nonempty (AuxiliaryRationalCycleComponentBorelMooreComparisonData V d d x hx) :=
+  ⟨auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx⟩
 
 /-- The fully constructed ordinary class of a maximal-codimension irreducible component. -/
 def maximalCodimensionComponentClass

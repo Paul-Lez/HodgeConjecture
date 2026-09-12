@@ -457,6 +457,13 @@ def toAuxiliaryBorelMooreComparisonData
     AuxiliaryRationalCycleComponentBorelMooreComparisonData.fundamentalClass,
     compactificationFundamentalClass, AddEquiv.coe_toRatLinearEquiv]
 
+/-- Sheaf-theoretic comparison inputs for a component supply the auxiliary comparison data of the
+earlier cycle-class package, through the adapter. -/
+theorem nonempty_auxiliaryRationalCycleComponentBorelMooreComparisonData
+    (h : Nonempty (RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx)) :
+    Nonempty (AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :=
+  h.map toAuxiliaryBorelMooreComparisonData
+
 /-- Forgetting support gives the comparison-dependent ordinary rational class. -/
 def ordinaryClassOfComparisons
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
@@ -504,6 +511,13 @@ def toComplexOrientedComponentClassData
   localThomCap := D.localThomCap
   comparison := D.comparisonInputs.orientationInducedComparisonAddEquiv.toRatLinearEquiv
   comparison_isComplexOriented := D.orientationComparison_local
+
+/-- The sheaf route together with the local Verdier/Thom normalization theorem supplies the general
+complex-oriented component class data. -/
+theorem nonempty_complexOrientedRationalCycleComponentClassData
+    (h : Nonempty (ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx)) :
+    Nonempty (ComplexOrientedRationalCycleComponentClassData V d p x hx) :=
+  h.map toComplexOrientedComponentClassData
 
 /-- The normalized Alexander--Poincaré equivalence obtained from the sheaf construction and the
 explicit local Verdier/Thom compatibility theorem. -/
