@@ -139,6 +139,16 @@ lemma Smooth.exists_smoothOfRelativeDimension [IsIntegral X] [Smooth f] :
   refine ⟨⊤, isAffineOpen_top _, V, hV, hxV, by simp, ?_⟩
   rwa [isStandardSmoothOfRelativeDimension_eq f hV₀ hV hn hm]
 
+/-- The relative dimension of a smooth integral complex scheme is unique: any `d` certifying
+smoothness of relative dimension is `dim X`. This is the converse direction of
+`SmoothOfRelativeDimension.of_isIntegral`, and it is what lets a bound relative dimension be
+eliminated in favour of the canonical one. -/
+theorem SmoothOfRelativeDimension.dim_eq [IsIntegral X] [Smooth f] (d : ℕ)
+    [SmoothOfRelativeDimension d f] : dim X = d := by
+  rw [TopologicalSpace.dim_eq_krullDim,
+    SmoothOfRelativeDimension.orderKrullDim_eq_complex (f := f) (d := d)]
+  simp
+
 /-- A smooth integral complex scheme is smooth of relative dimension `dim X`.
 
 This is what makes the relative dimension of a smooth integral complex scheme redundant data: it

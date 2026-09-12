@@ -66,8 +66,7 @@ theorem coheight_genericPoint_eq_zero :
 component class of the generic point: no other point of an integral scheme has coheight zero. -/
 theorem algebraicCycleClassSpan_zero_eq_span_genericPoint :
     algebraicCycleClassSpan X 0 =
-      Submodule.span ℚ {cycleComponentSheafClass X (genericPoint X.left)
-        (d := dim X.left) (coheight_genericPoint_eq_zero X)} := by
+      Submodule.span ℚ {cycleComponentSheafClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X)} := by
   unfold algebraicCycleClassSpan
   refine le_antisymm (iSup_le fun x ↦ iSup_le fun hx ↦ ?_)
     (le_iSup_of_le (genericPoint X.left)
@@ -107,7 +106,7 @@ theorem span_singleton_eq_top_iff_ne_zero [ConnectedSpace (ComplexPoint X)]
 constructed generic-point component class is nonzero. -/
 theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff :
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X ↔
-      cycleComponentSheafClass X (genericPoint X.left) (d := dim X.left)
+      cycleComponentSheafClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) ≠ 0 := by
   let _ : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
   rw [codimensionZeroCycleClassSpan_eq_span_unit, span_rationalCohomologyUnit_eq_top,
@@ -142,10 +141,10 @@ theorem forgetSupport_injective_of_eq_univ (Z : Set (ComplexPoint X))
 built from vanishes: support on the whole analytic space is forgotten injectively, and the
 support-cone presentation is an isomorphism. -/
 theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass
-    (d : ℕ) [SmoothOfRelativeDimension d X.hom] :
-    cycleComponentSheafClass X (genericPoint X.left) (d := d)
+    :
+    cycleComponentSheafClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 ↔
-      cycleComponentSupportedInjectiveClass X (genericPoint X.left) (d := d)
+      cycleComponentSupportedInjectiveClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 := by
   have hZ : cycleComponentSupport X (genericPoint X.left) = Set.univ :=
     cycleComponentSupport_genericPoint_eq_univ X
@@ -157,21 +156,18 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClas
 /-- The generic-point component class vanishes exactly when the normalized coclass section it is
 constructed from vanishes: the normalization comparison is an isomorphism. -/
 theorem cycleComponentSheafClass_genericPoint_eq_zero_iff
-    (d : ℕ) [SmoothOfRelativeDimension d X.hom] :
-    cycleComponentSheafClass X (genericPoint X.left) (d := d)
+    :
+    cycleComponentSheafClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 ↔
       cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
-        (d := d) (coheight_genericPoint_eq_zero X) = 0 := by
-  have hcoclass : (cycleComponentSupportedClassNormalizationIso X (genericPoint X.left)
-        (d := d) (coheight_genericPoint_eq_zero X)).addCommGroupIsoToAddEquiv
-      (cycleComponentSupportedInjectiveClass X (genericPoint X.left)
-        (d := d) (coheight_genericPoint_eq_zero X)) =
+        (d := dim X.left) (coheight_genericPoint_eq_zero X) = 0 := by
+  have hcoclass : (cycleComponentSupportedClassNormalizationIso X (genericPoint X.left) (coheight_genericPoint_eq_zero X)).addCommGroupIsoToAddEquiv
+      (cycleComponentSupportedInjectiveClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X)) =
       cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
-        (d := d) (coheight_genericPoint_eq_zero X) :=
-    cycleComponentSupportedInjectiveClass_normalization X (genericPoint X.left)
-      (d := d) (coheight_genericPoint_eq_zero X)
+        (d := dim X.left) (coheight_genericPoint_eq_zero X) :=
+    cycleComponentSupportedInjectiveClass_normalization X (genericPoint X.left) (coheight_genericPoint_eq_zero X)
   refine Iff.trans
-    (cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass X d) ?_
+    (cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass X) ?_
   rw [← hcoclass]
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
   · rw [h]
@@ -185,7 +181,7 @@ theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_coclass
       (d := dim X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X :=
   (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff X).mpr
-    fun h ↦ hne ((cycleComponentSheafClass_genericPoint_eq_zero_iff X (dim X.left)).mp h)
+    fun h ↦ hne ((cycleComponentSheafClass_genericPoint_eq_zero_iff X).mp h)
 
 /-! ### The codimension-zero Hodge conjecture from the local nonvanishing -/
 

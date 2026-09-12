@@ -42,7 +42,7 @@ namespace Guide.Statement.D5
 def sheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap] (p : ℕ) :
     codimensionCycleSubgroup V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
-  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := d))
+  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over)
 ```
 ```lean -show
 end Guide.Statement.D5
@@ -102,7 +102,7 @@ namespace Guide.Statement.D2
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
-    Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
+    Submodule.span ℚ {cycleComponentSheafClass X x hx}
 ```
 ```lean -show
 end Guide.Statement.D2
@@ -115,7 +115,7 @@ example : @Guide.Statement.D2.algebraicCycleClassSpan = @AlgebraicGeometry.Compl
 
 In Lean the span is the supremum, over all points {lean}`x` and all proofs {lean}`hx` of
 {lean}`coheight x = p`, of the line spanned by
-{lean}`cycleComponentSheafClass X x (d := dim X.left) hx`, where the named argument fixes the
+{lean}`cycleComponentSheafClass X x hx`, where the named argument fixes the
 dimension at {lean}`dim X.left`.
 
 # The proposition

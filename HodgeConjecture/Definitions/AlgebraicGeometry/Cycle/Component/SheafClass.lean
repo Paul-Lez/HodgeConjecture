@@ -51,8 +51,7 @@ def complexSupportInjectiveCohomologySheafIsoRelative
       supportedSingularCohomologySheafIsoRelative
         (TopCat.of (ComplexPoint X)) S S.isClosed n
 
-variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-  (hx : Order.coheight x = p)
+variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
 /-- Degree-`2p` cohomology of global sections supported on the component,
 computed in the fixed ambient injective resolution. -/
@@ -73,8 +72,8 @@ Each of the three arrows is an actual proved isomorphism. -/
 def cycleComponentSupportedClassNormalizationIso :
     CycleComponentSupportedCohomology X x p ≅
       CycleComponentSmoothCoclassSections X x p := by
-  refine cycleComponentSupportExtensionIso X x (d := d) hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := d) hx ≪≫ ?_
+  refine cycleComponentSupportExtensionIso X x (d := dim X.left) hx ≪≫
+    cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := dim X.left) hx ≪≫ ?_
   let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
       (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
         (complexSupportInjectiveCohomologySheafIsoRelative X
@@ -89,13 +88,13 @@ The inverse comes from proved purity and boundary vanishing; no extension datum 
 def cycleComponentExtendSmoothCoclass :
     CycleComponentSmoothCoclassSections X x p →+
       CycleComponentSupportedCohomology X x p :=
-  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).inv.hom
+  (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
 
 /-- The actual globally supported class extending the exact complex-normal
 coclass. The inverse is that of the proved normalization isomorphism. -/
 def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
-  cycleComponentExtendSmoothCoclass X x (d := d) hx
-    (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)
+  cycleComponentExtendSmoothCoclass X x hx
+    (cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx)
 
 /-- The constructed class in the existing support-cone presentation. Its
 comparison includes the proved cone sign required by actual support forgetting. -/
@@ -103,7 +102,7 @@ def cycleComponentSheafSupportedClass :
     RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
     (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
-      (cycleComponentSupportedInjectiveClass X x (d := d) hx)
+      (cycleComponentSupportedInjectiveClass X x hx)
 
 /-- The unconditional ordinary class of an arbitrary integral component.
 This uses the literal inclusion of supported injective sections. -/
@@ -113,13 +112,13 @@ def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
         (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
         (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
-      (cycleComponentSupportedInjectiveClass X x (d := d) hx))
+      (cycleComponentSupportedInjectiveClass X x hx))
 
 include X hx in
-omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- The actual dimension bound needed for the Borel–Moore degree, not an extra input. -/
-theorem cycleComponentSheafClass_codimension_le : p ≤ d := by
-  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := d) x
+omit [IsProjective X.hom] in
+/-- The dimension bound needed for the Borel–Moore degree, not an extra input. -/
+theorem cycleComponentSheafClass_codimension_le : p ≤ dim X.left := by
+  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := dim X.left) x
   rw [hx] at h
   exact_mod_cast h
 

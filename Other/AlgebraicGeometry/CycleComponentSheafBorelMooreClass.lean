@@ -31,44 +31,43 @@ variable (X : Over (Spec (.of ℂ)))
 
 attribute [local instance] cycleComponentSheafClassAnalyticTopology
 
-variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-  (hx : Order.coheight x = p)
+variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
 /-- The normalized fundamental class in ACTUAL ambient chain-sheaf
 Borel–Moore homology, obtained through the constructed orientation shift.
 It is not an element of a supplied replacement homology group. -/
 def cycleComponentSheafBorelMooreFundamentalClass :
-    ComplexAmbientSheafBorelMooreHomology X d (cycleComponentAnalyticClosedSupport X x)
-      (2 * ((d - p : ℕ) : ℤ)) :=
-  (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X d
+    ComplexAmbientSheafBorelMooreHomology X (dim X.left) (cycleComponentAnalyticClosedSupport X x)
+      (2 * ((dim X.left - p : ℕ) : ℤ)) :=
+  (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X (dim X.left)
     (cycleComponentAnalyticClosedSupport X x) p
-    (cycleComponentSheafClass_codimension_le X x (d := d) hx)).symm
-      (cycleComponentSheafSupportedClass X x (d := d) hx)
+    (cycleComponentSheafClass_codimension_le X x hx)).symm
+      (cycleComponentSheafSupportedClass X x hx)
 
 /-- The constructed Alexander–Poincaré map sends the fundamental class to
 the exact normalized supported class, with no comparison hypothesis. -/
 @[simp]
 theorem cycleComponentSheafBorelMooreFundamentalClass_duality :
-    complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X d
+    complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X (dim X.left)
       (cycleComponentAnalyticClosedSupport X x) p
-      (cycleComponentSheafClass_codimension_le X x (d := d) hx)
-      (cycleComponentSheafBorelMooreFundamentalClass X x (d := d) hx) =
-    cycleComponentSheafSupportedClass X x (d := d) hx :=
+      (cycleComponentSheafClass_codimension_le X x hx)
+      (cycleComponentSheafBorelMooreFundamentalClass X x hx) =
+    cycleComponentSheafSupportedClass X x hx :=
   AddEquiv.apply_symm_apply _ _
 
 /-- The ordinary class is also exactly the actual ambient Borel–Moore
 cycle-class route. The ordinary-target comparison is proved, not an input. -/
 theorem cycleComponentSheafBorelMooreFundamentalClass_toFieldCohomology :
-    complexAmbientSheafBorelMooreCycleDegreeToFieldCohomology X d
+    complexAmbientSheafBorelMooreCycleDegreeToFieldCohomology X (dim X.left)
       (cycleComponentAnalyticClosedSupport X x) p
-      (cycleComponentSheafClass_codimension_le X x (d := d) hx)
-      (cycleComponentSheafBorelMooreFundamentalClass X x (d := d) hx) =
-    cycleComponentSheafClass X x (d := d) hx := by
+      (cycleComponentSheafClass_codimension_le X x hx)
+      (cycleComponentSheafBorelMooreFundamentalClass X x hx) =
+    cycleComponentSheafClass X x hx := by
   change forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
-    (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X d
+    (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X (dim X.left)
       (cycleComponentAnalyticClosedSupport X x) p
-      (cycleComponentSheafClass_codimension_le X x (d := d) hx)
-      (cycleComponentSheafBorelMooreFundamentalClass X x (d := d) hx)) = _
+      (cycleComponentSheafClass_codimension_le X x hx)
+      (cycleComponentSheafBorelMooreFundamentalClass X x hx)) = _
   rw [cycleComponentSheafBorelMooreFundamentalClass_duality,
     cycleComponentSheafClass_eq_forgetSupport]
 

@@ -154,7 +154,7 @@ theorem analyticComponentPointPositiveKernelClass_eq_neg_legacy :
 /-- The ACTUAL general component class, with no point branch, has the positive
 standard raw relative-cochain normalization at every point component. -/
 theorem cycleComponentSheafClass_point_raw_positive (hx : Order.coheight x = d) :
-    cycleComponentSheafClass X x (d := d) hx =
+    cycleComponentSheafClass X x hx =
       (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (d : ℤ))).symm
         (HomologicalComplex.homologyMap
           (globalRawToSingularSheafInt X ≫
@@ -207,7 +207,7 @@ theorem cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap] (x : V.scheme)
     (hx : Order.coheight x = d) :
-    cycleComponentSheafClass V.over x (d := d) hx =
+    cycleComponentSheafClass V.over x hx =
       -maximalCodimensionComponentClass V d x hx := by
   rw [cycleComponentSheafClass_point_normalization V.over x d
     (maximalCodimensionCycleComponentPoint V x) hx,
@@ -220,9 +220,9 @@ has the independently proved negative legacy comparison. -/
 theorem sheafCycleClassOnCycles_eq_neg_pointCycleClassOnCycles
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap] :
-    sheafCycleClassOnCycles V d d = -pointCycleClassOnCycles V d := by
+    sheafCycleClassOnCycles V d = -pointCycleClassOnCycles V d := by
   have h : (fun (x : V.scheme) (hx : Order.coheight x = d) =>
-      cycleComponentSheafClass V.over x (d := d) hx) =
+      cycleComponentSheafClass V.over x hx) =
         fun x hx => -maximalCodimensionComponentClass V d x hx := by
     funext x hx
     exact cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass V d x hx
@@ -235,9 +235,9 @@ point cycles; in particular every finite rational combination has this sign. -/
 theorem rationalSheafCycleClassOnCycles_eq_neg_rationalPointCycleClassOnCycles
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap] :
-    rationalSheafCycleClassOnCycles V d d = -rationalPointCycleClassOnCycles V d := by
+    rationalSheafCycleClassOnCycles V d = -rationalPointCycleClassOnCycles V d := by
   refine TensorProduct.AlgebraTensorModule.ext fun q c ↦ ?_
-  change q • sheafCycleClassOnCycles V d d c = -(q • pointCycleClassOnCycles V d c)
+  change q • sheafCycleClassOnCycles V d c = -(q • pointCycleClassOnCycles V d c)
   rw [sheafCycleClassOnCycles_eq_neg_pointCycleClassOnCycles]
   simp only [AddMonoidHom.neg_apply, smul_neg]
 
@@ -249,7 +249,7 @@ theorem cycleComponentSheafClass_closedPoint_positiveKernel
     (hx : IsClosed ({x} : Set V.scheme)) :
     let hcodim := SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
       (f := V.structureMap) (d := d) x hx
-    cycleComponentSheafClass V.over x (d := d) hcodim =
+    cycleComponentSheafClass V.over x hcodim =
       analyticComponentPointPositiveKernelClass V.over x d
         (maximalCodimensionCycleComponentPoint V x) :=
   cycleComponentSheafClass_point_normalization V.over x d
@@ -263,7 +263,7 @@ theorem cycleComponentSheafClass_closedPoint_eq_neg_legacy
     (hx : IsClosed ({x} : Set V.scheme)) :
     let hcodim := SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
       (f := V.structureMap) (d := d) x hx
-    cycleComponentSheafClass V.over x (d := d) hcodim =
+    cycleComponentSheafClass V.over x hcodim =
       -maximalCodimensionComponentClass V d x hcodim :=
   cycleComponentSheafClass_eq_neg_maximalCodimensionComponentClass V d x _
 
