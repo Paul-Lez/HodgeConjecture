@@ -45,44 +45,44 @@ theorem cycleComponentSingularAmbientClosedFiltration_length :
 
 /-- Every closed remainder stays below the proved singular-boundary dimension bound. -/
 theorem cycleComponentSingularClosedFiltration_dimension_lt
-    {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) (k : ℕ) :
-    topologicalKrullDim (cycleComponentSingularClosedFiltration X x k) < (d - p : ℕ) :=
+    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ) :
+    topologicalKrullDim (cycleComponentSingularClosedFiltration X x k) < (dim X.left - p : ℕ) :=
   (IsEmbedding.inclusion (reducedSmoothClosedFiltration_le _ _ k)).isInducing.topologicalKrullDim_le.trans_lt
     (topologicalKrullDim_cycleComponent_singularLocus_lt X x hx)
 
 /-- Every actual smooth layer has strictly smaller dimension than the component. -/
 theorem cycleComponentSingularFiltrationStratum_dimension_lt
-    {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) (k : ℕ) :
-    topologicalKrullDim (cycleComponentSingularFiltrationStratum X x k) < (d - p : ℕ) :=
+    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ) :
+    topologicalKrullDim (cycleComponentSingularFiltrationStratum X x k) < (dim X.left - p : ℕ) :=
   (topologicalKrullDim_reducedClosedSmoothPiece_le _ le_rfl).trans_lt
     (cycleComponentSingularClosedFiltration_dimension_lt X x hx k)
 
 /-- The normal codimension lower bound is realized on actual standard-smooth affine
 neighborhoods of every stratum point, including strata of nonconstant dimension. -/
 theorem cycleComponentSingularFiltrationStratum_exists_affine_normalCodimension_ge
-    {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) (k : ℕ)
+    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)
     (z : cycleComponentSingularFiltrationStratum X x k) :
     ∃ (U : (cycleComponentSingularFiltrationStratum X x k).Opens) (_ : IsAffineOpen U),
-      z ∈ U ∧ ∃ n : ℕ, n < d - p ∧ p + 1 ≤ d - n ∧
+      z ∈ U ∧ ∃ n : ℕ, n < dim X.left - p ∧ p + 1 ≤ dim X.left - n ∧
         RingHom.IsStandardSmoothOfRelativeDimension n
           ((cycleComponentSingularFiltrationStratumι X x k ≫ X.hom).appLE ⊤ U (by simp)).hom := by
   obtain ⟨U, hU, hzU, n, hn, hstd⟩ :=
     Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
       (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom)
-      (cycleComponentSingularFiltrationStratum_dimension_lt X x (d := d) hx k) z
+      (cycleComponentSingularFiltrationStratum_dimension_lt X x hx k) z
   exact ⟨U, hU, hzU, n, hn, by omega, hstd⟩
 
 /-- The dimension bound supplies genuine smooth scheme morphisms of fixed local
 dimension, ready for the actual normal-coordinate construction. -/
 theorem cycleComponentSingularFiltrationStratum_exists_smooth_relativeDimension
-    {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) (k : ℕ)
+    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)
     (z : cycleComponentSingularFiltrationStratum X x k) :
     ∃ (U : (cycleComponentSingularFiltrationStratum X x k).Opens) (_ : IsAffineOpen U),
-      z ∈ U ∧ ∃ n : ℕ, n < d - p ∧ p + 1 ≤ d - n ∧
+      z ∈ U ∧ ∃ n : ℕ, n < dim X.left - p ∧ p + 1 ≤ dim X.left - n ∧
         SmoothOfRelativeDimension n (U.ι ≫ cycleComponentSingularFiltrationStratumι X x k ≫ X.hom) := by
   obtain ⟨U, hU, hzU, n, hn, hcodim, hstd⟩ :=
     cycleComponentSingularFiltrationStratum_exists_affine_normalCodimension_ge X x
-      (d := d) hx k z
+      hx k z
   exact ⟨U, hU, hzU, n, hn, hcodim,
     smoothOfRelativeDimension_affineOpen_of_isStandardSmooth _ hU hstd⟩
 

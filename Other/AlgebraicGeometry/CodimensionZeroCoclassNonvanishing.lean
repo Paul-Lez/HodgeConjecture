@@ -28,26 +28,25 @@ variable (X : Over (Spec (.of ℂ)))
 
 /-- Every component's normalized coclass section is nonzero, as detected on its smooth locus. -/
 theorem cycleComponentSmoothSupportCoclassSection_ne_zero
-    (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    cycleComponentSmoothSupportCoclassSection X x (d := d) hx ≠ 0 := by
+    cycleComponentSmoothSupportCoclassSection X x hx ≠ 0 := by
   apply cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero X x hx
   apply (cycleComponentSmoothClosedLiftCoclassSection_ne_zero_iff X x hx).mpr
-  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x (d := d) hx
+  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
   obtain ⟨z⟩ := cycleComponentSmoothLocusOver_nonempty X x
-  exact smoothClosedSupportCoclassSection_ne_zero _ _ _ (d - p) d z
+  exact smoothClosedSupportCoclassSection_ne_zero _ _ _ (dim X.left - p) (dim X.left) z
 
 /-- The generic component's normalized coclass section is nonzero in every dimension. -/
 theorem cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero
-    (d : ℕ) [SmoothOfRelativeDimension d X.hom] :
-    cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
-      (d := d) (coheight_genericPoint_eq_zero X) ≠ 0 :=
+    :
+    cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
   cycleComponentSmoothSupportCoclassSection_ne_zero X _ (coheight_genericPoint_eq_zero X)
 
 /-- The constructed ordinary cycle class of the whole variety is nonzero in every dimension. -/
 theorem cycleComponentSheafClass_genericPoint_ne_zero :
     cycleComponentSheafClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
-  fun h ↦ cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X (dim X.left)
+  fun h ↦ cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X
     ((cycleComponentSheafClass_genericPoint_eq_zero_iff X).mp h)
 
 /-- The constructed codimension-zero span agrees with the span of the cohomological unit. -/
@@ -60,12 +59,12 @@ theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan :
 theorem algebraicCycleClassSpan_zero_eq_top :
     algebraicCycleClassSpan X 0 = ⊤ :=
   algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero X
-    (cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X (dim X.left))
+    (cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X)
 
 /-- The codimension-zero Hodge conjecture in every dimension. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan :
     Hdg^0(ℚ; X) = algebraicCycleClassSpan X 0 :=
   rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero X
-    (cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X (dim X.left))
+    (cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X)
 
 end AlgebraicGeometry.ComplexPoint

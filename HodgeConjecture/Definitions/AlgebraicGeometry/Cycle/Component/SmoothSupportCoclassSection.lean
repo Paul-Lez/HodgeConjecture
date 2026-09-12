@@ -40,22 +40,22 @@ section Component
 
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-  {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
+  {p : ℕ} (hx : Order.coheight x = p)
 
 include hx in
 /-- The proved dimension of the smooth locus, bundled over `Spec ℂ`. -/
 theorem cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension :
-    SmoothOfRelativeDimension (d - p) (cycleComponentSmoothLocusOver X x).hom :=
-  cycleComponentSmoothLocus_smoothOfRelativeDimension X x (d := d) hx
+    SmoothOfRelativeDimension (dim X.left - p) (cycleComponentSmoothLocusOver X x).hom :=
+  cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
 
 include X hx in
-omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- The codimension arithmetic is proved from the actual coheight bound. -/
+omit [IsProjective X.hom] in
+/-- The codimension arithmetic is proved from the coheight bound. -/
 theorem cycleComponentSmoothClosedLift_codimension :
-    d - (d - p) = p := by
-  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := d) x
+    dim X.left - (dim X.left - p) = p := by
+  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := dim X.left) x
   rw [hx] at h
-  have hpd : p ≤ d := by exact_mod_cast h
+  have hpd : p ≤ dim X.left := by exact_mod_cast h
   omega
 
 /-- The normalized section in the auxiliary algebraic ambient open, in the proved
@@ -65,12 +65,12 @@ def cycleComponentSmoothClosedLiftCoclassSection :
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (2 * p)).obj.obj (op ⊤) := by
-  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x (d := d) hx
-  have hdeg := cycleComponentSmoothClosedLift_codimension X x (d := d) hx
+  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+  have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
   exact hdeg ▸ smoothClosedSupportCoclassSection
     (cycleComponentSmoothLocusAmbientOpenOver X x)
     (cycleComponentSmoothLocusOver X x)
-    (cycleComponentSmoothLocusClosedLiftOver X x) (d - p) d
+    (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)
 
 /-- The actual analytic open-embedding map back to the original ambient space. -/
 def cycleComponentSmoothClosedLiftAmbientMap :
@@ -113,7 +113,7 @@ def cycleComponentSmoothSupportCoclassSection :
     (cycleComponentSmoothClosedLiftAmbientMap_support X x)
     (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
     (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
-    (cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx)
+    (cycleComponentSmoothClosedLiftCoclassSection X x hx)
 
 end Component
 

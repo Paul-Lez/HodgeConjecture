@@ -159,12 +159,10 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff
     :
     cycleComponentSheafClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 ↔
-      cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
-        (d := dim X.left) (coheight_genericPoint_eq_zero X) = 0 := by
+      cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) = 0 := by
   have hcoclass : (cycleComponentSupportedClassNormalizationIso X (genericPoint X.left) (coheight_genericPoint_eq_zero X)).addCommGroupIsoToAddEquiv
       (cycleComponentSupportedInjectiveClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X)) =
-      cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
-        (d := dim X.left) (coheight_genericPoint_eq_zero X) :=
+      cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) :=
     cycleComponentSupportedInjectiveClass_normalization X (genericPoint X.left) (coheight_genericPoint_eq_zero X)
   refine Iff.trans
     (cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass X) ?_
@@ -177,8 +175,7 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff
 /-- The comparison of the two codimension-zero span constructions, reduced to nonvanishing of the
 one normalized coclass section the component class is built from. -/
 theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_coclassSection_ne_zero
-    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
-      (d := dim X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
+    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X :=
   (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff X).mpr
     fun h ↦ hne ((cycleComponentSheafClass_genericPoint_eq_zero_iff X).mp h)
@@ -188,8 +185,7 @@ theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_coclass
 /-- The constructed codimension-zero algebraic cycle-class span is all of degree-zero rational
 cohomology when the normalized coclass section is nonzero. -/
 theorem algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero
-    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
-      (d := dim X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
+    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
     algebraicCycleClassSpan X 0 = ⊤ := by
   let hV : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
   exact algebraicCycleClassSpan_zero_eq_top_of_connected X hV
@@ -198,8 +194,7 @@ theorem algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero
 /-- The degree-zero Hodge classes are exactly the algebraic cycle-class span when the normalized
 coclass section is nonzero. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero
-    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
-      (d := dim X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
+    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
     Hdg^0(ℚ; X) = algebraicCycleClassSpan X 0 := by
   let hV : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
   exact rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected X hV
@@ -208,8 +203,7 @@ theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_n
 /-- The Hodge-conjecture inclusion in codimension zero follows from nonvanishing of the normalized
 coclass section. -/
 theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_coclassSection_ne_zero
-    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
-      (d := dim X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
+    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
     Hdg^0(ℚ; X) ≤ algebraicCycleClassSpan X 0 := by
   rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero X hne]
 
@@ -217,8 +211,7 @@ theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_coclassSection_n
 complex dimension zero, given nonvanishing of the normalized coclass section. -/
 theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero_of_coclassSection_ne_zero
     (hd : dim X.left = 0)
-    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
-      (d := dim X.left) (coheight_genericPoint_eq_zero X) ≠ 0) (p : ℕ) :
+    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) (p : ℕ) :
     Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p := by
   let _ : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
   exact rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero X hd

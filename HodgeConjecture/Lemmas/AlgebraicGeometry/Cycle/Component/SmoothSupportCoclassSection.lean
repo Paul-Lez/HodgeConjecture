@@ -36,7 +36,7 @@ section Component
 
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-  {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
+  {p : ℕ} (hx : Order.coheight x = p)
 
 /-- Restriction to each actual image neighborhood agrees with transport of the
 constructed auxiliary normalized section. No ambient section comparison is supplied. -/
@@ -46,7 +46,7 @@ theorem cycleComponentSmoothSupportCoclassSection_restrict
       cycleComponentSmoothSupportAmbientOpen X x) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * p)).obj.map (homOfLE hV).op
-        (cycleComponentSmoothSupportCoclassSection X x (d := d) hx) =
+        (cycleComponentSmoothSupportCoclassSection X x hx) =
     (supportRelativeCohomologySheafOpenIso (cycleComponentSmoothClosedLiftAmbientMap X x)
       (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
       (cycleComponentSupport X x)
@@ -56,7 +56,7 @@ theorem cycleComponentSmoothSupportCoclassSection_restrict
         (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
         (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
         (2 * p)).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op
-        (cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx)) :=
+        (cycleComponentSmoothClosedLiftCoclassSection X x hx)) :=
   supportRelativeCohomologySectionOnOpen_restrict
     (cycleComponentSmoothClosedLiftAmbientMap X x)
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
@@ -65,7 +65,7 @@ theorem cycleComponentSmoothSupportCoclassSection_restrict
     (cycleComponentSmoothClosedLiftAmbientMap_support X x)
     (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
     (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
-    (cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx) V hV
+    (cycleComponentSmoothClosedLiftCoclassSection X x hx) V hV
 
 end Component
 

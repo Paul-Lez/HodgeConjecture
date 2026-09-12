@@ -55,7 +55,7 @@ theorem cycleComponentSupportedClassNormalizationIso_hom :
     (cycleComponentSupportedClassNormalizationIso X x hx).hom =
       HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x)
         (2 * (p : ℤ)) ≫
-      (cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := dim X.left) hx).hom ≫
+      (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom ≫
       (complexSupportInjectiveCohomologySheafIsoRelative X
         (cycleComponentAnalyticClosedSupport X x) (2 * p)).hom.hom.app
           (op (cycleComponentSmoothSupportAmbientOpen X x)) := rfl
@@ -128,20 +128,21 @@ theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
         (2 * (d : ℤ)) (cycleComponentSmoothSupportAmbientOpen X x)
         (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x)
           (2 * (d : ℤ)) (analyticComponentPointSupportedInjectiveCoclass X x d z))) =
-      cycleComponentSmoothSupportCoclassSection X x (d := d) hx := by
+      cycleComponentSmoothSupportCoclassSection X x hx := by
+  obtain rfl : dim X.left = d := SmoothOfRelativeDimension.dim_eq X.hom d
   have h := ConcreteCategory.congr_hom
     (complexSupportInjectiveCohomologySheafIsoRelative_restriction_section X
-      (cycleComponentAnalyticClosedSupport X x) (2 * d)
+      (cycleComponentAnalyticClosedSupport X x) (2 * dim X.left)
       (homOfLE (show cycleComponentSmoothSupportAmbientOpen X x ≤ ⊤ from le_top)))
-        (analyticComponentPointSupportedInjectiveCoclass X x d z)
+        (analyticComponentPointSupportedInjectiveCoclass X x (dim X.left) z)
   refine h.trans ?_
   change (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-      (cycleComponentSupport X x) (2 * d)).obj.map (homOfLE le_top).op
+      (cycleComponentSupport X x) (2 * dim X.left)).obj.map (homOfLE le_top).op
     ((supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
-      (cycleComponentSupport X x) (2 * d)).app (op ⊤)
+      (cycleComponentSupport X x) (2 * dim X.left)).app (op ⊤)
       (complexSupportInjectiveSectionCohomologyEquiv X
-        (cycleComponentAnalyticClosedSupport X x) ⊤ (2 * d)
-        (analyticComponentPointSupportedInjectiveCoclass X x d z))) = _
+        (cycleComponentAnalyticClosedSupport X x) ⊤ (2 * dim X.left)
+        (analyticComponentPointSupportedInjectiveCoclass X x (dim X.left) z))) = _
   rw [analyticComponentPointSupportedInjectiveCoclass_relative,
     analyticComponentPointRelativeCoclass_toSheaf]
   exact cycleComponentSmoothSupportCoclassSection_global_point_normalization X x hx z

@@ -35,12 +35,12 @@ theorem range_cycleComponentSmoothLocusClosedLift :
   rw [← range_cycleComponentι X.left x]
   exact range_closedImmersionSourceOpenLift _ _
 
-variable {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+variable {p : ℕ}
 
 /-- The smooth locus has exactly the constant relative dimension of the integral
 component, not just a locally chosen dimension. -/
 theorem cycleComponentSmoothLocus_smoothOfRelativeDimension (hx : Order.coheight x = p) :
-    SmoothOfRelativeDimension (d - p)
+    SmoothOfRelativeDimension (dim X.left - p)
       ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫ cycleComponentι X.left x ≫ X.hom) := by
   let A := (cycleComponentι X.left x ≫ X.hom).smoothLocus
   let g := A.ι ≫ cycleComponentι X.left x ≫ X.hom
@@ -55,13 +55,13 @@ theorem cycleComponentSmoothLocus_smoothOfRelativeDimension (hx : Order.coheight
       ext a
       exact ⟨fun h => Subtype.ext h, fun h => congrArg Subtype.val h⟩
     exact he ▸ hzClosed.preimage A.ι.continuous
-  have hmEq : m = d - p := by
+  have hmEq : m = dim X.left - p := by
     exact_mod_cast calc
       (m : ℕ∞) = Order.coheight zA :=
         (SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
           (f := g) (d := m) zA hzAClosed).symm
       _ = Order.coheight z := (coheight_eq_of_isOpenImmersion (x := zA) A.ι).symm
-      _ = d - p := cycleComponent_closedPoint_coheight_eq_sub X x z hx hzClosed
+      _ = dim X.left - p := cycleComponent_closedPoint_coheight_eq_sub X x z hx hzClosed
   subst m
   exact hm
 

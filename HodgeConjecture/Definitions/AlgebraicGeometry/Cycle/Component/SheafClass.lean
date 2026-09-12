@@ -72,8 +72,8 @@ Each of the three arrows is an actual proved isomorphism. -/
 def cycleComponentSupportedClassNormalizationIso :
     CycleComponentSupportedCohomology X x p ≅
       CycleComponentSmoothCoclassSections X x p := by
-  refine cycleComponentSupportExtensionIso X x (d := dim X.left) hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := dim X.left) hx ≪≫ ?_
+  refine cycleComponentSupportExtensionIso X x hx ≪≫
+    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫ ?_
   let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
       (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
         (complexSupportInjectiveCohomologySheafIsoRelative X
@@ -94,7 +94,7 @@ def cycleComponentExtendSmoothCoclass :
 coclass. The inverse is that of the proved normalization isomorphism. -/
 def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
   cycleComponentExtendSmoothCoclass X x hx
-    (cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx)
+    (cycleComponentSmoothSupportCoclassSection X x hx)
 
 /-- The constructed class in the existing support-cone presentation. Its
 comparison includes the proved cone sign required by actual support forgetting. -/

@@ -30,12 +30,12 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-  {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) (k : ℕ)
+  {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)
 
 local instance singularFiltrationLocalSupportVanishingAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
-include d hx in
+include hx in
 /-- Every point in the actual `k`th layer has cofinal actual ambient neighborhoods
 whose relative cohomology below degree `2(p+1)` vanishes. -/
 theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
@@ -56,7 +56,7 @@ theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
   let i : Y ⟶ OX := cycleComponentSingularStratumClosedLiftOver X x k
   obtain ⟨A, hA, hzA, m, hm, hcodim, hdim⟩ :=
     cycleComponentSingularFiltrationStratum_exists_smooth_relativeDimension
-      X x (d := d) hx k z.underlying
+      X x hx k z.underlying
   let : SmoothOfRelativeDimension m (openScheme Y A).hom := hdim
   let zA := asOpenPoint Y A z hzA
   let f := Point.map (openInclusion X O)
@@ -77,17 +77,18 @@ theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
   have hzV' : f (Point.map (openInclusion Y A ≫ i) zA) ∈ V' := by
     rw [he]
     exact ⟨hyV, hyNext⟩
-  have : SmoothOfRelativeDimension d OX.hom := by
-    change SmoothOfRelativeDimension d (O.ι ≫ X.hom)
-    simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 d O.ι X.hom
+  have : SmoothOfRelativeDimension (dim X.left) OX.hom := by
+    change SmoothOfRelativeDimension (dim X.left) (O.ι ≫ X.hom)
+    simpa only [Nat.zero_add] using
+      smoothOfRelativeDimension_comp 0 (dim X.left) O.ι X.hom
   obtain ⟨W, hWV', hzW, hW⟩ := exists_smoothClosedSourceOpenImageNeighborhood
-    OX Y i m d f (isOpenEmbedding_map_open X O)
+    OX Y i m (dim X.left) f (isOpenEmbedding_map_open X O)
     (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X))
     hS A zA V' hzV'
   exact ⟨W, hWV'.trans inf_le_left, hWV'.trans inf_le_right, he ▸ hzW,
     fun n hn ↦ hW n (by omega)⟩
 
-include d hx in
+include hx in
 /-- The original ambient supported injective complex has cofinally vanishing section
 cohomology below `2(p+1)` at every point outside the next closed support. -/
 theorem cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
@@ -108,7 +109,7 @@ theorem cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
   · obtain ⟨q, rfl⟩ := Int.eq_ofNat_of_zero_le (le_of_not_gt hneg)
     by_cases hy : y ∈ cycleComponentSingularAnalyticClosedFiltration X x k
     · obtain ⟨W, hWV, _, hyW, hW⟩ :=
-        cycleComponentSingularLayer_exists_relativeCohomology_vanishing X x (d := d) hx k
+        cycleComponentSingularLayer_exists_relativeCohomology_vanishing X x hx k
           y hy hyNext V hyV
       refine ⟨W, hWV, hyW, ?_⟩
       let : Subsingleton (RelativeCohomology ℚ
@@ -131,7 +132,7 @@ theorem cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
         (cycleComponentSingularAnalyticClosedFiltration X x k).compl W
         ((ambientRationalInjectiveComplex X).X (q : ℤ)) inf_le_right
 
-include d hx in
+include hx in
 /-- The exact open-layer section complex needed by finite support localization has
 zero cohomology below `2(p+1)`. The resolution remains the one on the original
 projective ambient variety; no injective resolution on a projective auxiliary open
@@ -150,6 +151,6 @@ theorem cycleComponentSingularLayerSectionCohomology_isZero_of_lt
       ((ambientRationalInjectiveComplex X).X j)
   · exact fun j hj y hy V hyV ↦
       cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
-        X x (d := d) hx k j (hj.trans_lt hn) y hy V hyV
+        X x hx k j (hj.trans_lt hn) y hy V hyV
 
 end AlgebraicGeometry.ComplexPoint

@@ -23,7 +23,7 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-  {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
+  {p : ℕ} (hx : Order.coheight x = p)
 
 attribute [local instance] cycleComponentSmoothSupportPurityAnalyticTopology
 
@@ -39,7 +39,7 @@ theorem cycleComponentSmoothRestrictedInjectiveComplex_isFlasque (n : ℤ) :
     (TopCat.of (ComplexPoint X)) (cycleComponentSmoothSupportAmbientOpen X x)
       ((complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)).X n)
 
-include d hx in
+include hx in
 /-- The actual lower cohomological bound along the smooth locus. -/
 theorem cycleComponentSmoothRestrictedInjective_isGE :
     (cycleComponentSmoothRestrictedInjectiveComplex X x).IsGE (2 * (p : ℤ)) := by
@@ -47,9 +47,9 @@ theorem cycleComponentSmoothRestrictedInjective_isGE :
   intro n hn
   rw [HomologicalComplex.exactAt_iff_isZero_homology]
   exact cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
-    X x (d := d) hx n (ne_of_lt hn)
+    X x hx n (ne_of_lt hn)
 
-include d hx in
+include hx in
 /-- The actual upper cohomological bound, hence concentration rather than just lower purity. -/
 theorem cycleComponentSmoothRestrictedInjective_isLE :
     (cycleComponentSmoothRestrictedInjectiveComplex X x).IsLE (2 * (p : ℤ)) := by
@@ -57,12 +57,12 @@ theorem cycleComponentSmoothRestrictedInjective_isLE :
   intro n hn
   rw [HomologicalComplex.exactAt_iff_isZero_homology]
   exact cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
-    X x (d := d) hx n (ne_of_gt hn)
+    X x hx n (ne_of_gt hn)
 
 /-- Its forward map displays the actual open-section identification, canonical
 sheafification comparison on the open, and exact open-restriction homology comparison. -/
 @[simp] theorem cycleComponentSmoothSupportLowestSectionCohomologyIso_hom :
-    (cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := d) hx).hom =
+    (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom =
       HomologicalComplex.homologyMap
         (TopCat.Sheaf.openRestrictionTopSectionComplexIso (TopCat.of (ComplexPoint X))
           (cycleComponentSmoothSupportAmbientOpen X x)
@@ -76,7 +76,7 @@ sheafification comparison on the open, and exact open-restriction homology compa
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
         (2 * (p : ℤ))).hom := rfl
 
-include d hx in
+include hx in
 /-- Actual supported section cohomology on the boundary complement vanishes below `2p`.
 Higher-degree global vanishing is not inferred from sheaf concentration. -/
 theorem cycleComponentSmoothSupportSectionCohomology_isZero_of_lt
@@ -92,6 +92,6 @@ theorem cycleComponentSmoothSupportSectionCohomology_isZero_of_lt
         ((ambientRationalInjectiveComplex X).X j)
   · intro j hj y hy V hyV
     exact cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
-      X x (d := d) hx j (ne_of_lt (hj.trans_lt hn)) y hy V hyV
+      X x hx j (ne_of_lt (hj.trans_lt hn)) y hy V hyV
 
 end AlgebraicGeometry.ComplexPoint

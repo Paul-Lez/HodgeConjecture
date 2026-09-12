@@ -51,7 +51,7 @@ theorem cycleComponentExtendSmoothCoclass_unique
 theorem cycleComponentSupportedInjectiveClass_normalization :
     (cycleComponentSupportedClassNormalizationIso X x hx).hom
       (cycleComponentSupportedInjectiveClass X x hx) =
-    cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx :=
+    cycleComponentSmoothSupportCoclassSection X x hx :=
   cycleComponentExtendSmoothCoclass_normalization X x hx _
 
 /-- The normalized global extension is unique, by injectivity of the actual
@@ -59,7 +59,7 @@ restriction/purity comparison. This is a theorem, not a supplied existence input
 theorem cycleComponentSupportedInjectiveClass_unique
     (a : CycleComponentSupportedCohomology X x p)
     (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a =
-      cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx) :
+      cycleComponentSmoothSupportCoclassSection X x hx) :
     a = cycleComponentSupportedInjectiveClass X x hx :=
   cycleComponentExtendSmoothCoclass_unique X x hx _ a ha
 
