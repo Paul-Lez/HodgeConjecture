@@ -1,0 +1,37 @@
+% Content shared by the web and print versions.
+%
+% `generated.tex` is produced by `lake env lean --run scripts/BlueprintGraph.lean`;
+% do not edit it by hand. It contains one node per definition that the statement
+% of the conjecture transitively depends on, with the `\uses` edges extracted from
+% the compiled declarations. This file only adds the introduction.
+
+\chapter*{About this document}
+
+This blueprint is generated from the Lean sources of the
+\href{https://github.com/Paul-Lez/HodgeConjecture}{HodgeConjecture} repository.
+Its purpose is the \href{dep_graph_document.html}{dependency graph}: a node for the
+conjecture and for every definition (structure, class, inductive type, \texttt{def} or
+\texttt{abbrev}) that its statement transitively depends on, and an edge from a node to each
+node used in its type or body. Edges are computed from the compiled declarations, passing
+through the lemmas, instances and auxiliary declarations that are not shown as nodes, so an
+edge means that the source cannot be stated without the target. The edges are then transitively
+reduced, so an edge implied by a longer path is left out. Mathlib declarations are not shown; a
+node with no outgoing edges depends on Mathlib only.
+
+Chapters follow the layout of the repository (\texttt{Statement}, then the
+\texttt{Definitions}, \texttt{Lemmas} and \texttt{Mathlib} folders) and sections follow its
+files, listed in import order. The text of each node is the docstring of the corresponding
+Lean declaration, followed by a link to its source. Every node is formalised, so all of them
+are marked as such; the conjecture itself is stated but, naturally, not proved.
+
+The prose explanation of the statement is the
+\href{https://paul-lez.github.io/HodgeConjecture/}{formalisation guide}. To regenerate this
+document after changing the Lean sources, run
+\begin{verbatim}
+lake build HodgeConjecture
+lake env lean --run scripts/BlueprintGraph.lean
+leanblueprint web
+\end{verbatim}
+from the root of the repository.
+
+\input{generated}

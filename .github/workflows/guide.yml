@@ -28,6 +28,30 @@ jobs:
       - name: Build the Verso guide
         if: github.event_name != 'pull_request'
         run: lake exe hodge-guide
+      - name: Regenerate the blueprint dependency graph
+        if: github.event_name != 'pull_request'
+        run: |
+          lake build ImportGraph
+          lake env lean --run scripts/BlueprintGraph.lean
+          if ! git diff --quiet -- blueprint/src/generated.tex; then
+            echo "::warning file=blueprint/src/generated.tex::blueprint/src/generated.tex is out of date; run 'lake env lean --run scripts/BlueprintGraph.lean' and commit the result."
+          fi
+      - uses: actions/setup-python@v5
+        if: github.event_name != 'pull_request'
+        with:
+          python-version: '3.12'
+      - name: Install the blueprint tooling
+        if: github.event_name != 'pull_request'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends graphviz
+          pip install leanblueprint
+      - name: Build the blueprint
+        if: github.event_name != 'pull_request'
+        run: leanblueprint web
+      - name: Add the blueprint to the site
+        if: github.event_name != 'pull_request'
+        run: cp -r blueprint/web _out/html-multi/blueprint
       - uses: actions/configure-pages@v5
         if: github.event_name != 'pull_request'
       - uses: actions/upload-pages-artifact@v3
