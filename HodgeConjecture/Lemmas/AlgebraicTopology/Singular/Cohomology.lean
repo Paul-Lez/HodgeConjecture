@@ -162,10 +162,7 @@ lemma relativeChainShortComplex_shortExact (R : Type u) [Field R] (X : TopPair.{
         infer_instance
       epi_g := by
         dsimp [relativeChainShortComplex, relativeChainProjection]
-        constructor
-        intro Z g h w
-        exact Cofork.IsColimit.hom_ext
-          (cokernelIsCokernel ((chainPairFunctor R).obj X).hom) w }
+        exact coequalizer.π_epi }
 
 /-- Forgetting that a class is relative and then pairing it with an absolute homology class is
 the same as projecting the homology class to relative homology and pairing there. -/
