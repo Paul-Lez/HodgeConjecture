@@ -96,7 +96,6 @@ public import Other.AlgebraicGeometry.ProjectiveAnalytificationSecondCountable
 public import Other.AlgebraicGeometry.ProjectiveCoordinatePoint
 public import Other.AlgebraicGeometry.ProjectiveSingularCoefficientBaseChange
 public import Other.AlgebraicGeometry.RationalCohomologyZero
-public import Other.AlgebraicGeometry.SheafBorelMoore
 public import Other.AlgebraicGeometry.SheafBorelMoorePointClass
 public import Other.AlgebraicGeometry.SheafCycleClass
 public import Other.AlgebraicGeometry.SingularCycleClass
@@ -194,5 +193,4 @@ public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
 public import Other.CommutativeAlgebra.RegularLocalQuotientKernel
 public import Other.Geometry.Manifold.Orientation
-public import Other.Mathlib.Algebra.Module.LinearMap.Rat
 public import Other.Topology.Category.TopCat.Basic
