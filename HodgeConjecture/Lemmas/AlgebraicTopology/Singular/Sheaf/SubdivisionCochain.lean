@@ -490,16 +490,6 @@ section HereditarilyParacompact
 
 variable {R : Type u} [Field R] {X : TopCat.{u}}
 
-/-- Every positive sheaf-cohomology group of a term of the singular-cochain resolution vanishes
-on a hereditarily paracompact Hausdorff space. -/
-lemma singularCochainSheaf_cohomology_succ_eq_zero
-    [T2Space X] [∀ V : Opens X, ParacompactSpace V]
-    (n q : ℕ) (x : Abelian.Ext
-      (TopCat.Sheaf.IsFlasque.globalSectionsSource (X := X))
-      (singularCochainSheaf R X n) (q + 1)) :
-    x = 0 :=
-  TopCat.Sheaf.IsFlasque.cohomology_succ_eq_zero
-    (singularCochainSheaf R X n) q x
 
 /-- On a paracompact Hausdorff space, ordinary cochains map quasi-isomorphically to global
 sections of the double-plus singular-cochain complex. -/

@@ -827,19 +827,6 @@ def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ (DeRhamHypercohomology X n) :=
   hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
 
-/-- In degree filtration `F⁰`, the filtered and full de Rham hypercohomology groups are
-canonically equivalent. -/
-def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    FilteredDeRhamHypercohomology X 0 n ≃
-      DeRhamHypercohomology X n := by
-  letI : IsIso (hodgeFilteredDeRhamInclusion X 0) := by
-    unfold hodgeFilteredDeRhamInclusion hodgeFilteredDeRhamComplex
-    infer_instance
-  exact Localization.SmallShiftedHom.postcompEquiv
-    (hodgeFilteredDeRhamInclusion X 0)
-    (by
-      change QuasiIso (hodgeFilteredDeRhamInclusion X 0)
-      infer_instance)
 
 /-- Cohomology classes with coefficients in `K` whose de Rham images lie in `F^p ⊓ conj F^p`
 in degree `2p`. When conjugation fixes the image of `K` in `ℂ`, see

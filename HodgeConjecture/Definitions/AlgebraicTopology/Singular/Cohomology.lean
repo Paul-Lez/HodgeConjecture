@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -/
 module
+public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation -- shake: keep
 
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic -- shake: keep
 public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
 public import Mathlib.Algebra.Algebra.Rat
 public import Mathlib.Algebra.Category.ModuleCat.Abelian

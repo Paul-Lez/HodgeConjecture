@@ -423,22 +423,7 @@ lemma coverSmallRationalChainHomotopyEquiv_of_openCover_hom
       coverSmallRationalSingularChainInclusion X U :=
   (coverSmallRationalChainApproximation_of_openCover X U hUopen hUcover).choose_spec
 
-/-- Rational small-chain inclusion induces an isomorphism on homology in every degree. -/
-def coverSmallRationalSingularHomologyIso_of_openCover
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) (n : ℕ) :
-    (CoverSmallRationalSingularChainComplex X U).homology n ≅
-      ((TopCat.toSSet.obj X).chainComplex (ModuleCat.of ℚ ℚ)).homology n :=
-  (coverSmallRationalChainHomotopyEquiv_of_openCover X U hUopen hUcover).toHomologyIso n
 
-lemma coverSmallRationalSingularHomologyIso_of_openCover_hom
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) (n : ℕ) :
-    (coverSmallRationalSingularHomologyIso_of_openCover X U hUopen hUcover n).hom =
-      HomologicalComplex.homologyMap
-        (coverSmallRationalSingularChainInclusion X U) n := by
-  dsimp [coverSmallRationalSingularHomologyIso_of_openCover]
-  change HomologicalComplex.homologyMap
-      (coverSmallRationalChainHomotopyEquiv_of_openCover X U hUopen hUcover).hom n = _
-  rw [coverSmallRationalChainHomotopyEquiv_of_openCover_hom]
 
 end RationalSmallChains
 

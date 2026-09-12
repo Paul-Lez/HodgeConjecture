@@ -38,6 +38,14 @@ namespace AlgebraicGeometry
 
 variable (X : Over (Spec ↧ℂ))
 
+/-- The inclusion of a cycle component on complex points, bundled as a continuous map. -/
+noncomputable def cycleComponentContinuousMap
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
+    @ContinuousMap
+      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
+      (ComplexPoint X) Point.analyticTopology Point.analyticTopology :=
+  Point.continuousMap (Over.homMk (cycleComponentι X.left x) rfl)
+
 /-- The underlying closed support of an algebraic cycle: the union of the closures of all generic
 points having nonzero coefficient. -/
 def algebraicCycleSupport {R : Type*} [Zero R] (X : Scheme)
