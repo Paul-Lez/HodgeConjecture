@@ -44,10 +44,7 @@ lemma chartModelEmbedding_range_eq_target :
   rw [← Set.image_univ, ← chartModelEmbedding_source d e x hx]
   exact (chartModelEmbedding d e x hx).image_source_eq_target
 
-lemma chartModelTarget_isOpen : IsOpen (chartModelEmbedding d e x hx).target :=
-  (chartModelEmbedding d e x hx).open_target
-
-lemma chartModelTarget_mem : x ∈ (chartModelEmbedding d e x hx).target := by
+lemma chartModelEmbedding_mem_target : x ∈ (chartModelEmbedding d e x hx).target := by
   have hzero : chartModelEmbedding d e x hx 0 ∈ (chartModelEmbedding d e x hx).target :=
     (chartModelEmbedding d e x hx).map_source
       (by rw [chartModelEmbedding_source]; trivial)
@@ -130,8 +127,8 @@ theorem chartModelEmbedding_relativeHomologyMap_bijective :
     exact (ConcreteCategory.isIso_iff_bijective ((relativeHomologyFunctor ℚ (2 * d)).map
       (standardComplexChartTargetPairIso d e x hx).hom)).mp inferInstance
   have hexcision := neighborhoodPointComplement_relativeHomologyMap_bijective
-    (chartModelEmbedding d e x hx).target x (chartModelTarget_isOpen d e x hx)
-      (chartModelTarget_mem d e x hx) (2 * d)
+    (chartModelEmbedding d e x hx).target x (chartModelEmbedding d e x hx).open_target
+      (chartModelEmbedding_mem_target d e x hx) (2 * d)
   rw [← standardComplexChartTargetPairIso_hom_comp_neighborhoodMap d e x hx,
     relativeHomologyMap_comp]
   exact hexcision.comp htarget

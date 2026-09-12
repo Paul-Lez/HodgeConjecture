@@ -187,7 +187,8 @@ lemma rationalizeSimplicialChainComponent_neg
 /-- The integral-to-rational coefficient map commutes with the simplicial differential. -/
 lemma integralToRationalChainComponent_comm_d (X : SSet.{0}) (n : ℕ) :
     integralToRationalChainComponent X (n + 1) ≫
-        (forget₂ (ModuleCat ℚ) AddCommGrpCat).map ((RationalSimplicialChainComplex X).d (n + 1) n) =
+        (forget₂ (ModuleCat ℚ) AddCommGrpCat).map
+          ((RationalSimplicialChainComplex X).d (n + 1) n) =
       (X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n ≫
         integralToRationalChainComponent X n := by
   refine (X.isColimitChainComplexXCofan (AddCommGrpCat.of ℤ) (n + 1)).hom_ext fun x ↦ ?_

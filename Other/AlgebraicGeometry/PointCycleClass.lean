@@ -38,82 +38,88 @@ open CategoryTheory Order TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-set_option maxRecDepth 4096 in
+variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
+  [SmoothOfRelativeDimension d V.structureMap]
+
 /-- The fully constructed normalized-interface ordinary point class agrees exactly with the
 previous point coclass construction. -/
 @[simp] lemma maximalCodimensionComplexOrientedComponentClassData_ordinary
-    (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
-    (hx : coheight x = V.dimension) :
-    (maximalCodimensionComplexOrientedComponentClassData V x hx).ordinaryFundamentalClass =
-      maximalCodimensionComponentClass V x hx :=
-  rfl
+    (x : V.scheme) (hx : coheight x = d) :
+    (maximalCodimensionComplexOrientedComponentClassData V d x hx).ordinaryFundamentalClass =
+      maximalCodimensionComponentClass V d x hx := by
+  simp only [ComplexOrientedRationalCycleComponentClassData.ordinaryFundamentalClass,
+    ComplexOrientedRationalCycleComponentClassData.constantSheafSupportedFundamentalClass,
+    maximalCodimensionComplexOrientedComponentClassData_supported,
+    maximalCodimensionComponentClass,
+    AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliaryOrdinaryClass,
+    AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliarySupportedClass,
+    auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension_supported]
+  rw [AuxiliaryRationalCycleComponentBorelMooreComparisonData.supportedComparison_eq
+    (maximalCodimensionComplexOrientedComponentClassData V d x hx).toAuxiliaryComparisonData
+    (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx)]
 
 /-- The unconditional additive cycle-class map in maximal codimension. It takes only the
 geometric variety as input and uses its constructed complex-oriented point classes. -/
-def pointCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) :
-    codimensionCycleSubgroup V.scheme V.dimension →+
-      H^(2 * (V.dimension : ℤ))(V.over; ℚ) :=
-  cycleClassOnCyclesOfComponents (maximalCodimensionComponentClass V)
+def pointCycleClassOnCycles :
+    codimensionCycleSubgroup V.scheme d →+
+      H^(2 * (d : ℤ))(V.over; ℚ) :=
+  cycleClassOnCyclesOfComponents (maximalCodimensionComponentClass V d)
 
 /-- An individual point with multiplicity `n` has exactly `n` times its normalized coclass. -/
 @[simp] lemma pointCycleClassOnCycles_single
-    (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
-    (hx : coheight x = V.dimension) (n : ℤ) :
-    pointCycleClassOnCycles V (codimensionCycleSubgroup.single x hx n) =
-      n • maximalCodimensionComponentClass V x hx := by
+    (x : V.scheme) (hx : coheight x = d) (n : ℤ) :
+    pointCycleClassOnCycles V d (codimensionCycleSubgroup.single x hx n) =
+      n • maximalCodimensionComponentClass V d x hx := by
   simp [pointCycleClassOnCycles]
 
 /-- A closed scheme point automatically has the required maximal codimension; no extra
 dimension or purity certificate is needed to evaluate its cycle class. -/
 lemma pointCycleClassOnCycles_single_closedPoint
-    (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
-    (hx : IsClosed ({x} : Set V.scheme)) (n : ℤ) :
+    (x : V.scheme) (hx : IsClosed ({x} : Set V.scheme)) (n : ℤ) :
     let hcodim := SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
-      (f := V.structureMap) (d := V.dimension) x hx
-    pointCycleClassOnCycles V (codimensionCycleSubgroup.single x hcodim n) =
-      n • maximalCodimensionComponentClass V x hcodim :=
-  pointCycleClassOnCycles_single V x _ n
+      (f := V.structureMap) (d := d) x hx
+    pointCycleClassOnCycles V d (codimensionCycleSubgroup.single x hcodim n) =
+      n • maximalCodimensionComponentClass V d x hcodim :=
+  pointCycleClassOnCycles_single V d x _ n
 
 /-- The point-cycle construction really uses the normalized supported point coclass before
 forgetting support. This equality fixes its scale and sign. -/
 lemma pointCycleClassOnCycles_single_eq_forgetSupport_pointCoclass
-    (V : DimensionedSmoothProjectiveComplexVariety) (x : V.scheme)
-    (hx : coheight x = V.dimension) (n : ℤ) :
-    pointCycleClassOnCycles V (codimensionCycleSubgroup.single x hx n) =
+    (x : V.scheme) (hx : coheight x = d) (n : ℤ) :
+    pointCycleClassOnCycles V d (codimensionCycleSubgroup.single x hx n) =
       n • forgetSupport V.over
-        (cycleComponentSupport V.over x) (2 * (V.dimension : ℤ))
+        (cycleComponentSupport V.over x) (2 * (d : ℤ))
         ((auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
-          V x hx).supportedComparison.symm (maximalCodimensionSupportedGenerator V x hx)) := by
+          V d x hx).supportedComparison.symm
+            (maximalCodimensionSupportedGenerator V d x hx)) := by
   rw [pointCycleClassOnCycles_single,
     maximalCodimensionComponentClass_eq_forgetSupport_pointCoclass]
 
 /-- Evaluation on an arbitrary finite linear combination of points, including repeated points
 and negative multiplicities. -/
 lemma pointCycleClassOnCycles_sum_single
-    (V : DimensionedSmoothProjectiveComplexVariety) {ι : Type*} (s : Finset ι)
-    (x : ι → V.scheme) (hx : ∀ i, coheight (x i) = V.dimension) (n : ι → ℤ) :
-    pointCycleClassOnCycles V (∑ i ∈ s, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
-      ∑ i ∈ s, n i • maximalCodimensionComponentClass V (x i) (hx i) := by
+    {ι : Type*} (s : Finset ι)
+    (x : ι → V.scheme) (hx : ∀ i, coheight (x i) = d) (n : ι → ℤ) :
+    pointCycleClassOnCycles V d (∑ i ∈ s, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
+      ∑ i ∈ s, n i • maximalCodimensionComponentClass V d (x i) (hx i) := by
   simp
 
 /-- The finite-support formula on every integral point cycle. The zero branch is unused at
 every point with a nonzero coefficient, by the defining codimension condition on `c`. -/
 lemma pointCycleClassOnCycles_apply
-    (V : DimensionedSmoothProjectiveComplexVariety)
-    (c : codimensionCycleSubgroup V.scheme V.dimension) :
-    pointCycleClassOnCycles V c =
+    (c : codimensionCycleSubgroup V.scheme d) :
+    pointCycleClassOnCycles V d c =
       (compactCycleToFinsupp c.1).sum fun x n ↦
-        n • if hx : coheight x = V.dimension then
-          maximalCodimensionComponentClass V x hx else 0 :=
+        n • if hx : coheight x = d then
+          maximalCodimensionComponentClass V d x hx else 0 :=
   rfl
 
 /-- The bilinear map used to extend the unconditional point-cycle map to rational
 coefficients. Its second argument is an integral cycle, not a Chow class. -/
-def pointCycleClassRationalExtensionBilinear
-    (V : DimensionedSmoothProjectiveComplexVariety) :
-    ℚ →ₗ[ℚ] codimensionCycleSubgroup V.scheme V.dimension →ₗ[ℤ]
-      H^(2 * (V.dimension : ℤ))(V.over; ℚ) where
-  toFun q := q • (pointCycleClassOnCycles V).toIntLinearMap
+def pointCycleClassRationalExtensionBilinear :
+    ℚ →ₗ[ℚ] codimensionCycleSubgroup V.scheme d →ₗ[ℤ]
+      H^(2 * (d : ℤ))(V.over; ℚ) where
+  toFun q := q • (pointCycleClassOnCycles V d).toIntLinearMap
   map_add' _ _ := by
     ext
     simp [add_smul]
@@ -122,35 +128,33 @@ def pointCycleClassRationalExtensionBilinear
     simp [mul_smul]
 
 /-- The unconditional rational linear class map on rational zero-dimensional cycles,
-represented by `ℚ ⊗[ℤ] codimensionCycleSubgroup V.scheme V.dimension`. No rational-equivalence
+represented by `ℚ ⊗[ℤ] codimensionCycleSubgroup V.scheme d`. No rational-equivalence
 quotient is taken here. -/
-def rationalPointCycleClassOnCycles (V : DimensionedSmoothProjectiveComplexVariety) :
-    TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme V.dimension) →ₗ[ℚ]
-      H^(2 * (V.dimension : ℤ))(V.over; ℚ) :=
-  TensorProduct.AlgebraTensorModule.lift (pointCycleClassRationalExtensionBilinear V)
+def rationalPointCycleClassOnCycles :
+    TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme d) →ₗ[ℚ]
+      H^(2 * (d : ℤ))(V.over; ℚ) :=
+  TensorProduct.AlgebraTensorModule.lift (pointCycleClassRationalExtensionBilinear V d)
 
 /-- Rational extension agrees with the integral class map on pure tensors. -/
 @[simp] lemma rationalPointCycleClassOnCycles_tmul
-    (V : DimensionedSmoothProjectiveComplexVariety) (q : ℚ)
-    (c : codimensionCycleSubgroup V.scheme V.dimension) :
-    rationalPointCycleClassOnCycles V (q ⊗ₜ[ℤ] c) = q • pointCycleClassOnCycles V c :=
+    (q : ℚ) (c : codimensionCycleSubgroup V.scheme d) :
+    rationalPointCycleClassOnCycles V d (q ⊗ₜ[ℤ] c) = q • pointCycleClassOnCycles V d c :=
   rfl
 
 /-- Exact evaluation of a point with arbitrary rational multiplicity. -/
 @[simp] lemma rationalPointCycleClassOnCycles_tmul_single
-    (V : DimensionedSmoothProjectiveComplexVariety) (q : ℚ) (x : V.scheme)
-    (hx : coheight x = V.dimension) :
-    rationalPointCycleClassOnCycles V (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
-      q • maximalCodimensionComponentClass V x hx := by
+    (q : ℚ) (x : V.scheme) (hx : coheight x = d) :
+    rationalPointCycleClassOnCycles V d (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
+      q • maximalCodimensionComponentClass V d x hx := by
   simp
 
 /-- Exact evaluation on every finite rational linear combination of points. -/
 lemma rationalPointCycleClassOnCycles_sum_tmul_single
-    (V : DimensionedSmoothProjectiveComplexVariety) {ι : Type*} (s : Finset ι)
-    (x : ι → V.scheme) (hx : ∀ i, coheight (x i) = V.dimension) (q : ι → ℚ) :
-    rationalPointCycleClassOnCycles V
+    {ι : Type*} (s : Finset ι)
+    (x : ι → V.scheme) (hx : ∀ i, coheight (x i) = d) (q : ι → ℚ) :
+    rationalPointCycleClassOnCycles V d
         (∑ i ∈ s, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
-      ∑ i ∈ s, q i • maximalCodimensionComponentClass V (x i) (hx i) := by
+      ∑ i ∈ s, q i • maximalCodimensionComponentClass V d (x i) (hx i) := by
   simp
 
 end AlgebraicGeometry.ComplexPoint

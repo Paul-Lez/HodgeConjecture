@@ -45,7 +45,7 @@ theorem exists_open_normalTransition_localClass_invariance_within
         relativeHomologyMap ℚ (2 * c)
           (complexNeighborhoodPuncturedPairMapOf c V (normalTransitionMap c t a)
             ((normalTransitionMap_continuousOn c t a).mono (hV.trans hUt))
-            (normalTransitionMap_zero c t a ha hp) hne) z = standardComplexLocalClass c := by
+            hne) z = standardComplexLocalClass c := by
   let L := normalTransitionDerivativeEquiv t a ha hp ht hti
   let A := complexMatrixOfContinuousLinearMap c L.toContinuousLinearMap
   have hA := complexMatrixOfContinuousLinearMap_det_ne_zero c L.toContinuousLinearMap L.injective
@@ -104,11 +104,10 @@ theorem chartNormalFiber_comp_other_projection
     (e' : OpenPartialHomeomorph M (E × (Fin c → ℂ)))
     (hS' : ∀ y ∈ e'.source, y ∈ S ↔ (e' y).2 = 0) (hW' : W ⊆ e'.source)
     (hf : ContinuousOn (normalTransitionMap c (e.symm.trans e') a) V)
-    (h0 : normalTransitionMap c (e.symm.trans e') a 0 = 0)
     (hne : ∀ v, v ∈ V → v ≠ 0 → normalTransitionMap c (e.symm.trans e') a v ≠ 0) :
     chartNormalFiberPair c e S hS a W V hV ≫ chartNormalProjectionPair E c e' S hS' W hW' =
       complexNeighborhoodPuncturedPairMapOf c V (normalTransitionMap c (e.symm.trans e') a)
-        hf h0 hne := by
+        hf hne := by
   apply MorphismProperty.Arrow.Hom.ext <;> ext v <;> rfl
 
 end Fiber
@@ -178,12 +177,13 @@ theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
       (chartNormalFiberPair c e S hS a W V hfiber ≫ chartNormalProjectionPair E c e S hS W _) z = _
     rw [chartNormalFiber_comp_projection]
     exact hz
-  have hvalue : chartNormalProjectionCoclass E c e' S hS' W hW'
+  have hvalue : relativeCohomologyEquivDualHomology ℚ
+      (neighborhoodSupportComplementPair (W : Set M) S) (2 * c)
+      (chartNormalProjectionCoclass E c e' S hS' W hW')
       (flattenedSupportNormalClass E c e x hx S hS h0) = 1 := by
-    rw [← hFz]
-    change normalizedDual (standardComplexLocalClass c) (standardComplexLocalClass_ne_zero_for_chart c)
-      (relativeHomologyMap ℚ (2 * c) (chartNormalProjectionPair E c e' S hS' W hW')
-        (relativeHomologyMap ℚ (2 * c) F z)) = 1
+    rw [← hFz, chartNormalProjectionCoclass,
+      relativeCohomologyEquivDualHomology_relativeCohomologyMap,
+      relativeCohomologyEquivDualHomology_normalizedRelativeCoclass]
     rw [← LinearMap.comp_apply (relativeHomologyMap ℚ (2 * c)
       (chartNormalProjectionPair E c e' S hS' W hW')), ← relativeHomologyMap_comp]
     change normalizedDual (standardComplexLocalClass c) (standardComplexLocalClass_ne_zero_for_chart c)
@@ -191,7 +191,7 @@ theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
         (chartNormalFiberPair c e S hS a W V hfiber ≫ chartNormalProjectionPair E c e' S hS' W hW') z) = 1
     rw [chartNormalFiber_comp_other_projection c e S hS a W V hfiber e' hS' hW'
       ((normalTransitionMap_continuousOn c t a).mono (hV.trans hUt))
-      (normalTransitionMap_zero c t a h0t hp) hne, hclass z hz, normalizedDual_apply_self]
+      hne, hclass z hz, normalizedDual_apply_self]
   exact (chartNormalProjectionCoclass_unique E c e S hS x hx h0 _ hvalue).symm
 
 include hx h0 in

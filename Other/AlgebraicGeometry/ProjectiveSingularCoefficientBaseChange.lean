@@ -65,13 +65,4 @@ theorem finiteRationalSingularHomologyZero [IsIntegral X.left] [Smooth X.hom] :
     (TopCat.singularHomology₀Iso (TopCat.of (ComplexPoint X))
       (ModuleCat.of ℚ ℚ)).symm.toLinearEquiv
 
-/-- Rational-to-complex singular cohomology base change for projective analytifications in
-degree zero. -/
-def rationalToComplexCohomologyBaseChangeZero [IsIntegral X.left] [Smooth X.hom] :
-    ℂ ⊗[ℚ] Cohomology ℚ (TopCat.of (ComplexPoint X)) 0 ≃ₗ[ℂ]
-      Cohomology ℂ (TopCat.of (ComplexPoint X)) 0 :=
-  letI : Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X)) 0) :=
-    finiteRationalSingularHomologyZero X
-  rationalToComplexCohomologyBaseChange (TopCat.of (ComplexPoint X)) 0
-
 end AlgebraicGeometry.ComplexPoint

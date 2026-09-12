@@ -107,12 +107,15 @@ theorem chartNormalProjection_normalClass :
 
 /-- The actual chart-projection coclass has precisely the required normalization. -/
 theorem chartNormalProjectionCoclass_apply_normalClass :
-    chartNormalProjectionCoclass E c e S hS (flattenedSupportNeighborhood E c e x hx)
-      (flattenedSupportNeighborhood_subset_source E c e x hx)
+    relativeCohomologyEquivDualHomology ℚ
+        (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) (2 * c)
+        (chartNormalProjectionCoclass E c e S hS (flattenedSupportNeighborhood E c e x hx)
+          (flattenedSupportNeighborhood_subset_source E c e x hx))
       (flattenedSupportNormalClass E c e x hx S hS h0) = 1 := by
-  change normalizedDual (standardComplexLocalClass c) (standardComplexLocalClass_ne_zero_for_chart c)
-    (relativeHomologyMap ℚ (2 * c) _ (flattenedSupportNormalClass E c e x hx S hS h0)) = 1
-  rw [chartNormalProjection_normalClass, normalizedDual_apply_self]
+  rw [chartNormalProjectionCoclass,
+    relativeCohomologyEquivDualHomology_relativeCohomologyMap,
+    relativeCohomologyEquivDualHomology_normalizedRelativeCoclass,
+    chartNormalProjection_normalClass, normalizedDual_apply_self]
 
 /-- Generation follows from the already constructed pair isomorphism and contraction. -/
 theorem span_flattenedSupportNormalClass_eq_top :
@@ -142,7 +145,9 @@ it evaluates to one on the constructed normal class. -/
 theorem chartNormalProjectionCoclass_unique
     (α : RelativeCohomology ℚ
       (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) (2 * c))
-    (hα : α (flattenedSupportNormalClass E c e x hx S hS h0) = 1) :
+    (hα : relativeCohomologyEquivDualHomology ℚ
+        (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) (2 * c) α
+      (flattenedSupportNormalClass E c e x hx S hS h0) = 1) :
     α = chartNormalProjectionCoclass E c e S hS (flattenedSupportNeighborhood E c e x hx)
       (flattenedSupportNeighborhood_subset_source E c e x hx) := by
   have hne : flattenedSupportNormalClass E c e x hx S hS h0 ≠ 0 := by
@@ -150,8 +155,10 @@ theorem chartNormalProjectionCoclass_unique
     have h := chartNormalProjectionCoclass_apply_normalClass E c e S hS x hx h0
     rw [hz, map_zero] at h
     exact zero_ne_one h
-  exact (normalizedDual_unique hne (span_flattenedSupportNormalClass_eq_top E c e S hS x hx h0) α hα).trans
-    (normalizedDual_unique hne (span_flattenedSupportNormalClass_eq_top E c e S hS x hx h0) _
+  exact (normalizedRelativeCoclass_unique hne
+      (span_flattenedSupportNormalClass_eq_top E c e S hS x hx h0) α hα).trans
+    (normalizedRelativeCoclass_unique hne
+      (span_flattenedSupportNormalClass_eq_top E c e S hS x hx h0) _
       (chartNormalProjectionCoclass_apply_normalClass E c e S hS x hx h0)).symm
 
 end AlgebraicTopology.Singular

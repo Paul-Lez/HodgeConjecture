@@ -161,30 +161,9 @@ theorem span_normalSliceClass_eq_top :
   change Submodule.span ℚ {e (standardComplexLocalClass c)} = ⊤ at h
   rwa [he] at h
 
-/-- Normal projection gives the contravariant cohomology equivalence by dualizing its
-actual homology equivalence. -/
-def normalSliceRelativeCohomologyEquiv (n : ℕ) :
-    RelativeCohomology ℚ (standardComplexPuncturedPair c) n ≃ₗ[ℚ]
-      RelativeCohomology ℚ (normalSlicePair E c) n :=
-  (normalSliceRelativeHomologyIso E c n).toLinearEquiv.dualMap
-
-@[simp] theorem normalSliceRelativeCohomologyEquiv_apply (n : ℕ)
-    (α : RelativeCohomology ℚ (standardComplexPuncturedPair c) n) :
-    normalSliceRelativeCohomologyEquiv E c n α =
-      relativeCohomologyMap ℚ n (normalSliceProjection E c) α := rfl
-
-@[simp] theorem normalSliceRelativeCohomologyEquiv_evaluate_class
-    (α : RelativeCohomology ℚ (standardComplexPuncturedPair c) (2 * c)) :
-    normalSliceRelativeCohomologyEquiv E c (2 * c) α (normalSliceClass E c) =
-      α (standardComplexLocalClass c) := by
-  change α (relativeHomologyMap ℚ (2 * c) (normalSliceProjection E c)
-    (normalSliceClass E c)) = _
-  rw [normalSliceProjection_class]
-
 /-- Relative cohomology is likewise concentrated in normal real dimension `2*c`. -/
 theorem normalSliceRelativeCohomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * c) :
-    IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ (normalSlicePair E c) n)) := by
-  have := ModuleCat.subsingleton_of_isZero (normalSliceRelativeHomology_isZero_of_ne E c n hn)
-  exact ModuleCat.isZero_of_subsingleton _
+    IsZero (RelativeCohomology ℚ (normalSlicePair E c) n) :=
+  relativeCohomology_isZero ℚ _ n (normalSliceRelativeHomology_isZero_of_ne E c n hn)
 
 end AlgebraicTopology.Singular

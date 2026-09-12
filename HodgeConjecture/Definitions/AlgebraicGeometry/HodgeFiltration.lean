@@ -185,7 +185,7 @@ abbrev fieldScalarSheaf (q : K) :
     constantFieldSheaf K X ⟶ constantFieldSheaf K X :=
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   (constantSheaf J AddCommGrpCat).map
-    (AddCommGrpCat.ofHom (fieldScalarAddHom K q))
+    (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q))
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarSheaf_one : fieldScalarSheaf K X 1 = 𝟙 _ := by
@@ -194,11 +194,11 @@ omit [Algebra K ℂ] in
     rfl
   change (constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).map (AddCommGrpCat.ofHom (fieldScalarAddHom K 1)) =
+      AddCommGrpCat).map (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft 1)) =
     𝟙 ((constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
       AddCommGrpCat).obj (AddCommGrpCat.of K))
-  rw [fieldScalarAddHom_one, h]
+  rw [AddMonoidHom.mulLeft_one, h]
   exact (constantSheaf
     (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     AddCommGrpCat).map_id (AddCommGrpCat.of K)
@@ -207,15 +207,15 @@ omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarSheaf_add (a b : K) :
     fieldScalarSheaf K X (a + b) =
       fieldScalarSheaf K X a + fieldScalarSheaf K X b := by
-  have h : AddCommGrpCat.ofHom (fieldScalarAddHom K a + fieldScalarAddHom K b) =
-      AddCommGrpCat.ofHom (fieldScalarAddHom K a) +
-        AddCommGrpCat.ofHom (fieldScalarAddHom K b) :=
+  have h : AddCommGrpCat.ofHom (AddMonoidHom.mulLeft a + AddMonoidHom.mulLeft b) =
+      AddCommGrpCat.ofHom (AddMonoidHom.mulLeft a) +
+        AddCommGrpCat.ofHom (AddMonoidHom.mulLeft b) :=
     AddCommGrpCat.hom_ext rfl
   change (constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
       AddCommGrpCat).map
-        (AddCommGrpCat.ofHom (fieldScalarAddHom K (a + b))) = _
-  rw [fieldScalarAddHom_add, h, Functor.map_add]
+        (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a + b))) = _
+  rw [AddMonoidHom.mulLeft_add, h, Functor.map_add]
   rfl
 
 omit [Algebra K ℂ] in
@@ -223,15 +223,15 @@ omit [Algebra K ℂ] in
     fieldScalarSheaf K X (a * b) =
       fieldScalarSheaf K X b ≫ fieldScalarSheaf K X a := by
   have h : AddCommGrpCat.ofHom
-      ((fieldScalarAddHom K a).comp (fieldScalarAddHom K b)) =
-      AddCommGrpCat.ofHom (fieldScalarAddHom K b) ≫
-        AddCommGrpCat.ofHom (fieldScalarAddHom K a) :=
+      ((AddMonoidHom.mulLeft a).comp (AddMonoidHom.mulLeft b)) =
+      AddCommGrpCat.ofHom (AddMonoidHom.mulLeft b) ≫
+        AddCommGrpCat.ofHom (AddMonoidHom.mulLeft a) :=
     AddCommGrpCat.hom_ext rfl
   change (constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
       AddCommGrpCat).map
-        (AddCommGrpCat.ofHom (fieldScalarAddHom K (a * b))) = _
-  rw [fieldScalarAddHom_mul, h, Functor.map_comp]
+        (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a * b))) = _
+  rw [AddMonoidHom.mulLeft_mul, h, Functor.map_comp]
   rfl
 
 /-- Multiplying by `q` in `K` before including into `ℂ` agrees with including first and then
@@ -239,12 +239,12 @@ multiplying by `algebraMap K ℂ q`. -/
 private lemma ofHom_algebraMap_comp_complexScalarSMul (q : K) :
     AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom ≫
         AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ (algebraMap K ℂ q)) =
-      AddCommGrpCat.ofHom (fieldScalarAddHom K q) ≫
+      AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q) ≫
         AddCommGrpCat.ofHom (@AddMonoidHomClass.toAddMonoidHom K ℂ (K →+* ℂ) Field.toSemifield.toNonAssocSemiring.toAddCommMonoidWithOne.toAddZeroClass.toAddZero
                 Complex.instSemiring.toNonAssocSemiring.toAddCommMonoidWithOne.toAddZeroClass.toAddZero RingHom.instFunLike _
         (algebraMap K ℂ)) := by
   ext r
-  simp [fieldScalarAddHom, map_mul]
+  simp [map_mul]
 
 /-- The constant-presheaf map induced by the inclusion `K → ℂ`, followed by scalar multiplication
 by `algebraMap K ℂ q` on the constant complex presheaf, is the constant-presheaf map induced by the
@@ -270,9 +270,9 @@ private lemma fieldToComplexConstantSheaf_scalar (q : K) :
 
 omit [Algebra K ℂ] in
 /-- Multiplying an integer by `r` and then by `q` is multiplying it by `q * r`. -/
-private lemma ofHom_zmultiplesAddHom_comp_fieldScalarAddHom (q r : K) :
+private lemma ofHom_zmultiplesAddHom_comp_mulLeft (q r : K) :
     AddCommGrpCat.ofHom (zmultiplesAddHom K r) ≫
-        AddCommGrpCat.ofHom (fieldScalarAddHom K q) =
+        AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q) =
       AddCommGrpCat.ofHom (zmultiplesAddHom K (q * r)) := by
   ext
   simp
@@ -287,7 +287,7 @@ private lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
       fieldScalarSheaf K X q =
         integerToFieldConstantSheaf K X (q * r) := by
   rw [integerToFieldConstantSheaf, fieldScalarSheaf, integerToFieldConstantSheaf,
-    ← Functor.map_comp, ofHom_zmultiplesAddHom_comp_fieldScalarAddHom]
+    ← Functor.map_comp, ofHom_zmultiplesAddHom_comp_mulLeft]
 
 /-- Scalar multiplication on the rational constant sheaf complex. -/
 def fieldScalarComplex (q : K) :
@@ -428,12 +428,6 @@ omit [Algebra K ℂ] in
   simp [fieldCohomologyClass, hypercohomologyEquiv_add,
     integerToFieldConstantSheafComplexInt_add]
 
-/-- Rational constants as an additive map into degree-zero rational cohomology. -/
-def fieldCohomologyClassAddHom : K →+ H^0(X; K) where
-  toFun := fieldCohomologyClass K X
-  map_zero' := fieldCohomologyClass_zero K X
-  map_add' := fieldCohomologyClass_add K X
-
 /-- The unit in degree-zero rational cohomology. -/
 def fieldCohomologyUnit : H^0(X; K) :=
   fieldCohomologyClass K X 1
@@ -441,16 +435,6 @@ def fieldCohomologyUnit : H^0(X; K) :=
 /-- Hypercohomology of the holomorphic de Rham complex in integer degree `n`. -/
 abbrev DeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) : Type 1 :=
   Hypercohomology X (holomorphicDeRhamComplexInt X) n
-
-/-- A proved constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
-equivalence on hypercohomology. -/
-def complexConstantCohomologyDeRhamEquiv
-    [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
-    ComplexConstantCohomology X n ≃
-      DeRhamHypercohomology X n :=
-  Localization.SmallShiftedHom.postcompEquiv
-    (constantsToHolomorphicDeRhamComplexInt X) h
 
 /-- Postcomposition on hypercohomology by a map of complexes. -/
 def hypercohomologyMap
@@ -574,13 +558,9 @@ noncomputable abbrev hypercohomologyModule {R : Type*} [Semiring R]
 
 /-- The rational action on constant-sheaf cohomology, induced by scalar multiplication on the
 coefficient sheaf. -/
-def fieldCohomologySMul (n : ℤ) (q : K)
-    (α : H^n(X; K)) : H^n(X; K) :=
-  hypercohomologyMap X (fieldScalarComplex K X q) n α
-
 noncomputable instance (n : ℤ) :
     SMul K (H^n(X; K)) :=
-  ⟨fieldCohomologySMul K X n⟩
+  ⟨fun q α ↦ hypercohomologyMap X (fieldScalarComplex K X q) n α⟩
 
 omit [Algebra K ℂ] in
 lemma field_smul_eq (n : ℤ) (q : K) (α : H^n(X; K)) :
@@ -596,16 +576,10 @@ noncomputable instance fieldCohomologyModule (n : ℤ) :
 
 /-- The complex action on holomorphic de Rham hypercohomology, induced by scalar multiplication
 on the holomorphic de Rham complex. -/
-def deRhamComplexSMul [IsIntegral X.left] [Smooth X.hom]
-    (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology X n) :
-    DeRhamHypercohomology X n :=
-  hypercohomologyMap X
-    (scalarHolomorphicDeRhamComplexInt X c) n α
-
 noncomputable instance
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     SMul ℂ (DeRhamHypercohomology X n) :=
-  ⟨deRhamComplexSMul X n⟩
+  ⟨fun c α ↦ hypercohomologyMap X (scalarHolomorphicDeRhamComplexInt X c) n α⟩
 
 lemma deRham_complex_smul_eq [IsIntegral X.left] [Smooth X.hom]
     (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology X n) :
@@ -690,29 +664,6 @@ def fieldToDeRhamCohomologyLinear
   map_add' := (fieldToDeRhamCohomology K X n).map_add
   map_smul' := fieldToDeRhamCohomology_smul K X n
 
-/-- The balanced map that extends rational-to-de Rham comparison after scalar extension from
-`K` to `ℂ`. -/
-def fieldToDeRhamComplexificationBilinear
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    ℂ →ₗ[ℂ] H^n(X; K) →ₗ[K]
-      DeRhamHypercohomology X n where
-  toFun c := c • (fieldToDeRhamCohomologyLinear K X n)
-  map_add' a b := by
-    ext α
-    simp [add_smul]
-  map_smul' a b := by
-    ext α
-    simp [mul_smul]
-
-/-- The canonical complex-linear comparison from the complexification of rational
-constant-sheaf cohomology to holomorphic de Rham hypercohomology. -/
-def fieldToDeRhamComplexification
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    ℂ ⊗[K] H^n(X; K) →ₗ[ℂ]
-      DeRhamHypercohomology X n :=
-  TensorProduct.AlgebraTensorModule.lift
-    (fieldToDeRhamComplexificationBilinear K X n)
-
 /-- The de Rham complex with only form degrees at least `p` retained. -/
 def hodgeFilteredDeRhamComplex [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
@@ -790,18 +741,20 @@ Conjugation is not `ℂ`-linear, so it acts on the constant sheaf `ℂ` rather t
 de Rham complex, and is transported across the constant-to-de Rham comparison. The `(p,q)` piece
 is then *defined* as `F^p ⊓ conj F^q`, which needs no Hodge decomposition theorem. -/
 
-/-- The constant-to-de Rham comparison equivalence, upgraded to an additive equivalence. -/
+/-- A proved constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
+additive equivalence on hypercohomology. -/
 def complexConstantCohomologyDeRhamAddEquiv [IsIntegral X.left] [Smooth X.hom]
     (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
     ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
-  { complexConstantCohomologyDeRhamEquiv X h n with
+  { Localization.SmallShiftedHom.postcompEquiv
+      (constantsToHolomorphicDeRhamComplexInt X) h with
     map_add' := fun α β ↦ by
       change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
         hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α +
           hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n β
       exact map_add _ α β }
 
-private lemma complexConstantCohomologyDeRhamAddEquiv_apply [IsIntegral X.left] [Smooth X.hom]
+lemma complexConstantCohomologyDeRhamAddEquiv_apply [IsIntegral X.left] [Smooth X.hom]
     (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ)
     (α : ComplexConstantCohomology X n) :
     complexConstantCohomologyDeRhamAddEquiv X h n α =
@@ -874,27 +827,6 @@ def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ (DeRhamHypercohomology X n) :=
   hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
 
-/-- Pull back the de Rham Hodge filtration to the actual complexification of rational
-constant-sheaf cohomology. This definition uses the canonical comparison map rather than
-identifying the two cohomology theories without proof. -/
-def complexifiedFieldHodgeFiltration [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) :
-    Submodule ℂ (ℂ ⊗[K] H^n(X; K)) :=
-  (hodgeFiltrationComplexSubmodule X p n).comap
-    (fieldToDeRhamComplexification K X n)
-
-/-- Pull back the de Rham Hodge piece `F^p ⊓ conj F^q` to the actual complexification of
-constant-sheaf cohomology with coefficients in `K`. -/
-def complexifiedFieldHodgePiece [IsIntegral X.left] [Smooth X.hom]
-    (p q n : ℤ) :
-    Submodule ℂ (ℂ ⊗[K] H^n(X; K)) :=
-  (hodgePiece X p q n).comap (fieldToDeRhamComplexification K X n)
-
-/-- The Hodge filtration as a subspace over `K`, by restriction of complex scalars. -/
-def hodgeFiltrationSubmodule [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) :
-    Submodule K (DeRhamHypercohomology X n) :=
-  (hodgeFiltrationComplexSubmodule X p n).restrictScalars K
-
 /-- In degree filtration `F⁰`, the filtered and full de Rham hypercohomology groups are
 canonically equivalent. -/
 def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
@@ -911,7 +843,7 @@ def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
 
 /-- Cohomology classes with coefficients in `K` whose de Rham images lie in `F^p ⊓ conj F^p`
 in degree `2p`. When conjugation fixes the image of `K` in `ℂ`, see
-`hodgeClasses_eq_comap_hodgeFiltrationSubmodule` for the equivalent `F^p` condition. -/
+`hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule` for the equivalent `F^p` condition. -/
 def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
     Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
@@ -922,20 +854,5 @@ def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
 The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the variety is presented by its
 structure morphism `f`, and the coefficient field is named. -/
 scoped notation:max "Hdg^" p:max "(" K "; " f ")" => hodgeClasses K f p
-
-/-- Rational Hodge classes described through the rational lattice inside its actual
-complexification. -/
-def hodgeClassesViaComplexification
-    [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
-    Submodule K (H^(2 * p)(X; K)) :=
-  Submodule.comap
-    (HodgeStructure.ofBase K (H^(2 * p)(X; K)))
-    ((complexifiedFieldHodgePiece K X p p (2 * p)).restrictScalars K)
-
-/-- A rational cohomology class is a Hodge class of codimension `p` when it belongs to the
-canonical subgroup of rational Hodge classes. -/
-def IsHodgeClass [IsIntegral X.left] [Smooth X.hom] (p : ℕ)
-    (α : H^(2 * p)(X; K)) : Prop :=
-  α ∈ Hdg^p(K; X)
 
 end AlgebraicGeometry.ComplexPoint

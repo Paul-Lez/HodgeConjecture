@@ -772,13 +772,21 @@ lemma relativeCapCochainCohomologyLinear_on_cycle
   rw [h]
   rfl
 
+/-- The short-complex model computes relative cohomology: relative cohomology is the homology
+of the dual relative cochain complex, whose degree-`p` short complex is the reversed dual of the
+degree-`p` relative chain short complex. -/
+noncomputable def relativeCochainCohomologyEquiv (X : TopPair.{u}) (p : ℕ) :
+    RelativeCochainCohomology R X p ≃ₗ[R] RelativeCohomology R X p :=
+  (ShortComplex.homologyMapIso (HomologicalComplex.linearDualCochainComplexScIso
+    ((relativeChainFunctor R).obj X) p)).toLinearEquiv.symm
+
 /-- Same-pair relative cap product on the repository's standard relative cohomology and
 relative homology objects. -/
 noncomputable def relativeCapCohomologyLinear (X : TopPair.{u}) (p q : ℕ) :
     RelativeCohomology R X p →ₗ[R]
       (RelativeHomology R X (p + q) →ₗ[R] Homology R X.fst q) :=
   (relativeCapCochainCohomologyLinear R X p q).comp
-    ((((relativeChainFunctor R).obj X).sc p).linearDualHomologyEquiv.symm.toLinearMap)
+    (relativeCochainCohomologyEquiv R X p).symm.toLinearMap
 
 set_option backward.isDefEq.respectTransparency false in
 /-- On the standard relative cohomology class represented by an explicit relative
@@ -790,17 +798,17 @@ lemma relativeCapCohomologyLinear_on_cycle
       ((((relativeChainFunctor R).obj X).sc p).linearDual.g.hom)) :
     let S := ((relativeChainFunctor R).obj X).sc p
     relativeCapCohomologyLinear R X p q
-        (S.linearDualHomologyEquiv
+        (relativeCochainCohomologyEquiv R X p
           (S.linearDual.moduleCatHomologyIso.inv.hom (Submodule.Quotient.mk phi))) =
       relativeCohomologyCycleCapLinear R X p q phi := by
   dsimp only
   rw [relativeCapCohomologyLinear, LinearMap.comp_apply]
   let S := ((relativeChainFunctor R).obj X).sc p
-  have h := S.linearDualHomologyEquiv.symm_apply_apply
+  have h := (relativeCochainCohomologyEquiv R X p).symm_apply_apply
     (S.linearDual.moduleCatHomologyIso.inv.hom (Submodule.Quotient.mk phi))
   change relativeCapCochainCohomologyLinear R X p q
-      (S.linearDualHomologyEquiv.symm
-        (S.linearDualHomologyEquiv
+      ((relativeCochainCohomologyEquiv R X p).symm
+        (relativeCochainCohomologyEquiv R X p
           (S.linearDual.moduleCatHomologyIso.inv.hom (Submodule.Quotient.mk phi)))) = _
   rw [h]
   exact relativeCapCochainCohomologyLinear_on_cycle R X p q phi

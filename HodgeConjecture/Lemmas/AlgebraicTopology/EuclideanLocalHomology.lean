@@ -117,13 +117,6 @@ lemma relativeSingular_homology_exact_subspace (X : TopPair) (n : ℕ) :
   (relativeSingularChainShortComplex_shortExact X).homology_exact₁
     (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
 
-/-- The alternating sum of the faces of the standard affine `(n + 1)`-simplex, regarded as a
-chain in punctured Euclidean space. -/
-def standardSubspaceBoundaryChain (n : ℕ) :
-    ModuleCat.of ℚ ℚ ⟶
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).left.X n :=
-  ∑ i : Fin (n + 2), (-1) ^ i.val • standardSubspaceFaceChain n i
-
 lemma standardSubspaceBoundaryChain_inclusion (n : ℕ) :
     standardSubspaceBoundaryChain n ≫
       ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).hom.f n =
@@ -264,18 +257,15 @@ lemma span_standardLocalClass_succ_eq_top_iff (n : ℕ) (hn : n ≠ 0) :
 
 /-! ### The standard class in dimension one -/
 
-/-- The punctured real line, in the coordinates used by the standard local class. -/
-abbrev StandardPuncturedLine := ({0}ᶜ : Set (StandardRealModel 1))
-
 /-- The point `-1` of the standard punctured real line. -/
-def standardNegativePoint : StandardPuncturedLine := ⟨fun _ ↦ -1, by
+def standardNegativePoint : ({0}ᶜ : Set (StandardRealModel 1)) := ⟨fun _ ↦ -1, by
   simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
   intro h
   have := congr_fun h 0
   norm_num at this⟩
 
 /-- The point `1` of the standard punctured real line. -/
-def standardPositivePoint : StandardPuncturedLine := ⟨fun _ ↦ 1, by
+def standardPositivePoint : ({0}ᶜ : Set (StandardRealModel 1)) := ⟨fun _ ↦ 1, by
   simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
   intro h
   have := congr_fun h 0

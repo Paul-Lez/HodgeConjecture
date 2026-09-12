@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMoore
+public import Other.AlgebraicGeometry.ComplexSheafBorelMoore
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionComplexPoint
 public import Other.AlgebraicTopology.SingularChainSheafDerivedPushforward
 
@@ -98,15 +98,6 @@ lemma smoothClosedCycleMorphism_source_orientation :
         smoothClosedChainPushforwardPlus Z X i e d := by
   rw [smoothClosedCycleMorphism, ← Functor.map_comp_assoc, Iso.hom_inv_id,
     CategoryTheory.Functor.map_id, Category.id_comp]
-
-/-- The normalized smooth closed-immersion morphism between the shifted rational sheaves.
-This is the sheaf-level morphism underlying the smooth cycle class. -/
-def smoothClosedOrientedCycleMorphism :
-    (TopCat.Sheaf.closedEmbeddingDerivedPushforwardPlus (closedCycleAnalyticMap Z X i)
-      (closedCycleAnalyticMap_isClosedEmbedding Z X i)).obj
-        ((complexConstantRationalSheafPlusObject Z)⟦2 * (e : ℤ)⟧) ⟶
-      (complexConstantRationalSheafPlusObject X)⟦2 * (d : ℤ)⟧ :=
-  smoothClosedCycleMorphism Z X i e d ≫ (complexChainSheafPlusOrientationIso X d).hom
 
 /-- The smooth-cycle morphism retains genuine closed support in the localized termwise
 supported chain model. This target is not renamed right-derived support. -/

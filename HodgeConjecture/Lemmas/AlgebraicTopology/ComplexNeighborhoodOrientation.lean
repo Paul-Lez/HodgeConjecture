@@ -94,15 +94,12 @@ lemma zero_mem_standardComplexOrientationNeighborhood (d : ℕ) :
   refine ⟨0, zero_mem_standardOrientationBall (d * 2), ?_⟩
   exact map_zero (Complex.piCoordCLE d).symm
 
-/-- The complex-coordinate neighborhood pair supporting the oriented simplex. -/
-abbrev standardComplexOrientationNeighborhoodPair (d : ℕ) : TopPair :=
-  TopPair.ofSubset (X := TopCat.of (Fin d → ℂ))
-    (standardComplexOrientationNeighborhood d : Set (Fin d → ℂ))ᶜ
-
 /-- The normalized complex neighborhood class. The only degree cast is the proved arithmetic
 identity `d * 2 = 2 * d` converting the ordered real-coordinate dimension. -/
 def standardComplexOrientationNeighborhoodClass (d : ℕ) :
-    RelativeHomology ℚ (standardComplexOrientationNeighborhoodPair d) (2 * d) :=
+    RelativeHomology ℚ
+      (TopPair.ofSubset (X := TopCat.of (Fin d → ℂ))
+        (standardComplexOrientationNeighborhood d : Set (Fin d → ℂ))ᶜ) (2 * d) :=
   (Nat.mul_comm d 2) ▸
     relativeHomologyMap ℚ (d * 2)
       (imageSupportPairMap (standardRealToComplexMap d) (standardRealToComplexMap_injective d)

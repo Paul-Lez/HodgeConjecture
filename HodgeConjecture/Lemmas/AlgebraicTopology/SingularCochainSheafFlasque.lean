@@ -416,17 +416,14 @@ noncomputable def singularZeroCochainEquivFunction (U : (Opens X)ᵒᵖ) :
   · ext φ c
     exact congrArg (fun f ↦ f c) (singularZeroCochainOfFunction_toFunction R X U φ)
 
-/-- Restriction of arbitrary functions along an inclusion of open subsets. -/
-def openFunctionRestriction {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) :
-    (U.unop → R) →ₗ[R] (V.unop → R) where
-  toFun f := f ∘ i.unop
-  map_add' _ _ := rfl
-  map_smul' _ _ := rfl
-
-/-- The additive presheaf of arbitrary `R`-valued functions. -/
+/-- The additive presheaf of arbitrary `R`-valued functions, restricted along inclusions of
+open subsets. -/
 def functionPresheaf : TopCat.Presheaf AddCommGrpCat X where
   obj U := AddCommGrpCat.of (U.unop → R)
-  map i := AddCommGrpCat.ofHom (openFunctionRestriction R X i).toAddMonoidHom
+  map i := AddCommGrpCat.ofHom
+    { toFun := fun f ↦ f ∘ i.unop
+      map_zero' := rfl
+      map_add' := fun _ _ ↦ rfl }
   map_id _ := rfl
   map_comp _ _ := rfl
 

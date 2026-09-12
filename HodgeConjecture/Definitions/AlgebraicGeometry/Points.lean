@@ -126,11 +126,6 @@ Using this subtype is preferable whenever a local regular function is evaluated:
 domain condition in the type instead of assigning an arbitrary value outside `U`. -/
 abbrev OverOpen (U : X.left.Opens) := {z : Point R X // z.underlying ∈ U}
 
-/-- Evaluation of a local regular function on its actual domain. -/
-noncomputable def evaluateOnOpen (U : X.left.Opens) (s : Γ(X.left, U))
-    (z : OverOpen (X := X) U) : R :=
-  z.1.stalkHom (X.left.presheaf.germ U z.1.underlying z.2 s)
-
 /--
 Evaluation of a local regular function at an `R`-point. Outside the function's domain this is
 defined to be zero; all uses in the analytic topology are restricted to `overOpen U`.
@@ -176,11 +171,6 @@ lemma evaluationHom_apply (U : X.left.Opens) (z : OverOpen (X := X) U)
     (s : Γ(X.left, U)) : evaluationHom U z s = evaluate U s z.1 := by
   rw [evaluate, dif_pos z.2]
   rfl
-
-/-- The underlying ring homomorphism of `evaluationHom` is evaluation. -/
-private lemma evaluationHom_hom_apply (U : X.left.Opens) (z : OverOpen (X := X) U)
-    (s : Γ(X.left, U)) : (evaluationHom U z).hom s = evaluate U s z.1 :=
-  evaluationHom_apply U z s
 
 /-- On an affine open, a regular function on a principal open is, at every `R`-point of that
 principal open, a regular function on the whole affine open divided by a power of the defining
@@ -353,7 +343,7 @@ lemma analyticTopology_eq_generateFrom :
     · rintro y ⟨hyU, hyu⟩
       have hy : ⇑(evaluationHom U ⟨y, hyU⟩).hom ∈ O' :=
         hIO fun t ht ↦ by
-          rw [evaluationHom_hom_apply]
+          rw [evaluationHom_apply]
           exact (Set.mem_iInter₂.1 hyu t ht).2
       have hmem : (⟨y, hyU⟩ : OverOpen (X := X) U) ∈
           evaluationHom U ⁻¹' ((fun f : Γ(X.left, U) ⟶ ↧R ↦ ⇑f.hom) ⁻¹' O') := hy
@@ -364,7 +354,7 @@ lemma analyticTopology_eq_generateFrom :
           TopologicalSpace.isOpen_generateFrom_of_mem ⟨U, t, u t, (hu t ht).1, rfl⟩)
     · refine ⟨hzU, Set.mem_iInter₂.2 fun t ht ↦ ⟨hzU, ?_⟩⟩
       have h2 := (hu t ht).2
-      rwa [evaluationHom_hom_apply] at h2
+      rwa [evaluationHom_apply] at h2
 
 /-- Continuity of a map into the `R`-points is tested on the defining subbasis. -/
 lemma continuous_iff_analyticSubbasis {Z : Type*} [TopologicalSpace Z]

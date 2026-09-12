@@ -47,7 +47,8 @@ def chartNormalProjectionPair (W : Set M) (hW : W ⊆ e.source) :
 def chartNormalProjectionCoclass (W : Set M) (hW : W ⊆ e.source) :
     RelativeCohomology ℚ (neighborhoodSupportComplementPair W S) (2 * c) :=
   relativeCohomologyMap ℚ (2 * c) (chartNormalProjectionPair E c e S hS W hW)
-    (normalizedDual (standardComplexLocalClass c) (standardComplexLocalClass_ne_zero_for_chart c))
+    (normalizedRelativeCoclass (standardComplexLocalClass c)
+      (standardComplexLocalClass_ne_zero_for_chart c))
 
 variable (x : M) (hx : x ∈ e.source) (h0 : (e x).2 = 0)
 

@@ -228,16 +228,10 @@ lemma standardPuncturedFacetIntersectionSet_ne_zero (d : ℕ)
   rw [hzeroCoord i, hzeroCoord j] at hj
   exact (lt_self_iff_false 0).mp hj
 
-/-- A proper nonempty intersection of facet-cover conditions, as a topological subspace of
-the ambient coordinate vector space. -/
-abbrev StandardPuncturedFacetIntersection (d : ℕ)
-    (I : Finset (Fin (d + 1))) :=
-  standardPuncturedFacetIntersectionSet d I
-
 /-- Every proper intersection of facet-cover members is contractible. -/
 lemma standardPuncturedFacetIntersection_contractibleSpace (d : ℕ)
     (I : Finset (Fin (d + 1))) (hI : I ≠ Finset.univ) :
-    ContractibleSpace (StandardPuncturedFacetIntersection d I) :=
+    ContractibleSpace (standardPuncturedFacetIntersectionSet d I) :=
   (standardPuncturedFacetIntersectionSet_starConvex d I hI).contractibleSpace
     ⟨standardFacetIntersectionCenter d I,
       standardFacetIntersectionCenter_mem d I hI⟩
@@ -251,7 +245,7 @@ def standardPuncturedFacetIntersectionSubspace (d : ℕ)
 homeomorphic. -/
 def standardPuncturedFacetIntersectionHomeomorph (d : ℕ)
     (I : Finset (Fin (d + 1))) (hI : I.Nonempty) :
-    StandardPuncturedFacetIntersection d I ≃ₜ
+    standardPuncturedFacetIntersectionSet d I ≃ₜ
       standardPuncturedFacetIntersectionSubspace d I where
   toFun x := ⟨⟨x.1,
     standardPuncturedFacetIntersectionSet_ne_zero d I hI x.2⟩, x.2⟩
@@ -265,7 +259,7 @@ def standardPuncturedFacetIntersectionHomeomorph (d : ℕ)
 lemma standardPuncturedFacetIntersectionSubspace_contractibleSpace (d : ℕ)
     (I : Finset (Fin (d + 1))) (hI : I.Nonempty) (hproper : I ≠ Finset.univ) :
     ContractibleSpace (standardPuncturedFacetIntersectionSubspace d I) := by
-  let : ContractibleSpace (StandardPuncturedFacetIntersection d I) :=
+  let : ContractibleSpace (standardPuncturedFacetIntersectionSet d I) :=
     standardPuncturedFacetIntersection_contractibleSpace d I hproper
   exact (standardPuncturedFacetIntersectionHomeomorph d I hI).symm.contractibleSpace
 
@@ -293,12 +287,12 @@ lemma standardPuncturedFacetIntersection_exactAt (d : ℕ)
     (I : Finset (Fin (d + 1))) (hI : I ≠ Finset.univ)
     (k : ℕ) (hk : k ≠ 0) :
     ((TopCat.toSSet.obj
-      (TopCat.of (StandardPuncturedFacetIntersection d I))).chainComplex
+      (TopCat.of (standardPuncturedFacetIntersectionSet d I))).chainComplex
         (ModuleCat.of ℚ ℚ)).ExactAt k := by
-  let : ContractibleSpace (StandardPuncturedFacetIntersection d I) :=
+  let : ContractibleSpace (standardPuncturedFacetIntersectionSet d I) :=
     standardPuncturedFacetIntersection_contractibleSpace d I hI
   exact AlgebraicTopology.singularChainComplex_exactAt_of_contractible
-    ℚ (StandardPuncturedFacetIntersection d I) k hk
+    ℚ (standardPuncturedFacetIntersectionSet d I) k hk
 
 /-- Positive-degree integral singular homology of a nonempty proper facet intersection
 vanishes. -/
@@ -2649,21 +2643,6 @@ lemma standardAffineBoundaryHomologyMap_comp_retraction (n : ℕ) :
     (standardAffineBoundaryChainRetractionHomotopy (n + 2)).homologyMap_eq,
     HomologicalComplex.homologyMap_id]
 
-/-- The homology isomorphism induced by affine realization of the standard simplicial
-boundary. -/
-def standardAffineBoundaryHomologyIso (n : ℕ) :
-    ((∂Δ[n + 2] : SSet.{0}).chainComplex
-      (ModuleCat.of ℚ ℚ)).homology (n + 1) ≅
-    ((TopCat.toSSet.obj (standardPuncturedPair (n + 2)).snd).chainComplex
-      (ModuleCat.of ℚ ℚ)).homology (n + 1) :=
-  (standardAffineBoundaryChainHomotopyEquiv (n + 2)).toHomologyIso (n + 1)
-
-@[simp]
-lemma standardAffineBoundaryHomologyIso_hom (n : ℕ) :
-    (standardAffineBoundaryHomologyIso n).hom =
-      standardAffineBoundaryHomologyMap n :=
-  rfl
-
 /-- The affine boundary comparison is an isomorphism on rational homology. -/
 noncomputable instance standardAffineBoundaryHomologyMap_isIso (n : ℕ) :
     IsIso (standardAffineBoundaryHomologyMap n) := by
@@ -2688,13 +2667,6 @@ lemma standardAffineBoundaryHomologyMap_injective (n : ℕ) :
     _ = y := by
       simpa only [ConcreteCategory.comp_apply, ConcreteCategory.id_apply]
         using hcomp y
-
-lemma standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain' (n : ℕ) :
-    standardSphereSimplicialBoundaryChain n ≫
-        (standardAffineBoundaryChainMap (n + 1)).f n =
-      standardSubspaceBoundaryChain n := by
-  rw [standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain,
-    standardPuncturedAffineBoundaryChain, standardSubspaceBoundaryChain]
 
 lemma standardPuncturedBoundaryCycle_inclusion' (n : ℕ) :
     standardPuncturedBoundaryCycle n ≫
@@ -2740,8 +2712,7 @@ lemma standardSphereSimplicialBoundaryCycle_affine (n : ℕ) :
       (ModuleCat.of ℚ ℚ)).iCycles (n + 1))).mp
   rw [Category.assoc, hcycles, standardPuncturedBoundaryCycle_direct_inclusion,
     ← Category.assoc, standardSphereSimplicialBoundaryCycle_inclusion']
-  exact standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain'
-    (n + 1)
+  exact standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain (n + 1)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- On homology, the affine realization sends the known simplicial sphere generator to the

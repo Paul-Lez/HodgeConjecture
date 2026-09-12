@@ -56,11 +56,18 @@ def neighborhoodSupportPairImageIso :
     · ext w
       exact (hf.homeomorphImage W).right_inv w
 
-/-- Relative cohomology transport is the dual of the actual induced homology map. -/
+/-- Relative cohomology transport, obtained by dualising the actual induced chain map. -/
+def neighborhoodSupportPairImageCohomologyIso (n : ℕ) :
+    RelativeCohomology ℚ (neighborhoodSupportComplementPair (f '' W) S) n ≅
+      RelativeCohomology ℚ (neighborhoodSupportComplementPair W B) n :=
+  (HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.up ℕ) n).mapIso
+    (HomologicalComplex.linearDualIso
+      ((relativeChainFunctor ℚ).mapIso (neighborhoodSupportPairImageIso f hf W B S hS)))
+
+/-- Relative cohomology transport as a linear equivalence. -/
 def neighborhoodSupportPairImageCohomologyEquiv (n : ℕ) :
     RelativeCohomology ℚ (neighborhoodSupportComplementPair (f '' W) S) n ≃ₗ[ℚ]
       RelativeCohomology ℚ (neighborhoodSupportComplementPair W B) n :=
-  (((relativeHomologyFunctor ℚ n).mapIso
-    (neighborhoodSupportPairImageIso f hf W B S hS)).toLinearEquiv).dualMap
+  (neighborhoodSupportPairImageCohomologyIso f hf W B S hS n).toLinearEquiv
 
 end AlgebraicTopology.Singular

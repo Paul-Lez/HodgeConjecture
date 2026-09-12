@@ -80,13 +80,6 @@ def graphFlattenPairIso : graphComplementPair E c F ≅ normalSlicePair E c wher
     · ext z
       exact (graphFlattenHomeomorph E c F hF).right_inv z
 
-/-- Actual chain homotopy equivalence from a graph-complement pair to its normal slice. -/
-def graphNormalRelativeChainHomotopyEquiv :
-    HomotopyEquiv ((relativeChainFunctor ℚ).obj (graphComplementPair E c F))
-      ((relativeChainFunctor ℚ).obj (standardComplexPuncturedPair c)) :=
-  (HomotopyEquiv.ofIso ((relativeChainFunctor ℚ).mapIso
-    (graphFlattenPairIso E c F hF))).trans (normalSliceRelativeChainHomotopyEquiv E c)
-
 /-- The homology isomorphism constructed from the actual graph shear and normal projection. -/
 def graphNormalRelativeHomologyIso (n : ℕ) :
     RelativeHomology ℚ (graphComplementPair E c F) n ≅
@@ -125,23 +118,8 @@ theorem graphNormalFiber_class (a : E) :
   rw [graphNormalFiber, relativeHomologyMap_comp, LinearMap.comp_apply, normalSliceSectionAt_class]
   rfl
 
-/-- Actual normal projection determines graph relative cohomology by linear duality. -/
-def graphNormalRelativeCohomologyEquiv (n : ℕ) :
-    RelativeCohomology ℚ (standardComplexPuncturedPair c) n ≃ₗ[ℚ]
-      RelativeCohomology ℚ (graphComplementPair E c F) n :=
-  (graphNormalRelativeHomologyIso E c F hF n).toLinearEquiv.dualMap
-
-@[simp] theorem graphNormalRelativeCohomologyEquiv_evaluate_class
-    (α : RelativeCohomology ℚ (standardComplexPuncturedPair c) (2 * c)) :
-    graphNormalRelativeCohomologyEquiv E c F hF (2 * c) α (graphNormalClass E c F hF) =
-      α (standardComplexLocalClass c) := by
-  change α ((graphNormalRelativeHomologyIso E c F hF (2 * c)).hom.hom
-    (graphNormalClass E c F hF)) = _
-  rw [graphNormalClass_normalization]
-
 theorem graphRelativeCohomology_isZero_of_ne (hF : Continuous F) (n : ℕ) (hn : n ≠ 2 * c) :
-    IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ (graphComplementPair E c F) n)) := by
-  have := ModuleCat.subsingleton_of_isZero (graphRelativeHomology_isZero_of_ne E c F hF n hn)
-  exact ModuleCat.isZero_of_subsingleton _
+    IsZero (RelativeCohomology ℚ (graphComplementPair E c F) n) :=
+  relativeCohomology_isZero ℚ _ n (graphRelativeHomology_isZero_of_ne E c F hF n hn)
 
 end AlgebraicTopology.Singular

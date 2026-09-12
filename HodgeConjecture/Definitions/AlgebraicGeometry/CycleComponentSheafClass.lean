@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicGeometry.DerivedSupportRationalConeForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSupportExtension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSmoothSupportCoclassSection
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSheafBorelMooreRationalComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSingularCohomologySheafComparison
 /-!
 # Constructed sheaf cycle classes in arbitrary codimension
@@ -54,16 +54,25 @@ def complexSupportInjectiveCohomologySheafIsoRelative
 variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
   (hx : Order.coheight x = p)
 
+/-- Degree-`2p` cohomology of global sections supported on the component,
+computed in the fixed ambient injective resolution. -/
+abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
+  (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+    (.up ℤ)).obj (complexSupportInjectiveComplex X
+      (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))
+
+/-- Sections of the local relative-cohomology sheaf on the smooth-locus ambient open. -/
+abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
+  (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+    (cycleComponentSupport X x) (2 * p)).obj.obj
+      (op (cycleComponentSmoothSupportAmbientOpen X x))
+
 /-- Supported cohomology on the full component is identified with sections
 of the local relative-cohomology sheaf on its smooth-locus ambient open.
 Each of the three arrows is an actual proved isomorphism. -/
 def cycleComponentSupportedClassNormalizationIso :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
-      (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-        (cycleComponentSupport X x) (2 * p)).obj.obj
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) := by
+    CycleComponentSupportedCohomology X x p ≅
+      CycleComponentSmoothCoclassSections X x p := by
   refine cycleComponentSupportExtensionIso X x (d := d) hx ≪≫
     cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := d) hx ≪≫ ?_
   let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
@@ -75,13 +84,17 @@ def cycleComponentSupportedClassNormalizationIso :
   rw [he] at e
   exact e
 
+/-- Extend a smooth-locus coclass uniquely across the singular boundary.
+The inverse comes from proved purity and boundary vanishing; no extension datum is supplied. -/
+def cycleComponentExtendSmoothCoclass :
+    CycleComponentSmoothCoclassSections X x p →+
+      CycleComponentSupportedCohomology X x p :=
+  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).inv.hom
+
 /-- The actual globally supported class extending the exact complex-normal
 coclass. The inverse is that of the proved normalization isomorphism. -/
-def cycleComponentSupportedInjectiveClass :
-    (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ)) :=
-  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).inv
+def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
+  cycleComponentExtendSmoothCoclass X x (d := d) hx
     (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)
 
 /-- The constructed class in the existing support-cone presentation. Its
@@ -109,16 +122,5 @@ theorem cycleComponentSheafClass_codimension_le : p ≤ d := by
   have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := d) x
   rw [hx] at h
   exact_mod_cast h
-
-/-- The normalized fundamental class in ACTUAL ambient chain-sheaf
-Borel–Moore homology, obtained through the constructed orientation shift.
-It is not an element of a supplied replacement homology group. -/
-def cycleComponentSheafBorelMooreFundamentalClass :
-    ComplexAmbientSheafBorelMooreHomology X d (cycleComponentAnalyticClosedSupport X x)
-      (2 * ((d - p : ℕ) : ℤ)) :=
-  (complexAmbientSheafBorelMooreCycleDegreeAddEquivRationalSupport X d
-    (cycleComponentAnalyticClosedSupport X x) p
-    (cycleComponentSheafClass_codimension_le X x (d := d) hx)).symm
-      (cycleComponentSheafSupportedClass X x (d := d) hx)
 
 end AlgebraicGeometry.ComplexPoint

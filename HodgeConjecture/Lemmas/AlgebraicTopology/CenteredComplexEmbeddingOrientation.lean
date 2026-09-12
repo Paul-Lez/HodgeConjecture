@@ -45,7 +45,7 @@ def centeredComplexEmbeddingPair (F : (Fin d → ℂ) → (Fin d → ℂ))
     standardComplexPuncturedPair d ⟶ standardComplexPuncturedPair d :=
   complexPuncturedPairMapOf d (fun w => F (w + v) - F v)
     ((hF.comp (continuous_id.add continuous_const)).sub continuous_const)
-    (by simp) (fun w hw h => hw
+    (fun w hw h => hw
       (add_right_cancel (show w + v = 0 + v by simpa using hFi (sub_eq_zero.mp h))))
 
 /-- An explicit punctured-pair homotopy moving the center from zero to `v`. -/
@@ -124,6 +124,7 @@ theorem centeredComplexUnivBall_preserves_standardComplexLocalClass
       (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) = L :=
     ContinuousLinearMap.ext (complexMatrixOfContinuousLinearMap_mulVec d L)
   apply relativeHomologyMap_complexDifferentiable_standardComplexLocalClass d A hA
+  case hf0 => simp
   rw [hAL]
   simpa only [add_zero] using
     (hasFDerivAt_univBall_complex d c r hr).sub_const

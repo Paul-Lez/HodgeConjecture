@@ -54,6 +54,27 @@ lemma normalizedDual_apply_self (z : M) (hz : z ≠ 0) :
     (normalizedDual (R := R) z hz) z = (1 : R) :=
   Classical.choose_spec (Module.Projective.exists_dual_eq_one R hz)
 
+/-- The relative cohomology class normalized to pair to one with a given nonzero relative
+homology class. Cohomology is the homology of the dual cochain complex rather than the dual of
+homology, so the normalized functional is transported along the universal-coefficient
+equivalence. -/
+def normalizedRelativeCoclass {R : Type*} [Field R] {X : TopPair} {n : ℕ}
+    (z : RelativeHomology R X n) (hz : z ≠ 0) : RelativeCohomology R X n :=
+  (relativeCohomologyEquivDualHomology R X n).symm (normalizedDual z hz)
+
+@[simp]
+lemma relativeCohomologyEquivDualHomology_normalizedRelativeCoclass {R : Type*} [Field R]
+    {X : TopPair} {n : ℕ} (z : RelativeHomology R X n) (hz : z ≠ 0) :
+    relativeCohomologyEquivDualHomology R X n (normalizedRelativeCoclass z hz) =
+      normalizedDual z hz :=
+  (relativeCohomologyEquivDualHomology R X n).apply_symm_apply _
+
+@[simp]
+lemma normalizedRelativeCoclass_pairing_self {R : Type*} [Field R] {X : TopPair} {n : ℕ}
+    (z : RelativeHomology R X n) (hz : z ≠ 0) :
+    relativeCohomologyEquivDualHomology R X n (normalizedRelativeCoclass z hz) z = (1 : R) := by
+  rw [relativeCohomologyEquivDualHomology_normalizedRelativeCoclass, normalizedDual_apply_self]
+
 /-- Two one-dimensional vector spaces with specified normalized generators are canonically
 linearly equivalent by sending the first generator to the second. -/
 def linearEquivOfNormalizedGenerators
@@ -114,16 +135,5 @@ lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
   apply standardComplexLocalClass_ne_zero n
   apply hinjective
   simpa only [neighborhoodLocalClass, map_zero] using hzero
-
-/-- Cohomology of the component neighborhood supported at its selected smooth point. -/
-abbrev neighborhoodPointSupportedCohomology :=
-  CohomologyWithSupport ℚ
-    (TopCat.of (ComplexPoint C.neighborhoodScheme))
-    {C.neighborhoodPoint} (2 * n)
-
-/-- The unique local cohomology class normalized to evaluate to one on the transported local
-fundamental class. -/
-def neighborhoodLocalCoclass : C.neighborhoodPointSupportedCohomology :=
-  normalizedDual C.neighborhoodLocalClass C.neighborhoodLocalClass_ne_zero
 
 end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

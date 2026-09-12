@@ -249,9 +249,8 @@ lemma awayCoordinateEvaluation_smul {n : ℕ} (v : CoordinateSpace n)
     _ = _ := by rw [mul_inv_cancel₀ hc, one_pow, mul_one]
 
 /-- Evaluation on the degree-zero localization away from an arbitrary homogeneous polynomial. -/
-noncomputable def awayHomogeneousEvaluation {n d : ℕ} (v : CoordinateSpace n)
-    (f : UniversalRing n) (_hf : f ∈ UniversalGrading n d)
-    (hv : coordinateEvaluationHom v f ≠ 0) :
+noncomputable def awayHomogeneousEvaluation {n : ℕ} (v : CoordinateSpace n)
+    (f : UniversalRing n) (hv : coordinateEvaluationHom v f ≠ 0) :
     HomogeneousLocalization.Away (UniversalGrading n) f →+* ℂ :=
   (IsLocalization.Away.lift
     (S := Localization.Away f) f
@@ -266,7 +265,7 @@ lemma awayHomogeneousEvaluation_mk {n d : ℕ} (v : CoordinateSpace n)
     (f : UniversalRing n) (hf : f ∈ UniversalGrading n d)
     (hv : coordinateEvaluationHom v f ≠ 0) (k : ℕ)
     (r : UniversalRing n) (hr : r ∈ UniversalGrading n (k * d)) :
-    awayHomogeneousEvaluation v f hf hv
+    awayHomogeneousEvaluation v f hv
       (HomogeneousLocalization.Away.mk (UniversalGrading n) hf k r
         (by simpa [nsmul_eq_mul] using hr)) =
       coordinateEvaluationHom v r * (coordinateEvaluationHom v f)⁻¹ ^ k := by
@@ -462,21 +461,14 @@ set_option backward.isDefEq.respectTransparency.types false in
 lemma awayHomogeneousEvaluation_comp_awayMap_coordinate {n : ℕ}
     (v : CoordinateSpace n) (i j : Fin (n + 1))
     (hi : v i ≠ 0) (hj : v j ≠ 0) :
-    (awayHomogeneousEvaluation (d := 2) v (MvPolynomial.X i * MvPolynomial.X j)
-      (by simpa using (SetLike.mul_mem_graded (A := UniversalGrading n)
-        (MvPolynomial.isHomogeneous_X (ULift ℤ) i)
-        (MvPolynomial.isHomogeneous_X (ULift ℤ) j)))
+    (awayHomogeneousEvaluation v (MvPolynomial.X i * MvPolynomial.X j)
       (by simp [hi, hj])).comp
         (HomogeneousLocalization.awayMap (UniversalGrading n)
           (MvPolynomial.isHomogeneous_X (ULift ℤ) j) rfl) =
       awayCoordinateEvaluation v i hi := by
-  let hfij : MvPolynomial.X i * MvPolynomial.X j ∈ UniversalGrading n 2 := by
-    convert SetLike.mul_mem_graded (A := UniversalGrading n)
-      (MvPolynomial.isHomogeneous_X (ULift ℤ) i)
-      (MvPolynomial.isHomogeneous_X (ULift ℤ) j) using 1
   let hvij : coordinateEvaluationHom v (MvPolynomial.X i * MvPolynomial.X j) ≠ 0 := by
     simp [hi, hj]
-  let φij := awayHomogeneousEvaluation v (MvPolynomial.X i * MvPolynomial.X j) hfij hvij
+  let φij := awayHomogeneousEvaluation v (MvPolynomial.X i * MvPolynomial.X j) hvij
   change φij.comp
       (HomogeneousLocalization.awayMap (UniversalGrading n)
         (MvPolynomial.isHomogeneous_X (ULift ℤ) j) rfl) =
@@ -597,11 +589,8 @@ standard coordinate. -/
 lemma chartIntegralProjAt_independent {n : ℕ} (v : CoordinateSpace n)
     (i j : Fin (n + 1)) (hi : v i ≠ 0) (hj : v j ≠ 0) :
     chartIntegralProjAt v i hi = chartIntegralProjAt v j hj := by
-  let φij := awayHomogeneousEvaluation (d := 2) v
+  let φij := awayHomogeneousEvaluation v
     (MvPolynomial.X i * MvPolynomial.X j)
-    (by simpa using (SetLike.mul_mem_graded (A := UniversalGrading n)
-      (MvPolynomial.isHomogeneous_X (ULift ℤ) i)
-      (MvPolynomial.isHomogeneous_X (ULift ℤ) j)))
     (by simp [hi, hj])
   have hfi : φij.comp
         (HomogeneousLocalization.awayMap (UniversalGrading n)
@@ -858,136 +847,6 @@ lemma coordinate_irrelevant_map_eq_top {n : ℕ} (v : CoordinateSpace n) (hv : v
   · rw [coordinateGlobalSectionsHom_X]
     exact IsUnit.map (Scheme.ΓSpecIso ↧ℂ).inv.hom
       (isUnit_iff_ne_zero.mpr hi)
-
-/-- Nonzero homogeneous coordinates define a morphism from `Spec ℂ` to the integral `Proj`
-model. -/
-noncomputable def toIntegralProj {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
-    Spec ↧ℂ ⟶ Proj (UniversalGrading n) :=
-  Proj.fromOfGlobalSections (UniversalGrading n) (coordinateGlobalSectionsHom v)
-    (coordinate_irrelevant_map_eq_top v hv)
-
-/-- The inverse image of a positive-degree basic open under the point constructed from
-coordinates is determined by whether the homogeneous polynomial vanishes at those coordinates. -/
-lemma toIntegralProj_preimage_basicOpen {n d : ℕ}
-    (v : CoordinateSpace n) (hv : v ≠ 0)
-    (r : UniversalRing n) (hd : 0 < d) (hr : r ∈ UniversalGrading n d) :
-    toIntegralProj v hv ⁻¹ᵁ Proj.basicOpen (UniversalGrading n) r =
-      if (Scheme.ΓSpecIso ↧ℂ).hom (coordinateGlobalSectionsHom v r) = 0
-        then ⊥ else ⊤ := by
-  rw [toIntegralProj,
-    Proj.fromOfGlobalSections_preimage_basicOpen _ _ _ hd hr]
-  rw [basicOpen_eq_of_affine']
-  let a : ℂ := (Scheme.ΓSpecIso ↧ℂ).hom (coordinateGlobalSectionsHom v r)
-  change PrimeSpectrum.basicOpen a = if a = 0 then ⊥ else ⊤
-  split_ifs with h
-  · rw [h]
-    exact PrimeSpectrum.basicOpen_zero
-  · apply top_unique
-    intro x hx
-    rw [PrimeSpectrum.mem_basicOpen, Subsingleton.elim x (⊥ : PrimeSpectrum ℂ)]
-    simpa using h
-
-/-- The coordinate chart met by the point constructed from a vector is exactly the chart on
-which that coordinate is nonzero. -/
-lemma toIntegralProj_preimage_coordinateBasicOpen {n : ℕ}
-    (v : CoordinateSpace n) (hv : v ≠ 0) (i : Fin (n + 1)) :
-    toIntegralProj v hv ⁻¹ᵁ
-      Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i) =
-        if v i = 0 then ⊥ else ⊤ := by
-  rw [toIntegralProj,
-    Proj.fromOfGlobalSections_preimage_basicOpen _ _ _ zero_lt_one
-      (MvPolynomial.isHomogeneous_X _ i)]
-  rw [coordinateGlobalSectionsHom_X, basicOpen_eq_of_affine']
-  let a : ℂ := (Scheme.ΓSpecIso ↧ℂ).hom
-    ((Scheme.ΓSpecIso ↧ℂ).inv (v i))
-  have ha : a = v i := Iso.hom_inv_id_apply _ _
-  change PrimeSpectrum.basicOpen a = _
-  rw [ha]
-  split_ifs with h
-  · rw [h]
-    exact PrimeSpectrum.basicOpen_zero
-  · apply top_unique
-    intro x hx
-    rw [PrimeSpectrum.mem_basicOpen, Subsingleton.elim x (⊥ : PrimeSpectrum ℂ)]
-    simpa using h
-
-/-- Rescaling nonzero homogeneous coordinates does not change the underlying point of the
-integral `Proj` model. -/
-lemma toIntegralProj_apply_smul {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0)
-    (c : ℂ) (hc : c ≠ 0) (x : Spec ↧ℂ) :
-    toIntegralProj (c • v) (smul_ne_zero hc hv) x = toIntegralProj v hv x := by
-  classical
-  obtain ⟨i, hi⟩ := exists_coordinate_ne_zero v hv
-  apply ProjectiveSpectrum.ext
-  ext r
-  rw [(toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal.isHomogeneous.mem_iff,
-    (toIntegralProj v hv x).asHomogeneousIdeal.isHomogeneous.mem_iff]
-  apply forall_congr'
-  intro d
-  let s : UniversalRing n :=
-    GradedRing.proj (UniversalGrading n) d r
-  have hs : s ∈ UniversalGrading n d := SetLike.coe_mem _
-  let t : UniversalRing n := s * MvPolynomial.X i
-  have ht : t ∈ UniversalGrading n (d + 1) :=
-    SetLike.mul_mem_graded hs (MvPolynomial.isHomogeneous_X _ i)
-  have hXi_v : MvPolynomial.X i ∉
-      (toIntegralProj v hv x).asHomogeneousIdeal := by
-    rw [← Proj.mem_basicOpen]
-    change x ∈ toIntegralProj v hv ⁻¹ᵁ
-      Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i)
-    rw [toIntegralProj_preimage_basicOpen v hv (MvPolynomial.X i) zero_lt_one
-      (MvPolynomial.isHomogeneous_X _ i), coordinateGlobalSectionsHom_X]
-    simp [hi]
-  have hXi_cv : MvPolynomial.X i ∉
-      (toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal := by
-    rw [← Proj.mem_basicOpen]
-    change x ∈ toIntegralProj (c • v) (smul_ne_zero hc hv) ⁻¹ᵁ
-      Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i)
-    rw [toIntegralProj_preimage_basicOpen (c • v) (smul_ne_zero hc hv)
-      (MvPolynomial.X i) zero_lt_one (MvPolynomial.isHomogeneous_X _ i),
-      coordinateGlobalSectionsHom_X]
-    simp [hi, hc]
-  have htmem (w : CoordinateSpace n) (hw : w ≠ 0) :
-      t ∈ (toIntegralProj w hw x).asHomogeneousIdeal ↔
-        (Scheme.ΓSpecIso ↧ℂ).hom (coordinateGlobalSectionsHom w t) = 0 := by
-    rw [← not_iff_not, ← Proj.mem_basicOpen]
-    change x ∈ toIntegralProj w hw ⁻¹ᵁ
-      Proj.basicOpen (UniversalGrading n) t ↔ _
-    rw [toIntegralProj_preimage_basicOpen w hw t (Nat.zero_lt_succ d) ht]
-    split_ifs with h <;> simp [h]
-  change s ∈ (toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal ↔
-    s ∈ (toIntegralProj v hv x).asHomogeneousIdeal
-  have hmul_cv : t ∈
-      (toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal ↔
-        s ∈ (toIntegralProj (c • v) (smul_ne_zero hc hv) x).asHomogeneousIdeal :=
-    ⟨fun h ↦ ((toIntegralProj (c • v) (smul_ne_zero hc hv) x).isPrime.mem_or_mem
-      h).resolve_right hXi_cv, fun h ↦ Ideal.mul_mem_right _ _ h⟩
-  have hmul_v : t ∈ (toIntegralProj v hv x).asHomogeneousIdeal ↔
-      s ∈ (toIntegralProj v hv x).asHomogeneousIdeal :=
-    ⟨fun h ↦ ((toIntegralProj v hv x).isPrime.mem_or_mem h).resolve_right hXi_v,
-      fun h ↦ Ideal.mul_mem_right _ _ h⟩
-  rw [← hmul_cv, ← hmul_v, htmem, htmem, coordinateGlobalSectionsHom_smul t ht c v]
-  simp [hc]
-
-/-- Homogeneous coordinates give a scale-independent map to the underlying projective spectrum.
-This is the point-level part of the comparison with scheme-theoretic projective space. -/
-noncomputable def projectivizationToIntegralProjPointAt {n : ℕ} (x : Spec ↧ℂ) :
-    Projectivization ℂ (CoordinateSpace n) → Proj (UniversalGrading n) :=
-  Projectivization.lift
-    (fun v ↦ toIntegralProj v.1 v.2 x)
-    (fun a b c h ↦ by
-      have hc : c ≠ 0 := by
-        intro hc
-        apply a.2
-        rw [h, hc, zero_smul]
-      simpa only [h] using toIntegralProj_apply_smul b.1 b.2 c hc x)
-
-@[simp]
-lemma projectivizationToIntegralProjPointAt_mk {n : ℕ} (x : Spec ↧ℂ)
-    (v : CoordinateSpace n) (hv : v ≠ 0) :
-    projectivizationToIntegralProjPointAt x (Projectivization.mk ℂ v hv) =
-      toIntegralProj v hv x :=
-  rfl
 
 /-- Nonzero homogeneous coordinates define a point of scheme-theoretic projective space over
 `Spec ℂ`. -/

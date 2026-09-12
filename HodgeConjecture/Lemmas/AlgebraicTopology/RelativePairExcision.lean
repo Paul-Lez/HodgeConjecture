@@ -841,16 +841,9 @@ def pointComplementChainsToAmbientPairLeft (x : X) :
       ((chainPairFunctor ℚ).obj (pointComplementPair x)).left :=
   𝟙 _
 
-/-- The inverse identity map for `pointComplementChainsToAmbientPairLeft`. -/
-def ambientPairLeftToPointComplementChains (x : X) :
-    ((chainPairFunctor ℚ).obj (pointComplementPair x)).left ⟶
-      (TopCat.toSSet.obj (pointComplementPair x).snd).chainComplex
-        (ModuleCat.of ℚ ℚ) :=
-  𝟙 _
-
 instance pointComplementChainsToAmbientPairLeft_isIso (x : X) :
     IsIso (pointComplementChainsToAmbientPairLeft x) := by
-  exact ⟨⟨ambientPairLeftToPointComplementChains x, Category.comp_id _, Category.comp_id _⟩⟩
+  exact ⟨⟨𝟙 _, Category.comp_id _, Category.comp_id _⟩⟩
 
 omit [T1Space X] in
 lemma pointComplementChainsToAmbientPairLeft_comp
@@ -1039,18 +1032,6 @@ theorem neighborhoodPointComplement_relativeChainMap_quasiIso
     pointExcisionSmallRelativeToAmbient_quasiIso U x hU hx
   rw [← neighborhoodToSmallRelative_comp_smallRelativeToAmbient]
   infer_instance
-
-/-- The canonical isomorphism on relative homology induced by inclusion of an open
-neighborhood of the distinguished point. -/
-def neighborhoodPointComplementRelativeHomologyIso
-    (U : Set X) (x : X) (hU : IsOpen U) (hx : x ∈ U) (n : ℕ) :
-    RelativeHomology ℚ (neighborhoodPointComplementPair U x) n ≅
-      RelativeHomology ℚ (pointComplementPair x) n := by
-  let : QuasiIso
-      ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) :=
-    neighborhoodPointComplement_relativeChainMap_quasiIso U x hU hx
-  exact isoOfQuasiIsoAt
-    ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) n
 
 /-- The map on relative homology induced by an open neighborhood inclusion is bijective. -/
 theorem neighborhoodPointComplement_relativeHomologyMap_bijective
