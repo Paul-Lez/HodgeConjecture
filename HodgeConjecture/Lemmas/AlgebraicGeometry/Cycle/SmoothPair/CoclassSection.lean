@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CoclassSection
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 
 /-!
 # The global exactly normalized smooth-support coclass section
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CoclassSection`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection`.
 -/
 
 @[expose] public noncomputable section

@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.NormalCoordinates
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Purity
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainCone
 /-!

@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CoclassOverlap
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothPair.CoclassOverlap
 
 /-!
 # Exactly normalized smooth-support coclasses on overlaps
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CoclassOverlap`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothPair.CoclassOverlap`.
 -/
 
 @[expose] public noncomputable section

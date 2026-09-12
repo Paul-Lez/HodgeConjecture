@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
 
 /-!
 # Cohomology-sheaf concentration for smooth closed supports
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf`.
 -/
 
 @[expose] public noncomputable section

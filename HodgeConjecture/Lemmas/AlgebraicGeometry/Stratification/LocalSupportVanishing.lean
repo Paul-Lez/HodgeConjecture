@@ -5,8 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.OpenTransport
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.OpenTransport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestrictedVanishing
 
 /-!

@@ -221,7 +221,7 @@ The shortest route through the implementation is:
    the class on the smooth locus;
 5. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SupportExtension.lean`, its
    extension across the singular locus;
-6. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SheafClass.lean`, the class of a
+6. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`, the class of a
    subvariety;
 7. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`, the span the
    statement compares against;

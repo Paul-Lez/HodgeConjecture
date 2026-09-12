@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SheafClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeForget
 
 /-!
 # Constructed sheaf cycle classes in arbitrary codimension
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SheafClass`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass`.
 -/
 
 @[expose] public noncomputable section

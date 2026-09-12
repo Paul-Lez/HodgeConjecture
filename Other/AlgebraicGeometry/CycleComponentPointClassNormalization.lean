@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SheafClass
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.CycleComponentPointCoclassSectionNormalization
 public import Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization
 public import Other.AlgebraicGeometry.SheafCycleClass
