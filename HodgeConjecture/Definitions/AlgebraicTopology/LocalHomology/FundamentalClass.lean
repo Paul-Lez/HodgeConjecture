@@ -153,13 +153,6 @@ def standardSubspaceFaceChain (n : ℕ) (i : Fin (n + 2)) :
   (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).snd).ιChainComplex
     (standardFaceSimplex n i)
 
-/-- The alternating sum of the faces of the standard affine `(n + 1)`-simplex, regarded as a
-chain in punctured Euclidean space. -/
-def standardSubspaceBoundaryChain (n : ℕ) :
-    ModuleCat.of ℚ ℚ ⟶
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).left.X n :=
-  ∑ i : Fin (n + 2), (-1) ^ i.val • standardSubspaceFaceChain n i
-
 lemma standardFaceChain_inclusion (n : ℕ) (i : Fin (n + 2)) :
     standardSubspaceFaceChain n i ≫
       ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).hom.f n =

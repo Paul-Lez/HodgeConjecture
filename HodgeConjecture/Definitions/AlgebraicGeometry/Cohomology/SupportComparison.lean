@@ -129,20 +129,6 @@ lemma comp_liftToInjective (hI : ∀ n : ℤ, Injective (I.X n)) :
     (Plus.modelCategoryQuillen.isFibrant_iff I').2 hI
   exact congrArg (fun f ↦ f.hom) sq.fac_left
 
-/-- Replacing the source of a restriction map by a monic quasi-isomorphic resolution induces a
-quasi-isomorphism of mapping cones. -/
-def sourceReplacementConeMap (hI : ∀ n : ℤ, Injective (I.X n)) :
-    mappingCone r ⟶ mappingCone (liftToInjective a r hI) :=
-  mappingCone.map r (liftToInjective a r hI) a (𝟙 I)
-    (by rw [Category.comp_id, comp_liftToInjective])
-
-noncomputable instance sourceReplacementConeMap_quasiIso
-    [HasDerivedCategory C]
-    (hI : ∀ n : ℤ, Injective (I.X n)) :
-    QuasiIso (sourceReplacementConeMap a r hI) :=
-  mappingCone.map_quasiIso_of_vertical_quasiIso r (liftToInjective a r hI)
-    a (𝟙 I) (by rw [Category.comp_id, comp_liftToInjective])
-
 end
 
 end CochainComplex
@@ -235,36 +221,5 @@ local instance bettiSupportComparisonMono : Mono (rationalToSingularCochainCompl
 
 local instance bettiSupportComparisonQuasiIso : QuasiIso (rationalToSingularCochainComplexInt X) :=
   rationalToSingularCochainComplexInt_quasiIso X
-
-/-- A strict chain-level extension of restriction from rational constants to the chosen derived
-pushforward complex across the singular-cochain resolution. -/
-def singularResolutionRestriction
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    singularCochainSheafComplexInt X ℚ ⟶
-      derivedPushforwardComplementConstantRationalComplexInt X Z :=
-  CochainComplex.liftToInjective
-    (rationalToSingularCochainComplexInt X)
-    (rationalRestrictionComplexInt X Z)
-    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
-
-/-- Replacing rational constants by their singular-cochain resolution gives a quasi-isomorphic
-mapping-cone model for supported cohomology. -/
-def rationalSupportConeToSingularResolutionCone
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    rationalCohomologyWithSupportComplex X Z ⟶
-      CochainComplex.mappingCone (singularResolutionRestriction X Z hZ) :=
-  CochainComplex.sourceReplacementConeMap
-    (rationalToSingularCochainComplexInt X)
-    (rationalRestrictionComplexInt X Z)
-    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
-
-noncomputable instance rationalSupportConeToSingularResolutionCone_quasiIso
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    QuasiIso (rationalSupportConeToSingularResolutionCone X Z hZ) := by
-  change QuasiIso (CochainComplex.sourceReplacementConeMap
-    (rationalToSingularCochainComplexInt X)
-    (rationalRestrictionComplexInt X Z)
-    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ))
-  infer_instance
 
 end AlgebraicGeometry.ComplexPoint

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularFlasqueModel
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularFlasqueModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveParacompact
@@ -30,18 +30,6 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom]
 
-/-- The actual singular-to-injective resolution map, using proved local
-contractibility of the analytic space. -/
-def complexSingularToAmbientInjective :
-    rationalSingularCochainComplex (TopCat.of (ComplexPoint X)) ⟶
-      ambientRationalInjectiveComplex X :=
-  singularToConstantInjectiveComplex (TopCat.of (ComplexPoint X))
-    (exists_contractibleOpen_le X)
-
-instance complexSingularToAmbientInjective_quasiIso :
-    QuasiIso (complexSingularToAmbientInjective X) :=
-  singularToConstantInjectiveComplex_quasiIso _ _
-
 /-- Its actual supported version for any open complement, not just a smooth support. -/
 def complexSupportedSingularToAmbientInjective
     (U : Opens (ComplexPoint X)) :
@@ -63,22 +51,5 @@ instance complexSupportedSingularToAmbientInjective_quasiIso
     openParacompactSpace X
   exact supportedSingularToInjectiveComplex_quasiIso
     (TopCat.of (ComplexPoint X)) (exists_contractibleOpen_le X) U
-
-/-- Local supported singular cohomology and the literal supported injective
-model are canonically isomorphic in every integer degree. -/
-def complexSupportedSingularInjectiveHomologyIso
-    (U V : Opens (ComplexPoint X)) (n : ℤ) :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj
-        (supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U))).homology n ≅
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj
-        (((TopCat.Sheaf.sheafSectionsSupportedOutside
-          (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
-            (ambientRationalInjectiveComplex X)))).homology n := by
-  let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=
-    openParacompactSpace X
-  exact supportedSingularInjectiveHomologyIso (TopCat.of (ComplexPoint X))
-    (exists_contractibleOpen_le X) U V n
 
 end AlgebraicGeometry.ComplexPoint

@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.HolomorphicDeRham
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
 
 @[expose] public noncomputable section
 

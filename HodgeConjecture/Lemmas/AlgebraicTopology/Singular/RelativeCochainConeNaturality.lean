@@ -13,6 +13,61 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Singular.RelativeCochainConeNaturality`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory CategoryTheory.Limits
+
+universe u
+
+namespace AlgebraicTopology.Singular
+
+variable (R : Type u) [Field R]
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- The actual contravariant map of dual relative short exact sequences. -/
+def relativeDualCochainShortComplexNatMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
+    relativeDualCochainShortComplexNat R Y ⟶ relativeDualCochainShortComplexNat R X where
+  τ₁ := HomologicalComplex.linearDualMap ((relativeChainFunctor R).map f)
+  τ₂ := HomologicalComplex.linearDualMap ((chainPairFunctor R).map f).right
+  τ₃ := HomologicalComplex.linearDualMap ((chainPairFunctor R).map f).left
+  comm₁₂ := by
+    change HomologicalComplex.linearDualMap ((relativeChainFunctor R).map f) ≫
+        HomologicalComplex.linearDualMap (relativeChainProjection R X) =
+      HomologicalComplex.linearDualMap (relativeChainProjection R Y) ≫
+        HomologicalComplex.linearDualMap ((chainPairFunctor R).map f).right
+    rw [← HomologicalComplex.linearDualMap_comp, ← HomologicalComplex.linearDualMap_comp]
+    exact congrArg HomologicalComplex.linearDualMap
+      ((coker.π (C := ChainCategory R)).naturality ((chainPairFunctor R).map f)).symm
+  comm₂₃ := by
+    change HomologicalComplex.linearDualMap ((chainPairFunctor R).map f).right ≫
+        HomologicalComplex.linearDualMap ((chainPairFunctor R).obj X).hom =
+      HomologicalComplex.linearDualMap ((chainPairFunctor R).obj Y).hom ≫
+        HomologicalComplex.linearDualMap ((chainPairFunctor R).map f).left
+    rw [← HomologicalComplex.linearDualMap_comp, ← HomologicalComplex.linearDualMap_comp]
+    exact congrArg HomologicalComplex.linearDualMap ((chainPairFunctor R).map f).w.symm
+
+/-- Extend the actual relative short-complex map to integer degrees. -/
+def relativeDualCochainShortComplexIntMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
+    relativeDualCochainShortComplexInt R Y ⟶ relativeDualCochainShortComplexInt R X :=
+  ((ComplexShape.embeddingUpNat.extendFunctor (ModuleCat R)).mapShortComplex).map
+    (relativeDualCochainShortComplexNatMap R f)
+
+/-- The literal relative restriction-cone map induced by a map of pairs. -/
+def relativeCochainConeMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
+    CochainComplex.mappingCone (relativeCochainRestrictionInt R Y) ⟶
+      CochainComplex.mappingCone (relativeCochainRestrictionInt R X) :=
+  CochainComplex.mappingCone.map _ _
+    (relativeDualCochainShortComplexIntMap R f).τ₂
+    (relativeDualCochainShortComplexIntMap R f).τ₃
+    (relativeDualCochainShortComplexIntMap R f).comm₂₃.symm
+
+end AlgebraicTopology.Singular
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory CategoryTheory.Limits

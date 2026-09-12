@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NestedLocalization
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.FlasqueSections
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
 /-!
 # The open-set model of the last localization term

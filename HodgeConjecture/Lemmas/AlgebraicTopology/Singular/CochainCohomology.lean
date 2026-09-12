@@ -15,19 +15,19 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.Algebra.Homology.LinearDual
+public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDual
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 /-!
 # The short-complex model of singular cochain cohomology
 
 Singular cohomology is *defined* in
-`HodgeConjecture.Definitions.AlgebraicTopology.Singular.Cohomology` as the homology of the singular
+`HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology` as the homology of the singular
 cochain complex, that is by dualising the chain complex. This file records the equivalent
 description that only mentions the degree-`n` short complex of the singular chain complex: its
 reversed linear dual has the same homology.
 
 That short-complex model is what the chain-homotopy machinery of
-`HodgeConjecture.Definitions.Algebra.Homology.LinearDual` produces, so it is the convenient shape
+`HodgeConjecture.Lemmas.Algebra.Homology.LinearDual` produces, so it is the convenient shape
 for comparison results such as subdivision invariance.
 -/
 

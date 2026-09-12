@@ -13,6 +13,42 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory CategoryTheory.Limits Topology TopologicalSpace Opposite
+
+namespace AlgebraicGeometry.ComplexPoint
+
+open AlgebraicTopology.Singular
+
+variable (X : Over (Spec (.of ℂ)))
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+
+attribute [local instance] smoothClosedSupportCohomologySheafAnalyticTopology
+
+/-- Actual open-section cohomology of the supported injective model is relative
+singular cohomology of the same literal local support pair. -/
+def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
+    (V : Opens (ComplexPoint X)) (n : ℕ) :
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
+      (.up ℤ)).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ) ≃+
+        RelativeCohomology ℚ (neighborhoodSupportComplementPair
+          (V : Set (ComplexPoint X)) (S : Set (ComplexPoint X))) n := by
+  let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W := openParacompactSpace X
+  exact (complexSupportedSingularInjectiveHomologyIso X S.compl V (n : ℤ)).symm.addCommGroupIsoToAddEquiv
+    |>.trans (supportedRationalSingularSectionCohomologyEquivSupportComplement
+      (TopCat.of (ComplexPoint X)) S S.isClosed V n)
+
+variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
+  (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
+  [IsClosedImmersion i.left]
+
+end AlgebraicGeometry.ComplexPoint
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory CategoryTheory.Limits Topology TopologicalSpace Opposite
@@ -53,9 +89,5 @@ theorem complexSupportInjectiveComplex_homology_stalk_isZero_of_not_mem
 variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
-
-
-
-
 
 end AlgebraicGeometry.ComplexPoint

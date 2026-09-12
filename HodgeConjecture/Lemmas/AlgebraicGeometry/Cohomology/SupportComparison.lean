@@ -24,6 +24,93 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportComparison`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
+open scoped CochainComplex.Plus.modelCategoryQuillen
+
+namespace CochainComplex
+
+universe v u
+
+variable {C : Type u} [Category.{v} C] [Abelian C] [EnoughInjectives C]
+
+section
+
+variable {A S I : CochainComplex C ℤ}
+  [A.IsStrictlyGE 0] [S.IsStrictlyGE 0] [I.IsStrictlyGE 0]
+  (a : A ⟶ S) [Mono a] [QuasiIso a]
+  (r : A ⟶ I)
+
+/-- Replacing the source of a restriction map by a monic quasi-isomorphic resolution induces a
+quasi-isomorphism of mapping cones. -/
+def sourceReplacementConeMap (hI : ∀ n : ℤ, Injective (I.X n)) :
+    mappingCone r ⟶ mappingCone (liftToInjective a r hI) :=
+  mappingCone.map r (liftToInjective a r hI) a (𝟙 I)
+    (by rw [Category.comp_id, comp_liftToInjective])
+
+noncomputable instance sourceReplacementConeMap_quasiIso
+    [HasDerivedCategory C]
+    (hI : ∀ n : ℤ, Injective (I.X n)) :
+    QuasiIso (sourceReplacementConeMap a r hI) :=
+  mappingCone.map_quasiIso_of_vertical_quasiIso r (liftToInjective a r hI)
+    a (𝟙 I) (by rw [Category.comp_id, comp_liftToInjective])
+
+end
+
+end CochainComplex
+
+namespace AlgebraicGeometry.ComplexPoint
+
+open Point
+
+variable (X : Over (Spec ↧ℂ))
+
+variable [IsIntegral X.left] [Smooth X.hom]
+
+attribute [local instance] bettiSupportComparisonHasDerivedCategory
+
+attribute [local instance] bettiSupportComparisonMono
+
+attribute [local instance] bettiSupportComparisonQuasiIso
+
+/-- A strict chain-level extension of restriction from rational constants to the chosen derived
+pushforward complex across the singular-cochain resolution. -/
+def singularResolutionRestriction
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    singularCochainSheafComplexInt X ℚ ⟶
+      derivedPushforwardComplementConstantRationalComplexInt X Z :=
+  CochainComplex.liftToInjective
+    (rationalToSingularCochainComplexInt X)
+    (rationalRestrictionComplexInt X Z)
+    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
+
+/-- Replacing rational constants by their singular-cochain resolution gives a quasi-isomorphic
+mapping-cone model for supported cohomology. -/
+def rationalSupportConeToSingularResolutionCone
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    rationalCohomologyWithSupportComplex X Z ⟶
+      CochainComplex.mappingCone (singularResolutionRestriction X Z hZ) :=
+  CochainComplex.sourceReplacementConeMap
+    (rationalToSingularCochainComplexInt X)
+    (rationalRestrictionComplexInt X Z)
+    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
+
+noncomputable instance rationalSupportConeToSingularResolutionCone_quasiIso
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    QuasiIso (rationalSupportConeToSingularResolutionCone X Z hZ) := by
+  change QuasiIso (CochainComplex.sourceReplacementConeMap
+    (rationalToSingularCochainComplexInt X)
+    (rationalRestrictionComplexInt X Z)
+    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ))
+  infer_instance
+
+end AlgebraicGeometry.ComplexPoint
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra

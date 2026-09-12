@@ -44,22 +44,8 @@ instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint 
   dsimp [complexSupportInjectiveComplex]
   infer_instance
 
-/-- Actual open-section cohomology of the supported injective model is relative
-singular cohomology of the same literal local support pair. -/
-def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
-    (V : Opens (ComplexPoint X)) (n : ℕ) :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ) ≃+
-        RelativeCohomology ℚ (neighborhoodSupportComplementPair
-          (V : Set (ComplexPoint X)) (S : Set (ComplexPoint X))) n := by
-  let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W := openParacompactSpace X
-  exact (complexSupportedSingularInjectiveHomologyIso X S.compl V (n : ℤ)).symm.addCommGroupIsoToAddEquiv
-    |>.trans (supportedRationalSingularSectionCohomologyEquivSupportComplement
-      (TopCat.of (ComplexPoint X)) S S.isClosed V n)
-
 variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
-
 
 end AlgebraicGeometry.ComplexPoint

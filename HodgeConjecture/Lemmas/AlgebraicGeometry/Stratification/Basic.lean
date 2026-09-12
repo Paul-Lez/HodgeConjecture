@@ -13,6 +13,60 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Stratification.Basic`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Topology TopologicalSpace
+
+namespace AlgebraicGeometry
+
+universe u
+
+variable {X : Scheme.{u}}
+
+variable {K : Type u} [Field K]
+  (f : X ⟶ Spec (.of K)) [LocallyOfFiniteType f]
+
+/-- The smooth piece removed from a closed subset at one step. -/
+def reducedClosedSmoothPiece (S : Closeds X) : Scheme :=
+  (reducedClosedStructureMap f S).smoothLocus
+
+/-- This piece is locally closed in the original ambient scheme. -/
+def reducedClosedSmoothPieceι (S : Closeds X) : reducedClosedSmoothPiece f S ⟶ X :=
+  (reducedClosedStructureMap f S).smoothLocus.ι ≫ reducedClosedSubschemeι S
+
+set_option backward.isDefEq.respectTransparency false in
+instance reducedClosedSmoothPieceι_isImmersion (S : Closeds X) :
+    IsImmersion (reducedClosedSmoothPieceι f S) := by
+  change IsImmersion
+    ((reducedClosedStructureMap f S).smoothLocus.ι ≫ reducedClosedSubschemeι S)
+  infer_instance
+
+instance reducedClosedSmoothPiece_smooth (S : Closeds X) :
+    Smooth (reducedClosedSmoothPieceι f S ≫ f) := by
+  change Smooth ((reducedClosedStructureMap f S).smoothLocus.ι ≫
+    reducedClosedSubschemeι S ≫ f)
+  exact (reducedClosedStructureMap f S).smooth_restrict_smoothLocus
+
+attribute [local instance] reducedSmoothStratificationWellFoundedRelation
+
+/-- The finite, explicitly recursive sequence of nonempty closed remainders. The actual
+smooth strata are `reducedClosedSmoothPiece f S` for the members of this list. -/
+def reducedSmoothStratification [PerfectField K] [NoetherianSpace X]
+    (S : Closeds X) : List (Closeds X) := by
+  classical
+  exact if hS : S = ⊥ then []
+    else S :: reducedSmoothStratification (reducedClosedSingularRemainder f S)
+termination_by S
+decreasing_by exact reducedClosedSingularRemainder_lt f S hS
+
+variable [PerfectField K] [NoetherianSpace X]
+
+end AlgebraicGeometry
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Topology TopologicalSpace

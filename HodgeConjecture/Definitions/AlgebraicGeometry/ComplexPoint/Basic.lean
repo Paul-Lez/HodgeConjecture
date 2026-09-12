@@ -413,21 +413,12 @@ section Field
 
 variable {K : Type} [Field K] {X : Over (Spec ↧K)}
 
-/-- Over a field, a `K`-point is a scheme point together with an embedding of its residue field.
-
-This refines `stalkData`: the stalk homomorphism out of a local ring into a field factors through
-the residue field. -/
-noncomputable def residueData (z : Point K X) :
-    Σ x : X.left, X.left.residueField x ⟶ ↧K :=
-  Scheme.SpecToEquivOfField K X.left z.left
-
 end Field
 
 end Point
 
 /-- A complex point of a scheme over `Spec ℂ`. -/
 abbrev ComplexPoint (X : Over (Spec ↧ℂ)) := Point ℂ X
-
 
 /-- A projective complex scheme is Noetherian. -/
 theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))

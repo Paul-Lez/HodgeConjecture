@@ -75,27 +75,6 @@ lemma normalizedRelativeCoclass_pairing_self {R : Type*} [Field R] {X : TopPair}
     relativeCohomologyEquivDualHomology R X n (normalizedRelativeCoclass z hz) z = (1 : R) := by
   rw [relativeCohomologyEquivDualHomology_normalizedRelativeCoclass, normalizedDual_apply_self]
 
-/-- Two one-dimensional vector spaces with specified normalized generators are canonically
-linearly equivalent by sending the first generator to the second. -/
-def linearEquivOfNormalizedGenerators
-    {N : Type*} [AddCommGroup N] [Module R N]
-    (x : M) (hx : x ≠ 0) (hxspan : Submodule.span R {x} = ⊤)
-    (y : N) (hy : y ≠ 0) (hyspan : Submodule.span R {y} = ⊤) :
-    M ≃ₗ[R] N := by
-  let f : M →ₗ[R] N :=
-    (LinearMap.toSpanSingleton R N y).comp (normalizedDual x hx)
-  let g : N →ₗ[R] M :=
-    (LinearMap.toSpanSingleton R M x).comp (normalizedDual y hy)
-  apply LinearEquiv.ofLinearMap f g
-  · apply LinearMap.ext
-    intro n
-    obtain ⟨a, rfl⟩ := (Submodule.span_singleton_eq_top_iff R y).mp hyspan n
-    simp [f, g, normalizedDual_apply_self]
-  · apply LinearMap.ext
-    intro m
-    obtain ⟨a, rfl⟩ := (Submodule.span_singleton_eq_top_iff R x).mp hxspan m
-    simp [f, g, normalizedDual_apply_self]
-
 /-- The oriented standard complex local class is nonzero in every complex dimension. -/
 lemma standardComplexLocalClass_ne_zero (n : ℕ) :
     standardComplexLocalClass n ≠ 0 := by

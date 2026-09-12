@@ -13,6 +13,59 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.CochainOpenSections`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
+
+namespace AlgebraicTopology.Singular
+
+variable (R : Type) [Field R] (X : TopCat.{0})
+
+/-- The image of the top open of a subspace is that ambient open itself. -/
+def openSubspaceImageTopIso (V : Opens X) : V.isOpenEmbedding.functor.obj ⊤ ≅ V :=
+  eqToIso (Opens.isOpenEmbedding_obj_top V)
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- Ambient raw cochains on `V` identified with top-open raw cochains of
+the space `V`, through the actual image homeomorphism. -/
+def openRawSingularCochainComplexIsoGlobal (V : Opens X) :
+    openRawSingularCochainComplex R X V ≅ globalRawSingularCochainComplex R (TopCat.of V) :=
+  (NatIso.mapHomologicalComplex
+    ((evaluation (Opens X)ᵒᵖ AddCommGrpCat).mapIso (openSubspaceImageTopIso X V).op)
+      (.up ℕ)).app (singularCochainPresheafComplex R X) ≪≫
+    (((evaluation (Opens (TopCat.of V))ᵒᵖ AddCommGrpCat).obj (.op ⊤)).mapHomologicalComplex
+      (.up ℕ)).mapIso (singularCochainPresheafComplexOpenRestrictionIso R X V)
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- Sections of the ambient singular sheaf on `V` identified with global
+sections of its intrinsic singular sheaf, using the normalized open restriction. -/
+def openSingularCochainSheafComplexIsoGlobal (V : Opens X) :
+    openSingularCochainSheafComplex R X V ≅
+      globalSingularCochainSheafComplex R (TopCat.of V) := by
+  let : (TopCat.Sheaf.forget AddCommGrpCat X ⋙
+      (evaluation (Opens X)ᵒᵖ AddCommGrpCat).obj (.op V)).PreservesZeroMorphisms :=
+    inferInstanceAs ((TopCat.Sheaf.supportEvaluation X V).PreservesZeroMorphisms)
+  let : (TopCat.Sheaf.forget AddCommGrpCat X ⋙
+      (evaluation (Opens X)ᵒᵖ AddCommGrpCat).obj
+        (.op (V.isOpenEmbedding.functor.obj ⊤))).PreservesZeroMorphisms :=
+    inferInstanceAs ((TopCat.Sheaf.supportEvaluation X
+      (V.isOpenEmbedding.functor.obj ⊤)).PreservesZeroMorphisms)
+  exact
+  (NatIso.mapHomologicalComplex
+    (Functor.isoWhiskerLeft (TopCat.Sheaf.forget AddCommGrpCat X)
+      ((evaluation (Opens X)ᵒᵖ AddCommGrpCat).mapIso (openSubspaceImageTopIso X V).op))
+      (.up ℕ)).app (singularCochainSheafComplex R X) ≪≫
+    ((TopCat.Sheaf.supportEvaluation (TopCat.of V) ⊤).mapHomologicalComplex (.up ℕ)).mapIso
+      (singularCochainSheafComplexOpenRestrictionIso R X V)
+
+end AlgebraicTopology.Singular
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
