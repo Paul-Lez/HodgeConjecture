@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import Other.AlgebraicTopology.ClosedEmbeddingSheafification
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheafStalk
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
 
 /-!
 # Closed-embedding pushforward on the actual relative singular-chain sheaves

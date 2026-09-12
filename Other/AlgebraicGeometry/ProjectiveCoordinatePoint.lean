@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytification
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Projective
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 

@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheaf
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.Chain
 public import Mathlib.Topology.Sheaves.Functors
 
 /-!

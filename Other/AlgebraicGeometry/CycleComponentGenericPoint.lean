@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
 
 /-!
 # The generic point of a reduced cycle component

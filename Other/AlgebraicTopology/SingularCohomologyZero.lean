@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCohomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 public import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
 
 /-!

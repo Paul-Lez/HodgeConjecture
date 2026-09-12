@@ -5,8 +5,8 @@ Authors: Bhavik Mehta
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 public import Other.AlgebraicGeometry.EtaleNonvanishingDensity
 public import Mathlib.AlgebraicGeometry.Morphisms.QuasiSeparated
 

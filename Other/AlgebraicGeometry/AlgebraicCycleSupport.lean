@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 

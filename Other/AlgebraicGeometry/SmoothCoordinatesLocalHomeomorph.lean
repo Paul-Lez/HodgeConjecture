@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 public import Other.AlgebraicGeometry.EtaleLocalHomeomorph
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation

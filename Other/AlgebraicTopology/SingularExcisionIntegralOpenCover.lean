@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularExcisionOpenCover
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.OpenCover
 
 /-!
 # Integral small-chain approximation

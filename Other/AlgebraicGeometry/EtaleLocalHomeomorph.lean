@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexEtale
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Etale
 
 import Mathlib.RingTheory.Unramified.LocalStructure
 

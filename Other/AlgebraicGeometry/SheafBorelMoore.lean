@@ -18,7 +18,7 @@ module
 public import Other.AlgebraicGeometry.BorelMooreCycleClass
 public import Other.Mathlib.Algebra.Module.LinearMap.Rat
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 
 /-!
 # Sheaf-theoretic Borel--Moore homology
@@ -391,7 +391,7 @@ lemma sheafToLocal_sheafBorelMooreClassOfComparisons
   exact D.borelMoore.toLocal_fundamentalClass z hz
 
 /-- The additive equivalence obtained by composing the supplied compactification comparison,
-the orientation-induced sheaf comparison, and the proved Betti comparison.  This is only
+the orientation-induced sheaf comparison, and the proved singular comparison.  This is only
 identified with normalized Alexander--Poincaré duality after the missing compatibility theorem. -/
 def orientationInducedComparisonAddEquiv
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :

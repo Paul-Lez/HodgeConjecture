@@ -3,7 +3,7 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
-import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
 
@@ -155,7 +155,8 @@ $$`\mathcal O_X \xrightarrow{d} \Omega_X^1 \xrightarrow{d}
 
 Sheafifying degree by degree gives the holomorphic de Rham complex, indexed by the natural
 numbers: its terms are the sheaves of holomorphic forms and its differentials the exterior
-derivatives, both constructed in `HodgeConjecture/Definitions/AlgebraicGeometry/HolomorphicDeRham.lean`.
+derivatives, both constructed in
+`HodgeConjecture/Definitions/AlgebraicGeometry/Hodge/HolomorphicDeRham.lean`.
 
 ```lean -show
 namespace Guide.Hodge.D27

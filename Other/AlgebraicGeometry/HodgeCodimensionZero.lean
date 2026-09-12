@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleClassSpan
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 import Other.AlgebraicGeometry.CycleClassDimension
 import Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
 import Other.AlgebraicGeometry.RationalCohomologyZero

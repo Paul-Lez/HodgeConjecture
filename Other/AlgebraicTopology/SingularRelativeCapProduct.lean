@@ -306,7 +306,7 @@ theorem boundary_relativeCap_eq_of_cocycle (X : TopPair.{u}) (p q : ℕ)
 This is the intermediate pairing
 `H^p(X, A) ⊗ H_{p+q}(X, A) → H_q(X)`.  It is distinct from the triad pairing
 `H^p(X, A) ⊗ H_{p+q}(X, A ∪ B) → H_q(X, B)` needed for the supported form of
-Alexander--Poincare duality. -/
+Alexander--Poincaré duality. -/
 
 /-- Relative cocycles in the algebraic dual of the relative singular chain complex. -/
 abbrev RelativeCocycle (X : TopPair.{u}) (p : ℕ) :=
