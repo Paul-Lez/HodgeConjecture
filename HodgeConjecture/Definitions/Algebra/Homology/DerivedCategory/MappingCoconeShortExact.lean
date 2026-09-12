@@ -20,23 +20,27 @@ canonical quasi-isomorphism from the cone of `A → B` to `C`.
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open HomologicalComplex
 
+attribute [local implicit_reducible] CategoryTheory.Functor.mapTriangle
+  CochainComplex.mappingCone CochainComplex.mappingCone.triangle
+  CategoryTheory.Pretriangulated.Triangle.mk shiftFunctorCompIsoId
+  CochainComplex.shiftFunctor CochainComplex.mappingCocone CochainComplex.HomComplex.Cocycle.mk
+
 namespace CochainComplex
 
 variable {C : Type*} [Category* C] [Abelian C]
 
 namespace mappingCone
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
 /-- A map of mapping cones induced by quasi-isomorphisms is a quasi-isomorphism. -/
 lemma quasiIso_map_of_quasiIso {K₁ L₁ K₂ L₂ : CochainComplex C ℤ}
     (f₁ : K₁ ⟶ L₁) (f₂ : K₂ ⟶ L₂) (a : K₁ ⟶ K₂) (b : L₁ ⟶ L₂)
     (h : f₁ ≫ b = a ≫ f₂) [QuasiIso a] [QuasiIso b] :
     QuasiIso (map f₁ f₂ a b h) := by
   let := HasDerivedCategory.standard C
-  apply (DerivedCategory.isIso_Q_map_iff_quasiIso C _).1
-  exact isIso₃_of_isIso₁₂
-    (DerivedCategory.Q.mapTriangle.map (triangleMap f₁ f₂ a b h))
+  refine (DerivedCategory.isIso_Q_map_iff_quasiIso C _).1 ?_
+  rw [← triangleMap_hom₃, ← DerivedCategory.Q.mapTriangle_map_hom₃]
+  with_implicit
+  exact isIso₃_of_isIso₁₂ (DerivedCategory.Q.mapTriangle.map (triangleMap f₁ f₂ a b h))
     (DerivedCategory.mappingCone_triangle_distinguished f₁)
     (DerivedCategory.mappingCone_triangle_distinguished f₂)
     (inferInstanceAs (IsIso (DerivedCategory.Q.map a)))
@@ -66,36 +70,39 @@ lemma quasiIso_shiftedLiftShortComplex (hS : S.ShortExact) :
 
 /-- Canonical comparison from the first term of a short complex to the homotopy
 fiber of its second map. -/
-def liftShortComplex : S.X₁ ⟶ mappingCocone S.g :=
+abbrev liftShortComplex : S.X₁ ⟶ mappingCocone S.g :=
   (shiftFunctorCompIsoId _ (1 : ℤ) (-1) (by simp)).inv.app S.X₁ ≫
     (shiftedLiftShortComplex S)⟦(-1 : ℤ)⟧'
 
-set_option backward.isDefEq.respectTransparency false in
 lemma quasiIso_liftShortComplex (hS : S.ShortExact) :
     QuasiIso (liftShortComplex S) := by
   have := quasiIso_shiftedLiftShortComplex S hS
-  dsimp only [liftShortComplex]
   infer_instance
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
+/-- The rotated-cone lift, followed by the connecting map of the mapping-cone triangle of
+`S.g`, is `-S.f⟦1⟧'`. -/
+lemma shiftedLiftShortComplex_comp_triangle_mor₃ :
+    shiftedLiftShortComplex S ≫ (mappingCone.triangle S.g).mor₃ = -(S.f⟦(1 : ℤ)⟧') := by
+  rw [shiftedLiftShortComplex, Category.assoc, mappingCone.map_eq_mapOfHomotopy,
+    mappingCone.triangleMapOfHomotopy_comm₃, ← Category.assoc,
+    mappingCone.rotateHomotopyEquiv_comm₃, Preadditive.neg_comp, ← Functor.map_comp,
+    Category.comp_id]
+
+/-- The first projection of a mapping cocone is, up to sign, the `(-1)`-shift of the connecting
+map of the mapping-cone triangle, transported back along `K⟦1⟧⟦-1⟧ ≅ K`. -/
+lemma fst_eq_neg_shift_triangle_mor₃ {K L : CochainComplex C ℤ} (φ : K ⟶ L) :
+    fst φ = -((mappingCone.triangle φ).mor₃⟦(-1 : ℤ)⟧' ≫
+      (shiftFunctorCompIsoId (CochainComplex C ℤ) 1 (-1) (by lia)).hom.app K) := by
+  ext n
+  simp [fst, mappingCone.triangle, HomComplex.Cochain.leftShift_v (n := 1) _ (-1) 0 _ n n _ (n + -1),
+    HomComplex.Cochain.rightShift_v (n := 1) _ 1 0 _ (n + -1) (n + -1) _ n,
+    shiftFunctorCompIsoId, shiftFunctorAdd'_inv_app_f', shiftFunctorZero_hom_app_f, shiftFunctor]
+
 @[reassoc (attr := simp)]
 lemma liftShortComplex_fst : liftShortComplex S ≫ fst S.g = S.f := by
-  ext n
-  have aux (p q : ℤ) (h : p = q) (hpq : p + 0 = q) :
-      (S.X₁.XIsoOfEq h.symm).hom ≫ (HomComplex.Cochain.ofHom S.f).v p q hpq =
-        S.f.f q := by
-    subst q
-    simp
-  simpa [liftShortComplex, shiftedLiftShortComplex, fst,
-    shiftFunctorCompIsoId, shiftFunctorAdd'_hom_app_f', shiftFunctorZero_inv_app_f,
-    mappingCone.rotateHomotopyEquiv, mappingCone.map,
-    mappingCone.lift_f _ _ _ _ (n + -1) n (by omega),
-    HomComplex.Cochain.leftShift, shiftFunctorObjXIso] using
-      aux (n + -1 + 1) n (by omega) (by omega)
+  simp [fst_eq_neg_shift_triangle_mor₃, liftShortComplex,
+    ← Functor.map_comp_assoc, shiftedLiftShortComplex_comp_triangle_mor₃, ← Functor.comp_map]
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
 lemma liftShortComplex_f_snd_v (p q : ℤ) (hpq : p + -1 = q) :
     (liftShortComplex S).f p ≫ (snd S.g).v p q hpq = 0 := by
@@ -104,7 +111,7 @@ lemma liftShortComplex_f_snd_v (p q : ℤ) (hpq : p + -1 = q) :
     shiftFunctorCompIsoId, shiftFunctorAdd'_hom_app_f', shiftFunctorZero_inv_app_f,
     mappingCone.rotateHomotopyEquiv, mappingCone.map,
     mappingCone.lift_f _ _ _ _ (p + -1) p (by omega),
-    HomComplex.Cochain.leftShift, shiftFunctorObjXIso]
+    HomComplex.Cochain.leftShift, shiftFunctor]
 
 /-- The rotated-cone formula is exactly the standard fiber lift with the zero
 nullhomotopy of `S.f ≫ S.g = 0`. Thus its chain-level normalization is canonical. -/

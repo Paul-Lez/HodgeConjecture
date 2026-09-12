@@ -166,7 +166,6 @@ lemma linearDualCochainComplex_d_succ (K : ChainComplex (ModuleCat.{u} R) ℕ) (
     (K.linearDualCochainComplex).d n (n + 1) =
       ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap := rfl
 
-attribute [local implicit_reducible] shortComplexFunctor' shortComplexFunctor
 /-- The degree-`n` short complex of a linear-dual cochain complex is the reversed dual of the
 degree-`n` short complex of the original chain complex. -/
 @[implicit_reducible]
@@ -174,7 +173,7 @@ def linearDualCochainComplexScIso (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : 
     K.linearDualCochainComplex.sc n ≅ (K.sc n).linearDual :=
   have hprev : (ComplexShape.up ℕ).prev n = (ComplexShape.down ℕ).next n := by cases n <;> simp
   have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by simp
-  K.linearDualCochainComplex.isoSc' (c := ComplexShape.up ℕ) _ _ _ hprev hnext --≪≫
+  K.linearDualCochainComplex.isoSc' (c := ComplexShape.up ℕ) _ _ _ hprev hnext
 
 variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
 
