@@ -29,9 +29,4 @@ variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
     (lowestSectionCohomologyIso X K N n hK hflasque U).hom =
       sectionCohomologyToSheafSection X K n U := rfl
 
-@[simp] theorem lowestGlobalSectionCohomologyIso_hom (N n : ℤ) [K.IsStrictlyGE N]
-    (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :
-    (lowestGlobalSectionCohomologyIso X K N n hK hflasque).hom =
-      sectionCohomologyToSheafSection X K n ⊤ := rfl
-
 end TopCat.Sheaf

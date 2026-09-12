@@ -47,12 +47,4 @@ abbrev RationalCompactlySupportedCohomology (n : ℕ) : AddCommGrpCat :=
   TopCat.Sheaf.compactlySupportedCohomology (TopCat.of (ComplexPoint X))
     (constantFieldSheaf ℚ X) n
 
-/-- A rational class with specified compact closed support defines a compactly supported class. -/
-def toRationalCompactlySupportedCohomology
-    (K : CompactCloseds (ComplexPoint X)) (n : ℕ) :
-    AddCommGrpCat.of (RationalCohomologyWithClosedSupport X K.1 n) ⟶
-      RationalCompactlySupportedCohomology X n :=
-  TopCat.Sheaf.toCompactlySupportedCohomology (TopCat.of (ComplexPoint X)) K
-    (constantFieldSheaf ℚ X) n
-
 end AlgebraicGeometry.ComplexPoint

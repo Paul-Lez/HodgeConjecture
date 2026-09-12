@@ -80,13 +80,6 @@ def graphFlattenPairIso : graphComplementPair E c F ≅ normalSlicePair E c wher
     · ext z
       exact (graphFlattenHomeomorph E c F hF).right_inv z
 
-/-- Actual chain homotopy equivalence from a graph-complement pair to its normal slice. -/
-def graphNormalRelativeChainHomotopyEquiv :
-    HomotopyEquiv ((relativeChainFunctor ℚ).obj (graphComplementPair E c F))
-      ((relativeChainFunctor ℚ).obj (standardComplexPuncturedPair c)) :=
-  (HomotopyEquiv.ofIso ((relativeChainFunctor ℚ).mapIso
-    (graphFlattenPairIso E c F hF))).trans (normalSliceRelativeChainHomotopyEquiv E c)
-
 /-- The homology isomorphism constructed from the actual graph shear and normal projection. -/
 def graphNormalRelativeHomologyIso (n : ℕ) :
     RelativeHomology ℚ (graphComplementPair E c F) n ≅

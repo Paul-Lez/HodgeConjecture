@@ -113,13 +113,4 @@ theorem complexAmbientSheafBorelMooreToCohomology_eq_forgetSupport
         (complexDerivedSupportedCohomologyTopIso X (2 * (d : ℤ) - i)).hom :=
   (complexAmbientSheafBorelMooreToCohomology_naturality X d le_top i).symm
 
-/-- The cycle-degree transport, with the dimension arithmetic already proved in duality. -/
-def complexAmbientSheafBorelMooreCycleDegreeToCohomology
-    (Z : Closeds (ComplexPoint X)) (p : ℕ) (hp : p ≤ d) :
-    ComplexAmbientSheafBorelMooreHomology X d Z
-        (2 * ((d - p : ℕ) : ℤ)) ⟶
-      ComplexDerivedCohomology X (2 * (p : ℤ)) :=
-  (complexAmbientSheafBorelMooreCycleDegreeIso X d Z p hp).hom ≫
-    complexDerivedSupportedCohomologyForgetSupport X Z (2 * (p : ℤ))
-
 end AlgebraicGeometry.ComplexPoint

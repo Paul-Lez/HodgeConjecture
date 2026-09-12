@@ -2643,21 +2643,6 @@ lemma standardAffineBoundaryHomologyMap_comp_retraction (n : ℕ) :
     (standardAffineBoundaryChainRetractionHomotopy (n + 2)).homologyMap_eq,
     HomologicalComplex.homologyMap_id]
 
-/-- The homology isomorphism induced by affine realization of the standard simplicial
-boundary. -/
-def standardAffineBoundaryHomologyIso (n : ℕ) :
-    ((∂Δ[n + 2] : SSet.{0}).chainComplex
-      (ModuleCat.of ℚ ℚ)).homology (n + 1) ≅
-    ((TopCat.toSSet.obj (standardPuncturedPair (n + 2)).snd).chainComplex
-      (ModuleCat.of ℚ ℚ)).homology (n + 1) :=
-  (standardAffineBoundaryChainHomotopyEquiv (n + 2)).toHomologyIso (n + 1)
-
-@[simp]
-lemma standardAffineBoundaryHomologyIso_hom (n : ℕ) :
-    (standardAffineBoundaryHomologyIso n).hom =
-      standardAffineBoundaryHomologyMap n :=
-  rfl
-
 /-- The affine boundary comparison is an isomorphism on rational homology. -/
 noncomputable instance standardAffineBoundaryHomologyMap_isIso (n : ℕ) :
     IsIso (standardAffineBoundaryHomologyMap n) := by

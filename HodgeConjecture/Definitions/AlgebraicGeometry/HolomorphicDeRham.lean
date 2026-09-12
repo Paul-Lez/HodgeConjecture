@@ -207,22 +207,6 @@ lemma constantsToHolomorphicDeRhamZero_comp_differential
   NatTrans.ext <| funext fun U => AddCommGrpCat.hom_ext <| AddMonoidHom.ext fun c =>
     holomorphicFormDifferential_ofConstant X d U c
 
-/-- The inclusion of the constant presheaf into the holomorphic de Rham complex. -/
-def constantsToHolomorphicDeRhamPresheafComplex
-    [SmoothOfRelativeDimension d X.hom] :
-    (CochainComplex.single₀
-      (TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (constantComplexAddCommGrpPresheaf X) ⟶
-      holomorphicDeRhamPresheafComplex X d :=
-  HomologicalComplex.mkHomFromSingle
-    (constantsToHolomorphicDeRhamZero X d) <| by
-      intro k hk
-      obtain rfl : k = 1 := by simpa using hk.symm
-      change constantsToHolomorphicDeRhamZero X d ≫
-        (holomorphicDeRhamPresheafComplex X d).d 0 1 = 0
-      rw [holomorphicDeRhamPresheafComplex_d]
-      exact constantsToHolomorphicDeRhamZero_comp_differential X d
-
 /-- Holomorphic de Rham forms in a fixed degree, after additive sheafification. -/
 def holomorphicDeRhamSheaf [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
@@ -349,18 +333,6 @@ lemma scalarHolomorphicDeRhamPresheaf_d
       scalarHolomorphicDeRhamPresheaf X d (p + 1) c :=
   NatTrans.ext <| funext fun U => AddCommGrpCat.hom_ext <| AddMonoidHom.ext fun x =>
     (holomorphicFormDifferential X d U p).map_smul c x
-
-/-- Multiplication by a complex scalar as an endomorphism of the presheaf de Rham complex. -/
-def scalarHolomorphicDeRhamPresheafComplex
-    [SmoothOfRelativeDimension d X.hom] (c : ℂ) :
-    holomorphicDeRhamPresheafComplex X d ⟶
-      holomorphicDeRhamPresheafComplex X d := by
-  unfold holomorphicDeRhamPresheafComplex
-  exact CochainComplex.ofHom
-    (fun p => scalarHolomorphicDeRhamPresheaf X d p c)
-    (fun p => by
-      simpa [CochainComplex.of_d] using
-        scalarHolomorphicDeRhamPresheaf_d X d p c)
 
 /-- Multiplication by a complex scalar as an endomorphism of the sheafified de Rham complex. -/
 def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom]

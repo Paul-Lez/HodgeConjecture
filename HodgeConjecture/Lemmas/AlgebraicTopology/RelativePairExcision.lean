@@ -1040,18 +1040,6 @@ theorem neighborhoodPointComplement_relativeChainMap_quasiIso
   rw [← neighborhoodToSmallRelative_comp_smallRelativeToAmbient]
   infer_instance
 
-/-- The canonical isomorphism on relative homology induced by inclusion of an open
-neighborhood of the distinguished point. -/
-def neighborhoodPointComplementRelativeHomologyIso
-    (U : Set X) (x : X) (hU : IsOpen U) (hx : x ∈ U) (n : ℕ) :
-    RelativeHomology ℚ (neighborhoodPointComplementPair U x) n ≅
-      RelativeHomology ℚ (pointComplementPair x) n := by
-  let : QuasiIso
-      ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) :=
-    neighborhoodPointComplement_relativeChainMap_quasiIso U x hU hx
-  exact isoOfQuasiIsoAt
-    ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) n
-
 /-- The map on relative homology induced by an open neighborhood inclusion is bijective. -/
 theorem neighborhoodPointComplement_relativeHomologyMap_bijective
     (U : Set X) (x : X) (hU : IsOpen U) (hx : x ∈ U) (n : ℕ) :

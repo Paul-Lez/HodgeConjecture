@@ -189,16 +189,4 @@ theorem pushforwardSheafificationComparison_isIso
     (S.map (toSheafify (Opens.grothendieckTopology X)
       ((TopCat.Presheaf.pushforward AddCommGrpCat.{u} i).obj P))) _
 
-/-- Sheafification commutes with closed-embedding direct image for a normalized additive
-presheaf, via its canonical adjunction comparison. -/
-def closedEmbeddingSheafificationIso
-    (hi : IsClosedEmbedding i) (P : TopCat.Presheaf AddCommGrpCat.{u} Z)
-    (hP : IsZero (P.obj (.op ⊥))) :
-    (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
-        ((TopCat.Presheaf.pushforward AddCommGrpCat.{u} i).obj P) ≅
-      (TopCat.Sheaf.pushforward AddCommGrpCat.{u} i).obj
-        ((presheafToSheaf (Opens.grothendieckTopology Z) AddCommGrpCat.{u}).obj P) := by
-  have hiso := pushforwardSheafificationComparison_isIso i hi P hP
-  exact asIso (pushforwardSheafificationComparison i P)
-
 end AlgebraicTopology.Singular

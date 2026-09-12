@@ -382,15 +382,6 @@ lemma qToCHomology_isBaseChange (X : TopCat) (n : ℕ) :
   · exact (ModuleCat.epi_iff_surjective hC.π).mp
       (Limits.epi_of_isColimit_cofork hC.hπ)
 
-/-- The rational-to-complex comparison map on singular cohomology.  Cohomology is the homology
-of the dual cochain complex, so the base-change map on duals is transported along the
-universal-coefficient equivalences on both sides. -/
-def rationalToComplexCohomologyMap (X : TopCat) (n : ℕ) :
-    Cohomology ℚ X n →ₗ[ℚ] Cohomology ℂ X n :=
-  ((cohomologyEquivDualHomology ℂ X n).symm.toLinearMap.restrictScalars ℚ).comp
-    (((qToCHomology_isBaseChange X n).toDual).comp
-      (cohomologyEquivDualHomology ℚ X n).toLinearMap)
-
 /-- If rational singular homology in degree `n` is finite-dimensional, extending rational
 singular cohomology coefficients to `ℂ` gives complex singular cohomology. -/
 def rationalToComplexCohomologyBaseChange (X : TopCat) (n : ℕ)

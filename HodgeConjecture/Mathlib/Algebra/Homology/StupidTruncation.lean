@@ -104,10 +104,4 @@ lemma stupidTruncMap_comp_stupidTruncInclusion (f : K ⟶ L) :
       stupidTruncMap_stupidTruncXIso_hom f e hi]
   · exact (K.isZero_stupidTrunc_X e j (by simpa using hj)).eq_of_src _ _
 
-/-- The inclusions of stupid truncations form a natural transformation. -/
-def stupidTruncInclusionNatTrans :
-    e.stupidTruncFunctor C ⟶ Functor.id (HomologicalComplex C c') where
-  app K := stupidTruncInclusion K e
-  naturality _ _ f := stupidTruncMap_comp_stupidTruncInclusion e f
-
 end HomologicalComplex

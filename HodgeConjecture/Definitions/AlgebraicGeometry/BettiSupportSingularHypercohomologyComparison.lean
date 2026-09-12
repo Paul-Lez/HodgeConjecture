@@ -193,48 +193,6 @@ def kInjectiveDerivedHomAddEquivCohomologyClass
   exact eDerived.trans <| eQh.symm.trans <|
     CochainComplex.HomComplex.CohomologyClass.homAddEquiv.symm
 
-/-- If a K-injective resolution of a sheaf complex remains a quasi-isomorphism after taking
-global sections, then hypercohomology is computed by the original global-section complex. -/
-def hypercohomologyEquivGlobalSectionsOfResolution
-    (K I : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
-    [I.IsKInjective]
-    (i : K ⟶ I) [QuasiIso i]
-    [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map i)]
-    (n : ℤ) :
-    Hypercohomology X K n ≃
-      (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X)) K).homology n := by
-  let Y := TopCat.of (ComplexPoint X)
-  let A := constantIntegerSheafComplexInt X
-  let A' := TopCat.Sheaf.integerConstantSingleComplex Y
-  let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-  let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle X
-  have hi : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
-      (ComplexShape.up ℤ) i := by
-    rw [HomologicalComplex.mem_quasiIso_iff]
-    infer_instance
-  have he : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
-      (ComplexShape.up ℤ) e.inv := by
-    rw [HomologicalComplex.mem_quasiIso_iff]
-    infer_instance
-  let e₁ := Localization.SmallShiftedHom.postcompEquiv
-    (X := A) (Y := K) (Z := I) (a := n) i hi
-  let e₂ := Localization.SmallShiftedHom.precompEquiv
-    (X := A') (Y := A) (Z := I) (a := n) e.inv he
-  let e₃ := (CochainComplex.HomComplex.CohomologyClass.equivOfIsKInjective
-    (K := A') (L := I) (n := n)).symm
-  let e₄ := (CochainComplex.HomComplex.homologyAddEquiv A' I n).symm.toEquiv
-  let e₅ := (HomologicalComplex.homologyMapIso
-    (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
-      |>.addCommGroupIsoToAddEquiv.toEquiv
-  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
-  let e₆ := (asIso (HomologicalComplex.homologyMap
-    ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
-      |>.addCommGroupIsoToAddEquiv.toEquiv
-  exact e₁.trans (e₂.trans (e₃.trans (e₄.trans (e₅.trans e₆))))
-
 /-- Additive form of the hypercohomology/global-sections comparison for a fixed K-injective
 resolution. -/
 def hypercohomologyAddEquivGlobalSectionsOfResolution
@@ -274,27 +232,6 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
     ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
       |>.addCommGroupIsoToAddEquiv
   exact e₀.trans <| e₁.trans <| e₂.trans <| e₃.trans <| e₄.trans <| e₅.trans e₆
-
-/-- Hypercohomology of a bounded-below termwise-flasque sheaf complex is computed by its
-global-section complex. The proof uses an explicit bounded-below injective replacement. -/
-def hypercohomologyEquivGlobalSections
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
-    (N : ℤ) [K.IsStrictlyGE N]
-    (hKflasque : ∀ q, (K.X q).IsFlasque) (n : ℤ) :
-    Hypercohomology X K n ≃
-      (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X)) K).homology n := by
-  let Y := TopCat.of (ComplexPoint X)
-  choose I i _ _ _ using
-    CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective K N
-  letI : I.IsKInjective := CochainComplex.isKInjective_of_injective I N
-  have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
-  letI : QuasiIso
-      (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-        ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
-    TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
-      i N N hKflasque hIflasque
-  exact hypercohomologyEquivGlobalSectionsOfResolution X K I i n
 
 /-- Additive hypercohomology/global-sections comparison for a bounded-below termwise-flasque
 complex. -/
@@ -760,27 +697,6 @@ theorem naturalSingularSupportCone_term_isFlasque
   · exact singularCochainSheafComplexInt_isFlasque X
   · exact derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque X Z
 
-/-- Rational constant-sheaf cohomology with support is computed by global sections of the
-natural singular support cone. -/
-def rationalSupportHypercohomologyEquivNaturalSingularConeGlobalSections
-    [IsIntegral X.left] [Smooth X.hom]
-    [T2Space (ComplexPoint X)]
-    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
-    RationalCohomologyWithSupport X Z n ≃
-      (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X))
-        (CochainComplex.mappingCone
-          (naturalSingularResolutionRestriction X Z hZ))).homology (n - 1) := by
-  let K := CochainComplex.mappingCone
-    (naturalSingularResolutionRestriction X Z hZ)
-  letI : K.IsStrictlyGE (-1) :=
-    naturalSingularSupportCone_isStrictlyGE X Z hZ
-  exact (rationalSupportHypercohomologyEquivNaturalSingularCone
-      X Z hZ n).trans
-    (hypercohomologyEquivGlobalSections X K (-1)
-      (naturalSingularSupportCone_term_isFlasque X Z hZ) (n - 1))
-
 /-- Additive form of the computation of rational constant-sheaf cohomology with support by
 global sections of the natural singular support cone. -/
 def rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections
@@ -801,27 +717,6 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections
       X Z hZ n).trans
     (hypercohomologyAddEquivGlobalSections X K (-1)
       (naturalSingularSupportCone_term_isFlasque X Z hZ) (n - 1))
-
-/-- Rational constant-sheaf cohomology with closed support agrees with rational singular
-cohomology with the same support. -/
-def rationalCohomologyWithSupportEquivSingular
-    [IsIntegral X.left] [Smooth X.hom]
-    [T2Space (ComplexPoint X)]
-    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℕ) :
-    RationalCohomologyWithSupport X Z (n : ℤ) ≃
-      CohomologyWithSupport ℚ
-        (TopCat.of (ComplexPoint X)) Z n :=
-  (rationalSupportHypercohomologyEquivNaturalSingularConeGlobalSections
-      X Z hZ (n : ℤ)).trans <|
-    ((HomologicalComplex.homologyMapIso
-      (globalSectionsNaturalSingularConeIsoMappingCone
-        X Z hZ) ((n : ℤ) - 1)).addCommGroupIsoToAddEquiv.toEquiv).trans <|
-    ((asIso (HomologicalComplex.homologyMap
-      (globalRawSupportConeToGlobalNaturalSingularCone
-        X Z hZ) ((n : ℤ) - 1))).symm.addCommGroupIsoToAddEquiv.toEquiv).trans <|
-    (globalRawSingularRestrictionConeCohomologyEquivSupport ℚ
-      (TopCat.of (ComplexPoint X)) Z n).toEquiv
 
 /-- Additive Betti comparison for rational cohomology with closed support. -/
 def rationalCohomologyWithSupportAddEquivSingular

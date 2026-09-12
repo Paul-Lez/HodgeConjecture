@@ -469,14 +469,6 @@ def toAuxiliaryBorelMooreComparisonData
     AuxiliaryRationalCycleComponentBorelMooreComparisonData.fundamentalClass,
     compactificationFundamentalClass, AddEquiv.coe_toRatLinearEquiv]
 
-/-- Forgetting support gives the comparison-dependent ordinary rational class. -/
-def ordinaryClassOfComparisons
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    H^(2 * (p : ℤ))(V.over; ℚ) :=
-  forgetSupport V.over
-    (cycleComponentSupport V.over x) (2 * (p : ℤ))
-      D.supportedClassOfComparisons
-
 end RationalCycleComponentSheafBorelMooreComparisonInputs
 
 /-! ### Conditional normalized sheaf route -/
@@ -522,13 +514,6 @@ explicit local Verdier/Thom compatibility theorem. -/
 def alexanderPoincare
     (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx) :=
   D.toComplexOrientedComponentClassData.alexanderPoincare
-
-/-- The ambient sheaf Borel--Moore class transported from the exactly normalized
-compactification-relative class. Its supported image is normalized by
-`orientationComparison_local`. -/
-def sheafBorelMooreFundamentalClass
-    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx) :=
-  D.comparisonInputs.sheafBorelMooreClassOfComparisons
 
 /-- The singular supported fundamental class with exact local Thom-cap normalization. -/
 def supportedFundamentalClass

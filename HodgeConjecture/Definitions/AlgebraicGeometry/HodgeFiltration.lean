@@ -428,12 +428,6 @@ omit [Algebra K ℂ] in
   simp [fieldCohomologyClass, hypercohomologyEquiv_add,
     integerToFieldConstantSheafComplexInt_add]
 
-/-- Rational constants as an additive map into degree-zero rational cohomology. -/
-def fieldCohomologyClassAddHom : K →+ H^0(X; K) where
-  toFun := fieldCohomologyClass K X
-  map_zero' := fieldCohomologyClass_zero K X
-  map_add' := fieldCohomologyClass_add K X
-
 /-- The unit in degree-zero rational cohomology. -/
 def fieldCohomologyUnit : H^0(X; K) :=
   fieldCohomologyClass K X 1

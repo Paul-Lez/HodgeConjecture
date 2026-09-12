@@ -30,26 +30,6 @@ variable (X Y : Over (Spec (.of ℂ)))
   (hf : IsOpenEmbedding f) (S : Set M)
   (hS : f ⁻¹' S = Set.range (Point.map i))
 
-/-- On every transported chart, the section is precisely the unit image of the
-actual transported normal-projection coclass. This displays exact normalization. -/
-theorem smoothClosedSupportOpenImageCoclassSection_restrict_chart
-    (z : ComplexPoint Y) :
-    (supportRelativeCohomologySheaf M S (2 * (d - m))).obj.map
-      (hf.functor.map (homOfLE (show
-        smoothClosedSupportChartOpen X Y i m d z ≤ ⊤ from le_top))).op
-      (smoothClosedSupportOpenImageCoclassSection X Y i m d f hf S hS) =
-    (supportRelativeCohomologyToSheaf M S (2 * (d - m))).app
-      (op (hf.functor.obj (smoothClosedSupportChartOpen X Y i m d z)))
-      ((supportRelativeCohomologyPresheafOpenIso f hf S (Set.range (Point.map i)) hS
-          (2 * (d - m))).inv.app (op (smoothClosedSupportChartOpen X Y i m d z))
-        (smoothClosedSupportChartCoclass X Y i m d z
-          (smoothClosedSupportChartOpen X Y i m d z) (le_refl _))) := by
-  rw [smoothClosedSupportOpenImageCoclassSection,
-    supportRelativeCohomologySectionOpenImage_restrict,
-    smoothClosedSupportCoclassSection_restrict_chart]
-  exact supportRelativeCohomologySheafOpenIso_unit_apply f hf S (Set.range (Point.map i))
-    hS (2 * (d - m)) (smoothClosedSupportChartOpen X Y i m d z) _
-
 end GeneralOpenTransport
 
 section Component

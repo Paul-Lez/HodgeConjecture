@@ -112,12 +112,6 @@ def closedEmbeddingDerivedPushforwardPlus :
       obtain ⟨n, hn⟩ := A.property
       exact ⟨n, closedEmbeddingDerivedPushforward_isGE i hi A.obj n⟩)
 
-/-- Forgetting the lower-bound certificate gives exactly the constructed unbounded
-derived pushforward. -/
-def closedEmbeddingDerivedPushforwardPlusForgetIso :
-    closedEmbeddingDerivedPushforwardPlus i hi ⋙ DerivedCategory.Plus.ι ≅
-      DerivedCategory.Plus.ι ⋙ closedEmbeddingDerivedPushforward i hi := Iso.refl _
-
 instance closedEmbeddingDerivedPushforwardPlus_commShift :
     (closedEmbeddingDerivedPushforwardPlus i hi).CommShift ℤ := by
   dsimp only [closedEmbeddingDerivedPushforwardPlus]
