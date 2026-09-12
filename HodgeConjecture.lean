@@ -103,7 +103,7 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportComparison
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.GlobalSections
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.GlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SingularSheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularComparison
@@ -269,8 +269,6 @@ public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
 public import HodgeConjecture.Lemmas.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Lemmas.RingTheory.TranscendenceDegreeKrullDimension
 public import HodgeConjecture.Lemmas.Topology.Dimension.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
 public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
