@@ -27,6 +27,61 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.Basic`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public section
+
+open CategoryTheory Topology
+open scoped CommRingCat.HomTopology
+
+namespace AlgebraicGeometry
+
+variable (R : Type) [CommRing R]
+
+namespace Point
+
+variable {R}
+
+section Functoriality
+
+variable {X Y Z : Over (Spec ↧R)}
+
+end Functoriality
+
+section IsLocalRing
+
+variable [IsLocalRing R] {X : Over (Spec ↧R)}
+
+section Topology
+
+variable [TopologicalSpace R]
+
+variable [ContinuousMul R] [IsOpenUnits R]
+
+end Topology
+
+end IsLocalRing
+
+section Field
+
+variable {K : Type} [Field K] {X : Over (Spec ↧K)}
+
+/-- Over a field, a `K`-point is a scheme point together with an embedding of its residue field.
+
+This refines `stalkData`: the stalk homomorphism out of a local ring into a field factors through
+the residue field. -/
+noncomputable def residueData (z : Point K X) :
+    Σ x : X.left, X.left.residueField x ⟶ ↧K :=
+  Scheme.SpecToEquivOfField K X.left z.left
+
+end Field
+
+end Point
+
+end AlgebraicGeometry
+
+end
+
 @[expose] public section
 
 open CategoryTheory Topology

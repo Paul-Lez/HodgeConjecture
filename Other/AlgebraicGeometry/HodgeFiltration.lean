@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.Filtration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 
 @[expose] public noncomputable section

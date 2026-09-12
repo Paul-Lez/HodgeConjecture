@@ -24,6 +24,36 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.FlasqueBoundedBelow`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Limits Opposite TopologicalSpace
+
+namespace TopCat.Sheaf.IsFlasque
+
+universe u
+
+variable {X : TopCat.{u}}
+
+namespace BoundedBelowComplex
+
+variable (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ)
+
+/-- The short exact sequence from cycles in degree `i`, through the degree-`i` term, to cycles
+in degree `i + 1`. -/
+def cyclesShortComplex (i : ℤ) :
+    ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
+  ShortComplex.mk (K.iCycles i) (K.toCycles i (i + 1)) (by
+    rw [← cancel_mono (K.iCycles (i + 1))]
+    simp)
+
+end BoundedBelowComplex
+
+end TopCat.Sheaf.IsFlasque
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Limits Opposite TopologicalSpace

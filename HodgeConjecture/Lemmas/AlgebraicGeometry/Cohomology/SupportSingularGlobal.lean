@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.GlobalSections
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.GlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.GlobalRestriction
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainCone
 /-!

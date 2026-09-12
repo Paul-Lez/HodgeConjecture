@@ -215,7 +215,7 @@ The shortest route through the implementation is:
 1. `HodgeConjecture/Statement.lean`, the statement;
 2. `HodgeConjecture/Definitions/AlgebraicGeometry/Hodge/Filtration.lean`, cohomology and the Hodge
    filtration;
-3. `HodgeConjecture/Definitions/AlgebraicGeometry/Cohomology/WithSupport.lean`, the mapping-cone
+3. `HodgeConjecture/Lemmas/AlgebraicGeometry/Cohomology/WithSupport.lean`, the mapping-cone
    model of cohomology with support;
 4. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`,
    the class on the smooth locus;

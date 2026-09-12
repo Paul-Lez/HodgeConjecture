@@ -316,34 +316,6 @@ lemma constantsToSingularCochainZeroSheaf_comp_coboundary :
   rw [← Functor.map_comp, constantsToSingularCochainZero_comp_coboundary,
     Functor.map_zero]
 
-/-- The augmented singular zero-cochain short complex before sheafification. -/
-noncomputable def constantsToSingularCochainPresheafShortComplex :
-    ShortComplex (TopCat.Presheaf AddCommGrpCat X) :=
-  ShortComplex.mk (constantsToSingularCochainZero R X)
-    (singularCochainCoboundary R X 0)
-    (constantsToSingularCochainZero_comp_coboundary R X)
-
-/-- The augmented singular zero-cochain short complex after sheafification. -/
-noncomputable def constantsToSingularCochainSheafShortComplex :
-    ShortComplex (TopCat.Sheaf AddCommGrpCat X) :=
-  ShortComplex.mk (constantsToSingularCochainZeroSheaf R X)
-    (singularCochainSheafCoboundary R X 0)
-    (constantsToSingularCochainZeroSheaf_comp_coboundary R X)
-
-set_option backward.isDefEq.respectTransparency false in
-/-- The sheafification unit between the augmented presheaf and sheaf short complexes. -/
-noncomputable def constantsToSingularCochainShortComplexSheafificationUnit :
-    constantsToSingularCochainPresheafShortComplex R X ⟶
-      (constantsToSingularCochainSheafShortComplex R X).map
-        (TopCat.Sheaf.forget AddCommGrpCat.{u} X) where
-  τ₁ := toSheafify (Opens.grothendieckTopology X) (constantCoefficientPresheaf R X)
-  τ₂ := toSheafify (Opens.grothendieckTopology X) (singularCochainPresheaf R X 0)
-  τ₃ := toSheafify (Opens.grothendieckTopology X) (singularCochainPresheaf R X 1)
-  comm₁₂ := (toSheafify_naturality (Opens.grothendieckTopology X)
-    (constantsToSingularCochainZero R X)).symm
-  comm₂₃ := (toSheafify_naturality (Opens.grothendieckTopology X)
-    (singularCochainCoboundary R X 0)).symm
-
 /-- The canonical comparison from the constant sheaf complex to the singular-cochain sheaf
 complex. -/
 def constantsToSingularCochainSheafComplex :

@@ -560,7 +560,7 @@ coefficient field of the conjecture.
 ```
 
 The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from
-`HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
+`HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
 vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector in
 $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in $`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`,
 and the only summand common to both is $`H^{p,p}`.

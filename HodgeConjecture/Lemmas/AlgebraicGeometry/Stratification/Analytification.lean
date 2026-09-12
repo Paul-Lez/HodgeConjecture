@@ -16,6 +16,34 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Stratification.Analytification`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Topology TopologicalSpace
+
+namespace AlgebraicGeometry.ComplexPoint
+
+variable (X : Over (Spec (.of ℂ))) {Y : Over (Spec (.of ℂ))}
+
+attribute [local instance] smoothStratificationAnalyticTopology
+
+variable [LocallyOfFiniteType X.hom] [NoetherianSpace X.left]
+
+/-- The inclusion of a reduced smooth stratum, bundled over the complex base. -/
+def reducedClosedSmoothPieceMap (T : Closeds X.left) :
+    Over.mk (reducedClosedSmoothPieceι X.hom T ≫ X.hom) ⟶ X :=
+  Over.homMk (reducedClosedSmoothPieceι X.hom T) rfl
+
+instance reducedClosedSmoothPieceMap_isImmersion (T : Closeds X.left) :
+    IsImmersion (reducedClosedSmoothPieceMap X T).left := by
+  change IsImmersion (reducedClosedSmoothPieceι X.hom T)
+  infer_instance
+
+end AlgebraicGeometry.ComplexPoint
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Topology TopologicalSpace

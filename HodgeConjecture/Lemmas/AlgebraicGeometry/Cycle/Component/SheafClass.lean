@@ -14,6 +14,35 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SheafClass`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Limits TopologicalSpace Opposite
+open AlgebraicTopology.Singular
+
+namespace AlgebraicGeometry.ComplexPoint
+
+variable (X : Over (Spec (.of ℂ)))
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+
+attribute [local instance] cycleComponentSheafClassAnalyticTopology
+
+variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+  (hx : Order.coheight x = p)
+
+/-- The constructed class in the existing support-cone presentation. Its
+comparison includes the proved cone sign required by actual support forgetting. -/
+def cycleComponentSheafSupportedClass :
+    RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
+  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
+    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
+      (cycleComponentSupportedInjectiveClass X x (d := d) hx)
+
+end AlgebraicGeometry.ComplexPoint
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace Opposite

@@ -22,7 +22,7 @@ public import Mathlib.Algebra.Category.ModuleCat.Abelian
 public import Mathlib.Algebra.Homology.ShortComplex.Linear
 public import Mathlib.Algebra.Module.BigOperators
 public import Mathlib.LinearAlgebra.Dual.Defs
-public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.CochainCohomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.CochainCohomology
 
 /-!
 # The simplicial cap product

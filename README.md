@@ -40,4 +40,14 @@ statement. Two checks for this:
   `Lemmas` and `Mathlib` really is used by the statement — plus that both umbrella modules are
   complete, and that every source path the Verso guide names in prose still exists.
 
+"Used in the statement" is sharper than "reachable from the statement". Checking that the statement
+says what it should means unfolding the definitions it mentions, and the definitions those mention,
+and so on — and that descent stops at every proof, because a proof is interchangeable with any other
+proof of the same `Prop`. So a definition the statement reaches *only* through a proof never has to
+be read, however much the construction is needed to make the statement typecheck, and it belongs in
+`Lemmas`. `lake env lean scripts/PropOnlyDefinitions.lean` lists the definitions of `Definitions`
+that are in that position; it is a report rather than a check, because a proof-only definition
+sometimes has to stay where it is, namely when a lemma whose *statement* the reader does have to
+inspect is proved with it.
+
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.

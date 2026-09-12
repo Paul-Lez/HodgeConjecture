@@ -97,14 +97,6 @@ def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X 
   cycleComponentExtendSmoothCoclass X x (d := d) hx
     (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)
 
-/-- The constructed class in the existing support-cone presentation. Its
-comparison includes the proved cone sign required by actual support forgetting. -/
-def cycleComponentSheafSupportedClass :
-    RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
-      (cycleComponentSupportedInjectiveClass X x (d := d) hx)
-
 /-- The unconditional ordinary class of an arbitrary integral component.
 This uses the literal inclusion of supported injective sections. -/
 def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=

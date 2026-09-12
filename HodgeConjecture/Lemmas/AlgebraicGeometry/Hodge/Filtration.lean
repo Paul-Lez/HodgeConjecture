@@ -24,6 +24,187 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.Filtration`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Limits TopologicalSpace
+open scoped TensorProduct
+
+namespace AlgebraicGeometry.ComplexPoint
+
+open Point
+
+variable (K : Type) [Field K] [Algebra K ℂ]
+variable (X : Over (Spec ↧ℂ))
+
+attribute [local instance] hodgeFiltrationTopology
+
+attribute [local instance] analyticHasDerivedCategory
+
+/-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
+def complexToFieldConstantSheaf :
+    constantComplexSheaf X ⟶ constantFieldSheaf K X :=
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
+  (constantSheaf J AddCommGrpCat).map
+    (AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom)
+
+/-- The chosen retraction from the complex constant sheaf complex to the rational one. -/
+def complexToFieldConstantSheafComplexInt :
+    constantComplexSheafComplexInt X ⟶
+      constantFieldSheafComplexInt K X :=
+  HomologicalComplex.extendMap
+    ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
+      (complexToFieldConstantSheaf K X)) ComplexShape.embeddingUpNat
+
+/-- A rational number as a morphism from the integer to the rational constant sheaf. -/
+def integerToFieldConstantSheaf (q : K) :
+    constantIntegerSheaf X ⟶ constantFieldSheaf K X :=
+  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
+  (constantSheaf J AddCommGrpCat).map (AddCommGrpCat.ofHom (zmultiplesAddHom K q))
+
+omit [Algebra K ℂ] in
+@[simp] lemma integerToFieldConstantSheaf_zero :
+    integerToFieldConstantSheaf K X 0 = 0 := by
+  unfold integerToFieldConstantSheaf
+  rw [map_zero (zmultiplesAddHom K)]
+  have h : AddCommGrpCat.ofHom (0 : ℤ →+ K) = 0 := AddCommGrpCat.hom_ext rfl
+  rw [h, Functor.map_zero]
+  rfl
+
+omit [Algebra K ℂ] in
+@[simp] lemma integerToFieldConstantSheaf_add (a b : K) :
+    integerToFieldConstantSheaf K X (a + b) =
+      integerToFieldConstantSheaf K X a +
+        integerToFieldConstantSheaf K X b := by
+  unfold integerToFieldConstantSheaf
+  rw [map_add (zmultiplesAddHom K)]
+  have h : AddCommGrpCat.ofHom
+      (zmultiplesAddHom K a + zmultiplesAddHom K b) =
+      AddCommGrpCat.ofHom (zmultiplesAddHom K a) +
+        AddCommGrpCat.ofHom (zmultiplesAddHom K b) :=
+    AddCommGrpCat.hom_ext rfl
+  rw [h, Functor.map_add]
+  rfl
+
+/-- A rational number as a morphism of constant complexes. -/
+def integerToFieldConstantSheafComplexInt (q : K) :
+    constantIntegerSheafComplexInt X ⟶
+      constantFieldSheafComplexInt K X :=
+  HomologicalComplex.extendMap
+    ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
+      (integerToFieldConstantSheaf K X q)) ComplexShape.embeddingUpNat
+
+omit [Algebra K ℂ] in
+@[simp] lemma integerToFieldConstantSheafComplexInt_zero :
+    integerToFieldConstantSheafComplexInt K X 0 = 0 := by
+  unfold integerToFieldConstantSheafComplexInt
+  rw [integerToFieldConstantSheaf_zero, Functor.map_zero,
+    HomologicalComplex.extendMap_zero]
+
+omit [Algebra K ℂ] in
+@[simp] lemma integerToFieldConstantSheafComplexInt_add (a b : K) :
+    integerToFieldConstantSheafComplexInt K X (a + b) =
+      integerToFieldConstantSheafComplexInt K X a +
+        integerToFieldConstantSheafComplexInt K X b := by
+  unfold integerToFieldConstantSheafComplexInt
+  rw [integerToFieldConstantSheaf_add, Functor.map_add,
+    HomologicalComplex.extendMap_add]
+
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1 TopCat.instCategorySheaf._aux_3
+  TopCat.instCategorySheaf._aux_5 constantComplexAddCommGrpPresheaf in
+
+omit [Algebra K ℂ] in
+/-- Multiplying an integer by `r` and then by `q` is multiplying it by `q * r`. -/
+private lemma ofHom_zmultiplesAddHom_comp_mulLeft (q r : K) :
+    AddCommGrpCat.ofHom (zmultiplesAddHom K r) ≫
+        AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q) =
+      AddCommGrpCat.ofHom (zmultiplesAddHom K (q * r)) := by
+  ext
+  simp
+
+set_option linter.auxLemma false in
+omit [Algebra K ℂ] in
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 constantIntegerSheaf in
+/-- Applying a rational scalar after the constant class `r` gives the constant class `q * r`. -/
+private lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
+    integerToFieldConstantSheaf K X r ≫
+      fieldScalarSheaf K X q =
+        integerToFieldConstantSheaf K X (q * r) := by
+  rw [integerToFieldConstantSheaf, fieldScalarSheaf, integerToFieldConstantSheaf,
+    ← Functor.map_comp, ofHom_zmultiplesAddHom_comp_mulLeft]
+
+omit [Algebra K ℂ] in
+/-- Scalar multiplication after an integer-to-rational constant-complex map multiplies its
+rational coefficient. -/
+private lemma integerToFieldConstantSheafComplexInt_comp_fieldScalarComplex (q r : K) :
+    integerToFieldConstantSheafComplexInt K X r ≫
+      fieldScalarComplex K X q =
+        integerToFieldConstantSheafComplexInt K X (q * r) := by
+  unfold integerToFieldConstantSheafComplexInt fieldScalarComplex
+  rw [← HomologicalComplex.extendMap_comp, ← Functor.map_comp,
+    integerToFieldConstantSheaf_comp_fieldScalarSheaf]
+
+/-- The constant rational class `q` in degree-zero rational cohomology. -/
+def fieldCohomologyClass (q : K) : H^0(X; K) :=
+  Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
+    (integerToFieldConstantSheafComplexInt K X q)
+
+omit [Algebra K ℂ] in
+@[simp] lemma fieldCohomologyClass_zero :
+    fieldCohomologyClass K X 0 = 0 := by
+  apply (Localization.SmallShiftedHom.equiv
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+  simp [fieldCohomologyClass, hypercohomologyEquiv_zero,
+    integerToFieldConstantSheafComplexInt_zero]
+
+omit [Algebra K ℂ] in
+@[simp] lemma fieldCohomologyClass_add (a b : K) :
+    fieldCohomologyClass K X (a + b) =
+      fieldCohomologyClass K X a + fieldCohomologyClass K X b := by
+  apply (Localization.SmallShiftedHom.equiv
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+  simp [fieldCohomologyClass, hypercohomologyEquiv_add,
+    integerToFieldConstantSheafComplexInt_add]
+
+/-- The unit in degree-zero rational cohomology. -/
+def fieldCohomologyUnit : H^0(X; K) :=
+  fieldCohomologyClass K X 1
+
+/-- Extension of coefficients from rational to complex constant-sheaf cohomology. -/
+def fieldToComplexCohomology (n : ℤ) :
+    H^n(X; K) →+ ComplexConstantCohomology X n :=
+  hypercohomologyMap X
+    (fieldToComplexConstantSheafComplexInt K X) n
+
+/-- The cohomological retraction induced by the chosen rational-linear retraction `ℂ → K`. -/
+def complexToFieldCohomology (n : ℤ) :
+    ComplexConstantCohomology X n →+ H^n(X; K) :=
+  hypercohomologyMap X
+    (complexToFieldConstantSheafComplexInt K X) n
+
+omit [Algebra K ℂ] in
+/-- Constant degree-zero cohomology classes respect rational scalar multiplication. -/
+lemma fieldCohomologyClass_mul (q r : K) :
+    fieldCohomologyClass K X (q * r) =
+      q • fieldCohomologyClass K X r := by
+  rw [field_smul_eq]
+  unfold fieldCohomologyClass hypercohomologyMap
+  dsimp
+  rw [← smallShiftedHomMkZero_comp X,
+    integerToFieldConstantSheafComplexInt_comp_fieldScalarComplex]
+
+/-- Rational constants map rational-linearly to degree-zero rational cohomology. -/
+def fieldCohomologyClassLinear : K →ₗ[K] H^0(X; K) where
+  toFun := fieldCohomologyClass K X
+  map_add' := fieldCohomologyClass_add K X
+  map_smul' q r := fieldCohomologyClass_mul K X q r
+
+end AlgebraicGeometry.ComplexPoint
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace
@@ -297,10 +478,6 @@ lemma hodgePiece_eq_bot_of_lt [IsIntegral X.left] [Smooth X.hom]
   rw [hodgeFiltration_eq_bot_of_lt X hp n, AddSubgroup.mem_bot] at h
   exact h
 
-
-
-
-
 /-- When conjugation fixes `K`, a `K`-class is its own conjugate, so `F^p` already implies
 `(p,p)` and the Hodge filtration alone cuts out the Hodge classes. -/
 lemma hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
@@ -342,6 +519,5 @@ lemma hodgeClasses_eq_bot_of_lt
     Hdg^p(K; X) = ⊥ := by
   rw [hodgeClasses_eq_ker_of_lt K X hp]
   exact LinearMap.ker_eq_bot.mpr (fieldToDeRhamCohomology_injective K X (2 * p))
-
 
 end AlgebraicGeometry.ComplexPoint
