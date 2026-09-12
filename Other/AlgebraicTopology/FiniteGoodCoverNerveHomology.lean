@@ -260,12 +260,9 @@ namespace SupportChainModels
 
 variable {ι : Type} [LinearOrder ι] {M N : SupportChainModels ι}
 
-/-- A natural morphism between contravariant diagrams of local chain models. -/
-public abbrev Hom (M N : SupportChainModels ι) := M ⟶ N
-
-namespace Hom
-
-variable (η : Hom M N)
+/- A morphism of local chain models is a natural transformation between the underlying
+contravariant diagrams. -/
+variable (η : M ⟶ N)
 
 /-- The coproduct of a natural local-model map over tuples in one Čech degree. -/
 public def cechObjectMap (P : TupleClass ι) (n : ℕ) :
@@ -286,45 +283,43 @@ public theorem faceOrZero_naturality {n m : ℕ}
 @[reassoc]
 public theorem realizeAux_naturality {n m : ℕ} (a : Fin (n + 1) → ι)
     (P : TupleClass ι) (w : OrderedCechTuple.Formal ι (m + 1)) :
-    M.realizeAux a P w ≫ η.cechObjectMap P m =
+    M.realizeAux a P w ≫ cechObjectMap η P m =
       η.app (Opposite.op (tupleSupport a)) ≫ N.realizeAux a P w := by
   exact OrderedCechTuple.linearMap_apply_eq_of_forall_mem_support
-    (L := (Preadditive.rightComp _ (η.cechObjectMap P m)).toIntLinearMap ∘ₗ
+    (L := (Preadditive.rightComp _ (cechObjectMap η P m)).toIntLinearMap ∘ₗ
       M.realizeAux a P)
     (R := (Preadditive.leftComp _ (η.app (Opposite.op (tupleSupport a)))).toIntLinearMap ∘ₗ
       N.realizeAux a P)
     (w := w) fun b _ ↦ by
-      change M.realizeAux a P (Finsupp.single b 1) ≫ η.cechObjectMap P m =
+      change M.realizeAux a P (Finsupp.single b 1) ≫ cechObjectMap η P m =
         η.app (Opposite.op (tupleSupport a)) ≫ N.realizeAux a P (Finsupp.single b 1)
       rw [M.realizeAux_single, N.realizeAux_single]
       by_cases hb : P.mem m b
       · rw [M.ιOrZero_of_mem P hb, N.ιOrZero_of_mem P hb]
         unfold cechObjectMap
         rw [Category.assoc, Limits.Sigma.ι_map, ← Category.assoc,
-          η.faceOrZero_naturality, Category.assoc]
+          faceOrZero_naturality η, Category.assoc]
       · simp [SupportChainModels.ιOrZero, hb]
 
 @[reassoc]
 public theorem realize_naturality (P Q : TupleClass ι) {n m : ℕ}
     (T : OrderedCechTuple.Formal ι (n + 1) →ₗ[ℤ]
       OrderedCechTuple.Formal ι (m + 1)) :
-    η.cechObjectMap P n ≫ N.realize P Q T =
-      M.realize P Q T ≫ η.cechObjectMap Q m := by
+    cechObjectMap η P n ≫ N.realize P Q T =
+      M.realize P Q T ≫ cechObjectMap η Q m := by
   apply Sigma.hom_ext
   intro a
   unfold cechObjectMap
   rw [Limits.Sigma.ι_map_assoc, N.ι_realize, M.ι_realize_assoc]
-  exact (η.realizeAux_naturality a.1 Q (T (Finsupp.single a.1 1))).symm
+  exact (realizeAux_naturality η a.1 Q (T (Finsupp.single a.1 1))).symm
 
 /-- A natural local-model map induces a map of ordered Čech bicomplexes. -/
 public def cechMap (P : TupleClass ι) : M.cechComplex P ⟶ N.cechComplex P where
-  f n := η.cechObjectMap P n
+  f n := cechObjectMap η P n
   comm' i j hij := by
     obtain rfl : i = j + 1 := hij.symm
     rw [M.cechComplex_d, N.cechComplex_d]
-    exact η.realize_naturality P P _
-
-end Hom
+    exact realize_naturality η P P _
 
 end SupportChainModels
 
@@ -334,8 +329,7 @@ variable {ι : Type} [LinearOrder ι] (X : TopCat) (U : ι → Set X)
 
 /-- The intersection-to-nerve augmentations form a natural map of local chain models. -/
 public def goodCoverNerveLocalMap :
-    SupportChainModels.Hom (openCoverIntersectionChainModels X U)
-      (goodCoverNerveChainModels X U) where
+    openCoverIntersectionChainModels X U ⟶ goodCoverNerveChainModels X U where
   app s := goodCoverLocalAugmentation X U s.unop
   naturality _ _ f := goodCoverLocalAugmentation_naturality X U (leOfHom f.unop)
 
@@ -343,7 +337,7 @@ public def goodCoverNerveLocalMap :
 public def goodCoverNerveBicomplexMap :
     (openCoverIntersectionChainModels X U).cechComplex TupleClass.strictMono ⟶
       (goodCoverNerveChainModels X U).cechComplex TupleClass.strictMono :=
-  (goodCoverNerveLocalMap X U).cechMap TupleClass.strictMono
+  SupportChainModels.cechMap (goodCoverNerveLocalMap X U) TupleClass.strictMono
 
 namespace FiniteGoodCover
 
