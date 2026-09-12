@@ -20,8 +20,8 @@ public import Mathlib.Data.Complex.Basic
 public import Mathlib.RingTheory.QuasiFinite.Basic
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.RingTheory.RegularLocalRing.Polynomial
 import Mathlib.RingTheory.Unramified.LocalStructure

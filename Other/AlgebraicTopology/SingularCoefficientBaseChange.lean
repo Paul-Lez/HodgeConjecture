@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCohomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 public import Mathlib.Algebra.Category.ModuleCat.ChangeOfRings
 public import Mathlib.LinearAlgebra.Dual.BaseChange
 
@@ -55,6 +55,12 @@ local instance (X : TopCat) (n : ℕ) : Module ℚ ((CChains X).X n) :=
   Module.compHom _ (algebraMap ℚ ℂ)
 
 local instance (X : TopCat) (n : ℕ) : IsScalarTower ℚ ℂ ((CChains X).X n) :=
+  IsScalarTower.of_compHom ℚ ℂ _
+
+local instance (X : TopCat) (n : ℕ) : Module ℚ (Cohomology ℂ X n) :=
+  Module.compHom _ (algebraMap ℚ ℂ)
+
+local instance (X : TopCat) (n : ℕ) : IsScalarTower ℚ ℂ (Cohomology ℂ X n) :=
   IsScalarTower.of_compHom ℚ ℂ _
 
 /-- A singular chain group identified with finitely supported functions on singular simplices. -/
@@ -375,20 +381,5 @@ lemma qToCHomology_isBaseChange (X : TopCat) (n : ℕ) :
       (T.exact_of_g_is_cokernel hC.hπ)
   · exact (ModuleCat.epi_iff_surjective hC.π).mp
       (Limits.epi_of_isColimit_cofork hC.hπ)
-
-/-- The rational-to-complex comparison map on singular cohomology. -/
-def rationalToComplexCohomologyMap (X : TopCat) (n : ℕ) :
-    Cohomology ℚ X n →ₗ[ℚ] Cohomology ℂ X n :=
-  (qToCHomology_isBaseChange X n).toDual
-
-/-- If rational singular homology in degree `n` is finite-dimensional, extending rational
-singular cohomology coefficients to `ℂ` gives complex singular cohomology. -/
-def rationalToComplexCohomologyBaseChange (X : TopCat) (n : ℕ)
-    [Module.Finite ℚ (Homology ℚ X n)] :
-    ℂ ⊗[ℚ] Cohomology ℚ X n ≃ₗ[ℂ] Cohomology ℂ X n := by
-  letI : Module.Finite ℚ ((QChains X).homology n) := by
-    change Module.Finite ℚ (Homology ℚ X n)
-    infer_instance
-  exact (qToCHomology_isBaseChange X n).toDualBaseChange
 
 end AlgebraicTopology.Singular

@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCohomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 public import Mathlib.LinearAlgebra.Dual.Lemmas
 
 /-!
@@ -85,7 +85,9 @@ lemma homologyEmptySubspaceIso_hom (n : ℕ) :
     (homologyEmptySubspaceIso R X n).hom = relativeHomologyProjection R (emptySubspacePair X) n :=
   rfl
 
-/-- Cohomology supported on all of `X` is canonically ordinary cohomology. -/
+/-- Cohomology supported on all of `X` is canonically ordinary cohomology.  On cochains the
+forget-support map is the dual of the relative chain projection, which is an isomorphism here, so
+this is an isomorphism of cochain complexes before passing to cohomology. -/
 def wholeSupportCohomologyLinearEquiv (n : ℕ) :
     CohomologyWithSupport R X Set.univ n ≃ₗ[R] Cohomology R X n :=
   LinearEquiv.ofBijective (forgetSupport R X Set.univ n) <| by
@@ -96,26 +98,23 @@ def wholeSupportCohomologyLinearEquiv (n : ℕ) :
       rw [Set.compl_univ]
       infer_instance
     let e := HomologicalComplex.homologyMapIso
-      (asIso (relativeChainProjection R P)) n
-    have h : Function.Bijective (relativeHomologyProjection R P n).hom :=
-      (ConcreteCategory.isIso_iff_bijective e.hom).mp e.isIso_hom
-    exact ⟨LinearMap.dualMap_injective_of_surjective h.2,
-      LinearMap.dualMap_surjective_of_injective h.1⟩
+      (HomologicalComplex.linearDualIso (asIso (relativeChainProjection R P))) n
+    exact (ConcreteCategory.isIso_iff_bijective e.hom).mp e.isIso_hom
 
 @[simp]
 lemma wholeSupportCohomologyLinearEquiv_apply (n : ℕ)
     (α : CohomologyWithSupport R X Set.univ n) (z : Homology R X n) :
-    wholeSupportCohomologyLinearEquiv R X n α z =
-      α ((relativeHomologyProjection R
-        (TopPair.ofSubset ((Set.univ : Set X)ᶜ)) n).hom z) :=
-  rfl
+    cohomologyEquivDualHomology R X n (wholeSupportCohomologyLinearEquiv R X n α) z =
+      relativeCohomologyEquivDualHomology R (TopPair.ofSubset ((Set.univ : Set X)ᶜ)) n α
+        ((relativeHomologyProjection R
+          (TopPair.ofSubset ((Set.univ : Set X)ᶜ)) n).hom z) :=
+  cohomologyEquivDualHomology_forgetSupport R X Set.univ n α z
 
 /-- The canonical whole-support equivalence has the existing forget-support map as its underlying
 linear map. -/
 lemma wholeSupportCohomologyLinearEquiv_toLinearMap (n : ℕ) :
     (wholeSupportCohomologyLinearEquiv R X n).toLinearMap =
-      forgetSupport R X Set.univ n := by
-  ext α z
+      forgetSupport R X Set.univ n :=
   rfl
 
 end AlgebraicTopology.Singular

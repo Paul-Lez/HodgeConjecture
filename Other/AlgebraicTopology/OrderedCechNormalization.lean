@@ -252,14 +252,6 @@ public def normalizationHomotopy :
     (((M.firstRepeatHomotopyMap.compLeft M.sortMap).compRight M.monotoneInclusion).trans
       ((Homotopy.ofEq (by simp)).trans M.sortHomotopyMap))
 
-/-- Normalization is a homotopy equivalence of bicomplexes. -/
-public def normalizationHomotopyEquiv :
-    HomotopyEquiv (M.cechComplex TupleClass.all) (M.cechComplex TupleClass.strictMono) where
-  hom := M.normalizedProjection
-  inv := M.normalizedInclusion
-  homotopyHomInvId := M.normalizationHomotopy
-  homotopyInvHomId := Homotopy.ofEq M.normalizedInclusion_normalizedProjection
-
 /-! ### Totalization -/
 
 /-- The totalized normalization projection. -/

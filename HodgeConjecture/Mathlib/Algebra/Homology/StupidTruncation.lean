@@ -54,7 +54,7 @@ lemma stupidTruncInclusionApp_eq {i : I} {j : J} (h : e.f i = j) :
   grind [stupidTruncInclusionApp]
 
 set_option backward.isDefEq.respectTransparency false in
-lemma stupidTrunc_d_comp_XIso {i j : I} (_hij : c'.Rel (e.f i) (e.f j)) :
+lemma stupidTrunc_d_comp_XIso {i j : I} :
     (K.stupidTrunc e).d (e.f i) (e.f j) ≫
         (K.stupidTruncXIso e (i := j) rfl).hom =
       (K.stupidTruncXIso e (i := i) rfl).hom ≫ K.d (e.f i) (e.f j) := by
@@ -70,7 +70,7 @@ def stupidTruncInclusion : K.stupidTrunc e ⟶ K where
       obtain ⟨j, hj⟩ := e.mem_next (hi ▸ hij)
       rw [stupidTruncInclusionApp_eq K e hi, stupidTruncInclusionApp_eq K e hj]
       subst i' j'
-      exact (stupidTrunc_d_comp_XIso K e hij).symm
+      exact (stupidTrunc_d_comp_XIso K e).symm
     · exact (K.isZero_stupidTrunc_X e i' (by simpa using hi)).eq_of_src _ _
 
 @[simp] lemma stupidTruncInclusion_f {i : I} {j : J} (h : e.f i = j) :
@@ -103,11 +103,5 @@ lemma stupidTruncMap_comp_stupidTruncInclusion (f : K ⟶ L) :
       stupidTruncInclusion_f L e hi, stupidTruncInclusion_f K e hi,
       stupidTruncMap_stupidTruncXIso_hom f e hi]
   · exact (K.isZero_stupidTrunc_X e j (by simpa using hj)).eq_of_src _ _
-
-/-- The inclusions of stupid truncations form a natural transformation. -/
-def stupidTruncInclusionNatTrans :
-    e.stupidTruncFunctor C ⟶ Functor.id (HomologicalComplex C c') where
-  app K := stupidTruncInclusion K e
-  naturality _ _ f := stupidTruncMap_comp_stupidTruncInclusion e f
 
 end HomologicalComplex

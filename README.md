@@ -31,8 +31,8 @@ The remaining content of the project is sorted into four folders:
 
 The dividing line is `HodgeConjecture/Statement.lean`: a module belongs in `Definitions` if it
 defines something the statement mentions, in `Lemmas` if it is needed only to build such a
-definition, and in `Other` otherwise. In particular nothing in `Other` may be reachable from the
-statement. Two checks keep this honest:
+definition (in principle), and in `Other` otherwise. In particular nothing in `Other` should be reachable from the
+statement. Two checks for this:
 
 - `lake build` builds `scripts/CheckStatementImports.lean`, which imports the statement and fails if
   the resulting environment contains any module of `Other`;

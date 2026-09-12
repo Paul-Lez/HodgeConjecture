@@ -40,12 +40,6 @@ def shiftedLiftShortComplex : S.X₁⟦(1 : ℤ)⟧ ⟶ mappingCone S.g :=
     mappingCone.map (mappingCone.inr S.f) S.g (𝟙 _)
       (mappingCone.descShortComplex S) (by simp)
 
-/-- Canonical comparison from the first term of a short complex to the homotopy
-fiber of its second map. -/
-def liftShortComplex : S.X₁ ⟶ mappingCocone S.g :=
-  (shiftFunctorCompIsoId _ (1 : ℤ) (-1) (by simp)).inv.app S.X₁ ≫
-    (shiftedLiftShortComplex S)⟦(-1 : ℤ)⟧'
-
 end mappingCocone
 
 end CochainComplex
