@@ -319,13 +319,13 @@ this comparison and `ambientSheafBorelMooreCycleDegreeEquiv`.  Because neither t
 orientation isomorphism nor `sheafToLocal` is canonically constructed, this structure does not
 claim a normalized general cycle class. -/
 structure RationalCycleComponentSheafBorelMooreComparisonInputs
-    (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ)
+    (V : SmoothProjectiveComplexVariety) (d p : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = p) where
   /-- The exactly complex-oriented compactification-relative fundamental class. -/
-  borelMoore : RationalCycleComponentBorelMooreData
-    V.toSmoothProjectiveComplexVariety x V.dimension p hx
+  borelMoore : RationalCycleComponentBorelMooreData V x d p hx
   /-- The proposed dualizing complex and its supplied shift isomorphism. -/
-  dualizing : RationalDualizingComplexOrientationInput V.over V.dimension
+  dualizing : RationalDualizingComplexOrientationInput V.over d
   /-- Derived sections with support in the analytic cycle component. -/
   support : DerivedSectionsWithSupportInput V.over
     (cycleComponentSupport V.over x)
@@ -333,66 +333,62 @@ structure RationalCycleComponentSheafBorelMooreComparisonInputs
   ambient sheaf model.  This is the exact API boundary replacing an arbitrary Alexander-duality
   equivalence. -/
   compactificationComparison :
-    CycleComponentBorelMooreHomology ℚ V.toSmoothProjectiveComplexVariety x
-        (2 * (V.dimension - p)) ≃+
+    CycleComponentBorelMooreHomology ℚ V x (2 * (d - p)) ≃+
       AmbientSheafBorelMooreHomology V.over
         dualizing.toRationalDualizingComplex support
-        ((2 * (V.dimension - p) : ℕ) : ℤ)
+        ((2 * (d - p) : ℕ) : ℤ)
   /-- Costalk/local-homology evaluation of an ambient sheaf Borel--Moore class.  Constructing this
   map is part of the missing closed-embedding/costalk comparison. -/
-  sheafToLocal : ∀ z : CycleComponentAnalyticPoint
-      V.toSmoothProjectiveComplexVariety x,
+  sheafToLocal : ∀ z : CycleComponentAnalyticPoint V x,
     AmbientSheafBorelMooreHomology V.over
         dualizing.toRationalDualizingComplex support
-        ((2 * (V.dimension - p) : ℕ) : ℤ) →+
-      RelativeHomology ℚ (pointComplementPair z) (2 * (V.dimension - p))
+        ((2 * (d - p) : ℕ) : ℤ) →+
+      RelativeHomology ℚ (pointComplementPair z) (2 * (d - p))
   /-- The compactification/sheaf comparison commutes with every supplied local evaluation.  This
   exposes the missing costalk/model-compatibility theorem and proves normalization relative to
   `sheafToLocal`; canonicity of that costalk map is not asserted by the present API. -/
   compactificationComparison_toLocal : ∀
-      (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
-      (c : CycleComponentBorelMooreHomology ℚ V.toSmoothProjectiveComplexVariety x
-        (2 * (V.dimension - p))),
+      (z : CycleComponentAnalyticPoint V x)
+      (c : CycleComponentBorelMooreHomology ℚ V x (2 * (d - p))),
     sheafToLocal z (compactificationComparison c) =
-      cycleComponentBorelMooreToLocal ℚ V.toSmoothProjectiveComplexVariety x
-        (2 * (V.dimension - p)) z c
+      cycleComponentBorelMooreToLocal ℚ V x (2 * (d - p)) z c
 
 namespace RationalCycleComponentSheafBorelMooreComparisonInputs
 
-variable {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
+variable {V : SmoothProjectiveComplexVariety} {d p : ℕ}
+  [SmoothOfRelativeDimension d V.structureMap]
   {x : V.scheme} {hx : coheight x = p}
 
 /-- Codimension does not exceed ambient dimension for a component of a smooth complex variety. -/
 lemma codimension_le_dimension
-    (_D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    p ≤ V.dimension := by
+    (_D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
+    p ≤ d := by
   have h := SmoothOfRelativeDimension.coheight_le_complex
-    (f := V.structureMap) (d := V.dimension) x
+    (f := V.structureMap) (d := d) x
   rw [hx] at h
   exact_mod_cast h
 
 /-- The old compactification-relative fundamental class, still normalized by the exact complex
 local orientation. -/
 def compactificationFundamentalClass
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    CycleComponentBorelMooreHomology ℚ V.toSmoothProjectiveComplexVariety x
-      (2 * (V.dimension - p)) :=
+    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
+    CycleComponentBorelMooreHomology ℚ V x (2 * (d - p)) :=
   D.borelMoore.fundamentalClass
 
 /-- The compactification-relative class transported to ambient sheaf Borel--Moore homology.  Its
 local normalization relative to the supplied costalk map is proved below. -/
 def sheafBorelMooreClassOfComparisons
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
+    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
     AmbientSheafBorelMooreHomology V.over
       D.dualizing.toRationalDualizingComplex D.support
-      ((2 * (V.dimension - p) : ℕ) : ℤ) :=
+      ((2 * (d - p) : ℕ) : ℤ) :=
   D.compactificationComparison D.compactificationFundamentalClass
 
 /-- Relative to `sheafToLocal`, the transported sheaf Borel--Moore class has exactly the
 constructed positive complex local orientation at every smooth point. -/
 lemma sheafToLocal_sheafBorelMooreClassOfComparisons
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx)
-    (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
+    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx)
+    (z : CycleComponentAnalyticPoint V x)
     (hz : z ∈ cycleComponentSmoothAnalyticLocus
       V.over x) :
     D.sheafToLocal z D.sheafBorelMooreClassOfComparisons =
@@ -404,7 +400,7 @@ lemma sheafToLocal_sheafBorelMooreClassOfComparisons
 /-- The supported constant-sheaf class induced by all supplied comparison inputs.
 No canonicity or complex-orientation normalization is asserted at this boundary. -/
 def supportedClassOfComparisons
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
+    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
     RationalCohomologyWithSupport V.over
       (cycleComponentSupport V.over x) (2 * (p : ℤ)) :=
   ambientSheafBorelMooreCycleDegreeEquiv V.over
@@ -414,18 +410,17 @@ def supportedClassOfComparisons
 the orientation-induced sheaf comparison, and the proved Betti comparison.  This is only
 identified with normalized Alexander--Poincaré duality after the missing compatibility theorem. -/
 def orientationInducedComparisonAddEquiv
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    CycleComponentBorelMooreHomology ℚ V.toSmoothProjectiveComplexVariety x
-        (2 * (V.dimension - p)) ≃+
+    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
+    CycleComponentBorelMooreHomology ℚ V x (2 * (d - p)) ≃+
       RationalSingularComponentCohomologyWithSupport V.over x (2 * p) := by
   let : TopologicalSpace V.analyticPoint := Point.analyticTopology
   let : T2Space V.analyticPoint := inferInstance
   let : CompactSpace V.analyticPoint := inferInstance
-  let : ChartedSpace (Fin V.dimension → ℂ) V.analyticPoint :=
+  let : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
     inferInstance
   let : ∀ U : Opens V.analyticPoint, ParacompactSpace U := fun U =>
     opens_paracompactSpace_of_compact_chartedSpace
-      (H := Fin V.dimension → ℂ) U
+      (H := Fin d → ℂ) U
   exact D.compactificationComparison |>.trans
     (ambientSheafBorelMooreCycleDegreeEquiv V.over
       D.codimension_le_dimension D.dualizing D.support) |>.trans
@@ -436,14 +431,14 @@ def orientationInducedComparisonAddEquiv
 
 /-- The singular supported class obtained from all supplied comparisons. -/
 def singularSupportedClassOfComparisons
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
+    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
     RationalSingularComponentCohomologyWithSupport V.over x (2 * p) :=
   D.orientationInducedComparisonAddEquiv D.compactificationFundamentalClass
 
 /-- The comparison composite sends the compactification-relative fundamental class to the
 comparison-dependent singular supported class. -/
 @[simp] lemma orientationInducedComparisonAddEquiv_fundamentalClass
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
+    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
     D.orientationInducedComparisonAddEquiv D.compactificationFundamentalClass =
       D.singularSupportedClassOfComparisons := rfl
 
@@ -454,14 +449,14 @@ constructed sheaf-theoretic composite.  Although the present derived category is
 additive, no extra linearity hypothesis is needed: every additive homomorphism between rational
 vector spaces preserves rational scalar multiplication (`map_rat_smul`). -/
 def toAuxiliaryBorelMooreComparisonData
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    AuxiliaryRationalCycleComponentBorelMooreComparisonData V p x hx where
+    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
+    AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx where
   borelMoore := D.borelMoore
   auxiliaryComparison := D.orientationInducedComparisonAddEquiv.toRatLinearEquiv
 
 /-- Passing through the adapter does not change the comparison-dependent singular class. -/
 @[simp] lemma toAuxiliaryBorelMooreComparisonData_auxiliarySingularSupportedClass
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
+    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
     D.toAuxiliaryBorelMooreComparisonData.auxiliarySingularSupportedClass =
       D.singularSupportedClassOfComparisons := by
   simp only [AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliarySingularSupportedClass,
@@ -471,7 +466,7 @@ def toAuxiliaryBorelMooreComparisonData
 
 /-- Forgetting support gives the comparison-dependent ordinary rational class. -/
 def ordinaryClassOfComparisons
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
+    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
     H^(2 * (p : ℤ))(V.over; ℚ) :=
   forgetSupport V.over
     (cycleComponentSupport V.over x) (2 * (p : ℤ))
@@ -488,30 +483,30 @@ comparison is normalized by the actual local Thom-cap operation.
 implied by `compactificationComparison_toLocal`: the latter sees only the Borel--Moore side and
 allows simultaneous inverse rescaling of the orientation and costalk maps. -/
 structure ComplexOrientedRationalCycleComponentSheafBorelMooreData
-    (V : DimensionedSmoothProjectiveComplexVariety) (p : ℕ)
+    (V : SmoothProjectiveComplexVariety) (d p : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = p) where
-  comparisonInputs : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx
-  localThomCap : RationalCycleComponentLocalThomCapInput V p x hx
+  comparisonInputs : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx
+  localThomCap : RationalCycleComponentLocalThomCapInput V d p x hx
   orientationComparison_local : ∀
-      (c : CycleComponentBorelMooreHomology ℚ
-        V.toSmoothProjectiveComplexVariety x (2 * (V.dimension - p)))
-      (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
+      (c : CycleComponentBorelMooreHomology ℚ V x (2 * (d - p)))
+      (z : CycleComponentAnalyticPoint V x)
       (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
     localThomCap.capWithAmbientComplexOrientation z hz
         (comparisonInputs.orientationInducedComparisonAddEquiv c) =
-      cycleComponentBorelMooreToLocal ℚ V.toSmoothProjectiveComplexVariety x
-        (2 * (V.dimension - p)) z c
+      cycleComponentBorelMooreToLocal ℚ V x (2 * (d - p)) z c
 
 namespace ComplexOrientedRationalCycleComponentSheafBorelMooreData
 
-variable {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
+variable {V : SmoothProjectiveComplexVariety} {d p : ℕ}
+  [SmoothOfRelativeDimension d V.structureMap]
   {x : V.scheme} {hx : coheight x = p}
 
 /-- The general complex-oriented component package induced by the sheaf comparison and the
 independent Verdier/Thom normalization theorem. -/
 def toComplexOrientedComponentClassData
-    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx) :
-    ComplexOrientedRationalCycleComponentClassData V p x hx where
+    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx) :
+    ComplexOrientedRationalCycleComponentClassData V d p x hx where
   borelMoore := D.comparisonInputs.borelMoore
   localThomCap := D.localThomCap
   comparison := D.comparisonInputs.orientationInducedComparisonAddEquiv.toRatLinearEquiv
@@ -520,51 +515,49 @@ def toComplexOrientedComponentClassData
 /-- The normalized Alexander--Poincaré equivalence obtained from the sheaf construction and the
 explicit local Verdier/Thom compatibility theorem. -/
 def alexanderPoincare
-    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx) :=
+    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx) :=
   D.toComplexOrientedComponentClassData.alexanderPoincare
 
 /-- The ambient sheaf Borel--Moore class transported from the exactly normalized
 compactification-relative class. Its supported image is normalized by
 `orientationComparison_local`. -/
 def sheafBorelMooreFundamentalClass
-    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx) :=
+    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx) :=
   D.comparisonInputs.sheafBorelMooreClassOfComparisons
 
 /-- The singular supported fundamental class with exact local Thom-cap normalization. -/
 def supportedFundamentalClass
-    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx) :=
+    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx) :=
   D.toComplexOrientedComponentClassData.supportedFundamentalClass
 
 /-- The normalized supported class has the exact constructed complex local orientation. -/
 theorem alexanderPoincare_fundamentalClass_local
-    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx)
-    (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
+    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx)
+    (z : CycleComponentAnalyticPoint V x)
     (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     D.localThomCap.capWithAmbientComplexOrientation z hz D.supportedFundamentalClass =
-      cycleComponentComplexLocalOrientation V.toSmoothProjectiveComplexVariety x
-        V.dimension p hx z hz :=
+      cycleComponentComplexLocalOrientation V x d p hx z hz :=
   D.toComplexOrientedComponentClassData.alexanderPoincare_fundamentalClass_local z hz
 
 /-- Local Thom-cap normalization uniquely determines the sheaf-route supported class. -/
 theorem supportedFundamentalClass_unique
-    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx)
+    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx)
     (α : RationalSingularComponentCohomologyWithSupport V.over x (2 * p))
-    (hα : ∀ (z : CycleComponentAnalyticPoint V.toSmoothProjectiveComplexVariety x)
+    (hα : ∀ (z : CycleComponentAnalyticPoint V x)
       (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
       D.localThomCap.capWithAmbientComplexOrientation z hz α =
-        cycleComponentComplexLocalOrientation V.toSmoothProjectiveComplexVariety x
-          V.dimension p hx z hz) :
+        cycleComponentComplexLocalOrientation V x d p hx z hz) :
     α = D.supportedFundamentalClass :=
   D.toComplexOrientedComponentClassData.supportedFundamentalClass_unique α hα
 
 /-- The normalized rational constant-sheaf supported fundamental class. -/
 def constantSheafSupportedFundamentalClass
-    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx) :=
+    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx) :=
   D.toComplexOrientedComponentClassData.constantSheafSupportedFundamentalClass
 
 /-- The normalized ordinary rational component class supplied by the conditional sheaf route. -/
 def ordinaryFundamentalClass
-    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V p x hx) :=
+    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx) :=
   D.toComplexOrientedComponentClassData.ordinaryFundamentalClass
 
 end ComplexOrientedRationalCycleComponentSheafBorelMooreData
