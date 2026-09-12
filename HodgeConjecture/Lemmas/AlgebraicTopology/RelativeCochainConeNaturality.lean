@@ -54,23 +54,10 @@ lemma relativeDualCochainCohomologyEquiv_naturality {X Y : TopPair.{u}} (f : X �
     (a : (relativeDualCochainShortComplexInt R Y).X₁.homology (n : ℤ)) :
     relativeDualCochainCohomologyEquiv R X n
         (HomologicalComplex.homologyMap (relativeDualCochainShortComplexIntMap R f).τ₁ n a) =
-      relativeCohomologyMap R n f (relativeDualCochainCohomologyEquiv R Y n a) := by
-  have h := HomologicalComplex.extendHomologyIso_hom_naturality
+      relativeCohomologyMap R n f (relativeDualCochainCohomologyEquiv R Y n a) :=
+  ConcreteCategory.congr_hom (HomologicalComplex.extendHomologyIso_hom_naturality
     (HomologicalComplex.linearDualMap ((relativeChainFunctor R).map f))
-    ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl
-  have ha := ConcreteCategory.congr_hom h a
-  ext z
-  change HomologicalComplex.linearDualHomologyEquiv ((relativeChainFunctor R).obj X) n
-    ((((relativeChainFunctor R).obj X).linearDualCochainComplex.extendHomologyIso
-      ComplexShape.embeddingUpNat rfl).hom
-      (HomologicalComplex.homologyMap (relativeDualCochainShortComplexIntMap R f).τ₁ n a)) z = _
-  rw [show (((relativeChainFunctor R).obj X).linearDualCochainComplex.extendHomologyIso
-      ComplexShape.embeddingUpNat rfl).hom
-      (HomologicalComplex.homologyMap (relativeDualCochainShortComplexIntMap R f).τ₁ n a) =
-    HomologicalComplex.homologyMap (HomologicalComplex.linearDualMap ((relativeChainFunctor R).map f)) n
-      ((((relativeChainFunctor R).obj Y).linearDualCochainComplex.extendHomologyIso
-        ComplexShape.embeddingUpNat rfl).hom a) from ha]
-  exact HomologicalComplex.linearDualHomologyEquiv_naturality _ _ _ _
+    ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl) a
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

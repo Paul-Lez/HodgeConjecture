@@ -239,7 +239,7 @@ lemma complexNeighborhoodPuncturedPairMap_compressedChartTransition_comp
     complexNeighborhoodPuncturedPairMapOf d V
         (compressedChartTransition d e e' x hx hx')
         ((compressedChartTransition d e e' x hx hx').continuousOn.mono hV)
-        (compressedChartTransition_zero d e e' x hx hx') hf_ne ≫
+        hf_ne ≫
       chartModelEmbeddingPair d e' x hx' =
     neighborhoodPointComplementPairMap V 0 ≫ chartModelEmbeddingPair d e x hx := by
   apply MorphismProperty.Arrow.Hom.ext
@@ -284,7 +284,7 @@ theorem localClassOfChart_eq_of_hasFDerivAt_compressedTransition
     V 0 hVopen h0V (2 * d) (standardComplexLocalClass d)
   have hfc : relativeHomologyMap ℚ (2 * d)
       (complexNeighborhoodPuncturedPairMapOf d V f
-        (f.continuousOn.mono hVsource) (compressedChartTransition_zero d e e' x hx hx') hf_ne) c =
+        (f.continuousOn.mono hVsource) hf_ne) c =
       standardComplexLocalClass d := hlocal c hc
   have hpair := complexNeighborhoodPuncturedPairMap_compressedChartTransition_comp
     d e e' x hx hx' V hVsource hf_ne
@@ -301,14 +301,12 @@ theorem localClassOfChart_eq_of_hasFDerivAt_compressedTransition
           rfl
     _ = relativeHomologyMap ℚ (2 * d)
         (complexNeighborhoodPuncturedPairMapOf d V f
-            (f.continuousOn.mono hVsource)
-            (compressedChartTransition_zero d e e' x hx hx') hf_ne ≫
+            (f.continuousOn.mono hVsource) hf_ne ≫
           chartModelEmbeddingPair d e' x hx') c := by rw [hpair]
     _ = relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e' x hx')
         (relativeHomologyMap ℚ (2 * d)
           (complexNeighborhoodPuncturedPairMapOf d V f
-            (f.continuousOn.mono hVsource)
-            (compressedChartTransition_zero d e e' x hx hx') hf_ne) c) := by
+            (f.continuousOn.mono hVsource) hf_ne) c) := by
               rw [relativeHomologyMap_comp]
               rfl
     _ = relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e' x hx')

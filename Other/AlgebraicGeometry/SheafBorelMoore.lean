@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import Other.AlgebraicGeometry.BorelMooreCycleClass
+public import Other.Mathlib.Algebra.Module.LinearMap.Rat
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 
@@ -44,6 +45,77 @@ retained as input.
 The construction here is ambient.  `IntrinsicSheafBorelMooreHomology` separately records what
 the intrinsic definition on a space carrying its own dualizing complex means; no compactification
 independence or closed-embedding comparison is claimed.
+
+## Inventory: the hypothesis structures of the Borel--Moore layer
+
+The Borel--Moore development is this file together with `BorelMooreCycleClass.lean`,
+`CycleComponentBorelMoore.lean` and `CycleComponentGlobalFundamentalClass.lean`, all under
+`Other/AlgebraicGeometry/`.  Everything proved there is conditional on the fifteen hypothesis
+structures listed below: each packages data and theorems Mathlib does not supply, so the results
+read "given such a package, ...".  The grouping is by producer -- which packages some declaration
+actually builds, and out of what.  Issue #57 tracks this inventory; issue #14 tracks redefining
+Borel--Moore homology through hypercohomology, after which how many of the fifteen become
+constructible measures the progress made.
+
+### Instantiated, but only in maximal codimension `p = d`
+
+* `CycleComponentBorelMoore.lean`: `RationalCycleComponentBorelMooreData`, by
+  `rationalCycleComponentBorelMooreDataOfCoheightEqDimension`
+* `BorelMooreCycleClass.lean`: `AuxiliaryRationalCycleComponentBorelMooreComparisonData`, by
+  `auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension`
+* `BorelMooreCycleClass.lean`: `RationalCycleComponentLocalThomCapInput`, by
+  `maximalCodimensionLocalThomCapInput`
+* `BorelMooreCycleClass.lean`: `ComplexOrientedRationalCycleComponentClassData`, by
+  `maximalCodimensionComplexOrientedComponentClassData`
+* `BorelMooreCycleClass.lean`: `AuxiliaryRationalBorelMooreCycleClassDescent`, by
+  `ofMaximalCodimension`, which in addition assumes the unproved
+  `MaximalCodimensionPrincipalDivisorClassVanishes`
+
+For a point component the Borel--Moore group, the local orientation and Alexander duality are
+computed outright, so the first four witnesses take no input beyond the variety and the point,
+and the fifth adds only the named principal-divisor statement.  Away from `p = d` the same
+packages await the global Borel--Moore fundamental-class theorem for oriented manifolds and the
+Thom/costalk operation normalizing the comparison, neither of which Mathlib provides.  Three of
+the five -- `RationalCycleComponentBorelMooreData`,
+`AuxiliaryRationalCycleComponentBorelMooreComparisonData` and
+`ComplexOrientedRationalCycleComponentClassData` -- also have adapters out of other packages of
+this list, which add nothing their source package does not already provide.
+
+### Constructible only from other structures of this list
+
+* `BorelMooreCycleClass.lean`: `ComplexOrientedRationalBorelMooreCycleClassConstruction`, whose
+  only producer is `ofSheaf` in this file, out of
+  `ComplexOrientedRationalCycleComponentSheafBorelMooreData` and principal-divisor vanishing
+* `CycleComponentGlobalFundamentalClass.lean`:
+  `RationalCycleComponentGlobalFundamentalClassInputs`, out of
+  `RationalCycleComponentInjectiveBoundaryInputs` or `RationalCycleComponentBoundedModelInputs`
+* `CycleComponentGlobalFundamentalClass.lean`: `RationalCycleComponentInjectiveBoundaryInputs`,
+  out of `RationalCycleComponentBoundedModelInputs`
+
+These producers only move work between packages -- boundary vanishing is derived from injectivity
+of the punctured-space inclusion, and that in turn from a bounded chain model -- so each inherits
+whatever its source package is still missing, and every source package is itself in this list.
+
+### No producer
+
+* `SheafBorelMoore.lean`: `RationalDualizingComplex`
+* `SheafBorelMoore.lean`: `RationalDualizingComplexOrientationInput`
+* `SheafBorelMoore.lean`: `DerivedSectionsWithSupportInput`
+* `SheafBorelMoore.lean`: `RationalCycleComponentSheafBorelMooreComparisonInputs`
+* `SheafBorelMoore.lean`: `ComplexOrientedRationalCycleComponentSheafBorelMooreData`
+* `CycleComponentGlobalFundamentalClass.lean`: `RationalCycleComponentGlobalFundamentalClassCore`,
+  reached only through the `extends` clauses of the three packages sharing it
+* `CycleComponentGlobalFundamentalClass.lean`: `RationalCycleComponentBoundedModelInputs`
+
+The five in this file await the six-functor input described above: a dualizing complex, the
+Verdier-duality predicate with which to say that it is dualizing, the orientation isomorphism
+`ω_X ≅ ℚ_X[2d]` together with its normalization by the complex orientation, derived sections with
+support, and the costalk comparison identifying the sheaf model with the compactification-relative
+one.  For the first two, inhabitation would be weaker than construction: nothing in their fields
+asserts that the object is dualizing or that the isomorphism is the normalized one.  The last two
+await the local-to-global geometry of a positive-dimensional component: relative Mayer--Vietoris
+propagation of the local orientation from one smooth anchor point, and a dimension-bounded chain
+model for the punctured component.
 -/
 
 @[expose] public noncomputable section
@@ -370,7 +442,6 @@ comparison-dependent singular supported class. -/
     D.orientationInducedComparisonAddEquiv D.compactificationFundamentalClass =
       D.singularSupportedClassOfComparisons := rfl
 
-set_option maxRecDepth 5000 in
 /-- Adapter to the previous cycle-class package.
 
 The old API asks for a rational `LinearEquiv`.  Its underlying additive equivalence is now the
@@ -381,15 +452,17 @@ def toAuxiliaryBorelMooreComparisonData
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
     AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx where
   borelMoore := D.borelMoore
-  auxiliaryComparison := D.orientationInducedComparisonAddEquiv.toLinearEquiv
-    (map_rat_smul D.orientationInducedComparisonAddEquiv)
+  auxiliaryComparison := D.orientationInducedComparisonAddEquiv.toRatLinearEquiv
 
-set_option maxRecDepth 5000 in
 /-- Passing through the adapter does not change the comparison-dependent singular class. -/
 @[simp] lemma toAuxiliaryBorelMooreComparisonData_auxiliarySingularSupportedClass
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
     D.toAuxiliaryBorelMooreComparisonData.auxiliarySingularSupportedClass =
-      D.singularSupportedClassOfComparisons := rfl
+      D.singularSupportedClassOfComparisons := by
+  simp only [AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliarySingularSupportedClass,
+    toAuxiliaryBorelMooreComparisonData, singularSupportedClassOfComparisons,
+    AuxiliaryRationalCycleComponentBorelMooreComparisonData.fundamentalClass,
+    compactificationFundamentalClass, AddEquiv.coe_toRatLinearEquiv]
 
 /-- Forgetting support gives the comparison-dependent ordinary rational class. -/
 def ordinaryClassOfComparisons
@@ -429,7 +502,6 @@ variable {V : SmoothProjectiveComplexVariety} {d p : ℕ}
   [SmoothOfRelativeDimension d V.structureMap]
   {x : V.scheme} {hx : coheight x = p}
 
-set_option maxRecDepth 5000 in
 /-- The general complex-oriented component package induced by the sheaf comparison and the
 independent Verdier/Thom normalization theorem. -/
 def toComplexOrientedComponentClassData
@@ -437,8 +509,7 @@ def toComplexOrientedComponentClassData
     ComplexOrientedRationalCycleComponentClassData V d p x hx where
   borelMoore := D.comparisonInputs.borelMoore
   localThomCap := D.localThomCap
-  comparison := D.comparisonInputs.orientationInducedComparisonAddEquiv.toLinearEquiv
-    (map_rat_smul D.comparisonInputs.orientationInducedComparisonAddEquiv)
+  comparison := D.comparisonInputs.orientationInducedComparisonAddEquiv.toRatLinearEquiv
   comparison_isComplexOriented := D.orientationComparison_local
 
 /-- The normalized Alexander--Poincaré equivalence obtained from the sheaf construction and the
@@ -490,43 +561,5 @@ def ordinaryFundamentalClass
   D.toComplexOrientedComponentClassData.ordinaryFundamentalClass
 
 end ComplexOrientedRationalCycleComponentSheafBorelMooreData
-
-namespace ComplexOrientedRationalBorelMooreCycleClassConstruction
-
-/-- Construct the normalized Chow-group cycle-class package from the sheaf-theoretic component
-data and the remaining geometric principal-divisor theorem.
-
-The resulting linear map is obtained from `cycleClass`; neither the map nor quotient descent is
-supplied here as data. -/
-def ofSheaf
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (component : ∀ (x : V.scheme) (hx : coheight x = p),
-      ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx)
-    (hprincipal : ∀ D : PrincipalDivisor V.scheme p,
-      cycleClassOnAlgebraicCyclesOfComponents
-          (fun x hx ↦ (component x hx).ordinaryFundamentalClass)
-          D.pushforwardCycle = 0) :
-    ComplexOrientedRationalBorelMooreCycleClassConstruction V d p where
-  component := fun x hx ↦ (component x hx).toComplexOrientedComponentClassData
-  principalDivisor_class := hprincipal
-
-/-- The sheaf-induced Chow map sends each component to its locally normalized sheaf class. -/
-@[simp] theorem ofSheaf_cycleClass_component
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (component : ∀ (x : V.scheme) (hx : coheight x = p),
-      ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx)
-    (hprincipal : ∀ D : PrincipalDivisor V.scheme p,
-      cycleClassOnAlgebraicCyclesOfComponents
-          (fun x hx ↦ (component x hx).ordinaryFundamentalClass)
-          D.pushforwardCycle = 0)
-    (x : V.scheme) (hx : coheight x = p) :
-    (ofSheaf component hprincipal).cycleClass
-        (rationalComponentChowClass V.over p x hx) =
-      (component x hx).ordinaryFundamentalClass :=
-  (ofSheaf component hprincipal).cycleClass_component x hx
-
-end ComplexOrientedRationalBorelMooreCycleClassConstruction
 
 end AlgebraicGeometry.ComplexPoint

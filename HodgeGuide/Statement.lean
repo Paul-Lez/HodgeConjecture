@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
 import HodgeConjecture.Statement
-import Other.AlgebraicGeometry.ChowCycleClassDescent
+import Other.AlgebraicGeometry.CodimensionZeroCoclassNonvanishing
+import Other.AlgebraicGeometry.CycleClassDimension
 import Other.AlgebraicGeometry.SheafCycleClass
+import Other.AlgebraicGeometry.SmoothAnalytificationConnected
 
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
@@ -22,7 +24,6 @@ tag := "the-statement"
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
 noncomputable section
 universe u u_1
-open AlgebraicGeometry.ChowGroup
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
@@ -81,8 +82,6 @@ certificate.
 
 {name}`algebraicCycleClassSpan`, defined next, evaluates each class at {lean}`dim X.left` directly,
 so the statement mentions the scheme and its structure morphism alone.
-
-Whether these maps factor through rational equivalence is a separate question, taken up below.
 
 # The algebraic subspace
 
@@ -150,59 +149,64 @@ inclusion, that every algebraic class is a Hodge class, is a theorem that has no
 formalized, so the formulation as an equality $`\operatorname{Hdg}^p(X;\mathbb Q)=A^p(X)` is not
 yet available.
 
-# Why a span rather than a map on Chow groups
+# What the repository proves about the statement
 %%%
-tag := "why-a-span"
+tag := "what-is-proved"
 %%%
 
-The repository defines {name}`ChowGroup` and {name}`RationalChowGroup`, and the classes of subvarieties give an
-additive map on cycles. To descend this map to the Chow group, one must show that it vanishes on
-every principal-divisor relation. The descent itself is formalized as a construction that takes
-this vanishing as a hypothesis, but the vanishing has not been proved for the classes constructed
-here.
+The conjecture is stated, not proved. Two of its cases are proved outright.
 
-```lean -show
-namespace Guide.Statement.D3
-```
-```lean
-def ChowGroup.cycleClassOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
-    {M : Type*} [AddCommGroup M]
-    (componentClass : ∀ (x : X), coheight x = p → M)
-    (hprincipal : ∀ D : PrincipalDivisor X p,
-      cycleClassOnAlgebraicCyclesOfComponents componentClass D.pushforwardCycle = 0) :
-    ChowGroup X p →+ M :=
-  liftCycleClass (cycleClassOnCyclesOfComponents componentClass)
-    (rationalEquivalenceSubgroup_le_cycleClassOnCyclesOfComponents_ker
-      componentClass hprincipal)
-```
-```lean -show
-end Guide.Statement.D3
-example : @Guide.Statement.D3.ChowGroup.cycleClassOfComponents.{u, u_1} = @AlgebraicGeometry.ChowGroup.cycleClassOfComponents.{u, u_1} := rfl
-```
-```lean -show
-namespace Guide.Statement.D4
-```
-```lean
-def ChowGroup.rationalCycleClassOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
-    {M : Type*} [AddCommGroup M] [Module ℚ M]
-    (componentClass : ∀ (x : X), coheight x = p → M)
-    (hprincipal : ∀ D : PrincipalDivisor X p,
-      cycleClassOnAlgebraicCyclesOfComponents componentClass D.pushforwardCycle = 0) :
-    RationalChowGroup X p →ₗ[ℚ] M :=
-  rationalExtension (cycleClassOfComponents componentClass hprincipal)
-```
-```lean -show
-end Guide.Statement.D4
-example : @Guide.Statement.D4.ChowGroup.rationalCycleClassOfComponents.{u, u_1} = @AlgebraicGeometry.ChowGroup.rationalCycleClassOfComponents.{u, u_1} := rfl
-```
+The easy case is $`p>\dim X`. A smooth variety has no point of coheight above its dimension, so
+the span is $`\bot`; and $`F^p` vanishes there, so the Hodge classes are $`\bot` too. The
+inclusion holds because both sides are zero. It settles nothing about the conjecture, but it does
+check that the two sides degenerate together, which a mismatch in the degree conventions would
+break.
 
 ```lean
-#check AlgebraicGeometry.ChowGroup.cycleClassOfComponents_mk
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_bot_of_lt
+#check AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan_eq_bot_of_lt
 ```
 
-The span of the classes of subvarieties is exactly the image that the descended map would have,
-so nothing is lost by using it. The statement says "rational linear combinations of classes of
-subvarieties" without claiming a factorization through rational equivalence.
+Codimension zero is the substantial one. Both sides are computed, and they agree:
+
+$$`\operatorname{Hdg}^0(X;\mathbb Q)=A^0(X)=H^0(X;\mathbb Q).`
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.rationalHodgeClasses_zero_eq_algebraicCycleClassSpan
+```
+
+The left-hand side is everything, because $`F^0` is; that is the sanity check of
+{ref "hodge-classes"}[Hodge classes]. The right-hand side is the line on a single class, that of
+the generic point of {lean}`X.left`, since on an integral scheme no other point has coheight zero.
+That line is all of $`H^0(X;\mathbb Q)` for two reasons: the analytification of a smooth integral
+complex scheme is connected, so $`H^0` is itself a line, and the class is nonzero. Connectedness
+is proved here, from Noether normalization and a local étale chart, rather than assumed.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.connectedSpace
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_genericPoint_ne_zero
+```
+
+The nonvanishing is the part that tests the construction. Its proof runs the chain of
+{ref "class-of-a-subvariety"}[The class of a subvariety] backwards: the normalized local section
+is nonzero at any complex point of the smooth locus, the two normalization comparisons are
+isomorphisms, and forgetting support is injective here because the generic component is supported
+on all of $`X(\mathbb C)`. So the construction does not return zero, at least for this one
+subvariety, on a variety of any dimension.
+
+For a component of positive codimension the same chain stops at the last step. The normalized
+section is still nonzero, for every component:
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection_ne_zero
+```
+
+but forgetting support need not be injective on $`H^{2p}_Z(X;\mathbb Q)`, and showing that it is
+on the fundamental-class line is cohomological purity, which is open; see
+{ref "scope-and-status"}[Scope and status]. Until it is settled, $`A^p(X)` is generated by classes
+not yet known to be nonzero, so it could be smaller than the classical right-hand side, making
+the statement stronger than the conjecture rather than weaker.
 
 # Reading the source
 
@@ -219,11 +223,17 @@ The shortest route through the implementation is:
    extension across the singular locus;
 6. `HodgeConjecture/Definitions/AlgebraicGeometry/CycleComponentSheafClass.lean`, the class of a
    subvariety;
-7. `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and
-   `ComplexSheafBorelMooreRationalComparison.lean`, Borel–Moore homology and duality;
+7. `HodgeConjecture/Definitions/AlgebraicGeometry/AlgebraicCycleClassSpan.lean`, the span the
+   statement compares against;
 8. `Other/AlgebraicGeometry/SheafCycleClass.lean`, the maps on cycles;
-9. `Other/AlgebraicGeometry/ChowCycleClassDescent.lean`, descent to Chow groups.
+9. `Other/AlgebraicGeometry/CodimensionZeroClassComparison.lean` and
+   `CodimensionZeroCoclassNonvanishing.lean`, the codimension-zero case.
+
+`Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and its rational comparison are not on this
+route. They build Borel–Moore homology of the pair $`Z\subset X` and its duality with cohomology
+with support; both live in `Other/`, so the import check that guards
+`HodgeConjecture/Statement.lean` guarantees the statement does not reach them.
 
 Things to keep track of while reading: integer versus natural-number degrees, real versus complex
 dimension, whether a class has been normalized, whether its support has been forgotten, and
-whether a map is defined on cycles or on their quotient by rational equivalence.
+whether a class is supported or ordinary.

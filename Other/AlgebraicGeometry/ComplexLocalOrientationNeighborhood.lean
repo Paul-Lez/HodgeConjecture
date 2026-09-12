@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartNeighborhoodOrientation
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalOrientationCoherence
+public import Other.AlgebraicTopology.ChartNeighborhoodOrientation
+public import Other.AlgebraicGeometry.ComplexLocalOrientationCoherence
 
 /-!
 # Local representability of the exact complex orientation

@@ -1,28 +1,13 @@
 /-
 Copyright 2026 The Formal Conjectures Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    https://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroupLift
+public import Other.AlgebraicGeometry.CodimensionCycle
+public import Mathlib.LinearAlgebra.TensorProduct.Basic
 
-/-!
-# Descending a map on cycles to the Chow group
-
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroupLift`.
--/
+/-! # Additive extension of component classes to cycles -/
 
 @[expose] public noncomputable section
 
@@ -32,9 +17,37 @@ namespace AlgebraicGeometry
 
 universe u
 
+/-- On a compact scheme, regard a locally finite integral algebraic cycle as a finitely supported
+function. -/
+def compactCycleToFinsupp {X : Scheme.{u}} [CompactSpace X] :
+    AlgebraicCycle X ℤ →+ X →₀ ℤ where
+  toFun c := Finsupp.ofSupportFinite c
+    (by
+      simpa using c.locallyFiniteSupport.finite_inter_support_of_isCompact
+        (W := Set.univ) isCompact_univ)
+  map_zero' := by
+    ext
+    rfl
+  map_add' _ _ := by
+    ext
+    rfl
+
 @[simp] lemma compactCycleToFinsupp_apply {X : Scheme.{u}} [CompactSpace X]
     (c : AlgebraicCycle X ℤ) (x : X) : compactCycleToFinsupp c x = c x :=
   rfl
+
+/-- Extend prescribed classes of irreducible codimension-`p` components additively to integral
+codimension-`p` cycles. Values away from codimension `p` are set to zero; the support condition on
+a `codimensionCycleSubgroup` ensures that this branch is never used by a nonzero coefficient. -/
+def cycleClassOnCyclesOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
+    {M : Type*} [AddCommGroup M]
+    (componentClass : ∀ (x : X), coheight x = p → M) :
+    codimensionCycleSubgroup X p →+ M := by
+  classical
+  let componentValue : X → M := fun x ↦
+    if hx : coheight x = p then componentClass x hx else 0
+  exact (Finsupp.linearCombination ℤ componentValue).toAddMonoidHom.comp
+    ((compactCycleToFinsupp (X := X)).comp (codimensionCycleInclusion X p))
 
 /-- The additive extension sends a one-component cycle to its coefficient times the prescribed
 component class. -/
@@ -61,22 +74,5 @@ component class. -/
     · simp [h]
     · simp [h, Ne.symm h]
   rw [hsingle, Finsupp.linearCombination_single, dif_pos hx]
-
-namespace ChowGroup
-
-/-- Evaluation of a descended additive map on a represented Chow class. -/
-@[simp] lemma liftCycleClass_mk {X : Scheme.{u}} {p : ℕ} {M : Type*} [AddCommGroup M]
-    (f : codimensionCycleSubgroup X p →+ M)
-    (h : rationalEquivalenceSubgroup X p ≤ f.ker) (z : codimensionCycleSubgroup X p) :
-    liftCycleClass f h (mk z) = f z :=
-  QuotientAddGroup.lift_mk' _ h z
-
-@[simp] lemma rationalExtension_tmul {X : Scheme.{u}} {p : ℕ} {M : Type*}
-    [AddCommGroup M] [Module ℚ M] (f : ChowGroup X p →+ M)
-    (q : ℚ) (z : ChowGroup X p) :
-    rationalExtension f (q ⊗ₜ[ℤ] z) = q • f z :=
-  rfl
-
-end ChowGroup
 
 end AlgebraicGeometry

@@ -690,29 +690,6 @@ def fieldToDeRhamCohomologyLinear
   map_add' := (fieldToDeRhamCohomology K X n).map_add
   map_smul' := fieldToDeRhamCohomology_smul K X n
 
-/-- The balanced map that extends rational-to-de Rham comparison after scalar extension from
-`K` to `ℂ`. -/
-def fieldToDeRhamComplexificationBilinear
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    ℂ →ₗ[ℂ] H^n(X; K) →ₗ[K]
-      DeRhamHypercohomology X n where
-  toFun c := c • (fieldToDeRhamCohomologyLinear K X n)
-  map_add' a b := by
-    ext α
-    simp [add_smul]
-  map_smul' a b := by
-    ext α
-    simp [mul_smul]
-
-/-- The canonical complex-linear comparison from the complexification of rational
-constant-sheaf cohomology to holomorphic de Rham hypercohomology. -/
-def fieldToDeRhamComplexification
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    ℂ ⊗[K] H^n(X; K) →ₗ[ℂ]
-      DeRhamHypercohomology X n :=
-  TensorProduct.AlgebraTensorModule.lift
-    (fieldToDeRhamComplexificationBilinear K X n)
-
 /-- The de Rham complex with only form degrees at least `p` retained. -/
 def hodgeFilteredDeRhamComplex [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
@@ -874,27 +851,6 @@ def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ (DeRhamHypercohomology X n) :=
   hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
 
-/-- Pull back the de Rham Hodge filtration to the actual complexification of rational
-constant-sheaf cohomology. This definition uses the canonical comparison map rather than
-identifying the two cohomology theories without proof. -/
-def complexifiedFieldHodgeFiltration [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) :
-    Submodule ℂ (ℂ ⊗[K] H^n(X; K)) :=
-  (hodgeFiltrationComplexSubmodule X p n).comap
-    (fieldToDeRhamComplexification K X n)
-
-/-- Pull back the de Rham Hodge piece `F^p ⊓ conj F^q` to the actual complexification of
-constant-sheaf cohomology with coefficients in `K`. -/
-def complexifiedFieldHodgePiece [IsIntegral X.left] [Smooth X.hom]
-    (p q n : ℤ) :
-    Submodule ℂ (ℂ ⊗[K] H^n(X; K)) :=
-  (hodgePiece X p q n).comap (fieldToDeRhamComplexification K X n)
-
-/-- The Hodge filtration as a subspace over `K`, by restriction of complex scalars. -/
-def hodgeFiltrationSubmodule [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) :
-    Submodule K (DeRhamHypercohomology X n) :=
-  (hodgeFiltrationComplexSubmodule X p n).restrictScalars K
-
 /-- In degree filtration `F⁰`, the filtered and full de Rham hypercohomology groups are
 canonically equivalent. -/
 def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
@@ -911,7 +867,7 @@ def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
 
 /-- Cohomology classes with coefficients in `K` whose de Rham images lie in `F^p ⊓ conj F^p`
 in degree `2p`. When conjugation fixes the image of `K` in `ℂ`, see
-`hodgeClasses_eq_comap_hodgeFiltrationSubmodule` for the equivalent `F^p` condition. -/
+`hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule` for the equivalent `F^p` condition. -/
 def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
     Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
@@ -922,20 +878,5 @@ def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
 The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the variety is presented by its
 structure morphism `f`, and the coefficient field is named. -/
 scoped notation:max "Hdg^" p:max "(" K "; " f ")" => hodgeClasses K f p
-
-/-- Rational Hodge classes described through the rational lattice inside its actual
-complexification. -/
-def hodgeClassesViaComplexification
-    [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
-    Submodule K (H^(2 * p)(X; K)) :=
-  Submodule.comap
-    (HodgeStructure.ofBase K (H^(2 * p)(X; K)))
-    ((complexifiedFieldHodgePiece K X p p (2 * p)).restrictScalars K)
-
-/-- A rational cohomology class is a Hodge class of codimension `p` when it belongs to the
-canonical subgroup of rational Hodge classes. -/
-def IsHodgeClass [IsIntegral X.left] [Smooth X.hom] (p : ℕ)
-    (α : H^(2 * p)(X; K)) : Prop :=
-  α ∈ Hdg^p(K; X)
 
 end AlgebraicGeometry.ComplexPoint

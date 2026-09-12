@@ -355,18 +355,6 @@ end Guide.Hodge.D9
 example : @Guide.Hodge.D9.filteredToDeRhamCohomology = @AlgebraicGeometry.ComplexPoint.filteredToDeRhamCohomology := rfl
 ```
 ```lean -show
-namespace Guide.Hodge.D10
-```
-```lean
-def hodgeFiltrationSubmodule (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
-    [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) : Submodule K (DeRhamHypercohomology X n) :=
-  (hodgeFiltrationComplexSubmodule X p n).restrictScalars K
-```
-```lean -show
-end Guide.Hodge.D10
-example : @Guide.Hodge.D10.hodgeFiltrationSubmodule = @AlgebraicGeometry.ComplexPoint.hodgeFiltrationSubmodule := rfl
-```
-```lean -show
 namespace Guide.Hodge.D19
 ```
 ```lean
@@ -382,11 +370,17 @@ end Guide.Hodge.D19
 example : @Guide.Hodge.D19.hodgeFiltrationComplexSubmodule = @AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule := rfl
 ```
 
-The image is a priori an additive subgroup. Compatibility with scalars is proved, and
-{name}`hodgeFiltrationSubmodule` bundles the image as a subspace over any coefficient field contained
-in $`\mathbb C`; {name}`hodgeFiltrationComplexSubmodule` is the case of $`\mathbb C` itself, used
-below. Two sanity checks are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and
-$`F^p=0` for $`p>\dim X`.
+The image is a priori an additive subgroup. Compatibility with complex scalars is proved, and
+{name}`hodgeFiltrationComplexSubmodule` bundles the image as a $`\mathbb C`-subspace, which
+restricts to a subspace over any coefficient field contained in $`\mathbb C`. Two sanity checks
+are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and $`F^p=0` for $`p>\dim X`. Both are
+used later — the first is what makes every degree-zero class a Hodge class, the second is what
+makes the conjecture vacuous above the dimension.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.hodgeFiltration_eq_bot_of_lt
+```
 
 # Complex conjugation and the Hodge pieces
 
@@ -540,6 +534,15 @@ The cohomology of $`X` is not equipped with a pure Hodge structure in the formal
 would require the Hodge decomposition. The $`(p,p)` piece is instead defined directly by the
 formula above, which is why the conjugation had to be constructed.
 
+The two sanity checks on the filtration pass to the Hodge classes: every degree-zero class is a
+Hodge class, and there are none above the dimension. These are the two ends of the conjecture that
+the repository settles; see {ref "what-is-proved"}[What the repository proves about the statement].
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_bot_of_lt
+```
+
 # Why the filtration alone suffices over the rationals
 
 Deligne states the conjecture with the condition $`\alpha_{\mathrm{dR}}\in F^p` alone,
@@ -550,8 +553,8 @@ lemma below proves this for any such $`K`; the second specializes it to $`\mathb
 coefficient field of the conjecture.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_comap_hodgeFiltrationSubmodule
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_rat_eq_comap_hodgeFiltrationSubmodule
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule
 ```
 
 The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from

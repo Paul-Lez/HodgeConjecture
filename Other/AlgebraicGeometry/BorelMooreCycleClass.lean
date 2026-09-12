@@ -16,11 +16,11 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleClass
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
 public import Other.AlgebraicGeometry.CycleComponentBorelMoore
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
-public import Other.AlgebraicGeometry.PrincipalDivisorCycleClass
+public import Other.AlgebraicGeometry.CycleClassOnCycles
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationParacompact
 import Lean.Elab.Tactic.Omega
@@ -113,6 +113,11 @@ def supportedComparison
     V.over
       (cycleComponentSupport V.over x)
       (isClosed_cycleComponentSupport V.over x) (2 * p)
+
+/-- The supported comparison depends only on the component, not on the surrounding data. -/
+lemma supportedComparison_eq
+    (D D' : AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :
+    D.supportedComparison = D'.supportedComparison := rfl
 
 /-- The comparison-dependent rational constant-sheaf class with support. -/
 def auxiliarySupportedClass
@@ -313,8 +318,8 @@ def maximalCodimensionSupportedGenerator
     [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = d) :
     RationalSingularComponentCohomologyWithSupport V.over x (2 * d) := by
-  let F := fun Z : Set V.analyticPoint ↦ CohomologyWithSupport ℚ
-    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d)
+  let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
+    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d))
   exact LinearEquiv.cast (R := ℚ) (M := F)
     (maximalCodimensionCycleComponentSupport_eq_singleton V d x hx).symm
       (analyticPointLocalCoclass V.over d
@@ -329,8 +334,8 @@ lemma span_maximalCodimensionSupportedGenerator_eq_top
     Submodule.span ℚ {maximalCodimensionSupportedGenerator V d x hx} = ⊤ := by
   let z := maximalCodimensionCycleComponentPoint V x
   let y := cycleComponentMap V.over x z
-  let F := fun Z : Set V.analyticPoint ↦ CohomologyWithSupport ℚ
-    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d)
+  let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
+    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d))
   let e := LinearEquiv.cast (R := ℚ) (M := F)
     (maximalCodimensionCycleComponentSupport_eq_singleton V d x hx).symm
   change Submodule.span ℚ {e
@@ -353,8 +358,8 @@ lemma maximalCodimensionSupportedGenerator_ne_zero
     maximalCodimensionSupportedGenerator V d x hx ≠ 0 := by
   let z := maximalCodimensionCycleComponentPoint V x
   let y := cycleComponentMap V.over x z
-  let F := fun Z : Set V.analyticPoint ↦ CohomologyWithSupport ℚ
-    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d)
+  let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
+    (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d))
   let e := LinearEquiv.cast (R := ℚ) (M := F)
     (maximalCodimensionCycleComponentSupport_eq_singleton V d x hx).symm
   change e (analyticPointLocalCoclass V.over d y) ≠ 0
@@ -363,7 +368,8 @@ lemma maximalCodimensionSupportedGenerator_ne_zero
     intro hzero
     have hone :=
       analyticPointLocalCoclass_apply_localClass V.over d y
-    rw [hzero, LinearMap.zero_apply] at hone
+    unfold analyticPointLocalCoclassDual at hone
+    rw [hzero, map_zero, LinearMap.zero_apply] at hone
     exact zero_ne_one hone
   intro hzero
   exact hsource (e.injective (by simpa using hzero))
@@ -620,328 +626,5 @@ lemma maximalCodimensionComponentClass_eq_forgetSupport_pointCoclass
   rw [AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliaryOrdinaryClass,
     AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliarySupportedClass,
     auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension_supported]
-
-/-- The exact remaining geometric statement for descending the constructed
-maximal-codimension component classes to the Chow group. -/
-def MaximalCodimensionPrincipalDivisorClassVanishes
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] : Prop :=
-  ∀ D : PrincipalDivisor V.scheme d,
-    cycleClassOnAlgebraicCyclesOfComponents
-        (maximalCodimensionComponentClass V d) D.pushforwardCycle = 0
-
-/-- Auxiliary descent data for comparison-dependent component classes.
-
-Although each source Borel--Moore class is exactly normalized, the comparison used for each
-component may be independently rescaled.  Thus this structure and `auxiliaryCycleClass` do not
-define the standard general cycle-class map.  The quotient descent itself is constructed from
-the stated principal-divisor vanishing theorem. -/
-structure AuxiliaryRationalBorelMooreCycleClassDescent
-    (V : SmoothProjectiveComplexVariety) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] where
-  /-- The normalized Borel--Moore source and an auxiliary comparison for every component. -/
-  component : ∀ (x : V.scheme) (hx : coheight x = p),
-    AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx
-  /-- Principal divisors have zero comparison-dependent componentwise class. -/
-  principalDivisor_class : ∀ D : PrincipalDivisor V.scheme p,
-    cycleClassOnAlgebraicCyclesOfComponents
-        (fun x hx ↦ (component x hx).auxiliaryOrdinaryClass)
-        D.pushforwardCycle = 0
-
-namespace AuxiliaryRationalBorelMooreCycleClassDescent
-
-/-- Build an auxiliary comparison descent from the two intrinsic geometric statements
-for principal divisors: compatibility with proper pushforward from the carrier, and vanishing of
-the divisor class on that carrier.  The ambient principal-divisor theorem is derived by applying
-the Gysin compatibility to the intrinsic vanishing theorem; it is not an additional field of the
-input.
-
-This is the data-oriented entry point for a future Thom--Gysin construction.  All quotient and
-scalar-extension steps remain part of `auxiliaryCycleClass` below. -/
-def ofCarrierDivisors
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (component : ∀ (x : V.scheme) (hx : coheight x = p),
-      AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx)
-    (carrierClass : ∀ D : PrincipalDivisor V.scheme p,
-      AlgebraicCycle D.carrier ℤ →+
-        H^(2 * (p : ℤ))(V.over; ℚ))
-    (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforward D
-      (carrierClass D)
-      (cycleClassOnAlgebraicCyclesOfComponents
-        (fun x hx ↦ (component x hx).auxiliaryOrdinaryClass)))
-    (hdivisor : ∀ D, carrierClass D D.divisor = 0) :
-    AuxiliaryRationalBorelMooreCycleClassDescent V d p where
-  component := component
-  principalDivisor_class := fun D ↦
-    principalDivisor_class_eq_zero_of_carrier_divisor_class_eq_zero
-      D (carrierClass D)
-        (cycleClassOnAlgebraicCyclesOfComponents
-          (fun x hx ↦ (component x hx).auxiliaryOrdinaryClass))
-        (hpush D) (hdivisor D)
-
-/-- A version of `ofCarrierDivisors` in which the intrinsic divisor class and its Gysin map have
-separate targets.  This matches the geometric construction literally: first construct the
-codimension-one class on each integral carrier, then push it into ambient cohomology.  The target
-is allowed to depend on the principal-divisor datum, as carrier cohomology naturally does. -/
-def ofCarrierDivisorsViaGysin
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (component : ∀ (x : V.scheme) (hx : coheight x = p),
-      AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx)
-    (carrierTarget : PrincipalDivisor V.scheme p → Type*)
-    [∀ D, AddCommGroup (carrierTarget D)]
-    (carrierClass : ∀ D : PrincipalDivisor V.scheme p,
-      AlgebraicCycle D.carrier ℤ →+ carrierTarget D)
-    (gysin : ∀ D : PrincipalDivisor V.scheme p,
-      carrierTarget D →+
-        H^(2 * (p : ℤ))(V.over; ℚ))
-    (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforwardVia D
-      (carrierClass D)
-      (cycleClassOnAlgebraicCyclesOfComponents
-        (fun x hx ↦ (component x hx).auxiliaryOrdinaryClass))
-      (gysin D))
-    (hdivisor : ∀ D, carrierClass D D.divisor = 0) :
-    AuxiliaryRationalBorelMooreCycleClassDescent V d p where
-  component := component
-  principalDivisor_class := fun D ↦
-    principalDivisor_class_eq_zero_of_gysin_carrier_divisor_class_eq_zero
-      D (carrierClass D)
-        (cycleClassOnAlgebraicCyclesOfComponents
-          (fun x hx ↦ (component x hx).auxiliaryOrdinaryClass))
-        (gysin D) (hpush D) (hdivisor D)
-
-/-- In maximal codimension all componentwise Borel--Moore and duality data are constructed.
-Consequently the only input to the Chow-level construction is the intrinsic geometric theorem
-that principal divisors have zero class. -/
-def ofMaximalCodimension
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
-    (hprincipal : MaximalCodimensionPrincipalDivisorClassVanishes V d) :
-    AuxiliaryRationalBorelMooreCycleClassDescent V d d where
-  component := auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d
-  principalDivisor_class := hprincipal
-
-/-- In maximal codimension, construct the entire package from carrierwise Gysin compatibility
-and intrinsic principal-divisor vanishing.  Local orientations, Borel--Moore fundamental
-classes, and point Alexander duality are already constructed, while the two arguments here are
-exactly the remaining functorial divisor theorems. -/
-def ofMaximalCodimensionOfCarrierDivisors
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
-    (carrierClass : ∀ D : PrincipalDivisor V.scheme d,
-      AlgebraicCycle D.carrier ℤ →+
-        H^(2 * (d : ℤ))(V.over; ℚ))
-    (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforward D
-      (carrierClass D)
-      (cycleClassOnAlgebraicCyclesOfComponents
-        (fun x hx ↦ (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
-          V d x hx).auxiliaryOrdinaryClass)))
-    (hdivisor : ∀ D, carrierClass D D.divisor = 0) :
-    AuxiliaryRationalBorelMooreCycleClassDescent V d d :=
-  ofCarrierDivisors
-    (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d)
-    carrierClass hpush hdivisor
-
-/-- Maximal-codimension construction with the intrinsic carrier class and the Gysin map kept
-separate.  This is the closest interface to the usual proof that a principal Cartier divisor has
-zero first Chern class before proper pushforward. -/
-def ofMaximalCodimensionViaGysin
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
-    (carrierTarget : PrincipalDivisor V.scheme d → Type*)
-    [∀ D, AddCommGroup (carrierTarget D)]
-    (carrierClass : ∀ D : PrincipalDivisor V.scheme d,
-      AlgebraicCycle D.carrier ℤ →+ carrierTarget D)
-    (gysin : ∀ D : PrincipalDivisor V.scheme d,
-      carrierTarget D →+
-        H^(2 * (d : ℤ))(V.over; ℚ))
-    (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforwardVia D
-      (carrierClass D)
-      (cycleClassOnAlgebraicCyclesOfComponents
-        (fun x hx ↦ (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
-          V d x hx).auxiliaryOrdinaryClass))
-      (gysin D))
-    (hdivisor : ∀ D, carrierClass D D.divisor = 0) :
-    AuxiliaryRationalBorelMooreCycleClassDescent V d d :=
-  ofCarrierDivisorsViaGysin
-    (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d)
-    carrierTarget carrierClass gysin hpush hdivisor
-
-/-- The auxiliary ordinary class assigned to an irreducible codimension-`p` component. -/
-def auxiliaryComponentClass
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (C : AuxiliaryRationalBorelMooreCycleClassDescent V d p)
-    (x : V.scheme) (hx : coheight x = p) :
-    H^(2 * (p : ℤ))(V.over; ℚ) :=
-  (C.component x hx).auxiliaryOrdinaryClass
-
-@[simp] lemma ofMaximalCodimension_auxiliaryComponentClass
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
-    (hprincipal : MaximalCodimensionPrincipalDivisorClassVanishes V d)
-    (x : V.scheme) (hx : coheight x = d) :
-    (ofMaximalCodimension V d hprincipal).auxiliaryComponentClass x hx =
-      maximalCodimensionComponentClass V d x hx :=
-  rfl
-
-/-- The auxiliary rational Chow-group map derived from the rescalable comparison classes. Its
-construction performs the genuine quotient descent, but it is not identified with the standard
-cycle-class map outside cases where the comparisons are independently normalized. -/
-def auxiliaryCycleClass
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (C : AuxiliaryRationalBorelMooreCycleClassDescent V d p) :
-    RationalChowGroup V.scheme p →ₗ[ℚ]
-      H^(2 * (p : ℤ))(V.over; ℚ) :=
-  ChowGroup.rationalCycleClassOfComponents C.auxiliaryComponentClass C.principalDivisor_class
-
-/-- The auxiliary descended map sends a component to its comparison-dependent ordinary class. -/
-@[simp] theorem auxiliaryCycleClass_component
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (C : AuxiliaryRationalBorelMooreCycleClassDescent V d p)
-    (x : V.scheme) (hx : coheight x = p) :
-    C.auxiliaryCycleClass (rationalComponentChowClass
-      V.over p x hx) = C.auxiliaryComponentClass x hx :=
-  ChowGroup.rationalCycleClassOfComponents_component
-    C.auxiliaryComponentClass C.principalDivisor_class x hx
-
-/-- The maximal-codimension rational Chow cycle-class map, with every local, Borel--Moore, and
-duality ingredient constructed.  Its sole argument is the remaining principal-divisor theorem.
--/
-def maximalCodimensionCycleClass
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
-    (hprincipal : MaximalCodimensionPrincipalDivisorClassVanishes V d) :
-    RationalChowGroup V.scheme d →ₗ[ℚ]
-      H^(2 * (d : ℤ))(V.over; ℚ) :=
-  (ofMaximalCodimension V d hprincipal).auxiliaryCycleClass
-
-/-- The maximal-codimension rational Chow cycle-class map constructed from the carrierwise
-geometric inputs, without asking separately for an ambient rational-equivalence theorem. -/
-def maximalCodimensionCycleClassOfCarrierDivisors
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
-    (carrierClass : ∀ D : PrincipalDivisor V.scheme d,
-      AlgebraicCycle D.carrier ℤ →+
-        H^(2 * (d : ℤ))(V.over; ℚ))
-    (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforward D
-      (carrierClass D)
-      (cycleClassOnAlgebraicCyclesOfComponents
-        (fun x hx ↦ (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
-          V d x hx).auxiliaryOrdinaryClass)))
-    (hdivisor : ∀ D, carrierClass D D.divisor = 0) :
-    RationalChowGroup V.scheme d →ₗ[ℚ]
-      H^(2 * (d : ℤ))(V.over; ℚ) :=
-  (ofMaximalCodimensionOfCarrierDivisors V d carrierClass hpush hdivisor).auxiliaryCycleClass
-
-/-- The resulting maximal-codimension Chow map sends a component to the explicitly normalized
-Borel--Moore point class. -/
-@[simp] lemma maximalCodimensionCycleClass_component
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
-    (hprincipal : MaximalCodimensionPrincipalDivisorClassVanishes V d)
-    (x : V.scheme) (hx : coheight x = d) :
-    maximalCodimensionCycleClass V d hprincipal
-        (rationalComponentChowClass V.over d x hx) =
-      maximalCodimensionComponentClass V d x hx :=
-  (ofMaximalCodimension V d hprincipal).auxiliaryCycleClass_component x hx
-
-/-- The carrierwise construction has the same normalized component formula. -/
-@[simp] lemma maximalCodimensionCycleClassOfCarrierDivisors_component
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap]
-    (carrierClass : ∀ D : PrincipalDivisor V.scheme d,
-      AlgebraicCycle D.carrier ℤ →+
-        H^(2 * (d : ℤ))(V.over; ℚ))
-    (hpush : ∀ D, CycleClassCommutesWithPrincipalDivisorPushforward D
-      (carrierClass D)
-      (cycleClassOnAlgebraicCyclesOfComponents
-        (fun x hx ↦ (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
-          V d x hx).auxiliaryOrdinaryClass)))
-    (hdivisor : ∀ D, carrierClass D D.divisor = 0)
-    (x : V.scheme) (hx : coheight x = d) :
-    maximalCodimensionCycleClassOfCarrierDivisors V d carrierClass hpush hdivisor
-        (rationalComponentChowClass V.over d x hx) =
-      maximalCodimensionComponentClass V d x hx :=
-  (ofMaximalCodimensionOfCarrierDivisors V d carrierClass hpush
-    hdivisor).auxiliaryCycleClass_component x hx
-
-/-- The auxiliary component class is in the range of the auxiliary descended map. -/
-lemma auxiliaryOrdinaryClass_mem_range
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (C : AuxiliaryRationalBorelMooreCycleClassDescent V d p)
-    (x : V.scheme) (hx : coheight x = p) :
-    (C.component x hx).auxiliaryOrdinaryClass ∈ LinearMap.range C.auxiliaryCycleClass :=
-  ⟨rationalComponentChowClass V.over p x hx, C.auxiliaryCycleClass_component x hx⟩
-
-end AuxiliaryRationalBorelMooreCycleClassDescent
-
-/-! ### Descent of normalized component classes -/
-
-/-- The remaining geometric input for descending the conditionally normalized component classes
-to the rational Chow group.
-
-The component field retains the global fundamental-class existence theorem and the supplied
-Thom-cap, local-detection, and comparison inputs of
-`ComplexOrientedRationalCycleComponentClassData`. Its normalization is relative to those
-supplied maps, not an unconditional protection against simultaneous rescaling. In addition,
-principal-divisor vanishing is supplied here. The additive extension, quotient descent,
-and rational scalar extension are constructed below from these explicit inputs. -/
-structure ComplexOrientedRationalBorelMooreCycleClassConstruction
-    (V : SmoothProjectiveComplexVariety) (d p : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] where
-  component : ∀ (x : V.scheme) (hx : coheight x = p),
-    ComplexOrientedRationalCycleComponentClassData V d p x hx
-  principalDivisor_class : ∀ D : PrincipalDivisor V.scheme p,
-    cycleClassOnAlgebraicCyclesOfComponents
-        (fun x hx ↦ (component x hx).ordinaryFundamentalClass)
-        D.pushforwardCycle = 0
-
-namespace ComplexOrientedRationalBorelMooreCycleClassConstruction
-
-/-- The normalized ordinary class assigned to an irreducible codimension-`p` component. -/
-def componentClass
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (C : ComplexOrientedRationalBorelMooreCycleClassConstruction V d p)
-    (x : V.scheme) (hx : coheight x = p) :
-    H^(2 * (p : ℤ))(V.over; ℚ) :=
-  (C.component x hx).ordinaryFundamentalClass
-
-/-- Descent of the locally normalized component classes to a rational linear map on the Chow
-group.  This map is constructed by the quotient universal property; it is not stored as data. -/
-def cycleClass
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (C : ComplexOrientedRationalBorelMooreCycleClassConstruction V d p) :
-    RationalChowGroup V.scheme p →ₗ[ℚ]
-      H^(2 * (p : ℤ))(V.over; ℚ) :=
-  ChowGroup.rationalCycleClassOfComponents C.componentClass C.principalDivisor_class
-
-/-- The descended map sends an irreducible component to its locally normalized class. -/
-@[simp] theorem cycleClass_component
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (C : ComplexOrientedRationalBorelMooreCycleClassConstruction V d p)
-    (x : V.scheme) (hx : coheight x = p) :
-    C.cycleClass (rationalComponentChowClass
-      V.over p x hx) = C.componentClass x hx :=
-  ChowGroup.rationalCycleClassOfComponents_component
-    C.componentClass C.principalDivisor_class x hx
-
-/-- Every normalized component class lies in the range of the descended Chow map. -/
-theorem componentClass_mem_range
-    {V : SmoothProjectiveComplexVariety} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap]
-    (C : ComplexOrientedRationalBorelMooreCycleClassConstruction V d p)
-    (x : V.scheme) (hx : coheight x = p) :
-    C.componentClass x hx ∈ LinearMap.range C.cycleClass :=
-  ⟨rationalComponentChowClass V.over p x hx, C.cycleClass_component x hx⟩
-
-end ComplexOrientedRationalBorelMooreCycleClassConstruction
 
 end AlgebraicGeometry.ComplexPoint

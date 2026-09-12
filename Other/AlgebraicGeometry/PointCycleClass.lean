@@ -41,14 +41,22 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
   [SmoothOfRelativeDimension d V.structureMap]
 
-set_option maxRecDepth 4096 in
 /-- The fully constructed normalized-interface ordinary point class agrees exactly with the
 previous point coclass construction. -/
 @[simp] lemma maximalCodimensionComplexOrientedComponentClassData_ordinary
     (x : V.scheme) (hx : coheight x = d) :
     (maximalCodimensionComplexOrientedComponentClassData V d x hx).ordinaryFundamentalClass =
-      maximalCodimensionComponentClass V d x hx :=
-  rfl
+      maximalCodimensionComponentClass V d x hx := by
+  simp only [ComplexOrientedRationalCycleComponentClassData.ordinaryFundamentalClass,
+    ComplexOrientedRationalCycleComponentClassData.constantSheafSupportedFundamentalClass,
+    maximalCodimensionComplexOrientedComponentClassData_supported,
+    maximalCodimensionComponentClass,
+    AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliaryOrdinaryClass,
+    AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliarySupportedClass,
+    auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension_supported]
+  rw [AuxiliaryRationalCycleComponentBorelMooreComparisonData.supportedComparison_eq
+    (maximalCodimensionComplexOrientedComponentClassData V d x hx).toAuxiliaryComparisonData
+    (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx)]
 
 /-- The unconditional additive cycle-class map in maximal codimension. It takes only the
 geometric variety as input and uses its constructed complex-oriented point classes. -/

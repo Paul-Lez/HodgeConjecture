@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import Other.AlgebraicGeometry.CycleClassOnCycles
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
 public import Other.AlgebraicGeometry.DimensionedSmoothProjective
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Coniveau
+public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleClassSpan
 /-!
 # Unconditional integral and rational algebraic-cycle class maps
 
@@ -17,8 +18,7 @@ The maps take a smooth projective complex variety, its relative dimension, and
 a codimension; no orientation, fundamental class, duality, or principal-divisor
 theorem is an argument. Components may be singular and have arbitrary dimension.
 
-These are maps on CYCLES, not Chow groups. Descent to the quotient still
-requires proving that the constructed map kills principal-divisor relations.
+These are the additive and rational extensions of the constructed component classes.
 Comparison with the older maximal-codimension ordinary coclass is a separate
 normalization theorem, not the definition of a point branch of this map.
 -/

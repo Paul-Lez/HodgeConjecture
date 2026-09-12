@@ -82,22 +82,30 @@ lemma span_analyticPointLocalHomologyClass_eq_top [SmoothOfRelativeDimension d X
 def analyticPointLocalCoclass [SmoothOfRelativeDimension d X.hom]
     (z : ComplexPoint X) :
     CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) {z} (2 * d) :=
-  normalizedDual (analyticPointLocalHomologyClass X d z)
+  normalizedRelativeCoclass (analyticPointLocalHomologyClass X d z)
     (analyticPointLocalHomologyClass_ne_zero X d z)
+
+/-- The point coclass read through universal coefficients as a functional on point-local
+homology.  Cohomology is the homology of the dual cochain complex, so pairing with a homology
+class goes through this equivalence. -/
+abbrev analyticPointLocalCoclassDual [SmoothOfRelativeDimension d X.hom]
+    (z : ComplexPoint X) :
+    Module.Dual ℚ (RelativeHomology ℚ (pointComplementPair z) (2 * d)) :=
+  relativeCohomologyEquivDualHomology ℚ (pointComplementPair z) (2 * d)
+    (analyticPointLocalCoclass X d z)
 
 @[simp]
 lemma analyticPointLocalCoclass_apply_localClass [SmoothOfRelativeDimension d X.hom]
     (z : ComplexPoint X) :
-    analyticPointLocalCoclass X d z
-        (analyticPointLocalHomologyClass X d z) = 1 :=
-  normalizedDual_apply_self (analyticPointLocalHomologyClass X d z)
+    analyticPointLocalCoclassDual X d z (analyticPointLocalHomologyClass X d z) = 1 :=
+  normalizedRelativeCoclass_pairing_self (analyticPointLocalHomologyClass X d z)
     (analyticPointLocalHomologyClass_ne_zero X d z)
 
 /-- The normalized chart-local coclass generates rational cohomology supported at the point. -/
 lemma span_analyticPointLocalCoclass_eq_top [SmoothOfRelativeDimension d X.hom]
     (z : ComplexPoint X) :
     Submodule.span ℚ {analyticPointLocalCoclass X d z} = ⊤ :=
-  span_normalizedDual_eq_top
+  span_normalizedRelativeCoclass_eq_top
     (analyticPointLocalHomologyClass_ne_zero X d z)
     (span_analyticPointLocalHomologyClass_eq_top X d z)
 

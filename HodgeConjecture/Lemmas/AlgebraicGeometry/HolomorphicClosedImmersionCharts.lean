@@ -109,15 +109,12 @@ normal-derivative facts are obtained from the constructed closed-immersion chart
 theorem exists_open_closedImmersionNormalTransition_coclass_invariance (a : Fin m → ℂ)
     (ha : (a, 0) ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
     let T := closedImmersionNormalTransition X Y i m d z z'
-    let h0 : normalTransitionMap (d - m) T a 0 = 0 :=
-      (closedImmersionNormalTransition_preserves_support X Y i m d z z'
-        (a, 0) ha).mpr rfl
     ∃ (W : Set (Fin (d - m) → ℂ)) (hW : W ⊆ normalTransitionDomain (d - m) T a)
       (hne : ∀ v, v ∈ W → v ≠ 0 → normalTransitionMap (d - m) T a v ≠ 0),
       IsOpen W ∧ 0 ∈ W ∧
       relativeCohomologyMap ℚ (2 * (d - m))
         (complexNeighborhoodPuncturedPairMapOf (d - m) W (normalTransitionMap (d - m) T a)
-          ((normalTransitionMap_continuousOn (d - m) T a).mono hW) h0 hne) =
+          ((normalTransitionMap_continuousOn (d - m) T a).mono hW) hne) =
         relativeCohomologyMap ℚ (2 * (d - m)) (neighborhoodPointComplementPairMap W 0) :=
   exists_open_normalTransition_relativeCohomologyMap_eq (d - m)
     (closedImmersionNormalTransition X Y i m d z z') a ha

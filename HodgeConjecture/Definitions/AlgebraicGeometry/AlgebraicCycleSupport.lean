@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ChowGroup
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Points
+public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothLocus
@@ -253,11 +253,5 @@ def analyticCycleSupport {R : Type*} [Zero R]
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
     (c : AlgebraicCycle X.left R) : Set (ComplexPoint X) :=
   Point.underlying ⁻¹' algebraicCycleSupport X.left c
-
-/-- The complex points lying over the closed carrier of a principal divisor. -/
-def principalDivisorCarrierSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    {p : ℕ} (D : PrincipalDivisor X.left p) : Set (ComplexPoint X) :=
-  (@Point.underlying ℂ _ _ X) ⁻¹' Set.range D.inclusion
 
 end AlgebraicGeometry

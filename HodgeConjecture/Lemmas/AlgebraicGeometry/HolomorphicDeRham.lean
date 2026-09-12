@@ -40,13 +40,6 @@ open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-lemma holomorphicDeRhamModuleDifferential_comp
-    [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
-    holomorphicDeRhamModuleDifferential X d p ≫
-      holomorphicDeRhamModuleDifferential X d (p + 1) = 0 :=
-  NatTrans.ext <| funext fun U => ModuleCat.hom_ext <| LinearMap.ext fun x =>
-    holomorphicFormDifferential_squared X d U p x
-
 /-- The holomorphic de Rham complex is exact in every degree above the complex dimension. -/
 lemma holomorphicDeRhamComplex_exactAt_of_lt
     [SmoothOfRelativeDimension d X.hom] {p : ℕ} (hp : d < p) :
