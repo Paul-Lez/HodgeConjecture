@@ -15,13 +15,15 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
+public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.Topology.Sheaves.Abelian
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.HolomorphicPoincare
+import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 import Mathlib.Algebra.Category.Grp.Zero
 import Mathlib.Algebra.Homology.Embedding.ExtendHomology
 import Mathlib.Topology.Sheaves.Sheafify
@@ -50,27 +52,7 @@ open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-/-- Holomorphic de Rham forms in a fixed degree, as a presheaf of complex vector spaces.
-
-This is the coefficient-aware object.  It is the migration target for the additive presheaf used
-by the existing derived comparison below, and keeps the linearity of restriction maps available
-for module-valued sheafification. -/
-def holomorphicDeRhamModulePresheaf [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
-    TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X)) where
-  obj U := ModuleCat.of ℂ
-    (HolomorphicForm X d U p)
-  map {U V} i := ModuleCat.ofHom
-    (holomorphicFormRestriction X d i p)
-  map_id U := by
-    ext x
-    rw [holomorphicFormRestriction_id]
-    rfl
-  map_comp i j := by
-    ext x
-    rw [holomorphicFormRestriction_comp]
-    rfl
-
-/-- The legacy additive-group presentation of the holomorphic de Rham presheaf. -/
+/-- Holomorphic de Rham forms in a fixed degree, as a presheaf of additive groups. -/
 def holomorphicDeRhamPresheaf [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) where
   obj U := AddCommGrpCat.of
@@ -90,7 +72,7 @@ def holomorphicDeRhamPresheaf [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
 
 /-- Holomorphic differential forms vanish in degrees above the complex dimension, already before
 sheafification. -/
-lemma holomorphicDeRhamPresheaf_isZero_of_lt
+private lemma holomorphicDeRhamPresheaf_isZero_of_lt
     [SmoothOfRelativeDimension d X.hom] {p : ℕ} (hp : d < p) :
     IsZero (holomorphicDeRhamPresheaf X d p) := by
   apply Functor.isZero
@@ -102,25 +84,6 @@ lemma holomorphicDeRhamPresheaf_isZero_of_lt
   exact AddCommGrpCat.isZero_of_subsingleton _
 
 /-- The exterior derivative as a morphism of presheaves. -/
-def holomorphicDeRhamModuleDifferential [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
-    holomorphicDeRhamModulePresheaf X d p ⟶
-      holomorphicDeRhamModulePresheaf X d (p + 1) where
-  app U := ModuleCat.ofHom <|
-    holomorphicFormDifferential X d U p
-  naturality {U V} i := by
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro x
-    exact (holomorphicFormRestriction_differential X d i p x).symm
-
-lemma holomorphicDeRhamModuleDifferential_comp
-    [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
-    holomorphicDeRhamModuleDifferential X d p ≫
-      holomorphicDeRhamModuleDifferential X d (p + 1) = 0 :=
-  NatTrans.ext <| funext fun U => ModuleCat.hom_ext <| LinearMap.ext fun x =>
-    holomorphicFormDifferential_squared X d U p x
-
-/-- The legacy additive presentation of the exterior derivative. -/
 def holomorphicDeRhamDifferential [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     holomorphicDeRhamPresheaf X d p ⟶
       holomorphicDeRhamPresheaf X d (p + 1) where
@@ -128,8 +91,7 @@ def holomorphicDeRhamDifferential [SmoothOfRelativeDimension d X.hom] (p : ℕ) 
     (holomorphicFormDifferential X d U p).toAddMonoidHom
   naturality {U V} i := by
     apply AddCommGrpCat.hom_ext
-    apply AddMonoidHom.ext
-    intro x
+    ext x
     exact (holomorphicFormRestriction_differential X d i p x).symm
 
 lemma holomorphicDeRhamDifferential_comp [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
@@ -137,16 +99,6 @@ lemma holomorphicDeRhamDifferential_comp [SmoothOfRelativeDimension d X.hom] (p 
       holomorphicDeRhamDifferential X d (p + 1) = 0 :=
   NatTrans.ext <| funext fun U => AddCommGrpCat.hom_ext <| AddMonoidHom.ext fun x =>
     holomorphicFormDifferential_squared X d U p x
-
-/-- The holomorphic de Rham complex before forgetting its complex-linear structure. -/
-def holomorphicDeRhamModulePresheafComplex [SmoothOfRelativeDimension d X.hom] :
-    CochainComplex
-      (TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X))) ℕ :=
-  CochainComplex.of
-    (holomorphicDeRhamModulePresheaf X d)
-    (holomorphicDeRhamModuleDifferential X d)
-    (fun p => NatTrans.ext <| funext fun U => ModuleCat.hom_ext <| LinearMap.ext fun x =>
-      holomorphicFormDifferential_squared X d U p x)
 
 /-- The holomorphic de Rham complex before sheafification. -/
 def holomorphicDeRhamPresheafComplex [SmoothOfRelativeDimension d X.hom] :
@@ -169,46 +121,6 @@ def constantComplexAddCommGrpPresheaf :
   (Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).obj
     (AddCommGrpCat.of ℂ)
 
-/-- The constant presheaf with value `ℂ`, retaining its complex-module structure. -/
-def constantComplexModulePresheaf :
-    TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X)) :=
-  (Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).obj
-    (ModuleCat.of ℂ ℂ)
-
-/-- Complex-linear constants as holomorphic de Rham forms of degree zero. -/
-def constantsToHolomorphicDeRhamModuleZero [SmoothOfRelativeDimension d X.hom] :
-    constantComplexModulePresheaf X ⟶
-      holomorphicDeRhamModulePresheaf X d 0 where
-  app U := ModuleCat.ofHom
-    (holomorphicFormOfConstant X d U)
-  naturality {U V} i := by
-    apply ModuleCat.hom_ext
-    apply LinearMap.ext
-    intro c
-    exact (holomorphicFormRestriction_ofConstant X d i c).symm
-
-lemma constantsToHolomorphicDeRhamModuleZero_comp_differential
-    [SmoothOfRelativeDimension d X.hom] :
-    constantsToHolomorphicDeRhamModuleZero X d ≫
-      holomorphicDeRhamModuleDifferential X d 0 = 0 :=
-  NatTrans.ext <| funext fun U => ModuleCat.hom_ext <| LinearMap.ext fun c =>
-    holomorphicFormDifferential_ofConstant X d U c
-
-/-- The complex-linear inclusion of constants in the module-valued de Rham complex. -/
-def constantsToHolomorphicDeRhamModulePresheafComplex
-    [SmoothOfRelativeDimension d X.hom] :
-    (CochainComplex.single₀
-      (TopCat.Presheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X)))).obj
-        (constantComplexModulePresheaf X) ⟶
-      holomorphicDeRhamModulePresheafComplex X d :=
-  HomologicalComplex.mkHomFromSingle
-    (constantsToHolomorphicDeRhamModuleZero X d) <| by
-      intro k hk
-      obtain rfl : k = 1 := by simpa using hk.symm
-      change constantsToHolomorphicDeRhamModuleZero X d ≫
-        holomorphicDeRhamModuleDifferential X d 0 = 0
-      exact constantsToHolomorphicDeRhamModuleZero_comp_differential X d
-
 /-- Constants as holomorphic de Rham forms of degree zero. -/
 def constantsToHolomorphicDeRhamZero [SmoothOfRelativeDimension d X.hom] :
     constantComplexAddCommGrpPresheaf X ⟶
@@ -217,12 +129,11 @@ def constantsToHolomorphicDeRhamZero [SmoothOfRelativeDimension d X.hom] :
     (holomorphicFormOfConstant X d U).toAddMonoidHom
   naturality {U V} i := by
     apply AddCommGrpCat.hom_ext
-    apply AddMonoidHom.ext
-    intro c
+    ext c
     exact (holomorphicFormRestriction_ofConstant X d i c).symm
 
 /-- On a nonempty open set, distinct complex constants define distinct holomorphic zero-forms. -/
-lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d X.hom]
+private lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) [Nonempty U.unop] :
     Function.Injective (holomorphicFormOfConstant X d U) := by
   intro c c' hcc'
@@ -233,11 +144,7 @@ lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d X.hom]
   have ha : a ∈ holomorphicFormRelations X d U 0 := by
     change Submodule.Quotient.mk a = 0 at hzero
     rwa [Submodule.Quotient.mk_eq_zero] at hzero
-  rw [holomorphicFormRelations_eq_restrictionStableAnalyticKernel,
-    restrictionStableAnalyticKernel] at ha
-  simp only [Submodule.mem_iInf, Submodule.mem_comap] at ha
-  specialize ha U (𝟙 U)
-  rw [formRestriction_id, LinearMap.id_apply] at ha
+  rw [holomorphicFormRelations_eq_chartEvaluationKernel] at ha
   let x : U.unop := Classical.arbitrary U.unop
   let e := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x.1
   have hxsource : x.1 ∈ e.source := mem_extChartAt_source x.1
@@ -256,7 +163,7 @@ lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d X.hom]
 set_option backward.isDefEq.respectTransparency false in
 /-- The inclusion of complex constants into holomorphic zero-forms is a monomorphism on every
 stalk. -/
-lemma constantsToHolomorphicDeRhamZero_stalk_mono
+private lemma constantsToHolomorphicDeRhamZero_stalk_mono
     [SmoothOfRelativeDimension d X.hom] (x : ComplexPoint X) :
     Mono ((TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map
       (constantsToHolomorphicDeRhamZero X d)) := by
@@ -359,41 +266,6 @@ def holomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom] :
       holomorphicDeRhamSheafDifferential X d p := by
   simp [holomorphicDeRhamComplex]
 
-/-- A neighborhood-wise primitive for every local kernel section gives exactness on a stalk.
-The primitive may be taken after shrinking the original neighborhood. -/
-lemma holomorphicStalkExact_of_locallyPrimitive
-    (S : ShortComplex (TopCat.Presheaf AddCommGrpCat
-      (TopCat.of (ComplexPoint X))))
-    (hlocal : ∀ (x : ComplexPoint X)
-      (U : Opens (TopCat.of (ComplexPoint X))) (_hx : x ∈ U)
-      (s : S.X₂.obj (.op U)), S.g.app (.op U) s = 0 →
-        ∃ (V : Opens (TopCat.of (ComplexPoint X))) (_hxV : x ∈ V)
-          (i : V ⟶ U) (t : S.X₁.obj (.op V)),
-          S.f.app (.op V) t = S.X₂.map i.op s)
-    (x : ComplexPoint X) :
-    (S.map (TopCat.Presheaf.stalkFunctor AddCommGrpCat x)).Exact := by
-  rw [ShortComplex.ab_exact_iff]
-  intro z hz
-  obtain ⟨U, hxU, s, rfl⟩ := S.X₂.exists_germ_eq z
-  change (TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map S.g
-      (S.X₂.germ U x hxU s) = 0 at hz
-  rw [TopCat.Presheaf.stalkFunctor_map_germ_apply] at hz
-  have hz' : S.X₃.germ U x hxU (S.g.app (.op U) s) =
-      S.X₃.germ U x hxU 0 := by
-    rwa [map_zero]
-  obtain ⟨W, hxW, iWU, iWU', hW⟩ :=
-    S.X₃.germ_eq x hxU hxU (S.g.app (.op U) s) 0 hz'
-  have hWs : S.g.app (.op W) (S.X₂.map iWU.op s) = 0 := by
-    rw [← ConcreteCategory.comp_apply, S.g.naturality, ConcreteCategory.comp_apply]
-    simpa using hW
-  obtain ⟨V, hxV, iVW, t, ht⟩ :=
-    hlocal x W hxW (S.X₂.map iWU.op s) hWs
-  refine ⟨S.X₁.germ V x hxV t, ?_⟩
-  change (TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map S.f
-      (S.X₁.germ V x hxV t) = S.X₂.germ U x hxU s
-  rw [TopCat.Presheaf.stalkFunctor_map_germ_apply, ht,
-    S.X₂.germ_res_apply iVW x hxV, S.X₂.germ_res_apply iWU x hxW]
-
 set_option backward.isDefEq.respectTransparency false in
 /-- The degreewise sheafification unit from holomorphic forms to the underlying presheaf of the
 holomorphic de Rham sheaf complex. -/
@@ -417,7 +289,7 @@ noncomputable def holomorphicDeRhamSheafificationUnit
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The sheafified holomorphic de Rham complex is exact in every positive degree. -/
-lemma holomorphicDeRhamComplex_exactAt_succ
+private lemma holomorphicDeRhamComplex_exactAt_succ
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     (holomorphicDeRhamComplex X d).ExactAt (p + 1) := by
   rw [HomologicalComplex.exactAt_iff'
@@ -428,7 +300,7 @@ lemma holomorphicDeRhamComplex_exactAt_succ
   let stalk := TopCat.Presheaf.stalkFunctor AddCommGrpCat x
   let P := holomorphicDeRhamPresheafComplex X d
   have hP : (P.sc' p (p + 1) ((p + 1) + 1)).map stalk |>.Exact :=
-    holomorphicStalkExact_of_locallyPrimitive X
+    TopCat.Presheaf.stalkExact_of_locallyPrimitive
       (P.sc' p (p + 1) ((p + 1) + 1)) (by
         intro y U hyU form hform
         dsimp [P, HomologicalComplex.sc', HomologicalComplex.shortComplexFunctor'] at hform ⊢
@@ -454,13 +326,6 @@ lemma holomorphicDeRhamComplex_exactAt_succ
   let : IsIso η := ShortComplex.isIso_of_isIso η
   exact ShortComplex.exact_of_iso (asIso η) hP
 
-/-- The holomorphic de Rham complex is exact in every degree above the complex dimension. -/
-lemma holomorphicDeRhamComplex_exactAt_of_lt
-    [SmoothOfRelativeDimension d X.hom] {p : ℕ} (hp : d < p) :
-    (holomorphicDeRhamComplex X d).ExactAt p :=
-  HomologicalComplex.ExactAt.of_isZero
-    (holomorphicDeRhamSheaf_isZero_of_lt X d hp)
-
 /-- Multiplication by a complex scalar on the presheaf of holomorphic de Rham forms. -/
 def scalarHolomorphicDeRhamPresheaf [SmoothOfRelativeDimension d X.hom]
     (p : ℕ) (c : ℂ) :
@@ -474,65 +339,6 @@ def scalarHolomorphicDeRhamPresheaf [SmoothOfRelativeDimension d X.hom]
     change c • holomorphicFormRestriction X d i p x =
       holomorphicFormRestriction X d i p (c • x)
     exact (LinearMap.map_smul _ c x).symm
-
-@[simp] lemma scalarHolomorphicDeRhamPresheaf_apply
-    [SmoothOfRelativeDimension d X.hom] (p : ℕ) (c : ℂ)
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (x : HolomorphicForm X d U p) :
-    (scalarHolomorphicDeRhamPresheaf X d p c).app U x = c • x := by
-  rfl
-
-@[simp] lemma scalarHolomorphicDeRhamPresheaf_zero
-    [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
-    scalarHolomorphicDeRhamPresheaf X d p 0 = 0 := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro x
-  dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
-  simp
-  rfl
-
-@[simp] lemma scalarHolomorphicDeRhamPresheaf_one
-    [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
-    scalarHolomorphicDeRhamPresheaf X d p 1 = 𝟙 _ := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro x
-  dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
-  simp
-  rfl
-
-@[simp] lemma scalarHolomorphicDeRhamPresheaf_add
-    [SmoothOfRelativeDimension d X.hom] (p : ℕ) (a b : ℂ) :
-    scalarHolomorphicDeRhamPresheaf X d p (a + b) =
-      scalarHolomorphicDeRhamPresheaf X d p a +
-        scalarHolomorphicDeRhamPresheaf X d p b := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro x
-  dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
-  simp [add_smul]
-  rfl
-
-@[simp] lemma scalarHolomorphicDeRhamPresheaf_mul
-    [SmoothOfRelativeDimension d X.hom] (p : ℕ) (a b : ℂ) :
-    scalarHolomorphicDeRhamPresheaf X d p (a * b) =
-      scalarHolomorphicDeRhamPresheaf X d p b ≫
-        scalarHolomorphicDeRhamPresheaf X d p a := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  apply AddMonoidHom.ext
-  intro x
-  dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
-  simp [mul_smul]
-  rfl
 
 /-- Scalar multiplication commutes with the exterior derivative. -/
 lemma scalarHolomorphicDeRhamPresheaf_d
@@ -583,59 +389,6 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom]
       rw [← Functor.map_comp, ← Functor.map_comp,
         scalarHolomorphicDeRhamPresheaf_d])
 
-@[simp] lemma scalarHolomorphicDeRhamComplex_zero
-    [SmoothOfRelativeDimension d X.hom] :
-    scalarHolomorphicDeRhamComplex X d 0 = 0 := by
-  apply HomologicalComplex.hom_ext
-  intro p
-  change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).map
-      (scalarHolomorphicDeRhamPresheaf X d p 0) = 0
-  rw [scalarHolomorphicDeRhamPresheaf_zero, Functor.map_zero]
-
-@[simp] lemma scalarHolomorphicDeRhamComplex_one
-    [SmoothOfRelativeDimension d X.hom] :
-    scalarHolomorphicDeRhamComplex X d 1 = 𝟙 _ := by
-  apply HomologicalComplex.hom_ext
-  intro p
-  change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).map
-      (scalarHolomorphicDeRhamPresheaf X d p 1) = 𝟙 _
-  rw [scalarHolomorphicDeRhamPresheaf_one]
-  exact (presheafToSheaf
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-    AddCommGrpCat).map_id _
-
-@[simp] lemma scalarHolomorphicDeRhamComplex_add
-    [SmoothOfRelativeDimension d X.hom] (a b : ℂ) :
-    scalarHolomorphicDeRhamComplex X d (a + b) =
-      scalarHolomorphicDeRhamComplex X d a +
-        scalarHolomorphicDeRhamComplex X d b := by
-  apply HomologicalComplex.hom_ext
-  intro p
-  change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).map
-      (scalarHolomorphicDeRhamPresheaf X d p (a + b)) = _
-  rw [scalarHolomorphicDeRhamPresheaf_add, Functor.map_add]
-  rfl
-
-@[simp] lemma scalarHolomorphicDeRhamComplex_mul
-    [SmoothOfRelativeDimension d X.hom] (a b : ℂ) :
-    scalarHolomorphicDeRhamComplex X d (a * b) =
-      scalarHolomorphicDeRhamComplex X d b ≫
-        scalarHolomorphicDeRhamComplex X d a := by
-  apply HomologicalComplex.hom_ext
-  intro p
-  change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).map
-      (scalarHolomorphicDeRhamPresheaf X d p (a * b)) = _
-  rw [scalarHolomorphicDeRhamPresheaf_mul, Functor.map_comp]
-  rfl
-
 /-- The constant sheaf with value the additive group of complex numbers. -/
 @[implicit_reducible]
 def constantComplexSheaf :
@@ -673,16 +426,6 @@ def conjConstantComplexPresheaf :
     ext x
     rfl
 
-/-- Conjugating twice is the identity on the constant complex presheaf. -/
-lemma conjConstantComplexPresheaf_comp_self :
-    conjConstantComplexPresheaf X ≫ conjConstantComplexPresheaf X =
-      𝟙 (constantComplexAddCommGrpPresheaf X) := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  change (starRingEnd ℂ).toAddMonoidHom.comp (starRingEnd ℂ).toAddMonoidHom = AddMonoidHom.id ℂ
-  exact AddMonoidHom.ext Complex.conj_conj
-
 /-- Complex conjugation on the constant complex sheaf. -/
 def conjConstantComplexSheaf :
     constantComplexSheaf X ⟶ constantComplexSheaf X := by
@@ -690,45 +433,6 @@ def conjConstantComplexSheaf :
     (TopCat.of (ComplexPoint X))
   exact (presheafToSheaf J AddCommGrpCat).map
     (conjConstantComplexPresheaf X)
-
-/-- Conjugating twice is the identity on the constant complex sheaf. -/
-lemma conjConstantComplexSheaf_comp_self :
-    conjConstantComplexSheaf X ≫ conjConstantComplexSheaf X =
-      𝟙 (constantComplexSheaf X) := by
-  let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
-  change (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) ≫
-    (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) = _
-  rw [← Functor.map_comp, conjConstantComplexPresheaf_comp_self]
-  exact (presheafToSheaf J AddCommGrpCat).map_id _
-
-/-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the constant
-complex presheaf. This is the presheaf-level source of conjugate-linearity. -/
-lemma complexScalarPresheaf_comp_conj (c : ℂ) :
-    complexScalarPresheaf X c ≫ conjConstantComplexPresheaf X =
-      conjConstantComplexPresheaf X ≫
-        complexScalarPresheaf X (starRingEnd ℂ c) := by
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  change (starRingEnd ℂ).toAddMonoidHom.comp (DistribSMul.toAddMonoidHom ℂ c) =
-    (DistribSMul.toAddMonoidHom ℂ (starRingEnd ℂ c)).comp (starRingEnd ℂ).toAddMonoidHom
-  exact AddMonoidHom.ext (map_mul (starRingEnd ℂ) c)
-
-/-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the constant
-complex sheaf. -/
-lemma complexScalarSheaf_comp_conj (c : ℂ) :
-    complexScalarSheaf X c ≫ conjConstantComplexSheaf X =
-      conjConstantComplexSheaf X ≫
-        complexScalarSheaf X (starRingEnd ℂ c) := by
-  let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
-  change (presheafToSheaf J AddCommGrpCat).map (complexScalarPresheaf X c) ≫
-      (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) =
-    (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) ≫
-      (presheafToSheaf J AddCommGrpCat).map
-        (complexScalarPresheaf X (starRingEnd ℂ c))
-  rw [← Functor.map_comp, ← Functor.map_comp, complexScalarPresheaf_comp_conj]
 
 /-- The sheafified inclusion of constants as de Rham zero-forms. -/
 def constantsToHolomorphicDeRhamZeroSheaf [SmoothOfRelativeDimension d X.hom] :
@@ -794,7 +498,7 @@ noncomputable def constantsToHolomorphicDeRhamShortComplexSheafificationUnit
 set_option backward.isDefEq.respectTransparency false in
 /-- The augmented holomorphic de Rham sheaf complex is exact. Thus the kernel of the exterior
 derivative on holomorphic functions is exactly the constant sheaf. -/
-lemma constantsToHolomorphicDeRhamSheafShortComplex_exact
+private lemma constantsToHolomorphicDeRhamSheafShortComplex_exact
     [SmoothOfRelativeDimension d X.hom] :
     (constantsToHolomorphicDeRhamSheafShortComplex X d).Exact := by
   rw [TopCat.Sheaf.exact_iff_stalkFunctor_map_exact]
@@ -802,7 +506,7 @@ lemma constantsToHolomorphicDeRhamSheafShortComplex_exact
   let stalk := TopCat.Presheaf.stalkFunctor AddCommGrpCat x
   have hP : ((constantsToHolomorphicDeRhamPresheafShortComplex X d).map
       stalk).Exact :=
-    holomorphicStalkExact_of_locallyPrimitive X
+    TopCat.Presheaf.stalkExact_of_locallyPrimitive
       (constantsToHolomorphicDeRhamPresheafShortComplex X d) (by
         intro y U hyU form hform
         change holomorphicFormDifferential X d (.op U) 0 form = 0 at hform
@@ -826,7 +530,7 @@ lemma constantsToHolomorphicDeRhamSheafShortComplex_exact
 set_option backward.isDefEq.respectTransparency false in
 /-- The sheafified inclusion of complex constants into holomorphic functions is a
 monomorphism. -/
-lemma constantsToHolomorphicDeRhamZeroSheaf_mono
+private lemma constantsToHolomorphicDeRhamZeroSheaf_mono
     [SmoothOfRelativeDimension d X.hom] :
     Mono (constantsToHolomorphicDeRhamZeroSheaf X d) := by
   rw [TopCat.Presheaf.mono_iff_stalk_mono]
@@ -851,39 +555,6 @@ lemma constantsToHolomorphicDeRhamZeroSheaf_mono
     simp
   rw [h]
   infer_instance
-
-/-- The inclusion of constant zero-forms commutes with complex scalar multiplication. -/
-lemma constantsToHolomorphicDeRhamZero_scalar
-    [SmoothOfRelativeDimension d X.hom] (c : ℂ) :
-    constantsToHolomorphicDeRhamZeroSheaf X d ≫
-      (let J := Opens.grothendieckTopology
-        (TopCat.of (ComplexPoint X))
-      (presheafToSheaf J AddCommGrpCat).map
-        (scalarHolomorphicDeRhamPresheaf X d 0 c)) =
-    complexScalarSheaf X c ≫
-      constantsToHolomorphicDeRhamZeroSheaf X d := by
-  let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
-  change (presheafToSheaf J AddCommGrpCat).map
-      (constantsToHolomorphicDeRhamZero X d) ≫
-      (presheafToSheaf J AddCommGrpCat).map
-        (scalarHolomorphicDeRhamPresheaf X d 0 c) =
-    (presheafToSheaf J AddCommGrpCat).map
-      (complexScalarPresheaf X c) ≫
-      (presheafToSheaf J AddCommGrpCat).map
-        (constantsToHolomorphicDeRhamZero X d)
-  rw [← Functor.map_comp, ← Functor.map_comp]
-  congr 1
-  apply NatTrans.ext
-  funext U
-  apply AddCommGrpCat.hom_ext
-  let f := holomorphicFormOfConstant X d U
-  change (c • LinearMap.id).toAddMonoidHom.comp f.toAddMonoidHom =
-    f.toAddMonoidHom.comp (DistribSMul.toAddMonoidHom ℂ c)
-  apply AddMonoidHom.ext
-  intro x
-  change c • f x = f (c • x)
-  exact (f.map_smul c x).symm
 
 /-- The comparison from the constant sheaf complex to the holomorphic de Rham complex. -/
 def constantsToHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom] :
@@ -927,17 +598,6 @@ instance constantsToHolomorphicDeRhamComplex_quasiIso
     · exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_zero X d
     · exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_succ X d p
 
-/-- The constant-to-de Rham comparison is a quasi-isomorphism in every degree above the complex
-dimension. Both sides have zero cohomology there. -/
-lemma constantsToHolomorphicDeRhamComplex_quasiIsoAt_of_lt
-    [SmoothOfRelativeDimension d X.hom] {p : ℕ} (hp : d < p) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplex X d) p := by
-  have hp0 : p ≠ 0 := by lia
-  obtain ⟨q, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hp0
-  rw [quasiIsoAt_iff_exactAt _ _
-    (CochainComplex.exactAt_succ_single_obj (constantComplexSheaf X) q)]
-  exact holomorphicDeRhamComplex_exactAt_of_lt X d hp
-
 /-- Scalar multiplication on the constant complex-valued complex concentrated in degree zero. -/
 @[implicit_reducible]
 def complexScalarComplex (c : ℂ) :
@@ -948,21 +608,6 @@ def complexScalarComplex (c : ℂ) :
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
         (constantComplexSheaf X) :=
   (CochainComplex.single₀ _).map (complexScalarSheaf X c)
-
-/-- The constant-to-de Rham comparison commutes with complex scalar multiplication. -/
-lemma constantsToHolomorphicDeRhamComplex_scalar
-    [SmoothOfRelativeDimension d X.hom] (c : ℂ) :
-    constantsToHolomorphicDeRhamComplex X d ≫
-      scalarHolomorphicDeRhamComplex X d c =
-    complexScalarComplex X c ≫
-      constantsToHolomorphicDeRhamComplex X d := by
-  apply HomologicalComplex.hom_ext
-  intro p
-  rcases p with _ | p
-  · exact constantsToHolomorphicDeRhamZero_scalar X d c
-  · apply (HomologicalComplex.isZero_single_obj_X
-      (ComplexShape.up ℕ) 0 (constantComplexSheaf X) (p + 1)
-      (Nat.succ_ne_zero p)).eq_of_src
 
 /-- The constant sheaf complex, extended by zero from natural to integer degrees. -/
 @[implicit_reducible]
@@ -990,21 +635,6 @@ def conjConstantComplexComplex :
         (constantComplexSheaf X) :=
   (CochainComplex.single₀ _).map (conjConstantComplexSheaf X)
 
-/-- Conjugating twice is the identity in degree zero. -/
-lemma conjConstantComplexComplex_comp_self :
-    conjConstantComplexComplex X ≫ conjConstantComplexComplex X = 𝟙 _ := by
-  unfold conjConstantComplexComplex
-  rw [← Functor.map_comp, conjConstantComplexSheaf_comp_self]
-  exact (CochainComplex.single₀ _).map_id _
-
-/-- Conjugation intertwines the two scalar multiplications in degree zero. -/
-lemma complexScalarComplex_comp_conj (c : ℂ) :
-    complexScalarComplex X c ≫ conjConstantComplexComplex X =
-      conjConstantComplexComplex X ≫
-        complexScalarComplex X (starRingEnd ℂ c) := by
-  unfold complexScalarComplex conjConstantComplexComplex
-  rw [← Functor.map_comp, ← Functor.map_comp, complexScalarSheaf_comp_conj]
-
 /-- Complex conjugation on the integer-indexed constant complex-valued complex.
 
 The holomorphic de Rham complex carries no such map: conjugation is not `ℂ`-linear, so it exists
@@ -1014,28 +644,15 @@ def conjConstantComplexSheafComplexInt :
   HomologicalComplex.extendMap (conjConstantComplexComplex X)
     ComplexShape.embeddingUpNat
 
-/-- Conjugating twice is the identity on the integer-indexed constant complex. -/
-lemma conjConstantComplexSheafComplexInt_comp_self :
-    conjConstantComplexSheafComplexInt X ≫ conjConstantComplexSheafComplexInt X = 𝟙 _ := by
-  unfold conjConstantComplexSheafComplexInt constantComplexSheafComplexInt
-  rw [← HomologicalComplex.extendMap_comp, conjConstantComplexComplex_comp_self]
-  exact HomologicalComplex.extendMap_id _ _
-
-/-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the
-integer-indexed constant complex. -/
-lemma complexScalarComplexInt_comp_conj (c : ℂ) :
-    complexScalarComplexInt X c ≫ conjConstantComplexSheafComplexInt X =
-      conjConstantComplexSheafComplexInt X ≫
-        complexScalarComplexInt X (starRingEnd ℂ c) := by
-  unfold complexScalarComplexInt conjConstantComplexSheafComplexInt
-    constantComplexSheafComplexInt
-  rw [← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp,
-    complexScalarComplex_comp_conj]
-
 /-- The holomorphic de Rham complex, extended by zero to negative degrees. -/
 def holomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
     CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(ComplexPoint X)) ℤ :=
   (holomorphicDeRhamComplex X (dim X.left)).extend ComplexShape.embeddingUpNat
+
+instance [IsIntegral X.left] [Smooth X.hom] :
+    CochainComplex.IsStrictlyGE (holomorphicDeRhamComplexInt X) 0 := by
+  unfold holomorphicDeRhamComplexInt
+  infer_instance
 
 /-- The integer-indexed holomorphic de Rham complex vanishes in every degree above the complex
 dimension. -/
@@ -1069,38 +686,6 @@ def scalarHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom]
   HomologicalComplex.extendMap
     (scalarHolomorphicDeRhamComplex X (dim X.left) c) ComplexShape.embeddingUpNat
 
-@[simp] lemma scalarHolomorphicDeRhamComplexInt_zero
-    [IsIntegral X.left] [Smooth X.hom] :
-    scalarHolomorphicDeRhamComplexInt X 0 = 0 := by
-  unfold scalarHolomorphicDeRhamComplexInt
-  rw [scalarHolomorphicDeRhamComplex_zero, HomologicalComplex.extendMap_zero]
-  rfl
-
-@[simp] lemma scalarHolomorphicDeRhamComplexInt_one
-    [IsIntegral X.left] [Smooth X.hom] :
-    scalarHolomorphicDeRhamComplexInt X 1 = 𝟙 _ := by
-  unfold scalarHolomorphicDeRhamComplexInt holomorphicDeRhamComplexInt
-  rw [scalarHolomorphicDeRhamComplex_one]
-  exact HomologicalComplex.extendMap_id _ _
-
-@[simp] lemma scalarHolomorphicDeRhamComplexInt_add
-    [IsIntegral X.left] [Smooth X.hom] (a b : ℂ) :
-    scalarHolomorphicDeRhamComplexInt X (a + b) =
-      scalarHolomorphicDeRhamComplexInt X a +
-        scalarHolomorphicDeRhamComplexInt X b := by
-  unfold scalarHolomorphicDeRhamComplexInt
-  rw [scalarHolomorphicDeRhamComplex_add, HomologicalComplex.extendMap_add]
-  rfl
-
-@[simp] lemma scalarHolomorphicDeRhamComplexInt_mul
-    [IsIntegral X.left] [Smooth X.hom] (a b : ℂ) :
-    scalarHolomorphicDeRhamComplexInt X (a * b) =
-      scalarHolomorphicDeRhamComplexInt X b ≫
-        scalarHolomorphicDeRhamComplexInt X a := by
-  unfold scalarHolomorphicDeRhamComplexInt
-  rw [scalarHolomorphicDeRhamComplex_mul, HomologicalComplex.extendMap_comp]
-  rfl
-
 /-- The constant-to-de Rham comparison on integer-indexed complexes. -/
 def constantsToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
     constantComplexSheafComplexInt X ⟶
@@ -1118,66 +703,5 @@ instance constantsToHolomorphicDeRhamComplexInt_quasiIso
   exact (HomologicalComplex.quasiIso_extendMap_iff
     (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat).2
       inferInstance
-
-/-- The integer-indexed constant-to-de Rham comparison is a quasi-isomorphism at every
-degree. -/
-lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt X) n :=
-  inferInstance
-
-/-- In a nonnegative degree, extending the constant-to-de Rham comparison from natural to
-integer indices does not change whether it is a quasi-isomorphism. -/
-lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_iff
-    [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt X) (p : ℤ) ↔
-      QuasiIsoAt (constantsToHolomorphicDeRhamComplex X (dim X.left)) p :=
-  HomologicalComplex.quasiIsoAt_extendMap_iff
-    (constantsToHolomorphicDeRhamComplex X (dim X.left))
-    ComplexShape.embeddingUpNat rfl
-
-/-- The integer-indexed constant-to-de Rham comparison is automatically a quasi-isomorphism in
-negative degrees, since both extended complexes vanish there. -/
-lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_of_neg
-    [IsIntegral X.left] [Smooth X.hom] {n : ℤ} (hn : n < 0) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt X) n := by
-  have hnone : ∀ p : ℕ, (p : ℤ) ≠ n := fun p hp => by lia
-  rw [quasiIsoAt_iff_exactAt]
-  · exact HomologicalComplex.extend_exactAt
-      (holomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat n hnone
-  · exact HomologicalComplex.extend_exactAt
-      ((CochainComplex.single₀
-        (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-          (constantComplexSheaf X))
-      ComplexShape.embeddingUpNat n hnone
-
-/-- The integer-indexed comparison is a quasi-isomorphism in every nonnegative degree above the
-complex dimension. -/
-lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_of_lt
-    [IsIntegral X.left] [Smooth X.hom] {p : ℕ} (hp : dim X.left < p) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt X) (p : ℤ) := by
-  rw [constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_iff]
-  exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_of_lt X (dim X.left) hp
-
-/-- The integer-indexed constant-to-de Rham comparison commutes with complex scalar
-multiplication. -/
-lemma constantsToHolomorphicDeRhamComplexInt_scalar
-    [IsIntegral X.left] [Smooth X.hom] (c : ℂ) :
-    constantsToHolomorphicDeRhamComplexInt X ≫
-      scalarHolomorphicDeRhamComplexInt X c =
-    complexScalarComplexInt X c ≫
-      constantsToHolomorphicDeRhamComplexInt X := by
-  unfold constantsToHolomorphicDeRhamComplexInt
-    scalarHolomorphicDeRhamComplexInt complexScalarComplexInt
-  change HomologicalComplex.extendMap
-      (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat ≫
-    HomologicalComplex.extendMap
-      (scalarHolomorphicDeRhamComplex X (dim X.left) c) ComplexShape.embeddingUpNat =
-    HomologicalComplex.extendMap
-      (complexScalarComplex X c) ComplexShape.embeddingUpNat ≫
-    HomologicalComplex.extendMap
-      (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat
-  rw [← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp,
-    constantsToHolomorphicDeRhamComplex_scalar]
 
 end AlgebraicGeometry.ComplexPoint

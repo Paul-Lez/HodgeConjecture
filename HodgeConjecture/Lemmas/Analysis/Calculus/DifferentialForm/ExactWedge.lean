@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Analysis.NormedSpace.WedgeCovectors
+public import HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors
 public import Mathlib.Analysis.Calculus.DifferentialForm.Basic
 
 /-!
@@ -44,7 +44,7 @@ lemma wedgeFDerivWithin_eq_standardVolumeForm_comp
     (p : ℕ) (f : Fin p → E → ℂ) (s : Set E) (x : E)
     (hf : ∀ i, DifferentiableWithinAt ℂ (f i) s x)
     (hs : UniqueDiffWithinAt ℂ s x) :
-    wedgeCovectors E p (fun i ↦ fderivWithin ℂ (f i) s x) =
+    wedgeCovectors ℂ E p (fun i ↦ fderivWithin ℂ (f i) s x) =
       (standardVolumeForm p).compContinuousLinearMap
         (fderivWithin ℂ (fun y i ↦ f i y) s x) := by
   refine ContinuousAlternatingMap.ext fun v ↦ ?_
@@ -60,7 +60,7 @@ lemma wedgeFDerivWithin_eq_standardVolumeForm_comp
 def exactWedgeWithin (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
     (p : ℕ) (f : Fin p → E → ℂ) (s : Set E) :
     E → E [⋀^Fin p]→L[ℂ] ℂ :=
-  fun x ↦ wedgeCovectors E p (fun i ↦ fderivWithin ℂ (f i) s x)
+  fun x ↦ wedgeCovectors ℂ E p (fun i ↦ fderivWithin ℂ (f i) s x)
 
 /-- A wedge of exact one-forms is closed. The proof identifies it with the pullback of the
 constant volume form and applies naturality of the exterior derivative. -/
@@ -130,7 +130,7 @@ lemma extDerivWithin_smul_exactWedgeWithin
     (hs : IsOpen s) (hx : x ∈ s) (ha : ContDiffOn ℂ ω a s)
     (hf : ∀ i, ContDiffOn ℂ ω (f i) s) :
     extDerivWithin (fun y ↦ a y • exactWedgeWithin E p f s y) s x =
-      wedgeCovectors E (p + 1)
+      wedgeCovectors ℂ E (p + 1)
         (Fin.cases (fderivWithin ℂ a s x)
           (fun i ↦ fderivWithin ℂ (f i) s x)) := by
   rw [extDerivWithin, fderivWithin_fun_smul

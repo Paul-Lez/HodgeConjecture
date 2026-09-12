@@ -772,8 +772,7 @@ noncomputable def supportCapCohomologyLinear
       (RelativeHomology R (TopPair.ofSubset B) (p + q) →ₗ[R]
         RelativeHomology R (TopPair.ofSubset (A ∪ B)) q) :=
   (supportCapCochainCohomologyLinear R X A B p q).comp
-    (((relativeChainFunctor R).obj
-      (TopPair.ofSubset A)).sc p).linearDualHomologyEquiv.symm.toLinearMap
+    (relativeCochainCohomologyEquiv R (TopPair.ofSubset A) p).symm.toLinearMap
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -783,17 +782,17 @@ lemma supportCapCohomologyLinear_on_cycle
       ((((relativeChainFunctor R).obj (TopPair.ofSubset A)).sc p).linearDual.g.hom)) :
     let S := ((relativeChainFunctor R).obj (TopPair.ofSubset A)).sc p
     supportCapCohomologyLinear R X A B p q
-        (S.linearDualHomologyEquiv
+        (relativeCochainCohomologyEquiv R (TopPair.ofSubset A) p
           (S.linearDual.moduleCatHomologyIso.inv.hom (Submodule.Quotient.mk phi))) =
       supportRelativeCohomologyCycleCapLinear R X A B p q phi := by
   dsimp only
   rw [supportCapCohomologyLinear, LinearMap.comp_apply]
   let S := ((relativeChainFunctor R).obj (TopPair.ofSubset A)).sc p
-  have h := S.linearDualHomologyEquiv.symm_apply_apply
+  have h := (relativeCochainCohomologyEquiv R (TopPair.ofSubset A) p).symm_apply_apply
     (S.linearDual.moduleCatHomologyIso.inv.hom (Submodule.Quotient.mk phi))
   change supportCapCochainCohomologyLinear R X A B p q
-      (S.linearDualHomologyEquiv.symm
-        (S.linearDualHomologyEquiv
+      ((relativeCochainCohomologyEquiv R (TopPair.ofSubset A) p).symm
+        (relativeCochainCohomologyEquiv R (TopPair.ofSubset A) p
           (S.linearDual.moduleCatHomologyIso.inv.hom
             (Submodule.Quotient.mk phi)))) = _
   rw [h]

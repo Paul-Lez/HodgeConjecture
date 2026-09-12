@@ -19,6 +19,8 @@ public import Mathlib.Algebra.Homology.Homotopy
 public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 public import HodgeConjecture.Mathlib.LinearAlgebra.Quotient.Basic
 public import HodgeConjecture.Mathlib.LinearAlgebra.Dual.Defs
+public import HodgeConjecture.Mathlib.LinearAlgebra.Quotient.Basic
+public import HodgeConjecture.Mathlib.LinearAlgebra.Dual.Defs
 
 import Mathlib.LinearAlgebra.Dual.Lemmas
 
@@ -165,6 +167,7 @@ attribute [simp] HomologicalComplex.linearDualCochainComplex_X
 lemma linearDualCochainComplex_d_succ (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
     (K.linearDualCochainComplex).d n (n + 1) =
       ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap := rfl
+      ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap := rfl
 
 /-- The degree-`n` short complex of a linear-dual cochain complex is the reversed dual of the
 degree-`n` short complex of the original chain complex. -/
@@ -173,7 +176,14 @@ def linearDualCochainComplexScIso (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : 
     K.linearDualCochainComplex.sc n ≅ (K.sc n).linearDual :=
   have hprev : (ComplexShape.up ℕ).prev n = (ComplexShape.down ℕ).next n := by cases n <;> simp
   have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by simp
-  K.linearDualCochainComplex.isoSc' (c := ComplexShape.up ℕ) _ _ _ hprev hnext
+  K.linearDualCochainComplex.isoSc' (c := ComplexShape.up ℕ) _ _ _ hprev hnext --≪≫
+
+/-- Universal coefficients for a complex of vector spaces: the degree-`n` cohomology of the
+linear-dual cochain complex is canonically the linear dual of the degree-`n` homology. -/
+def linearDualHomologyEquiv (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
+    K.linearDualCochainComplex.homology n ≃ₗ[R] Module.Dual R (K.homology n) :=
+  (ShortComplex.homologyMapIso (linearDualCochainComplexScIso K n)).toLinearEquiv.trans
+    (K.sc n).linearDualHomologyEquiv
 
 variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
 

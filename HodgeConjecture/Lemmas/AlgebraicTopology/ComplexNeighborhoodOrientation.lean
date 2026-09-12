@@ -92,18 +92,14 @@ def standardComplexOrientationNeighborhood (d : ℕ) : TopologicalSpace.Opens (F
 lemma zero_mem_standardComplexOrientationNeighborhood (d : ℕ) :
     (0 : Fin d → ℂ) ∈ standardComplexOrientationNeighborhood d := by
   refine ⟨0, zero_mem_standardOrientationBall (d * 2), ?_⟩
-  ext j
-  apply Complex.ext <;> rfl
-
-/-- The complex-coordinate neighborhood pair supporting the oriented simplex. -/
-abbrev standardComplexOrientationNeighborhoodPair (d : ℕ) : TopPair :=
-  TopPair.ofSubset (X := TopCat.of (Fin d → ℂ))
-    (standardComplexOrientationNeighborhood d : Set (Fin d → ℂ))ᶜ
+  exact map_zero (Complex.piCoordCLE d).symm
 
 /-- The normalized complex neighborhood class. The only degree cast is the proved arithmetic
 identity `d * 2 = 2 * d` converting the ordered real-coordinate dimension. -/
 def standardComplexOrientationNeighborhoodClass (d : ℕ) :
-    RelativeHomology ℚ (standardComplexOrientationNeighborhoodPair d) (2 * d) :=
+    RelativeHomology ℚ
+      (TopPair.ofSubset (X := TopCat.of (Fin d → ℂ))
+        (standardComplexOrientationNeighborhood d : Set (Fin d → ℂ))ᶜ) (2 * d) :=
   (Nat.mul_comm d 2) ▸
     relativeHomologyMap ℚ (d * 2)
       (imageSupportPairMap (standardRealToComplexMap d) (standardRealToComplexMap_injective d)
@@ -118,12 +114,10 @@ lemma standardRealToComplexPair_translation (d : ℕ) (v : StandardRealModel (d 
         translationPointComplementPairMap (Fin d → ℂ) (standardRealToComplexMap d v) := by
   apply MorphismProperty.Arrow.Hom.ext
   · ext w
-    apply Subtype.ext
-    funext j
-    apply Complex.ext <;> rfl
+    refine Subtype.ext ?_
+    exact map_add (Complex.piCoordCLE d).symm _ _
   · ext w
-    funext j
-    apply Complex.ext <;> rfl
+    exact map_add (Complex.piCoordCLE d).symm _ _
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Throughout the complex-coordinate neighborhood the same relative class restricts to the

@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.LocalFundamentalClass
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalFundamentalClass
 public import Mathlib.Algebra.Homology.HomologySequence
 public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
 public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
@@ -264,18 +264,15 @@ lemma span_standardLocalClass_succ_eq_top_iff (n : ℕ) (hn : n ≠ 0) :
 
 /-! ### The standard class in dimension one -/
 
-/-- The punctured real line, in the coordinates used by the standard local class. -/
-abbrev StandardPuncturedLine := ({0}ᶜ : Set (StandardRealModel 1))
-
 /-- The point `-1` of the standard punctured real line. -/
-def standardNegativePoint : StandardPuncturedLine := ⟨fun _ ↦ -1, by
+def standardNegativePoint : ({0}ᶜ : Set (StandardRealModel 1)) := ⟨fun _ ↦ -1, by
   simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
   intro h
   have := congr_fun h 0
   norm_num at this⟩
 
 /-- The point `1` of the standard punctured real line. -/
-def standardPositivePoint : StandardPuncturedLine := ⟨fun _ ↦ 1, by
+def standardPositivePoint : ({0}ᶜ : Set (StandardRealModel 1)) := ⟨fun _ ↦ 1, by
   simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
   intro h
   have := congr_fun h 0
@@ -315,8 +312,7 @@ lemma standardFaceSimplex_zero_point :
   change standardFaceMap 0 (0 : Fin 2)
     (default : stdSimplex ℝ (Fin 1)) = standardNegativePoint
   rw [Subsingleton.elim (default : stdSimplex ℝ (Fin 1)) (stdSimplex.vertex 0)]
-  apply Subtype.ext
-  funext j
+  ext j
   fin_cases j
   simp [standardFaceMap, standardAffineSimplex, stdSimplex.map, standardNegativePoint]
 
@@ -326,8 +322,7 @@ lemma standardFaceSimplex_one_point :
   change standardFaceMap 0 (1 : Fin 2)
     (default : stdSimplex ℝ (Fin 1)) = standardPositivePoint
   rw [Subsingleton.elim (default : stdSimplex ℝ (Fin 1)) (stdSimplex.vertex 0)]
-  apply Subtype.ext
-  funext j
+  ext j
   fin_cases j
   simp [standardFaceMap, standardAffineSimplex, stdSimplex.map, standardPositivePoint]
 

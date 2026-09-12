@@ -39,18 +39,30 @@ throughout, in place of a separate type of subvarieties.
 namespace Guide.Cycles.D1
 ```
 ```lean
-abbrev CodimensionCycle (X : Scheme.{u}) (p : ℕ) := codimensionCycleSubgroup X p
+def codimensionCycleSubgroup (X : Scheme.{u}) (p : ℕ) : AddSubgroup (AlgebraicCycle X ℤ) where
+  carrier c := ∀ x, c x ≠ 0 → coheight x = p
+  zero_mem' x hx := (hx rfl).elim
+  add_mem' := by
+    intro a b ha hb x hx
+    by_cases hax : a x = 0
+    · exact hb x (by simpa [hax] using hx)
+    · exact ha x hax
+  neg_mem' := by
+    intro a ha x hx
+    refine ha x fun h ↦ hx ?_
+    change -(a x) = 0
+    simp [h]
 ```
 ```lean -show
 end Guide.Cycles.D1
-example : @Guide.Cycles.D1.CodimensionCycle.{u} = @AlgebraicGeometry.CodimensionCycle.{u} := rfl
+example : @Guide.Cycles.D1.codimensionCycleSubgroup.{u} = @AlgebraicGeometry.codimensionCycleSubgroup.{u} := rfl
 ```
 ```lean -show
 namespace Guide.Cycles.D2
 ```
 ```lean
-noncomputable def CodimensionCycle.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
-    (n : ℤ) : CodimensionCycle X p := by
+noncomputable def codimensionCycleSubgroup.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
+    (n : ℤ) : codimensionCycleSubgroup X p := by
   classical
   exact ⟨Function.locallyFinsuppWithin.single x n, by
     intro y hy
@@ -60,39 +72,8 @@ noncomputable def CodimensionCycle.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx
 ```
 ```lean -show
 end Guide.Cycles.D2
-example : @Guide.Cycles.D2.CodimensionCycle.single.{u} = @AlgebraicGeometry.CodimensionCycle.single.{u} := rfl
+example : @Guide.Cycles.D2.codimensionCycleSubgroup.single.{u} = @AlgebraicGeometry.codimensionCycleSubgroup.single.{u} := rfl
 ```
-```lean -show
-namespace Guide.Cycles.D3
-```
-```lean
-abbrev ChowGroup (X : Scheme.{u}) (p : ℕ) :=
-  CodimensionCycle X p ⧸ rationalEquivalenceSubgroup X p
-```
-```lean -show
-end Guide.Cycles.D3
-example : @Guide.Cycles.D3.ChowGroup.{u} = @AlgebraicGeometry.ChowGroup.{u} := rfl
-```
-```lean -show
-namespace Guide.Cycles.D4
-```
-```lean
-noncomputable abbrev RationalChowGroup (X : Scheme.{u}) (p : ℕ) :=
-  TensorProduct ℤ ℚ (ChowGroup X p)
-```
-```lean -show
-end Guide.Cycles.D4
-example : @Guide.Cycles.D4.RationalChowGroup.{u} = @AlgebraicGeometry.RationalChowGroup.{u} := rfl
-```
-
-Rational equivalence is defined in the usual way. For an integral Noetherian closed subscheme
-$`W\subseteq X` of codimension $`p-1` and a nonzero rational function on $`W`, push the divisor of
-the function forward to $`X`. The Chow group $`\mathrm{CH}^p(X)` is the quotient of the cycle
-group by the subgroup these relations generate, and
-$`\mathrm{CH}^p(X)_{\mathbb Q}=\mathbb Q\otimes_{\mathbb Z}\mathrm{CH}^p(X)`. Compare the Stacks
-Project on [cycles of given codimension](https://stacks.math.columbia.edu/tag/0FE2) and on
-[rational equivalence](https://stacks.math.columbia.edu/tag/02RW).
-
 # The support of a subvariety
 
 For a point {lean}`x` of {lean}`X.left`, {lean}`cycleComponent X.left x` is the reduced closed

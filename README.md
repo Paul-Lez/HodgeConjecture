@@ -10,8 +10,9 @@ transitively used in the statement. The code is being cleaned up by
 [Roktim Mascharak](https://roktimmascharak.github.io/), 
 [Jack McCarthy](https://jackmccarthy.org/), 
 [Edison Xie](https://github.com/Whysoserioushah), 
-[Brian Nugent](https://github.com/Brian-Nugent) and
-[Archie Browne](https://github.com/archiebrowne) 
+[Brian Nugent](https://github.com/Brian-Nugent),
+[Archie Browne](https://github.com/archiebrowne) and 
+[Bhavik Mehta](https://github.com/b-mehta).
 during the Formal Conjectures workshop hosted
 by Imperial College London 7-11 September 2026 thanks to a generous donation from Google DeepMind.
 
@@ -25,7 +26,7 @@ The remaining content of the project is sorted into four folders:
 
 - `HodgeConjecture/Mathlib`: Content that is on track to be upstreamed to Mathlib;
 - `HodgeConjecture/Definitions`: Definitions used in the statement of the conjecture;
-- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions;
+- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions. If these aren't used in `Lemmas` then they should go in `Other`;
 - `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
 
 The dividing line is `HodgeConjecture/Statement.lean`: a module belongs in `Definitions` if it
@@ -37,6 +38,24 @@ statement. Two checks keep this honest:
   the resulting environment contains any module of `Other`;
 - `python3 scripts/check_import_layers.py` checks the converse — that every module of `Definitions`,
   `Lemmas` and `Mathlib` really is used by the statement — plus that both umbrella modules are
-  complete.
+  complete, and that every source path the Verso guide names in prose still exists.
+
+## The Borel–Moore layer is conditional
+
+The Borel–Moore homology development under `Other/AlgebraicGeometry/` — `SheafBorelMoore.lean`,
+`BorelMooreCycleClass.lean`, `CycleComponentBorelMoore.lean` and
+`CycleComponentGlobalFundamentalClass.lean` — is stated relative to fifteen bespoke hypothesis
+structures. They package what Mathlib does not yet provide: dualizing complexes and Verdier
+duality, derived sections with support, the Thom/costalk cap operation that normalises
+Alexander–Poincaré duality, and the local-to-global input for a Borel–Moore fundamental class.
+Its results therefore read "given such a package, ..." rather than asserting anything
+unconditional about complex varieties. Five of the fifteen can be instantiated today, and only in
+maximal codimension, that is for point components — and one of those five needs a further
+unproved statement about principal divisors. The other ten are never constructed.
+
+The module docstring of `Other/AlgebraicGeometry/SheafBorelMoore.lean` inventories all fifteen,
+grouped by construction status, and records the mathematical input each group awaits. Issue #57
+tracks that inventory; issue #14 tracks redefining Borel–Moore homology through hypercohomology,
+after which how many of the fifteen become constructible is the measure of progress.
 
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.

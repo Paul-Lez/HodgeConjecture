@@ -34,51 +34,31 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-set_option backward.isDefEq.respectTransparency false in
 /-- Homotopic maps induce equal pullbacks on singular cohomology. -/
 theorem cohomologyMap_eq_of_homotopy
     (R : Type u) [Field R] {X Y : TopCat.{u}} (n : ℕ)
     {f g : X ⟶ Y} (H : TopCat.Homotopy f g) :
-    cohomologyMap R n f = cohomologyMap R n g := by
-  apply LinearMap.ext
-  intro α
-  apply LinearMap.ext
-  intro z
-  change α (homologyMap R n f z) = α (homologyMap R n g z)
-  congr 1
-  exact ConcreteCategory.congr_hom
-    (H.congr_homologyMap_singularChainComplexFunctor (ModuleCat.of R R) n) z
+    cohomologyMap R n f = cohomologyMap R n g :=
+  cohomologyMap_eq_of_homologyMap_eq R n <| LinearMap.ext fun z =>
+    ConcreteCategory.congr_hom
+      (H.congr_homologyMap_singularChainComplexFunctor (ModuleCat.of R R) n) z
 
 set_option backward.isDefEq.respectTransparency false in
-/-- Pullback in singular cohomology commutes with forgetting support. -/
+/-- Pullback in singular cohomology commutes with forgetting support.  Dualising the naturality
+square of the relative chain projection gives this before passing to cohomology. -/
 theorem cohomologyMap_forgetSupport
     (R : Type u) [Field R] {X Y : TopCat.{u}} (n : ℕ)
     (f : X ⟶ Y) (Z : Set Y) (α : CohomologyWithSupport R Y Z n) :
     cohomologyMap R n f (forgetSupport R Y Z n α) =
       forgetSupport R X (f ⁻¹' Z) n
         (cohomologyWithSupportMap R n f Z α) := by
-  ext z
-  change α ((relativeHomologyProjection R (TopPair.ofSubset Zᶜ) n).hom
-      (homologyMap R n f z)) =
-    α (relativeHomologyMap R n (preimageSupportPairMap f Z)
-      ((relativeHomologyProjection R
-        (TopPair.ofSubset (f ⁻¹' Z)ᶜ) n).hom z))
-  congr 1
   let a := preimageSupportPairMap f Z
-  have hnat := TopPair.Homotopy.relativeChainProjection_naturality (R := R) a
-  have hhom := congrArg (fun g ↦ HomologicalComplex.homologyMap g n) hnat
-  rw [HomologicalComplex.homologyMap_comp,
-    HomologicalComplex.homologyMap_comp] at hhom
-  have happ := ConcreteCategory.congr_hom hhom z
-  simp only [ModuleCat.hom_comp] at happ
-  change (relativeHomologyMap R n a)
-      ((relativeHomologyProjection R
-        (TopPair.ofSubset (f ⁻¹' Z)ᶜ) n).hom z) =
-    (relativeHomologyProjection R (TopPair.ofSubset Zᶜ) n).hom
-      (homologyMap R n (TopPair.Hom.fst a) z) at happ
-  have hafst : TopPair.Hom.fst a = f := rfl
-  rw [hafst] at happ
-  exact happ.symm
+  have hdual := congrArg HomologicalComplex.linearDualMap
+    (TopPair.Homotopy.relativeChainProjection_naturality (R := R) a)
+  rw [HomologicalComplex.linearDualMap_comp, HomologicalComplex.linearDualMap_comp] at hdual
+  have hhom := congrArg (fun u ↦ HomologicalComplex.homologyMap u n) hdual
+  rw [HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp] at hhom
+  exact (ConcreteCategory.congr_hom hhom α).symm
 
 /-- Pulling a supported class back along a map homotopic to the identity does not change its
 ordinary class after forgetting support. -/

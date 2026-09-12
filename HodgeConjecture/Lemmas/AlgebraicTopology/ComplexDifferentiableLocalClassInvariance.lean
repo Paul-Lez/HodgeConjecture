@@ -42,24 +42,24 @@ namespace AlgebraicTopology.Singular
 
 variable (d : ℕ)
 
-/-- A continuous map fixing the origin and having no other zero defines a self-map of the
-punctured complex affine-space pair. -/
+/-- A continuous map whose only zero is the origin defines a self-map of the punctured complex
+affine-space pair. -/
 def complexPuncturedPairMapOf
     (f : (Fin d → ℂ) → (Fin d → ℂ)) (hf : Continuous f)
-    (_hf0 : f 0 = 0) (hf_ne : ∀ z, z ≠ 0 → f z ≠ 0) :
+    (hf_ne : ∀ z, z ≠ 0 → f z ≠ 0) :
     standardComplexPuncturedPair d ⟶ standardComplexPuncturedPair d :=
   TopPair.ofHom
     (TopCat.ofHom ⟨f, hf⟩)
     (TopCat.ofHom
       ⟨fun z ↦ ⟨f z.1, hf_ne z.1 z.2⟩,
-        Continuous.subtype_mk (hf.comp continuous_subtype_val) _⟩)
+        by fun_prop⟩)
     (by ext z; rfl)
 
 @[simp]
 lemma complexPuncturedPairMapOf_fst_apply
     (f : (Fin d → ℂ) → (Fin d → ℂ)) (hf : Continuous f)
-    (hf0 : f 0 = 0) (hf_ne : ∀ z, z ≠ 0 → f z ≠ 0) (z : Fin d → ℂ) :
-    TopPair.Hom.fst (complexPuncturedPairMapOf d f hf hf0 hf_ne) z = f z := rfl
+    (hf_ne : ∀ z, z ≠ 0 → f z ≠ 0) (z : Fin d → ℂ) :
+    TopPair.Hom.fst (complexPuncturedPairMapOf d f hf hf_ne) z = f z := rfl
 
 /-- Point excision upgrades a homotopy on any open neighborhood of the distinguished point to
 equality of the two induced maps on ambient relative homology. -/
@@ -70,8 +70,7 @@ theorem relativeHomologyMap_eq_of_neighborhood_pairHomotopy
       (neighborhoodPointComplementPairMap U 0 ≫ F)
       (neighborhoodPointComplementPairMap U 0 ≫ G)) :
     relativeHomologyMap ℚ n F = relativeHomologyMap ℚ n G := by
-  apply LinearMap.ext
-  intro a
+  ext a
   obtain ⟨b, rfl⟩ := neighborhoodPointComplement_relativeHomologyMap_surjective
     U 0 hU h0U n a
   have h := H.relativeHomologyMap_apply_eq (R := ℚ) n b
@@ -157,7 +156,7 @@ theorem exists_open_straightLine_ne_zero
 point gives a map from that neighborhood pair to the standard punctured pair. -/
 def complexNeighborhoodPuncturedPairMapOf
     (U : Set (Fin d → ℂ)) (f : (Fin d → ℂ) → (Fin d → ℂ))
-    (hf : ContinuousOn f U) (_hf0 : f 0 = 0)
+    (hf : ContinuousOn f U)
     (hf_ne : ∀ z, z ∈ U → z ≠ 0 → f z ≠ 0) :
     neighborhoodPointComplementPair U 0 ⟶ standardComplexPuncturedPair d :=
   TopPair.ofHom
@@ -173,12 +172,12 @@ def complexStraightLineLocalPairHomotopy
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0)
     (U : Set (Fin d → ℂ))
     (f : (Fin d → ℂ) → (Fin d → ℂ)) (hf : ContinuousOn f U)
-    (hf0 : f 0 = 0) (hf_ne : ∀ z, z ∈ U → z ≠ 0 → f z ≠ 0)
+    (hf_ne : ∀ z, z ∈ U → z ≠ 0 → f z ≠ 0)
     (hline : ∀ (t : unitInterval) (z : Fin d → ℂ), z ∈ U → z ≠ 0 →
       A.mulVec z + (((t : ℝ) : ℂ) • (f z - A.mulVec z)) ≠ 0) :
     TopPair.Homotopy
       (neighborhoodPointComplementPairMap U 0 ≫ complexMatrixPuncturedPairMap d A hA)
-      (complexNeighborhoodPuncturedPairMapOf d U f hf hf0 hf_ne) where
+      (complexNeighborhoodPuncturedPairMapOf d U f hf hf_ne) where
   fst :=
     { toFun := fun tx ↦
         A.mulVec tx.2.1 + (((tx.1 : ℝ) : ℂ) • (f tx.2.1 - A.mulVec tx.2.1))
@@ -249,7 +248,7 @@ theorem exists_open_complexDifferentiable_localClass_invariance
         relativeHomologyMap ℚ (2 * d) (neighborhoodPointComplementPairMap V 0) c =
             standardComplexLocalClass d →
           relativeHomologyMap ℚ (2 * d)
-              (complexNeighborhoodPuncturedPairMapOf d V f (hf.mono hVU) hf0 hf_ne) c =
+              (complexNeighborhoodPuncturedPairMapOf d V f (hf.mono hVU) hf_ne) c =
             standardComplexLocalClass d := by
   let f' : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     A.mulVecLin.toContinuousLinearMap
@@ -271,11 +270,11 @@ theorem exists_open_complexDifferentiable_localClass_invariance
     simpa using hlineV (1 : unitInterval) z hz hz0
   refine ⟨V, Set.inter_subset_left, hf_neV, hV, h0V, ?_⟩
   intro c hc
-  let H := complexStraightLineLocalPairHomotopy d A hA V f hfV hf0 hf_neV hlineV
+  let H := complexStraightLineLocalPairHomotopy d A hA V f hfV hf_neV hlineV
   have hhom := H.relativeHomologyMap_apply_eq (R := ℚ) (2 * d) c
   calc
     relativeHomologyMap ℚ (2 * d)
-        (complexNeighborhoodPuncturedPairMapOf d V f hfV hf0 hf_neV) c =
+        (complexNeighborhoodPuncturedPairMapOf d V f hfV hf_neV) c =
         relativeHomologyMap ℚ (2 * d)
           (neighborhoodPointComplementPairMap V 0 ≫
             complexMatrixPuncturedPairMap d A hA) c := hhom.symm
@@ -294,7 +293,7 @@ straight line avoids the origin. -/
 def complexStraightLineNeighborhoodPairHomotopy
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0)
     (f : (Fin d → ℂ) → (Fin d → ℂ)) (hf : Continuous f)
-    (hf0 : f 0 = 0) (hf_ne : ∀ z, z ≠ 0 → f z ≠ 0)
+    (hf_ne : ∀ z, z ≠ 0 → f z ≠ 0)
     (U : Set (Fin d → ℂ))
     (hline : ∀ (t : unitInterval) (z : Fin d → ℂ), z ∈ U → z ≠ 0 →
       A.mulVec z + (((t : ℝ) : ℂ) • (f z - A.mulVec z)) ≠ 0) :
@@ -302,19 +301,11 @@ def complexStraightLineNeighborhoodPairHomotopy
       (neighborhoodPointComplementPairMap U 0 ≫
         complexMatrixPuncturedPairMap d A hA)
       (neighborhoodPointComplementPairMap U 0 ≫
-        complexPuncturedPairMapOf d f hf hf0 hf_ne) where
+        complexPuncturedPairMapOf d f hf hf_ne) where
   fst :=
     { toFun := fun tx ↦
         A.mulVec tx.2.1 + (((tx.1 : ℝ) : ℂ) • (f tx.2.1 - A.mulVec tx.2.1))
-      continuous_toFun := by
-        have hAz : Continuous (fun tx : unitInterval × U ↦ A.mulVec tx.2.1) :=
-          A.mulVecLin.continuous_of_finiteDimensional.comp
-            (continuous_subtype_val.comp continuous_snd)
-        have hfz : Continuous (fun tx : unitInterval × U ↦ f tx.2.1) :=
-          hf.comp (continuous_subtype_val.comp continuous_snd)
-        have ht : Continuous (fun tx : unitInterval × U ↦ ((tx.1 : ℝ) : ℂ)) :=
-          Complex.continuous_ofReal.comp (continuous_subtype_val.comp continuous_fst)
-        exact hAz.add (ht.smul (hfz.sub hAz))
+      continuous_toFun := by fun_prop
       map_zero_left := fun z ↦ by
         change A.mulVec z.1 + (((0 : unitInterval) : ℝ) : ℂ) •
           (f z.1 - A.mulVec z.1) = A.mulVec z.1
@@ -328,20 +319,7 @@ def complexStraightLineNeighborhoodPairHomotopy
         ⟨A.mulVec tx.2.1.1 +
             (((tx.1 : ℝ) : ℂ) • (f tx.2.1.1 - A.mulVec tx.2.1.1)),
           hline tx.1 tx.2.1.1 tx.2.1.2 tx.2.2⟩
-      continuous_toFun := by
-        apply Continuous.subtype_mk
-        have hval : Continuous
-            (fun tx : unitInterval × {u : U | u.1 ≠ 0} ↦ tx.2.1.1) :=
-          continuous_subtype_val.comp (continuous_subtype_val.comp continuous_snd)
-        have hAz : Continuous
-            (fun tx : unitInterval × {u : U | u.1 ≠ 0} ↦ A.mulVec tx.2.1.1) :=
-          A.mulVecLin.continuous_of_finiteDimensional.comp hval
-        have hfz : Continuous
-            (fun tx : unitInterval × {u : U | u.1 ≠ 0} ↦ f tx.2.1.1) := hf.comp hval
-        have ht : Continuous
-            (fun tx : unitInterval × {u : U | u.1 ≠ 0} ↦ ((tx.1 : ℝ) : ℂ)) :=
-          Complex.continuous_ofReal.comp (continuous_subtype_val.comp continuous_fst)
-        exact hAz.add (ht.smul (hfz.sub hAz))
+      continuous_toFun := by fun_prop
       map_zero_left := fun z ↦ by
         apply Subtype.ext
         change A.mulVec z.1.1 + (((0 : unitInterval) : ℝ) : ℂ) •
@@ -366,7 +344,7 @@ theorem relativeHomologyMap_complexDifferentiable_standardComplexLocalClass
     (hf0 : f 0 = 0) (hf_ne : ∀ z, z ≠ 0 → f z ≠ 0)
     (hf' : HasFDerivAt f
       (A.mulVecLin.toContinuousLinearMap : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) 0) :
-    relativeHomologyMap ℚ (2 * d) (complexPuncturedPairMapOf d f hf hf0 hf_ne)
+    relativeHomologyMap ℚ (2 * d) (complexPuncturedPairMapOf d f hf hf_ne)
         (standardComplexLocalClass d) =
       standardComplexLocalClass d := by
   let f' : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
@@ -379,10 +357,10 @@ theorem relativeHomologyMap_complexDifferentiable_standardComplexLocalClass
   have hline' : ∀ (t : unitInterval) (z : Fin d → ℂ), z ∈ U → z ≠ 0 →
       A.mulVec z + (((t : ℝ) : ℂ) • (f z - A.mulVec z)) ≠ 0 := by
     simpa only [hf'_apply] using hline
-  let H := complexStraightLineNeighborhoodPairHomotopy d A hA f hf hf0 hf_ne U hline'
+  let H := complexStraightLineNeighborhoodPairHomotopy d A hA f hf hf_ne U hline'
   have hmaps := relativeHomologyMap_eq_of_neighborhood_pairHomotopy d (2 * d)
     (complexMatrixPuncturedPairMap d A hA)
-    (complexPuncturedPairMapOf d f hf hf0 hf_ne) U hU h0U H
+    (complexPuncturedPairMapOf d f hf hf_ne) U hU h0U H
   rw [← hmaps]
   exact relativeHomologyMap_complexMatrix_standardComplexLocalClass d A hA
 
@@ -396,7 +374,7 @@ theorem relativeHomologyMap_complexDifferentiable_standardComplexLocalClass_of_i
     (hf' : HasFDerivAt f
       (A.mulVecLin.toContinuousLinearMap : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) 0) :
     relativeHomologyMap ℚ (2 * d)
-        (complexPuncturedPairMapOf d f hf hf0 (fun z hz ↦ by
+        (complexPuncturedPairMapOf d f hf (fun z hz ↦ by
           intro hfz
           apply hz
           apply hf_inj

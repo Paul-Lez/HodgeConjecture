@@ -15,8 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiCohomologyWithSupportComparison
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiCohomologyWithSupportComparison
 /-!
 # Naturality of the supported Betti comparison
 
@@ -306,9 +305,9 @@ variable (X : Over (Spec ↧ℂ))
 lemma analyticComplement_contractibleOpenBasis
     [IsIntegral X.left] [Smooth X.hom]
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    ∀ (x : TopCat.of (AnalyticComplement X Z))
-      (V : Opens (TopCat.of (AnalyticComplement X Z))), x ∈ V →
-      ∃ (W : Opens (TopCat.of (AnalyticComplement X Z))),
+    ∀ (x : TopCat.of ↥Zᶜ)
+      (V : Opens (TopCat.of ↥Zᶜ)), x ∈ V →
+      ∃ (W : Opens (TopCat.of ↥Zᶜ)),
         x ∈ W ∧ ContractibleSpace W ∧ W ≤ V :=
   contractibleOpenBasis_of_isOpenEmbedding
     (analyticComplementInclusion X Z)
@@ -319,7 +318,7 @@ lemma complementConstantsToSingularCochain_quasiIso
     [IsIntegral X.left] [Smooth X.hom]
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (constantsToSingularCochainSheafComplex ℚ
-      (TopCat.of (AnalyticComplement X Z))) :=
+      (TopCat.of ↥Zᶜ)) :=
   constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ
     (analyticComplement_contractibleOpenBasis X Z hZ)
 
@@ -332,14 +331,14 @@ def complementConstantRationalSingleComplex
 def complementSingularCochainSheafComplex
     (Z : Set (ComplexPoint X)) :
     CochainComplex (AnalyticComplementAdditiveSheaf X Z) ℕ :=
-  singularCochainSheafComplex ℚ (TopCat.of (AnalyticComplement X Z))
+  singularCochainSheafComplex ℚ (TopCat.of ↥Zᶜ)
 
 def complementConstantsToSingularCochain
     (Z : Set (ComplexPoint X)) :
     complementConstantRationalSingleComplex X Z ⟶
       complementSingularCochainSheafComplex X Z :=
   constantsToSingularCochainSheafComplex ℚ
-    (TopCat.of (AnalyticComplement X Z))
+    (TopCat.of ↥Zᶜ)
 
 def complementConstantsToSingularCochainInt
     (Z : Set (ComplexPoint X)) :
@@ -355,7 +354,7 @@ lemma complementConstantsToSingularCochainInt_mono
     (Z : Set (ComplexPoint X)) :
     Mono (complementConstantsToSingularCochainInt X Z) :=
   constantsToSingularCochainComplexInt_mono ℚ
-    (TopCat.of (AnalyticComplement X Z))
+    (TopCat.of ↥Zᶜ)
 
 lemma complementConstantsToSingularCochainInt_quasiIso
     [IsIntegral X.left] [Smooth X.hom]

@@ -11,4 +11,16 @@ Chris Birkbeck, and Dean Cureton, principally from pull requests #49, #103,
 and #185 and from the files and revisions identified in individual Lean
 module docstrings. Those source-level notices are retained.
 
+This distribution also contains material adapted from the Apache-2.0-licensed
+mathlib4 project:
+
+  https://github.com/leanprover-community/mathlib4
+
+The adapted material is a block copied from
+Mathlib/RingTheory/NoetherNormalization.lean, by Riccardo Brasca, Sihan Su,
+Wan Lin, and Xiaoyang Su, reproduced in
+HodgeConjecture/Mathlib/Algebra/PolynomialCatenary.lean. The source-level
+notice in that file's module docstring identifies the copied section, the
+upstream copyright line, and the changes made to it.
+
 This NOTICE is informational. The licensing terms are in LICENSE.

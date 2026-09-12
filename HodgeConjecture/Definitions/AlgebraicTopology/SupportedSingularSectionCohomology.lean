@@ -4,18 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSectionRestrictionCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSectionRestrictionCone
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularFlasqueSupportModel
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularCochainOpenCone
-public import HodgeConjecture.Definitions.AlgebraicTopology.FlattenedSupportLocalHomology
-
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainOpenCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.FlattenedSupportLocalHomology
 /-!
-# Actual supported singular-section cohomology on arbitrary opens
+# Supported singular-section cohomology on arbitrary opens
 
-The actual kernel of restriction on singular cochain sheaves is compared to the literal
-relative singular pair on an arbitrary open neighborhood. The construction composes the
-proved flasque kernel/cone comparison, canonical grading comparison, and the actual
-sheafification-unit cone comparison. It assumes no local purity or orientation theorem.
+The kernel of restriction on singular cochain sheaves is compared to the relative singular
+pair on an arbitrary open neighborhood. The construction composes the flasque kernel/cone
+comparison, the canonical grading comparison, and the sheafification-unit cone comparison.
 -/
 
 @[expose] public noncomputable section
@@ -75,7 +73,8 @@ def supportedRationalSingularSectionCohomologyEquivSupportComplement
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ) ≃+
         RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n :=
   (supportedRationalSingularSectionCohomologyEquivRelative X ⟨Sᶜ, hS.isOpen_compl⟩ V n).trans
-    (((relativeHomologyFunctor ℚ n).mapIso
-      (openIntersectionPairIsoSupportComplement X S hS V).symm).toLinearEquiv.dualMap.toAddEquiv)
+    (((HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.up ℕ) n).mapIso
+      (HomologicalComplex.linearDualIso ((relativeChainFunctor ℚ).mapIso
+        (openIntersectionPairIsoSupportComplement X S hS V).symm))).toLinearEquiv.toAddEquiv)
 
 end AlgebraicTopology.Singular

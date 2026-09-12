@@ -15,12 +15,13 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.AlgebraicCycleSupport
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothComplexCoordinates
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
+import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentNormalGeometry
 
@@ -129,9 +130,9 @@ lemma orderKrullDim_cycleComponent_eq_sub_of_le_two
     ENat.natCast_sub d p
   exact congrArg (fun n : ℕ∞ ↦ (↑n : WithBot ℕ∞)) hcast.symm
 
-/-- A closed point of a zero-dimensional cycle component has coheight zero in the component. -/
-lemma coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
-    (x : X) (z : cycleComponent X x) (_hz : IsClosed {z})
+/-- A point of a zero-dimensional cycle component has coheight zero in the component. -/
+lemma coheight_eq_zero_of_cycleComponent_orderKrullDim_eq_zero
+    (x : X) (z : cycleComponent X x)
     (hdim : Order.krullDim (cycleComponent X x) =
       (↑(0 : ℕ∞) : WithBot ℕ∞)) :
     Order.coheight z = 0 := by
@@ -215,8 +216,8 @@ lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
     lia
   rcases hcases with h00 | h10 | h11 | h20 | h21 | h22
   · obtain ⟨rfl, rfl⟩ := h00
-    exact coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
-      x z.underlying hzclosed
+    exact coheight_eq_zero_of_cycleComponent_orderKrullDim_eq_zero
+      x z.underlying
         (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
           (f := X.hom) (d := 0) x hx)
   · obtain ⟨rfl, rfl⟩ := h10
@@ -225,13 +226,13 @@ lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
         (orderKrullDim_cycleComponent_eq_one_of_coheight_succ_eq_dimension
           (f := X.hom) (d := 1) (p := 0) x hx rfl)
   · obtain ⟨rfl, rfl⟩ := h11
-    exact coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
-      x z.underlying hzclosed
+    exact coheight_eq_zero_of_cycleComponent_orderKrullDim_eq_zero
+      x z.underlying
         (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
           (f := X.hom) (d := 1) x hx)
   · obtain ⟨rfl, rfl⟩ := h20
     have hxgeneric : x = genericPoint X.left :=
-      CodimensionCycle.eq_genericPoint_of_coheight_zero x hx
+      eq_genericPoint_of_coheight_zero x hx
     subst x
     let e : cycleComponent X.left (genericPoint X.left) ≃o X.left :=
       (cycleComponentOrderIsoIic X.left (genericPoint X.left)).trans OrderIso.IicTop
@@ -256,8 +257,8 @@ lemma cycleComponent_closedPoint_coheight_eq_sub_of_le_two
         (orderKrullDim_cycleComponent_eq_one_of_coheight_succ_eq_dimension
           (f := X.hom) (d := 2) (p := 1) x hx rfl)
   · obtain ⟨rfl, rfl⟩ := h22
-    exact coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
-      x z.underlying hzclosed
+    exact coheight_eq_zero_of_cycleComponent_orderKrullDim_eq_zero
+      x z.underlying
         (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
           (f := X.hom) (d := 2) x hx)
 namespace CycleComponentSeparateLocalCoordinates
@@ -401,8 +402,8 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_of_coheight_eq_dimension
     (hx : Order.coheight x = d) :
     Nonempty (CycleComponentSeparateLocalCoordinates X x d 0) :=
   nonempty_cycleComponentSeparateLocalCoordinates_of_closedPoint_coheight X x d 0 fun z ↦
-    coheight_eq_zero_of_isClosed_of_cycleComponent_orderKrullDim_eq_zero
-      x z.underlying (cycleComponent_complexPoint_underlying_isClosed X x z)
+    coheight_eq_zero_of_cycleComponent_orderKrullDim_eq_zero
+      x z.underlying
         (orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
           (f := X.hom) (d := d) x hx)
 

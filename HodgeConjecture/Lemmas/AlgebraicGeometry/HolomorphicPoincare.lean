@@ -15,9 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AnalyticDifferentialForms
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.HolomorphicPoincare
-public import HodgeConjecture.Lemmas.Analysis.NormedSpace.WedgeCovectors
+public import HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors
 
 import Mathlib.LinearAlgebra.ExteriorAlgebra.OfAlternating
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
@@ -43,71 +43,6 @@ open CategoryTheory TopologicalSpace
 open scoped Manifold
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
-
-/-- Restricting a holomorphic function does not change its value in a fixed chart. -/
-lemma chartSection_holomorphicRestrictionAlgHom
-    [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X)
-    (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
-    (hy : y ∈ chartSectionDomain X d V z) :
-    chartSection X d V z (holomorphicRestrictionAlgHom X d i f) y =
-      chartSection X d U z f y := by
-  have hyU : y ∈ chartSectionDomain X d U z :=
-    ⟨hy.1, leOfHom i.unop hy.2⟩
-  rw [chartSection_apply_of_mem X d V z _ hy,
-    chartSection_apply_of_mem X d U z _ hyU]
-  rfl
-
-/-- Restricting a holomorphic function does not change its derivative in a fixed chart. -/
-lemma chartSectionDifferential_holomorphicRestrictionAlgHom
-    [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X)
-    (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
-    (hy : y ∈ chartSectionDomain X d V z) :
-    chartSectionDifferential X d V z
-        (holomorphicRestrictionAlgHom X d i f) y =
-      chartSectionDifferential X d U z f y := by
-  have hyU : y ∈ chartSectionDomain X d U z :=
-    ⟨hy.1, leOfHom i.unop hy.2⟩
-  have heq : Filter.EventuallyEq (nhds y)
-      (chartSection X d V z
-        (holomorphicRestrictionAlgHom X d i f))
-      (chartSection X d U z f) := by
-    filter_upwards [(isOpen_chartSectionDomain X d V z).mem_nhds hy] with w hw
-    exact chartSection_holomorphicRestrictionAlgHom X d i z f hw
-  rw [chartSectionDifferential, chartSectionDifferential,
-    fderivWithin_of_isOpen (isOpen_chartSectionDomain X d V z) hy,
-    fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z) hyU]
-  exact heq.fderiv_eq
-
-/-- Fixed-chart evaluation of a differential form commutes with restriction. -/
-lemma chartEvaluation_formRestriction
-    [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X) (p : ℕ)
-    (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
-    {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d V z) :
-    chartEvaluation X d V z p (formRestriction X d i p θ) y =
-      chartEvaluation X d U z p θ y := by
-  have hyU : y ∈ chartSectionDomain X d U z := ⟨hy.1, leOfHom i.unop hy.2⟩
-  induction θ using Algebra.DeRham.mk_induction with
-  | mk a₀ v =>
-      rw [formRestriction_mk, chartEvaluation_mk X d V z p _ _ hy,
-        chartEvaluation_mk X d U z p a₀ v hyU]
-      simp only [chartGeneratorEvaluation]
-      rw [chartSection_holomorphicRestrictionAlgHom X d i z a₀ hy]
-      have hd :
-          (fun j ↦ chartSectionDifferential X d V z
-            (holomorphicRestrictionAlgHom X d i (v j)) y) =
-          (fun j ↦ chartSectionDifferential X d U z (v j) y) := by
-        funext j
-        exact chartSectionDifferential_holomorphicRestrictionAlgHom X d i z (v j) hy
-      rw [hd]
-  | zero => simp
-  | add a b ha hb => simp [ha, hb]
-  | smul c a ha => simp [ha]
 
 /-- For the analytic charted-space instance, `chartAt` is the algebraically constructed local
 chart. -/
@@ -208,35 +143,6 @@ lemma chartSectionDifferential_fixedChartTransition
     heq.fderiv_eq]
   exact fderiv_fun_comp y hf hT
 
-/-- Wedges of covectors commute with pullback along a continuous linear map. -/
-lemma wedgeCovectors_compContinuousLinearMap
-    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
-    [NormedAddCommGroup F] [NormedSpace ℂ F]
-    (p : ℕ) (L : Fin p → F →L[ℂ] ℂ) (T : E →L[ℂ] F) :
-    wedgeCovectors E p (fun i ↦ (L i).comp T) =
-      (wedgeCovectors F p L).compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [wedgeCovectors_apply_eq_det, ContinuousAlternatingMap.compContinuousLinearMap_apply,
-    wedgeCovectors_apply_eq_det]
-  rfl
-
-lemma add_compContinuousLinearMap
-    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
-    [NormedAddCommGroup F] [NormedSpace ℂ F]
-    {p : ℕ} (a b : F [⋀^Fin p]→L[ℂ] ℂ) (T : E →L[ℂ] F) :
-    (a + b).compContinuousLinearMap T =
-      a.compContinuousLinearMap T + b.compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
-
-lemma smul_compContinuousLinearMap
-    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
-    [NormedAddCommGroup F] [NormedSpace ℂ F]
-    {p : ℕ} (c : ℂ) (a : F [⋀^Fin p]→L[ℂ] ℂ) (T : E →L[ℂ] F) :
-    (c • a).compContinuousLinearMap T = c • a.compContinuousLinearMap T := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
-
 /-- Evaluation of a differential form is covariant under a holomorphic fixed-chart
 transition. -/
 lemma chartEvaluation_fixedChartTransition
@@ -283,9 +189,9 @@ lemma chartEvaluation_fixedChartTransition
   | smul c a ha =>
       simp only [chartEvaluation_smul, Pi.smul_apply, ha, smul_compContinuousLinearMap]
 
-/-- Vanishing throughout one fixed chart detects a restriction-stable analytic relation, provided
+/-- Vanishing throughout one fixed chart detects an analytic relation, provided
 the open set lies in the source of that chart. -/
-lemma mem_restrictionStableAnalyticKernel_of_chartEvaluation_eq_zero
+lemma mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     (z : ComplexPoint X) (p : ℕ)
@@ -295,17 +201,10 @@ lemma mem_restrictionStableAnalyticKernel_of_chartEvaluation_eq_zero
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
     (hθ : Set.EqOn (chartEvaluation X d U z p θ) 0
       (chartSectionDomain X d U z)) :
-    θ ∈ restrictionStableAnalyticKernel X d U p := by
-  rw [restrictionStableAnalyticKernel]
-  simp only [Submodule.mem_iInf, Submodule.mem_comap]
-  intro V i
-  apply (mem_chartEvaluationKernel_iff X d V p _).2
+    θ ∈ chartEvaluationKernel X d U p := by
+  apply (mem_chartEvaluationKernel_iff X d U p _).2
   intro z' y hy
-  rw [chartEvaluation_formRestriction X d i z' p θ hy]
-  have hyU :
-      (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
-        ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) :=
-    leOfHom i.unop hy.2
+  have hyU := hy.2
   have hyz :
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
         (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source :=
@@ -450,134 +349,6 @@ lemma chartSectionDifferential_chartCoordinateSection
     fderivWithin_of_isOpen (isOpen_chartSectionDomain X d U z) hy]
   exact (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin d ↦ ℂ) i).hasFDerivAt.fderiv
 
-/-- The product of a tuple of coordinate covectors. -/
-def covectorProduct (d p : ℕ) (I : Fin p → Fin d) :
-    ContinuousMultilinearMap ℂ (fun _ : Fin p ↦ Fin d → ℂ) ℂ :=
-  (ContinuousMultilinearMap.mkPiAlgebra ℂ (Fin p) ℂ).compContinuousLinearMap
-    (fun j ↦ ContinuousLinearMap.proj (I j))
-
-@[simp] lemma covectorProduct_apply (d p : ℕ) (I : Fin p → Fin d)
-    (v : Fin p → Fin d → ℂ) :
-    covectorProduct d p I v = ∏ j, v j (I j) := by
-  simp [covectorProduct, ContinuousMultilinearMap.compContinuousLinearMap_apply,
-    ContinuousMultilinearMap.mkPiAlgebra_apply]
-
-/-- A multilinear form on a finite product is the sum of its coordinate monomials. -/
-lemma multilinear_eq_sum_covectorProduct (d p : ℕ)
-    (A : ContinuousMultilinearMap ℂ (fun _ : Fin p ↦ Fin d → ℂ) ℂ) :
-    A = ∑ I : Fin p → Fin d,
-      A (fun j ↦ Pi.single (I j) 1) • covectorProduct d p I := by
-  classical
-  apply ContinuousMultilinearMap.toMultilinearMap_injective
-  change A.toMultilinearMap =
-    ContinuousMultilinearMap.toMultilinearMapLinear
-      (R' := ℂ) (∑ I : Fin p → Fin d,
-        A (fun j ↦ Pi.single (I j) 1) • covectorProduct d p I)
-  rw [_root_.map_sum]
-  simp_rw [_root_.map_smul]
-  refine Module.Basis.ext_multilinear (fun _ : Fin p ↦ Pi.basisFun ℂ (Fin d)) fun v ↦ ?_
-  simp only [_root_.sum_apply, _root_.smul_apply, smul_eq_mul]
-  rw [Finset.sum_eq_single v]
-  · simp [Pi.basisFun_apply]
-  · intro I hI hne
-    change A (fun j ↦ Pi.single (I j) 1) *
-      covectorProduct d p I (fun j ↦ Pi.basisFun ℂ (Fin d) (v j)) = 0
-    rw [covectorProduct_apply]
-    obtain ⟨j, hj⟩ := Function.ne_iff.mp hne
-    have hz : (Pi.basisFun ℂ (Fin d) (v j)) (I j) = 0 := by
-      simp [Pi.basisFun_apply, hj.symm]
-    rw [Finset.prod_eq_zero (Finset.mem_univ j) hz, mul_zero]
-  · simp
-
-/-- Alternatizing a coordinate monomial gives the wedge of its coordinate covectors. -/
-lemma alternatization_covectorProduct (d p : ℕ) (I : Fin p → Fin d) :
-    ContinuousMultilinearMap.alternatization (covectorProduct d p I) =
-      wedgeCovectors (Fin d → ℂ) p (fun j ↦ ContinuousLinearMap.proj (I j)) := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  rw [ContinuousMultilinearMap.alternatization_apply_apply,
-    wedgeCovectors_apply_eq_det, ← Matrix.det_transpose, Matrix.det_apply]
-  refine Finset.sum_congr rfl fun σ _ ↦ ?_
-  rw [covectorProduct_apply]
-  congr 1
-
-lemma alternatization_smul (d p : ℕ) (c : ℂ)
-    (M : ContinuousMultilinearMap ℂ (fun _ : Fin p ↦ Fin d → ℂ) ℂ) :
-    ContinuousMultilinearMap.alternatization (c • M) =
-      c • ContinuousMultilinearMap.alternatization M := by
-  refine ContinuousAlternatingMap.ext fun v ↦ ?_
-  simp only [ContinuousMultilinearMap.alternatization_apply_apply, _root_.smul_apply,
-    ContinuousAlternatingMap.smul_apply]
-  rw [Finset.smul_sum]
-  refine Finset.sum_congr rfl fun σ _ ↦ ?_
-  rw [smul_comm]
-
-lemma alternatization_toContinuousMultilinearMap (d p : ℕ)
-    (A : (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) :
-    ContinuousMultilinearMap.alternatization A.toContinuousMultilinearMap =
-      (p.factorial : ℂ) • A := by
-  apply ContinuousAlternatingMap.toAlternatingMap_injective
-  rw [ContinuousMultilinearMap.alternatization_apply_toAlternatingMap]
-  change MultilinearMap.alternatization A.toAlternatingMap.toMultilinearMap =
-    (p.factorial : ℂ) • A.toAlternatingMap
-  simpa only [Fintype.card_fin, Nat.cast_smul_eq_nsmul] using
-    AlternatingMap.coe_alternatization A.toAlternatingMap
-
-/-- A continuous alternating form on `Fin d → ℂ` is the finite coordinate-wedge expansion
-of its values on the standard coordinate vectors. -/
-lemma alternating_eq_sum_wedgeCovectors (d p : ℕ)
-    (A : (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) :
-    A = ∑ I : Fin p → Fin d,
-      ((p.factorial : ℂ)⁻¹ * A (fun j ↦ Pi.single (I j) 1)) •
-        wedgeCovectors (Fin d → ℂ) p
-          (fun j ↦ ContinuousLinearMap.proj (I j)) := by
-  classical
-  have hM := multilinear_eq_sum_covectorProduct d p A.toContinuousMultilinearMap
-  have hAlt := congrArg ContinuousMultilinearMap.alternatization hM
-  rw [alternatization_toContinuousMultilinearMap d p A] at hAlt
-  simp only [_root_.map_sum] at hAlt
-  simp_rw [alternatization_smul, alternatization_covectorProduct] at hAlt
-  change (p.factorial : ℂ) • A =
-    ∑ I : Fin p → Fin d, A (fun j ↦ Pi.single (I j) 1) •
-      wedgeCovectors (Fin d → ℂ) p
-        (fun j ↦ ContinuousLinearMap.proj (I j)) at hAlt
-  have hfac : (p.factorial : ℂ) ≠ 0 := by exact_mod_cast Nat.factorial_ne_zero p
-  calc
-    A = (p.factorial : ℂ)⁻¹ • ((p.factorial : ℂ) • A) := by
-      rw [← mul_smul, inv_mul_cancel₀ hfac, one_smul]
-    _ = (p.factorial : ℂ)⁻¹ • ∑ I : Fin p → Fin d,
-        A (fun j ↦ Pi.single (I j) 1) •
-          wedgeCovectors (Fin d → ℂ) p
-            (fun j ↦ ContinuousLinearMap.proj (I j)) := by rw [hAlt]
-    _ = _ := by
-      rw [Finset.smul_sum]
-      exact Finset.sum_congr rfl fun I _ ↦ smul_smul _ _ _
-
-/-- Evaluation at a fixed tuple is a continuous linear functional on continuous alternating
-forms. -/
-def alternatingFormEvaluation (d p : ℕ) (v : Fin p → Fin d → ℂ) :
-    ((Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) →L[ℂ] ℂ :=
-  let L : ((Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) →ₗ[ℂ] ℂ :=
-    { toFun := fun A ↦ A v
-      map_add' := fun A B ↦ by simp
-      map_smul' := fun a A ↦ by simp [ContinuousAlternatingMap.smul_apply] }
-  LinearMap.mkContinuous L (∏ j, ‖v j‖) (fun A ↦ by
-    change ‖A v‖ ≤ (∏ j, ‖v j‖) * ‖A‖
-    simpa only [mul_comm] using A.le_opNorm v)
-
-/-- The coefficient of an alternating form field in its finite coordinate-wedge expansion. -/
-def coordinateCoefficient (d p : ℕ)
-    (θ : (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)
-    (I : Fin p → Fin d) (y : Fin d → ℂ) : ℂ :=
-  (p.factorial : ℂ)⁻¹ * θ y (fun j ↦ Pi.single (I j) 1)
-
-lemma analyticOnNhd_coordinateCoefficient (d p : ℕ)
-    (θ : (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)
-    {s : Set (Fin d → ℂ)} (hθ : AnalyticOnNhd ℂ θ s) (I : Fin p → Fin d) :
-    AnalyticOnNhd ℂ (coordinateCoefficient d p θ I) s := by
-  let e : Fin p → Fin d → ℂ := fun j ↦ Pi.single (I j) 1
-  exact ((alternatingFormEvaluation d p e).comp_analyticOnNhd hθ).const_smul
-    (c := (p.factorial : ℂ)⁻¹)
-
 /-- A finite differential form whose fixed-chart evaluation is a given analytic
 alternating-form field. -/
 def formOfAnalyticField [SmoothOfRelativeDimension d X.hom]
@@ -626,7 +397,7 @@ lemma chartEvaluation_formOfAnalyticField
             (analyticOnNhd_coordinateCoefficient d p θ hθ I))
           fun j ↦ chartCoordinateSection X d U z hsource (I j)) =
       ((p.factorial : ℂ)⁻¹ * θ y fun j ↦ Pi.single (I j) 1) •
-        wedgeCovectors (Fin d → ℂ) p fun j ↦ ContinuousLinearMap.proj (I j) := by
+        wedgeCovectors ℂ (Fin d → ℂ) p fun j ↦ ContinuousLinearMap.proj (I j) := by
     intro I
     rw [show ((p.factorial : ℂ)⁻¹ * θ y fun j ↦ Pi.single (I j) 1) =
       coordinateCoefficient d p θ I y from rfl]
@@ -741,7 +512,7 @@ lemma analyticOnNhd_chartEvaluation [SmoothOfRelativeDimension d X.hom]
   let s := chartSectionDomain X d U z
   let e (I : Fin p → Fin d) : Fin p → Fin d → ℂ := fun j ↦ Pi.single (I j) 1
   let W (I : Fin p → Fin d) :=
-    wedgeCovectors (Fin d → ℂ) p (fun j ↦ ContinuousLinearMap.proj (I j))
+    wedgeCovectors ℂ (Fin d → ℂ) p (fun j ↦ ContinuousLinearMap.proj (I j))
   have hc (I : Fin p → Fin d) : AnalyticOnNhd ℂ
       (fun y ↦ (p.factorial : ℂ)⁻¹ * chartEvaluation X d U z p θ y (e I)) s := by
     convert (analyticOnNhd_chartEvaluation_apply X d U z p θ (e I)).const_smul
@@ -903,20 +674,10 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
     intro y hy
     have hyV : y ∈ chartSectionDomain X d V x := hdomV.symm ▸ hy
-    have hkernel : Algebra.DeRham.differential ℂ
-        (OpenHolomorphicFunctions X d V) (p + 1) aV ∈
-        restrictionStableAnalyticKernel X d V (p + 2) := by
-      rw [← holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
-      exact hrelV
     have hchart : chartEvaluation X d V x (p + 2)
         (Algebra.DeRham.differential ℂ
           (OpenHolomorphicFunctions X d V) (p + 1) aV) y = 0 := by
-      have hk := hkernel
-      rw [restrictionStableAnalyticKernel] at hk
-      simp only [Submodule.mem_iInf, Submodule.mem_comap] at hk
-      specialize hk V (𝟙 V)
-      rw [formRestriction_id, LinearMap.id_apply] at hk
-      exact (mem_chartEvaluationKernel_iff X d V (p + 2) _).1 hk x y hyV
+      exact (mem_chartEvaluationKernel_iff X d V (p + 2) _).1 hrelV x y hyV
     rw [chartEvaluation_differential X d V x (p + 1) aV hyV] at hchart
     have hwithin : extDerivWithin η (chartSectionDomain X d V x) y =
         extDeriv η y := by
@@ -937,8 +698,8 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
       (OpenHolomorphicFunctions X d W) p b) =
     Submodule.Quotient.mk (formRestriction X d (i ≫ j) (p + 1) a)
   apply (Submodule.Quotient.eq (holomorphicFormRelations X d W (p + 1))).2
-  rw [holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
-  apply mem_restrictionStableAnalyticKernel_of_chartEvaluation_eq_zero
+  rw [holomorphicFormRelations_eq_chartEvaluationKernel]
+  apply mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     X d W x (p + 1) hsourceW
   intro y hy
   rw [chartEvaluation_sub, Pi.sub_apply,
@@ -968,7 +729,7 @@ lemma chartEvaluation_ofConstant [SmoothOfRelativeDimension d X.hom]
   rw [Algebra.DeRham.ofConstant_apply, Algebra.DeRham.ofFunction_apply,
     chartEvaluation_mk X d U x 0 _ _ hy]
   simp only [chartGeneratorEvaluation, chartSection_apply_of_mem X d U x _ hy]
-  change c • wedgeCovectors (Fin d → ℂ) 0 Fin.elim0 = _
+  change c • wedgeCovectors ℂ (Fin d → ℂ) 0 Fin.elim0 = _
   ext v
   simp [wedgeCovectors]
 
@@ -1007,20 +768,10 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r) := by
     intro y hy
     have hyV : y ∈ chartSectionDomain X d V x := hdomV.symm ▸ hy
-    have hkernel : Algebra.DeRham.differential ℂ
-        (OpenHolomorphicFunctions X d V) 0 aV ∈
-        restrictionStableAnalyticKernel X d V 1 := by
-      rw [← holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
-      exact hrelV
     have hchart : chartEvaluation X d V x 1
         (Algebra.DeRham.differential ℂ
           (OpenHolomorphicFunctions X d V) 0 aV) y = 0 := by
-      have hk := hkernel
-      rw [restrictionStableAnalyticKernel] at hk
-      simp only [Submodule.mem_iInf, Submodule.mem_comap] at hk
-      specialize hk V (𝟙 V)
-      rw [formRestriction_id, LinearMap.id_apply] at hk
-      exact (mem_chartEvaluationKernel_iff X d V 1 _).1 hk x y hyV
+      exact (mem_chartEvaluationKernel_iff X d V 1 _).1 hrelV x y hyV
     rw [chartEvaluation_differential X d V x 0 aV hyV] at hchart
     have hwithin : extDerivWithin η (chartSectionDomain X d V x) y =
         extDeriv η y := by
@@ -1035,8 +786,8 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
   change Submodule.Quotient.mk aV = Submodule.Quotient.mk
     (Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d V) c)
   apply (Submodule.Quotient.eq (holomorphicFormRelations X d V 0)).2
-  rw [holomorphicFormRelations_eq_restrictionStableAnalyticKernel]
-  apply mem_restrictionStableAnalyticKernel_of_chartEvaluation_eq_zero
+  rw [holomorphicFormRelations_eq_chartEvaluationKernel]
+  apply mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     X d V x 0 hsourceV
   intro y hy
   rw [chartEvaluation_sub, Pi.sub_apply]

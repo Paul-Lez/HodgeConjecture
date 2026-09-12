@@ -60,19 +60,18 @@ def shiftedLiftShortComplex : S.X₁⟦(1 : ℤ)⟧ ⟶ mappingCone S.g :=
     mappingCone.map (mappingCone.inr S.f) S.g (𝟙 _)
       (mappingCone.descShortComplex S) (by simp)
 
-lemma quasiIso_shiftedLiftShortComplex (hS : S.ShortExact) :
-    QuasiIso (shiftedLiftShortComplex S) := by
-  have := mappingCone.quasiIso_descShortComplex hS
-  have := mappingCone.quasiIso_map_of_quasiIso
-    (mappingCone.inr S.f) S.g (𝟙 _) (mappingCone.descShortComplex S) (by simp)
-  dsimp only [shiftedLiftShortComplex]
-  infer_instance
-
 /-- Canonical comparison from the first term of a short complex to the homotopy
 fiber of its second map. -/
 abbrev liftShortComplex : S.X₁ ⟶ mappingCocone S.g :=
   (shiftFunctorCompIsoId _ (1 : ℤ) (-1) (by simp)).inv.app S.X₁ ≫
     (shiftedLiftShortComplex S)⟦(-1 : ℤ)⟧'
+
+attribute [local instance] mappingCone.quasiIso_map_of_quasiIso in
+lemma quasiIso_shiftedLiftShortComplex (hS : S.ShortExact) :
+    QuasiIso (shiftedLiftShortComplex S) := by
+  have := mappingCone.quasiIso_descShortComplex hS
+  rw [shiftedLiftShortComplex]
+  infer_instance
 
 lemma quasiIso_liftShortComplex (hS : S.ShortExact) :
     QuasiIso (liftShortComplex S) := by

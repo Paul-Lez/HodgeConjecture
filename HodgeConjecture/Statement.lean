@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Coniveau
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleClassSpan
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
 
 /-!
 # The Hodge conjecture
@@ -26,14 +26,6 @@ This file states (but does not prove!) the Hodge conjecture.
 The Hodge conjecture says that, for every nonsingular complex projective variety `X` and natural
 number `p`, every rational Hodge class of degree `2p` on `X` is a rational linear combination of
 classes of algebraic subvarieties of `X` of codimension `p`.
-
-## TODO
-
-The conjecture is currently stated using the rational span of the constructed component classes,
-which are the values of the constructed cycle-class map on individual components. Once that map
-is proved to kill principal-divisor relations, it should be descended to the rational Chow group.
-After separately proving that its values are Hodge classes, the conjecture can equivalently be
-restated as surjectivity onto the rational Hodge classes.
 
 ## References
 
@@ -46,8 +38,8 @@ open CategoryTheory AlgebraicGeometry ComplexPoint
 
 For every nonsingular complex projective variety `X` and natural number `p`, every rational Hodge
 class of degree `2p` on `X` is a rational linear combination of classes of algebraic subvarieties of
-`X` of codimension `p`. The algebraic subspace is the span of the actual constructed component
-classes, not a subspace defined by quantifying over generators of a supported-cohomology image. -/
+`X` of codimension `p`. The algebraic subspace is `algebraicCycleClassSpan`, the span of the
+component classes of `CycleComponentSheafClass` indexed by the points of codimension `p`. -/
 @[expose] public def HodgeConjecture : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ),

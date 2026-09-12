@@ -45,7 +45,7 @@ def centeredComplexEmbeddingPair (F : (Fin d → ℂ) → (Fin d → ℂ))
     standardComplexPuncturedPair d ⟶ standardComplexPuncturedPair d :=
   complexPuncturedPairMapOf d (fun w => F (w + v) - F v)
     ((hF.comp (continuous_id.add continuous_const)).sub continuous_const)
-    (by simp) (fun w hw h => hw
+    (fun w hw h => hw
       (add_right_cancel (show w + v = 0 + v by simpa using hFi (sub_eq_zero.mp h))))
 
 /-- An explicit punctured-pair homotopy moving the center from zero to `v`. -/
@@ -56,12 +56,7 @@ def centeredComplexEmbeddingPairHomotopy (F : (Fin d → ℂ) → (Fin d → ℂ
   fst :=
     { toFun := fun tw : unitInterval × (Fin d → ℂ) =>
         F (tw.2 + (tw.1 : ℝ) • v) - F ((tw.1 : ℝ) • v)
-      continuous_toFun := by
-        change Continuous (fun tw : unitInterval × (Fin d → ℂ) =>
-          F (tw.2 + (tw.1 : ℝ) • v) - F ((tw.1 : ℝ) • v))
-        exact (hF.comp (continuous_snd.add
-          ((continuous_subtype_val.comp continuous_fst).smul continuous_const))).sub
-          (hF.comp ((continuous_subtype_val.comp continuous_fst).smul continuous_const))
+      continuous_toFun := by fun_prop
       map_zero_left := fun w : Fin d → ℂ => by
         change F (w + (0 : ℝ) • v) - F ((0 : ℝ) • v) = F (w + 0) - F 0
         simp
@@ -74,11 +69,7 @@ def centeredComplexEmbeddingPairHomotopy (F : (Fin d → ℂ) → (Fin d → ℂ
         apply tw.2.2
         exact add_right_cancel (show tw.2.1 + (tw.1 : ℝ) • v = 0 + (tw.1 : ℝ) • v by
           simpa using hFi (sub_eq_zero.mp h))⟩
-      continuous_toFun := by
-        apply Continuous.subtype_mk
-        exact (hF.comp ((continuous_subtype_val.comp continuous_snd).add
-          ((continuous_subtype_val.comp continuous_fst).smul continuous_const))).sub
-          (hF.comp ((continuous_subtype_val.comp continuous_fst).smul continuous_const))
+      continuous_toFun := by fun_prop
       map_zero_left := fun w => by
         apply Subtype.ext
         change F (w.1 + (0 : ℝ) • v) - F ((0 : ℝ) • v) = F (w.1 + 0) - F 0
@@ -98,6 +89,7 @@ theorem centeredComplexEmbeddingPair_relativeHomologyMap_eq
   ((centeredComplexEmbeddingPairHomotopy d F hF hFi v).congr_relativeHomologyMap n).symm
 
 /-- Global continuity of the radial coordinate compression. -/
+@[fun_prop]
 lemma continuous_complexUnivBall (c : Fin d → ℂ) (r : ℝ) :
     Continuous (OpenPartialHomeomorph.univBall c r : (Fin d → ℂ) → (Fin d → ℂ)) :=
   ((OpenPartialHomeomorph.univBall c r).isOpenEmbedding
@@ -132,6 +124,7 @@ theorem centeredComplexUnivBall_preserves_standardComplexLocalClass
       (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) = L :=
     ContinuousLinearMap.ext (complexMatrixOfContinuousLinearMap_mulVec d L)
   apply relativeHomologyMap_complexDifferentiable_standardComplexLocalClass d A hA
+  case hf0 => simp
   rw [hAL]
   simpa only [add_zero] using
     (hasFDerivAt_univBall_complex d c r hr).sub_const

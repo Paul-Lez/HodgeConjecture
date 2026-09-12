@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Algebra.Homology.DualExact
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularSubdivisionCochainSheaf
+public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularSubdivisionCochainSheaf
 public import Mathlib.Algebra.Category.ModuleCat.Projective
 public import Mathlib.Analysis.Normed.Group.Basic
 public import Mathlib.LinearAlgebra.Dual.Lemmas
@@ -27,8 +27,8 @@ public import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 For a topological pair `A ⊆ X`, restriction of singular cochains is the algebraic dual of
 the inclusion `C_*(A) ⟶ C_*(X)`.  This file proves, without a finite-dimensionality
-hypothesis, that the cohomology in degree `n - 1` of its mapping cone is the algebraic dual of
-`H_n(X, A)`.
+hypothesis, that the cohomology in degree `n - 1` of its mapping cone is `H^n(X, A)`, the
+degree-`n` cohomology of the dual relative cochain complex.
 
 The proof dualizes the degreewise short exact sequence
 `C_*(A) ⟶ C_*(X) ⟶ C_*(X, A)`, extends the resulting cochain complexes by zero to
@@ -54,7 +54,7 @@ def relativeChainShortComplex (X : TopPair.{u}) :
     (subspaceChainMap_relativeChainProjection R X)
 
 /-- The singular-chain map of a topological-pair inclusion is a monomorphism. -/
-lemma relativeChainMap_mono (X : TopPair.{u}) :
+private lemma relativeChainMap_mono (X : TopPair.{u}) :
     Mono ((chainPairFunctor R).obj X).hom := by
   let : Mono X.hom :=
     (TopCat.mono_iff_injective X.hom).mpr X.prop.injective
@@ -63,7 +63,7 @@ lemma relativeChainMap_mono (X : TopPair.{u}) :
   apply Functor.map_mono
 
 /-- Singular chains of a pair form a short exact sequence. -/
-lemma relativeChainShortComplex_shortExact (X : TopPair.{u}) :
+private lemma relativeChainShortComplex_shortExact (X : TopPair.{u}) :
     (relativeChainShortComplex R X).ShortExact := by
   let : Mono ((chainPairFunctor R).obj X).hom := relativeChainMap_mono R X
   exact
@@ -98,7 +98,7 @@ def relativeDualCochainShortComplexNat (X : TopPair.{u}) :
 set_option backward.isDefEq.respectTransparency false in
 /-- Dualizing the singular-chain sequence of a pair gives a short exact sequence of
 nonnegative cochain complexes. -/
-lemma relativeDualCochainShortComplexNat_shortExact (X : TopPair.{u}) :
+private lemma relativeDualCochainShortComplexNat_shortExact (X : TopPair.{u}) :
     (relativeDualCochainShortComplexNat R X).ShortExact := by
   rw [HomologicalComplex.shortExact_iff_degreewise_shortExact]
   intro n
@@ -280,24 +280,6 @@ def relativeDualShiftIsoCochainCone (X : TopPair.{u}) :
         (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)) :=
   Pretriangulated.Triangle.π₃.mapIso (relativeCochainConeTriangleIso R X)
 
-set_option backward.isDefEq.respectTransparency false in
-/-- The cone comparison commutes with the connecting morphism which, in supported
-cohomology, forgets support. -/
-lemma relativeDualShiftIsoCochainCone_hom_comp_mor₃ (X : TopPair.{u}) :
-    (relativeDualShiftIsoCochainCone R X).hom ≫
-        (CochainComplex.mappingCone.triangleh
-          (relativeCochainRestrictionInt R X)).mor₃ =
-      (CochainComplex.trianglehOfDegreewiseSplit
-        (relativeDualCochainShortComplexInt R X)
-        (relativeDualCochainDegreewiseSplitting R X)).rotate.mor₃ := by
-  change (relativeCochainConeTriangleIso R X).hom.hom₃ ≫
-      (CochainComplex.mappingCone.triangleh
-        (relativeCochainRestrictionInt R X)).mor₃ = _
-  rw [← (relativeCochainConeTriangleIso R X).hom.comm₃]
-  unfold relativeCochainConeTriangleIso
-  rw [Pretriangulated.isoTriangleOfIso₁₂_hom_hom₁]
-  simp
-
 /-- Cohomology of the cochain restriction cone in degree `n - 1` is the cohomology in degree
 `n` of the integer-indexed dual relative cochain complex. -/
 def relativeCochainConeHomologyIsoDualRelativeInt (X : TopPair.{u}) (n : ℕ) :
@@ -324,12 +306,8 @@ def relativeCochainConeCohomologyEquiv (X : TopPair.{u}) (n : ℕ) :
     (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)).homology
         ((n : ℤ) - 1) ≃ₗ[R]
       RelativeCohomology R X n :=
-  (relativeCochainConeHomologyIsoDualRelativeInt R X n).toLinearEquiv |>.trans <|
+  (relativeCochainConeHomologyIsoDualRelativeInt R X n).toLinearEquiv.trans
     (((relativeChainFunctor R).obj X).linearDualCochainComplex.extendHomologyIso
-      ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).toLinearEquiv |>.trans <|
-      (ShortComplex.homologyMapIso
-        (HomologicalComplex.linearDualCochainComplexScIso ((relativeChainFunctor R).obj X) n)
-          |>.toLinearEquiv.trans <|
-        (((relativeChainFunctor R).obj X).sc n).linearDualHomologyEquiv)
+      ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).toLinearEquiv
 
 end AlgebraicTopology.Singular

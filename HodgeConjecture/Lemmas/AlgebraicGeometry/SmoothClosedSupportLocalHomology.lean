@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersionNormalCoordinates
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentPurity
-public import HodgeConjecture.Definitions.AlgebraicTopology.FlattenedSupportLocalHomology
-public import HodgeConjecture.Definitions.AlgebraicTopology.RelativeCochainCone
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionNormalCoordinates
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentPurity
+public import HodgeConjecture.Lemmas.AlgebraicTopology.FlattenedSupportLocalHomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeCochainCone
 /-!
 # Constructed local relative homology for smooth closed supports
 
@@ -126,40 +125,27 @@ def smoothClosedSupportNormalClass :
     (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
       (2 * (d - m))).inv_hom_id _
 
-/-- Relative cohomology uses the dual of the same actual homology map. -/
-def smoothClosedSupportRelativeCohomologyEquiv (n : ℕ) :
-    RelativeCohomology ℚ (standardComplexPuncturedPair (d - m)) n ≃ₗ[ℚ]
-      RelativeCohomology ℚ
-        (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n :=
-  (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV n).toLinearEquiv.dualMap
+theorem smoothClosedSupportNormalClass_ne_zero :
+    smoothClosedSupportNormalClass X Y i m d z V hzV ≠ 0 := by
+  intro hzero
+  have h := smoothClosedSupportNormalClass_normalization X Y i m d z V hzV
+  rw [hzero, map_zero] at h
+  exact standardComplexLocalClass_ne_zero_for_chart (d - m) h.symm
 
-/-- The coclass is transported from the normalized dual of the fixed complex normal
-class, along the actual normal-slice equivalence. -/
+/-- The coclass normalized to pair to one with the exact complex normal class. -/
 def smoothClosedSupportNormalCoclass :
     RelativeCohomology ℚ
       (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV)
         (2 * (d - m)) :=
-  smoothClosedSupportRelativeCohomologyEquiv X Y i m d z V hzV
-    (2 * (d - m))
-    (normalizedDual (standardComplexLocalClass (d - m))
-      (standardComplexLocalClass_ne_zero_for_chart (d - m)))
+  normalizedRelativeCoclass (smoothClosedSupportNormalClass X Y i m d z V hzV)
+    (smoothClosedSupportNormalClass_ne_zero X Y i m d z V hzV)
 
 @[simp] theorem smoothClosedSupportNormalCoclass_apply_class :
-    smoothClosedSupportNormalCoclass X Y i m d z V hzV
-      (smoothClosedSupportNormalClass X Y i m d z V hzV) = 1 := by
-  change normalizedDual (standardComplexLocalClass (d - m))
-    (standardComplexLocalClass_ne_zero_for_chart (d - m))
-    ((smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
-      (2 * (d - m))).hom.hom
-      (smoothClosedSupportNormalClass X Y i m d z V hzV)) = 1
-  rw [smoothClosedSupportNormalClass_normalization, normalizedDual_apply_self]
-
-theorem smoothClosedSupportNormalClass_ne_zero :
-    smoothClosedSupportNormalClass X Y i m d z V hzV ≠ 0 := by
-  intro hzero
-  have h := smoothClosedSupportNormalCoclass_apply_class X Y i m d z V hzV
-  rw [hzero, map_zero] at h
-  exact zero_ne_one h
+    relativeCohomologyEquivDualHomology ℚ
+        (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) (2 * (d - m))
+        (smoothClosedSupportNormalCoclass X Y i m d z V hzV)
+      (smoothClosedSupportNormalClass X Y i m d z V hzV) = 1 :=
+  normalizedRelativeCoclass_pairing_self _ _
 
 /-- Generation is deduced from the explicit pair computation, never used to manufacture
 the normal-slice comparison. -/
@@ -178,22 +164,19 @@ theorem smoothClosedSupportNormalCoclass_unique
     (α : RelativeCohomology ℚ
       (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV)
         (2 * (d - m)))
-    (hα : α (smoothClosedSupportNormalClass X Y i m d z V hzV) = 1) :
+    (hα : relativeCohomologyEquivDualHomology ℚ
+        (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) (2 * (d - m)) α
+      (smoothClosedSupportNormalClass X Y i m d z V hzV) = 1) :
     α = smoothClosedSupportNormalCoclass X Y i m d z V hzV :=
-  (normalizedDual_unique
+  normalizedRelativeCoclass_unique
     (smoothClosedSupportNormalClass_ne_zero X Y i m d z V hzV)
-    (span_smoothClosedSupportNormalClass_eq_top X Y i m d z V hzV) α hα).trans
-      (normalizedDual_unique
-        (smoothClosedSupportNormalClass_ne_zero X Y i m d z V hzV)
-        (span_smoothClosedSupportNormalClass_eq_top X Y i m d z V hzV)
-        _ (smoothClosedSupportNormalCoclass_apply_class X Y i m d z V hzV)).symm
+    (span_smoothClosedSupportNormalClass_eq_top X Y i m d z V hzV) α hα
 
 theorem smoothClosedSupportRelativeCohomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * (d - m)) :
-    IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
-      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n)) := by
-  have := ModuleCat.subsingleton_of_isZero
+    IsZero (RelativeCohomology ℚ
+      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n) :=
+  relativeCohomology_isZero ℚ _ n
     (smoothClosedSupportRelativeHomology_isZero_of_ne X Y i m d z V hzV n hn)
-  exact ModuleCat.isZero_of_subsingleton _
 
 /-- The same concentration for the actual singular-cochain restriction cone. The cone
 has its conventional unshifted grading: supported degree `n` is cone degree `n-1`. -/
@@ -211,8 +194,8 @@ the point. This is the local concentration statement needed for a stalkwise puri
 theorem exists_small_open_supportCohomology_concentrated :
     ∃ W : Opens (ComplexPoint X), Point.map i z ∈ W ∧ W ≤ V ∧
       ∀ n : ℕ, n ≠ 2 * (d - m) →
-        IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
-          (neighborhoodSupportComplementPair W (Set.range (Point.map i))) n)) := by
+        IsZero (RelativeCohomology ℚ
+          (neighborhoodSupportComplementPair W (Set.range (Point.map i))) n) := by
   refine ⟨smoothClosedSupportNeighborhood X Y i m d z V hzV,
     mem_smoothClosedSupportNeighborhood X Y i m d z V hzV,
     smoothClosedSupportNeighborhood_le X Y i m d z V hzV, ?_⟩

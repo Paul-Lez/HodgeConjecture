@@ -5,16 +5,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportLocalHomology
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartNeighborhoodOrientation
+public import Other.AlgebraicTopology.ChartNeighborhoodOrientation
 
 /-!
-# The actual zero-dimensional normal parametrization
+# The zero-dimensional normal parametrization
 
-When the source has complex dimension zero, its constructed normal parametrization is
-the ambient complex chart inverse preceded by a translation and an injective complex-
-linear map. The chosen normal-space coordinates therefore retain the standard complex
-orientation; they cannot introduce a sign or an arbitrary rational scaling of the class.
-These formulas concern the general normal-coordinate construction specialized to `m=0`.
+When the source has complex dimension zero, its normal parametrization is the ambient
+complex chart inverse preceded by a translation and an injective complex-linear map. The
+normal-space coordinates therefore carry the standard complex orientation, and the class
+is normalized exactly. These formulas specialize the general normal-coordinate
+construction to `m = 0`.
 -/
 
 @[expose] public noncomputable section

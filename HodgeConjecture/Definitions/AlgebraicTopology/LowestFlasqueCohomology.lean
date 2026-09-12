@@ -9,17 +9,13 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueCohomologyLowerVan
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueCokernelPreservation
 
 /-!
-# The actual lowest-degree cohomology comparison for flasque complexes
+# Lowest-degree cohomology comparison for flasque complexes
 
-For a bounded-below termwise-flasque sheaf complex with cohomology sheaves zero
-below `n`, the canonical map from cohomology of sections on any open `U` to
-sections of its degree-`n` cohomology sheaf is an isomorphism.
-
-The proof shows something stronger: the degree-`n` cohomology presheaf is already
-a sheaf. Flasqueness of the preceding cycles is proved from the stated lower
-vanishing; the resulting cokernel preservation is proved for this actual map.
-The isomorphism is the existing sheafification-unit/counit comparison itself.
-No new group equivalence or exactness of arbitrary sheaf evaluation is assumed.
+For a bounded-below termwise-flasque sheaf complex with cohomology sheaves zero below `n`,
+the canonical map from cohomology of sections on any open `U` to sections of its degree-`n`
+cohomology sheaf is an isomorphism, exhibited as the sheafification unit/counit comparison.
+The proof shows the degree-`n` cohomology presheaf is already a sheaf, deriving flasqueness
+of the preceding cycles from the lower vanishing and cokernel preservation from that.
 -/
 
 @[expose] public noncomputable section
@@ -34,18 +30,18 @@ variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
 /-- The kernel of the actual boundary-to-cycles map is the preceding cycle sheaf. -/
 def kernelBoundaryToCyclesIso (n : ℤ) :
-    kernel (K.sc n).toCycles ≅ K.cycles ((ComplexShape.up ℤ).prev n) := by
-  let p := (ComplexShape.up ℤ).prev n
-  have hp : p = n - 1 := (ComplexShape.up ℤ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
-  have hnext : (ComplexShape.up ℤ).next p = n :=
+    kernel (K.sc n).toCycles ≅ K.cycles ((ComplexShape.up ℤ).prev n) :=
+  letI p := (ComplexShape.up ℤ).prev n
+  letI hp : p = n - 1 := (ComplexShape.up ℤ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
+  letI hnext : (ComplexShape.up ℤ).next p = n :=
     (ComplexShape.up ℤ).next_eq' (ComplexShape.up_mk _ _ (by rw [hp]; omega))
-  exact (kernelCompMono (K.sc n).toCycles (K.sc n).iCycles).symm ≪≫
+  (kernelCompMono (K.sc n).toCycles (K.sc n).iCycles).symm ≪≫
     kernelIsoOfEq (K.sc n).toCycles_i ≪≫
     IsLimit.conePointUniqueUpToIso (kernelIsKernel (K.sc n).f) (K.cyclesIsKernel p n hnext)
 
 /-- In the first potentially nonzero cohomology degree, the forgetful functor
 preserves the actual left homology of this short complex. -/
-theorem forget_preservesLeftHomologyOf_lowest (N n : ℤ) [K.IsStrictlyGE N]
+private theorem forget_preservesLeftHomologyOf_lowest (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :
     (forget AddCommGrpCat.{u} X).PreservesLeftHomologyOf (K.sc n) := by
   let F := forget AddCommGrpCat.{u} X
@@ -66,7 +62,7 @@ theorem forget_preservesLeftHomologyOf_lowest (N n : ℤ) [K.IsStrictlyGE N]
   exact Functor.PreservesLeftHomologyOf.mk' F (ShortComplex.LeftHomologyData.canonical (K.sc n))
 
 /-- The lowest-degree section-cohomology presheaf is an actual sheaf. -/
-theorem sectionCohomologyPresheaf_isSheaf_lowest (N n : ℤ) [K.IsStrictlyGE N]
+private theorem sectionCohomologyPresheaf_isSheaf_lowest (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :
     CategoryTheory.Presheaf.IsSheaf (Opens.grothendieckTopology X)
       (sectionCohomologyPresheaf X K n) := by
@@ -76,10 +72,9 @@ theorem sectionCohomologyPresheaf_isSheaf_lowest (N n : ℤ) [K.IsStrictlyGE N]
   exact (CategoryTheory.Presheaf.isSheaf_of_iso_iff e).mpr (K.homology n).property
 
 set_option backward.isDefEq.respectTransparency false in
-set_option backward.defeqAttrib.useBackward true in
 /-- The actual presheaf-to-cohomology-sheaf comparison is an isomorphism, because
 its literal sheafification unit is an isomorphism in this degree. -/
-theorem sectionCohomologyPresheafToSheaf_isIso_lowest (N n : ℤ) [K.IsStrictlyGE N]
+private theorem sectionCohomologyPresheafToSheaf_isIso_lowest (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :
     IsIso (sectionCohomologyPresheafToSheaf X K n) := by
   let := isIso_toSheafify (Opens.grothendieckTopology X)
@@ -102,15 +97,9 @@ def lowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque)
     (U : Opens X) :
     (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ≅
-      (K.homology n).obj.obj (op U) := by
+      (K.homology n).obj.obj (op U) :=
   let := sectionCohomologyToSheafSection_isIso_lowest X K N n hK hflasque U
-  exact asIso (sectionCohomologyToSheafSection X K n U)
-
-@[simp] theorem lowestSectionCohomologyIso_hom (N n : ℤ) [K.IsStrictlyGE N]
-    (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque)
-    (U : Opens X) :
-    (lowestSectionCohomologyIso X K N n hK hflasque U).hom =
-      sectionCohomologyToSheafSection X K n U := rfl
+  asIso (sectionCohomologyToSheafSection X K n U)
 
 /-- In particular, the actual lowest-degree global section-complex cohomology
 is canonically isomorphic to global sections of the cohomology sheaf. -/
@@ -119,10 +108,5 @@ def lowestGlobalSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (IsFlasque.BoundedBelowComplex.globalSectionsComplex K).homology n ≅
       (K.homology n).obj.obj (op (⊤ : Opens X)) :=
   lowestSectionCohomologyIso X K N n hK hflasque ⊤
-
-@[simp] theorem lowestGlobalSectionCohomologyIso_hom (N n : ℤ) [K.IsStrictlyGE N]
-    (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :
-    (lowestGlobalSectionCohomologyIso X K N n hK hflasque).hom =
-      sectionCohomologyToSheafSection X K n ⊤ := rfl
 
 end TopCat.Sheaf

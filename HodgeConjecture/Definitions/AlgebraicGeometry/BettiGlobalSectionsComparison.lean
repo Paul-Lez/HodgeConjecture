@@ -18,7 +18,8 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueQuasiIsoGlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.InjectiveFlasque
-public import HodgeConjecture.Definitions.AlgebraicTopology.SingularSubdivisionCochainSheaf
+public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularSubdivisionCochainSheaf
+public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import Mathlib.Algebra.Homology.Factorizations.CM5a
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
@@ -39,75 +40,6 @@ theorem is assumed.
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace
-
-namespace HomologicalComplex
-
-universe u v
-
-variable {C D : Type u} [Category C] [Category D]
-  [Preadditive C] [Preadditive D] [HasZeroObject C] [HasZeroObject D]
-  {i i' : Type v} {c : ComplexShape i} {c' : ComplexShape i'}
-  (F : C ⥤ D) [F.Additive] (K : HomologicalComplex C c)
-  (e : c.Embedding c') [e.IsRelIff]
-
-set_option backward.isDefEq.respectTransparency.types false in
-/-- Componentwise form of the fact that an additive functor preserves extension by zero. -/
-def mapExtendXIsoAux : (x : Option i) →
-    F.obj (HomologicalComplex.extend.X K x) ≅
-      HomologicalComplex.extend.X ((F.mapHomologicalComplex c).obj K) x
-  | some _ => Iso.refl _
-  | none => F.mapZeroObject
-
-set_option backward.isDefEq.respectTransparency.types false in
-set_option backward.isDefEq.respectTransparency false in
-lemma mapExtendXIsoAux_d (x y : Option i) :
-    (mapExtendXIsoAux F K x).hom ≫
-        HomologicalComplex.extend.d ((F.mapHomologicalComplex c).obj K) x y =
-      F.map (HomologicalComplex.extend.d K x y) ≫
-        (mapExtendXIsoAux F K y).hom := by
-  cases x with
-  | none =>
-      cases y with
-      | none =>
-          dsimp [mapExtendXIsoAux, HomologicalComplex.extend.d]
-          rw [Functor.map_zero, Limits.comp_zero, Limits.zero_comp]
-      | some y =>
-          dsimp [mapExtendXIsoAux, HomologicalComplex.extend.d]
-          rw [Functor.map_zero, Limits.comp_zero, Limits.zero_comp]
-  | some x =>
-      cases y with
-      | none =>
-          dsimp [mapExtendXIsoAux, HomologicalComplex.extend.d]
-          rw [Functor.map_zero, Category.id_comp, Limits.zero_comp]
-      | some y =>
-          dsimp [mapExtendXIsoAux, HomologicalComplex.extend.d]
-          rw [Category.id_comp, Category.comp_id]
-          exact Functor.mapHomologicalComplex_obj_d F c K x y
-
-set_option backward.isDefEq.respectTransparency.types false in
-/-- An additive functor commutes degreewise with extension of a homological complex by zero. -/
-def mapExtendXIso (q : i') :
-    ((F.mapHomologicalComplex c').obj (K.extend e)).X q ≅
-      (((F.mapHomologicalComplex c).obj K).extend e).X q :=
-  mapExtendXIsoAux F K (e.r q)
-
-set_option backward.isDefEq.respectTransparency.types false in
-set_option backward.isDefEq.respectTransparency false in
-/-- An additive functor commutes with extension of a homological complex by zero. -/
-def mapExtendIso :
-    (F.mapHomologicalComplex c').obj (K.extend e) ≅
-      ((F.mapHomologicalComplex c).obj K).extend e :=
-  HomologicalComplex.Hom.isoOfComponents (mapExtendXIso F K e) (by
-    intro p q hpq
-    change (mapExtendXIso F K e p).hom ≫
-          HomologicalComplex.extend.d ((F.mapHomologicalComplex c).obj K)
-            (e.r p) (e.r q) =
-        F.map (HomologicalComplex.extend.d K (e.r p) (e.r q)) ≫
-          (mapExtendXIso F K e q).hom
-    dsimp only [mapExtendXIso]
-    exact mapExtendXIsoAux_d F K (e.r p) (e.r q))
-
-end HomologicalComplex
 
 namespace CochainComplex.HomComplex
 
@@ -315,7 +247,7 @@ def globalSectionsSingularCochainComplexIntIsoExtend :
   let : F.Additive := by dsimp [F]; infer_instance
   let : E.Additive := by dsimp [E]; infer_instance
   let eComp : F ⋙ E ≅ G := Iso.refl _
-  exact HomologicalComplex.mapExtendIso G K ComplexShape.embeddingUpNat ≪≫
+  exact HomologicalComplex.mapExtendCanonicalIso G K ComplexShape.embeddingUpNat ≪≫
     (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
       ((Functor.mapHomologicalComplexCompIso eComp (ComplexShape.up ℕ)).app K).symm
 
@@ -382,18 +314,8 @@ def rationalSingularCochainHypercohomologyEquivGlobalSections
   let : S.IsStrictlyGE 0 := by
     dsimp [S, singularCochainSheafComplexInt]
     infer_instance
-  let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
-  let I := Classical.choose hres
-  let hresI := Classical.choose_spec hres
-  let i := Classical.choose hresI
-  let hresi := Classical.choose_spec hresI
-  let hi : QuasiIso i := Classical.choose hresi
-  let hresiHi := Classical.choose_spec hresi
-  let hI : ∀ q : ℤ, Injective (I.X q) := Classical.choose hresiHi
-  let hIge : I.IsStrictlyGE 0 := Classical.choose_spec hresiHi
-  letI : QuasiIso i := hi
-  letI : ∀ q : ℤ, Injective (I.X q) := hI
-  letI : I.IsStrictlyGE 0 := hIge
+  choose I i _ _ _ using
+    CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
   letI : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
   have hSflasque : ∀ q, (S.X q).IsFlasque :=
     fun q ↦ singularCochainSheafComplexInt_isFlasque X q
@@ -414,61 +336,6 @@ universe u
 
 variable (R : Type u) [Field R] (Y : TopCat.{u})
 
-set_option backward.isDefEq.respectTransparency false in
-/-- The short complex controlling degree-`n` cohomology of the full linear-dual cochain complex
-is the reversed dual of the degree-`n` singular-chain short complex. -/
-def linearDualCochainComplexScIso
-    (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
-    K.linearDualCochainComplex.sc n ≅ (K.sc n).linearDual := by
-  let D := K.linearDualCochainComplex
-  have hprev : (ComplexShape.up ℕ).prev n = (ComplexShape.down ℕ).next n := by
-    cases n <;> simp
-  have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by simp
-  refine D.isoSc' ((ComplexShape.down ℕ).next n) n
-      ((ComplexShape.down ℕ).prev n) hprev hnext ≪≫
-    ShortComplex.isoMk (Iso.refl _) (Iso.refl _) (Iso.refl _) ?_ ?_
-  · cases n with
-    | zero =>
-        simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
-          HomologicalComplex.shortComplexFunctor'_obj_f]
-        dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk,
-          HomologicalComplex.sc, HomologicalComplex.shortComplexFunctor,
-          HomologicalComplex.shortComplexFunctor']
-        rw [ChainComplex.next_nat_zero]
-        change ModuleCat.ofHom (K.d 0 0).hom.dualMap = D.d 0 0
-        rw [K.shape 0 0 (by simp), D.shape 0 0 (by simp)]
-        exact ModuleCat.hom_ext (LinearMap.ext fun φ ↦ LinearMap.ext fun _ ↦ map_zero φ)
-    | succ n =>
-        simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
-          HomologicalComplex.shortComplexFunctor'_obj_f]
-        dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk,
-          HomologicalComplex.sc, HomologicalComplex.shortComplexFunctor,
-          HomologicalComplex.shortComplexFunctor']
-        rw [ChainComplex.next_nat_succ]
-        change ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap = D.d n (n + 1)
-        exact (HomologicalComplex.linearDualCochainComplex_d K n).symm
-  · simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
-      HomologicalComplex.shortComplexFunctor'_obj_g]
-    dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk,
-      HomologicalComplex.sc, HomologicalComplex.shortComplexFunctor,
-      HomologicalComplex.shortComplexFunctor']
-    rw [ChainComplex.prev]
-    change ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap = D.d n (n + 1)
-    exact (HomologicalComplex.linearDualCochainComplex_d K n).symm
-
-/-- Ordinary singular cohomology, presented as the homology of the algebraic-dual singular
-cochain complex. -/
-abbrev OrdinarySingularCohomology (n : ℕ) : ModuleCat.{u} R :=
-  (SingularChainComplex R Y).linearDualCochainComplex.homology n
-
-/-- Universal coefficients identify the full-complex presentation of ordinary singular
-cohomology with the repository's existing dual-of-singular-homology type. -/
-def ordinarySingularCohomologyEquivCohomology (n : ℕ) :
-    OrdinarySingularCohomology R Y n ≃ₗ[R] Cohomology R Y n :=
-  (ShortComplex.homologyMapIso
-    (linearDualCochainComplexScIso R (SingularChainComplex R Y) n)).toLinearEquiv.trans
-      ((SingularChainComplex R Y).sc n).linearDualHomologyEquiv
-
 /-- Forgetting scalar multiplication commutes with taking the homology of the top-open singular
 cochain complex. -/
 def topOpenForgottenSingularCochainHomologyIso (n : ℕ) :
@@ -482,7 +349,7 @@ def topOpenForgottenSingularCochainHomologyIso (n : ℕ) :
 /-- Ordinary singular cohomology agrees with the homology of the raw singular-cochain
 presheaf evaluated on the top open subset. -/
 def ordinarySingularCohomologyEquivGlobalRaw (n : ℕ) :
-    OrdinarySingularCohomology R Y n ≃+
+    Cohomology R Y n ≃+
       (globalRawSingularCochainComplex R Y).homology n :=
   ((forget₂ (ModuleCat.{u} R) AddCommGrpCat).mapIso
       (HomologicalComplex.homologyMapIso
@@ -495,11 +362,11 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicTopology.Singular.HereditarilyParacompact
 
-/-- On a paracompact Hausdorff space, ordinary rational singular cohomology is the cohomology of
-the global-section complex of the chosen singular-cochain sheaf resolution. -/
+/-- On a paracompact Hausdorff space, rational singular cohomology is the cohomology of the
+global-section complex of the chosen singular-cochain sheaf resolution. -/
 def ordinaryRationalSingularCohomologyEquivGlobalSections
     (Y : TopCat.{0}) [ParacompactSpace Y] [T2Space Y] (n : ℕ) :
-    AlgebraicTopology.Singular.OrdinarySingularCohomology ℚ Y n ≃+
+    AlgebraicTopology.Singular.Cohomology ℚ Y n ≃+
       (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y).homology n := by
   let := AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
     (Y := Y)
@@ -515,18 +382,7 @@ def rationalSingularCohomologyEquivGlobalSections
     (Y : TopCat.{0}) [ParacompactSpace Y] [T2Space Y] (n : ℕ) :
     AlgebraicTopology.Singular.Cohomology ℚ Y n ≃+
       (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y).homology n :=
-  (AlgebraicTopology.Singular.ordinarySingularCohomologyEquivCohomology ℚ Y n).symm.toAddEquiv
-    |>.trans (ordinaryRationalSingularCohomologyEquivGlobalSections Y n)
-
-/-- Every positive sheaf-cohomology class of every term of the rational singular-cochain
-resolution vanishes on a hereditarily paracompact Hausdorff space. -/
-theorem rationalSingularCochainTerm_cohomology_succ_eq_zero
-    (Y : TopCat.{0}) [T2Space Y] [∀ U : Opens Y, ParacompactSpace U]
-    (p q : ℕ) (x : Abelian.Ext
-      (TopCat.Sheaf.IsFlasque.globalSectionsSource (X := Y))
-      (AlgebraicTopology.Singular.singularCochainSheaf ℚ Y p) (q + 1)) :
-    x = 0 :=
-  AlgebraicTopology.Singular.singularCochainSheaf_cohomology_succ_eq_zero p q x
+  ordinaryRationalSingularCohomologyEquivGlobalSections Y n
 
 end AlgebraicTopology.Singular.HereditarilyParacompact
 

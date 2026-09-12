@@ -9,16 +9,13 @@ public import Mathlib.Algebra.Homology.DerivedCategory.ExactFunctor
 public import Mathlib.Algebra.Homology.DerivedCategory.Plus
 
 /-!
-# The actual derived pushforward of a closed embedding
+# The derived pushforward of a closed embedding
 
-Closed-embedding sheaf pushforward is exact by the proved stalk calculation. It therefore
-induces a functor on the unbounded derived category directly by localization of its
-termwise action. That functor preserves lower cohomological bounds and hence restricts to
-`D⁺`. The displayed comparisons fix its normalization on coefficient complexes.
-
-No boundedness of an arbitrary singular chain model is assumed. A source object must
-actually belong to `D⁺` to use the bounded-below restriction. No claim that an intrinsic
-chain model is quasi-isomorphic to the ambient supported model is needed here.
+Closed-embedding sheaf pushforward is exact by the stalk calculation, so localizing its
+termwise action induces a functor on the unbounded derived category. That functor preserves
+lower cohomological bounds and so restricts to `D⁺`, and the displayed comparisons fix its
+normalization on coefficient complexes. The bounded-below restriction applies to a source
+object that lies in `D⁺`.
 -/
 
 @[expose] public noncomputable section
