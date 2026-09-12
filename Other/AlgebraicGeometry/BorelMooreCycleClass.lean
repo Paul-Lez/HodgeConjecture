@@ -19,7 +19,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.BettiSupportSingular
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
 public import Other.AlgebraicGeometry.CycleComponentBorelMoore
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
-public import Other.AlgebraicGeometry.DimensionedSmoothProjective
+public import Other.AlgebraicGeometry.SmoothProjective
 public import Other.AlgebraicGeometry.CycleClassOnCycles
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationParacompact

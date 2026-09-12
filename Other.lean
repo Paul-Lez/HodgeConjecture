@@ -63,7 +63,6 @@ public import Other.AlgebraicGeometry.CycleComponentRegularImmersion
 public import Other.AlgebraicGeometry.CycleComponentSheafBorelMooreClass
 public import Other.AlgebraicGeometry.DerivedSupportRationalComparison
 public import Other.AlgebraicGeometry.DerivedSupportRationalForget
-public import Other.AlgebraicGeometry.DimensionedSmoothProjective
 public import Other.AlgebraicGeometry.HodgeCodimensionZero
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality
 public import Other.AlgebraicGeometry.PointCycleClass
@@ -85,6 +84,7 @@ public import Other.AlgebraicGeometry.SmoothClosedSupportCoclassNonzero
 public import Other.AlgebraicGeometry.SmoothClosedSupportCoclassRestrictionNonzero
 public import Other.AlgebraicGeometry.SmoothClosedSupportLowestCohomology
 public import Other.AlgebraicGeometry.SmoothClosedSupportedCycleMorphism
+public import Other.AlgebraicGeometry.SmoothProjective
 public import Other.AlgebraicGeometry.SmoothRegularLocal
 public import Other.AlgebraicTopology.CechNerveEvaluation
 public import Other.AlgebraicTopology.ChartLocalClassHomeomorph
