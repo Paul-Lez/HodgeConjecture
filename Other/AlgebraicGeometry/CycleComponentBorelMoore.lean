@@ -283,6 +283,16 @@ theorem rationalCycleComponentBorelMooreDataOfCoheightEqDimension
     existsUnique_cycleComponentBorelMooreFundamentalClass_of_coheight_eq_dimension
       V x d hx
 
+/-- A maximal-codimension component carries rational Borel--Moore data.  The witness is the
+one-point construction, so this existence statement holds for every smooth projective variety
+and every point of maximal coheight. -/
+theorem nonempty_rationalCycleComponentBorelMooreData_of_coheight_eq_dimension
+    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
+    (hx : Order.coheight x = d) :
+    Nonempty (RationalCycleComponentBorelMooreData V x d d hx) :=
+  ⟨rationalCycleComponentBorelMooreDataOfCoheightEqDimension V x d hx⟩
+
 namespace RationalCycleComponentBorelMooreData
 
 /-- The constructed exact local complex orientation used to normalize the component class. -/
