@@ -312,6 +312,17 @@ lemma hypercohomologyEquiv_add
 abbrev DeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) : Type 1 :=
   Hypercohomology X (holomorphicDeRhamComplexInt X) n
 
+/-- The constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
+equivalence on hypercohomology. -/
+def complexConstantCohomologyDeRhamEquiv
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    ComplexConstantCohomology X n ≃
+      DeRhamHypercohomology X n :=
+  Localization.SmallShiftedHom.postcompEquiv
+    (constantsToHolomorphicDeRhamComplexInt X)
+    (by
+      change QuasiIso (constantsToHolomorphicDeRhamComplexInt X)
+      infer_instance)
 /-- Postcomposition on hypercohomology by a map of complexes. -/
 def hypercohomologyMap
     {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (f : K ⟶ L) (n : ℤ) :
@@ -588,33 +599,28 @@ Conjugation is not `ℂ`-linear, so it acts on the constant sheaf `ℂ` rather t
 de Rham complex, and is transported across the constant-to-de Rham comparison. The `(p,q)` piece
 is then *defined* as `F^p ⊓ conj F^q`, which needs no Hodge decomposition theorem. -/
 
-/-- A proved constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
-additive equivalence on hypercohomology. -/
-def complexConstantCohomologyDeRhamAddEquiv [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
+/-- The constant-to-de Rham comparison equivalence, upgraded to an additive equivalence. -/
+def complexConstantCohomologyDeRhamAddEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
-  { Localization.SmallShiftedHom.postcompEquiv
-      (constantsToHolomorphicDeRhamComplexInt X) h with
+  { complexConstantCohomologyDeRhamEquiv X n with
     map_add' := fun α β ↦ by
       change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
         hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α +
           hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n β
       exact map_add _ α β }
 
-lemma complexConstantCohomologyDeRhamAddEquiv_apply [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ)
-    (α : ComplexConstantCohomology X n) :
-    complexConstantCohomologyDeRhamAddEquiv X h n α =
+private lemma complexConstantCohomologyDeRhamAddEquiv_apply [IsIntegral X.left] [Smooth X.hom]
+    (n : ℤ) (α : ComplexConstantCohomology X n) :
+    complexConstantCohomologyDeRhamAddEquiv X n α =
       hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α :=
   rfl
 
 /-- The comparison equivalence carries the constant-sheaf scalar action to the de Rham one. -/
 private lemma complexConstantCohomologyDeRhamAddEquiv_scalar [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) (c : ℂ)
-    (β : ComplexConstantCohomology X n) :
-    complexConstantCohomologyDeRhamAddEquiv X h n
+    (n : ℤ) (c : ℂ) (β : ComplexConstantCohomology X n) :
+    complexConstantCohomologyDeRhamAddEquiv X n
         (hypercohomologyMap X (complexScalarComplexInt X c) n β) =
-      c • complexConstantCohomologyDeRhamAddEquiv X h n β := by
+      c • complexConstantCohomologyDeRhamAddEquiv X n β := by
   rw [complexConstantCohomologyDeRhamAddEquiv_apply,
     complexConstantCohomologyDeRhamAddEquiv_apply,
     ← hypercohomologyMap_comp_apply, ← constantsToHolomorphicDeRhamComplexInt_scalar,
@@ -622,28 +628,27 @@ private lemma complexConstantCohomologyDeRhamAddEquiv_scalar [IsIntegral X.left]
 
 /-- The inverse comparison carries the de Rham scalar action back to the constant-sheaf one. -/
 private lemma complexConstantCohomologyDeRhamAddEquiv_symm_scalar [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) (c : ℂ)
-    (α : DeRhamHypercohomology X n) :
-    (complexConstantCohomologyDeRhamAddEquiv X h n).symm (c • α) =
+    (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology X n) :
+    (complexConstantCohomologyDeRhamAddEquiv X n).symm (c • α) =
       hypercohomologyMap X (complexScalarComplexInt X c) n
-        ((complexConstantCohomologyDeRhamAddEquiv X h n).symm α) := by
-  apply (complexConstantCohomologyDeRhamAddEquiv X h n).injective
+        ((complexConstantCohomologyDeRhamAddEquiv X n).symm α) := by
+  apply (complexConstantCohomologyDeRhamAddEquiv X n).injective
   rw [AddEquiv.apply_symm_apply, complexConstantCohomologyDeRhamAddEquiv_scalar,
     AddEquiv.apply_symm_apply]
 
 /-- Complex conjugation on de Rham hypercohomology, transported from the constant sheaf `ℂ`. -/
 def deRhamConj [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
-  ((complexConstantCohomologyDeRhamAddEquiv X inferInstance n).toAddMonoidHom).comp
+  ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
     ((hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n).comp
-      (complexConstantCohomologyDeRhamAddEquiv X inferInstance n).symm.toAddMonoidHom)
+      (complexConstantCohomologyDeRhamAddEquiv X n).symm.toAddMonoidHom)
 
 lemma deRhamConj_apply [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
     (α : DeRhamHypercohomology X n) :
     deRhamConj X n α =
-      complexConstantCohomologyDeRhamAddEquiv X inferInstance n
+      complexConstantCohomologyDeRhamAddEquiv X n
         (hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n
-          ((complexConstantCohomologyDeRhamAddEquiv X inferInstance n).symm α)) :=
+          ((complexConstantCohomologyDeRhamAddEquiv X n).symm α)) :=
   rfl
 
 /-- Conjugation on de Rham hypercohomology is conjugate-linear. -/
