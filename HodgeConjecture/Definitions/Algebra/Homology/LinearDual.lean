@@ -167,7 +167,6 @@ attribute [simp] HomologicalComplex.linearDualCochainComplex_X
 lemma linearDualCochainComplex_d_succ (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
     (K.linearDualCochainComplex).d n (n + 1) =
       ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap := rfl
-      ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap := rfl
 
 /-- The degree-`n` short complex of a linear-dual cochain complex is the reversed dual of the
 degree-`n` short complex of the original chain complex. -/
