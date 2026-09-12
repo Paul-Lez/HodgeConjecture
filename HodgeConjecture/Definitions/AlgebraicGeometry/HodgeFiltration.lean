@@ -185,7 +185,7 @@ abbrev fieldScalarSheaf (q : K) :
     constantFieldSheaf K X ⟶ constantFieldSheaf K X :=
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   (constantSheaf J AddCommGrpCat).map
-    (AddCommGrpCat.ofHom (fieldScalarAddHom K q))
+    (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q))
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarSheaf_one : fieldScalarSheaf K X 1 = 𝟙 _ := by
@@ -194,11 +194,11 @@ omit [Algebra K ℂ] in
     rfl
   change (constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).map (AddCommGrpCat.ofHom (fieldScalarAddHom K 1)) =
+      AddCommGrpCat).map (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft 1)) =
     𝟙 ((constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
       AddCommGrpCat).obj (AddCommGrpCat.of K))
-  rw [fieldScalarAddHom_one, h]
+  rw [AddMonoidHom.mulLeft_one, h]
   exact (constantSheaf
     (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     AddCommGrpCat).map_id (AddCommGrpCat.of K)
@@ -207,15 +207,15 @@ omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarSheaf_add (a b : K) :
     fieldScalarSheaf K X (a + b) =
       fieldScalarSheaf K X a + fieldScalarSheaf K X b := by
-  have h : AddCommGrpCat.ofHom (fieldScalarAddHom K a + fieldScalarAddHom K b) =
-      AddCommGrpCat.ofHom (fieldScalarAddHom K a) +
-        AddCommGrpCat.ofHom (fieldScalarAddHom K b) :=
+  have h : AddCommGrpCat.ofHom (AddMonoidHom.mulLeft a + AddMonoidHom.mulLeft b) =
+      AddCommGrpCat.ofHom (AddMonoidHom.mulLeft a) +
+        AddCommGrpCat.ofHom (AddMonoidHom.mulLeft b) :=
     AddCommGrpCat.hom_ext rfl
   change (constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
       AddCommGrpCat).map
-        (AddCommGrpCat.ofHom (fieldScalarAddHom K (a + b))) = _
-  rw [fieldScalarAddHom_add, h, Functor.map_add]
+        (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a + b))) = _
+  rw [AddMonoidHom.mulLeft_add, h, Functor.map_add]
   rfl
 
 omit [Algebra K ℂ] in
@@ -223,15 +223,15 @@ omit [Algebra K ℂ] in
     fieldScalarSheaf K X (a * b) =
       fieldScalarSheaf K X b ≫ fieldScalarSheaf K X a := by
   have h : AddCommGrpCat.ofHom
-      ((fieldScalarAddHom K a).comp (fieldScalarAddHom K b)) =
-      AddCommGrpCat.ofHom (fieldScalarAddHom K b) ≫
-        AddCommGrpCat.ofHom (fieldScalarAddHom K a) :=
+      ((AddMonoidHom.mulLeft a).comp (AddMonoidHom.mulLeft b)) =
+      AddCommGrpCat.ofHom (AddMonoidHom.mulLeft b) ≫
+        AddCommGrpCat.ofHom (AddMonoidHom.mulLeft a) :=
     AddCommGrpCat.hom_ext rfl
   change (constantSheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
       AddCommGrpCat).map
-        (AddCommGrpCat.ofHom (fieldScalarAddHom K (a * b))) = _
-  rw [fieldScalarAddHom_mul, h, Functor.map_comp]
+        (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a * b))) = _
+  rw [AddMonoidHom.mulLeft_mul, h, Functor.map_comp]
   rfl
 
 /-- Multiplying by `q` in `K` before including into `ℂ` agrees with including first and then
@@ -239,12 +239,12 @@ multiplying by `algebraMap K ℂ q`. -/
 private lemma ofHom_algebraMap_comp_complexScalarSMul (q : K) :
     AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom ≫
         AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ (algebraMap K ℂ q)) =
-      AddCommGrpCat.ofHom (fieldScalarAddHom K q) ≫
+      AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q) ≫
         AddCommGrpCat.ofHom (@AddMonoidHomClass.toAddMonoidHom K ℂ (K →+* ℂ) Field.toSemifield.toNonAssocSemiring.toAddCommMonoidWithOne.toAddZeroClass.toAddZero
                 Complex.instSemiring.toNonAssocSemiring.toAddCommMonoidWithOne.toAddZeroClass.toAddZero RingHom.instFunLike _
         (algebraMap K ℂ)) := by
   ext r
-  simp [fieldScalarAddHom, map_mul]
+  simp [map_mul]
 
 /-- The constant-presheaf map induced by the inclusion `K → ℂ`, followed by scalar multiplication
 by `algebraMap K ℂ q` on the constant complex presheaf, is the constant-presheaf map induced by the
@@ -270,9 +270,9 @@ private lemma fieldToComplexConstantSheaf_scalar (q : K) :
 
 omit [Algebra K ℂ] in
 /-- Multiplying an integer by `r` and then by `q` is multiplying it by `q * r`. -/
-private lemma ofHom_zmultiplesAddHom_comp_fieldScalarAddHom (q r : K) :
+private lemma ofHom_zmultiplesAddHom_comp_mulLeft (q r : K) :
     AddCommGrpCat.ofHom (zmultiplesAddHom K r) ≫
-        AddCommGrpCat.ofHom (fieldScalarAddHom K q) =
+        AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q) =
       AddCommGrpCat.ofHom (zmultiplesAddHom K (q * r)) := by
   ext
   simp
@@ -287,7 +287,7 @@ private lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
       fieldScalarSheaf K X q =
         integerToFieldConstantSheaf K X (q * r) := by
   rw [integerToFieldConstantSheaf, fieldScalarSheaf, integerToFieldConstantSheaf,
-    ← Functor.map_comp, ofHom_zmultiplesAddHom_comp_fieldScalarAddHom]
+    ← Functor.map_comp, ofHom_zmultiplesAddHom_comp_mulLeft]
 
 /-- Scalar multiplication on the rational constant sheaf complex. -/
 def fieldScalarComplex (q : K) :
@@ -436,16 +436,6 @@ def fieldCohomologyUnit : H^0(X; K) :=
 abbrev DeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) : Type 1 :=
   Hypercohomology X (holomorphicDeRhamComplexInt X) n
 
-/-- A proved constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
-equivalence on hypercohomology. -/
-def complexConstantCohomologyDeRhamEquiv
-    [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
-    ComplexConstantCohomology X n ≃
-      DeRhamHypercohomology X n :=
-  Localization.SmallShiftedHom.postcompEquiv
-    (constantsToHolomorphicDeRhamComplexInt X) h
-
 /-- Postcomposition on hypercohomology by a map of complexes. -/
 def hypercohomologyMap
     {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (f : K ⟶ L) (n : ℤ) :
@@ -568,13 +558,9 @@ noncomputable abbrev hypercohomologyModule {R : Type*} [Semiring R]
 
 /-- The rational action on constant-sheaf cohomology, induced by scalar multiplication on the
 coefficient sheaf. -/
-def fieldCohomologySMul (n : ℤ) (q : K)
-    (α : H^n(X; K)) : H^n(X; K) :=
-  hypercohomologyMap X (fieldScalarComplex K X q) n α
-
 noncomputable instance (n : ℤ) :
     SMul K (H^n(X; K)) :=
-  ⟨fieldCohomologySMul K X n⟩
+  ⟨fun q α ↦ hypercohomologyMap X (fieldScalarComplex K X q) n α⟩
 
 omit [Algebra K ℂ] in
 lemma field_smul_eq (n : ℤ) (q : K) (α : H^n(X; K)) :
@@ -590,16 +576,10 @@ noncomputable instance fieldCohomologyModule (n : ℤ) :
 
 /-- The complex action on holomorphic de Rham hypercohomology, induced by scalar multiplication
 on the holomorphic de Rham complex. -/
-def deRhamComplexSMul [IsIntegral X.left] [Smooth X.hom]
-    (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology X n) :
-    DeRhamHypercohomology X n :=
-  hypercohomologyMap X
-    (scalarHolomorphicDeRhamComplexInt X c) n α
-
 noncomputable instance
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     SMul ℂ (DeRhamHypercohomology X n) :=
-  ⟨deRhamComplexSMul X n⟩
+  ⟨fun c α ↦ hypercohomologyMap X (scalarHolomorphicDeRhamComplexInt X c) n α⟩
 
 lemma deRham_complex_smul_eq [IsIntegral X.left] [Smooth X.hom]
     (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology X n) :
@@ -761,18 +741,20 @@ Conjugation is not `ℂ`-linear, so it acts on the constant sheaf `ℂ` rather t
 de Rham complex, and is transported across the constant-to-de Rham comparison. The `(p,q)` piece
 is then *defined* as `F^p ⊓ conj F^q`, which needs no Hodge decomposition theorem. -/
 
-/-- The constant-to-de Rham comparison equivalence, upgraded to an additive equivalence. -/
+/-- A proved constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
+additive equivalence on hypercohomology. -/
 def complexConstantCohomologyDeRhamAddEquiv [IsIntegral X.left] [Smooth X.hom]
     (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
     ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
-  { complexConstantCohomologyDeRhamEquiv X h n with
+  { Localization.SmallShiftedHom.postcompEquiv
+      (constantsToHolomorphicDeRhamComplexInt X) h with
     map_add' := fun α β ↦ by
       change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
         hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α +
           hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n β
       exact map_add _ α β }
 
-private lemma complexConstantCohomologyDeRhamAddEquiv_apply [IsIntegral X.left] [Smooth X.hom]
+lemma complexConstantCohomologyDeRhamAddEquiv_apply [IsIntegral X.left] [Smooth X.hom]
     (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ)
     (α : ComplexConstantCohomology X n) :
     complexConstantCohomologyDeRhamAddEquiv X h n α =

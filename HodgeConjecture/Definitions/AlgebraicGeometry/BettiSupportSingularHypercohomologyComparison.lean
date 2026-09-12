@@ -619,20 +619,7 @@ def globalSectionsNaturalSingularConeIsoMappingCone
       (TopCat.of (ComplexPoint X)))
 
 /-- Replacing rational constants by the natural singular resolution identifies the two support
-hypercohomology groups. -/
-def rationalSupportHypercohomologyEquivNaturalSingularCone
-    [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
-    RationalCohomologyWithSupport X Z n ≃
-      Hypercohomology X
-        (CochainComplex.mappingCone
-          (naturalSingularResolutionRestriction X Z hZ)) (n - 1) :=
-  Localization.SmallShiftedHom.postcompEquiv
-    (rationalSupportConeToNaturalSingularCone X Z hZ)
-    (rationalSupportConeToNaturalSingularCone_quasiIso X Z hZ)
-
-/-- Additive form of the quasi-isomorphism invariance comparison between the rational support
-cone and the natural singular support cone. -/
+hypercohomology groups, additively. -/
 def rationalSupportHypercohomologyAddEquivNaturalSingularCone
     [IsIntegral X.left] [Smooth X.hom]
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
@@ -640,8 +627,9 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularCone
       Hypercohomology X
         (CochainComplex.mappingCone
           (naturalSingularResolutionRestriction X Z hZ)) (n - 1) where
-  toEquiv := rationalSupportHypercohomologyEquivNaturalSingularCone
-    X Z hZ n
+  toEquiv := Localization.SmallShiftedHom.postcompEquiv
+    (rationalSupportConeToNaturalSingularCone X Z hZ)
+    (rationalSupportConeToNaturalSingularCone_quasiIso X Z hZ)
   map_add' α β := (hypercohomologyMap X
     (rationalSupportConeToNaturalSingularCone X Z hZ) (n - 1)).map_add α β
 
