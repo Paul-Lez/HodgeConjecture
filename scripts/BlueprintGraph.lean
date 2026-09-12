@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -/
 import Lean
+import ImportGraph.Graph.Filter
+import ImportGraph.Lean.Environment
 
 /-!
 # The blueprint dependency graph of the statement
@@ -32,6 +34,10 @@ The nodes are `HodgeConjecture` itself and every definition (structure, class, i
 auxiliary declarations are not nodes, but the edges are computed *through* them: a node uses
 another when the second occurs in the type or body of the first, possibly via such intermediate
 declarations. Mathlib is the boundary; nothing outside the `HodgeConjecture` library is shown.
+
+The edge set is then transitively reduced with `importGraph`'s `NameMap.transitiveReduction`,
+which drops the edges implied by a longer path. That is what the rendered graph displays anyway,
+and it removes about four fifths of them, so the generated file stays readable in a diff.
 
 Each node is a `definition` environment (a `conjecture` for the statement) carrying `\lean`,
 `\leanok` and `\uses`, whose text is the docstring of the declaration followed by a link to its
@@ -237,13 +243,10 @@ def nodeKind (env : Environment) (n : Name) : CoreM String := do
   | _ =>
     return if (← getReducibilityStatus n) matches .reducible then "abbrev" else "def"
 
-/-- The module a constant lives in, if it is an imported one. -/
-def moduleOf (env : Environment) (n : Name) : Option Name :=
-  env.getModuleIdxFor? n |>.map fun idx => env.header.moduleNames[idx.toNat]!
-
-/-- Is the constant part of the library (as opposed to Mathlib, core, or the other dependencies)? -/
+/-- Is the constant part of the library (as opposed to Mathlib, core, or the other dependencies)?
+`getModuleFor?` is `importGraph`'s. -/
 def inLibrary (env : Environment) (n : Name) : Bool :=
-  match moduleOf env n with
+  match env.getModuleFor? n with
   | some m => libraryName.isPrefixOf m
   | none => false
 
@@ -358,19 +361,23 @@ unsafe def main (_args : List String) : IO Unit := do
         let s ← nodeUses env isNode n
         return (n, s)
     let (usesOf, _) ← collect.run {}
-    let usesOf : Std.HashMap Name NameSet := Std.HashMap.ofList usesOf.toList
+    -- The contracted graph, in the `NameMap (Array Name)` shape `importGraph` works with. A
+    -- structure reaches itself through its constructor, so drop the self-loops first: they are
+    -- meaningless as dependencies, and plasTeX recurses forever on them.
+    let graph : NameMap (Array Name) := usesOf.foldl (init := {}) fun g (n, used) =>
+      g.insert n (used.erase n).toArray
+    let graph := graph.transitiveReduction
     let mut nodes : Array Node := #[]
     for n in nodeNames.toArray do
-      let some m := moduleOf env n | continue
+      let some m := env.getModuleFor? n | continue
       let line := match ← findDeclarationRanges? n with
         | some r => r.range.pos.line
         | none => 1
       let doc ← findDocString? env n
-      -- A structure reaches itself through its constructor; the graph must have no self-loops.
-      let uses := ((usesOf.getD n {}).erase n).toArray.qsort (·.toString < ·.toString)
+      let uses := (graph.find? n |>.getD #[]).qsort (·.toString < ·.toString)
       nodes := nodes.push { name := n, module := m, line, kind := ← nodeKind env n, doc, uses }
     return nodes : CoreM (Array Node)).toIO ctx { env }
-  IO.println s!"{nodes.size} nodes, {nodes.foldl (· + ·.uses.size) 0} edges."
+  IO.println s!"{nodes.size} nodes, {nodes.foldl (· + ·.uses.size) 0} edges after reduction."
   -- Group by module, modules in import order, chapters by folder.
   let moduleOrder : Std.HashMap Name Nat :=
     Std.HashMap.ofList (env.header.moduleNames.toList.zipIdx)

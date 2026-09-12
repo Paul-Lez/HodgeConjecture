@@ -14,8 +14,9 @@ conjecture and for every definition (structure, class, inductive type, \texttt{d
 \texttt{abbrev}) that its statement transitively depends on, and an edge from a node to each
 node used in its type or body. Edges are computed from the compiled declarations, passing
 through the lemmas, instances and auxiliary declarations that are not shown as nodes, so an
-edge means that the source cannot be stated without the target. Mathlib declarations are not
-shown; a node with no outgoing edges depends on Mathlib only.
+edge means that the source cannot be stated without the target. The edges are then transitively
+reduced, so an edge implied by a longer path is left out. Mathlib declarations are not shown; a
+node with no outgoing edges depends on Mathlib only.
 
 Chapters follow the layout of the repository (\texttt{Statement}, then the
 \texttt{Definitions}, \texttt{Lemmas} and \texttt{Mathlib} folders) and sections follow its

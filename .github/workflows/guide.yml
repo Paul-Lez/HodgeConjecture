@@ -31,6 +31,7 @@ jobs:
       - name: Regenerate the blueprint dependency graph
         if: github.event_name != 'pull_request'
         run: |
+          lake build ImportGraph
           lake env lean --run scripts/BlueprintGraph.lean
           if ! git diff --quiet -- blueprint/src/generated.tex; then
             echo "::warning file=blueprint/src/generated.tex::blueprint/src/generated.tex is out of date; run 'lake env lean --run scripts/BlueprintGraph.lean' and commit the result."
