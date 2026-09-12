@@ -19,14 +19,9 @@ canonical quasi-isomorphism from the cone of `A → B` to `C`.
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open HomologicalComplex
-
 namespace CochainComplex
 
 variable {C : Type*} [Category* C] [Abelian C]
-
-namespace mappingCone
-
-end mappingCone
 
 namespace mappingCocone
 
@@ -42,7 +37,7 @@ def shiftedLiftShortComplex : S.X₁⟦(1 : ℤ)⟧ ⟶ mappingCone S.g :=
 
 /-- Canonical comparison from the first term of a short complex to the homotopy
 fiber of its second map. -/
-def liftShortComplex : S.X₁ ⟶ mappingCocone S.g :=
+abbrev liftShortComplex : S.X₁ ⟶ mappingCocone S.g :=
   (shiftFunctorCompIsoId _ (1 : ℤ) (-1) (by simp)).inv.app S.X₁ ≫
     (shiftedLiftShortComplex S)⟦(-1 : ℤ)⟧'
 

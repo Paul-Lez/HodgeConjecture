@@ -19,6 +19,8 @@ public import Mathlib.Algebra.Homology.Homotopy
 public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 public import HodgeConjecture.Mathlib.LinearAlgebra.Quotient.Basic
 public import HodgeConjecture.Mathlib.LinearAlgebra.Dual.Defs
+public import HodgeConjecture.Mathlib.LinearAlgebra.Quotient.Basic
+public import HodgeConjecture.Mathlib.LinearAlgebra.Dual.Defs
 
 import Mathlib.LinearAlgebra.Dual.Lemmas
 
@@ -166,7 +168,6 @@ lemma linearDualCochainComplex_d_succ (K : ChainComplex (ModuleCat.{u} R) ℕ) (
     (K.linearDualCochainComplex).d n (n + 1) =
       ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap := rfl
 
-attribute [local implicit_reducible] shortComplexFunctor' shortComplexFunctor
 /-- The degree-`n` short complex of a linear-dual cochain complex is the reversed dual of the
 degree-`n` short complex of the original chain complex. -/
 @[implicit_reducible]

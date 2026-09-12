@@ -94,13 +94,16 @@ variable (R A)
 /-- The square-zero extension of `⋀ Ω[A⁄R]` by an odd square-zero element `ε`, with elements
 written `x + u * ε` and multiplication `(x, u) * (y, v) = (x * y, involute x * v + u * y)`.
 An `R`-algebra map `x ↦ (x, d x)` into it is precisely an odd degree-one `R`-derivation `d`. -/
+@[implicit_reducible]
 def Sq : Type u := ExtAlg R A × ExtAlg R A
+deriving AddCommGroup
 
 namespace Sq
 
 variable {R A}
 
 /-- The element `x + u * ε` of the square-zero extension. -/
+@[simps]
 def mk (x u : ExtAlg R A) : Sq R A := (x, u)
 
 /-- The part of an element of the square-zero extension not involving `ε`. -/
@@ -115,9 +118,6 @@ def snd (s : Sq R A) : ExtAlg R A := Prod.snd s
 
 @[ext] lemma ext {s t : Sq R A} (h₁ : fst s = fst t) (h₂ : snd s = snd t) : s = t :=
   Prod.ext h₁ h₂
-
-instance instAddCommGroup : AddCommGroup (Sq R A) :=
-  inferInstanceAs (AddCommGroup (ExtAlg R A × ExtAlg R A))
 
 @[simp] lemma fst_zero : fst (0 : Sq R A) = 0 := rfl
 
@@ -146,7 +146,6 @@ instance : One (Sq R A) := ⟨mk 1 0⟩
 @[simp] lemma snd_one : snd (1 : Sq R A) = 0 := rfl
 
 instance instRing : Ring (Sq R A) where
-  __ := instAddCommGroup (R := R) (A := A)
   mul_assoc s t u := by
     ext
     · simp [mul_assoc]
@@ -232,15 +231,10 @@ end Sq
 namespace Sq
 
 /-- The projection to the `ε`-free part, as an `A`-algebra map. -/
+@[simps!]
 def fstAlgHom : Sq R A →ₐ[A] ExtAlg R A where
-  toFun := fst
-  map_one' := rfl
-  map_mul' _ _ := rfl
-  map_zero' := rfl
-  map_add' _ _ := rfl
+  __ := AlgHom.fst R (ExtAlg R A) (ExtAlg R A)
   commutes' _ := rfl
-
-@[simp] lemma fstAlgHom_apply (s : Sq R A) : fstAlgHom R A s = fst s := rfl
 
 /-- The coefficient of `ε`, as an `R`-linear map. -/
 def sndLinear : Sq R A →ₗ[R] ExtAlg R A where
@@ -291,7 +285,7 @@ lemma D_induction {motive : Ω[A⁄R] → Prop} (ω : Ω[A⁄R])
   have h : (Sq.fstAlgHom R A).toLinearMap.comp (phi R A) = ExteriorAlgebra.ι A := by
     refine LinearMap.ext_on (KaehlerDifferential.span_range_derivation R A) ?_
     rintro _ ⟨a, rfl⟩
-    simp
+    simp [Sq.mk]
   exact congrArg (fun f => f ω) h
 
 lemma snd_phi_smul (a : A) (ω : Ω[A⁄R]) :
