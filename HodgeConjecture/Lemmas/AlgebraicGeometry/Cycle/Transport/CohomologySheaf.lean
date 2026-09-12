@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
 
 /-!
-# Actual cohomology-sheaf concentration for smooth closed supports
+# Cohomology-sheaf concentration for smooth closed supports
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf`.
 -/
 
 @[expose] public noncomputable section
@@ -27,7 +27,7 @@ variable (X : Over (Spec (.of ℂ)))
 attribute [local instance] smoothClosedSupportCohomologySheafAnalyticTopology
 
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- Negative cohomology vanishes directly from the actual nonnegative resolution. -/
+/-- Negative cohomology vanishes directly from the nonnegative resolution. -/
 theorem complexSupportInjectiveComplex_homology_isZero_negative
     (S : Closeds (ComplexPoint X)) (n : ℤ) (hn : n < 0) :
     IsZero ((complexSupportInjectiveComplex X S).homology n) :=
@@ -35,7 +35,7 @@ theorem complexSupportInjectiveComplex_homology_isZero_negative
     ((complexSupportInjectiveComplex X S).isZero_of_isStrictlyGE 0 n hn)
 
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- Off the support, the actual supported complex has zero cohomology stalks in every
+/-- Off the support, the supported complex has zero cohomology stalks in every
 degree: choose neighborhoods in the complement and use the defining kernel. -/
 theorem complexSupportInjectiveComplex_homology_stalk_isZero_of_not_mem
     (S : Closeds (ComplexPoint X)) (x : ComplexPoint X) (hx : x ∉ S) (n : ℤ) :

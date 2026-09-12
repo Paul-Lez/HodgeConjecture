@@ -26,7 +26,12 @@ namespace AlgebraicGeometry
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- The precise algebraic open complementary to the canonical singular boundary. -/
+/-- `X ∖ Z_sing`: the largest Zariski open of `X` on which the component `Z` is smooth, namely
+the complement of the image of `Z`'s singular locus.
+
+Stage `0` of the singular filtration *is* that singular locus, by the base case of
+`reducedSmoothClosedFiltration`; `coe_cycleComponentSmoothLocusAmbientOpen` states the
+resulting description of the underlying set. -/
 def cycleComponentSmoothLocusAmbientOpen : X.left.Opens :=
   (cycleComponentSingularAmbientClosedFiltration X x 0).compl
 
@@ -45,7 +50,7 @@ instance cycleComponentSmoothLocusAmbientOpenInclusion_isImmersion :
   change IsImmersion (cycleComponentSmoothLocusAmbientOpen X x).ι
   infer_instance
 
-/-- The actual smooth locus, closed in the complement of its singular boundary. -/
+/-- The smooth locus, closed in the complement of its singular boundary. -/
 def cycleComponentSmoothLocusClosedLift :
     (cycleComponentι X.left x ≫ X.hom).smoothLocus.toScheme ⟶
       (cycleComponentSmoothLocusAmbientOpen X x).toScheme :=
@@ -99,7 +104,7 @@ namespace ComplexPoint
 local instance cycleComponentSmoothClosedLiftAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
-/-- The full cycle support as an actual closed analytic subset. -/
+/-- The full cycle support as a closed analytic subset. -/
 def cycleComponentAnalyticClosedSupport : Closeds (ComplexPoint X) :=
   ⟨cycleComponentSupport X x, isClosed_cycleComponentSupport X x⟩
 

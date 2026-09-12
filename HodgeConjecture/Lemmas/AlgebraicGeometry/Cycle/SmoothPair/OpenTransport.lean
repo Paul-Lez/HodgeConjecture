@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.LocalHomology
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.SourceOpen
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.NeighborhoodPairImage
 
@@ -30,7 +30,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
-/-- Actual normal neighborhoods can be computed in any smooth auxiliary ambient open
+/-- Normal neighborhoods can be computed in any smooth auxiliary ambient open
 and then transported to the original topological ambient space. -/
 theorem exists_smoothClosedSupportImageNeighborhood
     {M : Type} [TopologicalSpace M]
@@ -110,7 +110,7 @@ theorem exists_smoothClosedSourceOpenNeighborhood
   exact ⟨W, hWV, he ▸ hzW, hW⟩
 
 omit [SmoothOfRelativeDimension m Y.hom] in
-/-- The fixed-dimensional source-open calculation, transported through a further actual
+/-- The fixed-dimensional source-open calculation, transported through a further
 open embedding. This is the form used by successive closed supports in a larger ambient. -/
 theorem exists_smoothClosedSourceOpenImageNeighborhood
     {M : Type} [TopologicalSpace M]

@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.LocalHomology
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
 
 /-!
@@ -44,7 +44,7 @@ instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint 
   dsimp [complexSupportInjectiveComplex]
   infer_instance
 
-/-- Actual open-section cohomology of the supported injective model is relative
+/-- Open-section cohomology of the supported injective model is relative
 singular cohomology of the same literal local support pair. -/
 def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
     (V : Opens (ComplexPoint X)) (n : ℕ) :

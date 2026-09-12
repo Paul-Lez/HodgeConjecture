@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CoclassOverlap
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothPair.CoclassOverlap
 
 /-!
-# Exactly normalized smooth-support coclasses on actual overlaps
+# Exactly normalized smooth-support coclasses on overlaps
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CoclassOverlap`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothPair.CoclassOverlap`.
 -/
 
 @[expose] public noncomputable section
@@ -25,7 +25,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- Restriction is the map induced by the actual inclusion of support-complement pairs. -/
+/-- Restriction is the map induced by the inclusion of support-complement pairs. -/
 theorem smoothClosedSupportChartCoclass_restrict
     {W V : Set (ComplexPoint X)} (hWV : W ⊆ V)
     (hV : V ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
@@ -35,7 +35,7 @@ theorem smoothClosedSupportChartCoclass_restrict
     smoothClosedSupportChartCoclass X Y i m d z W (hWV.trans hV) :=
   chartNormalProjectionCoclass_restrict _ _ _ _ _ hWV hV
 
-/-- The old local pair-model coclass is exactly the actual chart-projection coclass.
+/-- The old local pair-model coclass is exactly the chart-projection coclass.
 The proof uses the explicit radial normal fiber, including its complex normalization. -/
 theorem smoothClosedSupportNormalCoclass_eq_projection
     (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V) :
@@ -76,8 +76,8 @@ theorem smoothClosedSupportNormalCoclass_restrict_eq_chart
 
 variable (z' : ComplexPoint Y)
 
-/-- Exactly normalized ambient coclass agreement for the actual closed-immersion charts.
-The only inputs are smoothness, the closed immersion, and membership in its actual chart
+/-- Exactly normalized ambient coclass agreement for the closed-immersion charts.
+The only inputs are smoothness, the closed immersion, and membership in its chart
 overlap and image. Holomorphicity and invertibility of the normal derivative are proved. -/
 theorem exists_open_smoothClosedSupportChartCoclass_eq
     (x : ComplexPoint X) (hxS : x ∈ Set.range (Point.map i))
@@ -124,7 +124,7 @@ theorem exists_open_smoothClosedSupportChartCoclass_eq_within
     (neighborhoodSupportInclusionPairMap hWW₀ (Set.range (Point.map i)))) heq
   simpa only [smoothClosedSupportChartCoclass_restrict] using h
 
-/-- The original exactly normalized local normal coclasses agree after actual pair
+/-- The original exactly normalized local normal coclasses agree after pair
 restriction on sufficiently small ambient overlaps of the holomorphic chart loci.
 This is a comparison theorem for the old classes, not a new definition of their duality. -/
 theorem exists_open_smoothClosedSupportNormalCoclass_restrict_eq

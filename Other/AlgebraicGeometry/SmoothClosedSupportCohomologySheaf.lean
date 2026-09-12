@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
 
 open CategoryTheory CategoryTheory.Limits Topology TopologicalSpace Opposite
 open AlgebraicTopology.Singular
@@ -49,7 +49,7 @@ theorem smoothClosedSupportInjective_homology_stalk_isZero_of_ne
           (n : ℤ)) := e.injective.subsingleton
   exact AddCommGrpCat.isZero_of_subsingleton _
 
-/-- The actual supported cohomology sheaf vanishes in every integer degree other than
+/-- The supported cohomology sheaf vanishes in every integer degree other than
 twice the complex codimension. -/
 theorem smoothClosedSupportInjective_homology_isZero_of_ne (n : ℤ)
     (hn : n ≠ 2 * ((d - m : ℕ) : ℤ)) :
@@ -66,7 +66,7 @@ theorem smoothClosedSupportInjective_homology_isZero_of_ne (n : ℤ)
         (by exact_mod_cast hn)
     · exact complexSupportInjectiveComplex_homology_stalk_isZero_of_not_mem X _ x hx k
 
-/-- The proved lower support bound, packaged in Mathlib's actual cohomological grading API. -/
+/-- The proved lower support bound, packaged in Mathlib's cohomological grading API. -/
 theorem smoothClosedSupportInjective_isGE :
     (complexSupportInjectiveComplex X (smoothClosedAnalyticSupport X Y i)).IsGE
       (2 * ((d - m : ℕ) : ℤ)) := by
@@ -75,7 +75,7 @@ theorem smoothClosedSupportInjective_isGE :
   rw [HomologicalComplex.exactAt_iff_isZero_homology]
   exact smoothClosedSupportInjective_homology_isZero_of_ne X Y i m d n (ne_of_lt hn)
 
-/-- The proved upper support bound; together with `isGE` this is actual concentration. -/
+/-- The proved upper support bound; together with `isGE` this is concentration. -/
 theorem smoothClosedSupportInjective_isLE :
     (complexSupportInjectiveComplex X (smoothClosedAnalyticSupport X Y i)).IsLE
       (2 * ((d - m : ℕ) : ℤ)) := by

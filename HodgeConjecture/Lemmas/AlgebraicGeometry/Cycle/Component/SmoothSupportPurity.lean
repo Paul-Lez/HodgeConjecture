@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 
 /-!
-# Actual purity along the smooth locus of an integral cycle component
+# Purity along the smooth locus of an integral cycle component
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity`.
@@ -23,11 +23,18 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-  {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
+  {p : ℕ} (hx : Order.coheight x = p)
 
 attribute [local instance] cycleComponentSmoothSupportPurityAnalyticTopology
 
-/-- Restricting the actual flasque supported coefficient sheaves preserves flasqueness. -/
+/-- The analytic smooth-locus open is the preimage of the Zariski one: the complex points
+lying off the image of the component's singular locus. -/
+@[simp] theorem coe_cycleComponentSmoothSupportAmbientOpen :
+    (cycleComponentSmoothSupportAmbientOpen X x : Set (ComplexPoint X)) =
+      (Point.underlying ⁻¹' (cycleComponentι X.left x ''
+        (singularLocusClosed (cycleComponentι X.left x ≫ X.hom) : Set _)))ᶜ := rfl
+
+/-- Restricting the flasque supported coefficient sheaves preserves flasqueness. -/
 theorem cycleComponentSmoothRestrictedInjectiveComplex_isFlasque (n : ℤ) :
     ((cycleComponentSmoothRestrictedInjectiveComplex X x).X n).IsFlasque := by
   let : ((complexSupportInjectiveComplex X
@@ -39,30 +46,30 @@ theorem cycleComponentSmoothRestrictedInjectiveComplex_isFlasque (n : ℤ) :
     (TopCat.of (ComplexPoint X)) (cycleComponentSmoothSupportAmbientOpen X x)
       ((complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)).X n)
 
-include d hx in
-/-- The actual lower cohomological bound along the smooth locus. -/
+include hx in
+/-- The lower cohomological bound along the smooth locus. -/
 theorem cycleComponentSmoothRestrictedInjective_isGE :
     (cycleComponentSmoothRestrictedInjectiveComplex X x).IsGE (2 * (p : ℤ)) := by
   rw [CochainComplex.isGE_iff]
   intro n hn
   rw [HomologicalComplex.exactAt_iff_isZero_homology]
   exact cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
-    X x (d := d) hx n (ne_of_lt hn)
+    X x hx n (ne_of_lt hn)
 
-include d hx in
-/-- The actual upper cohomological bound, hence concentration rather than just lower purity. -/
+include hx in
+/-- The upper cohomological bound, hence concentration rather than just lower purity. -/
 theorem cycleComponentSmoothRestrictedInjective_isLE :
     (cycleComponentSmoothRestrictedInjectiveComplex X x).IsLE (2 * (p : ℤ)) := by
   rw [CochainComplex.isLE_iff]
   intro n hn
   rw [HomologicalComplex.exactAt_iff_isZero_homology]
   exact cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
-    X x (d := d) hx n (ne_of_gt hn)
+    X x hx n (ne_of_gt hn)
 
-/-- Its forward map displays the actual open-section identification, canonical
+/-- Its forward map displays the open-section identification, canonical
 sheafification comparison on the open, and exact open-restriction homology comparison. -/
 @[simp] theorem cycleComponentSmoothSupportLowestSectionCohomologyIso_hom :
-    (cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := d) hx).hom =
+    (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom =
       HomologicalComplex.homologyMap
         (TopCat.Sheaf.openRestrictionTopSectionComplexIso (TopCat.of (ComplexPoint X))
           (cycleComponentSmoothSupportAmbientOpen X x)
@@ -76,8 +83,8 @@ sheafification comparison on the open, and exact open-restriction homology compa
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
         (2 * (p : ℤ))).hom := rfl
 
-include d hx in
-/-- Actual supported section cohomology on the boundary complement vanishes below `2p`.
+include hx in
+/-- Supported section cohomology on the boundary complement vanishes below `2p`.
 Higher-degree global vanishing is not inferred from sheaf concentration. -/
 theorem cycleComponentSmoothSupportSectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * (p : ℤ)) :
@@ -92,6 +99,6 @@ theorem cycleComponentSmoothSupportSectionCohomology_isZero_of_lt
         ((ambientRationalInjectiveComplex X).X j)
   · intro j hj y hy V hyV
     exact cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
-      X x (d := d) hx j (ne_of_lt (hj.trans_lt hn)) y hy V hyV
+      X x hx j (ne_of_lt (hj.trans_lt hn)) y hy V hyV
 
 end AlgebraicGeometry.ComplexPoint

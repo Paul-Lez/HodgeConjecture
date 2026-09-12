@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.CoclassOverlap
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.CoclassOverlap
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.RelativeCohomologySheaf
 /-!
 # The global normalized smooth-support coclass section
@@ -28,7 +28,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
-/-- The actual source open of a constructed holomorphic normal chart. -/
+/-- The source open of a constructed holomorphic normal chart. -/
 def smoothClosedSupportChartOpen (z : ComplexPoint Y) :
     Opens (ComplexPoint X) :=
   ⟨(closedImmersionHolomorphicFlatteningChart X Y i m d z).source,
@@ -44,7 +44,7 @@ abbrev smoothClosedSupportCoclassSheaf : TopCat.Sheaf AddCommGrpCat
   supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
     (Set.range (Point.map i)) (2 * (d - m))
 
-/-- The exact normal coclass determines an actual section on its full chart source. -/
+/-- The exact normal coclass determines a section on its full chart source. -/
 def smoothClosedSupportChartSheafSection (z : ComplexPoint Y) :
     (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj
       (op (smoothClosedSupportChartOpen X Y i m d z)) :=
@@ -66,7 +66,7 @@ def smoothClosedSupportChartCoclassGerm (z : ComplexPoint Y)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The actual ambient overlap theorem proves equality of chart germs on support. -/
+/-- The ambient overlap theorem proves equality of chart germs on support. -/
 private theorem smoothClosedSupportChartCoclassGerm_eq
     (z z' : ComplexPoint Y) (x : ComplexPoint X)
     (hxS : x ∈ Set.range (Point.map i))
@@ -83,7 +83,7 @@ private theorem smoothClosedSupportChartCoclassGerm_eq
     hW hW' x hxW
   simpa only [smoothClosedSupportChartCoclass_restrict] using heq
 
-/-- Away from the actual closed image, the actual chart coclass germ is zero. -/
+/-- Away from the closed image, the chart coclass germ is zero. -/
 private theorem smoothClosedSupportChartCoclassGerm_eq_zero
     (z : ComplexPoint Y) (x : ComplexPoint X)
     (hx : x ∈ smoothClosedSupportChartOpen X Y i m d z)
@@ -107,7 +107,7 @@ def smoothClosedSupportCoclassStalk (x : ComplexPoint X) :
         mem_smoothClosedSupportChartOpen X Y i m d hxS.choose)
   else 0
 
-/-- The normalized germ family agrees with every actual chart, including at points
+/-- The normalized germ family agrees with every chart, including at points
 outside the support. This supplies local coherence as a theorem, not as data. -/
 theorem smoothClosedSupportCoclassStalk_eq_chartGerm
     (z : ComplexPoint Y) (x : ComplexPoint X)
@@ -126,7 +126,7 @@ theorem smoothClosedSupportCoclassStalk_eq_chartGerm
     smoothClosedSupportCoclassStalk X Y i m d x = 0 := by
   rw [smoothClosedSupportCoclassStalk, dif_neg hxS]
 
-/-- Actual charts and the open support complement prove local representability
+/-- The charts and the open support complement prove local representability
 of the entire normalized stalk family. -/
 theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
     ∀ x : ComplexPoint X,
@@ -148,7 +148,7 @@ theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
     intro y hy
     rw [map_zero, smoothClosedSupportCoclassStalk_eq_zero X Y i m d y hy]
 
-/-- The actual unique global gluing of exactly normalized smooth normal coclasses. -/
+/-- The unique global gluing of exactly normalized smooth normal coclasses. -/
 def smoothClosedSupportCoclassSection :
     (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj (op ⊤) :=
   TopCat.Sheaf.sectionOfLocallyRepresentable _

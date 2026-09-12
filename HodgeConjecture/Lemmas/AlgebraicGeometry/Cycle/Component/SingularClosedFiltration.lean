@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 
 /-!
-# Actual ambient closed supports for singular-component localization induction
+# Ambient closed supports for singular-component localization induction
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration`.
@@ -23,7 +23,8 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
 theorem cycleComponentSingularClosedFiltration_length :
-    cycleComponentSingularClosedFiltration X x (cycleComponentSingularFiltrationLength X x) = ⊥ := by
+    cycleComponentSingularClosedFiltration X x
+      (cycleComponentSingularStratification X x).length = ⊥ := by
   let := cycleComponent_isNoetherian X x
   exact reducedSmoothClosedFiltration_length _ _
 
@@ -33,54 +34,55 @@ theorem cycleComponentSingularAmbientClosedFiltration_antitone :
   fun _ _ hkl ↦ Set.image_mono (reducedSmoothClosedFiltration_antitone _ _ hkl)
 
 theorem cycleComponentSingularAmbientClosedFiltration_length :
-    cycleComponentSingularAmbientClosedFiltration X x (cycleComponentSingularFiltrationLength X x) =
-      ⊥ := by
+    cycleComponentSingularAmbientClosedFiltration X x
+      (cycleComponentSingularStratification X x).length = ⊥ := by
   apply SetLike.coe_injective
   change cycleComponentι X.left x ''
-    (cycleComponentSingularClosedFiltration X x (cycleComponentSingularFiltrationLength X x) : Set _) = ∅
+    (cycleComponentSingularClosedFiltration X x
+      (cycleComponentSingularStratification X x).length : Set _) = ∅
   rw [cycleComponentSingularClosedFiltration_length]
   exact Set.image_empty _
 
 /-- Every closed remainder stays below the proved singular-boundary dimension bound. -/
 theorem cycleComponentSingularClosedFiltration_dimension_lt
-    {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) (k : ℕ) :
-    topologicalKrullDim (cycleComponentSingularClosedFiltration X x k) < (d - p : ℕ) :=
+    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ) :
+    topologicalKrullDim (cycleComponentSingularClosedFiltration X x k) < (dim X.left - p : ℕ) :=
   (IsEmbedding.inclusion (reducedSmoothClosedFiltration_le _ _ k)).isInducing.topologicalKrullDim_le.trans_lt
     (topologicalKrullDim_cycleComponent_singularLocus_lt X x hx)
 
-/-- Every actual smooth layer has strictly smaller dimension than the component. -/
+/-- Every smooth layer has strictly smaller dimension than the component. -/
 theorem cycleComponentSingularFiltrationStratum_dimension_lt
-    {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) (k : ℕ) :
-    topologicalKrullDim (cycleComponentSingularFiltrationStratum X x k) < (d - p : ℕ) :=
+    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ) :
+    topologicalKrullDim (cycleComponentSingularFiltrationStratum X x k) < (dim X.left - p : ℕ) :=
   (topologicalKrullDim_reducedClosedSmoothPiece_le _ le_rfl).trans_lt
     (cycleComponentSingularClosedFiltration_dimension_lt X x hx k)
 
-/-- The normal codimension lower bound is realized on actual standard-smooth affine
+/-- The normal codimension lower bound is realized on standard-smooth affine
 neighborhoods of every stratum point, including strata of nonconstant dimension. -/
 theorem cycleComponentSingularFiltrationStratum_exists_affine_normalCodimension_ge
-    {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) (k : ℕ)
+    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)
     (z : cycleComponentSingularFiltrationStratum X x k) :
     ∃ (U : (cycleComponentSingularFiltrationStratum X x k).Opens) (_ : IsAffineOpen U),
-      z ∈ U ∧ ∃ n : ℕ, n < d - p ∧ p + 1 ≤ d - n ∧
+      z ∈ U ∧ ∃ n : ℕ, n < dim X.left - p ∧ p + 1 ≤ dim X.left - n ∧
         RingHom.IsStandardSmoothOfRelativeDimension n
           ((cycleComponentSingularFiltrationStratumι X x k ≫ X.hom).appLE ⊤ U (by simp)).hom := by
   obtain ⟨U, hU, hzU, n, hn, hstd⟩ :=
     Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
       (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom)
-      (cycleComponentSingularFiltrationStratum_dimension_lt X x (d := d) hx k) z
+      (cycleComponentSingularFiltrationStratum_dimension_lt X x hx k) z
   exact ⟨U, hU, hzU, n, hn, by omega, hstd⟩
 
 /-- The dimension bound supplies genuine smooth scheme morphisms of fixed local
-dimension, ready for the actual normal-coordinate construction. -/
+dimension, ready for the normal-coordinate construction. -/
 theorem cycleComponentSingularFiltrationStratum_exists_smooth_relativeDimension
-    {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) (k : ℕ)
+    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)
     (z : cycleComponentSingularFiltrationStratum X x k) :
     ∃ (U : (cycleComponentSingularFiltrationStratum X x k).Opens) (_ : IsAffineOpen U),
-      z ∈ U ∧ ∃ n : ℕ, n < d - p ∧ p + 1 ≤ d - n ∧
+      z ∈ U ∧ ∃ n : ℕ, n < dim X.left - p ∧ p + 1 ≤ dim X.left - n ∧
         SmoothOfRelativeDimension n (U.ι ≫ cycleComponentSingularFiltrationStratumι X x k ≫ X.hom) := by
   obtain ⟨U, hU, hzU, n, hn, hcodim, hstd⟩ :=
     cycleComponentSingularFiltrationStratum_exists_affine_normalCodimension_ge X x
-      (d := d) hx k z
+      hx k z
   exact ⟨U, hU, hzU, n, hn, hcodim,
     smoothOfRelativeDimension_affineOpen_of_isStandardSmooth _ hU hstd⟩
 
@@ -94,17 +96,17 @@ theorem cycleComponentSingularAnalyticClosedFiltration_antitone :
   fun _ _ hkl _ hz ↦ cycleComponentSingularAmbientClosedFiltration_antitone X x hkl hz
 
 theorem cycleComponentSingularAnalyticClosedFiltration_length :
-    cycleComponentSingularAnalyticClosedFiltration X x (cycleComponentSingularFiltrationLength X x) =
-      ⊥ := by
+    cycleComponentSingularAnalyticClosedFiltration X x
+      (cycleComponentSingularStratification X x).length = ⊥ := by
   apply SetLike.coe_injective
   change Point.underlying ⁻¹'
-    (cycleComponentSingularAmbientClosedFiltration X x (cycleComponentSingularFiltrationLength X x) :
-      Set X.left) = ∅
+    (cycleComponentSingularAmbientClosedFiltration X x
+      (cycleComponentSingularStratification X x).length : Set X.left) = ∅
   rw [cycleComponentSingularAmbientClosedFiltration_length]
   exact Set.preimage_empty
 
 omit [IsIntegral X.left] [Smooth X.hom] in
-/-- Each analytic successive difference is the actual complex-point image of its smooth
+/-- Each analytic successive difference is the complex-point image of its smooth
 stratum, not a supplied support parametrization. -/
 theorem cycleComponentSingularAnalyticClosedFiltration_layer (k : ℕ) :
     Set.range (Point.map (cycleComponentSingularFiltrationStratumOverι X x k)) =
@@ -116,7 +118,7 @@ theorem cycleComponentSingularAnalyticClosedFiltration_layer (k : ℕ) :
   rfl
 
 omit [IsIntegral X.left] [Smooth X.hom] in
-/-- Inside the exact localization open, the stratum's actual closed-embedding image
+/-- Inside the exact localization open, the stratum's closed-embedding image
 is precisely the current analytic closed support restricted to that open. -/
 theorem cycleComponentSingularStratumClosedLift_complexPoints_range (k : ℕ) :
     Set.range (Point.map (cycleComponentSingularStratumClosedLiftOver X x k)) =
@@ -130,7 +132,7 @@ theorem cycleComponentSingularStratumClosedLift_complexPoints_range (k : ℕ) :
   rfl
 
 /-- Removing the first closed boundary support from the full cycle support gives
-exactly the complex points of the actual smooth locus of the integral component. -/
+exactly the complex points of the smooth locus of the integral component. -/
 theorem cycleComponentSmoothLocus_complexPoints_range_eq_support_sdiff_boundary :
     Set.range (Point.map (cycleComponentSmoothLocusOverι X x)) =
       cycleComponentSupport X x \

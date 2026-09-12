@@ -12,15 +12,15 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularCohomolog
 # Constructed sheaf cycle classes in arbitrary codimension
 
 The exactly normalized normal-chart coclass on a component's smooth locus is
-transported to the actual supported cohomology sheaf. Lowest-degree purity
+transported to the supported cohomology sheaf. Lowest-degree purity
 and the proved unique extension across the singular boundary then give an
-actual supported class on the original ambient variety. Forgetting support
+supported class on the original ambient variety. Forgetting support
 lands in the repository's ordinary rational cohomology.
 
 All comparison maps, purity statements, and extension isomorphisms are
 constructed. No fundamental-class, orientation, duality, or vanishing datum
 is an argument. The corresponding Borel–Moore fundamental class is obtained
-through the previously constructed complex-orientation duality for the actual
+through the previously constructed complex-orientation duality for the
 ambient chain sheaf. This does not assert intrinsic compactification
 independence or rational-equivalence invariance.
 -/
@@ -38,7 +38,7 @@ variable (X : Over (Spec (.of ℂ)))
 local instance cycleComponentSheafClassAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
-/-- The actual supported injective cohomology sheaf is the sheaf of local
+/-- The supported injective cohomology sheaf is the sheaf of local
 relative cohomology, by the constructed singular resolution and its literal
 restriction-natural comparison. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
@@ -51,8 +51,7 @@ def complexSupportInjectiveCohomologySheafIsoRelative
       supportedSingularCohomologySheafIsoRelative
         (TopCat.of (ComplexPoint X)) S S.isClosed n
 
-variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-  (hx : Order.coheight x = p)
+variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
 /-- Degree-`2p` cohomology of global sections supported on the component,
 computed in the fixed ambient injective resolution. -/
@@ -69,12 +68,12 @@ abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
 
 /-- Supported cohomology on the full component is identified with sections
 of the local relative-cohomology sheaf on its smooth-locus ambient open.
-Each of the three arrows is an actual proved isomorphism. -/
+Each of the three arrows is a proved isomorphism. -/
 def cycleComponentSupportedClassNormalizationIso :
     CycleComponentSupportedCohomology X x p ≅
       CycleComponentSmoothCoclassSections X x p := by
-  refine cycleComponentSupportExtensionIso X x (d := d) hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := d) hx ≪≫ ?_
+  refine cycleComponentSupportExtensionIso X x hx ≪≫
+    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫ ?_
   let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
       (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
         (complexSupportInjectiveCohomologySheafIsoRelative X
@@ -89,37 +88,36 @@ The inverse comes from proved purity and boundary vanishing; no extension datum 
 def cycleComponentExtendSmoothCoclass :
     CycleComponentSmoothCoclassSections X x p →+
       CycleComponentSupportedCohomology X x p :=
-  (cycleComponentSupportedClassNormalizationIso X x (d := d) hx).inv.hom
+  (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
 
-/-- The actual globally supported class extending the exact complex-normal
+/-- The globally supported class extending the exact complex-normal
 coclass. The inverse is that of the proved normalization isomorphism. -/
 def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
-  cycleComponentExtendSmoothCoclass X x (d := d) hx
-    (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)
+  cycleComponentExtendSmoothCoclass X x hx
+    (cycleComponentSmoothSupportCoclassSection X x hx)
 
 /-- The constructed class in the existing support-cone presentation. Its
-comparison includes the proved cone sign required by actual support forgetting. -/
+comparison includes the proved cone sign required by support forgetting. -/
 def cycleComponentSheafSupportedClass :
     RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
     (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
-      (cycleComponentSupportedInjectiveClass X x (d := d) hx)
+      (cycleComponentSupportedInjectiveClass X x hx)
 
-/-- The unconditional ordinary class of an arbitrary integral component.
-This uses the literal inclusion of supported injective sections. -/
+/-- **Step 3.** The unconditional ordinary class of an arbitrary integral component: the
+supported class of step 2, with its support forgotten.
+
+This is the composite of the three steps, not a second route into ordinary cohomology; the
+agreement with `forgetSupport` is therefore definitional rather than a theorem. -/
 def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
-  (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
-    (HomologicalComplex.homologyMap
-      (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
-        (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
-      (cycleComponentSupportedInjectiveClass X x (d := d) hx))
+  forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
+    (cycleComponentSheafSupportedClass X x hx)
 
 include X hx in
-omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- The actual dimension bound needed for the Borel–Moore degree, not an extra input. -/
-theorem cycleComponentSheafClass_codimension_le : p ≤ d := by
-  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := d) x
+omit [IsProjective X.hom] in
+/-- The dimension bound needed for the Borel–Moore degree, not an extra input. -/
+theorem cycleComponentSheafClass_codimension_le : p ≤ dim X.left := by
+  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := dim X.left) x
   rw [hx] at h
   exact_mod_cast h
 

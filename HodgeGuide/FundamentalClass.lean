@@ -71,8 +71,8 @@ def cycleComponentSmoothClosedLiftCoclassSection (X : Over (Spec ↧ℂ)) [IsInt
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (2 * p)).obj.obj (op ⊤) := by
-  let := cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension X x (d := d) hx
-  have hdeg := cycleComponentSmoothClosedLift_codimension X x (d := d) hx
+  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+  have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
   exact hdeg ▸ smoothClosedSupportCoclassSection
     (cycleComponentSmoothLocusAmbientOpenOver X x)
     (cycleComponentSmoothLocusOver X x)
@@ -99,7 +99,7 @@ def cycleComponentSmoothSupportCoclassSection (X : Over (Spec ↧ℂ)) [IsIntegr
     (cycleComponentSmoothClosedLiftAmbientMap_support X x)
     (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
     (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
-    (cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx)
+    (cycleComponentSmoothClosedLiftCoclassSection X x hx)
 ```
 ```lean -show
 end Guide.Subvariety.D2
@@ -185,8 +185,8 @@ def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsInt
       (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * p)).obj.obj
           (op (cycleComponentSmoothSupportAmbientOpen X x)) := by
-  refine cycleComponentSupportExtensionIso X x (d := d) hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x (d := d) hx ≪≫ ?_
+  refine cycleComponentSupportExtensionIso X x hx ≪≫
+    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫ ?_
   let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
       (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
         (complexSupportInjectiveCohomologySheafIsoRelative X
@@ -221,8 +221,8 @@ the component class.
 ```lean
 example [SmoothOfRelativeDimension d X.hom] :
     CycleComponentSupportedCohomology X x p :=
-  cycleComponentExtendSmoothCoclass X x (d := d) hx
-    (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)
+  cycleComponentExtendSmoothCoclass X x hx
+    (cycleComponentSmoothSupportCoclassSection X x hx)
 ```
 
 # Step 3: from support to ordinary cohomology
@@ -242,7 +242,7 @@ def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.lef
     RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
     (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
-      (cycleComponentSupportedInjectiveClass X x (d := d) hx)
+      (cycleComponentSupportedInjectiveClass X x hx)
 ```
 ```lean -show
 end Guide.Subvariety.D5
@@ -260,7 +260,7 @@ def cycleComponentSheafClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
         (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
         (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
-      (cycleComponentSupportedInjectiveClass X x (d := d) hx))
+      (cycleComponentSupportedInjectiveClass X x hx))
 ```
 ```lean -show
 end Guide.Subvariety.D6
@@ -282,7 +282,6 @@ $`H^0(X;\mathbb Q)` in every dimension, without assuming analytic connectedness.
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_genericPoint_ne_zero
 ```
 ```lean -show
-example : cycleComponentSheafClass X (genericPoint X.left)
-    (d := dim X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
-  cycleComponentSheafClass_genericPoint_ne_zero X (dim X.left)
+example : cycleComponentSheafClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
+  cycleComponentSheafClass_genericPoint_ne_zero X
 ```

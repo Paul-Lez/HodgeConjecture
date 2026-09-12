@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.Purity
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Local.Purity
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
@@ -27,7 +27,7 @@ import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 # Local dual classes on cycle components
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.Purity`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Local.Purity`.
 -/
 
 @[expose] public noncomputable section
