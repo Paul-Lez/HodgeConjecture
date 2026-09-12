@@ -115,6 +115,11 @@ def supportedComparison
       (cycleComponentSupport V.over x)
       (isClosed_cycleComponentSupport V.over x) (2 * p)
 
+/-- The supported comparison depends only on the component, not on the surrounding data. -/
+lemma supportedComparison_eq
+    (D D' : AuxiliaryRationalCycleComponentBorelMooreComparisonData V p x hx) :
+    D.supportedComparison = D'.supportedComparison := rfl
+
 /-- The comparison-dependent rational constant-sheaf class with support. -/
 def auxiliarySupportedClass
     (D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V p x hx) :

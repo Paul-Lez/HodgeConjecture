@@ -160,4 +160,5 @@ public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
 public import Other.CommutativeAlgebra.RegularLocalQuotientKernel
 public import Other.Geometry.Manifold.Orientation
+public import Other.Mathlib.Algebra.Module.LinearMap.Rat
 public import Other.Topology.Category.TopCat.Basic

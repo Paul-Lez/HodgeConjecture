@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import Other.AlgebraicGeometry.BorelMooreCycleClass
+public import Other.Mathlib.Algebra.Module.LinearMap.Rat
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
 
@@ -375,7 +376,6 @@ comparison-dependent singular supported class. -/
     D.orientationInducedComparisonAddEquiv D.compactificationFundamentalClass =
       D.singularSupportedClassOfComparisons := rfl
 
-set_option maxRecDepth 5000 in
 /-- Adapter to the previous cycle-class package.
 
 The old API asks for a rational `LinearEquiv`.  Its underlying additive equivalence is now the
@@ -386,15 +386,17 @@ def toAuxiliaryBorelMooreComparisonData
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
     AuxiliaryRationalCycleComponentBorelMooreComparisonData V p x hx where
   borelMoore := D.borelMoore
-  auxiliaryComparison := D.orientationInducedComparisonAddEquiv.toLinearEquiv
-    (map_rat_smul D.orientationInducedComparisonAddEquiv)
+  auxiliaryComparison := D.orientationInducedComparisonAddEquiv.toRatLinearEquiv
 
-set_option maxRecDepth 5000 in
 /-- Passing through the adapter does not change the comparison-dependent singular class. -/
 @[simp] lemma toAuxiliaryBorelMooreComparisonData_auxiliarySingularSupportedClass
     (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
     D.toAuxiliaryBorelMooreComparisonData.auxiliarySingularSupportedClass =
-      D.singularSupportedClassOfComparisons := rfl
+      D.singularSupportedClassOfComparisons := by
+  simp only [AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliarySingularSupportedClass,
+    toAuxiliaryBorelMooreComparisonData, singularSupportedClassOfComparisons,
+    AuxiliaryRationalCycleComponentBorelMooreComparisonData.fundamentalClass,
+    compactificationFundamentalClass, AddEquiv.coe_toRatLinearEquiv]
 
 /-- Forgetting support gives the comparison-dependent ordinary rational class. -/
 def ordinaryClassOfComparisons
@@ -434,7 +436,6 @@ namespace ComplexOrientedRationalCycleComponentSheafBorelMooreData
 variable {V : DimensionedSmoothProjectiveComplexVariety} {p : ℕ}
   {x : V.scheme} {hx : coheight x = p}
 
-set_option maxRecDepth 5000 in
 /-- The general complex-oriented component package induced by the sheaf comparison and the
 independent Verdier/Thom normalization theorem. -/
 def toComplexOrientedComponentClassData
@@ -442,8 +443,7 @@ def toComplexOrientedComponentClassData
     ComplexOrientedRationalCycleComponentClassData V p x hx where
   borelMoore := D.comparisonInputs.borelMoore
   localThomCap := D.localThomCap
-  comparison := D.comparisonInputs.orientationInducedComparisonAddEquiv.toLinearEquiv
-    (map_rat_smul D.comparisonInputs.orientationInducedComparisonAddEquiv)
+  comparison := D.comparisonInputs.orientationInducedComparisonAddEquiv.toRatLinearEquiv
   comparison_isComplexOriented := D.orientationComparison_local
 
 /-- The normalized Alexander--Poincaré equivalence obtained from the sheaf construction and the
