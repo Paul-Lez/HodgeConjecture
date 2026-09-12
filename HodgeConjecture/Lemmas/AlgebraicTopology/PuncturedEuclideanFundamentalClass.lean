@@ -2643,21 +2643,6 @@ lemma standardAffineBoundaryHomologyMap_comp_retraction (n : ℕ) :
     (standardAffineBoundaryChainRetractionHomotopy (n + 2)).homologyMap_eq,
     HomologicalComplex.homologyMap_id]
 
-/-- The homology isomorphism induced by affine realization of the standard simplicial
-boundary. -/
-def standardAffineBoundaryHomologyIso (n : ℕ) :
-    ((∂Δ[n + 2] : SSet.{0}).chainComplex
-      (ModuleCat.of ℚ ℚ)).homology (n + 1) ≅
-    ((TopCat.toSSet.obj (standardPuncturedPair (n + 2)).snd).chainComplex
-      (ModuleCat.of ℚ ℚ)).homology (n + 1) :=
-  (standardAffineBoundaryChainHomotopyEquiv (n + 2)).toHomologyIso (n + 1)
-
-@[simp]
-lemma standardAffineBoundaryHomologyIso_hom (n : ℕ) :
-    (standardAffineBoundaryHomologyIso n).hom =
-      standardAffineBoundaryHomologyMap n :=
-  rfl
-
 /-- The affine boundary comparison is an isomorphism on rational homology. -/
 noncomputable instance standardAffineBoundaryHomologyMap_isIso (n : ℕ) :
     IsIso (standardAffineBoundaryHomologyMap n) := by
@@ -2682,13 +2667,6 @@ lemma standardAffineBoundaryHomologyMap_injective (n : ℕ) :
     _ = y := by
       simpa only [ConcreteCategory.comp_apply, ConcreteCategory.id_apply]
         using hcomp y
-
-lemma standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain' (n : ℕ) :
-    standardSphereSimplicialBoundaryChain n ≫
-        (standardAffineBoundaryChainMap (n + 1)).f n =
-      standardSubspaceBoundaryChain n := by
-  rw [standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain,
-    standardPuncturedAffineBoundaryChain, standardSubspaceBoundaryChain]
 
 lemma standardPuncturedBoundaryCycle_inclusion' (n : ℕ) :
     standardPuncturedBoundaryCycle n ≫
@@ -2734,8 +2712,7 @@ lemma standardSphereSimplicialBoundaryCycle_affine (n : ℕ) :
       (ModuleCat.of ℚ ℚ)).iCycles (n + 1))).mp
   rw [Category.assoc, hcycles, standardPuncturedBoundaryCycle_direct_inclusion,
     ← Category.assoc, standardSphereSimplicialBoundaryCycle_inclusion']
-  exact standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain'
-    (n + 1)
+  exact standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain (n + 1)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- On homology, the affine realization sends the known simplicial sphere generator to the

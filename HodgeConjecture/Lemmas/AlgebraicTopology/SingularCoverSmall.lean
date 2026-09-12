@@ -139,54 +139,6 @@ public theorem coverMemberToSmallIntegralSingularChains_comp_inclusion (j : ι) 
         (TopCat.toSSet.map (topologicalSubsetInclusion X (U j)))
   rw [← Functor.map_comp, coverMemberToSmallSingularSet_comp_inclusion]
 
-/-- A subspace equal to the whole space is homeomorphic to the ambient space by its inclusion. -/
-public noncomputable def topologicalSubsetHomeomorphOfEqUniv
-    (s : Set X) (hs : s = Set.univ) : s ≃ₜ X :=
-  (Homeomorph.setCongr hs).trans (Homeomorph.Set.univ X)
-
-/-- The subspace inclusion is an isomorphism when the subset is all of `X`. -/
-public theorem topologicalSubsetInclusion_isIso_of_eq_univ
-    (s : Set X) (hs : s = Set.univ) :
-    IsIso (topologicalSubsetInclusion X s) := by
-  change IsIso (TopCat.isoOfHomeo
-    (X := TopCat.of s) (Y := X) (topologicalSubsetHomeomorphOfEqUniv X s hs)).hom
-  infer_instance
-
-/-- If one cover member is the whole space, every singular simplex is already small. -/
-public theorem coverSmallSingularSubcomplex_eq_top_of_member_eq_univ
-    (j : ι) (hj : U j = Set.univ) :
-    coverSmallSingularSubcomplex X U = ⊤ := by
-  let := topologicalSubsetInclusion_isIso_of_eq_univ X (U j) hj
-  have hrange : SSet.Subcomplex.range
-      (TopCat.toSSet.map (topologicalSubsetInclusion X (U j))) = ⊤ :=
-    SSet.Subcomplex.range_eq_top _
-  exact top_unique (hrange ▸ le_iSup (fun k ↦ SSet.Subcomplex.range
-    (TopCat.toSSet.map (topologicalSubsetInclusion X (U k)))) j)
-
-/-- For a cover containing the whole space, the small-chain inclusion is an isomorphism. -/
-public theorem coverSmallIntegralSingularChainInclusion_isIso_of_member_eq_univ
-    (j : ι) (hj : U j = Set.univ) :
-    IsIso (coverSmallIntegralSingularChainInclusion X U) := by
-  let htop := coverSmallSingularSubcomplex_eq_top_of_member_eq_univ X U j hj
-  let e : (coverSmallSingularSubcomplex X U : SSet) ≅ TopCat.toSSet.obj X :=
-    SSet.Subcomplex.eqToIso htop ≪≫ SSet.Subcomplex.topIso _
-  have he : e.hom = (coverSmallSingularSubcomplex X U).ι := by
-    dsimp [e]
-    exact SSet.Subcomplex.homOfLE_ι htop.le
-  change IsIso (((SSet.chainComplexFunctor AddCommGrpCat).obj
-    (AddCommGrpCat.of ℤ)).map (coverSmallSingularSubcomplex X U).ι)
-  rw [← he]
-  infer_instance
-
-/-- The small-chain approximation theorem holds directly for a cover containing the whole
-space, without subdivision. -/
-public theorem coverSmallChainApproximation_of_member_eq_univ
-    (j : ι) (hj : U j = Set.univ) :
-    HomologicalComplex.homotopyEquivalences AddCommGrpCat (ComplexShape.down ℕ)
-      (coverSmallIntegralSingularChainInclusion X U) := by
-  let := coverSmallIntegralSingularChainInclusion_isIso_of_member_eq_univ X U j hj
-  exact HomologicalComplex.homotopyEquivalences.of_isIso _
-
 end SmallChains
 
 

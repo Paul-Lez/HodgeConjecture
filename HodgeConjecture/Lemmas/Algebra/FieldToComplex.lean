@@ -38,29 +38,3 @@ lemma complexToFieldLinear_comp_algebraMap :
     complexToFieldLinear K (algebraMap K ℂ q) = q :=
   LinearMap.congr_fun (complexToFieldLinear_comp_algebraMap K) q
 
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_apply (q x : K) :
-    fieldScalarAddHom K q x = q * x := rfl
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_zero : fieldScalarAddHom K 0 = 0 := by
-  ext
-  simp
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_one : fieldScalarAddHom K 1 = AddMonoidHom.id K := by
-  ext
-  simp
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_add (a b : K) :
-    fieldScalarAddHom K (a + b) = fieldScalarAddHom K a + fieldScalarAddHom K b := by
-  ext
-  simp [add_mul]
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_mul (a b : K) :
-    fieldScalarAddHom K (a * b) =
-      (fieldScalarAddHom K a).comp (fieldScalarAddHom K b) := by
-  ext
-  simp [fieldScalarAddHom, mul_assoc]

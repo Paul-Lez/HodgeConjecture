@@ -276,6 +276,7 @@ public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
 public import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
+public import HodgeConjecture.Mathlib.Algebra.Ring.Basic
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
 public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
@@ -285,6 +286,7 @@ public import HodgeConjecture.Mathlib.CategoryTheory.Abelian.KernelCompositionSh
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import HodgeConjecture.Mathlib.RingTheory.SmoothKrullDimension
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Mathlib.Topology.ChartedSpaceParacompact
 public import HodgeConjecture.Mathlib.Topology.KrullDimension
 public import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact

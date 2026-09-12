@@ -390,15 +390,6 @@ lemma sheafToLocal_sheafBorelMooreClassOfComparisons
     D.compactificationComparison_toLocal]
   exact D.borelMoore.toLocal_fundamentalClass z hz
 
-/-- The supported constant-sheaf class induced by all supplied comparison inputs.
-No canonicity or complex-orientation normalization is asserted at this boundary. -/
-def supportedClassOfComparisons
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
-    RationalCohomologyWithSupport V.over
-      (cycleComponentSupport V.over x) (2 * (p : ℤ)) :=
-  ambientSheafBorelMooreCycleDegreeEquiv V.over
-    D.codimension_le_dimension D.dualizing D.support D.sheafBorelMooreClassOfComparisons
-
 /-- The additive equivalence obtained by composing the supplied compactification comparison,
 the orientation-induced sheaf comparison, and the proved Betti comparison.  This is only
 identified with normalized Alexander--Poincaré duality after the missing compatibility theorem. -/
@@ -457,21 +448,6 @@ def toAuxiliaryBorelMooreComparisonData
     AuxiliaryRationalCycleComponentBorelMooreComparisonData.fundamentalClass,
     compactificationFundamentalClass, AddEquiv.coe_toRatLinearEquiv]
 
-/-- Sheaf-theoretic comparison inputs for a component supply the auxiliary comparison data of the
-earlier cycle-class package, through the adapter. -/
-theorem nonempty_auxiliaryRationalCycleComponentBorelMooreComparisonData
-    (h : Nonempty (RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx)) :
-    Nonempty (AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :=
-  h.map toAuxiliaryBorelMooreComparisonData
-
-/-- Forgetting support gives the comparison-dependent ordinary rational class. -/
-def ordinaryClassOfComparisons
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V d p x hx) :
-    H^(2 * (p : ℤ))(V.over; ℚ) :=
-  forgetSupport V.over
-    (cycleComponentSupport V.over x) (2 * (p : ℤ))
-      D.supportedClassOfComparisons
-
 end RationalCycleComponentSheafBorelMooreComparisonInputs
 
 /-! ### Conditional normalized sheaf route -/
@@ -524,13 +500,6 @@ explicit local Verdier/Thom compatibility theorem. -/
 def alexanderPoincare
     (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx) :=
   D.toComplexOrientedComponentClassData.alexanderPoincare
-
-/-- The ambient sheaf Borel--Moore class transported from the exactly normalized
-compactification-relative class. Its supported image is normalized by
-`orientationComparison_local`. -/
-def sheafBorelMooreFundamentalClass
-    (D : ComplexOrientedRationalCycleComponentSheafBorelMooreData V d p x hx) :=
-  D.comparisonInputs.sheafBorelMooreClassOfComparisons
 
 /-- The singular supported fundamental class with exact local Thom-cap normalization. -/
 def supportedFundamentalClass

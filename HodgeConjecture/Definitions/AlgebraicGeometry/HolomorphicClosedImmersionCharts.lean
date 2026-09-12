@@ -173,15 +173,4 @@ theorem analyticAt_closedImmersionNormalTransition_symm
     (closedImmersionNormalTransition X Y i m d z z' v)
     ((closedImmersionNormalTransition X Y i m d z z').map_source hv)
 
-/-- For a point in a genuine overlap, the normal derivative has a constructed complex
-linear inverse. Only membership in the actual overlap is required. -/
-def closedImmersionNormalTransitionDerivativeEquiv (a : Fin m → ℂ)
-    (ha : (a, 0) ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
-    (Fin (d - m) → ℂ) ≃L[ℂ] (Fin (d - m) → ℂ) :=
-  normalTransitionDerivativeEquiv
-    (closedImmersionNormalTransition X Y i m d z z') a ha
-    (closedImmersionNormalTransition_preserves_support X Y i m d z z')
-    (analyticAt_closedImmersionNormalTransition X Y i m d z z' (a, 0) ha)
-    (analyticAt_closedImmersionNormalTransition_symm X Y i m d z z' (a, 0) ha)
-
 end AlgebraicGeometry.ComplexPoint

@@ -62,7 +62,7 @@ lemma homComplexSingleIntegerGlobalSections_rightUnshift_middle :
       (z.rightUnshift (n + s) rfl)
   exact congrArg
     (fun f : (integerConstantSingleComplex Y).X 0 ⟶ K.X (n + s) =>
-      integerConstantHomEquivGlobalSections (K.X (n + s))
+      integerConstantHomAddEquivGlobalSections (K.X (n + s))
         ((HomologicalComplex.singleObjXSelf (.up ℤ) 0
           ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
             (AddCommGrpCat.of ℤ))).inv ≫ f))

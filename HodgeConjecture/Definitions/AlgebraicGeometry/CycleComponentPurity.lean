@@ -136,16 +136,4 @@ lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
   apply hinjective
   simpa only [neighborhoodLocalClass, map_zero] using hzero
 
-/-- Cohomology of the component neighborhood supported at its selected smooth point. -/
-abbrev neighborhoodPointSupportedCohomology :=
-  CohomologyWithSupport ℚ
-    (TopCat.of (ComplexPoint C.neighborhoodScheme))
-    {C.neighborhoodPoint} (2 * n)
-
-/-- The unique local cohomology class normalized to evaluate to one on the transported local
-fundamental class. Cohomology is the homology of the dual cochain complex, so the normalized
-functional is transported along the universal-coefficient equivalence. -/
-def neighborhoodLocalCoclass : C.neighborhoodPointSupportedCohomology :=
-  normalizedRelativeCoclass C.neighborhoodLocalClass C.neighborhoodLocalClass_ne_zero
-
 end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

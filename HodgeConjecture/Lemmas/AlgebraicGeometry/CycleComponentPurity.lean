@@ -127,41 +127,4 @@ variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [SmoothOfRelativeDimension d X.hom]
   (C : CycleComponentSeparateLocalCoordinates X x d n)
 
-@[simp]
-lemma neighborhoodLocalCoclass_apply_localClass :
-    relativeCohomologyEquivDualHomology ℚ _ (2 * n) C.neighborhoodLocalCoclass
-      C.neighborhoodLocalClass = 1 :=
-  normalizedRelativeCoclass_pairing_self C.neighborhoodLocalClass
-    C.neighborhoodLocalClass_ne_zero
-
-/-- The normalized local coclass generates cohomology supported at the selected smooth point of
-the component neighborhood. -/
-lemma span_neighborhoodLocalCoclass_eq_top :
-    Submodule.span ℚ {C.neighborhoodLocalCoclass} = ⊤ :=
-  span_normalizedRelativeCoclass_eq_top C.neighborhoodLocalClass_ne_zero
-    C.span_neighborhoodLocalClass_eq_top
-
-/-- The local normalization condition characterizes the component's local coclass. -/
-lemma neighborhoodLocalCoclass_unique
-    (β : C.neighborhoodPointSupportedCohomology)
-    (hβ : relativeCohomologyEquivDualHomology ℚ _ (2 * n) β C.neighborhoodLocalClass = 1) :
-    β = C.neighborhoodLocalCoclass :=
-  normalizedRelativeCoclass_unique C.neighborhoodLocalClass_ne_zero
-    C.span_neighborhoodLocalClass_eq_top β hβ
-
-/-- Every codimension-`p` component of a smooth complex `d`-fold has an exact smooth local
-coordinate package whose normalized point-supported coclass generates local cohomology. -/
-lemma exists_span_neighborhoodLocalCoclass_eq_top
-    (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (d p : ℕ)
-    [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = p) :
-    ∃ C : CycleComponentSeparateLocalCoordinates X x d (d - p),
-      relativeCohomologyEquivDualHomology ℚ _ (2 * (d - p)) C.neighborhoodLocalCoclass
-          C.neighborhoodLocalClass = 1 ∧
-        Submodule.span ℚ {C.neighborhoodLocalCoclass} = ⊤ := by
-  obtain ⟨C, -⟩ := exists_span_neighborhoodLocalClass_eq_top X x d p hx
-  exact ⟨C, C.neighborhoodLocalCoclass_apply_localClass,
-    C.span_neighborhoodLocalCoclass_eq_top⟩
-
 end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

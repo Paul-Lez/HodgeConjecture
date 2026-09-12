@@ -354,13 +354,6 @@ def algebraicCoordinates :
     ComplexAlgHom.etaleBaseAlgHom Γ(D.neighborhood.toScheme, ⊤) ∘
       D.pointAlgHomHomeomorph
 
-lemma isLocalHomeomorph_algebraicCoordinates :
-    IsLocalHomeomorph D.algebraicCoordinates :=
-  (ComplexAlgHom.mvPolynomialAlgHomHomeomorph d).isLocalHomeomorph.comp
-    ((ComplexAlgHom.isLocalHomeomorph_etaleBaseAlgHom
-      Γ(D.neighborhood.toScheme, ⊤)).comp
-        D.pointAlgHomHomeomorph.isLocalHomeomorph)
-
 /-- The reconstructed ring-theoretic coordinates agree with the coordinates induced directly by
 the scheme morphism to affine space. -/
 lemma algebraicCoordinates_eq_analyticCoordinates :
@@ -424,20 +417,6 @@ lemma ambientAnalyticCoordinates_apply_eq_evaluate
       congr 2
       exact congrArg Subtype.val
         ((ComplexPoint.openHomeomorph X D.neighborhood).apply_symm_apply z)
-
-/-- The analytic coordinates supplied by smoothness are local homeomorphisms to complex affine
-space. -/
-lemma isLocalHomeomorph_analyticCoordinates :
-    IsLocalHomeomorph D.analyticCoordinates := by
-  rw [← D.algebraicCoordinates_eq_analyticCoordinates]
-  exact D.isLocalHomeomorph_algebraicCoordinates
-
-/-- The same coordinates are a local homeomorphism on the corresponding analytic open subset of
-the ambient complex-point space. -/
-lemma isLocalHomeomorph_ambientAnalyticCoordinates :
-    IsLocalHomeomorph D.ambientAnalyticCoordinates := by
-  exact D.isLocalHomeomorph_analyticCoordinates.comp
-    (ComplexPoint.openHomeomorph X D.neighborhood).symm.isLocalHomeomorph
 
 /-- The explicit analytic projection chart centered at a point of the ambient coordinate
 neighborhood. Unlike a chart chosen only from local-homeomorphism existence, its inverse retains

@@ -126,11 +126,6 @@ Using this subtype is preferable whenever a local regular function is evaluated:
 domain condition in the type instead of assigning an arbitrary value outside `U`. -/
 abbrev OverOpen (U : X.left.Opens) := {z : Point R X // z.underlying ∈ U}
 
-/-- Evaluation of a local regular function on its actual domain. -/
-noncomputable def evaluateOnOpen (U : X.left.Opens) (s : Γ(X.left, U))
-    (z : OverOpen (X := X) U) : R :=
-  z.1.stalkHom (X.left.presheaf.germ U z.1.underlying z.2 s)
-
 /--
 Evaluation of a local regular function at an `R`-point. Outside the function's domain this is
 defined to be zero; all uses in the analytic topology are restricted to `overOpen U`.

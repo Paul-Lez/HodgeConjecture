@@ -55,32 +55,15 @@ lemma rationalToSingularCochainComplexInt_quasiIso
 abbrev RationalSingularCochainHypercohomology (n : ℤ) : Type 1 :=
   Hypercohomology X (singularCochainSheafComplexInt X ℚ) n
 
-/-- Rational constant-sheaf cohomology is canonically equivalent to the hypercohomology of its
-singular-cochain resolution. -/
-def rationalCohomologySingularCochainEquiv
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    H^n(X; ℚ) ≃
-      RationalSingularCochainHypercohomology X n :=
-  Localization.SmallShiftedHom.postcompEquiv
-    (rationalToSingularCochainComplexInt X)
-    (rationalToSingularCochainComplexInt_quasiIso X)
-
-/-- The comparison equivalence is the map on hypercohomology induced by the canonical
-constant-to-singular-cochain morphism. -/
-lemma rationalCohomologySingularCochainEquiv_apply
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : H^n(X; ℚ)) :
-    rationalCohomologySingularCochainEquiv X n α =
-      hypercohomologyMap X
-        (rationalToSingularCochainComplexInt X) n α :=
-  rfl
-
-/-- The rational constant-to-singular comparison is additive. -/
+/-- Rational constant-sheaf cohomology is canonically additively equivalent to the
+hypercohomology of its singular-cochain resolution. -/
 def rationalCohomologySingularCochainAddEquiv
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     H^n(X; ℚ) ≃+
       RationalSingularCochainHypercohomology X n where
-  toEquiv := rationalCohomologySingularCochainEquiv X n
+  toEquiv := Localization.SmallShiftedHom.postcompEquiv
+    (rationalToSingularCochainComplexInt X)
+    (rationalToSingularCochainComplexInt_quasiIso X)
   map_add' α β :=
     (hypercohomologyMap X
       (rationalToSingularCochainComplexInt X) n).map_add α β

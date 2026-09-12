@@ -453,17 +453,11 @@ lemma span_standardSphereSimplicialBoundaryClass_eq_top (n : ℕ) :
     LinearMap.range_eq_top.mpr e.surjective]
   exact hone
 
-/-- The alternating affine face chain in punctured coordinate space. -/
-def standardPuncturedAffineBoundaryChain (n : ℕ) :
-    ModuleCat.of ℚ ℚ ⟶
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).left.X n :=
-  ∑ i : Fin (n + 2), (-1) ^ i.val • standardSubspaceFaceChain n i
-
 lemma standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain (n : ℕ) :
     standardSphereSimplicialBoundaryChain n ≫
         (standardAffineBoundaryChainMap (n + 1)).f n =
-      standardPuncturedAffineBoundaryChain n := by
-  rw [standardSphereSimplicialBoundaryChain, standardPuncturedAffineBoundaryChain,
+      standardSubspaceBoundaryChain n := by
+  rw [standardSphereSimplicialBoundaryChain, standardSubspaceBoundaryChain,
     Preadditive.sum_comp]
   apply Finset.sum_congr rfl
   intro i _
