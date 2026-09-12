@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Coniveau
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 
 /-!
 # Dimension bounds for algebraic cycle classes
@@ -47,7 +47,7 @@ lemma algebraicCycleClassSpan_eq_bot_of_lt
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (d p : ℕ)
     [SmoothOfRelativeDimension d X.hom] (h : d < p) :
     algebraicCycleClassSpan X p = ⊥ := by
-  rw [algebraicCycleClassSpan_eq_iSup X p]
+  unfold algebraicCycleClassSpan
   refine le_antisymm (iSup_le fun x ↦ iSup_le fun hx ↦ ?_) bot_le
   exact (SmoothOfRelativeDimension.coheight_ne_of_lt (f := X.hom) (d := d) x h hx).elim
 

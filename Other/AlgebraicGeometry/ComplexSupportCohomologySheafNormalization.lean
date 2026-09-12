@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SheafClass
 public import Other.AlgebraicTopology.CohomologySheafSectionNaturality
 
 /-! # Exact local normalization of the actual supported injective cohomology sheaf -/

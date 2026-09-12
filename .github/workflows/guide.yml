@@ -26,6 +26,7 @@ jobs:
       - name: Check the import layering
         run: python3 scripts/check_import_layers.py
       - name: Build the Verso guide
+        if: github.event_name != 'pull_request'
         run: lake exe hodge-guide
       - uses: actions/configure-pages@v5
         if: github.event_name != 'pull_request'

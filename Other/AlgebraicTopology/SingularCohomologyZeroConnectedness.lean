@@ -52,20 +52,24 @@ theorem pathConnectedSpace_of_span_cohomologyUnitZero_eq_top
   let e := X.singularHomology₀Iso M
   let χ : (∐ fun _ : ZerothHomotopy X ↦ M) ⟶ M :=
     Sigma.desc (fun i ↦ if i = a then 𝟙 M else 0)
-  let φ : Cohomology R X 0 := (e.hom ≫ χ).hom
+  let ψ : Module.Dual R (Homology R X 0) := (e.hom ≫ χ).hom
+  let φ : Cohomology R X 0 := (cohomologyEquivDualHomology R X 0).symm ψ
   have hφ : φ ∈ Submodule.span R {cohomologyUnitZero R X} := by
     rw [hspan]
     exact Submodule.mem_top
   rw [Submodule.mem_span_singleton] at hφ
   obtain ⟨r, hr⟩ := hφ
+  have hr' : r • (X.singularHomology₀ε M).hom = ψ := by
+    have h := congrArg (cohomologyEquivDualHomology R X 0) hr
+    rwa [map_smul, cohomologyEquivDualHomology_cohomologyUnitZero,
+      (cohomologyEquivDualHomology R X 0).apply_symm_apply] at h
   let va : ↑(∐ fun _ : ZerothHomotopy X ↦ M) :=
     (Sigma.ι (fun _ : ZerothHomotopy X ↦ M) a).hom 1
   let vb : ↑(∐ fun _ : ZerothHomotopy X ↦ M) :=
     (Sigma.ι (fun _ : ZerothHomotopy X ↦ M) b).hom 1
   let za : Homology R X 0 := e.inv.hom va
   let zb : Homology R X 0 := e.inv.hom vb
-  have hua : cohomologyUnitZero R X za = 1 := by
-    change (X.singularHomology₀ε M).hom za = 1
+  have hua : (X.singularHomology₀ε M).hom za = 1 := by
     calc
       (X.singularHomology₀ε M).hom za =
           (e.hom ≫ Sigma.desc (fun _ : ZerothHomotopy X ↦ 𝟙 M)).hom za := by
@@ -74,8 +78,7 @@ theorem pathConnectedSpace_of_span_cohomologyUnitZero_eq_top
         simp only [ConcreteCategory.comp_apply, za, Iso.inv_hom_id_apply, va]
         rw [← ConcreteCategory.comp_apply, Sigma.ι_desc]
         simp
-  have hub : cohomologyUnitZero R X zb = 1 := by
-    change (X.singularHomology₀ε M).hom zb = 1
+  have hub : (X.singularHomology₀ε M).hom zb = 1 := by
     calc
       (X.singularHomology₀ε M).hom zb =
           (e.hom ≫ Sigma.desc (fun _ : ZerothHomotopy X ↦ 𝟙 M)).hom zb := by
@@ -84,12 +87,12 @@ theorem pathConnectedSpace_of_span_cohomologyUnitZero_eq_top
         simp only [ConcreteCategory.comp_apply, zb, Iso.inv_hom_id_apply, vb]
         rw [← ConcreteCategory.comp_apply, Sigma.ι_desc]
         simp
-  have hφa : φ za = 1 := by
-    simp [φ, χ, za, va, e]
-  have hφb : φ zb = 0 := by
-    simp [φ, χ, zb, vb, e, Ne.symm hab]
-  have hra := LinearMap.congr_fun hr za
-  have hrb := LinearMap.congr_fun hr zb
+  have hφa : ψ za = 1 := by
+    simp [ψ, χ, za, va, e]
+  have hφb : ψ zb = 0 := by
+    simp [ψ, χ, zb, vb, e, Ne.symm hab]
+  have hra := LinearMap.congr_fun hr' za
+  have hrb := LinearMap.congr_fun hr' zb
   simp only [LinearMap.smul_apply, hua, hφa, smul_eq_mul, mul_one] at hra
   simp only [LinearMap.smul_apply, hub, hφb, smul_eq_mul, mul_one] at hrb
   exact one_ne_zero (hra.symm.trans hrb)

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Other.AlgebraicTopology.SingularChainSheafDerivedPushforward
 public import Other.AlgebraicTopology.DerivedClosedSupportTruncation
 
@@ -32,7 +33,7 @@ abbrev pointChainSource : TopCat.{u} := TopCat.of ({x} : Set X)
 
 /-- Its actual inclusion into the ambient space. -/
 def pointChainEmbedding : pointChainSource X x ⟶ X :=
-  TopCat.ofHom ⟨Subtype.val, continuous_subtype_val⟩
+  TopCat.subtypeInclusion X ({x} : Set X)
 
 /-- Singletons are closed in a `T₁` space, so the actual closed-chain pushforward applies. -/
 theorem pointChainEmbedding_isClosedEmbedding : IsClosedEmbedding (pointChainEmbedding X x) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportShift
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsShift
 public import Other.AlgebraicTopology.ClosedEmbeddingDerivedPushforward
 public import Mathlib.Algebra.Homology.DerivedCategory.FullyFaithful
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularGlobalComparison
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularGlobal
 public import Other.AlgebraicTopology.RelativeCochainConeForgetComparison
 public import Other.Algebra.Homology.MapHomologyShift
 public import Other.Algebra.Homology.MapArrowConeConnecting
