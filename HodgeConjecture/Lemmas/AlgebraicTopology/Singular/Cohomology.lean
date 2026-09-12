@@ -17,6 +17,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Cohomology
 
+import Mathlib.Algebra.Homology.HomologicalComplexAbelian
+
 /-!
 # Singular cohomology over a field
 
@@ -132,6 +134,37 @@ lemma subspaceChainMap_relativeChainProjection (R : Type u) [Field R]
     (X : TopPair.{u}) :
     ((chainPairFunctor R).obj X).hom ≫ relativeChainProjection R X = 0 :=
   cokernel.condition _
+
+/-- The short exact sequence of subspace, ambient, and relative singular chains. -/
+def relativeChainShortComplex (R : Type u) [Field R] (X : TopPair.{u}) :
+    ShortComplex (ChainComplex (ModuleCat.{u} R) ℕ) :=
+  ShortComplex.mk ((chainPairFunctor R).obj X).hom
+    (relativeChainProjection R X)
+    (subspaceChainMap_relativeChainProjection R X)
+
+/-- The singular-chain map of a topological-pair inclusion is a monomorphism. -/
+lemma relativeChainMap_mono (R : Type u) [Field R] (X : TopPair.{u}) :
+    Mono ((chainPairFunctor R).obj X).hom := by
+  let : Mono X.hom :=
+    (TopCat.mono_iff_injective X.hom).mpr X.prop.injective
+  change Mono (((singularChainComplexFunctor (ModuleCat.{u} R)).obj
+    (ModuleCat.of R R)).map X.hom)
+  apply Functor.map_mono
+
+/-- Singular chains of a pair form a short exact sequence.
+
+See mathlib PR https://github.com/leanprover-community/mathlib4/pull/37659. -/
+lemma relativeChainShortComplex_shortExact (R : Type u) [Field R] (X : TopPair.{u}) :
+    (relativeChainShortComplex R X).ShortExact := by
+  let : Mono ((chainPairFunctor R).obj X).hom := relativeChainMap_mono R X
+  exact
+    { exact := ShortComplex.exact_cokernel ((chainPairFunctor R).obj X).hom
+      mono_f := by
+        dsimp [relativeChainShortComplex]
+        infer_instance
+      epi_g := by
+        dsimp [relativeChainShortComplex, relativeChainProjection]
+        exact coequalizer.π_epi }
 
 /-- Forgetting that a class is relative and then pairing it with an absolute homology class is
 the same as projecting the homology class to relative homology and pairing there. -/

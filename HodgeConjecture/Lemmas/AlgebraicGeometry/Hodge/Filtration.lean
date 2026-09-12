@@ -119,6 +119,13 @@ omit [Algebra K ℂ] in
   rw [Localization.SmallShiftedHom.equiv_comp]
   simp [eK]
 
+lemma complexConstantCohomologyDeRhamEquiv_apply
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
+    (α : ComplexConstantCohomology X n) :
+    complexConstantCohomologyDeRhamEquiv X n α =
+      hypercohomologyMap X
+        (constantsToHolomorphicDeRhamComplexInt X) n α :=
+  rfl
 /-- The rational-to-complex cohomology map has the displayed cohomological left inverse. -/
 lemma complexToFieldCohomology_leftInverse (n : ℤ) :
     Function.LeftInverse (complexToFieldCohomology K X n)
@@ -149,26 +156,17 @@ lemma fieldToDeRhamCohomology_factor
     (fieldToComplexConstantSheafComplexInt K X)
     (constantsToHolomorphicDeRhamComplexInt X) n α
 
-/-- Once the analytic Poincaré comparison is proved to be a quasi-isomorphism, the
-rational-to-de Rham comparison is injective. This uses the explicit splitting of `K → ℂ`, not a
-finite-dimensionality assumption. -/
-lemma fieldToDeRhamCohomology_injective_of_quasiIso
-    [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
+/-- The rational-to-de Rham comparison is injective. The holomorphic Poincaré lemma supplies
+the analytic quasi-isomorphism, while the explicit splitting of `K → ℂ` proves that extending
+scalars is injective; no finite-dimensionality assumption is needed. -/
+lemma fieldToDeRhamCohomology_injective
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     Function.Injective (fieldToDeRhamCohomology K X n) := by
   intro α β hαβ
   apply fieldToComplexCohomology_injective K X n
-  apply (complexConstantCohomologyDeRhamAddEquiv X h n).injective
-  simpa only [complexConstantCohomologyDeRhamAddEquiv_apply,
+  apply (complexConstantCohomologyDeRhamEquiv X n).injective
+  simpa only [complexConstantCohomologyDeRhamEquiv_apply,
     fieldToDeRhamCohomology_factor K X n] using hαβ
-
-/-- The rational-to-de Rham comparison is injective. The holomorphic Poincaré lemma supplies
-the analytic quasi-isomorphism, while the explicit coefficient splitting proves that extending
-scalars from `K` to `ℂ` is injective. -/
-lemma fieldToDeRhamCohomology_injective
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    Function.Injective (fieldToDeRhamCohomology K X n) :=
-  fieldToDeRhamCohomology_injective_of_quasiIso K X inferInstance n
 
 /-- The part of the holomorphic de Rham complex in form degrees at least `p` is zero when `p`
 is above the complex dimension. -/
@@ -267,7 +265,7 @@ lemma deRhamConj_fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom]
     deRhamConj X n (fieldToDeRhamCohomology K X n α) =
       fieldToDeRhamCohomology K X n α := by
   have he : fieldToDeRhamCohomology K X n α =
-      complexConstantCohomologyDeRhamAddEquiv X inferInstance n
+      complexConstantCohomologyDeRhamAddEquiv X n
         (fieldToComplexCohomology K X n α) :=
     fieldToDeRhamCohomology_factor K X n α
   rw [he, deRhamConj_apply, AddEquiv.symm_apply_apply,
@@ -299,41 +297,9 @@ lemma hodgePiece_eq_bot_of_lt [IsIntegral X.left] [Smooth X.hom]
   rw [hodgeFiltration_eq_bot_of_lt X hp n, AddSubgroup.mem_bot] at h
   exact h
 
-lemma filteredToDeRhamCohomology_zero_apply
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : FilteredDeRhamHypercohomology X 0 n) :
-    filteredToDeRhamCohomology X 0 n α =
-      hodgeFiltrationZeroEquiv X n α := rfl
 
-/-- The zeroth Hodge filtration is the whole de Rham hypercohomology group. -/
-lemma hodgeFiltration_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    hodgeFiltration X 0 n = ⊤ := by
-  ext α
-  simp only [hodgeFiltration, AddMonoidHom.mem_range, AddSubgroup.mem_top, iff_true]
-  exact ⟨(hodgeFiltrationZeroEquiv X n).symm α,
-    filteredToDeRhamCohomology_zero_apply X n _ |>.trans
-      ((hodgeFiltrationZeroEquiv X n).apply_symm_apply α)⟩
 
-/-- `F⁰ ⊓ conj F⁰` is everything, in every degree, because `F⁰` is. In degree `0` this says the
-`(0,0)` piece is everything; in other degrees it is not a statement about a Hodge piece. -/
-lemma hodgePiece_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    hodgePiece X 0 0 n = ⊤ := by
-  refine eq_top_iff.mpr fun α _ ↦ ⟨?_, ?_⟩
-  · show α ∈ hodgeFiltration X 0 n
-    rw [hodgeFiltration_zero_eq_top X n]
-    trivial
-  · show deRhamConj X n α ∈ hodgeFiltration X 0 n
-    rw [hodgeFiltration_zero_eq_top X n]
-    trivial
 
-/-- The complex subspace underlying `F⁰` is the whole de Rham hypercohomology group. -/
-lemma hodgeFiltrationComplexSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    hodgeFiltrationComplexSubmodule X 0 n = ⊤ := by
-  refine SetLike.ext fun α ↦ ?_
-  change α ∈ hodgeFiltration X 0 n ↔ α ∈ (⊤ :
-    Submodule ℂ (DeRhamHypercohomology X n))
-  rw [hodgeFiltration_zero_eq_top X n]
-  simp
 
 /-- When conjugation fixes `K`, a `K`-class is its own conjugate, so `F^p` already implies
 `(p,p)` and the Hodge filtration alone cuts out the Hodge classes. -/
@@ -369,30 +335,13 @@ lemma hodgeClasses_eq_ker_of_lt [IsIntegral X.left] [Smooth X.hom] {p : ℕ} (hp
     hodgePiece_eq_bot_of_lt X (by exact_mod_cast hp : (dim X.left : ℤ) < (p : ℤ)),
     Submodule.restrictScalars_bot, Submodule.comap_bot]
 
-/-- If the analytic constant-to-holomorphic de Rham comparison is a quasi-isomorphism, rational
-Hodge classes vanish above the complex dimension. -/
-lemma hodgeClasses_eq_bot_of_lt_of_quasiIso [IsIntegral X.left] [Smooth X.hom]
-    (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X))
-    {p : ℕ} (hp : dim X.left < p) :
-    Hdg^p(K; X) = ⊥ := by
-  rw [hodgeClasses_eq_ker_of_lt K X hp]
-  exact LinearMap.ker_eq_bot.mpr (fieldToDeRhamCohomology_injective_of_quasiIso K X h (2 * p))
-
 /-- Rational Hodge classes vanish above the complex dimension. -/
 lemma hodgeClasses_eq_bot_of_lt
     [IsIntegral X.left] [Smooth X.hom]
     {p : ℕ} (hp : dim X.left < p) :
-    Hdg^p(K; X) = ⊥ :=
-  hodgeClasses_eq_bot_of_lt_of_quasiIso K X inferInstance hp
+    Hdg^p(K; X) = ⊥ := by
+  rw [hodgeClasses_eq_ker_of_lt K X hp]
+  exact LinearMap.ker_eq_bot.mpr (fieldToDeRhamCohomology_injective K X (2 * p))
 
-/-- Every rational degree-zero cohomology class belongs to the rational Hodge subgroup. -/
-lemma hodgeClasses_zero_eq_top [IsIntegral X.left] [Smooth X.hom] :
-    Hdg^0(K; X) = ⊤ := by
-  refine SetLike.ext fun α ↦ ?_
-  change fieldToDeRhamCohomology K X (2 * (0 : ℕ)) α ∈
-      hodgePiece X ((0 : ℕ) : ℤ) ((0 : ℕ) : ℤ) (2 * (0 : ℕ)) ↔ True
-  simp only [Nat.cast_zero]
-  rw [hodgePiece_zero_eq_top]
-  trivial
 
 end AlgebraicGeometry.ComplexPoint

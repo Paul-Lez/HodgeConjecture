@@ -61,8 +61,5 @@ variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
-/-- The actual closed analytic image of the smooth closed immersion. -/
-def smoothClosedAnalyticSupport : Closeds (ComplexPoint X) :=
-  ⟨Set.range (Point.map i), (isClosedEmbedding_map_of_closedImmersion i).isClosed_range⟩
 
 end AlgebraicGeometry.ComplexPoint

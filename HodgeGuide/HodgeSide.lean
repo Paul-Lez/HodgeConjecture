@@ -376,10 +376,11 @@ The image is a priori an additive subgroup. Compatibility with complex scalars i
 restricts to a subspace over any coefficient field contained in $`\mathbb C`. Two sanity checks
 are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and $`F^p=0` for $`p>\dim X`. Both are
 used later — the first is what makes every degree-zero class a Hodge class, the second is what
-makes the conjecture vacuous above the dimension.
+makes the conjecture vacuous above the dimension. The first,
+`hodgeFiltrationComplexSubmodule_zero_eq_top`, is not needed by the statement and lives in
+`Other/AlgebraicGeometry/HodgeFiltration.lean`; the second is checked below.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule_zero_eq_top
 #check AlgebraicGeometry.ComplexPoint.hodgeFiltration_eq_bot_of_lt
 ```
 
@@ -428,10 +429,9 @@ namespace Guide.Hodge.D14
 ```
 ```lean
 def complexConstantCohomologyDeRhamAddEquiv (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
+    [Smooth X.hom] (n : ℤ) :
     ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
-  { Localization.SmallShiftedHom.postcompEquiv
-      (constantsToHolomorphicDeRhamComplexInt X) h with
+  { complexConstantCohomologyDeRhamEquiv X n with
     map_add' := fun α β ↦ by
       change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
         hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α +
@@ -448,9 +448,9 @@ namespace Guide.Hodge.D15
 ```lean
 def deRhamConj (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
-  ((complexConstantCohomologyDeRhamAddEquiv X inferInstance n).toAddMonoidHom).comp
+  ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
     ((hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n).comp
-      (complexConstantCohomologyDeRhamAddEquiv X inferInstance n).symm.toAddMonoidHom)
+      (complexConstantCohomologyDeRhamAddEquiv X n).symm.toAddMonoidHom)
 ```
 ```lean -show
 end Guide.Hodge.D15
@@ -545,9 +545,10 @@ imports the modules the statement depends on.
 The two sanity checks on the filtration pass to the Hodge classes: every degree-zero class is a
 Hodge class, and there are none above the dimension. These are the two ends of the conjecture that
 the repository settles; see {ref "what-is-proved"}[What the repository proves about the statement].
+The degree-zero statement, `hodgeClasses_zero_eq_top`, lives in
+`Other/AlgebraicGeometry/HodgeFiltration.lean` since the statement does not need it.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_zero_eq_top
 #check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_bot_of_lt
 ```
 

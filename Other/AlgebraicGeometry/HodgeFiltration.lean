@@ -15,16 +15,19 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.Filtration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import Other.LinearAlgebra.HodgeStructure
 
 /-!
 # Sanity checks on the Hodge filtration
 
-The Hodge filtration is decreasing. The comparison map `H^n(X; K) → H^n_dR(X)` extends to a
-complex-linear map `fieldToDeRhamComplexification` on `ℂ ⊗[K] H^n(X; K)`, along which the Hodge
-filtration and the Hodge pieces of de Rham hypercohomology pull back to the complexification. Over
-`ℚ` this map intertwines the conjugation of the complexification with the conjugation of de Rham
+In filtration degree `0` the filtered and full de Rham hypercohomology agree, so `F^0`,
+`F^0 ⊓ conj F^0` and the degree-zero Hodge classes are everything. The Hodge filtration is
+decreasing. The comparison map `H^n(X; K) → H^n_dR(X)` extends to a complex-linear map
+`fieldToDeRhamComplexification` on `ℂ ⊗[K] H^n(X; K)`, along which the Hodge filtration and the
+Hodge pieces of de Rham hypercohomology pull back to the complexification. Over `ℚ` this map
+intertwines the conjugation of the complexification with the conjugation of de Rham
 hypercohomology, so the pulled-back Hodge piece `F^p ⊓ conj F^q` is cut out by the pulled-back
 filtration alone. Finally, the Hodge classes of the statement are the rational classes whose
 complexifications lie in the pulled-back `(p,p)` piece.
@@ -35,7 +38,7 @@ it to relate the statement's Hodge classes to pure Hodge structures.
 
 @[expose] public noncomputable section
 
-open CategoryTheory
+open CategoryTheory Limits TopologicalSpace
 open scoped TensorProduct
 
 namespace AlgebraicGeometry.ComplexPoint
@@ -48,6 +51,66 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
 attribute [local instance] hodgeFiltrationTopology
 
 attribute [local instance] analyticHasDerivedCategory
+
+/-- In degree filtration `F⁰`, the filtered and full de Rham hypercohomology groups are
+canonically equivalent. -/
+def hodgeFiltrationZeroEquiv (n : ℤ) :
+    FilteredDeRhamHypercohomology X 0 n ≃
+      DeRhamHypercohomology X n := by
+  letI : IsIso (hodgeFilteredDeRhamInclusion X 0) := by
+    unfold hodgeFilteredDeRhamInclusion hodgeFilteredDeRhamComplex
+    infer_instance
+  exact Localization.SmallShiftedHom.postcompEquiv
+    (hodgeFilteredDeRhamInclusion X 0)
+    (by
+      change QuasiIso (hodgeFilteredDeRhamInclusion X 0)
+      infer_instance)
+
+lemma filteredToDeRhamCohomology_zero_apply
+    (n : ℤ)
+    (α : FilteredDeRhamHypercohomology X 0 n) :
+    filteredToDeRhamCohomology X 0 n α =
+      hodgeFiltrationZeroEquiv X n α := rfl
+
+/-- The zeroth Hodge filtration is the whole de Rham hypercohomology group. -/
+lemma hodgeFiltration_zero_eq_top (n : ℤ) :
+    hodgeFiltration X 0 n = ⊤ := by
+  ext α
+  simp only [hodgeFiltration, AddMonoidHom.mem_range, AddSubgroup.mem_top, iff_true]
+  exact ⟨(hodgeFiltrationZeroEquiv X n).symm α,
+    filteredToDeRhamCohomology_zero_apply X n _ |>.trans
+      ((hodgeFiltrationZeroEquiv X n).apply_symm_apply α)⟩
+
+/-- `F⁰ ⊓ conj F⁰` is everything, in every degree, because `F⁰` is. In degree `0` this says the
+`(0,0)` piece is everything; in other degrees it is not a statement about a Hodge piece. -/
+lemma hodgePiece_zero_eq_top (n : ℤ) :
+    hodgePiece X 0 0 n = ⊤ := by
+  refine eq_top_iff.mpr fun α _ ↦ ⟨?_, ?_⟩
+  · show α ∈ hodgeFiltration X 0 n
+    rw [hodgeFiltration_zero_eq_top X n]
+    trivial
+  · show deRhamConj X n α ∈ hodgeFiltration X 0 n
+    rw [hodgeFiltration_zero_eq_top X n]
+    trivial
+
+/-- The complex subspace underlying `F⁰` is the whole de Rham hypercohomology group. -/
+lemma hodgeFiltrationComplexSubmodule_zero_eq_top (n : ℤ) :
+    hodgeFiltrationComplexSubmodule X 0 n = ⊤ := by
+  refine SetLike.ext fun α ↦ ?_
+  change α ∈ hodgeFiltration X 0 n ↔ α ∈ (⊤ :
+    Submodule ℂ (DeRhamHypercohomology X n))
+  rw [hodgeFiltration_zero_eq_top X n]
+  simp
+
+/-- Every rational degree-zero cohomology class belongs to the rational Hodge subgroup. -/
+lemma hodgeClasses_zero_eq_top :
+    Hdg^0(K; X) = ⊤ := by
+  refine SetLike.ext fun α ↦ ?_
+  change fieldToDeRhamCohomology K X (2 * (0 : ℕ)) α ∈
+      hodgePiece X ((0 : ℕ) : ℤ) ((0 : ℕ) : ℤ) (2 * (0 : ℕ)) ↔ True
+  simp only [Nat.cast_zero]
+  rw [hodgePiece_zero_eq_top]
+  trivial
 
 /-- The Hodge filtration is decreasing: forms of degree at least `p'` have degree at least `p`
 when `p ≤ p'`. -/

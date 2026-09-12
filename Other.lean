@@ -16,9 +16,29 @@ limitations under the License.
 module  -- shake: keep-all --deprecated_module: ignore
 
 public import HodgeConjecture
+public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
+public import Other.AlgebraicGeometry.CycleComponentSmoothSupportCoclassSection
+public import Other.AlgebraicGeometry.HodgeFiltration
+public import Other.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
+public import Other.AlgebraicTopology.FlasqueAcyclic
+public import Other.AlgebraicTopology.SingularCochainFlasque
+public import Other.AlgebraicTopology.SingularExcisionField
+public import Other.LinearAlgebra.ComplexOrientation
+public import Other.Algebra.Homology.LinearDual
+public import Other.AlgebraicGeometry.HolomorphicDeRham
+public import Other.AlgebraicGeometry.Points
+public import Other.AlgebraicTopology.RelativePairExcision
+public import Other.AlgebraicTopology.SingularAffineSubdivisionMesh
+public import Other.AlgebraicTopology.SingularCochainCohomology
+public import Other.AlgebraicTopology.SingularCochainSheaf
+public import Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
+public import Other.Mathlib.Algebra.Category.Grp.Basic
+public import Other.Mathlib.Algebra.Category.ModuleCat.Basic
+public import Other.Mathlib.Algebra.Homology.StupidTruncation
 public import Other.Algebra.Category.ModuleCat.Presheaf.ExteriorPower
 public import Other.Algebra.Category.Ring.Basic
 public import Other.Algebra.DeRham.Complex
+public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import Other.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusInjectiveModel
 public import Other.Algebra.Homology.MapArrowConeConnecting
 public import Other.Algebra.Homology.MapHomologyShift
@@ -69,6 +89,7 @@ public import Other.AlgebraicGeometry.EtaleLocalHomeomorph
 public import Other.AlgebraicGeometry.HodgeCodimensionZero
 public import Other.AlgebraicGeometry.HodgeDecomposition
 public import Other.AlgebraicGeometry.HodgeFiltration
+public import Other.AlgebraicGeometry.HolomorphicClosedImmersionCharts
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality
 public import Other.AlgebraicGeometry.PointCycleClass
 public import Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
@@ -112,6 +133,8 @@ public import Other.AlgebraicTopology.DerivedClosedSupportTruncation
 public import Other.AlgebraicTopology.DerivedConcentratedOrientation
 public import Other.AlgebraicTopology.DerivedSheafSectionClass
 public import Other.AlgebraicTopology.DerivedSheafSupportForget
+public import Other.AlgebraicTopology.DerivedSheafSupportLocalization
+public import Other.AlgebraicTopology.DerivedSheafSupportShift
 public import Other.AlgebraicTopology.DerivedSheafSupportTruncation
 public import Other.AlgebraicTopology.FiniteGoodCoverHomology
 public import Other.AlgebraicTopology.FiniteGoodCoverNerveHomology
@@ -120,11 +143,14 @@ public import Other.AlgebraicTopology.FirstQuadrantColumnFiltrationQuotient
 public import Other.AlgebraicTopology.FirstQuadrantColumnFiltrationShortExact
 public import Other.AlgebraicTopology.FirstQuadrantRowwiseTotalization
 public import Other.AlgebraicTopology.FirstQuadrantTotalComplex
+public import Other.AlgebraicTopology.FlasqueSheafSupportComparison
 public import Other.AlgebraicTopology.GlobalFundamentalClass
 public import Other.AlgebraicTopology.GlobalRawRelativeConnecting
 public import Other.AlgebraicTopology.GraphNormalSlicePurity
 public import Other.AlgebraicTopology.HorizontalTotalHomotopy
 public import Other.AlgebraicTopology.IntegralCechTotalAugmentation
+public import Other.AlgebraicTopology.LowestFlasqueCohomology
+public import Other.AlgebraicTopology.NestedSheafSupportLocalization
 public import Other.AlgebraicTopology.OpenCoverOrderedCechBicomplex
 public import Other.AlgebraicTopology.OpenRawRelativeConnecting
 public import Other.AlgebraicTopology.OpenRestrictedLowestCohomologyNormalization
@@ -133,6 +159,7 @@ public import Other.AlgebraicTopology.OrderedCechNormalization
 public import Other.AlgebraicTopology.OrderedCechRealization
 public import Other.AlgebraicTopology.OrderedCechTupleAlgebra
 public import Other.AlgebraicTopology.PointSupportedChainSection
+public import Other.AlgebraicTopology.PuncturedEuclideanFundamentalClass
 public import Other.AlgebraicTopology.RelativeCochainConeForgetComparison
 public import Other.AlgebraicTopology.RelativeHomologyEmpty
 public import Other.AlgebraicTopology.RelativeMayerVietoris
