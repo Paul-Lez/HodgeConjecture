@@ -50,11 +50,11 @@ independence or closed-embedding comparison is claimed.
 
 The Borel--Moore development is this file together with `BorelMooreCycleClass.lean`,
 `CycleComponentBorelMoore.lean` and `CycleComponentGlobalFundamentalClass.lean`, all under
-`Other/AlgebraicGeometry/`.  Everything proved there is conditional on the fifteen hypothesis
+`Other/AlgebraicGeometry/`.  Everything proved there is conditional on the thirteen hypothesis
 structures listed below: each packages data and theorems Mathlib does not supply, so the results
 read "given such a package, ...".  The grouping is by producer -- which packages some declaration
 actually builds, and out of what.  Issue #57 tracks this inventory; issue #14 tracks redefining
-Borel--Moore homology through hypercohomology, after which how many of the fifteen become
+Borel--Moore homology through hypercohomology, after which how many of the thirteen become
 constructible measures the progress made.
 
 ### Instantiated, but only in maximal codimension `p = d`
@@ -67,25 +67,18 @@ constructible measures the progress made.
   `maximalCodimensionLocalThomCapInput`
 * `BorelMooreCycleClass.lean`: `ComplexOrientedRationalCycleComponentClassData`, by
   `maximalCodimensionComplexOrientedComponentClassData`
-* `BorelMooreCycleClass.lean`: `AuxiliaryRationalBorelMooreCycleClassDescent`, by
-  `ofMaximalCodimension`, which in addition assumes the unproved
-  `MaximalCodimensionPrincipalDivisorClassVanishes`
 
 For a point component the Borel--Moore group, the local orientation and Alexander duality are
-computed outright, so the first four witnesses take no input beyond the variety and the point,
-and the fifth adds only the named principal-divisor statement.  Away from `p = d` the same
-packages await the global Borel--Moore fundamental-class theorem for oriented manifolds and the
-Thom/costalk operation normalizing the comparison, neither of which Mathlib provides.  Three of
-the five -- `RationalCycleComponentBorelMooreData`,
+computed outright, so these four witnesses take no input beyond the variety and the point.  Away
+from `p = d` the same packages await the global Borel--Moore fundamental-class theorem for
+oriented manifolds and the Thom/costalk operation normalizing the comparison, neither of which
+Mathlib provides.  Three of the four -- `RationalCycleComponentBorelMooreData`,
 `AuxiliaryRationalCycleComponentBorelMooreComparisonData` and
 `ComplexOrientedRationalCycleComponentClassData` -- also have adapters out of other packages of
 this list, which add nothing their source package does not already provide.
 
 ### Constructible only from other structures of this list
 
-* `BorelMooreCycleClass.lean`: `ComplexOrientedRationalBorelMooreCycleClassConstruction`, whose
-  only producer is `ofSheaf` in this file, out of
-  `ComplexOrientedRationalCycleComponentSheafBorelMooreData` and principal-divisor vanishing
 * `CycleComponentGlobalFundamentalClass.lean`:
   `RationalCycleComponentGlobalFundamentalClassInputs`, out of
   `RationalCycleComponentInjectiveBoundaryInputs` or `RationalCycleComponentBoundedModelInputs`
