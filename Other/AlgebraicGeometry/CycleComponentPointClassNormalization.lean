@@ -171,7 +171,7 @@ theorem cycleComponentSheafClass_point_normalization
     (hx : Order.coheight x = d) :
     cycleComponentSheafClass X x hx =
       analyticComponentPointPositiveKernelClass X x d z := by
-  rw [cycleComponentSheafClass,
+  rw [cycleComponentSheafClass_eq_injectiveModel,
     cycleComponentSupportedInjectiveClass_point_normalization X x d z hx]
   rfl
 

@@ -10,9 +10,9 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.RelativeCohomolog
 /-!
 # The normalized component coclass on the original ambient smooth-support open
 
-The component's actual smooth locus is closed in the complement of its singular
+The component's smooth locus is closed in the complement of its singular
 boundary. We construct its exactly normalized smooth-support section there and
-transport it through the actual analytic open embedding. The result is a section
+transport it through the analytic open embedding. The result is a section
 of the ORIGINAL ambient relative-cohomology sheaf on the singular-boundary
 complement. No section, purity comparison, or orientation coherence is an input.
 -/
@@ -72,7 +72,7 @@ def cycleComponentSmoothClosedLiftCoclassSection :
     (cycleComponentSmoothLocusOver X x)
     (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)
 
-/-- The actual analytic open-embedding map back to the original ambient space. -/
+/-- The analytic open-embedding map back to the original ambient space. -/
 def cycleComponentSmoothClosedLiftAmbientMap :
     TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)) ⟶
     TopCat.of (ComplexPoint X) :=
@@ -84,7 +84,7 @@ theorem cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding :
     IsOpenEmbedding (cycleComponentSmoothClosedLiftAmbientMap X x) :=
   isOpenEmbedding_map_open X (cycleComponentSmoothLocusAmbientOpen X x)
 
-/-- Support membership is transported by the actual lift-image theorem. -/
+/-- Support membership is transported by the lift-image theorem. -/
 theorem cycleComponentSmoothClosedLiftAmbientMap_support :
     cycleComponentSmoothClosedLiftAmbientMap X x ⁻¹' cycleComponentSupport X x =
       Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)) :=
@@ -100,7 +100,7 @@ theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
   rw [Set.image_univ]
   exact cycleComponentSmoothLocusAmbientOpen_analytic_image X x
 
-/-- The actual normalized component coclass section, living on the singular-boundary
+/-- The normalized component coclass section, living on the singular-boundary
 complement in the ORIGINAL ambient relative-cohomology sheaf. -/
 def cycleComponentSmoothSupportCoclassSection :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))

@@ -34,12 +34,14 @@ variable (X : Over (Spec (.of ℂ)))
 local instance cycleComponentSmoothSupportPurityAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
-/-- The exact analytic complement of the canonical singular boundary. -/
+/-- The analytic twin of `cycleComponentSmoothLocusAmbientOpen`: the complex points of
+`X ∖ Z_sing`, an open subset of `X(ℂ)`. Its underlying set is described by
+`coe_cycleComponentSmoothSupportAmbientOpen`. -/
 abbrev cycleComponentSmoothSupportAmbientOpen : Opens (ComplexPoint X) :=
   (cycleComponentSingularAnalyticClosedFiltration X x 0).compl
 
 include hx in
-/-- Actual cofinal ambient relative-cohomology calculations along the smooth locus. -/
+/-- Cofinal ambient relative-cohomology calculations along the smooth locus. -/
 private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
     (y : ComplexPoint X) (hy : y ∈ cycleComponentSupport X x)
     (hyU : y ∈ cycleComponentSmoothSupportAmbientOpen X x)
@@ -132,7 +134,7 @@ instance cycleComponentSmoothRestrictedInjectiveComplex_isStrictlyGE :
   infer_instance
 
 include hx in
-/-- The actual restricted cohomology sheaves are concentrated in degree `2p`. -/
+/-- The restricted cohomology sheaves are concentrated in degree `2p`. -/
 theorem cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
     (n : ℤ) (hn : n ≠ 2 * (p : ℤ)) :
     IsZero ((cycleComponentSmoothRestrictedInjectiveComplex X x).homology n) :=

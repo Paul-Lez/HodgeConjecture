@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf
 
 /-!
-# Actual cohomology-sheaf concentration for smooth closed supports
+# Cohomology-sheaf concentration for smooth closed supports
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CohomologySheaf`.
@@ -27,7 +27,7 @@ variable (X : Over (Spec (.of ℂ)))
 attribute [local instance] smoothClosedSupportCohomologySheafAnalyticTopology
 
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- Negative cohomology vanishes directly from the actual nonnegative resolution. -/
+/-- Negative cohomology vanishes directly from the nonnegative resolution. -/
 theorem complexSupportInjectiveComplex_homology_isZero_negative
     (S : Closeds (ComplexPoint X)) (n : ℤ) (hn : n < 0) :
     IsZero ((complexSupportInjectiveComplex X S).homology n) :=
@@ -35,7 +35,7 @@ theorem complexSupportInjectiveComplex_homology_isZero_negative
     ((complexSupportInjectiveComplex X S).isZero_of_isStrictlyGE 0 n hn)
 
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- Off the support, the actual supported complex has zero cohomology stalks in every
+/-- Off the support, the supported complex has zero cohomology stalks in every
 degree: choose neighborhoods in the complement and use the defining kernel. -/
 theorem complexSupportInjectiveComplex_homology_stalk_isZero_of_not_mem
     (S : Closeds (ComplexPoint X)) (x : ComplexPoint X) (hx : x ∉ S) (n : ℤ) :
@@ -54,7 +54,7 @@ variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
-/-- On support points, cofinal actual normal neighborhoods prove vanishing outside
+/-- On support points, cofinal normal neighborhoods prove vanishing outside
 twice the complex codimension, without a local-purity hypothesis. -/
 theorem smoothClosedSupportInjective_homology_stalk_isZero_of_ne
     (z : ComplexPoint Y) (n : ℕ) (hn : n ≠ 2 * (d - m)) :
@@ -80,7 +80,7 @@ theorem smoothClosedSupportInjective_homology_stalk_isZero_of_ne
           (n : ℤ)) := e.injective.subsingleton
   exact AddCommGrpCat.isZero_of_subsingleton _
 
-/-- The actual supported cohomology sheaf vanishes in every integer degree other than
+/-- The supported cohomology sheaf vanishes in every integer degree other than
 twice the complex codimension. -/
 theorem smoothClosedSupportInjective_homology_isZero_of_ne (n : ℤ)
     (hn : n ≠ 2 * ((d - m : ℕ) : ℤ)) :
@@ -97,7 +97,7 @@ theorem smoothClosedSupportInjective_homology_isZero_of_ne (n : ℤ)
         (by exact_mod_cast hn)
     · exact complexSupportInjectiveComplex_homology_stalk_isZero_of_not_mem X _ x hx k
 
-/-- The proved lower support bound, packaged in Mathlib's actual cohomological grading API. -/
+/-- The proved lower support bound, packaged in Mathlib's cohomological grading API. -/
 theorem smoothClosedSupportInjective_isGE :
     (complexSupportInjectiveComplex X (smoothClosedAnalyticSupport X Y i)).IsGE
       (2 * ((d - m : ℕ) : ℤ)) := by
@@ -106,7 +106,7 @@ theorem smoothClosedSupportInjective_isGE :
   rw [HomologicalComplex.exactAt_iff_isZero_homology]
   exact smoothClosedSupportInjective_homology_isZero_of_ne X Y i m d n (ne_of_lt hn)
 
-/-- The proved upper support bound; together with `isGE` this is actual concentration. -/
+/-- The proved upper support bound; together with `isGE` this is concentration. -/
 theorem smoothClosedSupportInjective_isLE :
     (complexSupportInjectiveComplex X (smoothClosedAnalyticSupport X Y i)).IsLE
       (2 * ((d - m : ℕ) : ℤ)) := by

@@ -18,7 +18,7 @@ open Point
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- The rational span of the actually constructed codimension-`p` component classes.
+/-- The rational span of the constructed codimension-`p` component classes.
 
 The relative dimension is the canonical `dim X`, whose certificate is proved from smoothness and
 integrality. This definition spans explicit normalized component classes. -/

@@ -9,10 +9,10 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.Holomorph
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionOverlap
 
 /-!
-# Exactly normalized smooth-support coclasses on actual overlaps
+# Exactly normalized smooth-support coclasses on overlaps
 
 The previously constructed local normal coclass is the pullback of the fixed complex
-normal coclass along the actual normal coordinate projection. The actual holomorphic
+normal coclass along the normal coordinate projection. The holomorphic
 closed-immersion charts prove that these coclasses agree on sufficiently small common
 ambient neighborhoods. No transition compatibility or purity equivalence is supplied.
 -/
@@ -29,7 +29,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- Actual normal-projection coclass on any subset of a holomorphic flattening chart. -/
+/-- The normal-projection coclass on any subset of a holomorphic flattening chart. -/
 def smoothClosedSupportChartCoclass (W : Set (ComplexPoint X))
     (hW : W ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     RelativeCohomology ℚ (neighborhoodSupportComplementPair W (Set.range (Point.map i)))

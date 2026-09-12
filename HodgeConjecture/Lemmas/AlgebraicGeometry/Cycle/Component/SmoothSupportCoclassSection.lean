@@ -38,7 +38,7 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
-/-- Restriction to each actual image neighborhood agrees with transport of the
+/-- Restriction to each image neighborhood agrees with transport of the
 constructed auxiliary normalized section. No ambient section comparison is supplied. -/
 theorem cycleComponentSmoothSupportCoclassSection_restrict
     (V : Opens (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))

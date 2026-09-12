@@ -32,7 +32,7 @@ local instance cycleComponentSupportExtensionAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 include hx in
-/-- Every actual closed remainder in the finite singular filtration has
+/-- Every closed remainder in the finite singular filtration has
 vanishing supported section-complex cohomology below `2(p+1)`. -/
 private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
     (k : ℕ) (hk : k ≤ (cycleComponentSingularStratification X x).length)
@@ -57,7 +57,7 @@ private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
       X x hx j n hn) k hk
 
 include hx in
-/-- The actual singular boundary has the required lower supported
+/-- The singular boundary has the required lower supported
 cohomological bound. All geometric and finite-filtration inputs are proved. -/
 private theorem cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
@@ -90,13 +90,13 @@ private theorem cycleComponentSingularBoundary_le_support :
   rw [← range_cycleComponentι X.left x]
   exact ⟨z, hz⟩
 
-/-- The actual complement inclusion determining the localization sequence. -/
+/-- The complement inclusion determining the localization sequence. -/
 private theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
     (cycleComponentAnalyticClosedSupport X x).compl ≤ cycleComponentSmoothSupportAmbientOpen X x :=
   fun _ hy hyS ↦ hy (cycleComponentSingularBoundary_le_support X x hyS)
 
 /-- Restriction of the original supported injective section complex to the
-actual smooth-locus ambient open. -/
+smooth-locus ambient open. -/
 def cycleComponentSupportSectionRestriction :
     ((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) ⟶
@@ -109,8 +109,8 @@ def cycleComponentSupportSectionRestriction :
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 include hx in
-/-- The actual restriction map is an isomorphism in cycle degree, by the
-two proved boundary vanishings and the actual localization sequence. -/
+/-- The restriction map is an isomorphism in cycle degree, by the
+two proved boundary vanishings and the localization sequence. -/
 theorem cycleComponentSupportSectionRestriction_homology_isIso :
     IsIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ))) := by
   let T := TopCat.of (ComplexPoint X)
@@ -131,7 +131,7 @@ theorem cycleComponentSupportSectionRestriction_homology_isIso :
   rw [← he]
   infer_instance
 
-/-- The extension equivalence is the actual restriction map with its proved
+/-- The extension equivalence is the restriction map with its proved
 inverse. It has no boundary-vanishing or fundamental-class input. -/
 def cycleComponentSupportExtensionIso :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex

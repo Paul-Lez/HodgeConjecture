@@ -44,7 +44,7 @@ instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint 
   dsimp [complexSupportInjectiveComplex]
   infer_instance
 
-/-- Actual open-section cohomology of the supported injective model is relative
+/-- Open-section cohomology of the supported injective model is relative
 singular cohomology of the same literal local support pair. -/
 def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
     (V : Opens (ComplexPoint X)) (n : ℕ) :
@@ -61,7 +61,7 @@ variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
-/-- The actual closed analytic image of the smooth closed immersion. -/
+/-- The closed analytic image of the smooth closed immersion. -/
 def smoothClosedAnalyticSupport : Closeds (ComplexPoint X) :=
   ⟨Set.range (Point.map i), (isClosedEmbedding_map_of_closedImmersion i).isClosed_range⟩
 

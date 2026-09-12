@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 
 /-!
-# Actual purity along the smooth locus of an integral cycle component
+# Purity along the smooth locus of an integral cycle component
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity`.
@@ -27,7 +27,14 @@ variable (X : Over (Spec (.of ℂ)))
 
 attribute [local instance] cycleComponentSmoothSupportPurityAnalyticTopology
 
-/-- Restricting the actual flasque supported coefficient sheaves preserves flasqueness. -/
+/-- The analytic smooth-locus open is the preimage of the Zariski one: the complex points
+lying off the image of the component's singular locus. -/
+@[simp] theorem coe_cycleComponentSmoothSupportAmbientOpen :
+    (cycleComponentSmoothSupportAmbientOpen X x : Set (ComplexPoint X)) =
+      (Point.underlying ⁻¹' (cycleComponentι X.left x ''
+        (singularLocusClosed (cycleComponentι X.left x ≫ X.hom) : Set _)))ᶜ := rfl
+
+/-- Restricting the flasque supported coefficient sheaves preserves flasqueness. -/
 theorem cycleComponentSmoothRestrictedInjectiveComplex_isFlasque (n : ℤ) :
     ((cycleComponentSmoothRestrictedInjectiveComplex X x).X n).IsFlasque := by
   let : ((complexSupportInjectiveComplex X
@@ -40,7 +47,7 @@ theorem cycleComponentSmoothRestrictedInjectiveComplex_isFlasque (n : ℤ) :
       ((complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)).X n)
 
 include hx in
-/-- The actual lower cohomological bound along the smooth locus. -/
+/-- The lower cohomological bound along the smooth locus. -/
 theorem cycleComponentSmoothRestrictedInjective_isGE :
     (cycleComponentSmoothRestrictedInjectiveComplex X x).IsGE (2 * (p : ℤ)) := by
   rw [CochainComplex.isGE_iff]
@@ -50,7 +57,7 @@ theorem cycleComponentSmoothRestrictedInjective_isGE :
     X x hx n (ne_of_lt hn)
 
 include hx in
-/-- The actual upper cohomological bound, hence concentration rather than just lower purity. -/
+/-- The upper cohomological bound, hence concentration rather than just lower purity. -/
 theorem cycleComponentSmoothRestrictedInjective_isLE :
     (cycleComponentSmoothRestrictedInjectiveComplex X x).IsLE (2 * (p : ℤ)) := by
   rw [CochainComplex.isLE_iff]
@@ -59,7 +66,7 @@ theorem cycleComponentSmoothRestrictedInjective_isLE :
   exact cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
     X x hx n (ne_of_gt hn)
 
-/-- Its forward map displays the actual open-section identification, canonical
+/-- Its forward map displays the open-section identification, canonical
 sheafification comparison on the open, and exact open-restriction homology comparison. -/
 @[simp] theorem cycleComponentSmoothSupportLowestSectionCohomologyIso_hom :
     (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom =
@@ -77,7 +84,7 @@ sheafification comparison on the open, and exact open-restriction homology compa
         (2 * (p : ℤ))).hom := rfl
 
 include hx in
-/-- Actual supported section cohomology on the boundary complement vanishes below `2p`.
+/-- Supported section cohomology on the boundary complement vanishes below `2p`.
 Higher-degree global vanishing is not inferred from sheaf concentration. -/
 theorem cycleComponentSmoothSupportSectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * (p : ℤ)) :

@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SupportExtension
 
 /-!
-# Actual unique extension across a cycle component's singular boundary
+# Unique extension across a cycle component's singular boundary
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SupportExtension`.

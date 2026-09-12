@@ -14,7 +14,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainC
 Every prescribed open neighborhood of a point on a smooth closed complex subvariety contains
 an explicitly constructed smaller open neighborhood whose support-complement pair has rational
 relative homology and cohomology only in degree twice the complex codimension. The comparison
-and the exactly normalized normal class come from actual flattening, radial compression, and
+and the exactly normalized normal class come from flattening, radial compression, and
 tangent contraction. No purity, derivative, or comparison equivalence is supplied.
 
 This is a cofinal local singular calculation. The identification with derived sheaf sections
@@ -57,7 +57,7 @@ theorem smoothClosedSupportRestrictionChart_mem_range_iff (y : ComplexPoint X)
       (smoothClosedSupportRestrictionChart X Y i m d z V y).2 = 0 :=
   closedImmersionStandardFlatteningChart_mem_range_iff X Y i m d z y hy.1
 
-/-- An actual small open support-model neighborhood inside the prescribed open. -/
+/-- A small open support-model neighborhood inside the prescribed open. -/
 def smoothClosedSupportNeighborhood : Opens (ComplexPoint X) :=
   flattenedSupportNeighborhood (Fin m → ℂ) (d - m)
     (smoothClosedSupportRestrictionChart X Y i m d z V)
@@ -76,13 +76,13 @@ theorem smoothClosedSupportNeighborhood_le :
     (smoothClosedSupportRestrictionChart_mem_source X Y i m d z V hzV)
     hy).2
 
-/-- The local support-complement pair, with the actual image as support. -/
+/-- The local support-complement pair, with the image as support. -/
 abbrev smoothClosedSupportNeighborhoodPair : TopPair :=
   neighborhoodSupportComplementPair
     (smoothClosedSupportNeighborhood X Y i m d z V hzV)
     (Set.range (Point.map i))
 
-/-- The actual pair homeomorphism to the product normal model. -/
+/-- The pair homeomorphism to the product normal model. -/
 def smoothClosedSupportNeighborhoodPairIso :
     normalSlicePair (Fin m → ℂ) (d - m) ≅
       smoothClosedSupportNeighborhoodPair X Y i m d z V hzV :=
@@ -94,7 +94,7 @@ def smoothClosedSupportNeighborhoodPairIso :
     (smoothClosedSupportRestrictionChart_mem_range_iff X Y i m d z V)
     (congrArg Prod.snd (smoothClosedSupportRestrictionChart_center X Y i m d z V))
 
-/-- All-degree local relative homology, computed from the actual pair maps. -/
+/-- All-degree local relative homology, computed from the pair maps. -/
 def smoothClosedSupportRelativeHomologyIso (n : ℕ) :
     RelativeHomology ℚ
       (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n ≅
@@ -109,7 +109,7 @@ theorem smoothClosedSupportRelativeHomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2
   (standardComplexLocalHomology_isZero_of_ne (d - m) n hn).of_iso
     (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV n)
 
-/-- The exact complex-normal class in the actual local support pair. -/
+/-- The exact complex-normal class in the local support pair. -/
 def smoothClosedSupportNormalClass :
     RelativeHomology ℚ
       (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) (2 * (d - m)) :=
@@ -178,7 +178,7 @@ theorem smoothClosedSupportRelativeCohomology_isZero_of_ne (n : ℕ) (hn : n ≠
   relativeCohomology_isZero ℚ _ n
     (smoothClosedSupportRelativeHomology_isZero_of_ne X Y i m d z V hzV n hn)
 
-/-- The same concentration for the actual singular-cochain restriction cone. The cone
+/-- The same concentration for the singular-cochain restriction cone. The cone
 has its conventional unshifted grading: supported degree `n` is cone degree `n-1`. -/
 theorem smoothClosedSupportCochainConeHomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * (d - m)) :
     IsZero ((CochainComplex.mappingCone (relativeCochainRestrictionInt ℚ

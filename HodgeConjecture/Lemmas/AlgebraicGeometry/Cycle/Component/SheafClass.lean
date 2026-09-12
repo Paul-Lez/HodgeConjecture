@@ -54,7 +54,7 @@ theorem cycleComponentSupportedInjectiveClass_normalization :
     cycleComponentSmoothSupportCoclassSection X x hx :=
   cycleComponentExtendSmoothCoclass_normalization X x hx _
 
-/-- The normalized global extension is unique, by injectivity of the actual
+/-- The normalized global extension is unique, by injectivity of the
 restriction/purity comparison. This is a theorem, not a supplied existence input. -/
 theorem cycleComponentSupportedInjectiveClass_unique
     (a : CycleComponentSupportedCohomology X x p)
@@ -63,20 +63,33 @@ theorem cycleComponentSupportedInjectiveClass_unique
     a = cycleComponentSupportedInjectiveClass X x hx :=
   cycleComponentExtendSmoothCoclass_unique X x hx _ a ha
 
-set_option backward.isDefEq.respectTransparency false in
-set_option backward.isDefEq.respectTransparency.types false in
-set_option backward.defeqAttrib.useBackward true in
-/-- The ordinary class agrees with the repository's support-forgetting map,
-through the constructed, sign-correct support comparison. -/
+/-- The ordinary class is the support-forgetting image of the supported class. Since
+`cycleComponentSheafClass` is now defined as that composite, this holds by definition; it is
+kept as a named rewrite for the proofs that use it. -/
 theorem cycleComponentSheafClass_eq_forgetSupport :
     cycleComponentSheafClass X x hx =
       forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
-        (cycleComponentSheafSupportedClass X x hx) := by
+        (cycleComponentSheafSupportedClass X x hx) :=
+  rfl
+
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
+set_option backward.defeqAttrib.useBackward true in
+/-- The ordinary class computed directly in the ambient injective model, bypassing the
+mapping-cone presentation. This was the old definition of `cycleComponentSheafClass`. -/
+theorem cycleComponentSheafClass_eq_injectiveModel :
+    cycleComponentSheafClass X x hx =
+      (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
+        (HomologicalComplex.homologyMap
+          (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
+            (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
+            (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
+          (cycleComponentSupportedInjectiveClass X x hx)) := by
   apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).injective
-  rw [rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
+  rw [cycleComponentSheafClass_eq_forgetSupport,
+    rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
     (cycleComponentSupport X x) (cycleComponentAnalyticClosedSupport X x).isClosed]
-  simp only [cycleComponentSheafClass, cycleComponentSheafSupportedClass,
-    AddEquiv.apply_symm_apply]
+  simp only [cycleComponentSheafSupportedClass, AddEquiv.apply_symm_apply]
   rfl
 
 end AlgebraicGeometry.ComplexPoint

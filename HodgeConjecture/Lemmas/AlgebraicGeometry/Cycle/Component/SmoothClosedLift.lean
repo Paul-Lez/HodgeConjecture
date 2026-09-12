@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
 
 /-!
-# The actual smooth-locus closed lift of an integral cycle component
+# The smooth-locus closed lift of an integral cycle component
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothClosedLift`.
@@ -22,7 +22,14 @@ namespace AlgebraicGeometry
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- The target is the actual source-open target of the smooth locus. -/
+/-- `X ∖ Z_sing` really is the complement of the image of the component's singular locus: the
+filtration index `0` in the definition contributes nothing. -/
+@[simp] theorem coe_cycleComponentSmoothLocusAmbientOpen :
+    (cycleComponentSmoothLocusAmbientOpen X x : Set X.left) =
+      (cycleComponentι X.left x ''
+        (singularLocusClosed (cycleComponentι X.left x ≫ X.hom) : Set _))ᶜ := rfl
+
+/-- The target is the source-open target of the smooth locus. -/
 theorem cycleComponentSmoothLocusAmbientOpen_eq_sourceOpenTarget :
     cycleComponentSmoothLocusAmbientOpen X x =
       closedImmersionSourceOpenTarget (cycleComponentι X.left x)
