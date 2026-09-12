@@ -51,13 +51,11 @@ theorem cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero
 /-- The degree identification does not change whether the auxiliary section vanishes. -/
 theorem cycleComponentSmoothClosedLiftCoclassSection_ne_zero_iff :
     cycleComponentSmoothClosedLiftCoclassSection X x (d := d) hx ≠ 0 ↔
-      letI := cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension X x
-        (d := d) hx
+      letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x (d := d) hx
       smoothClosedSupportCoclassSection (cycleComponentSmoothLocusAmbientOpenOver X x)
         (cycleComponentSmoothLocusOver X x) (cycleComponentSmoothLocusClosedLiftOver X x)
         (d - p) d ≠ 0 := by
-  let := cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension X x
-    (d := d) hx
+  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x (d := d) hx
   have transport (a b : ℕ) (h : a = b)
       (s : (supportRelativeCohomologySheaf
         (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))

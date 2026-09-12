@@ -71,7 +71,7 @@ def cycleComponentSmoothClosedLiftCoclassSection (X : Over (Spec ↧ℂ)) [IsInt
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (2 * p)).obj.obj (op ⊤) := by
-  let := cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension X x (d := d) hx
+  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x (d := d) hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x (d := d) hx
   exact hdeg ▸ smoothClosedSupportCoclassSection
     (cycleComponentSmoothLocusAmbientOpenOver X x)

@@ -35,7 +35,7 @@ include d hx in
 /-- Every actual closed remainder in the finite singular filtration has
 vanishing supported section-complex cohomology below `2(p+1)`. -/
 private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
-    (k : ℕ) (hk : k ≤ cycleComponentSingularFiltrationLength X x)
+    (k : ℕ) (hk : k ≤ (cycleComponentSingularStratification X x).length)
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X
@@ -43,14 +43,14 @@ private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
   let O (j : ℕ) := (cycleComponentSingularAnalyticClosedFiltration X x j).compl
   have hO : Monotone O := fun _ _ hab _ hy hyb ↦
     hy (cycleComponentSingularAnalyticClosedFiltration_antitone X x hab hyb)
-  have hN : O (cycleComponentSingularFiltrationLength X x) = ⊤ := by
+  have hN : O (cycleComponentSingularStratification X x).length = ⊤ := by
     dsimp only [O]
     rw [cycleComponentSingularAnalyticClosedFiltration_length]
     ext y
     change (y ∉ (∅ : Set (ComplexPoint X))) ↔ y ∈ Set.univ
     simp
   exact TopCat.Sheaf.finiteNestedSupport_homology_isZero
-    (TopCat.of (ComplexPoint X)) O hO (cycleComponentSingularFiltrationLength X x) hN
+    (TopCat.of (ComplexPoint X)) O hO (cycleComponentSingularStratification X x).length hN
     (ambientRationalInjectiveComplex X)
     (fun j => TopCat.Sheaf.injective_isFlasque _ _) n
     (fun j _ => cycleComponentSingularLayerSectionCohomology_isZero_of_lt

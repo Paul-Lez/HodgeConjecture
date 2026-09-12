@@ -33,8 +33,7 @@ theorem cycleComponentSmoothSupportCoclassSection_ne_zero
     cycleComponentSmoothSupportCoclassSection X x (d := d) hx ≠ 0 := by
   apply cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero X x hx
   apply (cycleComponentSmoothClosedLiftCoclassSection_ne_zero_iff X x hx).mpr
-  let := cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension X x
-    (d := d) hx
+  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x (d := d) hx
   obtain ⟨z⟩ := cycleComponentSmoothLocusOver_nonempty X x
   exact smoothClosedSupportCoclassSection_ne_zero _ _ _ (d - p) d z
 

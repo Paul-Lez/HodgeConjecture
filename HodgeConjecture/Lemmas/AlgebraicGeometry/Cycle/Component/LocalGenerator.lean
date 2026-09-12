@@ -64,7 +64,7 @@ def smoothPoint : ComplexPoint (componentSmoothScheme X x) :=
 /-- The complex structure map on the selected affine component neighborhood. -/
 abbrev neighborhoodStructureMap :
     C.componentNeighborhood.toScheme ⟶ Spec ↧ℂ :=
-  C.componentNeighborhood.ι ≫ componentSmoothStructureMap X x
+  C.componentNeighborhood.ι ≫ (componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom
 
 /-- The selected affine component neighborhood, bundled over the complex base. -/
 abbrev neighborhoodScheme : Over (Spec ↧ℂ) :=

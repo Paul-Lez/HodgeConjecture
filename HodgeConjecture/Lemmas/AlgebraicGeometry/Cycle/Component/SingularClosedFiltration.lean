@@ -23,7 +23,8 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
 theorem cycleComponentSingularClosedFiltration_length :
-    cycleComponentSingularClosedFiltration X x (cycleComponentSingularFiltrationLength X x) = ⊥ := by
+    cycleComponentSingularClosedFiltration X x
+      (cycleComponentSingularStratification X x).length = ⊥ := by
   let := cycleComponent_isNoetherian X x
   exact reducedSmoothClosedFiltration_length _ _
 
@@ -33,11 +34,12 @@ theorem cycleComponentSingularAmbientClosedFiltration_antitone :
   fun _ _ hkl ↦ Set.image_mono (reducedSmoothClosedFiltration_antitone _ _ hkl)
 
 theorem cycleComponentSingularAmbientClosedFiltration_length :
-    cycleComponentSingularAmbientClosedFiltration X x (cycleComponentSingularFiltrationLength X x) =
-      ⊥ := by
+    cycleComponentSingularAmbientClosedFiltration X x
+      (cycleComponentSingularStratification X x).length = ⊥ := by
   apply SetLike.coe_injective
   change cycleComponentι X.left x ''
-    (cycleComponentSingularClosedFiltration X x (cycleComponentSingularFiltrationLength X x) : Set _) = ∅
+    (cycleComponentSingularClosedFiltration X x
+      (cycleComponentSingularStratification X x).length : Set _) = ∅
   rw [cycleComponentSingularClosedFiltration_length]
   exact Set.image_empty _
 
@@ -94,12 +96,12 @@ theorem cycleComponentSingularAnalyticClosedFiltration_antitone :
   fun _ _ hkl _ hz ↦ cycleComponentSingularAmbientClosedFiltration_antitone X x hkl hz
 
 theorem cycleComponentSingularAnalyticClosedFiltration_length :
-    cycleComponentSingularAnalyticClosedFiltration X x (cycleComponentSingularFiltrationLength X x) =
-      ⊥ := by
+    cycleComponentSingularAnalyticClosedFiltration X x
+      (cycleComponentSingularStratification X x).length = ⊥ := by
   apply SetLike.coe_injective
   change Point.underlying ⁻¹'
-    (cycleComponentSingularAmbientClosedFiltration X x (cycleComponentSingularFiltrationLength X x) :
-      Set X.left) = ∅
+    (cycleComponentSingularAmbientClosedFiltration X x
+      (cycleComponentSingularStratification X x).length : Set X.left) = ∅
   rw [cycleComponentSingularAmbientClosedFiltration_length]
   exact Set.preimage_empty
 

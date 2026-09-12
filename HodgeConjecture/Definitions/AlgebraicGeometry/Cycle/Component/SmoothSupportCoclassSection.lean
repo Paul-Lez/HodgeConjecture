@@ -42,14 +42,10 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
 
-/-- The actual structure morphism of the closed-lift source. -/
-abbrev cycleComponentSmoothClosedLiftStructureMap :=
-  (cycleComponentSmoothLocusOver X x).hom
-
 include hx in
-/-- The proved dimension of the actual closed-lift source. -/
-theorem cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension :
-    SmoothOfRelativeDimension (d - p) (cycleComponentSmoothClosedLiftStructureMap X x) :=
+/-- The proved dimension of the smooth locus, bundled over `Spec ℂ`. -/
+theorem cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension :
+    SmoothOfRelativeDimension (d - p) (cycleComponentSmoothLocusOver X x).hom :=
   cycleComponentSmoothLocus_smoothOfRelativeDimension X x (d := d) hx
 
 include X hx in
@@ -69,7 +65,7 @@ def cycleComponentSmoothClosedLiftCoclassSection :
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (2 * p)).obj.obj (op ⊤) := by
-  let := cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension X x (d := d) hx
+  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x (d := d) hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x (d := d) hx
   exact hdeg ▸ smoothClosedSupportCoclassSection
     (cycleComponentSmoothLocusAmbientOpenOver X x)

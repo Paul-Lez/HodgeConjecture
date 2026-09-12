@@ -62,9 +62,9 @@ theorem cycleComponentSmoothClosedLift_range_eq_singleton
 include hx in
 /-- The actual closed-lift source is smooth of dimension zero in maximal codimension. -/
 theorem cycleComponentPointClosedLift_smoothOfRelativeDimension_zero :
-    SmoothOfRelativeDimension 0 (cycleComponentSmoothClosedLiftStructureMap X x) := by
+    SmoothOfRelativeDimension 0 (cycleComponentSmoothLocusOver X x).hom := by
   simpa only [Nat.sub_self] using
-    cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension X x (d := d) hx
+    cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x (d := d) hx
 
 /-- Comparison of the auxiliary section with its old normalized point coclass.
 This is a specialization theorem about the general gluing, not its definition. -/
@@ -89,7 +89,7 @@ theorem cycleComponentSmoothClosedLiftCoclassSection_eq_oldPoint
         (cycleComponentSmoothLocusOver X x)
         (cycleComponentSmoothLocusClosedLiftOver X x) 0 d := by
     have hcast (m : ℕ) (hm : m = 0)
-        (hinst : SmoothOfRelativeDimension m (cycleComponentSmoothClosedLiftStructureMap X x)) :
+        (hinst : SmoothOfRelativeDimension m (cycleComponentSmoothLocusOver X x).hom) :
         ((show d - m = d by omega) ▸ @smoothClosedSupportCoclassSection
           (cycleComponentSmoothLocusAmbientOpenOver X x)
           (cycleComponentSmoothLocusOver X x)
@@ -101,7 +101,7 @@ theorem cycleComponentSmoothClosedLiftCoclassSection_eq_oldPoint
       subst m
       rfl
     exact hcast (d - d) (Nat.sub_self d)
-      (cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension X x (d := d) hx)
+      (cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x (d := d) hx)
   rw [hsec, smoothClosedSupportCoclassSection_eq_oldPoint_of_singleton
     (cycleComponentSmoothLocusAmbientOpenOver X x)
     (cycleComponentSmoothLocusOver X x)

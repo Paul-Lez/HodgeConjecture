@@ -33,10 +33,6 @@ abbrev cycleComponentSingularClosedFiltration (k : ℕ) : Closeds (cycleComponen
   reducedSmoothClosedFiltration (cycleComponentι X.left x ≫ X.hom)
     (singularLocusClosed (cycleComponentι X.left x ≫ X.hom)) k
 
-/-- The exact terminal index is read from the already constructed finite decomposition. -/
-abbrev cycleComponentSingularFiltrationLength : ℕ :=
-  (cycleComponentSingularStratification X x).length
-
 /-- The actual smooth scheme occurring between two consecutive closed supports. -/
 abbrev cycleComponentSingularFiltrationStratum (k : ℕ) : Scheme :=
   reducedClosedSmoothPiece (cycleComponentι X.left x ≫ X.hom)
