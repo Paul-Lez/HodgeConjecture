@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.Algebra.Category.Grp.FilteredColimits
 public import Mathlib.CategoryTheory.Limits.Shapes.Countable
 public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
@@ -113,7 +114,7 @@ variable (X : TopCat.{u})
 
 /-- The inclusion of a closed subspace. -/
 def closedInclusion (Z : Closeds X) : TopCat.of Z ⟶ X :=
-  TopCat.ofHom ⟨Subtype.val, continuous_subtype_val⟩
+  TopCat.subtypeInclusion X (Z : Set X)
 
 /-- The integer sheaf on a closed subspace, pushed forward to the ambient space. -/
 def supportIntegerSheaf (Z : Closeds X) :

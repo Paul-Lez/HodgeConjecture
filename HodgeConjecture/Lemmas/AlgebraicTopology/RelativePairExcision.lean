@@ -841,16 +841,9 @@ def pointComplementChainsToAmbientPairLeft (x : X) :
       ((chainPairFunctor ℚ).obj (pointComplementPair x)).left :=
   𝟙 _
 
-/-- The inverse identity map for `pointComplementChainsToAmbientPairLeft`. -/
-def ambientPairLeftToPointComplementChains (x : X) :
-    ((chainPairFunctor ℚ).obj (pointComplementPair x)).left ⟶
-      (TopCat.toSSet.obj (pointComplementPair x).snd).chainComplex
-        (ModuleCat.of ℚ ℚ) :=
-  𝟙 _
-
 instance pointComplementChainsToAmbientPairLeft_isIso (x : X) :
     IsIso (pointComplementChainsToAmbientPairLeft x) := by
-  exact ⟨⟨ambientPairLeftToPointComplementChains x, Category.comp_id _, Category.comp_id _⟩⟩
+  exact ⟨⟨𝟙 _, Category.comp_id _, Category.comp_id _⟩⟩
 
 omit [T1Space X] in
 lemma pointComplementChainsToAmbientPairLeft_comp

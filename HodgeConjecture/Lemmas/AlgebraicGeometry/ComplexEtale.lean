@@ -561,11 +561,6 @@ def standardEtalePresentationComplexAlgEquiv :
     S ≃ₐ[ℂ] (chosenStandardEtalePresentation (n := n) S).P.Ring :=
   (chosenStandardEtalePresentation (n := n) S).equivRing.restrictScalars ℂ
 
-/-- Restriction of a complex point of a standard étale algebra to its polynomial base. -/
-def isStandardEtaleBaseAlgHom (u : S →ₐ[ℂ] ℂ) :
-    complexPolynomialRing n →ₐ[ℂ] ℂ :=
-  u.comp (IsScalarTower.toAlgHom ℂ (complexPolynomialRing n) S)
-
 /-- A projection chart for an arbitrary standard étale algebra, transported through its chosen
 standard étale presentation. -/
 noncomputable def isStandardEtaleAlgHomProjectionChart (u : S →ₐ[ℂ] ℂ) :
@@ -589,7 +584,8 @@ lemma mem_isStandardEtaleAlgHomProjectionChart_source (u : S →ₐ[ℂ] ℂ) :
 
 lemma isStandardEtaleAlgHomProjectionChart_apply (u v : S →ₐ[ℂ] ℂ) :
     isStandardEtaleAlgHomProjectionChart (n := n) S u v =
-      mvPolynomialAlgHomHomeomorph n (isStandardEtaleBaseAlgHom (n := n) S v) := by
+      mvPolynomialAlgHomHomeomorph n
+        (v.comp (IsScalarTower.toAlgHom ℂ (complexPolynomialRing n) S)) := by
   let e := standardEtalePresentationComplexAlgEquiv (n := n) S
   let Q := (chosenStandardEtalePresentation (n := n) S).P
   let q := (precompAlgEquivHomeomorph e).symm u

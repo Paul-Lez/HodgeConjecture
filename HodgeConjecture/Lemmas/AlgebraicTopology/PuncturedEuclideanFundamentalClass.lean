@@ -2668,13 +2668,6 @@ lemma standardAffineBoundaryHomologyMap_injective (n : ℕ) :
       simpa only [ConcreteCategory.comp_apply, ConcreteCategory.id_apply]
         using hcomp y
 
-lemma standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain' (n : ℕ) :
-    standardSphereSimplicialBoundaryChain n ≫
-        (standardAffineBoundaryChainMap (n + 1)).f n =
-      standardSubspaceBoundaryChain n := by
-  rw [standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain,
-    standardPuncturedAffineBoundaryChain, standardSubspaceBoundaryChain]
-
 lemma standardPuncturedBoundaryCycle_inclusion' (n : ℕ) :
     standardPuncturedBoundaryCycle n ≫
         ((chainPairFunctor ℚ).obj
@@ -2719,8 +2712,7 @@ lemma standardSphereSimplicialBoundaryCycle_affine (n : ℕ) :
       (ModuleCat.of ℚ ℚ)).iCycles (n + 1))).mp
   rw [Category.assoc, hcycles, standardPuncturedBoundaryCycle_direct_inclusion,
     ← Category.assoc, standardSphereSimplicialBoundaryCycle_inclusion']
-  exact standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain'
-    (n + 1)
+  exact standardAffineBoundaryChainMap_standardSphereSimplicialBoundaryChain (n + 1)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- On homology, the affine realization sends the known simplicial sphere generator to the

@@ -104,12 +104,6 @@ public noncomputable def simplexSubdivisionMaximumNatTrans :
         (nonemptyFiniteChainMaximum (ULift.{u} (Fin (n.len + 1))) A)
     exact nonemptyFiniteChainMaximum_map _ A
 
-/-- Taking nerves gives the last-vertex map on the subdivision model of standard simplices. -/
-public noncomputable def simplexSubdivisionLastVertexToNerve :
-    SimplexCategory.sd.{u} ⟶
-      SimplexCategory.toPartOrd.{u} ⋙ PartOrd.nerveFunctor :=
-  Functor.whiskerRight simplexSubdivisionMaximumNatTrans PartOrd.nerveFunctor
-
 /-- The objectwise identification of the standard simplex with the nerve of its vertex order is
 natural in the simplex category. -/
 public noncomputable def standardSimplexNerveIso :
@@ -120,7 +114,8 @@ public noncomputable def standardSimplexNerveIso :
 /-- The last-vertex map from the subdivision model of standard simplices to standard simplices. -/
 public noncomputable def simplexSubdivisionLastVertex :
     SimplexCategory.sd.{u} ⟶ SSet.stdSimplex.{u} :=
-  simplexSubdivisionLastVertexToNerve ≫ standardSimplexNerveIso.inv
+  Functor.whiskerRight simplexSubdivisionMaximumNatTrans PartOrd.nerveFunctor ≫
+    standardSimplexNerveIso.inv
 
 /-- The last-vertex map, viewed with the codomain required by the left Kan extension universal
 property. -/

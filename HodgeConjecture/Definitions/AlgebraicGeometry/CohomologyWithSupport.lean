@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 public import Mathlib.CategoryTheory.Abelian.Injective.Resolution
@@ -53,7 +54,7 @@ local instance analyticSupportHasDerivedCategory :
 def analyticComplementInclusion (Z : Set (ComplexPoint X)) :
     TopCat.of ↥Zᶜ ⟶
       TopCat.of (ComplexPoint X) :=
-  TopCat.ofHom ⟨Subtype.val, continuous_subtype_val⟩
+  TopCat.subtypeInclusion (TopCat.of (ComplexPoint X)) Zᶜ
 
 /-- Sheaves of additive groups on the complement of a subset. -/
 abbrev AnalyticComplementAdditiveSheaf (Z : Set (ComplexPoint X)) :=

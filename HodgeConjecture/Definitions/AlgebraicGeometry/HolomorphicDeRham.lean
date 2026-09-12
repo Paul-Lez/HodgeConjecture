@@ -141,10 +141,9 @@ private lemma holomorphicFormOfConstant_injective [SmoothOfRelativeDimension d X
     rw [map_sub, hcc', sub_self]
   let a : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) 0 :=
     Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d U) (c - c')
-  have ha : a ∈ holomorphicFormRelations X d U 0 := by
+  have ha : a ∈ chartEvaluationKernel X d U 0 := by
     change Submodule.Quotient.mk a = 0 at hzero
     rwa [Submodule.Quotient.mk_eq_zero] at hzero
-  rw [holomorphicFormRelations_eq_chartEvaluationKernel] at ha
   let x : U.unop := Classical.arbitrary U.unop
   let e := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x.1
   have hxsource : x.1 ∈ e.source := mem_extChartAt_source x.1

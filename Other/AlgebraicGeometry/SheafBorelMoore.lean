@@ -401,15 +401,6 @@ lemma sheafToLocal_sheafBorelMooreClassOfComparisons
     D.compactificationComparison_toLocal]
   exact D.borelMoore.toLocal_fundamentalClass z hz
 
-/-- The supported constant-sheaf class induced by all supplied comparison inputs.
-No canonicity or complex-orientation normalization is asserted at this boundary. -/
-def supportedClassOfComparisons
-    (D : RationalCycleComponentSheafBorelMooreComparisonInputs V p x hx) :
-    RationalCohomologyWithSupport V.over
-      (cycleComponentSupport V.over x) (2 * (p : ℤ)) :=
-  ambientSheafBorelMooreCycleDegreeEquiv V.over
-    D.codimension_le_dimension D.dualizing D.support D.sheafBorelMooreClassOfComparisons
-
 /-- The additive equivalence obtained by composing the supplied compactification comparison,
 the orientation-induced sheaf comparison, and the proved Betti comparison.  This is only
 identified with normalized Alexander--Poincaré duality after the missing compatibility theorem. -/

@@ -8,12 +8,11 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SheafCohomologyWithSupport
 
 /-!
-# Compactly supported rational cohomology of the analytic complex-point space
+# Rational cohomology with closed support on the analytic complex-point space
 
-These definitions specialize the general Ext and filtered-colimit construction to the
-rational constant sheaf on the analytic complex-point space. They require no smoothness,
-properness, or separation hypotheses. The closed-support API uses nonnegative degrees,
-as does Mathlib's sheaf cohomology.
+This specializes the general Ext construction to the rational constant sheaf on the analytic
+complex-point space. It requires no smoothness, properness, or separation hypotheses. The
+closed-support API uses nonnegative degrees, as does Mathlib's sheaf cohomology.
 
 The arbitrary-subset, integer-degree cone model in `CohomologyWithSupport` remains a separate
 API; identifying its closed-support specialization with this Ext model requires a comparison
@@ -41,10 +40,5 @@ instance (Z : Closeds (ComplexPoint X)) (n : ℕ) :
     (((TopCat.Sheaf.cohomologyWithSupportFunctor
       (TopCat.of (ComplexPoint X)) n).obj Z).obj
         (constantFieldSheaf ℚ X)))
-
-/-- Rational compactly supported cohomology of the analytic complex-point space. -/
-abbrev RationalCompactlySupportedCohomology (n : ℕ) : AddCommGrpCat :=
-  TopCat.Sheaf.compactlySupportedCohomology (TopCat.of (ComplexPoint X))
-    (constantFieldSheaf ℚ X) n
 
 end AlgebraicGeometry.ComplexPoint
