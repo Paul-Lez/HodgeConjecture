@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.Basic
+public import Other.AlgebraicGeometry.Points
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth

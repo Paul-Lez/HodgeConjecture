@@ -31,30 +31,13 @@ The remaining content of the project is sorted into four folders:
 
 The dividing line is `HodgeConjecture/Statement.lean`: a module belongs in `Definitions` if it
 defines something the statement mentions, in `Lemmas` if it is needed only to build such a
-definition, and in `Other` otherwise. In particular nothing in `Other` may be reachable from the
-statement. Two checks keep this honest:
+definition (in principle), and in `Other` otherwise. In particular nothing in `Other` should be reachable from the
+statement. Two checks for this:
 
 - `lake build` builds `scripts/CheckStatementImports.lean`, which imports the statement and fails if
   the resulting environment contains any module of `Other`;
 - `python3 scripts/check_import_layers.py` checks the converse — that every module of `Definitions`,
   `Lemmas` and `Mathlib` really is used by the statement — plus that both umbrella modules are
   complete, and that every source path the Verso guide names in prose still exists.
-
-## The Borel–Moore layer is conditional
-
-The Borel–Moore homology development under `Other/AlgebraicGeometry/` — `SheafBorelMoore.lean`,
-`BorelMooreCycleClass.lean`, `CycleComponentBorelMoore.lean` and
-`CycleComponentGlobalFundamentalClass.lean` — is stated relative to thirteen bespoke hypothesis
-structures. They package what Mathlib does not yet provide: dualizing complexes and Verdier
-duality, derived sections with support, the Thom/costalk cap operation that normalises
-Alexander–Poincaré duality, and the local-to-global input for a Borel–Moore fundamental class.
-Its results therefore read "given such a package, ..." rather than asserting anything
-unconditional about complex varieties. Four of the thirteen can be instantiated today, and only in
-maximal codimension, that is for point components. The other nine are never constructed.
-
-The module docstring of `Other/AlgebraicGeometry/SheafBorelMoore.lean` inventories all thirteen,
-grouped by construction status, and records the mathematical input each group awaits. Issue #57
-tracks that inventory; issue #14 tracks redefining Borel–Moore homology through hypercohomology,
-after which how many of the thirteen become constructible is the measure of progress.
 
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.

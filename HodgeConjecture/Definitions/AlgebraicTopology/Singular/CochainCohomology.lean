@@ -46,12 +46,5 @@ the degree-`n` short complex of the singular chain complex. -/
 abbrev CochainCohomology (n : ℕ) : ModuleCat.{u} R :=
   ((SingularChainComplex R X).sc n).linearDual.homology
 
-/-- The short-complex model computes singular cohomology: the degree-`n` short complex of the
-singular cochain complex is the reversed dual of the degree-`n` short complex of the singular
-chain complex. -/
-def cochainCohomologyEquiv (n : ℕ) :
-    CochainCohomology R X n ≃ₗ[R] Cohomology R X n :=
-  (ShortComplex.homologyMapIso (HomologicalComplex.linearDualCochainComplexScIso
-    (SingularChainComplex R X) n)).toLinearEquiv.symm
 
 end AlgebraicTopology.Singular

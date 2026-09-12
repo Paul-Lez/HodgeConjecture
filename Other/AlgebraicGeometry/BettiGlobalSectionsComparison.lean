@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.GlobalSections
 
 /-!

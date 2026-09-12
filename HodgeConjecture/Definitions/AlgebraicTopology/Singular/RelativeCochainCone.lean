@@ -46,38 +46,6 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R]
 
-/-- The short exact sequence of subspace, ambient, and relative singular chains. -/
-def relativeChainShortComplex (X : TopPair.{u}) :
-    ShortComplex (ChainComplex (ModuleCat.{u} R) ℕ) :=
-  ShortComplex.mk ((chainPairFunctor R).obj X).hom
-    (relativeChainProjection R X)
-    (subspaceChainMap_relativeChainProjection R X)
-
-/-- The singular-chain map of a topological-pair inclusion is a monomorphism. -/
-private lemma relativeChainMap_mono (X : TopPair.{u}) :
-    Mono ((chainPairFunctor R).obj X).hom := by
-  let : Mono X.hom :=
-    (TopCat.mono_iff_injective X.hom).mpr X.prop.injective
-  change Mono (((singularChainComplexFunctor (ModuleCat.{u} R)).obj
-    (ModuleCat.of R R)).map X.hom)
-  apply Functor.map_mono
-
-/-- Singular chains of a pair form a short exact sequence. -/
-private lemma relativeChainShortComplex_shortExact (X : TopPair.{u}) :
-    (relativeChainShortComplex R X).ShortExact := by
-  let : Mono ((chainPairFunctor R).obj X).hom := relativeChainMap_mono R X
-  exact
-    { exact := ShortComplex.exact_cokernel ((chainPairFunctor R).obj X).hom
-      mono_f := by
-        dsimp [relativeChainShortComplex]
-        infer_instance
-      epi_g := by
-        dsimp [relativeChainShortComplex, relativeChainProjection]
-        constructor
-        intro Z g h w
-        exact Cofork.IsColimit.hom_ext
-          (cokernelIsCokernel ((chainPairFunctor R).obj X).hom) w }
-
 set_option backward.isDefEq.respectTransparency false in
 /-- The dual relative, ambient, and subspace cochain complexes in nonnegative degrees. -/
 def relativeDualCochainShortComplexNat (X : TopPair.{u}) :

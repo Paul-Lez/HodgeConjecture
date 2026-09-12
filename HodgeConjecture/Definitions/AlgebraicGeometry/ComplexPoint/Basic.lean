@@ -428,21 +428,6 @@ end Point
 /-- A complex point of a scheme over `Spec ℂ`. -/
 abbrev ComplexPoint (X : Over (Spec ↧ℂ)) := Point ℂ X
 
-/-- Analytification of schemes over `Spec ℂ` as a functor to topological spaces.
-
-This is the canonical home for functorial complex points.  In particular, consumers need not
-package their own morphism records or reprove identity and composition laws. -/
-noncomputable def complexAnalytification :
-    CategoryTheory.Functor (Over (Spec ↧ℂ)) TopCat where
-  obj X := @TopCat.of (ComplexPoint X) Point.analyticTopology
-  map f := @TopCat.ofHom _ _ Point.analyticTopology Point.analyticTopology
-    (Point.continuousMap f)
-  map_id X := by
-    ext z
-    simp [Point.continuousMap, Point.map]
-  map_comp f g := by
-    ext z
-    simp [Point.continuousMap, Point.map, Category.assoc]
 
 /-- A projective complex scheme is Noetherian. -/
 theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
