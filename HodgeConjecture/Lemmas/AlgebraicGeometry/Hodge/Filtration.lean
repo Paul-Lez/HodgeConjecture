@@ -42,6 +42,13 @@ attribute [local instance] hodgeFiltrationTopology
 
 attribute [local instance] analyticHasDerivedCategory
 
+/-- Scalar multiplication over `K` agrees with multiplication by its image in `ℂ`. -/
+lemma deRham_field_smul_eq_complex_smul
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
+    (q : K) (α : DeRhamHypercohomology X n) :
+    q • α = (algebraMap K ℂ q) • α :=
+  rfl
+
 /-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
 def complexToFieldConstantSheaf :
     constantComplexSheaf X ⟶ constantFieldSheaf K X :=

@@ -38,6 +38,12 @@ namespace AlgebraicGeometry
 
 variable (R : Type) [CommRing R]
 
+/-- A projective complex scheme is Noetherian. -/
+theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
+    [IsProjective X.hom] : IsNoetherian X.left where
+  toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian X.hom
+  toCompactSpace := QuasiCompact.compactSpace_of_compactSpace X.hom
+
 namespace Point
 
 variable {R}

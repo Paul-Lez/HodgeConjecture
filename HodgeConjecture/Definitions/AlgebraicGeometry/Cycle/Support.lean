@@ -84,35 +84,6 @@ lemma range_cycleComponentι (X : Scheme) (x : X) :
   rw [Scheme.IdealSheafData.range_subschemeι]
   rfl
 
-/-- The kernel of a complex point is the vanishing ideal of the closure of its underlying scheme
-point. -/
-private lemma complexPoint_ker_eq_vanishingIdeal_closure
-    {X : Over (Spec ↧ℂ)}
-    (z : ComplexPoint X) :
-    z.left.ker = Scheme.IdealSheafData.vanishingIdeal
-      ⟨closure {z.underlying}, isClosed_closure⟩ := by
-  let f : Spec ↧ℂ ⟶ X.left := z.left
-  change f.ker = _
-  have hrange : Set.range f = {z.underlying} := by
-    ext y
-    constructor
-    · rintro ⟨s, rfl⟩
-      have hs : s = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
-      subst s
-      rfl
-    · intro hy
-      rw [Set.mem_singleton_iff] at hy
-      subst y
-      exact ⟨IsLocalRing.closedPoint ℂ, rfl⟩
-  have h := Scheme.IdealSheafData.map_vanishingIdeal f
-    (⊤ : TopologicalSpace.Closeds (Spec ↧ℂ))
-  rw [Scheme.IdealSheafData.vanishingIdeal_top, Scheme.nilradical_eq_bot,
-    Scheme.IdealSheafData.map_bot] at h
-  have himage : f '' (↑(⊤ : TopologicalSpace.Closeds (Spec ↧ℂ)) :
-      Set (Spec ↧ℂ)) = {z.underlying} := by
-    simpa only [TopologicalSpace.Closeds.coe_top, Set.image_univ] using hrange
-  rwa [himage] at h
-
 /-- A cycle component of a projective variety is projective over `ℂ`. -/
 instance cycleComponent_projective
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
@@ -145,21 +116,5 @@ def cycleComponentSupport
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
     Set (ComplexPoint X) :=
   Point.underlying ⁻¹' closure {x}
-
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
-/-- A complex point in the support of a component annihilates the defining ideal of that
-component. -/
-lemma cycleComponent_vanishingIdeal_le_complexPoint_ker
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : (ComplexPoint X)) (hz : z.underlying ∈ closure {x}) :
-    (cycleComponentι X.left x).ker ≤ z.left.ker := by
-  unfold cycleComponentι
-  rw [Scheme.IdealSheafData.ker_subschemeι]
-  change Scheme.IdealSheafData.vanishingIdeal
-      ⟨closure {x}, isClosed_closure⟩ ≤ z.left.ker
-  rw [complexPoint_ker_eq_vanishingIdeal_closure z]
-  apply Scheme.IdealSheafData.vanishingIdeal_antimono
-  exact closure_minimal (Set.singleton_subset_iff.mpr hz) isClosed_closure
 
 end AlgebraicGeometry

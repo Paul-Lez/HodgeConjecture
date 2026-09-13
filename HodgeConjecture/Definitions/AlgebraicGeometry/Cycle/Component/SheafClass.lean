@@ -107,12 +107,4 @@ def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
         (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
       (cycleComponentSupportedInjectiveClass X x (d := d) hx))
 
-include X hx in
-omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- The actual dimension bound needed for the Borel–Moore degree, not an extra input. -/
-theorem cycleComponentSheafClass_codimension_le : p ≤ d := by
-  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := d) x
-  rw [hx] at h
-  exact_mod_cast h
-
 end AlgebraicGeometry.ComplexPoint

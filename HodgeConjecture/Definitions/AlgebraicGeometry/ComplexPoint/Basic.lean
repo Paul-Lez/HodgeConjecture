@@ -420,10 +420,4 @@ end Point
 /-- A complex point of a scheme over `Spec ℂ`. -/
 abbrev ComplexPoint (X : Over (Spec ↧ℂ)) := Point ℂ X
 
-/-- A projective complex scheme is Noetherian. -/
-theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
-    [IsProjective X.hom] : IsNoetherian X.left where
-  toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian X.hom
-  toCompactSpace := QuasiCompact.compactSpace_of_compactSpace X.hom
-
 end AlgebraicGeometry

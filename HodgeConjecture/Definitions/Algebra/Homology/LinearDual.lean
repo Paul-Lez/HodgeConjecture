@@ -216,10 +216,6 @@ def linearDualIso (e : K ≅ L) :
   hom_inv_id := by rw [← linearDualMap_comp, e.inv_hom_id, linearDualMap_id]
   inv_hom_id := by rw [← linearDualMap_comp, e.hom_inv_id, linearDualMap_id]
 
-lemma ModuleCat.ofHom_sub.{v} {R : Type*} [Ring R] {M N : Type v} [AddCommGroup M]
-    [Module R M] [AddCommGroup N] [Module R N] (f g : M →ₗ[R] N) :
-    ModuleCat.ofHom (f - g) = ModuleCat.ofHom f - ModuleCat.ofHom g := rfl
-
 end HomologicalComplex
 
 namespace HomologicalComplex.HomotopyEquiv

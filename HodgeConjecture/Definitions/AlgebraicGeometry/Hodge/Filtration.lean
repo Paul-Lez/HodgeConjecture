@@ -483,13 +483,6 @@ lemma deRham_field_smul_eq [IsIntegral X.left] [Smooth X.hom]
       (scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q)) n α :=
   rfl
 
-/-- Scalar multiplication over `K` agrees with multiplication by its image in `ℂ`. -/
-lemma deRham_field_smul_eq_complex_smul
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (q : K) (α : DeRhamHypercohomology X n) :
-    q • α = (algebraMap K ℂ q) • α :=
-  rfl
-
 /-- Restriction of complex scalars gives the scalar tower on de Rham hypercohomology. -/
 noncomputable instance deRhamHypercohomologyIsScalarTower
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :

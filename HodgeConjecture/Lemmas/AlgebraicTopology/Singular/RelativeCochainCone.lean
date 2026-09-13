@@ -37,6 +37,77 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R]
 
+set_option backward.isDefEq.respectTransparency false in
+/-- Dualizing the singular-chain sequence of a pair gives a short exact sequence of
+nonnegative cochain complexes. -/
+private lemma relativeDualCochainShortComplexNat_shortExact (X : TopPair.{u}) :
+    (relativeDualCochainShortComplexNat R X).ShortExact := by
+  rw [HomologicalComplex.shortExact_iff_degreewise_shortExact]
+  intro n
+  let T := (relativeChainShortComplex R X).map
+    (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.down ℕ) n)
+  have hT : T.ShortExact :=
+    ((HomologicalComplex.shortExact_iff_degreewise_shortExact
+      (relativeChainShortComplex R X)).mp
+        (relativeChainShortComplex_shortExact R X)) n
+  apply ModuleCat.shortComplex_shortExact
+  · dsimp [relativeDualCochainShortComplexNat, T]
+    rw [LinearMap.exact_iff]
+    exact (LinearMap.range_dualMap_eq_ker_dualMap_of_range_eq_ker
+      T.f.hom T.g.hom hT.exact.moduleCat_range_eq_ker).symm
+  · dsimp [relativeDualCochainShortComplexNat, T]
+    change Function.Injective T.g.hom.dualMap
+    exact LinearMap.dualMap_injective_of_surjective
+      ((ModuleCat.epi_iff_surjective T.g).mp hT.epi_g)
+  · dsimp [relativeDualCochainShortComplexNat, T]
+    change Function.Surjective T.f.hom.dualMap
+    exact LinearMap.dualMap_surjective_of_injective
+      ((ModuleCat.mono_iff_injective T.f).mp hT.mono_f)
+
+/-- The integer-indexed dual cochain sequence of a pair is short exact. -/
+lemma relativeDualCochainShortComplexInt_shortExact (X : TopPair.{u}) :
+    (relativeDualCochainShortComplexInt R X).ShortExact := by
+  rw [HomologicalComplex.shortExact_iff_degreewise_shortExact]
+  intro z
+  by_cases hz : 0 ≤ z
+  · have hn : ((z.toNat : ℕ) : ℤ) = z := Int.toNat_of_nonneg hz
+    let e :
+        (relativeDualCochainShortComplexNat R X).map
+            (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) z.toNat) ≅
+          (relativeDualCochainShortComplexInt R X).map
+            (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z) := by
+      simpa only [hn] using
+        (relativeDualCochainShortComplexIntEvalIso R X z.toNat).symm
+    exact ShortComplex.shortExact_of_iso e
+      (((HomologicalComplex.shortExact_iff_degreewise_shortExact
+        (relativeDualCochainShortComplexNat R X)).mp
+          (relativeDualCochainShortComplexNat_shortExact R X)) z.toNat)
+  · have hi : ∀ n : ℕ, ComplexShape.embeddingUpNat.f n ≠ z := by
+      intro n hn
+      apply hz
+      rw [← hn]
+      exact Int.natCast_nonneg n
+    let S := (relativeDualCochainShortComplexInt R X).map
+      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z)
+    have h₁ : IsZero S.X₁ := by
+      dsimp [S, relativeDualCochainShortComplexInt]
+      exact (relativeDualCochainShortComplexNat R X).X₁.isZero_extend_X
+        ComplexShape.embeddingUpNat z hi
+    have h₂ : IsZero S.X₂ := by
+      dsimp [S, relativeDualCochainShortComplexInt]
+      exact (relativeDualCochainShortComplexNat R X).X₂.isZero_extend_X
+        ComplexShape.embeddingUpNat z hi
+    have h₃ : IsZero S.X₃ := by
+      dsimp [S, relativeDualCochainShortComplexInt]
+      exact (relativeDualCochainShortComplexNat R X).X₃.isZero_extend_X
+        ComplexShape.embeddingUpNat z hi
+    exact ShortComplex.Splitting.shortExact
+      { r := 0
+        s := 0
+        f_r := h₁.eq_of_src _ _
+        s_g := h₃.eq_of_tgt _ _
+        id := h₂.eq_of_src _ _ }
+
 /-- A degreewise splitting of the dual cochain sequence.  The choice is harmless: the final
 cohomology comparison is independent of finite-dimensionality. -/
 def relativeDualCochainDegreewiseSplitting (X : TopPair.{u}) (z : ℤ) :

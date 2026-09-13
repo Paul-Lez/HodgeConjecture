@@ -31,6 +31,14 @@ attribute [local instance] cycleComponentSheafClassAnalyticTopology
 variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
   (hx : Order.coheight x = p)
 
+include X hx in
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
+/-- The actual dimension bound needed for the Borel–Moore degree, not an extra input. -/
+theorem cycleComponentSheafClass_codimension_le : p ≤ d := by
+  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := d) x
+  rw [hx] at h
+  exact_mod_cast h
+
 /-- The constructed class in the existing support-cone presentation. Its
 comparison includes the proved cone sign required by actual support forgetting. -/
 def cycleComponentSheafSupportedClass :

@@ -19,6 +19,36 @@ Lemmas about the definitions in
 
 open CategoryTheory Topology Filter
 
+namespace OpenPartialHomeomorph
+
+variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+  [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace E] [CompleteSpace F]
+  (e : OpenPartialHomeomorph E F)
+
+theorem biAnalyticRestrict_mem_source_iff (x : E) :
+    x ∈ e.biAnalyticRestrict.source ↔
+      x ∈ e.source ∧ AnalyticAt ℂ e x ∧ AnalyticAt ℂ e.symm (e x) := by
+  change (x ∈ e.source ∧ AnalyticAt ℂ e x ∧ x ∈ e.source ∧ AnalyticAt ℂ e.symm (e x)) ↔ _
+  aesop
+
+end OpenPartialHomeomorph
+
+namespace AlgebraicGeometry.ComplexPoint
+
+open AlgebraicTopology.Singular
+variable (X Y : Over (Spec (.of ℂ)))
+  (i : Y ⟶ X) (m d : ℕ)
+  [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
+  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+
+theorem closedImmersionHolomorphicFlatteningChart_mem_range_iff (y : ComplexPoint X)
+    (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
+    y ∈ Set.range (Point.map i) ↔
+      (closedImmersionHolomorphicFlatteningChart X Y i m d z y).2 = 0 :=
+  closedImmersionStandardFlatteningChart_mem_range_iff X Y i m d z y hy.2
+
+end AlgebraicGeometry.ComplexPoint
+
 namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular

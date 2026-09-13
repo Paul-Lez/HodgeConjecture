@@ -36,12 +36,6 @@ theorem biAnalyticLocus_isOpen : IsOpen e.biAnalyticLocus :=
 def biAnalyticRestrict : OpenPartialHomeomorph E F :=
   e.restrOpen e.biAnalyticLocus e.biAnalyticLocus_isOpen
 
-theorem biAnalyticRestrict_mem_source_iff (x : E) :
-    x ∈ e.biAnalyticRestrict.source ↔
-      x ∈ e.source ∧ AnalyticAt ℂ e x ∧ AnalyticAt ℂ e.symm (e x) := by
-  change (x ∈ e.source ∧ AnalyticAt ℂ e x ∧ x ∈ e.source ∧ AnalyticAt ℂ e.symm (e x)) ↔ _
-  aesop
-
 end OpenPartialHomeomorph
 
 namespace AlgebraicGeometry.ComplexPoint
@@ -76,12 +70,6 @@ def closedImmersionHolomorphicFlatteningChart :
     (closedImmersionNormalCoordinateChange X Y i m d z).biAnalyticRestrict).restrOpen
       (closedImmersionStandardFlatteningChart X Y i m d z).source
       (closedImmersionStandardFlatteningChart X Y i m d z).open_source
-
-theorem closedImmersionHolomorphicFlatteningChart_mem_range_iff (y : ComplexPoint X)
-    (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
-    y ∈ Set.range (Point.map i) ↔
-      (closedImmersionHolomorphicFlatteningChart X Y i m d z y).2 = 0 :=
-  closedImmersionStandardFlatteningChart_mem_range_iff X Y i m d z y hy.2
 
 variable (z' : ComplexPoint Y)
 
