@@ -16,6 +16,12 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.RelativeCochainCone
+public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
+public import Mathlib.Algebra.Category.ModuleCat.Projective
+public import Mathlib.Analysis.Normed.Group.Basic
+public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Relative singular cohomology as a cochain mapping cone
@@ -25,6 +31,60 @@ Lemmas about the definitions in
 -/
 
 /-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+open CategoryTheory Limits
+open CategoryTheory.Pretriangulated
+universe u
+namespace AlgebraicTopology.Singular
+variable (R : Type u) [Field R]
+
+@[simp]
+lemma relativeDualCochainShortComplexInt_g (X : TopPair.{u}) :
+    (relativeDualCochainShortComplexInt R X).g = relativeCochainRestrictionInt R X :=
+  rfl
+
+set_option backward.isDefEq.respectTransparency false in
+/-- In a nonnegative degree, evaluation of the integer extension recovers evaluation of the
+original nonnegative short complex. -/
+def relativeDualCochainShortComplexIntEvalIso (X : TopPair.{u}) (n : ℕ) :
+    (relativeDualCochainShortComplexInt R X).map
+        (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) (n : ℤ)) ≅
+      (relativeDualCochainShortComplexNat R X).map
+        (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) n) := by
+  have hn : ComplexShape.embeddingUpNat.f n = (n : ℤ) := rfl
+  refine ShortComplex.isoMk
+    ((relativeDualCochainShortComplexNat R X).X₁.extendXIso
+      ComplexShape.embeddingUpNat hn)
+    ((relativeDualCochainShortComplexNat R X).X₂.extendXIso
+      ComplexShape.embeddingUpNat hn)
+    ((relativeDualCochainShortComplexNat R X).X₃.extendXIso
+      ComplexShape.embeddingUpNat hn)
+    (by
+      change ((relativeDualCochainShortComplexNat R X).X₁.extendXIso
+          ComplexShape.embeddingUpNat hn).hom ≫
+            (relativeDualCochainShortComplexNat R X).f.f n =
+        (HomologicalComplex.extendMap
+          (relativeDualCochainShortComplexNat R X).f
+          ComplexShape.embeddingUpNat).f (n : ℤ) ≫
+            ((relativeDualCochainShortComplexNat R X).X₂.extendXIso
+              ComplexShape.embeddingUpNat hn).hom
+      rw [HomologicalComplex.extendMap_f _ _ hn]
+      simp only [Category.assoc, Iso.inv_hom_id, Category.comp_id])
+    (by
+      change ((relativeDualCochainShortComplexNat R X).X₂.extendXIso
+          ComplexShape.embeddingUpNat hn).hom ≫
+            (relativeDualCochainShortComplexNat R X).g.f n =
+        (HomologicalComplex.extendMap
+          (relativeDualCochainShortComplexNat R X).g
+          ComplexShape.embeddingUpNat).f (n : ℤ) ≫
+            ((relativeDualCochainShortComplexNat R X).X₃.extendXIso
+              ComplexShape.embeddingUpNat hn).hom
+      rw [HomologicalComplex.extendMap_f _ _ hn]
+      simp only [Category.assoc, Iso.inv_hom_id, Category.comp_id])
+
+end AlgebraicTopology.Singular
+end
 
 @[expose] public noncomputable section
 

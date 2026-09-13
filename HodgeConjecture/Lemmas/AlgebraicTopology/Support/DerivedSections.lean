@@ -5,6 +5,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.DerivedSections
+public import Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlus
+public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
+public import Mathlib.Topology.Sheaves.Abelian
+public import Mathlib.Topology.Sheaves.Functors
+public import Mathlib.Topology.Sets.Closeds
 
 /-!
 # Concrete sheaf sections with support and their right derived functor
@@ -14,6 +19,22 @@ Lemmas about the definitions in
 -/
 
 /-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
+universe u
+namespace TopCat.Sheaf
+variable (X : TopCat.{u})
+
+@[reassoc (attr := simp)]
+lemma sheafSectionsSupportedOutsideInclusion_restriction (U : Opens X)
+    (F : Sheaf AddCommGrpCat.{u} X) :
+    (sheafSectionsSupportedOutsideInclusion X U).app F ≫
+      (toOpenRestrictionPushforward X U).app F = 0 :=
+  kernel.condition _
+
+end TopCat.Sheaf
+end
 
 @[expose] public noncomputable section
 

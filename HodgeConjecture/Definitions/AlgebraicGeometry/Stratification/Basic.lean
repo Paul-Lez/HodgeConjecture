@@ -54,10 +54,6 @@ instance reducedClosedSubscheme_isReduced (S : Closeds X) :
   rw [affine_isReduced_iff, ← Ideal.isRadical_iff_quotient_reduced]
   exact PrimeSpectrum.isRadical_vanishingIdeal _
 
-@[simp] lemma range_reducedClosedSubschemeι (S : Closeds X) :
-    Set.range (reducedClosedSubschemeι S) = (S : Set X) :=
-  Scheme.IdealSheafData.range_subschemeι _
-
 variable {K : Type u} [Field K]
   (f : X ⟶ Spec (.of K)) [LocallyOfFiniteType f]
 

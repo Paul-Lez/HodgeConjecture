@@ -21,6 +21,9 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Locus
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
+public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 /-!
 # Geometric support of algebraic cycles
@@ -30,6 +33,23 @@ Lemmas about the definitions in
 -/
 
 /-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+open CategoryTheory Topology TopologicalSpace
+namespace AlgebraicGeometry
+variable (X : Over (Spec ↧ℂ))
+
+@[simp]
+lemma range_cycleComponentι (X : Scheme) (x : X) :
+    Set.range (cycleComponentι X x) = closure {x} := by
+  change Set.range
+    ((Scheme.IdealSheafData.vanishingIdeal
+      (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι) = closure {x}
+  rw [Scheme.IdealSheafData.range_subschemeι]
+  rfl
+
+end AlgebraicGeometry
+end
 
 @[expose] public noncomputable section
 

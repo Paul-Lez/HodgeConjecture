@@ -5,6 +5,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Stratification.Basic
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Locus
+public import Mathlib.AlgebraicGeometry.Morphisms.Immersion
+public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Subscheme
 
 /-!
 # A finite smooth decomposition of reduced closed subschemes
@@ -14,6 +18,19 @@ Lemmas about the definitions in
 -/
 
 /-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+open CategoryTheory Topology TopologicalSpace
+namespace AlgebraicGeometry
+universe u
+variable {X : Scheme.{u}}
+
+@[simp] lemma range_reducedClosedSubschemeι (S : Closeds X) :
+    Set.range (reducedClosedSubschemeι S) = (S : Set X) :=
+  Scheme.IdealSheafData.range_subschemeι _
+
+end AlgebraicGeometry
+end
 
 @[expose] public noncomputable section
 
