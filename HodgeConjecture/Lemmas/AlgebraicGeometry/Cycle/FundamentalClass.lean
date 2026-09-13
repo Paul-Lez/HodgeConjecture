@@ -92,12 +92,4 @@ theorem cycleComponentSheafClass_eq_injectiveModel :
   simp only [cycleComponentSheafSupportedClass, AddEquiv.apply_symm_apply]
   rfl
 
-include X hx in
-omit [IsProjective X.hom] in
-/-- The dimension bound needed for the Borel–Moore degree, not an extra input. -/
-theorem cycleComponentSheafClass_codimension_le : p ≤ dim X.left := by
-  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := dim X.left) x
-  rw [hx] at h
-  exact_mod_cast h
-
 end AlgebraicGeometry.ComplexPoint

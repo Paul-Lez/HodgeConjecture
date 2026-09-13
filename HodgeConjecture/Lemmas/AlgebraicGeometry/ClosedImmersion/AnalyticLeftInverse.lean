@@ -136,15 +136,4 @@ theorem exists_leftInverse_fderiv_inclusionInComplexCharts [IsClosedImmersion i.
   have hc := hL.differentiableAt.hasFDerivAt.comp a hφ.differentiableAt.hasFDerivAt
   exact (hc.congr_of_eventuallyEq hleft.symm).unique (hasFDerivAt_id a)
 
-/-- Derivative injectivity for the actual chart-written closed immersion, with no
-assumed immersion, cotangent comparison, regular-sequence, or flattening data. -/
-theorem injective_fderiv_inclusionInComplexCharts [IsClosedImmersion i.left]
-    (z : ComplexPoint Y) :
-    Function.Injective
-      (fderiv ℂ (inclusionInComplexCharts X Y i m d z)
-        (localChart Y m z z)) := by
-  obtain ⟨P, hP⟩ :=
-    exists_leftInverse_fderiv_inclusionInComplexCharts X Y i m d z
-  exact Function.LeftInverse.injective (g := P) fun v ↦ DFunLike.congr_fun hP v
-
 end AlgebraicGeometry.ComplexPoint

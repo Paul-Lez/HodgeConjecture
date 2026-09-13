@@ -192,30 +192,6 @@ public theorem iteratedAffineCellMap_cons
         (affineFlagContinuousMap n n F) :=
   rfl
 
-/-- Abstract eventual-smallness theorem for iterated cells.  Once a concrete subdivision model
-supplies nonempty cells with the displayed power-law diameter bound, a single depth works for all
-cells and makes each of them lie in one member of any open cover. -/
-public theorem exists_depth_for_diameter_controlled_cells_subordinate
-    {X α ι : Type*} [PseudoMetricSpace X] [CompactSpace X]
-    (n : ℕ) (U : ι → Set X) (hUopen : ∀ i, IsOpen (U i))
-    (hUcover : (Set.univ : Set X) ⊆ ⋃ i, U i)
-    (cell : ℕ → α → Set X)
-    (hcell : ∀ m a, (cell m a).Nonempty)
-    (hdiam : ∀ m a, Metric.diam (cell m a) ≤
-      barycentricContractionFactor n ^ m) :
-    ∃ m : ℕ, ∀ a : α, ∃ i : ι, cell m a ⊆ U i := by
-  obtain ⟨δ, hδ, hball⟩ :=
-    lebesgue_number_lemma_of_metric isCompact_univ hUopen hUcover
-  obtain ⟨m, hm⟩ := exists_barycentricContractionFactor_pow_lt n hδ
-  refine ⟨m, fun a ↦ ?_⟩
-  obtain ⟨x, hx⟩ := hcell m a
-  obtain ⟨i, hi⟩ := hball x (Set.mem_univ x)
-  refine ⟨i, fun y hy ↦ hi ?_⟩
-  rw [Metric.mem_ball]
-  exact (Metric.dist_le_diam_of_mem
-    (isCompact_univ.isBounded.subset (Set.subset_univ _)) hy hx).trans_lt
-      ((hdiam m a).trans_lt hm)
-
 /-! ## Chain-level endpoint -/
 
 /-- Iterating affine subdivision is additive in the exponent.  This synchronization identity is

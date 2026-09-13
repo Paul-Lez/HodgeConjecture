@@ -93,13 +93,6 @@ open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-/-- The holomorphic de Rham complex is exact in every degree above the complex dimension. -/
-lemma holomorphicDeRhamComplex_exactAt_of_lt
-    [SmoothOfRelativeDimension d X.hom] {p : ℕ} (hp : d < p) :
-    (holomorphicDeRhamComplex X d).ExactAt p :=
-  HomologicalComplex.ExactAt.of_isZero
-    (holomorphicDeRhamSheaf_isZero_of_lt X d hp)
-
 @[simp] lemma scalarHolomorphicDeRhamPresheaf_apply
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) (c : ℂ)
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
@@ -265,17 +258,6 @@ lemma constantsToHolomorphicDeRhamZero_scalar
   ext x
   exact (f.map_smul c x).symm
 
-/-- The constant-to-de Rham comparison is a quasi-isomorphism in every degree above the complex
-dimension. Both sides have zero cohomology there. -/
-lemma constantsToHolomorphicDeRhamComplex_quasiIsoAt_of_lt
-    [SmoothOfRelativeDimension d X.hom] {p : ℕ} (hp : d < p) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplex X d) p := by
-  have hp0 : p ≠ 0 := by lia
-  obtain ⟨q, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hp0
-  rw [quasiIsoAt_iff_exactAt _ _
-    (CochainComplex.exactAt_succ_single_obj (constantComplexSheaf X) q)]
-  exact holomorphicDeRhamComplex_exactAt_of_lt X d hp
-
 /-- The constant-to-de Rham comparison commutes with complex scalar multiplication. -/
 lemma constantsToHolomorphicDeRhamComplex_scalar
     [SmoothOfRelativeDimension d X.hom] (c : ℂ) :
@@ -355,46 +337,6 @@ lemma complexScalarComplexInt_comp_conj (c : ℂ) :
   unfold scalarHolomorphicDeRhamComplexInt
   rw [scalarHolomorphicDeRhamComplex_mul, HomologicalComplex.extendMap_comp]
   rfl
-
-/-- The integer-indexed constant-to-de Rham comparison is a quasi-isomorphism at every
-degree. -/
-lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt X) n :=
-  inferInstance
-
-/-- In a nonnegative degree, extending the constant-to-de Rham comparison from natural to
-integer indices does not change whether it is a quasi-isomorphism. -/
-lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_iff
-    [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt X) (p : ℤ) ↔
-      QuasiIsoAt (constantsToHolomorphicDeRhamComplex X (dim X.left)) p :=
-  HomologicalComplex.quasiIsoAt_extendMap_iff
-    (constantsToHolomorphicDeRhamComplex X (dim X.left))
-    ComplexShape.embeddingUpNat rfl
-
-/-- The integer-indexed constant-to-de Rham comparison is automatically a quasi-isomorphism in
-negative degrees, since both extended complexes vanish there. -/
-lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_of_neg
-    [IsIntegral X.left] [Smooth X.hom] {n : ℤ} (hn : n < 0) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt X) n := by
-  have hnone : ∀ p : ℕ, (p : ℤ) ≠ n := fun p hp => by lia
-  rw [quasiIsoAt_iff_exactAt]
-  · exact HomologicalComplex.extend_exactAt
-      (holomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat n hnone
-  · exact HomologicalComplex.extend_exactAt
-      ((CochainComplex.single₀
-        (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-          (constantComplexSheaf X))
-      ComplexShape.embeddingUpNat n hnone
-
-/-- The integer-indexed comparison is a quasi-isomorphism in every nonnegative degree above the
-complex dimension. -/
-lemma constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_of_lt
-    [IsIntegral X.left] [Smooth X.hom] {p : ℕ} (hp : dim X.left < p) :
-    QuasiIsoAt (constantsToHolomorphicDeRhamComplexInt X) (p : ℤ) := by
-  rw [constantsToHolomorphicDeRhamComplexInt_quasiIsoAt_iff]
-  exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_of_lt X (dim X.left) hp
 
 /-- The integer-indexed constant-to-de Rham comparison commutes with complex scalar
 multiplication. -/

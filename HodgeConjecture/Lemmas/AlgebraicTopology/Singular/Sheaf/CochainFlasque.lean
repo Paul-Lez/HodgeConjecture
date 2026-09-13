@@ -70,12 +70,6 @@ lemma openSingularCochainRestriction_surjective
   LinearMap.dualMap_surjective_of_injective
     (openSingularChainMap_injective R X i.unop n)
 
-/-- Every cochain on an open subset extends to a cochain on the whole space. -/
-lemma globalOpenSingularCochainRestriction_surjective (U : Opens X) (n : ℕ) :
-    Function.Surjective
-      ((singularCochainPresheaf R X n).map (homOfLE (le_top : U ≤ ⊤)).op) :=
-  openSingularCochainRestriction_surjective R X _ n
-
 /-- The presheaf of singular cochains in every fixed degree is flasque. -/
 instance singularCochainPresheaf_isFlasque (n : ℕ) :
     TopCat.Presheaf.IsFlasque (singularCochainPresheaf R X n) where

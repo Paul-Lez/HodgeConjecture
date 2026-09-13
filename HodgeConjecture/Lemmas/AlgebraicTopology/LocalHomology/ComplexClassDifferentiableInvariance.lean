@@ -76,22 +76,6 @@ theorem relativeHomologyMap_eq_of_neighborhood_pairHomotopy
   have h := H.relativeHomologyMap_apply_eq (R := ℚ) n b
   simpa only [relativeHomologyMap_comp, LinearMap.comp_apply] using h
 
-/-- Two chart-local classes agree if the compressed chart maps are homotopic after restriction
-to any open neighborhood of the model origin.  This is the germ-local version of
-`localClassOfChart_eq_of_pairHomotopy`. -/
-theorem localClassOfChart_eq_of_neighborhood_pairHomotopy
-    {M : Type} [TopologicalSpace M]
-    (e e' : OpenPartialHomeomorph M (Fin d → ℂ))
-    (x : M) (hx : x ∈ e.source) (hx' : x ∈ e'.source)
-    (U : Set (Fin d → ℂ)) (hU : IsOpen U) (h0U : 0 ∈ U)
-    (H : TopPair.Homotopy
-      (neighborhoodPointComplementPairMap U 0 ≫ chartModelEmbeddingPair d e x hx)
-      (neighborhoodPointComplementPairMap U 0 ≫ chartModelEmbeddingPair d e' x hx')) :
-    localClassOfChart d e x hx = localClassOfChart d e' x hx' := by
-  unfold localClassOfChart
-  rw [relativeHomologyMap_eq_of_neighborhood_pairHomotopy d (2 * d)
-    (chartModelEmbeddingPair d e x hx) (chartModelEmbeddingPair d e' x hx') U hU h0U H]
-
 /-- The straight line from a differentiable map to its injective derivative avoids zero on a
 sufficiently small punctured neighborhood.
 
@@ -363,24 +347,5 @@ theorem relativeHomologyMap_complexDifferentiable_standardComplexLocalClass
     (complexPuncturedPairMapOf d f hf hf_ne) U hU h0U H
   rw [← hmaps]
   exact relativeHomologyMap_complexMatrix_standardComplexLocalClass d A hA
-
-/-- Injectivity is the natural chart-transition hypothesis ensuring that the origin is the only
-zero, so an injective differentiable coordinate change with invertible complex derivative
-preserves the standard local class. -/
-theorem relativeHomologyMap_complexDifferentiable_standardComplexLocalClass_of_injective
-    (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0)
-    (f : (Fin d → ℂ) → (Fin d → ℂ)) (hf : Continuous f)
-    (hf0 : f 0 = 0) (hf_inj : Function.Injective f)
-    (hf' : HasFDerivAt f
-      (A.mulVecLin.toContinuousLinearMap : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) 0) :
-    relativeHomologyMap ℚ (2 * d)
-        (complexPuncturedPairMapOf d f hf (fun z hz ↦ by
-          intro hfz
-          apply hz
-          apply hf_inj
-          simpa only [hf0] using hfz))
-        (standardComplexLocalClass d) =
-      standardComplexLocalClass d := by
-  exact relativeHomologyMap_complexDifferentiable_standardComplexLocalClass d A hA f hf hf0 _ hf'
 
 end AlgebraicTopology.Singular

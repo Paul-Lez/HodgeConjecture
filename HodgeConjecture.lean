@@ -154,7 +154,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Projective
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveParacompact
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.ClosedFiltration
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.ClosedFiltrationDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.LocalSupportVanishing
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.SingularLocusDimension
@@ -209,7 +208,6 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NestedOnOpen
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionOverlap
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalSlicePurity
-public import HodgeConjecture.Lemmas.Topology.Dimension.NowhereDense
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestrictedVanishing
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestriction
@@ -237,7 +235,6 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainHomol
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.Chain
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainFlasque
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenConeNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenRestriction
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenSections

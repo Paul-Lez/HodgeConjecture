@@ -108,18 +108,6 @@ public theorem subdivisionLastVertex_barycentricSubdivisionVertex
   change X.map (𝟙 (Opposite.op (SimplexCategory.mk 0))) x = x
   simp
 
-/-- Canonical subdivided vertices are natural in maps of simplicial sets. -/
-public theorem barycentricSubdivisionVertex_naturality
-    {X Y : SSet.{0}} (f : X ⟶ Y)
-    (x : X.obj (Opposite.op (SimplexCategory.mk 0))) :
-    barycentricSubdivisionVertex Y (f.app _ x) =
-      (SSet.sd.map f).app _ (barycentricSubdivisionVertex X x) := by
-  rw [barycentricSubdivisionVertex, barycentricSubdivisionVertex,
-    ← SSet.yonedaEquiv_symm_comp]
-  have h := SSet.sd.map_comp (SSet.yonedaEquiv.symm x) f
-  have h₀ := NatTrans.congr_app h (Opposite.op (SimplexCategory.mk 0))
-  exact ConcreteCategory.congr_hom h₀ subdividedStandardZeroVertex
-
 /-- The degree-zero component of barycentric subdivision on integral simplicial chains. -/
 public noncomputable def barycentricSubdivisionChainMapZero (X : SSet.{0}) :
     (X.chainComplex (AddCommGrpCat.of ℤ)).X 0 ⟶
@@ -149,19 +137,5 @@ public theorem barycentricSubdivisionChainMapZero_comp_lastVertex
   rw [SSet.ι_chainComplexMap_f,
     subdivisionLastVertex_barycentricSubdivisionVertex]
   simp
-
-/-- The degree-zero barycentric subdivision maps are natural. -/
-public theorem barycentricSubdivisionChainMapZero_naturality
-    {X Y : SSet.{0}} (f : X ⟶ Y) :
-    (SSet.chainComplexMap f (AddCommGrpCat.of ℤ)).f 0 ≫
-        barycentricSubdivisionChainMapZero Y =
-      barycentricSubdivisionChainMapZero X ≫
-        (SSet.chainComplexMap (SSet.sd.map f) (AddCommGrpCat.of ℤ)).f 0 := by
-  apply X.chainComplex_hom_ext
-  intro x
-  rw [← Category.assoc, SSet.ι_chainComplexMap_f,
-    iota_barycentricSubdivisionChainMapZero]
-  rw [← Category.assoc, iota_barycentricSubdivisionChainMapZero,
-    SSet.ι_chainComplexMap_f, barycentricSubdivisionVertex_naturality]
 
 end AlgebraicTopology.Singular

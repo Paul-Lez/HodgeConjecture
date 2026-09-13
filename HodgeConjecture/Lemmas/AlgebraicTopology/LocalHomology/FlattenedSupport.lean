@@ -196,22 +196,10 @@ variable (S : Set M) (hS : ∀ y ∈ e.source, y ∈ S ↔ (e y).2 = 0) (h0 : (e
 
 include hS h0
 
-theorem flattenedSupportRelativeHomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * c) :
-    IsZero (RelativeHomology ℚ
-      (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n) :=
-  (standardComplexLocalHomology_isZero_of_ne c n hn).of_iso
-    (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 n)
-
 @[simp] theorem flattenedSupportNormalClass_normalization :
     (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).hom.hom
       (flattenedSupportNormalClass E c e x hx S hS h0) = standardComplexLocalClass c :=
   ConcreteCategory.congr_hom
     (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).inv_hom_id _
-
-theorem flattenedSupportRelativeCohomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * c) :
-    IsZero (RelativeCohomology ℚ
-      (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n) :=
-  relativeCohomology_isZero ℚ _ n
-    (flattenedSupportRelativeHomology_isZero_of_ne E c e x hx S hS h0 n hn)
 
 end AlgebraicTopology.Singular

@@ -131,40 +131,4 @@ theorem topologicalKrullDim_cycleComponent_singularLocus_lt
   topologicalKrullDim_reducedSingularLocus_lt _
     (topologicalKrullDim_cycleComponent_le_sub Y x hx)
 
-theorem cycleComponentSingularStratification_covers
-    (x : Y.left) (y : cycleComponent Y.left x) :
-    (∃ T ∈ cycleComponentSingularStratification Y x,
-      y ∈ Set.range (reducedClosedSmoothPieceι (cycleComponentι Y.left x ≫ Y.hom) T)) ↔
-        y ∉ (cycleComponentι Y.left x ≫ Y.hom).smoothLocus := by
-  let := cycleComponent_isNoetherian Y x
-  exact reducedSmoothStratification_covers _ _ y
-
-/-- Every constructed smooth stratum of the singular locus has strictly smaller algebraic
-dimension than the cycle component. -/
-theorem cycleComponentSingularStratification_piece_dimension_lt
-    (x : Y.left) {d p : ℕ} [SmoothOfRelativeDimension d Y.hom]
-    (hx : Order.coheight x = p) (T : Closeds (cycleComponent Y.left x))
-    (hT : T ∈ cycleComponentSingularStratification Y x) :
-    topologicalKrullDim
-      (reducedClosedSmoothPiece (cycleComponentι Y.left x ≫ Y.hom) T) < (d - p : ℕ) := by
-  let := cycleComponent_isNoetherian Y x
-  exact (topologicalKrullDim_reducedClosedSmoothPiece_le _
-    (reducedSmoothStratification_mem_le _ _ T hT)).trans_lt
-      (topologicalKrullDim_cycleComponent_singularLocus_lt Y x hx)
-
-/-- The algebraic dimension bound is realized by actual lower-dimensional smooth affine
-charts on each constructed singular-locus stratum. -/
-theorem cycleComponentSingularStratification_exists_affine_relativeDimension_lt
-    (x : Y.left) {d p : ℕ} [SmoothOfRelativeDimension d Y.hom]
-    (hx : Order.coheight x = p) (T : Closeds (cycleComponent Y.left x))
-    (hT : T ∈ cycleComponentSingularStratification Y x)
-    (z : reducedClosedSmoothPiece (cycleComponentι Y.left x ≫ Y.hom) T) :
-    ∃ (U : (reducedClosedSmoothPiece (cycleComponentι Y.left x ≫ Y.hom) T).Opens)
-      (_ : IsAffineOpen U), z ∈ U ∧ ∃ n : ℕ, n < d - p ∧
-        RingHom.IsStandardSmoothOfRelativeDimension n
-          ((reducedClosedSmoothPieceι (cycleComponentι Y.left x ≫ Y.hom) T ≫
-            (cycleComponentι Y.left x ≫ Y.hom)).appLE ⊤ U (by simp)).hom :=
-  Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt _
-    (cycleComponentSingularStratification_piece_dimension_lt Y x hx T hT) z
-
 end AlgebraicGeometry

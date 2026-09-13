@@ -72,16 +72,4 @@ variable (X : Over (Spec (.of ℂ)))
 
 variable [IsProjective X.hom]
 
-/-- The same comparison computes supported cohomology on every actual analytic
-open, with no locally supplied comparison or acyclicity input. -/
-theorem complexSupportedSingularToAmbientInjective_onOpen_quasiIso
-    (U V : Opens (ComplexPoint X)) :
-    QuasiIso (((TopCat.Sheaf.supportEvaluation
-      (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex (.up ℤ)).map
-        (complexSupportedSingularToAmbientInjective X U)) := by
-  let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=
-    openParacompactSpace X
-  exact supportedSingularToInjectiveComplex_onOpen_quasiIso
-    (TopCat.of (ComplexPoint X)) (exists_contractibleOpen_le X) U V
-
 end AlgebraicGeometry.ComplexPoint

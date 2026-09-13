@@ -256,15 +256,6 @@ lemma rationalizeSimplicialChainMap_comp (X Y Z : SSet.{0})
   HomologicalComplex.hom_ext _ _ fun n ↦
     rationalizeSimplicialChainComponent_comp X Y Z n n n (f.f n) (g.f n)
 
-lemma rationalizeSimplicialChainMap_add (X Y : SSet.{0})
-    (f g : X.chainComplex (AddCommGrpCat.of ℤ) ⟶
-      Y.chainComplex (AddCommGrpCat.of ℤ)) :
-    rationalizeSimplicialChainMap X Y (f + g) =
-      rationalizeSimplicialChainMap X Y f +
-        rationalizeSimplicialChainMap X Y g :=
-  HomologicalComplex.hom_ext _ _ fun n ↦
-    rationalizeSimplicialChainComponent_add X Y n n (f.f n) (g.f n)
-
 lemma rationalizeSimplicialChainMap_zero (X Y : SSet.{0}) :
     rationalizeSimplicialChainMap X Y 0 = 0 :=
   HomologicalComplex.hom_ext _ _ fun n ↦

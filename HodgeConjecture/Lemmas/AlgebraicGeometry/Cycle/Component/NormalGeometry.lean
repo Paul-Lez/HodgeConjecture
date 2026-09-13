@@ -120,18 +120,6 @@ lemma cycleComponent_codimension_le
   rw [hx] at hle
   exact_mod_cast hle
 
-/-- The reduced component of a point of coheight `p` in a smooth complex `d`-fold has order
-Krull dimension at most `d - p`. -/
-lemma orderKrullDim_cycleComponent_le_sub
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) {d p : ℕ}
-    [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) :
-    Order.krullDim (cycleComponent X.left x) ≤ d - p := by
-  rw [orderKrullDim_cycleComponent]
-  exact WithBot.coe_le_coe.mpr
-    (SmoothOfRelativeDimension.height_le_sub_of_coheight_eq
-      (f := X.hom) (d := d) x hx)
-
 /-- The reduced component of a point of coheight `p` in a smooth complex `d`-fold has
 topological Krull dimension at most `d - p`. -/
 lemma topologicalKrullDim_cycleComponent_le_sub

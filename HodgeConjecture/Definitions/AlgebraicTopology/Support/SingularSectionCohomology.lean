@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularFlasqueModel
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
+public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
 /-!
 # Supported singular-section cohomology on arbitrary opens

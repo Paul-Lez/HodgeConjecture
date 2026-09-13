@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.ClosedFiltrationDimension
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.ClosedFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.SingularLocusDimension
+public import HodgeConjecture.Lemmas.Topology.Dimension.ClosedSubset
+public import Mathlib.Topology.NoetherianSpace
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Analytification
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.AffineRelativeDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Open

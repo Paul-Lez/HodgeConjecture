@@ -272,16 +272,6 @@ lemma rationalSupportConeToAmbientInjectiveCone_connecting
     (ambientRationalInjectiveAugmentation X) (𝟙 _)
     (by simpa using (ambientRationalAugmentation_comp_restriction X Z hZ).symm)).comm₃.symm
 
-/-- Both resolutions, and hence their cone, are termwise flasque. -/
-lemma ambientRationalInjectiveCone_isFlasque
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (q : ℤ) :
-    ((CochainComplex.mappingCone
-      (ambientRationalInjectiveRestriction X Z hZ)).X q).IsFlasque := by
-  apply TopCat.Sheaf.IsFlasque.BoundedBelowComplex.mappingCone_term_isFlasque
-    (ambientRationalInjectiveRestriction X Z hZ)
-  · exact fun _ ↦ TopCat.Sheaf.injective_isFlasque _ _
-  · exact derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque X Z
-
 set_option backward.isDefEq.respectTransparency false in
 /-- The group-cone comparison preserves its connecting morphism with the
 identity on the ambient global sections. -/

@@ -358,32 +358,6 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
   have hres := Point.evaluate_res hgW s yv hv
   exact (hres.trans (hquot yv hv)).symm
 
-/-- The relative-homology map induced by the analytic chart coming from the exact
-component coordinates. -/
-def neighborhoodLocalHomologyMap :
-    AlgebraicTopology.Singular.RelativeHomology ℚ
-        (AlgebraicTopology.Singular.standardComplexPuncturedPair n) (2 * n) →ₗ[ℚ]
-      AlgebraicTopology.Singular.RelativeHomology ℚ
-        (AlgebraicTopology.Singular.pointComplementPair C.neighborhoodPoint) (2 * n) :=
-  AlgebraicTopology.Singular.relativeHomologyMap ℚ (2 * n)
-    (AlgebraicTopology.Singular.chartModelEmbeddingPair n
-      C.neighborhoodProjectionChart C.neighborhoodPoint
-        C.neighborhoodPoint_mem_projectionChart_source)
-
-/-- The standard complex local class transported through the exact analytic component chart. -/
-def neighborhoodLocalClass :
-    AlgebraicTopology.Singular.RelativeHomology ℚ
-      (AlgebraicTopology.Singular.pointComplementPair C.neighborhoodPoint) (2 * n) :=
-  C.neighborhoodLocalHomologyMap
-    (AlgebraicTopology.Singular.standardComplexLocalClass n)
-
-/-- The transported class is the chart-local class defined by the general chart construction. -/
-lemma neighborhoodLocalClass_eq_localClassOfChart :
-    C.neighborhoodLocalClass =
-      AlgebraicTopology.Singular.localClassOfChart n C.neighborhoodProjectionChart
-        C.neighborhoodPoint C.neighborhoodPoint_mem_projectionChart_source :=
-  rfl
-
 end CycleComponentSeparateLocalCoordinates
 end AlgebraicGeometry
 
@@ -409,36 +383,5 @@ variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}
   [SmoothOfRelativeDimension d X.hom]
   (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-/-- The transported local class generates exactly the image of the chart-induced local-homology
-map. This is the algebraic intermediate identity used by the full generator theorem below. -/
-lemma span_neighborhoodLocalClass_eq_range :
-    Submodule.span ℚ {C.neighborhoodLocalClass} =
-      LinearMap.range C.neighborhoodLocalHomologyMap := by
-  calc
-    Submodule.span ℚ {C.neighborhoodLocalClass} =
-        (Submodule.span ℚ
-          {AlgebraicTopology.Singular.standardComplexLocalClass n}).map
-            C.neighborhoodLocalHomologyMap := by
-      rw [Submodule.map_span]
-      simp only [Set.image_singleton, neighborhoodLocalClass]
-    _ = (⊤ : Submodule ℚ _).map C.neighborhoodLocalHomologyMap := by
-      rw [AlgebraicTopology.Singular.span_standardComplexLocalClass_eq_top]
-    _ = LinearMap.range C.neighborhoodLocalHomologyMap :=
-      Submodule.map_top C.neighborhoodLocalHomologyMap
-
-/-- The transported class generates the full local homology of the affine component
-neighborhood.  The missing surjectivity in `span_neighborhoodLocalClass_eq_range` is supplied by
-open-neighborhood excision for the target of the compressed chart. -/
-lemma span_neighborhoodLocalClass_eq_top :
-    Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
-  let : IsAffine C.neighborhoodScheme.left :=
-    C.componentNeighborhood_isAffine
-  let : T2Space
-      (ComplexPoint C.neighborhoodScheme) :=
-    ComplexPoint.t2Space_of_isAffine C.neighborhoodScheme
-  exact AlgebraicTopology.Singular.span_localClassOfChart_eq_top
-    n C.neighborhoodProjectionChart C.neighborhoodPoint
-      C.neighborhoodPoint_mem_projectionChart_source
 
 end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

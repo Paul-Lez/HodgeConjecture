@@ -323,17 +323,4 @@ namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- In every ambient dimension, exact component coordinates give a transported generator of the
-full local homology at the selected smooth component point. -/
-lemma exists_span_neighborhoodLocalClass_eq_top
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (d p : ℕ)
-    [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = p) :
-    ∃ C : CycleComponentSeparateLocalCoordinates X x d (d - p),
-      Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
-  obtain ⟨C⟩ := AlgebraicGeometry.nonempty_cycleComponentSeparateLocalCoordinates
-    X x d p hx
-  exact ⟨C, C.span_neighborhoodLocalClass_eq_top⟩
-
 end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

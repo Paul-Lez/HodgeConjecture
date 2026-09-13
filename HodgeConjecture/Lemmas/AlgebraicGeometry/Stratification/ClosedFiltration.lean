@@ -70,13 +70,6 @@ theorem reducedSmoothClosedFiltration_layer (S : Closeds X) (k : ℕ) :
 
 variable [PerfectField K] [NoetherianSpace X]
 
-omit [NoetherianSpace X] in
-/-- Nonempty steps are strict; no artificial repeated nonempty supports are inserted. -/
-theorem reducedSmoothClosedFiltration_succ_lt (S : Closeds X) (k : ℕ)
-    (hk : reducedSmoothClosedFiltration f S k ≠ ⊥) :
-    reducedSmoothClosedFiltration f S (k + 1) < reducedSmoothClosedFiltration f S k :=
-  reducedClosedSingularRemainder_lt f _ hk
-
 /-- The terminal index is the actual finite list length, not supplied termination data. -/
 theorem reducedSmoothClosedFiltration_length (S : Closeds X) :
     reducedSmoothClosedFiltration f S (reducedSmoothStratification f S).length = ⊥ := by
@@ -90,33 +83,5 @@ theorem reducedSmoothClosedFiltration_length (S : Closeds X) :
         rw [reducedSmoothStratification, dif_neg hS, List.length_cons]
       rw [hlen, reducedSmoothClosedFiltration_succ_start]
       exact ih _ (reducedClosedSingularRemainder_lt f S hS)
-
-/-- Every index at or after the constructed terminal length is empty. -/
-theorem reducedSmoothClosedFiltration_eq_bot_of_length_le (S : Closeds X) {k : ℕ}
-    (hk : (reducedSmoothStratification f S).length ≤ k) :
-    reducedSmoothClosedFiltration f S k = ⊥ := by
-  apply le_bot_iff.mp
-  rw [← reducedSmoothClosedFiltration_length f S]
-  exact reducedSmoothClosedFiltration_antitone f S hk
-
-/-- Every nonterminal support is a member of the already constructed finite list. -/
-theorem reducedSmoothClosedFiltration_mem (S : Closeds X) {k : ℕ}
-    (hk : k < (reducedSmoothStratification f S).length) :
-    reducedSmoothClosedFiltration f S k ∈ reducedSmoothStratification f S := by
-  induction k generalizing S with
-  | zero =>
-    rw [reducedSmoothClosedFiltration_zero, reducedSmoothStratification]
-    split_ifs with hS
-    · subst S
-      simp [reducedSmoothStratification] at hk
-    · exact List.mem_cons_self
-  | succ k ih =>
-    rw [reducedSmoothStratification] at hk ⊢
-    split_ifs at hk ⊢ with hS
-    · simp at hk
-    · rw [List.length_cons, Nat.add_lt_add_iff_right] at hk
-      exact List.mem_cons_of_mem _ (by
-        rw [reducedSmoothClosedFiltration_succ_start]
-        exact ih _ hk)
 
 end AlgebraicGeometry

@@ -131,25 +131,10 @@ namespace Pure
 
 variable {V : Type u} [AddCommGroup V] [Module ℚ V] {n : ℕ}
 
-/-- The Hodge pieces span the whole complexification. -/
-lemma iSup_piece_eq_top (H : Pure V n) :
-    ⨆ pq : ℕ × ℕ, H.piece pq.1 pq.2 = ⊤ :=
-  H.isInternal.submodule_iSup_eq_top
-
-/-- Membership in a conjugate Hodge piece, with conjugation moved to the other side. -/
-lemma mem_piece_conjugate_iff (H : Pure V n) (p q : ℕ) (x : ℂ ⊗[ℚ] V) :
-    x ∈ H.piece p q ↔ conjugate V x ∈ H.piece q p :=
-  (H.conjugate_mem_iff q p x).symm
-
 /-- A piece with first index at least `p` lies in `F^p`. -/
 lemma piece_le_filtration (H : Pure V n) {p a b : ℕ} (ha : p ≤ a) :
     H.piece a b ≤ H.filtration p :=
   le_iSup_of_le a <| le_iSup_of_le ha <| le_iSup (fun b' ↦ H.piece a b') b
-
-/-- The defining membership criterion for a rational Hodge class. -/
-lemma mem_hodgeClasses_iff (p : ℕ) (H : Pure V (2 * p)) (x : V) :
-    x ∈ hodgeClasses p H ↔ ofBase ℚ V x ∈ H.piece p p :=
-  Iff.rfl
 
 /-- Every rational Hodge class lies in the corresponding Hodge filtration after
 complexification. -/
@@ -157,17 +142,6 @@ lemma ofBase_mem_filtration {p : ℕ} (H : Pure V (2 * p))
     {x : V} (hx : x ∈ hodgeClasses p H) :
     ofBase ℚ V x ∈ H.filtration p :=
   H.piece_le_filtration le_rfl hx
-
-/-- A vector in one Hodge piece has only that direct-sum coordinate. -/
-lemma decomposition_apply_of_mem (H : Pure V n) {pq : ℕ × ℕ}
-    {x : ℂ ⊗[ℚ] V} (hx : x ∈ H.piece pq.1 pq.2) :
-    H.decomposition x =
-      DirectSum.lof ℂ (ℕ × ℕ) (fun ab ↦ H.piece ab.1 ab.2) pq ⟨x, hx⟩ :=
-  H.decomposition.symm.injective (by
-    rw [LinearEquiv.symm_apply_apply]
-    change x = DirectSum.coeLinearMap (fun ab : ℕ × ℕ ↦ H.piece ab.1 ab.2)
-      (DirectSum.lof ℂ (ℕ × ℕ) (fun ab ↦ H.piece ab.1 ab.2) pq ⟨x, hx⟩)
-    simp)
 
 lemma pieceSum_mono (H : Pure V n) {s t : Set (ℕ × ℕ)} (hst : s ⊆ t) :
     H.pieceSum s ≤ H.pieceSum t :=
@@ -302,14 +276,6 @@ lemma ofBase_mem_filtration_iff (p : ℕ) (H : Pure V (2 * p)) (x : V) :
     rw [← H.filtration_inf_conjugateFiltration p]
     exact ⟨hx, hconj⟩
   · exact fun hx ↦ H.piece_le_filtration (p := p) (a := p) (b := p) le_rfl hx
-
-/-- In weight `2p`, taking the inverse image of `F^p` along the rational lattice gives exactly
-the usual rational `(p,p)` classes. -/
-lemma filtration_comap_ofBase_eq_hodgeClasses (p : ℕ) (H : Pure V (2 * p)) :
-    Submodule.comap (ofBase ℚ V) ((H.filtration p).restrictScalars ℚ) =
-      hodgeClasses p H := by
-  ext x
-  exact H.ofBase_mem_filtration_iff p x
 
 end Pure
 

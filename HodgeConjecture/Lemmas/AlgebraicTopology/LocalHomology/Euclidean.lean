@@ -48,20 +48,6 @@ def relativeSingularBoundary (X : TopPair) (n : ℕ) :
   (relativeChainShortComplex_shortExact ℚ X).δ (n + 1) n
     (ComplexShape.down_mk (n + 1) n (by lia))
 
-set_option backward.isDefEq.respectTransparency false in
-/-- Exactness at ambient homology in the long exact sequence of a topological pair. -/
-lemma relativeSingular_homology_exact_ambient (X : TopPair) (n : ℕ) :
-    (ShortComplex.mk
-      (HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n)
-      (HomologicalComplex.homologyMap (relativeChainProjection ℚ X) n)
-      (by
-        rw [← HomologicalComplex.homologyMap_comp]
-        change HomologicalComplex.homologyMap
-          (((chainPairFunctor ℚ).obj X).hom ≫
-            cokernel.π ((chainPairFunctor ℚ).obj X).hom) n = 0
-        rw [cokernel.condition, HomologicalComplex.homologyMap_zero])).Exact :=
-  (relativeChainShortComplex_shortExact ℚ X).homology_exact₂ n
-
 /-- Exactness at relative homology in the long exact sequence of a topological pair. -/
 lemma relativeSingular_homology_exact_relative (X : TopPair) (n : ℕ) :
     (ShortComplex.mk
@@ -71,17 +57,6 @@ lemma relativeSingular_homology_exact_relative (X : TopPair) (n : ℕ) :
         exact (relativeChainShortComplex_shortExact ℚ X).comp_δ
           (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia)))).Exact :=
   (relativeChainShortComplex_shortExact ℚ X).homology_exact₃
-    (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
-
-/-- Exactness at subspace homology in the long exact sequence of a topological pair. -/
-lemma relativeSingular_homology_exact_subspace (X : TopPair) (n : ℕ) :
-    (ShortComplex.mk
-      (relativeSingularBoundary X n)
-      (HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n)
-      (by
-        exact (relativeChainShortComplex_shortExact ℚ X).δ_comp
-          (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia)))).Exact :=
-  (relativeChainShortComplex_shortExact ℚ X).homology_exact₁
     (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
 
 lemma standardSubspaceBoundaryChain_inclusion (n : ℕ) :

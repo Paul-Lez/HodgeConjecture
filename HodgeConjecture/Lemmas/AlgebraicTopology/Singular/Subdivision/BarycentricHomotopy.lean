@@ -142,25 +142,6 @@ public theorem iota_barycentricLastVertexPrismComponent
       barycentricLastVertexPrismSimplexChain P X n x := by
   apply Sigma.ι_desc
 
-/-- The prism components are natural in the ambient simplicial set. -/
-public theorem barycentricLastVertexPrismComponent_naturality
-    (P : BarycentricLastVertexPrismData) {X Y : SSet.{0}}
-    (f : X ⟶ Y) (n : ℕ) :
-    (SSet.chainComplexMap f (AddCommGrpCat.of ℤ)).f n ≫
-        barycentricLastVertexPrismComponent P Y n =
-      barycentricLastVertexPrismComponent P X n ≫
-        (SSet.chainComplexMap f (AddCommGrpCat.of ℤ)).f (n + 1) := by
-  apply X.chainComplex_hom_ext
-  intro x
-  rw [← Category.assoc, SSet.ι_chainComplexMap_f, iota_barycentricLastVertexPrismComponent,
-    ← Category.assoc, iota_barycentricLastVertexPrismComponent]
-  unfold barycentricLastVertexPrismSimplexChain
-  rw [← SSet.yonedaEquiv_symm_comp, Category.assoc]
-  congr 1
-  let F := (SSet.chainComplexFunctor AddCommGrpCat).obj (AddCommGrpCat.of ℤ)
-  have hmap := F.map_comp (SSet.yonedaEquiv.symm x) f
-  exact congrArg (fun k ↦ k.f (n + 1)) hmap
-
 /-- Transporting the universal face-prism sum is the source differential followed by the
 lower-dimensional prism component. -/
 public theorem standardPrismFaceChain_transport_succ

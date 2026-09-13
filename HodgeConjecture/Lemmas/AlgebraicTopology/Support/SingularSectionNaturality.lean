@@ -93,19 +93,6 @@ lemma supportedRationalSingularSectionCohomologyEquivRelative_naturality
     (Opens.infLELeft V U) (Opens.infLELeft W U) a
     (homOfLE (inf_le_inf_right U (leOfHom a))) n _
 
-omit [T2Space X] [∀ V : Opens X, ParacompactSpace V] in
-/-- Regrouping the intersection witnesses commutes with the actual pair inclusions. -/
-lemma openIntersectionPairIsoSupportComplement_naturality
-    (S : Set X) (hS : IsClosed S) {V W : Opens X} (a : W ⟶ V) :
-    openInclusionPairMap X
-      (Opens.infLELeft V (⟨Sᶜ, hS.isOpen_compl⟩ : Opens X))
-      (Opens.infLELeft W (⟨Sᶜ, hS.isOpen_compl⟩ : Opens X))
-      a (homOfLE (inf_le_inf_right _ (leOfHom a))) ≫
-        (openIntersectionPairIsoSupportComplement X S hS V).hom =
-    (openIntersectionPairIsoSupportComplement X S hS W).hom ≫
-      neighborhoodSupportInclusionPairMap
-        (W := (W : Set X)) (V := (V : Set X)) (leOfHom a) S := rfl
-
 /-- The final support-complement comparison preserves literal ambient-open restrictions. -/
 lemma supportedRationalSingularSectionCohomologyEquivSupportComplement_naturality
     (S : Set X) (hS : IsClosed S) {V W : Opens X} (a : W ⟶ V) (n : ℕ)

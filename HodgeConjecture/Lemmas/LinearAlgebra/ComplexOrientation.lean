@@ -52,17 +52,6 @@ theorem LinearEquiv.det_restrictScalars_complex_pos
   rw [LinearMap.det_restrictScalars, Algebra.norm_complex_apply]
   exact Complex.normSq_pos.mpr f.isUnit_det'.ne_zero
 
-/-- A complex-linear automorphism preserves every real orientation after restriction of scalars. -/
-theorem Orientation.map_restrictScalars_complexLinearEquiv
-    {E ι : Type*} [AddCommGroup E] [Module ℝ E] [Module ℂ E]
-    [IsScalarTower ℝ ℂ E] [Module.Free ℂ E]
-    [FiniteDimensional ℝ E] [Fintype ι]
-    (f : E ≃ₗ[ℂ] E) (ω : Orientation ℝ E ι)
-    (hι : Fintype.card ι = Module.finrank ℝ E) :
-    Orientation.map ι (f.restrictScalars ℝ) ω = ω := by
-  rw [Orientation.map_eq_iff_det_pos ω (f.restrictScalars ℝ) hι]
-  exact f.det_restrictScalars_complex_pos
-
 namespace Complex
 
 /-- The real dimension of `Fin n → ℂ` is `2 * n`, in the form expected by

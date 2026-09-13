@@ -72,11 +72,6 @@ lemma standardComplexLocalClass_ne_zero_iff (p : ℕ) :
   rw [relativeHomologyDegreeCast_ne_zero_iff,
     standardComplexLocalClassMul_ne_zero_iff]
 
-lemma linearIndependent_singleton_standardComplexLocalClassMul_iff (p : ℕ) :
-    LinearIndependent ℚ ![standardComplexLocalClassMul p] ↔
-      LinearIndependent ℚ ![standardLocalClass (p * 2)] := by
-  simp [standardComplexLocalClassMul_ne_zero_iff]
-
 lemma span_standardComplexLocalClassMul_eq_top_iff (p : ℕ) :
     Submodule.span ℚ {standardComplexLocalClassMul p} = ⊤ ↔
       Submodule.span ℚ {standardLocalClass (p * 2)} = ⊤ := by
@@ -265,11 +260,6 @@ lemma span_standardLocalClass_zero_eq_top :
   apply Submodule.map_injective_of_injective e.injective
   rw [hmap, hone, Submodule.map_top]
   exact (LinearMap.range_eq_top.mpr e.surjective).symm
-
-lemma standardComplexLocalClass_zero_ne_zero : standardComplexLocalClass 0 ≠ 0 := by
-  have h := (standardComplexLocalClassMul_ne_zero_iff 0).mpr
-    standardLocalClass_zero_ne_zero
-  simpa [standardComplexLocalClass, standardComplexLocalClassMul] using h
 
 lemma span_standardComplexLocalClass_zero_eq_top :
     Submodule.span ℚ {standardComplexLocalClass 0} = ⊤ := by

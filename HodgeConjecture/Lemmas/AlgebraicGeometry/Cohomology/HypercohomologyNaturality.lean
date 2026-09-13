@@ -176,21 +176,4 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_naturality
     Functor.mapIso_inv, Category.comp_id, ← Category.assoc]
   exact derivedHomAddEquivGlobalSectionsKInjective_naturality X K L f n _
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
-/-- The direct comparison agrees with the existing comparison specialized to
-the identity injective resolution. -/
-lemma hypercohomologyAddEquivGlobalSectionsKInjective_eq_identityResolution
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective] (n : ℤ) :
-    hypercohomologyAddEquivGlobalSectionsKInjective X K n =
-      hypercohomologyAddEquivGlobalSectionsOfResolution X K K (𝟙 K) n := by
-  ext x
-  dsimp only [hypercohomologyAddEquivGlobalSectionsKInjective,
-    hypercohomologyAddEquivGlobalSectionsOfResolution,
-    derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
-  simp [isoHomCongrAddEquiv]
-  change _ = (inv (𝟙 (_ : AddCommGrpCat))) _
-  rw [IsIso.inv_id]
-  rfl
-
 end AlgebraicGeometry.ComplexPoint

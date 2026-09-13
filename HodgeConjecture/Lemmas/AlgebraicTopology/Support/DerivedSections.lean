@@ -78,14 +78,6 @@ lemma sheafSectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
     _ = _
   exact kernelComparison_comp_ι ((toOpenRestrictionPushforward X U).app F) ev
 
-/-- With no restriction imposed, the support-sheaf inclusion is canonically an
-isomorphism with the original coefficient sheaf. -/
-def sheafSectionsSupportedOutsideBotIso :
-    sheafSectionsSupportedOutside X ⊥ ≅ 𝟭 (Sheaf AddCommGrpCat.{u} X) :=
-  NatIso.ofComponents
-    (fun F => asIso ((sheafSectionsSupportedOutsideInclusion X ⊥).app F))
-    (fun f => (sheafSectionsSupportedOutsideInclusion X ⊥).naturality f)
-
 /-- The sheaf-valued sections-with-support functor for a closed support. -/
 def sheafSectionsWithClosedSupport (Z : Closeds X) :
     Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} X :=
@@ -93,14 +85,6 @@ def sheafSectionsWithClosedSupport (Z : Closeds X) :
 
 instance (Z : Closeds X) : (sheafSectionsWithClosedSupport X Z).Additive :=
   inferInstanceAs (sheafSectionsSupportedOutside X Z.compl).Additive
-
-/-- Sections supported on the whole space are all sections, through the actual
-support-forgetting inclusion. -/
-def sheafSectionsWithClosedSupportTopIso :
-    sheafSectionsWithClosedSupport X ⊤ ≅ 𝟭 (Sheaf AddCommGrpCat.{u} X) := by
-  have h : (⊤ : Closeds X).compl = ⊥ := by ext; simp
-  simpa only [sheafSectionsWithClosedSupport, h] using
-    sheafSectionsSupportedOutsideBotIso X
 
 /-- Global sections supported in a closed subset, obtained by evaluating the
 concrete support sheaf on the whole ambient space. -/
@@ -183,15 +167,6 @@ universe u
 namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
-
-/-- Uniqueness in the universal property of supported sections. -/
-lemma liftSheafSectionsSupportedOutside_unique (U : Opens X)
-    {F G : Sheaf AddCommGrpCat.{u} X} (f : F ⟶ G)
-    (hf : f ≫ (toOpenRestrictionPushforward X U).app G = 0)
-    (g : F ⟶ (sheafSectionsSupportedOutside X U).obj G)
-    (hg : g ≫ (sheafSectionsSupportedOutsideInclusion X U).app G = f) :
-    g = liftSheafSectionsSupportedOutside X U f hf :=
-  (cancel_mono (kernel.ι _)).1 (hg.trans (kernel.lift_ι _ _ _).symm)
 
 attribute [local instance] supportSheafHasDerivedCategory
 

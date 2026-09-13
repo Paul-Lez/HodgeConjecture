@@ -187,22 +187,6 @@ variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [SmoothOfRelativeDimension d X.hom]
   (C : CycleComponentSeparateLocalCoordinates X x d n)
 
-/-- The local homology class transported from the exact component chart is nonzero. -/
-lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
-  let : IsAffine C.neighborhoodScheme.left :=
-    C.componentNeighborhood_isAffine
-  let : T2Space
-      (ComplexPoint C.neighborhoodScheme) :=
-    ComplexPoint.t2Space_of_isAffine C.neighborhoodScheme
-  have hinjective : Function.Injective C.neighborhoodLocalHomologyMap :=
-    (chartModelEmbedding_relativeHomologyMap_bijective
-      n C.neighborhoodProjectionChart C.neighborhoodPoint
-        C.neighborhoodPoint_mem_projectionChart_source).1
-  intro hzero
-  apply standardComplexLocalClass_ne_zero n
-  apply hinjective
-  simpa only [neighborhoodLocalClass, map_zero] using hzero
-
 end
 
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]

@@ -29,12 +29,6 @@ filtration index `0` in the definition contributes nothing. -/
       (cycleComponentι X.left x ''
         (singularLocusClosed (cycleComponentι X.left x ≫ X.hom) : Set _))ᶜ := rfl
 
-/-- The target is the source-open target of the smooth locus. -/
-theorem cycleComponentSmoothLocusAmbientOpen_eq_sourceOpenTarget :
-    cycleComponentSmoothLocusAmbientOpen X x =
-      closedImmersionSourceOpenTarget (cycleComponentι X.left x)
-        (cycleComponentι X.left x ≫ X.hom).smoothLocus := rfl
-
 /-- The exact image of the lift is the restriction of the full component support. -/
 theorem range_cycleComponentSmoothLocusClosedLift :
     Set.range (cycleComponentSmoothLocusClosedLift X x) =

@@ -64,16 +64,6 @@ theorem smoothClosedSupportCoclassSection_germ_eq_zero
   rw [smoothClosedSupportCoclassSection_germ,
     smoothClosedSupportCoclassStalk_eq_zero X Y i m d x hxS]
 
-/-- Uniqueness of the gluing, expressed by its exact stalk normalization. -/
-theorem smoothClosedSupportCoclassSection_unique
-    (s : (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj (op ⊤))
-    (hs : ∀ x : ComplexPoint X,
-      (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.Γgerm x s =
-        smoothClosedSupportCoclassStalk X Y i m d x) :
-    s = smoothClosedSupportCoclassSection X Y i m d := by
-  apply TopCat.Presheaf.section_ext (smoothClosedSupportCoclassSheaf X Y i m d)
-  exact fun x _ ↦ (hs x).trans (smoothClosedSupportCoclassSection_germ X Y i m d x).symm
-
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- At every center, the global section has exactly the germ of the previously
@@ -103,25 +93,5 @@ theorem smoothClosedSupportCoclassSection_germ_eq_normalCoclass
     hWC hWU (Point.map i z) hzW
   rw [smoothClosedSupportChartCoclass_restrict,
     smoothClosedSupportNormalCoclass_restrict_eq_chart X Y i m d z V hzV W hWU hWC]
-
-/-- The fixed chart normalization at support centers and zero germs off support
-uniquely characterize the global section, independently of preimage choices. -/
-theorem smoothClosedSupportCoclassSection_unique_of_normalization
-    (s : (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj (op ⊤))
-    (hs : ∀ z : ComplexPoint Y,
-      (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.Γgerm (Point.map i z) s =
-        smoothClosedSupportChartCoclassGerm X Y i m d z (Point.map i z)
-          (mem_smoothClosedSupportChartOpen X Y i m d z))
-    (hzero : ∀ (x : ComplexPoint X), x ∉ Set.range (Point.map i) →
-      (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.Γgerm x s = 0) :
-    s = smoothClosedSupportCoclassSection X Y i m d := by
-  apply smoothClosedSupportCoclassSection_unique
-  intro x
-  by_cases hxS : x ∈ Set.range (Point.map i)
-  · obtain ⟨z, rfl⟩ := hxS
-    exact (hs z).trans (smoothClosedSupportCoclassStalk_eq_chartGerm
-      X Y i m d z (Point.map i z)
-      (mem_smoothClosedSupportChartOpen X Y i m d z)).symm
-  · rw [hzero x hxS, smoothClosedSupportCoclassStalk_eq_zero X Y i m d x hxS]
 
 end AlgebraicGeometry.ComplexPoint

@@ -205,21 +205,4 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R]
 
-set_option backward.isDefEq.respectTransparency false in
-/-- The cone comparison commutes with the connecting morphism which, in supported
-cohomology, forgets support. -/
-lemma relativeDualShiftIsoCochainCone_hom_comp_mor₃ (X : TopPair.{u}) :
-    (relativeDualShiftIsoCochainCone R X).hom ≫
-        (CochainComplex.mappingCone.triangleh
-          (relativeCochainRestrictionInt R X)).mor₃ =
-      (CochainComplex.trianglehOfDegreewiseSplit
-        (relativeDualCochainShortComplexInt R X)
-        (relativeDualCochainDegreewiseSplitting R X)).rotate.mor₃ := by
-  change (relativeCochainConeTriangleIso R X).hom.hom₃ ≫
-      (CochainComplex.mappingCone.triangleh
-        (relativeCochainRestrictionInt R X)).mor₃ = _
-  rw [← (relativeCochainConeTriangleIso R X).hom.comm₃]
-  unfold relativeCochainConeTriangleIso
-  simp
-
 end AlgebraicTopology.Singular

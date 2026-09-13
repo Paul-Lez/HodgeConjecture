@@ -48,13 +48,6 @@ lemma formRestriction_differential [SmoothOfRelativeDimension d X.hom]
         (formRestriction X d i p θ) :=
   Algebra.DeRham.map_differential ℂ (holomorphicRestrictionAlgHom X d i) p θ
 
-lemma chartEvaluation_apply_of_notMem [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
-    (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
-    {y : Fin d → ℂ} (hy : y ∉ chartSectionDomain X d U z) :
-    chartEvaluation X d U z p θ y = 0 :=
-  extendByZero_apply_of_notMem X d U z _ hy
-
 lemma chartEvaluationKernel_eq_top_of_lt [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     {p : ℕ} (hp : d < p) : chartEvaluationKernel X d U p = ⊤ := by
@@ -65,22 +58,6 @@ lemma chartEvaluationKernel_eq_top_of_lt [SmoothOfRelativeDimension d X.hom]
   have hcard := hli.fintype_card_le_finrank
   rw [Fintype.card_fin, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hcard
   lia
-
-/-- Vanishing in every chart is equivalent to vanishing after every restriction. -/
-lemma chartEvaluationKernel_eq_iInf_comap
-    [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
-    chartEvaluationKernel X d U p =
-      ⨅ (V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ), ⨅ (i : U ⟶ V),
-        (chartEvaluationKernel X d V p).comap (formRestriction X d i p) := by
-  ext θ
-  simp only [Submodule.mem_iInf, Submodule.mem_comap]
-  constructor
-  · intro hθ V i
-    exact formRestriction_mem_chartEvaluationKernel X d i p hθ
-  · intro hθ
-    have h := hθ U (𝟙 U)
-    rwa [formRestriction_id, LinearMap.id_apply] at h
 
 lemma holomorphicForm_eq_zero_of_lt [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)

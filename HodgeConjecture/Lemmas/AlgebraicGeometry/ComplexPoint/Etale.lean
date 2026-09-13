@@ -186,15 +186,6 @@ lemma standardEtale_mem_implicit_source (z : standardEtaleCoordinateSpace P) :
   simpa [standardEtaleImplicitOpenPartialHomeomorph, φ] using
     φ.pt_mem_toOpenPartialHomeomorph_source
 
-lemma standardEtale_zero_base_mem_implicit_target (z : standardEtaleCoordinateSpace P) :
-    (0, z.1.1) ∈ (standardEtaleImplicitOpenPartialHomeomorph P z).target := by
-  have hzmap := (standardEtaleImplicitOpenPartialHomeomorph P z).map_source
-    (standardEtale_mem_implicit_source P z)
-  have heq : standardEtaleEquation P z.1 = 0 := by
-    simpa [standardEtaleEquation] using z.2.1
-  rw [standardEtaleImplicitOpenPartialHomeomorph_apply, heq] at hzmap
-  exact hzmap
-
 /-- The localization polynomial evaluated in ordinary complex coordinates. -/
 def standardEtaleLocalizationEquation (u : (Fin n → ℂ) × ℂ) : ℂ :=
   Polynomial.eval₂ (MvPolynomial.aeval (R := ℂ) u.1).toRingHom u.2 P.g
@@ -421,14 +412,6 @@ lemma analyticAt_standardEtaleChartInverse_val
   filter_upwards [(isOpen_standardEtaleChartTarget P z).eventually_mem hw] with v hv
   exact (standardEtaleChartInverse_of_mem P z hv).symm
 
-/-- In ambient coordinates, the inverse branch of a standard étale projection chart is
-holomorphic throughout its target. -/
-lemma contDiffOn_standardEtaleChartInverse_val
-    (z : standardEtaleCoordinateSpace P) :
-    ContDiffOn ℂ ω (fun v ↦ (standardEtaleChartInverse P z v).1)
-      (standardEtaleChartTarget P z) :=
-  fun _ hw ↦ (analyticAt_standardEtaleChartInverse_val P z hw).contDiffAt.contDiffWithinAt
-
 /-- Evaluation of a quotient representative in ordinary coordinates agrees with the explicit
 bivariate polynomial formula. -/
 lemma standardEtaleCoordinateHomeomorph_symm_mk
@@ -506,11 +489,6 @@ lemma mem_standardEtaleAlgHomProjectionChart_source (u : P.Ring →ₐ[ℂ] ℂ)
   · change standardEtaleCoordinateHomeomorph P u ∈
       (standardEtaleProjectionChart P (standardEtaleCoordinateHomeomorph P u)).source
     exact standardEtale_mem_implicit_source P (standardEtaleCoordinateHomeomorph P u)
-
-lemma standardEtaleAlgHomProjectionChart_apply (u v : P.Ring →ₐ[ℂ] ℂ) :
-    standardEtaleAlgHomProjectionChart P u v =
-      mvPolynomialAlgHomHomeomorph n
-        (v.comp (IsScalarTower.toAlgHom ℂ (complexPolynomialRing n) P.Ring)) := rfl
 
 /-- Every regular function is analytic on the inverse of a standard étale algebra-homomorphism
 projection chart. -/

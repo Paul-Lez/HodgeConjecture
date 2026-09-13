@@ -32,15 +32,6 @@ def supportRestrictionShortComplex (F : Sheaf AddCommGrpCat.{u} X) :
     ((toOpenRestrictionPushforward X U).app F)
     (sheafSectionsSupportedOutsideInclusion_restriction X U F)
 
-set_option backward.isDefEq.respectTransparency false in
-/-- The localization sequence is short exact for an injective coefficient sheaf.
-The first map is literally its defining kernel inclusion. -/
-private lemma supportRestrictionShortComplex_shortExact (F : Sheaf AddCommGrpCat.{u} X)
-    [Injective F] : (supportRestrictionShortComplex X U F).ShortExact where
-  exact := ShortComplex.exact_kernel _
-  mono_f := inferInstanceAs (Mono (kernel.ι _))
-  epi_g := inferInstanceAs (Epi ((toOpenRestrictionPushforward X U).app F))
-
 /-- The sequence of sections on `V`, with the actual supported-sections inclusion
 and actual restriction map. -/
 def supportRestrictionSectionsShortComplex (V : Opens X)
@@ -60,14 +51,6 @@ private lemma supportRestrictionSectionsShortComplex_shortExact (V : Opens X)
   mono_f := mono_of_isLimit_fork
     (KernelFork.mapIsLimit _ (kernelIsKernel _) (supportEvaluation X V))
   epi_g := toOpenRestrictionPushforward_app_epi X U F V
-
-/-- A termwise injective complex gives an actual short exact localization
-sequence of complexes of sheaves. -/
-private lemma supportRestrictionComplexShortComplex_shortExact
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :
-    (supportRestrictionComplexShortComplex X U K).ShortExact :=
-  HomologicalComplex.shortExact_of_degreewise_shortExact _ fun n =>
-    supportRestrictionShortComplex_shortExact X U (K.X n)
 
 /-- The support/restriction sequence is short exact even after taking sections
 on an arbitrary open set, for a termwise injective coefficient complex. -/

@@ -283,14 +283,6 @@ lemma standardSphereSimplicialNormalizedBoundaryChain_detect (n : ℕ) :
     simp [hi]
   · simp
 
-/-- The normalized alternating facet chain is nonzero in every positive sphere dimension. -/
-lemma standardSphereSimplicialNormalizedBoundaryChain_ne_zero (n : ℕ) :
-    standardSphereSimplicialNormalizedBoundaryChain n ≠ 0 := by
-  intro h
-  have hdet := standardSphereSimplicialNormalizedBoundaryChain_detect n
-  rw [h, zero_comp] at hdet
-  exact zero_ne_one (ConcreteCategory.congr_hom hdet 1)
-
 lemma standardSphereSimplicialNormalizedBoundaryChain_boundary (n : ℕ) :
     standardSphereSimplicialNormalizedBoundaryChain n ≫
       (standardSphereSuccNormalizedRationalChains n).d (n + 1) n = 0 := by
@@ -362,22 +354,6 @@ lemma standardSphereSimplicialNormalizedBoundaryClass_ne_zero (n : ℕ) :
     ((standardSphereSimplicialNormalizedBoundaryChain n).hom 1) = 1 at hdet
   rw [hchain, map_zero] at hdet
   exact zero_ne_one hdet
-
-/-- The explicit alternating-facet class spans normalized rational top homology. -/
-lemma span_standardSphereSimplicialNormalizedBoundaryClass_eq_top (n : ℕ) :
-    Submodule.span ℚ {standardSphereSimplicialNormalizedBoundaryClass n} = ⊤ := by
-  let e := (standardSphereSuccNormalizedHomologyTopIsoRat n).toLinearEquiv
-  have he : e (standardSphereSimplicialNormalizedBoundaryClass n) ≠ 0 :=
-    e.map_ne_zero_iff.mpr (standardSphereSimplicialNormalizedBoundaryClass_ne_zero n)
-  have hone : Submodule.span ℚ
-      {e (standardSphereSimplicialNormalizedBoundaryClass n)} = ⊤ :=
-    (Submodule.span_singleton_eq_top_iff ℚ _).mpr fun q ↦
-      ⟨q / e (standardSphereSimplicialNormalizedBoundaryClass n), by
-        simpa only [smul_eq_mul] using div_mul_cancel₀ q he⟩
-  apply Submodule.map_injective_of_injective e.injective
-  rw [Submodule.map_span, Set.image_singleton, Submodule.map_top,
-    LinearMap.range_eq_top.mpr e.surjective]
-  exact hone
 
 lemma standardSphereSimplicialBoundaryCycle_normalization (n : ℕ) :
     standardSphereSimplicialBoundaryCycle n ≫

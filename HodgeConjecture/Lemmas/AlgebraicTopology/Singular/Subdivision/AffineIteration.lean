@@ -56,21 +56,6 @@ public theorem affineSingularSubdivisionIterate_succ
         affineSingularSubdivisionChainMap X :=
   rfl
 
-/-- Every affine-subdivision iterate is natural in the target space. -/
-public theorem affineSingularSubdivisionIterate_naturality
-    {X Y : TopCat.{0}} (f : X ⟶ Y) : ∀ m : ℕ,
-    SSet.chainComplexMap (TopCat.toSSet.map f) (AddCommGrpCat.of ℤ) ≫
-        affineSingularSubdivisionIterate Y m =
-      affineSingularSubdivisionIterate X m ≫
-        SSet.chainComplexMap (TopCat.toSSet.map f) (AddCommGrpCat.of ℤ)
-  | 0 => by simp
-  | m + 1 => by
-      rw [affineSingularSubdivisionIterate_succ,
-        affineSingularSubdivisionIterate_succ, ← Category.assoc,
-        affineSingularSubdivisionIterate_naturality f m,
-        Category.assoc, affineSingularSubdivisionChainMap_naturality,
-        ← Category.assoc]
-
 /-- Every finite affine-subdivision iterate is chain homotopic to the identity. -/
 public noncomputable def affineSingularSubdivisionIterateHomotopy
     (X : TopCat.{0}) : ∀ m : ℕ,
@@ -81,16 +66,6 @@ public noncomputable def affineSingularSubdivisionIterateHomotopy
       simpa [affineSingularSubdivisionIterate_succ] using
         (affineSingularSubdivisionIterateHomotopy X m).comp
           (affineSingularSubdivisionHomotopy X)
-
-/-- Every affine-subdivision iterate induces the identity on integral singular homology. -/
-public theorem affineSingularSubdivisionIterate_homologyMap
-    (X : TopCat.{0}) (m n : ℕ) :
-    HomologicalComplex.homologyMap
-        (affineSingularSubdivisionIterate X m) n =
-      𝟙 (((TopCat.toSSet.obj X).chainComplex
-        (AddCommGrpCat.of ℤ)).homology n) := by
-  rw [(affineSingularSubdivisionIterateHomotopy X m).homologyMap_eq]
-  exact HomologicalComplex.homologyMap_id _ _
 
 section Small
 
@@ -124,15 +99,6 @@ public noncomputable def coverSmallAffineSubdivisionIterateHomotopy :
       simpa [coverSmallAffineSubdivisionIterate_succ] using
         (coverSmallAffineSubdivisionIterateHomotopy m).comp
           (coverSmallAffineSubdivisionHomotopy X U)
-
-/-- Every cover-small affine-subdivision iterate induces the identity on small-chain homology. -/
-public theorem coverSmallAffineSubdivisionIterate_homologyMap
-    (m n : ℕ) :
-    HomologicalComplex.homologyMap
-        (coverSmallAffineSubdivisionIterate X U m) n =
-      𝟙 ((CoverSmallIntegralSingularChainComplex X U).homology n) := by
-  rw [(coverSmallAffineSubdivisionIterateHomotopy X U m).homologyMap_eq]
-  exact HomologicalComplex.homologyMap_id _ _
 
 /-- Small and full affine-subdivision iterates commute with the small-chain inclusion. -/
 public theorem coverSmallAffineSubdivisionIterate_comp_inclusion : ∀ m : ℕ,

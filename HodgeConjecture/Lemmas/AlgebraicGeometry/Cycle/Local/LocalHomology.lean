@@ -178,27 +178,4 @@ theorem smoothClosedSupportRelativeCohomology_isZero_of_ne (n : ℕ) (hn : n ≠
   relativeCohomology_isZero ℚ _ n
     (smoothClosedSupportRelativeHomology_isZero_of_ne X Y i m d z V hzV n hn)
 
-/-- The same concentration for the singular-cochain restriction cone. The cone
-has its conventional unshifted grading: supported degree `n` is cone degree `n-1`. -/
-theorem smoothClosedSupportCochainConeHomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * (d - m)) :
-    IsZero ((CochainComplex.mappingCone (relativeCochainRestrictionInt ℚ
-      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV))).homology
-        ((n : ℤ) - 1)) :=
-  (smoothClosedSupportRelativeCohomology_isZero_of_ne X Y i m d z V hzV n hn).of_iso
-    (relativeCochainConeCohomologyEquiv ℚ
-      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n).toModuleIso
-
-include hzV in
-/-- The vanishing neighborhoods are cofinal among all ambient open neighborhoods of
-the point. This is the local concentration statement needed for a stalkwise purity proof. -/
-theorem exists_small_open_supportCohomology_concentrated :
-    ∃ W : Opens (ComplexPoint X), Point.map i z ∈ W ∧ W ≤ V ∧
-      ∀ n : ℕ, n ≠ 2 * (d - m) →
-        IsZero (RelativeCohomology ℚ
-          (neighborhoodSupportComplementPair W (Set.range (Point.map i))) n) := by
-  refine ⟨smoothClosedSupportNeighborhood X Y i m d z V hzV,
-    mem_smoothClosedSupportNeighborhood X Y i m d z V hzV,
-    smoothClosedSupportNeighborhood_le X Y i m d z V hzV, ?_⟩
-  exact smoothClosedSupportRelativeCohomology_isZero_of_ne X Y i m d z V hzV
-
 end AlgebraicGeometry.ComplexPoint

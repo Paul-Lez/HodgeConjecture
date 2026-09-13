@@ -213,17 +213,6 @@ lemma exists_eq_smul_simplicialZeroAugmentation_of_connected (S : SSet.{u}) [S.I
       _ = φ ((S.ιChainComplex (R := ModuleCat.of R R) x).hom t) := hvalue.symm
   exact congrArg (fun f ↦ f.hom c) heq
 
-/-- On a connected simplicial set, every singular zero-cocycle is represented by a unique
-constant. -/
-lemma existsUnique_eq_smul_simplicialZeroAugmentation_of_connected
-    (S : SSet.{u}) [S.IsConnected]
-    (φ : Module.Dual R ((S.chainComplex (ModuleCat.of R R)).X 0))
-    (hφ : ((S.chainComplex (ModuleCat.of R R)).d 1 0).hom.dualMap φ = 0) :
-    ∃! r : R, r • (simplicialZeroAugmentation R S).hom = φ := by
-  obtain ⟨r, hr⟩ := exists_eq_smul_simplicialZeroAugmentation_of_connected R S φ hφ
-  exact ⟨r, hr, fun s hs ↦
-    smul_simplicialZeroAugmentation_injective R S (hs.trans hr.symm)⟩
-
 /-- Constant singular zero-cochains on a nonempty open set have unique coefficients. -/
 lemma constantSingularZeroCochain_injective (U : (Opens X)ᵒᵖ) [Nonempty U.unop] :
     Function.Injective (constantSingularZeroCochain R X U) := by
@@ -243,18 +232,6 @@ lemma exists_eq_constantSingularZeroCochain_of_pathConnected (U : (Opens X)ᵒ�
   let : PathConnectedSpace ((Opens.toTopCat X).obj U.unop) :=
     show PathConnectedSpace U.unop from inferInstance
   exact exists_eq_smul_simplicialZeroAugmentation_of_connected R
-    (TopCat.toSSet.obj ((Opens.toTopCat X).obj U.unop)) φ hφ
-
-/-- On a path-connected open subset, every singular zero-cocycle is represented by a unique
-constant. -/
-lemma existsUnique_eq_constantSingularZeroCochain_of_pathConnected (U : (Opens X)ᵒᵖ)
-    [PathConnectedSpace U.unop]
-    (φ : OpenCochains R X U 0)
-    (hφ : (((openSingularChainComplexFunctor R X).obj U.unop).d 1 0).hom.dualMap φ = 0) :
-    ∃! r : R, constantSingularZeroCochain R X U r = φ := by
-  let : PathConnectedSpace ((Opens.toTopCat X).obj U.unop) :=
-    show PathConnectedSpace U.unop from inferInstance
-  exact existsUnique_eq_smul_simplicialZeroAugmentation_of_connected R
     (TopCat.toSSet.obj ((Opens.toTopCat X).obj U.unop)) φ hφ
 
 set_option backward.isDefEq.respectTransparency false in

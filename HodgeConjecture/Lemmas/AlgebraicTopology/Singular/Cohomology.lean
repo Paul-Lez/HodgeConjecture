@@ -283,24 +283,12 @@ lemma cohomologyEquivDualHomology_forgetSupport (R : Type u) [Field R] (X : TopC
 lemma preimageSupportPairMap_id (X : TopCat.{u}) (Z : Set X) :
     preimageSupportPairMap (𝟙 X) Z = 𝟙 (TopPair.ofSubset Zᶜ) := rfl
 
-lemma preimageSupportPairMap_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
-    (W : Set Z) :
-    preimageSupportPairMap (f ≫ g) W =
-      preimageSupportPairMap f (g ⁻¹' W) ≫ preimageSupportPairMap g W := rfl
-
 @[simp]
 lemma cohomologyWithSupportMap_id (R : Type u) [Field R] (X : TopCat.{u})
     (Z : Set X) (n : ℕ) :
     cohomologyWithSupportMap R n (𝟙 X) Z = LinearMap.id := by
   unfold cohomologyWithSupportMap
   exact relativeCohomologyMap_id R (TopPair.ofSubset Zᶜ) n
-
-lemma cohomologyWithSupportMap_comp (R : Type u) [Field R]
-    {X Y Z : TopCat.{u}} (n : ℕ) (f : X ⟶ Y) (g : Y ⟶ Z) (W : Set Z) :
-    cohomologyWithSupportMap R n (f ≫ g) W =
-      (cohomologyWithSupportMap R n f (g ⁻¹' W)).comp
-        (cohomologyWithSupportMap R n g W) := by
-  simp [cohomologyWithSupportMap, preimageSupportPairMap_comp, relativeCohomologyMap_comp]
 
 @[simp]
 lemma supportInclusionPairMap_rfl (X : TopCat.{u}) (Z : Set X) :
@@ -316,13 +304,6 @@ lemma enlargeSupport_rfl (R : Type u) [Field R] (X : TopCat.{u}) (Z : Set X) (n 
     enlargeSupport R X (Set.Subset.rfl : Z ⊆ Z) n = LinearMap.id := by
   rw [enlargeSupport, supportInclusionPairMap_rfl, relativeCohomologyMap_id]
 
-lemma enlargeSupport_trans (R : Type u) [Field R] (X : TopCat.{u}) {Z W U : Set X}
-    (hZW : Z ⊆ W) (hWU : W ⊆ U) (n : ℕ) :
-    enlargeSupport R X (hZW.trans hWU) n =
-      (enlargeSupport R X hWU n).comp (enlargeSupport R X hZW n) := by
-  rw [enlargeSupport, enlargeSupport, enlargeSupport, supportInclusionPairMap_trans,
-    relativeCohomologyMap_comp]
-
 /-- Over a field a continuous map is determined on cohomology by its effect on homology:
 universal coefficients is natural, and an injective equivalence. -/
 lemma cohomologyMap_eq_of_homologyMap_eq (R : Type u) [Field R] {X Y : TopCat.{u}} (n : ℕ)
@@ -332,17 +313,6 @@ lemma cohomologyMap_eq_of_homologyMap_eq (R : Type u) [Field R] {X Y : TopCat.{u
   refine (cohomologyEquivDualHomology R X n).injective (LinearMap.ext fun z => ?_)
   rw [cohomologyEquivDualHomology_cohomologyMap, cohomologyEquivDualHomology_cohomologyMap,
     h]
-
-/-- Over a field a map of pairs is determined on relative cohomology by its effect on relative
-homology. -/
-lemma relativeCohomologyMap_eq_of_relativeHomologyMap_eq (R : Type u) [Field R]
-    {X Y : TopPair.{u}} (n : ℕ) {f g : X ⟶ Y}
-    (h : relativeHomologyMap R n f = relativeHomologyMap R n g) :
-    relativeCohomologyMap R n f = relativeCohomologyMap R n g := by
-  ext α
-  refine (relativeCohomologyEquivDualHomology R X n).injective (LinearMap.ext fun z => ?_)
-  rw [relativeCohomologyEquivDualHomology_relativeCohomologyMap,
-    relativeCohomologyEquivDualHomology_relativeCohomologyMap, h]
 
 /-- Relative cohomology vanishes wherever relative homology does: the two are linked by the
 universal-coefficient equivalence. -/

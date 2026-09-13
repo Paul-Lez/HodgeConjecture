@@ -863,13 +863,6 @@ lemma openSingularChainToTop_comp_topOpenIso {V : Opens X} (i : V ⟶ ⊤) :
   rw [← Functor.map_comp, openToTop_comp_inclusionTopIso]
   rfl
 
-/-- Every term of the double-plus singular-cochain complex satisfies the sheaf condition. -/
-lemma singularCochainPlusPlusPresheafComplex_isSheaf (n : ℕ) :
-    TopCat.Presheaf.IsSheaf
-      ((singularCochainPlusPlusPresheafComplex R X).X n) := by
-  exact GrothendieckTopology.Plus.isSheaf_plus_plus
-    (Opens.grothendieckTopology X) (singularCochainPresheaf R X n)
-
 section RationalCover
 
 variable {κ : Type} (Y : TopCat.{0}) (U : κ → Set Y)

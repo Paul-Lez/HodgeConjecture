@@ -234,20 +234,6 @@ public theorem barycentricSubdivisionSimplexChain_naturality
   rw [hn, Functor.map_comp]
   rfl
 
-/-- Every degree of the barycentric subdivision operator is natural. -/
-public theorem barycentricSubdivisionComponent_naturality
-    {X Y : SSet.{0}} (f : X ⟶ Y) (n : ℕ) :
-    (SSet.chainComplexMap f (AddCommGrpCat.of ℤ)).f n ≫
-        barycentricSubdivisionComponent Y n =
-      barycentricSubdivisionComponent X n ≫
-        (SSet.chainComplexMap (SSet.sd.map f) (AddCommGrpCat.of ℤ)).f n := by
-  apply X.chainComplex_hom_ext
-  intro x
-  rw [← Category.assoc, SSet.ι_chainComplexMap_f,
-    iota_barycentricSubdivisionComponent]
-  rw [← Category.assoc, iota_barycentricSubdivisionComponent,
-    barycentricSubdivisionSimplexChain_naturality]
-
 /-- The alternating sum of the subdivided fundamental chains of the codimension-one faces of
 the standard `(n+1)`-simplex, in the explicit nerve model. -/
 public noncomputable def subdividedSimplexAlternatingFaceChain (n : ℕ) :
@@ -353,28 +339,6 @@ public theorem subdividedSimplexFundamentalChain_boundary_eq_outer
   simp_rw [hinterior]
   simp only [Finset.sum_const_zero, zero_add]
   rfl
-
-/-- Reindex a permutation by first rotating its final position to position zero and then using
-Mathlib's standard `decomposeFin` equivalence.  The first coordinate is therefore the vertex
-omitted by the surviving outer face. -/
-public noncomputable def permutationLastDecomposition (n : ℕ) :
-    Equiv.Perm (Fin (n + 2)) ≃
-      Fin (n + 2) × Equiv.Perm (Fin (n + 1)) :=
-  (Equiv.mulRight (finRotate (n + 2))⁻¹).trans Equiv.Perm.decomposeFin
-
-/-- The distinguished vertex in `permutationLastDecomposition` is the image of the last
-position. -/
-public theorem permutationLastDecomposition_fst
-    (n : ℕ) (σ : Equiv.Perm (Fin (n + 2))) :
-    (permutationLastDecomposition n σ).1 = σ (Fin.last (n + 1)) := by
-  let θ := σ * (finRotate (n + 2))⁻¹
-  have hinv := Equiv.Perm.decomposeFin.symm_apply_apply θ
-  have hfirst := congrArg (fun e ↦ e 0) hinv
-  rw [Equiv.Perm.decomposeFin_symm_apply_zero] at hfirst
-  change (Equiv.Perm.decomposeFin θ).1 = σ (Fin.last (n + 1))
-  rw [hfirst]
-  change σ ((finRotate (n + 2))⁻¹ 0) = σ (Fin.last (n + 1))
-  congr 1
 
 /-- Naturality of `stdSimplex.sdIso.inv`, transported to integral chains in a fixed degree. -/
 public theorem subdividedStandardSimplexFace_naturality

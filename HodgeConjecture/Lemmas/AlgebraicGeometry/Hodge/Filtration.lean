@@ -40,13 +40,6 @@ variable (X : Over (Spec ↧ℂ))
 
 attribute [local instance] analyticHasDerivedCategory
 
-/-- Scalar multiplication over `K` agrees with multiplication by its image in `ℂ`. -/
-lemma deRham_field_smul_eq_complex_smul
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (q : K) (α : DeRhamHypercohomology X n) :
-    q • α = (algebraMap K ℂ q) • α :=
-  rfl
-
 /-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
 def complexToFieldConstantSheaf :
     constantComplexSheaf X ⟶ constantFieldSheaf K X :=
@@ -447,22 +440,11 @@ lemma deRhamConj_fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom]
   rw [he, deRhamConj_apply, AddEquiv.symm_apply_apply,
     conj_fieldToComplexCohomology K X hK]
 
-lemma mem_conjHodgeFiltrationComplexSubmodule_iff [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) (α : DeRhamHypercohomology X n) :
-    α ∈ conjHodgeFiltrationComplexSubmodule X p n ↔
-      deRhamConj X n α ∈ hodgeFiltration X p n :=
-  Iff.rfl
-
 lemma mem_hodgePiece_iff [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ)
     (α : DeRhamHypercohomology X n) :
     α ∈ hodgePiece X p q n ↔
       α ∈ hodgeFiltration X p n ∧ deRhamConj X n α ∈ hodgeFiltration X q n :=
   Iff.rfl
-
-/-- A Hodge piece is contained in the corresponding Hodge filtration step. -/
-lemma hodgePiece_le_hodgeFiltration [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
-    hodgePiece X p q n ≤ hodgeFiltrationComplexSubmodule X p n :=
-  inf_le_left
 
 /-- Above the complex dimension the Hodge pieces vanish, because `F^p` already does. -/
 lemma hodgePiece_eq_bot_of_lt [IsIntegral X.left] [Smooth X.hom]

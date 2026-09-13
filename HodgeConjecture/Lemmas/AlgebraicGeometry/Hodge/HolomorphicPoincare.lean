@@ -320,16 +320,6 @@ def chartCoordinateSection [SmoothOfRelativeDimension d X.hom]
     (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin d ↦ ℂ) i)
     ((ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin d ↦ ℂ) i).analyticOnNhd _)
 
-lemma chartSection_chartCoordinateSection [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
-      (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
-    (i : Fin d) {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
-    chartSection X d U z (chartCoordinateSection X d U z hsource i) y =
-      y i := by
-  exact chartSection_holomorphicSectionOfChart X d U z hsource _ _ hy
-
 lemma chartSectionDifferential_chartCoordinateSection
     [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)

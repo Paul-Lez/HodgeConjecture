@@ -72,40 +72,4 @@ lemma supportedSingularCohomologySheafIsoRelative_section (V : Opens X) :
     Iso.trans_hom, Iso.symm_hom]
   rw [Iso.hom_inv_id_assoc]
 
-/-- Inverse transport of a represented relative section recovers the canonical
-section of the actual cohomology sheaf, without changing its normalization. -/
-lemma supportedSingularCohomologySheafIsoRelative_inv_section (V : Opens X)
-    (z : ((((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
-      (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ)) :
-    (supportedSingularCohomologySheafIsoRelative X S hS n).inv.hom.app (op V)
-      ((supportRelativeCohomologyToSheaf X S n).app (op V)
-        (supportedRationalSingularSectionCohomologyEquivSupportComplement X S hS V n z)) =
-    sectionCohomologyToSheafSection X
-      (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩) (n : ℤ) V z := by
-  have h := ConcreteCategory.congr_hom
-    (supportedSingularCohomologySheafIsoRelative_section X S hS n V) z
-  exact (congrArg ((supportedSingularCohomologySheafIsoRelative X S hS n).inv.hom.app (op V))
-    h.symm).trans (ConcreteCategory.congr_hom
-      (congrArg (fun f => f.hom.app (op V))
-        (supportedSingularCohomologySheafIsoRelative X S hS n).hom_inv_id) _)
-
-/-- Exact stalk normalization: the actual local class germ maps to the germ
-of its literal relative coclass under the sheaf comparison. -/
-lemma supportedSingularCohomologySheafIsoRelative_germ
-    (V : Opens X) (x : X) (hx : x ∈ V)
-    (z : ((((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
-      (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ)) :
-    (TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map
-      (supportedSingularCohomologySheafIsoRelative X S hS n).hom.hom
-      (((supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩).homology
-        (n : ℤ)).presheaf.germ V x hx
-        (sectionCohomologyToSheafSection X
-          (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩) (n : ℤ) V z)) =
-    supportRelativeCohomologyGerm X S n V x hx
-      (supportedRationalSingularSectionCohomologyEquivSupportComplement X S hS V n z) := by
-  rw [TopCat.Presheaf.stalkFunctor_map_germ_apply]
-  apply congrArg ((supportRelativeCohomologySheaf X S n).presheaf.germ V x hx)
-  exact ConcreteCategory.congr_hom
-    (supportedSingularCohomologySheafIsoRelative_section X S hS n V) z
-
 end AlgebraicTopology.Singular
