@@ -63,17 +63,13 @@ def radialPrimitiveSeries (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ))
     (k : ℕ) (x : E) :
     radialPrimitiveSeries n p (k + 1) (fun _ ↦ x) =
-      ((k + n + 1 : ℕ) : ℂ)⁻¹ • (p k (fun _ ↦ x)).curryLeft x := by
-  simp [radialPrimitiveSeries]
-  congr 2
+      ((k + n + 1 : ℕ) : ℂ)⁻¹ • (p k (fun _ ↦ x)).curryLeft x := rfl
 
 lemma norm_radialPrimitiveSeries_succ_le (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ)) (k : ℕ) :
     ‖radialPrimitiveSeries n p (k + 1)‖ ≤ ‖p k‖ := by
   refine ContinuousMultilinearMap.opNorm_le_bound (norm_nonneg (p k)) fun v ↦ ?_
   rw [radialPrimitiveSeries, continuousMultilinearCurryRightEquiv_symm_apply']
-  simp only [_root_.smul_apply, ContinuousLinearMap.compContinuousMultilinearMap_coe,
-    Function.comp_apply]
   calc
     ‖(((k + n + 1 : ℕ) : ℂ)⁻¹) • (p k (Fin.init v)).curryLeft (v (Fin.last k))‖ ≤
         ‖((k + n + 1 : ℕ) : ℂ)⁻¹‖ *
@@ -202,8 +198,6 @@ lemma hasSum_radialIntegrand_of_hasFPowerSeriesOnBall (n : ℕ)
       (((t : ℂ) ^ n) • (η ((t : ℂ) • x)).curryLeft x) := by
     simpa [contraction] using hst
   refine HasSum.congr_fun hst' (fun k ↦ ?_)
-  change ((t : ℂ) ^ (k + n)) • (p k (fun _ ↦ x)).curryLeft x =
-    ((t : ℂ) ^ n) • (p k (fun _ ↦ (t : ℂ) • x)).curryLeft x
   rw [ContinuousMultilinearMap.map_smul_univ, Finset.prod_const, Finset.card_univ,
     Fintype.card_fin]
   refine ContinuousAlternatingMap.ext fun v ↦ ?_
@@ -220,8 +214,6 @@ lemma hasSum_intervalIntegral_radialTerms_of_hasFPowerSeriesOnBall (n : ℕ)
     HasSum (fun k : ℕ ↦ ∫ t : ℝ in 0..1,
         ((t : ℂ) ^ (k + n)) • (p k (fun _ ↦ x)).curryLeft x)
       (radialHomotopy n η x) := by
-  let F : ℕ → ℝ → (E [⋀^Fin n]→L[ℂ] ℂ) := fun k t ↦
-    ((t : ℂ) ^ (k + n)) • (p k (fun _ ↦ x)).curryLeft x
   let bound : ℕ → ℝ → ℝ := fun k _ ↦ ‖p k (fun _ ↦ x)‖ * ‖x‖
   refine intervalIntegral.hasSum_integral_of_dominated_convergence bound (fun k ↦ ?_)
     (fun k ↦ ?_) ?_ ?_ ?_
@@ -359,8 +351,7 @@ lemma extDeriv_translateForm {p : ℕ} (c : E)
 
 omit [NormedSpace ℂ E] in
 lemma add_mem_ball_iff (c x : E) (r : ℝ) :
-    c + x ∈ Metric.ball c r ↔ x ∈ Metric.ball 0 r := by
-  simp [Metric.mem_ball, dist_eq_norm]
+    c + x ∈ Metric.ball c r ↔ x ∈ Metric.ball 0 r := by simp
 
 lemma analyticOnNhd_translateForm {p : ℕ} (c : E) (r : ℝ)
     (A : E → E [⋀^Fin p]→L[ℂ] ℂ)
@@ -427,7 +418,6 @@ theorem exists_analyticOnNhd_primitive_on_smaller_centered_ball
   rw [extDeriv_untranslateForm c θ₀ y ((hθ₀ (y - c) hy₀).differentiableAt),
     hprim hy₀]
   change η (c + (y - c)) = η y
-  congr 1
   abel
 
 /-- A closed analytic zero-form is constant on a ball with arbitrary center. -/

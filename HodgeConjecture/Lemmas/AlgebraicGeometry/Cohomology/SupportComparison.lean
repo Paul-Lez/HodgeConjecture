@@ -41,7 +41,6 @@ private lemma sheafPullback_preservesMonomorphisms :
     Functor.PreservesMonomorphisms (hf.sheafPullback AddCommGrpCat.{0}) := by
   constructor
   intro F G g hg
-  letI : Mono g := hg
   let : Mono g.hom := Functor.map_mono (TopCat.Sheaf.forget AddCommGrpCat.{0} Y) g
   let : Mono (Functor.whiskerLeft hf.functor.op g.hom) := by
     rw [NatTrans.mono_iff_mono_app]
@@ -115,8 +114,6 @@ variable (X : Over (Spec ↧ℂ))
 lemma analyticComplementInclusion_isOpenEmbedding
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     Topology.IsOpenEmbedding (analyticComplementInclusion X Z) := by
-  change Topology.IsOpenEmbedding
-    (Subtype.val : (Zᶜ : Set (ComplexPoint X)) → ComplexPoint X)
   exact hZ.isOpen_compl.isOpenEmbedding_subtypeVal
 
 /-- Every term of the chosen derived-pushforward model from an open complement is injective. -/

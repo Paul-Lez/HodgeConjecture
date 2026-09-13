@@ -118,7 +118,6 @@ variable (A : AddCommGrpCat.{u}) (g : ∀ x : X, A ⟶ F.presheaf.stalk x)
 @[reassoc]
 theorem globalMapOfLocallyRepresentable_germ (x : X) :
     globalMapOfLocallyRepresentable F A g hlocal ≫ F.presheaf.Γgerm x = g x := by
-  apply AddCommGrpCat.hom_ext
   ext a
   exact sectionOfLocallyRepresentable_germ F (fun x ↦ g x a) (hlocal a) x
 
@@ -143,7 +142,6 @@ theorem constantSheafMapOfLocallyRepresentable_stalk (x : X) :
         (constantSheafMapOfLocallyRepresentable F A g hlocal).hom = g x := by
   simp only [constantSheafStalkIso, Iso.trans_hom, asIso_hom, Category.assoc]
   rw [← Functor.map_comp, constantSheafMapOfLocallyRepresentable_unit]
-  dsimp only [TopCat.Presheaf.Γgerm]
   erw [TopCat.Presheaf.stalkFunctor_map_germ]
   change globalMapOfLocallyRepresentable F A g hlocal ≫ F.presheaf.map (𝟙 _) ≫
     F.presheaf.Γgerm x = g x

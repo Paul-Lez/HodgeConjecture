@@ -57,9 +57,6 @@ lemma homComplexSingleIntegerGlobalSections_rightUnshift_middle :
         (homComplexSingleIntegerIsoGlobalSections Y K).hom).τ₂ := by
   subst n'
   ext z
-  change (homComplexSingleIntegerIsoGlobalSections Y (K⟦s⟧)).hom.f n z =
-    (homComplexSingleIntegerIsoGlobalSections Y K).hom.f (n + s)
-      (z.rightUnshift (n + s) rfl)
   exact congrArg
     (fun f : (integerConstantSingleComplex Y).X 0 ⟶ K.X (n + s) =>
       integerConstantHomAddEquivGlobalSections (K.X (n + s))
@@ -98,7 +95,6 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift
     CochainComplex.HomComplex.rightUnshiftClass A K s n n' h
       (kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n x) := by
   apply (kInjectiveDerivedHomAddEquivCohomologyClass A K n').symm.injective
-  rw [AddEquiv.symm_apply_apply]
   obtain ⟨x, rfl⟩ := (kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n).symm.surjective x
   obtain ⟨z, rfl⟩ := x.mk_surjective
   rw [AddEquiv.apply_symm_apply, CochainComplex.HomComplex.rightUnshiftClass_mk,
@@ -128,7 +124,6 @@ lemma hypercohomologyAddEquivDerived_rightUnshift
   change Localization.SmallShiftedHom.equiv _ DerivedCategory.Q _ =
     ShiftedHom.comp (Localization.SmallShiftedHom.equiv _ DerivedCategory.Q x) _ _
   rw [Localization.SmallShiftedHom.equiv_comp, Localization.SmallShiftedHom.equiv_mk]
-  congr 1
   simp [ShiftedHom.map]
 
 set_option backward.defeqAttrib.useBackward true in

@@ -160,9 +160,7 @@ lemma linearEquivOfNormalizedGenerators_apply_generator
     {N : Type*} [AddCommGroup N] [Module R N]
     (x : M) (hx : x ≠ 0) (hxspan : Submodule.span R {x} = ⊤)
     (y : N) (hy : y ≠ 0) (hyspan : Submodule.span R {y} = ⊤) :
-    linearEquivOfNormalizedGenerators x hx hxspan y hy hyspan x = y := by
-  change (normalizedDual (R := R) x hx x : R) • y = y
-  rw [normalizedDual_apply_self, one_smul]
+    linearEquivOfNormalizedGenerators x hx hxspan y hy hyspan x = y := by simp
 
 /-- Sending the distinguished generator to the distinguished generator uniquely characterizes
 the normalized equivalence. -/

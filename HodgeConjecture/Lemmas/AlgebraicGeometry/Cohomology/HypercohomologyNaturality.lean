@@ -87,8 +87,6 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk
   rw [CochainComplex.HomComplex.CohomologyClass.toHom_mk]
   have h := (DerivedCategory.quotientCompQhIso C).hom.naturality
     (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
-  dsimp only [Functor.comp_map] at h
-  rw [reassoc_of% h]
   simp
 
 set_option backward.defeqAttrib.useBackward true in

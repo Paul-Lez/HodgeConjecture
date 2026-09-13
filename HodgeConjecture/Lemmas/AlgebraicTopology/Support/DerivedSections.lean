@@ -76,7 +76,6 @@ lemma sheafSectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op V))
   change (PreservesKernel.iso ev ((toOpenRestrictionPushforward X U).app F)).hom ≫
     _ = _
-  rw [PreservesKernel.iso_hom]
   exact kernelComparison_comp_ι ((toOpenRestrictionPushforward X U).app F) ev
 
 /-- With no restriction imposed, the support-sheaf inclusion is canonically an

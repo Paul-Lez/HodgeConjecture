@@ -74,8 +74,6 @@ lemma dense_cycleComponent_smooth_closedPoints
   let f := cycleComponentι X.left x ≫ X.hom
   let : JacobsonSpace (cycleComponent X.left x) :=
     LocallyOfFiniteType.jacobsonSpace f
-  change Dense ((f.smoothLocus : Set (cycleComponent X.left x)) ∩
-    closedPoints (cycleComponent X.left x))
   exact dense_iff_closure_eq.mpr ((JacobsonSpace.closure_inter_closedPoints_eq_closure
     f.smoothLocus.2.isLocallyClosed).trans
       (dense_iff_closure_eq.mp (dense_cycleComponent_smoothLocus X x)))
@@ -86,7 +84,6 @@ lemma cycleComponent_complexPoint_underlying_isClosed
     (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
     IsClosed {z.underlying} := by
   let φ : Spec ↧ℂ ⟶ cycleComponent X.left x := z.left
-  change IsClosed {φ (IsLocalRing.closedPoint ℂ)}
   exact ((pointEquivClosedPoint
     (cycleComponentι X.left x ≫ X.hom)) ⟨φ, Over.w z⟩).2
 

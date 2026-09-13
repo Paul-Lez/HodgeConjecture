@@ -208,14 +208,12 @@ lemma standardEtalePointToAlgHom_mk (z : standardEtalePointSpace P)
   let : Algebra (complexPolynomialRing n) ℂ := z.1.1.toRingHom.toAlgebra
   let hscalar : IsScalarTower ℂ (complexPolynomialRing n) ℂ :=
     IsScalarTower.of_algebraMap_eq fun c ↦ (z.1.1.commutes c).symm
-  let := hscalar
   have hz : P.HasMap z.1.2 := by
     rw [StandardEtalePair.HasMap]
     constructor
     · simpa [Polynomial.aeval_def, RingHom.algebraMap_toAlgebra] using z.2.1
     · simpa [Polynomial.aeval_def, RingHom.algebraMap_toAlgebra, isUnit_iff_ne_zero] using z.2.2
   change P.lift z.1.2 hz (Ideal.Quotient.mk _ q) = _
-  unfold StandardEtalePair.lift
   change Polynomial.aevalAeval z.1.2 (↑hz.2.unit⁻¹ : ℂ) q = _
   have hinv : (↑hz.2.unit⁻¹ : ℂ) =
       (Polynomial.eval₂ z.1.1 z.1.2 P.g)⁻¹ := by

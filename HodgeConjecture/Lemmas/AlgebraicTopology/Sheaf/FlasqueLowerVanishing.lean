@@ -117,9 +117,6 @@ lemma globalSectionsComplex_exactAt_of_cycles_isFlasque (i : ℤ)
         dsimp [T, B]
         rw [Category.comp_id, ← F.map_comp, K.toCycles_i]
       comm₂₃ := by dsimp [T, B]; simp }
-  let : Epi φ.τ₁ := hepi
-  let : IsIso φ.τ₂ := inferInstanceAs (IsIso (𝟙 (F.obj (K.X i))))
-  let : Mono φ.τ₃ := inferInstanceAs (Mono (𝟙 (F.obj (K.X (i + 1)))))
   have hT : T.Exact := (ShortComplex.exact_iff_of_epi_of_isIso_of_mono φ).mpr hB
   exact (L.exactAt_iff' (i := i - 1) (j := i) (k := i + 1) hprev hnext).mpr hT
 

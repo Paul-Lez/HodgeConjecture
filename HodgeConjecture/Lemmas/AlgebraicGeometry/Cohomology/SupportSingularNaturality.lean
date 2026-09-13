@@ -70,7 +70,6 @@ lemma locallyPathConnectedSpace_of_contractibleOpenBasis
   obtain ⟨V, hVS, hVopen, hxV⟩ := mem_nhds_iff.mp hS
   let Vo : Opens X := ⟨V, hVopen⟩
   obtain ⟨W, hxW, hWcontractible, hWVo⟩ := hX x Vo hxV
-  let : ContractibleSpace W := hWcontractible
   refine ⟨(W : Set X), W.2.mem_nhds hxW, ?_, ?_⟩
   · rw [isPathConnected_iff_pathConnectedSpace]
     infer_instance
@@ -175,13 +174,6 @@ lemma singularRestrictionToRawPushforward_coboundary (n : ℕ) :
   change OpenCochains R X V n at φ
   apply LinearMap.ext
   intro c
-  change φ
-      (((((openSingularChainComplexFunctor R X).obj V.unop).d (n + 1) n).hom)
-        (((preimageOpenChainMap R j V.unop).f (n + 1)).hom c)) =
-    φ
-      ((((preimageOpenChainMap R j V.unop).f n).hom)
-        ((((openSingularChainComplexFunctor R U).obj
-          ((Opens.map j).obj V.unop)).d (n + 1) n).hom c))
   exact congrArg φ (ConcreteCategory.congr_hom
     ((preimageOpenChainMap R j V.unop).comm (n + 1) n) c)
 
@@ -191,7 +183,6 @@ lemma singularRestrictionPresheaf_coboundary (n : ℕ) :
       singularRestrictionPresheaf R j n ≫
         ((TopCat.Sheaf.pushforward AddCommGrpCat j).map
           (singularCochainSheafCoboundary R U n)).hom := by
-  unfold singularRestrictionPresheaf
   change singularCochainCoboundary R X n ≫
         singularRestrictionToRawPushforward R j (n + 1) ≫
           Functor.whiskerLeft (Opens.map j).op

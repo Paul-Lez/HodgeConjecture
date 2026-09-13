@@ -87,7 +87,6 @@ theorem standardLocalHomology_isZero_of_dimension_lt (d k : ℕ) (hk : d < k) :
 theorem standardPuncturedPair_nonempty (d : ℕ) (hd : 0 < d) :
     Nonempty (standardPuncturedPair d).snd := by
   refine ⟨⟨fun _ ↦ 1, ?_⟩⟩
-  change (fun _ : Fin d ↦ (1 : ℝ)) ≠ 0
   intro h
   have := congrFun h ⟨0, hd⟩
   norm_num at this

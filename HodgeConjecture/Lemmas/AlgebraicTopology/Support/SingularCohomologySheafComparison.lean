@@ -84,7 +84,6 @@ lemma supportedSingularCohomologySheafIsoRelative_inv_section (V : Opens X)
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩) (n : ℤ) V z := by
   have h := ConcreteCategory.congr_hom
     (supportedSingularCohomologySheafIsoRelative_section X S hS n V) z
-  simp only [ConcreteCategory.comp_apply] at h
   exact (congrArg ((supportedSingularCohomologySheafIsoRelative X S hS n).inv.hom.app (op V))
     h.symm).trans (ConcreteCategory.congr_hom
       (congrArg (fun f => f.hom.app (op V))

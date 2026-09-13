@@ -80,7 +80,6 @@ lemma affineSpecEquiv_apply
   change (Spec.preimage z.left).hom r =
     (Scheme.ΓSpecIso ↧ℂ).hom (z.left.appTop ((Scheme.ΓSpecIso ↧R).inv r))
   have h := Scheme.ΓSpecIso_naturality (Spec.preimage z.left)
-  rw [Spec.map_preimage] at h
   have h' := DFunLike.congr_fun (congrArg CommRingCat.Hom.hom h)
     ((Scheme.ΓSpecIso ↧R).inv r)
   simpa using h'.symm
@@ -182,7 +181,6 @@ lemma continuous_affineSpecEquiv_symm :
       (affineAlgebraHomTopology R) analyticTopology (affineSpecEquiv R).symm := by
   rw [continuous_iff_analyticSubbasis]
   rintro W ⟨U, s, V, hV, rfl⟩
-  rw [Set.preimage_inter, Set.preimage_preimage]
   apply isOpen_iff_forall_mem_open.mpr
   rintro φ ⟨hφU, hφV⟩
   obtain ⟨f, hfU, hφf⟩ :=

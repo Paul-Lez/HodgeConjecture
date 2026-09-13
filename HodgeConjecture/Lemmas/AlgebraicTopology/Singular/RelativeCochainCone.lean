@@ -220,7 +220,6 @@ lemma relativeDualShiftIsoCochainCone_hom_comp_mor₃ (X : TopPair.{u}) :
         (relativeCochainRestrictionInt R X)).mor₃ = _
   rw [← (relativeCochainConeTriangleIso R X).hom.comm₃]
   unfold relativeCochainConeTriangleIso
-  rw [Pretriangulated.isoTriangleOfIso₁₂_hom_hom₁]
   simp
 
 end AlgebraicTopology.Singular

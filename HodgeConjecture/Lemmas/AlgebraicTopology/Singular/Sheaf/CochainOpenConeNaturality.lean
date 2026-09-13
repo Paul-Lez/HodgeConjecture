@@ -153,7 +153,6 @@ lemma openRawSingularRestrictionConeIsoForgottenRelative_naturality :
   dsimp only [openRawSingularRestrictionConeIsoForgottenRelative, Iso.trans_hom, Iso.symm_hom]
   rw [← Category.assoc, openRawSingularRestrictionConeIsoRelative_naturality, Category.assoc,
     Category.assoc]
-  apply congrArg (fun f => (openRawSingularRestrictionConeIsoRelative R X i).hom ≫ f)
   apply (cancel_mono (CochainComplex.mappingCone.mapHomologicalComplexIso
     (relativeCochainRestrictionInt R (openInclusionPair X i'))
     (forget₂ (ModuleCat R) AddCommGrpCat)).hom).1

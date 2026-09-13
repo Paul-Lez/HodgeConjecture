@@ -111,11 +111,7 @@ lemma nestedSupportRestrictionShortComplex_eq (F : Sheaf AddCommGrpCat.{u} X) :
         ((toOpenRestrictionPushforward X U).app F)
         ((openRestrictionPushforwardMap X h).app F)
         ((toOpenRestrictionPushforward X V).app F)
-        (NatTrans.congr_app (toOpenRestrictionPushforward_comp X h) F) := by
-  simp [nestedSupportRestrictionShortComplex, kernelFactorizationShortComplex,
-    sheafSectionsSupportedOutsideMap, liftSheafSectionsSupportedOutside,
-    toSheafSectionsBetweenOpens, kernel.map, sheafSectionsSupportedOutside,
-    sheafSectionsBetweenOpens, sheafSectionsSupportedOutsideInclusion]
+        (NatTrans.congr_app (toOpenRestrictionPushforward_comp X h) F) := rfl
 
 /-- Injective coefficients give the actual short exact nested-support sequence. -/
 lemma nestedSupportRestrictionShortComplex_shortExact

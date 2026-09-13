@@ -47,7 +47,6 @@ private lemma complexPoint_ker_eq_vanishingIdeal_closure
     z.left.ker = Scheme.IdealSheafData.vanishingIdeal
       ⟨closure {z.underlying}, isClosed_closure⟩ := by
   let f : Spec ↧ℂ ⟶ X.left := z.left
-  change f.ker = _
   have hrange : Set.range f = {z.underlying} := by
     ext y
     constructor
@@ -78,8 +77,6 @@ lemma cycleComponent_vanishingIdeal_le_complexPoint_ker
     (cycleComponentι X.left x).ker ≤ z.left.ker := by
   unfold cycleComponentι
   rw [Scheme.IdealSheafData.ker_subschemeι]
-  change Scheme.IdealSheafData.vanishingIdeal
-      ⟨closure {x}, isClosed_closure⟩ ≤ z.left.ker
   rw [complexPoint_ker_eq_vanishingIdeal_closure z]
   apply Scheme.IdealSheafData.vanishingIdeal_antimono
   exact closure_minimal (Set.singleton_subset_iff.mpr hz) isClosed_closure
@@ -226,15 +223,6 @@ lemma isClosed_complexPoint_underlying_preimage
   rw [← isOpen_compl_iff]
   let U : X.left.Opens := ⟨(Z : Set X.left)ᶜ,
     isOpen_compl_iff.mpr Z.2⟩
-  change @IsOpen (ComplexPoint X) Point.analyticTopology
-    ((@Point.underlying ℂ _ _ X) ⁻¹' (Z : Set X.left))ᶜ
-  rw [show ((@Point.underlying ℂ _ _ X) ⁻¹'
-      (Z : Set X.left))ᶜ = Point.overOpen U by
-    apply Set.ext
-    intro z
-    change (¬Point.underlying z ∈ Z) ↔
-      Point.underlying z ∈ (Z : Set X.left)ᶜ
-    rfl]
   exact Point.isOpen_overOpen (X := X) U
 
 lemma isClosed_cycleComponentSupport

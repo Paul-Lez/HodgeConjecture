@@ -63,17 +63,12 @@ lemma imageSupportPairMap_restrict {X Y : TopCat} (f : X ⟶ Y)
     imageSupportPairMap f hf U ≫
       supportInclusionPairMap Y (Set.singleton_subset_iff.mpr (Set.mem_image_of_mem f hx)) =
       supportInclusionPairMap X (Set.singleton_subset_iff.mpr hx) ≫
-        imagePointPairMap f hf x := by
-  apply MorphismProperty.Arrow.Hom.ext
-  · ext v; rfl
-  · rfl
+        imagePointPairMap f hf x := rfl
 
 /-- Degree transport commutes with the actual map on relative singular homology. -/
 lemma relativeHomologyMap_cast {P Q : TopPair} {m n : ℕ} (h : m = n)
     (f : P ⟶ Q) (c : RelativeHomology ℚ P m) :
-    relativeHomologyMap ℚ n f (h ▸ c) = h ▸ relativeHomologyMap ℚ m f c := by
-  subst n
-  rfl
+    relativeHomologyMap ℚ n f (h ▸ c) = h ▸ relativeHomologyMap ℚ m f c := by aesop
 
 /-- The fixed inverse real/imaginary coordinate map as a continuous map. -/
 def standardRealToComplexMap (d : ℕ) :
@@ -141,8 +136,6 @@ theorem standardComplexOrientationNeighborhoodClass_restrict (d : ℕ) (y : Fin 
     standardOrientationBallClass_restrict, ← LinearMap.comp_apply,
     ← relativeHomologyMap_comp, standardRealToComplexPair_translation,
     relativeHomologyMap_comp, LinearMap.comp_apply]
-  change (Nat.mul_comm d 2) ▸ relativeHomologyMap ℚ (d * 2) _
-      ((standardComplexRealRelativeHomologyIso d).inv.hom (standardLocalClass (d * 2))) = _
   exact (relativeHomologyMap_cast (Nat.mul_comm d 2) _ _).symm
 
 end AlgebraicTopology.Singular
