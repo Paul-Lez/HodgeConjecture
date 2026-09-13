@@ -18,10 +18,8 @@ open Point
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- The rational span of the codimension-`p` component classes.
-
-The relative dimension is the canonical `dim X`, whose certificate is proved from smoothness and
-integrality. This definition spans explicit normalized component classes. -/
+/-- The rational span of the normalized classes of the integral components of codimension `p`,
+inside `H^(2p)(X; ℚ)`. -/
 def algebraicCycleClassSpan
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) :
     Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=

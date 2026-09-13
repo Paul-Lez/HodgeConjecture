@@ -660,8 +660,7 @@ public theorem canonicalAffineSubdivisionPrism_zero :
     canonicalAffineSubdivisionPrism 0 = 0 := by
   simp [canonicalAffineSubdivisionPrism]
 
-/-- The successor prism is the chosen filler of discrepancy minus the already constructed
-face-prism sum. -/
+/-- The successor prism is the chosen filler of discrepancy minus the face-prism sum. -/
 public theorem canonicalAffineSubdivisionPrism_succ (n : ℕ) :
     canonicalAffineSubdivisionPrism (n + 1) =
       standardTopologicalSimplexTotalCycleFiller (n + 1) n

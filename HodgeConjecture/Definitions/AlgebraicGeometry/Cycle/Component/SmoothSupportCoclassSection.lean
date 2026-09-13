@@ -49,7 +49,7 @@ theorem cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension :
 
 include X hx in
 omit [IsProjective X.hom] in
-/-- The codimension arithmetic is proved from the coheight bound. -/
+/-- The codimension arithmetic, from the coheight bound. -/
 theorem cycleComponentSmoothClosedLift_codimension :
     dim X.left - (dim X.left - p) = p := by
   have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := dim X.left) x
@@ -99,8 +99,8 @@ theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
   rw [Set.image_univ]
   exact cycleComponentSmoothLocusAmbientOpen_analytic_image X x
 
-/-- The normalized component coclass section, living on the singular-boundary
-complement in the ORIGINAL ambient relative-cohomology sheaf. -/
+/-- The normalized component coclass section on the singular-boundary complement, as a section
+of the original ambient relative-cohomology sheaf. -/
 def cycleComponentSmoothSupportCoclassSection :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * p)).obj.obj

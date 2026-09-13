@@ -40,8 +40,8 @@ theorem closedImmersionDerivativeProjection_leftInverse :
   (exists_leftInverse_fderiv_inclusionInComplexCharts
     X Y i m d z).choose_spec
 
-/-- Normal-coordinate parametrization, with the kernel of the constructed
-derivative projection as its complex normal space. -/
+/-- Normal-coordinate parametrization, with the kernel of the derivative projection as its
+complex normal space. -/
 def closedImmersionNormalChart :
     OpenPartialHomeomorph
       ((Fin m → ℂ) ×

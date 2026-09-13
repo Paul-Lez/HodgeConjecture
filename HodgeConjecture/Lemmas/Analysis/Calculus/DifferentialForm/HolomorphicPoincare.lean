@@ -112,7 +112,8 @@ lemma radius_le_radius_radialPrimitiveSeries (n : ℕ)
               exact norm_radialPrimitiveSeries_succ_le n p k
         _ = (r : ℝ) * (‖p k‖ * (r : ℝ) ^ k) := by ring)
 
-/-- The formal radial primitive has positive convergence radius whenever the original series does. -/
+/-- The formal radial primitive has positive convergence radius whenever the original series
+does. -/
 lemma radialPrimitiveSeries_radius_pos (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ))
     (hp : 0 < p.radius) : 0 < (radialPrimitiveSeries n p).radius :=
@@ -249,7 +250,8 @@ lemma hasSum_intervalIntegral_radialTerms_of_hasFPowerSeriesOnBall (n : ℕ)
     rw [Set.uIoc_of_le (by norm_num : (0 : ℝ) ≤ 1)] at ht
     exact hasSum_radialIntegrand_of_hasFPowerSeriesOnBall n p η hp hx ⟨ht.1.le, ht.2⟩
 
-/-- On a power-series ball, the radial homotopy is exactly the sum of the formal primitive series. -/
+/-- On a power-series ball, the radial homotopy is exactly the sum of the formal primitive
+series. -/
 theorem radialHomotopy_eq_radialPrimitiveSeries_sum (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ))
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) {R : ENNReal}

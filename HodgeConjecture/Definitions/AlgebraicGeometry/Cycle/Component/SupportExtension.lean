@@ -54,8 +54,7 @@ private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
       X x hx j n hn) k hk
 
 include hx in
-/-- The singular boundary has the required lower supported
-cohomological bound. All geometric and finite-filtration inputs are proved. -/
+/-- The singular boundary satisfies the required lower supported cohomological bound. -/
 private theorem cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
@@ -128,8 +127,7 @@ theorem cycleComponentSupportSectionRestriction_homology_isIso :
   rw [← he]
   infer_instance
 
-/-- The extension equivalence is the restriction map with its proved
-inverse. It has no boundary-vanishing or fundamental-class input. -/
+/-- The extension equivalence: the restriction map together with its inverse. -/
 def cycleComponentSupportExtensionIso :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X

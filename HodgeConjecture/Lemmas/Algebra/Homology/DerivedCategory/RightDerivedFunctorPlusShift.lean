@@ -143,8 +143,8 @@ instance rightDerivedFunctorPlusCommShift : F.rightDerivedFunctorPlus.CommShift 
     (MorphismProperty.isomorphisms (HomotopyCategory.Plus (InjectiveObject C))) ℤ
     F.rightDerivedFunctorPlusOnInjectives F.rightDerivedFunctorPlus
 
-/-- The injective-resolution comparison is compatible with the constructed
-coherent shifts. This pins the comparison to the derived unit. -/
+/-- The injective-resolution comparison is compatible with the coherent shifts, which pins it to
+the derived unit. -/
 instance rightDerivedFunctorPlusOnInjectivesIso_commShift :
     NatTrans.CommShift F.rightDerivedFunctorPlusOnInjectivesIso.hom ℤ :=
   NatTrans.commShift_iso_hom_of_localization

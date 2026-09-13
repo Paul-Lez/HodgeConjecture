@@ -19,9 +19,9 @@ normalized by its projection to the coefficient complex, and the resulting isomo
 built from the `D⁺` right-derived functors and their canonical units on bounded-below
 injective models, then displayed in `D` along the full inclusion `D⁺ → D`.
 
-Identifying these fibers with the repository's constant-rational restriction-cone model
-requires a normalized comparison between restriction of the ambient injective model and an
-independently chosen injective resolution on the complement, which is still to be supplied.
+Identifying these fibers with the constant-rational restriction-cone model requires a normalized
+comparison between restriction of the ambient injective model and an independently chosen
+injective resolution on the complement. That comparison is a separate statement.
 -/
 
 @[expose] public noncomputable section

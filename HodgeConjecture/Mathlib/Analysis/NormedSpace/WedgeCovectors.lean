@@ -25,10 +25,10 @@ import Mathlib.Analysis.Calculus.FDeriv.Pi
 /-!
 # Wedge products of continuous covectors
 
-The wedge of continuous linear functionals on a normed space is the alternating
-form whose value on a family of vectors is the determinant of the matrix of pairings. This
-file builds it by alternatizing the covector product, proves the determinant formula, and derives the
-multilinearity and alternation properties in each covector slot.
+The wedge of continuous linear functionals on a normed space is the alternating form whose value
+on a family of vectors is the determinant of the matrix of pairings. This file builds it by
+alternatizing the covector product, proves the determinant formula, and derives the multilinearity
+and alternation properties in each covector slot.
 
 On `ι' → 𝕜` the coordinate projections wedge to the standard volume form, and every continuous
 alternating form is a finite combination of wedges of coordinate projections. The coefficients

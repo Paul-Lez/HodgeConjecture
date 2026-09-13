@@ -677,8 +677,8 @@ def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
 
 /-- `Hdg^p(K; f)` is the space of Hodge classes of codimension `p` with coefficients in `K`.
 
-The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the variety is presented by its
-structure morphism `f`, and the coefficient field is named. -/
+The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the variety is
+presented by its structure morphism `f`, and the coefficient field is named. -/
 scoped notation:max "Hdg^" p:max "(" K "; " f ")" => hodgeClasses K f p
 
 end AlgebraicGeometry.ComplexPoint

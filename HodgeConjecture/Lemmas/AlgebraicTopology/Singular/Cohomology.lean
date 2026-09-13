@@ -25,10 +25,9 @@ import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Singular.Cohomology`.
 
-Because cohomology is the homology of the dual cochain complex rather than the dual of homology,
-the pairing of a cohomology class against a homology class is not definitional: it is mediated by
-the universal-coefficient equivalence `cohomologyEquivDualHomology`. The `_apply` lemmas below
-record that this pairing is natural, which is what the old definitional `rfl` lemmas expressed.
+Cohomology is the homology of the dual cochain complex, so the pairing of a cohomology class
+against a homology class is mediated by the universal-coefficient equivalence
+`cohomologyEquivDualHomology`. The `_apply` lemmas below record that this pairing is natural.
 -/
 
 /-! ### Constructions used only in proofs -/

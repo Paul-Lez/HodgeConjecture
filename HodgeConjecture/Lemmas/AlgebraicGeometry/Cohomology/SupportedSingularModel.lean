@@ -25,8 +25,8 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom]
 
-/-- The singular-to-injective resolution map, using proved local
-contractibility of the analytic space. -/
+/-- The singular-to-injective resolution map, using local contractibility of the analytic
+space. -/
 def complexSingularToAmbientInjective :
     rationalSingularCochainComplex (TopCat.of (ComplexPoint X)) ⟶
       ambientRationalInjectiveComplex X :=

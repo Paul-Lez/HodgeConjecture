@@ -40,16 +40,14 @@ def relativeDualCochainHomologyIsoCone (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X)
     (relativeDualCochainShortComplexInt_shortExact R X) ((n : ℤ) - 1) n (by omega)
 
-/-- Integer dual-relative cohomology computes the repository's
-relative cohomology by the evaluation pairing. -/
+/-- Integer dual-relative cohomology computes `RelativeCohomology` by the evaluation pairing. -/
 def relativeDualCochainCohomologyEquiv (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X).X₁.homology (n : ℤ) ≃ₗ[R]
       RelativeCohomology R X n :=
   (((relativeChainFunctor R).obj X).linearDualCochainComplex.extendHomologyIso
     ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).toLinearEquiv
 
-/-- Relative cohomology computed from the explicit canonical cone lift.
-No arbitrary completion of a triangle map enters this equivalence. -/
+/-- Relative cohomology computed from the explicit canonical cone lift. -/
 def relativeCochainConeCohomologyEquivCanonical (X : TopPair.{u}) (n : ℕ) :
     (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)).homology
         ((n : ℤ) - 1) ≃ₗ[R] RelativeCohomology R X n :=

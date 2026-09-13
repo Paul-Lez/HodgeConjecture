@@ -121,8 +121,8 @@ instance rationalSingularCochainComplex_isFlasque (n : ℤ) :
   change (singularCochainSheaf ℚ X m).IsFlasque
   infer_instance
 
-/-- Supported singular cochains really compute the supported injective model,
-on the level of sheaf complexes. -/
+/-- Supported singular cochains compute the supported injective model, at the level of sheaf
+complexes. -/
 instance supportedSingularToInjectiveComplex_quasiIso (U : Opens X) :
     QuasiIso (supportedSingularToInjectiveComplex X hX U) :=
   TopCat.Sheaf.sheafSectionsSupportedOutside_map_quasiIso_of_flasque X U

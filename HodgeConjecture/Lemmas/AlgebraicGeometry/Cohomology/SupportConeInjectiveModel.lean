@@ -53,8 +53,8 @@ lemma ambientRationalAugmentation_comp_restriction
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
       (AddCommGrpCat.of ℚ))
 
-/-- The map from the old rational support cone to its ambient-injective
-source replacement. -/
+/-- The map from the original rational support cone to its ambient-injective source
+replacement. -/
 def rationalSupportConeToAmbientInjectiveCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     rationalCohomologyWithSupportComplex X Z ⟶
@@ -214,7 +214,7 @@ instance actualSupportConeToAmbientInjectiveGlobalCone_quasiIso
 
 /-- The rational support group is the homology of the
 kernel-defined supported sections of the ambient rational injective
-resolution. The shift `n - 1` in the old cone model is reconciled by the
+resolution. The shift `n - 1` in the original cone model is reconciled by the
 explicit homology/shift isomorphism. The final negation corrects the
 standard cone triangle's negative connecting projection, so that the
 comparison preserves the support-forgetting inclusion. -/

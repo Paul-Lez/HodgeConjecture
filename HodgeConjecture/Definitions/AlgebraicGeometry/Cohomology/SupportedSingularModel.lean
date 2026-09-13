@@ -12,10 +12,10 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectivePa
 /-!
 # Supported singular models on smooth projective complex varieties
 
-The generic supported singular/injective comparison is specialized using the
-constructed analytic contractible neighborhoods and hereditary paracompactness
-of smooth projective analytifications. Only the geometric scheme hypotheses remain. The target
-is the ambient injective complex used by the derived rational support comparison.
+The generic supported singular/injective comparison is specialized using the analytic
+contractible neighborhoods and hereditary paracompactness of smooth projective analytifications.
+Only the geometric scheme hypotheses remain. The target is the ambient injective complex used by
+the derived rational support comparison.
 -/
 
 @[expose] public noncomputable section

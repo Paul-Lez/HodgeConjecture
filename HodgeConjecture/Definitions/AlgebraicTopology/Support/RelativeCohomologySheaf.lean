@@ -35,8 +35,8 @@ variable {M : Type} [TopologicalSpace M]
 
 variable (X : TopCat.{0}) (S : Set X) (n : ℕ)
 
-/-- The presheaf of rational relative cohomology of neighborhood/support pairs.
-We retain the rational group but forget its scalar structure for the additive sheaf API. -/
+/-- The presheaf of rational relative cohomology of neighborhood/support pairs, with its scalar
+structure forgotten for the additive sheaf API. -/
 def supportRelativeCohomologyPresheaf : TopCat.Presheaf AddCommGrpCat X where
   obj V := AddCommGrpCat.of (RelativeCohomology ℚ
     (neighborhoodSupportComplementPair (V.unop : Set X) S) n)

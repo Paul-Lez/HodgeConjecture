@@ -92,8 +92,8 @@ def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X 
   cycleComponentExtendSmoothCoclass X x hx
     (cycleComponentSmoothSupportCoclassSection X x hx)
 
-/-- The class in the support-cone presentation. Its
-comparison includes the cone sign required by support forgetting. -/
+/-- The component class in the support-cone presentation. The comparison carries the cone sign
+required by support forgetting. -/
 def cycleComponentSheafSupportedClass :
     RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)

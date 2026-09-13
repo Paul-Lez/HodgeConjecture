@@ -36,8 +36,8 @@ Everything that speaks of *the* point underlying an `R`-point needs `Spec R` to 
 closed point, so from `stalkData` onwards `R` is local. An `R`-point then determines a scheme point
 together with a local homomorphism out of the stalk there, and evaluating the sections on an open
 `U` containing it gives a ring homomorphism `Γ(X.left, U) ⟶ ↧R`. Over an affine open this
-identifies the `R`-points with a subspace of that hom set, which carries Mathlib's topology of pointwise
-convergence; the analytic topology is the topology glued from these affine charts. It exists as
+identifies the `R`-points with a subspace of that hom set, which carries Mathlib's topology of
+pointwise convergence; the analytic topology is the topology glued from these affine charts. It exists as
 soon as multiplication on `R` is continuous and the units of `R` are open, so it applies to `ℝ`,
 to a `p`-adic field, and to `ℤ_p` alike.
 
