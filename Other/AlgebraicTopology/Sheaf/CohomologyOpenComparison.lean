@@ -127,10 +127,10 @@ variable (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 def openRestrictionSectionCohomologyPresheafIso (n : ℤ) :
     sectionCohomologyPresheaf (TopCat.of U)
       (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex (.up ℤ)).obj K) n ≅
-    (cohomologyOpenPresheafRestriction X U).obj (sectionCohomologyPresheaf X K n) := by
+    (cohomologyOpenPresheafRestriction X U).obj (sectionCohomologyPresheaf X K n) :=
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
     (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).sc n
-  exact S.mapHomologyIso (cohomologyOpenPresheafRestriction X U)
+  S.mapHomologyIso (cohomologyOpenPresheafRestriction X U)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

@@ -141,10 +141,10 @@ def standardRelativeHomologyProjectionZeroIso :
 
 /-- The zero-dimensional standard relative local homology group is canonically one-dimensional. -/
 def standardLocalRelativeHomologyZeroIso :
-    RelativeHomology ℚ (standardPuncturedPair 0) 0 ≅ ModuleCat.of ℚ ℚ := by
+    RelativeHomology ℚ (standardPuncturedPair 0) 0 ≅ ModuleCat.of ℚ ℚ :=
   letI (j : Fin 0) : TotallyDisconnectedSpace ℝ := Fin.elim0 j
   letI : TotallyDisconnectedSpace (StandardRealModel 0) := inferInstance
-  exact standardRelativeHomologyProjectionZeroIso.symm ≪≫
+  standardRelativeHomologyProjectionZeroIso.symm ≪≫
       singularHomologyFunctorZeroOfTotallyDisconnectedSpace
         (ModuleCat (R := ℚ)) (ModuleCat.of ℚ ℚ)
           (TopCat.of (StandardRealModel 0)) ≪≫

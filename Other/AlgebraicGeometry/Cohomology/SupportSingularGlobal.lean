@@ -232,7 +232,7 @@ def globalRawSingularRestrictionConeIsoRelative (A : Set X) :
       CochainComplex.mappingCone
         (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex
           (ComplexShape.up ℤ)).map
-            (relativeCochainRestrictionInt R (TopPair.ofSubset A))) := by
+            (relativeCochainRestrictionInt R (TopPair.ofSubset A))) :=
   let eX := globalRawSingularCochainComplexIntIsoRelative R X
   let eA := globalRawPushforwardSingularCochainComplexIntIsoRelative R X A
   let f := globalRawSingularRestrictionInt R X A
@@ -241,7 +241,7 @@ def globalRawSingularRestrictionConeIsoRelative (A : Set X) :
       (relativeCochainRestrictionInt R (TopPair.ofSubset A))
   have h : f ≫ eA.hom = eX.hom ≫ g :=
     globalRawSingularRestrictionInt_transport_relative R X A
-  exact HomologicalComplex.homotopyCofiber.mapArrowIso f g
+  HomologicalComplex.homotopyCofiber.mapArrowIso f g
     (fun j ↦ ⟨j - 1, ComplexShape.up_mk _ _ (by lia)⟩)
     (Arrow.isoMk eX eA h.symm)
 

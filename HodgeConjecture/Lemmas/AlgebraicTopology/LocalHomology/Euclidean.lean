@@ -125,11 +125,11 @@ lemma relativeSingularBoundary_standardLocalClass (n : ℕ) :
 def rationalSingularHomologyIsoOfHomotopyEquiv
     {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y]
     (k : ℕ) (e : X ≃ₕ Y) :
-    Homology ℚ (TopCat.of X) k ≅ Homology ℚ (TopCat.of Y) k := by
+    Homology ℚ (TopCat.of X) k ≅ Homology ℚ (TopCat.of Y) k :=
   let F := (singularHomologyFunctor (ModuleCat ℚ) k).obj (ModuleCat.of ℚ ℚ)
   let f : TopCat.of X ⟶ TopCat.of Y := TopCat.ofHom e.toFun
   let g : TopCat.of Y ⟶ TopCat.of X := TopCat.ofHom e.invFun
-  exact CategoryTheory.Iso.mk (F.map f) (F.map g) (by
+  CategoryTheory.Iso.mk (F.map f) (F.map g) (by
     rw [← F.map_comp, ← F.map_id]
     exact TopCat.Homotopy.congr_homologyMap_singularChainComplexFunctor
       e.left_inv.some (ModuleCat.of ℚ ℚ) k) (by
@@ -314,12 +314,12 @@ lemma standardPuncturedBoundaryCycle_homology₀Iso :
   rw [standardPuncturedBoundaryCycle_zero_eq, Preadditive.sub_comp,
     standardPuncturedFaceCycle_homology₀Iso, standardPuncturedFaceCycle_homology₀Iso]
 
+open scoped Classical in
 /-- A linear functional detecting the negative component of the punctured line. -/
 def standardPuncturedBoundaryDetector :
     (∐ (fun (_ : (TopCat.toSSet.obj (standardPuncturedPair 1).snd).π₀) ↦
-      ModuleCat.of ℚ ℚ)) ⟶ ModuleCat.of ℚ ℚ := by
-  classical
-  exact Sigma.desc fun j ↦
+      ModuleCat.of ℚ ℚ)) ⟶ ModuleCat.of ℚ ℚ :=
+  Sigma.desc fun j ↦
     if j = SSet.π₀.mk (standardFaceSimplex 0 0) then 𝟙 _ else 0
 
 set_option backward.isDefEq.respectTransparency false in

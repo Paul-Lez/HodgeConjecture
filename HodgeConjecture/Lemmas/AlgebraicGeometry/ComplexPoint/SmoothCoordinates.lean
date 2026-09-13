@@ -241,15 +241,15 @@ def affineSpecPointHomeomorph :
     @Homeomorph
       (ComplexPoint (ComplexPoint.openScheme X D.neighborhood))
       (ComplexPoint (Over.mk (ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤))))
-      Point.analyticTopology Point.analyticTopology := by
-  let : IsAffine D.neighborhood.toScheme := D.isAffine
+      Point.analyticTopology Point.analyticTopology :=
+  letI : IsAffine D.neighborhood.toScheme := D.isAffine
   let e := asIso D.neighborhood.toScheme.toSpecΓ
   have he : e.hom ≫ ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤) =
       D.neighborhood.ι ≫ X.hom := by
     change D.neighborhood.toScheme.toSpecΓ ≫
       ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤) = _
     exact D.toSpecΓ_over
-  exact Point.isoMapHomeomorph (Over.isoMk e he)
+  Point.isoMapHomeomorph (Over.isoMk e he)
 
 lemma affineSpecPointHomeomorph_apply
     (z : ComplexPoint (ComplexPoint.openScheme X D.neighborhood)) :

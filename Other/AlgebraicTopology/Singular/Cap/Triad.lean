@@ -1119,9 +1119,9 @@ noncomputable def triadUnionExcisionHomologyEquiv
     (X : TopCat.{u}) (A B : Set X) (n : ℕ)
     (hExcision : QuasiIso (triadToUnionRelativeChainMap R X A B)) :
     TriadRelativeHomology R X A B n ≃ₗ[R]
-      RelativeHomology R (TopPair.ofSubset (A ∪ B)) n := by
+      RelativeHomology R (TopPair.ofSubset (A ∪ B)) n :=
   letI := hExcision
-  exact (isoOfQuasiIsoAt
+  (isoOfQuasiIsoAt
     (triadToUnionRelativeChainMap R X A B) n).toLinearEquiv
 
 @[simp]

@@ -388,10 +388,10 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The final endpoint homology comparison, constructed using the proved excision map. -/
 def relativeMayerVietorisRightHomologyIso (hU : IsOpen U) (hV : IsOpen V) (n : ℕ) :
     (relativeMayerVietorisSmallShortComplex X U V).X₃.homology n ≅
-      RelativeHomology ℚ (TopPair.ofSubset (U ∪ V)) n := by
-  let : QuasiIso (relativeMayerVietorisRightComparison X U V) :=
+      RelativeHomology ℚ (TopPair.ofSubset (U ∪ V)) n :=
+  letI : QuasiIso (relativeMayerVietorisRightComparison X U V) :=
     relativeMayerVietorisRightComparison_quasiIso X U V hU hV
-  exact asIso (HomologicalComplex.homologyMap (relativeMayerVietorisRightComparison X U V) n)
+  asIso (HomologicalComplex.homologyMap (relativeMayerVietorisRightComparison X U V) n)
 
 /-- The relative Mayer--Vietoris connecting map, constructed from the quotient exact sequence
 and the canonical excision comparison. -/

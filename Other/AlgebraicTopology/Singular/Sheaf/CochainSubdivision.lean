@@ -36,14 +36,14 @@ noncomputable def openSimplexLift {X : TopCat.{u}} {U V : Opens X} (n : ℕ)
     (s : OpenSimplex X (.op U) n)
     (h : ∀ z, (((TopCat.of U).toSSetObjEquiv
       (Opposite.op (SimplexCategory.mk n)) s z : U) : X) ∈ V) :
-    OpenSimplex X (.op V) n := by
+    OpenSimplex X (.op V) n :=
   let m := Opposite.op (SimplexCategory.mk n)
   let fs := (TopCat.of U).toSSetObjEquiv m s
   let f : C(stdSimplex ℝ (Fin (n + 1)), TopCat.of V) :=
     ⟨fun z ↦ ⟨((fs z : U) : X), h z⟩,
       Continuous.subtype_mk
         (continuous_subtype_val.comp fs.continuous) _⟩
-  exact (TopCat.of V).toSSetObjEquiv m |>.symm f
+  (TopCat.of V).toSSetObjEquiv m |>.symm f
 
 @[simp]
 lemma openSimplexMap_openSimplexLift {X : TopCat.{u}} {U V : Opens X} (i : V ⟶ U) (n : ℕ)
@@ -75,13 +75,12 @@ def topOpenRationalCochainHomotopyEquivCoverSmall
     HomotopyEquiv
       (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex
       (CoverSmallRationalSingularChainComplex Y U).linearDualCochainComplex :=
-  by
     let e₁ : HomotopyEquiv
         (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex
         ((TopCat.toSSet.obj Y).chainComplex
           (ModuleCat.of ℚ ℚ)).linearDualCochainComplex :=
       HomotopyEquiv.ofIso (singularCochainComplexIsoTopOpen ℚ Y).symm
-    exact e₁.trans
+    e₁.trans
       (rationalCochainHomotopyEquivCoverSmall Y U hUopen hUcover)
 
 lemma topOpenRationalCochainHomotopyEquivCoverSmall_hom

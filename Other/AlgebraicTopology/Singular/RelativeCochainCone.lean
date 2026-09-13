@@ -91,20 +91,19 @@ def relativeDualShiftIsoCochainCone (X : TopPair.{u}) :
 def relativeCochainConeHomologyIsoDualRelativeInt (X : TopPair.{u}) (n : ℕ) :
     (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)).homology
         ((n : ℤ) - 1) ≅
-      (relativeDualCochainShortComplexInt R X).X₁.homology (n : ℤ) := by
+      (relativeDualCochainShortComplexInt R X).X₁.homology (n : ℤ) :=
   let Q := HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)
   let H (z : ℤ) := HomotopyCategory.homologyFunctor
     (ModuleCat.{u} R) (ComplexShape.up ℤ) z
   let C := CochainComplex.mappingCone (relativeCochainRestrictionInt R X)
   let D := (relativeDualCochainShortComplexInt R X).X₁
   have hn : (1 : ℤ) + ((n : ℤ) - 1) = (n : ℤ) := by lia
-  exact
-    (HomotopyCategory.homologyFunctorFactors
-      (ModuleCat.{u} R) (ComplexShape.up ℤ) ((n : ℤ) - 1)).symm.app C ≪≫
-    (H ((n : ℤ) - 1)).mapIso (relativeDualShiftIsoCochainCone R X).symm ≪≫
-    (((H 0).shiftIso (1 : ℤ) ((n : ℤ) - 1) (n : ℤ) hn).app (Q.obj D)) ≪≫
-    (HomotopyCategory.homologyFunctorFactors
-      (ModuleCat.{u} R) (ComplexShape.up ℤ) (n : ℤ)).app D
+  (HomotopyCategory.homologyFunctorFactors
+    (ModuleCat.{u} R) (ComplexShape.up ℤ) ((n : ℤ) - 1)).symm.app C ≪≫
+  (H ((n : ℤ) - 1)).mapIso (relativeDualShiftIsoCochainCone R X).symm ≪≫
+  (((H 0).shiftIso (1 : ℤ) ((n : ℤ) - 1) (n : ℤ) hn).app (Q.obj D)) ≪≫
+  (HomotopyCategory.homologyFunctorFactors
+    (ModuleCat.{u} R) (ComplexShape.up ℤ) (n : ℤ)).app D
 
 /-- Relative singular cohomology is the degree-`n - 1` cohomology of the mapping cone of
 restriction from ambient singular cochains to subspace singular cochains. -/

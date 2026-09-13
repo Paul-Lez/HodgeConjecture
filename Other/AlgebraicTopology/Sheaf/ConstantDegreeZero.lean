@@ -200,7 +200,7 @@ lemma constantSheafGlobalSectionsAddEquiv_apply [ConnectedSpace X] (A : AddCommG
 /-- On a connected topological space, the constant-sheaf functor on additive commutative groups
 is fully faithful. -/
 def constantSheafFullyFaithfulOfConnected [ConnectedSpace X] :
-    (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).FullyFaithful := by
+    (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).FullyFaithful :=
   let adj := constantSheafAdj (Opens.grothendieckTopology X) AddCommGrpCat.{u}
     (Limits.isTerminalTop (α := Opens X))
   haveI (A : AddCommGrpCat.{u}) : IsIso (adj.unit.app A) := by
@@ -211,7 +211,7 @@ def constantSheafFullyFaithfulOfConnected [ConnectedSpace X] :
     exact ⟨constant_toSheafify_app_top_injective X A,
       constant_toSheafify_app_top_surjective X A⟩
   letI : IsIso adj.unit := NatIso.isIso_of_isIso_app _
-  exact adj.fullyFaithfulLOfIsIsoUnit
+  adj.fullyFaithfulLOfIsIsoUnit
 
 /-- On a nonempty topological space, the constant-sheaf functor on additive commutative groups is
 faithful. -/

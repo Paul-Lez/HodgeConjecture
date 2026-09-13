@@ -44,9 +44,9 @@ restriction-natural comparison. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
     (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
-      supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n := by
-  let : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
-  exact (asIso (HomologicalComplex.homologyMap
+      supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n :=
+  letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
+  (asIso (HomologicalComplex.homologyMap
     (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
       supportedSingularCohomologySheafIsoRelative
         (TopCat.of (ComplexPoint X)) S S.isClosed n

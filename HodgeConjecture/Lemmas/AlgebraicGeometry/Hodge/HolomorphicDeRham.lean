@@ -129,10 +129,10 @@ def complexScalarPresheaf (c : ℂ) :
 
 /-- Scalar multiplication on the constant complex sheaf. -/
 def complexScalarSheaf (c : ℂ) :
-    constantComplexSheaf X ⟶ constantComplexSheaf X := by
+    constantComplexSheaf X ⟶ constantComplexSheaf X :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
-  exact (presheafToSheaf J AddCommGrpCat).map
+  (presheafToSheaf J AddCommGrpCat).map
     (complexScalarPresheaf X c)
 
 /-- Scalar multiplication on the constant complex-valued complex concentrated in degree zero. -/

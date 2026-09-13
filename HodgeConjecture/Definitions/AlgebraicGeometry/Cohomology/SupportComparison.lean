@@ -54,7 +54,7 @@ variable {A S I : CochainComplex C ℤ}
 
 /-- A map into a bounded-below degreewise-injective complex extends strictly across a monic
 quasi-isomorphism. This is the lifting property in the injective model structure. -/
-noncomputable def liftToInjective (hI : ∀ n : ℤ, Injective (I.X n)) : S ⟶ I := by
+noncomputable def liftToInjective (hI : ∀ n : ℤ, Injective (I.X n)) : S ⟶ I :=
   let A' : Plus C := ⟨A, 0, inferInstance⟩
   let S' : Plus C := ⟨S, 0, inferInstance⟩
   let I' : Plus C := ⟨I, 0, inferInstance⟩
@@ -69,7 +69,7 @@ noncomputable def liftToInjective (hI : ∀ n : ℤ, Injective (I.X n)) : S ⟶ 
     (Plus.modelCategoryQuillen.weakEquivalence_iff a').2 (inferInstance : QuasiIso a)
   letI : IsFibrant I' :=
     (Plus.modelCategoryQuillen.isFibrant_iff I').2 hI
-  exact sq.lift.hom
+  sq.lift.hom
 
 end
 

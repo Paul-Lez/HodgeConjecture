@@ -64,10 +64,10 @@ def cycleComponentSmoothClosedLiftCoclassSection :
     (supportRelativeCohomologySheaf
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
-      (2 * p)).obj.obj (op ⊤) := by
-  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+      (2 * p)).obj.obj (op ⊤) :=
+  letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
-  exact hdeg ▸ smoothClosedSupportCoclassSection
+  hdeg ▸ smoothClosedSupportCoclassSection
     (cycleComponentSmoothLocusAmbientOpenOver X x)
     (cycleComponentSmoothLocusOver X x)
     (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)

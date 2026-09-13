@@ -93,7 +93,7 @@ abbrev standardEtalePointSpace :=
     Polynomial.eval₂ vx.1 vx.2 P.f = 0 ∧ Polynomial.eval₂ vx.1 vx.2 P.g ≠ 0 }
 
 /-- Construct a complex algebra homomorphism from the root data of a standard étale point. -/
-def standardEtalePointToAlgHom (z : standardEtalePointSpace P) : P.Ring →ₐ[ℂ] ℂ := by
+def standardEtalePointToAlgHom (z : standardEtalePointSpace P) : P.Ring →ₐ[ℂ] ℂ :=
   letI : Algebra (complexPolynomialRing n) ℂ := z.1.1.toRingHom.toAlgebra
   letI : IsScalarTower ℂ (complexPolynomialRing n) ℂ :=
     IsScalarTower.of_algebraMap_eq fun c ↦ (z.1.1.commutes c).symm
@@ -102,7 +102,7 @@ def standardEtalePointToAlgHom (z : standardEtalePointSpace P) : P.Ring →ₐ[�
     constructor
     · simpa [Polynomial.aeval_def, RingHom.algebraMap_toAlgebra] using z.2.1
     · simpa [Polynomial.aeval_def, RingHom.algebraMap_toAlgebra, isUnit_iff_ne_zero] using z.2.2
-  exact (P.lift z.1.2 hz).restrictScalars ℂ
+  (P.lift z.1.2 hz).restrictScalars ℂ
 
 /-- Read the base point and distinguished root from a complex point of a standard étale algebra. -/
 def algHomToStandardEtalePoint (φ : P.Ring →ₐ[ℂ] ℂ) : standardEtalePointSpace P := by

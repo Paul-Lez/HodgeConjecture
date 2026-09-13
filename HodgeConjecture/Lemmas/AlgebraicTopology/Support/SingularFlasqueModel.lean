@@ -42,10 +42,10 @@ def supportedSingularInjectiveHomologyIso (U V : Opens X) (n : ℤ) :
       (supportedRationalSingularCochainComplex X U))).homology n ≅
     ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
       (((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
-        (rationalConstantInjectiveComplex X)))).homology n := by
+        (rationalConstantInjectiveComplex X)))).homology n :=
   let f := ((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).map
     (supportedSingularToInjectiveComplex X hX U)
-  let : QuasiIso f := supportedSingularToInjectiveComplex_onOpen_quasiIso X hX U V
-  exact asIso (HomologicalComplex.homologyMap f n)
+  letI : QuasiIso f := supportedSingularToInjectiveComplex_onOpen_quasiIso X hX U V
+  asIso (HomologicalComplex.homologyMap f n)
 
 end AlgebraicTopology.Singular

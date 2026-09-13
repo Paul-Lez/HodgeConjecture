@@ -31,11 +31,11 @@ neighborhood of the distinguished point. -/
 def neighborhoodPointComplementRelativeHomologyIso
     (U : Set X) (x : X) (hU : IsOpen U) (hx : x ∈ U) (n : ℕ) :
     RelativeHomology ℚ (neighborhoodPointComplementPair U x) n ≅
-      RelativeHomology ℚ (pointComplementPair x) n := by
-  let : QuasiIso
+      RelativeHomology ℚ (pointComplementPair x) n :=
+  letI : QuasiIso
       ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) :=
     neighborhoodPointComplement_relativeChainMap_quasiIso U x hU hx
-  exact isoOfQuasiIsoAt
+  isoOfQuasiIsoAt
     ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) n
 
 end AlgebraicTopology.Singular

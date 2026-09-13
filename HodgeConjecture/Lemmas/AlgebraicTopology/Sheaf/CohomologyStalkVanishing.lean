@@ -31,12 +31,12 @@ variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 The underlying sheaf-forgetful functor is not assumed exact. -/
 def sectionCohomologyPresheafStalkIso (n : ℤ) (x : X) :
     (Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj (sectionCohomologyPresheaf X K n) ≅
-      (additiveSheafStalkFunctor X x).obj (K.homology n) := by
+      (additiveSheafStalkFunctor X x).obj (K.homology n) :=
   let S : ShortComplex (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
     K.sc n
   let P : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
     (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).sc n
-  exact (P.mapHomologyIso (additivePresheafStalkFunctor X x)).symm ≪≫
+  (P.mapHomologyIso (additivePresheafStalkFunctor X x)).symm ≪≫
     S.mapHomologyIso (additiveSheafStalkFunctor X x)
 
 end TopCat.Sheaf

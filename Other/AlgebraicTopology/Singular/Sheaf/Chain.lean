@@ -47,13 +47,13 @@ def singularChainSheafificationStalkIso (x : X) :
     ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex
       (ComplexShape.down ℕ)).obj
       (((TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapHomologicalComplex
-        (ComplexShape.down ℕ)).obj (singularChainSheafComplex R X)) := by
+        (ComplexShape.down ℕ)).obj (singularChainSheafComplex R X)) :=
   let f := ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex
     (ComplexShape.down ℕ)).map (singularChainSheafificationUnit R X)
   have : ∀ n, IsIso (f.f n) := fun n ↦
     singularChainSheafificationUnit_stalk_isIso R X x n
   have : IsIso f := HomologicalComplex.Hom.isIso_of_components f
-  exact asIso f
+  asIso f
 
 end AlgebraicTopology.Singular
 end

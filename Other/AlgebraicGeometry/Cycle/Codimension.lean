@@ -48,11 +48,10 @@ variable {X : Scheme.{u}} {p : ℕ}
 lemma ext {a b : codimensionCycleSubgroup X p} (h : ∀ x, a.1 x = b.1 x) : a = b :=
   Subtype.ext (Function.locallyFinsuppWithin.ext h)
 
+open scoped Classical in
 /-- The cycle with coefficient `n` at one point and zero elsewhere. -/
 noncomputable def single (x : X) (hx : coheight x = p) (n : ℤ) : codimensionCycleSubgroup X p :=
-  by
-    classical
-    exact ⟨Function.locallyFinsuppWithin.single x n, by
+    ⟨Function.locallyFinsuppWithin.single x n, by
       intro y hy
       by_cases h : y = x
       · simpa [h] using hx

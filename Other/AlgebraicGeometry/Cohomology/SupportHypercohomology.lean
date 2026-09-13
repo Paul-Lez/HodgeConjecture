@@ -119,7 +119,7 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
     (n : ℤ) :
     Hypercohomology X K n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X)) K).homology n := by
+        (TopCat.of (ComplexPoint X)) K).homology n :=
   let Y := TopCat.of (ComplexPoint X)
   let A := constantIntegerSheafComplexInt X
   let A' := TopCat.Sheaf.integerConstantSingleComplex Y
@@ -141,11 +141,11 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
   let e₅ := (HomologicalComplex.homologyMapIso
     (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
       |>.addCommGroupIsoToAddEquiv
-  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
+  letI : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
   let e₆ := (asIso (HomologicalComplex.homologyMap
     ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
       |>.addCommGroupIsoToAddEquiv
-  exact e₀.trans <| e₁.trans <| e₂.trans <| e₃.trans <| e₄.trans <| e₅.trans e₆
+  e₀.trans <| e₁.trans <| e₂.trans <| e₃.trans <| e₄.trans <| e₅.trans e₆
 
 /-- Additive hypercohomology/global-sections comparison for a bounded-below termwise-flasque
 complex. -/
@@ -214,12 +214,12 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections
       (TopCat.Sheaf.globalSectionsComplexInt
         (TopCat.of (ComplexPoint X))
         (CochainComplex.mappingCone
-          (naturalSingularResolutionRestriction X Z hZ))).homology (n - 1) := by
+          (naturalSingularResolutionRestriction X Z hZ))).homology (n - 1) :=
   let K := CochainComplex.mappingCone
     (naturalSingularResolutionRestriction X Z hZ)
   letI : K.IsStrictlyGE (-1) :=
     naturalSingularSupportCone_isStrictlyGE X Z hZ
-  exact (rationalSupportHypercohomologyAddEquivNaturalSingularCone
+  (rationalSupportHypercohomologyAddEquivNaturalSingularCone
       X Z hZ n).trans
     (hypercohomologyAddEquivGlobalSections X K (-1)
       (naturalSingularSupportCone_term_isFlasque X Z hZ) (n - 1))

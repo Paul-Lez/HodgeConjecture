@@ -145,7 +145,7 @@ noncomputable def localizationAwayAlgEquivAdjoinRange
     [Algebra R B] [Algebra R L] (f : B →ₐ[R] L) (hf : Function.Injective f)
     (r : R) (hr : algebraMap R L r ≠ 0) :
     Localization.Away (algebraMap R B r) ≃ₐ[R]
-      Algebra.adjoin R ((f.range : Set L) ∪ {(algebraMap R L r)⁻¹}) := by
+      Algebra.adjoin R ((f.range : Set L) ∪ {(algebraMap R L r)⁻¹}) :=
   let T := Algebra.adjoin R ((f.range : Set L) ∪ {(algebraMap R L r)⁻¹})
   let g : B →ₐ[R] T := f.codRestrict T fun x ↦
     Algebra.subset_adjoin (Set.mem_union_left _ ⟨x, rfl⟩)
@@ -211,7 +211,7 @@ noncomputable def localizationAwayAlgEquivAdjoinRange
       (fun _ _ _ _ hx hy ↦ q.range.add_mem hx hy)
       (fun _ _ _ _ hx hy ↦ q.range.mul_mem hx hy)
       z.property
-  exact (AlgEquiv.ofBijective q ⟨hq_injective, hq_surjective⟩).restrictScalars R
+  (AlgEquiv.ofBijective q ⟨hq_injective, hq_surjective⟩).restrictScalars R
 
 end Algebra
 
@@ -241,7 +241,7 @@ variable (A : Type*) [CommRing A] [IsDomain A] [Algebra ℂ A]
 
 @[instance_reducible] noncomputable def ComplexNoetherNormalization.fractionFieldAlgebra
     (N : ComplexNoetherNormalization A) :
-    Algebra (FractionRing (MvPolynomial (Fin N.dimension) ℂ)) (FractionRing A) := by
+    Algebra (FractionRing (MvPolynomial (Fin N.dimension) ℂ)) (FractionRing A) :=
   let P := MvPolynomial (Fin N.dimension) ℂ
   letI : Algebra P A := N.hom.toAlgebra
   letI : Module.Finite P A := N.finite
@@ -254,7 +254,7 @@ variable (A : Type*) [CommRing A] [IsDomain A] [Algebra ℂ A]
   letI : FaithfulSMul P (FractionRing A) :=
     (faithfulSMul_iff_algebraMap_injective P (FractionRing A)).mpr
       ((FaithfulSMul.algebraMap_injective A (FractionRing A)).comp N.injective)
-  exact FractionRing.liftAlgebra P (FractionRing A)
+  FractionRing.liftAlgebra P (FractionRing A)
 
 theorem ComplexNoetherNormalization.finiteDimensionalFractionFields
     (N : ComplexNoetherNormalization A) :

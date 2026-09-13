@@ -64,13 +64,13 @@ def openRestrictedLowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
         (.up ℤ)).obj K).homology j))
     (hflasque : ∀ j, (K.X j).IsFlasque) :
     (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ≅
-      (K.homology n).obj.obj (op U) := by
+      (K.homology n).obj.obj (op U) :=
   let L := ((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
     (.up ℤ)).obj K
   have hLF (j : ℤ) : (L.X j).IsFlasque := by
     let := hflasque j
     exact openSheafRestriction_isFlasque X U (K.X j)
-  exact (HomologicalComplex.homologyMapIso (openRestrictionTopSectionComplexIso X U K) n).symm ≪≫
+  (HomologicalComplex.homologyMapIso (openRestrictionTopSectionComplexIso X U K) n).symm ≪≫
     lowestSectionCohomologyIso (TopCat.of U) L N n hK hLF ⊤ ≪≫
       openRestrictionHomologyTopSectionsIso X U K n
 

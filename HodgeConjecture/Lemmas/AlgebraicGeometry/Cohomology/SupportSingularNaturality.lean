@@ -370,18 +370,18 @@ def complementSingularToInjectiveResolutionInt
     (complementSingularCochainSheafComplex X Z).extend
         ComplexShape.embeddingUpNat ⟶
       (complementConstantRationalInjectiveResolution X Z).cocomplex.extend
-        ComplexShape.embeddingUpNat := by
+        ComplexShape.embeddingUpNat :=
   let a := complementConstantsToSingularCochainInt X Z
   let r := complementResolutionMapInt X Z
   let I := (complementConstantRationalInjectiveResolution X Z).cocomplex.extend
     ComplexShape.embeddingUpNat
-  let : Mono a := complementConstantsToSingularCochainInt_mono X Z
-  let : QuasiIso a :=
+  letI : Mono a := complementConstantsToSingularCochainInt_mono X Z
+  letI : QuasiIso a :=
     complementConstantsToSingularCochainInt_quasiIso X Z hZ
   have hI : ∀ n : ℤ, Injective (I.X n) := fun n ↦ by
     dsimp [I]
     infer_instance
-  exact CochainComplex.liftToInjective a r hI
+  CochainComplex.liftToInjective a r hI
 
 set_option linter.style.haveILetI false in
 lemma complementConstants_comp_singularToInjectiveResolutionInt

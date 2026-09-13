@@ -57,12 +57,12 @@ variable (hX : ∀ (x : X) (V : Opens X), x ∈ V →
 /-- Strictly extend the constant augmentation to the actual injective resolution. -/
 def singularToConstantInjectiveResolution :
     singularCochainSheafComplex ℚ X ⟶
-      (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).cocomplex := by
-  let : Mono (constantsToSingularCochainSheafComplex ℚ X) :=
+      (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).cocomplex :=
+  letI : Mono (constantsToSingularCochainSheafComplex ℚ X) :=
     constantsToSingularCochainSheafComplex_mono ℚ X
-  let : QuasiIso (constantsToSingularCochainSheafComplex ℚ X) :=
+  letI : QuasiIso (constantsToSingularCochainSheafComplex ℚ X) :=
     constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ hX
-  exact CochainComplex.liftToInjectiveNat (constantsToSingularCochainSheafComplex ℚ X)
+  CochainComplex.liftToInjectiveNat (constantsToSingularCochainSheafComplex ℚ X)
     (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).ι
     (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).injective
 

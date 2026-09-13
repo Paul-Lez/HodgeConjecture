@@ -39,7 +39,7 @@ variable (X Y : Over (Spec (.of ℂ)))
 def smoothClosedPointNormalTargetPairMap :
     standardComplexPuncturedPair d ⟶
       neighborhoodPointComplementPair (localChart X d (Point.map i z)).target
-        (localChart X d (Point.map i z) (Point.map i z)) := by
+        (localChart X d (Point.map i z) (Point.map i z)) :=
   let c := localChart X d (Point.map i z) (Point.map i z)
   let L := closedImmersionPointNormalLinearMap X Y i d z
   let r := smoothClosedPointNormalRadius X Y i d z V hzV
@@ -58,7 +58,7 @@ def smoothClosedPointNormalTargetPairMap :
     simpa only [map_zero] using add_left_cancel (h.trans (add_zero c).symm)
   have hcont : Continuous (fun w => c + L (R w)) :=
     continuous_const.add (L.continuous.comp (continuous_complexUnivBall d 0 r))
-  exact TopPair.ofHom
+  TopPair.ofHom
     (TopCat.ofHom ⟨fun w => ⟨c + L (R w), hmem w⟩, hcont.subtype_mk hmem⟩)
     (TopCat.ofHom ⟨fun w => ⟨⟨c + L (R w.1), hmem w.1⟩, hne w.1 w.2⟩,
       ((hcont.comp continuous_subtype_val).subtype_mk _).subtype_mk _⟩) rfl

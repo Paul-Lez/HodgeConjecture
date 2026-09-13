@@ -49,11 +49,11 @@ variable {A K I : CochainComplex C ℕ} (a : A ⟶ K) [Mono a] [QuasiIso a]
 
 /-- Strict injective lifting for nonnegative cochain complexes, transported
 through the fully faithful extension to integer degrees. -/
-def liftToInjectiveNat : K ⟶ I := by
-  let := mono_extendMap_nat a
-  let : CochainComplex.IsStrictlyGE (A.extend ComplexShape.embeddingUpNat) 0 := inferInstance
-  let : CochainComplex.IsStrictlyGE (K.extend ComplexShape.embeddingUpNat) 0 := inferInstance
-  let : CochainComplex.IsStrictlyGE (I.extend ComplexShape.embeddingUpNat) 0 := inferInstance
+def liftToInjectiveNat : K ⟶ I :=
+  letI := mono_extendMap_nat a
+  letI : CochainComplex.IsStrictlyGE (A.extend ComplexShape.embeddingUpNat) 0 := inferInstance
+  letI : CochainComplex.IsStrictlyGE (K.extend ComplexShape.embeddingUpNat) 0 := inferInstance
+  letI : CochainComplex.IsStrictlyGE (I.extend ComplexShape.embeddingUpNat) 0 := inferInstance
   let f := liftToInjective
       (A := A.extend ComplexShape.embeddingUpNat)
       (S := K.extend ComplexShape.embeddingUpNat)
@@ -61,7 +61,7 @@ def liftToInjectiveNat : K ⟶ I := by
       (HomologicalComplex.extendMap a ComplexShape.embeddingUpNat)
       (HomologicalComplex.extendMap r ComplexShape.embeddingUpNat)
       (injective_extend_nat I hI)
-  exact (ComplexShape.embeddingUpNat.extendFunctor C).preimage f
+  (ComplexShape.embeddingUpNat.extendFunctor C).preimage f
 
 end CochainComplex
 

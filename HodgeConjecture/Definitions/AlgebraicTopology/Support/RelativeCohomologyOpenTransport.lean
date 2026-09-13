@@ -70,12 +70,12 @@ restricted unit. This is the general open-embedding version of open restriction.
 def supportOpenEmbeddingSheafificationIso (P : TopCat.Presheaf AddCommGrpCat X) :
     (presheafToSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj (hf.functor.op ⋙ P) ≅
       (hf.sheafPullback AddCommGrpCat).obj
-        ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj P) := by
-  let : hf.functor.IsContinuous (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) :=
+        ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj P) :=
+  letI : hf.functor.IsContinuous (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) :=
     hf.functor_isContinuous
-  let : hf.functor.IsCocontinuous (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) :=
+  letI : hf.functor.IsCocontinuous (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) :=
     hf.functor_isCocontinuous
-  exact (hf.functor.pushforwardContinuousSheafificationCompatibility AddCommGrpCat
+  (hf.functor.pushforwardContinuousSheafificationCompatibility AddCommGrpCat
     (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X)).app P
 
 /-- Actual sheafification of the pair comparison identifies intrinsic local support

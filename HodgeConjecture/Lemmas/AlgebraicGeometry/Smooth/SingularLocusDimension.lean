@@ -49,9 +49,9 @@ variable (Y : Over (Spec (.of ℂ)))
 /-- The singular locus of every cycle component admits the actual finite smooth
 decomposition constructed by Noetherian recursion. -/
 def cycleComponentSingularStratification (x : Y.left) :
-    List (Closeds (cycleComponent Y.left x)) := by
+    List (Closeds (cycleComponent Y.left x)) :=
   letI := cycleComponent_isNoetherian Y x
-  exact reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
+  reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
     (singularLocusClosed (cycleComponentι Y.left x ≫ Y.hom))
 
 end AlgebraicGeometry

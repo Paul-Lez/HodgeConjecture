@@ -79,11 +79,11 @@ def contractibleSingularChainHomotopyEquiv
       (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj
         (TopCat.of X))
       (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj
-        (TopCat.of (ULift.{u} Unit))) := by
+        (TopCat.of (ULift.{u} Unit))) :=
   let e : X ≃ₕ ULift.{u} Unit :=
     (Classical.choice (ContractibleSpace.hequiv_unit X)).trans
       (Homeomorph.ulift.{u, 0}.symm.toHomotopyEquiv)
-  exact singularChainHomotopyEquivOfHomotopyEquiv R e
+  singularChainHomotopyEquivOfHomotopyEquiv R e
 
 /-- Positive-degree singular chains of a contractible space are exact. -/
 lemma singularChainComplex_exactAt_of_contractible

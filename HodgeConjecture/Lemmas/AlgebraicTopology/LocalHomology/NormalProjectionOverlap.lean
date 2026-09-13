@@ -71,7 +71,7 @@ variable {M E : Type} [TopologicalSpace M] [NormedAddCommGroup E] [NormedSpace �
 /-- The uncompressed normal fiber is a genuine map from a small normal point-complement
 pair into the chosen ambient support-complement pair. -/
 def chartNormalFiberPair :
-    neighborhoodPointComplementPair V 0 ⟶ neighborhoodSupportComplementPair W S := by
+    neighborhoodPointComplementPair V 0 ⟶ neighborhoodSupportComplementPair W S :=
   have hc : Continuous (fun v : V => e.symm (a, v.1)) :=
     e.symm.continuousOn.comp_continuous (continuous_const.prodMk continuous_subtype_val)
       (fun v => (hV v.1 v.2).1)
@@ -80,7 +80,7 @@ def chartNormalFiberPair :
     have hz := (hS _ (e.map_target (hV v.1.1 v.1.2).1)).mp hs
     rw [e.right_inv (hV v.1.1 v.1.2).1] at hz
     exact v.2 hz
-  exact TopPair.ofHom
+  TopPair.ofHom
     (TopCat.ofHom ⟨fun v => ⟨e.symm (a, v.1), (hV v.1 v.2).2⟩, hc.subtype_mk _⟩)
     (TopCat.ofHom ⟨fun v => ⟨⟨e.symm (a, v.1.1), (hV v.1.1 v.1.2).2⟩, hn v⟩,
       (hc.comp continuous_subtype_val).subtype_mk _ |>.subtype_mk _⟩) (by ext v; rfl)

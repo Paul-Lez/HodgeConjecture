@@ -137,8 +137,8 @@ def cycleComponentSupportExtensionIso :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
       (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
-          (2 * (p : ℤ))) := by
-  let := cycleComponentSupportSectionRestriction_homology_isIso X x hx
-  exact asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
+          (2 * (p : ℤ))) :=
+  letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
+  asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
 
 end AlgebraicGeometry.ComplexPoint

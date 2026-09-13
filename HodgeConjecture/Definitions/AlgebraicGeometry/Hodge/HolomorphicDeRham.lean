@@ -331,10 +331,10 @@ def conjConstantComplexPresheaf :
 
 /-- Complex conjugation on the constant complex sheaf. -/
 def conjConstantComplexSheaf :
-    constantComplexSheaf X ⟶ constantComplexSheaf X := by
+    constantComplexSheaf X ⟶ constantComplexSheaf X :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
-  exact (presheafToSheaf J AddCommGrpCat).map
+  (presheafToSheaf J AddCommGrpCat).map
     (conjConstantComplexPresheaf X)
 
 /-- The sheafified inclusion of constants as de Rham zero-forms. -/

@@ -50,10 +50,10 @@ def complexSupportedSingularInjectiveHomologyIso
       (.up ℤ)).obj
         (((TopCat.Sheaf.sheafSectionsSupportedOutside
           (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
-            (ambientRationalInjectiveComplex X)))).homology n := by
-  let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=
+            (ambientRationalInjectiveComplex X)))).homology n :=
+  letI : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=
     openParacompactSpace X
-  exact supportedSingularInjectiveHomologyIso (TopCat.of (ComplexPoint X))
+  supportedSingularInjectiveHomologyIso (TopCat.of (ComplexPoint X))
     (exists_contractibleOpen_le X) U V n
 
 end AlgebraicGeometry.ComplexPoint

@@ -51,14 +51,14 @@ def openRestrictionSheafificationIso (P : Presheaf AddCommGrpCat.{u} X) :
     (presheafToSheaf (Opens.grothendieckTopology (TopCat.of U)) AddCommGrpCat).obj
       (U.isOpenEmbedding.functor.op ⋙ P) ≅
     (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
-      ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj P) := by
-  let : U.isOpenEmbedding.functor.IsContinuous
+      ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj P) :=
+  letI : U.isOpenEmbedding.functor.IsContinuous
       (Opens.grothendieckTopology (TopCat.of U)) (Opens.grothendieckTopology X) :=
     U.isOpenEmbedding.functor_isContinuous
-  let : U.isOpenEmbedding.functor.IsCocontinuous
+  letI : U.isOpenEmbedding.functor.IsCocontinuous
       (Opens.grothendieckTopology (TopCat.of U)) (Opens.grothendieckTopology X) :=
     U.isOpenEmbedding.functor_isCocontinuous
-  exact (U.isOpenEmbedding.functor.pushforwardContinuousSheafificationCompatibility
+  (U.isOpenEmbedding.functor.pushforwardContinuousSheafificationCompatibility
     AddCommGrpCat (Opens.grothendieckTopology (TopCat.of U))
       (Opens.grothendieckTopology X)).app P
 

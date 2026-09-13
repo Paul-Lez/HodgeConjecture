@@ -76,14 +76,14 @@ def derivedClosedSupportInjectiveFiberIso (Z : Closeds X)
         (CochainComplex.mappingCocone
           (supportRestrictionSectionsComplexShortComplex X Z.compl ⊤
             (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-              (.up ℤ)).obj I.obj)).g) := by
-  let : ∀ n, Injective
+              (.up ℤ)).obj I.obj)).g) :=
+  letI : ∀ n, Injective
       ((((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
         (.up ℤ)).obj I.obj).X n) := fun n => (I.obj.X n).property
   have := supportRestrictionToFiber_quasiIso X Z.compl ⊤
     (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
       (.up ℤ)).obj I.obj)
-  exact derivedClosedSupportInjectiveModelIso X Z I ≪≫
+  derivedClosedSupportInjectiveModelIso X Z I ≪≫
     asIso (DerivedCategory.Q.map (supportRestrictionToFiber X Z.compl ⊤ _))
 
 set_option backward.defeqAttrib.useBackward true in
@@ -121,14 +121,14 @@ def derivedSheafSupportInjectiveFiberIso (Z : Closeds X)
         (CochainComplex.mappingCocone
           (supportRestrictionComplexShortComplex X Z.compl
             (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-              (.up ℤ)).obj I.obj)).g) := by
-  let : ∀ n, Injective
+              (.up ℤ)).obj I.obj)).g) :=
+  letI : ∀ n, Injective
       ((((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
         (.up ℤ)).obj I.obj).X n) := fun n => (I.obj.X n).property
   have := sheafSupportRestrictionToFiber_quasiIso X Z.compl
     (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
       (.up ℤ)).obj I.obj)
-  exact derivedSheafSupportInjectiveModelIso X Z I ≪≫
+  derivedSheafSupportInjectiveModelIso X Z I ≪≫
     asIso (DerivedCategory.Q.map (sheafSupportRestrictionToFiber X Z.compl _))
 /-- The localization comparison preserves the actual support-forgetting map,
 including its sign. -/

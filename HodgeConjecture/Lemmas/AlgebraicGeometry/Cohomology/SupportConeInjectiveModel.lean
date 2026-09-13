@@ -106,7 +106,7 @@ def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
       (TopCat.Sheaf.globalSectionsComplexInt
         (TopCat.of (ComplexPoint X))
         (CochainComplex.mappingCone
-          (ambientRationalInjectiveRestriction X Z hZ))).homology (n - 1) := by
+          (ambientRationalInjectiveRestriction X Z hZ))).homology (n - 1) :=
   let e : RationalCohomologyWithSupport X Z n ≃+
       Hypercohomology X (CochainComplex.mappingCone
         (ambientRationalInjectiveRestriction X Z hZ)) (n - 1) :=
@@ -115,7 +115,7 @@ def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
         ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)
       map_add' α β := (hypercohomologyMap X
         (rationalSupportConeToAmbientInjectiveCone X Z hZ) (n - 1)).map_add α β }
-  exact e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ (n - 1))
+  e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ (n - 1))
 
 /-- Compare actual restriction of the integer-indexed ambient resolution with
 the independently chosen complement resolution. The map/extension isomorphism
@@ -224,7 +224,7 @@ def rationalSupportAddEquivSupportedInjectiveHomology
     RationalCohomologyWithSupport X Z n ≃+
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
         (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
-        (ambientRationalInjectiveComplex X)).X₁.homology n := by
+        (ambientRationalInjectiveComplex X)).X₁.homology n :=
   let Y := TopCat.of (ComplexPoint X)
   let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
@@ -236,14 +236,14 @@ def rationalSupportAddEquivSupportedInjectiveHomology
       (ambientRationalInjectiveRestriction X Z hZ) Γ) (n - 1)
   let e₃ := (asIso (HomologicalComplex.homologyMap
     (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) (n - 1))).symm
-  let : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
+  letI : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
     CochainComplex.mappingCocone.quasiIso_shiftedLiftShortComplex S
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)
   let e₄ := (asIso (HomologicalComplex.homologyMap
     (CochainComplex.mappingCocone.shiftedLiftShortComplex S) (n - 1))).symm
   let e₅ := ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftIso
     1 (n - 1) n (by omega)).app S.X₁
-  exact (e₁.trans (e₂ ≪≫ e₃ ≪≫ e₄ ≪≫ e₅).addCommGroupIsoToAddEquiv).trans
+  (e₁.trans (e₂ ≪≫ e₃ ≪≫ e₄ ≪≫ e₅).addCommGroupIsoToAddEquiv).trans
     (AddEquiv.neg _)
 
 end AlgebraicGeometry.ComplexPoint

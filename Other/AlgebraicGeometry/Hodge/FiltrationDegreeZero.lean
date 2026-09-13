@@ -34,11 +34,11 @@ variable (X : Over (Spec ↧ℂ))
 canonically equivalent. -/
 def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     FilteredDeRhamHypercohomology X 0 n ≃
-      DeRhamHypercohomology X n := by
+      DeRhamHypercohomology X n :=
   letI : IsIso (hodgeFilteredDeRhamInclusion X 0) := by
     unfold hodgeFilteredDeRhamInclusion hodgeFilteredDeRhamComplex
     infer_instance
-  exact Localization.SmallShiftedHom.postcompEquiv
+  Localization.SmallShiftedHom.postcompEquiv
     (hodgeFilteredDeRhamInclusion X 0)
     (by
       change QuasiIso (hodgeFilteredDeRhamInclusion X 0)

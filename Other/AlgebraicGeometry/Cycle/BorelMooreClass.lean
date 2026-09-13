@@ -326,10 +326,10 @@ def maximalCodimensionSupportedGenerator
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = d) :
-    RationalSingularComponentCohomologyWithSupport V.over x (2 * d) := by
+    RationalSingularComponentCohomologyWithSupport V.over x (2 * d) :=
   let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
     (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d))
-  exact LinearEquiv.cast (R := ℚ) (M := F)
+  LinearEquiv.cast (R := ℚ) (M := F)
     (maximalCodimensionCycleComponentSupport_eq_singleton V d x hx).symm
       (analyticPointLocalCoclass V.over d
         (cycleComponentMap V.over x
