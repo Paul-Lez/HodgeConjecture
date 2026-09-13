@@ -39,6 +39,15 @@ attribute [local instance] chartFieldModule
 
 attribute [local instance] chartFieldTower
 
+lemma formRestriction_differential [SmoothOfRelativeDimension d X.hom]
+    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
+    formRestriction X d i (p + 1)
+        (Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) p θ) =
+      Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d V) p
+        (formRestriction X d i p θ) :=
+  Algebra.DeRham.map_differential ℂ (holomorphicRestrictionAlgHom X d i) p θ
+
 lemma chartEvaluation_apply_of_notMem [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)

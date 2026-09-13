@@ -21,6 +21,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicPoincare
 import Mathlib.Algebra.Category.Grp.Zero
 import Mathlib.Algebra.Homology.Embedding.ExtendHomology
 import Mathlib.Topology.Sheaves.Sheafify
+import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 
 /-!
 # The holomorphic de Rham complex
@@ -28,6 +29,58 @@ import Mathlib.Topology.Sheaves.Sheafify
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.HolomorphicDeRham`.
 -/
+
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory CategoryTheory.Limits TopologicalSpace
+open scoped ContDiff Manifold
+
+namespace AlgebraicGeometry.ComplexPoint
+
+open Point
+
+variable (X : Over (Spec ↧ℂ)) (d : ℕ)
+
+/-- Scalar multiplication on the constant complex presheaf. -/
+def complexScalarPresheaf (c : ℂ) :
+    constantComplexAddCommGrpPresheaf X ⟶
+      constantComplexAddCommGrpPresheaf X where
+  app _ := AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ c)
+  naturality {U V} i := by
+    ext x
+    rfl
+
+/-- Scalar multiplication on the constant complex sheaf. -/
+def complexScalarSheaf (c : ℂ) :
+    constantComplexSheaf X ⟶ constantComplexSheaf X := by
+  let J := Opens.grothendieckTopology
+    (TopCat.of (ComplexPoint X))
+  exact (presheafToSheaf J AddCommGrpCat).map
+    (complexScalarPresheaf X c)
+
+/-- Scalar multiplication on the constant complex-valued complex concentrated in degree zero. -/
+@[implicit_reducible]
+def complexScalarComplex (c : ℂ) :
+    (CochainComplex.single₀
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
+        (constantComplexSheaf X) ⟶
+    (CochainComplex.single₀
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
+        (constantComplexSheaf X) :=
+  (CochainComplex.single₀ _).map (complexScalarSheaf X c)
+
+/-- Scalar multiplication on the integer-indexed constant complex-valued complex. -/
+def complexScalarComplexInt (c : ℂ) :
+    constantComplexSheafComplexInt X ⟶
+      constantComplexSheafComplexInt X :=
+  HomologicalComplex.extendMap (complexScalarComplex X c)
+    ComplexShape.embeddingUpNat
+
+end AlgebraicGeometry.ComplexPoint
+
+end
 
 @[expose] public noncomputable section
 

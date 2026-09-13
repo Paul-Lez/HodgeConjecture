@@ -45,14 +45,6 @@ namespace BoundedBelowComplex
 
 variable (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- The short exact sequence from cycles in degree `i`, through the degree-`i` term, to cycles
-in degree `i + 1`. -/
-def cyclesShortComplex (i : ℤ) :
-    ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
-  ShortComplex.mk (K.iCycles i) (K.toCycles i (i + 1)) (by
-    rw [← cancel_mono (K.iCycles (i + 1))]
-    simp)
-
 /-- Evaluation of a sheaf on the top open subset, viewed as a functor. This is
 `CategoryTheory.sheafSections` at the top open, stated with the domain spelled `TopCat.Sheaf`. -/
 def globalSectionsFunctor (X : TopCat.{u}) :

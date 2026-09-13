@@ -129,24 +129,4 @@ instance supportedSingularToInjectiveComplex_quasiIso (U : Opens X) :
   TopCat.Sheaf.sheafSectionsSupportedOutside_map_quasiIso_of_flasque X U
     (singularToConstantInjectiveComplex X hX) 0 0 (fun _ => inferInstance) (fun _ => inferInstance)
 
-/-- The comparison is a quasi-isomorphism on sections on every open set.
-This stronger conclusion is essential for applying local normal-slice calculations. -/
-theorem supportedSingularToInjectiveComplex_onOpen_quasiIso (U V : Opens X) :
-    QuasiIso (((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).map
-      (supportedSingularToInjectiveComplex X hX U)) :=
-  TopCat.Sheaf.supportedSections_map_quasiIso_of_flasque X U V
-    (singularToConstantInjectiveComplex X hX) 0 0 (fun _ => inferInstance) (fun _ => inferInstance)
-
-/-- Actual section-complex cohomology agrees through the normalized comparison. -/
-def supportedSingularInjectiveHomologyIso (U V : Opens X) (n : ℤ) :
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
-      (supportedRationalSingularCochainComplex X U))).homology n ≅
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
-      (((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
-        (rationalConstantInjectiveComplex X)))).homology n := by
-  let f := ((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).map
-    (supportedSingularToInjectiveComplex X hX U)
-  let : QuasiIso f := supportedSingularToInjectiveComplex_onOpen_quasiIso X hX U V
-  exact asIso (HomologicalComplex.homologyMap f n)
-
 end AlgebraicTopology.Singular

@@ -31,17 +31,12 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
-local instance cycleComponentSmoothSupportPurityAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
-/-- The analytic twin of `cycleComponentSmoothLocusAmbientOpen`: the complex points of
-`X ∖ Z_sing`, an open subset of `X(ℂ)`. Its underlying set is described by
-`coe_cycleComponentSmoothSupportAmbientOpen`. -/
+/-- The exact analytic complement of the canonical singular boundary. -/
 abbrev cycleComponentSmoothSupportAmbientOpen : Opens (ComplexPoint X) :=
   (cycleComponentSingularAnalyticClosedFiltration X x 0).compl
 
 include hx in
-/-- Cofinal ambient relative-cohomology calculations along the smooth locus. -/
+/-- Actual cofinal ambient relative-cohomology calculations along the smooth locus. -/
 private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
     (y : ComplexPoint X) (hy : y ∈ cycleComponentSupport X x)
     (hyU : y ∈ cycleComponentSmoothSupportAmbientOpen X x)
@@ -59,8 +54,7 @@ private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
     cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
   have : SmoothOfRelativeDimension (dim X.left) OX.hom := by
     change SmoothOfRelativeDimension (dim X.left) (O.ι ≫ X.hom)
-    simpa only [Nat.zero_add] using
-      smoothOfRelativeDimension_comp 0 (dim X.left) O.ι X.hom
+    simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 (dim X.left) O.ι X.hom
   let f := Point.map (openInclusion X O)
   have hS : f ⁻¹' cycleComponentSupport X x = Set.range (Point.map i) :=
     (cycleComponentSmoothLocusClosedLift_complexPoints_range X x).symm
@@ -134,7 +128,7 @@ instance cycleComponentSmoothRestrictedInjectiveComplex_isStrictlyGE :
   infer_instance
 
 include hx in
-/-- The restricted cohomology sheaves are concentrated in degree `2p`. -/
+/-- The actual restricted cohomology sheaves are concentrated in degree `2p`. -/
 theorem cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
     (n : ℤ) (hn : n ≠ 2 * (p : ℤ)) :
     IsZero ((cycleComponentSmoothRestrictedInjectiveComplex X x).homology n) :=

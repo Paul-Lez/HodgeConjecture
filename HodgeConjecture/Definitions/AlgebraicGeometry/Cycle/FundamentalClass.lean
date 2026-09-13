@@ -66,12 +66,4 @@ def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
   forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
     (cycleComponentSheafSupportedClass X x hx)
 
-include X hx in
-omit [IsProjective X.hom] in
-/-- The dimension bound needed for the Borel–Moore degree, not an extra input. -/
-theorem cycleComponentSheafClass_codimension_le : p ≤ dim X.left := by
-  have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := dim X.left) x
-  rw [hx] at h
-  exact_mod_cast h
-
 end AlgebraicGeometry.ComplexPoint

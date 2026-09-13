@@ -32,6 +32,14 @@ attribute [local instance] cycleComponentSheafClassAnalyticTopology
 
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
+/-- The class in the injective model extending the exact complex-normal coclass.
+
+This lives here rather than in `Definitions`: after the extension step is stated in the
+mapping-cone model, nothing the conjecture's statement inspects passes through it. -/
+def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
+  (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
+    (cycleComponentSmoothSupportCoclassSection X x hx)
+
 /-- Exact smooth-locus normalization, not equality only up to a scalar. -/
 @[simp]
 theorem cycleComponentSupportedInjectiveClass_normalization :

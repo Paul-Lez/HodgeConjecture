@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.Algebra.Homology.LinearDual
+public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDual
 
 /-!
 # Naturality of linear duality on homology

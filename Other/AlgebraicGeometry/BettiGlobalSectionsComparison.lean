@@ -17,13 +17,13 @@ module
 
 public import Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.GlobalSections
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.GlobalSections
 
 /-!
 # Singular cohomology and global sections
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.GlobalSections`.
+`HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.GlobalSections`.
 -/
 
 @[expose] public noncomputable section

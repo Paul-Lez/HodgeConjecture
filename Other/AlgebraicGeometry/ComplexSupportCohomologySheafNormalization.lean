@@ -19,9 +19,6 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-local instance complexSupportCohomologySheafNormalizationTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 local instance complexSupportCohomologySheafNormalizationParacompact :
     ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
 

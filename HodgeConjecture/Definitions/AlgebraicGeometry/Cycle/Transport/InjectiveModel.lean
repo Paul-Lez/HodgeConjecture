@@ -86,11 +86,6 @@ def cycleComponentSupportedClassNormalizationIso :
   rw [he] at e
   exact e
 
-/-- The class in the injective model extending the exact complex-normal coclass. -/
-def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
-  (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
-    (cycleComponentSmoothSupportCoclassSection X x hx)
-
 /-- The bridge out of the injective model: degree-`2p` cohomology with support in the
 component, in the mapping-cone model the statement uses, is identified with sections of the
 relative-cohomology sheaf on the smooth-locus ambient open.

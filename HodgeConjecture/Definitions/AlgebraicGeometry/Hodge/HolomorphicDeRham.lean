@@ -367,23 +367,6 @@ def constantComplexSheaf :
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of ℂ)
 
-/-- Scalar multiplication on the constant complex presheaf. -/
-def complexScalarPresheaf (c : ℂ) :
-    constantComplexAddCommGrpPresheaf X ⟶
-      constantComplexAddCommGrpPresheaf X where
-  app _ := AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ c)
-  naturality {U V} i := by
-    ext x
-    rfl
-
-/-- Scalar multiplication on the constant complex sheaf. -/
-def complexScalarSheaf (c : ℂ) :
-    constantComplexSheaf X ⟶ constantComplexSheaf X := by
-  let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
-  exact (presheafToSheaf J AddCommGrpCat).map
-    (complexScalarPresheaf X c)
-
 /-- Complex conjugation on the constant complex presheaf.
 
 Conjugation is a ring automorphism of `ℂ`, so it acts on the constant complex sheaf exactly the
@@ -569,17 +552,6 @@ instance constantsToHolomorphicDeRhamComplex_quasiIso
     · exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_zero X d
     · exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_succ X d p
 
-/-- Scalar multiplication on the constant complex-valued complex concentrated in degree zero. -/
-@[implicit_reducible]
-def complexScalarComplex (c : ℂ) :
-    (CochainComplex.single₀
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (constantComplexSheaf X) ⟶
-    (CochainComplex.single₀
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (constantComplexSheaf X) :=
-  (CochainComplex.single₀ _).map (complexScalarSheaf X c)
-
 /-- The constant sheaf complex, extended by zero from natural to integer degrees. -/
 @[implicit_reducible]
 def constantComplexSheafComplexInt :
@@ -588,13 +560,6 @@ def constantComplexSheafComplexInt :
   ((CochainComplex.single₀
     (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
       (constantComplexSheaf X)).extend ComplexShape.embeddingUpNat
-
-/-- Scalar multiplication on the integer-indexed constant complex-valued complex. -/
-def complexScalarComplexInt (c : ℂ) :
-    constantComplexSheafComplexInt X ⟶
-      constantComplexSheafComplexInt X :=
-  HomologicalComplex.extendMap (complexScalarComplex X c)
-    ComplexShape.embeddingUpNat
 
 /-- Complex conjugation on the constant complex-valued complex concentrated in degree zero. -/
 def conjConstantComplexComplex :

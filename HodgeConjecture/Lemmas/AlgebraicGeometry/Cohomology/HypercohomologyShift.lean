@@ -190,6 +190,7 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_rightUnshift
       (DerivedCategory.Q.map (constantIntegerSheafComplexIntIsoSingle X).inv ≫
         hypercohomologyAddEquivDerived X (K⟦s⟧) n x)
 
+set_option maxHeartbeats 400000 in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The hypercohomology/global-section comparison respects arbitrary
