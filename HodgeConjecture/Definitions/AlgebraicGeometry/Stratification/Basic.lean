@@ -78,27 +78,6 @@ def reducedClosedSingularRemainder (S : Closeds X) : Closeds X :=
     (reducedClosedSubschemeι S).isClosedEmbedding.isClosedMap _
       (reducedClosedStructureMap f S).smoothLocus.isOpen.isClosed_compl⟩
 
-lemma reducedClosedSingularRemainder_le (S : Closeds X) :
-    reducedClosedSingularRemainder f S ≤ S := by
-  rintro _ ⟨x, _, rfl⟩
-  exact (range_reducedClosedSubschemeι S).le ⟨x, rfl⟩
-
-lemma reducedClosedSingularRemainder_lt [PerfectField K] (S : Closeds X) (hS : S ≠ ⊥) :
-    reducedClosedSingularRemainder f S < S := by
-  refine lt_of_le_of_ne (reducedClosedSingularRemainder_le f S) ?_
-  have hne : Nonempty (reducedClosedSubscheme S) := by
-    obtain ⟨x, hx⟩ := Closeds.coe_nonempty.mpr hS
-    obtain ⟨y, _⟩ := (range_reducedClosedSubschemeι S).ge hx
-    exact ⟨y⟩
-  obtain ⟨x, hx⟩ :=
-    (reducedClosedStructureMap f S).dense_smoothLocus_of_perfectField.nonempty
-  intro h
-  have hmem : reducedClosedSubschemeι S x ∈ reducedClosedSingularRemainder f S := by
-    rw [h]
-    exact (range_reducedClosedSubschemeι S).le ⟨x, rfl⟩
-  obtain ⟨y, hy, hxy⟩ := hmem
-  exact hy ((reducedClosedSubschemeι S).isClosedEmbedding.injective hxy ▸ hx)
-
 local instance reducedSmoothStratificationWellFoundedRelation [NoetherianSpace X] :
     WellFoundedRelation (Closeds X) :=
   ⟨(· < ·), wellFounded_lt⟩

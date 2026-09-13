@@ -24,6 +24,19 @@ namespace AlgebraicTopology.Singular
 variable {M : Type} [TopologicalSpace M]
   (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
 
+section
+
+variable (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (x : M) (hx : x ∈ e.source)
+include hx
+
+omit [NormedSpace ℝ E] in
+/-- A positive coordinate-ball radius is obtained from the actual open chart target. -/
+theorem exists_flattenedSupportRadius :
+    ∃ r : ℝ, 0 < r ∧ Metric.ball (e x) r ⊆ e.target :=
+  Metric.isOpen_iff.mp e.open_target (e x) (e.map_source hx)
+
+end
+
 /-- Radial compression centered on the zero-normal plane preserves that plane exactly. -/
 private theorem univBall_normal_eq_zero_iff (a : E) (r : ℝ) (hr : 0 < r)
     (v : E × (Fin c → ℂ)) :
