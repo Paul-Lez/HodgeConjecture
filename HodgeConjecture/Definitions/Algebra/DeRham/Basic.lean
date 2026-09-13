@@ -559,8 +559,7 @@ def extAlgMap : ExtAlg R A →ₐ[A] ExtAlg R B :=
 
 @[simp] lemma extAlgMap_algebraMap (a : A) :
     extAlgMap R A B (algebraMap A (ExtAlg R A) a) =
-      algebraMap B (ExtAlg R B) (algebraMap A B a) := by
-  rw [AlgHom.commutes, IsScalarTower.algebraMap_apply A B (ExtAlg R B)]
+      algebraMap B (ExtAlg R B) (algebraMap A B a) := by aesop
 
 @[simp] lemma extAlgMap_algebraMap_base (r : R) :
     extAlgMap R A B (algebraMap R (ExtAlg R A) r) = algebraMap R (ExtAlg R B) r := by simp

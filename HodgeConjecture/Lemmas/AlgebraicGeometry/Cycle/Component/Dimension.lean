@@ -41,9 +41,7 @@ namespace AlgebraicGeometry
 lemma mem_cycleComponent_support_iff (X : Scheme) (x y : X) :
     y ∈ (Scheme.IdealSheafData.vanishingIdeal
         (X := X) ⟨closure {x}, isClosed_closure⟩).support ↔
-      y ∈ closure {x} :=
-  Set.ext_iff.mp
-    (Scheme.IdealSheafData.coe_support_vanishingIdeal ⟨closure {x}, isClosed_closure⟩) y
+      y ∈ closure {x} := by aesop
 
 /-- The points of the reduced closure of `x` are exactly the specializations below `x`.
 

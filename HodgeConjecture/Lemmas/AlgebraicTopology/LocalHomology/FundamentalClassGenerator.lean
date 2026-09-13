@@ -47,16 +47,12 @@ def relativeHomologyDegreeCast {X : TopPair} {i j : ℕ} (h : i = j)
 
 lemma relativeHomologyDegreeCast_ne_zero_iff {X : TopPair} {i j : ℕ} (h : i = j)
     (z : RelativeHomology ℚ X i) :
-    relativeHomologyDegreeCast h z ≠ 0 ↔ z ≠ 0 := by
-  subst h
-  rfl
+    relativeHomologyDegreeCast h z ≠ 0 ↔ z ≠ 0 := by aesop
 
 lemma span_relativeHomologyDegreeCast_eq_top_iff {X : TopPair} {i j : ℕ} (h : i = j)
     (z : RelativeHomology ℚ X i) :
     Submodule.span ℚ {relativeHomologyDegreeCast h z} = ⊤ ↔
-      Submodule.span ℚ {z} = ⊤ := by
-  subst h
-  rfl
+      Submodule.span ℚ {z} = ⊤ := by aesop
 
 lemma standardComplexRealRelativeHomologyIso_hom_standardComplexLocalClassMul (p : ℕ) :
     (standardComplexRealRelativeHomologyIso p).hom.hom

@@ -68,9 +68,7 @@ lemma imageSupportPairMap_restrict {X Y : TopCat} (f : X ⟶ Y)
 /-- Degree transport commutes with the actual map on relative singular homology. -/
 lemma relativeHomologyMap_cast {P Q : TopPair} {m n : ℕ} (h : m = n)
     (f : P ⟶ Q) (c : RelativeHomology ℚ P m) :
-    relativeHomologyMap ℚ n f (h ▸ c) = h ▸ relativeHomologyMap ℚ m f c := by
-  subst n
-  rfl
+    relativeHomologyMap ℚ n f (h ▸ c) = h ▸ relativeHomologyMap ℚ m f c := by aesop
 
 /-- The fixed inverse real/imaginary coordinate map as a continuous map. -/
 def standardRealToComplexMap (d : ℕ) :

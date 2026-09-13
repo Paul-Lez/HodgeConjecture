@@ -74,9 +74,7 @@ noncomputable def normalize {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
 
 /-- A vector on the unit sphere is nonzero. -/
 lemma sphere_ne_zero {n : ℕ} (v : sphere (0 : CoordinateSpace n) 1) :
-    (v : CoordinateSpace n) ≠ 0 := by
-  intro h
-  simpa [h] using v.property
+    (v : CoordinateSpace n) ≠ 0 := by aesop
 
 /-- The quotient map from the unit sphere to complex projective space. -/
 noncomputable def sphereToProjectivization {n : ℕ} :
@@ -560,9 +558,7 @@ lemma exists_coordinates_of_range_subset_chart {n : ℕ}
 
 lemma chartIntegralProjAt_congr {n : ℕ} (v : CoordinateSpace n)
     {i j : Fin (n + 1)} (hi : v i ≠ 0) (hj : v j ≠ 0) (hij : i = j) :
-    chartIntegralProjAt v i hi = chartIntegralProjAt v j hj := by
-  subst hij
-  rfl
+    chartIntegralProjAt v i hi = chartIntegralProjAt v j hj := by simp_all
 
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The projective morphism defined by a coordinate vector is independent of the chosen nonzero

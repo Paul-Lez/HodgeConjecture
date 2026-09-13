@@ -126,9 +126,7 @@ omit [Algebra K ℂ] in
 private lemma ofHom_zmultiplesAddHom_comp_mulLeft (q r : K) :
     AddCommGrpCat.ofHom (zmultiplesAddHom K r) ≫
         AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q) =
-      AddCommGrpCat.ofHom (zmultiplesAddHom K (q * r)) := by
-  ext
-  simp
+      AddCommGrpCat.ofHom (zmultiplesAddHom K (q * r)) := by aesop
 
 set_option linter.auxLemma false in
 omit [Algebra K ℂ] in

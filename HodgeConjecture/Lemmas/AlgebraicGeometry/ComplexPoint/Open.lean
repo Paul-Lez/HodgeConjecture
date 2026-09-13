@@ -116,9 +116,7 @@ lemma continuous_openEquiv :
 /-- Evaluation is unchanged when both a point and a section are transported across equal opens. -/
 lemma evaluate_eq {Y : Over (Spec ↧ℂ)}
     {V W : Y.left.Opens} (e : V = W) (t : Γ(Y.left, V)) (z : ComplexPoint Y) :
-    evaluate V t z = evaluate W (Y.left.presheaf.map (eqToHom e.symm).op t) z := by
-  subst e
-  simp
+    evaluate V t z = evaluate W (Y.left.presheaf.map (eqToHom e.symm).op t) z := by aesop
 
 /-- Evaluation commutes with the equivalence between an open subscheme and its ambient open. -/
 lemma evaluate_openEquiv {V : U.toScheme.Opens} (t : Γ(U.toScheme, V))
