@@ -23,7 +23,7 @@ public import Other.AlgebraicTopology.LocalHomology.EuclideanNeighborhoodOrienta
 /-!
 # A simultaneously normalized orientation class in a complex chart
 
-The fixed complex-coordinate neighborhood cycle is transported through the actual compressed
+The fixed complex-coordinate neighborhood cycle is transported through the compressed
 inverse chart. Its point restrictions agree with `localClassOfChart` throughout the resulting
 open neighborhood. Point excision in the chart target compares the two radial compressions;
 the moving-center homotopy supplies their exact, not merely nonzero, normalization.
@@ -99,7 +99,7 @@ lemma radialTargetPointPairMap_normalization
     centeredComplexUnivBall_preserves_standardComplexLocalClass d c r hr v]
 
 /-- Two radial parameterizations with the same image point give identical classes inside
-the open coordinate target. The proof uses genuine point excision. -/
+the open coordinate target. The proof uses point excision. -/
 theorem radialTargetPointPairMap_class_eq
     (U : Set (Fin d → ℂ)) (hU : IsOpen U)
     (c c' : Fin d → ℂ) (r r' : ℝ) (hr : 0 < r) (hr' : 0 < r')
@@ -122,7 +122,7 @@ theorem radialTargetPointPairMap_class_eq
 
 variable {M : Type} [TopologicalSpace M]
 
-/-- Apply the inverse chart on its genuine open target, with the distinguished point removed. -/
+/-- Apply the inverse chart on its open target, with the distinguished point removed. -/
 def chartTargetInversePointPairMap (e : OpenPartialHomeomorph M (Fin d → ℂ))
     (q : Fin d → ℂ) (hq : q ∈ e.target) :
     neighborhoodPointComplementPair e.target q ⟶ pointComplementPair (e.symm q) := by
@@ -233,7 +233,7 @@ lemma chartOrientationNeighborhood_subset_source :
   rintro y ⟨v, _, rfl⟩
   exact chartOrientationEmbeddingMap_mem_source d e x hx v
 
-/-- The actual relative homology class on a chart neighborhood, constructed from the fixed
+/-- The relative homology class on a chart neighborhood, constructed from the fixed
 affine-simplex cycle. -/
 def chartOrientationNeighborhoodClass :
     RelativeHomology ℚ

@@ -166,7 +166,7 @@ def localRelativeChainCoconeDesc [T2Space X] (x : X)
   cokernel.π_desc _ _ _
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual local relative chain complex is the colimit over open neighborhoods.
+/-- The local relative chain complex is the colimit over open neighborhoods.
 The proof uses the quotient universal property and compactness of individual simplices. -/
 def localRelativeChainCoconeIsColimit [T2Space X] (x : X) :
     IsColimit (localRelativeChainCocone R X x) where
@@ -207,7 +207,7 @@ def singularChainPresheafStalkIso [T2Space X] (x : X) (n : ℕ) :
     (isColimitOfPreserves (chainDegreeAdditiveFunctor R n)
       (localRelativeChainCoconeIsColimit R X x))
 
-/-- On a germ represented over `U`, the stalk isomorphism is the actual restriction map from
+/-- On a germ represented over `U`, the stalk isomorphism is the restriction map from
 `(X, X ∖ U)` to `(X, X ∖ {x})`. -/
 @[reassoc] lemma singularChainPresheafStalkIso_germ [T2Space X]
     (x : X) (U : Opens X) (hx : x ∈ U) (n : ℕ) :
@@ -221,7 +221,7 @@ def singularChainPresheafStalkIso [T2Space X] (x : X) (n : ℕ) :
       (localRelativeChainCoconeIsColimit R X x)) (.op ⟨U, hx⟩)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The stalk identification respects the actual local relative singular boundary. -/
+/-- The stalk identification respects the local relative singular boundary. -/
 @[reassoc] lemma singularChainPresheafStalkIso_boundary [T2Space X] (x : X) (n : ℕ) :
     (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map (singularChainBoundary R X n) ≫
         (singularChainPresheafStalkIso R X x n).hom =
@@ -255,7 +255,7 @@ def singularChainPresheafComplexStalkIso [T2Space X] (x : X) :
     rw [singularChainPresheafComplex_d]
     exact (singularChainPresheafStalkIso_boundary R X x j).symm)
 
-/-- The stalk of the constructed relative singular-chain sheaf complex is the actual local
+/-- The stalk of the relative singular-chain sheaf complex is the local
 relative singular-chain complex. This isomorphism requires only Hausdorffness of `X`. -/
 def singularChainSheafStalkIso [T2Space X] (x : X) :
     ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex

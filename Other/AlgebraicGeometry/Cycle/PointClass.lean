@@ -22,11 +22,11 @@ public import Other.AlgebraicGeometry.Cycle.BorelMooreClass
 
 On a smooth projective complex variety of dimension `d`, this file constructs an additive map
 from integral codimension-`d` cycles to rational cohomology in degree `2 * d`, and its rational
-scalar extension. The component classes come from the already constructed complex-oriented
+scalar extension. The component classes come from the complex-oriented
 Borel--Moore point classes. No duality map, local Thom-cap map, fundamental class, or
-principal-divisor theorem is an argument to either construction.
+principal-divisor theorem enters either construction.
 
-The evaluation theorems identify the result with the existing normalized point coclass, with
+The evaluation theorems identify the result with the normalized point coclass, with
 the exact integer or rational multiplicity, not merely up to a nonzero scalar. The domain is
 cycles, not Chow groups: this file does not prove rational-equivalence invariance. It also does
 not construct the classes of positive-dimensional components.
@@ -41,8 +41,8 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
   [SmoothOfRelativeDimension d V.structureMap]
 
-/-- The fully constructed normalized-interface ordinary point class agrees exactly with the
-previous point coclass construction. -/
+/-- The normalized-interface ordinary point class agrees exactly with the point coclass
+construction. -/
 @[simp] lemma maximalCodimensionComplexOrientedComponentClassData_ordinary
     (x : V.scheme) (hx : coheight x = d) :
     (maximalCodimensionComplexOrientedComponentClassData V d x hx).ordinaryFundamentalClass =
@@ -59,7 +59,7 @@ previous point coclass construction. -/
     (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx)]
 
 /-- The unconditional additive cycle-class map in maximal codimension. It takes only the
-geometric variety as input and uses its constructed complex-oriented point classes. -/
+geometric variety as input and uses its complex-oriented point classes. -/
 def pointCycleClassOnCycles :
     codimensionCycleSubgroup V.scheme d →+
       H^(2 * (d : ℤ))(V.over; ℚ) :=

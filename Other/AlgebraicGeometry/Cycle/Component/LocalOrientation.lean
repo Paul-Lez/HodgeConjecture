@@ -40,10 +40,9 @@ neighborhood to the smooth locus and then to the whole component. Transporting t
 standard complex class gives an exactly normalized element of the component's top local
 homology.
 
-No local class, generator, sign, or rational multiple is an input to this construction. The only
-choice is among the proved nonempty type of algebraic étale coordinate packages. Independence
-of that choice follows once invariance of the explicit local class under positive chart
-transitions is available.
+The only choice made is among the nonempty type of algebraic étale coordinate packages.
+Independence of that choice follows once invariance of the explicit local class under positive
+chart transitions is available.
 -/
 
 @[expose] public noncomputable section
@@ -232,7 +231,7 @@ def componentLocalOrientationClass :
   localClassOfChart n C.componentProjectionChart C.point
     C.point_mem_componentProjectionChart_source
 
-/-- The constructed component-local class generates the full top local homology group. -/
+/-- The component-local class generates the full top local homology group. -/
 theorem span_componentLocalOrientationClass_eq_top :
     Submodule.span ℚ {C.componentLocalOrientationClass} = ⊤ := by
   let : T2Space
@@ -278,7 +277,7 @@ def cycleComponentComplexLocalOrientation
     (cycleComponentLocalCoordinatesAt_point V x d p hx z hz) ▸
       C.componentLocalOrientationClass
 
-/-- Every value of the constructed component orientation is a generator of top local homology. -/
+/-- Every value of the component orientation is a generator of top local homology. -/
 theorem span_cycleComponentComplexLocalOrientation_eq_top
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
@@ -294,7 +293,7 @@ theorem span_cycleComponentComplexLocalOrientation_eq_top
     (cycleComponentLocalCoordinatesAt_point V x d p hx z hz)
     C.componentLocalOrientationClass C.span_componentLocalOrientationClass_eq_top
 
-/-- Every value of the constructed component orientation is nonzero. -/
+/-- Every value of the component orientation is nonzero. -/
 theorem cycleComponentComplexLocalOrientation_ne_zero
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]

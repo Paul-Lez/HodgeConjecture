@@ -22,7 +22,7 @@ namespace AlgebraicTopology.Singular
 variable (X : TopCat.{0}) (S : Set X) (n : ℕ)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- A sheafified germ vanishes exactly when an actual neighborhood restriction vanishes. -/
+/-- A sheafified germ vanishes exactly when a neighborhood restriction vanishes. -/
 theorem supportRelativeCohomologyGerm_eq_zero_iff
     (U : Opens X) (x : X) (hx : x ∈ U)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (U : Set X) S) n) :

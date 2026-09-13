@@ -19,12 +19,12 @@ namespace TopCat.Sheaf
 variable (X : TopCat.{u}) {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
   (f : K ⟶ L) (n : ℤ)
 
-/-- The actual map on the presheaves of local section-complex cohomology. -/
+/-- The map on the presheaves of local section-complex cohomology. -/
 def sectionCohomologyPresheafMap :
     sectionCohomologyPresheaf X K n ⟶ sectionCohomologyPresheaf X L n :=
   homologyMap (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).map f) n
 
-/-- The actual evaluation/homology comparison is natural in coefficient maps. -/
+/-- The evaluation/homology comparison is natural in coefficient maps. -/
 @[reassoc]
 lemma sectionCohomologyPresheafOnOpenIso_naturality (U : Opens X) :
     homologyMap (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).map f) n ≫
@@ -90,8 +90,8 @@ lemma sectionCohomologyPresheafToSheaf_naturality :
   exact congrArg (sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).map
     (sectionCohomologyPresheafSheafificationIso_naturality X f n)
 
-/-- The actual map from cohomology of local sections to cohomology-sheaf sections
-commutes with every actual coefficient-complex map. -/
+/-- The map from cohomology of local sections to cohomology-sheaf sections
+commutes with every coefficient-complex map. -/
 @[reassoc]
 lemma sectionCohomologyToSheafSection_naturality (U : Opens X) :
     homologyMap (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).map f) n ≫

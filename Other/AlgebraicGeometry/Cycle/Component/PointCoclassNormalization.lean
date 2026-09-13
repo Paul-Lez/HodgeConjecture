@@ -10,10 +10,9 @@ public import Other.AlgebraicGeometry.Cycle.Support
 
 /-! # Exact point normalization of the general component section
 
-This compares the general smooth-locus/open-transport construction with the
-old point coclass. In maximal codimension the singular boundary is proved
-empty. Actual scheme-isomorphism and pair-map naturality preserve coefficient
-one through the auxiliary ambient open; no point-specific definition is used.
+This compares the general smooth-locus/open-transport construction with the point coclass. In
+maximal codimension the singular boundary is empty. Scheme-isomorphism and pair-map naturality
+preserve coefficient one through the auxiliary ambient open.
 -/
 
 @[expose] public noncomputable section
@@ -27,7 +26,7 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   (hx : Order.coheight x = dim X.left)
 
-/-- The actual ambient image of a complex point of the component's smooth closed lift. -/
+/-- The ambient image of a complex point of the component's smooth closed lift. -/
 def cycleComponentSmoothClosedLiftPointImage
     (a : ComplexPoint (cycleComponentSmoothLocusOver X x)) : ComplexPoint X :=
   cycleComponentSmoothClosedLiftAmbientMap X x
@@ -39,7 +38,7 @@ theorem cycleComponentSmoothClosedLiftPointImage_mem_support
   (cycleComponentSmoothClosedLiftAmbientMap_support X x).ge ⟨a, rfl⟩
 
 include hx in
-/-- The entire component support is the singleton at any actual closed-lift point. -/
+/-- The entire component support is the singleton at any closed-lift point. -/
 theorem cycleComponentSupport_eq_singleton_smoothClosedLiftPointImage
     (a : ComplexPoint (cycleComponentSmoothLocusOver X x)) :
     cycleComponentSupport X x = {cycleComponentSmoothClosedLiftPointImage X x a} := by
@@ -49,7 +48,7 @@ theorem cycleComponentSupport_eq_singleton_smoothClosedLiftPointImage
   exact cycleComponentSupport_eq_singleton_of_coheight_eq_dimension X (dim X.left) x hx z
 
 include hx in
-/-- Injectivity of the actual ambient open embedding proves the auxiliary singleton support. -/
+/-- Injectivity of the ambient open embedding proves the auxiliary singleton support. -/
 theorem cycleComponentSmoothClosedLift_range_eq_singleton
     (a : ComplexPoint (cycleComponentSmoothLocusOver X x)) :
     Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)) =
@@ -61,7 +60,7 @@ theorem cycleComponentSmoothClosedLift_range_eq_singleton
   exact (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x).injective.eq_iff
 
 include hx in
-/-- The actual closed-lift source is smooth of dimension zero in maximal codimension. -/
+/-- The closed-lift source is smooth of dimension zero in maximal codimension. -/
 theorem cycleComponentPointClosedLift_smoothOfRelativeDimension_zero :
     SmoothOfRelativeDimension 0 (cycleComponentSmoothLocusOver X x).hom := by
   simpa only [Nat.sub_self] using
@@ -146,8 +145,8 @@ theorem cycleComponentSmoothSupportCoclassSection_eq_point_at_lift
     (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x).symm.le
 
 
-/-- The exact point target may be any complex point of the actual component.
-The actual open-image and support-image theorems supply a smooth-lift preimage. -/
+/-- The exact point target may be any complex point of the component.
+The open-image and support-image theorems supply a smooth-lift preimage. -/
 theorem cycleComponentSmoothSupportCoclassSection_eq_analyticPointCoclass
     (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
     cycleComponentSmoothSupportCoclassSection X x hx =
@@ -178,9 +177,8 @@ theorem cycleComponentSmoothSupportCoclassSection_eq_analyticPointCoclass
         (cycleComponentSmoothSupportAmbientOpen X x)) hpoints
   exact (cycleComponentSmoothSupportCoclassSection_eq_point_at_lift X x hx a).trans he
 
-/-- After the PROVED equality U=top, the general component section is exactly the
-literal sheafification image of the old GLOBAL point coclass. The displayed map
-is only equality transport of opens, not an extra comparison equivalence. -/
+/-- Given the equality `U = ⊤`, the general component section is exactly the sheafification
+image of the global point coclass. The displayed map is equality transport of opens. -/
 theorem cycleComponentSmoothSupportCoclassSection_global_point_normalization
     (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))

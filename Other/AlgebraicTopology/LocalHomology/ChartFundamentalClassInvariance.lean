@@ -152,7 +152,7 @@ lemma complexNeighborhoodPuncturedPairMap_compressedChartTransition_comp
       chartModelEmbedding d e x hx z.1
     exact (chartModelEmbedding d e' x hx').right_inv (hV z.2).2
 
-/-- Differentiability with injective complex derivative of the actual compressed chart transition
+/-- Differentiability with injective complex derivative of the compressed chart transition
 implies equality of the two normalized chart-local fundamental classes. -/
 theorem localClassOfChart_eq_of_hasFDerivAt_compressedTransition
     (e e' : OpenPartialHomeomorph M (Fin d → ℂ)) (x : M)

@@ -18,7 +18,7 @@ public import Other.AlgebraicTopology.Singular.Sheaf.ChainStalk
 /-!
 # Homology sheaves of the relative singular-chain complex
 
-This module upgrades the chain-stalk comparison to the stalk of the actual homology sheaf,
+This module upgrades the chain-stalk comparison to the stalk of the homology sheaf,
 using exactness of the sheaf stalk functor. In particular, vanishing of the homology sheaf is
 equivalent to vanishing of all local relative homology groups. This proves the sheaf-theoretic
 reduction needed for a manifold orientation theorem, without assuming local homology vanishing
@@ -35,7 +35,7 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R] (X : TopCat.{u})
 
-/-- The homology sheaf in homological degree `n` of the actual relative singular-chain sheaf
+/-- The homology sheaf in homological degree `n` of the relative singular-chain sheaf
 complex. Under the cohomological convention this is the homology sheaf in degree `-n`. -/
 def singularChainHomologySheaf (n : ℕ) : TopCat.Sheaf AddCommGrpCat.{u} X :=
   (singularChainSheafComplex R X).homology n
@@ -53,7 +53,7 @@ def singularChainHomologySheafStalkIso [T2Space X] (x : X) (n : ℕ) :
     singularChainSheafStalkHomologyIso R X x n
 
 /-- Local homology vanishing is exactly the obstruction to vanishing of the homology sheaf.
-The right side uses the underlying additive groups of the actual local relative homology. -/
+The right side uses the underlying additive groups of the local relative homology. -/
 theorem singularChainHomologySheaf_isZero_iff [T2Space X] (n : ℕ) :
     IsZero (singularChainHomologySheaf R X n) ↔
       ∀ x : X, IsZero ((forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).obj
@@ -61,7 +61,7 @@ theorem singularChainHomologySheaf_isZero_iff [T2Space X] (n : ℕ) :
   rw [TopCat.Sheaf.isZero_iff_stalkFunctor_obj_isZero]
   exact forall_congr' fun x ↦ (singularChainHomologySheafStalkIso R X x n).isZero_iff
 
-/-- The homology sheaf vanishes whenever the actual local relative homology groups vanish. -/
+/-- The homology sheaf vanishes whenever the local relative homology groups vanish. -/
 theorem singularChainHomologySheaf_isZero_of_localHomology_isZero [T2Space X] (n : ℕ)
     (hlocal : ∀ x : X, IsZero (RelativeHomology R (TopPair.ofSubset ({x} : Set X)ᶜ) n)) :
     IsZero (singularChainHomologySheaf R X n) := by

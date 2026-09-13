@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCohomologySheafComparison
 
 /-!
-# The actual supported singular cohomology sheaf and local relative cohomology
+# The supported singular cohomology sheaf and local relative cohomology
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCohomologySheafComparison`.
@@ -35,7 +35,7 @@ variable (X : TopCat.{0}) [T2Space X] [∀ V : Opens X, ParacompactSpace V]
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The sheaf comparison preserves the actual sheafification unit. -/
+/-- The sheaf comparison preserves the sheafification unit. -/
 @[reassoc]
 lemma supportedSingularCohomologySheafIsoRelative_unit :
     sectionCohomologyPresheafToSheaf X
@@ -56,7 +56,7 @@ lemma supportedSingularCohomologySheafIsoRelative_unit :
   exact (toSheafify_naturality (Opens.grothendieckTopology X)
     (supportedSingularCohomologyPresheafIsoRelative X S hS n).hom).symm
 
-/-- An actual local section-complex class maps to its actual relative class
+/-- A local section-complex class maps to its relative class
 followed by the relative sheafification unit. This fixes the local normalization. -/
 @[reassoc]
 lemma supportedSingularCohomologySheafIsoRelative_section (V : Opens X) :

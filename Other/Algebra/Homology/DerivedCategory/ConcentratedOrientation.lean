@@ -19,7 +19,7 @@ public import Mathlib.Algebra.Homology.SingleHomology
 # Canonical orientation of a cohomologically concentrated complex
 
 The roof `K ← τ≤n K → τ≥n τ≤n K` canonically identifies a complex concentrated in
-cohomological degree `n` with its actual homology object in that degree. An orientation
+cohomological degree `n` with its homology object in that degree. An orientation
 of this homology object therefore induces a derived orientation; no derived equivalence
 or bounded replacement is supplied as data.
 
@@ -55,18 +55,18 @@ def strictSingleIso [K.IsStrictlyGE n] [K.IsStrictlyLE n] :
     · apply (K.isZero_of_isStrictlyLE n i (by omega)).eq_of_tgt
   inv_hom_id := by aesop
 
-/-- Its actual homology in degree `n` is canonically that of the original complex. -/
+/-- Its homology in degree `n` is canonically that of the original complex. -/
 def singleTruncationHomologyIso : ((K.truncLE n).truncGE n).homology n ≅ K.homology n :=
   (isoOfQuasiIsoAt ((K.truncLE n).πTruncGE n) n).symm ≪≫
     isoOfQuasiIsoAt (K.ιTruncLE n) n
 
-/-- The only nonzero term of the double truncation is canonically the actual homology object. -/
+/-- The only nonzero term of the double truncation is canonically the homology object. -/
 def singleTruncationTermIso : ((K.truncLE n).truncGE n).X n ≅ K.homology n :=
   (singleObjHomologySelfIso (.up ℤ) n _).symm ≪≫
     (homologyMapIso (strictSingleIso ((K.truncLE n).truncGE n) n) n).symm ≪≫
       singleTruncationHomologyIso K n
 
-/-- Canonical single-degree model, with its term identified using actual homology maps. -/
+/-- Canonical single-degree model, with its term identified using homology maps. -/
 def singleTruncationIso :
     (K.truncLE n).truncGE n ≅ (single C (.up ℤ) n).obj (K.homology n) :=
   strictSingleIso ((K.truncLE n).truncGE n) n ≪≫
@@ -92,13 +92,13 @@ theorem toSingleHomology_homology :
     homologyMap_id, Category.id_comp]
   simp [isoOfQuasiIsoAt]
 
-/-- Cohomological concentration implies the lower bound on the actual complex. -/
+/-- Cohomological concentration implies the lower bound on the complex. -/
 theorem isGE_of_homology_concentrated
     (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i)) : K.IsGE n := by
   rw [isGE_iff]
   exact fun i hi ↦ (exactAt_iff_isZero_homology _ _).2 (h i (ne_of_lt hi))
 
-/-- Cohomological concentration implies the upper bound on the actual complex. -/
+/-- Cohomological concentration implies the upper bound on the complex. -/
 theorem isLE_of_homology_concentrated
     (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i)) : K.IsLE n := by
   rw [isLE_iff]
@@ -123,7 +123,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C] [HasDerivedCategory.{w} C]
   (K : CochainComplex C ℤ) (n : ℤ)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The canonical derived comparison with the actual homology object in the unique
+/-- The canonical derived comparison with the homology object in the unique
 nonvanishing degree, constructed by inverting the canonical truncation roof. -/
 def concentratedHomologyIso
     (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i)) :
@@ -134,7 +134,7 @@ def concentratedHomologyIso
   exact (asIso (Q.map (K.ιTruncLE n))).symm ≪≫
     asIso (Q.map (CochainComplex.toSingleHomology K n))
 
-/-- Orienting the actual unique homology object gives a derived orientation. -/
+/-- Orienting the unique homology object gives a derived orientation. -/
 def concentratedOrientationIso
     (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i))
     {A : C} (orientation : K.homology n ≅ A) :
@@ -151,7 +151,7 @@ theorem concentratedHomologyIso_roof
   simp [concentratedHomologyIso]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The constructed derived comparison induces the identity of the actual top homology
+/-- The derived comparison induces the identity of the top homology
 object, under Mathlib's canonical comparison with chain-level homology. -/
 @[reassoc]
 theorem concentratedHomologyIso_homology
@@ -168,7 +168,7 @@ theorem concentratedHomologyIso_homology
     homologyFunctorFactors_hom_naturality]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The derived orientation induces exactly the supplied orientation of the actual top
+/-- The derived orientation induces exactly the supplied orientation of the top
 homology object. This equality rules out an unnoticed scalar rescaling. -/
 @[reassoc]
 theorem concentratedOrientationIso_homology
@@ -196,7 +196,7 @@ def concentratedOrientationShiftIso
   concentratedOrientationIso K n h orientation ≪≫
     ((singleFunctors C).shiftIso (-n) n 0 (by omega)).symm.app A
 
-/-- Concentration proves eligibility for `D⁺` for the actual derived object. The witness
+/-- Concentration proves eligibility for `D⁺` for the derived object. The witness
 is its cohomological bound, not an independently supplied bounded chain model. -/
 def concentratedPlusObject
     (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i)) : Plus C := by

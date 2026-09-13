@@ -10,8 +10,8 @@ public import Other.LinearAlgebra.HodgeStructure
 
 /-! # The singular boundary of a maximal-codimension component is empty
 
-The already proved strict algebraic dimension drop gives a negative Krull
-dimension for its singular boundary. We deduce actual emptiness, both
+The strict algebraic dimension drop gives a negative Krull
+dimension for its singular boundary. We deduce emptiness, both
 algebraically and analytically; the auxiliary ambient open is therefore the
 whole scheme. No smoothness or emptiness of the component is assumed.
 -/
@@ -43,7 +43,7 @@ theorem cycleComponentSingularClosedFiltration_eq_bot_of_coheight_eq_dimension (
   exact (not_lt_of_ge hnonneg) hdim
 
 include hx in
-/-- The actual algebraic ambient singular supports vanish, not just their cohomology. -/
+/-- The algebraic ambient singular supports vanish, not just their cohomology. -/
 theorem cycleComponentSingularAmbientClosedFiltration_eq_bot_of_coheight_eq_dimension (k : ℕ) :
     cycleComponentSingularAmbientClosedFiltration X x k = ⊥ := by
   apply SetLike.coe_injective
@@ -79,14 +79,14 @@ theorem cycleComponentSmoothSupportAmbientOpen_eq_top_of_coheight_eq_dimension :
   exact Opens.ext Set.compl_empty
 
 include hx in
-/-- The actual auxiliary ambient scheme-open inclusion is an isomorphism in the point case. -/
+/-- The auxiliary ambient scheme-open inclusion is an isomorphism in the point case. -/
 theorem cycleComponentSmoothLocusAmbientOpen_ι_isIso_of_coheight_eq_dimension :
     IsIso (cycleComponentSmoothLocusAmbientOpen X x).ι := by
   rw [cycleComponentSmoothLocusAmbientOpen_eq_top_of_coheight_eq_dimension X x hx]
   exact X.left.topIso.isIso_hom
 
 include hx in
-/-- Consequently the auxiliary ambient scheme retains actual projectivity in this
+/-- Consequently the auxiliary ambient scheme retains projectivity in this
 point case; projectivity of arbitrary auxiliary opens is not asserted. -/
 theorem cycleComponentSmoothLocusAmbientOpen_isProjective_of_coheight_eq_dimension :
     IsProjective ((cycleComponentSmoothLocusAmbientOpen X x).ι ≫ X.hom) := by

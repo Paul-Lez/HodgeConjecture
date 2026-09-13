@@ -758,7 +758,7 @@ lemma supportCapCochainCohomologyLinear_on_cycle
   rw [h]
   rfl
 
-/-- The support-valued cap product on the repository's standard relative cohomology and
+/-- The support-valued cap product on the standard relative cohomology and
 homology objects:
 
 `H^p(X,A) → (H_{p+q}(X,B) → H_q(X,A ∪ B))`.

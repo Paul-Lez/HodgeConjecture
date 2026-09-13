@@ -208,7 +208,7 @@ namespace OrientationLift
 def orientationInChart (o : OrientationLift I M ι) (x z : M) : _root_.Orientation ℝ E ι :=
   signedOrientation (o.chartSign x z) o.modelOrientation
 
-/-- The old determinant/sign compatibility condition follows from transport of orientations. -/
+/-- The determinant/sign compatibility condition follows from transport of orientations. -/
 theorem compatible_det (o : OrientationLift I M ι) {x y z : M}
     (hx : z ∈ (chartAt H x).source) (hy : z ∈ (chartAt H y).source) :
     0 < LinearMap.det (tangentCoordChange I x y z).toLinearMap ↔

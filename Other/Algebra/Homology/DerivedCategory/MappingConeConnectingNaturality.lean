@@ -86,7 +86,7 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The standard connecting projection is the negative shifted inclusion.
 This sign must be retained when comparing a cone model of supported
-cohomology with actual kernel-defined supported sections. -/
+cohomology with kernel-defined supported sections. -/
 @[reassoc]
 lemma shiftedLiftShortComplex_connecting (S : ShortComplex (CochainComplex C ℤ)) :
     shiftedLiftShortComplex S ≫ (mappingCone.triangle S.g).mor₃ = -S.f⟦(1 : ℤ)⟧' := by
@@ -114,7 +114,7 @@ lemma homologyMap_shiftedLiftShortComplex_connecting
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Inverting the actual short-exact-sequence quasi-isomorphism requires a
+/-- Inverting the short-exact-sequence quasi-isomorphism requires a
 minus sign to identify the connecting map with support-forgetting. -/
 lemma inv_homologyMap_shiftedLiftShortComplex_connecting
     (S : ShortComplex (CochainComplex C ℤ)) (hS : S.ShortExact)

@@ -36,8 +36,8 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- The old local pair-model coclass is exactly the chart-projection coclass.
-The proof uses the explicit radial normal fiber, including its complex normalization. -/
+/-- The local pair-model coclass is exactly the chart-projection coclass. The proof uses the
+explicit radial normal fiber, including its complex normalization. -/
 theorem smoothClosedSupportNormalCoclass_eq_projection
     (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V) :
     smoothClosedSupportNormalCoclass X Y i m d z V hzV =
@@ -57,8 +57,8 @@ theorem smoothClosedSupportNormalCoclass_eq_projection
     (congrArg Prod.snd (smoothClosedSupportRestrictionChart_center X Y i m d z V))
   exact smoothClosedSupportNormalCoclass_apply_class X Y i m d z V hzV
 
-/-- On a common smaller neighborhood, restriction of the old local coclass is exactly
-the holomorphic-chart coclass. Both maps are the same literal normal projection. -/
+/-- On a common smaller neighborhood, restriction of the local coclass is exactly the
+holomorphic-chart coclass. Both maps are the same normal projection. -/
 theorem smoothClosedSupportNormalCoclass_restrict_eq_chart
     (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
     (W : Set (ComplexPoint X))

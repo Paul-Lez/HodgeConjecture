@@ -8,7 +8,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestriction
 public import Mathlib.Topology.Sheaves.Stalks
 
 /-!
-# Stalk normalization for actual open restriction
+# Stalk normalization for open restriction
 
 Restriction here means precomposition with the open-image functor, not an independently
 chosen inverse-image model. Its stalk comparison sends the germ of a section on an open
@@ -26,7 +26,7 @@ namespace TopCat.Presheaf
 variable {X : TopCat.{u}} (U : Opens X) (F : X.Presheaf AddCommGrpCat.{u})
   (y : (Opens.toTopCat X).obj U)
 
-/-- Actual presheaf restriction to the open subspace. -/
+/-- Presheaf restriction to the open subspace. -/
 abbrev openRestriction : ((Opens.toTopCat X).obj U).Presheaf AddCommGrpCat.{u} :=
   U.isOpenEmbedding.functor.op ⋙ F
 

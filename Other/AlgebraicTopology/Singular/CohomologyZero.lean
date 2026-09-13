@@ -37,7 +37,7 @@ namespace AlgebraicTopology.Singular
 variable (R : Type u) [Field R] (X : TopCat.{u}) [PathConnectedSpace X]
 
 /-- The degree-zero singular-homology augmentation, transported across universal coefficients
-to an actual class in the cohomology of the singular cochain complex. -/
+to a class in the cohomology of the singular cochain complex. -/
 def cohomologyUnitZero : Cohomology R X 0 :=
   (cohomologyEquivDualHomology R X 0).symm (X.singularHomology₀ε (ModuleCat.of R R)).hom
 

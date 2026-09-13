@@ -14,10 +14,10 @@ public import Other.AlgebraicTopology.LocalHomology.EuclideanNeighborhoodOrienta
 /-!
 # Exact point normalization of the general smooth normal-purity construction
 
-The actual zero-dimensional normal-purity parametrization has the complex orientation
-of the existing point class. The proof computes its coordinate map, uses complex-linear
-orientation invariance and positive radial normalization, and then applies genuine point
-excision. Thus the general normal coclass restricts to the existing point coclass with
+The zero-dimensional normal-purity parametrization has the complex orientation
+of the point class. The proof computes its coordinate map, uses complex-linear
+orientation invariance and positive radial normalization, and then applies point
+excision. Thus the general normal coclass restricts to the point coclass with
 exact coefficient `1`, not just up to a nonzero rational factor.
 -/
 
@@ -35,7 +35,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
   (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
 
-/-- The actual normal parametrization factored through the genuine ambient chart target. -/
+/-- The normal parametrization factored through the ambient chart target. -/
 def smoothClosedPointNormalTargetPairMap :
     standardComplexPuncturedPair d ⟶
       neighborhoodPointComplementPair (localChart X d (Point.map i z)).target
@@ -103,7 +103,7 @@ theorem smoothClosedPointNormalTargetPairMap_comp_inclusion :
   · ext w
     exact h w
 
-/-- The actual normal model sends the fixed standard class to the exact ambient chart class. -/
+/-- The normal model sends the fixed standard class to the exact ambient chart class. -/
 theorem smoothClosedPointNormalModelPairMap_localClass :
     relativeHomologyMap ℚ (2 * d) (smoothClosedPointNormalModelPairMap X Y i d z V hzV)
       (standardComplexLocalClass d) =
@@ -117,7 +117,7 @@ theorem smoothClosedPointNormalModelPairMap_localClass :
     relativeHomologyMap_comp, LinearMap.comp_apply,
     centeredComplexLinear_preserves_standardComplexLocalClass]
 
-/-- The actual normal class restricts to the old precisely normalized local point class. -/
+/-- The normal class restricts to the exactly normalized local point class. -/
 theorem smoothClosedPointNormalClass_to_analyticPointLocalHomologyClass :
     relativeHomologyMap ℚ (2 * d) (smoothClosedPointNeighborhoodPairMap X Y i d z V hzV)
       (smoothClosedSupportNormalClass X Y i 0 d z V hzV) =
@@ -134,8 +134,8 @@ theorem smoothClosedPointNormalClass_to_analyticPointLocalHomologyClass :
 
 variable [IsProjective X.hom]
 
-/-- The old point coclass evaluates to exactly one on the actual general normal class.
-This theorem computes the normalization; it does not postulate a trace comparison. -/
+/-- The point coclass evaluates to exactly one on the general normal class. The theorem computes
+the normalization. -/
 @[simp]
 theorem analyticPointLocalCoclass_apply_smoothClosedPointNormalClass :
     relativeCohomologyEquivDualHomology ℚ
@@ -149,7 +149,7 @@ theorem analyticPointLocalCoclass_apply_smoothClosedPointNormalClass :
     analyticPointLocalCoclass_apply_localClass]
 
 /-- The general normal-purity coclass, in zero source dimension, agrees exactly with
-the existing point coclass pulled back along the actual local inclusion. -/
+the point coclass pulled back along the local inclusion. -/
 theorem smoothClosedPointNormalCoclass_eq_analyticPointLocalCoclass :
     smoothClosedSupportNormalCoclass X Y i 0 d z V hzV =
       relativeCohomologyMap ℚ (2 * d)

@@ -143,7 +143,7 @@ def compactificationBorelMooreToLocal
 
 /-- If the compactification consists of a single point, then restriction from its
 compactification-relative Borel--Moore homology to local homology at that point is an
-isomorphism.  This is a genuine isomorphism of pairs: both omitted subspaces are empty.
+isomorphism.  This is an isomorphism of pairs: both omitted subspaces are empty.
 
 The statement is useful for zero-dimensional irreducible components and does not appeal to a
 fundamental-class existence theorem. -/

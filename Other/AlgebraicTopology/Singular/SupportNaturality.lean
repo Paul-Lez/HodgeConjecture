@@ -75,7 +75,7 @@ theorem forgetSupport_cohomologyWithSupportMap_eq_of_homotopyToId
 
 /-- If a map homotopic to the identity transports one supported class to another, the two
 classes have the same image in ordinary cohomology.  The equality `hW` only identifies the
-actual inverse-image support with the named source support; no equivalence of unrelated
+inverse-image support with the named source support; no equivalence of unrelated
 cohomology groups is assumed. -/
 theorem forgetSupport_eq_of_supportedClass_transport
     (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ)

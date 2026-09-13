@@ -293,7 +293,7 @@ theorem nonempty_rationalCycleComponentBorelMooreData_of_coheight_eq_dimension
 
 namespace RationalCycleComponentBorelMooreData
 
-/-- The constructed exact local complex orientation used to normalize the component class. -/
+/-- The exact local complex orientation used to normalize the component class. -/
 def localOrientation
     {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
     [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
@@ -301,7 +301,7 @@ def localOrientation
     CycleComponentLocalOrientation ℚ V x (2 * (d - p)) :=
   cycleComponentComplexLocalOrientation V x d p hx
 
-/-- Every value of the constructed local orientation is an exact generator of top local
+/-- Every value of the local orientation is an exact generator of top local
 homology; this property is proved from the explicit complex chart class. -/
 theorem span_localOrientation_eq_top
     {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
@@ -313,7 +313,7 @@ theorem span_localOrientation_eq_top
   span_cycleComponentComplexLocalOrientation_eq_top V x d p hx z hz
 
 /-- The distinguished rational Borel--Moore fundamental class supplied by the global
-existence-and-uniqueness theorem and normalized by the constructed local orientation. -/
+existence-and-uniqueness theorem and normalized by the local orientation. -/
 def fundamentalClass
     {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
     [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}

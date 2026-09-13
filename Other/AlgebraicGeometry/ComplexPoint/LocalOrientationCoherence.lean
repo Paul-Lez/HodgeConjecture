@@ -25,7 +25,7 @@ public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvaria
 # Coherence of the complex local orientation
 
 The local class constructed from the preferred algebraic chart does not depend on which preferred
-chart containing the point is used.  The proof computes the derivative of the actual compressed
+chart containing the point is used.  The proof computes the derivative of the compressed
 transition appearing in `localClassOfChart`: its three factors are the first radial compression,
 the complex tangent-coordinate equivalence, and the inverse radial compression.  All three are
 injective complex-linear maps, so nonlinear local-class invariance applies.

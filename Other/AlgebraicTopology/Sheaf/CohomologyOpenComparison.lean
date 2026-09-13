@@ -9,7 +9,7 @@ public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
 public import Other.AlgebraicTopology.Sheaf.HomologySection
 
-/-! # The canonical local cohomology-sheaf map under actual open restriction -/
+/-! # The canonical local cohomology-sheaf map under open restriction -/
 
 @[expose] public noncomputable section
 
@@ -25,7 +25,7 @@ variable {C D E A : Type*} [Category* C] [Category* D] [Category* E] [Category* 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- Homology comparisons around an actual square of exact functors. -/
+/-- Homology comparisons around a square of exact functors. -/
 @[reassoc]
 lemma mapHomologyIso_exactSquare (S : ShortComplex C)
     (F : C ⥤ D) (P : D ⥤ A) (G : C ⥤ E) (Q : E ⥤ A)
@@ -51,7 +51,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U : Opens X)
 
-/-- Actual restriction of additive presheaves to the open subspace. -/
+/-- Restriction of additive presheaves to the open subspace. -/
 def cohomologyOpenPresheafRestriction :
     ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) ⥤ ((Opens (TopCat.of U))ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
   (Functor.whiskeringLeft (Opens (TopCat.of U))ᵒᵖ (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj
@@ -93,7 +93,7 @@ def cohomologyOpenSheafificationIso :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- Open restriction of the actual sheafification counit is its actual subspace counit. -/
+/-- Open restriction of the sheafification counit is its subspace counit. -/
 @[reassoc]
 lemma openRestrictionSheafificationIso_counit (F : Sheaf AddCommGrpCat.{u} X) :
     (openRestrictionSheafificationIso X U F.obj).hom ≫

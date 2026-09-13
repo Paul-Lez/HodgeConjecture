@@ -10,7 +10,7 @@ public import Other.AlgebraicTopology.Sheaf.CohomologyOpenRestriction
 /-!
 # Exact normalization of the lowest-degree comparison on an ambient open
 
-The actual top-open equality transport is compatible with the canonical
+The top-open equality transport is compatible with the canonical
 cohomology-sheaf section map. No identification of cohomology groups is
 supplied as data: all equality transports are those of the underlying opens.
 -/
@@ -25,7 +25,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
 
-/-- Evaluation on equal opens, using the actual presheaf equality map. -/
+/-- Evaluation on equal opens, using the presheaf equality map. -/
 def supportEvaluationEqIso {V W : Opens X} (h : V = W) :
     supportEvaluation X V ≅ supportEvaluation X W :=
   NatIso.ofComponents (fun F => F.obj.mapIso (eqToIso (congrArg op h)))
@@ -33,7 +33,7 @@ def supportEvaluationEqIso {V W : Opens X} (h : V = W) :
 
 variable (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- The same literal equality transport on the actual section complexes. -/
+/-- The same equality transport on the section complexes. -/
 def sectionComplexEqIso {V W : Opens X} (h : V = W) :
     ((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj K ≅
       ((supportEvaluation X W).mapHomologicalComplex (.up ℤ)).obj K :=
@@ -60,7 +60,7 @@ theorem sectionComplexEqIso_homology_section {V W : Opens X} (h : V = W) (n : �
   rw [sectionComplexEqIso_hom_refl, homologyMap_id]
   simp [supportEvaluationEqIso]
 
-/-- In particular the actual top-open identification used by open restriction
+/-- In particular the top-open identification used by open restriction
 preserves the original ambient cohomology-sheaf section map exactly. -/
 @[reassoc]
 theorem openRestrictionTopSectionComplexIso_homology_section (U : Opens X) (n : ℤ) :
@@ -73,9 +73,9 @@ theorem openRestrictionTopSectionComplexIso_homology_section (U : Opens X) (n : 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The constructed lowest-degree isomorphism on an ambient open has
-EXACTLY the original ambient canonical section map as its forward map.
-The open restriction and its top-open transport introduce no normalization. -/
+/-- The lowest-degree isomorphism on an ambient open has the original ambient canonical section
+map as its forward map, on the nose. The open restriction and its top-open transport preserve the
+normalization. -/
 @[simp]
 theorem openRestrictedLowestSectionCohomologyIso_hom (U : Opens X) (N n : ℤ)
     [K.IsStrictlyGE N]

@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 
 /-!
-# Actual open-embedding transport of the relative-cohomology sheaf
+# Open-embedding transport of the relative-cohomology sheaf
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologyOpenTransport`.
@@ -22,7 +22,7 @@ namespace AlgebraicTopology.Singular
 variable {X Y : TopCat.{0}} (f : Y ⟶ X) (hf : IsOpenEmbedding f)
   (S : Set X) (B : Set Y) (hB : f ⁻¹' S = B)
 
-/-- Inverse transport is literal pullback along the inverse pair homeomorphism. -/
+/-- Inverse transport is pullback along the inverse pair homeomorphism. -/
 theorem supportRelativeCohomologyPresheafOpenIso_inv_app (n : ℕ) (V : Opens Y)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set Y) B) n) :
     (supportRelativeCohomologyPresheafOpenIso f hf S B hB n).inv.app (op V) a =
@@ -44,7 +44,7 @@ theorem supportOpenEmbeddingSheafificationIso_unit (P : TopCat.Presheaf AddCommG
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The normalization square: actual classes are transported through their literal
+/-- The normalization square: classes are transported through their
 pair-homeomorphism pullbacks before application of the ambient sheafification unit. -/
 @[reassoc]
 theorem supportRelativeCohomologySheafOpenIso_unit (n : ℕ) :
@@ -57,7 +57,7 @@ theorem supportRelativeCohomologySheafOpenIso_unit (n : ℕ) :
     supportOpenEmbeddingSheafificationIso_unit]
   rfl
 
-/-- Restriction of the transported section is transport of its actual restriction. -/
+/-- Restriction of the transported section is transport of its restriction. -/
 theorem supportRelativeCohomologySectionOpenImage_restrict (n : ℕ)
     (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤)) (V : Opens Y) :
     (supportRelativeCohomologySheaf X S n).obj.map
@@ -67,7 +67,7 @@ theorem supportRelativeCohomologySectionOpenImage_restrict (n : ℕ)
       ((supportRelativeCohomologySheaf Y B n).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op s) := by
   aesop
 
-/-- The open transport preserves the literal sheafification images of local classes. -/
+/-- The open transport preserves the sheafification images of local classes. -/
 theorem supportRelativeCohomologySheafOpenIso_unit_apply (n : ℕ) (V : Opens Y)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set Y) B) n) :
     (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op V)
@@ -80,7 +80,7 @@ theorem supportRelativeCohomologySheafOpenIso_unit_apply (n : ℕ) (V : Opens Y)
 
 
 
-/-- Restriction to each actual image neighborhood retains the constructed comparison. -/
+/-- Restriction to each image neighborhood retains the comparison. -/
 theorem supportRelativeCohomologySectionOnOpen_restrict (n : ℕ) (U : Opens X)
     (hU : hf.functor.obj ⊤ = U)
     (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤))

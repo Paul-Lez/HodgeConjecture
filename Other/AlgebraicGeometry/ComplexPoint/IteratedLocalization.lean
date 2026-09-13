@@ -62,7 +62,7 @@ lemma iteratedAway_isLocalization_derivative_mul_base
   exact hloc
 
 /-- The twice-localized monogenic algebra is the derivative standard étale algebra for the
-product of the old denominator and the new principal-open equation. -/
+product of the first denominator and the second principal-open equation. -/
 def iteratedAwayEquivDerivativeStandardEtale
     (p : Polynomial (complexPolynomialRing n)) (hp : p.Monic)
     (r ρ : complexPolynomialRing n) :

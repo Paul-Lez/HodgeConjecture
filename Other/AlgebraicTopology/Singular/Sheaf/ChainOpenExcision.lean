@@ -10,8 +10,8 @@ public import Other.AlgebraicTopology.Singular.Sheaf.ChainStalk
 /-!
 # The open-inclusion comparison is a quasi-isomorphism
 
-The actual chain-sheaf comparison is a quasi-isomorphism over `ℚ` on Hausdorff spaces.
-The proof uses its normalized stalk formula and the proved rational neighborhood-excision
+The chain-sheaf comparison is a quasi-isomorphism over `ℚ` on Hausdorff spaces.
+The proof uses its normalized stalk formula and the rational neighborhood-excision
 theorem, rather than assuming an open-restriction comparison or a chain-stalk isomorphism.
 The universe and coefficient restriction on excision match the current subdivision API.
 -/
@@ -25,7 +25,7 @@ namespace AlgebraicTopology.Singular
 variable {X : TopCat} (U : Opens X)
 
 /-- The two presentations of the intrinsic punctured pair differ only by subtype equality.
-Both directions are the identity on actual underlying points. -/
+Both directions are the identity on underlying points. -/
 def openSubsetPointExcisionPairIso (y : (Opens.toTopCat X).obj U) :
     TopPair.ofSubset (X := (Opens.toTopCat X).obj U)
         ({y} : Set ((Opens.toTopCat X).obj U))ᶜ ≅
@@ -45,7 +45,7 @@ def openSubsetPointExcisionPairIso (y : (Opens.toTopCat X).obj U) :
     · ext z; rfl
     · rfl
 
-/-- The normalized map of punctured pairs is exactly the previously proved excision map. -/
+/-- The normalized map of punctured pairs is exactly the excision map. -/
 lemma openSubsetPointExcisionPairIso_hom_comp (y : (Opens.toTopCat X).obj U) :
     (openSubsetPointExcisionPairIso U y).hom ≫
       neighborhoodPointComplementPairMap (U : Set X) y.val = openSubsetPointPairMap U y := by
@@ -53,7 +53,7 @@ lemma openSubsetPointExcisionPairIso_hom_comp (y : (Opens.toTopCat X).obj U) :
   · ext z; rfl
   · rfl
 
-/-- Rational point excision applies to the actual normalized point-pair map. -/
+/-- Rational point excision applies to the normalized point-pair map. -/
 theorem openSubsetPointPairMap_quasiIso [T2Space X] (y : (Opens.toTopCat X).obj U) :
     QuasiIso ((relativeChainFunctor ℚ).map (openSubsetPointPairMap U y)) := by
   rw [← openSubsetPointExcisionPairIso_hom_comp, Functor.map_comp]
@@ -63,7 +63,7 @@ theorem openSubsetPointPairMap_quasiIso [T2Space X] (y : (Opens.toTopCat X).obj 
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The actual chain map on each stalk is a quasi-isomorphism, by neighborhood excision.
+/-- The chain map on each stalk is a quasi-isomorphism, by neighborhood excision.
 There is deliberately no assertion that this map is a chain-complex isomorphism. -/
 theorem singularChainSheafOpenRestriction_stalk_quasiIso [T2Space X]
     (y : (Opens.toTopCat X).obj U) :
@@ -111,7 +111,7 @@ theorem sheafChainMap_quasiIso_of_stalk {Y : TopCat}
     (F.map (HomologicalComplex.homologyMap f n))
 
 /-- The intrinsic chain sheaf on an open subspace is canonically quasi-isomorphic to the
-restriction of the ambient chain sheaf, with its actual pair-induced normalization. -/
+restriction of the ambient chain sheaf, with its pair-induced normalization. -/
 theorem singularChainSheafOpenRestriction_quasiIso [T2Space X] :
     QuasiIso (singularChainSheafOpenRestriction U ℚ) :=
   sheafChainMap_quasiIso_of_stalk _ (singularChainSheafOpenRestriction_stalk_quasiIso U)

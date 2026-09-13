@@ -183,7 +183,7 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Hypercohomology unshifting is carried to the canonical, signed
-global-section homology shift. The shifted morphism used here is literally
+global-section homology shift. The shifted morphism used here is
 the identity on `K⟦s⟧`, not an independently chosen group equivalence. -/
 lemma hypercohomologyAddEquivGlobalSectionsKInjective_rightUnshift
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective]

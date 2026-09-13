@@ -10,10 +10,10 @@ public import Other.AlgebraicGeometry.ComplexPoint.CoclassOrientation
 public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
 public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvariance
 
-/-! # Exact point-coclass naturality for actual complex scheme isomorphisms
+/-! # Exact point-coclass naturality for complex scheme isomorphisms
 
-The actual maps of complex points are holomorphic in both directions. Analytic
-chart-transition invariance therefore proves that their literal point-pair maps
+The maps of complex points are holomorphic in both directions. Analytic
+chart-transition invariance therefore proves that their point-pair maps
 carry the exactly normalized local class to the exactly normalized local class.
 Dual normalization proves the point-coclass pullback identity with coefficient one.
 -/
@@ -30,14 +30,14 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension d X.hom] [SmoothOfRelativeDimension d Y.hom]
   [IsProjective X.hom] [IsProjective Y.hom] (z : ComplexPoint Y)
 
-/-- The actual point-complement map associated with the actual analytic homeomorphism. -/
+/-- The point-complement map associated with the analytic homeomorphism. -/
 def complexSchemeIsoPointPairMap :
     pointComplementPair z ⟶ pointComplementPair (Point.map e.hom z) :=
   pointComplementHomeomorphPairMap (Point.isoMapHomeomorph e) z
 
 omit [IsProjective X.hom] [IsProjective Y.hom] in
 /-- Scheme-isomorphism naturality preserves the exact complex local orientation,
-proved from analyticity of both actual coordinate transitions. -/
+proved from analyticity of both coordinate transitions. -/
 theorem complexSchemeIsoPointPairMap_localClass :
     relativeHomologyMap ℚ (2 * d) (complexSchemeIsoPointPairMap X Y e z)
       (analyticPointLocalHomologyClass Y d z) =
@@ -67,7 +67,7 @@ theorem complexSchemeIsoPointPairMap_localClass :
     have hsymm (q : ComplexPoint X) : H.symm q = Point.map e.inv q := rfl
     simpa only [hback, hsymm] using ha
 
-/-- The old normalized point coclass pulls back exactly under the actual scheme iso. -/
+/-- The normalized point coclass pulls back exactly under the scheme iso. -/
 theorem analyticPointLocalCoclass_schemeIso_pullback :
     relativeCohomologyMap ℚ (2 * d) (complexSchemeIsoPointPairMap X Y e z)
       (analyticPointLocalCoclass X d (Point.map e.hom z)) =

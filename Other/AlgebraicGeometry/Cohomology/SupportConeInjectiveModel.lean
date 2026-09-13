@@ -32,8 +32,8 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
 
-/-- The old-cone comparison preserves the actual connecting morphism used to
-forget support, with the ambient augmentation on its target. -/
+/-- The sheaf-cone comparison preserves the connecting morphism used to forget support, with the
+ambient augmentation on its target. -/
 @[reassoc]
 lemma rationalSupportConeToAmbientInjectiveCone_connecting
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :

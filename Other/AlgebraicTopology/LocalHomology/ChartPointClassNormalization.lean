@@ -9,9 +9,9 @@ public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
 public import Other.AlgebraicTopology.LocalHomology.EuclideanNeighborhoodOrientation
 
 /-!
-# Normalization of actual point parametrizations inside a complex chart
+# Normalization of point parametrizations inside a complex chart
 
-Point excision compares any actual target-neighborhood parametrization with the standard
+Point excision compares any target-neighborhood parametrization with the standard
 compressed chart parametrization, provided its ambient coordinate action preserves the
 specified translated complex class. The resulting comparison preserves the exact local
 class, including its scale and sign.
@@ -25,7 +25,7 @@ namespace AlgebraicTopology.Singular
 
 variable (d : ℕ)
 
-/-- Every actual injective complex-linear endomorphism preserves the fixed complex class. -/
+/-- Every injective complex-linear endomorphism preserves the fixed complex class. -/
 theorem centeredComplexLinear_preserves_standardComplexLocalClass
     (L : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) (hL : Function.Injective L) :
     relativeHomologyMap ℚ (2 * d) (centeredComplexEmbeddingPair d L L.continuous hL 0)
@@ -77,8 +77,8 @@ lemma radialTargetPointPairMap_chartTargetInverseAtSource :
       rw [add_zero]
     exact h v
 
-/-- A normalized actual coordinate parametrization gives the exact chart-local class.
-The only comparison used in this proof is genuine point-neighborhood excision. -/
+/-- A normalized coordinate parametrization gives the exact chart-local class.
+The only comparison used in this proof is point-neighborhood excision. -/
 theorem chartTargetPointPairMap_localClass
     (P : standardComplexPuncturedPair d ⟶ neighborhoodPointComplementPair e.target (e x))
     (hP : relativeHomologyMap ℚ (2 * d)

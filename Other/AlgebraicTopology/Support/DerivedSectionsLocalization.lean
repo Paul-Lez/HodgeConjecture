@@ -37,7 +37,7 @@ attribute [local instance] derivedSupportLocalizationGroupDerivedCategory
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The derived unit identifies the actual `D⁺` supported-sections functor
+/-- The derived unit identifies the `D⁺` supported-sections functor
 with its termwise value on a bounded-below injective complex. The displayed
 comparison takes values in the ambient derived category via its full inclusion. -/
 def derivedClosedSupportInjectiveModelIso (Z : Closeds X)

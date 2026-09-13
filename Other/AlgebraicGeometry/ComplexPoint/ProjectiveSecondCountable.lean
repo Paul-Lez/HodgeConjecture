@@ -30,7 +30,7 @@ import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 A smooth projective complex analytification is compact and has manifold charts
 modeled on a finite-dimensional complex vector space. Compactness gives sigma-compactness, so the
 charted-space second-countability theorem applies. Standard consequences include separability,
-first countability, and the Lindelöf property. The independently proved Hausdorff theorem for
+first countability, and the Lindelöf property. The Hausdorff theorem for
 projective analytifications then supplies the remaining hypothesis of Mathlib's manifold
 metrizability theorem.
 -/

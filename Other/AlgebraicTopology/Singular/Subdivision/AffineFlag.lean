@@ -131,7 +131,7 @@ public theorem diam_range_affineFlagContinuousMap_le
     (affineFlagContinuousMap_mem_convexHull_vertices n k F w') |>.trans
       (by rw [convexHull_diam]; exact diam_affineFlagVertexSet_le n k hn F)
 
-/-- One actual affine flag cell in the subdivision of a singular simplex maps into a cover
+/-- One affine flag cell in the subdivision of a singular simplex maps into a cover
 member as soon as the barycentric contraction factor is below the pulled-back Lebesgue number.
 This is the direct bridge between the metric estimate in this file and cover-smallness. -/
 public theorem singularSimplex_affineFlag_image_subset_cover_of_factor_lt

@@ -58,7 +58,7 @@ def rightUnshiftCochain : Cochain A (K⟦s⟧) n →+ Cochain A K n' where
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual three-term map for unshifting a target. The outer components
+/-- The three-term map for unshifting a target. The outer components
 have the standard `(-1)^s` factors; its middle component has no sign. -/
 def rightUnshiftShortComplex :
     (HomComplex A (K⟦s⟧)).sc n ⟶ (HomComplex A K).sc n' where
@@ -113,7 +113,7 @@ lemma homologyAddEquiv_rightUnshift (x : (HomComplex A (K⟦s⟧)).homology n) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Unshifting cocycles corresponds to the actual shift-composition
+/-- Unshifting cocycles corresponds to the shift-composition
 isomorphism on their representing chain maps. -/
 lemma equivHomShift_symm_rightUnshift (z : Cocycle A (K⟦s⟧) n) :
     Cocycle.equivHomShift.symm (z.rightUnshift n' h) =

@@ -27,7 +27,7 @@ resulting canonical identifications
 
 `Hₙ(X; R) ≅ Hₙ(X, ∅; R)` and `Hⁿ(X, X ∖ X; R) ≅ Hⁿ(X; R)`.
 
-The second isomorphism is exactly the existing map which forgets support in all of `X`.  These
+The second isomorphism is exactly the map which forgets support in all of `X`.  These
 identifications are useful when Borel--Moore homology of a compact space is presented using the
 space itself as a compactification, with empty boundary.
 -/
@@ -110,7 +110,7 @@ lemma wholeSupportCohomologyLinearEquiv_apply (n : ℕ)
           (TopPair.ofSubset ((Set.univ : Set X)ᶜ)) n).hom z) :=
   cohomologyEquivDualHomology_forgetSupport R X Set.univ n α z
 
-/-- The canonical whole-support equivalence has the existing forget-support map as its underlying
+/-- The canonical whole-support equivalence has the forget-support map as its underlying
 linear map. -/
 lemma wholeSupportCohomologyLinearEquiv_toLinearMap (n : ℕ) :
     (wholeSupportCohomologyLinearEquiv R X n).toLinearMap =

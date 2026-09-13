@@ -30,18 +30,18 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- The actual complex-linear normal-coordinate inclusion in source dimension zero. -/
+/-- The complex-linear normal-coordinate inclusion in source dimension zero. -/
 def closedImmersionPointNormalLinearMap : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
   (closedImmersionDerivativeProjection X Y i 0 d z).ker.subtypeL.comp
     (closedImmersionNormalKernelEquiv X Y i 0 d z).symm.toContinuousLinearMap
 
-/-- Injectivity comes from the actual kernel-coordinate equivalence, not a homology choice. -/
+/-- Injectivity comes from the kernel-coordinate equivalence, not a homology choice. -/
 theorem closedImmersionPointNormalLinearMap_injective :
     Function.Injective (closedImmersionPointNormalLinearMap X Y i d z) :=
   Subtype.val_injective.comp (closedImmersionNormalKernelEquiv X Y i 0 d z).symm.injective
 
 /-- In zero tangent dimension the intrinsic coordinates are unique; the raw normal chart
-is precisely translation of the actual complex-linear normal parametrization. -/
+is precisely translation of the complex-linear normal parametrization. -/
 theorem closedImmersionPointNormalChart_apply (w : Fin d → ℂ) :
     closedImmersionNormalChart X Y i 0 d z
       (0, (closedImmersionNormalKernelEquiv X Y i 0 d z).symm w) =
@@ -53,7 +53,7 @@ theorem closedImmersionPointNormalChart_apply (w : Fin d → ℂ) :
     inclusionInComplexCharts_at_center]
   rfl
 
-/-- The inverse of the actual standard flattening chart retains that same affine formula. -/
+/-- The inverse of the standard flattening chart retains that same affine formula. -/
 theorem closedImmersionPointStandardFlatteningChart_symm (w : Fin d → ℂ) :
     (closedImmersionStandardFlatteningChart X Y i 0 d z).symm (0, w) =
       (localChart X d (Point.map i z)).symm
@@ -64,7 +64,7 @@ theorem closedImmersionPointStandardFlatteningChart_symm (w : Fin d → ℂ) :
       (0, (closedImmersionNormalKernelEquiv X Y i 0 d z).symm w)) = _
   rw [closedImmersionPointNormalChart_apply]
 
-/-- On the actual flattening source, ambient coordinates are the same affine normal map. -/
+/-- On the flattening source, ambient coordinates are the same affine normal map. -/
 theorem closedImmersionPointStandardFlatteningChart_coordinates
     (y : ComplexPoint X)
     (hy : y ∈ (closedImmersionStandardFlatteningChart X Y i 0 d z).source) :
@@ -99,7 +99,7 @@ theorem univBall_zeroTangent_apply (r : ℝ) (hr : 0 < r) (w : Fin d → ℂ) :
 variable (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
 
 /-- The neighborhood pair of the general normal-purity construction maps to the ambient
-point-complement pair by the actual inclusion. -/
+point-complement pair by the inclusion. -/
 def smoothClosedPointNeighborhoodPairMap :
     smoothClosedSupportNeighborhoodPair X Y i 0 d z V hzV ⟶
       pointComplementPair (Point.map i z) :=
@@ -108,7 +108,7 @@ def smoothClosedPointNeighborhoodPairMap :
       (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _⟩) rfl
 
 /-- The normal-purity parametrization specialized to zero tangent dimension, followed
-by the genuine ambient point-complement inclusion. -/
+by the ambient point-complement inclusion. -/
 def smoothClosedPointNormalModelPairMap :
     standardComplexPuncturedPair d ⟶ pointComplementPair (Point.map i z) :=
   normalSliceSection (Fin 0 → ℂ) d ≫
@@ -124,7 +124,7 @@ abbrev smoothClosedPointNormalRadius : ℝ :=
 theorem smoothClosedPointNormalRadius_pos : 0 < smoothClosedPointNormalRadius X Y i d z V hzV :=
   flattenedSupportRadius_pos _ _ _ _ _
 
-/-- The actual normal-model map has the explicitly normalized linear-radial formula. -/
+/-- The normal-model map has the explicitly normalized linear-radial formula. -/
 theorem smoothClosedPointNormalModelPairMap_apply (w : Fin d → ℂ) :
     TopPair.Hom.fst (smoothClosedPointNormalModelPairMap X Y i d z V hzV) w =
       (localChart X d (Point.map i z)).symm
@@ -141,7 +141,7 @@ theorem smoothClosedPointNormalModelPairMap_apply (w : Fin d → ℂ) :
     univBall_zeroTangent_apply d _ (smoothClosedPointNormalRadius_pos X Y i d z V hzV)]
   exact closedImmersionPointStandardFlatteningChart_symm X Y i d z _
 
-/-- The actual normal-model image lies in the chosen ambient complex chart source. -/
+/-- The normal-model image lies in the chosen ambient complex chart source. -/
 theorem smoothClosedPointNormalModelPairMap_mem_chartSource (w : Fin d → ℂ) :
     TopPair.Hom.fst (smoothClosedPointNormalModelPairMap X Y i d z V hzV) w ∈
       (localChart X d (Point.map i z)).source := by
@@ -155,8 +155,8 @@ theorem smoothClosedPointNormalModelPairMap_mem_chartSource (w : Fin d → ℂ) 
   rw [closedImmersionStandardFlatteningChart_source] at h'
   exact h'.1.1
 
-/-- The actual normal-model coordinates are precisely the positive radial compression
-followed by the actual complex-linear normal identification and translation. -/
+/-- The normal-model coordinates are precisely the positive radial compression
+followed by the complex-linear normal identification and translation. -/
 theorem smoothClosedPointNormalModelPairMap_coordinates (w : Fin d → ℂ) :
     localChart X d (Point.map i z)
       (TopPair.Hom.fst (smoothClosedPointNormalModelPairMap X Y i d z V hzV) w) =
