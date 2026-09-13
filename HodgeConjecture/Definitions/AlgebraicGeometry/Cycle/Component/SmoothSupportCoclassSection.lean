@@ -42,7 +42,7 @@ variable (X : Over (Spec (.of ℂ)))
   {p : ℕ} (hx : Order.coheight x = p)
 
 include hx in
-/-- The proved dimension of the smooth locus, bundled over `Spec ℂ`. -/
+/-- The dimension of the smooth locus, bundled over `Spec ℂ`. -/
 theorem cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension :
     SmoothOfRelativeDimension (dim X.left - p) (cycleComponentSmoothLocusOver X x).hom :=
   cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx

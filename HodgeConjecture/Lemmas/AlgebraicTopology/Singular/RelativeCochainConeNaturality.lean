@@ -108,7 +108,7 @@ lemma relativeDualCochainCohomologyEquiv_naturality {X Y : TopPair.{u}} (f : X �
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The canonical restriction-cone comparison intertwines maps of
-pairs with the existing relative cohomology pullback. -/
+pairs with the relative cohomology pullback. -/
 lemma relativeCochainConeCohomologyEquivCanonical_naturality
     {X Y : TopPair.{u}} (f : X ⟶ Y) (n : ℕ)
     (a : (CochainComplex.mappingCone (relativeCochainRestrictionInt R Y)).homology

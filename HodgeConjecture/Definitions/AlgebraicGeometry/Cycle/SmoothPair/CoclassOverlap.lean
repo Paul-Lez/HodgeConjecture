@@ -11,7 +11,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProje
 /-!
 # Exactly normalized smooth-support coclasses on overlaps
 
-The previously constructed local normal coclass is the pullback of the fixed complex
+The local normal coclass is the pullback of the fixed complex
 normal coclass along the normal coordinate projection. The holomorphic
 closed-immersion charts prove that these coclasses agree on sufficiently small common ambient
 neighborhoods.

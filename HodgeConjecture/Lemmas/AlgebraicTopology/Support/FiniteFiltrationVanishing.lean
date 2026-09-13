@@ -115,7 +115,7 @@ theorem nestedSupportRestriction_middle_homology_isZero
 
 /-- A finite increasing sequence of open complements, terminating at the
 whole space, gives vanishing on every corresponding closed support once the
-open layers vanish. The induction uses only the proved localization
+open layers vanish. The induction uses only the localization
 sequence; the layer hypotheses still have to be discharged geometrically. -/
 theorem finiteNestedSupport_homology_isZero
     (O : ℕ → Opens X) (hO : Monotone O) (N : ℕ) (hN : O N = ⊤)

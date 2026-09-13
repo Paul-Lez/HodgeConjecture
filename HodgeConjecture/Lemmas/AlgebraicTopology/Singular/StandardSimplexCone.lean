@@ -461,7 +461,7 @@ public theorem canonicalBarycentricLastVertexPrism_zero :
     canonicalBarycentricLastVertexPrism 0 = 0 := by
   simp [canonicalBarycentricLastVertexPrism]
 
-/-- The recursive prism is the cone on discrepancy minus the already constructed face
+/-- The recursive prism is the cone on discrepancy minus the face
 prisms. -/
 public theorem canonicalBarycentricLastVertexPrism_succ
     (n : ℕ) :

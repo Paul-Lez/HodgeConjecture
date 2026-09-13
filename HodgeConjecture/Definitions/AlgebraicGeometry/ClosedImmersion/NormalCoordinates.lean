@@ -92,7 +92,7 @@ theorem closedImmersionNormalKernel_finrank :
   omega
 
 /-- Near the selected ambient point, membership in the entire image is equivalent
-to having zero normal coordinate. The forward direction uses the proved induced topology
+to having zero normal coordinate. The forward direction uses the induced topology
 to exclude image points whose intrinsic parameters are outside the coordinate neighborhood. -/
 private theorem eventually_mem_range_iff_normal_eq_zero :
     ∀ᶠ y in 𝓝 (Point.map i z),
@@ -153,7 +153,7 @@ private theorem eventually_mem_range_iff_normal_eq_zero :
     simpa only [Submodule.coe_zero, add_zero] using hright
 
 /-- An open ambient neighborhood on which normal coordinates detect the full
-closed-immersion image, extracted from the proved neighborhood assertion. -/
+closed-immersion image, extracted from the neighborhood assertion. -/
 theorem exists_open_normalCriterion :
     ∃ W : Set (ComplexPoint X), IsOpen W ∧ Point.map i z ∈ W ∧
       ∀ y ∈ W, y ∈ Set.range (Point.map i) ↔

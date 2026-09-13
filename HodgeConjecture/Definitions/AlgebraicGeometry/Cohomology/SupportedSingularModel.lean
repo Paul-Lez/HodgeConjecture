@@ -40,7 +40,7 @@ def complexSupportedSingularToAmbientInjective
 
 variable [IsProjective X.hom]
 
-/-- The constructed supported comparison is a sheaf quasi-isomorphism under
+/-- The supported comparison is a sheaf quasi-isomorphism under
 the usual smooth projective geometry hypotheses alone. -/
 instance complexSupportedSingularToAmbientInjective_quasiIso
     (U : Opens (ComplexPoint X)) :

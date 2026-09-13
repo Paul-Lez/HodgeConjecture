@@ -120,7 +120,7 @@ theorem exists_analytic_localLeftInverse_of_isClosedImmersion [IsClosedImmersion
     exact congrFun (eY.right_inv hvY) j
 
 /-- The derivative of a smooth closed immersion has a continuous-linear left
-inverse, obtained by differentiating the constructed analytic local left inverse. -/
+inverse, obtained by differentiating the analytic local left inverse. -/
 theorem exists_leftInverse_fderiv_inclusionInComplexCharts [IsClosedImmersion i.left]
     (z : ComplexPoint Y) :
     ∃ P : (Fin d → ℂ) →L[ℂ] (Fin m → ℂ),

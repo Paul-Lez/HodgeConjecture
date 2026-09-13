@@ -12,7 +12,7 @@ public import Mathlib.Analysis.Normed.Module.Connected
 /-!
 # Dimensional vanishing for Euclidean local homology
 
-These vanishing statements use the constructed affine boundary chain-homotopy equivalence
+These vanishing statements use the affine boundary chain-homotopy equivalence
 and the dimension bound on normalized simplicial chains. They are prerequisites for proving
 that the concrete relative-chain sheaf has cohomology only in the orientation degree.
 -/

@@ -13,7 +13,7 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.ShortExact
 
 A quasi-isomorphism of bounded-below termwise-flasque complexes remains a
 quasi-isomorphism on every open set. The proof restricts to that open set and
-uses the proved flasque global-sections theorem. Consequently its direct image
+uses the flasque global-sections theorem. Consequently its direct image
 under any continuous map is a sheaf quasi-isomorphism. This is a theorem about
 flasque models, not an assertion that arbitrary direct image is exact.
 

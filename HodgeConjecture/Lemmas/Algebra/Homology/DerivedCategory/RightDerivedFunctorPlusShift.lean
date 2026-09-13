@@ -12,7 +12,7 @@ public import Mathlib.CategoryTheory.Shift.Localization
 
 The bounded-below homotopy category of injective objects is equivalent to the
 bounded-below derived category. The right-derived unit becomes an isomorphism
-on this category. The existing coherent shifts descend through this equivalence, using
+on this category. The coherent shifts descend through this equivalence, using
 Mathlib's localization construction. Boundedness is explicit in all source and target
 categories.
 -/
@@ -169,7 +169,7 @@ instance rightDerivedFunctorPlusUnit_whiskerLeft_injectives_commShift :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The full right-derived unit commutes with the constructed coherent shifts,
+/-- The full right-derived unit commutes with the coherent shifts,
 including on complexes which are not termwise injective. -/
 instance rightDerivedFunctorPlusUnitCommShift :
     NatTrans.CommShift F.rightDerivedFunctorPlusUnit ℤ where

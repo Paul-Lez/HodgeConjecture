@@ -1363,7 +1363,7 @@ abbrev StandardFacetCarrierPrismFamily (d : ℕ) :=
           (standardFacetCarrier d x)))).chainComplex
             (AddCommGrpCat.of ℤ)).X (n + 1)
 
-/-- The alternating sum of the already constructed face prisms, restricted into the carrier
+/-- The alternating sum of the face prisms, restricted into the carrier
 intersection assigned to the original simplex. -/
 def standardFacetCarrierPrismFaces
     (d : ℕ) (P : StandardFacetCarrierPrismFamily d) (n : ℕ)
@@ -1599,7 +1599,7 @@ lemma exists_standardFacetCarrierIntersectionPrism_zero
     (standardFacetCarrierIntersectionDiscrepancy d 0 x)
     (standardFacetCarrierIntersectionDiscrepancy_zero_augmentation d x)
 
-/-- The local residual left after subtracting the already constructed face prisms. -/
+/-- The local residual left after subtracting the face prisms. -/
 def standardFacetCarrierPrismResidual
     (d : ℕ) (P : StandardFacetCarrierPrismFamily d) (n : ℕ)
     (x : (coverSmallSingularSubcomplex

@@ -83,8 +83,8 @@ theorem normalFiber_comp_chartNormalProjection :
         OpenPartialHomeomorph.univBall (0 : Fin c → ℂ) (flattenedSupportRadius E c e x hx) 0
     simpa only [add_zero, OpenPartialHomeomorph.univBall_apply_zero, sub_zero] using hp v
 
-/-- The previously constructed class is exactly the image of the fixed class on this
-normal fiber. -/
+/-- The flattened-support normal class is the image of the fixed class on this normal
+fiber. -/
 theorem flattenedSupportNormalClass_eq_normalFiber :
     flattenedSupportNormalClass E c e x hx S hS h0 =
       relativeHomologyMap ℚ (2 * c)
@@ -113,7 +113,7 @@ theorem chartNormalProjectionCoclass_apply_normalClass :
     relativeCohomologyEquivDualHomology_normalizedRelativeCoclass,
     chartNormalProjection_normalClass, normalizedDual_apply_self]
 
-/-- Generation follows from the already constructed pair isomorphism and contraction. -/
+/-- Generation follows from the pair isomorphism and contraction. -/
 theorem span_flattenedSupportNormalClass_eq_top :
     Submodule.span ℚ {flattenedSupportNormalClass E c e x hx S hS h0} = ⊤ := by
   let eH := (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).symm.toLinearEquiv
@@ -137,7 +137,7 @@ theorem chartNormalProjection_relativeHomologyMap_injective :
   rw [smul_left_injective ℚ (standardComplexLocalClass_ne_zero_for_chart c) hvw]
 
 /-- A local supported coclass equals the normal-projection coclass precisely when
-it evaluates to one on the constructed normal class. -/
+it evaluates to one on the normal class. -/
 theorem chartNormalProjectionCoclass_unique
     (α : RelativeCohomology ℚ
       (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) (2 * c))

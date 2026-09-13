@@ -28,7 +28,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
-/-- The source open of a constructed holomorphic normal chart. -/
+/-- The source open of a holomorphic normal chart. -/
 def smoothClosedSupportChartOpen (z : ComplexPoint Y) :
     Opens (ComplexPoint X) :=
   ⟨(closedImmersionHolomorphicFlatteningChart X Y i m d z).source,
@@ -97,7 +97,7 @@ private theorem smoothClosedSupportChartCoclassGerm_eq_zero
       (smoothClosedSupportChartOpen X Y i m d z) (le_refl _))
 
 /-- A pointwise normalized germ family. Choice selects a preimage point only;
-the proved chart-overlap theorem below proves independence of that selection. -/
+the chart-overlap theorem below proves independence of that selection. -/
 def smoothClosedSupportCoclassStalk (x : ComplexPoint X) :
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.stalk x := by
   classical

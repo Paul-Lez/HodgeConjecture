@@ -142,7 +142,7 @@ def derivedClosedSupportSectionsMap {Z W : Closeds X} (h : Z ≤ W) :
     derivedClosedSupportSections X Z ⟶ derivedClosedSupportSections X W :=
   (closedSupportSectionsMap X h).rightDerivedFunctorPlus
 
-/-- The support-enlargement maps commute with the constructed coherent shifts. -/
+/-- The support-enlargement maps commute with the coherent shifts. -/
 instance derivedClosedSupportSectionsMap_commShift {Z W : Closeds X} (h : Z ≤ W) :
     NatTrans.CommShift (derivedClosedSupportSectionsMap X h) ℤ :=
   inferInstanceAs (NatTrans.CommShift (closedSupportSectionsMap X h).rightDerivedFunctorPlus ℤ)

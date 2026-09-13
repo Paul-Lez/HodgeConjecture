@@ -104,7 +104,7 @@ def supportedRationalSingularCochainComplex (U : Opens X) :
   ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
     (rationalSingularCochainComplex X)
 
-/-- Apply supported sections to the constructed resolution comparison. -/
+/-- Apply supported sections to the resolution comparison. -/
 def supportedSingularToInjectiveComplex (U : Opens X) :
     supportedRationalSingularCochainComplex X U ⟶
       ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj

@@ -98,7 +98,7 @@ instance ambientRationalInjectiveCone_isKInjective
       (ambientRationalInjectiveRestriction X Z hZ)).IsKInjective :=
   CochainComplex.isKInjective_of_injective _ (-1)
 
-/-- The existing support group is computed by the global sections of this normalized
+/-- The support group is computed by the global sections of this normalized
 ambient-injective cone. -/
 def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
@@ -212,7 +212,7 @@ instance actualSupportConeToAmbientInjectiveGlobalCone_quasiIso
     QuasiIso (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) :=
   CochainComplex.mappingCone.quasiIso_map_of_quasiIso _ _ _ _ _
 
-/-- The existing rational support group is the homology of the
+/-- The rational support group is the homology of the
 kernel-defined supported sections of the ambient rational injective
 resolution. The shift `n - 1` in the old cone model is reconciled by the
 explicit homology/shift isomorphism. The final negation corrects the

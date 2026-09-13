@@ -424,7 +424,7 @@ public theorem iota_universalAffinePrismComponent
         (AddCommGrpCat.of ℤ)).f (n + 1) := by
   apply Sigma.ι_desc
 
-/-- The raw sum of the already constructed prisms over the faces of a standard simplex. -/
+/-- The raw sum of the prisms over the faces of a standard simplex. -/
 public noncomputable def standardAffinePrismFaceChain
     (prism : ∀ n : ℕ, AddCommGrpCat.of ℤ ⟶
       ((TopCat.toSSet.obj
@@ -637,7 +637,7 @@ public theorem standardAffinePrismResidual_cycle_succ
   rw [hface, sub_self]
 
 /-- The universal affine prisms, defined recursively by filling the discrepancy left after
-the already constructed face prisms. -/
+the face prisms. -/
 public noncomputable def canonicalAffineSubdivisionPrism
     (n : ℕ) : AddCommGrpCat.of ℤ ⟶
       ((TopCat.toSSet.obj

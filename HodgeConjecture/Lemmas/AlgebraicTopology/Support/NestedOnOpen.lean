@@ -147,7 +147,7 @@ def nestedSupportRestrictionLastComplexIso
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The last localization map, under the proved kernel comparison, is
+/-- The last localization map, under the kernel comparison, is
 restriction of the supported section to `U`. -/
 @[reassoc]
 theorem toSheafSectionsBetweenOpens_global_comparison

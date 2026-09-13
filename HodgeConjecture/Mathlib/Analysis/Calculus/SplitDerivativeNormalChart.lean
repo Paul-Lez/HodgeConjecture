@@ -15,7 +15,7 @@ public import Mathlib.Analysis.Normed.Module.FiniteDimension
 A map with a split injective strict derivative extends to a local coordinate map
 by adding vectors in the kernel of a left inverse. This is an application of the inverse
 function theorem, not an assumed flattening equivalence. The zero-normal slice is exactly
-the original parametrization on the constructed coordinate domain. Identifying that slice
+the original parametrization on the coordinate domain. Identifying that slice
 with an entire geometric support additionally requires a local embedding assertion.
 -/
 

@@ -132,7 +132,7 @@ theorem supportChartTransition_preserves_plane (v : E × (Fin c → ℂ))
 include h0 in
 /-- On a modeled ambient neighborhood contained in both chart sources, the
 normal-projection coclasses agree. The proof factors both projections through the same
-normal fiber and uses the proved complex normal-transition orientation theorem. -/
+normal fiber and uses the complex normal-transition orientation theorem. -/
 theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
     (hW' : (flattenedSupportNeighborhood E c e x hx : Set M) ⊆ e'.source)
     (ht : AnalyticAt ℂ (e.symm.trans e') (e x))

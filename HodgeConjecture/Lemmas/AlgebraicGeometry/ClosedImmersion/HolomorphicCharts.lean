@@ -77,7 +77,7 @@ private theorem closedImmersionNormalCoordinateChange_symm_at_chart (y : Complex
 
 variable (z' : ComplexPoint Y)
 
-/-- The transition between two constructed holomorphic support-flattening charts. -/
+/-- The transition between two holomorphic support-flattening charts. -/
 def closedImmersionNormalTransition :
     OpenPartialHomeomorph ((Fin m → ℂ) × (Fin (d - m) → ℂ))
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=

@@ -24,7 +24,7 @@ namespace AlgebraicGeometry
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- The exact terminal index is read from the already constructed finite decomposition. -/
+/-- The exact terminal index is read from the finite decomposition. -/
 abbrev cycleComponentSingularFiltrationLength : ℕ :=
   (cycleComponentSingularStratification X x).length
 
@@ -225,7 +225,7 @@ theorem cycleComponentSingularAmbientClosedFiltration_length :
   rw [cycleComponentSingularClosedFiltration_length]
   exact Set.image_empty _
 
-/-- Every closed remainder stays below the proved singular-boundary dimension bound. -/
+/-- Every closed remainder stays below the singular-boundary dimension bound. -/
 theorem cycleComponentSingularClosedFiltration_dimension_lt
     {p : ℕ} (hx : Order.coheight x = p) (k : ℕ) :
     topologicalKrullDim (cycleComponentSingularClosedFiltration X x k) < (dim X.left - p : ℕ) :=

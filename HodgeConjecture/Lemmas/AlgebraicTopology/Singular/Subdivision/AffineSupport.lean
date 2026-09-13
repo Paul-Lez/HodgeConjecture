@@ -517,7 +517,7 @@ public theorem exists_zero_dimensional_ancestry_depth_subordinate
   simpa [hw] using hi
 
 /-- Every finite singular chain becomes subordinate to an open cover after enough affine
-barycentric subdivisions: the proved relative mesh contraction handles the positive degrees, and
+barycentric subdivisions: the relative mesh contraction handles the positive degrees, and
 degree zero is already small. -/
 public theorem coverSmallAffineSubdivisionEventuallySmall_of_openCover
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :

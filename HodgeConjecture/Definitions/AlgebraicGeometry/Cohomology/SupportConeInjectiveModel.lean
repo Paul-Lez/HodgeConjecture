@@ -11,7 +11,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.Hypercohomolog
 /-!
 # Normalized injective models for the rational support cone
 
-The existing rational support object resolves constants on the complement
+The rational support object resolves constants on the complement
 independently of the ambient space. This file connects that model with the
 restriction of an ambient injective resolution. All comparison maps extend the given constant
 restriction.

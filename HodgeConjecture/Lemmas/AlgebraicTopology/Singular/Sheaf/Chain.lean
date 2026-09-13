@@ -154,7 +154,7 @@ homological degree `n` occupies cohomological degree `-n`, and positive degrees 
 def singularChainSheafCochainComplex : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ :=
   (singularChainSheafComplex R X).extend ComplexShape.embeddingDownNat
 
-/-- The constructed integer-graded chain sheaf has no terms in positive degrees. -/
+/-- The integer-graded chain sheaf has no terms in positive degrees. -/
 instance singularChainSheafCochainComplex_isStrictlyLE :
     (singularChainSheafCochainComplex R X).IsStrictlyLE 0 := by
   unfold singularChainSheafCochainComplex

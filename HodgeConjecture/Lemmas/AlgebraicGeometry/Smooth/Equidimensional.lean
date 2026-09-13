@@ -35,7 +35,7 @@ that on an integral scheme there is such a dimension, and that it is `dim X`.
 The argument is that the relative dimension of an affine chart is the Krull dimension of its
 sections, and that any two nonempty opens of an irreducible space meet: shrinking a chart to a
 basic open inside another chart compares the two dimensions, and doing this in both directions
-makes them equal. Once a single relative dimension is known to work, the existing global formula
+makes them equal. Once a single relative dimension is known to work, the global formula
 `SmoothOfRelativeDimension.orderKrullDim_eq_complex` identifies it with `dim X`.
 
 The resulting instance is what lets constructions on a smooth integral complex scheme drop their

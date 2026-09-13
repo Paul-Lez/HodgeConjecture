@@ -35,7 +35,7 @@ local instance cycleComponentSheafClassAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- The supported injective cohomology sheaf is the sheaf of local
-relative cohomology, by the constructed singular resolution and its
+relative cohomology, by the singular resolution and its
 restriction-natural comparison. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
@@ -64,7 +64,7 @@ abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
 
 /-- Supported cohomology on the full component is identified with sections
 of the local relative-cohomology sheaf on its smooth-locus ambient open.
-Each of the three arrows is a proved isomorphism. -/
+Each of the three arrows is an isomorphism. -/
 def cycleComponentSupportedClassNormalizationIso :
     CycleComponentSupportedCohomology X x p ≅
       CycleComponentSmoothCoclassSections X x p := by
@@ -87,13 +87,13 @@ def cycleComponentExtendSmoothCoclass :
   (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
 
 /-- The globally supported class extending the exact complex-normal
-coclass. The inverse is that of the proved normalization isomorphism. -/
+coclass. The inverse is that of the normalization isomorphism. -/
 def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
   cycleComponentExtendSmoothCoclass X x hx
     (cycleComponentSmoothSupportCoclassSection X x hx)
 
-/-- The constructed class in the existing support-cone presentation. Its
-comparison includes the proved cone sign required by support forgetting. -/
+/-- The class in the support-cone presentation. Its
+comparison includes the cone sign required by support forgetting. -/
 def cycleComponentSheafSupportedClass :
     RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)

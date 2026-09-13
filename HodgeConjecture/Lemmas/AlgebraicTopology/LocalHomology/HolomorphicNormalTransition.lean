@@ -131,7 +131,7 @@ def normalTransitionDerivativeEquiv : N ≃L[ℂ] N where
     normalTransitionDerivativeEquiv e a ha hplane he hei v =
       (fderiv ℂ e (a, 0) (0, v)).2 := rfl
 
-/-- The map on a transverse normal fiber has the constructed normal derivative. -/
+/-- The map on a transverse normal fiber has the normal derivative. -/
 theorem normalTransition_hasFDerivAt :
     HasFDerivAt (fun v : N => (e (a, v)).2)
       (normalTransitionDerivativeEquiv e a ha hplane he hei).toContinuousLinearMap 0 := by

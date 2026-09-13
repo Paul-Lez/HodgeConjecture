@@ -12,7 +12,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainC
 # Constructed local relative homology for smooth closed supports
 
 Every prescribed open neighborhood of a point on a smooth closed complex subvariety contains
-an explicitly constructed smaller open neighborhood whose support-complement pair has rational
+a smaller open neighborhood whose support-complement pair has rational
 relative homology and cohomology only in degree twice the complex codimension. The comparison
 and the exactly normalized normal class come from flattening, radial compression, and tangent
 contraction.
@@ -34,7 +34,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
   (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
 
-/-- Restrict the constructed flattening chart by the prescribed ambient open. -/
+/-- Restrict the flattening chart by the prescribed ambient open. -/
 def smoothClosedSupportRestrictionChart :
     OpenPartialHomeomorph (ComplexPoint X)
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=

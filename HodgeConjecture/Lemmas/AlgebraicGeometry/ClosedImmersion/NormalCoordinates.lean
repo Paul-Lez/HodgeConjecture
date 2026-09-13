@@ -24,7 +24,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- The constructed normal parametrization is complex analytic at its center. -/
+/-- The normal parametrization is complex analytic at its center. -/
 theorem analyticAt_closedImmersionNormalChart :
     AnalyticAt ℂ (closedImmersionNormalChart X Y i m d z)
       (localChart Y m z z, 0) := by

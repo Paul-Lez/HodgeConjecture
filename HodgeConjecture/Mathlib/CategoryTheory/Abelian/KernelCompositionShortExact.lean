@@ -61,7 +61,7 @@ def kernelFactorizationShortComplex : ShortComplex C where
     apply (cancel_mono (kernel.ι g)).1
     simp
 
-/-- Replacing the composite by its proved equality is a canonical kernel isomorphism. -/
+/-- Replacing the composite by its equality is a canonical kernel isomorphism. -/
 def kernelCompositionFactorizationIso :
     kernelCompositionShortComplex f g ≅ kernelFactorizationShortComplex f g k hk :=
   ShortComplex.isoMk (Iso.refl _) (kernelIsoOfEq hk) (Iso.refl _)

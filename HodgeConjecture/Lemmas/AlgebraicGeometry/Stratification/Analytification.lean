@@ -10,7 +10,7 @@ import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
-# Complex points of the constructed smooth decomposition
+# Complex points of the smooth decomposition
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Stratification.Analytification`.

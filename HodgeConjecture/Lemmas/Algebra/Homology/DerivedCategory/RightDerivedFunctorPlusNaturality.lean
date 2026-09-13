@@ -93,7 +93,7 @@ variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
   {F G : C ⥤ D} [F.Additive] [G.Additive]
 
 /-- A coefficient natural isomorphism induces an isomorphism of the bounded-below
-right derived functors, using the already constructed derived natural transformations. -/
+right derived functors, using the derived natural transformations. -/
 def rightDerivedFunctorPlus (e : F ≅ G) :
     F.rightDerivedFunctorPlus ≅ G.rightDerivedFunctorPlus where
   hom := e.hom.rightDerivedFunctorPlus

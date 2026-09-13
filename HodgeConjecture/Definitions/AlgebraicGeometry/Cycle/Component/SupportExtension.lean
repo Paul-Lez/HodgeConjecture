@@ -107,7 +107,7 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 include hx in
 /-- The restriction map is an isomorphism in cycle degree, by the
-two proved boundary vanishings and the localization sequence. -/
+two boundary vanishings and the localization sequence. -/
 theorem cycleComponentSupportSectionRestriction_homology_isIso :
     IsIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ))) := by
   let T := TopCat.of (ComplexPoint X)

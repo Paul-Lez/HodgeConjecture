@@ -28,10 +28,10 @@ import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 
 An exact étale coordinate package on the smooth locus of a cycle component gives an
 analytic chart on its chosen affine neighborhood. This file constructs that chart directly from
-the retained polynomial-ring homomorphism. It then transports the proved standard complex local
+the retained polynomial-ring homomorphism. It then transports the standard complex local
 homology generator through the chart.
 
-The chart map factors through its open target and the proved point-neighborhood excision theorem.
+The chart map factors through its open target and the point-neighborhood excision theorem.
 Consequently the resulting class generates the full local homology of the affine component
 neighborhood. This file does not construct a supported cohomology class or prove purity for the
 component inside the ambient variety.

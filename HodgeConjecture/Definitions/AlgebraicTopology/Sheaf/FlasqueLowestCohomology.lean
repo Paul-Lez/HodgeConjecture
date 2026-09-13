@@ -91,7 +91,7 @@ theorem sectionCohomologyToSheafSection_isIso_lowest (N n : ℤ) [K.IsStrictlyGE
   dsimp only [sectionCohomologyToSheafSection]
   infer_instance
 
-/-- The constructed lowest-degree isomorphism, with the comparison as its
+/-- The lowest-degree isomorphism, with the comparison as its
 forward map. Taking `U = ⊤` gives the global-sections isomorphism. -/
 def lowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque)
