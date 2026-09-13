@@ -18,7 +18,6 @@ module
 public import Other.Algebra.Homology.LinearDual
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
 public import Other.AlgebraicTopology.Sheaf.FlasqueGlobalSections
-public import Other.AlgebraicTopology.Sheaf.FlasqueAcyclic
 public import Other.AlgebraicTopology.Singular.CochainCohomology
 
 @[expose] public noncomputable section
@@ -124,7 +123,7 @@ on a hereditarily paracompact Hausdorff space. -/
 lemma singularCochainSheaf_cohomology_succ_eq_zero
     [T2Space X] [∀ V : Opens X, ParacompactSpace V]
     (n q : ℕ) (x : Abelian.Ext
-      (TopCat.Sheaf.IsFlasque.globalSectionsSource (X := X))
+      𝓒(X; ULift.{u} ℤ)
       (singularCochainSheaf R X n) (q + 1)) :
     x = 0 :=
   TopCat.Sheaf.IsFlasque.cohomology_succ_eq_zero

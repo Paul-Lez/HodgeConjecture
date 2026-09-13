@@ -25,6 +25,8 @@ public import Mathlib.Algebra.Module.MinimalAxioms
 public import Mathlib.CategoryTheory.Localization.SmallShiftedHom
 public import Mathlib.Data.Int.Cast.Lemmas
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # The Hodge filtration
 
@@ -58,16 +60,10 @@ local instance analyticHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-/-- The constant rational sheaf on the analytic complex-point space. -/
-abbrev constantFieldSheaf : AnalyticAdditiveSheaf X :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
-  (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of K)
-
 /-- The inclusion of the rational constant sheaf into the complex constant sheaf. -/
 abbrev fieldToComplexConstantSheaf :
-    constantFieldSheaf K X ⟶ constantComplexSheaf X :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
-  (constantSheaf J AddCommGrpCat).map
+    𝓒(↧(ComplexPoint X); K) ⟶ 𝓒(↧(ComplexPoint X); ℂ) :=
+  (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
 
 /-- The constant rational sheaf complex, extended by zero to integer degrees. -/
@@ -75,7 +71,7 @@ abbrev fieldToComplexConstantSheaf :
 def constantFieldSheafComplexInt :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-    (constantFieldSheaf K X)).extend ComplexShape.embeddingUpNat
+    𝓒(↧(ComplexPoint X); K)).extend ComplexShape.embeddingUpNat
 
 instance : (constantFieldSheafComplexInt K X).IsStrictlyGE 0 := by
   unfold constantFieldSheafComplexInt
@@ -96,23 +92,17 @@ def fieldToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
   fieldToComplexConstantSheafComplexInt K X ≫
     constantsToHolomorphicDeRhamComplexInt X
 
-/-- The constant integer sheaf on the analytic complex-point space. -/
-def constantIntegerSheaf : AnalyticAdditiveSheaf X :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
-  (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of ℤ)
-
 /-- The constant integer sheaf complex, extended by zero to integer degrees. -/
 @[implicit_reducible]
 def constantIntegerSheafComplexInt :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-    (constantIntegerSheaf X)).extend ComplexShape.embeddingUpNat
+    𝓒(↧(ComplexPoint X); ℤ)).extend ComplexShape.embeddingUpNat
 
 /-- Scalar multiplication on the rational constant sheaf. -/
 abbrev fieldScalarSheaf (q : K) :
-    constantFieldSheaf K X ⟶ constantFieldSheaf K X :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
-  (constantSheaf J AddCommGrpCat).map
+    𝓒(↧(ComplexPoint X); K) ⟶ 𝓒(↧(ComplexPoint X); K) :=
+  (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q))
 
 omit [Algebra K ℂ] in
@@ -120,16 +110,11 @@ omit [Algebra K ℂ] in
   have h : AddCommGrpCat.ofHom (AddMonoidHom.id K) = 𝟙 (AddCommGrpCat.of K) := by
     apply AddCommGrpCat.hom_ext
     rfl
-  change (constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).map (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft 1)) =
-    𝟙 ((constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).obj (AddCommGrpCat.of K))
+  change (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+      (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft 1)) =
+    𝟙 𝓒(↧(ComplexPoint X); K)
   rw [AddMonoidHom.mulLeft_one, h]
-  exact (constantSheaf
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-    AddCommGrpCat).map_id (AddCommGrpCat.of K)
+  exact (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map_id (AddCommGrpCat.of K)
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarSheaf_add (a b : K) :
@@ -139,10 +124,8 @@ omit [Algebra K ℂ] in
       AddCommGrpCat.ofHom (AddMonoidHom.mulLeft a) +
         AddCommGrpCat.ofHom (AddMonoidHom.mulLeft b) :=
     AddCommGrpCat.hom_ext rfl
-  change (constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).map
-        (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a + b))) = _
+  change (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+      (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a + b))) = _
   rw [AddMonoidHom.mulLeft_add, h, Functor.map_add]
   rfl
 
@@ -155,10 +138,8 @@ omit [Algebra K ℂ] in
       AddCommGrpCat.ofHom (AddMonoidHom.mulLeft b) ≫
         AddCommGrpCat.ofHom (AddMonoidHom.mulLeft a) :=
     AddCommGrpCat.hom_ext rfl
-  change (constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).map
-        (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a * b))) = _
+  change (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+      (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a * b))) = _
   rw [AddMonoidHom.mulLeft_mul, h, Functor.map_comp]
   rfl
 
@@ -193,12 +174,12 @@ private lemma fieldToComplexConstantSheaf_scalar (q : K) :
     fieldScalarSheaf K X q ≫
       fieldToComplexConstantSheaf K X := by
   simp [fieldToComplexConstantSheaf, fieldScalarSheaf, complexScalarSheaf, constantSheaf,
-    constantComplexSheaf, constantFieldSheaf, ← Functor.map_comp, ← ofHom_algebraMap_comp_complexScalarSMul,
+    TopCat.Sheaf.const, TopCat.Sheaf.constantFunctor, ← Functor.map_comp,
+    ← ofHom_algebraMap_comp_complexScalarSMul,
     const_map_algebraMap_comp_complexScalarPresheaf]
 
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
-  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 constantIntegerSheaf in
-
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 in
 /-- Scalar multiplication on the rational constant sheaf complex. -/
 def fieldScalarComplex (q : K) :
     constantFieldSheafComplexInt K X ⟶

@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SingularSheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueQuasiIso
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.InjectiveFlasque
@@ -23,6 +24,8 @@ public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import Mathlib.Algebra.Homology.Factorizations.CM5a
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Singular cohomology and global sections
@@ -187,7 +190,7 @@ def constantIntegerSheafComplexIntIsoSingle :
       TopCat.Sheaf.integerConstantSingleComplex
         (TopCat.of (ComplexPoint X)) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    (constantIntegerSheaf X) 0 0 rfl
+    𝓒(↧(ComplexPoint X); ℤ) 0 0 rfl
 
 end AlgebraicGeometry.ComplexPoint
 

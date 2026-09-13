@@ -22,6 +22,8 @@ public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerat
 public import Other.AlgebraicTopology.Sheaf.HomologySection
 public import Other.AlgebraicTopology.Singular.Sheaf.ChainHomology
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # The normalized complex orientation of the singular homology sheaf
 
@@ -113,7 +115,7 @@ theorem complexOrientationHomologyStalkMap_isIso (x : ComplexPoint X) :
 
 /-- The actual sheaf map obtained by gluing the geometric neighborhood orientations. -/
 def constantToComplexOrientationHomologySheaf :
-    singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X)) ⟶
+    𝓒(↧(ComplexPoint X); ℚ) ⟶
       singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d) :=
   TopCat.Sheaf.constantSheafMapOfLocallyRepresentable _ (AddCommGrpCat.of ℚ)
     (complexOrientationHomologyStalkMap X d)
@@ -121,7 +123,7 @@ def constantToComplexOrientationHomologySheaf :
 
 /-- The constructed normalized orientation is an isomorphism of actual sheaves. -/
 def complexOrientationHomologySheafIso :
-    singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X)) ≅
+    𝓒(↧(ComplexPoint X); ℚ) ≅
       singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d) :=
   letI : IsIso (constantToComplexOrientationHomologySheaf X d) := by
     unfold constantToComplexOrientationHomologySheaf

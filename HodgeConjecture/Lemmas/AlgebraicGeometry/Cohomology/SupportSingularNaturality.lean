@@ -16,6 +16,8 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportComparison
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Naturality of the supported singular comparison
 
@@ -317,7 +319,7 @@ def complementConstantRationalSingleComplex
     (Z : Set (ComplexPoint X)) :
     CochainComplex (AnalyticComplementAdditiveSheaf X Z) ℕ :=
   (CochainComplex.single₀ (AnalyticComplementAdditiveSheaf X Z)).obj
-    (complementConstantRationalSheaf X Z)
+    𝓒(↧↥Zᶜ; ℚ)
 
 def complementSingularCochainSheafComplex
     (Z : Set (ComplexPoint X)) :
