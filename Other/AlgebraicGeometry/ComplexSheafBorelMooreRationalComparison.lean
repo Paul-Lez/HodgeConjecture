@@ -29,9 +29,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
-local instance complexBorelMooreRationalComparisonAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 /-- The actual derived-support groups agree with the existing rational support API,
 through its constructed resolution and cone comparison. -/
 def complexDerivedSupportedCohomologyAddEquivRationalSupport

@@ -701,15 +701,6 @@ def formRestriction [SmoothOfRelativeDimension d X.hom]
         fun k => holomorphicRestrictionAlgHom X d i (v k) :=
   Algebra.DeRham.map_mk ℂ (holomorphicRestrictionAlgHom X d i) p a₀ v
 
-lemma formRestriction_differential [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
-    (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
-    formRestriction X d i (p + 1)
-        (Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) p θ) =
-      Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d V) p
-        (formRestriction X d i p θ) :=
-  Algebra.DeRham.map_differential ℂ (holomorphicRestrictionAlgHom X d i) p θ
-
 /-- Fixed-chart values of holomorphic functions commute with restriction. -/
 lemma chartSection_holomorphicRestrictionAlgHom
     [SmoothOfRelativeDimension d X.hom]

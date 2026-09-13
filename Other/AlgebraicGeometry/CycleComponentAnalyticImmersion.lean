@@ -44,9 +44,6 @@ open scoped Manifold ContDiff
 namespace AlgebraicGeometry
 namespace CycleComponentSeparateLocalCoordinates
 
-noncomputable local instance componentImmersionTopology {Y : Over (Spec (.of ℂ))} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}
   [SmoothOfRelativeDimension d V.structureMap]
 

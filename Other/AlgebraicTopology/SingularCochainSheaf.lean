@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.Cochain
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.Cochain
 
 @[expose] public noncomputable section
 

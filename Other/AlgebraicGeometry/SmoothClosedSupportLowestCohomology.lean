@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.FlasqueSections
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueLowestCohomology
 /-!
 # Lowest-degree globalization for smooth closed supports
@@ -24,9 +24,6 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
 namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec (.of ℂ)))
-
-local instance smoothClosedSupportLowestAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- The actual supported injective coefficient sheaves are flasque, by the
 proved gluing-with-zero theorem for the defining support kernel. -/

@@ -32,9 +32,6 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)
 
-local instance singularFiltrationLocalSupportVanishingAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 include hx in
 /-- Every point in the actual `k`th layer has cofinal actual ambient neighborhoods
 whose relative cohomology below degree `2(p+1)` vanishes. -/
@@ -79,8 +76,7 @@ theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
     exact ⟨hyV, hyNext⟩
   have : SmoothOfRelativeDimension (dim X.left) OX.hom := by
     change SmoothOfRelativeDimension (dim X.left) (O.ι ≫ X.hom)
-    simpa only [Nat.zero_add] using
-      smoothOfRelativeDimension_comp 0 (dim X.left) O.ι X.hom
+    simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 (dim X.left) O.ι X.hom
   obtain ⟨W, hWV', hzW, hW⟩ := exists_smoothClosedSourceOpenImageNeighborhood
     OX Y i m (dim X.left) f (isOpenEmbedding_map_open X O)
     (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X))

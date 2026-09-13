@@ -164,10 +164,6 @@ namespace CycleComponentSeparateLocalCoordinates
 
 open AlgebraicTopology.Singular
 
-noncomputable local instance cycleComponentLocalOrientationTopology
-    {Y : Over (Spec (.of ℂ))} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}
   [SmoothOfRelativeDimension d V.structureMap]
   (C : CycleComponentSeparateLocalCoordinates V.over x d n)
@@ -255,10 +251,6 @@ end CycleComponentSeparateLocalCoordinates
 namespace ComplexPoint
 
 open AlgebraicTopology.Singular
-
-noncomputable local instance {V : SmoothProjectiveComplexVariety} {x : V.scheme} :
-    TopologicalSpace
-      (ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap))) := Point.analyticTopology
 
 /-- A family of rational top local homology classes on the smooth analytic locus of a reduced
 cycle component. -/

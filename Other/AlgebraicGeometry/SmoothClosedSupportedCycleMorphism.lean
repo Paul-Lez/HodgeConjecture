@@ -28,10 +28,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-noncomputable local instance smoothSupportedCycleAnalyticTopology
-    (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=
-  Point.analyticTopology
-
 local instance smoothSupportedCycleSheafDerivedCategory
     (Y : Over (Spec (.of ℂ))) :
     HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint Y))) :=

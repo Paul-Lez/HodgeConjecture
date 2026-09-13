@@ -39,9 +39,6 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
-noncomputable local instance complexSheafBorelMooreAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 local instance complexSheafBorelMooreSheafDerivedCategory : HasDerivedCategory
     (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) :=
   HasDerivedCategory.standard _

@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.Basic
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 
 @[expose] public noncomputable section

@@ -26,12 +26,7 @@ namespace AlgebraicGeometry
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- `X ∖ Z_sing`: the largest Zariski open of `X` on which the component `Z` is smooth, namely
-the complement of the image of `Z`'s singular locus.
-
-Stage `0` of the singular filtration *is* that singular locus, by the base case of
-`reducedSmoothClosedFiltration`; `coe_cycleComponentSmoothLocusAmbientOpen` states the
-resulting description of the underlying set. -/
+/-- The precise algebraic open complementary to the canonical singular boundary. -/
 def cycleComponentSmoothLocusAmbientOpen : X.left.Opens :=
   (cycleComponentSingularAmbientClosedFiltration X x 0).compl
 
@@ -50,7 +45,7 @@ instance cycleComponentSmoothLocusAmbientOpenInclusion_isImmersion :
   change IsImmersion (cycleComponentSmoothLocusAmbientOpen X x).ι
   infer_instance
 
-/-- The smooth locus, closed in the complement of its singular boundary. -/
+/-- The actual smooth locus, closed in the complement of its singular boundary. -/
 def cycleComponentSmoothLocusClosedLift :
     (cycleComponentι X.left x ≫ X.hom).smoothLocus.toScheme ⟶
       (cycleComponentSmoothLocusAmbientOpen X x).toScheme :=
@@ -87,7 +82,9 @@ instance cycleComponentSmoothLocusClosedLiftOver_isClosedImmersion :
 
 variable {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
 
-/-- The ambient open retains the original smooth relative dimension. -/
+/-- The ambient open retains the original smooth relative dimension. These stay generic in
+`d`: they are instances, found by resolution, and narrowing them to `dim X.left` would make
+them fire less often. -/
 instance cycleComponentSmoothLocusAmbientOpen_smoothOfRelativeDimension :
     SmoothOfRelativeDimension d ((cycleComponentSmoothLocusAmbientOpen X x).ι ≫ X.hom) := by
   simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 d
@@ -101,10 +98,7 @@ instance cycleComponentSmoothLocusAmbientOpenOver_smoothOfRelativeDimension :
 
 namespace ComplexPoint
 
-local instance cycleComponentSmoothClosedLiftAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
-/-- The full cycle support as a closed analytic subset. -/
+/-- The full cycle support as an actual closed analytic subset. -/
 def cycleComponentAnalyticClosedSupport : Closeds (ComplexPoint X) :=
   ⟨cycleComponentSupport X x, isClosed_cycleComponentSupport X x⟩
 

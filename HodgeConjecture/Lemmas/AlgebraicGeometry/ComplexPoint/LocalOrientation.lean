@@ -45,9 +45,6 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
-noncomputable local instance :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 /-- The canonical pointwise local orientation of a smooth complex scheme, constructed from its
 algebraic étale charts and the standard complex local class. -/
 def complexLocalOrientation [SmoothOfRelativeDimension d X.hom]

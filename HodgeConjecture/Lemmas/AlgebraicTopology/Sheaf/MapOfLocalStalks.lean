@@ -21,6 +21,85 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.MapOfLocalStalks`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Limits TopologicalSpace Opposite
+
+universe u
+
+namespace TopCat.Sheaf
+
+variable {X : TopCat.{u}} (F : TopCat.Sheaf AddCommGrpCat.{u} X)
+
+variable (A : AddCommGrpCat.{u}) (g : ∀ x : X, A ⟶ F.presheaf.stalk x)
+  (hlocal : ∀ (a : A) (x : X), ∃ (U : Opens X) (_ : x ∈ U) (s : F.presheaf.obj (op U)),
+    ∀ (y : X) (hy : y ∈ U), F.presheaf.germ U y hy s = g y a)
+
+/-- The global section map is additive because equality can be checked on stalks. -/
+def globalMapOfLocallyRepresentable : A ⟶ F.presheaf.obj (op ⊤) :=
+  AddCommGrpCat.ofHom
+    { toFun := fun a ↦ sectionOfLocallyRepresentable F (fun x ↦ g x a) (hlocal a)
+      map_zero' := by
+        apply TopCat.Presheaf.section_ext F
+        intro x _
+        change F.presheaf.Γgerm x (sectionOfLocallyRepresentable F
+          (fun x ↦ g x 0) (hlocal 0)) = F.presheaf.Γgerm x 0
+        rw [sectionOfLocallyRepresentable_germ, map_zero, map_zero]
+      map_add' := by
+        intro a b
+        apply TopCat.Presheaf.section_ext F
+        intro x _
+        change F.presheaf.Γgerm x _ = F.presheaf.Γgerm x (_ + _)
+        simp only [map_add, sectionOfLocallyRepresentable_germ] }
+
+/-- The actual presheaf map from constants, prior to sheafification. -/
+def constantPresheafMapOfLocallyRepresentable :
+    (Functor.const (Opens X)ᵒᵖ).obj A ⟶ F.presheaf where
+  app U := globalMapOfLocallyRepresentable F A g hlocal ≫
+    F.presheaf.map (homOfLE (show U.unop ≤ ⊤ from le_top)).op
+  naturality {U V} i := by
+    dsimp
+    rw [Category.id_comp, Category.assoc, ← Functor.map_comp]
+    rfl
+
+/-- Gluing followed by sheafification constructs the constant-sheaf map. -/
+def constantSheafMapOfLocallyRepresentable :
+    (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj A ⟶ F :=
+  ⟨sheafifyLift (Opens.grothendieckTopology X)
+    (constantPresheafMapOfLocallyRepresentable F A g hlocal) F.property⟩
+
+variable {F}
+
+set_option backward.isDefEq.respectTransparency false in
+/-- The canonical constant-sheaf stalk identification, directed from the coefficient
+group to the stalk. Its map is the germ of an actual constant section. -/
+def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
+    A ≅ (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj
+      ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj A).obj := by
+  let P : TopCat.Presheaf AddCommGrpCat.{u} X := (Functor.const (Opens X)ᵒᵖ).obj A
+  letI : IsIso (P.Γgerm x) := by
+    apply (ConcreteCategory.isIso_iff_bijective _).2
+    constructor
+    · intro a b hab
+      obtain ⟨U, hx, i, j, hij⟩ := P.germ_eq (U := ⊤) (V := ⊤)
+        x True.intro True.intro a b hab
+      exact hij
+    · intro t
+      obtain ⟨U, hx, a, rfl⟩ := P.exists_germ_eq t
+      exact ⟨a, (P.Γgerm_res_apply (i := homOfLE (show U ≤ ⊤ from le_top)) x hx a).symm⟩
+  letI := TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u} P
+  exact asIso (P.Γgerm x) ≪≫
+    asIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
+      (toSheafify (Opens.grothendieckTopology X) P))
+
+variable (F)
+
+end TopCat.Sheaf
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace Opposite

@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHypercohomology
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.CycleComponentBorelMoore
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
@@ -54,10 +54,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-noncomputable local instance cycleComponentBorelMooreClassTopology
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    TopologicalSpace (CycleComponentAnalyticPoint V x) :=
-  Point.analyticTopology
 
 /-- Auxiliary comparison data for one irreducible codimension-`p` component.
 

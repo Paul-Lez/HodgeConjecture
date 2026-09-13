@@ -13,6 +13,36 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.CohomologyStalkVanishing`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Limits TopologicalSpace Opposite HomologicalComplex
+
+universe u
+
+namespace TopCat.Sheaf
+
+open AlgebraicTopology.Singular
+
+variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
+
+/-- The homology presheaf and actual homology sheaf have canonically equal stalks.
+The underlying sheaf-forgetful functor is not assumed exact. -/
+def sectionCohomologyPresheafStalkIso (n : ℤ) (x : X) :
+    (Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj (sectionCohomologyPresheaf X K n) ≅
+      (additiveSheafStalkFunctor X x).obj (K.homology n) := by
+  let S : ShortComplex (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
+    K.sc n
+  let P : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
+    (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).sc n
+  exact (P.mapHomologyIso (additivePresheafStalkFunctor X x)).symm ≪≫
+    S.mapHomologyIso (additiveSheafStalkFunctor X x)
+
+end TopCat.Sheaf
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace Opposite HomologicalComplex

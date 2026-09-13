@@ -92,60 +92,6 @@ lemma sheafSectionsSupportedOutsideInclusion_restriction (U : Opens X)
       (toOpenRestrictionPushforward X U).app F = 0 :=
   kernel.condition _
 
-/-- A morphism of sheaves whose restriction to `U` is zero factors canonically
-through the sheaf of sections supported outside `U`. -/
-def liftSheafSectionsSupportedOutside (U : Opens X)
-    {F G : Sheaf AddCommGrpCat.{u} X} (f : F ⟶ G)
-    (hf : f ≫ (toOpenRestrictionPushforward X U).app G = 0) :
-    F ⟶ (sheafSectionsSupportedOutside X U).obj G :=
-  kernel.lift _ f hf
-
-@[reassoc (attr := simp)]
-lemma liftSheafSectionsSupportedOutside_inclusion (U : Opens X)
-    {F G : Sheaf AddCommGrpCat.{u} X} (f : F ⟶ G)
-    (hf : f ≫ (toOpenRestrictionPushforward X U).app G = 0) :
-    liftSheafSectionsSupportedOutside X U f hf ≫
-      (sheafSectionsSupportedOutsideInclusion X U).app G = f :=
-  kernel.lift_ι _ _ _
-
-/-- On every ambient open set, supported sections are exactly the kernel of
-restriction to its intersection with `U`. This is the canonical kernel
-comparison, not a supplied equivalence. -/
-def sheafSectionsSupportedOutsideOnOpenIso (U V : Opens X)
-    (F : Sheaf AddCommGrpCat.{u} X) :
-    ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V) ≅
-      kernel (((toOpenRestrictionPushforward X U).app F).hom.app (op V)) :=
-  let ev : Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
-    sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat ⋙
-      (evaluation _ AddCommGrpCat).obj (op V)
-  letI : ev.PreservesZeroMorphisms := ⟨fun _ _ => rfl⟩
-  letI : PreservesLimitsOfShape WalkingParallelPair ev :=
-    comp_preservesLimitsOfShape
-      (sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
-      ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op V))
-  PreservesKernel.iso ev ((toOpenRestrictionPushforward X U).app F)
-
-/-- The kernel comparison preserves the actual inclusion of supported sections
-into all sections. -/
-@[reassoc (attr := simp)]
-lemma sheafSectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
-    (F : Sheaf AddCommGrpCat.{u} X) :
-    (sheafSectionsSupportedOutsideOnOpenIso X U V F).hom ≫
-      kernel.ι (((toOpenRestrictionPushforward X U).app F).hom.app (op V)) =
-        ((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V) := by
-  let ev : Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
-    sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat ⋙
-      (evaluation _ AddCommGrpCat).obj (op V)
-  let _ : ev.PreservesZeroMorphisms := ⟨fun _ _ => rfl⟩
-  let _ : PreservesLimitsOfShape WalkingParallelPair ev :=
-    comp_preservesLimitsOfShape
-      (sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
-      ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op V))
-  change (PreservesKernel.iso ev ((toOpenRestrictionPushforward X U).app F)).hom ≫
-    _ = _
-  rw [PreservesKernel.iso_hom]
-  exact kernelComparison_comp_ι ((toOpenRestrictionPushforward X U).app F) ev
-
 /-- Restriction to the empty open subspace and pushforward gives the zero sheaf. -/
 lemma isZero_openRestrictionPushforward_bot (F : Sheaf AddCommGrpCat.{u} X) :
     IsZero ((openRestrictionPushforward X ⊥).obj F) :=
@@ -159,121 +105,11 @@ instance (F : Sheaf AddCommGrpCat.{u} X) :
     ((toOpenRestrictionPushforward X ⊥).app F)]
   infer_instance
 
-/-- With no restriction imposed, the support-sheaf inclusion is canonically an
-isomorphism with the original coefficient sheaf. -/
-def sheafSectionsSupportedOutsideBotIso :
-    sheafSectionsSupportedOutside X ⊥ ≅ 𝟭 (Sheaf AddCommGrpCat.{u} X) :=
-  NatIso.ofComponents
-    (fun F => asIso ((sheafSectionsSupportedOutsideInclusion X ⊥).app F))
-    (fun f => (sheafSectionsSupportedOutsideInclusion X ⊥).naturality f)
-
-/-- The sheaf-valued sections-with-support functor for a closed support. -/
-def sheafSectionsWithClosedSupport (Z : Closeds X) :
-    Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} X :=
-  sheafSectionsSupportedOutside X Z.compl
-
-instance (Z : Closeds X) : (sheafSectionsWithClosedSupport X Z).Additive :=
-  inferInstanceAs (sheafSectionsSupportedOutside X Z.compl).Additive
-
-/-- Sections supported on the whole space are all sections, through the actual
-support-forgetting inclusion. -/
-def sheafSectionsWithClosedSupportTopIso :
-    sheafSectionsWithClosedSupport X ⊤ ≅ 𝟭 (Sheaf AddCommGrpCat.{u} X) := by
-  have h : (⊤ : Closeds X).compl = ⊥ := by ext; simp
-  simpa only [sheafSectionsWithClosedSupport, h] using
-    sheafSectionsSupportedOutsideBotIso X
-
-/-- Global sections supported in a closed subset, obtained by evaluating the
-concrete support sheaf on the whole ambient space. -/
-def closedSupportSections (Z : Closeds X) :
-    Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
-  sheafSectionsWithClosedSupport X Z ⋙
-    sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat ⋙
-    (evaluation _ AddCommGrpCat).obj (op ⊤)
-
-instance (Z : Closeds X) : (closedSupportSections X Z).Additive where
-  map_add {F G} f g :=
-    congrArg (fun h : (sheafSectionsWithClosedSupport X Z).obj F ⟶
-        (sheafSectionsWithClosedSupport X Z).obj G => h.hom.app (op ⊤))
-      ((sheafSectionsWithClosedSupport X Z).map_add (f := f) (g := g))
-
 local instance supportSheafHasDerivedCategory :
     HasDerivedCategory (Sheaf AddCommGrpCat.{u} X) :=
   HasDerivedCategory.standard (Sheaf AddCommGrpCat.{u} X)
 
 local instance supportGroupsHasDerivedCategory : HasDerivedCategory AddCommGrpCat.{u} :=
   HasDerivedCategory.standard AddCommGrpCat.{u}
-
-/-- The genuine right derived sheaf sections-with-support functor on bounded-below
-complexes. Enough injectives is furnished by the Grothendieck abelian category of
-abelian sheaves, not supplied as mathematical data. -/
-def derivedSheafSectionsWithClosedSupport (Z : Closeds X) :
-    DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X) ⥤
-      DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X) :=
-  (sheafSectionsWithClosedSupport X Z).rightDerivedFunctorPlus
-
-/-- The canonical comparison from termwise sections with support to their derived
-functor. -/
-def derivedSheafSectionsWithClosedSupportUnit (Z : Closeds X) :
-    (sheafSectionsWithClosedSupport X Z).mapHomotopyCategoryPlus ⋙
-        DerivedCategory.Plus.Qh ⟶
-      DerivedCategory.Plus.Qh ⋙ derivedSheafSectionsWithClosedSupport X Z :=
-  (sheafSectionsWithClosedSupport X Z).rightDerivedFunctorPlusUnit
-
-/-- This construction satisfies Mathlib's universal property of a right derived
-functor; it is not merely a named candidate endofunctor. -/
-instance derivedSheafSectionsWithClosedSupport_isRightDerivedFunctor (Z : Closeds X) :
-    (derivedSheafSectionsWithClosedSupport X Z).IsRightDerivedFunctor
-      (derivedSheafSectionsWithClosedSupportUnit X Z)
-      (HomotopyCategory.Plus.quasiIso (Sheaf AddCommGrpCat.{u} X)) := by
-  dsimp only [derivedSheafSectionsWithClosedSupport,
-    derivedSheafSectionsWithClosedSupportUnit]
-  infer_instance
-
-/-- A bounded-below complex of injective sheaves computes sheaf-valued derived
-sections with support by applying the concrete support functor termwise. -/
-instance derivedSheafSectionsWithClosedSupportUnit_isIso_injectiveComplex (Z : Closeds X)
-    (K : HomotopyCategory.Plus (InjectiveObject (Sheaf AddCommGrpCat.{u} X))) :
-    IsIso ((derivedSheafSectionsWithClosedSupportUnit X Z).app
-      ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj K)) :=
-  (HomotopyCategory.Plus.localizerMorphism_derives
-    ((sheafSectionsWithClosedSupport X Z).mapHomotopyCategoryPlus ⋙
-      DerivedCategory.Plus.Qh)).isIso_of_isRightDerivedFunctor
-        (derivedSheafSectionsWithClosedSupportUnit X Z) K
-
-/-- The group-valued derived sections-with-support functor `RΓ_Z` on
-bounded-below complexes. This is derived from the actual functor of global
-sections vanishing on the complement. -/
-def derivedClosedSupportSections (Z : Closeds X) :
-    DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X) ⥤
-      DerivedCategory.Plus AddCommGrpCat.{u} :=
-  (closedSupportSections X Z).rightDerivedFunctorPlus
-
-/-- The canonical unit defining group-valued derived sections with support. -/
-def derivedClosedSupportSectionsUnit (Z : Closeds X) :
-    (closedSupportSections X Z).mapHomotopyCategoryPlus ⋙
-        DerivedCategory.Plus.Qh ⟶
-      DerivedCategory.Plus.Qh ⋙ derivedClosedSupportSections X Z :=
-  (closedSupportSections X Z).rightDerivedFunctorPlusUnit
-
-/-- Group-valued supported sections satisfy the universal property of their
-right derived functor. -/
-instance derivedClosedSupportSections_isRightDerivedFunctor (Z : Closeds X) :
-    (derivedClosedSupportSections X Z).IsRightDerivedFunctor
-      (derivedClosedSupportSectionsUnit X Z)
-      (HomotopyCategory.Plus.quasiIso (Sheaf AddCommGrpCat.{u} X)) := by
-  dsimp only [derivedClosedSupportSections, derivedClosedSupportSectionsUnit]
-  infer_instance
-
-/-- A bounded-below complex of injective sheaves computes group-valued derived
-sections with support by taking supported global sections termwise. -/
-instance derivedClosedSupportSectionsUnit_isIso_injectiveComplex (Z : Closeds X)
-    (K : HomotopyCategory.Plus (InjectiveObject (Sheaf AddCommGrpCat.{u} X))) :
-    IsIso ((derivedClosedSupportSectionsUnit X Z).app
-      ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj K)) :=
-  (HomotopyCategory.Plus.localizerMorphism_derives
-    ((closedSupportSections X Z).mapHomotopyCategoryPlus ⋙
-      DerivedCategory.Plus.Qh)).isIso_of_isRightDerivedFunctor
-        (derivedClosedSupportSectionsUnit X Z) K
 
 end TopCat.Sheaf

@@ -16,6 +16,48 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Smooth.SingularLocusDimension`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Topology TopologicalSpace
+
+namespace AlgebraicGeometry
+
+universe u
+
+variable {K : Type u} [Field K] {X : Scheme.{u}}
+  (f : X ⟶ Spec (.of K)) [LocallyOfFiniteType f]
+
+/-- The singular locus equipped with its reduced closed-subscheme structure. -/
+def reducedSingularLocus : Scheme := reducedClosedSubscheme (singularLocusClosed f)
+
+/-- Its canonical closed immersion in the original scheme. -/
+def reducedSingularLocusι : reducedSingularLocus f ⟶ X :=
+  reducedClosedSubschemeι (singularLocusClosed f)
+
+instance reducedSingularLocus_isReduced : IsReduced (reducedSingularLocus f) :=
+  inferInstanceAs (IsReduced (reducedClosedSubscheme (singularLocusClosed f)))
+
+instance reducedSingularLocusι_isClosedImmersion :
+    IsClosedImmersion (reducedSingularLocusι f) :=
+  inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f)))
+
+variable (Y : Over (Spec (.of ℂ)))
+  [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
+
+/-- The singular locus of every cycle component admits the actual finite smooth
+decomposition constructed by Noetherian recursion. -/
+def cycleComponentSingularStratification (x : Y.left) :
+    List (Closeds (cycleComponent Y.left x)) := by
+  letI := cycleComponent_isNoetherian Y x
+  exact reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
+    (singularLocusClosed (cycleComponentι Y.left x ≫ Y.hom))
+
+end AlgebraicGeometry
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Topology TopologicalSpace

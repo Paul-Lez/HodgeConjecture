@@ -64,12 +64,6 @@ noncomputable instance cycleComponent_smoothLocus_irreducibleSpace
   exact
     (cycleComponentι X.left x ≫ X.hom).smoothLocus.ι.isOpenEmbedding.irreducibleSpace
 
-/-- The smooth locus of an integral cycle component is itself an integral scheme. -/
-noncomputable instance cycleComponent_smoothLocus_isIntegral
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IsIntegral (cycleComponentι X.left x ≫ X.hom).smoothLocus :=
-  isIntegral_of_irreducibleSpace_of_isReduced _
-
 /-- The scheme points that are both smooth and closed are dense in a reduced cycle component. -/
 lemma dense_cycleComponent_smooth_closedPoints
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
