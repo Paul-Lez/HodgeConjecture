@@ -39,10 +39,9 @@ below hold for all integer and rational coefficients.
 namespace Guide.Statement.D5
 ```
 ```lean
-def sheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] (p : ℕ) :
+def sheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (p : ℕ) :
     codimensionCycleSubgroup V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
-  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over)
+  cycleClassOnCyclesOfComponents (fun x hx ↦ cycleComponentSheafClass V.over x hx)
 ```
 ```lean -show
 end Guide.Statement.D5
@@ -57,12 +56,10 @@ example : @Guide.Statement.D5.sheafCycleClassOnCycles = @AlgebraicGeometry.Compl
 namespace Guide.Statement.D6
 ```
 ```lean
-def rationalSheafCycleClassOnCycles
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] (p : ℕ) :
+def rationalSheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (p : ℕ) :
     TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme p) →ₗ[ℚ]
       H^(2 * (p : ℤ))(V.over; ℚ) :=
-  TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V d p)
+  TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 ```
 ```lean -show
 end Guide.Statement.D6
