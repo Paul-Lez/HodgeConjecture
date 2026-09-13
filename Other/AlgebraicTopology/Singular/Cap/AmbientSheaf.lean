@@ -31,7 +31,7 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R]
 
-/-- The ambient cap product followed by the actual relative projection. -/
+/-- The ambient cap product followed by the relative projection. -/
 def ambientCapRelativeLift (P : TopPair.{u}) (p q : ℕ)
     (φ : Simplicial.Cochain R (TopCat.toSSet.obj P.fst) p) :
     Simplicial.ChainGroup R (TopCat.toSSet.obj P.fst) (p + q) ⟶
@@ -40,7 +40,7 @@ def ambientCapRelativeLift (P : TopPair.{u}) (p q : ℕ)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The cap lift kills every chain in the relative subspace, by actual cap naturality. -/
+/-- The cap lift kills every chain in the relative subspace, by cap naturality. -/
 lemma subspaceChain_ambientCapRelativeLift (P : TopPair.{u}) (p q : ℕ)
     (φ : Simplicial.Cochain R (TopCat.toSSet.obj P.fst) p) :
     ((chainPairFunctor R).obj P).hom.f (p + q) ≫ ambientCapRelativeLift R P p q φ = 0 := by
@@ -55,7 +55,7 @@ lemma subspaceChain_ambientCapRelativeLift (P : TopPair.{u}) (p q : ℕ)
   change ((chainPairFunctor R).obj P).hom.f q ≫ (relativeChainProjection R P).f q = 0 at hz
   rw [ambientCapRelativeLift, ← Category.assoc, hcap, Category.assoc, hz, comp_zero]
 
-/-- Cap by an ambient cochain on the actual quotient relative-chain group. -/
+/-- Cap by an ambient cochain on the quotient relative-chain group. -/
 def relativeAmbientCapHom (P : TopPair.{u}) (p q : ℕ)
     (φ : Simplicial.Cochain R (TopCat.toSSet.obj P.fst) p) :
     RelativeChainGroup R P (p + q) ⟶ RelativeChainGroup R P q :=
@@ -80,7 +80,7 @@ variable (X : TopCat.{u}) (p q : ℕ)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Restriction of the relative support commutes with the actual ambient-cochain cap. -/
+/-- Restriction of the relative support commutes with the ambient-cochain cap. -/
 @[reassoc]
 lemma relativeAmbientCapHom_supportInclusion {Z W : Set X} (h : Z ⊆ W) :
     ((relativeChainFunctor R).map (supportInclusionPairMap X h)).f (p + q) ≫
@@ -98,7 +98,7 @@ lemma relativeAmbientCapHom_supportInclusion {Z W : Set X} (h : Z ⊆ W) :
   rw [← Category.assoc, hn, relativeChainProjection_relativeAmbientCapHom,
     relativeChainProjection_relativeAmbientCapHom_assoc, hn]
 
-/-- The degreewise cap action is an actual morphism of the relative-chain presheaves. -/
+/-- The degreewise cap action is a morphism of the relative-chain presheaves. -/
 def singularChainPresheafAmbientCap :
     singularChainPresheaf R X (p + q) ⟶ singularChainPresheaf R X q where
   app U := (forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map
@@ -107,13 +107,13 @@ def singularChainPresheafAmbientCap :
     exact congrArg ((forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map)
       (relativeAmbientCapHom_supportInclusion R X p q φ (leOfHom f.unop))
 
-/-- Sheafification of the actual presheaf cap action. -/
+/-- Sheafification of the presheaf cap action. -/
 def singularChainSheafAmbientCap :
     singularChainSheaf R X (p + q) ⟶ singularChainSheaf R X q :=
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).map
     (singularChainPresheafAmbientCap R X p q φ)
 
-/-- Sheafification preserves the literal cap action on the original relative-chain sections. -/
+/-- Sheafification preserves the cap action on the original relative-chain sections. -/
 @[reassoc]
 lemma singularChainSheafAmbientCap_unit :
     toSheafify (Opens.grothendieckTopology X) (singularChainPresheaf R X (p + q)) ≫
@@ -123,7 +123,7 @@ lemma singularChainSheafAmbientCap_unit :
   (toSheafify_naturality (Opens.grothendieckTopology X)
     (singularChainPresheafAmbientCap R X p q φ)).symm
 
-/-- The cap boundary identity on actual relative-chain classes, with its exact sign. -/
+/-- The cap boundary identity on relative-chain classes, with its exact sign. -/
 lemma relativeAmbientCapHom_boundary_apply
     (P : TopPair.{u}) (p q : ℕ)
     (φ : Simplicial.Cochain R (TopCat.toSSet.obj P.fst) p)
@@ -145,7 +145,7 @@ lemma relativeAmbientCapHom_boundary_apply
   erw [hproj, relativeBoundary_projection, relativeBoundary_projection, hproj,
     Simplicial.boundary_cap_eq_of_cocycle R p q φ hφ, map_smul]
 
-/-- The relative cap maps satisfy the signed differential identity as actual morphisms. -/
+/-- The relative cap maps satisfy the signed differential identity as morphisms. -/
 lemma relativeAmbientCapHom_boundary (P : TopPair.{u}) (p q : ℕ)
     (φ : Simplicial.Cochain R (TopCat.toSSet.obj P.fst) p)
     (hφ : Simplicial.coboundary R p φ = 0) :
@@ -160,7 +160,7 @@ lemma relativeAmbientCapHom_boundary (P : TopPair.{u}) (p q : ℕ)
   rw [← Int.cast_smul_eq_zsmul R, Int.cast_pow, Int.cast_neg, Int.cast_one]
   exact relativeAmbientCapHom_boundary_apply R P p q φ hφ c
 
-/-- The actual presheaf action retains the signed cap-boundary identity. -/
+/-- The presheaf action retains the signed cap-boundary identity. -/
 lemma singularChainPresheafAmbientCap_boundary
     (hφ : Simplicial.coboundary R p φ = 0) :
     singularChainPresheafAmbientCap R X p (q + 1) φ ≫ singularChainBoundary R X q =

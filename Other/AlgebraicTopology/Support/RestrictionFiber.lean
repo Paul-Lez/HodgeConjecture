@@ -20,7 +20,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U : Opens X)
 
-/-- Canonical localization comparison to the homotopy fiber of actual
+/-- Canonical localization comparison to the homotopy fiber of
 restriction, on a coefficient complex. -/
 def supportRestrictionToFiber (V : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
@@ -62,8 +62,8 @@ attribute [local instance] derivedSupportLocalizationGroupDerivedCategory
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Localization for the actual derived support functor, evaluated on a
-bounded-below injective model. The fiber is built from actual restriction, not
+/-- Localization for the derived support functor, evaluated on a
+bounded-below injective model. The fiber is built from restriction, not
 an unrelated morphism between isomorphic cohomology groups. -/
 def derivedClosedSupportInjectiveFiberIso (Z : Closeds X)
     (I : CochainComplex.Plus (InjectiveObject (Sheaf AddCommGrpCat.{u} X))) :
@@ -108,7 +108,7 @@ def derivedSheafSupportInjectiveModelIso (Z : Closeds X)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Sheaf-valued localization for the actual derived support functor on a
+/-- Sheaf-valued localization for the derived support functor on a
 bounded-below injective model, through the canonical restriction fiber. -/
 def derivedSheafSupportInjectiveFiberIso (Z : Closeds X)
     (I : CochainComplex.Plus (InjectiveObject (Sheaf AddCommGrpCat.{u} X))) :
@@ -130,7 +130,7 @@ def derivedSheafSupportInjectiveFiberIso (Z : Closeds X)
       (.up ℤ)).obj I.obj)
   exact derivedSheafSupportInjectiveModelIso X Z I ≪≫
     asIso (DerivedCategory.Q.map (sheafSupportRestrictionToFiber X Z.compl _))
-/-- The localization comparison preserves the actual support-forgetting map,
+/-- The localization comparison preserves the support-forgetting map,
 including its sign. -/
 @[reassoc (attr := simp)]
 lemma supportRestrictionToFiber_fst (V : Opens X)

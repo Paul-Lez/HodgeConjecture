@@ -22,11 +22,11 @@ public import Other.AlgebraicGeometry.ComplexPoint.LocalOrientation
 /-!
 # Local representability of the exact complex orientation
 
-For every point of a smooth complex scheme, an actual relative singular homology class on an
+For every point of a smooth complex scheme, a relative singular homology class on an
 open neighborhood simultaneously restricts to the prescribed `complexLocalOrientation` at
 every point of that neighborhood. The class is constructed from the fixed ordered affine
 simplex, transported through the preferred complex chart. Chart coherence identifies its
-nearby restrictions with the existing canonical pointwise family.
+nearby restrictions with the canonical pointwise family.
 
 This proves local representability; it is not a local-representability field or an assumed
 orientation of a sheaf. It is the concrete input for gluing the normalized homology-sheaf
@@ -56,7 +56,7 @@ lemma mem_complexLocalOrientationNeighborhood (x : ComplexPoint X) :
   mem_chartOrientationNeighborhood d (localChart X d x) x
     (mem_localChart_source X d x)
 
-/-- The actual relative singular homology class supported on the constructed neighborhood. -/
+/-- The relative singular homology class supported on the neighborhood. -/
 def complexLocalOrientationNeighborhoodClass (x : ComplexPoint X) :
     RelativeHomology ℚ
       (TopPair.ofSubset (X := TopCat.of (ComplexPoint X))
@@ -82,7 +82,7 @@ theorem complexLocalOrientationNeighborhoodClass_restrict
           (mem_localChart_source X d x) hy)).symm
 
 /-- Simultaneous local representability of the normalized pointwise orientation is a theorem,
-witnessed by the explicitly constructed neighborhood-relative class. -/
+witnessed by the neighborhood-relative class. -/
 theorem exists_neighborhood_complexLocalOrientation (x : ComplexPoint X) :
     ∃ (U : Opens (ComplexPoint X)), x ∈ U ∧
       ∃ c : RelativeHomology ℚ

@@ -27,7 +27,7 @@ public import Other.AlgebraicGeometry.Hodge.Filtration
 
 On a smooth projective variety with connected analytification, the degree-zero rational
 cohomology unit spans the whole cohomology group. The Hodge-conjecture conclusions assume that
-this unit span equals the constructed component-class span. In dimension zero, this comparison
+this unit span equals the component-class span. In dimension zero, this comparison
 implies the inclusion in every codimension.
 -/
 
@@ -58,7 +58,7 @@ theorem codimensionZeroCycleClassSpan_eq_top_of_connected
   let : ConnectedSpace (ComplexPoint X) := hV
   rw [codimensionZeroCycleClassSpan_eq_span_unit, span_rationalCohomologyUnit_eq_top]
 
-/-- On a connected projective analytification, the constructed codimension-zero algebraic
+/-- On a connected projective analytification, the codimension-zero algebraic
 cycle-class span is the whole degree-zero rational cohomology group, provided it has been compared
 with the degree-zero unit span. -/
 theorem algebraicCycleClassSpan_zero_eq_top_of_connected

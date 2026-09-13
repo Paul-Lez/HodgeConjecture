@@ -9,7 +9,7 @@ public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
 # Open-restriction naturality of canonical cohomology-sheaf sections
 
 The map from cohomology of sections to sections of the cohomology sheaf is
-constructed by exact sheafification. This proves its compatibility with actual
+constructed by exact sheafification. This proves its compatibility with
 restrictions, without assuming that evaluation on opens is exact.
 -/
 
@@ -21,7 +21,7 @@ namespace TopCat.Sheaf
 
 universe u
 
-/-- The canonical section-to-cohomology-sheaf map commutes with literal open restriction. -/
+/-- The canonical section-to-cohomology-sheaf map commutes with open restriction. -/
 @[reassoc]
 theorem sectionCohomologyToSheafSection_restriction
     (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)

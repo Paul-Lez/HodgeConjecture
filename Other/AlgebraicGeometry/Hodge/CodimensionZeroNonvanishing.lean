@@ -43,19 +43,19 @@ theorem cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero
     cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
   cycleComponentSmoothSupportCoclassSection_ne_zero X _ (coheight_genericPoint_eq_zero X)
 
-/-- The constructed ordinary cycle class of the whole variety is nonzero in every dimension. -/
+/-- The ordinary cycle class of the whole variety is nonzero in every dimension. -/
 theorem cycleComponentSheafClass_genericPoint_ne_zero :
     cycleComponentSheafClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
   fun h ↦ cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X
     ((cycleComponentSheafClass_genericPoint_eq_zero_iff X).mp h)
 
-/-- The constructed codimension-zero span agrees with the span of the cohomological unit. -/
+/-- The codimension-zero span agrees with the span of the cohomological unit. -/
 theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan :
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X :=
   (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff X).mpr
     (cycleComponentSheafClass_genericPoint_ne_zero X)
 
-/-- The constructed codimension-zero classes span degree-zero cohomology. -/
+/-- The codimension-zero classes span degree-zero cohomology. -/
 theorem algebraicCycleClassSpan_zero_eq_top :
     algebraicCycleClassSpan X 0 = ⊤ :=
   algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero X

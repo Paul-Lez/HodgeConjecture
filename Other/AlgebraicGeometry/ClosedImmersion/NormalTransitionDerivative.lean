@@ -20,8 +20,8 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z z' : ComplexPoint Y)
 
-/-- For a point in a genuine overlap, the normal derivative has a constructed complex
-linear inverse. Only membership in the actual overlap is required. -/
+/-- For a point in an overlap, the normal derivative has a complex
+linear inverse. Only membership in the overlap is required. -/
 def closedImmersionNormalTransitionDerivativeEquiv (a : Fin m → ℂ)
     (ha : (a, 0) ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
     (Fin (d - m) → ℂ) ≃L[ℂ] (Fin (d - m) → ℂ) :=

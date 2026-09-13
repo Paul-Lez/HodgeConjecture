@@ -88,7 +88,7 @@ universe u
 namespace AlgebraicTopology.Singular
 variable (R : Type u) [Field R] (X : TopCat.{u})
 
-/-- Evaluation of the presheaf chain complex is the actual relative chain complex. -/
+/-- Evaluation of the presheaf chain complex is the relative chain complex. -/
 def singularChainPresheafComplexEvaluationIso (U : Opens X) :
     (((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op U)).mapHomologicalComplex
       (.down ℕ)).obj (singularChainPresheafComplex R X) ≅
@@ -102,7 +102,7 @@ def singularChainPresheafComplexEvaluationIso (U : Opens X) :
     simp only [Iso.refl_hom]
     rfl)
 
-/-- Actual relative homology identifies with the evaluation of the homology presheaf. -/
+/-- Relative homology identifies with the evaluation of the homology presheaf. -/
 def relativeHomologyPresheafSectionIso (U : Opens X) (n : ℕ) :
     (forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).obj
       (RelativeHomology R (TopPair.ofSubset (U : Set X)ᶜ) n) ≅
@@ -117,7 +117,7 @@ def relativeHomologyPresheafSectionIso (U : Opens X) (n : ℕ) :
       e
 
 /-- Exact sheafification identifies the sheafification of presheaf homology with the
-homology sheaf of the actual relative-chain model. -/
+homology sheaf of the relative-chain model. -/
 def singularChainHomologySheafificationIso (n : ℕ) :
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
       ((singularChainPresheafComplex R X).homology n) ≅
@@ -128,14 +128,14 @@ def singularChainHomologySheafificationIso (n : ℕ) :
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
   exact e.symm
 
-/-- The canonical map from presheaf homology to the actual homology sheaf. -/
+/-- The canonical map from presheaf homology to the homology sheaf. -/
 def singularChainHomologyPresheafToSheaf (n : ℕ) :
     (singularChainPresheafComplex R X).homology n ⟶
       (singularChainHomologySheaf R X n).presheaf :=
   toSheafify (Opens.grothendieckTopology X) _ ≫
     (singularChainHomologySheafificationIso R X n).hom.hom
 
-/-- An actual relative homology class on an open support gives a section of the
+/-- A relative homology class on an open support gives a section of the
 homology sheaf; this map is constructed by exact sheafification. -/
 def relativeHomologyToHomologySheafSection (U : Opens X) (n : ℕ) :
     (forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).obj
@@ -151,7 +151,7 @@ def additivePresheafGermNatTrans (U : Opens X) (x : X) (hx : x ∈ U) :
   app P := TopCat.Presheaf.germ P U x hx
   naturality {_P _Q} f := (TopCat.Presheaf.stalkFunctor_map_germ U x hx f).symm
 
-/-- Presheaf homology stalks identify with actual local relative homology. -/
+/-- Presheaf homology stalks identify with local relative homology. -/
 def singularChainHomologyPresheafStalkIso [T2Space X] (x : X) (n : ℕ) :
     (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj
       ((singularChainPresheafComplex R X).homology n) ≅
@@ -164,7 +164,7 @@ def singularChainHomologyPresheafStalkIso [T2Space X] (x : X) (n : ℕ) :
       (((relativeChainFunctor R).obj (TopPair.ofSubset ({x} : Set X)ᶜ)).sc n).mapHomologyIso
         (forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u})
 
-/-- The evaluated germ chain map is the actual restriction to the point complement. -/
+/-- The evaluated germ chain map is the restriction to the point complement. -/
 @[reassoc]
 theorem singularChainPresheafComplexEvaluationIso_germ [T2Space X]
     (U : Opens X) (x : X) (hx : x ∈ U) :
@@ -184,7 +184,7 @@ theorem singularChainPresheafComplexEvaluationIso_germ [T2Space X]
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The germ of a relative class in the homology presheaf is exactly its actual
+/-- The germ of a relative class in the homology presheaf is exactly its
 restriction to the local pair. -/
 @[reassoc]
 theorem relativeHomologyPresheafSectionIso_germ [T2Space X]
@@ -220,7 +220,7 @@ theorem relativeHomologyPresheafSectionIso_germ [T2Space X]
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The homology sheafification unit is compatible with the actual local-homology
+/-- The homology sheafification unit is compatible with the local-homology
 identifications on stalks. -/
 @[reassoc]
 theorem singularChainHomologyPresheafToSheaf_stalk [T2Space X] (x : X) (n : ℕ) :
@@ -254,7 +254,7 @@ theorem singularChainHomologyPresheafToSheaf_stalk [T2Space X] (x : X) (n : ℕ)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The constructed sheaf section has, under the canonical stalk identification,
+/-- The sheaf section has, under the canonical stalk identification,
 exactly the local restriction of the original relative homology class. -/
 @[reassoc]
 theorem relativeHomologyToHomologySheafSection_germ [T2Space X]

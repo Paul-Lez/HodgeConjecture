@@ -16,7 +16,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- In particular, the actual lowest-degree global section-complex cohomology
+/-- In particular, the lowest-degree global section-complex cohomology
 is canonically isomorphic to global sections of the cohomology sheaf. -/
 def lowestGlobalSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :

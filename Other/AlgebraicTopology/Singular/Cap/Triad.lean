@@ -879,7 +879,7 @@ lemma triadCapCochainCohomologyLinear_on_cycle
   rw [h]
   rfl
 
-/-- The sum-relative triad cap product on the repository's standard relative cohomology
+/-- The sum-relative triad cap product on the standard relative cohomology
 and homology objects:
 
 `H^p(X,A) → (H_{p+q}^{sum}(X;A,B) → H_q(X,B))`.
@@ -1137,7 +1137,7 @@ lemma triadUnionExcisionHomologyEquiv_apply
 
 `H^p(X,A) → (H_{p+q}(X,A ∪ B) → H_q(X,B))`,
 
-obtained by transporting the constructed sum-relative cap product along the homology equivalence
+obtained by transporting the sum-relative cap product along the homology equivalence
 induced by the canonical excision comparison. -/
 noncomputable def unionRelativeTriadCapCohomologyLinear
     (X : TopCat.{u}) (A B : Set X) (p q : ℕ)

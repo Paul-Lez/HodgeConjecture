@@ -37,7 +37,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 variable (z' : ComplexPoint Y)
 
-/-- The actual transition preserves the zero-normal plane in both directions. -/
+/-- The transition preserves the zero-normal plane in both directions. -/
 theorem closedImmersionNormalTransition_preserves_support
     (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
     (hv : v ∈ (closedImmersionNormalTransition X Y i m d z z').source) :

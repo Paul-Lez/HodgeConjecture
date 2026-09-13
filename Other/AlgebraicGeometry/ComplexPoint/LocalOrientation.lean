@@ -63,7 +63,7 @@ lemma complexLocalOrientation_eq_localClassOfChart
         (mem_localChart_source X d z) :=
   rfl
 
-/-- At every point of a `T₁` smooth complex analytic space, the constructed local orientation
+/-- At every point of a `T₁` smooth complex analytic space, the local orientation
 class generates the full top local homology group. -/
 theorem span_complexLocalOrientation_eq_top
     [SmoothOfRelativeDimension d X.hom]

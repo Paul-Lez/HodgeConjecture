@@ -23,7 +23,7 @@ For an arbitrary pair of subsets, singular chains give a short exact sequence
 
 The first map has signs `(i, -j)` and the second map is addition. The overlap is identified
 geometrically using the images of singular simplices, not by defining it to be a kernel.
-For an open cover `X = U ∪ V`, the proved subdivision theorem identifies the last chain model
+For an open cover `X = U ∪ V`, the subdivision theorem identifies the last chain model
 with ambient homology. We construct the connecting map and prove exactness at every term.
 
 This supplies the ordinary singular Mayer--Vietoris primitive needed for local-to-global
@@ -208,7 +208,7 @@ theorem subsetSmallChainSquare_isPushout :
   (subsetSmallSingularSquare_isPushout X U V).map
     ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ))
 
-/-- The actual small-chain Mayer--Vietoris sequence
+/-- The small-chain Mayer--Vietoris sequence
 `C(U ∩ V) → C(U) ⊞ C(V) → C(U) + C(V)`, with maps `(i,-j)` and addition. -/
 def singularMayerVietorisShortComplex : ShortComplex (ChainCategory ℚ) :=
   (subsetSmallChainSquare_isPushout X U V).shortComplex
@@ -294,7 +294,7 @@ def singularMayerVietorisSumChainMap :
   (singularMayerVietorisShortComplex X U V).g ≫ twoSubsetSmallChainInclusion X U V
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The ambient map of the Mayer--Vietoris sequence is exactly the sum of the actual two
+/-- The ambient map of the Mayer--Vietoris sequence is exactly the sum of the two
 subset-inclusion chain maps. -/
 theorem singularMayerVietorisSumChainMap_eq :
     singularMayerVietorisSumChainMap X U V =
@@ -349,7 +349,7 @@ theorem singularMayerVietoris_exact_sum
   simp [HomologicalComplex.homologyMap_comp]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The ambient sum map followed by the constructed Mayer--Vietoris boundary is zero. -/
+/-- The ambient sum map followed by the Mayer--Vietoris boundary is zero. -/
 theorem singularMayerVietoris_sum_boundary
     (hU : IsOpen U) (hV : IsOpen V) (hUV : U ∪ V = Set.univ) (n : ℕ) :
     HomologicalComplex.homologyMap (singularMayerVietorisSumChainMap X U V) (n + 1) ≫
@@ -385,7 +385,7 @@ theorem singularMayerVietoris_exact_ambient
     simp
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The constructed Mayer--Vietoris boundary followed by the overlap inclusion map is zero. -/
+/-- The Mayer--Vietoris boundary followed by the overlap inclusion map is zero. -/
 theorem singularMayerVietoris_boundary_overlap
     (hU : IsOpen U) (hV : IsOpen V) (hUV : U ∪ V = Set.univ) (n : ℕ) :
     singularMayerVietorisBoundary X U V hU hV hUV n ≫
@@ -423,7 +423,7 @@ def singularMayerVietorisHomologySumIso (n : ℕ) :
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Under the canonical biproduct identification, the overlap map is the difference of the
-two actual inclusion-induced homology maps. -/
+two inclusion-induced homology maps. -/
 theorem singularMayerVietoris_overlap_map_eq (n : ℕ) :
     HomologicalComplex.homologyMap (singularMayerVietorisShortComplex X U V).f n ≫
       (singularMayerVietorisHomologySumIso X U V n).hom =
@@ -440,7 +440,7 @@ theorem singularMayerVietoris_overlap_map_eq (n : ℕ) :
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
-/-- Under the canonical biproduct identification, the ambient map is the sum of the actual
+/-- Under the canonical biproduct identification, the ambient map is the sum of the
 subset-inclusion maps on homology. -/
 theorem singularMayerVietoris_sum_map_eq (n : ℕ) :
     (singularMayerVietorisHomologySumIso X U V n).inv ≫

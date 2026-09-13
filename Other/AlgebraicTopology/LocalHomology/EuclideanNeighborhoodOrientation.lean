@@ -29,7 +29,7 @@ Its restriction at the origin is exactly `standardLocalClass`, with its original
 Translation through the ball gives homotopies of pairs identifying its restriction at every
 other point of the ball with the translate of that same normalized class.
 
-The ball radius is chosen only to avoid the explicitly constructed boundary. No local homology
+The ball radius is chosen only to avoid the boundary. No local homology
 generator, orientation, or local representability theorem is supplied as data.
 -/
 
@@ -139,7 +139,7 @@ lemma standardOrientationBallChain_boundary (d : ℕ) :
     rw [Preadditive.zsmul_comp, standardOrientationBallFace_projection]
     simp
 
-/-- The actual relative cycle on a neighborhood, obtained by lifting the fixed simplex. -/
+/-- The relative cycle on a neighborhood, obtained by lifting the fixed simplex. -/
 def standardOrientationBallCycle (d : ℕ) :
     ModuleCat.of ℚ ℚ ⟶
       ((relativeChainFunctor ℚ).obj (standardOrientationBallPair d)).cycles d :=
@@ -220,7 +220,7 @@ lemma convexSupport_translation_ne (U : Set E) (h0 : (0 : E) ∈ U)
   exact hU.smul_mem_of_zero_mem h0 hy ⟨sub_nonneg.mpr t.2.2, by linarith [t.2.1]⟩
 
 /-- Over convex support, restriction to `y` is homotopic to restriction to the origin
-followed by translation. This is a homotopy of actual relative pairs. -/
+followed by translation. This is a homotopy of relative pairs. -/
 def convexSupportTranslationPairHomotopy (U : Set E) (h0 : (0 : E) ∈ U)
     (hU : Convex ℝ U) (y : E) (hy : y ∈ U) :
     TopPair.Homotopy

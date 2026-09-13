@@ -21,7 +21,7 @@ namespace TopCat.Sheaf
 variable (X : TopCat.{u}) (U : Opens X)
 
 /-- The canonical inclusion into the restriction fiber is a quasi-isomorphism
-for actual flasque coefficient complexes. -/
+for flasque coefficient complexes. -/
 lemma supportRestrictionToFiber_quasiIso_of_flasque
     (V : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
     (hK : ∀ n, (K.X n).IsFlasque) :

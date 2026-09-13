@@ -7,7 +7,7 @@ module
 public import Other.AlgebraicTopology.Sheaf.CohomologyOpenComparison
 public import Other.AlgebraicTopology.Sheaf.HomologySection
 
-/-! # The canonical local cohomology-sheaf map under actual open restriction -/
+/-! # The canonical local cohomology-sheaf map under open restriction -/
 
 @[expose] public noncomputable section
 
@@ -23,7 +23,7 @@ variable (X : TopCat.{u}) (U : Opens X)
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The canonical local-class presheaf map commutes with actual open restriction. -/
+/-- The canonical local-class presheaf map commutes with open restriction. -/
 @[reassoc]
 lemma sectionCohomologyPresheafToSheaf_openRestriction (n : ℤ) :
     sectionCohomologyPresheafToSheaf (TopCat.of U)
@@ -46,7 +46,7 @@ lemma sectionCohomologyPresheafToSheaf_openRestriction (n : ℤ) :
   erw [toSheafify_openRestrictionSheafificationIso_assoc X U (sectionCohomologyPresheaf X K n)]
   rfl
 
-/-- The evaluation/homology comparison uses the literal open-image equality. -/
+/-- The evaluation/homology comparison uses the open-image equality. -/
 @[reassoc]
 lemma openRestrictionSectionCohomologyPresheafIso_onOpen (n : ℤ)
     (W : Opens (TopCat.of U)) :
@@ -63,7 +63,7 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The original-ambient canonical section map agrees with the one on the
-actual open-restricted coefficient complex, through its exact homology comparison. -/
+open-restricted coefficient complex, through its exact homology comparison. -/
 @[reassoc]
 lemma sectionCohomologyToSheafSection_openRestriction (n : ℤ)
     (W : Opens (TopCat.of U)) :

@@ -9,8 +9,8 @@ public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
 
 /-! # Exact transport of chart-local fundamental classes by homeomorphisms
 
-The chart transported by an actual homeomorphism has the same target and the
-same radial compression. Its literal punctured-pair map therefore factors through
+The chart transported by a homeomorphism has the same target and the
+same radial compression. Its punctured-pair map therefore factors through
 the original chart pair map. This is topological naturality of the constructed
 class, not an assumption that arbitrary homeomorphisms preserve orientations.
 -/
@@ -24,7 +24,7 @@ namespace AlgebraicTopology.Singular
 variable {M N : Type} [TopologicalSpace M] [TopologicalSpace N]
   (H : M ≃ₜ N) (x : M)
 
-/-- The actual homeomorphism map on point-complement pairs. -/
+/-- The homeomorphism map on point-complement pairs. -/
 def pointComplementHomeomorphPairMap : pointComplementPair x ⟶ pointComplementPair (H x) :=
   TopPair.ofHom
     (TopCat.ofHom ⟨H, H.continuous⟩)
@@ -49,7 +49,7 @@ theorem chartRadius_homeomorphTransport :
   unfold chartRadius
   simp only [Homeomorph.transOpenPartialHomeomorph_apply, Function.comp_apply, H.symm_apply_apply]
 
-/-- The actual compressed-chart pair map factors through the homeomorphism. -/
+/-- The compressed-chart pair map factors through the homeomorphism. -/
 theorem chartModelEmbeddingPair_homeomorphTransport :
     chartModelEmbeddingPair d e x hx ≫ pointComplementHomeomorphPairMap H x =
       chartModelEmbeddingPair d (H.symm.transOpenPartialHomeomorph e) (H x)

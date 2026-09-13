@@ -62,7 +62,7 @@ lemma cycleComponentGenericPoint_isGeneric (X : Scheme) (x : X) :
     cycleComponentOrderIsoIic_genericPoint]
   exact (cycleComponentOrderIsoIic X x y).2
 
-/-- The explicitly constructed point agrees with the canonical generic point supplied by
+/-- The point agrees with the canonical generic point supplied by
 integrality. -/
 lemma cycleComponentGenericPoint_eq_genericPoint (X : Scheme) (x : X) :
     cycleComponentGenericPoint X x = genericPoint (cycleComponent X x) :=

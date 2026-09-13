@@ -54,7 +54,7 @@ def globalMapOfLocallyRepresentable : A ⟶ F.presheaf.obj (op ⊤) :=
         change F.presheaf.Γgerm x _ = F.presheaf.Γgerm x (_ + _)
         simp only [map_add, sectionOfLocallyRepresentable_germ] }
 
-/-- The actual presheaf map from constants, prior to sheafification. -/
+/-- The presheaf map from constants, prior to sheafification. -/
 def constantPresheafMapOfLocallyRepresentable :
     (Functor.const (Opens X)ᵒᵖ).obj A ⟶ F.presheaf where
   app U := globalMapOfLocallyRepresentable F A g hlocal ≫
@@ -74,7 +74,7 @@ variable {F}
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The canonical constant-sheaf stalk identification, directed from the coefficient
-group to the stalk. Its map is the germ of an actual constant section. -/
+group to the stalk. Its map is the germ of a constant section. -/
 def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
     A ≅ (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj
       ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj A).obj := by
@@ -121,7 +121,7 @@ theorem globalMapOfLocallyRepresentable_germ (x : X) :
   ext a
   exact sectionOfLocallyRepresentable_germ F (fun x ↦ g x a) (hlocal a) x
 
-/-- The sheaf map agrees with the explicitly constructed map on constant sections. -/
+/-- The sheaf map agrees with the map on constant sections. -/
 @[reassoc]
 theorem constantSheafMapOfLocallyRepresentable_unit :
     toSheafify (Opens.grothendieckTopology X) ((Functor.const (Opens X)ᵒᵖ).obj A) ≫
@@ -148,7 +148,7 @@ theorem constantSheafMapOfLocallyRepresentable_stalk (x : X) :
   rw [CategoryTheory.Functor.map_id, Category.id_comp, globalMapOfLocallyRepresentable_germ]
 
 /-- If the specified stalk maps are isomorphisms, the assembled sheaf map is an
-isomorphism. This uses the actual stalk formula, not a chosen sheaf equivalence. -/
+isomorphism. This uses the stalk formula, not a chosen sheaf equivalence. -/
 theorem constantSheafMapOfLocallyRepresentable_isIso (hg : ∀ x : X, IsIso (g x)) :
     IsIso (constantSheafMapOfLocallyRepresentable F A g hlocal) := by
   apply (TopCat.Presheaf.isIso_iff_stalkFunctor_map_iso _).2

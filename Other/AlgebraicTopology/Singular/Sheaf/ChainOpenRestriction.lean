@@ -11,9 +11,9 @@ public import Other.AlgebraicTopology.Singular.Sheaf.Chain
 public import Other.AlgebraicTopology.Singular.Sheaf.ChainStalk
 
 /-!
-# Excision and the open restriction of the actual singular-chain sheaf
+# Excision and the open restriction of the singular-chain sheaf
 
-For an open subspace `U` of `X`, inclusion of the actual relative pairs constructs a map
+For an open subspace `U` of `X`, inclusion of the relative pairs constructs a map
 from the intrinsic chain sheaf of `U` to the restriction of the ambient chain sheaf.
 On point stalks it is the inclusion of point-complement pairs. This is not generally an
 isomorphism of chain stalks: ambient simplices need not remain in `U`. Rational singular
@@ -35,7 +35,7 @@ instance singularChainOpenSubspace_t2 [T2Space X] :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Inclusion of an open subspace gives an actual map of complement-support pairs. -/
+/-- Inclusion of an open subspace gives a map of complement-support pairs. -/
 def openSubsetSupportPairMap (V : Opens ((Opens.toTopCat X).obj U)) :
     TopPair.ofSubset (X := (Opens.toTopCat X).obj U)
         (V : Set ((Opens.toTopCat X).obj U))ᶜ ⟶
@@ -52,7 +52,7 @@ def openSubsetSupportPairMap (V : Opens ((Opens.toTopCat X).obj U)) :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The point-complement version of the actual open inclusion. -/
+/-- The point-complement version of the open inclusion. -/
 def openSubsetPointPairMap (y : (Opens.toTopCat X).obj U) :
     TopPair.ofSubset (X := (Opens.toTopCat X).obj U)
         ({y} : Set ((Opens.toTopCat X).obj U))ᶜ ⟶
@@ -79,7 +79,7 @@ lemma openSubsetSupportPairMap_restrict (V : Opens ((Opens.toTopCat X).obj U))
 
 variable (R : Type u) [Field R]
 
-/-- The actual open-inclusion maps form a natural transformation of pair-valued presheaves. -/
+/-- The open-inclusion maps form a natural transformation of pair-valued presheaves. -/
 def openComplementPairRestriction :
     openComplementPairFunctor ((Opens.toTopCat X).obj U) ⟶
       U.isOpenEmbedding.functor.op ⋙ openComplementPairFunctor X where
@@ -104,7 +104,7 @@ lemma singularChainPresheafOpenRestriction_app (n : ℕ)
       (forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map
         (((relativeChainFunctor R).map (openSubsetSupportPairMap U V)).f n) := rfl
 
-/-- The sheaf map is obtained from the actual pair map and the sheafification unit. -/
+/-- The sheaf map is obtained from the pair map and the sheafification unit. -/
 def singularChainSheafOpenRestrictionDegree (n : ℕ) :
     singularChainSheaf R ((Opens.toTopCat X).obj U) n ⟶
       (U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).obj (singularChainSheaf R X n) :=
@@ -137,7 +137,7 @@ lemma singularChainPresheafOpenRestriction_boundary (n : ℕ) :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The actual open-inclusion map commutes with the sheafified boundary. -/
+/-- The open-inclusion map commutes with the sheafified boundary. -/
 @[reassoc]
 lemma singularChainSheafOpenRestrictionDegree_boundary (n : ℕ) :
     singularChainSheafOpenRestrictionDegree U R (n + 1) ≫
@@ -164,7 +164,7 @@ lemma singularChainSheafOpenRestrictionDegree_boundary (n : ℕ) :
     (Functor.whiskerLeft U.isOpenEmbedding.functor.op
       (toSheafify (Opens.grothendieckTopology X) (singularChainPresheaf R X n)))
 
-/-- The actual intrinsic-to-ambient open comparison of chain sheaf complexes. -/
+/-- The intrinsic-to-ambient open comparison of chain sheaf complexes. -/
 def singularChainSheafOpenRestriction :
     singularChainSheafComplex R ((Opens.toTopCat X).obj U) ⟶
       ((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
@@ -175,7 +175,7 @@ def singularChainSheafOpenRestriction :
     simp only [Functor.mapHomologicalComplex_obj_d, singularChainSheafComplex_d]
     exact singularChainSheafOpenRestrictionDegree_boundary U R k
 
-/-- On complexes, taking a stalk of actual open restriction gives the ambient stalk. -/
+/-- On complexes, taking a stalk of open restriction gives the ambient stalk. -/
 def openRestrictionSheafComplexStalkIso
     (K : ChainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℕ)
     (y : (Opens.toTopCat X).obj U) :
@@ -210,7 +210,7 @@ lemma singularChainSheafStalkIso_unit {Y : TopCat.{u}} [T2Space Y] (y : Y) (n : 
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Germ normalization for the actual sheaf-chain open comparison. -/
+/-- Germ normalization for the sheaf-chain open comparison. -/
 @[reassoc]
 lemma singularChainSheafOpenRestriction_unit_germ
     (n : ℕ) (V : Opens ((Opens.toTopCat X).obj U))
@@ -233,7 +233,7 @@ lemma singularChainSheafOpenRestriction_unit_germ
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The stalk map of open comparison, under the constructed local-chain identifications,
+/-- The stalk map of open comparison, under the local-chain identifications,
 is exactly inclusion of point-complement pairs. No chain-stalk isomorphism is claimed. -/
 lemma singularChainSheafOpenRestriction_stalk [T2Space X]
     (y : (Opens.toTopCat X).obj U) :
@@ -275,7 +275,7 @@ lemma singularChainSheafOpenRestriction_stalk [T2Space X]
   exact congrArg ((forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map)
     (congrArg (fun f => f.f n) h)
 
-/-- The same constructed open comparison after placing homological degree `n` in degree
+/-- The same open comparison after placing homological degree `n` in degree
 `-n`. The target is explicitly the regraded restricted chain complex. -/
 def singularChainSheafOpenRestrictionRegraded :
     singularChainSheafCochainComplex R ((Opens.toTopCat X).obj U) ⟶

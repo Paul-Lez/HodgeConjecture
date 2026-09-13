@@ -19,8 +19,8 @@ For open subsets `U,V ⊆ X`, this file constructs the exact sequence
 
 The first map has signs `(restriction,-restriction)` and the second adds the two restrictions.
 Their quotient-projection identities are proved, so neither map is supplied as arbitrary data.
-The chain sequence comes from the snake lemma applied to the actual two-subset small-chain
-sequence and the ambient split sequence. The final comparison uses the proved triad excision
+The chain sequence comes from the snake lemma applied to the two-subset small-chain
+sequence and the ambient split sequence. The final comparison uses the triad excision
 theorem, rather than identifying the small quotient with the union quotient by definition.
 
 For closed supports `K,L`, putting `U = Kᶜ`, `V = Lᶜ` yields the support sequence with
@@ -40,7 +40,7 @@ section Abelian
 variable {C : Type*} [Category C] [Abelian C]
   {S T : ShortComplex C} (f : S ⟶ T) (hS : S.ShortExact) (hT : T.ShortExact)
 
-/-- The snake-lemma diagram formed using the actual kernel and cokernel of a map of exact
+/-- The snake-lemma diagram formed using the kernel and cokernel of a map of exact
 sequences. No connecting or exactness datum is supplied. -/
 def shortExactMapSnakeInput : ShortComplex.SnakeInput C where
   L₀ := kernel f
@@ -177,7 +177,7 @@ theorem subsetIntersectionChainMap_right_comp :
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The geometric morphism from the two-subset small-chain exact sequence to the ambient
-diagonal exact sequence. Its three components are actual inclusion chain maps. -/
+diagonal exact sequence. Its three components are inclusion chain maps. -/
 def subsetMayerVietorisToAmbient :
     singularMayerVietorisShortComplex X U V ⟶ ambientDiagonalShortComplex X :=
   ShortComplex.homMk
@@ -217,7 +217,7 @@ theorem subsetMayerVietorisToAmbient_mono_third :
   infer_instance
 
 /-- The quotient Mayer--Vietoris chain sequence, constructed as the componentwise cokernel
-of the actual subset-inclusion diagram. -/
+of the subset-inclusion diagram. -/
 def relativeMayerVietorisSmallShortComplex : ShortComplex (ChainCategory ℚ) :=
   cokernel (subsetMayerVietorisToAmbient X U V)
 
@@ -261,7 +261,7 @@ def relativeMayerVietorisSmallRightIso :
   exact cokernelIsoOfEq (singularMayerVietorisSumChainMap_eq X U V)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The left endpoint comparison carries the componentwise cokernel projection to the actual
+/-- The left endpoint comparison carries the componentwise cokernel projection to the
 relative-chain projection. -/
 @[reassoc]
 theorem relativeMayerVietorisSmallLeftIso_projection :
@@ -271,7 +271,7 @@ theorem relativeMayerVietorisSmallLeftIso_projection :
   PreservesCokernel.π_iso_hom ShortComplex.π₁ (subsetMayerVietorisToAmbient X U V)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The middle comparison respects both actual quotient projections. -/
+/-- The middle comparison respects both quotient projections. -/
 @[reassoc]
 theorem relativeMayerVietorisSmallMiddleIso_projection :
     (cokernel.π (subsetMayerVietorisToAmbient X U V)).τ₂ ≫
@@ -285,7 +285,7 @@ theorem relativeMayerVietorisSmallMiddleIso_projection :
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The final comparison carries the quotient projection to the actual triad projection. -/
+/-- The final comparison carries the quotient projection to the triad projection. -/
 @[reassoc]
 theorem relativeMayerVietorisSmallRightIso_projection :
     (cokernel.π (subsetMayerVietorisToAmbient X U V)).τ₃ ≫
@@ -321,7 +321,7 @@ def relativeMayerVietorisRightChainMap :
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The first map is induced by the signed diagonal on ambient chains. This identifies it as
-the actual pair of support restrictions, not a separately supplied homomorphism. -/
+the pair of support restrictions, not a separately supplied homomorphism. -/
 theorem relativeMayerVietorisLeftChainMap_projection :
     relativeChainProjection ℚ (TopPair.ofSubset (U ∩ V)) ≫
       relativeMayerVietorisLeftChainMap X U V =
@@ -337,7 +337,7 @@ theorem relativeMayerVietorisLeftChainMap_projection :
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The second map is induced by addition of ambient chains followed by the union quotient.
-This identifies its two components as actual relative restriction maps. -/
+This identifies its two components as relative restriction maps. -/
 theorem relativeMayerVietorisRightChainMap_projection :
     biprod.map (relativeChainProjection ℚ (TopPair.ofSubset U))
         (relativeChainProjection ℚ (TopPair.ofSubset V)) ≫
@@ -385,7 +385,7 @@ def relativeMayerVietorisMiddleHomologyIso (n : ℕ) :
     (relativeMayerVietorisSmallMiddleIso X U V)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The final endpoint homology comparison, constructed using the proved excision map. -/
+/-- The final endpoint homology comparison, constructed using the excision map. -/
 def relativeMayerVietorisRightHomologyIso (hU : IsOpen U) (hV : IsOpen V) (n : ℕ) :
     (relativeMayerVietorisSmallShortComplex X U V).X₃.homology n ≅
       RelativeHomology ℚ (TopPair.ofSubset (U ∪ V)) n := by
@@ -404,7 +404,7 @@ def relativeMayerVietorisBoundary (hU : IsOpen U) (hV : IsOpen V) (n : ℕ) :
         (relativeMayerVietorisLeftHomologyIso X U V n).hom
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The first actual homology map is the transported map of the quotient sequence. -/
+/-- The first homology map is the transported map of the quotient sequence. -/
 theorem relativeMayerVietorisLeftHomologyMap_eq (n : ℕ) :
     HomologicalComplex.homologyMap (relativeMayerVietorisLeftChainMap X U V) n =
       (relativeMayerVietorisLeftHomologyIso X U V n).inv ≫
@@ -414,7 +414,7 @@ theorem relativeMayerVietorisLeftHomologyMap_eq (n : ℕ) :
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The second actual homology map is the transported map of the quotient sequence. -/
+/-- The second homology map is the transported map of the quotient sequence. -/
 theorem relativeMayerVietorisRightHomologyMap_eq
     (hU : IsOpen U) (hV : IsOpen V) (n : ℕ) :
     HomologicalComplex.homologyMap (relativeMayerVietorisRightChainMap X U V) n =
@@ -456,7 +456,7 @@ theorem relativeMayerVietorisBoundary_comm
   rw [relativeMayerVietorisBoundary, Iso.hom_inv_id_assoc]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- Consecutive actual relative chain maps compose to zero. -/
+/-- Consecutive relative chain maps compose to zero. -/
 theorem relativeMayerVietorisLeftRight_comp :
     relativeMayerVietorisLeftChainMap X U V ≫ relativeMayerVietorisRightChainMap X U V = 0 := by
   simp only [relativeMayerVietorisLeftChainMap, relativeMayerVietorisRightChainMap,

@@ -8,7 +8,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
 
-/-! # Exact local normalization of the actual supported injective cohomology sheaf -/
+/-! # Exact local normalization of the supported injective cohomology sheaf -/
 
 @[expose] public noncomputable section
 
@@ -23,7 +23,7 @@ variable (X : Over (Spec (.of ℂ)))
 local instance complexSupportCohomologySheafNormalizationParacompact :
     ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
 
-/-- The injective-sheaf comparison inverts exactly the actual singular-resolution map. -/
+/-- The injective-sheaf comparison inverts exactly the singular-resolution map. -/
 @[reassoc]
 lemma complexSupportInjectiveCohomologySheafIsoRelative_comp
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
@@ -39,7 +39,7 @@ lemma complexSupportInjectiveCohomologySheafIsoRelative_comp
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The actual supported injective cohomology-sheaf comparison takes the
+/-- The supported injective cohomology-sheaf comparison takes the
 canonical original-ambient section to the prescribed relative sheafification unit. -/
 @[reassoc]
 lemma complexSupportInjectiveCohomologySheafIsoRelative_section
@@ -78,7 +78,7 @@ lemma complexSupportInjectiveCohomologySheafIsoRelative_section
     (supportedRationalSingularSectionCohomologyEquivSupportComplement Y S S.isClosed V n z))
       (e.addCommGroupIsoToAddEquiv.symm_apply_apply z).symm
 
-/-- The normalization equation on an actual local injective-model cohomology class. -/
+/-- The normalization equation on a local injective-model cohomology class. -/
 lemma complexSupportInjectiveCohomologySheafIsoRelative_section_apply
     (S : Closeds (ComplexPoint X)) (n : ℕ) (V : Opens (ComplexPoint X))
     (z : ((((supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex

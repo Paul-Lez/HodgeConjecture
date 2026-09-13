@@ -13,17 +13,17 @@ public import Other.AlgebraicTopology.Sheaf.MapOfLocalStalks
 public import Other.AlgebraicTopology.Singular.Sheaf.ChainHomology
 
 /-!
-# Exact point-coclass normalization of the constructed orientation sheaf
+# Exact point-coclass normalization of the orientation sheaf
 
-The old point coclass evaluates to `1` on exactly the local fundamental class used by
-the constructed chain-homology sheaf orientation. Consequently the actual stalk
-orientation map followed by the old point-coclass pairing is the identity of `ℚ`.
+The point coclass evaluates to `1` on exactly the local fundamental class used by the
+chain-homology sheaf orientation. Consequently the stalk orientation map followed by the
+point-coclass pairing is the identity of `ℚ`.
 
-This is an exact comparison, not a rescaling by one-dimensionality. The point-only
-uniqueness theorem states precisely the remaining local test for a proposed class.
-This file does **not** assert that the class obtained by derived closed-chain pushforward
-passes that test: compatibility of derived sheaf duality and the singular evaluation/cap
-pairing, as well as the exact-image supported global comparison, still has to be proved.
+This is an exact comparison on the nose. The point-only uniqueness theorem states precisely the
+remaining local test for a proposed class. Whether the class obtained by derived closed-chain
+pushforward passes that test is a separate question: it needs compatibility of derived sheaf
+duality with the singular evaluation/cap pairing, and the exact-image supported global
+comparison.
 -/
 
 @[expose] public noncomputable section
@@ -40,12 +40,12 @@ variable [IsProjective X.hom] [SmoothOfRelativeDimension d X.hom]
   (z : ComplexPoint X)
 
 omit [IsProjective X.hom] in
-/-- The old point-local class and the local class used by the sheaf orientation are identical. -/
+/-- The point-local class and the local class used by the sheaf orientation are identical. -/
 lemma analyticPointLocalHomologyClass_eq_complexLocalOrientation :
     analyticPointLocalHomologyClass X d z =
       complexLocalOrientation X d z := rfl
 
-/-- The old point coclass evaluates to exactly `1` on the new orientation's local class. -/
+/-- The point coclass evaluates to exactly `1` on the orientation's local class. -/
 @[simp]
 lemma analyticPointLocalCoclass_apply_complexLocalOrientation :
     analyticPointLocalCoclassDual X d z
@@ -60,8 +60,8 @@ lemma analyticPointLocalCoclass_apply_smul_complexLocalOrientation (q : ℚ) :
   rw [map_smul, analyticPointLocalCoclass_apply_complexLocalOrientation]
   exact mul_one q
 
-/-- In the explicitly point-supported group, evaluation on the exact orientation determines
-the coclass. This uniqueness lemma constructs no new general duality equivalence. -/
+/-- In the explicitly point-supported group, evaluation on the exact orientation determines the
+coclass. -/
 lemma eq_analyticPointLocalCoclass_iff
     (β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) {z} (2 * d)) :
     β = analyticPointLocalCoclass X d z ↔
@@ -80,8 +80,8 @@ lemma eq_analyticPointLocalCoclass_iff
     rw [map_smul, hβ, analyticPointLocalCoclass_apply_smul_complexLocalOrientation]
     exact mul_one q
 
-/-- The actual assembled homology-sheaf orientation is dual to the old point coclass
-on every stalk, with its coefficient map exactly the identity. -/
+/-- The assembled homology-sheaf orientation is dual to the point coclass on every stalk, with
+its coefficient map exactly the identity. -/
 @[reassoc]
 lemma complexOrientationHomologySheafIso_stalk_pointCoclass :
     (TopCat.Sheaf.constantSheafStalkIso (X := TopCat.of (ComplexPoint X))

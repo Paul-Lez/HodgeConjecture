@@ -781,7 +781,7 @@ noncomputable def relativeCochainCohomologyEquiv (X : TopPair.{u}) (p : ℕ) :
   (ShortComplex.homologyMapIso (HomologicalComplex.linearDualCochainComplexScIso
     ((relativeChainFunctor R).obj X) p)).toLinearEquiv.symm
 
-/-- Same-pair relative cap product on the repository's standard relative cohomology and
+/-- Same-pair relative cap product on the standard relative cohomology and
 relative homology objects. -/
 noncomputable def relativeCapCohomologyLinear (X : TopPair.{u}) (p q : ℕ) :
     RelativeCohomology R X p →ₗ[R]
@@ -836,7 +836,7 @@ lemma capCocycleHomologyLinear_apply (X : TopCat.{u}) (p q : ℕ)
     capCocycleHomologyLinear R X p q phi = capHomologyMap R X p q phi :=
   rfl
 
-/-- Singular cap product, descended all the way to the repository's standard singular
+/-- Singular cap product, descended all the way to the standard singular
 cochain cohomology and singular homology objects. -/
 noncomputable def capCohomologyLinear (X : TopCat.{u}) (p q : ℕ) :
     CochainCohomology R X p →ₗ[R]

@@ -25,7 +25,7 @@ The Euclidean neighborhood simplex is transported by the fixed ordered real/imag
 coordinate homeomorphism. The resulting class has degree `2 * d` and restricts at every point
 of its open support to the translation of the exact `standardComplexLocalClass`.
 
-The support-image pair maps used for this transport are actual maps of relative singular
+The support-image pair maps used for this transport are maps of relative singular
 complexes induced by continuous injective maps; their compatibility with point restriction is
 proved at the level of maps of topological pairs.
 -/
@@ -37,7 +37,7 @@ open CategoryTheory
 namespace AlgebraicTopology.Singular
 
 /-- A continuous injective map sends the complement of a support into the complement of its
-image, giving an actual covariant map of the relative pairs. -/
+image, giving a covariant map of the relative pairs. -/
 def imageSupportPairMap {X Y : TopCat} (f : X ⟶ Y) (hf : Function.Injective f)
     (U : Set X) : TopPair.ofSubset Uᶜ ⟶ TopPair.ofSubset (f '' U)ᶜ := by
   refine TopPair.ofHom f ?_ ?_
@@ -65,7 +65,7 @@ lemma imageSupportPairMap_restrict {X Y : TopCat} (f : X ⟶ Y)
       supportInclusionPairMap X (Set.singleton_subset_iff.mpr hx) ≫
         imagePointPairMap f hf x := rfl
 
-/-- Degree transport commutes with the actual map on relative singular homology. -/
+/-- Degree transport commutes with the map on relative singular homology. -/
 lemma relativeHomologyMap_cast {P Q : TopPair} {m n : ℕ} (h : m = n)
     (f : P ⟶ Q) (c : RelativeHomology ℚ P m) :
     relativeHomologyMap ℚ n f (h ▸ c) = h ▸ relativeHomologyMap ℚ m f c := by aesop
@@ -89,7 +89,7 @@ lemma zero_mem_standardComplexOrientationNeighborhood (d : ℕ) :
   refine ⟨0, zero_mem_standardOrientationBall (d * 2), ?_⟩
   exact map_zero (Complex.piCoordCLE d).symm
 
-/-- The normalized complex neighborhood class. The only degree cast is the proved arithmetic
+/-- The normalized complex neighborhood class. The only degree cast is the arithmetic
 identity `d * 2 = 2 * d` converting the ordered real-coordinate dimension. -/
 def standardComplexOrientationNeighborhoodClass (d : ℕ) :
     RelativeHomology ℚ

@@ -33,7 +33,7 @@ namespace CochainComplex.HomComplex
 variable {C : Type*} [Category* C] [Abelian C]
   (K : CochainComplex C ℤ) {L M : CochainComplex C ℤ} (f : L ⟶ M)
 
-/-- Postcomposition by an actual chain map, on the entire Hom complex. -/
+/-- Postcomposition by a chain map, on the entire Hom complex. -/
 def postcompMap : HomComplex K L ⟶ HomComplex K M where
   f n := AddCommGrpCat.ofHom
     { toFun z := z.comp (Cochain.ofHom f) (add_zero n)

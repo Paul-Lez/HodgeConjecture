@@ -68,7 +68,7 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The ordinary class computed directly in the ambient injective model, bypassing the
-mapping-cone presentation. This was the old definition of `cycleComponentSheafClass`. -/
+mapping-cone presentation. -/
 theorem cycleComponentSheafClass_eq_injectiveModel :
     cycleComponentSheafClass X x hx =
       (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm

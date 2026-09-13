@@ -45,7 +45,7 @@ variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 variable [SmoothOfRelativeDimension d X.hom]
   [T2Space (ComplexPoint X)]
 
-/-- Scalar multiples of the exact normalized local orientation, viewed in the actual
+/-- Scalar multiples of the exact normalized local orientation, viewed in the
 homology-sheaf stalk through its canonical local-homology comparison. -/
 def complexOrientationHomologyStalkMap (x : ComplexPoint X) :
     AddCommGrpCat.of ℚ ⟶
@@ -54,7 +54,7 @@ def complexOrientationHomologyStalkMap (x : ComplexPoint X) :
     ((LinearMap.toSpanSingleton ℚ _ (complexLocalOrientation X d x)).toAddMonoidHom) ≫
       (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X)) x (2 * d)).inv
 
-/-- Local representability is proved using the actual geometric neighborhood class,
+/-- Local representability is proved using the geometric neighborhood class,
 not assumed as an orientation-sheaf field. -/
 theorem complexOrientationHomologyStalkMap_locallyRepresentable :
     ∀ (q : ℚ) (x : ComplexPoint X),
@@ -111,7 +111,7 @@ theorem complexOrientationHomologyStalkMap_isIso (x : ComplexPoint X) :
   unfold complexOrientationHomologyStalkMap
   infer_instance
 
-/-- The actual sheaf map obtained by gluing the geometric neighborhood orientations. -/
+/-- The sheaf map obtained by gluing the geometric neighborhood orientations. -/
 def constantToComplexOrientationHomologySheaf :
     singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X)) ⟶
       singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d) :=
@@ -119,7 +119,7 @@ def constantToComplexOrientationHomologySheaf :
     (complexOrientationHomologyStalkMap X d)
     (complexOrientationHomologyStalkMap_locallyRepresentable X d)
 
-/-- The constructed normalized orientation is an isomorphism of actual sheaves. -/
+/-- The normalized orientation is an isomorphism of sheaves. -/
 def complexOrientationHomologySheafIso :
     singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X)) ≅
       singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d) := by

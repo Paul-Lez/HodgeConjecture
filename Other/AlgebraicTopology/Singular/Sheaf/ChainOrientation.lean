@@ -18,16 +18,15 @@ public import Other.AlgebraicTopology.Singular.Sheaf.ChainHomology
 /-!
 # From local singular homology to the derived orientation
 
-This is the canonical truncation bridge for the *actual* relative singular-chain sheaf.
-Its two explicit mathematical hypotheses are local homology vanishing outside degree
-`N`, and an orientation of the actual degree-`N` homology sheaf. The latter is not an
-arbitrary derived equivalence: the derived comparison is constructed, and the general
-normalization theorem proves that it induces exactly the given sheaf orientation.
+This is the canonical truncation comparison for the relative singular-chain sheaf. Its two
+explicit mathematical hypotheses are local homology vanishing outside degree `N`, and an
+orientation of the degree-`N` homology sheaf. The derived comparison is constructed, and the
+general normalization theorem proves that it induces exactly the given sheaf orientation.
 
 For complex dimension `d`, take `N = 2*d`; homological degree `N` is cohomological degree
 `-N`, so the resulting orientation is `ω ≅ R_X[N]`. Local vanishing and the normalized
-orientation of the homology sheaf must still be established geometrically. This module
-does not claim Verdier duality or the intrinsic Borel--Moore comparison.
+orientation of the homology sheaf must still be established geometrically. Verdier duality and
+the intrinsic Borel--Moore comparison are outside the scope of this module.
 -/
 
 @[expose] public noncomputable section
@@ -40,14 +39,14 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R] (X : TopCat.{u})
 
-/-- Reindexing the actual homology sheaf from homological to cohomological grading. -/
+/-- Reindexing the homology sheaf from homological to cohomological grading. -/
 def singularChainSheafCochainHomologyIso (N : ℕ) :
     (singularChainSheafCochainComplex R X).homology (-(N : ℤ)) ≅
       singularChainHomologySheaf R X N :=
   (singularChainSheafComplex R X).extendHomologyIso ComplexShape.embeddingDownNat rfl
 
 /-- Local relative homology concentration implies cohomological concentration of the
-actual chain-sheaf complex. Positive degrees vanish because the complex is termwise
+chain-sheaf complex. Positive degrees vanish because the complex is termwise
 bounded above by zero. -/
 theorem singularChainSheafCochainHomology_concentrated [T2Space X] (N : ℕ)
     (hlocal : ∀ (m : ℕ), m ≠ N → ∀ x : X,
@@ -103,7 +102,7 @@ theorem singularChainSheafDerivedSingleOrientationIso_homology [T2Space X] (N : 
         (singularChainSheafCochainHomologyIso R X N).hom ≫ orientation.hom :=
   DerivedCategory.concentratedOrientationIso_homology _ _ _ _
 
-/-- Canonical derived orientation of the actual relative-chain sheaf, obtained from
+/-- Canonical derived orientation of the relative-chain sheaf, obtained from
 local homology concentration and the specified orientation of its homology sheaf. -/
 def singularChainSheafDerivedOrientationIso [T2Space X] (N : ℕ)
     (hlocal : ∀ (m : ℕ), m ≠ N → ∀ x : X,
@@ -118,7 +117,7 @@ def singularChainSheafDerivedOrientationIso [T2Space X] (N : ℕ)
     (singularChainSheafCochainHomology_concentrated R X N hlocal)
     (singularChainSheafCochainHomologyIso R X N ≪≫ orientation)
 
-/-- Cohomological concentration constructs the `D⁺` object of the actual chain sheaf.
+/-- Cohomological concentration constructs the `D⁺` object of the chain sheaf.
 No termwise bounded-below hypothesis or replacement complex is supplied. -/
 def singularChainSheafPlusObject [T2Space X] (N : ℕ)
     (hlocal : ∀ (m : ℕ), m ≠ N → ∀ x : X,
@@ -127,7 +126,7 @@ def singularChainSheafPlusObject [T2Space X] (N : ℕ)
   DerivedCategory.concentratedPlusObject (singularChainSheafCochainComplex R X)
     (-(N : ℤ)) (singularChainSheafCochainHomology_concentrated R X N hlocal)
 
-/-- The `D⁺` object is literally the localization of the actual relative-chain model. -/
+/-- The `D⁺` object is the localization of the relative-chain model. -/
 @[simp]
 theorem singularChainSheafPlusObject_obj [T2Space X] (N : ℕ)
     (hlocal : ∀ (m : ℕ), m ≠ N → ∀ x : X,

@@ -7,11 +7,11 @@ module
 public import Other.AlgebraicGeometry.ComplexPoint.CoclassSchemeIso
 public import Other.AlgebraicGeometry.Cycle.SmoothPair.PointCoclassSection
 public import Other.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
-/-! # Exact transport of old point coclass sections through scheme isomorphisms
+/-! # Exact transport of point coclass sections through scheme isomorphisms
 
-The old coclass enters the relative-cohomology sheaf through the actual
-neighborhood-to-point pair map and the sheafification unit. Literal pair squares
-and complex orientation naturality prove its compatibility with open transport.
+The coclass enters the relative-cohomology sheaf through the neighborhood-to-point pair map and
+the sheafification unit. Pair squares and complex orientation naturality prove its compatibility
+with open transport.
 -/
 
 @[expose] public noncomputable section
@@ -24,8 +24,8 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
   [SmoothOfRelativeDimension d X.hom] [IsProjective X.hom]
 
-/-- The old exactly normalized point coclass, included in a larger support and
-restricted to a literal ambient neighborhood before sheafification. -/
+/-- The exactly normalized point coclass, included in a larger support and restricted to an
+ambient neighborhood before sheafification. -/
 def analyticPointCoclassSupportSection (S : Set (ComplexPoint X))
     (z : ComplexPoint X) (hz : z ∈ S) (V : Opens (ComplexPoint X)) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S (2 * d)).obj.obj (op V) :=
@@ -35,7 +35,7 @@ def analyticPointCoclassSupportSection (S : Set (ComplexPoint X))
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Its actual restriction is the same old coclass on the smaller neighborhood. -/
+/-- Its restriction is the same coclass on the smaller neighborhood. -/
 theorem analyticPointCoclassSupportSection_restrict (S : Set (ComplexPoint X))
     (z : ComplexPoint X) (hz : z ∈ S) {U V : Opens (ComplexPoint X)} (hUV : U ≤ V) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S (2 * d)).obj.map (homOfLE hUV).op
@@ -63,7 +63,7 @@ variable (Y : Over (Spec (.of ℂ)))
   (e : Y ≅ X)
   [SmoothOfRelativeDimension d Y.hom] [IsProjective Y.hom]
 
-/-- The actual analytic scheme-isomorphism map as a topological-category morphism. -/
+/-- The analytic scheme-isomorphism map as a topological-category morphism. -/
 def complexSchemeIsoTopMap : TopCat.of (ComplexPoint Y) ⟶ TopCat.of (ComplexPoint X) :=
   TopCat.ofHom (Point.continuousMap e.hom)
 
@@ -94,8 +94,8 @@ theorem neighborhoodSupportPairImageIso_inv_to_point
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Exact compatibility of the old point coclass with the constructed sheaf
-open-isomorphism transport, on every actual neighborhood. -/
+/-- Exact compatibility of the point coclass with the sheaf open-isomorphism transport, on every
+neighborhood. -/
 theorem analyticPointCoclassSupportSection_schemeIso_transport
     (S : Set (ComplexPoint X)) (B : Set (ComplexPoint Y))
     (hB : Point.map e.hom ⁻¹' S = B)

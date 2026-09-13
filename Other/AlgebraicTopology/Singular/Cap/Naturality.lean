@@ -27,7 +27,7 @@ public import Other.AlgebraicTopology.Singular.CochainCohomology
 
 The chain-level Alexander--Whitney formula induces the projection formula
 `f_* (f^* φ ⌢ c) = φ ⌢ f_* c` for every cocycle `φ` and homology class `c`.
-Both maps are the actual maps induced on singular chains. No orientation, duality equivalence,
+Both maps are the maps induced on singular chains. No orientation, duality equivalence,
 or compatibility theorem is passed as data.
 
 This is a prerequisite for geometric duality, not a proof that capping with an orientation
@@ -58,7 +58,7 @@ lemma coboundary_cochainMap {X Y : SSet.{u}} (f : X ⟶ Y) (p : ℕ)
   exact congrArg phi (ConcreteCategory.congr_hom
     ((SSet.chainComplexMap f (ModuleCat.of R R)).comm (p + 1) p) c).symm
 
-/-- The actual cochain pullback restricted to cocycles. -/
+/-- The cochain pullback restricted to cocycles. -/
 def cocycleMap {X Y : SSet.{u}} (f : X ⟶ Y) (p : ℕ) :
     Cocycle R Y p →ₗ[R] Cocycle R X p :=
   (cochainMap R f p).restrict
@@ -97,7 +97,7 @@ theorem capHomologyMap_naturality {X Y : SSet.{u}} (f : X ⟶ Y) (p q : ℕ)
   rw [ShortComplex.homologyMap_comp, ShortComplex.homologyMap_comp] at h
   exact congrArg ModuleCat.Hom.hom h
 
-/-- Pullback on cochain cohomology, induced by the actual dual chain map. -/
+/-- Pullback on cochain cohomology, induced by the dual chain map. -/
 def cochainCohomologyMap {X Y : SSet.{u}} (f : X ⟶ Y) (p : ℕ) :
     CochainCohomology R Y p →ₗ[R] CochainCohomology R X p :=
   (ShortComplex.homologyMap (ShortComplex.linearDualMap
@@ -139,7 +139,7 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R]
 
-/-- Pullback of singular cocycles along the actual continuous map. -/
+/-- Pullback of singular cocycles along the continuous map. -/
 def cocycleMap {X Y : TopCat.{u}} (f : X ⟶ Y) (p : ℕ) :
     Cocycle R Y p →ₗ[R] Cocycle R X p :=
   Simplicial.cocycleMap R (TopCat.toSSet.map f) p
@@ -157,7 +157,7 @@ def cochainCohomologyMap {X Y : TopCat.{u}} (f : X ⟶ Y) (p : ℕ) :
     CochainCohomology R Y p →ₗ[R] CochainCohomology R X p :=
   Simplicial.cochainCohomologyMap R (TopCat.toSSet.map f) p
 
-/-- The universal-coefficient comparison respects the actual pullback maps. -/
+/-- The universal-coefficient comparison respects the pullback maps. -/
 theorem cochainCohomologyEquiv_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p : ℕ)
     (alpha : CochainCohomology R Y p) :
     cochainCohomologyEquiv R X p (cochainCohomologyMap R f p alpha) =
@@ -184,8 +184,8 @@ theorem capCohomologyLinear_naturality {X Y : TopCat.{u}} (f : X ⟶ Y) (p q : �
   LinearMap.congr_fun
     (Simplicial.capCohomologyLinear_naturality R (TopCat.toSSet.map f) p q alpha) c
 
-/-- Cap product in the repository's standard, homology-dual model of singular cohomology.
-The comparison is the constructed universal-coefficient map. -/
+/-- Cap product in the standard, homology-dual model of singular cohomology.
+The comparison is the universal-coefficient map. -/
 def standardCapCohomologyLinear (X : TopCat.{u}) (p q : ℕ) :
     Cohomology R X p →ₗ[R] (Homology R X (p + q) →ₗ[R] Homology R X q) :=
   (capCohomologyLinear R X p q).comp (cochainCohomologyEquiv R X p).symm.toLinearMap
@@ -280,7 +280,7 @@ lemma relativeCapHom_naturality {X Y : TopPair.{u}} (f : X ⟶ Y) (p q : ℕ)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The relative cap projection formula on homology. Its output is ordinary homology
-of the ambient space, as in the existing same-pair cap product. -/
+of the ambient space, as in the same-pair cap product. -/
 theorem relativeCapHomologyMap_naturality {X Y : TopPair.{u}} (f : X ⟶ Y) (p q : ℕ)
     (phi : RelativeCocycle R Y p) (c : RelativeHomology R X (p + q)) :
     homologyMap R q (TopPair.Hom.fst f)

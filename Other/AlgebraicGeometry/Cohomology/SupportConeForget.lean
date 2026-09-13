@@ -25,7 +25,7 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
 attribute [local instance] rationalConeForgetSheafDerivedCategory
 
-/-- Ordinary rational cohomology computed by the actual ambient rational
+/-- Ordinary rational cohomology computed by the ambient rational
 injective resolution. This has the ordinary augmentation normalization. -/
 def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
     H^n(X; ℚ) ≃+
@@ -91,7 +91,7 @@ lemma hypercohomologyMap_comp_shifted
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The original support-forgetting map, after replacing the ambient
-constant sheaf by its actual injective resolution, is the actual cone
+constant sheaf by its injective resolution, is the cone
 connecting homology map. -/
 lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
@@ -119,7 +119,7 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The normalized support equivalence intertwines the existing
-`forgetSupport` with the actual inclusion of supported injective sections.
+`forgetSupport` with the inclusion of supported injective sections.
 No compatibility or choice of a sign is supplied as an input. -/
 lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)

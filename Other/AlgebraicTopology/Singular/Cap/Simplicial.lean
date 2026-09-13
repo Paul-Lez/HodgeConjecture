@@ -917,7 +917,7 @@ theorem capShortComplexHom_coboundary_homologyMap_eq_zero {X : SSet.{u}}
   rw [← ShortComplex.homologyMap_comp, comp_zero]
   exact capCoboundary_homologyMap_eq_zero R p q phi
 
-/-- Cap product with a cocycle, descended to the actual simplicial homology objects. -/
+/-- Cap product with a cocycle, descended to the simplicial homology objects. -/
 noncomputable def capHomologyMap {X : SSet.{u}} (p q : ℕ)
     (phi : Cochain R X p) (hphi : coboundary R p phi = 0) :
     (X.chainComplex (ModuleCat.of R R)).homology (p + q) →ₗ[R]
@@ -1124,7 +1124,7 @@ lemma capHomologyMap_on_cycles {X : SSet.{u}} (p q : ℕ)
   ShortComplex.homologyπ_naturality (capShortComplexHom R p q phi hphi)
 
 /-- On the underlying chain groups, the map on cycles used to define `capHomologyMap` is
-literally the cap product. -/
+the cap product. -/
 @[reassoc]
 lemma capCyclesMap_i {X : SSet.{u}} (p q : ℕ)
     (phi : Cochain R X p) (hphi : coboundary R p phi = 0) :

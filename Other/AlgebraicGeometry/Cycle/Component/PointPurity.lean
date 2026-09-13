@@ -38,7 +38,7 @@ dual generates local cohomology.
 For a codimension-`d` component of a smooth complex `d`-fold, the component has Krull dimension
 zero. Its analytic support is consequently a singleton, so the chart-local coclass proves the
 guarded singular purity proposition for that component. This is point-support purity only; it
-does not assert the Thom--Gysin comparison needed for positive-dimensional supports.
+leaves the Thom--Gysin comparison needed for positive-dimensional supports to a later file.
 -/
 
 @[expose] public noncomputable section

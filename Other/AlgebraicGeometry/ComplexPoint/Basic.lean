@@ -35,7 +35,7 @@ section IsLocalRing
 
 variable [IsLocalRing R] {X : Over (Spec ↧R)}
 
-/-- Evaluation of a local regular function on its actual domain. -/
+/-- Evaluation of a local regular function on its domain. -/
 noncomputable def evaluateOnOpen (U : X.left.Opens) (s : Γ(X.left, U))
     (z : OverOpen (X := X) U) : R :=
   z.1.stalkHom (X.left.presheaf.germ U z.1.underlying z.2 s)

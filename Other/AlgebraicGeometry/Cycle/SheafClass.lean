@@ -16,9 +16,9 @@ component classes with its exact integer multiplicities. Rational scalar
 extension then gives a rational linear map on `ℚ ⊗[ℤ] codimensionCycleSubgroup X p`.
 The maps take a smooth projective complex variety, its relative dimension, and
 a codimension; no orientation, fundamental class, duality, or principal-divisor
-theorem is an argument. Components may be singular and have arbitrary dimension.
+theorem enters it. Components may be singular and have arbitrary dimension.
 
-These are the additive and rational extensions of the constructed component classes.
+These are the additive and rational extensions of the component classes.
 Comparison with the older maximal-codimension ordinary coclass is a separate
 normalization theorem, not the definition of a point branch of this map.
 -/
@@ -31,8 +31,8 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (V : SmoothProjectiveComplexVariety)
 
-/-- An actual additive map from algebraic cycles to ordinary rational cohomology,
-using the constructed sheaf class in every codimension. -/
+/-- An additive map from algebraic cycles to ordinary rational cohomology,
+using the sheaf class in every codimension. -/
 def sheafCycleClassOnCycles (p : ℕ) :
     codimensionCycleSubgroup V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
   cycleClassOnCyclesOfComponents (fun x hx ↦ cycleComponentSheafClass V.over x hx)
@@ -62,7 +62,7 @@ theorem sheafCycleClassOnCycles_apply (p : ℕ) (c : codimensionCycleSubgroup V.
         n • if hx : coheight x = p then
           cycleComponentSheafClass V.over x hx else 0 := rfl
 
-/-- The actual scalar-extension bilinear map, with integral cycles as its
+/-- The scalar-extension bilinear map, with integral cycles as its
 second input, not a rational-equivalence quotient. -/
 def sheafCycleClassRationalExtensionBilinear (p : ℕ) :
     ℚ →ₗ[ℚ] codimensionCycleSubgroup V.scheme p →ₗ[ℤ]
@@ -82,7 +82,7 @@ def rationalSheafCycleClassOnCycles (p : ℕ) :
       H^(2 * (p : ℤ))(V.over; ℚ) :=
   TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 
-/-- Rational extension agrees with the constructed integral map on pure tensors. -/
+/-- Rational extension agrees with the integral map on pure tensors. -/
 @[simp]
 theorem rationalSheafCycleClassOnCycles_tmul (p : ℕ) (q : ℚ)
     (c : codimensionCycleSubgroup V.scheme p) :
@@ -98,7 +98,7 @@ theorem rationalSheafCycleClassOnCycles_tmul_single (p : ℕ) (q : ℚ)
   simp
 
 /-- Every finite rational combination is sent to the corresponding exact
-combination of the constructed ordinary cohomology classes. -/
+combination of the ordinary cohomology classes. -/
 theorem rationalSheafCycleClassOnCycles_sum_tmul_single (p : ℕ)
     {ι : Type*} (t : Finset ι) (x : ι → V.scheme)
     (hx : ∀ i, coheight (x i) = p) (q : ι → ℚ) :
@@ -107,7 +107,7 @@ theorem rationalSheafCycleClassOnCycles_sum_tmul_single (p : ℕ)
       ∑ i ∈ t, q i • cycleComponentSheafClass V.over (x i) (hx i) := by
   simp
 
-/-- Every actually constructed component class belongs to the algebraic cycle-class span. -/
+/-- Every component class belongs to the algebraic cycle-class span. -/
 theorem cycleComponentSheafClass_mem_algebraicCycleClassSpan
     (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom]

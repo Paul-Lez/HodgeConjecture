@@ -142,7 +142,7 @@ end AuxiliaryRationalCycleComponentBorelMooreComparisonData
 `capWithAmbientComplexOrientation` is intended to be the triad-cap/Thom/costalk operation already
 specialized to the exact ambient complex orientation. `local_ext` is the corresponding purity or
 local-detection theorem. Neither field is constructed here, and canonicity is conditional on
-instantiating this structure with the actual geometric operations. -/
+instantiating this structure with the geometric operations. -/
 structure RationalCycleComponentLocalThomCapInput
     (V : SmoothProjectiveComplexVariety) (d p : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
@@ -264,7 +264,7 @@ def toAuxiliaryComparisonData
   borelMoore := D.borelMoore
   auxiliaryComparison := D.alexanderPoincare
 
-/-- The rational constant-sheaf supported fundamental class, obtained through the proved singular
+/-- The rational constant-sheaf supported fundamental class, obtained through the singular
 comparison after local Thom-cap normalization. -/
 def constantSheafSupportedFundamentalClass
     (D : ComplexOrientedRationalCycleComponentClassData V d p x hx) :
@@ -383,7 +383,7 @@ lemma maximalCodimensionSupportedGenerator_ne_zero
   intro hzero
   exact hsource (e.injective (by simpa using hzero))
 
-/-- The explicitly constructed Borel--Moore fundamental class of a maximal-codimension
+/-- The Borel--Moore fundamental class of a maximal-codimension
 component. -/
 def maximalCodimensionBorelMooreFundamentalClass
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
@@ -530,7 +530,7 @@ def maximalCodimensionLocalThomCapEquiv
     (cycleComponentComplexLocalOrientation_ne_zero V x d d hx z hz)
     (D.span_localOrientation_eq_top z hz)
 
-/-- The actual local Thom-cap package is completely constructed for a point component. -/
+/-- The local Thom-cap package is completely constructed for a point component. -/
 def maximalCodimensionLocalThomCapInput
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
@@ -552,7 +552,7 @@ theorem nonempty_rationalCycleComponentLocalThomCapInput_of_coheight_eq_dimensio
     Nonempty (RationalCycleComponentLocalThomCapInput V d d x hx) :=
   ⟨maximalCodimensionLocalThomCapInput V d x hx⟩
 
-/-- The constructed point-case duality satisfies the full exact local Thom-cap square. -/
+/-- The point-case duality satisfies the full exact local Thom-cap square. -/
 lemma maximalCodimensionAlexanderDuality_isComplexOriented
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
@@ -590,7 +590,7 @@ def maximalCodimensionComplexOrientedComponentClassData
   comparison_isComplexOriented :=
     maximalCodimensionAlexanderDuality_isComplexOriented V d x hx
 
-/-- The normalized-interface point class is exactly the previously constructed ambient point
+/-- The normalized-interface point class is exactly the ambient point
 coclass, not merely a nonzero rational multiple of it. -/
 @[simp] lemma maximalCodimensionComplexOrientedComponentClassData_supported
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
@@ -647,7 +647,7 @@ def maximalCodimensionComponentClass
     (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx)
 
 /-- The maximal-codimension ordinary class is obtained by transporting the normalized singular
-point coclass through the proved support comparison and then forgetting support. -/
+point coclass through the support comparison and then forgetting support. -/
 lemma maximalCodimensionComponentClass_eq_forgetSupport_pointCoclass
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]

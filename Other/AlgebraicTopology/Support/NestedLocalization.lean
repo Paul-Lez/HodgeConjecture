@@ -35,7 +35,7 @@ lemma nestedSupportRestrictionToFiber_quasiIso (W : Opens X)
   CochainComplex.mappingCocone.quasiIso_liftShortComplex _
     (nestedSupportRestrictionSectionsComplexShortComplex_shortExact X h W K)
 
-/-- The fiber comparison preserves the literal support-enlargement map. -/
+/-- The fiber comparison preserves the support-enlargement map. -/
 @[reassoc (attr := simp)]
 lemma nestedSupportRestrictionToFiber_fst (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
@@ -43,7 +43,7 @@ lemma nestedSupportRestrictionToFiber_fst (W : Opens X)
       (nestedSupportRestrictionSectionsComplexShortComplex X h W K).f :=
   CochainComplex.mappingCocone.liftShortComplex_fst _
 
-/-- The extension equivalence is the inverse of actual restriction, rather
+/-- The extension equivalence is the inverse of restriction, rather
 than an arbitrarily chosen linear equivalence between cohomology groups. -/
 def nestedSupportRestrictionHomologyIsoOfVanishing (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)]
