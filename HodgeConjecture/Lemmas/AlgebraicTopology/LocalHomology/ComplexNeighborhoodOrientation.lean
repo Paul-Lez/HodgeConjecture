@@ -138,8 +138,6 @@ theorem standardComplexOrientationNeighborhoodClass_restrict (d : ℕ) (y : Fin 
     standardOrientationBallClass_restrict, ← LinearMap.comp_apply,
     ← relativeHomologyMap_comp, standardRealToComplexPair_translation,
     relativeHomologyMap_comp, LinearMap.comp_apply]
-  change (Nat.mul_comm d 2) ▸ relativeHomologyMap ℚ (d * 2) _
-      ((standardComplexRealRelativeHomologyIso d).inv.hom (standardLocalClass (d * 2))) = _
   exact (relativeHomologyMap_cast (Nat.mul_comm d 2) _ _).symm
 
 end AlgebraicTopology.Singular

@@ -38,10 +38,6 @@ lemma preimageOpenChainMap_comp_zeroAugmentation
     (preimageOpenChainMap R j V).f 0 ≫
         openZeroAugmentation R X (.op V) =
       openZeroAugmentation R U (.op ((Opens.map j).obj V)) := by
-  change (((AlgebraicTopology.singularChainComplexFunctor (ModuleCat R)).obj
-      (ModuleCat.of R R)).map (preimageOpenToOpen j V)).f 0 ≫
-        openZeroAugmentation R X (.op V) =
-      openZeroAugmentation R U (.op ((Opens.map j).obj V))
   exact simplicialZeroAugmentation_naturality R
     (TopCat.toSSet.map (preimageOpenToOpen j V))
 

@@ -80,7 +80,6 @@ private lemma hasFDerivAt_univUnitBall_formula_normed :
     simpa only [Metric.mem_ball, Real.dist_eq] using hx
   filter_upwards [hsmall] with x hx
   norm_num
-  change ‖(√(1 + ‖x‖ ^ (2 : ℕ)))⁻¹ • x - x‖ ≤ ε * ‖x‖
   calc
     ‖(√(1 + ‖x‖ ^ (2 : ℕ)))⁻¹ • x - x‖ =
         ‖((√(1 + ‖x‖ ^ (2 : ℕ)))⁻¹ - 1) • x‖ := by rw [sub_smul, one_smul]
@@ -111,7 +110,6 @@ private lemma hasFDerivAt_univUnitBall_symm_formula_normed :
     simpa only [Metric.mem_ball, Real.dist_eq] using hx
   filter_upwards [hsmall] with x hx
   norm_num
-  change ‖(√(1 - ‖x‖ ^ (2 : ℕ)))⁻¹ • x - x‖ ≤ ε * ‖x‖
   calc
     ‖(√(1 - ‖x‖ ^ (2 : ℕ)))⁻¹ • x - x‖ =
         ‖((√(1 - ‖x‖ ^ (2 : ℕ)))⁻¹ - 1) • x‖ := by rw [sub_smul, one_smul]

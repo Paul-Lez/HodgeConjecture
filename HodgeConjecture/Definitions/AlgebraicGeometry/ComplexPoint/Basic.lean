@@ -150,8 +150,6 @@ lemma mem_overOpen_basicOpen_iff_isUnit_evaluate {U : X.left.Opens} (s : Γ(X.le
     (z : Point R X) (hz : z ∈ overOpen U) :
     z ∈ overOpen (X.left.basicOpen s) ↔ IsUnit (evaluate U s z) := by
   rw [evaluate, dif_pos (show z.underlying ∈ U from hz)]
-  change z.underlying ∈ X.left.basicOpen s ↔
-    IsUnit (z.stalkHom.hom (X.left.presheaf.germ U z.underlying hz s))
   rw [isUnit_map_iff z.stalkHom.hom]
   exact X.left.mem_basicOpen s z.underlying hz
 

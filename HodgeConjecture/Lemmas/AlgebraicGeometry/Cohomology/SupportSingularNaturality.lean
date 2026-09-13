@@ -174,13 +174,6 @@ lemma singularRestrictionToRawPushforward_coboundary (n : ℕ) :
   change OpenCochains R X V n at φ
   apply LinearMap.ext
   intro c
-  change φ
-      (((((openSingularChainComplexFunctor R X).obj V.unop).d (n + 1) n).hom)
-        (((preimageOpenChainMap R j V.unop).f (n + 1)).hom c)) =
-    φ
-      ((((preimageOpenChainMap R j V.unop).f n).hom)
-        ((((openSingularChainComplexFunctor R U).obj
-          ((Opens.map j).obj V.unop)).d (n + 1) n).hom c))
   exact congrArg φ (ConcreteCategory.congr_hom
     ((preimageOpenChainMap R j V.unop).comm (n + 1) n) c)
 

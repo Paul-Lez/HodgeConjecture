@@ -57,9 +57,6 @@ lemma homComplexSingleIntegerGlobalSections_rightUnshift_middle :
         (homComplexSingleIntegerIsoGlobalSections Y K).hom).τ₂ := by
   subst n'
   ext z
-  change (homComplexSingleIntegerIsoGlobalSections Y (K⟦s⟧)).hom.f n z =
-    (homComplexSingleIntegerIsoGlobalSections Y K).hom.f (n + s)
-      (z.rightUnshift (n + s) rfl)
   exact congrArg
     (fun f : (integerConstantSingleComplex Y).X 0 ⟶ K.X (n + s) =>
       integerConstantHomAddEquivGlobalSections (K.X (n + s))

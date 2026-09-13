@@ -109,8 +109,6 @@ def normalSliceClass : RelativeHomology ℚ (normalSlicePair E c) (2 * c) :=
 @[simp] theorem normalSliceProjection_class :
     relativeHomologyMap ℚ (2 * c) (normalSliceProjection E c) (normalSliceClass E c) =
       standardComplexLocalClass c := by
-  change (normalSliceRelativeHomologyIso E c (2 * c)).hom.hom
-    ((normalSliceRelativeHomologyIso E c (2 * c)).inv.hom (standardComplexLocalClass c)) = _
   exact ConcreteCategory.congr_hom (normalSliceRelativeHomologyIso E c (2 * c)).inv_hom_id _
 
 theorem normalSliceClass_ne_zero : normalSliceClass E c ≠ 0 := by

@@ -144,8 +144,6 @@ namespace AlgebraicTopology.Singular
 @[simp]
 lemma homologyMap_id (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) :
     homologyMap R n (𝟙 X) = LinearMap.id := by
-  change (((singularHomologyFunctor (ModuleCat.{u} R) n).obj
-    (ModuleCat.of R R)).map (𝟙 X)).hom = LinearMap.id
   calc
     _ = ModuleCat.Hom.hom (𝟙 (((singularHomologyFunctor (ModuleCat.{u} R) n).obj
         (ModuleCat.of R R)).obj X)) := congrArg ModuleCat.Hom.hom
@@ -156,8 +154,6 @@ lemma homologyMap_id (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) :
 lemma homologyMap_comp (R : Type u) [Field R] {X Y Z : TopCat.{u}} (n : ℕ)
     (f : X ⟶ Y) (g : Y ⟶ Z) :
     homologyMap R n (f ≫ g) = (homologyMap R n g).comp (homologyMap R n f) := by
-  change (((singularHomologyFunctor (ModuleCat.{u} R) n).obj
-    (ModuleCat.of R R)).map (f ≫ g)).hom = _
   calc
     _ = ((((singularHomologyFunctor (ModuleCat.{u} R) n).obj
         (ModuleCat.of R R)).map f) ≫
@@ -191,7 +187,6 @@ lemma cohomologyMap_comp (R : Type u) [Field R] {X Y Z : TopCat.{u}} (n : ℕ)
 @[simp]
 lemma relativeHomologyMap_id (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ) :
     relativeHomologyMap R n (𝟙 X) = LinearMap.id := by
-  change ((relativeHomologyFunctor R n).map (𝟙 X)).hom = LinearMap.id
   calc
     _ = ModuleCat.Hom.hom (𝟙 ((relativeHomologyFunctor R n).obj X)) :=
       congrArg ModuleCat.Hom.hom ((relativeHomologyFunctor R n).map_id X)
@@ -202,7 +197,6 @@ lemma relativeHomologyMap_comp (R : Type u) [Field R] {X Y Z : TopPair.{u}} (n :
     (f : X ⟶ Y) (g : Y ⟶ Z) :
     relativeHomologyMap R n (f ≫ g) =
       (relativeHomologyMap R n g).comp (relativeHomologyMap R n f) := by
-  change ((relativeHomologyFunctor R n).map (f ≫ g)).hom = _
   calc
     _ = (((relativeHomologyFunctor R n).map f) ≫
         (relativeHomologyFunctor R n).map g).hom :=

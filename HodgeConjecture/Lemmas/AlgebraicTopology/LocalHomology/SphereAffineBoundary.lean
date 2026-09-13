@@ -258,8 +258,6 @@ lemma standardSphereSimplicialNormalizedBoundaryFace_detect
   let x : (∂Δ[n + 2] : SSet.{0}).nonDegenerate (n + 1) :=
     ⟨standardSphereBoundaryFaceSimplex (n + 1) i,
       standardSphereBoundaryFaceSimplex_nonDegenerate (n + 1) i⟩
-  change (∂Δ[n + 2] : SSet.{0}).ιNormalizedChainComplex x.1 ≫
-      standardSphereSimplicialNormalizedBoundaryDetector n = _
   have hiff : standardSphereBoundaryFaceSimplex (n + 1) i =
       standardSphereBoundaryFaceSimplex (n + 1) 0 ↔ i = 0 :=
     (standardSphereBoundaryFaceSimplex_injective (n + 1)).eq_iff
@@ -300,8 +298,6 @@ lemma standardSphereSimplicialNormalizedBoundaryChain_boundary (n : ℕ) :
   let L := (∂Δ[n + 2] : SSet.{0}).normalizedChainComplex (ModuleCat.of ℚ ℚ)
   let q : K ⟶ L :=
     (∂Δ[n + 2] : SSet.{0}).toNormalizedChainComplex (ModuleCat.of ℚ ℚ)
-  change (standardSphereSimplicialBoundaryChain (n + 1) ≫ q.f (n + 1)) ≫
-    L.d (n + 1) n = 0
   calc
     _ = standardSphereSimplicialBoundaryChain (n + 1) ≫
         (q.f (n + 1) ≫ L.d (n + 1) n) :=
@@ -412,12 +408,6 @@ lemma standardSphereSimplicialBoundaryClass_normalization (n : ℕ) :
           (standardSphereSuccNormalizedRationalChains n).homologyπ (n + 1) := by
     rw [HomologicalComplex.homologyπ_naturality, ← Category.assoc,
       standardSphereSimplicialBoundaryCycle_normalization]
-  change ((standardSphereSimplicialBoundaryCycle n ≫
-      ((∂Δ[n + 2] : SSet.{0}).chainComplex
-        (ModuleCat.of ℚ ℚ)).homologyπ (n + 1) ≫
-      HomologicalComplex.homologyMap q (n + 1)).hom) 1 =
-    ((standardSphereSimplicialNormalizedBoundaryCycle n ≫
-      (standardSphereSuccNormalizedRationalChains n).homologyπ (n + 1)).hom) 1
   exact ConcreteCategory.congr_hom hmor 1
 
 /-- The explicit alternating-facet class is nonzero in ordinary simplicial top homology. -/

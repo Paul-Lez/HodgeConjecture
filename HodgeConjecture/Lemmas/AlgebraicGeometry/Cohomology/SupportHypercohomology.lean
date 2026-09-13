@@ -439,7 +439,6 @@ theorem globalRawToSingularSheafInt_quasiIso
     (HomologicalComplex.quasiIso_extendMap_iff f ComplexShape.embeddingUpNat).mpr
       inferInstance
   let he : QuasiIso e.inv := inferInstance
-  change QuasiIso (fInt ≫ e.inv)
   refine ⟨fun i ↦ ?_⟩
   exact quasiIsoAt_comp fInt e.inv i
 
@@ -468,7 +467,6 @@ theorem globalRawComplementToDerivedPushforwardInt_quasiIso
     (HomologicalComplex.quasiIso_extendMap_iff f ComplexShape.embeddingUpNat).mpr
       inferInstance
   let he : QuasiIso e.inv := inferInstance
-  change QuasiIso (fInt ≫ e.inv)
   refine ⟨fun i ↦ ?_⟩
   exact quasiIsoAt_comp fInt e.inv i
 

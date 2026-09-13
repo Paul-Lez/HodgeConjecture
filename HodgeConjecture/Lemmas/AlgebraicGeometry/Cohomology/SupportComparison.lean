@@ -114,8 +114,6 @@ variable (X : Over (Spec ↧ℂ))
 lemma analyticComplementInclusion_isOpenEmbedding
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     Topology.IsOpenEmbedding (analyticComplementInclusion X Z) := by
-  change Topology.IsOpenEmbedding
-    (Subtype.val : (Zᶜ : Set (ComplexPoint X)) → ComplexPoint X)
   exact hZ.isOpen_compl.isOpenEmbedding_subtypeVal
 
 /-- Every term of the chosen derived-pushforward model from an open complement is injective. -/

@@ -102,11 +102,9 @@ theorem analyticAt_closedImmersionNormalTransition
   have hyC' : y ∈ C'.source := hyv'.1.1
   have hAv := closedImmersionNormalCoordinateChange_symm_at_chart
     X Y i m d z y hyv
-  change A.symm (e (e.symm v)) = C y at hAv
   rw [e.right_inv hv.1] at hAv
   have hA := (closedImmersionHolomorphicFlatteningChart_analytic
     X Y i m d z y hyv).2
-  change AnalyticAt ℂ A.symm (e (e.symm v)) at hA
   rw [e.right_inv hv.1] at hA
   have hA' := (closedImmersionHolomorphicFlatteningChart_analytic
     X Y i m d z' y hyv').1
@@ -133,7 +131,6 @@ theorem closedImmersionNormalTransition_preserves_support
     X Y i m d z (e.symm v) hy
   have h2 := closedImmersionHolomorphicFlatteningChart_mem_range_iff
     X Y i m d z' (e.symm v) hv.2
-  change e.symm v ∈ Set.range (Point.map i) ↔ (e (e.symm v)).2 = 0 at h1
   rw [e.right_inv hv.1] at h1
   exact h2.symm.trans h1
 

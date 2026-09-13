@@ -360,7 +360,6 @@ lemma hodgeFilteredDeRhamComplex_isZero_of_lt
   rw [hodgeFilteredDeRhamComplex,
     HomologicalComplex.isZero_stupidTrunc_iff]
   refine ⟨fun n => ?_⟩
-  change IsZero ((holomorphicDeRhamComplexInt X).X (p + n))
   exact (holomorphicDeRhamComplexInt X).isZero_of_isStrictlyLE
     (dim X.left) (p + n) (by lia)
 

@@ -123,9 +123,6 @@ variable (X : Over (Spec ↧ℂ))
 complexes. -/
 lemma rationalToSingularCochainComplexInt_mono :
     Mono (rationalToSingularCochainComplexInt X) := by
-  change Mono (HomologicalComplex.extendMap
-    (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex ℚ
-      (TopCat.of (ComplexPoint X))) ComplexShape.embeddingUpNat)
   exact AlgebraicTopology.Singular.constantsToSingularCochainComplexInt_mono ℚ _
 
 variable [IsIntegral X.left] [Smooth X.hom]

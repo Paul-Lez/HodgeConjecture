@@ -166,8 +166,6 @@ private lemma standardPairChain_projection (d k : ℕ) :
       ((chainPairFunctor ℚ).obj (standardPuncturedPair d)).left ⟶
         standardLocalRelativeChainComplex d => f.f k)
     (subspaceChainMap_relativeChainProjection ℚ (standardPuncturedPair d))
-  change ((chainPairFunctor ℚ).obj (standardPuncturedPair d)).hom.f k ≫
-    (relativeChainProjection ℚ (standardPuncturedPair d)).f k = 0 at h
   exact h
 
 private lemma standardFaceChain_projection (n : ℕ) (i : Fin (n + 2)) :
@@ -179,10 +177,6 @@ lemma standardAmbientSimplexChain_boundary (n : ℕ) :
       ((chainPairFunctor ℚ).obj
         (standardPuncturedPair (n + 1))).right.d (n + 1) n =
     ∑ i : Fin (n + 2), (-1) ^ i.val • standardAmbientFaceChain n i := by
-  change (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).fst).ιChainComplex
-      (standardSingularSimplex (n + 1)) ≫
-    ((TopCat.toSSet.obj (standardPuncturedPair (n + 1)).fst).chainComplex
-      (ModuleCat.of ℚ ℚ)).d (n + 1) n = _
   exact SSet.ιChainComplex_d
     (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).fst)
     (ModuleCat.of ℚ ℚ) (standardSingularSimplex (n + 1))
@@ -203,8 +197,6 @@ lemma standardLocalChain_boundary_succ (n : ℕ) :
   apply Finset.sum_eq_zero
   intro i _
   rw [Preadditive.zsmul_comp]
-  change (-1) ^ i.val •
-    (standardAmbientFaceChain n i ≫ standardLocalProjectionComponent (n + 1) n) = 0
   rw [standardFaceChain_projection]
   simp
 

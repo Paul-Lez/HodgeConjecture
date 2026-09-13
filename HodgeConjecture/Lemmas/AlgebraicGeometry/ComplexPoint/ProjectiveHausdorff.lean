@@ -212,8 +212,6 @@ lemma vectorToComplexPoint_mem_projectiveSpaceBasicOpen {n d : ℕ}
     (r : UniversalRing n) (hd : 0 < d) (hr : r ∈ UniversalGrading n d)
     (hne : coordinateEvaluationHom v r ≠ 0) :
     vectorToComplexPoint v hv ∈ Point.overOpen (projectiveSpaceBasicOpen n r) := by
-  change (vectorToProjectiveSpace v hv) (IsLocalRing.closedPoint ℂ) ∈
-    projectiveSpaceBasicOpen n r
   change ((vectorToProjectiveSpace v hv) ≫ Limits.pullback.snd
     (Limits.terminal.from (Spec ↧ℂ))
     (Limits.terminal.from (Proj (UniversalGrading n))))

@@ -210,11 +210,6 @@ lemma rationalizeSimplicialChainComponent_d (X : SSet.{0}) (n : ℕ) :
   ext
   change (LinearMap.toSpanSingleton ℚ _ _) 1 = _
   rw [LinearMap.toSpanSingleton_apply_one]
-  change (integralToRationalChainComponent X n).hom
-      (((X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n).hom
-        ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1)) =
-    ((RationalSimplicialChainComplex X).d (n + 1) n).hom
-      ((X.ιChainComplex (R := ModuleCat.of ℚ ℚ) x).hom 1)
   have h := ConcreteCategory.congr_hom
     (integralToRationalChainComponent_comm_d X n)
     ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1)
@@ -340,10 +335,6 @@ lemma rationalizeSimplicialChainComponent_chainComplexMap
   ext
   change (LinearMap.toSpanSingleton ℚ _ _) 1 = _
   rw [LinearMap.toSpanSingleton_apply_one]
-  change (integralToRationalChainComponent Y n).hom
-      (((SSet.chainComplexMap f (AddCommGrpCat.of ℤ)).f n).hom
-        ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1)) =
-    (Y.ιChainComplex (R := ModuleCat.of ℚ ℚ) (f.app _ x)).hom 1
   have hf := ConcreteCategory.congr_hom
     (SSet.ι_chainComplexMap_f X Y f (AddCommGrpCat.of ℤ) x) 1
   have hcoeff := ConcreteCategory.congr_hom

@@ -665,16 +665,11 @@ lemma neighborhoodToPointExcisionSmall_comp_smallToNeighborhood
       pointExcisionSmallToNeighborhoodRelativeComponent U x n = _
   rw [SSet.ι_chainComplexMap_f]
   let σ := (neighborhoodToPointExcisionSmallSingularSet U x).app _ u
-  change (coverSmallSingularSubcomplex (TopCat.of X)
-      (pointExcisionCover U x) : SSet).ιChainComplex σ ≫
-      pointExcisionSmallToNeighborhoodRelativeComponent U x n = _
   rw [iota_pointExcisionSmallToNeighborhoodRelativeComponent]
   have hs := congr_app
     (neighborhoodToPointExcisionSmallSingularSet_comp_inclusion U x)
     (Opposite.op (SimplexCategory.mk n))
   have hsu := ConcreteCategory.congr_hom hs u
-  change σ.1 =
-    (TopCat.toSSet.map (topologicalSubsetInclusion (TopCat.of X) U)).app _ u at hsu
   by_cases hσ : PointExcisionSmallSimplex.AvoidsPoint U x σ
   · rw [dif_pos hσ]
     symm

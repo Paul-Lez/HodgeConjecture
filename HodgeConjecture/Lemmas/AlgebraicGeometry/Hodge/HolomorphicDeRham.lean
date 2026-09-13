@@ -217,8 +217,6 @@ lemma complexScalarPresheaf_comp_conj (c : ℂ) :
       conjConstantComplexPresheaf X ≫
         complexScalarPresheaf X (starRingEnd ℂ c) := by
   ext U : 2
-  change (starRingEnd ℂ).toAddMonoidHom.comp (DistribSMul.toAddMonoidHom ℂ c) =
-    (DistribSMul.toAddMonoidHom ℂ (starRingEnd ℂ c)).comp (starRingEnd ℂ).toAddMonoidHom
   exact AddMonoidHom.ext (map_mul (starRingEnd ℂ) c)
 
 /-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the constant
@@ -265,7 +263,6 @@ lemma constantsToHolomorphicDeRhamZero_scalar
   change (c • LinearMap.id).toAddMonoidHom.comp f.toAddMonoidHom =
     f.toAddMonoidHom.comp (DistribSMul.toAddMonoidHom ℂ c)
   ext x
-  change c • f x = f (c • x)
   exact (f.map_smul c x).symm
 
 /-- The constant-to-de Rham comparison is a quasi-isomorphism in every degree above the complex

@@ -119,7 +119,6 @@ set_option linter.style.haveILetI false in
 lemma of_iso {F G : TopCat.Sheaf AddCommGrpCat.{u} X} (e : F ≅ G)
     [hG : G.IsFlasque] :
     F.IsFlasque := by
-  change TopCat.Presheaf.IsFlasque F.obj
   letI : TopCat.Presheaf.IsFlasque G.obj := hG
   exact TopCat.Presheaf.IsFlasque.of_iso (G := G.obj)
     ((TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapIso e)
@@ -129,8 +128,6 @@ set_option linter.style.haveILetI false in
 lemma biprod (F G : TopCat.Sheaf AddCommGrpCat.{u} X)
     [hF : F.IsFlasque] [hG : G.IsFlasque] :
     (F ⊞ G).IsFlasque := by
-  change TopCat.Presheaf.IsFlasque
-    ((TopCat.Sheaf.forget AddCommGrpCat.{u} X).obj (F ⊞ G))
   letI : TopCat.Presheaf.IsFlasque (F.obj ⊞ G.obj) :=
     TopCat.Presheaf.IsFlasque.biprod F.obj G.obj
   let forget := TopCat.Sheaf.forget AddCommGrpCat.{u} X

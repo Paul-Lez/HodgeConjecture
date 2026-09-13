@@ -380,8 +380,6 @@ lemma hypercohomologyMap_comp_apply
       (analyticQuasiIsomorphisms X) L M (0 : ℤ) :=
     Localization.SmallShiftedHom.mk₀
       (analyticQuasiIsomorphisms X) (0 : ℤ) rfl g
-  change α.comp (β.comp γ (zero_add (0 : ℤ))) (zero_add n) =
-    (α.comp β (zero_add n)).comp γ (zero_add n)
   simpa only using
     (Localization.SmallShiftedHom.comp_assoc
       (analyticQuasiIsomorphisms X) α β γ

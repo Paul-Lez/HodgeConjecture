@@ -198,8 +198,6 @@ lemma hasSum_radialIntegrand_of_hasFPowerSeriesOnBall (n : ℕ)
       (((t : ℂ) ^ n) • (η ((t : ℂ) • x)).curryLeft x) := by
     simpa [contraction] using hst
   refine HasSum.congr_fun hst' (fun k ↦ ?_)
-  change ((t : ℂ) ^ (k + n)) • (p k (fun _ ↦ x)).curryLeft x =
-    ((t : ℂ) ^ n) • (p k (fun _ ↦ (t : ℂ) • x)).curryLeft x
   rw [ContinuousMultilinearMap.map_smul_univ, Finset.prod_const, Finset.card_univ,
     Fintype.card_fin]
   refine ContinuousAlternatingMap.ext fun v ↦ ?_

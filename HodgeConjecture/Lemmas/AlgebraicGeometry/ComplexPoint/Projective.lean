@@ -86,10 +86,6 @@ noncomputable def sphereToProjectivization {n : ℕ} :
 /-- The quotient map from the unit sphere to complex projective space is continuous. -/
 lemma continuous_sphereToProjectivization {n : ℕ} :
     Continuous (sphereToProjectivization (n := n)) := by
-  change Continuous (Quotient.mk'' ∘
-    (fun v : sphere (0 : CoordinateSpace n) 1 ↦
-      (⟨(v : CoordinateSpace n), sphere_ne_zero v⟩ :
-        {v : CoordinateSpace n // v ≠ 0})))
   exact continuous_quot_mk.comp (continuous_subtype_val.subtype_mk _)
 
 /-- Every point of complex projective space has a unit-norm representative. -/
@@ -428,7 +424,6 @@ lemma awayCoordinateEvaluation_vectorOfAwayRingHom {n : ℕ} (i : Fin (n + 1))
     change vectorOfAwayRingHom i φ i ≠ 0
     rw [vectorOfAwayRingHom_self]
     exact one_ne_zero
-  change awayCoordinateEvaluation v i hi = φ
   apply awayRingHom_ext i
   · intro a
     exact DFunLike.congr_fun (degreeZero_ringHom_unique
@@ -461,10 +456,6 @@ lemma awayHomogeneousEvaluation_comp_awayMap_coordinate {n : ℕ}
   let hvij : coordinateEvaluationHom v (MvPolynomial.X i * MvPolynomial.X j) ≠ 0 := by
     simp [hi, hj]
   let φij := awayHomogeneousEvaluation v (MvPolynomial.X i * MvPolynomial.X j) hvij
-  change φij.comp
-      (HomogeneousLocalization.awayMap (UniversalGrading n)
-        (MvPolynomial.isHomogeneous_X (ULift ℤ) j) rfl) =
-    awayCoordinateEvaluation v i hi
   apply awayRingHom_ext i
   · intro a
     exact DFunLike.congr_fun (degreeZero_ringHom_unique
@@ -879,7 +870,6 @@ lemma surjective_vectorToComplexPoint {n : ℕ} :
     (z.left ≫ Limits.pullback.snd
       (Limits.terminal.from (Spec ↧ℂ))
       (Limits.terminal.from (Proj (UniversalGrading n))))
-  change chartIntegralProj v.1 v.2 = _ at hq
   refine ⟨v, ?_⟩
   apply Over.OverMorphism.ext
   change vectorToProjectiveSpace v.1 v.2 = z.left
@@ -1162,8 +1152,6 @@ lemma chartVectorToComplexPoint_eq {n : ℕ} (i : Fin (n + 1))
     chartAffineComplexPointMap i (vectorChartToAffinePoint i v) =
       vectorToComplexPoint v.1 (vector_ne_zero_of_coordinate v.1 i v.2) := by
   apply Over.OverMorphism.ext
-  change (vectorChartToAffinePoint i v).left ≫ chartAffineToProjectiveSpace i =
-    vectorToProjectiveSpace v.1 (vector_ne_zero_of_coordinate v.1 i v.2)
   apply Limits.pullback.hom_ext
   · change ((vectorChartToAffinePoint i v).left ≫ chartAffineToProjectiveSpace i) ≫
       ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ) =

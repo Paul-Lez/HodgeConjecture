@@ -29,9 +29,6 @@ theorem analyticAt_closedImmersionNormalChart :
     AnalyticAt ℂ (closedImmersionNormalChart X Y i m d z)
       (localChart Y m z z, 0) := by
   let P := closedImmersionDerivativeProjection X Y i m d z
-  change AnalyticAt ℂ
-    (fun v : (Fin m → ℂ) × P.ker =>
-      inclusionInComplexCharts X Y i m d z v.1 + v.2) _
   exact ((analyticAt_inclusionInComplexCharts X Y i m d z).comp
     (f := (ContinuousLinearMap.fst ℂ (Fin m → ℂ) P.ker))
     (x := (localChart Y m z z, 0))

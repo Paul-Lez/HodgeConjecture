@@ -198,8 +198,6 @@ lemma relativeChainProjection_naturality (a : X ⟶ Y) :
     relativeChainProjection R X ≫ (relativeChainFunctor R).map a =
       ((singularChainComplexFunctor (ModuleCat.{u} R)).obj
           (ModuleCat.of R R)).map (TopPair.Hom.fst a) ≫ relativeChainProjection R Y := by
-  change relativeChainProjection R X ≫ (relativeChainFunctor R).map a =
-    ((chainPairFunctor R).map a).right ≫ relativeChainProjection R Y
   exact ((coker.π (C := ChainCategory R)).naturality
     ((chainPairFunctor R).map a)).symm
 
@@ -282,8 +280,6 @@ noncomputable def relativeChainHomotopy (H : TopPair.Homotopy f g) :
 /-- Homotopic maps of topological pairs induce equal maps on relative singular homology. -/
 theorem congr_relativeHomologyMap (H : TopPair.Homotopy f g) (n : ℕ) :
     relativeHomologyMap R n f = relativeHomologyMap R n g := by
-  change (HomologicalComplex.homologyMap ((relativeChainFunctor R).map f) n).hom =
-    (HomologicalComplex.homologyMap ((relativeChainFunctor R).map g) n).hom
   exact congrArg ModuleCat.Hom.hom
     ((relativeChainHomotopy (R := R) H).homologyMap_eq n)
 

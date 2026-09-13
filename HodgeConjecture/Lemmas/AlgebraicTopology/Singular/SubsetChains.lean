@@ -105,13 +105,7 @@ lemma singularSimplicialMapToSubset_ext
   apply ContinuousMap.ext
   intro t
   apply Subtype.ext
-  change (Y.toSSetObjEquiv n
-      ((TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (f.app n x))) t =
-    (Y.toSSetObjEquiv n
-      ((TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (g.app n x))) t
   have hx := congrArg (fun k : X ⟶ TopCat.toSSet.obj Y ↦ k.app n x) h
-  change (TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (f.app n x) =
-    (TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (g.app n x) at hx
   exact congrArg (fun z ↦ Y.toSSetObjEquiv n z t) hx
 
 /-- A singular simplex whose image lies in a subspace, regarded as a simplex of that

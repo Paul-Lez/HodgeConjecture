@@ -52,10 +52,8 @@ lemma IsStandardSmooth.exists_isStandardSmoothOfRelativeDimension
     (hf : f.IsStandardSmooth) :
     ∃ n, f.IsStandardSmoothOfRelativeDimension n := by
   let : Algebra R S := f.toAlgebra
-  change Algebra.IsStandardSmooth R S at hf
   obtain ⟨ι, σ, hσ, hι, ⟨P⟩⟩ := hf.out
   refine ⟨P.dimension, ?_⟩
-  change Algebra.IsStandardSmoothOfRelativeDimension P.dimension R S
   exact ⟨ι, σ, hσ, hι, P, rfl⟩
 
 end RingHom

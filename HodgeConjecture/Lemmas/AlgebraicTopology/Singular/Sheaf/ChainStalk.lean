@@ -46,8 +46,6 @@ set_option backward.isDefEq.respectTransparency false in
         relativeChainProjection R (TopPair.ofSubset Zᶜ) := by
   have hnat := TopPair.Homotopy.relativeChainProjection_naturality (R := R)
     (supportInclusionPairMap X h)
-  change _ = ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).map
-    (𝟙 X) ≫ _ at hnat
   calc
     _ = _ := hnat
     _ = 𝟙 _ ≫ relativeChainProjection R (TopPair.ofSubset Zᶜ) :=

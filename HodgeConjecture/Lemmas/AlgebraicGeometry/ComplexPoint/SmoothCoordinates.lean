@@ -163,8 +163,6 @@ lemma C_comp_coordinateRingHomOnOpen :
   rw [Category.assoc, Iso.inv_hom_id, Category.comp_id]
   simp only [Scheme.Hom.comp_appTop, Category.assoc]
   rw [Scheme.Opens.ι_appTop_topIso_hom]
-  change CommRingCat.ofHom (D.coordinateAlgHom.toRingHom.comp MvPolynomial.C) =
-    CommRingCat.ofHom (algebraMap ℂ Γ(X.left, D.neighborhood))
   exact congrArg CommRingCat.ofHom D.coordinateAlgHom.comp_algebraMap
 
 /-- The scheme morphism defined by the étale coordinates. -/
@@ -196,8 +194,6 @@ lemma toAffineSpace_over :
     rw [← Spec.map_comp]
     rfl
   refine (congrArg (fun q ↦ D.neighborhood.toScheme.toSpecΓ ≫ q) hSpec).trans ?_
-  change (ΓSpec.adjunction.homEquiv D.neighborhood.toScheme
-    (Opposite.op ↧ℂ)) φ.op = D.neighborhood.ι ≫ X.hom
   apply ext_to_Spec
   exact (ΓSpecIso_inv_ΓSpec_adjunction_homEquiv φ).trans
     D.C_comp_coordinateRingHomOnOpen
@@ -280,9 +276,6 @@ lemma toSpecΓ_over :
       D.neighborhood.ι ≫ X.hom := by
   let φ : ↧ℂ ⟶ Γ(D.neighborhood.toScheme, ⊤) :=
     CommRingCat.ofHom MvPolynomial.C ≫ CommRingCat.ofHom D.coordinateRingHomOnOpen
-  change D.neighborhood.toScheme.toSpecΓ ≫ Spec.map φ = D.neighborhood.ι ≫ X.hom
-  change (ΓSpec.adjunction.homEquiv D.neighborhood.toScheme
-    (Opposite.op ↧ℂ)) φ.op = D.neighborhood.ι ≫ X.hom
   apply ext_to_Spec
   exact (ΓSpecIso_inv_ΓSpec_adjunction_homEquiv φ).trans
     D.C_comp_coordinateRingHomOnOpen
@@ -332,9 +325,6 @@ lemma pointAlgHomHomeomorph_apply
       (D.neighborhood.toScheme.toSpecΓ.appTop
         ((Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).inv r)) z = _
   rw [Scheme.toSpecΓ_appTop]
-  change Point.evaluate ⊤
-      ((Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).hom
-        ((Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).inv r)) z = _
   have h := DFunLike.congr_fun (congrArg CommRingCat.Hom.hom
     (Scheme.ΓSpecIso ↧Γ(D.neighborhood.toScheme, ⊤)).inv_hom_id) r
   exact congrArg (fun s ↦ Point.evaluate ⊤ s z) h
@@ -379,8 +369,6 @@ lemma analyticCoordinates_apply_eq_evaluate
     D.analyticCoordinates z i =
       Point.evaluate ⊤ (D.coordinateRingHomOnOpen (MvPolynomial.X i)) z := by
   rw [← D.algebraicCoordinates_eq_analyticCoordinates]
-  change D.pointAlgHomHomeomorph z
-      (D.coordinateRingHomOnOpen (MvPolynomial.X i)) = _
   exact D.pointAlgHomHomeomorph_apply z _
 
 /-- The ambient open on which a chosen coordinate section is naturally expressed. -/

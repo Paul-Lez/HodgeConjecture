@@ -275,8 +275,6 @@ lemma isOpen_standardEtaleChartTarget (z : standardEtaleCoordinateSpace P) :
     continuous_standardEtaleLocalizationEquation P |>.comp_continuousOn hinv
   have hopenNe : IsOpen {x : ℂ | x ≠ 0} :=
     isOpen_ne_fun continuous_id continuous_const
-  change IsOpen (targetZero ∩
-    (fun w ↦ standardEtaleLocalizationEquation P (T.symm (zeroSection w))) ⁻¹' {x | x ≠ 0})
   exact hloc.isOpen_inter_preimage htargetZero hopenNe
 
 /-- The inverse of the standard étale chart on its target. It is assigned the center point
@@ -466,9 +464,6 @@ lemma analyticAt_standardEtaleCoordinateEvaluation_chart
   have hinner : AnalyticAt ℂ
       (fun v ↦ (standardEtaleChartInverse P z v).1) w :=
     analyticAt_standardEtaleChartInverse_val P z hw
-  change AnalyticAt ℂ
-    (standardEtaleBivariateEvaluation P q ∘
-      fun v ↦ (standardEtaleChartInverse P z v).1) w
   exact houter.comp_of_eq hinner rfl
 
 /-- A neighborhood of a standard étale point on which projection to the polynomial-ring

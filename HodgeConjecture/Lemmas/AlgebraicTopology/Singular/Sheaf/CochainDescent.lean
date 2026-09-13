@@ -260,10 +260,6 @@ lemma exists_openCochain_of_meq {U : Opens X}
   have hrel := congrArg
     (fun ψ ↦ singularCochainToSimplexFunction R X (.op (I.Y ⊓ J.Y)) n ψ r)
     (x.condition rel)
-  change singularCochainToSimplexFunction R X (.op (I.Y ⊓ J.Y)) n
-      ((singularCochainPresheaf R X n).map (homOfLE inf_le_left).op (x I)) r =
-    singularCochainToSimplexFunction R X (.op (I.Y ⊓ J.Y)) n
-      ((singularCochainPresheaf R X n).map (homOfLE inf_le_right).op (x J)) r at hrel
   have hl := congrFun (singularCochainToSimplexFunction_naturality R X
     (homOfLE inf_le_left).op n (x I)) r
   have hr := congrFun (singularCochainToSimplexFunction_naturality R X

@@ -114,11 +114,6 @@ lemma C_comp_coordinateRingHomOnNeighborhood :
   rw [Category.assoc, Iso.inv_hom_id, Category.comp_id]
   simp only [neighborhoodStructureMap, Scheme.Hom.comp_appTop, Category.assoc]
   rw [Scheme.Opens.ι_appTop_topIso_hom]
-  change CommRingCat.ofHom
-      (C.componentCoordinateAlgHom.toRingHom.comp MvPolynomial.C) =
-    CommRingCat.ofHom
-      (algebraMap ℂ Γ((componentSmoothScheme X x).left,
-        C.componentNeighborhood))
   exact congrArg CommRingCat.ofHom C.componentCoordinateAlgHom.comp_algebraMap
 
 /-- The transported exact coordinate map remains étale. -/
@@ -231,10 +226,6 @@ lemma neighborhoodToSpecΓ_over :
   let φ : ↧ℂ ⟶ Γ(C.componentNeighborhood.toScheme, ⊤) :=
     CommRingCat.ofHom MvPolynomial.C ≫
       CommRingCat.ofHom C.coordinateRingHomOnNeighborhood
-  change C.componentNeighborhood.toScheme.toSpecΓ ≫ Spec.map φ =
-    C.neighborhoodStructureMap
-  change (ΓSpec.adjunction.homEquiv C.componentNeighborhood.toScheme
-    (Opposite.op ↧ℂ)) φ.op = C.neighborhoodStructureMap
   exact ext_to_Spec ((ΓSpecIso_inv_ΓSpec_adjunction_homEquiv φ).trans
     C.C_comp_coordinateRingHomOnNeighborhood)
 
@@ -273,9 +264,6 @@ lemma neighborhoodPointAlgHomHomeomorph_apply
       (C.componentNeighborhood.toScheme.toSpecΓ.appTop
         ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)) z = _
   rw [Scheme.toSpecΓ_appTop]
-  change Point.evaluate ⊤
-      ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).hom
-        ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)) z = _
   have h := DFunLike.congr_fun (congrArg CommRingCat.Hom.hom
     (Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv_hom_id) r
   exact congrArg (fun s ↦ Point.evaluate ⊤ s z) h

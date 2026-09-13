@@ -123,7 +123,6 @@ lemma singularCochainCoboundary_comp (n : ℕ) :
   apply LinearMap.ext
   intro c
   let K := (openSingularChainComplexFunctor R X).obj U.unop
-  change φ ((K.d (n + 1) n).hom ((K.d (n + 2) (n + 1)).hom c)) = 0
   have h := K.d_comp_d (n + 2) (n + 1) n
   calc
     _ = φ (ModuleCat.Hom.hom
