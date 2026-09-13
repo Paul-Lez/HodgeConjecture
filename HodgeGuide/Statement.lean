@@ -229,11 +229,6 @@ The shortest route through the implementation is:
 9. `Other/AlgebraicGeometry/CodimensionZeroClassComparison.lean` and
    `CodimensionZeroCoclassNonvanishing.lean`, the codimension-zero case.
 
-`Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and its rational comparison are not on this
-route. They build Borel–Moore homology of the pair $`Z\subset X` and its duality with cohomology
-with support; both live in `Other/`, so the import check that guards
-`HodgeConjecture/Statement.lean` guarantees the statement does not reach them.
-
 Things to keep track of while reading: integer versus natural-number degrees, real versus complex
 dimension, whether a class has been normalized, whether its support has been forgotten, and
 whether a class is supported or ordinary.
