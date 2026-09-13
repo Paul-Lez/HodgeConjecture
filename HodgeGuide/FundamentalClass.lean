@@ -3,7 +3,7 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
-import Other.AlgebraicGeometry.CodimensionZeroCoclassNonvanishing
+import Other.AlgebraicGeometry.Hodge.CodimensionZeroNonvanishing
 import Other.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
 import Other.AlgebraicGeometry.Cycle.FundamentalClass
 import Other.LinearAlgebra.HodgeStructure
