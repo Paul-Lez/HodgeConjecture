@@ -40,7 +40,6 @@ lemma commShift_of_whiskerLeft (L : B ⥤ C) [L.EssSurj] [L.CommShift A]
         Category.assoc] at h
       rw [← α.naturality_assoc] at h
       exact (cancel_epi (F.map ((L.commShiftIso a).hom.app X))).1 h
-    change τ = τ'
     ext Y : 2
     rw [← cancel_epi ((shiftFunctor C a ⋙ F).map (L.objObjPreimageIso Y).hom),
       τ.naturality, τ'.naturality, h]
@@ -130,7 +129,6 @@ theorem rightDerivedFunctorPlus_onInjectives :
           (Functor.whiskerRight α.mapHomotopyCategoryPlus DerivedCategory.Plus.Qh) ≫
         G.rightDerivedFunctorPlusOnInjectivesIso.inv := by
   ext K : 2
-  apply (cancel_epi ((asIso F.rightDerivedFunctorPlusOnInjectivesUnit).app K).hom).1
   simp [Functor.rightDerivedFunctorPlusOnInjectivesIso,
     Functor.rightDerivedFunctorPlusOnInjectivesUnit,
     HomotopyCategory.Plus.injectiveToDerived]

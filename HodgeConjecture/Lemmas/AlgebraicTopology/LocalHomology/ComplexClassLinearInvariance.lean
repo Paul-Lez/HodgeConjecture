@@ -80,44 +80,43 @@ def mul {A B : Matrix n n ℂ}
 
 /-- An invertible diagonal complex matrix is isotopic to the identity. -/
 def diagonal (D : n → ℂ) (hD : (Matrix.diagonal D).det ≠ 0) :
-    ComplexIsotopyToOne (Matrix.diagonal D) := by
+    ComplexIsotopyToOne (Matrix.diagonal D) :=
   have hDi : ∀ i, D i ≠ 0 := fun i hi ↦ hD <| by
     rw [Matrix.det_diagonal]
     exact Finset.prod_eq_zero (Finset.mem_univ i) hi
-  refine
-    { path :=
-        ⟨fun t ↦ Matrix.diagonal fun i ↦
-            Complex.exp (((t : ℝ) : ℂ) * Complex.log (D i)), ?_⟩
-      map_zero := ?_
-      map_one := ?_
-      det_ne_zero := ?_ }
-  · refine continuous_pi fun i ↦ continuous_pi fun j ↦ ?_
-    change Continuous (fun a : unitInterval ↦ if i = j then
-      Complex.exp (((a : ℝ) : ℂ) * Complex.log (D i)) else 0)
-    by_cases hij : i = j
-    · simp only [hij, ↓reduceIte]
-      fun_prop
-    · simp only [hij, ↓reduceIte]
-      exact continuous_const
-  · ext i j
-    by_cases hij : i = j
-    · subst j
-      simp [Matrix.diagonal]
-    · simp [Matrix.diagonal, hij]
-  · ext i j
-    by_cases hij : i = j
-    · subst j
-      simp [Matrix.diagonal, Complex.exp_log (hDi i)]
-    · simp [Matrix.diagonal, hij]
-  · intro t
-    change (Matrix.diagonal (fun i ↦
-      Complex.exp (((t : ℝ) : ℂ) * Complex.log (D i)))).det ≠ 0
-    rw [Matrix.det_diagonal]
-    exact Finset.prod_ne_zero_iff.mpr fun i _ ↦ Complex.exp_ne_zero _
+  { path :=
+      ⟨fun t ↦ Matrix.diagonal fun i ↦
+          Complex.exp (((t : ℝ) : ℂ) * Complex.log (D i)), by
+        refine continuous_pi fun i ↦ continuous_pi fun j ↦ ?_
+        change Continuous (fun a : unitInterval ↦ if i = j then
+          Complex.exp (((a : ℝ) : ℂ) * Complex.log (D i)) else 0)
+        by_cases hij : i = j
+        · simp only [hij, ↓reduceIte]
+          fun_prop
+        · simp only [hij, ↓reduceIte]
+          exact continuous_const⟩
+    map_zero := by
+      ext i j
+      by_cases hij : i = j
+      · subst j
+        simp [Matrix.diagonal]
+      · simp [Matrix.diagonal, hij]
+    map_one := by
+      ext i j
+      by_cases hij : i = j
+      · subst j
+        simp [Matrix.diagonal, Complex.exp_log (hDi i)]
+      · simp [Matrix.diagonal, hij]
+    det_ne_zero := by
+      intro t
+      change (Matrix.diagonal (fun i ↦
+        Complex.exp (((t : ℝ) : ℂ) * Complex.log (D i)))).det ≠ 0
+      rw [Matrix.det_diagonal]
+      exact Finset.prod_ne_zero_iff.mpr fun i _ ↦ Complex.exp_ne_zero _ }
 
 /-- A complex transvection is isotopic to the identity by scaling its off-diagonal entry. -/
 def transvection (t : Matrix.TransvectionStruct n ℂ) :
-    ComplexIsotopyToOne t.toMatrix := by
+    ComplexIsotopyToOne t.toMatrix :=
   let P : C(unitInterval, Matrix n n ℂ) :=
     ⟨fun s ↦ Matrix.transvection t.i t.j (((s : ℝ) : ℂ) * t.c), by
       refine continuous_pi fun i ↦ continuous_pi fun j ↦ ?_
@@ -129,18 +128,15 @@ def transvection (t : Matrix.TransvectionStruct n ℂ) :
         fun_prop
       · simp [h]
         exact continuous_const⟩
-  refine
-    { path := P
-      map_zero := ?_
-      map_one := ?_
-      det_ne_zero := ?_ }
-  · simp [P]
-  · simp [P, Matrix.TransvectionStruct.toMatrix]
-  · intro s
-    simpa only [P, ContinuousMap.coe_mk] using
-      (show (Matrix.transvection t.i t.j (((s : ℝ) : ℂ) * t.c)).det ≠ 0 by
-        rw [Matrix.det_transvection_of_ne _ _ t.hij]
-        exact one_ne_zero)
+  { path := P
+    map_zero := by simp [P]
+    map_one := by simp [P, Matrix.TransvectionStruct.toMatrix]
+    det_ne_zero := by
+      intro s
+      simpa only [P, ContinuousMap.coe_mk] using
+        (show (Matrix.transvection t.i t.j (((s : ℝ) : ℂ) * t.c)).det ≠ 0 by
+          rw [Matrix.det_transvection_of_ne _ _ t.hij]
+          exact one_ne_zero) }
 
 end ComplexIsotopyToOne
 
@@ -169,14 +165,7 @@ variable (d : ℕ)
 lemma continuous_complexMatrixPath_mulVec
     (H : C(unitInterval, Matrix (Fin d) (Fin d) ℂ)) :
     Continuous (fun tx : unitInterval × (Fin d → ℂ) ↦
-      (H tx.1).mulVec tx.2) := by
-  refine continuous_pi fun i ↦ ?_
-  simp only [Matrix.mulVec, dotProduct]
-  refine continuous_finsetSum _ fun j _ ↦ ?_
-  exact
-    ((continuous_apply j).comp
-      ((continuous_apply i).comp (H.continuous.comp continuous_fst))).mul
-        ((continuous_apply j).comp continuous_snd)
+      (H tx.1).mulVec tx.2) := by fun_prop
 
 /-- Joint continuity on the punctured vector subspace. -/
 lemma continuous_complexMatrixPath_mulVec_punctured

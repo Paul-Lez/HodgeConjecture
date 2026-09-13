@@ -177,7 +177,6 @@ lemma standardFacetIntersectionCenter_mem (d : ℕ)
     (I : Finset (Fin (d + 1))) (hI : I ≠ Finset.univ) :
     standardFacetIntersectionCenter d I ∈
       standardPuncturedFacetIntersectionSet d I := by
-  classical
   obtain ⟨j, hj⟩ : Iᶜ.Nonempty :=
     Finset.nonempty_iff_ne_empty.2 fun hc ↦ hI ((Finset.compl_eq_empty_iff I).1 hc)
   intro i hi
@@ -191,7 +190,6 @@ lemma standardPuncturedFacetIntersectionSet_starConvex (d : ℕ)
     (I : Finset (Fin (d + 1))) (hI : I ≠ Finset.univ) :
     StarConvex ℝ (standardFacetIntersectionCenter d I)
       (standardPuncturedFacetIntersectionSet d I) := by
-  classical
   rw [starConvex_iff_segment_subset]
   intro y hy z hz
   rw [segment_eq_image] at hz
@@ -279,20 +277,7 @@ lemma standardPuncturedFacetIntersectionMapOfSubset_comp_inclusion
         topologicalSubsetInclusion (standardPuncturedPair d).snd
           (standardPuncturedFacetIntersectionSubspace d I) =
       topologicalSubsetInclusion (standardPuncturedPair d).snd
-        (standardPuncturedFacetIntersectionSubspace d J) := by
-  rfl
-
-/-- Rational singular chains of a proper facet intersection are exact in positive degrees. -/
-lemma standardPuncturedFacetIntersection_exactAt (d : ℕ)
-    (I : Finset (Fin (d + 1))) (hI : I ≠ Finset.univ)
-    (k : ℕ) (hk : k ≠ 0) :
-    ((TopCat.toSSet.obj
-      (TopCat.of (standardPuncturedFacetIntersectionSet d I))).chainComplex
-        (ModuleCat.of ℚ ℚ)).ExactAt k := by
-  let : ContractibleSpace (standardPuncturedFacetIntersectionSet d I) :=
-    standardPuncturedFacetIntersection_contractibleSpace d I hI
-  exact AlgebraicTopology.singularChainComplex_exactAt_of_contractible
-    ℚ (standardPuncturedFacetIntersectionSet d I) k hk
+        (standardPuncturedFacetIntersectionSubspace d J) := rfl
 
 /-- Positive-degree integral singular homology of a nonempty proper facet intersection
 vanishes. -/
@@ -404,13 +389,13 @@ lemma exists_integralSingularZeroChain_filler
   change K.d 1 0 ((AddCommGrpCat.asHom p) 1) = z 1
   rwa [AddCommGrpCat.asHom_hom_apply, one_zsmul]
 
+open scoped Classical in
 /-- Cover indices through which a cover-small singular simplex factors. -/
 def standardFacetCarrier (d : ℕ) {n : SimplexCategoryᵒᵖ}
     (x : (coverSmallSingularSubcomplex
       (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet).obj n) :
-    Finset (Fin (d + 1)) := by
-  classical
-  exact Finset.univ.filter fun i ↦ x.1 ∈
+    Finset (Fin (d + 1)) :=
+  Finset.univ.filter fun i ↦ x.1 ∈
       (SSet.Subcomplex.range (TopCat.toSSet.map
         (topologicalSubsetInclusion (standardPuncturedPair d).snd
           (standardPuncturedFacetCover d i)))).obj n
@@ -584,14 +569,14 @@ lemma standardFacetCarrierSourceSubdivisionIntersectionMap_delta
   rw [Category.assoc, standardFacetCarrierSourceIntersectionMap_delta, ← Category.assoc,
     ← simplexSubdivisionLastVertex.naturality, Category.assoc]
 
+open scoped Classical in
 /-- Cover indices which contain the images of every vertex in `A`. -/
 def standardFacetCarrierAtFace (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
       (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n⦌)
     (A : NonemptyFiniteChains (ULift.{0} (Fin (n + 1)))) :
-    Finset (Fin (d + 1)) := by
-  classical
-  exact Finset.univ.filter fun i ↦
+    Finset (Fin (d + 1)) :=
+  Finset.univ.filter fun i ↦
     ∀ a ∈ A.finset,
       ((standardPuncturedPair d).snd.toSSetObjEquiv _ x.1)
         (stdSimplex.vertex a.down) ∈
@@ -664,7 +649,6 @@ lemma standardFacetComplementCarrier_nonempty (d : ℕ) {n : ℕ}
       (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n⦌)
     (A : NonemptyFiniteChains (ULift.{0} (Fin (n + 1)))) :
     (standardFacetComplementCarrier d x A).Nonempty := by
-  classical
   rw [standardFacetComplementCarrier, Finset.nonempty_iff_ne_empty,
     ne_eq, Finset.compl_eq_empty_iff]
   exact standardFacetCarrierAtFace_ne_univ d x A
@@ -673,9 +657,7 @@ lemma standardFacetComplementCarrier_mono (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
       (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n⦌) :
     Monotone (standardFacetComplementCarrier d x) := by
-  classical
   intro A B hAB
-  rw [standardFacetComplementCarrier, standardFacetComplementCarrier]
   exact Finset.compl_subset_compl.mpr
     (standardFacetCarrierAtFace_antitone d x hAB)
 
@@ -732,8 +714,7 @@ lemma standardFacetCarrierSimplexMap_apply (d : ℕ) {n k : ℕ}
     (F : (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)) _⦋k⦌)
     (r : Fin (k + 1)) :
     ((standardFacetCarrierSimplexMap d x).app _ F) r =
-      standardFacetComplementCarrierMax d x (F.obj r) :=
-  standardFacetCarrierSimplexMap_objEquiv_apply d x F r
+      standardFacetComplementCarrierMax d x (F.obj r) := rfl
 
 lemma standardFacetComplementCarrierMax_mem (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
@@ -751,7 +732,6 @@ lemma standardFacetCarrierSimplexMap_mem_boundary (d : ℕ) {n k : ℕ}
     (F : (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)) _⦋k⦌) :
     (standardFacetCarrierSimplexMap d x).app _ F ∈ (∂Δ[d]).obj
       (Opposite.op (SimplexCategory.mk k)) := by
-  classical
   rw [SSet.mem_boundary_iff_notMem_range]
   let A := F.obj (Fin.last k)
   obtain ⟨j, hj⟩ := standardFacetCarrierAtFace_nonempty d x A
@@ -779,8 +759,7 @@ lemma standardFacetCarrierBoundarySimplexMap_comp_inclusion (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
       (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n⦌) :
     standardFacetCarrierBoundarySimplexMap d x ≫ (∂Δ[d]).ι =
-      standardFacetCarrierSimplexMap d x :=
-  SSet.Subcomplex.lift_ι _ _
+      standardFacetCarrierSimplexMap d x := rfl
 
 /-- Every vertex chosen by the carrier avoids every cover index containing the original
 simplex. -/
@@ -804,7 +783,6 @@ lemma standardFacetCarrierBoundarySimplexMap_avoids_carrier
     (standardFacetCarrierBoundarySimplexMap_comp_inclusion d x)
   change ((standardFacetCarrierBoundarySimplexMap d x).app _ F).1 =
     (standardFacetCarrierSimplexMap d x).app _ F at hinclusion
-  rw [← hinclusion] at hvalue
   have heq : standardFacetComplementCarrierMax d x (F.obj r) = i :=
     hvalue.symm.trans hr
   apply Finset.mem_compl.mp himax
@@ -848,7 +826,6 @@ lemma standardFacetCarrierAtFace_delta (d n : ℕ) (i : Fin (n + 2))
           (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet).δ i x) A =
       standardFacetCarrierAtFace d x
         (A.map (standardFaceVertexOrderHom n i)) := by
-  classical
   ext j
   simp only [standardFacetCarrierAtFace, Finset.mem_filter,
     Finset.mem_univ, true_and]
@@ -895,7 +872,6 @@ lemma standardFacetCarrierSimplexMap_delta (d n : ℕ) (i : Fin (n + 2))
         ((coverSmallSingularSubcomplex
           (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet).δ i x) := by
   ext q F
-  rcases q with ⟨⟨k⟩⟩
   apply SSet.stdSimplex.objEquiv.injective
   apply SimplexCategory.Hom.ext
   apply OrderHom.ext
@@ -907,8 +883,6 @@ lemma standardFacetCarrierSimplexMap_delta (d n : ℕ) (i : Fin (n + 2))
       ((standardFacetCarrierSimplexMap d
         ((coverSmallSingularSubcomplex
           (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet).δ i x)).app _ F)).toOrderHom r
-  rw [standardFacetCarrierSimplexMap_objEquiv_apply,
-    standardFacetCarrierSimplexMap_objEquiv_apply]
   change standardFacetComplementCarrierMax d x
       ((F.obj r).map (standardFaceVertexOrderHom n i)) =
     standardFacetComplementCarrierMax d
@@ -1311,7 +1285,6 @@ lemma standardFacetCarrierDiscrepancyFaces_comp_inclusion
           standardFacetCarrierDiscrepancyComponent d n := by
   rw [standardFacetCarrierIntersectionDiscrepancyFaces,
     Preadditive.sum_comp]
-  simp only [Preadditive.zsmul_comp, Category.assoc]
   rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp only [Preadditive.zsmul_comp,
     iota_standardFacetCarrierDiscrepancyComponent,
@@ -1453,7 +1426,6 @@ lemma standardFacetCarrierPrismFaces_comp_inclusion
             (standardPuncturedFacetCover d)).d (n + 1) n ≫
           standardFacetCarrierPrismComponent d P n := by
   rw [standardFacetCarrierPrismFaces, Preadditive.sum_comp]
-  simp only [Preadditive.zsmul_comp, Category.assoc]
   rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp only [Preadditive.zsmul_comp,
     iota_standardFacetCarrierPrismComponent,
@@ -1740,50 +1712,6 @@ lemma standardFacetCarrierPrismResidual_cycle
             (standardPuncturedFacetCover d)).d_comp_d]
       simp only [zero_comp, zero_add, sub_self]
 
-/-- Every positive-degree residual has a filler in its proper contractible carrier
-intersection. -/
-lemma exists_standardFacetCarrierPrismResidual_filler
-    (d : ℕ) (P : StandardFacetCarrierPrismFamily d) (n : ℕ)
-    (hzero : n = 0 →
-      ∀ x : (coverSmallSingularSubcomplex
-        (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋0⦌,
-        standardFacetCarrierIntersectionDiscrepancy d 0 x =
-          P 0 x ≫
-            ((TopCat.toSSet.obj (TopCat.of
-              (standardPuncturedFacetIntersectionSubspace d
-                (standardFacetCarrier d x)))).chainComplex
-                  (AddCommGrpCat.of ℤ)).d 1 0)
-    (hsucc : ∀ k, n = k + 1 →
-      ∀ x : (coverSmallSingularSubcomplex
-        (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋k + 1⦌,
-        standardFacetCarrierIntersectionDiscrepancy d (k + 1) x =
-          P (k + 1) x ≫
-              ((TopCat.toSSet.obj (TopCat.of
-                (standardPuncturedFacetIntersectionSubspace d
-                  (standardFacetCarrier d x)))).chainComplex
-                    (AddCommGrpCat.of ℤ)).d (k + 2) (k + 1) +
-            standardFacetCarrierPrismFaces d P k x)
-    (x : (coverSmallSingularSubcomplex
-      (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n + 1⦌) :
-    ∃ p : AddCommGrpCat.of ℤ ⟶
-        ((TopCat.toSSet.obj (TopCat.of
-          (standardPuncturedFacetIntersectionSubspace d
-            (standardFacetCarrier d x)))).chainComplex
-              (AddCommGrpCat.of ℤ)).X (n + 2),
-      p ≫ ((TopCat.toSSet.obj (TopCat.of
-        (standardPuncturedFacetIntersectionSubspace d
-          (standardFacetCarrier d x)))).chainComplex
-            (AddCommGrpCat.of ℤ)).d (n + 2) (n + 1) =
-        standardFacetCarrierPrismResidual d P n x := by
-  have hI : (standardFacetCarrier d x).Nonempty :=
-    standardFacetCarrier_nonempty d x
-  have hproper : standardFacetCarrier d x ≠ Finset.univ :=
-    standardFacetCarrier_ne_univ d x
-  exact exists_standardPuncturedFacetIntersection_integralCycleFiller
-    d n (standardFacetCarrier d x) hI hproper
-    (standardFacetCarrierPrismResidual d P n x)
-    (standardFacetCarrierPrismResidual_cycle d P n hzero hsucc x)
-
 /-- The local acyclic-carrier prism equation in one degree. -/
 def StandardFacetCarrierPrismEquation
     (d : ℕ) (P : StandardFacetCarrierPrismFamily d) : ℕ → Prop :=
@@ -1822,6 +1750,7 @@ lemma standardFacetCarrierPrismResidual_cycle_of_equation
   · rintro k rfl
     exact h
 
+open scoped Classical in
 /-- A total selected filler for a positive-degree cycle in a proper facet intersection.  It
 returns zero when its input is not a cycle, so it can be used in a structural recursion whose
 cycle proof is established afterwards. -/
@@ -1835,9 +1764,8 @@ def standardPuncturedFacetIntersectionIntegralTotalCycleFiller
     AddCommGrpCat.of ℤ ⟶
       ((TopCat.toSSet.obj (TopCat.of
         (standardPuncturedFacetIntersectionSubspace d I))).chainComplex
-          (AddCommGrpCat.of ℤ)).X (n + 2) := by
-  classical
-  exact if hz : z ≫
+          (AddCommGrpCat.of ℤ)).X (n + 2) :=
+  if hz : z ≫
         ((TopCat.toSSet.obj (TopCat.of
           (standardPuncturedFacetIntersectionSubspace d I))).chainComplex
             (AddCommGrpCat.of ℤ)).d (n + 1) n = 0 then
@@ -2044,9 +1972,7 @@ lemma standardFacetCarrierAffineIntersectionMap_comp_ambientInclusion
             (standardPuncturedFacetIntersectionSubspace d
               (standardFacetCarrier d x))) =
       standardFacetCarrierBoundarySimplexMap d x ≫
-        standardAffineBoundarySimplicialMap d := by
-  unfold standardFacetCarrierAffineIntersectionMap
-  exact singularSimplicialMapLiftToSubset_comp_inclusion _ _ _ _ _
+        standardAffineBoundarySimplicialMap d := rfl
 
 set_option backward.isDefEq.respectTransparency false in
 lemma standardFacetCarrierSourceSubdivisionIntersectionMap_comp_ambientInclusion
@@ -2059,18 +1985,7 @@ lemma standardFacetCarrierSourceSubdivisionIntersectionMap_comp_ambientInclusion
             (standardPuncturedFacetIntersectionSubspace d
               (standardFacetCarrier d x))) =
       simplexSubdivisionLastVertex.app (SimplexCategory.mk n) ≫
-        SSet.yonedaEquiv.symm x.1 := by
-  unfold standardFacetCarrierSourceSubdivisionIntersectionMap
-  have hsource : standardFacetCarrierSourceIntersectionMap d x ≫
-      TopCat.toSSet.map
-        (topologicalSubsetInclusion (standardPuncturedPair d).snd
-          (standardPuncturedFacetIntersectionSubspace d
-            (standardFacetCarrier d x))) =
-      SSet.yonedaEquiv.symm x.1 := by
-    unfold standardFacetCarrierSourceIntersectionMap
-    exact singularSimplicialMapLiftToSubset_comp_inclusion _ _ _ _ _
-  simpa only [Category.assoc] using congrArg
-    (fun f ↦ simplexSubdivisionLastVertex.app (SimplexCategory.mk n) ≫ f) hsource
+        SSet.yonedaEquiv.symm x.1 := rfl
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Subdivision, last vertex, and the simplex represented by `x` give the same map whether
@@ -2211,8 +2126,7 @@ lemma standardAffineBoundaryToFacetSmall_comp_inclusion (d : ℕ) :
     standardAffineBoundaryToFacetSmall d ≫
         (coverSmallSingularSubcomplex
           (standardPuncturedPair d).snd (standardPuncturedFacetCover d)).ι =
-      standardAffineBoundarySimplicialMap d :=
-  SSet.Subcomplex.lift_ι _ _
+      standardAffineBoundarySimplicialMap d := rfl
 
 lemma standardAffineBoundary_vertex_mem_facetCover_iff
     (d n : ℕ) (y : (∂Δ[d] : SSet.{0}) _⦋n⦌)
@@ -2259,7 +2173,6 @@ lemma standardFacetComplementCarrier_affine (d n : ℕ)
     standardFacetComplementCarrier d
         ((standardAffineBoundaryToFacetSmall d).app _ y) A =
       A.finset.image (fun a ↦ y.1 a.down) := by
-  classical
   ext i
   simp only [standardFacetComplementCarrier, Finset.mem_compl,
     standardFacetCarrierAtFace, Finset.mem_filter, Finset.mem_univ, true_and,
@@ -2278,8 +2191,6 @@ lemma standardFacetComplementCarrierMax_affine (d n : ℕ)
     standardFacetComplementCarrierMax d
         ((standardAffineBoundaryToFacetSmall d).app _ y) A =
       y.1 (A.finset.max' A.nonempty).down := by
-  classical
-  unfold standardFacetComplementCarrierMax
   have hcarrier := standardFacetComplementCarrier_affine d n y A
   apply le_antisymm
   · apply Finset.max'_le
@@ -2300,7 +2211,6 @@ lemma standardFacetCarrierSimplexMap_affine (d n : ℕ)
       simplexSubdivisionLastVertex.app (SimplexCategory.mk n) ≫
         SSet.yonedaEquiv.symm y.1 := by
   ext q F
-  rcases q with ⟨⟨k⟩⟩
   apply SSet.stdSimplex.objEquiv.injective
   apply SimplexCategory.Hom.ext
   apply OrderHom.ext
@@ -2310,7 +2220,6 @@ lemma standardFacetCarrierSimplexMap_affine (d n : ℕ)
       ((standardAffineBoundaryToFacetSmall d).app _ y) A =
     y.1 (nonemptyFiniteChainMaximum
       (ULift.{0} (Fin (n + 1))) A).down
-  rw [nonemptyFiniteChainMaximum_apply]
   exact standardFacetComplementCarrierMax_affine d n y A
 
 lemma standardFacetCarrierBoundarySimplexMap_affine (d n : ℕ)
@@ -2519,7 +2428,7 @@ def standardFacetCarrierAffineRationalHomotopy (d : ℕ) :
       (standardFacetCarrierRationalChainMap d ≫
         standardAffineBoundaryChainMap d)
       (coverSmallRationalSingularChainInclusion
-        (standardPuncturedPair d).snd (standardPuncturedFacetCover d)) := by
+        (standardPuncturedPair d).snd (standardPuncturedFacetCover d)) :=
   let C := standardFacetCarrierRationalChainMap d ≫
     standardAffineBoundaryChainMap d
   let B := standardFacetSmallBarycentricLastVertexRationalChainMap d
@@ -2529,7 +2438,7 @@ def standardFacetCarrierAffineRationalHomotopy (d : ℕ) :
     (Homotopy.ofEq
       (standardFacetCarrierDiscrepancyRationalChainMap_eq d).symm).trans
         (standardFacetCarrierDiscrepancyRationalHomotopy d)
-  exact ((Homotopy.equivSubZero (f := C) (g := B ≫ I)).symm hnull).trans
+  ((Homotopy.equivSubZero (f := C) (g := B ≫ I)).symm hnull).trans
     ((standardFacetSmallBarycentricLastVertexRationalHomotopy d).compRightId I)
 
 /-- A chain-level left inverse of affine realization, obtained by smallifying with respect to
@@ -2550,7 +2459,7 @@ def standardAffineBoundaryChainRetractionHomotopy (d : ℕ) :
     Homotopy
       (standardAffineBoundaryChainMap d ≫
         standardAffineBoundaryChainRetraction d)
-      (𝟙 ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ))) := by
+      (𝟙 ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ))) :=
   let A := SSet.chainComplexMap (standardAffineBoundaryToFacetSmall d)
     (ModuleCat.of ℚ ℚ)
   let E := coverSmallRationalChainHomotopyEquiv_of_openCover
@@ -2571,7 +2480,7 @@ def standardAffineBoundaryChainRetractionHomotopy (d : ℕ) :
   have hunit : (A ≫ 𝟙 _) ≫ C = A ≫ C := by simp
   have hcarrier : A ≫ C = standardBarycentricLastVertexRationalChainMap d :=
     standardAffineSmallRational_comp_standardFacetCarrierRationalChainMap d
-  exact (Homotopy.ofEq hstart).trans <| hsmall.trans <|
+  (Homotopy.ofEq hstart).trans <| hsmall.trans <|
     (Homotopy.ofEq hunit).trans <| (Homotopy.ofEq hcarrier).trans <|
       standardBarycentricLastVertexRationalHomotopy d
 
@@ -2582,7 +2491,7 @@ def standardAffineBoundaryChainCoretractionHomotopy (d : ℕ) :
       (standardAffineBoundaryChainRetraction d ≫
         standardAffineBoundaryChainMap d)
       (𝟙 ((TopCat.toSSet.obj (standardPuncturedPair d).snd).chainComplex
-        (ModuleCat.of ℚ ℚ))) := by
+        (ModuleCat.of ℚ ℚ))) :=
   let E := coverSmallRationalChainHomotopyEquiv_of_openCover
     (standardPuncturedPair d).snd (standardPuncturedFacetCover d)
     (isOpen_standardPuncturedFacetCover d)
@@ -2601,7 +2510,7 @@ def standardAffineBoundaryChainCoretractionHomotopy (d : ℕ) :
       (Homotopy.ofEq hE.symm)
   have hfull : Homotopy (E.inv ≫ (C ≫ A)) (𝟙 _) :=
     (hcarrier.compLeft E.inv).trans E.homotopyInvHomId
-  simpa only [standardAffineBoundaryChainRetraction, Category.assoc] using hfull
+  (Homotopy.ofEq (Category.assoc E.inv C A)).trans hfull
 
 /-- Affine realization of the standard simplicial boundary is a rational chain-homotopy
 equivalence onto punctured Euclidean space. -/

@@ -45,7 +45,6 @@ lemma singularSimplex_mem_range_subset
     x ∈ (SSet.Subcomplex.range
         (TopCat.toSSet.map (topologicalSubsetInclusion X s))).obj n ↔
       Set.range (X.toSSetObjEquiv n x) ⊆ s := by
-  simp only [Subfunctor.range_obj]
   constructor
   · rintro ⟨y, rfl⟩ _ ⟨t, rfl⟩
     exact (TopCat.of s).toSSetObjEquiv n y t |>.2
@@ -92,15 +91,7 @@ lemma singularSimplicialMapLiftToSubset_comp_inclusion
     (hf : ∀ (n : SimplexCategoryᵒᵖ) (x : X.obj n),
       Set.range (Y.toSSetObjEquiv n (f.app n x)) ⊆ s) :
     singularSimplicialMapLiftToSubset X Y s f hf ≫
-        TopCat.toSSet.map (topologicalSubsetInclusion Y s) = f := by
-  ext n x
-  apply (Y.toSSetObjEquiv n).injective
-  apply ContinuousMap.ext
-  intro t
-  change ((((TopCat.of s).toSSetObjEquiv n)
-    ((singularSimplicialMapLiftToSubset X Y s f hf).app n x)) t).1 =
-      (Y.toSSetObjEquiv n (f.app n x)) t
-  rfl
+        TopCat.toSSet.map (topologicalSubsetInclusion Y s) = f := rfl
 
 /-- Maps into a topological subspace are equal when their composites with the subspace
 inclusion are equal. -/
@@ -114,13 +105,7 @@ lemma singularSimplicialMapToSubset_ext
   apply ContinuousMap.ext
   intro t
   apply Subtype.ext
-  change (Y.toSSetObjEquiv n
-      ((TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (f.app n x))) t =
-    (Y.toSSetObjEquiv n
-      ((TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (g.app n x))) t
   have hx := congrArg (fun k : X ⟶ TopCat.toSSet.obj Y ↦ k.app n x) h
-  change (TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (f.app n x) =
-    (TopCat.toSSet.map (topologicalSubsetInclusion Y s)).app n (g.app n x) at hx
   exact congrArg (fun z ↦ Y.toSSetObjEquiv n z t) hx
 
 /-- A singular simplex whose image lies in a subspace, regarded as a simplex of that
@@ -140,20 +125,17 @@ lemma singularSimplexLiftToSubset_comp_inclusion
     (x : (TopCat.toSSet.obj X).obj n)
     (hx : Set.range (X.toSSetObjEquiv n x) ⊆ s) :
     (TopCat.toSSet.map (topologicalSubsetInclusion X s)).app n
-      (singularSimplexLiftToSubset X s x hx) = x := by
-  apply (X.toSSetObjEquiv n).injective
-  ext t
-  rfl
+      (singularSimplexLiftToSubset X s x hx) = x := rfl
 
+open scoped Classical in
 /-- A degreewise retraction of integral singular chains along a topological subspace
 inclusion.  It sends a simplex outside the subspace to zero. -/
 def singularSubsetIntegralChainRetractionComponent
     (X : TopCat.{0}) (s : Set X) (n : ℕ) :
     ((TopCat.toSSet.obj X).chainComplex (AddCommGrpCat.of ℤ)).X n ⟶
       ((TopCat.toSSet.obj (TopCat.of s)).chainComplex
-        (AddCommGrpCat.of ℤ)).X n := by
-  classical
-  exact (TopCat.toSSet.obj X).isColimitChainComplexXCofan
+        (AddCommGrpCat.of ℤ)).X n :=
+  (TopCat.toSSet.obj X).isColimitChainComplexXCofan
     (AddCommGrpCat.of ℤ) n |>.desc
       (Cofan.mk _ (fun x ↦
         if hx : Set.range ((X.toSSetObjEquiv _ x)) ⊆ s then

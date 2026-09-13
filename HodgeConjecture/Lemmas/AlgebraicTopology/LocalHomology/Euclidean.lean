@@ -48,20 +48,6 @@ def relativeSingularBoundary (X : TopPair) (n : ℕ) :
   (relativeChainShortComplex_shortExact ℚ X).δ (n + 1) n
     (ComplexShape.down_mk (n + 1) n (by lia))
 
-set_option backward.isDefEq.respectTransparency false in
-/-- Exactness at ambient homology in the long exact sequence of a topological pair. -/
-lemma relativeSingular_homology_exact_ambient (X : TopPair) (n : ℕ) :
-    (ShortComplex.mk
-      (HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n)
-      (HomologicalComplex.homologyMap (relativeChainProjection ℚ X) n)
-      (by
-        rw [← HomologicalComplex.homologyMap_comp]
-        change HomologicalComplex.homologyMap
-          (((chainPairFunctor ℚ).obj X).hom ≫
-            cokernel.π ((chainPairFunctor ℚ).obj X).hom) n = 0
-        rw [cokernel.condition, HomologicalComplex.homologyMap_zero])).Exact :=
-  (relativeChainShortComplex_shortExact ℚ X).homology_exact₂ n
-
 /-- Exactness at relative homology in the long exact sequence of a topological pair. -/
 lemma relativeSingular_homology_exact_relative (X : TopPair) (n : ℕ) :
     (ShortComplex.mk
@@ -71,17 +57,6 @@ lemma relativeSingular_homology_exact_relative (X : TopPair) (n : ℕ) :
         exact (relativeChainShortComplex_shortExact ℚ X).comp_δ
           (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia)))).Exact :=
   (relativeChainShortComplex_shortExact ℚ X).homology_exact₃
-    (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
-
-/-- Exactness at subspace homology in the long exact sequence of a topological pair. -/
-lemma relativeSingular_homology_exact_subspace (X : TopPair) (n : ℕ) :
-    (ShortComplex.mk
-      (relativeSingularBoundary X n)
-      (HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n)
-      (by
-        exact (relativeChainShortComplex_shortExact ℚ X).δ_comp
-          (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia)))).Exact :=
-  (relativeChainShortComplex_shortExact ℚ X).homology_exact₁
     (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
 
 lemma standardSubspaceBoundaryChain_inclusion (n : ℕ) :
@@ -100,9 +75,6 @@ lemma standardSubspaceBoundaryChain_boundary (n : ℕ) :
         ((ComplexShape.down ℕ).next n) = 0 := by
   let f := ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).hom
   let : Mono f := relativeChainMap_mono ℚ (standardPuncturedPair (n + 1))
-  let : Mono (f.f ((ComplexShape.down ℕ).next n)) :=
-    Functor.map_mono (HomologicalComplex.eval (ModuleCat ℚ) _
-      ((ComplexShape.down ℕ).next n)) f
   rw [← cancel_mono (f.f ((ComplexShape.down ℕ).next n)), Category.assoc, ← f.comm,
     ← Category.assoc, standardSubspaceBoundaryChain_inclusion, Category.assoc,
     HomologicalComplex.d_comp_d, comp_zero]
@@ -131,7 +103,6 @@ lemma standardLocalCycle_comp_relativeSingularBoundary (n : ℕ) :
       standardPuncturedBoundaryCycle n ≫
         ((chainPairFunctor ℚ).obj
           (standardPuncturedPair (n + 1))).left.homologyπ n := by
-  let S := relativeChainShortComplex ℚ (standardPuncturedPair (n + 1))
   let hS := relativeChainShortComplex_shortExact ℚ
     (standardPuncturedPair (n + 1))
   exact hS.δ_eq (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
@@ -154,11 +125,11 @@ lemma relativeSingularBoundary_standardLocalClass (n : ℕ) :
 def rationalSingularHomologyIsoOfHomotopyEquiv
     {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y]
     (k : ℕ) (e : X ≃ₕ Y) :
-    Homology ℚ (TopCat.of X) k ≅ Homology ℚ (TopCat.of Y) k := by
+    Homology ℚ (TopCat.of X) k ≅ Homology ℚ (TopCat.of Y) k :=
   let F := (singularHomologyFunctor (ModuleCat ℚ) k).obj (ModuleCat.of ℚ ℚ)
   let f : TopCat.of X ⟶ TopCat.of Y := TopCat.ofHom e.toFun
   let g : TopCat.of Y ⟶ TopCat.of X := TopCat.ofHom e.invFun
-  exact CategoryTheory.Iso.mk (F.map f) (F.map g) (by
+  CategoryTheory.Iso.mk (F.map f) (F.map g) (by
     rw [← F.map_comp, ← F.map_id]
     exact TopCat.Homotopy.congr_homologyMap_singularChainComplexFunctor
       e.left_inv.some (ModuleCat.of ℚ ℚ) k) (by
@@ -315,7 +286,6 @@ lemma standardPuncturedBoundaryCycle_zero_eq :
     HomologicalComplex.liftCycles_i]
   change (∑ i : Fin 2, (-1 : ℤ) ^ i.val • standardSubspaceFaceChain 0 i) =
     standardSubspaceFaceChain 0 0 - standardSubspaceFaceChain 0 1
-  rw [Fin.sum_univ_two]
   norm_num
   rw [sub_eq_add_neg]
 
@@ -344,12 +314,12 @@ lemma standardPuncturedBoundaryCycle_homology₀Iso :
   rw [standardPuncturedBoundaryCycle_zero_eq, Preadditive.sub_comp,
     standardPuncturedFaceCycle_homology₀Iso, standardPuncturedFaceCycle_homology₀Iso]
 
+open scoped Classical in
 /-- A linear functional detecting the negative component of the punctured line. -/
 def standardPuncturedBoundaryDetector :
     (∐ (fun (_ : (TopCat.toSSet.obj (standardPuncturedPair 1).snd).π₀) ↦
-      ModuleCat.of ℚ ℚ)) ⟶ ModuleCat.of ℚ ℚ := by
-  classical
-  exact Sigma.desc fun j ↦
+      ModuleCat.of ℚ ℚ)) ⟶ ModuleCat.of ℚ ℚ :=
+  Sigma.desc fun j ↦
     if j = SSet.π₀.mk (standardFaceSimplex 0 0) then 𝟙 _ else 0
 
 set_option backward.isDefEq.respectTransparency false in

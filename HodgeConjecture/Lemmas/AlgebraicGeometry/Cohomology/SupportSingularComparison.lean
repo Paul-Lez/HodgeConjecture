@@ -34,21 +34,17 @@ namespace AlgebraicTopology.Singular
 set_option backward.isDefEq.respectTransparency false in
 /-- The chain map on a preimage open commutes with the zero-chain augmentation. -/
 lemma preimageOpenChainMap_comp_zeroAugmentation
-    (R : Type) [Field R] {U X : TopCat.{0}} (j : U ⟶ X) (V : Opens X) :
+    (R : Type) [CommRing R] {U X : TopCat.{0}} (j : U ⟶ X) (V : Opens X) :
     (preimageOpenChainMap R j V).f 0 ≫
         openZeroAugmentation R X (.op V) =
       openZeroAugmentation R U (.op ((Opens.map j).obj V)) := by
-  change (((AlgebraicTopology.singularChainComplexFunctor (ModuleCat R)).obj
-      (ModuleCat.of R R)).map (preimageOpenToOpen j V)).f 0 ≫
-        openZeroAugmentation R X (.op V) =
-      openZeroAugmentation R U (.op ((Opens.map j).obj V))
   exact simplicialZeroAugmentation_naturality R
     (TopCat.toSSet.map (preimageOpenToOpen j V))
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Raw restriction carries a constant singular zero-cochain to the same constant cochain. -/
 lemma constantsToSingularCochainZero_comp_singularRestrictionToRawPushforward
-    (R : Type) [Field R] {U X : TopCat.{0}} (j : U ⟶ X) :
+    (R : Type) [CommRing R] {U X : TopCat.{0}} (j : U ⟶ X) :
     constantsToSingularCochainZero R X ≫
         singularRestrictionToRawPushforward R j 0 =
       Functor.whiskerLeft (Opens.map j).op
@@ -65,12 +61,10 @@ lemma constantsToSingularCochainZero_comp_singularRestrictionToRawPushforward
       (.op ((Opens.map j).obj V.unop)) r
   apply LinearMap.ext
   intro c
-  simp only [LinearMap.dualMap_apply]
   change (r • (openZeroAugmentation R X V).hom)
       (((preimageOpenChainMap R j V.unop).f 0).hom c) =
     (r • (openZeroAugmentation R U
       (.op ((Opens.map j).obj V.unop))).hom) c
-  rw [LinearMap.smul_apply, LinearMap.smul_apply]
   exact congrArg (r • ·) (ConcreteCategory.congr_hom
     (preimageOpenChainMap_comp_zeroAugmentation R j V.unop) c)
 
@@ -125,7 +119,6 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
   unfold rationalRestrictionSheaf
   rw [← Category.assoc, toSheafify_sheafifyLift]
   unfold singularRestrictionPresheaf rationalRestrictionPresheaf
-  rw [← Functor.whiskerLeft_comp]
   change _ = Functor.whiskerLeft
     (Opens.map (analyticComplementInclusion X Z)).op
       (toSheafify (Opens.grothendieckTopology

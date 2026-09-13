@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.FlasqueSections
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueComparison
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 
@@ -111,14 +111,14 @@ def supportedSectionHomologyIsoRestrictionCone
     (hK : ∀ n, (K.X n).IsFlasque) (n : ℤ) :
     (supportRestrictionSectionsComplexShortComplex X U V K).X₁.homology n ≅
       (CochainComplex.mappingCone
-        (sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U))).homology (n - 1) := by
+        (sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U))).homology (n - 1) :=
   let S := supportRestrictionSectionsComplexShortComplex X U V K
-  let : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
+  letI : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
     CochainComplex.mappingCocone.quasiIso_shiftedLiftShortComplex S
       (supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque X U V K hK)
   let e := ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftIso
     1 (n - 1) n (by omega)).app S.X₁
-  exact e.symm ≪≫
+  e.symm ≪≫
     asIso (HomologicalComplex.homologyMap
       (CochainComplex.mappingCocone.shiftedLiftShortComplex S) (n - 1)) ≪≫
     HomologicalComplex.homologyMapIso (supportRestrictionSectionsConeIso X U V K) (n - 1)

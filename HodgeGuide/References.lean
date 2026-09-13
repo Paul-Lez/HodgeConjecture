@@ -3,6 +3,7 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
+import Other.LinearAlgebra.HodgeStructure
 
 open Verso.Genre Manual
 
@@ -46,23 +47,23 @@ formalization.
 
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Hodge/HolomorphicDeRham.lean` and
   `Filtration.lean`: the de Rham complex, hypercohomology, and the Hodge filtration;
-* `Other/AlgebraicGeometry/CodimensionCycle.lean`,
+* `Other/AlgebraicGeometry/Cycle/Codimension.lean`,
   `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Support.lean`,
-  and `HodgeConjecture/Definitions/AlgebraicGeometry/Cohomology/WithSupport.lean`: cycles, their
+  and `HodgeConjecture/Lemmas/AlgebraicGeometry/Cohomology/WithSupport.lean`: cycles, their
   supports, and cohomology with support;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`
   and `SupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SheafClass.lean`: the class of a
+* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`: the class of a
   subvariety;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`: the span of those
   classes, which is the right-hand side of the statement;
-* `Other/AlgebraicGeometry/SheafCycleClass.lean`: the maps on cycles;
-* `Other/AlgebraicGeometry/SmoothAnalytificationConnected.lean`: connectedness of the
+* `Other/AlgebraicGeometry/Cycle/SheafClass.lean`: the maps on cycles;
+* `Other/AlgebraicGeometry/ComplexPoint/SmoothConnected.lean`: connectedness of the
   analytification of a smooth integral complex scheme;
-* `Other/AlgebraicGeometry/CodimensionZeroClassComparison.lean` and
-  `CodimensionZeroCoclassNonvanishing.lean`: nonvanishing of the class of the whole variety and
+* `Other/AlgebraicGeometry/Hodge/CodimensionZeroComparison.lean` and
+  `CodimensionZeroNonvanishing.lean`: nonvanishing of the class of the whole variety and
   the codimension-zero case of the conjecture;
-* `Other/LinearAlgebra/HodgeStructure.lean`, `Other/AlgebraicGeometry/HodgeFiltration.lean`, and
-  `Other/AlgebraicGeometry/HodgeDecomposition.lean`: pure Hodge structures, the $`(p,p)`
+* `Other/LinearAlgebra/HodgeStructure.lean`, `Other/AlgebraicGeometry/Hodge/Complexification.lean`,
+  and `Other/AlgebraicGeometry/Hodge/Decomposition.lean`: pure Hodge structures, the $`(p,p)`
   criterion, and the Hodge decomposition as a hypothesis.

@@ -52,7 +52,6 @@ lemma toSimplicialObjectHomotopy_h_naturality
   simp only [CategoryTheory.SimplicialObject.Homotopy.precomp_h,
     CategoryTheory.SimplicialObject.Homotopy.postcomp_h]
   dsimp [SSet.Homotopy.toSimplicialObjectHomotopy, TopCat.Homotopy.toSSet]
-  rw [← SSet.yonedaEquiv_symm_comp]
   have hmap :
       (SSet.yonedaEquiv.symm x ≫ TopCat.toSSet.map a) ▷ Δ[1] ≫
           (TopCat.toSSet.obj X ◁ SSet.stdSimplex.toSSetObjI) ≫
@@ -129,7 +128,7 @@ end TopCat.Homotopy
 
 namespace TopPair.Homotopy
 
-variable {R : Type u} [Field R]
+variable {R : Type u} [CommRing R]
 variable {X Y : TopPair.{u}} {f g : X ⟶ Y}
 
 /-- The component of the relative-chain projection in each degree is a cokernel. -/
@@ -187,7 +186,6 @@ lemma relativeChainHomotopyComponent_fac (H : TopPair.Homotopy f g)
         relativeChainHomotopyComponent (R := R) H i j =
       (H.fst.singularChainComplexFunctorObjMap (ModuleCat.of R R)).hom i j ≫
         (relativeChainProjection R Y).f j := by
-  unfold relativeChainHomotopyComponent
   exact (Cofork.IsColimit.π_desc
       (relativeChainProjectionComponentIsCokernel (R := R) X i)
       (t := CokernelCofork.ofπ
@@ -200,8 +198,6 @@ lemma relativeChainProjection_naturality (a : X ⟶ Y) :
     relativeChainProjection R X ≫ (relativeChainFunctor R).map a =
       ((singularChainComplexFunctor (ModuleCat.{u} R)).obj
           (ModuleCat.of R R)).map (TopPair.Hom.fst a) ≫ relativeChainProjection R Y := by
-  change relativeChainProjection R X ≫ (relativeChainFunctor R).map a =
-    ((chainPairFunctor R).map a).right ≫ relativeChainProjection R Y
   exact ((coker.π (C := ChainCategory R)).naturality
     ((chainPairFunctor R).map a)).symm
 
@@ -284,8 +280,6 @@ noncomputable def relativeChainHomotopy (H : TopPair.Homotopy f g) :
 /-- Homotopic maps of topological pairs induce equal maps on relative singular homology. -/
 theorem congr_relativeHomologyMap (H : TopPair.Homotopy f g) (n : ℕ) :
     relativeHomologyMap R n f = relativeHomologyMap R n g := by
-  change (HomologicalComplex.homologyMap ((relativeChainFunctor R).map f) n).hom =
-    (HomologicalComplex.homologyMap ((relativeChainFunctor R).map g) n).hom
   exact congrArg ModuleCat.Hom.hom
     ((relativeChainHomotopy (R := R) H).homologyMap_eq n)
 

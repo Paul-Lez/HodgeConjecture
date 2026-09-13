@@ -16,6 +16,8 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.Cochain
+public import HodgeConjecture.Mathlib.AlgebraicTopology.SimplicialSet.ChainComplexSplit
+public import HodgeConjecture.Mathlib.LinearAlgebra.Dual.Defs
 public import Mathlib.Algebra.Module.Projective -- shake: keep
 public import Mathlib.Topology.Sheaves.Flasque
 
@@ -26,8 +28,8 @@ import Mathlib.LinearAlgebra.Dual.Lemmas
 # Flasqueness of open singular cochains
 
 Restriction of a singular cochain to an open subset is surjective: the inclusion on singular
-chains is injective, and a linear functional on a subspace of a vector space extends to the whole
-space. Consequently, the presheaf of singular cochains in each fixed degree is flasque.
+chains is a split injection, and the dual of a split injection is surjective. Consequently, the
+presheaf of singular cochains in each fixed degree is flasque.
 
 The extension may be chosen linearly. We also identify the cochains on the top open set with the
 ordinary singular cochains of the ambient space. These statements concern the presheaf before
@@ -42,7 +44,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Inclusion of open subsets induces a monomorphism of singular chain complexes. -/
 lemma openSingularChainComplexMap_mono {U V : Opens X} (i : U ⟶ V) :
@@ -62,19 +64,24 @@ lemma openSingularChainMap_injective {U V : Opens X} (i : U ⟶ V) (n : ℕ) :
   exact Functor.map_mono (HomologicalComplex.eval (ModuleCat R) _ n)
     ((openSingularChainComplexFunctor R X).map i)
 
+/-- Inclusion of open subsets induces a split monomorphism on singular chains in each degree. -/
+lemma openSingularChainMap_isSplitMono {U V : Opens X} (i : U ⟶ V) (n : ℕ) :
+    IsSplitMono (((openSingularChainComplexFunctor R X).map i).f n) :=
+  let _ : Mono ((Opens.toTopCat X).map i) :=
+    (TopCat.mono_iff_injective ((Opens.toTopCat X).map i)).mpr fun _ _ h ↦
+      Subtype.ext (congrArg (fun z : V ↦ z.1) h)
+  AlgebraicTopology.isSplitMono_singularChainComplexFunctor_map_f
+    ((Opens.toTopCat X).map i) (ModuleCat.of R R) n
+
 /-- Every cochain on an open subset extends linearly to a containing open subset. -/
 lemma openSingularCochainRestriction_surjective
     {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) :
     Function.Surjective
       ((singularCochainPresheaf R X n).map i) :=
-  LinearMap.dualMap_surjective_of_injective
-    (openSingularChainMap_injective R X i.unop n)
-
-/-- Every cochain on an open subset extends to a cochain on the whole space. -/
-lemma globalOpenSingularCochainRestriction_surjective (U : Opens X) (n : ℕ) :
-    Function.Surjective
-      ((singularCochainPresheaf R X n).map (homOfLE (le_top : U ≤ ⊤)).op) :=
-  openSingularCochainRestriction_surjective R X _ n
+  let _ := openSingularChainMap_isSplitMono R X i.unop n
+  LinearMap.dualMap_surjective_of_comp_eq_id
+    (congrArg ModuleCat.Hom.hom
+      (IsSplitMono.id (((openSingularChainComplexFunctor R X).map i.unop).f n)))
 
 /-- The presheaf of singular cochains in every fixed degree is flasque. -/
 instance singularCochainPresheaf_isFlasque (n : ℕ) :

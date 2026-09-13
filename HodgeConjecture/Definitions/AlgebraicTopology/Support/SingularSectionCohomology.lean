@@ -5,8 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularFlasqueModel
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularFlasqueModel
+public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
 /-!
 # Supported singular-section cohomology on arbitrary opens

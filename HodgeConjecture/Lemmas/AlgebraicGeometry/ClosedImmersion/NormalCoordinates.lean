@@ -19,7 +19,7 @@ open CategoryTheory Topology Filter
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
@@ -29,9 +29,6 @@ theorem analyticAt_closedImmersionNormalChart :
     AnalyticAt ℂ (closedImmersionNormalChart X Y i m d z)
       (localChart Y m z z, 0) := by
   let P := closedImmersionDerivativeProjection X Y i m d z
-  change AnalyticAt ℂ
-    (fun v : (Fin m → ℂ) × P.ker =>
-      inclusionInComplexCharts X Y i m d z v.1 + v.2) _
   exact ((analyticAt_inclusionInComplexCharts X Y i m d z).comp
     (f := (ContinuousLinearMap.fst ℂ (Fin m → ℂ) P.ker))
     (x := (localChart Y m z z, 0))
@@ -45,7 +42,6 @@ theorem analyticAt_closedImmersionNormalChart_symm :
     AnalyticAt ℂ (closedImmersionNormalChart X Y i m d z).symm
       (localChart X d (Point.map i z) (Point.map i z)) := by
   let P := closedImmersionDerivativeProjection X Y i m d z
-  let : CompleteSpace P.ker := FiniteDimensional.complete ℂ P.ker
   let e := closedImmersionNormalChart X Y i m d z
   have ha := analyticAt_inclusionInComplexCharts X Y i m d z
   have hd := ha.hasStrictFDerivAt.add_kernel P

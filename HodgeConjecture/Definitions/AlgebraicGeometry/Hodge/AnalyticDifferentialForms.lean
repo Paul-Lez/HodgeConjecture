@@ -57,10 +57,9 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 noncomputable instance holomorphicFunctionPresheafAlgebra
     [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
-    Algebra ℂ ((holomorphicFunctionPresheaf X d).obj U) := by
-  change Algebra ℂ
-    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯
-  infer_instance
+    Algebra ℂ ((holomorphicFunctionPresheaf X d).obj U) :=
+  inferInstanceAs (Algebra ℂ
+    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯)
 
 /-- Restriction of holomorphic functions as an algebra homomorphism over the constants. -/
 def holomorphicRestrictionAlgHom [SmoothOfRelativeDimension d X.hom]
@@ -72,18 +71,14 @@ def holomorphicRestrictionAlgHom [SmoothOfRelativeDimension d X.hom]
 
 @[simp] lemma holomorphicRestrictionAlgHom_id [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
-    holomorphicRestrictionAlgHom X d (𝟙 U) = AlgHom.id ℂ _ := by
-  ext f
-  rfl
+    holomorphicRestrictionAlgHom X d (𝟙 U) = AlgHom.id ℂ _ := rfl
 
 @[simp] lemma holomorphicRestrictionAlgHom_comp [SmoothOfRelativeDimension d X.hom]
     {U V W : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ}
     (i : U ⟶ V) (j : V ⟶ W) :
     holomorphicRestrictionAlgHom X d (i ≫ j) =
       (holomorphicRestrictionAlgHom X d j).comp
-        (holomorphicRestrictionAlgHom X d i) := by
-  ext f
-  rfl
+        (holomorphicRestrictionAlgHom X d i) := rfl
 
 abbrev OpenHolomorphicFunctions [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :=
@@ -359,33 +354,33 @@ def chartWedge [SmoothOfRelativeDimension d X.hom]
     (↥(chartSectionDomain X d U z) → ((Fin d → ℂ) →L[ℂ] ℂ))
       [⋀^Fin p]→ₗ[OpenHolomorphicFunctions X d U]
       (↥(chartSectionDomain X d U z) → ((Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)) where
-  toFun L y := ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) p fun i => L i y
+  toFun L y := ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) fun i => L i y
   map_update_add' := by
     intro instDec L i a b
     obtain rfl : instDec = instDecidableEqFin p := Subsingleton.elim _ _
     funext y
-    show ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) p (fun j => Function.update L i (a + b) j y) =
-      ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) p (fun j => Function.update L i a j y) +
-        ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) p (fun j => Function.update L i b j y)
+    show ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) (fun j => Function.update L i (a + b) j y) =
+      ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) (fun j => Function.update L i a j y) +
+        ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) (fun j => Function.update L i b j y)
     rw [update_eval, update_eval, update_eval, Pi.add_apply, ContinuousAlternatingMap.wedgeCovectors_update_add]
   map_update_smul' := by
     intro instDec L i f a
     obtain rfl : instDec = instDecidableEqFin p := Subsingleton.elim _ _
     funext y
-    show ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) p (fun j => Function.update L i (f • a) j y) =
+    show ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) (fun j => Function.update L i (f • a) j y) =
       chartSection X d U z f y.1 •
-        ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) p (fun j => Function.update L i a j y)
+        ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) (fun j => Function.update L i a j y)
     rw [update_eval, update_eval, chartFieldModule_smul_apply,
       ContinuousAlternatingMap.wedgeCovectors_update_smul]
   map_eq_zero_of_eq' L i j h hij := by
     funext y
-    exact ContinuousAlternatingMap.wedgeCovectors_eq_zero_of_eq p _ i j (congrFun h y) hij
+    exact ContinuousAlternatingMap.wedgeCovectors_eq_zero_of_eq _ i j (congrFun h y) hij
 
 @[simp] lemma chartWedge_apply [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
     (L : Fin p → ↥(chartSectionDomain X d U z) → ((Fin d → ℂ) →L[ℂ] ℂ))
     (y : ↥(chartSectionDomain X d U z)) :
-    chartWedge X d U z p L y = ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) p fun i => L i y := rfl
+    chartWedge X d U z p L y = ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) fun i => L i y := rfl
 
 /-- Fixed-chart evaluation of differential forms, as a `ℂ`-linear map into alternating-form
 fields on the coordinate domain. -/
@@ -404,7 +399,7 @@ private lemma chartEvaluationHolo_mk [SmoothOfRelativeDimension d X.hom]
     chartEvaluationHolo X d U z p
         (Algebra.DeRham.mk ℂ (OpenHolomorphicFunctions X d U) p a₀ v) y =
       chartSection X d U z a₀ y.1 •
-        ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) p
+        ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ)
           fun i => chartSectionDifferential X d U z (v i) y.1 := by
   show chartEvaluationHolo X d U z p
     (a₀ • Algebra.DeRham.exact ℂ (OpenHolomorphicFunctions X d U) p v) y = _
@@ -505,7 +500,7 @@ def chartGeneratorEvaluation [SmoothOfRelativeDimension d X.hom]
     (a₀ : OpenHolomorphicFunctions X d U) (v : Fin p → OpenHolomorphicFunctions X d U) :
     (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
   fun y => chartSection X d U z a₀ y •
-    ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) p fun i => chartSectionDifferential X d U z (v i) y
+    ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) fun i => chartSectionDifferential X d U z (v i) y
 
 lemma chartEvaluation_mk [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
@@ -565,11 +560,6 @@ private lemma chartGeneratorEvaluation_differentiableWithinAt
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     DifferentiableWithinAt ℂ (chartGeneratorEvaluation X d U z p a₀ v)
       (chartSectionDomain X d U z) y := by
-  rw [show chartGeneratorEvaluation X d U z p a₀ v =
-      (fun w ↦ chartSection X d U z a₀ w •
-        exactWedgeWithin (Fin d → ℂ) p
-          (fun i ↦ chartSection X d U z (v i))
-          (chartSectionDomain X d U z) w) from rfl]
   exact DifferentiableWithinAt.smul
     ((chartSection_contDiffWithinAt X d U z a₀ hy).differentiableWithinAt (by simp))
     (exactWedgeWithin_differentiableWithinAt (Fin d → ℂ) p
@@ -653,9 +643,7 @@ lemma mem_chartEvaluationKernel_iff [SmoothOfRelativeDimension d X.hom]
     θ ∈ chartEvaluationKernel X d U p ↔
       ∀ z y, y ∈ chartSectionDomain X d U z →
         chartEvaluation X d U z p θ y = 0 := by
-  simp only [chartEvaluationKernel, Submodule.mem_iInf, LinearMap.mem_ker,
-    chartEvaluationAt]
-  rfl
+  simp [chartEvaluationKernel, Submodule.mem_iInf, LinearMap.mem_ker, chartEvaluationAt]
 
 /-- Coordinate-zero identities remain coordinate-zero after exterior differentiation. -/
 lemma differential_mem_chartEvaluationKernel
@@ -700,15 +688,6 @@ def formRestriction [SmoothOfRelativeDimension d X.hom]
         (holomorphicRestrictionAlgHom X d i a₀)
         fun k => holomorphicRestrictionAlgHom X d i (v k) :=
   Algebra.DeRham.map_mk ℂ (holomorphicRestrictionAlgHom X d i) p a₀ v
-
-lemma formRestriction_differential [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
-    (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
-    formRestriction X d i (p + 1)
-        (Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) p θ) =
-      Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d V) p
-        (formRestriction X d i p θ) :=
-  Algebra.DeRham.map_differential ℂ (holomorphicRestrictionAlgHom X d i) p θ
 
 /-- Fixed-chart values of holomorphic functions commute with restriction. -/
 lemma chartSection_holomorphicRestrictionAlgHom

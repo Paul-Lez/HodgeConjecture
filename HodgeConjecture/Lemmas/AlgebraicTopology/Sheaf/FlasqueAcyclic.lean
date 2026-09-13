@@ -47,15 +47,6 @@ local instance extAddCommGroup
 
 namespace IsFlasque
 
-/-- The constant sheaf which represents global sections in sheaf cohomology. -/
-abbrev globalSectionsSource : TopCat.Sheaf AddCommGrpCat.{u} X :=
-  (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
-    (AddCommGrpCat.of (ULift ℤ))
-
-
-
-
-
 end IsFlasque
 
 end TopCat.Sheaf

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 
 /-! # Naturality of the canonical short-exact-sequence cone comparison -/
 
@@ -23,11 +23,11 @@ set_option backward.isDefEq.respectTransparency false in
 lift. Its source degree is one larger than the cone degree. -/
 def shortExactHomologyIsoCone (S : ShortComplex (CochainComplex C ℤ))
     (hS : S.ShortExact) (n n' : ℤ) (h : 1 + n = n') :
-    S.X₁.homology n' ≅ (mappingCone S.g).homology n := by
-  let : QuasiIso (shiftedLiftShortComplex S) := quasiIso_shiftedLiftShortComplex S hS
-  let : IsIso (HomologicalComplex.homologyMap (shiftedLiftShortComplex S) n) :=
+    S.X₁.homology n' ≅ (mappingCone S.g).homology n :=
+  letI : QuasiIso (shiftedLiftShortComplex S) := quasiIso_shiftedLiftShortComplex S hS
+  letI : IsIso (HomologicalComplex.homologyMap (shiftedLiftShortComplex S) n) :=
     (quasiIsoAt_iff_isIso_homologyMap (shiftedLiftShortComplex S) n).mp inferInstance
-  exact (((HomologicalComplex.homologyFunctor C (.up ℤ) 0).shiftIso 1 n n' h).app S.X₁).symm ≪≫
+  (((HomologicalComplex.homologyFunctor C (.up ℤ) 0).shiftIso 1 n n' h).app S.X₁).symm ≪≫
     asIso (HomologicalComplex.homologyMap (shiftedLiftShortComplex S) n)
 
 end CochainComplex.mappingCocone

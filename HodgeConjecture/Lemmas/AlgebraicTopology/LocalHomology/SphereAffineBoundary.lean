@@ -115,18 +115,12 @@ lemma standardSphereBoundaryFaceSimplex_injective (n : ℕ) :
     simpa [standardSimplexTopSimplexForLocalClass] using
       (SSet.stdSimplex.objEquiv_symm_comp
         (𝟙 (SimplexCategory.mk n)) (SimplexCategory.δ k)).symm
-  rw [key i, key j] at h'
   exact SSet.stdSimplex.objEquiv.symm.injective h'
 
 lemma standardAffineBoundarySimplicialMap_face (n : ℕ) (i : Fin (n + 2)) :
     (standardAffineBoundarySimplicialMap (n + 1)).app _
         (standardSphereBoundaryFaceSimplex n i) =
-      standardFaceSimplex n i := by
-  apply ((standardPuncturedPair (n + 1)).snd.toSSetObjEquiv _).injective
-  ext t
-  apply Subtype.ext
-  funext j
-  rfl
+      standardFaceSimplex n i := rfl
 
 /-- The chain map from a simplicial boundary to singular chains of punctured coordinate space. -/
 def standardAffineBoundaryChainMap (d : ℕ) :
@@ -135,13 +129,13 @@ def standardAffineBoundaryChainMap (d : ℕ) :
         (ModuleCat.of ℚ ℚ) :=
   SSet.chainComplexMap (standardAffineBoundarySimplicialMap d) (ModuleCat.of ℚ ℚ)
 
+open scoped Classical in
 /-- A degreewise retraction from chains of the full simplex to chains of its boundary. Simplices
 outside the boundary are sent to zero. -/
 def standardSphereBoundaryChainRetractionComponent (d k : ℕ) :
     ((Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)).X k ⟶
-      ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)).X k := by
-  classical
-  exact ((Δ[d] : SSet.{0}).isColimitChainComplexXCofan
+      ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)).X k :=
+  ((Δ[d] : SSet.{0}).isColimitChainComplexXCofan
     (ModuleCat.of ℚ ℚ) k).desc
       (Cofan.mk _ (fun x ↦ if hx : x ∈ (SSet.boundary d).obj _ then
         (∂Δ[d] : SSet.{0}).ιChainComplex ⟨x, hx⟩ else 0))
@@ -151,7 +145,6 @@ lemma standardSphereBoundaryChainInclusion_comp_retraction (d k : ℕ) :
         (SSet.boundary d : SSet.Subcomplex (Δ[d] : SSet.{0})).ι
         (ModuleCat.of ℚ ℚ)).f k ≫
       standardSphereBoundaryChainRetractionComponent d k = 𝟙 _ := by
-  classical
   apply (∂Δ[d] : SSet.{0}).chainComplex_hom_ext
   intro x
   rw [← Category.assoc, SSet.ι_chainComplexMap_f]
@@ -200,7 +193,6 @@ lemma standardSphereSimplicialBoundaryChain_inclusion (n : ℕ) :
   apply Finset.sum_congr rfl
   intro i _
   rw [Preadditive.zsmul_comp]
-  congr 1
   rw [SSet.ι_chainComplexMap_f]
   rfl
 
@@ -247,12 +239,12 @@ def standardSphereSimplicialNormalizedBoundaryChain (n : ℕ) :
     ((∂Δ[n + 2] : SSet.{0}).toNormalizedChainComplex
       (ModuleCat.of ℚ ℚ)).f (n + 1)
 
+open scoped Classical in
 /-- The coefficient functional of the zeroth oriented facet in normalized top chains. -/
 def standardSphereSimplicialNormalizedBoundaryDetector (n : ℕ) :
     (standardSphereSuccNormalizedRationalChains n).X (n + 1) ⟶
-      ModuleCat.of ℚ ℚ := by
-  classical
-  exact Cofan.IsColimit.desc
+      ModuleCat.of ℚ ℚ :=
+  Cofan.IsColimit.desc
     ((∂Δ[n + 2] : SSet.{0}).isColimitCofanNormalizedChainComplex
       (ModuleCat.of ℚ ℚ) (n + 1)) (fun x ↦
         if x.1 = standardSphereBoundaryFaceSimplex (n + 1) 0 then 𝟙 _ else 0)
@@ -263,12 +255,9 @@ lemma standardSphereSimplicialNormalizedBoundaryFace_detect
         (standardSphereBoundaryFaceSimplex (n + 1) i) ≫
       standardSphereSimplicialNormalizedBoundaryDetector n =
         if i = 0 then 𝟙 _ else 0 := by
-  classical
   let x : (∂Δ[n + 2] : SSet.{0}).nonDegenerate (n + 1) :=
     ⟨standardSphereBoundaryFaceSimplex (n + 1) i,
       standardSphereBoundaryFaceSimplex_nonDegenerate (n + 1) i⟩
-  change (∂Δ[n + 2] : SSet.{0}).ιNormalizedChainComplex x.1 ≫
-      standardSphereSimplicialNormalizedBoundaryDetector n = _
   have hiff : standardSphereBoundaryFaceSimplex (n + 1) i =
       standardSphereBoundaryFaceSimplex (n + 1) 0 ↔ i = 0 :=
     (standardSphereBoundaryFaceSimplex_injective (n + 1)).eq_iff
@@ -282,7 +271,6 @@ lemma standardSphereSimplicialNormalizedBoundaryFace_detect
 lemma standardSphereSimplicialNormalizedBoundaryChain_detect (n : ℕ) :
     standardSphereSimplicialNormalizedBoundaryChain n ≫
       standardSphereSimplicialNormalizedBoundaryDetector n = 𝟙 _ := by
-  classical
   rw [standardSphereSimplicialNormalizedBoundaryChain,
     standardSphereSimplicialBoundaryChain, Preadditive.sum_comp,
     Preadditive.sum_comp]
@@ -295,14 +283,6 @@ lemma standardSphereSimplicialNormalizedBoundaryChain_detect (n : ℕ) :
     simp [hi]
   · simp
 
-/-- The normalized alternating facet chain is nonzero in every positive sphere dimension. -/
-lemma standardSphereSimplicialNormalizedBoundaryChain_ne_zero (n : ℕ) :
-    standardSphereSimplicialNormalizedBoundaryChain n ≠ 0 := by
-  intro h
-  have hdet := standardSphereSimplicialNormalizedBoundaryChain_detect n
-  rw [h, zero_comp] at hdet
-  exact zero_ne_one (ConcreteCategory.congr_hom hdet 1)
-
 lemma standardSphereSimplicialNormalizedBoundaryChain_boundary (n : ℕ) :
     standardSphereSimplicialNormalizedBoundaryChain n ≫
       (standardSphereSuccNormalizedRationalChains n).d (n + 1) n = 0 := by
@@ -310,8 +290,6 @@ lemma standardSphereSimplicialNormalizedBoundaryChain_boundary (n : ℕ) :
   let L := (∂Δ[n + 2] : SSet.{0}).normalizedChainComplex (ModuleCat.of ℚ ℚ)
   let q : K ⟶ L :=
     (∂Δ[n + 2] : SSet.{0}).toNormalizedChainComplex (ModuleCat.of ℚ ℚ)
-  change (standardSphereSimplicialBoundaryChain (n + 1) ≫ q.f (n + 1)) ≫
-    L.d (n + 1) n = 0
   calc
     _ = standardSphereSimplicialBoundaryChain (n + 1) ≫
         (q.f (n + 1) ≫ L.d (n + 1) n) :=
@@ -377,22 +355,6 @@ lemma standardSphereSimplicialNormalizedBoundaryClass_ne_zero (n : ℕ) :
   rw [hchain, map_zero] at hdet
   exact zero_ne_one hdet
 
-/-- The explicit alternating-facet class spans normalized rational top homology. -/
-lemma span_standardSphereSimplicialNormalizedBoundaryClass_eq_top (n : ℕ) :
-    Submodule.span ℚ {standardSphereSimplicialNormalizedBoundaryClass n} = ⊤ := by
-  let e := (standardSphereSuccNormalizedHomologyTopIsoRat n).toLinearEquiv
-  have he : e (standardSphereSimplicialNormalizedBoundaryClass n) ≠ 0 :=
-    e.map_ne_zero_iff.mpr (standardSphereSimplicialNormalizedBoundaryClass_ne_zero n)
-  have hone : Submodule.span ℚ
-      {e (standardSphereSimplicialNormalizedBoundaryClass n)} = ⊤ :=
-    (Submodule.span_singleton_eq_top_iff ℚ _).mpr fun q ↦
-      ⟨q / e (standardSphereSimplicialNormalizedBoundaryClass n), by
-        simpa only [smul_eq_mul] using div_mul_cancel₀ q he⟩
-  apply Submodule.map_injective_of_injective e.injective
-  rw [Submodule.map_span, Set.image_singleton, Submodule.map_top,
-    LinearMap.range_eq_top.mpr e.surjective]
-  exact hone
-
 lemma standardSphereSimplicialBoundaryCycle_normalization (n : ℕ) :
     standardSphereSimplicialBoundaryCycle n ≫
         HomologicalComplex.cyclesMap
@@ -422,12 +384,6 @@ lemma standardSphereSimplicialBoundaryClass_normalization (n : ℕ) :
           (standardSphereSuccNormalizedRationalChains n).homologyπ (n + 1) := by
     rw [HomologicalComplex.homologyπ_naturality, ← Category.assoc,
       standardSphereSimplicialBoundaryCycle_normalization]
-  change ((standardSphereSimplicialBoundaryCycle n ≫
-      ((∂Δ[n + 2] : SSet.{0}).chainComplex
-        (ModuleCat.of ℚ ℚ)).homologyπ (n + 1) ≫
-      HomologicalComplex.homologyMap q (n + 1)).hom) 1 =
-    ((standardSphereSimplicialNormalizedBoundaryCycle n ≫
-      (standardSphereSuccNormalizedRationalChains n).homologyπ (n + 1)).hom) 1
   exact ConcreteCategory.congr_hom hmor 1
 
 /-- The explicit alternating-facet class is nonzero in ordinary simplicial top homology. -/

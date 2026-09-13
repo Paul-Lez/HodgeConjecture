@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.SingularLocusDimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
@@ -25,22 +26,9 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ))) {Y : Over (Spec (.of ℂ))}
-
-local instance smoothStratificationAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
+variable (X : Over (Spec ↧ℂ)) {Y : Over (Spec ↧ℂ)}
 
 variable [LocallyOfFiniteType X.hom] [NoetherianSpace X.left]
-
-/-- The inclusion of a reduced smooth stratum, bundled over the complex base. -/
-def reducedClosedSmoothPieceMap (T : Closeds X.left) :
-    Over.mk (reducedClosedSmoothPieceι X.hom T ≫ X.hom) ⟶ X :=
-  Over.homMk (reducedClosedSmoothPieceι X.hom T) rfl
-
-instance reducedClosedSmoothPieceMap_isImmersion (T : Closeds X.left) :
-    IsImmersion (reducedClosedSmoothPieceMap X T).left := by
-  change IsImmersion (reducedClosedSmoothPieceι X.hom T)
-  infer_instance
 
 instance reducedClosedSmoothPiece_locallyOfFiniteType (T : Closeds X.left) :
     LocallyOfFiniteType (Over.mk (reducedClosedSmoothPieceι X.hom T ≫ X.hom)).hom := by

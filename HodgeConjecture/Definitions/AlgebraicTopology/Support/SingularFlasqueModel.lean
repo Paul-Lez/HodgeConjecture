@@ -57,12 +57,12 @@ variable (hX : ∀ (x : X) (V : Opens X), x ∈ V →
 /-- Strictly extend the constant augmentation to the actual injective resolution. -/
 def singularToConstantInjectiveResolution :
     singularCochainSheafComplex ℚ X ⟶
-      (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).cocomplex := by
-  let : Mono (constantsToSingularCochainSheafComplex ℚ X) :=
+      (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).cocomplex :=
+  letI : Mono (constantsToSingularCochainSheafComplex ℚ X) :=
     constantsToSingularCochainSheafComplex_mono ℚ X
-  let : QuasiIso (constantsToSingularCochainSheafComplex ℚ X) :=
+  letI : QuasiIso (constantsToSingularCochainSheafComplex ℚ X) :=
     constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ hX
-  exact CochainComplex.liftToInjectiveNat (constantsToSingularCochainSheafComplex ℚ X)
+  CochainComplex.liftToInjectiveNat (constantsToSingularCochainSheafComplex ℚ X)
     (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).ι
     (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).injective
 
@@ -128,25 +128,5 @@ instance supportedSingularToInjectiveComplex_quasiIso (U : Opens X) :
     QuasiIso (supportedSingularToInjectiveComplex X hX U) :=
   TopCat.Sheaf.sheafSectionsSupportedOutside_map_quasiIso_of_flasque X U
     (singularToConstantInjectiveComplex X hX) 0 0 (fun _ => inferInstance) (fun _ => inferInstance)
-
-/-- The comparison is a quasi-isomorphism on sections on every open set.
-This stronger conclusion is essential for applying local normal-slice calculations. -/
-theorem supportedSingularToInjectiveComplex_onOpen_quasiIso (U V : Opens X) :
-    QuasiIso (((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).map
-      (supportedSingularToInjectiveComplex X hX U)) :=
-  TopCat.Sheaf.supportedSections_map_quasiIso_of_flasque X U V
-    (singularToConstantInjectiveComplex X hX) 0 0 (fun _ => inferInstance) (fun _ => inferInstance)
-
-/-- Actual section-complex cohomology agrees through the normalized comparison. -/
-def supportedSingularInjectiveHomologyIso (U V : Opens X) (n : ℤ) :
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
-      (supportedRationalSingularCochainComplex X U))).homology n ≅
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
-      (((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
-        (rationalConstantInjectiveComplex X)))).homology n := by
-  let f := ((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).map
-    (supportedSingularToInjectiveComplex X hX U)
-  let : QuasiIso f := supportedSingularToInjectiveComplex_onOpen_quasiIso X hX U V
-  exact asIso (HomologicalComplex.homologyMap f n)
 
 end AlgebraicTopology.Singular

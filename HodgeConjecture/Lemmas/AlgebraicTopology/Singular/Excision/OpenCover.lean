@@ -41,13 +41,6 @@ namespace AlgebraicTopology.Singular
 
 variable {ι : Type} (X : TopCat) (U : ι → Set X)
 
-/-- The cover-small inclusion is a quasi-isomorphism for every open cover. -/
-public theorem coverSmallChainQuasiIsomorphism_of_openCover
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
-    QuasiIso (coverSmallIntegralSingularChainInclusion X U) :=
-  coverSmallChainQuasiIsomorphism_of_eventuallySmall X U
-    (coverSmallAffineSubdivisionEventuallySmall_of_openCover X U hUopen hUcover)
-
 /-- Classical small-chain approximation: the inclusion of chains subordinate to an open cover is
 a chain-homotopy equivalence for integral singular chains. -/
 public theorem coverSmallChainApproximation_of_openCover

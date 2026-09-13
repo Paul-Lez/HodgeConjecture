@@ -26,7 +26,7 @@ import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 /-!
 # Local generators from exact cycle-component coordinates
 
-An exact étale coordinate package on the smooth locus of a cycle component gives an actual
+An exact étale coordinate package on the smooth locus of a cycle component gives an
 analytic chart on its chosen affine neighborhood. This file constructs that chart directly from
 the retained polynomial-ring homomorphism. It then transports the proved standard complex local
 homology generator through the chart.
@@ -45,9 +45,6 @@ namespace AlgebraicGeometry
 
 attribute [local instance] overSpecAlgebra
 
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}
   [SmoothOfRelativeDimension d X.hom]
@@ -55,41 +52,11 @@ variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
 namespace CycleComponentSeparateLocalCoordinates
 
 variable (C : CycleComponentSeparateLocalCoordinates X x d n)
-/-- The selected smooth component point regarded as a complex point of the smooth locus. -/
-def smoothPoint : ComplexPoint (componentSmoothScheme X x) :=
-  ComplexPoint.asOpenPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))
-    (componentSmoothLocus X x)
-    C.point C.point_mem_smoothLocus
 
 /-- The complex structure map on the selected affine component neighborhood. -/
 abbrev neighborhoodStructureMap :
     C.componentNeighborhood.toScheme ⟶ Spec ↧ℂ :=
-  C.componentNeighborhood.ι ≫ componentSmoothStructureMap X x
-
-/-- The selected affine component neighborhood, bundled over the complex base. -/
-abbrev neighborhoodScheme : Over (Spec ↧ℂ) :=
-  Over.mk C.neighborhoodStructureMap
-
-/-- The selected smooth point regarded as a complex point of its affine neighborhood. -/
-def neighborhoodPoint :
-    ComplexPoint C.neighborhoodScheme :=
-  ComplexPoint.asOpenPoint (componentSmoothScheme X x) C.componentNeighborhood
-    (smoothPoint C) (by
-      change (smoothPoint C).underlying ∈ C.componentNeighborhood
-      have hmap : Point.map (ComplexPoint.openInclusion (Over.mk (cycleComponentι X.left x ≫ X.hom))
-          (componentSmoothLocus X x)) (smoothPoint C) =
-          C.point :=
-        congrArg Subtype.val
-          ((ComplexPoint.openEquiv (Over.mk (cycleComponentι X.left x ≫ X.hom))
-            (componentSmoothLocus X x)).apply_symm_apply
-              ⟨C.point, C.point_mem_smoothLocus⟩)
-      have hu := congrArg Point.underlying hmap
-      rw [Point.underlying_map] at hu
-      have hu' : (smoothPoint C).underlying =
-          (⟨C.point.underlying, C.point_mem_smoothLocus⟩ :
-            (componentSmoothLocus X x).toScheme) := Subtype.ext hu
-      rw [hu']
-      exact C.point_mem_componentNeighborhood)
+  C.componentNeighborhood.ι ≫ (componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom
 
 /-- The retained exact component coordinates, transported to global sections of the affine
 neighborhood itself. -/
@@ -114,11 +81,6 @@ lemma C_comp_coordinateRingHomOnNeighborhood :
   rw [Category.assoc, Iso.inv_hom_id, Category.comp_id]
   simp only [neighborhoodStructureMap, Scheme.Hom.comp_appTop, Category.assoc]
   rw [Scheme.Opens.ι_appTop_topIso_hom]
-  change CommRingCat.ofHom
-      (C.componentCoordinateAlgHom.toRingHom.comp MvPolynomial.C) =
-    CommRingCat.ofHom
-      (algebraMap ℂ Γ((componentSmoothScheme X x).left,
-        C.componentNeighborhood))
   exact congrArg CommRingCat.ofHom C.componentCoordinateAlgHom.comp_algebraMap
 
 /-- The transported exact coordinate map remains étale. -/
@@ -189,7 +151,6 @@ lemma neighborhoodStructureMap_appTop_isStandardSmoothOfRelativeDimension :
     have ha := ConcreteCategory.congr_hom
       (Scheme.ΓSpecIso ↧ℂ).hom_inv_id a
     exact congrArg C.neighborhoodStructureMap.appTop.hom ha
-  rw [add_zero] at h
   exact heq ▸ h
 
 /-- The exact coordinates prove that the selected affine component neighborhood is smooth of the
@@ -223,187 +184,6 @@ noncomputable local instance coordinateRingEtale :
       Γ(C.componentNeighborhood.toScheme, ⊤) :=
   RingHom.etale_algebraMap.mp C.coordinateRingHomOnNeighborhood_etale
 
-/-- The affine neighborhood's canonical map to its spectrum respects the complex structure
-induced by the exact component coordinates. -/
-lemma neighborhoodToSpecΓ_over :
-    C.componentNeighborhood.toScheme.toSpecΓ ≫
-        ComplexPoint.affineSpecStructureMap Γ(C.componentNeighborhood.toScheme, ⊤) =
-      C.neighborhoodStructureMap := by
-  let φ : ↧ℂ ⟶ Γ(C.componentNeighborhood.toScheme, ⊤) :=
-    CommRingCat.ofHom MvPolynomial.C ≫
-      CommRingCat.ofHom C.coordinateRingHomOnNeighborhood
-  change C.componentNeighborhood.toScheme.toSpecΓ ≫ Spec.map φ =
-    C.neighborhoodStructureMap
-  change (ΓSpec.adjunction.homEquiv C.componentNeighborhood.toScheme
-    (Opposite.op ↧ℂ)) φ.op = C.neighborhoodStructureMap
-  exact ext_to_Spec ((ΓSpecIso_inv_ΓSpec_adjunction_homEquiv φ).trans
-    C.C_comp_coordinateRingHomOnNeighborhood)
-
-/-- The canonical affine-spectrum isomorphism, bundled over `Spec ℂ`. -/
-def neighborhoodToSpecΓIso : C.neighborhoodScheme ≅
-    Over.mk (ComplexPoint.affineSpecStructureMap Γ(C.componentNeighborhood.toScheme, ⊤)) := by
-  letI : IsAffine C.componentNeighborhood.toScheme :=
-    C.componentNeighborhood_isAffine
-  letI : IsIso C.componentNeighborhood.toScheme.toSpecΓ :=
-    IsAffine.affine
-  exact Over.isoMk (asIso C.componentNeighborhood.toScheme.toSpecΓ)
-    C.neighborhoodToSpecΓ_over
-
-/-- Complex points of the affine component neighborhood as complex algebra homomorphisms on its
-coordinate ring. -/
-def neighborhoodPointAlgHomHomeomorph :
-    @Homeomorph
-      (ComplexPoint C.neighborhoodScheme)
-      (Γ(C.componentNeighborhood.toScheme, ⊤) →ₐ[ℂ] ℂ)
-      Point.analyticTopology
-      (ComplexPoint.affineAlgebraHomTopology Γ(C.componentNeighborhood.toScheme, ⊤)) :=
-  (Point.isoMapHomeomorph C.neighborhoodToSpecΓIso).trans
-    (ComplexPoint.affineSpecHomeomorph Γ(C.componentNeighborhood.toScheme, ⊤))
-
-/-- The affine algebra-homomorphism coordinate of a neighborhood point evaluates global
-regular sections in the usual way. -/
-lemma neighborhoodPointAlgHomHomeomorph_apply
-    (z : ComplexPoint C.neighborhoodScheme)
-    (r : Γ(C.componentNeighborhood.toScheme, ⊤)) :
-    C.neighborhoodPointAlgHomHomeomorph z r = Point.evaluate ⊤ r z := by
-  rw [neighborhoodPointAlgHomHomeomorph, Homeomorph.trans_apply]
-  change ComplexPoint.affineSpecEquiv Γ(C.componentNeighborhood.toScheme, ⊤)
-      (Point.isoMapHomeomorph C.neighborhoodToSpecΓIso z) r = _
-  rw [ComplexPoint.affineSpecEquiv_apply, Point.isoMapHomeomorph_apply,
-    Point.evaluate_map]
-  change Point.evaluate ⊤
-      (C.componentNeighborhood.toScheme.toSpecΓ.appTop
-        ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)) z = _
-  rw [Scheme.toSpecΓ_appTop]
-  change Point.evaluate ⊤
-      ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).hom
-        ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)) z = _
-  have h := DFunLike.congr_fun (congrArg CommRingCat.Hom.hom
-    (Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv_hom_id) r
-  exact congrArg (fun s ↦ Point.evaluate ⊤ s z) h
-
-/-- The actual local analytic chart supplied by the exact étale component coordinates. -/
-def neighborhoodProjectionChart :
-    OpenPartialHomeomorph
-      (ComplexPoint C.neighborhoodScheme)
-      (Fin n → ℂ) :=
-  C.neighborhoodPointAlgHomHomeomorph.toOpenPartialHomeomorph |>.trans
-    (ComplexAlgHom.etaleAlgHomProjectionChart
-      Γ(C.componentNeighborhood.toScheme, ⊤)
-      (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint))
-
-/-- The selected smooth point belongs to the source of the exact analytic component chart. -/
-lemma neighborhoodPoint_mem_projectionChart_source :
-    C.neighborhoodPoint ∈ C.neighborhoodProjectionChart.source := by
-  rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source]
-  exact ⟨by simp, ComplexAlgHom.mem_etaleAlgHomProjectionChart_source
-    Γ(C.componentNeighborhood.toScheme, ⊤)
-      (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)⟩
-
-/-- On its source, the component chart is exactly restriction of a complex point along the
-retained polynomial coordinate map, followed by evaluation on the coordinate variables. -/
-lemma neighborhoodProjectionChart_apply_of_mem
-    (z : ComplexPoint C.neighborhoodScheme)
-    (hz : z ∈ C.neighborhoodProjectionChart.source) :
-    C.neighborhoodProjectionChart z =
-      ComplexAlgHom.mvPolynomialAlgHomHomeomorph n
-        (ComplexAlgHom.etaleBaseAlgHom Γ(C.componentNeighborhood.toScheme, ⊤)
-          (C.neighborhoodPointAlgHomHomeomorph z)) := by
-  rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source] at hz
-  rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_apply]
-  exact ComplexAlgHom.etaleAlgHomProjectionChart_apply_of_mem (n := n)
-    Γ(C.componentNeighborhood.toScheme, ⊤)
-      (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)
-      (C.neighborhoodPointAlgHomHomeomorph z) hz.2
-
-/-- Evaluation of a global section of the affine component neighborhood is analytic along the
-inverse of its exact projection chart. -/
-lemma analyticAt_neighborhoodProjectionChart_symm_evaluate_top
-    {w : Fin n → ℂ} (hw : w ∈ C.neighborhoodProjectionChart.target)
-    (r : Γ(C.componentNeighborhood.toScheme, ⊤)) :
-    AnalyticAt ℂ (fun v ↦ Point.evaluate ⊤ r
-      (C.neighborhoodProjectionChart.symm v)) w := by
-  let u := C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint
-  have hw' : w ∈ (ComplexAlgHom.etaleAlgHomProjectionChart
-      Γ(C.componentNeighborhood.toScheme, ⊤) u).target := by
-    rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_target] at hw
-    exact hw.1
-  have h := ComplexAlgHom.analyticAt_etaleAlgHomProjectionChart_symm_apply
-    Γ(C.componentNeighborhood.toScheme, ⊤) u hw' r
-  have h' : AnalyticAt ℂ (fun v ↦ C.neighborhoodPointAlgHomHomeomorph
-      (C.neighborhoodProjectionChart.symm v) r) w := by
-    apply h.congr
-    filter_upwards with v
-    simp only [neighborhoodProjectionChart, OpenPartialHomeomorph.coe_trans_symm,
-      Function.comp_apply, Homeomorph.toOpenPartialHomeomorph_symm_apply]
-    rw [Homeomorph.apply_symm_apply]
-  simpa only [C.neighborhoodPointAlgHomHomeomorph_apply] using h'
-
-/-- Evaluation of an arbitrary regular section defined near the inverse-chart point is analytic
-there.  The proof shrinks inside the affine neighborhood to a principal open and represents the
-section by a quotient of global sections. -/
-lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
-    {w : Fin n → ℂ} (hw : w ∈ C.neighborhoodProjectionChart.target)
-    (W : C.componentNeighborhood.toScheme.Opens) (s : Γ(C.componentNeighborhood.toScheme, W))
-    (hW : C.neighborhoodProjectionChart.symm w ∈ Point.overOpen W) :
-    AnalyticAt ℂ (fun v ↦ Point.evaluate W s
-      (C.neighborhoodProjectionChart.symm v)) w := by
-  let Y := C.neighborhoodScheme
-  let : IsAffine Y.left := C.componentNeighborhood_isAffine
-  let y : ComplexPoint Y := C.neighborhoodProjectionChart.symm w
-  obtain ⟨g, hgW, hyg⟩ :=
-    (isAffineOpen_top Y.left).exists_basicOpen_le
-      (V := W) ⟨y.underlying, hW⟩ trivial
-  let t : Γ(Y.left, Y.left.basicOpen g) := Y.left.presheaf.map (homOfLE hgW).op s
-  obtain ⟨k, a, hquot⟩ :=
-    ComplexPoint.exists_evaluate_affine_basicOpen_eq_div (X := Y) g t
-  have hyg' : y ∈ Point.overOpen (Y.left.basicOpen g) := hyg
-  have hgzero : Point.evaluate ⊤ g y ≠ 0 :=
-    (Point.mem_overOpen_basicOpen_iff_evaluate_ne_zero g y trivial).mp hyg'
-  have ha := C.analyticAt_neighborhoodProjectionChart_symm_evaluate_top hw a
-  have hg := C.analyticAt_neighborhoodProjectionChart_symm_evaluate_top hw g
-  have hrat : AnalyticAt ℂ
-      (fun v ↦ Point.evaluate ⊤ a (C.neighborhoodProjectionChart.symm v) /
-        Point.evaluate ⊤ g (C.neighborhoodProjectionChart.symm v) ^ k) w :=
-    ha.div (hg.pow k) (pow_ne_zero k hgzero)
-  apply hrat.congr
-  have hcontinuous : ContinuousAt C.neighborhoodProjectionChart.symm w :=
-    C.neighborhoodProjectionChart.continuousAt_symm hw
-  have heventually : C.neighborhoodProjectionChart.symm ⁻¹'
-      Point.overOpen (Y.left.basicOpen g) ∈ 𝓝 w :=
-    hcontinuous ((Point.isOpen_overOpen (Y.left.basicOpen g)).mem_nhds hyg')
-  filter_upwards [heventually] with v hv
-  let yv : ComplexPoint Y :=
-    C.neighborhoodProjectionChart.symm v
-  have hres := Point.evaluate_res hgW s yv hv
-  exact (hres.trans (hquot yv hv)).symm
-
-/-- The relative-homology map induced by the actual analytic chart coming from the exact
-component coordinates. -/
-def neighborhoodLocalHomologyMap :
-    AlgebraicTopology.Singular.RelativeHomology ℚ
-        (AlgebraicTopology.Singular.standardComplexPuncturedPair n) (2 * n) →ₗ[ℚ]
-      AlgebraicTopology.Singular.RelativeHomology ℚ
-        (AlgebraicTopology.Singular.pointComplementPair C.neighborhoodPoint) (2 * n) :=
-  AlgebraicTopology.Singular.relativeHomologyMap ℚ (2 * n)
-    (AlgebraicTopology.Singular.chartModelEmbeddingPair n
-      C.neighborhoodProjectionChart C.neighborhoodPoint
-        C.neighborhoodPoint_mem_projectionChart_source)
-
-/-- The standard complex local class transported through the exact analytic component chart. -/
-def neighborhoodLocalClass :
-    AlgebraicTopology.Singular.RelativeHomology ℚ
-      (AlgebraicTopology.Singular.pointComplementPair C.neighborhoodPoint) (2 * n) :=
-  C.neighborhoodLocalHomologyMap
-    (AlgebraicTopology.Singular.standardComplexLocalClass n)
-
-/-- The transported class is the chart-local class defined by the general chart construction. -/
-lemma neighborhoodLocalClass_eq_localClassOfChart :
-    C.neighborhoodLocalClass =
-      AlgebraicTopology.Singular.localClassOfChart n C.neighborhoodProjectionChart
-        C.neighborhoodPoint C.neighborhoodPoint_mem_projectionChart_source :=
-  rfl
-
 end CycleComponentSeparateLocalCoordinates
 end AlgebraicGeometry
 
@@ -425,44 +205,9 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}
   [SmoothOfRelativeDimension d X.hom]
   (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-/-- The transported local class generates exactly the image of the chart-induced local-homology
-map. This is the algebraic intermediate identity used by the full generator theorem below. -/
-lemma span_neighborhoodLocalClass_eq_range :
-    Submodule.span ℚ {C.neighborhoodLocalClass} =
-      LinearMap.range C.neighborhoodLocalHomologyMap := by
-  calc
-    Submodule.span ℚ {C.neighborhoodLocalClass} =
-        (Submodule.span ℚ
-          {AlgebraicTopology.Singular.standardComplexLocalClass n}).map
-            C.neighborhoodLocalHomologyMap := by
-      rw [Submodule.map_span]
-      simp only [Set.image_singleton, neighborhoodLocalClass]
-    _ = (⊤ : Submodule ℚ _).map C.neighborhoodLocalHomologyMap := by
-      rw [AlgebraicTopology.Singular.span_standardComplexLocalClass_eq_top]
-    _ = LinearMap.range C.neighborhoodLocalHomologyMap :=
-      Submodule.map_top C.neighborhoodLocalHomologyMap
-
-/-- The transported class generates the full local homology of the affine component
-neighborhood.  The missing surjectivity in `span_neighborhoodLocalClass_eq_range` is supplied by
-open-neighborhood excision for the target of the compressed chart. -/
-lemma span_neighborhoodLocalClass_eq_top :
-    Submodule.span ℚ {C.neighborhoodLocalClass} = ⊤ := by
-  let : IsAffine C.neighborhoodScheme.left :=
-    C.componentNeighborhood_isAffine
-  let : T2Space
-      (ComplexPoint C.neighborhoodScheme) :=
-    ComplexPoint.t2Space_of_isAffine C.neighborhoodScheme
-  rw [C.neighborhoodLocalClass_eq_localClassOfChart]
-  exact AlgebraicTopology.Singular.span_localClassOfChart_eq_top
-    n C.neighborhoodProjectionChart C.neighborhoodPoint
-      C.neighborhoodPoint_mem_projectionChart_source
 
 end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

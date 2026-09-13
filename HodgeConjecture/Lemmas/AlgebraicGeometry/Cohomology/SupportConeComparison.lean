@@ -96,8 +96,6 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestriction
     rationalToSingularCochainComplexInt X ≫
         naturalSingularResolutionRestriction X Z hZ =
       rationalRestrictionComplexInt X Z := by
-  unfold rationalToSingularCochainComplexInt constantsToSingularCochainComplexInt
-    naturalSingularResolutionRestriction rationalRestrictionComplexInt
   calc
     _ = HomologicalComplex.extendMap
         (constantsToSingularCochainSheafComplex ℚ

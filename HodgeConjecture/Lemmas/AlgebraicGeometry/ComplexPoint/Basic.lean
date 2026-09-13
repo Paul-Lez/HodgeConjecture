@@ -27,6 +27,67 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.Basic`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public section
+
+open CategoryTheory Topology
+open scoped CommRingCat.HomTopology
+
+namespace AlgebraicGeometry
+
+variable (R : Type) [CommRing R]
+
+/-- A projective complex scheme is Noetherian. -/
+theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
+    [IsProjective X.hom] : IsNoetherian X.left where
+  toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian X.hom
+  toCompactSpace := QuasiCompact.compactSpace_of_compactSpace X.hom
+
+namespace Point
+
+variable {R}
+
+section Functoriality
+
+variable {X Y Z : Over (Spec ↧R)}
+
+end Functoriality
+
+section IsLocalRing
+
+variable [IsLocalRing R] {X : Over (Spec ↧R)}
+
+section Topology
+
+variable [TopologicalSpace R]
+
+variable [ContinuousMul R] [IsOpenUnits R]
+
+end Topology
+
+end IsLocalRing
+
+section Field
+
+variable {K : Type} [Field K] {X : Over (Spec ↧K)}
+
+/-- Over a field, a `K`-point is a scheme point together with an embedding of its residue field.
+
+This refines `stalkData`: the stalk homomorphism out of a local ring into a field factors through
+the residue field. -/
+noncomputable def residueData (z : Point K X) :
+    Σ x : X.left, X.left.residueField x ⟶ ↧K :=
+  Scheme.SpecToEquivOfField K X.left z.left
+
+end Field
+
+end Point
+
+end AlgebraicGeometry
+
+end
+
 @[expose] public section
 
 open CategoryTheory Topology
@@ -69,19 +130,6 @@ section Field
 
 variable {K : Type} [Field K] {X : Over (Spec ↧K)}
 
-lemma residueData_fst (z : Point K X) : z.residueData.1 = z.underlying := rfl
-
-lemma residue_comp_residueData_snd (z : Point K X) :
-    X.left.residue z.underlying ≫ z.residueData.2 = z.stalkHom :=
-  Scheme.residue_descResidueField (X := X.left) z.stalkHom
-
-/-- Over a field, evaluation is evaluation in the residue field. -/
-lemma evaluate_eq_residueData (U : X.left.Opens) (s : Γ(X.left, U)) (z : Point K X)
-    (hz : z ∈ overOpen U) :
-    evaluate U s z = z.residueData.2 (X.left.evaluation U z.underlying hz s) := by
-  rw [evaluate, dif_pos (show z.underlying ∈ U from hz), ← residue_comp_residueData_snd z]
-  rfl
-
 /-- Over a field, a `K`-point belongs to a principal open exactly when its defining function is
 nonzero there. -/
 lemma mem_overOpen_basicOpen_iff_evaluate_ne_zero {U : X.left.Opens} (s : Γ(X.left, U))
@@ -99,23 +147,6 @@ lemma exists_evaluate_basicOpen_eq_div {U : X.left.Opens} (hU : IsAffineOpen U) 
   obtain ⟨k, a, h⟩ :=
     exists_evaluate_basicOpen_eq_inverse_mul (X := X) hU f t
   exact ⟨k, a, fun z hz ↦ by rw [h z hz, Ring.inverse_eq_inv', div_eq_inv_mul]⟩
-
-/-- The residue-field description of the image of a `K`-point. Both the underlying point and
-its residue-field embedding are obtained functorially. -/
-lemma residueData_map {Y : Over (Spec ↧K)} (f : X ⟶ Y) (z : Point K X) :
-    (map f z).residueData =
-      ⟨f.left z.residueData.1, f.left.residueFieldMap z.residueData.1 ≫ z.residueData.2⟩ := by
-  apply Sigma.ext
-  · simp [map, residueData, Scheme.SpecToEquivOfField]
-    rfl
-  · dsimp [map, residueData, Scheme.SpecToEquivOfField]
-    rw [Scheme.descResidueField_stalkClosedPointTo_comp]
-
-lemma residueData_map_snd {Y : Over (Spec ↧K)} (f : X ⟶ Y) (z : Point K X) :
-    (map f z).residueData.2 =
-      f.left.residueFieldMap z.residueData.1 ≫ z.residueData.2 := by
-  dsimp [map, residueData, Scheme.SpecToEquivOfField]
-  rw [Scheme.descResidueField_stalkClosedPointTo_comp]
 
 end Field
 

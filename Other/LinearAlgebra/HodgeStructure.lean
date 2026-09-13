@@ -38,7 +38,7 @@ fixes every rational vector. This file defines the structure, its Hodge filtrati
 
 The statement of the Hodge conjecture does not use this file. Equipping the cohomology of a
 smooth projective variety with a pure Hodge structure is the Hodge decomposition theorem, which
-this repository does not prove. `Other.AlgebraicGeometry.HodgeDecomposition` takes that theorem
+this repository does not prove. `Other.AlgebraicGeometry.Hodge.Decomposition` takes that theorem
 as a hypothesis and shows that the Hodge classes of the statement are then the rational
 `(p,p)`-classes of the resulting Hodge structure.
 -/

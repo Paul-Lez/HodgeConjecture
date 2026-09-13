@@ -23,7 +23,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
 
 local instance singularCochainOpenConeDerivedCategory : HasDerivedCategory AddCommGrpCat :=
   HasDerivedCategory.standard AddCommGrpCat
@@ -105,10 +105,7 @@ private lemma openRawSingularRestriction_transport {V W : Opens X} (i : W ⟶ V)
       (openRawSingularCochainComplexIsoDual R X V).hom ≫
         ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℕ)).map
           (HomologicalComplex.linearDualMap
-            ((chainPairFunctor R).obj (openInclusionPair X i)).hom) := by
-  apply HomologicalComplex.Hom.ext
-  funext n
-  rfl
+            ((chainPairFunctor R).obj (openInclusionPair X i)).hom) := rfl
 
 /-- The actual raw cochains on an ambient open, in the integer-indexed
 presentation used by relative cohomology. -/
@@ -190,9 +187,9 @@ def openSingularSheafRestrictionConeCohomologyEquivRelative {V W : Opens X}
     (i : W ⟶ V) [ParacompactSpace V] [T2Space V]
     [ParacompactSpace W] [T2Space W] (n : ℕ) :
     (openSingularSheafRestrictionCone ℚ X i).homology ((n : ℤ) - 1) ≃+
-      RelativeCohomology ℚ (openInclusionPair X i) n := by
-  let := openRawToSingularSheafRestrictionCone_quasiIso X i
-  exact (asIso (HomologicalComplex.homologyMap
+      RelativeCohomology ℚ (openInclusionPair X i) n :=
+  letI := openRawToSingularSheafRestrictionCone_quasiIso X i
+  (asIso (HomologicalComplex.homologyMap
     (openRawToSingularSheafRestrictionCone ℚ X i) ((n : ℤ) - 1))).symm.addCommGroupIsoToAddEquiv
     |>.trans (openRawSingularRestrictionConeCohomologyEquivRelative ℚ X i n)
 

@@ -47,7 +47,6 @@ lemma residueFieldMap_surjective [IsClosedImmersion i] (x : A) :
   obtain ⟨s, hs⟩ := i.stalkMap_surjective x r
   refine ⟨B.residue (i x) s, ?_⟩
   change (B.residue (i x) ≫ i.residueFieldMap x) s = _
-  rw [Scheme.residue_residueFieldMap]
   exact congrArg (A.residue x) hs
 
 /-- The residue-field isomorphism induced by a closed immersion. -/

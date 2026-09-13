@@ -54,12 +54,6 @@ namespace Sq
 
 end Sq
 
-lemma deRhamHom_apply (x : ExtAlg R A) :
-    deRhamHom R A x = Sq.mk x (extDeriv R A x) := by
-  ext
-  · simp
-  · rfl
-
 /-- The exterior derivative anticommutes with the grade involution, since it raises the degree
 by one. -/
 lemma extDeriv_involute (x : ExtAlg R A) :
@@ -148,7 +142,6 @@ variable {B C : Type u} [CommRing B] [CommRing C] [Algebra R B] [Algebra R C]
 lemma map_differential (f : A →ₐ[R] B) (p : ℕ) (x : Form R A p) :
     map R f (p + 1) (differential R A p x) = differential R B p (map R f p x) := by
   let _ := f.toAlgebra
-  have : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
   exact Subtype.ext (extAlgMap_extDeriv R A B x)
 
 end AlgHomMap

@@ -1,0 +1,133 @@
+/-
+Copyright 2026 The Formal Conjectures Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-/
+module
+
+public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.RelativeCochainCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainCone
+
+/-!
+# RelativeCochainCone, the part the statement does not need
+
+Separated out of
+`HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainCone`:
+nothing in the statement's dependency chain uses these results, only material in
+`Other` does.
+-/
+
+@[expose] public noncomputable section
+open CategoryTheory Limits
+open CategoryTheory.Pretriangulated
+universe u
+namespace AlgebraicTopology.Singular
+variable (R : Type u) [CommRing R]
+
+/-- A degreewise splitting of the dual cochain sequence: the dual of the splitting of the chain
+sequence in nonnegative degrees, and zero in negative degrees. -/
+noncomputable def relativeDualCochainDegreewiseSplitting (X : TopPair.{u}) (z : ℤ) :
+    ((relativeDualCochainShortComplexInt R X).map
+      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z)).Splitting := by
+  by_cases hz : 0 ≤ z
+  · have hn : ((z.toNat : ℕ) : ℤ) = z := Int.toNat_of_nonneg hz
+    refine ShortComplex.Splitting.ofIso
+      (relativeDualCochainShortComplexNatDegreewiseSplitting R X z.toNat) ?_
+    simpa only [hn] using (relativeDualCochainShortComplexIntEvalIso R X z.toNat).symm
+  · have hi : ∀ n : ℕ, ComplexShape.embeddingUpNat.f n ≠ z := by
+      intro n hn
+      exact hz (hn ▸ Int.natCast_nonneg n)
+    exact
+      { r := 0
+        s := 0
+        f_r := ((relativeDualCochainShortComplexNat R X).X₁.isZero_extend_X
+          ComplexShape.embeddingUpNat z hi).eq_of_src _ _
+        s_g := ((relativeDualCochainShortComplexNat R X).X₃.isZero_extend_X
+          ComplexShape.embeddingUpNat z hi).eq_of_tgt _ _
+        id := ((relativeDualCochainShortComplexNat R X).X₂.isZero_extend_X
+          ComplexShape.embeddingUpNat z hi).eq_of_src _ _ }
+
+/-- The triangle attached to the degreewise split dual cochain sequence is distinguished. -/
+lemma relativeDualCochainTriangle_distinguished (X : TopPair.{u}) :
+    CochainComplex.trianglehOfDegreewiseSplit
+        (relativeDualCochainShortComplexInt R X)
+        (relativeDualCochainDegreewiseSplitting R X) ∈ distinguishedTriangles :=
+  (HomotopyCategory.distinguished_iff_iso_trianglehOfDegreewiseSplit _).mpr
+    ⟨relativeDualCochainShortComplexInt R X,
+      relativeDualCochainDegreewiseSplitting R X, ⟨Iso.refl _⟩⟩
+
+/-- The rotated triangle of the dual short exact sequence agrees with the mapping-cone
+triangle of singular-cochain restriction. -/
+def relativeCochainConeTriangleIso (X : TopPair.{u}) :
+    (CochainComplex.trianglehOfDegreewiseSplit
+      (relativeDualCochainShortComplexInt R X)
+      (relativeDualCochainDegreewiseSplitting R X)).rotate ≅
+    CochainComplex.mappingCone.triangleh (relativeCochainRestrictionInt R X) :=
+  isoTriangleOfIso₁₂
+    (CochainComplex.trianglehOfDegreewiseSplit
+      (relativeDualCochainShortComplexInt R X)
+      (relativeDualCochainDegreewiseSplitting R X)).rotate
+    (CochainComplex.mappingCone.triangleh (relativeCochainRestrictionInt R X))
+    ((rotate_distinguished_triangle _).mp
+      (relativeDualCochainTriangle_distinguished R X))
+    (HomotopyCategory.mappingCone_triangleh_distinguished
+      (relativeCochainRestrictionInt R X))
+    (Iso.refl _) (Iso.refl _) (by
+      change (HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)).map
+          (relativeDualCochainShortComplexInt R X).g =
+        (HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)).map
+          (relativeCochainRestrictionInt R X)
+      rw [relativeDualCochainShortComplexInt_g]
+      rfl)
+
+/-- The homotopy-category isomorphism from the shifted dual relative cochain complex to the
+mapping cone of restriction. -/
+def relativeDualShiftIsoCochainCone (X : TopPair.{u}) :
+    (shiftFunctor (HomotopyCategory (ModuleCat.{u} R) (ComplexShape.up ℤ)) (1 : ℤ)).obj
+        ((HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)).obj
+          (relativeDualCochainShortComplexInt R X).X₁) ≅
+      (HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)).obj
+        (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)) :=
+  Pretriangulated.Triangle.π₃.mapIso (relativeCochainConeTriangleIso R X)
+
+/-- Cohomology of the cochain restriction cone in degree `n - 1` is the cohomology in degree
+`n` of the integer-indexed dual relative cochain complex. -/
+def relativeCochainConeHomologyIsoDualRelativeInt (X : TopPair.{u}) (n : ℕ) :
+    (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)).homology
+        ((n : ℤ) - 1) ≅
+      (relativeDualCochainShortComplexInt R X).X₁.homology (n : ℤ) :=
+  let Q := HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)
+  let H (z : ℤ) := HomotopyCategory.homologyFunctor
+    (ModuleCat.{u} R) (ComplexShape.up ℤ) z
+  let C := CochainComplex.mappingCone (relativeCochainRestrictionInt R X)
+  let D := (relativeDualCochainShortComplexInt R X).X₁
+  have hn : (1 : ℤ) + ((n : ℤ) - 1) = (n : ℤ) := by lia
+  (HomotopyCategory.homologyFunctorFactors
+    (ModuleCat.{u} R) (ComplexShape.up ℤ) ((n : ℤ) - 1)).symm.app C ≪≫
+  (H ((n : ℤ) - 1)).mapIso (relativeDualShiftIsoCochainCone R X).symm ≪≫
+  (((H 0).shiftIso (1 : ℤ) ((n : ℤ) - 1) (n : ℤ) hn).app (Q.obj D)) ≪≫
+  (HomotopyCategory.homologyFunctorFactors
+    (ModuleCat.{u} R) (ComplexShape.up ℤ) (n : ℤ)).app D
+
+/-- Relative singular cohomology is the degree-`n - 1` cohomology of the mapping cone of
+restriction from ambient singular cochains to subspace singular cochains. -/
+def relativeCochainConeCohomologyEquiv (X : TopPair.{u}) (n : ℕ) :
+    (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)).homology
+        ((n : ℤ) - 1) ≃ₗ[R]
+      RelativeCohomology R X n :=
+  (relativeCochainConeHomologyIsoDualRelativeInt R X n).toLinearEquiv.trans
+    (((relativeChainFunctor R).obj X).linearDualCochainComplex.extendHomologyIso
+      ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).toLinearEquiv
+
+end AlgebraicTopology.Singular
+end

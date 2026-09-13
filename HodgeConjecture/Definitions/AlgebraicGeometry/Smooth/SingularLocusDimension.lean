@@ -11,6 +11,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # The singular locus has smaller algebraic dimension
@@ -35,29 +36,7 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
 /-- The closed complement of the actual smooth locus. -/
 def singularLocusClosed : Closeds X := f.smoothLocus.compl
 
-/-- The singular locus equipped with its reduced closed-subscheme structure. -/
-def reducedSingularLocus : Scheme := reducedClosedSubscheme (singularLocusClosed f)
-
-/-- Its canonical closed immersion in the original scheme. -/
-def reducedSingularLocusι : reducedSingularLocus f ⟶ X :=
-  reducedClosedSubschemeι (singularLocusClosed f)
-
-instance reducedSingularLocus_isReduced : IsReduced (reducedSingularLocus f) :=
-  inferInstanceAs (IsReduced (reducedClosedSubscheme (singularLocusClosed f)))
-
-instance reducedSingularLocusι_isClosedImmersion :
-    IsClosedImmersion (reducedSingularLocusι f) :=
-  inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f)))
-
-variable (Y : Over (Spec (.of ℂ)))
+variable (Y : Over (Spec ↧ℂ))
   [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
-
-/-- The singular locus of every cycle component admits the actual finite smooth
-decomposition constructed by Noetherian recursion. -/
-def cycleComponentSingularStratification (x : Y.left) :
-    List (Closeds (cycleComponent Y.left x)) := by
-  letI := cycleComponent_isNoetherian Y x
-  exact reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
-    (singularLocusClosed (cycleComponentι Y.left x ≫ Y.hom))
 
 end AlgebraicGeometry

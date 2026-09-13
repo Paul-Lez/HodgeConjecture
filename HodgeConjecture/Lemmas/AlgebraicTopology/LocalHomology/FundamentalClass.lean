@@ -24,6 +24,8 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.FundamentalClass`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
 @[expose] public noncomputable section
 
 open CategoryTheory Limits
@@ -33,36 +35,25 @@ namespace AlgebraicTopology.Singular
 
 attribute [fun_prop] stdSimplex.continuous_map
 
-lemma standardAffineSimplex_eq_zero_iff (d : ℕ)
-    (t : stdSimplex ℝ (Fin (d + 1))) :
-    standardAffineSimplex d t = 0 ↔ t = stdSimplex.barycenter := by
-  constructor
-  · intro h
-    have hcoord (j : Fin d) : t (Fin.castSucc j) = t (Fin.last d) := by
-      have hj := congr_fun h j
-      simpa [standardAffineSimplex] using sub_eq_zero.mp hj
-    have hall (j : Fin (d + 1)) : t j = t (Fin.last d) := by
-      rcases Fin.eq_castSucc_or_eq_last j with ⟨k, rfl⟩ | rfl
-      · exact hcoord k
-      · rfl
-    have hsum : ∑ _ : Fin (d + 1), t (Fin.last d) = 1 := by
-      rw [← t.2.2]
-      exact Finset.sum_congr rfl fun j _ => (hall j).symm
-    have hcard : (Fintype.card (Fin (d + 1)) : ℝ) ≠ 0 := by
-      simp only [Fintype.card_fin]
-      positivity
-    have hlast : t (Fin.last d) = (Fintype.card (Fin (d + 1)) : ℝ)⁻¹ := by
-      rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at hsum
-      exact ((mul_eq_one_iff_inv_eq₀ hcard).mp hsum).symm
-    apply stdSimplex.ext
-    funext j
-    rw [hall j, hlast]
-    exact stdSimplex.barycenter_apply j |>.symm
-  · rintro rfl
-    ext j
-    change (stdSimplex.barycenter : stdSimplex ℝ (Fin (d + 1)))
-      (Fin.castSucc j) - stdSimplex.barycenter (Fin.last d) = 0
-    exact sub_self _
+/-- The alternating sum of the faces of the standard affine `(n + 1)`-simplex, regarded as a
+chain in punctured Euclidean space. -/
+def standardSubspaceBoundaryChain (n : ℕ) :
+    ModuleCat.of ℚ ℚ ⟶
+      ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).left.X n :=
+  ∑ i : Fin (n + 2), (-1) ^ i.val • standardSubspaceFaceChain n i
+
+end AlgebraicTopology.Singular
+
+end
+
+@[expose] public noncomputable section
+
+open CategoryTheory Limits
+open scoped Simplicial
+
+namespace AlgebraicTopology.Singular
+
+attribute [fun_prop] stdSimplex.continuous_map
 
 lemma standardLocalCycle_inclusion (d : ℕ) :
     standardLocalCycle d ≫ (standardLocalRelativeChainComplex d).iCycles d =

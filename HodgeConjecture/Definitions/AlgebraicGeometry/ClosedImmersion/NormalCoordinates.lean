@@ -23,7 +23,7 @@ open CategoryTheory Topology Filter
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
@@ -219,8 +219,6 @@ def closedImmersionStandardFlatteningChart :
 
 @[simp] theorem closedImmersionStandardFlatteningChart_center :
     closedImmersionStandardFlatteningChart X Y i m d z
-      (Point.map i z) = (localChart Y m z z, 0) := by
-  simp only [closedImmersionStandardFlatteningChart_apply, closedImmersionFlatteningChart_center,
-    map_zero]
+      (Point.map i z) = (localChart Y m z z, 0) := by simp
 
 end AlgebraicGeometry.ComplexPoint

@@ -33,9 +33,10 @@ def injectiveToDerived :
     HomotopyCategory.Plus (InjectiveObject C) ⥤ DerivedCategory.Plus C :=
   (InjectiveObject.ι C).mapHomotopyCategoryPlus ⋙ DerivedCategory.Plus.Qh
 
-instance : (injectiveToDerived C).CommShift ℤ := by
-  dsimp only [injectiveToDerived]
-  infer_instance
+instance : (injectiveToDerived C).CommShift ℤ :=
+  inferInstanceAs
+    (((InjectiveObject.ι C).mapHomotopyCategoryPlus ⋙
+      DerivedCategory.Plus.Qh).CommShift ℤ)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -100,9 +101,10 @@ def rightDerivedFunctorPlusOnInjectives :
   (InjectiveObject.ι C).mapHomotopyCategoryPlus ⋙
     F.mapHomotopyCategoryPlus ⋙ DerivedCategory.Plus.Qh
 
-instance : F.rightDerivedFunctorPlusOnInjectives.CommShift ℤ := by
-  dsimp only [rightDerivedFunctorPlusOnInjectives]
-  infer_instance
+instance : F.rightDerivedFunctorPlusOnInjectives.CommShift ℤ :=
+  inferInstanceAs
+    (((InjectiveObject.ι C).mapHomotopyCategoryPlus ⋙
+      F.mapHomotopyCategoryPlus ⋙ DerivedCategory.Plus.Qh).CommShift ℤ)
 
 /-- The right-derived unit restricted to injective complexes. -/
 def rightDerivedFunctorPlusOnInjectivesUnit :

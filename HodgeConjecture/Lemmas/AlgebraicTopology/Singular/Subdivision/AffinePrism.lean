@@ -51,7 +51,7 @@ abbrev IntegralSingularHomology (k : ℕ) (X : Type) [TopologicalSpace X] : Type
 /-- Integral singular homology is invariant under a homotopy equivalence. -/
 noncomputable def integralSingularHomologyEquivOfHomotopyEquiv
     {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y] (k : ℕ) (e : X ≃ₕ Y) :
-    IntegralSingularHomology k X ≃+ IntegralSingularHomology k Y := by
+    IntegralSingularHomology k X ≃+ IntegralSingularHomology k Y :=
   let F := (singularHomologyFunctor AddCommGrpCat k).obj (AddCommGrpCat.of ℤ)
   let f : TopCat.of X ⟶ TopCat.of Y := TopCat.ofHom e.toFun
   let g : TopCat.of Y ⟶ TopCat.of X := TopCat.ofHom e.invFun
@@ -63,7 +63,7 @@ noncomputable def integralSingularHomologyEquivOfHomotopyEquiv
       rw [← F.map_comp, ← F.map_id]
       exact TopCat.Homotopy.congr_homologyMap_singularChainComplexFunctor
         e.right_inv.some (AddCommGrpCat.of ℤ) k)
-  exact i.addCommGroupIsoToAddEquiv
+  i.addCommGroupIsoToAddEquiv
 
 /-- A real topological standard simplex is contractible because it is nonempty and convex. -/
 public theorem standardTopologicalSimplex_contractibleSpace (m : ℕ) :

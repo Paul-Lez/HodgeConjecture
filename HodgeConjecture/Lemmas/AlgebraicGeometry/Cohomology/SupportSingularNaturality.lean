@@ -35,7 +35,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] {U X : TopCat.{u}} (j : U ⟶ X)
+variable (R : Type u) [CommRing R] {U X : TopCat.{u}} (j : U ⟶ X)
 
 lemma contractibleOpenBasis_of_isOpenEmbedding
     (hj : Topology.IsOpenEmbedding j)
@@ -70,7 +70,6 @@ lemma locallyPathConnectedSpace_of_contractibleOpenBasis
   obtain ⟨V, hVS, hVopen, hxV⟩ := mem_nhds_iff.mp hS
   let Vo : Opens X := ⟨V, hVopen⟩
   obtain ⟨W, hxW, hWcontractible, hWVo⟩ := hX x Vo hxV
-  let : ContractibleSpace W := hWcontractible
   refine ⟨(W : Set X), W.2.mem_nhds hxW, ?_, ?_⟩
   · rw [isPathConnected_iff_pathConnectedSpace]
     infer_instance
@@ -175,13 +174,6 @@ lemma singularRestrictionToRawPushforward_coboundary (n : ℕ) :
   change OpenCochains R X V n at φ
   apply LinearMap.ext
   intro c
-  change φ
-      (((((openSingularChainComplexFunctor R X).obj V.unop).d (n + 1) n).hom)
-        (((preimageOpenChainMap R j V.unop).f (n + 1)).hom c)) =
-    φ
-      ((((preimageOpenChainMap R j V.unop).f n).hom)
-        ((((openSingularChainComplexFunctor R U).obj
-          ((Opens.map j).obj V.unop)).d (n + 1) n).hom c))
   exact congrArg φ (ConcreteCategory.congr_hom
     ((preimageOpenChainMap R j V.unop).comm (n + 1) n) c)
 
@@ -191,7 +183,6 @@ lemma singularRestrictionPresheaf_coboundary (n : ℕ) :
       singularRestrictionPresheaf R j n ≫
         ((TopCat.Sheaf.pushforward AddCommGrpCat j).map
           (singularCochainSheafCoboundary R U n)).hom := by
-  unfold singularRestrictionPresheaf
   change singularCochainCoboundary R X n ≫
         singularRestrictionToRawPushforward R j (n + 1) ≫
           Functor.whiskerLeft (Opens.map j).op
@@ -379,18 +370,18 @@ def complementSingularToInjectiveResolutionInt
     (complementSingularCochainSheafComplex X Z).extend
         ComplexShape.embeddingUpNat ⟶
       (complementConstantRationalInjectiveResolution X Z).cocomplex.extend
-        ComplexShape.embeddingUpNat := by
+        ComplexShape.embeddingUpNat :=
   let a := complementConstantsToSingularCochainInt X Z
   let r := complementResolutionMapInt X Z
   let I := (complementConstantRationalInjectiveResolution X Z).cocomplex.extend
     ComplexShape.embeddingUpNat
-  let : Mono a := complementConstantsToSingularCochainInt_mono X Z
-  let : QuasiIso a :=
+  letI : Mono a := complementConstantsToSingularCochainInt_mono X Z
+  letI : QuasiIso a :=
     complementConstantsToSingularCochainInt_quasiIso X Z hZ
   have hI : ∀ n : ℤ, Injective (I.X n) := fun n ↦ by
     dsimp [I]
     infer_instance
-  exact CochainComplex.liftToInjective a r hI
+  CochainComplex.liftToInjective a r hI
 
 set_option linter.style.haveILetI false in
 lemma complementConstants_comp_singularToInjectiveResolutionInt

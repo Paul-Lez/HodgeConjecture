@@ -24,7 +24,6 @@ public import Mathlib.Topology.Connected.LocallyPathConnected
 public import Mathlib.Topology.Homotopy.Contractible
 public import Mathlib.Topology.Sheaves.Abelian
 
-import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Contractible
 import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
 import Mathlib.Topology.Homotopy.TopCat.ZerothHomotopy
@@ -53,7 +52,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The singular chain complex, functorially restricted to the open subsets of `X`. -/
 def openSingularChainComplexFunctor :
@@ -123,7 +122,6 @@ lemma singularCochainCoboundary_comp (n : ℕ) :
   apply LinearMap.ext
   intro c
   let K := (openSingularChainComplexFunctor R X).obj U.unop
-  change φ ((K.d (n + 1) n).hom ((K.d (n + 2) (n + 1)).hom c)) = 0
   have h := K.d_comp_d (n + 2) (n + 1) n
   calc
     _ = φ (ModuleCat.Hom.hom
@@ -220,7 +218,6 @@ private lemma simplicialBoundary_comp_zeroAugmentation (S : SSet.{u}) :
   apply SSet.chainComplex_hom_ext
   intro σ
   rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
-  simp_rw [Preadditive.zsmul_comp, ιChainComplex_comp_simplicialZeroAugmentation]
   simp
 
 /-- The augmentation on the zero-chains of an open subset. -/
@@ -277,8 +274,6 @@ lemma constantsToSingularCochainZero_comp_coboundary :
   change R at r
   apply LinearMap.ext
   intro c
-  dsimp [constantsToSingularCochainZero, constantSingularZeroCochain,
-    constantCoefficientPresheaf, singularCochainPresheaf, singularCochainCoboundary]
   change r * (openZeroAugmentation R X U).hom
       ((((openSingularChainComplexFunctor R X).obj U.unop).d 1 0).hom c) = 0
   have hc : (openZeroAugmentation R X U).hom
@@ -315,34 +310,6 @@ lemma constantsToSingularCochainZeroSheaf_comp_coboundary :
       (singularCochainCoboundary R X 0) = 0
   rw [← Functor.map_comp, constantsToSingularCochainZero_comp_coboundary,
     Functor.map_zero]
-
-/-- The augmented singular zero-cochain short complex before sheafification. -/
-noncomputable def constantsToSingularCochainPresheafShortComplex :
-    ShortComplex (TopCat.Presheaf AddCommGrpCat X) :=
-  ShortComplex.mk (constantsToSingularCochainZero R X)
-    (singularCochainCoboundary R X 0)
-    (constantsToSingularCochainZero_comp_coboundary R X)
-
-/-- The augmented singular zero-cochain short complex after sheafification. -/
-noncomputable def constantsToSingularCochainSheafShortComplex :
-    ShortComplex (TopCat.Sheaf AddCommGrpCat X) :=
-  ShortComplex.mk (constantsToSingularCochainZeroSheaf R X)
-    (singularCochainSheafCoboundary R X 0)
-    (constantsToSingularCochainZeroSheaf_comp_coboundary R X)
-
-set_option backward.isDefEq.respectTransparency false in
-/-- The sheafification unit between the augmented presheaf and sheaf short complexes. -/
-noncomputable def constantsToSingularCochainShortComplexSheafificationUnit :
-    constantsToSingularCochainPresheafShortComplex R X ⟶
-      (constantsToSingularCochainSheafShortComplex R X).map
-        (TopCat.Sheaf.forget AddCommGrpCat.{u} X) where
-  τ₁ := toSheafify (Opens.grothendieckTopology X) (constantCoefficientPresheaf R X)
-  τ₂ := toSheafify (Opens.grothendieckTopology X) (singularCochainPresheaf R X 0)
-  τ₃ := toSheafify (Opens.grothendieckTopology X) (singularCochainPresheaf R X 1)
-  comm₁₂ := (toSheafify_naturality (Opens.grothendieckTopology X)
-    (constantsToSingularCochainZero R X)).symm
-  comm₂₃ := (toSheafify_naturality (Opens.grothendieckTopology X)
-    (singularCochainCoboundary R X 0)).symm
 
 /-- The canonical comparison from the constant sheaf complex to the singular-cochain sheaf
 complex. -/
