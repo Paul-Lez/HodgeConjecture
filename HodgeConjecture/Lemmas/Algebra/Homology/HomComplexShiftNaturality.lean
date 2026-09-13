@@ -29,7 +29,7 @@ def rightUnshiftCocycle : Cocycle A (K⟦s⟧) n →+ Cocycle A K n' where
   map_zero' := by ext; simp [Cocycle.rightUnshift]
   map_add' _ _ := by ext; simp [Cocycle.rightUnshift, Cochain.rightUnshift_add]
 
-/-- Target unshifting descends through actual coboundaries. The factor
+/-- Target unshifting descends through coboundaries. The factor
 `(-1)^s` is included in the witnessing primitive. -/
 def rightUnshiftClass : CohomologyClass A (K⟦s⟧) n →+ CohomologyClass A K n' :=
   CohomologyClass.descAddMonoidHom

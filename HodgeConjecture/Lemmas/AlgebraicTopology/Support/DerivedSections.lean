@@ -79,7 +79,7 @@ def sheafSectionsSupportedOutsideOnOpenIso (U V : Opens X)
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op V))
   PreservesKernel.iso ev ((toOpenRestrictionPushforward X U).app F)
 
-/-- The kernel comparison preserves the actual inclusion of supported sections
+/-- The kernel comparison preserves the inclusion of supported sections
 into all sections. -/
 @[reassoc (attr := simp)]
 lemma sheafSectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
@@ -125,7 +125,7 @@ attribute [local instance] supportSheafHasDerivedCategory
 
 attribute [local instance] supportGroupsHasDerivedCategory
 
-/-- The genuine right derived sheaf sections-with-support functor on bounded-below
+/-- The right derived sheaf sections-with-support functor on bounded-below
 complexes. Enough injectives is furnished by the Grothendieck abelian category of
 abelian sheaves, not supplied as mathematical data. -/
 def derivedSheafSectionsWithClosedSupport (Z : Closeds X) :
@@ -152,7 +152,7 @@ instance derivedSheafSectionsWithClosedSupport_isRightDerivedFunctor (Z : Closed
   infer_instance
 
 /-- The group-valued derived sections-with-support functor `RΓ_Z` on
-bounded-below complexes. This is derived from the actual functor of global
+bounded-below complexes. This is derived from the functor of global
 sections vanishing on the complement. -/
 def derivedClosedSupportSections (Z : Closeds X) :
     DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X) ⥤

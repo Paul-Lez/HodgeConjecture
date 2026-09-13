@@ -24,7 +24,7 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
 
 /-- Restriction from the ambient injective resolution to the fixed complement
-resolution, using the strict comparison on the actual open complement. -/
+resolution, using the strict comparison on the open complement. -/
 def ambientRationalInjectiveRestriction
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     ambientRationalInjectiveComplex X ⟶
@@ -53,7 +53,7 @@ lemma ambientRationalAugmentation_comp_restriction
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
       (AddCommGrpCat.of ℚ))
 
-/-- The actual map from the old rational support cone to its ambient-injective
+/-- The map from the old rational support cone to its ambient-injective
 source replacement. -/
 def rationalSupportConeToAmbientInjectiveCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
@@ -79,7 +79,7 @@ instance ambientRationalInjectiveCone_isStrictlyGE
     infer_instance
   exact CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1) (by omega) (by omega)
 
-/-- The replacement cone is genuinely termwise injective: its terms are
+/-- The replacement cone is termwise injective: its terms are
 finite biproducts of ambient injectives and open direct images of injectives. -/
 instance ambientRationalInjectiveCone_injective
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (q : ℤ) :
@@ -117,7 +117,7 @@ def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
         (rationalSupportConeToAmbientInjectiveCone X Z hZ) (n - 1)).map_add α β }
   exact e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ (n - 1))
 
-/-- Compare actual restriction of the integer-indexed ambient resolution with
+/-- Compare restriction of the integer-indexed ambient resolution with
 the independently chosen complement resolution. The map/extension isomorphism
 is displayed explicitly, rather than requiring the two models to be equal. -/
 def ambientRationalOpenResolutionComparison
@@ -155,7 +155,7 @@ lemma actualRestriction_comp_openResolutionComparison
   exact (ComplexShape.embeddingUpNat.extendFunctor (AnalyticAdditiveSheaf X)).map_comp _ _
     |>.symm
 
-/-- Global sections of the actual open-resolution comparison. -/
+/-- Global sections of the open-resolution comparison. -/
 def globalAmbientRationalOpenResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :=
   ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
@@ -186,7 +186,7 @@ instance globalAmbientRationalOpenResolutionComparison_quasiIso
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual group-level restriction cone maps to the cone of the independent
+/-- The group-level restriction cone maps to the cone of the independent
 complement resolution. Both the ambient component and the prescribed
 restriction square are fixed. -/
 def actualSupportConeToAmbientInjectiveGlobalCone
@@ -213,12 +213,12 @@ instance actualSupportConeToAmbientInjectiveGlobalCone_quasiIso
     QuasiIso (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) :=
   CochainComplex.mappingCone.quasiIso_map_of_quasiIso _ _ _ _ _
 
-/-- The existing rational support group is the homology of the actual
+/-- The existing rational support group is the homology of the
 kernel-defined supported sections of the ambient rational injective
 resolution. The shift `n - 1` in the old cone model is reconciled by the
 explicit homology/shift isomorphism. The final negation corrects the
 standard cone triangle's negative connecting projection, so that the
-comparison preserves the actual support-forgetting inclusion. -/
+comparison preserves the support-forgetting inclusion. -/
 def rationalSupportAddEquivSupportedInjectiveHomology
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+

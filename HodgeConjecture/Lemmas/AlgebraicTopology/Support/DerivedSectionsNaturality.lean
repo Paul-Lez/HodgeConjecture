@@ -10,7 +10,7 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDeriv
 /-!
 # Naturality of derived sections with closed support
 
-Support enlargement comes from the actual kernel inclusion, and is then derived by
+Support enlargement comes from the kernel inclusion, and is then derived by
 the universal property. In particular, forgetting support is the map to whole-space
 support; no cohomology-level comparison morphism is supplied.
 -/
@@ -25,7 +25,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
 
-/-- The support-forgetting inclusion is the actual kernel monomorphism. -/
+/-- The support-forgetting inclusion is the kernel monomorphism. -/
 instance sheafSectionsSupportedOutsideInclusion_mono (U : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) :
     Mono ((sheafSectionsSupportedOutsideInclusion X U).app F) :=
@@ -40,7 +40,7 @@ theorem openRestrictionImage_mono {U V : Opens X} (h : V ≤ U) (W : Opens X) :
   rintro x ⟨y, hy, rfl⟩
   exact ⟨⟨y.1, h y.2⟩, hy, rfl⟩
 
-/-- Further restriction from `U` to `V ⊆ U`, on the actual open pushforward functors. -/
+/-- Further restriction from `U` to `V ⊆ U`, on the open pushforward functors. -/
 def openRestrictionPushforwardMap {U V : Opens X} (h : V ≤ U) :
     openRestrictionPushforward X U ⟶ openRestrictionPushforward X V where
   app F := ⟨{
@@ -82,7 +82,7 @@ def sheafSectionsSupportedOutsideMap {U V : Opens X} (h : V ≤ U) :
       ← Category.assoc, liftSheafSectionsSupportedOutside_inclusion]
     exact (sheafSectionsSupportedOutsideInclusion X U).naturality f
 
-/-- Support enlargement preserves the actual inclusion into the coefficient sheaf. -/
+/-- Support enlargement preserves the inclusion into the coefficient sheaf. -/
 @[reassoc (attr := simp)]
 theorem sheafSectionsSupportedOutsideMap_inclusion {U V : Opens X} (h : V ≤ U) :
     sheafSectionsSupportedOutsideMap X h ≫ sheafSectionsSupportedOutsideInclusion X V =
@@ -111,7 +111,7 @@ def sheafSectionsWithClosedSupportMap {Z W : Closeds X} (h : Z ≤ W) :
     sheafSectionsWithClosedSupport X Z ⟶ sheafSectionsWithClosedSupport X W :=
   sheafSectionsSupportedOutsideMap X (show W.compl ≤ Z.compl from fun _ hx hz ↦ hx (h hz))
 
-/-- The actual support-enlargement map on global sections. -/
+/-- The support-enlargement map on global sections. -/
 def closedSupportSectionsMap {Z W : Closeds X} (h : Z ≤ W) :
     closedSupportSections X Z ⟶ closedSupportSections X W :=
   Functor.whiskerRight (sheafSectionsWithClosedSupportMap X h)
@@ -138,12 +138,12 @@ local instance derivedSupportNaturalitySheafDerivedCategory :
 local instance derivedSupportNaturalityGroupDerivedCategory :
     HasDerivedCategory AddCommGrpCat.{u} := HasDerivedCategory.standard _
 
-/-- Derived support enlargement, constructed from the actual kernel map. -/
+/-- Derived support enlargement, constructed from the kernel map. -/
 def derivedClosedSupportSectionsMap {Z W : Closeds X} (h : Z ≤ W) :
     derivedClosedSupportSections X Z ⟶ derivedClosedSupportSections X W :=
   (closedSupportSectionsMap X h).rightDerivedFunctorPlus
 
-/-- The actual support-enlargement maps commute with the constructed coherent shifts. -/
+/-- The support-enlargement maps commute with the constructed coherent shifts. -/
 instance derivedClosedSupportSectionsMap_commShift {Z W : Closeds X} (h : Z ≤ W) :
     NatTrans.CommShift (derivedClosedSupportSectionsMap X h) ℤ :=
   inferInstanceAs (NatTrans.CommShift (closedSupportSectionsMap X h).rightDerivedFunctorPlus ℤ)
@@ -162,7 +162,7 @@ theorem derivedClosedSupportSectionsMap_comp {Z W T : Closeds X}
       derivedClosedSupportSectionsMap X (h.trans h') := by
   simp [derivedClosedSupportSectionsMap, ← NatTrans.rightDerivedFunctorPlus_comp]
 
-/-- The actual derived-unit square identifies the support map on injective resolutions. -/
+/-- The derived-unit square identifies the support map on injective resolutions. -/
 @[reassoc (attr := simp)]
 theorem derivedClosedSupportSectionsMap_unit_app {Z W : Closeds X} (h : Z ≤ W)
     (K : HomotopyCategory.Plus (Sheaf AddCommGrpCat.{u} X)) :

@@ -38,7 +38,7 @@ theorem mem_smoothClosedSupportChartOpen (z : ComplexPoint Y) :
     Point.map i z ∈ smoothClosedSupportChartOpen X Y i m d z :=
   closedImmersionHolomorphicFlatteningChart_mem_source X Y i m d z
 
-/-- The target is the sheafification of the literal relative-cohomology presheaf. -/
+/-- The target is the sheafification of the relative-cohomology presheaf. -/
 abbrev smoothClosedSupportCoclassSheaf : TopCat.Sheaf AddCommGrpCat
     (TopCat.of (ComplexPoint X)) :=
   supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))

@@ -138,7 +138,7 @@ instance rightDerivedFunctorPlusInjectiveLifting :
       F.rightDerivedFunctorPlusOnInjectives F.rightDerivedFunctorPlus :=
   ⟨F.rightDerivedFunctorPlusOnInjectivesIso⟩
 
-/-- Coherent shift compatibility of the actual bounded-below right derived
+/-- Coherent shift compatibility of the bounded-below right derived
 functor. Its zero and addition coherence laws are inherited by localization
 from the termwise complex-level shift compatibility. -/
 instance rightDerivedFunctorPlusCommShift : F.rightDerivedFunctorPlus.CommShift ℤ :=
@@ -147,7 +147,7 @@ instance rightDerivedFunctorPlusCommShift : F.rightDerivedFunctorPlus.CommShift 
     F.rightDerivedFunctorPlusOnInjectives F.rightDerivedFunctorPlus
 
 /-- The injective-resolution comparison is compatible with the constructed
-coherent shifts. This pins the comparison to the actual derived unit. -/
+coherent shifts. This pins the comparison to the derived unit. -/
 instance rightDerivedFunctorPlusOnInjectivesIso_commShift :
     NatTrans.CommShift F.rightDerivedFunctorPlusOnInjectivesIso.hom ℤ :=
   NatTrans.commShift_iso_hom_of_localization

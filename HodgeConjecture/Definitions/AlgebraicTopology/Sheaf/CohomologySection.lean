@@ -9,12 +9,12 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.CohomologyStalkVani
 # Canonical cohomology-sheaf sections from local section-complex classes
 
 Exact sheafification identifies the sheafification of the presheaf of local
-section-complex cohomology with the actual cohomology sheaf. Composing its unit
+section-complex cohomology with the cohomology sheaf. Composing its unit
 with that identification gives the canonical local-to-sheaf class map. This
 provides the target in which normalized local purity classes can be glued.
 
 No exactness of open-set evaluation on sheaves is assumed. The presheaf
-homology is taken before sheafification, and the counit is the actual
+homology is taken before sheafification, and the counit is the
 sheafification counit on the original coefficient complex.
 -/
 
@@ -28,7 +28,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- Sheafification of the local cohomology presheaf is the actual cohomology
+/-- Sheafification of the local cohomology presheaf is the cohomology
 sheaf, by exact sheafification and its counit. -/
 def sectionCohomologyPresheafSheafificationIso (n : ℤ) :
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
@@ -49,8 +49,8 @@ def sectionCohomologyPresheafToSheaf (n : ℤ) :
   toSheafify (Opens.grothendieckTopology X) _ ≫
     (sectionCohomologyPresheafSheafificationIso X K n).hom.hom
 
-/-- An actual cohomology class of sections on `U` determines a section of the
-actual cohomology sheaf on `U`. -/
+/-- A cohomology class of sections on `U` determines a section of the
+cohomology sheaf on `U`. -/
 def sectionCohomologyToSheafSection (n : ℤ) (U : Opens X) :
     (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ⟶
       (K.homology n).obj.obj (op U) :=

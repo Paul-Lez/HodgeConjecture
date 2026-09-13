@@ -26,13 +26,13 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
 
-/-- Restriction between the actual open-section evaluation functors. -/
+/-- Restriction between the open-section evaluation functors. -/
 def supportEvaluationRestriction {V W : Opens X} (i : W ⟶ V) :
     supportEvaluation X V ⟶ supportEvaluation X W where
   app F := F.obj.map i.op
   naturality _F _G f := (f.hom.naturality i.op).symm
 
-/-- The actual restriction morphism of section complexes, in any grading. -/
+/-- The restriction morphism of section complexes, in any grading. -/
 def sectionComplexRestriction {I : Type*} (c : ComplexShape I)
     (K : HomologicalComplex (Sheaf AddCommGrpCat.{u} X) c)
     {V W : Opens X} (i : W ⟶ V) :
@@ -40,7 +40,7 @@ def sectionComplexRestriction {I : Type*} (c : ComplexShape I)
       ((supportEvaluation X W).mapHomologicalComplex c).obj K :=
   ((supportEvaluationRestriction X i).mapHomologicalComplex c).app K
 
-/-- Actual section restriction commutes with extension from natural to integer degrees. -/
+/-- Section restriction commutes with extension from natural to integer degrees. -/
 theorem sectionComplexRestriction_extend
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℕ)
     {V W : Opens X} (i : W ⟶ V) :
@@ -54,7 +54,7 @@ theorem sectionComplexRestriction_extend
   HomologicalComplex.mapExtendCanonicalIso_natTrans (supportEvaluation X V) K
     ComplexShape.embeddingUpNat (supportEvaluationRestriction X i)
 
-/-- The corresponding actual restriction cones agree under the canonical grading comparison. -/
+/-- The corresponding restriction cones agree under the canonical grading comparison. -/
 def sectionComplexRestrictionExtendConeIso
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℕ)
     {V W : Opens X} (i : W ⟶ V) :
@@ -74,7 +74,7 @@ def sectionComplexRestrictionExtendConeIso
 
 variable (U V : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- The third term of the actual support sequence is sections on the actual intersection. -/
+/-- The third term of the support sequence is sections on the intersection. -/
 def supportRestrictionSectionsIntersectionIso :
     (supportRestrictionSectionsComplexShortComplex X U V K).X₃ ≅
       ((supportEvaluation X (V ⊓ U)).mapHomologicalComplex (.up ℤ)).obj K :=
@@ -83,7 +83,7 @@ def supportRestrictionSectionsIntersectionIso :
     (fun n m _ => (K.d n m).hom.naturality
       (eqToHom (congrArg op (Opens.functor_map_eq_inf U V))))
 
-/-- The intersection identification preserves the literal restriction arrow. -/
+/-- The intersection identification preserves the restriction arrow. -/
 theorem supportRestrictionSectionsIntersectionIso_restriction :
     (supportRestrictionSectionsComplexShortComplex X U V K).g ≫
       (supportRestrictionSectionsIntersectionIso X U V K).hom =
@@ -93,7 +93,7 @@ theorem supportRestrictionSectionsIntersectionIso_restriction :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The cone of the actual support-sequence arrow is the cone of actual open restriction. -/
+/-- The cone of the support-sequence arrow is the cone of open restriction. -/
 def supportRestrictionSectionsConeIso :
     CochainComplex.mappingCone (supportRestrictionSectionsComplexShortComplex X U V K).g ≅
       CochainComplex.mappingCone

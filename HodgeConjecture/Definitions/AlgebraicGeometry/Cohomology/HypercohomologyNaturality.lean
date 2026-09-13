@@ -33,7 +33,7 @@ local instance hypercohomologyNaturalitySheafDerivedCategory :
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 /-- On a K-injective sheaf complex, derived morphisms from the integer
-constant sheaf are computed by actual global sections, with no further
+constant sheaf are computed by global sections, with no further
 replacement complex. -/
 def derivedHomAddEquivGlobalSectionsKInjective
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective] (n : ℤ) :
@@ -47,7 +47,7 @@ def derivedHomAddEquivGlobalSectionsKInjective
         (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections
           (TopCat.of (ComplexPoint X)) K) n).addCommGroupIsoToAddEquiv)
 
-/-- Hypercohomology of an actual K-injective complex is its global-section
+/-- Hypercohomology of a K-injective complex is its global-section
 cohomology. This direct form exposes naturality without choosing another
 injective resolution. -/
 def hypercohomologyAddEquivGlobalSectionsKInjective

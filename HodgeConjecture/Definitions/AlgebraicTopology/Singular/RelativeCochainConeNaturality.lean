@@ -40,7 +40,7 @@ def relativeDualCochainHomologyIsoCone (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X)
     (relativeDualCochainShortComplexInt_shortExact R X) ((n : ℤ) - 1) n (by omega)
 
-/-- Actual integer dual-relative cohomology computes the repository's
+/-- Integer dual-relative cohomology computes the repository's
 relative cohomology by the evaluation pairing. -/
 def relativeDualCochainCohomologyEquiv (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X).X₁.homology (n : ℤ) ≃ₗ[R]

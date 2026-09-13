@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.FlattenedSupport
 
 /-!
-# Actual relative homology near a flattened support
+# Relative homology near a flattened support
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.FlattenedSupport`.
@@ -30,7 +30,7 @@ variable (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (x : M) (hx : x �
 include hx
 
 omit [NormedSpace ℝ E] in
-/-- A positive coordinate-ball radius is obtained from the actual open chart target. -/
+/-- A positive coordinate-ball radius is obtained from the open chart target. -/
 theorem exists_flattenedSupportRadius :
     ∃ r : ℝ, 0 < r ∧ Metric.ball (e x) r ⊆ e.target :=
   Metric.isOpen_iff.mp e.open_target (e x) (e.map_source hx)
@@ -61,7 +61,7 @@ private theorem ball_flattenedSupportRadius_subset :
     Metric.ball (e x) (flattenedSupportRadius E c e x hx) ⊆ e.target :=
   (exists_flattenedSupportRadius E c e x hx).choose_spec.2
 
-/-- Actual radial compression followed by the inverse chart. -/
+/-- Radial compression followed by the inverse chart. -/
 def flattenedSupportEmbedding : OpenPartialHomeomorph (E × (Fin c → ℂ)) M :=
   (OpenPartialHomeomorph.univBall (e x) (flattenedSupportRadius E c e x hx)).trans e.symm
 
@@ -74,7 +74,7 @@ theorem flattenedSupportEmbedding_source :
   exact (OpenPartialHomeomorph.univBall (e x)
     (flattenedSupportRadius E c e x hx)).map_source (by simp)
 
-/-- The actual open neighborhood on which the support has the normal-slice pair model. -/
+/-- The open neighborhood on which the support has the normal-slice pair model. -/
 def flattenedSupportNeighborhood : TopologicalSpace.Opens M :=
   ⟨(flattenedSupportEmbedding E c e x hx).target,
     (flattenedSupportEmbedding E c e x hx).open_target⟩
@@ -112,14 +112,14 @@ theorem flattenedSupportHomeomorph_mem_support_iff (v : E × (Fin c → ℂ)) :
   rw [he]
   exact univBall_normal_eq_zero_iff E c _ _ (flattenedSupportRadius_pos E c e x hx) v
 
-/-- Restriction of the actual homeomorphism to the support complements. -/
+/-- Restriction of the homeomorphism to the support complements. -/
 def flattenedSupportComplementHomeomorph :
     {v : E × (Fin c → ℂ) | v.2 ≠ 0} ≃ₜ
       {w : flattenedSupportNeighborhood E c e x hx | (w : M) ∉ S} :=
   (flattenedSupportHomeomorph E c e x hx).subtype fun v =>
     not_congr (flattenedSupportHomeomorph_mem_support_iff E c e x hx S hS h0 v).symm
 
-/-- A genuine pair isomorphism from the standard normal model to the local support pair. -/
+/-- A pair isomorphism from the standard normal model to the local support pair. -/
 def flattenedSupportPairIso : normalSlicePair E c ≅
     neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S where
   hom := TopPair.ofHom
@@ -145,7 +145,7 @@ def flattenedSupportPairIso : normalSlicePair E c ≅
     · ext v
       exact (flattenedSupportHomeomorph E c e x hx).right_inv v
 
-/-- Local relative homology is computed by actual pair maps and tangent contraction. -/
+/-- Local relative homology is computed by pair maps and tangent contraction. -/
 def flattenedSupportRelativeHomologyIso (n : ℕ) :
     RelativeHomology ℚ
       (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n ≅

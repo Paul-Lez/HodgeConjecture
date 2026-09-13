@@ -24,7 +24,7 @@ namespace AlgebraicTopology.Singular
 
 variable (X : TopCat.{0})
 
-/-- The literal intersection subspace and the complement of a support inside an open
+/-- The intersection subspace and the complement of a support inside an open
 are homeomorphic by regrouping subtype witnesses. -/
 def openIntersectionSupportComplementHomeomorph (S : Set X) (hS : IsClosed S) (V : Opens X) :
     ↥(V ⊓ (⟨Sᶜ, hS.isOpen_compl⟩ : Opens X)) ≃ₜ {v : V | v.1 ∉ S} where
@@ -32,7 +32,7 @@ def openIntersectionSupportComplementHomeomorph (S : Set X) (hS : IsClosed S) (V
   continuous_toFun := (continuous_subtype_val.subtype_mk _).subtype_mk _
   continuous_invFun := (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
 
-/-- The actual open-inclusion pair is the actual support-complement pair, preserving
+/-- The open-inclusion pair is the support-complement pair, preserving
 the ambient open pointwise. -/
 def openIntersectionPairIsoSupportComplement (S : Set X) (hS : IsClosed S) (V : Opens X) :
     openInclusionPair X (Opens.infLELeft V (⟨Sᶜ, hS.isOpen_compl⟩ : Opens X)) ≅
@@ -50,7 +50,7 @@ def openIntersectionPairIsoSupportComplement (S : Set X) (hS : IsClosed S) (V : 
 
 variable [T2Space X] [∀ V : Opens X, ParacompactSpace V] (U V : Opens X)
 
-/-- Actual local supported singular cohomology computes the literal relative pair
+/-- Local supported singular cohomology computes the relative pair
 `(V, V ∩ U)`, in supported degree `n`. -/
 def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
     ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
@@ -65,7 +65,7 @@ def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
         ((n : ℤ) - 1)).addCommGroupIsoToAddEquiv
     |>.trans (openSingularSheafRestrictionConeCohomologyEquivRelative X (Opens.infLELeft V U) n)
 
-/-- Actual local supported singular cohomology computes `(V, V \ S)`, with the pair
+/-- Local supported singular cohomology computes `(V, V \ S)`, with the pair
 homeomorphism displayed explicitly rather than silently replacing an inclusion. -/
 def supportedRationalSingularSectionCohomologyEquivSupportComplement
     (S : Set X) (hS : IsClosed S) (V : Opens X) (n : ℕ) :

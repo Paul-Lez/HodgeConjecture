@@ -6,9 +6,9 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
 /-!
-# Transporting actual neighborhood-support pairs through embeddings
+# Transporting neighborhood-support pairs through embeddings
 
-An embedding identifies a neighborhood and its support complement with their actual
+An embedding identifies a neighborhood and its support complement with their
 images. Only equality of support membership on that neighborhood is required; no
 cohomology comparison is supplied. Open embeddings therefore transport the cofinal
 normal neighborhoods of auxiliary algebraic opens to the original ambient space.
@@ -24,12 +24,12 @@ variable {M N : Type} [TopologicalSpace M] [TopologicalSpace N]
   (f : M → N) (hf : IsEmbedding f) (W B : Set M) (S : Set N)
   (hS : ∀ w ∈ W, w ∈ B ↔ f w ∈ S)
 
-/-- The actual embedding-induced homeomorphism of the two support complements. -/
+/-- The embedding-induced homeomorphism of the two support complements. -/
 def neighborhoodSupportComplementImageHomeomorph :
     {w : W | (w : M) ∉ B} ≃ₜ {v : f '' W | (v : N) ∉ S} :=
   (hf.homeomorphImage W).subtype fun w => not_congr (hS w w.2)
 
-/-- The literal pair isomorphism, with the embedding as ambient map. -/
+/-- The pair isomorphism, with the embedding as ambient map. -/
 def neighborhoodSupportPairImageIso :
     neighborhoodSupportComplementPair W B ≅
       neighborhoodSupportComplementPair (f '' W) S where
@@ -56,7 +56,7 @@ def neighborhoodSupportPairImageIso :
     · ext w
       exact (hf.homeomorphImage W).right_inv w
 
-/-- Relative cohomology transport, obtained by dualising the actual induced chain map. -/
+/-- Relative cohomology transport, obtained by dualising the induced chain map. -/
 def neighborhoodSupportPairImageCohomologyIso (n : ℕ) :
     RelativeCohomology ℚ (neighborhoodSupportComplementPair (f '' W) S) n ≅
       RelativeCohomology ℚ (neighborhoodSupportComplementPair W B) n :=

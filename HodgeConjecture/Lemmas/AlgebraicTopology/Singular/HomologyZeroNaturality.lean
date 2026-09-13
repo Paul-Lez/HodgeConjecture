@@ -9,7 +9,7 @@ public import Mathlib.AlgebraicTopology.SingularHomology.HomologyZero
 /-!
 # Naturality of the degree-zero homology augmentation
 
-The augmentation is natural for actual simplicial and continuous maps. Consequently a
+The augmentation is natural for simplicial and continuous maps. Consequently a
 continuous map between path-connected spaces induces an isomorphism on degree-zero homology;
 for a nonempty source and path-connected target the induced map is an epimorphism.
 
@@ -108,7 +108,7 @@ theorem singularHomologyMap_zero_epi {X Y : TopCat.{w}} [Nonempty X]
     infer_instance
   exact (epi_comp_iff_of_isIso _ (Y.singularHomology₀ε R)).mp this
 
-/-- Maps between path-connected spaces induce actual isomorphisms in degree zero. -/
+/-- Maps between path-connected spaces induce isomorphisms in degree zero. -/
 theorem singularHomologyMap_zero_isIso {X Y : TopCat.{w}}
     [PathConnectedSpace X] [PathConnectedSpace Y] (f : X ⟶ Y) (R : C) :
     IsIso (((singularHomologyFunctor C 0).obj R).map f) := by

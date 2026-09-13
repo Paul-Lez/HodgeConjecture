@@ -45,7 +45,7 @@ the two; that identification is recorded as `cohomologyEquivDualHomology` (and
 `relativeCohomologyEquivDualHomology`) rather than being taken as the definition, so every
 statement that pairs a cohomology class with a homology class goes through it explicitly.
 
-For a topological pair `A ⊆ X`, the relative chain complex is the cokernel of the actual chain map
+For a topological pair `A ⊆ X`, the relative chain complex is the cokernel of the chain map
 `C_*(A) ⟶ C_*(X)`; the relative cochain complex is its dual, and relative cohomology is again the
 homology of that complex. Cohomology with support and the map that forgets support are derived
 from this construction.

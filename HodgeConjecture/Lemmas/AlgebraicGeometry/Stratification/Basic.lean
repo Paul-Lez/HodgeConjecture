@@ -89,7 +89,7 @@ instance reducedClosedSmoothPiece_smooth (S : Closeds X) :
 
 attribute [local instance] reducedSmoothStratificationWellFoundedRelation
 
-/-- The finite, explicitly recursive sequence of nonempty closed remainders. The actual
+/-- The finite, explicitly recursive sequence of nonempty closed remainders. The
 smooth strata are `reducedClosedSmoothPiece f S` for the members of this list. -/
 def reducedSmoothStratification [PerfectField K] [NoetherianSpace X]
     (S : Closeds X) : List (Closeds X) := by

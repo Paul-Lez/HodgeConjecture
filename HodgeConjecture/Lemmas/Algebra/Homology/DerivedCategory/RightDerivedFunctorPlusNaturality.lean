@@ -10,8 +10,8 @@ public import Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlus
 # Natural transformations on bounded-below right derived functors
 
 A natural transformation of additive functors induces a transformation of their
-actual right derived functors. The construction uses the derived universal property,
-and its compatibility with the actual derived units is proved. This supplies, for
+right derived functors. The construction uses the derived universal property,
+and its compatibility with the derived units is proved. This supplies, for
 example, the canonical support-enlargement and forget-support maps.
 -/
 
@@ -44,7 +44,7 @@ theorem mapHomotopyCategoryPlus_comp (α : F ⟶ G) (β : G ⟶ H) :
 
 variable [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
 
-/-- The transformation of the actual bounded-below right derived functors, obtained
+/-- The transformation of the bounded-below right derived functors, obtained
 from the universal property, not supplied as an extra comparison datum. -/
 def rightDerivedFunctorPlus (α : F ⟶ G) :
     F.rightDerivedFunctorPlus ⟶ G.rightDerivedFunctorPlus :=
@@ -53,7 +53,7 @@ def rightDerivedFunctorPlus (α : F ⟶ G) :
       (HomotopyCategory.Plus.quasiIso C)
         (Functor.whiskerRight α.mapHomotopyCategoryPlus DerivedCategory.Plus.Qh)
 
-/-- Compatibility with the actual derived units on every bounded-below homotopy complex. -/
+/-- Compatibility with the derived units on every bounded-below homotopy complex. -/
 @[reassoc (attr := simp)]
 theorem rightDerivedFunctorPlus_unit (α : F ⟶ G) :
     F.rightDerivedFunctorPlusUnit ≫
@@ -92,7 +92,7 @@ variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
   [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
   {F G : C ⥤ D} [F.Additive] [G.Additive]
 
-/-- A coefficient natural isomorphism induces an isomorphism of the actual bounded-below
+/-- A coefficient natural isomorphism induces an isomorphism of the bounded-below
 right derived functors, using the already constructed derived natural transformations. -/
 def rightDerivedFunctorPlus (e : F ≅ G) :
     F.rightDerivedFunctorPlus ≅ G.rightDerivedFunctorPlus where

@@ -137,7 +137,7 @@ lemma mem_overOpen_basicOpen_iff_evaluate_ne_zero {U : X.left.Opens} (s : Γ(X.l
     z ∈ overOpen (X.left.basicOpen s) ↔ evaluate U s z ≠ 0 := by
   rw [mem_overOpen_basicOpen_iff_isUnit_evaluate s z hz, isUnit_iff_ne_zero]
 
-/-- Over a field, a regular function on a principal open of an affine open is a genuine quotient
+/-- Over a field, a regular function on a principal open of an affine open is a quotient
 of regular functions on the whole affine open. -/
 lemma exists_evaluate_basicOpen_eq_div {U : X.left.Opens} (hU : IsAffineOpen U) (f : Γ(X.left, U))
     (t : Γ(X.left, X.left.basicOpen f)) :

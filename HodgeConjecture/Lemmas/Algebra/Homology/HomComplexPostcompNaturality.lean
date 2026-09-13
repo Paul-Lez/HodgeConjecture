@@ -23,7 +23,7 @@ def postcompCocycle (n : ℤ) : Cocycle K L n →+ Cocycle K M n where
   map_zero' := by ext; simp [Cocycle.postcomp]
   map_add' x y := by ext; simp [Cocycle.postcomp, Cochain.add_comp]
 
-/-- Postcomposition descends to actual cohomology classes. -/
+/-- Postcomposition descends to cohomology classes. -/
 def postcompClass (n : ℤ) : CohomologyClass K L n →+ CohomologyClass K M n :=
   CohomologyClass.descAddMonoidHom
     ((CohomologyClass.mkAddMonoidHom K M n).comp (postcompCocycle K f n)) (by

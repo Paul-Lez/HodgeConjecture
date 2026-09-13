@@ -22,25 +22,25 @@ def openRawSingularCochainComplex (V : Opens X) : CochainComplex AddCommGrpCat �
   (((evaluation (Opens X)ᵒᵖ AddCommGrpCat).obj (.op V)).mapHomologicalComplex (.up ℕ)).obj
     (singularCochainPresheafComplex R X)
 
-/-- Sections on an ambient open of the actual singular cochain sheaf complex. -/
+/-- Sections on an ambient open of the singular cochain sheaf complex. -/
 def openSingularCochainSheafComplex (V : Opens X) : CochainComplex AddCommGrpCat ℕ :=
   ((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℕ)).obj
     (singularCochainSheafComplex R X)
 
-/-- The actual singular-cochain sheafification unit evaluated on an ambient open. -/
+/-- The singular-cochain sheafification unit evaluated on an ambient open. -/
 def openRawToSingularCochainSheafComplex (V : Opens X) :
     openRawSingularCochainComplex R X V ⟶ openSingularCochainSheafComplex R X V :=
   (((evaluation (Opens X)ᵒᵖ AddCommGrpCat).obj (.op V)).mapHomologicalComplex (.up ℕ)).map
     (singularCochainSheafificationUnit R X)
 
-/-- Actual restriction of raw cochains between two ambient opens. -/
+/-- Restriction of raw cochains between two ambient opens. -/
 def openRawSingularRestriction {V W : Opens X} (i : W ⟶ V) :
     openRawSingularCochainComplex R X V ⟶ openRawSingularCochainComplex R X W :=
   (NatTrans.mapHomologicalComplex
     ((evaluation (Opens X)ᵒᵖ AddCommGrpCat).map i.op) (.up ℕ)).app
       (singularCochainPresheafComplex R X)
 
-/-- Actual restriction of sections of the singular cochain sheaf. -/
+/-- Restriction of sections of the singular cochain sheaf. -/
 def openSingularSheafRestriction {V W : Opens X} (i : W ⟶ V) :
     openSingularCochainSheafComplex R X V ⟶ openSingularCochainSheafComplex R X W :=
   (NatTrans.mapHomologicalComplex

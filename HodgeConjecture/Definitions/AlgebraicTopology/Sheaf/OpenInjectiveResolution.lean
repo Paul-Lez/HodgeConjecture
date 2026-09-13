@@ -11,7 +11,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHyperco
 /-!
 # Comparing an ambient resolution with a resolution on an open subspace
 
-The comparison is lifted on the open subspace across the actual restricted
+The comparison is lifted on the open subspace across the restricted
 augmentation. Exact open restriction and the normalized constant-sheaf
 comparison prove that this augmentation is a monic quasi-isomorphism.
 -/

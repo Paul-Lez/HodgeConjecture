@@ -8,7 +8,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AnalyticMap
 public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
 
 /-!
-# Analytic local left inverses from actual section lifting
+# Analytic local left inverses from section lifting
 
 Intrinsic regular coordinate functions lift through a closed immersion on a common affine
 ambient neighborhood. Their analytic evaluations give a local left inverse to the inclusion
@@ -34,7 +34,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
 
-/-- The actual inclusion written in the canonical intrinsic and ambient complex charts. -/
+/-- The inclusion written in the canonical intrinsic and ambient complex charts. -/
 def inclusionInComplexCharts (z : ComplexPoint Y) :
     (Fin m → ℂ) → (Fin d → ℂ) :=
   fun v => localChart X d (Point.map i z)

@@ -25,7 +25,7 @@ namespace AlgebraicTopology.Singular
 variable {M : Type} [TopologicalSpace M]
   (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
 
-/-- The actual pair consisting of a neighborhood and the complement of a support in it. -/
+/-- The pair consisting of a neighborhood and the complement of a support in it. -/
 abbrev neighborhoodSupportComplementPair (W S : Set M) : TopPair :=
   TopPair.ofSubset (X := TopCat.of W) {w | w.1 ∉ S}
 

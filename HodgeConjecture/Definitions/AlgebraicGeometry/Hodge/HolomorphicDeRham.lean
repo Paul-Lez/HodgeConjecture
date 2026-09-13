@@ -31,7 +31,7 @@ import Mathlib.Topology.Sheaves.Sheafify
 /-!
 # The holomorphic de Rham complex
 
-This file assembles the analytic differential forms constructed from actual manifold derivatives
+This file assembles the analytic differential forms constructed from manifold derivatives
 into a presheaf complex and then sheafifies it degree by degree. Restriction of functions induces
 restriction of forms and commutes with the exterior derivative.
 

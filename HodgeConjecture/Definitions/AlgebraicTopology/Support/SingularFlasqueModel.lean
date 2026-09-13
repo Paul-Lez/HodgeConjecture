@@ -27,11 +27,11 @@ namespace AlgebraicTopology.Singular
 
 variable (X : TopCat.{0})
 
-/-- The actual singular-cochain sheaf complex in integer degrees. -/
+/-- The singular-cochain sheaf complex in integer degrees. -/
 def rationalSingularCochainComplex : CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   (singularCochainSheafComplex ℚ X).extend ComplexShape.embeddingUpNat
 
-/-- The fixed injective resolution of actual rational constants, in integer degrees. -/
+/-- The fixed injective resolution of rational constants, in integer degrees. -/
 def rationalConstantInjectiveComplex : CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).cocomplex.extend
     ComplexShape.embeddingUpNat
@@ -54,7 +54,7 @@ instance rationalConstantInjectiveComplex_injective (n : ℤ) :
 variable (hX : ∀ (x : X) (V : Opens X), x ∈ V →
   ∃ (W : Opens X), x ∈ W ∧ ContractibleSpace W ∧ W ≤ V)
 
-/-- Strictly extend the constant augmentation to the actual injective resolution. -/
+/-- Strictly extend the constant augmentation to the injective resolution. -/
 def singularToConstantInjectiveResolution :
     singularCochainSheafComplex ℚ X ⟶
       (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).cocomplex := by
@@ -98,14 +98,14 @@ instance singularToConstantInjectiveComplex_quasiIso :
     QuasiIso (singularToConstantInjectiveComplex X hX) :=
   (HomologicalComplex.quasiIso_extendMap_iff _ _).mpr inferInstance
 
-/-- The actual supported singular-cochain sheaf model. Its terms are kernels
+/-- The supported singular-cochain sheaf model. Its terms are kernels
 of restriction; its cohomology is not defined to be a desired purity group. -/
 def supportedRationalSingularCochainComplex (U : Opens X) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
     (rationalSingularCochainComplex X)
 
-/-- Apply actual supported sections to the constructed resolution comparison. -/
+/-- Apply supported sections to the constructed resolution comparison. -/
 def supportedSingularToInjectiveComplex (U : Opens X) :
     supportedRationalSingularCochainComplex X U ⟶
       ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
@@ -123,7 +123,7 @@ instance rationalSingularCochainComplex_isFlasque (n : ℤ) :
   infer_instance
 
 /-- Supported singular cochains really compute the supported injective model,
-on the level of actual sheaf complexes. -/
+on the level of sheaf complexes. -/
 instance supportedSingularToInjectiveComplex_quasiIso (U : Opens X) :
     QuasiIso (supportedSingularToInjectiveComplex X hX U) :=
   TopCat.Sheaf.sheafSectionsSupportedOutside_map_quasiIso_of_flasque X U

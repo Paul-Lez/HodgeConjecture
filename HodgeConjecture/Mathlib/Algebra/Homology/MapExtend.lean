@@ -77,7 +77,7 @@ lemma mapExtendCanonicalXIso_hom_mapX {L : HomologicalComplex C c} (f : K ⟶ L)
       (mapExtendCanonicalXIso F K a).hom ≫ extend.mapX ((F.mapHomologicalComplex c).map f) a := by
   cases a <;> simp [mapExtendCanonicalXIso, extend.mapX]
 
-/-- Mapping and extension commute on actual chain maps, with the canonical normalization. -/
+/-- Mapping and extension commute on chain maps, with the canonical normalization. -/
 @[reassoc]
 lemma mapExtendCanonicalIso_naturality {L : HomologicalComplex C c} (f : K ⟶ L) :
     (F.mapHomologicalComplex c').map (extendMap f e) ≫ (mapExtendCanonicalIso F L e).hom =
@@ -100,7 +100,7 @@ lemma mapExtendCanonicalIso_natTrans {G : C ⥤ D} [G.Additive] (a : F ⟶ G) :
   | none => exact (F.map_isZero (Limits.isZero_zero C)).eq_of_src _ _
   | some n => simp [mapExtendCanonicalXIso, extend.X, extend.mapX]
 
-/-- The comparison for the identity coefficient functor is the actual identity. -/
+/-- The comparison for the identity coefficient functor is the identity. -/
 @[simp]
 lemma mapExtendCanonicalIso_id : (mapExtendCanonicalIso (𝟭 C) K e).hom = 𝟙 (K.extend e) := by
   ext j

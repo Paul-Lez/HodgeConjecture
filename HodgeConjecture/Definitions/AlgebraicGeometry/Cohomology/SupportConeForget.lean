@@ -8,7 +8,7 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoc
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift
 
-/-! # Support-forgetting in the actual rational injective model -/
+/-! # Support-forgetting in the rational injective model -/
 
 @[expose] public noncomputable section
 

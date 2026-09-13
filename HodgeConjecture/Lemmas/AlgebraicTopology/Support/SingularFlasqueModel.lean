@@ -36,7 +36,7 @@ theorem supportedSingularToInjectiveComplex_onOpen_quasiIso (U V : Opens X) :
   TopCat.Sheaf.supportedSections_map_quasiIso_of_flasque X U V
     (singularToConstantInjectiveComplex X hX) 0 0 (fun _ => inferInstance) (fun _ => inferInstance)
 
-/-- Actual section-complex cohomology agrees through the normalized comparison. -/
+/-- Section-complex cohomology agrees through the normalized comparison. -/
 def supportedSingularInjectiveHomologyIso (U V : Opens X) (n : ℤ) :
     ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
       (supportedRationalSingularCochainComplex X U))).homology n ≅

@@ -26,7 +26,7 @@ This module is ported from Paul Lezeau's corresponding file in
 
 For each permutation of the vertices of the standard `n`-simplex, its successive nonempty
 prefixes form a maximal flag in the poset of nonempty subsets.  The signed sum of these flags is
-the oriented barycentric fundamental chain.  This file constructs that chain in Mathlib's actual
+the oriented barycentric fundamental chain.  This file constructs that chain in Mathlib's
 `SimplexCategory.sd` nerve model and transports it naturally to every simplex of every simplicial
 set.
 -/

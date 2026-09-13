@@ -8,7 +8,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictio
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenConeNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.RelativeCohomologySheaf
-/-! # Naturality of actual supported singular-section relative cohomology -/
+/-! # Naturality of supported singular-section relative cohomology -/
 
 @[expose] public noncomputable section
 
@@ -21,7 +21,7 @@ open TopCat.Sheaf
 variable (X : TopCat.{0}) [T2Space X] [∀ V : Opens X, ParacompactSpace V]
   (U : Opens X) {V W : Opens X} (a : W ⟶ V)
 
-/-- The actual two-step supported kernel and grading comparison, before the relative calculation. -/
+/-- The two-step supported kernel and grading comparison, before the relative calculation. -/
 def supportedSingularSectionConeHomologyIso (V : Opens X) (n : ℤ) :
     ((((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
       (supportedRationalSingularCochainComplex X U))).homology n ≅
@@ -34,7 +34,7 @@ def supportedSingularSectionConeHomologyIso (V : Opens X) (n : ℤ) :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The actual supported kernel-to-singular-cone comparison respects open restriction. -/
+/-- The supported kernel-to-singular-cone comparison respects open restriction. -/
 @[reassoc]
 lemma supportedSingularSectionConeHomologyIso_naturality (n : ℤ) :
     HomologicalComplex.homologyMap
@@ -93,7 +93,7 @@ lemma supportedRationalSingularSectionCohomologyEquivRelative_naturality
     (Opens.infLELeft V U) (Opens.infLELeft W U) a
     (homOfLE (inf_le_inf_right U (leOfHom a))) n _
 
-/-- The final support-complement comparison preserves literal ambient-open restrictions. -/
+/-- The final support-complement comparison preserves ambient-open restrictions. -/
 lemma supportedRationalSingularSectionCohomologyEquivSupportComplement_naturality
     (S : Set X) (hS : IsClosed S) {V W : Opens X} (a : W ⟶ V) (n : ℕ)
     (z : ((((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj

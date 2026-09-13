@@ -44,7 +44,7 @@ def cycleComponentSingularAmbientClosedFiltration (k : ℕ) : Closeds X.left :=
 
 namespace ComplexPoint
 
-/-- The actual analytically closed ambient supports for nested-support localization. -/
+/-- The analytically closed ambient supports for nested-support localization. -/
 def cycleComponentSingularAnalyticClosedFiltration (k : ℕ) : Closeds (ComplexPoint X) :=
   ⟨Point.underlying ⁻¹' (cycleComponentSingularAmbientClosedFiltration X x k : Set X.left),
     (cycleComponentSingularAmbientClosedFiltration X x k).isClosed.preimage

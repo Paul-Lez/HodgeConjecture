@@ -67,7 +67,7 @@ instance (V : Opens X) :
 instance : (openRestrictionPushforward X U).Additive where
   map_add := by intros; rfl
 
-/-- The actual support/restriction sequence applied termwise to a coefficient
+/-- The support/restriction sequence applied termwise to a coefficient
 complex. No boundedness is needed for this algebraic sequence. -/
 def supportRestrictionComplexShortComplex
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
@@ -81,7 +81,7 @@ def supportRestrictionComplexShortComplex
         comm' i j h := ((toOpenRestrictionPushforward X U).naturality (K.d i j)).symm })
     (by ext n; exact sheafSectionsSupportedOutsideInclusion_restriction X U (K.X n))
 
-/-- Evaluate the actual termwise support/restriction sequence on `V`. -/
+/-- Evaluate the termwise support/restriction sequence on `V`. -/
 def supportRestrictionSectionsComplexShortComplex (V : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex AddCommGrpCat.{u} ℤ) :=

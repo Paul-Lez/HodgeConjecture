@@ -27,7 +27,7 @@ variable (R : Type u) [Field R]
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual contravariant map of dual relative short exact sequences. -/
+/-- The contravariant map of dual relative short exact sequences. -/
 def relativeDualCochainShortComplexNatMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
     relativeDualCochainShortComplexNat R Y ⟶ relativeDualCochainShortComplexNat R X where
   τ₁ := HomologicalComplex.linearDualMap ((relativeChainFunctor R).map f)
@@ -49,13 +49,13 @@ def relativeDualCochainShortComplexNatMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
     rw [← HomologicalComplex.linearDualMap_comp, ← HomologicalComplex.linearDualMap_comp]
     exact congrArg HomologicalComplex.linearDualMap ((chainPairFunctor R).map f).w.symm
 
-/-- Extend the actual relative short-complex map to integer degrees. -/
+/-- Extend the relative short-complex map to integer degrees. -/
 def relativeDualCochainShortComplexIntMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
     relativeDualCochainShortComplexInt R Y ⟶ relativeDualCochainShortComplexInt R X :=
   ((ComplexShape.embeddingUpNat.extendFunctor (ModuleCat R)).mapShortComplex).map
     (relativeDualCochainShortComplexNatMap R f)
 
-/-- The literal relative restriction-cone map induced by a map of pairs. -/
+/-- The relative restriction-cone map induced by a map of pairs. -/
 def relativeCochainConeMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
     CochainComplex.mappingCone (relativeCochainRestrictionInt R Y) ⟶
       CochainComplex.mappingCone (relativeCochainRestrictionInt R X) :=
@@ -94,7 +94,7 @@ lemma relativeDualCochainHomologyIsoCone_naturality {X Y : TopPair.{u}} (f : X �
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Integer extension and universal coefficients preserve the actual
+/-- Integer extension and universal coefficients preserve the
 relative pullback map. -/
 lemma relativeDualCochainCohomologyEquiv_naturality {X Y : TopPair.{u}} (f : X ⟶ Y) (n : ℕ)
     (a : (relativeDualCochainShortComplexInt R Y).X₁.homology (n : ℤ)) :
@@ -107,7 +107,7 @@ lemma relativeDualCochainCohomologyEquiv_naturality {X Y : TopPair.{u}} (f : X �
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The canonical restriction-cone comparison intertwines actual maps of
+/-- The canonical restriction-cone comparison intertwines maps of
 pairs with the existing relative cohomology pullback. -/
 lemma relativeCochainConeCohomologyEquivCanonical_naturality
     {X Y : TopPair.{u}} (f : X ⟶ Y) (n : ℕ)

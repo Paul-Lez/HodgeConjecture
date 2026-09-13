@@ -26,8 +26,8 @@ open AlgebraicTopology.Singular
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- Actual open-section cohomology of the supported injective model is relative
-singular cohomology of the same literal local support pair. -/
+/-- Open-section cohomology of the supported injective model is relative
+singular cohomology of the same local support pair. -/
 def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
     (V : Opens (ComplexPoint X)) (n : ℕ) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex

@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SectionRestrictionCone
 
 /-!
-# Actual supported-section kernels and open restriction cones
+# Supported-section kernels and open restriction cones
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Support.SectionRestrictionCone`.
@@ -25,7 +25,7 @@ variable (X : TopCat.{u})
 
 variable (U V : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- On an open contained in the excluded open, the actual supported-section group is
+/-- On an open contained in the excluded open, the supported-section group is
 zero because its defining restriction map is an isomorphism. -/
 theorem supportedOutsideSections_isZero_of_le (F : Sheaf AddCommGrpCat.{u} X)
     (hVU : V ≤ U) :

@@ -9,9 +9,9 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoc
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
 
 /-!
-# Restriction naturality of the actual supported-section kernel comparison
+# Restriction naturality of the supported-section kernel comparison
 
-Every map below is induced by the literal restriction of sheaf sections. In
+Every map below is induced by the restriction of sheaf sections. In
 particular the short-exact-sequence lift is the positive canonical lift; its
 naturality is established before passing to homology or sheafification.
 -/
@@ -26,7 +26,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
 
-/-- Actual section restriction around a rectangle of open inclusions. -/
+/-- Section restriction around a rectangle of open inclusions. -/
 lemma sectionComplexRestriction_square {I : Type*} (c : ComplexShape I)
     (K : HomologicalComplex (Sheaf AddCommGrpCat.{u} X) c)
     {V W V' W' : Opens X} (i : W ⟶ V) (i' : W' ⟶ V')
@@ -40,7 +40,7 @@ lemma sectionComplexRestriction_square {I : Type*} (c : ComplexShape I)
   rw [← Functor.map_comp, ← Functor.map_comp]
   congr 1
 
-/-- The literal restriction on the cones of section restriction. -/
+/-- The restriction on the cones of section restriction. -/
 def sectionComplexRestrictionConeMap
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
     {V W V' W' : Opens X} (i : W ⟶ V) (i' : W' ⟶ V')
@@ -55,7 +55,7 @@ def sectionComplexRestrictionConeMap
 variable (U : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
   {V W : Opens X} (a : W ⟶ V)
 
-/-- The actual map between the three terms of the supported-section sequence. -/
+/-- The map between the three terms of the supported-section sequence. -/
 def supportRestrictionSectionsComplexMap :
     supportRestrictionSectionsComplexShortComplex X U V K ⟶
       supportRestrictionSectionsComplexShortComplex X U W K where
@@ -69,7 +69,7 @@ def supportRestrictionSectionsComplexMap :
   comm₂₃ := (((supportEvaluationRestriction X a).mapHomologicalComplex (.up ℤ)).naturality
     (supportRestrictionComplexShortComplex X U K).g).symm
 
-/-- The pushforward/intersection identification commutes with literal restriction. -/
+/-- The pushforward/intersection identification commutes with restriction. -/
 @[reassoc]
 lemma supportedOutsideIntersectionIso_naturality (F : Sheaf AddCommGrpCat.{u} X) :
     ((openRestrictionPushforward X U).obj F).obj.map a.op ≫
@@ -80,7 +80,7 @@ lemma supportedOutsideIntersectionIso_naturality (F : Sheaf AddCommGrpCat.{u} X)
   rw [← Functor.map_comp, ← Functor.map_comp]
   congr 1
 
-/-- Naturality of the actual intersection identification on coefficient complexes. -/
+/-- Naturality of the intersection identification on coefficient complexes. -/
 @[reassoc]
 lemma supportRestrictionSectionsIntersectionIso_naturality :
     (supportRestrictionSectionsComplexMap X U K a).τ₃ ≫
@@ -93,7 +93,7 @@ lemma supportRestrictionSectionsIntersectionIso_naturality :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual cone identification is a standard cone map with the specified components. -/
+/-- The cone identification is a standard cone map with the specified components. -/
 lemma supportRestrictionSectionsConeIso_hom (V : Opens X) :
     (supportRestrictionSectionsConeIso X U V K).hom =
       CochainComplex.mappingCone.map _ _ (𝟙 _)
@@ -149,7 +149,7 @@ lemma supportedSectionHomologyIsoRestrictionCone_naturality
   change H.map _ ≫ H.map _ = H.map _ ≫ H.map _
   rw [← H.map_comp, ← H.map_comp, supportRestrictionSectionsConeIso_naturality]
 
-/-- The canonical grading cone comparison is the actual map of its two grading isomorphisms. -/
+/-- The canonical grading cone comparison is the map of its two grading isomorphisms. -/
 lemma sectionComplexRestrictionExtendConeIso_hom
     (L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℕ)
     {V W : Opens X} (i : W ⟶ V) :
@@ -162,7 +162,7 @@ lemma sectionComplexRestrictionExtendConeIso_hom
         (sectionComplexRestriction_extend X L i) :=
   CochainComplex.mappingCone.mapArrowHom_eq_map _ _ _ _ _
 
-/-- The canonical grading cone comparison respects the actual restriction rectangle. -/
+/-- The canonical grading cone comparison respects the restriction rectangle. -/
 @[reassoc]
 lemma sectionComplexRestrictionExtendConeIso_naturality
     (L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℕ)

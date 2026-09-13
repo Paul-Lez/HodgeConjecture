@@ -25,7 +25,7 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom]
 
-/-- The actual singular-to-injective resolution map, using proved local
+/-- The singular-to-injective resolution map, using proved local
 contractibility of the analytic space. -/
 def complexSingularToAmbientInjective :
     rationalSingularCochainComplex (TopCat.of (ComplexPoint X)) ⟶
@@ -39,7 +39,7 @@ instance complexSingularToAmbientInjective_quasiIso :
 
 variable [IsProjective X.hom]
 
-/-- Local supported singular cohomology and the literal supported injective
+/-- Local supported singular cohomology and the supported injective
 model are canonically isomorphic in every integer degree. -/
 def complexSupportedSingularInjectiveHomologyIso
     (U V : Opens (ComplexPoint X)) (n : ℤ) :

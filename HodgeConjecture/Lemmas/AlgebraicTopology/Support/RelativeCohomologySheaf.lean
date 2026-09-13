@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologySheaf
 
 /-!
-# The actual local relative-cohomology presheaf and its sheafification
+# The local relative-cohomology presheaf and its sheafification
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologySheaf`.
@@ -33,7 +33,7 @@ variable (X : TopCat.{0}) (S : Set X) (n : ℕ)
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Restriction followed by germ is the original germ; the restriction is the
-literal pair-inclusion pullback. -/
+pair-inclusion pullback. -/
 theorem supportRelativeCohomologyGerm_restrict {U V : Opens X} (hUV : U ≤ V)
     (x : X) (hx : x ∈ U)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n) :
@@ -46,7 +46,7 @@ theorem supportRelativeCohomologyGerm_restrict {U V : Opens X} (hUV : U ≤ V)
   exact (congrArg ((supportRelativeCohomologySheaf X S n).presheaf.germ U x hx) h).trans
     ((supportRelativeCohomologySheaf X S n).presheaf.germ_res_apply (homOfLE hUV) x hx _)
 
-/-- Equality after actual restriction to a common neighborhood gives equal sheaf germs. -/
+/-- Equality after restriction to a common neighborhood gives equal sheaf germs. -/
 theorem supportRelativeCohomologyGerm_eq_of_restrict_eq
     {U V W : Opens X} (hWU : W ≤ U) (hWV : W ≤ V) (x : X) (hx : x ∈ W)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (U : Set X) S) n)
@@ -60,7 +60,7 @@ theorem supportRelativeCohomologyGerm_eq_of_restrict_eq
   rw [← supportRelativeCohomologyGerm_restrict X S n hWU x hx,
     ← supportRelativeCohomologyGerm_restrict X S n hWV x hx, h]
 
-/-- When a neighborhood misses the support, its actual relative-chain complex is zero. -/
+/-- When a neighborhood misses the support, its relative-chain complex is zero. -/
 theorem neighborhoodSupportRelativeChains_isZero (V : Set X) (hV : ∀ x ∈ V, x ∉ S) :
     IsZero ((relativeChainFunctor ℚ).obj (neighborhoodSupportComplementPair V S)) := by
   have hset : {v : V | v.1 ∉ S} = Set.univ := Set.eq_univ_of_forall fun v => hV v.1 v.2
@@ -85,7 +85,7 @@ theorem neighborhoodSupportRelativeCohomology_subsingleton
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Off closed support, every actual local relative class has zero sheaf germ. -/
+/-- Off closed support, every local relative class has zero sheaf germ. -/
 theorem supportRelativeCohomologyGerm_eq_zero_of_not_mem (hS : IsClosed S)
     (V : Opens X) (x : X) (hx : x ∈ V) (hxS : x ∉ S)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n) :

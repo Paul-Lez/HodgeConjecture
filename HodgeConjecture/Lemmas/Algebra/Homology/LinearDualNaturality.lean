@@ -21,7 +21,7 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDual
 # Naturality of linear duality on homology
 
 Concrete cycle representatives and the canonical universal-coefficient equivalence are
-compatible with actual morphisms of short complexes. These identities are used to descend
+compatible with morphisms of short complexes. These identities are used to descend
 geometric cap-product identities in the cohomology variable.
 
 The same holds one level up: the universal-coefficient equivalence
@@ -164,7 +164,7 @@ variable {R : Type u} [Field R]
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The degreewise short-complex dual identification preserves actual maps. -/
+/-- The degreewise short-complex dual identification preserves maps. -/
 lemma linearDualCochainComplexScIso_naturality (f : K ⟶ L) (n : ℕ) :
     (shortComplexFunctor (ModuleCat R) (.up ℕ) n).map (linearDualMap f) ≫
       (linearDualCochainComplexScIso K n).hom =
@@ -173,8 +173,8 @@ lemma linearDualCochainComplexScIso_naturality (f : K ⟶ L) (n : ℕ) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The universal-coefficient identification intertwines the actual dual
-cochain map with the dual of the actual homology map. -/
+/-- The universal-coefficient identification intertwines the dual
+cochain map with the dual of the homology map. -/
 lemma linearDualHomologyEquiv_naturality (f : K ⟶ L) (n : ℕ)
     (a : L.linearDualCochainComplex.homology n) (z : K.homology n) :
     linearDualHomologyEquiv K n (homologyMap (linearDualMap f) n a) z =

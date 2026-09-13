@@ -10,7 +10,7 @@ public import Mathlib.Algebra.Homology.DerivedCategory.ShortExact
 # The canonical homotopy fiber comparison for a short exact sequence
 
 For `0 → A → B → C → 0` this file constructs the canonical quasi-isomorphism
-`A → mappingCocone (B → C)`. Its normalization is the actual inclusion `A → B`.
+`A → mappingCocone (B → C)`. Its normalization is the inclusion `A → B`.
 The proof uses the explicit mapping-cone rotation homotopy equivalence and the
 canonical quasi-isomorphism from the cone of `A → B` to `C`.
 -/

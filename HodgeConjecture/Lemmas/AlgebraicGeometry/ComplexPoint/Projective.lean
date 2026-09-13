@@ -754,7 +754,7 @@ lemma surjective_vectorToComplexPoint {n : ℕ} :
   · rw [vectorToProjectiveSpace, Limits.pullback.lift_snd]
     exact hq
 
-/-- Homogeneous coordinates define an actual map from linear projectivization to the complex
+/-- Homogeneous coordinates define a map from linear projectivization to the complex
 points of scheme-theoretic projective space. -/
 noncomputable def projectivizationToComplexPoint {n : ℕ} :
     Projectivization ℂ (CoordinateSpace n) →

@@ -26,7 +26,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- The canonical evaluation/homology comparison respects actual open restriction. -/
+/-- The canonical evaluation/homology comparison respects open restriction. -/
 @[reassoc]
 lemma sectionCohomologyPresheafOnOpenIso_inv_naturality
     (n : ℤ) {V W : Opens X} (a : W ⟶ V) :
@@ -54,8 +54,8 @@ open TopCat.Sheaf
 variable (X : TopCat.{0}) [T2Space X] [∀ V : Opens X, ParacompactSpace V]
   (S : Set X) (hS : IsClosed S) (n : ℕ)
 
-/-- The actual local cohomology presheaf of supported singular cochains is the
-literal relative-cohomology presheaf, with its literal pair restrictions. -/
+/-- The local cohomology presheaf of supported singular cochains is the
+relative-cohomology presheaf, with its pair restrictions. -/
 def supportedSingularCohomologyPresheafIsoRelative :
     sectionCohomologyPresheaf X
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩) (n : ℤ) ≅
@@ -83,8 +83,8 @@ def supportedSingularCohomologyPresheafIsoRelative :
     exact supportedRationalSingularSectionCohomologyEquivSupportComplement_naturality
       X S hS a.unop n _)
 
-/-- Exact sheafification identifies the actual supported cohomology sheaf with
-the sheafification of literal neighborhood/support relative cohomology. -/
+/-- Exact sheafification identifies the supported cohomology sheaf with
+the sheafification of neighborhood/support relative cohomology. -/
 def supportedSingularCohomologySheafIsoRelative :
     (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩).homology (n : ℤ) ≅
       supportRelativeCohomologySheaf X S n :=

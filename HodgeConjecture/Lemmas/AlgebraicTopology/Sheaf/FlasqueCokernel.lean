@@ -12,8 +12,8 @@ public import Mathlib.CategoryTheory.Abelian.Exact
 
 The sheaf-forgetful functor is not exact in general. For a map whose source and
 kernel are flasque, its image is flasque and both associated short exact sequences
-remain exact on every open. Consequently its actual cokernel is preserved by the
-forgetful functor. This is a local hypothesis on one actual map, not a fabricated
+remain exact on every open. Consequently its cokernel is preserved by the
+forgetful functor. This is a local hypothesis on one map, not a fabricated
 exactness instance for the whole forgetful functor.
 -/
 
@@ -28,7 +28,7 @@ namespace TopCat.Sheaf.IsFlasque
 variable {X : TopCat.{u}}
 
 /-- A short exact sequence with flasque first term stays short exact as presheaves.
-The epimorphism is proved sectionwise using the actual flasque lifting theorem. -/
+The epimorphism is proved sectionwise using the flasque lifting theorem. -/
 lemma shortExact_map_forget {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact) [S.X₁.IsFlasque] :
     (S.map (TopCat.Sheaf.forget AddCommGrpCat.{u} X)).ShortExact := by
@@ -44,7 +44,7 @@ lemma shortExact_map_forget {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)
 
 variable {A B : TopCat.Sheaf AddCommGrpCat.{u} X} (f : A ⟶ B)
 
-/-- The actual kernel/source/image short complex. -/
+/-- The kernel/source/image short complex. -/
 def kernelImageShortComplex : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
   ShortComplex.mk (kernel.ι f) (Abelian.factorThruImage f) (by
     rw [← cancel_mono (Abelian.image.ι f), zero_comp, Category.assoc,
@@ -52,7 +52,7 @@ def kernelImageShortComplex : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Kernel, source, and actual image form a short exact sequence. -/
+/-- Kernel, source, and image form a short exact sequence. -/
 lemma kernelImageShortComplex_shortExact : (kernelImageShortComplex f).ShortExact := by
   let T := ShortComplex.mk (kernel.ι f) f (kernel.condition f)
   let φ : kernelImageShortComplex f ⟶ T :=
@@ -67,7 +67,7 @@ lemma kernelImageShortComplex_shortExact : (kernelImageShortComplex f).ShortExac
           mono_f := by dsimp [kernelImageShortComplex]; infer_instance
           epi_g := by dsimp [kernelImageShortComplex]; infer_instance }
 
-/-- The image/codomain/cokernel short exact sequence is the actual abelian image sequence. -/
+/-- The image/codomain/cokernel short exact sequence is the abelian image sequence. -/
 def imageCokernelShortComplex : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
   ShortComplex.mk (Abelian.image.ι f) (cokernel.π f)
     (Abelian.image_ι_comp_eq_zero (cokernel.condition f))
@@ -78,7 +78,7 @@ lemma imageCokernelShortComplex_shortExact : (imageCokernelShortComplex f).Short
           mono_f := by dsimp [imageCokernelShortComplex]; infer_instance
           epi_g := by dsimp [imageCokernelShortComplex]; infer_instance }
 
-/-- The actual image is flasque when both the source and kernel are flasque. -/
+/-- The image is flasque when both the source and kernel are flasque. -/
 lemma image_isFlasque [A.IsFlasque] [(kernel f).IsFlasque] : (Abelian.image f).IsFlasque := by
   let : (kernelImageShortComplex f).X₁.IsFlasque := inferInstanceAs ((kernel f).IsFlasque)
   let : (kernelImageShortComplex f).X₂.IsFlasque := inferInstanceAs A.IsFlasque
@@ -87,7 +87,7 @@ lemma image_isFlasque [A.IsFlasque] [(kernel f).IsFlasque] : (Abelian.image f).I
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- For one map with flasque source and kernel, the forgetful functor preserves its
-actual cokernel. No exactness assertion is made for arbitrary sheaf maps. -/
+cokernel. No exactness assertion is made for arbitrary sheaf maps. -/
 lemma forget_preservesCokernel [A.IsFlasque] [(kernel f).IsFlasque] :
     PreservesColimit (parallelPair f 0) (TopCat.Sheaf.forget AddCommGrpCat.{u} X) := by
   let F := TopCat.Sheaf.forget AddCommGrpCat.{u} X

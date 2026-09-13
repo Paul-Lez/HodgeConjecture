@@ -299,7 +299,7 @@ public noncomputable def coverSmallAffineAncestryLiftChain
         (coverSmallIteratedAffineCellSimplex X U n x
           (affinePermutationAncestryFlags n m a) (hsmall a))
 
-/-- The lifted ancestry chain maps to the actual affine-subdivision iterate of its original
+/-- The lifted ancestry chain maps to the affine-subdivision iterate of its original
 generator. -/
 public theorem coverSmallAffineAncestryLiftChain_comp_inclusion
     (n m : ℕ)
@@ -516,7 +516,7 @@ public theorem exists_zero_dimensional_ancestry_depth_subordinate
     exact hwone.trans hw₀one.symm
   simpa [hw] using hi
 
-/-- Every finite singular chain becomes subordinate to an open cover after enough genuine affine
+/-- Every finite singular chain becomes subordinate to an open cover after enough affine
 barycentric subdivisions: the proved relative mesh contraction handles the positive degrees, and
 degree zero is already small. -/
 public theorem coverSmallAffineSubdivisionEventuallySmall_of_openCover

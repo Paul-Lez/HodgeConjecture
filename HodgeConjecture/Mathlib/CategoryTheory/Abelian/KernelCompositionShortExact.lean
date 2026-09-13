@@ -12,7 +12,7 @@ public import Mathlib.Algebra.Homology.ShortComplex.ShortExact
 
 For `A → B → C`, restriction to kernels gives
 `0 → ker f → ker (f ≫ g) → ker g → 0` when `f` is an epimorphism.
-The maps are the actual kernel maps, with their inclusion normalizations retained.
+The maps are the kernel maps, with their inclusion normalizations retained.
 -/
 
 @[expose] public noncomputable section
@@ -50,7 +50,7 @@ lemma kernelCompositionShortComplex_shortExact [Epi f] :
 
 variable (k : A ⟶ D) (hk : f ≫ g = k)
 
-/-- The same sequence with a specified composite, preserving the actual kernel objects. -/
+/-- The same sequence with a specified composite, preserving the kernel objects. -/
 def kernelFactorizationShortComplex : ShortComplex C where
   X₁ := kernel f
   X₂ := kernel k
@@ -84,7 +84,7 @@ variable {E : Type*} [Category* E] [Abelian E]
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Kernel-preserving functors identify the actual sequence with that of the mapped
+/-- Kernel-preserving functors identify the sequence with that of the mapped
 restriction maps. This does not require them to preserve epimorphisms in general. -/
 def kernelFactorizationShortComplexMapIso :
     (kernelFactorizationShortComplex f g k hk).map F ≅

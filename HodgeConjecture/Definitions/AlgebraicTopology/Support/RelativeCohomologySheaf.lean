@@ -35,7 +35,7 @@ variable {M : Type} [TopologicalSpace M]
 
 variable (X : TopCat.{0}) (S : Set X) (n : ℕ)
 
-/-- The literal presheaf of rational relative cohomology of neighborhood/support pairs.
+/-- The presheaf of rational relative cohomology of neighborhood/support pairs.
 We retain the rational group but forget its scalar structure for the additive sheaf API. -/
 def supportRelativeCohomologyPresheaf : TopCat.Presheaf AddCommGrpCat X where
   obj V := AddCommGrpCat.of (RelativeCohomology ℚ
@@ -62,17 +62,17 @@ def supportRelativeCohomologyPresheaf : TopCat.Presheaf AddCommGrpCat X where
             (W := (V.unop : Set X)) (V := (U.unop : Set X)) (leOfHom f.unop) S) a)
     rw [← LinearMap.comp_apply, ← relativeCohomologyMap_comp, neighborhoodSupportInclusionPairMap_comp]
 
-/-- Actual sheafification, not a presupposed sheaf property of relative cohomology. -/
+/-- Sheafification, not a presupposed sheaf property of relative cohomology. -/
 def supportRelativeCohomologySheaf : TopCat.Sheaf AddCommGrpCat X :=
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj
     (supportRelativeCohomologyPresheaf X S n)
 
-/-- The canonical map taking an actual relative class to its sheafified local section. -/
+/-- The canonical map taking a relative class to its sheafified local section. -/
 def supportRelativeCohomologyToSheaf :
     supportRelativeCohomologyPresheaf X S n ⟶ (supportRelativeCohomologySheaf X S n).obj :=
   toSheafify (Opens.grothendieckTopology X) _
 
-/-- Germ of an actual relative coclass in the sheafification. -/
+/-- Germ of a relative coclass in the sheafification. -/
 def supportRelativeCohomologyGerm (V : Opens X) (x : X) (hx : x ∈ V)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n) :
     (supportRelativeCohomologySheaf X S n).presheaf.stalk x :=

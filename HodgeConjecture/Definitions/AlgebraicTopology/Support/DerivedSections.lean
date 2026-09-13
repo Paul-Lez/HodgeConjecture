@@ -45,7 +45,7 @@ def openRestrictionPushforward (U : Opens X) :
   U.isOpenEmbedding.sheafPullback AddCommGrpCat ⋙
     pushforward AddCommGrpCat U.inclusion'
 
-/-- The actual restriction morphism, functorial in the coefficient sheaf. -/
+/-- The restriction morphism, functorial in the coefficient sheaf. -/
 def toOpenRestrictionPushforward (U : Opens X) :
     𝟭 (Sheaf AddCommGrpCat.{u} X) ⟶ openRestrictionPushforward X U where
   app F := ⟨{

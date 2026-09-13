@@ -45,7 +45,7 @@ instance cycleComponentSmoothLocusAmbientOpenInclusion_isImmersion :
   change IsImmersion (cycleComponentSmoothLocusAmbientOpen X x).ι
   infer_instance
 
-/-- The actual smooth locus, closed in the complement of its singular boundary. -/
+/-- The smooth locus, closed in the complement of its singular boundary. -/
 def cycleComponentSmoothLocusClosedLift :
     (cycleComponentι X.left x ≫ X.hom).smoothLocus.toScheme ⟶
       (cycleComponentSmoothLocusAmbientOpen X x).toScheme :=
@@ -98,7 +98,7 @@ instance cycleComponentSmoothLocusAmbientOpenOver_smoothOfRelativeDimension :
 
 namespace ComplexPoint
 
-/-- The full cycle support as an actual closed analytic subset. -/
+/-- The full cycle support as a closed analytic subset. -/
 def cycleComponentAnalyticClosedSupport : Closeds (ComplexPoint X) :=
   ⟨cycleComponentSupport X x, isClosed_cycleComponentSupport X x⟩
 

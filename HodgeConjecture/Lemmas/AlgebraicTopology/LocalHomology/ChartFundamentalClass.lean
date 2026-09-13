@@ -27,7 +27,7 @@ chart target. Mathlib's radial homeomorphism compresses all of `ℂ^d` into that
 the inverse chart gives an open embedding into the space. The induced map of punctured pairs sends
 the standard complex local class to local homology at the point.
 
-The construction fixes both the support and the complex orientation. It requires only an actual
+The construction fixes both the support and the complex orientation. It requires only a
 chart and a proof that the point lies in its source; no fundamental or orientation class is passed
 as data.
 -/

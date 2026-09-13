@@ -24,7 +24,7 @@ variable {C : Type*} [Category* C] [Abelian C]
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The explicit shifted fiber lift is natural for actual short-complex
+/-- The explicit shifted fiber lift is natural for short-complex
 maps, before passing to any derived or homotopy category. -/
 @[reassoc]
 lemma shiftedLiftShortComplex_naturality (f : S ⟶ T) :

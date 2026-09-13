@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.DerivedSectionsLocalization
 
 /-!
-# The actual localization sequence on injective coefficient complexes
+# The localization sequence on injective coefficient complexes
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Support.DerivedSectionsLocalization`.
@@ -25,15 +25,15 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U : Opens X)
 
-/-- The actual support inclusion followed by restriction-pushforward. -/
+/-- The support inclusion followed by restriction-pushforward. -/
 def supportRestrictionShortComplex (F : Sheaf AddCommGrpCat.{u} X) :
     ShortComplex (Sheaf AddCommGrpCat.{u} X) :=
   ShortComplex.mk ((sheafSectionsSupportedOutsideInclusion X U).app F)
     ((toOpenRestrictionPushforward X U).app F)
     (sheafSectionsSupportedOutsideInclusion_restriction X U F)
 
-/-- The sequence of sections on `V`, with the actual supported-sections inclusion
-and actual restriction map. -/
+/-- The sequence of sections on `V`, with the supported-sections inclusion
+and restriction map. -/
 def supportRestrictionSectionsShortComplex (V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) : ShortComplex AddCommGrpCat.{u} :=
   (supportRestrictionShortComplex X U F).map (supportEvaluation X V)

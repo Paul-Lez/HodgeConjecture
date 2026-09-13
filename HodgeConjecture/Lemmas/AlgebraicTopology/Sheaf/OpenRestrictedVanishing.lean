@@ -8,11 +8,11 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.CohomologyStalkVani
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestriction
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueLowestCohomology
 /-!
-# Local vanishing on an open subset and actual restricted section complexes
+# Local vanishing on an open subset and restricted section complexes
 
 Cofinal calculations are performed on opens of the original ambient space.
-The literal image/preimage identities identify these section complexes with
-sections of the actual open-restricted sheaf complex. For a bounded-below
+The image/preimage identities identify these section complexes with
+sections of the open-restricted sheaf complex. For a bounded-below
 flasque complex, lower local vanishing therefore implies lower cohomology
 vanishing of sections on that open.
 -/
@@ -28,7 +28,7 @@ namespace TopCat.Sheaf
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
   (U : Opens X)
 
-/-- Cofinal ambient calculations on points of `U` imply actual cohomology-sheaf
+/-- Cofinal ambient calculations on points of `U` imply cohomology-sheaf
 vanishing of the restricted complex. -/
 theorem openRestriction_homology_isZero_of_cofinal_sections (n : ℤ)
     (hlocal : ∀ (x : X), x ∈ U → ∀ (V : Opens X), x ∈ V →
@@ -58,7 +58,7 @@ theorem openRestriction_homology_isZero_of_cofinal_sections (n : ℤ)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- On a bounded-below flasque complex, actual lower local vanishing on `U`
+/-- On a bounded-below flasque complex, lower local vanishing on `U`
 implies vanishing of the section-complex cohomology on `U`. -/
 theorem sectionCohomology_isZero_of_cofinal_lower_vanishing (N n : ℤ) [K.IsStrictlyGE N]
     (hflasque : ∀ j, (K.X j).IsFlasque)

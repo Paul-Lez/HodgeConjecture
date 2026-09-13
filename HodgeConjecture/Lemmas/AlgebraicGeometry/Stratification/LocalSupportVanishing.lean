@@ -33,7 +33,7 @@ variable (X : Over (Spec (.of ℂ)))
   {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)
 
 include hx in
-/-- Every point in the actual `k`th layer has cofinal actual ambient neighborhoods
+/-- Every point in the `k`th layer has cofinal ambient neighborhoods
 whose relative cohomology below degree `2(p+1)` vanishes. -/
 theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
     (y : ComplexPoint X)

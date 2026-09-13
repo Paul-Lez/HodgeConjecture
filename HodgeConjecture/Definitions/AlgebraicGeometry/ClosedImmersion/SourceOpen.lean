@@ -10,7 +10,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Analytific
 # Restricting the source of a closed immersion without losing closedness
 
 For a closed immersion `i : Y ⟶ X` and an open `A ⊆ Y`, delete `i(Y \ A)`
-from the target. The actual map from `A` into this target open is closed, and its
+from the target. The map from `A` into this target open is closed, and its
 image is exactly the restriction of the original image. This allows a smooth
 source of varying local dimensions to be treated on fixed-dimensional opens.
 -/
@@ -23,7 +23,7 @@ namespace AlgebraicGeometry
 
 variable {X Y : Scheme} (i : Y ⟶ X) [IsClosedImmersion i] (A : Y.Opens)
 
-/-- Delete the actual closed image of the discarded source complement. -/
+/-- Delete the closed image of the discarded source complement. -/
 def closedImmersionSourceOpenTarget : X.Opens :=
   ⟨(i '' (A : Set Y)ᶜ)ᶜ, (i.isClosedEmbedding.isClosedMap _ A.isOpen.isClosed_compl).isOpen_compl⟩
 
@@ -33,7 +33,7 @@ theorem closedImmersionSourceOpenTarget_preimage :
   rw [Set.preimage_compl, Set.preimage_image_eq _ i.isClosedEmbedding.injective,
     compl_compl]
 
-/-- The actual factor of the source open into the corresponding target open. -/
+/-- The factor of the source open into the corresponding target open. -/
 def closedImmersionSourceOpenLift : (A : Scheme) ⟶ (closedImmersionSourceOpenTarget i A : Scheme) :=
   IsOpenImmersion.lift (closedImmersionSourceOpenTarget i A).ι (A.ι ≫ i) (by
     rw [Scheme.Opens.range_ι]
@@ -67,7 +67,7 @@ theorem range_closedImmersionSourceOpenLift :
     refine ⟨⟨a, haA⟩, (closedImmersionSourceOpenTarget i A).ι.isOpenEmbedding.injective ?_⟩
     exact (hf ⟨a, haA⟩).trans ha
 
-/-- Restricting the source in this way produces a genuine closed immersion. -/
+/-- Restricting the source in this way produces a closed immersion. -/
 instance closedImmersionSourceOpenLift_isClosedImmersion :
     IsClosedImmersion (closedImmersionSourceOpenLift i A) := by
   have : IsPreimmersion (closedImmersionSourceOpenLift i A ≫

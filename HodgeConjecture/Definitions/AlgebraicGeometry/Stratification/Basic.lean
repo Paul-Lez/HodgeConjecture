@@ -12,9 +12,9 @@ public import Mathlib.AlgebraicGeometry.IdealSheaf.Subscheme
 /-!
 # A finite smooth decomposition of reduced closed subschemes
 
-Each step takes the actual reduced closed subscheme on a closed subset, removes its smooth
+Each step takes the reduced closed subscheme on a closed subset, removes its smooth
 locus, and continues on the closed remainder. Noetherian induction makes this construction
-finite. The pieces are actual smooth locally closed subschemes, not supplied stratification
+finite. The pieces are smooth locally closed subschemes, not supplied stratification
 data. This is an algebraic prerequisite for dimension induction; it does not assert a
 Whitney or frontier condition, triangulation, analytic homology vanishing, or extension of an
 orientation across singularities.
@@ -30,7 +30,7 @@ universe u
 
 variable {X : Scheme.{u}}
 
-/-- The actual reduced closed subscheme on a closed subset. -/
+/-- The reduced closed subscheme on a closed subset. -/
 def reducedClosedSubscheme (S : Closeds X) : Scheme :=
   (Scheme.IdealSheafData.vanishingIdeal S).subscheme
 
@@ -57,7 +57,7 @@ instance reducedClosedSubscheme_isReduced (S : Closeds X) :
 variable {K : Type u} [Field K]
   (f : X ⟶ Spec (.of K)) [LocallyOfFiniteType f]
 
-/-- The structure morphism of the actual reduced closed subscheme. -/
+/-- The structure morphism of the reduced closed subscheme. -/
 def reducedClosedStructureMap (S : Closeds X) :
     reducedClosedSubscheme S ⟶ Spec (.of K) :=
   reducedClosedSubschemeι S ≫ f

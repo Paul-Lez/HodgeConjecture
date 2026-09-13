@@ -25,7 +25,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U V : Opens X) (F : Sheaf AddCommGrpCat.{u} X)
 
-/-- The preceding identification preserves the actual restriction morphism. -/
+/-- The preceding identification preserves the restriction morphism. -/
 @[reassoc]
 theorem toOpenRestrictionPushforward_intersection :
     (((toOpenRestrictionPushforward X U).app F).hom.app (op V)) ≫
@@ -35,7 +35,7 @@ theorem toOpenRestrictionPushforward_intersection :
   rw [← F.obj.map_comp]
   congr 1
 
-/-- The literal supported-section inclusion restricts to zero on the intersection. -/
+/-- The supported-section inclusion restricts to zero on the intersection. -/
 @[reassoc]
 theorem supportedOutsideInclusion_restrict_intersection :
     ((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V) ≫
@@ -47,7 +47,7 @@ theorem supportedOutsideInclusion_restrict_intersection :
     ((toOpenRestrictionPushforward X U).app F).hom.app (op V) = 0 at h
   rw [h, zero_comp]
 
-/-- A section zero on the intersection lifts into the actual supported-section kernel.
+/-- A section zero on the intersection lifts into the supported-section kernel.
 The proof uses its canonical on-open kernel comparison, not a chosen support lift. -/
 theorem exists_supportedOutsideSection_of_restrict_eq_zero
     (s : F.obj.obj (op V))
@@ -74,7 +74,7 @@ theorem exists_supportedOutsideSection_of_restrict_eq_zero
   rw [hai]
   rfl
 
-/-- Pairwise sheaf gluing extends a supported section by zero across `U`, as an actual
+/-- Pairwise sheaf gluing extends a supported section by zero across `U`, as an
 additive morphism from the defining kernel. -/
 def supportedOutsideGlueZero :
     ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V) ⟶ F.obj.obj (op (V ⊔ U)) :=
@@ -154,14 +154,14 @@ theorem sheafSectionsSupportedOutside_restriction_surjective [F.IsFlasque]
     _ = ι.hom.app (op V) a :=
       ConcreteCategory.congr_hom (supportedOutsideGlueZero_restrict_left X U V F) a
 
-/-- The actual sheaf-valued supported-sections functor preserves flasque sheaves. -/
+/-- The sheaf-valued supported-sections functor preserves flasque sheaves. -/
 instance sheafSectionsSupportedOutside_isFlasque [F.IsFlasque] :
     ((sheafSectionsSupportedOutside X U).obj F).IsFlasque where
   epi {V W} i := by
     exact (AddCommGrpCat.epi_iff_surjective _).mpr
       (sheafSectionsSupportedOutside_restriction_surjective X U F (leOfHom i.unop))
 
-/-- Equivalently, sections supported in any actual closed subset preserve flasqueness. -/
+/-- Equivalently, sections supported in any closed subset preserve flasqueness. -/
 instance sheafSectionsWithClosedSupport_isFlasque (Z : Closeds X) [F.IsFlasque] :
     ((sheafSectionsWithClosedSupport X Z).obj F).IsFlasque :=
   sheafSectionsSupportedOutside_isFlasque X Z.compl F

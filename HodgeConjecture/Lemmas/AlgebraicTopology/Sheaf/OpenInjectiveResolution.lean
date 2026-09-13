@@ -30,7 +30,7 @@ def restrictedAmbientConstantResolution :
   ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex (.up ℕ)).obj
     (ambientConstantInjectiveResolution X A).cocomplex
 
-/-- The augmentation from actual open constants into the restricted ambient
+/-- The augmentation from open constants into the restricted ambient
 resolution, using the normalized constant/open isomorphism. -/
 def restrictedAmbientConstantAugmentation :
     (CochainComplex.single₀ (Sheaf AddCommGrpCat.{0} (TopCat.of U))).obj
@@ -62,7 +62,7 @@ instance restrictedAmbientConstantAugmentation_quasiIso :
   dsimp only [restrictedAmbientConstantAugmentation]
   infer_instance
 
-/-- An actual map from the restricted ambient resolution to the independent
+/-- A map from the restricted ambient resolution to the independent
 open-subspace resolution, extending the prescribed constant augmentation. -/
 def restrictedAmbientToOpenResolution :
     restrictedAmbientConstantResolution X U A ⟶
@@ -79,7 +79,7 @@ instance restrictedAmbientConstantResolution_isFlasque (n : ℕ) :
     @injective_isFlasque _ _ ((ambientConstantInjectiveResolution X A).injective n)
   exact openSheafRestriction_isFlasque X U _
 
-/-- The actual restriction of the ambient injective complex. -/
+/-- The restriction of the ambient injective complex. -/
 def ambientInjectiveRestriction :
     (ambientConstantInjectiveResolution X A).cocomplex ⟶
       ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
@@ -90,7 +90,7 @@ def ambientInjectiveRestriction :
     ((ambientConstantInjectiveResolution X A).cocomplex.d i j)).symm
 
 /-- Restriction from the ambient injective resolution to the independently
-chosen open-subspace resolution, through actual open restriction. -/
+chosen open-subspace resolution, through open restriction. -/
 def ambientToOpenInjectiveResolution :
     (ambientConstantInjectiveResolution X A).cocomplex ⟶
       ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
@@ -100,7 +100,7 @@ def ambientToOpenInjectiveResolution :
       (restrictedAmbientToOpenResolution X U A)
 
 /-- Global sections of the pushed-forward comparison. Its source uses the
-actual open restriction of the ambient resolution, not a supplied model. -/
+open restriction of the ambient resolution, not a supplied model. -/
 def globalRestrictedAmbientToOpenResolution :
     ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
       (.up ℕ)).obj
@@ -171,7 +171,7 @@ lemma restrictedAmbientToOpenResolution_quasiIso :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Strict normalization: the independently resolved restriction extends
-the actual restriction map of constant sheaves. -/
+the restriction map of constant sheaves. -/
 @[reassoc]
 lemma ambientAugmentation_comp_openResolution :
     (ambientConstantInjectiveResolution X A).ι ≫ ambientToOpenInjectiveResolution X U A =
@@ -216,7 +216,7 @@ lemma ambientAugmentation_comp_openResolution :
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The comparison remains a quasi-isomorphism after global sections: on the
-open subspace both actual resolutions are termwise flasque. No exactness of
+open subspace both resolutions are termwise flasque. No exactness of
 open direct image on arbitrary complexes is asserted. -/
 theorem globalRestrictedAmbientToOpenResolution_quasiIso :
     QuasiIso (globalRestrictedAmbientToOpenResolution X U A) := by

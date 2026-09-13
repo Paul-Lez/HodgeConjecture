@@ -39,7 +39,7 @@ local instance cycleComponentSheafClassAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- The supported injective cohomology sheaf is the sheaf of local
-relative cohomology, by the constructed singular resolution and its literal
+relative cohomology, by the constructed singular resolution and its
 restriction-natural comparison. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :

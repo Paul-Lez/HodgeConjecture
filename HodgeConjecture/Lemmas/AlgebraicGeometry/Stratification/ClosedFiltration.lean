@@ -61,7 +61,7 @@ theorem reducedSmoothClosedFiltration_le (S : Closeds X) (k : ℕ) :
     reducedSmoothClosedFiltration f S k ≤ S :=
   reducedSmoothClosedFiltration_antitone f S (Nat.zero_le k)
 
-/-- Each successive layer is the range of the actual smooth locally closed immersion. -/
+/-- Each successive layer is the range of the smooth locally closed immersion. -/
 theorem reducedSmoothClosedFiltration_layer (S : Closeds X) (k : ℕ) :
     Set.range (reducedClosedSmoothPieceι f (reducedSmoothClosedFiltration f S k)) =
       (reducedSmoothClosedFiltration f S k : Set X) \
@@ -70,7 +70,7 @@ theorem reducedSmoothClosedFiltration_layer (S : Closeds X) (k : ℕ) :
 
 variable [PerfectField K] [NoetherianSpace X]
 
-/-- The terminal index is the actual finite list length, not supplied termination data. -/
+/-- The terminal index is the finite list length, not supplied termination data. -/
 theorem reducedSmoothClosedFiltration_length (S : Closeds X) :
     reducedSmoothClosedFiltration f S (reducedSmoothStratification f S).length = ⊥ := by
   induction S using (wellFounded_lt (α := Closeds X)).induction with

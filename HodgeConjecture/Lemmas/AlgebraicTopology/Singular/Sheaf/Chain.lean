@@ -27,7 +27,7 @@ public import Mathlib.Topology.Sheaves.Sheafify
 # The relative singular-chain sheaf complex
 
 This file constructs the presheaf of relative singular chain complexes
-`U ↦ C_*(X, X ∖ U; R)`. For `V ⊆ U`, restriction is the actual relative chain map induced by
+`U ↦ C_*(X, X ∖ U; R)`. For `V ⊆ U`, restriction is the relative chain map induced by
 the identity map of `X` and the inclusion `X ∖ U ⊆ X ∖ V`. Degreewise sheafification gives a
 complex of additive sheaves, then the grading embedding `n ↦ -n` gives a cochain complex
 indexed by the integers. All complexes, restrictions, and sheafification maps are constructed;
@@ -62,7 +62,7 @@ def openComplementPairFunctor : (Opens X)ᵒᵖ ⥤ TopPair.{u} where
   map_comp i j :=
     supportInclusionPairMap_trans X (leOfHom j.unop) (leOfHom i.unop)
 
-/-- The actual relative singular-chain complex, contravariantly in the open support. -/
+/-- The relative singular-chain complex, contravariantly in the open support. -/
 def openRelativeSingularChainComplexFunctor :
     (Opens X)ᵒᵖ ⥤ ChainComplex (ModuleCat.{u} R) ℕ :=
   openComplementPairFunctor X ⋙ relativeChainFunctor R
@@ -116,7 +116,7 @@ def singularChainSheafBoundary (n : ℕ) :
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).map
     (singularChainBoundary R X n)
 
-/-- Degreewise sheafification of the actual relative singular-chain complex. -/
+/-- Degreewise sheafification of the relative singular-chain complex. -/
 def singularChainSheafComplex : ChainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℕ :=
   ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).mapHomologicalComplex
     (ComplexShape.down ℕ)).obj (singularChainPresheafComplex R X)
@@ -129,7 +129,7 @@ def singularChainSheafComplex : ChainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) 
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The degreewise sheafification unit, as an actual chain map. -/
+/-- The degreewise sheafification unit, as a chain map. -/
 def singularChainSheafificationUnit :
     singularChainPresheafComplex R X ⟶
       ((TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapHomologicalComplex

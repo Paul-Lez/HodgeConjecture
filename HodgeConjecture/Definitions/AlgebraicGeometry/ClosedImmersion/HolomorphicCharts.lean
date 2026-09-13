@@ -25,7 +25,7 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace E] [CompleteSpace F]
   (e : OpenPartialHomeomorph E F)
 
-/-- The actual open locus on which both directions of a coordinate change are analytic. -/
+/-- The open locus on which both directions of a coordinate change are analytic. -/
 def biAnalyticLocus : Set E :=
   {x | AnalyticAt ℂ e x} ∩ (e.source ∩ e ⁻¹' {y | AnalyticAt ℂ e.symm y})
 
@@ -47,7 +47,7 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- The actual complex-linear identification of tangent and normal product coordinates. -/
+/-- The complex-linear identification of tangent and normal product coordinates. -/
 def closedImmersionNormalCoordinatesLinearEquiv :
     ((Fin m → ℂ) ×
       (closedImmersionDerivativeProjection X Y i m d z).ker) ≃L[ℂ]
@@ -61,7 +61,7 @@ def closedImmersionNormalCoordinateChange :
   (closedImmersionNormalChart X Y i m d z).symm.trans
     (closedImmersionNormalCoordinatesLinearEquiv X Y i m d z).toHomeomorph.toOpenPartialHomeomorph
 
-/-- An actual support-flattening chart whose normal coordinate change is holomorphic in
+/-- A support-flattening chart whose normal coordinate change is holomorphic in
 both directions throughout its source. It contains the distinguished support point. -/
 def closedImmersionHolomorphicFlatteningChart :
     OpenPartialHomeomorph (ComplexPoint X)

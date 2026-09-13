@@ -23,7 +23,7 @@ This file constructs restriction of singular cochains through direct image and p
 naturality with sheafification. For a closed subset of a smooth complex-point space, it also
 constructs a compatible quasi-isomorphism from singular cochains on the open complement to the
 chosen injective resolution. The resulting morphism to the derived direct-image model is induced
-by the actual restriction of singular cochains. This file does not yet identify its global-section
+by the restriction of singular cochains. This file does not yet identify its global-section
 mapping cone with relative singular cohomology.
 -/
 

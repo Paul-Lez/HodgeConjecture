@@ -12,7 +12,7 @@ public import Mathlib.Algebra.Homology.HomologySequence
 /-!
 # Localization between two nested closed supports
 
-For `V ⊆ U` open, the actual restrictions `F → j_{U*}F|U → j_{V*}F|V`
+For `V ⊆ U` open, the restrictions `F → j_{U*}F|U → j_{V*}F|V`
 give a short exact sequence on injective coefficients:
 `0 → Γ_{X∖U} F → Γ_{X∖V} F → ker(j_{U*}F|U → j_{V*}F|V) → 0`.
 The last term is explicitly the sheaf of sections on `U` vanishing on `V`,
@@ -55,7 +55,7 @@ instance : (sheafSectionsBetweenOpens X h).Additive where
     apply (cancel_mono (kernel.ι _)).1
     simp [sheafSectionsBetweenOpens, Preadditive.add_comp, Preadditive.comp_add]
 
-/-- On each ambient open set the last term is exactly the kernel of actual
+/-- On each ambient open set the last term is exactly the kernel of
 restriction from its intersection with `U` to its intersection with `V`. -/
 def sheafSectionsBetweenOpensOnOpenIso (W : Opens X) (F : Sheaf AddCommGrpCat.{u} X) :
     ((sheafSectionsBetweenOpens X h).obj F).obj.obj (op W) ≅
@@ -97,7 +97,7 @@ lemma sheafSectionsSupportedOutsideMap_toBetween :
   simp [toSheafSectionsBetweenOpens, sheafSectionsSupportedOutsideMap,
     liftSheafSectionsSupportedOutside, sheafSectionsSupportedOutsideInclusion]
 
-/-- The actual inclusion/restriction sequence for two nested complements. -/
+/-- The inclusion/restriction sequence for two nested complements. -/
 def nestedSupportRestrictionShortComplex (F : Sheaf AddCommGrpCat.{u} X) :
     ShortComplex (Sheaf AddCommGrpCat.{u} X) :=
   ShortComplex.mk ((sheafSectionsSupportedOutsideMap X h).app F)
@@ -132,7 +132,7 @@ def nestedSupportRestrictionComplexShortComplex
     (((toSheafSectionsBetweenOpens X h).mapHomologicalComplex (.up ℤ)).app K)
     (by ext n; exact NatTrans.congr_app (sheafSectionsSupportedOutsideMap_toBetween X h) (K.X n))
 
-/-- The actual nested-support sequence of section complexes on an open set. -/
+/-- The nested-support sequence of section complexes on an open set. -/
 def nestedSupportRestrictionSectionsComplexShortComplex (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex AddCommGrpCat.{u} ℤ) :=

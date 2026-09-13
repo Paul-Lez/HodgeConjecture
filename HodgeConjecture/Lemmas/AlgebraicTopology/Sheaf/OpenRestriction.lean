@@ -9,11 +9,11 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SheafCohomology
 public import Mathlib.CategoryTheory.Sites.GlobalSections
 
 /-!
-# Exact open restriction with its actual adjunction
+# Exact open restriction with its adjunction
 
 The naive open restriction is both a continuous-site direct image (hence
 left exact) and isomorphic to topological inverse image (hence right exact).
-Its adjunction to open direct image is displayed with the actual restriction
+Its adjunction to open direct image is displayed with the restriction
 unit used to define sections with support.
 -/
 
@@ -66,7 +66,7 @@ lemma openSheafRestriction_map_quasiIso
     QuasiIso (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
       (.up ℤ)).map f) := inferInstance
 
-/-- The actual counit of open restriction/direct image. -/
+/-- The counit of open restriction/direct image. -/
 def openSheafRestrictionCounit :
     pushforward AddCommGrpCat.{u} U.inclusion' ⋙
       U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⟶
@@ -84,7 +84,7 @@ def openSheafRestrictionCounit :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The open-restriction adjunction with the actual support-defining restriction
+/-- The open-restriction adjunction with the support-defining restriction
 as its unit, so later resolution comparisons have a fixed normalization. -/
 def openSheafRestrictionAdjunction :
     U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⊣
@@ -134,7 +134,7 @@ lemma toSheafify_constantToOpenSheafRestriction (A : AddCommGrpCat.{u}) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Actual restriction of ambient constants, followed by the constant/open
+/-- Restriction of ambient constants, followed by the constant/open
 comparison, is the support-defining restriction unit. -/
 @[reassoc]
 lemma constantRestriction_pushforward_constantToOpen (A : AddCommGrpCat.{u}) :
@@ -159,7 +159,7 @@ lemma constantRestriction_pushforward_constantToOpen (A : AddCommGrpCat.{u}) :
     ((Functor.const (Opens X)ᵒᵖ).obj A)).naturality
       (U.isOpenEmbedding.isOpenMap.adjunction.counit.app V.unop).op)
 
-/-- The inverse constant/open comparison is the adjoint of actual constant
+/-- The inverse constant/open comparison is the adjoint of constant
 restriction to the subspace. -/
 def openSheafRestrictionToConstant (A : AddCommGrpCat.{u}) :
     (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj

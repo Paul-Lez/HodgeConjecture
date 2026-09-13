@@ -28,12 +28,12 @@ variable (X : Over (Spec (.of ℂ)))
 abbrev cycleComponentSingularFiltrationLength : ℕ :=
   (cycleComponentSingularStratification X x).length
 
-/-- The actual smooth scheme occurring between two consecutive closed supports. -/
+/-- The smooth scheme occurring between two consecutive closed supports. -/
 abbrev cycleComponentSingularFiltrationStratum (k : ℕ) : Scheme :=
   reducedClosedSmoothPiece (cycleComponentι X.left x ≫ X.hom)
     (cycleComponentSingularClosedFiltration X x k)
 
-/-- Its actual locally closed immersion into the original smooth ambient scheme. -/
+/-- Its locally closed immersion into the original smooth ambient scheme. -/
 def cycleComponentSingularFiltrationStratumι (k : ℕ) :
     cycleComponentSingularFiltrationStratum X x k ⟶ X.left :=
   reducedClosedSmoothPieceι (cycleComponentι X.left x ≫ X.hom)
@@ -73,7 +73,7 @@ instance cycleComponentSingularFiltrationStratumOver_locallyOfFiniteType (k : �
   infer_instance
 
 omit [IsIntegral X.left] [Smooth X.hom] in
-/-- The successive ambient difference is precisely the image of the actual smooth stratum. -/
+/-- The successive ambient difference is precisely the image of the smooth stratum. -/
 theorem cycleComponentSingularAmbientClosedFiltration_layer (k : ℕ) :
     Set.range (cycleComponentSingularFiltrationStratumι X x k) =
       (cycleComponentSingularAmbientClosedFiltration X x k : Set X.left) \
@@ -86,7 +86,7 @@ theorem cycleComponentSingularAmbientClosedFiltration_layer (k : ℕ) :
 def cycleComponentSingularStratumAmbientOpen (k : ℕ) : X.left.Opens :=
   (cycleComponentSingularAmbientClosedFiltration X x (k + 1)).compl
 
-/-- The actual smooth stratum factors into the complement of the next closed support. -/
+/-- The smooth stratum factors into the complement of the next closed support. -/
 def cycleComponentSingularStratumClosedLift (k : ℕ) :
     cycleComponentSingularFiltrationStratum X x k ⟶
       cycleComponentSingularStratumAmbientOpen X x k :=
@@ -144,7 +144,7 @@ theorem range_cycleComponentSingularStratumClosedLift (k : ℕ) :
     exact ⟨w, (cycleComponentSingularStratumAmbientOpen X x k).ι.isOpenEmbedding.injective
       ((hf w).trans hw)⟩
 
-/-- Each actual layer is a closed immersion in precisely the open needed by localization,
+/-- Each layer is a closed immersion in precisely the open needed by localization,
 not in an unrelated auxiliary open. -/
 instance cycleComponentSingularStratumClosedLift_isClosedImmersion (k : ℕ) :
     IsClosedImmersion (cycleComponentSingularStratumClosedLift X x k) := by
@@ -165,7 +165,7 @@ instance cycleComponentSingularStratumClosedLiftOver_isClosedImmersion (k : ℕ)
   change IsClosedImmersion (cycleComponentSingularStratumClosedLift X x k)
   infer_instance
 
-/-- The actual localization open remains smooth of the original ambient dimension. -/
+/-- The localization open remains smooth of the original ambient dimension. -/
 instance cycleComponentSingularStratumAmbientOpen_smoothOfRelativeDimension
     (k d : ℕ) [SmoothOfRelativeDimension d X.hom] :
     SmoothOfRelativeDimension d ((cycleComponentSingularStratumAmbientOpen X x k).ι ≫ X.hom) := by
@@ -255,7 +255,7 @@ theorem cycleComponentSingularFiltrationStratum_exists_affine_normalCodimension_
       (cycleComponentSingularFiltrationStratum_dimension_lt X x hx k) z
   exact ⟨U, hU, hzU, n, hn, by omega, hstd⟩
 
-/-- The dimension bound supplies genuine smooth scheme morphisms of fixed local
+/-- The dimension bound supplies smooth scheme morphisms of fixed local
 dimension, ready for the normal-coordinate construction. -/
 theorem cycleComponentSingularFiltrationStratum_exists_smooth_relativeDimension
     {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)

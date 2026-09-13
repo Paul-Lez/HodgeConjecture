@@ -37,7 +37,7 @@ theorem analyticAt_closedImmersionNormalChart :
         ((ContinuousLinearMap.snd ℂ (Fin m → ℂ) P.ker).analyticAt _))
 
 /-- The inverse normal coordinates are complex analytic as well, by the analytic inverse
-function theorem applied to the actual invertible complex derivative. -/
+function theorem applied to the invertible complex derivative. -/
 theorem analyticAt_closedImmersionNormalChart_symm :
     AnalyticAt ℂ (closedImmersionNormalChart X Y i m d z).symm
       (localChart X d (Point.map i z) (Point.map i z)) := by
@@ -77,7 +77,7 @@ theorem closedImmersionStandardFlatteningChart_mem_source :
   rw [closedImmersionStandardFlatteningChart_source]
   exact closedImmersionFlatteningChart_mem_source X Y i m d z
 
-/-- The support is exactly the zero-normal plane throughout the actual chart source. -/
+/-- The support is exactly the zero-normal plane throughout the chart source. -/
 theorem closedImmersionStandardFlatteningChart_mem_range_iff (y : ComplexPoint X)
     (hy : y ∈ (closedImmersionStandardFlatteningChart X Y i m d z).source) :
     y ∈ Set.range (Point.map i) ↔

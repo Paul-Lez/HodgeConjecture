@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts
 
 /-!
-# Actual holomorphic support-flattening charts
+# Holomorphic support-flattening charts
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts`.
@@ -77,14 +77,14 @@ private theorem closedImmersionNormalCoordinateChange_symm_at_chart (y : Complex
 
 variable (z' : ComplexPoint Y)
 
-/-- The genuine transition between two constructed holomorphic support-flattening charts. -/
+/-- The transition between two constructed holomorphic support-flattening charts. -/
 def closedImmersionNormalTransition :
     OpenPartialHomeomorph ((Fin m → ℂ) × (Fin (d - m) → ℂ))
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
   (closedImmersionHolomorphicFlatteningChart X Y i m d z).symm.trans
     (closedImmersionHolomorphicFlatteningChart X Y i m d z')
 
-/-- These actual transitions are holomorphic throughout their domains. -/
+/-- These transitions are holomorphic throughout their domains. -/
 theorem analyticAt_closedImmersionNormalTransition
     (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
     (hv : v ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
@@ -120,7 +120,7 @@ theorem analyticAt_closedImmersionNormalTransition
   have hlast : AnalyticAt ℂ A' (C' (C.symm (A.symm v))) := himage ▸ hA'
   exact hlast.comp (f := fun w => C' (C.symm (A.symm w))) (x := v) hmiddle
 
-/-- The actual inverse transition is holomorphic at the image of every source point. -/
+/-- The inverse transition is holomorphic at the image of every source point. -/
 theorem analyticAt_closedImmersionNormalTransition_symm
     (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
     (hv : v ∈ (closedImmersionNormalTransition X Y i m d z z').source) :

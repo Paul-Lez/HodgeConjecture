@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenSheafification
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
-/-! # Singular cochains and actual restriction to open subspaces -/
+/-! # Singular cochains and restriction to open subspaces -/
 
 @[expose] public noncomputable section
 
@@ -18,7 +18,7 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R] (X : TopCat.{u}) (U : Opens X)
 
-/-- An open in an open subspace is identified with its actual ambient image. -/
+/-- An open in an open subspace is identified with its ambient image. -/
 def openSubspaceImageIso (V : Opens U) :
     (Opens.toTopCat (TopCat.of U)).obj V ≅
       (Opens.toTopCat X).obj (U.isOpenEmbedding.functor.obj V) :=
@@ -31,7 +31,7 @@ lemma openSubspaceImageIso_naturality {V W : Opens U} (f : V ⟶ W) :
         (Opens.toTopCat X).map (U.isOpenEmbedding.functor.map f) :=
   TopCat.hom_ext rfl
 
-/-- The actual ambient-image homeomorphisms induce chain isomorphisms. -/
+/-- The ambient-image homeomorphisms induce chain isomorphisms. -/
 def openSubspaceImageChainIso (V : Opens U) :
     (openSingularChainComplexFunctor R (TopCat.of U)).obj V ≅
       (openSingularChainComplexFunctor R X).obj (U.isOpenEmbedding.functor.obj V) :=
@@ -49,7 +49,7 @@ lemma openSubspaceImageChainIso_naturality {V W : Opens U} (f : V ⟶ W) :
   rw [← Functor.map_comp, ← Functor.map_comp, openSubspaceImageIso_naturality]
 
 /-- Restricting ambient raw singular cochains to the open subspace gives
-intrinsic raw cochains there, by dualizing the actual image chain map. -/
+intrinsic raw cochains there, by dualizing the image chain map. -/
 def singularCochainPresheafOpenRestrictionIso (n : ℕ) :
     U.isOpenEmbedding.functor.op ⋙ singularCochainPresheaf R X n ≅
       singularCochainPresheaf R (TopCat.of U) n :=
@@ -84,7 +84,7 @@ lemma singularCochainPresheafOpenRestrictionIso_coboundary (n : ℕ) :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The raw open-subspace comparison respects the actual singular
+/-- The raw open-subspace comparison respects the singular
 coboundaries, and hence is an isomorphism of complexes. -/
 def singularCochainPresheafComplexOpenRestrictionIso :
     (Functor.mapHomologicalComplex
@@ -127,7 +127,7 @@ lemma singularCochainSheafOpenRestrictionIso_coboundary (n : ℕ) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual open restriction of the ambient sheafified singular
+/-- The open restriction of the ambient sheafified singular
 cochains is the intrinsic complex on that open subspace. -/
 def singularCochainSheafComplexOpenRestrictionIso :
     ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex (.up ℕ)).obj

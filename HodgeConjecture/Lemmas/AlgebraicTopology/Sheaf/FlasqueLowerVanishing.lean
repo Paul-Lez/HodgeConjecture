@@ -13,7 +13,7 @@ its global section complex is exact through the same degree. Only the stated
 initial range is used; exactness in higher degrees is not assumed.
 
 The proof inductively establishes flasqueness of the cycle sheaves in that
-range and then applies the actual short exact cycles sequence. This is the
+range and then applies the short exact cycles sequence. This is the
 globalization step for supported semipurity, without assuming a spectral
 sequence or an exact global-sections functor.
 -/

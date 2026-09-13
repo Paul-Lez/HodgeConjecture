@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
 
-/-! # Actual local restriction-cone naturality -/
+/-! # Local restriction-cone naturality -/
 
 @[expose] public noncomputable section
 
@@ -18,11 +18,11 @@ namespace AlgebraicTopology.Singular
 variable (R : Type) [Field R] (X : TopCat.{0})
   {V W V' W' : Opens X} (i : W ⟶ V) (i' : W' ⟶ V') (a : V' ⟶ V) (b : W' ⟶ W)
 
-/-- The actual map of pairs induced by a square of ambient open inclusions. -/
+/-- The map of pairs induced by a square of ambient open inclusions. -/
 def openInclusionPairMap : openInclusionPair X i' ⟶ openInclusionPair X i :=
   TopPair.ofHom ((Opens.toTopCat X).map a) ((Opens.toTopCat X).map b) (by ext x; rfl)
 
-/-- Restriction of raw cochains around an actual open-inclusion square. -/
+/-- Restriction of raw cochains around an open-inclusion square. -/
 lemma openRawSingularRestriction_square :
     openRawSingularRestriction R X i ≫ openRawSingularRestriction R X b =
       openRawSingularRestriction R X a ≫ openRawSingularRestriction R X i' := by
@@ -35,7 +35,7 @@ lemma openRawSingularRestriction_square :
   rw [← Functor.map_comp, ← Functor.map_comp]
   congr 1
 
-/-- Actual sheaf-section restriction around the same square. -/
+/-- Sheaf-section restriction around the same square. -/
 lemma openSingularSheafRestriction_square :
     openSingularSheafRestriction R X i ≫ openSingularSheafRestriction R X b =
       openSingularSheafRestriction R X a ≫ openSingularSheafRestriction R X i' := by
@@ -48,7 +48,7 @@ lemma openSingularSheafRestriction_square :
   rw [← Functor.map_comp, ← Functor.map_comp]
   congr 1
 
-/-- Actual restriction on raw local cones. -/
+/-- Restriction on raw local cones. -/
 def openRawSingularRestrictionConeMap :
     openRawSingularRestrictionCone R X i ⟶ openRawSingularRestrictionCone R X i' :=
   CochainComplex.mappingCone.map _ _
@@ -57,7 +57,7 @@ def openRawSingularRestrictionConeMap :
     (by rw [← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp,
       openRawSingularRestriction_square R X i i' a b])
 
-/-- Actual restriction on sheaf-section local cones. -/
+/-- Restriction on sheaf-section local cones. -/
 def openSingularSheafRestrictionConeMap :
     openSingularSheafRestrictionCone R X i ⟶ openSingularSheafRestrictionCone R X i' :=
   CochainComplex.mappingCone.map _ _
@@ -68,7 +68,7 @@ def openSingularSheafRestrictionConeMap :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual local cone sheafification map is natural in the ambient open. -/
+/-- The local cone sheafification map is natural in the ambient open. -/
 @[reassoc]
 lemma openRawToSingularSheafRestrictionCone_naturality :
     openRawSingularRestrictionConeMap R X i i' a b ≫
@@ -94,7 +94,7 @@ lemma openRawSingularRestrictionConeIsoRelative_hom :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The actual relative cone map after forgetting scalars termwise. -/
+/-- The relative cone map after forgetting scalars termwise. -/
 def forgottenRelativeCochainConeMap {P Q : TopPair.{0}} (f : P ⟶ Q) :
     CochainComplex.mappingCone
         (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
@@ -114,7 +114,7 @@ def forgottenRelativeCochainConeMap {P Q : TopPair.{0}} (f : P ⟶ Q) :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The actual open raw-cone comparison preserves maps of open pairs. -/
+/-- The open raw-cone comparison preserves maps of open pairs. -/
 @[reassoc]
 lemma openRawSingularRestrictionConeIsoRelative_naturality :
     openRawSingularRestrictionConeMap R X i i' a b ≫
@@ -162,7 +162,7 @@ lemma openRawSingularRestrictionConeIsoForgottenRelative_naturality :
     Iso.inv_hom_id_assoc]
   rfl
 
-/-- The actual homology comparison, retaining the scalar-forgetting
+/-- The homology comparison, retaining the scalar-forgetting
 homology isomorphism as a separate canonical factor. -/
 def openRawSingularRestrictionConeHomologyIso (n : ℤ) :
     (openRawSingularRestrictionCone R X i).homology n ≅
@@ -178,7 +178,7 @@ def openRawSingularRestrictionConeHomologyIso (n : ℤ) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The complete raw-cone homology comparison preserves actual restrictions. -/
+/-- The complete raw-cone homology comparison preserves restrictions. -/
 @[reassoc]
 lemma openRawSingularRestrictionConeHomologyIso_naturality (n : ℤ) :
     HomologicalComplex.homologyMap (openRawSingularRestrictionConeMap R X i i' a b) n ≫
@@ -226,7 +226,7 @@ lemma openRawSingularRestrictionConeCohomologyEquivRelative_eq (n : ℕ)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Exact relative-cohomology naturality of the actual local raw-cone
+/-- Exact relative-cohomology naturality of the local raw-cone
 comparison, including all grading and scalar-forgetting identifications. -/
 lemma openRawSingularRestrictionConeCohomologyEquivRelative_naturality (n : ℕ)
     (z : (openRawSingularRestrictionCone R X i).homology ((n : ℤ) - 1)) :
@@ -247,7 +247,7 @@ lemma openRawSingularRestrictionConeCohomologyEquivRelative_naturality (n : ℕ)
   rw [h]
   exact relativeCochainConeCohomologyEquivCanonical_naturality _ _ _ _
 
-/-- Homology of the actual raw-to-sheaf cone map. -/
+/-- Homology of the raw-to-sheaf cone map. -/
 def openRawToSingularSheafRestrictionConeHomologyIso
     [ParacompactSpace V] [T2Space V] [ParacompactSpace W] [T2Space W] (n : ℤ) :
     (openRawSingularRestrictionCone ℚ X i).homology n ≅
@@ -257,8 +257,8 @@ def openRawToSingularSheafRestrictionConeHomologyIso
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Inverting the actual sheafification quasi-isomorphism preserves the
-literal local restriction square. -/
+/-- Inverting the sheafification quasi-isomorphism preserves the
+local restriction square. -/
 @[reassoc]
 lemma openRawToSingularSheafRestrictionConeHomologyIso_inv_naturality
     [ParacompactSpace V] [T2Space V] [ParacompactSpace W] [T2Space W]
@@ -280,8 +280,8 @@ lemma openRawToSingularSheafRestrictionConeHomologyIso_inv_naturality
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The complete actual local sheaf-section cone comparison intertwines
-ambient-open restriction with the literal relative-cohomology pullback. -/
+/-- The complete local sheaf-section cone comparison intertwines
+ambient-open restriction with the relative-cohomology pullback. -/
 lemma openSingularSheafRestrictionConeCohomologyEquivRelative_naturality
     [ParacompactSpace V] [T2Space V] [ParacompactSpace W] [T2Space W]
     [ParacompactSpace V'] [T2Space V'] [ParacompactSpace W'] [T2Space W'] (n : ℕ)

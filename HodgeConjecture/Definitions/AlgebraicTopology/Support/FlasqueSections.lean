@@ -26,7 +26,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U V : Opens X) (F : Sheaf AddCommGrpCat.{u} X)
 
-/-- Restriction-pushforward on an ambient open is literally evaluation on its
+/-- Restriction-pushforward on an ambient open is evaluation on its
 intersection with the excluded open. -/
 def supportedOutsideIntersectionIso :
     ((openRestrictionPushforward X U).obj F).obj.obj (op V) ≅ F.obj.obj (op (V ⊓ U)) :=

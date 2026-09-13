@@ -23,7 +23,7 @@ This module is ported from Paul Lezeau's corresponding file in
 
 # Low-dimensional barycentric fundamental chains
 
-This file constructs the first actual components of the barycentric subdivision chain operator.
+This file constructs the first components of the barycentric subdivision chain operator.
 The construction starts from the vertex of `sd Δ[0]` represented by the singleton chain and
 uses Yoneda naturality to associate a subdivided vertex to every vertex of a simplicial set.
 -/

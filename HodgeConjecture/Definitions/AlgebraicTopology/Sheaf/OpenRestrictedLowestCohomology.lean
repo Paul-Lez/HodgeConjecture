@@ -9,8 +9,8 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestrictedVanis
 /-!
 # Canonical lowest-degree section comparison on an ambient open
 
-The coefficient complex stays on the original ambient space. The actual open
-restriction, its exact homology comparison, and literal equality of the top open's
+The coefficient complex stays on the original ambient space. The open
+restriction, its exact homology comparison, and equality of the top open's
 image identify the lowest-degree comparison on the restricted space with an
 isomorphism between ambient section cohomology and ambient cohomology-sheaf sections.
 -/
@@ -25,7 +25,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U : Opens X)
 
-/-- Actual global sections of open restriction are ambient sections on the same open. -/
+/-- Global sections of open restriction are ambient sections on the same open. -/
 def openRestrictionTopSectionsIso :
     U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⋙ supportEvaluation (TopCat.of U) ⊤ ≅
       supportEvaluation X U :=
@@ -37,7 +37,7 @@ variable (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The same actual open equality applied to coefficient complexes. -/
+/-- The same open equality applied to coefficient complexes. -/
 def openRestrictionTopSectionComplexIso :
     ((supportEvaluation (TopCat.of U) ⊤).mapHomologicalComplex (.up ℤ)).obj
       (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
@@ -45,7 +45,7 @@ def openRestrictionTopSectionComplexIso :
       ((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K :=
   (NatIso.mapHomologicalComplex (openRestrictionTopSectionsIso X U) (.up ℤ)).app K
 
-/-- Exact open restriction identifies sections of the two actual homology sheaves. -/
+/-- Exact open restriction identifies sections of the two homology sheaves. -/
 def openRestrictionHomologyTopSectionsIso (n : ℤ) :
     (((((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
       (.up ℤ)).obj K).homology n).obj.obj (op (⊤ : Opens (TopCat.of U)))) ≅
@@ -56,7 +56,7 @@ def openRestrictionHomologyTopSectionsIso (n : ℤ) :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Actual lowest-degree comparison on an open where lower cohomology sheaves vanish.
+/-- Lowest-degree comparison on an open where lower cohomology sheaves vanish.
 Its maps are fixed by restriction, sheafification, and exact homology functoriality. -/
 def openRestrictedLowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero

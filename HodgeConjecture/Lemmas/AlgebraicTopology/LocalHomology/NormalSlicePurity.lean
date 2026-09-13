@@ -29,7 +29,7 @@ variable (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
 abbrev normalSlicePair : TopPair :=
   TopPair.ofSubset (X := TopCat.of (E × (Fin c → ℂ))) {z | z.2 ≠ 0}
 
-/-- Projection to the actual normal point-complement pair. -/
+/-- Projection to the normal point-complement pair. -/
 def normalSliceProjection : normalSlicePair E c ⟶ standardComplexPuncturedPair c :=
   TopPair.ofHom (TopCat.ofHom ⟨Prod.snd, continuous_snd⟩)
     (TopCat.ofHom ⟨fun z => ⟨z.1.2, z.2⟩,
@@ -62,7 +62,7 @@ def normalSliceContraction :
       map_one_left := fun z => Subtype.ext (Prod.ext (one_smul ℝ z.1.1) rfl) }
   w := rfl
 
-/-- Normal projection and zero section are inverse up to the actual relative prism homotopy. -/
+/-- Normal projection and zero section are inverse up to the relative prism homotopy. -/
 def normalSliceRelativeChainHomotopyEquiv :
     HomotopyEquiv ((relativeChainFunctor ℚ).obj (normalSlicePair E c))
       ((relativeChainFunctor ℚ).obj (standardComplexPuncturedPair c)) where
@@ -90,7 +90,7 @@ def normalSliceRelativeHomologyIso (n : ℕ) :
       relativeHomologyMap ℚ n (normalSliceSection E c) := rfl
 
 /-- The relative normal class uses the exact complex orientation, transported by the
-actual zero tangent section. -/
+zero tangent section. -/
 def normalSliceClass : RelativeHomology ℚ (normalSlicePair E c) (2 * c) :=
   relativeHomologyMap ℚ (2 * c) (normalSliceSection E c) (standardComplexLocalClass c)
 

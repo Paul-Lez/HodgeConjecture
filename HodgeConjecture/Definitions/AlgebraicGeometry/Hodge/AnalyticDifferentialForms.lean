@@ -22,7 +22,7 @@ public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWed
 /-!
 # Analytic differential forms
 
-This file constructs analytic differential forms from holomorphic functions and their actual
+This file constructs analytic differential forms from holomorphic functions and their
 manifold derivatives. The pointwise algebra of wedges lives in
 `HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors` and
 `HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWedge`.
@@ -768,7 +768,7 @@ lemma formRestriction_mem_chartEvaluationKernel
     ⟨hy.1, leOfHom i.unop hy.2⟩
 
 /-- Analytic differential forms of degree `p` on `U`: Kähler differential forms of the
-holomorphic functions, modulo the identities that actual complex derivatives detect. -/
+holomorphic functions, modulo the identities that complex derivatives detect. -/
 abbrev HolomorphicForm [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :=
   Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p ⧸

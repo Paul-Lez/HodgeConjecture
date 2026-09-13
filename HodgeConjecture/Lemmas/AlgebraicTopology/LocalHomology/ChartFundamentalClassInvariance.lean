@@ -26,7 +26,7 @@ public import Mathlib.Analysis.Calculus.FDeriv.Linear
 
 This file turns the local nonlinear degree calculation into a chart-comparison theorem.  For two
 complex charts through the same point, their compressed inverse-chart embeddings determine an
-actual open partial homeomorphism of `ℂᵈ`.  If its derivative at the model origin is injective
+open partial homeomorphism of `ℂᵈ`.  If its derivative at the model origin is injective
 and complex linear, the two explicitly normalized chart-local homology classes agree.
 
 The proof constructs the overlap neighborhood, uses point excision to lift the standard class,

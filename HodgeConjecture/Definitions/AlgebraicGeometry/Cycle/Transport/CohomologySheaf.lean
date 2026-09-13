@@ -29,7 +29,7 @@ open AlgebraicTopology.Singular
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- The literal supported ambient rational injective complex for a closed support. -/
+/-- The supported ambient rational injective complex for a closed support. -/
 def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
   ((TopCat.Sheaf.sheafSectionsSupportedOutside

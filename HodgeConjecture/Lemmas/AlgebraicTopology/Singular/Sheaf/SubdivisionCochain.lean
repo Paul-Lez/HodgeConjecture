@@ -1162,7 +1162,7 @@ theorem exists_topOpenLocallyZero_primitive
         Y S ((ComplexShape.up ℕ).prev n) ψ hψsmall)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual kernel of the map from top-open rational cochains to global first-plus cochains is
+/-- The kernel of the map from top-open rational cochains to global first-plus cochains is
 acyclic. -/
 theorem topOpenToGlobalSingularCochainPlusComplex_kernel_acyclic :
     (kernel (topOpenToGlobalSingularCochainPlusComplex ℚ Y)).Acyclic := by

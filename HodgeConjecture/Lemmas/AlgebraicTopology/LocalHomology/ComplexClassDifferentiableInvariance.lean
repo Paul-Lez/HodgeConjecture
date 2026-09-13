@@ -214,7 +214,7 @@ def complexStraightLineLocalPairHomotopy
         simp }
   w := rfl
 
-/-- A genuinely local coordinate-change theorem.  On some open neighborhood `V` contained in
+/-- A local coordinate-change theorem.  On some open neighborhood `V` contained in
 the prescribed coordinate domain `U`, the local map sends every lift of the standard local class
 through point excision back to the standard local class.  In particular, neither a global
 extension nor a global injectivity/nonvanishing hypothesis is needed. -/

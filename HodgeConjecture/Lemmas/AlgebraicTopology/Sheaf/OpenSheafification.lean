@@ -7,10 +7,10 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestriction
 public import Mathlib.CategoryTheory.Sites.CoverLifting
 
-/-! # Sheafification commutes with actual open restriction
+/-! # Sheafification commutes with open restriction
 
 Open-image functors lift covering sieves. The resulting sheafification
-comparison is the actual sheafification lift of the restricted unit.
+comparison is the sheafification lift of the restricted unit.
 -/
 
 @[expose] public noncomputable section
@@ -45,7 +45,7 @@ variable (X : TopCat.{u}) (U : Opens X)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Sheafification followed by actual open restriction is canonically
+/-- Sheafification followed by open restriction is canonically
 sheafification of the restricted presheaf. -/
 def openRestrictionSheafificationIso (P : Presheaf AddCommGrpCat.{u} X) :
     (presheafToSheaf (Opens.grothendieckTopology (TopCat.of U)) AddCommGrpCat).obj
@@ -64,7 +64,7 @@ def openRestrictionSheafificationIso (P : Presheaf AddCommGrpCat.{u} X) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The comparison is normalized by the actual restricted sheafification
+/-- The comparison is normalized by the restricted sheafification
 unit, so no independently selected stalk or section isomorphism is used. -/
 @[reassoc]
 lemma toSheafify_openRestrictionSheafificationIso (P : Presheaf AddCommGrpCat.{u} X) :

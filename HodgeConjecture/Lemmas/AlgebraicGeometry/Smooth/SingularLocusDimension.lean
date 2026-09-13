@@ -10,7 +10,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
 
 /-!
-# The actual singular locus has smaller algebraic dimension
+# The singular locus has smaller algebraic dimension
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Smooth.SingularLocusDimension`.
@@ -46,7 +46,7 @@ instance reducedSingularLocusι_isClosedImmersion :
 variable (Y : Over (Spec (.of ℂ)))
   [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
 
-/-- The singular locus of every cycle component admits the actual finite smooth
+/-- The singular locus of every cycle component admits the finite smooth
 decomposition constructed by Noetherian recursion. -/
 def cycleComponentSingularStratification (x : Y.left) :
     List (Closeds (cycleComponent Y.left x)) := by
@@ -73,7 +73,7 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
     Set.range (reducedSingularLocusι f) = (f.smoothLocus : Set X)ᶜ :=
   range_reducedClosedSubschemeι _
 
-/-- Generic smoothness makes the actual singular locus proper; no singular-locus bound
+/-- Generic smoothness makes the singular locus proper; no singular-locus bound
 is supplied as an input. -/
 theorem singularLocusClosed_ne_top [PerfectField K] [IsReduced X] [Nonempty X] :
     singularLocusClosed f ≠ ⊤ := by
@@ -90,7 +90,7 @@ theorem topologicalKrullDim_reducedSingularLocus_lt [PerfectField K] [IsIntegral
   topologicalKrullDim_lt_of_isClosed_of_ne_univ (singularLocusClosed f).isClosed
     (fun he => singularLocusClosed_ne_top f (SetLike.coe_injective he)) hdim
 
-/-- Each actual smooth piece has dimension at most that of any containing closed set. -/
+/-- Each smooth piece has dimension at most that of any containing closed set. -/
 theorem topologicalKrullDim_reducedClosedSmoothPiece_le {S T : Closeds X} (hTS : T ≤ S) :
     topologicalKrullDim (reducedClosedSmoothPiece f T) ≤ topologicalKrullDim S := by
   calc
@@ -99,8 +99,8 @@ theorem topologicalKrullDim_reducedClosedSmoothPiece_le {S T : Closeds X} (hTS :
     _ ≤ topologicalKrullDim S :=
       (IsEmbedding.inclusion hTS).isInducing.topologicalKrullDim_le
 
-/-- On a smooth complex scheme of algebraic dimension below `m`, every point has an
-actual standard-smooth affine neighborhood of some relative dimension below `m`.
+/-- On a smooth complex scheme of algebraic dimension below `m`, every point has a
+standard-smooth affine neighborhood of some relative dimension below `m`.
 No global equidimensionality assumption is needed. -/
 theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
     {Z : Scheme} (g : Z ⟶ Spec (.of ℂ)) [Smooth g] {m : ℕ}

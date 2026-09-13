@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 
 /-!
-# Actual purity along the smooth locus of an integral cycle component
+# Purity along the smooth locus of an integral cycle component
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity`.
@@ -25,7 +25,7 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
-/-- Its forward map displays the actual open-section identification, canonical
+/-- Its forward map displays the open-section identification, canonical
 sheafification comparison on the open, and exact open-restriction homology comparison. -/
 @[simp] theorem cycleComponentSmoothSupportLowestSectionCohomologyIso_hom :
     (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom =

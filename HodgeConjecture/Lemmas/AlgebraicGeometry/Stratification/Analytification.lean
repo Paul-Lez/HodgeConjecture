@@ -50,7 +50,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec (.of ℂ))) {Y : Over (Spec (.of ℂ))}
 
-/-- Forgetting a complex point to its underlying Zariski point is continuous for the actual
+/-- Forgetting a complex point to its underlying Zariski point is continuous for the
 analytic topology. -/
 theorem continuous_underlying_to_zariski :
     Continuous (Point.underlying : ComplexPoint X → X.left) := by

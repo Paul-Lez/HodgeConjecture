@@ -23,7 +23,7 @@ namespace AlgebraicTopology.Singular
 
 variable {M : Type} [TopologicalSpace M]
 
-/-- Inclusion of actual neighborhood/support-complement pairs. -/
+/-- Inclusion of neighborhood/support-complement pairs. -/
 def neighborhoodSupportInclusionPairMap {W V : Set M} (hWV : W ⊆ V) (S : Set M) :
     neighborhoodSupportComplementPair W S ⟶ neighborhoodSupportComplementPair V S :=
   TopPair.ofHom
@@ -34,7 +34,7 @@ variable (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
   (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (S : Set M)
   (hS : ∀ y ∈ e.source, y ∈ S ↔ (e y).2 = 0)
 
-/-- The actual normal projection from a neighborhood support pair. -/
+/-- The normal projection from a neighborhood support pair. -/
 def chartNormalProjectionPair (W : Set M) (hW : W ⊆ e.source) :
     neighborhoodSupportComplementPair W S ⟶ standardComplexPuncturedPair c :=
   TopPair.ofHom
@@ -43,7 +43,7 @@ def chartNormalProjectionPair (W : Set M) (hW : W ⊆ e.source) :
       ((((e.continuousOn.mono hW).domRestrict).comp continuous_subtype_val).snd).subtype_mk _⟩)
     (by ext w; rfl)
 
-/-- The coclass on a whole chart neighborhood is the actual normal-projection pullback. -/
+/-- The coclass on a whole chart neighborhood is the normal-projection pullback. -/
 def chartNormalProjectionCoclass (W : Set M) (hW : W ⊆ e.source) :
     RelativeCohomology ℚ (neighborhoodSupportComplementPair W S) (2 * c) :=
   relativeCohomologyMap ℚ (2 * c) (chartNormalProjectionPair E c e S hS W hW)
