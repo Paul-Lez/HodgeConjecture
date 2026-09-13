@@ -121,8 +121,7 @@ lemma pointComplementToExcisionSmallSingularSet_comp_inclusion
     (U : Set X) (x : X) :
     pointComplementToExcisionSmallSingularSet U x ≫
         (coverSmallSingularSubcomplex (TopCat.of X) (pointExcisionCover U x)).ι =
-      TopCat.toSSet.map (pointComplementAmbientInclusion x) :=
-  SSet.Subcomplex.lift_ι _ _
+      TopCat.toSSet.map (pointComplementAmbientInclusion x) := rfl
 
 def pointComplementToExcisionSmallChains (U : Set X) (x : X) :
     (TopCat.toSSet.obj (pointComplementPair x).snd).chainComplex
@@ -217,10 +216,7 @@ lemma neighborhoodPointComplementSimplexOfAvoids_map (U : Set X) (x : X) {n : �
     (u : (TopCat.toSSet.obj (TopCat.of U)) _⦋n⦌)
     (hu : ∀ t, (((TopCat.of U).toSSetObjEquiv _ u) t).1 ≠ x) :
     (TopCat.toSSet.map (neighborhoodPointComplementPair U x).map).app _
-        (neighborhoodPointComplementSimplexOfAvoids U x u hu) = u := by
-  apply ((TopCat.of U).toSSetObjEquiv _).injective
-  ext t
-  rfl
+        (neighborhoodPointComplementSimplexOfAvoids U x u hu) = u := rfl
 
 omit [T1Space X] in
 /-- Equality with a simplex in `X ∖ {x}` shows that a simplex of `U` avoids `x`. -/
@@ -501,8 +497,7 @@ lemma neighborhoodToPointExcisionSmallSingularSet_comp_inclusion
     (U : Set X) (x : X) :
     neighborhoodToPointExcisionSmallSingularSet U x ≫
         (coverSmallSingularSubcomplex (TopCat.of X) (pointExcisionCover U x)).ι =
-      TopCat.toSSet.map (topologicalSubsetInclusion (TopCat.of X) U) :=
-  SSet.Subcomplex.lift_ι _ _
+      TopCat.toSSet.map (topologicalSubsetInclusion (TopCat.of X) U) := rfl
 
 def neighborhoodToPointExcisionSmallChains (U : Set X) (x : X) :
     (TopCat.toSSet.obj (TopCat.of U)).chainComplex (ModuleCat.of ℚ ℚ) ⟶
@@ -525,12 +520,7 @@ lemma neighborhoodPointComplementToSmall_sSet_square (U : Set X) (x : X) :
     TopCat.toSSet.map (neighborhoodPointComplementToPointComplement U x) ≫
         pointComplementToExcisionSmallSingularSet U x =
       TopCat.toSSet.map (neighborhoodPointComplementPair U x).map ≫
-        neighborhoodToPointExcisionSmallSingularSet U x := by
-  ext n y
-  apply Subtype.ext
-  apply ((TopCat.of X).toSSetObjEquiv n).injective
-  ext t
-  rfl
+        neighborhoodToPointExcisionSmallSingularSet U x := rfl
 
 omit [T1Space X] in
 lemma neighborhoodPointComplementToSmall_chain_square (U : Set X) (x : X) :
@@ -755,9 +745,7 @@ def neighborhoodRelativePointExcisionSmallIso (U : Set X) (x : X) :
 
 omit [T1Space X] in
 lemma pointComplementAmbientInclusion_eq_pairMap (x : X) :
-    pointComplementAmbientInclusion x = (pointComplementPair x).map := by
-  ext y
-  rfl
+    pointComplementAmbientInclusion x = (pointComplementPair x).map := rfl
 
 /-- The chain inclusion for the ambient point-complement pair, with both singular chain
 complexes exposed. -/
@@ -777,9 +765,7 @@ def pointComplementAmbientChainMap (x : X) :
 
 omit [T1Space X] in
 lemma pointComplementAmbientChainMap_eq_subspaceChainMap (x : X) :
-    pointComplementAmbientChainMap x = ambientPointComplementSubspaceChainMap x := by
-  rw [pointComplementAmbientChainMap, pointComplementAmbientInclusion_eq_pairMap]
-  rfl
+    pointComplementAmbientChainMap x = ambientPointComplementSubspaceChainMap x := rfl
 
 instance pointComplementAmbientInclusion_mono (x : X) :
     Mono (pointComplementAmbientInclusion x) :=
@@ -973,8 +959,7 @@ lemma neighborhoodToPointExcisionSmallChains_comp_ambientInclusion
 omit [T1Space X] in
 lemma neighborhoodAmbientChainMap_eq_pairMapRight (U : Set X) (x : X) :
     neighborhoodAmbientChainMap U =
-      ((chainPairFunctor ℚ).map (neighborhoodPointComplementPairMap U x)).right := by
-  rfl
+      ((chainPairFunctor ℚ).map (neighborhoodPointComplementPairMap U x)).right := rfl
 
 omit [T1Space X] in
 @[reassoc]

@@ -114,10 +114,7 @@ lemma integerConstantHomAddEquivGlobalSections_naturality
       (AddCommGrpCat.of ℤ) ⟶ F) :
     integerConstantHomAddEquivGlobalSections G (g ≫ f) =
       f.hom.app (.op (⊤ : Opens Y))
-        (integerConstantHomAddEquivGlobalSections F g) := by
-  have h := (constantSheafAdj (Opens.grothendieckTopology Y) AddCommGrpCat
-    isTerminalTop).homEquiv_naturality_right g f
-  exact ConcreteCategory.congr_hom h (1 : ℤ)
+        (integerConstantHomAddEquivGlobalSections F g) := rfl
 
 end
 

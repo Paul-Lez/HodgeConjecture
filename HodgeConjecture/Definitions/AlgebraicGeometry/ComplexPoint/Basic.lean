@@ -83,14 +83,12 @@ noncomputable def map (f : X ⟶ Y) : Point R X → Point R Y :=
 
 /-- The identity scheme morphism induces the identity on `R`-points. -/
 @[simp]
-lemma map_id (z : Point R X) : map (𝟙 X) z = z := by
-  simp [map]
+lemma map_id (z : Point R X) : map (𝟙 X) z = z := rfl
 
 /-- Composition of scheme morphisms agrees with composition on `R`-points. -/
 @[simp]
 lemma map_comp_apply (f : X ⟶ Y) (g : Y ⟶ Z) (z : Point R X) :
-    map (f ≫ g) z = map g (map f z) := by
-  simp [map, Category.assoc]
+    map (f ≫ g) z = map g (map f z) := rfl
 
 end Functoriality
 

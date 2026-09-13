@@ -35,8 +35,7 @@ theorem neighborhoodSupportPairImageIso_naturality {U V : Opens Y} (hUV : U ≤ 
       (fun y _ => by rw [← hB]; rfl)).hom ≫
       neighborhoodSupportInclusionPairMap
         (W := (hf.functor.obj U : Set X)) (V := (hf.functor.obj V : Set X))
-        (Set.image_mono hUV) S := by
-  apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
+        (Set.image_mono hUV) S := rfl
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in

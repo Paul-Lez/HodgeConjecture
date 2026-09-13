@@ -56,8 +56,7 @@ lemma piHasFDerivAt_iff_normed
     @HasFDerivAt ℂ _ (Fin d → ℂ) Pi.normedAddCommGroup.toAddCommGroup
       Pi.normedSpace.toModule PseudoMetricSpace.toUniformSpace.toTopologicalSpace
       (Fin d → ℂ) Pi.normedAddCommGroup.toAddCommGroup Pi.normedSpace.toModule
-      PseudoMetricSpace.toUniformSpace.toTopologicalSpace f L x := by
-  rfl
+      PseudoMetricSpace.toUniformSpace.toTopologicalSpace f L x := by simp
 
 private lemma hasFDerivAt_univUnitBall_formula_normed :
     HasFDerivAt (fun x : Fin d → ℂ ↦ (√(1 + ‖x‖ ^ 2))⁻¹ • x)

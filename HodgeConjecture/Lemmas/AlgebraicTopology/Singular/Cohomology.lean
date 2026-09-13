@@ -287,14 +287,12 @@ lemma cohomologyEquivDualHomology_forgetSupport (R : Type u) [Field R] (X : TopC
 
 @[simp]
 lemma preimageSupportPairMap_id (X : TopCat.{u}) (Z : Set X) :
-    preimageSupportPairMap (𝟙 X) Z = 𝟙 (TopPair.ofSubset Zᶜ) := by
-  apply MorphismProperty.Arrow.Hom.ext <;> rfl
+    preimageSupportPairMap (𝟙 X) Z = 𝟙 (TopPair.ofSubset Zᶜ) := rfl
 
 lemma preimageSupportPairMap_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
     (W : Set Z) :
     preimageSupportPairMap (f ≫ g) W =
-      preimageSupportPairMap f (g ⁻¹' W) ≫ preimageSupportPairMap g W := by
-  apply MorphismProperty.Arrow.Hom.ext <;> rfl
+      preimageSupportPairMap f (g ⁻¹' W) ≫ preimageSupportPairMap g W := rfl
 
 @[simp]
 lemma cohomologyWithSupportMap_id (R : Type u) [Field R] (X : TopCat.{u})
@@ -309,19 +307,16 @@ lemma cohomologyWithSupportMap_comp (R : Type u) [Field R]
     cohomologyWithSupportMap R n (f ≫ g) W =
       (cohomologyWithSupportMap R n f (g ⁻¹' W)).comp
         (cohomologyWithSupportMap R n g W) := by
-  rw [cohomologyWithSupportMap, cohomologyWithSupportMap, cohomologyWithSupportMap,
-    preimageSupportPairMap_comp, relativeCohomologyMap_comp]
+  simp [cohomologyWithSupportMap, preimageSupportPairMap_comp, relativeCohomologyMap_comp]
 
 @[simp]
 lemma supportInclusionPairMap_rfl (X : TopCat.{u}) (Z : Set X) :
-    supportInclusionPairMap X (Set.Subset.rfl : Z ⊆ Z) = 𝟙 (TopPair.ofSubset Zᶜ) := by
-  apply MorphismProperty.Arrow.Hom.ext <;> rfl
+    supportInclusionPairMap X (Set.Subset.rfl : Z ⊆ Z) = 𝟙 (TopPair.ofSubset Zᶜ) := rfl
 
 lemma supportInclusionPairMap_trans (X : TopCat.{u}) {Z W U : Set X}
     (hZW : Z ⊆ W) (hWU : W ⊆ U) :
     supportInclusionPairMap X (hZW.trans hWU) =
-      supportInclusionPairMap X hWU ≫ supportInclusionPairMap X hZW := by
-  apply MorphismProperty.Arrow.Hom.ext <;> rfl
+      supportInclusionPairMap X hWU ≫ supportInclusionPairMap X hZW := rfl
 
 @[simp]
 lemma enlargeSupport_rfl (R : Type u) [Field R] (X : TopCat.{u}) (Z : Set X) (n : ℕ) :

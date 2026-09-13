@@ -106,13 +106,7 @@ def standardComplexChartTargetPairIso :
 lemma standardComplexChartTargetPairIso_hom_comp_neighborhoodMap :
     (standardComplexChartTargetPairIso d e x hx).hom ≫
         neighborhoodPointComplementPairMap (chartModelEmbedding d e x hx).target x =
-      chartModelEmbeddingPair d e x hx := by
-  apply MorphismProperty.Arrow.Hom.ext
-  · ext y
-    apply Subtype.ext
-    rfl
-  · ext y
-    exact chartModelTargetHomeomorph_apply_val d e x hx y
+      chartModelEmbeddingPair d e x hx := rfl
 
 variable [T1Space M]
 

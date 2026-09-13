@@ -63,10 +63,7 @@ lemma imageSupportPairMap_restrict {X Y : TopCat} (f : X ⟶ Y)
     imageSupportPairMap f hf U ≫
       supportInclusionPairMap Y (Set.singleton_subset_iff.mpr (Set.mem_image_of_mem f hx)) =
       supportInclusionPairMap X (Set.singleton_subset_iff.mpr hx) ≫
-        imagePointPairMap f hf x := by
-  apply MorphismProperty.Arrow.Hom.ext
-  · ext v; rfl
-  · rfl
+        imagePointPairMap f hf x := rfl
 
 /-- Degree transport commutes with the actual map on relative singular homology. -/
 lemma relativeHomologyMap_cast {P Q : TopPair} {m n : ℕ} (h : m = n)

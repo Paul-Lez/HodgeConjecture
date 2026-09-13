@@ -92,15 +92,7 @@ lemma singularSimplicialMapLiftToSubset_comp_inclusion
     (hf : ∀ (n : SimplexCategoryᵒᵖ) (x : X.obj n),
       Set.range (Y.toSSetObjEquiv n (f.app n x)) ⊆ s) :
     singularSimplicialMapLiftToSubset X Y s f hf ≫
-        TopCat.toSSet.map (topologicalSubsetInclusion Y s) = f := by
-  ext n x
-  apply (Y.toSSetObjEquiv n).injective
-  apply ContinuousMap.ext
-  intro t
-  change ((((TopCat.of s).toSSetObjEquiv n)
-    ((singularSimplicialMapLiftToSubset X Y s f hf).app n x)) t).1 =
-      (Y.toSSetObjEquiv n (f.app n x)) t
-  rfl
+        TopCat.toSSet.map (topologicalSubsetInclusion Y s) = f := rfl
 
 /-- Maps into a topological subspace are equal when their composites with the subspace
 inclusion are equal. -/
@@ -140,10 +132,7 @@ lemma singularSimplexLiftToSubset_comp_inclusion
     (x : (TopCat.toSSet.obj X).obj n)
     (hx : Set.range (X.toSSetObjEquiv n x) ⊆ s) :
     (TopCat.toSSet.map (topologicalSubsetInclusion X s)).app n
-      (singularSimplexLiftToSubset X s x hx) = x := by
-  apply (X.toSSetObjEquiv n).injective
-  ext t
-  rfl
+      (singularSimplexLiftToSubset X s x hx) = x := rfl
 
 /-- A degreewise retraction of integral singular chains along a topological subspace
 inclusion.  It sends a simplex outside the subspace to zero. -/

@@ -42,8 +42,7 @@ def normalSliceSection : standardComplexPuncturedPair c ⟶ normalSlicePair E c 
 
 omit [NormedSpace ℝ E] in
 @[simp] theorem normalSliceSection_projection :
-    normalSliceSection E c ≫ normalSliceProjection E c = 𝟙 _ := by
-  apply MorphismProperty.Arrow.Hom.ext <;> ext z <;> rfl
+    normalSliceSection E c ≫ normalSliceProjection E c = 𝟙 _ := rfl
 
 /-- The explicit pair homotopy contracts only tangent coordinates. Its normal coordinate
 is unchanged, so the complement condition holds throughout, including at the endpoints. -/

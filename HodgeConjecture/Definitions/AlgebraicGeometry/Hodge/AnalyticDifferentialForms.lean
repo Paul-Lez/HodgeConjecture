@@ -72,18 +72,14 @@ def holomorphicRestrictionAlgHom [SmoothOfRelativeDimension d X.hom]
 
 @[simp] lemma holomorphicRestrictionAlgHom_id [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
-    holomorphicRestrictionAlgHom X d (𝟙 U) = AlgHom.id ℂ _ := by
-  ext f
-  rfl
+    holomorphicRestrictionAlgHom X d (𝟙 U) = AlgHom.id ℂ _ := rfl
 
 @[simp] lemma holomorphicRestrictionAlgHom_comp [SmoothOfRelativeDimension d X.hom]
     {U V W : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ}
     (i : U ⟶ V) (j : V ⟶ W) :
     holomorphicRestrictionAlgHom X d (i ≫ j) =
       (holomorphicRestrictionAlgHom X d j).comp
-        (holomorphicRestrictionAlgHom X d i) := by
-  ext f
-  rfl
+        (holomorphicRestrictionAlgHom X d i) := rfl
 
 abbrev OpenHolomorphicFunctions [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :=
@@ -653,9 +649,7 @@ lemma mem_chartEvaluationKernel_iff [SmoothOfRelativeDimension d X.hom]
     θ ∈ chartEvaluationKernel X d U p ↔
       ∀ z y, y ∈ chartSectionDomain X d U z →
         chartEvaluation X d U z p θ y = 0 := by
-  simp only [chartEvaluationKernel, Submodule.mem_iInf, LinearMap.mem_ker,
-    chartEvaluationAt]
-  rfl
+  simp [chartEvaluationKernel, Submodule.mem_iInf, LinearMap.mem_ker, chartEvaluationAt]
 
 /-- Coordinate-zero identities remain coordinate-zero after exterior differentiation. -/
 lemma differential_mem_chartEvaluationKernel

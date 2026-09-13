@@ -60,10 +60,7 @@ lemma continuous_standardAffineSimplex (d : ℕ) : Continuous (standardAffineSim
 
 lemma stdSimplex_map_succAbove_self_zero (n : ℕ) (i : Fin (n + 2))
     (t : stdSimplex ℝ (Fin (n + 1))) :
-    stdSimplex.map i.succAbove t i = 0 := by
-  change (FunOnFinite.linearMap ℝ ℝ i.succAbove) t i = 0
-  rw [FunOnFinite.linearMap_apply_apply]
-  simp
+    stdSimplex.map i.succAbove t i = 0 := by simp [FunOnFinite.linearMap_apply_apply]
 
 lemma standardAffineSimplex_ne_zero_of_coord_zero (d : ℕ)
     (t : stdSimplex ℝ (Fin (d + 1))) (i : Fin (d + 1)) (hi : t i = 0) :
@@ -110,10 +107,7 @@ private lemma standardFaceSimplex_map (n : ℕ) (i : Fin (n + 2)) :
     (TopCat.toSSet.map (standardPuncturedPair (n + 1)).map).app _
       (standardFaceSimplex n i) =
     (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).fst).δ i
-      (standardSingularSimplex (n + 1)) := by
-  apply ((standardPuncturedPair (n + 1)).fst.toSSetObjEquiv _).injective
-  ext t
-  rfl
+      (standardSingularSimplex (n + 1)) := rfl
 
 /-- The relative singular chain complex of the standard punctured real coordinate space. -/
 abbrev standardLocalRelativeChainComplex (d : ℕ) :=

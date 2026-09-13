@@ -300,7 +300,6 @@ lemma standardEtaleChartInverse_of_mem (z : standardEtaleCoordinateSpace P)
     {w : Fin n → ℂ} (hw : w ∈ standardEtaleChartTarget P z) :
     (standardEtaleChartInverse P z w).1 =
       (standardEtaleImplicitOpenPartialHomeomorph P z).symm (0, w) := by
-  classical
   simp [standardEtaleChartInverse, hw]
 
 lemma standardEtale_base_mem_chartTarget (z x : standardEtaleCoordinateSpace P)
@@ -518,9 +517,7 @@ lemma mem_standardEtaleAlgHomProjectionChart_source (u : P.Ring →ₐ[ℂ] ℂ)
 lemma standardEtaleAlgHomProjectionChart_apply (u v : P.Ring →ₐ[ℂ] ℂ) :
     standardEtaleAlgHomProjectionChart P u v =
       mvPolynomialAlgHomHomeomorph n
-        (v.comp (IsScalarTower.toAlgHom ℂ (complexPolynomialRing n) P.Ring)) := by
-  funext i
-  rfl
+        (v.comp (IsScalarTower.toAlgHom ℂ (complexPolynomialRing n) P.Ring)) := rfl
 
 /-- Every regular function is analytic on the inverse of a standard étale algebra-homomorphism
 projection chart. -/

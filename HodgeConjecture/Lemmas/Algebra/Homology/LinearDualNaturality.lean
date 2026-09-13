@@ -197,10 +197,7 @@ lemma linearDualCochainComplexScIso_naturality (f : K ⟶ L) (n : ℕ) :
     (shortComplexFunctor (ModuleCat R) (.up ℕ) n).map (linearDualMap f) ≫
       (linearDualCochainComplexScIso K n).hom =
     (linearDualCochainComplexScIso L n).hom ≫
-      ShortComplex.linearDualMap ((shortComplexFunctor (ModuleCat R) (.down ℕ) n).map f) := by
-  ext <;> cases n <;>
-    simp [linearDualCochainComplexScIso, isoSc', linearDualMap,
-      ShortComplex.linearDualMap]
+      ShortComplex.linearDualMap ((shortComplexFunctor (ModuleCat R) (.down ℕ) n).map f) := rfl
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

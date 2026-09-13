@@ -63,9 +63,7 @@ def radialPrimitiveSeries (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ))
     (k : ℕ) (x : E) :
     radialPrimitiveSeries n p (k + 1) (fun _ ↦ x) =
-      ((k + n + 1 : ℕ) : ℂ)⁻¹ • (p k (fun _ ↦ x)).curryLeft x := by
-  simp [radialPrimitiveSeries]
-  congr 2
+      ((k + n + 1 : ℕ) : ℂ)⁻¹ • (p k (fun _ ↦ x)).curryLeft x := rfl
 
 lemma norm_radialPrimitiveSeries_succ_le (n : ℕ)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ)) (k : ℕ) :
@@ -359,8 +357,7 @@ lemma extDeriv_translateForm {p : ℕ} (c : E)
 
 omit [NormedSpace ℂ E] in
 lemma add_mem_ball_iff (c x : E) (r : ℝ) :
-    c + x ∈ Metric.ball c r ↔ x ∈ Metric.ball 0 r := by
-  simp [Metric.mem_ball, dist_eq_norm]
+    c + x ∈ Metric.ball c r ↔ x ∈ Metric.ball 0 r := by simp
 
 lemma analyticOnNhd_translateForm {p : ℕ} (c : E) (r : ℝ)
     (A : E → E [⋀^Fin p]→L[ℂ] ℂ)

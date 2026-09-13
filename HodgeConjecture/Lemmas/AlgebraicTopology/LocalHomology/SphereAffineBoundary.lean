@@ -121,12 +121,7 @@ lemma standardSphereBoundaryFaceSimplex_injective (n : ℕ) :
 lemma standardAffineBoundarySimplicialMap_face (n : ℕ) (i : Fin (n + 2)) :
     (standardAffineBoundarySimplicialMap (n + 1)).app _
         (standardSphereBoundaryFaceSimplex n i) =
-      standardFaceSimplex n i := by
-  apply ((standardPuncturedPair (n + 1)).snd.toSSetObjEquiv _).injective
-  ext t
-  apply Subtype.ext
-  funext j
-  rfl
+      standardFaceSimplex n i := rfl
 
 /-- The chain map from a simplicial boundary to singular chains of punctured coordinate space. -/
 def standardAffineBoundaryChainMap (d : ℕ) :

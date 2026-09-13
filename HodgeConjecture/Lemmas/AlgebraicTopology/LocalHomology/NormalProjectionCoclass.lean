@@ -29,8 +29,7 @@ omit [NormedSpace ℝ E] in
 theorem neighborhoodSupportInclusion_comp_chartNormalProjection
     {W V : Set M} (hWV : W ⊆ V) (hV : V ⊆ e.source) :
     neighborhoodSupportInclusionPairMap hWV S ≫ chartNormalProjectionPair E c e S hS V hV =
-      chartNormalProjectionPair E c e S hS W (hWV.trans hV) := by
-  apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
+      chartNormalProjectionPair E c e S hS W (hWV.trans hV) := rfl
 
 omit [NormedSpace ℝ E] in
 /-- The chart coclass is compatible with actual neighborhood inclusion. -/
@@ -112,8 +111,7 @@ theorem chartNormalProjectionCoclass_apply_normalClass :
         (chartNormalProjectionCoclass E c e S hS (flattenedSupportNeighborhood E c e x hx)
           (flattenedSupportNeighborhood_subset_source E c e x hx))
       (flattenedSupportNormalClass E c e x hx S hS h0) = 1 := by
-  rw [chartNormalProjectionCoclass,
-    relativeCohomologyEquivDualHomology_relativeCohomologyMap,
+  simp [chartNormalProjectionCoclass, relativeCohomologyEquivDualHomology_relativeCohomologyMap,
     relativeCohomologyEquivDualHomology_normalizedRelativeCoclass,
     chartNormalProjection_normalClass, normalizedDual_apply_self]
 

@@ -189,8 +189,7 @@ lemma coordinateEvaluationHom_apply {n : ℕ} (v : CoordinateSpace n)
 
 @[simp]
 lemma coordinateEvaluationHom_X {n : ℕ} (v : CoordinateSpace n) (i : Fin (n + 1)) :
-    coordinateEvaluationHom v (MvPolynomial.X i) = v i := by
-  simp [coordinateEvaluationHom, coordinateGlobalSectionsHom_X]
+    coordinateEvaluationHom v (MvPolynomial.X i) = v i := by simp
 
 /-- Evaluation of regular functions on the standard projective chart where the `i`-th coordinate
 is nonzero. -/
@@ -411,8 +410,7 @@ lemma vectorOfAwayRingHom_apply {n : ℕ} (i j : Fin (n + 1))
 lemma vectorOfAwayRingHom_self {n : ℕ} (i : Fin (n + 1))
     (φ : HomogeneousLocalization.Away (UniversalGrading n)
       (MvPolynomial.X i : UniversalRing n) →+* ℂ) :
-    vectorOfAwayRingHom i φ i = 1 := by
-  rw [vectorOfAwayRingHom_apply, chartCoordinate_self, map_one]
+    vectorOfAwayRingHom i φ i = 1 := by simp
 
 lemma vectorOfAwayRingHom_ne_zero {n : ℕ} (i : Fin (n + 1))
     (φ : HomogeneousLocalization.Away (UniversalGrading n)

@@ -104,8 +104,7 @@ lemma holomorphicDeRhamComplex_exactAt_of_lt
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) (c : ℂ)
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     (x : HolomorphicForm X d U p) :
-    (scalarHolomorphicDeRhamPresheaf X d p c).app U x = c • x := by
-  rfl
+    (scalarHolomorphicDeRhamPresheaf X d p c).app U x = c • x := rfl
 
 @[simp] lemma scalarHolomorphicDeRhamPresheaf_zero
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) :

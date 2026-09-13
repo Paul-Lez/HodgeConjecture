@@ -307,11 +307,7 @@ def affineSpecPointHomeomorph :
 lemma affineSpecPointHomeomorph_apply
     (z : ComplexPoint (ComplexPoint.openScheme X D.neighborhood)) :
     D.affineSpecPointHomeomorph z =
-      Point.map (Over.homMk D.neighborhood.toScheme.toSpecΓ D.toSpecΓ_over) z := by
-  let : IsAffine D.neighborhood.toScheme :=
-    show IsAffine D.neighborhood.toScheme from D.isAffine
-  rw [affineSpecPointHomeomorph, Point.isoMapHomeomorph_apply]
-  rfl
+      Point.map (Over.homMk D.neighborhood.toScheme.toSpecΓ D.toSpecΓ_over) z := rfl
 
 /-- Complex points of an affine neighborhood as complex-valued algebra homomorphisms on its
 coordinate ring. -/

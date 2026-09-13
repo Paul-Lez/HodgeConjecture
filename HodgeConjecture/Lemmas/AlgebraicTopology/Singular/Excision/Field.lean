@@ -42,9 +42,7 @@ abbrev RationalSimplicialChainComplex (X : SSet.{0}) :
 
 @[simp]
 lemma moduleCat_toSpanSingleton_apply_one (M : ModuleCat ℚ) (v : M) :
-    (ModuleCat.ofHom (LinearMap.toSpanSingleton ℚ M v)).hom 1 = v := by
-  change (1 : ℚ) • v = v
-  simp
+    (ModuleCat.ofHom (LinearMap.toSpanSingleton ℚ M v)).hom 1 = v := by simp
 
 /-- The coefficient map from integral to rational chains in one degree. -/
 def integralToRationalChainComponent (X : SSet.{0}) (n : ℕ) :

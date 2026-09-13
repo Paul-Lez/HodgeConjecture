@@ -104,8 +104,7 @@ lemma openIntersectionPairIsoSupportComplement_naturality
         (openIntersectionPairIsoSupportComplement X S hS V).hom =
     (openIntersectionPairIsoSupportComplement X S hS W).hom ≫
       neighborhoodSupportInclusionPairMap
-        (W := (W : Set X)) (V := (V : Set X)) (leOfHom a) S := by
-  apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
+        (W := (W : Set X)) (V := (V : Set X)) (leOfHom a) S := rfl
 
 /-- The final support-complement comparison preserves literal ambient-open restrictions. -/
 lemma supportedRationalSingularSectionCohomologyEquivSupportComplement_naturality

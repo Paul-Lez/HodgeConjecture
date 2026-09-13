@@ -102,16 +102,13 @@ lemma mem_coordinateNeighborhood_of_mem_localChart_source
 lemma localChart_target [SmoothOfRelativeDimension d X.hom]
     (z : ComplexPoint X) :
     (localChart X d z).target =
-      (coordinateNeighborhoodChart X d z).target := by
-  rw [localChart, OpenPartialHomeomorph.lift_openEmbedding_target]
+      (coordinateNeighborhoodChart X d z).target := rfl
 
 @[simp]
 lemma localChart_symm_apply [SmoothOfRelativeDimension d X.hom]
     (z : ComplexPoint X) (w : Fin d → ℂ) :
     (localChart X d z).symm w =
-      ((coordinateNeighborhoodChart X d z).symm w).1 := by
-  rw [localChart, OpenPartialHomeomorph.lift_openEmbedding_symm]
-  rfl
+      ((coordinateNeighborhoodChart X d z).symm w).1 := rfl
 
 lemma localChart_apply_of_mem [SmoothOfRelativeDimension d X.hom]
     (z w : ComplexPoint X) (hw : w ∈ (localChart X d z).source) :

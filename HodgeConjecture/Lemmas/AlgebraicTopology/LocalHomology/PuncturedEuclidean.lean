@@ -279,8 +279,7 @@ lemma standardPuncturedFacetIntersectionMapOfSubset_comp_inclusion
         topologicalSubsetInclusion (standardPuncturedPair d).snd
           (standardPuncturedFacetIntersectionSubspace d I) =
       topologicalSubsetInclusion (standardPuncturedPair d).snd
-        (standardPuncturedFacetIntersectionSubspace d J) := by
-  rfl
+        (standardPuncturedFacetIntersectionSubspace d J) := rfl
 
 /-- Rational singular chains of a proper facet intersection are exact in positive degrees. -/
 lemma standardPuncturedFacetIntersection_exactAt (d : ℕ)
@@ -732,8 +731,7 @@ lemma standardFacetCarrierSimplexMap_apply (d : ℕ) {n k : ℕ}
     (F : (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)) _⦋k⦌)
     (r : Fin (k + 1)) :
     ((standardFacetCarrierSimplexMap d x).app _ F) r =
-      standardFacetComplementCarrierMax d x (F.obj r) :=
-  standardFacetCarrierSimplexMap_objEquiv_apply d x F r
+      standardFacetComplementCarrierMax d x (F.obj r) := rfl
 
 lemma standardFacetComplementCarrierMax_mem (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
@@ -779,8 +777,7 @@ lemma standardFacetCarrierBoundarySimplexMap_comp_inclusion (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
       (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n⦌) :
     standardFacetCarrierBoundarySimplexMap d x ≫ (∂Δ[d]).ι =
-      standardFacetCarrierSimplexMap d x :=
-  SSet.Subcomplex.lift_ι _ _
+      standardFacetCarrierSimplexMap d x := rfl
 
 /-- Every vertex chosen by the carrier avoids every cover index containing the original
 simplex. -/
@@ -2044,9 +2041,7 @@ lemma standardFacetCarrierAffineIntersectionMap_comp_ambientInclusion
             (standardPuncturedFacetIntersectionSubspace d
               (standardFacetCarrier d x))) =
       standardFacetCarrierBoundarySimplexMap d x ≫
-        standardAffineBoundarySimplicialMap d := by
-  unfold standardFacetCarrierAffineIntersectionMap
-  exact singularSimplicialMapLiftToSubset_comp_inclusion _ _ _ _ _
+        standardAffineBoundarySimplicialMap d := rfl
 
 set_option backward.isDefEq.respectTransparency false in
 lemma standardFacetCarrierSourceSubdivisionIntersectionMap_comp_ambientInclusion
@@ -2059,18 +2054,7 @@ lemma standardFacetCarrierSourceSubdivisionIntersectionMap_comp_ambientInclusion
             (standardPuncturedFacetIntersectionSubspace d
               (standardFacetCarrier d x))) =
       simplexSubdivisionLastVertex.app (SimplexCategory.mk n) ≫
-        SSet.yonedaEquiv.symm x.1 := by
-  unfold standardFacetCarrierSourceSubdivisionIntersectionMap
-  have hsource : standardFacetCarrierSourceIntersectionMap d x ≫
-      TopCat.toSSet.map
-        (topologicalSubsetInclusion (standardPuncturedPair d).snd
-          (standardPuncturedFacetIntersectionSubspace d
-            (standardFacetCarrier d x))) =
-      SSet.yonedaEquiv.symm x.1 := by
-    unfold standardFacetCarrierSourceIntersectionMap
-    exact singularSimplicialMapLiftToSubset_comp_inclusion _ _ _ _ _
-  simpa only [Category.assoc] using congrArg
-    (fun f ↦ simplexSubdivisionLastVertex.app (SimplexCategory.mk n) ≫ f) hsource
+        SSet.yonedaEquiv.symm x.1 := rfl
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Subdivision, last vertex, and the simplex represented by `x` give the same map whether
@@ -2211,8 +2195,7 @@ lemma standardAffineBoundaryToFacetSmall_comp_inclusion (d : ℕ) :
     standardAffineBoundaryToFacetSmall d ≫
         (coverSmallSingularSubcomplex
           (standardPuncturedPair d).snd (standardPuncturedFacetCover d)).ι =
-      standardAffineBoundarySimplicialMap d :=
-  SSet.Subcomplex.lift_ι _ _
+      standardAffineBoundarySimplicialMap d := rfl
 
 lemma standardAffineBoundary_vertex_mem_facetCover_iff
     (d n : ℕ) (y : (∂Δ[d] : SSet.{0}) _⦋n⦌)
