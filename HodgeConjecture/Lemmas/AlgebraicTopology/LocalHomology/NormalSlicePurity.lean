@@ -68,9 +68,11 @@ def normalSliceRelativeChainHomotopyEquiv :
       ((relativeChainFunctor ℚ).obj (standardComplexPuncturedPair c)) where
   hom := (relativeChainFunctor ℚ).map (normalSliceProjection E c)
   inv := (relativeChainFunctor ℚ).map (normalSliceSection E c)
-  homotopyHomInvId := by
-    simpa only [CategoryTheory.Functor.map_comp, CategoryTheory.Functor.map_id] using
-      (normalSliceContraction E c).relativeChainHomotopy (R := ℚ)
+  homotopyHomInvId :=
+    (Homotopy.ofEq ((relativeChainFunctor ℚ).map_comp
+        (normalSliceProjection E c) (normalSliceSection E c)).symm).trans
+      (((normalSliceContraction E c).relativeChainHomotopy (R := ℚ)).trans
+        (Homotopy.ofEq ((relativeChainFunctor ℚ).map_id (normalSlicePair E c))))
   homotopyInvHomId := Homotopy.ofEq (by
     rw [← CategoryTheory.Functor.map_comp, normalSliceSection_projection,
       CategoryTheory.Functor.map_id])
