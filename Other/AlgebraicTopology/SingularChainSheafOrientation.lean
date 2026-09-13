@@ -38,7 +38,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Reindexing the actual homology sheaf from homological to cohomological grading. -/
 def singularChainSheafCochainHomologyIso (N : ℕ) :

@@ -34,7 +34,7 @@ namespace AlgebraicTopology.Singular
 set_option backward.isDefEq.respectTransparency false in
 /-- The chain map on a preimage open commutes with the zero-chain augmentation. -/
 lemma preimageOpenChainMap_comp_zeroAugmentation
-    (R : Type) [Field R] {U X : TopCat.{0}} (j : U ⟶ X) (V : Opens X) :
+    (R : Type) [CommRing R] {U X : TopCat.{0}} (j : U ⟶ X) (V : Opens X) :
     (preimageOpenChainMap R j V).f 0 ≫
         openZeroAugmentation R X (.op V) =
       openZeroAugmentation R U (.op ((Opens.map j).obj V)) := by
@@ -44,7 +44,7 @@ lemma preimageOpenChainMap_comp_zeroAugmentation
 set_option backward.isDefEq.respectTransparency false in
 /-- Raw restriction carries a constant singular zero-cochain to the same constant cochain. -/
 lemma constantsToSingularCochainZero_comp_singularRestrictionToRawPushforward
-    (R : Type) [Field R] {U X : TopCat.{0}} (j : U ⟶ X) :
+    (R : Type) [CommRing R] {U X : TopCat.{0}} (j : U ⟶ X) :
     constantsToSingularCochainZero R X ≫
         singularRestrictionToRawPushforward R j 0 =
       Functor.whiskerLeft (Opens.map j).op

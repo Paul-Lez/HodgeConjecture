@@ -29,7 +29,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-- The ambient cap product followed by the actual relative projection. -/
 def ambientCapRelativeLift (P : TopPair.{u}) (p q : ℕ)

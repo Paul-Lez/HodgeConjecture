@@ -77,7 +77,7 @@ lemma openSubsetSupportPairMap_restrict (V : Opens ((Opens.toTopCat X).obj U))
   · ext z; rfl
   · rfl
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-- The actual open-inclusion maps form a natural transformation of pair-valued presheaves. -/
 def openComplementPairRestriction :

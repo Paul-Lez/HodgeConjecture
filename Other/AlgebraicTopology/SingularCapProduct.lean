@@ -329,7 +329,7 @@ lemma backFace_naturality {Y : SSet.{u}} (f : X ⟶ Y) {p q : ℕ}
     backFace Y (f.app _ x) = f.app _ (backFace X x) :=
   (NatTrans.naturality_apply f (backInclusion p q).op x).symm
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-- Unnormalised simplicial chains with coefficients in a field, in one degree. -/
 abbrev ChainGroup (X : SSet.{u}) (n : ℕ) : ModuleCat.{u} R :=
@@ -713,7 +713,7 @@ theorem cap_naturality {X Y : SSet.{u}} (f : X ⟶ Y) (p q : ℕ)
 /-! ## Descent to homology -/
 
 /-- Algebraic simplicial cocycles. -/
-abbrev Cocycle (R : Type u) [Field R] (X : SSet.{u}) (p : ℕ) :=
+abbrev Cocycle (R : Type u) [CommRing R] (X : SSet.{u}) (p : ℕ) :=
   LinearMap.ker (coboundary R p : Cochain R X p →ₗ[R] Cochain R X (p + 1))
 
 /-- Maps of short complexes with the same middle component induce the same map on homology. -/
@@ -955,7 +955,7 @@ lemma capCocycleHomologyLinear_apply {X : SSet.{u}} (p q : ℕ)
 
 /-- The cohomology of algebraic simplicial cochains, using the same short-complex model
 as singular cochain cohomology. -/
-abbrev CochainCohomology (R : Type u) [Field R] (X : SSet.{u}) (p : ℕ) :
+abbrev CochainCohomology (R : Type u) [CommRing R] (X : SSet.{u}) (p : ℕ) :
     ModuleCat.{u} R :=
   ((X.chainComplex (ModuleCat.of R R)).sc p).linearDual.homology
 

@@ -226,7 +226,7 @@ namespace AlgebraicTopology.Singular
 
 universe u
 
-variable (R : Type u) [Field R] (Y : TopCat.{u})
+variable (R : Type u) [CommRing R] (Y : TopCat.{u})
 
 /-- Forgetting scalar multiplication commutes with taking the homology of the top-open singular
 cochain complex. -/

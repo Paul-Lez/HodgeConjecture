@@ -252,7 +252,6 @@ public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
 public import HodgeConjecture.Lemmas.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Lemmas.RingTheory.TranscendenceDegreeKrullDimension
 public import HodgeConjecture.Lemmas.Topology.Dimension.Basic
-public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
@@ -260,6 +259,7 @@ public import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
 public import HodgeConjecture.Mathlib.Algebra.Ring.Basic
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
+public import HodgeConjecture.Mathlib.AlgebraicTopology.SimplicialSet.ChainComplexSplit
 public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart
 public import HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors

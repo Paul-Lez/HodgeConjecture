@@ -35,20 +35,24 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-/-- Homotopic maps induce equal pullbacks on singular cohomology. -/
+/-- Homotopic maps induce equal pullbacks on singular cohomology.
+
+This is proved at cochain level — a topological homotopy gives a chain homotopy, which dualises
+to a cochain homotopy — rather than by transporting the homology statement across universal
+coefficients, so it holds over a commutative ring and not just over a field. -/
 theorem cohomologyMap_eq_of_homotopy
-    (R : Type u) [Field R] {X Y : TopCat.{u}} (n : ℕ)
+    (R : Type u) [CommRing R] {X Y : TopCat.{u}} (n : ℕ)
     {f g : X ⟶ Y} (H : TopCat.Homotopy f g) :
     cohomologyMap R n f = cohomologyMap R n g :=
-  cohomologyMap_eq_of_homologyMap_eq R n <| LinearMap.ext fun z =>
-    ConcreteCategory.congr_hom
-      (H.congr_homologyMap_singularChainComplexFunctor (ModuleCat.of R R) n) z
+  congrArg ModuleCat.Hom.hom <|
+    (HomologicalComplex.linearDualHomotopy
+      (H.singularChainComplexFunctorObjMap (ModuleCat.of R R))).homologyMap_eq n
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Pullback in singular cohomology commutes with forgetting support.  Dualising the naturality
 square of the relative chain projection gives this before passing to cohomology. -/
 theorem cohomologyMap_forgetSupport
-    (R : Type u) [Field R] {X Y : TopCat.{u}} (n : ℕ)
+    (R : Type u) [CommRing R] {X Y : TopCat.{u}} (n : ℕ)
     (f : X ⟶ Y) (Z : Set Y) (α : CohomologyWithSupport R Y Z n) :
     cohomologyMap R n f (forgetSupport R Y Z n α) =
       forgetSupport R X (f ⁻¹' Z) n
@@ -64,7 +68,7 @@ theorem cohomologyMap_forgetSupport
 /-- Pulling a supported class back along a map homotopic to the identity does not change its
 ordinary class after forgetting support. -/
 theorem forgetSupport_cohomologyWithSupportMap_eq_of_homotopyToId
-    (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ)
+    (R : Type u) [CommRing R] (X : TopCat.{u}) (n : ℕ)
     (f : X ⟶ X) (H : TopCat.Homotopy f (𝟙 X))
     (Z : Set X) (α : CohomologyWithSupport R X Z n) :
     forgetSupport R X (f ⁻¹' Z) n
@@ -78,7 +82,7 @@ classes have the same image in ordinary cohomology.  The equality `hW` only iden
 actual inverse-image support with the named source support; no equivalence of unrelated
 cohomology groups is assumed. -/
 theorem forgetSupport_eq_of_supportedClass_transport
-    (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ)
+    (R : Type u) [CommRing R] (X : TopCat.{u}) (n : ℕ)
     (f : X ⟶ X) (H : TopCat.Homotopy f (𝟙 X))
     (Z W : Set X) (hW : f ⁻¹' Z = W)
     (α : CohomologyWithSupport R X Z n)

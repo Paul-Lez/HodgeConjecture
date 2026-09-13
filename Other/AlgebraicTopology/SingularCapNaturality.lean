@@ -42,7 +42,7 @@ universe u
 
 namespace AlgebraicTopology.Simplicial
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Pullback of simplicial cochains commutes with coboundary. -/
@@ -137,7 +137,7 @@ end AlgebraicTopology.Simplicial
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-- Pullback of singular cocycles along the actual continuous map. -/
 def cocycleMap {X Y : TopCat.{u}} (f : X ⟶ Y) (p : ℕ) :

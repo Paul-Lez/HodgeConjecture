@@ -15,7 +15,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
   {V W V' W' : Opens X} (i : W ⟶ V) (i' : W' ⟶ V') (a : V' ⟶ V) (b : W' ⟶ W)
 
 /-- The actual map of pairs induced by a square of ambient open inclusions. -/

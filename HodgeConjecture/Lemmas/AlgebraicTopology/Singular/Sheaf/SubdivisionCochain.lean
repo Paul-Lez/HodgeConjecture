@@ -81,7 +81,7 @@ private theorem exists_coveringSieve_locallyFinite_closedRefinement
   refine ⟨W, hWopen, hWcover, ?_, fun I ↦ (hWsub I).trans (hVsub I)⟩
   exact (hVfinite.subset fun I ↦ subset_closure.trans (hWsub I)).closure
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The singular chain complex of the top open subset of `X`. -/
 abbrev TopOpenSingularChainComplex : ChainComplex (ModuleCat.{u} R) ℕ :=
@@ -502,7 +502,7 @@ end RationalCover
 
 section HereditarilyParacompact
 
-variable {R : Type u} [Field R] {X : TopCat.{u}}
+variable {R : Type u} [CommRing R] {X : TopCat.{u}}
 
 /-- Regard an open subset of an open subspace as an open subset of the ambient space. -/
 def ambientOpen (U : Opens X) (V : Opens U) : Opens X :=
@@ -840,7 +840,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Inclusion of an open subset into the top open, followed by inclusion of the top open into the
 space, is the usual subspace inclusion. -/
@@ -1264,7 +1264,7 @@ end RationalCover
 
 section HereditarilyParacompact
 
-variable {R : Type u} [Field R] {X : TopCat.{u}}
+variable {R : Type u} [CommRing R] {X : TopCat.{u}}
 
 /-- On a paracompact Hausdorff space, ordinary cochains map quasi-isomorphically to global
 sections of the double-plus singular-cochain complex. -/

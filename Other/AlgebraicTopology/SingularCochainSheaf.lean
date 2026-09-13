@@ -25,7 +25,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The canonical augmentation from the constant presheaf complex to singular cochains. -/
 def constantsToSingularCochainPresheafComplex :

@@ -49,7 +49,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-- The map `C_*(A) ⊕ C_*(B) ⟶ C_*(X)` induced by the two subset inclusions. -/
 noncomputable def triadSubspaceChainMap (X : TopCat.{u}) (A B : Set X) :

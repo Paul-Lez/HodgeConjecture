@@ -28,7 +28,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-- Canonical comparison from integer dual-relative cohomology to its
 restriction cone, induced by the positive `(inclusion, 0)` lift. -/

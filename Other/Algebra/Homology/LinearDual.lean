@@ -25,15 +25,20 @@ universe u
 
 namespace HomologicalComplex.HomotopyEquiv
 
-variable {R : Type u} [Field R]
+variable {R : Type u} [CommRing R]
 variable {K L : ChainComplex (ModuleCat.{u} R) ℕ}
 
 /-- A chain-homotopy equivalence induces, contravariantly, a linear equivalence on the
-cohomology of the algebraic-dual short complexes. -/
+cohomology of the algebraic-dual short complexes.
+
+This dualises the homotopy equivalence itself rather than the induced isomorphism on homology, so
+it does not go through universal coefficients and holds over a commutative ring. -/
 def linearDualCohomologyEquiv (h : HomotopyEquiv K L) (n : ℕ) :
     (L.sc n).linearDual.homology ≃ₗ[R] (K.sc n).linearDual.homology :=
-  (L.sc n).linearDualHomologyEquiv |>.trans <|
-    h.toHomologyIso n |>.toLinearEquiv.dualMap |>.trans <|
-      (K.sc n).linearDualHomologyEquiv.symm
+  (ShortComplex.homologyMapIso
+      (HomologicalComplex.linearDualCochainComplexScIso L n)).symm.toLinearEquiv.trans <|
+    ((HomologicalComplex.linearDualHomotopyEquiv h).toHomologyIso n).toLinearEquiv.trans
+      (ShortComplex.homologyMapIso
+        (HomologicalComplex.linearDualCochainComplexScIso K n)).toLinearEquiv
 
 end HomologicalComplex.HomotopyEquiv

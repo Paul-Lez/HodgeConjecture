@@ -35,7 +35,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] {U X : TopCat.{u}} (j : U ⟶ X)
+variable (R : Type u) [CommRing R] {U X : TopCat.{u}} (j : U ⟶ X)
 
 lemma contractibleOpenBasis_of_isOpenEmbedding
     (hj : Topology.IsOpenEmbedding j)

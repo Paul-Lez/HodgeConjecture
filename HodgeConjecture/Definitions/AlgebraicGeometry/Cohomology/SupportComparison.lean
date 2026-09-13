@@ -80,7 +80,7 @@ namespace AlgebraicTopology.Singular
 set_option backward.isDefEq.respectTransparency false in
 /-- The constant-to-singular-cochain resolution is a monomorphism of complexes. -/
 lemma constantsToSingularCochainSheafComplex_mono
-    (R : Type) [Field R] (Y : TopCat.{0}) :
+    (R : Type) [CommRing R] (Y : TopCat.{0}) :
     Mono (constantsToSingularCochainSheafComplex R Y) := by
   apply HomologicalComplex.mono_of_mono_f
   intro n
@@ -94,7 +94,7 @@ lemma constantsToSingularCochainSheafComplex_mono
 
 /-- Extending the constant-to-singular-cochain resolution to integer degrees remains monic. -/
 lemma constantsToSingularCochainComplexInt_mono
-    (R : Type) [Field R] (Y : TopCat.{0}) :
+    (R : Type) [CommRing R] (Y : TopCat.{0}) :
     Mono (HomologicalComplex.extendMap
       (constantsToSingularCochainSheafComplex R Y) ComplexShape.embeddingUpNat) := by
   let a := constantsToSingularCochainSheafComplex R Y

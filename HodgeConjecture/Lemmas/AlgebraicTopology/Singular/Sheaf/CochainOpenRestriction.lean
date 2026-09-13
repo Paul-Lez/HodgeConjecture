@@ -16,7 +16,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u}) (U : Opens X)
+variable (R : Type u) [CommRing R] (X : TopCat.{u}) (U : Opens X)
 
 /-- An open in an open subspace is identified with its actual ambient image. -/
 def openSubspaceImageIso (V : Opens U) :

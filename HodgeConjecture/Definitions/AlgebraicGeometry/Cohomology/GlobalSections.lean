@@ -195,7 +195,7 @@ namespace AlgebraicTopology.Singular
 
 universe u
 
-variable (R : Type u) [Field R] (Y : TopCat.{u})
+variable (R : Type u) [CommRing R] (Y : TopCat.{u})
 
 end AlgebraicTopology.Singular
 
