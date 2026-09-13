@@ -103,19 +103,6 @@ lemma singularChainComplex_exactAt_of_contractible
   exact singularChainComplexFunctor_exactAt_of_totallyDisconnectedSpace
     (ModuleCat.{u} R) n (ModuleCat.of R R) (TopCat.of (ULift.{u} Unit)) hn
 
-/-- The singular chain complex of a contractible space is homotopy equivalent to the coefficient
-object placed in degree zero. -/
-def contractibleSingularChainHomotopyEquivSingle₀
-    (X : Type u) [TopologicalSpace X] [ContractibleSpace X] :
-    HomotopyEquiv
-      (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj (TopCat.of X))
-      ((ChainComplex.single₀ (ModuleCat.{u} R)).obj
-        (∐ fun _ : TopCat.of (ULift.{u} Unit) => ModuleCat.of R R)) :=
-  (contractibleSingularChainHomotopyEquiv R X).trans <|
-    (HomotopyEquiv.ofIso (singularChainComplexFunctorIsoOfTotallyDisconnectedSpace
-      (ModuleCat.{u} R) (ModuleCat.of R R) (TopCat.of (ULift.{u} Unit)))).trans
-      (ChainComplex.alternatingConstHomotopyEquiv _)
-
 /-- Positive-degree singular cochains of a contractible space are exact.
 
 Dualising the homotopy equivalence with a point, rather than dualising exactness of the chain
@@ -125,8 +112,13 @@ lemma singularCochainComplex_exactAt_of_contractible
     HomologicalComplex.ExactAt
       ((((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj
         (TopCat.of X)).linearDualCochainComplex) (n + 1) := by
+  -- `C_*(X)` is chain homotopy equivalent to the coefficients placed in degree zero: contract
+  -- `X` to a point, then use Mathlib's calculation of the chains of a totally disconnected space.
   let e := HomologicalComplex.linearDualHomotopyEquiv
-    (contractibleSingularChainHomotopyEquivSingle₀ R X)
+    ((contractibleSingularChainHomotopyEquiv R X).trans <|
+      (HomotopyEquiv.ofIso (singularChainComplexFunctorIsoOfTotallyDisconnectedSpace
+        (ModuleCat.{u} R) (ModuleCat.of R R) (TopCat.of (ULift.{u} Unit)))).trans
+        (ChainComplex.alternatingConstHomotopyEquiv _))
   rw [← exactAt_iff_of_quasiIsoAt e.hom (n + 1)]
   refine HomologicalComplex.ExactAt.of_isZero ?_
   have h := HomologicalComplex.isZero_single_obj_X (ComplexShape.down ℕ) 0

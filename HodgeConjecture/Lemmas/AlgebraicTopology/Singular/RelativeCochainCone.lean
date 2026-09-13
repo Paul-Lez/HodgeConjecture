@@ -103,8 +103,14 @@ The singular-chain sequence of a pair is split in each degree, and a splitting �
 exactness — is carried through `Module.Dual` over an arbitrary commutative ring. -/
 def relativeDualCochainShortComplexNatDegreewiseSplitting (X : TopPair.{u}) (n : ℕ) :
     ((relativeDualCochainShortComplexNat R X).map
-      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) n)).Splitting :=
-  (relativeChainDegreewiseSplitting R X n).linearDual
+      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) n)).Splitting := by
+  -- The chain sequence of the pair splits in degree `n`, because the singular simplices of the
+  -- subspace are a subset of those of the ambient space; dualising carries the splitting over.
+  have hT := ((HomologicalComplex.shortExact_iff_degreewise_shortExact
+    (relativeChainShortComplex R X)).mp (relativeChainShortComplex_shortExact R X)) n
+  let sm := (relativeChainMap_isSplitMono R X n).exists_splitMono.some
+  exact (ShortComplex.Splitting.ofExactOfRetraction _ hT.exact sm.retraction sm.id
+    hT.epi_g).linearDual
 
 /-- Dualizing the singular-chain sequence of a pair gives a short exact sequence of
 nonnegative cochain complexes. -/

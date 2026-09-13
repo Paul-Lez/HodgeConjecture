@@ -275,16 +275,6 @@ lemma relativeChainShortComplex_shortExact (R : Type u) [CommRing R] (X : TopPai
         dsimp [relativeChainShortComplex, relativeChainProjection]
         exact coequalizer.π_epi }
 
-/-- The short exact sequence of singular chains of a pair is split in every degree. -/
-noncomputable def relativeChainDegreewiseSplitting (R : Type u) [CommRing R] (X : TopPair.{u})
-    (n : ℕ) :
-    ((relativeChainShortComplex R X).map
-      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.down ℕ) n)).Splitting := by
-  have hT := ((HomologicalComplex.shortExact_iff_degreewise_shortExact
-    (relativeChainShortComplex R X)).mp (relativeChainShortComplex_shortExact R X)) n
-  let sm := (relativeChainMap_isSplitMono R X n).exists_splitMono.some
-  exact ShortComplex.Splitting.ofExactOfRetraction _ hT.exact sm.retraction sm.id hT.epi_g
-
 /-- Forgetting that a class is relative and then pairing it with an absolute homology class is
 the same as projecting the homology class to relative homology and pairing there. -/
 @[simp]
