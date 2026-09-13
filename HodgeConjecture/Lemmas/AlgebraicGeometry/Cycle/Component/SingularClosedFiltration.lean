@@ -180,8 +180,6 @@ instance cycleComponentSingularStratumClosedLift_smooth (k : ℕ) :
 
 namespace ComplexPoint
 
-attribute [local instance] cycleComponentSingularClosedFiltrationAnalyticTopology
-
 /-- The smooth-locus immersion into the ambient variety, bundled over `Spec ℂ`. -/
 def cycleComponentSmoothLocusOverι : cycleComponentSmoothLocusOver X x ⟶ X :=
   Over.homMk ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
@@ -270,8 +268,6 @@ theorem cycleComponentSingularFiltrationStratum_exists_smooth_relativeDimension
     smoothOfRelativeDimension_affineOpen_of_isStandardSmooth _ hU hstd⟩
 
 namespace ComplexPoint
-
-attribute [local instance] cycleComponentSingularClosedFiltrationAnalyticTopology
 
 omit [IsIntegral X.left] [Smooth X.hom] in
 theorem cycleComponentSingularAnalyticClosedFiltration_antitone :

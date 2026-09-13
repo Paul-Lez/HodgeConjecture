@@ -25,8 +25,6 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
 
-attribute [local instance] cycleComponentSmoothSupportPurityAnalyticTopology
-
 /-- Restricting the actual flasque supported coefficient sheaves preserves flasqueness. -/
 theorem cycleComponentSmoothRestrictedInjectiveComplex_isFlasque (n : ℤ) :
     ((cycleComponentSmoothRestrictedInjectiveComplex X x).X n).IsFlasque := by

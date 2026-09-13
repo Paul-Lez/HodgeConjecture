@@ -86,9 +86,6 @@ noncomputable instance (V : SmoothProjectiveComplexVariety) (d : ℕ)
 abbrev analyticPoint (V : SmoothProjectiveComplexVariety) :=
   ComplexPoint V.over
 
-noncomputable instance (V : SmoothProjectiveComplexVariety) :
-    TopologicalSpace V.analyticPoint := Point.analyticTopology
-
 /-- The analytification as an object of `TopCat`. -/
 noncomputable def analytification (V : SmoothProjectiveComplexVariety) : TopCat :=
   complexAnalytification.obj V.over

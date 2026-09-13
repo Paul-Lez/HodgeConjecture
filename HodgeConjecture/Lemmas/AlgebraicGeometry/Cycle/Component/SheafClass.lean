@@ -26,8 +26,6 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-attribute [local instance] cycleComponentSheafClassAnalyticTopology
-
 variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
   (hx : Order.coheight x = p)
 
@@ -60,8 +58,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-
-attribute [local instance] cycleComponentSheafClassAnalyticTopology
 
 variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
   (hx : Order.coheight x = p)

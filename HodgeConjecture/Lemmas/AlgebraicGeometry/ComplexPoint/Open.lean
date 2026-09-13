@@ -37,9 +37,6 @@ open Point
 
 noncomputable section
 
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := analyticTopology
-
 variable (X : Over (Spec ↧ℂ)) (U : X.left.Opens)
 
 /-- An open subscheme with its induced complex structure. -/

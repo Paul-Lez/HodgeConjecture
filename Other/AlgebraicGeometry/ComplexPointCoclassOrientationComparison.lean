@@ -33,9 +33,6 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
-noncomputable local instance pointCoclassOrientationComparisonAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 variable [IsProjective X.hom] [SmoothOfRelativeDimension d X.hom]
   (z : ComplexPoint X)
 

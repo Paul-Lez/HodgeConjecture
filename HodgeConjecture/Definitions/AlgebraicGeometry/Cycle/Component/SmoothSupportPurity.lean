@@ -31,9 +31,6 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
 
-local instance cycleComponentSmoothSupportPurityAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 /-- The exact analytic complement of the canonical singular boundary. -/
 abbrev cycleComponentSmoothSupportAmbientOpen : Opens (ComplexPoint X) :=
   (cycleComponentSingularAnalyticClosedFiltration X x 0).compl

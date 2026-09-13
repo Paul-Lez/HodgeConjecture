@@ -26,8 +26,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec (.of ℂ))) {Y : Over (Spec (.of ℂ))}
 
-attribute [local instance] smoothStratificationAnalyticTopology
-
 variable [LocallyOfFiniteType X.hom] [NoetherianSpace X.left]
 
 /-- The inclusion of a reduced smooth stratum, bundled over the complex base. -/
@@ -51,8 +49,6 @@ open CategoryTheory Topology TopologicalSpace
 namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec (.of ℂ))) {Y : Over (Spec (.of ℂ))}
-
-attribute [local instance] smoothStratificationAnalyticTopology
 
 /-- Forgetting a complex point to its underlying Zariski point is continuous for the actual
 analytic topology. -/

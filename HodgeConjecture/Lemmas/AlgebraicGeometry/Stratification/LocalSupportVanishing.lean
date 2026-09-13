@@ -32,9 +32,6 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) (k : ℕ)
 
-local instance singularFiltrationLocalSupportVanishingAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 include d hx in
 /-- Every point in the actual `k`th layer has cofinal actual ambient neighborhoods
 whose relative cohomology below degree `2(p+1)` vanishes. -/

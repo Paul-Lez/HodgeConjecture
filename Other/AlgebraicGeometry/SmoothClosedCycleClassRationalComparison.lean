@@ -25,10 +25,6 @@ open CategoryTheory TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-noncomputable local instance smoothClosedRationalClassAnalyticTopology
-    (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=
-  Point.analyticTopology
-
 variable (Z X : Over (Spec (.of ℂ)))
   (i : Z ⟶ X) [IsClosedImmersion i.left]
   (e d : ℕ) [SmoothOfRelativeDimension e Z.hom] [SmoothOfRelativeDimension d X.hom]

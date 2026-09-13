@@ -23,8 +23,6 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
 
-attribute [local instance] cycleComponentSupportExtensionAnalyticTopology
-
 @[simp]
 theorem cycleComponentSupportExtensionIso_hom :
     (cycleComponentSupportExtensionIso X x (d := d) hx).hom =
