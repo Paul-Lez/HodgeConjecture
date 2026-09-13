@@ -35,8 +35,6 @@ public import Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
 public import Other.Mathlib.Algebra.Category.Grp.Basic
 public import Other.Mathlib.Algebra.Category.ModuleCat.Basic
 public import Other.Mathlib.Algebra.Homology.StupidTruncation
-public import Other.Algebra.Category.ModuleCat.Presheaf.ExteriorPower
-public import Other.Algebra.Category.Ring.Basic
 public import Other.Algebra.DeRham.Complex
 public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import Other.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusInjectiveModel
@@ -48,7 +46,6 @@ public import Other.AlgebraicGeometry.CodimensionCycle
 public import Other.AlgebraicGeometry.CodimensionZeroClassComparison
 public import Other.AlgebraicGeometry.CodimensionZeroCoclassNonvanishing
 public import Other.AlgebraicGeometry.CodimensionZeroDimensionZero
-public import Other.AlgebraicGeometry.CompactlySupportedCohomology
 public import Other.AlgebraicGeometry.ComplexLocalOrientationCoherence
 public import Other.AlgebraicGeometry.ComplexLocalOrientationNeighborhood
 public import Other.AlgebraicGeometry.ComplexManifoldOrientation
@@ -63,11 +60,9 @@ public import Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization
 public import Other.AlgebraicGeometry.CycleClassDimension
 public import Other.AlgebraicGeometry.CycleClassOnCycles
 public import Other.AlgebraicGeometry.CycleComponentAnalyticEmbedding
-public import Other.AlgebraicGeometry.CycleComponentAnalyticImmersion
 public import Other.AlgebraicGeometry.CycleComponentBorelMoore
 public import Other.AlgebraicGeometry.CycleComponentCoclassNonzeroTransfer
 public import Other.AlgebraicGeometry.CycleComponentGenericPoint
-public import Other.AlgebraicGeometry.CycleComponentGlobalFundamentalClass
 public import Other.AlgebraicGeometry.CycleComponentLocalOrientation
 public import Other.AlgebraicGeometry.CycleComponentLocalOrientationCoherence
 public import Other.AlgebraicGeometry.CycleComponentPointBoundary
@@ -104,7 +99,6 @@ public import Other.AlgebraicGeometry.SmoothClosedSupportedCycleMorphism
 public import Other.AlgebraicGeometry.SmoothProjective
 public import Other.AlgebraicGeometry.SmoothRegularLocal
 public import Other.AlgebraicTopology.ChartLocalClassHomeomorph
-public import Other.AlgebraicTopology.ChartLocalFundamentalClassInvariance
 public import Other.AlgebraicTopology.ChartNeighborhoodOrientation
 public import Other.AlgebraicTopology.ChartTargetPointClassNormalization
 public import Other.AlgebraicTopology.ClosedEmbeddingConstantSectionClass
@@ -125,8 +119,6 @@ public import Other.AlgebraicTopology.DerivedSheafSupportLocalization
 public import Other.AlgebraicTopology.DerivedSheafSupportShift
 public import Other.AlgebraicTopology.DerivedSheafSupportTruncation
 public import Other.AlgebraicTopology.FlasqueSheafSupportComparison
-public import Other.AlgebraicTopology.GlobalFundamentalClass
-public import Other.AlgebraicTopology.GraphNormalSlicePurity
 public import Other.AlgebraicTopology.LowestFlasqueCohomology
 public import Other.AlgebraicTopology.NestedSheafSupportLocalization
 public import Other.AlgebraicTopology.OpenRestrictedLowestCohomologyNormalization
@@ -149,11 +141,9 @@ public import Other.AlgebraicTopology.SingularCoefficientBaseChange
 public import Other.AlgebraicTopology.SingularCohomologySupportNaturality
 public import Other.AlgebraicTopology.SingularCohomologyZero
 public import Other.AlgebraicTopology.SingularCohomologyZeroConnectedness
-public import Other.AlgebraicTopology.SingularHomologyVanishing
 public import Other.AlgebraicTopology.SingularExcisionIntegralOpenCover
 public import Other.AlgebraicTopology.SingularMayerVietoris
 public import Other.AlgebraicTopology.SingularOpenCoverSmallChains
-public import Other.AlgebraicTopology.SingularPeriod
 public import Other.AlgebraicTopology.SingularRelativeCapProduct
 public import Other.AlgebraicTopology.SingularSupportCapProduct
 public import Other.AlgebraicTopology.SingularTriadCapProduct
@@ -161,4 +151,3 @@ public import Other.AlgebraicTopology.SingularTriadExcision
 public import Other.AlgebraicTopology.SupportRelativeCohomologyGermNonzero
 public import Other.CommutativeAlgebra.RegularLocalQuotientKernel
 public import Other.Geometry.Manifold.Orientation
-public import Other.Topology.Category.TopCat.Basic
