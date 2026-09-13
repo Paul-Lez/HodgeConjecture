@@ -25,6 +25,8 @@ public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import Mathlib.Algebra.Homology.Factorizations.CM5a
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Singular cohomology and global sections
 
@@ -188,7 +190,7 @@ def constantIntegerSheafComplexIntIsoSingle :
       TopCat.Sheaf.integerConstantSingleComplex
         (TopCat.of (ComplexPoint X)) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(TopCat.of (ComplexPoint X); ℤ) 0 0 rfl
+    𝓒(↧(ComplexPoint X); ℤ) 0 0 rfl
 
 end AlgebraicGeometry.ComplexPoint
 

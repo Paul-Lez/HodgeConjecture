@@ -21,6 +21,7 @@ public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
 import Mathlib.Algebra.Homology.Embedding.ExtendHomology
 
@@ -99,7 +100,7 @@ def constantCoefficientSheafComplexInt (R : Type) [CommRing R] :
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
   ((CochainComplex.single₀
     (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-      𝓒(TopCat.of (ComplexPoint X); R)).extend ComplexShape.embeddingUpNat
+      𝓒(↧(ComplexPoint X); R)).extend ComplexShape.embeddingUpNat
 
 /-- The constant-to-singular comparison, extended by zero to integer degrees. -/
 def constantsToSingularCochainComplexInt (R : Type) [CommRing R] :

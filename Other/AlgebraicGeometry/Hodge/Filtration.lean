@@ -20,6 +20,8 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import Other.AlgebraicGeometry.Hodge.HolomorphicDeRham
 public import Other.LinearAlgebra.HodgeStructure
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Filtration, the part the statement does not need
 
@@ -40,8 +42,8 @@ attribute [local instance] analyticHasDerivedCategory
 
 /-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
 def complexToFieldConstantSheaf :
-    𝓒(TopCat.of (ComplexPoint X); ℂ) ⟶ 𝓒(TopCat.of (ComplexPoint X); K) :=
-  (TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).map
+    𝓒(↧(ComplexPoint X); ℂ) ⟶ 𝓒(↧(ComplexPoint X); K) :=
+  (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom)
 
 /-- The chosen retraction from the complex constant sheaf complex to the rational one. -/
@@ -134,7 +136,7 @@ attribute [local instance] analyticHasDerivedCategory
 lemma fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf :
     fieldToComplexConstantSheaf K X ≫
       complexToFieldConstantSheaf K X = 𝟙 _ := by
-  let F := TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))
+  let F := TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)
   change F.map (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
     F.map (AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom) = 𝟙 _
   rw [← Functor.map_comp]
@@ -156,9 +158,9 @@ lemma fieldToComplexConstantSheafComplexInt_comp_complexToField :
   rw [← HomologicalComplex.extendMap_comp, ← Functor.map_comp,
     fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf]
   have hmap : (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-      (𝟙 (𝓒(TopCat.of (ComplexPoint X); K))) =
+      (𝟙 𝓒(↧(ComplexPoint X); K)) =
       𝟙 ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        (𝓒(TopCat.of (ComplexPoint X); K))) :=
+        𝓒(↧(ComplexPoint X); K)) :=
     (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map_id _
   rw [hmap]
   exact HomologicalComplex.extendMap_id _ _
@@ -254,7 +256,7 @@ lemma fieldToComplexConstantSheaf_comp_conj
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q) :
     fieldToComplexConstantSheaf K X ≫ conjConstantComplexSheaf X =
       fieldToComplexConstantSheaf K X := by
-  let F := TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))
+  let F := TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)
   change F.map (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
     F.map (AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom) =
     F.map (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)

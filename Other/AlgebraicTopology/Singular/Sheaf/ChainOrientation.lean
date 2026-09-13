@@ -76,7 +76,7 @@ def singularChainSheafDerivedSingleOrientationIso [T2Space X] (N : ℕ)
       𝓒(X; R)) :
     DerivedCategory.Q.obj (singularChainSheafCochainComplex R X) ≅
       (DerivedCategory.singleFunctor (TopCat.Sheaf AddCommGrpCat.{u} X) (-(N : ℤ))).obj
-        (𝓒(X; R)) :=
+        𝓒(X; R) :=
   DerivedCategory.concentratedOrientationIso (singularChainSheafCochainComplex R X)
     (-(N : ℤ)) (singularChainSheafCochainHomology_concentrated R X N hlocal)
     (singularChainSheafCochainHomologyIso R X N ≪≫ orientation)
@@ -108,7 +108,7 @@ def singularChainSheafDerivedOrientationIso [T2Space X] (N : ℕ)
       𝓒(X; R)) :
     DerivedCategory.Q.obj (singularChainSheafCochainComplex R X) ≅
       ((DerivedCategory.singleFunctor (TopCat.Sheaf AddCommGrpCat.{u} X) 0).obj
-        (𝓒(X; R)))⟦(N : ℤ)⟧ :=
+        𝓒(X; R))⟦(N : ℤ)⟧ :=
   neg_neg (N : ℤ) ▸ DerivedCategory.concentratedOrientationShiftIso
     (singularChainSheafCochainComplex R X) (-(N : ℤ))
     (singularChainSheafCochainHomology_concentrated R X N hlocal)

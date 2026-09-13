@@ -311,9 +311,9 @@ lemma constantsToSingularCochainZeroSheaf_comp_coboundary :
 complex. -/
 def constantsToSingularCochainSheafComplex :
     (CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat X)).obj
-        (𝓒(X; R)) ⟶ singularCochainSheafComplex R X :=
+        𝓒(X; R) ⟶ singularCochainSheafComplex R X :=
   (CochainComplex.fromSingle₀Equiv (singularCochainSheafComplex R X)
-    (𝓒(X; R))).symm
+    𝓒(X; R)).symm
       ⟨constantsToSingularCochainZeroSheaf R X, by
         rw [singularCochainSheafComplex_d]
         exact constantsToSingularCochainZeroSheaf_comp_coboundary R X⟩

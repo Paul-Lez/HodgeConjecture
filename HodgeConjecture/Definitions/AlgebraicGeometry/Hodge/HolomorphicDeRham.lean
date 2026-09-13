@@ -23,6 +23,7 @@ public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.Topology.Sheaves.Abelian
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicPoincare
 import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 import Mathlib.Algebra.Category.Grp.Zero
@@ -325,7 +326,7 @@ def conjConstantComplexPresheaf :
 
 /-- Complex conjugation on the constant complex sheaf. -/
 def conjConstantComplexSheaf :
-    𝓒(TopCat.of (ComplexPoint X); ℂ) ⟶ 𝓒(TopCat.of (ComplexPoint X); ℂ) :=
+    𝓒(↧(ComplexPoint X); ℂ) ⟶ 𝓒(↧(ComplexPoint X); ℂ) :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
   (presheafToSheaf J AddCommGrpCat).map
@@ -333,7 +334,7 @@ def conjConstantComplexSheaf :
 
 /-- The sheafified inclusion of constants as de Rham zero-forms. -/
 def constantsToHolomorphicDeRhamZeroSheaf [SmoothOfRelativeDimension d X.hom] :
-    𝓒(TopCat.of (ComplexPoint X); ℂ) ⟶ holomorphicDeRhamSheaf X d 0 :=
+    𝓒(↧(ComplexPoint X); ℂ) ⟶ holomorphicDeRhamSheaf X d 0 :=
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   (presheafToSheaf J AddCommGrpCat).map
     (constantsToHolomorphicDeRhamZero X d)
@@ -457,10 +458,10 @@ private lemma constantsToHolomorphicDeRhamZeroSheaf_mono
 def constantsToHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom] :
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (𝓒(TopCat.of (ComplexPoint X); ℂ)) ⟶
+        𝓒(↧(ComplexPoint X); ℂ) ⟶
       holomorphicDeRhamComplex X d :=
   (CochainComplex.fromSingle₀Equiv (holomorphicDeRhamComplex X d)
-    (𝓒(TopCat.of (ComplexPoint X); ℂ))).symm
+    𝓒(↧(ComplexPoint X); ℂ)).symm
       ⟨constantsToHolomorphicDeRhamZeroSheaf X d, by
         rw [holomorphicDeRhamComplex_d]
         exact constantsToHolomorphicDeRhamZeroSheaf_comp_differential X d⟩
@@ -483,7 +484,7 @@ lemma constantsToHolomorphicDeRhamComplex_quasiIsoAt_succ
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     QuasiIsoAt (constantsToHolomorphicDeRhamComplex X d) (p + 1) := by
   rw [quasiIsoAt_iff_exactAt _ _
-    (CochainComplex.exactAt_succ_single_obj (𝓒(TopCat.of (ComplexPoint X); ℂ)) p)]
+    (CochainComplex.exactAt_succ_single_obj 𝓒(↧(ComplexPoint X); ℂ) p)]
   exact holomorphicDeRhamComplex_exactAt_succ X d p
 
 /-- The constant sheaf resolves the holomorphic de Rham complex in all natural degrees. -/
@@ -502,16 +503,16 @@ def constantComplexSheafComplexInt :
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
   ((CochainComplex.single₀
     (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-      (𝓒(TopCat.of (ComplexPoint X); ℂ))).extend ComplexShape.embeddingUpNat
+      𝓒(↧(ComplexPoint X); ℂ)).extend ComplexShape.embeddingUpNat
 
 /-- Complex conjugation on the constant complex-valued complex concentrated in degree zero. -/
 def conjConstantComplexComplex :
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (𝓒(TopCat.of (ComplexPoint X); ℂ)) ⟶
+        𝓒(↧(ComplexPoint X); ℂ) ⟶
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (𝓒(TopCat.of (ComplexPoint X); ℂ)) :=
+        𝓒(↧(ComplexPoint X); ℂ) :=
   (CochainComplex.single₀ _).map (conjConstantComplexSheaf X)
 
 /-- Complex conjugation on the integer-indexed constant complex-valued complex.

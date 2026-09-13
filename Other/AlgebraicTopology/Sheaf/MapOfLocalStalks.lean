@@ -78,7 +78,7 @@ set_option backward.isDefEq.respectTransparency false in
 group to the stalk. Its map is the germ of an actual constant section. -/
 def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
     A ≅ (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj
-      (𝓒[X; A]).obj :=
+      𝓒[X; A].obj :=
   let P : TopCat.Presheaf AddCommGrpCat.{u} X := (Functor.const (Opens X)ᵒᵖ).obj A
   letI : IsIso (P.Γgerm x) := by
     apply (ConcreteCategory.isIso_iff_bijective _).2

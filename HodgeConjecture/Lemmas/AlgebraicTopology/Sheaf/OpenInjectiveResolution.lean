@@ -6,6 +6,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Comparing an ambient resolution with a resolution on an open subspace
 
@@ -34,7 +36,7 @@ def restrictedAmbientConstantResolution :
 resolution, using the normalized constant/open isomorphism. -/
 def restrictedAmbientConstantAugmentation :
     (CochainComplex.single₀ (Sheaf AddCommGrpCat.{0} (TopCat.of U))).obj
-        𝓒[TopCat.of U; A] ⟶
+        𝓒[↧U; A] ⟶
       restrictedAmbientConstantResolution X U A :=
   (CochainComplex.single₀ _).map (constantOpenSheafRestrictionIso X U A).hom ≫
     (HomologicalComplex.singleMapHomologicalComplex

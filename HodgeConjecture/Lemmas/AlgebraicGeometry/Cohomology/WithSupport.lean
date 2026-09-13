@@ -21,6 +21,8 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 public import Mathlib.CategoryTheory.Abelian.Injective.Resolution
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Rational cohomology with support
 
@@ -58,7 +60,7 @@ def pushforwardComplementConstantRationalSheaf
     (Z : Set (ComplexPoint X)) : AnalyticAdditiveSheaf X :=
   (TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion X Z)).obj
-      (𝓒(TopCat.of ↥Zᶜ; ℚ))
+      𝓒(↧↥Zᶜ; ℚ)
 
 /-- Constant rational sections restrict canonically to locally constant sections on the
 complement. This is the presheaf morphism before sheafifying the source. -/
@@ -74,7 +76,7 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
 
 /-- The canonical restriction of the rational constant sheaf to the complement. -/
 def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
-    𝓒(TopCat.of (ComplexPoint X); ℚ) ⟶
+    𝓒(↧(ComplexPoint X); ℚ) ⟶
       pushforwardComplementConstantRationalSheaf X Z :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
@@ -84,8 +86,8 @@ def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
 /-- A fixed injective resolution used to compute the derived pushforward from the complement. -/
 def complementConstantRationalInjectiveResolution
     (Z : Set (ComplexPoint X)) :
-    InjectiveResolution (𝓒(TopCat.of ↥Zᶜ; ℚ)) :=
-  injectiveResolution (𝓒(TopCat.of ↥Zᶜ; ℚ))
+    InjectiveResolution 𝓒(↧↥Zᶜ; ℚ) :=
+  injectiveResolution 𝓒(↧↥Zᶜ; ℚ)
 
 /-- A complex representing the derived pushforward of the rational constant sheaf on the
 complement. -/
@@ -156,7 +158,7 @@ def pushforwardComplementResolutionMap
         (ComplexShape.up ℕ)).obj
       ((CochainComplex.single₀
         (AnalyticComplementAdditiveSheaf X Z)).obj
-          (𝓒(TopCat.of ↥Zᶜ; ℚ))) ⟶
+          𝓒(↧↥Zᶜ; ℚ)) ⟶
     derivedPushforwardComplementConstantRationalComplexNat X Z :=
   ((TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion X Z)).mapHomologicalComplex
@@ -168,14 +170,14 @@ pushforward from the complement. -/
 def rationalRestrictionComplexNat
     (Z : Set (ComplexPoint X)) :
     (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        (𝓒(TopCat.of (ComplexPoint X); ℚ)) ⟶
+        𝓒(↧(ComplexPoint X); ℚ) ⟶
       derivedPushforwardComplementConstantRationalComplexNat X Z :=
   (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
       (rationalRestrictionSheaf X Z) ≫
     (HomologicalComplex.singleMapHomologicalComplex
       (TopCat.Sheaf.pushforward AddCommGrpCat
         (analyticComplementInclusion X Z)) (ComplexShape.up ℕ) 0).inv.app
-          (𝓒(TopCat.of ↥Zᶜ; ℚ)) ≫
+          𝓒(↧↥Zᶜ; ℚ) ≫
     pushforwardComplementResolutionMap X Z
 
 /-- Restriction from the ambient rational constant complex to the derived pushforward from the

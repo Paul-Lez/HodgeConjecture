@@ -90,7 +90,7 @@ lemma constantsToSingularCochainSheafComplex_mono
       exact constantsToSingularCochainZeroSheaf_mono R Y
   | succ n =>
       exact (HomologicalComplex.isZero_single_obj_X (ComplexShape.up ℕ) 0
-        (𝓒(Y; R)) (n + 1) (by lia)).mono _
+        𝓒(Y; R) (n + 1) (by lia)).mono _
 
 /-- Extending the constant-to-singular-cochain resolution to integer degrees remains monic. -/
 lemma constantsToSingularCochainComplexInt_mono
@@ -108,7 +108,7 @@ lemma constantsToSingularCochainComplexInt_mono
       (i := m) (i' := (m : ℤ)) rfl]
     infer_instance
   · exact (((CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat Y)).obj
-      (𝓒(Y; R))).isZero_extend_X
+      𝓒(Y; R)).isZero_extend_X
         ComplexShape.embeddingUpNat n (fun i hi ↦ hn ⟨i, hi⟩)).mono _
 
 end AlgebraicTopology.Singular

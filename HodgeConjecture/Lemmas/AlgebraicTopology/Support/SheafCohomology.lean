@@ -88,7 +88,7 @@ lemma constantRestriction_id (X : TopCat.{u}) (A : AddCommGrpCat.{u}) :
     constantRestriction (𝟙 X) A = 𝟙 _ := by
   apply CategoryTheory.Sheaf.hom_ext_iff.mpr
   apply sheafify_hom_ext
-  · exact (𝓒[X; A]).property
+  · exact 𝓒[X; A].property
   · exact (toSheafify_constantRestriction (𝟙 X) A).trans (by rfl)
 
 lemma constantRestriction_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
@@ -115,7 +115,7 @@ def closedInclusion (Z : Closeds X) : TopCat.of Z ⟶ X :=
 /-- The integer sheaf on a closed subspace, pushed forward to the ambient space. -/
 def supportIntegerSheaf (Z : Closeds X) :
     CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u} :=
-  (pushforward AddCommGrpCat (closedInclusion X Z)).obj 𝓒(TopCat.of Z; ULift.{u} ℤ)
+  (pushforward AddCommGrpCat (closedInclusion X Z)).obj 𝓒(↧Z; ULift.{u} ℤ)
 
 /-- Restriction from a larger closed support to a smaller one. -/
 def supportIntegerSheafMap {Z W : Closeds X} (h : Z ≤ W) :
