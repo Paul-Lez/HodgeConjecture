@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.Purity
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Local.Purity
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
@@ -27,7 +27,7 @@ import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 # Local dual classes on cycle components
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.Purity`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Local.Purity`.
 -/
 
 /-! ### Constructions used only in proofs -/
@@ -204,9 +204,6 @@ lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
   simpa only [neighborhoodLocalClass, map_zero] using hzero
 
 end
-
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}

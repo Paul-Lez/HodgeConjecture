@@ -74,9 +74,6 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
-noncomputable local instance complexLocalHomologyAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 /-- Local homology of a smooth complex scheme is concentrated in its real dimension. -/
 theorem localHomology_isZero_of_ne [SmoothOfRelativeDimension d X.hom]
     [T1Space (ComplexPoint X)] (z : ComplexPoint X)

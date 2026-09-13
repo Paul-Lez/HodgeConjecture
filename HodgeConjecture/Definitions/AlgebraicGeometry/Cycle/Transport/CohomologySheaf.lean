@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.LocalHomology
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
 
 /-!
@@ -28,9 +28,6 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-
-local instance smoothClosedSupportCohomologySheafAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- The literal supported ambient rational injective complex for a closed support. -/
 def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :

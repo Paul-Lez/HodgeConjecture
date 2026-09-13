@@ -49,10 +49,6 @@ noncomputable instance affineAlgebraHomTopology : TopologicalSpace (R →ₐ[ℂ
 abbrev affineSpecStructureMap : Spec ↧R ⟶ Spec ↧ℂ :=
   Spec.map (CommRingCat.ofHom (algebraMap ℂ R))
 
-noncomputable local instance :
-    TopologicalSpace (ComplexPoint (Over.mk (affineSpecStructureMap R))) :=
-  analyticTopology
-
 /-- Complex points of `Spec R` correspond to complex algebra homomorphisms from `R` to `ℂ`. -/
 def affineSpecEquiv :
     ComplexPoint (Over.mk (affineSpecStructureMap R)) ≃ (R →ₐ[ℂ] ℂ) where

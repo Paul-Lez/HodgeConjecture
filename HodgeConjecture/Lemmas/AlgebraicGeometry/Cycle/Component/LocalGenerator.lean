@@ -26,7 +26,7 @@ import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 /-!
 # Local generators from exact cycle-component coordinates
 
-An exact étale coordinate package on the smooth locus of a cycle component gives an actual
+An exact étale coordinate package on the smooth locus of a cycle component gives an
 analytic chart on its chosen affine neighborhood. This file constructs that chart directly from
 the retained polynomial-ring homomorphism. It then transports the proved standard complex local
 homology generator through the chart.
@@ -45,9 +45,6 @@ namespace AlgebraicGeometry
 
 attribute [local instance] overSpecAlgebra
 
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}
   [SmoothOfRelativeDimension d X.hom]
@@ -64,7 +61,7 @@ def smoothPoint : ComplexPoint (componentSmoothScheme X x) :=
 /-- The complex structure map on the selected affine component neighborhood. -/
 abbrev neighborhoodStructureMap :
     C.componentNeighborhood.toScheme ⟶ Spec ↧ℂ :=
-  C.componentNeighborhood.ι ≫ componentSmoothStructureMap X x
+  C.componentNeighborhood.ι ≫ (componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom
 
 /-- The selected affine component neighborhood, bundled over the complex base. -/
 abbrev neighborhoodScheme : Over (Spec ↧ℂ) :=
@@ -268,7 +265,7 @@ lemma neighborhoodPointAlgHomHomeomorph_apply
     (Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv_hom_id) r
   exact congrArg (fun s ↦ Point.evaluate ⊤ s z) h
 
-/-- The actual local analytic chart supplied by the exact étale component coordinates. -/
+/-- The local analytic chart supplied by the exact étale component coordinates. -/
 def neighborhoodProjectionChart :
     OpenPartialHomeomorph
       (ComplexPoint C.neighborhoodScheme)
@@ -361,7 +358,7 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
   have hres := Point.evaluate_res hgW s yv hv
   exact (hres.trans (hquot yv hv)).symm
 
-/-- The relative-homology map induced by the actual analytic chart coming from the exact
+/-- The relative-homology map induced by the analytic chart coming from the exact
 component coordinates. -/
 def neighborhoodLocalHomologyMap :
     AlgebraicTopology.Singular.RelativeHomology ℚ
@@ -407,9 +404,6 @@ lemma span_standardComplexLocalClass_eq_top (n : ℕ) :
 end AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
-
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}

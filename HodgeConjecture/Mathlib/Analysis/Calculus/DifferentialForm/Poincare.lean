@@ -378,8 +378,6 @@ local instance (n : ℕ) : NormedSpace ℂ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] �
 local instance (n : ℕ) : NormedSpace ℝ (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) :=
   NormedSpace.restrictScalars ℝ ℂ _
 
-local instance (n : ℕ) : CompleteSpace (E →L[ℂ] E [⋀^Fin n]→L[ℂ] ℂ) := by infer_instance
-
 /-- First-order regularity of the radial homotopy on an open star-convex domain. -/
 theorem radialHomotopy_contDiffOn_one [FiniteDimensional ℂ E] (n : ℕ) {s : Set E}
     (η : E → E [⋀^Fin (n + 1)]→L[ℂ] ℂ) (hs : IsOpen s)

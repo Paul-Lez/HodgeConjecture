@@ -44,9 +44,6 @@ open scoped Manifold ContDiff
 namespace AlgebraicGeometry
 namespace CycleComponentSeparateLocalCoordinates
 
-noncomputable local instance componentImmersionTopology {Y : Over (Spec (.of ℂ))} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}
   [SmoothOfRelativeDimension d V.structureMap]
 
@@ -129,8 +126,7 @@ noncomputable instance neighborhoodToAmbientSchemeMap_formallyUnramified :
 /-- The neighborhood-to-ambient scheme map respects the complex structure maps. -/
 lemma neighborhoodToAmbientSchemeMap_over :
     C.neighborhoodToAmbientSchemeMap ≫ V.over.hom = C.neighborhoodStructureMap := by
-  simp only [neighborhoodToAmbientSchemeMap, neighborhoodStructureMap,
-    componentSmoothStructureMap, Category.assoc]
+  simp only [neighborhoodToAmbientSchemeMap, neighborhoodStructureMap, Category.assoc]
 
 /-- The neighborhood-to-ambient morphism bundled over `Spec ℂ`. -/
 def neighborhoodToAmbientOver : C.neighborhoodScheme ⟶ V.over :=

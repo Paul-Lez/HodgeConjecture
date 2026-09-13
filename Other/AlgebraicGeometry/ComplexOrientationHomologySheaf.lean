@@ -37,9 +37,6 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
-noncomputable local instance complexOrientationHomologySheafAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 variable [SmoothOfRelativeDimension d X.hom]
   [T2Space (ComplexPoint X)]
 

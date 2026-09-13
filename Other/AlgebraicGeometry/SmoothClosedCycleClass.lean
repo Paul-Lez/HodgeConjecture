@@ -29,10 +29,6 @@ open CategoryTheory TopologicalSpace Topology
 
 namespace AlgebraicGeometry.ComplexPoint
 
-noncomputable local instance smoothClosedClassAnalyticTopology
-    (Y : Over (Spec (.of ℂ))) : TopologicalSpace (ComplexPoint Y) :=
-  Point.analyticTopology
-
 local instance smoothClosedClassSheafDerivedCategory
     (Y : Over (Spec (.of ℂ))) :
     HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint Y))) :=
