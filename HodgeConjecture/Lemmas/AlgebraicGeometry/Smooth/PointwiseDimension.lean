@@ -127,17 +127,4 @@ lemma SmoothOfRelativeDimension.height_add_coheight_eq_of_isClosed [IsIntegral X
       _ = d := hP
   rw [hheight, hcoheight, zero_add]
 
-/-- The pointwise dimension formula holds at a point whose coheight equals the ambient relative
-dimension. -/
-lemma SmoothOfRelativeDimension.height_add_coheight_eq_of_coheight_eq_dimension
-    [IsIntegral X] [SmoothOfRelativeDimension d f] (x : X)
-    (hx : Order.coheight x = d) :
-    Order.height x + Order.coheight x = d := by
-  have hsum := SmoothOfRelativeDimension.height_add_coheight_le_complex
-    (f := f) (d := d) x
-  rw [hx] at hsum ⊢
-  have hheight : Order.height x = 0 :=
-    bot_unique ((ENat.add_le_add_iff_right (ENat.natCast_ne_top d)).mp (by simpa using hsum))
-  rw [hheight, zero_add]
-
 end AlgebraicGeometry

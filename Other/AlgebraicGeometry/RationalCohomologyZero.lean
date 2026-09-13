@@ -19,6 +19,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Basic
 
 import Other.AlgebraicTopology.ConstantSheafDegreeZero
+public import Other.AlgebraicGeometry.Hodge.Filtration
 
 /-!
 # Degree-zero rational constant-sheaf cohomology

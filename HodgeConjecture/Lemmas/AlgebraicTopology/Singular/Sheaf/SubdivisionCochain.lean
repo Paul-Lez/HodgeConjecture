@@ -19,7 +19,8 @@ import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.Topology.ShrinkingLemma
 public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueAcyclic
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.CochainCohomology
+public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDual
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainDescent
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.Field
 public import HodgeConjecture.Mathlib.Topology.ChartedSpaceParacompact

@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.LocalOrientation
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.EuclideanVanishing
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainHomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
 
 /-!
 # Local homology concentration on a smooth complex scheme

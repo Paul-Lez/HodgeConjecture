@@ -17,6 +17,9 @@ module
 
 public import Other.AlgebraicGeometry.CycleComponentLocalOrientation
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvariance
+public import Other.AlgebraicGeometry.Cycle.Component.LocalGenerator
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvariance
 
 /-!
 # Coherence of exact cycle-component local orientations

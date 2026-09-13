@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.CohomologySheafOpenComparison
+public import Other.AlgebraicTopology.Sheaf.HomologySection
 
 /-! # The canonical local cohomology-sheaf map under actual open restriction -/
 

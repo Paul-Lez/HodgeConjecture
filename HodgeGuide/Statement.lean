@@ -8,6 +8,8 @@ import Other.AlgebraicGeometry.CodimensionZeroCoclassNonvanishing
 import Other.AlgebraicGeometry.CycleClassDimension
 import Other.AlgebraicGeometry.SheafCycleClass
 import Other.AlgebraicGeometry.SmoothAnalytificationConnected
+import Other.AlgebraicGeometry.Hodge.Filtration
+import Other.LinearAlgebra.HodgeStructure
 
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean

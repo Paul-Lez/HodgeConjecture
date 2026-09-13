@@ -184,25 +184,6 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
   rw [scalarHolomorphicDeRhamPresheaf_mul, Functor.map_comp]
   rfl
 
-/-- Conjugating twice is the identity on the constant complex presheaf. -/
-lemma conjConstantComplexPresheaf_comp_self :
-    conjConstantComplexPresheaf X ≫ conjConstantComplexPresheaf X =
-      𝟙 (constantComplexAddCommGrpPresheaf X) := by
-  ext U : 2
-  change (starRingEnd ℂ).toAddMonoidHom.comp (starRingEnd ℂ).toAddMonoidHom = AddMonoidHom.id ℂ
-  exact AddMonoidHom.ext Complex.conj_conj
-
-/-- Conjugating twice is the identity on the constant complex sheaf. -/
-lemma conjConstantComplexSheaf_comp_self :
-    conjConstantComplexSheaf X ≫ conjConstantComplexSheaf X =
-      𝟙 (constantComplexSheaf X) := by
-  let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
-  change (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) ≫
-    (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) = _
-  rw [← Functor.map_comp, conjConstantComplexPresheaf_comp_self]
-  exact (presheafToSheaf J AddCommGrpCat).map_id _
-
 /-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the constant
 complex presheaf. This is the presheaf-level source of conjugate-linearity. -/
 lemma complexScalarPresheaf_comp_conj (c : ℂ) :
@@ -273,13 +254,6 @@ lemma constantsToHolomorphicDeRhamComplex_scalar
       (ComplexShape.up ℕ) 0 (constantComplexSheaf X) (p + 1)
       (Nat.succ_ne_zero p)).eq_of_src
 
-/-- Conjugating twice is the identity in degree zero. -/
-lemma conjConstantComplexComplex_comp_self :
-    conjConstantComplexComplex X ≫ conjConstantComplexComplex X = 𝟙 _ := by
-  unfold conjConstantComplexComplex
-  rw [← Functor.map_comp, conjConstantComplexSheaf_comp_self]
-  exact (CochainComplex.single₀ _).map_id _
-
 /-- Conjugation intertwines the two scalar multiplications in degree zero. -/
 lemma complexScalarComplex_comp_conj (c : ℂ) :
     complexScalarComplex X c ≫ conjConstantComplexComplex X =
@@ -287,13 +261,6 @@ lemma complexScalarComplex_comp_conj (c : ℂ) :
         complexScalarComplex X (starRingEnd ℂ c) := by
   unfold complexScalarComplex conjConstantComplexComplex
   rw [← Functor.map_comp, ← Functor.map_comp, complexScalarSheaf_comp_conj]
-
-/-- Conjugating twice is the identity on the integer-indexed constant complex. -/
-lemma conjConstantComplexSheafComplexInt_comp_self :
-    conjConstantComplexSheafComplexInt X ≫ conjConstantComplexSheafComplexInt X = 𝟙 _ := by
-  unfold conjConstantComplexSheafComplexInt constantComplexSheafComplexInt
-  rw [← HomologicalComplex.extendMap_comp, conjConstantComplexComplex_comp_self]
-  exact HomologicalComplex.extendMap_id _ _
 
 /-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the
 integer-indexed constant complex. -/

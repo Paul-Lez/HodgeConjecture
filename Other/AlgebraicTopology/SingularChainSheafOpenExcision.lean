@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.SingularChainSheafOpenRestriction
+public import Other.AlgebraicTopology.Singular.Sheaf.ChainStalk
 
 /-!
 # The open-inclusion comparison is a quasi-isomorphism

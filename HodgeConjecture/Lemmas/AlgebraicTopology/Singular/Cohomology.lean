@@ -304,16 +304,6 @@ lemma enlargeSupport_rfl (R : Type u) [Field R] (X : TopCat.{u}) (Z : Set X) (n 
     enlargeSupport R X (Set.Subset.rfl : Z ⊆ Z) n = LinearMap.id := by
   rw [enlargeSupport, supportInclusionPairMap_rfl, relativeCohomologyMap_id]
 
-/-- Over a field a continuous map is determined on cohomology by its effect on homology:
-universal coefficients is natural, and an injective equivalence. -/
-lemma cohomologyMap_eq_of_homologyMap_eq (R : Type u) [Field R] {X Y : TopCat.{u}} (n : ℕ)
-    {f g : X ⟶ Y} (h : homologyMap R n f = homologyMap R n g) :
-    cohomologyMap R n f = cohomologyMap R n g := by
-  ext α
-  refine (cohomologyEquivDualHomology R X n).injective (LinearMap.ext fun z => ?_)
-  rw [cohomologyEquivDualHomology_cohomologyMap, cohomologyEquivDualHomology_cohomologyMap,
-    h]
-
 /-- Relative cohomology vanishes wherever relative homology does: the two are linked by the
 universal-coefficient equivalence. -/
 lemma relativeCohomology_subsingleton (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ)

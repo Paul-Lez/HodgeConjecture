@@ -21,6 +21,7 @@ import Other.AlgebraicGeometry.CodimensionCycle
 import Other.AlgebraicGeometry.RationalCohomologyZero
 public import Other.AlgebraicGeometry.HodgeCodimensionZero
 import Other.AlgebraicGeometry.SmoothAnalytificationConnected
+public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 
 /-!
 # Comparing the two codimension-zero cycle-class constructions

@@ -7,6 +7,8 @@ module
 public import Other.AlgebraicTopology.OpenRestrictionStalk
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativePairExcision
+public import Other.AlgebraicTopology.Singular.Sheaf.Chain
+public import Other.AlgebraicTopology.Singular.Sheaf.ChainStalk
 
 /-!
 # Excision and the open restriction of the actual singular-chain sheaf

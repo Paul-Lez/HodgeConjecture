@@ -66,21 +66,6 @@ section SchemeGeometry
 
 variable {X : Scheme} {f : X ⟶ Spec ↧ℂ} {d p : ℕ}
 
-/-- A component whose generic point has coheight equal to the ambient dimension has dimension
-zero. -/
-lemma orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
-    [IsIntegral X] [SmoothOfRelativeDimension d f] (x : X)
-    (hx : Order.coheight x = d) :
-    Order.krullDim (cycleComponent X x) =
-      (↑(0 : ℕ∞) : WithBot ℕ∞) := by
-  rw [orderKrullDim_cycleComponent]
-  have h := SmoothOfRelativeDimension.height_add_coheight_eq_of_coheight_eq_dimension
-    (f := f) (d := d) x hx
-  rw [hx] at h
-  have hheight : Order.height x = 0 :=
-    bot_unique ((ENat.add_le_add_iff_right (ENat.natCast_ne_top d)).mp (by simpa using h.le))
-  rw [hheight]
-
 /-- A closed point of an integral smooth complex `d`-fold has coheight `d`. -/
 lemma SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
     [IsIntegral X] [SmoothOfRelativeDimension d f] (x : X) (hx : IsClosed {x}) :

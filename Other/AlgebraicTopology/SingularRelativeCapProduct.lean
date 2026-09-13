@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import Other.AlgebraicTopology.SingularCapProduct
+public import Other.AlgebraicTopology.Singular.CochainCohomology
 
 /-!
 # The relative singular cap product

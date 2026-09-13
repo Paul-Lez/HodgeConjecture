@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.MapOfLocalStalks
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.MapOfLocalStalks
 /-!
 # The local relative-cohomology presheaf and its sheafification
 

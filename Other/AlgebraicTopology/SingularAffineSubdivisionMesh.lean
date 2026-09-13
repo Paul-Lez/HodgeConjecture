@@ -19,6 +19,8 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.Affi
 
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.Lebesgue
 import Mathlib.Analysis.Normed.Module.Convex
+public import Other.AlgebraicTopology.Singular.Excision.Lebesgue
+public import Other.AlgebraicTopology.Singular.Subdivision.AffineMesh
 
 /-!
 # Affine barycentric subdivision mesh estimates

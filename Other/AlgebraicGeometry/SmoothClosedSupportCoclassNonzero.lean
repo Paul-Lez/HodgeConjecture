@@ -7,6 +7,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 public import Other.AlgebraicGeometry.SmoothClosedSupportCoclassRestrictionNonzero
 public import Other.AlgebraicTopology.SupportRelativeCohomologyGermNonzero
+public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 
 /-!
 # Nonvanishing of smooth closed-support coclass sections

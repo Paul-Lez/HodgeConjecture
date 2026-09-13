@@ -696,20 +696,6 @@ lemma surjective_chartIntegralProj {n : ℕ} :
   change chartIntegralProj v hv = q
   rw [chartIntegralProj_eq_chartIntegralProjAt v hv i hi, hq]
 
-/-- Nonzero homogeneous coordinates satisfy the irrelevant-ideal condition in the universal
-construction of a morphism to `Proj`. -/
-lemma coordinate_irrelevant_map_eq_top {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
-    Ideal.map (coordinateGlobalSectionsHom v)
-      (HomogeneousIdeal.irrelevant (UniversalGrading n)).toIdeal = ⊤ := by
-  obtain ⟨i, hi⟩ := exists_coordinate_ne_zero v hv
-  apply Ideal.eq_top_of_isUnit_mem _
-  · apply Ideal.mem_map_of_mem
-    exact HomogeneousIdeal.mem_irrelevant_of_mem _ zero_lt_one
-      (MvPolynomial.isHomogeneous_X _ i)
-  · rw [coordinateGlobalSectionsHom_X]
-    exact IsUnit.map (Scheme.ΓSpecIso ↧ℂ).inv.hom
-      (isUnit_iff_ne_zero.mpr hi)
-
 /-- Nonzero homogeneous coordinates define a point of scheme-theoretic projective space over
 `Spec ℂ`. -/
 noncomputable def vectorToProjectiveSpace {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :

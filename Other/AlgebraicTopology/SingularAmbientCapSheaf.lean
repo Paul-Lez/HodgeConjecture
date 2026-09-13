@@ -6,6 +6,7 @@ module
 
 public import Other.AlgebraicTopology.SingularCapNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
+public import Other.AlgebraicTopology.Singular.Sheaf.ChainStalk
 
 /-!
 # The ambient-cochain cap action on the relative-chain sheaf

@@ -45,13 +45,6 @@ open Point
 
 variable {X Y : Over (Spec ↧ℂ)}
 
-/-- For a complex scheme locally of finite type, a complex point is determined by its underlying
-closed point. -/
-lemma underlying_injective_of_locallyOfFiniteType
-    [LocallyOfFiniteType X.hom] :
-    Function.Injective (@underlying ℂ _ _ X) := fun z w h ↦
-  Over.OverMorphism.ext (ext_of_apply_closedPoint_eq X.hom (Over.w z) (Over.w w) h)
-
 /-- A monomorphism of schemes induces an injection on complex points. -/
 lemma map_injective_of_mono (i : X ⟶ Y) [Mono i] :
     Function.Injective (map i) := fun _ _ h ↦ (cancel_mono i).mp h

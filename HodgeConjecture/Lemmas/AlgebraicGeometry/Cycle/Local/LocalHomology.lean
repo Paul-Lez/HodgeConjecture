@@ -147,31 +147,6 @@ def smoothClosedSupportNormalCoclass :
       (smoothClosedSupportNormalClass X Y i m d z V hzV) = 1 :=
   normalizedRelativeCoclass_pairing_self _ _
 
-/-- Generation is deduced from the explicit pair computation, never used to manufacture
-the normal-slice comparison. -/
-theorem span_smoothClosedSupportNormalClass_eq_top :
-    Submodule.span ℚ {smoothClosedSupportNormalClass X Y i m d z V hzV} = ⊤ := by
-  let e := (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
-    (2 * (d - m))).symm.toLinearEquiv
-  have h := congrArg (Submodule.map e.toLinearMap)
-    (span_standardComplexLocalClass_eq_top_for_chart (d - m))
-  rw [Submodule.map_span, Set.image_singleton, Submodule.map_top, LinearEquiv.range] at h
-  exact h
-
-/-- Exact normalization uniquely specifies the local coclass, since the constructed
-normal class generates the already computed local relative homology. -/
-theorem smoothClosedSupportNormalCoclass_unique
-    (α : RelativeCohomology ℚ
-      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV)
-        (2 * (d - m)))
-    (hα : relativeCohomologyEquivDualHomology ℚ
-        (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) (2 * (d - m)) α
-      (smoothClosedSupportNormalClass X Y i m d z V hzV) = 1) :
-    α = smoothClosedSupportNormalCoclass X Y i m d z V hzV :=
-  normalizedRelativeCoclass_unique
-    (smoothClosedSupportNormalClass_ne_zero X Y i m d z V hzV)
-    (span_smoothClosedSupportNormalClass_eq_top X Y i m d z V hzV) α hα
-
 theorem smoothClosedSupportRelativeCohomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * (d - m)) :
     IsZero (RelativeCohomology ℚ
       (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n) :=

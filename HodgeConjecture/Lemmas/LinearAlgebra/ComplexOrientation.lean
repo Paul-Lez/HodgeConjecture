@@ -38,20 +38,6 @@ equivalence.
 
 @[expose] public noncomputable section
 
-/-- A complex-linear automorphism has positive real determinant after restriction of scalars.
-
-This is stated for an arbitrary finite free complex module.  The real freeness needed to form the
-determinant is supplied by the scalar-tower instance behind `LinearMap.det_restrictScalars`.
--/
-theorem LinearEquiv.det_restrictScalars_complex_pos
-    {E : Type*} [AddCommGroup E] [Module ℝ E] [Module ℂ E]
-    [IsScalarTower ℝ ℂ E] [Module.Free ℂ E]
-    (f : E ≃ₗ[ℂ] E) :
-    0 < LinearMap.det ((f.restrictScalars ℝ).toLinearMap) := by
-  change 0 < LinearMap.det (f.toLinearMap.restrictScalars ℝ)
-  rw [LinearMap.det_restrictScalars, Algebra.norm_complex_apply]
-  exact Complex.normSq_pos.mpr f.isUnit_det'.ne_zero
-
 namespace Complex
 
 /-- The real dimension of `Fin n → ℂ` is `2 * n`, in the form expected by

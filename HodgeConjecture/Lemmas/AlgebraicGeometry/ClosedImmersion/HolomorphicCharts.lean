@@ -120,20 +120,6 @@ theorem analyticAt_closedImmersionNormalTransition
   have hlast : AnalyticAt ℂ A' (C' (C.symm (A.symm v))) := himage ▸ hA'
   exact hlast.comp (f := fun w => C' (C.symm (A.symm w))) (x := v) hmiddle
 
-/-- The actual transition preserves the zero-normal plane in both directions. -/
-theorem closedImmersionNormalTransition_preserves_support
-    (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
-    (hv : v ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
-    (closedImmersionNormalTransition X Y i m d z z' v).2 = 0 ↔ v.2 = 0 := by
-  let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
-  have hy := e.map_target hv.1
-  have h1 := closedImmersionHolomorphicFlatteningChart_mem_range_iff
-    X Y i m d z (e.symm v) hy
-  have h2 := closedImmersionHolomorphicFlatteningChart_mem_range_iff
-    X Y i m d z' (e.symm v) hv.2
-  rw [e.right_inv hv.1] at h1
-  exact h2.symm.trans h1
-
 /-- The actual inverse transition is holomorphic at the image of every source point. -/
 theorem analyticAt_closedImmersionNormalTransition_symm
     (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))

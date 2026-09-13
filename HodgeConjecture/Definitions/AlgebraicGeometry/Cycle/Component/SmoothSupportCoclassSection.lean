@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 /-!
 # The normalized component coclass on the original ambient smooth-support open
 

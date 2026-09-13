@@ -169,10 +169,6 @@ lemma isOpenEmbedding_localizationAwayAlgHomMap (f : S) :
   (isOpen_nonvanishingAlgHom S f).isOpenEmbedding_subtypeVal.comp
     (localizationAwayAlgHomHomeomorph S f).isOpenEmbedding
 
-lemma isLocalHomeomorph_localizationAwayAlgHomMap (f : S) :
-    IsLocalHomeomorph (localizationAwayAlgHomMap S f) :=
-  (isOpenEmbedding_localizationAwayAlgHomMap S f).isLocalHomeomorph
-
 end
 
 

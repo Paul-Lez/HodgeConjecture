@@ -64,28 +64,6 @@ attribute [local instance] derivedSupportLocalizationSheafDerivedCategory
 
 attribute [local instance] derivedSupportLocalizationGroupDerivedCategory
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
-/-- The derived unit identifies the actual `D⁺` supported-sections functor
-with its termwise value on a bounded-below injective complex. The displayed
-comparison takes values in the ambient derived category via its full inclusion. -/
-def derivedClosedSupportInjectiveModelIso (Z : Closeds X)
-    (I : CochainComplex.Plus (InjectiveObject (Sheaf AddCommGrpCat.{u} X))) :
-    DerivedCategory.Plus.ι.obj
-      ((derivedClosedSupportSections X Z).obj
-        (DerivedCategory.Plus.Qh.obj
-          ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj
-            ((HomotopyCategory.Plus.quotient _).obj I)))) ≅
-      DerivedCategory.Q.obj
-        (supportRestrictionSectionsComplexShortComplex X Z.compl ⊤
-          (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-            (.up ℤ)).obj I.obj)).X₁ :=
-  (DerivedCategory.Plus.ι.mapIso
-    (asIso ((derivedClosedSupportSectionsUnit X Z).app
-      ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj
-        ((HomotopyCategory.Plus.quotient _).obj I))))).symm ≪≫
-    (DerivedCategory.quotientCompQhIso AddCommGrpCat.{u}).app _
-
 end TopCat.Sheaf
 
 end

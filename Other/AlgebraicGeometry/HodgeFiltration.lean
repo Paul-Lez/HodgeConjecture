@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
+public import Other.LinearAlgebra.HodgeStructure
 
 @[expose] public noncomputable section
 

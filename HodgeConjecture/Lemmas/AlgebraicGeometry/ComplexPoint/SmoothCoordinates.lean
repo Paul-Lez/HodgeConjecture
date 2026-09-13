@@ -73,12 +73,6 @@ lemma Smooth.exists_affine_isStandardSmooth [Smooth f] (x : Y) :
 
 variable (X : Over (Spec ↧ℂ))
 
-lemma algebraMap_isStandardSmooth {V : X.left.Opens}
-    (h : (X.hom.appLE ⊤ V (by simp)).hom.IsStandardSmooth) :
-    (algebraMap ℂ Γ(X.left, V)).IsStandardSmooth := by
-  exact RingHom.isStandardSmooth_respectsIso.2 _
-    (Scheme.ΓSpecIso ↧ℂ).symm.commRingCatIsoToRingEquiv h
-
 lemma SmoothOfRelativeDimension.exists_affine_isStandardSmoothOfRelativeDimension
     {d : ℕ} [SmoothOfRelativeDimension d f] (x : Y) :
     ∃ (V : Y.Opens) (_ : IsAffineOpen V), x ∈ V ∧

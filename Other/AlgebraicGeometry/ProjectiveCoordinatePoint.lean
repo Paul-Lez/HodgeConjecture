@@ -18,6 +18,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Projective
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import Other.AlgebraicGeometry.ComplexPoint.Projective
 
 /-!
 # Points of the integral `Proj` model from homogeneous coordinates

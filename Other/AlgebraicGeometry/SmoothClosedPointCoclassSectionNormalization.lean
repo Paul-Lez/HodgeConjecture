@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 public import Other.AlgebraicGeometry.SmoothClosedPointPurityNormalization
+public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 
 /-!
 # Exact point comparison for the global smooth-support coclass section

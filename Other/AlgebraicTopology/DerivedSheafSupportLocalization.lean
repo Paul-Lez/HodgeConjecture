@@ -8,6 +8,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLo
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.InjectiveFlasque
 public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
+public import Other.AlgebraicTopology.Support.DerivedSectionsLocalization
 
 @[expose] public noncomputable section
 

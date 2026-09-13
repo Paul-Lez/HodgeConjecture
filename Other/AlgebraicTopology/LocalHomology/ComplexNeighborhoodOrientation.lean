@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.EuclideanNeighborhoodOrientation
+public import Other.AlgebraicTopology.LocalHomology.EuclideanNeighborhoodOrientation
 public import HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.ComplexClass
 
 /-!

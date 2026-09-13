@@ -6,8 +6,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportExtension
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularCohomologySheafComparison
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCohomologySheafComparison
 /-!
 # Constructed sheaf cycle classes in arbitrary codimension
 

@@ -150,22 +150,6 @@ instance singularChainSheafificationUnit_stalk_isIso (x : X) (n : ℕ) :
   TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
     (singularChainPresheaf R X n)
 
-/-- The chain-complex-level identification of stalks before and after sheafification.
-This is not yet an identification with the local relative homology at `x`. -/
-def singularChainSheafificationStalkIso (x : X) :
-    ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex
-      (ComplexShape.down ℕ)).obj (singularChainPresheafComplex R X) ≅
-    ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex
-      (ComplexShape.down ℕ)).obj
-      (((TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapHomologicalComplex
-        (ComplexShape.down ℕ)).obj (singularChainSheafComplex R X)) := by
-  let f := ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex
-    (ComplexShape.down ℕ)).map (singularChainSheafificationUnit R X)
-  have : ∀ n, IsIso (f.f n) := fun n ↦
-    singularChainSheafificationUnit_stalk_isIso R X x n
-  have : IsIso f := HomologicalComplex.Hom.isIso_of_components f
-  exact asIso f
-
 /-- The sheafified relative singular-chain model with the cohomological grading convention:
 homological degree `n` occupies cohomological degree `-n`, and positive degrees are zero. -/
 def singularChainSheafCochainComplex : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ :=

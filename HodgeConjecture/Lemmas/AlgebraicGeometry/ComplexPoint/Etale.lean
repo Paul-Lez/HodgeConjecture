@@ -506,14 +506,6 @@ lemma analyticAt_standardEtaleAlgHomProjectionChart_symm_apply
     analyticAt_standardEtaleCoordinateEvaluation_chart P
       (standardEtaleCoordinateHomeomorph P u) hw' r
 
-/-- Projection from a standard étale equation locus to its polynomial coordinates is a local
-homeomorphism. -/
-lemma isLocalHomeomorph_standardEtaleCoordinateProjection :
-    IsLocalHomeomorph (fun z : standardEtaleCoordinateSpace P ↦ z.1.1) := by
-  rw [isLocalHomeomorph_iff_isLocalHomeomorphOn_univ]
-  exact IsLocalHomeomorphOn.mk _ _ fun z _ ↦
-    ⟨standardEtaleProjectionChart P z, standardEtale_mem_implicit_source P z, fun _ _ ↦ rfl⟩
-
 variable (S : Type) [CommRing S] [Algebra ℂ S]
   [Algebra (complexPolynomialRing n) S]
   [IsScalarTower ℂ (complexPolynomialRing n) S]
@@ -721,13 +713,6 @@ lemma affineSpaceEquiv_polynomialSpecToAffineSpacePointMap
     affineSpecEquiv (complexPolynomialRing n) z (MvPolynomial.X i)
   rw [AffineSpace.SpecIso_inv_appTop_coord]
   rw [affineSpecEquiv_apply, evaluate_top_eq_appTop]
-
-lemma specMap_algebraMap_comp_affineSpecStructureMap :
-    Spec.map (CommRingCat.ofHom (algebraMap (complexPolynomialRing n) P.Ring)) ≫
-        affineSpecStructureMap (complexPolynomialRing n) =
-      affineSpecStructureMap P.Ring := by
-  rw [← Spec.map_comp]
-  congr 1
 
 end
 
