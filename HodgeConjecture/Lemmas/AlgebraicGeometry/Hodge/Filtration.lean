@@ -38,8 +38,6 @@ open Point
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
 
-attribute [local instance] hodgeFiltrationTopology
-
 attribute [local instance] analyticHasDerivedCategory
 
 /-- Scalar multiplication over `K` agrees with multiplication by its image in `ℂ`. -/
@@ -223,8 +221,6 @@ open Point
 
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
-
-attribute [local instance] hodgeFiltrationTopology
 
 attribute [local instance] analyticHasDerivedCategory
 

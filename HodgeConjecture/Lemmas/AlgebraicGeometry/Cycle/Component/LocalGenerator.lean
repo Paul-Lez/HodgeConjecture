@@ -45,9 +45,6 @@ namespace AlgebraicGeometry
 
 attribute [local instance] overSpecAlgebra
 
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}
   [SmoothOfRelativeDimension d X.hom]
@@ -424,9 +421,6 @@ lemma span_standardComplexLocalClass_eq_top (n : ℕ) :
 end AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
-
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}

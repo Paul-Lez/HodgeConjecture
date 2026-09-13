@@ -26,9 +26,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
-local instance complexSheafForgetAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 local instance complexSheafForgetSheafDerivedCategory : HasDerivedCategory
     (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) :=
   HasDerivedCategory.standard _

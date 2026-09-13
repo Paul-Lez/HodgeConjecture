@@ -102,9 +102,6 @@ end SchemeStructure
 
 variable (X : Over (Spec ↧ℂ))
 
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 /-- Étale algebraic coordinates of the specified relative dimension around a point of a smooth
 complex scheme. -/
 structure LocalEtaleCoordinates (d : ℕ) [SmoothOfRelativeDimension d X.hom] (x : X.left) where

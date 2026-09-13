@@ -147,17 +147,6 @@ instance derivedSheafSectionsWithClosedSupport_isRightDerivedFunctor (Z : Closed
     derivedSheafSectionsWithClosedSupportUnit]
   infer_instance
 
-/-- A bounded-below complex of injective sheaves computes sheaf-valued derived
-sections with support by applying the concrete support functor termwise. -/
-instance derivedSheafSectionsWithClosedSupportUnit_isIso_injectiveComplex (Z : Closeds X)
-    (K : HomotopyCategory.Plus (InjectiveObject (Sheaf AddCommGrpCat.{u} X))) :
-    IsIso ((derivedSheafSectionsWithClosedSupportUnit X Z).app
-      ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj K)) :=
-  (HomotopyCategory.Plus.localizerMorphism_derives
-    ((sheafSectionsWithClosedSupport X Z).mapHomotopyCategoryPlus ⋙
-      DerivedCategory.Plus.Qh)).isIso_of_isRightDerivedFunctor
-        (derivedSheafSectionsWithClosedSupportUnit X Z) K
-
 /-- The group-valued derived sections-with-support functor `RΓ_Z` on
 bounded-below complexes. This is derived from the actual functor of global
 sections vanishing on the complement. -/
@@ -181,17 +170,6 @@ instance derivedClosedSupportSections_isRightDerivedFunctor (Z : Closeds X) :
       (HomotopyCategory.Plus.quasiIso (Sheaf AddCommGrpCat.{u} X)) := by
   dsimp only [derivedClosedSupportSections, derivedClosedSupportSectionsUnit]
   infer_instance
-
-/-- A bounded-below complex of injective sheaves computes group-valued derived
-sections with support by taking supported global sections termwise. -/
-instance derivedClosedSupportSectionsUnit_isIso_injectiveComplex (Z : Closeds X)
-    (K : HomotopyCategory.Plus (InjectiveObject (Sheaf AddCommGrpCat.{u} X))) :
-    IsIso ((derivedClosedSupportSectionsUnit X Z).app
-      ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj K)) :=
-  (HomotopyCategory.Plus.localizerMorphism_derives
-    ((closedSupportSections X Z).mapHomotopyCategoryPlus ⋙
-      DerivedCategory.Plus.Qh)).isIso_of_isRightDerivedFunctor
-        (derivedClosedSupportSectionsUnit X Z) K
 
 end TopCat.Sheaf
 

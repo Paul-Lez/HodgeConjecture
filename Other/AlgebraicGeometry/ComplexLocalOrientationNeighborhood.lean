@@ -42,9 +42,6 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
-noncomputable local instance complexOrientationNeighborhood_analyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 variable [SmoothOfRelativeDimension d X.hom]
 
 /-- An open neighborhood carrying a single exactly normalized relative orientation class. -/

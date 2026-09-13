@@ -262,12 +262,6 @@ lemma continuous_affineSpaceEquiv_symm (n : Type) :
       ((affineSpaceEquiv n).symm v) ∈ V
     exact (congrArg (fun c ↦ c ∈ V) (evaluate_res hfU s _ hvf)).mp hvV
 
-/-- The analytic topology on complex affine space. -/
-noncomputable instance affineSpaceTopology (n : Type) :
-    TopologicalSpace
-      (ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ))) :=
-  analyticTopology
-
 /-- Complex affine space with the evaluation topology is ordinary complex affine space. -/
 def affineSpaceHomeomorph (n : Type) :
     ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) ≃ₜ (n → ℂ) where

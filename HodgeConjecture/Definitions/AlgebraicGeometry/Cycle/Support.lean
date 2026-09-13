@@ -98,19 +98,6 @@ instance cycleComponent_projective
       immersion_toBase := by rw [Category.assoc, P.immersion_toBase] }
   ⟩⟩
 
-/-- A cycle component of a projective complex variety is proper over `ℂ`. -/
-noncomputable instance cycleComponent_isProper
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IsProper (cycleComponentι X.left x ≫ X.hom) :=
-  inferInstance
-
-/-- A cycle component of a projective complex variety is locally of finite presentation over
-`ℂ`. -/
-noncomputable instance cycleComponent_locallyOfFinitePresentation
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    LocallyOfFinitePresentation (cycleComponentι X.left x ≫ X.hom) :=
-  inferInstance
-
 /-- The complex points supported on the irreducible closed subset with generic point `x`. -/
 def cycleComponentSupport
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :

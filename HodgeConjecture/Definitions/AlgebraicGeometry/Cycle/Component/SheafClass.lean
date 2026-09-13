@@ -35,9 +35,6 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-local instance cycleComponentSheafClassAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 /-- The actual supported injective cohomology sheaf is the sheaf of local
 relative cohomology, by the constructed singular resolution and its literal
 restriction-natural comparison. -/

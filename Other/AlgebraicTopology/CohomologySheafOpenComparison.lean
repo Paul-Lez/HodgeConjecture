@@ -64,10 +64,6 @@ instance cohomologyOpenPresheafRestriction_additive :
   dsimp [cohomologyOpenPresheafRestriction]
   infer_instance
 
-instance cohomologyOpenPresheafRestriction_preservesZeroMorphisms :
-    (cohomologyOpenPresheafRestriction X U).PreservesZeroMorphisms where
-  map_zero := by intros; rfl
-
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in

@@ -28,9 +28,6 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {d p : ℕ} [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p)
 
-local instance cycleComponentSupportExtensionAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 include d hx in
 /-- Every actual closed remainder in the finite singular filtration has
 vanishing supported section-complex cohomology below `2(p+1)`. -/

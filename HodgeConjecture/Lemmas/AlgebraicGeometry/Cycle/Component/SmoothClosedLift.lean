@@ -45,7 +45,6 @@ theorem cycleComponentSmoothLocus_smoothOfRelativeDimension (hx : Order.coheight
   let A := (cycleComponentι X.left x ≫ X.hom).smoothLocus
   let g := A.ι ≫ cycleComponentι X.left x ≫ X.hom
   let : Smooth g := cycleComponent_smoothLocus_smooth X x
-  let : IsIntegral A := cycleComponent_smoothLocus_isIntegral X x
   obtain ⟨m, hm⟩ := Smooth.exists_smoothOfRelativeDimension g
   let : SmoothOfRelativeDimension m g := hm
   obtain ⟨z, hzA, hzClosed⟩ := (dense_cycleComponent_smooth_closedPoints X x).nonempty
@@ -66,8 +65,6 @@ theorem cycleComponentSmoothLocus_smoothOfRelativeDimension (hx : Order.coheight
   exact hm
 
 namespace ComplexPoint
-
-attribute [local instance] cycleComponentSmoothClosedLiftAnalyticTopology
 
 omit [IsIntegral X.left] [Smooth X.hom] in
 /-- The analytic image of the algebraic boundary complement is the exact open used by

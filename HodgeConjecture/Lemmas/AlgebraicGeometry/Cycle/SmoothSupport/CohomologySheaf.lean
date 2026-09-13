@@ -26,8 +26,6 @@ open AlgebraicTopology.Singular
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-attribute [local instance] smoothClosedSupportCohomologySheafAnalyticTopology
-
 /-- Actual open-section cohomology of the supported injective model is relative
 singular cohomology of the same literal local support pair. -/
 def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
@@ -59,8 +57,6 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-
-attribute [local instance] smoothClosedSupportCohomologySheafAnalyticTopology
 
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 /-- Negative cohomology vanishes directly from the actual nonnegative resolution. -/

@@ -54,11 +54,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-noncomputable local instance cycleComponentBorelMooreClassTopology
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    TopologicalSpace (CycleComponentAnalyticPoint V x) :=
-  Point.analyticTopology
-
 /-- Auxiliary comparison data for one irreducible codimension-`p` component.
 
 The Borel--Moore class is exactly normalized, but `auxiliaryComparison` is an arbitrary linear

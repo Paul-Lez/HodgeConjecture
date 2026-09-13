@@ -50,9 +50,6 @@ open Point
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
 
-local instance hodgeFiltrationTopology :
-    TopologicalSpace (ComplexPoint X) := analyticTopology
-
 /-- Sheaves of additive groups on the analytic complex-point space. -/
 abbrev AnalyticAdditiveSheaf :=
   TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))

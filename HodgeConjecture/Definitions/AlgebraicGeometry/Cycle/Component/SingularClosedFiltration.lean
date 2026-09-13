@@ -41,9 +41,6 @@ def cycleComponentSingularAmbientClosedFiltration (k : ℕ) : Closeds X.left :=
 
 namespace ComplexPoint
 
-local instance cycleComponentSingularClosedFiltrationAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 /-- The actual analytically closed ambient supports for nested-support localization. -/
 def cycleComponentSingularAnalyticClosedFiltration (k : ℕ) : Closeds (ComplexPoint X) :=
   ⟨Point.underlying ⁻¹' (cycleComponentSingularAmbientClosedFiltration X x k : Set X.left),

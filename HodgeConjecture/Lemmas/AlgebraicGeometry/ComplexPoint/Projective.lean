@@ -1285,13 +1285,6 @@ lemma continuous_projectivizationToComplexPoint {n : ℕ} :
   apply Continuous.quotient_lift
   exact continuous_vectorToComplexPoint
 
-/-- The analytic topology on the complex points of finite-dimensional scheme-theoretic
-projective space. -/
-noncomputable instance instTopologicalSpaceProjectiveSpaceComplexPoint (n : ℕ) :
-    TopologicalSpace
-      (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) :=
-  Point.analyticTopology
-
 /-- Finite-dimensional scheme-theoretic complex projective space is analytically compact. -/
 noncomputable instance instCompactSpaceProjectiveSpaceComplexPoint (n : ℕ) :
     CompactSpace

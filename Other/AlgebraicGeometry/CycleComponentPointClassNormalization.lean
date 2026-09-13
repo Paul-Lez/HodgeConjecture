@@ -22,6 +22,8 @@ The separate comparison with the legacy ordinary class has its own cone sign.
 
 @[expose] public noncomputable section
 
+set_option maxRecDepth 4000
+
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
 

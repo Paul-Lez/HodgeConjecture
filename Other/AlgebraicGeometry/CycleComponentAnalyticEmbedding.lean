@@ -38,12 +38,6 @@ open Point
 
 variable (X : Over (Spec ↧ℂ))
 
-noncomputable local instance cycleComponentTopology
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    TopologicalSpace
-      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :=
-  analyticTopology
-
 /-- The complex-point map of a reduced cycle component is a closed topological embedding. -/
 lemma cycleComponentMap_isClosedEmbedding
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :

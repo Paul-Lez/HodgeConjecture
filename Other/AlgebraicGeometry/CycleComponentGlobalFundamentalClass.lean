@@ -62,11 +62,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-noncomputable local instance cycleComponentAnalyticTopology'
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    TopologicalSpace (CycleComponentAnalyticPoint V x) :=
-  Point.analyticTopology
-
 /-- Passing from ordinary homology to the empty-boundary Borel--Moore presentation commutes
 with restriction to local homology at a point. -/
 lemma cycleComponentBorelMooreToLocal_relativeHomologyProjection

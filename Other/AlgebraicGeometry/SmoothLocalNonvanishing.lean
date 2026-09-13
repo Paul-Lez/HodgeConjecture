@@ -32,21 +32,9 @@ noncomputable section
 variable {X : Over (Spec (CommRingCat.of ℂ))} {d : ℕ} [SmoothOfRelativeDimension d X.hom]
   {x : X.left} (D : LocalEtaleCoordinates X d x)
 
-noncomputable local instance coordinateRingAlgebra :
-    Algebra (complexPolynomialRing d) Γ(D.neighborhood.toScheme, ⊤) :=
-  D.coordinateRingHomOnOpen.toAlgebra
-
-noncomputable local instance coordinateRingComplexAlgebra :
-    Algebra ℂ Γ(D.neighborhood.toScheme, ⊤) :=
-  (D.coordinateRingHomOnOpen.comp MvPolynomial.C).toAlgebra
-
-noncomputable local instance coordinateRingScalarTower :
-    IsScalarTower ℂ (complexPolynomialRing d) Γ(D.neighborhood.toScheme, ⊤) :=
-  IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
-
-noncomputable local instance coordinateRingEtale :
-    Algebra.Etale (complexPolynomialRing d) Γ(D.neighborhood.toScheme, ⊤) :=
-  RingHom.etale_algebraMap.mp D.coordinateRingHomOnOpen_etale
+attribute [local instance] LocalEtaleCoordinates.coordinateRingAlgebra
+  LocalEtaleCoordinates.coordinateRingComplexAlgebra
+  LocalEtaleCoordinates.coordinateRingScalarTower LocalEtaleCoordinates.coordinateRingEtale
 
 /-- A nonzero function on an affine étale coordinate neighborhood has analytically dense
 nonvanishing locus. -/
