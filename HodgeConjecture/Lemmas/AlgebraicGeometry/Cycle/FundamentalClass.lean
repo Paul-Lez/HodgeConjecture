@@ -5,13 +5,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeForget
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Transport.InjectiveModel
 
 /-!
-# Constructed sheaf cycle classes in arbitrary codimension
+# The class of an integral cycle component
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass`.
+
+The supported class is characterized by its restriction to the smooth locus, and the
+ordinary class is its support-forgetting image. Both statements stay in the mapping-cone
+model; `cycleComponentSheafSupportedClass_eq_injectiveClass` is the one place that names
+the injective model, for the proofs that still compute in it.
 -/
 
 @[expose] public noncomputable section
@@ -32,39 +37,46 @@ variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 @[simp]
 theorem cycleComponentExtendSmoothCoclass_normalization
     (s : CycleComponentSmoothCoclassSections X x p) :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom
+    cycleComponentSupportedClassEquiv X x hx
       (cycleComponentExtendSmoothCoclass X x hx s) = s :=
-  AddEquiv.apply_symm_apply
-    (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv s
+  AddEquiv.apply_symm_apply (cycleComponentSupportedClassEquiv X x hx) s
 
 /-- The prescribed smooth-locus section determines the extension uniquely. -/
 theorem cycleComponentExtendSmoothCoclass_unique
     (s : CycleComponentSmoothCoclassSections X x p)
-    (a : CycleComponentSupportedCohomology X x p)
-    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a = s) :
+    (a : RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)))
+    (ha : cycleComponentSupportedClassEquiv X x hx a = s) :
     a = cycleComponentExtendSmoothCoclass X x hx s :=
-  (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv.injective
+  (cycleComponentSupportedClassEquiv X x hx).injective
     (ha.trans (cycleComponentExtendSmoothCoclass_normalization X x hx s).symm)
 
-/-- Exact smooth-locus normalization, not equality only up to a scalar. -/
+/-- The supported class restricts to exactly the normalized smooth-locus coclass. -/
 @[simp]
-theorem cycleComponentSupportedInjectiveClass_normalization :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom
-      (cycleComponentSupportedInjectiveClass X x hx) =
+theorem cycleComponentSheafSupportedClass_normalization :
+    cycleComponentSupportedClassEquiv X x hx
+      (cycleComponentSheafSupportedClass X x hx) =
     cycleComponentSmoothSupportCoclassSection X x hx :=
   cycleComponentExtendSmoothCoclass_normalization X x hx _
 
-/-- The normalized global extension is unique, by injectivity of the
-restriction/purity comparison. This is a theorem, not a supplied existence input. -/
-theorem cycleComponentSupportedInjectiveClass_unique
-    (a : CycleComponentSupportedCohomology X x p)
-    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a =
+/-- The supported class is determined by that restriction. -/
+theorem cycleComponentSheafSupportedClass_unique
+    (a : RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)))
+    (ha : cycleComponentSupportedClassEquiv X x hx a =
       cycleComponentSmoothSupportCoclassSection X x hx) :
-    a = cycleComponentSupportedInjectiveClass X x hx :=
+    a = cycleComponentSheafSupportedClass X x hx :=
   cycleComponentExtendSmoothCoclass_unique X x hx _ a ha
 
+/-- The supported class, written in the injective model. This is the only statement here
+that names a resolution; it exists for the proofs that compute in one. -/
+theorem cycleComponentSheafSupportedClass_eq_injectiveClass :
+    cycleComponentSheafSupportedClass X x hx =
+      (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
+        (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
+          (cycleComponentSupportedInjectiveClass X x hx) :=
+  rfl
+
 /-- The ordinary class is the support-forgetting image of the supported class. Since
-`cycleComponentSheafClass` is now defined as that composite, this holds by definition; it is
+`cycleComponentSheafClass` is defined as that composite, this holds by definition; it is
 kept as a named rewrite for the proofs that use it. -/
 theorem cycleComponentSheafClass_eq_forgetSupport :
     cycleComponentSheafClass X x hx =
@@ -76,7 +88,7 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The ordinary class computed directly in the ambient injective model, bypassing the
-mapping-cone presentation. This was the old definition of `cycleComponentSheafClass`. -/
+mapping-cone presentation. -/
 theorem cycleComponentSheafClass_eq_injectiveModel :
     cycleComponentSheafClass X x hx =
       (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
@@ -89,7 +101,7 @@ theorem cycleComponentSheafClass_eq_injectiveModel :
   rw [cycleComponentSheafClass_eq_forgetSupport,
     rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
     (cycleComponentSupport X x) (cycleComponentAnalyticClosedSupport X x).isClosed]
-  simp only [cycleComponentSheafSupportedClass, AddEquiv.apply_symm_apply]
+  simp only [cycleComponentSheafSupportedClass_eq_injectiveClass, AddEquiv.apply_symm_apply]
   rfl
 
 include X hx in

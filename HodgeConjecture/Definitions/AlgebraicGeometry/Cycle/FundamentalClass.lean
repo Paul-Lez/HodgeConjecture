@@ -4,25 +4,26 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportExtension
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularCohomologySheafComparison
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.InjectiveModel
 /-!
-# Constructed sheaf cycle classes in arbitrary codimension
+# The class of an integral cycle component
 
-The exactly normalized normal-chart coclass on a component's smooth locus is
-transported to the supported cohomology sheaf. Lowest-degree purity
-and the proved unique extension across the singular boundary then give an
-supported class on the original ambient variety. Forgetting support
-lands in the repository's ordinary rational cohomology.
+The three steps of the construction, and nothing else.
 
-All comparison maps, purity statements, and extension isomorphisms are
-constructed. No fundamental-class, orientation, duality, or vanishing datum
-is an argument. The corresponding Borel–Moore fundamental class is obtained
-through the previously constructed complex-orientation duality for the
-ambient chain sheaf. This does not assert intrinsic compactification
-independence or rational-equivalence invariance.
+1. The exactly normalized normal-chart coclass on the component's smooth locus, a section
+   of the relative-cohomology sheaf over `X ∖ Z_sing`. This is
+   `cycleComponentSmoothSupportCoclassSection`, built in `Cycle/Component/`.
+2. That section extends uniquely to a class with support in the whole component:
+   `cycleComponentSheafSupportedClass`, in `H^{2p}` with support, in the mapping-cone model.
+3. Forgetting the support gives `cycleComponentSheafClass`, the class in ordinary rational
+   cohomology that the statement of the conjecture uses.
+
+Every group named here is one the statement could name. The injective resolution that
+proves step 2 is confined to `Cycle/Transport/InjectiveModel.lean`, and reaches this file
+only through `cycleComponentSupportedClassEquiv`.
+
+No fundamental-class, orientation, duality, or vanishing datum is an argument. This does
+not assert intrinsic compactification independence or rational-equivalence invariance.
 -/
 
 @[expose] public noncomputable section
@@ -35,74 +36,26 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-local instance cycleComponentSheafClassAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
-/-- The supported injective cohomology sheaf is the sheaf of local
-relative cohomology, by the constructed singular resolution and its literal
-restriction-natural comparison. -/
-def complexSupportInjectiveCohomologySheafIsoRelative
-    (S : Closeds (ComplexPoint X)) (n : ℕ) :
-    (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
-      supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n := by
-  let : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
-  exact (asIso (HomologicalComplex.homologyMap
-    (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
-      supportedSingularCohomologySheafIsoRelative
-        (TopCat.of (ComplexPoint X)) S S.isClosed n
+attribute [local instance] cycleComponentSheafClassAnalyticTopology
 
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
-/-- Degree-`2p` cohomology of global sections supported on the component,
-computed in the fixed ambient injective resolution. -/
-abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
-  (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-    (.up ℤ)).obj (complexSupportInjectiveComplex X
-      (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))
+/-- **Step 2.** Extend a smooth-locus coclass across the singular boundary, uniquely.
 
-/-- Sections of the local relative-cohomology sheaf on the smooth-locus ambient open. -/
-abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
-  (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-    (cycleComponentSupport X x) (2 * p)).obj.obj
-      (op (cycleComponentSmoothSupportAmbientOpen X x))
-
-/-- Supported cohomology on the full component is identified with sections
-of the local relative-cohomology sheaf on its smooth-locus ambient open.
-Each of the three arrows is a proved isomorphism. -/
-def cycleComponentSupportedClassNormalizationIso :
-    CycleComponentSupportedCohomology X x p ≅
-      CycleComponentSmoothCoclassSections X x p := by
-  refine cycleComponentSupportExtensionIso X x hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫ ?_
-  let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
-        (complexSupportInjectiveCohomologySheafIsoRelative X
-          (cycleComponentAnalyticClosedSupport X x) (2 * p))
-  have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
-  dsimp only [TopCat.Sheaf.supportEvaluation, Functor.comp_obj] at e
-  rw [he] at e
-  exact e
-
-/-- Extend a smooth-locus coclass uniquely across the singular boundary.
-The inverse comes from proved purity and boundary vanishing; no extension datum is supplied. -/
+The singular locus has codimension at least `p + 1`, so restriction to `X ∖ Z_sing` is an
+isomorphism in degree `2p`; this is its inverse. Purity and boundary vanishing are proved
+in the injective model, but the map itself lands in cohomology with support. -/
 def cycleComponentExtendSmoothCoclass :
     CycleComponentSmoothCoclassSections X x p →+
-      CycleComponentSupportedCohomology X x p :=
-  (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
+      RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
+  (cycleComponentSupportedClassEquiv X x hx).symm.toAddMonoidHom
 
-/-- The globally supported class extending the exact complex-normal
-coclass. The inverse is that of the proved normalization isomorphism. -/
-def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
-  cycleComponentExtendSmoothCoclass X x hx
-    (cycleComponentSmoothSupportCoclassSection X x hx)
-
-/-- The constructed class in the existing support-cone presentation. Its
-comparison includes the proved cone sign required by support forgetting. -/
+/-- The class of the component in degree-`2p` rational cohomology with support in it,
+obtained by extending the normalized smooth-locus coclass. -/
 def cycleComponentSheafSupportedClass :
     RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
-      (cycleComponentSupportedInjectiveClass X x hx)
+  cycleComponentExtendSmoothCoclass X x hx
+    (cycleComponentSmoothSupportCoclassSection X x hx)
 
 /-- **Step 3.** The unconditional ordinary class of an arbitrary integral component: the
 supported class of step 2, with its support forgotten.

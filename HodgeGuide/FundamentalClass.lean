@@ -205,14 +205,14 @@ example : @Guide.Subvariety.D4.cycleComponentSupportedClassNormalizationIso = @A
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSupportedInjectiveClass_unique
 ```
 
-The compact interface names the supported group and the smooth-locus section group.
-The extension map takes any such section to its unique global supported class, using
-the proved isomorphism above. Applying it to the normalized smooth-locus section gives
-the component class.
+The injective resolution above is a computation device: purity and boundary vanishing are
+proved in it, because that is where a resolution can be restricted to an open and truncated.
+The extension map itself is stated in the mapping-cone model, the one the conjecture uses,
+and reaches the injective model only through `cycleComponentSupportedClassEquiv`.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.CycleComponentSupportedCohomology
 #check AlgebraicGeometry.ComplexPoint.CycleComponentSmoothCoclassSections
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSupportedClassEquiv
 #check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass
 #check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass_normalization
 #check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass_unique
@@ -220,16 +220,15 @@ the component class.
 
 ```lean
 example :
-    CycleComponentSupportedCohomology X x p :=
+    RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
   cycleComponentExtendSmoothCoclass X x hx
     (cycleComponentSmoothSupportCoclassSection X x hx)
 ```
 
 # Step 3: from support to ordinary cohomology
 
-The extension is a class in the cohomology of an injective resolution with supports. Transporting
-it through the comparison with the mapping-cone model of the previous section gives the class of
-the subvariety in cohomology with support, and forgetting the support gives its class in ordinary
+Step 2 already lands in cohomology with support, in the mapping-cone model; forgetting the
+support gives the class of the subvariety in ordinary
 cohomology, which is the class the statement uses.
 
 ```lean -show

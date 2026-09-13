@@ -33,6 +33,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.WithSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.AnalyticSheaf
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.InjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
@@ -134,6 +135,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.LocalGene
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalCoordinates
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Transport.InjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
