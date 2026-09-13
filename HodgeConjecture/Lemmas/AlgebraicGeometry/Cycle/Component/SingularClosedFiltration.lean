@@ -6,6 +6,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Ambient closed supports for singular-component localization induction
 
@@ -21,7 +23,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
 /-- The exact terminal index is read from the already constructed finite decomposition. -/
@@ -40,7 +42,7 @@ def cycleComponentSingularFiltrationStratumι (k : ℕ) :
     (cycleComponentSingularClosedFiltration X x k) ≫ cycleComponentι X.left x
 
 /-- A singular-filtration stratum with its induced structure map to `Spec ℂ`. -/
-abbrev cycleComponentSingularFiltrationStratumOver (k : ℕ) : Over (Spec (.of ℂ)) :=
+abbrev cycleComponentSingularFiltrationStratumOver (k : ℕ) : Over (Spec ↧ℂ) :=
   Over.mk (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom)
 
 /-- The stratum immersion bundled over `Spec ℂ`. -/
@@ -97,7 +99,7 @@ def cycleComponentSingularStratumClosedLift (k : ℕ) :
       exact ((cycleComponentSingularAmbientClosedFiltration_layer X x k).le hy).2)
 
 /-- The localization open with its induced structure map to `Spec ℂ`. -/
-abbrev cycleComponentSingularStratumAmbientOpenOver (k : ℕ) : Over (Spec (.of ℂ)) :=
+abbrev cycleComponentSingularStratumAmbientOpenOver (k : ℕ) : Over (Spec ↧ℂ) :=
   ComplexPoint.openScheme X (cycleComponentSingularStratumAmbientOpen X x k)
 
 instance cycleComponentSingularStratumAmbientOpenOver_locallyOfFiniteType (k : ℕ) :
@@ -202,7 +204,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
 theorem cycleComponentSingularClosedFiltration_length :

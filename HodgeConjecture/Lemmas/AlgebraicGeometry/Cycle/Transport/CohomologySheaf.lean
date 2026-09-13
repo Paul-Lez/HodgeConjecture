@@ -23,7 +23,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 /-- Actual open-section cohomology of the supported injective model is relative
@@ -39,7 +39,7 @@ def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
     |>.trans (supportedRationalSingularSectionCohomologyEquivSupportComplement
       (TopCat.of (ComplexPoint X)) S S.isClosed V n)
 
-variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
+variable (Y : Over (Spec ↧ℂ)) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
@@ -55,10 +55,10 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
+variable (Y : Over (Spec ↧ℂ)) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 

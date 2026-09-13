@@ -11,6 +11,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # The singular locus has smaller algebraic dimension
@@ -35,7 +36,7 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
 /-- The closed complement of the actual smooth locus. -/
 def singularLocusClosed : Closeds X := f.smoothLocus.compl
 
-variable (Y : Over (Spec (.of ℂ)))
+variable (Y : Over (Spec ↧ℂ))
   [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
 
 end AlgebraicGeometry

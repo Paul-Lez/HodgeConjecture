@@ -23,7 +23,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
 /-- The precise algebraic open complementary to the canonical singular boundary. -/
@@ -31,7 +31,7 @@ def cycleComponentSmoothLocusAmbientOpen : X.left.Opens :=
   (cycleComponentSingularAmbientClosedFiltration X x 0).compl
 
 /-- The ambient boundary complement with its induced structure map to `Spec ℂ`. -/
-abbrev cycleComponentSmoothLocusAmbientOpenOver : Over (Spec (.of ℂ)) :=
+abbrev cycleComponentSmoothLocusAmbientOpenOver : Over (Spec ↧ℂ) :=
   ComplexPoint.openScheme X (cycleComponentSmoothLocusAmbientOpen X x)
 
 instance cycleComponentSmoothLocusAmbientOpenOver_locallyOfFiniteType :

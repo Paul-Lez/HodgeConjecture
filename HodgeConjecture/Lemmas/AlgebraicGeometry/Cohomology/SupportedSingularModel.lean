@@ -22,7 +22,7 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom]
 
 /-- The actual singular-to-injective resolution map, using proved local
@@ -67,7 +67,7 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom]
 
 variable [IsProjective X.hom]

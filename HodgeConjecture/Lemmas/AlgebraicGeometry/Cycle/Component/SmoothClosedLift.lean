@@ -19,7 +19,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
 /-- `X ∖ Z_sing` really is the complement of the image of the component's singular locus: the

@@ -21,7 +21,7 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 attribute [local instance] cycleComponentSheafClassAnalyticTopology

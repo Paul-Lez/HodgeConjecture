@@ -32,7 +32,7 @@ nothing in the statement's dependency chain uses these results, only material in
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
 namespace AlgebraicGeometry.ComplexPoint
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 attribute [local instance] cycleComponentSheafClassAnalyticTopology
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)

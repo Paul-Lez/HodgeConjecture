@@ -12,6 +12,8 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Analytific
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.AffineRelativeDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Open
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Ambient closed supports for singular-component localization induction
 
@@ -28,7 +30,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
 /-- The canonical closed remainders inside the integral component's singular boundary. -/
@@ -51,7 +53,7 @@ def cycleComponentSingularAnalyticClosedFiltration (k : ℕ) : Closeds (ComplexP
       (continuous_underlying_to_zariski X)⟩
 
 /-- The smooth locus of the component, bundled over `Spec ℂ`. -/
-abbrev cycleComponentSmoothLocusOver : Over (Spec (.of ℂ)) :=
+abbrev cycleComponentSmoothLocusOver : Over (Spec ↧ℂ) :=
   Over.mk (((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
     cycleComponentι X.left x) ≫ X.hom)
 

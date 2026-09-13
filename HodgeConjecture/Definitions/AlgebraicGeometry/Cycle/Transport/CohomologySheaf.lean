@@ -26,7 +26,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 /-- The literal supported ambient rational injective complex for a closed support. -/
@@ -41,7 +41,7 @@ instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint 
   dsimp [complexSupportInjectiveComplex]
   infer_instance
 
-variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
+variable (Y : Over (Spec ↧ℂ)) (i : Y ⟶ X)
   (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
