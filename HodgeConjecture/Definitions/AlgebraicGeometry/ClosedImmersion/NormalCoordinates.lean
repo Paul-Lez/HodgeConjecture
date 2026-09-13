@@ -9,7 +9,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ClosedImmers
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart
 
 /-!
-# Constructed normal coordinates for smooth closed immersions
+# Normal coordinates for smooth closed immersions
 
 The derivative projection here comes from lifted algebraic coordinate sections. The normal
 chart is then constructed by the inverse function theorem. Finally the topological

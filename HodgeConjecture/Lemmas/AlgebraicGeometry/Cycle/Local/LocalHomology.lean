@@ -9,7 +9,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainCone
 /-!
-# Constructed local relative homology for smooth closed supports
+# Local relative homology for smooth closed supports
 
 Every prescribed open neighborhood of a point on a smooth closed complex subvariety contains
 a smaller open neighborhood whose support-complement pair has rational

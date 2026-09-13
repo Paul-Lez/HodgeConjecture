@@ -8,7 +8,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalCla
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
 
 /-!
-# Constructed sheaf cycle classes in arbitrary codimension
+# Sheaf cycle classes in arbitrary codimension
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass`.

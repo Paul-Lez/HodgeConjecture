@@ -9,7 +9,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportEx
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCohomologySheafComparison
 /-!
-# Constructed sheaf cycle classes in arbitrary codimension
+# Sheaf cycle classes in arbitrary codimension
 
 The exactly normalized normal-chart coclass on a component's smooth locus is transported to the
 supported cohomology sheaf. Lowest-degree purity and unique extension across the singular

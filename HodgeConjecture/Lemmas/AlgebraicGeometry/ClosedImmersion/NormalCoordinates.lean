@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.NormalCoordinates
 
 /-!
-# Constructed normal coordinates for smooth closed immersions
+# Normal coordinates for smooth closed immersions
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.NormalCoordinates`.
