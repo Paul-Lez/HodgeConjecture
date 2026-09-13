@@ -16,8 +16,8 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
-public import HodgeConjecture.Mathlib.Algebra.Category.Grp.Basic
-public import HodgeConjecture.Mathlib.Algebra.Category.ModuleCat.Basic
+public import Mathlib.Algebra.Category.Grp.Basic
+public import Mathlib.Algebra.Category.ModuleCat.Basic
 public import Mathlib.Algebra.Category.ModuleCat.Presheaf.Sheafification
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Topology.Sheaves.Abelian
@@ -90,15 +90,6 @@ def singularChainBoundary (n : ℕ) :
     exact congrArg ((forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map)
       (((openRelativeSingularChainComplexFunctor R X).map i).comm (n + 1) n)
 
-/-- Restriction commutes with the relative singular boundary. -/
-@[reassoc] lemma singularChainBoundary_naturality {U V : Opens X}
-    (i : V ⟶ U) (n : ℕ) :
-    (singularChainPresheaf R X (n + 1)).map i.op ≫
-        (singularChainBoundary R X n).app (.op V) =
-      (singularChainBoundary R X n).app (.op U) ≫
-        (singularChainPresheaf R X n).map i.op :=
-  (singularChainBoundary R X n).naturality i.op
-
 /-- Consecutive relative singular boundaries compose to zero. -/
 lemma singularChainBoundary_comp (n : ℕ) :
     singularChainBoundary R X (n + 1) ≫ singularChainBoundary R X n = 0 :=
@@ -159,44 +150,10 @@ instance singularChainSheafificationUnit_stalk_isIso (x : X) (n : ℕ) :
   TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
     (singularChainPresheaf R X n)
 
-/-- The chain-complex-level identification of stalks before and after sheafification.
-This is not yet an identification with the local relative homology at `x`. -/
-def singularChainSheafificationStalkIso (x : X) :
-    ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex
-      (ComplexShape.down ℕ)).obj (singularChainPresheafComplex R X) ≅
-    ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex
-      (ComplexShape.down ℕ)).obj
-      (((TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapHomologicalComplex
-        (ComplexShape.down ℕ)).obj (singularChainSheafComplex R X)) := by
-  let f := ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex
-    (ComplexShape.down ℕ)).map (singularChainSheafificationUnit R X)
-  have : ∀ n, IsIso (f.f n) := fun n ↦
-    singularChainSheafificationUnit_stalk_isIso R X x n
-  have : IsIso f := HomologicalComplex.Hom.isIso_of_components f
-  exact asIso f
-
 /-- The sheafified relative singular-chain model with the cohomological grading convention:
 homological degree `n` occupies cohomological degree `-n`, and positive degrees are zero. -/
 def singularChainSheafCochainComplex : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ :=
   (singularChainSheafComplex R X).extend ComplexShape.embeddingDownNat
-
-/-- Degree `-n` of the integer-graded model is the sheaf of relative `n`-chains. -/
-def singularChainSheafCochainComplexXIso (n : ℕ) :
-    (singularChainSheafCochainComplex R X).X (-(n : ℤ)) ≅ singularChainSheaf R X n :=
-  (singularChainSheafComplex R X).extendXIso ComplexShape.embeddingDownNat rfl
-
-set_option backward.isDefEq.respectTransparency false in
-/-- The cohomological differential from degree `-(n+1)` to `-n` is exactly the sheafified
-relative singular boundary, transported through the grading isomorphisms. -/
-lemma singularChainSheafCochainComplex_d (n : ℕ) :
-    (singularChainSheafCochainComplex R X).d (-((n + 1 : ℕ) : ℤ)) (-(n : ℤ)) =
-      (singularChainSheafCochainComplexXIso R X (n + 1)).hom ≫
-        singularChainSheafBoundary R X n ≫
-          (singularChainSheafCochainComplexXIso R X n).inv := by
-  simpa only [singularChainSheafCochainComplex, singularChainSheafCochainComplexXIso,
-    singularChainSheafComplex_d] using
-    (singularChainSheafComplex R X).extend_d_eq ComplexShape.embeddingDownNat
-      (i := n + 1) (j := n) (i' := -((n + 1 : ℕ) : ℤ)) (j' := -(n : ℤ)) rfl rfl
 
 /-- The constructed integer-graded chain sheaf has no terms in positive degrees. -/
 instance singularChainSheafCochainComplex_isStrictlyLE :

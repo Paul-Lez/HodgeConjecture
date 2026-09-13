@@ -15,9 +15,11 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.LocalOrientation
+public import Other.AlgebraicGeometry.ComplexPoint.LocalOrientation
 public import Other.AlgebraicGeometry.ComplexManifoldOrientation
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvariance
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvariance
 
 /-!
 # Coherence of the complex local orientation
@@ -39,9 +41,6 @@ namespace AlgebraicGeometry.ComplexPoint
 open AlgebraicTopology.Singular
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
-
-noncomputable local instance :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- The normalized local homology classes obtained from any two preferred algebraic charts
 containing a point coincide. -/

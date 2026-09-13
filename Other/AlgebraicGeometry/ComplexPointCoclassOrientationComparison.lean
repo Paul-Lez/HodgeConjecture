@@ -8,6 +8,9 @@ public import Other.AlgebraicGeometry.ComplexOrientationHomologySheaf
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
+public import Other.AlgebraicGeometry.ComplexPoint.LocalOrientation
+public import Other.AlgebraicTopology.Sheaf.MapOfLocalStalks
+public import Other.AlgebraicTopology.Singular.Sheaf.ChainHomology
 
 /-!
 # Exact point-coclass normalization of the constructed orientation sheaf
@@ -32,9 +35,6 @@ namespace AlgebraicGeometry.ComplexPoint
 open AlgebraicTopology.Singular
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
-
-noncomputable local instance pointCoclassOrientationComparisonAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 variable [IsProjective X.hom] [SmoothOfRelativeDimension d X.hom]
   (z : ComplexPoint X)

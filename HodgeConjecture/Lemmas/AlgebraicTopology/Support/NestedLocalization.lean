@@ -111,18 +111,7 @@ lemma nestedSupportRestrictionShortComplex_eq (F : Sheaf AddCommGrpCat.{u} X) :
         ((toOpenRestrictionPushforward X U).app F)
         ((openRestrictionPushforwardMap X h).app F)
         ((toOpenRestrictionPushforward X V).app F)
-        (NatTrans.congr_app (toOpenRestrictionPushforward_comp X h) F) := by
-  simp [nestedSupportRestrictionShortComplex, kernelFactorizationShortComplex,
-    sheafSectionsSupportedOutsideMap, liftSheafSectionsSupportedOutside,
-    toSheafSectionsBetweenOpens, kernel.map, sheafSectionsSupportedOutside,
-    sheafSectionsBetweenOpens, sheafSectionsSupportedOutsideInclusion]
-
-/-- Injective coefficients give the actual short exact nested-support sequence. -/
-lemma nestedSupportRestrictionShortComplex_shortExact
-    (F : Sheaf AddCommGrpCat.{u} X) [Injective F] :
-    (nestedSupportRestrictionShortComplex X h F).ShortExact := by
-  rw [nestedSupportRestrictionShortComplex_eq]
-  exact kernelFactorizationShortComplex_shortExact _ _ _ _
+        (NatTrans.congr_app (toOpenRestrictionPushforward_comp X h) F) := rfl
 
 /-- Exactness after evaluation is proved using flasqueness, not by treating
 global sections as an exact functor. -/
@@ -142,12 +131,6 @@ def nestedSupportRestrictionComplexShortComplex
     (((sheafSectionsSupportedOutsideMap X h).mapHomologicalComplex (.up ℤ)).app K)
     (((toSheafSectionsBetweenOpens X h).mapHomologicalComplex (.up ℤ)).app K)
     (by ext n; exact NatTrans.congr_app (sheafSectionsSupportedOutsideMap_toBetween X h) (K.X n))
-
-lemma nestedSupportRestrictionComplexShortComplex_shortExact
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :
-    (nestedSupportRestrictionComplexShortComplex X h K).ShortExact :=
-  HomologicalComplex.shortExact_of_degreewise_shortExact _
-    fun n => nestedSupportRestrictionShortComplex_shortExact X h (K.X n)
 
 /-- The actual nested-support sequence of section complexes on an open set. -/
 def nestedSupportRestrictionSectionsComplexShortComplex (W : Opens X)

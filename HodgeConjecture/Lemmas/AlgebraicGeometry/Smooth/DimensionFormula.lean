@@ -151,15 +151,4 @@ lemma SmoothOfRelativeDimension.coheight_le_complex
     _ ≤ d := SmoothOfRelativeDimension.height_add_coheight_le_complex
       (f := f) (d := d) x
 
-/-- A smooth complex scheme of relative dimension `d` has no point of coheight `p` when
-`d < p`. -/
-lemma SmoothOfRelativeDimension.coheight_ne_of_lt
-    [SmoothOfRelativeDimension d f] (x : X) {p : ℕ} (hp : d < p) :
-    Order.coheight x ≠ p := by
-  intro hx
-  have hle : (p : ℕ∞) ≤ d := by
-    rw [← hx]
-    exact SmoothOfRelativeDimension.coheight_le_complex (f := f) (d := d) x
-  exact (not_le_of_gt (by exact_mod_cast hp)) hle
-
 end AlgebraicGeometry

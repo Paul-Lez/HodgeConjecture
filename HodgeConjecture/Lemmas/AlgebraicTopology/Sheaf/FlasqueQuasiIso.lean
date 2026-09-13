@@ -43,8 +43,6 @@ variable {X : TopCat.{u}}
 lemma of_iso {F G : TopCat.Presheaf AddCommGrpCat.{u} X} (e : F ≅ G) [G.IsFlasque] :
     F.IsFlasque where
   epi {U V} i := by
-    let : IsIso (e.hom.app U) := by infer_instance
-    let : IsIso (e.inv.app V) := by infer_instance
     have hmap : F.map i =
         e.hom.app U ≫ G.map i ≫ e.inv.app V := by
       apply (cancel_mono (e.hom.app V)).1
@@ -121,7 +119,6 @@ set_option linter.style.haveILetI false in
 lemma of_iso {F G : TopCat.Sheaf AddCommGrpCat.{u} X} (e : F ≅ G)
     [hG : G.IsFlasque] :
     F.IsFlasque := by
-  change TopCat.Presheaf.IsFlasque F.obj
   letI : TopCat.Presheaf.IsFlasque G.obj := hG
   exact TopCat.Presheaf.IsFlasque.of_iso (G := G.obj)
     ((TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapIso e)
@@ -131,10 +128,6 @@ set_option linter.style.haveILetI false in
 lemma biprod (F G : TopCat.Sheaf AddCommGrpCat.{u} X)
     [hF : F.IsFlasque] [hG : G.IsFlasque] :
     (F ⊞ G).IsFlasque := by
-  change TopCat.Presheaf.IsFlasque
-    ((TopCat.Sheaf.forget AddCommGrpCat.{u} X).obj (F ⊞ G))
-  letI : TopCat.Presheaf.IsFlasque F.obj := hF
-  letI : TopCat.Presheaf.IsFlasque G.obj := hG
   letI : TopCat.Presheaf.IsFlasque (F.obj ⊞ G.obj) :=
     TopCat.Presheaf.IsFlasque.biprod F.obj G.obj
   let forget := TopCat.Sheaf.forget AddCommGrpCat.{u} X
@@ -187,8 +180,6 @@ variable {K L : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ}
 lemma mappingCone_term_isFlasque (f : K ⟶ L)
     (hK : ∀ i, (K.X i).IsFlasque) (hL : ∀ i, (L.X i).IsFlasque) (i : ℤ) :
     ((CochainComplex.mappingCone f).X i).IsFlasque := by
-  let : (K.X (i + 1)).IsFlasque := hK (i + 1)
-  let : (L.X i).IsFlasque := hL i
   let : (K.X (i + 1) ⊞ L.X i).IsFlasque := biprod _ _
   exact of_iso (HomologicalComplex.homotopyCofiber.XIsoBiprod f i (i + 1) rfl)
 

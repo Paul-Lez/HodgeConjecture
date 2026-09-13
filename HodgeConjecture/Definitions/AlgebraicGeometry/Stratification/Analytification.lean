@@ -28,20 +28,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ)) {Y : Over (Spec ↧ℂ)}
 
-local instance smoothStratificationAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 variable [LocallyOfFiniteType X.hom] [NoetherianSpace X.left]
-
-/-- The inclusion of a reduced smooth stratum, bundled over the complex base. -/
-def reducedClosedSmoothPieceMap (T : Closeds X.left) :
-    Over.mk (reducedClosedSmoothPieceι X.hom T ≫ X.hom) ⟶ X :=
-  Over.homMk (reducedClosedSmoothPieceι X.hom T) rfl
-
-instance reducedClosedSmoothPieceMap_isImmersion (T : Closeds X.left) :
-    IsImmersion (reducedClosedSmoothPieceMap X T).left := by
-  change IsImmersion (reducedClosedSmoothPieceι X.hom T)
-  infer_instance
 
 instance reducedClosedSmoothPiece_locallyOfFiniteType (T : Closeds X.left) :
     LocallyOfFiniteType (Over.mk (reducedClosedSmoothPieceι X.hom T ≫ X.hom)).hom := by

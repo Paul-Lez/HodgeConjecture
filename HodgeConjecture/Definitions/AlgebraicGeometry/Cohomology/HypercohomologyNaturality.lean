@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturality
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHypercohomology
 
 /-! # Naturality of the hypercohomology/global-sections comparison -/
 

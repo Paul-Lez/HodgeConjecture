@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.Algebra.Homology.LinearDual
+public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDual
 
 /-!
 # Naturality of linear duality on homology
@@ -82,8 +82,6 @@ lemma moduleCatHomologyClass_naturality {S T : ShortComplex (ModuleCat.{u} R)}
         ModuleCat.ofHom (moduleCatCycleMap f) ≫ T.moduleCatCyclesIso.inv ≫ T.homologyπ := by
     rw [homologyπ_naturality, ← Category.assoc, moduleCatCyclesIso_inv_cycleMap,
       Category.assoc]
-  rw [← Category.assoc, moduleCatCyclesIso_inv_π,
-    moduleCatCyclesIso_inv_π] at h
   exact ConcreteCategory.congr_hom h x
 
 set_option backward.isDefEq.respectTransparency false in
@@ -157,32 +155,6 @@ theorem linearDualHomologyEquiv_naturality
     linearDualHomologyEquiv_class_apply_class, linearDualHomologyEquiv_class_apply_class]
   rfl
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
-/-- Universal coefficients is the literal evaluation of an actual dual
-cycle on an actual cycle. -/
-lemma linearDualHomologyEquiv_homologyπ_apply (S : ShortComplex (ModuleCat.{u} R))
-    (φ : S.linearDual.cycles) (z : S.cycles) :
-    S.linearDualHomologyEquiv (S.linearDual.homologyπ φ) (S.homologyπ z) =
-      (show Module.Dual R S.X₂ from S.linearDual.iCycles φ) (S.iCycles z) := by
-  change S.dualHomologyComparisonExplicit
-    (S.linearDual.moduleCatHomologyIso.hom (S.linearDual.homologyπ φ))
-    (S.moduleCatHomologyIso.hom (S.homologyπ z)) = _
-  have hφ := ConcreteCategory.congr_hom (π_moduleCatCyclesIso_hom S.linearDual) φ
-  have hz := ConcreteCategory.congr_hom (π_moduleCatCyclesIso_hom S) z
-  change S.linearDual.moduleCatHomologyIso.hom (S.linearDual.homologyπ φ) =
-    Submodule.Quotient.mk (S.linearDual.moduleCatCyclesIso.hom φ) at hφ
-  change S.moduleCatHomologyIso.hom (S.homologyπ z) =
-    Submodule.Quotient.mk (S.moduleCatCyclesIso.hom z) at hz
-  rw [hφ, hz]
-  change (show Module.Dual R S.X₂ from (S.linearDual.moduleCatCyclesIso.hom φ).val)
-    (S.moduleCatCyclesIso.hom z).val = _
-  have hφ' := ConcreteCategory.congr_hom (moduleCatCyclesIso_hom_i S.linearDual) φ
-  have hz' := ConcreteCategory.congr_hom (moduleCatCyclesIso_hom_i S) z
-  change (S.linearDual.moduleCatCyclesIso.hom φ).val = S.linearDual.iCycles φ at hφ'
-  change (S.moduleCatCyclesIso.hom z).val = S.iCycles z at hz'
-  rw [hφ', hz']
-
 end CategoryTheory.ShortComplex
 
 namespace HomologicalComplex
@@ -197,10 +169,7 @@ lemma linearDualCochainComplexScIso_naturality (f : K ⟶ L) (n : ℕ) :
     (shortComplexFunctor (ModuleCat R) (.up ℕ) n).map (linearDualMap f) ≫
       (linearDualCochainComplexScIso K n).hom =
     (linearDualCochainComplexScIso L n).hom ≫
-      ShortComplex.linearDualMap ((shortComplexFunctor (ModuleCat R) (.down ℕ) n).map f) := by
-  ext <;> cases n <;>
-    simp [linearDualCochainComplexScIso, isoSc', linearDualMap,
-      ShortComplex.linearDualMap]
+      ShortComplex.linearDualMap ((shortComplexFunctor (ModuleCat R) (.down ℕ) n).map f) := rfl
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

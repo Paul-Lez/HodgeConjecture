@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.MapOfLocalStalks
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.MapOfLocalStalks
 /-!
 # The local relative-cohomology presheaf and its sheafification
 
@@ -26,14 +26,12 @@ variable {M : Type} [TopologicalSpace M]
 
 @[simp] theorem neighborhoodSupportInclusionPairMap_id (W S : Set M) :
     neighborhoodSupportInclusionPairMap (show W ⊆ W from le_refl W) S =
-      𝟙 (neighborhoodSupportComplementPair W S) := by
-  apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
+      𝟙 (neighborhoodSupportComplementPair W S) := rfl
 
 @[simp] theorem neighborhoodSupportInclusionPairMap_comp {U V W : Set M}
     (hUV : U ⊆ V) (hVW : V ⊆ W) (S : Set M) :
     neighborhoodSupportInclusionPairMap hUV S ≫ neighborhoodSupportInclusionPairMap hVW S =
-      neighborhoodSupportInclusionPairMap (hUV.trans hVW) S := by
-  apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
+      neighborhoodSupportInclusionPairMap (hUV.trans hVW) S := rfl
 
 variable (X : TopCat.{0}) (S : Set X) (n : ℕ)
 

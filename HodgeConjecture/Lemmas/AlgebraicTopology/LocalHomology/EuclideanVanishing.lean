@@ -87,7 +87,6 @@ theorem standardLocalHomology_isZero_of_dimension_lt (d k : ℕ) (hk : d < k) :
 theorem standardPuncturedPair_nonempty (d : ℕ) (hd : 0 < d) :
     Nonempty (standardPuncturedPair d).snd := by
   refine ⟨⟨fun _ ↦ 1, ?_⟩⟩
-  change (fun _ : Fin d ↦ (1 : ℝ)) ≠ 0
   intro h
   have := congrFun h ⟨0, hd⟩
   norm_num at this
@@ -106,7 +105,7 @@ theorem relativeHomology_zero_isZero_of_pathConnected (P : TopPair)
     [Nonempty P.snd] [PathConnectedSpace P.fst] :
     IsZero (RelativeHomology ℚ P 0) := by
   apply HomologicalComplex.ExactAt.isZero_homology
-  refine (relativeSingularChainShortComplex_shortExact P).exactAt_X₃ 0 ?_ ?_
+  refine (relativeChainShortComplex_shortExact ℚ P).exactAt_X₃ 0 ?_ ?_
   · exact TopCat.singularHomologyMap_zero_epi (X := P.snd) (Y := P.fst)
       P.map (ModuleCat.of ℚ ℚ)
   · intro j hj
@@ -128,7 +127,7 @@ theorem standardLocalHomology_one_isZero (d : ℕ) (hd : 1 < d) :
   let : PathConnectedSpace (standardPuncturedPair d).fst :=
     inferInstanceAs (PathConnectedSpace (StandardRealModel d))
   apply HomologicalComplex.ExactAt.isZero_homology
-  refine (relativeSingularChainShortComplex_shortExact (standardPuncturedPair d)).exactAt_X₃ 1 ?_ ?_
+  refine (relativeChainShortComplex_shortExact ℚ (standardPuncturedPair d)).exactAt_X₃ 1 ?_ ?_
   · exact (standardRealModel_homology_isZero d 1 (by omega)).epi _
   · intro j hj
     have hj0 : j = 0 := by simpa [ComplexShape.down_Rel] using hj

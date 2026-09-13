@@ -21,6 +21,9 @@ public import Other.AlgebraicTopology.CompactificationBorelMoore
 public import Other.AlgebraicTopology.RelativeHomologyEmpty
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveCompact
+public import Other.AlgebraicGeometry.ComplexPoint.ClosedImmersion
+public import Other.AlgebraicGeometry.Cycle.Component.NormalCoordinates
+public import Other.AlgebraicGeometry.Cycle.Support
 
 /-!
 # Borel--Moore fundamental classes of cycle components
@@ -47,11 +50,6 @@ open AlgebraicTopology.Singular
 abbrev CycleComponentAnalyticPoint
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) :=
   ComplexPoint (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
-
-noncomputable local instance cycleComponentAnalyticTopology
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    TopologicalSpace (CycleComponentAnalyticPoint V x) :=
-  Point.analyticTopology
 
 /-- Integral Borel--Moore homology of a projective analytic cycle component. -/
 abbrev IntegralCycleComponentBorelMooreHomology

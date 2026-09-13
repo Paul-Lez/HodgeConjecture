@@ -104,15 +104,6 @@ public theorem insertOmittedVertexLastEquiv_symm_fst
   have hlast := congrArg (fun e ↦ e (Fin.last (n + 1))) h
   simpa only [insertOmittedVertexLast_apply_last] using hlast
 
-/-- Mathlib's rotate-and-`decomposeFin` parametrization and the order-preserving parametrization
-record the same omitted vertex. -/
-public theorem permutationLastDecomposition_fst_eq_orderPreserving
-    (n : ℕ) (σ : Equiv.Perm (Fin (n + 2))) :
-    (permutationLastDecomposition n σ).1 =
-      ((insertOmittedVertexLastEquiv n).symm σ).1 := by
-  rw [permutationLastDecomposition_fst,
-    insertOmittedVertexLastEquiv_symm_fst]
-
 /-- `Fin.castSucc` identifies `Fin (n+1)` with all vertices except the last one. -/
 public def finCastSuccEquivNotLast (n : ℕ) :
     Fin (n + 1) ≃ {i : Fin (n + 2) // i ≠ Fin.last (n + 1)} where
@@ -350,16 +341,5 @@ public theorem barycentricSubdivisionChainMapCanonical_f
     (barycentricSubdivisionChainMapCanonical X).f n =
       barycentricSubdivisionComponent X n :=
   rfl
-
-/-- Naturality of the unconditional barycentric subdivision chain morphism. -/
-public theorem barycentricSubdivisionChainMapCanonical_naturality
-    {X Y : SSet.{0}} (f : X ⟶ Y) :
-    SSet.chainComplexMap f (AddCommGrpCat.of ℤ) ≫
-        barycentricSubdivisionChainMapCanonical Y =
-      barycentricSubdivisionChainMapCanonical X ≫
-        SSet.chainComplexMap (SSet.sd.map f) (AddCommGrpCat.of ℤ) := by
-  apply HomologicalComplex.Hom.ext
-  funext n
-  exact barycentricSubdivisionComponent_naturality f n
 
 end AlgebraicTopology.Singular

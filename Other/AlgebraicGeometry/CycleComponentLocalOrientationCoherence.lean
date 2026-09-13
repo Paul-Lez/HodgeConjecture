@@ -17,6 +17,9 @@ module
 
 public import Other.AlgebraicGeometry.CycleComponentLocalOrientation
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvariance
+public import Other.AlgebraicGeometry.Cycle.Component.LocalGenerator
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvariance
 
 /-!
 # Coherence of exact cycle-component local orientations
@@ -36,9 +39,6 @@ namespace AlgebraicGeometry
 namespace CycleComponentSeparateLocalCoordinates
 
 open AlgebraicTopology.Singular
-
-noncomputable local instance componentCoherenceTopology {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
 
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}
   [SmoothOfRelativeDimension d V.structureMap]

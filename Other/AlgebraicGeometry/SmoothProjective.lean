@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.Basic
+public import Other.AlgebraicGeometry.Points
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
@@ -85,9 +85,6 @@ noncomputable instance (V : SmoothProjectiveComplexVariety) (d : ℕ)
 /-- The analytic complex-point space. -/
 abbrev analyticPoint (V : SmoothProjectiveComplexVariety) :=
   ComplexPoint V.over
-
-noncomputable instance (V : SmoothProjectiveComplexVariety) :
-    TopologicalSpace V.analyticPoint := Point.analyticTopology
 
 /-- The analytification as an object of `TopCat`. -/
 noncomputable def analytification (V : SmoothProjectiveComplexVariety) : TopCat :=

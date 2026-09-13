@@ -38,31 +38,6 @@ equivalence.
 
 @[expose] public noncomputable section
 
-/-- A complex-linear automorphism has positive real determinant after restriction of scalars.
-
-This is stated for an arbitrary finite free complex module.  The real freeness needed to form the
-determinant is supplied by the scalar-tower instance behind `LinearMap.det_restrictScalars`.
--/
-theorem LinearEquiv.det_restrictScalars_complex_pos
-    {E : Type*} [AddCommGroup E] [Module ℝ E] [Module ℂ E]
-    [IsScalarTower ℝ ℂ E] [Module.Free ℂ E]
-    (f : E ≃ₗ[ℂ] E) :
-    0 < LinearMap.det ((f.restrictScalars ℝ).toLinearMap) := by
-  change 0 < LinearMap.det (f.toLinearMap.restrictScalars ℝ)
-  rw [LinearMap.det_restrictScalars, Algebra.norm_complex_apply]
-  exact Complex.normSq_pos.mpr f.isUnit_det'.ne_zero
-
-/-- A complex-linear automorphism preserves every real orientation after restriction of scalars. -/
-theorem Orientation.map_restrictScalars_complexLinearEquiv
-    {E ι : Type*} [AddCommGroup E] [Module ℝ E] [Module ℂ E]
-    [IsScalarTower ℝ ℂ E] [Module.Free ℂ E]
-    [FiniteDimensional ℝ E] [Fintype ι]
-    (f : E ≃ₗ[ℂ] E) (ω : Orientation ℝ E ι)
-    (hι : Fintype.card ι = Module.finrank ℝ E) :
-    Orientation.map ι (f.restrictScalars ℝ) ω = ω := by
-  rw [Orientation.map_eq_iff_det_pos ω (f.restrictScalars ℝ) hι]
-  exact f.det_restrictScalars_complex_pos
-
 namespace Complex
 
 /-- The real dimension of `Fin n → ℂ` is `2 * n`, in the form expected by
@@ -89,16 +64,6 @@ for the underlying function. -/
 def piCoordCLE (n : ℕ) : (Fin n → ℂ) ≃L[ℝ] (Fin (n * 2) → ℝ) :=
   (piBasisOneI n).equivFunL
 
-/-- The canonical complex orientation of `Fin n → ℂ`, regarded as a real vector space. -/
-def piOrientation (n : ℕ) : Orientation ℝ (Fin n → ℂ) (Fin (n * 2)) :=
-  (piBasisOneI n).orientation
 
-/-- Complex-linear automorphisms of `Fin n → ℂ` preserve its canonical complex orientation. -/
-theorem map_piOrientation (n : ℕ) (f : (Fin n → ℂ) ≃ₗ[ℂ] (Fin n → ℂ)) :
-    Orientation.map (Fin (n * 2)) (f.restrictScalars ℝ) (piOrientation n) =
-      piOrientation n :=
-  (Orientation.map_eq_iff_det_pos _ _
-    (by rw [Module.finrank_eq_card_basis (piBasisOneI n)])).2
-    f.det_restrictScalars_complex_pos
 
 end Complex

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.CoclassOverlap
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.CoclassOverlap
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologySheaf
+public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassOverlap
 
 /-!
 # Nonvanishing of normal coclasses after restriction

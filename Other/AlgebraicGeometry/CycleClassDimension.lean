@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
+public import Other.AlgebraicGeometry.Smooth.DimensionFormula
 
 /-!
 # Dimension bounds for algebraic cycle classes

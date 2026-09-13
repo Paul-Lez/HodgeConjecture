@@ -45,13 +45,6 @@ open Point
 
 variable {X Y : Over (Spec ↧ℂ)}
 
-/-- For a complex scheme locally of finite type, a complex point is determined by its underlying
-closed point. -/
-lemma underlying_injective_of_locallyOfFiniteType
-    [LocallyOfFiniteType X.hom] :
-    Function.Injective (@underlying ℂ _ _ X) := fun z w h ↦
-  Over.OverMorphism.ext (ext_of_apply_closedPoint_eq X.hom (Over.w z) (Over.w w) h)
-
 /-- A monomorphism of schemes induces an injection on complex points. -/
 lemma map_injective_of_mono (i : X ⟶ Y) [Mono i] :
     Function.Injective (map i) := fun _ _ h ↦ (cancel_mono i).mp h
@@ -95,7 +88,6 @@ lemma range_map_of_closedImmersion [IsClosedImmersion i.left] :
 lemma isClosed_range_map_of_closedImmersion [IsClosedImmersion i.left] :
     @IsClosed (ComplexPoint B) analyticTopology
       (Set.range (map i)) := by
-  let : TopologicalSpace (ComplexPoint B) := analyticTopology
   rw [range_map_of_closedImmersion i]
   apply isOpen_compl_iff.mp
   let U : B.left.Opens :=
@@ -113,7 +105,6 @@ lemma isOpen_induced_chartSubbasic [IsClosedImmersion i.left]
     @IsOpen (ComplexPoint A)
       (TopologicalSpace.induced (map i) analyticTopology)
       (overOpen (i.left ⁻¹ᵁ U) ∩ evaluate (i.left ⁻¹ᵁ U) s ⁻¹' O) := by
-  let : TopologicalSpace (ComplexPoint B) := analyticTopology
   let : TopologicalSpace (ComplexPoint A) :=
     TopologicalSpace.induced (map i) analyticTopology
   rw [isOpen_iff_forall_mem_open]
@@ -180,8 +171,6 @@ lemma analyticSubbasis_isOpen_induced [IsClosedImmersion i.left]
 lemma isInducing_map_of_closedImmersion [IsClosedImmersion i.left] :
     @IsInducing (ComplexPoint A) (ComplexPoint B)
       analyticTopology analyticTopology (map i) := by
-  let : TopologicalSpace (ComplexPoint A) := analyticTopology
-  let : TopologicalSpace (ComplexPoint B) := analyticTopology
   rw [isInducing_iff]
   apply le_antisymm
   · exact continuous_iff_le_induced.mp (continuous_map i)
@@ -194,8 +183,6 @@ lemma isInducing_map_of_closedImmersion [IsClosedImmersion i.left] :
 lemma isEmbedding_map_of_closedImmersion [IsClosedImmersion i.left] :
     @IsEmbedding (ComplexPoint A) (ComplexPoint B)
       analyticTopology analyticTopology (map i) := by
-  let : TopologicalSpace (ComplexPoint A) := analyticTopology
-  let : TopologicalSpace (ComplexPoint B) := analyticTopology
   let : Mono i := Over.mono_of_mono_left i
   exact ⟨isInducing_map_of_closedImmersion i, map_injective_of_mono i⟩
 
@@ -203,8 +190,6 @@ lemma isEmbedding_map_of_closedImmersion [IsClosedImmersion i.left] :
 lemma isClosedEmbedding_map_of_closedImmersion [IsClosedImmersion i.left] :
     @IsClosedEmbedding (ComplexPoint A) (ComplexPoint B)
       analyticTopology analyticTopology (map i) := by
-  let : TopologicalSpace (ComplexPoint A) := analyticTopology
-  let : TopologicalSpace (ComplexPoint B) := analyticTopology
   exact ⟨isEmbedding_map_of_closedImmersion i, isClosed_range_map_of_closedImmersion i⟩
 
 end AnalyticClosedImmersion

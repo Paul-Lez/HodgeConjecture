@@ -17,6 +17,48 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Smooth.SingularLocusDimension`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Topology TopologicalSpace
+
+namespace AlgebraicGeometry
+
+universe u
+
+variable {K : Type u} [Field K] {X : Scheme.{u}}
+  (f : X ⟶ Spec (.of K)) [LocallyOfFiniteType f]
+
+/-- The singular locus equipped with its reduced closed-subscheme structure. -/
+def reducedSingularLocus : Scheme := reducedClosedSubscheme (singularLocusClosed f)
+
+/-- Its canonical closed immersion in the original scheme. -/
+def reducedSingularLocusι : reducedSingularLocus f ⟶ X :=
+  reducedClosedSubschemeι (singularLocusClosed f)
+
+instance reducedSingularLocus_isReduced : IsReduced (reducedSingularLocus f) :=
+  inferInstanceAs (IsReduced (reducedClosedSubscheme (singularLocusClosed f)))
+
+instance reducedSingularLocusι_isClosedImmersion :
+    IsClosedImmersion (reducedSingularLocusι f) :=
+  inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f)))
+
+variable (Y : Over (Spec ↧ℂ))
+  [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
+
+/-- The singular locus of every cycle component admits the actual finite smooth
+decomposition constructed by Noetherian recursion. -/
+def cycleComponentSingularStratification (x : Y.left) :
+    List (Closeds (cycleComponent Y.left x)) := by
+  letI := cycleComponent_isNoetherian Y x
+  exact reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
+    (singularLocusClosed (cycleComponentι Y.left x ≫ Y.hom))
+
+end AlgebraicGeometry
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Topology TopologicalSpace
@@ -89,41 +131,5 @@ theorem topologicalKrullDim_cycleComponent_singularLocus_lt
       (reducedSingularLocus (cycleComponentι Y.left x ≫ Y.hom)) < (d - p : ℕ) :=
   topologicalKrullDim_reducedSingularLocus_lt _
     (topologicalKrullDim_cycleComponent_le_sub Y x hx)
-
-theorem cycleComponentSingularStratification_covers
-    (x : Y.left) (y : cycleComponent Y.left x) :
-    (∃ T ∈ cycleComponentSingularStratification Y x,
-      y ∈ Set.range (reducedClosedSmoothPieceι (cycleComponentι Y.left x ≫ Y.hom) T)) ↔
-        y ∉ (cycleComponentι Y.left x ≫ Y.hom).smoothLocus := by
-  let := cycleComponent_isNoetherian Y x
-  exact reducedSmoothStratification_covers _ _ y
-
-/-- Every constructed smooth stratum of the singular locus has strictly smaller algebraic
-dimension than the cycle component. -/
-theorem cycleComponentSingularStratification_piece_dimension_lt
-    (x : Y.left) {d p : ℕ} [SmoothOfRelativeDimension d Y.hom]
-    (hx : Order.coheight x = p) (T : Closeds (cycleComponent Y.left x))
-    (hT : T ∈ cycleComponentSingularStratification Y x) :
-    topologicalKrullDim
-      (reducedClosedSmoothPiece (cycleComponentι Y.left x ≫ Y.hom) T) < (d - p : ℕ) := by
-  let := cycleComponent_isNoetherian Y x
-  exact (topologicalKrullDim_reducedClosedSmoothPiece_le _
-    (reducedSmoothStratification_mem_le _ _ T hT)).trans_lt
-      (topologicalKrullDim_cycleComponent_singularLocus_lt Y x hx)
-
-/-- The algebraic dimension bound is realized by actual lower-dimensional smooth affine
-charts on each constructed singular-locus stratum. -/
-theorem cycleComponentSingularStratification_exists_affine_relativeDimension_lt
-    (x : Y.left) {d p : ℕ} [SmoothOfRelativeDimension d Y.hom]
-    (hx : Order.coheight x = p) (T : Closeds (cycleComponent Y.left x))
-    (hT : T ∈ cycleComponentSingularStratification Y x)
-    (z : reducedClosedSmoothPiece (cycleComponentι Y.left x ≫ Y.hom) T) :
-    ∃ (U : (reducedClosedSmoothPiece (cycleComponentι Y.left x ≫ Y.hom) T).Opens)
-      (_ : IsAffineOpen U), z ∈ U ∧ ∃ n : ℕ, n < d - p ∧
-        RingHom.IsStandardSmoothOfRelativeDimension n
-          ((reducedClosedSmoothPieceι (cycleComponentι Y.left x ≫ Y.hom) T ≫
-            (cycleComponentι Y.left x ≫ Y.hom)).appLE ⊤ U (by simp)).hom :=
-  Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt _
-    (cycleComponentSingularStratification_piece_dimension_lt Y x hx T hT) z
 
 end AlgebraicGeometry

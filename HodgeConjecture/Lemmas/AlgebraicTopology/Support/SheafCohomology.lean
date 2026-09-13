@@ -160,12 +160,6 @@ def supportIntegerSheafFunctor :
   map_id Z := supportIntegerSheafMap_refl X Z.unop
   map_comp f g := supportIntegerSheafMap_trans X (leOfHom g.unop) (leOfHom f.unop)
 
-/-- The integer sheaf supported on the empty subset is zero. -/
-lemma isZero_supportIntegerSheaf_bot : IsZero (supportIntegerSheaf X ⊥) := by
-  apply (pushforward AddCommGrpCat (closedInclusion X ⊥)).map_isZero
-  apply (isZero_iff_stalkFunctor_obj_isZero _).2
-  exact fun x ↦ False.elim x.property
-
 local instance :
     HasExt.{u} (CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) :=
   hasExt_of_enoughInjectives (CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u})
@@ -188,12 +182,6 @@ instance (Z : Closeds X) (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u})
 def cohomologyWithSupportFunctor (n : ℕ) :
     Closeds X ⥤ CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u} ⥤ AddCommGrpCat.{u} :=
   (supportIntegerSheafFunctor X).rightOp ⋙ extFunctor n
-
-/-- Cohomology with empty support vanishes in every degree. -/
-lemma isZero_cohomologyWithSupport_bot
-    (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) (n : ℕ) :
-    IsZero (AddCommGrpCat.of (cohomologyWithSupport X ⊥ F n)) :=
-  ((extFunctor n).flip.obj F).map_isZero (isZero_supportIntegerSheaf_bot X).op
 
 /-- The diagram of cohomology groups indexed by compact closed supports. -/
 def compactSupportDiagram
@@ -226,18 +214,5 @@ lemma toCompactlySupportedCohomology_enlarge {K L : CompactCloseds X} (h : K ≤
         toCompactlySupportedCohomology X L F n =
       toCompactlySupportedCohomology X K F n :=
   colimit.w _ _
-
-/-- Higher compactly supported cohomology vanishes on injective coefficient sheaves. -/
-lemma isZero_compactlySupportedCohomology_injective
-    (F :
-    CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) [Injective F] (n : ℕ) :
-    IsZero (compactlySupportedCohomology X F (n + 1)) := by
-  apply (IsZero.iff_id_eq_zero _).2
-  apply colimit.hom_ext
-  intro K
-  have h : IsZero ((compactSupportDiagram X F (n + 1)).obj K) :=
-    AddCommGrpCat.isZero_iff_subsingleton.2
-      (Ext.subsingleton_of_injective _ F n)
-  exact h.eq_of_src _ _
 
 end TopCat.Sheaf

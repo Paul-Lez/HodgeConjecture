@@ -175,7 +175,6 @@ lemma standardEtaleImplicitOpenPartialHomeomorph_apply
   let φ : ImplicitFunctionData ℂ ((Fin n → ℂ) × ℂ) ℂ (Fin n → ℂ) :=
     hs.implicitFunctionDataOfProdDomain (standardEtale_partial_isInvertible P z)
   change φ.toOpenPartialHomeomorph u = _
-  rw [ImplicitFunctionData.toOpenPartialHomeomorph_apply]
   simp [φ]
 
 lemma standardEtale_mem_implicit_source (z : standardEtaleCoordinateSpace P) :
@@ -186,15 +185,6 @@ lemma standardEtale_mem_implicit_source (z : standardEtaleCoordinateSpace P) :
     hs.implicitFunctionDataOfProdDomain (standardEtale_partial_isInvertible P z)
   simpa [standardEtaleImplicitOpenPartialHomeomorph, φ] using
     φ.pt_mem_toOpenPartialHomeomorph_source
-
-lemma standardEtale_zero_base_mem_implicit_target (z : standardEtaleCoordinateSpace P) :
-    (0, z.1.1) ∈ (standardEtaleImplicitOpenPartialHomeomorph P z).target := by
-  have hzmap := (standardEtaleImplicitOpenPartialHomeomorph P z).map_source
-    (standardEtale_mem_implicit_source P z)
-  have heq : standardEtaleEquation P z.1 = 0 := by
-    simpa [standardEtaleEquation] using z.2.1
-  rw [standardEtaleImplicitOpenPartialHomeomorph_apply, heq] at hzmap
-  exact hzmap
 
 /-- The localization polynomial evaluated in ordinary complex coordinates. -/
 def standardEtaleLocalizationEquation (u : (Fin n → ℂ) × ℂ) : ℂ :=
@@ -276,8 +266,6 @@ lemma isOpen_standardEtaleChartTarget (z : standardEtaleCoordinateSpace P) :
     continuous_standardEtaleLocalizationEquation P |>.comp_continuousOn hinv
   have hopenNe : IsOpen {x : ℂ | x ≠ 0} :=
     isOpen_ne_fun continuous_id continuous_const
-  change IsOpen (targetZero ∩
-    (fun w ↦ standardEtaleLocalizationEquation P (T.symm (zeroSection w))) ⁻¹' {x | x ≠ 0})
   exact hloc.isOpen_inter_preimage htargetZero hopenNe
 
 /-- The inverse of the standard étale chart on its target. It is assigned the center point
@@ -300,7 +288,6 @@ lemma standardEtaleChartInverse_of_mem (z : standardEtaleCoordinateSpace P)
     {w : Fin n → ℂ} (hw : w ∈ standardEtaleChartTarget P z) :
     (standardEtaleChartInverse P z w).1 =
       (standardEtaleImplicitOpenPartialHomeomorph P z).symm (0, w) := by
-  classical
   simp [standardEtaleChartInverse, hw]
 
 lemma standardEtale_base_mem_chartTarget (z x : standardEtaleCoordinateSpace P)
@@ -425,14 +412,6 @@ lemma analyticAt_standardEtaleChartInverse_val
   filter_upwards [(isOpen_standardEtaleChartTarget P z).eventually_mem hw] with v hv
   exact (standardEtaleChartInverse_of_mem P z hv).symm
 
-/-- In ambient coordinates, the inverse branch of a standard étale projection chart is
-holomorphic throughout its target. -/
-lemma contDiffOn_standardEtaleChartInverse_val
-    (z : standardEtaleCoordinateSpace P) :
-    ContDiffOn ℂ ω (fun v ↦ (standardEtaleChartInverse P z v).1)
-      (standardEtaleChartTarget P z) :=
-  fun _ hw ↦ (analyticAt_standardEtaleChartInverse_val P z hw).contDiffAt.contDiffWithinAt
-
 /-- Evaluation of a quotient representative in ordinary coordinates agrees with the explicit
 bivariate polynomial formula. -/
 lemma standardEtaleCoordinateHomeomorph_symm_mk
@@ -468,9 +447,6 @@ lemma analyticAt_standardEtaleCoordinateEvaluation_chart
   have hinner : AnalyticAt ℂ
       (fun v ↦ (standardEtaleChartInverse P z v).1) w :=
     analyticAt_standardEtaleChartInverse_val P z hw
-  change AnalyticAt ℂ
-    (standardEtaleBivariateEvaluation P q ∘
-      fun v ↦ (standardEtaleChartInverse P z v).1) w
   exact houter.comp_of_eq hinner rfl
 
 /-- A neighborhood of a standard étale point on which projection to the polynomial-ring
@@ -508,19 +484,11 @@ noncomputable def standardEtaleAlgHomProjectionChart (u : P.Ring →ₐ[ℂ] ℂ
 
 lemma mem_standardEtaleAlgHomProjectionChart_source (u : P.Ring →ₐ[ℂ] ℂ) :
     u ∈ (standardEtaleAlgHomProjectionChart P u).source := by
-  rw [standardEtaleAlgHomProjectionChart, OpenPartialHomeomorph.trans_source]
   constructor
   · simp
   · change standardEtaleCoordinateHomeomorph P u ∈
       (standardEtaleProjectionChart P (standardEtaleCoordinateHomeomorph P u)).source
     exact standardEtale_mem_implicit_source P (standardEtaleCoordinateHomeomorph P u)
-
-lemma standardEtaleAlgHomProjectionChart_apply (u v : P.Ring →ₐ[ℂ] ℂ) :
-    standardEtaleAlgHomProjectionChart P u v =
-      mvPolynomialAlgHomHomeomorph n
-        (v.comp (IsScalarTower.toAlgHom ℂ (complexPolynomialRing n) P.Ring)) := by
-  funext i
-  rfl
 
 /-- Every regular function is analytic on the inverse of a standard étale algebra-homomorphism
 projection chart. -/
@@ -537,14 +505,6 @@ lemma analyticAt_standardEtaleAlgHomProjectionChart_symm_apply
     standardEtaleProjectionChart_symm_apply] using
     analyticAt_standardEtaleCoordinateEvaluation_chart P
       (standardEtaleCoordinateHomeomorph P u) hw' r
-
-/-- Projection from a standard étale equation locus to its polynomial coordinates is a local
-homeomorphism. -/
-lemma isLocalHomeomorph_standardEtaleCoordinateProjection :
-    IsLocalHomeomorph (fun z : standardEtaleCoordinateSpace P ↦ z.1.1) := by
-  rw [isLocalHomeomorph_iff_isLocalHomeomorphOn_univ]
-  exact IsLocalHomeomorphOn.mk _ _ fun z _ ↦
-    ⟨standardEtaleProjectionChart P z, standardEtale_mem_implicit_source P z, fun _ _ ↦ rfl⟩
 
 variable (S : Type) [CommRing S] [Algebra ℂ S]
   [Algebra (complexPolynomialRing n) S]
@@ -581,7 +541,6 @@ lemma mem_isStandardEtaleAlgHomProjectionChart_source (u : S →ₐ[ℂ] ℂ) :
   let e := standardEtalePresentationComplexAlgEquiv (n := n) S
   let Q := (chosenStandardEtalePresentation (n := n) S).P
   let q := (precompAlgEquivHomeomorph e).symm u
-  rw [isStandardEtaleAlgHomProjectionChart, OpenPartialHomeomorph.trans_source]
   constructor
   · simp
   · change q ∈ (standardEtaleAlgHomProjectionChart Q q).source
@@ -592,15 +551,11 @@ lemma isStandardEtaleAlgHomProjectionChart_apply (u v : S →ₐ[ℂ] ℂ) :
       mvPolynomialAlgHomHomeomorph n (isStandardEtaleBaseAlgHom (n := n) S v) := by
   let e := standardEtalePresentationComplexAlgEquiv (n := n) S
   let Q := (chosenStandardEtalePresentation (n := n) S).P
-  let q := (precompAlgEquivHomeomorph e).symm u
-  rw [isStandardEtaleAlgHomProjectionChart, OpenPartialHomeomorph.trans_apply,
-    standardEtaleAlgHomProjectionChart_apply]
   apply congrArg (mvPolynomialAlgHomHomeomorph n)
   apply AlgHom.ext
   intro b
   change v (e.symm (algebraMap (complexPolynomialRing n) Q.Ring b)) =
     v (algebraMap (complexPolynomialRing n) S b)
-  congr 1
   have hb := (chosenStandardEtalePresentation (n := n) S).equivRing.commutes b
   change e (algebraMap (complexPolynomialRing n) S b) =
     algebraMap (complexPolynomialRing n) Q.Ring b at hb
@@ -650,10 +605,6 @@ lemma nonempty_etaleStandardNeighborhood (u : T →ₐ[ℂ] ℂ) :
     Nonempty (EtaleStandardNeighborhood (n := n) T u) := by
   let Q : Ideal T := RingHom.ker u.toRingHom
   let : Q.IsPrime := RingHom.ker_isPrime u.toRingHom
-  let : Algebra.IsEtaleAt (complexPolynomialRing n) Q := by
-    have : Algebra.FormallyEtale T (Localization.AtPrime Q) :=
-      Algebra.FormallyEtale.of_isLocalization Q.primeCompl
-    exact Algebra.FormallyEtale.comp (complexPolynomialRing n) T (Localization.AtPrime Q)
   obtain ⟨f, hfQ, hfstd⟩ :=
     Algebra.IsEtaleAt.exists_isStandardEtale (R := complexPolynomialRing n) Q
   refine ⟨⟨f, ?_, hfstd⟩⟩
@@ -688,7 +639,6 @@ lemma mem_etaleAlgHomProjectionChart_source (u : T →ₐ[ℂ] ℂ) :
   let : Algebra.IsStandardEtale (complexPolynomialRing n) (Localization.Away D.element) :=
     D.isStandard
   let v := pointInEtaleStandardNeighborhood (n := n) T u
-  rw [etaleAlgHomProjectionChart, OpenPartialHomeomorph.lift_openEmbedding_source]
   refine ⟨v, mem_isStandardEtaleAlgHomProjectionChart_source
     (n := n) (Localization.Away D.element) v, ?_⟩
   change (localizationAwayAlgHomHomeomorph T D.element v).1 = u
@@ -702,7 +652,6 @@ lemma etaleAlgHomProjectionChart_apply_of_mem (u v : T →ₐ[ℂ] ℂ)
   let D := etaleStandardNeighborhood (n := n) T u
   let : Algebra.IsStandardEtale (complexPolynomialRing n) (Localization.Away D.element) :=
     D.isStandard
-  rw [etaleAlgHomProjectionChart, OpenPartialHomeomorph.lift_openEmbedding_source] at hv
   obtain ⟨q, hq, rfl⟩ := hv
   change ((isStandardEtaleAlgHomProjectionChart (n := n) (Localization.Away D.element)
       (pointInEtaleStandardNeighborhood (n := n) T u)).lift_openEmbedding
@@ -764,13 +713,6 @@ lemma affineSpaceEquiv_polynomialSpecToAffineSpacePointMap
     affineSpecEquiv (complexPolynomialRing n) z (MvPolynomial.X i)
   rw [AffineSpace.SpecIso_inv_appTop_coord]
   rw [affineSpecEquiv_apply, evaluate_top_eq_appTop]
-
-lemma specMap_algebraMap_comp_affineSpecStructureMap :
-    Spec.map (CommRingCat.ofHom (algebraMap (complexPolynomialRing n) P.Ring)) ≫
-        affineSpecStructureMap (complexPolynomialRing n) =
-      affineSpecStructureMap P.Ring := by
-  rw [← Spec.map_comp]
-  congr 1
 
 end
 

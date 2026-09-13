@@ -75,18 +75,6 @@ public noncomputable def simplexSubdivisionMaximum (n : SimplexCategory) :
   PartOrd.ofHom
     (nonemptyFiniteChainMaximum (ULift.{u} (Fin (n.len + 1))))
 
-/-- The underlying vertex map of `toPartOrd.map f` is monotone for the canonical linear orders
-on the lifted finite ordinals. -/
-public theorem simplexToPartOrdMap_monotone {n m : SimplexCategory} (f : n ⟶ m)
-    {i j : ULift.{u} (Fin (n.len + 1))} (h : i ≤ j) :
-    SimplexCategory.toPartOrd.{u}.map f i ≤
-      SimplexCategory.toPartOrd.{u}.map f j := by
-  induction i with
-  | up i =>
-    induction j with
-    | up j =>
-      exact f.toOrderHom.monotone h
-
 /-- Maximum vertex is natural in morphisms of the simplex category. -/
 public noncomputable def simplexSubdivisionMaximumNatTrans :
     SimplexCategory.toPartOrd.{u} ⋙ PartOrd.nonemptyFiniteChainsFunctor ⟶

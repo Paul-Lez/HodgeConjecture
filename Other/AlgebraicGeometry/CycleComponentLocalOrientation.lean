@@ -23,6 +23,12 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
 import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
+public import Other.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
+public import Other.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
+public import Other.AlgebraicGeometry.Cycle.Component.LocalGenerator
+public import Other.AlgebraicGeometry.Cycle.Component.NormalGeometry
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
 
 /-!
 # Local complex orientation of a cycle component
@@ -164,10 +170,6 @@ namespace CycleComponentSeparateLocalCoordinates
 
 open AlgebraicTopology.Singular
 
-noncomputable local instance cycleComponentLocalOrientationTopology
-    {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}
   [SmoothOfRelativeDimension d V.structureMap]
   (C : CycleComponentSeparateLocalCoordinates V.over x d n)
@@ -255,10 +257,6 @@ end CycleComponentSeparateLocalCoordinates
 namespace ComplexPoint
 
 open AlgebraicTopology.Singular
-
-noncomputable local instance {V : SmoothProjectiveComplexVariety} {x : V.scheme} :
-    TopologicalSpace
-      (ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap))) := Point.analyticTopology
 
 /-- A family of rational top local homology classes on the smooth analytic locus of a reduced
 cycle component. -/

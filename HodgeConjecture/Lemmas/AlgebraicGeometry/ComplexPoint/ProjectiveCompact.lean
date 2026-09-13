@@ -40,17 +40,6 @@ namespace ComplexPoint
 
 open Point
 
-/-- A complex point of finite-dimensional scheme-theoretic projective space is determined by its
-underlying closed point. -/
-lemma projectiveSpace_underlying_injective (n : ℕ) :
-    Function.Injective
-      (@underlying ℂ _ _
-        (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) :=
-  @underlying_injective_of_locallyOfFiniteType
-    (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
-    (inferInstanceAs (LocallyOfFiniteType
-      (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
-
 end ComplexPoint
 
 namespace ProjectiveSpace.Presentation
@@ -70,12 +59,6 @@ noncomputable def analyticImmersion {X : Scheme} {f : X ⟶ Spec ↧ℂ}
       Point.analyticTopology Point.analyticTopology :=
   Point.continuousMap (overImmersion P)
 
-/-- The analytic map of an explicit projective presentation is injective. -/
-lemma analyticImmersion_injective {X : Scheme} {f : X ⟶ Spec ↧ℂ}
-    (P : ProjectiveSpace.Presentation f) : Function.Injective (analyticImmersion P) := by
-  let : IsClosedImmersion P.immersion := P.isClosedImmersion
-  exact ComplexPoint.map_injective_of_mono (overImmersion P)
-
 /-- The analytic map of an explicit projective presentation is a closed topological
 embedding. -/
 lemma analyticImmersion_isClosedEmbedding {X : Scheme} {f : X ⟶ Spec ↧ℂ}
@@ -83,7 +66,6 @@ lemma analyticImmersion_isClosedEmbedding {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     @IsClosedEmbedding (ComplexPoint (Over.mk f))
       (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (P.ambientDimension + 1)) (Spec ↧ℂ))))
       Point.analyticTopology Point.analyticTopology (analyticImmersion P) := by
-  let : IsClosedImmersion P.immersion := P.isClosedImmersion
   let : IsClosedImmersion (overImmersion P).left := P.isClosedImmersion
   exact ComplexPoint.isClosedEmbedding_map_of_closedImmersion (overImmersion P)
 
@@ -91,7 +73,6 @@ lemma analyticImmersion_isClosedEmbedding {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 theorem complexPoint_compactSpace {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) :
     @CompactSpace (ComplexPoint (Over.mk f)) Point.analyticTopology := by
-  let : TopologicalSpace (ComplexPoint (Over.mk f)) := Point.analyticTopology
   exact (analyticImmersion_isClosedEmbedding P).compactSpace
 
 end ProjectiveSpace.Presentation

@@ -96,39 +96,4 @@ lemma analyticAt_localChart_symm_map
   AnalyticAt.pi fun i ↦ analyticAt_localChart_symm_map_component
     X Y f d e z hw hmap i
 
-/-- A morphism of smooth complex schemes is holomorphic for the complex-manifold structures
-constructed from algebraic étale coordinates. -/
-theorem contMDiff_analyticMap
-    [SmoothOfRelativeDimension d X.hom]
-    [SmoothOfRelativeDimension e Y.hom] :
-    ContMDiff 𝓘(ℂ, Fin d → ℂ) 𝓘(ℂ, Fin e → ℂ) ω (map f) := by
-  intro z
-  let z' := map f z
-  have hz : z ∈ (localChart X d z).source :=
-    mem_localChart_source X d z
-  have hz' : z' ∈ (localChart Y e z').source :=
-    mem_localChart_source Y e z'
-  rw [contMDiffAt_iff_of_mem_source
-    (I := 𝓘(ℂ, Fin d → ℂ)) (I' := 𝓘(ℂ, Fin e → ℂ))
-    (x := z) (y := z') hz hz']
-  refine ⟨(continuous_map f).continuousAt, ?_⟩
-  have hw : localChart X d z z ∈
-      (localChart X d z).target :=
-    (localChart X d z).map_source hz
-  have hmap : map f
-      ((localChart X d z).symm (localChart X d z z)) ∈
-        (localChart Y e z').source := by
-    rw [(localChart X d z).left_inv hz]
-    exact hz'
-  have ha := analyticAt_localChart_symm_map X Y f d e
-    z hw hmap
-  have hsourceChart : chartAt (Fin d → ℂ) z = localChart X d z := rfl
-  have htargetChart : chartAt (Fin e → ℂ) z' = localChart Y e z' := rfl
-  simpa only [extChartAt_coe, extChartAt_coe_symm,
-    modelWithCornersSelf_coe, modelWithCornersSelf_coe_symm,
-    Function.id_comp, Function.comp_id, Function.comp_apply, Function.comp_def,
-    id_eq, Set.range_id,
-    hsourceChart, htargetChart, z'] using
-      ha.contDiffAt.contDiffWithinAt
-
 end AlgebraicGeometry.ComplexPoint

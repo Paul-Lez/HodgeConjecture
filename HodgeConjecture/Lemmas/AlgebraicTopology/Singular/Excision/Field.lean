@@ -42,9 +42,7 @@ abbrev RationalSimplicialChainComplex (X : SSet.{0}) :
 
 @[simp]
 lemma moduleCat_toSpanSingleton_apply_one (M : ModuleCat ℚ) (v : M) :
-    (ModuleCat.ofHom (LinearMap.toSpanSingleton ℚ M v)).hom 1 = v := by
-  change (1 : ℚ) • v = v
-  simp
+    (ModuleCat.ofHom (LinearMap.toSpanSingleton ℚ M v)).hom 1 = v := by simp
 
 /-- The coefficient map from integral to rational chains in one degree. -/
 def integralToRationalChainComponent (X : SSet.{0}) (n : ℕ) :
@@ -116,7 +114,6 @@ lemma integralToRationalChainComponent_naturality
       ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x.as).hom 1) =
     (X.ιChainComplex (R := ModuleCat.of ℚ ℚ) x.as).hom 1 at hx
   rw [hx]
-  simp only [ConcreteCategory.comp_apply] at hf ⊢
   simpa using hf
 
 lemma rationalizeSimplicialChainComponent_comp
@@ -135,7 +132,6 @@ lemma rationalizeSimplicialChainComponent_comp
   have h := ConcreteCategory.congr_hom
     (integralToRationalChainComponent_naturality Y Z m k g)
     (f.hom ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1))
-  simp only [ConcreteCategory.comp_apply] at h ⊢
   simpa using h.symm
 
 lemma rationalizeSimplicialChainComponent_id (X : SSet.{0}) (n : ℕ) :
@@ -143,11 +139,8 @@ lemma rationalizeSimplicialChainComponent_id (X : SSet.{0}) (n : ℕ) :
   refine SSet.chainComplex_hom_ext fun x ↦ ?_
   rw [iota_rationalizeSimplicialChainComponent]
   ext
-  simp only [Category.comp_id,
-    ConcreteCategory.id_apply]
   have hx := ConcreteCategory.congr_hom
     (iota_integralToRationalChainComponent X n x) 1
-  simp only [ConcreteCategory.comp_apply] at hx
   simpa using hx
 
 lemma rationalizeSimplicialChainComponent_zero
@@ -155,7 +148,6 @@ lemma rationalizeSimplicialChainComponent_zero
     rationalizeSimplicialChainComponent X Y n m 0 = 0 := by
   refine SSet.chainComplex_hom_ext fun x ↦ ?_
   rw [iota_rationalizeSimplicialChainComponent]
-  ext
   simp
 
 lemma rationalizeSimplicialChainComponent_add
@@ -218,12 +210,6 @@ lemma rationalizeSimplicialChainComponent_d (X : SSet.{0}) (n : ℕ) :
   ext
   change (LinearMap.toSpanSingleton ℚ _ _) 1 = _
   rw [LinearMap.toSpanSingleton_apply_one]
-  simp only [ConcreteCategory.comp_apply]
-  change (integralToRationalChainComponent X n).hom
-      (((X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n).hom
-        ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1)) =
-    ((RationalSimplicialChainComplex X).d (n + 1) n).hom
-      ((X.ιChainComplex (R := ModuleCat.of ℚ ℚ) x).hom 1)
   have h := ConcreteCategory.congr_hom
     (integralToRationalChainComponent_comm_d X n)
     ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1)
@@ -269,15 +255,6 @@ lemma rationalizeSimplicialChainMap_comp (X Y Z : SSet.{0})
         rationalizeSimplicialChainMap Y Z g :=
   HomologicalComplex.hom_ext _ _ fun n ↦
     rationalizeSimplicialChainComponent_comp X Y Z n n n (f.f n) (g.f n)
-
-lemma rationalizeSimplicialChainMap_add (X Y : SSet.{0})
-    (f g : X.chainComplex (AddCommGrpCat.of ℤ) ⟶
-      Y.chainComplex (AddCommGrpCat.of ℤ)) :
-    rationalizeSimplicialChainMap X Y (f + g) =
-      rationalizeSimplicialChainMap X Y f +
-        rationalizeSimplicialChainMap X Y g :=
-  HomologicalComplex.hom_ext _ _ fun n ↦
-    rationalizeSimplicialChainComponent_add X Y n n (f.f n) (g.f n)
 
 lemma rationalizeSimplicialChainMap_zero (X Y : SSet.{0}) :
     rationalizeSimplicialChainMap X Y 0 = 0 :=
@@ -349,10 +326,6 @@ lemma rationalizeSimplicialChainComponent_chainComplexMap
   ext
   change (LinearMap.toSpanSingleton ℚ _ _) 1 = _
   rw [LinearMap.toSpanSingleton_apply_one]
-  change (integralToRationalChainComponent Y n).hom
-      (((SSet.chainComplexMap f (AddCommGrpCat.of ℤ)).f n).hom
-        ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1)) =
-    (Y.ιChainComplex (R := ModuleCat.of ℚ ℚ) (f.app _ x)).hom 1
   have hf := ConcreteCategory.congr_hom
     (SSet.ι_chainComplexMap_f X Y f (AddCommGrpCat.of ℤ) x) 1
   have hcoeff := ConcreteCategory.congr_hom
@@ -423,22 +396,7 @@ lemma coverSmallRationalChainHomotopyEquiv_of_openCover_hom
       coverSmallRationalSingularChainInclusion X U :=
   (coverSmallRationalChainApproximation_of_openCover X U hUopen hUcover).choose_spec
 
-/-- Rational small-chain inclusion induces an isomorphism on homology in every degree. -/
-def coverSmallRationalSingularHomologyIso_of_openCover
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) (n : ℕ) :
-    (CoverSmallRationalSingularChainComplex X U).homology n ≅
-      ((TopCat.toSSet.obj X).chainComplex (ModuleCat.of ℚ ℚ)).homology n :=
-  (coverSmallRationalChainHomotopyEquiv_of_openCover X U hUopen hUcover).toHomologyIso n
 
-lemma coverSmallRationalSingularHomologyIso_of_openCover_hom
-    (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) (n : ℕ) :
-    (coverSmallRationalSingularHomologyIso_of_openCover X U hUopen hUcover n).hom =
-      HomologicalComplex.homologyMap
-        (coverSmallRationalSingularChainInclusion X U) n := by
-  dsimp [coverSmallRationalSingularHomologyIso_of_openCover]
-  change HomologicalComplex.homologyMap
-      (coverSmallRationalChainHomotopyEquiv_of_openCover X U hUopen hUcover).hom n = _
-  rw [coverSmallRationalChainHomotopyEquiv_of_openCover_hom]
 
 end RationalSmallChains
 

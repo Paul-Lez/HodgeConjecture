@@ -43,7 +43,6 @@ theorem supportRelativeCohomologyGerm_restrict {U V : Opens X} (hUV : U ≤ V)
     supportRelativeCohomologyGerm X S n V x (hUV hx) a := by
   have h := ConcreteCategory.congr_hom
     ((supportRelativeCohomologyToSheaf X S n).naturality (homOfLE hUV).op) a
-  simp only [ConcreteCategory.comp_apply] at h
   exact (congrArg ((supportRelativeCohomologySheaf X S n).presheaf.germ U x hx) h).trans
     ((supportRelativeCohomologySheaf X S n).presheaf.germ_res_apply (homOfLE hUV) x hx _)
 

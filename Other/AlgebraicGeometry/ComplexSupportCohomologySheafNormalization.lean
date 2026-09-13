@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SheafClass
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicTopology.CohomologySheafSectionNaturality
+public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
 
 /-! # Exact local normalization of the actual supported injective cohomology sheaf -/
 
@@ -18,9 +19,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-
-local instance complexSupportCohomologySheafNormalizationTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 local instance complexSupportCohomologySheafNormalizationParacompact :
     ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X

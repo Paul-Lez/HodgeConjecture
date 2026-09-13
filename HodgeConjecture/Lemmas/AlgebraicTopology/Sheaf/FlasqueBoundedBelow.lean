@@ -24,6 +24,36 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.FlasqueBoundedBelow`.
 -/
 
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Limits Opposite TopologicalSpace
+
+namespace TopCat.Sheaf.IsFlasque
+
+universe u
+
+variable {X : TopCat.{u}}
+
+namespace BoundedBelowComplex
+
+variable (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ)
+
+/-- The short exact sequence from cycles in degree `i`, through the degree-`i` term, to cycles
+in degree `i + 1`. -/
+def cyclesShortComplex (i : ℤ) :
+    ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
+  ShortComplex.mk (K.iCycles i) (K.toCycles i (i + 1)) (by
+    rw [← cancel_mono (K.iCycles (i + 1))]
+    simp)
+
+end BoundedBelowComplex
+
+end TopCat.Sheaf.IsFlasque
+
+end
+
 @[expose] public noncomputable section
 
 open CategoryTheory Limits Opposite TopologicalSpace
@@ -179,15 +209,7 @@ theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
       comm₂₃ := by
         dsimp [T, B]
         simp }
-  let : Epi φ.τ₁ := hepi
-  let : IsIso φ.τ₂ := by
-    change IsIso (𝟙 (F.obj (K.X i)))
-    infer_instance
-  let : Mono φ.τ₃ := by
-    change Mono (𝟙 (F.obj (K.X (i + 1))))
-    infer_instance
   apply (L.exactAt_iff' (i := i - 1) (j := i) (k := i + 1) hprev hnext).mpr
-  change T.Exact
   exact (ShortComplex.exact_iff_of_epi_of_isIso_of_mono φ).mpr hB
 
 end BoundedBelowComplex

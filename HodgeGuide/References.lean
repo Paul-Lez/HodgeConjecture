@@ -3,6 +3,7 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
+import Other.LinearAlgebra.HodgeStructure
 
 open Verso.Genre Manual
 
@@ -48,12 +49,12 @@ formalization.
   `Filtration.lean`: the de Rham complex, hypercohomology, and the Hodge filtration;
 * `Other/AlgebraicGeometry/CodimensionCycle.lean`,
   `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Support.lean`,
-  and `HodgeConjecture/Definitions/AlgebraicGeometry/Cohomology/WithSupport.lean`: cycles, their
+  and `HodgeConjecture/Lemmas/AlgebraicGeometry/Cohomology/WithSupport.lean`: cycles, their
   supports, and cohomology with support;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`
   and `SupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SheafClass.lean`: the class of a
+* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`: the class of a
   subvariety;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`: the span of those
   classes, which is the right-hand side of the statement;
@@ -63,5 +64,5 @@ formalization.
 * `Other/AlgebraicGeometry/CodimensionZeroClassComparison.lean` and
   `CodimensionZeroCoclassNonvanishing.lean`: nonvanishing of the class of the whole variety and
   the codimension-zero case of the conjecture;
-* `HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures and the
+* `HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures and the
   $`(p,p)` criterion.

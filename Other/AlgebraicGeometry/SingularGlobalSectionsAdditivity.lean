@@ -15,7 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.GlobalSections
+public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
+public import Other.AlgebraicGeometry.Cohomology.GlobalSections
 /-!
 # The singular global-sections comparison as a `ℚ`-linear equivalence
 

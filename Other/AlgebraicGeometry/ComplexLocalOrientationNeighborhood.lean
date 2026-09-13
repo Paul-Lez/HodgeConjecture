@@ -17,6 +17,7 @@ module
 
 public import Other.AlgebraicTopology.ChartNeighborhoodOrientation
 public import Other.AlgebraicGeometry.ComplexLocalOrientationCoherence
+public import Other.AlgebraicGeometry.ComplexPoint.LocalOrientation
 
 /-!
 # Local representability of the exact complex orientation
@@ -41,9 +42,6 @@ namespace AlgebraicGeometry.ComplexPoint
 open AlgebraicTopology.Singular
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
-
-noncomputable local instance complexOrientationNeighborhood_analyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 variable [SmoothOfRelativeDimension d X.hom]
 

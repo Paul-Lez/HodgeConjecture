@@ -88,8 +88,6 @@ def nonvanishingAlgHomExtension (f : S) (u : nonvanishingAlgHom S f) :
 @[simp]
 lemma nonvanishingAlgHomExtension_algebraMap (f : S) (u : nonvanishingAlgHom S f) (s : S) :
     nonvanishingAlgHomExtension S f u (algebraMap S (Localization.Away f) s) = u.1 s := by
-  change IsLocalization.Away.lift f (isUnit_iff_ne_zero.mpr u.2)
-    (algebraMap S (Localization.Away f) s) = u.1 s
   exact IsLocalization.Away.lift_eq f (isUnit_iff_ne_zero.mpr u.2) s
 
 @[simp]
@@ -170,10 +168,6 @@ lemma isOpenEmbedding_localizationAwayAlgHomMap (f : S) :
     IsOpenEmbedding (localizationAwayAlgHomMap S f) :=
   (isOpen_nonvanishingAlgHom S f).isOpenEmbedding_subtypeVal.comp
     (localizationAwayAlgHomHomeomorph S f).isOpenEmbedding
-
-lemma isLocalHomeomorph_localizationAwayAlgHomMap (f : S) :
-    IsLocalHomeomorph (localizationAwayAlgHomMap S f) :=
-  (isOpenEmbedding_localizationAwayAlgHomMap S f).isLocalHomeomorph
 
 end
 

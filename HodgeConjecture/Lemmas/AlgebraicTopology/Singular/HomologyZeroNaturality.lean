@@ -14,7 +14,8 @@ continuous map between path-connected spaces induces an isomorphism on degree-ze
 for a nonempty source and path-connected target the induced map is an epimorphism.
 
 The augmentation proof generalizes the additive-group-valued proof in
-`StandardSimplexSingularComparison` to arbitrary coefficient objects.
+[`SphereSixComplex/Topology/StandardSimplexSimplicialSingularComparisonGeneral.lean`](https://github.com/deancureton/sphere-six-complex/blob/895c0a0/SphereSixComplex/Topology/StandardSimplexSimplicialSingularComparisonGeneral.lean)
+to arbitrary coefficient objects.
 -/
 
 @[expose] public noncomputable section
@@ -51,9 +52,6 @@ theorem homology₀ε_naturality {X Y : SSet.{w}} (f : X ⟶ Y) (R : C) :
   apply (cancel_epi e₀.hom).1
   apply X.chainComplex_hom_ext
   intro x
-  change X.ιChainComplex x ≫ e₀.hom ≫ K.homologyπ 0 ≫
-      HomologicalComplex.homologyMap φ 0 ≫ Y.homology₀ε R =
-    X.ιChainComplex x ≫ e₀.hom ≫ K.homologyπ 0 ≫ X.homology₀ε R
   rw [HomologicalComplex.homologyπ_naturality_assoc]
   change X.ιChainComplex x ≫ K.liftCycles (𝟙 _) 0 (by simp) (by simp) ≫
       HomologicalComplex.cyclesMap φ 0 ≫ L.homologyπ 0 ≫ Y.homology₀ε R =
@@ -62,11 +60,6 @@ theorem homology₀ε_naturality {X Y : SSet.{w}} (f : X ⟶ Y) (R : C) :
   simp only [← Category.assoc, HomologicalComplex.comp_liftCycles, Category.comp_id,
     HomologicalComplex.liftCycles_comp_cyclesMap]
   simp only [Category.assoc]
-  change L.liftCycles
-      (X.ιChainComplex x ≫ (SSet.chainComplexMap f R).f 0) 0 (by simp) (by simp) ≫
-        L.homologyπ 0 ≫ Y.homology₀ε R =
-    K.liftCycles (X.ιChainComplex x) 0 (by simp) (by simp) ≫
-      K.homologyπ 0 ≫ X.homology₀ε R
   have hlift : L.liftCycles
       (X.ιChainComplex x ≫ (SSet.chainComplexMap f R).f 0) 0 (by simp) (by simp) =
       L.liftCycles (Y.ιChainComplex (f.app _ x)) 0 (by simp) (by simp) := by

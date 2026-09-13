@@ -7,6 +7,9 @@ module
 public import Other.AlgebraicGeometry.ClosedImmersionPointNormalCoordinates
 public import Other.AlgebraicGeometry.CycleComponentPointPurity
 public import Other.AlgebraicTopology.ChartTargetPointClassNormalization
+public import Other.AlgebraicGeometry.Cycle.Local.LocalHomology
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import Other.AlgebraicTopology.LocalHomology.EuclideanNeighborhoodOrientation
 
 /-!
 # Exact point normalization of the general smooth normal-purity construction

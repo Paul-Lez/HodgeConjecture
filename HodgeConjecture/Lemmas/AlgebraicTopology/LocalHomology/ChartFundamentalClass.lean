@@ -81,38 +81,4 @@ lemma chartModelEmbedding_zero : chartModelEmbedding d e x hx 0 = x := by
     OpenPartialHomeomorph.univBall_apply_zero]
   exact e.left_inv hx
 
-lemma chartModelEmbedding_injective : Function.Injective (chartModelEmbedding d e x hx) :=
-  (chartModelEmbedding d e x hx).isOpenEmbedding
-    (chartModelEmbedding_source d e x hx) |>.injective
-
-/-- The compressed inverse chart on the complements of the two distinguished points. -/
-def puncturedChartModelEmbedding :
-    ({0}ᶜ : Set (Fin d → ℂ)) → ({x}ᶜ : Set M) := fun y =>
-  ⟨chartModelEmbedding d e x hx y, by
-    intro h
-    apply y.2
-    apply chartModelEmbedding_injective d e x hx
-    rw [chartModelEmbedding_zero d e x hx]
-    exact h⟩
-
-lemma continuous_puncturedChartModelEmbedding :
-    Continuous (puncturedChartModelEmbedding d e x hx) :=
-  Continuous.subtype_mk (((chartModelEmbedding d e x hx).isOpenEmbedding
-    (chartModelEmbedding_source d e x hx)).continuous.comp continuous_subtype_val) _
-
-/-- The map from the standard punctured complex affine space to the local pair at `x`. -/
-def chartModelEmbeddingPair : standardComplexPuncturedPair d ⟶ pointComplementPair x :=
-  TopPair.ofHom
-    (TopCat.ofHom ⟨chartModelEmbedding d e x hx,
-      (chartModelEmbedding d e x hx).isOpenEmbedding
-        (chartModelEmbedding_source d e x hx) |>.continuous⟩)
-    (TopCat.ofHom ⟨puncturedChartModelEmbedding d e x hx,
-      continuous_puncturedChartModelEmbedding d e x hx⟩)
-    (by ext y; rfl)
-
-/-- The local homology class at `x`, normalized by the complex ordering of the chart. -/
-def localClassOfChart : RelativeHomology ℚ (pointComplementPair x) (2 * d) :=
-  relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e x hx)
-    (standardComplexLocalClass d)
-
 end AlgebraicTopology.Singular

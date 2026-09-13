@@ -41,59 +41,12 @@ open scoped Simplicial
 
 namespace AlgebraicTopology.Singular
 
-/-- The short complex of subspace, ambient, and relative rational singular chains. -/
-def relativeSingularChainShortComplex (X : TopPair) :
-    ShortComplex (ChainComplex (ModuleCat ℚ) ℕ) :=
-  ShortComplex.mk ((chainPairFunctor ℚ).obj X).hom
-    (relativeChainProjection ℚ X)
-    (subspaceChainMap_relativeChainProjection ℚ X)
-
-/-- Singular chains turn the subspace inclusion of a topological pair into a monomorphism. -/
-lemma relativeSingularChainMap_mono (X : TopPair) :
-    Mono ((chainPairFunctor ℚ).obj X).hom := by
-  let : Mono X.hom :=
-    (TopCat.mono_iff_injective X.hom).mpr X.prop.injective
-  change Mono (((singularChainComplexFunctor (ModuleCat ℚ)).obj
-    (ModuleCat.of ℚ ℚ)).map X.hom)
-  apply Functor.map_mono
-
-/-- The subspace, ambient, and relative rational singular chain complexes form a short exact
-sequence. -/
-lemma relativeSingularChainShortComplex_shortExact (X : TopPair) :
-    (relativeSingularChainShortComplex X).ShortExact := by
-  let : Mono ((chainPairFunctor ℚ).obj X).hom := relativeSingularChainMap_mono X
-  exact
-    { exact := ShortComplex.exact_cokernel ((chainPairFunctor ℚ).obj X).hom
-      mono_f := by
-        dsimp [relativeSingularChainShortComplex]
-        infer_instance
-      epi_g := by
-        dsimp [relativeSingularChainShortComplex, relativeChainProjection]
-        constructor
-        intro Z g h w
-        exact Cofork.IsColimit.hom_ext
-          (cokernelIsCokernel ((chainPairFunctor ℚ).obj X).hom) w }
-
 /-- The connecting map from relative homology in degree `n + 1` to subspace homology in degree
 `n`. -/
 def relativeSingularBoundary (X : TopPair) (n : ℕ) :
     RelativeHomology ℚ X (n + 1) ⟶ Homology ℚ X.snd n :=
-  (relativeSingularChainShortComplex_shortExact X).δ (n + 1) n
+  (relativeChainShortComplex_shortExact ℚ X).δ (n + 1) n
     (ComplexShape.down_mk (n + 1) n (by lia))
-
-set_option backward.isDefEq.respectTransparency false in
-/-- Exactness at ambient homology in the long exact sequence of a topological pair. -/
-lemma relativeSingular_homology_exact_ambient (X : TopPair) (n : ℕ) :
-    (ShortComplex.mk
-      (HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n)
-      (HomologicalComplex.homologyMap (relativeChainProjection ℚ X) n)
-      (by
-        rw [← HomologicalComplex.homologyMap_comp]
-        change HomologicalComplex.homologyMap
-          (((chainPairFunctor ℚ).obj X).hom ≫
-            cokernel.π ((chainPairFunctor ℚ).obj X).hom) n = 0
-        rw [cokernel.condition, HomologicalComplex.homologyMap_zero])).Exact :=
-  (relativeSingularChainShortComplex_shortExact X).homology_exact₂ n
 
 /-- Exactness at relative homology in the long exact sequence of a topological pair. -/
 lemma relativeSingular_homology_exact_relative (X : TopPair) (n : ℕ) :
@@ -101,20 +54,9 @@ lemma relativeSingular_homology_exact_relative (X : TopPair) (n : ℕ) :
       (relativeHomologyProjection ℚ X (n + 1))
       (relativeSingularBoundary X n)
       (by
-        exact (relativeSingularChainShortComplex_shortExact X).comp_δ
+        exact (relativeChainShortComplex_shortExact ℚ X).comp_δ
           (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia)))).Exact :=
-  (relativeSingularChainShortComplex_shortExact X).homology_exact₃
-    (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
-
-/-- Exactness at subspace homology in the long exact sequence of a topological pair. -/
-lemma relativeSingular_homology_exact_subspace (X : TopPair) (n : ℕ) :
-    (ShortComplex.mk
-      (relativeSingularBoundary X n)
-      (HomologicalComplex.homologyMap ((chainPairFunctor ℚ).obj X).hom n)
-      (by
-        exact (relativeSingularChainShortComplex_shortExact X).δ_comp
-          (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia)))).Exact :=
-  (relativeSingularChainShortComplex_shortExact X).homology_exact₁
+  (relativeChainShortComplex_shortExact ℚ X).homology_exact₃
     (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
 
 lemma standardSubspaceBoundaryChain_inclusion (n : ℕ) :
@@ -132,10 +74,7 @@ lemma standardSubspaceBoundaryChain_boundary (n : ℕ) :
       ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).left.d n
         ((ComplexShape.down ℕ).next n) = 0 := by
   let f := ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).hom
-  let : Mono f := relativeSingularChainMap_mono (standardPuncturedPair (n + 1))
-  let : Mono (f.f ((ComplexShape.down ℕ).next n)) :=
-    Functor.map_mono (HomologicalComplex.eval (ModuleCat ℚ) _
-      ((ComplexShape.down ℕ).next n)) f
+  let : Mono f := relativeChainMap_mono ℚ (standardPuncturedPair (n + 1))
   rw [← cancel_mono (f.f ((ComplexShape.down ℕ).next n)), Category.assoc, ← f.comm,
     ← Category.assoc, standardSubspaceBoundaryChain_inclusion, Category.assoc,
     HomologicalComplex.d_comp_d, comp_zero]
@@ -164,8 +103,7 @@ lemma standardLocalCycle_comp_relativeSingularBoundary (n : ℕ) :
       standardPuncturedBoundaryCycle n ≫
         ((chainPairFunctor ℚ).obj
           (standardPuncturedPair (n + 1))).left.homologyπ n := by
-  let S := relativeSingularChainShortComplex (standardPuncturedPair (n + 1))
-  let hS := relativeSingularChainShortComplex_shortExact
+  let hS := relativeChainShortComplex_shortExact ℚ
     (standardPuncturedPair (n + 1))
   exact hS.δ_eq (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
     (standardLocalChain (n + 1)) (standardLocalChain_boundary_succ n)
@@ -212,7 +150,7 @@ the preceding homology of its punctured complement. -/
 def standardPuncturedRelativeBoundaryIso (n : ℕ) (hn : n ≠ 0) :
     RelativeHomology ℚ (standardPuncturedPair (n + 1)) (n + 1) ≅
       Homology ℚ (standardPuncturedPair (n + 1)).snd n :=
-  (relativeSingularChainShortComplex_shortExact (standardPuncturedPair (n + 1))).δIso
+  (relativeChainShortComplex_shortExact ℚ (standardPuncturedPair (n + 1))).δIso
     (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
     (standardRealModel_homology_isZero (n + 1) (n + 1) (by lia))
     (standardRealModel_homology_isZero (n + 1) n hn)
@@ -348,7 +286,6 @@ lemma standardPuncturedBoundaryCycle_zero_eq :
     HomologicalComplex.liftCycles_i]
   change (∑ i : Fin 2, (-1 : ℤ) ^ i.val • standardSubspaceFaceChain 0 i) =
     standardSubspaceFaceChain 0 0 - standardSubspaceFaceChain 0 1
-  rw [Fin.sum_univ_two]
   norm_num
   rw [sub_eq_add_neg]
 

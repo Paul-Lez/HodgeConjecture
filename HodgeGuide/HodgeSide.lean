@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
+import Other.AlgebraicGeometry.HodgeFiltration
+import Other.AlgebraicGeometry.Hodge.Filtration
+import Other.LinearAlgebra.HodgeStructure
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
 
@@ -428,10 +431,9 @@ namespace Guide.Hodge.D14
 ```
 ```lean
 def complexConstantCohomologyDeRhamAddEquiv (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
+    [Smooth X.hom] (n : ℤ) :
     ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
-  { Localization.SmallShiftedHom.postcompEquiv
-      (constantsToHolomorphicDeRhamComplexInt X) h with
+  { complexConstantCohomologyDeRhamEquiv X n with
     map_add' := fun α β ↦ by
       change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
         hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α +
@@ -448,9 +450,9 @@ namespace Guide.Hodge.D15
 ```lean
 def deRhamConj (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
-  ((complexConstantCohomologyDeRhamAddEquiv X inferInstance n).toAddMonoidHom).comp
+  ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
     ((hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n).comp
-      (complexConstantCohomologyDeRhamAddEquiv X inferInstance n).symm.toAddMonoidHom)
+      (complexConstantCohomologyDeRhamAddEquiv X n).symm.toAddMonoidHom)
 ```
 ```lean -show
 end Guide.Hodge.D15
@@ -560,7 +562,7 @@ coefficient field of the conjecture.
 ```
 
 The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from
-`HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
+`HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
 vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector in
 $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in $`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`,
 and the only summand common to both is $`H^{p,p}`.

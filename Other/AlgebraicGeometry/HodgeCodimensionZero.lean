@@ -16,10 +16,11 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
+public import Other.AlgebraicGeometry.HodgeFiltration
 import Other.AlgebraicGeometry.CycleClassDimension
 import Other.AlgebraicGeometry.ProjectiveAnalytificationConnected
 import Other.AlgebraicGeometry.RationalCohomologyZero
+public import Other.AlgebraicGeometry.Hodge.Filtration
 
 /-!
 # The Hodge conjecture in codimension zero

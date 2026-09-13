@@ -8,6 +8,8 @@ import Other.AlgebraicGeometry.CodimensionZeroCoclassNonvanishing
 import Other.AlgebraicGeometry.CycleClassDimension
 import Other.AlgebraicGeometry.SheafCycleClass
 import Other.AlgebraicGeometry.SmoothAnalytificationConnected
+import Other.AlgebraicGeometry.Hodge.Filtration
+import Other.LinearAlgebra.HodgeStructure
 
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
@@ -39,10 +41,9 @@ below hold for all integer and rational coefficients.
 namespace Guide.Statement.D5
 ```
 ```lean
-def sheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] (p : ℕ) :
+def sheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (p : ℕ) :
     codimensionCycleSubgroup V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
-  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := d))
+  cycleClassOnCyclesOfComponents (fun x hx ↦ cycleComponentSheafClass V.over x hx)
 ```
 ```lean -show
 end Guide.Statement.D5
@@ -57,12 +58,10 @@ example : @Guide.Statement.D5.sheafCycleClassOnCycles = @AlgebraicGeometry.Compl
 namespace Guide.Statement.D6
 ```
 ```lean
-def rationalSheafCycleClassOnCycles
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] (p : ℕ) :
+def rationalSheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (p : ℕ) :
     TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme p) →ₗ[ℚ]
       H^(2 * (p : ℤ))(V.over; ℚ) :=
-  TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V d p)
+  TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 ```
 ```lean -show
 end Guide.Statement.D6
@@ -102,7 +101,7 @@ namespace Guide.Statement.D2
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
-    Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
+    Submodule.span ℚ {cycleComponentSheafClass X x hx}
 ```
 ```lean -show
 end Guide.Statement.D2
@@ -115,7 +114,7 @@ example : @Guide.Statement.D2.algebraicCycleClassSpan = @AlgebraicGeometry.Compl
 
 In Lean the span is the supremum, over all points {lean}`x` and all proofs {lean}`hx` of
 {lean}`coheight x = p`, of the line spanned by
-{lean}`cycleComponentSheafClass X x (d := dim X.left) hx`, where the named argument fixes the
+{lean}`cycleComponentSheafClass X x hx`, where the named argument fixes the
 dimension at {lean}`dim X.left`.
 
 # The proposition
@@ -215,24 +214,19 @@ The shortest route through the implementation is:
 1. `HodgeConjecture/Statement.lean`, the statement;
 2. `HodgeConjecture/Definitions/AlgebraicGeometry/Hodge/Filtration.lean`, cohomology and the Hodge
    filtration;
-3. `HodgeConjecture/Definitions/AlgebraicGeometry/Cohomology/WithSupport.lean`, the mapping-cone
+3. `HodgeConjecture/Lemmas/AlgebraicGeometry/Cohomology/WithSupport.lean`, the mapping-cone
    model of cohomology with support;
 4. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`,
    the class on the smooth locus;
 5. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SupportExtension.lean`, its
    extension across the singular locus;
-6. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SheafClass.lean`, the class of a
+6. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`, the class of a
    subvariety;
 7. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`, the span the
    statement compares against;
 8. `Other/AlgebraicGeometry/SheafCycleClass.lean`, the maps on cycles;
 9. `Other/AlgebraicGeometry/CodimensionZeroClassComparison.lean` and
    `CodimensionZeroCoclassNonvanishing.lean`, the codimension-zero case.
-
-`Other/AlgebraicGeometry/ComplexSheafBorelMoore.lean` and its rational comparison are not on this
-route. They build Borel–Moore homology of the pair $`Z\subset X` and its duality with cohomology
-with support; both live in `Other/`, so the import check that guards
-`HodgeConjecture/Statement.lean` guarantees the statement does not reach them.
 
 Things to keep track of while reading: integer versus natural-number degrees, real versus complex
 dimension, whether a class has been normalized, whether its support has been forgotten, and
