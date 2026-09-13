@@ -114,9 +114,9 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
 /-- Restriction of the original full-support injective model to the boundary complement. -/
 def cycleComponentSmoothRestrictedInjectiveComplex :
     CochainComplex (TopCat.Sheaf AddCommGrpCat
-      (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))) ℤ := by
+      (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))) ℤ :=
   let U : Opens (TopCat.of (ComplexPoint X)) := cycleComponentSmoothSupportAmbientOpen X x
-  exact ((U.isOpenEmbedding.sheafPullback
+  ((U.isOpenEmbedding.sheafPullback
     AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
       (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
 

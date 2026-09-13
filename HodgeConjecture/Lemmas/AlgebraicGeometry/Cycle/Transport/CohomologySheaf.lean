@@ -33,9 +33,9 @@ def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ) ≃+
         RelativeCohomology ℚ (neighborhoodSupportComplementPair
-          (V : Set (ComplexPoint X)) (S : Set (ComplexPoint X))) n := by
-  let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W := openParacompactSpace X
-  exact (complexSupportedSingularInjectiveHomologyIso X S.compl V (n : ℤ)).symm.addCommGroupIsoToAddEquiv
+          (V : Set (ComplexPoint X)) (S : Set (ComplexPoint X))) n :=
+  letI : ∀ W : Opens (ComplexPoint X), ParacompactSpace W := openParacompactSpace X
+  (complexSupportedSingularInjectiveHomologyIso X S.compl V (n : ℤ)).symm.addCommGroupIsoToAddEquiv
     |>.trans (supportedRationalSingularSectionCohomologyEquivSupportComplement
       (TopCat.of (ComplexPoint X)) S S.isClosed V n)
 

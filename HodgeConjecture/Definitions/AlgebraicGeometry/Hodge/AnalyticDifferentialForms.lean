@@ -57,10 +57,9 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 noncomputable instance holomorphicFunctionPresheafAlgebra
     [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
-    Algebra ℂ ((holomorphicFunctionPresheaf X d).obj U) := by
-  change Algebra ℂ
-    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯
-  infer_instance
+    Algebra ℂ ((holomorphicFunctionPresheaf X d).obj U) :=
+  inferInstanceAs (Algebra ℂ
+    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯)
 
 /-- Restriction of holomorphic functions as an algebra homomorphism over the constants. -/
 def holomorphicRestrictionAlgHom [SmoothOfRelativeDimension d X.hom]

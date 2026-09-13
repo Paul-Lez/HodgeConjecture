@@ -74,7 +74,7 @@ def kInjectiveDerivedHomAddEquivCohomologyClass
     {C : Type u} [Category.{v} C] [Abelian C] [HasDerivedCategory C]
     (K L : CochainComplex C ℤ) [L.IsKInjective] (n : ℤ) :
     ShiftedHom (DerivedCategory.Q.obj K) (DerivedCategory.Q.obj L) n ≃+
-      CochainComplex.HomComplex.CohomologyClass K L n := by
+      CochainComplex.HomComplex.CohomologyClass K L n :=
   let qSource : DerivedCategory.Q.obj K ≅
       DerivedCategory.Qh.obj
         ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) :=
@@ -113,7 +113,7 @@ def kInjectiveDerivedHomAddEquivCohomologyClass
         let h := CochainComplex.IsKInjective.Qh_map_bijective
           ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) (L⟦n⟧)
         exact ⟨fun _ _ hfg ↦ h.injective hfg, h.surjective⟩)
-  exact eDerived.trans <| eQh.symm.trans <|
+  eDerived.trans <| eQh.symm.trans <|
     CochainComplex.HomComplex.CohomologyClass.homAddEquiv.symm
 
 open AlgebraicTopology.Singular

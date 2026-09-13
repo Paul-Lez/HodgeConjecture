@@ -122,7 +122,7 @@ def constantToComplexOrientationHomologySheaf :
 /-- The constructed normalized orientation is an isomorphism of actual sheaves. -/
 def complexOrientationHomologySheafIso :
     singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X)) ≅
-      singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d) := by
+      singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d) :=
   letI : IsIso (constantToComplexOrientationHomologySheaf X d) := by
     unfold constantToComplexOrientationHomologySheaf
     exact TopCat.Sheaf.constantSheafMapOfLocallyRepresentable_isIso
@@ -131,7 +131,7 @@ def complexOrientationHomologySheafIso :
       (complexOrientationHomologyStalkMap X d)
       (complexOrientationHomologyStalkMap_locallyRepresentable X d)
       (complexOrientationHomologyStalkMap_isIso X d)
-  exact asIso (constantToComplexOrientationHomologySheaf X d)
+  asIso (constantToComplexOrientationHomologySheaf X d)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in

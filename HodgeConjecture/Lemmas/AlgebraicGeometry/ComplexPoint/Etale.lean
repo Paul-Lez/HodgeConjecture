@@ -268,12 +268,12 @@ lemma isOpen_standardEtaleChartTarget (z : standardEtaleCoordinateSpace P) :
     isOpen_ne_fun continuous_id continuous_const
   exact hloc.isOpen_inter_preimage htargetZero hopenNe
 
+open scoped Classical in
 /-- The inverse of the standard étale chart on its target. It is assigned the center point
 outside the target because `OpenPartialHomeomorph` stores total functions. -/
 noncomputable def standardEtaleChartInverse (z : standardEtaleCoordinateSpace P)
-    (w : Fin n → ℂ) : standardEtaleCoordinateSpace P := by
-  classical
-  exact if hw : w ∈ standardEtaleChartTarget P z then
+    (w : Fin n → ℂ) : standardEtaleCoordinateSpace P :=
+  if hw : w ∈ standardEtaleChartTarget P z then
     ⟨(standardEtaleImplicitOpenPartialHomeomorph P z).symm (0, w), by
       have heq := congrArg Prod.fst
         ((standardEtaleImplicitOpenPartialHomeomorph P z).right_inv hw.1)
@@ -625,11 +625,11 @@ noncomputable def pointInEtaleStandardNeighborhood (u : T →ₐ[ℂ] ℂ) :
 /-- A projection chart on the complex points of an arbitrary étale algebra. It is obtained from a
 standard étale chart after restricting to a principal open neighborhood. -/
 noncomputable def etaleAlgHomProjectionChart (u : T →ₐ[ℂ] ℂ) :
-    OpenPartialHomeomorph (T →ₐ[ℂ] ℂ) (Fin n → ℂ) := by
+    OpenPartialHomeomorph (T →ₐ[ℂ] ℂ) (Fin n → ℂ) :=
   let D := etaleStandardNeighborhood (n := n) T u
-  let : Algebra.IsStandardEtale (complexPolynomialRing n) (Localization.Away D.element) :=
+  letI : Algebra.IsStandardEtale (complexPolynomialRing n) (Localization.Away D.element) :=
     D.isStandard
-  exact (isStandardEtaleAlgHomProjectionChart (n := n) (Localization.Away D.element)
+  (isStandardEtaleAlgHomProjectionChart (n := n) (Localization.Away D.element)
     (pointInEtaleStandardNeighborhood (n := n) T u)).lift_openEmbedding
       (isOpenEmbedding_localizationAwayAlgHomMap T D.element)
 

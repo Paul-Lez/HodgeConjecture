@@ -45,16 +45,15 @@ set_option backward.isDefEq.respectTransparency false in
 sections of its intrinsic singular sheaf, using the normalized open restriction. -/
 def openSingularCochainSheafComplexIsoGlobal (V : Opens X) :
     openSingularCochainSheafComplex R X V ≅
-      globalSingularCochainSheafComplex R (TopCat.of V) := by
-  let : (TopCat.Sheaf.forget AddCommGrpCat X ⋙
+      globalSingularCochainSheafComplex R (TopCat.of V) :=
+  letI : (TopCat.Sheaf.forget AddCommGrpCat X ⋙
       (evaluation (Opens X)ᵒᵖ AddCommGrpCat).obj (.op V)).PreservesZeroMorphisms :=
     inferInstanceAs ((TopCat.Sheaf.supportEvaluation X V).PreservesZeroMorphisms)
-  let : (TopCat.Sheaf.forget AddCommGrpCat X ⋙
+  letI : (TopCat.Sheaf.forget AddCommGrpCat X ⋙
       (evaluation (Opens X)ᵒᵖ AddCommGrpCat).obj
         (.op (V.isOpenEmbedding.functor.obj ⊤))).PreservesZeroMorphisms :=
     inferInstanceAs ((TopCat.Sheaf.supportEvaluation X
       (V.isOpenEmbedding.functor.obj ⊤)).PreservesZeroMorphisms)
-  exact
   (NatIso.mapHomologicalComplex
     (Functor.isoWhiskerLeft (TopCat.Sheaf.forget AddCommGrpCat X)
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat).mapIso (openSubspaceImageTopIso X V).op))

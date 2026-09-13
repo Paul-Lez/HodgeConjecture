@@ -44,9 +44,9 @@ restriction-natural comparison. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
     (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
-      supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n := by
-  let : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
-  exact (asIso (HomologicalComplex.homologyMap
+      supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n :=
+  letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
+  (asIso (HomologicalComplex.homologyMap
     (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
       supportedSingularCohomologySheafIsoRelative
         (TopCat.of (ComplexPoint X)) S S.isClosed n
@@ -71,17 +71,14 @@ of the local relative-cohomology sheaf on its smooth-locus ambient open.
 Each of the three arrows is a proved isomorphism. -/
 def cycleComponentSupportedClassNormalizationIso :
     CycleComponentSupportedCohomology X x p ≅
-      CycleComponentSmoothCoclassSections X x p := by
-  refine cycleComponentSupportExtensionIso X x hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫ ?_
-  let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
-        (complexSupportInjectiveCohomologySheafIsoRelative X
-          (cycleComponentAnalyticClosedSupport X x) (2 * p))
+      CycleComponentSmoothCoclassSections X x p :=
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
-  dsimp only [TopCat.Sheaf.supportEvaluation, Functor.comp_obj] at e
-  rw [he] at e
-  exact e
+  cycleComponentSupportExtensionIso X x hx ≪≫
+    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
+      (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+        (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
+          (complexSupportInjectiveCohomologySheafIsoRelative X
+            (cycleComponentAnalyticClosedSupport X x) (2 * p)))
 
 /-- Extend a smooth-locus coclass uniquely across the singular boundary.
 The inverse comes from proved purity and boundary vanishing; no extension datum is supplied. -/

@@ -160,10 +160,10 @@ variable {I} {ι : Type*} [Fintype ι] [FiniteDimensional ℝ E]
   [Fact (Fintype.card ι = Module.finrank ℝ E)]
   {M : Type*} [TopologicalSpace M] [ChartedSpace H M] [IsManifold I 1 M]
 
+open scoped Classical in
 /-- The sign taking one linear orientation to another. -/
-noncomputable def orientationSign (ω₀ ω : _root_.Orientation ℝ E ι) : ℤˣ := by
-  classical
-  exact if ω = ω₀ then 1 else -1
+noncomputable def orientationSign (ω₀ ω : _root_.Orientation ℝ E ι) : ℤˣ :=
+  if ω = ω₀ then 1 else -1
 
 omit [Fintype ι] [FiniteDimensional ℝ E]
   [Fact (Fintype.card ι = Module.finrank ℝ E)] in

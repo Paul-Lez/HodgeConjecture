@@ -157,12 +157,12 @@ sections. -/
 def homComplexSingleIntegerIsoGlobalSections
     (Y : TopCat.{0}) (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
     CochainComplex.HomComplex (integerConstantSingleComplex Y) K ≅
-      globalSectionsComplexInt Y K := by
+      globalSectionsComplexInt Y K :=
   let pre := (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y))
   letI : Preadditive (TopCat.Sheaf AddCommGrpCat Y) := pre
-  let : (IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).PreservesZeroMorphisms :=
+  letI : (IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
-  exact CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda
+  CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda
       ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
         (AddCommGrpCat.of ℤ)) K ≪≫
     (NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y)

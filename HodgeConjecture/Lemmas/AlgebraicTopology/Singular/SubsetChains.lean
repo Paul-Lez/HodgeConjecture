@@ -127,15 +127,15 @@ lemma singularSimplexLiftToSubset_comp_inclusion
     (TopCat.toSSet.map (topologicalSubsetInclusion X s)).app n
       (singularSimplexLiftToSubset X s x hx) = x := rfl
 
+open scoped Classical in
 /-- A degreewise retraction of integral singular chains along a topological subspace
 inclusion.  It sends a simplex outside the subspace to zero. -/
 def singularSubsetIntegralChainRetractionComponent
     (X : TopCat.{0}) (s : Set X) (n : ℕ) :
     ((TopCat.toSSet.obj X).chainComplex (AddCommGrpCat.of ℤ)).X n ⟶
       ((TopCat.toSSet.obj (TopCat.of s)).chainComplex
-        (AddCommGrpCat.of ℤ)).X n := by
-  classical
-  exact (TopCat.toSSet.obj X).isColimitChainComplexXCofan
+        (AddCommGrpCat.of ℤ)).X n :=
+  (TopCat.toSSet.obj X).isColimitChainComplexXCofan
     (AddCommGrpCat.of ℤ) n |>.desc
       (Cofan.mk _ (fun x ↦
         if hx : Set.range ((X.toSSetObjEquiv _ x)) ⊆ s then

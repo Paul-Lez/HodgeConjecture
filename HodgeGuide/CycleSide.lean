@@ -61,10 +61,10 @@ example : @Guide.Cycles.D1.codimensionCycleSubgroup.{u} = @AlgebraicGeometry.cod
 namespace Guide.Cycles.D2
 ```
 ```lean
+open scoped Classical in
 noncomputable def codimensionCycleSubgroup.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
-    (n : ℤ) : codimensionCycleSubgroup X p := by
-  classical
-  exact ⟨Function.locallyFinsuppWithin.single x n, by
+    (n : ℤ) : codimensionCycleSubgroup X p :=
+  ⟨Function.locallyFinsuppWithin.single x n, by
     intro y hy
     by_cases h : y = x
     · simpa [h] using hx

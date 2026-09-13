@@ -129,13 +129,13 @@ def standardAffineBoundaryChainMap (d : ℕ) :
         (ModuleCat.of ℚ ℚ) :=
   SSet.chainComplexMap (standardAffineBoundarySimplicialMap d) (ModuleCat.of ℚ ℚ)
 
+open scoped Classical in
 /-- A degreewise retraction from chains of the full simplex to chains of its boundary. Simplices
 outside the boundary are sent to zero. -/
 def standardSphereBoundaryChainRetractionComponent (d k : ℕ) :
     ((Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)).X k ⟶
-      ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)).X k := by
-  classical
-  exact ((Δ[d] : SSet.{0}).isColimitChainComplexXCofan
+      ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)).X k :=
+  ((Δ[d] : SSet.{0}).isColimitChainComplexXCofan
     (ModuleCat.of ℚ ℚ) k).desc
       (Cofan.mk _ (fun x ↦ if hx : x ∈ (SSet.boundary d).obj _ then
         (∂Δ[d] : SSet.{0}).ιChainComplex ⟨x, hx⟩ else 0))
@@ -239,12 +239,12 @@ def standardSphereSimplicialNormalizedBoundaryChain (n : ℕ) :
     ((∂Δ[n + 2] : SSet.{0}).toNormalizedChainComplex
       (ModuleCat.of ℚ ℚ)).f (n + 1)
 
+open scoped Classical in
 /-- The coefficient functional of the zeroth oriented facet in normalized top chains. -/
 def standardSphereSimplicialNormalizedBoundaryDetector (n : ℕ) :
     (standardSphereSuccNormalizedRationalChains n).X (n + 1) ⟶
-      ModuleCat.of ℚ ℚ := by
-  classical
-  exact Cofan.IsColimit.desc
+      ModuleCat.of ℚ ℚ :=
+  Cofan.IsColimit.desc
     ((∂Δ[n + 2] : SSet.{0}).isColimitCofanNormalizedChainComplex
       (ModuleCat.of ℚ ℚ) (n + 1)) (fun x ↦
         if x.1 = standardSphereBoundaryFaceSimplex (n + 1) 0 then 𝟙 _ else 0)

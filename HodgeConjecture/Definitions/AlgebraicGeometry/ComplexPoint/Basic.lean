@@ -124,14 +124,14 @@ Using this subtype is preferable whenever a local regular function is evaluated:
 domain condition in the type instead of assigning an arbitrary value outside `U`. -/
 abbrev OverOpen (U : X.left.Opens) := {z : Point R X // z.underlying ∈ U}
 
+open scoped Classical in
 /--
 Evaluation of a local regular function at an `R`-point. Outside the function's domain this is
 defined to be zero; all uses in the analytic topology are restricted to `overOpen U`.
 -/
 noncomputable def evaluate (U : X.left.Opens) (s : Γ(X.left, U))
-    (z : Point R X) : R := by
-  classical
-  exact if hz : z.underlying ∈ U then z.stalkHom (X.left.presheaf.germ U z.underlying hz s) else 0
+    (z : Point R X) : R :=
+  if hz : z.underlying ∈ U then z.stalkHom (X.left.presheaf.germ U z.underlying hz s) else 0
 
 /-- Restricting a regular function does not change its value at a point in the smaller open. -/
 lemma evaluate_res {U V : X.left.Opens} (hVU : V ≤ U) (s : Γ(X.left, U))
@@ -382,16 +382,15 @@ noncomputable def continuousMap {Y : Over (Spec ↧R)} (f : X ⟶ Y) :
 /-- An isomorphism of schemes over `Spec R` induces a homeomorphism on `R`-points. -/
 noncomputable def isoMapHomeomorph {Y : Over (Spec ↧R)} (e : X ≅ Y) :
     @Homeomorph (Point R X) (Point R Y)
-      analyticTopology analyticTopology := by
-  let : TopologicalSpace (Point R X) := analyticTopology
-  let : TopologicalSpace (Point R Y) := analyticTopology
-  exact
-    { toFun := map e.hom
-      invFun := map e.inv
-      left_inv z := by simp [map, Category.assoc]
-      right_inv z := by simp [map, Category.assoc]
-      continuous_toFun := continuous_map e.hom
-      continuous_invFun := continuous_map e.inv }
+      analyticTopology analyticTopology :=
+  letI : TopologicalSpace (Point R X) := analyticTopology
+  letI : TopologicalSpace (Point R Y) := analyticTopology
+  { toFun := map e.hom
+    invFun := map e.inv
+    left_inv z := by simp [map, Category.assoc]
+    right_inv z := by simp [map, Category.assoc]
+    continuous_toFun := continuous_map e.hom
+    continuous_invFun := continuous_map e.inv }
 
 @[simp]
 lemma isoMapHomeomorph_apply {Y : Over (Spec ↧R)} (e : X ≅ Y)

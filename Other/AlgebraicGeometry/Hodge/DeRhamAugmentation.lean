@@ -49,11 +49,11 @@ def constantsToHolomorphicDeRhamPresheafComplex
 def scalarHolomorphicDeRhamPresheafComplex
     [SmoothOfRelativeDimension d X.hom] (c : ℂ) :
     holomorphicDeRhamPresheafComplex X d ⟶
-      holomorphicDeRhamPresheafComplex X d := by
-  unfold holomorphicDeRhamPresheafComplex
-  exact CochainComplex.ofHom
+      holomorphicDeRhamPresheafComplex X d :=
+  CochainComplex.ofHom
     (fun p => scalarHolomorphicDeRhamPresheaf X d p c)
     (fun p => by
+      unfold holomorphicDeRhamPresheafComplex
       simpa [CochainComplex.of_d] using
         scalarHolomorphicDeRhamPresheaf_d X d p c)
 

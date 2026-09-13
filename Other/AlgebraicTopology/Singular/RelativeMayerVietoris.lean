@@ -85,8 +85,8 @@ def cokernelBiprodMapCofork : CokernelCofork (biprod.map a b) :=
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Binary biproducts commute with cokernels, proved by the two quotient universal properties. -/
-def cokernelBiprodMapCofork_isColimit : IsColimit (cokernelBiprodMapCofork a b) := by
-  apply Cofork.IsColimit.mk _
+def cokernelBiprodMapCofork_isColimit : IsColimit (cokernelBiprodMapCofork a b) :=
+  Cofork.IsColimit.mk _
     (fun s ↦ biprod.desc
       (cokernel.desc a (biprod.inl ≫ s.π) (by
         have h := biprod.inl ≫= s.condition
@@ -94,14 +94,13 @@ def cokernelBiprodMapCofork_isColimit : IsColimit (cokernelBiprodMapCofork a b) 
       (cokernel.desc b (biprod.inr ≫ s.π) (by
         have h := biprod.inr ≫= s.condition
         simpa only [Category.assoc, biprod.inr_map_assoc, zero_comp, comp_zero] using h)))
-  · intro s
-    apply biprod.hom_ext' <;> simp [cokernelBiprodMapCofork]
-  · intro s m hm
-    apply biprod.hom_ext'
-    · apply (cancel_epi (cokernel.π a)).mp
-      simpa [cokernelBiprodMapCofork] using biprod.inl ≫= hm
-    · apply (cancel_epi (cokernel.π b)).mp
-      simpa [cokernelBiprodMapCofork] using biprod.inr ≫= hm
+    (fun _ ↦ by apply biprod.hom_ext' <;> simp [cokernelBiprodMapCofork])
+    (fun _ m hm ↦ by
+      apply biprod.hom_ext'
+      · apply (cancel_epi (cokernel.π a)).mp
+        simpa [cokernelBiprodMapCofork] using biprod.inl ≫= hm
+      · apply (cancel_epi (cokernel.π b)).mp
+        simpa [cokernelBiprodMapCofork] using biprod.inr ≫= hm)
 
 /-- The canonical isomorphism `coker(a ⊞ b) ≅ coker(a) ⊞ coker(b)`. -/
 def cokernelBiprodMapIso : cokernel (biprod.map a b) ≅ cokernel a ⊞ cokernel b :=
@@ -252,13 +251,13 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The final quotient chain model is the established sum-relative triad complex. -/
 def relativeMayerVietorisSmallRightIso :
     (relativeMayerVietorisSmallShortComplex X U V).X₃ ≅
-      triadRelativeChainComplex ℚ X U V := by
-  let : Epi (singularMayerVietorisShortComplex X U V).g :=
+      triadRelativeChainComplex ℚ X U V :=
+  letI : Epi (singularMayerVietorisShortComplex X U V).g :=
     (singularMayerVietorisShortComplex_shortExact X U V).epi_g
-  refine PreservesCokernel.iso ShortComplex.π₃ (subsetMayerVietorisToAmbient X U V) ≪≫
+  PreservesCokernel.iso ShortComplex.π₃ (subsetMayerVietorisToAmbient X U V) ≪≫
     (cokernelEpiComp (singularMayerVietorisShortComplex X U V).g
-      (twoSubsetSmallChainInclusion X U V)).symm ≪≫ ?_
-  exact cokernelIsoOfEq (singularMayerVietorisSumChainMap_eq X U V)
+      (twoSubsetSmallChainInclusion X U V)).symm ≪≫
+    cokernelIsoOfEq (singularMayerVietorisSumChainMap_eq X U V)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The left endpoint comparison carries the componentwise cokernel projection to the actual
@@ -388,10 +387,10 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The final endpoint homology comparison, constructed using the proved excision map. -/
 def relativeMayerVietorisRightHomologyIso (hU : IsOpen U) (hV : IsOpen V) (n : ℕ) :
     (relativeMayerVietorisSmallShortComplex X U V).X₃.homology n ≅
-      RelativeHomology ℚ (TopPair.ofSubset (U ∪ V)) n := by
-  let : QuasiIso (relativeMayerVietorisRightComparison X U V) :=
+      RelativeHomology ℚ (TopPair.ofSubset (U ∪ V)) n :=
+  letI : QuasiIso (relativeMayerVietorisRightComparison X U V) :=
     relativeMayerVietorisRightComparison_quasiIso X U V hU hV
-  exact asIso (HomologicalComplex.homologyMap (relativeMayerVietorisRightComparison X U V) n)
+  asIso (HomologicalComplex.homologyMap (relativeMayerVietorisRightComparison X U V) n)
 
 /-- The relative Mayer--Vietoris connecting map, constructed from the quotient exact sequence
 and the canonical excision comparison. -/

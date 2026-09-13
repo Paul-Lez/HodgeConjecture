@@ -179,9 +179,9 @@ variable (d : ℕ) [SmoothOfRelativeDimension d X.hom] [IsProjective X.hom]
 It is still defined by the same arbitrary-dimensional normal-chart gluing. -/
 def complexPointSmoothSupportCoclassSection (z : ComplexPoint X) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-      (Set.range (Point.map z)) (2 * d)).obj.obj (op ⊤) := by
+      (Set.range (Point.map z)) (2 * d)).obj.obj (op ⊤) :=
   letI := complexPoint_isClosedImmersion X z
-  exact smoothClosedSupportCoclassSection X (Over.mk (𝟙 _)) z 0 d
+  smoothClosedSupportCoclassSection X (Over.mk (𝟙 _)) z 0 d
 
 /-- The actual sheafification image of the pre-existing global point coclass.
 The only adapter is the literal inclusion of the whole-open subtype pair. -/

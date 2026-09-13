@@ -30,7 +30,7 @@ injective resolution. This has the ordinary augmentation normalization. -/
 def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
     H^n(X; ℚ) ≃+
       (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X))
-        (ambientRationalInjectiveComplex X)).homology n := by
+        (ambientRationalInjectiveComplex X)).homology n :=
   let e : H^n(X; ℚ) ≃+
       Hypercohomology X (ambientRationalInjectiveComplex X) n :=
     { toEquiv := Localization.SmallShiftedHom.postcompEquiv
@@ -38,7 +38,7 @@ def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
         ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)
       map_add' α β := (hypercohomologyMap X
         (ambientRationalInjectiveAugmentation X) n).map_add α β }
-  exact e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ n)
+  e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ n)
 
 end AlgebraicGeometry.ComplexPoint
 end

@@ -48,7 +48,7 @@ lemma mem_cycleComponent_support_iff (X : Scheme) (x y : X) :
 This is an order isomorphism for the specialization preorders. It is the order-theoretic core of
 the dimension calculation for a cycle component. -/
 def cycleComponentOrderIsoIic (X : Scheme) (x : X) :
-    cycleComponent X x ≃o Set.Iic x := by
+    cycleComponent X x ≃o Set.Iic x :=
   let e : cycleComponent X x ≃ Set.Iic x :=
     { toFun := fun y ↦ ⟨cycleComponentι X x y, show cycleComponentι X x y ≤ x by
         rw [Scheme.le_iff_specializes, specializes_iff_mem_closure]
@@ -59,11 +59,11 @@ def cycleComponentOrderIsoIic (X : Scheme) (x : X) :
         exact y.2⟩
       left_inv := fun _ ↦ rfl
       right_inv := fun _ ↦ rfl }
-  refine ⟨e, ?_⟩
-  intro a b
-  change (cycleComponentι X x a ≤ cycleComponentι X x b) ↔ a ≤ b
-  rw [Scheme.le_iff_specializes, Scheme.le_iff_specializes]
-  exact (cycleComponentι X x).isClosedEmbedding.isInducing.specializes_iff
+  ⟨e, by
+    intro a b
+    change (cycleComponentι X x a ≤ cycleComponentι X x b) ↔ a ≤ b
+    rw [Scheme.le_iff_specializes, Scheme.le_iff_specializes]
+    exact (cycleComponentι X x).isClosedEmbedding.isInducing.specializes_iff⟩
 
 @[simp]
 lemma cycleComponentOrderIsoIic_apply (X : Scheme) (x : X) (y : cycleComponent X x) :

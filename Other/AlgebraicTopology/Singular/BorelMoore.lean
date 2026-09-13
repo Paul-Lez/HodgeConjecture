@@ -177,11 +177,11 @@ def compactificationBorelMooreToLocalEquivOfSubsingleton
     (R : Type) [Field R] {X : Type} [TopologicalSpace X] [Subsingleton X]
     (x : X) (n : ℕ) :
     CompactificationBorelMooreHomology R (Set.univ : Set X)ᶜ n ≃ₗ[R]
-      RelativeHomology R (pointComplementPair x) n := by
+      RelativeHomology R (pointComplementPair x) n :=
   let f := compactificationToPointComplementPair
     (Set.univ : Set X) x (Set.mem_univ x)
-  let : IsIso f := compactificationToPointComplementPair_isIso_of_subsingleton x
-  exact LinearEquiv.ofBijective
+  letI : IsIso f := compactificationToPointComplementPair_isIso_of_subsingleton x
+  LinearEquiv.ofBijective
     (compactificationBorelMooreToLocal R (Set.univ : Set X) n x (Set.mem_univ x))
     ((ConcreteCategory.isIso_iff_bijective
       ((relativeHomologyFunctor R n).map f)).mp inferInstance)

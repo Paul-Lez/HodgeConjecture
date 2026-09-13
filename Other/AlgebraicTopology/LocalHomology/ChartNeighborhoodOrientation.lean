@@ -41,7 +41,7 @@ variable (d : ℕ)
 def radialTargetPointPairMap (U : Set (Fin d → ℂ)) (c : Fin d → ℂ) (r : ℝ)
     (hr : 0 < r) (hball : Metric.ball c r ⊆ U) (v q : Fin d → ℂ)
     (hq : OpenPartialHomeomorph.univBall c r v = q) :
-    standardComplexPuncturedPair d ⟶ neighborhoodPointComplementPair U q := by
+    standardComplexPuncturedPair d ⟶ neighborhoodPointComplementPair U q :=
   have hmem (w : Fin d → ℂ) : OpenPartialHomeomorph.univBall c r (w + v) ∈ U := by
     apply hball
     rw [← OpenPartialHomeomorph.univBall_target c hr]
@@ -51,13 +51,12 @@ def radialTargetPointPairMap (U : Set (Fin d → ℂ)) (c : Fin d → ℂ) (r : 
     intro h
     exact w.2 (add_right_cancel (show w.1 + v = 0 + v by
       simpa using injective_complexUnivBall d c r (h.trans hq.symm)))
-  refine TopPair.ofHom
+  TopPair.ofHom
     (TopCat.ofHom ⟨fun w => ⟨OpenPartialHomeomorph.univBall c r (w + v), hmem w⟩,
-      by fun_prop⟩) ?_ ?_
-  · refine TopCat.ofHom ⟨fun w => ⟨⟨OpenPartialHomeomorph.univBall c r (w.1 + v),
-        hmem w.1⟩, hne w⟩, ?_⟩
-    fun_prop
-  · rfl
+      by fun_prop⟩)
+    (TopCat.ofHom ⟨fun w => ⟨⟨OpenPartialHomeomorph.univBall c r (w.1 + v),
+      hmem w.1⟩, hne w⟩, by fun_prop⟩)
+    rfl
 
 /-- Forgetting the target restriction displays exactly the centered radial map followed by
 translation to its image point. -/
@@ -125,14 +124,14 @@ variable {M : Type} [TopologicalSpace M]
 /-- Apply the inverse chart on its genuine open target, with the distinguished point removed. -/
 def chartTargetInversePointPairMap (e : OpenPartialHomeomorph M (Fin d → ℂ))
     (q : Fin d → ℂ) (hq : q ∈ e.target) :
-    neighborhoodPointComplementPair e.target q ⟶ pointComplementPair (e.symm q) := by
+    neighborhoodPointComplementPair e.target q ⟶ pointComplementPair (e.symm q) :=
   have hne (w : {w : e.target | w.1 ≠ q}) : e.symm w.1.1 ≠ e.symm q := fun h ↦
     w.2 (e.symm.injOn w.1.2 hq h)
-  refine TopPair.ofHom
-    (TopCat.ofHom ⟨fun w => e.symm w.1, e.symm.continuousOn.domRestrict⟩) ?_ ?_
-  · exact TopCat.ofHom ⟨fun w => ⟨e.symm w.1.1, hne w⟩,
-      (e.symm.continuousOn.domRestrict.comp continuous_subtype_val).subtype_mk hne⟩
-  · rfl
+  TopPair.ofHom
+    (TopCat.ofHom ⟨fun w => e.symm w.1, e.symm.continuousOn.domRestrict⟩)
+    (TopCat.ofHom ⟨fun w => ⟨e.symm w.1.1, hne w⟩,
+      (e.symm.continuousOn.domRestrict.comp continuous_subtype_val).subtype_mk hne⟩)
+    rfl
 
 variable (e : OpenPartialHomeomorph M (Fin d → ℂ)) (x : M) (hx : x ∈ e.source)
 

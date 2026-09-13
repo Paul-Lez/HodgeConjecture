@@ -197,16 +197,16 @@ variable (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E]
 /-- Translation carries the complement of the origin to the complement of its center. -/
 def translationPointComplementPairMap (y : E) :
     TopPair.ofSubset (X := TopCat.of E) ({0}ᶜ : Set E) ⟶
-      TopPair.ofSubset (X := TopCat.of E) ({y}ᶜ : Set E) := by
-  refine TopPair.ofHom
-    (TopCat.ofHom ⟨fun v : E => v + y, continuous_id.add continuous_const⟩) ?_ ?_
-  · have hne : ∀ v : ({0}ᶜ : Set E), v.1 + y ∈ ({y}ᶜ : Set E) := by
-      intro v h
-      exact v.2 (add_right_cancel (show v.1 + y = 0 + y by simpa using h))
-    exact TopCat.ofHom
+      TopPair.ofSubset (X := TopCat.of E) ({y}ᶜ : Set E) :=
+  have hne : ∀ v : ({0}ᶜ : Set E), v.1 + y ∈ ({y}ᶜ : Set E) := by
+    intro v h
+    exact v.2 (add_right_cancel (show v.1 + y = 0 + y by simpa using h))
+  TopPair.ofHom
+    (TopCat.ofHom ⟨fun v : E => v + y, continuous_id.add continuous_const⟩)
+    (TopCat.ofHom
       ⟨fun v => ⟨v.1 + y, hne v⟩,
-        (continuous_subtype_val.add continuous_const).subtype_mk hne⟩
-  · rfl
+        (continuous_subtype_val.add continuous_const).subtype_mk hne⟩)
+    rfl
 
 lemma convexSupport_translation_ne (U : Set E) (h0 : (0 : E) ∈ U)
     (hU : Convex ℝ U) (y : E) (hy : y ∈ U) (t : unitInterval)

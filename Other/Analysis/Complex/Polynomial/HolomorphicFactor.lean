@@ -343,9 +343,9 @@ abbrev MvSimpleRootLocusOn {n : ℕ} (p : Polynomial (MvPolynomial (Fin n) ℂ))
 noncomputable def mvSimpleRootLocusOnPoint {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
     (r : MvPolynomial (Fin n) ℂ) (z : MvSimpleRootBase p)
-    (hzr : MvPolynomial.eval z.1 r ≠ 0) (i : Fin p.natDegree) : MvSimpleRootLocusOn p r := by
-  refine ⟨(z.1, mvSimpleRootEnumeration hp z i), mvSimpleRootEnumeration_isRoot hp z i, ?_⟩
-  exact mul_ne_zero hzr (z.2 _ (mvSimpleRootEnumeration_isRoot hp z i))
+    (hzr : MvPolynomial.eval z.1 r ≠ 0) (i : Fin p.natDegree) : MvSimpleRootLocusOn p r :=
+  ⟨(z.1, mvSimpleRootEnumeration hp z i), mvSimpleRootEnumeration_isRoot hp z i,
+    mul_ne_zero hzr (z.2 _ (mvSimpleRootEnumeration_isRoot hp z i))⟩
 
 /-- Membership in a clopen part of the restricted cover is constant along each local branch. -/
 theorem eventually_mem_clopen_mvSimpleRootLocusOn_iff {n : ℕ}
@@ -420,12 +420,12 @@ theorem eventually_mem_clopen_mvSimpleRootLocusOn_iff {n : ℕ}
     exact ⟨fun h ↦ ((hmem hz') h).elim, fun h ↦ (hi h).elim⟩
 
 
+open scoped Classical in
 /-- Roots selected in a simple fiber by a subset of the principal-open root cover. -/
 def mvSelectedRootsOn {n : ℕ} {p : Polynomial (MvPolynomial (Fin n) ℂ)}
     (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
-    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) : Multiset ℂ := by
-  classical
-  exact (mvFamilySpecialization p z.1).roots.filter fun w ↦
+    (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) : Multiset ℂ :=
+  (mvFamilySpecialization p z.1).roots.filter fun w ↦
     ∃ h : (mvFamilySpecialization p z.1).eval w = 0,
       (⟨(z.1, w), h, mul_ne_zero hzr (z.2 w h)⟩ : MvSimpleRootLocusOn p r) ∈ S
 
@@ -459,13 +459,13 @@ theorem natDegree_mvSelectedFactorOn {n : ℕ}
   simp [mvSelectedFactorOn]
 
 
+open scoped Classical in
 noncomputable def mvSelectedBranchIndicesOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
     (r : MvPolynomial (Fin n) ℂ) (S : Set (MvSimpleRootLocusOn p r))
     (z : MvSimpleRootBase p) (hzr : MvPolynomial.eval z.1 r ≠ 0) :
-    Finset (Fin p.natDegree) := by
-  classical
-  exact Finset.univ.filter fun i ↦ mvSimpleRootLocusOnPoint hp r z hzr i ∈ S
+    Finset (Fin p.natDegree) :=
+  Finset.univ.filter fun i ↦ mvSimpleRootLocusOnPoint hp r z hzr i ∈ S
 
 /-- Near a center fiber, the restricted selection is a fixed set of local branches. -/
 theorem eventually_mvSelectedRootsOn_eq_map_mvLocalRootBranches {n : ℕ}
@@ -590,15 +590,15 @@ theorem eventually_mvSelectedFactorOn_eq_mvLocalBranchFactor {n : ℕ}
   rw [mvSelectedFactorOn, mvLocalBranchFactor, hz hbase hr, Multiset.map_map]
   rfl
 
+open scoped Classical in
 noncomputable def mvSelectedFactorCoeffOn {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (r : MvPolynomial (Fin n) ℂ)
     (S : Set (MvSimpleRootLocusOn p r))
     (hsimple : ∀ z, MvPolynomial.eval z r ≠ 0 → ∀ w : ℂ,
       (mvFamilySpecialization p z).eval w = 0 →
       (mvFamilySpecialization p z).derivative.eval w ≠ 0)
-    (k : ℕ) (z : Fin n → ℂ) : ℂ := by
-  classical
-  exact if hr : MvPolynomial.eval z r ≠ 0 then
+    (k : ℕ) (z : Fin n → ℂ) : ℂ :=
+  if hr : MvPolynomial.eval z r ≠ 0 then
     (mvSelectedFactorOn r S ⟨z, hsimple z hr⟩ hr).coeff k else 0
 
 theorem mvSelectedFactorCoeffOn_eq {n : ℕ}

@@ -91,12 +91,12 @@ lemma neighborhoodToSpecΓ_over :
 
 /-- The canonical affine-spectrum isomorphism, bundled over `Spec ℂ`. -/
 def neighborhoodToSpecΓIso : C.neighborhoodScheme ≅
-    Over.mk (ComplexPoint.affineSpecStructureMap Γ(C.componentNeighborhood.toScheme, ⊤)) := by
+    Over.mk (ComplexPoint.affineSpecStructureMap Γ(C.componentNeighborhood.toScheme, ⊤)) :=
   letI : IsAffine C.componentNeighborhood.toScheme :=
     C.componentNeighborhood_isAffine
   letI : IsIso C.componentNeighborhood.toScheme.toSpecΓ :=
     IsAffine.affine
-  exact Over.isoMk (asIso C.componentNeighborhood.toScheme.toSpecΓ)
+  Over.isoMk (asIso C.componentNeighborhood.toScheme.toSpecΓ)
     C.neighborhoodToSpecΓ_over
 
 /-- Complex points of the affine component neighborhood as complex algebra homomorphisms on its

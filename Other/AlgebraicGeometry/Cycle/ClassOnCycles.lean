@@ -36,17 +36,17 @@ def compactCycleToFinsupp {X : Scheme.{u}} [CompactSpace X] :
     (c : AlgebraicCycle X ℤ) (x : X) : compactCycleToFinsupp c x = c x :=
   rfl
 
+open scoped Classical in
 /-- Extend prescribed classes of irreducible codimension-`p` components additively to integral
 codimension-`p` cycles. Values away from codimension `p` are set to zero; the support condition on
 a `codimensionCycleSubgroup` ensures that this branch is never used by a nonzero coefficient. -/
 def cycleClassOnCyclesOfComponents {X : Scheme.{u}} [CompactSpace X] {p : ℕ}
     {M : Type*} [AddCommGroup M]
     (componentClass : ∀ (x : X), coheight x = p → M) :
-    codimensionCycleSubgroup X p →+ M := by
-  classical
+    codimensionCycleSubgroup X p →+ M :=
   let componentValue : X → M := fun x ↦
     if hx : coheight x = p then componentClass x hx else 0
-  exact (Finsupp.linearCombination ℤ componentValue).toAddMonoidHom.comp
+  (Finsupp.linearCombination ℤ componentValue).toAddMonoidHom.comp
     ((compactCycleToFinsupp (X := X)).comp (codimensionCycleInclusion X p))
 
 /-- The additive extension sends a one-component cycle to its coefficient times the prescribed

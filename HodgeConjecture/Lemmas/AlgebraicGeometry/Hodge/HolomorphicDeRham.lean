@@ -73,9 +73,8 @@ lemma scalarHolomorphicDeRhamPresheaf_d
 def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom]
     (c : ℂ) :
     holomorphicDeRhamComplex X d ⟶
-      holomorphicDeRhamComplex X d := by
-  unfold holomorphicDeRhamComplex
-  exact CochainComplex.ofHom
+      holomorphicDeRhamComplex X d :=
+  CochainComplex.ofHom
     (fun p =>
       let J := Opens.grothendieckTopology
         (TopCat.of (ComplexPoint X))
@@ -84,6 +83,7 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom]
     (fun p => by
       let J := Opens.grothendieckTopology
         (TopCat.of (ComplexPoint X))
+      unfold holomorphicDeRhamComplex
       simp only [CochainComplex.of_d]
       change (presheafToSheaf J AddCommGrpCat).map
           (scalarHolomorphicDeRhamPresheaf X d p c) ≫
@@ -129,10 +129,10 @@ def complexScalarPresheaf (c : ℂ) :
 
 /-- Scalar multiplication on the constant complex sheaf. -/
 def complexScalarSheaf (c : ℂ) :
-    constantComplexSheaf X ⟶ constantComplexSheaf X := by
+    constantComplexSheaf X ⟶ constantComplexSheaf X :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
-  exact (presheafToSheaf J AddCommGrpCat).map
+  (presheafToSheaf J AddCommGrpCat).map
     (complexScalarPresheaf X c)
 
 /-- Scalar multiplication on the constant complex-valued complex concentrated in degree zero. -/

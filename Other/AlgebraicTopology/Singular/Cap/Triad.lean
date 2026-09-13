@@ -401,35 +401,34 @@ noncomputable def triadCapShortComplexHomZero
     (hphi : relativeCoboundary R (TopPair.ofSubset A) p phi = 0) :
     (triadRelativeChainComplex R X A B).sc' (p + 1) p
         ((ComplexShape.down ℕ).next p) ⟶
-      ((relativeChainFunctor R).obj (TopPair.ofSubset B)).sc' 1 0 0 := by
+      ((relativeChainFunctor R).obj (TopPair.ofSubset B)).sc' 1 0 0 :=
   let s : R := (-1 : R) ^ p
   have hs : s * s = 1 := by
     dsimp only [s]
     rw [← pow_add, (Even.add_self p).neg_one_pow]
-  refine
-    { τ₁ := ModuleCat.ofHom (s • triadCap R X A B p 1 phi)
-      τ₂ := triadCapHom R X A B p 0 phi
-      τ₃ := 0
-      comm₁₂ := ?_
-      comm₂₃ := ?_ }
-  · ext c
-    change relativeBoundary R (TopPair.ofSubset B) 0
-        (s • triadCap R X A B p 1 phi c) =
-      triadCap R X A B p 0 phi (triadRelativeBoundary R X A B p c)
-    rw [map_smul]
-    have h := LinearMap.congr_fun
-      (boundary_triadCap_eq_of_cocycle R X A B p 0 phi hphi) c
-    change relativeBoundary R (TopPair.ofSubset B) 0
-        (triadCap R X A B p 1 phi c) =
-      s • triadCap R X A B p 0 phi
-        (triadRelativeBoundary R X A B p c) at h
-    simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · change triadCapHom R X A B p 0 phi ≫
-        ((relativeChainFunctor R).obj (TopPair.ofSubset B)).d 0 0 =
-      (triadRelativeChainComplex R X A B).d p
-          ((ComplexShape.down ℕ).next p) ≫ 0
-    rw [(((relativeChainFunctor R).obj (TopPair.ofSubset B)).shape 0 0 (by simp)),
-      comp_zero, comp_zero]
+  { τ₁ := ModuleCat.ofHom (s • triadCap R X A B p 1 phi)
+    τ₂ := triadCapHom R X A B p 0 phi
+    τ₃ := 0
+    comm₁₂ := by
+      ext c
+      change relativeBoundary R (TopPair.ofSubset B) 0
+          (s • triadCap R X A B p 1 phi c) =
+        triadCap R X A B p 0 phi (triadRelativeBoundary R X A B p c)
+      rw [map_smul]
+      have h := LinearMap.congr_fun
+        (boundary_triadCap_eq_of_cocycle R X A B p 0 phi hphi) c
+      change relativeBoundary R (TopPair.ofSubset B) 0
+          (triadCap R X A B p 1 phi c) =
+        s • triadCap R X A B p 0 phi
+          (triadRelativeBoundary R X A B p c) at h
+      simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
+    comm₂₃ := by
+      change triadCapHom R X A B p 0 phi ≫
+          ((relativeChainFunctor R).obj (TopPair.ofSubset B)).d 0 0 =
+        (triadRelativeChainComplex R X A B).d p
+            ((ComplexShape.down ℕ).next p) ≫ 0
+      rw [(((relativeChainFunctor R).obj (TopPair.ofSubset B)).shape 0 0 (by simp)),
+        comp_zero, comp_zero] }
 
 /-- The explicit triad cap morphism ending in a positive degree. -/
 noncomputable def triadCapShortComplexHomSucc
@@ -439,31 +438,29 @@ noncomputable def triadCapShortComplexHomSucc
     (triadRelativeChainComplex R X A B).sc'
         (p + ((q + 1) + 1)) (p + (q + 1)) (p + q) ⟶
       ((relativeChainFunctor R).obj (TopPair.ofSubset B)).sc'
-        ((q + 1) + 1) (q + 1) q := by
+        ((q + 1) + 1) (q + 1) q :=
   let s : R := (-1 : R) ^ p
   have hs : s * s = 1 := by
     dsimp only [s]
     rw [← pow_add, (Even.add_self p).neg_one_pow]
-  refine
-    { τ₁ := ModuleCat.ofHom (s • triadCap R X A B p ((q + 1) + 1) phi)
-      τ₂ := triadCapHom R X A B p (q + 1) phi
-      τ₃ := ModuleCat.ofHom (s • triadCap R X A B p q phi)
-      comm₁₂ := ?_
-      comm₂₃ := ?_ }
-  · ext c
-    change relativeBoundary R (TopPair.ofSubset B) (q + 1)
-        (s • triadCap R X A B p ((q + 1) + 1) phi c) =
-      triadCap R X A B p (q + 1) phi
-        (triadRelativeBoundary R X A B (p + (q + 1)) c)
-    rw [map_smul]
-    have h := LinearMap.congr_fun
-      (boundary_triadCap_eq_of_cocycle R X A B p (q + 1) phi hphi) c
-    change relativeBoundary R (TopPair.ofSubset B) (q + 1)
-        (triadCap R X A B p ((q + 1) + 1) phi c) =
-      s • triadCap R X A B p (q + 1) phi
-        (triadRelativeBoundary R X A B (p + (q + 1)) c) at h
-    simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · exact ModuleCat.hom_ext (boundary_triadCap_eq_of_cocycle R X A B p q phi hphi)
+  { τ₁ := ModuleCat.ofHom (s • triadCap R X A B p ((q + 1) + 1) phi)
+    τ₂ := triadCapHom R X A B p (q + 1) phi
+    τ₃ := ModuleCat.ofHom (s • triadCap R X A B p q phi)
+    comm₁₂ := by
+      ext c
+      change relativeBoundary R (TopPair.ofSubset B) (q + 1)
+          (s • triadCap R X A B p ((q + 1) + 1) phi c) =
+        triadCap R X A B p (q + 1) phi
+          (triadRelativeBoundary R X A B (p + (q + 1)) c)
+      rw [map_smul]
+      have h := LinearMap.congr_fun
+        (boundary_triadCap_eq_of_cocycle R X A B p (q + 1) phi hphi) c
+      change relativeBoundary R (TopPair.ofSubset B) (q + 1)
+          (triadCap R X A B p ((q + 1) + 1) phi c) =
+        s • triadCap R X A B p (q + 1) phi
+          (triadRelativeBoundary R X A B (p + (q + 1)) c) at h
+      simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
+    comm₂₃ := ModuleCat.hom_ext (boundary_triadCap_eq_of_cocycle R X A B p q phi hphi) }
 
 /-- The short-complex morphism underlying the sum-relative triad cap product. -/
 noncomputable def triadCapShortComplexHom
@@ -471,26 +468,24 @@ noncomputable def triadCapShortComplexHom
     (phi : RelativeCochain R (TopPair.ofSubset A) p)
     (hphi : relativeCoboundary R (TopPair.ofSubset A) p phi = 0) :
     (triadRelativeChainComplex R X A B).sc (p + q) ⟶
-      ((relativeChainFunctor R).obj (TopPair.ofSubset B)).sc q := by
+      ((relativeChainFunctor R).obj (TopPair.ofSubset B)).sc q :=
   let Ktriad := triadRelativeChainComplex R X A B
   let KrelB := (relativeChainFunctor R).obj (TopPair.ofSubset B)
-  cases q with
-  | zero =>
-      exact
-        (Ktriad.isoSc' (p + 1) p ((ComplexShape.down ℕ).next p)
-            (ChainComplex.prev ℕ p) rfl).hom ≫
-          triadCapShortComplexHomZero R X A B p phi hphi ≫
-          (KrelB.isoSc' 1 0 0 (ChainComplex.prev ℕ 0)
-            ChainComplex.next_nat_zero).inv
-  | succ q =>
-      exact
-        (Ktriad.isoSc' (p + ((q + 1) + 1)) (p + (q + 1)) (p + q)
-            (by rw [ChainComplex.prev]; omega)
-            (by rw [show p + (q + 1) = (p + q) + 1 by omega,
-              ChainComplex.next_nat_succ])).hom ≫
-          triadCapShortComplexHomSucc R X A B p q phi hphi ≫
-          (KrelB.isoSc' ((q + 1) + 1) (q + 1) q
-            (by rw [ChainComplex.prev]) (ChainComplex.next_nat_succ q)).inv
+  match q with
+  | 0 =>
+      (Ktriad.isoSc' (p + 1) p ((ComplexShape.down ℕ).next p)
+          (ChainComplex.prev ℕ p) rfl).hom ≫
+        triadCapShortComplexHomZero R X A B p phi hphi ≫
+        (KrelB.isoSc' 1 0 0 (ChainComplex.prev ℕ 0)
+          ChainComplex.next_nat_zero).inv
+  | q + 1 =>
+      (Ktriad.isoSc' (p + ((q + 1) + 1)) (p + (q + 1)) (p + q)
+          (by rw [ChainComplex.prev]; omega)
+          (by rw [show p + (q + 1) = (p + q) + 1 by omega,
+            ChainComplex.next_nat_succ])).hom ≫
+        triadCapShortComplexHomSucc R X A B p q phi hphi ≫
+        (KrelB.isoSc' ((q + 1) + 1) (q + 1) q
+          (by rw [ChainComplex.prev]) (ChainComplex.next_nat_succ q)).inv
 
 @[simp]
 lemma triadCapShortComplexHom_τ₂
@@ -1119,9 +1114,9 @@ noncomputable def triadUnionExcisionHomologyEquiv
     (X : TopCat.{u}) (A B : Set X) (n : ℕ)
     (hExcision : QuasiIso (triadToUnionRelativeChainMap R X A B)) :
     TriadRelativeHomology R X A B n ≃ₗ[R]
-      RelativeHomology R (TopPair.ofSubset (A ∪ B)) n := by
+      RelativeHomology R (TopPair.ofSubset (A ∪ B)) n :=
   letI := hExcision
-  exact (isoOfQuasiIsoAt
+  (isoOfQuasiIsoAt
     (triadToUnionRelativeChainMap R X A B) n).toLinearEquiv
 
 @[simp]

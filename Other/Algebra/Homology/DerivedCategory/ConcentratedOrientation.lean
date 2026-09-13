@@ -127,11 +127,11 @@ set_option backward.isDefEq.respectTransparency false in
 nonvanishing degree, constructed by inverting the canonical truncation roof. -/
 def concentratedHomologyIso
     (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i)) :
-    Q.obj K ≅ (singleFunctor C n).obj (K.homology n) := by
+    Q.obj K ≅ (singleFunctor C n).obj (K.homology n) :=
   letI := CochainComplex.isLE_of_homology_concentrated K n h
   letI : QuasiIso (CochainComplex.toSingleHomology K n) :=
     CochainComplex.toSingleHomology_quasiIso K n h
-  exact (asIso (Q.map (K.ιTruncLE n))).symm ≪≫
+  (asIso (Q.map (K.ιTruncLE n))).symm ≪≫
     asIso (Q.map (CochainComplex.toSingleHomology K n))
 
 /-- Orienting the actual unique homology object gives a derived orientation. -/
@@ -199,8 +199,8 @@ def concentratedOrientationShiftIso
 /-- Concentration proves eligibility for `D⁺` for the actual derived object. The witness
 is its cohomological bound, not an independently supplied bounded chain model. -/
 def concentratedPlusObject
-    (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i)) : Plus C := by
+    (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i)) : Plus C :=
   letI := CochainComplex.isGE_of_homology_concentrated K n h
-  exact ⟨Q.obj K, n, inferInstance⟩
+  ⟨Q.obj K, n, inferInstance⟩
 
 end DerivedCategory

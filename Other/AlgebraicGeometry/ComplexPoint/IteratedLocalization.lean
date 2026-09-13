@@ -70,15 +70,14 @@ def iteratedAwayEquivDerivativeStandardEtale
     let C := Localization.Away (algebraMap (complexPolynomialRing n) AR r)
     let y : C := algebraMap AR C (derivativeAdjoinRootElement p ρ)
     let T := Localization.Away y
-    T ≃ₐ[complexPolynomialRing n] (derivativeStandardEtalePair p hp (r * ρ)).Ring := by
-  dsimp only
+    T ≃ₐ[complexPolynomialRing n] (derivativeStandardEtalePair p hp (r * ρ)).Ring :=
   let AR := AdjoinRoot p
   let C := Localization.Away (algebraMap (complexPolynomialRing n) AR r)
   let y : C := algebraMap AR C (derivativeAdjoinRootElement p ρ)
   let T := Localization.Away y
   letI : IsLocalization.Away (derivativeAdjoinRootElement p (r * ρ)) T :=
     iteratedAway_isLocalization_derivative_mul_base p r ρ
-  exact ((IsLocalization.algEquiv
+  ((IsLocalization.algEquiv
     (Submonoid.powers (derivativeAdjoinRootElement p (r * ρ))) T
     (Localization.Away (derivativeAdjoinRootElement p (r * ρ)))).restrictScalars
       (complexPolynomialRing n)).trans
@@ -95,9 +94,8 @@ def transportedIteratedAwayEquivDerivativeStandardEtale
     let C := Localization.Away (algebraMap (complexPolynomialRing n) (AdjoinRoot p) r)
     let y : C := algebraMap (AdjoinRoot p) C (derivativeAdjoinRootElement p ρ)
     Localization.Away (e.symm y) ≃ₐ[complexPolynomialRing n]
-      (derivativeStandardEtalePair p hp (r * ρ)).Ring := by
-  dsimp only
-  exact (iteratedAwayAlgEquivOfAlgEquiv e _).trans
+      (derivativeStandardEtalePair p hp (r * ρ)).Ring :=
+  (iteratedAwayAlgEquivOfAlgEquiv e _).trans
     (iteratedAwayEquivDerivativeStandardEtale p hp r ρ)
 
 end

@@ -187,9 +187,9 @@ def openSingularSheafRestrictionConeCohomologyEquivRelative {V W : Opens X}
     (i : W ⟶ V) [ParacompactSpace V] [T2Space V]
     [ParacompactSpace W] [T2Space W] (n : ℕ) :
     (openSingularSheafRestrictionCone ℚ X i).homology ((n : ℤ) - 1) ≃+
-      RelativeCohomology ℚ (openInclusionPair X i) n := by
-  let := openRawToSingularSheafRestrictionCone_quasiIso X i
-  exact (asIso (HomologicalComplex.homologyMap
+      RelativeCohomology ℚ (openInclusionPair X i) n :=
+  letI := openRawToSingularSheafRestrictionCone_quasiIso X i
+  (asIso (HomologicalComplex.homologyMap
     (openRawToSingularSheafRestrictionCone ℚ X i) ((n : ℤ) - 1))).symm.addCommGroupIsoToAddEquiv
     |>.trans (openRawSingularRestrictionConeCohomologyEquivRelative ℚ X i n)
 

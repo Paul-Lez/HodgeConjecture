@@ -77,7 +77,7 @@ set_option backward.isDefEq.respectTransparency false in
 group to the stalk. Its map is the germ of an actual constant section. -/
 def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
     A ≅ (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj
-      ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj A).obj := by
+      ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj A).obj :=
   let P : TopCat.Presheaf AddCommGrpCat.{u} X := (Functor.const (Opens X)ᵒᵖ).obj A
   letI : IsIso (P.Γgerm x) := by
     apply (ConcreteCategory.isIso_iff_bijective _).2
@@ -90,7 +90,7 @@ def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
       obtain ⟨U, hx, a, rfl⟩ := P.exists_germ_eq t
       exact ⟨a, (P.Γgerm_res_apply (i := homOfLE (show U ≤ ⊤ from le_top)) x hx a).symm⟩
   letI := TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u} P
-  exact asIso (P.Γgerm x) ≪≫
+  asIso (P.Γgerm x) ≪≫
     asIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
       (toSheafify (Opens.grothendieckTopology X) P))
 

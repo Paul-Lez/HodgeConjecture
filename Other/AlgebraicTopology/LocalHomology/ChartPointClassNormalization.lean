@@ -45,14 +45,14 @@ variable {M : Type} [TopologicalSpace M]
 
 /-- The inverse chart on its target, with the exact ambient basepoint as codomain. -/
 def chartTargetInverseAtSourcePairMap :
-    neighborhoodPointComplementPair e.target (e x) ⟶ pointComplementPair x := by
+    neighborhoodPointComplementPair e.target (e x) ⟶ pointComplementPair x :=
   have hne (v : {v : e.target | v.1 ≠ e x}) : e.symm v.1.1 ≠ x := by
     intro h
     apply v.2
     calc
       v.1.1 = e (e.symm v.1.1) := (e.right_inv v.1.2).symm
       _ = e x := congrArg e h
-  exact TopPair.ofHom
+  TopPair.ofHom
     (TopCat.ofHom ⟨fun v => e.symm v.1, e.symm.continuousOn.domRestrict⟩)
     (TopCat.ofHom ⟨fun v => ⟨e.symm v.1.1, hne v⟩,
       (e.symm.continuousOn.domRestrict.comp continuous_subtype_val).subtype_mk hne⟩) rfl

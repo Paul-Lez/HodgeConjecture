@@ -96,12 +96,12 @@ private theorem smoothClosedSupportChartCoclassGerm_eq_zero
     (smoothClosedSupportChartCoclass X Y i m d z
       (smoothClosedSupportChartOpen X Y i m d z) (le_refl _))
 
+open scoped Classical in
 /-- A pointwise normalized germ family. Choice selects a preimage point only;
 the proved chart-overlap theorem below proves independence of that selection. -/
 def smoothClosedSupportCoclassStalk (x : ComplexPoint X) :
-    (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.stalk x := by
-  classical
-  exact if hxS : x ∈ Set.range (Point.map i) then
+    (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.stalk x :=
+  if hxS : x ∈ Set.range (Point.map i) then
     smoothClosedSupportChartCoclassGerm X Y i m d hxS.choose x
       (by simpa only [hxS.choose_spec] using
         mem_smoothClosedSupportChartOpen X Y i m d hxS.choose)

@@ -251,9 +251,9 @@ lemma openRawSingularRestrictionConeCohomologyEquivRelative_naturality (n : ℕ)
 def openRawToSingularSheafRestrictionConeHomologyIso
     [ParacompactSpace V] [T2Space V] [ParacompactSpace W] [T2Space W] (n : ℤ) :
     (openRawSingularRestrictionCone ℚ X i).homology n ≅
-      (openSingularSheafRestrictionCone ℚ X i).homology n := by
-  let := openRawToSingularSheafRestrictionCone_quasiIso X i
-  exact asIso (HomologicalComplex.homologyMap (openRawToSingularSheafRestrictionCone ℚ X i) n)
+      (openSingularSheafRestrictionCone ℚ X i).homology n :=
+  letI := openRawToSingularSheafRestrictionCone_quasiIso X i
+  asIso (HomologicalComplex.homologyMap (openRawToSingularSheafRestrictionCone ℚ X i) n)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

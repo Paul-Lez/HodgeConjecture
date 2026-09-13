@@ -80,16 +80,16 @@ def globalSectionsSingularCochainComplexIntIsoExtend :
         (singularCochainSheafComplexInt X ℚ) ≅
       (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ
         (TopCat.of (ComplexPoint X))).extend
-          ComplexShape.embeddingUpNat := by
+          ComplexShape.embeddingUpNat :=
   let Y := TopCat.of (ComplexPoint X)
   let F := TopCat.Sheaf.forget AddCommGrpCat Y
   let E := (evaluation (Opens Y)ᵒᵖ AddCommGrpCat).obj (.op ⊤)
   let G := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let K := AlgebraicTopology.Singular.singularCochainSheafComplex ℚ Y
-  let : F.Additive := by dsimp [F]; infer_instance
-  let : E.Additive := by dsimp [E]; infer_instance
+  letI : F.Additive := by dsimp [F]; infer_instance
+  letI : E.Additive := by dsimp [E]; infer_instance
   let eComp : F ⋙ E ≅ G := Iso.refl _
-  exact HomologicalComplex.mapExtendCanonicalIso G K ComplexShape.embeddingUpNat ≪≫
+  HomologicalComplex.mapExtendCanonicalIso G K ComplexShape.embeddingUpNat ≪≫
     (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
       ((Functor.mapHomologicalComplexCompIso eComp (ComplexShape.up ℕ)).app K).symm
 
@@ -107,7 +107,7 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
     RationalSingularCochainHypercohomology X n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
         (TopCat.of (ComplexPoint X))
-        (singularCochainSheafComplexInt X ℚ)).homology n := by
+        (singularCochainSheafComplexInt X ℚ)).homology n :=
   let Y := TopCat.of (ComplexPoint X)
   let A := constantIntegerSheafComplexInt X
   let A' := TopCat.Sheaf.integerConstantSingleComplex Y
@@ -185,11 +185,11 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
   let ae₅ := (HomologicalComplex.homologyMapIso
     (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
       |>.addCommGroupIsoToAddEquiv
-  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
+  letI : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
   let ae₆ := (asIso (HomologicalComplex.homologyMap
     ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
       |>.addCommGroupIsoToAddEquiv
-  exact ae₁.trans (ae₂.trans (ae₃.trans (ae₄.trans (ae₅.trans ae₆))))
+  ae₁.trans (ae₂.trans (ae₃.trans (ae₄.trans (ae₅.trans ae₆))))
 
 /-- The canonical hypercohomology comparison with the global-section complex, bundled as an
 additive equivalence. -/
@@ -200,24 +200,28 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSections
     RationalSingularCochainHypercohomology X n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
         (TopCat.of (ComplexPoint X))
-        (singularCochainSheafComplexInt X ℚ)).homology n := by
+        (singularCochainSheafComplexInt X ℚ)).homology n :=
   let Y := TopCat.of (ComplexPoint X)
   let S := singularCochainSheafComplexInt X ℚ
-  let : S.IsStrictlyGE 0 := by
+  letI : S.IsStrictlyGE 0 := by
     dsimp [S, singularCochainSheafComplexInt]
     infer_instance
-  choose I i _ _ _ using
-    CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
-  letI : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
+  let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
+  let I := hres.choose
+  let i := hres.choose_spec.choose
+  haveI : QuasiIso i := hres.choose_spec.choose_spec.choose
+  haveI : ∀ q, Injective (I.X q) := hres.choose_spec.choose_spec.choose_spec.choose
+  haveI : I.IsStrictlyGE 0 := hres.choose_spec.choose_spec.choose_spec.choose_spec
+  haveI : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
   have hSflasque : ∀ q, (S.X q).IsFlasque :=
     fun q ↦ singularCochainSheafComplexInt_isFlasque X q
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
-  letI : QuasiIso
+  haveI : QuasiIso
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
         ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i 0 0 hSflasque hIflasque
-  exact rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
+  rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
     X I i n
 
 end AlgebraicGeometry.ComplexPoint
@@ -259,14 +263,13 @@ global-section complex of the chosen singular-cochain sheaf resolution. -/
 def ordinaryRationalSingularCohomologyEquivGlobalSections
     (Y : TopCat.{0}) [ParacompactSpace Y] [T2Space Y] (n : ℕ) :
     AlgebraicTopology.Singular.Cohomology ℚ Y n ≃+
-      (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y).homology n := by
-  let := AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
+      (AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y).homology n :=
+  letI := AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
     (Y := Y)
-  exact
-    AlgebraicTopology.Singular.ordinarySingularCohomologyEquivGlobalRaw ℚ Y n |>.trans <|
-      (asIso (HomologicalComplex.homologyMap
-        (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ Y) n))
-          |>.addCommGroupIsoToAddEquiv
+  AlgebraicTopology.Singular.ordinarySingularCohomologyEquivGlobalRaw ℚ Y n |>.trans <|
+    (asIso (HomologicalComplex.homologyMap
+      (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ Y) n))
+        |>.addCommGroupIsoToAddEquiv
 
 end AlgebraicTopology.Singular.HereditarilyParacompact
 
@@ -284,13 +287,13 @@ def rationalSingularCochainHypercohomologyAddEquivCohomology
     (n : ℕ) :
     RationalSingularCochainHypercohomology X (n : ℤ) ≃+
       AlgebraicTopology.Singular.Cohomology ℚ
-        (TopCat.of (ComplexPoint X)) n := by
+        (TopCat.of (ComplexPoint X)) n :=
   let Y := TopCat.of (ComplexPoint X)
   let K := AlgebraicTopology.Singular.globalSingularCochainSheafComplex ℚ Y
   letI : ParacompactSpace (ComplexPoint X) :=
     (Homeomorph.Set.univ (ComplexPoint X)).paracompactSpace_iff.mp
       (inferInstance : ParacompactSpace (⊤ : Opens (ComplexPoint X)))
-  exact (rationalSingularCochainHypercohomologyAddEquivGlobalSections
+  (rationalSingularCochainHypercohomologyAddEquivGlobalSections
       X (n : ℤ)).trans <|
     (HomologicalComplex.homologyMapIso
       (globalSectionsSingularCochainComplexIntIsoExtend X)

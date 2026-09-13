@@ -51,9 +51,9 @@ def sectionCohomologyPresheaf (n : ℤ) : Presheaf AddCommGrpCat.{u} X :=
 the homology presheaf on the same open set. -/
 def sectionCohomologyPresheafOnOpenIso (n : ℤ) (U : Opens X) :
     (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ≅
-      (sectionCohomologyPresheaf X K n).obj (op U) := by
+      (sectionCohomologyPresheaf X K n).obj (op U) :=
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
     ((((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).sc n)
-  exact S.mapHomologyIso ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op U))
+  S.mapHomologyIso ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op U))
 
 end TopCat.Sheaf

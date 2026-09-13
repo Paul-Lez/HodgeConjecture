@@ -52,9 +52,9 @@ def nestedSupportRestrictionHomologyIsoOfVanishing (W : Opens X)
     (hn₁ : IsZero
       ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology (n + 1))) :
     (nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₂.homology n ≅
-      (nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₃.homology n := by
+      (nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₃.homology n :=
   have := nestedSupportRestriction_homologyMap_isIso_of_vanishing X h W K n hn hn₁
-  exact asIso (HomologicalComplex.homologyMap
+  asIso (HomologicalComplex.homologyMap
     (nestedSupportRestrictionSectionsComplexShortComplex X h W K).g n)
 
 @[simp]

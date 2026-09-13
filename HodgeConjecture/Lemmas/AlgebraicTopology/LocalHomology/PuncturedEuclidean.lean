@@ -389,13 +389,13 @@ lemma exists_integralSingularZeroChain_filler
   change K.d 1 0 ((AddCommGrpCat.asHom p) 1) = z 1
   rwa [AddCommGrpCat.asHom_hom_apply, one_zsmul]
 
+open scoped Classical in
 /-- Cover indices through which a cover-small singular simplex factors. -/
 def standardFacetCarrier (d : ℕ) {n : SimplexCategoryᵒᵖ}
     (x : (coverSmallSingularSubcomplex
       (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet).obj n) :
-    Finset (Fin (d + 1)) := by
-  classical
-  exact Finset.univ.filter fun i ↦ x.1 ∈
+    Finset (Fin (d + 1)) :=
+  Finset.univ.filter fun i ↦ x.1 ∈
       (SSet.Subcomplex.range (TopCat.toSSet.map
         (topologicalSubsetInclusion (standardPuncturedPair d).snd
           (standardPuncturedFacetCover d i)))).obj n
@@ -569,14 +569,14 @@ lemma standardFacetCarrierSourceSubdivisionIntersectionMap_delta
   rw [Category.assoc, standardFacetCarrierSourceIntersectionMap_delta, ← Category.assoc,
     ← simplexSubdivisionLastVertex.naturality, Category.assoc]
 
+open scoped Classical in
 /-- Cover indices which contain the images of every vertex in `A`. -/
 def standardFacetCarrierAtFace (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
       (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n⦌)
     (A : NonemptyFiniteChains (ULift.{0} (Fin (n + 1)))) :
-    Finset (Fin (d + 1)) := by
-  classical
-  exact Finset.univ.filter fun i ↦
+    Finset (Fin (d + 1)) :=
+  Finset.univ.filter fun i ↦
     ∀ a ∈ A.finset,
       ((standardPuncturedPair d).snd.toSSetObjEquiv _ x.1)
         (stdSimplex.vertex a.down) ∈
@@ -1750,6 +1750,7 @@ lemma standardFacetCarrierPrismResidual_cycle_of_equation
   · rintro k rfl
     exact h
 
+open scoped Classical in
 /-- A total selected filler for a positive-degree cycle in a proper facet intersection.  It
 returns zero when its input is not a cycle, so it can be used in a structural recursion whose
 cycle proof is established afterwards. -/
@@ -1763,9 +1764,8 @@ def standardPuncturedFacetIntersectionIntegralTotalCycleFiller
     AddCommGrpCat.of ℤ ⟶
       ((TopCat.toSSet.obj (TopCat.of
         (standardPuncturedFacetIntersectionSubspace d I))).chainComplex
-          (AddCommGrpCat.of ℤ)).X (n + 2) := by
-  classical
-  exact if hz : z ≫
+          (AddCommGrpCat.of ℤ)).X (n + 2) :=
+  if hz : z ≫
         ((TopCat.toSSet.obj (TopCat.of
           (standardPuncturedFacetIntersectionSubspace d I))).chainComplex
             (AddCommGrpCat.of ℤ)).d (n + 1) n = 0 then
@@ -2428,7 +2428,7 @@ def standardFacetCarrierAffineRationalHomotopy (d : ℕ) :
       (standardFacetCarrierRationalChainMap d ≫
         standardAffineBoundaryChainMap d)
       (coverSmallRationalSingularChainInclusion
-        (standardPuncturedPair d).snd (standardPuncturedFacetCover d)) := by
+        (standardPuncturedPair d).snd (standardPuncturedFacetCover d)) :=
   let C := standardFacetCarrierRationalChainMap d ≫
     standardAffineBoundaryChainMap d
   let B := standardFacetSmallBarycentricLastVertexRationalChainMap d
@@ -2438,7 +2438,7 @@ def standardFacetCarrierAffineRationalHomotopy (d : ℕ) :
     (Homotopy.ofEq
       (standardFacetCarrierDiscrepancyRationalChainMap_eq d).symm).trans
         (standardFacetCarrierDiscrepancyRationalHomotopy d)
-  exact ((Homotopy.equivSubZero (f := C) (g := B ≫ I)).symm hnull).trans
+  ((Homotopy.equivSubZero (f := C) (g := B ≫ I)).symm hnull).trans
     ((standardFacetSmallBarycentricLastVertexRationalHomotopy d).compRightId I)
 
 /-- A chain-level left inverse of affine realization, obtained by smallifying with respect to
@@ -2459,7 +2459,7 @@ def standardAffineBoundaryChainRetractionHomotopy (d : ℕ) :
     Homotopy
       (standardAffineBoundaryChainMap d ≫
         standardAffineBoundaryChainRetraction d)
-      (𝟙 ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ))) := by
+      (𝟙 ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ))) :=
   let A := SSet.chainComplexMap (standardAffineBoundaryToFacetSmall d)
     (ModuleCat.of ℚ ℚ)
   let E := coverSmallRationalChainHomotopyEquiv_of_openCover
@@ -2480,7 +2480,7 @@ def standardAffineBoundaryChainRetractionHomotopy (d : ℕ) :
   have hunit : (A ≫ 𝟙 _) ≫ C = A ≫ C := by simp
   have hcarrier : A ≫ C = standardBarycentricLastVertexRationalChainMap d :=
     standardAffineSmallRational_comp_standardFacetCarrierRationalChainMap d
-  exact (Homotopy.ofEq hstart).trans <| hsmall.trans <|
+  (Homotopy.ofEq hstart).trans <| hsmall.trans <|
     (Homotopy.ofEq hunit).trans <| (Homotopy.ofEq hcarrier).trans <|
       standardBarycentricLastVertexRationalHomotopy d
 
@@ -2491,7 +2491,7 @@ def standardAffineBoundaryChainCoretractionHomotopy (d : ℕ) :
       (standardAffineBoundaryChainRetraction d ≫
         standardAffineBoundaryChainMap d)
       (𝟙 ((TopCat.toSSet.obj (standardPuncturedPair d).snd).chainComplex
-        (ModuleCat.of ℚ ℚ))) := by
+        (ModuleCat.of ℚ ℚ))) :=
   let E := coverSmallRationalChainHomotopyEquiv_of_openCover
     (standardPuncturedPair d).snd (standardPuncturedFacetCover d)
     (isOpen_standardPuncturedFacetCover d)
@@ -2510,7 +2510,7 @@ def standardAffineBoundaryChainCoretractionHomotopy (d : ℕ) :
       (Homotopy.ofEq hE.symm)
   have hfull : Homotopy (E.inv ≫ (C ≫ A)) (𝟙 _) :=
     (hcarrier.compLeft E.inv).trans E.homotopyInvHomId
-  simpa only [standardAffineBoundaryChainRetraction, Category.assoc] using hfull
+  (Homotopy.ofEq (Category.assoc E.inv C A)).trans hfull
 
 /-- Affine realization of the standard simplicial boundary is a rational chain-homotopy
 equivalence onto punctured Euclidean space. -/
