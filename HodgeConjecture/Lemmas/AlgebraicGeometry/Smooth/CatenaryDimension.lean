@@ -35,9 +35,8 @@ import Mathlib.RingTheory.Unramified.LocalStructure
 This file proves the arbitrary-dimensional pointwise dimension formula for smooth complex
 schemes.  Its commutative-algebra bridge is
 `HodgeConjecture.Lemmas.RingTheory.TranscendenceDegreeKrullDimension`, which compares quotient
-dimensions under a quasi-finite map of finite-type algebras using Noether normalization and the
-finite extension of residue fields, rather than any unproved catenarity assumption or flatness
-of the quotient map.
+dimensions under a quasi-finite map of finite-type algebras, using Noether normalization and the
+finite extension of residue fields.
 
 Applied to the étale polynomial coordinates of a standard-smooth algebra, the bridge transfers
 the arbitrary-prime polynomial dimension formula.  An affine neighborhood then supplies enough

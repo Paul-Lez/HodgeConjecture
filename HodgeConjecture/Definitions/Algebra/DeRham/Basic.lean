@@ -31,8 +31,8 @@ that algebra.
 ## The exterior derivative
 
 The exterior derivative is the odd degree-one `R`-derivation `d` of `⋀ Ω[A⁄R]` extending the
-universal derivation `A → Ω[A⁄R]`. It is obtained from a universal property rather than from a
-choice of generators: an odd derivation is the same thing as an algebra map `x ↦ x + (d x) * ε`
+universal derivation `A → Ω[A⁄R]`. It is obtained from a universal property: an odd derivation is
+the same thing as an algebra map `x ↦ x + (d x) * ε`
 into the square-zero extension `Sq R A = ⋀ Ω[A⁄R] ⊕ ⋀ Ω[A⁄R] * ε` by an odd square-zero element,
 whose multiplication `(x, u) * (y, v) = (x * y, involute x * v + u * y)` encodes the graded
 Leibniz rule. Here `involute` is the grade involution, so `involute x = (-1) ^ p * x` on a form of

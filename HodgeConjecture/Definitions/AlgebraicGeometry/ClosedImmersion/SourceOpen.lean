@@ -47,7 +47,7 @@ theorem closedImmersionSourceOpenLift_ι :
     closedImmersionSourceOpenLift i A ≫ (closedImmersionSourceOpenTarget i A).ι = A.ι ≫ i :=
   IsOpenImmersion.lift_fac _ _ _
 
-/-- In the target open, the new image is exactly the old closed support. -/
+/-- In the target open, the restricted image is the original closed support. -/
 theorem range_closedImmersionSourceOpenLift :
     Set.range (closedImmersionSourceOpenLift i A) =
       (closedImmersionSourceOpenTarget i A).ι ⁻¹' Set.range i := by

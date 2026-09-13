@@ -35,7 +35,7 @@ holomorphic. So the complex points form a complex-analytic manifold of complex d
 particular a topological manifold of real dimension `2 * d`; both structures are instances.
 
 The charts are not extra input. At a complex point we choose the affine étale coordinates supplied
-by relative-dimensional smoothness, take a local inverse for the proven local homeomorphism, and
+by relative-dimensional smoothness, take a local inverse for that local homeomorphism, and
 extend that chart from the corresponding analytic open subset to the ambient space.
 -/
 
