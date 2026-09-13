@@ -55,9 +55,6 @@ private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
   let i : Y ⟶ OX := cycleComponentSmoothLocusClosedLiftOver X x
   let : SmoothOfRelativeDimension (d - p) Y.hom :=
     cycleComponentSmoothLocus_smoothOfRelativeDimension X x (d := d) hx
-  have : SmoothOfRelativeDimension d OX.hom := by
-    change SmoothOfRelativeDimension d (O.ι ≫ X.hom)
-    simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 d O.ι X.hom
   let f := Point.map (openInclusion X O)
   have hS : f ⁻¹' cycleComponentSupport X x = Set.range (Point.map i) :=
     (cycleComponentSmoothLocusClosedLift_complexPoints_range X x).symm

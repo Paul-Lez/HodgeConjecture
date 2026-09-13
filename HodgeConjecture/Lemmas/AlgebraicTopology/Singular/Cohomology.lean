@@ -299,7 +299,6 @@ lemma cohomologyWithSupportMap_id (R : Type u) [Field R] (X : TopCat.{u})
     (Z : Set X) (n : ℕ) :
     cohomologyWithSupportMap R n (𝟙 X) Z = LinearMap.id := by
   unfold cohomologyWithSupportMap
-  rw [preimageSupportPairMap_id]
   exact relativeCohomologyMap_id R (TopPair.ofSubset Zᶜ) n
 
 lemma cohomologyWithSupportMap_comp (R : Type u) [Field R]

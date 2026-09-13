@@ -83,7 +83,6 @@ lemma analyticImmersion_isClosedEmbedding {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     @IsClosedEmbedding (ComplexPoint (Over.mk f))
       (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (P.ambientDimension + 1)) (Spec ↧ℂ))))
       Point.analyticTopology Point.analyticTopology (analyticImmersion P) := by
-  let : IsClosedImmersion P.immersion := P.isClosedImmersion
   let : IsClosedImmersion (overImmersion P).left := P.isClosedImmersion
   exact ComplexPoint.isClosedEmbedding_map_of_closedImmersion (overImmersion P)
 
@@ -91,7 +90,6 @@ lemma analyticImmersion_isClosedEmbedding {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 theorem complexPoint_compactSpace {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) :
     @CompactSpace (ComplexPoint (Over.mk f)) Point.analyticTopology := by
-  let : TopologicalSpace (ComplexPoint (Over.mk f)) := Point.analyticTopology
   exact (analyticImmersion_isClosedEmbedding P).compactSpace
 
 end ProjectiveSpace.Presentation

@@ -189,7 +189,6 @@ lemma neighborhoodStructureMap_appTop_isStandardSmoothOfRelativeDimension :
     have ha := ConcreteCategory.congr_hom
       (Scheme.ΓSpecIso ↧ℂ).hom_inv_id a
     exact congrArg C.neighborhoodStructureMap.appTop.hom ha
-  rw [add_zero] at h
   exact heq ▸ h
 
 /-- The exact coordinates prove that the selected affine component neighborhood is smooth of the
@@ -266,7 +265,6 @@ lemma neighborhoodPointAlgHomHomeomorph_apply
     (z : ComplexPoint C.neighborhoodScheme)
     (r : Γ(C.componentNeighborhood.toScheme, ⊤)) :
     C.neighborhoodPointAlgHomHomeomorph z r = Point.evaluate ⊤ r z := by
-  rw [neighborhoodPointAlgHomHomeomorph, Homeomorph.trans_apply]
   change ComplexPoint.affineSpecEquiv Γ(C.componentNeighborhood.toScheme, ⊤)
       (Point.isoMapHomeomorph C.neighborhoodToSpecΓIso z) r = _
   rw [ComplexPoint.affineSpecEquiv_apply, Point.isoMapHomeomorph_apply,
@@ -295,7 +293,6 @@ def neighborhoodProjectionChart :
 /-- The selected smooth point belongs to the source of the exact analytic component chart. -/
 lemma neighborhoodPoint_mem_projectionChart_source :
     C.neighborhoodPoint ∈ C.neighborhoodProjectionChart.source := by
-  rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source]
   exact ⟨by simp, ComplexAlgHom.mem_etaleAlgHomProjectionChart_source
     Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)⟩
@@ -309,8 +306,6 @@ lemma neighborhoodProjectionChart_apply_of_mem
       ComplexAlgHom.mvPolynomialAlgHomHomeomorph n
         (ComplexAlgHom.etaleBaseAlgHom Γ(C.componentNeighborhood.toScheme, ⊤)
           (C.neighborhoodPointAlgHomHomeomorph z)) := by
-  rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source] at hz
-  rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_apply]
   exact ComplexAlgHom.etaleAlgHomProjectionChart_apply_of_mem (n := n)
     Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)
@@ -460,7 +455,6 @@ lemma span_neighborhoodLocalClass_eq_top :
   let : T2Space
       (ComplexPoint C.neighborhoodScheme) :=
     ComplexPoint.t2Space_of_isAffine C.neighborhoodScheme
-  rw [C.neighborhoodLocalClass_eq_localClassOfChart]
   exact AlgebraicTopology.Singular.span_localClassOfChart_eq_top
     n C.neighborhoodProjectionChart C.neighborhoodPoint
       C.neighborhoodPoint_mem_projectionChart_source

@@ -65,15 +65,8 @@ lemma FiniteType.height_eq_ringKrullDim_of_isMaximal
   let : Algebra (MvPolynomial (Fin n) k) A := g.toAlgebra
   let : FaithfulSMul (MvPolynomial (Fin n) k) A :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hg
-  let : IsScalarTower k (MvPolynomial (Fin n) k) A :=
-    IsScalarTower.of_algebraMap_eq' (by
-      ext r
-      exact (g.commutes r).symm)
   let : Algebra.IsIntegral (MvPolynomial (Fin n) k) A :=
     ⟨hfinite.to_isIntegral⟩
-  let : Algebra.HasGoingDown (MvPolynomial (Fin n) k) A := inferInstance
-  have hunder : (P.under (MvPolynomial (Fin n) k)).IsMaximal :=
-    Ideal.isMaximal_comap_of_isIntegral_of_isMaximal P
   have hheight : P.height = (P.under (MvPolynomial (Fin n) k)).height := by
     calc
       P.height = Order.height (⟨P, inferInstance⟩ : PrimeSpectrum A) :=
@@ -236,7 +229,6 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
     (hW.primeIdealOf zw).asIdeal
   have hQmax : Q.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed
     zw hz
-  let : Q.IsMaximal := hQmax
   have hQheight : (↑Q.height : WithBot ℕ∞) = d - p := by
     rw [Algebra.FiniteType.height_eq_ringKrullDim_of_isMaximal
       (k := ℂ) Q, hringW]

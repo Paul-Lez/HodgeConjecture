@@ -177,7 +177,6 @@ lemma standardFacetIntersectionCenter_mem (d : ℕ)
     (I : Finset (Fin (d + 1))) (hI : I ≠ Finset.univ) :
     standardFacetIntersectionCenter d I ∈
       standardPuncturedFacetIntersectionSet d I := by
-  classical
   obtain ⟨j, hj⟩ : Iᶜ.Nonempty :=
     Finset.nonempty_iff_ne_empty.2 fun hc ↦ hI ((Finset.compl_eq_empty_iff I).1 hc)
   intro i hi
@@ -191,7 +190,6 @@ lemma standardPuncturedFacetIntersectionSet_starConvex (d : ℕ)
     (I : Finset (Fin (d + 1))) (hI : I ≠ Finset.univ) :
     StarConvex ℝ (standardFacetIntersectionCenter d I)
       (standardPuncturedFacetIntersectionSet d I) := by
-  classical
   rw [starConvex_iff_segment_subset]
   intro y hy z hz
   rw [segment_eq_image] at hz
@@ -663,7 +661,6 @@ lemma standardFacetComplementCarrier_nonempty (d : ℕ) {n : ℕ}
       (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n⦌)
     (A : NonemptyFiniteChains (ULift.{0} (Fin (n + 1)))) :
     (standardFacetComplementCarrier d x A).Nonempty := by
-  classical
   rw [standardFacetComplementCarrier, Finset.nonempty_iff_ne_empty,
     ne_eq, Finset.compl_eq_empty_iff]
   exact standardFacetCarrierAtFace_ne_univ d x A
@@ -672,9 +669,7 @@ lemma standardFacetComplementCarrier_mono (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
       (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n⦌) :
     Monotone (standardFacetComplementCarrier d x) := by
-  classical
   intro A B hAB
-  rw [standardFacetComplementCarrier, standardFacetComplementCarrier]
   exact Finset.compl_subset_compl.mpr
     (standardFacetCarrierAtFace_antitone d x hAB)
 
@@ -749,7 +744,6 @@ lemma standardFacetCarrierSimplexMap_mem_boundary (d : ℕ) {n k : ℕ}
     (F : (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)) _⦋k⦌) :
     (standardFacetCarrierSimplexMap d x).app _ F ∈ (∂Δ[d]).obj
       (Opposite.op (SimplexCategory.mk k)) := by
-  classical
   rw [SSet.mem_boundary_iff_notMem_range]
   let A := F.obj (Fin.last k)
   obtain ⟨j, hj⟩ := standardFacetCarrierAtFace_nonempty d x A
@@ -801,7 +795,6 @@ lemma standardFacetCarrierBoundarySimplexMap_avoids_carrier
     (standardFacetCarrierBoundarySimplexMap_comp_inclusion d x)
   change ((standardFacetCarrierBoundarySimplexMap d x).app _ F).1 =
     (standardFacetCarrierSimplexMap d x).app _ F at hinclusion
-  rw [← hinclusion] at hvalue
   have heq : standardFacetComplementCarrierMax d x (F.obj r) = i :=
     hvalue.symm.trans hr
   apply Finset.mem_compl.mp himax
@@ -845,7 +838,6 @@ lemma standardFacetCarrierAtFace_delta (d n : ℕ) (i : Fin (n + 2))
           (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet).δ i x) A =
       standardFacetCarrierAtFace d x
         (A.map (standardFaceVertexOrderHom n i)) := by
-  classical
   ext j
   simp only [standardFacetCarrierAtFace, Finset.mem_filter,
     Finset.mem_univ, true_and]
@@ -892,7 +884,6 @@ lemma standardFacetCarrierSimplexMap_delta (d n : ℕ) (i : Fin (n + 2))
         ((coverSmallSingularSubcomplex
           (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet).δ i x) := by
   ext q F
-  rcases q with ⟨⟨k⟩⟩
   apply SSet.stdSimplex.objEquiv.injective
   apply SimplexCategory.Hom.ext
   apply OrderHom.ext
@@ -904,8 +895,6 @@ lemma standardFacetCarrierSimplexMap_delta (d n : ℕ) (i : Fin (n + 2))
       ((standardFacetCarrierSimplexMap d
         ((coverSmallSingularSubcomplex
           (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet).δ i x)).app _ F)).toOrderHom r
-  rw [standardFacetCarrierSimplexMap_objEquiv_apply,
-    standardFacetCarrierSimplexMap_objEquiv_apply]
   change standardFacetComplementCarrierMax d x
       ((F.obj r).map (standardFaceVertexOrderHom n i)) =
     standardFacetComplementCarrierMax d
@@ -1308,7 +1297,6 @@ lemma standardFacetCarrierDiscrepancyFaces_comp_inclusion
           standardFacetCarrierDiscrepancyComponent d n := by
   rw [standardFacetCarrierIntersectionDiscrepancyFaces,
     Preadditive.sum_comp]
-  simp only [Preadditive.zsmul_comp, Category.assoc]
   rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp only [Preadditive.zsmul_comp,
     iota_standardFacetCarrierDiscrepancyComponent,
@@ -1450,7 +1438,6 @@ lemma standardFacetCarrierPrismFaces_comp_inclusion
             (standardPuncturedFacetCover d)).d (n + 1) n ≫
           standardFacetCarrierPrismComponent d P n := by
   rw [standardFacetCarrierPrismFaces, Preadditive.sum_comp]
-  simp only [Preadditive.zsmul_comp, Category.assoc]
   rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp only [Preadditive.zsmul_comp,
     iota_standardFacetCarrierPrismComponent,
@@ -2242,7 +2229,6 @@ lemma standardFacetComplementCarrier_affine (d n : ℕ)
     standardFacetComplementCarrier d
         ((standardAffineBoundaryToFacetSmall d).app _ y) A =
       A.finset.image (fun a ↦ y.1 a.down) := by
-  classical
   ext i
   simp only [standardFacetComplementCarrier, Finset.mem_compl,
     standardFacetCarrierAtFace, Finset.mem_filter, Finset.mem_univ, true_and,
@@ -2261,8 +2247,6 @@ lemma standardFacetComplementCarrierMax_affine (d n : ℕ)
     standardFacetComplementCarrierMax d
         ((standardAffineBoundaryToFacetSmall d).app _ y) A =
       y.1 (A.finset.max' A.nonempty).down := by
-  classical
-  unfold standardFacetComplementCarrierMax
   have hcarrier := standardFacetComplementCarrier_affine d n y A
   apply le_antisymm
   · apply Finset.max'_le
@@ -2283,7 +2267,6 @@ lemma standardFacetCarrierSimplexMap_affine (d n : ℕ)
       simplexSubdivisionLastVertex.app (SimplexCategory.mk n) ≫
         SSet.yonedaEquiv.symm y.1 := by
   ext q F
-  rcases q with ⟨⟨k⟩⟩
   apply SSet.stdSimplex.objEquiv.injective
   apply SimplexCategory.Hom.ext
   apply OrderHom.ext
@@ -2293,7 +2276,6 @@ lemma standardFacetCarrierSimplexMap_affine (d n : ℕ)
       ((standardAffineBoundaryToFacetSmall d).app _ y) A =
     y.1 (nonemptyFiniteChainMaximum
       (ULift.{0} (Fin (n + 1))) A).down
-  rw [nonemptyFiniteChainMaximum_apply]
   exact standardFacetComplementCarrierMax_affine d n y A
 
 lemma standardFacetCarrierBoundarySimplexMap_affine (d n : ℕ)

@@ -70,8 +70,6 @@ lemma norm_radialPrimitiveSeries_succ_le (n : ℕ)
     ‖radialPrimitiveSeries n p (k + 1)‖ ≤ ‖p k‖ := by
   refine ContinuousMultilinearMap.opNorm_le_bound (norm_nonneg (p k)) fun v ↦ ?_
   rw [radialPrimitiveSeries, continuousMultilinearCurryRightEquiv_symm_apply']
-  simp only [_root_.smul_apply, ContinuousLinearMap.compContinuousMultilinearMap_coe,
-    Function.comp_apply]
   calc
     ‖(((k + n + 1 : ℕ) : ℂ)⁻¹) • (p k (Fin.init v)).curryLeft (v (Fin.last k))‖ ≤
         ‖((k + n + 1 : ℕ) : ℂ)⁻¹‖ *
@@ -218,8 +216,6 @@ lemma hasSum_intervalIntegral_radialTerms_of_hasFPowerSeriesOnBall (n : ℕ)
     HasSum (fun k : ℕ ↦ ∫ t : ℝ in 0..1,
         ((t : ℂ) ^ (k + n)) • (p k (fun _ ↦ x)).curryLeft x)
       (radialHomotopy n η x) := by
-  let F : ℕ → ℝ → (E [⋀^Fin n]→L[ℂ] ℂ) := fun k t ↦
-    ((t : ℂ) ^ (k + n)) • (p k (fun _ ↦ x)).curryLeft x
   let bound : ℕ → ℝ → ℝ := fun k _ ↦ ‖p k (fun _ ↦ x)‖ * ‖x‖
   refine intervalIntegral.hasSum_integral_of_dominated_convergence bound (fun k ↦ ?_)
     (fun k ↦ ?_) ?_ ?_ ?_
@@ -424,7 +420,6 @@ theorem exists_analyticOnNhd_primitive_on_smaller_centered_ball
   rw [extDeriv_untranslateForm c θ₀ y ((hθ₀ (y - c) hy₀).differentiableAt),
     hprim hy₀]
   change η (c + (y - c)) = η y
-  congr 1
   abel
 
 /-- A closed analytic zero-form is constant on a ball with arbitrary center. -/

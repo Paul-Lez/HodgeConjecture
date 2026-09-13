@@ -135,9 +135,6 @@ set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
 lemma comp_liftToInjectiveNat : a ≫ liftToInjectiveNat a r hI = r := by
   let := mono_extendMap_nat a
-  let : CochainComplex.IsStrictlyGE (A.extend ComplexShape.embeddingUpNat) 0 := inferInstance
-  let : CochainComplex.IsStrictlyGE (K.extend ComplexShape.embeddingUpNat) 0 := inferInstance
-  let : CochainComplex.IsStrictlyGE (I.extend ComplexShape.embeddingUpNat) 0 := inferInstance
   apply (ComplexShape.embeddingUpNat.extendFunctor C).map_injective
   rw [Functor.map_comp]
   dsimp only [liftToInjectiveNat]

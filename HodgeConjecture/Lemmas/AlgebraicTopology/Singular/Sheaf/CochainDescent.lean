@@ -121,8 +121,6 @@ lemma singularCochainOfSimplexFunction_toFunction (U : (Opens X)ᵒᵖ) (n : ℕ
   change Module.Dual R
     ((sigmaObj (C := ModuleCat.{u} R)
       fun _ : OpenSimplex X U n ↦ ModuleCat.of R R) : Type u) at φ
-  dsimp [singularCochainOfSimplexFunction, singularCochainToSimplexFunction,
-    singularChainOfSimplex]
   change (Sigma.desc (fun s : OpenSimplex X U n ↦ ModuleCat.ofHom <|
       (LinearMap.ringLmapEquivSelf R R R).symm
         (φ ((Sigma.ι (fun _ : OpenSimplex X U n ↦ ModuleCat.of R R) s).hom 1)))).hom = φ
@@ -251,7 +249,6 @@ lemma exists_openCochain_of_meq {U : Opens X}
     (n : ℕ) (x : Meq (singularCochainPresheaf R X n) S) :
     ∃ φ : OpenCochains R X (.op U) n,
       ∀ I : S.Arrow, (singularCochainPresheaf R X n).map I.f.op φ = x I := by
-  classical
   apply exists_openCochain_of_compatibleOnSimplexBasis R X
     (fun I : S.Arrow ↦ .op I.Y) (fun I ↦ I.f.op) n (fun I ↦ x I)
   intro I J s t hst
@@ -293,7 +290,6 @@ lemma singularCochain_toPlus_exists_rep (U : Opens X) (n : ℕ)
     ∃ φ : OpenCochains R X (.op U) n,
       ((Opens.grothendieckTopology X).toPlus
         (singularCochainPresheaf R X n)).app (.op U) φ = y := by
-  classical
   obtain ⟨S, x, hy⟩ := GrothendieckTopology.Plus.exists_rep y
   obtain ⟨φ, hφ⟩ := exists_openCochain_of_meq R X S n x
   let φ' : ToType ((singularCochainPresheaf R X n).obj (.op U)) := φ

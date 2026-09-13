@@ -128,7 +128,6 @@ theorem closedImmersionNormalTransition_preserves_support
     (hv : v ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
     (closedImmersionNormalTransition X Y i m d z z' v).2 = 0 ↔ v.2 = 0 := by
   let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
-  let e' := closedImmersionHolomorphicFlatteningChart X Y i m d z'
   have hy := e.map_target hv.1
   have h1 := closedImmersionHolomorphicFlatteningChart_mem_range_iff
     X Y i m d z (e.symm v) hy
@@ -187,7 +186,6 @@ theorem closedImmersionNormalCoordinateChange_mem_source :
         (localChart Y m z z, 0) := by
   change closedImmersionNormalCoordinatesLinearEquiv X Y i m d z
     ((closedImmersionNormalChart X Y i m d z).symm _) = _
-  rw [closedImmersionNormalChart_symm_center]
   simp [closedImmersionNormalCoordinatesLinearEquiv]
 
 theorem analyticAt_closedImmersionNormalCoordinateChange :

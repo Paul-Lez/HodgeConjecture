@@ -624,7 +624,6 @@ def map (f : A →ₐ[R] B) (p : ℕ) : Form R A p →ₗ[R] Form R B p :=
 @[simp] lemma map_mk (f : A →ₐ[R] B) (p : ℕ) (a₀ : A) (v : Fin p → A) :
     map R f p (mk R A p a₀ v) = mk R B p (f a₀) fun i => f (v i) := by
   let _ := f.toAlgebra
-  have : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
   refine Subtype.ext ?_
   show extAlgMap R A B (mk R A p a₀ v : ExtAlg R A) =
     ((mk R B p (f a₀) fun i => f (v i) : Form R B p) : ExtAlg R B)

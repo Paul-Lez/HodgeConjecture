@@ -41,7 +41,6 @@ private lemma sheafPullback_preservesMonomorphisms :
     Functor.PreservesMonomorphisms (hf.sheafPullback AddCommGrpCat.{0}) := by
   constructor
   intro F G g hg
-  letI : Mono g := hg
   let : Mono g.hom := Functor.map_mono (TopCat.Sheaf.forget AddCommGrpCat.{0} Y) g
   let : Mono (Functor.whiskerLeft hf.functor.op g.hom) := by
     rw [NatTrans.mono_iff_mono_app]

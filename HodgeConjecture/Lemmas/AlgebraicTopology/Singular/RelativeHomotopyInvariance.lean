@@ -52,7 +52,6 @@ lemma toSimplicialObjectHomotopy_h_naturality
   simp only [CategoryTheory.SimplicialObject.Homotopy.precomp_h,
     CategoryTheory.SimplicialObject.Homotopy.postcomp_h]
   dsimp [SSet.Homotopy.toSimplicialObjectHomotopy, TopCat.Homotopy.toSSet]
-  rw [← SSet.yonedaEquiv_symm_comp]
   have hmap :
       (SSet.yonedaEquiv.symm x ≫ TopCat.toSSet.map a) ▷ Δ[1] ≫
           (TopCat.toSSet.obj X ◁ SSet.stdSimplex.toSSetObjI) ≫
@@ -187,7 +186,6 @@ lemma relativeChainHomotopyComponent_fac (H : TopPair.Homotopy f g)
         relativeChainHomotopyComponent (R := R) H i j =
       (H.fst.singularChainComplexFunctorObjMap (ModuleCat.of R R)).hom i j ≫
         (relativeChainProjection R Y).f j := by
-  unfold relativeChainHomotopyComponent
   exact (Cofork.IsColimit.π_desc
       (relativeChainProjectionComponentIsCokernel (R := R) X i)
       (t := CokernelCofork.ofπ

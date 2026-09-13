@@ -130,7 +130,6 @@ theorem rightDerivedFunctorPlus_onInjectives :
           (Functor.whiskerRight α.mapHomotopyCategoryPlus DerivedCategory.Plus.Qh) ≫
         G.rightDerivedFunctorPlusOnInjectivesIso.inv := by
   ext K : 2
-  apply (cancel_epi ((asIso F.rightDerivedFunctorPlusOnInjectivesUnit).app K).hom).1
   simp [Functor.rightDerivedFunctorPlusOnInjectivesIso,
     Functor.rightDerivedFunctorPlusOnInjectivesUnit,
     HomotopyCategory.Plus.injectiveToDerived]

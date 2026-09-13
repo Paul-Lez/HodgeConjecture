@@ -59,8 +59,6 @@ theorem supportEvaluation_map_quasiIso_of_flasque
     (R.mapHomologicalComplex (.up ℤ)).obj L
   let f' : K' ⟶ L' := (R.mapHomologicalComplex (.up ℤ)).map f
   let : QuasiIso f' := openSheafRestriction_map_quasiIso X U f
-  let : K'.IsStrictlyGE nK := by dsimp [K']; infer_instance
-  let : L'.IsStrictlyGE nL := by dsimp [L']; infer_instance
   have hK' (n : ℤ) : (K'.X n).IsFlasque := by
     let : (K.X n).IsFlasque := hK n
     exact openSheafRestriction_isFlasque X U _
@@ -116,7 +114,6 @@ lemma supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque
     (supportRestrictionSectionsComplexShortComplex X U V K).ShortExact := by
   apply HomologicalComplex.shortExact_of_degreewise_shortExact
   intro n
-  let := hK n
   exact supportRestrictionSectionsShortComplex_shortExact_of_flasque X U V (K.X n)
 
 /-- A coefficient-complex map induces the actual map of localization sequences. -/

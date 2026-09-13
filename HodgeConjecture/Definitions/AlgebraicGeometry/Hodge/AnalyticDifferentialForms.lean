@@ -561,11 +561,6 @@ private lemma chartGeneratorEvaluation_differentiableWithinAt
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     DifferentiableWithinAt ℂ (chartGeneratorEvaluation X d U z p a₀ v)
       (chartSectionDomain X d U z) y := by
-  rw [show chartGeneratorEvaluation X d U z p a₀ v =
-      (fun w ↦ chartSection X d U z a₀ w •
-        exactWedgeWithin (Fin d → ℂ) p
-          (fun i ↦ chartSection X d U z (v i))
-          (chartSectionDomain X d U z) w) from rfl]
   exact DifferentiableWithinAt.smul
     ((chartSection_contDiffWithinAt X d U z a₀ hy).differentiableWithinAt (by simp))
     (exactWedgeWithin_differentiableWithinAt (Fin d → ℂ) p

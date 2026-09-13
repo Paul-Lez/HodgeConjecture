@@ -81,15 +81,6 @@ theorem globalSectionsNat_map_quasiIso
     HomologicalComplex.extendMap f ComplexShape.embeddingUpNat
   let eK := HomologicalComplex.mapExtendCanonicalIso Γ K ComplexShape.embeddingUpNat
   let eL := HomologicalComplex.mapExtendCanonicalIso Γ L ComplexShape.embeddingUpNat
-  let : KInt.IsStrictlyGE 0 := by
-    dsimp [KInt]
-    infer_instance
-  let : LInt.IsStrictlyGE 0 := by
-    dsimp [LInt]
-    infer_instance
-  let : QuasiIso fInt :=
-    (HomologicalComplex.quasiIso_extendMap_iff f ComplexShape.embeddingUpNat).mpr
-      inferInstance
   let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map fInt) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       fInt 0 0 (extendNat_term_isFlasque K hK) (extendNat_term_isFlasque L hL)
@@ -145,7 +136,6 @@ theorem globalRawComplementToSingularSheaf_quasiIso
       (analyticComplementInclusion X Z)) := by
   let U := TopCat.of ↥Zᶜ
   let j := analyticComplementInclusion X Z
-  let : T2Space U := inferInstance
   let Uopen : Opens (TopCat.of (ComplexPoint X)) :=
     ⟨Zᶜ, hZ.isOpen_compl⟩
   let : ParacompactSpace U := hpara Uopen
@@ -315,7 +305,6 @@ theorem globalComplementSingularToInjectiveResolutionNat_quasiIso
       X Z hZ) := by
   let U := TopCat.of ↥Zᶜ
   let j := analyticComplementInclusion X Z
-  let : T2Space U := inferInstance
   let : ∀ W : Opens U, ParacompactSpace W := fun W ↦
     opens_paracompactSpace_of_isOpenEmbedding j
       (analyticComplementInclusion_isOpenEmbedding X Z hZ) hpara W
@@ -452,8 +441,6 @@ theorem globalRawToSingularSheafInt_quasiIso
   let he : QuasiIso e.inv := inferInstance
   change QuasiIso (fInt ≫ e.inv)
   refine ⟨fun i ↦ ?_⟩
-  letI : QuasiIsoAt fInt i := hfInt.quasiIsoAt i
-  letI : QuasiIsoAt e.inv i := he.quasiIsoAt i
   exact quasiIsoAt_comp fInt e.inv i
 
 set_option linter.style.haveILetI false in
@@ -483,8 +470,6 @@ theorem globalRawComplementToDerivedPushforwardInt_quasiIso
   let he : QuasiIso e.inv := inferInstance
   change QuasiIso (fInt ≫ e.inv)
   refine ⟨fun i ↦ ?_⟩
-  letI : QuasiIsoAt fInt i := hfInt.quasiIsoAt i
-  letI : QuasiIsoAt e.inv i := he.quasiIsoAt i
   exact quasiIsoAt_comp fInt e.inv i
 
 set_option backward.isDefEq.respectTransparency false in

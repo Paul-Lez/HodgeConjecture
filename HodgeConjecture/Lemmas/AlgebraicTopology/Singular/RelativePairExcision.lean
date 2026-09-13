@@ -659,7 +659,6 @@ lemma neighborhoodToPointExcisionSmall_comp_smallToNeighborhood
     neighborhoodRelativeProjectionComponent U x n
   apply SSet.chainComplex_hom_ext
   intro u
-  rw [← Category.assoc]
   change ((TopCat.toSSet.obj (TopCat.of U)).ιChainComplex u ≫
       (SSet.chainComplexMap (neighborhoodToPointExcisionSmallSingularSet U x)
         (ModuleCat.of ℚ ℚ)).f n) ≫
@@ -840,7 +839,6 @@ lemma pointComplementChainsToAmbientPairLeft_comp
         coverSmallRationalSingularChainInclusion
           (TopCat.of X) (pointExcisionCover U x) := by
   change 𝟙 _ ≫ ambientPointComplementSubspaceChainMap x = _
-  rw [Category.id_comp]
   exact (pointComplementToExcisionSmallChains_comp_ambientInclusion U x).symm
 
 /-- The morphism of chain-pair arrows from the point-excision-small pair to the ambient
@@ -969,7 +967,6 @@ lemma neighborhoodRelativeProjection_comp_ambientRelativeMap
         (relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x) =
       neighborhoodAmbientChainMap U ≫
         ambientPointComplementRelativeProjection x := by
-  rw [neighborhoodAmbientChainMap_eq_pairMapRight]
   exact ((coker.π (C := ChainCategory ℚ)).naturality
     ((chainPairFunctor ℚ).map (neighborhoodPointComplementPairMap U x))).symm
 
@@ -1011,8 +1008,6 @@ theorem neighborhoodPointComplement_relativeChainMap_quasiIso
       ((relativeChainFunctor ℚ).map (neighborhoodPointComplementPairMap U x)) := by
   let : IsIso (neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x) :=
     (neighborhoodRelativePointExcisionSmallIso U x).isIso_hom
-  let : QuasiIso (neighborhoodRelativeToPointExcisionSmallRelativeChainMap U x) :=
-    inferInstance
   let : QuasiIso (pointExcisionSmallRelativeToAmbientRelativeChainMap U x) :=
     pointExcisionSmallRelativeToAmbient_quasiIso U x hU hx
   rw [← neighborhoodToSmallRelative_comp_smallRelativeToAmbient]

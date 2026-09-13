@@ -100,9 +100,6 @@ lemma standardSubspaceBoundaryChain_boundary (n : ℕ) :
         ((ComplexShape.down ℕ).next n) = 0 := by
   let f := ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).hom
   let : Mono f := relativeChainMap_mono ℚ (standardPuncturedPair (n + 1))
-  let : Mono (f.f ((ComplexShape.down ℕ).next n)) :=
-    Functor.map_mono (HomologicalComplex.eval (ModuleCat ℚ) _
-      ((ComplexShape.down ℕ).next n)) f
   rw [← cancel_mono (f.f ((ComplexShape.down ℕ).next n)), Category.assoc, ← f.comm,
     ← Category.assoc, standardSubspaceBoundaryChain_inclusion, Category.assoc,
     HomologicalComplex.d_comp_d, comp_zero]
@@ -131,7 +128,6 @@ lemma standardLocalCycle_comp_relativeSingularBoundary (n : ℕ) :
       standardPuncturedBoundaryCycle n ≫
         ((chainPairFunctor ℚ).obj
           (standardPuncturedPair (n + 1))).left.homologyπ n := by
-  let S := relativeChainShortComplex ℚ (standardPuncturedPair (n + 1))
   let hS := relativeChainShortComplex_shortExact ℚ
     (standardPuncturedPair (n + 1))
   exact hS.δ_eq (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
@@ -315,7 +311,6 @@ lemma standardPuncturedBoundaryCycle_zero_eq :
     HomologicalComplex.liftCycles_i]
   change (∑ i : Fin 2, (-1 : ℤ) ^ i.val • standardSubspaceFaceChain 0 i) =
     standardSubspaceFaceChain 0 0 - standardSubspaceFaceChain 0 1
-  rw [Fin.sum_univ_two]
   norm_num
   rw [sub_eq_add_neg]
 

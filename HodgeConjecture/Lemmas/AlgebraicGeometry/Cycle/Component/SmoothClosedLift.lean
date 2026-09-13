@@ -45,9 +45,7 @@ theorem cycleComponentSmoothLocus_smoothOfRelativeDimension (hx : Order.coheight
   let A := (cycleComponentι X.left x ≫ X.hom).smoothLocus
   let g := A.ι ≫ cycleComponentι X.left x ≫ X.hom
   let : Smooth g := cycleComponent_smoothLocus_smooth X x
-  let : IsIntegral A := cycleComponent_smoothLocus_isIntegral X x
   obtain ⟨m, hm⟩ := Smooth.exists_smoothOfRelativeDimension g
-  let : SmoothOfRelativeDimension m g := hm
   obtain ⟨z, hzA, hzClosed⟩ := (dense_cycleComponent_smooth_closedPoints X x).nonempty
   let zA : A.toScheme := ⟨z, hzA⟩
   have hzAClosed : IsClosed ({zA} : Set A) := by

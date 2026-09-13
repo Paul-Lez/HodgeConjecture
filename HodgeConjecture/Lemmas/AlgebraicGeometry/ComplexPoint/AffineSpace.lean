@@ -236,7 +236,6 @@ lemma continuous_affineSpaceEquiv_symm (n : Type) :
       inferInstance analyticTopology (affineSpaceEquiv n).symm := by
   rw [continuous_iff_analyticSubbasis]
   rintro W ⟨U, s, V, hV, rfl⟩
-  rw [Set.preimage_inter, Set.preimage_preimage]
   apply isOpen_iff_forall_mem_open.mpr
   rintro v ⟨hvU, hvV⟩
   obtain ⟨f, hfU, hvf⟩ :=

@@ -82,8 +82,6 @@ lemma moduleCatHomologyClass_naturality {S T : ShortComplex (ModuleCat.{u} R)}
         ModuleCat.ofHom (moduleCatCycleMap f) ≫ T.moduleCatCyclesIso.inv ≫ T.homologyπ := by
     rw [homologyπ_naturality, ← Category.assoc, moduleCatCyclesIso_inv_cycleMap,
       Category.assoc]
-  rw [← Category.assoc, moduleCatCyclesIso_inv_π,
-    moduleCatCyclesIso_inv_π] at h
   exact ConcreteCategory.congr_hom h x
 
 set_option backward.isDefEq.respectTransparency false in

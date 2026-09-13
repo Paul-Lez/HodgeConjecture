@@ -45,7 +45,6 @@ theorem analyticAt_closedImmersionNormalChart_symm :
     AnalyticAt ℂ (closedImmersionNormalChart X Y i m d z).symm
       (localChart X d (Point.map i z) (Point.map i z)) := by
   let P := closedImmersionDerivativeProjection X Y i m d z
-  let : CompleteSpace P.ker := FiniteDimensional.complete ℂ P.ker
   let e := closedImmersionNormalChart X Y i m d z
   have ha := analyticAt_inclusionInComplexCharts X Y i m d z
   have hd := ha.hasStrictFDerivAt.add_kernel P

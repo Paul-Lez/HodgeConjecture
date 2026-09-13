@@ -115,8 +115,6 @@ lemma constantsToSingularCochainComplexInt_quasiIso
     [IsIntegral X.left] [Smooth X.hom]
     (R : Type) [Field R] :
     QuasiIso (constantsToSingularCochainComplexInt X R) := by
-  unfold constantsToSingularCochainComplexInt constantCoefficientSheafComplexInt
-    singularCochainSheafComplexInt
   exact (HomologicalComplex.quasiIso_extendMap_iff
     (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
       (TopCat.of (ComplexPoint X))) ComplexShape.embeddingUpNat).mpr

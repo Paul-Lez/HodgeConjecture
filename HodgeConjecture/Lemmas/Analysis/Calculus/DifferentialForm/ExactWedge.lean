@@ -52,7 +52,6 @@ lemma wedgeFDerivWithin_eq_standardVolumeForm_comp
     ContinuousAlternatingMap.compContinuousLinearMap_apply,
     standardVolumeForm, wedgeCovectors_apply_eq_det]
   congr 1
-  ext i j
   rw [fderivWithin_pi hf hs]
   simp
 

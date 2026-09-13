@@ -90,7 +90,6 @@ lemma exists_openNhds_complement_simplex [T2Space X] (x : X) {n : ℕ}
       ⟨fun t ↦ ⟨g t, hg t⟩, g.continuous.subtype_mk hg⟩
   refine ⟨U, τ, ?_⟩
   apply (X.toSSetObjEquiv _).injective
-  ext t
   rfl
 
 /-- The map from ambient chains induced by a neighborhood cocone. -/

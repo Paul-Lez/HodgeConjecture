@@ -115,7 +115,6 @@ lemma standardSphereBoundaryFaceSimplex_injective (n : ℕ) :
     simpa [standardSimplexTopSimplexForLocalClass] using
       (SSet.stdSimplex.objEquiv_symm_comp
         (𝟙 (SimplexCategory.mk n)) (SimplexCategory.δ k)).symm
-  rw [key i, key j] at h'
   exact SSet.stdSimplex.objEquiv.symm.injective h'
 
 lemma standardAffineBoundarySimplicialMap_face (n : ℕ) (i : Fin (n + 2)) :
@@ -146,7 +145,6 @@ lemma standardSphereBoundaryChainInclusion_comp_retraction (d k : ℕ) :
         (SSet.boundary d : SSet.Subcomplex (Δ[d] : SSet.{0})).ι
         (ModuleCat.of ℚ ℚ)).f k ≫
       standardSphereBoundaryChainRetractionComponent d k = 𝟙 _ := by
-  classical
   apply (∂Δ[d] : SSet.{0}).chainComplex_hom_ext
   intro x
   rw [← Category.assoc, SSet.ι_chainComplexMap_f]
@@ -195,7 +193,6 @@ lemma standardSphereSimplicialBoundaryChain_inclusion (n : ℕ) :
   apply Finset.sum_congr rfl
   intro i _
   rw [Preadditive.zsmul_comp]
-  congr 1
   rw [SSet.ι_chainComplexMap_f]
   rfl
 
@@ -258,7 +255,6 @@ lemma standardSphereSimplicialNormalizedBoundaryFace_detect
         (standardSphereBoundaryFaceSimplex (n + 1) i) ≫
       standardSphereSimplicialNormalizedBoundaryDetector n =
         if i = 0 then 𝟙 _ else 0 := by
-  classical
   let x : (∂Δ[n + 2] : SSet.{0}).nonDegenerate (n + 1) :=
     ⟨standardSphereBoundaryFaceSimplex (n + 1) i,
       standardSphereBoundaryFaceSimplex_nonDegenerate (n + 1) i⟩
@@ -277,7 +273,6 @@ lemma standardSphereSimplicialNormalizedBoundaryFace_detect
 lemma standardSphereSimplicialNormalizedBoundaryChain_detect (n : ℕ) :
     standardSphereSimplicialNormalizedBoundaryChain n ≫
       standardSphereSimplicialNormalizedBoundaryDetector n = 𝟙 _ := by
-  classical
   rw [standardSphereSimplicialNormalizedBoundaryChain,
     standardSphereSimplicialBoundaryChain, Preadditive.sum_comp,
     Preadditive.sum_comp]

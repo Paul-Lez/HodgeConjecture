@@ -79,7 +79,6 @@ private lemma hasFDerivAt_univUnitBall_formula_normed :
     filter_upwards [hball] with x hx
     simpa only [Metric.mem_ball, Real.dist_eq] using hx
   filter_upwards [hsmall] with x hx
-  simp only [ContinuousLinearMap.id_apply]
   norm_num
   change ‖(√(1 + ‖x‖ ^ (2 : ℕ)))⁻¹ • x - x‖ ≤ ε * ‖x‖
   calc
@@ -111,8 +110,6 @@ private lemma hasFDerivAt_univUnitBall_symm_formula_normed :
     filter_upwards [hball] with x hx
     simpa only [Metric.mem_ball, Real.dist_eq] using hx
   filter_upwards [hsmall] with x hx
-  simp only [OpenPartialHomeomorph.univUnitBall_symm_apply,
-    ContinuousLinearMap.id_apply]
   norm_num
   change ‖(√(1 - ‖x‖ ^ (2 : ℕ)))⁻¹ • x - x‖ ≤ ε * ‖x‖
   calc
@@ -130,14 +127,12 @@ lemma hasFDerivAt_univBall_complex (c : Fin d → ℂ) (r : ℝ) (hr : 0 < r) :
       (Fin d → ℂ) → (Fin d → ℂ))
       ((r : ℂ) • ContinuousLinearMap.id ℂ (Fin d → ℂ)) 0 := by
   rw [OpenPartialHomeomorph.univBall, dif_pos hr]
-  apply (piHasFDerivAt_iff_normed d _ _ _).mpr
   apply ((hasFDerivAt_univUnitBall_formula_normed d).const_smul (r : ℂ)).add_const c
     |>.congr_of_eventuallyEq
   filter_upwards [] with y
   change r • OpenPartialHomeomorph.univUnitBall y + c =
     (r : ℂ) • ((√(1 + ‖y‖ ^ 2))⁻¹ • y) + c
   rw [OpenPartialHomeomorph.univUnitBall_apply]
-  match_scalars
   all_goals rfl
 
 /-- The inverse positive-radius radial compression has derivative `r⁻¹ · id` at its center. -/
@@ -147,7 +142,6 @@ lemma hasFDerivAt_univBall_symm_complex (c : Fin d → ℂ) (r : ℝ) (hr : 0 < 
       ((ContinuousLinearMap.id ℂ (Fin d → ℂ)).comp
         ((r⁻¹ : ℂ) • ContinuousLinearMap.id ℂ (Fin d → ℂ))) c := by
   rw [OpenPartialHomeomorph.univBall, dif_pos hr]
-  apply (piHasFDerivAt_iff_normed d _ _ _).mpr
   have ha : HasFDerivAt
       (fun y : Fin d → ℂ ↦ (r⁻¹ : ℂ) • (y - c))
       ((r⁻¹ : ℂ) • ContinuousLinearMap.id ℂ (Fin d → ℂ)) c :=
@@ -218,7 +212,6 @@ lemma compressedChartTransition_zero
     compressedChartTransition d e e' x hx hx' 0 = 0 := by
   change (chartModelEmbedding d e' x hx').symm
     (chartModelEmbedding d e x hx 0) = 0
-  rw [chartModelEmbedding_zero]
   have hleft := (chartModelEmbedding d e' x hx').left_inv
     (show 0 ∈ (chartModelEmbedding d e' x hx').source by
       rw [chartModelEmbedding_source]
@@ -287,7 +280,6 @@ theorem localClassOfChart_eq_of_hasFDerivAt_compressedTransition
       standardComplexLocalClass d := hlocal c hc
   have hpair := complexNeighborhoodPuncturedPairMap_compressedChartTransition_comp
     d e e' x hx hx' V hVsource hf_ne
-  unfold localClassOfChart
   calc
     relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e x hx)
         (standardComplexLocalClass d) =

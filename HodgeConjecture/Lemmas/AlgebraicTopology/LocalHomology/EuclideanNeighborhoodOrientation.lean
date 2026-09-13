@@ -111,7 +111,6 @@ lemma standardOrientationBallFace_projection (n : ℕ) (i : Fin (n + 2)) :
     apply ((standardOrientationBallPair (n + 1)).fst.toSSetObjEquiv _).injective
     ext t
     rfl
-  rw [standardAmbientFaceChain, ← hσ]
   exact iota_subspace_relativeChainProjection ℚ (standardOrientationBallPair (n + 1)) σ
 
 /-- The fixed ordered affine simplex projected modulo the complement of the ball. -/

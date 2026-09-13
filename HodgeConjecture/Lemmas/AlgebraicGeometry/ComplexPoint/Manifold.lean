@@ -86,7 +86,6 @@ def localChart [SmoothOfRelativeDimension d X.hom]
 
 lemma mem_localChart_source [SmoothOfRelativeDimension d X.hom]
     (z : ComplexPoint X) : z ∈ (localChart X d z).source := by
-  rw [localChart, OpenPartialHomeomorph.lift_openEmbedding_source]
   exact ⟨pointInCoordinateNeighborhood X d z,
     pointInCoordinateNeighborhood_mem_chart_source X d z, rfl⟩
 
@@ -94,7 +93,6 @@ lemma mem_coordinateNeighborhood_of_mem_localChart_source
     [SmoothOfRelativeDimension d X.hom]
     (z w : ComplexPoint X) (hw : w ∈ (localChart X d z).source) :
     w ∈ overOpen ((localEtaleCoordinates X d z).neighborhood) := by
-  rw [localChart, OpenPartialHomeomorph.lift_openEmbedding_source] at hw
   obtain ⟨w', _, rfl⟩ := hw
   exact w'.2
 
@@ -115,7 +113,6 @@ lemma localChart_apply_of_mem [SmoothOfRelativeDimension d X.hom]
     localChart X d z w =
       (localEtaleCoordinates X d z).ambientAnalyticCoordinates
         ⟨w, mem_coordinateNeighborhood_of_mem_localChart_source X d z w hw⟩ := by
-  rw [localChart, OpenPartialHomeomorph.lift_openEmbedding_source] at hw
   obtain ⟨w', hw', rfl⟩ := hw
   rw [localChart, OpenPartialHomeomorph.lift_openEmbedding_apply]
   exact (localEtaleCoordinates X d z).ambientProjectionChart_apply_of_mem
@@ -169,7 +166,6 @@ lemma analyticAt_localChart_transition_component
     AnalyticAt ℂ
       (fun v ↦ localChart X d z'
         ((localChart X d z).symm v) i) w := by
-  rw [OpenPartialHomeomorph.trans_source] at hw
   have hwtarget : w ∈ (localChart X d z).target := hw.1
   have hsource : (localChart X d z).symm w ∈
       (localChart X d z').source := hw.2
@@ -273,7 +269,6 @@ theorem locallyPathConnectedSpace [IsIntegral X.left] [Smooth X.hom] :
   let Uo : TopologicalSpace.Opens (ComplexPoint X) := ⟨U, hUopen⟩
   obtain ⟨V, hxV, hVcontractible, hVU⟩ :=
     exists_contractibleOpen_le X x Uo hxU
-  let : ContractibleSpace V := hVcontractible
   refine ⟨(V : Set _), V.2.mem_nhds hxV, ?_, ?_⟩
   · rw [isPathConnected_iff_pathConnectedSpace]
     infer_instance

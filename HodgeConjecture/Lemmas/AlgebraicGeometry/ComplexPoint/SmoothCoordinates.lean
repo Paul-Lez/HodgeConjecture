@@ -47,7 +47,6 @@ attribute [local instance] overSpecAlgebra
 lemma Scheme.Opens.ι_appTop_topIso_hom {Y : Scheme} (U : Y.Opens) :
     U.ι.appTop ≫ U.topIso.hom =
       Y.presheaf.map (homOfLE (show U ≤ (⊤ : Y.Opens) from le_top)).op := by
-  rw [Scheme.Opens.ι_appTop, Scheme.Opens.topIso_hom]
   let a : Opposite.op (⊤ : Y.Opens) ⟶ Opposite.op (U.ι ''ᵁ ⊤) :=
     (homOfLE (show U.ι ''ᵁ ⊤ ≤ (⊤ : Y.Opens) from le_top)).op
   let b : Opposite.op (U.ι ''ᵁ ⊤) ⟶ Opposite.op U :=
@@ -326,7 +325,6 @@ lemma pointAlgHomHomeomorph_apply
     (z : ComplexPoint (ComplexPoint.openScheme X D.neighborhood))
     (r : Γ(D.neighborhood.toScheme, ⊤)) :
     D.pointAlgHomHomeomorph z r = Point.evaluate ⊤ r z := by
-  rw [pointAlgHomHomeomorph, Homeomorph.trans_apply]
   change ComplexPoint.affineSpecEquiv Γ(D.neighborhood.toScheme, ⊤)
       (D.affineSpecPointHomeomorph z) r = _
   rw [ComplexPoint.affineSpecEquiv_apply, affineSpecPointHomeomorph_apply, Point.evaluate_map]
@@ -456,8 +454,6 @@ lemma ambientProjectionChart_apply_of_mem
           Γ(D.neighborhood.toScheme, ⊤) u).source := by
     simpa only [Set.mem_preimage, OpenPartialHomeomorph.coe_trans, Function.comp_apply,
       Homeomorph.toOpenPartialHomeomorph_apply] using hu
-  rw [ambientProjectionChart, OpenPartialHomeomorph.trans_apply,
-    OpenPartialHomeomorph.trans_apply]
   change ComplexAlgHom.etaleAlgHomProjectionChart (n := d)
       Γ(D.neighborhood.toScheme, ⊤) u
         (D.pointAlgHomHomeomorph

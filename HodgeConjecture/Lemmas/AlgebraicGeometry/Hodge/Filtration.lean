@@ -281,7 +281,6 @@ omit [Algebra K ℂ] in
     {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (n : ℤ) :
     hypercohomologyMap X (0 : K ⟶ L) n = 0 := by
   refine AddMonoidHom.ext fun α ↦ ?_
-  rw [AddMonoidHom.zero_apply]
   apply (Localization.SmallShiftedHom.equiv
     (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
   unfold hypercohomologyMap
@@ -304,7 +303,6 @@ omit [Algebra K ℂ] in
         (analyticQuasiIsomorphisms X) 0 rfl (𝟙 K))
       (zero_add n) = α
   apply eK.injective
-  rw [Localization.SmallShiftedHom.equiv_comp]
   simp [eK]
 
 lemma complexConstantCohomologyDeRhamEquiv_apply
@@ -338,8 +336,6 @@ lemma fieldToDeRhamCohomology_factor
       hypercohomologyMap X
         (constantsToHolomorphicDeRhamComplexInt X) n
         (fieldToComplexCohomology K X n α) := by
-  unfold fieldToDeRhamCohomology fieldToComplexCohomology
-    fieldToHolomorphicDeRhamComplexInt
   exact hypercohomologyMap_comp_apply X
     (fieldToComplexConstantSheafComplexInt K X)
     (constantsToHolomorphicDeRhamComplexInt X) n α
@@ -379,7 +375,6 @@ lemma hodgeFilteredDeRhamInclusion_eq_zero_of_lt
 lemma hodgeFiltration_eq_bot_of_lt [IsIntegral X.left] [Smooth X.hom]
     {p : ℤ} (hp : (dim X.left : ℤ) < p) (n : ℤ) :
     hodgeFiltration X p n = ⊥ := by
-  rw [hodgeFiltration]
   change (hypercohomologyMap X
     (hodgeFilteredDeRhamInclusion X p) n).range = ⊥
   rw [hodgeFilteredDeRhamInclusion_eq_zero_of_lt X hp,

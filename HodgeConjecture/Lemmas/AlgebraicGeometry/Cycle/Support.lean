@@ -228,13 +228,6 @@ lemma isClosed_complexPoint_underlying_preimage
     isOpen_compl_iff.mpr Z.2⟩
   change @IsOpen (ComplexPoint X) Point.analyticTopology
     ((@Point.underlying ℂ _ _ X) ⁻¹' (Z : Set X.left))ᶜ
-  rw [show ((@Point.underlying ℂ _ _ X) ⁻¹'
-      (Z : Set X.left))ᶜ = Point.overOpen U by
-    apply Set.ext
-    intro z
-    change (¬Point.underlying z ∈ Z) ↔
-      Point.underlying z ∈ (Z : Set X.left)ᶜ
-    rfl]
   exact Point.isOpen_overOpen (X := X) U
 
 lemma isClosed_cycleComponentSupport

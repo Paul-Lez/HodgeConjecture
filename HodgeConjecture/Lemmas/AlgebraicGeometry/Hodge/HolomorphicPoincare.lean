@@ -308,7 +308,6 @@ lemma chartSectionDifferential_holomorphicSectionOfChart
     chartSectionDifferential X d U z
         (holomorphicSectionOfChart X d U z hsource a ha) y =
       fderivWithin ℂ a (chartSectionDomain X d U z) y := by
-  rw [chartSectionDifferential]
   exact fderivWithin_congr'
     (fun w hw ↦ chartSection_holomorphicSectionOfChart X d U z hsource a ha hw) hy
 
@@ -331,7 +330,6 @@ lemma chartSection_chartCoordinateSection [SmoothOfRelativeDimension d X.hom]
     (i : Fin d) {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     chartSection X d U z (chartCoordinateSection X d U z hsource i) y =
       y i := by
-  unfold chartCoordinateSection
   exact chartSection_holomorphicSectionOfChart X d U z hsource _ _ hy
 
 lemma chartSectionDifferential_chartCoordinateSection
@@ -508,7 +506,6 @@ lemma analyticOnNhd_chartEvaluation [SmoothOfRelativeDimension d X.hom]
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
     AnalyticOnNhd ℂ (chartEvaluation X d U z p θ)
       (chartSectionDomain X d U z) := by
-  classical
   let s := chartSectionDomain X d U z
   let e (I : Fin p → Fin d) : Fin p → Fin d → ℂ := fun j ↦ Pi.single (I j) 1
   let W (I : Fin p → Fin d) :=

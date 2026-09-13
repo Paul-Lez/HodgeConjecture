@@ -135,7 +135,6 @@ lemma equivHomShift_symm_rightUnshift (z : Cocycle A (K⟦s⟧) n) :
 lemma rightUnshift_v_zero (z : Cochain A (K⟦s⟧) n) :
     (z.rightUnshift (n + s) rfl).v 0 (n + s) (zero_add _) =
       z.v 0 n (zero_add _) := by
-  dsimp only [Cochain.rightUnshift, Cochain.mk_v]
   exact z.v_comp_XIsoOfEq_hom 0 (0 + n) n rfl (zero_add n)
 
 end CochainComplex.HomComplex

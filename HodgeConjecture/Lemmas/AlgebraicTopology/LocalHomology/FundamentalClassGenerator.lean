@@ -62,7 +62,6 @@ lemma standardComplexRealRelativeHomologyIso_hom_standardComplexLocalClassMul (p
     (standardComplexRealRelativeHomologyIso p).hom.hom
         (standardComplexLocalClassMul p) =
       standardLocalClass (p * 2) := by
-  unfold standardComplexLocalClassMul
   exact (standardComplexRealRelativeHomologyIso p).inv_hom_id_apply
     (standardLocalClass (p * 2))
 

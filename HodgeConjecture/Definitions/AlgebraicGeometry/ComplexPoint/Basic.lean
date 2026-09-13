@@ -217,7 +217,6 @@ lemma mem_overOpen_map_iff {Y : Over (Spec ↧R)} (f : X ⟶ Y)
 lemma evaluate_map {Y : Over (Spec ↧R)} (f : X ⟶ Y)
     (U : Y.left.Opens) (s : Γ(Y.left, U)) (z : Point R X) :
     evaluate U s (map f z) = evaluate (f.left ⁻¹ᵁ U) (f.left.app U s) z := by
-  classical
   by_cases hx : z.underlying ∈ f.left ⁻¹ᵁ U
   · have hy : f.left z.underlying ∈ U := hx
     rw [evaluate, dif_pos (show (map f z).underlying ∈ U from hy), evaluate,
@@ -260,7 +259,6 @@ out by an open set of ring homomorphisms `Γ(X.left, U) ⟶ ↧R`. -/
 private lemma isOpen_analyticTopology_iff {W : Set (Point R X)} :
     IsOpen W ↔ ∀ U : X.left.affineOpens,
       ∃ O : Set (Γ(X.left, U.1) ⟶ ↧R), IsOpen O ∧ evaluationHom U.1 ⁻¹' O = Subtype.val ⁻¹' W := by
-  show IsOpen[⨆ U : X.left.affineOpens, TopologicalSpace.coinduced _ (chartTopology U.1)] W ↔ _
   rw [isOpen_iSup_iff]
   exact forall_congr' fun U ↦ isOpen_coinduced.trans isOpen_induced_iff
 

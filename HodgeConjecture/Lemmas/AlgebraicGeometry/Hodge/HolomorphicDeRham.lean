@@ -109,7 +109,6 @@ lemma holomorphicDeRhamComplex_exactAt_of_lt
 @[simp] lemma scalarHolomorphicDeRhamPresheaf_zero
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     scalarHolomorphicDeRhamPresheaf X d p 0 = 0 := by
-  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp
   rfl
@@ -117,7 +116,6 @@ lemma holomorphicDeRhamComplex_exactAt_of_lt
 @[simp] lemma scalarHolomorphicDeRhamPresheaf_one
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     scalarHolomorphicDeRhamPresheaf X d p 1 = 𝟙 _ := by
-  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp
   rfl
@@ -127,7 +125,6 @@ lemma holomorphicDeRhamComplex_exactAt_of_lt
     scalarHolomorphicDeRhamPresheaf X d p (a + b) =
       scalarHolomorphicDeRhamPresheaf X d p a +
         scalarHolomorphicDeRhamPresheaf X d p b := by
-  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp [add_smul]
   rfl
@@ -137,7 +134,6 @@ lemma holomorphicDeRhamComplex_exactAt_of_lt
     scalarHolomorphicDeRhamPresheaf X d p (a * b) =
       scalarHolomorphicDeRhamPresheaf X d p b ≫
         scalarHolomorphicDeRhamPresheaf X d p a := by
-  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp [mul_smul]
   rfl
@@ -411,8 +407,6 @@ lemma constantsToHolomorphicDeRhamComplexInt_scalar
       scalarHolomorphicDeRhamComplexInt X c =
     complexScalarComplexInt X c ≫
       constantsToHolomorphicDeRhamComplexInt X := by
-  unfold constantsToHolomorphicDeRhamComplexInt
-    scalarHolomorphicDeRhamComplexInt complexScalarComplexInt
   change HomologicalComplex.extendMap
       (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat ≫
     HomologicalComplex.extendMap

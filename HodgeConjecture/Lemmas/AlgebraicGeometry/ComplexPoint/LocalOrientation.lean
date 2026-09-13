@@ -71,7 +71,6 @@ theorem span_complexLocalOrientation_eq_top
     [T1Space (ComplexPoint X)]
     (z : ComplexPoint X) :
     Submodule.span ℚ {complexLocalOrientation X d z} = ⊤ := by
-  rw [complexLocalOrientation_eq_localClassOfChart]
   exact span_localClassOfChart_eq_top d (localChart X d z) z
     (mem_localChart_source X d z)
 

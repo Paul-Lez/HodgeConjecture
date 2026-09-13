@@ -75,7 +75,6 @@ private theorem exists_coveringSieve_locallyFinite_closedRefinement
     (coveringSieveOpenFamilyOn X S)
     (coveringSieveOpenFamilyOn_isOpen X S)
     (coveringSieveOpenFamilyOn_iUnion X S)
-  let : NormalSpace U := inferInstance
   obtain ⟨W, hWcover, hWopen, hWsub⟩ :=
     exists_iUnion_eq_closure_subset hVopen hVfinite.point_finite hVcover
   refine ⟨W, hWopen, hWcover, ?_, fun I ↦ (hWsub I).trans (hVsub I)⟩
@@ -539,7 +538,6 @@ def openFamilySieve {U : Opens X} {I : Type*} (V : I → Opens X) : Sieve U wher
 private lemma openFamilySieve_mem {U : Opens X} {I : Type*} (V : I → Opens X)
     (hV : ∀ i, V i ≤ U) (hcover : ∀ x ∈ U, ∃ i, x ∈ V i) :
     openFamilySieve V ∈ Opens.grothendieckTopology X U := by
-  rw [Opens.mem_grothendieckTopology]
   intro x hx
   obtain ⟨i, hxi⟩ := hcover x hx
   exact ⟨V i, homOfLE (hV i), ⟨i, le_rfl⟩, hxi⟩
@@ -946,8 +944,6 @@ lemma rationalCochainRestrictionToCoveringSieve_eq_zero
       (((TopCat.toSSet.obj (TopCat.of (coveringSieveOpenFamily Y S I))).ιChainComplex
         (R := ModuleCat.of ℚ ℚ) y).hom a))
     (hφ I)
-  dsimp only [singularCochainPresheaf, singularCochainComplexIsoTopOpen,
-    HomologicalComplex.linearDualIso, HomologicalComplex.linearDualMap] at hI
   change φ (ModuleCat.Hom.hom
       (((openSingularChainComplexFunctor ℚ Y).map I.f).f n ≫
         (topOpenSingularChainComplexIso ℚ Y).hom.f n)
@@ -970,7 +966,6 @@ lemma rationalCochainRestrictionToCoveringSieve_eq_zero
       (TopCat.toSSet.map (topologicalSubsetInclusion Y
         (coveringSieveOpenFamily Y S I)))
       (ModuleCat.of ℚ ℚ) y) a
-  simp only [ConcreteCategory.comp_apply] at hiota
   have hI' : φ
       (((TopCat.toSSet.obj Y).ιChainComplex
         (R := ModuleCat.of ℚ ℚ)
@@ -992,7 +987,6 @@ lemma rationalCochainRestrictionToCoveringSieve_eq_zero
       (coverSmallRationalSingularChainInclusion Y
         (coveringSieveOpenFamily Y S)).f n) a) = 0
   dsimp only [coverSmallRationalSingularChainInclusion] at ⊢
-  rw [SSet.ι_chainComplexMap_f]
   simpa [hy] using hI'
   · intro f g h
     exact congrArg ModuleCat.Hom.hom h
@@ -1026,7 +1020,6 @@ lemma rationalCochainRestrictionToCoveringSieve_local_zero
   have hmember := HomologicalComplex.congr_hom
     (coverMemberToSmallRationalSingularChains_comp_inclusion Y
       (coveringSieveOpenFamily Y S) I) n
-  simp only [LinearMap.dualMap_apply, LinearMap.zero_apply] at hc ⊢
   calc
     φ ((topOpenSingularChainComplexIso ℚ Y).hom.f n
         (((openSingularChainComplexFunctor ℚ Y).map I.f).f n c)) =

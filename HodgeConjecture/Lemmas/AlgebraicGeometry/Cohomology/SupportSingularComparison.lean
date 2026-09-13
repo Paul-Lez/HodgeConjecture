@@ -65,12 +65,10 @@ lemma constantsToSingularCochainZero_comp_singularRestrictionToRawPushforward
       (.op ((Opens.map j).obj V.unop)) r
   apply LinearMap.ext
   intro c
-  simp only [LinearMap.dualMap_apply]
   change (r • (openZeroAugmentation R X V).hom)
       (((preimageOpenChainMap R j V.unop).f 0).hom c) =
     (r • (openZeroAugmentation R U
       (.op ((Opens.map j).obj V.unop))).hom) c
-  rw [LinearMap.smul_apply, LinearMap.smul_apply]
   exact congrArg (r • ·) (ConcreteCategory.congr_hom
     (preimageOpenChainMap_comp_zeroAugmentation R j V.unop) c)
 
@@ -125,7 +123,6 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
   unfold rationalRestrictionSheaf
   rw [← Category.assoc, toSheafify_sheafifyLift]
   unfold singularRestrictionPresheaf rationalRestrictionPresheaf
-  rw [← Functor.whiskerLeft_comp]
   change _ = Functor.whiskerLeft
     (Opens.map (analyticComplementInclusion X Z)).op
       (toSheafify (Opens.grothendieckTopology

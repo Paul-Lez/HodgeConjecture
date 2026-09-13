@@ -114,7 +114,6 @@ lemma integralToRationalChainComponent_naturality
       ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x.as).hom 1) =
     (X.ιChainComplex (R := ModuleCat.of ℚ ℚ) x.as).hom 1 at hx
   rw [hx]
-  simp only [ConcreteCategory.comp_apply] at hf ⊢
   simpa using hf
 
 lemma rationalizeSimplicialChainComponent_comp
@@ -133,7 +132,6 @@ lemma rationalizeSimplicialChainComponent_comp
   have h := ConcreteCategory.congr_hom
     (integralToRationalChainComponent_naturality Y Z m k g)
     (f.hom ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1))
-  simp only [ConcreteCategory.comp_apply] at h ⊢
   simpa using h.symm
 
 lemma rationalizeSimplicialChainComponent_id (X : SSet.{0}) (n : ℕ) :
@@ -141,11 +139,8 @@ lemma rationalizeSimplicialChainComponent_id (X : SSet.{0}) (n : ℕ) :
   refine SSet.chainComplex_hom_ext fun x ↦ ?_
   rw [iota_rationalizeSimplicialChainComponent]
   ext
-  simp only [Category.comp_id,
-    ConcreteCategory.id_apply]
   have hx := ConcreteCategory.congr_hom
     (iota_integralToRationalChainComponent X n x) 1
-  simp only [ConcreteCategory.comp_apply] at hx
   simpa using hx
 
 lemma rationalizeSimplicialChainComponent_zero
@@ -153,7 +148,6 @@ lemma rationalizeSimplicialChainComponent_zero
     rationalizeSimplicialChainComponent X Y n m 0 = 0 := by
   refine SSet.chainComplex_hom_ext fun x ↦ ?_
   rw [iota_rationalizeSimplicialChainComponent]
-  ext
   simp
 
 lemma rationalizeSimplicialChainComponent_add
@@ -216,7 +210,6 @@ lemma rationalizeSimplicialChainComponent_d (X : SSet.{0}) (n : ℕ) :
   ext
   change (LinearMap.toSpanSingleton ℚ _ _) 1 = _
   rw [LinearMap.toSpanSingleton_apply_one]
-  simp only [ConcreteCategory.comp_apply]
   change (integralToRationalChainComponent X n).hom
       (((X.chainComplex (AddCommGrpCat.of ℤ)).d (n + 1) n).hom
         ((X.ιChainComplex (R := AddCommGrpCat.of ℤ) x).hom 1)) =

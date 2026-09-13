@@ -45,7 +45,6 @@ lemma singularSimplex_mem_range_subset
     x ∈ (SSet.Subcomplex.range
         (TopCat.toSSet.map (topologicalSubsetInclusion X s))).obj n ↔
       Set.range (X.toSSetObjEquiv n x) ⊆ s := by
-  simp only [Subfunctor.range_obj]
   constructor
   · rintro ⟨y, rfl⟩ _ ⟨t, rfl⟩
     exact (TopCat.of s).toSSetObjEquiv n y t |>.2
