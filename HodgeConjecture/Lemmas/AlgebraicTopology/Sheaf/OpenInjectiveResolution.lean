@@ -214,9 +214,8 @@ lemma ambientAugmentation_comp_openResolution :
     exact (HomologicalComplex.isZero_single_obj_X (.up ℕ) 0 _ (n + 1) (by omega)).eq_of_src _ _
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The comparison remains a quasi-isomorphism after global sections: on the
-open subspace both resolutions are termwise flasque. No exactness of
-open direct image on arbitrary complexes is asserted. -/
+/-- The comparison remains a quasi-isomorphism after global sections, because on the open
+subspace both resolutions are termwise flasque. -/
 theorem globalRestrictedAmbientToOpenResolution_quasiIso :
     QuasiIso (globalRestrictedAmbientToOpenResolution X U A) := by
   change QuasiIso

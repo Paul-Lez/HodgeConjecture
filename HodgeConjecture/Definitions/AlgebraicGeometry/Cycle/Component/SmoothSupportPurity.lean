@@ -31,7 +31,7 @@ variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
-/-- The exact analytic complement of the canonical singular boundary. -/
+/-- The analytic complement of the canonical singular boundary. -/
 abbrev cycleComponentSmoothSupportAmbientOpen : Opens (ComplexPoint X) :=
   (cycleComponentSingularAnalyticClosedFiltration X x 0).compl
 

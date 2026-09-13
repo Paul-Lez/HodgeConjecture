@@ -60,7 +60,7 @@ lemma supportedSingularSectionConeHomologyIso_naturality (n : ℤ) :
     (singularCochainSheafComplex ℚ X) (Opens.infLELeft V U) (Opens.infLELeft W U)
     a (homOfLE (inf_le_inf_right U (leOfHom a))))
 
-/-- Restriction naturality of the entire existing supported-section-to-relative equivalence. -/
+/-- Restriction naturality of the whole supported-section-to-relative equivalence. -/
 lemma supportedRationalSingularSectionCohomologyEquivRelative_naturality
     (n : ℕ)
     (z : ((((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj

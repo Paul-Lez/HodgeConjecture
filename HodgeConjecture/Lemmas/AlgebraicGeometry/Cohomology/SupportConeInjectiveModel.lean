@@ -185,9 +185,8 @@ instance globalAmbientRationalOpenResolutionComparison_quasiIso
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The group-level restriction cone maps to the cone of the independent
-complement resolution. Both the ambient component and the prescribed
-restriction square are fixed. -/
+/-- The group-level restriction cone maps to the cone of the independent complement resolution,
+fixing both the ambient component and the prescribed restriction square. -/
 def actualSupportConeToAmbientInjectiveGlobalCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     CochainComplex.mappingCone

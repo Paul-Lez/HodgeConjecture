@@ -63,8 +63,8 @@ theorem isZero_sheafSectionsSupportedOutside_top (F : Sheaf AddCommGrpCat.{u} X)
   let := toOpenRestrictionPushforward_top_isIso X F
   exact isZero_kernel_of_mono ((toOpenRestrictionPushforward X ⊤).app F)
 
-/-- In particular the empty supported-section complex has zero cohomology,
-without any acyclicity or boundedness assumption on its coefficients. -/
+/-- In particular the empty supported-section complex has zero cohomology, for arbitrary
+coefficients. -/
 theorem supportedSections_top_homology_isZero (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (n : ℤ) :
     IsZero ((((supportEvaluation X W).mapHomologicalComplex (.up ℤ)).obj

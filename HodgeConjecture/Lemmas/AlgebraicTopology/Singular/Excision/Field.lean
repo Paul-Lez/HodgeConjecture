@@ -366,8 +366,8 @@ instance coverSmallRationalSingularChainInclusion_mono :
   dsimp [SSet, SimplicialObject.whiskering, SimplicialObject]
   infer_instance
 
-/-- The proven integral subdivision-and-prism homotopy transports to rational coefficients:
-the all-open-cover small-chain theorem with rational coefficients. -/
+/-- The integral subdivision-and-prism homotopy transported to rational coefficients: the
+all-open-cover small-chain theorem over `ℚ`. -/
 theorem coverSmallRationalChainApproximation_of_openCover
     (hUopen : ∀ i, IsOpen (U i)) (hUcover : ⋃ i, U i = Set.univ) :
     HomologicalComplex.homotopyEquivalences (ModuleCat ℚ) (ComplexShape.down ℕ)

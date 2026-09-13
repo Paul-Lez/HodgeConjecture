@@ -12,16 +12,14 @@ public import Mathlib.Algebra.Category.Grp.Zero
 /-!
 # Cohomology-sheaf stalk vanishing from cofinal local section calculations
 
-For a complex of additive sheaves, the stalk of the homology presheaf of its
-underlying presheaf complex is canonically the stalk of its homology sheaf.
-Both comparisons use exact stalk functors; evaluation on an open set is not
-mistakenly treated as exact on sheaves.
+For a complex of additive sheaves, the stalk of the homology presheaf of its underlying presheaf
+complex is canonically the stalk of its homology sheaf. Both comparisons go through exact stalk
+functors.
 
-Consequently, vanishing of section-complex homology on a cofinal system of
-neighborhoods implies vanishing of the cohomology-sheaf stalk. The neighborhood
-may depend on the original open set; no single neighborhood is silently
-substituted for a cofinal family. This is the generic passage from the local
-normal-slice calculation to sheaf support purity.
+Consequently, vanishing of section-complex homology on a cofinal system of neighborhoods implies
+vanishing of the cohomology-sheaf stalk, the neighborhood being allowed to depend on the original
+open set. This is the generic passage from the local normal-slice calculation to sheaf support
+purity.
 -/
 
 @[expose] public noncomputable section

@@ -24,7 +24,7 @@ namespace AlgebraicGeometry
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- The exact terminal index is read from the finite decomposition. -/
+/-- The terminal index, read off from the finite decomposition. -/
 abbrev cycleComponentSingularFiltrationLength : ℕ :=
   (cycleComponentSingularStratification X x).length
 
@@ -82,7 +82,7 @@ theorem cycleComponentSingularAmbientClosedFiltration_layer (k : ℕ) :
     Set.range_comp, reducedSmoothClosedFiltration_layer]
   exact Set.image_sdiff (cycleComponentι X.left x).isClosedEmbedding.injective _ _
 
-/-- The exact ambient open used by the consecutive-support localization triangle. -/
+/-- The ambient open used by the consecutive-support localization triangle. -/
 def cycleComponentSingularStratumAmbientOpen (k : ℕ) : X.left.Opens :=
   (cycleComponentSingularAmbientClosedFiltration X x (k + 1)).compl
 
@@ -297,8 +297,8 @@ theorem cycleComponentSingularAnalyticClosedFiltration_layer (k : ℕ) :
   rfl
 
 omit [IsIntegral X.left] [Smooth X.hom] in
-/-- Inside the exact localization open, the stratum's closed-embedding image
-is precisely the current analytic closed support restricted to that open. -/
+/-- Inside the localization open, the stratum's closed-embedding image is the current analytic
+closed support restricted to that open. -/
 theorem cycleComponentSingularStratumClosedLift_complexPoints_range (k : ℕ) :
     Set.range (Point.map (cycleComponentSingularStratumClosedLiftOver X x k)) =
       Point.map (openInclusion X (cycleComponentSingularStratumAmbientOpen X x k)) ⁻¹'

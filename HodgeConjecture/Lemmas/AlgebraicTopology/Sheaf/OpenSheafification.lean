@@ -64,8 +64,7 @@ def openRestrictionSheafificationIso (P : Presheaf AddCommGrpCat.{u} X) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The comparison is normalized by the restricted sheafification
-unit, so no independently selected stalk or section isomorphism is used. -/
+/-- The comparison is normalized by the restricted sheafification unit. -/
 @[reassoc]
 lemma toSheafify_openRestrictionSheafificationIso (P : Presheaf AddCommGrpCat.{u} X) :
     toSheafify (Opens.grothendieckTopology (TopCat.of U))

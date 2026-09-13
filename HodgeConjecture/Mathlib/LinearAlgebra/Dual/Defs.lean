@@ -10,7 +10,7 @@ theorem LinearMap.dualMap_zero {R M₁ M₂ : Type*} [CommSemiring R] [AddCommMo
     [AddCommMonoid M₂] [Module R M₂] : (0 : M₁ →ₗ[R] M₂).dualMap = 0 := by
   rw [LinearMap.dualMap_def, map_zero]
 
-/-- The dual of a difference of maps is the difference of the duals. -/
+/-- The dual of a sum of maps is the sum of the duals. -/
 theorem LinearMap.dualMap_add {R M₁ M₂ : Type*} [CommRing R] [AddCommGroup M₁] [Module R M₁]
     [AddCommGroup M₂] [Module R M₂] (f g : M₁ →ₗ[R] M₂) :
     (f + g).dualMap = f.dualMap + g.dualMap := by

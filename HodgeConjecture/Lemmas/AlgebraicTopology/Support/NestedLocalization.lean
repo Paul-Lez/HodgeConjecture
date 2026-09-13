@@ -143,9 +143,8 @@ lemma nestedSupportRestrictionSectionsComplexShortComplex_shortExact (W : Opens 
   HomologicalComplex.shortExact_of_degreewise_shortExact _
     fun n => nestedSupportRestrictionSectionsShortComplex_shortExact X h W (K.X n)
 
-/-- Removing the smaller support preserves degree `n` cohomology if its two
-adjacent groups vanish. These are explicit hypotheses of the extension lemma;
-no vanishing statement about a singular locus is asserted here. -/
+/-- Removing the smaller support preserves degree `n` cohomology if its two adjacent groups
+vanish. Those two vanishings are hypotheses of the extension lemma. -/
 lemma nestedSupportRestriction_homologyMap_isIso_of_vanishing (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)]
     (n : ℤ)

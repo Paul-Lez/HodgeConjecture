@@ -287,8 +287,8 @@ public noncomputable def subdividedSimplexOuterFaceSum (n : ℕ) :
           ((SimplexCategory.sd.{0}.obj (SimplexCategory.mk (n + 1))).δ
             (Fin.last (n + 1)) (permutationMaximalFlagSimplex σ)))
 
-/-- After the certified pairwise cancellations, only the faces obtained by deleting the full
-vertex set remain in the boundary of the barycentric fundamental chain. -/
+/-- After the pairwise cancellations, only the faces obtained by deleting the full vertex set
+remain in the boundary of the barycentric fundamental chain. -/
 public theorem subdividedSimplexFundamentalChain_boundary_eq_outer
     (n : ℕ) :
     subdividedSimplexFundamentalChain (n + 1) ≫

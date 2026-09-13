@@ -11,8 +11,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Basic
 This module indexes the recursive smooth decomposition by natural
 numbers. Consecutive closed supports differ by the smooth piece. The filtration
 is empty at the length of the finite list and stays empty thereafter. This
-format exposes precisely the nested closed supports required for localization induction;
-it introduces no stratification choices or assumed cohomology vanishing.
+format exposes precisely the nested closed supports required for localization induction.
 -/
 
 @[expose] public noncomputable section

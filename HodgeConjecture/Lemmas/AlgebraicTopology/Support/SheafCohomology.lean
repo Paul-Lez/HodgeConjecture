@@ -31,8 +31,8 @@ open CategoryTheory CategoryTheory.Limits CategoryTheory.Abelian Opposite Topolo
 
 universe u
 
-/-- Compact closed subsets, ordered by inclusion. Compactness does not imply closedness
-unless a suitable separation assumption is available. -/
+/-- Compact closed subsets, ordered by inclusion. Both conditions are carried, since without a
+separation assumption compactness alone need not give closedness. -/
 abbrev TopologicalSpace.CompactCloseds (X : Type u) [TopologicalSpace X] :=
   {K : Closeds X // IsCompact (K : Set X)}
 

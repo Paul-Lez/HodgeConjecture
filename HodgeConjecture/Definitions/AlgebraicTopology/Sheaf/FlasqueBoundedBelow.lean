@@ -27,8 +27,7 @@ by induction through their short exact sequences.  Global sections are then exac
 those sequences.
 
 This is the acyclic-complex lemma needed to compare a bounded-below flasque resolution with a
-termwise-injective replacement.  It does not assume or invoke a hypercohomology spectral
-sequence.
+termwise-injective replacement.
 -/
 
 @[expose] public noncomputable section

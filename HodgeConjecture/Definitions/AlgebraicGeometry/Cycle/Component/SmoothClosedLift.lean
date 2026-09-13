@@ -26,7 +26,7 @@ namespace AlgebraicGeometry
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- The precise algebraic open complementary to the canonical singular boundary. -/
+/-- The algebraic open complementary to the canonical singular boundary. -/
 def cycleComponentSmoothLocusAmbientOpen : X.left.Opens :=
   (cycleComponentSingularAmbientClosedFiltration X x 0).compl
 

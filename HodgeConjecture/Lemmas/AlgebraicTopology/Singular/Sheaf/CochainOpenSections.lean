@@ -107,9 +107,8 @@ lemma openRawToSingularCochainSheafComplex_global (V : Opens X) :
           (openSubspaceImageTopIso X V).hom.op ≫ f.app (.op ⊤))
         (toSheafify_singularCochainSheafOpenRestrictionIso R X V n)
 
-/-- On any paracompact Hausdorff ambient open, raw rational singular
-cochains map quasi-isomorphically to sections of the singular sheaf.
-No separation or paracompactness assumption is made on the rest of `X`. -/
+/-- On any paracompact Hausdorff ambient open, raw rational singular cochains map
+quasi-isomorphically to sections of the singular sheaf. The hypothesis is on that open alone. -/
 theorem openRawToSingularCochainSheafComplex_quasiIso (V : Opens X)
     [ParacompactSpace V] [T2Space V] :
     QuasiIso (openRawToSingularCochainSheafComplex ℚ X V) := by

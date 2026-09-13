@@ -53,8 +53,8 @@ theorem univBall_zero_tangent_normal (a : E) (r : ℝ) (hr : 0 < r) (v : Fin c �
 
 variable (x : M) (hx : x ∈ e.source) (h0 : (e x).2 = 0)
 
-/-- The normal fiber, local pair homeomorphism, and normal projection compose
-to the standard radial point-complement map, with no scalar ambiguity. -/
+/-- The normal fiber, local pair homeomorphism, and normal projection compose to the standard
+radial point-complement map, scale included. -/
 theorem normalFiber_comp_chartNormalProjection :
     normalSliceSection E c ≫ (flattenedSupportPairIso E c e x hx S hS h0).hom ≫
       chartNormalProjectionPair E c e S hS (flattenedSupportNeighborhood E c e x hx)
@@ -91,7 +91,8 @@ theorem flattenedSupportNormalClass_eq_normalFiber :
         (normalSliceSection E c ≫ (flattenedSupportPairIso E c e x hx S hS h0).hom)
         (standardComplexLocalClass c) := by aesop
 
-/-- Normal projection sends the local normal class to the exact standard class. -/
+/-- Normal projection sends the local normal class to the exactly normalized standard
+class. -/
 theorem chartNormalProjection_normalClass :
     relativeHomologyMap ℚ (2 * c)
       (chartNormalProjectionPair E c e S hS (flattenedSupportNeighborhood E c e x hx)

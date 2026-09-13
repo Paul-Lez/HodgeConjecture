@@ -9,15 +9,13 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 /-! # Canonical natural relative-cochain cone comparison
 
-Unlike a completion of a morphism of distinguished triangles, the explicit
-short-exact-sequence lift is natural before passage to homology.
+The explicit short-exact-sequence lift is natural already before passage to homology.
 
-The lift is positive `(inclusion, 0)`; Mathlib's cone connecting morphism
-is the negative first projection. Their exact composite is displayed below.
-This file does not assert equality with the older
-`relativeCochainConeCohomologyEquiv`, which uses a completed triangle map.
-Such equality, in particular on normalized point neighborhoods, is a
-separate comparison theorem.
+The lift is positive `(inclusion, 0)`; Mathlib's cone connecting morphism is the negative first
+projection. Their composite is displayed below.
+
+Agreement with `relativeCochainConeCohomologyEquiv`, which is built from a completed triangle map,
+is a separate comparison theorem.
 -/
 
 @[expose] public noncomputable section

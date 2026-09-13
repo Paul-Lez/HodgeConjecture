@@ -24,8 +24,8 @@ public import Mathlib.Analysis.Complex.Basic
 
 This file identifies `ℂ^p` with an ordered real coordinate space by listing the real and imaginary
 part of each complex coordinate consecutively. It transports the explicit standard local cycle to
-`H_{2p}(ℂ^p, ℂ^p ∖ {0}; ℚ)`. Thus the complex orientation is constructed from complex coordinates
-rather than supplied as data.
+`H_{2p}(ℂ^p, ℂ^p ∖ {0}; ℚ)`. The complex orientation therefore comes from the complex
+coordinates themselves.
 -/
 
 open CategoryTheory

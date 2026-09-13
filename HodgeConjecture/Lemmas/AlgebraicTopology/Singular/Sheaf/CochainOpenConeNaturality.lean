@@ -203,8 +203,8 @@ lemma openRawSingularRestrictionConeHomologyIso_naturality (n : ℤ) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The previously exposed open-cone equivalence factors through this
-canonical homology comparison and the natural relative evaluation pairing. -/
+/-- The open-cone equivalence factors through this canonical homology comparison and the natural
+relative evaluation pairing. -/
 lemma openRawSingularRestrictionConeCohomologyEquivRelative_eq (n : ℕ)
     (z : (openRawSingularRestrictionCone R X i).homology ((n : ℤ) - 1)) :
     openRawSingularRestrictionConeCohomologyEquivRelative R X i n z =

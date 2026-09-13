@@ -32,7 +32,7 @@ def biAnalyticLocus : Set E :=
 theorem biAnalyticLocus_isOpen : IsOpen e.biAnalyticLocus :=
   (isOpen_analyticAt ℂ e).inter (e.isOpen_inter_preimage (isOpen_analyticAt ℂ e.symm))
 
-/-- Restricting to this open set introduces no analytic-equivalence input. -/
+/-- Restricting to this open set keeps both directions of the coordinate change analytic. -/
 def biAnalyticRestrict : OpenPartialHomeomorph E F :=
   e.restrOpen e.biAnalyticLocus e.biAnalyticLocus_isOpen
 

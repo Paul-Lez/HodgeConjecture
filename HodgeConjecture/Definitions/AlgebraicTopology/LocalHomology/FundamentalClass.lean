@@ -25,8 +25,8 @@ This file constructs a canonical relative singular cycle in
 `(-1, ..., -1)`. Its barycenter is the unique point that maps to the origin, while each face
 misses the origin. Its relative boundary therefore vanishes.
 
-This explicit cycle fixes the ordering and sign convention needed to normalize local Thom and
-fundamental classes without adding an orientation as arbitrary data.
+This explicit cycle fixes the ordering and sign convention used to normalize local Thom and
+fundamental classes.
 -/
 
 @[expose] public noncomputable section

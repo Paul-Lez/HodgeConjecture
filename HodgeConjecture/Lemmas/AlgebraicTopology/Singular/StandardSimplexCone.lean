@@ -515,8 +515,7 @@ public theorem canonicalBarycentricLastVertexPrism_boundary
       abel
 
 /-- The explicit canonical chain homotopy from subdivision followed by last vertex to the
-identity. The explicit recursively coned universal prisms supply the formerly missing
-acyclic-model datum. -/
+identity, built from the recursively coned universal prisms. -/
 public noncomputable def barycentricSubdivisionLastVertexHomotopyCanonical
     (X : SSet.{0}) :
     Homotopy

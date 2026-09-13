@@ -302,7 +302,7 @@ lemma enlargeSupport_rfl (R : Type u) [Field R] (X : TopCat.{u}) (Z : Set X) (n 
     enlargeSupport R X (Set.Subset.rfl : Z ⊆ Z) n = LinearMap.id := by
   rw [enlargeSupport, supportInclusionPairMap_rfl, relativeCohomologyMap_id]
 
-/-- Relative cohomology vanishes wherever relative homology does: the two are linked by the
+/-- If relative homology is a subsingleton, so is relative cohomology, by the
 universal-coefficient equivalence. -/
 lemma relativeCohomology_subsingleton (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ)
     (h : Subsingleton (RelativeHomology R X n)) :
@@ -311,7 +311,7 @@ lemma relativeCohomology_subsingleton (R : Type u) [Field R] (X : TopPair.{u}) (
     ⟨fun φ ψ => LinearMap.ext fun x => by rw [h.elim x 0, map_zero, map_zero]⟩
   (relativeCohomologyEquivDualHomology R X n).toEquiv.subsingleton
 
-/-- Relative cohomology is zero wherever relative homology is. -/
+/-- If relative homology is a zero object, so is relative cohomology. -/
 lemma relativeCohomology_isZero (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ)
     (h : IsZero (RelativeHomology R X n)) : IsZero (RelativeCohomology R X n) :=
   have := relativeCohomology_subsingleton R X n (ModuleCat.subsingleton_of_isZero h)

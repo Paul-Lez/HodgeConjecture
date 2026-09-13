@@ -104,8 +104,8 @@ lemma injective_complexUnivBall (c : Fin d → ℂ) (r : ℝ) :
   ((OpenPartialHomeomorph.univBall c r).isOpenEmbedding
     (OpenPartialHomeomorph.univBall_source c r)).injective
 
-/-- At every center the positive-radius compression preserves the precisely normalized
-complex local homology class. -/
+/-- At every center the positive-radius compression preserves the exactly normalized complex
+local homology class. -/
 theorem centeredComplexUnivBall_preserves_standardComplexLocalClass
     (c : Fin d → ℂ) (r : ℝ) (hr : 0 < r) (v : Fin d → ℂ) :
     relativeHomologyMap ℚ (2 * d)

@@ -30,20 +30,19 @@ public import Mathlib.Topology.Category.TopPair
 
 This file constructs field-valued singular cohomology from Mathlib's singular chain complex.
 
-**Cohomology is defined by dualising the chain complex, not by dualising homology.** The singular
-cochain complex `C^*(X; R)` is the degreewise `R`-linear dual of the singular chain complex
-`C_*(X; R)`, and `Cohomology R X n` is the degree-`n` homology of that cochain complex, exactly as
-Mathlib defines the homology of any `HomologicalComplex`. Pullback in cohomology is the map on
-homology induced by the dualised chain map; the definition never mentions singular homology.
+Cohomology is built at the cochain level. The singular cochain complex `C^*(X; R)` is the
+degreewise `R`-linear dual of the singular chain complex `C_*(X; R)`, and `Cohomology R X n` is the
+degree-`n` homology of that cochain complex, exactly as Mathlib defines the homology of any
+`HomologicalComplex`. Pullback in cohomology is the map on homology induced by the dualised chain
+map.
 
-Dualising homology instead would be wrong in general: over a ring it silently discards the `Ext`
-term of the universal coefficient theorem, and even over a field it produces an object with no
-cochain-level representative, so cochain-level constructions — cup products, mapping cones of
-restriction, comparisons with sheaf cohomology — cannot be expressed against it. The coefficients
-are a field throughout this development, and there the universal coefficient theorem does identify
-the two; that identification is recorded as `cohomologyEquivDualHomology` (and
-`relativeCohomologyEquivDualHomology`) rather than being taken as the definition, so every
-statement that pairs a cohomology class with a homology class goes through it explicitly.
+This is what makes the cochain-level constructions available — cup products, mapping cones of
+restriction, comparisons with sheaf cohomology are all expressed against `C^*(X; R)` — and over a
+ring it is what retains the `Ext` term of the universal coefficient theorem. The coefficients here
+are a field, where the universal coefficient theorem identifies `Cohomology R X n` with the dual of
+singular homology; that identification is the theorem `cohomologyEquivDualHomology` (and
+`relativeCohomologyEquivDualHomology`), and every statement pairing a cohomology class with a
+homology class goes through it explicitly.
 
 For a topological pair `A ⊆ X`, the relative chain complex is the cokernel of the chain map
 `C_*(A) ⟶ C_*(X)`; the relative cochain complex is its dual, and relative cohomology is again the

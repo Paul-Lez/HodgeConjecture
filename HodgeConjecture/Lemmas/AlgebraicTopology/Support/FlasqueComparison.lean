@@ -44,8 +44,8 @@ def openRestrictionGlobalSectionsIso :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Open-set sections preserve quasi-isomorphisms between bounded-below
-termwise-flasque complexes. All acyclicity is proved from flasqueness. -/
+/-- Open-set sections preserve quasi-isomorphisms between bounded-below termwise-flasque
+complexes. -/
 theorem supportEvaluation_map_quasiIso_of_flasque
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ} (f : K ⟶ L) [QuasiIso f]
     (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]

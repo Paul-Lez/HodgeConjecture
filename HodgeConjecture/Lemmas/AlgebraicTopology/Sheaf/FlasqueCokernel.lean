@@ -86,8 +86,7 @@ lemma image_isFlasque [A.IsFlasque] [(kernel f).IsFlasque] : (Abelian.image f).I
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- For one map with flasque source and kernel, the forgetful functor preserves its
-cokernel. No exactness assertion is made for arbitrary sheaf maps. -/
+/-- For a map with flasque source and kernel, the forgetful functor preserves its cokernel. -/
 lemma forget_preservesCokernel [A.IsFlasque] [(kernel f).IsFlasque] :
     PreservesColimit (parallelPair f 0) (TopCat.Sheaf.forget AddCommGrpCat.{u} X) := by
   let F := TopCat.Sheaf.forget AddCommGrpCat.{u} X

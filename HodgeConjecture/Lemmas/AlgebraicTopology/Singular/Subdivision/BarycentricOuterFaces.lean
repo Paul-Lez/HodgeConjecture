@@ -92,8 +92,7 @@ public theorem insertOmittedVertexLastEquiv_apply
       insertOmittedVertexLast pτ.1 pτ.2 :=
   rfl
 
-/-- The reindexing equivalence really records the omitted final vertex in its first
-coordinate. -/
+/-- The reindexing equivalence records the omitted final vertex in its first coordinate. -/
 @[simp]
 public theorem insertOmittedVertexLastEquiv_symm_fst
     (n : ℕ) (σ : Equiv.Perm (Fin (n + 2))) :

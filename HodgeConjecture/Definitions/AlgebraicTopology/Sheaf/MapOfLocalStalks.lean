@@ -21,11 +21,11 @@ public import Mathlib.Topology.Sheaves.Stalks
 /-!
 # Assembling constant-sheaf maps from locally represented stalk maps
 
-A pointwise family of additive maps from a fixed group to the stalks is not automatically
-a sheaf map. This module proves the precise assembly theorem: each value must be locally
-represented by a section. Unique sheaf gluing then constructs the map. The stalk formula
-retains the specified maps exactly, and isomorphisms on stalks give a sheaf
-isomorphism. Geometric applications must prove the local representability hypothesis.
+A pointwise family of additive maps from a fixed group to the stalks assembles into a sheaf map
+exactly when each value is locally represented by a section. Unique sheaf gluing then constructs
+the map, the stalk formula retains the specified maps exactly, and isomorphisms on stalks give a
+sheaf isomorphism. Local representability is a hypothesis, to be discharged by each geometric
+application.
 -/
 
 @[expose] public noncomputable section
