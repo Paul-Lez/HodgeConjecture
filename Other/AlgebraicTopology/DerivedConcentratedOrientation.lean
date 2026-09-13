@@ -55,24 +55,21 @@ def strictSingleIso [K.IsStrictlyGE n] [K.IsStrictlyLE n] :
     · apply (K.isZero_of_isStrictlyLE n i (by omega)).eq_of_tgt
   inv_hom_id := by aesop
 
-/-- Canonical double truncation in a single degree. -/
-abbrev singleTruncation := (K.truncLE n).truncGE n
-
 /-- Its actual homology in degree `n` is canonically that of the original complex. -/
-def singleTruncationHomologyIso : (K.singleTruncation n).homology n ≅ K.homology n :=
+def singleTruncationHomologyIso : ((K.truncLE n).truncGE n).homology n ≅ K.homology n :=
   (isoOfQuasiIsoAt ((K.truncLE n).πTruncGE n) n).symm ≪≫
     isoOfQuasiIsoAt (K.ιTruncLE n) n
 
 /-- The only nonzero term of the double truncation is canonically the actual homology object. -/
-def singleTruncationTermIso : (K.singleTruncation n).X n ≅ K.homology n :=
+def singleTruncationTermIso : ((K.truncLE n).truncGE n).X n ≅ K.homology n :=
   (singleObjHomologySelfIso (.up ℤ) n _).symm ≪≫
-    (homologyMapIso (strictSingleIso (K.singleTruncation n) n) n).symm ≪≫
+    (homologyMapIso (strictSingleIso ((K.truncLE n).truncGE n) n) n).symm ≪≫
       singleTruncationHomologyIso K n
 
 /-- Canonical single-degree model, with its term identified using actual homology maps. -/
 def singleTruncationIso :
-    K.singleTruncation n ≅ (single C (.up ℤ) n).obj (K.homology n) :=
-  strictSingleIso (K.singleTruncation n) n ≪≫
+    (K.truncLE n).truncGE n ≅ (single C (.up ℤ) n).obj (K.homology n) :=
+  strictSingleIso ((K.truncLE n).truncGE n) n ≪≫
     (single C (.up ℤ) n).mapIso (singleTruncationTermIso K n)
 
 /-- The right leg of the canonical truncation roof. -/
@@ -90,8 +87,8 @@ theorem toSingleHomology_homology :
   rw [singleObjHomologySelfIso_hom_naturality]
   simp only [singleTruncationTermIso, singleTruncationHomologyIso, Iso.trans_hom,
     Iso.symm_hom, homologyMapIso_inv, Iso.hom_inv_id_assoc]
-  rw [← homologyMap_comp_assoc (strictSingleIso (K.singleTruncation n) n).hom
-    (strictSingleIso (K.singleTruncation n) n).inv, Iso.hom_inv_id,
+  rw [← homologyMap_comp_assoc (strictSingleIso ((K.truncLE n).truncGE n) n).hom
+    (strictSingleIso ((K.truncLE n).truncGE n) n).inv, Iso.hom_inv_id,
     homologyMap_id, Category.id_comp]
   simp [isoOfQuasiIsoAt]
 

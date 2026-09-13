@@ -6,6 +6,7 @@ You may obtain a copy of the License at
 https://www.apache.org/licenses/LICENSE-2.0
 -/
 module
+public import Other.AlgebraicTopology.SingularExcisionField
 
 public import Other.AlgebraicTopology.SingularTriadExcision
 public import Mathlib.AlgebraicTopology.SimplicialSet.SubcomplexColimits

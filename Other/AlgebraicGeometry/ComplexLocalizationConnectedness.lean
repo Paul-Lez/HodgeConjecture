@@ -6,7 +6,7 @@ Authors: Bhavik Mehta
 module
 
 public import Other.AlgebraicGeometry.ComplexIteratedLocalization
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalization
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Localization
 public import Other.AlgebraicGeometry.SmoothLocalNonvanishing
 
 @[expose] public section

@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.ComplexPointCoclassSchemeIso
 public import Other.AlgebraicGeometry.SmoothClosedPointCoclassSectionNormalization
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportRelativeCohomologyOpenTransport
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 /-! # Exact transport of old point coclass sections through scheme isomorphisms
 
 The old coclass enters the relative-cohomology sheaf through the actual

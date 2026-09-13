@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Points
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothEquidimensional
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
 import Mathlib.Geometry.Manifold.Metrizable
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 

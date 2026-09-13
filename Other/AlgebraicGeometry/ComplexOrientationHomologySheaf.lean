@@ -13,8 +13,8 @@ limitations under the License.
 module
 
 public import Other.AlgebraicGeometry.ComplexLocalOrientationNeighborhood
-public import HodgeConjecture.Lemmas.AlgebraicTopology.HomologySheafSection
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SheafMapOfLocallyRepresentableStalks
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.HomologySection
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.MapOfLocalStalks
 public import Other.AlgebraicTopology.SingularChainSheafOrientation
 
 /-!
@@ -36,9 +36,6 @@ namespace AlgebraicGeometry.ComplexPoint
 open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
-
-noncomputable local instance complexOrientationHomologySheafAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 variable [SmoothOfRelativeDimension d X.hom]
   [T2Space (ComplexPoint X)]

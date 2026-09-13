@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Basic
 
 import Other.AlgebraicTopology.ConstantSheafDegreeZero

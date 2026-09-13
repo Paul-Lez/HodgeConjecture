@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.SingularCapNaturality
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainSheafStalk
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
 
 /-!
 # The ambient-cochain cap action on the relative-chain sheaf

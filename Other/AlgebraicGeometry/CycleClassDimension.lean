@@ -15,8 +15,8 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.AlgebraicCycleClassSpan
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothDimensionFormula
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 
 /-!
 # Dimension bounds for algebraic cycle classes

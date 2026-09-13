@@ -15,9 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalyticImmersion
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveCompact
 
 /-!
 # Analytic embedding of a cycle component
@@ -37,12 +37,6 @@ namespace AlgebraicGeometry.ComplexPoint
 open Point
 
 variable (X : Over (Spec ↧ℂ))
-
-noncomputable local instance cycleComponentTopology
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    TopologicalSpace
-      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :=
-  analyticTopology
 
 /-- The complex-point map of a reduced cycle component is a closed topological embedding. -/
 lemma cycleComponentMap_isClosedEmbedding

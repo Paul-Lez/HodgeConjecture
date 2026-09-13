@@ -34,6 +34,7 @@ theorem centeredComplexLinear_preserves_standardComplexLocalClass
     ContinuousLinearMap.ext (complexMatrixOfContinuousLinearMap_mulVec d L)
   apply relativeHomologyMap_complexDifferentiable_standardComplexLocalClass d A
     (complexMatrixOfContinuousLinearMap_det_ne_zero d L hL)
+  case hf0 => simp
   rw [hAL]
   simpa only [add_zero] using L.hasFDerivAt.sub_const (L 0)
 

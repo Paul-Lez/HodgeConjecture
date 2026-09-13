@@ -27,18 +27,7 @@ The remaining content of the project is sorted into four folders:
 
 - `HodgeConjecture/Mathlib`: Content that is on track to be upstreamed to Mathlib;
 - `HodgeConjecture/Definitions`: Definitions used in the statement of the conjecture;
-- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions. If these aren't used in `Lemmas` then they should go in `Other`;
+- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions. If these aren't used in `Lemmas` then they should go in `Other`. This folder can also contain definitions that are only used to in *proofs* of theorems that are needed to state the conjecture;
 - `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
-
-The dividing line is `HodgeConjecture/Statement.lean`: a module belongs in `Definitions` if it
-defines something the statement mentions, in `Lemmas` if it is needed only to build such a
-definition, and in `Other` otherwise. In particular nothing in `Other` may be reachable from the
-statement. Two checks keep this honest:
-
-- `lake build` builds `scripts/CheckStatementImports.lean`, which imports the statement and fails if
-  the resulting environment contains any module of `Other`;
-- `python3 scripts/check_import_layers.py` checks the converse — that every module of `Definitions`,
-  `Lemmas` and `Mathlib` really is used by the statement — plus that both umbrella modules are
-  complete, and that every source path the Verso guide names in prose still exists.
 
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.

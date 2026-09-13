@@ -15,10 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCoverSmallProjective
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.CoverSmallProjective
 public import Mathlib.Topology.Sets.Opens
 
-import HodgeConjecture.Lemmas.AlgebraicTopology.SingularExcisionOpenCover
+import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.OpenCover
 
 /-!
 # Small chains for covers by open subsets

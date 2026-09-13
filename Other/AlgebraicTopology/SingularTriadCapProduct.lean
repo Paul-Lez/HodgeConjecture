@@ -892,8 +892,7 @@ noncomputable def triadCapCohomologyLinear
       (TriadRelativeHomology R X A B (p + q) →ₗ[R]
         RelativeHomology R (TopPair.ofSubset B) q) :=
   (triadCapCochainCohomologyLinear R X A B p q).comp
-    (((relativeChainFunctor R).obj
-      (TopPair.ofSubset A)).sc p).linearDualHomologyEquiv.symm.toLinearMap
+    (relativeCochainCohomologyEquiv R (TopPair.ofSubset A) p).symm.toLinearMap
 
 set_option backward.isDefEq.respectTransparency false in
 /-- On the standard relative cohomology class represented by an explicit relative
@@ -905,17 +904,17 @@ lemma triadCapCohomologyLinear_on_cycle
       ((((relativeChainFunctor R).obj (TopPair.ofSubset A)).sc p).linearDual.g.hom)) :
     let S := ((relativeChainFunctor R).obj (TopPair.ofSubset A)).sc p
     triadCapCohomologyLinear R X A B p q
-        (S.linearDualHomologyEquiv
+        (relativeCochainCohomologyEquiv R (TopPair.ofSubset A) p
           (S.linearDual.moduleCatHomologyIso.inv.hom (Submodule.Quotient.mk phi))) =
       triadRelativeCohomologyCycleCapLinear R X A B p q phi := by
   dsimp only
   rw [triadCapCohomologyLinear, LinearMap.comp_apply]
   let S := ((relativeChainFunctor R).obj (TopPair.ofSubset A)).sc p
-  have h := S.linearDualHomologyEquiv.symm_apply_apply
+  have h := (relativeCochainCohomologyEquiv R (TopPair.ofSubset A) p).symm_apply_apply
     (S.linearDual.moduleCatHomologyIso.inv.hom (Submodule.Quotient.mk phi))
   change triadCapCochainCohomologyLinear R X A B p q
-      (S.linearDualHomologyEquiv.symm
-        (S.linearDualHomologyEquiv
+      ((relativeCochainCohomologyEquiv R (TopPair.ofSubset A) p).symm
+        (relativeCochainCohomologyEquiv R (TopPair.ofSubset A) p
           (S.linearDual.moduleCatHomologyIso.inv.hom
             (Submodule.Quotient.mk phi)))) = _
   rw [h]

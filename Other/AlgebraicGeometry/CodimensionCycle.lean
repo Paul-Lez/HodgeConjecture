@@ -79,41 +79,6 @@ lemma specField_coheight (K : Type u) [Field K] (x : Spec ↧K) : coheight x = 0
   refine Order.IsMax.coheight_eq_zero fun y _ ↦ ?_
   rw [Subsingleton.elim y x]
 
-/-- Codimension-zero cycles on an integral scheme are determined by their generic coefficient. -/
-noncomputable def integralEquiv [IsIntegral X] : codimensionCycleSubgroup X 0 ≃+ ℤ where
-  toFun c := c (genericPoint X)
-  invFun n := single (genericPoint X) (Order.IsMax.coheight_eq_zero isMax_top) n
-  left_inv c := by
-    have hgp : coheight (genericPoint X) = (0 : ℕ) :=
-      Order.IsMax.coheight_eq_zero isMax_top
-    change single (genericPoint X) hgp (c (genericPoint X)) = c
-    refine ext fun x ↦ ?_
-    classical
-    by_cases hx : c x = 0
-    · by_cases h : x = genericPoint X
-      · subst x
-        rw [single_same, hx]
-      · rw [single_apply]
-        simp [h, hx]
-    · have hcodim := c.2 x hx
-      rw [eq_genericPoint_of_coheight_zero x hcodim]
-      exact single_same (genericPoint X) _ _
-  right_inv n := single_same (genericPoint X) _ _
-  map_add' _ _ := rfl
-
-/-- Codimension-zero cycles on the spectrum of a field are determined by the coefficient of its
-unique point. -/
-noncomputable def specFieldEquiv (K : Type u) [Field K] :
-    codimensionCycleSubgroup (Spec ↧K) 0 ≃+ ℤ where
-  toFun c := c default
-  invFun n := single default (specField_coheight K default) n
-  left_inv c := by
-    refine ext fun x ↦ ?_
-    rw [Subsingleton.elim x (default : Spec ↧K)]
-    exact single_same default _ _
-  right_inv n := single_same default _ _
-  map_add' _ _ := rfl
-
 end codimensionCycleSubgroup
 
 /-- The inclusion of pure codimension cycles into all algebraic cycles. -/

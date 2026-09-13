@@ -20,7 +20,7 @@ public import Other.AlgebraicGeometry.CycleComponentLocalOrientation
 public import Other.AlgebraicTopology.CompactificationBorelMoore
 public import Other.AlgebraicTopology.RelativeHomologyEmpty
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalyticImmersion
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveCompact
 
 /-!
 # Borel--Moore fundamental classes of cycle components
@@ -47,11 +47,6 @@ open AlgebraicTopology.Singular
 abbrev CycleComponentAnalyticPoint
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) :=
   ComplexPoint (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
-
-noncomputable local instance cycleComponentAnalyticTopology
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    TopologicalSpace (CycleComponentAnalyticPoint V x) :=
-  Point.analyticTopology
 
 /-- Integral Borel--Moore homology of a projective analytic cycle component. -/
 abbrev IntegralCycleComponentBorelMooreHomology
@@ -121,19 +116,6 @@ abbrev CycleComponentBorelMooreHomology
     (x : V.scheme) (n : ℕ) : ModuleCat R :=
   CompactificationBorelMooreHomology R
     (Set.univᶜ : Set (CycleComponentAnalyticPoint V x)) n
-
-/-- For a projective cycle component, the chosen compactification has empty boundary, so its
-Borel--Moore homology is canonically ordinary singular homology. -/
-def cycleComponentHomologyBorelMooreIso
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ) :
-    Homology ℚ (TopCat.of (CycleComponentAnalyticPoint V x)) n ≅
-      CycleComponentBorelMooreHomology ℚ V x n := by
-  change Homology ℚ (TopCat.of (CycleComponentAnalyticPoint V x)) n ≅
-    RelativeHomology ℚ
-      (TopPair.ofSubset (X := TopCat.of (CycleComponentAnalyticPoint V x)) Set.univᶜ) n
-  rw [Set.compl_univ]
-  exact homologyEmptySubspaceIso ℚ
-    (TopCat.of (CycleComponentAnalyticPoint V x)) n
 
 /-- A family of exactly normalized local orientation classes on the smooth analytic locus of a
 cycle component. -/
@@ -295,6 +277,16 @@ theorem rationalCycleComponentBorelMooreDataOfCoheightEqDimension
   existsUnique_fundamentalClass :=
     existsUnique_cycleComponentBorelMooreFundamentalClass_of_coheight_eq_dimension
       V x d hx
+
+/-- A maximal-codimension component carries rational Borel--Moore data.  The witness is the
+one-point construction, so this existence statement holds for every smooth projective variety
+and every point of maximal coheight. -/
+theorem nonempty_rationalCycleComponentBorelMooreData_of_coheight_eq_dimension
+    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
+    [SmoothOfRelativeDimension d V.structureMap]
+    (hx : Order.coheight x = d) :
+    Nonempty (RationalCycleComponentBorelMooreData V x d d hx) :=
+  ⟨rationalCycleComponentBorelMooreDataOfCoheightEqDimension V x d hx⟩
 
 namespace RationalCycleComponentBorelMooreData
 

@@ -15,14 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentClosedPointDimension
-public import Other.AlgebraicGeometry.DimensionedSmoothProjective
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
+public import Other.AlgebraicGeometry.SmoothProjective
 public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
-import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentNormalGeometry
-import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
+import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
 
 /-!
 # Local complex orientation of a cycle component
@@ -164,10 +164,6 @@ namespace CycleComponentSeparateLocalCoordinates
 
 open AlgebraicTopology.Singular
 
-noncomputable local instance cycleComponentLocalOrientationTopology
-    {Y : Over (Spec (.of ℂ))} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}
   [SmoothOfRelativeDimension d V.structureMap]
   (C : CycleComponentSeparateLocalCoordinates V.over x d n)
@@ -255,10 +251,6 @@ end CycleComponentSeparateLocalCoordinates
 namespace ComplexPoint
 
 open AlgebraicTopology.Singular
-
-noncomputable local instance {V : SmoothProjectiveComplexVariety} {x : V.scheme} :
-    TopologicalSpace
-      (ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap))) := Point.analyticTopology
 
 /-- A family of rational top local homology classes on the smooth analytic locus of a reduced
 cycle component. -/

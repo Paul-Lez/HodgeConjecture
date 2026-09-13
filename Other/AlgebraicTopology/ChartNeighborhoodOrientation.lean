@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.CenteredComplexEmbeddingOrientation
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.CenteredComplexOrientation
 
 /-!
 # A simultaneously normalized orientation class in a complex chart

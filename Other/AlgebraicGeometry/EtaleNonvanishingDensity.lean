@@ -5,7 +5,7 @@ Authors: Bhavik Mehta
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexEtale
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Etale
 public import Other.Analysis.Complex.PolynomialComplement
 public import Other.RingTheory.StandardEtaleAlgebraic
 public import Other.RingTheory.AlgebraicNonvanishingObstruction

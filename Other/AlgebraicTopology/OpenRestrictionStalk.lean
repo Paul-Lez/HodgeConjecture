@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenSheafRestriction
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestriction
 public import Mathlib.Topology.Sheaves.Stalks
 
 /-!

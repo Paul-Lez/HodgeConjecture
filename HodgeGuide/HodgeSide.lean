@@ -3,7 +3,8 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
-import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
+import Other.AlgebraicGeometry.HodgeFiltration
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
 
@@ -155,7 +156,8 @@ $$`\mathcal O_X \xrightarrow{d} \Omega_X^1 \xrightarrow{d}
 
 Sheafifying degree by degree gives the holomorphic de Rham complex, indexed by the natural
 numbers: its terms are the sheaves of holomorphic forms and its differentials the exterior
-derivatives, both constructed in `HodgeConjecture/Definitions/AlgebraicGeometry/HolomorphicDeRham.lean`.
+derivatives, both constructed in
+`HodgeConjecture/Definitions/AlgebraicGeometry/Hodge/HolomorphicDeRham.lean`.
 
 ```lean -show
 namespace Guide.Hodge.D27
@@ -373,8 +375,14 @@ example : @Guide.Hodge.D19.hodgeFiltrationComplexSubmodule = @AlgebraicGeometry.
 The image is a priori an additive subgroup. Compatibility with complex scalars is proved, and
 {name}`hodgeFiltrationComplexSubmodule` bundles the image as a $`\mathbb C`-subspace, which
 restricts to a subspace over any coefficient field contained in $`\mathbb C`. Two sanity checks
-are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and
-$`F^p=0` for $`p>\dim X`.
+are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and $`F^p=0` for $`p>\dim X`. Both are
+used later — the first is what makes every degree-zero class a Hodge class, the second is what
+makes the conjecture vacuous above the dimension.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.hodgeFiltration_eq_bot_of_lt
+```
 
 # Complex conjugation and the Hodge pieces
 
@@ -421,9 +429,9 @@ namespace Guide.Hodge.D14
 ```
 ```lean
 def complexConstantCohomologyDeRhamAddEquiv (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] (h : QuasiIso (constantsToHolomorphicDeRhamComplexInt X)) (n : ℤ) :
+    [Smooth X.hom] (n : ℤ) :
     ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
-  { complexConstantCohomologyDeRhamEquiv X h n with
+  { complexConstantCohomologyDeRhamEquiv X n with
     map_add' := fun α β ↦ by
       change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
         hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α +
@@ -440,9 +448,9 @@ namespace Guide.Hodge.D15
 ```lean
 def deRhamConj (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
-  ((complexConstantCohomologyDeRhamAddEquiv X inferInstance n).toAddMonoidHom).comp
+  ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
     ((hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n).comp
-      (complexConstantCohomologyDeRhamAddEquiv X inferInstance n).symm.toAddMonoidHom)
+      (complexConstantCohomologyDeRhamAddEquiv X n).symm.toAddMonoidHom)
 ```
 ```lean -show
 end Guide.Hodge.D15
@@ -528,6 +536,15 @@ The cohomology of $`X` is not equipped with a pure Hodge structure in the formal
 would require the Hodge decomposition. The $`(p,p)` piece is instead defined directly by the
 formula above, which is why the conjugation had to be constructed.
 
+The two sanity checks on the filtration pass to the Hodge classes: every degree-zero class is a
+Hodge class, and there are none above the dimension. These are the two ends of the conjecture that
+the repository settles; see {ref "what-is-proved"}[What the repository proves about the statement].
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_bot_of_lt
+```
+
 # Why the filtration alone suffices over the rationals
 
 Deligne states the conjecture with the condition $`\alpha_{\mathrm{dR}}\in F^p` alone,
@@ -543,7 +560,7 @@ coefficient field of the conjecture.
 ```
 
 The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from
-`HodgeConjecture/Definitions/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
+`HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
 vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector in
 $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in $`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`,
 and the only summand common to both is $`H^{p,p}`.

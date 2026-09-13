@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 
 /-!
-# MappingCoconeShortExactNaturality
+# Naturality of the canonical short-exact-sequence cone comparison
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality`.

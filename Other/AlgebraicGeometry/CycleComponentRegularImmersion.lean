@@ -15,12 +15,12 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.AlgebraicCycleSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothPointwiseDimension
-import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentClosedPointDimension
-import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentNormalGeometry
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 import Other.AlgebraicGeometry.SmoothRegularLocal
 
 /-!

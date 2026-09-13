@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenSheafification
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenSheafification
 public import Other.AlgebraicTopology.CohomologySheafSectionNaturality
-public import HodgeConjecture.Definitions.AlgebraicTopology.OpenRestrictedLowestCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
 
 /-! # The canonical local cohomology-sheaf map under actual open restriction -/
 
@@ -63,10 +63,6 @@ instance cohomologyOpenPresheafRestriction_additive :
     (cohomologyOpenPresheafRestriction X U).Additive := by
   dsimp [cohomologyOpenPresheafRestriction]
   infer_instance
-
-instance cohomologyOpenPresheafRestriction_preservesZeroMorphisms :
-    (cohomologyOpenPresheafRestriction X U).PreservesZeroMorphisms where
-  map_zero := by intros; rfl
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

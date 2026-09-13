@@ -536,18 +536,7 @@ theorem relativeMayerVietoris_exact_intersection (hU : IsOpen U) (hV : IsOpen V)
   · exact relativeMayerVietorisBoundary_comm X U V hU hV n
   · exact relativeMayerVietorisLeftHomologyIso_comm X U V n
 
-local instance relativeHomologyFunctor_preservesBinaryBiproducts (n : ℕ) :
-    PreservesBinaryBiproducts
-      (HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.down ℕ) n) :=
-  preservesBinaryBiproducts_of_preservesBiproducts _
-
-/-- The middle term is canonically the direct sum of the two relative homology groups. -/
-def relativeMayerVietorisHomologySumIso (n : ℕ) :
-    ((relativeChainFunctor ℚ).obj (TopPair.ofSubset U) ⊞
-      (relativeChainFunctor ℚ).obj (TopPair.ofSubset V)).homology n ≅
-        RelativeHomology ℚ (TopPair.ofSubset U) n ⊞
-          RelativeHomology ℚ (TopPair.ofSubset V) n :=
-  (HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.down ℕ) n).mapBiprod _ _
+attribute [local instance] homologyFunctor_preservesBinaryBiproducts
 
 end Subsets
 

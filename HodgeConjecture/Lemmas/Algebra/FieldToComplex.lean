@@ -15,14 +15,29 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.Algebra.FieldToComplex
+public import HodgeConjecture.Mathlib.Algebra.Ring.Basic
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
 
 /-!
 # A coefficient field inside the complex numbers
 
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.Algebra.FieldToComplex`.
+The definitions in this file, and the lemmas about them, are reached from the statement of the
+conjecture only through proofs, so the statement never inspects them: by proof irrelevance
+nothing about how they were built can change what it asserts.
 -/
+
+@[expose] public noncomputable section
+
+variable (K : Type) [Field K] [Algebra K ℂ]
+
+/-- A rational-linear retraction of the inclusion `K → ℂ`. Such a retraction exists because an
+injective linear map of vector spaces over a field splits. -/
+noncomputable def complexToFieldLinear : ℂ →ₗ[K] K :=
+  Classical.choose <| (Algebra.linearMap K ℂ).exists_leftInverse_of_injective
+    (LinearMap.ker_eq_bot.mpr (algebraMap K ℂ).injective)
+
+end
 
 @[expose] public noncomputable section
 
@@ -37,30 +52,3 @@ lemma complexToFieldLinear_comp_algebraMap :
 @[simp] lemma complexToFieldLinear_algebraMap (q : K) :
     complexToFieldLinear K (algebraMap K ℂ q) = q :=
   LinearMap.congr_fun (complexToFieldLinear_comp_algebraMap K) q
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_apply (q x : K) :
-    fieldScalarAddHom K q x = q * x := rfl
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_zero : fieldScalarAddHom K 0 = 0 := by
-  ext
-  simp
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_one : fieldScalarAddHom K 1 = AddMonoidHom.id K := by
-  ext
-  simp
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_add (a b : K) :
-    fieldScalarAddHom K (a + b) = fieldScalarAddHom K a + fieldScalarAddHom K b := by
-  ext
-  simp [add_mul]
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarAddHom_mul (a b : K) :
-    fieldScalarAddHom K (a * b) =
-      (fieldScalarAddHom K a).comp (fieldScalarAddHom K b) := by
-  ext
-  simp [fieldScalarAddHom, mul_assoc]

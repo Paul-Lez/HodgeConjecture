@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.ChartLocalFundamentalClassGenerator
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
 
 /-!
 # Borel--Moore homology through a compactification
@@ -51,18 +51,15 @@ def compactificationToPointComplementPair
       Continuous.subtype_mk continuous_subtype_val _⟩)
     (by ext y; rfl)
 
-/-- The category of integral singular chain complexes. -/
-abbrev IntegralChainCategory := ChainComplex AddCommGrpCat ℕ
-
 /-- A topological pair sent to the induced map of integral singular chain complexes. -/
 def integralChainPairFunctor :
-    TopPair ⥤ Arrow IntegralChainCategory where
+    TopPair ⥤ Arrow (ChainComplex AddCommGrpCat ℕ) where
   __ := MorphismProperty.Arrow.forget TopCat.isEmbedding ⊤ ⊤ ⋙
     ((singularChainComplexFunctor AddCommGrpCat).obj (AddCommGrpCat.of ℤ)).mapArrow
 
 /-- The integral relative singular chain complex `C_*(X, A; ℤ)`. -/
-def integralRelativeChainFunctor : TopPair ⥤ IntegralChainCategory :=
-  integralChainPairFunctor ⋙ Limits.coker (C := IntegralChainCategory)
+def integralRelativeChainFunctor : TopPair ⥤ ChainComplex AddCommGrpCat ℕ :=
+  integralChainPairFunctor ⋙ Limits.coker (C := ChainComplex AddCommGrpCat ℕ)
 
 /-- Integral relative singular homology as a functor on topological pairs. -/
 def integralRelativeHomologyFunctor (n : ℕ) : TopPair ⥤ AddCommGrpCat :=

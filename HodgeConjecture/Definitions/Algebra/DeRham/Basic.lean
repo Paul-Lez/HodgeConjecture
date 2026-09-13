@@ -211,17 +211,14 @@ variable {R A}
 @[simp] lemma snd_algebraMap (a : A) :
     snd (algebraMap A (Sq R A) a) = ExteriorAlgebra.ι A (KaehlerDifferential.D R A a) := rfl
 
-@[simp] lemma fst_smul (a : A) (s : Sq R A) : fst (a • s) = a • fst s := by
-  rw [Algebra.smul_def, fst_mul, fst_algebraMap, Algebra.smul_def]
+@[simp] lemma fst_smul (a : A) (s : Sq R A) : fst (a • s) = a • fst s := rfl
 
 lemma snd_smul (a : A) (s : Sq R A) :
     snd (a • s) = a • snd s +
       ExteriorAlgebra.ι A (KaehlerDifferential.D R A a) * fst s := by
-  rw [Algebra.smul_def, snd_mul, fst_algebraMap, snd_algebraMap, AlgHom.commutes,
-    Algebra.smul_def]
+  simp [Algebra.smul_def, snd_mul, fst_algebraMap, snd_algebraMap, AlgHom.commutes]
 
-@[simp] lemma fst_smul_base (r : R) (s : Sq R A) : fst (r • s) = r • fst s := by
-  rw [← algebraMap_smul A r s, fst_smul, algebraMap_smul]
+@[simp] lemma fst_smul_base (r : R) (s : Sq R A) : fst (r • s) = r • fst s := rfl
 
 @[simp] lemma snd_smul_base (r : R) (s : Sq R A) : snd (r • s) = r • snd s := by
   rw [← algebraMap_smul A r s, snd_smul, algebraMap_smul]
@@ -364,9 +361,7 @@ private lemma mul_mem_exteriorPower {m n : ℕ} {x y : ExtAlg R A}
   exact Submodule.mul_mem_mul hx hy
 
 private lemma ι_mem_exteriorPower (ω : Ω[A⁄R]) :
-    ExteriorAlgebra.ι A ω ∈ ⋀[A]^1 Ω[A⁄R] := by
-  rw [ExteriorAlgebra.exteriorPower, pow_one]
-  exact LinearMap.mem_range_self _ _
+    ExteriorAlgebra.ι A ω ∈ ⋀[A]^1 Ω[A⁄R] := by simp
 
 
 private lemma snd_phi_mem (ω : Ω[A⁄R]) : Sq.snd (phi R A ω) ∈ ⋀[A]^2 Ω[A⁄R] := by
@@ -424,8 +419,7 @@ private lemma extDeriv_smul (a : A) (x : ExtAlg R A) :
     extDeriv R A (a • x) =
       a • extDeriv R A x +
         ExteriorAlgebra.ι A (KaehlerDifferential.D R A a) * x := by
-  rw [Algebra.smul_def, extDeriv_mul, AlgHom.commutes, extDeriv_algebraMap,
-    ← Algebra.smul_def]
+  simp [Algebra.smul_def, extDeriv_mul, AlgHom.commutes, extDeriv_algebraMap]
 
 /-- The exact form `d a₁ ∧ ⋯ ∧ d aₚ`. -/
 def exact (p : ℕ) (v : Fin p → A) : Form R A p :=
@@ -565,13 +559,10 @@ def extAlgMap : ExtAlg R A →ₐ[A] ExtAlg R B :=
 
 @[simp] lemma extAlgMap_algebraMap (a : A) :
     extAlgMap R A B (algebraMap A (ExtAlg R A) a) =
-      algebraMap B (ExtAlg R B) (algebraMap A B a) := by
-  rw [AlgHom.commutes, IsScalarTower.algebraMap_apply A B (ExtAlg R B)]
+      algebraMap B (ExtAlg R B) (algebraMap A B a) := by aesop
 
 @[simp] lemma extAlgMap_algebraMap_base (r : R) :
-    extAlgMap R A B (algebraMap R (ExtAlg R A) r) = algebraMap R (ExtAlg R B) r := by
-  rw [IsScalarTower.algebraMap_apply R A (ExtAlg R A), extAlgMap_algebraMap,
-    ← IsScalarTower.algebraMap_apply R A B, ← IsScalarTower.algebraMap_apply R B (ExtAlg R B)]
+    extAlgMap R A B (algebraMap R (ExtAlg R A) r) = algebraMap R (ExtAlg R B) r := by simp
 
 
 private lemma extAlgMap_ιMulti (p : ℕ) (w : Fin p → Ω[A⁄R]) :
@@ -632,7 +623,6 @@ def map (f : A →ₐ[R] B) (p : ℕ) : Form R A p →ₗ[R] Form R B p :=
 @[simp] lemma map_mk (f : A →ₐ[R] B) (p : ℕ) (a₀ : A) (v : Fin p → A) :
     map R f p (mk R A p a₀ v) = mk R B p (f a₀) fun i => f (v i) := by
   let _ := f.toAlgebra
-  have : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
   refine Subtype.ext ?_
   show extAlgMap R A B (mk R A p a₀ v : ExtAlg R A) =
     ((mk R B p (f a₀) fun i => f (v i) : Form R B p) : ExtAlg R B)
