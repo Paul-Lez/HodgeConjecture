@@ -20,7 +20,7 @@ my error, not a signal about the content.
    At `p = 0` it is decidable today: `hodgeClasses_zero_eq_top` proves `Hdg^0(ℚ; X) = ⊤`, so the
    statement at `p = 0` asserts that `H^0` is spanned by one component class. If that class were
    zero the statement would be false rather than vacuous.
-   `Other/AlgebraicGeometry/HodgeCodimensionZero.lean` already reduces the case to
+   `Other/AlgebraicGeometry/Hodge/CodimensionZero.lean` already reduces the case to
    `hcompare : algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X`, which is exactly the
    comparison of the constructed class against `fieldCohomologyUnit`. Nothing proves `hcompare`.
    The two codimension-zero constructions in the library are never compared to each other.
@@ -28,12 +28,12 @@ my error, not a signal about the content.
    **Partly done, unpushed.** Local branch `codim-zero-compare` (worktree `/home/bmehta/hodge-codim0`,
    two commits, `lake build` clean, layer check clean, no `sorry` or axiom) reduces `hcompare` to a
    single concrete nonvanishing statement and settles it in dimension zero. It adds
-   `Other/AlgebraicGeometry/CodimensionZeroClassComparison.lean`, which proves that the codimension-zero
+   `Other/AlgebraicGeometry/Hodge/CodimensionZeroComparison.lean`, which proves that the codimension-zero
    span is the line on the generic-point class, that `forgetSupport` at support `Set.univ` is injective,
    and hence that on a connected analytification
    `algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X` holds if and only if
    `cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) _ ≠ 0`; and
-   `Other/AlgebraicGeometry/CodimensionZeroDimensionZero.lean`, which proves that nonvanishing when
+   `Other/AlgebraicGeometry/Hodge/DimensionZero.lean`, which proves that nonvanishing when
    `dim X.left = 0` (there the generic point also has maximal codimension, so the existing point
    normalization applies), giving `hcompare` outright and
    `Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p` in every codimension for a dimension-zero variety.
@@ -41,10 +41,10 @@ my error, not a signal about the content.
    `chartNormalProjectionCoclass` is normalized to one on the normal class, but nothing shows its germ
    in the sheafified relative-cohomology presheaf is nonzero. Two routes were examined and not
    completed: local injectivity of `toSheafify` in degree zero, and a codimension-zero analogue of
-   `CycleComponentPointCoclassSectionNormalization.lean`.
+   `PointCoclassNormalization.lean`.
 
 2. **`ConnectedSpace (ComplexPoint X)`**, proved so far only for `dim = 0`
-   (`connectedSpaceOfDimensionEqZero`). Discharging it makes `HodgeCodimensionZero.lean`
+   (`connectedSpaceOfDimensionEqZero`). Discharging it makes `Hodge/CodimensionZero.lean`
    unconditional. It reduces to
 
    ```lean
@@ -84,7 +84,7 @@ my error, not a signal about the content.
 7. **Escape hatches, which block the Mathlib plan**: 473 `set_option backward.*` across 103 files
    (against 7 in all of `formal-conjectures`), nine `maxHeartbeats` up to 2000000, one
    `maxRecDepth 4000`, 25 `linter.style.haveILetI` disabled, and
-   `HodgeFiltration.lean:296-298,319-322` depending on compiler-generated
+   `Hodge/FiltrationDegreeZero.lean:296-298,319-322` depending on compiler-generated
    `TopCat.instCategorySheaf._aux_1/_3/_5` with `linter.auxLemma` off, which will break on a
    Mathlib bump.
 
@@ -118,7 +118,7 @@ my error, not a signal about the content.
 14. Both source tours in the guide omit `Coniveau.lean`, the home of `algebraicCycleClassSpan`.
 15. The two sanity checks in `HodgeSide.lean` carry no declaration names, so the guide's `rfl`
     certification does not cover them.
-16. The site never mentions `HodgeCodimensionZero.lean`, the one case of the conjecture proved
+16. The site never mentions `Hodge/CodimensionZero.lean`, the one case of the conjecture proved
     unconditionally (given connectedness).
 
 ## Review claims that turned out to be wrong
@@ -126,10 +126,10 @@ my error, not a signal about the content.
 Recorded so nobody spends time re-checking them. Several were artifacts of reviewing the
 `formal-conjectures` port, which carries `HodgeConjecture/` without `Other/` or `HodgeGuide/`.
 
-- `Nonempty (ComplexPoint X)` is proved, in `Other/AlgebraicGeometry/ProjectiveAnalytificationConnected.lean`.
+- `Nonempty (ComplexPoint X)` is proved, in `Other/AlgebraicGeometry/ComplexPoint/ProjectiveConnected.lean`.
 - The constant-sheaf to singular comparison is proved, and its additive upgrade
   `rationalCohomologyAddEquivSingularCohomology` is in
-  `Other/AlgebraicGeometry/SingularGlobalSectionsAdditivity.lean`.
+  `Other/AlgebraicGeometry/Cohomology/SingularComparison.lean`.
 - `Definitions/Algebra/Homology/LinearDual.lean` does not duplicate `Functor.mapHomotopy` or
   `ChainComplex.linearYonedaObj`; Mathlib has no `ModuleCat` dual functor.
 - `Lemmas/Analysis/NormedSpace/WedgeCovectors.lean` already calls Mathlib's determinant lemmas. The

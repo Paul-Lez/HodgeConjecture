@@ -47,7 +47,7 @@ formalization.
 
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Hodge/HolomorphicDeRham.lean` and
   `Filtration.lean`: the de Rham complex, hypercohomology, and the Hodge filtration;
-* `Other/AlgebraicGeometry/CodimensionCycle.lean`,
+* `Other/AlgebraicGeometry/Cycle/Codimension.lean`,
   `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Support.lean`,
   and `HodgeConjecture/Lemmas/AlgebraicGeometry/Cohomology/WithSupport.lean`: cycles, their
   supports, and cohomology with support;
@@ -58,11 +58,11 @@ formalization.
   subvariety;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`: the span of those
   classes, which is the right-hand side of the statement;
-* `Other/AlgebraicGeometry/SheafCycleClass.lean`: the maps on cycles;
-* `Other/AlgebraicGeometry/SmoothAnalytificationConnected.lean`: connectedness of the
+* `Other/AlgebraicGeometry/Cycle/SheafClass.lean`: the maps on cycles;
+* `Other/AlgebraicGeometry/ComplexPoint/SmoothConnected.lean`: connectedness of the
   analytification of a smooth integral complex scheme;
-* `Other/AlgebraicGeometry/CodimensionZeroClassComparison.lean` and
-  `CodimensionZeroCoclassNonvanishing.lean`: nonvanishing of the class of the whole variety and
+* `Other/AlgebraicGeometry/Hodge/CodimensionZeroComparison.lean` and
+  `CodimensionZeroNonvanishing.lean`: nonvanishing of the class of the whole variety and
   the codimension-zero case of the conjecture;
 * `HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures and the
   $`(p,p)` criterion.
