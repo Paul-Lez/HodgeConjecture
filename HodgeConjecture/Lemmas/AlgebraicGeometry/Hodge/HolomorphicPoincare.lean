@@ -274,10 +274,10 @@ def holomorphicSectionOfChart [SmoothOfRelativeDimension d X.hom]
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
     (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z)) :
-    OpenHolomorphicFunctions X d U := by
-  change C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯
-  exact ⟨fun q ↦ a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q),
-    contMDiff_chartFunction X d U z hsource a ha⟩
+    OpenHolomorphicFunctions X d U :=
+  (⟨fun q ↦ a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q),
+      contMDiff_chartFunction X d U z hsource a ha⟩ :
+    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯)
 
 lemma chartSection_holomorphicSectionOfChart [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)

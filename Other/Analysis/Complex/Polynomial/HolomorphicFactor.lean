@@ -343,9 +343,9 @@ abbrev MvSimpleRootLocusOn {n : ℕ} (p : Polynomial (MvPolynomial (Fin n) ℂ))
 noncomputable def mvSimpleRootLocusOnPoint {n : ℕ}
     {p : Polynomial (MvPolynomial (Fin n) ℂ)} (hp : p.Monic)
     (r : MvPolynomial (Fin n) ℂ) (z : MvSimpleRootBase p)
-    (hzr : MvPolynomial.eval z.1 r ≠ 0) (i : Fin p.natDegree) : MvSimpleRootLocusOn p r := by
-  refine ⟨(z.1, mvSimpleRootEnumeration hp z i), mvSimpleRootEnumeration_isRoot hp z i, ?_⟩
-  exact mul_ne_zero hzr (z.2 _ (mvSimpleRootEnumeration_isRoot hp z i))
+    (hzr : MvPolynomial.eval z.1 r ≠ 0) (i : Fin p.natDegree) : MvSimpleRootLocusOn p r :=
+  ⟨(z.1, mvSimpleRootEnumeration hp z i), mvSimpleRootEnumeration_isRoot hp z i,
+    mul_ne_zero hzr (z.2 _ (mvSimpleRootEnumeration_isRoot hp z i))⟩
 
 /-- Membership in a clopen part of the restricted cover is constant along each local branch. -/
 theorem eventually_mem_clopen_mvSimpleRootLocusOn_iff {n : ℕ}

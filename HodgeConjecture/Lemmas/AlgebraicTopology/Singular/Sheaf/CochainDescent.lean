@@ -67,12 +67,12 @@ def singularCochainToSimplexFunction (U : (Opens X)ᵒᵖ) (n : ℕ) :
 /-- Construct a singular cochain from its values on basis simplices. -/
 noncomputable def singularCochainOfSimplexFunction (U : (Opens X)ᵒᵖ) (n : ℕ) :
     (OpenSimplex X U n → R) →ₗ[R] OpenCochains R X U n where
-  toFun f := by
-    change Module.Dual R
-      ((sigmaObj (C := ModuleCat.{u} R)
-        fun _ : OpenSimplex X U n ↦ ModuleCat.of R R) : Type u)
-    exact (Sigma.desc fun s ↦ ModuleCat.ofHom <|
-      (LinearMap.ringLmapEquivSelf R R R).symm (f s)).hom
+  toFun f :=
+    ((Sigma.desc fun s ↦ ModuleCat.ofHom <|
+        (LinearMap.ringLmapEquivSelf R R R).symm (f s)).hom :
+      Module.Dual R
+        ((sigmaObj (C := ModuleCat.{u} R)
+          fun _ : OpenSimplex X U n ↦ ModuleCat.of R R) : Type u))
   map_add' f g := by
     change (Sigma.desc fun s : OpenSimplex X U n ↦ ModuleCat.ofHom <|
       (LinearMap.ringLmapEquivSelf R R R).symm ((f + g) s)).hom =
@@ -136,14 +136,16 @@ lemma singularCochainOfSimplexFunction_toFunction (U : (Opens X)ᵒᵖ) (n : ℕ
 
 /-- Singular cochains are precisely arbitrary functions on singular simplices. -/
 noncomputable def singularCochainEquivSimplexFunction (U : (Opens X)ᵒᵖ) (n : ℕ) :
-    OpenCochains R X U n ≃ₗ[R] (OpenSimplex X U n → R) := by
-  refine LinearEquiv.ofLinearMap (singularCochainToSimplexFunction R X U n)
-    (singularCochainOfSimplexFunction R X U n) ?_ ?_
-  · ext f s
-    exact congrFun (singularCochainToSimplexFunction_ofFunction R X U n f) s
-  · ext φ c
-    exact congrArg (fun f ↦ f c)
-      (singularCochainOfSimplexFunction_toFunction R X U n φ)
+    OpenCochains R X U n ≃ₗ[R] (OpenSimplex X U n → R) :=
+  LinearEquiv.ofLinearMap (singularCochainToSimplexFunction R X U n)
+    (singularCochainOfSimplexFunction R X U n)
+    (by
+      ext f s
+      exact congrFun (singularCochainToSimplexFunction_ofFunction R X U n f) s)
+    (by
+      ext φ c
+      exact congrArg (fun f ↦ f c)
+        (singularCochainOfSimplexFunction_toFunction R X U n φ))
 
 /-- An inclusion of open subsets sends a singular simplex to the same simplex in the larger
 open subset. -/
@@ -400,13 +402,15 @@ lemma singularZeroCochainOfFunction_toFunction (U : (Opens X)ᵒᵖ)
 /-- Degree-zero singular cochains are the all-degree simplex-function equivalence specialized at
 zero, transported along Mathlib's equivalence between zero-simplices and points. -/
 noncomputable def singularZeroCochainEquivFunction (U : (Opens X)ᵒᵖ) :
-    OpenCochains R X U 0 ≃ₗ[R] (U.unop → R) := by
-  refine LinearEquiv.ofLinearMap (singularZeroCochainToFunction R X U)
-    (singularZeroCochainOfFunction R X U) ?_ ?_
-  · ext f x
-    exact congrFun (singularZeroCochainToFunction_ofFunction R X U f) x
-  · ext φ c
-    exact congrArg (fun f ↦ f c) (singularZeroCochainOfFunction_toFunction R X U φ)
+    OpenCochains R X U 0 ≃ₗ[R] (U.unop → R) :=
+  LinearEquiv.ofLinearMap (singularZeroCochainToFunction R X U)
+    (singularZeroCochainOfFunction R X U)
+    (by
+      ext f x
+      exact congrFun (singularZeroCochainToFunction_ofFunction R X U f) x)
+    (by
+      ext φ c
+      exact congrArg (fun f ↦ f c) (singularZeroCochainOfFunction_toFunction R X U φ))
 
 /-- The additive presheaf of arbitrary `R`-valued functions, restricted along inclusions of
 open subsets. -/

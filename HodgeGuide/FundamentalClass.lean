@@ -73,10 +73,10 @@ def cycleComponentSmoothClosedLiftCoclassSection (X : Over (Spec ↧ℂ)) [IsInt
     (supportRelativeCohomologySheaf
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
-      (2 * p)).obj.obj (op ⊤) := by
-  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+      (2 * p)).obj.obj (op ⊤) :=
+  letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
-  exact hdeg ▸ smoothClosedSupportCoclassSection
+  hdeg ▸ smoothClosedSupportCoclassSection
     (cycleComponentSmoothLocusAmbientOpenOver X x)
     (cycleComponentSmoothLocusOver X x)
     (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)
@@ -167,9 +167,9 @@ def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.lef
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
       (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
-          (2 * (p : ℤ))) := by
-  let := cycleComponentSupportSectionRestriction_homology_isIso X x hx
-  exact asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
+          (2 * (p : ℤ))) :=
+  letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
+  asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
 ```
 ```lean -show
 end Guide.Subvariety.D3
@@ -187,17 +187,14 @@ def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsInt
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
       (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * p)).obj.obj
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) := by
-  refine cycleComponentSupportExtensionIso X x hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫ ?_
-  let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
-        (complexSupportInjectiveCohomologySheafIsoRelative X
-          (cycleComponentAnalyticClosedSupport X x) (2 * p))
+          (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
-  dsimp only [TopCat.Sheaf.supportEvaluation, Functor.comp_obj] at e
-  rw [he] at e
-  exact e
+  cycleComponentSupportExtensionIso X x hx ≪≫
+    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
+      (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+        (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
+          (complexSupportInjectiveCohomologySheafIsoRelative X
+            (cycleComponentAnalyticClosedSupport X x) (2 * p)))
 ```
 ```lean -show
 end Guide.Subvariety.D4

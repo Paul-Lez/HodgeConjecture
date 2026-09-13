@@ -51,9 +51,9 @@ def relativeDualCochainShortComplexIntEvalIso (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X).map
         (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) (n : ℤ)) ≅
       (relativeDualCochainShortComplexNat R X).map
-        (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) n) := by
+        (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) n) :=
   have hn : ComplexShape.embeddingUpNat.f n = (n : ℤ) := rfl
-  refine ShortComplex.isoMk
+  ShortComplex.isoMk
     ((relativeDualCochainShortComplexNat R X).X₁.extendXIso
       ComplexShape.embeddingUpNat hn)
     ((relativeDualCochainShortComplexNat R X).X₂.extendXIso

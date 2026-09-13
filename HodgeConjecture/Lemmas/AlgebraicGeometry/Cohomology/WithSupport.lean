@@ -281,7 +281,7 @@ ordinary rational cohomology. Its forward map is definitionally the support-forg
 noncomputable def forgetSupportEquivUniv (n : ℤ) :
     RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
-      H^n(X; ℚ) := by
+      H^n(X; ℚ) :=
   let eSource : RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
       ShiftedHom
@@ -318,15 +318,12 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
     rw [Localization.SmallShiftedHom.equiv_comp]
     exact (ShiftedHom.postcompEquivOfIsIso_apply g
       (show (1 : ℤ) + (n - 1) = n by lia) (eSource α)).symm
-  refine
-    { toFun := forgetSupport X Set.univ n
-      invFun := fun α => eSource.symm (eComp.symm (eTarget α))
-      left_inv := ?_
-      right_inv := ?_ }
-  · refine fun α ↦ eSource.injective ?_
-    rw [eSource.apply_symm_apply, hcomp, eComp.symm_apply_apply]
-  · refine fun α ↦ eTarget.injective ?_
-    rw [hcomp, eSource.apply_symm_apply, eComp.apply_symm_apply]
+  { toFun := forgetSupport X Set.univ n
+    invFun := fun α => eSource.symm (eComp.symm (eTarget α))
+    left_inv := fun α ↦ eSource.injective (by
+      rw [eSource.apply_symm_apply, hcomp, eComp.symm_apply_apply])
+    right_inv := fun α ↦ eTarget.injective (by
+      rw [hcomp, eSource.apply_symm_apply, eComp.apply_symm_apply]) }
 
 end AlgebraicGeometry.ComplexPoint
 

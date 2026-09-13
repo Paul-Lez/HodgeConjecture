@@ -98,20 +98,20 @@ def supportedComparison
     (_D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :
     RationalCohomologyWithSupport V.over
         (cycleComponentSupport V.over x) (2 * (p : ℤ)) ≃+
-      RationalSingularComponentCohomologyWithSupport V.over x (2 * p) := by
-  let : TopologicalSpace V.analyticPoint := Point.analyticTopology
-  let : T2Space V.analyticPoint := inferInstance
-  let : CompactSpace V.analyticPoint := inferInstance
-  let : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
+      RationalSingularComponentCohomologyWithSupport V.over x (2 * p) :=
+  letI : TopologicalSpace V.analyticPoint := Point.analyticTopology
+  letI : T2Space V.analyticPoint := inferInstance
+  letI : CompactSpace V.analyticPoint := inferInstance
+  letI : ChartedSpace (Fin d → ℂ) V.analyticPoint :=
     inferInstance
-  let : ∀ U : Opens V.analyticPoint, ParacompactSpace U := fun U =>
+  letI : ∀ U : Opens V.analyticPoint, ParacompactSpace U := fun U =>
     opens_paracompactSpace_of_compact_chartedSpace
       (H := Fin d → ℂ) U
-  rw [show 2 * (p : ℤ) = ((2 * p : ℕ) : ℤ) by omega]
-  exact rationalCohomologyWithSupportAddEquivSingular
-    V.over
-      (cycleComponentSupport V.over x)
-      (isClosed_cycleComponentSupport V.over x) (2 * p)
+  (show ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) by omega) ▸
+    rationalCohomologyWithSupportAddEquivSingular
+      V.over
+        (cycleComponentSupport V.over x)
+        (isClosed_cycleComponentSupport V.over x) (2 * p)
 
 /-- The supported comparison depends only on the component, not on the surrounding data. -/
 lemma supportedComparison_eq

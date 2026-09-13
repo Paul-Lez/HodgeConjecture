@@ -155,18 +155,22 @@ def hypercohomologyAddEquivGlobalSections
     (hKflasque : ∀ q, (K.X q).IsFlasque) (n : ℤ) :
     Hypercohomology X K n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X)) K).homology n := by
+        (TopCat.of (ComplexPoint X)) K).homology n :=
   let Y := TopCat.of (ComplexPoint X)
-  choose I i _ _ _ using
-    CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective K N
-  letI : I.IsKInjective := CochainComplex.isKInjective_of_injective I N
+  let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective K N
+  let I := hres.choose
+  let i := hres.choose_spec.choose
+  haveI : QuasiIso i := hres.choose_spec.choose_spec.choose
+  haveI : ∀ q, Injective (I.X q) := hres.choose_spec.choose_spec.choose_spec.choose
+  haveI : I.IsStrictlyGE N := hres.choose_spec.choose_spec.choose_spec.choose_spec
+  haveI : I.IsKInjective := CochainComplex.isKInjective_of_injective I N
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
-  letI : QuasiIso
+  haveI : QuasiIso
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
         ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i N N hKflasque hIflasque
-  exact hypercohomologyAddEquivGlobalSectionsOfResolution
+  hypercohomologyAddEquivGlobalSectionsOfResolution
     X K I i n
 
 /-- Global sections of a mapping cone are canonically isomorphic to the mapping cone of the

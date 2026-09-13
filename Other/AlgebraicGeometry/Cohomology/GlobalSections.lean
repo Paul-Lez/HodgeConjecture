@@ -200,24 +200,28 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSections
     RationalSingularCochainHypercohomology X n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
         (TopCat.of (ComplexPoint X))
-        (singularCochainSheafComplexInt X ℚ)).homology n := by
+        (singularCochainSheafComplexInt X ℚ)).homology n :=
   let Y := TopCat.of (ComplexPoint X)
   let S := singularCochainSheafComplexInt X ℚ
-  let : S.IsStrictlyGE 0 := by
+  letI : S.IsStrictlyGE 0 := by
     dsimp [S, singularCochainSheafComplexInt]
     infer_instance
-  choose I i _ _ _ using
-    CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
-  letI : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
+  let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
+  let I := hres.choose
+  let i := hres.choose_spec.choose
+  haveI : QuasiIso i := hres.choose_spec.choose_spec.choose
+  haveI : ∀ q, Injective (I.X q) := hres.choose_spec.choose_spec.choose_spec.choose
+  haveI : I.IsStrictlyGE 0 := hres.choose_spec.choose_spec.choose_spec.choose_spec
+  haveI : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
   have hSflasque : ∀ q, (S.X q).IsFlasque :=
     fun q ↦ singularCochainSheafComplexInt_isFlasque X q
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
-  letI : QuasiIso
+  haveI : QuasiIso
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
         ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i 0 0 hSflasque hIflasque
-  exact rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
+  rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
     X I i n
 
 end AlgebraicGeometry.ComplexPoint

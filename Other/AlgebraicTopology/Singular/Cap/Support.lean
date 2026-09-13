@@ -319,36 +319,35 @@ noncomputable def supportCapShortComplexHomZero
     (hphi : relativeCoboundary R (TopPair.ofSubset A) p phi = 0) :
     ((relativeChainFunctor R).obj (TopPair.ofSubset B)).sc'
         (p + 1) p ((ComplexShape.down ℕ).next p) ⟶
-      ((relativeChainFunctor R).obj (TopPair.ofSubset (A ∪ B))).sc' 1 0 0 := by
+      ((relativeChainFunctor R).obj (TopPair.ofSubset (A ∪ B))).sc' 1 0 0 :=
   let s : R := (-1 : R) ^ p
   have hs : s * s = 1 := by
     dsimp only [s]
     rw [← pow_add, (Even.add_self p).neg_one_pow]
-  refine
-    { τ₁ := ModuleCat.ofHom (s • supportCap R X A B p 1 phi)
-      τ₂ := supportCapHom R X A B p 0 phi
-      τ₃ := 0
-      comm₁₂ := ?_
-      comm₂₃ := ?_ }
-  · ext c
-    change relativeBoundary R (TopPair.ofSubset (A ∪ B)) 0
-        (s • supportCap R X A B p 1 phi c) =
-      supportCap R X A B p 0 phi
-        (relativeBoundary R (TopPair.ofSubset B) p c)
-    rw [map_smul]
-    have h := LinearMap.congr_fun
-      (boundary_supportCap_eq_of_cocycle R X A B p 0 phi hphi) c
-    change relativeBoundary R (TopPair.ofSubset (A ∪ B)) 0
-        (supportCap R X A B p 1 phi c) =
-      s • supportCap R X A B p 0 phi
-        (relativeBoundary R (TopPair.ofSubset B) p c) at h
-    simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · change supportCapHom R X A B p 0 phi ≫
-        ((relativeChainFunctor R).obj (TopPair.ofSubset (A ∪ B))).d 0 0 =
-      ((relativeChainFunctor R).obj (TopPair.ofSubset B)).d p
-          ((ComplexShape.down ℕ).next p) ≫ 0
-    rw [(((relativeChainFunctor R).obj
-      (TopPair.ofSubset (A ∪ B))).shape 0 0 (by simp)), comp_zero, comp_zero]
+  { τ₁ := ModuleCat.ofHom (s • supportCap R X A B p 1 phi)
+    τ₂ := supportCapHom R X A B p 0 phi
+    τ₃ := 0
+    comm₁₂ := by
+      ext c
+      change relativeBoundary R (TopPair.ofSubset (A ∪ B)) 0
+          (s • supportCap R X A B p 1 phi c) =
+        supportCap R X A B p 0 phi
+          (relativeBoundary R (TopPair.ofSubset B) p c)
+      rw [map_smul]
+      have h := LinearMap.congr_fun
+        (boundary_supportCap_eq_of_cocycle R X A B p 0 phi hphi) c
+      change relativeBoundary R (TopPair.ofSubset (A ∪ B)) 0
+          (supportCap R X A B p 1 phi c) =
+        s • supportCap R X A B p 0 phi
+          (relativeBoundary R (TopPair.ofSubset B) p c) at h
+      simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
+    comm₂₃ := by
+      change supportCapHom R X A B p 0 phi ≫
+          ((relativeChainFunctor R).obj (TopPair.ofSubset (A ∪ B))).d 0 0 =
+        ((relativeChainFunctor R).obj (TopPair.ofSubset B)).d p
+            ((ComplexShape.down ℕ).next p) ≫ 0
+      rw [(((relativeChainFunctor R).obj
+        (TopPair.ofSubset (A ∪ B))).shape 0 0 (by simp)), comp_zero, comp_zero] }
 
 /-- The explicit support-valued cap morphism ending in a positive degree. -/
 noncomputable def supportCapShortComplexHomSucc
@@ -358,31 +357,29 @@ noncomputable def supportCapShortComplexHomSucc
     ((relativeChainFunctor R).obj (TopPair.ofSubset B)).sc'
         (p + ((q + 1) + 1)) (p + (q + 1)) (p + q) ⟶
       ((relativeChainFunctor R).obj (TopPair.ofSubset (A ∪ B))).sc'
-        ((q + 1) + 1) (q + 1) q := by
+        ((q + 1) + 1) (q + 1) q :=
   let s : R := (-1 : R) ^ p
   have hs : s * s = 1 := by
     dsimp only [s]
     rw [← pow_add, (Even.add_self p).neg_one_pow]
-  refine
-    { τ₁ := ModuleCat.ofHom (s • supportCap R X A B p ((q + 1) + 1) phi)
-      τ₂ := supportCapHom R X A B p (q + 1) phi
-      τ₃ := ModuleCat.ofHom (s • supportCap R X A B p q phi)
-      comm₁₂ := ?_
-      comm₂₃ := ?_ }
-  · ext c
-    change relativeBoundary R (TopPair.ofSubset (A ∪ B)) (q + 1)
-        (s • supportCap R X A B p ((q + 1) + 1) phi c) =
-      supportCap R X A B p (q + 1) phi
-        (relativeBoundary R (TopPair.ofSubset B) (p + (q + 1)) c)
-    rw [map_smul]
-    have h := LinearMap.congr_fun
-      (boundary_supportCap_eq_of_cocycle R X A B p (q + 1) phi hphi) c
-    change relativeBoundary R (TopPair.ofSubset (A ∪ B)) (q + 1)
-        (supportCap R X A B p ((q + 1) + 1) phi c) =
-      s • supportCap R X A B p (q + 1) phi
-        (relativeBoundary R (TopPair.ofSubset B) (p + (q + 1)) c) at h
-    simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · exact ModuleCat.hom_ext (boundary_supportCap_eq_of_cocycle R X A B p q phi hphi)
+  { τ₁ := ModuleCat.ofHom (s • supportCap R X A B p ((q + 1) + 1) phi)
+    τ₂ := supportCapHom R X A B p (q + 1) phi
+    τ₃ := ModuleCat.ofHom (s • supportCap R X A B p q phi)
+    comm₁₂ := by
+      ext c
+      change relativeBoundary R (TopPair.ofSubset (A ∪ B)) (q + 1)
+          (s • supportCap R X A B p ((q + 1) + 1) phi c) =
+        supportCap R X A B p (q + 1) phi
+          (relativeBoundary R (TopPair.ofSubset B) (p + (q + 1)) c)
+      rw [map_smul]
+      have h := LinearMap.congr_fun
+        (boundary_supportCap_eq_of_cocycle R X A B p (q + 1) phi hphi) c
+      change relativeBoundary R (TopPair.ofSubset (A ∪ B)) (q + 1)
+          (supportCap R X A B p ((q + 1) + 1) phi c) =
+        s • supportCap R X A B p (q + 1) phi
+          (relativeBoundary R (TopPair.ofSubset B) (p + (q + 1)) c) at h
+      simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
+    comm₂₃ := ModuleCat.hom_ext (boundary_supportCap_eq_of_cocycle R X A B p q phi hphi) }
 
 /-- The short-complex morphism underlying the support-valued cap product. -/
 noncomputable def supportCapShortComplexHom
@@ -390,26 +387,24 @@ noncomputable def supportCapShortComplexHom
     (phi : RelativeCochain R (TopPair.ofSubset A) p)
     (hphi : relativeCoboundary R (TopPair.ofSubset A) p phi = 0) :
     ((relativeChainFunctor R).obj (TopPair.ofSubset B)).sc (p + q) ⟶
-      ((relativeChainFunctor R).obj (TopPair.ofSubset (A ∪ B))).sc q := by
+      ((relativeChainFunctor R).obj (TopPair.ofSubset (A ∪ B))).sc q :=
   let KB := (relativeChainFunctor R).obj (TopPair.ofSubset B)
   let Kunion := (relativeChainFunctor R).obj (TopPair.ofSubset (A ∪ B))
-  cases q with
-  | zero =>
-      exact
-        (KB.isoSc' (p + 1) p ((ComplexShape.down ℕ).next p)
-            (ChainComplex.prev ℕ p) rfl).hom ≫
-          supportCapShortComplexHomZero R X A B p phi hphi ≫
-          (Kunion.isoSc' 1 0 0 (ChainComplex.prev ℕ 0)
-            ChainComplex.next_nat_zero).inv
-  | succ q =>
-      exact
-        (KB.isoSc' (p + ((q + 1) + 1)) (p + (q + 1)) (p + q)
-            (by rw [ChainComplex.prev]; omega)
-            (by rw [show p + (q + 1) = (p + q) + 1 by omega,
-              ChainComplex.next_nat_succ])).hom ≫
-          supportCapShortComplexHomSucc R X A B p q phi hphi ≫
-          (Kunion.isoSc' ((q + 1) + 1) (q + 1) q
-            (by rw [ChainComplex.prev]) (ChainComplex.next_nat_succ q)).inv
+  match q with
+  | 0 =>
+      (KB.isoSc' (p + 1) p ((ComplexShape.down ℕ).next p)
+          (ChainComplex.prev ℕ p) rfl).hom ≫
+        supportCapShortComplexHomZero R X A B p phi hphi ≫
+        (Kunion.isoSc' 1 0 0 (ChainComplex.prev ℕ 0)
+          ChainComplex.next_nat_zero).inv
+  | q + 1 =>
+      (KB.isoSc' (p + ((q + 1) + 1)) (p + (q + 1)) (p + q)
+          (by rw [ChainComplex.prev]; omega)
+          (by rw [show p + (q + 1) = (p + q) + 1 by omega,
+            ChainComplex.next_nat_succ])).hom ≫
+        supportCapShortComplexHomSucc R X A B p q phi hphi ≫
+        (Kunion.isoSc' ((q + 1) + 1) (q + 1) q
+          (by rw [ChainComplex.prev]) (ChainComplex.next_nat_succ q)).inv
 
 @[simp]
 lemma supportCapShortComplexHom_τ₂

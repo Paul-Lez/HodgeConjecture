@@ -2491,7 +2491,7 @@ def standardAffineBoundaryChainCoretractionHomotopy (d : ℕ) :
       (standardAffineBoundaryChainRetraction d ≫
         standardAffineBoundaryChainMap d)
       (𝟙 ((TopCat.toSSet.obj (standardPuncturedPair d).snd).chainComplex
-        (ModuleCat.of ℚ ℚ))) := by
+        (ModuleCat.of ℚ ℚ))) :=
   let E := coverSmallRationalChainHomotopyEquiv_of_openCover
     (standardPuncturedPair d).snd (standardPuncturedFacetCover d)
     (isOpen_standardPuncturedFacetCover d)
@@ -2510,7 +2510,7 @@ def standardAffineBoundaryChainCoretractionHomotopy (d : ℕ) :
       (Homotopy.ofEq hE.symm)
   have hfull : Homotopy (E.inv ≫ (C ≫ A)) (𝟙 _) :=
     (hcarrier.compLeft E.inv).trans E.homotopyInvHomId
-  simpa only [standardAffineBoundaryChainRetraction, Category.assoc] using hfull
+  (Homotopy.ofEq (Category.assoc E.inv C A)).trans hfull
 
 /-- Affine realization of the standard simplicial boundary is a rational chain-homotopy
 equivalence onto punctured Euclidean space. -/

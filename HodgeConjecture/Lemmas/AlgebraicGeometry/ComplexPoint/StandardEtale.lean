@@ -105,21 +105,21 @@ def standardEtalePointToAlgHom (z : standardEtalePointSpace P) : P.Ring →ₐ[�
   (P.lift z.1.2 hz).restrictScalars ℂ
 
 /-- Read the base point and distinguished root from a complex point of a standard étale algebra. -/
-def algHomToStandardEtalePoint (φ : P.Ring →ₐ[ℂ] ℂ) : standardEtalePointSpace P := by
+def algHomToStandardEtalePoint (φ : P.Ring →ₐ[ℂ] ℂ) : standardEtalePointSpace P :=
   let v : complexPolynomialRing n →ₐ[ℂ] ℂ :=
     φ.comp (IsScalarTower.toAlgHom ℂ (complexPolynomialRing n) P.Ring)
   let x := φ P.X
-  refine ⟨(v, x), ?_⟩
-  let : Algebra (complexPolynomialRing n) ℂ := v.toRingHom.toAlgebra
-  let φB : P.Ring →ₐ[complexPolynomialRing n] ℂ :=
-    { toRingHom := φ.toRingHom
-      commutes' b := rfl }
-  have h := P.hasMap_X.map φB
-  constructor
-  · simpa [v, x, φB, StandardEtalePair.HasMap, Polynomial.aeval_def,
-      RingHom.algebraMap_toAlgebra] using h.1
-  · simpa [v, x, φB, StandardEtalePair.HasMap, Polynomial.aeval_def,
-      RingHom.algebraMap_toAlgebra, isUnit_iff_ne_zero] using h.2
+  ⟨(v, x), by
+    let : Algebra (complexPolynomialRing n) ℂ := v.toRingHom.toAlgebra
+    let φB : P.Ring →ₐ[complexPolynomialRing n] ℂ :=
+      { toRingHom := φ.toRingHom
+        commutes' b := rfl }
+    have h := P.hasMap_X.map φB
+    constructor
+    · simpa [v, x, φB, StandardEtalePair.HasMap, Polynomial.aeval_def,
+        RingHom.algebraMap_toAlgebra] using h.1
+    · simpa [v, x, φB, StandardEtalePair.HasMap, Polynomial.aeval_def,
+        RingHom.algebraMap_toAlgebra, isUnit_iff_ne_zero] using h.2⟩
 
 /-- Complex algebra homomorphisms out of a standard étale algebra are equivalent to its root
 data. -/
