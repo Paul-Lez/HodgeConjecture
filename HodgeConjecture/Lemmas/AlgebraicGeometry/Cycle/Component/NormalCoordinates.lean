@@ -269,18 +269,11 @@ abbrev componentSmoothLocus
     [IsProjective X.hom] (x : X.left) :=
   (cycleComponentι X.left x ≫ X.hom).smoothLocus
 
-/-- The complex structure map on the component's smooth locus. -/
-abbrev componentSmoothStructureMap
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) :
-    (componentSmoothLocus X x).toScheme ⟶ Spec ↧ℂ :=
-  (componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom
-
 /-- The component's smooth locus, bundled over the complex base. -/
 abbrev componentSmoothScheme
     (X : Over (Spec ↧ℂ)) [Smooth X.hom]
     [IsProjective X.hom] (x : X.left) : Over (Spec ↧ℂ) :=
-  Over.mk (componentSmoothStructureMap X x)
+  Over.mk ((componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom)
 
 end CycleComponentSeparateLocalCoordinates
 

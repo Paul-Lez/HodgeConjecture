@@ -82,7 +82,9 @@ instance cycleComponentSmoothLocusClosedLiftOver_isClosedImmersion :
 
 variable {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
 
-/-- The ambient open retains the original smooth relative dimension. -/
+/-- The ambient open retains the original smooth relative dimension. These stay generic in
+`d`: they are instances, found by resolution, and narrowing them to `dim X.left` would make
+them fire less often. -/
 instance cycleComponentSmoothLocusAmbientOpen_smoothOfRelativeDimension :
     SmoothOfRelativeDimension d ((cycleComponentSmoothLocusAmbientOpen X x).ι ≫ X.hom) := by
   simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 d

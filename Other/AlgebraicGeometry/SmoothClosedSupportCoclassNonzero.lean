@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothSupport.CoclassSection
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 public import Other.AlgebraicGeometry.SmoothClosedSupportCoclassRestrictionNonzero
 public import Other.AlgebraicTopology.SupportRelativeCohomologyGermNonzero
 
