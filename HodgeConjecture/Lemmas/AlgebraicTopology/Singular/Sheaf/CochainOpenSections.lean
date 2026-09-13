@@ -21,7 +21,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
 
 /-- The image of the top open of a subspace is that ambient open itself. -/
 def openSubspaceImageTopIso (V : Opens X) : V.isOpenEmbedding.functor.obj ⊤ ≅ V :=
@@ -71,7 +71,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

@@ -17,7 +17,6 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.Cochain
 
-import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Contractible
 import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
@@ -41,7 +40,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The augmented singular zero-cochain short complex before sheafification. -/
 noncomputable def constantsToSingularCochainPresheafShortComplex :
@@ -83,7 +82,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 set_option backward.isDefEq.respectTransparency false in
 /-- If every closed singular `(n + 1)`-cochain has a primitive near each point, then the
@@ -398,8 +397,6 @@ lemma exists_local_singularCochain_primitive_of_contractibleOpenBasis
   let K := (openSingularChainComplexFunctor R X).obj V
   let φV : OpenCochains R X (.op V) (n + 1) :=
     (singularCochainPresheaf R X (n + 1)).map i.op φ
-  have hK : K.ExactAt (n + 1) :=
-    singularChainComplex_exactAt_of_contractible R V (n + 1) (by lia)
   have hφV : (K.d (n + 2) (n + 1)).hom.dualMap φV = 0 := by
     change (singularCochainCoboundary R X (n + 1)).app (.op V) φV = 0
     dsimp [φV]
@@ -407,7 +404,10 @@ lemma exists_local_singularCochain_primitive_of_contractibleOpenBasis
       (singularCochainCoboundary R X (n + 1)).naturality,
       ConcreteCategory.comp_apply, hφ, map_zero]
   have hker : φV ∈ LinearMap.ker (K.d (n + 2) (n + 1)).hom.dualMap := hφV
-  rw [← K.dual_differentials_range_eq_ker_of_exactAt n hK] at hker
+  have hrange : LinearMap.range (K.d (n + 1) n).hom.dualMap =
+      LinearMap.ker (K.d (n + 2) (n + 1)).hom.dualMap :=
+    singularChain_dual_range_eq_ker_of_contractible R V n
+  rw [← hrange] at hker
   obtain ⟨ψ, hψ⟩ := hker
   exact ⟨V, hxV, i, ψ, hψ⟩
 

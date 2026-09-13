@@ -16,7 +16,6 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.RelativeCochainCone
-public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
 public import Mathlib.Algebra.Category.ModuleCat.Projective
 public import Mathlib.Analysis.Normed.Group.Basic
@@ -37,7 +36,7 @@ open CategoryTheory Limits
 open CategoryTheory.Pretriangulated
 universe u
 namespace AlgebraicTopology.Singular
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 @[simp]
 lemma relativeDualCochainShortComplexInt_g (X : TopPair.{u}) :
@@ -95,34 +94,26 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 set_option backward.isDefEq.respectTransparency false in
+/-- A degreewise splitting of the dual singular-chain sequence of a pair. -/
+def relativeDualCochainShortComplexNatDegreewiseSplitting (X : TopPair.{u}) (n : ℕ) :
+    ((relativeDualCochainShortComplexNat R X).map
+      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) n)).Splitting := by
+  -- Split the chain sequence in degree `n`, then dualise the splitting.
+  have hT := ((HomologicalComplex.shortExact_iff_degreewise_shortExact
+    (relativeChainShortComplex R X)).mp (relativeChainShortComplex_shortExact R X)) n
+  let sm := (relativeChainMap_isSplitMono R X n).exists_splitMono.some
+  exact (ShortComplex.Splitting.ofExactOfRetraction _ hT.exact sm.retraction sm.id
+    hT.epi_g).linearDual
+
 /-- Dualizing the singular-chain sequence of a pair gives a short exact sequence of
 nonnegative cochain complexes. -/
 private lemma relativeDualCochainShortComplexNat_shortExact (X : TopPair.{u}) :
     (relativeDualCochainShortComplexNat R X).ShortExact := by
   rw [HomologicalComplex.shortExact_iff_degreewise_shortExact]
-  intro n
-  let T := (relativeChainShortComplex R X).map
-    (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.down ℕ) n)
-  have hT : T.ShortExact :=
-    ((HomologicalComplex.shortExact_iff_degreewise_shortExact
-      (relativeChainShortComplex R X)).mp
-        (relativeChainShortComplex_shortExact R X)) n
-  apply ModuleCat.shortComplex_shortExact
-  · dsimp [relativeDualCochainShortComplexNat, T]
-    rw [LinearMap.exact_iff]
-    exact (LinearMap.range_dualMap_eq_ker_dualMap_of_range_eq_ker
-      T.f.hom T.g.hom hT.exact.moduleCat_range_eq_ker).symm
-  · dsimp [relativeDualCochainShortComplexNat, T]
-    change Function.Injective T.g.hom.dualMap
-    exact LinearMap.dualMap_injective_of_surjective
-      ((ModuleCat.epi_iff_surjective T.g).mp hT.epi_g)
-  · dsimp [relativeDualCochainShortComplexNat, T]
-    change Function.Surjective T.f.hom.dualMap
-    exact LinearMap.dualMap_surjective_of_injective
-      ((ModuleCat.mono_iff_injective T.f).mp hT.mono_f)
+  exact fun n => (relativeDualCochainShortComplexNatDegreewiseSplitting R X n).shortExact
 
 /-- The integer-indexed dual cochain sequence of a pair is short exact. -/
 lemma relativeDualCochainShortComplexInt_shortExact (X : TopPair.{u}) :
@@ -181,6 +172,6 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 end AlgebraicTopology.Singular

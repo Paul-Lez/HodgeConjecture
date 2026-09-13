@@ -15,7 +15,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
 
 /-- Raw singular cochains evaluated on an ambient open. -/
 def openRawSingularCochainComplex (V : Opens X) : CochainComplex AddCommGrpCat ℕ :=

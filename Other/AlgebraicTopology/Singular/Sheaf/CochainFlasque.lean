@@ -25,24 +25,26 @@ namespace AlgebraicTopology.Singular
 
 universe u
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
-/-- A linear choice of extension of cochains along an inclusion of open subsets. -/
+/-- A linear choice of extension of cochains along an inclusion of open subsets, given by
+precomposing with the retraction of the inclusion on chains. -/
 noncomputable def openSingularCochainExtension
     {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) :
     OpenCochains R X V n →ₗ[R] OpenCochains R X U n :=
-  Classical.choose <| LinearMap.exists_rightInverse_of_surjective
-    (((openSingularChainComplexFunctor R X).map i.unop).f n).hom.dualMap
-    (LinearMap.range_eq_top.mpr <| openSingularCochainRestriction_surjective R X i n)
+  let _ := openSingularChainMap_isSplitMono R X i.unop n
+  (retraction (((openSingularChainComplexFunctor R X).map i.unop).f n)).hom.dualMap
 
 /-- Restricting a chosen extension recovers the original cochain. -/
 lemma openSingularCochainRestriction_comp_extension
     {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) :
     (((openSingularChainComplexFunctor R X).map i.unop).f n).hom.dualMap.comp
-        (openSingularCochainExtension R X i n) = LinearMap.id :=
-  Classical.choose_spec <| LinearMap.exists_rightInverse_of_surjective
-    (((openSingularChainComplexFunctor R X).map i.unop).f n).hom.dualMap
-    (LinearMap.range_eq_top.mpr <| openSingularCochainRestriction_surjective R X i n)
+        (openSingularCochainExtension R X i n) = LinearMap.id := by
+  let _ := openSingularChainMap_isSplitMono R X i.unop n
+  have h := congrArg ModuleCat.Hom.hom
+    (IsSplitMono.id (((openSingularChainComplexFunctor R X).map i.unop).f n))
+  exact LinearMap.ext fun φ =>
+    LinearMap.ext fun c => congrArg φ (LinearMap.congr_fun h c)
 
 @[simp]
 lemma openSingularCochainRestriction_extension

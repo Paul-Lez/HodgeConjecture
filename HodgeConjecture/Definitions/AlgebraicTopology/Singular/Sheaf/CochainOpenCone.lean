@@ -23,7 +23,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
 
 local instance singularCochainOpenConeDerivedCategory : HasDerivedCategory AddCommGrpCat :=
   HasDerivedCategory.standard AddCommGrpCat

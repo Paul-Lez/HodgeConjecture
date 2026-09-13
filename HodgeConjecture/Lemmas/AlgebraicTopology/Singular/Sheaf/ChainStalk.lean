@@ -32,7 +32,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Evaluating a chain complex in degree `n` and forgetting its scalar structure. -/
 def chainDegreeAdditiveFunctor (n : ℕ) : ChainCategory R ⥤ AddCommGrpCat.{u} :=

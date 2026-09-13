@@ -32,7 +32,7 @@ open CategoryTheory TopologicalSpace
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [Field R] {U X : TopCat.{0}} (j : U ⟶ X)
+variable (R : Type) [CommRing R] {U X : TopCat.{0}} (j : U ⟶ X)
 
 /-- Restriction of the raw singular-cochain presheaf complexes. -/
 def singularRawRestrictionComplex :

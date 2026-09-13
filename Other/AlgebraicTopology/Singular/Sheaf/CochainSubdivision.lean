@@ -55,7 +55,7 @@ lemma openSimplexMap_openSimplexLift {X : TopCat.{u}} {U V : Opens X} (i : V ⟶
     (Opposite.op (SimplexCategory.mk n)) |>.injective
   rfl
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Ordinary singular cochain cohomology is canonically linearly equivalent to the cohomology of
 cochains on the top open subset. -/
@@ -117,7 +117,7 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicTopology.Singular
 
-variable {R : Type u} [Field R] {X : TopCat.{u}}
+variable {R : Type u} [CommRing R] {X : TopCat.{u}}
 
 /-- Every positive sheaf-cohomology group of a term of the singular-cochain resolution vanishes
 on a hereditarily paracompact Hausdorff space. -/

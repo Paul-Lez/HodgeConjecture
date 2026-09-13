@@ -86,7 +86,7 @@ end
 open CategoryTheory Limits TopologicalSpace HomologicalComplex Opposite
 universe u
 namespace AlgebraicTopology.Singular
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Evaluation of the presheaf chain complex is the actual relative chain complex. -/
 def singularChainPresheafComplexEvaluationIso (U : Opens X) :

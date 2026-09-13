@@ -37,7 +37,7 @@ nothing in the statement's dependency chain uses these results, only material in
 open CategoryTheory Limits TopologicalSpace
 universe u
 namespace AlgebraicTopology.Singular
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The chain-complex-level identification of stalks before and after sheafification.
 This is not yet an identification with the local relative homology at `x`. -/

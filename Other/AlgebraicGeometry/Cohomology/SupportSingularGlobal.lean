@@ -35,7 +35,7 @@ nothing in the statement's dependency chain uses these results, only material in
 open CategoryTheory Limits TopologicalSpace
 namespace AlgebraicTopology.Singular
 universe u v
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
 
 /-- Raw global singular cochains, transported from top-open cochains to ordinary singular
 cochains and with their scalar structure forgotten. -/

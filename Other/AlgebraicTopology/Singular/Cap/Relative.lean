@@ -42,7 +42,7 @@ namespace AlgebraicTopology.Singular
 
 open CategoryTheory
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-! ## Relative chain-level cap product -/
 

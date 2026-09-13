@@ -52,7 +52,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The contravariant functor sending an open set `U` to the pair `(X, X ∖ U)`. -/
 def openComplementPairFunctor : (Opens X)ᵒᵖ ⥤ TopPair.{u} where

@@ -45,7 +45,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Singular `n`-simplices in an open subset. -/
 abbrev OpenSimplex (U : (Opens X)ᵒᵖ) (n : ℕ) :=

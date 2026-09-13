@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDual
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
 public import Mathlib.AlgebraicTopology.SingularHomology.HomotopyInvariance
 public import Mathlib.Topology.Homotopy.Contractible
@@ -27,7 +28,13 @@ import Mathlib.Algebra.Homology.QuasiIso
 
 A topological homotopy equivalence induces a homotopy equivalence of singular chain complexes.
 Consequently, the singular chain complex of a contractible space is exact in every positive
-degree. The comparison with a point uses Mathlib's explicit calculation for totally disconnected
+degree, and so — because a chain homotopy equivalence dualises — is the singular *cochain*
+complex. The cochain statement is the one that matters for sheaf-theoretic comparisons, and
+deducing it from the homotopy equivalence rather than from exactness of the chain complex is what
+makes it hold over an arbitrary commutative ring: exactness alone does not survive dualisation
+over a ring.
+
+The comparison with a point uses Mathlib's explicit calculation for totally disconnected
 spaces.
 -/
 
@@ -40,7 +47,7 @@ universe u
 
 namespace AlgebraicTopology
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-- A topological homotopy equivalence induces a homotopy equivalence of singular chain
 complexes. -/
@@ -92,5 +99,41 @@ lemma singularChainComplex_exactAt_of_contractible
   rw [exactAt_iff_of_quasiIsoAt e.hom n]
   exact singularChainComplexFunctor_exactAt_of_totallyDisconnectedSpace
     (ModuleCat.{u} R) n (ModuleCat.of R R) (TopCat.of (ULift.{u} Unit)) hn
+
+/-- Positive-degree singular cochains of a contractible space are exact. -/
+lemma singularCochainComplex_exactAt_of_contractible
+    (X : Type u) [TopologicalSpace X] [ContractibleSpace X] (n : ℕ) :
+    HomologicalComplex.ExactAt
+      ((((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj
+        (TopCat.of X)).linearDualCochainComplex) (n + 1) := by
+  -- `C_*(X)` is chain homotopy equivalent to the coefficients placed in degree zero.
+  let e := HomologicalComplex.linearDualHomotopyEquiv
+    ((contractibleSingularChainHomotopyEquiv R X).trans <|
+      (HomotopyEquiv.ofIso (singularChainComplexFunctorIsoOfTotallyDisconnectedSpace
+        (ModuleCat.{u} R) (ModuleCat.of R R) (TopCat.of (ULift.{u} Unit)))).trans
+        (ChainComplex.alternatingConstHomotopyEquiv _))
+  rw [← exactAt_iff_of_quasiIsoAt e.hom (n + 1)]
+  refine HomologicalComplex.ExactAt.of_isZero ?_
+  have h := HomologicalComplex.isZero_single_obj_X (ComplexShape.down ℕ) 0
+    (∐ fun _ : TopCat.of (ULift.{u} Unit) => ModuleCat.of R R) (n + 1) (by simp)
+  have : Subsingleton
+      (((ChainComplex.single₀ (ModuleCat.{u} R)).obj
+        (∐ fun _ : TopCat.of (ULift.{u} Unit) => ModuleCat.of R R)).X (n + 1)) :=
+    ModuleCat.subsingleton_of_isZero h
+  exact ModuleCat.isZero_of_subsingleton (M := ModuleCat.of R (Module.Dual R _))
+
+/-- Exactness of the singular cochain complex of a contractible space, in range-equals-kernel
+form. -/
+lemma singularChain_dual_range_eq_ker_of_contractible
+    (X : Type u) [TopologicalSpace X] [ContractibleSpace X] (n : ℕ) :
+    LinearMap.range
+        ((((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj
+          (TopCat.of X)).d (n + 1) n).hom.dualMap =
+      LinearMap.ker
+        ((((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj
+          (TopCat.of X)).d (n + 2) (n + 1)).hom.dualMap := by
+  have h := singularCochainComplex_exactAt_of_contractible R X n
+  rw [HomologicalComplex.exactAt_iff' _ n (n + 1) (n + 2) (by simp) (by simp)] at h
+  exact h.moduleCat_range_eq_ker
 
 end AlgebraicTopology

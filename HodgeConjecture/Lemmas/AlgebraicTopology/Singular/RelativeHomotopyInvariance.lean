@@ -128,7 +128,7 @@ end TopCat.Homotopy
 
 namespace TopPair.Homotopy
 
-variable {R : Type u} [Field R]
+variable {R : Type u} [CommRing R]
 variable {X Y : TopPair.{u}} {f g : X ⟶ Y}
 
 /-- The component of the relative-chain projection in each degree is a cokernel. -/

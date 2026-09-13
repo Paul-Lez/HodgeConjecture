@@ -23,19 +23,19 @@ public import HodgeConjecture.Mathlib.LinearAlgebra.Dual.Defs
 import Mathlib.LinearAlgebra.Dual.Lemmas
 
 /-!
-# The linear dual of a complex of vector spaces
-
-This file dualises complexes of vector spaces. The reversed algebraic-dual short complex of a
-short complex has homology canonically linearly equivalent to the dual of the original homology:
-this is the universal-coefficient identification, and no finite-dimensionality hypothesis is
-needed.
+# The linear dual of a complex of modules
 
 Applying the dual degreewise turns a nonnegatively graded chain complex into a cochain complex,
-whose degree-`n` short complex is the reversed dual of the original one. A chain-homotopy
-equivalence therefore induces, contravariantly, a linear equivalence on dual homology.
+whose degree-`n` short complex is the reversed dual of the original one. Duality is
+contravariantly functorial for maps, isomorphisms, chain homotopies and chain-homotopy
+equivalences, so all of these transport to the dual cochain complex. That much holds over a
+commutative ring.
 
-Duality is contravariantly functorial for maps, isomorphisms, chain homotopies and
-chain-homotopy equivalences, so all of these transport to the dual cochain complex.
+Over a field the homology of the reversed dual is canonically the dual of the homology, with no
+finite-dimensionality hypothesis: this is `linearDualHomologyEquiv`. Over a ring the comparison
+map `dualHomologyComparisonExplicit` still exists but need not be bijective, which is the `Ext`
+term of the universal coefficient theorem. Each namespace below is split into a `CommRing` section
+and a `Field` section accordingly.
 -/
 
 @[expose] public noncomputable section
@@ -46,7 +46,8 @@ universe u
 
 namespace CategoryTheory.ShortComplex
 
-variable {R : Type u} [Field R]
+section CommRing
+variable {R : Type u} [CommRing R]
 
 attribute [local implicit_reducible] ShortComplex.moduleCatMk ShortComplex.moduleCatLeftHomologyData
 
@@ -99,6 +100,13 @@ lemma dualHomologyComparisonExplicit_mk_apply_mk
         (Submodule.Quotient.mk z) = φ.1 z.1 :=
   rfl
 
+end CommRing
+
+section Field
+variable {R : Type u} [Field R]
+
+attribute [local implicit_reducible] ShortComplex.moduleCatMk ShortComplex.moduleCatLeftHomologyData
+
 lemma dualHomologyComparisonExplicit_surjective
     (S : ShortComplex (ModuleCat.{u} R)) :
     Function.Surjective S.dualHomologyComparisonExplicit := by
@@ -142,14 +150,16 @@ def linearDualHomologyEquiv (S : ShortComplex (ModuleCat.{u} R)) :
         S.dualHomologyComparisonExplicit_surjective⟩).trans <|
       S.moduleCatHomologyIso.toLinearEquiv.dualMap
 
+end Field
+
 end CategoryTheory.ShortComplex
 
 namespace HomologicalComplex
 
-variable {R : Type u} [Field R]
+section CommRing
+variable {R : Type u} [CommRing R]
 
-/-- The algebraic-dual cochain complex of a nonnegatively graded chain complex of vector
-spaces. -/
+/-- The algebraic-dual cochain complex of a nonnegatively graded chain complex of modules. -/
 @[implicit_reducible, simps -isSimp X d]
 def linearDualCochainComplex (K : ChainComplex (ModuleCat.{u} R) ℕ) :
     CochainComplex (ModuleCat.{u} R) ℕ where
@@ -175,13 +185,6 @@ def linearDualCochainComplexScIso (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : 
   have hprev : (ComplexShape.up ℕ).prev n = (ComplexShape.down ℕ).next n := by cases n <;> simp
   have hnext : (ComplexShape.up ℕ).next n = (ComplexShape.down ℕ).prev n := by simp
   K.linearDualCochainComplex.isoSc' (c := ComplexShape.up ℕ) _ _ _ hprev hnext --≪≫
-
-/-- Universal coefficients for a complex of vector spaces: the degree-`n` cohomology of the
-linear-dual cochain complex is canonically the linear dual of the degree-`n` homology. -/
-def linearDualHomologyEquiv (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
-    K.linearDualCochainComplex.homology n ≃ₗ[R] Module.Dual R (K.homology n) :=
-  (ShortComplex.homologyMapIso (linearDualCochainComplexScIso K n)).toLinearEquiv.trans
-    (K.sc n).linearDualHomologyEquiv
 
 variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
 
@@ -215,6 +218,20 @@ def linearDualIso (e : K ≅ L) :
   inv := linearDualMap e.inv
   hom_inv_id := by rw [← linearDualMap_comp, e.inv_hom_id, linearDualMap_id]
   inv_hom_id := by rw [← linearDualMap_comp, e.hom_inv_id, linearDualMap_id]
+
+end CommRing
+
+section Field
+variable {R : Type u} [Field R]
+
+/-- Universal coefficients for a complex of vector spaces: the degree-`n` cohomology of the
+linear-dual cochain complex is canonically the linear dual of the degree-`n` homology. -/
+def linearDualHomologyEquiv (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
+    K.linearDualCochainComplex.homology n ≃ₗ[R] Module.Dual R (K.homology n) :=
+  (ShortComplex.homologyMapIso (linearDualCochainComplexScIso K n)).toLinearEquiv.trans
+    (K.sc n).linearDualHomologyEquiv
+
+end Field
 
 end HomologicalComplex
 

@@ -32,16 +32,30 @@ open CategoryTheory Limits
 open CategoryTheory.Pretriangulated
 universe u
 namespace AlgebraicTopology.Singular
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
-/-- A degreewise splitting of the dual cochain sequence.  The choice is harmless: the final
-cohomology comparison is independent of finite-dimensionality. -/
-def relativeDualCochainDegreewiseSplitting (X : TopPair.{u}) (z : ℤ) :
+/-- A degreewise splitting of the dual cochain sequence: the dual of the splitting of the chain
+sequence in nonnegative degrees, and zero in negative degrees. -/
+noncomputable def relativeDualCochainDegreewiseSplitting (X : TopPair.{u}) (z : ℤ) :
     ((relativeDualCochainShortComplexInt R X).map
-      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z)).Splitting :=
-  (((HomologicalComplex.shortExact_iff_degreewise_shortExact
-    (relativeDualCochainShortComplexInt R X)).mp
-      (relativeDualCochainShortComplexInt_shortExact R X)) z).splittingOfProjective
+      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z)).Splitting := by
+  by_cases hz : 0 ≤ z
+  · have hn : ((z.toNat : ℕ) : ℤ) = z := Int.toNat_of_nonneg hz
+    refine ShortComplex.Splitting.ofIso
+      (relativeDualCochainShortComplexNatDegreewiseSplitting R X z.toNat) ?_
+    simpa only [hn] using (relativeDualCochainShortComplexIntEvalIso R X z.toNat).symm
+  · have hi : ∀ n : ℕ, ComplexShape.embeddingUpNat.f n ≠ z := by
+      intro n hn
+      exact hz (hn ▸ Int.natCast_nonneg n)
+    exact
+      { r := 0
+        s := 0
+        f_r := ((relativeDualCochainShortComplexNat R X).X₁.isZero_extend_X
+          ComplexShape.embeddingUpNat z hi).eq_of_src _ _
+        s_g := ((relativeDualCochainShortComplexNat R X).X₃.isZero_extend_X
+          ComplexShape.embeddingUpNat z hi).eq_of_tgt _ _
+        id := ((relativeDualCochainShortComplexNat R X).X₂.isZero_extend_X
+          ComplexShape.embeddingUpNat z hi).eq_of_src _ _ }
 
 /-- The triangle attached to the degreewise split dual cochain sequence is distinguished. -/
 lemma relativeDualCochainTriangle_distinguished (X : TopPair.{u}) :

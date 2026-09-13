@@ -15,7 +15,6 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
 public import Mathlib.Algebra.Category.ModuleCat.Projective
 public import Mathlib.Analysis.Normed.Group.Basic
@@ -44,7 +43,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The dual relative, ambient, and subspace cochain complexes in nonnegative degrees. -/

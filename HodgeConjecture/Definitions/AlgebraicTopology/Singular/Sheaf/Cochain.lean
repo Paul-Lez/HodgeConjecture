@@ -24,7 +24,6 @@ public import Mathlib.Topology.Connected.LocallyPathConnected
 public import Mathlib.Topology.Homotopy.Contractible
 public import Mathlib.Topology.Sheaves.Abelian
 
-import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Contractible
 import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
 import Mathlib.Topology.Homotopy.TopCat.ZerothHomotopy
@@ -53,7 +52,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The singular chain complex, functorially restricted to the open subsets of `X`. -/
 def openSingularChainComplexFunctor :
