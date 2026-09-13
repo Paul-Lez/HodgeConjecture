@@ -149,7 +149,6 @@ lemma actualRestriction_comp_openResolutionComparison
         ambientRationalOpenResolutionComparison X Z hZ =
       ambientRationalInjectiveRestriction X Z hZ := by
   dsimp only [ambientRationalOpenResolutionComparison]
-  rw [← Category.assoc]
   change ((TopCat.Sheaf.toOpenRestrictionPushforward _ _).mapHomologicalComplex _).app _ ≫
     (HomologicalComplex.mapExtendCanonicalIso _ _ _).hom ≫ _ = _
   rw [HomologicalComplex.mapExtendCanonicalIso_hom_naturality_from_id_assoc]

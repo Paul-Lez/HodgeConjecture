@@ -83,14 +83,12 @@ noncomputable def map (f : X ⟶ Y) : Point R X → Point R Y :=
 
 /-- The identity scheme morphism induces the identity on `R`-points. -/
 @[simp]
-lemma map_id (z : Point R X) : map (𝟙 X) z = z := by
-  simp [map]
+lemma map_id (z : Point R X) : map (𝟙 X) z = z := rfl
 
 /-- Composition of scheme morphisms agrees with composition on `R`-points. -/
 @[simp]
 lemma map_comp_apply (f : X ⟶ Y) (g : Y ⟶ Z) (z : Point R X) :
-    map (f ≫ g) z = map g (map f z) := by
-  simp [map, Category.assoc]
+    map (f ≫ g) z = map g (map f z) := rfl
 
 end Functoriality
 
@@ -152,8 +150,6 @@ lemma mem_overOpen_basicOpen_iff_isUnit_evaluate {U : X.left.Opens} (s : Γ(X.le
     (z : Point R X) (hz : z ∈ overOpen U) :
     z ∈ overOpen (X.left.basicOpen s) ↔ IsUnit (evaluate U s z) := by
   rw [evaluate, dif_pos (show z.underlying ∈ U from hz)]
-  change z.underlying ∈ X.left.basicOpen s ↔
-    IsUnit (z.stalkHom.hom (X.left.presheaf.germ U z.underlying hz s))
   rw [isUnit_map_iff z.stalkHom.hom]
   exact X.left.mem_basicOpen s z.underlying hz
 
@@ -219,7 +215,6 @@ lemma mem_overOpen_map_iff {Y : Over (Spec ↧R)} (f : X ⟶ Y)
 lemma evaluate_map {Y : Over (Spec ↧R)} (f : X ⟶ Y)
     (U : Y.left.Opens) (s : Γ(Y.left, U)) (z : Point R X) :
     evaluate U s (map f z) = evaluate (f.left ⁻¹ᵁ U) (f.left.app U s) z := by
-  classical
   by_cases hx : z.underlying ∈ f.left ⁻¹ᵁ U
   · have hy : f.left z.underlying ∈ U := hx
     rw [evaluate, dif_pos (show (map f z).underlying ∈ U from hy), evaluate,
@@ -262,7 +257,6 @@ out by an open set of ring homomorphisms `Γ(X.left, U) ⟶ ↧R`. -/
 private lemma isOpen_analyticTopology_iff {W : Set (Point R X)} :
     IsOpen W ↔ ∀ U : X.left.affineOpens,
       ∃ O : Set (Γ(X.left, U.1) ⟶ ↧R), IsOpen O ∧ evaluationHom U.1 ⁻¹' O = Subtype.val ⁻¹' W := by
-  show IsOpen[⨆ U : X.left.affineOpens, TopologicalSpace.coinduced _ (chartTopology U.1)] W ↔ _
   rw [isOpen_iSup_iff]
   exact forall_congr' fun U ↦ isOpen_coinduced.trans isOpen_induced_iff
 
@@ -419,11 +413,5 @@ end Point
 
 /-- A complex point of a scheme over `Spec ℂ`. -/
 abbrev ComplexPoint (X : Over (Spec ↧ℂ)) := Point ℂ X
-
-/-- A projective complex scheme is Noetherian. -/
-theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
-    [IsProjective X.hom] : IsNoetherian X.left where
-  toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian X.hom
-  toCompactSpace := QuasiCompact.compactSpace_of_compactSpace X.hom
 
 end AlgebraicGeometry

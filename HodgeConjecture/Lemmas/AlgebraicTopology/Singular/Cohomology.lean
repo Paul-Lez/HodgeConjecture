@@ -144,8 +144,6 @@ namespace AlgebraicTopology.Singular
 @[simp]
 lemma homologyMap_id (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) :
     homologyMap R n (𝟙 X) = LinearMap.id := by
-  change (((singularHomologyFunctor (ModuleCat.{u} R) n).obj
-    (ModuleCat.of R R)).map (𝟙 X)).hom = LinearMap.id
   calc
     _ = ModuleCat.Hom.hom (𝟙 (((singularHomologyFunctor (ModuleCat.{u} R) n).obj
         (ModuleCat.of R R)).obj X)) := congrArg ModuleCat.Hom.hom
@@ -156,8 +154,6 @@ lemma homologyMap_id (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) :
 lemma homologyMap_comp (R : Type u) [Field R] {X Y Z : TopCat.{u}} (n : ℕ)
     (f : X ⟶ Y) (g : Y ⟶ Z) :
     homologyMap R n (f ≫ g) = (homologyMap R n g).comp (homologyMap R n f) := by
-  change (((singularHomologyFunctor (ModuleCat.{u} R) n).obj
-    (ModuleCat.of R R)).map (f ≫ g)).hom = _
   calc
     _ = ((((singularHomologyFunctor (ModuleCat.{u} R) n).obj
         (ModuleCat.of R R)).map f) ≫
@@ -191,7 +187,6 @@ lemma cohomologyMap_comp (R : Type u) [Field R] {X Y Z : TopCat.{u}} (n : ℕ)
 @[simp]
 lemma relativeHomologyMap_id (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ) :
     relativeHomologyMap R n (𝟙 X) = LinearMap.id := by
-  change ((relativeHomologyFunctor R n).map (𝟙 X)).hom = LinearMap.id
   calc
     _ = ModuleCat.Hom.hom (𝟙 ((relativeHomologyFunctor R n).obj X)) :=
       congrArg ModuleCat.Hom.hom ((relativeHomologyFunctor R n).map_id X)
@@ -202,7 +197,6 @@ lemma relativeHomologyMap_comp (R : Type u) [Field R] {X Y Z : TopPair.{u}} (n :
     (f : X ⟶ Y) (g : Y ⟶ Z) :
     relativeHomologyMap R n (f ≫ g) =
       (relativeHomologyMap R n g).comp (relativeHomologyMap R n f) := by
-  change ((relativeHomologyFunctor R n).map (f ≫ g)).hom = _
   calc
     _ = (((relativeHomologyFunctor R n).map f) ≫
         (relativeHomologyFunctor R n).map g).hom :=
@@ -287,21 +281,18 @@ lemma cohomologyEquivDualHomology_forgetSupport (R : Type u) [Field R] (X : TopC
 
 @[simp]
 lemma preimageSupportPairMap_id (X : TopCat.{u}) (Z : Set X) :
-    preimageSupportPairMap (𝟙 X) Z = 𝟙 (TopPair.ofSubset Zᶜ) := by
-  apply MorphismProperty.Arrow.Hom.ext <;> rfl
+    preimageSupportPairMap (𝟙 X) Z = 𝟙 (TopPair.ofSubset Zᶜ) := rfl
 
 lemma preimageSupportPairMap_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
     (W : Set Z) :
     preimageSupportPairMap (f ≫ g) W =
-      preimageSupportPairMap f (g ⁻¹' W) ≫ preimageSupportPairMap g W := by
-  apply MorphismProperty.Arrow.Hom.ext <;> rfl
+      preimageSupportPairMap f (g ⁻¹' W) ≫ preimageSupportPairMap g W := rfl
 
 @[simp]
 lemma cohomologyWithSupportMap_id (R : Type u) [Field R] (X : TopCat.{u})
     (Z : Set X) (n : ℕ) :
     cohomologyWithSupportMap R n (𝟙 X) Z = LinearMap.id := by
   unfold cohomologyWithSupportMap
-  rw [preimageSupportPairMap_id]
   exact relativeCohomologyMap_id R (TopPair.ofSubset Zᶜ) n
 
 lemma cohomologyWithSupportMap_comp (R : Type u) [Field R]
@@ -309,19 +300,16 @@ lemma cohomologyWithSupportMap_comp (R : Type u) [Field R]
     cohomologyWithSupportMap R n (f ≫ g) W =
       (cohomologyWithSupportMap R n f (g ⁻¹' W)).comp
         (cohomologyWithSupportMap R n g W) := by
-  rw [cohomologyWithSupportMap, cohomologyWithSupportMap, cohomologyWithSupportMap,
-    preimageSupportPairMap_comp, relativeCohomologyMap_comp]
+  simp [cohomologyWithSupportMap, preimageSupportPairMap_comp, relativeCohomologyMap_comp]
 
 @[simp]
 lemma supportInclusionPairMap_rfl (X : TopCat.{u}) (Z : Set X) :
-    supportInclusionPairMap X (Set.Subset.rfl : Z ⊆ Z) = 𝟙 (TopPair.ofSubset Zᶜ) := by
-  apply MorphismProperty.Arrow.Hom.ext <;> rfl
+    supportInclusionPairMap X (Set.Subset.rfl : Z ⊆ Z) = 𝟙 (TopPair.ofSubset Zᶜ) := rfl
 
 lemma supportInclusionPairMap_trans (X : TopCat.{u}) {Z W U : Set X}
     (hZW : Z ⊆ W) (hWU : W ⊆ U) :
     supportInclusionPairMap X (hZW.trans hWU) =
-      supportInclusionPairMap X hWU ≫ supportInclusionPairMap X hZW := by
-  apply MorphismProperty.Arrow.Hom.ext <;> rfl
+      supportInclusionPairMap X hWU ≫ supportInclusionPairMap X hZW := rfl
 
 @[simp]
 lemma enlargeSupport_rfl (R : Type u) [Field R] (X : TopCat.{u}) (Z : Set X) (n : ℕ) :

@@ -219,8 +219,6 @@ def closedImmersionStandardFlatteningChart :
 
 @[simp] theorem closedImmersionStandardFlatteningChart_center :
     closedImmersionStandardFlatteningChart X Y i m d z
-      (Point.map i z) = (localChart Y m z z, 0) := by
-  simp only [closedImmersionStandardFlatteningChart_apply, closedImmersionFlatteningChart_center,
-    map_zero]
+      (Point.map i z) = (localChart Y m z z, 0) := by simp
 
 end AlgebraicGeometry.ComplexPoint

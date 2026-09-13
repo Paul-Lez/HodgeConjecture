@@ -50,9 +50,6 @@ open Point
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
 
-local instance hodgeFiltrationTopology :
-    TopologicalSpace (ComplexPoint X) := analyticTopology
-
 /-- Sheaves of additive groups on the analytic complex-point space. -/
 abbrev AnalyticAdditiveSheaf :=
   TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))
@@ -380,8 +377,6 @@ lemma hypercohomologyMap_comp_apply
       (analyticQuasiIsomorphisms X) L M (0 : ℤ) :=
     Localization.SmallShiftedHom.mk₀
       (analyticQuasiIsomorphisms X) (0 : ℤ) rfl g
-  change α.comp (β.comp γ (zero_add (0 : ℤ))) (zero_add n) =
-    (α.comp β (zero_add n)).comp γ (zero_add n)
   simpa only using
     (Localization.SmallShiftedHom.comp_assoc
       (analyticQuasiIsomorphisms X) α β γ
@@ -481,13 +476,6 @@ lemma deRham_field_smul_eq [IsIntegral X.left] [Smooth X.hom]
     (n : ℤ) (q : K) (α : DeRhamHypercohomology X n) :
     q • α = hypercohomologyMap X
       (scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q)) n α :=
-  rfl
-
-/-- Scalar multiplication over `K` agrees with multiplication by its image in `ℂ`. -/
-lemma deRham_field_smul_eq_complex_smul
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (q : K) (α : DeRhamHypercohomology X n) :
-    q • α = (algebraMap K ℂ q) • α :=
   rfl
 
 /-- Restriction of complex scalars gives the scalar tower on de Rham hypercohomology. -/

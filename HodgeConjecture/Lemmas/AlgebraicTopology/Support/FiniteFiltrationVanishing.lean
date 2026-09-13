@@ -92,7 +92,6 @@ theorem nestedSupportRestrictionSectionsComplexShortComplex_shortExact_of_flasqu
     (nestedSupportRestrictionSectionsComplexShortComplex X h W K).ShortExact := by
   apply HomologicalComplex.shortExact_of_degreewise_shortExact
   intro n
-  let := hK n
   exact nestedSupportRestrictionSectionsShortComplex_shortExact_of_flasque X h W (K.X n)
 
 include h in

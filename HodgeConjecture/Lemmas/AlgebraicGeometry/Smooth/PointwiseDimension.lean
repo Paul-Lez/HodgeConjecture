@@ -72,7 +72,6 @@ the scheme point. -/
 lemma IsAffineOpen.primeIdealOf_height_eq_coheight {X : Scheme} {U : X.Opens}
     (hU : IsAffineOpen U) (x : U.toScheme) :
     (hU.primeIdealOf x).asIdeal.height = Order.coheight x := by
-  change (hU.isoSpec.hom x : Spec ↧Γ(X, U)).asIdeal.height = Order.coheight x
   calc
     (hU.isoSpec.hom x : Spec ↧Γ(X, U)).asIdeal.height =
         Order.coheight (hU.isoSpec.hom x) :=
@@ -103,7 +102,6 @@ lemma SmoothOfRelativeDimension.orderKrullDim_eq_complex [IsIntegral X]
 /-- The height of the generic point of an integral smooth complex `d`-fold is `d`. -/
 lemma SmoothOfRelativeDimension.height_genericPoint_eq_complex [IsIntegral X]
     [SmoothOfRelativeDimension d f] : Order.height (genericPoint X) = d := by
-  change Order.height (⊤ : X) = d
   apply WithBot.coe_eq_coe.mp
   calc
     (↑(Order.height (⊤ : X)) : WithBot ℕ∞) = Order.krullDim X :=

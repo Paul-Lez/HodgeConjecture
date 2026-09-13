@@ -38,9 +38,14 @@ open Point
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
 
-attribute [local instance] hodgeFiltrationTopology
-
 attribute [local instance] analyticHasDerivedCategory
+
+/-- Scalar multiplication over `K` agrees with multiplication by its image in `ℂ`. -/
+lemma deRham_field_smul_eq_complex_smul
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
+    (q : K) (α : DeRhamHypercohomology X n) :
+    q • α = (algebraMap K ℂ q) • α :=
+  rfl
 
 /-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
 def complexToFieldConstantSheaf :
@@ -119,9 +124,7 @@ omit [Algebra K ℂ] in
 private lemma ofHom_zmultiplesAddHom_comp_mulLeft (q r : K) :
     AddCommGrpCat.ofHom (zmultiplesAddHom K r) ≫
         AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q) =
-      AddCommGrpCat.ofHom (zmultiplesAddHom K (q * r)) := by
-  ext
-  simp
+      AddCommGrpCat.ofHom (zmultiplesAddHom K (q * r)) := by aesop
 
 set_option linter.auxLemma false in
 omit [Algebra K ℂ] in
@@ -217,8 +220,6 @@ open Point
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
 
-attribute [local instance] hodgeFiltrationTopology
-
 attribute [local instance] analyticHasDerivedCategory
 
 /-- The rational constant sheaf is a retract of the complex constant sheaf. -/
@@ -274,7 +275,6 @@ omit [Algebra K ℂ] in
     {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (n : ℤ) :
     hypercohomologyMap X (0 : K ⟶ L) n = 0 := by
   refine AddMonoidHom.ext fun α ↦ ?_
-  rw [AddMonoidHom.zero_apply]
   apply (Localization.SmallShiftedHom.equiv
     (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
   unfold hypercohomologyMap
@@ -297,7 +297,6 @@ omit [Algebra K ℂ] in
         (analyticQuasiIsomorphisms X) 0 rfl (𝟙 K))
       (zero_add n) = α
   apply eK.injective
-  rw [Localization.SmallShiftedHom.equiv_comp]
   simp [eK]
 
 lemma complexConstantCohomologyDeRhamEquiv_apply
@@ -331,8 +330,6 @@ lemma fieldToDeRhamCohomology_factor
       hypercohomologyMap X
         (constantsToHolomorphicDeRhamComplexInt X) n
         (fieldToComplexCohomology K X n α) := by
-  unfold fieldToDeRhamCohomology fieldToComplexCohomology
-    fieldToHolomorphicDeRhamComplexInt
   exact hypercohomologyMap_comp_apply X
     (fieldToComplexConstantSheafComplexInt K X)
     (constantsToHolomorphicDeRhamComplexInt X) n α
@@ -357,7 +354,6 @@ lemma hodgeFilteredDeRhamComplex_isZero_of_lt
   rw [hodgeFilteredDeRhamComplex,
     HomologicalComplex.isZero_stupidTrunc_iff]
   refine ⟨fun n => ?_⟩
-  change IsZero ((holomorphicDeRhamComplexInt X).X (p + n))
   exact (holomorphicDeRhamComplexInt X).isZero_of_isStrictlyLE
     (dim X.left) (p + n) (by lia)
 
@@ -372,7 +368,6 @@ lemma hodgeFilteredDeRhamInclusion_eq_zero_of_lt
 lemma hodgeFiltration_eq_bot_of_lt [IsIntegral X.left] [Smooth X.hom]
     {p : ℤ} (hp : (dim X.left : ℤ) < p) (n : ℤ) :
     hodgeFiltration X p n = ⊥ := by
-  rw [hodgeFiltration]
   change (hypercohomologyMap X
     (hodgeFilteredDeRhamInclusion X p) n).range = ⊥
   rw [hodgeFilteredDeRhamInclusion_eq_zero_of_lt X hp,

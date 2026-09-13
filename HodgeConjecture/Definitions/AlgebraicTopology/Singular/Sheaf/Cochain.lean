@@ -123,7 +123,6 @@ lemma singularCochainCoboundary_comp (n : ℕ) :
   apply LinearMap.ext
   intro c
   let K := (openSingularChainComplexFunctor R X).obj U.unop
-  change φ ((K.d (n + 1) n).hom ((K.d (n + 2) (n + 1)).hom c)) = 0
   have h := K.d_comp_d (n + 2) (n + 1) n
   calc
     _ = φ (ModuleCat.Hom.hom
@@ -220,7 +219,6 @@ private lemma simplicialBoundary_comp_zeroAugmentation (S : SSet.{u}) :
   apply SSet.chainComplex_hom_ext
   intro σ
   rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
-  simp_rw [Preadditive.zsmul_comp, ιChainComplex_comp_simplicialZeroAugmentation]
   simp
 
 /-- The augmentation on the zero-chains of an open subset. -/
@@ -277,8 +275,6 @@ lemma constantsToSingularCochainZero_comp_coboundary :
   change R at r
   apply LinearMap.ext
   intro c
-  dsimp [constantsToSingularCochainZero, constantSingularZeroCochain,
-    constantCoefficientPresheaf, singularCochainPresheaf, singularCochainCoboundary]
   change r * (openZeroAugmentation R X U).hom
       ((((openSingularChainComplexFunctor R X).obj U.unop).d 1 0).hom c) = 0
   have hc : (openZeroAugmentation R X U).hom

@@ -45,6 +45,10 @@ attribute [local implicit_reducible] shortComplexFunctor' shortComplexFunctor
 
 variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
 
+lemma ModuleCat.ofHom_sub.{v} {R : Type*} [Ring R] {M N : Type v} [AddCommGroup M]
+    [Module R M] [AddCommGroup N] [Module R N] (f g : M →ₗ[R] N) :
+    ModuleCat.ofHom (f - g) = ModuleCat.ofHom f - ModuleCat.ofHom g := rfl
+
 open Homotopy in
 /-- Algebraic duality sends a chain homotopy contravariantly to a cochain homotopy. -/
 def linearDualHomotopy {f g : K ⟶ L} (h : Homotopy f g) :

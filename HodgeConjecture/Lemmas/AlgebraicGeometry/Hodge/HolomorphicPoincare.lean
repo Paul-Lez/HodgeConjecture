@@ -63,8 +63,6 @@ lemma analyticAt_fixedChartTransition
     (hy : y ∈ ((localChart X d z').symm.trans
       (localChart X d z)).source) :
     AnalyticAt ℂ (fixedChartTransition X d z z') y := by
-  change AnalyticAt ℂ
-    (fun v ↦ localChart X d z ((localChart X d z').symm v)) y
   exact analyticAt_localChart_transition X d z' z hy
 
 /-- Expressions of a section in two overlapping fixed charts are related by the chart
@@ -308,7 +306,6 @@ lemma chartSectionDifferential_holomorphicSectionOfChart
     chartSectionDifferential X d U z
         (holomorphicSectionOfChart X d U z hsource a ha) y =
       fderivWithin ℂ a (chartSectionDomain X d U z) y := by
-  rw [chartSectionDifferential]
   exact fderivWithin_congr'
     (fun w hw ↦ chartSection_holomorphicSectionOfChart X d U z hsource a ha hw) hy
 
@@ -331,7 +328,6 @@ lemma chartSection_chartCoordinateSection [SmoothOfRelativeDimension d X.hom]
     (i : Fin d) {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     chartSection X d U z (chartCoordinateSection X d U z hsource i) y =
       y i := by
-  unfold chartCoordinateSection
   exact chartSection_holomorphicSectionOfChart X d U z hsource _ _ hy
 
 lemma chartSectionDifferential_chartCoordinateSection
@@ -508,7 +504,6 @@ lemma analyticOnNhd_chartEvaluation [SmoothOfRelativeDimension d X.hom]
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
     AnalyticOnNhd ℂ (chartEvaluation X d U z p θ)
       (chartSectionDomain X d U z) := by
-  classical
   let s := chartSectionDomain X d U z
   let e (I : Fin p → Fin d) : Fin p → Fin d → ℂ := fun j ↦ Pi.single (I j) 1
   let W (I : Fin p → Fin d) :=
@@ -694,9 +689,6 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
   let b := formOfAnalyticField X d W x hsourceW p θfield hθW
   let θ : HolomorphicForm X d W p := Submodule.Quotient.mk b
   refine ⟨W, i ≫ j, θ, hxW, ?_⟩
-  change Submodule.Quotient.mk (Algebra.DeRham.differential ℂ
-      (OpenHolomorphicFunctions X d W) p b) =
-    Submodule.Quotient.mk (formRestriction X d (i ≫ j) (p + 1) a)
   apply (Submodule.Quotient.eq (chartEvaluationKernel X d W (p + 1))).2
   apply mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     X d W x (p + 1) hsourceW
@@ -782,8 +774,6 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
   let center := (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x
   let c := DifferentialForm.zeroFormCoeff η center
   refine ⟨V, i, c, hxV, ?_⟩
-  change Submodule.Quotient.mk aV = Submodule.Quotient.mk
-    (Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d V) c)
   apply (Submodule.Quotient.eq (chartEvaluationKernel X d V 0)).2
   apply mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     X d V x 0 hsourceV
@@ -795,8 +785,6 @@ theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.
   rw [show chartEvaluation X d V x 0 aV y = η center from hconst hyball]
   rw [chartEvaluation_ofConstant X d V x c hy]
   have hrepr := congrFun (DifferentialForm.zeroForm_eq_constOfIsEmpty η) center
-  change η center =
-    ContinuousAlternatingMap.constOfIsEmpty ℂ (Fin d → ℂ) (Fin 0) c at hrepr
   rw [hrepr]
   exact sub_self _
 

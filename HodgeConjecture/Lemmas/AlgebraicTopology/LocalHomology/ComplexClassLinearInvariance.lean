@@ -169,14 +169,7 @@ variable (d : ℕ)
 lemma continuous_complexMatrixPath_mulVec
     (H : C(unitInterval, Matrix (Fin d) (Fin d) ℂ)) :
     Continuous (fun tx : unitInterval × (Fin d → ℂ) ↦
-      (H tx.1).mulVec tx.2) := by
-  refine continuous_pi fun i ↦ ?_
-  simp only [Matrix.mulVec, dotProduct]
-  refine continuous_finsetSum _ fun j _ ↦ ?_
-  exact
-    ((continuous_apply j).comp
-      ((continuous_apply i).comp (H.continuous.comp continuous_fst))).mul
-        ((continuous_apply j).comp continuous_snd)
+      (H tx.1).mulVec tx.2) := by fun_prop
 
 /-- Joint continuity on the punctured vector subspace. -/
 lemma continuous_complexMatrixPath_mulVec_punctured

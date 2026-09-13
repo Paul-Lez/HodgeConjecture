@@ -39,10 +39,9 @@ below hold for all integer and rational coefficients.
 namespace Guide.Statement.D5
 ```
 ```lean
-def sheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] (p : ℕ) :
+def sheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (p : ℕ) :
     codimensionCycleSubgroup V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
-  cycleClassOnCyclesOfComponents (cycleComponentSheafClass V.over (d := d))
+  cycleClassOnCyclesOfComponents (fun x hx ↦ cycleComponentSheafClass V.over x hx)
 ```
 ```lean -show
 end Guide.Statement.D5
@@ -57,12 +56,10 @@ example : @Guide.Statement.D5.sheafCycleClassOnCycles = @AlgebraicGeometry.Compl
 namespace Guide.Statement.D6
 ```
 ```lean
-def rationalSheafCycleClassOnCycles
-    (V : SmoothProjectiveComplexVariety) (d : ℕ)
-    [SmoothOfRelativeDimension d V.structureMap] (p : ℕ) :
+def rationalSheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (p : ℕ) :
     TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme p) →ₗ[ℚ]
       H^(2 * (p : ℤ))(V.over; ℚ) :=
-  TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V d p)
+  TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 ```
 ```lean -show
 end Guide.Statement.D6
@@ -102,7 +99,7 @@ namespace Guide.Statement.D2
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
-    Submodule.span ℚ {cycleComponentSheafClass X x (d := dim X.left) hx}
+    Submodule.span ℚ {cycleComponentSheafClass X x hx}
 ```
 ```lean -show
 end Guide.Statement.D2
@@ -115,7 +112,7 @@ example : @Guide.Statement.D2.algebraicCycleClassSpan = @AlgebraicGeometry.Compl
 
 In Lean the span is the supremum, over all points {lean}`x` and all proofs {lean}`hx` of
 {lean}`coheight x = p`, of the line spanned by
-{lean}`cycleComponentSheafClass X x (d := dim X.left) hx`, where the named argument fixes the
+{lean}`cycleComponentSheafClass X x hx`, where the named argument fixes the
 dimension at {lean}`dim X.left`.
 
 # The proposition
@@ -221,7 +218,7 @@ The shortest route through the implementation is:
    the class on the smooth locus;
 5. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SupportExtension.lean`, its
    extension across the singular locus;
-6. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SheafClass.lean`, the class of a
+6. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`, the class of a
    subvariety;
 7. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`, the span the
    statement compares against;

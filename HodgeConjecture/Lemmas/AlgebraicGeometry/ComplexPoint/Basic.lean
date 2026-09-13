@@ -38,6 +38,12 @@ namespace AlgebraicGeometry
 
 variable (R : Type) [CommRing R]
 
+/-- A projective complex scheme is Noetherian. -/
+theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
+    [IsProjective X.hom] : IsNoetherian X.left where
+  toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian X.hom
+  toCompactSpace := QuasiCompact.compactSpace_of_compactSpace X.hom
+
 namespace Point
 
 variable {R}
@@ -127,8 +133,7 @@ variable {K : Type} [Field K] {X : Over (Spec ↧K)}
 lemma residueData_fst (z : Point K X) : z.residueData.1 = z.underlying := rfl
 
 lemma residue_comp_residueData_snd (z : Point K X) :
-    X.left.residue z.underlying ≫ z.residueData.2 = z.stalkHom :=
-  Scheme.residue_descResidueField (X := X.left) z.stalkHom
+    X.left.residue z.underlying ≫ z.residueData.2 = z.stalkHom := rfl
 
 /-- Over a field, evaluation is evaluation in the residue field. -/
 lemma evaluate_eq_residueData (U : X.left.Opens) (s : Γ(X.left, U)) (z : Point K X)

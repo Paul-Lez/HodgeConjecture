@@ -46,8 +46,6 @@ set_option backward.isDefEq.respectTransparency false in
         relativeChainProjection R (TopPair.ofSubset Zᶜ) := by
   have hnat := TopPair.Homotopy.relativeChainProjection_naturality (R := R)
     (supportInclusionPairMap X h)
-  change _ = ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).map
-    (𝟙 X) ≫ _ at hnat
   calc
     _ = _ := hnat
     _ = 𝟙 _ ≫ relativeChainProjection R (TopPair.ofSubset Zᶜ) :=
@@ -90,7 +88,6 @@ lemma exists_openNhds_complement_simplex [T2Space X] (x : X) {n : ℕ}
       ⟨fun t ↦ ⟨g t, hg t⟩, g.continuous.subtype_mk hg⟩
   refine ⟨U, τ, ?_⟩
   apply (X.toSSetObjEquiv _).injective
-  ext t
   rfl
 
 /-- The map from ambient chains induced by a neighborhood cocone. -/

@@ -48,11 +48,6 @@ abbrev CycleComponentAnalyticPoint
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) :=
   ComplexPoint (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
 
-noncomputable local instance cycleComponentAnalyticTopology
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
-    TopologicalSpace (CycleComponentAnalyticPoint V x) :=
-  Point.analyticTopology
-
 /-- Integral Borel--Moore homology of a projective analytic cycle component. -/
 abbrev IntegralCycleComponentBorelMooreHomology
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ) : AddCommGrpCat :=

@@ -43,7 +43,6 @@ open Point
 /-- The analytification of an affine complex scheme is Hausdorff. -/
 lemma t2Space_of_isAffine (X : Over (Spec ↧ℂ)) [IsAffine X.left] :
     @T2Space (ComplexPoint X) analyticTopology := by
-  let : TopologicalSpace (ComplexPoint X) := analyticTopology
   rw [t2Space_iff_nhds]
   intro z w hzw
   have happ : z.left.appTop ≠ w.left.appTop := fun h ↦
@@ -72,16 +71,12 @@ lemma t2Space_of_pair_mem_affineOpen (X : Over (Spec ↧ℂ))
     (hpair : ∀ z w : ComplexPoint X,
       ∃ U : X.left.Opens, z ∈ overOpen U ∧ w ∈ overOpen U ∧ IsAffine U.toScheme) :
     @T2Space (ComplexPoint X) analyticTopology := by
-  let : TopologicalSpace (ComplexPoint X) := analyticTopology
   rw [t2Space_iff_nhds]
   intro z w hzw
   obtain ⟨U, hzU, hwU, hUaff⟩ := hpair z w
   let : IsAffine (openScheme X U).left := hUaff
-  let : TopologicalSpace (ComplexPoint (openScheme X U)) := analyticTopology
   let : T2Space (ComplexPoint (openScheme X U)) :=
     t2Space_of_isAffine (openScheme X U)
-  let : TopologicalSpace {q : ComplexPoint X // q ∈ overOpen U} :=
-    TopologicalSpace.induced Subtype.val analyticTopology
   let : T2Space {q : ComplexPoint X // q ∈ overOpen U} :=
     (openHomeomorph X U).t2Space
   let zU : {q : ComplexPoint X // q ∈ overOpen U} := ⟨z, hzU⟩
@@ -182,7 +177,6 @@ lemma chartIntegralProj_preimage_basicOpen {n d : ℕ}
       if coordinateEvaluationHom v r = 0 then ⊥ else ⊤ := by
   let i := coordinateIndex v hv
   let hi : v i ≠ 0 := coordinateIndex_ne_zero v hv
-  rw [chartIntegralProj_eq_chartIntegralProjAt v hv i hi]
   exact chartIntegralProjAt_preimage_basicOpen v i hi r hd hr
 
 /-- The inverse image of a projective-spectrum basic open in complex projective space. -/
@@ -198,7 +192,6 @@ set_option linter.style.haveILetI false in
 lemma projectiveSpaceBasicOpen_isAffine {n d : ℕ}
     (r : UniversalRing n) (hd : 0 < d) (hr : r ∈ UniversalGrading n d) :
     IsAffine (projectiveSpaceBasicOpen n r).toScheme := by
-  haveI : IsAffineHom (Limits.terminal.from (Spec ↧ℂ)) := inferInstance
   haveI : MorphismProperty.IsStableUnderBaseChangeAlong (@IsAffineHom)
       (Limits.terminal.from (Proj (UniversalGrading n))) :=
     { of_isPullback := fun pb h ↦
@@ -219,9 +212,6 @@ lemma vectorToComplexPoint_mem_projectiveSpaceBasicOpen {n d : ℕ}
     (r : UniversalRing n) (hd : 0 < d) (hr : r ∈ UniversalGrading n d)
     (hne : coordinateEvaluationHom v r ≠ 0) :
     vectorToComplexPoint v hv ∈ Point.overOpen (projectiveSpaceBasicOpen n r) := by
-  change (vectorToProjectiveSpace v hv) (IsLocalRing.closedPoint ℂ) ∈
-    projectiveSpaceBasicOpen n r
-  unfold projectiveSpaceBasicOpen
   change ((vectorToProjectiveSpace v hv) ≫ Limits.pullback.snd
     (Limits.terminal.from (Spec ↧ℂ))
     (Limits.terminal.from (Proj (UniversalGrading n))))

@@ -209,15 +209,7 @@ theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
       comm₂₃ := by
         dsimp [T, B]
         simp }
-  let : Epi φ.τ₁ := hepi
-  let : IsIso φ.τ₂ := by
-    change IsIso (𝟙 (F.obj (K.X i)))
-    infer_instance
-  let : Mono φ.τ₃ := by
-    change Mono (𝟙 (F.obj (K.X (i + 1))))
-    infer_instance
   apply (L.exactAt_iff' (i := i - 1) (j := i) (k := i + 1) hprev hnext).mpr
-  change T.Exact
   exact (ShortComplex.exact_iff_of_epi_of_isIso_of_mono φ).mpr hB
 
 end BoundedBelowComplex

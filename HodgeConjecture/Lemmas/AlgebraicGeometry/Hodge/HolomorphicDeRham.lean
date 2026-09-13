@@ -104,13 +104,11 @@ lemma holomorphicDeRhamComplex_exactAt_of_lt
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) (c : ℂ)
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     (x : HolomorphicForm X d U p) :
-    (scalarHolomorphicDeRhamPresheaf X d p c).app U x = c • x := by
-  rfl
+    (scalarHolomorphicDeRhamPresheaf X d p c).app U x = c • x := rfl
 
 @[simp] lemma scalarHolomorphicDeRhamPresheaf_zero
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     scalarHolomorphicDeRhamPresheaf X d p 0 = 0 := by
-  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp
   rfl
@@ -118,7 +116,6 @@ lemma holomorphicDeRhamComplex_exactAt_of_lt
 @[simp] lemma scalarHolomorphicDeRhamPresheaf_one
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     scalarHolomorphicDeRhamPresheaf X d p 1 = 𝟙 _ := by
-  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp
   rfl
@@ -128,7 +125,6 @@ lemma holomorphicDeRhamComplex_exactAt_of_lt
     scalarHolomorphicDeRhamPresheaf X d p (a + b) =
       scalarHolomorphicDeRhamPresheaf X d p a +
         scalarHolomorphicDeRhamPresheaf X d p b := by
-  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp [add_smul]
   rfl
@@ -138,7 +134,6 @@ lemma holomorphicDeRhamComplex_exactAt_of_lt
     scalarHolomorphicDeRhamPresheaf X d p (a * b) =
       scalarHolomorphicDeRhamPresheaf X d p b ≫
         scalarHolomorphicDeRhamPresheaf X d p a := by
-  ext U x
   dsimp [scalarHolomorphicDeRhamPresheaf, holomorphicDeRhamPresheaf]
   simp [mul_smul]
   rfl
@@ -222,8 +217,6 @@ lemma complexScalarPresheaf_comp_conj (c : ℂ) :
       conjConstantComplexPresheaf X ≫
         complexScalarPresheaf X (starRingEnd ℂ c) := by
   ext U : 2
-  change (starRingEnd ℂ).toAddMonoidHom.comp (DistribSMul.toAddMonoidHom ℂ c) =
-    (DistribSMul.toAddMonoidHom ℂ (starRingEnd ℂ c)).comp (starRingEnd ℂ).toAddMonoidHom
   exact AddMonoidHom.ext (map_mul (starRingEnd ℂ) c)
 
 /-- Conjugation intertwines multiplication by `c` with multiplication by `conj c` on the constant
@@ -270,7 +263,6 @@ lemma constantsToHolomorphicDeRhamZero_scalar
   change (c • LinearMap.id).toAddMonoidHom.comp f.toAddMonoidHom =
     f.toAddMonoidHom.comp (DistribSMul.toAddMonoidHom ℂ c)
   ext x
-  change c • f x = f (c • x)
   exact (f.map_smul c x).symm
 
 /-- The constant-to-de Rham comparison is a quasi-isomorphism in every degree above the complex
@@ -412,8 +404,6 @@ lemma constantsToHolomorphicDeRhamComplexInt_scalar
       scalarHolomorphicDeRhamComplexInt X c =
     complexScalarComplexInt X c ≫
       constantsToHolomorphicDeRhamComplexInt X := by
-  unfold constantsToHolomorphicDeRhamComplexInt
-    scalarHolomorphicDeRhamComplexInt complexScalarComplexInt
   change HomologicalComplex.extendMap
       (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat ≫
     HomologicalComplex.extendMap

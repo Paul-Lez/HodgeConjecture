@@ -26,7 +26,7 @@ import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 /-!
 # Local generators from exact cycle-component coordinates
 
-An exact étale coordinate package on the smooth locus of a cycle component gives an actual
+An exact étale coordinate package on the smooth locus of a cycle component gives an
 analytic chart on its chosen affine neighborhood. This file constructs that chart directly from
 the retained polynomial-ring homomorphism. It then transports the proved standard complex local
 homology generator through the chart.
@@ -45,9 +45,6 @@ namespace AlgebraicGeometry
 
 attribute [local instance] overSpecAlgebra
 
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}
   [SmoothOfRelativeDimension d X.hom]
@@ -64,7 +61,7 @@ def smoothPoint : ComplexPoint (componentSmoothScheme X x) :=
 /-- The complex structure map on the selected affine component neighborhood. -/
 abbrev neighborhoodStructureMap :
     C.componentNeighborhood.toScheme ⟶ Spec ↧ℂ :=
-  C.componentNeighborhood.ι ≫ componentSmoothStructureMap X x
+  C.componentNeighborhood.ι ≫ (componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom
 
 /-- The selected affine component neighborhood, bundled over the complex base. -/
 abbrev neighborhoodScheme : Over (Spec ↧ℂ) :=
@@ -114,11 +111,6 @@ lemma C_comp_coordinateRingHomOnNeighborhood :
   rw [Category.assoc, Iso.inv_hom_id, Category.comp_id]
   simp only [neighborhoodStructureMap, Scheme.Hom.comp_appTop, Category.assoc]
   rw [Scheme.Opens.ι_appTop_topIso_hom]
-  change CommRingCat.ofHom
-      (C.componentCoordinateAlgHom.toRingHom.comp MvPolynomial.C) =
-    CommRingCat.ofHom
-      (algebraMap ℂ Γ((componentSmoothScheme X x).left,
-        C.componentNeighborhood))
   exact congrArg CommRingCat.ofHom C.componentCoordinateAlgHom.comp_algebraMap
 
 /-- The transported exact coordinate map remains étale. -/
@@ -189,7 +181,6 @@ lemma neighborhoodStructureMap_appTop_isStandardSmoothOfRelativeDimension :
     have ha := ConcreteCategory.congr_hom
       (Scheme.ΓSpecIso ↧ℂ).hom_inv_id a
     exact congrArg C.neighborhoodStructureMap.appTop.hom ha
-  rw [add_zero] at h
   exact heq ▸ h
 
 /-- The exact coordinates prove that the selected affine component neighborhood is smooth of the
@@ -232,10 +223,6 @@ lemma neighborhoodToSpecΓ_over :
   let φ : ↧ℂ ⟶ Γ(C.componentNeighborhood.toScheme, ⊤) :=
     CommRingCat.ofHom MvPolynomial.C ≫
       CommRingCat.ofHom C.coordinateRingHomOnNeighborhood
-  change C.componentNeighborhood.toScheme.toSpecΓ ≫ Spec.map φ =
-    C.neighborhoodStructureMap
-  change (ΓSpec.adjunction.homEquiv C.componentNeighborhood.toScheme
-    (Opposite.op ↧ℂ)) φ.op = C.neighborhoodStructureMap
   exact ext_to_Spec ((ΓSpecIso_inv_ΓSpec_adjunction_homEquiv φ).trans
     C.C_comp_coordinateRingHomOnNeighborhood)
 
@@ -266,7 +253,6 @@ lemma neighborhoodPointAlgHomHomeomorph_apply
     (z : ComplexPoint C.neighborhoodScheme)
     (r : Γ(C.componentNeighborhood.toScheme, ⊤)) :
     C.neighborhoodPointAlgHomHomeomorph z r = Point.evaluate ⊤ r z := by
-  rw [neighborhoodPointAlgHomHomeomorph, Homeomorph.trans_apply]
   change ComplexPoint.affineSpecEquiv Γ(C.componentNeighborhood.toScheme, ⊤)
       (Point.isoMapHomeomorph C.neighborhoodToSpecΓIso z) r = _
   rw [ComplexPoint.affineSpecEquiv_apply, Point.isoMapHomeomorph_apply,
@@ -275,14 +261,11 @@ lemma neighborhoodPointAlgHomHomeomorph_apply
       (C.componentNeighborhood.toScheme.toSpecΓ.appTop
         ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)) z = _
   rw [Scheme.toSpecΓ_appTop]
-  change Point.evaluate ⊤
-      ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).hom
-        ((Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv r)) z = _
   have h := DFunLike.congr_fun (congrArg CommRingCat.Hom.hom
     (Scheme.ΓSpecIso (.of Γ(C.componentNeighborhood.toScheme, ⊤))).inv_hom_id) r
   exact congrArg (fun s ↦ Point.evaluate ⊤ s z) h
 
-/-- The actual local analytic chart supplied by the exact étale component coordinates. -/
+/-- The local analytic chart supplied by the exact étale component coordinates. -/
 def neighborhoodProjectionChart :
     OpenPartialHomeomorph
       (ComplexPoint C.neighborhoodScheme)
@@ -295,7 +278,6 @@ def neighborhoodProjectionChart :
 /-- The selected smooth point belongs to the source of the exact analytic component chart. -/
 lemma neighborhoodPoint_mem_projectionChart_source :
     C.neighborhoodPoint ∈ C.neighborhoodProjectionChart.source := by
-  rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source]
   exact ⟨by simp, ComplexAlgHom.mem_etaleAlgHomProjectionChart_source
     Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)⟩
@@ -309,8 +291,6 @@ lemma neighborhoodProjectionChart_apply_of_mem
       ComplexAlgHom.mvPolynomialAlgHomHomeomorph n
         (ComplexAlgHom.etaleBaseAlgHom Γ(C.componentNeighborhood.toScheme, ⊤)
           (C.neighborhoodPointAlgHomHomeomorph z)) := by
-  rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_source] at hz
-  rw [neighborhoodProjectionChart, OpenPartialHomeomorph.trans_apply]
   exact ComplexAlgHom.etaleAlgHomProjectionChart_apply_of_mem (n := n)
     Γ(C.componentNeighborhood.toScheme, ⊤)
       (C.neighborhoodPointAlgHomHomeomorph C.neighborhoodPoint)
@@ -378,7 +358,7 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
   have hres := Point.evaluate_res hgW s yv hv
   exact (hres.trans (hquot yv hv)).symm
 
-/-- The relative-homology map induced by the actual analytic chart coming from the exact
+/-- The relative-homology map induced by the analytic chart coming from the exact
 component coordinates. -/
 def neighborhoodLocalHomologyMap :
     AlgebraicTopology.Singular.RelativeHomology ℚ
@@ -425,9 +405,6 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
 
-noncomputable local instance {Y : Over (Spec ↧ℂ)} :
-    TopologicalSpace (ComplexPoint Y) := Point.analyticTopology
-
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}
   [SmoothOfRelativeDimension d X.hom]
@@ -460,7 +437,6 @@ lemma span_neighborhoodLocalClass_eq_top :
   let : T2Space
       (ComplexPoint C.neighborhoodScheme) :=
     ComplexPoint.t2Space_of_isAffine C.neighborhoodScheme
-  rw [C.neighborhoodLocalClass_eq_localClassOfChart]
   exact AlgebraicTopology.Singular.span_localClassOfChart_eq_top
     n C.neighborhoodProjectionChart C.neighborhoodPoint
       C.neighborhoodPoint_mem_projectionChart_source

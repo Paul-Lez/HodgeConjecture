@@ -53,8 +53,6 @@ lemma FiniteType.exists_ringKrullDim_eq_and_trdeg_eq :
   let : Algebra (MvPolynomial (Fin n) k) A := g.toAlgebra
   let : FaithfulSMul (MvPolynomial (Fin n) k) A :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hg
-  let : IsScalarTower k (MvPolynomial (Fin n) k) A :=
-    IsScalarTower.of_algebraMap_eq' (RingHom.ext fun r => (g.commutes r).symm)
   let : Algebra.IsIntegral (MvPolynomial (Fin n) k) A :=
     ⟨hfinite.to_isIntegral⟩
   refine ⟨n, ?_, ?_⟩
@@ -87,10 +85,8 @@ lemma QuasiFinite.trdeg_residueField_eq (P : Ideal S) [P.IsPrime] :
     Algebra.trdeg k P.ResidueField =
       Algebra.trdeg k (P.under R).ResidueField := by
   let q : Ideal R := P.under R
-  let : P.LiesOver q := ⟨rfl⟩
   let : Algebra (Localization.AtPrime q) (Localization.AtPrime P) :=
     Localization.AtPrime.algebraOfLiesOver q P
-  let : Module.Finite q.ResidueField P.ResidueField := inferInstance
   have h := trdeg_add_eq k q.ResidueField (A := P.ResidueField)
   have hzero : Algebra.trdeg q.ResidueField P.ResidueField = 0 := trdeg_eq_zero
   rw [hzero, add_zero] at h
@@ -104,9 +100,6 @@ the quotient at a prime.  This does not assert that the induced quotient map is 
 lemma QuasiFinite.ringKrullDim_quotient_eq (P : Ideal S) [P.IsPrime] :
     ringKrullDim (S ⧸ P) = ringKrullDim (R ⧸ P.under R) := by
   let q : Ideal R := P.under R
-  let : q.IsPrime := Ideal.IsPrime.comap (algebraMap R S)
-  let : Algebra.FiniteType k (R ⧸ q) := Algebra.FiniteType.quotient k q
-  let : Algebra.FiniteType k (S ⧸ P) := Algebra.FiniteType.quotient k P
   obtain ⟨n, hnDim, hnTrdeg⟩ :=
     FiniteType.exists_ringKrullDim_eq_and_trdeg_eq (k := k) (A := R ⧸ q)
   obtain ⟨m, hmDim, hmTrdeg⟩ :=

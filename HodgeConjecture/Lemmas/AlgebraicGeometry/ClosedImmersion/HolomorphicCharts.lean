@@ -19,6 +19,36 @@ Lemmas about the definitions in
 
 open CategoryTheory Topology Filter
 
+namespace OpenPartialHomeomorph
+
+variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+  [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace E] [CompleteSpace F]
+  (e : OpenPartialHomeomorph E F)
+
+theorem biAnalyticRestrict_mem_source_iff (x : E) :
+    x ∈ e.biAnalyticRestrict.source ↔
+      x ∈ e.source ∧ AnalyticAt ℂ e x ∧ AnalyticAt ℂ e.symm (e x) := by
+  change (x ∈ e.source ∧ AnalyticAt ℂ e x ∧ x ∈ e.source ∧ AnalyticAt ℂ e.symm (e x)) ↔ _
+  aesop
+
+end OpenPartialHomeomorph
+
+namespace AlgebraicGeometry.ComplexPoint
+
+open AlgebraicTopology.Singular
+variable (X Y : Over (Spec (.of ℂ)))
+  (i : Y ⟶ X) (m d : ℕ)
+  [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
+  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+
+theorem closedImmersionHolomorphicFlatteningChart_mem_range_iff (y : ComplexPoint X)
+    (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
+    y ∈ Set.range (Point.map i) ↔
+      (closedImmersionHolomorphicFlatteningChart X Y i m d z y).2 = 0 :=
+  closedImmersionStandardFlatteningChart_mem_range_iff X Y i m d z y hy.2
+
+end AlgebraicGeometry.ComplexPoint
+
 namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
@@ -72,11 +102,9 @@ theorem analyticAt_closedImmersionNormalTransition
   have hyC' : y ∈ C'.source := hyv'.1.1
   have hAv := closedImmersionNormalCoordinateChange_symm_at_chart
     X Y i m d z y hyv
-  change A.symm (e (e.symm v)) = C y at hAv
   rw [e.right_inv hv.1] at hAv
   have hA := (closedImmersionHolomorphicFlatteningChart_analytic
     X Y i m d z y hyv).2
-  change AnalyticAt ℂ A.symm (e (e.symm v)) at hA
   rw [e.right_inv hv.1] at hA
   have hA' := (closedImmersionHolomorphicFlatteningChart_analytic
     X Y i m d z' y hyv').1
@@ -98,13 +126,11 @@ theorem closedImmersionNormalTransition_preserves_support
     (hv : v ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
     (closedImmersionNormalTransition X Y i m d z z' v).2 = 0 ↔ v.2 = 0 := by
   let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
-  let e' := closedImmersionHolomorphicFlatteningChart X Y i m d z'
   have hy := e.map_target hv.1
   have h1 := closedImmersionHolomorphicFlatteningChart_mem_range_iff
     X Y i m d z (e.symm v) hy
   have h2 := closedImmersionHolomorphicFlatteningChart_mem_range_iff
     X Y i m d z' (e.symm v) hv.2
-  change e.symm v ∈ Set.range (Point.map i) ↔ (e (e.symm v)).2 = 0 at h1
   rw [e.right_inv hv.1] at h1
   exact h2.symm.trans h1
 
@@ -157,7 +183,6 @@ theorem closedImmersionNormalCoordinateChange_mem_source :
         (localChart Y m z z, 0) := by
   change closedImmersionNormalCoordinatesLinearEquiv X Y i m d z
     ((closedImmersionNormalChart X Y i m d z).symm _) = _
-  rw [closedImmersionNormalChart_symm_center]
   simp [closedImmersionNormalCoordinatesLinearEquiv]
 
 theorem analyticAt_closedImmersionNormalCoordinateChange :

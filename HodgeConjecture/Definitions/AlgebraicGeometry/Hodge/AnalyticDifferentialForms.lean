@@ -72,18 +72,14 @@ def holomorphicRestrictionAlgHom [SmoothOfRelativeDimension d X.hom]
 
 @[simp] lemma holomorphicRestrictionAlgHom_id [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
-    holomorphicRestrictionAlgHom X d (𝟙 U) = AlgHom.id ℂ _ := by
-  ext f
-  rfl
+    holomorphicRestrictionAlgHom X d (𝟙 U) = AlgHom.id ℂ _ := rfl
 
 @[simp] lemma holomorphicRestrictionAlgHom_comp [SmoothOfRelativeDimension d X.hom]
     {U V W : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ}
     (i : U ⟶ V) (j : V ⟶ W) :
     holomorphicRestrictionAlgHom X d (i ≫ j) =
       (holomorphicRestrictionAlgHom X d j).comp
-        (holomorphicRestrictionAlgHom X d i) := by
-  ext f
-  rfl
+        (holomorphicRestrictionAlgHom X d i) := rfl
 
 abbrev OpenHolomorphicFunctions [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :=
@@ -565,11 +561,6 @@ private lemma chartGeneratorEvaluation_differentiableWithinAt
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     DifferentiableWithinAt ℂ (chartGeneratorEvaluation X d U z p a₀ v)
       (chartSectionDomain X d U z) y := by
-  rw [show chartGeneratorEvaluation X d U z p a₀ v =
-      (fun w ↦ chartSection X d U z a₀ w •
-        exactWedgeWithin (Fin d → ℂ) p
-          (fun i ↦ chartSection X d U z (v i))
-          (chartSectionDomain X d U z) w) from rfl]
   exact DifferentiableWithinAt.smul
     ((chartSection_contDiffWithinAt X d U z a₀ hy).differentiableWithinAt (by simp))
     (exactWedgeWithin_differentiableWithinAt (Fin d → ℂ) p
@@ -653,9 +644,7 @@ lemma mem_chartEvaluationKernel_iff [SmoothOfRelativeDimension d X.hom]
     θ ∈ chartEvaluationKernel X d U p ↔
       ∀ z y, y ∈ chartSectionDomain X d U z →
         chartEvaluation X d U z p θ y = 0 := by
-  simp only [chartEvaluationKernel, Submodule.mem_iInf, LinearMap.mem_ker,
-    chartEvaluationAt]
-  rfl
+  simp [chartEvaluationKernel, Submodule.mem_iInf, LinearMap.mem_ker, chartEvaluationAt]
 
 /-- Coordinate-zero identities remain coordinate-zero after exterior differentiation. -/
 lemma differential_mem_chartEvaluationKernel
@@ -700,15 +689,6 @@ def formRestriction [SmoothOfRelativeDimension d X.hom]
         (holomorphicRestrictionAlgHom X d i a₀)
         fun k => holomorphicRestrictionAlgHom X d i (v k) :=
   Algebra.DeRham.map_mk ℂ (holomorphicRestrictionAlgHom X d i) p a₀ v
-
-lemma formRestriction_differential [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
-    (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
-    formRestriction X d i (p + 1)
-        (Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) p θ) =
-      Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d V) p
-        (formRestriction X d i p θ) :=
-  Algebra.DeRham.map_differential ℂ (holomorphicRestrictionAlgHom X d i) p θ
 
 /-- Fixed-chart values of holomorphic functions commute with restriction. -/
 lemma chartSection_holomorphicRestrictionAlgHom

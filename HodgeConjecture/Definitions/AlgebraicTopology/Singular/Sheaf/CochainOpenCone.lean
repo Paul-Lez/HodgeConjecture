@@ -105,10 +105,7 @@ private lemma openRawSingularRestriction_transport {V W : Opens X} (i : W ⟶ V)
       (openRawSingularCochainComplexIsoDual R X V).hom ≫
         ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℕ)).map
           (HomologicalComplex.linearDualMap
-            ((chainPairFunctor R).obj (openInclusionPair X i)).hom) := by
-  apply HomologicalComplex.Hom.ext
-  funext n
-  rfl
+            ((chainPairFunctor R).obj (openInclusionPair X i)).hom) := rfl
 
 /-- The actual raw cochains on an ambient open, in the integer-indexed
 presentation used by relative cohomology. -/

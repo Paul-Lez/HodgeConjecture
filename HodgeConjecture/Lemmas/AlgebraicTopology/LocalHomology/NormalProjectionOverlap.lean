@@ -107,8 +107,7 @@ theorem chartNormalFiber_comp_other_projection
     (hne : ∀ v, v ∈ V → v ≠ 0 → normalTransitionMap c (e.symm.trans e') a v ≠ 0) :
     chartNormalFiberPair c e S hS a W V hV ≫ chartNormalProjectionPair E c e' S hS' W hW' =
       complexNeighborhoodPuncturedPairMapOf c V (normalTransitionMap c (e.symm.trans e') a)
-        hf hne := by
-  apply MorphismProperty.Arrow.Hom.ext <;> ext v <;> rfl
+        hf hne := rfl
 
 end Fiber
 

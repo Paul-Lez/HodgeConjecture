@@ -48,7 +48,6 @@ complex-point space. -/
 lemma rationalToSingularCochainComplexInt_quasiIso
     [IsIntegral X.left] [Smooth X.hom] :
     QuasiIso (rationalToSingularCochainComplexInt X) := by
-  change QuasiIso (constantsToSingularCochainComplexInt X ℚ)
   exact constantsToSingularCochainComplexInt_quasiIso X ℚ
 
 /-- Hypercohomology of the integer-indexed rational singular-cochain sheaf complex. -/
