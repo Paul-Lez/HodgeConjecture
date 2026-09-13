@@ -140,7 +140,7 @@ def ambientRationalOpenResolutionComparison
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
-lemma actualRestriction_comp_openResolutionComparison
+lemma supportRestriction_comp_openResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     (TopCat.Sheaf.supportRestrictionComplexShortComplex
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
@@ -187,7 +187,7 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The group-level restriction cone maps to the cone of the independent complement resolution,
 fixing both the ambient component and the prescribed restriction square. -/
-def actualSupportConeToAmbientInjectiveGlobalCone
+def supportConeToAmbientInjectiveGlobalCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     CochainComplex.mappingCone
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
@@ -203,12 +203,12 @@ def actualSupportConeToAmbientInjectiveGlobalCone
         (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,
-        actualRestriction_comp_openResolutionComparison])
+        supportRestriction_comp_openResolutionComparison])
 
 set_option backward.isDefEq.respectTransparency false in
-instance actualSupportConeToAmbientInjectiveGlobalCone_quasiIso
+instance supportConeToAmbientInjectiveGlobalCone_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    QuasiIso (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) :=
+    QuasiIso (supportConeToAmbientInjectiveGlobalCone X Z hZ) :=
   CochainComplex.mappingCone.quasiIso_map_of_quasiIso _ _ _ _ _
 
 /-- The rational support group is the homology of the
@@ -233,7 +233,7 @@ def rationalSupportAddEquivSupportedInjectiveHomology
     (CochainComplex.mappingCone.mapHomologicalComplexIso
       (ambientRationalInjectiveRestriction X Z hZ) Γ) (n - 1)
   let e₃ := (asIso (HomologicalComplex.homologyMap
-    (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) (n - 1))).symm
+    (supportConeToAmbientInjectiveGlobalCone X Z hZ) (n - 1))).symm
   let : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
     CochainComplex.mappingCocone.quasiIso_shiftedLiftShortComplex S
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)

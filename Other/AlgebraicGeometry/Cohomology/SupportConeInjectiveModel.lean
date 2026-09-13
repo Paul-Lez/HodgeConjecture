@@ -50,9 +50,9 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The group-cone comparison preserves its connecting morphism with the
 identity on the ambient global sections. -/
 @[reassoc]
-lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
+lemma supportConeToAmbientInjectiveGlobalCone_connecting
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    actualSupportConeToAmbientInjectiveGlobalCone X Z hZ ≫
+    supportConeToAmbientInjectiveGlobalCone X Z hZ ≫
       (CochainComplex.mappingCone.triangle
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
@@ -74,7 +74,7 @@ lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
         (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,
-        actualRestriction_comp_openResolutionComparison])).comm₃
+        supportRestriction_comp_openResolutionComparison])).comm₃
   exact h.symm.trans ((congrArg (fun f =>
     (CochainComplex.mappingCone.triangle
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
