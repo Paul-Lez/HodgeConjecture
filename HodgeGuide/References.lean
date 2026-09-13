@@ -53,7 +53,7 @@ formalization.
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`
   and `SupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SheafClass.lean`: the class of a
+* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`: the class of a
   subvariety;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`: the span of those
   classes, which is the right-hand side of the statement;

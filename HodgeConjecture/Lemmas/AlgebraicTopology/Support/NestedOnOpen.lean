@@ -28,12 +28,10 @@ namespace TopCat.Sheaf
 variable (X : TopCat.{u})
 
 theorem openRestrictionImage_top (U : Opens X) :
-    openRestrictionImage X U ⊤ = U := by
-  simpa only [top_inf_eq] using Opens.functor_map_eq_inf U (⊤ : Opens X)
+    openRestrictionImage X U ⊤ = U := by simp
 
 theorem openRestrictionImage_eq_of_le {U V : Opens X} (h : V ≤ U) :
-    openRestrictionImage X V U = V := by
-  simpa only [inf_eq_right.mpr h] using Opens.functor_map_eq_inf V U
+    openRestrictionImage X V U = V := by simp_all
 
 /-- The literal equality of opens identifies global sections of the open
 pushforward with sections of the original sheaf on that open. -/

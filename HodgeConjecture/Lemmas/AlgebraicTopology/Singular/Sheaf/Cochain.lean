@@ -421,7 +421,6 @@ lemma exists_local_singularCochain_primitive_of_contractibleOpenBasis
   let K := (openSingularChainComplexFunctor R X).obj V
   let φV : OpenCochains R X (.op V) (n + 1) :=
     (singularCochainPresheaf R X (n + 1)).map i.op φ
-  let : ContractibleSpace V := hVcontractible
   have hK : K.ExactAt (n + 1) :=
     singularChainComplex_exactAt_of_contractible R V (n + 1) (by lia)
   have hφV : (K.d (n + 2) (n + 1)).hom.dualMap φV = 0 := by

@@ -109,11 +109,6 @@ lemma globalRawSingularRestriction_transport (A : Set X) :
   change OpenCochains R X (.op (⊤ : Opens X)) n at φ
   apply LinearMap.ext
   intro c
-  change φ
-      (((((topOpenSingularChainComplexIso R (TopCat.of A)).inv ≫
-        preimageOpenChainMap R (topologicalSubsetInclusion X A) (⊤ : Opens X)).f n).hom) c) =
-    φ ((((((chainPairFunctor R).obj (TopPair.ofSubset A)).hom ≫
-      (topOpenSingularChainComplexIso R X).inv).f n).hom) c)
   exact congrArg φ (ConcreteCategory.congr_hom
     (congrArg (fun f ↦ f.f n) (topOpenSubsetChainMap_transport R X A)) c)
 

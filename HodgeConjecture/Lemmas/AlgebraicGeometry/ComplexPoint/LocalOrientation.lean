@@ -45,9 +45,6 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec (.of ℂ))) (d : ℕ)
 
-noncomputable local instance :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 /-- The canonical pointwise local orientation of a smooth complex scheme, constructed from its
 algebraic étale charts and the standard complex local class. -/
 def complexLocalOrientation [SmoothOfRelativeDimension d X.hom]
@@ -71,7 +68,6 @@ theorem span_complexLocalOrientation_eq_top
     [T1Space (ComplexPoint X)]
     (z : ComplexPoint X) :
     Submodule.span ℚ {complexLocalOrientation X d z} = ⊤ := by
-  rw [complexLocalOrientation_eq_localClassOfChart]
   exact span_localClassOfChart_eq_top d (localChart X d z) z
     (mem_localChart_source X d z)
 

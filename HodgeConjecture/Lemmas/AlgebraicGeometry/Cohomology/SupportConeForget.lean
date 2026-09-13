@@ -76,11 +76,6 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)))
       (n - 1) n (by omega)
       (rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x) := by
-  change hypercohomologyAddEquivGlobalSectionsKInjective X _ n
-    (hypercohomologyMap X (ambientRationalInjectiveAugmentation X) n
-      (x.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
-        (CochainComplex.mappingCone.triangle
-          (rationalRestrictionComplexInt X Z)).mor₃) (by omega))) = _
   exact (congrArg (hypercohomologyAddEquivGlobalSectionsKInjective X
     (ambientRationalInjectiveComplex X) n)
     (hypercohomologyMap_comp_shifted _ 1 (n - 1) n (by omega)

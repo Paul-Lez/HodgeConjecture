@@ -116,7 +116,6 @@ lemma quasiIso_of_cofinal_section_quasiIso
   obtain ⟨V, hVU, hxV, hV⟩ := hlocal x U hxU
   refine ⟨V, hVU, hxV, ?_⟩
   let F := supportEvaluation X V
-  let : QuasiIso ((F.mapHomologicalComplex (.up ℤ)).map f) := hV
   have h := IsFlasque.BoundedBelowComplex.mappingCone_acyclic_of_quasiIso
     ((F.mapHomologicalComplex (.up ℤ)).map f) n
   exact (homologyMapIso (CochainComplex.mappingCone.mapHomologicalComplexIso f F) n).isZero_iff.mpr

@@ -39,6 +39,48 @@ namespace AlgebraicGeometry
 
 variable (X : Over (Spec ↧ℂ))
 
+/-- The kernel of a complex point is the vanishing ideal of the closure of its underlying scheme
+point. -/
+private lemma complexPoint_ker_eq_vanishingIdeal_closure
+    {X : Over (Spec ↧ℂ)}
+    (z : ComplexPoint X) :
+    z.left.ker = Scheme.IdealSheafData.vanishingIdeal
+      ⟨closure {z.underlying}, isClosed_closure⟩ := by
+  let f : Spec ↧ℂ ⟶ X.left := z.left
+  have hrange : Set.range f = {z.underlying} := by
+    ext y
+    constructor
+    · rintro ⟨s, rfl⟩
+      have hs : s = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
+      subst s
+      rfl
+    · intro hy
+      rw [Set.mem_singleton_iff] at hy
+      subst y
+      exact ⟨IsLocalRing.closedPoint ℂ, rfl⟩
+  have h := Scheme.IdealSheafData.map_vanishingIdeal f
+    (⊤ : TopologicalSpace.Closeds (Spec ↧ℂ))
+  rw [Scheme.IdealSheafData.vanishingIdeal_top, Scheme.nilradical_eq_bot,
+    Scheme.IdealSheafData.map_bot] at h
+  have himage : f '' (↑(⊤ : TopologicalSpace.Closeds (Spec ↧ℂ)) :
+      Set (Spec ↧ℂ)) = {z.underlying} := by
+    simpa only [TopologicalSpace.Closeds.coe_top, Set.image_univ] using hrange
+  rwa [himage] at h
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- A complex point in the support of a component annihilates the defining ideal of that
+component. -/
+lemma cycleComponent_vanishingIdeal_le_complexPoint_ker
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
+    (z : (ComplexPoint X)) (hz : z.underlying ∈ closure {x}) :
+    (cycleComponentι X.left x).ker ≤ z.left.ker := by
+  unfold cycleComponentι
+  rw [Scheme.IdealSheafData.ker_subschemeι]
+  rw [complexPoint_ker_eq_vanishingIdeal_closure z]
+  apply Scheme.IdealSheafData.vanishingIdeal_antimono
+  exact closure_minimal (Set.singleton_subset_iff.mpr hz) isClosed_closure
+
 /-- The map on complex points induced by the canonical inclusion of a cycle component. -/
 def cycleComponentMap
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
@@ -181,15 +223,6 @@ lemma isClosed_complexPoint_underlying_preimage
   rw [← isOpen_compl_iff]
   let U : X.left.Opens := ⟨(Z : Set X.left)ᶜ,
     isOpen_compl_iff.mpr Z.2⟩
-  change @IsOpen (ComplexPoint X) Point.analyticTopology
-    ((@Point.underlying ℂ _ _ X) ⁻¹' (Z : Set X.left))ᶜ
-  rw [show ((@Point.underlying ℂ _ _ X) ⁻¹'
-      (Z : Set X.left))ᶜ = Point.overOpen U by
-    apply Set.ext
-    intro z
-    change (¬Point.underlying z ∈ Z) ↔
-      Point.underlying z ∈ (Z : Set X.left)ᶜ
-    rfl]
   exact Point.isOpen_overOpen (X := X) U
 
 lemma isClosed_cycleComponentSupport

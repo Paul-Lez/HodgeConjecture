@@ -27,9 +27,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec (.of ℂ))) {Y : Over (Spec (.of ℂ))}
 
-local instance smoothStratificationAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 variable [LocallyOfFiniteType X.hom] [NoetherianSpace X.left]
 
 instance reducedClosedSmoothPiece_locallyOfFiniteType (T : Closeds X.left) :

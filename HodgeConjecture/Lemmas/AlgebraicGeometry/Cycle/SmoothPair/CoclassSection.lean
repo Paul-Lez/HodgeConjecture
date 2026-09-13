@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CoclassSection
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 
 /-!
-# The actual global exactly normalized smooth-support coclass section
+# The global exactly normalized smooth-support coclass section
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothSupport.CoclassSection`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection`.
 -/
 
 @[expose] public noncomputable section
@@ -35,7 +35,7 @@ variable (X Y : Over (Spec (.of ℂ)))
     (smoothClosedSupportCoclassStalk X Y i m d)
     (smoothClosedSupportCoclassStalk_locallyRepresentable X Y i m d) x
 
-/-- Exact stalk normalization in every actual normal chart. -/
+/-- Exact stalk normalization in every normal chart. -/
 theorem smoothClosedSupportCoclassSection_germ_eq_chart
     (z : ComplexPoint Y) (x : ComplexPoint X)
     (hx : x ∈ smoothClosedSupportChartOpen X Y i m d z) :
@@ -45,7 +45,7 @@ theorem smoothClosedSupportCoclassSection_germ_eq_chart
   rw [smoothClosedSupportCoclassSection_germ,
     smoothClosedSupportCoclassStalk_eq_chartGerm X Y i m d z x hx]
 
-/-- The global section restricts to the actual normalized section on a full normal chart. -/
+/-- The global section restricts to the normalized section on a full normal chart. -/
 theorem smoothClosedSupportCoclassSection_restrict_chart (z : ComplexPoint Y) :
     (smoothClosedSupportCoclassSheaf X Y i m d).obj.map
       (homOfLE (show smoothClosedSupportChartOpen X Y i m d z ≤ ⊤ from le_top)).op
@@ -56,7 +56,7 @@ theorem smoothClosedSupportCoclassSection_restrict_chart (z : ComplexPoint Y) :
   rw [TopCat.Presheaf.germ_res_apply]
   exact smoothClosedSupportCoclassSection_germ_eq_chart X Y i m d z x hx
 
-/-- Outside the actual image, the global section has zero germ. -/
+/-- Outside the image, the global section has zero germ. -/
 theorem smoothClosedSupportCoclassSection_germ_eq_zero
     (x : ComplexPoint X) (hxS : x ∉ Set.range (Point.map i)) :
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.Γgerm x
@@ -64,7 +64,7 @@ theorem smoothClosedSupportCoclassSection_germ_eq_zero
   rw [smoothClosedSupportCoclassSection_germ,
     smoothClosedSupportCoclassStalk_eq_zero X Y i m d x hxS]
 
-/-- Uniqueness of the actual gluing, expressed by its exact stalk normalization. -/
+/-- Uniqueness of the gluing, expressed by its exact stalk normalization. -/
 theorem smoothClosedSupportCoclassSection_unique
     (s : (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj (op ⊤))
     (hs : ∀ x : ComplexPoint X,

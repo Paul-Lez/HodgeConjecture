@@ -188,13 +188,10 @@ lemma constantToOpen_openSheafRestrictionToConstant (A : AddCommGrpCat.{u}) :
   · exact ((constantSheaf (Opens.grothendieckTopology (TopCat.of U)) AddCommGrpCat).obj A).property
   rw [ObjectProperty.FullSubcategory.comp_hom, ← Category.assoc,
     toSheafify_constantToOpenSheafRestriction]
-  dsimp only [openSheafRestrictionToConstant, Adjunction.homEquiv_symm_apply,
-    openSheafRestrictionAdjunction, Adjunction.mkOfUnitCounit_counit]
   ext V : 2
   change _ ≫ (((U.isOpenEmbedding.sheafPullback AddCommGrpCat).map
     (constantRestriction U.inclusion' A)).hom.app V ≫
       ((openSheafRestrictionCounit X U).app _).hom.app V) = _
-  rw [← Category.assoc]
   change (toSheafify (Opens.grothendieckTopology X)
     ((Functor.const (Opens X)ᵒᵖ).obj A) ≫ (constantRestriction U.inclusion' A).hom).app _ ≫ _ = _
   rw [toSheafify_constantRestriction]

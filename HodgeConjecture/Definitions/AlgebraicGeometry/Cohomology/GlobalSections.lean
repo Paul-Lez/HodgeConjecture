@@ -114,10 +114,7 @@ lemma integerConstantHomAddEquivGlobalSections_naturality
       (AddCommGrpCat.of ℤ) ⟶ F) :
     integerConstantHomAddEquivGlobalSections G (g ≫ f) =
       f.hom.app (.op (⊤ : Opens Y))
-        (integerConstantHomAddEquivGlobalSections F g) := by
-  have h := (constantSheafAdj (Opens.grothendieckTopology Y) AddCommGrpCat
-    isTerminalTop).homEquiv_naturality_right g f
-  exact ConcreteCategory.congr_hom h (1 : ℤ)
+        (integerConstantHomAddEquivGlobalSections F g) := rfl
 
 end
 
@@ -191,36 +188,6 @@ def constantIntegerSheafComplexIntIsoSingle :
         (TopCat.of (ComplexPoint X)) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
     (constantIntegerSheaf X) 0 0 rfl
-
-/-- Every integer-indexed term of the singular-cochain resolution is flasque on a hereditarily
-paracompact Hausdorff complex-point space. Negative terms are zero, and nonnegative terms are
-the corresponding natural-number-indexed singular-cochain sheaves. -/
-theorem singularCochainSheafComplexInt_isFlasque
-    [T2Space (ComplexPoint X)]
-    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
-    (n : ℤ) :
-    TopCat.Sheaf.IsFlasque ((singularCochainSheafComplexInt X ℚ).X n) := by
-  by_cases hn : ∃ m : ℕ, (m : ℤ) = n
-  · obtain ⟨m, rfl⟩ := hn
-    let e := (AlgebraicTopology.Singular.singularCochainSheafComplex ℚ
-      (TopCat.of (ComplexPoint X))).extendXIso
-        ComplexShape.embeddingUpNat (i := m) rfl
-    let hP : TopCat.Presheaf.IsFlasque
-        ((AlgebraicTopology.Singular.singularCochainSheafComplex ℚ
-          (TopCat.of (ComplexPoint X))).X m).obj := by
-      change TopCat.Sheaf.IsFlasque
-        (AlgebraicTopology.Singular.singularCochainSheaf ℚ
-          (TopCat.of (ComplexPoint X)) m)
-      infer_instance
-    change TopCat.Presheaf.IsFlasque
-      ((singularCochainSheafComplexInt X ℚ).X (m : ℤ)).obj
-    exact @AlgebraicTopology.Singular.presheaf_isFlasque_of_iso _ _ _
-      ((TopCat.Sheaf.forget AddCommGrpCat
-        (TopCat.of (ComplexPoint X))).mapIso e.symm) hP
-  · apply TopCat.Sheaf.IsFlasque.of_isZero
-    exact (AlgebraicTopology.Singular.singularCochainSheafComplex ℚ
-      (TopCat.of (ComplexPoint X))).isZero_extend_X
-        ComplexShape.embeddingUpNat n (fun i hi ↦ hn ⟨i, hi⟩)
 
 end AlgebraicGeometry.ComplexPoint
 

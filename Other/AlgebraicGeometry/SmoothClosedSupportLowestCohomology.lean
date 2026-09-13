@@ -25,9 +25,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec (.of ℂ)))
 
-local instance smoothClosedSupportLowestAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 /-- The actual supported injective coefficient sheaves are flasque, by the
 proved gluing-with-zero theorem for the defining support kernel. -/
 theorem complexSupportInjectiveComplex_isFlasque

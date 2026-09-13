@@ -35,18 +35,12 @@ def mapHomotopyCategoryPlus (α : F ⟶ G) :
 
 @[simp]
 theorem mapHomotopyCategoryPlus_id (F : C ⥤ D) [F.Additive] :
-    mapHomotopyCategoryPlus (𝟙 F) = 𝟙 F.mapHomotopyCategoryPlus := by
-  ext K
-  simp only [mapHomotopyCategoryPlus, mapHomotopyCategory_id, NatTrans.id_app]
-  rfl
+    mapHomotopyCategoryPlus (𝟙 F) = 𝟙 F.mapHomotopyCategoryPlus := rfl
 
 @[simp]
 theorem mapHomotopyCategoryPlus_comp (α : F ⟶ G) (β : G ⟶ H) :
     mapHomotopyCategoryPlus (α ≫ β) =
-      mapHomotopyCategoryPlus α ≫ mapHomotopyCategoryPlus β := by
-  ext K
-  simp only [mapHomotopyCategoryPlus, mapHomotopyCategory_comp, NatTrans.comp_app]
-  rfl
+      mapHomotopyCategoryPlus α ≫ mapHomotopyCategoryPlus β := rfl
 
 variable [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
 

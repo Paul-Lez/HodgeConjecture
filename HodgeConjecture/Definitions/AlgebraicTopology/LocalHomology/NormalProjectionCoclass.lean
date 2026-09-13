@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.CenteredComplexOrientation
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Purity
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
 /-!
 # Normal projections and the local support coclass
 

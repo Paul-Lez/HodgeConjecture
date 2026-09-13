@@ -33,12 +33,6 @@ variable (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (x : M) (hx : x �
 
 include hx
 
-omit [NormedSpace ℝ E] in
-/-- A positive coordinate-ball radius is obtained from the actual open chart target. -/
-theorem exists_flattenedSupportRadius :
-    ∃ r : ℝ, 0 < r ∧ Metric.ball (e x) r ⊆ e.target :=
-  Metric.isOpen_iff.mp e.open_target (e x) (e.map_source hx)
-
 variable (S : Set M) (hS : ∀ y ∈ e.source, y ∈ S ↔ (e y).2 = 0) (h0 : (e x).2 = 0)
 
 include hS h0

@@ -47,29 +47,22 @@ def relativeHomologyDegreeCast {X : TopPair} {i j : ℕ} (h : i = j)
 
 lemma relativeHomologyDegreeCast_ne_zero_iff {X : TopPair} {i j : ℕ} (h : i = j)
     (z : RelativeHomology ℚ X i) :
-    relativeHomologyDegreeCast h z ≠ 0 ↔ z ≠ 0 := by
-  subst h
-  rfl
+    relativeHomologyDegreeCast h z ≠ 0 ↔ z ≠ 0 := by aesop
 
 lemma span_relativeHomologyDegreeCast_eq_top_iff {X : TopPair} {i j : ℕ} (h : i = j)
     (z : RelativeHomology ℚ X i) :
     Submodule.span ℚ {relativeHomologyDegreeCast h z} = ⊤ ↔
-      Submodule.span ℚ {z} = ⊤ := by
-  subst h
-  rfl
+      Submodule.span ℚ {z} = ⊤ := by aesop
 
 lemma standardComplexRealRelativeHomologyIso_hom_standardComplexLocalClassMul (p : ℕ) :
     (standardComplexRealRelativeHomologyIso p).hom.hom
         (standardComplexLocalClassMul p) =
       standardLocalClass (p * 2) := by
-  unfold standardComplexLocalClassMul
   exact (standardComplexRealRelativeHomologyIso p).inv_hom_id_apply
     (standardLocalClass (p * 2))
 
 lemma standardComplexLocalClassMul_ne_zero_iff (p : ℕ) :
     standardComplexLocalClassMul p ≠ 0 ↔ standardLocalClass (p * 2) ≠ 0 := by
-  change (standardComplexRealRelativeHomologyIso p).symm.toLinearEquiv
-    (standardLocalClass (p * 2)) ≠ 0 ↔ _
   exact (standardComplexRealRelativeHomologyIso p).symm.toLinearEquiv.map_ne_zero_iff
 
 lemma standardComplexLocalClass_ne_zero_iff (p : ℕ) :
@@ -127,9 +120,6 @@ lemma standardPairChainMap_zero :
     ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).hom = 0 := by
   apply HomologicalComplex.hom_ext
   intro n
-  change (SSet.chainComplexMap
-    (TopCat.toSSet.map (standardPuncturedPair 0).map)
-    (ModuleCat.of ℚ ℚ)).f n = 0
   apply SSet.chainComplex_hom_ext
   intro σ
   exact (isEmpty_standardPuncturedPair_zero_simplices n).false σ |>.elim
@@ -205,11 +195,6 @@ lemma standardAmbientClassZero_projection :
         HomologicalComplex.homologyMap standardRelativeChainProjectionZero 0 = _
     rw [HomologicalComplex.homologyπ_naturality, ← Category.assoc,
       standardAmbientCycleZero_projection]
-  change ((standardAmbientCycleZero ≫
-    ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right.homologyπ 0 ≫
-      standardRelativeHomologyProjectionZeroIso.hom).hom) 1 =
-    ((standardLocalCycle 0 ≫
-      (standardLocalRelativeChainComplex 0).homologyπ 0).hom) 1
   exact ConcreteCategory.congr_hom hmor 1
 
 /-- The ordinary `H₀` augmentation, with its source exposed through the pair functor. -/
@@ -227,9 +212,6 @@ def standardLocalRelativeHomologyZeroε :
 lemma standardAmbientClassZero_epsilon :
     standardAmbientHomologyZeroε.hom
         standardAmbientClassZero = 1 := by
-  change (((standardAmbientCycleZero ≫
-    ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right.homologyπ 0 ≫
-      standardAmbientHomologyZeroε).hom) 1 = 1)
   have h := SSet.liftCycles_ιChainComplex_homologyπ_homology₀ε
     (TopCat.toSSet.obj (standardPuncturedPair 0).fst) (ModuleCat.of ℚ ℚ)
     (standardSingularSimplex 0)
@@ -251,9 +233,6 @@ lemma standardAmbientClassZero_epsilon :
 lemma standardLocalClass_zero_epsilon :
     standardLocalRelativeHomologyZeroε.hom (standardLocalClass 0) = 1 := by
   rw [← standardAmbientClassZero_projection]
-  change ((standardRelativeHomologyProjectionZeroIso.inv ≫
-      standardAmbientHomologyZeroε).hom
-    ((standardRelativeHomologyProjectionZeroIso.hom).hom standardAmbientClassZero) = 1)
   change standardAmbientHomologyZeroε.hom
     (standardRelativeHomologyProjectionZeroIso.inv.hom
       (standardRelativeHomologyProjectionZeroIso.hom.hom standardAmbientClassZero)) = 1

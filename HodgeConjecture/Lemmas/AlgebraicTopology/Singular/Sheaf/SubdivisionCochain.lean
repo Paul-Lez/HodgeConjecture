@@ -75,7 +75,6 @@ private theorem exists_coveringSieve_locallyFinite_closedRefinement
     (coveringSieveOpenFamilyOn X S)
     (coveringSieveOpenFamilyOn_isOpen X S)
     (coveringSieveOpenFamilyOn_iUnion X S)
-  let : NormalSpace U := inferInstance
   obtain ⟨W, hWcover, hWopen, hWsub⟩ :=
     exists_iUnion_eq_closure_subset hVopen hVfinite.point_finite hVcover
   refine ⟨W, hWopen, hWcover, ?_, fun I ↦ (hWsub I).trans (hVsub I)⟩
@@ -337,7 +336,6 @@ lemma singularCochain_toPlus_eq_zero_iff (V : Opens X) (n : ℕ)
           (singularCochainPresheaf R X n).map I.f.op φ = 0 := by
   let J := Opens.grothendieckTopology X
   let P := singularCochainPresheaf R X n
-  change (J.toPlus P).app (.op V) φ = 0 ↔ _
   rw [← map_zero (ConcreteCategory.hom ((J.toPlus P).app (.op V)))]
   constructor
   · intro h
@@ -376,10 +374,6 @@ private lemma exists_open_eq_of_plus_matchingFamily
       g₁ := eI
       g₂ := eJ }
   have hplus := s.condition rel
-  change ((Opens.grothendieckTopology X).plusObj
-      (singularCochainPresheaf R X n)).map eI.op (s I) =
-    ((Opens.grothendieckTopology X).plusObj
-      (singularCochainPresheaf R X n)).map eJ.op (s J) at hplus
   let η := (Opens.grothendieckTopology X).toPlus
     (singularCochainPresheaf R X n)
   have hplus' :
@@ -418,7 +412,6 @@ private lemma exists_open_eq_of_plus_matchingFamily
   let A : T.Arrow := GrothendieckTopology.Cover.Arrow.mk V f hf
   refine ⟨V, f ≫ eI, f ≫ eJ, hxV, ?_⟩
   have hz := hT A
-  change (singularCochainPresheaf R X n).map f.op δ = 0 at hz
   rw [map_sub, sub_eq_zero] at hz
   simpa only [δ, Functor.map_comp, op_comp,
     ConcreteCategory.comp_apply] using hz
@@ -518,13 +511,11 @@ def ambientOpen (U : Opens X) (V : Opens U) : Opens X :=
 @[simp]
 lemma mem_ambientOpen_iff (U : Opens X) (V : Opens U) (x : U) :
     (x.1 : X) ∈ ambientOpen U V ↔ x ∈ V := by
-  change x.1 ∈ Subtype.val '' (V : Set U) ↔ x ∈ V
   refine ⟨fun ⟨y, hy, hxy⟩ ↦ ?_, fun hx ↦ ⟨x, hx, rfl⟩⟩
   have h : y = x := Subtype.ext hxy
   exact show x ∈ (V : Set U) from h ▸ hy
 
 private lemma ambientOpen_le (U : Opens X) (V : Opens U) : ambientOpen U V ≤ U := by
-  change Subtype.val '' (V : Set U) ⊆ U
   rintro x ⟨y, -, rfl⟩
   exact y.2
 
@@ -539,7 +530,6 @@ def openFamilySieve {U : Opens X} {I : Type*} (V : I → Opens X) : Sieve U wher
 private lemma openFamilySieve_mem {U : Opens X} {I : Type*} (V : I → Opens X)
     (hV : ∀ i, V i ≤ U) (hcover : ∀ x ∈ U, ∃ i, x ∈ V i) :
     openFamilySieve V ∈ Opens.grothendieckTopology X U := by
-  rw [Opens.mem_grothendieckTopology]
   intro x hx
   obtain ⟨i, hxi⟩ := hcover x hx
   exact ⟨V i, homOfLE (hV i), ⟨i, le_rfl⟩, hxi⟩
@@ -877,10 +867,6 @@ lemma openSingularChainToTop_comp_topOpenIso {V : Opens X} (i : V ⟶ ⊤) :
 lemma singularCochainPlusPlusPresheafComplex_isSheaf (n : ℕ) :
     TopCat.Presheaf.IsSheaf
       ((singularCochainPlusPlusPresheafComplex R X).X n) := by
-  change CategoryTheory.Presheaf.IsSheaf (Opens.grothendieckTopology X)
-    ((Opens.grothendieckTopology X).plusObj
-      ((Opens.grothendieckTopology X).plusObj
-        (singularCochainPresheaf R X n)))
   exact GrothendieckTopology.Plus.isSheaf_plus_plus
     (Opens.grothendieckTopology X) (singularCochainPresheaf R X n)
 
@@ -930,8 +916,6 @@ lemma rationalCochainRestrictionToCoveringSieve_eq_zero
       (coveringSieveOpenFamily Y S)).f n φ = 0 := by
   change Module.Dual ℚ
     (((TopCat.toSSet.obj Y).chainComplex (ModuleCat.of ℚ ℚ)).X n) at φ
-  change ((coverSmallRationalSingularChainInclusion Y
-    (coveringSieveOpenFamily Y S)).f n).hom.dualMap φ = 0
   apply_fun ModuleCat.ofHom
   apply SSet.chainComplex_hom_ext
   intro x
@@ -946,8 +930,6 @@ lemma rationalCochainRestrictionToCoveringSieve_eq_zero
       (((TopCat.toSSet.obj (TopCat.of (coveringSieveOpenFamily Y S I))).ιChainComplex
         (R := ModuleCat.of ℚ ℚ) y).hom a))
     (hφ I)
-  dsimp only [singularCochainPresheaf, singularCochainComplexIsoTopOpen,
-    HomologicalComplex.linearDualIso, HomologicalComplex.linearDualMap] at hI
   change φ (ModuleCat.Hom.hom
       (((openSingularChainComplexFunctor ℚ Y).map I.f).f n ≫
         (topOpenSingularChainComplexIso ℚ Y).hom.f n)
@@ -970,7 +952,6 @@ lemma rationalCochainRestrictionToCoveringSieve_eq_zero
       (TopCat.toSSet.map (topologicalSubsetInclusion Y
         (coveringSieveOpenFamily Y S I)))
       (ModuleCat.of ℚ ℚ) y) a
-  simp only [ConcreteCategory.comp_apply] at hiota
   have hI' : φ
       (((TopCat.toSSet.obj Y).ιChainComplex
         (R := ModuleCat.of ℚ ℚ)
@@ -992,7 +973,6 @@ lemma rationalCochainRestrictionToCoveringSieve_eq_zero
       (coverSmallRationalSingularChainInclusion Y
         (coveringSieveOpenFamily Y S)).f n) a) = 0
   dsimp only [coverSmallRationalSingularChainInclusion] at ⊢
-  rw [SSet.ι_chainComplexMap_f]
   simpa [hy] using hI'
   · intro f g h
     exact congrArg ModuleCat.Hom.hom h
@@ -1012,10 +992,6 @@ lemma rationalCochainRestrictionToCoveringSieve_local_zero
   intro I
   change Module.Dual ℚ
     (((TopCat.toSSet.obj Y).chainComplex (ModuleCat.of ℚ ℚ)).X n) at φ
-  change ((coverSmallRationalSingularChainInclusion Y
-    (coveringSieveOpenFamily Y S)).f n).hom.dualMap φ = 0 at hφ
-  change (((openSingularChainComplexFunctor ℚ Y).map I.f).f n).hom.dualMap
-    (((topOpenSingularChainComplexIso ℚ Y).hom.f n).hom.dualMap φ) = 0
   apply LinearMap.ext
   intro c
   have hc := LinearMap.congr_fun hφ
@@ -1026,7 +1002,6 @@ lemma rationalCochainRestrictionToCoveringSieve_local_zero
   have hmember := HomologicalComplex.congr_hom
     (coverMemberToSmallRationalSingularChains_comp_inclusion Y
       (coveringSieveOpenFamily Y S) I) n
-  simp only [LinearMap.dualMap_apply, LinearMap.zero_apply] at hc ⊢
   calc
     φ ((topOpenSingularChainComplexIso ℚ Y).hom.f n
         (((openSingularChainComplexFunctor ℚ Y).map I.f).f n c)) =
@@ -1119,7 +1094,6 @@ theorem exists_coverSmallKernel_primitive
   have hacyclic := rationalCoverSmallCochainKernel_acyclic Y U hUopen hUcover
   obtain ⟨p, hp⟩ := (ShortComplex.moduleCat_exact_iff (K.sc n)).mp
     (hacyclic n) z hzclosed
-  change K.X ((ComplexShape.up ℕ).prev n) at p
   change K.d ((ComplexShape.up ℕ).prev n) n p = z at hp
   refine ⟨(kernel.ι q).f ((ComplexShape.up ℕ).prev n) p, ?_, ?_⟩
   · change F.d ((ComplexShape.up ℕ).prev n) n
@@ -1179,8 +1153,6 @@ theorem exists_topOpenLocallyZero_primitive
     (coveringSieveOpenFamily Y S)
     (coveringSieveOpenFamily_isOpen Y S)
     (coveringSieveOpenFamily_iUnion Y S) n φ' hsmall hclosed'
-  change A.X ((ComplexShape.up ℕ).prev n) at ψ
-  change A.d ((ComplexShape.up ℕ).prev n) n ψ = φ' at hψ
   refine ⟨e.hom.f ((ComplexShape.up ℕ).prev n) ψ, ?_, ?_⟩
   · change B.d ((ComplexShape.up ℕ).prev n) n
       (e.hom.f ((ComplexShape.up ℕ).prev n) ψ) = φ
@@ -1212,8 +1184,6 @@ theorem topOpenToGlobalSingularCochainPlusComplex_kernel_acyclic :
   have hφplus : f.f n φ = 0 := by
     have hcondition := HomologicalComplex.congr_hom (kernel.condition f) n
     exact ConcreteCategory.congr_hom hcondition z
-  change ((Opens.grothendieckTopology Y).toPlus
-    (singularCochainPresheaf ℚ Y n)).app (.op ⊤) φ = 0 at hφplus
   obtain ⟨S, hφlocal⟩ :=
     (singularCochain_toPlus_eq_zero_iff ℚ Y ⊤ n φ).mp hφplus
   have hφclosed : ((TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex.d
@@ -1266,7 +1236,6 @@ theorem topOpenToGlobalSingularCochainPlusComplex_kernel_acyclic :
             ((kernelComparison f ev) p)).1 := hk.symm
       _ = ψ := congrArg Subtype.val hE
   refine ⟨p, ?_⟩
-  change K.d ((ComplexShape.up ℕ).prev n) n p = z
   apply (AddCommGrpCat.mono_iff_injective ((kernel.ι f).f n)).mp inferInstance
   have hc := ConcreteCategory.congr_hom
     ((kernel.ι f).comm ((ComplexShape.up ℕ).prev n) n) p

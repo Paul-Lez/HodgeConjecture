@@ -26,14 +26,12 @@ variable {M : Type} [TopologicalSpace M]
 
 @[simp] theorem neighborhoodSupportInclusionPairMap_id (W S : Set M) :
     neighborhoodSupportInclusionPairMap (show W ⊆ W from le_refl W) S =
-      𝟙 (neighborhoodSupportComplementPair W S) := by
-  apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
+      𝟙 (neighborhoodSupportComplementPair W S) := rfl
 
 @[simp] theorem neighborhoodSupportInclusionPairMap_comp {U V W : Set M}
     (hUV : U ⊆ V) (hVW : V ⊆ W) (S : Set M) :
     neighborhoodSupportInclusionPairMap hUV S ≫ neighborhoodSupportInclusionPairMap hVW S =
-      neighborhoodSupportInclusionPairMap (hUV.trans hVW) S := by
-  apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
+      neighborhoodSupportInclusionPairMap (hUV.trans hVW) S := rfl
 
 variable (X : TopCat.{0}) (S : Set X) (n : ℕ)
 
