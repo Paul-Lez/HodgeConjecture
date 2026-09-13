@@ -17,6 +17,7 @@ module
 
 public import Other.AlgebraicTopology.ChartNeighborhoodOrientation
 public import Other.AlgebraicGeometry.ComplexLocalOrientationCoherence
+public import Other.AlgebraicGeometry.ComplexPoint.LocalOrientation
 
 /-!
 # Local representability of the exact complex orientation

@@ -950,11 +950,6 @@ lemma neighborhoodToPointExcisionSmallChains_comp_ambientInclusion
     _ = neighborhoodAmbientChainMap U := rfl
 
 omit [T1Space X] in
-lemma neighborhoodAmbientChainMap_eq_pairMapRight (U : Set X) (x : X) :
-    neighborhoodAmbientChainMap U =
-      ((chainPairFunctor ℚ).map (neighborhoodPointComplementPairMap U x)).right := rfl
-
-omit [T1Space X] in
 @[reassoc]
 lemma neighborhoodRelativeProjection_comp_ambientRelativeMap
     (U : Set X) (x : X) :

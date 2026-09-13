@@ -312,27 +312,5 @@ theorem cycleComponentSingularStratumClosedLift_complexPoints_range (k : ℕ) :
   rw [range_cycleComponentSingularStratumClosedLift]
   rfl
 
-/-- Removing the first closed boundary support from the full cycle support gives
-exactly the complex points of the smooth locus of the integral component. -/
-theorem cycleComponentSmoothLocus_complexPoints_range_eq_support_sdiff_boundary :
-    Set.range (Point.map (cycleComponentSmoothLocusOverι X x)) =
-      cycleComponentSupport X x \
-        (cycleComponentSingularAnalyticClosedFiltration X x 0 : Set (ComplexPoint X)) := by
-  have he : Set.range ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫ cycleComponentι X.left x) =
-      closure {x} \
-        (cycleComponentSingularAmbientClosedFiltration X x 0 : Set X.left) := by
-    rw [Scheme.Hom.comp_base, TopCat.coe_comp, Set.range_comp, Scheme.Opens.range_ι,
-      ← range_cycleComponentι X.left x]
-    change cycleComponentι X.left x '' ((cycleComponentι X.left x ≫ X.hom).smoothLocus : Set _) =
-      Set.range (cycleComponentι X.left x) \
-        cycleComponentι X.left x '' ((cycleComponentι X.left x ≫ X.hom).smoothLocus : Set _)ᶜ
-    rw [Set.range_sdiff_image (cycleComponentι X.left x).isClosedEmbedding.injective, compl_compl]
-  rw [range_map_of_isImmersion X]
-  change Point.underlying ⁻¹'
-    Set.range ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
-      cycleComponentι X.left x) = _
-  rw [he]
-  rfl
-
 end ComplexPoint
 end AlgebraicGeometry

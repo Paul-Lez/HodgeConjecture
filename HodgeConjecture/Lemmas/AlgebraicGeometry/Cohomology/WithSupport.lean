@@ -354,12 +354,4 @@ end
     forgetSupportEquivUniv X n α =
       forgetSupport X Set.univ n α := rfl
 
-/-- Forgetting whole-space support is surjective. -/
-lemma forgetSupport_surjective_univ (n : ℤ) :
-    Function.Surjective
-      (forgetSupport X (Set.univ : Set (ComplexPoint X)) n) := by
-  intro α
-  obtain ⟨β, hβ⟩ := (forgetSupportEquivUniv X n).surjective α
-  exact ⟨β, (forgetSupportEquivUniv_apply X n β).symm.trans hβ⟩
-
 end AlgebraicGeometry.ComplexPoint

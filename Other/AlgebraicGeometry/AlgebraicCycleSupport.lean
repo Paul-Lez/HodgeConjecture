@@ -18,6 +18,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import Other.AlgebraicGeometry.Cycle.Support
 
 /-!
 # The support of an algebraic cycle

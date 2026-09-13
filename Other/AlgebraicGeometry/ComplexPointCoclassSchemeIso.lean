@@ -7,6 +7,8 @@ module
 public import Other.AlgebraicTopology.ChartLocalClassHomeomorph
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AnalyticMap
 public import Other.AlgebraicGeometry.ComplexPointCoclassOrientationComparison
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvariance
 
 /-! # Exact point-coclass naturality for actual complex scheme isomorphisms
 

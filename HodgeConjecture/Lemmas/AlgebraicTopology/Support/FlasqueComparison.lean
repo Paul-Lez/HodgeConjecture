@@ -73,29 +73,6 @@ theorem supportEvaluation_map_quasiIso_of_flasque
     (Arrow.isoMk (e.app K) (e.app L) (e.hom.naturality f).symm)).mp
   infer_instance
 
-/-- Direct image preserves quasi-isomorphisms of bounded-below flasque models.
-The conclusion is detected by actual sections on preimages of ambient opens. -/
-theorem pushforward_map_quasiIso_of_flasque
-    {Y : TopCat.{u}} (j : X ⟶ Y)
-    {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ} (f : K ⟶ L) [QuasiIso f]
-    (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
-    (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
-    QuasiIso (((pushforward AddCommGrpCat.{u} j).mapHomologicalComplex (.up ℤ)).map f) := by
-  apply quasiIso_of_cofinal_section_quasiIso
-  exact fun y V hyV => ⟨V, le_rfl, hyV,
-    supportEvaluation_map_quasiIso_of_flasque X ((Opens.map j).obj V) f nK nL hK hL⟩
-
-set_option backward.isDefEq.respectTransparency false in
-set_option backward.defeqAttrib.useBackward true in
-/-- The actual supported-sections localization sequence is short exact for a
-flasque coefficient sheaf, without an injectivity assumption. -/
-lemma supportRestrictionShortComplex_shortExact_of_flasque
-    (F : Sheaf AddCommGrpCat.{u} X) [F.IsFlasque] :
-    (supportRestrictionShortComplex X U F).ShortExact where
-  exact := ShortComplex.exact_kernel _
-  mono_f := inferInstanceAs (Mono (kernel.ι _))
-  epi_g := inferInstanceAs (Epi ((toOpenRestrictionPushforward X U).app F))
-
 /-- The flasque localization sequence is short exact on each open set. -/
 lemma supportRestrictionSectionsShortComplex_shortExact_of_flasque (V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) [F.IsFlasque] :

@@ -18,6 +18,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
 public import Mathlib.Analysis.Normed.Module.Convex
+public import Other.AlgebraicTopology.Singular.Sheaf.ChainStalk
 
 /-!
 # A normalized relative orientation class over a Euclidean neighborhood

@@ -19,6 +19,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.CoverSm
 public import Mathlib.Topology.Sets.Opens
 
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.OpenCover
+public import Other.AlgebraicTopology.Singular.Excision.OpenCover
 
 /-!
 # Small chains for covers by open subsets

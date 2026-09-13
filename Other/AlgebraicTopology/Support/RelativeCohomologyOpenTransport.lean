@@ -22,16 +22,6 @@ namespace AlgebraicTopology.Singular
 variable {X Y : TopCat.{0}} (f : Y ⟶ X) (hf : IsOpenEmbedding f)
   (S : Set X) (B : Set Y) (hB : f ⁻¹' S = B)
 
-/-- Literal pair pullback is the forward component of the constructed equivalence. -/
-theorem neighborhoodSupportPairImageCohomologyEquiv_apply (V : Opens Y) (n : ℕ)
-    (a : RelativeCohomology ℚ
-      (neighborhoodSupportComplementPair (hf.functor.obj V : Set X) S) n) :
-    neighborhoodSupportPairImageCohomologyEquiv f hf.isEmbedding (V : Set Y) B S
-      (fun y _ => by rw [← hB]; rfl) n a =
-    relativeCohomologyMap ℚ n
-      (neighborhoodSupportPairImageIso f hf.isEmbedding (V : Set Y) B S
-        (fun y _ => by rw [← hB]; rfl)).hom a := rfl
-
 /-- Inverse transport is literal pullback along the inverse pair homeomorphism. -/
 theorem supportRelativeCohomologyPresheafOpenIso_inv_app (n : ℕ) (V : Opens Y)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set Y) B) n) :

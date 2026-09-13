@@ -13,6 +13,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
+public import Other.AlgebraicTopology.Singular.Sheaf.ChainStalk
 
 /-!
 # Homology sheaves of the relative singular-chain complex

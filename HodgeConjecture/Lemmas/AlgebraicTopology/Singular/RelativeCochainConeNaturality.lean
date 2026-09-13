@@ -78,15 +78,6 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R]
 
-/-- Exact sign normalization of the canonical relative-to-cone map. -/
-@[reassoc]
-lemma relativeDualCochainLift_connecting (X : TopPair.{u}) :
-    CochainComplex.mappingCocone.shiftedLiftShortComplex
-        (relativeDualCochainShortComplexInt R X) ≫
-      (CochainComplex.mappingCone.triangle (relativeCochainRestrictionInt R X)).mor₃ =
-    -(relativeDualCochainShortComplexInt R X).f⟦(1 : ℤ)⟧' :=
-  CochainComplex.mappingCocone.shiftedLiftShortComplex_connecting _
-
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The canonical relative dual-to-cone comparison is natural. -/

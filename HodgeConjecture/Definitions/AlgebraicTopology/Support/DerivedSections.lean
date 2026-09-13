@@ -85,13 +85,6 @@ def sheafSectionsSupportedOutsideInclusion (U : Opens X) :
   app F := kernel.ι ((toOpenRestrictionPushforward X U).app F)
   naturality F G f := by simp [sheafSectionsSupportedOutside]
 
-@[reassoc (attr := simp)]
-lemma sheafSectionsSupportedOutsideInclusion_restriction (U : Opens X)
-    (F : Sheaf AddCommGrpCat.{u} X) :
-    (sheafSectionsSupportedOutsideInclusion X U).app F ≫
-      (toOpenRestrictionPushforward X U).app F = 0 :=
-  kernel.condition _
-
 /-- Restriction to the empty open subspace and pushforward gives the zero sheaf. -/
 lemma isZero_openRestrictionPushforward_bot (F : Sheaf AddCommGrpCat.{u} X) :
     IsZero ((openRestrictionPushforward X ⊥).obj F) :=

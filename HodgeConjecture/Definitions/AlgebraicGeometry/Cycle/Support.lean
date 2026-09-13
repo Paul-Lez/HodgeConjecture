@@ -75,15 +75,6 @@ instance (X : Scheme) (x : X) : IrreducibleSpace (cycleComponent X x) :=
 instance (X : Scheme) (x : X) : IsIntegral (cycleComponent X x) :=
   isIntegral_of_irreducibleSpace_of_isReduced _
 
-@[simp]
-lemma range_cycleComponentι (X : Scheme) (x : X) :
-    Set.range (cycleComponentι X x) = closure {x} := by
-  change Set.range
-    ((Scheme.IdealSheafData.vanishingIdeal
-      (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι) = closure {x}
-  rw [Scheme.IdealSheafData.range_subschemeι]
-  rfl
-
 /-- A cycle component of a projective variety is projective over `ℂ`. -/
 instance cycleComponent_projective
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :

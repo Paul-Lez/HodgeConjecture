@@ -25,6 +25,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.RingTheory.RegularLocalRing.Polynomial
 import Mathlib.RingTheory.Unramified.LocalStructure
+public import Other.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 
 /-!
 # Regular local rings of smooth schemes

@@ -279,18 +279,6 @@ lemma standardPuncturedFacetIntersectionMapOfSubset_comp_inclusion
       topologicalSubsetInclusion (standardPuncturedPair d).snd
         (standardPuncturedFacetIntersectionSubspace d J) := rfl
 
-/-- Rational singular chains of a proper facet intersection are exact in positive degrees. -/
-lemma standardPuncturedFacetIntersection_exactAt (d : ℕ)
-    (I : Finset (Fin (d + 1))) (hI : I ≠ Finset.univ)
-    (k : ℕ) (hk : k ≠ 0) :
-    ((TopCat.toSSet.obj
-      (TopCat.of (standardPuncturedFacetIntersectionSet d I))).chainComplex
-        (ModuleCat.of ℚ ℚ)).ExactAt k := by
-  let : ContractibleSpace (standardPuncturedFacetIntersectionSet d I) :=
-    standardPuncturedFacetIntersection_contractibleSpace d I hI
-  exact AlgebraicTopology.singularChainComplex_exactAt_of_contractible
-    ℚ (standardPuncturedFacetIntersectionSet d I) k hk
-
 /-- Positive-degree integral singular homology of a nonempty proper facet intersection
 vanishes. -/
 lemma standardPuncturedFacetIntersection_integralHomology_isZero
@@ -1723,50 +1711,6 @@ lemma standardFacetCarrierPrismResidual_cycle
           (standardPuncturedPair d).snd
             (standardPuncturedFacetCover d)).d_comp_d]
       simp only [zero_comp, zero_add, sub_self]
-
-/-- Every positive-degree residual has a filler in its proper contractible carrier
-intersection. -/
-lemma exists_standardFacetCarrierPrismResidual_filler
-    (d : ℕ) (P : StandardFacetCarrierPrismFamily d) (n : ℕ)
-    (hzero : n = 0 →
-      ∀ x : (coverSmallSingularSubcomplex
-        (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋0⦌,
-        standardFacetCarrierIntersectionDiscrepancy d 0 x =
-          P 0 x ≫
-            ((TopCat.toSSet.obj (TopCat.of
-              (standardPuncturedFacetIntersectionSubspace d
-                (standardFacetCarrier d x)))).chainComplex
-                  (AddCommGrpCat.of ℤ)).d 1 0)
-    (hsucc : ∀ k, n = k + 1 →
-      ∀ x : (coverSmallSingularSubcomplex
-        (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋k + 1⦌,
-        standardFacetCarrierIntersectionDiscrepancy d (k + 1) x =
-          P (k + 1) x ≫
-              ((TopCat.toSSet.obj (TopCat.of
-                (standardPuncturedFacetIntersectionSubspace d
-                  (standardFacetCarrier d x)))).chainComplex
-                    (AddCommGrpCat.of ℤ)).d (k + 2) (k + 1) +
-            standardFacetCarrierPrismFaces d P k x)
-    (x : (coverSmallSingularSubcomplex
-      (standardPuncturedPair d).snd (standardPuncturedFacetCover d) : SSet) _⦋n + 1⦌) :
-    ∃ p : AddCommGrpCat.of ℤ ⟶
-        ((TopCat.toSSet.obj (TopCat.of
-          (standardPuncturedFacetIntersectionSubspace d
-            (standardFacetCarrier d x)))).chainComplex
-              (AddCommGrpCat.of ℤ)).X (n + 2),
-      p ≫ ((TopCat.toSSet.obj (TopCat.of
-        (standardPuncturedFacetIntersectionSubspace d
-          (standardFacetCarrier d x)))).chainComplex
-            (AddCommGrpCat.of ℤ)).d (n + 2) (n + 1) =
-        standardFacetCarrierPrismResidual d P n x := by
-  have hI : (standardFacetCarrier d x).Nonempty :=
-    standardFacetCarrier_nonempty d x
-  have hproper : standardFacetCarrier d x ≠ Finset.univ :=
-    standardFacetCarrier_ne_univ d x
-  exact exists_standardPuncturedFacetIntersection_integralCycleFiller
-    d n (standardFacetCarrier d x) hI hproper
-    (standardFacetCarrierPrismResidual d P n x)
-    (standardFacetCarrierPrismResidual_cycle d P n hzero hsucc x)
 
 /-- The local acyclic-carrier prism equation in one degree. -/
 def StandardFacetCarrierPrismEquation

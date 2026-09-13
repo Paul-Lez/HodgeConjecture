@@ -54,9 +54,6 @@ namespace Sq
 
 end Sq
 
-lemma deRhamHom_apply (x : ExtAlg R A) :
-    deRhamHom R A x = Sq.mk x (extDeriv R A x) := by aesop
-
 /-- The exterior derivative anticommutes with the grade involution, since it raises the degree
 by one. -/
 lemma extDeriv_involute (x : ExtAlg R A) :

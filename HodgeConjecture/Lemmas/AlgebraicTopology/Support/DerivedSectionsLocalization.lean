@@ -32,15 +32,6 @@ def supportRestrictionShortComplex (F : Sheaf AddCommGrpCat.{u} X) :
     ((toOpenRestrictionPushforward X U).app F)
     (sheafSectionsSupportedOutsideInclusion_restriction X U F)
 
-set_option backward.isDefEq.respectTransparency false in
-/-- The localization sequence is short exact for an injective coefficient sheaf.
-The first map is literally its defining kernel inclusion. -/
-private lemma supportRestrictionShortComplex_shortExact (F : Sheaf AddCommGrpCat.{u} X)
-    [Injective F] : (supportRestrictionShortComplex X U F).ShortExact where
-  exact := ShortComplex.exact_kernel _
-  mono_f := inferInstanceAs (Mono (kernel.ι _))
-  epi_g := inferInstanceAs (Epi ((toOpenRestrictionPushforward X U).app F))
-
 /-- The sequence of sections on `V`, with the actual supported-sections inclusion
 and actual restriction map. -/
 def supportRestrictionSectionsShortComplex (V : Opens X)
@@ -61,14 +52,6 @@ private lemma supportRestrictionSectionsShortComplex_shortExact (V : Opens X)
     (KernelFork.mapIsLimit _ (kernelIsKernel _) (supportEvaluation X V))
   epi_g := toOpenRestrictionPushforward_app_epi X U F V
 
-/-- A termwise injective complex gives an actual short exact localization
-sequence of complexes of sheaves. -/
-private lemma supportRestrictionComplexShortComplex_shortExact
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :
-    (supportRestrictionComplexShortComplex X U K).ShortExact :=
-  HomologicalComplex.shortExact_of_degreewise_shortExact _ fun n =>
-    supportRestrictionShortComplex_shortExact X U (K.X n)
-
 /-- The support/restriction sequence is short exact even after taking sections
 on an arbitrary open set, for a termwise injective coefficient complex. -/
 lemma supportRestrictionSectionsComplexShortComplex_shortExact (V : Opens X)
@@ -80,28 +63,6 @@ lemma supportRestrictionSectionsComplexShortComplex_shortExact (V : Opens X)
 attribute [local instance] derivedSupportLocalizationSheafDerivedCategory
 
 attribute [local instance] derivedSupportLocalizationGroupDerivedCategory
-
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
-/-- The derived unit identifies the actual `D⁺` supported-sections functor
-with its termwise value on a bounded-below injective complex. The displayed
-comparison takes values in the ambient derived category via its full inclusion. -/
-def derivedClosedSupportInjectiveModelIso (Z : Closeds X)
-    (I : CochainComplex.Plus (InjectiveObject (Sheaf AddCommGrpCat.{u} X))) :
-    DerivedCategory.Plus.ι.obj
-      ((derivedClosedSupportSections X Z).obj
-        (DerivedCategory.Plus.Qh.obj
-          ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj
-            ((HomotopyCategory.Plus.quotient _).obj I)))) ≅
-      DerivedCategory.Q.obj
-        (supportRestrictionSectionsComplexShortComplex X Z.compl ⊤
-          (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-            (.up ℤ)).obj I.obj)).X₁ :=
-  (DerivedCategory.Plus.ι.mapIso
-    (asIso ((derivedClosedSupportSectionsUnit X Z).app
-      ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj
-        ((HomotopyCategory.Plus.quotient _).obj I))))).symm ≪≫
-    (DerivedCategory.quotientCompQhIso AddCommGrpCat.{u}).app _
 
 end TopCat.Sheaf
 

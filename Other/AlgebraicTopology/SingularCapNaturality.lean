@@ -20,6 +20,7 @@ public import Other.AlgebraicTopology.SingularCochainCohomology
 public import Other.AlgebraicTopology.SingularRelativeCapProduct
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeHomotopyInvariance
 public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
+public import Other.AlgebraicTopology.Singular.CochainCohomology
 
 /-!
 # Naturality of cap product on homology

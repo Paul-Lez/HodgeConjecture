@@ -10,6 +10,9 @@ public import Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization
 public import Other.AlgebraicGeometry.SheafCycleClass
 public import Other.AlgebraicTopology.CohomologySheafSectionRestriction
 public import Other.AlgebraicTopology.OpenRestrictedLowestCohomologyNormalization
+public import Other.AlgebraicGeometry.Cohomology.SupportConeForget
+public import Other.AlgebraicGeometry.Cycle.FundamentalClass
+public import Other.AlgebraicGeometry.Cycle.Support
 
 /-!
 # Positive-kernel point normalization of the actual general cycle class

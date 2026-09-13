@@ -18,6 +18,8 @@ module
 public import Other.Algebra.Homology.LinearDual
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
 public import Other.AlgebraicTopology.FlasqueAcyclic
+public import Other.AlgebraicTopology.Sheaf.FlasqueAcyclic
+public import Other.AlgebraicTopology.Singular.CochainCohomology
 
 @[expose] public noncomputable section
 

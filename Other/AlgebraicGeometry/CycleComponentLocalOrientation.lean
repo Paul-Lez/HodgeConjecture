@@ -23,6 +23,12 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
 import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
+public import Other.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
+public import Other.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
+public import Other.AlgebraicGeometry.Cycle.Component.LocalGenerator
+public import Other.AlgebraicGeometry.Cycle.Component.NormalGeometry
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
 
 /-!
 # Local complex orientation of a cycle component

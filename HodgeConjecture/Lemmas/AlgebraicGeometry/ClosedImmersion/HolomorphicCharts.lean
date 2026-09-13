@@ -120,20 +120,6 @@ theorem analyticAt_closedImmersionNormalTransition
   have hlast : AnalyticAt ℂ A' (C' (C.symm (A.symm v))) := himage ▸ hA'
   exact hlast.comp (f := fun w => C' (C.symm (A.symm w))) (x := v) hmiddle
 
-/-- The actual transition preserves the zero-normal plane in both directions. -/
-theorem closedImmersionNormalTransition_preserves_support
-    (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
-    (hv : v ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
-    (closedImmersionNormalTransition X Y i m d z z' v).2 = 0 ↔ v.2 = 0 := by
-  let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
-  have hy := e.map_target hv.1
-  have h1 := closedImmersionHolomorphicFlatteningChart_mem_range_iff
-    X Y i m d z (e.symm v) hy
-  have h2 := closedImmersionHolomorphicFlatteningChart_mem_range_iff
-    X Y i m d z' (e.symm v) hv.2
-  rw [e.right_inv hv.1] at h1
-  exact h2.symm.trans h1
-
 /-- The actual inverse transition is holomorphic at the image of every source point. -/
 theorem analyticAt_closedImmersionNormalTransition_symm
     (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
@@ -229,24 +215,5 @@ theorem closedImmersionHolomorphicFlatteningChart_mem_source :
   closedImmersionStandardFlatteningChart_center X Y i m d z
 
 variable (z' : ComplexPoint Y)
-
-/-- On a smaller transverse normal neighborhood in a genuine overlap, transition and
-inclusion have exactly the same top relative-cohomology pullback. All holomorphic and
-normal-derivative facts are obtained from the constructed closed-immersion charts. -/
-theorem exists_open_closedImmersionNormalTransition_coclass_invariance (a : Fin m → ℂ)
-    (ha : (a, 0) ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
-    let T := closedImmersionNormalTransition X Y i m d z z'
-    ∃ (W : Set (Fin (d - m) → ℂ)) (hW : W ⊆ normalTransitionDomain (d - m) T a)
-      (hne : ∀ v, v ∈ W → v ≠ 0 → normalTransitionMap (d - m) T a v ≠ 0),
-      IsOpen W ∧ 0 ∈ W ∧
-      relativeCohomologyMap ℚ (2 * (d - m))
-        (complexNeighborhoodPuncturedPairMapOf (d - m) W (normalTransitionMap (d - m) T a)
-          ((normalTransitionMap_continuousOn (d - m) T a).mono hW) hne) =
-        relativeCohomologyMap ℚ (2 * (d - m)) (neighborhoodPointComplementPairMap W 0) :=
-  exists_open_normalTransition_relativeCohomologyMap_eq (d - m)
-    (closedImmersionNormalTransition X Y i m d z z') a ha
-    (closedImmersionNormalTransition_preserves_support X Y i m d z z')
-    (analyticAt_closedImmersionNormalTransition X Y i m d z z' (a, 0) ha)
-    (analyticAt_closedImmersionNormalTransition_symm X Y i m d z z' (a, 0) ha)
 
 end AlgebraicGeometry.ComplexPoint

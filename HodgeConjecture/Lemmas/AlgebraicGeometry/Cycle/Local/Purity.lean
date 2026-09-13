@@ -110,29 +110,9 @@ lemma normalizedDual_unique {z : M} (hz : z ≠ 0)
   obtain ⟨a, rfl⟩ := (Submodule.span_singleton_eq_top_iff R z).mp hzspan y
   simp [hφ]
 
-/-- The normalized dual of a homology generator generates the full dual space. -/
-lemma span_normalizedDual_eq_top {z : M} (hz : z ≠ 0)
-    (hzspan : Submodule.span R {z} = ⊤) :
-    Submodule.span R {normalizedDual (R := R) z hz} = ⊤ := by
-  rw [Submodule.span_singleton_eq_top_iff R]
-  intro φ
-  refine ⟨φ z, ?_⟩
-  ext y
-  obtain ⟨a, rfl⟩ := (Submodule.span_singleton_eq_top_iff R z).mp hzspan y
-  simp
-
 section Coclass
 
 variable {R : Type*} [Field R] {X : TopPair} {n : ℕ}
-
-/-- The normalized coclass generates relative cohomology when its class generates relative
-homology. -/
-lemma span_normalizedRelativeCoclass_eq_top {z : RelativeHomology R X n} (hz : z ≠ 0)
-    (hzspan : Submodule.span R {z} = ⊤) :
-    Submodule.span R {normalizedRelativeCoclass z hz} = ⊤ := by
-  have h := congrArg (Submodule.map (relativeCohomologyEquivDualHomology R X n).symm.toLinearMap)
-    (span_normalizedDual_eq_top hz hzspan)
-  rwa [Submodule.map_span, Set.image_singleton, Submodule.map_top, LinearEquiv.range] at h
 
 /-- The normalization condition characterizes the normalized coclass. -/
 lemma normalizedRelativeCoclass_unique {z : RelativeHomology R X n} (hz : z ≠ 0)
@@ -162,18 +142,6 @@ lemma linearEquivOfNormalizedGenerators_apply_generator
     (y : N) (hy : y ≠ 0) (hyspan : Submodule.span R {y} = ⊤) :
     linearEquivOfNormalizedGenerators x hx hxspan y hy hyspan x = y := by simp
 
-/-- Sending the distinguished generator to the distinguished generator uniquely characterizes
-the normalized equivalence. -/
-lemma linearEquivOfNormalizedGenerators_unique
-    {N : Type*} [AddCommGroup N] [Module R N]
-    (x : M) (hx : x ≠ 0) (hxspan : Submodule.span R {x} = ⊤)
-    (y : N) (hy : y ≠ 0) (hyspan : Submodule.span R {y} = ⊤)
-    (e : M ≃ₗ[R] N) (he : e x = y) :
-    e = linearEquivOfNormalizedGenerators x hx hxspan y hy hyspan := by
-  ext z
-  obtain ⟨a, rfl⟩ := (Submodule.span_singleton_eq_top_iff R x).mp hxspan z
-  simp [he]
-
 end AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
@@ -186,22 +154,6 @@ variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}
   [SmoothOfRelativeDimension d X.hom]
   (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-/-- The local homology class transported from the exact component chart is nonzero. -/
-lemma neighborhoodLocalClass_ne_zero : C.neighborhoodLocalClass ≠ 0 := by
-  let : IsAffine C.neighborhoodScheme.left :=
-    C.componentNeighborhood_isAffine
-  let : T2Space
-      (ComplexPoint C.neighborhoodScheme) :=
-    ComplexPoint.t2Space_of_isAffine C.neighborhoodScheme
-  have hinjective : Function.Injective C.neighborhoodLocalHomologyMap :=
-    (chartModelEmbedding_relativeHomologyMap_bijective
-      n C.neighborhoodProjectionChart C.neighborhoodPoint
-        C.neighborhoodPoint_mem_projectionChart_source).1
-  intro hzero
-  apply standardComplexLocalClass_ne_zero n
-  apply hinjective
-  simpa only [neighborhoodLocalClass, map_zero] using hzero
 
 end
 

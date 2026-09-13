@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
+public import Other.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
+public import Other.AlgebraicGeometry.Cycle.Support
 
 /-! # Nonvanishing through the component's open transport -/
 

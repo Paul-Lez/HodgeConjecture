@@ -24,7 +24,6 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportComparison
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.GlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHypercohomology
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.AnalyticLeftInverse
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.NormalCoordinates
@@ -70,8 +69,6 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolu
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainConeNaturality
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.MapOfLocalStalks
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.CochainCohomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.Cochain
@@ -89,7 +86,6 @@ public import HodgeConjecture.Lemmas.Algebra.DeRham.Basic
 public import HodgeConjecture.Lemmas.Algebra.FieldToComplex
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
-public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift
@@ -103,7 +99,6 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportComparison
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.GlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SingularSheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularComparison
@@ -121,7 +116,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AnalyticMap
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AnalyticSheaf
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Etale
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.LocalHomologyVanishing
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.LocalOrientation
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Localization
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Open
@@ -137,11 +131,9 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportExtension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
@@ -154,7 +146,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Projective
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveParacompact
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.ClosedFiltration
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.ClosedFiltrationDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.LocalSupportVanishing
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.SingularLocusDimension
@@ -180,14 +171,12 @@ public import HodgeConjecture.Lemmas.Topology.Dimension.ClosedSubset
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.CohomologyStalkVanishing
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ComplexClassDifferentiableInvariance
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ComplexClassLinearInvariance
-public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ComplexNeighborhoodOrientation
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsShift
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.Euclidean
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.EuclideanVanishing
-public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.EuclideanNeighborhoodOrientation
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FiniteFiltrationVanishing
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueAcyclic
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueLowerVanishing
@@ -209,7 +198,6 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NestedOnOpen
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionOverlap
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalSlicePurity
-public import HodgeConjecture.Lemmas.Topology.Dimension.NowhereDense
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestrictedVanishing
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestriction
@@ -220,7 +208,6 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainC
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeHomotopyInvariance
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativePairExcision
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SheafCohomology
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.MapOfLocalStalks
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.Affine
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.AffineIteration
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.AffineMesh
@@ -233,11 +220,9 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.Bary
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.BarycentricChains
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.BarycentricHomotopy
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.BarycentricOuterFaces
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainHomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.Chain
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainFlasque
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenConeNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenRestriction
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenSections
@@ -257,11 +242,9 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.Subdivisio
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.SubsetChains
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.SphereAffineBoundary
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.SphereSimplicialHomology
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.RelativeCohomologySheaf
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionConeNaturality
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularCohomologySheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularSectionNaturality
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWedge
 public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.HolomorphicPoincare

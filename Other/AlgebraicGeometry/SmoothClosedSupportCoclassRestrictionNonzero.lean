@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.CoclassOverlap
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologySheaf
+public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassOverlap
 
 /-!
 # Nonvanishing of normal coclasses after restriction

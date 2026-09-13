@@ -15,7 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ComplexNeighborhoodOrientation
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FundamentalClass
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
+public import Mathlib.Analysis.Normed.Module.Convex
+public import HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.ComplexClass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassInvariance
 
 /-!

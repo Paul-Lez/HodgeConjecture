@@ -14,8 +14,13 @@ module
 
 public import Other.AlgebraicGeometry.ComplexLocalOrientationNeighborhood
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.HomologySection
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.MapOfLocalStalks
+public import Other.AlgebraicTopology.Sheaf.MapOfLocalStalks
 public import Other.AlgebraicTopology.SingularChainSheafOrientation
+public import Other.AlgebraicGeometry.ComplexPoint.LocalOrientation
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
+public import Other.AlgebraicTopology.Sheaf.HomologySection
+public import Other.AlgebraicTopology.Singular.Sheaf.ChainHomology
 
 /-!
 # The normalized complex orientation of the singular homology sheaf

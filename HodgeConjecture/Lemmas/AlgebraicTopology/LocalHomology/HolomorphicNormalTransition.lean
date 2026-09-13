@@ -201,49 +201,6 @@ theorem exists_open_normalTransition_localClass_invariance :
   rw [hAL]
   exact normalTransition_hasFDerivAt e a ha hplane he hei
 
-include ha hplane he hei in
-/-- On a smaller actual normal neighborhood, the normal transition and inclusion induce
-the same top relative-homology map. This strengthens preservation of one normalized class
-to the equality needed to compare coclass pullbacks. -/
-theorem exists_open_normalTransition_relativeHomologyMap_eq :
-    ∃ (W : Set (Fin c → ℂ)) (hW : W ⊆ normalTransitionDomain c e a)
-      (hne : ∀ v, v ∈ W → v ≠ 0 → normalTransitionMap c e a v ≠ 0),
-      IsOpen W ∧ 0 ∈ W ∧
-      relativeHomologyMap ℚ (2 * c)
-        (complexNeighborhoodPuncturedPairMapOf c W (normalTransitionMap c e a)
-          ((normalTransitionMap_continuousOn c e a).mono hW)
-          hne) =
-        relativeHomologyMap ℚ (2 * c) (neighborhoodPointComplementPairMap W 0) := by
-  obtain ⟨W, hW, hne, hWo, h0W, hclass⟩ :=
-    exists_open_normalTransition_localClass_invariance c e a ha hplane he hei
-  refine ⟨W, hW, hne, hWo, h0W, ?_⟩
-  have hb := neighborhoodPointComplement_relativeHomologyMap_bijective W 0 hWo h0W (2 * c)
-  obtain ⟨z₀, hz₀⟩ := hb.2 (standardComplexLocalClass c)
-  have hzmap := hclass z₀ hz₀
-  ext z
-  obtain ⟨r, hr⟩ := (Submodule.span_singleton_eq_top_iff ℚ (standardComplexLocalClass c)).mp
-    (span_standardComplexLocalClass_eq_top_for_chart c)
-    (relativeHomologyMap ℚ (2 * c) (neighborhoodPointComplementPairMap W 0) z)
-  have hz : r • z₀ = z := hb.1 (by rw [map_smul, hz₀]; exact hr)
-  rw [← hz, map_smul, map_smul, hzmap, hz₀]
-
-include ha hplane he hei in
-/-- Therefore the actual normal transition and inclusion have identical top relative
-cohomology pullbacks, in particular for the fixed normalized normal coclass. -/
-theorem exists_open_normalTransition_relativeCohomologyMap_eq :
-    ∃ (W : Set (Fin c → ℂ)) (hW : W ⊆ normalTransitionDomain c e a)
-      (hne : ∀ v, v ∈ W → v ≠ 0 → normalTransitionMap c e a v ≠ 0),
-      IsOpen W ∧ 0 ∈ W ∧
-      relativeCohomologyMap ℚ (2 * c)
-        (complexNeighborhoodPuncturedPairMapOf c W (normalTransitionMap c e a)
-          ((normalTransitionMap_continuousOn c e a).mono hW)
-          hne) =
-        relativeCohomologyMap ℚ (2 * c) (neighborhoodPointComplementPairMap W 0) := by
-  obtain ⟨W, hW, hne, hWo, h0W, heq⟩ :=
-    exists_open_normalTransition_relativeHomologyMap_eq c e a ha hplane he hei
-  exact ⟨W, hW, hne, hWo, h0W,
-    relativeCohomologyMap_eq_of_relativeHomologyMap_eq ℚ (2 * c) heq⟩
-
 end StandardNormal
 
 end AlgebraicTopology.Singular

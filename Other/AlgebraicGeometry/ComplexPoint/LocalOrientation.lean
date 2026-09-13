@@ -17,6 +17,8 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
 
 /-!
 # Local homology orientation of a smooth complex scheme

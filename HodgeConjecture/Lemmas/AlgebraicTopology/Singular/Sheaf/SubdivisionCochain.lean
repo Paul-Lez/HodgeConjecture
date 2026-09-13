@@ -19,7 +19,8 @@ import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.Topology.ShrinkingLemma
 public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueAcyclic
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.CochainCohomology
+public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDual
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainDescent
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.Field
 public import HodgeConjecture.Mathlib.Topology.ChartedSpaceParacompact
@@ -862,13 +863,6 @@ lemma openSingularChainToTop_comp_topOpenIso {V : Opens X} (i : V ⟶ ⊤) :
       (ModuleCat.of R R)).map (Opens.inclusionTopIso X).hom = _
   rw [← Functor.map_comp, openToTop_comp_inclusionTopIso]
   rfl
-
-/-- Every term of the double-plus singular-cochain complex satisfies the sheaf condition. -/
-lemma singularCochainPlusPlusPresheafComplex_isSheaf (n : ℕ) :
-    TopCat.Presheaf.IsSheaf
-      ((singularCochainPlusPlusPresheafComplex R X).X n) := by
-  exact GrothendieckTopology.Plus.isSheaf_plus_plus
-    (Opens.grothendieckTopology X) (singularCochainPresheaf R X n)
 
 section RationalCover
 

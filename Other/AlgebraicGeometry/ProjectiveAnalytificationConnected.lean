@@ -24,6 +24,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveCompact
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
+public import Other.AlgebraicGeometry.ComplexPoint.ClosedImmersion
 
 /-!
 # Connected components of projective analytifications

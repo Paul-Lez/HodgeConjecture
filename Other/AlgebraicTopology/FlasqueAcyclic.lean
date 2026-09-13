@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueAcyclic
 import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.InjectiveFlasque
+public import Other.AlgebraicTopology.Sheaf.FlasqueAcyclic
 
 open CategoryTheory Limits Opposite TopologicalSpace
 

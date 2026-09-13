@@ -6,6 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.CycleComponentPointBoundary
 public import Other.AlgebraicGeometry.ComplexPointCoclassSheafIso
+public import Other.AlgebraicGeometry.Cycle.Support
 
 /-! # Exact point normalization of the general component section
 

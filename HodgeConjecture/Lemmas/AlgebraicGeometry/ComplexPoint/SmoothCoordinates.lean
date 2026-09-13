@@ -73,12 +73,6 @@ lemma Smooth.exists_affine_isStandardSmooth [Smooth f] (x : Y) :
 
 variable (X : Over (Spec ↧ℂ))
 
-lemma algebraMap_isStandardSmooth {V : X.left.Opens}
-    (h : (X.hom.appLE ⊤ V (by simp)).hom.IsStandardSmooth) :
-    (algebraMap ℂ Γ(X.left, V)).IsStandardSmooth := by
-  exact RingHom.isStandardSmooth_respectsIso.2 _
-    (Scheme.ΓSpecIso ↧ℂ).symm.commRingCatIsoToRingEquiv h
-
 lemma SmoothOfRelativeDimension.exists_affine_isStandardSmoothOfRelativeDimension
     {d : ℕ} [SmoothOfRelativeDimension d f] (x : Y) :
     ∃ (V : Y.Opens) (_ : IsAffineOpen V), x ∈ V ∧
@@ -169,15 +163,6 @@ def toAffineSpace : D.neighborhood.toScheme ⟶
     Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen) ≫
       (AffineSpace.SpecIso (Fin d) ↧ℂ).inv
 
-lemma etale_toAffineSpace : Etale D.toAffineSpace := by
-  have h₁ : Etale D.neighborhood.toScheme.toSpecΓ := by
-    let : IsAffine D.neighborhood.toScheme := D.isAffine
-    infer_instance
-  have h₂ : Etale (Spec.map (CommRingCat.ofHom D.coordinateRingHomOnOpen)) :=
-    HasRingHomProperty.Spec_iff.mpr D.coordinateRingHomOnOpen_etale
-  have h₃ : Etale (AffineSpace.SpecIso (Fin d) ↧ℂ).inv := inferInstance
-  exact @Etale.etale_comp _ _ _ _ _ h₁ (@Etale.etale_comp _ _ _ _ _ h₂ h₃)
-
 /-- The étale coordinate morphism respects the structure maps to `Spec ℂ`. -/
 lemma toAffineSpace_over :
     D.toAffineSpace ≫
@@ -207,44 +192,17 @@ def pointMap :
       ComplexPoint (Over.mk (ComplexPoint.complexAffineSpace (Fin d) ↘ Spec ↧ℂ)) :=
   Point.map D.toAffineSpaceOver
 
-/-- The étale coordinate morphism is continuous on complex points. -/
-lemma continuous_pointMap :
-    @Continuous
-      (ComplexPoint (ComplexPoint.openScheme X D.neighborhood))
-      (ComplexPoint (Over.mk (ComplexPoint.complexAffineSpace (Fin d) ↘ Spec ↧ℂ)))
-      Point.analyticTopology Point.analyticTopology D.pointMap :=
-  Point.continuous_map D.toAffineSpaceOver
-
 /-- The ordinary complex-valued coordinate tuple on the analytic neighborhood. -/
 def analyticCoordinates :
     ComplexPoint (ComplexPoint.openScheme X D.neighborhood) →
       Fin d → ℂ :=
   ComplexPoint.affineSpaceEquiv (Fin d) ∘ D.pointMap
 
-/-- The ordinary complex-valued étale coordinates are continuous. -/
-lemma continuous_analyticCoordinates :
-    @Continuous
-      (ComplexPoint (ComplexPoint.openScheme X D.neighborhood))
-      (Fin d → ℂ) Point.analyticTopology inferInstance
-      D.analyticCoordinates :=
-  (ComplexPoint.continuous_affineSpaceEquiv (Fin d)).comp
-    D.continuous_pointMap
-
 /-- Étale coordinates written on the corresponding open subset of the ambient complex points. -/
 def ambientAnalyticCoordinates :
     {z : ComplexPoint X // z ∈ Point.overOpen D.neighborhood} →
       Fin d → ℂ :=
   D.analyticCoordinates ∘ (ComplexPoint.openEquiv X D.neighborhood).symm
-
-/-- The étale coordinate tuple is continuous on its ambient analytic open set. -/
-lemma continuous_ambientAnalyticCoordinates :
-    @Continuous
-      {z : ComplexPoint X // z ∈ Point.overOpen D.neighborhood}
-      (Fin d → ℂ)
-      (TopologicalSpace.induced Subtype.val Point.analyticTopology) inferInstance
-      D.ambientAnalyticCoordinates := by
-  exact D.continuous_analyticCoordinates.comp
-    (ComplexPoint.continuous_openEquiv_symm X D.neighborhood)
 
 noncomputable local instance coordinateRingAlgebra :
     Algebra (ComplexAlgHom.complexPolynomialRing d)

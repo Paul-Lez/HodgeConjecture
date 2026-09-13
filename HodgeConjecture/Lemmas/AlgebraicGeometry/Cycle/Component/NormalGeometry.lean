@@ -78,60 +78,6 @@ lemma dense_cycleComponent_smooth_closedPoints
     f.smoothLocus.2.isLocallyClosed).trans
       (dense_iff_closure_eq.mp (dense_cycleComponent_smoothLocus X x)))
 
-/-- The underlying scheme point of a complex point of a cycle component is closed. -/
-lemma cycleComponent_complexPoint_underlying_isClosed
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
-    IsClosed {z.underlying} := by
-  let φ : Spec ↧ℂ ⟶ cycleComponent X.left x := z.left
-  exact ((pointEquivClosedPoint
-    (cycleComponentι X.left x ≫ X.hom)) ⟨φ, Over.w z⟩).2
-
-/-- The image in the ambient variety of a complex point of a cycle component is a closed scheme
-point. -/
-lemma cycleComponent_complexPoint_ambient_underlying_isClosed
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
-    IsClosed {cycleComponentι X.left x z.underlying} := by
-  have hclosed := (cycleComponentι X.left x).isClosedEmbedding.isClosedMap
-    {z.underlying} (cycleComponent_complexPoint_underlying_isClosed X x z)
-  simpa only [Set.image_singleton] using hclosed
-
-/-- A reduced cycle component has a smooth complex point whose underlying scheme point is
-closed. -/
-lemma exists_cycleComponent_smooth_closed_complexPoint
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ∃ z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)),
-      z.underlying ∈
-          (cycleComponentι X.left x ≫ X.hom).smoothLocus ∧
-        IsClosed {z.underlying} := by
-  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint X x
-  exact ⟨z, hz, cycleComponent_complexPoint_underlying_isClosed X x z⟩
-
-/-- The coheight of the generic point of a component cannot exceed the relative dimension of
-the smooth ambient complex scheme. -/
-lemma cycleComponent_codimension_le
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) {d p : ℕ}
-    [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) :
-    p ≤ d := by
-  have hle := SmoothOfRelativeDimension.coheight_le_complex
-    (f := X.hom) (d := d) x
-  rw [hx] at hle
-  exact_mod_cast hle
-
-/-- The reduced component of a point of coheight `p` in a smooth complex `d`-fold has order
-Krull dimension at most `d - p`. -/
-lemma orderKrullDim_cycleComponent_le_sub
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) {d p : ℕ}
-    [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) :
-    Order.krullDim (cycleComponent X.left x) ≤ d - p := by
-  rw [orderKrullDim_cycleComponent]
-  exact WithBot.coe_le_coe.mpr
-    (SmoothOfRelativeDimension.height_le_sub_of_coheight_eq
-      (f := X.hom) (d := d) x hx)
-
 /-- The reduced component of a point of coheight `p` in a smooth complex `d`-fold has
 topological Krull dimension at most `d - p`. -/
 lemma topologicalKrullDim_cycleComponent_le_sub

@@ -24,6 +24,9 @@ public import Other.AlgebraicGeometry.CycleClassOnCycles
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveParacompact
 import Lean.Elab.Tactic.Omega
+public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import Other.AlgebraicGeometry.Cycle.Local.Purity
+public import Other.AlgebraicGeometry.Cycle.Support
 
 /-!
 # Borel--Moore comparison scaffolds for cycle classes

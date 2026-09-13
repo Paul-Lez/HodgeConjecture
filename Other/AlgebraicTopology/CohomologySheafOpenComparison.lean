@@ -7,6 +7,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenSheafification
 public import Other.AlgebraicTopology.CohomologySheafSectionNaturality
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
+public import Other.AlgebraicTopology.Sheaf.HomologySection
 
 /-! # The canonical local cohomology-sheaf map under actual open restriction -/
 

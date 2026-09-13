@@ -17,7 +17,8 @@ module
 
 public import Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.GlobalSections
+public import Other.AlgebraicGeometry.Cohomology.GlobalSections
+public import Other.AlgebraicTopology.Sheaf.FlasqueAcyclic
 
 /-!
 # Singular cohomology and global sections

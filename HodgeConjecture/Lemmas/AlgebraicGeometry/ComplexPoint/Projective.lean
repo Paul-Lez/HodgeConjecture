@@ -102,12 +102,6 @@ noncomputable instance instCompactSpace (n : ℕ) :
   rw [← (surjective_sphereToProjectivization (n := n)).range_eq]
   exact isCompact_range continuous_sphereToProjectivization
 
-/-- A closed subset of finite-dimensional complex projective space is compact. -/
-lemma isCompact_of_isClosed {n : ℕ}
-    {Z : Set (Projectivization ℂ (CoordinateSpace n))} (hZ : IsClosed Z) :
-    IsCompact Z :=
-  hZ.isCompact
-
 /-- Evaluation at a coordinate vector, regarded as a map to the global functions on
 `Spec ℂ`. -/
 noncomputable def coordinateGlobalSectionsHom {n : ℕ} (v : CoordinateSpace n) :
@@ -610,49 +604,6 @@ lemma chartIntegralProjAt_independent {n : ℕ} (v : CoordinateSpace n)
   simp only [CommRingCat.ofHom_comp, Spec.map_comp, Category.assoc]
   rw [Proj.SpecMap_awayMap_awayι, Proj.SpecMap_awayMap_awayι]
 
-set_option backward.isDefEq.respectTransparency.types false in
-/-- A coordinate point lies in the `i`-th standard open exactly when its `i`-th coordinate is
-nonzero. -/
-lemma chartIntegralProjAt_preimage_coordinateBasicOpen {n : ℕ}
-    (v : CoordinateSpace n) (k : Fin (n + 1)) (hk : v k ≠ 0)
-    (i : Fin (n + 1)) :
-    chartIntegralProjAt v k hk ⁻¹ᵁ
-      Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i) =
-        if v i = 0 then ⊥ else ⊤ := by
-  unfold chartIntegralProjAt
-  rw [Scheme.Hom.comp_preimage, show Proj.awayι (UniversalGrading n) (MvPolynomial.X k)
-      (MvPolynomial.isHomogeneous_X (ULift ℤ) k) zero_lt_one ⁻¹ᵁ
-        Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i) =
-      PrimeSpectrum.basicOpen
-        (HomogeneousLocalization.Away.isLocalizationElem
-          (MvPolynomial.isHomogeneous_X (ULift ℤ) k)
-          (MvPolynomial.isHomogeneous_X (ULift ℤ) i)) from
-    Proj.awayι_preimage_basicOpen
-      (𝒜 := UniversalGrading n) (f := MvPolynomial.X k) (g := MvPolynomial.X i)
-      (m := 1) (m' := 1)
-      (MvPolynomial.isHomogeneous_X (ULift ℤ) k) zero_lt_one
-      (MvPolynomial.isHomogeneous_X (ULift ℤ) i) zero_lt_one]
-  rw [SpecMap_preimage_basicOpen, show HomogeneousLocalization.Away.isLocalizationElem
-      (MvPolynomial.isHomogeneous_X (ULift ℤ) k)
-      (MvPolynomial.isHomogeneous_X (ULift ℤ) i) = chartCoordinate k i by
-    rw [HomogeneousLocalization.ext_iff_val]
-    unfold chartCoordinate HomogeneousLocalization.Away.isLocalizationElem
-    rw [HomogeneousLocalization.Away.val_mk, HomogeneousLocalization.Away.val_mk]
-    simp]
-  unfold chartCoordinate
-  simp only [CommRingCat.hom_ofHom]
-  rw [awayCoordinateEvaluation_mk
-    (hr := MvPolynomial.isHomogeneous_X (ULift ℤ) i)]
-  simp only [coordinateEvaluationHom_X]
-  split_ifs with hi
-  · rw [hi, zero_mul, PrimeSpectrum.basicOpen_zero]
-    rfl
-  · apply top_unique
-    intro x hx
-    change v i * (v k)⁻¹ ^ 1 ∉ x.asIdeal
-    rw [Subsingleton.elim x (⊥ : PrimeSpectrum ℂ)]
-    simpa using mul_ne_zero hi (inv_ne_zero hk)
-
 /-- Direct chart points are unchanged by rescaling their coordinates. -/
 lemma chartIntegralProjAt_smul {n : ℕ} (v : CoordinateSpace n)
     (i : Fin (n + 1)) (hi : v i ≠ 0) (c : ℂ) (hc : c ≠ 0) :
@@ -745,81 +696,6 @@ lemma surjective_chartIntegralProj {n : ℕ} :
   change chartIntegralProj v hv = q
   rw [chartIntegralProj_eq_chartIntegralProjAt v hv i hi, hq]
 
-set_option backward.isDefEq.respectTransparency.types false in
-/-- Equal projective-spectrum morphisms constructed from nonzero vectors determine the same
-linear projective point. -/
-lemma projectivization_mk_eq_of_chartIntegralProj_eq {n : ℕ}
-    (v w : CoordinateSpace n) (hv : v ≠ 0) (hw : w ≠ 0)
-    (h : chartIntegralProj v hv = chartIntegralProj w hw) :
-    Projectivization.mk ℂ v hv = Projectivization.mk ℂ w hw := by
-  let i := coordinateIndex v hv
-  have hi : v i ≠ 0 := coordinateIndex_ne_zero v hv
-  have hvopen : IsLocalRing.closedPoint ℂ ∈
-      chartIntegralProj v hv ⁻¹ᵁ
-        Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i) := by
-    rw [chartIntegralProj_eq_chartIntegralProjAt v hv i hi,
-      chartIntegralProjAt_preimage_coordinateBasicOpen]
-    simp [hi]
-    exact trivial
-  have hwopen : IsLocalRing.closedPoint ℂ ∈
-      chartIntegralProj w hw ⁻¹ᵁ
-        Proj.basicOpen (UniversalGrading n) (MvPolynomial.X i) := by
-    rw [← h]
-    exact hvopen
-  have hwi : w i ≠ 0 := by
-    intro hwi
-    rw [chartIntegralProj_eq_chartIntegralProjAt w hw
-        (coordinateIndex w hw) (coordinateIndex_ne_zero w hw),
-      chartIntegralProjAt_preimage_coordinateBasicOpen, if_pos hwi] at hwopen
-    exact hwopen
-  have hcharts : chartIntegralProjAt v i hi = chartIntegralProjAt w i hwi := by
-    rw [← chartIntegralProj_eq_chartIntegralProjAt v hv i hi,
-      ← chartIntegralProj_eq_chartIntegralProjAt w hw i hwi]
-    exact h
-  have hspec : Spec.map (CommRingCat.ofHom (awayCoordinateEvaluation v i hi)) =
-      Spec.map (CommRingCat.ofHom (awayCoordinateEvaluation w i hwi)) := by
-    unfold chartIntegralProjAt at hcharts
-    exact (cancel_mono
-      (Proj.awayι (UniversalGrading n) (MvPolynomial.X i)
-        (MvPolynomial.isHomogeneous_X _ _) zero_lt_one)).mp hcharts
-  have hcat : CommRingCat.ofHom (awayCoordinateEvaluation v i hi) =
-      CommRingCat.ofHom (awayCoordinateEvaluation w i hwi) :=
-    Spec.map_injective hspec
-  have heval : awayCoordinateEvaluation v i hi = awayCoordinateEvaluation w i hwi :=
-    congrArg ConcreteCategory.hom hcat
-  apply (Projectivization.mk_eq_mk_iff' ℂ v w hv hw).2
-  refine ⟨v i * (w i)⁻¹, ?_⟩
-  funext j
-  have hj := DFunLike.congr_fun heval (chartCoordinate i j)
-  change awayCoordinateEvaluation v i hi
-      (HomogeneousLocalization.Away.mk (UniversalGrading n)
-        (MvPolynomial.isHomogeneous_X _ i) 1 (MvPolynomial.X j) _) =
-    awayCoordinateEvaluation w i hwi
-      (HomogeneousLocalization.Away.mk (UniversalGrading n)
-        (MvPolynomial.isHomogeneous_X _ i) 1 (MvPolynomial.X j) _) at hj
-  rw [awayCoordinateEvaluation_mk
-      (hr := MvPolynomial.isHomogeneous_X (ULift ℤ) j),
-    awayCoordinateEvaluation_mk
-      (hr := MvPolynomial.isHomogeneous_X (ULift ℤ) j)] at hj
-  simp only [coordinateEvaluationHom_X] at hj
-  change (v i * (w i)⁻¹) * w j = v j
-  field_simp [hi, hwi] at hj ⊢
-  exact hj.symm
-
-/-- Nonzero homogeneous coordinates satisfy the irrelevant-ideal condition in the universal
-construction of a morphism to `Proj`. -/
-lemma coordinate_irrelevant_map_eq_top {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
-    Ideal.map (coordinateGlobalSectionsHom v)
-      (HomogeneousIdeal.irrelevant (UniversalGrading n)).toIdeal = ⊤ := by
-  obtain ⟨i, hi⟩ := exists_coordinate_ne_zero v hv
-  apply Ideal.eq_top_of_isUnit_mem _
-  · apply Ideal.mem_map_of_mem
-    exact HomogeneousIdeal.mem_irrelevant_of_mem _ zero_lt_one
-      (MvPolynomial.isHomogeneous_X _ i)
-  · rw [coordinateGlobalSectionsHom_X]
-    exact IsUnit.map (Scheme.ΓSpecIso ↧ℂ).inv.hom
-      (isUnit_iff_ne_zero.mpr hi)
-
 /-- Nonzero homogeneous coordinates define a point of scheme-theoretic projective space over
 `Spec ℂ`. -/
 noncomputable def vectorToProjectiveSpace {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
@@ -906,27 +782,6 @@ lemma surjective_projectivizationToComplexPoint {n : ℕ} :
   intro z
   obtain ⟨v, hz⟩ := surjective_vectorToComplexPoint z
   exact ⟨Projectivization.mk ℂ v.1 v.2, hz⟩
-
-set_option backward.isDefEq.respectTransparency.types false in
-/-- The coordinate map from linear projectivization to scheme-theoretic projective-space complex
-points is injective. -/
-lemma injective_projectivizationToComplexPoint {n : ℕ} :
-    Function.Injective (projectivizationToComplexPoint (n := n)) := by
-  intro p q hpq
-  induction p using Projectivization.ind with
-  | _ v hv =>
-      induction q using Projectivization.ind with
-      | _ w hw =>
-          apply projectivization_mk_eq_of_chartIntegralProj_eq v w hv hw
-          change vectorToComplexPoint v hv = vectorToComplexPoint w hw at hpq
-          have hspace := congrArg Over.Hom.left hpq
-          change vectorToProjectiveSpace v hv = vectorToProjectiveSpace w hw at hspace
-          have hsnd := congrArg (fun f ↦ f ≫ Limits.pullback.snd
-            (Limits.terminal.from (Spec ↧ℂ))
-            (Limits.terminal.from (Proj (UniversalGrading n)))) hspace
-          rw [vectorToProjectiveSpace, vectorToProjectiveSpace,
-            Limits.pullback.lift_snd, Limits.pullback.lift_snd] at hsnd
-          exact hsnd
 
 noncomputable def chartPolynomialEvaluationHom {n : ℕ} (i : Fin (n + 1)) :
     UniversalRing n →+* MvPolynomial (Fin (n + 1)) ℂ :=

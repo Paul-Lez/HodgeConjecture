@@ -5,6 +5,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift
+public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
+public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
+public import Other.AlgebraicGeometry.Cohomology.HypercohomologyShift
+public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 
 /-!
 # Support-forgetting in the rational injective model
@@ -12,6 +18,30 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportCo
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget`.
 -/
+
+@[expose] public noncomputable section
+open CategoryTheory CategoryTheory.Limits TopologicalSpace
+namespace AlgebraicGeometry.ComplexPoint
+variable (X : Over (Spec ↧ℂ))
+attribute [local instance] rationalConeForgetSheafDerivedCategory
+
+/-- Ordinary rational cohomology computed by the actual ambient rational
+injective resolution. This has the ordinary augmentation normalization. -/
+def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
+    H^n(X; ℚ) ≃+
+      (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X))
+        (ambientRationalInjectiveComplex X)).homology n := by
+  let e : H^n(X; ℚ) ≃+
+      Hypercohomology X (ambientRationalInjectiveComplex X) n :=
+    { toEquiv := Localization.SmallShiftedHom.postcompEquiv
+        (ambientRationalInjectiveAugmentation X)
+        ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)
+      map_add' α β := (hypercohomologyMap X
+        (ambientRationalInjectiveAugmentation X) n).map_add α β }
+  exact e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ n)
+
+end AlgebraicGeometry.ComplexPoint
+end
 
 @[expose] public noncomputable section
 

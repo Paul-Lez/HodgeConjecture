@@ -18,6 +18,8 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Etale
 
 import Mathlib.RingTheory.Unramified.LocalStructure
+public import Other.AlgebraicGeometry.ComplexPoint.Etale
+public import Other.AlgebraicGeometry.ComplexPoint.Localization
 
 /-!
 # Étale algebras are local homeomorphisms on complex points

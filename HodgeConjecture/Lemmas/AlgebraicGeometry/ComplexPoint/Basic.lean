@@ -130,18 +130,6 @@ section Field
 
 variable {K : Type} [Field K] {X : Over (Spec ↧K)}
 
-lemma residueData_fst (z : Point K X) : z.residueData.1 = z.underlying := rfl
-
-lemma residue_comp_residueData_snd (z : Point K X) :
-    X.left.residue z.underlying ≫ z.residueData.2 = z.stalkHom := rfl
-
-/-- Over a field, evaluation is evaluation in the residue field. -/
-lemma evaluate_eq_residueData (U : X.left.Opens) (s : Γ(X.left, U)) (z : Point K X)
-    (hz : z ∈ overOpen U) :
-    evaluate U s z = z.residueData.2 (X.left.evaluation U z.underlying hz s) := by
-  rw [evaluate, dif_pos (show z.underlying ∈ U from hz), ← residue_comp_residueData_snd z]
-  rfl
-
 /-- Over a field, a `K`-point belongs to a principal open exactly when its defining function is
 nonzero there. -/
 lemma mem_overOpen_basicOpen_iff_evaluate_ne_zero {U : X.left.Opens} (s : Γ(X.left, U))
@@ -159,23 +147,6 @@ lemma exists_evaluate_basicOpen_eq_div {U : X.left.Opens} (hU : IsAffineOpen U) 
   obtain ⟨k, a, h⟩ :=
     exists_evaluate_basicOpen_eq_inverse_mul (X := X) hU f t
   exact ⟨k, a, fun z hz ↦ by rw [h z hz, Ring.inverse_eq_inv', div_eq_inv_mul]⟩
-
-/-- The residue-field description of the image of a `K`-point. Both the underlying point and
-its residue-field embedding are obtained functorially. -/
-lemma residueData_map {Y : Over (Spec ↧K)} (f : X ⟶ Y) (z : Point K X) :
-    (map f z).residueData =
-      ⟨f.left z.residueData.1, f.left.residueFieldMap z.residueData.1 ≫ z.residueData.2⟩ := by
-  apply Sigma.ext
-  · simp [map, residueData, Scheme.SpecToEquivOfField]
-    rfl
-  · dsimp [map, residueData, Scheme.SpecToEquivOfField]
-    rw [Scheme.descResidueField_stalkClosedPointTo_comp]
-
-lemma residueData_map_snd {Y : Over (Spec ↧K)} (f : X ⟶ Y) (z : Point K X) :
-    (map f z).residueData.2 =
-      f.left.residueFieldMap z.residueData.1 ≫ z.residueData.2 := by
-  dsimp [map, residueData, Scheme.SpecToEquivOfField]
-  rw [Scheme.descResidueField_stalkClosedPointTo_comp]
 
 end Field
 

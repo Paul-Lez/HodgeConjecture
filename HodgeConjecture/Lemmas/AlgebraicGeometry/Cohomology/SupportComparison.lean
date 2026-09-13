@@ -257,16 +257,4 @@ variable [IsIntegral X.left] [Smooth X.hom]
 attribute [local instance] bettiSupportComparisonHasDerivedCategory
   bettiSupportComparisonMono bettiSupportComparisonQuasiIso
 
-set_option backward.isDefEq.respectTransparency false in
-/-- The singular-resolution restriction strictly extends restriction of rational constants. -/
-lemma rationalToSingular_comp_singularResolutionRestriction
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    rationalToSingularCochainComplexInt X ≫
-        singularResolutionRestriction X Z hZ =
-      rationalRestrictionComplexInt X Z :=
-  CochainComplex.comp_liftToInjective
-    (rationalToSingularCochainComplexInt X)
-    (rationalRestrictionComplexInt X Z)
-    (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
-
 end AlgebraicGeometry.ComplexPoint

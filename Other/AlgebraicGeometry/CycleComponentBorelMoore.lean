@@ -21,6 +21,9 @@ public import Other.AlgebraicTopology.CompactificationBorelMoore
 public import Other.AlgebraicTopology.RelativeHomologyEmpty
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveCompact
+public import Other.AlgebraicGeometry.ComplexPoint.ClosedImmersion
+public import Other.AlgebraicGeometry.Cycle.Component.NormalCoordinates
+public import Other.AlgebraicGeometry.Cycle.Support
 
 /-!
 # Borel--Moore fundamental classes of cycle components

@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicTopology.CohomologySheafSectionNaturality
+public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
 
 /-! # Exact local normalization of the actual supported injective cohomology sheaf -/
 
