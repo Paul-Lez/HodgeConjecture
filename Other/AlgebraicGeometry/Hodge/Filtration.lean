@@ -40,9 +40,8 @@ attribute [local instance] analyticHasDerivedCategory
 
 /-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
 def complexToFieldConstantSheaf :
-    constantComplexSheaf X ⟶ constantFieldSheaf K X :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
-  (constantSheaf J AddCommGrpCat).map
+    𝓒(TopCat.of (ComplexPoint X); ℂ) ⟶ 𝓒(TopCat.of (ComplexPoint X); K) :=
+  (TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).map
     (AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom)
 
 /-- The chosen retraction from the complex constant sheaf complex to the rational one. -/
@@ -66,7 +65,7 @@ private lemma ofHom_zmultiplesAddHom_comp_mulLeft (q r : K) :
 set_option linter.auxLemma false in
 omit [Algebra K ℂ] in
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
-  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 constantIntegerSheaf in
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 in
 /-- Applying a rational scalar after the constant class `r` gives the constant class `q * r`. -/
 private lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
     integerToFieldConstantSheaf K X r ≫
@@ -135,11 +134,9 @@ attribute [local instance] analyticHasDerivedCategory
 lemma fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf :
     fieldToComplexConstantSheaf K X ≫
       complexToFieldConstantSheaf K X = 𝟙 _ := by
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
-  change (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
-    (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom) = 𝟙 _
+  let F := TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))
+  change F.map (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
+    F.map (AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom) = 𝟙 _
   rw [← Functor.map_comp]
   have h : AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom ≫
       AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom =
@@ -147,7 +144,7 @@ lemma fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf :
     ext q
     exact complexToFieldLinear_algebraMap K q
   rw [h]
-  exact (constantSheaf J AddCommGrpCat).map_id (AddCommGrpCat.of K)
+  exact F.map_id (AddCommGrpCat.of K)
 
 /-- The rational constant sheaf complex is a retract of the complex constant sheaf complex. -/
 lemma fieldToComplexConstantSheafComplexInt_comp_complexToField :
@@ -159,9 +156,9 @@ lemma fieldToComplexConstantSheafComplexInt_comp_complexToField :
   rw [← HomologicalComplex.extendMap_comp, ← Functor.map_comp,
     fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf]
   have hmap : (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-      (𝟙 (constantFieldSheaf K X)) =
+      (𝟙 (𝓒(TopCat.of (ComplexPoint X); K))) =
       𝟙 ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        (constantFieldSheaf K X)) :=
+        (𝓒(TopCat.of (ComplexPoint X); K))) :=
     (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map_id _
   rw [hmap]
   exact HomologicalComplex.extendMap_id _ _
@@ -257,14 +254,10 @@ lemma fieldToComplexConstantSheaf_comp_conj
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q) :
     fieldToComplexConstantSheaf K X ≫ conjConstantComplexSheaf X =
       fieldToComplexConstantSheaf K X := by
-  let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
-  change (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
-    (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom) =
-    (constantSheaf J AddCommGrpCat).map
-      (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
+  let F := TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))
+  change F.map (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
+    F.map (AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom) =
+    F.map (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
   rw [← Functor.map_comp]
   congr 1
   ext q

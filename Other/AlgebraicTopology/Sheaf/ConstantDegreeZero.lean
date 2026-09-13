@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import Mathlib.Algebra.Category.Grp.Colimits
 public import Mathlib.Algebra.Category.Grp.FilteredColimits
 public import Mathlib.Algebra.Category.Grp.Limits
@@ -183,8 +184,7 @@ lemma constant_toSheafify_app_top_surjective [ConnectedSpace X] (A : AddCommGrpC
 /-- On a connected topological space, the coefficient group is additively equivalent to the
 global sections of its constant sheaf. -/
 def constantSheafGlobalSectionsAddEquiv [ConnectedSpace X] (A : AddCommGrpCat.{u}) :
-    A ≃+ ((constantSheaf (Opens.grothendieckTopology X)
-      AddCommGrpCat.{u}).obj A).obj.obj (op ⊤) :=
+    A ≃+ (𝓒[X; A]).obj.obj (op ⊤) :=
   AddEquiv.ofBijective
     ((CategoryTheory.toSheafify (Opens.grothendieckTopology X)
       (constantAddCommGrpPresheaf X A)).app (op ⊤)).hom
@@ -200,7 +200,7 @@ lemma constantSheafGlobalSectionsAddEquiv_apply [ConnectedSpace X] (A : AddCommG
 /-- On a connected topological space, the constant-sheaf functor on additive commutative groups
 is fully faithful. -/
 def constantSheafFullyFaithfulOfConnected [ConnectedSpace X] :
-    (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).FullyFaithful :=
+    (Sheaf.constantFunctor X).FullyFaithful :=
   let adj := constantSheafAdj (Opens.grothendieckTopology X) AddCommGrpCat.{u}
     (Limits.isTerminalTop (α := Opens X))
   haveI (A : AddCommGrpCat.{u}) : IsIso (adj.unit.app A) := by
@@ -216,7 +216,7 @@ def constantSheafFullyFaithfulOfConnected [ConnectedSpace X] :
 /-- On a nonempty topological space, the constant-sheaf functor on additive commutative groups is
 faithful. -/
 instance constantSheaf_faithful_of_nonempty [Nonempty X] :
-    (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).Faithful where
+    (Sheaf.constantFunctor X).Faithful where
   map_injective {A B} f g h := by
     let J := Opens.grothendieckTopology X
     let PA := constantAddCommGrpPresheaf X A
@@ -248,7 +248,7 @@ instance constantSheaf_faithful_of_nonempty [Nonempty X] :
       _ = g ≫ ηB.app (op ⊤) := hcg.symm
 
 instance constantSheaf_full_of_connected [ConnectedSpace X] :
-    (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).Full :=
+    (Sheaf.constantFunctor X).Full :=
   (constantSheafFullyFaithfulOfConnected X).full
 
 end TopCat

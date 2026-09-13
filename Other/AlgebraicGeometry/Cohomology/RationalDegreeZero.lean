@@ -51,17 +51,17 @@ lemma embeddingUpNat_zero : ComplexShape.embeddingUpNat.f 0 = (0 : ℤ) := rfl
 def constantIntegerSheafComplexIntIsoSingleZero :
     constantIntegerSheafComplexInt X ≅
       (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        (constantIntegerSheaf X) :=
+        (𝓒(TopCat.of (ComplexPoint X); ℤ)) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    (constantIntegerSheaf X) 0 0 embeddingUpNat_zero
+    (𝓒(TopCat.of (ComplexPoint X); ℤ)) 0 0 embeddingUpNat_zero
 
 /-- The extended rational constant-sheaf complex is the rational constant sheaf in degree zero. -/
 def constantRationalSheafComplexIntIsoSingleZero :
     constantFieldSheafComplexInt ℚ X ≅
       (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        (constantFieldSheaf ℚ X) :=
+        (𝓒(TopCat.of (ComplexPoint X); ℚ)) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    (constantFieldSheaf ℚ X) 0 0 embeddingUpNat_zero
+    (𝓒(TopCat.of (ComplexPoint X); ℚ)) 0 0 embeddingUpNat_zero
 
 /-- The inverse of the integer extension/single comparison is a quasi-isomorphism. -/
 lemma constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso :
@@ -85,9 +85,9 @@ def rationalCohomologyZeroEquivSingle :
     H^0(X; ℚ) ≃
       Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          (constantIntegerSheaf X))
+          (𝓒(TopCat.of (ComplexPoint X); ℤ)))
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          (constantFieldSheaf ℚ X)) (0 : ℤ) :=
+          (𝓒(TopCat.of (ComplexPoint X); ℚ))) (0 : ℤ) :=
   (Localization.SmallShiftedHom.precompEquiv
       (constantIntegerSheafComplexIntIsoSingleZero X).inv
       (constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso X)).trans
@@ -99,27 +99,27 @@ def rationalCohomologyZeroEquivSingle :
 def rationalCohomologyZeroSingleEquivExt :
     Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          (constantIntegerSheaf X))
+          (𝓒(TopCat.of (ComplexPoint X); ℤ)))
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          (constantFieldSheaf ℚ X)) (0 : ℤ) ≃
-      Abelian.Ext (constantIntegerSheaf X)
-        (constantFieldSheaf ℚ X) 0 :=
+          (𝓒(TopCat.of (ComplexPoint X); ℚ))) (0 : ℤ) ≃
+      Abelian.Ext (𝓒(TopCat.of (ComplexPoint X); ℤ))
+        (𝓒(TopCat.of (ComplexPoint X); ℚ)) 0 :=
   Equiv.refl _
 
 /-- The definitional comparison from shifted Hom to Ext acts as the identity. -/
 @[simp] lemma rationalCohomologyZeroSingleEquivExt_apply
     (a : Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
       ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        (constantIntegerSheaf X))
+        (𝓒(TopCat.of (ComplexPoint X); ℤ)))
       ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        (constantFieldSheaf ℚ X)) (0 : ℤ)) :
+        (𝓒(TopCat.of (ComplexPoint X); ℚ))) (0 : ℤ)) :
     rationalCohomologyZeroSingleEquivExt X a = a := rfl
 
 /-- Degree-zero rational constant-sheaf cohomology is ordinary Hom from integer constants to
 rational constants. -/
 def rationalCohomologyZeroEquivSheafHom :
     H^0(X; ℚ) ≃
-      (constantIntegerSheaf X ⟶ constantFieldSheaf ℚ X) :=
+      (𝓒(TopCat.of (ComplexPoint X); ℤ) ⟶ 𝓒(TopCat.of (ComplexPoint X); ℚ)) :=
   ((rationalCohomologyZeroEquivSingle X).trans
     (rationalCohomologyZeroSingleEquivExt X)).trans Abelian.Ext.homEquiv₀
 
@@ -154,7 +154,7 @@ lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
     exact (HomologicalComplex.single_map_f_self (ComplexShape.up ℤ) 0
       (integerToFieldConstantSheaf ℚ X q)).symm
   · exact (HomologicalComplex.isZero_single_obj_X
-      (ComplexShape.up ℤ) 0 (constantIntegerSheaf X) i hi).eq_of_src _ _
+      (ComplexShape.up ℤ) 0 (𝓒(TopCat.of (ComplexPoint X); ℤ)) i hi).eq_of_src _ _
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
@@ -173,9 +173,7 @@ induced by `n ↦ n q`. -/
 /-- If the constant-sheaf functor is faithful, distinct rational constants define distinct
 degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective_of_constantSheaf_faithful
-    [(constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).Faithful] :
+    [(TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).Faithful] :
     Function.Injective (fieldCohomologyClass ℚ X) := by
   intro a b hab
   have hs : integerToFieldConstantSheaf ℚ X a =
@@ -183,9 +181,8 @@ theorem rationalCohomologyClass_injective_of_constantSheaf_faithful
     rw [← rationalCohomologyZeroEquivSheafHom_class,
       ← rationalCohomologyZeroEquivSheafHom_class, hab]
   unfold integerToFieldConstantSheaf at hs
-  have hm := (constantSheaf
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-    AddCommGrpCat).map_injective hs
+  have hm := (TopCat.Sheaf.constantFunctor
+    (TopCat.of (ComplexPoint X))).map_injective hs
   simpa using ConcreteCategory.congr_hom hm (1 : ℤ)
 
 /-- On a nonempty analytic complex-point space, distinct rational constants define distinct
@@ -193,9 +190,7 @@ degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective
     [Nonempty (ComplexPoint X)] :
     Function.Injective (fieldCohomologyClass ℚ X) := by
-  let : (constantSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-      AddCommGrpCat).Faithful :=
+  let : (TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).Faithful :=
     TopCat.constantSheaf_faithful_of_nonempty _
   exact rationalCohomologyClass_injective_of_constantSheaf_faithful X
 
@@ -205,8 +200,7 @@ theorem rationalCohomologyClass_surjective
     [ConnectedSpace (ComplexPoint X)] :
     Function.Surjective (fieldCohomologyClass ℚ X) := by
   intro α
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
-  let F := constantSheaf J AddCommGrpCat
+  let F := TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))
   let ff := TopCat.constantSheafFullyFaithfulOfConnected
     (TopCat.of (ComplexPoint X))
   let : F.Full := ff.full

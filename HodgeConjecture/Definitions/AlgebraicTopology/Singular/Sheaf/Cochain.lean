@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
 public import Mathlib.Algebra.Homology.QuasiIso
 public import Mathlib.Algebra.Homology.SingleHomology
@@ -288,14 +289,9 @@ lemma constantsToSingularCochainZero_comp_coboundary :
       _ = 0 := rfl
   rw [hc, mul_zero]
 
-/-- The constant sheaf with value the additive group of `R`. -/
-def constantCoefficientSheaf : TopCat.Sheaf AddCommGrpCat X :=
-  let J := Opens.grothendieckTopology X
-  (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of R)
-
 /-- The sheafified inclusion of constants into singular zero-cochains. -/
 def constantsToSingularCochainZeroSheaf :
-    constantCoefficientSheaf R X ⟶ singularCochainSheaf R X 0 :=
+    𝓒(X; R) ⟶ singularCochainSheaf R X 0 :=
   let J := Opens.grothendieckTopology X
   (presheafToSheaf J AddCommGrpCat).map (constantsToSingularCochainZero R X)
 
@@ -315,9 +311,9 @@ lemma constantsToSingularCochainZeroSheaf_comp_coboundary :
 complex. -/
 def constantsToSingularCochainSheafComplex :
     (CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat X)).obj
-        (constantCoefficientSheaf R X) ⟶ singularCochainSheafComplex R X :=
+        (𝓒(X; R)) ⟶ singularCochainSheafComplex R X :=
   (CochainComplex.fromSingle₀Equiv (singularCochainSheafComplex R X)
-    (constantCoefficientSheaf R X)).symm
+    (𝓒(X; R))).symm
       ⟨constantsToSingularCochainZeroSheaf R X, by
         rw [singularCochainSheafComplex_d]
         exact constantsToSingularCochainZeroSheaf_comp_coboundary R X⟩

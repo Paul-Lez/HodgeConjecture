@@ -317,7 +317,7 @@ def complementConstantRationalSingleComplex
     (Z : Set (ComplexPoint X)) :
     CochainComplex (AnalyticComplementAdditiveSheaf X Z) ℕ :=
   (CochainComplex.single₀ (AnalyticComplementAdditiveSheaf X Z)).obj
-    (complementConstantRationalSheaf X Z)
+    (𝓒(TopCat.of ↥Zᶜ; ℚ))
 
 def complementSingularCochainSheafComplex
     (Z : Set (ComplexPoint X)) :

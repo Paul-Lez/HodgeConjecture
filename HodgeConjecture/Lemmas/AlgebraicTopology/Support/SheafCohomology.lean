@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import Mathlib.Algebra.Category.Grp.FilteredColimits
 public import Mathlib.CategoryTheory.Limits.Shapes.Countable
@@ -66,16 +67,12 @@ open _root_.Opens
 @[inherit_doc grothendieckTopology]
 scoped notation "𝓖[" X "]" => grothendieckTopology X
 
-@[inherit_doc constantSheaf]
-scoped notation3 "𝓒[" Y "; " A "]" => (constantSheaf 𝓖[Y] AddCommGrpCat).obj A
-
 /-- Constant sheaves restrict along a continuous map. -/
 def constantRestriction {X Y : TopCat.{u}} (f : X ⟶ Y) (A : AddCommGrpCat.{u}) :
     𝓒[Y; A] ⟶ (pushforward _ f).obj 𝓒[X; A] :=
   ⟨sheafifyLift 𝓖[Y] (Functor.whiskerLeft (Opens.map f).op (toSheafify 𝓖[X]
     ((Functor.const (Opens X)ᵒᵖ).obj A)))
-    ((pushforward AddCommGrpCat f).obj
-      ((constantSheaf 𝓖[X] _).obj A)).property⟩
+    ((pushforward AddCommGrpCat f).obj 𝓒[X; A]).property⟩
 
 @[reassoc]
 lemma toSheafify_constantRestriction {X Y : TopCat.{u}} (f : X ⟶ Y)
@@ -89,19 +86,18 @@ lemma toSheafify_constantRestriction {X Y : TopCat.{u}} (f : X ⟶ Y)
 @[simp]
 lemma constantRestriction_id (X : TopCat.{u}) (A : AddCommGrpCat.{u}) :
     constantRestriction (𝟙 X) A = 𝟙 _ := by
-  ext1
+  apply CategoryTheory.Sheaf.hom_ext_iff.mpr
   apply sheafify_hom_ext
-  · exact ((constantSheaf 𝓖[X] AddCommGrpCat).obj A).property
+  · exact (𝓒[X; A]).property
   · exact (toSheafify_constantRestriction (𝟙 X) A).trans (by rfl)
 
 lemma constantRestriction_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
     (A : AddCommGrpCat.{u}) :
     constantRestriction (f ≫ g) A =
       constantRestriction g A ≫ (pushforward AddCommGrpCat g).map (constantRestriction f A) := by
-  ext1
+  apply CategoryTheory.Sheaf.hom_ext_iff.mpr
   apply sheafify_hom_ext
-  · exact ((pushforward AddCommGrpCat (f ≫ g)).obj
-      ((constantSheaf 𝓖[X] AddCommGrpCat).obj A)).property
+  · exact ((pushforward AddCommGrpCat (f ≫ g)).obj 𝓒[X; A]).property
   · change _ = _ ≫ (constantRestriction g A).hom ≫
       Functor.whiskerLeft (Opens.map g).op (constantRestriction f A).hom
     rw [toSheafify_constantRestriction]
@@ -119,9 +115,7 @@ def closedInclusion (Z : Closeds X) : TopCat.of Z ⟶ X :=
 /-- The integer sheaf on a closed subspace, pushed forward to the ambient space. -/
 def supportIntegerSheaf (Z : Closeds X) :
     CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u} :=
-  (pushforward AddCommGrpCat (closedInclusion X Z)).obj
-    ((constantSheaf (Opens.grothendieckTopology (TopCat.of Z)) AddCommGrpCat).obj
-      (AddCommGrpCat.of (ULift.{u} ℤ)))
+  (pushforward AddCommGrpCat (closedInclusion X Z)).obj 𝓒(TopCat.of Z; ULift.{u} ℤ)
 
 /-- Restriction from a larger closed support to a smaller one. -/
 def supportIntegerSheafMap {Z W : Closeds X} (h : Z ≤ W) :

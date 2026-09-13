@@ -15,9 +15,9 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueAcyclic
 import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.InjectiveFlasque
-public import Other.AlgebraicTopology.Sheaf.FlasqueAcyclic
 
 open CategoryTheory Limits Opposite TopologicalSpace
 
@@ -33,18 +33,19 @@ attribute [local instance] TopCat.Sheaf.extAddCommGroup
 
 namespace IsFlasque
 
-/-- The degree-zero `Ext` group from `globalSectionsSource` is the group of global sections. This
+/-- The degree-zero `Ext` group from the constant `ULift ℤ` sheaf is the group of global
+sections. This
 is `CategoryTheory.Sheaf.H.equiv₀` as an equivalence of types, so that no
 reducibility-sensitive typeclass search is needed. -/
 def globalSectionsEquiv (F : TopCat.Sheaf AddCommGrpCat.{u} X) :
-    Abelian.Ext (globalSectionsSource (X := X)) F 0 ≃
+    Abelian.Ext (𝓒(X; ULift.{u} ℤ)) F 0 ≃
       F.obj.obj (op (⊤ : Opens X)) :=
   letI : AddCommGroup (CategoryTheory.Sheaf.H F 0) := extAddCommGroup
   (CategoryTheory.Sheaf.H.equiv₀ F isTerminalTop).toEquiv
 
 /-- `globalSectionsEquiv` carries postcomposition to the map on global sections. -/
 lemma globalSectionsEquiv_naturality {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
-    (f : F ⟶ G) (x : Abelian.Ext (globalSectionsSource (X := X)) F 0) :
+    (f : F ⟶ G) (x : Abelian.Ext (𝓒(X; ULift.{u} ℤ)) F 0) :
     f.hom.app (op (⊤ : Opens X)) (globalSectionsEquiv F x) =
       globalSectionsEquiv G (x.comp (Abelian.Ext.mk₀ f) (add_zero 0)) :=
   CategoryTheory.Sheaf.H.equiv₀_naturality isTerminalTop f x
@@ -52,11 +53,11 @@ lemma globalSectionsEquiv_naturality {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
 /-- Every positive-degree cohomology class of a flasque sheaf is zero. -/
 theorem cohomology_succ_eq_zero
     (F : TopCat.Sheaf AddCommGrpCat.{u} X) [F.IsFlasque] (n : ℕ)
-    (x : Abelian.Ext (globalSectionsSource (X := X)) F (n + 1)) : x = 0 := by
+    (x : Abelian.Ext (𝓒(X; ULift.{u} ℤ)) F (n + 1)) : x = 0 := by
   induction n generalizing F with
   | zero =>
       let : AddCommGroup
-          (Abelian.Ext (globalSectionsSource (X := X)) F 1) :=
+          (Abelian.Ext (𝓒(X; ULift.{u} ℤ)) F 1) :=
         extAddCommGroup
       let S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
         ShortComplex.mk (Injective.ι F) (cokernel.π (Injective.ι F))
@@ -67,10 +68,10 @@ theorem cohomology_succ_eq_zero
       let : S.X₃.IsFlasque := of_shortExact_of_isFlasque₁₂ hS
       let : Injective S.X₂ := by dsimp [S]; infer_instance
       let : AddCommGroup
-          (Abelian.Ext (globalSectionsSource (X := X)) S.X₂ 1) :=
+          (Abelian.Ext (𝓒(X; ULift.{u} ℤ)) S.X₂ 1) :=
         extAddCommGroup
       let : AddCommGroup
-          (Abelian.Ext (globalSectionsSource (X := X)) S.X₃ 0) :=
+          (Abelian.Ext (𝓒(X; ULift.{u} ℤ)) S.X₃ 0) :=
         extAddCommGroup
       have hx : x.comp (Abelian.Ext.mk₀ S.f) (add_zero 1) = 0 := by
         apply Abelian.Ext.eq_zero_of_injective
@@ -80,10 +81,10 @@ theorem cohomology_succ_eq_zero
         (AddCommGrpCat.epi_iff_surjective _).mp
           (epi_of_shortExact (U := (⊤ : Opens X)) hS)
       obtain ⟨z, hz⟩ := hg (globalSectionsEquiv S.X₃ y)
-      let z' : Abelian.Ext (globalSectionsSource (X := X)) S.X₂ 0 :=
+      let z' : Abelian.Ext (𝓒(X; ULift.{u} ℤ)) S.X₂ 0 :=
         (globalSectionsEquiv S.X₂).symm z
       let : AddCommGroup
-          (Abelian.Ext (globalSectionsSource (X := X)) S.X₂ 0) :=
+          (Abelian.Ext (𝓒(X; ULift.{u} ℤ)) S.X₂ 0) :=
         extAddCommGroup
       have hz' : z'.comp (Abelian.Ext.mk₀ S.g) (add_zero 0) = y := by
         apply (globalSectionsEquiv S.X₃).injective
@@ -99,7 +100,7 @@ theorem cohomology_succ_eq_zero
         Abelian.Ext.comp_zero]
   | succ n ih =>
       let : AddCommGroup
-          (Abelian.Ext (globalSectionsSource (X := X)) F (n + 2)) :=
+          (Abelian.Ext (𝓒(X; ULift.{u} ℤ)) F (n + 2)) :=
         extAddCommGroup
       let S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
         ShortComplex.mk (Injective.ι F) (cokernel.π (Injective.ι F))
@@ -110,10 +111,10 @@ theorem cohomology_succ_eq_zero
       let : S.X₃.IsFlasque := of_shortExact_of_isFlasque₁₂ hS
       let : Injective S.X₂ := by dsimp [S]; infer_instance
       let : AddCommGroup
-          (Abelian.Ext (globalSectionsSource (X := X)) S.X₂ (n + 2)) :=
+          (Abelian.Ext (𝓒(X; ULift.{u} ℤ)) S.X₂ (n + 2)) :=
         extAddCommGroup
       let : AddCommGroup
-          (Abelian.Ext (globalSectionsSource (X := X)) S.X₃ (n + 1)) :=
+          (Abelian.Ext (𝓒(X; ULift.{u} ℤ)) S.X₃ (n + 1)) :=
         extAddCommGroup
       have hx : x.comp (Abelian.Ext.mk₀ S.f) (add_zero (n + 2)) = 0 := by
         apply Abelian.Ext.eq_zero_of_injective
@@ -128,7 +129,7 @@ theorem subsingleton_cohomology_succ
     Subsingleton (CategoryTheory.Sheaf.H F (n + 1)) := by
   constructor
   intro x y
-  change Abelian.Ext (globalSectionsSource (X := X)) F (n + 1) at x y
+  change Abelian.Ext (𝓒(X; ULift.{u} ℤ)) F (n + 1) at x y
   rw [cohomology_succ_eq_zero F n x, cohomology_succ_eq_zero F n y]
 
 end TopCat.Sheaf.IsFlasque

@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SingularSheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueQuasiIso
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.InjectiveFlasque
@@ -187,7 +188,7 @@ def constantIntegerSheafComplexIntIsoSingle :
       TopCat.Sheaf.integerConstantSingleComplex
         (TopCat.of (ComplexPoint X)) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    (constantIntegerSheaf X) 0 0 rfl
+    𝓒(TopCat.of (ComplexPoint X); ℤ) 0 0 rfl
 
 end AlgebraicGeometry.ComplexPoint
 
