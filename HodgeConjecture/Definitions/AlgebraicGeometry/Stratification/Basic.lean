@@ -14,10 +14,9 @@ public import Mathlib.AlgebraicGeometry.IdealSheaf.Subscheme
 
 Each step takes the reduced closed subscheme on a closed subset, removes its smooth
 locus, and continues on the closed remainder. Noetherian induction makes this construction
-finite. The pieces are smooth locally closed subschemes, not supplied stratification
-data. This is an algebraic prerequisite for dimension induction; it does not assert a
-Whitney or frontier condition, triangulation, analytic homology vanishing, or extension of an
-orientation across singularities.
+finite. The pieces are smooth locally closed subschemes. The decomposition is the algebraic
+input for dimension induction; Whitney and frontier conditions, triangulation, analytic homology
+vanishing, and extension of an orientation across singularities are all outside its scope.
 -/
 
 @[expose] public noncomputable section

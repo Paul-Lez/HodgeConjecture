@@ -64,7 +64,7 @@ theorem closedImmersionFlatteningChart_mem_source :
       closedImmersionNormalChart_mem_target X Y i m d z⟩,
     (exists_open_normalCriterion X Y i m d z).choose_spec.2.1⟩
 
-/-- The complete geometric support is flattened, not merely a parametrized sub-piece. -/
+/-- The chart flattens the whole geometric support. -/
 theorem closedImmersionFlatteningChart_mem_range_iff (y : ComplexPoint X)
     (hy : y ∈ (closedImmersionFlatteningChart X Y i m d z).source) :
     y ∈ Set.range (Point.map i) ↔

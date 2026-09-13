@@ -98,8 +98,7 @@ theorem chartNormalFiber_comp_projection (hW : W ⊆ e.source) :
     exact congrArg Prod.snd (e.right_inv (hV v.1 v.2).1)
 
 omit [NormedSpace ℝ E] in
-/-- In a second chart, normal projection of the same fiber is the
-normal transition map, not an unspecified comparison. -/
+/-- In a second chart, normal projection of the same fiber is the normal transition map. -/
 theorem chartNormalFiber_comp_other_projection
     (e' : OpenPartialHomeomorph M (E × (Fin c → ℂ)))
     (hS' : ∀ y ∈ e'.source, y ∈ S ↔ (e' y).2 = 0) (hW' : W ⊆ e'.source)
@@ -194,9 +193,9 @@ theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
   exact (chartNormalProjectionCoclass_unique E c e S hS x hx h0 _ hvalue).symm
 
 include hx h0 in
-/-- Ambient overlap agreement on a sufficiently small common open neighborhood.
-The local class is not chosen by one-dimensionality: it is already constructed by the
-normal pair model, and the proof checks its exact transition normalization. -/
+/-- Ambient overlap agreement on a sufficiently small common open neighborhood. The local class
+is the one built by the normal pair model, and the proof checks its exact transition
+normalization. -/
 theorem exists_open_chartNormalProjectionCoclass_eq (hx' : x ∈ e'.source)
     (ht : AnalyticAt ℂ (e.symm.trans e') (e x))
     (hti : AnalyticAt ℂ (e.symm.trans e').symm ((e.symm.trans e') (e x))) :

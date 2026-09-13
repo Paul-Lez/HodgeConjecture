@@ -62,7 +62,7 @@ def supportRelativeCohomologyPresheaf : TopCat.Presheaf AddCommGrpCat X where
             (W := (V.unop : Set X)) (V := (U.unop : Set X)) (leOfHom f.unop) S) a)
     rw [← LinearMap.comp_apply, ← relativeCohomologyMap_comp, neighborhoodSupportInclusionPairMap_comp]
 
-/-- Sheafification, not a presupposed sheaf property of relative cohomology. -/
+/-- The sheafification of `supportRelativeCohomologyPresheaf`. -/
 def supportRelativeCohomologySheaf : TopCat.Sheaf AddCommGrpCat X :=
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj
     (supportRelativeCohomologyPresheaf X S n)

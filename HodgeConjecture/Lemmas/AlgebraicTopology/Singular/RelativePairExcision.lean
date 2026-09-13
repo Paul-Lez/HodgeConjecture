@@ -32,7 +32,7 @@ isomorphism
 `Hₙ(U, U ∖ {x}; ℚ) ≅ Hₙ(X, X ∖ {x}; ℚ)`.
 
 The proof uses the already established affine-subdivision small-chain theorem for the two-set
-cover `U, X ∖ {x}`.  No excision or homology-comparison hypothesis is assumed.
+cover `U, X ∖ {x}`.
 -/
 
 @[expose] public noncomputable section

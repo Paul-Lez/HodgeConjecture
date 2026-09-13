@@ -13,9 +13,8 @@ section-complex cohomology with the cohomology sheaf. Composing its unit
 with that identification gives the canonical local-to-sheaf class map. This
 provides the target in which normalized local purity classes can be glued.
 
-No exactness of open-set evaluation on sheaves is assumed. The presheaf
-homology is taken before sheafification, and the counit is the
-sheafification counit on the original coefficient complex.
+The presheaf homology is taken before sheafification, and the counit is the sheafification
+counit on the original coefficient complex.
 -/
 
 @[expose] public noncomputable section
@@ -59,8 +58,7 @@ def sectionCohomologyToSheafSection (n : ℤ) (U : Opens X) :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The canonical presheaf-to-sheaf class map induces an isomorphism on every
-stalk; it does not assert surjectivity of classes on a fixed open set. -/
+/-- The canonical presheaf-to-sheaf class map induces an isomorphism on every stalk. -/
 instance sectionCohomologyPresheafToSheaf_stalk_isIso (n : ℤ) (x : X) :
     IsIso ((Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
       (sectionCohomologyPresheafToSheaf X K n)) := by

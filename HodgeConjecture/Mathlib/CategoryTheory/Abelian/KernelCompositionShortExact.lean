@@ -84,8 +84,8 @@ variable {E : Type*} [Category* E] [Abelian E]
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Kernel-preserving functors identify the sequence with that of the mapped
-restriction maps. This does not require them to preserve epimorphisms in general. -/
+/-- Kernel-preserving functors identify the sequence with that of the mapped restriction
+maps. -/
 def kernelFactorizationShortComplexMapIso :
     (kernelFactorizationShortComplex f g k hk).map F ≅
       kernelFactorizationShortComplex (F.map f) (F.map g) (F.map k)

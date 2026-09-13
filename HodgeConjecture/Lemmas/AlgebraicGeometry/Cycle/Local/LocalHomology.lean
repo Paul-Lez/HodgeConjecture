@@ -14,8 +14,8 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainC
 Every prescribed open neighborhood of a point on a smooth closed complex subvariety contains
 an explicitly constructed smaller open neighborhood whose support-complement pair has rational
 relative homology and cohomology only in degree twice the complex codimension. The comparison
-and the exactly normalized normal class come from flattening, radial compression, and
-tangent contraction. No purity, derivative, or comparison equivalence is supplied.
+and the exactly normalized normal class come from flattening, radial compression, and tangent
+contraction.
 
 This is a cofinal local singular calculation. The identification with derived sheaf sections
 with support, and gluing its normalizations across overlapping charts, are separate theorems.

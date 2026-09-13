@@ -21,10 +21,10 @@ bounded-below derived category using Mathlib's injective-resolution machinery.
 Both the sheaf-valued local cohomology operation, conventionally `RΓ_Z`, and
 the abelian-group-valued derived global sections `RΓ_Z` are constructed, with
 different source and target categories displayed explicitly.
-No dualizing complex or orientation is assumed or constructed. In particular, this
-file does not identify Borel--Moore homology with supported cohomology. Comparison
-with the project's restriction mapping-cone model, and coherent commutation with
-shifts, remain separate theorems.
+
+The identification of Borel--Moore homology with supported cohomology, the comparison with the
+project's restriction mapping-cone model, and coherent commutation with shifts are separate
+theorems.
 -/
 
 @[expose] public noncomputable section

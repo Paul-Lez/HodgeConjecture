@@ -10,11 +10,10 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCoho
 /-!
 # The normalized component coclass on the original ambient smooth-support open
 
-The component's smooth locus is closed in the complement of its singular
-boundary. We construct its exactly normalized smooth-support section there and
-transport it through the analytic open embedding. The result is a section
-of the ORIGINAL ambient relative-cohomology sheaf on the singular-boundary
-complement. No section, purity comparison, or orientation coherence is an input.
+The component's smooth locus is closed in the complement of its singular boundary. Its exactly
+normalized smooth-support section there is transported through the analytic open embedding,
+giving a section of the original ambient relative-cohomology sheaf on the singular-boundary
+complement.
 -/
 
 @[expose] public noncomputable section
@@ -58,8 +57,8 @@ theorem cycleComponentSmoothClosedLift_codimension :
   have hpd : p ≤ dim X.left := by exact_mod_cast h
   omega
 
-/-- The normalized section in the auxiliary algebraic ambient open, in the proved
-degree 2p. The class is the general normal-chart gluing, not supplied data. -/
+/-- The normalized section in the auxiliary algebraic ambient open, in degree `2p`. It is the
+general normal-chart gluing. -/
 def cycleComponentSmoothClosedLiftCoclassSection :
     (supportRelativeCohomologySheaf
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))

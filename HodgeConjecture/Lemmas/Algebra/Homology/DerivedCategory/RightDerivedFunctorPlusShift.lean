@@ -12,11 +12,9 @@ public import Mathlib.CategoryTheory.Shift.Localization
 
 The bounded-below homotopy category of injective objects is equivalent to the
 bounded-below derived category. The right-derived unit becomes an isomorphism
-on this category. We therefore descend the existing coherent shifts through
-this equivalence, using Mathlib's localization construction.
-
-No shift isomorphism is supplied as mathematical input. Boundedness is explicit
-in all source and target categories.
+on this category. The existing coherent shifts descend through this equivalence, using
+Mathlib's localization construction. Boundedness is explicit in all source and target
+categories.
 -/
 
 @[expose] public noncomputable section
@@ -70,9 +68,8 @@ instance : (injectiveToDerived C).IsLocalization
   Functor.IsLocalization.of_isEquivalence _ _ (by rfl)
 
 omit [HasDerivedCategory C] in
-/-- Natural transformations into a functor that inverts quasi-isomorphisms are
-determined by their values on bounded-below injective complexes. The proof uses
-the existing injective resolutions, not an extra resolution hypothesis. -/
+/-- Natural transformations into a functor that inverts quasi-isomorphisms are determined by
+their values on bounded-below injective complexes. -/
 lemma natTrans_ext_on_injectives {H : Type*} [Category* H]
     {F G : HomotopyCategory.Plus C ⥤ H}
     (hG : (HomotopyCategory.Plus.quasiIso C).IsInvertedBy G)

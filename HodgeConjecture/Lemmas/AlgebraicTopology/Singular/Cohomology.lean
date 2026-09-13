@@ -57,8 +57,8 @@ abbrev singularCochainComplexMap (R : Type u) [Field R] {X Y : TopCat.{u}} (f : 
     SingularCochainComplex R Y ⟶ SingularCochainComplex R X :=
   HomologicalComplex.linearDualMap (singularChainComplexMap R f)
 
-/-- Singular cohomology with coefficients in a field, defined as the homology of the singular
-cochain complex — that is, by dualising the chain complex, not by dualising homology. -/
+/-- Singular cohomology with coefficients in a field: the homology of the singular cochain
+complex, obtained by dualising the chain complex. -/
 abbrev Cohomology (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) : ModuleCat.{u} R :=
   (SingularCochainComplex R X).homology n
 
@@ -67,9 +67,8 @@ def cohomologyMap (R : Type u) [Field R] {X Y : TopCat.{u}} (n : ℕ) (f : X ⟶
     Cohomology R Y n →ₗ[R] Cohomology R X n :=
   (HomologicalComplex.homologyMap (singularCochainComplexMap R f) n).hom
 
-/-- Universal coefficients over a field: singular cohomology, defined by dualising the chain
-complex, is canonically the linear dual of singular homology. This is a theorem here, not the
-definition of cohomology. -/
+/-- Universal coefficients over a field: singular cohomology is canonically the linear dual of
+singular homology. -/
 def cohomologyEquivDualHomology (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) :
     Cohomology R X n ≃ₗ[R] Module.Dual R (Homology R X n) :=
   (SingularChainComplex R X).linearDualHomologyEquiv n

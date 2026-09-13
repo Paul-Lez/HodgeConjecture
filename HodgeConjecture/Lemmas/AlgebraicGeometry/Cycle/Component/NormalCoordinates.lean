@@ -103,8 +103,8 @@ abbrev componentSmoothScheme
 end CycleComponentSeparateLocalCoordinates
 
 /-- Separate exact local coordinates on a smooth cycle component and on its smooth ambient
-variety.  The component coordinates use exactly `n` variables.  This package does not assert
-that the two coordinate systems straighten the closed immersion simultaneously. -/
+variety.  The component coordinates use exactly `n` variables.  The two coordinate systems are
+independent of one another. -/
 structure CycleComponentSeparateLocalCoordinates
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (x : X.left) (d n : ℕ)

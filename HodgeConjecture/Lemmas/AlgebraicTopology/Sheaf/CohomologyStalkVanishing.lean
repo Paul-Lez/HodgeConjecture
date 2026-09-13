@@ -27,8 +27,7 @@ open AlgebraicTopology.Singular
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- The homology presheaf and homology sheaf have canonically equal stalks.
-The underlying sheaf-forgetful functor is not assumed exact. -/
+/-- The homology presheaf and homology sheaf have canonically equal stalks. -/
 def sectionCohomologyPresheafStalkIso (n : ℤ) (x : X) :
     (Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj (sectionCohomologyPresheaf X K n) ≅
       (additiveSheafStalkFunctor X x).obj (K.homology n) := by
@@ -76,8 +75,8 @@ open AlgebraicTopology.Singular
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- Cohomology-sheaf stalk vanishing from section complexes on cofinally
-small opens. This generic lemma exposes, rather than assumes, its local input. -/
+/-- Cohomology-sheaf stalk vanishing from section complexes on cofinally small opens, with the
+local input taken as a hypothesis. -/
 lemma cohomologySheaf_stalk_isZero_of_cofinal_sections (n : ℤ) (x : X)
     (hlocal : ∀ (U : Opens X), x ∈ U →
       ∃ (V : Opens X), V ≤ U ∧ x ∈ V ∧
@@ -99,9 +98,8 @@ lemma cohomologySheaf_isZero_of_cofinal_sections (n : ℤ)
   exact (isZero_iff_stalkFunctor_obj_isZero _).mpr fun x =>
     cohomologySheaf_stalk_isZero_of_cofinal_sections X K n x (hlocal x)
 
-/-- A map that is a quasi-isomorphism on sections on cofinally small opens is
-a sheaf quasi-isomorphism. This uses the mapping cone, not exactness of
-open-set evaluation on all sheaves. -/
+/-- A map that is a quasi-isomorphism on sections on cofinally small opens is a sheaf
+quasi-isomorphism. The proof goes through the mapping cone. -/
 lemma quasiIso_of_cofinal_section_quasiIso
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ} (f : K ⟶ L)
     (hlocal : ∀ (x : X) (U : Opens X), x ∈ U →

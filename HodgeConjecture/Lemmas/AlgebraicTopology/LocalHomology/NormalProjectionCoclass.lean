@@ -121,8 +121,8 @@ theorem span_flattenedSupportNormalClass_eq_top :
   rwa [Submodule.map_span, Set.image_singleton, Submodule.map_top, LinearEquiv.range] at h
 
 include h0 in
-/-- In top normal degree the normal projection is injective; this is deduced from
-the pair computation and its exact normalization, not used to construct the comparison. -/
+/-- In top normal degree the normal projection is injective, by the pair computation and its
+exact normalization. -/
 theorem chartNormalProjection_relativeHomologyMap_injective :
     Function.Injective (relativeHomologyMap ℚ (2 * c)
       (chartNormalProjectionPair E c e S hS (flattenedSupportNeighborhood E c e x hx)

@@ -37,7 +37,7 @@ theorem cycleComponentExtendSmoothCoclass_normalization
   AddEquiv.apply_symm_apply
     (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv s
 
-/-- Exact smooth-locus normalization, not equality only up to a scalar. -/
+/-- Exact smooth-locus normalization: equality on the nose. -/
 @[simp]
 theorem cycleComponentSupportedInjectiveClass_normalization :
     (cycleComponentSupportedClassNormalizationIso X x hx).hom

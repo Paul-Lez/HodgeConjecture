@@ -108,9 +108,8 @@ def supportRestrictionComplexShortComplexMap
     ext n
     exact (toOpenRestrictionPushforward X U).naturality (f.f n)
 
-/-- Supported sections of a quasi-isomorphism between bounded-below flasque
-models are a quasi-isomorphism on every open set. This is a proved acyclicity
-statement for these models, not exactness of supported sections in general. -/
+/-- Supported sections of a quasi-isomorphism between bounded-below flasque models are a
+quasi-isomorphism on every open set. -/
 theorem supportedSections_map_quasiIso_of_flasque
     (V : Opens X) {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
     (f : K ⟶ L) [QuasiIso f] (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]

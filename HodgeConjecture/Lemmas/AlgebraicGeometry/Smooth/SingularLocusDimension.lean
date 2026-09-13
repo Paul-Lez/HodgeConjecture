@@ -73,8 +73,7 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
     Set.range (reducedSingularLocusι f) = (f.smoothLocus : Set X)ᶜ :=
   range_reducedClosedSubschemeι _
 
-/-- Generic smoothness makes the singular locus proper; no singular-locus bound
-is supplied as an input. -/
+/-- Generic smoothness makes the singular locus proper. -/
 theorem singularLocusClosed_ne_top [PerfectField K] [IsReduced X] [Nonempty X] :
     singularLocusClosed f ≠ ⊤ := by
   obtain ⟨x, hx⟩ := f.dense_smoothLocus_of_perfectField.nonempty
@@ -100,8 +99,7 @@ theorem topologicalKrullDim_reducedClosedSmoothPiece_le {S T : Closeds X} (hTS :
       (IsEmbedding.inclusion hTS).isInducing.topologicalKrullDim_le
 
 /-- On a smooth complex scheme of algebraic dimension below `m`, every point has a
-standard-smooth affine neighborhood of some relative dimension below `m`.
-No global equidimensionality assumption is needed. -/
+standard-smooth affine neighborhood of some relative dimension below `m`. -/
 theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
     {Z : Scheme} (g : Z ⟶ Spec (.of ℂ)) [Smooth g] {m : ℕ}
     (hdim : topologicalKrullDim Z < m) (z : Z) :

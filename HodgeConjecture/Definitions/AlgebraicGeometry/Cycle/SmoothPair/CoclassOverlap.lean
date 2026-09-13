@@ -13,8 +13,8 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProje
 
 The previously constructed local normal coclass is the pullback of the fixed complex
 normal coclass along the normal coordinate projection. The holomorphic
-closed-immersion charts prove that these coclasses agree on sufficiently small common
-ambient neighborhoods. No transition compatibility or purity equivalence is supplied.
+closed-immersion charts prove that these coclasses agree on sufficiently small common ambient
+neighborhoods.
 -/
 
 @[expose] public noncomputable section

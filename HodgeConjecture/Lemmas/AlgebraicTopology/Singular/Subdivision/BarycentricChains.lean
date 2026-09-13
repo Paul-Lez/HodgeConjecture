@@ -48,10 +48,7 @@ public theorem nonemptyFiniteChainSingleton_finset
     (nonemptyFiniteChainSingleton x).finset = {x} :=
   rfl
 
-/-- A specified nonempty finset in a linear order, regarded as a finite chain.
-
-This constructor is shared by the all-degree barycentric development; unlike the removed
-degree-one scaffolding, it is part of that file's live API. -/
+/-- A specified nonempty finset in a linear order, regarded as a finite chain. -/
 public noncomputable def nonemptyFiniteChainOfFinset
     {X : Type*} [LinearOrder X] (s : Finset X) (hs : s.Nonempty) :
     NonemptyFiniteChains X where

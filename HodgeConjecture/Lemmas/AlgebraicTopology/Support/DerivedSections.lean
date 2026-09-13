@@ -62,9 +62,8 @@ lemma liftSheafSectionsSupportedOutside_inclusion (U : Opens X)
       (sheafSectionsSupportedOutsideInclusion X U).app G = f :=
   kernel.lift_ι _ _ _
 
-/-- On every ambient open set, supported sections are exactly the kernel of
-restriction to its intersection with `U`. This is the canonical kernel
-comparison, not a supplied equivalence. -/
+/-- On every ambient open set, supported sections are exactly the kernel of restriction to its
+intersection with `U`, through the canonical kernel comparison. -/
 def sheafSectionsSupportedOutsideOnOpenIso (U V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) :
     ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V) ≅
@@ -125,9 +124,8 @@ attribute [local instance] supportSheafHasDerivedCategory
 
 attribute [local instance] supportGroupsHasDerivedCategory
 
-/-- The right derived sheaf sections-with-support functor on bounded-below
-complexes. Enough injectives is furnished by the Grothendieck abelian category of
-abelian sheaves, not supplied as mathematical data. -/
+/-- The right derived sheaf sections-with-support functor on bounded-below complexes. Enough
+injectives comes from the Grothendieck abelian category of abelian sheaves. -/
 def derivedSheafSectionsWithClosedSupport (Z : Closeds X) :
     DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X) ⥤
       DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X) :=
@@ -141,8 +139,7 @@ def derivedSheafSectionsWithClosedSupportUnit (Z : Closeds X) :
       DerivedCategory.Plus.Qh ⋙ derivedSheafSectionsWithClosedSupport X Z :=
   (sheafSectionsWithClosedSupport X Z).rightDerivedFunctorPlusUnit
 
-/-- This construction satisfies Mathlib's universal property of a right derived
-functor; it is not merely a named candidate endofunctor. -/
+/-- The construction satisfies Mathlib's universal property of a right derived functor. -/
 instance derivedSheafSectionsWithClosedSupport_isRightDerivedFunctor (Z : Closeds X) :
     (derivedSheafSectionsWithClosedSupport X Z).IsRightDerivedFunctor
       (derivedSheafSectionsWithClosedSupportUnit X Z)

@@ -11,18 +11,14 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCoho
 /-!
 # Constructed sheaf cycle classes in arbitrary codimension
 
-The exactly normalized normal-chart coclass on a component's smooth locus is
-transported to the supported cohomology sheaf. Lowest-degree purity
-and the proved unique extension across the singular boundary then give an
-supported class on the original ambient variety. Forgetting support
-lands in the repository's ordinary rational cohomology.
+The exactly normalized normal-chart coclass on a component's smooth locus is transported to the
+supported cohomology sheaf. Lowest-degree purity and unique extension across the singular
+boundary then give a supported class on the original ambient variety, and forgetting its support
+lands in ordinary rational cohomology.
 
-All comparison maps, purity statements, and extension isomorphisms are
-constructed. No fundamental-class, orientation, duality, or vanishing datum
-is an argument. The corresponding Borel–Moore fundamental class is obtained
-through the previously constructed complex-orientation duality for the
-ambient chain sheaf. This does not assert intrinsic compactification
-independence or rational-equivalence invariance.
+The corresponding Borel–Moore fundamental class is obtained through the complex-orientation
+duality for the ambient chain sheaf. Compactification independence and rational-equivalence
+invariance are separate statements.
 -/
 
 @[expose] public noncomputable section
@@ -83,8 +79,8 @@ def cycleComponentSupportedClassNormalizationIso :
   rw [he] at e
   exact e
 
-/-- Extend a smooth-locus coclass uniquely across the singular boundary.
-The inverse comes from proved purity and boundary vanishing; no extension datum is supplied. -/
+/-- Extend a smooth-locus coclass uniquely across the singular boundary. The inverse comes from
+purity and boundary vanishing. -/
 def cycleComponentExtendSmoothCoclass :
     CycleComponentSmoothCoclassSections X x p →+
       CycleComponentSupportedCohomology X x p :=
@@ -107,8 +103,7 @@ def cycleComponentSheafSupportedClass :
 /-- **Step 3.** The unconditional ordinary class of an arbitrary integral component: the
 supported class of step 2, with its support forgotten.
 
-This is the composite of the three steps, not a second route into ordinary cohomology; the
-agreement with `forgetSupport` is therefore definitional rather than a theorem. -/
+Being the composite of the three steps, it agrees with `forgetSupport` definitionally. -/
 def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
   forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
     (cycleComponentSheafSupportedClass X x hx)

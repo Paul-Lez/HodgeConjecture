@@ -28,8 +28,7 @@ This file defines its sheaf of holomorphic functions: a section is a complex-val
 which is complex analytic in those charts. Mathlib expresses complex analyticity as manifold
 differentiability of order `ω`.
 
-The sheaf and its ring operations are constructed by the local-predicate sheaf machinery. No
-analytic atlas or sheaf is supplied as data.
+The sheaf and its ring operations are built by the local-predicate sheaf machinery.
 -/
 
 @[expose] public noncomputable section

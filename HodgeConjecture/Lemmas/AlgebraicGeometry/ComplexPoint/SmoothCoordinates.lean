@@ -356,8 +356,8 @@ lemma ambientAnalyticCoordinates_apply_eq_evaluate
         ((ComplexPoint.openHomeomorph X D.neighborhood).apply_symm_apply z)
 
 /-- The explicit analytic projection chart centered at a point of the ambient coordinate
-neighborhood. Unlike a chart chosen only from local-homeomorphism existence, its inverse retains
-the standard étale construction and its analyticity theorem. -/
+neighborhood. Its inverse is the standard étale construction, and so carries its analyticity
+theorem. -/
 noncomputable def ambientProjectionChart
     (z : {z : ComplexPoint X // z ∈ Point.overOpen D.neighborhood}) :
     OpenPartialHomeomorph

@@ -25,8 +25,8 @@ import Mathlib.Algebra.Homology.HomotopyCategory.Plus
 # Hypercohomology and singular cohomology with support
 
 This file develops the bounded-below flasque comparison needed for cohomology with support.
-It applies the same explicit injective-replacement argument used for ordinary singular cohomology
-to the mapping cone of singular restriction. No hypercohomology spectral sequence is assumed.
+It applies the same explicit injective-replacement argument used for ordinary singular
+cohomology to the mapping cone of singular restriction.
 -/
 
 @[expose] public noncomputable section

@@ -15,7 +15,6 @@ public import Mathlib.Analysis.Normed.Module.Connected
 These vanishing statements use the constructed affine boundary chain-homotopy equivalence
 and the dimension bound on normalized simplicial chains. They are prerequisites for proving
 that the concrete relative-chain sheaf has cohomology only in the orientation degree.
-No bounded chain model or homology-vanishing certificate is supplied as input.
 -/
 
 @[expose] public noncomputable section

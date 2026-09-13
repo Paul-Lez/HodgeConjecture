@@ -40,9 +40,8 @@ coboundary, giving a cochain complex. Degreewise sheafification gives the singul
 complex.
 
 These constructions are prerequisites for comparing singular cohomology with constant-sheaf
-cohomology. The comparison is proved in degree zero on locally path-connected spaces. In positive
-degrees, an explicit neighborhood-wise primitive condition is shown to imply the comparison.
-No local acyclicity statement is assumed.
+cohomology. The comparison is proved in degree zero on locally path-connected spaces. In
+positive degrees, an explicit neighborhood-wise primitive condition is shown to imply it.
 -/
 
 @[expose] public noncomputable section

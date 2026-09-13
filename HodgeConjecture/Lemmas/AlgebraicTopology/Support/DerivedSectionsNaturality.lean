@@ -11,8 +11,7 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDeriv
 # Naturality of derived sections with closed support
 
 Support enlargement comes from the kernel inclusion, and is then derived by
-the universal property. In particular, forgetting support is the map to whole-space
-support; no cohomology-level comparison morphism is supplied.
+the universal property. In particular, forgetting support is the map to whole-space support.
 -/
 
 @[expose] public noncomputable section

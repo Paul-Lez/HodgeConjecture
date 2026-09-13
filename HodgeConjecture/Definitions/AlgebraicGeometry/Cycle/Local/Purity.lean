@@ -49,9 +49,8 @@ variable {R M : Type*} [Field R] [AddCommGroup M] [Module R M]
 def normalizedDual (z : M) (hz : z ≠ 0) : Module.Dual R M :=
   Classical.choose (Module.Projective.exists_dual_eq_one R hz)
 
-/-- The relative cohomology class normalized to pair to one with a given nonzero relative
-homology class. Cohomology is the homology of the dual cochain complex rather than the dual of
-homology, so the normalized functional is transported along the universal-coefficient
+/-- The relative cohomology class pairing to one with a given nonzero relative homology class.
+It is the normalized functional on homology, transported along the universal-coefficient
 equivalence. -/
 def normalizedRelativeCoclass {R : Type*} [Field R] {X : TopPair} {n : ℕ}
     (z : RelativeHomology R X n) (hz : z ≠ 0) : RelativeCohomology R X n :=

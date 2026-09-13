@@ -98,8 +98,7 @@ instance singularToConstantInjectiveComplex_quasiIso :
     QuasiIso (singularToConstantInjectiveComplex X hX) :=
   (HomologicalComplex.quasiIso_extendMap_iff _ _).mpr inferInstance
 
-/-- The supported singular-cochain sheaf model. Its terms are kernels
-of restriction; its cohomology is not defined to be a desired purity group. -/
+/-- The supported singular-cochain sheaf model. Its terms are kernels of restriction. -/
 def supportedRationalSingularCochainComplex (U : Opens X) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj

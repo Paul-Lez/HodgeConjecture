@@ -30,18 +30,17 @@ This file constructs the presheaf of relative singular chain complexes
 `U ↦ C_*(X, X ∖ U; R)`. For `V ⊆ U`, restriction is the relative chain map induced by
 the identity map of `X` and the inclusion `X ∖ U ⊆ X ∖ V`. Degreewise sheafification gives a
 complex of additive sheaves, then the grading embedding `n ↦ -n` gives a cochain complex
-indexed by the integers. All complexes, restrictions, and sheafification maps are constructed;
-none are supplied as data.
+indexed by the integers.
 
 The conceptual model is the sheafification of relative singular chains described in
 Baumann--Kamnitzer--Knutson, *The Mirković--Vilonen basis and Duistermaat--Heckman measures*,
 §5.1, p. 24, <https://irma.math.unistra.fr/~baumann/mvbasis.pdf>. No external code is copied.
 The sheafification implementation follows the existing `Singular.Sheaf.Cochain` module.
 
-This is a concrete candidate for the dualizing complex, not a proof of its dualizing property.
-No identification with exceptional pullback, no orientation quasi-isomorphism, and no
-identification of its hypercohomology with intrinsic Borel--Moore homology is asserted here.
-In particular, stalkwise local homology and the orientation theorem remain separate tasks.
+This is a concrete candidate for the dualizing complex. Its dualizing property, the
+identification with exceptional pullback, the orientation quasi-isomorphism, stalkwise local
+homology, and the identification of its hypercohomology with intrinsic Borel--Moore homology are
+all separate tasks.
 -/
 
 @[expose] public noncomputable section
@@ -73,7 +72,7 @@ def singularChainPresheaf (n : ℕ) : TopCat.Presheaf AddCommGrpCat.{u} X :=
     HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.down ℕ) n ⋙
     forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}
 
-/-- The restriction map is induced by the inclusion of complements, not chosen arbitrarily. -/
+/-- The restriction map is induced by the inclusion of complements. -/
 @[simp] lemma singularChainPresheaf_map {U V : Opens X} (i : V ⟶ U) (n : ℕ) :
     (singularChainPresheaf R X n).map i.op =
       (forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).map

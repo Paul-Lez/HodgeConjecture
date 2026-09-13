@@ -12,8 +12,7 @@ public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
 
 Intrinsic regular coordinate functions lift through a closed immersion on a common affine
 ambient neighborhood. Their analytic evaluations give a local left inverse to the inclusion
-written in complex charts. In particular derivative injectivity is proved, not supplied as
-an immersion or purity field.
+written in complex charts, and in particular the inclusion has injective derivative.
 -/
 
 @[expose] public noncomputable section

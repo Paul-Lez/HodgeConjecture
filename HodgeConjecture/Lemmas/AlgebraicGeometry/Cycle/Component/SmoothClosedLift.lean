@@ -38,8 +38,7 @@ theorem range_cycleComponentSmoothLocusClosedLift :
 
 variable {p : ℕ}
 
-/-- The smooth locus has exactly the constant relative dimension of the integral
-component, not just a locally chosen dimension. -/
+/-- The smooth locus has the relative dimension of the integral component, constantly. -/
 theorem cycleComponentSmoothLocus_smoothOfRelativeDimension (hx : Order.coheight x = p) :
     SmoothOfRelativeDimension (dim X.left - p)
       ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫ cycleComponentι X.left x ≫ X.hom) := by

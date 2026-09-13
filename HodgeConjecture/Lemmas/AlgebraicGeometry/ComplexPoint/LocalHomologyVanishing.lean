@@ -15,7 +15,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
 The compressed-chart map is an isomorphism in every local-homology degree, by
 neighborhood excision. Euclidean local homology vanishing therefore proves concentration
 in real dimension `2*d`, and stalk exactness gives the corresponding homology-sheaf
-vanishing. No local vanishing or bounded-model data is assumed.
+vanishing.
 -/
 
 @[expose] public noncomputable section

@@ -40,9 +40,8 @@ def supportRestrictionSectionsShortComplex (V : Opens X)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Evaluation on every open set preserves this particular localization sequence
-for injective coefficients. This does not assert that evaluation is exact in
-general. -/
+/-- For injective coefficients, evaluation on every open set preserves this localization
+sequence. -/
 private lemma supportRestrictionSectionsShortComplex_shortExact (V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) [Injective F] :
     (supportRestrictionSectionsShortComplex X U V F).ShortExact where

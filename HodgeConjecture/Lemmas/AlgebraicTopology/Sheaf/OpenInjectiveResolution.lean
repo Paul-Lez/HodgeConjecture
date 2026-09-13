@@ -23,8 +23,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{0}) (U : Opens X) (A : AddCommGrpCat.{0})
 
-/-- Restrict the ambient injective resolution termwise. It is flasque, but no
-assertion that its terms are injective on the subspace is required. -/
+/-- Restrict the ambient injective resolution termwise. The restriction is flasque. -/
 def restrictedAmbientConstantResolution :
     CochainComplex (Sheaf AddCommGrpCat.{0} (TopCat.of U)) ℕ :=
   ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex (.up ℕ)).obj
@@ -99,8 +98,8 @@ def ambientToOpenInjectiveResolution :
     ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).map
       (restrictedAmbientToOpenResolution X U A)
 
-/-- Global sections of the pushed-forward comparison. Its source uses the
-open restriction of the ambient resolution, not a supplied model. -/
+/-- Global sections of the pushed-forward comparison. Its source is the open restriction of the
+ambient resolution. -/
 def globalRestrictedAmbientToOpenResolution :
     ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
       (.up ℕ)).obj

@@ -120,8 +120,8 @@ noncomputable def overOpen (U : X.left.Opens) : Set (Point R X) :=
 
 /-- An `R`-point whose underlying scheme point lies in `U`.
 
-Using this subtype is preferable whenever a local regular function is evaluated: it records the
-domain condition in the type instead of assigning an arbitrary value outside `U`. -/
+The domain condition is carried by the type, so a regular function on `U` can be evaluated at
+such a point. -/
 abbrev OverOpen (U : X.left.Opens) := {z : Point R X // z.underlying ∈ U}
 
 /--

@@ -158,8 +158,8 @@ lemma globalRawSingularCochainComplexIso_hom_f_apply (n : ℕ)
     (globalRawSingularCochainComplexIso R X).hom.f n x = x :=
   rfl
 
-/-- The singular-cochain presheaf complex after applying the first plus construction degreewise.
-This is a complex of presheaves, not a complex of sheaves. -/
+/-- The singular-cochain presheaf complex after applying the first plus construction
+degreewise. Its terms are presheaves. -/
 def singularCochainPlusPresheafComplex :
     CochainComplex (TopCat.Presheaf AddCommGrpCat X) ℕ :=
   ((Opens.grothendieckTopology X).plusFunctor AddCommGrpCat).mapHomologicalComplex

@@ -14,7 +14,7 @@ public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalCha
 The derivative projection here comes from lifted algebraic coordinate sections. The normal
 chart is then constructed by the inverse function theorem. Finally the topological
 embedding theorem excludes remote branches and identifies the whole local analytic support
-with zero normal coordinate. No analytic immersion or flattening equivalence is supplied.
+with zero normal coordinate.
 -/
 
 @[expose] public noncomputable section
@@ -185,9 +185,8 @@ def closedImmersionFlatteningChart :
       (localChart Y m z z, 0) :=
   closedImmersionNormalChart_symm_center X Y i m d z
 
-/-- Identifying the normal space with standard complex coordinates uses only its
-proved complex dimension. This is a complex-linear coordinate choice, not a choice of
-homology generator or an orientation class. -/
+/-- A complex-linear identification of the normal space with standard complex coordinates,
+determined by its complex dimension. -/
 def closedImmersionNormalKernelEquiv :
     (closedImmersionDerivativeProjection X Y i m d z).ker ≃L[ℂ]
       (Fin (d - m) → ℂ) :=

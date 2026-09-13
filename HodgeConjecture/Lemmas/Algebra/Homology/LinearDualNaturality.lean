@@ -135,8 +135,7 @@ lemma linearDualHomologyEquiv_class_apply_class (S : ShortComplex (ModuleCat.{u}
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The constructed universal-coefficient equivalence is natural, not merely an
-abstract isomorphism between vector spaces of the same dimension. -/
+/-- The universal-coefficient equivalence is natural in the complex. -/
 theorem linearDualHomologyEquiv_naturality
     {S T : ShortComplex (ModuleCat.{u} R)} (f : S ⟶ T)
     (alpha : T.linearDual.homology) :

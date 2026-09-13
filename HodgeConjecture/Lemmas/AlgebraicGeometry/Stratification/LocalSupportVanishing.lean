@@ -129,10 +129,9 @@ theorem cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
         ((ambientRationalInjectiveComplex X).X (q : ℤ)) inf_le_right
 
 include hx in
-/-- The exact open-layer section complex needed by finite support localization has
-zero cohomology below `2(p+1)`. The resolution remains the one on the original
-projective ambient variety; no injective resolution on a projective auxiliary open
-is assumed. -/
+/-- The exact open-layer section complex needed by finite support localization has zero
+cohomology below `2(p+1)`. The resolution remains the one on the original projective ambient
+variety. -/
 theorem cycleComponentSingularLayerSectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))

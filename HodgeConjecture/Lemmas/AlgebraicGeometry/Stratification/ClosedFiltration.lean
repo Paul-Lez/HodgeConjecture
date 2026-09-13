@@ -70,7 +70,7 @@ theorem reducedSmoothClosedFiltration_layer (S : Closeds X) (k : ℕ) :
 
 variable [PerfectField K] [NoetherianSpace X]
 
-/-- The terminal index is the finite list length, not supplied termination data. -/
+/-- The terminal index is the length of the finite list. -/
 theorem reducedSmoothClosedFiltration_length (S : Closeds X) :
     reducedSmoothClosedFiltration f S (reducedSmoothStratification f S).length = ⊥ := by
   induction S using (wellFounded_lt (α := Closeds X)).induction with

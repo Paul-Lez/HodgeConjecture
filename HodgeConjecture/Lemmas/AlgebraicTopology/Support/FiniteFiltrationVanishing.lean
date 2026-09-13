@@ -75,8 +75,7 @@ theorem supportedSections_top_homology_isZero (W : Opens X)
 
 variable {U V : Opens X} (h : V ≤ U)
 
-/-- Flasqueness suffices for the nested-support sequence to be short exact
-on every open. Injectivity is not required. -/
+/-- Flasqueness suffices for the nested-support sequence to be short exact on every open. -/
 theorem nestedSupportRestrictionSectionsShortComplex_shortExact_of_flasque
     (W : Opens X) (F : Sheaf AddCommGrpCat.{u} X) [F.IsFlasque] :
     ((nestedSupportRestrictionShortComplex X h F).map (supportEvaluation X W)).ShortExact := by

@@ -57,8 +57,7 @@ def nestedSupportRestrictionTargetIso (F : Sheaf AddCommGrpCat.{u} X) :
   F.obj.mapIso (eqToIso (congrArg op
     ((openRestrictionImage_top X V).trans (openRestrictionImage_eq_of_le X h).symm)))
 
-/-- The comparison of the two restriction arrows is the presheaf
-restriction square, not a comparison supplied on cohomology. -/
+/-- The comparison of the two restriction arrows is the presheaf restriction square. -/
 @[reassoc]
 theorem nestedSupportRestrictionTargetIso_square (F : Sheaf AddCommGrpCat.{u} X) :
     (((openRestrictionPushforwardMap X h).app F).hom.app (op ⊤)) ≫

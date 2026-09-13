@@ -14,10 +14,8 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectivePa
 
 The generic supported singular/injective comparison is specialized using the
 constructed analytic contractible neighborhoods and hereditary paracompactness
-of smooth projective analytifications. Only the geometric scheme hypotheses
-remain: no purity, fundamental class, or comparison equivalence is an input.
-The target is the ambient injective complex used by the derived
-rational support comparison.
+of smooth projective analytifications. Only the geometric scheme hypotheses remain. The target
+is the ambient injective complex used by the derived rational support comparison.
 -/
 
 @[expose] public noncomputable section
@@ -30,7 +28,7 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec (.of ℂ)))
   [IsIntegral X.left] [Smooth X.hom]
 
-/-- Its supported version for any open complement, not just a smooth support. -/
+/-- Its supported version, for any open complement. -/
 def complexSupportedSingularToAmbientInjective
     (U : Opens (ComplexPoint X)) :
     supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U ⟶

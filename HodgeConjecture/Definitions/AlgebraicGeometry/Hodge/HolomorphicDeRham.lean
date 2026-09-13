@@ -37,8 +37,7 @@ restriction of forms and commutes with the exterior derivative.
 
 Constant complex-valued functions define a canonical morphism from the constant sheaf complex to
 the holomorphic de Rham complex. Both complexes are also extended by zero to integer degrees for
-use in the derived category. No differential forms, differentials, or comparison maps are supplied
-as data.
+use in the derived category.
 -/
 
 @[expose] public noncomputable section
@@ -318,9 +317,8 @@ def constantComplexSheaf :
 
 /-- Complex conjugation on the constant complex presheaf.
 
-Conjugation is a ring automorphism of `ℂ`, so it acts on the constant complex sheaf exactly the
-way a scalar does; unlike a scalar it is only additive over `ℂ`, which is what makes the induced
-map on cohomology conjugate-linear rather than linear. -/
+Conjugation is a ring automorphism of `ℂ` that is additive but not `ℂ`-linear, so the induced
+map on cohomology is conjugate-linear. -/
 def conjConstantComplexPresheaf :
     constantComplexAddCommGrpPresheaf X ⟶
       constantComplexAddCommGrpPresheaf X where
@@ -522,8 +520,8 @@ def conjConstantComplexComplex :
 
 /-- Complex conjugation on the integer-indexed constant complex-valued complex.
 
-The holomorphic de Rham complex carries no such map: conjugation is not `ℂ`-linear, so it exists
-only on the constant-sheaf side of the comparison. -/
+Conjugation is not `ℂ`-linear, so it lives on the constant-sheaf side of the comparison and not
+on the holomorphic de Rham complex. -/
 def conjConstantComplexSheafComplexInt :
     constantComplexSheafComplexInt X ⟶ constantComplexSheafComplexInt X :=
   HomologicalComplex.extendMap (conjConstantComplexComplex X)

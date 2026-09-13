@@ -33,8 +33,7 @@ computes the hypercohomology of that resolution on a hereditarily paracompact Ha
 
 The derived comparison uses a bounded-below termwise-injective replacement. The mapping-cone
 argument in `Sheaf.FlasqueQuasiIso` proves that its quasi-isomorphism remains a
-quasi-isomorphism after taking global sections. Thus no spectral sequence or acyclic-resolution
-theorem is assumed.
+quasi-isomorphism after taking global sections.
 -/
 
 @[expose] public noncomputable section

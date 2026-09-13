@@ -32,9 +32,8 @@ namespace mappingCocone
 
 variable (S : ShortComplex (CochainComplex C ℤ))
 
-/-- The explicit rotated-cone comparison, before shifting back to the homotopy
-fiber. It is built from canonical chain maps, not from a choice of a completion
-of a morphism of distinguished triangles. -/
+/-- The explicit rotated-cone comparison, before shifting back to the homotopy fiber. It is
+built from canonical chain maps. -/
 def shiftedLiftShortComplex : S.X₁⟦(1 : ℤ)⟧ ⟶ mappingCone S.g :=
   (mappingCone.rotateHomotopyEquiv S.f).hom ≫
     mappingCone.map (mappingCone.inr S.f) S.g (𝟙 _)

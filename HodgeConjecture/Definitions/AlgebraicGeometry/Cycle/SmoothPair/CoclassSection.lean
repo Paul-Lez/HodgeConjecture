@@ -107,8 +107,8 @@ def smoothClosedSupportCoclassStalk (x : ComplexPoint X) :
         mem_smoothClosedSupportChartOpen X Y i m d hxS.choose)
   else 0
 
-/-- The normalized germ family agrees with every chart, including at points
-outside the support. This supplies local coherence as a theorem, not as data. -/
+/-- The normalized germ family agrees with every chart, including at points outside the
+support. -/
 theorem smoothClosedSupportCoclassStalk_eq_chartGerm
     (z : ComplexPoint Y) (x : ComplexPoint X)
     (hx : x ∈ smoothClosedSupportChartOpen X Y i m d z) :

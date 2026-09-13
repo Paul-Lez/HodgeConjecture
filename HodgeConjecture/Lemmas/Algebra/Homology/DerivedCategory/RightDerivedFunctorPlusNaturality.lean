@@ -44,8 +44,8 @@ theorem mapHomotopyCategoryPlus_comp (α : F ⟶ G) (β : G ⟶ H) :
 
 variable [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
 
-/-- The transformation of the bounded-below right derived functors, obtained
-from the universal property, not supplied as an extra comparison datum. -/
+/-- The transformation of the bounded-below right derived functors, obtained from the derived
+universal property. -/
 def rightDerivedFunctorPlus (α : F ⟶ G) :
     F.rightDerivedFunctorPlus ⟶ G.rightDerivedFunctorPlus :=
   Functor.rightDerivedNatTrans F.rightDerivedFunctorPlus G.rightDerivedFunctorPlus

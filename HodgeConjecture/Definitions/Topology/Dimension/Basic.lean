@@ -32,8 +32,7 @@ lengths of chains of irreducible closed subsets.
 
 Truncating to `ℕ` collapses the two degenerate values of `topologicalKrullDim`: the empty space,
 which the `IrreducibleSpace` hypothesis rules out, and infinite-dimensional spaces, which come out
-as `0`. Irreducibility also makes this *the* dimension of the space, rather than the maximum of the
-dimensions of its irreducible components. -/
+as `0`. Irreducibility also makes this *the* dimension of the space. -/
 @[expose, nolint unusedArguments]
 def dim (X : Type*) [TopologicalSpace X] [IrreducibleSpace X] : ℕ :=
   ((topologicalKrullDim X).unbotD 0).toNat

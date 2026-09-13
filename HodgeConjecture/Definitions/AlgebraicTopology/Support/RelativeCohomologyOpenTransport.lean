@@ -94,8 +94,8 @@ def supportRelativeCohomologySectionOpenImage (n : ℕ)
     (supportRelativeCohomologySheaf X S n).obj.obj (op (hf.functor.obj ⊤)) :=
   (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op ⊤) s
 
-/-- Transport to a specified ambient open equal to the image. The final
-identification is the unique open inclusion, not an arbitrary section equivalence. -/
+/-- Transport to a specified ambient open equal to the image, along the unique open
+inclusion. -/
 def supportRelativeCohomologySectionOnOpen (n : ℕ) (U : Opens X)
     (hU : hf.functor.obj ⊤ = U)
     (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤)) :

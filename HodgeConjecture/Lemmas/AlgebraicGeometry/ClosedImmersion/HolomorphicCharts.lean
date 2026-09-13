@@ -58,8 +58,8 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- At every selected ambient source point, the underlying normal coordinate change and
-its inverse are analytic, not only at the initially distinguished center. -/
+/-- The underlying normal coordinate change and its inverse are analytic at every ambient
+source point. -/
 private theorem closedImmersionHolomorphicFlatteningChart_analytic (y : ComplexPoint X)
     (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     AnalyticAt ℂ (closedImmersionNormalCoordinateChange X Y i m d z)

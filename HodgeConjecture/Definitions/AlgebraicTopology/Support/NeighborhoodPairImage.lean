@@ -9,9 +9,9 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSu
 # Transporting neighborhood-support pairs through embeddings
 
 An embedding identifies a neighborhood and its support complement with their
-images. Only equality of support membership on that neighborhood is required; no
-cohomology comparison is supplied. Open embeddings therefore transport the cofinal
-normal neighborhoods of auxiliary algebraic opens to the original ambient space.
+images. Only equality of support membership on that neighborhood is required. Open embeddings
+therefore transport the cofinal normal neighborhoods of auxiliary algebraic opens to the original
+ambient space.
 -/
 
 @[expose] public noncomputable section

@@ -42,8 +42,7 @@ open AlgebraicTopology.Singular
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- The presheaf homology of the underlying complex. This is not defined
-as evaluation of the cohomology sheaf, since that evaluation is not exact. -/
+/-- Degree-`n` homology of the presheaf complex underlying `K`. -/
 def sectionCohomologyPresheaf (n : ℤ) : Presheaf AddCommGrpCat.{u} X :=
   (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).homology n
 

@@ -64,9 +64,8 @@ theorem analyticAt_inclusionInComplexCharts (z : ComplexPoint Y) :
   rw [(localChart Y m z).left_inv (mem_localChart_source Y m z)]
   exact mem_localChart_source X d (Point.map i z)
 
-/-- A smooth closed immersion has an analytic local left inverse in complex
-coordinates. It is constructed by lifting the intrinsic coordinate sections, not assumed
-from an analytic-immersion structure. -/
+/-- A smooth closed immersion has an analytic local left inverse in complex coordinates,
+obtained by lifting the intrinsic coordinate sections. -/
 theorem exists_analytic_localLeftInverse_of_isClosedImmersion [IsClosedImmersion i.left]
     (z : ComplexPoint Y) :
     ∃ L : (Fin d → ℂ) → (Fin m → ℂ),

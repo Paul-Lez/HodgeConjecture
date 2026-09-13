@@ -47,8 +47,8 @@ theorem supportedOutsideInclusion_restrict_intersection :
     ((toOpenRestrictionPushforward X U).app F).hom.app (op V) = 0 at h
   rw [h, zero_comp]
 
-/-- A section zero on the intersection lifts into the supported-section kernel.
-The proof uses its canonical on-open kernel comparison, not a chosen support lift. -/
+/-- A section zero on the intersection lifts into the supported-section kernel, along the
+canonical on-open kernel comparison. -/
 theorem exists_supportedOutsideSection_of_restrict_eq_zero
     (s : F.obj.obj (op V))
     (hs : F.obj.map (homOfLE (inf_le_left : V ⊓ U ≤ V)).op s = 0) :

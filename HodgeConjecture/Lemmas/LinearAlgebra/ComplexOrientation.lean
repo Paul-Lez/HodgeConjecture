@@ -58,9 +58,8 @@ def piBasisOneI (n : ℕ) : Module.Basis (Fin (n * 2)) ℝ (Fin n → ℂ) :=
 /-- The real-coordinate identification of `Fin n → ℂ` with `Fin (n * 2) → ℝ`, listing the real
 and imaginary part of each complex coordinate consecutively.
 
-This is the coordinate map of `piBasisOneI`. It is recorded as a continuous linear equivalence so
-that continuity, linearity and `map_eq_zero_iff` all come from Mathlib rather than being reproved
-for the underlying function. -/
+This is the coordinate map of `piBasisOneI`, recorded as a continuous linear equivalence so that
+continuity, linearity and `map_eq_zero_iff` come from Mathlib. -/
 def piCoordCLE (n : ℕ) : (Fin n → ℂ) ≃L[ℝ] (Fin (n * 2) → ℝ) :=
   (piBasisOneI n).equivFunL
 

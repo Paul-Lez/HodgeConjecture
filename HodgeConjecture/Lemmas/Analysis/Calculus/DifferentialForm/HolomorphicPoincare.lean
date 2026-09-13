@@ -280,7 +280,7 @@ theorem analyticOnNhd_radialHomotopy_of_hasFPowerSeriesOnBall (n : ℕ)
     fun _ hx ↦ (radialHomotopy_eq_radialPrimitiveSeries_sum n p η hp hx).symm
 
 /-- The analytic Poincaré lemma on a complex normed-space ball. The primitive is the explicit
-radial homotopy, and no exactness assumption is used. -/
+radial homotopy. -/
 theorem exists_analyticOnNhd_primitive_on_ball_of_hasFPowerSeriesOnBall
     [FiniteDimensional ℂ E] (n : ℕ) {r : NNReal} (hr : 0 < r)
     (p : FormalMultilinearSeries ℂ E (E [⋀^Fin (n + 1)]→L[ℂ] ℂ))

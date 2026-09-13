@@ -12,9 +12,9 @@ public import Mathlib.Analysis.Calculus.FDeriv.Prod
 # The normal derivative of a support-preserving holomorphic transition
 
 Preservation of the zero-normal plane forces the tangent-to-normal derivative block to
-vanish. Differentiating the local inverse identity then constructs inverse normal
-blocks. No invertibility or orientation-preservation theorem is supplied for the normal
-map; both are consequences of the given holomorphic support-preserving coordinate transition.
+vanish. Differentiating the local inverse identity then constructs inverse normal blocks.
+Invertibility and orientation preservation of the normal map both follow from the given
+holomorphic support-preserving coordinate transition.
 -/
 
 @[expose] public noncomputable section
@@ -173,8 +173,8 @@ theorem normalTransitionMap_continuousOn :
     (fun _ hv => hv)).snd
 
 include ha hplane he hei in
-/-- The normal map preserves the exactly normalized complex class on a sufficiently
-small normal neighborhood. The inverse normal derivative is proved above, not assumed. -/
+/-- The normal map preserves the exactly normalized complex class on a sufficiently small
+normal neighborhood. -/
 theorem exists_open_normalTransition_localClass_invariance :
     ∃ (W : Set (Fin c → ℂ)) (hW : W ⊆ normalTransitionDomain c e a)
       (hne : ∀ v, v ∈ W → v ≠ 0 → normalTransitionMap c e a v ≠ 0),

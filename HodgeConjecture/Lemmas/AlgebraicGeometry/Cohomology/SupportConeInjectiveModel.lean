@@ -98,8 +98,8 @@ instance ambientRationalInjectiveCone_isKInjective
       (ambientRationalInjectiveRestriction X Z hZ)).IsKInjective :=
   CochainComplex.isKInjective_of_injective _ (-1)
 
-/-- The existing support group is computed by the global sections of this
-normalized ambient-injective cone. No smoothness assumption is needed. -/
+/-- The existing support group is computed by the global sections of this normalized
+ambient-injective cone. -/
 def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
@@ -117,9 +117,8 @@ def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
         (rationalSupportConeToAmbientInjectiveCone X Z hZ) (n - 1)).map_add α β }
   exact e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ (n - 1))
 
-/-- Compare restriction of the integer-indexed ambient resolution with
-the independently chosen complement resolution. The map/extension isomorphism
-is displayed explicitly, rather than requiring the two models to be equal. -/
+/-- Compare restriction of the integer-indexed ambient resolution with the independently chosen
+complement resolution, through an explicit map/extension isomorphism. -/
 def ambientRationalOpenResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     ((TopCat.Sheaf.openRestrictionPushforward

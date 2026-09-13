@@ -13,9 +13,8 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.Hypercohomolog
 
 The existing rational support object resolves constants on the complement
 independently of the ambient space. This file connects that model with the
-restriction of an ambient injective resolution. All comparison maps
-extend the given constant restriction, rather than choosing an abstract
-equivalence between cohomology groups.
+restriction of an ambient injective resolution. All comparison maps extend the given constant
+restriction.
 -/
 
 @[expose] public noncomputable section

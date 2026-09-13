@@ -123,8 +123,7 @@ private lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
       (Set.univ : Set (ComplexPoint X)))).map_isZero
         (isZero_sheaf_on_complement_univ X _)
 
-/-- The complex representing derived pushforward from the empty complement is itself a zero
-object, not merely acyclic. -/
+/-- The complex representing derived pushforward from the empty complement is a zero object. -/
 private lemma isZero_derivedPushforwardComplement_univ :
     IsZero (derivedPushforwardComplementConstantRationalComplexNat X
       (Set.univ : Set (ComplexPoint X))) := by

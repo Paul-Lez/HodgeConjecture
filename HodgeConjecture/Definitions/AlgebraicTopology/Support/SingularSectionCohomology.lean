@@ -65,8 +65,8 @@ def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
         ((n : ℤ) - 1)).addCommGroupIsoToAddEquiv
     |>.trans (openSingularSheafRestrictionConeCohomologyEquivRelative X (Opens.infLELeft V U) n)
 
-/-- Local supported singular cohomology computes `(V, V \ S)`, with the pair
-homeomorphism displayed explicitly rather than silently replacing an inclusion. -/
+/-- Local supported singular cohomology computes `(V, V \ S)`, through an explicit pair
+homeomorphism. -/
 def supportedRationalSingularSectionCohomologyEquivSupportComplement
     (S : Set X) (hS : IsClosed S) (V : Opens X) (n : ℕ) :
     ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj

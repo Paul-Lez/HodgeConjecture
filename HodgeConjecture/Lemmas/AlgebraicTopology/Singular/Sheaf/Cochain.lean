@@ -235,8 +235,7 @@ lemma exists_eq_constantSingularZeroCochain_of_pathConnected (U : (Opens X)ᵒ�
     (TopCat.toSSet.obj ((Opens.toTopCat X).obj U.unop)) φ hφ
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The inclusion of constant zero-cochains is a monomorphism on every stalk. The raw constant
-presheaf need not be a monomorphism on the empty open set, but that does not affect stalks. -/
+/-- The inclusion of constant zero-cochains is a monomorphism on every stalk. -/
 lemma constantsToSingularCochainZero_stalk_mono (x : X) :
     Mono ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
       (constantsToSingularCochainZero R X)) := by

@@ -36,13 +36,13 @@ import Mathlib.RingTheory.Polynomial.UniqueFactorization
 This file proves that every closed point of the reduced closure of a codimension-`p` point in a
 smooth complex `d`-fold has coheight `d - p`.  The commutative-algebra input is the
 equidimensionality of a finite-type domain over a field: every maximal ideal has height equal to
-the ring's Krull dimension.  We prove it directly from Noether normalization, incomparability,
-and going down; no catenarity or equidimensionality assertion is assumed.
+the ring's Krull dimension.  It is proved directly from Noether normalization, incomparability,
+and going down.
 
 The closed-point formula removes the small-dimensional restriction from the separate component
 and ambient coordinate package and from the resulting component-local fundamental-class
-generator.  The two coordinate systems are still independent: this file does not assert a
-simultaneous normal form for the closed immersion.
+generator.  The two coordinate systems remain independent of one another; a simultaneous normal
+form for the closed immersion is a separate statement.
 -/
 
 @[expose] public noncomputable section

@@ -19,10 +19,9 @@ The last term is explicitly the sheaf of sections on `U` vanishing on `V`,
 viewed on `X`. Thus for closed supports `S ⊆ Z`, the sequence removes `S`
 from `Z`, by taking `U = X∖S` and `V = X∖Z`.
 
-Exactness persists on every open set, since the first restriction is onto for
-injective (indeed flasque) coefficients. No local purity or dimension vanishing
-is assumed here. The resulting canonical mapping-fiber comparison is the
-algebraic localization step needed when extending over singular strata.
+Exactness persists on every open set, since the first restriction is onto for injective (indeed
+flasque) coefficients. The resulting canonical mapping-fiber comparison is the algebraic
+localization step needed when extending over singular strata.
 -/
 
 @[expose] public noncomputable section
@@ -113,8 +112,7 @@ lemma nestedSupportRestrictionShortComplex_eq (F : Sheaf AddCommGrpCat.{u} X) :
         ((toOpenRestrictionPushforward X V).app F)
         (NatTrans.congr_app (toOpenRestrictionPushforward_comp X h) F) := rfl
 
-/-- Exactness after evaluation is proved using flasqueness, not by treating
-global sections as an exact functor. -/
+/-- Exactness after evaluation, by flasqueness of the terms. -/
 lemma nestedSupportRestrictionSectionsShortComplex_shortExact (W : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) [Injective F] :
     ((nestedSupportRestrictionShortComplex X h F).map (supportEvaluation X W)).ShortExact := by

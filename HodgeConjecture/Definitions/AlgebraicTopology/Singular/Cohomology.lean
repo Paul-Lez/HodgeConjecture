@@ -111,8 +111,8 @@ abbrev relativeCochainComplexMap (R : Type u) [Field R] {X Y : TopPair.{u}} (f :
     RelativeCochainComplex R Y ⟶ RelativeCochainComplex R X :=
   HomologicalComplex.linearDualMap ((relativeChainFunctor R).map f)
 
-/-- Relative singular cohomology over a field, defined as the homology of the relative singular
-cochain complex — again by dualising the chain complex, not by dualising homology. -/
+/-- Relative singular cohomology over a field: the homology of the relative singular cochain
+complex. -/
 abbrev RelativeCohomology (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ) : ModuleCat.{u} R :=
   (RelativeCochainComplex R X).homology n
 

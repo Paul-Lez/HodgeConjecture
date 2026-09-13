@@ -134,7 +134,7 @@ lemma SmoothOfRelativeDimension.height_add_coheight_le_complex
       (f := f) (d := d)))
 
 /-- If a point of a smooth complex `d`-fold has coheight `p`, its height is at most `d - p`.
-This is the direction of the dimension formula that does not require catenarity. -/
+This is the direction of the dimension formula available without catenarity. -/
 lemma SmoothOfRelativeDimension.height_le_sub_of_coheight_eq
     [SmoothOfRelativeDimension d f] (x : X) {p : ℕ} (hx : Order.coheight x = p) :
     Order.height x ≤ d - p := by

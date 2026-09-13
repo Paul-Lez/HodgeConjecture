@@ -144,8 +144,7 @@ theorem range_cycleComponentSingularStratumClosedLift (k : ℕ) :
     exact ⟨w, (cycleComponentSingularStratumAmbientOpen X x k).ι.isOpenEmbedding.injective
       ((hf w).trans hw)⟩
 
-/-- Each layer is a closed immersion in precisely the open needed by localization,
-not in an unrelated auxiliary open. -/
+/-- Each layer is a closed immersion in precisely the open needed by localization. -/
 instance cycleComponentSingularStratumClosedLift_isClosedImmersion (k : ℕ) :
     IsClosedImmersion (cycleComponentSingularStratumClosedLift X x k) := by
   have : IsPreimmersion (cycleComponentSingularStratumClosedLift X x k ≫
@@ -287,8 +286,7 @@ theorem cycleComponentSingularAnalyticClosedFiltration_length :
   exact Set.preimage_empty
 
 omit [IsIntegral X.left] [Smooth X.hom] in
-/-- Each analytic successive difference is the complex-point image of its smooth
-stratum, not a supplied support parametrization. -/
+/-- Each analytic successive difference is the complex-point image of its smooth stratum. -/
 theorem cycleComponentSingularAnalyticClosedFiltration_layer (k : ℕ) :
     Set.range (Point.map (cycleComponentSingularFiltrationStratumOverι X x k)) =
       (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X)) \
