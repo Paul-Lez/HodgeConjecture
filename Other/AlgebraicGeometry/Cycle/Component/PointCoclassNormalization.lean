@@ -67,9 +67,9 @@ theorem cycleComponentPointClosedLift_smoothOfRelativeDimension_zero :
   simpa only [Nat.sub_self] using
     cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
 
-/-- Comparison of the auxiliary section with its old normalized point coclass.
-This is a specialization theorem about the general gluing, not its definition. -/
-theorem cycleComponentSmoothClosedLiftCoclassSection_eq_oldPoint
+/-- Comparison of the auxiliary section with its normalized point coclass. This specializes the
+general gluing to a single point. -/
+theorem cycleComponentSmoothClosedLiftCoclassSection_eq_point
     (a : ComplexPoint (cycleComponentSmoothLocusOver X x)) :
     cycleComponentSmoothClosedLiftCoclassSection X x hx =
       (letI : IsProjective (cycleComponentSmoothLocusAmbientOpenOver X x).hom := by
@@ -103,15 +103,15 @@ theorem cycleComponentSmoothClosedLiftCoclassSection_eq_oldPoint
       rfl
     exact hcast ((dim X.left) - (dim X.left)) (Nat.sub_self (dim X.left))
       (cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx)
-  rw [hsec, smoothClosedSupportCoclassSection_eq_oldPoint_of_singleton
+  rw [hsec, smoothClosedSupportCoclassSection_eq_point_of_singleton
     (cycleComponentSmoothLocusAmbientOpenOver X x)
     (cycleComponentSmoothLocusOver X x)
     (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left) a
     (cycleComponentSmoothClosedLift_range_eq_singleton X x hx a)]
   rfl
 
-/-- The generally transported original-ambient component section agrees exactly with
-the old point coclass on its actual boundary-complement open. -/
+/-- The transported original-ambient component section agrees exactly with the point coclass on
+its boundary-complement open. -/
 theorem cycleComponentSmoothSupportCoclassSection_eq_point_at_lift
     (a : ComplexPoint (cycleComponentSmoothLocusOver X x)) :
     cycleComponentSmoothSupportCoclassSection X x hx =
@@ -134,7 +134,7 @@ theorem cycleComponentSmoothSupportCoclassSection_eq_point_at_lift
     X (dim X.left) Y e (cycleComponentSupport X x) B hB y ⟨a, rfl⟩ ⊤
   dsimp only [cycleComponentSmoothSupportCoclassSection,
     supportRelativeCohomologySectionOnOpen, supportRelativeCohomologySectionOpenImage]
-  rw [cycleComponentSmoothClosedLiftCoclassSection_eq_oldPoint X x hx a]
+  rw [cycleComponentSmoothClosedLiftCoclassSection_eq_point X x hx a]
   have ht' := congrArg
     ((supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * (dim X.left))).obj.map

@@ -11,11 +11,10 @@ public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 /-!
 # Exact point comparison for the global smooth-support coclass section
 
-This is a comparison theorem, not the definition of general purity. In the
-singleton case the actual global section constructed by normal-chart gluing is
-the sheafification image of the old, exactly normalized point coclass. We also
-construct the actual closed immersion of every complex point, so the final
-point theorem takes no singleton-image or smooth-source hypothesis as input.
+In the singleton case the global section built by normal-chart gluing is the sheafification
+image of the exactly normalized point coclass. The closed immersion of every complex point is
+constructed here too, so the final point theorem takes no singleton-image or smooth-source
+hypothesis as input. General purity is defined elsewhere.
 -/
 
 @[expose] public noncomputable section
@@ -53,9 +52,9 @@ variable (X Y : Over (Spec (.of ℂ)))
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] [IsProjective X.hom]
 
-/-- The old ambient point coclass, pulled back to the literal whole-open pair,
-then sent through the actual sheafification unit. -/
-def smoothClosedOldPointCoclassSection (z : ComplexPoint Y) :
+/-- The ambient point coclass, pulled back to the whole-open pair and sent through the
+sheafification unit. -/
+def smoothClosedPointCoclassSection (z : ComplexPoint Y) :
     (smoothClosedSupportCoclassSheaf X Y i 0 d).obj.obj (op ⊤) :=
   (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
     (Set.range (Point.map i)) (2 * d)).app (op ⊤)
@@ -79,10 +78,10 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- At its distinguished point the old global coclass has exactly the germ of the
 general normal coclass, with coefficient one. -/
-theorem smoothClosedOldPointCoclassSection_germ_eq_normalCoclass
+theorem smoothClosedPointCoclassSection_germ_eq_normalCoclass
     (z : ComplexPoint Y) (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V) :
     (smoothClosedSupportCoclassSheaf X Y i 0 d).presheaf.Γgerm (Point.map i z)
-      (smoothClosedOldPointCoclassSection X Y i d z) =
+      (smoothClosedPointCoclassSection X Y i d z) =
     supportRelativeCohomologyGerm (TopCat.of (ComplexPoint X))
       (Set.range (Point.map i)) (2 * d)
       (smoothClosedSupportNeighborhood X Y i 0 d z V hzV)
@@ -107,20 +106,20 @@ theorem smoothClosedOldPointCoclassSection_germ_eq_normalCoclass
 
 omit [SmoothOfRelativeDimension 0 Y.hom] in
 /-- The old global point image vanishes off the actual closed support. -/
-theorem smoothClosedOldPointCoclassSection_germ_eq_zero
+theorem smoothClosedPointCoclassSection_germ_eq_zero
     (z : ComplexPoint Y) (x : ComplexPoint X) (hx : x ∉ Set.range (Point.map i)) :
     (smoothClosedSupportCoclassSheaf X Y i 0 d).presheaf.Γgerm x
-      (smoothClosedOldPointCoclassSection X Y i d z) = 0 :=
+      (smoothClosedPointCoclassSection X Y i d z) = 0 :=
   supportRelativeCohomologyGerm_eq_zero_of_not_mem (TopCat.of (ComplexPoint X))
     (Set.range (Point.map i)) (2 * d) (isClosed_range_map_of_closedImmersion i)
     ⊤ x (by trivial) hx _
 
-/-- Explicit singleton-case comparison: the general glued normal section agrees
-with the actual sheafification image of the old ambient point coclass. -/
-theorem smoothClosedSupportCoclassSection_eq_oldPoint_of_singleton
+/-- Explicit singleton-case comparison: the general glued normal section agrees with the
+sheafification image of the ambient point coclass. -/
+theorem smoothClosedSupportCoclassSection_eq_point_of_singleton
     (z : ComplexPoint Y) (hS : Set.range (Point.map i) = {Point.map i z}) :
     smoothClosedSupportCoclassSection X Y i 0 d =
-      smoothClosedOldPointCoclassSection X Y i d z := by
+      smoothClosedPointCoclassSection X Y i d z := by
   apply TopCat.Presheaf.section_ext (smoothClosedSupportCoclassSheaf X Y i 0 d)
   intro x _
   by_cases hx : x ∈ Set.range (Point.map i)
@@ -128,12 +127,12 @@ theorem smoothClosedSupportCoclassSection_eq_oldPoint_of_singleton
     subst x
     exact (smoothClosedSupportCoclassSection_germ_eq_normalCoclass
       X Y i 0 d z ⊤ (by trivial)).trans
-      (smoothClosedOldPointCoclassSection_germ_eq_normalCoclass
+      (smoothClosedPointCoclassSection_germ_eq_normalCoclass
         X Y i d z ⊤ (by trivial)).symm
   · exact (smoothClosedSupportCoclassSection_germ_eq_zero X Y i 0 d x hx).trans
-      (smoothClosedOldPointCoclassSection_germ_eq_zero X Y i d z x hx).symm
+      (smoothClosedPointCoclassSection_germ_eq_zero X Y i d z x hx).symm
 
-section ActualPoint
+section PointComparison
 
 variable (X : Over (Spec (.of ℂ)))
 
@@ -208,9 +207,9 @@ theorem complexPointSmoothSupportCoclassSection_eq_analyticPointLocalCoclassShea
       {Point.map z complexSpecIdentityPoint} := by
     rw [map_complexSpecIdentityPoint, range_map_complexPoint]
   change smoothClosedSupportCoclassSection X (Over.mk (𝟙 _)) z 0 d = _
-  rw [smoothClosedSupportCoclassSection_eq_oldPoint_of_singleton
+  rw [smoothClosedSupportCoclassSection_eq_point_of_singleton
     X (Over.mk (𝟙 _)) z d complexSpecIdentityPoint hS]
-  dsimp only [smoothClosedOldPointCoclassSection, analyticPointLocalCoclassSheafSection]
+  dsimp only [smoothClosedPointCoclassSection, analyticPointLocalCoclassSheafSection]
   apply congrArg ((supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
     (Set.range (Point.map z)) (2 * d)).app (op ⊤))
   let f : Set.range (Point.map z) → RelativeCohomology ℚ
@@ -228,6 +227,6 @@ theorem complexPointSmoothSupportCoclassSection_eq_analyticPointLocalCoclassShea
   have hh := congrArg f heq
   exact hh
 
-end ActualPoint
+end PointComparison
 
 end AlgebraicGeometry.ComplexPoint

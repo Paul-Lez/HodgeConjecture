@@ -137,7 +137,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
   let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤
     (ambientRationalInjectiveComplex X)
   let b := ambientRationalInjectiveRestriction X Z hZ
-  let c := actualSupportConeToAmbientInjectiveGlobalCone X Z hZ
+  let c := supportConeToAmbientInjectiveGlobalCone X Z hZ
   let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
   let e := CochainComplex.mappingCone.mapHomologicalComplexIso b Γ
   let y := rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x
@@ -149,7 +149,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
         ((Γ.mapHomologicalComplex (.up ℤ)).map b)).mor₃ (n - 1) n (by omega) =
       H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) := by
     change (H.shift (n - 1)).map c ≫ _ = _
-    rw [← Functor.shiftMap_comp', actualSupportConeToAmbientInjectiveGlobalCone_connecting]
+    rw [← Functor.shiftMap_comp', supportConeToAmbientInjectiveGlobalCone_connecting]
   have hc' : inv (HomologicalComplex.homologyMap c (n - 1)) ≫
       H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) =
       H.shiftMap (CochainComplex.mappingCone.triangle
