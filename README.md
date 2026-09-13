@@ -26,28 +26,7 @@ The remaining content of the project is sorted into four folders:
 
 - `HodgeConjecture/Mathlib`: Content that is on track to be upstreamed to Mathlib;
 - `HodgeConjecture/Definitions`: Definitions used in the statement of the conjecture;
-- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions. If these aren't used in `Lemmas` then they should go in `Other`;
+- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions. If these aren't used in `Lemmas` then they should go in `Other`. This folder can also contain definitions that are only used to in *proofs* of theorems that are needed to state the conjecture;
 - `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
-
-The dividing line is `HodgeConjecture/Statement.lean`: a module belongs in `Definitions` if it
-defines something the statement mentions, in `Lemmas` if it is needed only to build such a
-definition (in principle), and in `Other` otherwise. In particular nothing in `Other` should be reachable from the
-statement. Two checks for this:
-
-- `lake build` builds `scripts/CheckStatementImports.lean`, which imports the statement and fails if
-  the resulting environment contains any module of `Other`;
-- `python3 scripts/check_import_layers.py` checks the converse — that every module of `Definitions`,
-  `Lemmas` and `Mathlib` really is used by the statement — plus that both umbrella modules are
-  complete, and that every source path the Verso guide names in prose still exists.
-
-"Used in the statement" is sharper than "reachable from the statement". Checking that the statement
-says what it should means unfolding the definitions it mentions, and the definitions those mention,
-and so on — and that descent stops at every proof, because a proof is interchangeable with any other
-proof of the same `Prop`. So a definition the statement reaches *only* through a proof never has to
-be read, however much the construction is needed to make the statement typecheck, and it belongs in
-`Lemmas`. `lake env lean scripts/PropOnlyDefinitions.lean` lists the definitions of `Definitions`
-that are in that position; it is a report rather than a check, because a proof-only definition
-sometimes has to stay where it is, namely when a lemma whose *statement* the reader does have to
-inspect is proved with it.
 
 WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
