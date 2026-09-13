@@ -25,23 +25,17 @@ import Mathlib.LinearAlgebra.Dual.Lemmas
 /-!
 # The linear dual of a complex of modules
 
-This file dualises complexes of modules over a commutative ring. Applying the dual degreewise
-turns a nonnegatively graded chain complex into a cochain complex, whose degree-`n` short complex
-is the reversed dual of the original one. Duality is contravariantly functorial for maps,
-isomorphisms, chain homotopies and chain-homotopy equivalences, so all of these transport to the
-dual cochain complex. None of that needs more than a commutative ring, and it is all stated over
-one: the cochain complexes that carry singular cohomology are built here.
+Applying the dual degreewise turns a nonnegatively graded chain complex into a cochain complex,
+whose degree-`n` short complex is the reversed dual of the original one. Duality is
+contravariantly functorial for maps, isomorphisms, chain homotopies and chain-homotopy
+equivalences, so all of these transport to the dual cochain complex. That much holds over a
+commutative ring.
 
-Over a *field* there is more: the reversed algebraic-dual short complex of a short complex has
-homology canonically linearly equivalent to the dual of the original homology. This is the
-universal-coefficient identification `linearDualHomologyEquiv`, and no finite-dimensionality
-hypothesis is needed for it — but a field is genuinely needed, since the proof extends a
-functional from a subspace (`Subspace.dualLift`) and dualises an exactness statement
-(`LinearMap.range_dualMap_eq_dualAnnihilator_ker`). Over a general ring the comparison map still
-exists (`dualHomologyComparisonExplicit`) but is neither injective nor surjective in general: that
-is the `Ext` term of the universal coefficient theorem. Each namespace below is therefore split
-into a `CommRing` section and a `Field` section, and a declaration's section says exactly how much
-of the coefficients it uses.
+Over a field the homology of the reversed dual is canonically the dual of the homology, with no
+finite-dimensionality hypothesis: this is `linearDualHomologyEquiv`. Over a ring the comparison
+map `dualHomologyComparisonExplicit` still exists but need not be bijective, which is the `Ext`
+term of the universal coefficient theorem. Each namespace below is split into a `CommRing` section
+and a `Field` section accordingly.
 -/
 
 @[expose] public noncomputable section
@@ -147,9 +141,7 @@ lemma dualHomologyComparisonExplicit_injective
       exact ⟨η, Subtype.ext hη⟩
 
 /-- Universal coefficients for a short complex of vector spaces: the homology of its reversed
-dual is canonically linearly equivalent to the dual of its homology.
-
-This is the one place a field is used rather than a commutative ring. -/
+dual is canonically linearly equivalent to the dual of its homology. -/
 def linearDualHomologyEquiv (S : ShortComplex (ModuleCat.{u} R)) :
     S.linearDual.homology ≃ₗ[R] Module.Dual R S.homology :=
   S.linearDual.moduleCatHomologyIso.toLinearEquiv.trans <|
@@ -233,10 +225,7 @@ section Field
 variable {R : Type u} [Field R]
 
 /-- Universal coefficients for a complex of vector spaces: the degree-`n` cohomology of the
-linear-dual cochain complex is canonically the linear dual of the degree-`n` homology.
-
-Over a general commutative ring this fails: the comparison map is still defined, but the
-universal coefficient theorem has an `Ext` term. -/
+linear-dual cochain complex is canonically the linear dual of the degree-`n` homology. -/
 def linearDualHomologyEquiv (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
     K.linearDualCochainComplex.homology n ≃ₗ[R] Module.Dual R (K.homology n) :=
   (ShortComplex.homologyMapIso (linearDualCochainComplexScIso K n)).toLinearEquiv.trans

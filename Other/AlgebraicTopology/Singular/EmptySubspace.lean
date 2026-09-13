@@ -105,8 +105,7 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicTopology.Singular
 
-/-! Pairing the whole-support equivalence against homology is a universal-coefficient statement,
-so the next lemma is the one result here that needs the coefficients to be a field. -/
+/-! The next lemma is a universal-coefficient statement, so it needs a field. -/
 
 variable (R : Type u) [Field R] (X : TopCat.{u})
 

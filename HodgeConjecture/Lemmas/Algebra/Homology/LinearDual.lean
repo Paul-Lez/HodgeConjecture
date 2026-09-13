@@ -40,10 +40,7 @@ namespace CategoryTheory.ShortComplex
 variable {R : Type u} [CommRing R]
 
 /-- Dualising a splitting of a short complex of modules gives a splitting of the reversed dual
-short complex: the retraction and the section simply swap roles.
-
-Unlike exactness, splitness survives dualisation over an arbitrary commutative ring, so this is
-the tool that replaces `ShortComplex.dual_range_eq_ker_of_exact` away from fields. -/
+short complex: the retraction and the section swap roles. -/
 def Splitting.linearDual {S : ShortComplex (ModuleCat.{u} R)} (h : S.Splitting) :
     S.linearDual.Splitting where
   r := ModuleCat.ofHom h.s.hom.dualMap

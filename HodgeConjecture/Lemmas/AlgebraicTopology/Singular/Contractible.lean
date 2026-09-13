@@ -103,17 +103,13 @@ lemma singularChainComplex_exactAt_of_contractible
   exact singularChainComplexFunctor_exactAt_of_totallyDisconnectedSpace
     (ModuleCat.{u} R) n (ModuleCat.of R R) (TopCat.of (ULift.{u} Unit)) hn
 
-/-- Positive-degree singular cochains of a contractible space are exact.
-
-Dualising the homotopy equivalence with a point, rather than dualising exactness of the chain
-complex, keeps this true over an arbitrary commutative ring. -/
+/-- Positive-degree singular cochains of a contractible space are exact. -/
 lemma singularCochainComplex_exactAt_of_contractible
     (X : Type u) [TopologicalSpace X] [ContractibleSpace X] (n : ℕ) :
     HomologicalComplex.ExactAt
       ((((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj
         (TopCat.of X)).linearDualCochainComplex) (n + 1) := by
-  -- `C_*(X)` is chain homotopy equivalent to the coefficients placed in degree zero: contract
-  -- `X` to a point, then use Mathlib's calculation of the chains of a totally disconnected space.
+  -- `C_*(X)` is chain homotopy equivalent to the coefficients placed in degree zero.
   let e := HomologicalComplex.linearDualHomotopyEquiv
     ((contractibleSingularChainHomotopyEquiv R X).trans <|
       (HomotopyEquiv.ofIso (singularChainComplexFunctorIsoOfTotallyDisconnectedSpace
@@ -129,8 +125,8 @@ lemma singularCochainComplex_exactAt_of_contractible
     ModuleCat.subsingleton_of_isZero h
   exact ModuleCat.isZero_of_subsingleton (M := ModuleCat.of R (Module.Dual R _))
 
-/-- Exactness of the singular cochain complex of a contractible space, in the concrete form that
-every closed cochain in positive degree is a coboundary. -/
+/-- Exactness of the singular cochain complex of a contractible space, in range-equals-kernel
+form. -/
 lemma singularChain_dual_range_eq_ker_of_contractible
     (X : Type u) [TopologicalSpace X] [ContractibleSpace X] (n : ℕ) :
     LinearMap.range

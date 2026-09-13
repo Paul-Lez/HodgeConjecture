@@ -28,11 +28,8 @@ import Mathlib.LinearAlgebra.Dual.Lemmas
 # Flasqueness of open singular cochains
 
 Restriction of a singular cochain to an open subset is surjective: the inclusion on singular
-chains is a *split* injection — the singular simplices of the smaller open set are a subset of
-those of the larger one, so the remaining basis elements can be sent to zero — and the dual of a
-split injection is surjective. Consequently, the presheaf of singular cochains in each fixed
-degree is flasque, over an arbitrary commutative ring of coefficients rather than only over a
-field.
+chains is a split injection, and the dual of a split injection is surjective. Consequently, the
+presheaf of singular cochains in each fixed degree is flasque.
 
 The extension may be chosen linearly. We also identify the cochains on the top open set with the
 ordinary singular cochains of the ambient space. These statements concern the presheaf before
@@ -67,8 +64,7 @@ lemma openSingularChainMap_injective {U V : Opens X} (i : U ⟶ V) (n : ℕ) :
   exact Functor.map_mono (HomologicalComplex.eval (ModuleCat R) _ n)
     ((openSingularChainComplexFunctor R X).map i)
 
-/-- Inclusion of open subsets induces a split monomorphism on singular chains in each degree:
-a singular simplex of the larger open set either lies in the smaller one or is sent to zero. -/
+/-- Inclusion of open subsets induces a split monomorphism on singular chains in each degree. -/
 lemma openSingularChainMap_isSplitMono {U V : Opens X} (i : U ⟶ V) (n : ℕ) :
     IsSplitMono (((openSingularChainComplexFunctor R X).map i).f n) :=
   let _ : Mono ((Opens.toTopCat X).map i) :=

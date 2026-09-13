@@ -47,8 +47,8 @@ than a commutative ring.
 Over a *field* the universal coefficient theorem does identify cohomology with the dual of
 homology; that identification is recorded as `cohomologyEquivDualHomology` (and
 `relativeCohomologyEquivDualHomology`) rather than being taken as the definition, so every
-statement that pairs a cohomology class with a homology class goes through it explicitly — and
-those are exactly the statements that still carry a `Field` hypothesis.
+statement that pairs a cohomology class with a homology class goes through it explicitly. Those
+are the statements that still carry a `Field` hypothesis.
 
 For a topological pair `A ⊆ X`, the relative chain complex is the cokernel of the actual chain map
 `C_*(A) ⟶ C_*(X)`; the relative cochain complex is its dual, and relative cohomology is again the

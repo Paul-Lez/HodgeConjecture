@@ -27,11 +27,8 @@ universe u
 
 variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
-/-- A linear choice of extension of cochains along an inclusion of open subsets: precompose with
-the retraction that kills every singular simplex not contained in the smaller open set.
-
-Extending through a chosen retraction, rather than splitting the surjection abstractly, is what
-makes this work over a commutative ring: the dual of the chains is not projective in general. -/
+/-- A linear choice of extension of cochains along an inclusion of open subsets, given by
+precomposing with the retraction of the inclusion on chains. -/
 noncomputable def openSingularCochainExtension
     {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (n : ℕ) :
     OpenCochains R X V n →ₗ[R] OpenCochains R X U n :=

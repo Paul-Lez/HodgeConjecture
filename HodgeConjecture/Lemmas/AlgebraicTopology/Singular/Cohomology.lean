@@ -250,11 +250,7 @@ lemma relativeChainMap_mono (R : Type u) [CommRing R] (X : TopPair.{u}) :
   apply Functor.map_mono
 
 /-- The singular-chain map of a topological-pair inclusion is a split monomorphism in every
-degree: the singular simplices of the subspace are a subset of those of the ambient space, so the
-remaining ones can be sent to zero.
-
-This is strictly stronger than `relativeChainMap_mono`, and it is what survives dualisation over a
-commutative ring. -/
+degree. -/
 lemma relativeChainMap_isSplitMono (R : Type u) [CommRing R] (X : TopPair.{u}) (n : ℕ) :
     IsSplitMono (((chainPairFunctor R).obj X).hom.f n) :=
   let _ : Mono X.hom := (TopCat.mono_iff_injective X.hom).mpr X.prop.injective

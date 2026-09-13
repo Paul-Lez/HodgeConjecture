@@ -35,11 +35,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-/-- Homotopic maps induce equal pullbacks on singular cohomology.
-
-This is proved at cochain level — a topological homotopy gives a chain homotopy, which dualises
-to a cochain homotopy — rather than by transporting the homology statement across universal
-coefficients, so it holds over a commutative ring and not just over a field. -/
+/-- Homotopic maps induce equal pullbacks on singular cohomology. -/
 theorem cohomologyMap_eq_of_homotopy
     (R : Type u) [CommRing R] {X Y : TopCat.{u}} (n : ℕ)
     {f g : X ⟶ Y} (H : TopCat.Homotopy f g) :

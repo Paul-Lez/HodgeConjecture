@@ -34,10 +34,8 @@ universe u
 namespace AlgebraicTopology.Singular
 variable (R : Type u) [CommRing R]
 
-/-- A degreewise splitting of the dual cochain sequence.
-
-In nonnegative degrees this is the dual of the splitting of the chain sequence of the pair; in
-negative degrees every term is zero. No projectivity or finite-dimensionality is involved. -/
+/-- A degreewise splitting of the dual cochain sequence: the dual of the splitting of the chain
+sequence in nonnegative degrees, and zero in negative degrees. -/
 noncomputable def relativeDualCochainDegreewiseSplitting (X : TopPair.{u}) (z : ℤ) :
     ((relativeDualCochainShortComplexInt R X).map
       (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z)).Splitting := by

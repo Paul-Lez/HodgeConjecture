@@ -22,11 +22,9 @@ theorem LinearMap.dualMap_sub {R M₁ M₂ : Type*} [CommRing R] [AddCommGroup M
     (f - g).dualMap = f.dualMap - g.dualMap := by
   rw [LinearMap.dualMap_def, LinearMap.dualMap_def, LinearMap.dualMap_def, map_sub]
 
-/-- The dual of a split injection is surjective: a functional on the source is extended by
-precomposing with a retraction.
-
-Over a field every injection splits, which is `LinearMap.dualMap_surjective_of_injective`; over a
-general ring the splitting has to be supplied. -/
+/-- The dual of a split injection is surjective: extend a functional by precomposing with the
+retraction. Over a field use `LinearMap.dualMap_surjective_of_injective`, which needs no
+splitting. -/
 theorem LinearMap.dualMap_surjective_of_comp_eq_id {R M₁ M₂ : Type*} [CommSemiring R]
     [AddCommMonoid M₁] [Module R M₁] [AddCommMonoid M₂] [Module R M₂]
     {f : M₁ →ₗ[R] M₂} {g : M₂ →ₗ[R] M₁} (h : g.comp f = LinearMap.id) :

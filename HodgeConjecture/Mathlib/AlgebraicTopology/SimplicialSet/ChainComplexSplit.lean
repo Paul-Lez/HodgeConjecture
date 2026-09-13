@@ -19,20 +19,12 @@ public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.Basic
 public import Mathlib.AlgebraicTopology.SingularHomology.Basic
 
 /-!
-# Simplicial chains of an injection of simplicial sets are a split monomorphism
+# Split monomorphisms of simplicial chains
 
 Simplicial `n`-chains are a coproduct of copies of the coefficient object indexed by the
-`n`-simplices, so a map of simplicial sets that is injective on `n`-simplices induces a map on
-`n`-chains that is not merely a monomorphism but a *split* one: retract by sending the summand of
-a simplex in the image to the summand of its unique preimage, and every other summand to zero.
-
-This is what makes cochain-level constructions work over an arbitrary coefficient ring. Being a
-split monomorphism is preserved by every functor, in particular by `Module.Dual`, whereas a bare
-monomorphism only dualises to an epimorphism when the coefficients are a field.
-
-The topological consequence, `AlgebraicTopology.isSplitMono_singularChainComplexFunctor_map_f`, is
-that an injective continuous map induces a split monomorphism of singular chain complexes in every
-degree.
+`n`-simplices, so a map of simplicial sets injective on `n`-simplices induces a *split*
+monomorphism on `n`-chains: the summands outside the image go to zero. Being split, unlike being
+monic, is preserved by `Module.Dual` over an arbitrary coefficient ring.
 -/
 
 @[expose] public noncomputable section
@@ -48,10 +40,9 @@ namespace SSet
 variable {C : Type u} [Category.{v} C] [HasCoproducts.{w} C] [Preadditive C]
 variable {X Y : SSet.{w}} (f : X ⟶ Y) (R : C) (n : ℕ)
 
-/-- A retraction of the map on simplicial `n`-chains induced by a map of simplicial sets: the
-summand indexed by an `n`-simplex of `Y` in the image goes to the summand of a chosen preimage,
-and every other summand goes to zero. It is a retraction as soon as the map is injective on
-`n`-simplices; see `SSet.isSplitMono_chainComplexMap_f`. -/
+/-- The map on simplicial `n`-chains sending the summand of a simplex in the image of `f` to the
+summand of a chosen preimage, and every other summand to zero. It retracts `chainComplexMap f R`
+when `f` is injective on `n`-simplices; see `SSet.isSplitMono_chainComplexMap_f`. -/
 def chainComplexMapRetraction :
     (Y.chainComplex R).X n ⟶ (X.chainComplex R).X n :=
   Cofan.IsColimit.desc (Y.isColimitChainComplexXCofan R n) fun y =>
@@ -84,11 +75,7 @@ namespace AlgebraicTopology
 
 variable {C : Type u} [Category.{v} C] [HasCoproducts.{w} C] [Preadditive C]
 
-/-- A monomorphism of topological spaces induces a split monomorphism on singular `n`-chains.
-
-The singular simplices of the source inject into those of the target, so the summands of the
-target that are not hit can simply be sent to zero. Unlike plain monomorphy this survives
-dualisation over an arbitrary coefficient ring. -/
+/-- A monomorphism of topological spaces induces a split monomorphism on singular `n`-chains. -/
 lemma isSplitMono_singularChainComplexFunctor_map_f
     {X Y : TopCat.{w}} (g : X ⟶ Y) [Mono g] (R : C) (n : ℕ) :
     IsSplitMono ((((singularChainComplexFunctor C).obj R).map g).f n) :=

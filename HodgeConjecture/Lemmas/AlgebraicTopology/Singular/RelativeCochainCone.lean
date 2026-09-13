@@ -97,15 +97,11 @@ namespace AlgebraicTopology.Singular
 variable (R : Type u) [CommRing R]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- A degreewise splitting of the dual singular-chain sequence of a pair.
-
-The singular-chain sequence of a pair is split in each degree, and a splitting — unlike
-exactness — is carried through `Module.Dual` over an arbitrary commutative ring. -/
+/-- A degreewise splitting of the dual singular-chain sequence of a pair. -/
 def relativeDualCochainShortComplexNatDegreewiseSplitting (X : TopPair.{u}) (n : ℕ) :
     ((relativeDualCochainShortComplexNat R X).map
       (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) n)).Splitting := by
-  -- The chain sequence of the pair splits in degree `n`, because the singular simplices of the
-  -- subspace are a subset of those of the ambient space; dualising carries the splitting over.
+  -- Split the chain sequence in degree `n`, then dualise the splitting.
   have hT := ((HomologicalComplex.shortExact_iff_degreewise_shortExact
     (relativeChainShortComplex R X)).mp (relativeChainShortComplex_shortExact R X)) n
   let sm := (relativeChainMap_isSplitMono R X n).exists_splitMono.some
