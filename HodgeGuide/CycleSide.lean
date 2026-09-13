@@ -3,7 +3,7 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
-import Other.AlgebraicGeometry.SheafCycleClass
+import Other.AlgebraicGeometry.Cycle.SheafClass
 
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean

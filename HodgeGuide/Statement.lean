@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
 import HodgeConjecture.Statement
-import Other.AlgebraicGeometry.CodimensionZeroCoclassNonvanishing
-import Other.AlgebraicGeometry.CycleClassDimension
-import Other.AlgebraicGeometry.SheafCycleClass
-import Other.AlgebraicGeometry.SmoothAnalytificationConnected
+import Other.AlgebraicGeometry.Hodge.CodimensionZeroNonvanishing
+import Other.AlgebraicGeometry.Cycle.ClassDimension
+import Other.AlgebraicGeometry.Cycle.SheafClass
+import Other.AlgebraicGeometry.ComplexPoint.SmoothConnected
 import Other.AlgebraicGeometry.Hodge.Filtration
 import Other.LinearAlgebra.HodgeStructure
 
@@ -224,9 +224,9 @@ The shortest route through the implementation is:
    subvariety;
 7. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`, the span the
    statement compares against;
-8. `Other/AlgebraicGeometry/SheafCycleClass.lean`, the maps on cycles;
-9. `Other/AlgebraicGeometry/CodimensionZeroClassComparison.lean` and
-   `CodimensionZeroCoclassNonvanishing.lean`, the codimension-zero case.
+8. `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, the maps on cycles;
+9. `Other/AlgebraicGeometry/Hodge/CodimensionZeroComparison.lean` and
+   `CodimensionZeroNonvanishing.lean`, the codimension-zero case.
 
 Things to keep track of while reading: integer versus natural-number degrees, real versus complex
 dimension, whether a class has been normalized, whether its support has been forgotten, and
