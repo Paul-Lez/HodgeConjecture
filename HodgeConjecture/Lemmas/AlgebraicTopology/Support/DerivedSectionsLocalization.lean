@@ -60,26 +60,6 @@ lemma supportRestrictionSectionsComplexShortComplex_shortExact (V : Opens X)
   HomologicalComplex.shortExact_of_degreewise_shortExact _ fun n =>
     supportRestrictionSectionsShortComplex_shortExact X U V (K.X n)
 
-attribute [local instance] derivedSupportLocalizationSheafDerivedCategory
-
-attribute [local instance] derivedSupportLocalizationGroupDerivedCategory
-
 end TopCat.Sheaf
 
 end
-
-@[expose] public noncomputable section
-
-open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
-
-universe u
-
-namespace TopCat.Sheaf
-
-variable (X : TopCat.{u}) (U : Opens X)
-
-attribute [local instance] derivedSupportLocalizationSheafDerivedCategory
-
-attribute [local instance] derivedSupportLocalizationGroupDerivedCategory
-
-end TopCat.Sheaf

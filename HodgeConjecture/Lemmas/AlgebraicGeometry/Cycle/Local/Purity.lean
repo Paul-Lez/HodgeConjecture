@@ -145,23 +145,3 @@ lemma linearEquivOfNormalizedGenerators_apply_generator
     linearEquivOfNormalizedGenerators x hx hxspan y hy hyspan x = y := by simp
 
 end AlgebraicTopology.Singular
-
-namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
-
-open AlgebraicTopology.Singular
-
-section
-
-variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
-  [Smooth X.hom] [IsProjective X.hom] {x : X.left}
-  [SmoothOfRelativeDimension d X.hom]
-  (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-end
-
-variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
-  [Smooth X.hom] [IsProjective X.hom] {x : X.left}
-  [SmoothOfRelativeDimension d X.hom]
-  (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

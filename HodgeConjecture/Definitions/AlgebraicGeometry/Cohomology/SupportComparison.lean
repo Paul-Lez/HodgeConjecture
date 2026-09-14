@@ -33,12 +33,6 @@ direct image along an open embedding preserves injective additive sheaves.
 open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
 open scoped CochainComplex.Plus.modelCategoryQuillen
 
-namespace Topology.IsOpenEmbedding
-
-variable {X Y : TopCat.{0}} {f : X ⟶ Y} (hf : IsOpenEmbedding f)
-
-end Topology.IsOpenEmbedding
-
 namespace CochainComplex
 
 universe v u

@@ -178,19 +178,3 @@ instance derivedClosedSupportSections_isRightDerivedFunctor (Z : Closeds X) :
 end TopCat.Sheaf
 
 end
-
-@[expose] public noncomputable section
-
-open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
-
-universe u
-
-namespace TopCat.Sheaf
-
-variable (X : TopCat.{u})
-
-attribute [local instance] supportSheafHasDerivedCategory
-
-attribute [local instance] supportGroupsHasDerivedCategory
-
-end TopCat.Sheaf

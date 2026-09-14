@@ -29,13 +29,6 @@ open CategoryTheory Limits TopologicalSpace HomologicalComplex Opposite
 
 universe u
 
-namespace CategoryTheory.ShortComplex
-
-variable {C D E : Type*} [Category* C] [Category* D] [Category* E]
-  [Abelian C] [Abelian D] [Abelian E]
-
-end CategoryTheory.ShortComplex
-
 namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [CommRing R] (X : TopCat.{u})

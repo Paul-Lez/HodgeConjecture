@@ -39,27 +39,6 @@ def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
     |>.trans (supportedRationalSingularSectionCohomologyEquivSupportComplement
       (TopCat.of (ComplexPoint X)) S S.isClosed V n)
 
-variable (Y : Over (Spec ↧ℂ)) (i : Y ⟶ X)
-  (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left]
-
 end AlgebraicGeometry.ComplexPoint
 
 end
-
-@[expose] public noncomputable section
-
-open CategoryTheory CategoryTheory.Limits Topology TopologicalSpace Opposite
-
-namespace AlgebraicGeometry.ComplexPoint
-
-open AlgebraicTopology.Singular
-
-variable (X : Over (Spec ↧ℂ))
-  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-
-variable (Y : Over (Spec ↧ℂ)) (i : Y ⟶ X)
-  (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left]
-
-end AlgebraicGeometry.ComplexPoint

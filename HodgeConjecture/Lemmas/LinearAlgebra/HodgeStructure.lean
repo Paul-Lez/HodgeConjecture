@@ -107,10 +107,4 @@ lemma conjugate_conjugate (x : ℂ ⊗[ℚ] V) : conjugate V (conjugate V x) = x
   · intro x y hx hy
     simp [hx, hy]
 
-namespace Pure
-
-variable {V : Type u} [AddCommGroup V] [Module ℚ V] {n : ℕ}
-
-end Pure
-
 end HodgeStructure

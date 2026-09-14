@@ -36,12 +36,6 @@ open CategoryTheory Opposite TopologicalSpace Topology
 
 namespace AlgebraicGeometry
 
-namespace ComplexPoint
-
-open Point
-
-end ComplexPoint
-
 namespace ProjectiveSpace.Presentation
 
 /-- The immersion of a projective presentation, bundled over the complex base. -/

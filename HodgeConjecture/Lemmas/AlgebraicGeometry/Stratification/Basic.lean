@@ -99,8 +99,6 @@ def reducedSmoothStratification [PerfectField K] [NoetherianSpace X]
 termination_by S
 decreasing_by exact reducedClosedSingularRemainder_lt f S hS
 
-variable [PerfectField K] [NoetherianSpace X]
-
 end AlgebraicGeometry
 
 end
@@ -133,9 +131,5 @@ lemma reducedClosedSmoothPiece_range (S : Closeds X) :
       by_contra hn
       exact hnot ⟨y, hn, rfl⟩
     exact ⟨⟨y, hy⟩, rfl⟩
-
-attribute [local instance] reducedSmoothStratificationWellFoundedRelation
-
-variable [PerfectField K] [NoetherianSpace X]
 
 end AlgebraicGeometry

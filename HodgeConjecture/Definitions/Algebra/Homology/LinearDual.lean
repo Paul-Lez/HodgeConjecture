@@ -234,10 +234,3 @@ def linearDualHomologyEquiv (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
 end Field
 
 end HomologicalComplex
-
-namespace HomologicalComplex.HomotopyEquiv
-
-variable {R : Type u} [Field R]
-variable {K L : ChainComplex (ModuleCat.{u} R) ℕ}
-
-end HomologicalComplex.HomotopyEquiv

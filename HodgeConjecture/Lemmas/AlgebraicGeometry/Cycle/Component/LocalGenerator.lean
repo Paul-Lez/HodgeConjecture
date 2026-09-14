@@ -202,12 +202,3 @@ lemma span_standardComplexLocalClass_eq_top (n : ℕ) :
       exact span_standardLocalClass_add_two_eq_top (n * 2)
 
 end AlgebraicTopology.Singular
-
-namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
-
-variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
-  [Smooth X.hom] [IsProjective X.hom] {x : X.left}
-  [SmoothOfRelativeDimension d X.hom]
-  (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

@@ -402,12 +402,6 @@ end Topology
 
 end IsLocalRing
 
-section Field
-
-variable {K : Type} [Field K] {X : Over (Spec ↧K)}
-
-end Field
-
 end Point
 
 /-- A complex point of a scheme over `Spec ℂ`. -/

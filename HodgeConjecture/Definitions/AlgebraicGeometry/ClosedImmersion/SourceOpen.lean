@@ -82,7 +82,3 @@ instance closedImmersionSourceOpenLift_isClosedImmersion :
     (closedImmersionSourceOpenTarget i A).ι.continuous
 
 end AlgebraicGeometry
-
-namespace AlgebraicGeometry.ComplexPoint
-
-end AlgebraicGeometry.ComplexPoint

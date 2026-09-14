@@ -39,6 +39,4 @@ def smoothClosedSupportChartCoclass (W : Set (ComplexPoint X))
     (Set.range (Point.map i))
     (closedImmersionHolomorphicFlatteningChart_mem_range_iff X Y i m d z) W hW
 
-variable (z' : ComplexPoint Y)
-
 end AlgebraicGeometry.ComplexPoint

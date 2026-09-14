@@ -193,23 +193,3 @@ def constantIntegerSheafComplexIntIsoSingle :
     𝓒(↧(ComplexPoint X); ℤ) 0 0 rfl
 
 end AlgebraicGeometry.ComplexPoint
-
-namespace AlgebraicTopology.Singular
-
-universe u
-
-variable (R : Type u) [CommRing R] (Y : TopCat.{u})
-
-end AlgebraicTopology.Singular
-
-namespace AlgebraicTopology.Singular.HereditarilyParacompact
-
-end AlgebraicTopology.Singular.HereditarilyParacompact
-
-namespace AlgebraicGeometry.ComplexPoint
-
-open Point
-
-variable (X : Over (Spec ↧ℂ))
-
-end AlgebraicGeometry.ComplexPoint

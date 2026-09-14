@@ -95,8 +95,6 @@ def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
     asIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
       (toSheafify (Opens.grothendieckTopology X) P))
 
-variable (F)
-
 end TopCat.Sheaf
 
 end

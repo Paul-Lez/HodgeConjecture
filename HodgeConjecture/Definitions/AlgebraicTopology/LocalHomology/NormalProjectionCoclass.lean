@@ -50,6 +50,4 @@ def chartNormalProjectionCoclass (W : Set M) (hW : W ⊆ e.source) :
     (normalizedRelativeCoclass (standardComplexLocalClass c)
       (standardComplexLocalClass_ne_zero_for_chart c))
 
-variable (x : M) (hx : x ∈ e.source) (h0 : (e x).2 = 0)
-
 end AlgebraicTopology.Singular

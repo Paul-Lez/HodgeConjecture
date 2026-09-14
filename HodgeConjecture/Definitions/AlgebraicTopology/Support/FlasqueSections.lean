@@ -32,6 +32,4 @@ def supportedOutsideIntersectionIso :
     ((openRestrictionPushforward X U).obj F).obj.obj (op V) ≅ F.obj.obj (op (V ⊓ U)) :=
   F.obj.mapIso (eqToIso (congrArg op (Opens.functor_map_eq_inf U V)))
 
-variable {V} {W : Opens X}
-
 end TopCat.Sheaf
