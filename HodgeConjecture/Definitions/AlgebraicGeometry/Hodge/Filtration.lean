@@ -73,18 +73,6 @@ def constantFieldSheafComplexInt :
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
     𝓒(↧(ComplexPoint X), K)).extend ComplexShape.embeddingUpNat
 
-/-- A coefficient field is used as a sheaf complex through its constant sheaf in degree zero.
-This is the identification the literature makes silently when it writes `H^n(X, K)` for a
-field `K` and `H^n(X, 𝒦)` for a complex `𝒦` with the same symbol. -/
-instance : CoeDep Type K (CochainComplex (AnalyticAdditiveSheaf X) ℤ) :=
-  ⟨constantFieldSheafComplexInt K X⟩
-
-run_meta do
-  let info ← Lean.getConstInfo ``constantFieldSheafComplexInt
-  let numArgs ← Lean.Meta.forallTelescope info.type fun xs _ => pure xs.size
-  Lean.Meta.registerCoercion ``constantFieldSheafComplexInt
-    (some { numArgs, coercee := 0, type := .coe })
-
 instance : (constantFieldSheafComplexInt K X).IsStrictlyGE 0 := by
   unfold constantFieldSheafComplexInt
   infer_instance
@@ -262,14 +250,18 @@ def Hypercohomology
   Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
     (constantIntegerSheafComplexInt X) K n
 
-/-- `H^n(X, 𝒦)` is the hypercohomology in integer degree `n` of a complex `𝒦` of sheaves on the
-analytic space `X(ℂ)`. When a field `K` is written in place of `𝒦`, it is coerced to its
-constant sheaf in degree zero, so `H^n(X, K)` is constant-sheaf cohomology with coefficients in
-`K`, as in Deligne's statement of the conjecture.
+/-- `ℍ^n(X, 𝒦)` is the hypercohomology in integer degree `n` of a complex `𝒦` of sheaves on the
+analytic space `X(ℂ)`. The symbol `ℍ` follows page 51 of
+[P. Deligne, *The Hodge Conjecture*](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf). -/
+scoped notation3:max "ℍ^" n:max "(" X ", " 𝒦 ")" => Hypercohomology X 𝒦 n
+
+/-- `H^n(X, K)` is the cohomology of the analytic space `X(ℂ)` with coefficients in the field
+`K`, in integer degree `n`. It is the hypercohomology of the constant sheaf `K` in degree zero.
 
 The literature writes `H^n(X, K)` for the variety `X.left` alone; here the variety is presented by
 its structure morphism `X`. -/
-scoped notation3:max "H^" n:max "(" X ", " 𝒦 ")" => Hypercohomology X 𝒦 n
+scoped notation3:max "H^" n:max "(" X ", " K ")" =>
+  Hypercohomology X (constantFieldSheafComplexInt K X) n
 
 /-- Complex constant-sheaf cohomology in integer degree `n`. -/
 abbrev ComplexConstantCohomology (n : ℤ) : Type 1 :=
@@ -300,7 +292,7 @@ lemma hypercohomologyEquiv_add
   simp [Equiv.add_def]
 
 /-- Hypercohomology of the holomorphic de Rham complex in integer degree `n`, that is
-`H^n(X, Ω•(X))`. -/
+`ℍ^n(X, Ω•(X))`. -/
 abbrev DeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) : Type 1 :=
   Hypercohomology X (holomorphicDeRhamComplexInt X) n
 
