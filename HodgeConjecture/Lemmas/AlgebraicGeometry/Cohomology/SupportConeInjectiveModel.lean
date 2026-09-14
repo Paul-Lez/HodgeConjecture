@@ -249,13 +249,3 @@ def rationalSupportAddEquivSupportedInjectiveHomology
 end AlgebraicGeometry.ComplexPoint
 
 end
-
-@[expose] public noncomputable section
-
-open CategoryTheory CategoryTheory.Limits TopologicalSpace
-
-namespace AlgebraicGeometry.ComplexPoint
-
-variable (X : Over (Spec ↧ℂ))
-
-end AlgebraicGeometry.ComplexPoint

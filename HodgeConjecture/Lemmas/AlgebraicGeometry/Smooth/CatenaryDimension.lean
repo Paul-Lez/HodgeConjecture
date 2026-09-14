@@ -49,10 +49,6 @@ specialization chains to prove `height x + coheight x = d` at every point of a s
 
 open CategoryTheory Ideal MvPolynomial Topology
 
-namespace AlgebraicGeometry
-
-end AlgebraicGeometry
-
 namespace RingHom
 
 /-- For every prime of a standard-smooth complex algebra of relative dimension `d`, its height
@@ -83,9 +79,3 @@ lemma IsStandardSmoothOfRelativeDimension.height_add_ringKrullDim_quotient_eq_co
     (P.under (MvPolynomial (Fin d) ℂ))
 
 end RingHom
-
-namespace AlgebraicGeometry
-
-variable {X : Scheme.{0}} {f : X ⟶ Spec ↧ℂ} {d : ℕ}
-
-end AlgebraicGeometry

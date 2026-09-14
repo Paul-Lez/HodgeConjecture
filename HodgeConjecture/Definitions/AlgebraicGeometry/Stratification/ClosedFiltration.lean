@@ -32,6 +32,4 @@ def reducedSmoothClosedFiltration (S : Closeds X) : ℕ → Closeds X
   | 0 => S
   | k + 1 => reducedClosedSingularRemainder f (reducedSmoothClosedFiltration S k)
 
-variable [PerfectField K] [NoetherianSpace X]
-
 end AlgebraicGeometry

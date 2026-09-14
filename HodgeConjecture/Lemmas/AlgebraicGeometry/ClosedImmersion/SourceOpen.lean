@@ -19,12 +19,6 @@ Lemmas about the definitions in
 
 open CategoryTheory Topology TopologicalSpace
 
-namespace AlgebraicGeometry
-
-variable {X Y : Scheme} (i : Y ⟶ X) [IsClosedImmersion i] (A : Y.Opens)
-
-end AlgebraicGeometry
-
 namespace AlgebraicGeometry.ComplexPoint
 
 /-- The actual immersion image formula, with structure-map compatibility bundled in `i`. -/

@@ -30,12 +30,6 @@ open CategoryTheory Limits TopologicalSpace Opposite HomologicalComplex
 
 universe u
 
-namespace TopCat.Presheaf
-
-variable {X : TopCat.{u}}
-
-end TopCat.Presheaf
-
 namespace TopCat.Sheaf
 
 open AlgebraicTopology.Singular

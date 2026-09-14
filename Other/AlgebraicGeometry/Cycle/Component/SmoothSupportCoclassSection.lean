@@ -21,18 +21,6 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-section GeneralOpenTransport
-
-variable (X Y : Over (Spec ↧ℂ))
-  (i : Y ⟶ X) (m d : ℕ)
-  [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left]
-  {M : TopCat.{0}} (f : TopCat.of (ComplexPoint X) ⟶ M)
-  (hf : IsOpenEmbedding f) (S : Set M)
-  (hS : f ⁻¹' S = Set.range (Point.map i))
-
-end GeneralOpenTransport
-
 section Component
 
 variable (X : Over (Spec ↧ℂ))

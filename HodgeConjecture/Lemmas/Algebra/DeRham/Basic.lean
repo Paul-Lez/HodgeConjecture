@@ -38,22 +38,6 @@ variable {R A}
 
 variable (R A)
 
-namespace Sq
-
-variable {R A}
-
-end Sq
-
-namespace Sq
-
-variable {R A}
-
-end Sq
-
-namespace Sq
-
-end Sq
-
 /-- The exterior derivative anticommutes with the grade involution, since it raises the degree
 by one. -/
 lemma extDeriv_involute (x : ExtAlg R A) :

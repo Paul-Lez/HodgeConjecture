@@ -94,6 +94,4 @@ theorem range_map_of_isImmersion (i : Y ⟶ X)
       exact hy
     exact congrArg Subtype.val heq
 
-variable [LocallyOfFiniteType X.hom] [NoetherianSpace X.left]
-
 end AlgebraicGeometry.ComplexPoint

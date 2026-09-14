@@ -246,9 +246,3 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
   exact hQheight
 
 end AlgebraicGeometry
-
-namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
-
-variable (X : Over (Spec ↧ℂ))
-
-end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

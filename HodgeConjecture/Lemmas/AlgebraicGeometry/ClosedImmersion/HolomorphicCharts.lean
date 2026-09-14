@@ -214,6 +214,4 @@ theorem closedImmersionHolomorphicFlatteningChart_mem_source :
       (localChart Y m z z, 0) :=
   closedImmersionStandardFlatteningChart_center X Y i m d z
 
-variable (z' : ComplexPoint Y)
-
 end AlgebraicGeometry.ComplexPoint

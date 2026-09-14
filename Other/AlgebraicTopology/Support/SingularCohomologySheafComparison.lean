@@ -19,12 +19,6 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite HomologicalC
 
 universe u
 
-namespace TopCat.Sheaf
-
-variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
-
-end TopCat.Sheaf
-
 namespace AlgebraicTopology.Singular
 
 open TopCat.Sheaf

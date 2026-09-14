@@ -71,6 +71,4 @@ def closedImmersionHolomorphicFlatteningChart :
       (closedImmersionStandardFlatteningChart X Y i m d z).source
       (closedImmersionStandardFlatteningChart X Y i m d z).open_source
 
-variable (z' : ComplexPoint Y)
-
 end AlgebraicGeometry.ComplexPoint

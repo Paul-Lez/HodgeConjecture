@@ -30,52 +30,6 @@ Lemmas about the definitions in
 
 open CategoryTheory Limits TopologicalSpace
 
-namespace HomologicalComplex
-
-universe u v
-
-variable {C D : Type u} [Category C] [Category D]
-  [Preadditive C] [Preadditive D] [HasZeroObject C] [HasZeroObject D]
-  {i i' : Type v} {c : ComplexShape i} {c' : ComplexShape i'}
-  (F : C ⥤ D) [F.Additive] (K : HomologicalComplex C c)
-  (e : c.Embedding c') [e.IsRelIff]
-
-end HomologicalComplex
-
-namespace CochainComplex.HomComplex
-
-universe u v
-
-variable {C : Type u} [Category.{v} C] [Preadditive C] [HasZeroObject C]
-
-end CochainComplex.HomComplex
-
-namespace TopCat.Sheaf
-
-section
-
-variable {Y : TopCat.{0}}
-
-end
-
-end TopCat.Sheaf
-
-namespace AlgebraicGeometry.ComplexPoint
-
-open Point
-
-variable (X : Over (Spec ↧ℂ))
-
-end AlgebraicGeometry.ComplexPoint
-
-namespace AlgebraicTopology.Singular
-
-universe u
-
-variable (R : Type u) [CommRing R] (Y : TopCat.{u})
-
-end AlgebraicTopology.Singular
-
 namespace AlgebraicTopology.Singular.HereditarilyParacompact
 
 /-- Every positive sheaf-cohomology class of every term of the rational singular-cochain
@@ -89,11 +43,3 @@ theorem rationalSingularCochainTerm_cohomology_succ_eq_zero
   AlgebraicTopology.Singular.singularCochainSheaf_cohomology_succ_eq_zero p q x
 
 end AlgebraicTopology.Singular.HereditarilyParacompact
-
-namespace AlgebraicGeometry.ComplexPoint
-
-open Point
-
-variable (X : Over (Spec ↧ℂ))
-
-end AlgebraicGeometry.ComplexPoint

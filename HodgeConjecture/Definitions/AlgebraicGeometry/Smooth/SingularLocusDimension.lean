@@ -36,7 +36,4 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
 /-- The closed complement of the actual smooth locus. -/
 def singularLocusClosed : Closeds X := f.smoothLocus.compl
 
-variable (Y : Over (Spec ↧ℂ))
-  [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
-
 end AlgebraicGeometry

@@ -336,10 +336,6 @@ variable (X : Over (Spec ↧ℂ))
 
 attribute [local instance] analyticSupportHasDerivedCategory
 
-section
-
-end
-
 @[simp] lemma forgetSupportEquivUniv_apply (n : ℤ)
     (α : RationalCohomologyWithSupport X
       (Set.univ : Set (ComplexPoint X)) n) :

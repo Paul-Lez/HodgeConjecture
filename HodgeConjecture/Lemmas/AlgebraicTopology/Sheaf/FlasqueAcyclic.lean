@@ -45,8 +45,4 @@ local instance extAddCommGroup
     AddCommGroup (Abelian.Ext A B n) :=
   Abelian.Ext.instAddCommGroup
 
-namespace IsFlasque
-
-end IsFlasque
-
 end TopCat.Sheaf
