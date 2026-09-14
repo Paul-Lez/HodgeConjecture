@@ -116,7 +116,7 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map i.hom)]
     (n : ℤ) :
-    Hypercohomology X K n ≃+
+    ↥((analyticHypercohomologyFunctor X n).obj K) ≃+
       (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
         (TopCat.of (ComplexPoint X)) K.obj).homology n :=
   let Y := TopCat.of (ComplexPoint X)
@@ -139,8 +139,8 @@ def hypercohomologyAddEquivGlobalSections
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (N : ℤ) [K.IsStrictlyGE N]
     (hKflasque : ∀ q, (K.X q).IsFlasque) (n : ℤ) :
-    Hypercohomology X (⟨K, ⟨N, inferInstance⟩⟩ :
-      CochainComplex.Plus (AnalyticAdditiveSheaf X)) n ≃+
+    ↥((analyticHypercohomologyFunctor X n).obj
+      (⟨K, ⟨N, inferInstance⟩⟩ : CochainComplex.Plus (AnalyticAdditiveSheaf X))) ≃+
       (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
         (TopCat.of (ComplexPoint X)) K).homology n :=
   let Y := TopCat.of (ComplexPoint X)
@@ -187,13 +187,13 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularCone
     [IsIntegral X.left] [Smooth X.hom]
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
-      Hypercohomology X
+      ↥((analyticHypercohomologyFunctor X n).obj
         (⟨(shiftFunctor _ (-1 : ℤ)).obj (CochainComplex.mappingCone
           (naturalSingularResolutionRestriction X Z hZ)),
           ⟨0, by
             let _ := naturalSingularSupportCone_isStrictlyGE X Z hZ
             exact CochainComplex.isStrictlyGE_shift _ (-1) (-1) 0 (by norm_num)⟩⟩ :
-            CochainComplex.Plus (AnalyticAdditiveSheaf X)) n := by
+            CochainComplex.Plus (AnalyticAdditiveSheaf X))) :=
   let L : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
     ⟨(shiftFunctor _ (-1 : ℤ)).obj (CochainComplex.mappingCone
       (naturalSingularResolutionRestriction X Z hZ)),
@@ -210,7 +210,7 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularCone
   letI : IsIso (F.map f) := by
     dsimp only [F, analyticHypercohomologyFunctor, Functor.comp_map]
     infer_instance
-  exact (asIso (F.map f)).addCommGroupIsoToAddEquiv
+  (asIso (F.map f)).addCommGroupIsoToAddEquiv
 
 /-- Additive form of the computation of rational constant-sheaf cohomology with support by
 global sections of the natural singular support cone. -/

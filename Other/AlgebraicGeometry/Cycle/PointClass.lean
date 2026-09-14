@@ -102,7 +102,8 @@ lemma pointCycleClassOnCycles_sum_single
     (x : ι → V.scheme) (hx : ∀ i, coheight (x i) = d) (n : ι → ℤ) :
     pointCycleClassOnCycles V d (∑ i ∈ s, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
       ∑ i ∈ s, n i • maximalCodimensionComponentClass V d (x i) (hx i) := by
-  simp
+  rw [map_sum]
+  exact Finset.sum_congr rfl fun i _ ↦ pointCycleClassOnCycles_single V d (x i) (hx i) (n i)
 
 /-- The finite-support formula on every integral point cycle. The zero branch is unused at
 every point with a nonzero coefficient, by the defining codimension condition on `c`. -/
@@ -146,7 +147,7 @@ def rationalPointCycleClassOnCycles :
     (q : ℚ) (x : V.scheme) (hx : coheight x = d) :
     rationalPointCycleClassOnCycles V d (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
       q • maximalCodimensionComponentClass V d x hx := by
-  simp
+  rw [rationalPointCycleClassOnCycles_tmul, pointCycleClassOnCycles_single, one_smul]
 
 /-- Exact evaluation on every finite rational linear combination of points. -/
 lemma rationalPointCycleClassOnCycles_sum_tmul_single
@@ -155,6 +156,8 @@ lemma rationalPointCycleClassOnCycles_sum_tmul_single
     rationalPointCycleClassOnCycles V d
         (∑ i ∈ s, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
       ∑ i ∈ s, q i • maximalCodimensionComponentClass V d (x i) (hx i) := by
-  simp
+  rw [map_sum]
+  exact Finset.sum_congr rfl fun i _ ↦
+    rationalPointCycleClassOnCycles_tmul_single V d (q i) (x i) (hx i)
 
 end AlgebraicGeometry.ComplexPoint

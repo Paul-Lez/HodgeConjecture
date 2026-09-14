@@ -256,57 +256,47 @@ abbrev analyticHypercohomologyFunctor (n : ℤ) :
     TopCat.Sheaf.hypercohomologyFunctor AddCommGrpCat
       (TopCat.of (ComplexPoint X)) n
 
-/-- Hypercohomology of a bounded-below analytic sheaf complex in degree `n`. -/
-abbrev Hypercohomology
-    (K : CochainComplex.Plus (AnalyticAdditiveSheaf X)) (n : ℤ) :=
-  ↥((analyticHypercohomologyFunctor X n).obj K)
-
 /-- `H^n(X; K)` is constant-sheaf cohomology of the analytic space `X(ℂ)` with coefficients in
 the field `K`, in integer degree `n`: the hypercohomology of the constant sheaf `K` on `X(ℂ)`.
 
 The literature writes `H^n(X; K)` for the variety `X.left` alone; here the variety is presented by
 its structure morphism `X`. -/
 scoped notation3:max "H^" n:max "(" X "; " K ")" =>
-  Hypercohomology X (constantFieldSheafComplexIntPlus K X) n
-
-/-- Complex constant-sheaf cohomology in integer degree `n`. -/
-abbrev ComplexConstantCohomology (n : ℤ) :=
-  Hypercohomology X (constantComplexSheafComplexIntPlus X) n
+  ↥((analyticHypercohomologyFunctor X n).obj (constantFieldSheafComplexIntPlus K X))
 
 /-- Hypercohomology of the holomorphic de Rham complex in integer degree `n`. -/
 abbrev DeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :=
-  Hypercohomology X (holomorphicDeRhamComplexIntPlus X) n
+  ↥((analyticHypercohomologyFunctor X n).obj (holomorphicDeRhamComplexIntPlus X))
 
 /-- The constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
 equivalence on hypercohomology. -/
 def complexConstantCohomologyDeRhamAddEquiv
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    ComplexConstantCohomology X n ≃+
-      DeRhamHypercohomology X n := by
+    ↥((analyticHypercohomologyFunctor X n).obj
+      (constantComplexSheafComplexIntPlus X)) ≃+ DeRhamHypercohomology X n :=
   let f : (constantComplexSheafComplexIntPlus X :
       CochainComplex.Plus (AnalyticAdditiveSheaf X)) ⟶
       holomorphicDeRhamComplexIntPlus X :=
     ⟨constantsToHolomorphicDeRhamComplexInt X⟩
-  let _ : QuasiIso f.hom := by
-    change QuasiIso (constantsToHolomorphicDeRhamComplexInt X)
-    infer_instance
-  let _ : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
-  let _ : IsIso ((analyticHypercohomologyFunctor X n).map f) := by
-    dsimp
-    infer_instance
-  exact (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv
+  letI : QuasiIso f.hom := constantsToHolomorphicDeRhamComplexInt_quasiIso X
+  letI : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
+  letI : IsIso ((analyticHypercohomologyFunctor X n).map f) :=
+    by
+      dsimp only [analyticHypercohomologyFunctor, Functor.comp_map]
+      infer_instance
+  (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv
 
 /-- Scalars acting on a coefficient complex by an additive, unital and antimultiplicative family
 of endomorphisms act on its hypercohomology. -/
 noncomputable abbrev hypercohomologyModule {R : Type*} [Semiring R]
     {C : CochainComplex.Plus (AnalyticAdditiveSheaf X)} (s : R → (C ⟶ C)) (n : ℤ)
-    [SMul R (Hypercohomology X C n)]
-    (smul_eq : ∀ (r : R) (α : Hypercohomology X C n),
+    [SMul R ↥((analyticHypercohomologyFunctor X n).obj C)]
+    (smul_eq : ∀ (r : R) (α : ↥((analyticHypercohomologyFunctor X n).obj C)),
       r • α = (analyticHypercohomologyFunctor X n).map (s r) α)
     (s_add : ∀ a b : R, s (a + b) = s a + s b)
     (s_one : s 1 = 𝟙 C)
     (s_mul : ∀ a b : R, s (a * b) = s b ≫ s a) :
-    Module R (Hypercohomology X C n) :=
+    Module R ↥((analyticHypercohomologyFunctor X n).obj C) :=
   Module.ofMinimalAxioms
     (fun r α β => by
       rw [smul_eq, smul_eq, smul_eq]
@@ -474,7 +464,7 @@ private lemma hodgeFilteredDeRhamComplexScalar_comp_inclusion
 /-- Hypercohomology of the degree-at-least-`p` part of the de Rham complex. -/
 abbrev FilteredDeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) :=
-  Hypercohomology X (hodgeFilteredDeRhamComplexPlus X p) n
+  ↥((analyticHypercohomologyFunctor X n).obj (hodgeFilteredDeRhamComplexPlus X p))
 
 /-- The map from filtered to full de Rham hypercohomology. -/
 def filteredToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) :
@@ -521,7 +511,8 @@ de Rham complex, and is transported across the constant-to-de Rham comparison. T
 is then *defined* as `F^p ⊓ conj F^q`, which needs no Hodge decomposition theorem. -/
 
 private lemma complexConstantCohomologyDeRhamAddEquiv_apply [IsIntegral X.left] [Smooth X.hom]
-    (n : ℤ) (α : ComplexConstantCohomology X n) :
+    (n : ℤ) (α : ↥((analyticHypercohomologyFunctor X n).obj
+      (constantComplexSheafComplexIntPlus X))) :
     complexConstantCohomologyDeRhamAddEquiv X n α =
       (analyticHypercohomologyFunctor X n).map
         (⟨constantsToHolomorphicDeRhamComplexInt X⟩ :
@@ -532,7 +523,8 @@ private lemma complexConstantCohomologyDeRhamAddEquiv_apply [IsIntegral X.left] 
 
 /-- The comparison equivalence carries the constant-sheaf scalar action to the de Rham one. -/
 private lemma complexConstantCohomologyDeRhamAddEquiv_scalar [IsIntegral X.left] [Smooth X.hom]
-    (n : ℤ) (c : ℂ) (β : ComplexConstantCohomology X n) :
+    (n : ℤ) (c : ℂ) (β : ↥((analyticHypercohomologyFunctor X n).obj
+      (constantComplexSheafComplexIntPlus X))) :
     complexConstantCohomologyDeRhamAddEquiv X n
         ((analyticHypercohomologyFunctor X n).map
           (⟨complexScalarComplexInt X c⟩ : constantComplexSheafComplexIntPlus X ⟶
@@ -588,6 +580,7 @@ lemma deRhamConj_apply [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
           ((complexConstantCohomologyDeRhamAddEquiv X n).symm α)) :=
   rfl
 
+set_option maxHeartbeats 400000 in
 /-- Conjugation on de Rham hypercohomology is conjugate-linear. -/
 lemma deRhamConj_smul [IsIntegral X.left] [Smooth X.hom] (n : ℤ) (c : ℂ)
     (α : DeRhamHypercohomology X n) :

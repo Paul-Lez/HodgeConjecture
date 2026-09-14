@@ -52,7 +52,7 @@ global-section cohomology. -/
 def hypercohomologyAddEquivGlobalSectionsKInjective
     (K : CochainComplex.Plus (AnalyticAdditiveSheaf X))
     [∀ i, Injective (K.obj.X i)] (n : ℤ) :
-    Hypercohomology X K n ≃+
+    ↥((analyticHypercohomologyFunctor X n).obj K) ≃+
       (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
         (TopCat.of (ComplexPoint X)) K.obj).homology n :=
   (TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat

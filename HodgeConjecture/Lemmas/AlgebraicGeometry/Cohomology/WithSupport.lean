@@ -240,7 +240,8 @@ abbrev rationalCohomologyWithSupportComplexPlus
 /-- Rational constant-sheaf cohomology with support in `Z`. -/
 abbrev RationalCohomologyWithSupport
     (Z : Set (ComplexPoint X)) (n : ℤ) :=
-  Hypercohomology X (rationalCohomologyWithSupportComplexPlus X Z) n
+  ↥((analyticHypercohomologyFunctor X n).obj
+    (rationalCohomologyWithSupportComplexPlus X Z))
 
 /-- The shifted mapping-cone morphism which forgets support. -/
 def forgetSupportComplex (Z : Set (ComplexPoint X)) :
@@ -294,16 +295,17 @@ ordinary rational cohomology. Its forward map is definitionally the support-forg
 noncomputable def forgetSupportEquivUniv (n : ℤ) :
     RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
-      H^n(X; ℚ) := by
+      H^n(X; ℚ) :=
   let f : rationalCohomologyWithSupportComplexPlus X Set.univ ⟶
       constantFieldSheafComplexIntPlus ℚ X :=
     ⟨forgetSupportComplex X Set.univ⟩
-  let _ : QuasiIso f.hom := forgetSupportComplex_univ_quasiIso X
-  let _ : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
-  let _ : IsIso ((analyticHypercohomologyFunctor X n).map f) := by
-    dsimp
-    infer_instance
-  exact (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv.toEquiv
+  letI : QuasiIso f.hom := forgetSupportComplex_univ_quasiIso X
+  letI : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
+  letI : IsIso ((analyticHypercohomologyFunctor X n).map f) :=
+    by
+      dsimp only [analyticHypercohomologyFunctor, Functor.comp_map]
+      infer_instance
+  (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv.toEquiv
 
 end AlgebraicGeometry.ComplexPoint
 

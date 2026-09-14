@@ -52,7 +52,8 @@ theorem sheafCycleClassOnCycles_sum_single (p : ℕ)
     (hx : ∀ i, coheight (x i) = p) (n : ι → ℤ) :
     sheafCycleClassOnCycles V p (∑ i ∈ t, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
       ∑ i ∈ t, n i • cycleComponentSheafClass V.over (x i) (hx i) := by
-  simp
+  rw [map_sum]
+  exact Finset.sum_congr rfl fun i _ ↦ sheafCycleClassOnCycles_single V p (x i) (hx i) (n i)
 
 /-- The explicit finite-support formula. The codimension test's zero branch
 is never used for a nonzero coefficient of a codimension-`p` cycle. -/
@@ -95,7 +96,7 @@ theorem rationalSheafCycleClassOnCycles_tmul_single (p : ℕ) (q : ℚ)
     (x : V.scheme) (hx : coheight x = p) :
     rationalSheafCycleClassOnCycles V p (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
       q • cycleComponentSheafClass V.over x hx := by
-  simp
+  rw [rationalSheafCycleClassOnCycles_tmul, sheafCycleClassOnCycles_single, one_smul]
 
 /-- Every finite rational combination is sent to the corresponding exact
 combination of the constructed ordinary cohomology classes. -/
@@ -105,7 +106,9 @@ theorem rationalSheafCycleClassOnCycles_sum_tmul_single (p : ℕ)
     rationalSheafCycleClassOnCycles V p
       (∑ i ∈ t, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
       ∑ i ∈ t, q i • cycleComponentSheafClass V.over (x i) (hx i) := by
-  simp
+  rw [map_sum]
+  exact Finset.sum_congr rfl fun i _ ↦
+    rationalSheafCycleClassOnCycles_tmul_single V p (q i) (x i) (hx i)
 
 /-- Every actually constructed component class belongs to the algebraic cycle-class span. -/
 theorem cycleComponentSheafClass_mem_algebraicCycleClassSpan

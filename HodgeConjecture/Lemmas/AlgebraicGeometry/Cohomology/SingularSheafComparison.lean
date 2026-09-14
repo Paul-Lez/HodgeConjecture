@@ -63,25 +63,23 @@ abbrev rationalSingularCochainComplexIntPlus :
     CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
   ⟨singularCochainSheafComplexInt X ℚ, ⟨0, inferInstance⟩⟩
 
-/-- Hypercohomology of the integer-indexed rational singular-cochain sheaf complex. -/
-abbrev RationalSingularCochainHypercohomology (n : ℤ) :=
-  Hypercohomology X (rationalSingularCochainComplexIntPlus X) n
-
 /-- Rational constant-sheaf cohomology is canonically additively equivalent to the
 hypercohomology of its singular-cochain resolution. -/
 def rationalCohomologySingularCochainAddEquiv
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     H^n(X; ℚ) ≃+
-      RationalSingularCochainHypercohomology X n := by
+      ↥((analyticHypercohomologyFunctor X n).obj
+        (rationalSingularCochainComplexIntPlus X)) :=
   let f : constantFieldSheafComplexIntPlus ℚ X ⟶
       rationalSingularCochainComplexIntPlus X :=
     ⟨rationalToSingularCochainComplexInt X⟩
-  let _ : QuasiIso f.hom := rationalToSingularCochainComplexInt_quasiIso X
-  let _ : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
-  let _ : IsIso ((analyticHypercohomologyFunctor X n).map f) := by
-    dsimp
-    infer_instance
-  exact (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv
+  letI : QuasiIso f.hom := rationalToSingularCochainComplexInt_quasiIso X
+  letI : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
+  letI : IsIso ((analyticHypercohomologyFunctor X n).map f) :=
+    by
+      dsimp only [analyticHypercohomologyFunctor, Functor.comp_map]
+      infer_instance
+  (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv
 
 @[simp]
 lemma rationalCohomologySingularCochainAddEquiv_apply
