@@ -42,8 +42,8 @@ universe u v
 variable (X : Over (Spec ↧ℂ))
 
 local instance bettiSupportHypercohomologyComparisonHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) :=
+  HasDerivedCategory.standard (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))
 
 local instance bettiSupportHypercohomologyAddCommGrpHasDerivedCategory :
     HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard AddCommGrpCat
@@ -59,7 +59,7 @@ def isoHomCongrAddEquiv
 /-- The chosen additive structure on hypercohomology is transported from shifted morphisms in
 the derived category. -/
 def hypercohomologyAddEquivDerived
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) :
+    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ) (n : ℤ) :
     Hypercohomology X K n ≃+
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))

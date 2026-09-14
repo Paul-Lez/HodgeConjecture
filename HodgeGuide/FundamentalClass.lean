@@ -71,7 +71,7 @@ def cycleComponentSmoothClosedLiftCoclassSection (X : Over (Spec ↧ℂ)) [IsInt
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
     (supportRelativeCohomologySheaf
-      (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
+      (TopCat.of (Point ℂ (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (2 * p)).obj.obj (op ⊤) :=
   letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
@@ -92,7 +92,7 @@ namespace Guide.Subvariety.D2
 def cycleComponentSmoothSupportCoclassSection (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+    (supportRelativeCohomologySheaf (TopCat.of (Point ℂ X))
       (cycleComponentSupport X x) (2 * p)).obj.obj
       (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)
@@ -161,10 +161,10 @@ namespace Guide.Subvariety.D3
 def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X))
       (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
           (2 * (p : ℤ))) :=
@@ -182,16 +182,16 @@ namespace Guide.Subvariety.D4
 def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
-      (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+      (supportRelativeCohomologySheaf (TopCat.of (Point ℂ X))
         (cycleComponentSupport X x) (2 * p)).obj.obj
           (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
   cycleComponentSupportExtensionIso X x hx ≪≫
     cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
-      (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+      (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X))
         (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
           (complexSupportInjectiveCohomologySheafIsoRelative X
             (cycleComponentAnalyticClosedSupport X x) (2 * p)))

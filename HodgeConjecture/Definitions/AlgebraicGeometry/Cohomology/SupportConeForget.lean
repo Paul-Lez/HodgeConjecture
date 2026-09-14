@@ -19,8 +19,8 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
 
 local instance rationalConeForgetSheafDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) :=
+  HasDerivedCategory.standard (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))
 
 instance ambientRationalInjectiveComplex_isKInjective :
     (ambientRationalInjectiveComplex X).IsKInjective :=

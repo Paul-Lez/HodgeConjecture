@@ -54,7 +54,7 @@ variable (X : Over (Spec ↧ℂ)) {Y : Over (Spec ↧ℂ)}
 /-- Forgetting a complex point to its underlying Zariski point is continuous for the actual
 analytic topology. -/
 theorem continuous_underlying_to_zariski :
-    Continuous (Point.underlying : ComplexPoint X → X.left) := by
+    Continuous (Point.underlying : Point ℂ X → X.left) := by
   rw [continuous_def]
   exact fun S hS => Point.isOpen_overOpen ⟨S, hS⟩
 
@@ -63,7 +63,7 @@ whose underlying scheme point belongs to its range. -/
 theorem range_map_of_isImmersion (i : Y ⟶ X)
     [IsImmersion i.left] [LocallyOfFiniteType X.hom] [LocallyOfFiniteType Y.hom] :
     Set.range (Point.map i) =
-      (Point.underlying : ComplexPoint X → X.left) ⁻¹' Set.range i.left := by
+      (Point.underlying : Point ℂ X → X.left) ⁻¹' Set.range i.left := by
   ext z
   constructor
   · rintro ⟨w, rfl⟩
@@ -78,7 +78,7 @@ theorem range_map_of_isImmersion (i : Y ⟶ X)
         exact i.left.isEmbedding.injective.eq_iff
       rwa [he] at h
     let p := (pointEquivClosedPoint Y.hom).symm ⟨y, hyclosed⟩
-    let w : ComplexPoint Y := Over.homMk p.1 p.2
+    let w : Point ℂ Y := Over.homMk p.1 p.2
     refine ⟨w, ?_⟩
     apply Over.OverMorphism.ext
     have heq :

@@ -180,16 +180,16 @@ open Point
 variable (X : Over (Spec ↧ℂ))
 
 local instance bettiGlobalSectionsHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) :=
+  HasDerivedCategory.standard (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))
 
 /-- The integer constant-sheaf complex used to define hypercohomology is the degree-zero
 integer constant sheaf, after extending its natural-number grading to integer degrees. -/
 def constantIntegerSheafComplexIntIsoSingle :
     constantIntegerSheafComplexInt X ≅
       TopCat.Sheaf.integerConstantSingleComplex
-        (TopCat.of (ComplexPoint X)) :=
+        (TopCat.of (Point ℂ X)) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℤ) 0 0 rfl
+    𝓒(↧(Point ℂ X); ℤ) 0 0 rfl
 
 end AlgebraicGeometry.ComplexPoint

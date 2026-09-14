@@ -54,7 +54,7 @@ lemma cycleComponentMap_injective
 /-- Map the complex points of a cycle component into its analytic support. -/
 def cycleComponentSupportMap
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) →
+    Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom)) →
       cycleComponentSupport X x :=
   fun z => ⟨cycleComponentMap X x z,
     range_cycleComponentMap_subset X x ⟨z, rfl⟩⟩
@@ -63,7 +63,7 @@ def cycleComponentSupportMap
 support. -/
 def cycleComponentPointEquivSupport
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) ≃
+    Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom)) ≃
       cycleComponentSupport X x :=
   Equiv.ofBijective (cycleComponentSupportMap X x) ⟨
     fun _ _ h => cycleComponentMap_injective X x (congrArg Subtype.val h),
@@ -92,7 +92,7 @@ lemma algebraicCycle_support_finite {R : Type*} [Zero R]
 dense over the perfect field `ℂ`, and a projective complex variety has a closed point there. -/
 theorem exists_cycleComponent_smooth_complexPoint
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ∃ z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)),
+    ∃ z : Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom)),
       z.underlying ∈
         (cycleComponentι X.left x ≫ X.hom).smoothLocus := by
   let f := cycleComponentι X.left x ≫ X.hom

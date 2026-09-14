@@ -34,12 +34,12 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
 
 /-- The old local pair-model coclass is exactly the chart-projection coclass.
 The proof uses the explicit radial normal fiber, including its complex normalization. -/
 theorem smoothClosedSupportNormalCoclass_eq_projection
-    (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V) :
+    (V : Opens (Point ℂ X)) (hzV : Point.map i z ∈ V) :
     smoothClosedSupportNormalCoclass X Y i m d z V hzV =
     chartNormalProjectionCoclass (Fin m → ℂ) (d - m)
       (smoothClosedSupportRestrictionChart X Y i m d z V)
@@ -60,8 +60,8 @@ theorem smoothClosedSupportNormalCoclass_eq_projection
 /-- On a common smaller neighborhood, restriction of the old local coclass is exactly
 the holomorphic-chart coclass. Both maps are the same literal normal projection. -/
 theorem smoothClosedSupportNormalCoclass_restrict_eq_chart
-    (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
-    (W : Set (ComplexPoint X))
+    (V : Opens (Point ℂ X)) (hzV : Point.map i z ∈ V)
+    (W : Set (Point ℂ X))
     (hWV : W ⊆ smoothClosedSupportNeighborhood X Y i m d z V hzV)
     (hW : W ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     relativeCohomologyMap ℚ (2 * (d - m))

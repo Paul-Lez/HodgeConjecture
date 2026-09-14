@@ -55,7 +55,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 /-- An integral complex scheme locally of finite type has a complex point: its space is Jacobson,
 so it has a closed point, and the Nullstellensatz makes the residue field there `ℂ`. -/
 noncomputable instance instNonemptyComplexPoint [IsIntegral X.left]
-    [LocallyOfFiniteType X.hom] : Nonempty (ComplexPoint X) := by
+    [LocallyOfFiniteType X.hom] : Nonempty (Point ℂ X) := by
   let : JacobsonSpace X.left := LocallyOfFiniteType.jacobsonSpace X.hom
   obtain ⟨x, -, hx⟩ := nonempty_inter_closedPoints
     (X := X.left) (Z := Set.univ) Set.univ_nonempty isOpen_univ.isLocallyClosed
@@ -66,27 +66,27 @@ noncomputable instance instNonemptyComplexPoint [IsIntegral X.left]
 components. -/
 theorem finiteConnectedComponents [IsProjective X.hom]
     [IsIntegral X.left] [Smooth X.hom] :
-    Finite (ConnectedComponents (ComplexPoint X)) := by
-  let : LocallyPathConnectedSpace (ComplexPoint X) :=
+    Finite (ConnectedComponents (Point ℂ X)) := by
+  let : LocallyPathConnectedSpace (Point ℂ X) :=
     locallyPathConnectedSpace X
-  let : LocallyConnectedSpace (ComplexPoint X) := inferInstance
+  let : LocallyConnectedSpace (Point ℂ X) := inferInstance
   infer_instance
 
 /-- A compact, locally path connected projective analytification has finitely many path
 components. -/
 theorem finiteZerothHomotopy [IsProjective X.hom]
     [IsIntegral X.left] [Smooth X.hom] :
-    Finite (ZerothHomotopy (ComplexPoint X)) := by
-  let : LocallyPathConnectedSpace (ComplexPoint X) :=
+    Finite (ZerothHomotopy (Point ℂ X)) := by
+  let : LocallyPathConnectedSpace (Point ℂ X) :=
     locallyPathConnectedSpace X
   infer_instance
 
 /-- For a smooth projective complex analytification, connectedness is equivalent to path
 connectedness.  This theorem does not supply the global connectedness premise. -/
 theorem pathConnectedSpace_iff_connectedSpace [IsIntegral X.left] [Smooth X.hom] :
-    PathConnectedSpace (ComplexPoint X) ↔
-      ConnectedSpace (ComplexPoint X) := by
-  let : LocallyPathConnectedSpace (ComplexPoint X) :=
+    PathConnectedSpace (Point ℂ X) ↔
+      ConnectedSpace (Point ℂ X) := by
+  let : LocallyPathConnectedSpace (Point ℂ X) :=
     locallyPathConnectedSpace X
   exact _root_.pathConnectedSpace_iff_connectedSpace
 
@@ -94,7 +94,7 @@ theorem pathConnectedSpace_iff_connectedSpace [IsIntegral X.left] [Smooth X.hom]
 point. -/
 lemma underlying_eq_genericPoint_of_dimension_eq_zero [IsIntegral X.left]
     [SmoothOfRelativeDimension d X.hom] (hd : d = 0)
-    (z : ComplexPoint X) : z.underlying = genericPoint X.left := by
+    (z : Point ℂ X) : z.underlying = genericPoint X.left := by
   let x : X.left := z.underlying
   change x = genericPoint X.left
   have hzle : Order.coheight x ≤ (0 : ℕ) := by
@@ -111,7 +111,7 @@ most one point. -/
 theorem subsingletonComplexPointOfDimensionEqZero [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom]
     [SmoothOfRelativeDimension d X.hom] (hd : d = 0) :
-    Subsingleton (ComplexPoint X) := by
+    Subsingleton (Point ℂ X) := by
   constructor
   intro z w
   apply ComplexPoint.underlying_injective_of_locallyOfFiniteType
@@ -123,8 +123,8 @@ connected. -/
 theorem connectedSpaceOfDimensionEqZero [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom]
     [SmoothOfRelativeDimension d X.hom] (hd : d = 0) :
-    ConnectedSpace (ComplexPoint X) := by
-  let : Subsingleton (ComplexPoint X) :=
+    ConnectedSpace (Point ℂ X) := by
+  let : Subsingleton (Point ℂ X) :=
     subsingletonComplexPointOfDimensionEqZero X d hd
   exact
     { toNonempty := inferInstance
@@ -135,8 +135,8 @@ connected. -/
 theorem pathConnectedSpaceOfDimensionEqZero [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom]
     [SmoothOfRelativeDimension d X.hom] (hd : d = 0) :
-    PathConnectedSpace (ComplexPoint X) := by
-  let : ConnectedSpace (ComplexPoint X) :=
+    PathConnectedSpace (Point ℂ X) := by
+  let : ConnectedSpace (Point ℂ X) :=
     connectedSpaceOfDimensionEqZero X d hd
   exact (pathConnectedSpace_iff_connectedSpace X).mpr inferInstance
 

@@ -48,7 +48,7 @@ variable (C : CycleComponentSeparateLocalCoordinates V.over x d n)
 /-- Each exact coordinate of the affine component chart is evaluation of the corresponding
 global regular function. -/
 lemma neighborhoodProjectionChart_apply_eq_evaluate
-    (z : ComplexPoint C.neighborhoodScheme)
+    (z : Point ℂ C.neighborhoodScheme)
     (hz : z ∈ C.neighborhoodProjectionChart.source) (i : Fin n) :
     C.neighborhoodProjectionChart z i =
       Point.evaluate ⊤ (C.coordinateRingHomOnNeighborhood (MvPolynomial.X i)) z := by
@@ -79,8 +79,8 @@ lemma componentProjectionChart_symm_apply (w : Fin n → ℂ) :
 locus. -/
 lemma smoothPoints_eq_of_neighborhoodToComponentPoint_eq
     (C' : CycleComponentSeparateLocalCoordinates V.over x d n)
-    (z : ComplexPoint C.neighborhoodScheme)
-    (z' : ComplexPoint C'.neighborhoodScheme)
+    (z : Point ℂ C.neighborhoodScheme)
+    (z' : Point ℂ C'.neighborhoodScheme)
     (h : C.neighborhoodToComponentPoint z = C'.neighborhoodToComponentPoint z') :
     Point.map (ComplexPoint.openInclusion
       (componentSmoothScheme V.over x) C.componentNeighborhood) z =
@@ -93,7 +93,7 @@ lemma smoothPoints_eq_of_neighborhoodToComponentPoint_eq
 /-- If a smooth-locus point lies in the source of an extended component chart, that chart is
 evaluation of its defining smooth-locus sections. -/
 lemma componentProjectionChart_apply_component_eq_evaluate
-    (q : ComplexPoint (componentSmoothScheme V.over x))
+    (q : Point ℂ (componentSmoothScheme V.over x))
     (hq : Point.map (ComplexPoint.openInclusion
       (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
       (componentSmoothLocus V.over x)) q ∈
@@ -123,7 +123,7 @@ lemma componentProjectionChart_apply_component_eq_evaluate
 /-- Membership in the extended chart source forces the corresponding smooth-locus point to lie
 in the affine open on which the chart coordinates are represented. -/
 lemma mem_smoothCoordinateOpen_of_mem_componentProjectionChart_source
-    (q : ComplexPoint (componentSmoothScheme V.over x))
+    (q : Point ℂ (componentSmoothScheme V.over x))
     (hq : Point.map (ComplexPoint.openInclusion
       (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
       (componentSmoothLocus V.over x)) q ∈
@@ -182,7 +182,7 @@ lemma analyticAt_componentProjectionChart_transition_component
     AnalyticAt ℂ (fun v ↦ C'.componentProjectionChart
       (C.componentProjectionChart.symm v) i) w := by
   rw [OpenPartialHomeomorph.trans_source] at hw
-  let q : ComplexPoint (componentSmoothScheme V.over x) :=
+  let q : Point ℂ (componentSmoothScheme V.over x) :=
     Point.map (ComplexPoint.openInclusion
       (componentSmoothScheme V.over x) C.componentNeighborhood)
       (C.neighborhoodProjectionChart.symm w)
@@ -205,7 +205,7 @@ lemma analyticAt_componentProjectionChart_transition_component
       C'.componentProjectionChart.source ∈ nhds w :=
     hcontinuous (C'.componentProjectionChart.open_source.mem_nhds hw.2)
   filter_upwards [heventually] with v hv
-  let qv : ComplexPoint (componentSmoothScheme V.over x) :=
+  let qv : Point ℂ (componentSmoothScheme V.over x) :=
     Point.map (ComplexPoint.openInclusion
       (componentSmoothScheme V.over x) C.componentNeighborhood)
       (C.neighborhoodProjectionChart.symm v)
@@ -236,7 +236,7 @@ lemma analyticAt_componentProjectionChart_transition
 class at every point in their common source. -/
 theorem localClassOfChart_componentProjectionChart_eq
     (C' : CycleComponentSeparateLocalCoordinates V.over x d n)
-    (q : ComplexPoint (Over.mk
+    (q : Point ℂ (Over.mk
       (cycleComponentι V.over.left x ≫ V.over.hom)))
     (hq : q ∈ C.componentProjectionChart.source)
     (hq' : q ∈ C'.componentProjectionChart.source) :
@@ -301,7 +301,7 @@ with the canonical class defined using the internally chosen package. -/
 theorem componentLocalOrientationClass_eq_cycleComponentComplexLocalOrientation
     (p : ℕ) (D : CycleComponentSeparateLocalCoordinates V.over x d (d - p))
     (hx : Order.coheight x = p)
-    (z : ComplexPoint (Over.mk
+    (z : Point ℂ (Over.mk
       (cycleComponentι V.over.left x ≫ V.over.hom)))
     (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x)
     (hpoint : D.point = z) :

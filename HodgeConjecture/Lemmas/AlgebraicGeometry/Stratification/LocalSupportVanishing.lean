@@ -36,16 +36,16 @@ include hx in
 /-- Every point in the actual `k`th layer has cofinal actual ambient neighborhoods
 whose relative cohomology below degree `2(p+1)` vanishes. -/
 theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
-    (y : ComplexPoint X)
+    (y : Point ℂ X)
     (hy : y ∈ cycleComponentSingularAnalyticClosedFiltration X x k)
     (hyNext : y ∉ cycleComponentSingularAnalyticClosedFiltration X x (k + 1))
-    (V : Opens (ComplexPoint X)) (hyV : y ∈ V) :
-    ∃ W : Opens (ComplexPoint X), W ≤ V ∧
+    (V : Opens (Point ℂ X)) (hyV : y ∈ V) :
+    ∃ W : Opens (Point ℂ X), W ≤ V ∧
       W ≤ (cycleComponentSingularAnalyticClosedFiltration X x (k + 1)).compl ∧
       y ∈ W ∧ ∀ n : ℕ, n < 2 * (p + 1) →
         IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
-          (neighborhoodSupportComplementPair (W : Set (ComplexPoint X))
-            (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X))) n)) := by
+          (neighborhoodSupportComplementPair (W : Set (Point ℂ X))
+            (cycleComponentSingularAnalyticClosedFiltration X x k : Set (Point ℂ X))) n)) := by
   obtain ⟨z, rfl⟩ := (cycleComponentSingularAnalyticClosedFiltration_layer X x k).ge ⟨hy, hyNext⟩
   let O := cycleComponentSingularStratumAmbientOpen X x k
   let OX := cycleComponentSingularStratumAmbientOpenOver X x k
@@ -58,7 +58,7 @@ theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
   let zA := asOpenPoint Y A z hzA
   let f := Point.map (openInclusion X O)
   have hS : f ⁻¹'
-      (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X)) =
+      (cycleComponentSingularAnalyticClosedFiltration X x k : Set (Point ℂ X)) =
         Set.range (Point.map i) :=
     (cycleComponentSingularStratumClosedLift_complexPoints_range X x k).symm
   have he : f (Point.map (openInclusion Y A ≫ i) zA) =
@@ -79,7 +79,7 @@ theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
     simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 (dim X.left) O.ι X.hom
   obtain ⟨W, hWV', hzW, hW⟩ := exists_smoothClosedSourceOpenImageNeighborhood
     OX Y i m (dim X.left) f (isOpenEmbedding_map_open X O)
-    (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X))
+    (cycleComponentSingularAnalyticClosedFiltration X x k : Set (Point ℂ X))
     hS A zA V' hzV'
   exact ⟨W, hWV'.trans inf_le_left, hWV'.trans inf_le_right, he ▸ hzW,
     fun n hn ↦ hW n (by omega)⟩
@@ -89,17 +89,17 @@ include hx in
 cohomology below `2(p+1)` at every point outside the next closed support. -/
 theorem cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1))
-    (y : ComplexPoint X)
+    (y : Point ℂ X)
     (hyNext : y ∉ cycleComponentSingularAnalyticClosedFiltration X x (k + 1))
-    (V : Opens (ComplexPoint X)) (hyV : y ∈ V) :
-    ∃ W : Opens (ComplexPoint X), W ≤ V ∧ y ∈ W ∧
-      IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex
+    (V : Opens (Point ℂ X)) (hyV : y ∈ V) :
+    ∃ W : Opens (Point ℂ X), W ≤ V ∧ y ∈ W ∧
+      IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X)) W).mapHomologicalComplex
         (.up ℤ)).obj (complexSupportInjectiveComplex X
           (cycleComponentSingularAnalyticClosedFiltration X x k))).homology n) := by
   by_cases hneg : n < 0
   · refine ⟨V, le_rfl, hyV, ?_⟩
     apply ShortComplex.isZero_homology_of_isZero_X₂
-    exact (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).map_isZero
+    exact (TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X)) V).map_isZero
       ((complexSupportInjectiveComplex X
         (cycleComponentSingularAnalyticClosedFiltration X x k)).isZero_of_isStrictlyGE 0 n hneg)
   · obtain ⟨q, rfl⟩ := Int.eq_ofNat_of_zero_le (le_of_not_gt hneg)
@@ -109,13 +109,13 @@ theorem cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
           y hy hyNext V hyV
       refine ⟨W, hWV, hyW, ?_⟩
       let : Subsingleton (RelativeCohomology ℚ
-          (neighborhoodSupportComplementPair (W : Set (ComplexPoint X))
-            (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X))) q) :=
+          (neighborhoodSupportComplementPair (W : Set (Point ℂ X))
+            (cycleComponentSingularAnalyticClosedFiltration X x k : Set (Point ℂ X))) q) :=
         ModuleCat.subsingleton_of_isZero (hW q (by exact_mod_cast hn))
       let e := complexSupportInjectiveSectionCohomologyEquiv X
         (cycleComponentSingularAnalyticClosedFiltration X x k) W q
       let : Subsingleton ((((TopCat.Sheaf.supportEvaluation
-          (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex (.up ℤ)).obj
+          (TopCat.of (Point ℂ X)) W).mapHomologicalComplex (.up ℤ)).obj
             (complexSupportInjectiveComplex X
               (cycleComponentSingularAnalyticClosedFiltration X x k))).homology (q : ℤ)) :=
         e.injective.subsingleton
@@ -124,7 +124,7 @@ theorem cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
       refine ⟨W, inf_le_left, ⟨hyV, hy⟩, ?_⟩
       apply ShortComplex.isZero_homology_of_isZero_X₂
       exact TopCat.Sheaf.supportedOutsideSections_isZero_of_le
-        (TopCat.of (ComplexPoint X))
+        (TopCat.of (Point ℂ X))
         (cycleComponentSingularAnalyticClosedFiltration X x k).compl W
         ((ambientRationalInjectiveComplex X).X (q : ℤ)) inf_le_right
 
@@ -135,14 +135,14 @@ projective ambient variety; no injective resolution on a projective auxiliary op
 is assumed. -/
 theorem cycleComponentSingularLayerSectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
-    IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+    IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X))
       (cycleComponentSingularAnalyticClosedFiltration X x (k + 1)).compl).mapHomologicalComplex
         (.up ℤ)).obj (complexSupportInjectiveComplex X
           (cycleComponentSingularAnalyticClosedFiltration X x k))).homology n) := by
   apply TopCat.Sheaf.sectionCohomology_isZero_of_cofinal_lower_vanishing
-    (TopCat.of (ComplexPoint X)) _ _ 0 n
+    (TopCat.of (Point ℂ X)) _ _ 0 n
   · exact fun j ↦ TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
-      (TopCat.of (ComplexPoint X))
+      (TopCat.of (Point ℂ X))
       (cycleComponentSingularAnalyticClosedFiltration X x k).compl
       ((ambientRationalInjectiveComplex X).X j)
   · exact fun j hj y hy V hyV ↦

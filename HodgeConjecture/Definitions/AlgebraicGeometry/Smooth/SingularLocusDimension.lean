@@ -33,7 +33,4 @@ universe u
 variable {K : Type u} [Field K] {X : Scheme.{u}}
   (f : X ⟶ Spec (.of K)) [LocallyOfFiniteType f]
 
-/-- The closed complement of the actual smooth locus. -/
-def singularLocusClosed : Closeds X := f.smoothLocus.compl
-
 end AlgebraicGeometry

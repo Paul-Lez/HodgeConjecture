@@ -36,7 +36,7 @@ variable (X : Over (Spec ↧ℂ))
 /-- The canonical closed remainders inside the integral component's singular boundary. -/
 abbrev cycleComponentSingularClosedFiltration (k : ℕ) : Closeds (cycleComponent X.left x) :=
   reducedSmoothClosedFiltration (cycleComponentι X.left x ≫ X.hom)
-    (singularLocusClosed (cycleComponentι X.left x ≫ X.hom)) k
+    ((cycleComponentι X.left x ≫ X.hom).smoothLocus.compl) k
 
 /-- Every stage is a closed support in the original algebraic ambient scheme. -/
 def cycleComponentSingularAmbientClosedFiltration (k : ℕ) : Closeds X.left :=
@@ -47,7 +47,7 @@ def cycleComponentSingularAmbientClosedFiltration (k : ℕ) : Closeds X.left :=
 namespace ComplexPoint
 
 /-- The actual analytically closed ambient supports for nested-support localization. -/
-def cycleComponentSingularAnalyticClosedFiltration (k : ℕ) : Closeds (ComplexPoint X) :=
+def cycleComponentSingularAnalyticClosedFiltration (k : ℕ) : Closeds (Point ℂ X) :=
   ⟨Point.underlying ⁻¹' (cycleComponentSingularAmbientClosedFiltration X x k : Set X.left),
     (cycleComponentSingularAmbientClosedFiltration X x k).isClosed.preimage
       (continuous_underlying_to_zariski X)⟩

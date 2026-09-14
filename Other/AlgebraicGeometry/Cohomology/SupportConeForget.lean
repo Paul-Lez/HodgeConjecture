@@ -29,7 +29,7 @@ attribute [local instance] rationalConeForgetSheafDerivedCategory
 injective resolution. This has the ordinary augmentation normalization. -/
 def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
     H^n(X; ℚ) ≃+
-      (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X))
+      (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (Point ℂ X))
         (ambientRationalInjectiveComplex X)).homology n :=
   let e : H^n(X; ℚ) ≃+
       Hypercohomology X (ambientRationalInjectiveComplex X) n :=
@@ -56,7 +56,7 @@ attribute [local instance] rationalConeForgetSheafDerivedCategory
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma hypercohomologyAddEquivDerived_comp_shifted
-    {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ}
+    {K L : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ}
     (s n n' : ℤ) (h : s + n = n') (g : K ⟶ L⟦s⟧)
     (x : Hypercohomology X K n) :
     hypercohomologyAddEquivDerived X L n'
@@ -68,10 +68,11 @@ lemma hypercohomologyAddEquivDerived_comp_shifted
   rw [Localization.SmallShiftedHom.equiv_comp, Localization.SmallShiftedHom.equiv_mk]
   rfl
 
+set_option maxHeartbeats 800000 in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma hypercohomologyMap_comp_shifted
-    {K L K' L' : CochainComplex (AnalyticAdditiveSheaf X) ℤ}
+    {K L K' L' : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ}
     (s n n' : ℤ) (h : s + n = n')
     (a : K ⟶ K') (b : L ⟶ L') (g : K ⟶ L⟦s⟧) (g' : K' ⟶ L'⟦s⟧)
     (hab : a ≫ g' = g ≫ b⟦s⟧') (x : Hypercohomology X K n) :
@@ -94,7 +95,7 @@ set_option backward.isDefEq.respectTransparency false in
 constant sheaf by its actual injective resolution, is the actual cone
 connecting homology map. -/
 lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) (n : ℤ)
     (x : RationalCohomologyWithSupport X Z n) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n
       (forgetSupport X Z n x) =
@@ -103,7 +104,7 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
         (CochainComplex.mappingCone.triangle
           (ambientRationalInjectiveRestriction X Z hZ)).mor₃
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)))
+          (TopCat.of (Point ℂ X))).mapHomologicalComplex (.up ℤ)))
       (n - 1) n (by omega)
       (rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x) := by
   exact (congrArg (hypercohomologyAddEquivGlobalSectionsKInjective X
@@ -116,22 +117,23 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
         (CochainComplex.mappingCone (ambientRationalInjectiveRestriction X Z hZ))
         (ambientRationalInjectiveComplex X) 1 (n - 1) n (by omega) _ _)
 
+set_option maxHeartbeats 800000 in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The normalized support equivalence intertwines the existing
 `forgetSupport` with the actual inclusion of supported injective sections.
 No compatibility or choice of a sign is supplied as an input. -/
 lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) (n : ℤ)
     (x : RationalCohomologyWithSupport X Z n) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n
       (forgetSupport X Z n x) =
     HomologicalComplex.homologyMap
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
+        (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
         (ambientRationalInjectiveComplex X)).f n
       (rationalSupportAddEquivSupportedInjectiveHomology X Z hZ n x) := by
-  let Y := TopCat.of (ComplexPoint X)
+  let Y := TopCat.of (Point ℂ X)
   let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤

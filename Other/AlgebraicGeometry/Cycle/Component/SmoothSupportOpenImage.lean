@@ -22,7 +22,7 @@ variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
-  {M : TopCat.{0}} (f : TopCat.of (ComplexPoint X) ⟶ M)
+  {M : TopCat.{0}} (f : TopCat.of (Point ℂ X) ⟶ M)
   (hf : IsOpenEmbedding f) (S : Set M)
   (hS : f ⁻¹' S = Set.range (Point.map i))
 
@@ -33,7 +33,7 @@ def smoothClosedSupportOpenImageCoclassSection :
 
 
 theorem smoothClosedSupportOpenImageCoclassSection_restrict_chart
-    (z : ComplexPoint Y) :
+    (z : Point ℂ Y) :
     (supportRelativeCohomologySheaf M S (2 * (d - m))).obj.map
       (hf.functor.map (homOfLE (show
         smoothClosedSupportChartOpen X Y i m d z ≤ ⊤ from le_top))).op

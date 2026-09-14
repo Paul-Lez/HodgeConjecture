@@ -53,7 +53,7 @@ lemma cycleComponentMap_isClosedEmbedding
 analytic support in the ambient variety. -/
 def cycleComponentPointHomeomorphSupport
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) ≃ₜ
+    Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom)) ≃ₜ
       cycleComponentSupport X x :=
   (cycleComponentMap_isClosedEmbedding X x).toIsEmbedding.toHomeomorph.trans
     (Homeomorph.setCongr (range_cycleComponentMap X x))
@@ -61,7 +61,7 @@ def cycleComponentPointHomeomorphSupport
 @[simp]
 lemma cycleComponentPointHomeomorphSupport_apply
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
+    (z : Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
     cycleComponentPointHomeomorphSupport X x z =
       cycleComponentSupportMap X x z := by
   rfl
@@ -87,7 +87,7 @@ def cycleComponentSmoothPointHomeomorphSupport
 lemma cycleComponentSmoothPointHomeomorphSupport_apply
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
     (z : cycleComponentSmoothAnalyticLocus X x) :
-    (cycleComponentSmoothPointHomeomorphSupport X x z : (ComplexPoint X)) =
+    (cycleComponentSmoothPointHomeomorphSupport X x z : (Point ℂ X)) =
       cycleComponentMap X x z := by
   rfl
 

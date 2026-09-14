@@ -41,12 +41,9 @@ theorem opens_paracompactSpace_of_compact_chartedSpace
     [ChartedSpace H M] [SecondCountableTopology H] [LocallyCompactSpace H]
     [CompactSpace M] [T2Space M] (U : Opens M) :
     ParacompactSpace U := by
-  let : SigmaCompactSpace M := inferInstance
   let : SecondCountableTopology M :=
     ChartedSpace.secondCountable_of_sigmaCompact H M
-  let : LocallyCompactSpace M := ChartedSpace.locallyCompactSpace H M
   let : LocallyCompactSpace U := U.isOpen.locallyCompactSpace
-  let : SigmaCompactSpace U := inferInstance
   infer_instance
 
 end TopologicalSpace

@@ -40,7 +40,7 @@ attribute [local instance] chartFieldModule
 attribute [local instance] chartFieldTower
 
 lemma formRestriction_differential [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
     formRestriction X d i (p + 1)
         (Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) p θ) =
@@ -49,7 +49,7 @@ lemma formRestriction_differential [SmoothOfRelativeDimension d X.hom]
   Algebra.DeRham.map_differential ℂ (holomorphicRestrictionAlgHom X d i) p θ
 
 lemma chartEvaluationKernel_eq_top_of_lt [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
     {p : ℕ} (hp : d < p) : chartEvaluationKernel X d U p = ⊤ := by
   refine top_unique fun θ _ ↦ ?_
   refine (mem_chartEvaluationKernel_iff X d U p θ).2 fun z y hy ↦
@@ -60,7 +60,7 @@ lemma chartEvaluationKernel_eq_top_of_lt [SmoothOfRelativeDimension d X.hom]
   lia
 
 lemma holomorphicForm_eq_zero_of_lt [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
     {p : ℕ} (hp : d < p) (θ : HolomorphicForm X d U p) : θ = 0 := by
   obtain ⟨θ, rfl⟩ := Submodule.mkQ_surjective (chartEvaluationKernel X d U p) θ
   change Submodule.Quotient.mk θ = 0
@@ -68,7 +68,7 @@ lemma holomorphicForm_eq_zero_of_lt [SmoothOfRelativeDimension d X.hom]
   trivial
 
 lemma holomorphicFormDifferential_squared [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (p : ℕ)
     (θ : HolomorphicForm X d U p) :
     holomorphicFormDifferential X d U (p + 1)
       (holomorphicFormDifferential X d U p θ) = 0 := by
@@ -80,7 +80,7 @@ lemma holomorphicFormDifferential_squared [SmoothOfRelativeDimension d X.hom]
   exact Submodule.Quotient.mk_zero _
 
 lemma holomorphicFormRestriction_differential [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     (θ : HolomorphicForm X d U p) :
     holomorphicFormRestriction X d i (p + 1)
         (holomorphicFormDifferential X d U p θ) =

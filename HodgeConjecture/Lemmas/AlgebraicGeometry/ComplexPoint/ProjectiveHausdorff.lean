@@ -42,7 +42,7 @@ open Point
 
 /-- The analytification of an affine complex scheme is Hausdorff. -/
 lemma t2Space_of_isAffine (X : Over (Spec ↧ℂ)) [IsAffine X.left] :
-    @T2Space (ComplexPoint X) analyticTopology := by
+    @T2Space (Point ℂ X) analyticTopology := by
   rw [t2Space_iff_nhds]
   intro z w hzw
   have happ : z.left.appTop ≠ w.left.appTop := fun h ↦
@@ -68,23 +68,23 @@ lemma t2Space_of_isAffine (X : Over (Spec ↧ℂ)) [IsAffine X.left] :
 /-- A complex scheme whose every pair of complex points lies in a common affine open has a
 Hausdorff analytification. -/
 lemma t2Space_of_pair_mem_affineOpen (X : Over (Spec ↧ℂ))
-    (hpair : ∀ z w : ComplexPoint X,
+    (hpair : ∀ z w : Point ℂ X,
       ∃ U : X.left.Opens, z ∈ overOpen U ∧ w ∈ overOpen U ∧ IsAffine U.toScheme) :
-    @T2Space (ComplexPoint X) analyticTopology := by
+    @T2Space (Point ℂ X) analyticTopology := by
   rw [t2Space_iff_nhds]
   intro z w hzw
   obtain ⟨U, hzU, hwU, hUaff⟩ := hpair z w
   let : IsAffine (openScheme X U).left := hUaff
-  let : T2Space (ComplexPoint (openScheme X U)) :=
+  let : T2Space (Point ℂ (openScheme X U)) :=
     t2Space_of_isAffine (openScheme X U)
-  let : T2Space {q : ComplexPoint X // q ∈ overOpen U} :=
+  let : T2Space {q : Point ℂ X // q ∈ overOpen U} :=
     (openHomeomorph X U).t2Space
-  let zU : {q : ComplexPoint X // q ∈ overOpen U} := ⟨z, hzU⟩
-  let wU : {q : ComplexPoint X // q ∈ overOpen U} := ⟨w, hwU⟩
+  let zU : {q : Point ℂ X // q ∈ overOpen U} := ⟨z, hzU⟩
+  let wU : {q : Point ℂ X // q ∈ overOpen U} := ⟨w, hwU⟩
   have hzwU : zU ≠ wU := fun h ↦ hzw (congrArg Subtype.val h)
   obtain ⟨A, B, hA, hB, hzA, hwB, hAB⟩ := t2_separation hzwU
-  let e : {q : ComplexPoint X // q ∈ overOpen U} →
-      ComplexPoint X := Subtype.val
+  let e : {q : Point ℂ X // q ∈ overOpen U} →
+      Point ℂ X := Subtype.val
   have he : IsOpenEmbedding e := (isOpen_overOpen (X := X) U).isOpenEmbedding_subtypeVal
   refine ⟨e '' A, (he.isOpenMap A hA).mem_nhds ⟨zU, hzA, rfl⟩,
     e '' B, (he.isOpenMap B hB).mem_nhds ⟨wU, hwB, rfl⟩, ?_⟩
@@ -224,7 +224,7 @@ lemma vectorToComplexPoint_mem_projectiveSpaceBasicOpen {n d : ℕ}
 
 /-- Any two complex points of finite-dimensional projective space lie in a common affine open. -/
 lemma projectiveSpace_pair_mem_affineOpen (n : ℕ)
-    (z w : ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) :
+    (z w : Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) :
     ∃ U : (ProjectiveSpace (Fin (n + 1)) (Spec ↧ℂ)).Opens,
       z ∈ Point.overOpen U ∧ w ∈ Point.overOpen U ∧ IsAffine U.toScheme := by
   obtain ⟨v, hvz⟩ := surjective_vectorToComplexPoint z
@@ -243,7 +243,7 @@ lemma projectiveSpace_pair_mem_affineOpen (n : ℕ)
 /-- Finite-dimensional scheme-theoretic complex projective space is Hausdorff. -/
 noncomputable instance instT2SpaceProjectiveSpaceComplexPoint (n : ℕ) :
     T2Space
-      (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) :=
+      (Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) :=
   ComplexPoint.t2Space_of_pair_mem_affineOpen
     (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))
     (projectiveSpace_pair_mem_affineOpen n)
@@ -255,7 +255,7 @@ namespace ProjectiveSpace.Presentation
 set_option linter.style.haveILetI false in
 /-- Any two complex points of a projective presentation lie in a common affine open. -/
 lemma pair_mem_affineOpen {X : Scheme} {f : X ⟶ Spec ↧ℂ}
-    (P : ProjectiveSpace.Presentation f) (z w : ComplexPoint (Over.mk f)) :
+    (P : ProjectiveSpace.Presentation f) (z w : Point ℂ (Over.mk f)) :
     ∃ U : X.Opens, z ∈ Point.overOpen U ∧
       w ∈ Point.overOpen U ∧ IsAffine U.toScheme := by
   obtain ⟨U, hzU, hwU, hUaff⟩ :=
@@ -271,7 +271,7 @@ lemma pair_mem_affineOpen {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 /-- The analytification of an explicit projective presentation is Hausdorff. -/
 theorem complexPoint_t2Space {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) :
-    @T2Space (ComplexPoint (Over.mk f)) Point.analyticTopology :=
+    @T2Space (Point ℂ (Over.mk f)) Point.analyticTopology :=
   ComplexPoint.t2Space_of_pair_mem_affineOpen (Over.mk f) (pair_mem_affineOpen P)
 
 end ProjectiveSpace.Presentation
@@ -280,7 +280,7 @@ namespace IsProjective
 
 /-- The analytification of a projective complex scheme is Hausdorff. -/
 noncomputable instance complexPoint_t2Space {X : Over (Spec ↧ℂ)}
-    [h : IsProjective X.hom] : T2Space (ComplexPoint X) :=
+    [h : IsProjective X.hom] : T2Space (Point ℂ X) :=
   ProjectiveSpace.Presentation.complexPoint_t2Space
     (Classical.choice h.nonempty_presentation)
 

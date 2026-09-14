@@ -26,7 +26,7 @@ variable (X Y : Over (Spec ↧ℂ))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
-@[simp] theorem smoothClosedSupportCoclassSection_germ (x : ComplexPoint X) :
+@[simp] theorem smoothClosedSupportCoclassSection_germ (x : Point ℂ X) :
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.Γgerm x
       (smoothClosedSupportCoclassSection X Y i m d) =
         smoothClosedSupportCoclassStalk X Y i m d x :=

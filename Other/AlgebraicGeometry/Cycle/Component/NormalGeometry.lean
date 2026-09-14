@@ -41,7 +41,7 @@ variable (X : Over (Spec ↧ℂ))
 /-- The underlying scheme point of a complex point of a cycle component is closed. -/
 lemma cycleComponent_complexPoint_underlying_isClosed
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
+    (z : Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
     IsClosed {z.underlying} := by
   let φ : Spec ↧ℂ ⟶ cycleComponent X.left x := z.left
   exact ((pointEquivClosedPoint
@@ -51,7 +51,7 @@ lemma cycleComponent_complexPoint_underlying_isClosed
 point. -/
 lemma cycleComponent_complexPoint_ambient_underlying_isClosed
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
+    (z : Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
     IsClosed {cycleComponentι X.left x z.underlying} := by
   have hclosed := (cycleComponentι X.left x).isClosedEmbedding.isClosedMap
     {z.underlying} (cycleComponent_complexPoint_underlying_isClosed X x z)
@@ -61,7 +61,7 @@ lemma cycleComponent_complexPoint_ambient_underlying_isClosed
 closed. -/
 lemma exists_cycleComponent_smooth_closed_complexPoint
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ∃ z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)),
+    ∃ z : Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom)),
       z.underlying ∈
           (cycleComponentι X.left x ≫ X.hom).smoothLocus ∧
         IsClosed {z.underlying} := by

@@ -46,7 +46,7 @@ variable (X : Over (Spec ↧ℂ))
 
 /-- Every open subset of a smooth projective complex analytification is paracompact. -/
 theorem openParacompactSpace [IsIntegral X.left] [Smooth X.hom]
-    (U : Opens (ComplexPoint X)) : ParacompactSpace U :=
+    (U : Opens (Point ℂ X)) : ParacompactSpace U :=
   opens_paracompactSpace_of_compact_chartedSpace (H := Fin (dim X.left) → ℂ) U
 
 end AlgebraicGeometry.ComplexPoint

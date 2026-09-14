@@ -53,16 +53,16 @@ lemma codimensionZeroCycleClassSpan_eq_span_unit :
 
 /-- On a connected projective analytification, the codimension-zero unit span is all of degree-zero rational cohomology. -/
 theorem codimensionZeroCycleClassSpan_eq_top_of_connected
-    (hV : ConnectedSpace (ComplexPoint X)) :
+    (hV : ConnectedSpace (Point ℂ X)) :
     codimensionZeroCycleClassSpan X = ⊤ := by
-  let : ConnectedSpace (ComplexPoint X) := hV
+  let : ConnectedSpace (Point ℂ X) := hV
   rw [codimensionZeroCycleClassSpan_eq_span_unit, span_rationalCohomologyUnit_eq_top]
 
 /-- On a connected projective analytification, the constructed codimension-zero algebraic
 cycle-class span is the whole degree-zero rational cohomology group, provided it has been compared
 with the degree-zero unit span. -/
 theorem algebraicCycleClassSpan_zero_eq_top_of_connected
-    (hV : ConnectedSpace (ComplexPoint X))
+    (hV : ConnectedSpace (Point ℂ X))
     (hcompare : algebraicCycleClassSpan X 0 =
       codimensionZeroCycleClassSpan X) :
     algebraicCycleClassSpan X 0 = ⊤ := by
@@ -72,7 +72,7 @@ theorem algebraicCycleClassSpan_zero_eq_top_of_connected
 equal the algebraic cycle-class span, assuming the comparison with the codimension-zero
 Chow-class span. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected
-    (hV : ConnectedSpace (ComplexPoint X))
+    (hV : ConnectedSpace (Point ℂ X))
     (hcompare : algebraicCycleClassSpan X 0 =
       codimensionZeroCycleClassSpan X) :
     Hdg^0(ℚ; X) = algebraicCycleClassSpan X 0 := by
@@ -82,7 +82,7 @@ theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected
 /-- The codimension-zero Hodge-conjecture inclusion follows from analytic connectedness
 and the comparison with the degree-zero unit span. -/
 theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected
-    (hV : ConnectedSpace (ComplexPoint X))
+    (hV : ConnectedSpace (Point ℂ X))
     (hcompare : algebraicCycleClassSpan X 0 =
       codimensionZeroCycleClassSpan X) :
     Hdg^0(ℚ; X) ≤ algebraicCycleClassSpan X 0 := by

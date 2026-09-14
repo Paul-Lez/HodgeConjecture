@@ -42,30 +42,30 @@ open Point
 variable (X : Over (Spec ↧ℂ))
 
 local instance analyticSupportHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) :=
+  HasDerivedCategory.standard (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))
 
 /-- The inclusion of the complement of a subset into the complex-point space. -/
-def analyticComplementInclusion (Z : Set (ComplexPoint X)) :
+def analyticComplementInclusion (Z : Set (Point ℂ X)) :
     TopCat.of ↥Zᶜ ⟶
-      TopCat.of (ComplexPoint X) :=
-  TopCat.subtypeInclusion (TopCat.of (ComplexPoint X)) Zᶜ
+      TopCat.of (Point ℂ X) :=
+  TopCat.subtypeInclusion (TopCat.of (Point ℂ X)) Zᶜ
 
 /-- Sheaves of additive groups on the complement of a subset. -/
-abbrev AnalyticComplementAdditiveSheaf (Z : Set (ComplexPoint X)) :=
+abbrev AnalyticComplementAdditiveSheaf (Z : Set (Point ℂ X)) :=
   TopCat.Sheaf AddCommGrpCat (TopCat.of ↥Zᶜ)
 
 /-- The rational constant sheaf on the complement, pushed forward to the ambient space. -/
 def pushforwardComplementConstantRationalSheaf
-    (Z : Set (ComplexPoint X)) : AnalyticAdditiveSheaf X :=
+    (Z : Set (Point ℂ X)) : TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)) :=
   (TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion X Z)).obj
       𝓒(↧↥Zᶜ; ℚ)
 
 /-- Constant rational sections restrict canonically to locally constant sections on the
 complement. This is the presheaf morphism before sheafifying the source. -/
-def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
-    (Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).obj
+def rationalRestrictionPresheaf (Z : Set (Point ℂ X)) :
+    (Functor.const (Opens (TopCat.of (Point ℂ X)))ᵒᵖ).obj
         (AddCommGrpCat.of ℚ) ⟶
       (pushforwardComplementConstantRationalSheaf X Z).obj :=
   let U := TopCat.of ↥Zᶜ
@@ -75,25 +75,25 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
       ((Functor.const (Opens U)ᵒᵖ).obj (AddCommGrpCat.of ℚ)))
 
 /-- The canonical restriction of the rational constant sheaf to the complement. -/
-def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
-    𝓒(↧(ComplexPoint X); ℚ) ⟶
+def rationalRestrictionSheaf (Z : Set (Point ℂ X)) :
+    𝓒(↧(Point ℂ X); ℚ) ⟶
       pushforwardComplementConstantRationalSheaf X Z :=
   let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
+    (TopCat.of (Point ℂ X))
   ⟨sheafifyLift J (rationalRestrictionPresheaf X Z)
     (pushforwardComplementConstantRationalSheaf X Z).property⟩
 
 /-- A fixed injective resolution used to compute the derived pushforward from the complement. -/
 def complementConstantRationalInjectiveResolution
-    (Z : Set (ComplexPoint X)) :
+    (Z : Set (Point ℂ X)) :
     InjectiveResolution 𝓒(↧↥Zᶜ; ℚ) :=
   injectiveResolution 𝓒(↧↥Zᶜ; ℚ)
 
 /-- A complex representing the derived pushforward of the rational constant sheaf on the
 complement. -/
 def derivedPushforwardComplementConstantRationalComplexNat
-    (Z : Set (ComplexPoint X)) :
-    CochainComplex (AnalyticAdditiveSheaf X) ℕ :=
+    (Z : Set (Point ℂ X)) :
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℕ :=
   ((TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion X Z)).mapHomologicalComplex
       (ComplexShape.up ℕ)).obj
@@ -102,27 +102,27 @@ def derivedPushforwardComplementConstantRationalComplexNat
 /-- Every additive sheaf on the empty complement is a zero object. -/
 private lemma isZero_sheaf_on_complement_univ
     (F : TopCat.Sheaf AddCommGrpCat.{0}
-      (TopCat.of ↥((Set.univ : Set (ComplexPoint X))ᶜ))) :
+      (TopCat.of ↥((Set.univ : Set (Point ℂ X))ᶜ))) :
     IsZero F :=
   (TopCat.Sheaf.isZero_iff_stalkFunctor_obj_isZero
     (C := AddCommGrpCat.{0})
-    (X := TopCat.of ↥((Set.univ : Set (ComplexPoint X))ᶜ)) F).2
+    (X := TopCat.of ↥((Set.univ : Set (Point ℂ X))ᶜ)) F).2
     fun x ↦ (show False by simpa using x.property).elim
 
 /-- Every term of the derived pushforward from the empty complement is zero. -/
 private lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
     IsZero ((derivedPushforwardComplementConstantRationalComplexNat X
-      (Set.univ : Set (ComplexPoint X))).X n) :=
+      (Set.univ : Set (Point ℂ X))).X n) :=
   (TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion X
-      (Set.univ : Set (ComplexPoint X)))).map_isZero
+      (Set.univ : Set (Point ℂ X)))).map_isZero
         (isZero_sheaf_on_complement_univ X _)
 
 /-- The complex representing derived pushforward from the empty complement is itself a zero
 object, not merely acyclic. -/
 private lemma isZero_derivedPushforwardComplement_univ :
     IsZero (derivedPushforwardComplementConstantRationalComplexNat X
-      (Set.univ : Set (ComplexPoint X))) := by
+      (Set.univ : Set (Point ℂ X))) := by
   constructor
   · exact fun K ↦ ⟨⟨⟨0⟩, fun f ↦ HomologicalComplex.hom_ext _ _ fun n ↦
       (isZero_derivedPushforwardComplement_univ_X X n).eq_zero_of_src _⟩⟩
@@ -131,12 +131,12 @@ private lemma isZero_derivedPushforwardComplement_univ :
 
 /-- The derived pushforward complex, extended by zero to integer degrees. -/
 def derivedPushforwardComplementConstantRationalComplexInt
-    (Z : Set (ComplexPoint X)) :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+    (Z : Set (Point ℂ X)) :
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
   (derivedPushforwardComplementConstantRationalComplexNat X Z).extend
     ComplexShape.embeddingUpNat
 
-instance (Z : Set (ComplexPoint X)) :
+instance (Z : Set (Point ℂ X)) :
     (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE 0 := by
   unfold derivedPushforwardComplementConstantRationalComplexInt
   infer_instance
@@ -145,14 +145,14 @@ instance (Z : Set (ComplexPoint X)) :
 zero complex. -/
 lemma isZero_derivedPushforwardComplement_univ_int :
     IsZero (derivedPushforwardComplementConstantRationalComplexInt X
-      (Set.univ : Set (ComplexPoint X))) :=
+      (Set.univ : Set (Point ℂ X))) :=
   (ComplexShape.embeddingUpNat.extendFunctor
-    (AnalyticAdditiveSheaf X)).map_isZero
+    (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).map_isZero
       (isZero_derivedPushforwardComplement_univ X)
 
 /-- The pushed-forward resolution map from the underived constant sheaf on the complement. -/
 def pushforwardComplementResolutionMap
-    (Z : Set (ComplexPoint X)) :
+    (Z : Set (Point ℂ X)) :
     ((TopCat.Sheaf.pushforward AddCommGrpCat
       (analyticComplementInclusion X Z)).mapHomologicalComplex
         (ComplexShape.up ℕ)).obj
@@ -168,11 +168,11 @@ def pushforwardComplementResolutionMap
 /-- Restriction from ambient rational constants to a complex representing the derived
 pushforward from the complement. -/
 def rationalRestrictionComplexNat
-    (Z : Set (ComplexPoint X)) :
-    (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        𝓒(↧(ComplexPoint X); ℚ) ⟶
+    (Z : Set (Point ℂ X)) :
+    (CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).obj
+        𝓒(↧(Point ℂ X); ℚ) ⟶
       derivedPushforwardComplementConstantRationalComplexNat X Z :=
-  (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
+  (CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).map
       (rationalRestrictionSheaf X Z) ≫
     (HomologicalComplex.singleMapHomologicalComplex
       (TopCat.Sheaf.pushforward AddCommGrpCat
@@ -182,7 +182,7 @@ def rationalRestrictionComplexNat
 
 /-- Restriction from the ambient rational constant complex to the derived pushforward from the
 complement. -/
-def rationalRestrictionComplexInt (Z : Set (ComplexPoint X)) :
+def rationalRestrictionComplexInt (Z : Set (Point ℂ X)) :
     constantFieldSheafComplexInt ℚ X ⟶
       derivedPushforwardComplementConstantRationalComplexInt X Z :=
   HomologicalComplex.extendMap (rationalRestrictionComplexNat X Z)
@@ -194,15 +194,16 @@ fact that cohomology supported on the whole space is ordinary cohomology. -/
 noncomputable instance isIso_mappingConeTriangleh_mor₃_univ :
     IsIso ((CochainComplex.mappingCone.triangleh
       (rationalRestrictionComplexInt X
-        (Set.univ : Set (ComplexPoint X)))).mor₃) := by
+        (Set.univ : Set (Point ℂ X)))).mor₃) := by
   let f := rationalRestrictionComplexInt X
-    (Set.univ : Set (ComplexPoint X))
+    (Set.univ : Set (Point ℂ X))
   have hdist : CochainComplex.mappingCone.triangleh f ∈
       HomotopyCategory.Pretriangulated.distinguishedTriangles
-        (AnalyticAdditiveSheaf X) :=
+        (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) :=
     ⟨_, _, f, ⟨Iso.refl _⟩⟩
   exact (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _ hdist).1
-    ((HomotopyCategory.quotient (AnalyticAdditiveSheaf X) (ComplexShape.up ℤ)).map_isZero
+    ((HomotopyCategory.quotient (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))
+      (ComplexShape.up ℤ)).map_isZero
       (isZero_derivedPushforwardComplement_univ_int X))
 
 /-- The same whole-support connecting morphism is an isomorphism in the derived category used by
@@ -211,28 +212,28 @@ noncomputable instance isIso_derivedMappingConeTriangle_mor₃_univ :
     IsIso ((DerivedCategory.Q.mapTriangle.obj
       (CochainComplex.mappingCone.triangle
         (rationalRestrictionComplexInt X
-          (Set.univ : Set (ComplexPoint X))))).mor₃) := by
+          (Set.univ : Set (Point ℂ X))))).mor₃) := by
   let f := rationalRestrictionComplexInt X
-    (Set.univ : Set (ComplexPoint X))
+    (Set.univ : Set (Point ℂ X))
   exact (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _
     (DerivedCategory.mappingCone_triangle_distinguished f)).1
     (DerivedCategory.Q.map_isZero (isZero_derivedPushforwardComplement_univ_int X))
 
 /-- The mapping-cone model for the homotopy fiber defining rational cohomology with support. -/
 abbrev rationalCohomologyWithSupportComplex
-    (Z : Set (ComplexPoint X)) :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+    (Z : Set (Point ℂ X)) :
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
   CochainComplex.mappingCone (rationalRestrictionComplexInt X Z)
 
 /-- Rational constant-sheaf cohomology with support in `Z`. The degree shift realizes the
 homotopy fiber of restriction as the mapping cone shifted by `-1`. -/
 abbrev RationalCohomologyWithSupport
-    (Z : Set (ComplexPoint X)) (n : ℤ) : Type 1 :=
+    (Z : Set (Point ℂ X)) (n : ℤ) : Type 1 :=
   Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)
 
 /-- The degree-one connecting morphism from the mapping cone to the ambient rational constant
 complex. -/
-def forgetSupportShiftedHom (Z : Set (ComplexPoint X)) :
+def forgetSupportShiftedHom (Z : Set (Point ℂ X)) :
     Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
       (rationalCohomologyWithSupportComplex X Z)
       (constantFieldSheafComplexInt ℚ X) (1 : ℤ) :=
@@ -241,7 +242,7 @@ def forgetSupportShiftedHom (Z : Set (ComplexPoint X)) :
       (rationalRestrictionComplexInt X Z)).mor₃
 
 /-- Forget support, using the connecting morphism of the mapping-cone triangle. -/
-def forgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
+def forgetSupport (Z : Set (Point ℂ X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+
       H^n(X; ℚ) where
   toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
@@ -264,21 +265,22 @@ instance isIso_forgetSupportShiftedHom_univ_map :
     IsIso ((Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms X) DerivedCategory.Q)
         (forgetSupportShiftedHom X
-          (Set.univ : Set (ComplexPoint X)))) := by
+          (Set.univ : Set (Point ℂ X)))) := by
   unfold forgetSupportShiftedHom
   erw [Localization.SmallShiftedHom.equiv_mk]
   exact isIso_derivedMappingConeTriangle_mor₃_univ X
 
 end
 
+set_option maxHeartbeats 800000 in
 /-- For support equal to the whole space, forgetting support is a canonical equivalence with
 ordinary rational cohomology. Its forward map is definitionally the support-forgetting map. -/
 noncomputable def forgetSupportEquivUniv (n : ℤ) :
     RationalCohomologyWithSupport X
-        (Set.univ : Set (ComplexPoint X)) n ≃
+        (Set.univ : Set (Point ℂ X)) n ≃
       H^n(X; ℚ) :=
   let eSource : RationalCohomologyWithSupport X
-        (Set.univ : Set (ComplexPoint X)) n ≃
+        (Set.univ : Set (Point ℂ X)) n ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
         (DerivedCategory.Q.obj (rationalCohomologyWithSupportComplex X Set.univ))
@@ -294,7 +296,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
   let g := (Localization.SmallShiftedHom.equiv
     (analyticQuasiIsomorphisms X) DerivedCategory.Q)
       (forgetSupportShiftedHom X
-        (Set.univ : Set (ComplexPoint X)))
+        (Set.univ : Set (Point ℂ X)))
   let eComp : ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
         (DerivedCategory.Q.obj (rationalCohomologyWithSupportComplex X Set.univ))
@@ -306,7 +308,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
       (X := DerivedCategory.Q.obj (constantIntegerSheafComplexInt X)) g
       (show (1 : ℤ) + (n - 1) = n by lia)
   have hcomp (α : RationalCohomologyWithSupport X
-      (Set.univ : Set (ComplexPoint X)) n) :
+      (Set.univ : Set (Point ℂ X)) n) :
       eTarget (forgetSupport X Set.univ n α) = eComp (eSource α) := by
     change eTarget
       (α.comp (forgetSupportShiftedHom X Set.univ) (by lia)) = _
@@ -338,7 +340,7 @@ attribute [local instance] analyticSupportHasDerivedCategory
 
 @[simp] lemma forgetSupportEquivUniv_apply (n : ℤ)
     (α : RationalCohomologyWithSupport X
-      (Set.univ : Set (ComplexPoint X)) n) :
+      (Set.univ : Set (Point ℂ X)) n) :
     forgetSupportEquivUniv X n α =
       forgetSupport X Set.univ n α := rfl
 

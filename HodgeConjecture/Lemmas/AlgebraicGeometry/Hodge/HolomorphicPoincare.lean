@@ -47,19 +47,19 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 /-- For the analytic charted-space instance, `chartAt` is the algebraically constructed local
 chart. -/
 lemma chartAt_eq_localChart [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) :
+    (z : Point ℂ X) :
     chartAt (Fin d → ℂ) z = localChart X d z := rfl
 
 /-- The change of coordinates from the chart at `z'` to the chart at `z`. -/
 def fixedChartTransition [SmoothOfRelativeDimension d X.hom]
-    (z z' : ComplexPoint X) : (Fin d → ℂ) → (Fin d → ℂ) :=
+    (z z' : Point ℂ X) : (Fin d → ℂ) → (Fin d → ℂ) :=
   fun y ↦ (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z)
     ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y)
 
 /-- A fixed-chart transition is complex analytic wherever the two charts overlap. -/
 lemma analyticAt_fixedChartTransition
     [SmoothOfRelativeDimension d X.hom]
-    (z z' : ComplexPoint X) {y : Fin d → ℂ}
+    (z z' : Point ℂ X) {y : Fin d → ℂ}
     (hy : y ∈ ((localChart X d z').symm.trans
       (localChart X d z)).source) :
     AnalyticAt ℂ (fixedChartTransition X d z z') y := by
@@ -69,8 +69,8 @@ lemma analyticAt_fixedChartTransition
 transition. -/
 lemma chartSection_fixedChartTransition
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z z' : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z z' : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
     (hy : (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source) :
@@ -83,8 +83,8 @@ lemma chartSection_fixedChartTransition
 transition. -/
 lemma chartSectionDifferential_fixedChartTransition
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z z' : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z z' : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain X d U z')
     (hyz : (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
@@ -114,7 +114,7 @@ lemma chartSectionDifferential_fixedChartTransition
     let ez' := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z'
     refine ⟨ez.map_source hyz, ?_⟩
     change ez.symm (fixedChartTransition X d z z' y) ∈
-      ((Opposite.unop U : Opens (ComplexPoint X)) : Set _)
+      ((Opposite.unop U : Opens (Point ℂ X)) : Set _)
     rw [show fixedChartTransition X d z z' y = ez (ez'.symm y) from rfl,
       ez.left_inv hyz]
     exact hy.2
@@ -145,8 +145,8 @@ lemma chartSectionDifferential_fixedChartTransition
 transition. -/
 lemma chartEvaluation_fixedChartTransition
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z z' : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z z' : Point ℂ X) (p : ℕ)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z')
     (hyz : (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y ∈
@@ -159,7 +159,7 @@ lemma chartEvaluation_fixedChartTransition
     refine ⟨(extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).map_source hyz, ?_⟩
     change (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm
       (fixedChartTransition X d z z' y) ∈
-        ((Opposite.unop U : Opens (ComplexPoint X)) : Set _)
+        ((Opposite.unop U : Opens (Point ℂ X)) : Set _)
     rw [show fixedChartTransition X d z z' y =
         (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z)
           ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z').symm y) from rfl,
@@ -191,10 +191,10 @@ lemma chartEvaluation_fixedChartTransition
 the open set lies in the source of that chart. -/
 lemma mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (p : ℕ)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) :
-      Set (ComplexPoint X)) ⊆
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (p : ℕ)
+    (hsource : ((Opposite.unop U : Opens (Point ℂ X)) :
+      Set (Point ℂ X)) ⊆
         (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
     (hθ : Set.EqOn (chartEvaluation X d U z p θ) 0
@@ -214,7 +214,7 @@ lemma mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
     let ez' := extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z'
     refine ⟨ez.map_source hyz, ?_⟩
     change ez.symm (fixedChartTransition X d z z' y) ∈
-      ((Opposite.unop U : Opens (ComplexPoint X)) : Set _)
+      ((Opposite.unop U : Opens (Point ℂ X)) : Set _)
     rw [show fixedChartTransition X d z z' y = ez (ez'.symm y) from rfl,
       ez.left_inv hyz]
     exact hyU
@@ -223,13 +223,13 @@ lemma mem_chartEvaluationKernel_of_chartEvaluation_eq_zero
   simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
 
 lemma contMDiffAt_chartFunction [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
+    (hsource : ((Opposite.unop U : Opens (Point ℂ X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
     (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z))
-    {q : ComplexPoint X} (hq : q ∈ Opposite.unop U) :
+    {q : Point ℂ X} (hq : q ∈ Opposite.unop U) :
     ContMDiffAt (modelWithCornersSelf ℂ (Fin d → ℂ))
       (modelWithCornersSelf ℂ ℂ) ω
       (fun x ↦ a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) x)) q := by
@@ -240,7 +240,7 @@ lemma contMDiffAt_chartFunction [SmoothOfRelativeDimension d X.hom]
     refine ⟨(extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).map_source hqsource, ?_⟩
     change (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q) ∈
-        ((Opposite.unop U : Opens (ComplexPoint X)) : Set _)
+        ((Opposite.unop U : Opens (Point ℂ X)) : Set _)
     rw [(extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).left_inv hqsource]
     exact hq
   exact (ha _ hcoord).contDiffAt.contMDiffAt.comp q
@@ -248,41 +248,41 @@ lemma contMDiffAt_chartFunction [SmoothOfRelativeDimension d X.hom]
       rwa [← extChartAt_source (modelWithCornersSelf ℂ (Fin d → ℂ))]))
 
 lemma contMDiff_chartFunction [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
+    (hsource : ((Opposite.unop U : Opens (Point ℂ X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
     (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z)) :
     ContMDiff (modelWithCornersSelf ℂ (Fin d → ℂ)) (modelWithCornersSelf ℂ ℂ) ω
-      (fun q : (Opposite.unop U : Opens (ComplexPoint X)) ↦
+      (fun q : (Opposite.unop U : Opens (Point ℂ X)) ↦
         a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q)) :=
   fun q ↦ (contMDiffAt_subtype_iff
     (I := modelWithCornersSelf ℂ (Fin d → ℂ))
     (I' := modelWithCornersSelf ℂ ℂ)
-    (U := (Opposite.unop U : Opens (ComplexPoint X)))
-    (f := fun x : ComplexPoint X ↦
+    (U := (Opposite.unop U : Opens (Point ℂ X)))
+    (f := fun x : Point ℂ X ↦
       a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) x))
     (x := q)).mpr (contMDiffAt_chartFunction X d U z hsource a ha q.2)
 
 /-- An analytic scalar function in one chart, regarded as a holomorphic section on the chart
 source. -/
 def holomorphicSectionOfChart [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
+    (hsource : ((Opposite.unop U : Opens (Point ℂ X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
     (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z)) :
     OpenHolomorphicFunctions X d U :=
   (⟨fun q ↦ a ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z) q),
       contMDiff_chartFunction X d U z hsource a ha⟩ :
-    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯)
+    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (Point ℂ X)); ℂ⟯)
 
 lemma chartSection_holomorphicSectionOfChart [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
+    (hsource : ((Opposite.unop U : Opens (Point ℂ X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
     (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z))
@@ -296,9 +296,9 @@ lemma chartSection_holomorphicSectionOfChart [SmoothOfRelativeDimension d X.hom]
 
 lemma chartSectionDifferential_holomorphicSectionOfChart
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
+    (hsource : ((Opposite.unop U : Opens (Point ℂ X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (a : (Fin d → ℂ) → ℂ)
     (ha : AnalyticOnNhd ℂ a (chartSectionDomain X d U z))
@@ -311,9 +311,9 @@ lemma chartSectionDifferential_holomorphicSectionOfChart
 
 /-- The `i`-th fixed-chart coordinate as a holomorphic section. -/
 def chartCoordinateSection [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
+    (hsource : ((Opposite.unop U : Opens (Point ℂ X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (i : Fin d) : OpenHolomorphicFunctions X d U :=
   holomorphicSectionOfChart X d U z hsource
@@ -322,9 +322,9 @@ def chartCoordinateSection [SmoothOfRelativeDimension d X.hom]
 
 lemma chartSectionDifferential_chartCoordinateSection
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
+    (hsource : ((Opposite.unop U : Opens (Point ℂ X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (i : Fin d) {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     chartSectionDifferential X d U z
@@ -338,9 +338,9 @@ lemma chartSectionDifferential_chartCoordinateSection
 /-- A finite differential form whose fixed-chart evaluation is a given analytic
 alternating-form field. -/
 def formOfAnalyticField [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
+    (hsource : ((Opposite.unop U : Opens (Point ℂ X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (p : ℕ) (θ : (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)
     (hθ : AnalyticOnNhd ℂ θ (chartSectionDomain X d U z)) :
@@ -356,9 +356,9 @@ def formOfAnalyticField [SmoothOfRelativeDimension d X.hom]
 chosen chart. -/
 lemma chartEvaluation_formOfAnalyticField
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
-    (hsource : ((Opposite.unop U : Opens (ComplexPoint X)) : Set _) ⊆
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
+    (hsource : ((Opposite.unop U : Opens (Point ℂ X)) : Set _) ⊆
       (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).source)
     (p : ℕ) (θ : (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)
     (hθ : AnalyticOnNhd ℂ θ (chartSectionDomain X d U z)) :
@@ -400,8 +400,8 @@ lemma chartEvaluation_formOfAnalyticField
 
 /-- A holomorphic section is complex analytic in every fixed chart. -/
 lemma analyticOnNhd_chartSection [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) :
     AnalyticOnNhd ℂ (chartSection X d U z f)
       (chartSectionDomain X d U z) :=
@@ -411,8 +411,8 @@ lemma analyticOnNhd_chartSection [SmoothOfRelativeDimension d X.hom]
 /-- The coordinate differential of a holomorphic section is analytic. -/
 lemma analyticOnNhd_chartSectionDifferential
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) :
     AnalyticOnNhd ℂ (chartSectionDifferential X d U z f)
       (chartSectionDomain X d U z) := by
@@ -423,8 +423,8 @@ lemma analyticOnNhd_chartSectionDifferential
 
 lemma analyticOnNhd_chartGeneratorEvaluation_apply
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (p : ℕ)
     (a₀ : OpenHolomorphicFunctions X d U) (w : Fin p → OpenHolomorphicFunctions X d U)
     (v : Fin p → Fin d → ℂ) :
     AnalyticOnNhd ℂ
@@ -460,8 +460,8 @@ lemma analyticOnNhd_chartGeneratorEvaluation_apply
 
 lemma analyticOnNhd_chartEvaluation_apply
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (p : ℕ)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
     (v : Fin p → Fin d → ℂ) :
     AnalyticOnNhd ℂ (fun y ↦ chartEvaluation X d U z p θ y v)
@@ -487,8 +487,8 @@ lemma analyticOnNhd_chartEvaluation_apply
 
 /-- A holomorphic form has an analytic fixed-chart evaluation. -/
 lemma analyticOnNhd_chartEvaluation [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (p : ℕ)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
     AnalyticOnNhd ℂ (chartEvaluation X d U z p θ)
       (chartSectionDomain X d U z) := by
@@ -516,12 +516,12 @@ lemma analyticOnNhd_chartEvaluation [SmoothOfRelativeDimension d X.hom]
 /-- Every open neighborhood contains a smaller neighborhood that is exactly a Euclidean ball in
 the fixed chart at the chosen point. -/
 lemma exists_chartBall_le [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (x : ComplexPoint X) (hxU : x ∈ Opposite.unop U) :
-    ∃ (V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (_i : U ⟶ V)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (x : Point ℂ X) (hxU : x ∈ Opposite.unop U) :
+    ∃ (V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (_i : U ⟶ V)
       (r : ℝ),
       x ∈ Opposite.unop V ∧ 0 < r ∧
-      ((Opposite.unop V : Opens (ComplexPoint X)) : Set _) ⊆
+      ((Opposite.unop V : Opens (Point ℂ X)) : Set _) ⊆
         (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x).source ∧
       chartSectionDomain X d V x =
         Metric.ball ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r := by
@@ -534,7 +534,7 @@ lemma exists_chartBall_le [SmoothOfRelativeDimension d X.hom]
     rw [Set.mem_preimage, e.left_inv hxsource]
     exact hxU
   obtain ⟨r, hr, hball⟩ := Metric.nhds_basis_ball.mem_iff.mp (hopen.mem_nhds hximage)
-  let Vo : Opens (ComplexPoint X) :=
+  let Vo : Opens (Point ℂ X) :=
     ⟨e.source ∩ e ⁻¹' Metric.ball (e x) r, e.isOpen_inter_preimage Metric.isOpen_ball⟩
   have hxV : x ∈ Vo := ⟨hxsource, Metric.mem_ball_self hr⟩
   have hVU : Vo ≤ Opposite.unop U := by
@@ -566,14 +566,14 @@ lemma exists_chartBall_le [SmoothOfRelativeDimension d X.hom]
 
 /-- Shrink a fixed chart ball to any smaller positive radius. -/
 lemma exists_smaller_chartBall [SmoothOfRelativeDimension d X.hom]
-    (V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (x : ComplexPoint X) (r : ℝ)
+    (V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (x : Point ℂ X) (r : ℝ)
     (hdom : chartSectionDomain X d V x =
       Metric.ball ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) r)
     (ρ : NNReal) (hρ : 0 < ρ) (hρr : (ρ : ℝ) < r) :
-    ∃ (W : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (_j : V ⟶ W),
+    ∃ (W : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (_j : V ⟶ W),
       x ∈ Opposite.unop W ∧
-      ((Opposite.unop W : Opens (ComplexPoint X)) : Set _) ⊆
+      ((Opposite.unop W : Opens (Point ℂ X)) : Set _) ⊆
         (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x).source ∧
       chartSectionDomain X d W x = Metric.ball
         ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) x) x) (ρ : ℝ) := by
@@ -586,7 +586,7 @@ lemma exists_smaller_chartBall [SmoothOfRelativeDimension d X.hom]
       Function.comp_id, chartAt_eq_localChart X d, modelWithCornersSelf_coe] at hdom
     exact hdom
   have hxsource : x ∈ e.source := mem_localChart_source X d x
-  let Wo : Opens (ComplexPoint X) :=
+  let Wo : Opens (Point ℂ X) :=
     ⟨e.source ∩ e ⁻¹' Metric.ball (e x) (ρ : ℝ),
       e.isOpen_inter_preimage Metric.isOpen_ball⟩
   have hxW : x ∈ Wo := ⟨hxsource, Metric.mem_ball_self (by exact_mod_cast hρ)⟩
@@ -623,11 +623,11 @@ lemma exists_smaller_chartBall [SmoothOfRelativeDimension d X.hom]
 
 /-- Every closed holomorphic form of positive degree is locally exact. -/
 theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (x : ComplexPoint X) (hxU : x ∈ Opposite.unop U) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (x : Point ℂ X) (hxU : x ∈ Opposite.unop U) (p : ℕ)
     (form : HolomorphicForm X d U (p + 1))
     (hclosed : holomorphicFormDifferential X d U (p + 1) form = 0) :
-    ∃ (W : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (k : U ⟶ W)
+    ∃ (W : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (k : U ⟶ W)
       (θ : HolomorphicForm X d W p),
       x ∈ Opposite.unop W ∧
       holomorphicFormDifferential X d W p θ =
@@ -699,8 +699,8 @@ theorem exists_local_holomorphicForm_primitive [SmoothOfRelativeDimension d X.ho
 /-- In degree zero, the Kähler representative of a scalar evaluates to the constant alternating
 map with that scalar value. -/
 lemma chartEvaluation_ofConstant [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (x : ComplexPoint X) (c : ℂ) {y : Fin d → ℂ}
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (x : Point ℂ X) (c : ℂ) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain X d U x) :
     chartEvaluation X d U x 0
         (Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d U) c) y =
@@ -714,11 +714,11 @@ lemma chartEvaluation_ofConstant [SmoothOfRelativeDimension d X.hom]
 
 /-- A closed holomorphic zero-form is locally the image of a complex constant. -/
 theorem exists_local_holomorphicForm_eq_constant [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (x : ComplexPoint X) (hxU : x ∈ Opposite.unop U)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (x : Point ℂ X) (hxU : x ∈ Opposite.unop U)
     (form : HolomorphicForm X d U 0)
     (hclosed : holomorphicFormDifferential X d U 0 form = 0) :
-    ∃ (V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (i : U ⟶ V) (c : ℂ),
+    ∃ (V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (i : U ⟶ V) (c : ℂ),
       x ∈ Opposite.unop V ∧
       holomorphicFormRestriction X d i 0 form =
         holomorphicFormOfConstant X d V c := by

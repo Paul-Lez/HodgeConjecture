@@ -44,7 +44,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 underlying charts. This is the real-manifold structure to which the orientation API of
 [mathlib4 PR #35376](https://github.com/leanprover-community/mathlib4/pull/35376) applies. -/
 instance isRealManifold_one [SmoothOfRelativeDimension d X.hom] :
-    IsManifold 𝓘(ℝ, Fin d → ℂ) 1 (ComplexPoint X) := by
+    IsManifold 𝓘(ℝ, Fin d → ℂ) 1 (Point ℂ X) := by
   apply isManifold_of_contDiffOn
   intro e e' he he'
   obtain ⟨z, rfl⟩ := he
@@ -58,7 +58,7 @@ instance isRealManifold_one [SmoothOfRelativeDimension d X.hom] :
 restriction of scalars of the complex tangent coordinate change. -/
 lemma realTangentCoordChange_eq_restrictScalars
     [SmoothOfRelativeDimension d X.hom]
-    (x y z : ComplexPoint X)
+    (x y z : Point ℂ X)
     (hx : z ∈ (localChart X d x).source)
     (hy : z ∈ (localChart X d y).source) :
     tangentCoordChange 𝓘(ℝ, Fin d → ℂ) x y z =
@@ -88,7 +88,7 @@ lemma realTangentCoordChange_eq_restrictScalars
 the corresponding complex tangent coordinate equivalence. -/
 lemma realTangentCoordChangeEquiv_toLinearMap_eq_restrictScalars
     [SmoothOfRelativeDimension d X.hom]
-    (x y z : ComplexPoint X)
+    (x y z : Point ℂ X)
     (hx : z ∈ (localChart X d x).source)
     (hy : z ∈ (localChart X d y).source) :
     (tangentCoordChangeEquiv 𝓘(ℝ, Fin d → ℂ) x y z).toLinearMap =
@@ -113,7 +113,7 @@ lemma realTangentCoordChangeEquiv_toLinearMap_eq_restrictScalars
 charts is positive. -/
 lemma realTangentCoordChangeEquiv_det_pos
     [SmoothOfRelativeDimension d X.hom]
-    (x y z : ComplexPoint X)
+    (x y z : Point ℂ X)
     (hx : z ∈ (localChart X d x).source)
     (hy : z ∈ (localChart X d y).source) :
     0 < LinearMap.det
@@ -129,7 +129,7 @@ The model orientation is the ordered real/imaginary orientation of `Fin d → �
 holomorphic chart has sign `1`. Compatibility is the positivity of the real determinant of the
 complex-linear tangent coordinate change. -/
 def orientationLift [SmoothOfRelativeDimension d X.hom] :
-    Manifold.OrientationLift 𝓘(ℝ, Fin d → ℂ) (ComplexPoint X) (Fin (d * 2)) where
+    Manifold.OrientationLift 𝓘(ℝ, Fin d → ℂ) (Point ℂ X) (Fin (d * 2)) where
   modelOrientation := Complex.piOrientation d
   chartSign _ _ := 1
   continuousOn_chartSign _ := continuousOn_const
@@ -142,14 +142,14 @@ def orientationLift [SmoothOfRelativeDimension d X.hom] :
 
 /-- The complex orientation on a smooth complex analytification. -/
 def manifoldOrientation [SmoothOfRelativeDimension d X.hom] :
-    Manifold.Orientation 𝓘(ℝ, Fin d → ℂ) (ComplexPoint X) (Fin (d * 2)) :=
+    Manifold.Orientation 𝓘(ℝ, Fin d → ℂ) (Point ℂ X) (Fin (d * 2)) :=
   Manifold.Orientation.mk (orientationLift X d)
 
 /-- Smooth complex analytifications carry their canonical complex orientation as a real
 manifold. -/
 instance orientedManifold [SmoothOfRelativeDimension d X.hom] :
     Manifold.OrientedManifold 𝓘(ℝ, Fin d → ℂ)
-      (ComplexPoint X) (Fin (d * 2)) where
+      (Point ℂ X) (Fin (d * 2)) where
   manifoldOrientation := manifoldOrientation X d
 
 end AlgebraicGeometry.ComplexPoint

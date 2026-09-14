@@ -48,38 +48,38 @@ variable (X : Over (Spec ↧ℂ))
 
 /-- A smooth projective complex analytification has a second-countable topology. -/
 theorem secondCountableTopology [IsIntegral X.left] [Smooth X.hom] :
-    SecondCountableTopology (ComplexPoint X) := by
-  let : SigmaCompactSpace (ComplexPoint X) := inferInstance
-  exact ChartedSpace.secondCountable_of_sigmaCompact (Fin (dim X.left) → ℂ) (ComplexPoint X)
+    SecondCountableTopology (Point ℂ X) := by
+  let : SigmaCompactSpace (Point ℂ X) := inferInstance
+  exact ChartedSpace.secondCountable_of_sigmaCompact (Fin (dim X.left) → ℂ) (Point ℂ X)
 
 /-- A smooth projective complex analytification is separable. -/
 theorem separableSpace [IsIntegral X.left] [Smooth X.hom] :
-    TopologicalSpace.SeparableSpace (ComplexPoint X) := by
-  let : SecondCountableTopology (ComplexPoint X) :=
+    TopologicalSpace.SeparableSpace (Point ℂ X) := by
+  let : SecondCountableTopology (Point ℂ X) :=
     secondCountableTopology X
   infer_instance
 
 /-- A smooth projective complex analytification is first countable. -/
 theorem firstCountableTopology [IsIntegral X.left] [Smooth X.hom] :
-    FirstCountableTopology (ComplexPoint X) := by
-  let : SecondCountableTopology (ComplexPoint X) :=
+    FirstCountableTopology (Point ℂ X) := by
+  let : SecondCountableTopology (Point ℂ X) :=
     secondCountableTopology X
   infer_instance
 
 /-- A smooth projective complex analytification is Lindelöf. -/
 theorem lindelofSpace [IsIntegral X.left] [Smooth X.hom] :
-    LindelofSpace (ComplexPoint X) := by
-  let : SecondCountableTopology (ComplexPoint X) :=
+    LindelofSpace (Point ℂ X) := by
+  let : SecondCountableTopology (Point ℂ X) :=
     secondCountableTopology X
   infer_instance
 
 /-- A smooth projective complex analytification is metrizable. -/
 theorem metrizableSpace [IsIntegral X.left] [Smooth X.hom] :
-    TopologicalSpace.MetrizableSpace (ComplexPoint X) := by
-  let : SigmaCompactSpace (ComplexPoint X) := inferInstance
-  let : SecondCountableTopology (ComplexPoint X) :=
+    TopologicalSpace.MetrizableSpace (Point ℂ X) := by
+  let : SigmaCompactSpace (Point ℂ X) := inferInstance
+  let : SecondCountableTopology (Point ℂ X) :=
     secondCountableTopology X
   exact Manifold.metrizableSpace (modelWithCornersSelf ℝ (Fin (dim X.left) → ℂ))
-    (ComplexPoint X)
+    (Point ℂ X)
 
 end AlgebraicGeometry.ComplexPoint

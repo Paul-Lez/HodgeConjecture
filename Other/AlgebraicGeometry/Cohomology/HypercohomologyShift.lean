@@ -129,7 +129,7 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma hypercohomologyAddEquivDerived_rightUnshift
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ)
     (s n n' : ℤ) (h : n + s = n')
     (x : Hypercohomology X (K⟦s⟧) n) :
     hypercohomologyAddEquivDerived X K n'
@@ -148,17 +148,17 @@ set_option maxHeartbeats 800000 in
 /-- The direct derived-morphism/global-section comparison commutes with
 target unshifting, with the canonical signed homology shift. -/
 lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective]
+    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ) [K.IsKInjective]
     (s n n' : ℤ) (h : n + s = n')
     (x : ShiftedHom
       (DerivedCategory.Q.obj (TopCat.Sheaf.integerConstantSingleComplex
-        (TopCat.of (ComplexPoint X)))) (DerivedCategory.Q.obj (K⟦s⟧)) n) :
+        (TopCat.of (Point ℂ X)))) (DerivedCategory.Q.obj (K⟦s⟧)) n) :
     derivedHomAddEquivGlobalSectionsKInjective X K n'
       (x.comp ((DerivedCategory.Q.commShiftIso s).hom.app K) (by omega)) =
     ShortComplex.homologyMap (TopCat.Sheaf.globalSectionsShiftShortComplex
-      (TopCat.of (ComplexPoint X)) K s n n' h)
+      (TopCat.of (Point ℂ X)) K s n n' h)
       (derivedHomAddEquivGlobalSectionsKInjective X (K⟦s⟧) n x) := by
-  let Y := TopCat.of (ComplexPoint X)
+  let Y := TopCat.of (Point ℂ X)
   let A := TopCat.Sheaf.integerConstantSingleComplex Y
   let y := (CochainComplex.HomComplex.homologyAddEquiv A (K⟦s⟧) n).symm
     (kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n x)
@@ -178,20 +178,21 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
   rw [kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift _ _ s n n' h, ← hH]
   exact hΓy.symm
 
+set_option maxHeartbeats 800000 in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Hypercohomology unshifting is carried to the canonical, signed
 global-section homology shift. The shifted morphism used here is literally
 the identity on `K⟦s⟧`, not an independently chosen group equivalence. -/
 lemma hypercohomologyAddEquivGlobalSectionsKInjective_rightUnshift
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective]
+    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ) [K.IsKInjective]
     (s n n' : ℤ) (h : n + s = n')
     (x : Hypercohomology X (K⟦s⟧) n) :
     hypercohomologyAddEquivGlobalSectionsKInjective X K n'
       (x.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
         (show ShiftedHom (K⟦s⟧) K s from 𝟙 (K⟦s⟧))) (by omega)) =
     ShortComplex.homologyMap (TopCat.Sheaf.globalSectionsShiftShortComplex
-      (TopCat.of (ComplexPoint X)) K s n n' h)
+      (TopCat.of (Point ℂ X)) K s n n' h)
       (hypercohomologyAddEquivGlobalSectionsKInjective X (K⟦s⟧) n x) := by
   dsimp only [hypercohomologyAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
   rw [hypercohomologyAddEquivDerived_rightUnshift _ _ s n n' h]
@@ -201,13 +202,13 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_rightUnshift
       (DerivedCategory.Q.map (constantIntegerSheafComplexIntIsoSingle X).inv ≫
         hypercohomologyAddEquivDerived X (K⟦s⟧) n x)
 
-set_option maxHeartbeats 400000 in
+set_option maxHeartbeats 800000 in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The hypercohomology/global-section comparison respects arbitrary
 degree-shifted chain maps, in particular the degree-one cone connecting map. -/
 lemma hypercohomologyAddEquivGlobalSectionsKInjective_shifted_naturality
-    (K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+    (K L : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ)
     [K.IsKInjective] [L.IsKInjective]
     (s n n' : ℤ) (h : n + s = n') (f : K ⟶ L⟦s⟧)
     (x : Hypercohomology X K n) :
@@ -217,7 +218,7 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_shifted_naturality
     (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
       (ShiftedHom.map f
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)))
+          (TopCat.of (Point ℂ X))).mapHomologicalComplex (.up ℤ)))
         n n' (by omega)
       (hypercohomologyAddEquivGlobalSectionsKInjective X K n x) := by
   have hf : x.comp (Localization.SmallShiftedHom.mk

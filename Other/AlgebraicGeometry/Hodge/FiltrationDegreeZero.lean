@@ -33,8 +33,8 @@ variable (X : Over (Spec ↧ℂ))
 /-- In degree filtration `F⁰`, the filtered and full de Rham hypercohomology groups are
 canonically equivalent. -/
 def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    FilteredDeRhamHypercohomology X 0 n ≃
-      DeRhamHypercohomology X n :=
+    Hypercohomology X (hodgeFilteredDeRhamComplex X 0) n ≃
+      Hypercohomology X (holomorphicDeRhamComplexInt X) n :=
   letI : IsIso (hodgeFilteredDeRhamInclusion X 0) := by
     unfold hodgeFilteredDeRhamInclusion hodgeFilteredDeRhamComplex
     infer_instance
@@ -47,8 +47,8 @@ def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
 
 lemma filteredToDeRhamCohomology_zero_apply
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : FilteredDeRhamHypercohomology X 0 n) :
-    filteredToDeRhamCohomology X 0 n α =
+    (α : Hypercohomology X (hodgeFilteredDeRhamComplex X 0) n) :
+    hypercohomologyMap X (hodgeFilteredDeRhamInclusion X 0) n α =
       hodgeFiltrationZeroEquiv X n α := rfl
 
 /-- The zeroth Hodge filtration is the whole de Rham hypercohomology group. -/
@@ -77,7 +77,7 @@ lemma hodgeFiltrationComplexSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.
     hodgeFiltrationComplexSubmodule X 0 n = ⊤ := by
   refine SetLike.ext fun α ↦ ?_
   change α ∈ hodgeFiltration X 0 n ↔ α ∈ (⊤ :
-    Submodule ℂ (DeRhamHypercohomology X n))
+    Submodule ℂ (Hypercohomology X (holomorphicDeRhamComplexInt X) n))
   rw [hodgeFiltration_zero_eq_top X n]
   simp
 

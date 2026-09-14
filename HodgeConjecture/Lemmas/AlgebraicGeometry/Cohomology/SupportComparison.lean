@@ -112,13 +112,13 @@ variable (X : Over (Spec ↧ℂ))
 
 /-- The inclusion of the complement of a closed support is an open embedding. -/
 lemma analyticComplementInclusion_isOpenEmbedding
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     Topology.IsOpenEmbedding (analyticComplementInclusion X Z) := by
   exact hZ.isOpen_compl.isOpenEmbedding_subtypeVal
 
 /-- Every term of the chosen derived-pushforward model from an open complement is injective. -/
 theorem derivedPushforwardComplementConstantRationalComplexInt_injective
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) (n : ℤ) :
     Injective ((derivedPushforwardComplementConstantRationalComplexInt X Z).X n) := by
   by_cases hn : ∃ m : ℕ, (m : ℤ) = n
   · obtain ⟨m, rfl⟩ := hn
@@ -182,7 +182,7 @@ attribute [local instance] bettiSupportComparisonQuasiIso
 /-- A strict chain-level extension of restriction from rational constants to the chosen derived
 pushforward complex across the singular-cochain resolution. -/
 def singularResolutionRestriction
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     singularCochainSheafComplexInt X ℚ ⟶
       derivedPushforwardComplementConstantRationalComplexInt X Z :=
   CochainComplex.liftToInjective
@@ -193,7 +193,7 @@ def singularResolutionRestriction
 /-- Replacing rational constants by their singular-cochain resolution gives a quasi-isomorphic
 mapping-cone model for supported cohomology. -/
 def rationalSupportConeToSingularResolutionCone
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     rationalCohomologyWithSupportComplex X Z ⟶
       CochainComplex.mappingCone (singularResolutionRestriction X Z hZ) :=
   CochainComplex.sourceReplacementConeMap
@@ -202,7 +202,7 @@ def rationalSupportConeToSingularResolutionCone
     (derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ)
 
 noncomputable instance rationalSupportConeToSingularResolutionCone_quasiIso
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     QuasiIso (rationalSupportConeToSingularResolutionCone X Z hZ) := by
   change QuasiIso (CochainComplex.sourceReplacementConeMap
     (rationalToSingularCochainComplexInt X)

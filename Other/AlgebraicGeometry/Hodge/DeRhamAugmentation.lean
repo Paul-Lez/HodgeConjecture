@@ -33,7 +33,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 def constantsToHolomorphicDeRhamPresheafComplex
     [SmoothOfRelativeDimension d X.hom] :
     (CochainComplex.single₀
-      (TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
+      (TopCat.Presheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).obj
         (constantComplexAddCommGrpPresheaf X) ⟶
       holomorphicDeRhamPresheafComplex X d :=
   HomologicalComplex.mkHomFromSingle

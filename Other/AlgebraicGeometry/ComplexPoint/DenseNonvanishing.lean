@@ -42,10 +42,10 @@ attribute [local instance] LocalEtaleCoordinates.coordinateRingAlgebra
 nonvanishing locus. -/
 theorem LocalEtaleCoordinates.dense_evaluate_ne_zero [IsIntegral X.left]
     (r : Γ(D.neighborhood.toScheme, ⊤)) (hr : r ≠ 0) :
-    Dense {z : ComplexPoint (ComplexPoint.openScheme X D.neighborhood) |
+    Dense {z : Point ℂ (ComplexPoint.openScheme X D.neighborhood) |
       Point.evaluate ⊤ r z ≠ 0} := by
   let : Nonempty D.neighborhood := ⟨⟨x, D.mem⟩⟩
-  rw [show {z : ComplexPoint (ComplexPoint.openScheme X D.neighborhood) |
+  rw [show {z : Point ℂ (ComplexPoint.openScheme X D.neighborhood) |
       Point.evaluate ⊤ r z ≠ 0} =
       D.pointAlgHomHomeomorph ⁻¹' {v : Γ(D.neighborhood.toScheme, ⊤) →ₐ[ℂ] ℂ |
         v r ≠ 0} by
@@ -84,7 +84,7 @@ lemma LocalEtaleCoordinates.injective_appTop [IsIntegral X.left]
 local étale coordinate neighborhood. -/
 theorem LocalEtaleCoordinates.dense_restrict_evaluate_ne_zero [IsIntegral X.left]
     [QuasiSeparatedSpace X.left] (t : Γ(X.left, ⊤)) (ht : t ≠ 0) :
-    Dense {z : ComplexPoint (ComplexPoint.openScheme X D.neighborhood) |
+    Dense {z : Point ℂ (ComplexPoint.openScheme X D.neighborhood) |
       Point.evaluate ⊤ (D.neighborhood.ι.appTop t) z ≠ 0} := by
   apply D.dense_evaluate_ne_zero
   intro h
@@ -108,7 +108,7 @@ variable (X : Over (Spec ↧ℂ))
 global regular function is analytically dense. -/
 theorem ComplexPoint.dense_evaluate_ne_zero [IsIntegral X.left] [Smooth X.hom]
     [QuasiSeparatedSpace X.left] (t : Γ(X.left, ⊤)) (ht : t ≠ 0) :
-    Dense {z : ComplexPoint X | Point.evaluate ⊤ t z ≠ 0} := by
+    Dense {z : Point ℂ X | Point.evaluate ⊤ t z ≠ 0} := by
   rw [dense_iff_inter_open]
   intro O hO hOne
   obtain ⟨z, hzO⟩ := hOne
@@ -119,7 +119,7 @@ theorem ComplexPoint.dense_evaluate_ne_zero [IsIntegral X.left] [Smooth X.hom]
   have hmapzD : Point.map (ComplexPoint.openInclusion X D.neighborhood) zD = z := by
     exact congrArg Subtype.val
       ((ComplexPoint.openHomeomorph X D.neighborhood).apply_symm_apply ⟨z, hzD⟩)
-  let W : Set (ComplexPoint (ComplexPoint.openScheme X D.neighborhood)) :=
+  let W : Set (Point ℂ (ComplexPoint.openScheme X D.neighborhood)) :=
     Point.map (ComplexPoint.openInclusion X D.neighborhood) ⁻¹' O
   have hWopen : IsOpen W :=
     hO.preimage (ComplexPoint.isOpenEmbedding_map_open X D.neighborhood).continuous
@@ -151,7 +151,7 @@ variable (X : Over (Spec ↧ℂ))
 dense complex points in the analytic topology. -/
 theorem ComplexPoint.dense_overOpen [IsIntegral X.left] [Smooth X.hom]
     [QuasiSeparatedSpace X.left] (U : X.left.Opens) [Nonempty U] :
-    Dense (Point.overOpen U : Set (ComplexPoint X)) := by
+    Dense (Point.overOpen U : Set (Point ℂ X)) := by
   rw [dense_iff_inter_open]
   intro O hO hOne
   obtain ⟨z, hzO⟩ := hOne
@@ -162,7 +162,7 @@ theorem ComplexPoint.dense_overOpen [IsIntegral X.left] [Smooth X.hom]
   have hmapzD : Point.map (ComplexPoint.openInclusion X D.neighborhood) zD = z := by
     exact congrArg Subtype.val
       ((ComplexPoint.openHomeomorph X D.neighborhood).apply_symm_apply ⟨z, hzD⟩)
-  let W : Set (ComplexPoint (ComplexPoint.openScheme X D.neighborhood)) :=
+  let W : Set (Point ℂ (ComplexPoint.openScheme X D.neighborhood)) :=
     Point.map (ComplexPoint.openInclusion X D.neighborhood) ⁻¹' O
   have hWopen : IsOpen W :=
     hO.preimage (ComplexPoint.isOpenEmbedding_map_open X D.neighborhood).continuous
@@ -214,19 +214,19 @@ variable (X : Over (Spec ↧ℂ))
 point space to be connected. -/
 theorem ComplexPoint.connectedSpace_of_open [IsIntegral X.left] [Smooth X.hom]
     [QuasiSeparatedSpace X.left] (U : X.left.Opens) [Nonempty U]
-    [ConnectedSpace (ComplexPoint (ComplexPoint.openScheme X U))] :
-    ConnectedSpace (ComplexPoint X) := by
+    [ConnectedSpace (Point ℂ (ComplexPoint.openScheme X U))] :
+    ConnectedSpace (Point ℂ X) := by
   let e := ComplexPoint.openHomeomorph X U
-  let w : {z : ComplexPoint X // z ∈ Point.overOpen U} :=
+  let w : {z : Point ℂ X // z ∈ Point.overOpen U} :=
     e (Classical.choice (inferInstance : Nonempty
-      (ComplexPoint (ComplexPoint.openScheme X U))))
-  let : PreconnectedSpace {z : ComplexPoint X // z ∈ Point.overOpen U} := ⟨by
+      (Point ℂ (ComplexPoint.openScheme X U))))
+  let : PreconnectedSpace {z : Point ℂ X // z ∈ Point.overOpen U} := ⟨by
     rw [← Set.image_univ_of_surjective e.surjective]
     exact isPreconnected_univ.image e e.continuous.continuousOn⟩
-  let : Nonempty {z : ComplexPoint X // z ∈ Point.overOpen U} := ⟨w⟩
-  let : PreconnectedSpace (ComplexPoint X) :=
+  let : Nonempty {z : Point ℂ X // z ∈ Point.overOpen U} := ⟨w⟩
+  let : PreconnectedSpace (Point ℂ X) :=
     (ComplexPoint.dense_overOpen X U).denseRange_val.preconnectedSpace continuous_subtype_val
-  exact connectedSpace_iff (ComplexPoint X) |>.2 ⟨inferInstance, ⟨w.1⟩⟩
+  exact connectedSpace_iff (Point ℂ X) |>.2 ⟨inferInstance, ⟨w.1⟩⟩
 
 end
 

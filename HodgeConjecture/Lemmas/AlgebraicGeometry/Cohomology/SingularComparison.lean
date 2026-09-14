@@ -51,7 +51,7 @@ lemma constantsToSingularCochain_quasiIsoAt_succ
     (R : Type) [CommRing R] (n : ℕ) :
     QuasiIsoAt
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-        (TopCat.of (ComplexPoint X))) (n + 1) := by
+        (TopCat.of (Point ℂ X))) (n + 1) := by
   apply AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_contractibleOpenBasis
   exact fun x U hxU ↦ exists_contractibleOpen_le X x U hxU
 
@@ -62,12 +62,12 @@ lemma constantsToSingularCochain_quasiIsoAt_zero
     (R : Type) [CommRing R] :
     QuasiIsoAt
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-        (TopCat.of (ComplexPoint X))) 0 := by
-  let : LocallyPathConnectedSpace (ComplexPoint X) :=
+        (TopCat.of (Point ℂ X))) 0 := by
+  let : LocallyPathConnectedSpace (Point ℂ X) :=
     locallyPathConnectedSpace X
   exact
     AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_zero
-      R (TopCat.of (ComplexPoint X))
+      R (TopCat.of (Point ℂ X))
 
 /-- On the analytic space of a smooth complex scheme, the constant sheaf is resolved by the
 sheafified singular-cochain complex. -/
@@ -76,7 +76,7 @@ lemma constantsToSingularCochain_quasiIso
     (R : Type) [CommRing R] :
     QuasiIso
       (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-        (TopCat.of (ComplexPoint X))) := by
+        (TopCat.of (Point ℂ X))) := by
   refine ⟨fun n ↦ ?_⟩
   cases n with
   | zero => exact constantsToSingularCochain_quasiIsoAt_zero X R
@@ -85,9 +85,9 @@ lemma constantsToSingularCochain_quasiIso
 /-- The sheafified singular-cochain complex, extended by zero to integer degrees. -/
 def singularCochainSheafComplexInt (R : Type) [CommRing R] :
     CochainComplex
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
   (AlgebraicTopology.Singular.singularCochainSheafComplex R
-    (TopCat.of (ComplexPoint X))).extend ComplexShape.embeddingUpNat
+    (TopCat.of (Point ℂ X))).extend ComplexShape.embeddingUpNat
 
 instance (R : Type) [CommRing R] :
     CochainComplex.IsStrictlyGE (singularCochainSheafComplexInt X R) 0 := by
@@ -97,10 +97,10 @@ instance (R : Type) [CommRing R] :
 /-- The constant coefficient sheaf complex, extended by zero to integer degrees. -/
 def constantCoefficientSheafComplexInt (R : Type) [CommRing R] :
     CochainComplex
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
   ((CochainComplex.single₀
-    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-      𝓒(↧(ComplexPoint X); R)).extend ComplexShape.embeddingUpNat
+    (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).obj
+      𝓒(↧(Point ℂ X); R)).extend ComplexShape.embeddingUpNat
 
 /-- The constant-to-singular comparison, extended by zero to integer degrees. -/
 def constantsToSingularCochainComplexInt (R : Type) [CommRing R] :
@@ -108,7 +108,7 @@ def constantsToSingularCochainComplexInt (R : Type) [CommRing R] :
       singularCochainSheafComplexInt X R :=
   HomologicalComplex.extendMap
     (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-      (TopCat.of (ComplexPoint X))) ComplexShape.embeddingUpNat
+      (TopCat.of (Point ℂ X))) ComplexShape.embeddingUpNat
 
 /-- The integer-indexed constant-to-singular comparison remains a quasi-isomorphism. -/
 lemma constantsToSingularCochainComplexInt_quasiIso
@@ -117,7 +117,7 @@ lemma constantsToSingularCochainComplexInt_quasiIso
     QuasiIso (constantsToSingularCochainComplexInt X R) := by
   exact (HomologicalComplex.quasiIso_extendMap_iff
     (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-      (TopCat.of (ComplexPoint X))) ComplexShape.embeddingUpNat).mpr
+      (TopCat.of (Point ℂ X))) ComplexShape.embeddingUpNat).mpr
         (constantsToSingularCochain_quasiIso X R)
 
 end AlgebraicGeometry.ComplexPoint

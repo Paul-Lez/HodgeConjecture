@@ -110,7 +110,7 @@ structure CycleComponentSeparateLocalCoordinates
     [IsProjective X.hom] (x : X.left) (d n : ℕ)
     [SmoothOfRelativeDimension d X.hom] where
   /-- A complex point of the reduced component. -/
-  point : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))
+  point : Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom))
   /-- The point lies in the component's smooth locus. -/
   point_mem_smoothLocus : point.underlying ∈
     (cycleComponentι X.left x ≫ X.hom).smoothLocus

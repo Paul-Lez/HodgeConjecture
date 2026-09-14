@@ -29,36 +29,36 @@ variable (X Y : Over (Spec ↧ℂ))
   [IsClosedImmersion i.left]
 
 /-- The source open of a constructed holomorphic normal chart. -/
-def smoothClosedSupportChartOpen (z : ComplexPoint Y) :
-    Opens (ComplexPoint X) :=
+def smoothClosedSupportChartOpen (z : Point ℂ Y) :
+    Opens (Point ℂ X) :=
   ⟨(closedImmersionHolomorphicFlatteningChart X Y i m d z).source,
     (closedImmersionHolomorphicFlatteningChart X Y i m d z).open_source⟩
 
-theorem mem_smoothClosedSupportChartOpen (z : ComplexPoint Y) :
+theorem mem_smoothClosedSupportChartOpen (z : Point ℂ Y) :
     Point.map i z ∈ smoothClosedSupportChartOpen X Y i m d z :=
   closedImmersionHolomorphicFlatteningChart_mem_source X Y i m d z
 
 /-- The target is the sheafification of the literal relative-cohomology presheaf. -/
 abbrev smoothClosedSupportCoclassSheaf : TopCat.Sheaf AddCommGrpCat
-    (TopCat.of (ComplexPoint X)) :=
-  supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+    (TopCat.of (Point ℂ X)) :=
+  supportRelativeCohomologySheaf (TopCat.of (Point ℂ X))
     (Set.range (Point.map i)) (2 * (d - m))
 
 /-- The exact normal coclass determines a section on its full chart source. -/
-def smoothClosedSupportChartSheafSection (z : ComplexPoint Y) :
+def smoothClosedSupportChartSheafSection (z : Point ℂ Y) :
     (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj
       (op (smoothClosedSupportChartOpen X Y i m d z)) :=
-  (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
+  (supportRelativeCohomologyToSheaf (TopCat.of (Point ℂ X))
     (Set.range (Point.map i)) (2 * (d - m))).app _
       (smoothClosedSupportChartCoclass X Y i m d z
         (smoothClosedSupportChartOpen X Y i m d z) (le_refl _))
 
 /-- Its germ is, by definition, the germ of the fixed normal-projection coclass. -/
-def smoothClosedSupportChartCoclassGerm (z : ComplexPoint Y)
-    (x : ComplexPoint X)
+def smoothClosedSupportChartCoclassGerm (z : Point ℂ Y)
+    (x : Point ℂ X)
     (hx : x ∈ smoothClosedSupportChartOpen X Y i m d z) :
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.stalk x :=
-  supportRelativeCohomologyGerm (TopCat.of (ComplexPoint X))
+  supportRelativeCohomologyGerm (TopCat.of (Point ℂ X))
     (Set.range (Point.map i)) (2 * (d - m))
     (smoothClosedSupportChartOpen X Y i m d z) x hx
     (smoothClosedSupportChartCoclass X Y i m d z
@@ -68,7 +68,7 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The ambient overlap theorem proves equality of chart germs on support. -/
 private theorem smoothClosedSupportChartCoclassGerm_eq
-    (z z' : ComplexPoint Y) (x : ComplexPoint X)
+    (z z' : Point ℂ Y) (x : Point ℂ X)
     (hxS : x ∈ Set.range (Point.map i))
     (hx : x ∈ smoothClosedSupportChartOpen X Y i m d z)
     (hx' : x ∈ smoothClosedSupportChartOpen X Y i m d z') :
@@ -77,7 +77,7 @@ private theorem smoothClosedSupportChartCoclassGerm_eq
   obtain ⟨W, hW, hW', hxW, heq⟩ := exists_open_smoothClosedSupportChartCoclass_eq
     X Y i m d z z' x hxS hx hx'
   apply supportRelativeCohomologyGerm_eq_of_restrict_eq
-    (TopCat.of (ComplexPoint X)) (Set.range (Point.map i)) (2 * (d - m))
+    (TopCat.of (Point ℂ X)) (Set.range (Point.map i)) (2 * (d - m))
     (U := smoothClosedSupportChartOpen X Y i m d z)
     (V := smoothClosedSupportChartOpen X Y i m d z')
     hW hW' x hxW
@@ -85,12 +85,12 @@ private theorem smoothClosedSupportChartCoclassGerm_eq
 
 /-- Away from the closed image, the chart coclass germ is zero. -/
 private theorem smoothClosedSupportChartCoclassGerm_eq_zero
-    (z : ComplexPoint Y) (x : ComplexPoint X)
+    (z : Point ℂ Y) (x : Point ℂ X)
     (hx : x ∈ smoothClosedSupportChartOpen X Y i m d z)
     (hxS : x ∉ Set.range (Point.map i)) :
     smoothClosedSupportChartCoclassGerm X Y i m d z x hx = 0 :=
   supportRelativeCohomologyGerm_eq_zero_of_not_mem
-    (TopCat.of (ComplexPoint X)) (Set.range (Point.map i)) (2 * (d - m))
+    (TopCat.of (Point ℂ X)) (Set.range (Point.map i)) (2 * (d - m))
     (isClosed_range_map_of_closedImmersion i)
     (smoothClosedSupportChartOpen X Y i m d z) x hx hxS
     (smoothClosedSupportChartCoclass X Y i m d z
@@ -99,7 +99,7 @@ private theorem smoothClosedSupportChartCoclassGerm_eq_zero
 open scoped Classical in
 /-- A pointwise normalized germ family. Choice selects a preimage point only;
 the proved chart-overlap theorem below proves independence of that selection. -/
-def smoothClosedSupportCoclassStalk (x : ComplexPoint X) :
+def smoothClosedSupportCoclassStalk (x : Point ℂ X) :
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.stalk x :=
   if hxS : x ∈ Set.range (Point.map i) then
     smoothClosedSupportChartCoclassGerm X Y i m d hxS.choose x
@@ -110,7 +110,7 @@ def smoothClosedSupportCoclassStalk (x : ComplexPoint X) :
 /-- The normalized germ family agrees with every chart, including at points
 outside the support. This supplies local coherence as a theorem, not as data. -/
 theorem smoothClosedSupportCoclassStalk_eq_chartGerm
-    (z : ComplexPoint Y) (x : ComplexPoint X)
+    (z : Point ℂ Y) (x : Point ℂ X)
     (hx : x ∈ smoothClosedSupportChartOpen X Y i m d z) :
     smoothClosedSupportCoclassStalk X Y i m d x =
       smoothClosedSupportChartCoclassGerm X Y i m d z x hx := by
@@ -122,17 +122,17 @@ theorem smoothClosedSupportCoclassStalk_eq_chartGerm
     exact (smoothClosedSupportChartCoclassGerm_eq_zero X Y i m d z x hx hxS).symm
 
 @[simp] theorem smoothClosedSupportCoclassStalk_eq_zero
-    (x : ComplexPoint X) (hxS : x ∉ Set.range (Point.map i)) :
+    (x : Point ℂ X) (hxS : x ∉ Set.range (Point.map i)) :
     smoothClosedSupportCoclassStalk X Y i m d x = 0 := by
   rw [smoothClosedSupportCoclassStalk, dif_neg hxS]
 
 /-- The charts and the open support complement prove local representability
 of the entire normalized stalk family. -/
 theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
-    ∀ x : ComplexPoint X,
-      ∃ (U : Opens (ComplexPoint X)) (_ : x ∈ U)
+    ∀ x : Point ℂ X,
+      ∃ (U : Opens (Point ℂ X)) (_ : x ∈ U)
         (s : (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj (op U)),
-        ∀ (y : ComplexPoint X) (hy : y ∈ U),
+        ∀ (y : Point ℂ X) (hy : y ∈ U),
           (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.germ U y hy s =
             smoothClosedSupportCoclassStalk X Y i m d y := by
   intro x
@@ -142,7 +142,7 @@ theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
       mem_smoothClosedSupportChartOpen X Y i m d z,
       smoothClosedSupportChartSheafSection X Y i m d z, ?_⟩
     exact fun y hy ↦ (smoothClosedSupportCoclassStalk_eq_chartGerm X Y i m d z y hy).symm
-  · let U : Opens (ComplexPoint X) :=
+  · let U : Opens (Point ℂ X) :=
       ⟨(Set.range (Point.map i))ᶜ, (isClosed_range_map_of_closedImmersion i).isOpen_compl⟩
     refine ⟨U, hxS, 0, ?_⟩
     intro y hy

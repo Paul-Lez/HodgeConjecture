@@ -74,7 +74,7 @@ theorem cycleComponentSheafClass_eq_injectiveModel :
       (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
         (HomologicalComplex.homologyMap
           (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-            (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
+            (TopCat.of (Point ℂ X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
             (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
           (cycleComponentSupportedInjectiveClass X x hx)) := by
   apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).injective

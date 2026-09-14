@@ -49,7 +49,7 @@ abbrev openInclusion :
   Over.homMk U.ι rfl
 
 /-- The image of a complex point lying in `U` is contained in the image of its inclusion. -/
-lemma point_range_subset (z : ComplexPoint X) (hz : z ∈ overOpen U) :
+lemma point_range_subset (z : Point ℂ X) (hz : z ∈ overOpen U) :
     Set.range z.left ⊆ Set.range U.ι := by
   rintro y ⟨x, rfl⟩
   rw [Scheme.Opens.range_ι]
@@ -58,18 +58,18 @@ lemma point_range_subset (z : ComplexPoint X) (hz : z ∈ overOpen U) :
   exact hz
 
 /-- A complex point in an open set factors through the corresponding open subscheme. -/
-def liftToOpen (z : ComplexPoint X) (hz : z ∈ overOpen U) :
+def liftToOpen (z : Point ℂ X) (hz : z ∈ overOpen U) :
     Spec ↧ℂ ⟶ U.toScheme :=
   IsOpenImmersion.lift U.ι z.left (point_range_subset X U z hz)
 
 @[reassoc (attr := simp)]
-lemma liftToOpen_fac (z : ComplexPoint X) (hz : z ∈ overOpen U) :
+lemma liftToOpen_fac (z : Point ℂ X) (hz : z ∈ overOpen U) :
     liftToOpen X U z hz ≫ U.ι = z.left :=
   IsOpenImmersion.lift_fac _ _ _
 
 /-- A point of `X` lying in `U`, regarded as a complex point of the open subscheme `U`. -/
-def asOpenPoint (z : ComplexPoint X) (hz : z ∈ overOpen U) :
-    ComplexPoint (openScheme X U) :=
+def asOpenPoint (z : Point ℂ X) (hz : z ∈ overOpen U) :
+    Point ℂ (openScheme X U) :=
   Over.homMk (liftToOpen X U z hz) (by
     change liftToOpen X U z hz ≫ (U.ι ≫ X.hom) = 𝟙 _
     rw [← Category.assoc, liftToOpen_fac]
@@ -77,8 +77,8 @@ def asOpenPoint (z : ComplexPoint X) (hz : z ∈ overOpen U) :
 
 /-- Complex points of an open subscheme are the ambient complex points lying in the open. -/
 def openEquiv :
-    ComplexPoint (openScheme X U) ≃
-      {z : ComplexPoint X // z ∈ overOpen U} where
+    Point ℂ (openScheme X U) ≃
+      {z : Point ℂ X // z ∈ overOpen U} where
   toFun z := ⟨map (openInclusion X U) z, by
     change (map (openInclusion X U) z).underlying ∈ U
     rw [underlying_map]
@@ -92,32 +92,32 @@ def openEquiv :
   right_inv z := Subtype.ext (Over.OverMorphism.ext (liftToOpen_fac X U z.1 z.2))
 
 @[simp]
-lemma openEquiv_coe (z : ComplexPoint (openScheme X U)) :
+lemma openEquiv_coe (z : Point ℂ (openScheme X U)) :
     (openEquiv X U z).1 = map (openInclusion X U) z :=
   rfl
 
 /-- The map from an open subscheme to its ambient open subspace is continuous. -/
 lemma continuous_openEquiv :
     @Continuous
-      (ComplexPoint (openScheme X U))
-      {z : ComplexPoint X // z ∈ overOpen U}
+      (Point ℂ (openScheme X U))
+      {z : Point ℂ X // z ∈ overOpen U}
       analyticTopology (TopologicalSpace.induced Subtype.val analyticTopology)
       (openEquiv X U) :=
   @Continuous.subtype_mk
-    (ComplexPoint X)
-    (ComplexPoint (openScheme X U))
+    (Point ℂ X)
+    (Point ℂ (openScheme X U))
     analyticTopology analyticTopology
     (fun z ↦ z ∈ overOpen U) (map (openInclusion X U))
     (continuous_map (openInclusion X U)) _
 
 /-- Evaluation is unchanged when both a point and a section are transported across equal opens. -/
 lemma evaluate_eq {Y : Over (Spec ↧ℂ)}
-    {V W : Y.left.Opens} (e : V = W) (t : Γ(Y.left, V)) (z : ComplexPoint Y) :
+    {V W : Y.left.Opens} (e : V = W) (t : Γ(Y.left, V)) (z : Point ℂ Y) :
     evaluate V t z = evaluate W (Y.left.presheaf.map (eqToHom e.symm).op t) z := by aesop
 
 /-- Evaluation commutes with the equivalence between an open subscheme and its ambient open. -/
 lemma evaluate_openEquiv {V : U.toScheme.Opens} (t : Γ(U.toScheme, V))
-    (z : ComplexPoint (openScheme X U)) :
+    (z : Point ℂ (openScheme X U)) :
     evaluate (U.ι ''ᵁ V) ((U.ι.appIso V).inv t) (map (openInclusion X U) z) =
       evaluate V t z := by
   rw [evaluate_map]
@@ -142,15 +142,15 @@ lemma evaluate_openEquiv {V : U.toScheme.Opens} (t : Γ(U.toScheme, V))
 /-- The inverse map from the ambient open subspace is continuous. -/
 lemma continuous_openEquiv_symm :
     @Continuous
-      {z : ComplexPoint X // z ∈ overOpen U}
-      (ComplexPoint (openScheme X U))
+      {z : Point ℂ X // z ∈ overOpen U}
+      (Point ℂ (openScheme X U))
       (TopologicalSpace.induced Subtype.val analyticTopology) analyticTopology
       (openEquiv X U).symm := by
   rw [continuous_iff_analyticSubbasis]
   rintro W ⟨V, t, O, hO, rfl⟩
-  let A : Set (ComplexPoint X) := overOpen (U.ι ''ᵁ V) ∩
+  let A : Set (Point ℂ X) := overOpen (U.ι ''ᵁ V) ∩
     evaluate (U.ι ''ᵁ V) ((U.ι.appIso V).inv t) ⁻¹' O
-  have hA : @IsOpen (ComplexPoint X) analyticTopology A :=
+  have hA : @IsOpen (Point ℂ X) analyticTopology A :=
     isOpen_overOpen_inter_preimage _ _ _ hO
   rw [show (openEquiv X U).symm ⁻¹'
       (overOpen V ∩ evaluate V t ⁻¹' O) = Subtype.val ⁻¹' A by
@@ -166,14 +166,14 @@ lemma continuous_openEquiv_symm :
     rw [evaluate_openEquiv]
     exact and_congr_left' (by simp [overOpen])]
   exact @isOpen_induced
-    {z : ComplexPoint X // z ∈ overOpen U}
-    (ComplexPoint X) analyticTopology Subtype.val A hA
+    {z : Point ℂ X // z ∈ overOpen U}
+    (Point ℂ X) analyticTopology Subtype.val A hA
 
 /-- Analytification of an open subscheme is the corresponding analytic open subspace. -/
 def openHomeomorph :
     @Homeomorph
-      (ComplexPoint (openScheme X U))
-      {z : ComplexPoint X // z ∈ overOpen U}
+      (Point ℂ (openScheme X U))
+      {z : Point ℂ X // z ∈ overOpen U}
       analyticTopology (TopologicalSpace.induced Subtype.val analyticTopology) where
   toEquiv := openEquiv X U
   continuous_toFun := continuous_openEquiv X U
@@ -182,8 +182,8 @@ def openHomeomorph :
 /-- Inclusion of an open subscheme induces an open embedding on complex points. -/
 lemma isOpenEmbedding_map_open :
     IsOpenEmbedding (map (openInclusion X U) :
-      ComplexPoint (openScheme X U) → ComplexPoint X) := by
-  have hU : IsOpen (overOpen U : Set (ComplexPoint X)) := isOpen_overOpen (X := X) U
+      Point ℂ (openScheme X U) → Point ℂ X) := by
+  have hU : IsOpen (overOpen U : Set (Point ℂ X)) := isOpen_overOpen (X := X) U
   have h := hU.isOpenEmbedding_subtypeVal.comp (openHomeomorph X U).isOpenEmbedding
   simpa [Function.comp_def, openHomeomorph, openEquiv] using h
 

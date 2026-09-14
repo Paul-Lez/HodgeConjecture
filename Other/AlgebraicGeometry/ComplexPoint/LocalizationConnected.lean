@@ -44,7 +44,7 @@ lemma dense_eval_ne_zero_of_smooth
     change QuasiSeparatedSpace (Spec (CommRingCat.of B))
     infer_instance
   have hdense := ComplexPoint.dense_evaluate_ne_zero X t ht
-  rw [show {z : ComplexPoint X | Point.evaluate ⊤ t z ≠ 0} =
+  rw [show {z : Point ℂ X | Point.evaluate ⊤ t z ≠ 0} =
       (ComplexPoint.affineSpecHomeomorph B) ⁻¹'
         {u : B →ₐ[ℂ] ℂ | u y ≠ 0} by
     ext z

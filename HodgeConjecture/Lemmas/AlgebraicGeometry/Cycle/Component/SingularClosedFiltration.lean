@@ -293,8 +293,8 @@ omit [IsIntegral X.left] [Smooth X.hom] in
 stratum, not a supplied support parametrization. -/
 theorem cycleComponentSingularAnalyticClosedFiltration_layer (k : ℕ) :
     Set.range (Point.map (cycleComponentSingularFiltrationStratumOverι X x k)) =
-      (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X)) \
-        (cycleComponentSingularAnalyticClosedFiltration X x (k + 1) : Set (ComplexPoint X)) := by
+      (cycleComponentSingularAnalyticClosedFiltration X x k : Set (Point ℂ X)) \
+        (cycleComponentSingularAnalyticClosedFiltration X x (k + 1) : Set (Point ℂ X)) := by
   rw [range_map_of_isImmersion X]
   change Point.underlying ⁻¹' Set.range (cycleComponentSingularFiltrationStratumι X x k) = _
   rw [cycleComponentSingularAmbientClosedFiltration_layer]
@@ -306,9 +306,9 @@ is precisely the current analytic closed support restricted to that open. -/
 theorem cycleComponentSingularStratumClosedLift_complexPoints_range (k : ℕ) :
     Set.range (Point.map (cycleComponentSingularStratumClosedLiftOver X x k)) =
       Point.map (openInclusion X (cycleComponentSingularStratumAmbientOpen X x k)) ⁻¹'
-          (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X)) := by
+          (cycleComponentSingularAnalyticClosedFiltration X x k : Set (Point ℂ X)) := by
   rw [range_map_of_isImmersion]
-  change (Point.underlying : ComplexPoint (cycleComponentSingularStratumAmbientOpenOver X x k) →
+  change (Point.underlying : Point ℂ (cycleComponentSingularStratumAmbientOpenOver X x k) →
     (cycleComponentSingularStratumAmbientOpenOver X x k).left) ⁻¹'
       Set.range (cycleComponentSingularStratumClosedLift X x k) = _
   rw [range_cycleComponentSingularStratumClosedLift]

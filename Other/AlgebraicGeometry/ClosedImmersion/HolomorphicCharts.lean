@@ -34,8 +34,8 @@ open AlgebraicTopology.Singular
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
-variable (z' : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
+variable (z' : Point ℂ Y)
 
 /-- The actual transition preserves the zero-normal plane in both directions. -/
 theorem closedImmersionNormalTransition_preserves_support

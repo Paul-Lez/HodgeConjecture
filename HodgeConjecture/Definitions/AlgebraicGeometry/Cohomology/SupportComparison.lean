@@ -122,8 +122,8 @@ lemma rationalToSingularCochainComplexInt_mono :
 variable [IsIntegral X.left] [Smooth X.hom]
 
 local instance bettiSupportComparisonHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) :=
+  HasDerivedCategory.standard (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))
 
 local instance bettiSupportComparisonMono : Mono (rationalToSingularCochainComplexInt X) :=
   rationalToSingularCochainComplexInt_mono X

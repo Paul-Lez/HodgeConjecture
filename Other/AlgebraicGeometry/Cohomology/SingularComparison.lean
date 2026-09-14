@@ -38,8 +38,8 @@ open Point
 variable (X : Over (Spec ↧ℂ))
 
 local instance singularGlobalSectionsAdditivityHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) :=
+  HasDerivedCategory.standard (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))
 
 /-- Rational constant-sheaf cohomology and rational singular cohomology are equivalent as
 `ℚ`-vector spaces.  Both sides are `ℚ`-modules, and every additive map between `ℚ`-modules
@@ -47,12 +47,12 @@ is automatically `ℚ`-linear, so the additive comparison upgrades to a linear e
 no further work. -/
 def rationalCohomologyLinearEquivSingularCohomology
     [IsIntegral X.left] [Smooth X.hom]
-    [T2Space (ComplexPoint X)]
-    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    [T2Space (Point ℂ X)]
+    [∀ U : Opens (Point ℂ X), ParacompactSpace U]
     (n : ℕ) :
     H^(n : ℤ)(X; ℚ) ≃ₗ[ℚ]
       AlgebraicTopology.Singular.Cohomology ℚ
-        (TopCat.of (ComplexPoint X)) n :=
+        (TopCat.of (Point ℂ X)) n :=
   (rationalCohomologyAddEquivSingularCohomology X n).toLinearEquiv
     (map_rat_smul (rationalCohomologyAddEquivSingularCohomology X n))
 
@@ -60,8 +60,8 @@ def rationalCohomologyLinearEquivSingularCohomology
 @[simp]
 lemma coe_rationalCohomologyLinearEquivSingularCohomology
     [IsIntegral X.left] [Smooth X.hom]
-    [T2Space (ComplexPoint X)]
-    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    [T2Space (Point ℂ X)]
+    [∀ U : Opens (Point ℂ X), ParacompactSpace U]
     (n : ℕ) :
     ⇑(rationalCohomologyLinearEquivSingularCohomology X n) =
       ⇑(rationalCohomologyAddEquivSingularCohomology X n) :=

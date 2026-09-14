@@ -39,9 +39,9 @@ open AlgebraicTopology.Singular
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
 
-theorem closedImmersionHolomorphicFlatteningChart_mem_range_iff (y : ComplexPoint X)
+theorem closedImmersionHolomorphicFlatteningChart_mem_range_iff (y : Point ℂ X)
     (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     y ∈ Set.range (Point.map i) ↔
       (closedImmersionHolomorphicFlatteningChart X Y i m d z y).2 = 0 :=
@@ -56,11 +56,11 @@ open AlgebraicTopology.Singular
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
 
 /-- At every selected ambient source point, the underlying normal coordinate change and
 its inverse are analytic, not only at the initially distinguished center. -/
-private theorem closedImmersionHolomorphicFlatteningChart_analytic (y : ComplexPoint X)
+private theorem closedImmersionHolomorphicFlatteningChart_analytic (y : Point ℂ X)
     (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     AnalyticAt ℂ (closedImmersionNormalCoordinateChange X Y i m d z)
       (localChart X d (Point.map i z) y) ∧
@@ -68,14 +68,14 @@ private theorem closedImmersionHolomorphicFlatteningChart_analytic (y : ComplexP
       (closedImmersionHolomorphicFlatteningChart X Y i m d z y) :=
   ((OpenPartialHomeomorph.biAnalyticRestrict_mem_source_iff _ _).mp hy.1.2).2
 
-private theorem closedImmersionNormalCoordinateChange_symm_at_chart (y : ComplexPoint X)
+private theorem closedImmersionNormalCoordinateChange_symm_at_chart (y : Point ℂ X)
     (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     (closedImmersionNormalCoordinateChange X Y i m d z).symm
       (closedImmersionHolomorphicFlatteningChart X Y i m d z y) =
         localChart X d (Point.map i z) y :=
   (closedImmersionNormalCoordinateChange X Y i m d z).left_inv hy.1.2.1
 
-variable (z' : ComplexPoint Y)
+variable (z' : Point ℂ Y)
 
 /-- The genuine transition between two constructed holomorphic support-flattening charts. -/
 def closedImmersionNormalTransition :
@@ -156,7 +156,7 @@ open AlgebraicTopology.Singular
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
 
 theorem closedImmersionNormalCoordinateChange_mem_source :
     localChart X d (Point.map i z) (Point.map i z) ∈
@@ -187,7 +187,7 @@ theorem analyticAt_closedImmersionNormalCoordinateChange_symm :
       (K.symm (localChart Y m z z, 0)) := hK ▸ analyticAt_closedImmersionNormalChart X Y i m d z
   exact hA'.comp (K.symm.toContinuousLinearMap.analyticAt _)
 
-@[simp] theorem closedImmersionHolomorphicFlatteningChart_apply (y : ComplexPoint X) :
+@[simp] theorem closedImmersionHolomorphicFlatteningChart_apply (y : Point ℂ X) :
     closedImmersionHolomorphicFlatteningChart X Y i m d z y =
       closedImmersionStandardFlatteningChart X Y i m d z y := rfl
 

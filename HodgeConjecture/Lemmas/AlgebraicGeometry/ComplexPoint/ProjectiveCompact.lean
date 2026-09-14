@@ -48,8 +48,8 @@ noncomputable abbrev overImmersion {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 /-- The continuous map on complex points induced by an explicit projective presentation. -/
 noncomputable def analyticImmersion {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) :
-    @ContinuousMap (ComplexPoint (Over.mk f))
-      (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (P.ambientDimension + 1)) (Spec ↧ℂ))))
+    @ContinuousMap (Point ℂ (Over.mk f))
+      (Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (P.ambientDimension + 1)) (Spec ↧ℂ))))
       Point.analyticTopology Point.analyticTopology :=
   Point.continuousMap (overImmersion P)
 
@@ -57,8 +57,8 @@ noncomputable def analyticImmersion {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 embedding. -/
 lemma analyticImmersion_isClosedEmbedding {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) :
-    @IsClosedEmbedding (ComplexPoint (Over.mk f))
-      (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (P.ambientDimension + 1)) (Spec ↧ℂ))))
+    @IsClosedEmbedding (Point ℂ (Over.mk f))
+      (Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (P.ambientDimension + 1)) (Spec ↧ℂ))))
       Point.analyticTopology Point.analyticTopology (analyticImmersion P) := by
   let : IsClosedImmersion (overImmersion P).left := P.isClosedImmersion
   exact ComplexPoint.isClosedEmbedding_map_of_closedImmersion (overImmersion P)
@@ -66,7 +66,7 @@ lemma analyticImmersion_isClosedEmbedding {X : Scheme} {f : X ⟶ Spec ↧ℂ}
 /-- The analytic complex points of an explicit projective presentation form a compact space. -/
 theorem complexPoint_compactSpace {X : Scheme} {f : X ⟶ Spec ↧ℂ}
     (P : ProjectiveSpace.Presentation f) :
-    @CompactSpace (ComplexPoint (Over.mk f)) Point.analyticTopology := by
+    @CompactSpace (Point ℂ (Over.mk f)) Point.analyticTopology := by
   exact (analyticImmersion_isClosedEmbedding P).compactSpace
 
 end ProjectiveSpace.Presentation
@@ -75,7 +75,7 @@ namespace IsProjective
 
 /-- The analytic complex points of a projective complex scheme form a compact space. -/
 noncomputable instance complexPoint_compactSpace {X : Over (Spec ↧ℂ)}
-    [h : IsProjective X.hom] : CompactSpace (ComplexPoint X) :=
+    [h : IsProjective X.hom] : CompactSpace (Point ℂ X) :=
   ProjectiveSpace.Presentation.complexPoint_compactSpace
     (Classical.choice h.nonempty_presentation)
 

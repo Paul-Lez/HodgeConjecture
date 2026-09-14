@@ -50,14 +50,14 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 /-- The canonical pointwise local orientation of a smooth complex scheme, constructed from its
 algebraic étale charts and the standard complex local class. -/
 def complexLocalOrientation [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) : RelativeHomology ℚ (pointComplementPair z) (2 * d) :=
+    (z : Point ℂ X) : RelativeHomology ℚ (pointComplementPair z) (2 * d) :=
   localClassOfChart d (localChart X d z) z (mem_localChart_source X d z)
 
 /-- The local orientation is exactly the standard complex class transported through the
 canonical algebraic étale chart at the point. -/
 lemma complexLocalOrientation_eq_localClassOfChart
     [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) :
+    (z : Point ℂ X) :
     complexLocalOrientation X d z =
       localClassOfChart d (localChart X d z) z
         (mem_localChart_source X d z) :=
@@ -67,8 +67,8 @@ lemma complexLocalOrientation_eq_localClassOfChart
 class generates the full top local homology group. -/
 theorem span_complexLocalOrientation_eq_top
     [SmoothOfRelativeDimension d X.hom]
-    [T1Space (ComplexPoint X)]
-    (z : ComplexPoint X) :
+    [T1Space (Point ℂ X)]
+    (z : Point ℂ X) :
     Submodule.span ℚ {complexLocalOrientation X d z} = ⊤ := by
   exact span_localClassOfChart_eq_top d (localChart X d z) z
     (mem_localChart_source X d z)

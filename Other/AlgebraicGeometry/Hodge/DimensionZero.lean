@@ -40,7 +40,7 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
 theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_dimension_eq_zero
     (hd : dim X.left = 0) :
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X := by
-  let : ConnectedSpace (ComplexPoint X) :=
+  let : ConnectedSpace (Point ℂ X) :=
     connectedSpaceOfDimensionEqZero X (dim X.left) hd
   exact algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan X
 

@@ -44,7 +44,7 @@ complex analytic. -/
 lemma analyticAt_localChart_symm_map_component
     [SmoothOfRelativeDimension d X.hom]
     [SmoothOfRelativeDimension e Y.hom]
-    (z : ComplexPoint X) {w : Fin d → ℂ}
+    (z : Point ℂ X) {w : Fin d → ℂ}
     (hw : w ∈ (localChart X d z).target)
     (hmap : map f ((localChart X d z).symm w) ∈
       (localChart Y e (map f z)).source)
@@ -86,7 +86,7 @@ complex analytic. -/
 lemma analyticAt_localChart_symm_map
     [SmoothOfRelativeDimension d X.hom]
     [SmoothOfRelativeDimension e Y.hom]
-    (z : ComplexPoint X) {w : Fin d → ℂ}
+    (z : Point ℂ X) {w : Fin d → ℂ}
     (hw : w ∈ (localChart X d z).target)
     (hmap : map f ((localChart X d z).symm w) ∈
       (localChart Y e (map f z)).source) :

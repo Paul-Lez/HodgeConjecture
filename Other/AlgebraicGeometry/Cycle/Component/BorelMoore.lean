@@ -49,7 +49,7 @@ open AlgebraicTopology.Singular
 /-- The analytic space underlying the reduced closure of one point of a projective variety. -/
 abbrev CycleComponentAnalyticPoint
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) :=
-  ComplexPoint (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
+  Point ℂ (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
 
 /-- Integral Borel--Moore homology of a projective analytic cycle component. -/
 abbrev IntegralCycleComponentBorelMooreHomology

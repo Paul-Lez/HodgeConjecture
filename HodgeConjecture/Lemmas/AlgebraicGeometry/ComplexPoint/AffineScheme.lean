@@ -51,7 +51,7 @@ abbrev affineSpecStructureMap : Spec ↧R ⟶ Spec ↧ℂ :=
 
 /-- Complex points of `Spec R` correspond to complex algebra homomorphisms from `R` to `ℂ`. -/
 def affineSpecEquiv :
-    ComplexPoint (Over.mk (affineSpecStructureMap R)) ≃ (R →ₐ[ℂ] ℂ) where
+    Point ℂ (Over.mk (affineSpecStructureMap R)) ≃ (R →ₐ[ℂ] ℂ) where
   toFun z :=
     { toRingHom := (Spec.homEquiv z.left).hom
       commutes' c := by
@@ -73,7 +73,7 @@ def affineSpecEquiv :
     simp [Spec.homEquiv_apply]
 
 lemma affineSpecEquiv_apply
-    (z : ComplexPoint (Over.mk (affineSpecStructureMap R))) (r : R) :
+    (z : Point ℂ (Over.mk (affineSpecStructureMap R))) (r : R) :
     affineSpecEquiv R z r =
       evaluate ⊤ ((Scheme.ΓSpecIso ↧R).inv r) z := by
   rw [evaluate_top_eq_appTop]
@@ -102,7 +102,7 @@ lemma continuous_affineAlgebraHom_apply (r : R) :
 
 lemma continuous_affineSpecEquiv :
     @Continuous
-      (ComplexPoint (Over.mk (affineSpecStructureMap R)))
+      (Point ℂ (Over.mk (affineSpecStructureMap R)))
       (R →ₐ[ℂ] ℂ) analyticTopology (affineAlgebraHomTopology R)
       (affineSpecEquiv R) := by
   rw [continuous_induced_rng]
@@ -132,7 +132,7 @@ evaluations of global sections. -/
 lemma exists_evaluate_affine_basicOpen_eq_div {X : Over (Spec ↧ℂ)} [IsAffine X.left]
     (f : Γ(X.left, ⊤)) (t : Γ(X.left, X.left.basicOpen f)) :
     ∃ (k : ℕ) (a : Γ(X.left, ⊤)),
-      ∀ z : ComplexPoint X, z ∈ overOpen (X.left.basicOpen f) →
+      ∀ z : Point ℂ X, z ∈ overOpen (X.left.basicOpen f) →
         evaluate (X.left.basicOpen f) t z = evaluate ⊤ a z / evaluate ⊤ f z ^ k :=
   exists_evaluate_basicOpen_eq_div (X := X) (isAffineOpen_top X.left) f t
 
@@ -140,7 +140,7 @@ lemma exists_evaluate_affineSpec_basicOpen_eq_div
     (f : Γ(Spec ↧R, ⊤))
     (t : Γ(Spec ↧R, (Spec ↧R).basicOpen f)) :
     ∃ (k : ℕ) (a : Γ(Spec ↧R, ⊤)),
-      ∀ z : ComplexPoint (Over.mk (affineSpecStructureMap R)),
+      ∀ z : Point ℂ (Over.mk (affineSpecStructureMap R)),
         z ∈ overOpen ((Spec ↧R).basicOpen f) →
           evaluate ((Spec ↧R).basicOpen f) t z =
             evaluate ⊤ a z / evaluate ⊤ f z ^ k := by
@@ -177,7 +177,7 @@ lemma continuousOn_evaluate_affineSpec_basicOpen_equiv_symm
 
 lemma continuous_affineSpecEquiv_symm :
     @Continuous (R →ₐ[ℂ] ℂ)
-      (ComplexPoint (Over.mk (affineSpecStructureMap R)))
+      (Point ℂ (Over.mk (affineSpecStructureMap R)))
       (affineAlgebraHomTopology R) analyticTopology (affineSpecEquiv R).symm := by
   rw [continuous_iff_analyticSubbasis]
   rintro W ⟨U, s, V, hV, rfl⟩
@@ -209,7 +209,7 @@ lemma continuous_affineSpecEquiv_symm :
 from `R` to `ℂ`, with their topology of pointwise convergence. -/
 def affineSpecHomeomorph :
     @Homeomorph
-      (ComplexPoint (Over.mk (affineSpecStructureMap R)))
+      (Point ℂ (Over.mk (affineSpecStructureMap R)))
       (R →ₐ[ℂ] ℂ) analyticTopology (affineAlgebraHomTopology R) where
   toEquiv := affineSpecEquiv R
   continuous_toFun := continuous_affineSpecEquiv R
@@ -227,15 +227,15 @@ lemma specMap_comp_affineSpecStructureMap (g : A →ₐ[ℂ] B) :
 
 /-- The map on complex points contravariantly associated to a complex algebra homomorphism. -/
 def affineSpecComplexPointMap (g : A →ₐ[ℂ] B) :
-    ComplexPoint (Over.mk (affineSpecStructureMap B)) →
-      ComplexPoint (Over.mk (affineSpecStructureMap A)) :=
+    Point ℂ (Over.mk (affineSpecStructureMap B)) →
+      Point ℂ (Over.mk (affineSpecStructureMap A)) :=
   map (Over.homMk (Spec.map (CommRingCat.ofHom g.toRingHom))
     (specMap_comp_affineSpecStructureMap g))
 
 /-- Under the affine-point equivalence, an affine scheme map acts by precomposition of algebra
 homomorphisms. -/
 lemma affineSpecEquiv_affineSpecComplexPointMap (g : A →ₐ[ℂ] B)
-    (z : ComplexPoint (Over.mk (affineSpecStructureMap B))) :
+    (z : Point ℂ (Over.mk (affineSpecStructureMap B))) :
     affineSpecEquiv A (affineSpecComplexPointMap g z) =
       (affineSpecEquiv B z).comp g := by
   ext a

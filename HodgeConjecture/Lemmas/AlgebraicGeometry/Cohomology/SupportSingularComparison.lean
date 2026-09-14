@@ -81,9 +81,9 @@ variable (X : Over (Spec ↧ℂ))
 set_option backward.isDefEq.respectTransparency false in
 /-- Constant singular zero-cochains commute with restriction to an analytic complement. -/
 lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
-    (Z : Set (ComplexPoint X)) :
+    (Z : Set (Point ℂ X)) :
     constantsToSingularCochainZeroSheaf ℚ
-          (TopCat.of (ComplexPoint X)) ≫
+          (TopCat.of (Point ℂ X)) ≫
         singularRestrictionSheaf ℚ
           (analyticComplementInclusion X Z) 0 =
       rationalRestrictionSheaf X Z ≫
@@ -93,9 +93,9 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
               (TopCat.of ↥Zᶜ)) := by
   apply Sheaf.hom_ext
   change sheafifyMap (Opens.grothendieckTopology
-        (TopCat.of (ComplexPoint X)))
+        (TopCat.of (Point ℂ X)))
         (constantsToSingularCochainZero ℚ
-          (TopCat.of (ComplexPoint X))) ≫
+          (TopCat.of (Point ℂ X))) ≫
       (singularRestrictionSheaf ℚ
         (analyticComplementInclusion X Z) 0).hom =
     (rationalRestrictionSheaf X Z).hom ≫
@@ -107,9 +107,9 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
             (TopCat.of ↥Zᶜ)))
   apply sheafify_hom_ext
     (J := Opens.grothendieckTopology
-      (TopCat.of (ComplexPoint X)))
+      (TopCat.of (Point ℂ X)))
     (P := constantCoefficientPresheaf ℚ
-      (TopCat.of (ComplexPoint X))) _ _
+      (TopCat.of (Point ℂ X))) _ _
     ((TopCat.Sheaf.pushforward AddCommGrpCat
       (analyticComplementInclusion X Z)).obj
         (singularCochainSheaf ℚ

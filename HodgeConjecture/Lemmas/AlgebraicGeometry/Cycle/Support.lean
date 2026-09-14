@@ -63,7 +63,7 @@ variable (X : Over (Spec ↧ℂ))
 point. -/
 private lemma complexPoint_ker_eq_vanishingIdeal_closure
     {X : Over (Spec ↧ℂ)}
-    (z : ComplexPoint X) :
+    (z : Point ℂ X) :
     z.left.ker = Scheme.IdealSheafData.vanishingIdeal
       ⟨closure {z.underlying}, isClosed_closure⟩ := by
   let f : Spec ↧ℂ ⟶ X.left := z.left
@@ -93,7 +93,7 @@ set_option backward.isDefEq.respectTransparency false in
 component. -/
 lemma cycleComponent_vanishingIdeal_le_complexPoint_ker
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : (ComplexPoint X)) (hz : z.underlying ∈ closure {x}) :
+    (z : (Point ℂ X)) (hz : z.underlying ∈ closure {x}) :
     (cycleComponentι X.left x).ker ≤ z.left.ker := by
   unfold cycleComponentι
   rw [Scheme.IdealSheafData.ker_subschemeι]
@@ -104,14 +104,14 @@ lemma cycleComponent_vanishingIdeal_le_complexPoint_ker
 /-- The map on complex points induced by the canonical inclusion of a cycle component. -/
 def cycleComponentMap
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) → (ComplexPoint X) :=
+    Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom)) → (Point ℂ X) :=
   Point.map (Over.homMk (cycleComponentι X.left x) rfl)
 
 /-- Lift a complex point in a component support through the reduced closed component. -/
 def cycleComponentComplexPointLift
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : (ComplexPoint X)) (hz : z ∈ cycleComponentSupport X x) :
-    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) :=
+    (z : (Point ℂ X)) (hz : z ∈ cycleComponentSupport X x) :
+    Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom)) :=
   have hz' : z.underlying ∈ closure {x} := hz
   Over.homMk (IsClosedImmersion.lift (cycleComponentι X.left x) z.left
       (cycleComponent_vanishingIdeal_le_complexPoint_ker X x z hz')) (by
@@ -122,21 +122,21 @@ def cycleComponentComplexPointLift
 @[simp]
 lemma cycleComponentMap_lift
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : (ComplexPoint X)) (hz : z ∈ cycleComponentSupport X x) :
+    (z : (Point ℂ X)) (hz : z ∈ cycleComponentSupport X x) :
     cycleComponentMap X x (cycleComponentComplexPointLift X x z hz) = z :=
   Over.OverMorphism.ext (IsClosedImmersion.lift_fac (cycleComponentι X.left x) z.left _)
 
 /-- The analytic complex points in the smooth locus of a reduced cycle component. -/
 def cycleComponentSmoothAnalyticLocus
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Set (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :=
+    Set (Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom))) :=
   Point.overOpen
     (cycleComponentι X.left x ≫ X.hom).smoothLocus
 
 /-- The image in the ambient analytic space of the smooth locus of a cycle component. -/
 def cycleComponentSmoothSupport
     [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) : Set (ComplexPoint X) :=
+    [IsProjective X.hom] (x : X.left) : Set (Point ℂ X) :=
   cycleComponentMap X x '' cycleComponentSmoothAnalyticLocus X x
 
 end AlgebraicGeometry

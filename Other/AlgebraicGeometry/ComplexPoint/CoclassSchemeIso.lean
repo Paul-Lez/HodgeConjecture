@@ -28,7 +28,7 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X Y : Over (Spec ↧ℂ))
   (e : Y ≅ X) (d : ℕ)
   [SmoothOfRelativeDimension d X.hom] [SmoothOfRelativeDimension d Y.hom]
-  [IsProjective X.hom] [IsProjective Y.hom] (z : ComplexPoint Y)
+  [IsProjective X.hom] [IsProjective Y.hom] (z : Point ℂ Y)
 
 /-- The actual point-complement map associated with the actual analytic homeomorphism. -/
 def complexSchemeIsoPointPairMap :
@@ -64,7 +64,7 @@ theorem complexSchemeIsoPointPairMap_localClass :
       rw [b.left_inv hb, hback]
       exact hz
     have ha := analyticAt_localChart_symm_map X Y e.inv d d (H z) (b.map_source hb) hmem
-    have hsymm (q : ComplexPoint X) : H.symm q = Point.map e.inv q := rfl
+    have hsymm (q : Point ℂ X) : H.symm q = Point.map e.inv q := rfl
     simpa only [hback, hsymm] using ha
 
 /-- The old normalized point coclass pulls back exactly under the actual scheme iso. -/

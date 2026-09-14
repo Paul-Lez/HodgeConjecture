@@ -51,7 +51,7 @@ variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
 coheight `d - p`. -/
 lemma cycleComponent_complexPoint_coheight_eq_sub
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
+    (z : Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom)))
     [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = p) :
     Order.coheight z.underlying = d - p :=

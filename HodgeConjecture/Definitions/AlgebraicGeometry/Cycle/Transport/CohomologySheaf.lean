@@ -30,13 +30,13 @@ variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 /-- The literal supported ambient rational injective complex for a closed support. -/
-def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
-    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
+def complexSupportInjectiveComplex (S : Closeds (Point ℂ X)) :
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
   ((TopCat.Sheaf.sheafSectionsSupportedOutside
-    (TopCat.of (ComplexPoint X)) S.compl).mapHomologicalComplex (.up ℤ)).obj
+    (TopCat.of (Point ℂ X)) S.compl).mapHomologicalComplex (.up ℤ)).obj
       (ambientRationalInjectiveComplex X)
 
-instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint X)) :
+instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (Point ℂ X)) :
     (complexSupportInjectiveComplex X S).IsStrictlyGE 0 := by
   dsimp [complexSupportInjectiveComplex]
   infer_instance

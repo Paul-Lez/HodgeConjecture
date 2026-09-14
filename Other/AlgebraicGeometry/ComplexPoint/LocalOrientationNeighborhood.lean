@@ -46,21 +46,21 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 variable [SmoothOfRelativeDimension d X.hom]
 
 /-- An open neighborhood carrying a single exactly normalized relative orientation class. -/
-def complexLocalOrientationNeighborhood (x : ComplexPoint X) :
-    Opens (ComplexPoint X) :=
+def complexLocalOrientationNeighborhood (x : Point ℂ X) :
+    Opens (Point ℂ X) :=
   chartOrientationNeighborhood d (localChart X d x) x
     (mem_localChart_source X d x)
 
-lemma mem_complexLocalOrientationNeighborhood (x : ComplexPoint X) :
+lemma mem_complexLocalOrientationNeighborhood (x : Point ℂ X) :
     x ∈ complexLocalOrientationNeighborhood X d x :=
   mem_chartOrientationNeighborhood d (localChart X d x) x
     (mem_localChart_source X d x)
 
 /-- The actual relative singular homology class supported on the constructed neighborhood. -/
-def complexLocalOrientationNeighborhoodClass (x : ComplexPoint X) :
+def complexLocalOrientationNeighborhoodClass (x : Point ℂ X) :
     RelativeHomology ℚ
-      (TopPair.ofSubset (X := TopCat.of (ComplexPoint X))
-        (complexLocalOrientationNeighborhood X d x : Set (ComplexPoint X))ᶜ)
+      (TopPair.ofSubset (X := TopCat.of (Point ℂ X))
+        (complexLocalOrientationNeighborhood X d x : Set (Point ℂ X))ᶜ)
       (2 * d) :=
   chartOrientationNeighborhoodClass d (localChart X d x) x
     (mem_localChart_source X d x)
@@ -68,10 +68,10 @@ def complexLocalOrientationNeighborhoodClass (x : ComplexPoint X) :
 /-- Every nearby point restriction is the exact existing complex orientation, with no scalar
 ambiguity or arbitrary generator choice. -/
 theorem complexLocalOrientationNeighborhoodClass_restrict
-    (x y : ComplexPoint X)
+    (x y : Point ℂ X)
     (hy : y ∈ complexLocalOrientationNeighborhood X d x) :
     relativeHomologyMap ℚ (2 * d)
-      (supportInclusionPairMap (TopCat.of (ComplexPoint X))
+      (supportInclusionPairMap (TopCat.of (Point ℂ X))
         (Set.singleton_subset_iff.mpr hy))
       (complexLocalOrientationNeighborhoodClass X d x) =
       complexLocalOrientation X d y :=
@@ -83,14 +83,14 @@ theorem complexLocalOrientationNeighborhoodClass_restrict
 
 /-- Simultaneous local representability of the normalized pointwise orientation is a theorem,
 witnessed by the explicitly constructed neighborhood-relative class. -/
-theorem exists_neighborhood_complexLocalOrientation (x : ComplexPoint X) :
-    ∃ (U : Opens (ComplexPoint X)), x ∈ U ∧
+theorem exists_neighborhood_complexLocalOrientation (x : Point ℂ X) :
+    ∃ (U : Opens (Point ℂ X)), x ∈ U ∧
       ∃ c : RelativeHomology ℚ
-        (TopPair.ofSubset (X := TopCat.of (ComplexPoint X))
-          (U : Set (ComplexPoint X))ᶜ) (2 * d),
-        ∀ (y : ComplexPoint X) (hy : y ∈ U),
+        (TopPair.ofSubset (X := TopCat.of (Point ℂ X))
+          (U : Set (Point ℂ X))ᶜ) (2 * d),
+        ∀ (y : Point ℂ X) (hy : y ∈ U),
           relativeHomologyMap ℚ (2 * d)
-            (supportInclusionPairMap (TopCat.of (ComplexPoint X))
+            (supportInclusionPairMap (TopCat.of (Point ℂ X))
               (Set.singleton_subset_iff.mpr hy)) c =
               complexLocalOrientation X d y :=
   ⟨complexLocalOrientationNeighborhood X d x,

@@ -30,14 +30,14 @@ sheafification comparison on the open, and exact open-restriction homology compa
 @[simp] theorem cycleComponentSmoothSupportLowestSectionCohomologyIso_hom :
     (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom =
       HomologicalComplex.homologyMap
-        (TopCat.Sheaf.openRestrictionTopSectionComplexIso (TopCat.of (ComplexPoint X))
+        (TopCat.Sheaf.openRestrictionTopSectionComplexIso (TopCat.of (Point ℂ X))
           (cycleComponentSmoothSupportAmbientOpen X x)
           (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).inv
         (2 * (p : ℤ)) ≫
       TopCat.Sheaf.sectionCohomologyToSheafSection
         (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))
         (cycleComponentSmoothRestrictedInjectiveComplex X x) (2 * (p : ℤ)) ⊤ ≫
-      (TopCat.Sheaf.openRestrictionHomologyTopSectionsIso (TopCat.of (ComplexPoint X))
+      (TopCat.Sheaf.openRestrictionHomologyTopSectionsIso (TopCat.of (Point ℂ X))
         (cycleComponentSmoothSupportAmbientOpen X x)
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
         (2 * (p : ℤ))).hom := rfl

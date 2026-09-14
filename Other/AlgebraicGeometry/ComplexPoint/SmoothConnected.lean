@@ -34,12 +34,12 @@ noncomputable section
 /-- The complex points of a smooth integral quasi-separated complex scheme form a connected
 space. -/
 theorem connectedSpace (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [QuasiSeparatedSpace X.left] : ConnectedSpace (ComplexPoint X) := by
+    [QuasiSeparatedSpace X.left] : ConnectedSpace (Point ℂ X) := by
   let _ : LocallyOfFiniteType X.hom := inferInstance
   let _ : JacobsonSpace X.left := LocallyOfFiniteType.jacobsonSpace X.hom
   obtain ⟨x, -, hx⟩ := nonempty_inter_closedPoints
     (X := X.left) (Z := Set.univ) Set.univ_nonempty isOpen_univ.isLocallyClosed
-  let z : ComplexPoint X :=
+  let z : Point ℂ X :=
     let w := (pointEquivClosedPoint X.hom).symm ⟨x, hx⟩
     Over.homMk w.1 w.2
   let d := dim X.left
@@ -59,7 +59,7 @@ theorem connectedSpace (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.ho
   let _ : Algebra.Smooth ℂ A := Algebra.Smooth.comp ℂ P A
   let _ : ConnectedSpace (A →ₐ[ℂ] ℂ) :=
     connectedSpace_complexAlgHom_of_smooth_integral A
-  let _ : ConnectedSpace (ComplexPoint (openScheme X D.neighborhood)) :=
+  let _ : ConnectedSpace (Point ℂ (openScheme X D.neighborhood)) :=
     D.pointAlgHomHomeomorph.connectedSpace_iff.mpr inferInstance
   exact connectedSpace_of_open X D.neighborhood
 

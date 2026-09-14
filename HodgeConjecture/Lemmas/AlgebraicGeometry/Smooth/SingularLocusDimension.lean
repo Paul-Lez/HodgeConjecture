@@ -31,18 +31,18 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
   (f : X ⟶ Spec (.of K)) [LocallyOfFiniteType f]
 
 /-- The singular locus equipped with its reduced closed-subscheme structure. -/
-def reducedSingularLocus : Scheme := reducedClosedSubscheme (singularLocusClosed f)
+def reducedSingularLocus : Scheme := reducedClosedSubscheme (f.smoothLocus.compl)
 
 /-- Its canonical closed immersion in the original scheme. -/
 def reducedSingularLocusι : reducedSingularLocus f ⟶ X :=
-  reducedClosedSubschemeι (singularLocusClosed f)
+  reducedClosedSubschemeι (f.smoothLocus.compl)
 
 instance reducedSingularLocus_isReduced : IsReduced (reducedSingularLocus f) :=
-  inferInstanceAs (IsReduced (reducedClosedSubscheme (singularLocusClosed f)))
+  inferInstanceAs (IsReduced (reducedClosedSubscheme (f.smoothLocus.compl)))
 
 instance reducedSingularLocusι_isClosedImmersion :
     IsClosedImmersion (reducedSingularLocusι f) :=
-  inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f)))
+  inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (f.smoothLocus.compl)))
 
 variable (Y : Over (Spec ↧ℂ))
   [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
@@ -53,7 +53,7 @@ def cycleComponentSingularStratification (x : Y.left) :
     List (Closeds (cycleComponent Y.left x)) :=
   letI := cycleComponent_isNoetherian Y x
   reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
-    (singularLocusClosed (cycleComponentι Y.left x ≫ Y.hom))
+    ((cycleComponentι Y.left x ≫ Y.hom).smoothLocus.compl)
 
 end AlgebraicGeometry
 
@@ -77,10 +77,10 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
 /-- Generic smoothness makes the actual singular locus proper; no singular-locus bound
 is supplied as an input. -/
 theorem singularLocusClosed_ne_top [PerfectField K] [IsReduced X] [Nonempty X] :
-    singularLocusClosed f ≠ ⊤ := by
+    f.smoothLocus.compl ≠ ⊤ := by
   obtain ⟨x, hx⟩ := f.dense_smoothLocus_of_perfectField.nonempty
   intro he
-  have : x ∈ singularLocusClosed f := by rw [he]; trivial
+  have : x ∈ f.smoothLocus.compl := by rw [he]; trivial
   exact this hx
 
 /-- The algebraic dimension drops strictly across the singular locus of a reduced
@@ -88,7 +88,7 @@ irreducible scheme. -/
 theorem topologicalKrullDim_reducedSingularLocus_lt [PerfectField K] [IsIntegral X]
     {n : ℕ} (hdim : topologicalKrullDim X ≤ n) :
     topologicalKrullDim (reducedSingularLocus f) < n :=
-  topologicalKrullDim_lt_of_isClosed_of_ne_univ (singularLocusClosed f).isClosed
+  topologicalKrullDim_lt_of_isClosed_of_ne_univ (f.smoothLocus.compl).isClosed
     (fun he => singularLocusClosed_ne_top f (SetLike.coe_injective he)) hdim
 
 /-- Each actual smooth piece has dimension at most that of any containing closed set. -/

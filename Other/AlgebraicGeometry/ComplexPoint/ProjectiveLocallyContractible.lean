@@ -96,16 +96,16 @@ variable (X : Over (Spec ↧ℂ))
 /-- The analytification of a smooth projective complex variety is strongly locally
 contractible. -/
 theorem stronglyLocallyContractibleSpace [IsIntegral X.left] [Smooth X.hom] :
-    StronglyLocallyContractibleSpace (ComplexPoint X) := by
+    StronglyLocallyContractibleSpace (Point ℂ X) := by
   let : StronglyLocallyContractibleSpace (Fin (dim X.left) → ℂ) :=
     normedSpace_stronglyLocallyContractibleSpace
   exact ChartedSpace.stronglyLocallyContractibleSpace
-    (H := Fin (dim X.left) → ℂ) (M := ComplexPoint X)
+    (H := Fin (dim X.left) → ℂ) (M := Point ℂ X)
 
 /-- The analytification of a smooth projective complex variety is locally contractible. -/
 theorem locallyContractibleSpace [IsIntegral X.left] [Smooth X.hom] :
-    LocallyContractibleSpace (ComplexPoint X) := by
-  let : StronglyLocallyContractibleSpace (ComplexPoint X) :=
+    LocallyContractibleSpace (Point ℂ X) := by
+  let : StronglyLocallyContractibleSpace (Point ℂ X) :=
     stronglyLocallyContractibleSpace X
   exact StronglyLocallyContractibleSpace.locallyContractible
 

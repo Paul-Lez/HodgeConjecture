@@ -46,19 +46,19 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 /-- The sheaf of complex-valued functions which are analytic in the algebraically constructed
 étale charts, initially regarded as a sheaf of types. -/
 def holomorphicFunctionSheafToTypes [SmoothOfRelativeDimension d X.hom] :
-    TopCat.Sheaf (Type) (TopCat.of (ComplexPoint X)) :=
+    TopCat.Sheaf (Type) (TopCat.of (Point ℂ X)) :=
   (contDiffWithinAt_localInvariantProp (I := 𝓘(ℂ, Fin d → ℂ))
-    (I' := 𝓘(ℂ)) ω).sheaf (ComplexPoint X) ℂ
+    (I' := 𝓘(ℂ)) ω).sheaf (Point ℂ X) ℂ
 
 instance holomorphicFunctionSheafToTypes.commRing [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) :
     CommRing ((holomorphicFunctionSheafToTypes X d).presheaf.obj U) :=
   inferInstanceAs <| CommRing
-    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯
+    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (Point ℂ X)); ℂ⟯
 
 /-- The presheaf of rings underlying the holomorphic-function sheaf. -/
 def holomorphicFunctionPresheaf [SmoothOfRelativeDimension d X.hom] :
-    TopCat.Presheaf CommRingCat (TopCat.of (ComplexPoint X)) where
+    TopCat.Presheaf CommRingCat (TopCat.of (Point ℂ X)) where
   obj U := CommRingCat.of
     ((holomorphicFunctionSheafToTypes X d).presheaf.obj U)
   map h := CommRingCat.ofHom <|
@@ -70,7 +70,7 @@ def holomorphicFunctionPresheaf [SmoothOfRelativeDimension d X.hom] :
 /-- The sheaf of complex-valued functions which are analytic in the algebraically constructed
 étale charts. -/
 def holomorphicFunctionSheaf [SmoothOfRelativeDimension d X.hom] :
-    TopCat.Sheaf CommRingCat (TopCat.of (ComplexPoint X)) where
+    TopCat.Sheaf CommRingCat (TopCat.of (Point ℂ X)) where
   obj := holomorphicFunctionPresheaf X d
   property := by
     rw [CategoryTheory.Presheaf.isSheaf_iff_isSheaf_forget _ _

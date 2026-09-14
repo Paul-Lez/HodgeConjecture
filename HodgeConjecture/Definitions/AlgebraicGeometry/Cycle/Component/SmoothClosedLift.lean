@@ -99,7 +99,7 @@ instance cycleComponentSmoothLocusAmbientOpenOver_smoothOfRelativeDimension :
 namespace ComplexPoint
 
 /-- The full cycle support as an actual closed analytic subset. -/
-def cycleComponentAnalyticClosedSupport : Closeds (ComplexPoint X) :=
+def cycleComponentAnalyticClosedSupport : Closeds (Point ℂ X) :=
   ⟨cycleComponentSupport X x, isClosed_cycleComponentSupport X x⟩
 
 end ComplexPoint

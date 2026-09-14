@@ -696,14 +696,14 @@ variable {n : ℕ} (P : StandardEtalePair (complexPolynomialRing n))
 
 /-- The complex-point map from the spectrum of a polynomial ring to algebraic affine space. -/
 def polynomialSpecToAffineSpacePointMap :
-    ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n))) →
-      ComplexPoint (Over.mk (complexAffineSpace (Fin n) ↘ Spec ↧ℂ)) :=
+    Point ℂ (Over.mk (affineSpecStructureMap (complexPolynomialRing n))) →
+      Point ℂ (Over.mk (complexAffineSpace (Fin n) ↘ Spec ↧ℂ)) :=
   map (Over.homMk (AffineSpace.SpecIso (Fin n) ↧ℂ).inv (AffineSpace.SpecIso_inv_over ↧ℂ))
 
 /-- The scheme isomorphism between the spectrum of a polynomial ring and affine space agrees
 with evaluation of the polynomial variables. -/
 lemma affineSpaceEquiv_polynomialSpecToAffineSpacePointMap
-    (z : ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n)))) :
+    (z : Point ℂ (Over.mk (affineSpecStructureMap (complexPolynomialRing n)))) :
     affineSpaceEquiv (Fin n) (polynomialSpecToAffineSpacePointMap (n := n) z) =
       mvPolynomialAlgHomHomeomorph n (affineSpecEquiv (complexPolynomialRing n) z) := by
   funext i

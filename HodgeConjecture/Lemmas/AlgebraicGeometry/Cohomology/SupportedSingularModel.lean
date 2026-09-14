@@ -28,9 +28,9 @@ variable (X : Over (Spec ↧ℂ))
 /-- The actual singular-to-injective resolution map, using proved local
 contractibility of the analytic space. -/
 def complexSingularToAmbientInjective :
-    rationalSingularCochainComplex (TopCat.of (ComplexPoint X)) ⟶
+    rationalSingularCochainComplex (TopCat.of (Point ℂ X)) ⟶
       ambientRationalInjectiveComplex X :=
-  singularToConstantInjectiveComplex (TopCat.of (ComplexPoint X))
+  singularToConstantInjectiveComplex (TopCat.of (Point ℂ X))
     (exists_contractibleOpen_le X)
 
 instance complexSingularToAmbientInjective_quasiIso :
@@ -42,18 +42,18 @@ variable [IsProjective X.hom]
 /-- Local supported singular cohomology and the literal supported injective
 model are canonically isomorphic in every integer degree. -/
 def complexSupportedSingularInjectiveHomologyIso
-    (U V : Opens (ComplexPoint X)) (n : ℤ) :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
+    (U V : Opens (Point ℂ X)) (n : ℤ) :
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X)) V).mapHomologicalComplex
       (.up ℤ)).obj
-        (supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U))).homology n ≅
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
+        (supportedRationalSingularCochainComplex (TopCat.of (Point ℂ X)) U))).homology n ≅
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X)) V).mapHomologicalComplex
       (.up ℤ)).obj
         (((TopCat.Sheaf.sheafSectionsSupportedOutside
-          (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
+          (TopCat.of (Point ℂ X)) U).mapHomologicalComplex (.up ℤ)).obj
             (ambientRationalInjectiveComplex X)))).homology n :=
-  letI : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=
+  letI : ∀ W : Opens (Point ℂ X), ParacompactSpace W :=
     openParacompactSpace X
-  supportedSingularInjectiveHomologyIso (TopCat.of (ComplexPoint X))
+  supportedSingularInjectiveHomologyIso (TopCat.of (Point ℂ X))
     (exists_contractibleOpen_le X) U V n
 
 end AlgebraicGeometry.ComplexPoint

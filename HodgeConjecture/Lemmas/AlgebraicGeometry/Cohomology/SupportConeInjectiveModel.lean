@@ -26,37 +26,38 @@ variable (X : Over (Spec ↧ℂ))
 /-- Restriction from the ambient injective resolution to the fixed complement
 resolution, using the strict comparison on the actual open complement. -/
 def ambientRationalInjectiveRestriction
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     ambientRationalInjectiveComplex X ⟶
       derivedPushforwardComplementConstantRationalComplexInt X Z :=
   HomologicalComplex.extendMap
     (TopCat.Sheaf.ambientToOpenInjectiveResolution
-      (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
+      (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩
       (AddCommGrpCat.of ℚ)) ComplexShape.embeddingUpNat
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The comparison extends the original rational restriction strictly. -/
 @[reassoc]
 lemma ambientRationalAugmentation_comp_restriction
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     ambientRationalInjectiveAugmentation X ≫
       ambientRationalInjectiveRestriction X Z hZ =
         rationalRestrictionComplexInt X Z := by
   change (ComplexShape.embeddingUpNat.extendFunctor
-    (AnalyticAdditiveSheaf X)).map _ ≫
+    (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).map _ ≫
       (ComplexShape.embeddingUpNat.extendFunctor
-        (AnalyticAdditiveSheaf X)).map _ = _
+        (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).map _ = _
   rw [← Functor.map_comp]
   exact congrArg
-    ((ComplexShape.embeddingUpNat.extendFunctor (AnalyticAdditiveSheaf X)).map)
+    ((ComplexShape.embeddingUpNat.extendFunctor
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).map)
     (TopCat.Sheaf.ambientAugmentation_comp_openResolution
-      (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
+      (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩
       (AddCommGrpCat.of ℚ))
 
 /-- The actual map from the old rational support cone to its ambient-injective
 source replacement. -/
 def rationalSupportConeToAmbientInjectiveCone
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     rationalCohomologyWithSupportComplex X Z ⟶
       CochainComplex.mappingCone
         (ambientRationalInjectiveRestriction X Z hZ) :=
@@ -65,13 +66,13 @@ def rationalSupportConeToAmbientInjectiveCone
     (by simpa using (ambientRationalAugmentation_comp_restriction X Z hZ).symm)
 
 instance rationalSupportConeToAmbientInjectiveCone_quasiIso
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     QuasiIso (rationalSupportConeToAmbientInjectiveCone X Z hZ) :=
   CochainComplex.mappingCone.quasiIso_map_of_quasiIso _ _ _ _ _
 
 /-- The replacement cone is bounded below. -/
 instance ambientRationalInjectiveCone_isStrictlyGE
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     (CochainComplex.mappingCone
       (ambientRationalInjectiveRestriction X Z hZ)).IsStrictlyGE (-1) := by
   let : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE 0 := by
@@ -82,7 +83,7 @@ instance ambientRationalInjectiveCone_isStrictlyGE
 /-- The replacement cone is genuinely termwise injective: its terms are
 finite biproducts of ambient injectives and open direct images of injectives. -/
 instance ambientRationalInjectiveCone_injective
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (q : ℤ) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) (q : ℤ) :
     Injective ((CochainComplex.mappingCone
       (ambientRationalInjectiveRestriction X Z hZ)).X q) := by
   let : Injective
@@ -93,7 +94,7 @@ instance ambientRationalInjectiveCone_injective
       (ambientRationalInjectiveRestriction X Z hZ) q (q + 1) rfl).symm inferInstance
 
 instance ambientRationalInjectiveCone_isKInjective
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     (CochainComplex.mappingCone
       (ambientRationalInjectiveRestriction X Z hZ)).IsKInjective :=
   CochainComplex.isKInjective_of_injective _ (-1)
@@ -101,10 +102,10 @@ instance ambientRationalInjectiveCone_isKInjective
 /-- The existing support group is computed by the global sections of this
 normalized ambient-injective cone. No smoothness assumption is needed. -/
 def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X))
+        (TopCat.of (Point ℂ X))
         (CochainComplex.mappingCone
           (ambientRationalInjectiveRestriction X Z hZ))).homology (n - 1) :=
   let e : RationalCohomologyWithSupport X Z n ≃+
@@ -121,30 +122,30 @@ def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
 the independently chosen complement resolution. The map/extension isomorphism
 is displayed explicitly, rather than requiring the two models to be equal. -/
 def ambientRationalOpenResolutionComparison
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     ((TopCat.Sheaf.openRestrictionPushforward
-      (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩).mapHomologicalComplex
+      (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩).mapHomologicalComplex
       (.up ℤ)).obj (ambientRationalInjectiveComplex X) ⟶
         derivedPushforwardComplementConstantRationalComplexInt X Z :=
   (HomologicalComplex.mapExtendCanonicalIso
     (TopCat.Sheaf.openRestrictionPushforward
-      (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩)
+      (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩)
     (TopCat.Sheaf.ambientConstantInjectiveResolution
-      (TopCat.of (ComplexPoint X)) (AddCommGrpCat.of ℚ)).cocomplex
+      (TopCat.of (Point ℂ X)) (AddCommGrpCat.of ℚ)).cocomplex
       ComplexShape.embeddingUpNat).hom ≫
     HomologicalComplex.extendMap
       (((TopCat.Sheaf.pushforward AddCommGrpCat
         (analyticComplementInclusion X Z)).mapHomologicalComplex (.up ℕ)).map
         (TopCat.Sheaf.restrictedAmbientToOpenResolution
-          (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
+          (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩
           (AddCommGrpCat.of ℚ))) ComplexShape.embeddingUpNat
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
 lemma actualRestriction_comp_openResolutionComparison
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     (TopCat.Sheaf.supportRestrictionComplexShortComplex
-      (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
+      (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩
       (ambientRationalInjectiveComplex X)).g ≫
         ambientRationalOpenResolutionComparison X Z hZ =
       ambientRationalInjectiveRestriction X Z hZ := by
@@ -152,21 +153,21 @@ lemma actualRestriction_comp_openResolutionComparison
   change ((TopCat.Sheaf.toOpenRestrictionPushforward _ _).mapHomologicalComplex _).app _ ≫
     (HomologicalComplex.mapExtendCanonicalIso _ _ _).hom ≫ _ = _
   rw [HomologicalComplex.mapExtendCanonicalIso_hom_naturality_from_id_assoc]
-  exact (ComplexShape.embeddingUpNat.extendFunctor (AnalyticAdditiveSheaf X)).map_comp _ _
-    |>.symm
+  exact (ComplexShape.embeddingUpNat.extendFunctor
+    (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).map_comp _ _ |>.symm
 
 /-- Global sections of the actual open-resolution comparison. -/
 def globalAmbientRationalOpenResolutionComparison
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :=
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :=
   ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-    (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+    (TopCat.of (Point ℂ X))).mapHomologicalComplex (.up ℤ)).map
       (ambientRationalOpenResolutionComparison X Z hZ)
 
 set_option backward.isDefEq.respectTransparency false in
 instance globalAmbientRationalOpenResolutionComparison_quasiIso
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     QuasiIso (globalAmbientRationalOpenResolutionComparison X Z hZ) := by
-  let Y := TopCat.of (ComplexPoint X)
+  let Y := TopCat.of (Point ℂ X)
   let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let k := ((TopCat.Sheaf.pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex
@@ -190,26 +191,26 @@ set_option backward.isDefEq.respectTransparency false in
 complement resolution. Both the ambient component and the prescribed
 restriction square are fixed. -/
 def actualSupportConeToAmbientInjectiveGlobalCone
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     CochainComplex.mappingCone
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
+        (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
         (ambientRationalInjectiveComplex X)).g ⟶
     CochainComplex.mappingCone
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+        (TopCat.of (Point ℂ X))).mapHomologicalComplex (.up ℤ)).map
           (ambientRationalInjectiveRestriction X Z hZ)) :=
   CochainComplex.mappingCone.map _ _ (𝟙 _)
     (globalAmbientRationalOpenResolutionComparison X Z hZ) (by
       let Γ := (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)
+        (TopCat.of (Point ℂ X))).mapHomologicalComplex (.up ℤ)
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,
         actualRestriction_comp_openResolutionComparison])
 
 set_option backward.isDefEq.respectTransparency false in
 instance actualSupportConeToAmbientInjectiveGlobalCone_quasiIso
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     QuasiIso (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) :=
   CochainComplex.mappingCone.quasiIso_map_of_quasiIso _ _ _ _ _
 
@@ -220,12 +221,12 @@ explicit homology/shift isomorphism. The final negation corrects the
 standard cone triangle's negative connecting projection, so that the
 comparison preserves the actual support-forgetting inclusion. -/
 def rationalSupportAddEquivSupportedInjectiveHomology
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
+        (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
         (ambientRationalInjectiveComplex X)).X₁.homology n :=
-  let Y := TopCat.of (ComplexPoint X)
+  let Y := TopCat.of (Point ℂ X)
   let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤

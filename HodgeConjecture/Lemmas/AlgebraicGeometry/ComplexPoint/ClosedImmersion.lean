@@ -57,7 +57,7 @@ variable {A B : Over (Spec ↧ℂ)} (i : A ⟶ B)
 on its scheme-theoretic image. -/
 lemma range_map_of_closedImmersion [IsClosedImmersion i.left] :
     Set.range (map i) =
-      {y : ComplexPoint B | y.underlying ∈ Set.range i.left} := by
+      {y : Point ℂ B | y.underlying ∈ Set.range i.left} := by
   ext y
   constructor
   · rintro ⟨x, rfl⟩
@@ -86,13 +86,13 @@ lemma range_map_of_closedImmersion [IsClosedImmersion i.left] :
 
 /-- The analytic image of a closed immersion is closed. -/
 lemma isClosed_range_map_of_closedImmersion [IsClosedImmersion i.left] :
-    @IsClosed (ComplexPoint B) analyticTopology
+    @IsClosed (Point ℂ B) analyticTopology
       (Set.range (map i)) := by
   rw [range_map_of_closedImmersion i]
   apply isOpen_compl_iff.mp
   let U : B.left.Opens :=
     ⟨(Set.range i.left)ᶜ, i.left.isClosedEmbedding.isClosed_range.isOpen_compl⟩
-  have h : IsOpen (overOpen U : Set (ComplexPoint B)) :=
+  have h : IsOpen (overOpen U : Set (Point ℂ B)) :=
     isOpen_overOpen (X := B) U
   convert h using 1
   ext y
@@ -102,16 +102,16 @@ lemma isClosed_range_map_of_closedImmersion [IsClosedImmersion i.left] :
 ambient analytic space. -/
 lemma isOpen_induced_chartSubbasic [IsClosedImmersion i.left]
     (U : B.left.Opens) (s : Γ(A.left, i.left ⁻¹ᵁ U)) (O : Set ℂ) (hO : IsOpen O) :
-    @IsOpen (ComplexPoint A)
+    @IsOpen (Point ℂ A)
       (TopologicalSpace.induced (map i) analyticTopology)
       (overOpen (i.left ⁻¹ᵁ U) ∩ evaluate (i.left ⁻¹ᵁ U) s ⁻¹' O) := by
-  let : TopologicalSpace (ComplexPoint A) :=
+  let : TopologicalSpace (Point ℂ A) :=
     TopologicalSpace.induced (map i) analyticTopology
   rw [isOpen_iff_forall_mem_open]
   rintro z ⟨hzU, hzO⟩
   obtain ⟨V, hVU, ⟨r, hr⟩, hzV⟩ :=
     IsClosedImmersion.exists_local_ambient_lift U s z.underlying hzU
-  let T : Set (ComplexPoint B) :=
+  let T : Set (Point ℂ B) :=
     overOpen V ∩ evaluate V r ⁻¹' O
   refine ⟨map i ⁻¹' T, ?_, ?_, ?_⟩
   · rintro w ⟨hwV, hwO⟩
@@ -156,8 +156,8 @@ lemma isOpen_induced_chartSubbasic [IsClosedImmersion i.left]
 /-- Every generator of the analytic topology on a closed subscheme is open for the topology
 induced from the ambient analytic space. -/
 lemma analyticSubbasis_isOpen_induced [IsClosedImmersion i.left]
-    {W : Set (ComplexPoint A)} (hW : W ∈ analyticSubbasis) :
-    @IsOpen (ComplexPoint A)
+    {W : Set (Point ℂ A)} (hW : W ∈ analyticSubbasis) :
+    @IsOpen (Point ℂ A)
       (TopologicalSpace.induced (map i) analyticTopology) W := by
   obtain ⟨U, s, O, hO, rfl⟩ := hW
   obtain ⟨q, hq, hpre⟩ :=
@@ -169,26 +169,26 @@ lemma analyticSubbasis_isOpen_induced [IsClosedImmersion i.left]
 
 /-- A closed immersion induces the subspace topology on complex points. -/
 lemma isInducing_map_of_closedImmersion [IsClosedImmersion i.left] :
-    @IsInducing (ComplexPoint A) (ComplexPoint B)
+    @IsInducing (Point ℂ A) (Point ℂ B)
       analyticTopology analyticTopology (map i) := by
   rw [isInducing_iff]
   apply le_antisymm
   · exact continuous_iff_le_induced.mp (continuous_map i)
-  · rw [show (analyticTopology : TopologicalSpace (ComplexPoint A)) =
+  · rw [show (analyticTopology : TopologicalSpace (Point ℂ A)) =
       .generateFrom analyticSubbasis from analyticTopology_eq_generateFrom]
     exact le_generateFrom_iff_subset_isOpen.mpr fun _ hW ↦
       analyticSubbasis_isOpen_induced i hW
 
 /-- A closed immersion induces a topological embedding on complex points. -/
 lemma isEmbedding_map_of_closedImmersion [IsClosedImmersion i.left] :
-    @IsEmbedding (ComplexPoint A) (ComplexPoint B)
+    @IsEmbedding (Point ℂ A) (Point ℂ B)
       analyticTopology analyticTopology (map i) := by
   let : Mono i := Over.mono_of_mono_left i
   exact ⟨isInducing_map_of_closedImmersion i, map_injective_of_mono i⟩
 
 /-- A closed immersion induces a closed topological embedding on complex points. -/
 lemma isClosedEmbedding_map_of_closedImmersion [IsClosedImmersion i.left] :
-    @IsClosedEmbedding (ComplexPoint A) (ComplexPoint B)
+    @IsClosedEmbedding (Point ℂ A) (Point ℂ B)
       analyticTopology analyticTopology (map i) := by
   exact ⟨isEmbedding_map_of_closedImmersion i, isClosed_range_map_of_closedImmersion i⟩
 

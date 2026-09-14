@@ -45,7 +45,7 @@ open AlgebraicTopology.Singular
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
 
 /-- The actual complex-linear identification of tangent and normal product coordinates. -/
 def closedImmersionNormalCoordinatesLinearEquiv :
@@ -64,7 +64,7 @@ def closedImmersionNormalCoordinateChange :
 /-- An actual support-flattening chart whose normal coordinate change is holomorphic in
 both directions throughout its source. It contains the distinguished support point. -/
 def closedImmersionHolomorphicFlatteningChart :
-    OpenPartialHomeomorph (ComplexPoint X)
+    OpenPartialHomeomorph (Point ℂ X)
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
   ((localChart X d (Point.map i z)).trans
     (closedImmersionNormalCoordinateChange X Y i m d z).biAnalyticRestrict).restrOpen

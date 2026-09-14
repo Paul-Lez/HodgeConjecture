@@ -32,8 +32,8 @@ open AlgebraicTopology.Singular
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (d : ℕ)
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
-  (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
+  (V : Opens (Point ℂ X)) (hzV : Point.map i z ∈ V)
 
 /-- The actual normal parametrization factored through the genuine ambient chart target. -/
 def smoothClosedPointNormalTargetPairMap :

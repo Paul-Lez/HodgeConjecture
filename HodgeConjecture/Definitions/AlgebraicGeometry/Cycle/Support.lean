@@ -92,7 +92,7 @@ instance cycleComponent_projective
 /-- The complex points supported on the irreducible closed subset with generic point `x`. -/
 def cycleComponentSupport
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Set (ComplexPoint X) :=
+    Set (Point ℂ X) :=
   Point.underlying ⁻¹' closure {x}
 
 end AlgebraicGeometry

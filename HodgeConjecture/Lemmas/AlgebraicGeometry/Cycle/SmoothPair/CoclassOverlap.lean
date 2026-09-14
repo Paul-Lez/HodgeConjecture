@@ -23,11 +23,11 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
 
 /-- Restriction is the map induced by the inclusion of support-complement pairs. -/
 theorem smoothClosedSupportChartCoclass_restrict
-    {W V : Set (ComplexPoint X)} (hWV : W ⊆ V)
+    {W V : Set (Point ℂ X)} (hWV : W ⊆ V)
     (hV : V ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     relativeCohomologyMap ℚ (2 * (d - m))
       (neighborhoodSupportInclusionPairMap hWV (Set.range (Point.map i)))
@@ -35,16 +35,16 @@ theorem smoothClosedSupportChartCoclass_restrict
     smoothClosedSupportChartCoclass X Y i m d z W (hWV.trans hV) :=
   chartNormalProjectionCoclass_restrict _ _ _ _ _ hWV hV
 
-variable (z' : ComplexPoint Y)
+variable (z' : Point ℂ Y)
 
 /-- Exactly normalized ambient coclass agreement for the closed-immersion charts.
 The only inputs are smoothness, the closed immersion, and membership in its chart
 overlap and image. Holomorphicity and invertibility of the normal derivative are proved. -/
 theorem exists_open_smoothClosedSupportChartCoclass_eq
-    (x : ComplexPoint X) (hxS : x ∈ Set.range (Point.map i))
+    (x : Point ℂ X) (hxS : x ∈ Set.range (Point.map i))
     (hx : x ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)
     (hx' : x ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z').source) :
-    ∃ (W : Opens (ComplexPoint X))
+    ∃ (W : Opens (Point ℂ X))
       (hW : (W : Set _) ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)
       (hW' : (W : Set _) ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z').source),
       x ∈ W ∧ smoothClosedSupportChartCoclass X Y i m d z W hW =

@@ -80,7 +80,7 @@ theorem algebraicCycleClassSpan_zero_eq_span_genericPoint :
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 /-- On a connected analytification a degree-zero rational cohomology class generates the whole
 group precisely when it is nonzero. -/
-theorem span_singleton_eq_top_iff_ne_zero [ConnectedSpace (ComplexPoint X)]
+theorem span_singleton_eq_top_iff_ne_zero [ConnectedSpace (Point ℂ X)]
     (α : H^0(X; ℚ)) :
     Submodule.span ℚ {α} = ⊤ ↔ α ≠ 0 := by
   constructor
@@ -109,7 +109,7 @@ theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff :
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X ↔
       cycleComponentSheafClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) ≠ 0 := by
-  let _ : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
+  let _ : ConnectedSpace (Point ℂ X) := ComplexPoint.connectedSpace X
   rw [codimensionZeroCycleClassSpan_eq_span_unit, span_rationalCohomologyUnit_eq_top,
     algebraicCycleClassSpan_zero_eq_span_genericPoint]
   exact span_singleton_eq_top_iff_ne_zero X _
@@ -131,7 +131,7 @@ lemma cycleComponentSupport_genericPoint_eq_univ
 
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 /-- Forgetting support is injective whenever the support is the whole analytic space. -/
-theorem forgetSupport_injective_of_eq_univ (Z : Set (ComplexPoint X))
+theorem forgetSupport_injective_of_eq_univ (Z : Set (Point ℂ X))
     (hZ : Z = Set.univ) (n : ℤ) :
     Function.Injective (forgetSupport X Z n) := by
   subst hZ
@@ -188,7 +188,7 @@ cohomology when the normalized coclass section is nonzero. -/
 theorem algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero
     (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
     algebraicCycleClassSpan X 0 = ⊤ := by
-  let hV : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
+  let hV : ConnectedSpace (Point ℂ X) := ComplexPoint.connectedSpace X
   exact algebraicCycleClassSpan_zero_eq_top_of_connected X hV
     (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_coclassSection_ne_zero X hne)
 
@@ -197,7 +197,7 @@ coclass section is nonzero. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero
     (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
     Hdg^0(ℚ; X) = algebraicCycleClassSpan X 0 := by
-  let hV : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
+  let hV : ConnectedSpace (Point ℂ X) := ComplexPoint.connectedSpace X
   exact rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected X hV
     (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_coclassSection_ne_zero X hne)
 
@@ -214,7 +214,7 @@ theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero_of_
     (hd : dim X.left = 0)
     (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) (p : ℕ) :
     Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p := by
-  let _ : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
+  let _ : ConnectedSpace (Point ℂ X) := ComplexPoint.connectedSpace X
   exact rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero X hd
     (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_coclassSection_ne_zero
       X hne) p

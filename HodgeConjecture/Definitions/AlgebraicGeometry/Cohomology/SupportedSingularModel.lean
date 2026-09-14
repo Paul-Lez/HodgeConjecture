@@ -32,12 +32,12 @@ variable (X : Over (Spec ↧ℂ))
 
 /-- Its actual supported version for any open complement, not just a smooth support. -/
 def complexSupportedSingularToAmbientInjective
-    (U : Opens (ComplexPoint X)) :
-    supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U ⟶
+    (U : Opens (Point ℂ X)) :
+    supportedRationalSingularCochainComplex (TopCat.of (Point ℂ X)) U ⟶
       ((TopCat.Sheaf.sheafSectionsSupportedOutside
-        (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
+        (TopCat.of (Point ℂ X)) U).mapHomologicalComplex (.up ℤ)).obj
           (ambientRationalInjectiveComplex X) :=
-  supportedSingularToInjectiveComplex (TopCat.of (ComplexPoint X))
+  supportedSingularToInjectiveComplex (TopCat.of (Point ℂ X))
     (exists_contractibleOpen_le X) U
 
 variable [IsProjective X.hom]
@@ -45,11 +45,11 @@ variable [IsProjective X.hom]
 /-- The constructed supported comparison is a sheaf quasi-isomorphism under
 the usual smooth projective geometry hypotheses alone. -/
 instance complexSupportedSingularToAmbientInjective_quasiIso
-    (U : Opens (ComplexPoint X)) :
+    (U : Opens (Point ℂ X)) :
     QuasiIso (complexSupportedSingularToAmbientInjective X U) := by
-  let : ∀ V : Opens (ComplexPoint X), ParacompactSpace V :=
+  let : ∀ V : Opens (Point ℂ X), ParacompactSpace V :=
     openParacompactSpace X
   exact supportedSingularToInjectiveComplex_quasiIso
-    (TopCat.of (ComplexPoint X)) (exists_contractibleOpen_le X) U
+    (TopCat.of (Point ℂ X)) (exists_contractibleOpen_le X) U
 
 end AlgebraicGeometry.ComplexPoint

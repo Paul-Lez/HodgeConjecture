@@ -50,7 +50,7 @@ theorem cycleComponentSmoothClosedLift_codimension :
 degree 2p. The class is the general normal-chart gluing, not supplied data. -/
 def cycleComponentSmoothClosedLiftCoclassSection :
     (supportRelativeCohomologySheaf
-      (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
+      (TopCat.of (Point ℂ (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (2 * p)).obj.obj (op ⊤) :=
   letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
@@ -62,8 +62,8 @@ def cycleComponentSmoothClosedLiftCoclassSection :
 
 /-- The analytic open-embedding map back to the original ambient space. -/
 def cycleComponentSmoothClosedLiftAmbientMap :
-    TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)) ⟶
-    TopCat.of (ComplexPoint X) :=
+    TopCat.of (Point ℂ (cycleComponentSmoothLocusAmbientOpenOver X x)) ⟶
+    TopCat.of (Point ℂ X) :=
   TopCat.ofHom (Point.continuousMap
     (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x)))
 
@@ -91,7 +91,7 @@ theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
 /-- The normalized component coclass section, living on the singular-boundary
 complement in the ORIGINAL ambient relative-cohomology sheaf. -/
 def cycleComponentSmoothSupportCoclassSection :
-    (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+    (supportRelativeCohomologySheaf (TopCat.of (Point ℂ X))
       (cycleComponentSupport X x) (2 * p)).obj.obj
       (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)

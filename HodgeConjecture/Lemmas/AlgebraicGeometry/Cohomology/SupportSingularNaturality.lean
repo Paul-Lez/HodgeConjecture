@@ -297,7 +297,7 @@ variable (X : Over (Spec ↧ℂ))
 
 lemma analyticComplement_contractibleOpenBasis
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     ∀ (x : TopCat.of ↥Zᶜ)
       (V : Opens (TopCat.of ↥Zᶜ)), x ∈ V →
       ∃ (W : Opens (TopCat.of ↥Zᶜ)),
@@ -309,32 +309,32 @@ lemma analyticComplement_contractibleOpenBasis
 
 lemma complementConstantsToSingularCochain_quasiIso
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     QuasiIso (constantsToSingularCochainSheafComplex ℚ
       (TopCat.of ↥Zᶜ)) :=
   constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ
     (analyticComplement_contractibleOpenBasis X Z hZ)
 
 def complementConstantRationalSingleComplex
-    (Z : Set (ComplexPoint X)) :
+    (Z : Set (Point ℂ X)) :
     CochainComplex (AnalyticComplementAdditiveSheaf X Z) ℕ :=
   (CochainComplex.single₀ (AnalyticComplementAdditiveSheaf X Z)).obj
     𝓒(↧↥Zᶜ; ℚ)
 
 def complementSingularCochainSheafComplex
-    (Z : Set (ComplexPoint X)) :
+    (Z : Set (Point ℂ X)) :
     CochainComplex (AnalyticComplementAdditiveSheaf X Z) ℕ :=
   singularCochainSheafComplex ℚ (TopCat.of ↥Zᶜ)
 
 def complementConstantsToSingularCochain
-    (Z : Set (ComplexPoint X)) :
+    (Z : Set (Point ℂ X)) :
     complementConstantRationalSingleComplex X Z ⟶
       complementSingularCochainSheafComplex X Z :=
   constantsToSingularCochainSheafComplex ℚ
     (TopCat.of ↥Zᶜ)
 
 def complementConstantsToSingularCochainInt
-    (Z : Set (ComplexPoint X)) :
+    (Z : Set (Point ℂ X)) :
     (complementConstantRationalSingleComplex X Z).extend
         ComplexShape.embeddingUpNat ⟶
       (complementSingularCochainSheafComplex X Z).extend
@@ -344,19 +344,19 @@ def complementConstantsToSingularCochainInt
       ComplexShape.embeddingUpNat
 
 lemma complementConstantsToSingularCochainInt_mono
-    (Z : Set (ComplexPoint X)) :
+    (Z : Set (Point ℂ X)) :
     Mono (complementConstantsToSingularCochainInt X Z) :=
   constantsToSingularCochainComplexInt_mono ℚ
     (TopCat.of ↥Zᶜ)
 
 lemma complementConstantsToSingularCochainInt_quasiIso
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     QuasiIso (complementConstantsToSingularCochainInt X Z) :=
   (HomologicalComplex.quasiIso_extendMap_iff (complementConstantsToSingularCochain X Z)
     ComplexShape.embeddingUpNat).mpr (complementConstantsToSingularCochain_quasiIso X Z hZ)
 
-def complementResolutionMapInt (Z : Set (ComplexPoint X)) :
+def complementResolutionMapInt (Z : Set (Point ℂ X)) :
     (complementConstantRationalSingleComplex X Z).extend
         ComplexShape.embeddingUpNat ⟶
       (complementConstantRationalInjectiveResolution X Z).cocomplex.extend
@@ -368,7 +368,7 @@ def complementResolutionMapInt (Z : Set (ComplexPoint X)) :
 set_option linter.style.haveILetI false in
 def complementSingularToInjectiveResolutionInt
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     (complementSingularCochainSheafComplex X Z).extend
         ComplexShape.embeddingUpNat ⟶
       (complementConstantRationalInjectiveResolution X Z).cocomplex.extend
@@ -388,7 +388,7 @@ def complementSingularToInjectiveResolutionInt
 set_option linter.style.haveILetI false in
 lemma complementConstants_comp_singularToInjectiveResolutionInt
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     complementConstantsToSingularCochainInt X Z ≫
         complementSingularToInjectiveResolutionInt X Z hZ =
       complementResolutionMapInt X Z := by
@@ -406,7 +406,7 @@ lemma complementConstants_comp_singularToInjectiveResolutionInt
 
 def complementSingularToInjectiveResolution
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     complementSingularCochainSheafComplex X Z ⟶
       (complementConstantRationalInjectiveResolution X Z).cocomplex :=
   (ComplexShape.embeddingUpNat.fullyFaithfulExtendFunctor
@@ -415,7 +415,7 @@ def complementSingularToInjectiveResolution
 
 lemma complementConstants_comp_singularToInjectiveResolution
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     complementConstantsToSingularCochain X Z ≫
         complementSingularToInjectiveResolution X Z hZ =
       (complementConstantRationalInjectiveResolution X Z).ι := by
@@ -441,7 +441,7 @@ lemma complementConstants_comp_singularToInjectiveResolution
 set_option linter.style.haveILetI false in
 lemma complementSingularToInjectiveResolutionInt_quasiIso
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     QuasiIso (complementSingularToInjectiveResolutionInt X Z hZ) := by
   let a := complementConstantsToSingularCochainInt X Z
   let b := complementSingularToInjectiveResolutionInt X Z hZ
@@ -460,7 +460,7 @@ lemma complementSingularToInjectiveResolutionInt_quasiIso
 
 lemma complementSingularToInjectiveResolution_quasiIso
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     QuasiIso (complementSingularToInjectiveResolution X Z hZ) := by
   apply (HomologicalComplex.quasiIso_extendMap_iff
     (complementSingularToInjectiveResolution X Z hZ)
@@ -475,8 +475,8 @@ lemma complementSingularToInjectiveResolution_quasiIso
 
 def naturalSingularResolutionRestrictionNat
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    singularCochainSheafComplex ℚ (TopCat.of (ComplexPoint X)) ⟶
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
+    singularCochainSheafComplex ℚ (TopCat.of (Point ℂ X)) ⟶
       derivedPushforwardComplementConstantRationalComplexNat X Z :=
   singularRestrictionSheafComplex ℚ
       (analyticComplementInclusion X Z) ≫
@@ -487,7 +487,7 @@ def naturalSingularResolutionRestrictionNat
 
 def naturalSingularResolutionRestriction
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     singularCochainSheafComplexInt X ℚ ⟶
       derivedPushforwardComplementConstantRationalComplexInt X Z :=
   HomologicalComplex.extendMap

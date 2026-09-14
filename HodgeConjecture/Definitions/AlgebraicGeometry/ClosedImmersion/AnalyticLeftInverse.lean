@@ -27,7 +27,7 @@ variable (X Y : Over (Spec ↧ℂ))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
 
 /-- The actual inclusion written in the canonical intrinsic and ambient complex charts. -/
-def inclusionInComplexCharts (z : ComplexPoint Y) :
+def inclusionInComplexCharts (z : Point ℂ Y) :
     (Fin m → ℂ) → (Fin d → ℂ) :=
   fun v => localChart X d (Point.map i z)
     (Point.map i ((localChart Y m z).symm v))

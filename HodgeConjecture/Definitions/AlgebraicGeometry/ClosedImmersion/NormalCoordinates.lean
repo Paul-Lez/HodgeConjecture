@@ -26,7 +26,7 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
 
 /-- The actual derivative left inverse obtained from lifted intrinsic coordinates. -/
 def closedImmersionDerivativeProjection : (Fin d → ℂ) →L[ℂ] (Fin m → ℂ) :=
@@ -156,7 +156,7 @@ private theorem eventually_mem_range_iff_normal_eq_zero :
 /-- An actual open ambient neighborhood on which normal coordinates detect the full
 closed-immersion image, extracted from the proved neighborhood assertion. -/
 theorem exists_open_normalCriterion :
-    ∃ W : Set (ComplexPoint X), IsOpen W ∧ Point.map i z ∈ W ∧
+    ∃ W : Set (Point ℂ X), IsOpen W ∧ Point.map i z ∈ W ∧
       ∀ y ∈ W, y ∈ Set.range (Point.map i) ↔
         ((closedImmersionNormalChart X Y i m d z).symm
           (localChart X d (Point.map i z) y)).2 = 0 := by
@@ -168,7 +168,7 @@ theorem exists_open_normalCriterion :
 the actual embedded support on its entire source. Every ingredient has been constructed
 from the given smooth closed immersion. -/
 def closedImmersionFlatteningChart :
-    OpenPartialHomeomorph (ComplexPoint X)
+    OpenPartialHomeomorph (Point ℂ X)
       ((Fin m → ℂ) ×
         (closedImmersionDerivativeProjection X Y i m d z).ker) :=
   ((localChart X d (Point.map i z)).trans
@@ -176,7 +176,7 @@ def closedImmersionFlatteningChart :
       (exists_open_normalCriterion X Y i m d z).choose
       (exists_open_normalCriterion X Y i m d z).choose_spec.1
 
-@[simp] theorem closedImmersionFlatteningChart_apply (y : ComplexPoint X) :
+@[simp] theorem closedImmersionFlatteningChart_apply (y : Point ℂ X) :
     closedImmersionFlatteningChart X Y i m d z y =
       (closedImmersionNormalChart X Y i m d z).symm
         (localChart X d (Point.map i z) y) := rfl
@@ -199,13 +199,13 @@ def closedImmersionNormalKernelEquiv :
 /-- The actual ambient support-flattening chart in standard tangent and normal complex
 spaces, ready for the normal-slice pair calculation. -/
 def closedImmersionStandardFlatteningChart :
-    OpenPartialHomeomorph (ComplexPoint X)
+    OpenPartialHomeomorph (Point ℂ X)
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
   (closedImmersionFlatteningChart X Y i m d z).trans
     (((ContinuousLinearEquiv.refl ℂ (Fin m → ℂ)).prodCongr
       (closedImmersionNormalKernelEquiv X Y i m d z)).toHomeomorph.toOpenPartialHomeomorph)
 
-@[simp] theorem closedImmersionStandardFlatteningChart_apply (y : ComplexPoint X) :
+@[simp] theorem closedImmersionStandardFlatteningChart_apply (y : Point ℂ X) :
     closedImmersionStandardFlatteningChart X Y i m d z y =
       ((closedImmersionFlatteningChart X Y i m d z y).1,
         closedImmersionNormalKernelEquiv X Y i m d z

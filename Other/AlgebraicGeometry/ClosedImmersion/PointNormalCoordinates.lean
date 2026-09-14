@@ -28,7 +28,7 @@ open AlgebraicTopology.Singular
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (d : ℕ)
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
 
 /-- The actual complex-linear normal-coordinate inclusion in source dimension zero. -/
 def closedImmersionPointNormalLinearMap : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
@@ -66,7 +66,7 @@ theorem closedImmersionPointStandardFlatteningChart_symm (w : Fin d → ℂ) :
 
 /-- On the actual flattening source, ambient coordinates are the same affine normal map. -/
 theorem closedImmersionPointStandardFlatteningChart_coordinates
-    (y : ComplexPoint X)
+    (y : Point ℂ X)
     (hy : y ∈ (closedImmersionStandardFlatteningChart X Y i 0 d z).source) :
     localChart X d (Point.map i z) y =
       localChart X d (Point.map i z) (Point.map i z) +
@@ -96,7 +96,7 @@ theorem univBall_zeroTangent_apply (r : ℝ) (hr : 0 < r) (w : Fin d → ℂ) :
     Prod.norm_def, Prod.smul_mk, Prod.mk_add_mk]
   rw [hzero, max_eq_right (norm_nonneg w)]
 
-variable (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
+variable (V : Opens (Point ℂ X)) (hzV : Point.map i z ∈ V)
 
 /-- The neighborhood pair of the general normal-purity construction maps to the ambient
 point-complement pair by the actual inclusion. -/

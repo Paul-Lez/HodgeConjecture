@@ -27,10 +27,10 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
 
 /-- The normal-projection coclass on any subset of a holomorphic flattening chart. -/
-def smoothClosedSupportChartCoclass (W : Set (ComplexPoint X))
+def smoothClosedSupportChartCoclass (W : Set (Point ℂ X))
     (hW : W ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     RelativeCohomology ℚ (neighborhoodSupportComplementPair W (Set.range (Point.map i)))
       (2 * (d - m)) :=

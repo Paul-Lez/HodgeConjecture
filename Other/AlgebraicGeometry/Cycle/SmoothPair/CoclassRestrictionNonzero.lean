@@ -25,8 +25,8 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
-  (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
+  (V : Opens (Point ℂ X)) (hzV : Point.map i z ∈ V)
 
 /-- The normal coclass is nonzero, as witnessed by its normalized normal class. -/
 theorem smoothClosedSupportNormalCoclass_ne_zero :
@@ -38,7 +38,7 @@ theorem smoothClosedSupportNormalCoclass_ne_zero :
 
 /-- Restricting a normal coclass to any open neighborhood of its center preserves nonvanishing. -/
 theorem smoothClosedSupportNormalCoclass_restrict_ne_zero
-    (W : Opens (ComplexPoint X))
+    (W : Opens (Point ℂ X))
     (hWU : W ≤ smoothClosedSupportNeighborhood X Y i m d z V hzV)
     (hzW : Point.map i z ∈ W) :
     relativeCohomologyMap ℚ (2 * (d - m))

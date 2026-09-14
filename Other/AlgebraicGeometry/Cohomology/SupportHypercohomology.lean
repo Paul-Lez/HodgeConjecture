@@ -44,7 +44,7 @@ open AlgebraicTopology.Singular
 /-- The natural singular support cone is concentrated in degrees at least `-1`. -/
 lemma naturalSingularSupportCone_isStrictlyGE
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     (CochainComplex.mappingCone
       (naturalSingularResolutionRestriction X Z hZ)).IsStrictlyGE (-1) := by
   exact CochainComplex.isStrictlyGE_mappingCone
@@ -54,7 +54,7 @@ lemma naturalSingularSupportCone_isStrictlyGE
 /-- Every term of the derived complement resolution is flasque. In nonnegative degrees it is
 the pushforward of an injective sheaf; in negative degrees it is zero. -/
 theorem derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque
-    (Z : Set (ComplexPoint X)) (q : ℤ) :
+    (Z : Set (Point ℂ X)) (q : ℤ) :
     (derivedPushforwardComplementConstantRationalComplexInt X Z).X q |>.IsFlasque := by
   by_cases hq : ∃ m : ℕ, (m : ℤ) = q
   · obtain ⟨m, rfl⟩ := hq
@@ -74,7 +74,7 @@ theorem derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque
       ComplexShape.embeddingUpNat).X (m : ℤ)).obj
     exact @TopCat.Presheaf.IsFlasque.of_iso _ _ _
       ((TopCat.Sheaf.forget AddCommGrpCat
-        (TopCat.of (ComplexPoint X))).mapIso e) hP
+        (TopCat.of (Point ℂ X))).mapIso e) hP
   · apply TopCat.Sheaf.IsFlasque.of_isZero
     exact (derivedPushforwardComplementConstantRationalComplexNat X Z).isZero_extend_X
       ComplexShape.embeddingUpNat q (fun i hi ↦ hq ⟨i, hi⟩)
@@ -83,9 +83,9 @@ theorem derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque
 Hausdorff analytic space. -/
 theorem naturalSingularSupportCone_term_isFlasque
     [IsIntegral X.left] [Smooth X.hom]
-    [T2Space (ComplexPoint X)]
-    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (q : ℤ) :
+    [T2Space (Point ℂ X)]
+    [∀ U : Opens (Point ℂ X), ParacompactSpace U]
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) (q : ℤ) :
     ((CochainComplex.mappingCone
       (naturalSingularResolutionRestriction X Z hZ)).X q).IsFlasque := by
   apply TopCat.Sheaf.IsFlasque.BoundedBelowComplex.mappingCone_term_isFlasque
@@ -110,17 +110,17 @@ open AlgebraicTopology.Singular
 /-- Additive form of the hypercohomology/global-sections comparison for a fixed K-injective
 resolution. -/
 def hypercohomologyAddEquivGlobalSectionsOfResolution
-    (K I : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+    (K I : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ)
     [I.IsKInjective]
     (i : K ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X))).mapHomologicalComplex
+      (TopCat.of (Point ℂ X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map i)]
     (n : ℤ) :
     Hypercohomology X K n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X)) K).homology n :=
-  let Y := TopCat.of (ComplexPoint X)
+        (TopCat.of (Point ℂ X)) K).homology n :=
+  let Y := TopCat.of (Point ℂ X)
   let A := constantIntegerSheafComplexInt X
   let A' := TopCat.Sheaf.integerConstantSingleComplex Y
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
@@ -128,7 +128,7 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
   let e₀ := hypercohomologyAddEquivDerived X K n
   let eI : (DerivedCategory.Q.obj K)⟦n⟧ ≅
       (DerivedCategory.Q.obj I)⟦n⟧ :=
-    (shiftFunctor (DerivedCategory (AnalyticAdditiveSheaf X)) n).mapIso
+    (shiftFunctor (DerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))) n).mapIso
       (asIso (DerivedCategory.Q.map i))
   let e₁ : ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj K) n ≃+
       ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj I) n :=
@@ -150,13 +150,13 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
 /-- Additive hypercohomology/global-sections comparison for a bounded-below termwise-flasque
 complex. -/
 def hypercohomologyAddEquivGlobalSections
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ)
     (N : ℤ) [K.IsStrictlyGE N]
     (hKflasque : ∀ q, (K.X q).IsFlasque) (n : ℤ) :
     Hypercohomology X K n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X)) K).homology n :=
-  let Y := TopCat.of (ComplexPoint X)
+        (TopCat.of (Point ℂ X)) K).homology n :=
+  let Y := TopCat.of (Point ℂ X)
   let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective K N
   let I := hres.choose
   let i := hres.choose_spec.choose
@@ -177,26 +177,26 @@ def hypercohomologyAddEquivGlobalSections
 global-sections map. -/
 def globalSectionsNaturalSingularConeIsoMappingCone
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X))
+        (TopCat.of (Point ℂ X))
         (CochainComplex.mappingCone
           (naturalSingularResolutionRestriction X Z hZ)) ≅
       CochainComplex.mappingCone
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex
+          (TopCat.of (Point ℂ X))).mapHomologicalComplex
             (ComplexShape.up ℤ)).map
           (naturalSingularResolutionRestriction X Z hZ)) :=
   CochainComplex.mappingCone.mapHomologicalComplexIso
     (naturalSingularResolutionRestriction X Z hZ)
     (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X)))
+      (TopCat.of (Point ℂ X)))
 
 /-- Replacing rational constants by the natural singular resolution identifies the two support
 hypercohomology groups, additively. -/
 def rationalSupportHypercohomologyAddEquivNaturalSingularCone
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
       Hypercohomology X
         (CochainComplex.mappingCone
@@ -211,12 +211,12 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularCone
 global sections of the natural singular support cone. -/
 def rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections
     [IsIntegral X.left] [Smooth X.hom]
-    [T2Space (ComplexPoint X)]
-    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    [T2Space (Point ℂ X)]
+    [∀ U : Opens (Point ℂ X), ParacompactSpace U]
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X))
+        (TopCat.of (Point ℂ X))
         (CochainComplex.mappingCone
           (naturalSingularResolutionRestriction X Z hZ))).homology (n - 1) :=
   let K := CochainComplex.mappingCone
@@ -231,12 +231,12 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections
 /-- Additive singular comparison for rational cohomology with closed support. -/
 def rationalCohomologyWithSupportAddEquivSingular
     [IsIntegral X.left] [Smooth X.hom]
-    [T2Space (ComplexPoint X)]
-    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℕ) :
+    [T2Space (Point ℂ X)]
+    [∀ U : Opens (Point ℂ X), ParacompactSpace U]
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) (n : ℕ) :
     RationalCohomologyWithSupport X Z (n : ℤ) ≃+
       CohomologyWithSupport ℚ
-        (TopCat.of (ComplexPoint X)) Z n :=
+        (TopCat.of (Point ℂ X)) Z n :=
   (rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections
       X Z hZ (n : ℤ)).trans <|
     ((HomologicalComplex.homologyMapIso
@@ -246,7 +246,7 @@ def rationalCohomologyWithSupportAddEquivSingular
       (globalRawSupportConeToGlobalNaturalSingularCone
         X Z hZ) ((n : ℤ) - 1))).symm.addCommGroupIsoToAddEquiv).trans <|
     globalRawSingularRestrictionConeCohomologyEquivSupport ℚ
-      (TopCat.of (ComplexPoint X)) Z n
+      (TopCat.of (Point ℂ X)) Z n
 
 end AlgebraicGeometry.ComplexPoint
 end

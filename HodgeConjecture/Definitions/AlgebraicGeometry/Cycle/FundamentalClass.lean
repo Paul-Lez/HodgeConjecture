@@ -36,33 +36,33 @@ variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 local instance cycleComponentSheafClassAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
+    TopologicalSpace (Point ℂ X) := Point.analyticTopology
 
 /-- The supported injective cohomology sheaf is the sheaf of local
 relative cohomology, by the constructed singular resolution and its literal
 restriction-natural comparison. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
-    (S : Closeds (ComplexPoint X)) (n : ℕ) :
+    (S : Closeds (Point ℂ X)) (n : ℕ) :
     (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
-      supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n :=
-  letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
+      supportRelativeCohomologySheaf (TopCat.of (Point ℂ X)) S n :=
+  letI : ∀ V : Opens (Point ℂ X), ParacompactSpace V := openParacompactSpace X
   (asIso (HomologicalComplex.homologyMap
     (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
       supportedSingularCohomologySheafIsoRelative
-        (TopCat.of (ComplexPoint X)) S S.isClosed n
+        (TopCat.of (Point ℂ X)) S S.isClosed n
 
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
 /-- Degree-`2p` cohomology of global sections supported on the component,
 computed in the fixed ambient injective resolution. -/
 abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
-  (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+  (((TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X)) ⊤).mapHomologicalComplex
     (.up ℤ)).obj (complexSupportInjectiveComplex X
       (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))
 
 /-- Sections of the local relative-cohomology sheaf on the smooth-locus ambient open. -/
 abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
-  (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+  (supportRelativeCohomologySheaf (TopCat.of (Point ℂ X))
     (cycleComponentSupport X x) (2 * p)).obj.obj
       (op (cycleComponentSmoothSupportAmbientOpen X x))
 
@@ -75,7 +75,7 @@ def cycleComponentSupportedClassNormalizationIso :
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
   cycleComponentSupportExtensionIso X x hx ≪≫
     cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
-      (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+      (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X))
         (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
           (complexSupportInjectiveCohomologySheafIsoRelative X
             (cycleComponentAnalyticClosedSupport X x) (2 * p)))

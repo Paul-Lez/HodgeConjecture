@@ -56,45 +56,46 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 noncomputable instance holomorphicFunctionPresheafAlgebra
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) :
     Algebra ℂ ((holomorphicFunctionPresheaf X d).obj U) :=
   inferInstanceAs (Algebra ℂ
-    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯)
+    C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (Point ℂ X)); ℂ⟯)
 
 /-- Restriction of holomorphic functions as an algebra homomorphism over the constants. -/
 def holomorphicRestrictionAlgHom [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) :
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V) :
     ((holomorphicFunctionPresheaf X d).obj U : Type) →ₐ[ℂ]
       ((holomorphicFunctionPresheaf X d).obj V : Type) where
   toRingHom := ((holomorphicFunctionSheaf X d).presheaf.map i).hom
   commutes' _ := rfl
 
 @[simp] lemma holomorphicRestrictionAlgHom_id [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
-    holomorphicRestrictionAlgHom X d (𝟙 U) = AlgHom.id ℂ _ := rfl
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) :
+    holomorphicRestrictionAlgHom X d (𝟙 U) = AlgHom.id ℂ _ :=
+  rfl
 
 @[simp] lemma holomorphicRestrictionAlgHom_comp [SmoothOfRelativeDimension d X.hom]
-    {U V W : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ}
+    {U V W : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ}
     (i : U ⟶ V) (j : V ⟶ W) :
     holomorphicRestrictionAlgHom X d (i ≫ j) =
       (holomorphicRestrictionAlgHom X d j).comp
         (holomorphicRestrictionAlgHom X d i) := rfl
 
 abbrev OpenHolomorphicFunctions [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :=
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) :=
   ((holomorphicFunctionPresheaf X d).obj U : Type)
 
 /-- The part of a fixed chart target whose inverse image belongs to `U`. -/
 def chartSectionDomain [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) :
     Set (Fin d → ℂ) :=
   (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).target ∩
     (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm ⁻¹'
-      ((Opposite.unop U : Opens (ComplexPoint X)) :
-        Set (ComplexPoint X))
+      ((Opposite.unop U : Opens (Point ℂ X)) :
+        Set (Point ℂ X))
 
 lemma isOpen_chartSectionDomain [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) :
     IsOpen (chartSectionDomain X d U z) := by
   simpa [chartSectionDomain, extChartAt_target, extChartAt_coe_symm] using
     (chartAt (Fin d → ℂ) z).isOpen_inter_preimage_symm
@@ -103,23 +104,23 @@ lemma isOpen_chartSectionDomain [SmoothOfRelativeDimension d X.hom]
 /-- An arbitrary total extension of a section from its open domain. Its values outside the
 domain play no role in derivatives taken within that domain. -/
 def extendedSection [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
     (f : OpenHolomorphicFunctions X d U) :
-    ComplexPoint X → ℂ :=
+    Point ℂ X → ℂ :=
   Function.extend Subtype.val f.1 0
 
 private lemma extendedSection_contMDiffWithinAt [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (f : OpenHolomorphicFunctions X d U) {x : ComplexPoint X}
-    (hx : x ∈ (Opposite.unop U : Opens (ComplexPoint X))) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (f : OpenHolomorphicFunctions X d U) {x : Point ℂ X}
+    (hx : x ∈ (Opposite.unop U : Opens (Point ℂ X))) :
     ContMDiffWithinAt (modelWithCornersSelf ℂ (Fin d → ℂ))
       (modelWithCornersSelf ℂ ℂ) ω
       (extendedSection X d U f)
-      ((Opposite.unop U : Opens (ComplexPoint X)) :
-        Set (ComplexPoint X)) x := by
+      ((Opposite.unop U : Opens (Point ℂ X)) :
+        Set (Point ℂ X)) x := by
   apply ContMDiffAt.contMDiffWithinAt
   apply (contMDiffAt_subtype_iff
-    (U := (Opposite.unop U : Opens (ComplexPoint X)))
+    (U := (Opposite.unop U : Opens (Point ℂ X)))
     (x := ⟨x, hx⟩)).mp
   simpa only [extendedSection, Subtype.val_injective.extend_apply] using
     (holomorphicFunctionSheaf_section_analytic X d f).contMDiffAt
@@ -127,15 +128,15 @@ private lemma extendedSection_contMDiffWithinAt [SmoothOfRelativeDimension d X.h
 
 /-- The expression of a holomorphic section in one fixed chart. -/
 def chartSection [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) : (Fin d → ℂ) → ℂ :=
   extendedSection X d U f ∘
     (extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm
 
 lemma chartSection_contDiffWithinAt [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain X d U z) :
     ContDiffWithinAt ℂ ω (chartSection X d U z f)
@@ -149,23 +150,23 @@ lemma chartSection_contDiffWithinAt [SmoothOfRelativeDimension d X.hom]
   have hext : ContMDiffWithinAt (modelWithCornersSelf ℂ (Fin d → ℂ))
       (modelWithCornersSelf ℂ ℂ) ω
       (extendedSection X d U f)
-      ((Opposite.unop U : Opens (ComplexPoint X)) :
-        Set (ComplexPoint X))
+      ((Opposite.unop U : Opens (Point ℂ X)) :
+        Set (Point ℂ X))
       ((extChartAt (modelWithCornersSelf ℂ (Fin d → ℂ)) z).symm y) :=
     extendedSection_contMDiffWithinAt X d U f hy.2
   exact (hext.comp y hsymm (fun _ h ↦ h.2)).contDiffWithinAt
 
 lemma chartSection_contDiffOn [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) :
     ContDiffOn ℂ ω (chartSection X d U z f)
       (chartSectionDomain X d U z) :=
   fun _ hy ↦ chartSection_contDiffWithinAt X d U z f hy
 
 @[simp] lemma chartSection_apply_of_mem [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain X d U z) :
     chartSection X d U z f y =
@@ -177,16 +178,16 @@ lemma chartSection_contDiffOn [SmoothOfRelativeDimension d X.hom]
 
 /-- The derivative of a section in one fixed chart. -/
 def chartSectionDifferential [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) (y : Fin d → ℂ) :
     (Fin d → ℂ) →L[ℂ] ℂ :=
   fderivWithin ℂ (chartSection X d U z f)
     (chartSectionDomain X d U z) y
 
 lemma chartSectionDifferential_add [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
     (f g : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain X d U z) :
     chartSectionDifferential X d U z (f + g) y =
@@ -204,8 +205,8 @@ lemma chartSectionDifferential_add [SmoothOfRelativeDimension d X.hom]
     ((chartSection_contDiffWithinAt X d U z g hy).differentiableWithinAt (by simp))
 
 lemma chartSectionDifferential_smul [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (c : ℂ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (c : ℂ)
     (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain X d U z) :
     chartSectionDifferential X d U z (c • f) y =
@@ -221,8 +222,8 @@ lemma chartSectionDifferential_smul [SmoothOfRelativeDimension d X.hom]
     ((isOpen_chartSectionDomain X d U z).uniqueDiffWithinAt hy)
 
 lemma chartSectionDifferential_mul [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X)
     (f g : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain X d U z) :
     chartSectionDifferential X d U z (f * g) y =
@@ -241,8 +242,8 @@ lemma chartSectionDifferential_mul [SmoothOfRelativeDimension d X.hom]
     ((chartSection_contDiffWithinAt X d U z g hy).differentiableWithinAt (by simp))
 
 lemma chartSectionDifferential_algebraMap [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (c : ℂ) {y : Fin d → ℂ}
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (c : ℂ) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain X d U z) :
     chartSectionDifferential X d U z
       (algebraMap ℂ (OpenHolomorphicFunctions X d U) c) y = 0 := by
@@ -263,7 +264,7 @@ lemma chartSectionDifferential_algebraMap [SmoothOfRelativeDimension d X.hom]
 /-- Expressing holomorphic functions on `U` in a fixed chart, as a homomorphism of `ℂ`-algebras
 into functions on the coordinate domain of that chart. -/
 def chartSectionAlgHom [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) :
     OpenHolomorphicFunctions X d U →ₐ[ℂ] (↥(chartSectionDomain X d U z) → ℂ) where
   toFun f y := chartSection X d U z f y.1
   map_one' := by funext y; simp only [chartSection_apply_of_mem X d U z _ y.2]; rfl
@@ -279,14 +280,14 @@ def chartSectionAlgHom [SmoothOfRelativeDimension d X.hom]
   commutes' c := by funext y; simp only [chartSection_apply_of_mem X d U z _ y.2]; rfl
 
 @[simp] lemma chartSectionAlgHom_apply [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) (y : ↥(chartSectionDomain X d U z)) :
     chartSectionAlgHom X d U z f y = chartSection X d U z f y.1 := rfl
 
 /-- Functions on the coordinate domain of a fixed chart form a module over the holomorphic
 functions on `U`, acting through their expression in that chart. -/
 abbrev chartFieldModule [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X)
     (V : Type) [AddCommGroup V] [Module ℂ V] :
     Module (OpenHolomorphicFunctions X d U) (↥(chartSectionDomain X d U z) → V) :=
   Module.compHom _ (chartSectionAlgHom X d U z).toRingHom
@@ -294,7 +295,7 @@ abbrev chartFieldModule [SmoothOfRelativeDimension d X.hom]
 attribute [local instance] chartFieldModule
 
 lemma chartFieldModule_smul_apply [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X)
     (V : Type) [AddCommGroup V] [Module ℂ V]
     (f : OpenHolomorphicFunctions X d U) (F : ↥(chartSectionDomain X d U z) → V)
     (y : ↥(chartSectionDomain X d U z)) :
@@ -302,7 +303,7 @@ lemma chartFieldModule_smul_apply [SmoothOfRelativeDimension d X.hom]
 
 /-- The scalar actions of `ℂ` and of the holomorphic functions on chart fields are compatible. -/
 theorem chartFieldTower [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X)
     (V : Type) [AddCommGroup V] [Module ℂ V] :
     IsScalarTower ℂ (OpenHolomorphicFunctions X d U)
       (↥(chartSectionDomain X d U z) → V) := by
@@ -317,7 +318,7 @@ attribute [local instance] chartFieldTower
 /-- The coordinate differentials of holomorphic sections form a `ℂ`-derivation into covector
 fields along the coordinate domain of a fixed chart. -/
 def chartDerivation [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) :
     Derivation ℂ (OpenHolomorphicFunctions X d U)
       (↥(chartSectionDomain X d U z) → ((Fin d → ℂ) →L[ℂ] ℂ)) where
   toFun f y := chartSectionDifferential X d U z f y.1
@@ -338,7 +339,7 @@ def chartDerivation [SmoothOfRelativeDimension d X.hom]
     exact chartSectionDifferential_mul X d U z f g y.2
 
 @[simp] lemma chartDerivation_apply [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) (y : ↥(chartSectionDomain X d U z)) :
     chartDerivation X d U z f y = chartSectionDifferential X d U z f y.1 := rfl
 
@@ -350,7 +351,7 @@ private lemma update_eval {p : ℕ} {V W : Type*} (L : Fin p → V → W) (i : F
 
 /-- The pointwise wedge of covector fields along a fixed chart. -/
 def chartWedge [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ) :
     (↥(chartSectionDomain X d U z) → ((Fin d → ℂ) →L[ℂ] ℂ))
       [⋀^Fin p]→ₗ[OpenHolomorphicFunctions X d U]
       (↥(chartSectionDomain X d U z) → ((Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)) where
@@ -377,15 +378,16 @@ def chartWedge [SmoothOfRelativeDimension d X.hom]
     exact ContinuousAlternatingMap.wedgeCovectors_eq_zero_of_eq _ i j (congrFun h y) hij
 
 @[simp] lemma chartWedge_apply [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ)
     (L : Fin p → ↥(chartSectionDomain X d U z) → ((Fin d → ℂ) →L[ℂ] ℂ))
     (y : ↥(chartSectionDomain X d U z)) :
-    chartWedge X d U z p L y = ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) fun i => L i y := rfl
+    chartWedge X d U z p L y = ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) fun i => L i y :=
+  rfl
 
 /-- Fixed-chart evaluation of differential forms, as a `ℂ`-linear map into alternating-form
 fields on the coordinate domain. -/
 def chartEvaluationHolo [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ) :
     Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p →ₗ[OpenHolomorphicFunctions X d U]
       (↥(chartSectionDomain X d U z) → ((Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ)) :=
   exteriorPower.alternatingMapLinearEquiv
@@ -393,7 +395,7 @@ def chartEvaluationHolo [SmoothOfRelativeDimension d X.hom]
       (chartDerivation X d U z).liftKaehlerDifferential)
 
 private lemma chartEvaluationHolo_mk [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ)
     (a₀ : OpenHolomorphicFunctions X d U) (v : Fin p → OpenHolomorphicFunctions X d U)
     (y : ↥(chartSectionDomain X d U z)) :
     chartEvaluationHolo X d U z p
@@ -409,19 +411,19 @@ private lemma chartEvaluationHolo_mk [SmoothOfRelativeDimension d X.hom]
 
 /-- Extend a function on the coordinate domain of a fixed chart by zero. -/
 def extendByZero [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X)
     {V : Type} [Zero V] (F : ↥(chartSectionDomain X d U z) → V) : (Fin d → ℂ) → V :=
   Function.extend Subtype.val F 0
 
 @[simp] lemma extendByZero_apply_of_mem [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X)
     {V : Type} [Zero V] (F : ↥(chartSectionDomain X d U z) → V)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     extendByZero X d U z F y = F ⟨y, hy⟩ :=
   Subtype.val_injective.extend_apply F 0 ⟨y, hy⟩
 
 lemma extendByZero_apply_of_notMem [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X)
     {V : Type} [Zero V] (F : ↥(chartSectionDomain X d U z) → V)
     {y : Fin d → ℂ} (hy : y ∉ chartSectionDomain X d U z) :
     extendByZero X d U z F y = 0 := by
@@ -432,7 +434,7 @@ lemma extendByZero_apply_of_notMem [SmoothOfRelativeDimension d X.hom]
 
 /-- Extension by zero, as a `ℂ`-linear map on chart fields. -/
 def extendByZeroLinear [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X)
     (V : Type) [AddCommGroup V] [Module ℂ V] :
     (↥(chartSectionDomain X d U z) → V) →ₗ[ℂ] ((Fin d → ℂ) → V) where
   toFun := extendByZero X d U z
@@ -450,45 +452,45 @@ def extendByZeroLinear [SmoothOfRelativeDimension d X.hom]
 /-- Fixed-chart evaluation of a differential form, as a `ℂ`-linear map into alternating-form
 fields on the chart target, extended by zero outside the coordinate domain. -/
 def chartEvaluation [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ) :
     Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p →ₗ[ℂ]
       ((Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ) :=
   (extendByZeroLinear X d U z _).comp
     ((chartEvaluationHolo X d U z p).restrictScalars ℂ)
 
 private lemma chartEvaluation_apply_of_mem [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     chartEvaluation X d U z p θ y = chartEvaluationHolo X d U z p θ ⟨y, hy⟩ :=
   extendByZero_apply_of_mem X d U z _ hy
 
 @[simp] lemma chartEvaluation_zero [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ) :
     chartEvaluation X d U z p 0 = 0 :=
   map_zero (chartEvaluation X d U z p)
 
 @[simp] lemma chartEvaluation_add [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ)
     (a b : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
     chartEvaluation X d U z p (a + b) =
       chartEvaluation X d U z p a + chartEvaluation X d U z p b :=
   map_add (chartEvaluation X d U z p) a b
 
 @[simp] lemma chartEvaluation_smul [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ) (c : ℂ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ) (c : ℂ)
     (a : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
     chartEvaluation X d U z p (c • a) = c • chartEvaluation X d U z p a :=
   map_smul (chartEvaluation X d U z p) c a
 
 @[simp] lemma chartEvaluation_neg [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ)
     (a : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
     chartEvaluation X d U z p (-a) = -chartEvaluation X d U z p a :=
   map_neg (chartEvaluation X d U z p) a
 
 @[simp] lemma chartEvaluation_sub [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ)
     (a b : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
     chartEvaluation X d U z p (a - b) =
       chartEvaluation X d U z p a - chartEvaluation X d U z p b :=
@@ -496,14 +498,14 @@ private lemma chartEvaluation_apply_of_mem [SmoothOfRelativeDimension d X.hom]
 
 /-- Fixed-chart evaluation of the generator `a₀ * d v₀ ∧ ⋯ ∧ d vₚ₋₁`. -/
 def chartGeneratorEvaluation [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ)
     (a₀ : OpenHolomorphicFunctions X d U) (v : Fin p → OpenHolomorphicFunctions X d U) :
     (Fin d → ℂ) → (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
   fun y => chartSection X d U z a₀ y •
     ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) fun i => chartSectionDifferential X d U z (v i) y
 
 lemma chartEvaluation_mk [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ)
     (a₀ : OpenHolomorphicFunctions X d U) (v : Fin p → OpenHolomorphicFunctions X d U)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     chartEvaluation X d U z p
@@ -513,7 +515,7 @@ lemma chartEvaluation_mk [SmoothOfRelativeDimension d X.hom]
   rfl
 
 private lemma chartEvaluation_mk_eqOn [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (z : Point ℂ X) (p : ℕ)
     (a₀ : OpenHolomorphicFunctions X d U) (v : Fin p → OpenHolomorphicFunctions X d U) :
     Set.EqOn (chartEvaluation X d U z p
         (Algebra.DeRham.mk ℂ (OpenHolomorphicFunctions X d U) p a₀ v))
@@ -524,8 +526,8 @@ private lemma chartEvaluation_mk_eqOn [SmoothOfRelativeDimension d X.hom]
 differential. -/
 private lemma extDerivWithin_chartGeneratorEvaluation
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (p : ℕ)
     (a₀ : OpenHolomorphicFunctions X d U) (v : Fin p → OpenHolomorphicFunctions X d U)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     extDerivWithin (chartGeneratorEvaluation X d U z p a₀ v)
@@ -554,8 +556,8 @@ private lemma extDerivWithin_chartGeneratorEvaluation
 
 private lemma chartGeneratorEvaluation_differentiableWithinAt
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (p : ℕ)
     (a₀ : OpenHolomorphicFunctions X d U) (v : Fin p → OpenHolomorphicFunctions X d U)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     DifferentiableWithinAt ℂ (chartGeneratorEvaluation X d U z p a₀ v)
@@ -570,8 +572,8 @@ private lemma chartGeneratorEvaluation_differentiableWithinAt
 
 private lemma chartEvaluation_differentiableWithinAt
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (p : ℕ)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     DifferentiableWithinAt ℂ (chartEvaluation X d U z p θ)
@@ -596,8 +598,8 @@ private lemma extDerivWithin_zero {E : Type*} [NormedAddCommGroup E] [NormedSpac
 /-- Fixed-chart evaluation intertwines the algebraic and the analytic exterior derivative. -/
 lemma chartEvaluation_differential
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (p : ℕ)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
     chartEvaluation X d U z (p + 1)
@@ -622,8 +624,8 @@ lemma chartEvaluation_differential
 
 /-- Evaluation at one point of one fixed coordinate chart. -/
 def chartEvaluationAt [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (p : ℕ) (y : Fin d → ℂ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
+    (z : Point ℂ X) (p : ℕ) (y : Fin d → ℂ) :
     Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p →ₗ[ℂ]
       (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
   (LinearMap.proj y).comp (chartEvaluation X d U z p)
@@ -631,14 +633,14 @@ def chartEvaluationAt [SmoothOfRelativeDimension d X.hom]
 /-- Differential forms that vanish in every fixed chart at every point of its coordinate
 domain. -/
 def chartEvaluationKernel [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (p : ℕ) :
     Submodule ℂ (Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :=
-  ⨅ (z : ComplexPoint X), ⨅ (y : Fin d → ℂ),
+  ⨅ (z : Point ℂ X), ⨅ (y : Fin d → ℂ),
     ⨅ (_ : y ∈ chartSectionDomain X d U z),
       LinearMap.ker (chartEvaluationAt X d U z p y)
 
 lemma mem_chartEvaluationKernel_iff [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (p : ℕ)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :
     θ ∈ chartEvaluationKernel X d U p ↔
       ∀ z y, y ∈ chartSectionDomain X d U z →
@@ -648,7 +650,7 @@ lemma mem_chartEvaluationKernel_iff [SmoothOfRelativeDimension d X.hom]
 /-- Coordinate-zero identities remain coordinate-zero after exterior differentiation. -/
 lemma differential_mem_chartEvaluationKernel
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (p : ℕ)
     {θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p}
     (hθ : θ ∈ chartEvaluationKernel X d U p) :
     Algebra.DeRham.differential ℂ (OpenHolomorphicFunctions X d U) p θ ∈
@@ -662,18 +664,18 @@ lemma differential_mem_chartEvaluationKernel
 
 /-- Restriction of differential forms along an inclusion of open sets. -/
 def formRestriction [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
     Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p →ₗ[ℂ]
       Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d V) p :=
   Algebra.DeRham.map ℂ (holomorphicRestrictionAlgHom X d i) p
 
 @[simp] lemma formRestriction_id [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (p : ℕ) :
     formRestriction X d (𝟙 U) p = LinearMap.id := by
   rw [formRestriction, holomorphicRestrictionAlgHom_id, Algebra.DeRham.map_id]
 
 @[simp] lemma formRestriction_comp [SmoothOfRelativeDimension d X.hom]
-    {U V W : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ}
+    {U V W : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ}
     (i : U ⟶ V) (j : V ⟶ W) (p : ℕ) :
     formRestriction X d (i ≫ j) p =
       (formRestriction X d j p).comp (formRestriction X d i p) := by
@@ -681,7 +683,7 @@ def formRestriction [SmoothOfRelativeDimension d X.hom]
     holomorphicRestrictionAlgHom_comp, Algebra.DeRham.map_comp]
 
 @[simp] lemma formRestriction_mk [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     (a₀ : OpenHolomorphicFunctions X d U) (v : Fin p → OpenHolomorphicFunctions X d U) :
     formRestriction X d i p (Algebra.DeRham.mk ℂ (OpenHolomorphicFunctions X d U) p a₀ v) =
       Algebra.DeRham.mk ℂ (OpenHolomorphicFunctions X d V) p
@@ -692,8 +694,8 @@ def formRestriction [SmoothOfRelativeDimension d X.hom]
 /-- Fixed-chart values of holomorphic functions commute with restriction. -/
 lemma chartSection_holomorphicRestrictionAlgHom
     [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X)
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V)
+    (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain X d V z) :
     chartSection X d V z (holomorphicRestrictionAlgHom X d i f) y =
@@ -707,8 +709,8 @@ lemma chartSection_holomorphicRestrictionAlgHom
 /-- Fixed-chart derivatives of holomorphic functions commute with restriction. -/
 lemma chartSectionDifferential_holomorphicRestrictionAlgHom
     [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X)
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V)
+    (z : Point ℂ X)
     (f : OpenHolomorphicFunctions X d U) {y : Fin d → ℂ}
     (hy : y ∈ chartSectionDomain X d V z) :
     chartSectionDifferential X d V z
@@ -730,8 +732,8 @@ lemma chartSectionDifferential_holomorphicRestrictionAlgHom
 /-- Fixed-chart evaluation of a differential form commutes with restriction. -/
 lemma chartEvaluation_formRestriction
     [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
-    (z : ComplexPoint X) (p : ℕ)
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V)
+    (z : Point ℂ X) (p : ℕ)
     (θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d V z) :
     chartEvaluation X d V z p (formRestriction X d i p θ) y =
@@ -757,7 +759,7 @@ lemma chartEvaluation_formRestriction
 /-- Restriction preserves forms that vanish in every chart. -/
 lemma formRestriction_mem_chartEvaluationKernel
     [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ)
     {θ : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p}
     (hθ : θ ∈ chartEvaluationKernel X d U p) :
     formRestriction X d i p θ ∈ chartEvaluationKernel X d V p := by
@@ -769,19 +771,19 @@ lemma formRestriction_mem_chartEvaluationKernel
 /-- Analytic differential forms of degree `p` on `U`: Kähler differential forms of the
 holomorphic functions, modulo the identities that actual complex derivatives detect. -/
 abbrev HolomorphicForm [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :=
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (p : ℕ) :=
   Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p ⧸
     chartEvaluationKernel X d U p
 
 /-- A complex constant regarded as an analytic differential zero-form. -/
 def holomorphicFormOfConstant [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) :
     ℂ →ₗ[ℂ] HolomorphicForm X d U 0 :=
   (chartEvaluationKernel X d U 0).mkQ.comp
     (Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d U))
 
 def holomorphicFormDifferential [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (p : ℕ) :
     HolomorphicForm X d U p →ₗ[ℂ] HolomorphicForm X d U (p + 1) :=
   (chartEvaluationKernel X d U p).liftQ
     ((chartEvaluationKernel X d U (p + 1)).mkQ.comp
@@ -792,7 +794,7 @@ def holomorphicFormDifferential [SmoothOfRelativeDimension d X.hom]
         exact differential_mem_chartEvaluationKernel X d U p hθ)
 
 def holomorphicFormRestriction [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
     HolomorphicForm X d U p →ₗ[ℂ] HolomorphicForm X d V p :=
   (chartEvaluationKernel X d U p).liftQ
     ((chartEvaluationKernel X d V p).mkQ.comp (formRestriction X d i p)) (by
@@ -803,7 +805,7 @@ def holomorphicFormRestriction [SmoothOfRelativeDimension d X.hom]
 
 @[simp] lemma holomorphicFormRestriction_ofConstant
     [SmoothOfRelativeDimension d X.hom]
-    {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (c : ℂ) :
+    {U V : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ} (i : U ⟶ V) (c : ℂ) :
     holomorphicFormRestriction X d i 0
         (holomorphicFormOfConstant X d U c) =
       holomorphicFormOfConstant X d V c := by
@@ -814,7 +816,7 @@ def holomorphicFormRestriction [SmoothOfRelativeDimension d X.hom]
 
 @[simp] lemma holomorphicFormDifferential_ofConstant
     [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (c : ℂ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (c : ℂ) :
     holomorphicFormDifferential X d U 0
         (holomorphicFormOfConstant X d U c) = 0 := by
   change Submodule.Quotient.mk
@@ -823,7 +825,7 @@ def holomorphicFormRestriction [SmoothOfRelativeDimension d X.hom]
   exact Submodule.Quotient.mk_zero _
 
 @[simp] lemma holomorphicFormRestriction_id [SmoothOfRelativeDimension d X.hom]
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ) (p : ℕ) :
     holomorphicFormRestriction X d (𝟙 U) p = LinearMap.id := by
   apply LinearMap.ext
   intro θ
@@ -833,7 +835,7 @@ def holomorphicFormRestriction [SmoothOfRelativeDimension d X.hom]
   rfl
 
 @[simp] lemma holomorphicFormRestriction_comp [SmoothOfRelativeDimension d X.hom]
-    {U V W : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ}
+    {U V W : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ}
     (i : U ⟶ V) (j : V ⟶ W) (p : ℕ) :
     holomorphicFormRestriction X d (i ≫ j) p =
       (holomorphicFormRestriction X d j p).comp

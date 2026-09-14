@@ -43,7 +43,7 @@ noncomputable section
 
 /-- Evaluation of a global section at a complex point is pullback of that section to `Spec ℂ`. -/
 lemma evaluate_top_eq_appTop {X : Over (Spec ↧ℂ)}
-    (s : Γ(X.left, ⊤)) (z : ComplexPoint X) :
+    (s : Γ(X.left, ⊤)) (z : Point ℂ X) :
     evaluate ⊤ s z = (Scheme.ΓSpecIso ↧ℂ).hom (z.left.appTop s) := by
   rw [evaluate, dif_pos (by exact trivial)]
   have h := Scheme.germ_stalkClosedPointTo (R := ↧ℂ) (X := X.left) z.left ⊤ trivial
@@ -52,7 +52,7 @@ lemma evaluate_top_eq_appTop {X : Over (Spec ↧ℂ)}
 /-- Evaluation of a global regular function is continuous in the analytic topology. -/
 lemma continuous_evaluate_top {X : Over (Spec ↧ℂ)}
     (s : Γ(X.left, ⊤)) :
-    @Continuous (ComplexPoint X) ℂ analyticTopology inferInstance
+    @Continuous (Point ℂ X) ℂ analyticTopology inferInstance
       (evaluate ⊤ s) := by
   rw [continuous_def]
   intro V hV
@@ -65,7 +65,7 @@ abbrev complexAffineSpace (n : Type) : Scheme :=
 
 /-- Algebraic coordinates identify complex points of affine space with tuples of complex numbers. -/
 def affineSpaceEquiv (n : Type) :
-    ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) ≃ (n → ℂ) where
+    Point ℂ (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) ≃ (n → ℂ) where
   toFun z i :=
     (Scheme.ΓSpecIso ↧ℂ).hom (z.left.appTop (AffineSpace.coord (Spec ↧ℂ) i))
   invFun v :=
@@ -83,7 +83,7 @@ def affineSpaceEquiv (n : Type) :
 
 @[simp]
 lemma affineSpaceEquiv_apply (n : Type)
-    (z : ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ))) (i : n) :
+    (z : Point ℂ (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ))) (i : n) :
     affineSpaceEquiv n z i =
       (Scheme.ΓSpecIso ↧ℂ).hom
         (z.left.appTop (AffineSpace.coord (Spec ↧ℂ) i)) :=
@@ -92,14 +92,14 @@ lemma affineSpaceEquiv_apply (n : Type)
 /-- The algebraic coordinate equivalence is continuous for the analytic topology. -/
 lemma continuous_affineSpaceEquiv (n : Type) :
     @Continuous
-      (ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)))
+      (Point ℂ (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)))
       (n → ℂ) analyticTopology inferInstance (affineSpaceEquiv n) := by
   apply @continuous_pi
-    (ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)))
+    (Point ℂ (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)))
     n (fun _ ↦ ℂ) analyticTopology (fun _ ↦ inferInstance) (affineSpaceEquiv n)
   intro i
   let s := AffineSpace.coord (Spec ↧ℂ) i
-  have heq : (fun z : ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) ↦
+  have heq : (fun z : Point ℂ (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) ↦
       affineSpaceEquiv n z i) = evaluate ⊤ s :=
     funext fun z ↦ (evaluate_top_eq_appTop s z).symm
   rw [heq]
@@ -232,7 +232,7 @@ lemma continuousOn_evaluate_basicOpen_affineSpaceEquiv_symm {n : Type}
 /-- The inverse coordinate map is continuous for every local regular-function subbasis set. -/
 lemma continuous_affineSpaceEquiv_symm (n : Type) :
     @Continuous (n → ℂ)
-      (ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)))
+      (Point ℂ (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)))
       inferInstance analyticTopology (affineSpaceEquiv n).symm := by
   rw [continuous_iff_analyticSubbasis]
   rintro W ⟨U, s, V, hV, rfl⟩
@@ -263,7 +263,7 @@ lemma continuous_affineSpaceEquiv_symm (n : Type) :
 
 /-- Complex affine space with the evaluation topology is ordinary complex affine space. -/
 def affineSpaceHomeomorph (n : Type) :
-    ComplexPoint (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) ≃ₜ (n → ℂ) where
+    Point ℂ (Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) ≃ₜ (n → ℂ) where
   toEquiv := affineSpaceEquiv n
   continuous_toFun := continuous_affineSpaceEquiv n
   continuous_invFun := continuous_affineSpaceEquiv_symm n

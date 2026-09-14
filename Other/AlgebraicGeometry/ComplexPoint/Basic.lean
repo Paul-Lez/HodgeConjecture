@@ -56,7 +56,7 @@ This is the canonical home for functorial complex points.  In particular, consum
 package their own morphism records or reprove identity and composition laws. -/
 noncomputable def complexAnalytification :
     CategoryTheory.Functor (Over (Spec ↧ℂ)) TopCat where
-  obj X := @TopCat.of (ComplexPoint X) Point.analyticTopology
+  obj X := @TopCat.of (Point ℂ X) Point.analyticTopology
   map f := @TopCat.ofHom _ _ Point.analyticTopology Point.analyticTopology
     (Point.continuousMap f)
   map_id X := by

@@ -47,7 +47,7 @@ attribute [local instance] coordinateRingScalarTower
 attribute [local instance] coordinateRingEtale
 
 /-- The selected smooth component point regarded as a complex point of the smooth locus. -/
-def smoothPoint : ComplexPoint (componentSmoothScheme X x) :=
+def smoothPoint : Point ℂ (componentSmoothScheme X x) :=
   ComplexPoint.asOpenPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))
     (componentSmoothLocus X x)
     C.point C.point_mem_smoothLocus
@@ -58,7 +58,7 @@ abbrev neighborhoodScheme : Over (Spec ↧ℂ) :=
 
 /-- The selected smooth point regarded as a complex point of its affine neighborhood. -/
 def neighborhoodPoint :
-    ComplexPoint C.neighborhoodScheme :=
+    Point ℂ C.neighborhoodScheme :=
   ComplexPoint.asOpenPoint (componentSmoothScheme X x) C.componentNeighborhood
     (smoothPoint C) (by
       change (smoothPoint C).underlying ∈ C.componentNeighborhood
@@ -103,7 +103,7 @@ def neighborhoodToSpecΓIso : C.neighborhoodScheme ≅
 coordinate ring. -/
 def neighborhoodPointAlgHomHomeomorph :
     @Homeomorph
-      (ComplexPoint C.neighborhoodScheme)
+      (Point ℂ C.neighborhoodScheme)
       (Γ(C.componentNeighborhood.toScheme, ⊤) →ₐ[ℂ] ℂ)
       Point.analyticTopology
       (ComplexPoint.affineAlgebraHomTopology Γ(C.componentNeighborhood.toScheme, ⊤)) :=
@@ -113,7 +113,7 @@ def neighborhoodPointAlgHomHomeomorph :
 /-- The affine algebra-homomorphism coordinate of a neighborhood point evaluates global
 regular sections in the usual way. -/
 lemma neighborhoodPointAlgHomHomeomorph_apply
-    (z : ComplexPoint C.neighborhoodScheme)
+    (z : Point ℂ C.neighborhoodScheme)
     (r : Γ(C.componentNeighborhood.toScheme, ⊤)) :
     C.neighborhoodPointAlgHomHomeomorph z r = Point.evaluate ⊤ r z := by
   change ComplexPoint.affineSpecEquiv Γ(C.componentNeighborhood.toScheme, ⊤)
@@ -131,7 +131,7 @@ lemma neighborhoodPointAlgHomHomeomorph_apply
 /-- The local analytic chart supplied by the exact étale component coordinates. -/
 def neighborhoodProjectionChart :
     OpenPartialHomeomorph
-      (ComplexPoint C.neighborhoodScheme)
+      (Point ℂ C.neighborhoodScheme)
       (Fin n → ℂ) :=
   C.neighborhoodPointAlgHomHomeomorph.toOpenPartialHomeomorph |>.trans
     (ComplexAlgHom.etaleAlgHomProjectionChart
@@ -148,7 +148,7 @@ lemma neighborhoodPoint_mem_projectionChart_source :
 /-- On its source, the component chart is exactly restriction of a complex point along the
 retained polynomial coordinate map, followed by evaluation on the coordinate variables. -/
 lemma neighborhoodProjectionChart_apply_of_mem
-    (z : ComplexPoint C.neighborhoodScheme)
+    (z : Point ℂ C.neighborhoodScheme)
     (hz : z ∈ C.neighborhoodProjectionChart.source) :
     C.neighborhoodProjectionChart z =
       ComplexAlgHom.mvPolynomialAlgHomHomeomorph n
@@ -193,7 +193,7 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
       (C.neighborhoodProjectionChart.symm v)) w := by
   let Y := C.neighborhoodScheme
   let : IsAffine Y.left := C.componentNeighborhood_isAffine
-  let y : ComplexPoint Y := C.neighborhoodProjectionChart.symm w
+  let y : Point ℂ Y := C.neighborhoodProjectionChart.symm w
   obtain ⟨g, hgW, hyg⟩ :=
     (isAffineOpen_top Y.left).exists_basicOpen_le
       (V := W) ⟨y.underlying, hW⟩ trivial
@@ -216,7 +216,7 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
       Point.overOpen (Y.left.basicOpen g) ∈ 𝓝 w :=
     hcontinuous ((Point.isOpen_overOpen (Y.left.basicOpen g)).mem_nhds hyg')
   filter_upwards [heventually] with v hv
-  let yv : ComplexPoint Y :=
+  let yv : Point ℂ Y :=
     C.neighborhoodProjectionChart.symm v
   have hres := Point.evaluate_res hgW s yv hv
   exact (hres.trans (hquot yv hv)).symm

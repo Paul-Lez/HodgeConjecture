@@ -44,8 +44,8 @@ attribute [local instance] analyticHasDerivedCategory
 
 /-- A rational number as a morphism from the integer to the rational constant sheaf. -/
 def integerToFieldConstantSheaf (q : K) :
-    𝓒(↧(ComplexPoint X); ℤ) ⟶ 𝓒(↧(ComplexPoint X); K) :=
-  (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+    𝓒(↧(Point ℂ X); ℤ) ⟶ 𝓒(↧(Point ℂ X); K) :=
+  (TopCat.Sheaf.constantFunctor ↧(Point ℂ X)).map
     (AddCommGrpCat.ofHom (zmultiplesAddHom K q))
 
 omit [Algebra K ℂ] in
@@ -77,7 +77,7 @@ def integerToFieldConstantSheafComplexInt (q : K) :
     constantIntegerSheafComplexInt X ⟶
       constantFieldSheafComplexInt K X :=
   HomologicalComplex.extendMap
-    ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
+    ((CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).map
       (integerToFieldConstantSheaf K X q)) ComplexShape.embeddingUpNat
 
 omit [Algebra K ℂ] in
@@ -151,7 +151,7 @@ omit [Algebra K ℂ] in
 
 /-- Postcomposition by the zero map of complexes is the zero map on hypercohomology. -/
 @[simp] lemma hypercohomologyMap_zero
-    {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (n : ℤ) :
+    {K L : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ} (n : ℤ) :
     hypercohomologyMap X (0 : K ⟶ L) n = 0 := by
   refine AddMonoidHom.ext fun α ↦ ?_
   apply (Localization.SmallShiftedHom.equiv
@@ -162,7 +162,7 @@ omit [Algebra K ℂ] in
 
 /-- Postcomposition by the identity map of complexes is the identity on hypercohomology. -/
 @[simp] lemma hypercohomologyMap_id
-    {K : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (n : ℤ) :
+    {K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ} (n : ℤ) :
     hypercohomologyMap X (𝟙 K) n = AddMonoidHom.id _ := by
   refine AddMonoidHom.ext fun α ↦ ?_
   let eK : Hypercohomology X K n ≃
@@ -179,7 +179,7 @@ omit [Algebra K ℂ] in
   simp [eK]
 
 @[simp] lemma deRhamConjSemilinear_apply [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : DeRhamHypercohomology X n) :
+    (α : Hypercohomology X (holomorphicDeRhamComplexInt X) n) :
     deRhamConjSemilinear X n α = deRhamConj X n α := rfl
 
 /-! #### Real coefficient fields

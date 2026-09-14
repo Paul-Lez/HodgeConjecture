@@ -48,7 +48,7 @@ variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
 
-@[simp] theorem inclusionInComplexCharts_at_center (z : ComplexPoint Y) :
+@[simp] theorem inclusionInComplexCharts_at_center (z : Point ℂ Y) :
     inclusionInComplexCharts X Y i m d z
       (localChart Y m z z) =
         localChart X d (Point.map i z) (Point.map i z) := by
@@ -56,7 +56,7 @@ variable (X Y : Over (Spec ↧ℂ))
   rw [(localChart Y m z).left_inv (mem_localChart_source Y m z)]
 
 /-- Analyticity is inherited from the actual morphism of smooth schemes. -/
-theorem analyticAt_inclusionInComplexCharts (z : ComplexPoint Y) :
+theorem analyticAt_inclusionInComplexCharts (z : Point ℂ Y) :
     AnalyticAt ℂ (inclusionInComplexCharts X Y i m d z)
       (localChart Y m z z) := by
   apply analyticAt_localChart_symm_map Y X i m d z
@@ -68,7 +68,7 @@ theorem analyticAt_inclusionInComplexCharts (z : ComplexPoint Y) :
 coordinates. It is constructed by lifting the intrinsic coordinate sections, not assumed
 from an analytic-immersion structure. -/
 theorem exists_analytic_localLeftInverse_of_isClosedImmersion [IsClosedImmersion i.left]
-    (z : ComplexPoint Y) :
+    (z : Point ℂ Y) :
     ∃ L : (Fin d → ℂ) → (Fin m → ℂ),
       AnalyticAt ℂ L
         (inclusionInComplexCharts X Y i m d z
@@ -123,7 +123,7 @@ theorem exists_analytic_localLeftInverse_of_isClosedImmersion [IsClosedImmersion
 /-- The derivative of a smooth closed immersion has an actual continuous-linear left
 inverse, obtained by differentiating the constructed analytic local left inverse. -/
 theorem exists_leftInverse_fderiv_inclusionInComplexCharts [IsClosedImmersion i.left]
-    (z : ComplexPoint Y) :
+    (z : Point ℂ Y) :
     ∃ P : (Fin d → ℂ) →L[ℂ] (Fin m → ℂ),
       P.comp (fderiv ℂ (inclusionInComplexCharts X Y i m d z)
         (localChart Y m z z)) = ContinuousLinearMap.id ℂ (Fin m → ℂ) := by

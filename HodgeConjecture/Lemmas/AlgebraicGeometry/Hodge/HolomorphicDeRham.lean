@@ -79,12 +79,12 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom]
   CochainComplex.ofHom
     (fun p =>
       let J := Opens.grothendieckTopology
-        (TopCat.of (ComplexPoint X))
+        (TopCat.of (Point ℂ X))
       (presheafToSheaf J AddCommGrpCat).map
         (scalarHolomorphicDeRhamPresheaf X d p c))
     (fun p => by
       let J := Opens.grothendieckTopology
-        (TopCat.of (ComplexPoint X))
+        (TopCat.of (Point ℂ X))
       unfold holomorphicDeRhamComplex
       simp only [CochainComplex.of_d]
       change (presheafToSheaf J AddCommGrpCat).map
@@ -131,9 +131,9 @@ def complexScalarPresheaf (c : ℂ) :
 
 /-- Scalar multiplication on the constant complex sheaf. -/
 def complexScalarSheaf (c : ℂ) :
-    𝓒(↧(ComplexPoint X); ℂ) ⟶ 𝓒(↧(ComplexPoint X); ℂ) :=
+    𝓒(↧(Point ℂ X); ℂ) ⟶ 𝓒(↧(Point ℂ X); ℂ) :=
   let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
+    (TopCat.of (Point ℂ X))
   (presheafToSheaf J AddCommGrpCat).map
     (complexScalarPresheaf X c)
 
@@ -141,11 +141,11 @@ def complexScalarSheaf (c : ℂ) :
 @[implicit_reducible]
 def complexScalarComplex (c : ℂ) :
     (CochainComplex.single₀
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        𝓒(↧(ComplexPoint X); ℂ) ⟶
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).obj
+        𝓒(↧(Point ℂ X); ℂ) ⟶
     (CochainComplex.single₀
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        𝓒(↧(ComplexPoint X); ℂ) :=
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).obj
+        𝓒(↧(Point ℂ X); ℂ) :=
   (CochainComplex.single₀ _).map (complexScalarSheaf X c)
 
 /-- Scalar multiplication on the integer-indexed constant complex-valued complex. -/
@@ -172,7 +172,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 @[simp] lemma scalarHolomorphicDeRhamPresheaf_apply
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) (c : ℂ)
-    (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (U : (Opens (TopCat.of (Point ℂ X)))ᵒᵖ)
     (x : HolomorphicForm X d U p) :
     (scalarHolomorphicDeRhamPresheaf X d p c).app U x = c • x := rfl
 
@@ -214,7 +214,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
   apply HomologicalComplex.hom_ext
   intro p
   change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+      (Opens.grothendieckTopology (TopCat.of (Point ℂ X)))
       AddCommGrpCat).map
       (scalarHolomorphicDeRhamPresheaf X d p 0) = 0
   rw [scalarHolomorphicDeRhamPresheaf_zero, Functor.map_zero]
@@ -225,12 +225,12 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
   apply HomologicalComplex.hom_ext
   intro p
   change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+      (Opens.grothendieckTopology (TopCat.of (Point ℂ X)))
       AddCommGrpCat).map
       (scalarHolomorphicDeRhamPresheaf X d p 1) = 𝟙 _
   rw [scalarHolomorphicDeRhamPresheaf_one]
   exact (presheafToSheaf
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+    (Opens.grothendieckTopology (TopCat.of (Point ℂ X)))
     AddCommGrpCat).map_id _
 
 @[simp] lemma scalarHolomorphicDeRhamComplex_add
@@ -241,7 +241,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
   apply HomologicalComplex.hom_ext
   intro p
   change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+      (Opens.grothendieckTopology (TopCat.of (Point ℂ X)))
       AddCommGrpCat).map
       (scalarHolomorphicDeRhamPresheaf X d p (a + b)) = _
   rw [scalarHolomorphicDeRhamPresheaf_add, Functor.map_add]
@@ -255,7 +255,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
   apply HomologicalComplex.hom_ext
   intro p
   change (presheafToSheaf
-      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+      (Opens.grothendieckTopology (TopCat.of (Point ℂ X)))
       AddCommGrpCat).map
       (scalarHolomorphicDeRhamPresheaf X d p (a * b)) = _
   rw [scalarHolomorphicDeRhamPresheaf_mul, Functor.map_comp]
@@ -277,7 +277,7 @@ lemma complexScalarSheaf_comp_conj (c : ℂ) :
       conjConstantComplexSheaf X ≫
         complexScalarSheaf X (starRingEnd ℂ c) := by
   let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
+    (TopCat.of (Point ℂ X))
   change (presheafToSheaf J AddCommGrpCat).map (complexScalarPresheaf X c) ≫
       (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) =
     (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) ≫
@@ -290,13 +290,13 @@ lemma constantsToHolomorphicDeRhamZero_scalar
     [SmoothOfRelativeDimension d X.hom] (c : ℂ) :
     constantsToHolomorphicDeRhamZeroSheaf X d ≫
       (let J := Opens.grothendieckTopology
-        (TopCat.of (ComplexPoint X))
+        (TopCat.of (Point ℂ X))
       (presheafToSheaf J AddCommGrpCat).map
         (scalarHolomorphicDeRhamPresheaf X d 0 c)) =
     complexScalarSheaf X c ≫
       constantsToHolomorphicDeRhamZeroSheaf X d := by
   let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
+    (TopCat.of (Point ℂ X))
   change (presheafToSheaf J AddCommGrpCat).map
       (constantsToHolomorphicDeRhamZero X d) ≫
       (presheafToSheaf J AddCommGrpCat).map
@@ -328,7 +328,7 @@ lemma constantsToHolomorphicDeRhamComplex_scalar
   rcases p with _ | p
   · exact constantsToHolomorphicDeRhamZero_scalar X d c
   · apply (HomologicalComplex.isZero_single_obj_X
-      (ComplexShape.up ℕ) 0 𝓒(↧(ComplexPoint X); ℂ) (p + 1)
+      (ComplexShape.up ℕ) 0 𝓒(↧(Point ℂ X); ℂ) (p + 1)
       (Nat.succ_ne_zero p)).eq_of_src
 
 /-- Conjugation intertwines the two scalar multiplications in degree zero. -/

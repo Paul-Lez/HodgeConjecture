@@ -37,7 +37,7 @@ open AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 variable [IsProjective X.hom] [SmoothOfRelativeDimension d X.hom]
-  (z : ComplexPoint X)
+  (z : Point ℂ X)
 
 omit [IsProjective X.hom] in
 /-- The old point-local class and the local class used by the sheaf orientation are identical. -/
@@ -63,7 +63,7 @@ lemma analyticPointLocalCoclass_apply_smul_complexLocalOrientation (q : ℚ) :
 /-- In the explicitly point-supported group, evaluation on the exact orientation determines
 the coclass. This uniqueness lemma constructs no new general duality equivalence. -/
 lemma eq_analyticPointLocalCoclass_iff
-    (β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) {z} (2 * d)) :
+    (β : CohomologyWithSupport ℚ (TopCat.of (Point ℂ X)) {z} (2 * d)) :
     β = analyticPointLocalCoclass X d z ↔
       relativeCohomologyEquivDualHomology ℚ (pointComplementPair z) (2 * d) β
         (complexLocalOrientation X d z) = 1 := by
@@ -84,11 +84,11 @@ lemma eq_analyticPointLocalCoclass_iff
 on every stalk, with its coefficient map exactly the identity. -/
 @[reassoc]
 lemma complexOrientationHomologySheafIso_stalk_pointCoclass :
-    (TopCat.Sheaf.constantSheafStalkIso (X := TopCat.of (ComplexPoint X))
+    (TopCat.Sheaf.constantSheafStalkIso (X := TopCat.of (Point ℂ X))
       (AddCommGrpCat.of ℚ) z).hom ≫
       (TopCat.Presheaf.stalkFunctor AddCommGrpCat z).map
         (complexOrientationHomologySheafIso X d).hom.hom ≫
-      (singularChainHomologySheafStalkIso ℚ (TopCat.of (ComplexPoint X))
+      (singularChainHomologySheafStalkIso ℚ (TopCat.of (Point ℂ X))
         z (2 * d)).hom ≫
       AddCommGrpCat.ofHom
         (analyticPointLocalCoclassDual X d z).toAddMonoidHom =

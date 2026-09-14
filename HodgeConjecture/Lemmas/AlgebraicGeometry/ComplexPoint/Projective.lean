@@ -722,7 +722,7 @@ lemma vectorToProjectiveSpace_toBase {n : ℕ} (v : CoordinateSpace n) (hv : v �
 /-- Nonzero homogeneous coordinates define a complex point of scheme-theoretic projective
 space. -/
 noncomputable def vectorToComplexPoint {n : ℕ} (v : CoordinateSpace n) (hv : v ≠ 0) :
-    ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
+    Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
   Over.homMk (vectorToProjectiveSpace v hv) (vectorToProjectiveSpace_toBase v hv)
 
 /-- Rescaling homogeneous coordinates does not change the resulting complex point. -/
@@ -758,7 +758,7 @@ lemma surjective_vectorToComplexPoint {n : ℕ} :
 points of scheme-theoretic projective space. -/
 noncomputable def projectivizationToComplexPoint {n : ℕ} :
     Projectivization ℂ (CoordinateSpace n) →
-      ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
+      Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
   Projectivization.lift
     (fun v ↦ vectorToComplexPoint v.1 v.2)
     (fun a b c h ↦ by
@@ -850,15 +850,15 @@ lemma chartAffineToProjectiveSpace_toProj {n : ℕ} (i : Fin (n + 1)) :
   Limits.pullback.lift_snd _ _ _
 
 noncomputable def chartAffineComplexPointMap {n : ℕ} (i : Fin (n + 1)) :
-    ComplexPoint (Over.mk (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)) →
-      ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
+    Point ℂ (Over.mk (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)) →
+      Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))) :=
   Point.map (Over.homMk (chartAffineToProjectiveSpace i)
     (chartAffineToProjectiveSpace_over i))
 
 lemma continuous_chartAffineComplexPointMap {n : ℕ} (i : Fin (n + 1)) :
     @Continuous
-      (ComplexPoint (Over.mk (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)))
-      (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
+      (Point ℂ (Over.mk (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)))
+      (Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
       Point.analyticTopology Point.analyticTopology
       (chartAffineComplexPointMap i) :=
   Point.continuous_map _
@@ -880,12 +880,12 @@ lemma continuous_vectorChartRatios {n : ℕ} (i : Fin (n + 1)) :
 
 noncomputable def vectorChartToAffinePoint {n : ℕ} (i : Fin (n + 1)) :
     {v : CoordinateSpace n // v i ≠ 0} →
-      ComplexPoint (Over.mk (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)) :=
+      Point ℂ (Over.mk (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)) :=
   (ComplexPoint.affineSpaceEquiv (Fin (n + 1))).symm ∘ vectorChartRatios i
 
 lemma continuous_vectorChartToAffinePoint {n : ℕ} (i : Fin (n + 1)) :
     @Continuous {v : CoordinateSpace n // v i ≠ 0}
-      (ComplexPoint (Over.mk (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)))
+      (Point ℂ (Over.mk (ComplexPoint.complexAffineSpace (Fin (n + 1)) ↘ Spec ↧ℂ)))
       inferInstance Point.analyticTopology
       (vectorChartToAffinePoint i) :=
   (ComplexPoint.affineSpaceHomeomorph (Fin (n + 1))).symm.continuous.comp
@@ -893,7 +893,7 @@ lemma continuous_vectorChartToAffinePoint {n : ℕ} (i : Fin (n + 1)) :
 
 lemma continuous_chartVectorToComplexPoint {n : ℕ} (i : Fin (n + 1)) :
     @Continuous {v : CoordinateSpace n // v i ≠ 0}
-      (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
+      (Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
       inferInstance Point.analyticTopology
       (chartAffineComplexPointMap i ∘ vectorChartToAffinePoint i) := by
   exact (continuous_chartAffineComplexPointMap i).comp
@@ -1064,7 +1064,7 @@ lemma iUnion_nonzeroVectorChart {n : ℕ} :
 
 lemma continuousOn_vectorToComplexPoint_chart {n : ℕ} (i : Fin (n + 1)) :
     @ContinuousOn {v : CoordinateSpace n // v ≠ 0}
-      (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
+      (Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
       inferInstance Point.analyticTopology
       (fun v ↦ vectorToComplexPoint v.1 v.2) (nonzeroVectorChart i) := by
   rw [continuousOn_iff_continuous_domRestrict]
@@ -1074,7 +1074,7 @@ lemma continuousOn_vectorToComplexPoint_chart {n : ℕ} (i : Fin (n + 1)) :
 
 lemma continuous_vectorToComplexPoint {n : ℕ} :
     @Continuous {v : CoordinateSpace n // v ≠ 0}
-      (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
+      (Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
       inferInstance Point.analyticTopology
       (fun v ↦ vectorToComplexPoint v.1 v.2) := by
   apply continuous_of_continuousOn_iUnion_of_isOpen
@@ -1084,7 +1084,7 @@ lemma continuous_vectorToComplexPoint {n : ℕ} :
 
 lemma continuous_projectivizationToComplexPoint {n : ℕ} :
     @Continuous (Projectivization ℂ (CoordinateSpace n))
-      (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
+      (Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ))))
       (instTopologicalSpace n) Point.analyticTopology
       projectivizationToComplexPoint := by
   apply Continuous.quotient_lift
@@ -1093,7 +1093,7 @@ lemma continuous_projectivizationToComplexPoint {n : ℕ} :
 /-- Finite-dimensional scheme-theoretic complex projective space is analytically compact. -/
 noncomputable instance instCompactSpaceProjectiveSpaceComplexPoint (n : ℕ) :
     CompactSpace
-      (ComplexPoint (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) := by
+      (Point ℂ (Over.mk (ProjectiveSpace.toBase (Fin (n + 1)) (Spec ↧ℂ)))) := by
   constructor
   rw [← (surjective_projectivizationToComplexPoint (n := n)).range_eq]
   exact isCompact_range continuous_projectivizationToComplexPoint

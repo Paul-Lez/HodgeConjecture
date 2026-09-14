@@ -51,18 +51,18 @@ lemma embeddingUpNat_zero : ComplexShape.embeddingUpNat.f 0 = (0 : ℤ) := rfl
 /-- The extended integer constant-sheaf complex is the integer constant sheaf in degree zero. -/
 def constantIntegerSheafComplexIntIsoSingleZero :
     constantIntegerSheafComplexInt X ≅
-      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℤ) :=
+      (CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) 0).obj
+        𝓒(↧(Point ℂ X); ℤ) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℤ) 0 0 embeddingUpNat_zero
+    𝓒(↧(Point ℂ X); ℤ) 0 0 embeddingUpNat_zero
 
 /-- The extended rational constant-sheaf complex is the rational constant sheaf in degree zero. -/
 def constantRationalSheafComplexIntIsoSingleZero :
     constantFieldSheafComplexInt ℚ X ≅
-      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℚ) :=
+      (CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) 0).obj
+        𝓒(↧(Point ℂ X); ℚ) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℚ) 0 0 embeddingUpNat_zero
+    𝓒(↧(Point ℂ X); ℚ) 0 0 embeddingUpNat_zero
 
 /-- The inverse of the integer extension/single comparison is a quasi-isomorphism. -/
 lemma constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso :
@@ -85,10 +85,10 @@ complexes. -/
 def rationalCohomologyZeroEquivSingle :
     H^0(X; ℚ) ≃
       Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℤ))
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℚ)) (0 : ℤ) :=
+        ((CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) 0).obj
+          𝓒(↧(Point ℂ X); ℤ))
+        ((CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) 0).obj
+          𝓒(↧(Point ℂ X); ℚ)) (0 : ℤ) :=
   (Localization.SmallShiftedHom.precompEquiv
       (constantIntegerSheafComplexIntIsoSingleZero X).inv
       (constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso X)).trans
@@ -99,28 +99,28 @@ def rationalCohomologyZeroEquivSingle :
 /-- The single-complex shifted morphism group is definitionally the corresponding Ext group. -/
 def rationalCohomologyZeroSingleEquivExt :
     Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℤ))
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℚ)) (0 : ℤ) ≃
-      Abelian.Ext 𝓒(↧(ComplexPoint X); ℤ)
-        𝓒(↧(ComplexPoint X); ℚ) 0 :=
+        ((CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) 0).obj
+          𝓒(↧(Point ℂ X); ℤ))
+        ((CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) 0).obj
+          𝓒(↧(Point ℂ X); ℚ)) (0 : ℤ) ≃
+      Abelian.Ext 𝓒(↧(Point ℂ X); ℤ)
+        𝓒(↧(Point ℂ X); ℚ) 0 :=
   Equiv.refl _
 
 /-- The definitional comparison from shifted Hom to Ext acts as the identity. -/
 @[simp] lemma rationalCohomologyZeroSingleEquivExt_apply
     (a : Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
-      ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℤ))
-      ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℚ)) (0 : ℤ)) :
+      ((CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) 0).obj
+        𝓒(↧(Point ℂ X); ℤ))
+      ((CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) 0).obj
+        𝓒(↧(Point ℂ X); ℚ)) (0 : ℤ)) :
     rationalCohomologyZeroSingleEquivExt X a = a := rfl
 
 /-- Degree-zero rational constant-sheaf cohomology is ordinary Hom from integer constants to
 rational constants. -/
 def rationalCohomologyZeroEquivSheafHom :
     H^0(X; ℚ) ≃
-      (𝓒(↧(ComplexPoint X); ℤ) ⟶ 𝓒(↧(ComplexPoint X); ℚ)) :=
+      (𝓒(↧(Point ℂ X); ℤ) ⟶ 𝓒(↧(Point ℂ X); ℚ)) :=
   ((rationalCohomologyZeroEquivSingle X).trans
     (rationalCohomologyZeroSingleEquivExt X)).trans Abelian.Ext.homEquiv₀
 
@@ -133,7 +133,7 @@ lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
         (fieldCohomologyClass ℚ X q) =
       Localization.SmallShiftedHom.mk₀
         (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map
+        ((CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) 0).map
           (integerToFieldConstantSheaf ℚ X q)) := by
   simp only [rationalCohomologyZeroEquivSingle, fieldCohomologyClass, Equiv.trans_apply,
     Hypercohomology, Localization.SmallShiftedHom.precompEquiv_apply]
@@ -155,7 +155,7 @@ lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
     exact (HomologicalComplex.single_map_f_self (ComplexShape.up ℤ) 0
       (integerToFieldConstantSheaf ℚ X q)).symm
   · exact (HomologicalComplex.isZero_single_obj_X
-      (ComplexShape.up ℤ) 0 𝓒(↧(ComplexPoint X); ℤ) i hi).eq_of_src _ _
+      (ComplexShape.up ℤ) 0 𝓒(↧(Point ℂ X); ℤ) i hi).eq_of_src _ _
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
@@ -174,7 +174,7 @@ induced by `n ↦ n q`. -/
 /-- If the constant-sheaf functor is faithful, distinct rational constants define distinct
 degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective_of_constantSheaf_faithful
-    [(TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).Faithful] :
+    [(TopCat.Sheaf.constantFunctor ↧(Point ℂ X)).Faithful] :
     Function.Injective (fieldCohomologyClass ℚ X) := by
   intro a b hab
   have hs : integerToFieldConstantSheaf ℚ X a =
@@ -183,27 +183,27 @@ theorem rationalCohomologyClass_injective_of_constantSheaf_faithful
       ← rationalCohomologyZeroEquivSheafHom_class, hab]
   unfold integerToFieldConstantSheaf at hs
   have hm := (TopCat.Sheaf.constantFunctor
-    ↧(ComplexPoint X)).map_injective hs
+    ↧(Point ℂ X)).map_injective hs
   simpa using ConcreteCategory.congr_hom hm (1 : ℤ)
 
 /-- On a nonempty analytic complex-point space, distinct rational constants define distinct
 degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective
-    [Nonempty (ComplexPoint X)] :
+    [Nonempty (Point ℂ X)] :
     Function.Injective (fieldCohomologyClass ℚ X) := by
-  let : (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).Faithful :=
+  let : (TopCat.Sheaf.constantFunctor ↧(Point ℂ X)).Faithful :=
     TopCat.constantSheaf_faithful_of_nonempty _
   exact rationalCohomologyClass_injective_of_constantSheaf_faithful X
 
 /-- On a connected analytic complex-point space, every degree-zero rational cohomology class is
 a constant class. -/
 theorem rationalCohomologyClass_surjective
-    [ConnectedSpace (ComplexPoint X)] :
+    [ConnectedSpace (Point ℂ X)] :
     Function.Surjective (fieldCohomologyClass ℚ X) := by
   intro α
-  let F := TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)
+  let F := TopCat.Sheaf.constantFunctor ↧(Point ℂ X)
   let ff := TopCat.constantSheafFullyFaithfulOfConnected
-    (TopCat.of (ComplexPoint X))
+    (TopCat.of (Point ℂ X))
   let : F.Full := ff.full
   let : F.Faithful := ff.faithful
   let e := rationalCohomologyZeroEquivSheafHom X
@@ -222,16 +222,16 @@ theorem rationalCohomologyClass_surjective
 /-- Constant rational classes give a bijection onto degree-zero cohomology of a connected
 analytic complex-point space. -/
 theorem rationalCohomologyClass_bijective
-    [ConnectedSpace (ComplexPoint X)] :
+    [ConnectedSpace (Point ℂ X)] :
     Function.Bijective (fieldCohomologyClass ℚ X) := by
-  let : Nonempty (ComplexPoint X) := inferInstance
+  let : Nonempty (Point ℂ X) := inferInstance
   exact ⟨rationalCohomologyClass_injective X,
     rationalCohomologyClass_surjective X⟩
 
 /-- On a connected analytic complex-point space, rational constants are linearly equivalent to
 degree-zero rational cohomology. -/
 def rationalCohomologyClassLinearEquiv
-    [ConnectedSpace (ComplexPoint X)] :
+    [ConnectedSpace (Point ℂ X)] :
     ℚ ≃ₗ[ℚ] H^0(X; ℚ) :=
   LinearEquiv.ofBijective (fieldCohomologyClassLinear ℚ X)
     (rationalCohomologyClass_bijective X)
@@ -239,7 +239,7 @@ def rationalCohomologyClassLinearEquiv
 /-- On a connected analytic complex-point space, the rational cohomology unit spans all of
 degree-zero rational cohomology. -/
 theorem span_rationalCohomologyUnit_eq_top
-    [ConnectedSpace (ComplexPoint X)] :
+    [ConnectedSpace (Point ℂ X)] :
     Submodule.span ℚ {fieldCohomologyUnit ℚ X} = ⊤ := by
   apply le_antisymm le_top
   intro α _
@@ -254,7 +254,7 @@ theorem span_rationalCohomologyUnit_eq_top
 /-- The degree-zero rational cohomology unit is nonzero on a nonempty analytic complex-point
 space. -/
 theorem rationalCohomologyUnit_ne_zero
-    [Nonempty (ComplexPoint X)] :
+    [Nonempty (Point ℂ X)] :
     fieldCohomologyUnit ℚ X ≠ 0 := by
   intro h
   have h10 : fieldCohomologyClass ℚ X 1 =

@@ -24,8 +24,8 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 
 local instance analyticSupportHasDerivedCategory (X : Over (Spec ↧ℂ)) :
-    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) :=
+  HasDerivedCategory.standard (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))
 ```
 
 # Cycles are indexed by generic points
@@ -111,7 +111,7 @@ namespace Guide.Cycles.D7
 ```
 ```lean
 def cycleComponentSupport (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) : Set (ComplexPoint X) :=
+    [IsProjective X.hom] (x : X.left) : Set (Point ℂ X) :=
   Point.underlying ⁻¹' closure {x}
 ```
 ```lean -show
@@ -144,8 +144,8 @@ is {name}`forgetSupport`, the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
 namespace Guide.Cycles.D8
 ```
 ```lean
-abbrev rationalCohomologyWithSupportComplex (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+abbrev rationalCohomologyWithSupportComplex (X : Over (Spec ↧ℂ)) (Z : Set (Point ℂ X)) :
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
   CochainComplex.mappingCone (rationalRestrictionComplexInt X Z)
 ```
 ```lean -show
@@ -156,7 +156,7 @@ example : @Guide.Cycles.D8.rationalCohomologyWithSupportComplex = @AlgebraicGeom
 namespace Guide.Cycles.D9
 ```
 ```lean
-abbrev RationalCohomologyWithSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
+abbrev RationalCohomologyWithSupport (X : Over (Spec ↧ℂ)) (Z : Set (Point ℂ X)) (n : ℤ) :
     Type 1 :=
   Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)
 ```
@@ -168,7 +168,7 @@ example : @Guide.Cycles.D9.RationalCohomologyWithSupport = @AlgebraicGeometry.Co
 namespace Guide.Cycles.D10
 ```
 ```lean
-def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
+def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (Point ℂ X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) where
   toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
   map_zero' := by

@@ -28,16 +28,16 @@ variable (X : Over (Spec ↧ℂ))
 
 /-- Actual open-section cohomology of the supported injective model is relative
 singular cohomology of the same literal local support pair. -/
-def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
-    (V : Opens (ComplexPoint X)) (n : ℕ) :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
+def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (Point ℂ X))
+    (V : Opens (Point ℂ X)) (n : ℕ) :
+    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (Point ℂ X)) V).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ) ≃+
         RelativeCohomology ℚ (neighborhoodSupportComplementPair
-          (V : Set (ComplexPoint X)) (S : Set (ComplexPoint X))) n :=
-  letI : ∀ W : Opens (ComplexPoint X), ParacompactSpace W := openParacompactSpace X
+          (V : Set (Point ℂ X)) (S : Set (Point ℂ X))) n :=
+  letI : ∀ W : Opens (Point ℂ X), ParacompactSpace W := openParacompactSpace X
   (complexSupportedSingularInjectiveHomologyIso X S.compl V (n : ℤ)).symm.addCommGroupIsoToAddEquiv
     |>.trans (supportedRationalSingularSectionCohomologyEquivSupportComplement
-      (TopCat.of (ComplexPoint X)) S S.isClosed V n)
+      (TopCat.of (Point ℂ X)) S S.isClosed V n)
 
 end AlgebraicGeometry.ComplexPoint
 

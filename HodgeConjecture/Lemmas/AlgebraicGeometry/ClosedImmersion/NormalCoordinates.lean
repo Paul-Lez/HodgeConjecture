@@ -22,7 +22,7 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
 
 /-- The constructed normal parametrization is complex analytic at its center. -/
 theorem analyticAt_closedImmersionNormalChart :
@@ -65,7 +65,7 @@ theorem closedImmersionFlatteningChart_mem_source :
     (exists_open_normalCriterion X Y i m d z).choose_spec.2.1⟩
 
 /-- The complete geometric support is flattened, not merely a parametrized sub-piece. -/
-theorem closedImmersionFlatteningChart_mem_range_iff (y : ComplexPoint X)
+theorem closedImmersionFlatteningChart_mem_range_iff (y : Point ℂ X)
     (hy : y ∈ (closedImmersionFlatteningChart X Y i m d z).source) :
     y ∈ Set.range (Point.map i) ↔
       (closedImmersionFlatteningChart X Y i m d z y).2 = 0 :=
@@ -78,7 +78,7 @@ theorem closedImmersionStandardFlatteningChart_mem_source :
   exact closedImmersionFlatteningChart_mem_source X Y i m d z
 
 /-- The support is exactly the zero-normal plane throughout the actual chart source. -/
-theorem closedImmersionStandardFlatteningChart_mem_range_iff (y : ComplexPoint X)
+theorem closedImmersionStandardFlatteningChart_mem_range_iff (y : Point ℂ X)
     (hy : y ∈ (closedImmersionStandardFlatteningChart X Y i m d z).source) :
     y ∈ Set.range (Point.map i) ↔
       (closedImmersionStandardFlatteningChart X Y i m d z y).2 = 0 := by

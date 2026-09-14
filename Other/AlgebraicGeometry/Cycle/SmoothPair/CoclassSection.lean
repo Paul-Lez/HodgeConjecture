@@ -40,7 +40,7 @@ variable (X Y : Over (Spec ↧ℂ))
 
 /-- Exact stalk normalization in every normal chart. -/
 theorem smoothClosedSupportCoclassSection_germ_eq_chart
-    (z : ComplexPoint Y) (x : ComplexPoint X)
+    (z : Point ℂ Y) (x : Point ℂ X)
     (hx : x ∈ smoothClosedSupportChartOpen X Y i m d z) :
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.Γgerm x
       (smoothClosedSupportCoclassSection X Y i m d) =
@@ -49,7 +49,7 @@ theorem smoothClosedSupportCoclassSection_germ_eq_chart
     smoothClosedSupportCoclassStalk_eq_chartGerm X Y i m d z x hx]
 
 /-- The global section restricts to the normalized section on a full normal chart. -/
-theorem smoothClosedSupportCoclassSection_restrict_chart (z : ComplexPoint Y) :
+theorem smoothClosedSupportCoclassSection_restrict_chart (z : Point ℂ Y) :
     (smoothClosedSupportCoclassSheaf X Y i m d).obj.map
       (homOfLE (show smoothClosedSupportChartOpen X Y i m d z ≤ ⊤ from le_top)).op
       (smoothClosedSupportCoclassSection X Y i m d) =
@@ -61,7 +61,7 @@ theorem smoothClosedSupportCoclassSection_restrict_chart (z : ComplexPoint Y) :
 
 /-- Outside the image, the global section has zero germ. -/
 theorem smoothClosedSupportCoclassSection_germ_eq_zero
-    (x : ComplexPoint X) (hxS : x ∉ Set.range (Point.map i)) :
+    (x : Point ℂ X) (hxS : x ∉ Set.range (Point.map i)) :
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.Γgerm x
       (smoothClosedSupportCoclassSection X Y i m d) = 0 := by
   rw [smoothClosedSupportCoclassSection_germ,
@@ -72,11 +72,11 @@ set_option backward.defeqAttrib.useBackward true in
 /-- At every center, the global section has exactly the germ of the previously
 constructed normal-slice coclass, on any prescribed local model neighborhood. -/
 theorem smoothClosedSupportCoclassSection_germ_eq_normalCoclass
-    (z : ComplexPoint Y) (V : Opens (ComplexPoint X))
+    (z : Point ℂ Y) (V : Opens (Point ℂ X))
     (hzV : Point.map i z ∈ V) :
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.Γgerm
       (Point.map i z) (smoothClosedSupportCoclassSection X Y i m d) =
-    supportRelativeCohomologyGerm (TopCat.of (ComplexPoint X))
+    supportRelativeCohomologyGerm (TopCat.of (Point ℂ X))
       (Set.range (Point.map i)) (2 * (d - m))
       (smoothClosedSupportNeighborhood X Y i m d z V hzV)
       (Point.map i z) (mem_smoothClosedSupportNeighborhood X Y i m d z V hzV)
@@ -92,7 +92,7 @@ theorem smoothClosedSupportCoclassSection_germ_eq_normalCoclass
   rw [smoothClosedSupportCoclassSection_germ_eq_chart X Y i m d z
     (Point.map i z) (mem_smoothClosedSupportChartOpen X Y i m d z)]
   apply supportRelativeCohomologyGerm_eq_of_restrict_eq
-    (TopCat.of (ComplexPoint X)) (Set.range (Point.map i)) (2 * (d - m))
+    (TopCat.of (Point ℂ X)) (Set.range (Point.map i)) (2 * (d - m))
     hWC hWU (Point.map i z) hzW
   rw [smoothClosedSupportChartCoclass_restrict,
     smoothClosedSupportNormalCoclass_restrict_eq_chart X Y i m d z V hzV W hWU hWC]

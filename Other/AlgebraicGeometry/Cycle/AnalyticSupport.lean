@@ -43,8 +43,8 @@ variable (X : Over (Spec ↧ℂ))
 noncomputable def cycleComponentContinuousMap
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
     @ContinuousMap
-      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
-      (ComplexPoint X) Point.analyticTopology Point.analyticTopology :=
+      (Point ℂ (Over.mk (cycleComponentι X.left x ≫ X.hom)))
+      (Point ℂ X) Point.analyticTopology Point.analyticTopology :=
   Point.continuousMap (Over.homMk (cycleComponentι X.left x) rfl)
 
 /-- The underlying closed support of an algebraic cycle: the union of the closures of all generic
@@ -56,7 +56,7 @@ def algebraicCycleSupport {R : Type*} [Zero R] (X : Scheme)
 /-- The complex points lying over the geometric support of an algebraic cycle. -/
 def analyticCycleSupport {R : Type*} [Zero R]
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    (c : AlgebraicCycle X.left R) : Set (ComplexPoint X) :=
+    (c : AlgebraicCycle X.left R) : Set (Point ℂ X) :=
   Point.underlying ⁻¹' algebraicCycleSupport X.left c
 
 /-- The analytic support of a cycle is the union of the analytic supports of its nonzero

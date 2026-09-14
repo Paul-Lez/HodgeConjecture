@@ -143,13 +143,13 @@ variable {n : ℕ} (P : StandardEtalePair (complexPolynomialRing n))
 
 /-- The map on complex points associated to a standard étale algebra. -/
 def standardEtaleComplexPointMap :
-    ComplexPoint (Over.mk (affineSpecStructureMap P.Ring)) →
-      ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n))) :=
+    Point ℂ (Over.mk (affineSpecStructureMap P.Ring)) →
+      Point ℂ (Over.mk (affineSpecStructureMap (complexPolynomialRing n))) :=
   Point.map (Over.homMk (Spec.map (CommRingCat.ofHom (algebraMap (complexPolynomialRing n) P.Ring)))
     (specMap_algebraMap_comp_affineSpecStructureMap P))
 
 lemma affineSpecEquiv_standardEtaleComplexPointMap
-    (z : ComplexPoint (Over.mk (affineSpecStructureMap P.Ring))) :
+    (z : Point ℂ (Over.mk (affineSpecStructureMap P.Ring))) :
     affineSpecEquiv (complexPolynomialRing n) (standardEtaleComplexPointMap P z) =
       standardEtaleBaseAlgHom P (affineSpecEquiv P.Ring z) := by
   ext b
@@ -160,13 +160,13 @@ lemma affineSpecEquiv_standardEtaleComplexPointMap
 points. -/
 lemma isLocalHomeomorph_standardEtaleComplexPointMap :
     @IsLocalHomeomorph
-      (ComplexPoint (Over.mk (affineSpecStructureMap P.Ring)))
-      (ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n))))
+      (Point ℂ (Over.mk (affineSpecStructureMap P.Ring)))
+      (Point ℂ (Over.mk (affineSpecStructureMap (complexPolynomialRing n))))
       analyticTopology analyticTopology (standardEtaleComplexPointMap P) := by
   let : TopologicalSpace
-      (ComplexPoint (Over.mk (affineSpecStructureMap P.Ring))) := analyticTopology
+      (Point ℂ (Over.mk (affineSpecStructureMap P.Ring))) := analyticTopology
   let : TopologicalSpace
-      (ComplexPoint (Over.mk (affineSpecStructureMap (complexPolynomialRing n)))) := analyticTopology
+      (Point ℂ (Over.mk (affineSpecStructureMap (complexPolynomialRing n)))) := analyticTopology
   have h := (affineSpecHomeomorph (complexPolynomialRing n)).symm.isLocalHomeomorph.comp
     ((isLocalHomeomorph_standardEtaleBaseAlgHom P).comp
       (affineSpecHomeomorph P.Ring).isLocalHomeomorph)

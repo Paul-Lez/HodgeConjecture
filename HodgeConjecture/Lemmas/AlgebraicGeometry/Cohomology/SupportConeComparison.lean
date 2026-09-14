@@ -41,17 +41,17 @@ open AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ))
 
 local instance bettiSupportConeComparisonHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) :=
+  HasDerivedCategory.standard (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Restriction through the natural singular resolution agrees strictly with restriction of
 rational constants before extending the complexes to integer degrees. -/
 lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     constantsToSingularCochainSheafComplex ℚ
-          (TopCat.of (ComplexPoint X)) ≫
+          (TopCat.of (Point ℂ X)) ≫
         naturalSingularResolutionRestrictionNat X Z hZ =
       rationalRestrictionComplexNat X Z := by
   apply HomologicalComplex.Hom.ext
@@ -63,11 +63,11 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
       unfold rationalRestrictionComplexNat
       rw [HomologicalComplex.comp_f, HomologicalComplex.comp_f]
       rw [show (constantsToSingularCochainSheafComplex ℚ
-          (TopCat.of (ComplexPoint X))).f 0 =
+          (TopCat.of (Point ℂ X))).f 0 =
             constantsToSingularCochainZeroSheaf ℚ
-              (TopCat.of (ComplexPoint X)) from rfl]
+              (TopCat.of (Point ℂ X)) from rfl]
       change constantsToSingularCochainZeroSheaf ℚ
-            (TopCat.of (ComplexPoint X)) ≫
+            (TopCat.of (Point ℂ X)) ≫
           singularRestrictionSheaf ℚ
               (analyticComplementInclusion X Z) 0 ≫
             ((TopCat.Sheaf.pushforward AddCommGrpCat
@@ -87,20 +87,20 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
       rfl
   | succ n =>
       exact (HomologicalComplex.isZero_single_obj_X (ComplexShape.up ℕ) 0
-        𝓒(↧(ComplexPoint X); ℚ) (n + 1) (by lia)).eq_of_src _ _
+        𝓒(↧(Point ℂ X); ℚ) (n + 1) (by lia)).eq_of_src _ _
 
 /-- Restriction through the integer-indexed natural singular resolution agrees strictly with
 restriction of rational constants. -/
 lemma rationalToSingular_comp_naturalSingularResolutionRestriction
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     rationalToSingularCochainComplexInt X ≫
         naturalSingularResolutionRestriction X Z hZ =
       rationalRestrictionComplexInt X Z := by
   calc
     _ = HomologicalComplex.extendMap
         (constantsToSingularCochainSheafComplex ℚ
-            (TopCat.of (ComplexPoint X)) ≫
+            (TopCat.of (Point ℂ X)) ≫
           naturalSingularResolutionRestrictionNat X Z hZ)
         ComplexShape.embeddingUpNat :=
       (HomologicalComplex.extendMap_comp _ _ ComplexShape.embeddingUpNat).symm
@@ -113,7 +113,7 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestriction
 support cones. -/
 def rationalSupportConeToNaturalSingularCone
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     rationalCohomologyWithSupportComplex X Z ⟶
       CochainComplex.mappingCone
         (naturalSingularResolutionRestriction X Z hZ) :=
@@ -128,7 +128,7 @@ def rationalSupportConeToNaturalSingularCone
 quasi-isomorphism. -/
 noncomputable instance rationalSupportConeToNaturalSingularCone_quasiIso
     [IsIntegral X.left] [Smooth X.hom]
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     QuasiIso (rationalSupportConeToNaturalSingularCone X Z hZ) := by
   let : QuasiIso (rationalToSingularCochainComplexInt X) :=
     rationalToSingularCochainComplexInt_quasiIso X

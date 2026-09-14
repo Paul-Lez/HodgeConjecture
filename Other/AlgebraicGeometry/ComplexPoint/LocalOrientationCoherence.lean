@@ -46,7 +46,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 containing a point coincide. -/
 theorem localClassOfChart_localChart_eq
     [SmoothOfRelativeDimension d X.hom]
-    (z z' q : ComplexPoint X)
+    (z z' q : Point ℂ X)
     (hq : q ∈ (localChart X d z).source)
     (hq' : q ∈ (localChart X d z').source) :
     localClassOfChart d (localChart X d z) q hq =
@@ -82,7 +82,7 @@ theorem localClassOfChart_localChart_eq
 chart centered at any other point whose source contains the point in question. -/
 theorem complexLocalOrientation_eq_localClassOfChart_localChart
     [SmoothOfRelativeDimension d X.hom]
-    (z q : ComplexPoint X)
+    (z q : Point ℂ X)
     (hq : q ∈ (localChart X d z).source) :
     complexLocalOrientation X d q =
       localClassOfChart d (localChart X d z) q hq := by

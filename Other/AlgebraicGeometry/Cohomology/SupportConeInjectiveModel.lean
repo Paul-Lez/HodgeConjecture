@@ -36,7 +36,7 @@ variable (X : Over (Spec ↧ℂ))
 forget support, with the ambient augmentation on its target. -/
 @[reassoc]
 lemma rationalSupportConeToAmbientInjectiveCone_connecting
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     rationalSupportConeToAmbientInjectiveCone X Z hZ ≫
       (CochainComplex.mappingCone.triangle
         (ambientRationalInjectiveRestriction X Z hZ)).mor₃ =
@@ -51,34 +51,34 @@ set_option backward.isDefEq.respectTransparency false in
 identity on the ambient global sections. -/
 @[reassoc]
 lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    (Z : Set (Point ℂ X)) (hZ : IsClosed Z) :
     actualSupportConeToAmbientInjectiveGlobalCone X Z hZ ≫
       (CochainComplex.mappingCone.triangle
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+          (TopCat.of (Point ℂ X))).mapHomologicalComplex (.up ℤ)).map
             (ambientRationalInjectiveRestriction X Z hZ))).mor₃ =
     (CochainComplex.mappingCone.triangle
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
+        (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
         (ambientRationalInjectiveComplex X)).g).mor₃ := by
   have h := (CochainComplex.mappingCone.triangleMap
     (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-      (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
+      (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
       (ambientRationalInjectiveComplex X)).g
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+      (TopCat.of (Point ℂ X))).mapHomologicalComplex (.up ℤ)).map
         (ambientRationalInjectiveRestriction X Z hZ)) (𝟙 _)
     (globalAmbientRationalOpenResolutionComparison X Z hZ)
     (show _ = _ from by
       let Γ := (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)
+        (TopCat.of (Point ℂ X))).mapHomologicalComplex (.up ℤ)
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,
         actualRestriction_comp_openResolutionComparison])).comm₃
   exact h.symm.trans ((congrArg (fun f =>
     (CochainComplex.mappingCone.triangle
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
+        (TopCat.of (Point ℂ X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
         (ambientRationalInjectiveComplex X)).g).mor₃ ≫ f)
     ((shiftFunctor (CochainComplex AddCommGrpCat ℤ) (1 : ℤ)).map_id _)).trans
       (Category.comp_id _))

@@ -128,18 +128,18 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_naturality
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma derivedHomAddEquivGlobalSectionsKInjective_naturality
-    (K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+    (K L : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ)
     [K.IsKInjective] [L.IsKInjective] (f : K ⟶ L) (n : ℤ)
     (x : ShiftedHom
       (DerivedCategory.Q.obj (TopCat.Sheaf.integerConstantSingleComplex
-        (TopCat.of (ComplexPoint X)))) (DerivedCategory.Q.obj K) n) :
+        (TopCat.of (Point ℂ X)))) (DerivedCategory.Q.obj K) n) :
     derivedHomAddEquivGlobalSectionsKInjective X L n
       (x ≫ (DerivedCategory.Q.map f)⟦n⟧') =
     HomologicalComplex.homologyMap
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map f) n
+        (TopCat.of (Point ℂ X))).mapHomologicalComplex (.up ℤ)).map f) n
       (derivedHomAddEquivGlobalSectionsKInjective X K n x) := by
-  let Y := TopCat.of (ComplexPoint X)
+  let Y := TopCat.of (Point ℂ X)
   let A := TopCat.Sheaf.integerConstantSingleComplex Y
   let y := (CochainComplex.HomComplex.homologyAddEquiv A K n).symm
     (kInjectiveDerivedHomAddEquivCohomologyClass A K n x)
@@ -161,7 +161,7 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_naturality
 
 set_option backward.isDefEq.respectTransparency false in
 lemma hypercohomologyAddEquivDerived_naturality
-    {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ}
+    {K L : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ}
     (f : K ⟶ L) (n : ℤ) (x : Hypercohomology X K n) :
     hypercohomologyAddEquivDerived X L n (hypercohomologyMap X f n x) =
     hypercohomologyAddEquivDerived X K n x ≫ (DerivedCategory.Q.map f)⟦n⟧' := by
@@ -171,14 +171,14 @@ lemma hypercohomologyAddEquivDerived_naturality
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma hypercohomologyAddEquivGlobalSectionsKInjective_naturality
-    (K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+    (K L : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ)
     [K.IsKInjective] [L.IsKInjective] (f : K ⟶ L) (n : ℤ)
     (x : Hypercohomology X K n) :
     hypercohomologyAddEquivGlobalSectionsKInjective X L n
       (hypercohomologyMap X f n x) =
     HomologicalComplex.homologyMap
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map f) n
+        (TopCat.of (Point ℂ X))).mapHomologicalComplex (.up ℤ)).map f) n
       (hypercohomologyAddEquivGlobalSectionsKInjective X K n x) := by
   dsimp only [hypercohomologyAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
   rw [hypercohomologyAddEquivDerived_naturality]

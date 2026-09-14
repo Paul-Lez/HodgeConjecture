@@ -52,24 +52,24 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 /-- The analytic open subset on which the chosen coordinates at `z` are defined. -/
 abbrev coordinateNeighborhood [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) :=
-  {w : ComplexPoint X //
+    (z : Point ℂ X) :=
+  {w : Point ℂ X //
     w ∈ overOpen ((localEtaleCoordinates X d z).neighborhood)}
 
 /-- The point `z` regarded as a point of its chosen coordinate neighborhood. -/
 def pointInCoordinateNeighborhood [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) : coordinateNeighborhood X d z :=
+    (z : Point ℂ X) : coordinateNeighborhood X d z :=
   ⟨z, mem_localEtaleCoordinates X d z⟩
 
 /-- A local coordinate homeomorphism on the chosen analytic open neighborhood. -/
 def coordinateNeighborhoodChart [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) :
+    (z : Point ℂ X) :
     OpenPartialHomeomorph (coordinateNeighborhood X d z) (Fin d → ℂ) :=
   let D := localEtaleCoordinates X d z
   D.ambientProjectionChart (pointInCoordinateNeighborhood X d z)
 
 lemma pointInCoordinateNeighborhood_mem_chart_source
-    [SmoothOfRelativeDimension d X.hom] (z : ComplexPoint X) :
+    [SmoothOfRelativeDimension d X.hom] (z : Point ℂ X) :
     pointInCoordinateNeighborhood X d z ∈
       (coordinateNeighborhoodChart X d z).source :=
   (localEtaleCoordinates X d z).mem_ambientProjectionChart_source
@@ -78,38 +78,38 @@ lemma pointInCoordinateNeighborhood_mem_chart_source
 /-- The chosen local chart at a complex point, extended from its analytic open neighborhood to the
 whole complex-point space. -/
 def localChart [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) :
-    OpenPartialHomeomorph (ComplexPoint X) (Fin d → ℂ) :=
+    (z : Point ℂ X) :
+    OpenPartialHomeomorph (Point ℂ X) (Fin d → ℂ) :=
   (coordinateNeighborhoodChart X d z).lift_openEmbedding
     (isOpen_overOpen (X := X)
       ((localEtaleCoordinates X d z).neighborhood)).isOpenEmbedding_subtypeVal
 
 lemma mem_localChart_source [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) : z ∈ (localChart X d z).source := by
+    (z : Point ℂ X) : z ∈ (localChart X d z).source := by
   exact ⟨pointInCoordinateNeighborhood X d z,
     pointInCoordinateNeighborhood_mem_chart_source X d z, rfl⟩
 
 lemma mem_coordinateNeighborhood_of_mem_localChart_source
     [SmoothOfRelativeDimension d X.hom]
-    (z w : ComplexPoint X) (hw : w ∈ (localChart X d z).source) :
+    (z w : Point ℂ X) (hw : w ∈ (localChart X d z).source) :
     w ∈ overOpen ((localEtaleCoordinates X d z).neighborhood) := by
   obtain ⟨w', _, rfl⟩ := hw
   exact w'.2
 
 @[simp]
 lemma localChart_target [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) :
+    (z : Point ℂ X) :
     (localChart X d z).target =
       (coordinateNeighborhoodChart X d z).target := rfl
 
 @[simp]
 lemma localChart_symm_apply [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) (w : Fin d → ℂ) :
+    (z : Point ℂ X) (w : Fin d → ℂ) :
     (localChart X d z).symm w =
       ((coordinateNeighborhoodChart X d z).symm w).1 := rfl
 
 lemma localChart_apply_of_mem [SmoothOfRelativeDimension d X.hom]
-    (z w : ComplexPoint X) (hw : w ∈ (localChart X d z).source) :
+    (z w : Point ℂ X) (hw : w ∈ (localChart X d z).source) :
     localChart X d z w =
       (localEtaleCoordinates X d z).ambientAnalyticCoordinates
         ⟨w, mem_coordinateNeighborhood_of_mem_localChart_source X d z w hw⟩ := by
@@ -120,7 +120,7 @@ lemma localChart_apply_of_mem [SmoothOfRelativeDimension d X.hom]
 
 /-- The canonical charted-space structure obtained from algebraic smooth coordinates. -/
 instance [SmoothOfRelativeDimension d X.hom] :
-    ChartedSpace (Fin d → ℂ) (ComplexPoint X) where
+    ChartedSpace (Fin d → ℂ) (Point ℂ X) where
   atlas := Set.range (localChart X d)
   chartAt := localChart X d
   mem_chart_source := mem_localChart_source X d
@@ -129,7 +129,7 @@ instance [SmoothOfRelativeDimension d X.hom] :
 /-- Evaluation of a regular section near an inverse-chart point is complex analytic. -/
 lemma analyticAt_localChart_symm_evaluate
     [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint X) {w : Fin d → ℂ}
+    (z : Point ℂ X) {w : Fin d → ℂ}
     (hw : w ∈ (localChart X d z).target)
     (V : X.left.Opens) (s : Γ(X.left, V))
     (hV : (localChart X d z).symm w ∈ overOpen V) :
@@ -148,7 +148,7 @@ lemma analyticAt_localChart_symm_evaluate
 /-- On the source of a chart, each coordinate is evaluation of its defining regular section. -/
 lemma localChart_apply_component_eq_evaluate
     [SmoothOfRelativeDimension d X.hom]
-    (z q : ComplexPoint X) (hq : q ∈ (localChart X d z).source)
+    (z q : Point ℂ X) (hq : q ∈ (localChart X d z).source)
     (i : Fin d) :
     localChart X d z q i =
       Point.evaluate
@@ -160,7 +160,7 @@ lemma localChart_apply_component_eq_evaluate
 /-- Each component of a transition between the chosen algebraic charts is complex analytic. -/
 lemma analyticAt_localChart_transition_component
     [SmoothOfRelativeDimension d X.hom]
-    (z z' : ComplexPoint X) {w : Fin d → ℂ}
+    (z z' : Point ℂ X) {w : Fin d → ℂ}
     (hw : w ∈ ((localChart X d z).symm.trans
       (localChart X d z')).source) (i : Fin d) :
     AnalyticAt ℂ
@@ -190,7 +190,7 @@ lemma analyticAt_localChart_transition_component
 /-- A transition between the chosen algebraic charts is complex analytic. -/
 lemma analyticAt_localChart_transition
     [SmoothOfRelativeDimension d X.hom]
-    (z z' : ComplexPoint X) {w : Fin d → ℂ}
+    (z z' : Point ℂ X) {w : Fin d → ℂ}
     (hw : w ∈ ((localChart X d z).symm.trans
       (localChart X d z')).source) :
     AnalyticAt ℂ
@@ -200,7 +200,7 @@ lemma analyticAt_localChart_transition
 /-- Transition maps in the chosen atlas are holomorphic on their domains. -/
 lemma contDiffOn_localChart_transition
     [SmoothOfRelativeDimension d X.hom]
-    (z z' : ComplexPoint X) :
+    (z z' : Point ℂ X) :
     ContDiffOn ℂ ω ((localChart X d z).symm.trans
       (localChart X d z'))
         (((localChart X d z).symm.trans
@@ -213,7 +213,7 @@ lemma contDiffOn_localChart_transition
 This is an instance. Through `IsManifold.of_le` it makes the complex points a `C^n` manifold for
 every `n`, so no downstream file needs a local `IsManifold` instance. -/
 instance isManifold_omega [SmoothOfRelativeDimension d X.hom] :
-    IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X) := by
+    IsManifold 𝓘(ℂ, Fin d → ℂ) ω (Point ℂ X) := by
   apply isManifold_of_contDiffOn
   rintro _ _ ⟨z, rfl⟩ ⟨z', rfl⟩
   simpa only [modelWithCornersSelf_coe, modelWithCornersSelf_coe_symm,
@@ -225,9 +225,9 @@ instance isManifold_omega [SmoothOfRelativeDimension d X.hom] :
 neighborhood. The smaller neighborhood is the inverse image of a Euclidean ball in the chosen
 algebraic coordinate chart. -/
 lemma exists_contractibleOpen_le [IsIntegral X.left] [Smooth X.hom]
-    (x : ComplexPoint X)
-    (U : TopologicalSpace.Opens (ComplexPoint X)) (hxU : x ∈ U) :
-    ∃ (V : TopologicalSpace.Opens (ComplexPoint X)),
+    (x : Point ℂ X)
+    (U : TopologicalSpace.Opens (Point ℂ X)) (hxU : x ∈ U) :
+    ∃ (V : TopologicalSpace.Opens (Point ℂ X)),
       x ∈ V ∧ ContractibleSpace V ∧ V ≤ U := by
   let e := localChart X (dim X.left) x
   have hxsource : x ∈ e.source := mem_localChart_source X (dim X.left) x
@@ -238,7 +238,7 @@ lemma exists_contractibleOpen_le [IsIntegral X.left] [Smooth X.hom]
     rwa [Set.mem_preimage, e.left_inv hxsource]
   obtain ⟨r, hr, hball⟩ := Metric.nhds_basis_ball.mem_iff.mp
     (hopen.mem_nhds hximage)
-  let V : TopologicalSpace.Opens (ComplexPoint X) :=
+  let V : TopologicalSpace.Opens (Point ℂ X) :=
     ⟨e.source ∩ e ⁻¹' Metric.ball (e x) r,
       e.isOpen_inter_preimage Metric.isOpen_ball⟩
   have hxV : x ∈ V := ⟨hxsource, Metric.mem_ball_self hr⟩
@@ -263,10 +263,10 @@ lemma exists_contractibleOpen_le [IsIntegral X.left] [Smooth X.hom]
 
 /-- The analytic topology on the smooth complex-point space is locally path connected. -/
 theorem locallyPathConnectedSpace [IsIntegral X.left] [Smooth X.hom] :
-    LocallyPathConnectedSpace (ComplexPoint X) := by
+    LocallyPathConnectedSpace (Point ℂ X) := by
   refine ⟨fun x ↦ hasBasis_self.mpr fun S hS ↦ ?_⟩
   obtain ⟨U, hUS, hUopen, hxU⟩ := mem_nhds_iff.mp hS
-  let Uo : TopologicalSpace.Opens (ComplexPoint X) := ⟨U, hUopen⟩
+  let Uo : TopologicalSpace.Opens (Point ℂ X) := ⟨U, hUopen⟩
   obtain ⟨V, hxV, hVcontractible, hVU⟩ :=
     exists_contractibleOpen_le X x Uo hxU
   refine ⟨(V : Set _), V.2.mem_nhds hxV, ?_, ?_⟩

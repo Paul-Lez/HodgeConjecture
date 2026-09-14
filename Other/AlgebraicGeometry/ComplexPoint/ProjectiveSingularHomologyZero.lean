@@ -54,15 +54,15 @@ variable (X : Over (Spec ↧ℂ))
 /-- Zeroth rational singular homology of a smooth projective complex analytification is
 finite-dimensional, without assuming global connectedness. -/
 theorem finiteRationalSingularHomologyZero [IsIntegral X.left] [Smooth X.hom] :
-    Module.Finite ℚ (Homology ℚ (TopCat.of (ComplexPoint X)) 0) := by
-  let : Finite (ZerothHomotopy (ComplexPoint X)) :=
+    Module.Finite ℚ (Homology ℚ (TopCat.of (Point ℂ X)) 0) := by
+  let : Finite (ZerothHomotopy (Point ℂ X)) :=
     finiteZerothHomotopy X
   have hfinite : Module.Finite ℚ
-      (∐ fun _ : ZerothHomotopy (ComplexPoint X) ↦
+      (∐ fun _ : ZerothHomotopy (Point ℂ X) ↦
         ModuleCat.of ℚ ℚ : ModuleCat ℚ) :=
     inferInstance
   exact Module.Finite.equiv
-    (TopCat.singularHomology₀Iso (TopCat.of (ComplexPoint X))
+    (TopCat.singularHomology₀Iso (TopCat.of (Point ℂ X))
       (ModuleCat.of ℚ ℚ)).symm.toLinearEquiv
 
 end AlgebraicGeometry.ComplexPoint

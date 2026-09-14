@@ -31,12 +31,12 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left] (z : ComplexPoint Y)
-  (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
+  [IsClosedImmersion i.left] (z : Point ℂ Y)
+  (V : Opens (Point ℂ X)) (hzV : Point.map i z ∈ V)
 
 /-- Restrict the constructed flattening chart by the prescribed ambient open. -/
 def smoothClosedSupportRestrictionChart :
-    OpenPartialHomeomorph (ComplexPoint X)
+    OpenPartialHomeomorph (Point ℂ X)
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
   (closedImmersionStandardFlatteningChart X Y i m d z).restrOpen V V.isOpen
 
@@ -51,14 +51,14 @@ theorem smoothClosedSupportRestrictionChart_mem_source :
       (localChart Y m z z, 0) :=
   closedImmersionStandardFlatteningChart_center X Y i m d z
 
-theorem smoothClosedSupportRestrictionChart_mem_range_iff (y : ComplexPoint X)
+theorem smoothClosedSupportRestrictionChart_mem_range_iff (y : Point ℂ X)
     (hy : y ∈ (smoothClosedSupportRestrictionChart X Y i m d z V).source) :
     y ∈ Set.range (Point.map i) ↔
       (smoothClosedSupportRestrictionChart X Y i m d z V y).2 = 0 :=
   closedImmersionStandardFlatteningChart_mem_range_iff X Y i m d z y hy.1
 
 /-- A small open support-model neighborhood inside the prescribed open. -/
-def smoothClosedSupportNeighborhood : Opens (ComplexPoint X) :=
+def smoothClosedSupportNeighborhood : Opens (Point ℂ X) :=
   flattenedSupportNeighborhood (Fin m → ℂ) (d - m)
     (smoothClosedSupportRestrictionChart X Y i m d z V)
     (Point.map i z)

@@ -30,10 +30,10 @@ variable (X : Over (Spec ↧ℂ))
 /-- Restriction to each image neighborhood agrees with transport of the
 constructed auxiliary normalized section. No ambient section comparison is supplied. -/
 theorem cycleComponentSmoothSupportCoclassSection_restrict
-    (V : Opens (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
+    (V : Opens (Point ℂ (cycleComponentSmoothLocusAmbientOpenOver X x)))
     (hV : (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x).functor.obj V ≤
       cycleComponentSmoothSupportAmbientOpen X x) :
-    (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+    (supportRelativeCohomologySheaf (TopCat.of (Point ℂ X))
       (cycleComponentSupport X x) (2 * p)).obj.map (homOfLE hV).op
         (cycleComponentSmoothSupportCoclassSection X x hx) =
     (supportRelativeCohomologySheafOpenIso (cycleComponentSmoothClosedLiftAmbientMap X x)
@@ -42,7 +42,7 @@ theorem cycleComponentSmoothSupportCoclassSection_restrict
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (cycleComponentSmoothClosedLiftAmbientMap_support X x) (2 * p)).hom.hom.app (op V)
       ((supportRelativeCohomologySheaf
-        (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
+        (TopCat.of (Point ℂ (cycleComponentSmoothLocusAmbientOpenOver X x)))
         (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
         (2 * p)).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op
         (cycleComponentSmoothClosedLiftCoclassSection X x hx)) :=

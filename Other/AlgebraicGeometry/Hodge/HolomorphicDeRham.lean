@@ -52,9 +52,9 @@ lemma conjConstantComplexPresheaf_comp_self :
 /-- Conjugating twice is the identity on the constant complex sheaf. -/
 lemma conjConstantComplexSheaf_comp_self :
     conjConstantComplexSheaf X ≫ conjConstantComplexSheaf X =
-      𝟙 𝓒(↧(ComplexPoint X); ℂ) := by
+      𝟙 𝓒(↧(Point ℂ X); ℂ) := by
   let J := Opens.grothendieckTopology
-    (TopCat.of (ComplexPoint X))
+    (TopCat.of (Point ℂ X))
   change (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) ≫
     (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) = _
   rw [← Functor.map_comp, conjConstantComplexPresheaf_comp_self]

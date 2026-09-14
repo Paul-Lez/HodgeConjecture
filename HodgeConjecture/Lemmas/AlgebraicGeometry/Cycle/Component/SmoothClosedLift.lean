@@ -27,7 +27,7 @@ filtration index `0` in the definition contributes nothing. -/
 @[simp] theorem coe_cycleComponentSmoothLocusAmbientOpen :
     (cycleComponentSmoothLocusAmbientOpen X x : Set X.left) =
       (cycleComponentι X.left x ''
-        (singularLocusClosed (cycleComponentι X.left x ≫ X.hom) : Set _))ᶜ := rfl
+        ((cycleComponentι X.left x ≫ X.hom).smoothLocus.compl : Set _))ᶜ := rfl
 
 /-- The exact image of the lift is the restriction of the full component support. -/
 theorem range_cycleComponentSmoothLocusClosedLift :
@@ -71,9 +71,9 @@ omit [IsIntegral X.left] [Smooth X.hom] in
 the original ambient supported resolution. -/
 theorem cycleComponentSmoothLocusAmbientOpen_analytic_image :
     Set.range (Point.map (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x))) =
-      ((cycleComponentSingularAnalyticClosedFiltration X x 0).compl : Set (ComplexPoint X)) := by
+      ((cycleComponentSingularAnalyticClosedFiltration X x 0).compl : Set (Point ℂ X)) := by
   rw [range_map_of_isImmersion X]
-  change (Point.underlying : ComplexPoint X → X.left) ⁻¹'
+  change (Point.underlying : Point ℂ X → X.left) ⁻¹'
       Set.range (cycleComponentSmoothLocusAmbientOpen X x).ι = _
   rw [Scheme.Opens.range_ι]
   rfl
@@ -84,7 +84,7 @@ theorem cycleComponentSmoothLocusClosedLift_complexPoints_range :
       Point.map (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x)) ⁻¹'
           (cycleComponentSupport X x) := by
   rw [range_map_of_isImmersion]
-  change (Point.underlying : ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x) →
+  change (Point.underlying : Point ℂ (cycleComponentSmoothLocusAmbientOpenOver X x) →
     (cycleComponentSmoothLocusAmbientOpenOver X x).left) ⁻¹'
       Set.range (cycleComponentSmoothLocusClosedLift X x) = _
   rw [range_cycleComponentSmoothLocusClosedLift]

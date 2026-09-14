@@ -65,17 +65,6 @@ end Guide.Hodge.D21
 example : @Guide.Hodge.D21.Point = @AlgebraicGeometry.Point := rfl
 ```
 ```lean -show
-namespace Guide.Hodge.D22
-```
-```lean
-abbrev ComplexPoint (X : Over (Spec ↧ℂ)) := Point ℂ X
-```
-```lean -show
-end Guide.Hodge.D22
-example : @Guide.Hodge.D22.ComplexPoint = @AlgebraicGeometry.ComplexPoint := rfl
-```
-
-```lean -show
 section
 open AlgebraicGeometry.Point
 open scoped CommRingCat.HomTopology
@@ -167,12 +156,12 @@ namespace Guide.Hodge.D27
 ```lean
 def holomorphicDeRhamComplex (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom] :
     CochainComplex
-      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℕ :=
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℕ :=
   CochainComplex.of
     (holomorphicDeRhamSheaf X d)
     (holomorphicDeRhamSheafDifferential X d)
     (fun p => by
-      let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
+      let J := Opens.grothendieckTopology (TopCat.of (Point ℂ X))
       change (presheafToSheaf J AddCommGrpCat).map
           (holomorphicDeRhamDifferential X d p) ≫
         (presheafToSheaf J AddCommGrpCat).map
@@ -192,7 +181,7 @@ namespace Guide.Hodge.D1
 ```
 ```lean
 def holomorphicDeRhamComplexInt (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] :
-    CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(ComplexPoint X)) ℤ :=
+    CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(Point ℂ X)) ℤ :=
   (holomorphicDeRhamComplex X (dim X.left)).extend ComplexShape.embeddingUpNat
 ```
 ```lean -show
@@ -251,7 +240,8 @@ $`K^\bullet=\Omega_X^\bullet`.
 namespace Guide.Hodge.D3
 ```
 ```lean
-def Hypercohomology (X : Over (Spec ↧ℂ)) (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+def Hypercohomology (X : Over (Spec ↧ℂ))
+    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ)
     (n : ℤ) : Type 1 :=
   Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
     (constantIntegerSheafComplexInt X) K n
@@ -275,24 +265,12 @@ example (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℤ) :
 end Guide.Hodge.D4
 ```
 ```lean -show
-namespace Guide.Hodge.D5
-```
-```lean
-abbrev DeRhamHypercohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    Type 1 :=
-  Hypercohomology X (holomorphicDeRhamComplexInt X) n
-```
-```lean -show
-end Guide.Hodge.D5
-example : @Guide.Hodge.D5.DeRhamHypercohomology = @AlgebraicGeometry.ComplexPoint.DeRhamHypercohomology := rfl
-```
-```lean -show
 namespace Guide.Hodge.D6
 ```
 ```lean
 def fieldToDeRhamCohomologyLinear (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    H^n(X; K) →ₗ[K] DeRhamHypercohomology X n where
+    H^n(X; K) →ₗ[K] Hypercohomology X (holomorphicDeRhamComplexInt X) n where
   toFun := fieldToDeRhamCohomology K X n
   map_add' := (fieldToDeRhamCohomology K X n).map_add
   map_smul' := fieldToDeRhamCohomology_smul K X n
@@ -326,7 +304,7 @@ namespace Guide.Hodge.D7
 ```
 ```lean
 def hodgeFilteredDeRhamComplex (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
   (holomorphicDeRhamComplexInt X).stupidTrunc (ComplexShape.embeddingUpIntGE p)
 ```
 ```lean -show
@@ -347,23 +325,11 @@ end Guide.Hodge.D8
 example : @Guide.Hodge.D8.hodgeFilteredDeRhamInclusion = @AlgebraicGeometry.ComplexPoint.hodgeFilteredDeRhamInclusion := rfl
 ```
 ```lean -show
-namespace Guide.Hodge.D9
-```
-```lean
-def filteredToDeRhamCohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) : FilteredDeRhamHypercohomology X p n →+ DeRhamHypercohomology X n :=
-  hypercohomologyMap X (hodgeFilteredDeRhamInclusion X p) n
-```
-```lean -show
-end Guide.Hodge.D9
-example : @Guide.Hodge.D9.filteredToDeRhamCohomology = @AlgebraicGeometry.ComplexPoint.filteredToDeRhamCohomology := rfl
-```
-```lean -show
 namespace Guide.Hodge.D19
 ```
 ```lean
 def hodgeFiltrationComplexSubmodule (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) where
+    (p n : ℤ) : Submodule ℂ (Hypercohomology X (holomorphicDeRhamComplexInt X) n) where
   carrier := hodgeFiltration X p n
   zero_mem' := (hodgeFiltration X p n).zero_mem
   add_mem' := (hodgeFiltration X p n).add_mem
@@ -432,7 +398,7 @@ namespace Guide.Hodge.D14
 ```lean
 def complexConstantCohomologyDeRhamAddEquiv (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (n : ℤ) :
-    ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
+    ComplexConstantCohomology X n ≃+ Hypercohomology X (holomorphicDeRhamComplexInt X) n :=
   { complexConstantCohomologyDeRhamEquiv X n with
     map_add' := fun α β ↦ by
       change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
@@ -449,7 +415,8 @@ namespace Guide.Hodge.D15
 ```
 ```lean
 def deRhamConj (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
+    Hypercohomology X (holomorphicDeRhamComplexInt X) n →+
+      Hypercohomology X (holomorphicDeRhamComplexInt X) n :=
   ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
     ((hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n).comp
       (complexConstantCohomologyDeRhamAddEquiv X n).symm.toAddMonoidHom)
@@ -472,7 +439,8 @@ namespace Guide.Hodge.D16
 ```
 ```lean
 def deRhamConjSemilinear (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    DeRhamHypercohomology X n →ₛₗ[starRingEnd ℂ] DeRhamHypercohomology X n where
+    Hypercohomology X (holomorphicDeRhamComplexInt X) n →ₛₗ[starRingEnd ℂ]
+      Hypercohomology X (holomorphicDeRhamComplexInt X) n where
   toFun := deRhamConj X n
   map_add' := (deRhamConj X n).map_add
   map_smul' := deRhamConj_smul X n
@@ -482,24 +450,13 @@ end Guide.Hodge.D16
 example : @Guide.Hodge.D16.deRhamConjSemilinear = @AlgebraicGeometry.ComplexPoint.deRhamConjSemilinear := rfl
 ```
 ```lean -show
-namespace Guide.Hodge.D17
-```
-```lean
-def conjHodgeFiltrationComplexSubmodule (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) :=
-  (hodgeFiltrationComplexSubmodule X p n).comap (deRhamConjSemilinear X n)
-```
-```lean -show
-end Guide.Hodge.D17
-example : @Guide.Hodge.D17.conjHodgeFiltrationComplexSubmodule = @AlgebraicGeometry.ComplexPoint.conjHodgeFiltrationComplexSubmodule := rfl
-```
-```lean -show
 namespace Guide.Hodge.D18
 ```
 ```lean
 def hodgePiece (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
-    Submodule ℂ (DeRhamHypercohomology X n) :=
-  hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
+    Submodule ℂ (Hypercohomology X (holomorphicDeRhamComplexInt X) n) :=
+  hodgeFiltrationComplexSubmodule X p n ⊓
+    (hodgeFiltrationComplexSubmodule X q n).comap (deRhamConjSemilinear X n)
 ```
 ```lean -show
 end Guide.Hodge.D18

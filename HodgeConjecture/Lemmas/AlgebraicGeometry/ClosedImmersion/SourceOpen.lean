@@ -25,7 +25,7 @@ namespace AlgebraicGeometry.ComplexPoint
 theorem range_map_of_isImmersion_of_comm (X Y : Over (Spec ↧ℂ))
     (i : Y ⟶ X) [IsImmersion i.left] [LocallyOfFiniteType X.hom] :
     Set.range (Point.map i) =
-      (Point.underlying : ComplexPoint X → X.left) ⁻¹' Set.range i.left := by
+      (Point.underlying : Point ℂ X → X.left) ⁻¹' Set.range i.left := by
   let : LocallyOfFiniteType Y.hom := by
     rw [← i.w]
     infer_instance

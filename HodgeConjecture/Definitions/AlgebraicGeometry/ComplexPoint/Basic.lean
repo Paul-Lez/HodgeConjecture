@@ -149,8 +149,7 @@ Over a field this is nonvanishing; see `mem_overOpen_basicOpen_iff_evaluate_ne_z
 lemma mem_overOpen_basicOpen_iff_isUnit_evaluate {U : X.left.Opens} (s : Γ(X.left, U))
     (z : Point R X) (hz : z ∈ overOpen U) :
     z ∈ overOpen (X.left.basicOpen s) ↔ IsUnit (evaluate U s z) := by
-  rw [evaluate, dif_pos (show z.underlying ∈ U from hz)]
-  rw [isUnit_map_iff z.stalkHom.hom]
+  rw [evaluate, dif_pos (show z.underlying ∈ U from hz), isUnit_map_iff z.stalkHom.hom]
   exact X.left.mem_basicOpen s z.underlying hz
 
 /-- Evaluation of all regular functions on `U` at an `R`-point lying over `U`, bundled as a
@@ -207,8 +206,7 @@ private lemma stalkHom_map {Y : Over (Spec ↧R)} (f : X ⟶ Y) (z : Point R X) 
 
 /-- Pulling back a scheme open commutes with passage to `R`-points. -/
 lemma mem_overOpen_map_iff {Y : Over (Spec ↧R)} (f : X ⟶ Y)
-    (z : Point R X) (U : Y.left.Opens) :
-    map f z ∈ overOpen U ↔ z ∈ overOpen (f.left ⁻¹ᵁ U) := by
+    (z : Point R X) (U : Y.left.Opens) : map f z ∈ overOpen U ↔ z ∈ overOpen (f.left ⁻¹ᵁ U) := by
   simp [overOpen]
 
 /-- Evaluation of a pulled-back regular function agrees with evaluation after mapping the point. -/
@@ -403,8 +401,5 @@ end Topology
 end IsLocalRing
 
 end Point
-
-/-- A complex point of a scheme over `Spec ℂ`. -/
-abbrev ComplexPoint (X : Over (Spec ↧ℂ)) := Point ℂ X
 
 end AlgebraicGeometry

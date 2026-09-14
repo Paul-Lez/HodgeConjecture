@@ -52,26 +52,25 @@ open Point
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
 
-/-- Sheaves of additive groups on the analytic complex-point space. -/
-abbrev AnalyticAdditiveSheaf :=
-  TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))
+-- Most of this file makes sense for general topological spaces/manifolds, not just complex points
+-- of schemes.
 
 local instance analyticHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+    HasDerivedCategory (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) :=
+  HasDerivedCategory.standard (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))
 
 /-- The inclusion of the rational constant sheaf into the complex constant sheaf. -/
 abbrev fieldToComplexConstantSheaf :
-    𝓒(↧(ComplexPoint X); K) ⟶ 𝓒(↧(ComplexPoint X); ℂ) :=
-  (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+    𝓒(↧(Point ℂ X); K) ⟶ 𝓒(↧(Point ℂ X); ℂ) :=
+  (TopCat.Sheaf.constantFunctor ↧(Point ℂ X)).map
     (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
 
 /-- The constant rational sheaf complex, extended by zero to integer degrees. -/
 @[implicit_reducible]
 def constantFieldSheafComplexInt :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
-  ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-    𝓒(↧(ComplexPoint X); K)).extend ComplexShape.embeddingUpNat
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
+  ((CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).obj
+    𝓒(↧(Point ℂ X); K)).extend ComplexShape.embeddingUpNat
 
 instance : (constantFieldSheafComplexInt K X).IsStrictlyGE 0 := by
   unfold constantFieldSheafComplexInt
@@ -82,27 +81,26 @@ def fieldToComplexConstantSheafComplexInt :
     constantFieldSheafComplexInt K X ⟶
       constantComplexSheafComplexInt X :=
   HomologicalComplex.extendMap
-    ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
+    ((CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).map
       (fieldToComplexConstantSheaf K X)) ComplexShape.embeddingUpNat
 
 /-- Rational constants mapped canonically into the holomorphic de Rham complex. -/
 def fieldToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
-    constantFieldSheafComplexInt K X ⟶
-      holomorphicDeRhamComplexInt X :=
+    constantFieldSheafComplexInt K X ⟶ holomorphicDeRhamComplexInt X :=
   fieldToComplexConstantSheafComplexInt K X ≫
     constantsToHolomorphicDeRhamComplexInt X
 
 /-- The constant integer sheaf complex, extended by zero to integer degrees. -/
 @[implicit_reducible]
 def constantIntegerSheafComplexInt :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
-  ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-    𝓒(↧(ComplexPoint X); ℤ)).extend ComplexShape.embeddingUpNat
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
+  ((CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).obj
+    𝓒(↧(Point ℂ X); ℤ)).extend ComplexShape.embeddingUpNat
 
 /-- Scalar multiplication on the rational constant sheaf. -/
 abbrev fieldScalarSheaf (q : K) :
-    𝓒(↧(ComplexPoint X); K) ⟶ 𝓒(↧(ComplexPoint X); K) :=
-  (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+    𝓒(↧(Point ℂ X); K) ⟶ 𝓒(↧(Point ℂ X); K) :=
+  (TopCat.Sheaf.constantFunctor ↧(Point ℂ X)).map
     (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q))
 
 omit [Algebra K ℂ] in
@@ -110,11 +108,11 @@ omit [Algebra K ℂ] in
   have h : AddCommGrpCat.ofHom (AddMonoidHom.id K) = 𝟙 (AddCommGrpCat.of K) := by
     apply AddCommGrpCat.hom_ext
     rfl
-  change (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+  change (TopCat.Sheaf.constantFunctor ↧(Point ℂ X)).map
       (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft 1)) =
-    𝟙 𝓒(↧(ComplexPoint X); K)
+    𝟙 𝓒(↧(Point ℂ X); K)
   rw [AddMonoidHom.mulLeft_one, h]
-  exact (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map_id (AddCommGrpCat.of K)
+  exact (TopCat.Sheaf.constantFunctor ↧(Point ℂ X)).map_id (AddCommGrpCat.of K)
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarSheaf_add (a b : K) :
@@ -124,7 +122,7 @@ omit [Algebra K ℂ] in
       AddCommGrpCat.ofHom (AddMonoidHom.mulLeft a) +
         AddCommGrpCat.ofHom (AddMonoidHom.mulLeft b) :=
     AddCommGrpCat.hom_ext rfl
-  change (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+  change (TopCat.Sheaf.constantFunctor ↧(Point ℂ X)).map
       (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a + b))) = _
   rw [AddMonoidHom.mulLeft_add, h, Functor.map_add]
   rfl
@@ -138,7 +136,7 @@ omit [Algebra K ℂ] in
       AddCommGrpCat.ofHom (AddMonoidHom.mulLeft b) ≫
         AddCommGrpCat.ofHom (AddMonoidHom.mulLeft a) :=
     AddCommGrpCat.hom_ext rfl
-  change (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+  change (TopCat.Sheaf.constantFunctor ↧(Point ℂ X)).map
       (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a * b))) = _
   rw [AddMonoidHom.mulLeft_mul, h, Functor.map_comp]
   rfl
@@ -158,9 +156,9 @@ private lemma ofHom_algebraMap_comp_complexScalarSMul (q : K) :
 /-- The constant-presheaf map induced by the inclusion `K → ℂ`, followed by scalar multiplication
 by `algebraMap K ℂ q` on the constant complex presheaf, is the constant-presheaf map induced by the
 composite additive map. -/
-private lemma const_map_algebraMap_comp_complexScalarPresheaf (q : K) : (Functor.const (Opens (ComplexPoint X))ᵒᵖ).map (AddCommGrpCat.ofHom ↑(algebraMap K ℂ)) ≫
+private lemma const_map_algebraMap_comp_complexScalarPresheaf (q : K) : (Functor.const (Opens (Point ℂ X))ᵒᵖ).map (AddCommGrpCat.ofHom ↑(algebraMap K ℂ)) ≫
     complexScalarPresheaf X ((algebraMap K ℂ) q) =
-  (Functor.const (Opens (ComplexPoint X))ᵒᵖ).map
+  (Functor.const (Opens (Point ℂ X))ᵒᵖ).map
     (AddCommGrpCat.ofHom (algebraMap K ℂ : K →+ ℂ) ≫ AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ ((algebraMap K ℂ) q))) := rfl
 
 set_option linter.auxLemma false in
@@ -185,13 +183,14 @@ def fieldScalarComplex (q : K) :
     constantFieldSheafComplexInt K X ⟶
       constantFieldSheafComplexInt K X :=
   HomologicalComplex.extendMap
-    ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
+    ((CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).map
       (fieldScalarSheaf K X q)) ComplexShape.embeddingUpNat
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarComplex_one : fieldScalarComplex K X 1 = 𝟙 _ := by
   unfold fieldScalarComplex constantFieldSheafComplexInt
-  rw [fieldScalarSheaf_one, (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map_id,
+  rw [fieldScalarSheaf_one,
+    (CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X)))).map_id,
     HomologicalComplex.extendMap_id]
 
 omit [Algebra K ℂ] in
@@ -233,10 +232,10 @@ private lemma fieldToHolomorphicDeRhamComplexInt_scalar
 
 /-- Quasi-isomorphisms of analytic sheaf complexes. -/
 abbrev analyticQuasiIsomorphisms :=
-  HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X) (.up ℤ)
+  HomologicalComplex.quasiIso (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) (.up ℤ)
 
 noncomputable instance analyticHasSmallLocalizedShiftedHom
-    (K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ) :
+    (K L : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ) :
     Localization.HasSmallLocalizedShiftedHom.{1}
       (analyticQuasiIsomorphisms X) ℤ K L := by
   intro a b
@@ -246,7 +245,7 @@ noncomputable instance analyticHasSmallLocalizedShiftedHom
 /-- Hypercohomology of an analytic sheaf complex in integer degree `n`. -/
 @[implicit_reducible]
 def Hypercohomology
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) : Type 1 :=
+    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ) (n : ℤ) : Type 1 :=
   Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
     (constantIntegerSheafComplexInt X) K n
 
@@ -263,20 +262,20 @@ abbrev ComplexConstantCohomology (n : ℤ) : Type 1 :=
   Hypercohomology X (constantComplexSheafComplexInt X) n
 
 noncomputable instance hypercohomologyAddCommGroup
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) :
+    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ) (n : ℤ) :
     AddCommGroup (Hypercohomology X K n) :=
   fast_instance% (Localization.SmallShiftedHom.equiv
     (analyticQuasiIsomorphisms X) DerivedCategory.Q).addCommGroup
 
 lemma hypercohomologyEquiv_zero
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) :
+    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ) (n : ℤ) :
     (Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms X) DerivedCategory.Q)
         (0 : Hypercohomology X K n) = 0 := by
   rw [Equiv.zero_def, Equiv.apply_symm_apply]
 
 lemma hypercohomologyEquiv_add
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ)
+    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ) (n : ℤ)
     (α β : Hypercohomology X K n) :
     (Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms X) DerivedCategory.Q) (α + β) =
@@ -286,24 +285,22 @@ lemma hypercohomologyEquiv_add
         (analyticQuasiIsomorphisms X) DerivedCategory.Q) β := by
   simp [Equiv.add_def]
 
-/-- Hypercohomology of the holomorphic de Rham complex in integer degree `n`. -/
-abbrev DeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) : Type 1 :=
-  Hypercohomology X (holomorphicDeRhamComplexInt X) n
-
 /-- The constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
 equivalence on hypercohomology. -/
 def complexConstantCohomologyDeRhamEquiv
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     ComplexConstantCohomology X n ≃
-      DeRhamHypercohomology X n :=
+      Hypercohomology X (holomorphicDeRhamComplexInt X) n :=
   Localization.SmallShiftedHom.postcompEquiv
     (constantsToHolomorphicDeRhamComplexInt X)
     (by
       change QuasiIso (constantsToHolomorphicDeRhamComplexInt X)
       infer_instance)
+
 /-- Postcomposition on hypercohomology by a map of complexes. -/
 def hypercohomologyMap
-    {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (f : K ⟶ L) (n : ℤ) :
+    {K L : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ}
+    (f : K ⟶ L) (n : ℤ) :
     Hypercohomology X K n →+ Hypercohomology X L n where
   toFun α := α.comp
       (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl f)
@@ -313,7 +310,6 @@ def hypercohomologyMap
       (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
     simp only [Localization.SmallShiftedHom.equiv_comp,
       hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
-
   map_add' α β := by
     apply (Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
@@ -321,7 +317,7 @@ def hypercohomologyMap
       hypercohomologyEquiv_add, ShiftedHom.add_comp]
 
 lemma smallShiftedHomMkZero_comp
-    {K L M : CochainComplex (AnalyticAdditiveSheaf X) ℤ}
+    {K L M : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ}
     (f : K ⟶ L) (g : L ⟶ M) :
     Localization.SmallShiftedHom.mk₀
         (analyticQuasiIsomorphisms X) (0 : ℤ) rfl (f ≫ g) =
@@ -336,12 +332,11 @@ lemma smallShiftedHomMkZero_comp
     Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms X) DerivedCategory.Q
   apply e.injective
-  rw [Localization.SmallShiftedHom.equiv_comp]
-  simp [e, Functor.map_comp]
+  simp [Localization.SmallShiftedHom.equiv_comp, e, Functor.map_comp]
 
 /-- Postcomposition on hypercohomology respects composition of complex maps. -/
 lemma hypercohomologyMap_comp_apply
-    {K L M : CochainComplex (AnalyticAdditiveSheaf X) ℤ}
+    {K L M : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ}
     (f : K ⟶ L) (g : L ⟶ M) (n : ℤ)
     (α : Hypercohomology X K n) :
     hypercohomologyMap X (f ≫ g) n α =
@@ -349,7 +344,6 @@ lemma hypercohomologyMap_comp_apply
         (hypercohomologyMap X f n α) := by
   unfold hypercohomologyMap
   dsimp
-  rw [smallShiftedHomMkZero_comp X]
   let β : Localization.SmallShiftedHom
       (analyticQuasiIsomorphisms X) K L (0 : ℤ) :=
     Localization.SmallShiftedHom.mk₀
@@ -358,27 +352,28 @@ lemma hypercohomologyMap_comp_apply
       (analyticQuasiIsomorphisms X) L M (0 : ℤ) :=
     Localization.SmallShiftedHom.mk₀
       (analyticQuasiIsomorphisms X) (0 : ℤ) rfl g
-  simpa only using
+  simpa only [smallShiftedHomMkZero_comp X] using
     (Localization.SmallShiftedHom.comp_assoc
       (analyticQuasiIsomorphisms X) α β γ
       (zero_add n) (zero_add (0 : ℤ)) (zero_add n)).symm
 
 /-- Postcomposition on hypercohomology is additive in the map of complexes. -/
 lemma hypercohomologyMap_add_apply
-    {C D : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (f g : C ⟶ D) (n : ℤ)
+    {C D : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ}
+    (f g : C ⟶ D) (n : ℤ)
     (α : Hypercohomology X C n) :
     hypercohomologyMap X (f + g) n α =
       hypercohomologyMap X f n α + hypercohomologyMap X g n α := by
   apply (Localization.SmallShiftedHom.equiv
     (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-  rw [hypercohomologyEquiv_add]
-  simp [hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
+  simp [hypercohomologyEquiv_add, hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
     Functor.map_add]
 
 /-- Scalars acting on a coefficient complex by an additive, unital and antimultiplicative family
 of endomorphisms act on its hypercohomology. -/
 noncomputable abbrev hypercohomologyModule {R : Type*} [Semiring R]
-    {C : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (s : R → (C ⟶ C)) (n : ℤ)
+    {C : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ}
+    (s : R → (C ⟶ C)) (n : ℤ)
     [SMul R (Hypercohomology X C n)]
     (smul_eq : ∀ (r : R) (α : Hypercohomology X C n),
       r • α = hypercohomologyMap X (s r) n α)
@@ -429,11 +424,11 @@ noncomputable instance fieldCohomologyModule (n : ℤ) :
 on the holomorphic de Rham complex. -/
 noncomputable instance
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    SMul ℂ (DeRhamHypercohomology X n) :=
+    SMul ℂ (Hypercohomology X (holomorphicDeRhamComplexInt X) n) :=
   ⟨fun c α ↦ hypercohomologyMap X (scalarHolomorphicDeRhamComplexInt X c) n α⟩
 
 lemma deRham_complex_smul_eq [IsIntegral X.left] [Smooth X.hom]
-    (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology X n) :
+    (n : ℤ) (c : ℂ) (α : Hypercohomology X (holomorphicDeRhamComplexInt X) n) :
     c • α = hypercohomologyMap X
       (scalarHolomorphicDeRhamComplexInt X c) n α :=
   rfl
@@ -441,7 +436,7 @@ lemma deRham_complex_smul_eq [IsIntegral X.left] [Smooth X.hom]
 /-- Holomorphic de Rham hypercohomology is canonically a complex vector space. -/
 noncomputable instance deRhamHypercohomologyComplexModule
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    Module ℂ (DeRhamHypercohomology X n) :=
+    Module ℂ (Hypercohomology X (holomorphicDeRhamComplexInt X) n) :=
   hypercohomologyModule X (scalarHolomorphicDeRhamComplexInt X) n
     (deRham_complex_smul_eq X n) (scalarHolomorphicDeRhamComplexInt_add X)
     (scalarHolomorphicDeRhamComplexInt_one X)
@@ -450,11 +445,11 @@ noncomputable instance deRhamHypercohomologyComplexModule
 /-- De Rham hypercohomology as a vector space over `K`, by restriction of complex scalars. -/
 noncomputable instance deRhamHypercohomologyModule
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    Module K (DeRhamHypercohomology X n) :=
-  Module.restrictScalars K ℂ (DeRhamHypercohomology X n)
+    Module K (Hypercohomology X (holomorphicDeRhamComplexInt X) n) :=
+  Module.restrictScalars K ℂ (Hypercohomology X (holomorphicDeRhamComplexInt X) n)
 
 lemma deRham_field_smul_eq [IsIntegral X.left] [Smooth X.hom]
-    (n : ℤ) (q : K) (α : DeRhamHypercohomology X n) :
+    (n : ℤ) (q : K) (α : Hypercohomology X (holomorphicDeRhamComplexInt X) n) :
     q • α = hypercohomologyMap X
       (scalarHolomorphicDeRhamComplexInt X (algebraMap K ℂ q)) n α :=
   rfl
@@ -462,12 +457,12 @@ lemma deRham_field_smul_eq [IsIntegral X.left] [Smooth X.hom]
 /-- Restriction of complex scalars gives the scalar tower on de Rham hypercohomology. -/
 noncomputable instance deRhamHypercohomologyIsScalarTower
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    IsScalarTower K ℂ (DeRhamHypercohomology X n) :=
-  IsScalarTower.restrictScalars K ℂ (DeRhamHypercohomology X n)
+    IsScalarTower K ℂ (Hypercohomology X (holomorphicDeRhamComplexInt X) n) :=
+  IsScalarTower.restrictScalars K ℂ (Hypercohomology X (holomorphicDeRhamComplexInt X) n)
 
 /-- The derived comparison from rational cohomology to holomorphic de Rham hypercohomology. -/
 def fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    H^n(X; K) →+ DeRhamHypercohomology X n :=
+    H^n(X; K) →+ Hypercohomology X (holomorphicDeRhamComplexInt X) n :=
   hypercohomologyMap X
     (fieldToHolomorphicDeRhamComplexInt K X) n
 
@@ -479,84 +474,65 @@ lemma fieldToDeRhamCohomology_smul
       q • fieldToDeRhamCohomology K X n α := by
   rw [field_smul_eq, deRham_field_smul_eq]
   unfold fieldToDeRhamCohomology
-  rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
-  rw [fieldToHolomorphicDeRhamComplexInt_scalar]
+  rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply,
+    fieldToHolomorphicDeRhamComplexInt_scalar]
 
 /-- The rational-to-de Rham comparison as a rational-linear map. -/
 def fieldToDeRhamCohomologyLinear
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    H^n(X; K) →ₗ[K]
-      DeRhamHypercohomology X n where
+    H^n(X; K) →ₗ[K] Hypercohomology X (holomorphicDeRhamComplexInt X) n where
   toFun := fieldToDeRhamCohomology K X n
   map_add' := (fieldToDeRhamCohomology K X n).map_add
   map_smul' := fieldToDeRhamCohomology_smul K X n
 
 /-- The de Rham complex with only form degrees at least `p` retained. -/
 def hodgeFilteredDeRhamComplex [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
   (holomorphicDeRhamComplexInt X).stupidTrunc
     (ComplexShape.embeddingUpIntGE p)
 
 /-- Inclusion of the degree-at-least-`p` de Rham complex into the full complex. -/
 def hodgeFilteredDeRhamInclusion [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
-    hodgeFilteredDeRhamComplex X p ⟶
-      holomorphicDeRhamComplexInt X :=
+    hodgeFilteredDeRhamComplex X p ⟶ holomorphicDeRhamComplexInt X :=
   HomologicalComplex.stupidTruncInclusion
     (holomorphicDeRhamComplexInt X) (ComplexShape.embeddingUpIntGE p)
 
 /-- Complex scalar multiplication on the filtered de Rham complex. -/
-def hodgeFilteredDeRhamComplexScalar [IsIntegral X.left] [Smooth X.hom]
-    (p : ℤ) (c : ℂ) :
-    hodgeFilteredDeRhamComplex X p ⟶
-      hodgeFilteredDeRhamComplex X p :=
-  HomologicalComplex.stupidTruncMap
-    (scalarHolomorphicDeRhamComplexInt X c)
+def hodgeFilteredDeRhamComplexScalar [IsIntegral X.left] [Smooth X.hom] (p : ℤ) (c : ℂ) :
+    hodgeFilteredDeRhamComplex X p ⟶ hodgeFilteredDeRhamComplex X p :=
+  HomologicalComplex.stupidTruncMap (scalarHolomorphicDeRhamComplexInt X c)
     (ComplexShape.embeddingUpIntGE p)
 
 /-- Complex scalar multiplication on the filtered complex commutes with inclusion into the full
 de Rham complex. -/
 private lemma hodgeFilteredDeRhamComplexScalar_comp_inclusion
     [IsIntegral X.left] [Smooth X.hom] (p : ℤ) (c : ℂ) :
-    hodgeFilteredDeRhamComplexScalar X p c ≫
-      hodgeFilteredDeRhamInclusion X p =
-    hodgeFilteredDeRhamInclusion X p ≫
-      scalarHolomorphicDeRhamComplexInt X c :=
+    hodgeFilteredDeRhamComplexScalar X p c ≫ hodgeFilteredDeRhamInclusion X p
+      = hodgeFilteredDeRhamInclusion X p ≫ scalarHolomorphicDeRhamComplexInt X c :=
   HomologicalComplex.stupidTruncMap_comp_stupidTruncInclusion
     (ComplexShape.embeddingUpIntGE p)
     (scalarHolomorphicDeRhamComplexInt X c)
 
-/-- Hypercohomology of the degree-at-least-`p` part of the de Rham complex. -/
-abbrev FilteredDeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) : Type 1 :=
-  Hypercohomology X (hodgeFilteredDeRhamComplex X p) n
-
-/-- The map from filtered to full de Rham hypercohomology. -/
-def filteredToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) :
-    FilteredDeRhamHypercohomology X p n →+
-      DeRhamHypercohomology X n :=
-  hypercohomologyMap X (hodgeFilteredDeRhamInclusion X p) n
-
 /-- The Hodge filtration `F^p` on de Rham hypercohomology. -/
 def hodgeFiltration [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) :
-    AddSubgroup (DeRhamHypercohomology X n) :=
-  (filteredToDeRhamCohomology X p n).range
+    AddSubgroup (Hypercohomology X (holomorphicDeRhamComplexInt X) n) :=
+  (hypercohomologyMap X (hodgeFilteredDeRhamInclusion X p) n).range
 
 /-- The Hodge filtration is stable under arbitrary complex scalar multiplication. -/
 lemma hodgeFiltration_complex_smul_mem [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) (c : ℂ) {α : DeRhamHypercohomology X n}
+    (p n : ℤ) (c : ℂ) {α : Hypercohomology X (holomorphicDeRhamComplexInt X) n}
     (hα : α ∈ hodgeFiltration X p n) :
     c • α ∈ hodgeFiltration X p n := by
   rcases hα with ⟨β, rfl⟩
   refine ⟨hypercohomologyMap X
     (hodgeFilteredDeRhamComplexScalar X p c) n β, ?_⟩
   rw [deRham_complex_smul_eq]
-  unfold filteredToDeRhamCohomology
-  rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
-  rw [hodgeFilteredDeRhamComplexScalar_comp_inclusion]
+  rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply,
+    hodgeFilteredDeRhamComplexScalar_comp_inclusion]
 
 /-- The Hodge filtration bundled as a complex subspace of de Rham hypercohomology. -/
 def hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) where
+    (p n : ℤ) : Submodule ℂ (Hypercohomology X (holomorphicDeRhamComplexInt X) n) where
   carrier := hodgeFiltration X p n
   zero_mem' := (hodgeFiltration X p n).zero_mem
   add_mem' := (hodgeFiltration X p n).add_mem
@@ -570,7 +546,7 @@ is then *defined* as `F^p ⊓ conj F^q`, which needs no Hodge decomposition theo
 
 /-- The constant-to-de Rham comparison equivalence, upgraded to an additive equivalence. -/
 def complexConstantCohomologyDeRhamAddEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
+    ComplexConstantCohomology X n ≃+ Hypercohomology X (holomorphicDeRhamComplexInt X) n :=
   { complexConstantCohomologyDeRhamEquiv X n with
     map_add' := fun α β ↦ by
       change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
@@ -597,7 +573,7 @@ private lemma complexConstantCohomologyDeRhamAddEquiv_scalar [IsIntegral X.left]
 
 /-- The inverse comparison carries the de Rham scalar action back to the constant-sheaf one. -/
 private lemma complexConstantCohomologyDeRhamAddEquiv_symm_scalar [IsIntegral X.left] [Smooth X.hom]
-    (n : ℤ) (c : ℂ) (α : DeRhamHypercohomology X n) :
+    (n : ℤ) (c : ℂ) (α : Hypercohomology X (holomorphicDeRhamComplexInt X) n) :
     (complexConstantCohomologyDeRhamAddEquiv X n).symm (c • α) =
       hypercohomologyMap X (complexScalarComplexInt X c) n
         ((complexConstantCohomologyDeRhamAddEquiv X n).symm α) := by
@@ -607,13 +583,14 @@ private lemma complexConstantCohomologyDeRhamAddEquiv_symm_scalar [IsIntegral X.
 
 /-- Complex conjugation on de Rham hypercohomology, transported from the constant sheaf `ℂ`. -/
 def deRhamConj [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
+    Hypercohomology X (holomorphicDeRhamComplexInt X) n →+
+      Hypercohomology X (holomorphicDeRhamComplexInt X) n :=
   ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
     ((hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n).comp
       (complexConstantCohomologyDeRhamAddEquiv X n).symm.toAddMonoidHom)
 
 lemma deRhamConj_apply [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : DeRhamHypercohomology X n) :
+    (α : Hypercohomology X (holomorphicDeRhamComplexInt X) n) :
     deRhamConj X n α =
       complexConstantCohomologyDeRhamAddEquiv X n
         (hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n
@@ -622,7 +599,7 @@ lemma deRhamConj_apply [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
 
 /-- Conjugation on de Rham hypercohomology is conjugate-linear. -/
 lemma deRhamConj_smul [IsIntegral X.left] [Smooth X.hom] (n : ℤ) (c : ℂ)
-    (α : DeRhamHypercohomology X n) :
+    (α : Hypercohomology X (holomorphicDeRhamComplexInt X) n) :
     deRhamConj X n (c • α) = (starRingEnd ℂ) c • deRhamConj X n α := by
   rw [deRhamConj_apply, deRhamConj_apply,
     complexConstantCohomologyDeRhamAddEquiv_symm_scalar,
@@ -631,26 +608,23 @@ lemma deRhamConj_smul [IsIntegral X.left] [Smooth X.hom] (n : ℤ) (c : ℂ)
 
 /-- Conjugation on de Rham hypercohomology, bundled as a conjugate-linear map. -/
 def deRhamConjSemilinear [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    DeRhamHypercohomology X n →ₛₗ[starRingEnd ℂ] DeRhamHypercohomology X n where
+    Hypercohomology X (holomorphicDeRhamComplexInt X) n →ₛₗ[starRingEnd ℂ]
+      Hypercohomology X (holomorphicDeRhamComplexInt X) n where
   toFun := deRhamConj X n
   map_add' := (deRhamConj X n).map_add
   map_smul' := deRhamConj_smul X n
 
-/-- The conjugate Hodge filtration `conj F^p`. Conjugation is an involution, so the preimage of
-`F^p` is also its image. -/
-def conjHodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) :=
-  (hodgeFiltrationComplexSubmodule X p n).comap (deRhamConjSemilinear X n)
-
 /-- The intersection `F^p ⊓ conj F^q` in degree `n`. For smooth projective varieties and
-`p + q = n`, this is the usual `(p,q)` Hodge piece. -/
+`p + q = n`, this is the usual `(p,q)` Hodge piece. The conjugate filtration `conj F^q` is spelled
+as the preimage of `F^q` under conjugation, which is also its image since conjugation is an
+involution. -/
 def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
-    Submodule ℂ (DeRhamHypercohomology X n) :=
-  hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
+    Submodule ℂ (Hypercohomology X (holomorphicDeRhamComplexInt X) n) :=
+  hodgeFiltrationComplexSubmodule X p n ⊓
+    (hodgeFiltrationComplexSubmodule X q n).comap (deRhamConjSemilinear X n)
 
 /-- Cohomology classes with coefficients in `K` whose de Rham images lie in `F^p ⊓ conj F^p`
-in degree `2p`. When conjugation fixes the image of `K` in `ℂ`, see
-`hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule` for the equivalent `F^p` condition. -/
+in degree `2p`. -/
 def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
     Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap

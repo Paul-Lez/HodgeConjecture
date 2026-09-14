@@ -28,9 +28,9 @@ variable (X : Over (Spec ↧ℂ))
 
 /-- The standard ambient rational injective resolution in integer degrees. -/
 def ambientRationalInjectiveComplex :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (Point ℂ X))) ℤ :=
   (TopCat.Sheaf.ambientConstantInjectiveResolution
-    (TopCat.of (ComplexPoint X)) (AddCommGrpCat.of ℚ)).cocomplex.extend
+    (TopCat.of (Point ℂ X)) (AddCommGrpCat.of ℚ)).cocomplex.extend
       ComplexShape.embeddingUpNat
 
 /-- Its actual constant augmentation. -/
@@ -39,13 +39,13 @@ def ambientRationalInjectiveAugmentation :
       ambientRationalInjectiveComplex X :=
   HomologicalComplex.extendMap
     (TopCat.Sheaf.ambientConstantInjectiveResolution
-      (TopCat.of (ComplexPoint X)) (AddCommGrpCat.of ℚ)).ι
+      (TopCat.of (Point ℂ X)) (AddCommGrpCat.of ℚ)).ι
     ComplexShape.embeddingUpNat
 
 instance ambientRationalInjectiveAugmentation_quasiIso :
     QuasiIso (ambientRationalInjectiveAugmentation X) := by
   let I := TopCat.Sheaf.ambientConstantInjectiveResolution
-    (TopCat.of (ComplexPoint X)) (AddCommGrpCat.of ℚ)
+    (TopCat.of (Point ℂ X)) (AddCommGrpCat.of ℚ)
   let : QuasiIso I.ι := I.quasiIso
   exact (HomologicalComplex.quasiIso_extendMap_iff I.ι _).mpr inferInstance
 
@@ -53,7 +53,7 @@ instance ambientRationalInjectiveComplex_injective (q : ℤ) :
     Injective ((ambientRationalInjectiveComplex X).X q) :=
   CochainComplex.injective_extend_nat _
     (TopCat.Sheaf.ambientConstantInjectiveResolution
-      (TopCat.of (ComplexPoint X)) (AddCommGrpCat.of ℚ)).injective q
+      (TopCat.of (Point ℂ X)) (AddCommGrpCat.of ℚ)).injective q
 
 instance ambientRationalInjectiveComplex_isStrictlyGE :
     (ambientRationalInjectiveComplex X).IsStrictlyGE 0 := by
