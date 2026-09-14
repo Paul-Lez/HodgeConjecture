@@ -23,6 +23,13 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))
 
+local instance supportConeInjectiveModelSheafDerivedCategory :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+
+local instance supportConeInjectiveModelAddCommGrpDerivedCategory :
+    HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard AddCommGrpCat
+
 /-- Restriction from the ambient injective resolution to the fixed complement
 resolution, using the strict comparison on the actual open complement. -/
 def ambientRationalInjectiveRestriction
@@ -98,24 +105,66 @@ instance ambientRationalInjectiveCone_isKInjective
       (ambientRationalInjectiveRestriction X Z hZ)).IsKInjective :=
   CochainComplex.isKInjective_of_injective _ (-1)
 
+/-- The normalized ambient-injective cone as a bounded-below complex. -/
+abbrev ambientRationalInjectiveConePlus
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
+  ⟨(shiftFunctor _ (-1 : ℤ)).obj
+      (CochainComplex.mappingCone (ambientRationalInjectiveRestriction X Z hZ)),
+    ⟨0, CochainComplex.isStrictlyGE_shift _ (-1) (-1) 0 (by norm_num)⟩⟩
+
+instance ambientRationalInjectiveConePlus_injective
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (i : ℤ) :
+    Injective ((ambientRationalInjectiveConePlus X Z hZ).obj.X i) :=
+  Injective.of_iso
+    ((CochainComplex.mappingCone (ambientRationalInjectiveRestriction X Z hZ)).shiftFunctorObjXIso
+      (-1) i (i - 1) (by omega)).symm inferInstance
+
+/-- The support cone comparison, shifted to the normalized bounded-below models. -/
+def rationalSupportConeToAmbientInjectiveConePlus
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    rationalCohomologyWithSupportComplexPlus X Z ⟶
+      ambientRationalInjectiveConePlus X Z hZ :=
+  ⟨(shiftFunctor _ (-1 : ℤ)).map
+    (rationalSupportConeToAmbientInjectiveCone X Z hZ)⟩
+
+instance rationalSupportConeToAmbientInjectiveConePlus_quasiIso
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
+    QuasiIso (rationalSupportConeToAmbientInjectiveConePlus X Z hZ).hom :=
+  (CochainComplex.quasiIso_shift_iff
+    (rationalSupportConeToAmbientInjectiveCone X Z hZ) (-1)).2 inferInstance
+
 /-- The existing support group is computed by the global sections of this
 normalized ambient-injective cone. No smoothness assumption is needed. -/
 def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
-      (TopCat.Sheaf.globalSectionsComplexInt
+      (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
         (TopCat.of (ComplexPoint X))
         (CochainComplex.mappingCone
           (ambientRationalInjectiveRestriction X Z hZ))).homology (n - 1) :=
-  let e : RationalCohomologyWithSupport X Z n ≃+
-      Hypercohomology X (CochainComplex.mappingCone
-        (ambientRationalInjectiveRestriction X Z hZ)) (n - 1) :=
-    { toEquiv := Localization.SmallShiftedHom.postcompEquiv
-        (rationalSupportConeToAmbientInjectiveCone X Z hZ)
-        ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)
-      map_add' α β := (hypercohomologyMap X
-        (rationalSupportConeToAmbientInjectiveCone X Z hZ) (n - 1)).map_add α β }
-  e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ (n - 1))
+  let f := rationalSupportConeToAmbientInjectiveConePlus X Z hZ
+  let F := analyticHypercohomologyFunctor X n
+  let _ : IsIso (DerivedCategory.Plus.Q.map f) := by infer_instance
+  let _ : IsIso (F.map f) := by
+    dsimp only [F, Functor.comp_map]
+    infer_instance
+  let e₁ := (asIso (F.map f)).addCommGroupIsoToAddEquiv
+  let e₂ := hypercohomologyAddEquivGlobalSectionsKInjective X
+    (ambientRationalInjectiveConePlus X Z hZ) n
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
+    (TopCat.of (ComplexPoint X))
+  let C := CochainComplex.mappingCone (ambientRationalInjectiveRestriction X Z hZ)
+  let G := (Γ.mapHomologicalComplex (.up ℤ)).obj C
+  let e₃ : ((Γ.mapHomologicalComplex (.up ℤ)).obj
+      ((shiftFunctor _ (-1 : ℤ)).obj C)).homology n ≅
+      ((shiftFunctor _ (-1 : ℤ)).obj G).homology n :=
+    HomologicalComplex.homologyMapIso
+      (((Γ.mapHomologicalComplex (.up ℤ)).commShiftIso (-1)).app C) n
+  let e₄ : ((shiftFunctor _ (-1 : ℤ)).obj G).homology n ≅ G.homology (n - 1) := by
+    exact ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftIso
+      (-1) n (n - 1) (by omega)).app G
+  e₁.trans <| e₂.trans <| (e₃ ≪≫ e₄).addCommGroupIsoToAddEquiv
 
 /-- Compare actual restriction of the integer-indexed ambient resolution with
 the independently chosen complement resolution. The map/extension isomorphism
@@ -158,7 +207,7 @@ lemma actualRestriction_comp_openResolutionComparison
 /-- Global sections of the actual open-resolution comparison. -/
 def globalAmbientRationalOpenResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :=
-  ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+  ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
     (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
       (ambientRationalOpenResolutionComparison X Z hZ)
 
@@ -168,7 +217,7 @@ instance globalAmbientRationalOpenResolutionComparison_quasiIso
     QuasiIso (globalAmbientRationalOpenResolutionComparison X Z hZ) := by
   let Y := TopCat.of (ComplexPoint X)
   let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
-  let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
   let k := ((TopCat.Sheaf.pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex
     (.up ℕ)).map (TopCat.Sheaf.restrictedAmbientToOpenResolution Y U (AddCommGrpCat.of ℚ))
   let : QuasiIso ((Γ.mapHomologicalComplex (.up ℕ)).map k) :=
@@ -196,12 +245,12 @@ def actualSupportConeToAmbientInjectiveGlobalCone
         (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
         (ambientRationalInjectiveComplex X)).g ⟶
     CochainComplex.mappingCone
-      (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+      (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
         (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
           (ambientRationalInjectiveRestriction X Z hZ)) :=
   CochainComplex.mappingCone.map _ _ (𝟙 _)
     (globalAmbientRationalOpenResolutionComparison X Z hZ) (by
-      let Γ := (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+      let Γ := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
         (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,
@@ -227,7 +276,7 @@ def rationalSupportAddEquivSupportedInjectiveHomology
         (ambientRationalInjectiveComplex X)).X₁.homology n :=
   let Y := TopCat.of (ComplexPoint X)
   let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
-  let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
   let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤
     (ambientRationalInjectiveComplex X)
   let e₁ := rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n

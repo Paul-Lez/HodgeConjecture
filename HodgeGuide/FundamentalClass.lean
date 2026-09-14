@@ -270,14 +270,15 @@ example : @Guide.Subvariety.D6.cycleComponentSheafClass = @AlgebraicGeometry.Com
 Both definitions take only the variety, the generic point, its coheight, and the dimension $`d` as
 arguments.
 
-For the generic point of $`X` itself, the support is all of $`X(\mathbb C)`, so forgetting support
-is an isomorphism. The nonzero normalized section therefore gives a nonzero class in
-$`H^0(X;\mathbb Q)` in every dimension, without assuming analytic connectedness.
+For the generic point of $`X` itself, the normalized smooth-support coclass section is nonzero.
+Its comparison with an ordinary degree-zero hypercohomology class is deferred until the relevant
+derived-global-sections compatibility is available.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_genericPoint_ne_zero
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero
 ```
 ```lean -show
-example : cycleComponentSheafClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
-  cycleComponentSheafClass_genericPoint_ne_zero X
+example : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
+    (coheight_genericPoint_eq_zero X) ≠ 0 :=
+  cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X
 ```

@@ -54,7 +54,7 @@ lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     actualSupportConeToAmbientInjectiveGlobalCone X Z hZ ≫
       (CochainComplex.mappingCone.triangle
-        (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+        (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
             (ambientRationalInjectiveRestriction X Z hZ))).mor₃ =
     (CochainComplex.mappingCone.triangle
@@ -65,12 +65,12 @@ lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
     (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
       (ambientRationalInjectiveComplex X)).g
-    (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+    (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
         (ambientRationalInjectiveRestriction X Z hZ)) (𝟙 _)
     (globalAmbientRationalOpenResolutionComparison X Z hZ)
     (show _ = _ from by
-      let Γ := (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+      let Γ := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
         (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,

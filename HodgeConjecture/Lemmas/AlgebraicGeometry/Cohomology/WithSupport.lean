@@ -45,6 +45,9 @@ local instance analyticSupportHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
+local instance analyticSupportAddCommGrpHasDerivedCategory :
+    HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard _
+
 /-- The inclusion of the complement of a subset into the complex-point space. -/
 def analyticComplementInclusion (Z : Set (ComplexPoint X)) :
     TopCat.of ↥Zᶜ ⟶
@@ -226,48 +229,63 @@ abbrev rationalCohomologyWithSupportComplex
 
 /-- Rational constant-sheaf cohomology with support in `Z`. The degree shift realizes the
 homotopy fiber of restriction as the mapping cone shifted by `-1`. -/
-abbrev RationalCohomologyWithSupport
-    (Z : Set (ComplexPoint X)) (n : ℤ) : Type 1 :=
-  Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)
+abbrev rationalCohomologyWithSupportComplexPlus
+    (Z : Set (ComplexPoint X)) : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
+  ⟨(shiftFunctor _ (-1 : ℤ)).obj (rationalCohomologyWithSupportComplex X Z),
+    ⟨0, by
+      let _ : (rationalCohomologyWithSupportComplex X Z).IsStrictlyGE (-1) :=
+        CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1)
+      exact CochainComplex.isStrictlyGE_shift _ (-1) (-1) 0 (by norm_num)⟩⟩
 
-/-- The degree-one connecting morphism from the mapping cone to the ambient rational constant
-complex. -/
-def forgetSupportShiftedHom (Z : Set (ComplexPoint X)) :
-    Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
-      (rationalCohomologyWithSupportComplex X Z)
-      (constantFieldSheafComplexInt ℚ X) (1 : ℤ) :=
-  Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
-    (CochainComplex.mappingCone.triangle
-      (rationalRestrictionComplexInt X Z)).mor₃
+/-- Rational constant-sheaf cohomology with support in `Z`. -/
+abbrev RationalCohomologyWithSupport
+    (Z : Set (ComplexPoint X)) (n : ℤ) :=
+  Hypercohomology X (rationalCohomologyWithSupportComplexPlus X Z) n
+
+/-- The shifted mapping-cone morphism which forgets support. -/
+def forgetSupportComplex (Z : Set (ComplexPoint X)) :
+    (rationalCohomologyWithSupportComplexPlus X Z).obj ⟶
+      constantFieldSheafComplexInt ℚ X :=
+  ((CochainComplex.mappingCone.triangle
+      (rationalRestrictionComplexInt X Z)).mor₃)⟦(-1 : ℤ)⟧' ≫
+    (shiftFunctorCompIsoId _ (1 : ℤ) (-1) (by simp)).hom.app _
 
 /-- Forget support, using the connecting morphism of the mapping-cone triangle. -/
 def forgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+
-      H^n(X; ℚ) where
-  toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
-  map_zero' := by
-    apply (Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    simp only [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
-  map_add' α β := by
-    apply (Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    simp only [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_add, ShiftedHom.add_comp]
+      H^n(X; ℚ) :=
+  ((analyticHypercohomologyFunctor X n).map
+    (⟨forgetSupportComplex X Z⟩ : rationalCohomologyWithSupportComplexPlus X Z ⟶
+      constantFieldSheafComplexIntPlus ℚ X)).hom
 
 section
 
 /-- After passage to the derived category, the morphism which forgets whole-space support is an
 isomorphism. -/
-instance isIso_forgetSupportShiftedHom_univ_map :
-    IsIso ((Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q)
-        (forgetSupportShiftedHom X
-          (Set.univ : Set (ComplexPoint X)))) := by
-  unfold forgetSupportShiftedHom
-  erw [Localization.SmallShiftedHom.equiv_mk]
-  exact isIso_derivedMappingConeTriangle_mor₃_univ X
+instance forgetSupportComplex_univ_quasiIso :
+    QuasiIso (forgetSupportComplex X (Set.univ : Set (ComplexPoint X))) := by
+  let t := CochainComplex.mappingCone.triangle
+      (rationalRestrictionComplexInt X (Set.univ : Set (ComplexPoint X)))
+  have ht : QuasiIso t.mor₃ :=
+    (DerivedCategory.isIso_Q_map_iff_quasiIso
+      (C := AnalyticAdditiveSheaf X) t.mor₃).1 (by
+      let c := (DerivedCategory.Q.commShiftIso (1 : ℤ)).hom.app t.obj₁
+      let _ : IsIso (DerivedCategory.Q.map t.mor₃ ≫ c) := by
+        change IsIso ((DerivedCategory.Q.mapTriangle.obj t).mor₃)
+        infer_instance
+      exact IsIso.of_isIso_comp_right (DerivedCategory.Q.map t.mor₃) c)
+  have hs : QuasiIso (t.mor₃⟦(-1 : ℤ)⟧') :=
+    (CochainComplex.quasiIso_shift_iff t.mor₃ (-1)).2 ht
+  let c := (shiftFunctorCompIsoId (CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+    (1 : ℤ) (-1) (by simp)).hom.app t.obj₁
+  have hc : QuasiIso c := inferInstance
+  dsimp only [forgetSupportComplex]
+  let e := shiftFunctorCompIsoId (CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+    (1 : ℤ) (-1) (by simp)
+  change QuasiIso (t.mor₃⟦(-1 : ℤ)⟧' ≫ e.hom.app t.obj₁)
+  let _ : QuasiIso (t.mor₃⟦(-1 : ℤ)⟧') := hs
+  let _ : QuasiIso (e.hom.app t.obj₁) := by infer_instance
+  infer_instance
 
 end
 
@@ -276,49 +294,16 @@ ordinary rational cohomology. Its forward map is definitionally the support-forg
 noncomputable def forgetSupportEquivUniv (n : ℤ) :
     RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
-      H^n(X; ℚ) :=
-  let eSource : RationalCohomologyWithSupport X
-        (Set.univ : Set (ComplexPoint X)) n ≃
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj (rationalCohomologyWithSupportComplex X Set.univ))
-        (n - 1) :=
-    Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  let eTarget : H^n(X; ℚ) ≃
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=
-    Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  let g := (Localization.SmallShiftedHom.equiv
-    (analyticQuasiIsomorphisms X) DerivedCategory.Q)
-      (forgetSupportShiftedHom X
-        (Set.univ : Set (ComplexPoint X)))
-  let eComp : ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj (rationalCohomologyWithSupportComplex X Set.univ))
-        (n - 1) ≃
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=
-    ShiftedHom.postcompEquivOfIsIso
-      (X := DerivedCategory.Q.obj (constantIntegerSheafComplexInt X)) g
-      (show (1 : ℤ) + (n - 1) = n by lia)
-  have hcomp (α : RationalCohomologyWithSupport X
-      (Set.univ : Set (ComplexPoint X)) n) :
-      eTarget (forgetSupport X Set.univ n α) = eComp (eSource α) := by
-    change eTarget
-      (α.comp (forgetSupportShiftedHom X Set.univ) (by lia)) = _
-    rw [Localization.SmallShiftedHom.equiv_comp]
-    exact (ShiftedHom.postcompEquivOfIsIso_apply g
-      (show (1 : ℤ) + (n - 1) = n by lia) (eSource α)).symm
-  { toFun := forgetSupport X Set.univ n
-    invFun := fun α => eSource.symm (eComp.symm (eTarget α))
-    left_inv := fun α ↦ eSource.injective (by
-      rw [eSource.apply_symm_apply, hcomp, eComp.symm_apply_apply])
-    right_inv := fun α ↦ eTarget.injective (by
-      rw [hcomp, eSource.apply_symm_apply, eComp.apply_symm_apply]) }
+      H^n(X; ℚ) := by
+  let f : rationalCohomologyWithSupportComplexPlus X Set.univ ⟶
+      constantFieldSheafComplexIntPlus ℚ X :=
+    ⟨forgetSupportComplex X Set.univ⟩
+  let _ : QuasiIso f.hom := forgetSupportComplex_univ_quasiIso X
+  let _ : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
+  let _ : IsIso ((analyticHypercohomologyFunctor X n).map f) := by
+    dsimp
+    infer_instance
+  exact (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv.toEquiv
 
 end AlgebraicGeometry.ComplexPoint
 

@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.GlobalSections
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Topology.Sheaves.Flasque
 
@@ -35,45 +36,17 @@ sequence.
 
 open CategoryTheory Limits Opposite TopologicalSpace
 
-namespace TopCat.Sheaf.IsFlasque
+namespace TopCat.Sheaf
 
 universe u
 
 variable {X : TopCat.{u}}
 
+namespace IsFlasque
+
 namespace BoundedBelowComplex
 
 variable (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ)
-
-/-- Evaluation of a sheaf on the top open subset, viewed as a functor. This is
-`CategoryTheory.sheafSections` at the top open, stated with the domain spelled `TopCat.Sheaf`. -/
-def globalSectionsFunctor (X : TopCat.{u}) :
-    TopCat.Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
-  (sheafSections (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj (op (⊤ : Opens X))
-
-noncomputable instance globalSectionsFunctor_additive :
-    (globalSectionsFunctor X).Additive := by
-  constructor
-  intro A B f g
-  change (((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op (⊤ : Opens X))).map
-      ((TopCat.Sheaf.forget AddCommGrpCat.{u} X).map (f + g))) = _
-  rw [Functor.map_add, Functor.map_add]
-  rfl
-
-noncomputable instance globalSectionsFunctor_preservesFiniteLimits :
-    PreservesFiniteLimits (globalSectionsFunctor X) := by
-  let : PreservesFiniteLimits
-      ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op (⊤ : Opens X))) :=
-    inferInstance
-  exact comp_preservesFiniteLimits (TopCat.Sheaf.forget AddCommGrpCat.{u} X)
-    ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op (⊤ : Opens X)))
-
-/-- The integer-indexed cochain complex obtained by evaluating a sheaf complex on the top open
-subset. -/
-def globalSectionsComplex
-    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ) :
-    CochainComplex AddCommGrpCat.{u} ℤ :=
-  ((globalSectionsFunctor X).mapHomologicalComplex (ComplexShape.up ℤ)).obj K
 
 end BoundedBelowComplex
 

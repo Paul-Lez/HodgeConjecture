@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.Filtration
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.GlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import Other.AlgebraicGeometry.Hodge.HolomorphicDeRham
 public import Other.LinearAlgebra.HodgeStructure
@@ -39,6 +40,7 @@ open Point
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
 attribute [local instance] analyticHasDerivedCategory
+local instance : HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard _
 
 /-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
 def complexToFieldConstantSheaf :
@@ -54,70 +56,57 @@ def complexToFieldConstantSheafComplexInt :
     ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
       (complexToFieldConstantSheaf K X)) ComplexShape.embeddingUpNat
 
-attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1 TopCat.instCategorySheaf._aux_3
-  TopCat.instCategorySheaf._aux_5 constantComplexAddCommGrpPresheaf in
-
-omit [Algebra K ℂ] in
-/-- Multiplying an integer by `r` and then by `q` is multiplying it by `q * r`. -/
-private lemma ofHom_zmultiplesAddHom_comp_mulLeft (q r : K) :
-    AddCommGrpCat.ofHom (zmultiplesAddHom K r) ≫
-        AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q) =
-      AddCommGrpCat.ofHom (zmultiplesAddHom K (q * r)) := by aesop
-
-set_option linter.auxLemma false in
-omit [Algebra K ℂ] in
-attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
-  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 in
-/-- Applying a rational scalar after the constant class `r` gives the constant class `q * r`. -/
-private lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
-    integerToFieldConstantSheaf K X r ≫
-      fieldScalarSheaf K X q =
-        integerToFieldConstantSheaf K X (q * r) := by
-  rw [integerToFieldConstantSheaf, fieldScalarSheaf, integerToFieldConstantSheaf,
-    ← Functor.map_comp, ofHom_zmultiplesAddHom_comp_mulLeft]
-
-omit [Algebra K ℂ] in
-/-- Scalar multiplication after an integer-to-rational constant-complex map multiplies its
-rational coefficient. -/
-private lemma integerToFieldConstantSheafComplexInt_comp_fieldScalarComplex (q r : K) :
-    integerToFieldConstantSheafComplexInt K X r ≫
-      fieldScalarComplex K X q =
-        integerToFieldConstantSheafComplexInt K X (q * r) := by
-  unfold integerToFieldConstantSheafComplexInt fieldScalarComplex
-  rw [← HomologicalComplex.extendMap_comp, ← Functor.map_comp,
-    integerToFieldConstantSheaf_comp_fieldScalarSheaf]
-
-/-- The unit in degree-zero rational cohomology. -/
+/-- The unit in degree-zero field-valued cohomology, via the derived global-sections unit. -/
 def fieldCohomologyUnit : H^0(X; K) :=
-  fieldCohomologyClass K X 1
+  let f : TopCat.Sheaf.integerConstantSingleComplex (TopCat.of (ComplexPoint X)) ⟶
+      constantFieldSheafComplexInt K X :=
+    (constantIntegerSheafComplexIntIsoSingle X).inv ≫
+      HomologicalComplex.extendMap
+        ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
+          ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+            (AddCommGrpCat.ofHom (zmultiplesAddHom K 1)))) ComplexShape.embeddingUpNat
+  let x := (CochainComplex.HomComplex.homologyAddEquiv
+      (TopCat.Sheaf.integerConstantSingleComplex (TopCat.of (ComplexPoint X)))
+      (constantFieldSheafComplexInt K X) 0).symm
+    (CochainComplex.HomComplex.CohomologyClass.mk
+      (CochainComplex.HomComplex.Cocycle.ofHom f))
+  let y := (HomologicalComplex.homologyMapIso
+      (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections
+        (TopCat.of (ComplexPoint X)) (constantFieldSheafComplexInt K X)) 0).hom.hom x
+  ((TopCat.Sheaf.toHypercohomology AddCommGrpCat (TopCat.of (ComplexPoint X)) 0).app
+    (constantFieldSheafComplexIntPlus K X)).hom y
+
+/-- The degree-zero constant class associated to a field element. -/
+def fieldCohomologyClass (q : K) : H^0(X; K) :=
+  q • fieldCohomologyUnit K X
 
 /-- Extension of coefficients from rational to complex constant-sheaf cohomology. -/
 def fieldToComplexCohomology (n : ℤ) :
     H^n(X; K) →+ ComplexConstantCohomology X n :=
-  hypercohomologyMap X
-    (fieldToComplexConstantSheafComplexInt K X) n
+  ((analyticHypercohomologyFunctor X n).map
+    (⟨fieldToComplexConstantSheafComplexInt K X⟩ :
+      constantFieldSheafComplexIntPlus K X ⟶
+        constantComplexSheafComplexIntPlus X)).hom
 
 /-- The cohomological retraction induced by the chosen rational-linear retraction `ℂ → K`. -/
 def complexToFieldCohomology (n : ℤ) :
     ComplexConstantCohomology X n →+ H^n(X; K) :=
-  hypercohomologyMap X
-    (complexToFieldConstantSheafComplexInt K X) n
+  ((analyticHypercohomologyFunctor X n).map
+    (⟨complexToFieldConstantSheafComplexInt K X⟩ :
+      constantComplexSheafComplexIntPlus X ⟶
+        constantFieldSheafComplexIntPlus K X)).hom
 
 omit [Algebra K ℂ] in
 /-- Constant degree-zero cohomology classes respect rational scalar multiplication. -/
 lemma fieldCohomologyClass_mul (q r : K) :
     fieldCohomologyClass K X (q * r) =
       q • fieldCohomologyClass K X r := by
-  rw [field_smul_eq]
-  unfold fieldCohomologyClass hypercohomologyMap
-  dsimp
-  rw [← smallShiftedHomMkZero_comp X,
-    integerToFieldConstantSheafComplexInt_comp_fieldScalarComplex]
+  simp [fieldCohomologyClass, mul_smul]
 
 /-- Rational constants map rational-linearly to degree-zero rational cohomology. -/
 def fieldCohomologyClassLinear : K →ₗ[K] H^0(X; K) where
   toFun := fieldCohomologyClass K X
-  map_add' := fieldCohomologyClass_add K X
+  map_add' := by simp [fieldCohomologyClass, add_smul]
   map_smul' q r := fieldCohomologyClass_mul K X q r
 
 end AlgebraicGeometry.ComplexPoint
@@ -131,6 +120,7 @@ open Point
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
 attribute [local instance] analyticHasDerivedCategory
+local instance : HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard _
 
 /-- The rational constant sheaf is a retract of the complex constant sheaf. -/
 lemma fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf :
@@ -165,12 +155,14 @@ lemma fieldToComplexConstantSheafComplexInt_comp_complexToField :
   rw [hmap]
   exact HomologicalComplex.extendMap_id _ _
 
-lemma complexConstantCohomologyDeRhamEquiv_apply
+lemma complexConstantCohomologyDeRhamAddEquiv_apply
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
     (α : ComplexConstantCohomology X n) :
-    complexConstantCohomologyDeRhamEquiv X n α =
-      hypercohomologyMap X
-        (constantsToHolomorphicDeRhamComplexInt X) n α :=
+    complexConstantCohomologyDeRhamAddEquiv X n α =
+      (analyticHypercohomologyFunctor X n).map
+        (⟨constantsToHolomorphicDeRhamComplexInt X⟩ :
+          constantComplexSheafComplexIntPlus X ⟶
+            holomorphicDeRhamComplexIntPlus X) α :=
   rfl
 
 /-- The rational-to-complex cohomology map has the displayed cohomological left inverse. -/
@@ -179,10 +171,20 @@ lemma complexToFieldCohomology_leftInverse (n : ℤ) :
       (fieldToComplexCohomology K X n) := by
   intro α
   unfold complexToFieldCohomology fieldToComplexCohomology
-  rw [← hypercohomologyMap_comp_apply X,
-    fieldToComplexConstantSheafComplexInt_comp_complexToField,
-    hypercohomologyMap_id]
-  rfl
+  let f : constantFieldSheafComplexIntPlus K X ⟶
+      constantComplexSheafComplexIntPlus X :=
+    ⟨fieldToComplexConstantSheafComplexInt K X⟩
+  let g : constantComplexSheafComplexIntPlus X ⟶
+      constantFieldSheafComplexIntPlus K X :=
+    ⟨complexToFieldConstantSheafComplexInt K X⟩
+  change (analyticHypercohomologyFunctor X n).map g
+    ((analyticHypercohomologyFunctor X n).map f α) = α
+  rw [← Functor.map_comp_apply]
+  have h : f ≫ g = 𝟙 _ := by
+    apply ObjectProperty.hom_ext
+    exact fieldToComplexConstantSheafComplexInt_comp_complexToField K X
+  rw [h]
+  simp
 
 /-- Extension from rational to complex constant-sheaf cohomology is injective in every degree. -/
 lemma fieldToComplexCohomology_injective (n : ℤ) :
@@ -194,12 +196,16 @@ lemma fieldToDeRhamCohomology_factor
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
     (α : H^n(X; K)) :
     fieldToDeRhamCohomology K X n α =
-      hypercohomologyMap X
-        (constantsToHolomorphicDeRhamComplexInt X) n
+      (analyticHypercohomologyFunctor X n).map
+        (⟨constantsToHolomorphicDeRhamComplexInt X⟩ :
+          constantComplexSheafComplexIntPlus X ⟶
+            holomorphicDeRhamComplexIntPlus X)
         (fieldToComplexCohomology K X n α) := by
-  exact hypercohomologyMap_comp_apply X
-    (fieldToComplexConstantSheafComplexInt K X)
-    (constantsToHolomorphicDeRhamComplexInt X) n α
+  exact Functor.map_comp_apply (analyticHypercohomologyFunctor X n)
+    (⟨fieldToComplexConstantSheafComplexInt K X⟩ :
+      constantFieldSheafComplexIntPlus K X ⟶ constantComplexSheafComplexIntPlus X)
+    (⟨constantsToHolomorphicDeRhamComplexInt X⟩ :
+      constantComplexSheafComplexIntPlus X ⟶ holomorphicDeRhamComplexIntPlus X) α
 
 /-- The rational-to-de Rham comparison is injective. The holomorphic Poincaré lemma supplies
 the analytic quasi-isomorphism, while the explicit splitting of `K → ℂ` proves that extending
@@ -209,8 +215,8 @@ lemma fieldToDeRhamCohomology_injective
     Function.Injective (fieldToDeRhamCohomology K X n) := by
   intro α β hαβ
   apply fieldToComplexCohomology_injective K X n
-  apply (complexConstantCohomologyDeRhamEquiv X n).injective
-  simpa only [complexConstantCohomologyDeRhamEquiv_apply,
+  apply (complexConstantCohomologyDeRhamAddEquiv X n).injective
+  simpa only [complexConstantCohomologyDeRhamAddEquiv_apply,
     fieldToDeRhamCohomology_factor K X n] using hαβ
 
 /-- The part of the holomorphic de Rham complex in form degrees at least `p` is zero when `p`
@@ -235,10 +241,15 @@ lemma hodgeFilteredDeRhamInclusion_eq_zero_of_lt
 lemma hodgeFiltration_eq_bot_of_lt [IsIntegral X.left] [Smooth X.hom]
     {p : ℤ} (hp : (dim X.left : ℤ) < p) (n : ℤ) :
     hodgeFiltration X p n = ⊥ := by
-  change (hypercohomologyMap X
-    (hodgeFilteredDeRhamInclusion X p) n).range = ⊥
-  rw [hodgeFilteredDeRhamInclusion_eq_zero_of_lt X hp,
-    hypercohomologyMap_zero]
+  change AddMonoidHom.range (((analyticHypercohomologyFunctor X n).map
+    (⟨hodgeFilteredDeRhamInclusion X p⟩ : hodgeFilteredDeRhamComplexPlus X p ⟶
+      holomorphicDeRhamComplexIntPlus X)).hom) = ⊥
+  have h : (⟨hodgeFilteredDeRhamInclusion X p⟩ :
+      hodgeFilteredDeRhamComplexPlus X p ⟶ holomorphicDeRhamComplexIntPlus X) =
+        (0 : hodgeFilteredDeRhamComplexPlus X p ⟶ holomorphicDeRhamComplexIntPlus X) := by
+    apply ObjectProperty.hom_ext
+    exact hodgeFilteredDeRhamInclusion_eq_zero_of_lt X hp
+  rw [h, Functor.map_zero]
   simp
 
 /-- Conjugation on de Rham hypercohomology is an involution. -/
@@ -246,9 +257,17 @@ lemma deRhamConj_involutive [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     Function.Involutive (deRhamConj X n) := by
   intro α
   rw [deRhamConj_apply, deRhamConj_apply, AddEquiv.symm_apply_apply,
-    ← hypercohomologyMap_comp_apply, conjConstantComplexSheafComplexInt_comp_self,
-    hypercohomologyMap_id]
-  exact AddEquiv.apply_symm_apply _ α
+    ← Functor.map_comp_apply]
+  let f : constantComplexSheafComplexIntPlus X ⟶
+      constantComplexSheafComplexIntPlus X := ⟨conjConstantComplexSheafComplexInt X⟩
+  change (complexConstantCohomologyDeRhamAddEquiv X n)
+    ((analyticHypercohomologyFunctor X n).map (f ≫ f)
+      ((complexConstantCohomologyDeRhamAddEquiv X n).symm α)) = α
+  have h : f ≫ f = 𝟙 _ := by
+    apply ObjectProperty.hom_ext
+    exact conjConstantComplexSheafComplexInt_comp_self X
+  rw [h]
+  simp
 
 /-- If conjugation fixes the image of `K` in `ℂ`, it fixes the constant `K`-sheaf sitting inside
 the constant `ℂ`-sheaf. -/
@@ -280,12 +299,26 @@ lemma fieldToComplexConstantSheafComplexInt_comp_conj
 lemma conj_fieldToComplexCohomology
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q)
     (n : ℤ) (α : H^n(X; K)) :
-    hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n
+    (analyticHypercohomologyFunctor X n).map
+      (⟨conjConstantComplexSheafComplexInt X⟩ :
+        constantComplexSheafComplexIntPlus X ⟶ constantComplexSheafComplexIntPlus X)
         (fieldToComplexCohomology K X n α) =
       fieldToComplexCohomology K X n α := by
   unfold fieldToComplexCohomology
-  rw [← hypercohomologyMap_comp_apply,
-    fieldToComplexConstantSheafComplexInt_comp_conj K X hK]
+  let f : constantFieldSheafComplexIntPlus K X ⟶
+      constantComplexSheafComplexIntPlus X :=
+    ⟨fieldToComplexConstantSheafComplexInt K X⟩
+  let g : constantComplexSheafComplexIntPlus X ⟶
+      constantComplexSheafComplexIntPlus X :=
+    ⟨conjConstantComplexSheafComplexInt X⟩
+  change (analyticHypercohomologyFunctor X n).map g
+      ((analyticHypercohomologyFunctor X n).map f α) =
+    (analyticHypercohomologyFunctor X n).map f α
+  rw [← Functor.map_comp_apply]
+  have h : f ≫ g = f := by
+    apply ObjectProperty.hom_ext
+    exact fieldToComplexConstantSheafComplexInt_comp_conj K X hK
+  rw [h]
 
 /-- Such classes are their own conjugates in de Rham hypercohomology. This is the step that
 makes `F^p` alone the right condition over `ℚ`. -/

@@ -505,6 +505,10 @@ def constantComplexSheafComplexInt :
     (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
       𝓒(↧(ComplexPoint X); ℂ)).extend ComplexShape.embeddingUpNat
 
+instance : (constantComplexSheafComplexInt X).IsStrictlyGE 0 := by
+  unfold constantComplexSheafComplexInt
+  infer_instance
+
 /-- Complex conjugation on the constant complex-valued complex concentrated in degree zero. -/
 def conjConstantComplexComplex :
     (CochainComplex.single₀

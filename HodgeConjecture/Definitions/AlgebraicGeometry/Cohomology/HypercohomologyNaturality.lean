@@ -44,18 +44,18 @@ local instance hypercohomologyNaturalitySheafDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-/-- Hypercohomology of an actual K-injective complex is its global-section
-cohomology. This direct form exposes naturality without choosing another
-injective resolution. -/
+local instance hypercohomologyNaturalityAddCommGrpDerivedCategory :
+    HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard AddCommGrpCat
+
+/-- Hypercohomology of a bounded-below termwise-injective complex is its
+global-section cohomology. -/
 def hypercohomologyAddEquivGlobalSectionsKInjective
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective] (n : ℤ) :
+    (K : CochainComplex.Plus (AnalyticAdditiveSheaf X))
+    [∀ i, Injective (K.obj.X i)] (n : ℤ) :
     Hypercohomology X K n ≃+
-      (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X)) K).homology n :=
-  (hypercohomologyAddEquivDerived X K n).trans
-    ((isoHomCongrAddEquiv
-      (DerivedCategory.Q.mapIso (constantIntegerSheafComplexIntIsoSingle X))
-      (Iso.refl _)).trans
-      (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective
-        (TopCat.of (ComplexPoint X)) K n))
+      (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
+        (TopCat.of (ComplexPoint X)) K.obj).homology n :=
+  (TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat
+    (TopCat.of (ComplexPoint X)) K n).addCommGroupIsoToAddEquiv
 
 end AlgebraicGeometry.ComplexPoint

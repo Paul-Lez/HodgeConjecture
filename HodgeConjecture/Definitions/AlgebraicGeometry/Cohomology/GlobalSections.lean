@@ -128,12 +128,6 @@ def integerConstantSingleComplex (Y : TopCat.{0}) :
     ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
       (AddCommGrpCat.of ℤ))
 
-/-- Evaluation of an integer-indexed sheaf complex on the top open subset. -/
-def globalSectionsComplexInt (Y : TopCat.{0})
-    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
-    CochainComplex AddCommGrpCat ℤ :=
-  IsFlasque.BoundedBelowComplex.globalSectionsComplex K
-
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The additive constant-sheaf adjunction identifies the coyoneda functor represented by the
@@ -142,7 +136,7 @@ def integerConstantHomIsoGlobalSectionsFunctor (Y : TopCat.{0}) :
     preadditiveCoyoneda.obj
         (.op ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
           (AddCommGrpCat.of ℤ))) ≅
-      IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y :=
+      TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y :=
   NatIso.ofComponents
     (fun F ↦ (integerConstantHomAddEquivGlobalSections F).toAddCommGrpIso)
     (fun {F G} f ↦ by
@@ -160,10 +154,10 @@ sections. -/
 def homComplexSingleIntegerIsoGlobalSections
     (Y : TopCat.{0}) (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
     CochainComplex.HomComplex (integerConstantSingleComplex Y) K ≅
-      globalSectionsComplexInt Y K :=
+      globalSectionsComplex AddCommGrpCat Y K :=
   let pre := (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y))
   letI : Preadditive (TopCat.Sheaf AddCommGrpCat Y) := pre
-  letI : (IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).PreservesZeroMorphisms :=
+  letI : (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
   CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda
       ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
