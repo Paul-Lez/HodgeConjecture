@@ -12,13 +12,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.Hypercohomolog
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
-namespace TopCat.Sheaf
-
-variable (Y : TopCat.{0}) (K : CochainComplex (Sheaf AddCommGrpCat Y) ℤ)
-  (s n n' : ℤ) (h : n + s = n')
-
-end TopCat.Sheaf
-
 namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))

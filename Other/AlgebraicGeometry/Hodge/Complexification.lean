@@ -46,8 +46,6 @@ open Point
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
 
-attribute [local instance] hodgeFiltrationTopology
-
 attribute [local instance] analyticHasDerivedCategory
 
 /-- The Hodge filtration is decreasing: forms of degree at least `p'` have degree at least `p`

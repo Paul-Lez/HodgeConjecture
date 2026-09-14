@@ -535,8 +535,6 @@ theorem relativeMayerVietoris_exact_intersection (hU : IsOpen U) (hV : IsOpen V)
   · exact relativeMayerVietorisBoundary_comm X U V hU hV n
   · exact relativeMayerVietorisLeftHomologyIso_comm X U V n
 
-attribute [local instance] homologyFunctor_preservesBinaryBiproducts
-
 end Subsets
 
 section ClosedSupports

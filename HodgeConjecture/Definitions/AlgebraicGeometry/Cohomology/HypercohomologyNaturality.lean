@@ -13,17 +13,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHyperco
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
-namespace CochainComplex.HomComplex
-
-variable {C : Type*} [Category* C] [Abelian C]
-  (A : C) {K L : CochainComplex C ℤ} (f : K ⟶ L)
-
-end CochainComplex.HomComplex
-
-namespace TopCat.Sheaf
-
-end TopCat.Sheaf
-
 namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))

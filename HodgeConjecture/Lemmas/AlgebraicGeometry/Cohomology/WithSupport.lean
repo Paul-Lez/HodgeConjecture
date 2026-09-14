@@ -21,6 +21,8 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 public import Mathlib.CategoryTheory.Abelian.Injective.Resolution
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Rational cohomology with support
 
@@ -53,19 +55,12 @@ def analyticComplementInclusion (Z : Set (ComplexPoint X)) :
 abbrev AnalyticComplementAdditiveSheaf (Z : Set (ComplexPoint X)) :=
   TopCat.Sheaf AddCommGrpCat (TopCat.of ↥Zᶜ)
 
-/-- The rational constant sheaf on the complement. -/
-def complementConstantRationalSheaf (Z : Set (ComplexPoint X)) :
-    AnalyticComplementAdditiveSheaf X Z :=
-  let J := Opens.grothendieckTopology
-    (TopCat.of ↥Zᶜ)
-  (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of ℚ)
-
 /-- The rational constant sheaf on the complement, pushed forward to the ambient space. -/
 def pushforwardComplementConstantRationalSheaf
     (Z : Set (ComplexPoint X)) : AnalyticAdditiveSheaf X :=
   (TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion X Z)).obj
-      (complementConstantRationalSheaf X Z)
+      𝓒(↧↥Zᶜ; ℚ)
 
 /-- Constant rational sections restrict canonically to locally constant sections on the
 complement. This is the presheaf morphism before sheafifying the source. -/
@@ -81,7 +76,7 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
 
 /-- The canonical restriction of the rational constant sheaf to the complement. -/
 def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
-    constantFieldSheaf ℚ X ⟶
+    𝓒(↧(ComplexPoint X); ℚ) ⟶
       pushforwardComplementConstantRationalSheaf X Z :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
@@ -91,8 +86,8 @@ def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
 /-- A fixed injective resolution used to compute the derived pushforward from the complement. -/
 def complementConstantRationalInjectiveResolution
     (Z : Set (ComplexPoint X)) :
-    InjectiveResolution (complementConstantRationalSheaf X Z) :=
-  injectiveResolution (complementConstantRationalSheaf X Z)
+    InjectiveResolution 𝓒(↧↥Zᶜ; ℚ) :=
+  injectiveResolution 𝓒(↧↥Zᶜ; ℚ)
 
 /-- A complex representing the derived pushforward of the rational constant sheaf on the
 complement. -/
@@ -163,7 +158,7 @@ def pushforwardComplementResolutionMap
         (ComplexShape.up ℕ)).obj
       ((CochainComplex.single₀
         (AnalyticComplementAdditiveSheaf X Z)).obj
-          (complementConstantRationalSheaf X Z)) ⟶
+          𝓒(↧↥Zᶜ; ℚ)) ⟶
     derivedPushforwardComplementConstantRationalComplexNat X Z :=
   ((TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion X Z)).mapHomologicalComplex
@@ -175,14 +170,14 @@ pushforward from the complement. -/
 def rationalRestrictionComplexNat
     (Z : Set (ComplexPoint X)) :
     (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        (constantFieldSheaf ℚ X) ⟶
+        𝓒(↧(ComplexPoint X); ℚ) ⟶
       derivedPushforwardComplementConstantRationalComplexNat X Z :=
   (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
       (rationalRestrictionSheaf X Z) ≫
     (HomologicalComplex.singleMapHomologicalComplex
       (TopCat.Sheaf.pushforward AddCommGrpCat
         (analyticComplementInclusion X Z)) (ComplexShape.up ℕ) 0).inv.app
-          (complementConstantRationalSheaf X Z) ≫
+          𝓒(↧↥Zᶜ; ℚ) ≫
     pushforwardComplementResolutionMap X Z
 
 /-- Restriction from the ambient rational constant complex to the derived pushforward from the
@@ -340,10 +335,6 @@ open Point
 variable (X : Over (Spec ↧ℂ))
 
 attribute [local instance] analyticSupportHasDerivedCategory
-
-section
-
-end
 
 @[simp] lemma forgetSupportEquivUniv_apply (n : ℤ)
     (α : RationalCohomologyWithSupport X

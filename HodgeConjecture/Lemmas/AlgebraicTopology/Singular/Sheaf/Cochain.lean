@@ -376,7 +376,7 @@ lemma constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_locallyPrimitive
             (singularCochainPresheaf R X (n + 1)).map i.op φ) :
     QuasiIsoAt (constantsToSingularCochainSheafComplex R X) (n + 1) := by
   rw [quasiIsoAt_iff_exactAt _ _
-    (CochainComplex.exactAt_succ_single_obj (constantCoefficientSheaf R X) n)]
+    (CochainComplex.exactAt_succ_single_obj 𝓒(X; R) n)]
   exact singularCochainSheafComplex_exactAt_succ_of_locallyPrimitive R X n hlocal
 
 set_option backward.isDefEq.respectTransparency false in

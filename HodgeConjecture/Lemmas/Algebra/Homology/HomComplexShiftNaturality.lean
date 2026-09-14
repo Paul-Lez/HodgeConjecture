@@ -12,12 +12,6 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturali
 
 open CategoryTheory CategoryTheory.Limits
 
-namespace CategoryTheory.ShortComplex
-
-variable {C : Type*} [Category* C] [Abelian C]
-
-end CategoryTheory.ShortComplex
-
 namespace CochainComplex.HomComplex
 
 variable {C : Type*} [Category* C] [Abelian C]

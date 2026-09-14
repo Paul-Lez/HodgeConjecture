@@ -17,6 +17,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.Filtration
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # The Hodge filtration
 
@@ -42,9 +44,9 @@ attribute [local instance] analyticHasDerivedCategory
 
 /-- A rational number as a morphism from the integer to the rational constant sheaf. -/
 def integerToFieldConstantSheaf (q : K) :
-    constantIntegerSheaf X ⟶ constantFieldSheaf K X :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
-  (constantSheaf J AddCommGrpCat).map (AddCommGrpCat.ofHom (zmultiplesAddHom K q))
+    𝓒(↧(ComplexPoint X); ℤ) ⟶ 𝓒(↧(ComplexPoint X); K) :=
+  (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+    (AddCommGrpCat.ofHom (zmultiplesAddHom K q))
 
 omit [Algebra K ℂ] in
 @[simp] lemma integerToFieldConstantSheaf_zero :

@@ -59,17 +59,3 @@ def complexSupportedSingularInjectiveHomologyIso
 end AlgebraicGeometry.ComplexPoint
 
 end
-
-@[expose] public noncomputable section
-
-open CategoryTheory TopologicalSpace
-open AlgebraicTopology.Singular
-
-namespace AlgebraicGeometry.ComplexPoint
-
-variable (X : Over (Spec ↧ℂ))
-  [IsIntegral X.left] [Smooth X.hom]
-
-variable [IsProjective X.hom]
-
-end AlgebraicGeometry.ComplexPoint

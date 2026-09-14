@@ -56,11 +56,3 @@ noncomputable def postcompEquivOfIsIso {a b c : ℤ}
   simp [postcompEquivOfIsIso, ShiftedHom.comp]
 
 end CategoryTheory.ShiftedHom
-
-namespace CategoryTheory.Pretriangulated.Triangle
-
-variable {C : Type u} [Category.{v} C] [Limits.HasZeroObject C]
-  [HasShift C ℤ] [Preadditive C]
-  [∀ (n : ℤ), (CategoryTheory.shiftFunctor C n).Additive] [Pretriangulated C]
-
-end CategoryTheory.Pretriangulated.Triangle

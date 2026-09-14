@@ -20,14 +20,6 @@ an immersion or purity field.
 
 open CategoryTheory Topology TopologicalSpace Filter
 
-namespace AlgebraicGeometry
-
-universe u
-
-variable {X Y : Scheme.{u}} (i : Y ⟶ X) [IsClosedImmersion i]
-
-end AlgebraicGeometry
-
 namespace AlgebraicGeometry.ComplexPoint
 
 variable (X Y : Over (Spec ↧ℂ))

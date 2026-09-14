@@ -78,6 +78,4 @@ local instance reducedSmoothStratificationWellFoundedRelation [NoetherianSpace X
     WellFoundedRelation (Closeds X) :=
   ⟨(· < ·), wellFounded_lt⟩
 
-variable [PerfectField K] [NoetherianSpace X]
-
 end AlgebraicGeometry

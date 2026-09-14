@@ -24,10 +24,6 @@ namespace CochainComplex
 
 variable {C : Type*} [Category* C] [Abelian C]
 
-namespace mappingCone
-
-end mappingCone
-
 namespace mappingCocone
 
 variable (S : ShortComplex (CochainComplex C ℤ))

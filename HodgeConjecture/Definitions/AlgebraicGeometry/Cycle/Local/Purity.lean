@@ -58,14 +58,3 @@ def normalizedRelativeCoclass {R : Type*} [Field R] {X : TopPair} {n : ℕ}
   (relativeCohomologyEquivDualHomology R X n).symm (normalizedDual z hz)
 
 end AlgebraicTopology.Singular
-
-namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
-
-open AlgebraicTopology.Singular
-
-variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
-  [Smooth X.hom] [IsProjective X.hom] {x : X.left}
-  [SmoothOfRelativeDimension d X.hom]
-  (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

@@ -162,16 +162,3 @@ lemma relativeDualCochainShortComplexInt_shortExact (X : TopPair.{u}) :
 end AlgebraicTopology.Singular
 
 end
-
-@[expose] public noncomputable section
-
-open CategoryTheory Limits
-open CategoryTheory.Pretriangulated
-
-universe u
-
-namespace AlgebraicTopology.Singular
-
-variable (R : Type u) [CommRing R]
-
-end AlgebraicTopology.Singular

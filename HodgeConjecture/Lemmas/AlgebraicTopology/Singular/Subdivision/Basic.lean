@@ -155,10 +155,4 @@ public theorem subdivisionLastVertexChainMap_naturality
   rw [← Functor.map_comp, ← Functor.map_comp, subdivisionLastVertex.naturality]
   rfl
 
-section CoverSmallSubdivision
-
-variable {i : Type} (X : TopCat) (U : i → Set X)
-
-end CoverSmallSubdivision
-
 end AlgebraicTopology.Singular

@@ -33,12 +33,6 @@ direct image along an open embedding preserves injective additive sheaves.
 open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
 open scoped CochainComplex.Plus.modelCategoryQuillen
 
-namespace Topology.IsOpenEmbedding
-
-variable {X Y : TopCat.{0}} {f : X ⟶ Y} (hf : IsOpenEmbedding f)
-
-end Topology.IsOpenEmbedding
-
 namespace CochainComplex
 
 universe v u
@@ -90,7 +84,7 @@ lemma constantsToSingularCochainSheafComplex_mono
       exact constantsToSingularCochainZeroSheaf_mono R Y
   | succ n =>
       exact (HomologicalComplex.isZero_single_obj_X (ComplexShape.up ℕ) 0
-        (constantCoefficientSheaf R Y) (n + 1) (by lia)).mono _
+        𝓒(Y; R) (n + 1) (by lia)).mono _
 
 /-- Extending the constant-to-singular-cochain resolution to integer degrees remains monic. -/
 lemma constantsToSingularCochainComplexInt_mono
@@ -108,7 +102,7 @@ lemma constantsToSingularCochainComplexInt_mono
       (i := m) (i' := (m : ℤ)) rfl]
     infer_instance
   · exact (((CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat Y)).obj
-      (constantCoefficientSheaf R Y)).isZero_extend_X
+      𝓒(Y; R)).isZero_extend_X
         ComplexShape.embeddingUpNat n (fun i hi ↦ hn ⟨i, hi⟩)).mono _
 
 end AlgebraicTopology.Singular

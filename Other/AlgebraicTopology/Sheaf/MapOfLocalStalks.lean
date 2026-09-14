@@ -12,6 +12,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.MapOfLocalStalks
 
 /-!
@@ -66,7 +67,7 @@ def constantPresheafMapOfLocallyRepresentable :
 
 /-- Gluing followed by sheafification constructs the constant-sheaf map. -/
 def constantSheafMapOfLocallyRepresentable :
-    (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj A ⟶ F :=
+    𝓒[X; A] ⟶ F :=
   ⟨sheafifyLift (Opens.grothendieckTopology X)
     (constantPresheafMapOfLocallyRepresentable F A g hlocal) F.property⟩
 
@@ -77,7 +78,7 @@ set_option backward.isDefEq.respectTransparency false in
 group to the stalk. Its map is the germ of an actual constant section. -/
 def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
     A ≅ (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj
-      ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj A).obj :=
+      𝓒[X; A].obj :=
   let P : TopCat.Presheaf AddCommGrpCat.{u} X := (Functor.const (Opens X)ᵒᵖ).obj A
   letI : IsIso (P.Γgerm x) := by
     apply (ConcreteCategory.isIso_iff_bijective _).2
@@ -93,8 +94,6 @@ def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
   asIso (P.Γgerm x) ≪≫
     asIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
       (toSheafify (Opens.grothendieckTopology X) P))
-
-variable (F)
 
 end TopCat.Sheaf
 

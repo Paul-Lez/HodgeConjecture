@@ -116,6 +116,4 @@ def kInjectiveDerivedHomAddEquivCohomologyClass
   eDerived.trans <| eQh.symm.trans <|
     CochainComplex.HomComplex.CohomologyClass.homAddEquiv.symm
 
-open AlgebraicTopology.Singular
-
 end AlgebraicGeometry.ComplexPoint

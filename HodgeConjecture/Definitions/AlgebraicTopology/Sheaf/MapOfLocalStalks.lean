@@ -84,12 +84,4 @@ theorem sectionOfLocallyRepresentable_germ
     F.presheaf.Γgerm x (sectionOfLocallyRepresentable F g hlocal) = g x :=
   (existsUnique_section_of_locally_representable F g hlocal).exists.choose_spec x
 
-variable (A : AddCommGrpCat.{u}) (g : ∀ x : X, A ⟶ F.presheaf.stalk x)
-  (hlocal : ∀ (a : A) (x : X), ∃ (U : Opens X) (_ : x ∈ U) (s : F.presheaf.obj (op U)),
-    ∀ (y : X) (hy : y ∈ U), F.presheaf.germ U y hy s = g y a)
-
-variable {F}
-
-variable (F)
-
 end TopCat.Sheaf
