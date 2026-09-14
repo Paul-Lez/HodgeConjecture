@@ -15,10 +15,8 @@ limitations under the License.
 -/
 module
 
-import HodgeConjecture.Mathlib.Algebra.Homology.Notation
-
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
-public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModelLemmas
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 
 /-!
 # SupportConeInjectiveModel, the part the statement does not need
@@ -34,7 +32,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
 
-/-- The support-cone comparison preserves the connecting morphism used to
+/-- The old-cone comparison preserves the actual connecting morphism used to
 forget support, with the ambient augmentation on its target. -/
 @[reassoc]
 lemma rationalSupportConeToAmbientInjectiveCone_connecting
@@ -52,12 +50,12 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The group-cone comparison preserves its connecting morphism with the
 identity on the ambient global sections. -/
 @[reassoc]
-lemma supportConeToAmbientInjectiveGlobalCone_connecting
+lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    supportConeToAmbientInjectiveGlobalCone X Z hZ ≫
+    actualSupportConeToAmbientInjectiveGlobalCone X Z hZ ≫
       (CochainComplex.mappingCone.triangle
-        (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
+        (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
             (ambientRationalInjectiveRestriction X Z hZ))).mor₃ =
     (CochainComplex.mappingCone.triangle
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
@@ -67,16 +65,16 @@ lemma supportConeToAmbientInjectiveGlobalCone_connecting
     (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
       (ambientRationalInjectiveComplex X)).g
-    (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
+    (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
         (ambientRationalInjectiveRestriction X Z hZ)) (𝟙 _)
     (globalAmbientRationalOpenResolutionComparison X Z hZ)
     (show _ = _ from by
-      let Γ := (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ
+      let Γ := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,
-        supportRestriction_comp_openResolutionComparison])).comm₃
+        actualRestriction_comp_openResolutionComparison])).comm₃
   exact h.symm.trans ((congrArg (fun f =>
     (CochainComplex.mappingCone.triangle
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex

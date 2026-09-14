@@ -36,6 +36,14 @@ open Point
 
 variable (X : Over (Spec ↧ℂ))
 
+local instance singularComparisonHasDerivedCategory :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard _
+
+local instance singularComparisonAddCommGrpHasDerivedCategory :
+    HasDerivedCategory AddCommGrpCat :=
+  HasDerivedCategory.standard _
+
 /-- The rational constant-sheaf comparison with the integer-indexed singular-cochain
 resolution. -/
 def rationalToSingularCochainComplexInt :
@@ -50,46 +58,41 @@ lemma rationalToSingularCochainComplexInt_quasiIso
     QuasiIso (rationalToSingularCochainComplexInt X) := by
   exact constantsToSingularCochainComplexInt_quasiIso X ℚ
 
+/-- The rational singular-cochain resolution as a bounded-below complex. -/
+abbrev rationalSingularCochainComplexIntPlus :
+    CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
+  ⟨singularCochainSheafComplexInt X ℚ, ⟨0, inferInstance⟩⟩
+
 /-- Hypercohomology of the integer-indexed rational singular-cochain sheaf complex. -/
-abbrev RationalSingularCochainHypercohomology (n : ℤ) : Type 1 :=
-  Hypercohomology X (singularCochainSheafComplexInt X ℚ) n
-
-/-- Hypercohomology of the rational constant sheaf complex is canonically additively equivalent
-to the hypercohomology of its singular-cochain resolution. -/
-def rationalHypercohomologySingularCochainAddEquiv
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    Hypercohomology X (constantFieldSheafComplexInt ℚ X) n ≃+
-      RationalSingularCochainHypercohomology X n where
-  toEquiv := Localization.SmallShiftedHom.postcompEquiv
-    (rationalToSingularCochainComplexInt X)
-    (rationalToSingularCochainComplexInt_quasiIso X)
-  map_add' α β :=
-    (hypercohomologyMap X
-      (rationalToSingularCochainComplexInt X) n).map_add α β
-
-@[simp]
-lemma rationalHypercohomologySingularCochainAddEquiv_apply
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n) :
-    rationalHypercohomologySingularCochainAddEquiv X n α =
-      hypercohomologyMap X
-        (rationalToSingularCochainComplexInt X) n α :=
-  rfl
+abbrev RationalSingularCochainHypercohomology (n : ℤ) :=
+  Hypercohomology X (rationalSingularCochainComplexIntPlus X) n
 
 /-- Rational constant-sheaf cohomology is canonically additively equivalent to the
 hypercohomology of its singular-cochain resolution. -/
 def rationalCohomologySingularCochainAddEquiv
-    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
-    H^n(X; ℚ) ≃+ RationalSingularCochainHypercohomology X n :=
-  (hypercohomologyAddEquivConstantCohomology ℚ X n).symm.trans
-    (rationalHypercohomologySingularCochainAddEquiv X n)
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    H^n(X; ℚ) ≃+
+      RationalSingularCochainHypercohomology X n := by
+  let f : constantFieldSheafComplexIntPlus ℚ X ⟶
+      rationalSingularCochainComplexIntPlus X :=
+    ⟨rationalToSingularCochainComplexInt X⟩
+  let _ : QuasiIso f.hom := rationalToSingularCochainComplexInt_quasiIso X
+  let _ : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
+  let _ : IsIso ((analyticHypercohomologyFunctor X n).map f) := by
+    dsimp
+    infer_instance
+  exact (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv
 
 @[simp]
 lemma rationalCohomologySingularCochainAddEquiv_apply
-    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) (α : H^n(X; ℚ)) :
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
+    (α : H^n(X; ℚ)) :
     rationalCohomologySingularCochainAddEquiv X n α =
-      hypercohomologyMap X (rationalToSingularCochainComplexInt X) n
-        ((hypercohomologyAddEquivConstantCohomology ℚ X n).symm α) :=
+      (analyticHypercohomologyFunctor X n).map
+        (⟨rationalToSingularCochainComplexInt X⟩ :
+          constantFieldSheafComplexIntPlus ℚ X ⟶
+            rationalSingularCochainComplexIntPlus X) α := by
+  change ((rationalCohomologySingularCochainAddEquiv X n).toAddMonoidHom α) = _
   rfl
 
 end AlgebraicGeometry.ComplexPoint

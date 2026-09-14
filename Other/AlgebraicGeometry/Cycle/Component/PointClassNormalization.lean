@@ -4,14 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-import HodgeConjecture.Mathlib.Algebra.Homology.Notation
-
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Cycle.Component.PointCoclassNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafNormalization
 public import Other.AlgebraicGeometry.Cycle.SheafClass
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionRestriction
 public import Other.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
-public import Other.AlgebraicGeometry.Cohomology.SupportConeForget
 public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Cycle.Support
 
@@ -43,7 +41,7 @@ theorem complexSupportInjectiveCohomologySheafIsoRelative_restriction_section
     (S : Closeds (ComplexPoint X)) (n : ℕ)
     {V W : Opens (ComplexPoint X)} (a : W ⟶ V) :
     HomologicalComplex.homologyMap
-      (TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) ℤᵘᵖ
+      (TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) (.up ℤ)
         (complexSupportInjectiveComplex X S) a) (n : ℤ) ≫
       TopCat.Sheaf.sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
         (complexSupportInjectiveComplex X S) (n : ℤ) W ≫
@@ -54,6 +52,17 @@ theorem complexSupportInjectiveCohomologySheafIsoRelative_restriction_section
   rw [TopCat.Sheaf.sectionCohomologyToSheafSection_restriction_assoc,
     (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.naturality,
     complexSupportInjectiveCohomologySheafIsoRelative_section_assoc]
+
+/-- The normalization isomorphism's forward map displays the actual restriction,
+actual lowest-degree map, and actual cohomology-sheaf comparison. -/
+theorem cycleComponentSupportedClassNormalizationIso_hom :
+    (cycleComponentSupportedClassNormalizationIso X x hx).hom =
+      HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x)
+        (2 * (p : ℤ)) ≫
+      (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom ≫
+      (complexSupportInjectiveCohomologySheafIsoRelative X
+        (cycleComponentAnalyticClosedSupport X x) (2 * p)).hom.hom.app
+          (op (cycleComponentSmoothSupportAmbientOpen X x)) := rfl
 
 section Point
 
@@ -78,21 +87,11 @@ def analyticComponentPointRelativeCoclass :
 comparison; this is an explicit comparison target, not the definition of the general class. -/
 def analyticComponentPointSupportedInjectiveCoclass :
     (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      ℤᵘᵖ).obj (complexSupportInjectiveComplex X
+      (.up ℤ)).obj (complexSupportInjectiveComplex X
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (d : ℤ)) :=
   (complexSupportInjectiveSectionCohomologyEquiv X
     (cycleComponentAnalyticClosedSupport X x) ⊤ (2 * d)).symm
       (analyticComponentPointRelativeCoclass X x d z)
-
-/-- The positive literal supported-kernel inclusion of the old point coclass, in
-the repository's ordinary rational cohomology. No legacy cone-sign equality is claimed. -/
-def analyticComponentPointPositiveKernelClass : H^(2 * d)(X; ℚ) :=
-  (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * d)).symm
-    (HomologicalComplex.homologyMap
-      (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
-        (ambientRationalInjectiveComplex X)).f (2 * (d : ℤ))
-      (analyticComponentPointSupportedInjectiveCoclass X x d z))
 
 /-- The comparison target retains exactly the old normalized relative point coclass. -/
 @[simp]
@@ -145,63 +144,20 @@ theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
-private theorem cycleComponentSupportedInjectiveClass_point_normalization_aux
-    (hx : Order.coheight x = d) (a : CycleComponentSupportedCohomology X x d)
-    (ha : (rationalSupportAddEquivSupportedInjectiveHomology X
-      (cycleComponentAnalyticClosedSupport X x) (2 * d)) a =
-        analyticComponentPointSupportedInjectiveCoclass X x d z) :
-    (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a =
-      cycleComponentSmoothSupportCoclassSection X x hx := by
-  have hnorm :
-      (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a =
-        (complexSupportInjectiveCohomologySheafIsoRelative X
-          (cycleComponentAnalyticClosedSupport X x) (2 * d)).hom.hom.app
-            (op (cycleComponentSmoothSupportAmbientOpen X x))
-          ((cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx).hom
-            (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x)
-              (2 * (d : ℤ))
-              ((rationalSupportAddEquivSupportedInjectiveHomology X
-                (cycleComponentAnalyticClosedSupport X x) (2 * d)) a))) := by
-    exact cycleComponentSupportedClassNormalizationIso_apply X x hx a
-  rw [hnorm,
-    cycleComponentSmoothSupportLowestSectionCohomologyComplexIso,
-    TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso_hom,
-    ha]
-  exact analyticComponentPointSupportedInjectiveCoclass_section_normalization X x d z hx
-
-set_option backward.isDefEq.respectTransparency false in
-set_option backward.isDefEq.respectTransparency.types false in
-set_option backward.defeqAttrib.useBackward true in
-/-- The supported component class equals the normalized point class. -/
+/-- The ACTUAL general supported component class is the old normalized point
+coclass transported through the actual relative/injective comparison. This is
+a uniqueness theorem about the general construction, not a point branch. -/
 theorem cycleComponentSupportedInjectiveClass_point_normalization
     (hx : Order.coheight x = d) :
     cycleComponentSupportedInjectiveClass X x hx =
-      (rationalSupportAddEquivSupportedInjectiveHomology X
-        (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
-        (analyticComponentPointSupportedInjectiveCoclass X x d z) := by
-  let a : CycleComponentSupportedCohomology X x d :=
-    (rationalSupportAddEquivSupportedInjectiveHomology X
-      (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
-      (analyticComponentPointSupportedInjectiveCoclass X x d z)
+      analyticComponentPointSupportedInjectiveCoclass X x d z := by
+  obtain rfl : dim X.left = d := SmoothOfRelativeDimension.dim_eq X.hom d
   symm
-  apply cycleComponentSupportedInjectiveClass_unique X x hx a
-  have ha :
-      (rationalSupportAddEquivSupportedInjectiveHomology X
-        (cycleComponentAnalyticClosedSupport X x) (2 * d)) a =
-        analyticComponentPointSupportedInjectiveCoclass X x d z := by
-    dsimp [a]
-    exact AddEquiv.apply_symm_apply _ _
-  exact cycleComponentSupportedInjectiveClass_point_normalization_aux X x d z hx a ha
-
-/-- Exact positive-kernel point normalization of the mapping-cone class. -/
-theorem coneCycleComponentSheafClass_point_normalization
-    (hx : Order.coheight x = d) :
-    coneCycleComponentSheafClass X x hx =
-      analyticComponentPointPositiveKernelClass X x d z := by
-  rw [coneCycleComponentSheafClass_eq_injectiveModel,
-    cycleComponentSupportedInjectiveClass_point_normalization X x d z hx]
-  simp
-  rfl
+  apply cycleComponentSupportedInjectiveClass_unique X x hx
+  rw [cycleComponentSupportedClassNormalizationIso_hom,
+    cycleComponentSmoothSupportLowestSectionCohomologyIso,
+    TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso_hom]
+  exact analyticComponentPointSupportedInjectiveCoclass_section_normalization X x _ z hx
 
 end Point
 

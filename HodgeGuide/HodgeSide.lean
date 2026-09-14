@@ -25,6 +25,14 @@ universe u w
 open ProjectiveSpace
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+
+local instance guideHodgeHasDerivedCategory (X : Over (Spec ↧ℂ)) :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+
+local instance guideHodgeAddCommGrpHasDerivedCategory :
+    HasDerivedCategory AddCommGrpCat :=
+  HasDerivedCategory.standard AddCommGrpCat
 ```
 
 # The variety and its complex points
@@ -32,12 +40,7 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
 tag := "complex-points"
 %%%
 
-We begin with the definition of a projective morphism of schemes, which the repository supplies in
-an explicit form. A {name}`Presentation` of a morphism $`f\colon X\to T` consists of a natural
-number $`n`, a closed immersion of $`X` into the $`n`-dimensional projective space over $`T`, and
-a proof that composing that immersion with the projection to $`T` recovers $`f`. A morphism is
-projective when a presentation exists; the definition is a `Prop`, so the presentation is not part
-of the data.
+We begin with the definition of a projective morphism of schemes.
 
 ```lean -show
 namespace Guide.Hodge.D20
@@ -135,7 +138,7 @@ end
 ```
 
 ```lean
-#check Point.analyticTopology_eq_generateFrom
+#check AlgebraicGeometry.Point.analyticTopology_eq_generateFrom
 ```
 
 The dimension of $`X` is the Krull dimension of its underlying space, as a natural number.
@@ -225,7 +228,7 @@ example : @Guide.Hodge.D2.constantsToHolomorphicDeRhamComplexInt = @AlgebraicGeo
 The instance below is the holomorphic Poincaré lemma:
 
 ```lean
-#check constantsToHolomorphicDeRhamComplexInt_quasiIso
+#check AlgebraicGeometry.ComplexPoint.constantsToHolomorphicDeRhamComplexInt_quasiIso
 ```
 
 It says that, on stalks, a closed holomorphic form of positive degree is exact, and the closed holomorphic
@@ -238,50 +241,40 @@ notes, [§3.10](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=17), explain 
 lemma exhibits the de Rham complex as a resolution of the constant sheaf and thereby computes its
 cohomology.
 
-# Cohomology as morphisms in the derived category
+# Hypercohomology as derived global sections
 
-Constant-sheaf cohomology $`H^n(X;K)` is Mathlib's sheaf cohomology {name}`CategoryTheory.Sheaf.H`
-of the constant sheaf $`\underline{K}_X` on $`X(\mathbb C)`. The de Rham side needs the
-cohomology of a complex of sheaves. For a complex $`K^\bullet` on $`X(\mathbb C)`, hypercohomology
-is defined as a group of morphisms in the derived category,
+For a complex of sheaves $`K^\bullet` on $`X(\mathbb C)`, hypercohomology is the cohomology of
+derived global sections,
 
-$$`\mathbb H^n(X;K^\bullet)
-  =\operatorname{Hom}_{D(X)}(\underline{\mathbb Z}_X,K^\bullet[n]),`
+$$`\mathbb H^n(X,K^\bullet)=H^n(R\Gamma(X,K^\bullet)).`
 
-where $`\underline{\mathbb Z}_X` is the constant sheaf in degree zero. The derived category is never
-constructed: Mathlib's {name}`Localization.SmallShiftedHom` provides these morphism groups in the
-localization of complexes at quasi-isomorphisms without choosing a model for it. Rational
-cohomology and de Rham cohomology are the cases $`K^\bullet=\underline{\mathbb Q}_X` and
-$`K^\bullet=\Omega_X^\bullet`.
+The construction is a functor on the bounded-below derived category. Maps, composition,
+additivity, and the coefficient category's underlying structure are therefore inherited from the
+functorial construction. Rational cohomology and de Rham cohomology are the cases
+$`K^\bullet=\underline{\mathbb Q}_X` and $`K^\bullet=\Omega_X^\bullet`.
 
 ```lean -show
 namespace Guide.Hodge.D3
 ```
 ```lean
-def Hypercohomology (X : Over (Spec ↧ℂ)) (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
-    (n : ℤ) : Type 1 :=
-  Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
-    (constantIntegerSheafComplexInt X) K n
+abbrev Hypercohomology (X : Over (Spec ↧ℂ))
+    (K : CochainComplex.Plus (AnalyticAdditiveSheaf X)) (n : ℤ) :=
+  ↥((analyticHypercohomologyFunctor X n).obj K)
 ```
 ```lean -show
 end Guide.Hodge.D3
 example : @Guide.Hodge.D3.Hypercohomology = @AlgebraicGeometry.ComplexPoint.Hypercohomology := rfl
 ```
 
-Cohomology with coefficients in a field `K` is written with the notation $`H^n(X;K)`. Mathlib
-defines it as the `Ext`-group from the constant sheaf $`\underline{\mathbb Z}_X` to
-$`\underline{K}_X`, which is the same group of morphisms in the derived category. The comparison
-{name}`hypercohomologyAddEquivConstantCohomology` identifies it with the hypercohomology of the
-constant sheaf complex.
+Cohomology with coefficients in a field `K` is the case of the constant sheaf `K`, and it is
+written with the notation $`H^n(X;K)`:
 
 ```lean -show
 namespace Guide.Hodge.D4
 ```
 ```lean
-example (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℕ) :
-    H^n(X; K) =
-      Sheaf.H ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).obj (AddCommGrpCat.of K)) n :=
-  rfl
+example (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℤ) :
+    H^n(X; K) = Hypercohomology X (constantFieldSheafComplexIntPlus K X) n := rfl
 ```
 ```lean -show
 end Guide.Hodge.D4
@@ -290,9 +283,9 @@ end Guide.Hodge.D4
 namespace Guide.Hodge.D5
 ```
 ```lean
-abbrev DeRhamHypercohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    Type 1 :=
-  Hypercohomology X (holomorphicDeRhamComplexInt X) n
+abbrev DeRhamHypercohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    (n : ℤ) :=
+  Hypercohomology X (holomorphicDeRhamComplexIntPlus X) n
 ```
 ```lean -show
 end Guide.Hodge.D5
@@ -303,7 +296,7 @@ namespace Guide.Hodge.D6
 ```
 ```lean
 def fieldToDeRhamCohomologyLinear (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
-    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     H^n(X; K) →ₗ[K] DeRhamHypercohomology X n where
   toFun := fieldToDeRhamCohomology K X n
   map_add' := (fieldToDeRhamCohomology K X n).map_add
@@ -350,7 +343,7 @@ namespace Guide.Hodge.D8
 ```
 ```lean
 def hodgeFilteredDeRhamInclusion (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    (p : ℤ) : F^p Ω•(X) ⟶ Ω•(X) :=
+    (p : ℤ) : hodgeFilteredDeRhamComplex X p ⟶ holomorphicDeRhamComplexInt X :=
   HomologicalComplex.stupidTruncInclusion
     (holomorphicDeRhamComplexInt X) (ComplexShape.embeddingUpIntGE p)
 ```
@@ -364,7 +357,9 @@ namespace Guide.Hodge.D9
 ```lean
 def filteredToDeRhamCohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : FilteredDeRhamHypercohomology X p n →+ DeRhamHypercohomology X n :=
-  hypercohomologyMap X (hodgeFilteredDeRhamInclusion X p) n
+  ((analyticHypercohomologyFunctor X n).map
+    (⟨hodgeFilteredDeRhamInclusion X p⟩ : hodgeFilteredDeRhamComplexPlus X p ⟶
+      holomorphicDeRhamComplexIntPlus X)).hom
 ```
 ```lean -show
 end Guide.Hodge.D9
@@ -394,8 +389,8 @@ used later — the first is what makes every degree-zero class a Hodge class, th
 makes the conjecture vacuous above the dimension.
 
 ```lean
-#check hodgeFiltrationComplexSubmodule_zero_eq_top
-#check hodgeFiltration_eq_bot_of_lt
+#check AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.hodgeFiltration_eq_bot_of_lt
 ```
 
 # Complex conjugation and the Hodge pieces
@@ -414,7 +409,7 @@ namespace Guide.Hodge.D12
 ```
 ```lean
 def conjConstantComplexPresheaf (X : Over (Spec ↧ℂ)) :
-    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶ 𝓒ᵖ(↧(ComplexPoint X); ℂ) where
+    constantComplexAddCommGrpPresheaf X ⟶ constantComplexAddCommGrpPresheaf X where
   app _ := AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom
   naturality {U V} i := by
     ext x
@@ -445,12 +440,7 @@ namespace Guide.Hodge.D14
 def complexConstantCohomologyDeRhamAddEquiv (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (n : ℤ) :
     ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
-  { complexConstantCohomologyDeRhamEquiv X n with
-    map_add' := fun α β ↦ by
-      change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
-        hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α +
-          hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n β
-      exact map_add _ α β }
+  AlgebraicGeometry.ComplexPoint.complexConstantCohomologyDeRhamAddEquiv X n
 ```
 ```lean -show
 end Guide.Hodge.D14
@@ -463,7 +453,9 @@ namespace Guide.Hodge.D15
 def deRhamConj (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
   ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
-    ((hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n).comp
+    (((analyticHypercohomologyFunctor X n).map
+      (⟨conjConstantComplexSheafComplexInt X⟩ : constantComplexSheafComplexIntPlus X ⟶
+        constantComplexSheafComplexIntPlus X)).hom.comp
       (complexConstantCohomologyDeRhamAddEquiv X n).symm.toAddMonoidHom)
 ```
 ```lean -show
@@ -475,8 +467,8 @@ The result is an involution and is conjugate-linear, so it can be bundled as a s
 $`\overline{F^q}` is then the preimage of $`F^q` under it.
 
 ```lean
-#check deRhamConj_involutive
-#check deRhamConj_smul
+#check AlgebraicGeometry.ComplexPoint.deRhamConj_involutive
+#check AlgebraicGeometry.ComplexPoint.deRhamConj_smul
 ```
 
 ```lean -show
@@ -529,8 +521,8 @@ classes whose de Rham image lies in the $`(p,p)` piece:
 $$`\operatorname{Hdg}^p(X;K)
  =\{\alpha\in H^{2p}(X;K):\alpha_{\mathrm{dR}}\in H^{p,p}\}.`
 
-In Lean this is the preimage of {name}`hodgePiece` under the comparison map. The notation
-`Hdg^p(X; K)` is available for every such $`K`; the conjecture uses {lean}`Hdg^p(X; ℚ)`.
+In Lean this is the preimage of {name}`hodgePiece` under the comparison map, and the notation
+{lean}`Hdg^p(ℚ; X)` abbreviates the case $`K=\mathbb Q`.
 
 ```lean -show
 namespace Guide.Hodge.D11
@@ -538,7 +530,7 @@ namespace Guide.Hodge.D11
 ```lean
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X; K)) :=
-  ((hodgePiece X p p (2 * p : ℕ)).restrictScalars K).comap
+  ((hodgePiece X p p (2 * p)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 ```
 ```lean -show
@@ -555,8 +547,8 @@ Hodge class, and there are none above the dimension. These are the two ends of t
 the repository settles; see {ref "what-is-proved"}[What the repository proves about the statement].
 
 ```lean
-#check hodgeClasses_zero_eq_top
-#check hodgeClasses_eq_bot_of_lt
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_bot_of_lt
 ```
 
 # Why the filtration alone suffices over the rationals
@@ -569,18 +561,15 @@ lemma below proves this for any such $`K`; the second specializes it to $`\mathb
 coefficient field of the conjecture.
 
 ```lean
-#check hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule
-#check hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule
 ```
 
-The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below.
-Pure Hodge structures themselves are defined in
-`HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`; the criterion is proved in
-`Other/LinearAlgebra/HodgeStructure.lean`, since nothing in the statement depends on it.
-Conjugation fixes rational vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector
-in $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in
-$`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`, and the only summand common to both is
-$`H^{p,p}`.
+The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from
+`HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
+vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector in
+$`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in $`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`,
+and the only summand common to both is $`H^{p,p}`.
 
 ```lean
 #check HodgeStructure.Pure.ofBase_mem_filtration_iff
