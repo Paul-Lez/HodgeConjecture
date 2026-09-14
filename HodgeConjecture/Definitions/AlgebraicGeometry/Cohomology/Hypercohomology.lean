@@ -23,17 +23,9 @@ public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectiv
 # Hypercohomology
 
 For a topological space `X` and an abelian coefficient category `C`, hypercohomology is the
-cohomology of derived global sections.  The construction is a functor on the bounded-below
-derived category and takes values in `C` itself.  In particular, choosing `C = ModuleCat R`
-retains the `R`-module structure and makes every induced map `R`-linear.
-
-The bounded-below hypothesis is explicit in the domain.  Mathlib's current right-derived
-functor API does not construct unbounded derived global sections.
-
-This construction does not by itself provide a multiplication on hypercohomology.  A complex
-of sheaves of unital algebras is a differential graded object, not a cochain complex in an
-abelian category of algebras, and its product mixes cohomological degrees.  Such a product
-requires separate monoidal and graded-algebra infrastructure.
+cohomology of derived global sections. The construction is a functor from the bounded-below
+derived category to `C`. For `C = ModuleCat R`, it retains the `R`-module structure and gives
+`R`-linear maps.
 -/
 
 @[expose] public noncomputable section
@@ -52,9 +44,7 @@ variable [HasDerivedCategory C] [HasDerivedCategory (Sheaf C X)]
 
 /-- Hypercohomology in degree `n`: cohomology after bounded-below derived global sections.
 
-The source is the derived category rather than the category of complexes.  A bounded-below
-complex enters through `DerivedCategory.Plus.Q`; this also lets callers apply hypercohomology
-directly to derived morphisms. -/
+Use `DerivedCategory.Plus.Q` to apply this functor to a bounded-below complex. -/
 def hypercohomologyFunctor (n : ℤ) : DerivedCategory.Plus (Sheaf C X) ⥤ C :=
   (globalSectionsFunctor C X).rightDerivedFunctorPlus ⋙
     DerivedCategory.Plus.homologyFunctor C n
@@ -94,8 +84,7 @@ def globalSectionsHomologyIso (n : ℤ) :
 /-- The canonical natural transformation from ordinary global-section cohomology to
 hypercohomology.
 
-This is the right-derived unit followed by degree-`n` cohomology, so it involves no choice of an
-injective resolution. -/
+This is the right-derived unit followed by degree-`n` cohomology. -/
 def toHypercohomology (n : ℤ) :
     CochainComplex.Plus.ι (Sheaf C X) ⋙
         (globalSectionsFunctor C X).mapHomologicalComplex (.up ℤ) ⋙
@@ -106,8 +95,6 @@ def toHypercohomology (n : ℤ) :
       (Functor.whiskerLeft (HomotopyCategory.Plus.quotient (Sheaf C X))
         (globalSectionsFunctor C X).rightDerivedFunctorPlusUnit)
       (DerivedCategory.Plus.homologyFunctor C n)
-
-
 instance (K : CochainComplex.Plus (Sheaf C X)) (n : ℤ)
     [∀ i, Injective (K.obj.X i)] : IsIso ((toHypercohomology C X n).app K) := by
   unfold toHypercohomology

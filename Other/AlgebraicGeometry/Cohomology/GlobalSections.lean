@@ -106,7 +106,8 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map i)]
     (n : ℤ) :
-    RationalSingularCochainHypercohomology X n ≃+
+    ↥((analyticHypercohomologyFunctor X n).obj
+      (rationalSingularCochainComplexIntPlus X)) ≃+
       (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
         (TopCat.of (ComplexPoint X))
         (singularCochainSheafComplexInt X ℚ)).homology n :=
@@ -137,7 +138,8 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSections
     [T2Space (ComplexPoint X)]
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℤ) :
-    RationalSingularCochainHypercohomology X n ≃+
+    ↥((analyticHypercohomologyFunctor X n).obj
+      (rationalSingularCochainComplexIntPlus X)) ≃+
       (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
         (TopCat.of (ComplexPoint X))
         (singularCochainSheafComplexInt X ℚ)).homology n :=
@@ -225,7 +227,8 @@ def rationalSingularCochainHypercohomologyAddEquivCohomology
     [T2Space (ComplexPoint X)]
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
-    RationalSingularCochainHypercohomology X (n : ℤ) ≃+
+    ↥((analyticHypercohomologyFunctor X (n : ℤ)).obj
+      (rationalSingularCochainComplexIntPlus X)) ≃+
       AlgebraicTopology.Singular.Cohomology ℚ
         (TopCat.of (ComplexPoint X)) n :=
   let Y := TopCat.of (ComplexPoint X)

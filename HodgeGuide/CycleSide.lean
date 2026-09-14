@@ -162,7 +162,9 @@ namespace Guide.Cycles.D9
 ```lean
 abbrev RationalCohomologyWithSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
     Type :=
-  Hypercohomology X (rationalCohomologyWithSupportComplexPlus X Z) n
+  ↥((TopCat.Sheaf.hypercohomologyFunctor AddCommGrpCat
+    (TopCat.of (ComplexPoint X)) n).obj
+      (DerivedCategory.Plus.Q.obj (rationalCohomologyWithSupportComplexPlus X Z)))
 ```
 ```lean -show
 end Guide.Cycles.D9

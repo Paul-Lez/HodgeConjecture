@@ -82,7 +82,8 @@ def fieldCohomologyClass (q : K) : H^0(X; K) :=
 
 /-- Extension of coefficients from rational to complex constant-sheaf cohomology. -/
 def fieldToComplexCohomology (n : ℤ) :
-    H^n(X; K) →+ ComplexConstantCohomology X n :=
+    H^n(X; K) →+ ↥((analyticHypercohomologyFunctor X n).obj
+      (constantComplexSheafComplexIntPlus X)) :=
   ((analyticHypercohomologyFunctor X n).map
     (⟨fieldToComplexConstantSheafComplexInt K X⟩ :
       constantFieldSheafComplexIntPlus K X ⟶
@@ -90,7 +91,8 @@ def fieldToComplexCohomology (n : ℤ) :
 
 /-- The cohomological retraction induced by the chosen rational-linear retraction `ℂ → K`. -/
 def complexToFieldCohomology (n : ℤ) :
-    ComplexConstantCohomology X n →+ H^n(X; K) :=
+    ↥((analyticHypercohomologyFunctor X n).obj
+      (constantComplexSheafComplexIntPlus X)) →+ H^n(X; K) :=
   ((analyticHypercohomologyFunctor X n).map
     (⟨complexToFieldConstantSheafComplexInt K X⟩ :
       constantComplexSheafComplexIntPlus X ⟶
@@ -101,12 +103,16 @@ omit [Algebra K ℂ] in
 lemma fieldCohomologyClass_mul (q r : K) :
     fieldCohomologyClass K X (q * r) =
       q • fieldCohomologyClass K X r := by
-  simp [fieldCohomologyClass, mul_smul]
+  unfold fieldCohomologyClass
+  exact mul_smul q r _
 
 /-- Rational constants map rational-linearly to degree-zero rational cohomology. -/
 def fieldCohomologyClassLinear : K →ₗ[K] H^0(X; K) where
   toFun := fieldCohomologyClass K X
-  map_add' := by simp [fieldCohomologyClass, add_smul]
+  map_add' := by
+    intro q r
+    unfold fieldCohomologyClass
+    exact add_smul q r _
   map_smul' q r := fieldCohomologyClass_mul K X q r
 
 end AlgebraicGeometry.ComplexPoint
@@ -157,7 +163,8 @@ lemma fieldToComplexConstantSheafComplexInt_comp_complexToField :
 
 lemma complexConstantCohomologyDeRhamAddEquiv_apply
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : ComplexConstantCohomology X n) :
+    (α : ↥((analyticHypercohomologyFunctor X n).obj
+      (constantComplexSheafComplexIntPlus X))) :
     complexConstantCohomologyDeRhamAddEquiv X n α =
       (analyticHypercohomologyFunctor X n).map
         (⟨constantsToHolomorphicDeRhamComplexInt X⟩ :

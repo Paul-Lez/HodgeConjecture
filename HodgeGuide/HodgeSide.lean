@@ -253,17 +253,8 @@ additivity, and the coefficient category's underlying structure are therefore in
 functorial construction. Rational cohomology and de Rham cohomology are the cases
 $`K^\bullet=\underline{\mathbb Q}_X` and $`K^\bullet=\Omega_X^\bullet`.
 
-```lean -show
-namespace Guide.Hodge.D3
-```
 ```lean
-abbrev Hypercohomology (X : Over (Spec ↧ℂ))
-    (K : CochainComplex.Plus (AnalyticAdditiveSheaf X)) (n : ℤ) :=
-  ↥((analyticHypercohomologyFunctor X n).obj K)
-```
-```lean -show
-end Guide.Hodge.D3
-example : @Guide.Hodge.D3.Hypercohomology = @AlgebraicGeometry.ComplexPoint.Hypercohomology := rfl
+#check TopCat.Sheaf.hypercohomologyFunctor
 ```
 
 Cohomology with coefficients in a field `K` is the case of the constant sheaf `K`, and it is
@@ -274,7 +265,9 @@ namespace Guide.Hodge.D4
 ```
 ```lean
 example (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℤ) :
-    H^n(X; K) = Hypercohomology X (constantFieldSheafComplexIntPlus K X) n := rfl
+    H^n(X; K) =
+      ↥((analyticHypercohomologyFunctor X n).obj
+        (constantFieldSheafComplexIntPlus K X)) := rfl
 ```
 ```lean -show
 end Guide.Hodge.D4
@@ -285,7 +278,7 @@ namespace Guide.Hodge.D5
 ```lean
 abbrev DeRhamHypercohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     (n : ℤ) :=
-  Hypercohomology X (holomorphicDeRhamComplexIntPlus X) n
+  ↥((analyticHypercohomologyFunctor X n).obj (holomorphicDeRhamComplexIntPlus X))
 ```
 ```lean -show
 end Guide.Hodge.D5
@@ -439,7 +432,8 @@ namespace Guide.Hodge.D14
 ```lean
 def complexConstantCohomologyDeRhamAddEquiv (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (n : ℤ) :
-    ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
+    ↥((analyticHypercohomologyFunctor X n).obj
+      (constantComplexSheafComplexIntPlus X)) ≃+ DeRhamHypercohomology X n :=
   AlgebraicGeometry.ComplexPoint.complexConstantCohomologyDeRhamAddEquiv X n
 ```
 ```lean -show
