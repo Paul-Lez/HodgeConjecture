@@ -87,7 +87,7 @@ lemma rationalToSingular_comp_naturalSingularResolutionRestrictionNat
       rfl
   | succ n =>
       exact (HomologicalComplex.isZero_single_obj_X (ComplexShape.up ℕ) 0
-        𝓒(↧(ComplexPoint X); ℚ) (n + 1) (by lia)).eq_of_src _ _
+        𝓒(↧(ComplexPoint X), ℚ) (n + 1) (by lia)).eq_of_src _ _
 
 /-- Restriction through the integer-indexed natural singular resolution agrees strictly with
 restriction of rational constants. -/

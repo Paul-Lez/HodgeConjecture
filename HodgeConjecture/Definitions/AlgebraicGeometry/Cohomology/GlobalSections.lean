@@ -190,6 +190,6 @@ def constantIntegerSheafComplexIntIsoSingle :
       TopCat.Sheaf.integerConstantSingleComplex
         (TopCat.of (ComplexPoint X)) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℤ) 0 0 rfl
+    𝓒(↧(ComplexPoint X), ℤ) 0 0 rfl
 
 end AlgebraicGeometry.ComplexPoint

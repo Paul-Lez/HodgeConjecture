@@ -262,14 +262,14 @@ example : @Guide.Hodge.D3.Hypercohomology = @AlgebraicGeometry.ComplexPoint.Hype
 ```
 
 Cohomology with coefficients in a field `K` is the case of the constant sheaf `K`, and it is
-written with the notation $`H^n(X;K)`:
+written with the notation $`H^n(X,K)`:
 
 ```lean -show
 namespace Guide.Hodge.D4
 ```
 ```lean
 example (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℤ) :
-    H^n(X; K) = Hypercohomology X (constantFieldSheafComplexInt K X) n := rfl
+    H^n(X, K) = Hypercohomology X (constantFieldSheafComplexInt K X) n := rfl
 ```
 ```lean -show
 end Guide.Hodge.D4
@@ -292,7 +292,7 @@ namespace Guide.Hodge.D6
 ```lean
 def fieldToDeRhamCohomologyLinear (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    H^n(X; K) →ₗ[K] DeRhamHypercohomology X n where
+    H^n(X, K) →ₗ[K] DeRhamHypercohomology X n where
   toFun := fieldToDeRhamCohomology K X n
   map_add' := (fieldToDeRhamCohomology K X n).map_add
   map_smul' := fieldToDeRhamCohomology_smul K X n
@@ -302,7 +302,7 @@ end Guide.Hodge.D6
 example : @Guide.Hodge.D6.fieldToDeRhamCohomologyLinear = @AlgebraicGeometry.ComplexPoint.fieldToDeRhamCohomologyLinear := rfl
 ```
 
-The comparison map $`H^n(X;\mathbb Q)\to H^n_{\mathrm{dR}}(X)` is induced by the composite
+The comparison map $`H^n(X,\mathbb Q)\to H^n_{\mathrm{dR}}(X)` is induced by the composite
 $`\underline{\mathbb Q}_X\to\underline{\mathbb C}_X\to\Omega_X^\bullet`. It is $`\mathbb Q`-linear
 and injective; injectivity combines the quasi-isomorphism above with the injectivity of extending
 scalars from $`\mathbb Q` to $`\mathbb C`. Nothing more is needed, since Hodge classes are defined
@@ -514,18 +514,18 @@ $`(p,q)` piece.
 The Hodge classes of degree $`2p` with coefficients in a field $`K\subseteq\mathbb C` are the
 classes whose de Rham image lies in the $`(p,p)` piece:
 
-$$`\operatorname{Hdg}^p(X;K)
- =\{\alpha\in H^{2p}(X;K):\alpha_{\mathrm{dR}}\in H^{p,p}\}.`
+$$`\operatorname{Hdg}^p(X,K)
+ =\{\alpha\in H^{2p}(X,K):\alpha_{\mathrm{dR}}\in H^{p,p}\}.`
 
 In Lean this is the preimage of {name}`hodgePiece` under the comparison map, and the notation
-{lean}`Hdg^p(ℚ; X)` abbreviates the case $`K=\mathbb Q`.
+{lean}`Hdg^p(X, ℚ)` abbreviates the case $`K=\mathbb Q`.
 
 ```lean -show
 namespace Guide.Hodge.D11
 ```
 ```lean
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X; K)) :=
+    [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X, K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 ```

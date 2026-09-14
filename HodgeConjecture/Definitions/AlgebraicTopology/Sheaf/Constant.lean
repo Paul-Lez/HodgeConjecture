@@ -24,8 +24,8 @@ public import Mathlib.Topology.Sheaves.Abelian
 `CategoryTheory.constantSheaf` sheafifies the constant presheaf on a site. This file
 specialises it to the site of open subsets of a topological space with values in additive
 groups, and introduces notation for the two ways the value is given: as an object
-`A : AddCommGrpCat`, written `𝓒[X; A]`, and as a type `R` carrying an `AddCommGroup`
-instance — a field, a ring, `ℤ` — written `𝓒(X; R)`.
+`A : AddCommGrpCat`, written `𝓒[X, A]`, and as a type `R` carrying an `AddCommGroup`
+instance — a field, a ring, `ℤ` — written `𝓒(X, R)`.
 -/
 
 @[expose] public noncomputable section
@@ -55,10 +55,10 @@ abbrev const (A : AddCommGrpCat.{u}) : TopCat.Sheaf AddCommGrpCat.{u} X :=
   (constantFunctor X).obj A
 
 @[inherit_doc const]
-notation3 "𝓒[" X "; " A "]" => TopCat.Sheaf.const X A
+notation3 "𝓒[" X ", " A "]" => TopCat.Sheaf.const X A
 
 /-- The constant sheaf on `X` with value the additive group of `R`. -/
-notation3 "𝓒(" X "; " R ")" => TopCat.Sheaf.const X (AddCommGrpCat.of R)
+notation3 "𝓒(" X ", " R ")" => TopCat.Sheaf.const X (AddCommGrpCat.of R)
 
 end TopCat.Sheaf
 

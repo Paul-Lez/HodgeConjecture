@@ -58,7 +58,7 @@ abbrev RationalSingularCochainHypercohomology (n : ℤ) : Type 1 :=
 hypercohomology of its singular-cochain resolution. -/
 def rationalCohomologySingularCochainAddEquiv
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    H^n(X; ℚ) ≃+
+    H^n(X, ℚ) ≃+
       RationalSingularCochainHypercohomology X n where
   toEquiv := Localization.SmallShiftedHom.postcompEquiv
     (rationalToSingularCochainComplexInt X)
@@ -70,7 +70,7 @@ def rationalCohomologySingularCochainAddEquiv
 @[simp]
 lemma rationalCohomologySingularCochainAddEquiv_apply
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : H^n(X; ℚ)) :
+    (α : H^n(X, ℚ)) :
     rationalCohomologySingularCochainAddEquiv X n α =
       hypercohomologyMap X
         (rationalToSingularCochainComplexInt X) n α :=

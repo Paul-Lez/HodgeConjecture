@@ -62,7 +62,7 @@ local instance analyticHasDerivedCategory :
 
 /-- The inclusion of the rational constant sheaf into the complex constant sheaf. -/
 abbrev fieldToComplexConstantSheaf :
-    𝓒(↧(ComplexPoint X); K) ⟶ 𝓒(↧(ComplexPoint X); ℂ) :=
+    𝓒(↧(ComplexPoint X), K) ⟶ 𝓒(↧(ComplexPoint X), ℂ) :=
   (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
 
@@ -71,7 +71,19 @@ abbrev fieldToComplexConstantSheaf :
 def constantFieldSheafComplexInt :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-    𝓒(↧(ComplexPoint X); K)).extend ComplexShape.embeddingUpNat
+    𝓒(↧(ComplexPoint X), K)).extend ComplexShape.embeddingUpNat
+
+/-- A coefficient field is used as a sheaf complex through its constant sheaf in degree zero.
+This is the identification the literature makes silently when it writes `H^n(X, K)` for a
+field `K` and `H^n(X, 𝒦)` for a complex `𝒦` with the same symbol. -/
+instance : CoeDep Type K (CochainComplex (AnalyticAdditiveSheaf X) ℤ) :=
+  ⟨constantFieldSheafComplexInt K X⟩
+
+run_meta do
+  let info ← Lean.getConstInfo ``constantFieldSheafComplexInt
+  let numArgs ← Lean.Meta.forallTelescope info.type fun xs _ => pure xs.size
+  Lean.Meta.registerCoercion ``constantFieldSheafComplexInt
+    (some { numArgs, coercee := 0, type := .coe })
 
 instance : (constantFieldSheafComplexInt K X).IsStrictlyGE 0 := by
   unfold constantFieldSheafComplexInt
@@ -97,11 +109,11 @@ def fieldToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
 def constantIntegerSheafComplexInt :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-    𝓒(↧(ComplexPoint X); ℤ)).extend ComplexShape.embeddingUpNat
+    𝓒(↧(ComplexPoint X), ℤ)).extend ComplexShape.embeddingUpNat
 
 /-- Scalar multiplication on the rational constant sheaf. -/
 abbrev fieldScalarSheaf (q : K) :
-    𝓒(↧(ComplexPoint X); K) ⟶ 𝓒(↧(ComplexPoint X); K) :=
+    𝓒(↧(ComplexPoint X), K) ⟶ 𝓒(↧(ComplexPoint X), K) :=
   (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q))
 
@@ -112,7 +124,7 @@ omit [Algebra K ℂ] in
     rfl
   change (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
       (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft 1)) =
-    𝟙 𝓒(↧(ComplexPoint X); K)
+    𝟙 𝓒(↧(ComplexPoint X), K)
   rw [AddMonoidHom.mulLeft_one, h]
   exact (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map_id (AddCommGrpCat.of K)
 
@@ -250,13 +262,14 @@ def Hypercohomology
   Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
     (constantIntegerSheafComplexInt X) K n
 
-/-- `H^n(X; K)` is constant-sheaf cohomology of the analytic space `X(ℂ)` with coefficients in
-the field `K`, in integer degree `n`: the hypercohomology of the constant sheaf `K` on `X(ℂ)`.
+/-- `H^n(X, 𝒦)` is the hypercohomology in integer degree `n` of a complex `𝒦` of sheaves on the
+analytic space `X(ℂ)`. When a field `K` is written in place of `𝒦`, it is coerced to its
+constant sheaf in degree zero, so `H^n(X, K)` is constant-sheaf cohomology with coefficients in
+`K`, as in Deligne's statement of the conjecture.
 
-The literature writes `H^n(X; K)` for the variety `X.left` alone; here the variety is presented by
+The literature writes `H^n(X, K)` for the variety `X.left` alone; here the variety is presented by
 its structure morphism `X`. -/
-scoped notation3:max "H^" n:max "(" X "; " K ")" =>
-  Hypercohomology X (constantFieldSheafComplexInt K X) n
+scoped notation3:max "H^" n:max "(" X ", " 𝒦 ")" => Hypercohomology X 𝒦 n
 
 /-- Complex constant-sheaf cohomology in integer degree `n`. -/
 abbrev ComplexConstantCohomology (n : ℤ) : Type 1 :=
@@ -286,9 +299,13 @@ lemma hypercohomologyEquiv_add
         (analyticQuasiIsomorphisms X) DerivedCategory.Q) β := by
   simp [Equiv.add_def]
 
-/-- Hypercohomology of the holomorphic de Rham complex in integer degree `n`. -/
+/-- Hypercohomology of the holomorphic de Rham complex in integer degree `n`, that is
+`H^n(X, Ω•(X))`. -/
 abbrev DeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) : Type 1 :=
   Hypercohomology X (holomorphicDeRhamComplexInt X) n
+
+@[inherit_doc DeRhamHypercohomology]
+scoped notation3:max "H_dR^" n:max "(" X ")" => DeRhamHypercohomology X n
 
 /-- The constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
 equivalence on hypercohomology. -/
@@ -410,17 +427,17 @@ noncomputable abbrev hypercohomologyModule {R : Type*} [Semiring R]
 /-- The rational action on constant-sheaf cohomology, induced by scalar multiplication on the
 coefficient sheaf. -/
 noncomputable instance (n : ℤ) :
-    SMul K (H^n(X; K)) :=
+    SMul K (H^n(X, K)) :=
   ⟨fun q α ↦ hypercohomologyMap X (fieldScalarComplex K X q) n α⟩
 
 omit [Algebra K ℂ] in
-lemma field_smul_eq (n : ℤ) (q : K) (α : H^n(X; K)) :
+lemma field_smul_eq (n : ℤ) (q : K) (α : H^n(X, K)) :
     q • α = hypercohomologyMap X
       (fieldScalarComplex K X q) n α := rfl
 
 /-- Rational constant-sheaf cohomology is canonically a rational vector space. -/
 noncomputable instance fieldCohomologyModule (n : ℤ) :
-    Module K (H^n(X; K)) :=
+    Module K (H^n(X, K)) :=
   hypercohomologyModule X (fieldScalarComplex K X) n (field_smul_eq K X n)
     (fieldScalarComplex_add K X) (fieldScalarComplex_one K X)
     (fieldScalarComplex_mul K X)
@@ -467,14 +484,14 @@ noncomputable instance deRhamHypercohomologyIsScalarTower
 
 /-- The derived comparison from rational cohomology to holomorphic de Rham hypercohomology. -/
 def fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    H^n(X; K) →+ DeRhamHypercohomology X n :=
+    H^n(X, K) →+ DeRhamHypercohomology X n :=
   hypercohomologyMap X
     (fieldToHolomorphicDeRhamComplexInt K X) n
 
 /-- The rational-to-de Rham comparison is compatible with rational scalar multiplication. -/
 lemma fieldToDeRhamCohomology_smul
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (q : K) (α : H^n(X; K)) :
+    (q : K) (α : H^n(X, K)) :
     fieldToDeRhamCohomology K X n (q • α) =
       q • fieldToDeRhamCohomology K X n α := by
   rw [field_smul_eq, deRham_field_smul_eq]
@@ -485,7 +502,7 @@ lemma fieldToDeRhamCohomology_smul
 /-- The rational-to-de Rham comparison as a rational-linear map. -/
 def fieldToDeRhamCohomologyLinear
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    H^n(X; K) →ₗ[K]
+    H^n(X, K) →ₗ[K]
       DeRhamHypercohomology X n where
   toFun := fieldToDeRhamCohomology K X n
   map_add' := (fieldToDeRhamCohomology K X n).map_add
@@ -496,6 +513,9 @@ def hodgeFilteredDeRhamComplex [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   (holomorphicDeRhamComplexInt X).stupidTrunc
     (ComplexShape.embeddingUpIntGE p)
+
+@[inherit_doc hodgeFilteredDeRhamComplex]
+scoped notation3:max "F^" p:max " Ω•" "(" X ")" => hodgeFilteredDeRhamComplex X p
 
 /-- Inclusion of the degree-at-least-`p` de Rham complex into the full complex. -/
 def hodgeFilteredDeRhamInclusion [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
@@ -561,6 +581,10 @@ def hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
   zero_mem' := (hodgeFiltration X p n).zero_mem
   add_mem' := (hodgeFiltration X p n).add_mem
   smul_mem' := fun c _ h => hodgeFiltration_complex_smul_mem X p n c h
+
+@[inherit_doc hodgeFiltrationComplexSubmodule]
+scoped notation3:max "F^" p:max " H_dR^" n:max "(" X ")" =>
+  hodgeFiltrationComplexSubmodule X p n
 
 /-! ### Complex conjugation and the `(p,p)` part
 
@@ -648,18 +672,21 @@ def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ (DeRhamHypercohomology X n) :=
   hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
 
+/-- `H^{p, q}(X)` is the `(p, q)` Hodge piece in its natural degree `p + q`. -/
+scoped notation3:max "H^{" p ", " q "}" "(" X ")" => hodgePiece X p q (p + q)
+
 /-- Cohomology classes with coefficients in `K` whose de Rham images lie in `F^p ⊓ conj F^p`
 in degree `2p`. When conjugation fixes the image of `K` in `ℂ`, see
 `hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule` for the equivalent `F^p` condition. -/
 def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
-    Submodule K (H^(2 * p)(X; K)) :=
+    Submodule K (H^(2 * p)(X, K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 
-/-- `Hdg^p(K; f)` is the space of Hodge classes of codimension `p` with coefficients in `K`.
+/-- `Hdg^p(f, K)` is the space of Hodge classes of codimension `p` with coefficients in `K`.
 
-The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the variety is presented by its
-structure morphism `f`, and the coefficient field is named. -/
-scoped notation:max "Hdg^" p:max "(" K "; " f ")" => hodgeClasses K f p
+The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the variety is
+presented by its structure morphism `f`, and the coefficient field is named. -/
+scoped notation3:max "Hdg^" p:max "(" f ", " K ")" => hodgeClasses K f p
 
 end AlgebraicGeometry.ComplexPoint

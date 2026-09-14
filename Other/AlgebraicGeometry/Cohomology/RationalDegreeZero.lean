@@ -52,17 +52,17 @@ lemma embeddingUpNat_zero : ComplexShape.embeddingUpNat.f 0 = (0 : ℤ) := rfl
 def constantIntegerSheafComplexIntIsoSingleZero :
     constantIntegerSheafComplexInt X ≅
       (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℤ) :=
+        𝓒(↧(ComplexPoint X), ℤ) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℤ) 0 0 embeddingUpNat_zero
+    𝓒(↧(ComplexPoint X), ℤ) 0 0 embeddingUpNat_zero
 
 /-- The extended rational constant-sheaf complex is the rational constant sheaf in degree zero. -/
 def constantRationalSheafComplexIntIsoSingleZero :
     constantFieldSheafComplexInt ℚ X ≅
       (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℚ) :=
+        𝓒(↧(ComplexPoint X), ℚ) :=
   HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℚ) 0 0 embeddingUpNat_zero
+    𝓒(↧(ComplexPoint X), ℚ) 0 0 embeddingUpNat_zero
 
 /-- The inverse of the integer extension/single comparison is a quasi-isomorphism. -/
 lemma constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso :
@@ -83,12 +83,12 @@ lemma constantRationalSheafComplexIntIsoSingleZero_hom_quasiIso :
 /-- Degree-zero rational cohomology after replacing both extended complexes by single
 complexes. -/
 def rationalCohomologyZeroEquivSingle :
-    H^0(X; ℚ) ≃
+    H^0(X, ℚ) ≃
       Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℤ))
+          𝓒(↧(ComplexPoint X), ℤ))
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℚ)) (0 : ℤ) :=
+          𝓒(↧(ComplexPoint X), ℚ)) (0 : ℤ) :=
   (Localization.SmallShiftedHom.precompEquiv
       (constantIntegerSheafComplexIntIsoSingleZero X).inv
       (constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso X)).trans
@@ -100,27 +100,27 @@ def rationalCohomologyZeroEquivSingle :
 def rationalCohomologyZeroSingleEquivExt :
     Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℤ))
+          𝓒(↧(ComplexPoint X), ℤ))
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℚ)) (0 : ℤ) ≃
-      Abelian.Ext 𝓒(↧(ComplexPoint X); ℤ)
-        𝓒(↧(ComplexPoint X); ℚ) 0 :=
+          𝓒(↧(ComplexPoint X), ℚ)) (0 : ℤ) ≃
+      Abelian.Ext 𝓒(↧(ComplexPoint X), ℤ)
+        𝓒(↧(ComplexPoint X), ℚ) 0 :=
   Equiv.refl _
 
 /-- The definitional comparison from shifted Hom to Ext acts as the identity. -/
 @[simp] lemma rationalCohomologyZeroSingleEquivExt_apply
     (a : Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
       ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℤ))
+        𝓒(↧(ComplexPoint X), ℤ))
       ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℚ)) (0 : ℤ)) :
+        𝓒(↧(ComplexPoint X), ℚ)) (0 : ℤ)) :
     rationalCohomologyZeroSingleEquivExt X a = a := rfl
 
 /-- Degree-zero rational constant-sheaf cohomology is ordinary Hom from integer constants to
 rational constants. -/
 def rationalCohomologyZeroEquivSheafHom :
-    H^0(X; ℚ) ≃
-      (𝓒(↧(ComplexPoint X); ℤ) ⟶ 𝓒(↧(ComplexPoint X); ℚ)) :=
+    H^0(X, ℚ) ≃
+      (𝓒(↧(ComplexPoint X), ℤ) ⟶ 𝓒(↧(ComplexPoint X), ℚ)) :=
   ((rationalCohomologyZeroEquivSingle X).trans
     (rationalCohomologyZeroSingleEquivExt X)).trans Abelian.Ext.homEquiv₀
 
@@ -155,7 +155,7 @@ lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
     exact (HomologicalComplex.single_map_f_self (ComplexShape.up ℤ) 0
       (integerToFieldConstantSheaf ℚ X q)).symm
   · exact (HomologicalComplex.isZero_single_obj_X
-      (ComplexShape.up ℤ) 0 𝓒(↧(ComplexPoint X); ℤ) i hi).eq_of_src _ _
+      (ComplexShape.up ℤ) 0 𝓒(↧(ComplexPoint X), ℤ) i hi).eq_of_src _ _
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
@@ -232,7 +232,7 @@ theorem rationalCohomologyClass_bijective
 degree-zero rational cohomology. -/
 def rationalCohomologyClassLinearEquiv
     [ConnectedSpace (ComplexPoint X)] :
-    ℚ ≃ₗ[ℚ] H^0(X; ℚ) :=
+    ℚ ≃ₗ[ℚ] H^0(X, ℚ) :=
   LinearEquiv.ofBijective (fieldCohomologyClassLinear ℚ X)
     (rationalCohomologyClass_bijective X)
 

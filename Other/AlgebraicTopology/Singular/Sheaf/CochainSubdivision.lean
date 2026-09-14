@@ -123,7 +123,7 @@ on a hereditarily paracompact Hausdorff space. -/
 lemma singularCochainSheaf_cohomology_succ_eq_zero
     [T2Space X] [∀ V : Opens X, ParacompactSpace V]
     (n q : ℕ) (x : Abelian.Ext
-      𝓒(X; ULift.{u} ℤ)
+      𝓒(X, ULift.{u} ℤ)
       (singularCochainSheaf R X n) (q + 1)) :
     x = 0 :=
   TopCat.Sheaf.IsFlasque.cohomology_succ_eq_zero

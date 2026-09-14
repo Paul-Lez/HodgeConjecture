@@ -73,10 +73,10 @@ def singularChainSheafDerivedSingleOrientationIso [T2Space X] (N : ℕ)
     (hlocal : ∀ (m : ℕ), m ≠ N → ∀ x : X,
       IsZero (RelativeHomology R (TopPair.ofSubset ({x} : Set X)ᶜ) m))
     (orientation : singularChainHomologySheaf R X N ≅
-      𝓒(X; R)) :
+      𝓒(X, R)) :
     DerivedCategory.Q.obj (singularChainSheafCochainComplex R X) ≅
       (DerivedCategory.singleFunctor (TopCat.Sheaf AddCommGrpCat.{u} X) (-(N : ℤ))).obj
-        𝓒(X; R) :=
+        𝓒(X, R) :=
   DerivedCategory.concentratedOrientationIso (singularChainSheafCochainComplex R X)
     (-(N : ℤ)) (singularChainSheafCochainHomology_concentrated R X N hlocal)
     (singularChainSheafCochainHomologyIso R X N ≪≫ orientation)
@@ -88,11 +88,11 @@ theorem singularChainSheafDerivedSingleOrientationIso_homology [T2Space X] (N : 
     (hlocal : ∀ (m : ℕ), m ≠ N → ∀ x : X,
       IsZero (RelativeHomology R (TopPair.ofSubset ({x} : Set X)ᶜ) m))
     (orientation : singularChainHomologySheaf R X N ≅
-      𝓒(X; R)) :
+      𝓒(X, R)) :
     (DerivedCategory.homologyFunctor _ (-(N : ℤ))).map
       (singularChainSheafDerivedSingleOrientationIso R X N hlocal orientation).hom ≫
       (DerivedCategory.homologyFunctorFactors _ (-(N : ℤ))).hom.app
-        ((single _ (.up ℤ) (-(N : ℤ))).obj 𝓒(X; R)) ≫
+        ((single _ (.up ℤ) (-(N : ℤ))).obj 𝓒(X, R)) ≫
       (singleObjHomologySelfIso (.up ℤ) (-(N : ℤ)) _).hom =
       (DerivedCategory.homologyFunctorFactors _ (-(N : ℤ))).hom.app
         (singularChainSheafCochainComplex R X) ≫
@@ -105,10 +105,10 @@ def singularChainSheafDerivedOrientationIso [T2Space X] (N : ℕ)
     (hlocal : ∀ (m : ℕ), m ≠ N → ∀ x : X,
       IsZero (RelativeHomology R (TopPair.ofSubset ({x} : Set X)ᶜ) m))
     (orientation : singularChainHomologySheaf R X N ≅
-      𝓒(X; R)) :
+      𝓒(X, R)) :
     DerivedCategory.Q.obj (singularChainSheafCochainComplex R X) ≅
       ((DerivedCategory.singleFunctor (TopCat.Sheaf AddCommGrpCat.{u} X) 0).obj
-        𝓒(X; R))⟦(N : ℤ)⟧ :=
+        𝓒(X, R))⟦(N : ℤ)⟧ :=
   neg_neg (N : ℤ) ▸ DerivedCategory.concentratedOrientationShiftIso
     (singularChainSheafCochainComplex R X) (-(N : ℤ))
     (singularChainSheafCochainHomology_concentrated R X N hlocal)

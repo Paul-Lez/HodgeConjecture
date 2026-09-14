@@ -137,8 +137,8 @@ $$`R\Gamma_Z(X,\mathbb Q_X)\longrightarrow R\Gamma(X,\mathbb Q_X)
 The formalization builds the first term as a homotopy fibre. It resolves the constant sheaf
 $`\underline{\mathbb Q}_U` injectively, pushes the resolution forward along $`j`, maps
 $`\underline{\mathbb Q}_X` to the result, and takes the mapping cone shifted by $`-1`.
-Hypercohomology of this complex is $`H^n_Z(X;\mathbb Q)`, and the connecting map of the triangle
-is {name}`forgetSupport`, the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
+Hypercohomology of this complex is $`H^n_Z(X,\mathbb Q)`, and the connecting map of the triangle
+is {name}`forgetSupport`, the map $`H^n_Z(X,\mathbb Q)\to H^n(X,\mathbb Q)`.
 
 ```lean -show
 namespace Guide.Cycles.D8
@@ -169,7 +169,7 @@ namespace Guide.Cycles.D10
 ```
 ```lean
 def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
-    RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) where
+    RationalCohomologyWithSupport X Z n →+ H^n(X, ℚ) where
   toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
   map_zero' := by
     apply (Localization.SmallShiftedHom.equiv

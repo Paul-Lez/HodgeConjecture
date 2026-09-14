@@ -69,10 +69,10 @@ scoped notation "𝓖[" X "]" => grothendieckTopology X
 
 /-- Constant sheaves restrict along a continuous map. -/
 def constantRestriction {X Y : TopCat.{u}} (f : X ⟶ Y) (A : AddCommGrpCat.{u}) :
-    𝓒[Y; A] ⟶ (pushforward _ f).obj 𝓒[X; A] :=
+    𝓒[Y, A] ⟶ (pushforward _ f).obj 𝓒[X, A] :=
   ⟨sheafifyLift 𝓖[Y] (Functor.whiskerLeft (Opens.map f).op (toSheafify 𝓖[X]
     ((Functor.const (Opens X)ᵒᵖ).obj A)))
-    ((pushforward AddCommGrpCat f).obj 𝓒[X; A]).property⟩
+    ((pushforward AddCommGrpCat f).obj 𝓒[X, A]).property⟩
 
 @[reassoc]
 lemma toSheafify_constantRestriction {X Y : TopCat.{u}} (f : X ⟶ Y)
@@ -88,7 +88,7 @@ lemma constantRestriction_id (X : TopCat.{u}) (A : AddCommGrpCat.{u}) :
     constantRestriction (𝟙 X) A = 𝟙 _ := by
   apply CategoryTheory.Sheaf.hom_ext_iff.mpr
   apply sheafify_hom_ext
-  · exact 𝓒[X; A].property
+  · exact 𝓒[X, A].property
   · exact (toSheafify_constantRestriction (𝟙 X) A).trans (by rfl)
 
 lemma constantRestriction_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
@@ -97,7 +97,7 @@ lemma constantRestriction_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
       constantRestriction g A ≫ (pushforward AddCommGrpCat g).map (constantRestriction f A) := by
   apply CategoryTheory.Sheaf.hom_ext_iff.mpr
   apply sheafify_hom_ext
-  · exact ((pushforward AddCommGrpCat (f ≫ g)).obj 𝓒[X; A]).property
+  · exact ((pushforward AddCommGrpCat (f ≫ g)).obj 𝓒[X, A]).property
   · change _ = _ ≫ (constantRestriction g A).hom ≫
       Functor.whiskerLeft (Opens.map g).op (constantRestriction f A).hom
     rw [toSheafify_constantRestriction]
@@ -115,7 +115,7 @@ def closedInclusion (Z : Closeds X) : TopCat.of Z ⟶ X :=
 /-- The integer sheaf on a closed subspace, pushed forward to the ambient space. -/
 def supportIntegerSheaf (Z : Closeds X) :
     CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u} :=
-  (pushforward AddCommGrpCat (closedInclusion X Z)).obj 𝓒(↧Z; ULift.{u} ℤ)
+  (pushforward AddCommGrpCat (closedInclusion X Z)).obj 𝓒(↧Z, ULift.{u} ℤ)
 
 /-- Restriction from a larger closed support to a smaller one. -/
 def supportIntegerSheafMap {Z W : Closeds X} (h : Z ≤ W) :
@@ -163,6 +163,10 @@ abbrev cohomologyWithSupport (Z : Closeds X)
     (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) (n : ℕ) :=
   Ext (supportIntegerSheaf X Z) F n
 
+/-- `H_[Z]^n(X, F)` is sheaf cohomology of `X` with support in the closed subset `Z`, in degree
+`n` with coefficients in the sheaf `F`. -/
+scoped notation:max "H_[" Z "]^" n:max "(" X ", " F ")" => cohomologyWithSupport X Z F n
+
 instance (Z : Closeds X)
     (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) (n : ℕ) :
     AddCommGroup (cohomologyWithSupport X Z F n) :=
@@ -193,6 +197,10 @@ abbrev compactlySupportedCohomology
     (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) (n : ℕ) :
     AddCommGrpCat.{u} :=
   (compactlySupportedCohomologyFunctor X n).obj F
+
+/-- `H_c^n(X, F)` is compactly supported sheaf cohomology of `X` in degree `n` with coefficients
+in the sheaf `F`. -/
+scoped notation3:max "H_c^" n:max "(" X ", " F ")" => compactlySupportedCohomology X F n
 
 /-- A class with specified compact closed support defines a compactly supported class. -/
 def toCompactlySupportedCohomology (K : CompactCloseds X)

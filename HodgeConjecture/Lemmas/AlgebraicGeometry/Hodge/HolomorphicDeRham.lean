@@ -131,7 +131,7 @@ def complexScalarPresheaf (c : ℂ) :
 
 /-- Scalar multiplication on the constant complex sheaf. -/
 def complexScalarSheaf (c : ℂ) :
-    𝓒(↧(ComplexPoint X); ℂ) ⟶ 𝓒(↧(ComplexPoint X); ℂ) :=
+    𝓒(↧(ComplexPoint X), ℂ) ⟶ 𝓒(↧(ComplexPoint X), ℂ) :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
   (presheafToSheaf J AddCommGrpCat).map
@@ -142,10 +142,10 @@ def complexScalarSheaf (c : ℂ) :
 def complexScalarComplex (c : ℂ) :
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        𝓒(↧(ComplexPoint X); ℂ) ⟶
+        𝓒(↧(ComplexPoint X), ℂ) ⟶
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        𝓒(↧(ComplexPoint X); ℂ) :=
+        𝓒(↧(ComplexPoint X), ℂ) :=
   (CochainComplex.single₀ _).map (complexScalarSheaf X c)
 
 /-- Scalar multiplication on the integer-indexed constant complex-valued complex. -/
@@ -328,7 +328,7 @@ lemma constantsToHolomorphicDeRhamComplex_scalar
   rcases p with _ | p
   · exact constantsToHolomorphicDeRhamZero_scalar X d c
   · apply (HomologicalComplex.isZero_single_obj_X
-      (ComplexShape.up ℕ) 0 𝓒(↧(ComplexPoint X); ℂ) (p + 1)
+      (ComplexShape.up ℕ) 0 𝓒(↧(ComplexPoint X), ℂ) (p + 1)
       (Nat.succ_ne_zero p)).eq_of_src
 
 /-- Conjugation intertwines the two scalar multiplications in degree zero. -/

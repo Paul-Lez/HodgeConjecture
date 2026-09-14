@@ -79,7 +79,7 @@ lemma homComplexSingleIntegerGlobalSections_rightUnshift_middle :
   exact congrArg
     (fun f : (integerConstantSingleComplex Y).X 0 ⟶ K.X (n + s) =>
       integerConstantHomAddEquivGlobalSections (K.X (n + s))
-        ((HomologicalComplex.singleObjXSelf (.up ℤ) 0 𝓒(Y; ℤ)).inv ≫ f))
+        ((HomologicalComplex.singleObjXSelf (.up ℤ) 0 𝓒(Y, ℤ)).inv ≫ f))
     (CochainComplex.HomComplex.rightUnshift_v_zero
       (integerConstantSingleComplex Y) K s n z).symm
 

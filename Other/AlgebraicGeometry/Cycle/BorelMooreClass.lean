@@ -128,7 +128,7 @@ def auxiliarySupportedClass
 /-- The comparison-dependent ordinary rational cohomology class. -/
 def auxiliaryOrdinaryClass
     (D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :
-    H^(2 * (p : ℤ))(V.over; ℚ) :=
+    H^(2 * (p : ℤ))(V.over, ℚ) :=
   forgetSupport V.over
     (cycleComponentSupport V.over x) (2 * (p : ℤ))
     D.auxiliarySupportedClass
@@ -275,7 +275,7 @@ def constantSheafSupportedFundamentalClass
 /-- The conditional normalized ordinary rational component class. -/
 def ordinaryFundamentalClass
     (D : ComplexOrientedRationalCycleComponentClassData V d p x hx) :
-    H^(2 * (p : ℤ))(V.over; ℚ) :=
+    H^(2 * (p : ℤ))(V.over, ℚ) :=
   forgetSupport V.over
     (cycleComponentSupport V.over x) (2 * (p : ℤ))
       D.constantSheafSupportedFundamentalClass
@@ -642,7 +642,7 @@ def maximalCodimensionComponentClass
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = d) :
-    H^(2 * (d : ℤ))(V.over; ℚ) :=
+    H^(2 * (d : ℤ))(V.over, ℚ) :=
   AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliaryOrdinaryClass
     (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx)
 

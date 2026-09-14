@@ -42,7 +42,7 @@ attribute [local instance] analyticHasDerivedCategory
 
 /-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
 def complexToFieldConstantSheaf :
-    𝓒(↧(ComplexPoint X); ℂ) ⟶ 𝓒(↧(ComplexPoint X); K) :=
+    𝓒(↧(ComplexPoint X), ℂ) ⟶ 𝓒(↧(ComplexPoint X), K) :=
   (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom)
 
@@ -88,18 +88,18 @@ private lemma integerToFieldConstantSheafComplexInt_comp_fieldScalarComplex (q r
     integerToFieldConstantSheaf_comp_fieldScalarSheaf]
 
 /-- The unit in degree-zero rational cohomology. -/
-def fieldCohomologyUnit : H^0(X; K) :=
+def fieldCohomologyUnit : H^0(X, K) :=
   fieldCohomologyClass K X 1
 
 /-- Extension of coefficients from rational to complex constant-sheaf cohomology. -/
 def fieldToComplexCohomology (n : ℤ) :
-    H^n(X; K) →+ ComplexConstantCohomology X n :=
+    H^n(X, K) →+ ComplexConstantCohomology X n :=
   hypercohomologyMap X
     (fieldToComplexConstantSheafComplexInt K X) n
 
 /-- The cohomological retraction induced by the chosen rational-linear retraction `ℂ → K`. -/
 def complexToFieldCohomology (n : ℤ) :
-    ComplexConstantCohomology X n →+ H^n(X; K) :=
+    ComplexConstantCohomology X n →+ H^n(X, K) :=
   hypercohomologyMap X
     (complexToFieldConstantSheafComplexInt K X) n
 
@@ -115,7 +115,7 @@ lemma fieldCohomologyClass_mul (q r : K) :
     integerToFieldConstantSheafComplexInt_comp_fieldScalarComplex]
 
 /-- Rational constants map rational-linearly to degree-zero rational cohomology. -/
-def fieldCohomologyClassLinear : K →ₗ[K] H^0(X; K) where
+def fieldCohomologyClassLinear : K →ₗ[K] H^0(X, K) where
   toFun := fieldCohomologyClass K X
   map_add' := fieldCohomologyClass_add K X
   map_smul' q r := fieldCohomologyClass_mul K X q r
@@ -158,9 +158,9 @@ lemma fieldToComplexConstantSheafComplexInt_comp_complexToField :
   rw [← HomologicalComplex.extendMap_comp, ← Functor.map_comp,
     fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf]
   have hmap : (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-      (𝟙 𝓒(↧(ComplexPoint X); K)) =
+      (𝟙 𝓒(↧(ComplexPoint X), K)) =
       𝟙 ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        𝓒(↧(ComplexPoint X); K)) :=
+        𝓒(↧(ComplexPoint X), K)) :=
     (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map_id _
   rw [hmap]
   exact HomologicalComplex.extendMap_id _ _
@@ -192,7 +192,7 @@ lemma fieldToComplexCohomology_injective (n : ℤ) :
 /-- The rational-to-de Rham map factors through extension from rational to complex constants. -/
 lemma fieldToDeRhamCohomology_factor
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : H^n(X; K)) :
+    (α : H^n(X, K)) :
     fieldToDeRhamCohomology K X n α =
       hypercohomologyMap X
         (constantsToHolomorphicDeRhamComplexInt X) n
@@ -279,7 +279,7 @@ lemma fieldToComplexConstantSheafComplexInt_comp_conj
 /-- Such classes are their own conjugates in complex constant-sheaf cohomology. -/
 lemma conj_fieldToComplexCohomology
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q)
-    (n : ℤ) (α : H^n(X; K)) :
+    (n : ℤ) (α : H^n(X, K)) :
     hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n
         (fieldToComplexCohomology K X n α) =
       fieldToComplexCohomology K X n α := by
@@ -291,7 +291,7 @@ lemma conj_fieldToComplexCohomology
 makes `F^p` alone the right condition over `ℚ`. -/
 lemma deRhamConj_fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom]
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q)
-    (n : ℤ) (α : H^n(X; K)) :
+    (n : ℤ) (α : H^n(X, K)) :
     deRhamConj X n (fieldToDeRhamCohomology K X n α) =
       fieldToDeRhamCohomology K X n α := by
   have he : fieldToDeRhamCohomology K X n α =
@@ -320,7 +320,7 @@ lemma hodgePiece_eq_bot_of_lt [IsIntegral X.left] [Smooth X.hom]
 `(p,p)` and the Hodge filtration alone cuts out the Hodge classes. -/
 lemma hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q) (p : ℕ) :
-    Hdg^p(K; X) =
+    Hdg^p(X, K) =
       ((hodgeFiltrationComplexSubmodule X p (2 * p)).restrictScalars K).comap
         (fieldToDeRhamCohomologyLinear K X (2 * p)) := by
   refine SetLike.ext fun α ↦ ?_
@@ -335,7 +335,7 @@ lemma hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left] 
 definitions agree. -/
 lemma hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left]
     [Smooth X.hom] (p : ℕ) :
-    Hdg^p(ℚ; X) =
+    Hdg^p(X, ℚ) =
       ((hodgeFiltrationComplexSubmodule X p (2 * p)).restrictScalars ℚ).comap
         (fieldToDeRhamCohomologyLinear ℚ X (2 * p)) :=
   hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule ℚ X (fun q ↦ by simp) p
@@ -344,7 +344,7 @@ lemma hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.le
 rational-to-de Rham comparison. In particular, showing that comparison injective makes the
 out-of-range Hodge subgroup vanish. -/
 lemma hodgeClasses_eq_ker_of_lt [IsIntegral X.left] [Smooth X.hom] {p : ℕ} (hp : dim X.left < p) :
-    Hdg^p(K; X) =
+    Hdg^p(X, K) =
       LinearMap.ker (fieldToDeRhamCohomologyLinear K X (2 * p)) := by
   rw [hodgeClasses,
     hodgePiece_eq_bot_of_lt X (by exact_mod_cast hp : (dim X.left : ℤ) < (p : ℤ)),
@@ -354,7 +354,7 @@ lemma hodgeClasses_eq_ker_of_lt [IsIntegral X.left] [Smooth X.hom] {p : ℕ} (hp
 lemma hodgeClasses_eq_bot_of_lt
     [IsIntegral X.left] [Smooth X.hom]
     {p : ℕ} (hp : dim X.left < p) :
-    Hdg^p(K; X) = ⊥ := by
+    Hdg^p(X, K) = ⊥ := by
   rw [hodgeClasses_eq_ker_of_lt K X hp]
   exact LinearMap.ker_eq_bot.mpr (fieldToDeRhamCohomology_injective K X (2 * p))
 
