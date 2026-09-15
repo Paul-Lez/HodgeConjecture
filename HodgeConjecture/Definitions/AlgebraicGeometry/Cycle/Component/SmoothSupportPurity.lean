@@ -151,7 +151,7 @@ def cycleComponentSmoothSupportLowestSectionCohomologyIso :
     0 (2 * (p : ℤ))
     (fun j hj => cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
       X x hx j (ne_of_lt hj))
-    (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+    (fun j => TopCat.Sheaf.sectionsSupportedOutside_isFlasque
       (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl
         ((ambientRationalInjectiveComplex X).X j))
 

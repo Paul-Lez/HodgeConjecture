@@ -98,12 +98,12 @@ def supportRestrictionComplexShortComplexMap
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ} (f : K ⟶ L) :
     supportRestrictionComplexShortComplex X U K ⟶
       supportRestrictionComplexShortComplex X U L where
-  τ₁ := ((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map f
+  τ₁ := ((sectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map f
   τ₂ := f
   τ₃ := ((openRestrictionPushforward X U).mapHomologicalComplex (.up ℤ)).map f
   comm₁₂ := by
     ext n
-    exact (sheafSectionsSupportedOutsideInclusion X U).naturality (f.f n)
+    exact (sectionsSupportedOutsideInclusion X U).naturality (f.f n)
   comm₂₃ := by
     ext n
     exact (toOpenRestrictionPushforward X U).naturality (f.f n)
@@ -116,7 +116,7 @@ theorem supportedSections_map_quasiIso_of_flasque
     (f : K ⟶ L) [QuasiIso f] (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
     QuasiIso (((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).map
-      (((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map f)) := by
+      (((sectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map f)) := by
   let φ := (((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).mapShortComplex).map
     (supportRestrictionComplexShortComplexMap X U f)
   have h₂ : QuasiIso φ.τ₂ :=
@@ -132,11 +132,11 @@ theorem supportedSections_map_quasiIso_of_flasque
 
 /-- Termwise supported sections preserve quasi-isomorphisms between bounded-below
 flasque models, as detected by their actual section complexes. -/
-theorem sheafSectionsSupportedOutside_map_quasiIso_of_flasque
+theorem sectionsSupportedOutside_map_quasiIso_of_flasque
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
     (f : K ⟶ L) [QuasiIso f] (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
-    QuasiIso (((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map f) := by
+    QuasiIso (((sectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map f) := by
   apply quasiIso_of_cofinal_section_quasiIso
   exact fun x V hxV =>
     ⟨V, le_rfl, hxV, supportedSections_map_quasiIso_of_flasque X U V f nK nL hK hL⟩

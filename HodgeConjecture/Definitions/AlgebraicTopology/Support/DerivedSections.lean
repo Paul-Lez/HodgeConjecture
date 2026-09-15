@@ -61,7 +61,7 @@ def toOpenRestrictionPushforward (U : Opens X) :
 
 /-- The sheaf of sections vanishing on `U`, defined as the kernel of the
 coefficient-wise restriction map. -/
-def sheafSectionsSupportedOutside (U : Opens X) :
+def sectionsSupportedOutside (U : Opens X) :
     Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} X where
   obj F := kernel ((toOpenRestrictionPushforward X U).app F)
   map f := kernel.map _ _ f ((openRestrictionPushforward X U).map f)
@@ -74,16 +74,16 @@ def sheafSectionsSupportedOutside (U : Opens X) :
     simp
 
 set_option backward.isDefEq.respectTransparency false in
-instance (U : Opens X) : (sheafSectionsSupportedOutside X U).Additive where
+instance (U : Opens X) : (sectionsSupportedOutside X U).Additive where
   map_add {F G} f g := by
     apply (cancel_mono (kernel.ι _)).1
-    simp [sheafSectionsSupportedOutside, Preadditive.add_comp, Preadditive.comp_add]
+    simp [sectionsSupportedOutside, Preadditive.add_comp, Preadditive.comp_add]
 
 /-- Inclusion of supported sections into the original coefficient sheaf. -/
-def sheafSectionsSupportedOutsideInclusion (U : Opens X) :
-    sheafSectionsSupportedOutside X U ⟶ 𝟭 (Sheaf AddCommGrpCat.{u} X) where
+def sectionsSupportedOutsideInclusion (U : Opens X) :
+    sectionsSupportedOutside X U ⟶ 𝟭 (Sheaf AddCommGrpCat.{u} X) where
   app F := kernel.ι ((toOpenRestrictionPushforward X U).app F)
-  naturality F G f := by simp [sheafSectionsSupportedOutside]
+  naturality F G f := by simp [sectionsSupportedOutside]
 
 /-- Restriction to the empty open subspace and pushforward gives the zero sheaf. -/
 lemma isZero_openRestrictionPushforward_bot (F : Sheaf AddCommGrpCat.{u} X) :
@@ -92,7 +92,7 @@ lemma isZero_openRestrictionPushforward_bot (F : Sheaf AddCommGrpCat.{u} X) :
     ((isZero_iff_stalkFunctor_obj_isZero _).2 fun x => False.elim x.property)
 
 instance (F : Sheaf AddCommGrpCat.{u} X) :
-    IsIso ((sheafSectionsSupportedOutsideInclusion X ⊥).app F) := by
+    IsIso ((sectionsSupportedOutsideInclusion X ⊥).app F) := by
   change IsIso (kernel.ι ((toOpenRestrictionPushforward X ⊥).app F))
   rw [(isZero_openRestrictionPushforward_bot X F).eq_zero_of_tgt
     ((toOpenRestrictionPushforward X ⊥).app F)]

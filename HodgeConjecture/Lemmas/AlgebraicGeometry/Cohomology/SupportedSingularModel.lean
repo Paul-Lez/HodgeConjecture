@@ -48,7 +48,7 @@ def complexSupportedSingularInjectiveHomologyIso
         (supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U))).homology n ≅
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
       (.up ℤ)).obj
-        (((TopCat.Sheaf.sheafSectionsSupportedOutside
+        (((TopCat.Sheaf.sectionsSupportedOutside
           (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
             (ambientRationalInjectiveComplex X)))).homology n :=
   letI : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=

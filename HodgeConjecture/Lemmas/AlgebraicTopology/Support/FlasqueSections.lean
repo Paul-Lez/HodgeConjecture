@@ -38,12 +38,12 @@ theorem toOpenRestrictionPushforward_intersection :
 /-- The literal supported-section inclusion restricts to zero on the intersection. -/
 @[reassoc]
 theorem supportedOutsideInclusion_restrict_intersection :
-    ((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V) ≫
+    ((sectionsSupportedOutsideInclusion X U).app F).hom.app (op V) ≫
       F.obj.map (homOfLE (inf_le_left : V ⊓ U ≤ V)).op = 0 := by
   rw [← toOpenRestrictionPushforward_intersection X U V F, ← Category.assoc]
   have h := congrArg (fun f => f.hom.app (op V))
-    (sheafSectionsSupportedOutsideInclusion_restriction X U F)
-  change ((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V) ≫
+    (sectionsSupportedOutsideInclusion_restriction X U F)
+  change ((sectionsSupportedOutsideInclusion X U).app F).hom.app (op V) ≫
     ((toOpenRestrictionPushforward X U).app F).hom.app (op V) = 0 at h
   rw [h, zero_comp]
 
@@ -52,22 +52,22 @@ The proof uses its canonical on-open kernel comparison, not a chosen support lif
 theorem exists_supportedOutsideSection_of_restrict_eq_zero
     (s : F.obj.obj (op V))
     (hs : F.obj.map (homOfLE (inf_le_left : V ⊓ U ≤ V)).op s = 0) :
-    ∃ t : ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V),
-      ((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V) t = s := by
+    ∃ t : ((sectionsSupportedOutside X U).obj F).obj.obj (op V),
+      ((sectionsSupportedOutsideInclusion X U).app F).hom.app (op V) t = s := by
   let r := ((toOpenRestrictionPushforward X U).app F).hom.app (op V)
   have hr : r s = 0 := by
     apply (ConcreteCategory.bijective_of_isIso (supportedOutsideIntersectionIso X U V F).hom).1
     rw [map_zero]
     exact (ConcreteCategory.congr_hom
       (toOpenRestrictionPushforward_intersection X U V F) s).trans hs
-  let e := sheafSectionsSupportedOutsideOnOpenIso X U V F ≪≫ AddCommGrpCat.kernelIsoKer r
+  let e := sectionsSupportedOutsideOnOpenIso X U V F ≪≫ AddCommGrpCat.kernelIsoKer r
   let a : r.hom.ker := ⟨s, hr⟩
   refine ⟨e.inv a, ?_⟩
   have he : e.hom ≫ AddCommGrpCat.ofHom r.hom.ker.subtype =
-      ((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V) := by
+      ((sectionsSupportedOutsideInclusion X U).app F).hom.app (op V) := by
     simp only [e, Iso.trans_hom, Category.assoc,
       AddCommGrpCat.kernelIsoKer_hom_comp_subtype]
-    exact sheafSectionsSupportedOutsideOnOpenIso_hom_ι X U V F
+    exact sectionsSupportedOutsideOnOpenIso_hom_ι X U V F
   rw [← he]
   change (AddCommGrpCat.ofHom r.hom.ker.subtype) (e.hom (e.inv a)) = s
   have hai : e.hom (e.inv a) = a := ConcreteCategory.congr_hom e.inv_hom_id a
@@ -77,11 +77,11 @@ theorem exists_supportedOutsideSection_of_restrict_eq_zero
 /-- Pairwise sheaf gluing extends a supported section by zero across `U`, as an actual
 additive morphism from the defining kernel. -/
 def supportedOutsideGlueZero :
-    ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V) ⟶ F.obj.obj (op (V ⊔ U)) :=
+    ((sectionsSupportedOutside X U).obj F).obj.obj (op V) ⟶ F.obj.obj (op (V ⊔ U)) :=
   F.interUnionPullbackConeLift V U
     (PullbackCone.mk
-      (((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V))
-      (0 : ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V) ⟶ F.obj.obj (op U))
+      (((sectionsSupportedOutsideInclusion X U).app F).hom.app (op V))
+      (0 : ((sectionsSupportedOutside X U).obj F).obj.obj (op V) ⟶ F.obj.obj (op U))
       (by rw [supportedOutsideInclusion_restrict_intersection, zero_comp]))
 
 /-- Gluing with zero preserves the given section on its original open. -/
@@ -89,7 +89,7 @@ def supportedOutsideGlueZero :
 theorem supportedOutsideGlueZero_restrict_left :
     supportedOutsideGlueZero X U V F ≫
       F.obj.map (homOfLE (le_sup_left : V ≤ V ⊔ U)).op =
-        ((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V) :=
+        ((sectionsSupportedOutsideInclusion X U).app F).hom.app (op V) :=
   F.interUnionPullbackConeLift_left V U _
 
 /-- The same glued section is exactly zero on the excluded open. -/
@@ -103,13 +103,13 @@ variable {V} {W : Opens X}
 
 /-- Every supported section extends along an open inclusion when the original sheaf
 is flasque. The extension is produced by gluing with zero before extending. -/
-theorem sheafSectionsSupportedOutside_restriction_surjective [F.IsFlasque]
+theorem sectionsSupportedOutside_restriction_surjective [F.IsFlasque]
     (hVW : V ≤ W) :
-    Function.Surjective (((sheafSectionsSupportedOutside X U).obj F).obj.map
+    Function.Surjective (((sectionsSupportedOutside X U).obj F).obj.map
       (homOfLE hVW).op) := by
   intro a
-  let G := (sheafSectionsSupportedOutside X U).obj F
-  let ι := (sheafSectionsSupportedOutsideInclusion X U).app F
+  let G := (sectionsSupportedOutside X U).obj F
+  let ι := (sectionsSupportedOutsideInclusion X U).app F
   have hsup : V ⊔ U ≤ W ⊔ U := sup_le_sup_right hVW U
   obtain ⟨t, ht⟩ := (AddCommGrpCat.epi_iff_surjective
     (F.obj.map (homOfLE hsup).op)).mp inferInstance
@@ -135,8 +135,8 @@ theorem sheafSectionsSupportedOutside_restriction_surjective [F.IsFlasque]
   obtain ⟨c, hc⟩ := exists_supportedOutsideSection_of_restrict_eq_zero X U W F b hb
   have hι : Function.Injective (ι.hom.app (op V)) := by
     apply (AddCommGrpCat.mono_iff_injective _).mp
-    change Mono (((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V))
-    rw [← sheafSectionsSupportedOutsideOnOpenIso_hom_ι X U V F]
+    change Mono (((sectionsSupportedOutsideInclusion X U).app F).hom.app (op V))
+    rw [← sectionsSupportedOutsideOnOpenIso_hom_ι X U V F]
     infer_instance
   refine ⟨c, hι ?_⟩
   calc
@@ -155,15 +155,15 @@ theorem sheafSectionsSupportedOutside_restriction_surjective [F.IsFlasque]
       ConcreteCategory.congr_hom (supportedOutsideGlueZero_restrict_left X U V F) a
 
 /-- The actual sheaf-valued supported-sections functor preserves flasque sheaves. -/
-instance sheafSectionsSupportedOutside_isFlasque [F.IsFlasque] :
-    ((sheafSectionsSupportedOutside X U).obj F).IsFlasque where
+instance sectionsSupportedOutside_isFlasque [F.IsFlasque] :
+    ((sectionsSupportedOutside X U).obj F).IsFlasque where
   epi {V W} i := by
     exact (AddCommGrpCat.epi_iff_surjective _).mpr
-      (sheafSectionsSupportedOutside_restriction_surjective X U F (leOfHom i.unop))
+      (sectionsSupportedOutside_restriction_surjective X U F (leOfHom i.unop))
 
 /-- Equivalently, sections supported in any actual closed subset preserve flasqueness. -/
 instance sheafSectionsWithClosedSupport_isFlasque (Z : Closeds X) [F.IsFlasque] :
     ((sheafSectionsWithClosedSupport X Z).obj F).IsFlasque :=
-  sheafSectionsSupportedOutside_isFlasque X Z.compl F
+  sectionsSupportedOutside_isFlasque X Z.compl F
 
 end TopCat.Sheaf

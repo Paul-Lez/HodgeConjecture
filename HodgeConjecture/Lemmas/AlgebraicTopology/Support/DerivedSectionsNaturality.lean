@@ -26,9 +26,9 @@ namespace TopCat.Sheaf
 variable (X : TopCat.{u})
 
 /-- The support-forgetting inclusion is the actual kernel monomorphism. -/
-instance sheafSectionsSupportedOutsideInclusion_mono (U : Opens X)
+instance sectionsSupportedOutsideInclusion_mono (U : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) :
-    Mono ((sheafSectionsSupportedOutsideInclusion X U).app F) :=
+    Mono ((sectionsSupportedOutsideInclusion X U).app F) :=
   inferInstanceAs (Mono (kernel.ι ((toOpenRestrictionPushforward X U).app F)))
 
 /-- The ambient open used when restricting to `U` and pushing forward again. -/
@@ -68,48 +68,48 @@ theorem toOpenRestrictionPushforward_comp {U V : Opens X} (h : V ≤ U) :
 
 /-- The canonical inclusion of sections supported outside `U` into those supported
 outside the smaller open `V`. -/
-def sheafSectionsSupportedOutsideMap {U V : Opens X} (h : V ≤ U) :
-    sheafSectionsSupportedOutside X U ⟶ sheafSectionsSupportedOutside X V where
-  app F := liftSheafSectionsSupportedOutside X V
-    ((sheafSectionsSupportedOutsideInclusion X U).app F) (by
+def sectionsSupportedOutsideMap {U V : Opens X} (h : V ≤ U) :
+    sectionsSupportedOutside X U ⟶ sectionsSupportedOutside X V where
+  app F := liftSectionsSupportedOutside X V
+    ((sectionsSupportedOutsideInclusion X U).app F) (by
       rw [← NatTrans.congr_app (toOpenRestrictionPushforward_comp X h) F]
       simp only [NatTrans.comp_app, ← Category.assoc,
-        sheafSectionsSupportedOutsideInclusion_restriction, zero_comp])
+        sectionsSupportedOutsideInclusion_restriction, zero_comp])
   naturality F G f := by
-    apply (cancel_mono ((sheafSectionsSupportedOutsideInclusion X V).app G)).1
-    simp only [Category.assoc, liftSheafSectionsSupportedOutside_inclusion]
-    rw [(sheafSectionsSupportedOutsideInclusion X V).naturality f,
-      ← Category.assoc, liftSheafSectionsSupportedOutside_inclusion]
-    exact (sheafSectionsSupportedOutsideInclusion X U).naturality f
+    apply (cancel_mono ((sectionsSupportedOutsideInclusion X V).app G)).1
+    simp only [Category.assoc, liftSectionsSupportedOutside_inclusion]
+    rw [(sectionsSupportedOutsideInclusion X V).naturality f,
+      ← Category.assoc, liftSectionsSupportedOutside_inclusion]
+    exact (sectionsSupportedOutsideInclusion X U).naturality f
 
 /-- Support enlargement preserves the actual inclusion into the coefficient sheaf. -/
 @[reassoc (attr := simp)]
-theorem sheafSectionsSupportedOutsideMap_inclusion {U V : Opens X} (h : V ≤ U) :
-    sheafSectionsSupportedOutsideMap X h ≫ sheafSectionsSupportedOutsideInclusion X V =
-      sheafSectionsSupportedOutsideInclusion X U := by
+theorem sectionsSupportedOutsideMap_inclusion {U V : Opens X} (h : V ≤ U) :
+    sectionsSupportedOutsideMap X h ≫ sectionsSupportedOutsideInclusion X V =
+      sectionsSupportedOutsideInclusion X U := by
   ext F
-  exact liftSheafSectionsSupportedOutside_inclusion X V _ _
+  exact liftSectionsSupportedOutside_inclusion X V _ _
 
 @[simp]
-theorem sheafSectionsSupportedOutsideMap_refl (U : Opens X) :
-    sheafSectionsSupportedOutsideMap X (le_refl U) = 𝟙 (sheafSectionsSupportedOutside X U) := by
+theorem sectionsSupportedOutsideMap_refl (U : Opens X) :
+    sectionsSupportedOutsideMap X (le_refl U) = 𝟙 (sectionsSupportedOutside X U) := by
   ext F
-  apply (cancel_mono ((sheafSectionsSupportedOutsideInclusion X U).app F)).1
-  simp [sheafSectionsSupportedOutsideMap]
+  apply (cancel_mono ((sectionsSupportedOutsideInclusion X U).app F)).1
+  simp [sectionsSupportedOutsideMap]
 
 @[reassoc (attr := simp)]
-theorem sheafSectionsSupportedOutsideMap_comp {U V W : Opens X}
+theorem sectionsSupportedOutsideMap_comp {U V W : Opens X}
     (h : V ≤ U) (h' : W ≤ V) :
-    sheafSectionsSupportedOutsideMap X h ≫ sheafSectionsSupportedOutsideMap X h' =
-      sheafSectionsSupportedOutsideMap X (h'.trans h) := by
+    sectionsSupportedOutsideMap X h ≫ sectionsSupportedOutsideMap X h' =
+      sectionsSupportedOutsideMap X (h'.trans h) := by
   ext F
-  apply (cancel_mono ((sheafSectionsSupportedOutsideInclusion X W).app F)).1
-  simp [sheafSectionsSupportedOutsideMap]
+  apply (cancel_mono ((sectionsSupportedOutsideInclusion X W).app F)).1
+  simp [sectionsSupportedOutsideMap]
 
 /-- The coefficient-level support-enlargement map for closed subsets. -/
 def sheafSectionsWithClosedSupportMap {Z W : Closeds X} (h : Z ≤ W) :
     sheafSectionsWithClosedSupport X Z ⟶ sheafSectionsWithClosedSupport X W :=
-  sheafSectionsSupportedOutsideMap X (show W.compl ≤ Z.compl from fun _ hx hz ↦ hx (h hz))
+  sectionsSupportedOutsideMap X (show W.compl ≤ Z.compl from fun _ hx hz ↦ hx (h hz))
 
 /-- The actual support-enlargement map on global sections. -/
 def closedSupportSectionsMap {Z W : Closeds X} (h : Z ≤ W) :

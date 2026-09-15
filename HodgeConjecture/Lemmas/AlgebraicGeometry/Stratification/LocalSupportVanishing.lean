@@ -141,7 +141,7 @@ theorem cycleComponentSingularLayerSectionCohomology_isZero_of_lt
           (cycleComponentSingularAnalyticClosedFiltration X x k))).homology n) := by
   apply TopCat.Sheaf.sectionCohomology_isZero_of_cofinal_lower_vanishing
     (TopCat.of (ComplexPoint X)) _ _ 0 n
-  · exact fun j ↦ TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+  · exact fun j ↦ TopCat.Sheaf.sectionsSupportedOutside_isFlasque
       (TopCat.of (ComplexPoint X))
       (cycleComponentSingularAnalyticClosedFiltration X x k).compl
       ((ambientRationalInjectiveComplex X).X j)

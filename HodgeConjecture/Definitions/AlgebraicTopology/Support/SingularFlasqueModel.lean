@@ -102,15 +102,15 @@ instance singularToConstantInjectiveComplex_quasiIso :
 of restriction; its cohomology is not defined to be a desired purity group. -/
 def supportedRationalSingularCochainComplex (U : Opens X) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
-  ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
+  ((TopCat.Sheaf.sectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
     (rationalSingularCochainComplex X)
 
 /-- Apply actual supported sections to the constructed resolution comparison. -/
 def supportedSingularToInjectiveComplex (U : Opens X) :
     supportedRationalSingularCochainComplex X U ⟶
-      ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
+      ((TopCat.Sheaf.sectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
         (rationalConstantInjectiveComplex X) :=
-  ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map
+  ((TopCat.Sheaf.sectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map
     (singularToConstantInjectiveComplex X hX)
 
 variable [T2Space X] [∀ V : Opens X, ParacompactSpace V]
@@ -126,7 +126,7 @@ instance rationalSingularCochainComplex_isFlasque (n : ℤ) :
 on the level of actual sheaf complexes. -/
 instance supportedSingularToInjectiveComplex_quasiIso (U : Opens X) :
     QuasiIso (supportedSingularToInjectiveComplex X hX U) :=
-  TopCat.Sheaf.sheafSectionsSupportedOutside_map_quasiIso_of_flasque X U
+  TopCat.Sheaf.sectionsSupportedOutside_map_quasiIso_of_flasque X U
     (singularToConstantInjectiveComplex X hX) 0 0 (fun _ => inferInstance) (fun _ => inferInstance)
 
 end AlgebraicTopology.Singular
