@@ -40,7 +40,7 @@ namespace Guide.Overview.D1
 ```lean
 def HodgeConjecture : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ),
-    Hdg^p(X, ℚ) ≤ algebraicCycleClassSpan X p
+    Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p
 ```
 ```lean -show
 end Guide.Overview.D1
@@ -55,7 +55,7 @@ namespace Guide.Overview.D2
 ```
 ```lean
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X, K)) :=
+    [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 ```
@@ -68,7 +68,7 @@ namespace Guide.Overview.D3
 ```
 ```lean
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X, ℚ)) :=
+    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
     Submodule.span ℚ {cycleComponentSheafClass X x hx}
 ```
@@ -90,7 +90,7 @@ irreducible subvarieties of codimension $`p`.
 # The construction in outline
 
 1. Form the space $`X(\mathbb C)` of complex points with its analytic topology, and the holomorphic
-   de Rham complex $`\Omega_X^\bullet` on it. Rational cohomology $`H^n(X,\mathbb Q)` and de Rham
+   de Rham complex $`\Omega_X^\bullet` on it. Rational cohomology $`H^n(X;\mathbb Q)` and de Rham
    cohomology $`H^n_{\mathrm{dR}}(X)` are hypercohomology groups of sheaf complexes on
    $`X(\mathbb C)`, and the maps of complexes
    $`\underline{\mathbb Q}_X\to\underline{\mathbb C}_X\to\Omega_X^\bullet` induce a comparison map
@@ -108,7 +108,7 @@ irreducible subvarieties of codimension $`p`.
    local generators glue.
 5. Extend the resulting class uniquely across the singular locus of $`Z`, which has codimension at
    least $`p+1`, so that its cohomology with support vanishes in degrees $`2p` and $`2p+1`.
-   Forgetting the support gives $`\operatorname{cl}_X(Z)\in H^{2p}(X,\mathbb Q)`.
+   Forgetting the support gives $`\operatorname{cl}_X(Z)\in H^{2p}(X;\mathbb Q)`.
 6. Extend $`\operatorname{cl}_X` additively to cycles and $`\mathbb Q`-linearly to rational cycles.
    The statement itself uses only the span of the classes of individual subvarieties.
 
@@ -134,7 +134,7 @@ Two cases of the conjecture itself are proved, both unconditionally, and both in
 `Other/AlgebraicGeometry/`.
 
 * Codimension zero. Every degree-zero class is a Hodge class, and the class of $`X` itself spans
-  $`H^0(X,\mathbb Q)`, so $`\operatorname{Hdg}^0(X,\mathbb Q)=A^0(X)`. The two inputs are that
+  $`H^0(X;\mathbb Q)`, so $`\operatorname{Hdg}^0(X,\mathbb Q)=A^0(X)`. The two inputs are that
   the analytification of a smooth integral complex scheme is connected and that the constructed
   class of the whole variety is nonzero; both are proved here. The second is the useful one: it
   shows that the construction of
@@ -150,7 +150,7 @@ Three classical facts about the construction are not formalized. None is needed 
 conjecture, but they are needed for the usual equivalent formulations, and the first is what
 stands between the two cases above and the general one.
 
-* Cohomological purity: $`H^{2p}_Z(X,\mathbb Q)` is the line on the fundamental class, so that
+* Cohomological purity: $`H^{2p}_Z(X;\mathbb Q)` is the line on the fundamental class, so that
   forgetting support is injective on it and $`\operatorname{cl}_X(Z)\ne0` for every subvariety
   $`Z`. The normalized local section the class is built from is proved nonzero for every
   component; purity is what would carry that through to ordinary cohomology. Without it the span
@@ -172,5 +172,5 @@ orientation of those directions can generate. This is the origin of the index
 {lean}`2 * (p : ℤ)` throughout the code; the complementary index
 {lean}`2 * ((d - p : ℕ) : ℤ)`, the real dimension of $`Z`, appears wherever a construction is
 indexed by $`Z` rather than by its codimension. A class with support in $`Z` lies in
-$`H_Z^{2p}(X,\mathbb Q)`; the map {name}`forgetSupport` sends it to the ordinary group
-$`H^{2p}(X,\mathbb Q)`, in which the conjecture is stated.
+$`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the ordinary group
+$`H^{2p}(X;\mathbb Q)`, in which the conjecture is stated.

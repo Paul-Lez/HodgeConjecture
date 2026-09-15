@@ -60,7 +60,7 @@ def pushforwardComplementConstantRationalSheaf
     (Z : Set (ComplexPoint X)) : AnalyticAdditiveSheaf X :=
   (TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion X Z)).obj
-      𝓒(↧↥Zᶜ, ℚ)
+      𝓒(↧↥Zᶜ; ℚ)
 
 /-- Constant rational sections restrict canonically to locally constant sections on the
 complement. This is the presheaf morphism before sheafifying the source. -/
@@ -76,7 +76,7 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
 
 /-- The canonical restriction of the rational constant sheaf to the complement. -/
 def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
-    𝓒(↧(ComplexPoint X), ℚ) ⟶
+    𝓒(↧(ComplexPoint X); ℚ) ⟶
       pushforwardComplementConstantRationalSheaf X Z :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
@@ -86,8 +86,8 @@ def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
 /-- A fixed injective resolution used to compute the derived pushforward from the complement. -/
 def complementConstantRationalInjectiveResolution
     (Z : Set (ComplexPoint X)) :
-    InjectiveResolution 𝓒(↧↥Zᶜ, ℚ) :=
-  injectiveResolution 𝓒(↧↥Zᶜ, ℚ)
+    InjectiveResolution 𝓒(↧↥Zᶜ; ℚ) :=
+  injectiveResolution 𝓒(↧↥Zᶜ; ℚ)
 
 /-- A complex representing the derived pushforward of the rational constant sheaf on the
 complement. -/
@@ -158,7 +158,7 @@ def pushforwardComplementResolutionMap
         (ComplexShape.up ℕ)).obj
       ((CochainComplex.single₀
         (AnalyticComplementAdditiveSheaf X Z)).obj
-          𝓒(↧↥Zᶜ, ℚ)) ⟶
+          𝓒(↧↥Zᶜ; ℚ)) ⟶
     derivedPushforwardComplementConstantRationalComplexNat X Z :=
   ((TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion X Z)).mapHomologicalComplex
@@ -170,14 +170,14 @@ pushforward from the complement. -/
 def rationalRestrictionComplexNat
     (Z : Set (ComplexPoint X)) :
     (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-        𝓒(↧(ComplexPoint X), ℚ) ⟶
+        𝓒(↧(ComplexPoint X); ℚ) ⟶
       derivedPushforwardComplementConstantRationalComplexNat X Z :=
   (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
       (rationalRestrictionSheaf X Z) ≫
     (HomologicalComplex.singleMapHomologicalComplex
       (TopCat.Sheaf.pushforward AddCommGrpCat
         (analyticComplementInclusion X Z)) (ComplexShape.up ℕ) 0).inv.app
-          𝓒(↧↥Zᶜ, ℚ) ≫
+          𝓒(↧↥Zᶜ; ℚ) ≫
     pushforwardComplementResolutionMap X Z
 
 /-- Restriction from the ambient rational constant complex to the derived pushforward from the
@@ -230,9 +230,9 @@ abbrev RationalCohomologyWithSupport
     (Z : Set (ComplexPoint X)) (n : ℤ) : Type 1 :=
   Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)
 
-/-- `H_[Z]^n(X, ℚ)` is rational constant-sheaf cohomology of `X(ℂ)` with support in `Z`, in
+/-- `H_[Z]^n(X; ℚ)` is rational constant-sheaf cohomology of `X(ℂ)` with support in `Z`, in
 integer degree `n`. -/
-scoped notation:max "H_[" Z "]^" n:max "(" X ", " "ℚ" ")" => RationalCohomologyWithSupport X Z n
+scoped notation:max "H_[" Z "]^" n:max "(" X "; " "ℚ" ")" => RationalCohomologyWithSupport X Z n
 
 /-- The degree-one connecting morphism from the mapping cone to the ambient rational constant
 complex. -/
@@ -247,7 +247,7 @@ def forgetSupportShiftedHom (Z : Set (ComplexPoint X)) :
 /-- Forget support, using the connecting morphism of the mapping-cone triangle. -/
 def forgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+
-      H^n(X, ℚ) where
+      H^n(X; ℚ) where
   toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
   map_zero' := by
     apply (Localization.SmallShiftedHom.equiv
@@ -280,7 +280,7 @@ ordinary rational cohomology. Its forward map is definitionally the support-forg
 noncomputable def forgetSupportEquivUniv (n : ℤ) :
     RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
-      H^n(X, ℚ) :=
+      H^n(X; ℚ) :=
   let eSource : RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
       ShiftedHom
@@ -289,7 +289,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
         (n - 1) :=
     Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  let eTarget : H^n(X, ℚ) ≃
+  let eTarget : H^n(X; ℚ) ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
         (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=

@@ -17,7 +17,7 @@ my error, not a signal about the content.
    (`HodgeConjecture/Definitions/AlgebraicGeometry/Coniveau.lean`). `HodgeGuide/FundamentalClass.lean`
    names this as the crux ("purity alone fixes a line but not the multiplicity-one generator that a
    cycle class map needs"), but it is absent from the guide's list of open items.
-   At `p = 0` it is decidable today: `hodgeClasses_zero_eq_top` proves `Hdg^0(X, ℚ) = ⊤`, so the
+   At `p = 0` it is decidable today: `hodgeClasses_zero_eq_top` proves `Hdg^0(X; ℚ) = ⊤`, so the
    statement at `p = 0` asserts that `H^0` is spanned by one component class. If that class were
    zero the statement would be false rather than vacuous.
    `Other/AlgebraicGeometry/Hodge/CodimensionZero.lean` already reduces the case to
@@ -36,7 +36,7 @@ my error, not a signal about the content.
    `Other/AlgebraicGeometry/Hodge/DimensionZero.lean`, which proves that nonvanishing when
    `dim X.left = 0` (there the generic point also has maximal codimension, so the existing point
    normalization applies), giving `hcompare` outright and
-   `Hdg^p(X, ℚ) ≤ algebraicCycleClassSpan X p` in every codimension for a dimension-zero variety.
+   `Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p` in every codimension for a dimension-zero variety.
    For `dim X.left > 0` the chain stops at the sheafification unit `supportRelativeCohomologyToSheaf`:
    `chartNormalProjectionCoclass` is normalized to one on the normal class, but nothing shows its germ
    in the sheafified relative-cohomology presheaf is nonzero. Two routes were examined and not

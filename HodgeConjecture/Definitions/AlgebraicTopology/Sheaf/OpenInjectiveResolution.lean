@@ -73,7 +73,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The fixed injective resolution of the constant coefficient sheaf. -/
 def ambientConstantInjectiveResolution :
     InjectiveResolution (C := Sheaf AddCommGrpCat.{0} X)
-      𝓒[X, A] :=
+      𝓒[X; A] :=
   injectiveResolution (C := Sheaf AddCommGrpCat.{0} X) _
 
 end TopCat.Sheaf

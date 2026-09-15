@@ -114,14 +114,14 @@ def openSheafRestrictionAdjunction :
 /-- Constant sections on an open subspace map to the restriction of the ambient
 constant sheaf, by the sheafification unit itself. -/
 def constantToOpenSheafRestriction (A : AddCommGrpCat.{u}) :
-    𝓒[↧U, A] ⟶
-      (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj 𝓒[X, A] :=
+    𝓒[↧U; A] ⟶
+      (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj 𝓒[X; A] :=
   ⟨sheafifyLift (Opens.grothendieckTopology (TopCat.of U))
     (Functor.whiskerLeft U.isOpenEmbedding.functor.op
       (toSheafify (Opens.grothendieckTopology X)
         ((Functor.const (Opens X)ᵒᵖ).obj A)))
     ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
-      𝓒[X, A]).property⟩
+      𝓒[X; A]).property⟩
 
 @[reassoc]
 lemma toSheafify_constantToOpenSheafRestriction (A : AddCommGrpCat.{u}) :
@@ -143,10 +143,10 @@ lemma constantRestriction_pushforward_constantToOpen (A : AddCommGrpCat.{u}) :
       (pushforward AddCommGrpCat U.inclusion').map
         (constantToOpenSheafRestriction X U A) =
     (toOpenRestrictionPushforward X U).app
-      𝓒[X, A] := by
+      𝓒[X; A] := by
   apply CategoryTheory.Sheaf.hom_ext_iff.mpr
   apply sheafify_hom_ext
-  · exact ((openRestrictionPushforward X U).obj 𝓒[X, A]).property
+  · exact ((openRestrictionPushforward X U).obj 𝓒[X; A]).property
   rw [ObjectProperty.FullSubcategory.comp_hom, ← Category.assoc,
     toSheafify_constantRestriction]
   ext V : 2
@@ -165,7 +165,7 @@ lemma constantRestriction_pushforward_constantToOpen (A : AddCommGrpCat.{u}) :
 restriction to the subspace. -/
 def openSheafRestrictionToConstant (A : AddCommGrpCat.{u}) :
     (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
-        𝓒[X, A] ⟶ 𝓒[↧U, A] :=
+        𝓒[X; A] ⟶ 𝓒[↧U; A] :=
   ((openSheafRestrictionAdjunction X U).homEquiv _ _).symm
     (constantRestriction U.inclusion' A)
 
@@ -186,7 +186,7 @@ lemma constantToOpen_openSheafRestrictionToConstant (A : AddCommGrpCat.{u}) :
     constantToOpenSheafRestriction X U A ≫ openSheafRestrictionToConstant X U A = 𝟙 _ := by
   apply CategoryTheory.Sheaf.hom_ext_iff.mpr
   apply sheafify_hom_ext
-  · exact 𝓒[↧U, A].property
+  · exact 𝓒[↧U; A].property
   rw [ObjectProperty.FullSubcategory.comp_hom, ← Category.assoc,
     toSheafify_constantToOpenSheafRestriction]
   ext V : 2
@@ -203,8 +203,8 @@ lemma constantToOpen_openSheafRestrictionToConstant (A : AddCommGrpCat.{u}) :
 /-- Constant sheaves commute with open restriction through the explicitly
 normalized maps induced by constant sections. -/
 def constantOpenSheafRestrictionIso (A : AddCommGrpCat.{u}) :
-    𝓒[↧U, A] ≅
-      (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj 𝓒[X, A] where
+    𝓒[↧U; A] ≅
+      (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj 𝓒[X; A] where
   hom := constantToOpenSheafRestriction X U A
   inv := openSheafRestrictionToConstant X U A
   hom_inv_id := constantToOpen_openSheafRestrictionToConstant X U A

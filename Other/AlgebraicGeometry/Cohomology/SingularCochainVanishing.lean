@@ -37,7 +37,7 @@ resolution vanishes on a hereditarily paracompact Hausdorff space. -/
 theorem rationalSingularCochainTerm_cohomology_succ_eq_zero
     (Y : TopCat.{0}) [T2Space Y] [∀ U : Opens Y, ParacompactSpace U]
     (p q : ℕ) (x : Abelian.Ext
-      𝓒(Y, ULift.{0} ℤ)
+      𝓒(Y; ULift.{0} ℤ)
       (AlgebraicTopology.Singular.singularCochainSheaf ℚ Y p) (q + 1)) :
     x = 0 :=
   AlgebraicTopology.Singular.singularCochainSheaf_cohomology_succ_eq_zero p q x

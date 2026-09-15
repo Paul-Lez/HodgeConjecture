@@ -36,7 +36,7 @@ def restrictedAmbientConstantResolution :
 resolution, using the normalized constant/open isomorphism. -/
 def restrictedAmbientConstantAugmentation :
     (CochainComplex.single₀ (Sheaf AddCommGrpCat.{0} (TopCat.of U))).obj
-        𝓒[↧U, A] ⟶
+        𝓒[↧U; A] ⟶
       restrictedAmbientConstantResolution X U A :=
   (CochainComplex.single₀ _).map (constantOpenSheafRestrictionIso X U A).hom ≫
     (HomologicalComplex.singleMapHomologicalComplex
@@ -197,7 +197,7 @@ lemma ambientAugmentation_comp_openResolution :
       ((ambientConstantInjectiveResolution X A).ι.f 0)
     dsimp only [Functor.id_map] at hnat
     rw [← Category.assoc, hnat]
-    change ((toOpenRestrictionPushforward X U).app 𝓒[X, A] ≫ _) ≫ _ = _
+    change ((toOpenRestrictionPushforward X U).app 𝓒[X; A] ≫ _) ≫ _ = _
     rw [← constantRestriction_pushforward_constantToOpen]
     dsimp only [openRestrictionPushforward, Functor.comp_map]
     simp only [Category.assoc]

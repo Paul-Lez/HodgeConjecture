@@ -38,9 +38,9 @@ orients the normal directions, and the orientation picks out a generator, the Th
 normal bundle. The class to be constructed is the global section of degree $`2p` that restricts to
 that generator in every chart,
 
-$$`\operatorname{cl}_X(Z)\in H^{2p}_Z(X,\mathbb Q),`
+$$`\operatorname{cl}_X(Z)\in H^{2p}_Z(X;\mathbb Q),`
 
-and then, after forgetting the support, in $`H^{2p}(X,\mathbb Q)`.
+and then, after forgetting the support, in $`H^{2p}(X;\mathbb Q)`.
 
 The choice of generator is the essential point. Purity alone says that the local cohomology with
 support in degree $`2p` is one-dimensional, which fixes a line but not the multiplicity-one
@@ -144,7 +144,7 @@ differences are smooth. Each layer has codimension at least $`p+1` in $`X`, so i
 support vanishes in degrees below $`2(p+1)`, in particular in degrees $`2p` and $`2p+1`. The long
 exact sequence for the nested supports $`Z_{\mathrm{sing}}\subseteq Z` then shows that restriction
 
-$$`H_Z^{2p}(X,\mathbb Q)\longrightarrow
+$$`H_Z^{2p}(X;\mathbb Q)\longrightarrow
   H_{Z_{\mathrm{reg}}}^{2p}(X\setminus Z_{\mathrm{sing}};\mathbb Q)`
 
 is an isomorphism. Its inverse extends the class of Step 1 uniquely to a class with support in
@@ -254,7 +254,7 @@ namespace Guide.Subvariety.D6
 ```lean
 def cycleComponentSheafClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) : H^(2 * (p : ℤ))(X, ℚ) :=
+    (hx : coheight x = p) : H^(2 * (p : ℤ))(X; ℚ) :=
   forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
     (cycleComponentSheafSupportedClass X x hx)
 ```
@@ -272,7 +272,7 @@ arguments.
 
 For the generic point of $`X` itself, the support is all of $`X(\mathbb C)`, so forgetting support
 is an isomorphism. The nonzero normalized section therefore gives a nonzero class in
-$`H^0(X,\mathbb Q)` in every dimension, without assuming analytic connectedness.
+$`H^0(X;\mathbb Q)` in every dimension, without assuming analytic connectedness.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_genericPoint_ne_zero

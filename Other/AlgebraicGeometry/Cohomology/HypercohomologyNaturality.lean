@@ -66,7 +66,7 @@ lemma homComplexSingleIntegerIsoGlobalSections_naturality
       ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
         (.up ℤ)).map f := by
   let A : Sheaf AddCommGrpCat Y :=
-    𝓒(Y, ℤ)
+    𝓒(Y; ℤ)
   let : (IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
   let e := NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y) (.up ℤ)

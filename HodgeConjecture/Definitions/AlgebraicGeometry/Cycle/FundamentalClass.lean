@@ -106,7 +106,7 @@ supported class of step 2, with its support forgotten.
 
 This is the composite of the three steps, not a second route into ordinary cohomology; the
 agreement with `forgetSupport` is therefore definitional rather than a theorem. -/
-def cycleComponentSheafClass : H^(2 * (p : ℤ))(X, ℚ) :=
+def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
   forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
     (cycleComponentSheafSupportedClass X x hx)
 

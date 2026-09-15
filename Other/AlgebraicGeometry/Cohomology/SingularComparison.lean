@@ -50,7 +50,7 @@ def rationalCohomologyLinearEquivSingularCohomology
     [T2Space (ComplexPoint X)]
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
-    H^(n : ℤ)(X, ℚ) ≃ₗ[ℚ]
+    H^(n : ℤ)(X; ℚ) ≃ₗ[ℚ]
       AlgebraicTopology.Singular.Cohomology ℚ
         (TopCat.of (ComplexPoint X)) n :=
   (rationalCohomologyAddEquivSingularCohomology X n).toLinearEquiv

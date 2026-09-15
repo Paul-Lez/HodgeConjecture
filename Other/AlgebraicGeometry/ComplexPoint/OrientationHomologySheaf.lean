@@ -115,7 +115,7 @@ theorem complexOrientationHomologyStalkMap_isIso (x : ComplexPoint X) :
 
 /-- The actual sheaf map obtained by gluing the geometric neighborhood orientations. -/
 def constantToComplexOrientationHomologySheaf :
-    𝓒(↧(ComplexPoint X), ℚ) ⟶
+    𝓒(↧(ComplexPoint X); ℚ) ⟶
       singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d) :=
   TopCat.Sheaf.constantSheafMapOfLocallyRepresentable _ (AddCommGrpCat.of ℚ)
     (complexOrientationHomologyStalkMap X d)
@@ -123,7 +123,7 @@ def constantToComplexOrientationHomologySheaf :
 
 /-- The constructed normalized orientation is an isomorphism of actual sheaves. -/
 def complexOrientationHomologySheafIso :
-    𝓒(↧(ComplexPoint X), ℚ) ≅
+    𝓒(↧(ComplexPoint X); ℚ) ≅
       singularChainHomologySheaf ℚ (TopCat.of (ComplexPoint X)) (2 * d) :=
   letI : IsIso (constantToComplexOrientationHomologySheaf X d) := by
     unfold constantToComplexOrientationHomologySheaf

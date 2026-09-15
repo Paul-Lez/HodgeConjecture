@@ -44,7 +44,7 @@ attribute [local instance] analyticHasDerivedCategory
 
 /-- A rational number as a morphism from the integer to the rational constant sheaf. -/
 def integerToFieldConstantSheaf (q : K) :
-    𝓒(↧(ComplexPoint X), ℤ) ⟶ 𝓒(↧(ComplexPoint X), K) :=
+    𝓒(↧(ComplexPoint X); ℤ) ⟶ 𝓒(↧(ComplexPoint X); K) :=
   (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (zmultiplesAddHom K q))
 
@@ -97,7 +97,7 @@ omit [Algebra K ℂ] in
     HomologicalComplex.extendMap_add]
 
 /-- The constant rational class `q` in degree-zero rational cohomology. -/
-def fieldCohomologyClass (q : K) : H^0(X, K) :=
+def fieldCohomologyClass (q : K) : H^0(X; K) :=
   Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
     (integerToFieldConstantSheafComplexInt K X q)
 

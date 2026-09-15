@@ -54,8 +54,8 @@ abbrev SingularCochainComplex (R : Type u) [CommRing R] (X : TopCat.{u}) :
     CochainComplex (ModuleCat.{u} R) ℕ :=
   (SingularChainComplex R X).linearDualCochainComplex
 
-/-- `C^n(X, R)` is the module of singular `n`-cochains of `X` with coefficients in `R`. -/
-scoped notation3:max "C^" n:max "(" Y ", " R ")" => (SingularCochainComplex R Y).X n
+/-- `C^n(X; R)` is the module of singular `n`-cochains of `X` with coefficients in `R`. -/
+scoped notation3:max "C^" n:max "(" Y "; " R ")" => (SingularCochainComplex R Y).X n
 
 /-- The singular cochain map induced by a continuous map, obtained by dualising the chain map. -/
 abbrev singularCochainComplexMap (R : Type u) [CommRing R] {X Y : TopCat.{u}} (f : X ⟶ Y) :
@@ -67,8 +67,8 @@ singular cochain complex — that is, by dualising the chain complex, not by dua
 abbrev Cohomology (R : Type u) [CommRing R] (X : TopCat.{u}) (n : ℕ) : ModuleCat.{u} R :=
   (SingularCochainComplex R X).homology n
 
-/-- `H^n(X, R)` is singular cohomology of `X` in degree `n` with coefficients in `R`. -/
-scoped notation3:max "H^" n:max "(" X ", " R ")" => Cohomology R X n
+/-- `H^n(X; R)` is singular cohomology of `X` in degree `n` with coefficients in `R`. -/
+scoped notation3:max "H^" n:max "(" X "; " R ")" => Cohomology R X n
 
 /-- Pullback in singular cohomology, induced by the dualised chain map. -/
 def cohomologyMap (R : Type u) [CommRing R] {X Y : TopCat.{u}} (n : ℕ) (f : X ⟶ Y) :
@@ -99,14 +99,14 @@ def relativeCohomologyToAbsolute (R : Type u) [CommRing R] (X : TopPair.{u}) (n 
   (HomologicalComplex.homologyMap
     (HomologicalComplex.linearDualMap (relativeChainProjection R X)) n).hom
 
-/-- Singular cohomology of `X` with support in `Z`, defined as `H^n((X, Zᶜ), R)`. -/
+/-- Singular cohomology of `X` with support in `Z`, defined as `H^n((X, Zᶜ); R)`. -/
 abbrev CohomologyWithSupport (R : Type u) [CommRing R] (X : TopCat.{u})
     (Z : Set X) (n : ℕ) : ModuleCat.{u} R :=
   RelativeCohomology R (TopPair.ofSubset Zᶜ) n
 
-/-- `H_[Z]^n(X, R)` is singular cohomology of `X` with support in `Z`, in degree `n` with
+/-- `H_[Z]^n(X; R)` is singular cohomology of `X` with support in `Z`, in degree `n` with
 coefficients in `R`. -/
-scoped notation:max "H_[" Z "]^" n:max "(" X ", " R ")" => CohomologyWithSupport R X Z n
+scoped notation:max "H_[" Z "]^" n:max "(" X "; " R ")" => CohomologyWithSupport R X Z n
 
 /-- Forget support in `Z`, mapping a supported class to ordinary singular cohomology. -/
 def forgetSupport (R : Type u) [CommRing R] (X : TopCat.{u}) (Z : Set X) (n : ℕ) :

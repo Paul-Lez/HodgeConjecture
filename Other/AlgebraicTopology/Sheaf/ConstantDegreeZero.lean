@@ -184,7 +184,7 @@ lemma constant_toSheafify_app_top_surjective [ConnectedSpace X] (A : AddCommGrpC
 /-- On a connected topological space, the coefficient group is additively equivalent to the
 global sections of its constant sheaf. -/
 def constantSheafGlobalSectionsAddEquiv [ConnectedSpace X] (A : AddCommGrpCat.{u}) :
-    A ≃+ 𝓒[X, A].obj.obj (op ⊤) :=
+    A ≃+ 𝓒[X; A].obj.obj (op ⊤) :=
   AddEquiv.ofBijective
     ((CategoryTheory.toSheafify (Opens.grothendieckTopology X)
       (constantAddCommGrpPresheaf X A)).app (op ⊤)).hom
