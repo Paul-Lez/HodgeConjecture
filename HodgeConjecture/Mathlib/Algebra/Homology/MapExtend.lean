@@ -21,6 +21,31 @@ open CategoryTheory Limits
 
 namespace HomologicalComplex
 
+universe u v
+
+section Single
+
+variable {C : Type u} [Category.{v} C] [Preadditive C] [HasZeroObject C]
+  {I J : Type*} {c : ComplexShape I} {c' : ComplexShape J}
+
+/-- Extending a complex supported in one degree is naturally isomorphic to placing the object in
+the corresponding target degree. -/
+@[reassoc]
+lemma extendSingleIso_hom_naturality
+    [DecidableEq I] [DecidableEq J] (e : c.Embedding c') {A B : C} (f : A ⟶ B)
+    (i : I) (j : J) (h : e.f i = j) :
+    extendMap ((single C c i).map f) e ≫ (extendSingleIso e B i j h).hom =
+      (extendSingleIso e A i j h).hom ≫ (single C c' j).map f := by
+  apply hom_ext
+  intro k
+  by_cases hk : k = j
+  · subst k
+    simp only [comp_f, extendMap_f _ e h, extendSingleIso_hom_f, single_map_f_self]
+    simp
+  · exact (isZero_single_obj_X c' j B k hk).eq_of_tgt _ _
+
+end Single
+
 variable {C D : Type*} [Category* C] [Category* D] [Preadditive C] [Preadditive D]
   [HasZeroObject C] [HasZeroObject D] (F : C ⥤ D) [F.Additive]
   {I J : Type*} {c : ComplexShape I} {c' : ComplexShape J}

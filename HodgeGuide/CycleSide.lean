@@ -18,6 +18,7 @@ tag := "cycles"
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+open scoped TopCat.Sheaf
 noncomputable section
 universe u
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
@@ -164,7 +165,7 @@ abbrev RationalCohomologyWithSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexP
     Type :=
   ↥((TopCat.Sheaf.hypercohomologyFunctor AddCommGrpCat
     (TopCat.of (ComplexPoint X)) n).obj
-      (DerivedCategory.Plus.Q.obj (rationalCohomologyWithSupportComplexPlus X Z)))
+      (rationalCohomologyWithSupportComplexPlus X Z))
 ```
 ```lean -show
 end Guide.Cycles.D9
@@ -176,7 +177,7 @@ namespace Guide.Cycles.D10
 ```lean
 def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) :=
-  ((analyticHypercohomologyFunctor X n).map
+  ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
     (⟨forgetSupportComplex X Z⟩ : rationalCohomologyWithSupportComplexPlus X Z ⟶
       constantFieldSheafComplexIntPlus ℚ X)).hom
 ```

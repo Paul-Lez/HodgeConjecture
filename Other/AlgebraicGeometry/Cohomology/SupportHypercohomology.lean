@@ -32,6 +32,7 @@ nothing in the statement's dependency chain uses these results, only material in
 
 @[expose] public noncomputable section
 open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
+open scoped TopCat.Sheaf
 namespace AlgebraicGeometry.ComplexPoint
 open Point
 universe u v
@@ -99,6 +100,7 @@ end
 
 @[expose] public noncomputable section
 open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
+open scoped TopCat.Sheaf
 namespace AlgebraicGeometry.ComplexPoint
 open Point
 universe u v
@@ -116,15 +118,15 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
         (ComplexShape.up ℤ)).map i.hom)]
     (n : ℤ) :
-    ↥((analyticHypercohomologyFunctor X n).obj K) ≃+
+    ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj K) ≃+
       (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
         (TopCat.of (ComplexPoint X)) K.obj).homology n :=
   let Y := TopCat.of (ComplexPoint X)
   let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-  let F := analyticHypercohomologyFunctor X n
+  let F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
   letI : IsIso (DerivedCategory.Plus.Q.map i) := inferInstance
   letI : IsIso (F.map i) := by
-    dsimp only [F, analyticHypercohomologyFunctor, Functor.comp_map]
+    dsimp only [F, Functor.comp_map]
     infer_instance
   let e₀ := (asIso (F.map i)).addCommGroupIsoToAddEquiv
   let e₁ := (TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat Y I n
@@ -139,7 +141,7 @@ def hypercohomologyAddEquivGlobalSections
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (N : ℤ) [K.IsStrictlyGE N]
     (hKflasque : ∀ q, (K.X q).IsFlasque) (n : ℤ) :
-    ↥((analyticHypercohomologyFunctor X n).obj
+    ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
       (⟨K, ⟨N, inferInstance⟩⟩ : CochainComplex.Plus (AnalyticAdditiveSheaf X))) ≃+
       (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
         (TopCat.of (ComplexPoint X)) K).homology n :=
@@ -187,7 +189,7 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularCone
     [IsIntegral X.left] [Smooth X.hom]
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
-      ↥((analyticHypercohomologyFunctor X n).obj
+      ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
         (⟨(shiftFunctor _ (-1 : ℤ)).obj (CochainComplex.mappingCone
           (naturalSingularResolutionRestriction X Z hZ)),
           ⟨0, by
@@ -206,9 +208,9 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularCone
   letI : QuasiIso f.hom := (CochainComplex.quasiIso_shift_iff
     (rationalSupportConeToNaturalSingularCone X Z hZ) (-1)).2 inferInstance
   letI : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
-  let F := analyticHypercohomologyFunctor X n
+  let F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
   letI : IsIso (F.map f) := by
-    dsimp only [F, analyticHypercohomologyFunctor, Functor.comp_map]
+    dsimp only [F, Functor.comp_map]
     infer_instance
   (asIso (F.map f)).addCommGroupIsoToAddEquiv
 

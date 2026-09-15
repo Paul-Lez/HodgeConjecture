@@ -24,9 +24,8 @@ public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 /-!
 # Global-sections and derived-Hom shift comparisons
 
-These representation-independent results describe the shift compatibility needed by a future
-comparison with hypercohomology. The former SmallShiftedHom comparisons are intentionally
-omitted; the replacement should be phrased through the derived-global-sections functor.
+These results describe the compatibility of derived-Hom and global-section comparisons with
+shifts.
 -/
 
 @[expose] public noncomputable section
@@ -102,6 +101,10 @@ end
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
 namespace AlgebraicGeometry.ComplexPoint
 
+variable (X : Over (Spec ↧ℂ))
+
+attribute [local instance] hypercohomologyShiftSheafDerivedCategory
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift
@@ -122,6 +125,41 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift
     CochainComplex.HomComplex.equivHomShift_symm_rightUnshift,
     ShiftedHom.map_comp]
   simp [ShiftedHom.map]
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option maxHeartbeats 800000 in
+/-- The derived-Hom/global-section comparison commutes with target unshifting. -/
+lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
+    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective]
+    (s n n' : ℤ) (h : n + s = n')
+    (x : ShiftedHom
+      (DerivedCategory.Q.obj (TopCat.Sheaf.integerConstantSingleComplex
+        (TopCat.of (ComplexPoint X)))) (DerivedCategory.Q.obj (K⟦s⟧)) n) :
+    derivedHomAddEquivGlobalSectionsKInjective X K n'
+      (x.comp ((DerivedCategory.Q.commShiftIso s).hom.app K) (by omega)) =
+    ShortComplex.homologyMap (TopCat.Sheaf.globalSectionsShiftShortComplex
+      (TopCat.of (ComplexPoint X)) K s n n' h)
+      (derivedHomAddEquivGlobalSectionsKInjective X (K⟦s⟧) n x) := by
+  let Y := TopCat.of (ComplexPoint X)
+  let A := TopCat.Sheaf.integerConstantSingleComplex Y
+  let y := (CochainComplex.HomComplex.homologyAddEquiv A (K⟦s⟧) n).symm
+    (kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n x)
+  have hH : ShortComplex.homologyMap
+      (CochainComplex.HomComplex.rightUnshiftShortComplex A K s n n' h) y =
+      (CochainComplex.HomComplex.homologyAddEquiv A K n').symm
+        (CochainComplex.HomComplex.rightUnshiftClass A K s n n' h
+          (kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n x)) := by
+    apply (CochainComplex.HomComplex.homologyAddEquiv A K n').injective
+    rw [CochainComplex.HomComplex.homologyAddEquiv_rightUnshift,
+      AddEquiv.apply_symm_apply]
+    simp only [AddEquiv.apply_symm_apply]
+  have hΓy := ConcreteCategory.congr_hom
+    (TopCat.Sheaf.homComplexSingleIntegerGlobalSections_rightUnshift_homology
+      Y K s n n' h) y
+  dsimp only [derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
+  rw [kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift _ _ s n n' h, ← hH]
+  exact hΓy.symm
 
 end AlgebraicGeometry.ComplexPoint
 

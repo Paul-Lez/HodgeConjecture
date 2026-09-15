@@ -18,6 +18,7 @@ Lemmas about the definitions in
 @[expose] public noncomputable section
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
+open scoped TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -144,7 +145,7 @@ def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
         (CochainComplex.mappingCone
           (ambientRationalInjectiveRestriction X Z hZ))).homology (n - 1) :=
   let f := rationalSupportConeToAmbientInjectiveConePlus X Z hZ
-  let F := analyticHypercohomologyFunctor X n
+  let F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
   let _ : IsIso (DerivedCategory.Plus.Q.map f) := by infer_instance
   let _ : IsIso (F.map f) := by
     dsimp only [F, Functor.comp_map]

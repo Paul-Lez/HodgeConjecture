@@ -15,13 +15,14 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.FlasqueBoundedBelow
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.GlobalSections
+public import Mathlib.Algebra.Homology.Embedding.CochainComplex
+public import Mathlib.Topology.Sheaves.Flasque
 
 /-!
 # Global sections of bounded-below exact flasque complexes
 
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.FlasqueBoundedBelow`.
+The main exactness result and its supporting constructions.
 -/
 
 /-! ### Constructions used only in proofs -/

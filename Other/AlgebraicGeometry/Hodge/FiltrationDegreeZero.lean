@@ -21,7 +21,7 @@ public import Other.LinearAlgebra.HodgeStructure
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace
-open scoped TensorProduct
+open scoped TensorProduct TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -50,11 +50,8 @@ def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
   letI : QuasiIso f.hom := by
     change QuasiIso (hodgeFilteredDeRhamInclusion X 0)
     infer_instance
-  letI : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
-  letI : IsIso ((analyticHypercohomologyFunctor X n).map f) := by
-    dsimp
-    infer_instance
-  (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv.toEquiv
+  (asIso
+    ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map f)).addCommGroupIsoToAddEquiv.toEquiv
 
 
 lemma filteredToDeRhamCohomology_zero_apply

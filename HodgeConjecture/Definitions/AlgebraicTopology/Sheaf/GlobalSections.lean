@@ -17,12 +17,13 @@ namespace TopCat.Sheaf
 
 universe u v w
 
-variable (C : Type u) [Category.{v} C] [Abelian C]
-  (X : TopCat.{w}) [HasSheafify (Opens.grothendieckTopology X) C]
+variable (C : Type u) [Category.{v} C] (X : TopCat.{w})
 
 /-- Evaluation of a sheaf on the top open subset. -/
 def globalSectionsFunctor : Sheaf C X ⥤ C :=
   (sheafSections (Opens.grothendieckTopology X) C).obj (op (⊤ : Opens X))
+
+variable [Abelian C] [HasSheafify (Opens.grothendieckTopology X) C]
 
 instance globalSectionsFunctor_additive : (globalSectionsFunctor C X).Additive where
   map_add {A B} f g := by

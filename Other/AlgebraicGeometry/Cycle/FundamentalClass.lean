@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
+public import Other.AlgebraicGeometry.Cohomology.SupportConeForget
 
 /-!
 # FundamentalClass, the part the statement does not need
@@ -61,6 +62,25 @@ theorem cycleComponentSheafClass_eq_forgetSupport :
     cycleComponentSheafClass X x hx =
       forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
         (cycleComponentSheafSupportedClass X x hx) :=
+  rfl
+
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
+set_option backward.defeqAttrib.useBackward true in
+/-- The cycle-component class computed in the ambient injective model. -/
+theorem cycleComponentSheafClass_eq_injectiveModel :
+    cycleComponentSheafClass X x hx =
+      (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
+        (HomologicalComplex.homologyMap
+          (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
+            (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
+            (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
+          (cycleComponentSupportedInjectiveClass X x hx)) := by
+  apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).injective
+  rw [cycleComponentSheafClass_eq_forgetSupport,
+    rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
+    (cycleComponentSupport X x) (cycleComponentAnalyticClosedSupport X x).isClosed]
+  simp only [cycleComponentSheafSupportedClass, AddEquiv.apply_symm_apply]
   rfl
 
 end AlgebraicGeometry.ComplexPoint

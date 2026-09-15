@@ -153,8 +153,7 @@ yet available.
 tag := "what-is-proved"
 %%%
 
-The conjecture is stated, not proved. Its formalized constructions satisfy the expected
-out-of-range vanishing, and the local class used in codimension zero is known to be nonzero.
+The conjecture is stated, not proved. Two of its cases are proved outright.
 
 The easy case is $`p>\dim X`. A smooth variety has no point of coheight above its dimension, so
 the span is $`\bot`; and $`F^p` vanishes there, so the Hodge classes are $`\bot` too. The
@@ -167,19 +166,33 @@ break.
 #check AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan_eq_bot_of_lt
 ```
 
-In codimension zero, the constructed cycle-class span is the line on the generic-point class,
-since on an integral scheme no other point has coheight zero. The analytification of a smooth
-integral complex scheme is connected; this is proved from Noether normalization and a local
-étale chart, rather than assumed.
+Codimension zero is the substantial one. Both sides are computed, and they agree:
+
+$$`\operatorname{Hdg}^0(X;\mathbb Q)=A^0(X)=H^0(X;\mathbb Q).`
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.connectedSpace
-#check AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan_zero_eq_span_genericPoint
+#check AlgebraicGeometry.ComplexPoint.rationalHodgeClasses_zero_eq_algebraicCycleClassSpan
 ```
 
-The normalized local section is nonzero at any complex point of the smooth locus. Comparing its
-ordinary hypercohomology class with the cohomological unit is deferred until the required
-derived-global-sections comparison is available.
+The left-hand side is everything, because $`F^0` is; that is the sanity check of
+{ref "hodge-classes"}[Hodge classes]. The right-hand side is the line on a single class, that of
+the generic point of {lean}`X.left`, since on an integral scheme no other point has coheight zero.
+That line is all of $`H^0(X;\mathbb Q)` for two reasons: the analytification of a smooth integral
+complex scheme is connected, so $`H^0` is itself a line, and the class is nonzero. Connectedness
+is proved here, from Noether normalization and a local étale chart, rather than assumed.
+
+```lean
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.connectedSpace
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_genericPoint_ne_zero
+```
+
+The nonvanishing is the part that tests the construction. Its proof runs the chain of
+{ref "class-of-a-subvariety"}[The class of a subvariety] backwards: the normalized local section
+is nonzero at any complex point of the smooth locus, the normalization comparison is an
+isomorphism, and forgetting support is injective here because the generic component is supported
+on all of $`X(\mathbb C)`. Thus the construction does not return zero, at least for this one
+subvariety, on a variety of any dimension.
 
 For a component of positive codimension the same chain stops at the last step. The normalized
 section is still nonzero, for every component:

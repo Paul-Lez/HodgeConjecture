@@ -34,6 +34,7 @@ nothing about how they were built can change what it asserts.
 @[expose] public noncomputable section
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
+open scoped TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -186,7 +187,7 @@ def rationalRestrictionComplexNat
 /-- Restriction from the ambient rational constant complex to the derived pushforward from the
 complement. -/
 def rationalRestrictionComplexInt (Z : Set (ComplexPoint X)) :
-    constantFieldSheafComplexInt ℚ X ⟶
+    (constantFieldSheafComplexIntPlus ℚ X).obj ⟶
       derivedPushforwardComplementConstantRationalComplexInt X Z :=
   HomologicalComplex.extendMap (rationalRestrictionComplexNat X Z)
     ComplexShape.embeddingUpNat
@@ -240,13 +241,13 @@ abbrev rationalCohomologyWithSupportComplexPlus
 /-- Rational constant-sheaf cohomology with support in `Z`. -/
 abbrev RationalCohomologyWithSupport
     (Z : Set (ComplexPoint X)) (n : ℤ) :=
-  ↥((analyticHypercohomologyFunctor X n).obj
+  ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
     (rationalCohomologyWithSupportComplexPlus X Z))
 
 /-- The shifted mapping-cone morphism which forgets support. -/
 def forgetSupportComplex (Z : Set (ComplexPoint X)) :
     (rationalCohomologyWithSupportComplexPlus X Z).obj ⟶
-      constantFieldSheafComplexInt ℚ X :=
+      (constantFieldSheafComplexIntPlus ℚ X).obj :=
   ((CochainComplex.mappingCone.triangle
       (rationalRestrictionComplexInt X Z)).mor₃)⟦(-1 : ℤ)⟧' ≫
     (shiftFunctorCompIsoId _ (1 : ℤ) (-1) (by simp)).hom.app _
@@ -255,7 +256,7 @@ def forgetSupportComplex (Z : Set (ComplexPoint X)) :
 def forgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+
       H^n(X; ℚ) :=
-  ((analyticHypercohomologyFunctor X n).map
+  ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
     (⟨forgetSupportComplex X Z⟩ : rationalCohomologyWithSupportComplexPlus X Z ⟶
       constantFieldSheafComplexIntPlus ℚ X)).hom
 
@@ -300,12 +301,8 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
       constantFieldSheafComplexIntPlus ℚ X :=
     ⟨forgetSupportComplex X Set.univ⟩
   letI : QuasiIso f.hom := forgetSupportComplex_univ_quasiIso X
-  letI : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
-  letI : IsIso ((analyticHypercohomologyFunctor X n).map f) :=
-    by
-      dsimp only [analyticHypercohomologyFunctor, Functor.comp_map]
-      infer_instance
-  (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv.toEquiv
+  (asIso
+    ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map f)).addCommGroupIsoToAddEquiv.toEquiv
 
 end AlgebraicGeometry.ComplexPoint
 

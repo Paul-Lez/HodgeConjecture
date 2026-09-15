@@ -6,14 +6,17 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
 import Other.AlgebraicGeometry.Cycle.Codimension
-public import Other.AlgebraicGeometry.Hodge.CodimensionZero
+import Other.AlgebraicGeometry.Cohomology.RationalDegreeZeroProperties
+import Other.AlgebraicGeometry.ComplexPoint.SmoothConnected
+public import Other.AlgebraicGeometry.Hodge.FiltrationDegreeZero
 public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 
 /-!
-# Representation-independent codimension-zero cycle calculations
+# Codimension-zero cycle calculations
 
-The comparison with the cohomological unit is deferred until degree-zero hypercohomology is
-computed through derived global sections.
+Degree-zero rational cohomology is a line because constant rational classes exhaust it. The
+generic component class is nonzero because its normalized supported coclass is nonzero and
+forgetting whole-space support is injective.
 -/
 
 @[expose] public noncomputable section
@@ -48,5 +51,96 @@ theorem algebraicCycleClassSpan_zero_eq_span_genericPoint :
       (le_iSup_of_le (coheight_genericPoint_eq_zero X) le_rfl))
   obtain rfl := eq_genericPoint_of_coheight_zero x (by simpa using hx)
   exact le_rfl
+
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
+/-- On a connected analytification, a degree-zero rational cohomology class generates the
+whole group precisely when it is nonzero. -/
+theorem span_singleton_eq_top_iff_ne_zero [ConnectedSpace (ComplexPoint X)]
+    (α : H^0(X; ℚ)) :
+    Submodule.span ℚ {α} = ⊤ ↔ α ≠ 0 := by
+  constructor
+  · intro h hα
+    rw [hα, Submodule.span_zero_singleton] at h
+    exact rationalCohomologyUnit_ne_zero X
+      ((Submodule.mem_bot ℚ).mp (h.ge Submodule.mem_top))
+  · intro hα
+    let e := rationalCohomologyClassLinearEquiv X
+    obtain ⟨q, hq⟩ := e.surjective α
+    have hq0 : q ≠ 0 := by
+      rintro rfl
+      exact hα (hq.symm.trans (map_zero _))
+    refine top_unique fun β _ ↦ ?_
+    obtain ⟨r, hr⟩ := e.surjective β
+    have hβ : β = (r / q) • α := by
+      rw [← hq, ← hr, ← map_smul]
+      congr 1
+      rw [smul_eq_mul, div_mul_cancel₀ _ hq0]
+    rw [hβ]
+    exact Submodule.smul_mem _ _ (Submodule.subset_span (Set.mem_singleton _))
+
+/-- The component belonging to the generic point of an integral variety has the whole analytic
+space as its support. -/
+lemma cycleComponentSupport_genericPoint_eq_univ :
+    cycleComponentSupport X (genericPoint X.left) = Set.univ := by
+  rw [cycleComponentSupport]
+  change (@Point.underlying ℂ _ _ X) ⁻¹'
+    (closure {genericPoint X.left} : Set X.left) = Set.univ
+  rw [genericPoint_closure (α := X.left)]
+  exact Set.preimage_univ
+
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
+/-- Forgetting support is injective whenever the support is the whole analytic space. -/
+theorem forgetSupport_injective_of_eq_univ (Z : Set (ComplexPoint X))
+    (hZ : Z = Set.univ) (n : ℤ) :
+    Function.Injective (forgetSupport X Z n) := by
+  subst hZ
+  exact (forgetSupportEquivUniv X n).injective
+
+/-- The generic-point component class vanishes exactly when its supported class vanishes. -/
+theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass :
+    cycleComponentSheafClass X (genericPoint X.left)
+        (coheight_genericPoint_eq_zero X) = 0 ↔
+      cycleComponentSupportedInjectiveClass X (genericPoint X.left)
+        (coheight_genericPoint_eq_zero X) = 0 := by
+  have hZ : cycleComponentSupport X (genericPoint X.left) = Set.univ :=
+    cycleComponentSupport_genericPoint_eq_univ X
+  rw [cycleComponentSheafClass_eq_forgetSupport]
+  refine Iff.trans (map_eq_zero_iff _ (forgetSupport_injective_of_eq_univ X _ hZ _)) ?_
+  rw [cycleComponentSheafSupportedClass]
+  exact map_eq_zero_iff _ (AddEquiv.injective _)
+
+/-- The generic-point component class vanishes exactly when the normalized coclass section from
+which it is constructed vanishes. -/
+theorem cycleComponentSheafClass_genericPoint_eq_zero_iff :
+    cycleComponentSheafClass X (genericPoint X.left)
+        (coheight_genericPoint_eq_zero X) = 0 ↔
+      cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
+        (coheight_genericPoint_eq_zero X) = 0 := by
+  have hcoclass :
+      (cycleComponentSupportedClassNormalizationIso X (genericPoint X.left)
+        (coheight_genericPoint_eq_zero X)).addCommGroupIsoToAddEquiv
+          (cycleComponentSupportedInjectiveClass X (genericPoint X.left)
+            (coheight_genericPoint_eq_zero X)) =
+        cycleComponentSmoothSupportCoclassSection X (genericPoint X.left)
+          (coheight_genericPoint_eq_zero X) :=
+    cycleComponentSupportedInjectiveClass_normalization X (genericPoint X.left)
+      (coheight_genericPoint_eq_zero X)
+  refine Iff.trans
+    (cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass X) ?_
+  rw [← hcoclass]
+  refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
+  · rw [h]
+    exact AddEquiv.map_zero _
+  · exact AddEquiv.injective _ (h.trans (AddEquiv.map_zero _).symm)
+
+/-- The constructed codimension-zero span is all of degree-zero rational cohomology precisely
+when the generic-point component class is nonzero. -/
+theorem algebraicCycleClassSpan_zero_eq_top_iff :
+    algebraicCycleClassSpan X 0 = ⊤ ↔
+      cycleComponentSheafClass X (genericPoint X.left)
+        (coheight_genericPoint_eq_zero X) ≠ 0 := by
+  let _ : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
+  rw [algebraicCycleClassSpan_zero_eq_span_genericPoint]
+  exact span_singleton_eq_top_iff_ne_zero X _
 
 end AlgebraicGeometry.ComplexPoint

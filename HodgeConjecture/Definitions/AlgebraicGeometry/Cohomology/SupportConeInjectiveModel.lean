@@ -35,7 +35,7 @@ def ambientRationalInjectiveComplex :
 
 /-- Its actual constant augmentation. -/
 def ambientRationalInjectiveAugmentation :
-    constantFieldSheafComplexInt ℚ X ⟶
+    (constantFieldSheafComplexIntPlus ℚ X).obj ⟶
       ambientRationalInjectiveComplex X :=
   HomologicalComplex.extendMap
     (TopCat.Sheaf.ambientConstantInjectiveResolution
@@ -58,6 +58,27 @@ instance ambientRationalInjectiveComplex_injective (q : ℤ) :
 instance ambientRationalInjectiveComplex_isStrictlyGE :
     (ambientRationalInjectiveComplex X).IsStrictlyGE 0 := by
   dsimp only [ambientRationalInjectiveComplex]
+  infer_instance
+
+/-- The ambient rational injective resolution as a bounded-below complex. -/
+abbrev ambientRationalInjectiveComplexPlus :
+    CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
+  ⟨ambientRationalInjectiveComplex X,
+    ⟨0, ambientRationalInjectiveComplex_isStrictlyGE X⟩⟩
+
+/-- The rational constant-sheaf augmentation as a map of bounded-below complexes. -/
+def ambientRationalInjectiveAugmentationPlus :
+    constantFieldSheafComplexIntPlus ℚ X ⟶ ambientRationalInjectiveComplexPlus X :=
+  ⟨ambientRationalInjectiveAugmentation X⟩
+
+instance ambientRationalInjectiveComplexPlus_isKInjective :
+    (ambientRationalInjectiveComplexPlus X).obj.IsKInjective := by
+  change (ambientRationalInjectiveComplex X).IsKInjective
+  exact CochainComplex.isKInjective_of_injective (ambientRationalInjectiveComplex X) 0
+
+instance ambientRationalInjectiveAugmentationPlus_quasiIso :
+    QuasiIso (ambientRationalInjectiveAugmentationPlus X).hom := by
+  change QuasiIso (ambientRationalInjectiveAugmentation X)
   infer_instance
 
 end AlgebraicGeometry.ComplexPoint
