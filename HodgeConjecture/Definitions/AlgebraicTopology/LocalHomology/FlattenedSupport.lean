@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalSlicePurity
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.NeighborhoodPair
 public import Mathlib.Analysis.Normed.Module.Ball.Homeomorph
 
 /-!
@@ -24,10 +25,6 @@ namespace AlgebraicTopology.Singular
 
 variable {M : Type} [TopologicalSpace M]
   (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
-
-/-- The actual pair consisting of a neighborhood and the complement of a support in it. -/
-abbrev neighborhoodSupportComplementPair (W S : Set M) : TopPair :=
-  TopPair.ofSubset (X := TopCat.of W) {w | w.1 ∉ S}
 
 variable (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (x : M) (hx : x ∈ e.source)
 

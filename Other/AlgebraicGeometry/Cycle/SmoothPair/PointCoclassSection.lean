@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NeighborhoodPairImage
 public import Other.AlgebraicGeometry.Cycle.SmoothPair.PointPurity
 public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 
@@ -24,31 +25,9 @@ open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
 open TopCat.Presheaf
 
-namespace AlgebraicTopology.Singular
-
-variable {M : Type} [TopologicalSpace M]
-
-/-- The actual inclusion from a neighborhood/support pair into the pair with one
-point removed. It exists when the distinguished point belongs to the support. -/
-def neighborhoodSupportToPointPairMap (V S : Set M) (x : M) (hx : x ∈ S) :
-    neighborhoodSupportComplementPair V S ⟶ pointComplementPair x :=
-  TopPair.ofHom
-    (TopCat.ofHom ⟨Subtype.val, continuous_subtype_val⟩)
-    (TopCat.ofHom ⟨fun w => ⟨w.1.1, fun h => w.2 (h ▸ hx)⟩,
-      (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _⟩) rfl
-
-/-- Literal ambient inclusions factor through every nested neighborhood. -/
-@[simp] theorem neighborhoodSupportInclusionPairMap_toPoint {U V : Set M}
-    (hUV : U ⊆ V) (S : Set M) (x : M) (hx : x ∈ S) :
-    neighborhoodSupportInclusionPairMap hUV S ≫ neighborhoodSupportToPointPairMap V S x hx =
-      neighborhoodSupportToPointPairMap U S x hx := by
-  apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
-
-end AlgebraicTopology.Singular
-
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X Y : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)}
   (i : Y ⟶ X) (d : ℕ)
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] [IsProjective X.hom]
@@ -56,13 +35,9 @@ variable (X Y : Over (Spec ↧ℂ))
 /-- The old ambient point coclass, pulled back to the literal whole-open pair,
 then sent through the actual sheafification unit. -/
 def smoothClosedOldPointCoclassSection (z : ComplexPoint Y) :
-    (smoothClosedSupportCoclassSheaf X Y i 0 d).obj.obj (op ⊤) :=
-  (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
-    (Set.range (Point.map i)) (2 * d)).app (op ⊤)
-      (relativeCohomologyMap ℚ (2 * d)
-        (neighborhoodSupportToPointPairMap (⊤ : Opens (ComplexPoint X))
-          (Set.range (Point.map i)) (Point.map i z) ⟨z, rfl⟩)
-        (analyticPointLocalCoclass X d (Point.map i z)))
+    (smoothClosedSupportCoclassSheaf i 0 d).obj.obj (op ⊤) :=
+  supportRelativeCohomologyPointSection ⊤ ⟨z, rfl⟩
+      (analyticPointLocalCoclass X d (Point.map i z))
 
 omit [IsProjective X.hom] in
 /-- The literal local-to-point map is the map used by the existing exact
@@ -71,7 +46,7 @@ theorem neighborhoodSupportToPointPairMap_eq_smoothClosedPointNeighborhoodPairMa
     (z : ComplexPoint Y) (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V) :
     neighborhoodSupportToPointPairMap
       (smoothClosedSupportNeighborhood X Y i 0 d z V hzV)
-      (Set.range (Point.map i)) (Point.map i z) ⟨z, rfl⟩ =
+      (S := Set.range (Point.map i)) (x := Point.map i z) ⟨z, rfl⟩ =
       smoothClosedPointNeighborhoodPairMap X Y i d z V hzV := by
   apply MorphismProperty.Arrow.Hom.ext <;> ext w <;> rfl
 
@@ -81,19 +56,19 @@ set_option backward.defeqAttrib.useBackward true in
 general normal coclass, with coefficient one. -/
 theorem smoothClosedOldPointCoclassSection_germ_eq_normalCoclass
     (z : ComplexPoint Y) (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V) :
-    (smoothClosedSupportCoclassSheaf X Y i 0 d).presheaf.Γgerm (Point.map i z)
-      (smoothClosedOldPointCoclassSection X Y i d z) =
-    supportRelativeCohomologyGerm (TopCat.of (ComplexPoint X))
+    (smoothClosedSupportCoclassSheaf i 0 d).presheaf.Γgerm (Point.map i z)
+      (smoothClosedOldPointCoclassSection i d z) =
+    @supportRelativeCohomologyGerm (TopCat.of (ComplexPoint X))
       (Set.range (Point.map i)) (2 * d)
-      (smoothClosedSupportNeighborhood X Y i 0 d z V hzV)
-      (Point.map i z) (mem_smoothClosedSupportNeighborhood X Y i 0 d z V hzV)
+      (smoothClosedSupportNeighborhood X Y i 0 d z V hzV) (Point.map i z)
+      (mem_smoothClosedSupportNeighborhood X Y i 0 d z V hzV)
       (smoothClosedSupportNormalCoclass X Y i 0 d z V hzV) := by
   let W := smoothClosedSupportNeighborhood X Y i 0 d z V hzV
   let a := relativeCohomologyMap ℚ (2 * d)
     (neighborhoodSupportToPointPairMap (⊤ : Opens (ComplexPoint X))
-      (Set.range (Point.map i)) (Point.map i z) ⟨z, rfl⟩)
+      (S := Set.range (Point.map i)) (x := Point.map i z) ⟨z, rfl⟩)
     (analyticPointLocalCoclass X d (Point.map i z))
-  change supportRelativeCohomologyGerm (TopCat.of (ComplexPoint X))
+  change @supportRelativeCohomologyGerm (TopCat.of (ComplexPoint X))
     (Set.range (Point.map i)) (2 * d) ⊤ (Point.map i z) (by trivial) a = _
   rw [← supportRelativeCohomologyGerm_restrict (TopCat.of (ComplexPoint X))
     (Set.range (Point.map i)) (2 * d) (show W ≤ ⊤ from le_top)
@@ -109,8 +84,8 @@ omit [SmoothOfRelativeDimension 0 Y.hom] in
 /-- The old global point image vanishes off the actual closed support. -/
 theorem smoothClosedOldPointCoclassSection_germ_eq_zero
     (z : ComplexPoint Y) (x : ComplexPoint X) (hx : x ∉ Set.range (Point.map i)) :
-    (smoothClosedSupportCoclassSheaf X Y i 0 d).presheaf.Γgerm x
-      (smoothClosedOldPointCoclassSection X Y i d z) = 0 :=
+    (smoothClosedSupportCoclassSheaf i 0 d).presheaf.Γgerm x
+      (smoothClosedOldPointCoclassSection i d z) = 0 :=
   supportRelativeCohomologyGerm_eq_zero_of_not_mem (TopCat.of (ComplexPoint X))
     (Set.range (Point.map i)) (2 * d) (isClosed_range_map_of_closedImmersion i)
     ⊤ x (by trivial) hx _
@@ -119,19 +94,19 @@ theorem smoothClosedOldPointCoclassSection_germ_eq_zero
 with the actual sheafification image of the old ambient point coclass. -/
 theorem smoothClosedSupportCoclassSection_eq_oldPoint_of_singleton
     (z : ComplexPoint Y) (hS : Set.range (Point.map i) = {Point.map i z}) :
-    smoothClosedSupportCoclassSection X Y i 0 d =
-      smoothClosedOldPointCoclassSection X Y i d z := by
-  apply TopCat.Presheaf.section_ext (smoothClosedSupportCoclassSheaf X Y i 0 d)
+    smoothClosedSupportCoclassSection i 0 d =
+      smoothClosedOldPointCoclassSection i d z := by
+  apply TopCat.Presheaf.section_ext (smoothClosedSupportCoclassSheaf i 0 d)
   intro x _
   by_cases hx : x ∈ Set.range (Point.map i)
   · have heq : x = Point.map i z := by simpa only [hS, Set.mem_singleton_iff] using hx
     subst x
     exact (smoothClosedSupportCoclassSection_germ_eq_normalCoclass
-      X Y i 0 d z ⊤ (by trivial)).trans
+      i 0 d z ⊤ (by trivial)).trans
       (smoothClosedOldPointCoclassSection_germ_eq_normalCoclass
-        X Y i d z ⊤ (by trivial)).symm
-  · exact (smoothClosedSupportCoclassSection_germ_eq_zero X Y i 0 d x hx).trans
-      (smoothClosedOldPointCoclassSection_germ_eq_zero X Y i d z x hx).symm
+        i d z ⊤ (by trivial)).symm
+  · exact (smoothClosedSupportCoclassSection_germ_eq_zero i 0 d x hx).trans
+      (smoothClosedOldPointCoclassSection_germ_eq_zero i d z x hx).symm
 
 section ActualPoint
 
@@ -181,20 +156,16 @@ def complexPointSmoothSupportCoclassSection (z : ComplexPoint X) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
       (Set.range (Point.map z)) (2 * d)).obj.obj (op ⊤) :=
   letI := complexPoint_isClosedImmersion X z
-  smoothClosedSupportCoclassSection X (Over.mk (𝟙 _)) z 0 d
+  smoothClosedSupportCoclassSection z 0 d
 
 /-- The actual sheafification image of the pre-existing global point coclass.
 The only adapter is the literal inclusion of the whole-open subtype pair. -/
 def analyticPointLocalCoclassSheafSection (z : ComplexPoint X) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
       (Set.range (Point.map z)) (2 * d)).obj.obj (op ⊤) :=
-  (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
-    (Set.range (Point.map z)) (2 * d)).app (op ⊤)
-      (relativeCohomologyMap ℚ (2 * d)
-        (neighborhoodSupportToPointPairMap (⊤ : Opens (ComplexPoint X))
-          (Set.range (Point.map z)) z
-          ⟨complexSpecIdentityPoint, map_complexSpecIdentityPoint X z⟩)
-        (analyticPointLocalCoclass X d z))
+  supportRelativeCohomologyPointSection ⊤
+      ⟨complexSpecIdentityPoint, map_complexSpecIdentityPoint X z⟩
+      (analyticPointLocalCoclass X d z)
 
 /-- Unconditional exact point normalization of the general globally glued
 smooth-support section. The support-singleton equality and smooth point immersion
@@ -207,10 +178,11 @@ theorem complexPointSmoothSupportCoclassSection_eq_analyticPointLocalCoclassShea
   have hS : Set.range (Point.map z) =
       {Point.map z complexSpecIdentityPoint} := by
     rw [map_complexSpecIdentityPoint, range_map_complexPoint]
-  change smoothClosedSupportCoclassSection X (Over.mk (𝟙 _)) z 0 d = _
+  change smoothClosedSupportCoclassSection z 0 d = _
   rw [smoothClosedSupportCoclassSection_eq_oldPoint_of_singleton
-    X (Over.mk (𝟙 _)) z d complexSpecIdentityPoint hS]
-  dsimp only [smoothClosedOldPointCoclassSection, analyticPointLocalCoclassSheafSection]
+    z d complexSpecIdentityPoint hS]
+  dsimp only [smoothClosedOldPointCoclassSection, analyticPointLocalCoclassSheafSection,
+    supportRelativeCohomologyPointSection]
   apply congrArg ((supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
     (Set.range (Point.map z)) (2 * d)).app (op ⊤))
   let f : Set.range (Point.map z) → RelativeCohomology ℚ
@@ -218,7 +190,7 @@ theorem complexPointSmoothSupportCoclassSection_eq_analyticPointLocalCoclassShea
         (Set.range (Point.map z))) (2 * d) := fun x =>
     relativeCohomologyMap ℚ (2 * d)
       (neighborhoodSupportToPointPairMap ((⊤ : Opens (ComplexPoint X)) : Set (ComplexPoint X))
-        (Set.range (Point.map z)) x.1 x.2)
+        x.2)
       (analyticPointLocalCoclass X d x.1)
   have heq :
     (⟨Point.map z complexSpecIdentityPoint, ⟨complexSpecIdentityPoint, rfl⟩⟩ :
