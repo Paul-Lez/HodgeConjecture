@@ -86,7 +86,6 @@ public import Other.AlgebraicGeometry.Cycle.Component.PointCoclassNormalization
 public import Other.AlgebraicGeometry.Cycle.Component.PointPurity
 public import Other.AlgebraicGeometry.Cycle.Component.RegularImmersion
 public import Other.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
-public import Other.AlgebraicGeometry.Cycle.Component.SmoothSupportOpenImage
 public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Cycle.Local.LocalHomology
 public import Other.AlgebraicGeometry.Cycle.Local.Purity

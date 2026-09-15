@@ -20,7 +20,7 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X Y : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)}
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
@@ -31,8 +31,8 @@ theorem smoothClosedSupportChartCoclass_restrict
     (hV : V ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     relativeCohomologyMap ℚ (2 * (d - m))
       (neighborhoodSupportInclusionPairMap hWV (Set.range (Point.map i)))
-      (smoothClosedSupportChartCoclass X Y i m d z V hV) =
-    smoothClosedSupportChartCoclass X Y i m d z W (hWV.trans hV) :=
+      (smoothClosedSupportChartCoclass i m d z V hV) =
+    smoothClosedSupportChartCoclass i m d z W (hWV.trans hV) :=
   chartNormalProjectionCoclass_restrict _ _ _ _ _ hWV hV
 
 variable (z' : ComplexPoint Y)
@@ -47,8 +47,8 @@ theorem exists_open_smoothClosedSupportChartCoclass_eq
     ∃ (W : Opens (ComplexPoint X))
       (hW : (W : Set _) ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)
       (hW' : (W : Set _) ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z').source),
-      x ∈ W ∧ smoothClosedSupportChartCoclass X Y i m d z W hW =
-        smoothClosedSupportChartCoclass X Y i m d z' W hW' := by
+      x ∈ W ∧ smoothClosedSupportChartCoclass i m d z W hW =
+        smoothClosedSupportChartCoclass i m d z' W hW' := by
   let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
   let e' := closedImmersionHolomorphicFlatteningChart X Y i m d z'
   have ht : e x ∈ (closedImmersionNormalTransition X Y i m d z z').source := by
