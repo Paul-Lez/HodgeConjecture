@@ -192,4 +192,37 @@ theorem nestedSupportRestrictionLastComplexIso_g
   ext n : 1
   exact toSheafSectionsBetweenOpens_global_comparison X h (K.X n)
 
+/-- Boundary vanishing identifies global sections with supported sections on the larger open. -/
+def nestedSupportSectionRestrictionHomologyIsoOfVanishing
+    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ q, Injective (K.X q)]
+    (n : ℤ)
+    (hn : IsZero
+      ((nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).X₁.homology n))
+    (hn₁ : IsZero
+      ((nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).X₁.homology (n + 1))) :
+    (nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).X₂.homology n ≅
+      (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj
+        (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)).homology n :=
+  nestedSupportRestrictionHomologyIsoOfVanishing X h ⊤ K n hn hn₁ ≪≫
+    HomologicalComplex.homologyMapIso (nestedSupportRestrictionLastComplexIso X h K) n
+
+@[simp]
+theorem nestedSupportSectionRestrictionHomologyIsoOfVanishing_hom
+    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ q, Injective (K.X q)]
+    (n : ℤ)
+    (hn : IsZero
+      ((nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).X₁.homology n))
+    (hn₁ : IsZero
+      ((nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).X₁.homology (n + 1))) :
+    (nestedSupportSectionRestrictionHomologyIsoOfVanishing X h K n hn hn₁).hom =
+      HomologicalComplex.homologyMap
+        (sectionComplexRestriction X (.up ℤ)
+          (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)
+          (homOfLE (le_top : U ≤ ⊤))) n := by
+  change HomologicalComplex.homologyMap
+      (nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).g n ≫
+    HomologicalComplex.homologyMap (nestedSupportRestrictionLastComplexIso X h K).hom n = _
+  rw [← HomologicalComplex.homologyMap_comp, nestedSupportRestrictionLastComplexIso_g]
+  rfl
+
 end TopCat.Sheaf

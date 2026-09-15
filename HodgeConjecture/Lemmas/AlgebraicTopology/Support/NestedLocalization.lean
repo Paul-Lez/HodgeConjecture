@@ -164,4 +164,28 @@ lemma nestedSupportRestriction_homologyMap_isIso_of_vanishing (W : Opens X)
     (hS.homology_exact₃ n (n + 1) (by simp)).epi_f (hn₁.eq_zero_of_tgt _)
   exact isIso_of_mono_of_epi _
 
+/-- Vanishing on the smaller support makes restriction an isomorphism. -/
+def nestedSupportRestrictionHomologyIsoOfVanishing (W : Opens X)
+    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)]
+    (n : ℤ)
+    (hn : IsZero ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology n))
+    (hn₁ : IsZero
+      ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology (n + 1))) :
+    (nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₂.homology n ≅
+      (nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₃.homology n :=
+  have := nestedSupportRestriction_homologyMap_isIso_of_vanishing X h W K n hn hn₁
+  asIso (HomologicalComplex.homologyMap
+    (nestedSupportRestrictionSectionsComplexShortComplex X h W K).g n)
+
+@[simp]
+lemma nestedSupportRestrictionHomologyIsoOfVanishing_hom (W : Opens X)
+    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)]
+    (n : ℤ)
+    (hn : IsZero ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology n))
+    (hn₁ : IsZero
+      ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology (n + 1))) :
+    (nestedSupportRestrictionHomologyIsoOfVanishing X h W K n hn hn₁).hom =
+      HomologicalComplex.homologyMap
+        (nestedSupportRestrictionSectionsComplexShortComplex X h W K).g n := rfl
+
 end TopCat.Sheaf
