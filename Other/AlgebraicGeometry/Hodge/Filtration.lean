@@ -217,7 +217,7 @@ lemma fieldToDeRhamCohomology_injective
 is above the complex dimension. -/
 lemma hodgeFilteredDeRhamComplex_isZero_of_lt
     [IsIntegral X.left] [Smooth X.hom] {p : ℤ} (hp : (dim X.left : ℤ) < p) :
-    IsZero (hodgeFilteredDeRhamComplex X p) := by
+    IsZero (F^p Ω•(X)) := by
   rw [hodgeFilteredDeRhamComplex,
     HomologicalComplex.isZero_stupidTrunc_iff]
   refine ⟨fun n => ?_⟩

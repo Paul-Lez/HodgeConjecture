@@ -500,7 +500,8 @@ def fieldToDeRhamCohomologyLinear
   map_add' := (fieldToDeRhamCohomology K X n).map_add
   map_smul' := fieldToDeRhamCohomology_smul K X n
 
-/-- The de Rham complex with only form degrees at least `p` retained. -/
+/-- `F^p Ω•(X)` is the holomorphic de Rham complex `Ω•(X)` with only the form degrees at least
+`p` retained. -/
 def hodgeFilteredDeRhamComplex [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   (holomorphicDeRhamComplexInt X).stupidTrunc
@@ -511,16 +512,14 @@ scoped notation3:max "F^" p:max " Ω•" "(" X ")" => hodgeFilteredDeRhamComplex
 
 /-- Inclusion of the degree-at-least-`p` de Rham complex into the full complex. -/
 def hodgeFilteredDeRhamInclusion [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
-    hodgeFilteredDeRhamComplex X p ⟶
-      holomorphicDeRhamComplexInt X :=
+    F^p Ω•(X) ⟶ Ω•(X) :=
   HomologicalComplex.stupidTruncInclusion
     (holomorphicDeRhamComplexInt X) (ComplexShape.embeddingUpIntGE p)
 
 /-- Complex scalar multiplication on the filtered de Rham complex. -/
 def hodgeFilteredDeRhamComplexScalar [IsIntegral X.left] [Smooth X.hom]
     (p : ℤ) (c : ℂ) :
-    hodgeFilteredDeRhamComplex X p ⟶
-      hodgeFilteredDeRhamComplex X p :=
+    F^p Ω•(X) ⟶ F^p Ω•(X) :=
   HomologicalComplex.stupidTruncMap
     (scalarHolomorphicDeRhamComplexInt X c)
     (ComplexShape.embeddingUpIntGE p)
@@ -540,7 +539,7 @@ private lemma hodgeFilteredDeRhamComplexScalar_comp_inclusion
 /-- Hypercohomology of the degree-at-least-`p` part of the de Rham complex. -/
 abbrev FilteredDeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : Type 1 :=
-  Hypercohomology X (hodgeFilteredDeRhamComplex X p) n
+  ℍ^n(X; F^p Ω•(X))
 
 /-- The map from filtered to full de Rham hypercohomology. -/
 def filteredToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) :

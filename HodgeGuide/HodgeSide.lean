@@ -338,7 +338,7 @@ namespace Guide.Hodge.D8
 ```
 ```lean
 def hodgeFilteredDeRhamInclusion (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    (p : ℤ) : hodgeFilteredDeRhamComplex X p ⟶ holomorphicDeRhamComplexInt X :=
+    (p : ℤ) : F^p Ω•(X) ⟶ Ω•(X) :=
   HomologicalComplex.stupidTruncInclusion
     (holomorphicDeRhamComplexInt X) (ComplexShape.embeddingUpIntGE p)
 ```
