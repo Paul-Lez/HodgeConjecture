@@ -41,7 +41,7 @@ def supportedSingularInjectiveHomologyIso (U V : Opens X) (n : ℤ) :
     ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
       (supportedRationalSingularCochainComplex X U))).homology n ≅
     ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
-      (((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
+      (((TopCat.Sheaf.sectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
         (rationalConstantInjectiveComplex X)))).homology n :=
   let f := ((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).map
     (supportedSingularToInjectiveComplex X hX U)

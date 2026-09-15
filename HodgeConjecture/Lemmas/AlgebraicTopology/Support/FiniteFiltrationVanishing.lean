@@ -58,8 +58,8 @@ theorem toOpenRestrictionPushforward_top_isIso (F : Sheaf AddCommGrpCat.{u} X) :
     (forget AddCommGrpCat.{u} X)
 
 /-- The actual kernel defining sections with empty support is zero. -/
-theorem isZero_sheafSectionsSupportedOutside_top (F : Sheaf AddCommGrpCat.{u} X) :
-    IsZero ((sheafSectionsSupportedOutside X ⊤).obj F) := by
+theorem isZero_sectionsSupportedOutside_top (F : Sheaf AddCommGrpCat.{u} X) :
+    IsZero ((sectionsSupportedOutside X ⊤).obj F) := by
   let := toOpenRestrictionPushforward_top_isIso X F
   exact isZero_kernel_of_mono ((toOpenRestrictionPushforward X ⊤).app F)
 
@@ -68,10 +68,10 @@ without any acyclicity or boundedness assumption on its coefficients. -/
 theorem supportedSections_top_homology_isZero (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (n : ℤ) :
     IsZero ((((supportEvaluation X W).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X ⊤).mapHomologicalComplex (.up ℤ)).obj K)).homology n) :=
+      (((sectionsSupportedOutside X ⊤).mapHomologicalComplex (.up ℤ)).obj K)).homology n) :=
   ShortComplex.isZero_homology_of_isZero_X₂ _
     ((supportEvaluation X W).map_isZero
-      (isZero_sheafSectionsSupportedOutside_top X (K.X n)))
+      (isZero_sectionsSupportedOutside_top X (K.X n)))
 
 variable {U V : Opens X} (h : V ≤ U)
 
@@ -101,11 +101,11 @@ theorem nestedSupportRestriction_middle_homology_isZero
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
     (hK : ∀ n, (K.X n).IsFlasque) (n : ℤ)
     (hsmall : IsZero ((((supportEvaluation X ⊤).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj K)).homology n))
+      (((sectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj K)).homology n))
     (hlayer : IsZero ((((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)).homology n)) :
+      (((sectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)).homology n)) :
     IsZero ((((supportEvaluation X ⊤).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)).homology n) := by
+      (((sectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)).homology n) := by
   let S := nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K
   have hS := nestedSupportRestrictionSectionsComplexShortComplex_shortExact_of_flasque X h ⊤ K hK
   have hlast : IsZero (S.X₃.homology n) := hlayer.of_iso
@@ -124,10 +124,10 @@ theorem finiteNestedSupport_homology_isZero
     (hK : ∀ n, (K.X n).IsFlasque) (n : ℤ)
     (hlayer : ∀ k, k < N → IsZero
       ((((supportEvaluation X (O (k + 1))).mapHomologicalComplex (.up ℤ)).obj
-        (((sheafSectionsSupportedOutside X (O k)).mapHomologicalComplex (.up ℤ)).obj K)).homology n))
+        (((sectionsSupportedOutside X (O k)).mapHomologicalComplex (.up ℤ)).obj K)).homology n))
     (k : ℕ) (hk : k ≤ N) :
     IsZero ((((supportEvaluation X ⊤).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X (O k)).mapHomologicalComplex (.up ℤ)).obj K)).homology n) := by
+      (((sectionsSupportedOutside X (O k)).mapHomologicalComplex (.up ℤ)).obj K)).homology n) := by
   induction hk using Nat.decreasingInduction with
   | self =>
       rw [hN]

@@ -54,6 +54,9 @@ def supportEvaluation (V : Opens X) : Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCa
   sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat ⋙
     (evaluation _ AddCommGrpCat).obj (op V)
 
+/-- Evaluation of sheaves on the open set `V`. -/
+notation "Γ_[" V "]" => supportEvaluation _ V
+
 instance (V : Opens X) : (supportEvaluation X V).Additive where
   map_add := by intros; rfl
 
@@ -73,13 +76,13 @@ def supportRestrictionComplexShortComplex
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :=
   ShortComplex.mk
-    (show ((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj K ⟶ K from
-      { f n := (sheafSectionsSupportedOutsideInclusion X U).app (K.X n)
-        comm' i j h := ((sheafSectionsSupportedOutsideInclusion X U).naturality (K.d i j)).symm })
+    (show ((sectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj K ⟶ K from
+      { f n := (sectionsSupportedOutsideInclusion X U).app (K.X n)
+        comm' i j h := ((sectionsSupportedOutsideInclusion X U).naturality (K.d i j)).symm })
     (show K ⟶ ((openRestrictionPushforward X U).mapHomologicalComplex (.up ℤ)).obj K from
       { f n := (toOpenRestrictionPushforward X U).app (K.X n)
         comm' i j h := ((toOpenRestrictionPushforward X U).naturality (K.d i j)).symm })
-    (by ext n; exact sheafSectionsSupportedOutsideInclusion_restriction X U (K.X n))
+    (by ext n; exact sectionsSupportedOutsideInclusion_restriction X U (K.X n))
 
 /-- Evaluate the actual termwise support/restriction sequence on `V`. -/
 def supportRestrictionSectionsComplexShortComplex (V : Opens X)

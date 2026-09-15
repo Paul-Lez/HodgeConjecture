@@ -36,7 +36,7 @@ theorem openRestrictionImage_eq_of_le {U V : Opens X} (h : V ≤ U) :
 /-- The literal equality of opens identifies global sections of the open
 pushforward with sections of the original sheaf on that open. -/
 def openRestrictionPushforwardTopEvaluationIso (U : Opens X) :
-    openRestrictionPushforward X U ⋙ supportEvaluation X ⊤ ≅ supportEvaluation X U :=
+    openRestrictionPushforward X U ⋙ supportEvaluation X ⊤ ≅ Γ_[U] :=
   NatIso.ofComponents (fun F =>
     F.obj.mapIso (eqToIso (congrArg op (openRestrictionImage_top X U))))
     (fun f => (f.hom.naturality _).symm)
@@ -73,12 +73,12 @@ theorem nestedSupportRestrictionTargetIso_square (F : Sheaf AddCommGrpCat.{u} X)
 supported sections on the actual open complement. -/
 def sheafSectionsBetweenOpensGlobalIso (F : Sheaf AddCommGrpCat.{u} X) :
     ((sheafSectionsBetweenOpens X h).obj F).obj.obj (op ⊤) ≅
-      ((sheafSectionsSupportedOutside X V).obj F).obj.obj (op U) :=
+      ((sectionsSupportedOutside X V).obj F).obj.obj (op U) :=
   sheafSectionsBetweenOpensOnOpenIso X h ⊤ F ≪≫
     kernel.mapIso _ _ ((openRestrictionPushforwardTopEvaluationIso X U).app F)
       (nestedSupportRestrictionTargetIso X h F)
       (nestedSupportRestrictionTargetIso_square X h F) ≪≫
-    (sheafSectionsSupportedOutsideOnOpenIso X V U F).symm
+    (sectionsSupportedOutsideOnOpenIso X V U F).symm
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -87,10 +87,10 @@ set_option backward.defeqAttrib.useBackward true in
 theorem sheafSectionsBetweenOpensGlobalIso_hom_inclusion
     (F : Sheaf AddCommGrpCat.{u} X) :
     (sheafSectionsBetweenOpensGlobalIso X h F).hom ≫
-        ((sheafSectionsSupportedOutsideInclusion X V).app F).hom.app (op U) =
+        ((sectionsSupportedOutsideInclusion X V).app F).hom.app (op U) =
       ((sheafSectionsBetweenOpensInclusion X h).app F).hom.app (op ⊤) ≫
         (openRestrictionPushforwardTopEvaluationIso X U).hom.app F := by
-  rw [← sheafSectionsSupportedOutsideOnOpenIso_hom_ι X V U F]
+  rw [← sectionsSupportedOutsideOnOpenIso_hom_ι X V U F]
   simp only [sheafSectionsBetweenOpensGlobalIso, Iso.trans_hom, Iso.symm_hom,
     Category.assoc, Iso.inv_hom_id_assoc, kernel.mapIso_hom, kernel.map,
     kernel.lift_ι]
@@ -106,19 +106,19 @@ theorem sheafSectionsBetweenOpensGlobalIso_naturality
     (((sheafSectionsBetweenOpens X h).map f).hom.app (op ⊤)) ≫
         (sheafSectionsBetweenOpensGlobalIso X h G).hom =
       (sheafSectionsBetweenOpensGlobalIso X h F).hom ≫
-        (((sheafSectionsSupportedOutside X V).map f).hom.app (op U)) := by
-  have : Mono (((sheafSectionsSupportedOutsideInclusion X V).app G).hom.app (op U)) := by
-    rw [← sheafSectionsSupportedOutsideOnOpenIso_hom_ι X V U G]
+        (((sectionsSupportedOutside X V).map f).hom.app (op U)) := by
+  have : Mono (((sectionsSupportedOutsideInclusion X V).app G).hom.app (op U)) := by
+    rw [← sectionsSupportedOutsideOnOpenIso_hom_ι X V U G]
     infer_instance
-  apply (cancel_mono (((sheafSectionsSupportedOutsideInclusion X V).app G).hom.app (op U))).1
+  apply (cancel_mono (((sectionsSupportedOutsideInclusion X V).app G).hom.app (op U))).1
   rw [Category.assoc, sheafSectionsBetweenOpensGlobalIso_hom_inclusion]
   have h₁ := congrArg (fun q => q.hom.app (op ⊤))
     ((sheafSectionsBetweenOpensInclusion X h).naturality f)
   have h₂ := congrArg (fun q => q.hom.app (op U))
-    ((sheafSectionsSupportedOutsideInclusion X V).naturality f)
-  change (((sheafSectionsSupportedOutside X V).map f).hom.app (op U)) ≫
-      ((sheafSectionsSupportedOutsideInclusion X V).app G).hom.app (op U) =
-    ((sheafSectionsSupportedOutsideInclusion X V).app F).hom.app (op U) ≫
+    ((sectionsSupportedOutsideInclusion X V).naturality f)
+  change (((sectionsSupportedOutside X V).map f).hom.app (op U)) ≫
+      ((sectionsSupportedOutsideInclusion X V).app G).hom.app (op U) =
+    ((sectionsSupportedOutsideInclusion X V).app F).hom.app (op U) ≫
       f.hom.app (op U) at h₂
   change (((sheafSectionsBetweenOpens X h).map f).hom.app (op ⊤)) ≫
       ((sheafSectionsBetweenOpensInclusion X h).app G).hom.app (op ⊤) =
@@ -133,7 +133,7 @@ theorem sheafSectionsBetweenOpensGlobalIso_naturality
 /-- The comparison is a natural isomorphism of actual section functors. -/
 def sheafSectionsBetweenOpensGlobalNatIso :
     sheafSectionsBetweenOpens X h ⋙ supportEvaluation X ⊤ ≅
-      sheafSectionsSupportedOutside X V ⋙ supportEvaluation X U :=
+      sectionsSupportedOutside X V ⋙ Γ_[U] :=
   NatIso.ofComponents (sheafSectionsBetweenOpensGlobalIso X h)
     (fun f => sheafSectionsBetweenOpensGlobalIso_naturality X h f)
 
@@ -142,8 +142,8 @@ supported-section complex on the complement `U` of the smaller support. -/
 def nestedSupportRestrictionLastComplexIso
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     (nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).X₃ ≅
-      ((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj
-        (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K) :=
+      (Γ_[U].mapHomologicalComplex (.up ℤ)).obj
+        (((sectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K) :=
   (NatIso.mapHomologicalComplex (sheafSectionsBetweenOpensGlobalNatIso X h) (.up ℤ)).app K
 
 set_option backward.isDefEq.respectTransparency false in
@@ -155,18 +155,18 @@ theorem toSheafSectionsBetweenOpens_global_comparison
     (F : Sheaf AddCommGrpCat.{u} X) :
     ((toSheafSectionsBetweenOpens X h).app F).hom.app (op ⊤) ≫
         (sheafSectionsBetweenOpensGlobalIso X h F).hom =
-      ((sheafSectionsSupportedOutside X V).obj F).obj.map (homOfLE (le_top : U ≤ ⊤)).op := by
-  have : Mono (((sheafSectionsSupportedOutsideInclusion X V).app F).hom.app (op U)) := by
-    rw [← sheafSectionsSupportedOutsideOnOpenIso_hom_ι X V U F]
+      ((sectionsSupportedOutside X V).obj F).obj.map (homOfLE (le_top : U ≤ ⊤)).op := by
+  have : Mono (((sectionsSupportedOutsideInclusion X V).app F).hom.app (op U)) := by
+    rw [← sectionsSupportedOutsideOnOpenIso_hom_ι X V U F]
     infer_instance
-  apply (cancel_mono (((sheafSectionsSupportedOutsideInclusion X V).app F).hom.app (op U))).1
+  apply (cancel_mono (((sectionsSupportedOutsideInclusion X V).app F).hom.app (op U))).1
   rw [Category.assoc, sheafSectionsBetweenOpensGlobalIso_hom_inclusion]
-  have hι := ((sheafSectionsSupportedOutsideInclusion X V).app F).hom.naturality
+  have hι := ((sectionsSupportedOutsideInclusion X V).app F).hom.naturality
     (homOfLE (le_top : U ≤ ⊤)).op
   rw [hι, ← Category.assoc]
   have hg : ((toSheafSectionsBetweenOpens X h).app F).hom.app (op ⊤) ≫
       ((sheafSectionsBetweenOpensInclusion X h).app F).hom.app (op ⊤) =
-    ((sheafSectionsSupportedOutsideInclusion X V).app F).hom.app (op ⊤) ≫
+    ((sectionsSupportedOutsideInclusion X V).app F).hom.app (op ⊤) ≫
       ((toOpenRestrictionPushforward X U).app F).hom.app (op ⊤) := by
     change (((toSheafSectionsBetweenOpens X h).app F) ≫
       ((sheafSectionsBetweenOpensInclusion X h).app F)).hom.app (op ⊤) = _
@@ -187,7 +187,7 @@ theorem nestedSupportRestrictionLastComplexIso_g
     (nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).g ≫
         (nestedSupportRestrictionLastComplexIso X h K).hom =
       sectionComplexRestriction X (.up ℤ)
-        (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)
+        (((sectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)
         (homOfLE (le_top : U ≤ ⊤)) := by
   ext n : 1
   exact toSheafSectionsBetweenOpens_global_comparison X h (K.X n)
@@ -201,8 +201,8 @@ def nestedSupportSectionRestrictionHomologyIsoOfVanishing
     (hn₁ : IsZero
       ((nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).X₁.homology (n + 1))) :
     (nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).X₂.homology n ≅
-      (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj
-        (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)).homology n :=
+      ((Γ_[U].mapHomologicalComplex (.up ℤ)).obj
+        (((sectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)).homology n :=
   nestedSupportRestrictionHomologyIsoOfVanishing X h ⊤ K n hn hn₁ ≪≫
     HomologicalComplex.homologyMapIso (nestedSupportRestrictionLastComplexIso X h K) n
 
@@ -217,7 +217,7 @@ theorem nestedSupportSectionRestrictionHomologyIsoOfVanishing_hom
     (nestedSupportSectionRestrictionHomologyIsoOfVanishing X h K n hn hn₁).hom =
       HomologicalComplex.homologyMap
         (sectionComplexRestriction X (.up ℤ)
-          (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)
+          (((sectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)
           (homOfLE (le_top : U ≤ ⊤))) n := by
   change HomologicalComplex.homologyMap
       (nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).g n ≫

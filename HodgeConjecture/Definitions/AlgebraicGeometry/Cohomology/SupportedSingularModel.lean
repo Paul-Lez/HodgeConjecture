@@ -34,7 +34,7 @@ variable (X : Over (Spec ↧ℂ))
 def complexSupportedSingularToAmbientInjective
     (U : Opens (ComplexPoint X)) :
     supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U ⟶
-      ((TopCat.Sheaf.sheafSectionsSupportedOutside
+      ((TopCat.Sheaf.sectionsSupportedOutside
         (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
           (ambientRationalInjectiveComplex X) :=
   supportedSingularToInjectiveComplex (TopCat.of (ComplexPoint X))

@@ -15,7 +15,7 @@ The rational injective model agrees with relative cohomology on suitable spaces.
 
 @[expose] public noncomputable section
 
-open CategoryTheory TopologicalSpace
+open CategoryTheory TopologicalSpace TopCat.Sheaf
 
 namespace AlgebraicTopology.Singular
 
@@ -27,9 +27,8 @@ variable (X : TopCat.{0})
 /-- Supported injective sections compute relative cohomology of the local pair. -/
 def supportedRationalInjectiveSectionCohomologyEquivRelative
     (S : Closeds X) (V : Opens X) (n : ℕ) :
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
-      (((TopCat.Sheaf.sheafSectionsSupportedOutside X S.compl).mapHomologicalComplex
-        (.up ℤ)).obj
+    (((Γ_[V].mapHomologicalComplex (.up ℤ)).obj
+      (((sectionsSupportedOutside X S.compl).mapHomologicalComplex (.up ℤ)).obj
           (rationalConstantInjectiveComplex X))).homology (n : ℤ)) ≃+
       RelativeCohomology ℚ
         (neighborhoodSupportComplementPair (V : Set X) S) n :=
@@ -41,13 +40,12 @@ def supportedRationalInjectiveSectionCohomologyEquivRelative
 /-- The supported injective cohomology sheaf is the local relative-cohomology sheaf. -/
 def supportedRationalInjectiveCohomologySheafIsoRelative
     (S : Closeds X) (n : ℕ) :
-    ((((TopCat.Sheaf.sheafSectionsSupportedOutside X S.compl).mapHomologicalComplex
+    ((((sectionsSupportedOutside X S.compl).mapHomologicalComplex
       (.up ℤ)).obj
         (rationalConstantInjectiveComplex X)).homology (n : ℤ)) ≅
       supportRelativeCohomologySheaf X S n :=
   (asIso (HomologicalComplex.homologyMap
-    (supportedSingularToInjectiveComplex X hX S.compl)
-      (n : ℤ))).symm ≪≫
+    (supportedSingularToInjectiveComplex X hX S.compl) (n : ℤ))).symm ≪≫
     supportedSingularCohomologySheafIsoRelative X S S.isClosed n
 
 end AlgebraicTopology.Singular

@@ -29,7 +29,7 @@ variable (U V : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 zero because its defining restriction map is an isomorphism. -/
 theorem supportedOutsideSections_isZero_of_le (F : Sheaf AddCommGrpCat.{u} X)
     (hVU : V ≤ U) :
-    IsZero (((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V)) := by
+    IsZero (((sectionsSupportedOutside X U).obj F).obj.obj (op V)) := by
   have he : U.isOpenEmbedding.functor.obj ((Opens.map U.inclusion').obj V) = V := by
     rw [Opens.functor_map_eq_inf, inf_eq_left.mpr hVU]
   have hi : IsIso (U.isOpenEmbedding.isOpenMap.adjunction.counit.app V) := by
@@ -40,6 +40,6 @@ theorem supportedOutsideSections_isZero_of_le (F : Sheaf AddCommGrpCat.{u} X)
   have : IsIso r := by
     change IsIso (F.obj.map (U.isOpenEmbedding.isOpenMap.adjunction.counit.app V).op)
     infer_instance
-  exact (isZero_kernel_of_mono r).of_iso (sheafSectionsSupportedOutsideOnOpenIso X U V F)
+  exact (isZero_kernel_of_mono r).of_iso (sectionsSupportedOutsideOnOpenIso X U V F)
 
 end TopCat.Sheaf
