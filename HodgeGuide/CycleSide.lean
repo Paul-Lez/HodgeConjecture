@@ -31,48 +31,52 @@ local instance analyticSupportHasDerivedCategory (X : Over (Spec ↧ℂ)) :
 # Cycles are indexed by generic points
 
 The *coheight* of a point $`x` of a scheme is the codimension of its closure $`\overline{\{x\}}`,
-an irreducible closed subset with generic point $`x`. A codimension-$`p` cycle is a locally finite
-integer combination of points of coheight $`p`. The formalization uses this description
-throughout, in place of a separate type of subvarieties.
+an irreducible closed subset with generic point $`x`. An algebraic cycle is a locally finite
+combination of points. The cycles whose points with a nonzero coefficient all lie in a given set
+form a subgroup, and a codimension-$`p` cycle is a cycle whose points with a nonzero coefficient
+have coheight $`p`. The formalization uses this description throughout, in place of a separate
+type of subvarieties.
 
 ```lean -show
 namespace Guide.Cycles.D1
 ```
 ```lean
-def codimensionCycleSubgroup (X : Scheme.{u}) (p : ℕ) : AddSubgroup (AlgebraicCycle X ℤ) where
-  carrier c := ∀ x, c x ≠ 0 → coheight x = p
-  zero_mem' x hx := (hx rfl).elim
-  add_mem' := by
-    intro a b ha hb x hx
-    by_cases hax : a x = 0
-    · exact hb x (by simpa [hax] using hx)
-    · exact ha x hax
-  neg_mem' := by
-    intro a ha x hx
-    refine ha x fun h ↦ hx ?_
-    change -(a x) = 0
-    simp [h]
+def supported (X : Type*) [TopologicalSpace X] (Y : Type*) [AddGroup Y] (s : Set X) :
+    AddSubgroup (Function.locallyFinsupp X Y) where
+  carrier D := D.support ⊆ s
+  zero_mem' _ h := (h rfl).elim
+  add_mem' {a b} ha hb := (Function.support_add a b).trans (Set.union_subset ha hb)
+  neg_mem' {a} ha := (Function.locallyFinsuppWithin.support_neg a).trans_subset ha
 ```
 ```lean -show
 end Guide.Cycles.D1
-example : @Guide.Cycles.D1.codimensionCycleSubgroup.{u} = @AlgebraicGeometry.codimensionCycleSubgroup.{u} := rfl
+example : @Guide.Cycles.D1.supported = @Function.locallyFinsupp.supported := rfl
 ```
 ```lean -show
 namespace Guide.Cycles.D2
 ```
 ```lean
-open scoped Classical in
-noncomputable def codimensionCycleSubgroup.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
-    (n : ℤ) : codimensionCycleSubgroup X p :=
-  ⟨Function.locallyFinsuppWithin.single x n, by
-    intro y hy
-    by_cases h : y = x
-    · simpa [h] using hx
-    · simp [Function.locallyFinsuppWithin.single_apply, h] at hy⟩
+noncomputable abbrev codimSubgroup (X : Scheme.{u}) (R : Type*) [AddGroup R] (p : ℕ∞) :
+    AddSubgroup (AlgebraicCycle X R) :=
+  Function.locallyFinsupp.supported X R (coheight ⁻¹' {p})
 ```
 ```lean -show
 end Guide.Cycles.D2
-example : @Guide.Cycles.D2.codimensionCycleSubgroup.single.{u} = @AlgebraicGeometry.codimensionCycleSubgroup.single.{u} := rfl
+example : @Guide.Cycles.D2.codimSubgroup.{u} = @AlgebraicGeometry.AlgebraicCycle.codimSubgroup.{u} := rfl
+```
+```lean -show
+namespace Guide.Cycles.D3
+```
+```lean
+open scoped Classical in
+noncomputable def supported.single {X : Type*} [TopologicalSpace X] {Y : Type*} [AddGroup Y]
+    {s : Set X} (x : X) (hx : x ∈ s) (y : Y) : Function.locallyFinsupp.supported X Y s :=
+  ⟨Function.locallyFinsuppWithin.single x y,
+    Function.locallyFinsupp.single_mem_supported.2 (Or.inr hx)⟩
+```
+```lean -show
+end Guide.Cycles.D3
+example : @Guide.Cycles.D3.supported.single = @Function.locallyFinsupp.supported.single := rfl
 ```
 # The support of a subvariety
 

@@ -48,15 +48,6 @@ def cycleComponentSmoothAnalyticLocus [LocallyOfFiniteType X.hom] :
     Set (ComplexPoint (cycleComponentOver X x)) :=
   Point.overOpen (cycleComponentSmoothLocus X x)
 
-/-- An algebraic cycle on a projective complex variety has finite support. Algebraic cycles are
-locally finite by definition, and the underlying Zariski space is compact. -/
-lemma algebraicCycle_support_finite {R : Type*} [Zero R] [IsProjective X.hom]
-    (c : AlgebraicCycle X.left R) :
-    c.support.Finite := by
-  let : CompactSpace X.left := QuasiCompact.compactSpace_of_compactSpace X.hom
-  simpa using c.locallyFiniteSupport.finite_inter_support_of_isCompact
-    (W := Set.univ) isCompact_univ
-
 /-- Every cycle component has a complex point in its smooth locus. The smooth locus is dense
 over the perfect field `ℂ`, and it contains a closed point. -/
 theorem exists_cycleComponent_smooth_complexPoint [LocallyOfFiniteType X.hom] :
