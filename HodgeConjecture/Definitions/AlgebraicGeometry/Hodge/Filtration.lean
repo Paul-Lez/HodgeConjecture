@@ -250,8 +250,13 @@ def Hypercohomology
   Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
     (constantIntegerSheafComplexInt X) K n
 
-/-- `H^n(X; K)` is constant-sheaf cohomology of the analytic space `X(ℂ)` with coefficients in
-the field `K`, in integer degree `n`: the hypercohomology of the constant sheaf `K` on `X(ℂ)`.
+/-- `ℍ^n(X; 𝒦)` is the hypercohomology in integer degree `n` of a complex `𝒦` of sheaves on the
+analytic space `X(ℂ)`. The symbol `ℍ` follows page 51 of
+[P. Deligne, *The Hodge Conjecture*](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf). -/
+scoped notation3:max "ℍ^" n:max "(" X "; " 𝒦 ")" => Hypercohomology X 𝒦 n
+
+/-- `H^n(X; K)` is the cohomology of the analytic space `X(ℂ)` with coefficients in the field
+`K`, in integer degree `n`. It is the hypercohomology of the constant sheaf `K` in degree zero.
 
 The literature writes `H^n(X; K)` for the variety `X.left` alone; here the variety is presented by
 its structure morphism `X`. -/
@@ -286,9 +291,13 @@ lemma hypercohomologyEquiv_add
         (analyticQuasiIsomorphisms X) DerivedCategory.Q) β := by
   simp [Equiv.add_def]
 
-/-- Hypercohomology of the holomorphic de Rham complex in integer degree `n`. -/
+/-- Hypercohomology of the holomorphic de Rham complex in integer degree `n`, that is
+`ℍ^n(X; Ω•(X))`. -/
 abbrev DeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) : Type 1 :=
   Hypercohomology X (holomorphicDeRhamComplexInt X) n
+
+@[inherit_doc DeRhamHypercohomology]
+scoped notation3:max "H_dR^" n:max "(" X ")" => DeRhamHypercohomology X n
 
 /-- The constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
 equivalence on hypercohomology. -/
@@ -491,24 +500,26 @@ def fieldToDeRhamCohomologyLinear
   map_add' := (fieldToDeRhamCohomology K X n).map_add
   map_smul' := fieldToDeRhamCohomology_smul K X n
 
-/-- The de Rham complex with only form degrees at least `p` retained. -/
+/-- `F^p Ω•(X)` is the holomorphic de Rham complex `Ω•(X)` with only the form degrees at least
+`p` retained. -/
 def hodgeFilteredDeRhamComplex [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   (holomorphicDeRhamComplexInt X).stupidTrunc
     (ComplexShape.embeddingUpIntGE p)
 
+@[inherit_doc hodgeFilteredDeRhamComplex]
+scoped notation3:max "F^" p:max " Ω•" "(" X ")" => hodgeFilteredDeRhamComplex X p
+
 /-- Inclusion of the degree-at-least-`p` de Rham complex into the full complex. -/
 def hodgeFilteredDeRhamInclusion [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
-    hodgeFilteredDeRhamComplex X p ⟶
-      holomorphicDeRhamComplexInt X :=
+    F^p Ω•(X) ⟶ Ω•(X) :=
   HomologicalComplex.stupidTruncInclusion
     (holomorphicDeRhamComplexInt X) (ComplexShape.embeddingUpIntGE p)
 
 /-- Complex scalar multiplication on the filtered de Rham complex. -/
 def hodgeFilteredDeRhamComplexScalar [IsIntegral X.left] [Smooth X.hom]
     (p : ℤ) (c : ℂ) :
-    hodgeFilteredDeRhamComplex X p ⟶
-      hodgeFilteredDeRhamComplex X p :=
+    F^p Ω•(X) ⟶ F^p Ω•(X) :=
   HomologicalComplex.stupidTruncMap
     (scalarHolomorphicDeRhamComplexInt X c)
     (ComplexShape.embeddingUpIntGE p)
@@ -528,7 +539,7 @@ private lemma hodgeFilteredDeRhamComplexScalar_comp_inclusion
 /-- Hypercohomology of the degree-at-least-`p` part of the de Rham complex. -/
 abbrev FilteredDeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : Type 1 :=
-  Hypercohomology X (hodgeFilteredDeRhamComplex X p) n
+  ℍ^n(X; F^p Ω•(X))
 
 /-- The map from filtered to full de Rham hypercohomology. -/
 def filteredToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) :
@@ -561,6 +572,10 @@ def hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
   zero_mem' := (hodgeFiltration X p n).zero_mem
   add_mem' := (hodgeFiltration X p n).add_mem
   smul_mem' := fun c _ h => hodgeFiltration_complex_smul_mem X p n c h
+
+@[inherit_doc hodgeFiltrationComplexSubmodule]
+scoped notation3:max "F^" p:max " H_dR^" n:max "(" X ")" =>
+  hodgeFiltrationComplexSubmodule X p n
 
 /-! ### Complex conjugation and the `(p,p)` part
 
@@ -648,6 +663,9 @@ def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ (DeRhamHypercohomology X n) :=
   hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
 
+/-- `H^{p, q}(X)` is the `(p, q)` Hodge piece in its natural degree `p + q`. -/
+scoped notation3:max "H^{" p ", " q "}" "(" X ")" => hodgePiece X p q (p + q)
+
 /-- Cohomology classes with coefficients in `K` whose de Rham images lie in `F^p ⊓ conj F^p`
 in degree `2p`. When conjugation fixes the image of `K` in `ℂ`, see
 `hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule` for the equivalent `F^p` condition. -/
@@ -656,10 +674,10 @@ def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 
-/-- `Hdg^p(K; f)` is the space of Hodge classes of codimension `p` with coefficients in `K`.
+/-- `Hdg^p(f; K)` is the space of Hodge classes of codimension `p` with coefficients in `K`.
 
-The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the variety is presented by its
-structure morphism `f`, and the coefficient field is named. -/
-scoped notation:max "Hdg^" p:max "(" K "; " f ")" => hodgeClasses K f p
+The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the variety is
+presented by its structure morphism `f`, and the coefficient field is named. -/
+scoped notation3:max "Hdg^" p:max "(" f "; " K ")" => hodgeClasses K f p
 
 end AlgebraicGeometry.ComplexPoint

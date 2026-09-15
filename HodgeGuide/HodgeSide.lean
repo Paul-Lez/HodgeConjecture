@@ -238,7 +238,7 @@ cohomology.
 For a complex of sheaves $`K^\bullet` on $`X(\mathbb C)`, hypercohomology is defined as a group of
 morphisms in the derived category,
 
-$$`\mathbb H^n(X,K^\bullet)
+$$`\mathbb H^n(X;K^\bullet)
   =\operatorname{Hom}_{D(X)}(\underline{\mathbb Z}_X,K^\bullet[n]),`
 
 where $`\underline{\mathbb Z}_X` is the constant sheaf in degree zero. The derived category is never
@@ -338,7 +338,7 @@ namespace Guide.Hodge.D8
 ```
 ```lean
 def hodgeFilteredDeRhamInclusion (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    (p : ℤ) : hodgeFilteredDeRhamComplex X p ⟶ holomorphicDeRhamComplexInt X :=
+    (p : ℤ) : F^p Ω•(X) ⟶ Ω•(X) :=
   HomologicalComplex.stupidTruncInclusion
     (holomorphicDeRhamComplexInt X) (ComplexShape.embeddingUpIntGE p)
 ```
@@ -514,11 +514,11 @@ $`(p,q)` piece.
 The Hodge classes of degree $`2p` with coefficients in a field $`K\subseteq\mathbb C` are the
 classes whose de Rham image lies in the $`(p,p)` piece:
 
-$$`\operatorname{Hdg}^p(X;K)
+$$`\operatorname{Hdg}^p(X,K)
  =\{\alpha\in H^{2p}(X;K):\alpha_{\mathrm{dR}}\in H^{p,p}\}.`
 
 In Lean this is the preimage of {name}`hodgePiece` under the comparison map, and the notation
-{lean}`Hdg^p(ℚ; X)` abbreviates the case $`K=\mathbb Q`.
+{lean}`Hdg^p(X; ℚ)` abbreviates the case $`K=\mathbb Q`.
 
 ```lean -show
 namespace Guide.Hodge.D11

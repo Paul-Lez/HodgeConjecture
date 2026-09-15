@@ -163,6 +163,10 @@ abbrev cohomologyWithSupport (Z : Closeds X)
     (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) (n : ℕ) :=
   Ext (supportIntegerSheaf X Z) F n
 
+/-- `H_[Z]^n(X; F)` is sheaf cohomology of `X` with support in the closed subset `Z`, in degree
+`n` with coefficients in the sheaf `F`. -/
+scoped notation:max "H_[" Z "]^" n:max "(" X "; " F ")" => cohomologyWithSupport X Z F n
+
 instance (Z : Closeds X)
     (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) (n : ℕ) :
     AddCommGroup (cohomologyWithSupport X Z F n) :=
@@ -193,6 +197,10 @@ abbrev compactlySupportedCohomology
     (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) (n : ℕ) :
     AddCommGrpCat.{u} :=
   (compactlySupportedCohomologyFunctor X n).obj F
+
+/-- `H_c^n(X; F)` is compactly supported sheaf cohomology of `X` in degree `n` with coefficients
+in the sheaf `F`. -/
+scoped notation3:max "H_c^" n:max "(" X "; " F ")" => compactlySupportedCohomology X F n
 
 /-- A class with specified compact closed support defines a compactly supported class. -/
 def toCompactlySupportedCohomology (K : CompactCloseds X)

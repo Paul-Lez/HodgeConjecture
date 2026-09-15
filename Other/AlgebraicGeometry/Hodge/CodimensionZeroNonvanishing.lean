@@ -63,7 +63,7 @@ theorem algebraicCycleClassSpan_zero_eq_top :
 
 /-- The codimension-zero Hodge conjecture in every dimension. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan :
-    Hdg^0(ℚ; X) = algebraicCycleClassSpan X 0 :=
+    Hdg^0(X; ℚ) = algebraicCycleClassSpan X 0 :=
   rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero X
     (cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X)
 
