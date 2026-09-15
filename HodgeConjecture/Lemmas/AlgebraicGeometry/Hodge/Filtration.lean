@@ -134,7 +134,7 @@ omit [Algebra K ℂ] in
 omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarComplex_zero : fieldScalarComplex K X 0 = 0 := by
   unfold fieldScalarComplex
-  rw [fieldScalarSheaf_zero, Functor.map_zero, HomologicalComplex.extendMap_zero]
+  rw [fieldScalarSheaf_zero, Functor.map_zero]
 
 /-- Postcomposition by the zero map of complexes is the zero map on hypercohomology. -/
 @[simp] lemma hypercohomologyMap_zero
