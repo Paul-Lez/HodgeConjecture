@@ -36,7 +36,7 @@ variable {X Y : Scheme.{u}}
 
 /-- A locally finitely presented morphism is smooth after restricting its source to the smooth
 locus. -/
-lemma Scheme.Hom.smooth_restrict_smoothLocus
+instance Scheme.Hom.smooth_restrict_smoothLocus
     (f : X ⟶ Y) [LocallyOfFinitePresentation f] :
     Smooth (f.smoothLocus.ι ≫ f) := by
   rw [← Scheme.Hom.smoothLocus_eq_top_iff, ← Scheme.Hom.preimage_smoothLocus_eq]

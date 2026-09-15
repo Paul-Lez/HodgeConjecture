@@ -16,7 +16,9 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
+import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
@@ -41,19 +43,19 @@ variable (X : Over (Spec ↧ℂ))
 /-- The underlying scheme point of a complex point of a cycle component is closed. -/
 lemma cycleComponent_complexPoint_underlying_isClosed
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
+    (z : ComplexPoint (cycleComponentOver X x)) :
     IsClosed {z.underlying} := by
-  let φ : Spec ↧ℂ ⟶ cycleComponent X.left x := z.left
+  let φ : Spec ↧ℂ ⟶ X.left.pointClosure x := z.left
   exact ((pointEquivClosedPoint
-    (cycleComponentι X.left x ≫ X.hom)) ⟨φ, Over.w z⟩).2
+    (X.left.pointClosureι x ≫ X.hom)) ⟨φ, Over.w z⟩).2
 
 /-- The image in the ambient variety of a complex point of a cycle component is a closed scheme
 point. -/
 lemma cycleComponent_complexPoint_ambient_underlying_isClosed
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
-    IsClosed {cycleComponentι X.left x z.underlying} := by
-  have hclosed := (cycleComponentι X.left x).isClosedEmbedding.isClosedMap
+    (z : ComplexPoint (cycleComponentOver X x)) :
+    IsClosed {X.left.pointClosureι x z.underlying} := by
+  have hclosed := (X.left.pointClosureι x).isClosedEmbedding.isClosedMap
     {z.underlying} (cycleComponent_complexPoint_underlying_isClosed X x z)
   simpa only [Set.image_singleton] using hclosed
 
@@ -61,9 +63,9 @@ lemma cycleComponent_complexPoint_ambient_underlying_isClosed
 closed. -/
 lemma exists_cycleComponent_smooth_closed_complexPoint
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ∃ z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)),
+    ∃ z : ComplexPoint (cycleComponentOver X x),
       z.underlying ∈
-          (cycleComponentι X.left x ≫ X.hom).smoothLocus ∧
+          cycleComponentSmoothLocus X x ∧
         IsClosed {z.underlying} := by
   obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint X x
   exact ⟨z, hz, cycleComponent_complexPoint_underlying_isClosed X x z⟩

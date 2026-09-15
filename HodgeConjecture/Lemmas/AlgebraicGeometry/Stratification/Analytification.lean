@@ -51,13 +51,6 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ)) {Y : Over (Spec ↧ℂ)}
 
-/-- Forgetting a complex point to its underlying Zariski point is continuous for the actual
-analytic topology. -/
-theorem continuous_underlying_to_zariski :
-    Continuous (Point.underlying : ComplexPoint X → X.left) := by
-  rw [continuous_def]
-  exact fun S hS => Point.isOpen_overOpen ⟨S, hS⟩
-
 /-- The complex points of a locally closed subscheme map onto exactly the complex points
 whose underlying scheme point belongs to its range. -/
 theorem range_map_of_isImmersion (i : Y ⟶ X)

@@ -18,7 +18,8 @@ module
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Data.Complex.Basic
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint

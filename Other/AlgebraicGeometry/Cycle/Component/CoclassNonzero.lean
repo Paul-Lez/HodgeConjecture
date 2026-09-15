@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import Other.AlgebraicGeometry.Cycle.Support
 
 /-! # Nonvanishing through the component's open transport -/
@@ -24,8 +25,7 @@ variable (X : Over (Spec ↧ℂ))
 theorem cycleComponentSmoothLocusOver_nonempty :
     Nonempty (ComplexPoint (cycleComponentSmoothLocusOver X x)) := by
   obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint X x
-  exact ⟨asOpenPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))
-    (cycleComponentι X.left x ≫ X.hom).smoothLocus z hz⟩
+  exact ⟨asOpenPoint (cycleComponentOver X x) (cycleComponentSmoothLocus X x) z hz⟩
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Open transport of the normalized component section preserves nonvanishing. -/
@@ -52,11 +52,11 @@ theorem cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero
 /-- The degree identification does not change whether the auxiliary section vanishes. -/
 theorem cycleComponentSmoothClosedLiftCoclassSection_ne_zero_iff :
     cycleComponentSmoothClosedLiftCoclassSection X x hx ≠ 0 ↔
-      letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+      letI := cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
       smoothClosedSupportCoclassSection (cycleComponentSmoothLocusAmbientOpenOver X x)
         (cycleComponentSmoothLocusOver X x) (cycleComponentSmoothLocusClosedLiftOver X x)
         (dim X.left - p) (dim X.left) ≠ 0 := by
-  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+  let := cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
   have transport (a b : ℕ) (h : a = b)
       (s : (supportRelativeCohomologySheaf
         (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))

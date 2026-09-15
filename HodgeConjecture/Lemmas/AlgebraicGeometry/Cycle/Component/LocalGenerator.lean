@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalCoordinates
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
@@ -56,7 +57,7 @@ variable (C : CycleComponentSeparateLocalCoordinates X x d n)
 /-- The complex structure map on the selected affine component neighborhood. -/
 abbrev neighborhoodStructureMap :
     C.componentNeighborhood.toScheme ⟶ Spec ↧ℂ :=
-  C.componentNeighborhood.ι ≫ (componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom
+  C.componentNeighborhood.ι ≫ (cycleComponentSmoothLocus X x).ι ≫ X.left.pointClosureι x ≫ X.hom
 
 /-- The retained exact component coordinates, transported to global sections of the affine
 neighborhood itself. -/

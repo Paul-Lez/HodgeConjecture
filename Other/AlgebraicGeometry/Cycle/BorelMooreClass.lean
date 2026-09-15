@@ -111,7 +111,7 @@ def supportedComparison
     rationalCohomologyWithSupportAddEquivSingular
       V.over
         (cycleComponentSupport V.over x)
-        (isClosed_cycleComponentSupport V.over x) (2 * p)
+        ((cycleComponentSupport V.over x).isClosed) (2 * p)
 
 /-- The supported comparison depends only on the component, not on the surrounding data. -/
 lemma supportedComparison_eq
@@ -314,8 +314,8 @@ lemma maximalCodimensionCycleComponentSupport_eq_singleton
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = d) :
-    cycleComponentSupport V.over x =
-      {cycleComponentMap V.over x
+    (cycleComponentSupport V.over x : Set V.analyticPoint) =
+      {Point.map (cycleComponentOverι V.over x)
         (maximalCodimensionCycleComponentPoint V x)} :=
   cycleComponentSupport_eq_singleton_of_coheight_eq_dimension
     V.over d x hx
@@ -332,7 +332,7 @@ def maximalCodimensionSupportedGenerator
   LinearEquiv.cast (R := ℚ) (M := F)
     (maximalCodimensionCycleComponentSupport_eq_singleton V d x hx).symm
       (analyticPointLocalCoclass V.over d
-        (cycleComponentMap V.over x
+        (Point.map (cycleComponentOverι V.over x)
           (maximalCodimensionCycleComponentPoint V x)))
 
 /-- The supported point coclass generates the maximal-codimension target. -/
@@ -342,7 +342,7 @@ lemma span_maximalCodimensionSupportedGenerator_eq_top
     (x : V.scheme) (hx : coheight x = d) :
     Submodule.span ℚ {maximalCodimensionSupportedGenerator V d x hx} = ⊤ := by
   let z := maximalCodimensionCycleComponentPoint V x
-  let y := cycleComponentMap V.over x z
+  let y := Point.map (cycleComponentOverι V.over x) z
   let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
     (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d))
   let e := LinearEquiv.cast (R := ℚ) (M := F)
@@ -366,7 +366,7 @@ lemma maximalCodimensionSupportedGenerator_ne_zero
     (x : V.scheme) (hx : coheight x = d) :
     maximalCodimensionSupportedGenerator V d x hx ≠ 0 := by
   let z := maximalCodimensionCycleComponentPoint V x
-  let y := cycleComponentMap V.over x z
+  let y := Point.map (cycleComponentOverι V.over x) z
   let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
     (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d))
   let e := LinearEquiv.cast (R := ℚ) (M := F)
@@ -381,7 +381,7 @@ lemma maximalCodimensionSupportedGenerator_ne_zero
     rw [hzero, map_zero, LinearMap.zero_apply] at hone
     exact zero_ne_one hone
   intro hzero
-  exact hsource (e.injective (by simpa using hzero))
+  exact hsource (e.injective (hzero.trans (map_zero e).symm))
 
 /-- The explicitly constructed Borel--Moore fundamental class of a maximal-codimension
 component. -/

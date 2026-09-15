@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
@@ -47,6 +48,27 @@ abbrev openScheme : Over (Spec ↧ℂ) :=
 abbrev openInclusion :
     openScheme X U ⟶ X :=
   Over.homMk U.ι rfl
+
+instance : IsImmersion (openInclusion X U).left :=
+  inferInstanceAs (IsImmersion U.ι)
+
+instance [LocallyOfFiniteType X.hom] : LocallyOfFiniteType (openScheme X U).hom :=
+  inferInstanceAs (LocallyOfFiniteType (U.ι ≫ X.hom))
+
+instance [LocallyOfFinitePresentation X.hom] :
+    LocallyOfFinitePresentation (openScheme X U).hom :=
+  inferInstanceAs (LocallyOfFinitePresentation (U.ι ≫ X.hom))
+
+instance [Smooth X.hom] : Smooth (openScheme X U).hom :=
+  inferInstanceAs (Smooth (U.ι ≫ X.hom))
+
+instance {d : ℕ} [SmoothOfRelativeDimension d X.hom] :
+    SmoothOfRelativeDimension d (U.ι ≫ X.hom) := by
+  simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 d U.ι X.hom
+
+instance {d : ℕ} [SmoothOfRelativeDimension d X.hom] :
+    SmoothOfRelativeDimension d (openScheme X U).hom :=
+  inferInstanceAs (SmoothOfRelativeDimension d (U.ι ≫ X.hom))
 
 /-- The image of a complex point lying in `U` is contained in the image of its inclusion. -/
 lemma point_range_subset (z : ComplexPoint X) (hz : z ∈ overOpen U) :
@@ -178,6 +200,16 @@ def openHomeomorph :
   toEquiv := openEquiv X U
   continuous_toFun := continuous_openEquiv X U
   continuous_invFun := continuous_openEquiv_symm X U
+
+/-- The complex points of an open subscheme are the ambient complex points lying in the open. -/
+lemma range_map_openInclusion : Set.range (map (openInclusion X U)) = overOpen U := by
+  ext z
+  constructor
+  · rintro ⟨w, rfl⟩
+    exact (openEquiv X U w).2
+  · intro hz
+    exact ⟨(openEquiv X U).symm ⟨z, hz⟩,
+      congrArg Subtype.val ((openEquiv X U).apply_symm_apply ⟨z, hz⟩)⟩
 
 /-- Inclusion of an open subscheme induces an open embedding on complex points. -/
 lemma isOpenEmbedding_map_open :

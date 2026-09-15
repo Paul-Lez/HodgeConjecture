@@ -32,14 +32,14 @@ sheafification comparison on the open, and exact open-restriction homology compa
       HomologicalComplex.homologyMap
         (TopCat.Sheaf.openRestrictionTopSectionComplexIso (TopCat.of (ComplexPoint X))
           (cycleComponentSmoothSupportAmbientOpen X x)
-          (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).inv
+          (complexSupportInjectiveComplex X (cycleComponentSupport X x))).inv
         (2 * (p : ℤ)) ≫
       TopCat.Sheaf.sectionCohomologyToSheafSection
         (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))
         (cycleComponentSmoothRestrictedInjectiveComplex X x) (2 * (p : ℤ)) ⊤ ≫
       (TopCat.Sheaf.openRestrictionHomologyTopSectionsIso (TopCat.of (ComplexPoint X))
         (cycleComponentSmoothSupportAmbientOpen X x)
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
+        (complexSupportInjectiveComplex X (cycleComponentSupport X x))
         (2 * (p : ℤ))).hom := rfl
 
 end AlgebraicGeometry.ComplexPoint

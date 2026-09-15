@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import Other.AlgebraicGeometry.Cycle.SmoothPair.PointCoclassSection
 public import Other.LinearAlgebra.HodgeStructure
 
@@ -28,54 +29,54 @@ variable (X : Over (Spec ↧ℂ))
 
 include hx in
 /-- Every singular-filtration remainder of a maximal-codimension component is empty. -/
-theorem cycleComponentSingularClosedFiltration_eq_bot_of_coheight_eq_dimension (k : ℕ) :
-    cycleComponentSingularClosedFiltration X x k = ⊥ := by
-  have hdim := cycleComponentSingularClosedFiltration_dimension_lt X x hx k
+theorem cycleComponentSingularFiltration_eq_bot_of_coheight_eq_dimension (k : ℕ) :
+    cycleComponentSingularFiltration X x k = ⊥ := by
+  have hdim := cycleComponentSingularFiltration_dimension_lt X x hx k
   simp only [Nat.sub_self, Nat.cast_zero] at hdim
   apply SetLike.coe_injective
   apply Set.eq_empty_iff_forall_notMem.mpr
   intro y hy
-  let y' : cycleComponentSingularClosedFiltration X x k := ⟨y, hy⟩
-  let Z : IrreducibleCloseds (cycleComponentSingularClosedFiltration X x k) :=
+  let y' : cycleComponentSingularFiltration X x k := ⟨y, hy⟩
+  let Z : IrreducibleCloseds (cycleComponentSingularFiltration X x k) :=
     ⟨closure {y'}, isIrreducible_singleton.closure, isClosed_closure⟩
-  have hnonneg : 0 ≤ topologicalKrullDim (cycleComponentSingularClosedFiltration X x k) :=
+  have hnonneg : 0 ≤ topologicalKrullDim (cycleComponentSingularFiltration X x k) :=
     Order.krullDim_nonneg_iff.mpr ⟨Z⟩
   exact (not_lt_of_ge hnonneg) hdim
 
 include hx in
 /-- The actual algebraic ambient singular supports vanish, not just their cohomology. -/
-theorem cycleComponentSingularAmbientClosedFiltration_eq_bot_of_coheight_eq_dimension (k : ℕ) :
-    cycleComponentSingularAmbientClosedFiltration X x k = ⊥ := by
+theorem cycleComponentAmbientSingularFiltration_eq_bot_of_coheight_eq_dimension (k : ℕ) :
+    cycleComponentAmbientSingularFiltration X x k = ⊥ := by
   apply SetLike.coe_injective
-  change cycleComponentι X.left x '' (cycleComponentSingularClosedFiltration X x k : Set _) = ∅
-  rw [cycleComponentSingularClosedFiltration_eq_bot_of_coheight_eq_dimension X x hx k]
+  change X.left.pointClosureι x '' (cycleComponentSingularFiltration X x k : Set _) = ∅
+  rw [cycleComponentSingularFiltration_eq_bot_of_coheight_eq_dimension X x hx k]
   exact Set.image_empty _
 
 include hx in
 /-- In maximal codimension, the auxiliary algebraic ambient open is the whole scheme. -/
 theorem cycleComponentSmoothLocusAmbientOpen_eq_top_of_coheight_eq_dimension :
     cycleComponentSmoothLocusAmbientOpen X x = ⊤ := by
-  rw [cycleComponentSmoothLocusAmbientOpen,
-    cycleComponentSingularAmbientClosedFiltration_eq_bot_of_coheight_eq_dimension X x hx 0]
+  rw [cycleComponentSmoothLocusAmbientOpen_eq_compl,
+    cycleComponentAmbientSingularFiltration_eq_bot_of_coheight_eq_dimension X x hx 0]
   exact Opens.ext Set.compl_empty
 
 namespace ComplexPoint
 
 include hx in
 /-- All analytic singular supports of a maximal-codimension component are empty. -/
-theorem cycleComponentSingularAnalyticClosedFiltration_eq_bot_of_coheight_eq_dimension (k : ℕ) :
-    cycleComponentSingularAnalyticClosedFiltration X x k = ⊥ := by
+theorem cycleComponentAnalyticSingularFiltration_eq_bot_of_coheight_eq_dimension (k : ℕ) :
+    cycleComponentAnalyticSingularFiltration X x k = ⊥ := by
   apply SetLike.coe_injective
-  change Point.underlying ⁻¹' (cycleComponentSingularAmbientClosedFiltration X x k : Set X.left) = ∅
-  rw [cycleComponentSingularAmbientClosedFiltration_eq_bot_of_coheight_eq_dimension X x hx k]
+  change Point.underlying ⁻¹' (cycleComponentAmbientSingularFiltration X x k : Set X.left) = ∅
+  rw [cycleComponentAmbientSingularFiltration_eq_bot_of_coheight_eq_dimension X x hx k]
   exact Set.preimage_empty
 
 include hx in
 /-- The exact original-ambient open used by the general component class is all of X. -/
 theorem cycleComponentSmoothSupportAmbientOpen_eq_top_of_coheight_eq_dimension :
     cycleComponentSmoothSupportAmbientOpen X x = ⊤ := by
-  rw [cycleComponentSmoothSupportAmbientOpen,
-    cycleComponentSingularAnalyticClosedFiltration_eq_bot_of_coheight_eq_dimension X x hx 0]
+  rw [cycleComponentSmoothSupportAmbientOpen_eq_compl,
+    cycleComponentAnalyticSingularFiltration_eq_bot_of_coheight_eq_dimension X x hx 0]
   exact Opens.ext Set.compl_empty
 
 include hx in

@@ -120,11 +120,8 @@ theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff :
 space as its support. -/
 lemma cycleComponentSupport_genericPoint_eq_univ
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
-    cycleComponentSupport X (genericPoint X.left) = Set.univ := by
-  rw [cycleComponentSupport]
-  change (@Point.underlying ℂ _ _ X) ⁻¹'
-    (closure {genericPoint X.left} : Set X.left) = Set.univ
-  rw [genericPoint_closure (α := X.left)]
+    (cycleComponentSupport X (genericPoint X.left) : Set (ComplexPoint X)) = Set.univ := by
+  rw [coe_cycleComponentSupport, genericPoint_closure (α := X.left)]
   exact Set.preimage_univ
 
 
@@ -147,7 +144,7 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClas
         (coheight_genericPoint_eq_zero X) = 0 ↔
       cycleComponentSupportedInjectiveClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 := by
-  have hZ : cycleComponentSupport X (genericPoint X.left) = Set.univ :=
+  have hZ : (cycleComponentSupport X (genericPoint X.left) : Set (ComplexPoint X)) = Set.univ :=
     cycleComponentSupport_genericPoint_eq_univ X
   rw [cycleComponentSheafClass_eq_forgetSupport]
   refine Iff.trans (map_eq_zero_iff _ (forgetSupport_injective_of_eq_univ X _ hZ _)) ?_

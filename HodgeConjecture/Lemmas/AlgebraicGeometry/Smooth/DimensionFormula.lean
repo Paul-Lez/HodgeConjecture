@@ -18,7 +18,8 @@ module
 public import HodgeConjecture.Mathlib.RingTheory.SmoothKrullDimension
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.RingTheory.KrullDimension.Field

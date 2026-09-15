@@ -49,7 +49,7 @@ open AlgebraicTopology.Singular
 /-- The analytic space underlying the reduced closure of one point of a projective variety. -/
 abbrev CycleComponentAnalyticPoint
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) :=
-  ComplexPoint (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
+  ComplexPoint (cycleComponentOver V.over x)
 
 /-- Integral Borel--Moore homology of a projective analytic cycle component. -/
 abbrev IntegralCycleComponentBorelMooreHomology
@@ -202,27 +202,27 @@ lemma cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension
     [SmoothOfRelativeDimension d V.structureMap]
     (hx : Order.coheight x = d) :
     Subsingleton (CycleComponentAnalyticPoint V x) := by
-  have hdim : Order.krullDim (cycleComponent V.scheme x) = 0 := by
+  have hdim : Order.krullDim (V.scheme.pointClosure x) = 0 := by
     simpa using orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
       (f := V.structureMap) (d := d) x hx
-  let hcomponent : Subsingleton (cycleComponent V.scheme x) := by
+  let hcomponent : Subsingleton (V.scheme.pointClosure x) := by
     constructor
     intro a b
-    have htopLe (q : cycleComponent V.scheme x) :
-        (⊤ : cycleComponent V.scheme x) ≤ q :=
+    have htopLe (q : V.scheme.pointClosure x) :
+        (⊤ : V.scheme.pointClosure x) ≤ q :=
       Order.krullDim_nonpos_iff_forall_isMin.mp hdim.le ⊤ le_top
     apply inseparable_iff_eq.mp
     rw [inseparable_iff_specializes_and, ← Scheme.le_iff_specializes,
       ← Scheme.le_iff_specializes]
     exact ⟨le_top.trans (htopLe a), le_top.trans (htopLe b)⟩
   let : Subsingleton (Over.mk
-      (cycleComponentι V.over.left x ≫ V.over.hom)).left := hcomponent
+      (V.over.left.pointClosureι x ≫ V.over.hom)).left := hcomponent
   constructor
   intro a b
   let : LocallyOfFiniteType
-      (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom)).hom :=
+      (cycleComponentOver V.over x).hom :=
     inferInstanceAs (LocallyOfFiniteType
-      (cycleComponentι V.over.left x ≫ V.over.hom))
+      (V.over.left.pointClosureι x ≫ V.over.hom))
   exact ComplexPoint.underlying_injective_of_locallyOfFiniteType
     (Subsingleton.elim a.underlying b.underlying)
 

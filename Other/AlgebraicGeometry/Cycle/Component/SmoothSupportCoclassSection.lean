@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import Other.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 
 /-!

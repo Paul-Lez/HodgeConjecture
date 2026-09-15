@@ -120,17 +120,18 @@ support. -/
 lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.left]
     [Smooth X.hom] [SmoothOfRelativeDimension d X.hom]
     (x : X.left) (hx : coheight x = d)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
-    cycleComponentSupport X x = {cycleComponentMap X x z} := by
-  have hdim : Order.krullDim (cycleComponent X.left x) = 0 := by
+    (z : ComplexPoint (cycleComponentOver X x)) :
+    (cycleComponentSupport X x : Set (ComplexPoint X)) =
+      {Point.map (cycleComponentOverι X x) z} := by
+  have hdim : Order.krullDim (X.left.pointClosure x) = 0 := by
     simpa using orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
       (f := X.hom) (d := d) x hx
-  let : Subsingleton (cycleComponent X.left x) := by
+  let : Subsingleton (X.left.pointClosure x) := by
     constructor
     intro a b
-    have hallMin : ∀ q : cycleComponent X.left x, IsMin q :=
+    have hallMin : ∀ q : X.left.pointClosure x, IsMin q :=
       Order.krullDim_nonpos_iff_forall_isMin.mp hdim.le
-    have htopLe (q : cycleComponent X.left x) : (⊤ : cycleComponent X.left x) ≤ q :=
+    have htopLe (q : X.left.pointClosure x) : (⊤ : X.left.pointClosure x) ≤ q :=
       hallMin ⊤ le_top
     have hab : a ≤ b := le_top.trans (htopLe b)
     have hba : b ≤ a := le_top.trans (htopLe a)
@@ -139,12 +140,12 @@ lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.
       ← Scheme.le_iff_specializes]
     exact ⟨hba, hab⟩
   have hpoints : Subsingleton
-      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) := by
-    let : LocallyOfFiniteType (Over.mk (cycleComponentι X.left x ≫ X.hom)).hom :=
-      inferInstanceAs (LocallyOfFiniteType (cycleComponentι X.left x ≫ X.hom))
+      (ComplexPoint (cycleComponentOver X x)) := by
+    let : LocallyOfFiniteType (cycleComponentOver X x).hom :=
+      inferInstanceAs (LocallyOfFiniteType (X.left.pointClosureι x ≫ X.hom))
     exact ⟨fun a b ↦ ComplexPoint.underlying_injective_of_locallyOfFiniteType
-      (Subsingleton.elim (α := cycleComponent X.left x) a.underlying b.underlying)⟩
-  rw [← range_cycleComponentMap]
+      (Subsingleton.elim (α := X.left.pointClosure x) a.underlying b.underlying)⟩
+  rw [← range_map_cycleComponentOverι]
   ext y
   constructor
   · rintro ⟨w, rfl⟩
@@ -160,8 +161,8 @@ theorem exists_singularComponentSupportedGenerator_of_coheight_eq_dimension [IsI
     ∃ β : RationalSingularComponentCohomologyWithSupport X x (2 * d),
       IsSupportedCohomologyGenerator β := by
   obtain ⟨z, -⟩ := exists_cycleComponent_smooth_complexPoint X x
-  let y := cycleComponentMap X x z
-  have hsupport : cycleComponentSupport X x = {y} :=
+  let y := Point.map (cycleComponentOverι X x) z
+  have hsupport : (cycleComponentSupport X x : Set (ComplexPoint X)) = {y} :=
     cycleComponentSupport_eq_singleton_of_coheight_eq_dimension X d x hx z
   change ∃ β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * d),

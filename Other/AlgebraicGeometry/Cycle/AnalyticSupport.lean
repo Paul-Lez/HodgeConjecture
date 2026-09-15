@@ -37,15 +37,17 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
+open ComplexPoint
+
 variable (X : Over (Spec ↧ℂ))
 
 /-- The inclusion of a cycle component on complex points, bundled as a continuous map. -/
 noncomputable def cycleComponentContinuousMap
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
     @ContinuousMap
-      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
+      (ComplexPoint (cycleComponentOver X x))
       (ComplexPoint X) Point.analyticTopology Point.analyticTopology :=
-  Point.continuousMap (Over.homMk (cycleComponentι X.left x) rfl)
+  Point.continuousMap (Over.homMk (X.left.pointClosureι x) rfl)
 
 /-- The underlying closed support of an algebraic cycle: the union of the closures of all generic
 points having nonzero coefficient. -/
@@ -67,7 +69,7 @@ lemma analyticCycleSupport_eq_iUnion {R : Type*} [Zero R]
     analyticCycleSupport X c =
       ⋃ x ∈ c.support, cycleComponentSupport X x := by
   ext z
-  simp [analyticCycleSupport, algebraicCycleSupport, cycleComponentSupport]
+  simp [analyticCycleSupport, algebraicCycleSupport]
 
 /-- The analytic support of an algebraic cycle on a projective variety is closed. -/
 lemma isClosed_analyticCycleSupport {R : Type*} [Zero R]
@@ -76,13 +78,13 @@ lemma isClosed_analyticCycleSupport {R : Type*} [Zero R]
     IsClosed (analyticCycleSupport X c) := by
   rw [analyticCycleSupport_eq_iUnion]
   exact (algebraicCycle_support_finite X c).isClosed_biUnion fun x _ =>
-    isClosed_cycleComponentSupport X x
+    (cycleComponentSupport X x).isClosed
 
 lemma cycleComponentSupport_subset_analyticCycleSupport {R : Type*} [Zero R]
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (c : AlgebraicCycle X.left R)
     (x : X.left) (hx : c x ≠ 0) :
-    cycleComponentSupport X x ⊆ analyticCycleSupport X c :=
+    (cycleComponentSupport X x : Set (ComplexPoint X)) ⊆ analyticCycleSupport X c :=
   fun _ hz => Set.mem_iUnion₂.mpr ⟨x, Function.mem_support.mpr hx, hz⟩
 
 @[simp]
