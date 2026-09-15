@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.InjectiveCohomologySheafComparison
 
 /-!
 # Cohomology-sheaf concentration for smooth closed supports
@@ -35,9 +36,8 @@ def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
         RelativeCohomology ℚ (neighborhoodSupportComplementPair
           (V : Set (ComplexPoint X)) (S : Set (ComplexPoint X))) n :=
   letI : ∀ W : Opens (ComplexPoint X), ParacompactSpace W := openParacompactSpace X
-  (complexSupportedSingularInjectiveHomologyIso X S.compl V (n : ℤ)).symm.addCommGroupIsoToAddEquiv
-    |>.trans (supportedRationalSingularSectionCohomologyEquivSupportComplement
-      (TopCat.of (ComplexPoint X)) S S.isClosed V n)
+  supportedRationalInjectiveSectionCohomologyEquivRelative
+    (TopCat.of (ComplexPoint X)) (exists_contractibleOpen_le X) S V n
 
 end AlgebraicGeometry.ComplexPoint
 

@@ -54,6 +54,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothPair.Coc
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Analytification
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueBoundedBelow
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.SupportDescent
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.CohomologySection
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.CohomologyStalkVanishing
 public import HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.ComplexClass
@@ -63,7 +64,12 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FundamentalClass
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.FlasqueLowestCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.NeighborhoodPair
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.NeighborhoodPairImage
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NeighborhoodPair
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NeighborhoodPairCohomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NeighborhoodPairImage
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.InjectiveCohomologySheafComparison
 public import HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
@@ -131,8 +137,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportExtension
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts

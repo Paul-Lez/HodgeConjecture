@@ -29,9 +29,8 @@ restricted to a literal ambient neighborhood before sheafification. -/
 def analyticPointCoclassSupportSection (S : Set (ComplexPoint X))
     (z : ComplexPoint X) (hz : z ∈ S) (V : Opens (ComplexPoint X)) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S (2 * d)).obj.obj (op V) :=
-  (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X)) S (2 * d)).app (op V)
-    (relativeCohomologyMap ℚ (2 * d) (neighborhoodSupportToPointPairMap (V : Set _) S z hz)
-      (analyticPointLocalCoclass X d z))
+  supportRelativeCohomologyPointSection V hz
+    (analyticPointLocalCoclass X d z)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -40,22 +39,9 @@ theorem analyticPointCoclassSupportSection_restrict (S : Set (ComplexPoint X))
     (z : ComplexPoint X) (hz : z ∈ S) {U V : Opens (ComplexPoint X)} (hUV : U ≤ V) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S (2 * d)).obj.map (homOfLE hUV).op
       (analyticPointCoclassSupportSection X d S z hz V) =
-      analyticPointCoclassSupportSection X d S z hz U := by
-  have hn := ConcreteCategory.congr_hom
-    ((supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X)) S (2 * d)).naturality
-      (homOfLE hUV).op)
-    (relativeCohomologyMap ℚ (2 * d) (neighborhoodSupportToPointPairMap (V : Set _) S z hz)
-      (analyticPointLocalCoclass X d z))
-  simp only [ConcreteCategory.comp_apply] at hn
-  refine hn.symm.trans ?_
-  change (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X)) S (2 * d)).app (op U)
-    (relativeCohomologyMap ℚ (2 * d)
-      (neighborhoodSupportInclusionPairMap (W := (U : Set _)) (V := (V : Set _)) hUV S)
-      (relativeCohomologyMap ℚ (2 * d) (neighborhoodSupportToPointPairMap (V : Set _) S z hz)
-        (analyticPointLocalCoclass X d z))) = _
-  rw [← LinearMap.comp_apply, ← relativeCohomologyMap_comp,
-    neighborhoodSupportInclusionPairMap_toPoint]
-  rfl
+      analyticPointCoclassSupportSection X d S z hz U :=
+  supportRelativeCohomologyPointSection_restrict
+    (TopCat.of (ComplexPoint X)) S (2 * d) hz (analyticPointLocalCoclass X d z) hUV
 
 section Iso
 
@@ -63,34 +49,11 @@ variable (Y : Over (Spec ↧ℂ))
   (e : Y ≅ X)
   [SmoothOfRelativeDimension d Y.hom] [IsProjective Y.hom]
 
-/-- The actual analytic scheme-isomorphism map as a topological-category morphism. -/
-def complexSchemeIsoTopMap : TopCat.of (ComplexPoint Y) ⟶ TopCat.of (ComplexPoint X) :=
-  TopCat.ofHom (Point.continuousMap e.hom)
-
-omit [IsProjective X.hom] [IsProjective Y.hom] in
-theorem complexSchemeIsoTopMap_isOpenEmbedding :
-    IsOpenEmbedding (complexSchemeIsoTopMap X Y e) :=
+/-- A scheme isomorphism induces an open embedding on complex points. -/
+theorem complexSchemeIsoMap_isOpenEmbedding
+    {X Y : Over (Spec ↧ℂ)} (e : Y ≅ X) :
+    IsOpenEmbedding (TopCat.ofHom (Point.continuousMap e.hom)) :=
   (Point.isoMapHomeomorph e).isOpenEmbedding
-
-omit [IsProjective X.hom] [IsProjective Y.hom] in
-/-- The pair square behind point normalization on an image neighborhood. -/
-theorem neighborhoodSupportPairImageIso_inv_to_point
-    (S : Set (ComplexPoint X)) (B : Set (ComplexPoint Y))
-    (hB : Point.map e.hom ⁻¹' S = B)
-    (z : ComplexPoint Y) (hz : z ∈ B) (V : Opens (ComplexPoint Y)) :
-    (neighborhoodSupportPairImageIso (complexSchemeIsoTopMap X Y e)
-      (complexSchemeIsoTopMap_isOpenEmbedding X Y e).isEmbedding (V : Set _) B S
-      (fun y _ => by rw [← hB]; rfl)).inv ≫
-        neighborhoodSupportToPointPairMap (V : Set _) B z hz ≫
-          complexSchemeIsoPointPairMap X Y e z =
-    neighborhoodSupportToPointPairMap
-      ((complexSchemeIsoTopMap_isOpenEmbedding X Y e).functor.obj V : Set _)
-      S (Point.map e.hom z) (by rw [← hB] at hz; exact hz) := by
-  apply (cancel_epi (neighborhoodSupportPairImageIso (complexSchemeIsoTopMap X Y e)
-    (complexSchemeIsoTopMap_isOpenEmbedding X Y e).isEmbedding (V : Set _) B S
-    (fun y _ => by rw [← hB]; rfl)).hom).mp
-  rw [Iso.hom_inv_id_assoc]
-  apply MorphismProperty.Arrow.Hom.ext <;> ext y <;> rfl
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -100,20 +63,18 @@ theorem analyticPointCoclassSupportSection_schemeIso_transport
     (S : Set (ComplexPoint X)) (B : Set (ComplexPoint Y))
     (hB : Point.map e.hom ⁻¹' S = B)
     (z : ComplexPoint Y) (hz : z ∈ B) (V : Opens (ComplexPoint Y)) :
-    (supportRelativeCohomologySheafOpenIso (complexSchemeIsoTopMap X Y e)
-      (complexSchemeIsoTopMap_isOpenEmbedding X Y e) S B hB (2 * d)).hom.hom.app (op V)
+    (supportRelativeCohomologySheafOpenIso
+      (complexSchemeIsoMap_isOpenEmbedding e) hB (2 * d)).hom.hom.app (op V)
       (analyticPointCoclassSupportSection Y d B z hz V) =
     analyticPointCoclassSupportSection X d S (Point.map e.hom z)
       (by rw [← hB] at hz; exact hz)
-      ((complexSchemeIsoTopMap_isOpenEmbedding X Y e).functor.obj V) := by
-  rw [analyticPointCoclassSupportSection, supportRelativeCohomologySheafOpenIso_unit_apply,
-    supportRelativeCohomologyPresheafOpenIso_inv_app]
-  apply congrArg ((supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X)) S (2 * d)).app _)
-  rw [← analyticPointLocalCoclass_schemeIso_pullback X Y e d z]
-  rw [← LinearMap.comp_apply, ← relativeCohomologyMap_comp,
-    ← LinearMap.comp_apply, ← relativeCohomologyMap_comp,
-    Category.assoc, neighborhoodSupportPairImageIso_inv_to_point X Y e S B hB z hz V]
-  rfl
+      ((complexSchemeIsoMap_isOpenEmbedding e).functor.obj V) := by
+  rw [analyticPointCoclassSupportSection,
+    ← analyticPointLocalCoclass_schemeIso_pullback X Y e d z,
+    complexSchemeIsoPointPairMap]
+  exact supportRelativeCohomologyPointSection_open
+    (complexSchemeIsoMap_isOpenEmbedding e) hB (2 * d) V hz
+      (analyticPointLocalCoclass X d (Point.map e.hom z))
 
 end Iso
 end AlgebraicGeometry.ComplexPoint

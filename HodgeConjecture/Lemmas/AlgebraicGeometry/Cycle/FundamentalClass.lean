@@ -28,21 +28,12 @@ attribute [local instance] cycleComponentSheafClassAnalyticTopology
 
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
-/-- Extension recovers exactly the prescribed smooth-locus section. -/
-@[simp]
-theorem cycleComponentExtendSmoothCoclass_normalization
-    (s : CycleComponentSmoothCoclassSections X x p) :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom
-      (cycleComponentExtendSmoothCoclass X x hx s) = s :=
-  AddEquiv.apply_symm_apply
-    (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv s
-
 /-- Exact smooth-locus normalization, not equality only up to a scalar. -/
 @[simp]
 theorem cycleComponentSupportedInjectiveClass_normalization :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom
-      (cycleComponentSupportedInjectiveClass X x hx) =
+    (cycleComponentSupportedClassNormalizationIso x hx).hom
+      (cycleComponentSupportedInjectiveClass hx) =
     cycleComponentSmoothSupportCoclassSection X x hx :=
-  cycleComponentExtendSmoothCoclass_normalization X x hx _
+  (cycleComponentSupportedClassNormalizationIso x hx).inv_hom_id_apply _
 
 end AlgebraicGeometry.ComplexPoint

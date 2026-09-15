@@ -26,7 +26,7 @@ set_option backward.isDefEq.respectTransparency false in
 theorem supportRelativeCohomologyGerm_eq_zero_iff
     (U : Opens X) (x : X) (hx : x ∈ U)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (U : Set X) S) n) :
-    supportRelativeCohomologyGerm X S n U x hx a = 0 ↔
+    supportRelativeCohomologyGerm U x hx a = 0 ↔
       ∃ (W : Opens X) (hWU : W ≤ U), x ∈ W ∧
         relativeCohomologyMap ℚ n
           (neighborhoodSupportInclusionPairMap
@@ -58,7 +58,7 @@ theorem supportRelativeCohomologyGerm_ne_zero_of_restrict_ne_zero
       relativeCohomologyMap ℚ n
         (neighborhoodSupportInclusionPairMap
           (W := (W : Set X)) (V := (U : Set X)) hWU S) a ≠ 0) :
-    supportRelativeCohomologyGerm X S n U x hx a ≠ 0 := by
+    supportRelativeCohomologyGerm U x hx a ≠ 0 := by
   intro hz
   obtain ⟨W, hWU, hxW, he⟩ :=
     (supportRelativeCohomologyGerm_eq_zero_iff X S n U x hx a).mp hz
