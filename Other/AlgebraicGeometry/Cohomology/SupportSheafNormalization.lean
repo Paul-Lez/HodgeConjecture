@@ -28,7 +28,7 @@ local instance complexSupportCohomologySheafNormalizationParacompact :
 lemma complexSupportInjectiveCohomologySheafIsoRelative_comp
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
     homologyMap (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ) ≫
-      (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom =
+      (complexSupportInjectiveCohomologySheafIsoRelative S n).hom =
     (supportedSingularCohomologySheafIsoRelative
       (TopCat.of (ComplexPoint X)) S S.isClosed n).hom := by
   let : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
@@ -46,7 +46,7 @@ lemma complexSupportInjectiveCohomologySheafIsoRelative_section
     (S : Closeds (ComplexPoint X)) (n : ℕ) (V : Opens (ComplexPoint X)) :
     sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
       (complexSupportInjectiveComplex X S) (n : ℤ) V ≫
-        (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.app (op V) =
+        (complexSupportInjectiveCohomologySheafIsoRelative S n).hom.hom.app (op V) =
     (complexSupportInjectiveSectionCohomologyEquiv X S V n).toAddCommGrpIso.hom ≫
       (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X)) S n).app (op V) := by
   let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W := openParacompactSpace X
@@ -63,7 +63,7 @@ lemma complexSupportInjectiveCohomologySheafIsoRelative_section
   have hc := congrArg (fun f => f.hom.app (op V))
     (complexSupportInjectiveCohomologySheafIsoRelative_comp X S n)
   change (homologyMap (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ)).hom.app (op V) ≫
-      (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.app (op V) =
+      (complexSupportInjectiveCohomologySheafIsoRelative S n).hom.hom.app (op V) =
     (supportedSingularCohomologySheafIsoRelative Y S S.isClosed n).hom.hom.app (op V) at hc
   rw [hc]
   refine (supportedSingularCohomologySheafIsoRelative_section Y S S.isClosed n V).trans ?_
@@ -83,7 +83,7 @@ lemma complexSupportInjectiveCohomologySheafIsoRelative_section_apply
     (S : Closeds (ComplexPoint X)) (n : ℕ) (V : Opens (ComplexPoint X))
     (z : ((((supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ)) :
-    (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.app (op V)
+    (complexSupportInjectiveCohomologySheafIsoRelative S n).hom.hom.app (op V)
       (sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
         (complexSupportInjectiveComplex X S) (n : ℤ) V z) =
     (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X)) S n).app (op V)

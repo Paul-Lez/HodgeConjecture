@@ -145,8 +145,7 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClas
     :
     cycleComponentSheafClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 ↔
-      cycleComponentSupportedInjectiveClass X (genericPoint X.left)
-        (coheight_genericPoint_eq_zero X) = 0 := by
+      cycleComponentSupportedInjectiveClass (coheight_genericPoint_eq_zero X) = 0 := by
   have hZ : cycleComponentSupport X (genericPoint X.left) = Set.univ :=
     cycleComponentSupport_genericPoint_eq_univ X
   rw [cycleComponentSheafClass_eq_forgetSupport]
@@ -161,8 +160,9 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff
     cycleComponentSheafClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 ↔
       cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) = 0 := by
-  have hcoclass : (cycleComponentSupportedClassNormalizationIso X (genericPoint X.left) (coheight_genericPoint_eq_zero X)).addCommGroupIsoToAddEquiv
-      (cycleComponentSupportedInjectiveClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X)) =
+  have hcoclass : (cycleComponentSupportedClassNormalizationIso (genericPoint X.left)
+      (coheight_genericPoint_eq_zero X)).addCommGroupIsoToAddEquiv
+      (cycleComponentSupportedInjectiveClass (coheight_genericPoint_eq_zero X)) =
       cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) :=
     cycleComponentSupportedInjectiveClass_normalization X (genericPoint X.left) (coheight_genericPoint_eq_zero X)
   refine Iff.trans
