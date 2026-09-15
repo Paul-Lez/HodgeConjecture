@@ -125,39 +125,56 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_naturality
   simp only [ShiftedHom.map, Functor.map_comp, Category.assoc,
     Functor.commShiftIso_hom_naturality]
 
+end AlgebraicGeometry.ComplexPoint
+
+namespace TopCat.Sheaf
+
+variable (Y : TopCat.{0})
+
+local instance derivedGlobalSectionsNaturalityHasDerivedCategory :
+    HasDerivedCategory (Sheaf AddCommGrpCat Y) :=
+  HasDerivedCategory.standard (Sheaf AddCommGrpCat Y)
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma derivedHomAddEquivGlobalSectionsKInjective_naturality
-    (K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+    (K L : CochainComplex (Sheaf AddCommGrpCat Y) ℤ)
     [K.IsKInjective] [L.IsKInjective] (f : K ⟶ L) (n : ℤ)
     (x : ShiftedHom
-      (DerivedCategory.Q.obj (TopCat.Sheaf.integerConstantSingleComplex
-        (TopCat.of (ComplexPoint X)))) (DerivedCategory.Q.obj K) n) :
-    derivedHomAddEquivGlobalSectionsKInjective X L n
+      (DerivedCategory.Q.obj (integerConstantSingleComplex Y)) (DerivedCategory.Q.obj K) n) :
+    derivedHomAddEquivGlobalSectionsKInjective Y L n
       (x ≫ (DerivedCategory.Q.map f)⟦n⟧') =
     HomologicalComplex.homologyMap
-      (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map f) n
-      (derivedHomAddEquivGlobalSectionsKInjective X K n x) := by
-  let Y := TopCat.of (ComplexPoint X)
-  let A := TopCat.Sheaf.integerConstantSingleComplex Y
+      (((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
+        (.up ℤ)).map f) n
+      (derivedHomAddEquivGlobalSectionsKInjective Y K n x) := by
+  let A := integerConstantSingleComplex Y
   let y := (CochainComplex.HomComplex.homologyAddEquiv A K n).symm
-    (kInjectiveDerivedHomAddEquivCohomologyClass A K n x)
+    (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass A K n x)
   have hH : HomologicalComplex.homologyMap
       (CochainComplex.HomComplex.postcompMap A f) n y =
       (CochainComplex.HomComplex.homologyAddEquiv A L n).symm
         (CochainComplex.HomComplex.postcompClass A f n
-          (kInjectiveDerivedHomAddEquivCohomologyClass A K n x)) := by
+          (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass
+            A K n x)) := by
     apply (CochainComplex.HomComplex.homologyAddEquiv A L n).injective
     rw [CochainComplex.HomComplex.homologyAddEquiv_postcompMap, AddEquiv.apply_symm_apply]
     simp only [AddEquiv.apply_symm_apply]
   have hΓ := congrArg (fun g => HomologicalComplex.homologyMap g n)
-    (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections_naturality Y f)
+    (homComplexSingleIntegerIsoGlobalSections_naturality Y f)
   rw [HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp] at hΓ
   have hΓy := ConcreteCategory.congr_hom hΓ y
   dsimp only [derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
-  rw [kInjectiveDerivedHomAddEquivCohomologyClass_naturality, ← hH]
+  rw [AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass_naturality,
+    ← hH]
   exact hΓy
+
+end TopCat.Sheaf
+
+namespace AlgebraicGeometry.ComplexPoint
+
+variable (X : Over (Spec ↧ℂ))
+attribute [local instance] hypercohomologyNaturalitySheafDerivedCategory
 
 set_option backward.isDefEq.respectTransparency false in
 lemma hypercohomologyAddEquivDerived_naturality
@@ -184,7 +201,8 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_naturality
   rw [hypercohomologyAddEquivDerived_naturality]
   simp only [isoHomCongrAddEquiv_apply, Iso.refl_hom,
     Functor.mapIso_inv, Category.comp_id, ← Category.assoc]
-  exact derivedHomAddEquivGlobalSectionsKInjective_naturality X K L f n _
+  exact TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective_naturality
+    (TopCat.of (ComplexPoint X)) K L f n _
 
 end AlgebraicGeometry.ComplexPoint
 end

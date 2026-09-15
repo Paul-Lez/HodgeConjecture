@@ -13,6 +13,29 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHyperco
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
+namespace TopCat.Sheaf
+
+variable (Y : TopCat.{0})
+
+local instance derivedGlobalSectionsHasDerivedCategory :
+    HasDerivedCategory (Sheaf AddCommGrpCat Y) :=
+  HasDerivedCategory.standard (Sheaf AddCommGrpCat Y)
+
+/-- On a K-injective sheaf complex, derived morphisms from the integer
+constant sheaf are computed by actual global sections, with no further
+replacement complex. -/
+def derivedHomAddEquivGlobalSectionsKInjective
+    (K : CochainComplex (Sheaf AddCommGrpCat Y) ℤ) [K.IsKInjective] (n : ℤ) :
+    ShiftedHom
+      (DerivedCategory.Q.obj (integerConstantSingleComplex Y)) (DerivedCategory.Q.obj K) n ≃+
+    (globalSectionsComplexInt Y K).homology n :=
+  (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass _ K n).trans
+    ((CochainComplex.HomComplex.homologyAddEquiv _ K n).symm.trans
+      (HomologicalComplex.homologyMapIso
+        (homComplexSingleIntegerIsoGlobalSections Y K) n).addCommGroupIsoToAddEquiv)
+
+end TopCat.Sheaf
+
 namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))
@@ -20,21 +43,6 @@ variable (X : Over (Spec ↧ℂ))
 local instance hypercohomologyNaturalitySheafDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
-
-/-- On a K-injective sheaf complex, derived morphisms from the integer
-constant sheaf are computed by actual global sections, with no further
-replacement complex. -/
-def derivedHomAddEquivGlobalSectionsKInjective
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective] (n : ℤ) :
-    ShiftedHom
-      (DerivedCategory.Q.obj (TopCat.Sheaf.integerConstantSingleComplex
-        (TopCat.of (ComplexPoint X)))) (DerivedCategory.Q.obj K) n ≃+
-    (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X)) K).homology n :=
-  (kInjectiveDerivedHomAddEquivCohomologyClass _ K n).trans
-    ((CochainComplex.HomComplex.homologyAddEquiv _ K n).symm.trans
-      (HomologicalComplex.homologyMapIso
-        (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections
-          (TopCat.of (ComplexPoint X)) K) n).addCommGroupIsoToAddEquiv)
 
 /-- Hypercohomology of an actual K-injective complex is its global-section
 cohomology. This direct form exposes naturality without choosing another
@@ -47,6 +55,7 @@ def hypercohomologyAddEquivGlobalSectionsKInjective
     ((isoHomCongrAddEquiv
       (DerivedCategory.Q.mapIso (constantIntegerSheafComplexIntIsoSingle X))
       (Iso.refl _)).trans
-      (derivedHomAddEquivGlobalSectionsKInjective X K n))
+      (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective
+        (TopCat.of (ComplexPoint X)) K n))
 
 end AlgebraicGeometry.ComplexPoint

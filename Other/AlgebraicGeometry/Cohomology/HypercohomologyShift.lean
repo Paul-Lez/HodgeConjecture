@@ -142,41 +142,58 @@ lemma hypercohomologyAddEquivDerived_rightUnshift
   rw [Localization.SmallShiftedHom.equiv_comp, Localization.SmallShiftedHom.equiv_mk]
   simp [ShiftedHom.map]
 
+end AlgebraicGeometry.ComplexPoint
+
+namespace TopCat.Sheaf
+
+variable (Y : TopCat.{0})
+
+local instance derivedGlobalSectionsShiftHasDerivedCategory :
+    HasDerivedCategory (Sheaf AddCommGrpCat Y) :=
+  HasDerivedCategory.standard (Sheaf AddCommGrpCat Y)
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 800000 in
 /-- The direct derived-morphism/global-section comparison commutes with
 target unshifting, with the canonical signed homology shift. -/
 lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective]
+    (K : CochainComplex (Sheaf AddCommGrpCat Y) ℤ) [K.IsKInjective]
     (s n n' : ℤ) (h : n + s = n')
     (x : ShiftedHom
-      (DerivedCategory.Q.obj (TopCat.Sheaf.integerConstantSingleComplex
-        (TopCat.of (ComplexPoint X)))) (DerivedCategory.Q.obj (K⟦s⟧)) n) :
-    derivedHomAddEquivGlobalSectionsKInjective X K n'
+      (DerivedCategory.Q.obj (integerConstantSingleComplex Y))
+        (DerivedCategory.Q.obj (K⟦s⟧)) n) :
+    derivedHomAddEquivGlobalSectionsKInjective Y K n'
       (x.comp ((DerivedCategory.Q.commShiftIso s).hom.app K) (by omega)) =
-    ShortComplex.homologyMap (TopCat.Sheaf.globalSectionsShiftShortComplex
-      (TopCat.of (ComplexPoint X)) K s n n' h)
-      (derivedHomAddEquivGlobalSectionsKInjective X (K⟦s⟧) n x) := by
-  let Y := TopCat.of (ComplexPoint X)
-  let A := TopCat.Sheaf.integerConstantSingleComplex Y
+    ShortComplex.homologyMap (globalSectionsShiftShortComplex Y K s n n' h)
+      (derivedHomAddEquivGlobalSectionsKInjective Y (K⟦s⟧) n x) := by
+  let A := integerConstantSingleComplex Y
   let y := (CochainComplex.HomComplex.homologyAddEquiv A (K⟦s⟧) n).symm
-    (kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n x)
+    (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass
+      A (K⟦s⟧) n x)
   have hH : ShortComplex.homologyMap
       (CochainComplex.HomComplex.rightUnshiftShortComplex A K s n n' h) y =
       (CochainComplex.HomComplex.homologyAddEquiv A K n').symm
         (CochainComplex.HomComplex.rightUnshiftClass A K s n n' h
-          (kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n x)) := by
+          (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass
+            A (K⟦s⟧) n x)) := by
     apply (CochainComplex.HomComplex.homologyAddEquiv A K n').injective
     rw [CochainComplex.HomComplex.homologyAddEquiv_rightUnshift,
       AddEquiv.apply_symm_apply]
     simp only [AddEquiv.apply_symm_apply]
   have hΓy := ConcreteCategory.congr_hom
-    (TopCat.Sheaf.homComplexSingleIntegerGlobalSections_rightUnshift_homology
-      Y K s n n' h) y
+    (homComplexSingleIntegerGlobalSections_rightUnshift_homology Y K s n n' h) y
   dsimp only [derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
-  rw [kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift _ _ s n n' h, ← hH]
+  rw [AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift
+    _ _ s n n' h, ← hH]
   exact hΓy.symm
+
+end TopCat.Sheaf
+
+namespace AlgebraicGeometry.ComplexPoint
+
+variable (X : Over (Spec ↧ℂ))
+attribute [local instance] hypercohomologyShiftSheafDerivedCategory
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -197,7 +214,8 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_rightUnshift
   rw [hypercohomologyAddEquivDerived_rightUnshift _ _ s n n' h]
   simp only [isoHomCongrAddEquiv_apply, Iso.refl_hom, Functor.mapIso_inv, Category.comp_id]
   simpa only [ShiftedHom.comp, Category.assoc, Functor.map_id, Category.id_comp] using
-    derivedHomAddEquivGlobalSectionsKInjective_rightUnshift X K s n n' h
+    TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
+      (TopCat.of (ComplexPoint X)) K s n n' h
       (DerivedCategory.Q.map (constantIntegerSheafComplexIntIsoSingle X).inv ≫
         hypercohomologyAddEquivDerived X (K⟦s⟧) n x)
 
