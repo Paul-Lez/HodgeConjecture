@@ -5,16 +5,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 /-!
 # The normalized component coclass on the original ambient smooth-support open
 
-The component's smooth locus is closed in the complement of its singular
-boundary. We construct its exactly normalized smooth-support section there and
-transport it through the analytic open embedding. The result is a section
-of the ORIGINAL ambient relative-cohomology sheaf on the singular-boundary
-complement. No section, purity comparison, or orientation coherence is an input.
+The component's smooth locus is closed in the complement of its singular boundary.
+The smooth-pair coclass is constructed on this closed lift and transported through
+the analytic open embedding to the original ambient space.
 -/
 
 @[expose] public noncomputable section
@@ -29,12 +27,6 @@ section Component
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
-
-include hx in
-/-- The proved dimension of the smooth locus, bundled over `Spec ℂ`. -/
-theorem cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension :
-    SmoothOfRelativeDimension (dim X.left - p) (cycleComponentSmoothLocusOver X x).hom :=
-  cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
 
 include X hx in
 omit [IsProjective X.hom] in
@@ -53,11 +45,11 @@ def cycleComponentSmoothClosedLiftCoclassSection :
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (2 * p)).obj.obj (op ⊤) :=
-  letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+  letI : SmoothOfRelativeDimension (dim X.left - p)
+      (cycleComponentSmoothLocusOver X x).hom :=
+    cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
   hdeg ▸ smoothClosedSupportCoclassSection
-    (cycleComponentSmoothLocusAmbientOpenOver X x)
-    (cycleComponentSmoothLocusOver X x)
     (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)
 
 /-- The analytic open-embedding map back to the original ambient space. -/
@@ -88,20 +80,18 @@ theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
   rw [Set.image_univ]
   exact cycleComponentSmoothLocusAmbientOpen_analytic_image X x
 
-/-- The normalized component coclass section, living on the singular-boundary
-complement in the ORIGINAL ambient relative-cohomology sheaf. -/
+/-- The normalized smooth-locus section transported to the original ambient space. -/
 def cycleComponentSmoothSupportCoclassSection :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * p)).obj.obj
       (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
-  supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)
-    (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-    (cycleComponentSupport X x)
-    (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
-    (cycleComponentSmoothClosedLiftAmbientMap_support X x)
-    (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
-    (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
-    (cycleComponentSmoothClosedLiftCoclassSection X x hx)
+  (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+    (cycleComponentSupport X x) (2 * p)).obj.map
+      (eqToHom (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x).symm).op
+      ((supportRelativeCohomologySheafOpenIso
+        (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
+        (cycleComponentSmoothClosedLiftAmbientMap_support X x) (2 * p)).hom.hom.app (op ⊤)
+        (cycleComponentSmoothClosedLiftCoclassSection X x hx))
 
 end Component
 

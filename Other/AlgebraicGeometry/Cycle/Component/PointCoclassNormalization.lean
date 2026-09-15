@@ -64,8 +64,10 @@ include hx in
 /-- The actual closed-lift source is smooth of dimension zero in maximal codimension. -/
 theorem cycleComponentPointClosedLift_smoothOfRelativeDimension_zero :
     SmoothOfRelativeDimension 0 (cycleComponentSmoothLocusOver X x).hom := by
+  change SmoothOfRelativeDimension 0
+    ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫ cycleComponentι X.left x ≫ X.hom)
   simpa only [Nat.sub_self] using
-    cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+    cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
 
 /-- Comparison of the auxiliary section with its old normalized point coclass.
 This is a specialization theorem about the general gluing, not its definition. -/
@@ -86,8 +88,6 @@ theorem cycleComponentSmoothClosedLiftCoclassSection_eq_oldPoint
     exact cycleComponentSmoothLocusAmbientOpen_isProjective_of_coheight_eq_dimension X x hx
   have hsec : cycleComponentSmoothClosedLiftCoclassSection X x hx =
       smoothClosedSupportCoclassSection
-        (cycleComponentSmoothLocusAmbientOpenOver X x)
-        (cycleComponentSmoothLocusOver X x)
         (cycleComponentSmoothLocusClosedLiftOver X x) 0 (dim X.left) := by
     have hcast (m : ℕ) (hm : m = 0)
         (hinst : SmoothOfRelativeDimension m (cycleComponentSmoothLocusOver X x).hom) :
@@ -96,16 +96,16 @@ theorem cycleComponentSmoothClosedLiftCoclassSection_eq_oldPoint
           (cycleComponentSmoothLocusOver X x)
           (cycleComponentSmoothLocusClosedLiftOver X x) m (dim X.left) hinst inferInstance inferInstance) =
         smoothClosedSupportCoclassSection
-          (cycleComponentSmoothLocusAmbientOpenOver X x)
-          (cycleComponentSmoothLocusOver X x)
           (cycleComponentSmoothLocusClosedLiftOver X x) 0 (dim X.left) := by
       subst m
       rfl
-    exact hcast ((dim X.left) - (dim X.left)) (Nat.sub_self (dim X.left))
-      (cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx)
+    have hinst : SmoothOfRelativeDimension (dim X.left - dim X.left)
+        (cycleComponentSmoothLocusOver X x).hom := by
+      change SmoothOfRelativeDimension (dim X.left - dim X.left)
+        ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫ cycleComponentι X.left x ≫ X.hom)
+      exact cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
+    exact hcast (dim X.left - dim X.left) (Nat.sub_self (dim X.left)) hinst
   rw [hsec, smoothClosedSupportCoclassSection_eq_oldPoint_of_singleton
-    (cycleComponentSmoothLocusAmbientOpenOver X x)
-    (cycleComponentSmoothLocusOver X x)
     (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left) a
     (cycleComponentSmoothClosedLift_range_eq_singleton X x hx a)]
   rfl
@@ -132,8 +132,7 @@ theorem cycleComponentSmoothSupportCoclassSection_eq_point_at_lift
     cycleComponentSmoothClosedLiftAmbientMap_support X x
   have ht := analyticPointCoclassSupportSection_schemeIso_transport
     X (dim X.left) Y e (cycleComponentSupport X x) B hB y ⟨a, rfl⟩ ⊤
-  dsimp only [cycleComponentSmoothSupportCoclassSection,
-    supportRelativeCohomologySectionOnOpen, supportRelativeCohomologySectionOpenImage]
+  dsimp only [cycleComponentSmoothSupportCoclassSection]
   rw [cycleComponentSmoothClosedLiftCoclassSection_eq_oldPoint X x hx a]
   have ht' := congrArg
     ((supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))

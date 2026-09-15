@@ -33,9 +33,11 @@ theorem cycleComponentSmoothSupportCoclassSection_ne_zero
     cycleComponentSmoothSupportCoclassSection X x hx ≠ 0 := by
   apply cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero X x hx
   apply (cycleComponentSmoothClosedLiftCoclassSection_ne_zero_iff X x hx).mpr
-  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+  let : SmoothOfRelativeDimension (dim X.left - p)
+      (cycleComponentSmoothLocusOver X x).hom :=
+    cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
   obtain ⟨z⟩ := cycleComponentSmoothLocusOver_nonempty X x
-  exact smoothClosedSupportCoclassSection_ne_zero _ _ _ (dim X.left - p) (dim X.left) z
+  exact smoothClosedSupportCoclassSection_ne_zero _ (dim X.left - p) (dim X.left) z
 
 /-- The generic component's normalized coclass section is nonzero in every dimension. -/
 theorem cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero
