@@ -112,7 +112,8 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_symm_hom
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective]
     (f : TopCat.Sheaf.integerConstantSingleComplex
       (TopCat.of (ComplexPoint X)) ⟶ K) :
-    (derivedHomAddEquivGlobalSectionsKInjective X K 0).symm
+    (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective
+      (TopCat.of (ComplexPoint X)) K 0).symm
       ((HomologicalComplex.homologyMapIso
           (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections
             (TopCat.of (ComplexPoint X)) K) 0).hom
@@ -120,7 +121,7 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_symm_hom
           (CochainComplex.HomComplex.CohomologyClass.mk
             (CochainComplex.HomComplex.Cocycle.ofHom f)))) =
       ShiftedHom.mk₀ 0 rfl (DerivedCategory.Q.map f) := by
-  dsimp only [derivedHomAddEquivGlobalSectionsKInjective]
+  dsimp only [TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective]
   change (kInjectiveDerivedHomAddEquivCohomologyClass _ K 0).symm
       (((CochainComplex.HomComplex.homologyAddEquiv _ K 0).symm.trans
         (HomologicalComplex.homologyMapIso
