@@ -110,9 +110,10 @@ abbrev RelativeHomology (R : Type u) [CommRing R] (X : TopPair.{u}) (n : ℕ) :
     ModuleCat.{u} R :=
   (relativeHomologyFunctor R n).obj X
 
-/-- `H_[n]((X, A), R)` is relative singular homology of the pair `(X, A)` given by a subset
-`A : Set X`, in degree `n` with coefficients in `R`. -/
-scoped notation3:max "H_[" n "]" "(" "(" Y ", " A ")" ", " R ")" =>
+/-- `H_[n](X mod A, R)` is relative singular homology of the pair `(X, A)` given by a subset
+`A : Set X`, in degree `n` with coefficients in `R`. The spelling `X mod A` is Deligne's
+(Théorie de Hodge III, 8.3.8). -/
+scoped notation3:max "H_[" n "]" "(" Y " mod " A ", " R ")" =>
   RelativeHomology R (TopPair.ofSubset (X := Y) A) n
 
 /-- The relative singular cochain complex `C^*(X, A)`, the degreewise `R`-linear dual of the
@@ -121,9 +122,9 @@ abbrev RelativeCochainComplex (R : Type u) [CommRing R] (X : TopPair.{u}) :
     CochainComplex (ModuleCat.{u} R) ℕ :=
   ((relativeChainFunctor R).obj X).linearDualCochainComplex
 
-/-- `C^n((X, A), R)` is the module of relative singular `n`-cochains of the pair `(X, A)` given
+/-- `C^n(X mod A, R)` is the module of relative singular `n`-cochains of the pair `(X, A)` given
 by a subset `A : Set X`, with coefficients in `R`. -/
-scoped notation3:max "C^" n:max "(" "(" Y ", " A ")" ", " R ")" =>
+scoped notation3:max "C^" n:max "(" Y " mod " A ", " R ")" =>
   (RelativeCochainComplex R (TopPair.ofSubset (X := Y) A)).X n
 
 /-- The relative singular cochain map induced by a map of pairs, obtained by dualising the
@@ -137,9 +138,9 @@ complex — again by dualising the chain complex, not by dualising homology. -/
 abbrev RelativeCohomology (R : Type u) [CommRing R] (X : TopPair.{u}) (n : ℕ) : ModuleCat.{u} R :=
   (RelativeCochainComplex R X).homology n
 
-/-- `H^n((X, A), R)` is relative singular cohomology of the pair `(X, A)` given by a subset
+/-- `H^n(X mod A, R)` is relative singular cohomology of the pair `(X, A)` given by a subset
 `A : Set X`, in degree `n` with coefficients in `R`. -/
-scoped notation3:max "H^" n:max "(" "(" Y ", " A ")" ", " R ")" =>
+scoped notation3:max "H^" n:max "(" Y " mod " A ", " R ")" =>
   RelativeCohomology R (TopPair.ofSubset (X := Y) A) n
 
 /-- Pullback in relative singular cohomology, induced by the dualised relative chain map. -/
