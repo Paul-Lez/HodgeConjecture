@@ -18,6 +18,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import Other.Algebra.Homology.HomComplexPostcompNaturality
+public import Other.Algebra.Homology.HomComplexShiftNaturality
 
 /-!
 # HypercohomologyNaturality, the part the statement does not need
@@ -102,6 +103,39 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk
   have h := (DerivedCategory.quotientCompQhIso C).hom.naturality
     (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
   simp
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- In degree zero, the derived-Hom/global-sections comparison sends the cohomology class of an
+actual chain map back to that chain map in the derived category. -/
+lemma derivedHomAddEquivGlobalSectionsKInjective_symm_hom
+    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective]
+    (f : TopCat.Sheaf.integerConstantSingleComplex
+      (TopCat.of (ComplexPoint X)) ⟶ K) :
+    (derivedHomAddEquivGlobalSectionsKInjective X K 0).symm
+      ((HomologicalComplex.homologyMapIso
+          (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections
+            (TopCat.of (ComplexPoint X)) K) 0).hom
+        ((CochainComplex.HomComplex.homologyAddEquiv _ K 0).symm
+          (CochainComplex.HomComplex.CohomologyClass.mk
+            (CochainComplex.HomComplex.Cocycle.ofHom f)))) =
+      ShiftedHom.mk₀ 0 rfl (DerivedCategory.Q.map f) := by
+  dsimp only [derivedHomAddEquivGlobalSectionsKInjective]
+  change (kInjectiveDerivedHomAddEquivCohomologyClass _ K 0).symm
+      (((CochainComplex.HomComplex.homologyAddEquiv _ K 0).symm.trans
+        (HomologicalComplex.homologyMapIso
+          (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections
+            (TopCat.of (ComplexPoint X)) K) 0).addCommGroupIsoToAddEquiv).symm
+        (((CochainComplex.HomComplex.homologyAddEquiv _ K 0).symm.trans
+          (HomologicalComplex.homologyMapIso
+            (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections
+              (TopCat.of (ComplexPoint X)) K) 0).addCommGroupIsoToAddEquiv)
+          (CochainComplex.HomComplex.CohomologyClass.mk
+            (CochainComplex.HomComplex.Cocycle.ofHom f)))) = _
+  rw [AddEquiv.symm_apply_apply,
+    kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.HomComplex.Cocycle.equivHomShift_symm_ofHom]
+  exact ShiftedHom.map_mk₀ 0 rfl f DerivedCategory.Q
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

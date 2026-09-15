@@ -9,10 +9,11 @@ public import Other.AlgebraicGeometry.Cycle.Component.CoclassNonzero
 public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassNonzero
 
 /-!
-# Nonvanishing of component coclasses
+# Nonvanishing of the codimension-zero cycle class
 
-The representation-independent coclass nonvanishing results are retained. Their former
-application to ordinary hypercohomology awaits a derived-global-sections comparison.
+The generic component is supported on the whole analytification. Forgetting support is therefore
+injective, so nonvanishing of its normalized coclass implies nonvanishing of its ordinary cycle
+class and proves the codimension-zero Hodge conjecture.
 -/
 
 @[expose] public noncomputable section
@@ -41,5 +42,23 @@ theorem cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero :
       (coheight_genericPoint_eq_zero X) ≠ 0 :=
   cycleComponentSmoothSupportCoclassSection_ne_zero X _
     (coheight_genericPoint_eq_zero X)
+
+/-- The constructed ordinary cycle class of the whole variety is nonzero. -/
+theorem cycleComponentSheafClass_genericPoint_ne_zero :
+    cycleComponentSheafClass X (genericPoint X.left)
+        (coheight_genericPoint_eq_zero X) ≠ 0 :=
+  fun h ↦ cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X
+    ((cycleComponentSheafClass_genericPoint_eq_zero_iff X).mp h)
+
+/-- The constructed codimension-zero classes span degree-zero rational cohomology. -/
+theorem algebraicCycleClassSpan_zero_eq_top :
+    algebraicCycleClassSpan X 0 = ⊤ :=
+  (algebraicCycleClassSpan_zero_eq_top_iff X).mpr
+    (cycleComponentSheafClass_genericPoint_ne_zero X)
+
+/-- The codimension-zero Hodge conjecture. -/
+theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan :
+    Hdg^0(ℚ; X) = algebraicCycleClassSpan X 0 := by
+  rw [hodgeClasses_zero_eq_top, algebraicCycleClassSpan_zero_eq_top]
 
 end AlgebraicGeometry.ComplexPoint

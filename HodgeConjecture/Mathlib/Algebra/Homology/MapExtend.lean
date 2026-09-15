@@ -21,12 +21,15 @@ open CategoryTheory Limits
 
 namespace HomologicalComplex
 
+universe u v
+
 section Single
 
-variable {C : Type*} [Category* C] [Preadditive C] [HasZeroObject C]
+variable {C : Type u} [Category.{v} C] [Preadditive C] [HasZeroObject C]
   {I J : Type*} {c : ComplexShape I} {c' : ComplexShape J}
 
-/-- Extending a complex supported in one degree is natural in the object placed there. -/
+/-- Extending a complex supported in one degree is naturally isomorphic to placing the object in
+the corresponding target degree. -/
 @[reassoc]
 lemma extendSingleIso_hom_naturality
     [DecidableEq I] [DecidableEq J] (e : c.Embedding c') {A B : C} (f : A ⟶ B)
@@ -74,8 +77,8 @@ def mapExtendCanonicalIso :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- In a degree coming from the original complex, the comparison is the identity through the
-canonical extension identifications, including any grading transports. -/
+/-- In an old degree the comparison is the identity through the canonical extension
+identifications, including any grading transports. -/
 lemma mapExtendCanonicalIso_hom_f {i : I} {j : J} (h : e.f i = j) :
     (mapExtendCanonicalIso F K e).hom.f j =
       F.map (K.extendXIso e h).hom ≫
@@ -99,7 +102,7 @@ lemma mapExtendCanonicalXIso_hom_mapX {L : HomologicalComplex C c} (f : K ⟶ L)
       (mapExtendCanonicalXIso F K a).hom ≫ extend.mapX ((F.mapHomologicalComplex c).map f) a := by
   cases a <;> simp [mapExtendCanonicalXIso, extend.mapX]
 
-/-- Mapping and extension commute on chain maps, with the canonical normalization. -/
+/-- Mapping and extension commute on actual chain maps, with the canonical normalization. -/
 @[reassoc]
 lemma mapExtendCanonicalIso_naturality {L : HomologicalComplex C c} (f : K ⟶ L) :
     (F.mapHomologicalComplex c').map (extendMap f e) ≫ (mapExtendCanonicalIso F L e).hom =
@@ -122,7 +125,7 @@ lemma mapExtendCanonicalIso_natTrans {G : C ⥤ D} [G.Additive] (a : F ⟶ G) :
   | none => exact (F.map_isZero (Limits.isZero_zero C)).eq_of_src _ _
   | some n => simp [mapExtendCanonicalXIso, extend.X, extend.mapX]
 
-/-- The comparison for the identity coefficient functor is the identity. -/
+/-- The comparison for the identity coefficient functor is the actual identity. -/
 @[simp]
 lemma mapExtendCanonicalIso_id : (mapExtendCanonicalIso (𝟭 C) K e).hom = 𝟙 (K.extend e) := by
   ext j

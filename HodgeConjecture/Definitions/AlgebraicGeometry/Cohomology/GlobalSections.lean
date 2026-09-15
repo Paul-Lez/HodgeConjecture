@@ -122,7 +122,7 @@ lemma integerConstantHomAddEquivGlobalSections_naturality
 end
 
 /-- The integer sheaf placed in cohomological degree zero. -/
-def integerConstantSingleComplex (Y : TopCat.{0}) :
+abbrev integerConstantSingleComplex (Y : TopCat.{0}) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=
   (CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat Y) 0).obj
     ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj

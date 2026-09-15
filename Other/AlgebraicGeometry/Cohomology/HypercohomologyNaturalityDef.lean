@@ -12,6 +12,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHyperco
 @[expose] public noncomputable section
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
+open scoped TopCat.Sheaf
 
 namespace TopCat.Sheaf
 
@@ -47,12 +48,12 @@ local instance hypercohomologyNaturalitySheafDerivedCategory :
 local instance hypercohomologyNaturalityAddCommGrpDerivedCategory :
     HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard AddCommGrpCat
 
-/-- Hypercohomology of a bounded-below termwise-injective complex is its
-global-section cohomology. -/
+/-- Hypercohomology of a bounded-below termwise-injective complex is the cohomology of its
+complex of global sections. -/
 def hypercohomologyAddEquivGlobalSectionsKInjective
     (K : CochainComplex.Plus (AnalyticAdditiveSheaf X))
     [∀ i, Injective (K.obj.X i)] (n : ℤ) :
-    ↥((analyticHypercohomologyFunctor X n).obj K) ≃+
+    ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj K) ≃+
       (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
         (TopCat.of (ComplexPoint X)) K.obj).homology n :=
   (TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat

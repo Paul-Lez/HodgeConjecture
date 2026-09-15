@@ -29,6 +29,7 @@ canonical comparison equivalence in every cohomological degree.
 @[expose] public noncomputable section
 
 open CategoryTheory TopologicalSpace
+open scoped TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -47,7 +48,7 @@ local instance singularComparisonAddCommGrpHasDerivedCategory :
 /-- The rational constant-sheaf comparison with the integer-indexed singular-cochain
 resolution. -/
 def rationalToSingularCochainComplexInt :
-    constantFieldSheafComplexInt ℚ X ⟶
+    (constantFieldSheafComplexIntPlus ℚ X).obj ⟶
       singularCochainSheafComplexInt X ℚ :=
   constantsToSingularCochainComplexInt X ℚ
 
@@ -68,25 +69,21 @@ hypercohomology of its singular-cochain resolution. -/
 def rationalCohomologySingularCochainAddEquiv
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     H^n(X; ℚ) ≃+
-      ↥((analyticHypercohomologyFunctor X n).obj
+      ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
         (rationalSingularCochainComplexIntPlus X)) :=
   let f : constantFieldSheafComplexIntPlus ℚ X ⟶
       rationalSingularCochainComplexIntPlus X :=
     ⟨rationalToSingularCochainComplexInt X⟩
   letI : QuasiIso f.hom := rationalToSingularCochainComplexInt_quasiIso X
-  letI : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
-  letI : IsIso ((analyticHypercohomologyFunctor X n).map f) :=
-    by
-      dsimp only [analyticHypercohomologyFunctor, Functor.comp_map]
-      infer_instance
-  (asIso ((analyticHypercohomologyFunctor X n).map f)).addCommGroupIsoToAddEquiv
+  (asIso
+    ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map f)).addCommGroupIsoToAddEquiv
 
 @[simp]
 lemma rationalCohomologySingularCochainAddEquiv_apply
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
     (α : H^n(X; ℚ)) :
     rationalCohomologySingularCochainAddEquiv X n α =
-      (analyticHypercohomologyFunctor X n).map
+      (ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
         (⟨rationalToSingularCochainComplexInt X⟩ :
           constantFieldSheafComplexIntPlus ℚ X ⟶
             rationalSingularCochainComplexIntPlus X) α := by

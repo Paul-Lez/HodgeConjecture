@@ -16,44 +16,57 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
+public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Basic
 public import Other.AlgebraicTopology.Sheaf.ConstantDegreeZero
+public import Other.AlgebraicGeometry.Cohomology.SupportConeForget
 public import Other.AlgebraicGeometry.Hodge.Filtration
 
 /-!
-# Degree-zero rational constant-sheaf complexes
+# Degree-zero rational constant-sheaf cohomology
 
-Representation-independent degree-zero identifications for the constant-sheaf complexes.
-
-The former computation through SmallShiftedHom belonged to the old presentation of
-hypercohomology. It is intentionally not reproduced here: comparisons for the functorial
-derived-global-sections construction should be developed directly from that construction.
+This file identifies degree-zero rational constant-sheaf cohomology with morphisms from the
+constant integer sheaf to the constant rational sheaf.
 -/
 
 @[expose] public noncomputable section
 
-open CategoryTheory TopologicalSpace
+open CategoryTheory Limits TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open Point
+
 variable (X : Over (Spec ↧ℂ))
 
-/-- The natural-to-integer cochain embedding sends degree zero to degree zero. -/
-lemma embeddingUpNat_zero : ComplexShape.embeddingUpNat.f 0 = (0 : ℤ) := rfl
+local instance rationalDegreeZeroHasDerivedCategoryAddCommGrpCat :
+    HasDerivedCategory AddCommGrpCat :=
+  HasDerivedCategory.standard AddCommGrpCat
 
-/-- The extended integer constant-sheaf complex is the integer constant sheaf in degree zero. -/
-def constantIntegerSheafComplexIntIsoSingleZero :
-    constantIntegerSheafComplexInt X ≅
-      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℤ) :=
-  HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℤ) 0 0 embeddingUpNat_zero
+local instance rationalDegreeZeroHasDerivedCategorySheaf :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-/-- The extended rational constant-sheaf complex is the rational constant sheaf in degree zero. -/
-def constantRationalSheafComplexIntIsoSingleZero :
-    constantFieldSheafComplexInt ℚ X ≅
-      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℚ) :=
-  HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℚ) 0 0 embeddingUpNat_zero
+/-- Degree-zero rational cohomology is the morphism group from the constant integer sheaf to
+the constant rational sheaf. -/
+def rationalCohomologyZeroEquivSheafHom :
+    H^0(X; ℚ) ≃+ (𝓒(↧(ComplexPoint X); ℤ) ⟶ 𝓒(↧(ComplexPoint X); ℚ)) :=
+  let I := ambientRationalInjectiveComplexPlus X
+  let eTarget : DerivedCategory.Q.obj I.obj ≅
+      DerivedCategory.Q.obj
+        ((CochainComplex.singleFunctor
+          (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) 0).obj
+          𝓒(↧(ComplexPoint X); ℚ)) :=
+    (asIso (DerivedCategory.Q.map
+      (ambientRationalInjectiveAugmentationPlus X).hom)).symm ≪≫
+      DerivedCategory.Q.mapIso
+        (HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
+          𝓒(↧(ComplexPoint X); ℚ) 0 0 rfl)
+  let e₁ := rationalCohomologyAddEquivAmbientInjectiveHomology X 0
+  let e₂ := (derivedHomAddEquivGlobalSectionsKInjective X I.obj 0).symm
+  let e₃ := isoHomCongrAddEquiv (Iso.refl _)
+    ((shiftFunctor _ (0 : ℤ)).mapIso eTarget)
+  e₁.trans <| e₂.trans <| e₃.trans <|
+    (Abelian.Ext.homAddEquiv (X := 𝓒(↧(ComplexPoint X); ℤ))
+      (Y := 𝓒(↧(ComplexPoint X); ℚ))).symm.trans Abelian.Ext.addEquiv₀
 
 end AlgebraicGeometry.ComplexPoint
