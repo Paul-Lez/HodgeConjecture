@@ -36,7 +36,7 @@ variable (X : TopCat.{u}) (U : Opens X)
 open set, via the canonical equality of the image of the top open with `U`. -/
 def openRestrictionGlobalSectionsIso :
     U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⋙
-        IsFlasque.BoundedBelowComplex.globalSectionsFunctor (TopCat.of U) ≅
+        TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat (TopCat.of U) ≅
       supportEvaluation X U :=
   NatIso.ofComponents (fun F =>
     F.obj.mapIso (eqToIso (congrArg op (Opens.isOpenEmbedding_obj_top U)))) (fun {_ _} f =>
@@ -52,7 +52,7 @@ theorem supportEvaluation_map_quasiIso_of_flasque
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
     QuasiIso (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).map f) := by
   let R := U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}
-  let Γ := IsFlasque.BoundedBelowComplex.globalSectionsFunctor (TopCat.of U)
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat (TopCat.of U)
   let K' : CochainComplex (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤ :=
     (R.mapHomologicalComplex (.up ℤ)).obj K
   let L' : CochainComplex (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤ :=

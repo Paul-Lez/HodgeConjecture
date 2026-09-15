@@ -189,7 +189,7 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
     (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
     (hK : ∀ i, (K.X i).IsFlasque) (hL : ∀ i, (L.X i).IsFlasque) :
     QuasiIso
-      (((globalSectionsFunctor X).mapHomologicalComplex (ComplexShape.up ℤ)).map f) := by
+      (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X).mapHomologicalComplex (ComplexShape.up ℤ)).map f) := by
   let M := CochainComplex.mappingCone f
   let n := min nK nL - 1
   let : M.IsStrictlyGE n := by
@@ -203,9 +203,9 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
     intro i
     dsimp [M]
     exact mappingCone_term_isFlasque f hK hL i
-  have hglobal : (globalSectionsComplex M).Acyclic :=
+  have hglobal : (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat X M).Acyclic :=
     globalSectionsComplex_acyclic M n hM hMflasque
-  let F := globalSectionsFunctor X
+  let F := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X
   have hcone :
       (CochainComplex.mappingCone
         ((F.mapHomologicalComplex (ComplexShape.up ℤ)).map f)).Acyclic :=

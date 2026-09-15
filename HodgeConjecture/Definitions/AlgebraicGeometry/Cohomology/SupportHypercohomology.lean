@@ -56,18 +56,6 @@ def isoHomCongrAddEquiv
   toEquiv := Iso.homCongr eA eB
   map_add' f g := by simp [Iso.homCongr]
 
-/-- The chosen additive structure on hypercohomology is transported from shifted morphisms in
-the derived category. -/
-def hypercohomologyAddEquivDerived
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) :
-    Hypercohomology X K n ≃+
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj K) n where
-  toEquiv := Localization.SmallShiftedHom.equiv
-    (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  map_add' := hypercohomologyEquiv_add X K n
-
 /-- For a K-injective target, shifted derived morphisms are additively identified with
 cohomology classes in the Hom complex. -/
 def kInjectiveDerivedHomAddEquivCohomologyClass

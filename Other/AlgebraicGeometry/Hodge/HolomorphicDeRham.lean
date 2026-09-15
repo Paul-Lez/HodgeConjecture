@@ -70,9 +70,12 @@ lemma conjConstantComplexComplex_comp_self :
 /-- Conjugating twice is the identity on the integer-indexed constant complex. -/
 lemma conjConstantComplexSheafComplexInt_comp_self :
     conjConstantComplexSheafComplexInt X ≫ conjConstantComplexSheafComplexInt X = 𝟙 _ := by
-  unfold conjConstantComplexSheafComplexInt constantComplexSheafComplexInt
-  rw [← HomologicalComplex.extendMap_comp, conjConstantComplexComplex_comp_self]
-  exact HomologicalComplex.extendMap_id _ _
+  change (((CochainComplex.Plus.single₀ _).map (conjConstantComplexSheaf X) ≫
+      (CochainComplex.Plus.single₀ _).map (conjConstantComplexSheaf X))).hom =
+    𝟙 (constantComplexSheafComplexInt X)
+  rw [← Functor.map_comp, conjConstantComplexSheaf_comp_self]
+  exact congrArg (fun f ↦ f.hom)
+    ((CochainComplex.Plus.single₀ _).map_id 𝓒(↧(ComplexPoint X); ℂ))
 
 end AlgebraicGeometry.ComplexPoint
 end

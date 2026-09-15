@@ -18,8 +18,9 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
+public import HodgeConjecture.Mathlib.Algebra.Homology.CochainComplexPlus
+public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
-public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.Topology.Sheaves.Abelian
 
@@ -496,14 +497,23 @@ instance constantsToHolomorphicDeRhamComplex_quasiIso
     · exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_zero X d
     · exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_succ X d p
 
-/-- The constant sheaf complex, extended by zero from natural to integer degrees. -/
-@[implicit_reducible]
-def constantComplexSheafComplexInt :
+/-- The complex constant sheaf as a bounded-below complex supported in degree zero. -/
+abbrev constantComplexSheafComplexIntPlus :
+    CochainComplex.Plus
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) :=
+  (CochainComplex.Plus.single₀
+    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
+      𝓒(↧(ComplexPoint X); ℂ)
+
+/-- The underlying integer-indexed complex of the bounded-below complex constant sheaf. -/
+abbrev constantComplexSheafComplexInt :
     CochainComplex
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
-  ((CochainComplex.single₀
-    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-      𝓒(↧(ComplexPoint X); ℂ)).extend ComplexShape.embeddingUpNat
+  (constantComplexSheafComplexIntPlus X).obj
+
+instance : (constantComplexSheafComplexInt X).IsStrictlyGE 0 := by
+  unfold constantComplexSheafComplexInt
+  infer_instance
 
 /-- Complex conjugation on the constant complex-valued complex concentrated in degree zero. -/
 def conjConstantComplexComplex :
@@ -521,8 +531,7 @@ The holomorphic de Rham complex carries no such map: conjugation is not `ℂ`-li
 only on the constant-sheaf side of the comparison. -/
 def conjConstantComplexSheafComplexInt :
     constantComplexSheafComplexInt X ⟶ constantComplexSheafComplexInt X :=
-  HomologicalComplex.extendMap (conjConstantComplexComplex X)
-    ComplexShape.embeddingUpNat
+  ((CochainComplex.Plus.single₀ _).map (conjConstantComplexSheaf X)).hom
 
 /-- The holomorphic de Rham complex, extended by zero to negative degrees. -/
 def holomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
@@ -569,11 +578,9 @@ def constantsToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
 degree. -/
 instance constantsToHolomorphicDeRhamComplexInt_quasiIso
     [IsIntegral X.left] [Smooth X.hom] :
-    QuasiIso (constantsToHolomorphicDeRhamComplexInt X) := by
-  change QuasiIso (HomologicalComplex.extendMap
-    (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat)
-  exact (HomologicalComplex.quasiIso_extendMap_iff
+    QuasiIso (constantsToHolomorphicDeRhamComplexInt X) :=
+  (HomologicalComplex.quasiIso_extendMap_iff
     (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat).2
-      inferInstance
+    inferInstance
 
 end AlgebraicGeometry.ComplexPoint

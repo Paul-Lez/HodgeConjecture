@@ -18,6 +18,7 @@ tag := "cycles"
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+open scoped TopCat.Sheaf
 noncomputable section
 universe u
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
@@ -26,6 +27,10 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
 local instance analyticSupportHasDerivedCategory (X : Over (Spec ↧ℂ)) :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+
+local instance guideCyclesAddCommGrpHasDerivedCategory :
+    HasDerivedCategory AddCommGrpCat :=
+  HasDerivedCategory.standard AddCommGrpCat
 ```
 
 # Cycles are indexed by generic points
@@ -157,8 +162,10 @@ namespace Guide.Cycles.D9
 ```
 ```lean
 abbrev RationalCohomologyWithSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
-    Type 1 :=
-  Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)
+    Type :=
+  ↥((TopCat.Sheaf.hypercohomologyFunctor AddCommGrpCat
+    (TopCat.of (ComplexPoint X)) n).obj
+      (rationalCohomologyWithSupportComplexPlus X Z))
 ```
 ```lean -show
 end Guide.Cycles.D9
@@ -169,18 +176,10 @@ namespace Guide.Cycles.D10
 ```
 ```lean
 def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
-    RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) where
-  toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
-  map_zero' := by
-    apply (Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    simp only [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
-  map_add' α β := by
-    apply (Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    simp only [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_add, ShiftedHom.add_comp]
+    RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) :=
+  ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
+    (⟨forgetSupportComplex X Z⟩ : rationalCohomologyWithSupportComplexPlus X Z ⟶
+      constantFieldSheafComplexIntPlus ℚ X)).hom
 ```
 ```lean -show
 end Guide.Cycles.D10

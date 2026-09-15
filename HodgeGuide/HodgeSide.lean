@@ -20,11 +20,20 @@ tag := "hodge-classes"
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+open scoped TopCat.Sheaf
 noncomputable section
 universe u w
 open ProjectiveSpace
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+
+local instance guideHodgeHasDerivedCategory (X : Over (Spec ↧ℂ)) :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+
+local instance guideHodgeAddCommGrpHasDerivedCategory :
+    HasDerivedCategory AddCommGrpCat :=
+  HasDerivedCategory.standard AddCommGrpCat
 ```
 
 # The variety and its complex points
@@ -233,32 +242,19 @@ notes, [§3.10](https://www.math.ias.edu/~goresky/pdf/all.pdf#page=17), explain 
 lemma exhibits the de Rham complex as a resolution of the constant sheaf and thereby computes its
 cohomology.
 
-# Cohomology as morphisms in the derived category
+# Hypercohomology as derived global sections
 
-For a complex of sheaves $`K^\bullet` on $`X(\mathbb C)`, hypercohomology is defined as a group of
-morphisms in the derived category,
+For a complex of sheaves $`K^\bullet` on $`X(\mathbb C)`, hypercohomology is the cohomology of
+derived global sections,
 
-$$`\mathbb H^n(X,K^\bullet)
-  =\operatorname{Hom}_{D(X)}(\underline{\mathbb Z}_X,K^\bullet[n]),`
+$$`\mathbb H^n(X,K^\bullet)=H^n(R\Gamma(X,K^\bullet)).`
 
-where $`\underline{\mathbb Z}_X` is the constant sheaf in degree zero. The derived category is never
-constructed: Mathlib's {name}`Localization.SmallShiftedHom` provides these morphism groups in the
-localization of complexes at quasi-isomorphisms without choosing a model for it. Rational
-cohomology and de Rham cohomology are the cases $`K^\bullet=\underline{\mathbb Q}_X` and
-$`K^\bullet=\Omega_X^\bullet`.
+The construction is a functor on the bounded-below derived category, so maps, composition, and
+additivity are inherited from the functorial construction. Rational cohomology and de Rham cohomology are the cases
+$`K^\bullet=\underline{\mathbb Q}_X` and $`K^\bullet=\Omega_X^\bullet`.
 
-```lean -show
-namespace Guide.Hodge.D3
-```
 ```lean
-def Hypercohomology (X : Over (Spec ↧ℂ)) (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
-    (n : ℤ) : Type 1 :=
-  Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
-    (constantIntegerSheafComplexInt X) K n
-```
-```lean -show
-end Guide.Hodge.D3
-example : @Guide.Hodge.D3.Hypercohomology = @AlgebraicGeometry.ComplexPoint.Hypercohomology := rfl
+#check TopCat.Sheaf.hypercohomologyFunctor
 ```
 
 Cohomology with coefficients in a field `K` is the case of the constant sheaf `K`, and it is
@@ -269,7 +265,9 @@ namespace Guide.Hodge.D4
 ```
 ```lean
 example (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℤ) :
-    H^n(X; K) = Hypercohomology X (constantFieldSheafComplexInt K X) n := rfl
+    H^n(X; K) =
+      ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
+        (constantFieldSheafComplexIntPlus K X)) := rfl
 ```
 ```lean -show
 end Guide.Hodge.D4
@@ -278,9 +276,10 @@ end Guide.Hodge.D4
 namespace Guide.Hodge.D5
 ```
 ```lean
-abbrev DeRhamHypercohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    Type 1 :=
-  Hypercohomology X (holomorphicDeRhamComplexInt X) n
+abbrev DeRhamHypercohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    (n : ℤ) :=
+  ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
+    (holomorphicDeRhamComplexIntPlus X))
 ```
 ```lean -show
 end Guide.Hodge.D5
@@ -352,7 +351,9 @@ namespace Guide.Hodge.D9
 ```lean
 def filteredToDeRhamCohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : FilteredDeRhamHypercohomology X p n →+ DeRhamHypercohomology X n :=
-  hypercohomologyMap X (hodgeFilteredDeRhamInclusion X p) n
+  ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
+    (⟨hodgeFilteredDeRhamInclusion X p⟩ : hodgeFilteredDeRhamComplexPlus X p ⟶
+      holomorphicDeRhamComplexIntPlus X)).hom
 ```
 ```lean -show
 end Guide.Hodge.D9
@@ -432,13 +433,9 @@ namespace Guide.Hodge.D14
 ```lean
 def complexConstantCohomologyDeRhamAddEquiv (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (n : ℤ) :
-    ComplexConstantCohomology X n ≃+ DeRhamHypercohomology X n :=
-  { complexConstantCohomologyDeRhamEquiv X n with
-    map_add' := fun α β ↦ by
-      change hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n (α + β) =
-        hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n α +
-          hypercohomologyMap X (constantsToHolomorphicDeRhamComplexInt X) n β
-      exact map_add _ α β }
+    ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
+      (constantComplexSheafComplexIntPlus X)) ≃+ DeRhamHypercohomology X n :=
+  AlgebraicGeometry.ComplexPoint.complexConstantCohomologyDeRhamAddEquiv X n
 ```
 ```lean -show
 end Guide.Hodge.D14
@@ -451,7 +448,9 @@ namespace Guide.Hodge.D15
 def deRhamConj (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
   ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
-    ((hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n).comp
+    (((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
+      (⟨conjConstantComplexSheafComplexInt X⟩ : constantComplexSheafComplexIntPlus X ⟶
+        constantComplexSheafComplexIntPlus X)).hom.comp
       (complexConstantCohomologyDeRhamAddEquiv X n).symm.toAddMonoidHom)
 ```
 ```lean -show

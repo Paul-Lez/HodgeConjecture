@@ -43,7 +43,9 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportCo
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.Hypercohomology
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.GlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Stratification.ClosedFiltration
@@ -87,6 +89,7 @@ public import HodgeConjecture.Lemmas.Algebra.FieldToComplex
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlus
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShiftNaturality
@@ -252,6 +255,7 @@ public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
 public import HodgeConjecture.Lemmas.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Lemmas.RingTheory.TranscendenceDegreeKrullDimension
 public import HodgeConjecture.Lemmas.Topology.Dimension.Basic
+public import HodgeConjecture.Mathlib.Algebra.Homology.CochainComplexPlus
 public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation

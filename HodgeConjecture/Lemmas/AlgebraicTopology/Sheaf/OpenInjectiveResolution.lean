@@ -104,15 +104,15 @@ def ambientToOpenInjectiveResolution :
 /-- Global sections of the pushed-forward comparison. Its source uses the
 actual open restriction of the ambient resolution, not a supplied model. -/
 def globalRestrictedAmbientToOpenResolution :
-    ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
+    ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X).mapHomologicalComplex
       (.up ℕ)).obj
         (((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
           (restrictedAmbientConstantResolution X U A)) ⟶
-    ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
+    ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X).mapHomologicalComplex
       (.up ℕ)).obj
         (((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
           (ambientConstantInjectiveResolution (TopCat.of U) A).cocomplex) :=
-  ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
+  ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X).mapHomologicalComplex
     (.up ℕ)).map
       (((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).map
         (restrictedAmbientToOpenResolution X U A))
@@ -222,7 +222,7 @@ open direct image on arbitrary complexes is asserted. -/
 theorem globalRestrictedAmbientToOpenResolution_quasiIso :
     QuasiIso (globalRestrictedAmbientToOpenResolution X U A) := by
   change QuasiIso
-    (((IsFlasque.BoundedBelowComplex.globalSectionsFunctor (TopCat.of U)).mapHomologicalComplex
+    (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat (TopCat.of U)).mapHomologicalComplex
       (.up ℕ)).map (restrictedAmbientToOpenResolution X U A))
   let : QuasiIso (restrictedAmbientToOpenResolution X U A) :=
     restrictedAmbientToOpenResolution_quasiIso X U A

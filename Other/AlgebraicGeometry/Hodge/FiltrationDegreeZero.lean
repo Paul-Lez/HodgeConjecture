@@ -21,7 +21,7 @@ public import Other.LinearAlgebra.HodgeStructure
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace
-open scoped TensorProduct
+open scoped TensorProduct TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -29,6 +29,13 @@ open Point
 
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
+
+local instance filtrationDegreeZeroHasDerivedCategoryAnalytic :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard _
+
+local instance filtrationDegreeZeroHasDerivedCategoryAddCommGrpCat :
+    HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard _
 
 /-- In degree filtration `F⁰`, the filtered and full de Rham hypercohomology groups are
 canonically equivalent. -/
@@ -38,11 +45,13 @@ def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
   letI : IsIso (hodgeFilteredDeRhamInclusion X 0) := by
     unfold hodgeFilteredDeRhamInclusion hodgeFilteredDeRhamComplex
     infer_instance
-  Localization.SmallShiftedHom.postcompEquiv
-    (hodgeFilteredDeRhamInclusion X 0)
-    (by
-      change QuasiIso (hodgeFilteredDeRhamInclusion X 0)
-      infer_instance)
+  let f : hodgeFilteredDeRhamComplexPlus X 0 ⟶ holomorphicDeRhamComplexIntPlus X :=
+    ⟨hodgeFilteredDeRhamInclusion X 0⟩
+  letI : QuasiIso f.hom := by
+    change QuasiIso (hodgeFilteredDeRhamInclusion X 0)
+    infer_instance
+  (asIso
+    ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map f)).addCommGroupIsoToAddEquiv.toEquiv
 
 
 lemma filteredToDeRhamCohomology_zero_apply

@@ -189,9 +189,9 @@ is proved here, from Noether normalization and a local étale chart, rather than
 
 The nonvanishing is the part that tests the construction. Its proof runs the chain of
 {ref "class-of-a-subvariety"}[The class of a subvariety] backwards: the normalized local section
-is nonzero at any complex point of the smooth locus, the two normalization comparisons are
-isomorphisms, and forgetting support is injective here because the generic component is supported
-on all of $`X(\mathbb C)`. So the construction does not return zero, at least for this one
+is nonzero at any complex point of the smooth locus, the normalization comparison is an
+isomorphism, and forgetting support is injective here because the generic component is supported
+on all of $`X(\mathbb C)`. Thus the construction does not return zero, at least for this one
 subvariety, on a variety of any dimension.
 
 For a component of positive codimension the same chain stops at the last step. The normalized
