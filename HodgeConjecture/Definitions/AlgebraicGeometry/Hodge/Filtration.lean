@@ -17,7 +17,6 @@ module
 
 public import HodgeConjecture.Lemmas.Algebra.FieldToComplex
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
-public import HodgeConjecture.Lemmas.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
 public import Mathlib.Algebra.Homology.DerivedCategory.Basic
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex

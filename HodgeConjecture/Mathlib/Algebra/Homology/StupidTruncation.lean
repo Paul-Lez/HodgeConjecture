@@ -104,4 +104,40 @@ lemma stupidTruncMap_comp_stupidTruncInclusion (f : K ⟶ L) :
       stupidTruncMap_stupidTruncXIso_hom f e hi]
   · exact (K.isZero_stupidTrunc_X e j (by simpa using hj)).eq_of_src _ _
 
+section Nested
+
+variable (K) {I' : Type*} {c'' : ComplexShape I'} (e' : c''.Embedding c') [e'.IsTruncGE]
+
+/-- When the degrees retained by `e'` are among those retained by `e`, truncating the inclusion
+`K.stupidTrunc e ⟶ K` along `e'` is an isomorphism `(K.stupidTrunc e).stupidTrunc e' ≅
+K.stupidTrunc e'`. Both complexes are `K` in the degrees of `e'` and zero elsewhere. -/
+lemma isIso_stupidTruncMap_stupidTruncInclusion (h : ∀ i', ∃ i, e.f i = e'.f i') :
+    IsIso (stupidTruncMap (stupidTruncInclusion K e) e') := by
+  let componentIsIso (j : J) : IsIso ((stupidTruncMap (stupidTruncInclusion K e) e').f j) := by
+    by_cases hj : ∃ i', e'.f i' = j
+    · obtain ⟨i', rfl⟩ := hj
+      obtain ⟨i, hi⟩ := h i'
+      have hf : (stupidTruncMap (stupidTruncInclusion K e) e').f (e'.f i') =
+          (((K.stupidTrunc e).stupidTruncXIso e' rfl).hom ≫
+            (stupidTruncInclusion K e).f (e'.f i')) ≫ (K.stupidTruncXIso e' rfl).inv := by
+        rw [Iso.eq_comp_inv]
+        exact stupidTruncMap_stupidTruncXIso_hom (stupidTruncInclusion K e) e' rfl
+      rw [hf, stupidTruncInclusion_f K e hi]
+      infer_instance
+    · exact IsZero.isIso ((K.stupidTrunc e).isZero_stupidTrunc_X e' j (by simpa using hj))
+        (K.isZero_stupidTrunc_X e' j (by simpa using hj)) _
+  exact @Hom.isIso_of_components J C _ _ c' _ _
+    (stupidTruncMap (stupidTruncInclusion K e) e') componentIsIso
+
+/-- The inclusion of a finer stupid truncation factors through a coarser one. -/
+lemma exists_comp_stupidTruncInclusion (h : ∀ i', ∃ i, e.f i = e'.f i') :
+    ∃ g : K.stupidTrunc e' ⟶ K.stupidTrunc e,
+      g ≫ stupidTruncInclusion K e = stupidTruncInclusion K e' := by
+  have := isIso_stupidTruncMap_stupidTruncInclusion K e e' h
+  exact ⟨inv (stupidTruncMap (stupidTruncInclusion K e) e') ≫
+      stupidTruncInclusion (K.stupidTrunc e) e',
+    by rw [Category.assoc, ← stupidTruncMap_comp_stupidTruncInclusion, IsIso.inv_hom_id_assoc]⟩
+
+end Nested
+
 end HomologicalComplex
