@@ -21,6 +21,7 @@ variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
+omit [IsIntegral X.left] in
 /-- The actual smooth locus of each reduced component has a complex point. -/
 theorem cycleComponentSmoothLocusOver_nonempty :
     Nonempty (ComplexPoint (cycleComponentSmoothLocusOver X x)) := by

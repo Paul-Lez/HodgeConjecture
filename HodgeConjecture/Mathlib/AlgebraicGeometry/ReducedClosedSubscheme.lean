@@ -12,13 +12,25 @@ public import Mathlib.AlgebraicGeometry.Properties
 /-!
 # Reduced closed subschemes
 
-`X.reducedClosedSubscheme S` is the reduced closed subscheme of a scheme `X` whose underlying
-set is the closed subset `S`.
+We construct the reduced closed subscheme structure on a closed subset `S` of a scheme `X` as the
+closed subscheme of the vanishing ideal sheaf of `S`.
+
+## Main definitions
+
+* `AlgebraicGeometry.Scheme.reducedClosedSubscheme`: the reduced closed subscheme of `X` with
+  underlying set `S`.
+* `AlgebraicGeometry.Scheme.reducedClosedSubschemeι`: the closed immersion
+  `X.reducedClosedSubscheme S ⟶ X`.
+
+## Main results
+
+* `AlgebraicGeometry.Scheme.isIntegral_reducedClosedSubscheme`: if `S` is irreducible, then
+  `X.reducedClosedSubscheme S` is integral.
 -/
 
 @[expose] public noncomputable section
 
-open CategoryTheory Topology TopologicalSpace
+open TopologicalSpace
 
 namespace AlgebraicGeometry
 
@@ -30,10 +42,15 @@ instance (S : Closeds X) : IsReduced (Scheme.IdealSheafData.vanishingIdeal S).su
   let I := Scheme.IdealSheafData.vanishingIdeal S
   rw [IsReduced.iff_of_openCover I.subscheme I.subschemeCover.openCover]
   intro U
-  let U' : X.affineOpens := U
-  change IsReduced (Spec (.of (Γ(X, U') ⧸ I.ideal U')))
-  rw [affine_isReduced_iff, ← Ideal.isRadical_iff_quotient_reduced]
-  exact PrimeSpectrum.isRadical_vanishingIdeal _
+  -- the chart at `U` is `Spec (Γ(X, U) ⧸ I.ideal U)`, and `I.ideal U` is a radical ideal
+  exact (affine_isReduced_iff _).mpr <| (Ideal.isRadical_iff_quotient_reduced _).mp <|
+    PrimeSpectrum.isRadical_vanishingIdeal _
+
+/-- A closed subscheme of a Noetherian scheme is Noetherian. -/
+theorem isNoetherian_of_isClosedImmersion {Y : Scheme.{u}} (f : Y ⟶ X) [IsClosedImmersion f]
+    [IsNoetherian X] : IsNoetherian Y where
+  toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian f
+  toCompactSpace := QuasiCompact.compactSpace_of_compactSpace f
 
 namespace Scheme
 
@@ -53,9 +70,8 @@ instance : IsClosedImmersion (X.reducedClosedSubschemeι S) :=
 instance : IsReduced (X.reducedClosedSubscheme S) :=
   inferInstanceAs (IsReduced (IdealSheafData.vanishingIdeal S).subscheme)
 
-instance [IsNoetherian X] : IsNoetherian (X.reducedClosedSubscheme S) where
-  toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian (X.reducedClosedSubschemeι S)
-  toCompactSpace := QuasiCompact.compactSpace_of_compactSpace (X.reducedClosedSubschemeι S)
+instance [IsNoetherian X] : IsNoetherian (X.reducedClosedSubscheme S) :=
+  isNoetherian_of_isClosedImmersion (X.reducedClosedSubschemeι S)
 
 @[simp]
 lemma reducedClosedSubschemeι_apply (y : X.reducedClosedSubscheme S) :
@@ -73,13 +89,15 @@ lemma ker_reducedClosedSubschemeι :
 
 variable {S}
 
+/-- The reduced closed subscheme of an irreducible closed subset is an irreducible space. -/
 theorem irreducibleSpace_reducedClosedSubscheme (hS : IsIrreducible (S : Set X)) :
     IrreducibleSpace (X.reducedClosedSubscheme S) :=
   Subtype.irreducibleSpace hS
 
+/-- The reduced closed subscheme of an irreducible closed subset is an integral scheme. -/
 theorem isIntegral_reducedClosedSubscheme (hS : IsIrreducible (S : Set X)) :
     IsIntegral (X.reducedClosedSubscheme S) :=
-  let := X.irreducibleSpace_reducedClosedSubscheme hS
+  have := X.irreducibleSpace_reducedClosedSubscheme hS
   isIntegral_of_irreducibleSpace_of_isReduced _
 
 end Scheme

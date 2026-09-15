@@ -48,6 +48,7 @@ namespace AlgebraicGeometry
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
   [IsProjective X.hom] (x : X.left)
 
+omit [IsIntegral X.left] in
 /-- The component stalk at a point in the component's smooth locus is regular local. -/
 lemma cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus
     (z : X.left.pointClosure x)
@@ -76,6 +77,7 @@ lemma cycleComponent_ambient_stalk_isRegularLocalRing
   SmoothOfRelativeDimension.isRegularLocalRing_stalk_complex
     (d := d) (f := X.hom) (X.left.pointClosureι x z)
 
+omit [IsIntegral X.left] in
 /-- At a smooth component point, the quotient of the ambient stalk by the kernel of the
 closed-immersion stalk map is regular local. -/
 lemma cycleComponent_stalkMap_quotient_isRegularLocalRing_of_mem_smoothLocus

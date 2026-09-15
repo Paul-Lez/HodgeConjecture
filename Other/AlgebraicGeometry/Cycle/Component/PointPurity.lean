@@ -115,6 +115,7 @@ lemma span_analyticPointLocalCoclass_eq_top [SmoothOfRelativeDimension d X.hom]
     (analyticPointLocalHomologyClass_ne_zero X d z)
     (span_analyticPointLocalHomologyClass_eq_top X d z)
 
+omit [IsProjective X.hom] in
 /-- A maximal-codimension component of a smooth complex variety has a singleton analytic
 support. -/
 lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.left]
@@ -141,8 +142,6 @@ lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.
     exact ⟨hba, hab⟩
   have hpoints : Subsingleton
       (ComplexPoint (cycleComponentOver X x)) := by
-    let : LocallyOfFiniteType (cycleComponentOver X x).hom :=
-      inferInstanceAs (LocallyOfFiniteType (X.left.pointClosureι x ≫ X.hom))
     exact ⟨fun a b ↦ ComplexPoint.underlying_injective_of_locallyOfFiniteType
       (Subsingleton.elim (α := X.left.pointClosure x) a.underlying b.underlying)⟩
   rw [← range_map_cycleComponentOverι]

@@ -116,10 +116,10 @@ theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff :
 
 /-! ### The normalization chain is injective in codimension zero -/
 
+omit [Smooth X.hom] [IsProjective X.hom] in
 /-- The component belonging to the generic point of an integral variety has the whole analytic
 space as its support. -/
-lemma cycleComponentSupport_genericPoint_eq_univ
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
+lemma cycleComponentSupport_genericPoint_eq_univ :
     (cycleComponentSupport X (genericPoint X.left) : Set (ComplexPoint X)) = Set.univ := by
   rw [coe_cycleComponentSupport, genericPoint_closure (α := X.left)]
   exact Set.preimage_univ

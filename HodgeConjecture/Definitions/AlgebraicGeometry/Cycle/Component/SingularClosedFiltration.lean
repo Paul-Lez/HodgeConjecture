@@ -43,12 +43,30 @@ def cycleComponentAmbientSingularFiltration (k : ℕ) : Closeds X.left :=
     (X.left.pointClosureι x).isClosedEmbedding.isClosedMap _
       (cycleComponentSingularFiltration X x k).isClosed⟩
 
+@[simp]
+lemma coe_cycleComponentAmbientSingularFiltration (k : ℕ) :
+    (cycleComponentAmbientSingularFiltration X x k : Set X.left) =
+      X.left.pointClosureι x '' (cycleComponentSingularFiltration X x k : Set _) :=
+  rfl
+
 namespace ComplexPoint
 
 /-- The complex points of `X` over the `k`-th stage of the singular filtration of the cycle
 component at `x`. -/
 def cycleComponentAnalyticSingularFiltration (k : ℕ) : Closeds (ComplexPoint X) :=
   (cycleComponentAmbientSingularFiltration X x k).preimage Point.continuous_underlying
+
+@[simp]
+lemma coe_cycleComponentAnalyticSingularFiltration (k : ℕ) :
+    (cycleComponentAnalyticSingularFiltration X x k : Set (ComplexPoint X)) =
+      Point.underlying ⁻¹' (cycleComponentAmbientSingularFiltration X x k : Set X.left) :=
+  rfl
+
+@[simp]
+lemma mem_cycleComponentAnalyticSingularFiltration {z : ComplexPoint X} {k : ℕ} :
+    z ∈ cycleComponentAnalyticSingularFiltration X x k ↔
+      z.underlying ∈ cycleComponentAmbientSingularFiltration X x k :=
+  Iff.rfl
 
 end ComplexPoint
 

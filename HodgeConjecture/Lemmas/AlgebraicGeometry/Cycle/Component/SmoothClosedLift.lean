@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
@@ -22,7 +21,11 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ)) [LocallyOfFiniteType X.hom] (x : X.left)
+variable (X : Over (Spec ↧ℂ)) (x : X.left)
+
+section FiniteType
+
+variable [LocallyOfFiniteType X.hom]
 
 @[simp]
 theorem coe_cycleComponentSmoothLocusAmbientOpen :
@@ -53,11 +56,35 @@ theorem range_cycleComponentSmoothLocusClosedLiftOver_left :
   rw [← X.left.range_pointClosureι x]
   exact range_closedImmersionSourceOpenLift _ _
 
+namespace ComplexPoint
+
+/-- The complex points of the ambient open of the smooth locus are the complement of the first
+stage of the analytic singular filtration. -/
+theorem cycleComponentSmoothSupportAmbientOpen_eq_compl :
+    cycleComponentSmoothSupportAmbientOpen X x =
+      (cycleComponentAnalyticSingularFiltration X x 0).compl :=
+  rfl
+
+/-- Inside the ambient open, the complex points of the closed lift of the smooth locus are the
+complex points on the cycle component. -/
+theorem range_map_cycleComponentSmoothLocusClosedLiftOver :
+    Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)) =
+      Point.map (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x)) ⁻¹'
+          (cycleComponentSupport X x) := by
+  rw [range_map_of_closedImmersion]
+  ext z
+  change z.underlying ∈ Set.range (cycleComponentSmoothLocusClosedLiftOver X x).left ↔ _
+  rw [range_cycleComponentSmoothLocusClosedLiftOver_left]
+  rfl
+
+end ComplexPoint
+
+end FiniteType
+
 section Dimension
 
 variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] {p : ℕ}
 
-omit [LocallyOfFiniteType X.hom] in
 /-- The smooth locus of a codimension-`p` cycle component is smooth of relative dimension
 `dim X - p` over `ℂ`. -/
 theorem cycleComponentSmoothLocusOver_smoothOfRelativeDimension (hx : Order.coheight x = p) :
@@ -84,28 +111,5 @@ theorem cycleComponentSmoothLocusOver_smoothOfRelativeDimension (hx : Order.cohe
   exact hm
 
 end Dimension
-
-namespace ComplexPoint
-
-/-- The complex points of the ambient open of the smooth locus are the complement of the first
-stage of the analytic singular filtration. -/
-theorem cycleComponentSmoothSupportAmbientOpen_eq_compl :
-    cycleComponentSmoothSupportAmbientOpen X x =
-      (cycleComponentAnalyticSingularFiltration X x 0).compl :=
-  rfl
-
-/-- Inside the ambient open, the complex points of the closed lift of the smooth locus are the
-complex points on the cycle component. -/
-theorem range_map_cycleComponentSmoothLocusClosedLiftOver :
-    Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)) =
-      Point.map (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x)) ⁻¹'
-          (cycleComponentSupport X x) := by
-  rw [range_map_of_closedImmersion]
-  ext z
-  change z.underlying ∈ Set.range (cycleComponentSmoothLocusClosedLiftOver X x).left ↔ _
-  rw [range_cycleComponentSmoothLocusClosedLiftOver_left]
-  rfl
-
-end ComplexPoint
 
 end AlgebraicGeometry

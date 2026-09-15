@@ -38,37 +38,58 @@ open Point
 
 noncomputable section
 
-variable (X : Over (Spec ↧ℂ)) (U : X.left.Opens)
+variable (X : Over (Spec ↧ℂ))
+
+section OverMk
+
+variable {Y : Scheme} (i : Y ⟶ X.left)
+
+/-- A scheme over `X.left`, with its induced structure map to `Spec ℂ`. -/
+abbrev overMk : Over (Spec ↧ℂ) :=
+  Over.mk (i ≫ X.hom)
+
+/-- A morphism to `X.left`, as a morphism over `Spec ℂ`. -/
+abbrev overHomMk : overMk X i ⟶ X :=
+  Over.homMk i rfl
+
+instance [IsImmersion i] : IsImmersion (overHomMk X i).left :=
+  inferInstanceAs (IsImmersion i)
+
+instance [IsClosedImmersion i] : IsClosedImmersion (overHomMk X i).left :=
+  inferInstanceAs (IsClosedImmersion i)
+
+instance [LocallyOfFiniteType (i ≫ X.hom)] : LocallyOfFiniteType (overMk X i).hom :=
+  inferInstanceAs (LocallyOfFiniteType (i ≫ X.hom))
+
+instance [LocallyOfFinitePresentation (i ≫ X.hom)] :
+    LocallyOfFinitePresentation (overMk X i).hom :=
+  inferInstanceAs (LocallyOfFinitePresentation (i ≫ X.hom))
+
+instance [Smooth (i ≫ X.hom)] : Smooth (overMk X i).hom :=
+  inferInstanceAs (Smooth (i ≫ X.hom))
+
+instance {d : ℕ} [SmoothOfRelativeDimension d (i ≫ X.hom)] :
+    SmoothOfRelativeDimension d (overMk X i).hom :=
+  inferInstanceAs (SmoothOfRelativeDimension d (i ≫ X.hom))
+
+instance [IsProjective (i ≫ X.hom)] : IsProjective (overMk X i).hom :=
+  inferInstanceAs (IsProjective (i ≫ X.hom))
+
+end OverMk
+
+variable (U : X.left.Opens)
 
 /-- An open subscheme with its induced complex structure. -/
 abbrev openScheme : Over (Spec ↧ℂ) :=
-  Over.mk (U.ι ≫ X.hom)
+  overMk X U.ι
 
 /-- The inclusion of an open subscheme as a morphism over `Spec ℂ`. -/
-abbrev openInclusion :
-    openScheme X U ⟶ X :=
-  Over.homMk U.ι rfl
+abbrev openInclusion : openScheme X U ⟶ X :=
+  overHomMk X U.ι
 
-instance : IsImmersion (openInclusion X U).left :=
-  inferInstanceAs (IsImmersion U.ι)
-
-instance [LocallyOfFiniteType X.hom] : LocallyOfFiniteType (openScheme X U).hom :=
-  inferInstanceAs (LocallyOfFiniteType (U.ι ≫ X.hom))
-
-instance [LocallyOfFinitePresentation X.hom] :
-    LocallyOfFinitePresentation (openScheme X U).hom :=
-  inferInstanceAs (LocallyOfFinitePresentation (U.ι ≫ X.hom))
-
-instance [Smooth X.hom] : Smooth (openScheme X U).hom :=
-  inferInstanceAs (Smooth (U.ι ≫ X.hom))
-
-instance {d : ℕ} [SmoothOfRelativeDimension d X.hom] :
+instance (priority := 900) {d : ℕ} [SmoothOfRelativeDimension d X.hom] :
     SmoothOfRelativeDimension d (U.ι ≫ X.hom) := by
-  simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 d U.ι X.hom
-
-instance {d : ℕ} [SmoothOfRelativeDimension d X.hom] :
-    SmoothOfRelativeDimension d (openScheme X U).hom :=
-  inferInstanceAs (SmoothOfRelativeDimension d (U.ι ≫ X.hom))
+  simpa using smoothOfRelativeDimension_comp 0 d U.ι X.hom
 
 /-- The image of a complex point lying in `U` is contained in the image of its inclusion. -/
 lemma point_range_subset (z : ComplexPoint X) (hz : z ∈ overOpen U) :
@@ -202,14 +223,8 @@ def openHomeomorph :
   continuous_invFun := continuous_openEquiv_symm X U
 
 /-- The complex points of an open subscheme are the ambient complex points lying in the open. -/
-lemma range_map_openInclusion : Set.range (map (openInclusion X U)) = overOpen U := by
-  ext z
-  constructor
-  · rintro ⟨w, rfl⟩
-    exact (openEquiv X U w).2
-  · intro hz
-    exact ⟨(openEquiv X U).symm ⟨z, hz⟩,
-      congrArg Subtype.val ((openEquiv X U).apply_symm_apply ⟨z, hz⟩)⟩
+lemma range_map_openInclusion : Set.range (map (openInclusion X U)) = overOpen U :=
+  (EquivLike.range_comp Subtype.val (openEquiv X U)).trans Subtype.range_coe
 
 /-- Inclusion of an open subscheme induces an open embedding on complex points. -/
 lemma isOpenEmbedding_map_open :

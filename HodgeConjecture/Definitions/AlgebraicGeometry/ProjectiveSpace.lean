@@ -154,7 +154,8 @@ instance IsProjective.isProper {f : X ⟶ T} [h : IsProjective f] : IsProper f :
   rwa [P.immersion_toBase] at hcomp
 
 /-- A closed subscheme of a projective scheme is projective. -/
-instance {Y : Scheme.{w}} (i : Y ⟶ X) (f : X ⟶ T) [IsClosedImmersion i] [IsProjective f] :
+instance (priority := 900) {Y : Scheme.{w}} (i : Y ⟶ X) (f : X ⟶ T) [IsClosedImmersion i]
+    [IsProjective f] :
     IsProjective (i ≫ f) := by
   obtain ⟨P⟩ := ‹IsProjective f›.nonempty_presentation
   exact ⟨⟨{

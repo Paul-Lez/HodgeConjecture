@@ -17,8 +17,6 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
-import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
 import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
@@ -50,7 +48,7 @@ lemma orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
     (hx : Order.coheight x = d) :
     Order.krullDim (X.pointClosure x) =
       (↑(0 : ℕ∞) : WithBot ℕ∞) := by
-  rw [Scheme.orderKrullDim_pointClosure]
+  rw [Scheme.krullDim_pointClosure]
   have h := SmoothOfRelativeDimension.height_add_coheight_eq_of_coheight_eq_dimension
     (f := f) (d := d) x hx
   rw [hx] at h

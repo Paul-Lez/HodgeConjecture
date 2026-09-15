@@ -17,8 +17,6 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
-import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic

@@ -78,6 +78,7 @@ private theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegr
         (cycleComponentAnalyticSingularFiltration X x 0))).homology (2 * (p : ℤ) + 1)) :=
   cycleComponentSingularBoundarySectionCohomology_isZero_of_lt X x hx _ (by omega)
 
+omit [IsIntegral X.left] [Smooth X.hom] in
 /-- The actual complement inclusion determining the localization sequence. -/
 private theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
     (cycleComponentSupport X x).compl ≤ cycleComponentSmoothSupportAmbientOpen X x := by

@@ -15,18 +15,18 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Open
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
-public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Cycle components and their support
 
-A cycle on `X` is indexed by the points of `X.left`; the component at `x` is the integral closed
-subscheme `X.left.pointClosure x`. This file bundles it over `ℂ` and defines its support, the
-closed set of complex points of `X` that lie on it.
+A cycle on `X` is indexed by the points of `X.left`. The component at `x` is the integral closed
+subscheme `X.left.pointClosure x`. `cycleComponentOver X x` bundles it over `ℂ`, and
+`cycleComponentOverι X x` is its closed immersion into `X`. Its support
+`ComplexPoint.cycleComponentSupport X x` is the closed set of complex points of `X` that lie on it.
 -/
 
 @[expose] public noncomputable section
@@ -37,26 +37,17 @@ namespace AlgebraicGeometry
 
 variable (X : Over (Spec ↧ℂ)) (x : X.left)
 
-/-- The cycle component at `x`, over `ℂ`. -/
+/-- The cycle component at `x`, the integral closed subscheme `X.left.pointClosure x`, as a scheme
+over `ℂ`. -/
 abbrev cycleComponentOver : Over (Spec ↧ℂ) :=
-  Over.mk (X.left.pointClosureι x ≫ X.hom)
+  ComplexPoint.overMk X (X.left.pointClosureι x)
 
 /-- The closed immersion of the cycle component at `x`, as a morphism over `ℂ`. -/
 abbrev cycleComponentOverι : cycleComponentOver X x ⟶ X :=
-  Over.homMk (X.left.pointClosureι x) rfl
+  ComplexPoint.overHomMk X (X.left.pointClosureι x)
 
-instance : IsClosedImmersion (cycleComponentOverι X x).left :=
-  inferInstanceAs (IsClosedImmersion (X.left.pointClosureι x))
-
-instance [LocallyOfFiniteType X.hom] : LocallyOfFiniteType (cycleComponentOver X x).hom :=
-  inferInstanceAs (LocallyOfFiniteType (X.left.pointClosureι x ≫ X.hom))
-
-instance [LocallyOfFinitePresentation (X.left.pointClosureι x ≫ X.hom)] :
-    LocallyOfFinitePresentation (cycleComponentOver X x).hom :=
-  inferInstanceAs (LocallyOfFinitePresentation (X.left.pointClosureι x ≫ X.hom))
-
-instance [IsProjective X.hom] : IsProjective (cycleComponentOver X x).hom :=
-  inferInstanceAs (IsProjective (X.left.pointClosureι x ≫ X.hom))
+instance [LocallyOfFiniteType X.hom] : JacobsonSpace (X.left.pointClosure x) :=
+  LocallyOfFiniteType.jacobsonSpace (X.left.pointClosureι x ≫ X.hom)
 
 namespace ComplexPoint
 

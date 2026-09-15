@@ -17,8 +17,6 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
-import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
@@ -44,7 +42,11 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ)) [LocallyOfFiniteType X.hom] (x : X.left)
+variable (X : Over (Spec ↧ℂ)) (x : X.left)
+
+section FiniteType
+
+variable [LocallyOfFiniteType X.hom]
 
 /-- The smooth locus of a cycle component is Zariski dense. -/
 lemma dense_cycleComponentSmoothLocus :
@@ -52,8 +54,7 @@ lemma dense_cycleComponentSmoothLocus :
   (X.left.pointClosureι x ≫ X.hom).dense_smoothLocus_of_perfectField
 
 /-- The smooth locus of a cycle component is irreducible. -/
-instance cycleComponentSmoothLocus_irreducibleSpace :
-    IrreducibleSpace (cycleComponentSmoothLocus X x) := by
+instance : IrreducibleSpace (cycleComponentSmoothLocus X x) := by
   obtain ⟨y, hy⟩ := (dense_cycleComponentSmoothLocus X x).nonempty
   let : Nonempty (cycleComponentSmoothLocus X x) := ⟨⟨y, hy⟩⟩
   exact (cycleComponentSmoothLocus X x).ι.isOpenEmbedding.irreducibleSpace
@@ -63,12 +64,12 @@ lemma dense_cycleComponentSmoothLocus_closedPoints :
     Dense ((cycleComponentSmoothLocus X x : Set (X.left.pointClosure x)) ∩
       closedPoints (X.left.pointClosure x)) := by
   let f := X.left.pointClosureι x ≫ X.hom
-  let : JacobsonSpace (X.left.pointClosure x) := LocallyOfFiniteType.jacobsonSpace f
   exact dense_iff_closure_eq.mpr ((JacobsonSpace.closure_inter_closedPoints_eq_closure
     f.smoothLocus.2.isLocallyClosed).trans
       (dense_iff_closure_eq.mp (dense_cycleComponentSmoothLocus X x)))
 
-omit [LocallyOfFiniteType X.hom] in
+end FiniteType
+
 /-- The reduced component of a point of coheight `p` in a smooth complex `d`-fold has
 topological Krull dimension at most `d - p`. -/
 lemma topologicalKrullDim_cycleComponent_le_sub

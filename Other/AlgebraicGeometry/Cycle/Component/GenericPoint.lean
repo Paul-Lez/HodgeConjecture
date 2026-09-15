@@ -36,7 +36,7 @@ lemma pointClosureOrderIsoIic_genericPoint :
 lemma height_genericPoint_pointClosure :
     Order.height (genericPoint (X.pointClosure x)) = Order.height x := by
   apply WithBot.coe_eq_coe.mp
-  rw [← X.orderKrullDim_pointClosure x, ← Order.height_top_eq_krullDim]
+  rw [← X.krullDim_pointClosure x, ← Order.height_top_eq_krullDim]
   rfl
 
 /-- The generic point of the closure of `{x}` has coheight zero there. -/

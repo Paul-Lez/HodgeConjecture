@@ -43,33 +43,23 @@ def cycleComponentSingularFiltrationStratumι (k : ℕ) :
 
 /-- The `k`-th smooth stratum, over `ℂ`. -/
 abbrev cycleComponentSingularFiltrationStratumOver (k : ℕ) : Over (Spec ↧ℂ) :=
-  Over.mk (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom)
+  ComplexPoint.overMk X (cycleComponentSingularFiltrationStratumι X x k)
 
 /-- The immersion of the `k`-th smooth stratum, as a morphism over `ℂ`. -/
-def cycleComponentSingularFiltrationStratumOverι (k : ℕ) :
+abbrev cycleComponentSingularFiltrationStratumOverι (k : ℕ) :
     cycleComponentSingularFiltrationStratumOver X x k ⟶ X :=
-  Over.homMk (cycleComponentSingularFiltrationStratumι X x k) rfl
+  ComplexPoint.overHomMk X (cycleComponentSingularFiltrationStratumι X x k)
 
-set_option backward.isDefEq.respectTransparency false in
-instance cycleComponentSingularFiltrationStratumι_isImmersion (k : ℕ) :
-    IsImmersion (cycleComponentSingularFiltrationStratumι X x k) := by
-  dsimp [cycleComponentSingularFiltrationStratumι]
-  infer_instance
+instance (k : ℕ) : IsImmersion (cycleComponentSingularFiltrationStratumι X x k) :=
+  inferInstanceAs (IsImmersion (reducedClosedSmoothPieceι (X.left.pointClosureι x ≫ X.hom)
+    (cycleComponentSingularFiltration X x k) ≫ X.left.pointClosureι x))
 
-instance cycleComponentSingularFiltrationStratumOverι_isImmersion (k : ℕ) :
-    IsImmersion (cycleComponentSingularFiltrationStratumOverι X x k).left :=
-  inferInstanceAs (IsImmersion (cycleComponentSingularFiltrationStratumι X x k))
-
-instance cycleComponentSingularFiltrationStratum_smooth (k : ℕ) :
+instance (k : ℕ) :
     Smooth (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom) := by
   change Smooth ((reducedClosedSmoothPieceι (X.left.pointClosureι x ≫ X.hom)
     (cycleComponentSingularFiltration X x k) ≫ X.left.pointClosureι x) ≫ X.hom)
   rw [Category.assoc]
   infer_instance
-
-instance cycleComponentSingularFiltrationStratumOver_smooth (k : ℕ) :
-    Smooth (cycleComponentSingularFiltrationStratumOver X x k).hom :=
-  inferInstanceAs (Smooth (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom))
 
 /-- The `k`-th smooth stratum is the difference of consecutive stages of the ambient singular
 filtration. -/
@@ -136,7 +126,7 @@ theorem range_cycleComponentSingularStratumClosedLift (k : ℕ) :
     exact ⟨w, (cycleComponentSingularStratumAmbientOpen X x k).ι.isOpenEmbedding.injective
       ((hf w).trans hw)⟩
 
-instance cycleComponentSingularStratumClosedLift_isClosedImmersion (k : ℕ) :
+instance (k : ℕ) :
     IsClosedImmersion (cycleComponentSingularStratumClosedLift X x k) := by
   have : IsPreimmersion (cycleComponentSingularStratumClosedLift X x k ≫
       (cycleComponentSingularStratumAmbientOpen X x k).ι) := by
@@ -150,11 +140,11 @@ instance cycleComponentSingularStratumClosedLift_isClosedImmersion (k : ℕ) :
   exact (cycleComponentAmbientSingularFiltration X x k).isClosed.preimage
     (cycleComponentSingularStratumAmbientOpen X x k).ι.continuous
 
-instance cycleComponentSingularStratumClosedLiftOver_isClosedImmersion (k : ℕ) :
+instance (k : ℕ) :
     IsClosedImmersion (cycleComponentSingularStratumClosedLiftOver X x k).left :=
   inferInstanceAs (IsClosedImmersion (cycleComponentSingularStratumClosedLift X x k))
 
-instance cycleComponentSingularStratumClosedLift_smooth (k : ℕ) :
+instance (k : ℕ) :
     Smooth (cycleComponentSingularStratumClosedLift X x k ≫
       (cycleComponentSingularStratumAmbientOpen X x k).ι ≫ X.hom) := by
   rw [← Category.assoc, cycleComponentSingularStratumClosedLift_ι]

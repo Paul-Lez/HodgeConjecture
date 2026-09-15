@@ -34,6 +34,7 @@ def cycleComponentSmoothClosedLiftPointImage
   cycleComponentSmoothClosedLiftAmbientMap X x
     (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) a)
 
+omit [IsIntegral X.left] in
 theorem cycleComponentSmoothClosedLiftPointImage_mem_support
     (a : ComplexPoint (cycleComponentSmoothLocusOver X x)) :
     cycleComponentSmoothClosedLiftPointImage X x a ∈ cycleComponentSupport X x :=

@@ -39,8 +39,7 @@ variable (X : Over (Spec ↧ℂ)) (x : X.left)
 @[simp]
 lemma range_map_cycleComponentOverι :
     Set.range (Point.map (cycleComponentOverι X x)) = cycleComponentSupport X x := by
-  rw [range_map_of_closedImmersion]
-  ext z
-  simp
+  ext
+  simp [range_map_of_closedImmersion]
 
 end AlgebraicGeometry.ComplexPoint

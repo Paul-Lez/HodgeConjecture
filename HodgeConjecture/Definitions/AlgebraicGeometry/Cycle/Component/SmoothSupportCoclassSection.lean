@@ -62,18 +62,19 @@ def cycleComponentSmoothClosedLiftAmbientMap :
   TopCat.ofHom (Point.continuousMap
     (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x)))
 
-omit [IsIntegral X.left] in
+omit [IsIntegral X.left] [IsProjective X.hom] in
 theorem cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding :
     IsOpenEmbedding (cycleComponentSmoothClosedLiftAmbientMap X x) :=
   isOpenEmbedding_map_open X (cycleComponentSmoothLocusAmbientOpen X x)
 
+omit [IsIntegral X.left] [IsProjective X.hom] in
 /-- Support membership is transported by the lift-image theorem. -/
 theorem cycleComponentSmoothClosedLiftAmbientMap_support :
     cycleComponentSmoothClosedLiftAmbientMap X x ⁻¹' cycleComponentSupport X x =
       Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)) :=
   (range_map_cycleComponentSmoothLocusClosedLiftOver X x).symm
 
-omit [IsIntegral X.left] in
+omit [IsIntegral X.left] [IsProjective X.hom] in
 /-- The image open is exactly the complement of the canonical first singular boundary. -/
 theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x).functor.obj ⊤ =

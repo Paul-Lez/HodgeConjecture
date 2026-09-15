@@ -113,6 +113,7 @@ theorem analyticComponentPointSupportedInjectiveCoclass_relative :
         analyticComponentPointRelativeCoclass X x d z :=
   AddEquiv.apply_symm_apply _ _
 
+omit [IsIntegral X.left] [Smooth X.hom] in
 /-- Its literal sheafification image is the old point section on the whole ambient open. -/
 theorem analyticComponentPointRelativeCoclass_toSheaf :
     (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))

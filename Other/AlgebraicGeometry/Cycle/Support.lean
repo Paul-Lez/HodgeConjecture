@@ -6,6 +6,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
@@ -38,11 +40,8 @@ def cycleComponentSupportMap : ComplexPoint (cycleComponentOver X x) → cycleCo
 /-- The complex points of a cycle component are the complex points of `X` in its support. -/
 def cycleComponentPointEquivSupport :
     ComplexPoint (cycleComponentOver X x) ≃ cycleComponentSupport X x :=
-  Equiv.ofBijective (cycleComponentSupportMap X x)
-    ⟨fun _ _ h => map_injective_of_mono (cycleComponentOverι X x) (congrArg Subtype.val h),
-      fun z => by
-        obtain ⟨w, hw⟩ := (range_map_cycleComponentOverι X x).ge z.2
-        exact ⟨w, Subtype.ext hw⟩⟩
+  (Equiv.ofInjective _ (map_injective_of_mono (cycleComponentOverι X x))).trans
+    (Equiv.setCongr (range_map_cycleComponentOverι X x))
 
 /-- The complex points of a cycle component that lie in its smooth locus. -/
 def cycleComponentSmoothAnalyticLocus [LocallyOfFiniteType X.hom] :
@@ -62,14 +61,12 @@ lemma algebraicCycle_support_finite {R : Type*} [Zero R] [IsProjective X.hom]
 over the perfect field `ℂ`, and it contains a closed point. -/
 theorem exists_cycleComponent_smooth_complexPoint [LocallyOfFiniteType X.hom] :
     ∃ z : ComplexPoint (cycleComponentOver X x), z.underlying ∈ cycleComponentSmoothLocus X x := by
+  obtain ⟨y, hy, hyClosed⟩ := (dense_cycleComponentSmoothLocus_closedPoints X x).nonempty
   let f := X.left.pointClosureι x ≫ X.hom
-  let : JacobsonSpace (X.left.pointClosure x) := LocallyOfFiniteType.jacobsonSpace f
-  obtain ⟨y, hy, hyClosed⟩ := nonempty_inter_closedPoints
-    f.dense_smoothLocus_of_perfectField.nonempty f.smoothLocus.2.isLocallyClosed
   let p := (pointEquivClosedPoint f).symm ⟨y, hyClosed⟩
   refine ⟨Over.homMk p.1 p.2, ?_⟩
-  have hp := (pointEquivClosedPoint f).apply_symm_apply ⟨y, hyClosed⟩
-  have hp' : p.1 (IsLocalRing.closedPoint ℂ) = y := congrArg Subtype.val hp
+  have hp' : p.1 (IsLocalRing.closedPoint ℂ) = y :=
+    congrArg Subtype.val ((pointEquivClosedPoint f).apply_symm_apply ⟨y, hyClosed⟩)
   change p.1 (IsLocalRing.closedPoint ℂ) ∈ f.smoothLocus
   rw [hp']
   exact hy
