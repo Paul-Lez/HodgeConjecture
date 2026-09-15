@@ -285,7 +285,7 @@ induced by `n ↦ n q`. -/
     rw [← hrepK]
     exact hΓx
   have hderivedI :
-      (derivedHomAddEquivGlobalSectionsKInjective X I 0).symm
+      (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective Y I 0).symm
           (HomologicalComplex.homologyMap
             (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
               (.up ℤ)).map a) 0 (G.map m t)) =

@@ -62,7 +62,8 @@ def rationalCohomologyZeroEquivSheafHom :
         (HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
           𝓒(↧(ComplexPoint X); ℚ) 0 0 rfl)
   let e₁ := rationalCohomologyAddEquivAmbientInjectiveHomology X 0
-  let e₂ := (derivedHomAddEquivGlobalSectionsKInjective X I.obj 0).symm
+  let e₂ := (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective
+    (TopCat.of (ComplexPoint X)) I.obj 0).symm
   let e₃ := isoHomCongrAddEquiv (Iso.refl _)
     ((shiftFunctor _ (0 : ℤ)).mapIso eTarget)
   e₁.trans <| e₂.trans <| e₃.trans <|
