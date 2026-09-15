@@ -25,9 +25,12 @@ public import Mathlib.Algebra.Homology.SingleHomology
 /-!
 # Hypercohomology
 
-For a topological space `X` and an abelian coefficient category `C`, hypercohomology is the
-cohomology of derived global sections. The construction is a functor from the bounded-below
-derived category to `C`.
+For a topological space `X` and an abelian coefficient category `C`, derived global sections form
+a functor between bounded-below derived categories. Degree-`n` hypercohomology is obtained by
+composing this functor with degree-`n` cohomology.
+
+Multiplicative structures on hypercohomology require a graded lax-monoidal refinement (the cup
+product); that additional structure is not part of the degreewise functor constructed here.
 -/
 
 @[expose] public noncomputable section
@@ -44,23 +47,23 @@ variable (C : Type u) [Category.{v} C] [Abelian C]
 variable [HasDerivedCategory C] [HasDerivedCategory (Sheaf C X)]
   [EnoughInjectives (Sheaf C X)]
 
-/-- Hypercohomology in degree `n`, as a functor on the bounded-below derived category. -/
-def derivedHypercohomologyFunctor (n : ℤ) :
-    DerivedCategory.Plus (Sheaf C X) ⥤ C :=
-  (globalSectionsFunctor C X).rightDerivedFunctorPlus ⋙
-    DerivedCategory.Plus.homologyFunctor C n
+/-- Derived global sections on bounded-below derived categories. -/
+def derivedGlobalSectionsFunctor :
+    DerivedCategory.Plus (Sheaf C X) ⥤ DerivedCategory.Plus C :=
+  (globalSectionsFunctor C X).rightDerivedFunctorPlus
 
 /-- Hypercohomology in degree `n`, as a functor on bounded-below sheaf complexes. -/
 def hypercohomologyFunctor (n : ℤ) : CochainComplex.Plus (Sheaf C X) ⥤ C :=
-  DerivedCategory.Plus.Q ⋙ derivedHypercohomologyFunctor C X n
+  DerivedCategory.Plus.Q ⋙ derivedGlobalSectionsFunctor C X ⋙
+    DerivedCategory.Plus.homologyFunctor C n
 
 /-- Notation for the degree-`n` hypercohomology functor on bounded-below sheaf complexes. -/
 scoped notation3:max "ℍ[" C "]^" n:max "(" X ")" =>
   hypercohomologyFunctor C X n
 
-instance derivedHypercohomologyFunctor_additive (n : ℤ) :
-    (derivedHypercohomologyFunctor C X n).Additive := by
-  dsimp only [derivedHypercohomologyFunctor]
+instance derivedGlobalSectionsFunctor_additive :
+    (derivedGlobalSectionsFunctor C X).Additive := by
+  dsimp only [derivedGlobalSectionsFunctor]
   infer_instance
 
 instance hypercohomologyFunctor_additive (n : ℤ) :
@@ -206,7 +209,8 @@ def toHypercohomology (n : ℤ) :
   show CochainComplex.Plus.ι (Sheaf C X) ⋙
         (globalSectionsFunctor C X).mapHomologicalComplex (.up ℤ) ⋙
         HomologicalComplex.homologyFunctor C (.up ℤ) n ⟶
-      DerivedCategory.Plus.Q ⋙ derivedHypercohomologyFunctor C X n from
+      DerivedCategory.Plus.Q ⋙ derivedGlobalSectionsFunctor C X ⋙
+        DerivedCategory.Plus.homologyFunctor C n from
     (globalSectionsHomologyIso C X n).inv ≫
       Functor.whiskerRight
         (Functor.whiskerLeft (HomotopyCategory.Plus.quotient (Sheaf C X))
