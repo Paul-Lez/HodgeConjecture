@@ -12,6 +12,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicTopology.DerivedConcentratedOrientation
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularChainHomologySheaf
 
@@ -96,8 +98,8 @@ theorem singularChainSheafDerivedSingleOrientationIso_homology [T2Space X] (N : 
     (DerivedCategory.homologyFunctor _ (-(N : ℤ))).map
       (singularChainSheafDerivedSingleOrientationIso R X N hlocal orientation).hom ≫
       (DerivedCategory.homologyFunctorFactors _ (-(N : ℤ))).hom.app
-        ((single _ (.up ℤ) (-(N : ℤ))).obj (singularOrientationConstantSheaf R X)) ≫
-      (singleObjHomologySelfIso (.up ℤ) (-(N : ℤ)) _).hom =
+        ((single _ ℤᵘᵖ (-(N : ℤ))).obj (singularOrientationConstantSheaf R X)) ≫
+      (singleObjHomologySelfIso ℤᵘᵖ (-(N : ℤ)) _).hom =
       (DerivedCategory.homologyFunctorFactors _ (-(N : ℤ))).hom.app
         (singularChainSheafCochainComplex R X) ≫
         (singularChainSheafCochainHomologyIso R X N).hom ≫ orientation.hom :=

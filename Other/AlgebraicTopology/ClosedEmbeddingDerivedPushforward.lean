@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicTopology.ClosedEmbeddingSheafExact
 public import Mathlib.Algebra.Homology.DerivedCategory.ExactFunctor
 public import Mathlib.Algebra.Homology.DerivedCategory.Plus
@@ -57,7 +59,7 @@ instance closedEmbeddingDerivedPushforward_isTriangulated :
 /-- The induced derived functor agrees with actual termwise pushforward on complexes. -/
 def closedEmbeddingDerivedPushforwardFactors :
     DerivedCategory.Q ⋙ closedEmbeddingDerivedPushforward i hi ≅
-      (pushforward AddCommGrpCat.{u} i).mapHomologicalComplex (ComplexShape.up ℤ) ⋙
+      (pushforward AddCommGrpCat.{u} i).mapHomologicalComplex ℤᵘᵖ ⋙
         DerivedCategory.Q := by
   have h := closedEmbeddingPushforward_preservesFiniteColimits i hi
   exact (pushforward AddCommGrpCat.{u} i).mapDerivedCategoryFactors
@@ -70,13 +72,13 @@ lemma closedEmbeddingDerivedPushforwardFactors_naturality
       (closedEmbeddingDerivedPushforwardFactors i hi).hom.app L =
       (closedEmbeddingDerivedPushforwardFactors i hi).hom.app K ≫
         DerivedCategory.Q.map
-          (((pushforward AddCommGrpCat.{u} i).mapHomologicalComplex (ComplexShape.up ℤ)).map f) :=
+          (((pushforward AddCommGrpCat.{u} i).mapHomologicalComplex ℤᵘᵖ).map f) :=
   (closedEmbeddingDerivedPushforwardFactors i hi).hom.naturality f
 
 /-- The same normalization on the actual homotopy categories. -/
 def closedEmbeddingDerivedPushforwardFactorsh :
     DerivedCategory.Qh ⋙ closedEmbeddingDerivedPushforward i hi ≅
-      (pushforward AddCommGrpCat.{u} i).mapHomotopyCategory (ComplexShape.up ℤ) ⋙
+      (pushforward AddCommGrpCat.{u} i).mapHomotopyCategory ℤᵘᵖ ⋙
         DerivedCategory.Qh := by
   have h := closedEmbeddingPushforward_preservesFiniteColimits i hi
   exact (pushforward AddCommGrpCat.{u} i).mapDerivedCategoryFactorsh
@@ -88,16 +90,16 @@ theorem closedEmbeddingDerivedPushforward_isGE
   obtain ⟨K, hK, ⟨e⟩⟩ := DerivedCategory.exists_iso_Q_obj_of_isGE A n
   have hmap : CochainComplex.IsStrictlyGE
       (((pushforward AddCommGrpCat.{u} i).mapHomologicalComplex
-        (ComplexShape.up ℤ)).obj K) n := inferInstance
+        ℤᵘᵖ).obj K) n := inferInstance
   have hQ : (DerivedCategory.Q.obj
       (((pushforward AddCommGrpCat.{u} i).mapHomologicalComplex
-        (ComplexShape.up ℤ)).obj K)).IsGE n := by
+        ℤᵘᵖ).obj K)).IsGE n := by
     rw [DerivedCategory.isGE_Q_obj_iff]
     infer_instance
   let e' : (closedEmbeddingDerivedPushforward i hi).obj A ≅
       DerivedCategory.Q.obj
         (((pushforward AddCommGrpCat.{u} i).mapHomologicalComplex
-          (ComplexShape.up ℤ)).obj K) :=
+          ℤᵘᵖ).obj K) :=
     (closedEmbeddingDerivedPushforward i hi).mapIso e ≪≫
       (closedEmbeddingDerivedPushforwardFactors i hi).app K
   exact DerivedCategory.TStructure.t.isGE_of_iso e'.symm n

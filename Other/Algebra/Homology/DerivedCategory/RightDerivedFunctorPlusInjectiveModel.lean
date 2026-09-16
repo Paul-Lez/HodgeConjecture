@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusNaturality
 
 /-! # Naturality of the actual injective-model computation of `D⁺` right derivation -/
@@ -29,8 +31,8 @@ def rightDerivedFunctorPlusInjectiveModelIso (F : C ⥤ D) [F.Additive]
           ((InjectiveObject.ι C).mapHomotopyCategoryPlus.obj
             ((HomotopyCategory.Plus.quotient _).obj I)))) ≅
     DerivedCategory.Q.obj
-      ((F.mapHomologicalComplex (.up ℤ)).obj
-        (((InjectiveObject.ι C).mapHomologicalComplex (.up ℤ)).obj I.obj)) :=
+      ((F.mapHomologicalComplex ℤᵘᵖ).obj
+        (((InjectiveObject.ι C).mapHomologicalComplex ℤᵘᵖ).obj I.obj)) :=
   (DerivedCategory.Plus.ι.mapIso
     (asIso (F.rightDerivedFunctorPlusUnit.app
       ((InjectiveObject.ι C).mapHomotopyCategoryPlus.obj
@@ -58,8 +60,8 @@ lemma rightDerivedFunctorPlusInjectiveModel_naturality
       (G.rightDerivedFunctorPlusInjectiveModelIso I).hom =
     (F.rightDerivedFunctorPlusInjectiveModelIso I).hom ≫
       DerivedCategory.Q.map
-        ((α.mapHomologicalComplex (.up ℤ)).app
-          (((InjectiveObject.ι C).mapHomologicalComplex (.up ℤ)).obj I.obj)) := by
+        ((α.mapHomologicalComplex ℤᵘᵖ).app
+          (((InjectiveObject.ι C).mapHomologicalComplex ℤᵘᵖ).obj I.obj)) := by
   let K := (InjectiveObject.ι C).mapHomotopyCategoryPlus.obj
     ((HomotopyCategory.Plus.quotient _).obj I)
   have hu : α.rightDerivedFunctorPlus.app (DerivedCategory.Plus.Qh.obj K) ≫
@@ -76,7 +78,7 @@ lemma rightDerivedFunctorPlusInjectiveModel_naturality
   rw [← Functor.map_comp_assoc, hu, Functor.map_comp, Category.assoc]
   congr 1
   exact (DerivedCategory.quotientCompQhIso D).hom.naturality
-    ((α.mapHomologicalComplex (.up ℤ)).app
-      (((InjectiveObject.ι C).mapHomologicalComplex (.up ℤ)).obj I.obj))
+    ((α.mapHomologicalComplex ℤᵘᵖ).app
+      (((InjectiveObject.ι C).mapHomologicalComplex ℤᵘᵖ).obj I.obj))
 
 end CategoryTheory.NatTrans

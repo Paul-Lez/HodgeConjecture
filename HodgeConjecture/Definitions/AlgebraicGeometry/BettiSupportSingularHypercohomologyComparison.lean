@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportConeComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSupportSingularGlobalComparison
@@ -94,13 +96,13 @@ theorem globalSectionsNat_map_quasiIso
   let : QuasiIso fInt :=
     (HomologicalComplex.quasiIso_extendMap_iff f ComplexShape.embeddingUpNat).mpr
       inferInstance
-  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map fInt) :=
+  let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map fInt) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       fInt 0 0 (extendNat_term_isFlasque K hK) (extendNat_term_isFlasque L hL)
   have h : HomologicalComplex.extendMap
         ((Γ.mapHomologicalComplex (ComplexShape.up ℕ)).map f)
           ComplexShape.embeddingUpNat ≫ eL.inv =
-      eK.inv ≫ (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map fInt :=
+      eK.inv ≫ (Γ.mapHomologicalComplex ℤᵘᵖ).map fInt :=
     HomologicalComplex.mapExtendCanonicalIso_inv_naturality Γ f ComplexShape.embeddingUpNat
   have hcomp : QuasiIso
       (HomologicalComplex.extendMap
@@ -154,41 +156,41 @@ def kInjectiveDerivedHomAddEquivCohomologyClass
       CochainComplex.HomComplex.CohomologyClass K L n := by
   let qSource : DerivedCategory.Q.obj K ≅
       DerivedCategory.Qh.obj
-        ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) :=
+        ((HomotopyCategory.quotient C ℤᵘᵖ).obj K) :=
     (DerivedCategory.quotientCompQhIso C).symm.app K
   let qTarget : (DerivedCategory.Q.obj L)⟦n⟧ ≅
       DerivedCategory.Qh.obj
-        ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧)) :=
+        ((HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧)) :=
     (DerivedCategory.Q.commShiftIso n).symm.app L ≪≫
       (DerivedCategory.quotientCompQhIso C).symm.app (L⟦n⟧)
   let eDerived : ShiftedHom (DerivedCategory.Q.obj K)
         (DerivedCategory.Q.obj L) n ≃+
       (DerivedCategory.Qh.obj
-          ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) ⟶
+          ((HomotopyCategory.quotient C ℤᵘᵖ).obj K) ⟶
         DerivedCategory.Qh.obj
-          ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧))) :=
+          ((HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧))) :=
     isoHomCongrAddEquiv qSource qTarget
   let qhMap :
-      (((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K ⟶
-          (HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧))) →+
+      (((HomotopyCategory.quotient C ℤᵘᵖ).obj K ⟶
+          (HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧))) →+
         (DerivedCategory.Qh.obj
-            ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) ⟶
+            ((HomotopyCategory.quotient C ℤᵘᵖ).obj K) ⟶
           DerivedCategory.Qh.obj
-            ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧))) :=
+            ((HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧))) :=
     { toFun := DerivedCategory.Qh.map
       map_zero' := by simp
       map_add' f g := by rw [Functor.map_add] }
   let eQh :
-      (((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K ⟶
-          (HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧))) ≃+
+      (((HomotopyCategory.quotient C ℤᵘᵖ).obj K ⟶
+          (HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧))) ≃+
         (DerivedCategory.Qh.obj
-            ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) ⟶
+            ((HomotopyCategory.quotient C ℤᵘᵖ).obj K) ⟶
           DerivedCategory.Qh.obj
-            ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧))) :=
+            ((HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧))) :=
     AddEquiv.ofBijective qhMap
       (by
         let h := CochainComplex.IsKInjective.Qh_map_bijective
-          ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) (L⟦n⟧)
+          ((HomotopyCategory.quotient C ℤᵘᵖ).obj K) (L⟦n⟧)
         exact ⟨fun _ _ hfg ↦ h.injective hfg, h.surjective⟩)
   exact eDerived.trans <| eQh.symm.trans <|
     CochainComplex.HomComplex.CohomologyClass.homAddEquiv.symm
@@ -201,7 +203,7 @@ def hypercohomologyEquivGlobalSectionsOfResolution
     (i : K ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map i)]
+        ℤᵘᵖ).map i)]
     (n : ℤ) :
     Hypercohomology X K n ≃
       (TopCat.Sheaf.globalSectionsComplexInt
@@ -212,11 +214,11 @@ def hypercohomologyEquivGlobalSectionsOfResolution
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle X
   have hi : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
-      (ComplexShape.up ℤ) i := by
+      ℤᵘᵖ i := by
     rw [HomologicalComplex.mem_quasiIso_iff]
     infer_instance
   have he : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
-      (ComplexShape.up ℤ) e.inv := by
+      ℤᵘᵖ e.inv := by
     rw [HomologicalComplex.mem_quasiIso_iff]
     infer_instance
   let e₁ := Localization.SmallShiftedHom.postcompEquiv
@@ -229,9 +231,9 @@ def hypercohomologyEquivGlobalSectionsOfResolution
   let e₅ := (HomologicalComplex.homologyMapIso
     (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
       |>.addCommGroupIsoToAddEquiv.toEquiv
-  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
+  let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map i) := inferInstance
   let e₆ := (asIso (HomologicalComplex.homologyMap
-    ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
+    ((Γ.mapHomologicalComplex ℤᵘᵖ).map i) n)).symm
       |>.addCommGroupIsoToAddEquiv.toEquiv
   exact e₁.trans (e₂.trans (e₃.trans (e₄.trans (e₅.trans e₆))))
 
@@ -243,7 +245,7 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
     (i : K ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map i)]
+        ℤᵘᵖ).map i)]
     (n : ℤ) :
     Hypercohomology X K n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
@@ -269,9 +271,9 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
   let e₅ := (HomologicalComplex.homologyMapIso
     (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
       |>.addCommGroupIsoToAddEquiv
-  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
+  let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map i) := inferInstance
   let e₆ := (asIso (HomologicalComplex.homologyMap
-    ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
+    ((Γ.mapHomologicalComplex ℤᵘᵖ).map i) n)).symm
       |>.addCommGroupIsoToAddEquiv
   exact e₀.trans <| e₁.trans <| e₂.trans <| e₃.trans <| e₄.trans <| e₅.trans e₆
 
@@ -291,7 +293,7 @@ def hypercohomologyEquivGlobalSections
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
   letI : QuasiIso
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-        ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
+        ).mapHomologicalComplex ℤᵘᵖ).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i N N hKflasque hIflasque
   exact hypercohomologyEquivGlobalSectionsOfResolution X K I i n
@@ -312,7 +314,7 @@ def hypercohomologyAddEquivGlobalSections
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
   letI : QuasiIso
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-        ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
+        ).mapHomologicalComplex ℤᵘᵖ).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i N N hKflasque hIflasque
   exact hypercohomologyAddEquivGlobalSectionsOfResolution
@@ -572,7 +574,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
     globalRawToSingularSheafInt X ≫
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-            (ComplexShape.up ℤ)).map
+            ℤᵘᵖ).map
           (naturalSingularResolutionRestriction X Z hZ) =
       globalRawSingularRestrictionInt ℚ
           (TopCat.of (ComplexPoint X))
@@ -592,7 +594,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
   have hg : HomologicalComplex.extendMap
         ((Γ.mapHomologicalComplex (ComplexShape.up ℕ)).map g)
           ComplexShape.embeddingUpNat ≫ eD.inv =
-      eS.inv ≫ (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map
+      eS.inv ≫ (Γ.mapHomologicalComplex ℤᵘᵖ).map
         (HomologicalComplex.extendMap g ComplexShape.embeddingUpNat) :=
     HomologicalComplex.mapExtendCanonicalIso_inv_naturality Γ g ComplexShape.embeddingUpNat
   have hab : a ≫
@@ -600,7 +602,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
     globalNaturalSingularResolutionRestrictionNat_naturality
       X Z hZ
   change (HomologicalComplex.extendMap a ComplexShape.embeddingUpNat ≫ eS.inv) ≫
-      (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map
+      (Γ.mapHomologicalComplex ℤᵘᵖ).map
         (HomologicalComplex.extendMap g ComplexShape.embeddingUpNat) =
     HomologicalComplex.extendMap f ComplexShape.embeddingUpNat ≫
       (HomologicalComplex.extendMap b ComplexShape.embeddingUpNat ≫ eD.inv)
@@ -620,7 +622,7 @@ def globalRawSupportConeToGlobalNaturalSingularCone
       CochainComplex.mappingCone
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-            (ComplexShape.up ℤ)).map
+            ℤᵘᵖ).map
           (naturalSingularResolutionRestriction X Z hZ)) :=
   CochainComplex.mappingCone.map
     (globalRawSingularRestrictionInt ℚ
@@ -628,7 +630,7 @@ def globalRawSupportConeToGlobalNaturalSingularCone
       Zᶜ)
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map
+        ℤᵘᵖ).map
       (naturalSingularResolutionRestriction X Z hZ))
     (globalRawToSingularSheafInt X)
     (globalRawComplementToDerivedPushforwardInt X Z hZ)
@@ -656,7 +658,7 @@ noncomputable instance globalRawSupportConeToGlobalNaturalSingularCone_quasiIso
       Zᶜ)
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map
+        ℤᵘᵖ).map
       (naturalSingularResolutionRestriction X Z hZ))
     (globalRawToSingularSheafInt X)
     (globalRawComplementToDerivedPushforwardInt X Z hZ) _)
@@ -674,7 +676,7 @@ def globalSectionsNaturalSingularConeIsoMappingCone
       CochainComplex.mappingCone
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-            (ComplexShape.up ℤ)).map
+            ℤᵘᵖ).map
           (naturalSingularResolutionRestriction X Z hZ)) :=
   CochainComplex.mappingCone.mapHomologicalComplexIso
     (naturalSingularResolutionRestriction X Z hZ)

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicTopology.OpenRawRelativeConnecting
 public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSingularSectionCohomology
 
@@ -43,7 +45,7 @@ displayed pair isomorphism. This isolates its evaluation from the resolutions. -
 theorem supportedSingularSupportComplementEquiv_apply
     [T2Space X] [∀ V : Opens X, ParacompactSpace V]
     (S : Set X) (hS : IsClosed S) (V : Opens X) (n : ℕ)
-    (a : ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
+    (a : ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ)) :
     supportedRationalSingularSectionCohomologyEquivSupportComplement X S hS V n a =
       relativeCohomologyMap ℚ n (openIntersectionPairIsoSupportComplement X S hS V).inv
@@ -74,7 +76,7 @@ set_option backward.isDefEq.respectTransparency false in
 degrees and the coefficient-forgetting grading comparison. -/
 theorem globalRawCochainIntIso_comp_topOpenDual (U : Opens X) :
     (globalRawSingularCochainComplexIntIsoRelative R X).hom ≫
-      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
         (relativeDualCochainShortComplexIntMap R (topOpenIntersectionPairIso X U).hom).τ₂ =
       (openRawSingularCochainComplexIntIsoDual R X ⊤).hom := by
   let F := forget₂ (ModuleCat R) AddCommGrpCat
@@ -83,7 +85,7 @@ theorem globalRawCochainIntIso_comp_topOpenDual (U : Opens X) :
       ComplexShape.embeddingUpNat ≫
     (HomologicalComplex.mapExtendCanonicalIso F (SingularChainComplex R X).linearDualCochainComplex
       ComplexShape.embeddingUpNat).inv) ≫
-      (F.mapHomologicalComplex (.up ℤ)).map (HomologicalComplex.extendMap f
+      (F.mapHomologicalComplex ℤᵘᵖ).map (HomologicalComplex.extendMap f
         ComplexShape.embeddingUpNat) = _
   rw [Category.assoc, ← HomologicalComplex.mapExtendCanonicalIso_inv_naturality,
     ← Category.assoc, ← HomologicalComplex.extendMap_comp]
@@ -125,9 +127,9 @@ theorem openRawRelativeCochainClass_top (U : Opens X) (n : ℕ)
   have hm : l.hom ≫ eL.hom = g.hom ≫ eG.hom ≫
       F.map (HomologicalComplex.homologyMap f.τ₂ (n : ℤ)) := by
     have hn := ShortComplex.mapHomologyIso_hom_naturality
-      ((HomologicalComplex.shortComplexFunctor (ModuleCat R) (.up ℤ) (n : ℤ)).map f.τ₂) F
+      ((HomologicalComplex.shortComplexFunctor (ModuleCat R) ℤᵘᵖ (n : ℤ)).map f.τ₂) F
     change HomologicalComplex.homologyMap
-      ((F.mapHomologicalComplex (.up ℤ)).map f.τ₂) (n : ℤ) ≫ eL.hom =
+      ((F.mapHomologicalComplex ℤᵘᵖ).map f.τ₂) (n : ℤ) ≫ eL.hom =
       eG.hom ≫ F.map (HomologicalComplex.homologyMap f.τ₂ (n : ℤ)) at hn
     change HomologicalComplex.homologyMap (openRawSingularCochainComplexIntIsoDual R X ⊤).hom
       (n : ℤ) ≫ eL.hom = _

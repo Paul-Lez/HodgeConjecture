@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicTopology.OpenRawRelativeConnecting
 public import Other.AlgebraicTopology.SupportedSectionConeConnecting
 public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSingularSectionCohomology
@@ -47,7 +49,7 @@ theorem openSingularSheafRestrictionCone_connecting_of_relative
     {V W : Opens X} (i : W ⟶ V) [ParacompactSpace V] [T2Space V]
     [ParacompactSpace W] [T2Space W] (n : ℕ)
     (a : RelativeCohomology ℚ (openInclusionPair X i) n) :
-    (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
+    (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
       (CochainComplex.mappingCone.triangle
         (HomologicalComplex.extendMap (openSingularSheafRestriction ℚ X i)
           ComplexShape.embeddingUpNat)).mor₃ ((n : ℤ) - 1) (n : ℤ) (by omega)
@@ -56,7 +58,7 @@ theorem openSingularSheafRestrictionCone_connecting_of_relative
       (HomologicalComplex.extendMap (openRawToSingularCochainSheafComplex ℚ X V)
         ComplexShape.embeddingUpNat) (n : ℤ)
       (openRawRelativeCochainClass ℚ X i n a)) := by
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
   have hc := congrArg
     (fun f => H.shiftMap f ((n : ℤ) - 1) n (show (1 : ℤ) + ((n : ℤ) - 1) = n by omega))
     (openRawToSingularSheafRestrictionCone_connecting ℚ X i)
@@ -86,7 +88,7 @@ theorem sectionComplexRestrictionExtendConeIso_connecting (X : TopCat.{0})
         (HomologicalComplex.extendMap (sectionComplexRestriction X (.up ℕ) K i)
           ComplexShape.embeddingUpNat)).mor₃ =
     (CochainComplex.mappingCone.triangle
-      (sectionComplexRestriction X (.up ℤ) (K.extend ComplexShape.embeddingUpNat) i)).mor₃ ≫
+      (sectionComplexRestriction X ℤᵘᵖ (K.extend ComplexShape.embeddingUpNat) i)).mor₃ ≫
       (HomologicalComplex.mapExtendCanonicalIso (supportEvaluation X V) K
         ComplexShape.embeddingUpNat).hom⟦(1 : ℤ)⟧' :=
   CochainComplex.mappingCone.homotopyCofiber_mapArrowIso_connecting _ _ _
@@ -126,7 +128,7 @@ theorem supportedRationalSingularSectionCohomologyEquivRelative_inclusion (n : �
   let eV := HomologicalComplex.mapExtendCanonicalIso (TopCat.Sheaf.supportEvaluation X V)
     K₀ ComplexShape.embeddingUpNat
   let ev := HomologicalComplex.homologyMapIso eV (n : ℤ)
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
   let x := (supportedRationalSingularSectionCohomologyEquivRelative X U V n).symm a
   have hx : HomologicalComplex.homologyMap eg.hom ((n : ℤ) - 1) (eK.hom x) =
       (openSingularSheafRestrictionConeCohomologyEquivRelative X i n).symm a := by

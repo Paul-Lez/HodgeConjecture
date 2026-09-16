@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSheafClass
 public import Other.AlgebraicTopology.CohomologySheafSectionNaturality
 
@@ -84,7 +86,7 @@ lemma complexSupportInjectiveCohomologySheafIsoRelative_section
 lemma complexSupportInjectiveCohomologySheafIsoRelative_section_apply
     (S : Closeds (ComplexPoint X)) (n : ℕ) (V : Opens (ComplexPoint X))
     (z : ((((supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ)) :
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ)) :
     (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.app (op V)
       (sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
         (complexSupportInjectiveComplex X S) (n : ℤ) V z) =

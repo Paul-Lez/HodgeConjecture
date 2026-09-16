@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportLocalHomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSingularSectionCohomology
@@ -36,7 +38,7 @@ local instance smoothClosedSupportCohomologySheafAnalyticTopology :
 def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
   ((TopCat.Sheaf.sheafSectionsSupportedOutside
-    (TopCat.of (ComplexPoint X)) S.compl).mapHomologicalComplex (.up ℤ)).obj
+    (TopCat.of (ComplexPoint X)) S.compl).mapHomologicalComplex ℤᵘᵖ).obj
       (ambientRationalInjectiveComplex X)
 
 instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint X)) :
@@ -49,7 +51,7 @@ singular cohomology of the same literal local support pair. -/
 def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
     (V : Opens (ComplexPoint X)) (n : ℕ) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ) ≃+
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ) ≃+
         RelativeCohomology ℚ (neighborhoodSupportComplementPair
           (V : Set (ComplexPoint X)) (S : Set (ComplexPoint X))) n := by
   let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W := openParacompactSpace X

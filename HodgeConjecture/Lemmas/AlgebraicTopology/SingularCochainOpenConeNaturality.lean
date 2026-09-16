@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainOpenCone
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
 
@@ -97,18 +99,18 @@ set_option backward.isDefEq.respectTransparency.types false in
 /-- The actual relative cone map after forgetting scalars termwise. -/
 def forgottenRelativeCochainConeMap {P Q : TopPair.{0}} (f : P ⟶ Q) :
     CochainComplex.mappingCone
-        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
           (relativeCochainRestrictionInt R Q)) ⟶
       CochainComplex.mappingCone
-        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
           (relativeCochainRestrictionInt R P)) :=
   CochainComplex.mappingCone.map _ _
-    (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+    (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
       (relativeDualCochainShortComplexIntMap R f).τ₂)
-    (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+    (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
       (relativeDualCochainShortComplexIntMap R f).τ₃)
     (by rw [← Functor.map_comp, ← Functor.map_comp]
-        exact congrArg ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+        exact congrArg ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
           (relativeDualCochainShortComplexIntMap R f).comm₂₃.symm)
 
 set_option backward.defeqAttrib.useBackward true in
@@ -133,7 +135,7 @@ lemma openRawSingularRestrictionConeIsoRelative_naturality :
 including the canonical comparison for forgetting scalars. -/
 def openRawSingularRestrictionConeIsoForgottenRelative :
     openRawSingularRestrictionCone R X i ≅
-      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
+      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
         (CochainComplex.mappingCone (relativeCochainRestrictionInt R (openInclusionPair X i))) :=
   openRawSingularRestrictionConeIsoRelative R X i ≪≫
     (CochainComplex.mappingCone.mapHomologicalComplexIso
@@ -148,7 +150,7 @@ lemma openRawSingularRestrictionConeIsoForgottenRelative_naturality :
     openRawSingularRestrictionConeMap R X i i' a b ≫
       (openRawSingularRestrictionConeIsoForgottenRelative R X i').hom =
     (openRawSingularRestrictionConeIsoForgottenRelative R X i).hom ≫
-      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
         (relativeCochainConeMap R (openInclusionPairMap X i i' a b)) := by
   dsimp only [openRawSingularRestrictionConeIsoForgottenRelative, Iso.trans_hom, Iso.symm_hom]
   rw [← Category.assoc, openRawSingularRestrictionConeIsoRelative_naturality, Category.assoc,
@@ -188,7 +190,7 @@ lemma openRawSingularRestrictionConeHomologyIso_naturality (n : ℤ) :
       (forget₂ (ModuleCat R) AddCommGrpCat).map
         (HomologicalComplex.homologyMap
           (relativeCochainConeMap R (openInclusionPairMap X i i' a b)) n) := by
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) n
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ n
   change H.map (openRawSingularRestrictionConeMap R X i i' a b) ≫
       (H.map (openRawSingularRestrictionConeIsoForgottenRelative R X i').hom ≫ _) =
     (H.map (openRawSingularRestrictionConeIsoForgottenRelative R X i).hom ≫ _) ≫ _
@@ -198,7 +200,7 @@ lemma openRawSingularRestrictionConeHomologyIso_naturality (n : ℤ) :
   exact congrArg (fun f => H.map
     (openRawSingularRestrictionConeIsoForgottenRelative R X i).hom ≫ f)
     (ShortComplex.mapHomologyIso_hom_naturality
-      ((HomologicalComplex.shortComplexFunctor (ModuleCat R) (.up ℤ) n).map
+      ((HomologicalComplex.shortComplexFunctor (ModuleCat R) ℤᵘᵖ n).map
         (relativeCochainConeMap R (openInclusionPairMap X i i' a b)))
       (forget₂ (ModuleCat R) AddCommGrpCat))
 
@@ -215,7 +217,7 @@ lemma openRawSingularRestrictionConeCohomologyEquivRelative_eq (n : ℕ)
   let eB := CochainComplex.mappingCone.mapHomologicalComplexIso
     (relativeCochainRestrictionInt R (openInclusionPair X i))
     (forget₂ (ModuleCat R) AddCommGrpCat)
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) ((n : ℤ) - 1)
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ ((n : ℤ) - 1)
   change relativeCochainConeCohomologyEquivCanonical R (openInclusionPair X i) n
     ((ShortComplex.mapHomologyIso _ (forget₂ (ModuleCat R) AddCommGrpCat)).hom
       (H.map eB.inv (H.map eA.hom z))) =
@@ -268,7 +270,7 @@ lemma openRawToSingularSheafRestrictionConeHomologyIso_inv_naturality
       (openRawToSingularSheafRestrictionConeHomologyIso X i' n).inv =
     (openRawToSingularSheafRestrictionConeHomologyIso X i n).inv ≫
       HomologicalComplex.homologyMap (openRawSingularRestrictionConeMap ℚ X i i' a b) n := by
-  have h := congrArg (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) n).map
+  have h := congrArg (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ n).map
     (openRawToSingularSheafRestrictionCone_naturality ℚ X i i' a b)
   rw [Functor.map_comp, Functor.map_comp] at h
   change HomologicalComplex.homologyMap (openRawSingularRestrictionConeMap ℚ X i i' a b) n ≫

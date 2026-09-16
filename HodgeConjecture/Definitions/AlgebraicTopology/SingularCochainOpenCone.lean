@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainOpenSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.MappingConeQuasiIso
 public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeCochainCone
@@ -114,7 +116,7 @@ private lemma openRawSingularRestriction_transport {V W : Opens X} (i : W ⟶ V)
 presentation used by relative cohomology. -/
 def openRawSingularCochainComplexIntIsoDual (V : Opens X) :
     (openRawSingularCochainComplex R X V).extend ComplexShape.embeddingUpNat ≅
-      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
+      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
         ((SingularChainComplex R (TopCat.of V)).linearDualCochainComplex.extend
           ComplexShape.embeddingUpNat) :=
   (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
@@ -132,7 +134,7 @@ lemma openRawSingularRestrictionInt_transport {V W : Opens X} (i : W ⟶ V) :
         ComplexShape.embeddingUpNat ≫
       (openRawSingularCochainComplexIntIsoDual R X W).hom =
     (openRawSingularCochainComplexIntIsoDual R X V).hom ≫
-      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
         (relativeCochainRestrictionInt R (openInclusionPair X i)) := by
   dsimp only [openRawSingularCochainComplexIntIsoDual, Iso.trans_hom,
     Functor.mapIso_hom, Iso.symm_hom]
@@ -156,7 +158,7 @@ restriction square. -/
 def openRawSingularRestrictionConeIsoRelative {V W : Opens X} (i : W ⟶ V) :
     openRawSingularRestrictionCone R X i ≅
       CochainComplex.mappingCone
-        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
           (relativeCochainRestrictionInt R (openInclusionPair X i))) :=
   HomologicalComplex.homotopyCofiber.mapArrowIso _ _
     (fun j => ⟨j - 1, ComplexShape.up_mk _ _ (by lia)⟩)

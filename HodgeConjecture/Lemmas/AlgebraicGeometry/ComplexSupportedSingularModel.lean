@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexSupportedSingularModel
 
 /-!
@@ -30,7 +32,7 @@ open, with no locally supplied comparison or acyclicity input. -/
 theorem complexSupportedSingularToAmbientInjective_onOpen_quasiIso
     (U V : Opens (ComplexPoint X)) :
     QuasiIso (((TopCat.Sheaf.supportEvaluation
-      (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex (.up ℤ)).map
+      (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex ℤᵘᵖ).map
         (complexSupportedSingularToAmbientInjective X U)) := by
   let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=
     openParacompactSpace X

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicTopology.SingularChainSheafDerivedPushforward
 public import Other.AlgebraicTopology.DerivedClosedSupportTruncation
 
@@ -81,7 +83,7 @@ def pointSupportedChainSection :
     AddCommGrpCat.of R ⟶
       (((TopCat.Sheaf.closedSupportSections X
         (closedEmbeddingSupport (pointChainEmbedding X x)
-          (pointChainEmbedding_isClosedEmbedding X x))).mapHomologicalComplex (.up ℤ)).obj
+          (pointChainEmbedding_isClosedEmbedding X x))).mapHomologicalComplex ℤᵘᵖ).obj
             (singularChainSheafCochainComplex R X)).X 0 :=
   pointChainSourceSheafSection R X x ≫
     ((singularChainSheafCochainPushforwardWithClosedSupport (pointChainEmbedding X x) R
@@ -106,10 +108,10 @@ lemma pointSupportedChainSection_inclusion :
 /-- The point-chain section is an actual degree-zero cocycle: the regraded complex has
 zero terms in positive degrees, so its outgoing differential vanishes. -/
 def pointSupportedChainCocycle :
-    (HomologicalComplex.single AddCommGrpCat.{u} (.up ℤ) 0).obj (AddCommGrpCat.of R) ⟶
+    (HomologicalComplex.single AddCommGrpCat.{u} ℤᵘᵖ 0).obj (AddCommGrpCat.of R) ⟶
       ((TopCat.Sheaf.closedSupportSections X
         (closedEmbeddingSupport (pointChainEmbedding X x)
-          (pointChainEmbedding_isClosedEmbedding X x))).mapHomologicalComplex (.up ℤ)).obj
+          (pointChainEmbedding_isClosedEmbedding X x))).mapHomologicalComplex ℤᵘᵖ).obj
             (singularChainSheafCochainComplex R X) :=
   HomologicalComplex.mkHomFromSingle (pointSupportedChainSection R X x) (by
     intro k hk
@@ -120,7 +122,7 @@ def pointSupportedChainCocycle :
 @[simp]
 lemma pointSupportedChainCocycle_f_zero :
     (pointSupportedChainCocycle R X x).f 0 =
-      (HomologicalComplex.singleObjXSelf (.up ℤ) 0 (AddCommGrpCat.of R)).hom ≫
+      (HomologicalComplex.singleObjXSelf ℤᵘᵖ 0 (AddCommGrpCat.of R)).hom ≫
         pointSupportedChainSection R X x :=
   HomologicalComplex.mkHomFromSingle_f _ _
 

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.HomologySheafSection
 public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportLocalization
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueQuasiIsoGlobalSections
@@ -45,15 +47,15 @@ variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 /-- The presheaf homology of the actual underlying complex. This is not defined
 as evaluation of the cohomology sheaf, since that evaluation is not exact. -/
 def sectionCohomologyPresheaf (n : ℤ) : Presheaf AddCommGrpCat.{u} X :=
-  (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).homology n
+  (((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K).homology n
 
 /-- Exact evaluation of presheaves identifies section-complex homology with
 the homology presheaf on the same open set. -/
 def sectionCohomologyPresheafOnOpenIso (n : ℤ) (U : Opens X) :
-    (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ≅
+    (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n ≅
       (sectionCohomologyPresheaf X K n).obj (op U) := by
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
-    ((((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).sc n)
+    ((((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K).sc n)
   exact S.mapHomologyIso ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op U))
 
 /-- The homology presheaf and actual homology sheaf have canonically equal stalks.
@@ -64,7 +66,7 @@ def sectionCohomologyPresheafStalkIso (n : ℤ) (x : X) :
   let S : ShortComplex (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
     K.sc n
   let P : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
-    (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).sc n
+    (((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K).sc n
   exact (P.mapHomologyIso (additivePresheafStalkFunctor X x)).symm ≪≫
     S.mapHomologyIso (additiveSheafStalkFunctor X x)
 

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicTopology.CohomologySheafOpenComparison
 
 /-! # The canonical local cohomology-sheaf map under actual open restriction -/
@@ -26,7 +28,7 @@ set_option backward.isDefEq.respectTransparency.types false in
 @[reassoc]
 lemma sectionCohomologyPresheafToSheaf_openRestriction (n : ℤ) :
     sectionCohomologyPresheafToSheaf (TopCat.of U)
-      (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex (.up ℤ)).obj K) n ≫
+      (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex ℤᵘᵖ).obj K) n ≫
       ((K.sc n).mapHomologyIso (U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u})).hom.hom =
     (openRestrictionSectionCohomologyPresheafIso X U K n).hom ≫
       (cohomologyOpenPresheafRestriction X U).map (sectionCohomologyPresheafToSheaf X K n) := by
@@ -50,11 +52,11 @@ lemma sectionCohomologyPresheafToSheaf_openRestriction (n : ℤ) :
 lemma openRestrictionSectionCohomologyPresheafIso_onOpen (n : ℤ)
     (W : Opens (TopCat.of U)) :
     (sectionCohomologyPresheafOnOpenIso (TopCat.of U)
-      (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex (.up ℤ)).obj K) n W).hom ≫
+      (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex ℤᵘᵖ).obj K) n W).hom ≫
       (openRestrictionSectionCohomologyPresheafIso X U K n).hom.app (op W) =
     (sectionCohomologyPresheafOnOpenIso X K n (U.isOpenEmbedding.functor.obj W)).hom := by
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
-    (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).sc n
+    (((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K).sc n
   exact (ShortComplex.mapHomologyIso_comp_hom S (cohomologyOpenPresheafRestriction X U)
     ((evaluation (Opens (TopCat.of U))ᵒᵖ AddCommGrpCat.{u}).obj (op W))).symm
 
@@ -67,7 +69,7 @@ actual open-restricted coefficient complex, through its exact homology compariso
 lemma sectionCohomologyToSheafSection_openRestriction (n : ℤ)
     (W : Opens (TopCat.of U)) :
     sectionCohomologyToSheafSection (TopCat.of U)
-      (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex (.up ℤ)).obj K) n W ≫
+      (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex ℤᵘᵖ).obj K) n W ≫
       ((K.sc n).mapHomologyIso (U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u})).hom.hom.app (op W) =
     sectionCohomologyToSheafSection X K n (U.isOpenEmbedding.functor.obj W) := by
   dsimp only [sectionCohomologyToSheafSection]

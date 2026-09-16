@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenInjectiveResolutionComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportLocalization
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
@@ -161,7 +163,7 @@ def ambientRationalOpenResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     ((TopCat.Sheaf.openRestrictionPushforward
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩).mapHomologicalComplex
-      (.up ℤ)).obj (ambientRationalInjectiveComplex X) ⟶
+      ℤᵘᵖ).obj (ambientRationalInjectiveComplex X) ⟶
         derivedPushforwardComplementConstantRationalComplexInt X Z :=
   (HomologicalComplex.mapExtendCanonicalIso
     (TopCat.Sheaf.openRestrictionPushforward
@@ -197,7 +199,7 @@ lemma actualRestriction_comp_openResolutionComparison
 def globalAmbientRationalOpenResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :=
   ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-    (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+    (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
       (ambientRationalOpenResolutionComparison X Z hZ)
 
 set_option backward.isDefEq.respectTransparency false in
@@ -211,14 +213,14 @@ instance globalAmbientRationalOpenResolutionComparison_quasiIso
     (.up ℕ)).map (TopCat.Sheaf.restrictedAmbientToOpenResolution Y U (AddCommGrpCat.of ℚ))
   let : QuasiIso ((Γ.mapHomologicalComplex (.up ℕ)).map k) :=
     TopCat.Sheaf.globalRestrictedAmbientToOpenResolution_quasiIso Y U (AddCommGrpCat.of ℚ)
-  let : QuasiIso ((Γ.mapHomologicalComplex (.up ℤ)).map
+  let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map
       (HomologicalComplex.extendMap k ComplexShape.embeddingUpNat)) :=
     CochainComplex.quasiIso_map_extendMap_nat Γ k
   dsimp only [globalAmbientRationalOpenResolutionComparison,
     ambientRationalOpenResolutionComparison]
   rw [Functor.map_comp]
-  change QuasiIso ((Γ.mapHomologicalComplex (.up ℤ)).map _ ≫
-    (Γ.mapHomologicalComplex (.up ℤ)).map
+  change QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map _ ≫
+    (Γ.mapHomologicalComplex ℤᵘᵖ).map
       (HomologicalComplex.extendMap k ComplexShape.embeddingUpNat))
   infer_instance
 
@@ -235,12 +237,12 @@ def actualSupportConeToAmbientInjectiveGlobalCone
         (ambientRationalInjectiveComplex X)).g ⟶
     CochainComplex.mappingCone
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
           (ambientRationalInjectiveRestriction X Z hZ)) :=
   CochainComplex.mappingCone.map _ _ (𝟙 _)
     (globalAmbientRationalOpenResolutionComparison X Z hZ) (by
       let Γ := (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,
         actualRestriction_comp_openResolutionComparison])
@@ -279,7 +281,7 @@ def rationalSupportAddEquivSupportedInjectiveHomology
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)
   let e₄ := (asIso (HomologicalComplex.homologyMap
     (CochainComplex.mappingCocone.shiftedLiftShortComplex S) (n - 1))).symm
-  let e₅ := ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftIso
+  let e₅ := ((HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftIso
     1 (n - 1) n (by omega)).app S.X₁
   exact (e₁.trans (e₂ ≪≫ e₃ ≪≫ e₄ ≪≫ e₅).addCommGroupIsoToAddEquiv).trans
     (AddEquiv.neg _)

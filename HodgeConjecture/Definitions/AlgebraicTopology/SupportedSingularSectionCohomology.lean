@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSectionRestrictionCone
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularFlasqueSupportModel
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainOpenCone
@@ -53,7 +55,7 @@ variable [T2Space X] [∀ V : Opens X, ParacompactSpace V] (U V : Opens X)
 /-- Actual local supported singular cohomology computes the literal relative pair
 `(V, V ∩ U)`, in supported degree `n`. -/
 def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
+    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj
       (supportedRationalSingularCochainComplex X U))).homology (n : ℤ) ≃+
         RelativeCohomology ℚ (openInclusionPair X (Opens.infLELeft V U)) n :=
   (TopCat.Sheaf.supportedSectionHomologyIsoRestrictionCone X U V
@@ -69,7 +71,7 @@ def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
 homeomorphism displayed explicitly rather than silently replacing an inclusion. -/
 def supportedRationalSingularSectionCohomologyEquivSupportComplement
     (S : Set X) (hS : IsClosed S) (V : Opens X) (n : ℕ) :
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
+    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ) ≃+
         RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n :=
   (supportedRationalSingularSectionCohomologyEquivRelative X ⟨Sᶜ, hS.isOpen_compl⟩ V n).trans

@@ -7,6 +7,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupport
 public import HodgeConjecture.Lemmas.AlgebraicTopology.InjectiveFlasque
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 /-!
 # The localization sequence on injective coefficient complexes
 
@@ -109,10 +110,10 @@ def supportRestrictionComplexShortComplex
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :=
   ShortComplex.mk
-    (show ((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj K ⟶ K from
+    (show ((sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).obj K ⟶ K from
       { f n := (sheafSectionsSupportedOutsideInclusion X U).app (K.X n)
         comm' i j h := ((sheafSectionsSupportedOutsideInclusion X U).naturality (K.d i j)).symm })
-    (show K ⟶ ((openRestrictionPushforward X U).mapHomologicalComplex (.up ℤ)).obj K from
+    (show K ⟶ ((openRestrictionPushforward X U).mapHomologicalComplex ℤᵘᵖ).obj K from
       { f n := (toOpenRestrictionPushforward X U).app (K.X n)
         comm' i j h := ((toOpenRestrictionPushforward X U).naturality (K.d i j)).symm })
     (by ext n; exact sheafSectionsSupportedOutsideInclusion_restriction X U (K.X n))
@@ -130,7 +131,7 @@ def supportRestrictionSectionsComplexShortComplex (V : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex AddCommGrpCat.{u} ℤ) :=
   (supportRestrictionComplexShortComplex X U K).map
-    ((supportEvaluation X V).mapHomologicalComplex (.up ℤ))
+    ((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ)
 
 /-- The support/restriction sequence is short exact even after taking sections
 on an arbitrary open set, for a termwise injective coefficient complex. -/
@@ -192,7 +193,7 @@ def derivedClosedSupportInjectiveModelIso (Z : Closeds X)
       DerivedCategory.Q.obj
         (supportRestrictionSectionsComplexShortComplex X Z.compl ⊤
           (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-            (.up ℤ)).obj I.obj)).X₁ :=
+            ℤᵘᵖ).obj I.obj)).X₁ :=
   (DerivedCategory.Plus.ι.mapIso
     (asIso ((derivedClosedSupportSectionsUnit X Z).app
       ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj
@@ -215,13 +216,13 @@ def derivedClosedSupportInjectiveFiberIso (Z : Closeds X)
         (CochainComplex.mappingCocone
           (supportRestrictionSectionsComplexShortComplex X Z.compl ⊤
             (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-              (.up ℤ)).obj I.obj)).g) := by
+              ℤᵘᵖ).obj I.obj)).g) := by
   let : ∀ n, Injective
       ((((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-        (.up ℤ)).obj I.obj).X n) := fun n => (I.obj.X n).property
+        ℤᵘᵖ).obj I.obj).X n) := fun n => (I.obj.X n).property
   have := supportRestrictionToFiber_quasiIso X Z.compl ⊤
     (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-      (.up ℤ)).obj I.obj)
+      ℤᵘᵖ).obj I.obj)
   exact derivedClosedSupportInjectiveModelIso X Z I ≪≫
     asIso (DerivedCategory.Q.map (supportRestrictionToFiber X Z.compl ⊤ _))
 
@@ -238,7 +239,7 @@ def derivedSheafSupportInjectiveModelIso (Z : Closeds X)
       DerivedCategory.Q.obj
         (supportRestrictionComplexShortComplex X Z.compl
           (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-            (.up ℤ)).obj I.obj)).X₁ :=
+            ℤᵘᵖ).obj I.obj)).X₁ :=
   (DerivedCategory.Plus.ι.mapIso
     (asIso ((derivedSheafSectionsWithClosedSupportUnit X Z).app
       ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj
@@ -260,13 +261,13 @@ def derivedSheafSupportInjectiveFiberIso (Z : Closeds X)
         (CochainComplex.mappingCocone
           (supportRestrictionComplexShortComplex X Z.compl
             (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-              (.up ℤ)).obj I.obj)).g) := by
+              ℤᵘᵖ).obj I.obj)).g) := by
   let : ∀ n, Injective
       ((((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-        (.up ℤ)).obj I.obj).X n) := fun n => (I.obj.X n).property
+        ℤᵘᵖ).obj I.obj).X n) := fun n => (I.obj.X n).property
   have := sheafSupportRestrictionToFiber_quasiIso X Z.compl
     (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-      (.up ℤ)).obj I.obj)
+      ℤᵘᵖ).obj I.obj)
   exact derivedSheafSupportInjectiveModelIso X Z I ≪≫
     asIso (DerivedCategory.Q.map (sheafSupportRestrictionToFiber X Z.compl _))
 

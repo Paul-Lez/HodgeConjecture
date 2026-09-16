@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturality
 
 /-! # Hom-complex cohomology and target shifts -/
@@ -71,24 +73,24 @@ have the standard `(-1)^s` factors; its middle component has no sign. -/
 def rightUnshiftShortComplex :
     (HomComplex A (K⟦s⟧)).sc n ⟶ (HomComplex A K).sc n' where
   τ₁ := s.negOnePow • AddCommGrpCat.ofHom
-    (rightUnshiftCochain A K s ((ComplexShape.up ℤ).prev n)
-      ((ComplexShape.up ℤ).prev n') (by simp only [CochainComplex.prev]; omega))
+    (rightUnshiftCochain A K s ((ℤᵘᵖ).prev n)
+      ((ℤᵘᵖ).prev n') (by simp only [CochainComplex.prev]; omega))
   τ₂ := AddCommGrpCat.ofHom (rightUnshiftCochain A K s n n' h)
   τ₃ := s.negOnePow • AddCommGrpCat.ofHom
-    (rightUnshiftCochain A K s ((ComplexShape.up ℤ).next n)
-      ((ComplexShape.up ℤ).next n') (by simp only [CochainComplex.next]; omega))
+    (rightUnshiftCochain A K s ((ℤᵘᵖ).next n)
+      ((ℤᵘᵖ).next n') (by simp only [CochainComplex.next]; omega))
   comm₁₂ := by
     ext z
-    change δ ((ComplexShape.up ℤ).prev n') n'
-        (s.negOnePow • z.rightUnshift ((ComplexShape.up ℤ).prev n')
+    change δ ((ℤᵘᵖ).prev n') n'
+        (s.negOnePow • z.rightUnshift ((ℤᵘᵖ).prev n')
           (by simp only [CochainComplex.prev]; omega)) =
-      (δ ((ComplexShape.up ℤ).prev n) n z).rightUnshift n' h
+      (δ ((ℤᵘᵖ).prev n) n z).rightUnshift n' h
     rw [δ_units_smul, Cochain.δ_rightUnshift z _ _ n' n h,
       smul_smul, Int.units_mul_self, one_smul]
   comm₂₃ := by
     ext z
-    exact Cochain.δ_rightUnshift z n' h ((ComplexShape.up ℤ).next n')
-      ((ComplexShape.up ℤ).next n) (by simp only [CochainComplex.next]; omega)
+    exact Cochain.δ_rightUnshift z n' h ((ℤᵘᵖ).next n')
+      ((ℤᵘᵖ).next n) (by simp only [CochainComplex.next]; omega)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

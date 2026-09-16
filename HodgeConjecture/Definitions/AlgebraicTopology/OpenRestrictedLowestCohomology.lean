@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenRestrictedCohomologyVanishing
 
 /-!
@@ -39,16 +41,16 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The same actual open equality applied to coefficient complexes. -/
 def openRestrictionTopSectionComplexIso :
-    ((supportEvaluation (TopCat.of U) ⊤).mapHomologicalComplex (.up ℤ)).obj
+    ((supportEvaluation (TopCat.of U) ⊤).mapHomologicalComplex ℤᵘᵖ).obj
       (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-        (.up ℤ)).obj K) ≅
-      ((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K :=
-  (NatIso.mapHomologicalComplex (openRestrictionTopSectionsIso X U) (.up ℤ)).app K
+        ℤᵘᵖ).obj K) ≅
+      ((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K :=
+  (NatIso.mapHomologicalComplex (openRestrictionTopSectionsIso X U) ℤᵘᵖ).app K
 
 /-- Exact open restriction identifies sections of the two actual homology sheaves. -/
 def openRestrictionHomologyTopSectionsIso (n : ℤ) :
     (((((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-      (.up ℤ)).obj K).homology n).obj.obj (op (⊤ : Opens (TopCat.of U)))) ≅
+      ℤᵘᵖ).obj K).homology n).obj.obj (op (⊤ : Opens (TopCat.of U)))) ≅
         (K.homology n).obj.obj (op U) :=
   (supportEvaluation (TopCat.of U) ⊤).mapIso
     ((K.sc n).mapHomologyIso (U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u})) ≪≫
@@ -61,12 +63,12 @@ Its maps are fixed by restriction, sheafification, and exact homology functorial
 def openRestrictedLowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero
       ((((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-        (.up ℤ)).obj K).homology j))
+        ℤᵘᵖ).obj K).homology j))
     (hflasque : ∀ j, (K.X j).IsFlasque) :
-    (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ≅
+    (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n ≅
       (K.homology n).obj.obj (op U) := by
   let L := ((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-    (.up ℤ)).obj K
+    ℤᵘᵖ).obj K
   have hLF (j : ℤ) : (L.X j).IsFlasque := by
     let := hflasque j
     exact openSheafRestriction_isFlasque X U (K.X j)

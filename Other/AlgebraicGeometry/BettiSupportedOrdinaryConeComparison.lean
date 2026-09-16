@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalConeForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexSupportedSingularModel
@@ -71,12 +73,12 @@ theorem rationalCohomologyAmbient_forgetSupport_naturalSingularCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
     (a : RationalCohomologyWithSupport X Z n) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n (forgetSupport X Z n a) =
-      (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
+      (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
         (ShiftedHom.map
           ((CochainComplex.mappingCone.triangle (naturalSingularResolutionRestriction X Z hZ)).mor₃ ≫
             (complexSingularToAmbientInjective X)⟦(1 : ℤ)⟧')
           ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-            (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)))
+            (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ))
         (n - 1) n (by omega)
         (rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections X Z hZ n a) := by
   let K := CochainComplex.mappingCone (naturalSingularResolutionRestriction X Z hZ)

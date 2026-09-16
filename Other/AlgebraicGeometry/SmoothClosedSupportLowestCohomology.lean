@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
 public import HodgeConjecture.Definitions.AlgebraicTopology.FlasqueSupportedSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LowestFlasqueCohomology
@@ -45,7 +47,7 @@ variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 the section group of the actual cohomology sheaf, on every open set. -/
 def smoothClosedSupportLowestSectionCohomologyIso (U : Opens (ComplexPoint X)) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X
         (smoothClosedAnalyticSupport X Y i)))).homology (2 * ((d - m : ℕ) : ℤ)) ≅
       ((complexSupportInjectiveComplex X (smoothClosedAnalyticSupport X Y i)).homology
         (2 * ((d - m : ℕ) : ℤ))).obj.obj (op U) :=
@@ -70,7 +72,7 @@ dimension on every open. Higher-degree global vanishing is not asserted. -/
 theorem smoothClosedSupportSectionCohomology_isZero_of_lt
     (U : Opens (ComplexPoint X)) (n : ℤ) (hn : n < 2 * ((d - m : ℕ) : ℤ)) :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X
         (smoothClosedAnalyticSupport X Y i))).homology n) := by
   let e := TopCat.Sheaf.lowestSectionCohomologyIso (TopCat.of (ComplexPoint X))
     (complexSupportInjectiveComplex X (smoothClosedAnalyticSupport X Y i)) 0 n

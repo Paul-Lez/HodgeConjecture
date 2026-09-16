@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSingularSectionNaturality
 public import HodgeConjecture.Definitions.AlgebraicTopology.CohomologySheafSection
 
@@ -33,9 +35,9 @@ lemma sectionCohomologyPresheafOnOpenIso_inv_naturality
     (sectionCohomologyPresheaf X K n).map a.op ≫
       (sectionCohomologyPresheafOnOpenIso X K n W).inv =
     (sectionCohomologyPresheafOnOpenIso X K n V).inv ≫
-      homologyMap (sectionComplexRestriction X (.up ℤ) K a) n := by
+      homologyMap (sectionComplexRestriction X ℤᵘᵖ K a) n := by
   let P : CochainComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) ℤ :=
-    ((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K
+    ((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) := P.sc n
   change ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).map a.op).app S.homology ≫
       (S.mapHomologyIso ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op W))).inv =

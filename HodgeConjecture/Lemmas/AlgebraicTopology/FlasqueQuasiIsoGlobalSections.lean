@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.BoundedBelowFlasqueComplex
 public import Mathlib.Algebra.Homology.HomotopyCategory.MappingCone
 
@@ -154,8 +156,8 @@ lemma mappingCone_acyclic_of_quasiIso
     (CochainComplex.mappingCone.triangleh f)
     (HomotopyCategory.mappingCone_triangleh_distinguished f)).mp
   rw [← HomotopyCategory.quasiIso_eq_trW_subcategoryAcyclic]
-  change HomotopyCategory.quasiIso C (ComplexShape.up ℤ)
-    ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).map f)
+  change HomotopyCategory.quasiIso C ℤᵘᵖ
+    ((HomotopyCategory.quotient C ℤᵘᵖ).map f)
   rw [HomotopyCategory.quotient_map_mem_quasiIso_iff, HomologicalComplex.mem_quasiIso_iff]
   infer_instance
 
@@ -170,7 +172,7 @@ lemma quasiIso_of_mappingCone_acyclic
     (CochainComplex.mappingCone.triangleh f)
     (HomotopyCategory.mappingCone_triangleh_distinguished f)).mpr
   change (HomotopyCategory.subcategoryAcyclic C)
-    ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj
+    ((HomotopyCategory.quotient C ℤᵘᵖ).obj
       (CochainComplex.mappingCone f))
   rw [HomotopyCategory.quotient_obj_mem_subcategoryAcyclic_iff_acyclic]
   exact h
@@ -198,7 +200,7 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
     (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
     (hK : ∀ i, (K.X i).IsFlasque) (hL : ∀ i, (L.X i).IsFlasque) :
     QuasiIso
-      (((globalSectionsFunctor X).mapHomologicalComplex (ComplexShape.up ℤ)).map f) := by
+      (((globalSectionsFunctor X).mapHomologicalComplex ℤᵘᵖ).map f) := by
   let M := CochainComplex.mappingCone f
   let n := min nK nL - 1
   let : M.IsStrictlyGE n := by
@@ -217,7 +219,7 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
   let F := globalSectionsFunctor X
   have hcone :
       (CochainComplex.mappingCone
-        ((F.mapHomologicalComplex (ComplexShape.up ℤ)).map f)).Acyclic :=
+        ((F.mapHomologicalComplex ℤᵘᵖ).map f)).Acyclic :=
     acyclic_of_iso hglobal (CochainComplex.mappingCone.mapHomologicalComplexIso f F)
   exact quasiIso_of_mappingCone_acyclic _ hcone
 

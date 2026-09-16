@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.BoundedBelowFlasqueComplex
 /-!
 # Global lower-degree vanishing for flasque coefficient complexes
@@ -98,10 +100,10 @@ lemma globalSectionsComplex_exactAt_of_cycles_isFlasque (i : ℤ)
     change Epi ((K.toCycles (i - 1) (i - 1 + 1)).hom.app (op (⊤ : Opens X))) at hepiTop
     rw [hi] at hepiTop
     exact hepiTop
-  have hprev : (ComplexShape.up ℤ).prev i = i - 1 :=
-    (ComplexShape.up ℤ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
-  have hnext : (ComplexShape.up ℤ).next i = i + 1 :=
-    (ComplexShape.up ℤ).next_eq' (ComplexShape.up_mk _ _ rfl)
+  have hprev : (ℤᵘᵖ).prev i = i - 1 :=
+    (ℤᵘᵖ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
+  have hnext : (ℤᵘᵖ).next i = i + 1 :=
+    (ℤᵘᵖ).next_eq' (ComplexShape.up_mk _ _ rfl)
   let T : ShortComplex AddCommGrpCat.{u} :=
     ShortComplex.mk (F.map (K.d (i - 1) i)) (F.map (K.d i (i + 1))) (by
       rw [← F.map_comp, K.d_comp_d, F.map_zero])

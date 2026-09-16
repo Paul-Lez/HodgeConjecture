@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicGeometry.BettiSupportedRawOrdinaryComparison
 public import Other.AlgebraicTopology.GlobalRawRelativeConnecting
 
@@ -41,7 +43,7 @@ theorem rationalCohomologyAmbient_forgetSupport_of_singular_signed
     -(HomologicalComplex.homologyMap
       (globalRawToSingularSheafInt X ≫
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
           (complexSingularToAmbientInjective X)) (n : ℤ)
       (globalRawRelativeCochainClass ℚ (TopCat.of (ComplexPoint X)) Zᶜ n a)) := by
   rw [rationalCohomologyAmbient_forgetSupport_of_singular X Z hZ]

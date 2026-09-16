@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.CycleComponentSmoothSupportPurity
 
 /-!
@@ -82,7 +84,7 @@ Higher-degree global vanishing is not inferred from sheaf concentration. -/
 theorem cycleComponentSmoothSupportSectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * (p : ℤ)) :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
+      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology n) := by
   apply TopCat.Sheaf.sectionCohomology_isZero_of_cofinal_lower_vanishing
     (TopCat.of (ComplexPoint X)) _ _ 0 n

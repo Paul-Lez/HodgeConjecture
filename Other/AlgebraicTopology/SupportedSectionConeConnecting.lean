@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SupportedSectionRestrictionCone
 public import Other.Algebra.Homology.MapArrowConeConnecting
 
@@ -28,12 +30,12 @@ does not change the actual cone connecting morphism. -/
 theorem supportRestrictionSectionsConeIso_connecting :
     (supportRestrictionSectionsConeIso X U V K).hom ≫
       (CochainComplex.mappingCone.triangle
-        (sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U))).mor₃ =
+        (sectionComplexRestriction X ℤᵘᵖ K (Opens.infLELeft V U))).mor₃ =
     (CochainComplex.mappingCone.triangle
       (supportRestrictionSectionsComplexShortComplex X U V K).g).mor₃ := by
   have h := CochainComplex.mappingCone.homotopyCofiber_mapArrowIso_connecting
     (supportRestrictionSectionsComplexShortComplex X U V K).g
-    (sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U))
+    (sectionComplexRestriction X ℤᵘᵖ K (Opens.infLELeft V U))
     (Arrow.isoMk (Iso.refl _) (supportRestrictionSectionsIntersectionIso X U V K)
       (by simpa using (supportRestrictionSectionsIntersectionIso_restriction X U V K).symm))
   change (supportRestrictionSectionsConeIso X U V K).hom ≫ _ =
@@ -50,14 +52,14 @@ map is the negative actual inclusion of supported sections. -/
 theorem supportedSectionHomologyIsoRestrictionCone_connecting
     (hK : ∀ n, (K.X n).IsFlasque) (n : ℤ) :
     (supportedSectionHomologyIsoRestrictionCone X U V K hK n).hom ≫
-      (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
+      (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
         (CochainComplex.mappingCone.triangle
-          (sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U))).mor₃
+          (sectionComplexRestriction X ℤᵘᵖ K (Opens.infLELeft V U))).mor₃
         (n - 1) n (by omega) =
       -HomologicalComplex.homologyMap
         (supportRestrictionSectionsComplexShortComplex X U V K).f n := by
   let S := supportRestrictionSectionsComplexShortComplex X U V K
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
   have he := congrArg (fun f => H.shiftMap f (n - 1) n (show (1 : ℤ) + (n - 1) = n by omega))
     (supportRestrictionSectionsConeIso_connecting X U V K)
   rw [Functor.shiftMap_comp'] at he

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShift
 
@@ -68,7 +70,7 @@ variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Termwise coefficient transformations commute with cohomological shifts. -/
-instance mapCochainComplexCommShift : CommShift (α.mapHomologicalComplex (.up ℤ)) ℤ where
+instance mapCochainComplexCommShift : CommShift (α.mapHomologicalComplex ℤᵘᵖ) ℤ where
   shift_comm a := by
     ext K i
     simp
@@ -76,37 +78,37 @@ instance mapCochainComplexCommShift : CommShift (α.mapHomologicalComplex (.up �
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The induced transformation on homotopy categories retains the actual shifts. -/
-instance mapHomotopyCategoryCommShift : CommShift (α.mapHomotopyCategory (.up ℤ)) ℤ := by
-  have h : Functor.whiskerLeft (HomotopyCategory.quotient C (.up ℤ))
-      (α.mapHomotopyCategory (.up ℤ)) =
-      (F.mapHomotopyCategoryFactors (.up ℤ)).hom ≫
-        Functor.whiskerRight (α.mapHomologicalComplex (.up ℤ))
-          (HomotopyCategory.quotient D (.up ℤ)) ≫
-        (G.mapHomotopyCategoryFactors (.up ℤ)).inv := by
+instance mapHomotopyCategoryCommShift : CommShift (α.mapHomotopyCategory ℤᵘᵖ) ℤ := by
+  have h : Functor.whiskerLeft (HomotopyCategory.quotient C ℤᵘᵖ)
+      (α.mapHomotopyCategory ℤᵘᵖ) =
+      (F.mapHomotopyCategoryFactors ℤᵘᵖ).hom ≫
+        Functor.whiskerRight (α.mapHomologicalComplex ℤᵘᵖ)
+          (HomotopyCategory.quotient D ℤᵘᵖ) ≫
+        (G.mapHomotopyCategoryFactors ℤᵘᵖ).inv := by
     ext K
     simp [Functor.mapHomotopyCategoryFactors, mapHomotopyCategory]
     exact (Category.id_comp _).symm
-  have : CommShift (Functor.whiskerLeft (HomotopyCategory.quotient C (.up ℤ))
-      (α.mapHomotopyCategory (.up ℤ))) ℤ := by
+  have : CommShift (Functor.whiskerLeft (HomotopyCategory.quotient C ℤᵘᵖ)
+      (α.mapHomotopyCategory ℤᵘᵖ)) ℤ := by
     rw [h]
     infer_instance
-  exact commShift_of_whiskerLeft ℤ (HomotopyCategory.quotient C (.up ℤ)) _
+  exact commShift_of_whiskerLeft ℤ (HomotopyCategory.quotient C ℤᵘᵖ) _
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Restricting to bounded-below homotopy complexes preserves shift compatibility. -/
 instance mapHomotopyCategoryPlusCommShift : CommShift α.mapHomotopyCategoryPlus ℤ := by
   let eF : F.mapHomotopyCategoryPlus ⋙ HomotopyCategory.Plus.ι D ≅
-      HomotopyCategory.Plus.ι C ⋙ F.mapHomotopyCategory (.up ℤ) :=
+      HomotopyCategory.Plus.ι C ⋙ F.mapHomotopyCategory ℤᵘᵖ :=
     (HomotopyCategory.plus D).liftCompιIso _ _
   let eG : G.mapHomotopyCategoryPlus ⋙ HomotopyCategory.Plus.ι D ≅
-      HomotopyCategory.Plus.ι C ⋙ G.mapHomotopyCategory (.up ℤ) :=
+      HomotopyCategory.Plus.ι C ⋙ G.mapHomotopyCategory ℤᵘᵖ :=
     (HomotopyCategory.plus D).liftCompιIso _ _
   have : CommShift eF.hom ℤ := by dsimp [eF]; infer_instance
   have : CommShift eG.hom ℤ := by dsimp [eG]; infer_instance
   have h : Functor.whiskerRight α.mapHomotopyCategoryPlus (HomotopyCategory.Plus.ι D) =
       eF.hom ≫ Functor.whiskerLeft (HomotopyCategory.Plus.ι C)
-        (α.mapHomotopyCategory (.up ℤ)) ≫ eG.inv := by
+        (α.mapHomotopyCategory ℤᵘᵖ) ≫ eG.inv := by
     ext K
     simp [eF, eG, mapHomotopyCategoryPlus, ObjectProperty.liftCompιIso]
     exact (Category.id_comp _).symm

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison
 public import Other.AlgebraicTopology.RelativeCochainConeForgetComparison
 
@@ -35,23 +37,23 @@ theorem globalRawSupportConeToNatural_ambient_connecting
     globalRawSupportConeToGlobalNaturalSingularCone X Z hZ ≫
       (CochainComplex.mappingCone.triangle
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
           (naturalSingularResolutionRestriction X Z hZ))).mor₃ ≫
       ((((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
         (complexSingularToAmbientInjective X)))⟦(1 : ℤ)⟧' =
     (CochainComplex.mappingCone.triangle
       (globalRawSingularRestrictionInt ℚ (TopCat.of (ComplexPoint X))
         Zᶜ)).mor₃ ≫
       (globalRawToSingularSheafInt X ≫
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
           (complexSingularToAmbientInjective X))⟦(1 : ℤ)⟧' := by
   have h := (CochainComplex.mappingCone.triangleMap
     (globalRawSingularRestrictionInt ℚ (TopCat.of (ComplexPoint X))
       Zᶜ)
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
       (naturalSingularResolutionRestriction X Z hZ))
     (globalRawToSingularSheafInt X)
     (globalRawComplementToDerivedPushforwardInt X Z hZ)
@@ -74,9 +76,9 @@ theorem rationalCohomologyAmbient_forgetSupport_rawSingularCone
       HomologicalComplex.homologyMap
         (globalRawToSingularSheafInt X ≫
           ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-            (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+            (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
             (complexSingularToAmbientInjective X)) n
-        ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
+        ((HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
           (CochainComplex.mappingCone.triangle
             (globalRawSingularRestrictionInt ℚ (TopCat.of (ComplexPoint X))
               Zᶜ)).mor₃ (n - 1) n (by omega)
@@ -88,8 +90,8 @@ theorem rationalCohomologyAmbient_forgetSupport_rawSingularCone
                 X Z hZ n a)))) := by
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
     (TopCat.of (ComplexPoint X))
-  let F := Γ.mapHomologicalComplex (.up ℤ)
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
+  let F := Γ.mapHomologicalComplex ℤᵘᵖ
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
   let b := naturalSingularResolutionRestriction X Z hZ
   let u := complexSingularToAmbientInjective X
   let c := globalRawSupportConeToGlobalNaturalSingularCone X Z hZ
@@ -144,9 +146,9 @@ theorem rationalCohomologyAmbient_forgetSupport_of_singular
       HomologicalComplex.homologyMap
         (globalRawToSingularSheafInt X ≫
           ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-            (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+            (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
             (complexSingularToAmbientInjective X)) (n : ℤ)
-        ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
+        ((HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
           (CochainComplex.mappingCone.triangle
             (globalRawSingularRestrictionInt ℚ (TopCat.of (ComplexPoint X))
               Zᶜ)).mor₃ ((n : ℤ) - 1) (n : ℤ) (by omega)

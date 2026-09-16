@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.DerivedSupportRationalConeForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSupportExtension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSmoothSupportCoclassSection
@@ -58,7 +60,7 @@ variable (x : X.left) {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
 computed in the fixed ambient injective resolution. -/
 abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
   (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-    (.up ℤ)).obj (complexSupportInjectiveComplex X
+    ℤᵘᵖ).obj (complexSupportInjectiveComplex X
       (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))
 
 /-- Sections of the local relative-cohomology sheaf on the smooth-locus ambient open. -/

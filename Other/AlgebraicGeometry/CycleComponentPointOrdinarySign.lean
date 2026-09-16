@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicGeometry.CycleComponentPointClassNormalization
 public import Other.AlgebraicGeometry.PointCycleClass
 public import Other.AlgebraicGeometry.ComplexSupportedOrdinaryComparison
@@ -120,7 +122,7 @@ theorem analyticComponentPointPositiveKernelClass_raw_positive :
         (HomologicalComplex.homologyMap
           (globalRawToSingularSheafInt X ≫
             ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-              (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+              (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
                 (complexSingularToAmbientInjective X)) (2 * (d : ℤ))
           (globalRawRelativeCochainClass ℚ (TopCat.of (ComplexPoint X))
             (cycleComponentAnalyticClosedSupport X x).compl (2 * d)
@@ -159,7 +161,7 @@ theorem cycleComponentSheafClass_point_raw_positive (hx : Order.coheight x = d) 
         (HomologicalComplex.homologyMap
           (globalRawToSingularSheafInt X ≫
             ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-              (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+              (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
                 (complexSingularToAmbientInjective X)) (2 * (d : ℤ))
           (globalRawRelativeCochainClass ℚ (TopCat.of (ComplexPoint X))
             (cycleComponentAnalyticClosedSupport X x).compl (2 * d)

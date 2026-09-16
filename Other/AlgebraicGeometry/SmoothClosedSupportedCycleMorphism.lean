@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicGeometry.SmoothClosedCycleMorphism
 public import Other.AlgebraicTopology.DerivedSheafSupportTruncation
 
@@ -54,7 +56,7 @@ of the smooth ambient chain model. It is a map, not an assumed equivalence. -/
 def complexChainTermwiseToDerivedSupport (S : Closeds (ComplexPoint X)) :
     DerivedCategory.Q.obj
       (((TopCat.Sheaf.sheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X)) S).mapHomologicalComplex
-        (.up ℤ)).obj
+        ℤᵘᵖ).obj
           (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X)))) ⟶
     DerivedCategory.Plus.ι.obj
       ((TopCat.Sheaf.derivedSheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X)) S).obj

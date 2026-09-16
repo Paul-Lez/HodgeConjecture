@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexLocalHomologyVanishing
 public import Other.AlgebraicGeometry.ComplexOrientationHomologySheaf
 public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportShift
@@ -250,9 +252,9 @@ theorem complexChainSheafDerivedSingleOrientationIso_homology :
     (DerivedCategory.homologyFunctor _ (-((2 * d : ℕ) : ℤ))).map
         (complexChainSheafDerivedSingleOrientationIso X d).hom ≫
       (DerivedCategory.homologyFunctorFactors _ (-((2 * d : ℕ) : ℤ))).hom.app
-        ((HomologicalComplex.single _ (.up ℤ) (-((2 * d : ℕ) : ℤ))).obj
+        ((HomologicalComplex.single _ ℤᵘᵖ (-((2 * d : ℕ) : ℤ))).obj
           (singularOrientationConstantSheaf ℚ (TopCat.of (ComplexPoint X)))) ≫
-      (HomologicalComplex.singleObjHomologySelfIso (.up ℤ) (-((2 * d : ℕ) : ℤ)) _).hom =
+      (HomologicalComplex.singleObjHomologySelfIso ℤᵘᵖ (-((2 * d : ℕ) : ℤ)) _).hom =
       (DerivedCategory.homologyFunctorFactors _ (-((2 * d : ℕ) : ℤ))).hom.app
         (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X))) ≫
       (singularChainSheafCochainHomologyIso ℚ

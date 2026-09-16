@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.BettiSheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FlasqueQuasiIsoGlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.InjectiveFlasque
@@ -54,7 +56,7 @@ coyoneda functor applied to the target complex. -/
 def fromSingleZeroIsoPreadditiveCoyoneda (X : C) (K : CochainComplex C ℤ) :
     CochainComplex.HomComplex ((CochainComplex.singleFunctor C 0).obj X) K ≅
       ((preadditiveCoyoneda.obj (.op X)).mapHomologicalComplex
-        (ComplexShape.up ℤ)).obj K :=
+        ℤᵘᵖ).obj K :=
   HomologicalComplex.Hom.isoOfComponents
     (fun n ↦ (Cochain.fromSingleEquiv (p := 0) (q := n) (n := n)
       (zero_add n)).toAddCommGrpIso)
@@ -179,7 +181,7 @@ def homComplexSingleIntegerIsoGlobalSections
       ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
         (AddCommGrpCat.of ℤ)) K ≪≫
     (NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y)
-      (ComplexShape.up ℤ)).app K
+      ℤᵘᵖ).app K
 
 end TopCat.Sheaf
 
@@ -261,7 +263,7 @@ def rationalSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
     (i : singularCochainSheafComplexInt X ℚ ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map i)]
+        ℤᵘᵖ).map i)]
     (n : ℤ) :
     RationalSingularCochainHypercohomology X n ≃
       (TopCat.Sheaf.globalSectionsComplexInt
@@ -274,11 +276,11 @@ def rationalSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
   let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle X
   have hi : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
-      (ComplexShape.up ℤ) i := by
+      ℤᵘᵖ i := by
     rw [HomologicalComplex.mem_quasiIso_iff]
     infer_instance
   have he : HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X)
-      (ComplexShape.up ℤ) e.inv := by
+      ℤᵘᵖ e.inv := by
     rw [HomologicalComplex.mem_quasiIso_iff]
     infer_instance
   let e₁ := Localization.SmallShiftedHom.postcompEquiv
@@ -291,9 +293,9 @@ def rationalSingularCochainHypercohomologyEquivGlobalSectionsOfResolution
   let e₅ := (HomologicalComplex.homologyMapIso
     (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
       |>.addCommGroupIsoToAddEquiv.toEquiv
-  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
+  let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map i) := inferInstance
   let e₆ := (asIso (HomologicalComplex.homologyMap
-    ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
+    ((Γ.mapHomologicalComplex ℤᵘᵖ).map i) n)).symm
       |>.addCommGroupIsoToAddEquiv.toEquiv
   exact e₁.trans (e₂.trans (e₃.trans (e₄.trans (e₅.trans e₆))))
 
@@ -322,7 +324,7 @@ def rationalSingularCochainHypercohomologyEquivGlobalSections
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
   letI : QuasiIso
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-        ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
+        ).mapHomologicalComplex ℤᵘᵖ).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i 0 0 hSflasque hIflasque
   exact rationalSingularCochainHypercohomologyEquivGlobalSectionsOfResolution

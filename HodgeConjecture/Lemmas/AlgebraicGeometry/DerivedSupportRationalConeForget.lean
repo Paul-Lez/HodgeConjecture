@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.DerivedSupportRationalConeForget
 
 /-!
@@ -68,12 +70,12 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
     (x : RationalCohomologyWithSupport X Z n) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n
       (forgetSupport X Z n x) =
-    (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
+    (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
       (ShiftedHom.map
         (CochainComplex.mappingCone.triangle
           (ambientRationalInjectiveRestriction X Z hZ)).mor₃
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)))
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ))
       (n - 1) n (by omega)
       (rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x) := by
   change hypercohomologyAddEquivGlobalSectionsKInjective X _ n
@@ -113,7 +115,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
     (ambientRationalInjectiveComplex X)
   let b := ambientRationalInjectiveRestriction X Z hZ
   let c := actualSupportConeToAmbientInjectiveGlobalCone X Z hZ
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
   let e := CochainComplex.mappingCone.mapHomologicalComplexIso b Γ
   let y := rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x
   let : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
@@ -121,14 +123,14 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)
   have hc : HomologicalComplex.homologyMap c (n - 1) ≫
       H.shiftMap (CochainComplex.mappingCone.triangle
-        ((Γ.mapHomologicalComplex (.up ℤ)).map b)).mor₃ (n - 1) n (by omega) =
+        ((Γ.mapHomologicalComplex ℤᵘᵖ).map b)).mor₃ (n - 1) n (by omega) =
       H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) := by
     change (H.shift (n - 1)).map c ≫ _ = _
     rw [← Functor.shiftMap_comp', actualSupportConeToAmbientInjectiveGlobalCone_connecting]
   have hc' : inv (HomologicalComplex.homologyMap c (n - 1)) ≫
       H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) =
       H.shiftMap (CochainComplex.mappingCone.triangle
-        ((Γ.mapHomologicalComplex (.up ℤ)).map b)).mor₃ (n - 1) n (by omega) := by
+        ((Γ.mapHomologicalComplex ℤᵘᵖ).map b)).mor₃ (n - 1) n (by omega) := by
     rw [← hc, IsIso.inv_hom_id_assoc]
   have hl := CochainComplex.mappingCocone.inv_homologyMap_shiftedLiftShortComplex_connecting
     S (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)
@@ -137,7 +139,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
     b Γ (n - 1) n (by omega)
   rw [rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone]
   change H.shiftMap (ShiftedHom.map (CochainComplex.mappingCone.triangle b).mor₃
-      (Γ.mapHomologicalComplex (.up ℤ))) (n - 1) n (by omega) y =
+      (Γ.mapHomologicalComplex ℤᵘᵖ)) (n - 1) n (by omega) y =
     HomologicalComplex.homologyMap S.f n
       (-(((H.shiftIso 1 (n - 1) n (by omega)).hom.app S.X₁)
         ((inv (HomologicalComplex.homologyMap

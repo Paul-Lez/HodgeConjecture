@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.DerivedSheafSupportShift
 public import Other.AlgebraicTopology.ClosedEmbeddingDerivedPushforward
 public import Mathlib.Algebra.Homology.DerivedCategory.FullyFaithful
@@ -41,7 +43,7 @@ def sectionSinglePlusIso :
         (F.mapHomotopyCategoryPlus.obj ((HomotopyCategory.Plus.singleFunctor C n).obj A)) :=
   DerivedCategory.Plus.ι.preimageIso
     (DerivedCategory.Q.mapIso
-      ((HomologicalComplex.singleMapHomologicalComplex F (.up ℤ) n).app A).symm ≪≫
+      ((HomologicalComplex.singleMapHomologicalComplex F ℤᵘᵖ n).app A).symm ≪≫
         ((DerivedCategory.quotientCompQhIso AddCommGrpCat.{a}).app _).symm)
 
 /-- The actual right-derived unit on a coefficient sheaf in one degree. -/

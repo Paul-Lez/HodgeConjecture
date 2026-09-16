@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicGeometry.ComplexSheafBorelMoore
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersionComplexPoint
 public import Other.AlgebraicTopology.SingularChainSheafDerivedPushforward
@@ -119,7 +121,7 @@ def smoothClosedCycleTermwiseSupportedMorphism :
       (((TopCat.Sheaf.sheafSectionsWithClosedSupport (TopCat.of (ComplexPoint X))
         (closedEmbeddingSupport (closedCycleAnalyticMap Z X i)
           (closedCycleAnalyticMap_isClosedEmbedding Z X i))).mapHomologicalComplex
-            (ComplexShape.up ℤ)).obj
+            ℤᵘᵖ).obj
               (singularChainSheafCochainComplex ℚ (TopCat.of (ComplexPoint X)))) :=
   (TopCat.Sheaf.closedEmbeddingDerivedPushforward (closedCycleAnalyticMap Z X i)
     (closedCycleAnalyticMap_isClosedEmbedding Z X i)).map

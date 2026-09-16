@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.CohomologySheafStalkVanishing
 
 /-!
@@ -51,7 +53,7 @@ small opens. This generic lemma exposes, rather than assumes, its local input. -
 lemma cohomologySheaf_stalk_isZero_of_cofinal_sections (n : ℤ) (x : X)
     (hlocal : ∀ (U : Opens X), x ∈ U →
       ∃ (V : Opens X), V ≤ U ∧ x ∈ V ∧
-        IsZero ((((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj K).homology n)) :
+        IsZero ((((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj K).homology n)) :
     IsZero ((additiveSheafStalkFunctor X x).obj (K.homology n)) := by
   apply (sectionCohomologyPresheafStalkIso X K n x).isZero_iff.mp
   apply Presheaf.isZero_stalk_of_cofinal_sections
@@ -64,7 +66,7 @@ sheaf vanishes globally. -/
 lemma cohomologySheaf_isZero_of_cofinal_sections (n : ℤ)
     (hlocal : ∀ (x : X) (U : Opens X), x ∈ U →
       ∃ (V : Opens X), V ≤ U ∧ x ∈ V ∧
-        IsZero ((((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj K).homology n)) :
+        IsZero ((((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj K).homology n)) :
     IsZero (K.homology n) := by
   exact (isZero_iff_stalkFunctor_obj_isZero _).mpr fun x =>
     cohomologySheaf_stalk_isZero_of_cofinal_sections X K n x (hlocal x)
@@ -76,7 +78,7 @@ lemma quasiIso_of_cofinal_section_quasiIso
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ} (f : K ⟶ L)
     (hlocal : ∀ (x : X) (U : Opens X), x ∈ U →
       ∃ (V : Opens X), V ≤ U ∧ x ∈ V ∧
-        QuasiIso (((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).map f)) :
+        QuasiIso (((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).map f)) :
     QuasiIso f := by
   apply IsFlasque.BoundedBelowComplex.quasiIso_of_mappingCone_acyclic
   intro n
@@ -86,9 +88,9 @@ lemma quasiIso_of_cofinal_section_quasiIso
   obtain ⟨V, hVU, hxV, hV⟩ := hlocal x U hxU
   refine ⟨V, hVU, hxV, ?_⟩
   let F := supportEvaluation X V
-  let : QuasiIso ((F.mapHomologicalComplex (.up ℤ)).map f) := hV
+  let : QuasiIso ((F.mapHomologicalComplex ℤᵘᵖ).map f) := hV
   have h := IsFlasque.BoundedBelowComplex.mappingCone_acyclic_of_quasiIso
-    ((F.mapHomologicalComplex (.up ℤ)).map f) n
+    ((F.mapHomologicalComplex ℤᵘᵖ).map f) n
   exact (homologyMapIso (CochainComplex.mappingCone.mapHomologicalComplexIso f F) n).isZero_iff.mpr
     h.isZero_homology
 

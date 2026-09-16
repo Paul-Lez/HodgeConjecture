@@ -12,6 +12,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Mathlib.Algebra.Homology.DerivedCategory.TStructure
 public import Mathlib.Algebra.Homology.SingleHomology
 
@@ -42,7 +44,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The explicit identity-in-degree-`n` isomorphism of a termwise concentrated complex. -/
 def strictSingleIso [K.IsStrictlyGE n] [K.IsStrictlyLE n] :
-    K ≅ (single C (.up ℤ) n).obj (K.X n) where
+    K ≅ (single C ℤᵘᵖ n).obj (K.X n) where
   hom := mkHomToSingle (𝟙 _) (fun i (hi : i + 1 = n) ↦
     (K.isZero_of_isStrictlyGE n i (by omega)).eq_of_src _ _)
   inv := mkHomFromSingle (𝟙 _) (fun i (hi : n + 1 = i) ↦
@@ -65,18 +67,18 @@ def singleTruncationHomologyIso : (K.singleTruncation n).homology n ≅ K.homolo
 
 /-- The only nonzero term of the double truncation is canonically the actual homology object. -/
 def singleTruncationTermIso : (K.singleTruncation n).X n ≅ K.homology n :=
-  (singleObjHomologySelfIso (.up ℤ) n _).symm ≪≫
+  (singleObjHomologySelfIso ℤᵘᵖ n _).symm ≪≫
     (homologyMapIso (strictSingleIso (K.singleTruncation n) n) n).symm ≪≫
       singleTruncationHomologyIso K n
 
 /-- Canonical single-degree model, with its term identified using actual homology maps. -/
 def singleTruncationIso :
-    K.singleTruncation n ≅ (single C (.up ℤ) n).obj (K.homology n) :=
+    K.singleTruncation n ≅ (single C ℤᵘᵖ n).obj (K.homology n) :=
   strictSingleIso (K.singleTruncation n) n ≪≫
-    (single C (.up ℤ) n).mapIso (singleTruncationTermIso K n)
+    (single C ℤᵘᵖ n).mapIso (singleTruncationTermIso K n)
 
 /-- The right leg of the canonical truncation roof. -/
-def toSingleHomology : K.truncLE n ⟶ (single C (.up ℤ) n).obj (K.homology n) :=
+def toSingleHomology : K.truncLE n ⟶ (single C ℤᵘᵖ n).obj (K.homology n) :=
   (K.truncLE n).πTruncGE n ≫ (singleTruncationIso K n).hom
 
 /-- Normalization: the right leg induces exactly the same top-homology map as the left
@@ -84,7 +86,7 @@ leg. In particular, the construction introduces no scalar or generator choice. -
 @[reassoc]
 theorem toSingleHomology_homology :
     homologyMap (toSingleHomology K n) n ≫
-      (singleObjHomologySelfIso (.up ℤ) n _).hom = homologyMap (K.ιTruncLE n) n := by
+      (singleObjHomologySelfIso ℤᵘᵖ n _).hom = homologyMap (K.ιTruncLE n) n := by
   simp only [toSingleHomology, singleTruncationIso, Iso.trans_hom, Functor.mapIso_hom,
     homologyMap_comp, Category.assoc]
   rw [singleObjHomologySelfIso_hom_naturality]
@@ -160,8 +162,8 @@ object, under Mathlib's canonical comparison with chain-level homology. -/
 theorem concentratedHomologyIso_homology
     (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i)) :
     (homologyFunctor C n).map (concentratedHomologyIso K n h).hom ≫
-      (homologyFunctorFactors C n).hom.app ((single C (.up ℤ) n).obj (K.homology n)) ≫
-      (singleObjHomologySelfIso (.up ℤ) n _).hom =
+      (homologyFunctorFactors C n).hom.app ((single C ℤᵘᵖ n).obj (K.homology n)) ≫
+      (singleObjHomologySelfIso ℤᵘᵖ n _).hom =
       (homologyFunctorFactors C n).hom.app K := by
   let := CochainComplex.isLE_of_homology_concentrated K n h
   rw [← cancel_epi ((homologyFunctor C n).map (Q.map (K.ιTruncLE n))),
@@ -178,13 +180,13 @@ theorem concentratedOrientationIso_homology
     (h : ∀ i : ℤ, i ≠ n → IsZero (K.homology i))
     {A : C} (orientation : K.homology n ≅ A) :
     (homologyFunctor C n).map (concentratedOrientationIso K n h orientation).hom ≫
-      (homologyFunctorFactors C n).hom.app ((single C (.up ℤ) n).obj A) ≫
-      (singleObjHomologySelfIso (.up ℤ) n A).hom =
+      (homologyFunctorFactors C n).hom.app ((single C ℤᵘᵖ n).obj A) ≫
+      (singleObjHomologySelfIso ℤᵘᵖ n A).hom =
       (homologyFunctorFactors C n).hom.app K ≫ orientation.hom := by
   simp only [concentratedOrientationIso, Iso.trans_hom, Functor.map_comp,
     Functor.mapIso_hom, Category.assoc]
   change (homologyFunctor C n).map (concentratedHomologyIso K n h).hom ≫
-    (homologyFunctor C n).map (Q.map ((single C (.up ℤ) n).map orientation.hom)) ≫
+    (homologyFunctor C n).map (Q.map ((single C ℤᵘᵖ n).map orientation.hom)) ≫
     _ ≫ _ = _
   rw [homologyFunctorFactors_hom_naturality_assoc,
     singleObjHomologySelfIso_hom_naturality]

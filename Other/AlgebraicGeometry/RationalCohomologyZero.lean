@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.HodgeFiltration
 public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Basic
 
@@ -150,10 +152,10 @@ lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
       HomologicalComplex.extendMap_f _ _ embeddingUpNat_zero,
       HomologicalComplex.extendSingleIso_hom_f]
     simp
-    exact (HomologicalComplex.single_map_f_self (ComplexShape.up ℤ) 0
+    exact (HomologicalComplex.single_map_f_self ℤᵘᵖ 0
       (integerToFieldConstantSheaf ℚ X q)).symm
   · exact (HomologicalComplex.isZero_single_obj_X
-      (ComplexShape.up ℤ) 0 (constantIntegerSheaf X) i hi).eq_of_src _ _
+      ℤᵘᵖ 0 (constantIntegerSheaf X) i hi).eq_of_src _ _
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in

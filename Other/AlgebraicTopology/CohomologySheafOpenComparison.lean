@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.OpenSheafification
 public import Other.AlgebraicTopology.CohomologySheafSectionNaturality
 public import HodgeConjecture.Definitions.AlgebraicTopology.OpenRestrictedLowestCohomology
@@ -129,10 +131,10 @@ variable (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 /-- Exact presheaf restriction commutes with the presheaf of local cohomology. -/
 def openRestrictionSectionCohomologyPresheafIso (n : ℤ) :
     sectionCohomologyPresheaf (TopCat.of U)
-      (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex (.up ℤ)).obj K) n ≅
+      (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex ℤᵘᵖ).obj K) n ≅
     (cohomologyOpenPresheafRestriction X U).obj (sectionCohomologyPresheaf X K n) := by
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
-    (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).sc n
+    (((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K).sc n
   exact S.mapHomologyIso (cohomologyOpenPresheafRestriction X U)
 
 set_option backward.defeqAttrib.useBackward true in
@@ -148,7 +150,7 @@ lemma openRestrictionSectionCohomologySheafificationIso (n : ℤ) :
       (U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).map
         (sectionCohomologyPresheafSheafificationIso X K n).hom =
     (sectionCohomologyPresheafSheafificationIso (TopCat.of U)
-      (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex (.up ℤ)).obj K) n).hom ≫
+      (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex ℤᵘᵖ).obj K) n).hom ≫
       ((K.sc n).mapHomologyIso (U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u})).hom := by
   let A := cohomologyOpenPresheafRestriction X U
   let R : Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} (TopCat.of U) :=
@@ -179,26 +181,26 @@ lemma openRestrictionSectionCohomologySheafificationIso (n : ℤ) :
   let : PreservesFiniteLimits R := openSheafRestriction_preservesFiniteLimits X U
   let : PreservesFiniteColimits R := openSheafRestriction_preservesFiniteColimits X U
   let L : CochainComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) ℤ :=
-    ((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K
+    ((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) := L.sc n
   let β : A ⋙ Q ≅ P ⋙ R := cohomologyOpenSheafificationIso X U
-  let b := (β.hom.mapHomologicalComplex (.up ℤ)).app L
-  let eX : (P.mapHomologicalComplex (.up ℤ)).obj L ≅ K := (NatIso.mapHomologicalComplex
+  let b := (β.hom.mapHomologicalComplex ℤᵘᵖ).app L
+  let eX : (P.mapHomologicalComplex ℤᵘᵖ).obj L ≅ K := (NatIso.mapHomologicalComplex
     (asIso (sheafificationAdjunction (Opens.grothendieckTopology X) AddCommGrpCat.{u}).counit)
-    (.up ℤ)).app K
-  let eU : (Q.mapHomologicalComplex (.up ℤ)).obj ((A.mapHomologicalComplex (.up ℤ)).obj L) ≅
-      (R.mapHomologicalComplex (.up ℤ)).obj K := (NatIso.mapHomologicalComplex
+    ℤᵘᵖ).app K
+  let eU : (Q.mapHomologicalComplex ℤᵘᵖ).obj ((A.mapHomologicalComplex ℤᵘᵖ).obj L) ≅
+      (R.mapHomologicalComplex ℤᵘᵖ).obj K := (NatIso.mapHomologicalComplex
     (asIso (sheafificationAdjunction (Opens.grothendieckTopology (TopCat.of U)) AddCommGrpCat.{u}).counit)
-    (.up ℤ)).app ((R.mapHomologicalComplex (.up ℤ)).obj K)
-  let H := homologyFunctor (Sheaf AddCommGrpCat.{u} (TopCat.of U)) (.up ℤ) n
-  have hb : b ≫ (R.mapHomologicalComplex (.up ℤ)).map eX.hom = eU.hom := by
+    ℤᵘᵖ).app ((R.mapHomologicalComplex ℤᵘᵖ).obj K)
+  let H := homologyFunctor (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤᵘᵖ n
+  have hb : b ≫ (R.mapHomologicalComplex ℤᵘᵖ).map eX.hom = eU.hom := by
     apply HomologicalComplex.Hom.ext
     funext j
     exact openRestrictionSheafificationIso_counit X U (K.X j)
   have hs := ShortComplex.mapHomologyIso_exactSquare S A Q P R β.hom
   have hn := ShortComplex.mapHomologyIso_hom_naturality
-    ((shortComplexFunctor (Sheaf AddCommGrpCat.{u} X) (.up ℤ) n).map eX.hom) R
-  change H.map ((R.mapHomologicalComplex (.up ℤ)).map eX.hom) ≫
+    ((shortComplexFunctor (Sheaf AddCommGrpCat.{u} X) ℤᵘᵖ n).map eX.hom) R
+  change H.map ((R.mapHomologicalComplex ℤᵘᵖ).map eX.hom) ≫
       ((K.sc n).mapHomologyIso R).hom =
     ((S.map P).mapHomologyIso R).hom ≫ R.map (homologyMap eX.hom n) at hn
   change Q.map (S.mapHomologyIso A).hom ≫ β.hom.app S.homology ≫
@@ -210,7 +212,7 @@ lemma openRestrictionSectionCohomologySheafificationIso (n : ℤ) :
   simp only [Category.assoc]
   rw [← hn]
   change ((S.map A).mapHomologyIso Q).inv ≫
-      H.map b ≫ H.map ((R.mapHomologicalComplex (.up ℤ)).map eX.hom) ≫
+      H.map b ≫ H.map ((R.mapHomologicalComplex ℤᵘᵖ).map eX.hom) ≫
         ((K.sc n).mapHomologyIso R).hom = _
   rw [← H.map_comp_assoc, hb]
 

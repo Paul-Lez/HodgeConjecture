@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
 
 /-!
@@ -75,7 +77,7 @@ theorem smoothClosedSupportInjective_homology_stalk_isZero_of_ne
   let e := complexSupportInjectiveSectionCohomologyEquiv X
     (smoothClosedAnalyticSupport X Y i) W n
   let : Subsingleton ((((TopCat.Sheaf.supportEvaluation
-      (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex (.up ℤ)).obj
+      (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex ℤᵘᵖ).obj
         (complexSupportInjectiveComplex X (smoothClosedAnalyticSupport X Y i))).homology
           (n : ℤ)) := e.injective.subsingleton
   exact AddCommGrpCat.isZero_of_subsingleton _

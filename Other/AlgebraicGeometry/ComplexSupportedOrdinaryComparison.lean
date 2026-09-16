@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
 public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
@@ -121,9 +123,9 @@ theorem complexSupportedSingularInjectiveHomologyIso_inclusion
           (rationalSingularCochainComplex (TopCat.of (ComplexPoint X)))).f n ≫
       HomologicalComplex.homologyMap
         (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-          (.up ℤ)).map (complexSingularToAmbientInjective X)) n := by
+          ℤᵘᵖ).map (complexSingularToAmbientInjective X)) n := by
   let Y := TopCat.of (ComplexPoint X)
-  let f := (((TopCat.Sheaf.supportEvaluation Y V).mapHomologicalComplex (.up ℤ)).mapShortComplex).map
+  let f := (((TopCat.Sheaf.supportEvaluation Y V).mapHomologicalComplex ℤᵘᵖ).mapShortComplex).map
     (TopCat.Sheaf.supportRestrictionComplexShortComplexMap Y U (complexSingularToAmbientInjective X))
   have h := congrArg (fun g => HomologicalComplex.homologyMap g n) f.comm₁₂
   rwa [HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp] at h
@@ -145,7 +147,7 @@ theorem complexSupportInjectiveSectionCohomologyEquiv_inclusion_positive
     HomologicalComplex.homologyMap
       (globalRawToSingularSheafInt X ≫
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
           (complexSingularToAmbientInjective X)) (n : ℤ)
       (globalRawRelativeCochainClass ℚ (TopCat.of (ComplexPoint X)) S.compl n a) := by
   rw [complexSupportInjectiveSectionCohomologyEquiv_symm_top]
@@ -159,7 +161,7 @@ theorem complexSupportInjectiveSectionCohomologyEquiv_inclusion_positive
   have hp := congrArg
     (HomologicalComplex.homologyMap
       (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-        (.up ℤ)).map (complexSingularToAmbientInjective X)) (n : ℤ))
+        ℤᵘᵖ).map (complexSingularToAmbientInjective X)) (n : ℤ))
     (complexSupportedSingularTop_inclusion_of_relative X S n a)
   refine hp.trans ?_
   rw [HomologicalComplex.homologyMap_comp]

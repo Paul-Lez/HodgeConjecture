@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.DerivedSheafSupportLocalization
 
 /-!
@@ -54,7 +56,7 @@ lemma derivedClosedSupportInjectiveFiberIso_hom_fst (Z : Closeds X)
       DerivedCategory.Q.map
         (supportRestrictionSectionsComplexShortComplex X Z.compl ⊤
           (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-            (.up ℤ)).obj I.obj)).f := by
+            ℤᵘᵖ).obj I.obj)).f := by
   simp [derivedClosedSupportInjectiveFiberIso, ← DerivedCategory.Q.map_comp]
 
 set_option backward.defeqAttrib.useBackward true in
@@ -68,7 +70,7 @@ lemma derivedSheafSupportInjectiveFiberIso_hom_fst (Z : Closeds X)
       DerivedCategory.Q.map
         (supportRestrictionComplexShortComplex X Z.compl
           (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-            (.up ℤ)).obj I.obj)).f := by
+            ℤᵘᵖ).obj I.obj)).f := by
   simp [derivedSheafSupportInjectiveFiberIso, ← DerivedCategory.Q.map_comp]
 
 end TopCat.Sheaf

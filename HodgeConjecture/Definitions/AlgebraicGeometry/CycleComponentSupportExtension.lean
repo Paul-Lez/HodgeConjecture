@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SingularFiltrationLocalSupportVanishing
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSmoothSupportPurity
 public import HodgeConjecture.Lemmas.AlgebraicTopology.FiniteSheafSupportVanishing
@@ -38,7 +40,7 @@ private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
     (k : ℕ) (hk : k ≤ cycleComponentSingularFiltrationLength X x)
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X
         (cycleComponentSingularAnalyticClosedFiltration X x k))).homology n) := by
   let O (j : ℕ) := (cycleComponentSingularAnalyticClosedFiltration X x j).compl
   have hO : Monotone O := fun _ _ hab _ hy hyb ↦
@@ -62,7 +64,7 @@ cohomological bound. All geometric and finite-filtration inputs are proved. -/
 private theorem cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X
         (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology n) :=
   cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt X x (d := d) hx
     0 (Nat.zero_le _) n hn
@@ -70,14 +72,14 @@ private theorem cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
 include d hx in
 theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X
         (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology (2 * (p : ℤ))) :=
   cycleComponentSingularBoundarySectionCohomology_isZero_of_lt X x (d := d) hx _ (by omega)
 
 include d hx in
 private theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X
         (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology (2 * (p : ℤ) + 1)) :=
   cycleComponentSingularBoundarySectionCohomology_isZero_of_lt X x (d := d) hx _ (by omega)
 
@@ -99,11 +101,11 @@ private theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
 actual smooth-locus ambient open. -/
 def cycleComponentSupportSectionRestriction :
     ((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) ⟶
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) ⟶
     ((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
+      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) :=
-  TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) (.up ℤ)
+  TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) ℤᵘᵖ
     (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) (homOfLE le_top)
 
 set_option backward.isDefEq.respectTransparency false in
@@ -135,10 +137,10 @@ theorem cycleComponentSupportSectionRestriction_homology_isIso :
 inverse. It has no boundary-vanishing or fundamental-class input. -/
 def cycleComponentSupportExtensionIso :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
+      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
           (2 * (p : ℤ))) := by
   let := cycleComponentSupportSectionRestriction_homology_isIso X x (d := d) hx

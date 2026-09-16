@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicTopology.DerivedSheafSupportTruncation
 
 /-!
@@ -38,13 +40,13 @@ variable (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (n : ℤ) [K.IsGE 
 support functor by good truncation and its actual derived unit. -/
 def termwiseToDerivedClosedSupport (S : Closeds X) :
     DerivedCategory.Q.obj
-      (((closedSupportSections X S).mapHomologicalComplex (.up ℤ)).obj K) ⟶
+      (((closedSupportSections X S).mapHomologicalComplex ℤᵘᵖ).obj K) ⟶
     DerivedCategory.Plus.ι.obj
       ((derivedClosedSupportSections X S).obj (supportCoefficientPlus X K n)) :=
   DerivedCategory.Q.map
-      (((closedSupportSections X S).mapHomologicalComplex (.up ℤ)).map (K.πTruncGE n)) ≫
+      (((closedSupportSections X S).mapHomologicalComplex ℤᵘᵖ).map (K.πTruncGE n)) ≫
     (DerivedCategory.quotientCompQhIso AddCommGrpCat.{u}).inv.app
-      (((closedSupportSections X S).mapHomologicalComplex (.up ℤ)).obj (K.truncGE n)) ≫
+      (((closedSupportSections X S).mapHomologicalComplex ℤᵘᵖ).obj (K.truncGE n)) ≫
     DerivedCategory.Plus.ι.map
       ((derivedClosedSupportSectionsUnit X S).app (supportTruncationHomotopyPlus X K n)) ≫
     DerivedCategory.Plus.ι.map
@@ -60,9 +62,9 @@ lemma termwiseToDerivedClosedSupport_truncation (S : Closeds X) :
       DerivedCategory.Plus.ι.map
         ((derivedClosedSupportSections X S).map (supportCoefficientTruncationIso X K n).hom) =
     DerivedCategory.Q.map
-      (((closedSupportSections X S).mapHomologicalComplex (.up ℤ)).map (K.πTruncGE n)) ≫
+      (((closedSupportSections X S).mapHomologicalComplex ℤᵘᵖ).map (K.πTruncGE n)) ≫
     (DerivedCategory.quotientCompQhIso AddCommGrpCat.{u}).inv.app
-      (((closedSupportSections X S).mapHomologicalComplex (.up ℤ)).obj (K.truncGE n)) ≫
+      (((closedSupportSections X S).mapHomologicalComplex ℤᵘᵖ).obj (K.truncGE n)) ≫
     DerivedCategory.Plus.ι.map
       ((derivedClosedSupportSectionsUnit X S).app (supportTruncationHomotopyPlus X K n)) := by
   have hcancel : DerivedCategory.Plus.ι.map

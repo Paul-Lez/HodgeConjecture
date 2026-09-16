@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.SingularFlasqueSupportModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.DerivedSupportRationalConeComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
@@ -47,7 +49,7 @@ def complexSupportedSingularToAmbientInjective
     (U : Opens (ComplexPoint X)) :
     supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U ⟶
       ((TopCat.Sheaf.sheafSectionsSupportedOutside
-        (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
+        (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex ℤᵘᵖ).obj
           (ambientRationalInjectiveComplex X) :=
   supportedSingularToInjectiveComplex (TopCat.of (ComplexPoint X))
     (exists_contractibleOpen_le X) U
@@ -69,12 +71,12 @@ model are canonically isomorphic in every integer degree. -/
 def complexSupportedSingularInjectiveHomologyIso
     (U V : Opens (ComplexPoint X)) (n : ℤ) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj
+      ℤᵘᵖ).obj
         (supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U))).homology n ≅
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj
+      ℤᵘᵖ).obj
         (((TopCat.Sheaf.sheafSectionsSupportedOutside
-          (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
+          (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex ℤᵘᵖ).obj
             (ambientRationalInjectiveComplex X)))).homology n := by
   let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=
     openParacompactSpace X

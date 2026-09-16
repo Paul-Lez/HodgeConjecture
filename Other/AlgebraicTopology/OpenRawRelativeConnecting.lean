@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularCochainOpenCone
 public import Other.AlgebraicTopology.GlobalRawRelativeConnecting
 
@@ -22,7 +24,7 @@ variable (R : Type) [Field R] (X : TopCat.{0}) {V W : Opens X} (i : W ⟶ V)
 theorem openRawSingularRestrictionConeIsoRelative_connecting :
     (openRawSingularRestrictionConeIsoRelative R X i).hom ≫
       (CochainComplex.mappingCone.triangle
-        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
           (relativeCochainRestrictionInt R (openInclusionPair X i)))).mor₃ =
     (CochainComplex.mappingCone.triangle
       (HomologicalComplex.extendMap (openRawSingularRestriction R X i)
@@ -35,7 +37,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The canonical open raw cone comparison has the same negative connecting
 sign as its actual positive dual-relative inclusion. -/
 theorem openRawSingularRestrictionCone_signed_inclusion (n : ℕ) :
-    (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
+    (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
         (CochainComplex.mappingCone.triangle
           (HomologicalComplex.extendMap (openRawSingularRestriction R X i)
             ComplexShape.embeddingUpNat)).mor₃ ((n : ℤ) - 1) (n : ℤ) (by omega) ≫
@@ -59,7 +61,7 @@ theorem openRawSingularRestrictionCone_signed_inclusion (n : ℕ) :
   let F := forget₂ (ModuleCat R) AddCommGrpCat
   let g := relativeCochainRestrictionInt R (openInclusionPair X i)
   let eF := CochainComplex.mappingCone.mapHomologicalComplexIso g F
-  let HD := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
+  let HD := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
   have he := congrArg
     (fun f => HD.shiftMap f ((n : ℤ) - 1) (n : ℤ) (show (1 : ℤ) + ((n : ℤ) - 1) = n by omega))
     (openRawSingularRestrictionConeIsoRelative_connecting R X i)
@@ -101,7 +103,7 @@ set_option backward.isDefEq.respectTransparency false in
 the negative of its actual positive ordinary cochain class. -/
 theorem openRawSingularRestrictionCone_connecting_of_relative (n : ℕ)
     (a : RelativeCohomology R (openInclusionPair X i) n) :
-    (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
+    (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
       (CochainComplex.mappingCone.triangle
         (HomologicalComplex.extendMap (openRawSingularRestriction R X i)
           ComplexShape.embeddingUpNat)).mor₃ ((n : ℤ) - 1) (n : ℤ) (by omega)

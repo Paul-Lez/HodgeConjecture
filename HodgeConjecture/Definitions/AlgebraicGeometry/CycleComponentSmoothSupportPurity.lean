@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentSmoothClosedLift
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportOpenTransport
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.SmoothClosedSupportCohomologySheaf
@@ -82,7 +84,7 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
     (V : Opens (ComplexPoint X)) (hyV : y ∈ V) :
     ∃ W : Opens (ComplexPoint X), W ≤ V ∧ y ∈ W ∧
       IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex
-        (.up ℤ)).obj (complexSupportInjectiveComplex X
+        ℤᵘᵖ).obj (complexSupportInjectiveComplex X
           (cycleComponentAnalyticClosedSupport X x))).homology n) := by
   by_cases hneg : n < 0
   · refine ⟨V, le_rfl, hyV, ?_⟩
@@ -103,7 +105,7 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
       let e := complexSupportInjectiveSectionCohomologyEquiv X
         (cycleComponentAnalyticClosedSupport X x) W q
       let : Subsingleton ((((TopCat.Sheaf.supportEvaluation
-          (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex (.up ℤ)).obj
+          (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex ℤᵘᵖ).obj
             (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
               (q : ℤ)) := e.injective.subsingleton
       exact AddCommGrpCat.isZero_of_subsingleton _
@@ -120,7 +122,7 @@ def cycleComponentSmoothRestrictedInjectiveComplex :
       (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))) ℤ := by
   let U : Opens (TopCat.of (ComplexPoint X)) := cycleComponentSmoothSupportAmbientOpen X x
   exact ((U.isOpenEmbedding.sheafPullback
-    AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
+    AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
       (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
 
 set_option backward.isDefEq.respectTransparency false in
@@ -143,7 +145,7 @@ theorem cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
 the original ambient cohomology sheaf, both evaluated on the boundary complement. -/
 def cycleComponentSmoothSupportLowestSectionCohomologyIso :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
+      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
           (2 * (p : ℤ))) ≅
       ((complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)).homology

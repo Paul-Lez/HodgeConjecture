@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusInjectiveModel
 public import Other.AlgebraicTopology.DerivedSheafSupportForget
 public import Other.AlgebraicGeometry.DerivedSupportRationalComparison
@@ -79,9 +81,9 @@ lemma derivedRationalSupportInjectiveModelIso_forget
   have hi := NatTrans.rightDerivedFunctorPlusInjectiveModel_naturality
     (TopCat.Sheaf.closedSupportSectionsInclusion Y Z) I
   have hm : ((TopCat.Sheaf.closedSupportSectionsInclusion Y Z).mapHomologicalComplex
-      (.up ℤ)).app
+      ℤᵘᵖ).app
         (((InjectiveObject.ι (AnalyticAdditiveSheaf X)).mapHomologicalComplex
-          (.up ℤ)).obj I.obj) =
+          ℤᵘᵖ).obj I.obj) =
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y Z.compl ⊤
         (ambientRationalInjectiveComplex X)).f := by
     ext n

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.SupportedSingularCohomologySheafComparison
 
 /-!
@@ -75,7 +77,7 @@ lemma supportedSingularCohomologySheafIsoRelative_section (V : Opens X) :
 /-- Inverse transport of a represented relative section recovers the canonical
 section of the actual cohomology sheaf, without changing its normalization. -/
 lemma supportedSingularCohomologySheafIsoRelative_inv_section (V : Opens X)
-    (z : ((((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
+    (z : ((((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ)) :
     (supportedSingularCohomologySheafIsoRelative X S hS n).inv.hom.app (op V)
       ((supportRelativeCohomologyToSheaf X S n).app (op V)
@@ -94,7 +96,7 @@ lemma supportedSingularCohomologySheafIsoRelative_inv_section (V : Opens X)
 of its literal relative coclass under the sheaf comparison. -/
 lemma supportedSingularCohomologySheafIsoRelative_germ
     (V : Opens X) (x : X) (hx : x ∈ V)
-    (z : ((((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
+    (z : ((((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ)) :
     (TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map
       (supportedSingularCohomologySheafIsoRelative X S hS n).hom.hom

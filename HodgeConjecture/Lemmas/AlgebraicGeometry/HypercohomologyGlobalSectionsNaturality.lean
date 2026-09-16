@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
 
 /-!
@@ -28,7 +30,7 @@ lemma fromSingleZeroIsoPreadditiveCoyoneda_naturality :
     postcompMap ((CochainComplex.singleFunctor C 0).obj A) f ≫
       (fromSingleZeroIsoPreadditiveCoyoneda A L).hom =
     (fromSingleZeroIsoPreadditiveCoyoneda A K).hom ≫
-      ((preadditiveCoyoneda.obj (.op A)).mapHomologicalComplex (.up ℤ)).map f := by
+      ((preadditiveCoyoneda.obj (.op A)).mapHomologicalComplex ℤᵘᵖ).map f := by
   ext n z
   change Cochain.fromSingleEquiv (zero_add n)
       (z.comp (Cochain.ofHom f) (add_zero n)) =
@@ -49,12 +51,12 @@ lemma homComplexSingleIntegerIsoGlobalSections_naturality
       (homComplexSingleIntegerIsoGlobalSections Y L).hom =
     (homComplexSingleIntegerIsoGlobalSections Y K).hom ≫
       ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
-        (.up ℤ)).map f := by
+        ℤᵘᵖ).map f := by
   let A : Sheaf AddCommGrpCat Y :=
     (constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj (AddCommGrpCat.of ℤ)
   let : (IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
-  let e := NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y) (.up ℤ)
+  let e := NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y) ℤᵘᵖ
   have h := CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda_naturality_assoc
     A f (e.hom.app L)
   have h' := congrArg (fun g =>
@@ -129,7 +131,7 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_naturality
       (x ≫ (DerivedCategory.Q.map f)⟦n⟧') =
     HomologicalComplex.homologyMap
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map f) n
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map f) n
       (derivedHomAddEquivGlobalSectionsKInjective X K n x) := by
   let Y := TopCat.of (ComplexPoint X)
   let A := TopCat.Sheaf.integerConstantSingleComplex Y
@@ -170,7 +172,7 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_naturality
       (hypercohomologyMap X f n x) =
     HomologicalComplex.homologyMap
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map f) n
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map f) n
       (hypercohomologyAddEquivGlobalSectionsKInjective X K n x) := by
   dsimp only [hypercohomologyAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
   rw [hypercohomologyAddEquivDerived_naturality]

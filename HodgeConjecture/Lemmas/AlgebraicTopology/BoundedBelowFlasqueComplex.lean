@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.BoundedBelowFlasqueComplex
 
 /-!
@@ -56,8 +58,8 @@ lemma cyclesShortComplex_shortExact (i : ℤ) (hK : K.ExactAt (i + 1)) :
       S.zero (K.toCycles_i i (i + 1))
   have hepi : Epi S.g := by
     dsimp [S, cyclesShortComplex]
-    have hnext : (ComplexShape.up ℤ).next (i + 1) = i + 2 :=
-      (ComplexShape.up ℤ).next_eq' (ComplexShape.up_mk _ _ (by lia))
+    have hnext : (ℤᵘᵖ).next (i + 1) = i + 2 :=
+      (ℤᵘᵖ).next_eq' (ComplexShape.up_mk _ _ (by lia))
     have hsc' : (K.sc' i (i + 1) (i + 2)).Exact :=
       (K.exactAt_iff' (i := i) (j := i + 1) (k := i + 2) (by simp) hnext).mp hK
     have hepi' : Epi ((K.sc' i (i + 1) (i + 2)).toCycles) :=
@@ -158,10 +160,10 @@ theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
       (op (⊤ : Opens X))) at hepiTop
     rw [hi] at hepiTop
     exact hepiTop
-  have hprev : (ComplexShape.up ℤ).prev i = i - 1 :=
-    (ComplexShape.up ℤ).prev_eq' (ComplexShape.up_mk _ _ (by lia))
-  have hnext : (ComplexShape.up ℤ).next i = i + 1 :=
-    (ComplexShape.up ℤ).next_eq' (ComplexShape.up_mk _ _ rfl)
+  have hprev : (ℤᵘᵖ).prev i = i - 1 :=
+    (ℤᵘᵖ).prev_eq' (ComplexShape.up_mk _ _ (by lia))
+  have hnext : (ℤᵘᵖ).next i = i + 1 :=
+    (ℤᵘᵖ).next_eq' (ComplexShape.up_mk _ _ rfl)
   let T : ShortComplex AddCommGrpCat.{u} :=
     ShortComplex.mk (F.map (K.d (i - 1) i)) (F.map (K.d i (i + 1))) (by
       rw [← F.map_comp, K.d_comp_d, F.map_zero])

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeCochainConeNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
 
@@ -35,7 +37,7 @@ relative-to-ambient inclusion as the explicit canonical lift. -/
 theorem relativeDualShiftIsoCochainCone_hom_connecting :
     (relativeDualShiftIsoCochainCone R X).hom ≫
         (CochainComplex.mappingCone.triangleh (relativeCochainRestrictionInt R X)).mor₃ =
-      -((HomotopyCategory.quotient (ModuleCat R) (.up ℤ)).map
+      -((HomotopyCategory.quotient (ModuleCat R) ℤᵘᵖ).map
         (relativeDualCochainShortComplexInt R X).f)⟦(1 : ℤ)⟧' :=
   relativeDualShiftIsoCochainCone_hom_comp_mor₃ R X
 
@@ -46,7 +48,7 @@ actual inclusion into ambient cochains. -/
 @[reassoc]
 theorem relativeDualShiftIsoCochainCone_inv_inclusion :
     (relativeDualShiftIsoCochainCone R X).inv ≫
-        ((HomotopyCategory.quotient (ModuleCat R) (.up ℤ)).map
+        ((HomotopyCategory.quotient (ModuleCat R) ℤᵘᵖ).map
           (relativeDualCochainShortComplexInt R X).f)⟦(1 : ℤ)⟧' =
       -(CochainComplex.mappingCone.triangleh (relativeCochainRestrictionInt R X)).mor₃ := by
   have h := congrArg (fun f => (relativeDualShiftIsoCochainCone R X).inv ≫ f)
@@ -61,13 +63,13 @@ by actual inclusion is exactly the negative cone connecting map. -/
 theorem relativeCochainConeHomologyIsoDualRelativeInt_inclusion (n : ℕ) :
     -((relativeCochainConeHomologyIsoDualRelativeInt R X n).hom ≫
         HomologicalComplex.homologyMap (relativeDualCochainShortComplexInt R X).f (n : ℤ)) =
-      (HomologicalComplex.homologyFunctor (ModuleCat R) (.up ℤ) 0).shiftMap
+      (HomologicalComplex.homologyFunctor (ModuleCat R) ℤᵘᵖ 0).shiftMap
         (CochainComplex.mappingCone.triangle (relativeCochainRestrictionInt R X)).mor₃
         ((n : ℤ) - 1) (n : ℤ) (by omega) := by
-  let Q := HomotopyCategory.quotient (ModuleCat R) (.up ℤ)
-  let H := HomotopyCategory.homologyFunctor (ModuleCat R) (.up ℤ) 0
-  let Hc := HomologicalComplex.homologyFunctor (ModuleCat R) (.up ℤ) 0
-  let F (j : ℤ) := HomotopyCategory.homologyFunctorFactors (ModuleCat R) (.up ℤ) j
+  let Q := HomotopyCategory.quotient (ModuleCat R) ℤᵘᵖ
+  let H := HomotopyCategory.homologyFunctor (ModuleCat R) ℤᵘᵖ 0
+  let Hc := HomologicalComplex.homologyFunctor (ModuleCat R) ℤᵘᵖ 0
+  let F (j : ℤ) := HomotopyCategory.homologyFunctorFactors (ModuleCat R) ℤᵘᵖ j
   let S := relativeDualCochainShortComplexInt R X
   let C := CochainComplex.mappingCone (relativeCochainRestrictionInt R X)
   let e := relativeDualShiftIsoCochainCone R X

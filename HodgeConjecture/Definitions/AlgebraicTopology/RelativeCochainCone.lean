@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 public import HodgeConjecture.Lemmas.AlgebraicTopology.SingularSubdivisionCochainSheaf
 public import Mathlib.Algebra.Category.ModuleCat.Projective
@@ -150,7 +152,7 @@ set_option backward.isDefEq.respectTransparency false in
 original nonnegative short complex. -/
 def relativeDualCochainShortComplexIntEvalIso (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X).map
-        (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) (n : ℤ)) ≅
+        (HomologicalComplex.eval (ModuleCat.{u} R) ℤᵘᵖ (n : ℤ)) ≅
       (relativeDualCochainShortComplexNat R X).map
         (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) n) := by
   have hn : ComplexShape.embeddingUpNat.f n = (n : ℤ) := rfl
@@ -195,7 +197,7 @@ lemma relativeDualCochainShortComplexInt_shortExact (X : TopPair.{u}) :
         (relativeDualCochainShortComplexNat R X).map
             (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) z.toNat) ≅
           (relativeDualCochainShortComplexInt R X).map
-            (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z) := by
+            (HomologicalComplex.eval (ModuleCat.{u} R) ℤᵘᵖ z) := by
       simpa only [hn] using
         (relativeDualCochainShortComplexIntEvalIso R X z.toNat).symm
     exact ShortComplex.shortExact_of_iso e
@@ -208,7 +210,7 @@ lemma relativeDualCochainShortComplexInt_shortExact (X : TopPair.{u}) :
       rw [← hn]
       exact Int.natCast_nonneg n
     let S := (relativeDualCochainShortComplexInt R X).map
-      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z)
+      (HomologicalComplex.eval (ModuleCat.{u} R) ℤᵘᵖ z)
     have h₁ : IsZero S.X₁ := by
       dsimp [S, relativeDualCochainShortComplexInt]
       exact (relativeDualCochainShortComplexNat R X).X₁.isZero_extend_X
@@ -232,7 +234,7 @@ lemma relativeDualCochainShortComplexInt_shortExact (X : TopPair.{u}) :
 cohomology comparison is independent of finite-dimensionality. -/
 def relativeDualCochainDegreewiseSplitting (X : TopPair.{u}) (z : ℤ) :
     ((relativeDualCochainShortComplexInt R X).map
-      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z)).Splitting :=
+      (HomologicalComplex.eval (ModuleCat.{u} R) ℤᵘᵖ z)).Splitting :=
   (((HomologicalComplex.shortExact_iff_degreewise_shortExact
     (relativeDualCochainShortComplexInt R X)).mp
       (relativeDualCochainShortComplexInt_shortExact R X)) z).splittingOfProjective
@@ -263,9 +265,9 @@ def relativeCochainConeTriangleIso (X : TopPair.{u}) :
     (HomotopyCategory.mappingCone_triangleh_distinguished
       (relativeCochainRestrictionInt R X))
     (Iso.refl _) (Iso.refl _) (by
-      change (HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)).map
+      change (HomotopyCategory.quotient (ModuleCat.{u} R) ℤᵘᵖ).map
           (relativeDualCochainShortComplexInt R X).g =
-        (HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)).map
+        (HomotopyCategory.quotient (ModuleCat.{u} R) ℤᵘᵖ).map
           (relativeCochainRestrictionInt R X)
       rw [relativeDualCochainShortComplexInt_g]
       rfl)
@@ -273,10 +275,10 @@ def relativeCochainConeTriangleIso (X : TopPair.{u}) :
 /-- The homotopy-category isomorphism from the shifted dual relative cochain complex to the
 mapping cone of restriction. -/
 def relativeDualShiftIsoCochainCone (X : TopPair.{u}) :
-    (shiftFunctor (HomotopyCategory (ModuleCat.{u} R) (ComplexShape.up ℤ)) (1 : ℤ)).obj
-        ((HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)).obj
+    (shiftFunctor (HomotopyCategory (ModuleCat.{u} R) ℤᵘᵖ) (1 : ℤ)).obj
+        ((HomotopyCategory.quotient (ModuleCat.{u} R) ℤᵘᵖ).obj
           (relativeDualCochainShortComplexInt R X).X₁) ≅
-      (HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)).obj
+      (HomotopyCategory.quotient (ModuleCat.{u} R) ℤᵘᵖ).obj
         (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)) :=
   Pretriangulated.Triangle.π₃.mapIso (relativeCochainConeTriangleIso R X)
 
@@ -286,19 +288,19 @@ def relativeCochainConeHomologyIsoDualRelativeInt (X : TopPair.{u}) (n : ℕ) :
     (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)).homology
         ((n : ℤ) - 1) ≅
       (relativeDualCochainShortComplexInt R X).X₁.homology (n : ℤ) := by
-  let Q := HomotopyCategory.quotient (ModuleCat.{u} R) (ComplexShape.up ℤ)
+  let Q := HomotopyCategory.quotient (ModuleCat.{u} R) ℤᵘᵖ
   let H (z : ℤ) := HomotopyCategory.homologyFunctor
-    (ModuleCat.{u} R) (ComplexShape.up ℤ) z
+    (ModuleCat.{u} R) ℤᵘᵖ z
   let C := CochainComplex.mappingCone (relativeCochainRestrictionInt R X)
   let D := (relativeDualCochainShortComplexInt R X).X₁
   have hn : (1 : ℤ) + ((n : ℤ) - 1) = (n : ℤ) := by lia
   exact
     (HomotopyCategory.homologyFunctorFactors
-      (ModuleCat.{u} R) (ComplexShape.up ℤ) ((n : ℤ) - 1)).symm.app C ≪≫
+      (ModuleCat.{u} R) ℤᵘᵖ ((n : ℤ) - 1)).symm.app C ≪≫
     (H ((n : ℤ) - 1)).mapIso (relativeDualShiftIsoCochainCone R X).symm ≪≫
     (((H 0).shiftIso (1 : ℤ) ((n : ℤ) - 1) (n : ℤ) hn).app (Q.obj D)) ≪≫
     (HomotopyCategory.homologyFunctorFactors
-      (ModuleCat.{u} R) (ComplexShape.up ℤ) (n : ℤ)).app D
+      (ModuleCat.{u} R) ℤᵘᵖ (n : ℤ)).app D
 
 /-- Relative singular cohomology is the degree-`n - 1` cohomology of the mapping cone of
 restriction from ambient singular cochains to subspace singular cochains. -/

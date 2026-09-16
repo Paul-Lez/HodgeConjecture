@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import Other.AlgebraicTopology.SingularChainSheafClosedSupport
 public import Other.AlgebraicTopology.ClosedEmbeddingDerivedPushforward
@@ -31,10 +33,10 @@ variable {Z X : TopCat.{u}} (i : Z ⟶ X) (R : Type u) [Field R]
 /-- The actual closed-support inclusion, now applied to the integer-graded chain model. -/
 def singularCochainClosedSupportInclusion (S : Closeds X) :
     ((TopCat.Sheaf.sheafSectionsWithClosedSupport X S).mapHomologicalComplex
-      (ComplexShape.up ℤ)).obj (singularChainSheafCochainComplex R X) ⟶
+      ℤᵘᵖ).obj (singularChainSheafCochainComplex R X) ⟶
       singularChainSheafCochainComplex R X :=
   ((TopCat.Sheaf.sheafSectionsSupportedOutsideInclusion X S.compl).mapHomologicalComplex
-    (ComplexShape.up ℤ)).app (singularChainSheafCochainComplex R X)
+    ℤᵘᵖ).app (singularChainSheafCochainComplex R X)
 
 /-- The extension comparison intertwines the actual two support-forgetting inclusions. -/
 @[reassoc]
@@ -54,7 +56,7 @@ lemma singularCochainClosedSupportInclusion_extend (S : Closeds X) :
 grading, rather than a differently presented regraded source. -/
 def singularChainSheafCochainPushforward (hi : IsClosedEmbedding i) :
     ((TopCat.Sheaf.pushforward AddCommGrpCat.{u} i).mapHomologicalComplex
-      (ComplexShape.up ℤ)).obj (singularChainSheafCochainComplex R Z) ⟶
+      ℤᵘᵖ).obj (singularChainSheafCochainComplex R Z) ⟶
       singularChainSheafCochainComplex R X :=
   (HomologicalComplex.mapExtendCanonicalIso (TopCat.Sheaf.pushforward AddCommGrpCat.{u} i)
     (singularChainSheafComplex R Z) ComplexShape.embeddingDownNat).hom ≫
@@ -63,9 +65,9 @@ def singularChainSheafCochainPushforward (hi : IsClosedEmbedding i) :
 /-- The same actual map with its canonically constructed closed support. -/
 def singularChainSheafCochainPushforwardWithClosedSupport (hi : IsClosedEmbedding i) :
     ((TopCat.Sheaf.pushforward AddCommGrpCat.{u} i).mapHomologicalComplex
-      (ComplexShape.up ℤ)).obj (singularChainSheafCochainComplex R Z) ⟶
+      ℤᵘᵖ).obj (singularChainSheafCochainComplex R Z) ⟶
     ((TopCat.Sheaf.sheafSectionsWithClosedSupport X (closedEmbeddingSupport i hi)).mapHomologicalComplex
-      (ComplexShape.up ℤ)).obj (singularChainSheafCochainComplex R X) :=
+      ℤᵘᵖ).obj (singularChainSheafCochainComplex R X) :=
   (HomologicalComplex.mapExtendCanonicalIso (TopCat.Sheaf.pushforward AddCommGrpCat.{u} i)
     (singularChainSheafComplex R Z) ComplexShape.embeddingDownNat).hom ≫
       singularChainSheafPushforwardWithClosedSupportRegraded i R hi ≫
@@ -125,7 +127,7 @@ def singularChainSheafDerivedPushforwardWithClosedSupport (hi : IsClosedEmbeddin
       (DerivedCategory.Q.obj (singularChainSheafCochainComplex R Z)) ⟶
     DerivedCategory.Q.obj
       (((TopCat.Sheaf.sheafSectionsWithClosedSupport X (closedEmbeddingSupport i hi)).mapHomologicalComplex
-        (ComplexShape.up ℤ)).obj (singularChainSheafCochainComplex R X)) :=
+        ℤᵘᵖ).obj (singularChainSheafCochainComplex R X)) :=
   (TopCat.Sheaf.closedEmbeddingDerivedPushforwardFactors i hi).hom.app
       (singularChainSheafCochainComplex R Z) ≫
     DerivedCategory.Q.map (singularChainSheafCochainPushforwardWithClosedSupport i R hi)
