@@ -64,5 +64,6 @@ formalization.
 * `Other/AlgebraicGeometry/Hodge/CodimensionZeroComparison.lean` and
   `CodimensionZeroNonvanishing.lean`: nonvanishing of the class of the whole variety and
   the codimension-zero case of the conjecture;
-* `HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures and the
-  $`(p,p)` criterion.
+* `Other/LinearAlgebra/HodgeStructure.lean`, `Other/AlgebraicGeometry/Hodge/Complexification.lean`,
+  and `Other/AlgebraicGeometry/Hodge/Decomposition.lean`: pure Hodge structures, the $`(p,p)`
+  criterion, and the Hodge decomposition as a hypothesis.
