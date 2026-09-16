@@ -41,8 +41,13 @@ theorem mem_smoothClosedSupportChartOpen (z : ComplexPoint Y) :
 /-- The target is the sheafification of the literal relative-cohomology presheaf. -/
 abbrev smoothClosedSupportCoclassSheaf : TopCat.Sheaf AddCommGrpCat
     (TopCat.of (ComplexPoint X)) :=
-  supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-    (Set.range (Point.map i)) (2 * (d - m))
+  supportRelativeCohomologySheaf
+    -- `X(ℂ)`.
+    (TopCat.of (ComplexPoint X))
+    -- `Y(ℂ) ⊆ X(ℂ)`, the image of the closed immersion `i`.
+    (Set.range (Point.map i))
+    -- Twice the codimension of `Y` in `X`.
+    (2 * (d - m))
 
 /-- The exact normal coclass determines a section on its full chart source. -/
 def smoothClosedSupportChartSheafSection (z : ComplexPoint Y) :
@@ -150,7 +155,10 @@ theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
 
 /-- The unique global gluing of exactly normalized smooth normal coclasses. -/
 def smoothClosedSupportCoclassSection :
-    (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj (op ⊤) :=
+    -- A global section of `𝓗^{2(d-m)}_{Y(ℂ)}` on `X(ℂ)`.
+    (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj
+      -- All of `X(ℂ)`.
+      (op ⊤) :=
   TopCat.Sheaf.sectionOfLocallyRepresentable _
     (smoothClosedSupportCoclassStalk X Y i m d)
     (smoothClosedSupportCoclassStalk_locallyRepresentable X Y i m d)

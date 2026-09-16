@@ -33,6 +33,7 @@ variable (X : Over (Spec ↧ℂ))
 
 /-- The exact analytic complement of the canonical singular boundary. -/
 abbrev cycleComponentSmoothSupportAmbientOpen : Opens (ComplexPoint X) :=
+  -- `X(ℂ) \ Z_sing(ℂ)`.
   (cycleComponentSingularAnalyticClosedFiltration X x 0).compl
 
 include hx in
@@ -43,8 +44,10 @@ private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
     (V : Opens (ComplexPoint X)) (hyV : y ∈ V) :
     ∃ W : Opens (ComplexPoint X), W ≤ V ∧ y ∈ W ∧
       ∀ n : ℕ, n ≠ 2 * p →
+        -- `H^n(W, W \ Z(ℂ); ℚ)` vanishes away from degree `2p`.
         IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
           (neighborhoodSupportComplementPair (W : Set (ComplexPoint X))
+            -- `Z(ℂ)`.
             (cycleComponentSupport X x)) n)) := by
   let O := cycleComponentSmoothLocusAmbientOpen X x
   let OX := cycleComponentSmoothLocusAmbientOpenOver X x
@@ -78,8 +81,15 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
     (y : ComplexPoint X) (hyU : y ∈ cycleComponentSmoothSupportAmbientOpen X x)
     (V : Opens (ComplexPoint X)) (hyV : y ∈ V) :
     ∃ W : Opens (ComplexPoint X), W ≤ V ∧ y ∈ W ∧
-      IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex
-        (.up ℤ)).obj (complexSupportInjectiveComplex X
+      -- `H^n_{Z(ℂ)}(W; ℚ)` vanishes away from degree `2p`.
+      IsZero ((((TopCat.Sheaf.supportEvaluation
+        -- `X(ℂ)`.
+        (TopCat.of (ComplexPoint X))
+        -- Sections over the open `W`.
+        W).mapHomologicalComplex (.up ℤ)).obj
+        -- `RΓ_{Z(ℂ)}(ℚ)`.
+        (complexSupportInjectiveComplex X
+          -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
           (cycleComponentAnalyticClosedSupport X x))).homology n) := by
   by_cases hneg : n < 0
   · refine ⟨V, le_rfl, hyV, ?_⟩
@@ -115,9 +125,12 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
 def cycleComponentSmoothRestrictedInjectiveComplex :
     CochainComplex (TopCat.Sheaf AddCommGrpCat
       (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))) ℤ :=
+  -- `RΓ_{Z(ℂ)}(ℚ)`, restricted to the open `X(ℂ) \ Z_sing(ℂ)`.
   let U : Opens (TopCat.of (ComplexPoint X)) := cycleComponentSmoothSupportAmbientOpen X x
+  -- Restriction of sheaves to the open `U = X(ℂ) \ Z_sing(ℂ)`.
   ((U.isOpenEmbedding.sheafPullback
     AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
+      -- `RΓ_{Z(ℂ)}(ℚ)` on `X(ℂ)`.
       (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
 
 set_option backward.isDefEq.respectTransparency false in
@@ -131,6 +144,7 @@ include hx in
 /-- The actual restricted cohomology sheaves are concentrated in degree `2p`. -/
 theorem cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
     (n : ℤ) (hn : n ≠ 2 * (p : ℤ)) :
+    -- The sheaf `𝓗^n_{Z(ℂ)}` on `X(ℂ) \ Z_sing(ℂ)` is zero away from degree `2p`.
     IsZero ((cycleComponentSmoothRestrictedInjectiveComplex X x).homology n) :=
   TopCat.Sheaf.openRestriction_homology_isZero_of_cofinal_sections
     (TopCat.of (ComplexPoint X)) _ _ n
@@ -139,12 +153,22 @@ theorem cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
 /-- The canonical lowest-degree isomorphism using the original ambient resolution and
 the original ambient cohomology sheaf, both evaluated on the boundary complement. -/
 def cycleComponentSmoothSupportLowestSectionCohomologyIso :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+    -- `H^{2p}_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ); ℚ)`.
+    ((((TopCat.Sheaf.supportEvaluation
+      -- `X(ℂ)`.
+      (TopCat.of (ComplexPoint X))
+      -- Sections over the open `X(ℂ) \ Z_sing(ℂ)`.
       (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
+        -- `RΓ_{Z(ℂ)}(ℚ)`.
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
+          -- Degree `2p`.
           (2 * (p : ℤ))) ≅
+      -- Sections of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`.
       ((complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)).homology
-        (2 * (p : ℤ))).obj.obj (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
+        -- Degree `2p`.
+        (2 * (p : ℤ))).obj.obj
+          -- The open `X(ℂ) \ Z_sing(ℂ)`.
+          (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso
     (TopCat.of (ComplexPoint X)) (cycleComponentSmoothSupportAmbientOpen X x)
     (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))

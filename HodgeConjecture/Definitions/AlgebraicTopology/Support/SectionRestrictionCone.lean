@@ -109,8 +109,11 @@ set_option backward.defeqAttrib.useBackward true in
 supported degree `n` corresponding to cone degree `n - 1`. -/
 def supportedSectionHomologyIsoRestrictionCone
     (hK : ∀ n, (K.X n).IsFlasque) (n : ℤ) :
+    -- `H^n(Γ_{X \ U}(V, K)) ≅ H^{n-1}(cone(K(V) → K(V ⊓ U)))`.
+    -- `Γ_{X \ U}(V, K)`, the first term of `Γ_{X \ U}(V, K) → K(V) → K(V ⊓ U)`.
     (supportRestrictionSectionsComplexShortComplex X U V K).X₁.homology n ≅
       (CochainComplex.mappingCone
+        -- The restriction `K(V) → K(V ⊓ U)`.
         (sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U))).homology (n - 1) :=
   let S := supportRestrictionSectionsComplexShortComplex X U V K
   letI : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=

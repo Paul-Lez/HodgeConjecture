@@ -103,12 +103,14 @@ def standardComplexRealPairIso (p : ℕ) :
 
 /-- The induced isomorphism between complex and real local homology. -/
 def standardComplexRealRelativeHomologyIso (p : ℕ) :
+    -- `H_{2p}(ℂ^p, ℂ^p \ {0}; ℚ) ≅ H_{2p}(ℝ^{2p}, ℝ^{2p} \ {0}; ℚ)`.
     RelativeHomology ℚ (standardComplexPuncturedPair p) (p * 2) ≅
       RelativeHomology ℚ (standardPuncturedPair (p * 2)) (p * 2) :=
   (relativeHomologyFunctor ℚ (p * 2)).mapIso (standardComplexRealPairIso p)
 
 /-- The standard complex local class obtained from the explicit real local cycle. -/
 def standardComplexLocalClass (p : ℕ) :
+    -- The complex-orientation generator of `H_{2p}(ℂ^p, ℂ^p \ {0}; ℚ)`.
     RelativeHomology ℚ (standardComplexPuncturedPair p) (2 * p) :=
   (Nat.mul_comm p 2) ▸
     (standardComplexRealRelativeHomologyIso p).inv.hom (standardLocalClass (p * 2))

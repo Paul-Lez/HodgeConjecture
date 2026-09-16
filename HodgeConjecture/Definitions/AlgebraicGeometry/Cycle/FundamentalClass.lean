@@ -43,8 +43,12 @@ relative cohomology, by the constructed singular resolution and its literal
 restriction-natural comparison. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
+    -- The `n`-th cohomology sheaf of `RΓ_S(ℚ)`.
     (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
-      supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n :=
+      -- The sheaf `𝓗^n_S` associated with `V ↦ H^n(V, V \ S; ℚ)`.
+      supportRelativeCohomologySheaf
+        -- `X(ℂ)`.
+        (TopCat.of (ComplexPoint X)) S n :=
   letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
   (asIso (HomologicalComplex.homologyMap
     (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
@@ -56,14 +60,30 @@ variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 /-- Degree-`2p` cohomology of global sections supported on the component,
 computed in the fixed ambient injective resolution. -/
 abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
-  (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-    (.up ℤ)).obj (complexSupportInjectiveComplex X
-      (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))
+  -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, with `Z` the subvariety with generic point `x`.
+  (((TopCat.Sheaf.supportEvaluation
+    -- `X(ℂ)`.
+    (TopCat.of (ComplexPoint X))
+    -- Global sections, i.e. sections over all of `X(ℂ)`.
+    ⊤).mapHomologicalComplex (.up ℤ)).obj
+    -- `RΓ_{Z(ℂ)}(ℚ)`.
+    (complexSupportInjectiveComplex X
+      -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
+      (cycleComponentAnalyticClosedSupport X x))).homology
+    -- Degree `2p`.
+    (2 * (p : ℤ))
 
 /-- Sections of the local relative-cohomology sheaf on the smooth-locus ambient open. -/
 abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
-  (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-    (cycleComponentSupport X x) (2 * p)).obj.obj
+  -- Sections of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`.
+  (supportRelativeCohomologySheaf
+    -- `X(ℂ)`.
+    (TopCat.of (ComplexPoint X))
+    -- `Z(ℂ)`.
+    (cycleComponentSupport X x)
+    -- Degree `2p`.
+    (2 * p)).obj.obj
+      -- The open `X(ℂ) \ Z_sing(ℂ)`.
       (op (cycleComponentSmoothSupportAmbientOpen X x))
 
 /-- Supported cohomology on the full component is identified with sections
@@ -96,7 +116,12 @@ def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X 
 /-- The constructed class in the existing support-cone presentation. Its
 comparison includes the proved cone sign required by support forgetting. -/
 def cycleComponentSheafSupportedClass :
-    RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
+    -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, in the support-cone presentation.
+    RationalCohomologyWithSupport X
+      -- `Z(ℂ)`.
+      (cycleComponentSupport X x)
+      -- Degree `2p`.
+      (2 * (p : ℤ)) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
     (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
       (cycleComponentSupportedInjectiveClass X x hx)

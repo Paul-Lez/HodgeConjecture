@@ -53,8 +53,13 @@ variable [T2Space X] [∀ V : Opens X, ParacompactSpace V] (U V : Opens X)
 /-- Actual local supported singular cohomology computes the literal relative pair
 `(V, V ∩ U)`, in supported degree `n`. -/
 def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
+    -- `H^n_{X \ U}(V; ℚ) ≅ H^n(V, V ⊓ U; ℚ)`.
+    ((((TopCat.Sheaf.supportEvaluation X
+      -- Sections over the open `V`.
+      V).mapHomologicalComplex (.up ℤ)).obj
+      -- `Γ_{X \ U}` of the singular-cochain sheaf complex.
       (supportedRationalSingularCochainComplex X U))).homology (n : ℤ) ≃+
+        -- `H^n` of the pair `(V, V ⊓ U)`.
         RelativeCohomology ℚ (openInclusionPair X (Opens.infLELeft V U)) n :=
   (TopCat.Sheaf.supportedSectionHomologyIsoRestrictionCone X U V
       (rationalSingularCochainComplex X) (fun _ => inferInstance) (n : ℤ)).addCommGroupIsoToAddEquiv
@@ -69,8 +74,13 @@ def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
 homeomorphism displayed explicitly rather than silently replacing an inclusion. -/
 def supportedRationalSingularSectionCohomologyEquivSupportComplement
     (S : Set X) (hS : IsClosed S) (V : Opens X) (n : ℕ) :
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
+    -- `H^n_S(V; ℚ) ≅ H^n(V, V \ S; ℚ)`.
+    ((((TopCat.Sheaf.supportEvaluation X
+      -- Sections over the open `V`.
+      V).mapHomologicalComplex (.up ℤ)).obj
+      -- `Γ_S` of the singular-cochain sheaf complex.
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ) ≃+
+        -- `H^n` of the pair `(V, V \ S)`.
         RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n :=
   (supportedRationalSingularSectionCohomologyEquivRelative X ⟨Sᶜ, hS.isOpen_compl⟩ V n).trans
     (((HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.up ℕ) n).mapIso

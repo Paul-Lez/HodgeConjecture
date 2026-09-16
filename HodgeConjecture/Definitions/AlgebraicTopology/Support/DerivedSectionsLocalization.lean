@@ -71,6 +71,7 @@ instance : (openRestrictionPushforward X U).Additive where
 complex. No boundedness is needed for this algebraic sequence. -/
 def supportRestrictionComplexShortComplex
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
+    -- The sequence `Γ_{X \ U}(K) → K → j_*(K|_U)`.
     ShortComplex (CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :=
   ShortComplex.mk
     (show ((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj K ⟶ K from

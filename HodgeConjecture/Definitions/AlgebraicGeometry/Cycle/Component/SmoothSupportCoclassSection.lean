@@ -50,7 +50,9 @@ theorem cycleComponentSmoothClosedLift_codimension :
 degree 2p. The class is the general normal-chart gluing, not supplied data. -/
 def cycleComponentSmoothClosedLiftCoclassSection :
     (supportRelativeCohomologySheaf
+      -- If `Z ⊆ X` is the variety, this is the `X \ Z_sing` open, as a complex manifold.
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
+      -- The image of `Z_reg`.
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (2 * p)).obj.obj (op ⊤) :=
   letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
@@ -91,8 +93,12 @@ theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
 /-- The normalized component coclass section, living on the singular-boundary
 complement in the ORIGINAL ambient relative-cohomology sheaf. -/
 def cycleComponentSmoothSupportCoclassSection :
-    (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+    (supportRelativeCohomologySheaf
+      -- `X(ℂ)` the topological space of complex points of the ambient variety.
+      (TopCat.of (ComplexPoint X))
+      -- `Z(ℂ)` the topological space of complex points of the subvariety we're considering.
       (cycleComponentSupport X x) (2 * p)).obj.obj
+      -- The open set of complex points of the complement of the singular boundary, i.e. `X(ℂ) \ Z_sing(ℂ)`.
       (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)

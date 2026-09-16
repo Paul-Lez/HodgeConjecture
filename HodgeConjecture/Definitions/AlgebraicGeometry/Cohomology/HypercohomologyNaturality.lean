@@ -49,6 +49,7 @@ cohomology. This direct form exposes naturality without choosing another
 injective resolution. -/
 def hypercohomologyAddEquivGlobalSectionsKInjective
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective] (n : ℤ) :
+    -- `ℍ^n(X(ℂ); K) ≅ H^n(Γ(X(ℂ), K))`.
     Hypercohomology X K n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X)) K).homology n :=
   (hypercohomologyAddEquivDerived X K n).trans

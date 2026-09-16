@@ -32,7 +32,10 @@ variable (X Y : Over (Spec ↧ℂ))
 /-- The normal-projection coclass on any subset of a holomorphic flattening chart. -/
 def smoothClosedSupportChartCoclass (W : Set (ComplexPoint X))
     (hW : W ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
-    RelativeCohomology ℚ (neighborhoodSupportComplementPair W (Set.range (Point.map i)))
+    RelativeCohomology ℚ (neighborhoodSupportComplementPair W
+      -- `Y(ℂ) ⊆ X(ℂ)`, the image of the closed immersion `i`.
+      (Set.range (Point.map i)))
+      -- Twice the codimension of `Y` in `X`.
       (2 * (d - m)) :=
   chartNormalProjectionCoclass (Fin m → ℂ) (d - m)
     (closedImmersionHolomorphicFlatteningChart X Y i m d z)

@@ -45,6 +45,7 @@ def chartNormalProjectionPair (W : Set M) (hW : W ⊆ e.source) :
 
 /-- The coclass on a whole chart neighborhood is the actual normal-projection pullback. -/
 def chartNormalProjectionCoclass (W : Set M) (hW : W ⊆ e.source) :
+    -- The pullback to `H^{2c}(W, W \ S; ℚ)` of the generator of `H^{2c}(ℂ^c, ℂ^c \ {0}; ℚ)`.
     RelativeCohomology ℚ (neighborhoodSupportComplementPair W S) (2 * c) :=
   relativeCohomologyMap ℚ (2 * c) (chartNormalProjectionPair E c e S hS W hW)
     (normalizedRelativeCoclass (standardComplexLocalClass c)

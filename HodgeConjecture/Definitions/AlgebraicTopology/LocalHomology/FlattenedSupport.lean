@@ -27,6 +27,7 @@ variable {M : Type} [TopologicalSpace M]
 
 /-- The actual pair consisting of a neighborhood and the complement of a support in it. -/
 abbrev neighborhoodSupportComplementPair (W S : Set M) : TopPair :=
+  -- The pair `(W, W \ S)`.
   TopPair.ofSubset (X := TopCat.of W) {w | w.1 ∉ S}
 
 variable (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (x : M) (hx : x ∈ e.source)

@@ -81,7 +81,9 @@ def supportOpenEmbeddingSheafificationIso (P : TopCat.Presheaf AddCommGrpCat X) 
 /-- Actual sheafification of the pair comparison identifies intrinsic local support
 cohomology with restriction of the original ambient relative-cohomology sheaf. -/
 def supportRelativeCohomologySheafOpenIso (n : ℕ) :
+    -- `𝓗^n_B` on `Y` is the restriction of `𝓗^n_S` along the open embedding `f`.
     supportRelativeCohomologySheaf Y B n ≅
+      -- Restriction of sheaves along `f`.
       (hf.sheafPullback AddCommGrpCat).obj (supportRelativeCohomologySheaf X S n) :=
   (presheafToSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).mapIso
       (supportRelativeCohomologyPresheafOpenIso f hf S B hB n).symm ≪≫
@@ -90,8 +92,12 @@ def supportRelativeCohomologySheafOpenIso (n : ℕ) :
 /-- A genuine section on an auxiliary open ambient space gives a section on its
 actual image open in the original ambient space. -/
 def supportRelativeCohomologySectionOpenImage (n : ℕ)
+    -- A global section of `𝓗^n_B` on `Y`.
     (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤)) :
-    (supportRelativeCohomologySheaf X S n).obj.obj (op (hf.functor.obj ⊤)) :=
+    -- A section of `𝓗^n_S` on the open `f(Y) ⊆ X`.
+    (supportRelativeCohomologySheaf X S n).obj.obj
+      -- The open `f(Y)`.
+      (op (hf.functor.obj ⊤)) :=
   (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op ⊤) s
 
 /-- Transport to a specified ambient open equal to the actual image. The final

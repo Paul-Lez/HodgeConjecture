@@ -131,6 +131,7 @@ def integerConstantSingleComplex (Y : TopCat.{0}) :
 /-- Evaluation of an integer-indexed sheaf complex on the top open subset. -/
 def globalSectionsComplexInt (Y : TopCat.{0})
     (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
+    -- `Γ(Y, K^•)`.
     CochainComplex AddCommGrpCat ℤ :=
   IsFlasque.BoundedBelowComplex.globalSectionsComplex K
 

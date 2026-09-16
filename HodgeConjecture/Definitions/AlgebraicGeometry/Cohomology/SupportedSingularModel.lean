@@ -33,9 +33,12 @@ variable (X : Over (Spec ↧ℂ))
 /-- Its actual supported version for any open complement, not just a smooth support. -/
 def complexSupportedSingularToAmbientInjective
     (U : Opens (ComplexPoint X)) :
+    -- `Γ_{X(ℂ) \ U}` of the singular-cochain model, mapping to `Γ_{X(ℂ) \ U}(I^•)`.
     supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U ⟶
       ((TopCat.Sheaf.sheafSectionsSupportedOutside
+        -- `X(ℂ)`.
         (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
+          -- The injective resolution `I^•` of `ℚ` on `X(ℂ)`.
           (ambientRationalInjectiveComplex X) :=
   supportedSingularToInjectiveComplex (TopCat.of (ComplexPoint X))
     (exists_contractibleOpen_le X) U
