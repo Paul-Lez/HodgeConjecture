@@ -27,9 +27,9 @@ namespace TopCat.Sheaf
 variable (X : TopCat.{u})
 
 @[reassoc (attr := simp)]
-lemma sheafSectionsSupportedOutsideInclusion_restriction (U : Opens X)
+lemma sectionsSupportedOutsideInclusion_restriction (U : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) :
-    (sheafSectionsSupportedOutsideInclusion X U).app F ≫
+    (sectionsSupportedOutsideInclusion X U).app F ≫
       (toOpenRestrictionPushforward X U).app F = 0 :=
   kernel.condition _
 
@@ -48,26 +48,26 @@ variable (X : TopCat.{u})
 
 /-- A morphism of sheaves whose restriction to `U` is zero factors canonically
 through the sheaf of sections supported outside `U`. -/
-def liftSheafSectionsSupportedOutside (U : Opens X)
+def liftSectionsSupportedOutside (U : Opens X)
     {F G : Sheaf AddCommGrpCat.{u} X} (f : F ⟶ G)
     (hf : f ≫ (toOpenRestrictionPushforward X U).app G = 0) :
-    F ⟶ (sheafSectionsSupportedOutside X U).obj G :=
+    F ⟶ (sectionsSupportedOutside X U).obj G :=
   kernel.lift _ f hf
 
 @[reassoc (attr := simp)]
-lemma liftSheafSectionsSupportedOutside_inclusion (U : Opens X)
+lemma liftSectionsSupportedOutside_inclusion (U : Opens X)
     {F G : Sheaf AddCommGrpCat.{u} X} (f : F ⟶ G)
     (hf : f ≫ (toOpenRestrictionPushforward X U).app G = 0) :
-    liftSheafSectionsSupportedOutside X U f hf ≫
-      (sheafSectionsSupportedOutsideInclusion X U).app G = f :=
+    liftSectionsSupportedOutside X U f hf ≫
+      (sectionsSupportedOutsideInclusion X U).app G = f :=
   kernel.lift_ι _ _ _
 
 /-- On every ambient open set, supported sections are exactly the kernel of
 restriction to its intersection with `U`. This is the canonical kernel
 comparison, not a supplied equivalence. -/
-def sheafSectionsSupportedOutsideOnOpenIso (U V : Opens X)
+def sectionsSupportedOutsideOnOpenIso (U V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) :
-    ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V) ≅
+    ((sectionsSupportedOutside X U).obj F).obj.obj (op V) ≅
       kernel (((toOpenRestrictionPushforward X U).app F).hom.app (op V)) :=
   let ev : Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
     sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat ⋙
@@ -82,11 +82,11 @@ def sheafSectionsSupportedOutsideOnOpenIso (U V : Opens X)
 /-- The kernel comparison preserves the actual inclusion of supported sections
 into all sections. -/
 @[reassoc (attr := simp)]
-lemma sheafSectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
+lemma sectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) :
-    (sheafSectionsSupportedOutsideOnOpenIso X U V F).hom ≫
+    (sectionsSupportedOutsideOnOpenIso X U V F).hom ≫
       kernel.ι (((toOpenRestrictionPushforward X U).app F).hom.app (op V)) =
-        ((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V) := by
+        ((sectionsSupportedOutsideInclusion X U).app F).hom.app (op V) := by
   let ev : Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
     sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat ⋙
       (evaluation _ AddCommGrpCat).obj (op V)
@@ -102,10 +102,10 @@ lemma sheafSectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
 /-- The sheaf-valued sections-with-support functor for a closed support. -/
 def sheafSectionsWithClosedSupport (Z : Closeds X) :
     Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} X :=
-  sheafSectionsSupportedOutside X Z.compl
+  sectionsSupportedOutside X Z.compl
 
 instance (Z : Closeds X) : (sheafSectionsWithClosedSupport X Z).Additive :=
-  inferInstanceAs (sheafSectionsSupportedOutside X Z.compl).Additive
+  inferInstanceAs (sectionsSupportedOutside X Z.compl).Additive
 
 /-- Global sections supported in a closed subset, obtained by evaluating the
 concrete support sheaf on the whole ambient space. -/

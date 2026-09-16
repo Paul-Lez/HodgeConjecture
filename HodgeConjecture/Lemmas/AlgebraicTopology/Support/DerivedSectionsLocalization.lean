@@ -28,9 +28,9 @@ variable (X : TopCat.{u}) (U : Opens X)
 /-- The actual support inclusion followed by restriction-pushforward. -/
 def supportRestrictionShortComplex (F : Sheaf AddCommGrpCat.{u} X) :
     ShortComplex (Sheaf AddCommGrpCat.{u} X) :=
-  ShortComplex.mk ((sheafSectionsSupportedOutsideInclusion X U).app F)
+  ShortComplex.mk ((sectionsSupportedOutsideInclusion X U).app F)
     ((toOpenRestrictionPushforward X U).app F)
-    (sheafSectionsSupportedOutsideInclusion_restriction X U F)
+    (sectionsSupportedOutsideInclusion_restriction X U F)
 
 /-- The sequence of sections on `V`, with the actual supported-sections inclusion
 and actual restriction map. -/

@@ -32,7 +32,7 @@ variable (X : Over (Spec ↧ℂ))
 /-- The literal supported ambient rational injective complex for a closed support. -/
 def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
-  ((TopCat.Sheaf.sheafSectionsSupportedOutside
+  ((TopCat.Sheaf.sectionsSupportedOutside
     (TopCat.of (ComplexPoint X)) S.compl).mapHomologicalComplex (.up ℤ)).obj
       (ambientRationalInjectiveComplex X)
 
