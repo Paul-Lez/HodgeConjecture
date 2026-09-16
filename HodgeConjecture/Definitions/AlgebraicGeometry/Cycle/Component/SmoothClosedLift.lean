@@ -5,16 +5,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.SourceOpen
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 
-/-!
-# The smooth-locus closed lift of an integral cycle component
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
-The ambient open is the complement of the first canonical singular-boundary support, and
-the smooth locus embeds closed in it. Its constant relative dimension is `d-p`, by smooth
-equidimensionality together with the coheight formula for a closed point of the integral
-component.
+/-!
+# The smooth locus of a cycle component as a closed subscheme
+
+The smooth locus of the cycle component at `x` is closed in the open subscheme of `X.left`
+obtained by deleting the image of the singular locus. This file records that open, the closed
+immersion of the smooth locus into it, and the complex points of `X` in it.
 -/
 
 @[expose] public noncomputable section
@@ -23,84 +25,58 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ))
-  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
+variable (X : Over (Spec ↧ℂ)) [LocallyOfFiniteType X.hom] (x : X.left)
 
-/-- The precise algebraic open complementary to the canonical singular boundary. -/
+/-- The open subscheme of `X.left` in which the smooth locus of the cycle component at `x` is
+closed: the complement of the image of the singular locus. -/
 def cycleComponentSmoothLocusAmbientOpen : X.left.Opens :=
-  (cycleComponentSingularAmbientClosedFiltration X x 0).compl
+  closedImmersionSourceOpenTarget (X.left.pointClosureι x) (cycleComponentSmoothLocus X x)
 
-/-- The ambient boundary complement with its induced structure map to `Spec ℂ`. -/
+/-- The open `cycleComponentSmoothLocusAmbientOpen X x`, over `ℂ`. -/
 abbrev cycleComponentSmoothLocusAmbientOpenOver : Over (Spec ↧ℂ) :=
   ComplexPoint.openScheme X (cycleComponentSmoothLocusAmbientOpen X x)
 
-instance cycleComponentSmoothLocusAmbientOpenOver_locallyOfFiniteType :
-    LocallyOfFiniteType (cycleComponentSmoothLocusAmbientOpenOver X x).hom := by
-  change LocallyOfFiniteType ((cycleComponentSmoothLocusAmbientOpen X x).ι ≫ X.hom)
-  infer_instance
+/-- The smooth locus of the cycle component at `x` as a closed subscheme of
+`cycleComponentSmoothLocusAmbientOpen X x`, over `ℂ`. -/
+def cycleComponentSmoothLocusClosedLiftOver :
+    cycleComponentSmoothLocusOver X x ⟶ cycleComponentSmoothLocusAmbientOpenOver X x :=
+  Over.homMk
+    (closedImmersionSourceOpenLift (X.left.pointClosureι x) (cycleComponentSmoothLocus X x)) (by
+      change closedImmersionSourceOpenLift _ _ ≫
+        (closedImmersionSourceOpenTarget (X.left.pointClosureι x)
+          (cycleComponentSmoothLocus X x)).ι ≫ X.hom =
+            (cycleComponentSmoothLocus X x).ι ≫ X.left.pointClosureι x ≫ X.hom
+      rw [← Category.assoc, closedImmersionSourceOpenLift_ι, Category.assoc])
 
-instance cycleComponentSmoothLocusAmbientOpenInclusion_isImmersion :
-    IsImmersion
-      (ComplexPoint.openInclusion X (cycleComponentSmoothLocusAmbientOpen X x)).left := by
-  change IsImmersion (cycleComponentSmoothLocusAmbientOpen X x).ι
-  infer_instance
-
-/-- The actual smooth locus, closed in the complement of its singular boundary. -/
-def cycleComponentSmoothLocusClosedLift :
-    (cycleComponentι X.left x ≫ X.hom).smoothLocus.toScheme ⟶
-      (cycleComponentSmoothLocusAmbientOpen X x).toScheme :=
-  closedImmersionSourceOpenLift (cycleComponentι X.left x) (cycleComponentι X.left x ≫ X.hom).smoothLocus
-
-set_option backward.isDefEq.respectTransparency false in
-set_option backward.defeqAttrib.useBackward true in
-instance cycleComponentSmoothLocusClosedLift_isClosedImmersion :
-    IsClosedImmersion (cycleComponentSmoothLocusClosedLift X x) := by
-  dsimp [cycleComponentSmoothLocusClosedLift]
-  infer_instance
+instance : IsClosedImmersion (cycleComponentSmoothLocusClosedLiftOver X x).left :=
+  inferInstanceAs (IsClosedImmersion (closedImmersionSourceOpenLift _ _))
 
 @[reassoc (attr := simp)]
-theorem cycleComponentSmoothLocusClosedLift_ι :
-    cycleComponentSmoothLocusClosedLift X x ≫ (cycleComponentSmoothLocusAmbientOpen X x).ι =
-      (cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫ cycleComponentι X.left x :=
-  closedImmersionSourceOpenLift_ι _ _
-
-/-- The smooth-locus closed lift bundled over `Spec ℂ`. -/
-def cycleComponentSmoothLocusClosedLiftOver :
-    ComplexPoint.cycleComponentSmoothLocusOver X x ⟶
-      cycleComponentSmoothLocusAmbientOpenOver X x :=
-  Over.homMk (cycleComponentSmoothLocusClosedLift X x) (by
-    change cycleComponentSmoothLocusClosedLift X x ≫
-      ((cycleComponentSmoothLocusAmbientOpen X x).ι ≫ X.hom) =
-        ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
-          cycleComponentι X.left x) ≫ X.hom
-    rw [← Category.assoc, cycleComponentSmoothLocusClosedLift_ι])
-
-instance cycleComponentSmoothLocusClosedLiftOver_isClosedImmersion :
-    IsClosedImmersion (cycleComponentSmoothLocusClosedLiftOver X x).left := by
-  change IsClosedImmersion (cycleComponentSmoothLocusClosedLift X x)
-  infer_instance
-
-variable {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-
-/-- The ambient open retains the original smooth relative dimension. These stay generic in
-`d`: they are instances, found by resolution, and narrowing them to `dim X.left` would make
-them fire less often. -/
-instance cycleComponentSmoothLocusAmbientOpen_smoothOfRelativeDimension :
-    SmoothOfRelativeDimension d ((cycleComponentSmoothLocusAmbientOpen X x).ι ≫ X.hom) := by
-  simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 d
-    (cycleComponentSmoothLocusAmbientOpen X x).ι X.hom
-
-instance cycleComponentSmoothLocusAmbientOpenOver_smoothOfRelativeDimension :
-    SmoothOfRelativeDimension d (cycleComponentSmoothLocusAmbientOpenOver X x).hom := by
-  change SmoothOfRelativeDimension d
-    ((cycleComponentSmoothLocusAmbientOpen X x).ι ≫ X.hom)
-  infer_instance
+theorem cycleComponentSmoothLocusClosedLiftOver_openInclusion :
+    cycleComponentSmoothLocusClosedLiftOver X x ≫
+        ComplexPoint.openInclusion X (cycleComponentSmoothLocusAmbientOpen X x) =
+      ComplexPoint.openInclusion (cycleComponentOver X x) (cycleComponentSmoothLocus X x) ≫
+        cycleComponentOverι X x :=
+  Over.OverMorphism.ext (closedImmersionSourceOpenLift_ι _ _)
 
 namespace ComplexPoint
 
-/-- The full cycle support as an actual closed analytic subset. -/
-def cycleComponentAnalyticClosedSupport : Closeds (ComplexPoint X) :=
-  ⟨cycleComponentSupport X x, isClosed_cycleComponentSupport X x⟩
+/-- The complex points of `X` in `cycleComponentSmoothLocusAmbientOpen X x`. -/
+def cycleComponentSmoothSupportAmbientOpen : Opens (ComplexPoint X) :=
+  ⟨Point.overOpen (cycleComponentSmoothLocusAmbientOpen X x), Point.isOpen_overOpen _⟩
+
+@[simp]
+lemma coe_cycleComponentSmoothSupportAmbientOpen :
+    (cycleComponentSmoothSupportAmbientOpen X x : Set (ComplexPoint X)) =
+      Point.overOpen (cycleComponentSmoothLocusAmbientOpen X x) :=
+  rfl
+
+@[simp]
+lemma mem_cycleComponentSmoothSupportAmbientOpen {z : ComplexPoint X} :
+    z ∈ cycleComponentSmoothSupportAmbientOpen X x ↔
+      z.underlying ∈ cycleComponentSmoothLocusAmbientOpen X x :=
+  Iff.rfl
 
 end ComplexPoint
+
 end AlgebraicGeometry

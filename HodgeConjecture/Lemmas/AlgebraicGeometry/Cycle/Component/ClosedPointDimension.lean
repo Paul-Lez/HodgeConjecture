@@ -17,7 +17,8 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.LocalGenerator
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
 import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
@@ -141,26 +142,26 @@ variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
 `d`-fold has coheight `d - p` inside that reduced closure. -/
 lemma cycleComponent_closedPoint_coheight_eq_sub
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : cycleComponent X.left x)
+    (z : X.left.pointClosure x)
     [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = p) (hz : IsClosed {z}) :
     Order.coheight z = d - p := by
-  let c : cycleComponent X.left x ⟶ X.left := cycleComponentι X.left x
+  let c : X.left.pointClosure x ⟶ X.left := X.left.pointClosureι x
   let y : X.left := c z
-  have hyx : y ≤ x := (cycleComponentOrderIsoIic X.left x z).2
+  have hyx : y ≤ x := (X.left.pointClosureOrderIsoIic x z).2
   obtain ⟨U, hU, hyU, hstandard⟩ :=
     SmoothOfRelativeDimension.exists_affine_isStandardSmoothOfRelativeDimension
       (d := d) X.hom y
   have hxU : x ∈ U := by
     rw [Scheme.le_iff_specializes] at hyx
     exact hyx.mem_open U.isOpen hyU
-  let W : (cycleComponent X.left x).Opens := c ⁻¹ᵁ U
+  let W : (X.left.pointClosure x).Opens := c ⁻¹ᵁ U
   have hW : IsAffineOpen W := hU.preimage c
   have hzW : z ∈ W := hyU
   let : Nonempty W := ⟨⟨z, hzW⟩⟩
   let xu : U.toScheme := ⟨x, hxU⟩
   let zw : W.toScheme := ⟨z, hzW⟩
-  let q : Γ(X.left, U) →+* Γ(cycleComponent X.left x, W) :=
+  let q : Γ(X.left, U) →+* Γ(X.left.pointClosure x, W) :=
     (c.app U).hom
   have hqsurj : Function.Surjective q := c.app_surjective U hU
   let P : Ideal Γ(X.left, U) :=
@@ -208,24 +209,24 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
     (algebraMap_isStandardSmoothOfRelativeDimension
       (d := d) X hstandard).ringKrullDim_quotient_eq_sub_complex
         P hPheight
-  have hringW : ringKrullDim Γ(cycleComponent X.left x, W) = d - p := by
+  have hringW : ringKrullDim Γ(X.left.pointClosure x, W) = d - p := by
     calc
-      ringKrullDim Γ(cycleComponent X.left x, W) =
+      ringKrullDim Γ(X.left.pointClosure x, W) =
           ringKrullDim (Γ(X.left, U) ⧸ RingHom.ker q) :=
         (ringKrullDim_eq_of_ringEquiv
           (RingHom.quotientKerEquivOfSurjective hqsurj)).symm
       _ = ringKrullDim (Γ(X.left, U) ⧸ P) := by rw [hqker]
       _ = d - p := hquotient
-  let s : cycleComponent X.left x ⟶ Spec ↧ℂ := c ≫ X.hom
-  let : Algebra ℂ Γ(cycleComponent X.left x, W) :=
+  let s : X.left.pointClosure x ⟶ Spec ↧ℂ := c ≫ X.hom
+  let : Algebra ℂ Γ(X.left.pointClosure x, W) :=
     overSpecAlgebra (Over.mk s) W
-  let : Algebra.FiniteType ℂ Γ(cycleComponent X.left x, W) := by
+  let : Algebra.FiniteType ℂ Γ(X.left.pointClosure x, W) := by
     rw [← RingHom.finiteType_algebraMap]
-    change (algebraMap ℂ Γ(cycleComponent X.left x, W)).FiniteType
+    change (algebraMap ℂ Γ(X.left.pointClosure x, W)).FiniteType
     apply (s.finiteType_appLE (isAffineOpen_top (Spec ↧ℂ)) hW (by simp)).comp
     exact RingHom.FiniteType.of_surjective _
       (Scheme.ΓSpecIso ↧ℂ).symm.commRingCatIsoToRingEquiv.surjective
-  let Q : Ideal Γ(cycleComponent X.left x, W) :=
+  let Q : Ideal Γ(X.left.pointClosure x, W) :=
     (hW.primeIdealOf zw).asIdeal
   have hQmax : Q.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed
     zw hz

@@ -16,7 +16,8 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.LocalGenerator
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
 import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
@@ -51,7 +52,7 @@ variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
 coheight `d - p`. -/
 lemma cycleComponent_complexPoint_coheight_eq_sub
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
+    (z : ComplexPoint (cycleComponentOver X x))
     [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = p) :
     Order.coheight z.underlying = d - p :=
@@ -66,11 +67,11 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
     [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = p) :
     Nonempty (CycleComponentSeparateLocalCoordinates X x d (d - p)) := by
-  let c : cycleComponent X.left x ⟶ Spec ↧ℂ :=
-    cycleComponentι X.left x ≫ X.hom
-  let S : (cycleComponent X.left x).Opens := c.smoothLocus
+  let c : X.left.pointClosure x ⟶ Spec ↧ℂ :=
+    X.left.pointClosureι x ≫ X.hom
+  let S : (X.left.pointClosure x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
-  let : Smooth g := cycleComponent_smoothLocus_smooth X x
+  let : Smooth g := c.smooth_restrict_smoothLocus
   obtain ⟨z, hzsmooth, hzclosed⟩ :=
     exists_cycleComponent_smooth_closed_complexPoint X x
   let zs : S.toScheme := ⟨z.underlying, hzsmooth⟩
@@ -79,7 +80,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
   obtain ⟨m, hm⟩ :=
     hstandardComplex.exists_isStandardSmoothOfRelativeDimension
   have hzsClosed : IsClosed {zs} := by
-    have hpreimage : S.ι ⁻¹' ({z.underlying} : Set (cycleComponent X.left x)) =
+    have hpreimage : S.ι ⁻¹' ({z.underlying} : Set (X.left.pointClosure x)) =
         ({zs} : Set S.toScheme) := by
       ext y
       simp only [Set.mem_preimage, Set.mem_singleton_iff]
@@ -117,7 +118,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
           commutes' := fun c ↦ DFunLike.congr_fun hcomp c }
       componentCoordinateAlgHom_etale := hetale
       ambientCoordinates := localEtaleCoordinates X d
-        (cycleComponentι X.left x z.underlying) }⟩
+        (X.left.pointClosureι x z.underlying) }⟩
 
 end AlgebraicGeometry
 end

@@ -10,18 +10,16 @@ public import HodgeConjecture.Lemmas.Topology.Dimension.ClosedSubset
 public import Mathlib.Topology.NoetherianSpace
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Analytification
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.AffineRelativeDimension
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Open
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
-# Ambient closed supports for singular-component localization induction
+# The singular filtration of a cycle component
 
-The singular boundary of an integral cycle component carries its canonical finite reduced
-smooth filtration, whose images are closed both algebraically and analytically in the ambient
-variety, and whose successive differences are the complex-point images of smooth locally
-closed strata. Their local relative dimensions are strictly below `d - p`, so their ambient
-normal codimensions are at least `p + 1`.
+The singular locus of the cycle component at `x` carries the canonical finite filtration by closed
+subsets whose successive differences are smooth. This file records its stages as closed subsets of
+the component, their images in `X.left`, and the complex points of `X` over those images.
 -/
 
 @[expose] public noncomputable section
@@ -30,40 +28,46 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ))
-  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
+variable (X : Over (Spec ↧ℂ)) [LocallyOfFiniteType X.hom] (x : X.left)
 
-/-- The canonical closed remainders inside the integral component's singular boundary. -/
-abbrev cycleComponentSingularClosedFiltration (k : ℕ) : Closeds (cycleComponent X.left x) :=
-  reducedSmoothClosedFiltration (cycleComponentι X.left x ≫ X.hom)
-    (singularLocusClosed (cycleComponentι X.left x ≫ X.hom)) k
+/-- The `k`-th stage of the canonical smooth filtration of the singular locus of the cycle
+component at `x`. -/
+abbrev cycleComponentSingularFiltration (k : ℕ) : Closeds (X.left.pointClosure x) :=
+  reducedSmoothClosedFiltration (X.left.pointClosureι x ≫ X.hom)
+    (singularLocusClosed (X.left.pointClosureι x ≫ X.hom)) k
 
-/-- Every stage is a closed support in the original algebraic ambient scheme. -/
-def cycleComponentSingularAmbientClosedFiltration (k : ℕ) : Closeds X.left :=
-  ⟨cycleComponentι X.left x '' (cycleComponentSingularClosedFiltration X x k : Set _),
-    (cycleComponentι X.left x).isClosedEmbedding.isClosedMap _
-      (cycleComponentSingularClosedFiltration X x k).isClosed⟩
+/-- The image in `X.left` of the `k`-th stage of the singular filtration of the cycle component
+at `x`. -/
+def cycleComponentAmbientSingularFiltration (k : ℕ) : Closeds X.left :=
+  ⟨X.left.pointClosureι x '' (cycleComponentSingularFiltration X x k : Set _),
+    (X.left.pointClosureι x).isClosedEmbedding.isClosedMap _
+      (cycleComponentSingularFiltration X x k).isClosed⟩
+
+@[simp]
+lemma coe_cycleComponentAmbientSingularFiltration (k : ℕ) :
+    (cycleComponentAmbientSingularFiltration X x k : Set X.left) =
+      X.left.pointClosureι x '' (cycleComponentSingularFiltration X x k : Set _) :=
+  rfl
 
 namespace ComplexPoint
 
-/-- The actual analytically closed ambient supports for nested-support localization. -/
-def cycleComponentSingularAnalyticClosedFiltration (k : ℕ) : Closeds (ComplexPoint X) :=
-  ⟨Point.underlying ⁻¹' (cycleComponentSingularAmbientClosedFiltration X x k : Set X.left),
-    (cycleComponentSingularAmbientClosedFiltration X x k).isClosed.preimage
-      (continuous_underlying_to_zariski X)⟩
+/-- The complex points of `X` over the `k`-th stage of the singular filtration of the cycle
+component at `x`. -/
+def cycleComponentAnalyticSingularFiltration (k : ℕ) : Closeds (ComplexPoint X) :=
+  (cycleComponentAmbientSingularFiltration X x k).preimage Point.continuous_underlying
 
-/-- The smooth locus of the component, bundled over `Spec ℂ`. -/
-abbrev cycleComponentSmoothLocusOver : Over (Spec ↧ℂ) :=
-  Over.mk (((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
-    cycleComponentι X.left x) ≫ X.hom)
+@[simp]
+lemma coe_cycleComponentAnalyticSingularFiltration (k : ℕ) :
+    (cycleComponentAnalyticSingularFiltration X x k : Set (ComplexPoint X)) =
+      Point.underlying ⁻¹' (cycleComponentAmbientSingularFiltration X x k : Set X.left) :=
+  rfl
 
-instance cycleComponentSmoothLocusOver_locallyOfFiniteType :
-    LocallyOfFiniteType (cycleComponentSmoothLocusOver X x).hom := by
-  change LocallyOfFiniteType
-    (((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
-      cycleComponentι X.left x) ≫ X.hom)
-  rw [Category.assoc]
-  infer_instance
+@[simp]
+lemma mem_cycleComponentAnalyticSingularFiltration {z : ComplexPoint X} {k : ℕ} :
+    z ∈ cycleComponentAnalyticSingularFiltration X x k ↔
+      z.underlying ∈ cycleComponentAmbientSingularFiltration X x k :=
+  Iff.rfl
 
 end ComplexPoint
+
 end AlgebraicGeometry

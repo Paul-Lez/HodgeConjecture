@@ -16,16 +16,16 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
+public import Other.Mathlib.AlgebraicGeometry.AlgebraicCycle.Support
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Other.AlgebraicGeometry.Cycle.Support
 
 /-!
-# The support of an algebraic cycle
+# The analytic support of an algebraic cycle
 
-The support of an algebraic cycle is the union of the closures of the generic points carrying a
-nonzero coefficient, and its preimage in the analytic complex-point space is the union of the
-supports of the individual components, hence closed on a projective variety.
+The complex points over the support of an algebraic cycle form a closed subset of the analytic
+complex-point space, the union of the supports of the components with a nonzero coefficient.
 
 The conjecture is stated through the span of the classes of the individual components, so it
 never names the support of a cycle as a whole.
@@ -37,64 +37,52 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
+open ComplexPoint
+
 variable (X : Over (Spec ↧ℂ))
 
 /-- The inclusion of a cycle component on complex points, bundled as a continuous map. -/
 noncomputable def cycleComponentContinuousMap
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
     @ContinuousMap
-      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
+      (ComplexPoint (cycleComponentOver X x))
       (ComplexPoint X) Point.analyticTopology Point.analyticTopology :=
-  Point.continuousMap (Over.homMk (cycleComponentι X.left x) rfl)
+  Point.continuousMap (Over.homMk (X.left.pointClosureι x) rfl)
 
-/-- The underlying closed support of an algebraic cycle: the union of the closures of all generic
-points having nonzero coefficient. -/
-def algebraicCycleSupport {R : Type*} [Zero R] (X : Scheme)
-    (c : AlgebraicCycle X R) : Set X :=
-  ⋃ x ∈ c.support, closure {x}
+variable {R : Type*} [Zero R] (c : AlgebraicCycle X.left R)
 
-/-- The complex points lying over the geometric support of an algebraic cycle. -/
-def analyticCycleSupport {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    (c : AlgebraicCycle X.left R) : Set (ComplexPoint X) :=
-  Point.underlying ⁻¹' algebraicCycleSupport X.left c
+/-- The complex points over the support of an algebraic cycle. -/
+noncomputable def analyticCycleSupport : Closeds (ComplexPoint X) :=
+  c.closedSupport.preimage Point.continuous_underlying
 
-/-- The analytic support of a cycle is the union of the analytic supports of its nonzero
-components. -/
-lemma analyticCycleSupport_eq_iUnion {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (c : AlgebraicCycle X.left R) :
-    analyticCycleSupport X c =
-      ⋃ x ∈ c.support, cycleComponentSupport X x := by
-  ext z
-  simp [analyticCycleSupport, algebraicCycleSupport, cycleComponentSupport]
-
-/-- The analytic support of an algebraic cycle on a projective variety is closed. -/
-lemma isClosed_analyticCycleSupport {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (c : AlgebraicCycle X.left R) :
-    IsClosed (analyticCycleSupport X c) := by
-  rw [analyticCycleSupport_eq_iUnion]
-  exact (algebraicCycle_support_finite X c).isClosed_biUnion fun x _ =>
-    isClosed_cycleComponentSupport X x
-
-lemma cycleComponentSupport_subset_analyticCycleSupport {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (c : AlgebraicCycle X.left R)
-    (x : X.left) (hx : c x ≠ 0) :
-    cycleComponentSupport X x ⊆ analyticCycleSupport X c :=
-  fun _ hz => Set.mem_iUnion₂.mpr ⟨x, Function.mem_support.mpr hx, hz⟩
-
+/-- Unfold the analytic support of `c` to the preimage of its topological support in `X.left`. -/
 @[simp]
-lemma algebraicCycleSupport_zero {R : Type*} [Zero R] (X : Scheme) :
-    algebraicCycleSupport X (0 : AlgebraicCycle X R) = ∅ := by
-  simp [algebraicCycleSupport]
-  exact fun _ => rfl
+lemma coe_analyticCycleSupport :
+    (analyticCycleSupport X c : Set (ComplexPoint X)) = Point.underlying ⁻¹' tsupport c :=
+  rfl
 
+/-- Membership in the analytic support of `c`, tested on the underlying scheme point. -/
 @[simp]
-lemma analyticCycleSupport_zero {R : Type*} [Zero R]
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
-    analyticCycleSupport X (0 : AlgebraicCycle X.left R) = ∅ := by
-  simp [analyticCycleSupport]
+lemma mem_analyticCycleSupport {z : ComplexPoint X} :
+    z ∈ analyticCycleSupport X c ↔ z.underlying ∈ tsupport c :=
+  Iff.rfl
+
+/-- The analytic support of a cycle is the union of the supports of its components with a nonzero
+coefficient. -/
+lemma coe_analyticCycleSupport_eq_iUnion :
+    (analyticCycleSupport X c : Set (ComplexPoint X)) =
+      ⋃ x ∈ c.support, cycleComponentSupport X x :=
+  (congrArg (Point.underlying ⁻¹' ·) c.coe_closedSupport_eq_iUnion).trans Set.preimage_iUnion₂
+
+/-- The support of a component with a nonzero coefficient lies in the analytic support of the
+cycle. -/
+lemma cycleComponentSupport_le_analyticCycleSupport {x : X.left} (hx : c x ≠ 0) :
+    cycleComponentSupport X x ≤ analyticCycleSupport X c :=
+  fun _ hz ↦ c.closure_singleton_le_closedSupport hx hz
+
+/-- The zero cycle has empty analytic support. -/
+@[simp]
+lemma analyticCycleSupport_zero : analyticCycleSupport X (0 : AlgebraicCycle X.left R) = ⊥ :=
+  congrArg (Closeds.preimage · Point.continuous_underlying) AlgebraicCycle.closedSupport_zero
 
 end AlgebraicGeometry

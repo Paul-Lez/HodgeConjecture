@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClass
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
 import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerator
@@ -47,9 +48,9 @@ attribute [local instance] coordinateRingScalarTower
 attribute [local instance] coordinateRingEtale
 
 /-- The selected smooth component point regarded as a complex point of the smooth locus. -/
-def smoothPoint : ComplexPoint (componentSmoothScheme X x) :=
-  ComplexPoint.asOpenPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))
-    (componentSmoothLocus X x)
+def smoothPoint : ComplexPoint (cycleComponentSmoothLocusOver X x) :=
+  ComplexPoint.asOpenPoint (cycleComponentOver X x)
+    (cycleComponentSmoothLocus X x)
     C.point C.point_mem_smoothLocus
 
 /-- The selected affine component neighborhood, bundled over the complex base. -/
@@ -59,21 +60,21 @@ abbrev neighborhoodScheme : Over (Spec ↧ℂ) :=
 /-- The selected smooth point regarded as a complex point of its affine neighborhood. -/
 def neighborhoodPoint :
     ComplexPoint C.neighborhoodScheme :=
-  ComplexPoint.asOpenPoint (componentSmoothScheme X x) C.componentNeighborhood
+  ComplexPoint.asOpenPoint (cycleComponentSmoothLocusOver X x) C.componentNeighborhood
     (smoothPoint C) (by
       change (smoothPoint C).underlying ∈ C.componentNeighborhood
-      have hmap : Point.map (ComplexPoint.openInclusion (Over.mk (cycleComponentι X.left x ≫ X.hom))
-          (componentSmoothLocus X x)) (smoothPoint C) =
+      have hmap : Point.map (ComplexPoint.openInclusion (cycleComponentOver X x)
+          (cycleComponentSmoothLocus X x)) (smoothPoint C) =
           C.point :=
         congrArg Subtype.val
-          ((ComplexPoint.openEquiv (Over.mk (cycleComponentι X.left x ≫ X.hom))
-            (componentSmoothLocus X x)).apply_symm_apply
+          ((ComplexPoint.openEquiv (cycleComponentOver X x)
+            (cycleComponentSmoothLocus X x)).apply_symm_apply
               ⟨C.point, C.point_mem_smoothLocus⟩)
       have hu := congrArg Point.underlying hmap
       rw [Point.underlying_map] at hu
       have hu' : (smoothPoint C).underlying =
           (⟨C.point.underlying, C.point_mem_smoothLocus⟩ :
-            (componentSmoothLocus X x).toScheme) := Subtype.ext hu
+            (cycleComponentSmoothLocus X x).toScheme) := Subtype.ext hu
       rw [hu']
       exact C.point_mem_componentNeighborhood)
 

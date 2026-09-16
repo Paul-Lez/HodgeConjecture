@@ -7,7 +7,8 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Smooth.SingularLocusDimension
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
@@ -31,29 +32,26 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
   (f : X ⟶ Spec (.of K)) [LocallyOfFiniteType f]
 
 /-- The singular locus equipped with its reduced closed-subscheme structure. -/
-def reducedSingularLocus : Scheme := reducedClosedSubscheme (singularLocusClosed f)
+def reducedSingularLocus : Scheme := X.reducedClosedSubscheme (singularLocusClosed f)
 
 /-- Its canonical closed immersion in the original scheme. -/
 def reducedSingularLocusι : reducedSingularLocus f ⟶ X :=
-  reducedClosedSubschemeι (singularLocusClosed f)
+  X.reducedClosedSubschemeι (singularLocusClosed f)
 
 instance reducedSingularLocus_isReduced : IsReduced (reducedSingularLocus f) :=
-  inferInstanceAs (IsReduced (reducedClosedSubscheme (singularLocusClosed f)))
+  inferInstanceAs (IsReduced (X.reducedClosedSubscheme (singularLocusClosed f)))
 
 instance reducedSingularLocusι_isClosedImmersion :
     IsClosedImmersion (reducedSingularLocusι f) :=
-  inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f)))
+  inferInstanceAs (IsClosedImmersion (X.reducedClosedSubschemeι (singularLocusClosed f)))
 
-variable (Y : Over (Spec ↧ℂ))
-  [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
+variable (Y : Over (Spec ↧ℂ)) [IsNoetherian Y.left] [LocallyOfFiniteType Y.hom]
 
-/-- The singular locus of every cycle component admits the actual finite smooth
-decomposition constructed by Noetherian recursion. -/
+/-- The finite smooth stratification of the singular locus of the cycle component at `x`. -/
 def cycleComponentSingularStratification (x : Y.left) :
-    List (Closeds (cycleComponent Y.left x)) :=
-  letI := cycleComponent_isNoetherian Y x
-  reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
-    (singularLocusClosed (cycleComponentι Y.left x ≫ Y.hom))
+    List (Closeds (Y.left.pointClosure x)) :=
+  reducedSmoothStratification (Y.left.pointClosureι x ≫ Y.hom)
+    (singularLocusClosed (Y.left.pointClosureι x ≫ Y.hom))
 
 end AlgebraicGeometry
 
@@ -72,7 +70,7 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
 
 @[simp] theorem range_reducedSingularLocusι :
     Set.range (reducedSingularLocusι f) = (f.smoothLocus : Set X)ᶜ :=
-  range_reducedClosedSubschemeι _
+  X.range_reducedClosedSubschemeι _
 
 /-- Generic smoothness makes the actual singular locus proper; no singular-locus bound
 is supplied as an input. -/
@@ -95,7 +93,7 @@ theorem topologicalKrullDim_reducedSingularLocus_lt [PerfectField K] [IsIntegral
 theorem topologicalKrullDim_reducedClosedSmoothPiece_le {S T : Closeds X} (hTS : T ≤ S) :
     topologicalKrullDim (reducedClosedSmoothPiece f T) ≤ topologicalKrullDim S := by
   calc
-    _ ≤ topologicalKrullDim (reducedClosedSubscheme T) :=
+    _ ≤ topologicalKrullDim (X.reducedClosedSubscheme T) :=
       (reducedClosedStructureMap f T).smoothLocus.ι.isOpenEmbedding.isInducing.topologicalKrullDim_le
     _ ≤ topologicalKrullDim S :=
       (IsEmbedding.inclusion hTS).isInducing.topologicalKrullDim_le
@@ -113,7 +111,7 @@ theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
   obtain ⟨n, hn⟩ := RingHom.IsStandardSmooth.exists_isStandardSmoothOfRelativeDimension hs
   have : Nonempty U := ⟨⟨z, hzU⟩⟩
   have hdimU : topologicalKrullDim U = n := by
-    rw [Scheme.topologicalKrullDim_eq_orderKrullDim U.toScheme]
+    rw [topologicalKrullDim_eq_krullDim U.toScheme]
     exact orderKrullDim_eq_of_isStandardSmoothOfRelativeDimension g hU hn
   have hlt := U.ι.isOpenEmbedding.isInducing.topologicalKrullDim_le.trans_lt hdim
   rw [hdimU] at hlt
@@ -128,7 +126,7 @@ theorem topologicalKrullDim_cycleComponent_singularLocus_lt
     (x : Y.left) {d p : ℕ} [SmoothOfRelativeDimension d Y.hom]
     (hx : Order.coheight x = p) :
     topologicalKrullDim
-      (reducedSingularLocus (cycleComponentι Y.left x ≫ Y.hom)) < (d - p : ℕ) :=
+      (reducedSingularLocus (Y.left.pointClosureι x ≫ Y.hom)) < (d - p : ℕ) :=
   topologicalKrullDim_reducedSingularLocus_lt _
     (topologicalKrullDim_cycleComponent_le_sub Y x hx)
 

@@ -31,96 +31,98 @@ local instance analyticSupportHasDerivedCategory (X : Over (Spec ↧ℂ)) :
 # Cycles are indexed by generic points
 
 The *coheight* of a point $`x` of a scheme is the codimension of its closure $`\overline{\{x\}}`,
-an irreducible closed subset with generic point $`x`. A codimension-$`p` cycle is a locally finite
-integer combination of points of coheight $`p`. The formalization uses this description
-throughout, in place of a separate type of subvarieties.
+an irreducible closed subset with generic point $`x`. An algebraic cycle is a locally finite
+combination of points. The cycles whose points with a nonzero coefficient all lie in a given set
+form a subgroup, and a codimension-$`p` cycle is a cycle whose points with a nonzero coefficient
+have coheight $`p`. The formalization uses this description throughout, in place of a separate
+type of subvarieties.
 
 ```lean -show
 namespace Guide.Cycles.D1
 ```
 ```lean
-def codimensionCycleSubgroup (X : Scheme.{u}) (p : ℕ) : AddSubgroup (AlgebraicCycle X ℤ) where
-  carrier c := ∀ x, c x ≠ 0 → coheight x = p
-  zero_mem' x hx := (hx rfl).elim
-  add_mem' := by
-    intro a b ha hb x hx
-    by_cases hax : a x = 0
-    · exact hb x (by simpa [hax] using hx)
-    · exact ha x hax
-  neg_mem' := by
-    intro a ha x hx
-    refine ha x fun h ↦ hx ?_
-    change -(a x) = 0
-    simp [h]
+def supported (X : Type*) [TopologicalSpace X] (Y : Type*) [AddGroup Y] (s : Set X) :
+    AddSubgroup (Function.locallyFinsupp X Y) where
+  carrier D := D.support ⊆ s
+  zero_mem' _ h := (h rfl).elim
+  add_mem' {a b} ha hb := (Function.support_add a b).trans (Set.union_subset ha hb)
+  neg_mem' {a} ha := (Function.locallyFinsuppWithin.support_neg a).trans_subset ha
 ```
 ```lean -show
 end Guide.Cycles.D1
-example : @Guide.Cycles.D1.codimensionCycleSubgroup.{u} = @AlgebraicGeometry.codimensionCycleSubgroup.{u} := rfl
+example : @Guide.Cycles.D1.supported = @Function.locallyFinsupp.supported := rfl
 ```
 ```lean -show
 namespace Guide.Cycles.D2
 ```
 ```lean
-open scoped Classical in
-noncomputable def codimensionCycleSubgroup.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
-    (n : ℤ) : codimensionCycleSubgroup X p :=
-  ⟨Function.locallyFinsuppWithin.single x n, by
-    intro y hy
-    by_cases h : y = x
-    · simpa [h] using hx
-    · simp [Function.locallyFinsuppWithin.single_apply, h] at hy⟩
+noncomputable abbrev codimSubgroup (X : Scheme.{u}) (R : Type*) [AddGroup R] (p : ℕ∞) :
+    AddSubgroup (AlgebraicCycle X R) :=
+  Function.locallyFinsupp.supported X R (coheight ⁻¹' {p})
 ```
 ```lean -show
 end Guide.Cycles.D2
-example : @Guide.Cycles.D2.codimensionCycleSubgroup.single.{u} = @AlgebraicGeometry.codimensionCycleSubgroup.single.{u} := rfl
+example : @Guide.Cycles.D2.codimSubgroup.{u} = @AlgebraicGeometry.AlgebraicCycle.codimSubgroup.{u} := rfl
+```
+```lean -show
+namespace Guide.Cycles.D3
+```
+```lean
+open scoped Classical in
+noncomputable def supported.single {X : Type*} [TopologicalSpace X] {Y : Type*} [AddGroup Y]
+    {s : Set X} (x : X) (hx : x ∈ s) (y : Y) : Function.locallyFinsupp.supported X Y s :=
+  ⟨Function.locallyFinsuppWithin.single x y,
+    Function.locallyFinsupp.single_mem_supported.2 (Or.inr hx)⟩
+```
+```lean -show
+end Guide.Cycles.D3
+example : @Guide.Cycles.D3.supported.single = @Function.locallyFinsupp.supported.single := rfl
 ```
 # The support of a subvariety
 
-For a point {lean}`x` of {lean}`X.left`, {lean}`cycleComponent X.left x` is the reduced closed
-subscheme with underlying space $`\overline{\{x\}}`, and {name}`cycleComponentι` is its closed
-immersion into {lean}`X.left`. The
-support of the subvariety in $`X(\mathbb C)` is the preimage of $`\overline{\{x\}}` under the map
-from complex points to scheme points, and it is closed in the analytic topology.
+For a closed subset `S` of a scheme `X`, `X.reducedClosedSubscheme S` is the reduced closed
+subscheme with underlying space `S`. For a point {lean}`x` of {lean}`X.left`,
+{lean}`X.left.pointClosure x` is the case $`S = \overline{\{x\}}`: the integral closed subscheme
+with generic point $`x`, and {name}`Scheme.pointClosureι` is its closed immersion into
+{lean}`X.left`. The support of the subvariety in $`X(\mathbb C)` is the closed set of complex
+points whose underlying scheme point lies in $`\overline{\{x\}}`.
 
 ```lean -show
 namespace Guide.Cycles.D5
 ```
 ```lean
-def cycleComponent (X : Scheme) (x : X) : Scheme :=
-  (Scheme.IdealSheafData.vanishingIdeal
-    (X := X) ⟨closure {x}, isClosed_closure⟩).subscheme
+def reducedClosedSubscheme (X : Scheme) (S : Closeds X) : Scheme :=
+  (Scheme.IdealSheafData.vanishingIdeal S).subscheme
 ```
 ```lean -show
 end Guide.Cycles.D5
-example : @Guide.Cycles.D5.cycleComponent.{u} = @AlgebraicGeometry.cycleComponent.{u} := rfl
+example : @Guide.Cycles.D5.reducedClosedSubscheme.{u} = @AlgebraicGeometry.Scheme.reducedClosedSubscheme.{u} := rfl
 ```
 ```lean -show
 namespace Guide.Cycles.D6
 ```
 ```lean
-def cycleComponentι (X : Scheme) (x : X) : cycleComponent X x ⟶ X :=
-  (Scheme.IdealSheafData.vanishingIdeal
-    (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι
+abbrev pointClosure (X : Scheme) (x : X) : Scheme :=
+  X.reducedClosedSubscheme (Closeds.closure {x})
 ```
 ```lean -show
 end Guide.Cycles.D6
-example : @Guide.Cycles.D6.cycleComponentι.{u} = @AlgebraicGeometry.cycleComponentι.{u} := rfl
+example : @Guide.Cycles.D6.pointClosure.{u} = @AlgebraicGeometry.Scheme.pointClosure.{u} := rfl
 ```
 ```lean -show
 namespace Guide.Cycles.D7
 ```
 ```lean
-def cycleComponentSupport (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) : Set (ComplexPoint X) :=
-  Point.underlying ⁻¹' closure {x}
+def cycleComponentSupport (X : Over (Spec ↧ℂ)) (x : X.left) : Closeds (ComplexPoint X) :=
+  (Closeds.closure {x}).preimage Point.continuous_underlying
 ```
 ```lean -show
 end Guide.Cycles.D7
-example : @Guide.Cycles.D7.cycleComponentSupport = @AlgebraicGeometry.cycleComponentSupport := rfl
+example : @Guide.Cycles.D7.cycleComponentSupport = @AlgebraicGeometry.ComplexPoint.cycleComponentSupport := rfl
 ```
 
 ```lean
-#check AlgebraicGeometry.isClosed_cycleComponentSupport
+#check AlgebraicGeometry.ComplexPoint.mem_cycleComponentSupport
 ```
 
 Only the ambient variety is assumed smooth. A subvariety may be singular, and the construction of

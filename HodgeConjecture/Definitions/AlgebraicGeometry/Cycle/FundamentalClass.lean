@@ -58,7 +58,7 @@ computed in the fixed ambient injective resolution. -/
 abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
   (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
     (.up ℤ)).obj (complexSupportInjectiveComplex X
-      (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))
+      (cycleComponentSupport X x))).homology (2 * (p : ℤ))
 
 /-- Sections of the local relative-cohomology sheaf on the smooth-locus ambient open. -/
 abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
@@ -78,7 +78,7 @@ def cycleComponentSupportedClassNormalizationIso :
       (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
         (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
           (complexSupportInjectiveCohomologySheafIsoRelative X
-            (cycleComponentAnalyticClosedSupport X x) (2 * p)))
+            (cycleComponentSupport X x) (2 * p)))
 
 /-- Extend a smooth-locus coclass uniquely across the singular boundary.
 The inverse comes from proved purity and boundary vanishing; no extension datum is supplied. -/
@@ -98,7 +98,7 @@ comparison includes the proved cone sign required by support forgetting. -/
 def cycleComponentSheafSupportedClass :
     RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
+    (cycleComponentSupport X x).isClosed (2 * (p : ℤ))).symm
       (cycleComponentSupportedInjectiveClass X x hx)
 
 /-- **Step 3.** The unconditional ordinary class of an arbitrary integral component: the

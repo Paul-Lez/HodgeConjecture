@@ -35,6 +35,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SupportExtension
@@ -123,7 +124,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SingularCompar
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.StandardEtale
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.LocalGenerator
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalCoordinates
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
@@ -259,6 +259,8 @@ public import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
 public import HodgeConjecture.Mathlib.Algebra.Ring.Basic
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
+public import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
+public import HodgeConjecture.Mathlib.AlgebraicGeometry.ReducedClosedSubscheme
 public import HodgeConjecture.Mathlib.AlgebraicTopology.SimplicialSet.ChainComplexSplit
 public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart

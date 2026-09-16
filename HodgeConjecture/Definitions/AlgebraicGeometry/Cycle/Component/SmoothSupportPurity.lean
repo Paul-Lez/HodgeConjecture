@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.OpenTransport
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
@@ -31,10 +32,6 @@ variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
-/-- The exact analytic complement of the canonical singular boundary. -/
-abbrev cycleComponentSmoothSupportAmbientOpen : Opens (ComplexPoint X) :=
-  (cycleComponentSingularAnalyticClosedFiltration X x 0).compl
-
 include hx in
 /-- Actual cofinal ambient relative-cohomology calculations along the smooth locus. -/
 private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
@@ -51,14 +48,14 @@ private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
   let Y := cycleComponentSmoothLocusOver X x
   let i : Y ⟶ OX := cycleComponentSmoothLocusClosedLiftOver X x
   let : SmoothOfRelativeDimension (dim X.left - p) Y.hom :=
-    cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
+    cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
   have : SmoothOfRelativeDimension (dim X.left) OX.hom := by
     change SmoothOfRelativeDimension (dim X.left) (O.ι ≫ X.hom)
     simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 (dim X.left) O.ι X.hom
   let f := Point.map (openInclusion X O)
   have hS : f ⁻¹' cycleComponentSupport X x = Set.range (Point.map i) :=
-    (cycleComponentSmoothLocusClosedLift_complexPoints_range X x).symm
-  obtain ⟨w, rfl⟩ := (cycleComponentSmoothLocusAmbientOpen_analytic_image X x).ge hyU
+    (range_map_cycleComponentSmoothLocusClosedLiftOver X x).symm
+  obtain ⟨w, rfl⟩ := (range_map_openInclusion X O).ge hyU
   obtain ⟨z, rfl⟩ := hS.le hy
   have hpd : p ≤ dim X.left := by
     have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := dim X.left) x
@@ -80,13 +77,13 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
     ∃ W : Opens (ComplexPoint X), W ≤ V ∧ y ∈ W ∧
       IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex
         (.up ℤ)).obj (complexSupportInjectiveComplex X
-          (cycleComponentAnalyticClosedSupport X x))).homology n) := by
+          (cycleComponentSupport X x))).homology n) := by
   by_cases hneg : n < 0
   · refine ⟨V, le_rfl, hyV, ?_⟩
     apply ShortComplex.isZero_homology_of_isZero_X₂
     exact (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).map_isZero
       ((complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x)).isZero_of_isStrictlyGE 0 n hneg)
+        (cycleComponentSupport X x)).isZero_of_isStrictlyGE 0 n hneg)
   · obtain ⟨q, rfl⟩ := Int.eq_ofNat_of_zero_le (le_of_not_gt hneg)
     by_cases hy : y ∈ cycleComponentSupport X x
     · obtain ⟨W, hWV, hyW, hW⟩ :=
@@ -95,20 +92,20 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
       refine ⟨W, hWV, hyW, ?_⟩
       let : Subsingleton (RelativeCohomology ℚ
           (neighborhoodSupportComplementPair (W : Set (ComplexPoint X))
-            (cycleComponentAnalyticClosedSupport X x : Set (ComplexPoint X))) q) :=
+            (cycleComponentSupport X x : Set (ComplexPoint X))) q) :=
         ModuleCat.subsingleton_of_isZero (hW q (by exact_mod_cast hn))
       let e := complexSupportInjectiveSectionCohomologyEquiv X
-        (cycleComponentAnalyticClosedSupport X x) W q
+        (cycleComponentSupport X x) W q
       let : Subsingleton ((((TopCat.Sheaf.supportEvaluation
           (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex (.up ℤ)).obj
-            (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
+            (complexSupportInjectiveComplex X (cycleComponentSupport X x))).homology
               (q : ℤ)) := e.injective.subsingleton
       exact AddCommGrpCat.isZero_of_subsingleton _
-    · let W := V ⊓ (cycleComponentAnalyticClosedSupport X x).compl
+    · let W := V ⊓ (cycleComponentSupport X x).compl
       refine ⟨W, inf_le_left, ⟨hyV, hy⟩, ?_⟩
       apply ShortComplex.isZero_homology_of_isZero_X₂
       exact TopCat.Sheaf.supportedOutsideSections_isZero_of_le
-        (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl W
+        (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x).compl W
         ((ambientRationalInjectiveComplex X).X (q : ℤ)) inf_le_right
 
 /-- Restriction of the original full-support injective model to the boundary complement. -/
@@ -118,7 +115,7 @@ def cycleComponentSmoothRestrictedInjectiveComplex :
   let U : Opens (TopCat.of (ComplexPoint X)) := cycleComponentSmoothSupportAmbientOpen X x
   ((U.isOpenEmbedding.sheafPullback
     AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
-      (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
+      (complexSupportInjectiveComplex X (cycleComponentSupport X x))
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -141,18 +138,18 @@ the original ambient cohomology sheaf, both evaluated on the boundary complement
 def cycleComponentSmoothSupportLowestSectionCohomologyIso :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
       (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
+        (complexSupportInjectiveComplex X (cycleComponentSupport X x))).homology
           (2 * (p : ℤ))) ≅
-      ((complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)).homology
+      ((complexSupportInjectiveComplex X (cycleComponentSupport X x)).homology
         (2 * (p : ℤ))).obj.obj (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso
     (TopCat.of (ComplexPoint X)) (cycleComponentSmoothSupportAmbientOpen X x)
-    (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
+    (complexSupportInjectiveComplex X (cycleComponentSupport X x))
     0 (2 * (p : ℤ))
     (fun j hj => cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
       X x hx j (ne_of_lt hj))
     (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
-      (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl
+      (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x).compl
         ((ambientRationalInjectiveComplex X).X j))
 
 end AlgebraicGeometry.ComplexPoint

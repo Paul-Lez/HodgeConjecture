@@ -18,7 +18,8 @@ module
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Data.Complex.Basic
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
@@ -95,8 +96,8 @@ lemma SmoothOfRelativeDimension.orderKrullDim_eq_complex [IsIntegral X]
     rw [orderKrullDim_affineOpen_eq_ringKrullDim U hU]
     exact (algebraMap_isStandardSmoothOfRelativeDimension
       (d := d) (Over.mk f) hsmooth).ringKrullDim_eq_complex
-  rw [← hUdim, ← Scheme.topologicalKrullDim_eq_orderKrullDim U.toScheme,
-    ← Scheme.topologicalKrullDim_eq_orderKrullDim X]
+  rw [← hUdim, ← topologicalKrullDim_eq_krullDim U.toScheme,
+    ← topologicalKrullDim_eq_krullDim X]
   exact U.ι.isOpenEmbedding.isInducing.topologicalKrullDim_le
 
 /-- The pointwise dimension formula holds at every closed point of an integral smooth complex

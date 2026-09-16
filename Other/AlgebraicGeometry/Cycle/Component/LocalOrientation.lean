@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import Other.AlgebraicGeometry.SmoothProjectiveVariety
 public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 
@@ -90,14 +91,14 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
     (hx : Order.coheight x = p)
-    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
+    (z : ComplexPoint (cycleComponentOver V.over x))
     (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     ∃ C : CycleComponentSeparateLocalCoordinates V.over x d (d - p), C.point = z := by
-  let c : cycleComponent V.scheme x ⟶ Spec ↧ℂ :=
-    cycleComponentι V.scheme x ≫ V.structureMap
-  let S : (cycleComponent V.scheme x).Opens := c.smoothLocus
+  let c : V.scheme.pointClosure x ⟶ Spec ↧ℂ :=
+    V.scheme.pointClosureι x ≫ V.structureMap
+  let S : (V.scheme.pointClosure x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
-  let : Smooth g := cycleComponent_smoothLocus_smooth V.over x
+  let : Smooth g := c.smooth_restrict_smoothLocus
   let zs : S.toScheme := ⟨z.underlying, hz⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
   have hstandardComplex := algebraMap_isStandardSmooth (Over.mk g) hstandard
@@ -105,7 +106,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
   have hzclosed : IsClosed {z.underlying} :=
     cycleComponent_complexPoint_underlying_isClosed V.over x z
   have hzsClosed : IsClosed {zs} := by
-    have hpreimage : S.ι ⁻¹' ({z.underlying} : Set (cycleComponent V.scheme x)) =
+    have hpreimage : S.ι ⁻¹' ({z.underlying} : Set (V.scheme.pointClosure x)) =
         ({zs} : Set S.toScheme) := by
       ext y
       simp only [Set.mem_preimage, Set.mem_singleton_iff]
@@ -143,7 +144,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates_at
         commutes' := fun c ↦ DFunLike.congr_fun hcomp c }
     componentCoordinateAlgHom_etale := hetale
     ambientCoordinates := localEtaleCoordinates V.over d
-      (cycleComponentι V.scheme x z.underlying) }, rfl⟩
+      (V.scheme.pointClosureι x z.underlying) }, rfl⟩
 
 /-- A fixed exact coordinate package at a prescribed smooth component point. Existence is the
 preceding theorem; no coordinate package is supplied as data. -/
@@ -151,7 +152,7 @@ def cycleComponentLocalCoordinatesAt
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
     (hx : Order.coheight x = p)
-    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
+    (z : ComplexPoint (cycleComponentOver V.over x))
     (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     CycleComponentSeparateLocalCoordinates V.over x d (d - p) :=
   Classical.choose (nonempty_cycleComponentSeparateLocalCoordinates_at V x d p hx z hz)
@@ -161,7 +162,7 @@ lemma cycleComponentLocalCoordinatesAt_point
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
     (hx : Order.coheight x = p)
-    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
+    (z : ComplexPoint (cycleComponentOver V.over x))
     (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     (cycleComponentLocalCoordinatesAt V x d p hx z hz).point = z :=
   Classical.choose_spec (nonempty_cycleComponentSeparateLocalCoordinates_at V x d p hx z hz)
@@ -178,21 +179,21 @@ variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}
 whole reduced component, on complex points. -/
 def neighborhoodToComponentPoint :
     ComplexPoint C.neighborhoodScheme →
-      ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)) :=
+      ComplexPoint (cycleComponentOver V.over x) :=
   fun z ↦ Point.map (ComplexPoint.openInclusion
-      (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap))
-      (componentSmoothLocus V.over x))
+      (cycleComponentOver V.over x)
+      (cycleComponentSmoothLocus V.over x))
     (Point.map (ComplexPoint.openInclusion
-      (componentSmoothScheme V.over x) C.componentNeighborhood) z)
+      (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood) z)
 
 /-- The neighborhood-to-component map is an open embedding. -/
 lemma neighborhoodToComponentPoint_isOpenEmbedding :
     IsOpenEmbedding C.neighborhoodToComponentPoint :=
   (ComplexPoint.isOpenEmbedding_map_open
-      (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap))
-      (componentSmoothLocus V.over x)).comp
+      (cycleComponentOver V.over x)
+      (cycleComponentSmoothLocus V.over x)).comp
     (ComplexPoint.isOpenEmbedding_map_open
-      (componentSmoothScheme V.over x) C.componentNeighborhood)
+      (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood)
 
 /-- The selected neighborhood point maps to the selected component point. -/
 @[simp]
@@ -200,21 +201,21 @@ lemma neighborhoodToComponentPoint_neighborhoodPoint :
     C.neighborhoodToComponentPoint C.neighborhoodPoint = C.point := by
   unfold neighborhoodToComponentPoint
   rw [show Point.map (ComplexPoint.openInclusion
-      (componentSmoothScheme V.over x) C.componentNeighborhood) C.neighborhoodPoint =
+      (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood) C.neighborhoodPoint =
       C.smoothPoint by
     simpa only [neighborhoodPoint] using
       (ComplexPoint.map_asOpenPoint C.componentNeighborhood C.smoothPoint _)]
   simpa only [smoothPoint] using
     (ComplexPoint.map_asOpenPoint
-      (X := Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
-      (componentSmoothLocus V.over x)
+      (X := cycleComponentOver V.over x)
+      (cycleComponentSmoothLocus V.over x)
       C.point C.point_mem_smoothLocus)
 
 /-- The exact component chart, extended along the open embedding into the whole reduced
 component. -/
 def componentProjectionChart :
     OpenPartialHomeomorph
-      (ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
+      (ComplexPoint (cycleComponentOver V.over x))
       (Fin n → ℂ) :=
   C.neighborhoodProjectionChart.lift_openEmbedding
     C.neighborhoodToComponentPoint_isOpenEmbedding
@@ -236,9 +237,10 @@ def componentLocalOrientationClass :
 theorem span_componentLocalOrientationClass_eq_top :
     Submodule.span ℚ {C.componentLocalOrientationClass} = ⊤ := by
   let : T2Space
-      (ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap))) :=
+      (ComplexPoint (cycleComponentOver V.over x)) :=
     ProjectiveSpace.Presentation.complexPoint_t2Space
-      (Classical.choice (cycleComponent_projective V.over x).nonempty_presentation)
+      (Classical.choice (inferInstance :
+        IsProjective (V.over.left.pointClosureι x ≫ V.over.hom)).nonempty_presentation)
   exact span_localClassOfChart_eq_top n C.componentProjectionChart C.point
     C.point_mem_componentProjectionChart_source
 
@@ -246,9 +248,10 @@ theorem span_componentLocalOrientationClass_eq_top :
 theorem componentLocalOrientationClass_ne_zero :
     C.componentLocalOrientationClass ≠ 0 := by
   let : T2Space
-      (ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap))) :=
+      (ComplexPoint (cycleComponentOver V.over x)) :=
     ProjectiveSpace.Presentation.complexPoint_t2Space
-      (Classical.choice (cycleComponent_projective V.over x).nonempty_presentation)
+      (Classical.choice (inferInstance :
+        IsProjective (V.over.left.pointClosureι x ≫ V.over.hom)).nonempty_presentation)
   exact localClassOfChart_ne_zero n C.componentProjectionChart C.point
     C.point_mem_componentProjectionChart_source
 
@@ -262,7 +265,7 @@ open AlgebraicTopology.Singular
 cycle component. -/
 abbrev CycleComponentComplexLocalClassFamily
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ) :=
-  ∀ (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap))),
+  ∀ (z : ComplexPoint (cycleComponentOver V.over x)),
     z ∈ cycleComponentSmoothAnalyticLocus V.over x →
       RelativeHomology ℚ (pointComplementPair z) n
 
@@ -283,7 +286,7 @@ theorem span_cycleComponentComplexLocalOrientation_eq_top
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
     (hx : Order.coheight x = p)
-    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
+    (z : ComplexPoint (cycleComponentOver V.over x))
     (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     Submodule.span ℚ {cycleComponentComplexLocalOrientation V x d p hx z hz} = ⊤ := by
   let C := cycleComponentLocalCoordinatesAt V x d p hx z hz
@@ -299,7 +302,7 @@ theorem cycleComponentComplexLocalOrientation_ne_zero
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
     (hx : Order.coheight x = p)
-    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
+    (z : ComplexPoint (cycleComponentOver V.over x))
     (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
     cycleComponentComplexLocalOrientation V x d p hx z hz ≠ 0 := by
   let C := cycleComponentLocalCoordinatesAt V x d p hx z hz

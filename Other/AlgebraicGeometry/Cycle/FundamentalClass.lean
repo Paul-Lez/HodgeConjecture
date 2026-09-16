@@ -74,13 +74,13 @@ theorem cycleComponentSheafClass_eq_injectiveModel :
       (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
         (HomologicalComplex.homologyMap
           (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-            (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
+            (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x).compl ⊤
             (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
           (cycleComponentSupportedInjectiveClass X x hx)) := by
   apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).injective
   rw [cycleComponentSheafClass_eq_forgetSupport,
     rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
-    (cycleComponentSupport X x) (cycleComponentAnalyticClosedSupport X x).isClosed]
+    (cycleComponentSupport X x) (cycleComponentSupport X x).isClosed]
   simp only [cycleComponentSheafSupportedClass, AddEquiv.apply_symm_apply]
   rfl
 

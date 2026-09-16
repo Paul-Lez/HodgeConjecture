@@ -39,7 +39,7 @@ namespace AlgebraicGeometry
 variable (R : Type) [CommRing R]
 
 /-- A projective complex scheme is Noetherian. -/
-theorem isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
+instance isNoetherian_of_isProjective (X : Over (Spec ↧ℂ))
     [IsProjective X.hom] : IsNoetherian X.left where
   toIsLocallyNoetherian := LocallyOfFiniteType.isLocallyNoetherian X.hom
   toCompactSpace := QuasiCompact.compactSpace_of_compactSpace X.hom
@@ -95,6 +95,10 @@ variable [ContinuousMul R] [IsOpenUnits R]
 lemma isOpen_overOpen (U : X.left.Opens) :
     IsOpen (overOpen U : Set (Point R X)) := by
   simpa using isOpen_overOpen_inter_preimage U 0 Set.univ isOpen_univ
+
+/-- The underlying scheme point of an `R`-point is continuous for the Zariski topology. -/
+lemma continuous_underlying : Continuous (underlying : Point R X → X.left) :=
+  continuous_def.mpr fun S hS ↦ isOpen_overOpen ⟨S, hS⟩
 
 end Topology
 

@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.Cycle.Component.PointBoundary
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import Other.AlgebraicGeometry.ComplexPoint.CoclassSheafIso
 public import Other.AlgebraicGeometry.Cycle.Support
 
@@ -33,6 +34,7 @@ def cycleComponentSmoothClosedLiftPointImage
   cycleComponentSmoothClosedLiftAmbientMap X x
     (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) a)
 
+omit [IsIntegral X.left] in
 theorem cycleComponentSmoothClosedLiftPointImage_mem_support
     (a : ComplexPoint (cycleComponentSmoothLocusOver X x)) :
     cycleComponentSmoothClosedLiftPointImage X x a ∈ cycleComponentSupport X x :=
@@ -42,8 +44,9 @@ include hx in
 /-- The entire component support is the singleton at any actual closed-lift point. -/
 theorem cycleComponentSupport_eq_singleton_smoothClosedLiftPointImage
     (a : ComplexPoint (cycleComponentSmoothLocusOver X x)) :
-    cycleComponentSupport X x = {cycleComponentSmoothClosedLiftPointImage X x a} := by
-  obtain ⟨z, hz⟩ := (range_cycleComponentMap X x).ge
+    (cycleComponentSupport X x : Set (ComplexPoint X)) =
+      {cycleComponentSmoothClosedLiftPointImage X x a} := by
+  obtain ⟨z, hz⟩ := (range_map_cycleComponentOverι X x).ge
     (cycleComponentSmoothClosedLiftPointImage_mem_support X x a)
   rw [← hz]
   exact cycleComponentSupport_eq_singleton_of_coheight_eq_dimension X (dim X.left) x hx z
@@ -65,7 +68,7 @@ include hx in
 theorem cycleComponentPointClosedLift_smoothOfRelativeDimension_zero :
     SmoothOfRelativeDimension 0 (cycleComponentSmoothLocusOver X x).hom := by
   simpa only [Nat.sub_self] using
-    cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+    cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
 
 /-- Comparison of the auxiliary section with its old normalized point coclass.
 This is a specialization theorem about the general gluing, not its definition. -/
@@ -102,7 +105,7 @@ theorem cycleComponentSmoothClosedLiftCoclassSection_eq_oldPoint
       subst m
       rfl
     exact hcast ((dim X.left) - (dim X.left)) (Nat.sub_self (dim X.left))
-      (cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx)
+      (cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx)
   rw [hsec, smoothClosedSupportCoclassSection_eq_oldPoint_of_singleton
     (cycleComponentSmoothLocusAmbientOpenOver X x)
     (cycleComponentSmoothLocusOver X x)
@@ -149,16 +152,16 @@ theorem cycleComponentSmoothSupportCoclassSection_eq_point_at_lift
 /-- The exact point target may be any complex point of the actual component.
 The actual open-image and support-image theorems supply a smooth-lift preimage. -/
 theorem cycleComponentSmoothSupportCoclassSection_eq_analyticPointCoclass
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
+    (z : ComplexPoint (cycleComponentOver X x)) :
     cycleComponentSmoothSupportCoclassSection X x hx =
       analyticPointCoclassSupportSection X (dim X.left) (cycleComponentSupport X x)
-        (cycleComponentMap X x z) (range_cycleComponentMap_subset X x ⟨z, rfl⟩)
+        (Point.map (cycleComponentOverι X x) z) ((range_map_cycleComponentOverι X x).le ⟨z, rfl⟩)
         (cycleComponentSmoothSupportAmbientOpen X x) := by
-  have hzS := range_cycleComponentMap_subset X x ⟨z, rfl⟩
-  have hzU : cycleComponentMap X x z ∈ cycleComponentSmoothSupportAmbientOpen X x := by
+  have hzS := (range_map_cycleComponentOverι X x).le ⟨z, rfl⟩
+  have hzU : Point.map (cycleComponentOverι X x) z ∈ cycleComponentSmoothSupportAmbientOpen X x := by
     rw [cycleComponentSmoothSupportAmbientOpen_eq_top_of_coheight_eq_dimension X x hx]
     trivial
-  obtain ⟨w, hw⟩ := (cycleComponentSmoothLocusAmbientOpen_analytic_image X x).ge hzU
+  obtain ⟨w, hw⟩ := (range_map_openInclusion X (cycleComponentSmoothLocusAmbientOpen X x)).ge hzU
   have hwS : w ∈ Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)) := by
     apply (cycleComponentSmoothClosedLiftAmbientMap_support X x).le
     change Point.map (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x)) w ∈
@@ -166,12 +169,12 @@ theorem cycleComponentSmoothSupportCoclassSection_eq_analyticPointCoclass
     rw [hw]
     exact hzS
   obtain ⟨a, ha⟩ := hwS
-  have heq : cycleComponentSmoothClosedLiftPointImage X x a = cycleComponentMap X x z :=
+  have heq : cycleComponentSmoothClosedLiftPointImage X x a = Point.map (cycleComponentOverι X x) z :=
     (congrArg (cycleComponentSmoothClosedLiftAmbientMap X x) ha).trans hw
   have hpoints :
       (⟨cycleComponentSmoothClosedLiftPointImage X x a,
           cycleComponentSmoothClosedLiftPointImage_mem_support X x a⟩ : cycleComponentSupport X x) =
-        ⟨cycleComponentMap X x z, hzS⟩ := Subtype.ext heq
+        ⟨Point.map (cycleComponentOverι X x) z, hzS⟩ := Subtype.ext heq
   have he := congrArg
     (fun q : cycleComponentSupport X x =>
       analyticPointCoclassSupportSection X (dim X.left) (cycleComponentSupport X x) q.1 q.2
@@ -182,15 +185,15 @@ theorem cycleComponentSmoothSupportCoclassSection_eq_analyticPointCoclass
 literal sheafification image of the old GLOBAL point coclass. The displayed map
 is only equality transport of opens, not an extra comparison equivalence. -/
 theorem cycleComponentSmoothSupportCoclassSection_global_point_normalization
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
+    (z : ComplexPoint (cycleComponentOver X x)) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * (dim X.left))).obj.map
         (eqToHom (cycleComponentSmoothSupportAmbientOpen_eq_top_of_coheight_eq_dimension X x hx)).op
         (analyticPointCoclassSupportSection X (dim X.left) (cycleComponentSupport X x)
-          (cycleComponentMap X x z) (range_cycleComponentMap_subset X x ⟨z, rfl⟩) ⊤) =
+          (Point.map (cycleComponentOverι X x) z) ((range_map_cycleComponentOverι X x).le ⟨z, rfl⟩) ⊤) =
       cycleComponentSmoothSupportCoclassSection X x hx := by
   have h := analyticPointCoclassSupportSection_restrict X (dim X.left) (cycleComponentSupport X x)
-    (cycleComponentMap X x z) (range_cycleComponentMap_subset X x ⟨z, rfl⟩)
+    (Point.map (cycleComponentOverι X x) z) ((range_map_cycleComponentOverι X x).le ⟨z, rfl⟩)
     (show cycleComponentSmoothSupportAmbientOpen X x ≤ ⊤ from le_top)
   exact h.trans (cycleComponentSmoothSupportCoclassSection_eq_analyticPointCoclass X x hx z).symm
 

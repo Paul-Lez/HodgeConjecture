@@ -16,9 +16,9 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
 import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
@@ -86,22 +86,6 @@ end SchemeGeometry
 
 variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
 
-namespace CycleComponentSeparateLocalCoordinates
-
-/-- The smooth locus of the reduced cycle component underlying an exact coordinate package. -/
-abbrev componentSmoothLocus
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) :=
-  (cycleComponentι X.left x ≫ X.hom).smoothLocus
-
-/-- The component's smooth locus, bundled over the complex base. -/
-abbrev componentSmoothScheme
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) : Over (Spec ↧ℂ) :=
-  Over.mk ((componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom)
-
-end CycleComponentSeparateLocalCoordinates
-
 /-- Separate exact local coordinates on a smooth cycle component and on its smooth ambient
 variety.  The component coordinates use exactly `n` variables.  This package does not assert
 that the two coordinate systems straighten the closed immersion simultaneously. -/
@@ -110,33 +94,30 @@ structure CycleComponentSeparateLocalCoordinates
     [IsProjective X.hom] (x : X.left) (d n : ℕ)
     [SmoothOfRelativeDimension d X.hom] where
   /-- A complex point of the reduced component. -/
-  point : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))
+  point : ComplexPoint (cycleComponentOver X x)
   /-- The point lies in the component's smooth locus. -/
   point_mem_smoothLocus : point.underlying ∈
-    (cycleComponentι X.left x ≫ X.hom).smoothLocus
+    cycleComponentSmoothLocus X x
   /-- The underlying point is closed in the component. -/
   point_isClosed : IsClosed {point.underlying}
   /-- An affine neighborhood in the smooth locus of the component. -/
   componentNeighborhood :
-    (CycleComponentSeparateLocalCoordinates.componentSmoothScheme
-      (X := X) (x := x)).left.Opens
+    (cycleComponentSmoothLocusOver X x).left.Opens
   /-- The component neighborhood is affine. -/
   componentNeighborhood_isAffine : IsAffineOpen componentNeighborhood
   /-- The chosen point belongs to the component neighborhood. -/
   point_mem_componentNeighborhood :
     (⟨point.underlying, point_mem_smoothLocus⟩ :
-      (CycleComponentSeparateLocalCoordinates.componentSmoothScheme
-        (X := X) (x := x)).left) ∈
+      (cycleComponentSmoothLocusOver X x).left) ∈
         componentNeighborhood
   /-- An étale coordinate homomorphism of complex algebras with exactly `n` component
   coordinates. -/
   componentCoordinateAlgHom : MvPolynomial (Fin n) ℂ →ₐ[ℂ]
-    Γ((CycleComponentSeparateLocalCoordinates.componentSmoothScheme
-      (X := X) (x := x)).left, componentNeighborhood)
+    Γ((cycleComponentSmoothLocusOver X x).left, componentNeighborhood)
   /-- The component coordinate homomorphism is étale. -/
   componentCoordinateAlgHom_etale : componentCoordinateAlgHom.toRingHom.Etale
   /-- Independently chosen étale coordinates on the ambient `d`-fold. -/
   ambientCoordinates : LocalEtaleCoordinates X d
-    (cycleComponentι X.left x point.underlying)
+    (X.left.pointClosureι x point.underlying)
 
 end AlgebraicGeometry

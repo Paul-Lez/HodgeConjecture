@@ -27,7 +27,7 @@ The separate comparison with the legacy ordinary class has its own cone sign.
 
 set_option maxRecDepth 4000
 
-open CategoryTheory Limits TopologicalSpace Opposite
+open CategoryTheory Limits TopologicalSpace Opposite Function.locallyFinsupp
 open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
@@ -62,13 +62,13 @@ theorem cycleComponentSupportedClassNormalizationIso_hom :
         (2 * (p : ℤ)) ≫
       (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom ≫
       (complexSupportInjectiveCohomologySheafIsoRelative X
-        (cycleComponentAnalyticClosedSupport X x) (2 * p)).hom.hom.app
+        (cycleComponentSupport X x) (2 * p)).hom.hom.app
           (op (cycleComponentSmoothSupportAmbientOpen X x)) := rfl
 
 section Point
 
 variable (d : ℕ) [SmoothOfRelativeDimension d X.hom]
-  (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
+  (z : ComplexPoint (cycleComponentOver X x))
 
 /-- The OLD point coclass on the literal whole-open/full-component pair.
 The pair map simply forgets all removed support except the chosen point. -/
@@ -80,18 +80,18 @@ def analyticComponentPointRelativeCoclass :
   relativeCohomologyMap ℚ (2 * d)
     (neighborhoodSupportToPointPairMap
       ((⊤ : Opens (ComplexPoint X)) : Set (ComplexPoint X))
-      (cycleComponentSupport X x) (cycleComponentMap X x z)
-      (range_cycleComponentMap_subset X x ⟨z, rfl⟩))
-    (analyticPointLocalCoclass X d (cycleComponentMap X x z))
+      (cycleComponentSupport X x) (Point.map (cycleComponentOverι X x) z)
+      ((range_map_cycleComponentOverι X x).le ⟨z, rfl⟩))
+    (analyticPointLocalCoclass X d (Point.map (cycleComponentOverι X x) z))
 
 /-- The old point coclass transported through the ACTUAL relative/supported-injective
 comparison; this is an explicit comparison target, not the definition of the general class. -/
 def analyticComponentPointSupportedInjectiveCoclass :
     (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (d : ℤ)) :=
+        (cycleComponentSupport X x))).homology (2 * (d : ℤ)) :=
   (complexSupportInjectiveSectionCohomologyEquiv X
-    (cycleComponentAnalyticClosedSupport X x) ⊤ (2 * d)).symm
+    (cycleComponentSupport X x) ⊤ (2 * d)).symm
       (analyticComponentPointRelativeCoclass X x d z)
 
 /-- The positive literal supported-kernel inclusion of the old point coclass, in
@@ -100,7 +100,7 @@ def analyticComponentPointPositiveKernelClass : H^(2 * (d : ℤ))(X; ℚ) :=
   (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (d : ℤ))).symm
     (HomologicalComplex.homologyMap
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-        (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
+        (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x).compl ⊤
         (ambientRationalInjectiveComplex X)).f (2 * (d : ℤ))
       (analyticComponentPointSupportedInjectiveCoclass X x d z))
 
@@ -108,28 +108,29 @@ def analyticComponentPointPositiveKernelClass : H^(2 * (d : ℤ))(X; ℚ) :=
 @[simp]
 theorem analyticComponentPointSupportedInjectiveCoclass_relative :
     complexSupportInjectiveSectionCohomologyEquiv X
-      (cycleComponentAnalyticClosedSupport X x) ⊤ (2 * d)
+      (cycleComponentSupport X x) ⊤ (2 * d)
       (analyticComponentPointSupportedInjectiveCoclass X x d z) =
         analyticComponentPointRelativeCoclass X x d z :=
   AddEquiv.apply_symm_apply _ _
 
+omit [IsIntegral X.left] [Smooth X.hom] in
 /-- Its literal sheafification image is the old point section on the whole ambient open. -/
 theorem analyticComponentPointRelativeCoclass_toSheaf :
     (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * d)).app (op ⊤)
         (analyticComponentPointRelativeCoclass X x d z) =
       analyticPointCoclassSupportSection X d (cycleComponentSupport X x)
-        (cycleComponentMap X x z) (range_cycleComponentMap_subset X x ⟨z, rfl⟩) ⊤ := rfl
+        (Point.map (cycleComponentOverι X x) z) ((range_map_cycleComponentOverι X x).le ⟨z, rfl⟩) ⊤ := rfl
 
 /-- The old point candidate has the EXACT general smooth-locus section as its
 canonical sheaf normalization, using actual maps throughout. -/
 theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
     (hx : Order.coheight x = d) :
     (complexSupportInjectiveCohomologySheafIsoRelative X
-      (cycleComponentAnalyticClosedSupport X x) (2 * d)).hom.hom.app
+      (cycleComponentSupport X x) (2 * d)).hom.hom.app
         (op (cycleComponentSmoothSupportAmbientOpen X x))
       (TopCat.Sheaf.sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
+        (complexSupportInjectiveComplex X (cycleComponentSupport X x))
         (2 * (d : ℤ)) (cycleComponentSmoothSupportAmbientOpen X x)
         (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x)
           (2 * (d : ℤ)) (analyticComponentPointSupportedInjectiveCoclass X x d z))) =
@@ -137,7 +138,7 @@ theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
   obtain rfl : dim X.left = d := SmoothOfRelativeDimension.dim_eq X.hom d
   have h := ConcreteCategory.congr_hom
     (complexSupportInjectiveCohomologySheafIsoRelative_restriction_section X
-      (cycleComponentAnalyticClosedSupport X x) (2 * dim X.left)
+      (cycleComponentSupport X x) (2 * dim X.left)
       (homOfLE (show cycleComponentSmoothSupportAmbientOpen X x ≤ ⊤ from le_top)))
         (analyticComponentPointSupportedInjectiveCoclass X x (dim X.left) z)
   refine h.trans ?_
@@ -146,7 +147,7 @@ theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
     ((supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * dim X.left)).app (op ⊤)
       (complexSupportInjectiveSectionCohomologyEquiv X
-        (cycleComponentAnalyticClosedSupport X x) ⊤ (2 * dim X.left)
+        (cycleComponentSupport X x) ⊤ (2 * dim X.left)
         (analyticComponentPointSupportedInjectiveCoclass X x (dim X.left) z))) = _
   rw [analyticComponentPointSupportedInjectiveCoclass_relative,
     analyticComponentPointRelativeCoclass_toSheaf]
@@ -188,9 +189,9 @@ variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
 /-- Exact integer multiplicity at every point component in the general cycle map. -/
 theorem sheafCycleClassOnCycles_single_point_normalization
     (x : V.scheme) (hx : Order.coheight x = d)
-    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
+    (z : ComplexPoint (cycleComponentOver V.over x))
     (n : ℤ) :
-    sheafCycleClassOnCycles V d (codimensionCycleSubgroup.single x hx n) =
+    sheafCycleClassOnCycles V d (supported.single x hx n) =
       n • analyticComponentPointPositiveKernelClass V.over x d z := by
   rw [sheafCycleClassOnCycles_single,
     cycleComponentSheafClass_point_normalization V.over x d z hx]
@@ -201,9 +202,9 @@ theorem sheafCycleClassOnCycles_sum_single_point_normalization
     {ι : Type*} (t : Finset ι)
     (x : ι → V.scheme) (hx : ∀ i, Order.coheight (x i) = d)
     (z : ∀ i, ComplexPoint (Over.mk
-      (cycleComponentι V.scheme (x i) ≫ V.structureMap))) (n : ι → ℤ) :
+      (V.scheme.pointClosureι (x i) ≫ V.structureMap))) (n : ι → ℤ) :
     sheafCycleClassOnCycles V d
-      (∑ i ∈ t, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
+      (∑ i ∈ t, supported.single (x i) (hx i) (n i)) =
       ∑ i ∈ t, n i • analyticComponentPointPositiveKernelClass
         V.over (x i) d (z i) := by
   rw [sheafCycleClassOnCycles_sum_single]
@@ -213,9 +214,9 @@ theorem sheafCycleClassOnCycles_sum_single_point_normalization
 /-- Exact rational point multiplicity after scalar extension of the general map. -/
 theorem rationalSheafCycleClassOnCycles_tmul_single_point_normalization
     (x : V.scheme) (hx : Order.coheight x = d)
-    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
+    (z : ComplexPoint (cycleComponentOver V.over x))
     (q : ℚ) :
-    rationalSheafCycleClassOnCycles V d (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
+    rationalSheafCycleClassOnCycles V d (q ⊗ₜ[ℤ] supported.single x hx 1) =
       q • analyticComponentPointPositiveKernelClass V.over x d z := by
   rw [rationalSheafCycleClassOnCycles_tmul_single,
     cycleComponentSheafClass_point_normalization V.over x d z hx]
@@ -226,9 +227,9 @@ theorem rationalSheafCycleClassOnCycles_sum_tmul_single_point_normalization
     {ι : Type*} (t : Finset ι)
     (x : ι → V.scheme) (hx : ∀ i, Order.coheight (x i) = d)
     (z : ∀ i, ComplexPoint (Over.mk
-      (cycleComponentι V.scheme (x i) ≫ V.structureMap))) (q : ι → ℚ) :
+      (V.scheme.pointClosureι (x i) ≫ V.structureMap))) (q : ι → ℚ) :
     rationalSheafCycleClassOnCycles V d
-      (∑ i ∈ t, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
+      (∑ i ∈ t, q i ⊗ₜ[ℤ] supported.single (x i) (hx i) 1) =
       ∑ i ∈ t, q i • analyticComponentPointPositiveKernelClass
         V.over (x i) d (z i) := by
   rw [rationalSheafCycleClassOnCycles_sum_tmul_single]

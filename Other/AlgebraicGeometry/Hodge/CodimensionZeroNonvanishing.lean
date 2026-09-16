@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.Hodge.CodimensionZeroComparison
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import Other.AlgebraicGeometry.Cycle.Component.CoclassNonzero
 public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassNonzero
 
@@ -33,7 +34,7 @@ theorem cycleComponentSmoothSupportCoclassSection_ne_zero
     cycleComponentSmoothSupportCoclassSection X x hx ≠ 0 := by
   apply cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero X x hx
   apply (cycleComponentSmoothClosedLiftCoclassSection_ne_zero_iff X x hx).mpr
-  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+  let := cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
   obtain ⟨z⟩ := cycleComponentSmoothLocusOver_nonempty X x
   exact smoothClosedSupportCoclassSection_ne_zero _ _ _ (dim X.left - p) (dim X.left) z
 

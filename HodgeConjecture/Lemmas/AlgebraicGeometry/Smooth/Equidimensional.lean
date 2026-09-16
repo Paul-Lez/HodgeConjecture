@@ -19,7 +19,8 @@ public import HodgeConjecture.Lemmas.Topology.Dimension.Basic
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Data.Complex.Basic
 
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
@@ -88,8 +89,8 @@ lemma orderKrullDim_eq_of_isStandardSmoothOfRelativeDimension {U : X.Opens} {n :
 
 /-- The Krull dimension of an open subscheme does not exceed that of the ambient scheme. -/
 lemma orderKrullDim_mono {U V : X.Opens} (h : U ≤ V) : Order.krullDim U ≤ Order.krullDim V := by
-  rw [← Scheme.topologicalKrullDim_eq_orderKrullDim U.toScheme,
-    ← Scheme.topologicalKrullDim_eq_orderKrullDim V.toScheme]
+  rw [← topologicalKrullDim_eq_krullDim U.toScheme,
+    ← topologicalKrullDim_eq_krullDim V.toScheme]
   exact (Topology.IsEmbedding.inclusion h).isInducing.topologicalKrullDim_le
 
 /-- Half of the chart-independence, given a point in both charts: shrink the first chart to a basic

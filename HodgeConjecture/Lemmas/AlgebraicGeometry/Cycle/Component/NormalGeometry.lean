@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
@@ -42,50 +42,41 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ))
+variable (X : Over (Spec ↧ℂ)) (x : X.left)
 
-/-- The smooth locus of a reduced cycle component is Zariski dense. -/
-lemma dense_cycleComponent_smoothLocus
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Dense
-      ((cycleComponentι X.left x ≫ X.hom).smoothLocus :
-        Set (cycleComponent X.left x)) :=
-  (cycleComponentι X.left x ≫ X.hom).dense_smoothLocus_of_perfectField
+section FiniteType
 
-/-- The smooth locus of an integral cycle component is irreducible. -/
-noncomputable instance cycleComponent_smoothLocus_irreducibleSpace
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IrreducibleSpace
-      (cycleComponentι X.left x ≫ X.hom).smoothLocus := by
-  obtain ⟨y, hy⟩ := (dense_cycleComponent_smoothLocus X x).nonempty
-  let : Nonempty
-      (cycleComponentι X.left x ≫ X.hom).smoothLocus :=
-    ⟨⟨y, hy⟩⟩
-  exact
-    (cycleComponentι X.left x ≫ X.hom).smoothLocus.ι.isOpenEmbedding.irreducibleSpace
+variable [LocallyOfFiniteType X.hom]
 
-/-- The scheme points that are both smooth and closed are dense in a reduced cycle component. -/
-lemma dense_cycleComponent_smooth_closedPoints
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Dense
-      (((cycleComponentι X.left x ≫ X.hom).smoothLocus :
-          Set (cycleComponent X.left x)) ∩
-        closedPoints (cycleComponent X.left x)) := by
-  let f := cycleComponentι X.left x ≫ X.hom
-  let : JacobsonSpace (cycleComponent X.left x) :=
-    LocallyOfFiniteType.jacobsonSpace f
+/-- The smooth locus of a cycle component is Zariski dense. -/
+lemma dense_cycleComponentSmoothLocus :
+    Dense (cycleComponentSmoothLocus X x : Set (X.left.pointClosure x)) :=
+  (X.left.pointClosureι x ≫ X.hom).dense_smoothLocus_of_perfectField
+
+/-- The smooth locus of a cycle component is irreducible. -/
+instance : IrreducibleSpace (cycleComponentSmoothLocus X x) := by
+  obtain ⟨y, hy⟩ := (dense_cycleComponentSmoothLocus X x).nonempty
+  let : Nonempty (cycleComponentSmoothLocus X x) := ⟨⟨y, hy⟩⟩
+  exact (cycleComponentSmoothLocus X x).ι.isOpenEmbedding.irreducibleSpace
+
+/-- The closed points of the smooth locus are dense in a cycle component. -/
+lemma dense_cycleComponentSmoothLocus_closedPoints :
+    Dense ((cycleComponentSmoothLocus X x : Set (X.left.pointClosure x)) ∩
+      closedPoints (X.left.pointClosure x)) := by
+  let f := X.left.pointClosureι x ≫ X.hom
   exact dense_iff_closure_eq.mpr ((JacobsonSpace.closure_inter_closedPoints_eq_closure
     f.smoothLocus.2.isLocallyClosed).trans
-      (dense_iff_closure_eq.mp (dense_cycleComponent_smoothLocus X x)))
+      (dense_iff_closure_eq.mp (dense_cycleComponentSmoothLocus X x)))
+
+end FiniteType
 
 /-- The reduced component of a point of coheight `p` in a smooth complex `d`-fold has
 topological Krull dimension at most `d - p`. -/
 lemma topologicalKrullDim_cycleComponent_le_sub
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) {d p : ℕ}
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] {d p : ℕ}
     [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) :
-    topologicalKrullDim (cycleComponent X.left x) ≤ d - p := by
-  rw [topologicalKrullDim_cycleComponent]
+    topologicalKrullDim (X.left.pointClosure x) ≤ d - p := by
+  rw [Scheme.topologicalKrullDim_pointClosure]
   exact WithBot.coe_le_coe.mpr
     (SmoothOfRelativeDimension.height_le_sub_of_coheight_eq
       (f := X.hom) (d := d) x hx)

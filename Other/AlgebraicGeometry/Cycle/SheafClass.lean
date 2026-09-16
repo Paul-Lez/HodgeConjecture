@@ -13,7 +13,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
 
 An integral codimension-`p` cycle is sent to the sum of the constructed
 component classes with its exact integer multiplicities. Rational scalar
-extension then gives a rational linear map on `ℚ ⊗[ℤ] codimensionCycleSubgroup X p`.
+extension then gives a rational linear map on `ℚ ⊗[ℤ] AlgebraicCycle.codimSubgroup X ℤ p`.
 The maps take a smooth projective complex variety, its relative dimension, and
 a codimension; no orientation, fundamental class, duality, or principal-divisor
 theorem is an argument. Components may be singular and have arbitrary dimension.
@@ -25,7 +25,7 @@ normalization theorem, not the definition of a point branch of this map.
 
 @[expose] public noncomputable section
 
-open CategoryTheory Order TopologicalSpace
+open CategoryTheory Order TopologicalSpace Function.locallyFinsupp
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -34,14 +34,14 @@ variable (V : SmoothProjectiveComplexVariety)
 /-- An actual additive map from algebraic cycles to ordinary rational cohomology,
 using the constructed sheaf class in every codimension. -/
 def sheafCycleClassOnCycles (p : ℕ) :
-    codimensionCycleSubgroup V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
+    AlgebraicCycle.codimSubgroup V.scheme ℤ p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
   cycleClassOnCyclesOfComponents (fun x hx ↦ cycleComponentSheafClass V.over x hx)
 
 /-- An individual component carries its exact integer multiplicity. -/
 @[simp]
 theorem sheafCycleClassOnCycles_single (p : ℕ)
     (x : V.scheme) (hx : coheight x = p) (n : ℤ) :
-    sheafCycleClassOnCycles V p (codimensionCycleSubgroup.single x hx n) =
+    sheafCycleClassOnCycles V p (supported.single x hx n) =
       n • cycleComponentSheafClass V.over x hx := by
   simp [sheafCycleClassOnCycles]
 
@@ -50,22 +50,22 @@ components, negative multiplicities, and arbitrary codimension. -/
 theorem sheafCycleClassOnCycles_sum_single (p : ℕ)
     {ι : Type*} (t : Finset ι) (x : ι → V.scheme)
     (hx : ∀ i, coheight (x i) = p) (n : ι → ℤ) :
-    sheafCycleClassOnCycles V p (∑ i ∈ t, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
+    sheafCycleClassOnCycles V p (∑ i ∈ t, supported.single (x i) (hx i) (n i)) =
       ∑ i ∈ t, n i • cycleComponentSheafClass V.over (x i) (hx i) := by
   simp
 
 /-- The explicit finite-support formula. The codimension test's zero branch
 is never used for a nonzero coefficient of a codimension-`p` cycle. -/
-theorem sheafCycleClassOnCycles_apply (p : ℕ) (c : codimensionCycleSubgroup V.scheme p) :
+theorem sheafCycleClassOnCycles_apply (p : ℕ) (c : AlgebraicCycle.codimSubgroup V.scheme ℤ p) :
     sheafCycleClassOnCycles V p c =
-      (compactCycleToFinsupp c.1).sum fun x n ↦
+      (toFinsuppAddMonoidHom c.1).sum fun x n ↦
         n • if hx : coheight x = p then
           cycleComponentSheafClass V.over x hx else 0 := rfl
 
 /-- The actual scalar-extension bilinear map, with integral cycles as its
 second input, not a rational-equivalence quotient. -/
 def sheafCycleClassRationalExtensionBilinear (p : ℕ) :
-    ℚ →ₗ[ℚ] codimensionCycleSubgroup V.scheme p →ₗ[ℤ]
+    ℚ →ₗ[ℚ] AlgebraicCycle.codimSubgroup V.scheme ℤ p →ₗ[ℤ]
       H^(2 * (p : ℤ))(V.over; ℚ) where
   toFun q := q • (sheafCycleClassOnCycles V p).toIntLinearMap
   map_add' _ _ := by
@@ -78,14 +78,14 @@ def sheafCycleClassRationalExtensionBilinear (p : ℕ) :
 /-- The unconditional rational linear map on rational algebraic cycles in
 arbitrary codimension. No unproved geometric data are arguments. -/
 def rationalSheafCycleClassOnCycles (p : ℕ) :
-    TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme p) →ₗ[ℚ]
+    TensorProduct ℤ ℚ (AlgebraicCycle.codimSubgroup V.scheme ℤ p) →ₗ[ℚ]
       H^(2 * (p : ℤ))(V.over; ℚ) :=
   TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 
 /-- Rational extension agrees with the constructed integral map on pure tensors. -/
 @[simp]
 theorem rationalSheafCycleClassOnCycles_tmul (p : ℕ) (q : ℚ)
-    (c : codimensionCycleSubgroup V.scheme p) :
+    (c : AlgebraicCycle.codimSubgroup V.scheme ℤ p) :
     rationalSheafCycleClassOnCycles V p (q ⊗ₜ[ℤ] c) =
       q • sheafCycleClassOnCycles V p c := rfl
 
@@ -93,7 +93,7 @@ theorem rationalSheafCycleClassOnCycles_tmul (p : ℕ) (q : ℚ)
 @[simp]
 theorem rationalSheafCycleClassOnCycles_tmul_single (p : ℕ) (q : ℚ)
     (x : V.scheme) (hx : coheight x = p) :
-    rationalSheafCycleClassOnCycles V p (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
+    rationalSheafCycleClassOnCycles V p (q ⊗ₜ[ℤ] supported.single x hx 1) =
       q • cycleComponentSheafClass V.over x hx := by
   simp
 
@@ -103,7 +103,7 @@ theorem rationalSheafCycleClassOnCycles_sum_tmul_single (p : ℕ)
     {ι : Type*} (t : Finset ι) (x : ι → V.scheme)
     (hx : ∀ i, coheight (x i) = p) (q : ι → ℚ) :
     rationalSheafCycleClassOnCycles V p
-      (∑ i ∈ t, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
+      (∑ i ∈ t, q i ⊗ₜ[ℤ] supported.single (x i) (hx i) 1) =
       ∑ i ∈ t, q i • cycleComponentSheafClass V.over (x i) (hx i) := by
   simp
 

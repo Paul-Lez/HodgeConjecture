@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothLocus
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 /-!
@@ -30,12 +31,6 @@ variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
-include hx in
-/-- The proved dimension of the smooth locus, bundled over `Spec ℂ`. -/
-theorem cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension :
-    SmoothOfRelativeDimension (dim X.left - p) (cycleComponentSmoothLocusOver X x).hom :=
-  cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
-
 include X hx in
 omit [IsProjective X.hom] in
 /-- The codimension arithmetic is proved from the coheight bound. -/
@@ -53,7 +48,7 @@ def cycleComponentSmoothClosedLiftCoclassSection :
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (2 * p)).obj.obj (op ⊤) :=
-  letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+  letI := cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
   hdeg ▸ smoothClosedSupportCoclassSection
     (cycleComponentSmoothLocusAmbientOpenOver X x)
@@ -67,18 +62,19 @@ def cycleComponentSmoothClosedLiftAmbientMap :
   TopCat.ofHom (Point.continuousMap
     (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x)))
 
-omit [IsIntegral X.left] [Smooth X.hom] in
+omit [IsIntegral X.left] [IsProjective X.hom] in
 theorem cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding :
     IsOpenEmbedding (cycleComponentSmoothClosedLiftAmbientMap X x) :=
   isOpenEmbedding_map_open X (cycleComponentSmoothLocusAmbientOpen X x)
 
+omit [IsIntegral X.left] [IsProjective X.hom] in
 /-- Support membership is transported by the lift-image theorem. -/
 theorem cycleComponentSmoothClosedLiftAmbientMap_support :
     cycleComponentSmoothClosedLiftAmbientMap X x ⁻¹' cycleComponentSupport X x =
       Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)) :=
-  (cycleComponentSmoothLocusClosedLift_complexPoints_range X x).symm
+  (range_map_cycleComponentSmoothLocusClosedLiftOver X x).symm
 
-omit [IsIntegral X.left] [Smooth X.hom] in
+omit [IsIntegral X.left] [IsProjective X.hom] in
 /-- The image open is exactly the complement of the canonical first singular boundary. -/
 theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x).functor.obj ⊤ =
@@ -86,7 +82,7 @@ theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
   apply Opens.ext
   change (cycleComponentSmoothClosedLiftAmbientMap X x) '' Set.univ = _
   rw [Set.image_univ]
-  exact cycleComponentSmoothLocusAmbientOpen_analytic_image X x
+  exact range_map_openInclusion X _
 
 /-- The normalized component coclass section, living on the singular-boundary
 complement in the ORIGINAL ambient relative-cohomology sheaf. -/
