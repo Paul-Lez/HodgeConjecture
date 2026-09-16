@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Topology.Sheaves.Flasque
 
@@ -73,7 +75,7 @@ subset. -/
 def globalSectionsComplex
     (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ) :
     CochainComplex AddCommGrpCat.{u} ℤ :=
-  ((globalSectionsFunctor X).mapHomologicalComplex (ComplexShape.up ℤ)).obj K
+  ((globalSectionsFunctor X).mapHomologicalComplex ℤᵘᵖ).obj K
 
 end BoundedBelowComplex
 

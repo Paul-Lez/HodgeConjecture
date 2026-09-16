@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.CohomologyStalkVanishing
 /-!
 # Canonical cohomology-sheaf sections from local section-complex classes
@@ -34,11 +36,11 @@ def sectionCohomologyPresheafSheafificationIso (n : ℤ) :
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
       (sectionCohomologyPresheaf X K n) ≅ K.homology n :=
   let P : CochainComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) ℤ :=
-    ((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K
+    ((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) := P.sc n
   let e := NatIso.mapHomologicalComplex
     (asIso (sheafificationAdjunction (Opens.grothendieckTopology X) AddCommGrpCat.{u}).counit)
-    (.up ℤ)
+    ℤᵘᵖ
   (S.mapHomologyIso
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})).symm ≪≫
       homologyMapIso (e.app K) n
@@ -52,7 +54,7 @@ def sectionCohomologyPresheafToSheaf (n : ℤ) :
 /-- An actual cohomology class of sections on `U` determines a section of the
 actual cohomology sheaf on `U`. -/
 def sectionCohomologyToSheafSection (n : ℤ) (U : Opens X) :
-    (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ⟶
+    (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n ⟶
       (K.homology n).obj.obj (op U) :=
   (sectionCohomologyPresheafOnOpenIso X K n U).hom ≫
     (sectionCohomologyPresheafToSheaf X K n).app (op U)

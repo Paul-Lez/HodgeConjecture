@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 public import Other.AlgebraicGeometry.Cohomology.GlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.GlobalRestriction
@@ -166,7 +168,7 @@ singular-cochain complex used by relative cohomology. -/
 def globalRawSingularCochainComplexIntIsoRelative :
     globalRawSingularCochainComplexInt R X ≅
       ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex
-        (ComplexShape.up ℤ)).obj
+        ℤᵘᵖ).obj
           ((SingularChainComplex R X).linearDualCochainComplex.extend
             ComplexShape.embeddingUpNat) :=
   globalRawSingularCochainComplexIntIsoSingular R X ≪≫
@@ -180,7 +182,7 @@ singular-cochain complex used by relative cohomology. -/
 def globalRawPushforwardSingularCochainComplexIntIsoRelative (A : Set X) :
     globalRawPushforwardSingularCochainComplexInt R X A ≅
       ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex
-        (ComplexShape.up ℤ)).obj
+        ℤᵘᵖ).obj
           ((SingularChainComplex R (TopCat.of A)).linearDualCochainComplex.extend
             ComplexShape.embeddingUpNat) :=
   globalRawPushforwardSingularCochainComplexIntIsoSingular R X A ≪≫
@@ -197,7 +199,7 @@ lemma globalRawSingularRestrictionInt_transport_relative (A : Set X) :
         (globalRawPushforwardSingularCochainComplexIntIsoRelative R X A).hom =
       (globalRawSingularCochainComplexIntIsoRelative R X).hom ≫
         ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex
-          (ComplexShape.up ℤ)).map
+          ℤᵘᵖ).map
             (relativeCochainRestrictionInt R (TopPair.ofSubset A)) := by
   change globalRawSingularRestrictionInt R X A ≫
         ((globalRawPushforwardSingularCochainComplexIntIsoSingular R X A).hom ≫
@@ -211,7 +213,7 @@ lemma globalRawSingularRestrictionInt_transport_relative (A : Set X) :
           (SingularChainComplex R X).linearDualCochainComplex
           ComplexShape.embeddingUpNat).inv) ≫
       ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map
+        ℤᵘᵖ).map
           (relativeCochainRestrictionInt R (TopPair.ofSubset A))
   rw [← Category.assoc, globalRawSingularRestrictionInt_transport]
   simp only [Category.assoc]
@@ -231,13 +233,13 @@ def globalRawSingularRestrictionConeIsoRelative (A : Set X) :
     CochainComplex.mappingCone (globalRawSingularRestrictionInt R X A) ≅
       CochainComplex.mappingCone
         (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex
-          (ComplexShape.up ℤ)).map
+          ℤᵘᵖ).map
             (relativeCochainRestrictionInt R (TopPair.ofSubset A))) :=
   let eX := globalRawSingularCochainComplexIntIsoRelative R X
   let eA := globalRawPushforwardSingularCochainComplexIntIsoRelative R X A
   let f := globalRawSingularRestrictionInt R X A
   let g := ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex
-    (ComplexShape.up ℤ)).map
+    ℤᵘᵖ).map
       (relativeCochainRestrictionInt R (TopPair.ofSubset A))
   have h : f ≫ eA.hom = eX.hom ≫ g :=
     globalRawSingularRestrictionInt_transport_relative R X A

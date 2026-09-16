@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 
@@ -55,7 +57,7 @@ lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
     actualSupportConeToAmbientInjectiveGlobalCone X Z hZ ≫
       (CochainComplex.mappingCone.triangle
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
             (ambientRationalInjectiveRestriction X Z hZ))).mor₃ =
     (CochainComplex.mappingCone.triangle
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
@@ -66,12 +68,12 @@ lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
       (ambientRationalInjectiveComplex X)).g
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-      (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+      (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
         (ambientRationalInjectiveRestriction X Z hZ)) (𝟙 _)
     (globalAmbientRationalOpenResolutionComparison X Z hZ)
     (show _ = _ from by
       let Γ := (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-        (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)
+        (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,
         actualRestriction_comp_openResolutionComparison])).comm₃

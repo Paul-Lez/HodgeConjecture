@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 
 /-! # Naturality of the canonical short-exact-sequence cone comparison -/
@@ -27,7 +29,7 @@ def shortExactHomologyIsoCone (S : ShortComplex (CochainComplex C ℤ))
   letI : QuasiIso (shiftedLiftShortComplex S) := quasiIso_shiftedLiftShortComplex S hS
   letI : IsIso (HomologicalComplex.homologyMap (shiftedLiftShortComplex S) n) :=
     (quasiIsoAt_iff_isIso_homologyMap (shiftedLiftShortComplex S) n).mp inferInstance
-  (((HomologicalComplex.homologyFunctor C (.up ℤ) 0).shiftIso 1 n n' h).app S.X₁).symm ≪≫
+  (((HomologicalComplex.homologyFunctor C ℤᵘᵖ 0).shiftIso 1 n n' h).app S.X₁).symm ≪≫
     asIso (HomologicalComplex.homologyMap (shiftedLiftShortComplex S) n)
 
 end CochainComplex.mappingCocone

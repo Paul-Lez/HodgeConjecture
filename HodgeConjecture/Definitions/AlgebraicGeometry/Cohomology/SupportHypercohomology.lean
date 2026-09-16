@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularGlobal
@@ -77,41 +79,41 @@ def kInjectiveDerivedHomAddEquivCohomologyClass
       CochainComplex.HomComplex.CohomologyClass K L n :=
   let qSource : DerivedCategory.Q.obj K ≅
       DerivedCategory.Qh.obj
-        ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) :=
+        ((HomotopyCategory.quotient C ℤᵘᵖ).obj K) :=
     (DerivedCategory.quotientCompQhIso C).symm.app K
   let qTarget : (DerivedCategory.Q.obj L)⟦n⟧ ≅
       DerivedCategory.Qh.obj
-        ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧)) :=
+        ((HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧)) :=
     (DerivedCategory.Q.commShiftIso n).symm.app L ≪≫
       (DerivedCategory.quotientCompQhIso C).symm.app (L⟦n⟧)
   let eDerived : ShiftedHom (DerivedCategory.Q.obj K)
         (DerivedCategory.Q.obj L) n ≃+
       (DerivedCategory.Qh.obj
-          ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) ⟶
+          ((HomotopyCategory.quotient C ℤᵘᵖ).obj K) ⟶
         DerivedCategory.Qh.obj
-          ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧))) :=
+          ((HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧))) :=
     isoHomCongrAddEquiv qSource qTarget
   let qhMap :
-      (((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K ⟶
-          (HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧))) →+
+      (((HomotopyCategory.quotient C ℤᵘᵖ).obj K ⟶
+          (HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧))) →+
         (DerivedCategory.Qh.obj
-            ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) ⟶
+            ((HomotopyCategory.quotient C ℤᵘᵖ).obj K) ⟶
           DerivedCategory.Qh.obj
-            ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧))) :=
+            ((HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧))) :=
     { toFun := DerivedCategory.Qh.map
       map_zero' := by simp
       map_add' f g := by rw [Functor.map_add] }
   let eQh :
-      (((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K ⟶
-          (HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧))) ≃+
+      (((HomotopyCategory.quotient C ℤᵘᵖ).obj K ⟶
+          (HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧))) ≃+
         (DerivedCategory.Qh.obj
-            ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) ⟶
+            ((HomotopyCategory.quotient C ℤᵘᵖ).obj K) ⟶
           DerivedCategory.Qh.obj
-            ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj (L⟦n⟧))) :=
+            ((HomotopyCategory.quotient C ℤᵘᵖ).obj (L⟦n⟧))) :=
     AddEquiv.ofBijective qhMap
       (by
         let h := CochainComplex.IsKInjective.Qh_map_bijective
-          ((HomotopyCategory.quotient C (ComplexShape.up ℤ)).obj K) (L⟦n⟧)
+          ((HomotopyCategory.quotient C ℤᵘᵖ).obj K) (L⟦n⟧)
         exact ⟨fun _ _ hfg ↦ h.injective hfg, h.surjective⟩)
   eDerived.trans <| eQh.symm.trans <|
     CochainComplex.HomComplex.CohomologyClass.homAddEquiv.symm

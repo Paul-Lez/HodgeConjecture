@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.CohomologyStalkVanishing
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestriction
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueLowestCohomology
@@ -33,9 +35,9 @@ vanishing of the restricted complex. -/
 theorem openRestriction_homology_isZero_of_cofinal_sections (n : ℤ)
     (hlocal : ∀ (x : X), x ∈ U → ∀ (V : Opens X), x ∈ V →
       ∃ W : Opens X, W ≤ V ∧ x ∈ W ∧
-        IsZero ((((supportEvaluation X W).mapHomologicalComplex (.up ℤ)).obj K).homology n)) :
+        IsZero ((((supportEvaluation X W).mapHomologicalComplex ℤᵘᵖ).obj K).homology n)) :
     IsZero ((((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-      (.up ℤ)).obj K).homology n) := by
+      ℤᵘᵖ).obj K).homology n) := by
   apply cohomologySheaf_isZero_of_cofinal_sections
   intro x V hxV
   let V' := U.isOpenEmbedding.functor.obj V
@@ -53,7 +55,7 @@ theorem openRestriction_homology_isZero_of_cofinal_sections (n : ℤ)
     obtain ⟨v, hv, hvy⟩ := hWV' hy
     exact (Subtype.ext hvy : v = y) ▸ hv
   · change IsZero ((((supportEvaluation X (U.isOpenEmbedding.functor.obj W')).mapHomologicalComplex
-      (.up ℤ)).obj K).homology n)
+      ℤᵘᵖ).obj K).homology n)
     rwa [he]
 
 set_option backward.isDefEq.respectTransparency false in
@@ -64,10 +66,10 @@ theorem sectionCohomology_isZero_of_cofinal_lower_vanishing (N n : ℤ) [K.IsStr
     (hflasque : ∀ j, (K.X j).IsFlasque)
     (hlocal : ∀ j : ℤ, j ≤ n → ∀ (x : X), x ∈ U → ∀ (V : Opens X), x ∈ V →
       ∃ W : Opens X, W ≤ V ∧ x ∈ W ∧
-        IsZero ((((supportEvaluation X W).mapHomologicalComplex (.up ℤ)).obj K).homology j)) :
-    IsZero ((((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n) := by
+        IsZero ((((supportEvaluation X W).mapHomologicalComplex ℤᵘᵖ).obj K).homology j)) :
+    IsZero ((((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n) := by
   let L := ((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-    (.up ℤ)).obj K
+    ℤᵘᵖ).obj K
   have hL (j : ℤ) (hj : j ≤ n) : IsZero (L.homology j) :=
     openRestriction_homology_isZero_of_cofinal_sections X K U j (hlocal j hj)
   have hLF (j : ℤ) : (L.X j).IsFlasque := by
@@ -77,7 +79,7 @@ theorem sectionCohomology_isZero_of_cofinal_lower_vanishing (N n : ℤ) [K.IsStr
     (fun j hj => hL j hj.le) hLF ⊤
   have hzero := ((supportEvaluation (TopCat.of U) ⊤).map_isZero (hL n le_rfl)).of_iso e
   change IsZero ((((supportEvaluation X (U.isOpenEmbedding.functor.obj ⊤)).mapHomologicalComplex
-    (.up ℤ)).obj K).homology n) at hzero
+    ℤᵘᵖ).obj K).homology n) at hzero
   rwa [Opens.isOpenEmbedding_obj_top] at hzero
 
 end TopCat.Sheaf

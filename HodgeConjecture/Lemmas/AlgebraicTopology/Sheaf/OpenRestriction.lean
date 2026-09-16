@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SheafCohomology
 public import Mathlib.CategoryTheory.Sites.GlobalSections
@@ -66,7 +68,7 @@ lemma openSheafRestriction_map_quasiIso
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
     (f : K ⟶ L) [QuasiIso f] :
     QuasiIso (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-      (.up ℤ)).map f) := inferInstance
+      ℤᵘᵖ).map f) := inferInstance
 
 /-- The actual counit of open restriction/direct image. -/
 def openSheafRestrictionCounit :

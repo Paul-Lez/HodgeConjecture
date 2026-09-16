@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SingularSheafComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueQuasiIso
@@ -57,7 +59,7 @@ coyoneda functor applied to the target complex. -/
 def fromSingleZeroIsoPreadditiveCoyoneda (X : C) (K : CochainComplex C ℤ) :
     CochainComplex.HomComplex ((CochainComplex.singleFunctor C 0).obj X) K ≅
       ((preadditiveCoyoneda.obj (.op X)).mapHomologicalComplex
-        (ComplexShape.up ℤ)).obj K :=
+        ℤᵘᵖ).obj K :=
   HomologicalComplex.Hom.isoOfComponents
     (fun n ↦ (Cochain.fromSingleEquiv (p := 0) (q := n) (n := n)
       (zero_add n)).toAddCommGrpIso)
@@ -170,7 +172,7 @@ def homComplexSingleIntegerIsoGlobalSections
       ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
         (AddCommGrpCat.of ℤ)) K ≪≫
     (NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y)
-      (ComplexShape.up ℤ)).app K
+      ℤᵘᵖ).app K
 
 end TopCat.Sheaf
 

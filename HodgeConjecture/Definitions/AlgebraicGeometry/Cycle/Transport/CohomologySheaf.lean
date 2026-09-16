@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
@@ -38,7 +40,7 @@ def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
     -- `X(ℂ)`.
     (TopCat.of (ComplexPoint X))
     -- The open `X(ℂ) \ S`; sections supported outside it are the sections supported on `S`.
-    S.compl).mapHomologicalComplex (.up ℤ)).obj
+    S.compl).mapHomologicalComplex ℤᵘᵖ).obj
       -- The injective resolution `I^•` of `ℚ` on `X(ℂ)`.
       (ambientRationalInjectiveComplex X)
 

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportExtension
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
@@ -66,7 +68,7 @@ abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
     -- `X(ℂ)`.
     (TopCat.of (ComplexPoint X))
     -- Global sections, i.e. sections over all of `X(ℂ)`.
-    ⊤).mapHomologicalComplex (.up ℤ)).obj
+    ⊤).mapHomologicalComplex ℤᵘᵖ).obj
     -- `RΓ_{Z(ℂ)}(ℚ)`.
     (complexSupportInjectiveComplex X
       -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.

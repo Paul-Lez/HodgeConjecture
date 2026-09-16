@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.InjectiveFlasque
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
@@ -74,10 +76,10 @@ def supportRestrictionComplexShortComplex
     -- The sequence `Γ_{X \ U}(K) → K → j_*(K|_U)`.
     ShortComplex (CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :=
   ShortComplex.mk
-    (show ((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj K ⟶ K from
+    (show ((sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).obj K ⟶ K from
       { f n := (sheafSectionsSupportedOutsideInclusion X U).app (K.X n)
         comm' i j h := ((sheafSectionsSupportedOutsideInclusion X U).naturality (K.d i j)).symm })
-    (show K ⟶ ((openRestrictionPushforward X U).mapHomologicalComplex (.up ℤ)).obj K from
+    (show K ⟶ ((openRestrictionPushforward X U).mapHomologicalComplex ℤᵘᵖ).obj K from
       { f n := (toOpenRestrictionPushforward X U).app (K.X n)
         comm' i j h := ((toOpenRestrictionPushforward X U).naturality (K.d i j)).symm })
     (by ext n; exact sheafSectionsSupportedOutsideInclusion_restriction X U (K.X n))
@@ -87,7 +89,7 @@ def supportRestrictionSectionsComplexShortComplex (V : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex AddCommGrpCat.{u} ℤ) :=
   (supportRestrictionComplexShortComplex X U K).map
-    ((supportEvaluation X V).mapHomologicalComplex (.up ℤ))
+    ((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ)
 
 local instance derivedSupportLocalizationSheafDerivedCategory :
     HasDerivedCategory (Sheaf AddCommGrpCat.{u} X) :=
