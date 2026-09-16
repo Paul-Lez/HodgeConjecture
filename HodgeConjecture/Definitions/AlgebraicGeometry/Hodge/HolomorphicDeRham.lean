@@ -530,7 +530,7 @@ def holomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
   (holomorphicDeRhamComplex X (dim X.left)).extend ComplexShape.embeddingUpNat
 
 /-- `Ω•(X)` is the holomorphic de Rham complex of `X(ℂ)`, indexed by the integers. -/
-scoped notation3:max "Ω•" "(" X ")" => holomorphicDeRhamComplexInt X
+scoped notation:max "Ω•" "(" X ")" => holomorphicDeRhamComplexInt X
 
 instance [IsIntegral X.left] [Smooth X.hom] :
     CochainComplex.IsStrictlyGE (holomorphicDeRhamComplexInt X) 0 := by

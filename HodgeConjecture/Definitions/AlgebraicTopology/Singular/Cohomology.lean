@@ -73,14 +73,15 @@ abbrev SingularChainComplex (R : Type u) [CommRing R] (X : TopCat.{u}) : ChainCa
   ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X
 
 /-- `C_[n](X; R)` is the module of singular `n`-chains of `X` with coefficients in `R`. -/
-scoped notation3:max "C_[" n "]" "(" Y "; " R ")" => (SingularChainComplex R Y).X n
+scoped notation:max "C_[" n "]" "(" Y "; " R ")" =>
+  HomologicalComplex.X (SingularChainComplex R Y) n
 
 /-- Singular homology of a topological space with coefficients in a commutative ring. -/
 abbrev Homology (R : Type u) [CommRing R] (X : TopCat.{u}) (n : ℕ) : ModuleCat.{u} R :=
   ((singularHomologyFunctor (ModuleCat.{u} R) n).obj (ModuleCat.of R R)).obj X
 
 /-- `H_[n](X; R)` is singular homology of `X` in degree `n` with coefficients in `R`. -/
-scoped notation3:max "H_[" n "]" "(" Y "; " R ")" => Homology R Y n
+scoped notation:max "H_[" n "]" "(" Y "; " R ")" => Homology R Y n
 
 /-- The map on singular homology induced by a continuous map. -/
 def homologyMap (R : Type u) [CommRing R] {X Y : TopCat.{u}} (n : ℕ) (f : X ⟶ Y) :

@@ -55,7 +55,8 @@ abbrev SingularCochainComplex (R : Type u) [CommRing R] (X : TopCat.{u}) :
   (SingularChainComplex R X).linearDualCochainComplex
 
 /-- `C^n(X; R)` is the module of singular `n`-cochains of `X` with coefficients in `R`. -/
-scoped notation3:max "C^" n:max "(" Y "; " R ")" => (SingularCochainComplex R Y).X n
+scoped notation:max "C^" n:max "(" Y "; " R ")" =>
+  HomologicalComplex.X (SingularCochainComplex R Y) n
 
 /-- The singular cochain map induced by a continuous map, obtained by dualising the chain map. -/
 abbrev singularCochainComplexMap (R : Type u) [CommRing R] {X Y : TopCat.{u}} (f : X ⟶ Y) :
@@ -68,7 +69,7 @@ abbrev Cohomology (R : Type u) [CommRing R] (X : TopCat.{u}) (n : ℕ) : ModuleC
   (SingularCochainComplex R X).homology n
 
 /-- `H^n(X; R)` is singular cohomology of `X` in degree `n` with coefficients in `R`. -/
-scoped notation3:max "H^" n:max "(" X "; " R ")" => Cohomology R X n
+scoped notation:max "H^" n:max "(" X "; " R ")" => Cohomology R X n
 
 /-- Pullback in singular cohomology, induced by the dualised chain map. -/
 def cohomologyMap (R : Type u) [CommRing R] {X Y : TopCat.{u}} (n : ℕ) (f : X ⟶ Y) :

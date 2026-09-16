@@ -253,7 +253,7 @@ def Hypercohomology
 /-- `ℍ^n(X; 𝒦)` is the hypercohomology in integer degree `n` of a complex `𝒦` of sheaves on the
 analytic space `X(ℂ)`. The symbol `ℍ` follows page 51 of
 [P. Deligne, *The Hodge Conjecture*](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf). -/
-scoped notation3:max "ℍ^" n:max "(" X "; " 𝒦 ")" => Hypercohomology X 𝒦 n
+scoped notation:max "ℍ^" n:max "(" X "; " 𝒦 ")" => Hypercohomology X 𝒦 n
 
 /-- `H^n(X; K)` is the cohomology of the analytic space `X(ℂ)` with coefficients in the field
 `K`, in integer degree `n`. It is the hypercohomology of the constant sheaf `K` in degree zero.
@@ -297,7 +297,7 @@ abbrev DeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) : Type
   Hypercohomology X (holomorphicDeRhamComplexInt X) n
 
 @[inherit_doc DeRhamHypercohomology]
-scoped notation3:max "H_dR^" n:max "(" X ")" => DeRhamHypercohomology X n
+scoped notation:max "H_dR^" n:max "(" X ")" => DeRhamHypercohomology X n
 
 /-- The constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
 equivalence on hypercohomology. -/
@@ -508,7 +508,7 @@ def hodgeFilteredDeRhamComplex [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
     (ComplexShape.embeddingUpIntGE p)
 
 @[inherit_doc hodgeFilteredDeRhamComplex]
-scoped notation3:max "F^" p:max " Ω•" "(" X ")" => hodgeFilteredDeRhamComplex X p
+scoped notation:max "F^" p:max " Ω•" "(" X ")" => hodgeFilteredDeRhamComplex X p
 
 /-- Inclusion of the degree-at-least-`p` de Rham complex into the full complex. -/
 def hodgeFilteredDeRhamInclusion [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
@@ -574,7 +574,7 @@ def hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
   smul_mem' := fun c _ h => hodgeFiltration_complex_smul_mem X p n c h
 
 @[inherit_doc hodgeFiltrationComplexSubmodule]
-scoped notation3:max "F^" p:max " H_dR^" n:max "(" X ")" =>
+scoped notation:max "F^" p:max " H_dR^" n:max "(" X ")" =>
   hodgeFiltrationComplexSubmodule X p n
 
 /-! ### Complex conjugation and the `(p,p)` part
@@ -678,6 +678,6 @@ def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
 
 The literature writes `Hdg^p(X.left)` for the variety `X.left` alone; here the variety is
 presented by its structure morphism `f`, and the coefficient field is named. -/
-scoped notation3:max "Hdg^" p:max "(" f "; " K ")" => hodgeClasses K f p
+scoped notation:max "Hdg^" p:max "(" f "; " K ")" => hodgeClasses K f p
 
 end AlgebraicGeometry.ComplexPoint

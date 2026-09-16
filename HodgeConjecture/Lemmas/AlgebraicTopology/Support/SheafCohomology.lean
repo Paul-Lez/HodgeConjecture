@@ -200,7 +200,7 @@ abbrev compactlySupportedCohomology
 
 /-- `H_c^n(X; F)` is compactly supported sheaf cohomology of `X` in degree `n` with coefficients
 in the sheaf `F`. -/
-scoped notation3:max "H_c^" n:max "(" X "; " F ")" => compactlySupportedCohomology X F n
+scoped notation:max "H_c^" n:max "(" X "; " F ")" => compactlySupportedCohomology X F n
 
 /-- A class with specified compact closed support defines a compactly supported class. -/
 def toCompactlySupportedCohomology (K : CompactCloseds X)
