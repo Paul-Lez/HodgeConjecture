@@ -24,7 +24,7 @@ noncomputable section
 universe u w
 open ProjectiveSpace
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+  (d p q : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
 
 # The variety and its complex points
@@ -507,14 +507,14 @@ example : @Guide.Hodge.D18.hodgePiece = @AlgebraicGeometry.ComplexPoint.hodgePie
 ```
 
 The degree $`n` is an independent index, as for the filtration; when $`p+q=n` this is the usual
-$`(p,q)` piece.
+$`(p,q)` piece, which the notation {lean}`H^{p, q}(X)` abbreviates.
 
 # Hodge classes
 
 The Hodge classes of degree $`2p` with coefficients in a field $`K\subseteq\mathbb C` are the
 classes whose de Rham image lies in the $`(p,p)` piece:
 
-$$`\operatorname{Hdg}^p(X,K)
+$$`\operatorname{Hdg}^p(X;K)
  =\{\alpha\in H^{2p}(X;K):\alpha_{\mathrm{dR}}\in H^{p,p}\}.`
 
 In Lean this is the preimage of {name}`hodgePiece` under the comparison map, and the notation

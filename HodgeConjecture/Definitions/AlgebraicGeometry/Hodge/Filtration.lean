@@ -658,7 +658,7 @@ def conjHodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
   (hodgeFiltrationComplexSubmodule X p n).comap (deRhamConjSemilinear X n)
 
 /-- The intersection `F^p ⊓ conj F^q` in degree `n`. For smooth projective varieties and
-`p + q = n`, this is the usual `(p,q)` Hodge piece. -/
+`p + q = n`, this is the usual `(p,q)` Hodge piece, written `H^{p, q}(X)`. -/
 def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ (DeRhamHypercohomology X n) :=
   hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
