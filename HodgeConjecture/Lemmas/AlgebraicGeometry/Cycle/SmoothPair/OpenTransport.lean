@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.SourceOpen
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.NeighborhoodPairImage
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NeighborhoodPairImage
 
 /-!
 # Local purity neighborhoods transported out of ambient opens
@@ -25,7 +25,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X Y : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)}
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
@@ -34,13 +34,13 @@ variable (X Y : Over (Spec ↧ℂ))
 and then transported to the original topological ambient space. -/
 theorem exists_smoothClosedSupportImageNeighborhood
     {M : Type} [TopologicalSpace M]
-    (f : ComplexPoint X → M) (hf : IsOpenEmbedding f) (S : Set M)
+    {f : ComplexPoint X → M} (hf : IsOpenEmbedding f) {S : Set M}
     (hS : f ⁻¹' S = Set.range (Point.map i))
     (z : ComplexPoint Y) (V : Opens M) (hzV : f (Point.map i z) ∈ V) :
     ∃ W : Opens M, W ≤ V ∧ f (Point.map i z) ∈ W ∧
       ∀ n : ℕ, n ≠ 2 * (d - m) →
-        IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
-          (neighborhoodSupportComplementPair (W : Set M) S) n)) := by
+        IsZero (RelativeCohomology ℚ
+          (neighborhoodSupportComplementPair (W : Set M) S) n) := by
   let V' : Opens (ComplexPoint X) := ⟨f ⁻¹' V, V.isOpen.preimage hf.continuous⟩
   let W' := smoothClosedSupportNeighborhood X Y i m d z V' hzV
   let W : Opens M := ⟨f '' (W' : Set (ComplexPoint X)), hf.isOpenMap _ W'.isOpen⟩
@@ -49,18 +49,10 @@ theorem exists_smoothClosedSupportImageNeighborhood
     exact smoothClosedSupportNeighborhood_le X Y i m d z V' hzV hw
   · exact ⟨_, mem_smoothClosedSupportNeighborhood X Y i m d z V' hzV, rfl⟩
   · intro n hn
-    let : Subsingleton (RelativeCohomology ℚ
-        (neighborhoodSupportComplementPair (W' : Set (ComplexPoint X))
-          (Set.range (Point.map i))) n) :=
-      ModuleCat.subsingleton_of_isZero
+    exact (neighborhoodSupportPairImageCohomology_isZero_iff ℚ hf.isEmbedding
+      (W := W') (B := Set.range (Point.map i)) (S := S)
+      (fun w _ => by rw [← hS]; rfl) n).mpr
         (smoothClosedSupportRelativeCohomology_isZero_of_ne X Y i m d z V' hzV n hn)
-    let e := neighborhoodSupportPairImageCohomologyEquiv f hf.isEmbedding W'
-      (Set.range (Point.map i)) S (fun w _ => by
-        rw [← hS]
-        rfl) n
-    let : Subsingleton (RelativeCohomology ℚ
-        (neighborhoodSupportComplementPair (W : Set M) S) n) := e.injective.subsingleton
-    exact ModuleCat.isZero_of_subsingleton _
 
 omit [SmoothOfRelativeDimension m Y.hom] in
 /-- Fixed-dimensional source opens suffice: the target is restricted by deleting the
@@ -74,9 +66,9 @@ theorem exists_smoothClosedSourceOpenNeighborhood
     ∃ W : Opens (ComplexPoint X), W ≤ V ∧
       Point.map (openInclusion Y A ≫ i) z ∈ W ∧
       ∀ n : ℕ, n ≠ 2 * (d - m) →
-        IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
+        IsZero (RelativeCohomology ℚ
           (neighborhoodSupportComplementPair (W : Set (ComplexPoint X))
-            (Set.range (Point.map i))) n)) := by
+            (Set.range (Point.map i))) n) := by
   have : Smooth X.hom := SmoothOfRelativeDimension.smooth d X.hom
   let T := closedImmersionSourceOpenTarget i.left A
   let j := closedImmersionSourceOpenLift i.left A
@@ -91,22 +83,22 @@ theorem exists_smoothClosedSourceOpenNeighborhood
     simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 d T.ι X.hom
   have : Smooth (openScheme X T).hom :=
     SmoothOfRelativeDimension.smooth d (openScheme X T).hom
-  let f := Point.map (openInclusion X T)
-  have hS : f ⁻¹' Set.range (Point.map i) = Set.range (Point.map jOver) := by
+  have hS : Point.map (openInclusion X T) ⁻¹' Set.range (Point.map i) =
+      Set.range (Point.map jOver) := by
     rw [range_map_of_isImmersion_of_comm X Y i,
       range_map_of_isImmersion_of_comm (openScheme X T) (openScheme Y A) jOver]
     change _ = (Point.underlying : ComplexPoint (openScheme X T) →
       (openScheme X T).left) ⁻¹' Set.range j
     rw [range_closedImmersionSourceOpenLift i.left A]
     rfl
-  have he : f (Point.map jOver z) = Point.map (openInclusion Y A ≫ i) z := by
-    change Point.map (openInclusion X T) (Point.map jOver z) = _
+  have he : Point.map (openInclusion X T) (Point.map jOver z) =
+      Point.map (openInclusion Y A ≫ i) z := by
     rw [← Point.map_comp_apply]
     exact congrArg (fun k ↦ Point.map k z)
       (Over.OverMorphism.ext (closedImmersionSourceOpenLift_ι i.left A))
   obtain ⟨W, hWV, hzW, hW⟩ := exists_smoothClosedSupportImageNeighborhood
-    (openScheme X T) (openScheme Y A) jOver m d f
-    (isOpenEmbedding_map_open X T) (Set.range (Point.map i)) hS z V (he ▸ hzV)
+    jOver m d
+    (isOpenEmbedding_map_open X T) hS z V (he ▸ hzV)
   exact ⟨W, hWV, he ▸ hzW, hW⟩
 
 omit [SmoothOfRelativeDimension m Y.hom] in
@@ -114,7 +106,7 @@ omit [SmoothOfRelativeDimension m Y.hom] in
 open embedding. This is the form used by successive closed supports in a larger ambient. -/
 theorem exists_smoothClosedSourceOpenImageNeighborhood
     {M : Type} [TopologicalSpace M]
-    (f : ComplexPoint X → M) (hf : IsOpenEmbedding f) (S : Set M)
+    {f : ComplexPoint X → M} (hf : IsOpenEmbedding f) {S : Set M}
     (hS : f ⁻¹' S = Set.range (Point.map i))
     (A : Y.left.Opens) [SmoothOfRelativeDimension m (openScheme Y A).hom]
     (z : ComplexPoint (openScheme Y A))
@@ -123,23 +115,18 @@ theorem exists_smoothClosedSourceOpenImageNeighborhood
     ∃ W : Opens M, W ≤ V ∧
       f (Point.map (openInclusion Y A ≫ i) z) ∈ W ∧
       ∀ n : ℕ, n ≠ 2 * (d - m) →
-        IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
-          (neighborhoodSupportComplementPair (W : Set M) S) n)) := by
+        IsZero (RelativeCohomology ℚ
+          (neighborhoodSupportComplementPair (W : Set M) S) n) := by
   let V' : Opens (ComplexPoint X) := ⟨f ⁻¹' V, V.isOpen.preimage hf.continuous⟩
   obtain ⟨W', hW'V', hzW', hW'⟩ := exists_smoothClosedSourceOpenNeighborhood
-    X Y i m d A z V' hzV
+    i m d A z V' hzV
   let W : Opens M := ⟨f '' (W' : Set (ComplexPoint X)), hf.isOpenMap _ W'.isOpen⟩
   refine ⟨W, ?_, ⟨_, hzW', rfl⟩, ?_⟩
   · rintro _ ⟨w, hw, rfl⟩
     exact hW'V' hw
   · intro n hn
-    let : Subsingleton (RelativeCohomology ℚ
-        (neighborhoodSupportComplementPair (W' : Set (ComplexPoint X))
-          (Set.range (Point.map i))) n) := ModuleCat.subsingleton_of_isZero (hW' n hn)
-    let e := neighborhoodSupportPairImageCohomologyEquiv f hf.isEmbedding W'
-      (Set.range (Point.map i)) S (fun w _ => by rw [← hS]; rfl) n
-    let : Subsingleton (RelativeCohomology ℚ
-        (neighborhoodSupportComplementPair (W : Set M) S) n) := e.injective.subsingleton
-    exact ModuleCat.isZero_of_subsingleton _
+    exact (neighborhoodSupportPairImageCohomology_isZero_iff ℚ hf.isEmbedding
+      (W := W') (B := Set.range (Point.map i)) (S := S)
+      (fun w _ => by rw [← hS]; rfl) n).mpr (hW' n hn)
 
 end AlgebraicGeometry.ComplexPoint

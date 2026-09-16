@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.MapOfLocalStalks
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NeighborhoodPair
 /-!
 # The local relative-cohomology presheaf and its sheafification
 
@@ -21,17 +22,6 @@ open CategoryTheory Limits TopologicalSpace Opposite HomologicalComplex
 open TopCat.Presheaf
 
 namespace AlgebraicTopology.Singular
-
-variable {M : Type} [TopologicalSpace M]
-
-@[simp] theorem neighborhoodSupportInclusionPairMap_id (W S : Set M) :
-    neighborhoodSupportInclusionPairMap (show W ⊆ W from le_refl W) S =
-      𝟙 (neighborhoodSupportComplementPair W S) := rfl
-
-@[simp] theorem neighborhoodSupportInclusionPairMap_comp {U V W : Set M}
-    (hUV : U ⊆ V) (hVW : V ⊆ W) (S : Set M) :
-    neighborhoodSupportInclusionPairMap hUV S ≫ neighborhoodSupportInclusionPairMap hVW S =
-      neighborhoodSupportInclusionPairMap (hUV.trans hVW) S := rfl
 
 variable (X : TopCat.{0}) (S : Set X) (n : ℕ)
 
@@ -72,8 +62,17 @@ def supportRelativeCohomologyToSheaf :
     supportRelativeCohomologyPresheaf X S n ⟶ (supportRelativeCohomologySheaf X S n).obj :=
   toSheafify (Opens.grothendieckTopology X) _
 
+/-- A point coclass gives a section on every neighborhood of a support containing the point. -/
+def supportRelativeCohomologyPointSection {X : TopCat.{0}} {S : Set X} {n : ℕ}
+    (V : Opens X) {x : X} (hx : x ∈ S)
+    (a : RelativeCohomology ℚ (pointComplementPair x) n) :
+    (supportRelativeCohomologySheaf X S n).obj.obj (op V) :=
+  (supportRelativeCohomologyToSheaf X S n).app (op V)
+    (relativeCohomologyMap ℚ n (neighborhoodSupportToPointPairMap V hx) a)
+
 /-- Germ of an actual relative coclass in the sheafification. -/
-def supportRelativeCohomologyGerm (V : Opens X) (x : X) (hx : x ∈ V)
+def supportRelativeCohomologyGerm {X : TopCat.{0}} {S : Set X} {n : ℕ}
+    (V : Opens X) (x : X) (hx : x ∈ V)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n) :
     (supportRelativeCohomologySheaf X S n).presheaf.stalk x :=
   (supportRelativeCohomologySheaf X S n).presheaf.germ V x hx

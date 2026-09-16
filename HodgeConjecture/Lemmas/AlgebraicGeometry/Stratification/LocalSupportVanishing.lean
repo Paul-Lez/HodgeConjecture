@@ -43,9 +43,9 @@ theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
     ∃ W : Opens (ComplexPoint X), W ≤ V ∧
       W ≤ (cycleComponentSingularAnalyticClosedFiltration X x (k + 1)).compl ∧
       y ∈ W ∧ ∀ n : ℕ, n < 2 * (p + 1) →
-        IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
+        IsZero (RelativeCohomology ℚ
           (neighborhoodSupportComplementPair (W : Set (ComplexPoint X))
-            (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X))) n)) := by
+            (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X))) n) := by
   obtain ⟨z, rfl⟩ := (cycleComponentSingularAnalyticClosedFiltration_layer X x k).ge ⟨hy, hyNext⟩
   let O := cycleComponentSingularStratumAmbientOpen X x k
   let OX := cycleComponentSingularStratumAmbientOpenOver X x k
@@ -78,8 +78,7 @@ theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
     change SmoothOfRelativeDimension (dim X.left) (O.ι ≫ X.hom)
     simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 (dim X.left) O.ι X.hom
   obtain ⟨W, hWV', hzW, hW⟩ := exists_smoothClosedSourceOpenImageNeighborhood
-    OX Y i m (dim X.left) f (isOpenEmbedding_map_open X O)
-    (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X))
+    i m (dim X.left) (isOpenEmbedding_map_open X O)
     hS A zA V' hzV'
   exact ⟨W, hWV'.trans inf_le_left, hWV'.trans inf_le_right, he ▸ hzW,
     fun n hn ↦ hW n (by omega)⟩

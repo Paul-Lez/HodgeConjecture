@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.ComplexClass
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.NeighborhoodPair
 public import Mathlib.Analysis.Normed.Module.Ball.Homeomorph
 
 /-!
@@ -39,10 +40,6 @@ open CategoryTheory Topology
 namespace AlgebraicTopology.Singular
 
 variable {M : Type} [TopologicalSpace M] (d : ℕ)
-
-/-- The pair `(M, M ∖ {x})` used for local homology at `x`. -/
-abbrev pointComplementPair (x : M) : TopPair :=
-  TopPair.ofSubset (X := TopCat.of M) ({x}ᶜ : Set M)
 
 variable (e : OpenPartialHomeomorph M (Fin d → ℂ)) (x : M) (hx : x ∈ e.source)
 

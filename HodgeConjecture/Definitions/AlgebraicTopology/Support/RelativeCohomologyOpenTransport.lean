@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.RelativeCohomologySheaf
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.NeighborhoodPairImage
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NeighborhoodPairImage
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenSheafification
 
 /-!
@@ -23,19 +23,8 @@ open CategoryTheory Limits TopologicalSpace Topology Opposite
 
 namespace AlgebraicTopology.Singular
 
-variable {X Y : TopCat.{0}} (f : Y ⟶ X) (hf : IsOpenEmbedding f)
-  (S : Set X) (B : Set Y) (hB : f ⁻¹' S = B)
-
-/-- The pair-image identification respects literal neighborhood inclusions. -/
-theorem neighborhoodSupportPairImageIso_naturality {U V : Opens Y} (hUV : U ≤ V) :
-    neighborhoodSupportInclusionPairMap (W := (U : Set Y)) (V := (V : Set Y)) hUV B ≫
-      (neighborhoodSupportPairImageIso f hf.isEmbedding (V : Set Y) B S
-        (fun y _ => by rw [← hB]; rfl)).hom =
-    (neighborhoodSupportPairImageIso f hf.isEmbedding (U : Set Y) B S
-      (fun y _ => by rw [← hB]; rfl)).hom ≫
-      neighborhoodSupportInclusionPairMap
-        (W := (hf.functor.obj U : Set X)) (V := (hf.functor.obj V : Set X))
-        (Set.image_mono hUV) S := rfl
+variable {X Y : TopCat.{0}} {f : Y ⟶ X} (hf : IsOpenEmbedding f)
+  {S : Set X} {B : Set Y} (hB : f ⁻¹' S = B)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -43,14 +32,14 @@ set_option backward.defeqAttrib.useBackward true in
 def supportRelativeCohomologyPresheafOpenIso (n : ℕ) :
     hf.functor.op ⋙ supportRelativeCohomologyPresheaf X S n ≅
       supportRelativeCohomologyPresheaf Y B n :=
-  NatIso.ofComponents (fun V =>
-    (neighborhoodSupportPairImageCohomologyEquiv f hf.isEmbedding (V.unop : Set Y) B S
-      (fun y _ => by rw [← hB]; rfl) n).toAddEquiv.toAddCommGrpIso) (by
+  NatIso.ofComponents (fun V => (forget₂ (ModuleCat ℚ) AddCommGrpCat).mapIso
+    (neighborhoodSupportPairImageCohomologyIso ℚ hf.isEmbedding
+      (fun y _ => by rw [← hB]; rfl) n)) (by
     intro U V g
     apply AddCommGrpCat.hom_ext
     ext a
     change relativeCohomologyMap ℚ n
-        (neighborhoodSupportPairImageIso f hf.isEmbedding (V.unop : Set Y) B S
+        (neighborhoodSupportPairImageIso hf.isEmbedding
           (fun y _ => by rw [← hB]; rfl)).hom
         (relativeCohomologyMap ℚ n
           (neighborhoodSupportInclusionPairMap (Set.image_mono (leOfHom g.unop)) S) a) =
@@ -58,25 +47,13 @@ def supportRelativeCohomologyPresheafOpenIso (n : ℕ) :
         (neighborhoodSupportInclusionPairMap (W := (V.unop : Set Y))
           (V := (U.unop : Set Y)) (leOfHom g.unop) B)
         (relativeCohomologyMap ℚ n
-          (neighborhoodSupportPairImageIso f hf.isEmbedding (U.unop : Set Y) B S
+          (neighborhoodSupportPairImageIso hf.isEmbedding
             (fun y _ => by rw [← hB]; rfl)).hom a)
     rw [← LinearMap.comp_apply, ← relativeCohomologyMap_comp,
-      ← neighborhoodSupportPairImageIso_naturality f hf S B hB (leOfHom g.unop),
+      ← neighborhoodSupportPairImageIso_hom_naturality hf.isEmbedding
+        (leOfHom g.unop) (fun y _ => by rw [← hB]; rfl),
       relativeCohomologyMap_comp]
     rfl)
-
-/-- The open-image functor commutes with sheafification, through the actual
-restricted unit. This is the general open-embedding version of open restriction. -/
-def supportOpenEmbeddingSheafificationIso (P : TopCat.Presheaf AddCommGrpCat X) :
-    (presheafToSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj (hf.functor.op ⋙ P) ≅
-      (hf.sheafPullback AddCommGrpCat).obj
-        ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj P) :=
-  letI : hf.functor.IsContinuous (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) :=
-    hf.functor_isContinuous
-  letI : hf.functor.IsCocontinuous (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) :=
-    hf.functor_isCocontinuous
-  (hf.functor.pushforwardContinuousSheafificationCompatibility AddCommGrpCat
-    (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X)).app P
 
 /-- Actual sheafification of the pair comparison identifies intrinsic local support
 cohomology with restriction of the original ambient relative-cohomology sheaf. -/
@@ -84,23 +61,15 @@ def supportRelativeCohomologySheafOpenIso (n : ℕ) :
     supportRelativeCohomologySheaf Y B n ≅
       (hf.sheafPullback AddCommGrpCat).obj (supportRelativeCohomologySheaf X S n) :=
   (presheafToSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).mapIso
-      (supportRelativeCohomologyPresheafOpenIso f hf S B hB n).symm ≪≫
-    supportOpenEmbeddingSheafificationIso f hf (supportRelativeCohomologyPresheaf X S n)
-
-/-- A genuine section on an auxiliary open ambient space gives a section on its
-actual image open in the original ambient space. -/
-def supportRelativeCohomologySectionOpenImage (n : ℕ)
-    (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤)) :
-    (supportRelativeCohomologySheaf X S n).obj.obj (op (hf.functor.obj ⊤)) :=
-  (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op ⊤) s
-
-/-- Transport to a specified ambient open equal to the actual image. The final
-identification is the unique open inclusion, not an arbitrary section equivalence. -/
-def supportRelativeCohomologySectionOnOpen (n : ℕ) (U : Opens X)
-    (hU : hf.functor.obj ⊤ = U)
-    (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤)) :
-    (supportRelativeCohomologySheaf X S n).obj.obj (op U) :=
-  (supportRelativeCohomologySheaf X S n).obj.map (eqToHom hU.symm).op
-    (supportRelativeCohomologySectionOpenImage f hf S B hB n s)
+      (supportRelativeCohomologyPresheafOpenIso hf hB n).symm ≪≫
+    letI : hf.functor.IsContinuous
+        (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) :=
+      hf.functor_isContinuous
+    letI : hf.functor.IsCocontinuous
+        (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) :=
+      hf.functor_isCocontinuous
+    (hf.functor.pushforwardContinuousSheafificationCompatibility AddCommGrpCat
+      (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X)).app
+        (supportRelativeCohomologyPresheaf X S n)
 
 end AlgebraicTopology.Singular

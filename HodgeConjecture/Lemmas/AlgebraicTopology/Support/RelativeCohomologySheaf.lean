@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NeighborhoodPairCohomology
 
 /-!
 # The actual local relative-cohomology presheaf and its sheafification
@@ -24,6 +25,28 @@ variable {M : Type} [TopologicalSpace M]
 
 variable (X : TopCat.{0}) (S : Set X) (n : ℕ)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
+/-- Point-coclass sections commute with restriction to a smaller neighborhood. -/
+@[simp] theorem supportRelativeCohomologyPointSection_restrict
+    {x : X} (hx : x ∈ S) (a : RelativeCohomology ℚ (pointComplementPair x) n)
+    {U V : Opens X} (hUV : U ≤ V) :
+    (supportRelativeCohomologySheaf X S n).obj.map (homOfLE hUV).op
+      (supportRelativeCohomologyPointSection V hx a) =
+      supportRelativeCohomologyPointSection U hx a := by
+  have h := ConcreteCategory.congr_hom
+    ((supportRelativeCohomologyToSheaf X S n).naturality (homOfLE hUV).op)
+    (relativeCohomologyMap ℚ n (neighborhoodSupportToPointPairMap V hx) a)
+  simp only [ConcreteCategory.comp_apply] at h
+  refine h.symm.trans ?_
+  change (supportRelativeCohomologyToSheaf X S n).app (op U)
+    (relativeCohomologyMap ℚ n
+      (neighborhoodSupportInclusionPairMap (W := (U : Set X)) (V := (V : Set X)) hUV S)
+      (relativeCohomologyMap ℚ n (neighborhoodSupportToPointPairMap V hx) a)) = _
+  rw [← LinearMap.comp_apply, ← relativeCohomologyMap_comp,
+    neighborhoodSupportInclusionPairMap_toPoint]
+  rfl
+
 @[simp] theorem supportRelativeCohomologyPresheaf_map_apply {U V : Opens X}
     (hUV : U ≤ V) (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n) :
     (supportRelativeCohomologyPresheaf X S n).map (homOfLE hUV).op a =
@@ -37,10 +60,10 @@ literal pair-inclusion pullback. -/
 theorem supportRelativeCohomologyGerm_restrict {U V : Opens X} (hUV : U ≤ V)
     (x : X) (hx : x ∈ U)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n) :
-    supportRelativeCohomologyGerm X S n U x hx
+    supportRelativeCohomologyGerm U x hx
       (relativeCohomologyMap ℚ n
         (neighborhoodSupportInclusionPairMap (W := (U : Set X)) (V := (V : Set X)) hUV S) a) =
-    supportRelativeCohomologyGerm X S n V x (hUV hx) a := by
+    supportRelativeCohomologyGerm V x (hUV hx) a := by
   have h := ConcreteCategory.congr_hom
     ((supportRelativeCohomologyToSheaf X S n).naturality (homOfLE hUV).op) a
   exact (congrArg ((supportRelativeCohomologySheaf X S n).presheaf.germ U x hx) h).trans
@@ -55,33 +78,10 @@ theorem supportRelativeCohomologyGerm_eq_of_restrict_eq
         (neighborhoodSupportInclusionPairMap (W := (W : Set X)) (V := (U : Set X)) hWU S) a =
       relativeCohomologyMap ℚ n
         (neighborhoodSupportInclusionPairMap (W := (W : Set X)) (V := (V : Set X)) hWV S) b) :
-    supportRelativeCohomologyGerm X S n U x (hWU hx) a =
-      supportRelativeCohomologyGerm X S n V x (hWV hx) b := by
+    supportRelativeCohomologyGerm U x (hWU hx) a =
+      supportRelativeCohomologyGerm V x (hWV hx) b := by
   rw [← supportRelativeCohomologyGerm_restrict X S n hWU x hx,
     ← supportRelativeCohomologyGerm_restrict X S n hWV x hx, h]
-
-/-- When a neighborhood misses the support, its actual relative-chain complex is zero. -/
-theorem neighborhoodSupportRelativeChains_isZero (V : Set X) (hV : ∀ x ∈ V, x ∉ S) :
-    IsZero ((relativeChainFunctor ℚ).obj (neighborhoodSupportComplementPair V S)) := by
-  have hset : {v : V | v.1 ∉ S} = Set.univ := Set.eq_univ_of_forall fun v => hV v.1 v.2
-  change IsZero ((relativeChainFunctor ℚ).obj (TopPair.ofSubset (X := TopCat.of V) _))
-  rw [hset]
-  let P := TopPair.ofSubset (X := TopCat.of V) (Set.univ : Set V)
-  have hPi : IsIso P.map :=
-    (TopCat.isIso_iff_isHomeomorph P.map).mpr (Homeomorph.Set.univ V).isHomeomorph
-  have hchain : IsIso ((chainPairFunctor ℚ).obj P).hom := by
-    change IsIso (((singularChainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ)).map P.map)
-    infer_instance
-  exact isZero_cokernel_of_epi ((chainPairFunctor ℚ).obj P).hom
-
-/-- Relative cohomology vanishes on neighborhoods disjoint from the support. -/
-theorem neighborhoodSupportRelativeCohomology_subsingleton
-    (V : Set X) (hV : ∀ x ∈ V, x ∉ S) :
-    Subsingleton (RelativeCohomology ℚ (neighborhoodSupportComplementPair V S) n) := by
-  have hh : IsZero (RelativeHomology ℚ (neighborhoodSupportComplementPair V S) n) :=
-    (homologyFunctor (ModuleCat ℚ) (ComplexShape.down ℕ) n).map_isZero
-      (neighborhoodSupportRelativeChains_isZero X S V hV)
-  exact relativeCohomology_subsingleton ℚ _ n (ModuleCat.subsingleton_of_isZero hh)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -89,11 +89,11 @@ set_option backward.defeqAttrib.useBackward true in
 theorem supportRelativeCohomologyGerm_eq_zero_of_not_mem (hS : IsClosed S)
     (V : Opens X) (x : X) (hx : x ∈ V) (hxS : x ∉ S)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n) :
-    supportRelativeCohomologyGerm X S n V x hx a = 0 := by
+    supportRelativeCohomologyGerm V x hx a = 0 := by
   let W : Opens X := V ⊓ ⟨Sᶜ, hS.isOpen_compl⟩
   have hWV : W ≤ V := inf_le_left
   have hxW : x ∈ W := ⟨hx, hxS⟩
-  let := neighborhoodSupportRelativeCohomology_subsingleton X S n W (fun _ hy => hy.2)
+  let := neighborhoodSupportRelativeCohomology_subsingleton ℚ W S (fun _ hy => hy.2) n
   rw [← supportRelativeCohomologyGerm_restrict X S n hWV x hxW]
   have hz : relativeCohomologyMap ℚ n
       (neighborhoodSupportInclusionPairMap (W := (W : Set X)) (V := (V : Set X)) hWV S) a = 0 :=

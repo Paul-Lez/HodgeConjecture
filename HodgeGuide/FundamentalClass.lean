@@ -63,50 +63,35 @@ natural-number subtraction in the types exact. Normal charts give local classes 
 these classes agree on overlaps, and they glue to a section of the sheaf of relative cohomology
 over $`X\setminus Z_{\mathrm{sing}}`.
 
-```lean -show
-namespace Guide.Subvariety.D1
-```
 ```lean
-def cycleComponentSmoothClosedLiftCoclassSection (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+example (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
     (supportRelativeCohomologySheaf
       (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
       (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (2 * p)).obj.obj (op ⊤) :=
-  letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+  letI : SmoothOfRelativeDimension (dim X.left - p)
+      (cycleComponentSmoothLocusOver X x).hom :=
+    cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
   hdeg ▸ smoothClosedSupportCoclassSection
-    (cycleComponentSmoothLocusAmbientOpenOver X x)
-    (cycleComponentSmoothLocusOver X x)
     (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)
 ```
-```lean -show
-end Guide.Subvariety.D1
-example : @Guide.Subvariety.D1.cycleComponentSmoothClosedLiftCoclassSection = @AlgebraicGeometry.ComplexPoint.cycleComponentSmoothClosedLiftCoclassSection := rfl
-```
-```lean -show
-namespace Guide.Subvariety.D2
-```
 ```lean
-def cycleComponentSmoothSupportCoclassSection (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+example (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * p)).obj.obj
       (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
-  supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)
-    (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-    (cycleComponentSupport X x)
-    (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
-    (cycleComponentSmoothClosedLiftAmbientMap_support X x)
-    (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
-    (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
-    (cycleComponentSmoothClosedLiftCoclassSection X x hx)
-```
-```lean -show
-end Guide.Subvariety.D2
-example : @Guide.Subvariety.D2.cycleComponentSmoothSupportCoclassSection = @AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection := rfl
+  (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
+    (cycleComponentSupport X x) (2 * p)).obj.map
+      (eqToHom (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x).symm).op
+      ((supportRelativeCohomologySheafOpenIso
+        (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
+        (cycleComponentSmoothClosedLiftAmbientMap_support X x) (2 * p)).hom.hom.app (op ⊤)
+        (cycleComponentSmoothClosedLiftCoclassSection X x hx))
 ```
 
 ```lean
@@ -151,14 +136,11 @@ is an isomorphism. Its inverse extends the class of Step 1 uniquely to a class w
 all of $`Z`.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
 ```
 
-```lean -show
-namespace Guide.Subvariety.D3
-```
 ```lean
-def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+example (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
@@ -168,18 +150,10 @@ def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.lef
       (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
           (2 * (p : ℤ))) :=
-  letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
-  asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
-```
-```lean -show
-end Guide.Subvariety.D3
-example : @Guide.Subvariety.D3.cycleComponentSupportExtensionIso = @AlgebraicGeometry.ComplexPoint.cycleComponentSupportExtensionIso := rfl
-```
-```lean -show
-namespace Guide.Subvariety.D4
+  cycleComponentSupportExtensionIso X x hx
 ```
 ```lean
-def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+example (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
@@ -193,35 +167,28 @@ def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsInt
     cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
       (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
         (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
-          (complexSupportInjectiveCohomologySheafIsoRelative X
+          (complexSupportInjectiveCohomologySheafIsoRelative
             (cycleComponentAnalyticClosedSupport X x) (2 * p)))
-```
-```lean -show
-end Guide.Subvariety.D4
-example : @Guide.Subvariety.D4.cycleComponentSupportedClassNormalizationIso = @AlgebraicGeometry.ComplexPoint.cycleComponentSupportedClassNormalizationIso := rfl
 ```
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSupportedInjectiveClass_unique
 ```
 
-The compact interface names the supported group and the smooth-locus section group.
-The extension map takes any such section to its unique global supported class, using
-the proved isomorphism above. Applying it to the normalized smooth-locus section gives
-the component class.
+The compact interface names the supported group. The normalization isomorphism displays the
+smooth-locus sheaf-section group directly. Applying its inverse to the normalized smooth-locus
+section gives the component class.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.CycleComponentSupportedCohomology
-#check AlgebraicGeometry.ComplexPoint.CycleComponentSmoothCoclassSections
-#check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass
-#check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass_normalization
-#check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass_unique
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSupportedInjectiveClass_normalization
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSupportedInjectiveClass_unique
 ```
 
 ```lean
 example :
     CycleComponentSupportedCohomology X x p :=
-  cycleComponentExtendSmoothCoclass X x hx
+  (cycleComponentSupportedClassNormalizationIso x hx).inv
     (cycleComponentSmoothSupportCoclassSection X x hx)
 ```
 
@@ -232,35 +199,21 @@ it through the comparison with the mapping-cone model of the previous section gi
 the subvariety in cohomology with support, and forgetting the support gives its class in ordinary
 cohomology, which is the class the statement uses.
 
-```lean -show
-namespace Guide.Subvariety.D5
-```
 ```lean
-def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+example (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
     RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
     (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
-      (cycleComponentSupportedInjectiveClass X x hx)
-```
-```lean -show
-end Guide.Subvariety.D5
-example : @Guide.Subvariety.D5.cycleComponentSheafSupportedClass = @AlgebraicGeometry.ComplexPoint.cycleComponentSheafSupportedClass := rfl
-```
-```lean -show
-namespace Guide.Subvariety.D6
+      (cycleComponentSupportedInjectiveClass hx)
 ```
 ```lean
-def cycleComponentSheafClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
+example (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) : H^(2 * (p : ℤ))(X; ℚ) :=
   forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
     (cycleComponentSheafSupportedClass X x hx)
-```
-```lean -show
-end Guide.Subvariety.D6
-example : @Guide.Subvariety.D6.cycleComponentSheafClass = @AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass := rfl
 ```
 
 ```lean

@@ -46,24 +46,26 @@ theorem complexSupportInjectiveCohomologySheafIsoRelative_restriction_section
         (complexSupportInjectiveComplex X S) a) (n : ℤ) ≫
       TopCat.Sheaf.sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
         (complexSupportInjectiveComplex X S) (n : ℤ) W ≫
-      (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.app (op W) =
+      (complexSupportInjectiveCohomologySheafIsoRelative S n).hom.hom.app (op W) =
     (complexSupportInjectiveSectionCohomologyEquiv X S V n).toAddCommGrpIso.hom ≫
       (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X)) S n).app (op V) ≫
       (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n).obj.map a.op := by
   rw [TopCat.Sheaf.sectionCohomologyToSheafSection_restriction_assoc,
-    (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.naturality,
+    (complexSupportInjectiveCohomologySheafIsoRelative S n).hom.hom.naturality,
     complexSupportInjectiveCohomologySheafIsoRelative_section_assoc]
 
 /-- The normalization isomorphism's forward map displays the actual restriction,
 actual lowest-degree map, and actual cohomology-sheaf comparison. -/
 theorem cycleComponentSupportedClassNormalizationIso_hom :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom =
+    (cycleComponentSupportedClassNormalizationIso x hx).hom =
       HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x)
         (2 * (p : ℤ)) ≫
       (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom ≫
-      (complexSupportInjectiveCohomologySheafIsoRelative X
+      (complexSupportInjectiveCohomologySheafIsoRelative
         (cycleComponentAnalyticClosedSupport X x) (2 * p)).hom.hom.app
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) := rfl
+          (op (cycleComponentSmoothSupportAmbientOpen X x)) := by
+  simp [cycleComponentSupportedClassNormalizationIso]
+  exact (Category.assoc _ _ _).symm
 
 section Point
 
@@ -80,7 +82,6 @@ def analyticComponentPointRelativeCoclass :
   relativeCohomologyMap ℚ (2 * d)
     (neighborhoodSupportToPointPairMap
       ((⊤ : Opens (ComplexPoint X)) : Set (ComplexPoint X))
-      (cycleComponentSupport X x) (cycleComponentMap X x z)
       (range_cycleComponentMap_subset X x ⟨z, rfl⟩))
     (analyticPointLocalCoclass X d (cycleComponentMap X x z))
 
@@ -125,7 +126,7 @@ theorem analyticComponentPointRelativeCoclass_toSheaf :
 canonical sheaf normalization, using actual maps throughout. -/
 theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
     (hx : Order.coheight x = d) :
-    (complexSupportInjectiveCohomologySheafIsoRelative X
+    (complexSupportInjectiveCohomologySheafIsoRelative
       (cycleComponentAnalyticClosedSupport X x) (2 * d)).hom.hom.app
         (op (cycleComponentSmoothSupportAmbientOpen X x))
       (TopCat.Sheaf.sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
@@ -160,7 +161,7 @@ coclass transported through the actual relative/injective comparison. This is
 a uniqueness theorem about the general construction, not a point branch. -/
 theorem cycleComponentSupportedInjectiveClass_point_normalization
     (hx : Order.coheight x = d) :
-    cycleComponentSupportedInjectiveClass X x hx =
+    cycleComponentSupportedInjectiveClass hx =
       analyticComponentPointSupportedInjectiveCoclass X x d z := by
   obtain rfl : dim X.left = d := SmoothOfRelativeDimension.dim_eq X.hom d
   symm

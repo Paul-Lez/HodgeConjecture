@@ -40,10 +40,8 @@ theorem cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero
   apply hne
   let e := (sheafToPresheaf (Opens.grothendieckTopology
     (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x))) AddCommGrpCat).mapIso
-    (supportRelativeCohomologySheafOpenIso (cycleComponentSmoothClosedLiftAmbientMap X x)
+    (supportRelativeCohomologySheafOpenIso
       (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-      (cycleComponentSupport X x)
-      (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (cycleComponentSmoothClosedLiftAmbientMap_support X x) (2 * p))
   apply (ConcreteCategory.bijective_of_isIso (e.app (op ⊤)).hom).1
   rw [map_zero]
@@ -52,11 +50,14 @@ theorem cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero
 /-- The degree identification does not change whether the auxiliary section vanishes. -/
 theorem cycleComponentSmoothClosedLiftCoclassSection_ne_zero_iff :
     cycleComponentSmoothClosedLiftCoclassSection X x hx ≠ 0 ↔
-      letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
-      smoothClosedSupportCoclassSection (cycleComponentSmoothLocusAmbientOpenOver X x)
-        (cycleComponentSmoothLocusOver X x) (cycleComponentSmoothLocusClosedLiftOver X x)
+      letI : SmoothOfRelativeDimension (dim X.left - p)
+          (cycleComponentSmoothLocusOver X x).hom :=
+        cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
+      smoothClosedSupportCoclassSection (cycleComponentSmoothLocusClosedLiftOver X x)
         (dim X.left - p) (dim X.left) ≠ 0 := by
-  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+  let : SmoothOfRelativeDimension (dim X.left - p)
+      (cycleComponentSmoothLocusOver X x).hom :=
+    cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
   have transport (a b : ℕ) (h : a = b)
       (s : (supportRelativeCohomologySheaf
         (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
