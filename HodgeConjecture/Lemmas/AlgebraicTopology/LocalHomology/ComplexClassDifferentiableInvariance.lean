@@ -230,10 +230,10 @@ theorem exists_open_complexDifferentiable_localClass_invariance
       IsOpen V ∧ 0 ∈ V ∧
       ∀ c : RelativeHomology ℚ (neighborhoodPointComplementPair V 0) (2 * d),
         relativeHomologyMap ℚ (2 * d) (neighborhoodPointComplementPairMap V 0) c =
-            standardComplexLocalClass d →
+            standardComplexLocalClass ℚ d →
           relativeHomologyMap ℚ (2 * d)
               (complexNeighborhoodPuncturedPairMapOf d V f (hf.mono hVU) hf_ne) c =
-            standardComplexLocalClass d := by
+            standardComplexLocalClass ℚ d := by
   let f' : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     A.mulVecLin.toContinuousLinearMap
   have hf'_apply (z : Fin d → ℂ) : f' z = A.mulVec z := rfl
@@ -267,8 +267,8 @@ theorem exists_open_complexDifferentiable_localClass_invariance
           rw [relativeHomologyMap_comp]
           rfl
     _ = relativeHomologyMap ℚ (2 * d) (complexMatrixPuncturedPairMap d A hA)
-        (standardComplexLocalClass d) := by rw [hc]
-    _ = standardComplexLocalClass d :=
+        (standardComplexLocalClass ℚ d) := by rw [hc]
+    _ = standardComplexLocalClass ℚ d :=
       relativeHomologyMap_complexMatrix_standardComplexLocalClass d A hA
 
 /-- A puncture-preserving straight line from an invertible complex-linear map to a nonlinear
@@ -329,8 +329,8 @@ theorem relativeHomologyMap_complexDifferentiable_standardComplexLocalClass
     (hf' : HasFDerivAt f
       (A.mulVecLin.toContinuousLinearMap : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) 0) :
     relativeHomologyMap ℚ (2 * d) (complexPuncturedPairMapOf d f hf hf_ne)
-        (standardComplexLocalClass d) =
-      standardComplexLocalClass d := by
+        (standardComplexLocalClass ℚ d) =
+      standardComplexLocalClass ℚ d := by
   let f' : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     A.mulVecLin.toContinuousLinearMap
   have hf'_apply (z : Fin d → ℂ) : f' z = A.mulVec z := rfl

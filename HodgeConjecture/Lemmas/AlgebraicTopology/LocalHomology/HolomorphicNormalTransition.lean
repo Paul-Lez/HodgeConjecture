@@ -181,11 +181,11 @@ theorem exists_open_normalTransition_localClass_invariance :
       IsOpen W ∧ 0 ∈ W ∧
       ∀ z : RelativeHomology ℚ (neighborhoodPointComplementPair W 0) (2 * c),
         relativeHomologyMap ℚ (2 * c) (neighborhoodPointComplementPairMap W 0) z =
-          standardComplexLocalClass c →
+          standardComplexLocalClass ℚ c →
         relativeHomologyMap ℚ (2 * c)
           (complexNeighborhoodPuncturedPairMapOf c W (normalTransitionMap c e a)
             ((normalTransitionMap_continuousOn c e a).mono hW)
-            hne) z = standardComplexLocalClass c := by
+            hne) z = standardComplexLocalClass ℚ c := by
   let L := normalTransitionDerivativeEquiv e a ha hplane he hei
   let A := complexMatrixOfContinuousLinearMap c L.toContinuousLinearMap
   have hA : A.det ≠ 0 :=

@@ -24,8 +24,6 @@ Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.FundamentalClass`.
 -/
 
-/-! ### Constructions used only in proofs -/
-
 @[expose] public noncomputable section
 
 open CategoryTheory Limits
@@ -33,32 +31,19 @@ open scoped Simplicial
 
 namespace AlgebraicTopology.Singular
 
-attribute [fun_prop] stdSimplex.continuous_map
+variable (R : Type) [CommRing R]
 
 /-- The alternating sum of the faces of the standard affine `(n + 1)`-simplex, regarded as a
 chain in punctured Euclidean space. -/
 def standardSubspaceBoundaryChain (n : ℕ) :
     ModuleCat.of ℚ ℚ ⟶
       ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).left.X n :=
-  ∑ i : Fin (n + 2), (-1) ^ i.val • standardSubspaceFaceChain n i
-
-end AlgebraicTopology.Singular
-
-end
-
-@[expose] public noncomputable section
-
-open CategoryTheory Limits
-open scoped Simplicial
-
-namespace AlgebraicTopology.Singular
-
-attribute [fun_prop] stdSimplex.continuous_map
+  ∑ i : Fin (n + 2), (-1) ^ i.val • standardSubspaceFaceChain ℚ n i
 
 lemma standardLocalCycle_inclusion (d : ℕ) :
-    standardLocalCycle d ≫ (standardLocalRelativeChainComplex d).iCycles d =
-      standardLocalChain d :=
-  (standardLocalRelativeChainComplex d).liftCycles_i (standardLocalChain d)
-    ((ComplexShape.down ℕ).next d) rfl (standardLocalChain_boundary d)
+    standardLocalCycle R d ≫ (standardLocalRelativeChainComplex R d).iCycles d =
+      standardLocalChain R d :=
+  (standardLocalRelativeChainComplex R d).liftCycles_i (standardLocalChain R d)
+    ((ComplexShape.down ℕ).next d) rfl (standardLocalChain_boundary R d)
 
 end AlgebraicTopology.Singular

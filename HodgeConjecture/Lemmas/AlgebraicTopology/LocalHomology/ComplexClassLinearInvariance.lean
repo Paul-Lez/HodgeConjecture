@@ -257,11 +257,11 @@ def complexMatrixPuncturedPairHomotopy
 theorem relativeHomologyMap_complexMatrix_standardComplexLocalClass
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0) :
     relativeHomologyMap ℚ (2 * d) (complexMatrixPuncturedPairMap d A hA)
-        (standardComplexLocalClass d) =
-      standardComplexLocalClass d := by
+        (standardComplexLocalClass ℚ d) =
+      standardComplexLocalClass ℚ d := by
   let H := (Matrix.nonempty_complexIsotopyToOne A hA).some
   have h := (complexMatrixPuncturedPairHomotopy d hA H).relativeHomologyMap_apply_eq
-    (R := ℚ) (2 * d) (standardComplexLocalClass d)
+    (R := ℚ) (2 * d) (standardComplexLocalClass ℚ d)
   simpa using h.symm
 
 end AlgebraicTopology.Singular

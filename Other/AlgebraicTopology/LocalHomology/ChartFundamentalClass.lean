@@ -66,7 +66,7 @@ def chartModelEmbeddingPair : standardComplexPuncturedPair d ⟶ pointComplement
 /-- The local homology class at `x`, normalized by the complex ordering of the chart. -/
 def localClassOfChart : RelativeHomology ℚ (pointComplementPair x) (2 * d) :=
   relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e x hx)
-    (standardComplexLocalClass d)
+    (standardComplexLocalClass ℚ d)
 
 end AlgebraicTopology.Singular
 end

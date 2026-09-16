@@ -112,7 +112,7 @@ theorem centeredComplexUnivBall_preserves_standardComplexLocalClass
     relativeHomologyMap ℚ (2 * d)
       (centeredComplexEmbeddingPair d (OpenPartialHomeomorph.univBall c r)
         (continuous_complexUnivBall d c r) (injective_complexUnivBall d c r) v)
-      (standardComplexLocalClass d) = standardComplexLocalClass d := by
+      (standardComplexLocalClass ℚ d) = standardComplexLocalClass ℚ d := by
   rw [centeredComplexEmbeddingPair_relativeHomologyMap_eq]
   let L : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     (r : ℂ) • ContinuousLinearMap.id ℂ (Fin d → ℂ)

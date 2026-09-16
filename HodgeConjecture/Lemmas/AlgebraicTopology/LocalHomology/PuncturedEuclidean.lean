@@ -57,17 +57,17 @@ namespace AlgebraicTopology.Singular
 other coordinates are the ordinary coordinates on `ℝ^d`.  Only comparisons between these
 coordinates are used below, so this common-translation normalization is canonical. -/
 def standardExtendedCoordinate (d : ℕ) (i : Fin (d + 1))
-    (x : StandardRealModel d) : ℝ :=
+    (x : Fin d → ℝ) : ℝ :=
   Fin.lastCases 0 x i
 
 @[simp]
 lemma standardExtendedCoordinate_castSucc (d : ℕ) (i : Fin d)
-    (x : StandardRealModel d) :
+    (x : Fin d → ℝ) :
     standardExtendedCoordinate d (Fin.castSucc i) x = x i := by
   simp [standardExtendedCoordinate]
 
 @[simp]
-lemma standardExtendedCoordinate_last (d : ℕ) (x : StandardRealModel d) :
+lemma standardExtendedCoordinate_last (d : ℕ) (x : Fin d → ℝ) :
     standardExtendedCoordinate d (Fin.last d) x = 0 := by
   simp [standardExtendedCoordinate]
 
@@ -89,11 +89,11 @@ lemma stdSimplex_exists_pos {m : ℕ} (t : stdSimplex ℝ (Fin (m + 1))) :
 lemma continuous_standardExtendedCoordinate (d : ℕ) (i : Fin (d + 1)) :
     Continuous (fun x : (standardPuncturedPair d).snd ↦
       standardExtendedCoordinate d i x.1) := by
-  change Continuous (fun x : ({0}ᶜ : Set (StandardRealModel d)) ↦
+  change Continuous (fun x : ({0}ᶜ : Set (Fin d → ℝ)) ↦
     standardExtendedCoordinate d i x.1)
   cases i using Fin.lastCases with
   | last => simpa [standardExtendedCoordinate] using
-      (continuous_const : Continuous (fun _ : ({0}ᶜ : Set (StandardRealModel d)) ↦ (0 : ℝ)))
+      (continuous_const : Continuous (fun _ : ({0}ᶜ : Set (Fin d → ℝ)) ↦ (0 : ℝ)))
   | cast i =>
       convert (continuous_apply i).comp continuous_subtype_val using 1
       funext x
@@ -144,7 +144,7 @@ lemma not_forall_mem_standardPuncturedFacetCover (d : ℕ)
 /-- The coordinate vector whose extended coordinates are `-1` on `I` and `0` off `I`, up to
 the common translation that makes the last extended coordinate zero. -/
 def standardFacetIntersectionCenter (d : ℕ) (I : Finset (Fin (d + 1))) :
-    StandardRealModel d :=
+    (Fin d → ℝ) :=
   fun j ↦ (if Fin.castSucc j ∈ I then (-1 : ℝ) else 0) -
     (if Fin.last d ∈ I then (-1 : ℝ) else 0)
 
@@ -158,7 +158,7 @@ lemma standardExtendedCoordinate_intersectionCenter (d : ℕ)
   · simp [standardExtendedCoordinate, standardFacetIntersectionCenter]
 
 lemma standardExtendedCoordinate_add_smul (d : ℕ) (i : Fin (d + 1))
-    (a b : ℝ) (x y : StandardRealModel d) :
+    (a b : ℝ) (x y : Fin d → ℝ) :
     standardExtendedCoordinate d i (a • x + b • y) =
       a * standardExtendedCoordinate d i x +
         b * standardExtendedCoordinate d i y := by
@@ -169,7 +169,7 @@ lemma standardExtendedCoordinate_add_smul (d : ℕ) (i : Fin (d + 1))
 /-- The intersection of a finite collection of facet-cover conditions, expressed in the
 ambient coordinate vector space. -/
 def standardPuncturedFacetIntersectionSet (d : ℕ)
-    (I : Finset (Fin (d + 1))) : Set (StandardRealModel d) :=
+    (I : Finset (Fin (d + 1))) : Set (Fin d → ℝ) :=
   {x | ∀ i ∈ I, ∃ j : Fin (d + 1),
     standardExtendedCoordinate d i x < standardExtendedCoordinate d j x}
 
@@ -215,13 +215,13 @@ lemma standardPuncturedFacetIntersectionSet_starConvex (d : ℕ)
 
 lemma standardPuncturedFacetIntersectionSet_ne_zero (d : ℕ)
     (I : Finset (Fin (d + 1))) (hI : I.Nonempty)
-    {x : StandardRealModel d}
+    {x : Fin d → ℝ}
     (hx : x ∈ standardPuncturedFacetIntersectionSet d I) : x ≠ 0 := by
   obtain ⟨i, hi⟩ := hI
   obtain ⟨j, hj⟩ := hx i hi
   rintro rfl
   have hzeroCoord (k : Fin (d + 1)) :
-      standardExtendedCoordinate d k (0 : StandardRealModel d) = 0 := by
+      standardExtendedCoordinate d k (0 : Fin d → ℝ) = 0 := by
     refine Fin.lastCases ?_ (fun l ↦ ?_) k <;> simp [standardExtendedCoordinate]
   rw [hzeroCoord i, hzeroCoord j] at hj
   exact (lt_self_iff_false 0).mp hj
@@ -2688,7 +2688,7 @@ lemma span_standardPuncturedBoundaryClass_succ_eq_top_of_affine_isIso
 
 /-- The explicit standard local class is nonzero in every positive dimension. -/
 lemma standardLocalClass_ne_zero_of_pos (d : ℕ) (hd : 0 < d) :
-    standardLocalClass d ≠ 0 := by
+    standardLocalClass ℚ d ≠ 0 := by
   cases d with
   | zero => lia
   | succ n =>
@@ -2702,14 +2702,14 @@ lemma standardLocalClass_ne_zero_of_pos (d : ℕ) (hd : 0 < d) :
 relative local class a generator. -/
 lemma span_standardLocalClass_add_two_eq_top_of_affine_isIso
     (n : ℕ) [IsIso (standardAffineBoundaryHomologyMap n)] :
-    Submodule.span ℚ {standardLocalClass (n + 2)} = ⊤ := by
+    Submodule.span ℚ {standardLocalClass ℚ (n + 2)} = ⊤ := by
   rw [span_standardLocalClass_succ_eq_top_iff (n + 1) (by lia)]
   exact span_standardPuncturedBoundaryClass_succ_eq_top_of_affine_isIso n
 
 /-- In every dimension at least two, the explicit standard relative local class generates
 rational local homology. -/
 lemma span_standardLocalClass_add_two_eq_top (n : ℕ) :
-    Submodule.span ℚ {standardLocalClass (n + 2)} = ⊤ :=
+    Submodule.span ℚ {standardLocalClass ℚ (n + 2)} = ⊤ :=
   span_standardLocalClass_add_two_eq_top_of_affine_isIso n
 
 end AlgebraicTopology.Singular

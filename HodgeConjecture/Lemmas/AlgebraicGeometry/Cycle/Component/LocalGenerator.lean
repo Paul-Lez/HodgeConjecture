@@ -192,7 +192,7 @@ namespace AlgebraicTopology.Singular
 /-- The oriented standard complex local class generates rational local homology in every complex
 dimension. -/
 lemma span_standardComplexLocalClass_eq_top (n : ℕ) :
-    Submodule.span ℚ {standardComplexLocalClass n} = ⊤ := by
+    Submodule.span ℚ {standardComplexLocalClass ℚ n} = ⊤ := by
   cases n with
   | zero => exact span_standardComplexLocalClass_zero_eq_top
   | succ n =>

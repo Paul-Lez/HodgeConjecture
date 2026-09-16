@@ -41,7 +41,7 @@ open scoped Simplicial
 namespace AlgebraicTopology.Singular
 
 /-- The image of the boundary of the standard affine simplex. -/
-def standardAffineBoundarySupport (d : ℕ) : Set (StandardRealModel d) :=
+def standardAffineBoundarySupport (d : ℕ) : Set (Fin d → ℝ) :=
   ⋃ i : Fin (d + 1), standardAffineSimplex d ''
     (fun t : stdSimplex ℝ (Fin (d + 1)) => t i) ⁻¹' {0}
 
@@ -51,14 +51,14 @@ lemma isCompact_standardAffineBoundarySupport (d : ℕ) :
     continuous_const).isCompact.image (continuous_standardAffineSimplex d)
 
 lemma zero_not_mem_standardAffineBoundarySupport (d : ℕ) :
-    (0 : StandardRealModel d) ∉ standardAffineBoundarySupport d := by
+    (0 : Fin d → ℝ) ∉ standardAffineBoundarySupport d := by
   intro h
   obtain ⟨i, hi⟩ := Set.mem_iUnion.mp h
   rcases hi with ⟨t, ht, hzero⟩
   exact standardAffineSimplex_ne_zero_of_coord_zero d t i ht hzero
 
 lemma exists_standardOrientationRadius (d : ℕ) :
-    ∃ r : ℝ, 0 < r ∧ Metric.ball (0 : StandardRealModel d) r ⊆
+    ∃ r : ℝ, 0 < r ∧ Metric.ball (0 : Fin d → ℝ) r ⊆
       (standardAffineBoundarySupport d)ᶜ :=
   Metric.isOpen_iff.mp (isCompact_standardAffineBoundarySupport d).isClosed.isOpen_compl
     0 (zero_not_mem_standardAffineBoundarySupport d)
@@ -71,28 +71,28 @@ lemma standardOrientationRadius_pos (d : ℕ) : 0 < standardOrientationRadius d 
   (exists_standardOrientationRadius d).choose_spec.1
 
 lemma ball_standardOrientationRadius_subset (d : ℕ) :
-    Metric.ball (0 : StandardRealModel d) (standardOrientationRadius d) ⊆
+    Metric.ball (0 : Fin d → ℝ) (standardOrientationRadius d) ⊆
       (standardAffineBoundarySupport d)ᶜ :=
   (exists_standardOrientationRadius d).choose_spec.2
 
 /-- The small ball on which one and the same simplex represents the orientation. -/
-def standardOrientationBall (d : ℕ) : TopologicalSpace.Opens (StandardRealModel d) :=
+def standardOrientationBall (d : ℕ) : TopologicalSpace.Opens (Fin d → ℝ) :=
   ⟨Metric.ball 0 (standardOrientationRadius d), Metric.isOpen_ball⟩
 
 lemma zero_mem_standardOrientationBall (d : ℕ) :
-    (0 : StandardRealModel d) ∈ standardOrientationBall d :=
+    (0 : Fin d → ℝ) ∈ standardOrientationBall d :=
   Metric.mem_ball_self (standardOrientationRadius_pos d)
 
 /-- The pair supporting the Euclidean neighborhood class, not just a point class. -/
 abbrev standardOrientationBallPair (d : ℕ) : TopPair :=
-  TopPair.ofSubset (X := TopCat.of (StandardRealModel d))
-    (standardOrientationBall d : Set (StandardRealModel d))ᶜ
+  TopPair.ofSubset (X := TopCat.of (Fin d → ℝ))
+    (standardOrientationBall d : Set (Fin d → ℝ))ᶜ
 
 /-- A boundary face as a simplex in the complement of the entire orientation ball. -/
 def standardOrientationBallFaceMap (n : ℕ) (i : Fin (n + 2)) :
     C(stdSimplex ℝ (Fin (n + 1)),
-      ((standardOrientationBall (n + 1) : Set (StandardRealModel (n + 1)))ᶜ :
-        Set (StandardRealModel (n + 1)))) where
+      ((standardOrientationBall (n + 1) : Set (Fin (n + 1) → ℝ))ᶜ :
+        Set (Fin (n + 1) → ℝ))) where
   toFun t := ⟨standardAffineSimplex (n + 1) (stdSimplex.map i.succAbove t), by
     intro hball
     apply ball_standardOrientationRadius_subset (n + 1) hball
@@ -101,7 +101,7 @@ def standardOrientationBallFaceMap (n : ℕ) (i : Fin (n + 2)) :
   continuous_toFun := by fun_prop
 
 lemma standardOrientationBallFace_projection (n : ℕ) (i : Fin (n + 2)) :
-    standardAmbientFaceChain n i ≫
+    standardAmbientFaceChain ℚ n i ≫
       (relativeChainProjection ℚ (standardOrientationBallPair (n + 1))).f n = 0 := by
   let σ := ((standardOrientationBallPair (n + 1)).snd.toSSetObjEquiv (.op ⦋n⦌)).symm
     (standardOrientationBallFaceMap n i)
@@ -117,7 +117,7 @@ lemma standardOrientationBallFace_projection (n : ℕ) (i : Fin (n + 2)) :
 /-- The fixed ordered affine simplex projected modulo the complement of the ball. -/
 def standardOrientationBallChain (d : ℕ) :
     ModuleCat.of ℚ ℚ ⟶ ((relativeChainFunctor ℚ).obj (standardOrientationBallPair d)).X d :=
-  standardAmbientSimplexChain d ≫
+  standardAmbientSimplexChain ℚ d ≫
     (relativeChainProjection ℚ (standardOrientationBallPair d)).f d
 
 set_option backward.isDefEq.respectTransparency false in
@@ -131,7 +131,7 @@ lemma standardOrientationBallChain_boundary (d : ℕ) :
     rw [ChainComplex.next_nat_succ, standardOrientationBallChain, Category.assoc,
       (relativeChainProjection ℚ (standardOrientationBallPair (n + 1))).comm,
       ← Category.assoc]
-    change (standardAmbientSimplexChain (n + 1) ≫
+    change (standardAmbientSimplexChain ℚ (n + 1) ≫
       ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).right.d (n + 1) n) ≫ _ = 0
     rw [standardAmbientSimplexChain_boundary, Preadditive.sum_comp]
     apply Finset.sum_eq_zero
@@ -154,10 +154,10 @@ def standardOrientationBallClass (d : ℕ) :
     ((relativeChainFunctor ℚ).obj (standardOrientationBallPair d)).homologyπ d).hom) 1
 
 /-- Restriction from ball support to a point of that ball. -/
-def standardOrientationBallPointMap (d : ℕ) (y : StandardRealModel d)
+def standardOrientationBallPointMap (d : ℕ) (y : Fin d → ℝ)
     (hy : y ∈ standardOrientationBall d) :
-    standardOrientationBallPair d ⟶ TopPair.ofSubset (X := TopCat.of (StandardRealModel d))
-      ({y}ᶜ : Set (StandardRealModel d)) :=
+    standardOrientationBallPair d ⟶ TopPair.ofSubset (X := TopCat.of (Fin d → ℝ))
+      ({y}ᶜ : Set (Fin d → ℝ)) :=
   supportInclusionPairMap _ (Set.singleton_subset_iff.mpr hy)
 
 set_option backward.isDefEq.respectTransparency false in
@@ -165,27 +165,27 @@ lemma standardOrientationBallCycle_restrict_zero (d : ℕ) :
     standardOrientationBallCycle d ≫ HomologicalComplex.cyclesMap
       ((relativeChainFunctor ℚ).map
         (standardOrientationBallPointMap d 0 (zero_mem_standardOrientationBall d))) d =
-      standardLocalCycle d := by
-  apply (cancel_mono ((standardLocalRelativeChainComplex d).iCycles d)).mp
+      standardLocalCycle ℚ d := by
+  apply (cancel_mono ((standardLocalRelativeChainComplex ℚ d).iCycles d)).mp
   rw [Category.assoc, HomologicalComplex.cyclesMap_i, ← Category.assoc,
     standardOrientationBallCycle, HomologicalComplex.liftCycles_i,
     standardLocalCycle_inclusion, standardOrientationBallChain, Category.assoc]
   have h := congrArg (fun f => f.f d)
-    (relativeChainProjection_supportInclusion ℚ (TopCat.of (StandardRealModel d))
+    (relativeChainProjection_supportInclusion ℚ (TopCat.of (Fin d → ℝ))
       (Set.singleton_subset_iff.mpr (zero_mem_standardOrientationBall d)))
-  exact congrArg (fun f => standardAmbientSimplexChain d ≫ f) h
+  exact congrArg (fun f => standardAmbientSimplexChain ℚ d ≫ f) h
 
 /-- At the center, the neighborhood class restricts to the original normalized class,
 not merely to some generator or a nonzero rational multiple. -/
 theorem standardOrientationBallClass_restrict_zero (d : ℕ) :
     relativeHomologyMap ℚ d
       (standardOrientationBallPointMap d 0 (zero_mem_standardOrientationBall d))
-      (standardOrientationBallClass d) = standardLocalClass d := by
+      (standardOrientationBallClass d) = standardLocalClass ℚ d := by
   have hmor : standardOrientationBallCycle d ≫
       ((relativeChainFunctor ℚ).obj (standardOrientationBallPair d)).homologyπ d ≫
       HomologicalComplex.homologyMap ((relativeChainFunctor ℚ).map
         (standardOrientationBallPointMap d 0 (zero_mem_standardOrientationBall d))) d =
-      standardLocalCycle d ≫ (standardLocalRelativeChainComplex d).homologyπ d := by
+      standardLocalCycle ℚ d ≫ (standardLocalRelativeChainComplex ℚ d).homologyπ d := by
     rw [HomologicalComplex.homologyπ_naturality, ← Category.assoc,
       standardOrientationBallCycle_restrict_zero]
   exact ConcreteCategory.congr_hom hmor 1
@@ -258,20 +258,20 @@ end Translation
 
 /-- At every point of the ball, restriction gives the exact translated standard class.
 This is simultaneous local representability, with normalization fixed by the ordered simplex. -/
-theorem standardOrientationBallClass_restrict (d : ℕ) (y : StandardRealModel d)
+theorem standardOrientationBallClass_restrict (d : ℕ) (y : Fin d → ℝ)
     (hy : y ∈ standardOrientationBall d) :
     relativeHomologyMap ℚ d (standardOrientationBallPointMap d y hy)
       (standardOrientationBallClass d) =
-      relativeHomologyMap ℚ d (translationPointComplementPairMap (StandardRealModel d) y)
-        (standardLocalClass d) := by
-  have h := (convexSupportTranslationPairHomotopy (StandardRealModel d)
+      relativeHomologyMap ℚ d (translationPointComplementPairMap (Fin d → ℝ) y)
+        (standardLocalClass ℚ d) := by
+  have h := (convexSupportTranslationPairHomotopy (Fin d → ℝ)
     (standardOrientationBall d) (zero_mem_standardOrientationBall d)
     (convex_ball _ _) y hy).relativeHomologyMap_apply_eq (R := ℚ) d
       (standardOrientationBallClass d)
   change relativeHomologyMap ℚ d (standardOrientationBallPointMap d y hy)
     (standardOrientationBallClass d) = relativeHomologyMap ℚ d
       (standardOrientationBallPointMap d 0 (zero_mem_standardOrientationBall d) ≫
-        translationPointComplementPairMap (StandardRealModel d) y)
+        translationPointComplementPairMap (Fin d → ℝ) y)
       (standardOrientationBallClass d) at h
   simpa only [relativeHomologyMap_comp, LinearMap.comp_apply,
     standardOrientationBallClass_restrict_zero] using h

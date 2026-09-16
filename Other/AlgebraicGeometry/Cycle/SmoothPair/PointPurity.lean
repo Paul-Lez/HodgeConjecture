@@ -106,7 +106,7 @@ theorem smoothClosedPointNormalTargetPairMap_comp_inclusion :
 /-- The actual normal model sends the fixed standard class to the exact ambient chart class. -/
 theorem smoothClosedPointNormalModelPairMap_localClass :
     relativeHomologyMap ℚ (2 * d) (smoothClosedPointNormalModelPairMap X Y i d z V hzV)
-      (standardComplexLocalClass d) =
+      (standardComplexLocalClass ℚ d) =
         localClassOfChart d (localChart X d (Point.map i z)) (Point.map i z)
           (mem_localChart_source X d (Point.map i z)) := by
   rw [← smoothClosedPointNormalTargetPairMap_inverseChart]
@@ -126,7 +126,7 @@ theorem smoothClosedPointNormalClass_to_analyticPointLocalHomologyClass :
       relativeHomologyMap ℚ (2 * d)
         (normalSliceSection (Fin 0 → ℂ) d ≫
           (smoothClosedSupportNeighborhoodPairIso X Y i 0 d z V hzV).hom)
-        (standardComplexLocalClass d) := by
+        (standardComplexLocalClass ℚ d) := by
     rw [relativeHomologyMap_comp]
     rfl
   rw [hclass, ← LinearMap.comp_apply, ← relativeHomologyMap_comp, Category.assoc]

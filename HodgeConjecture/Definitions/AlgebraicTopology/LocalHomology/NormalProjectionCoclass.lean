@@ -50,7 +50,7 @@ def chartNormalProjectionCoclass (W : Set M) (hW : W ⊆ e.source) :
     -- The pullback to `H^{2c}(W, W \ S; ℚ)` of the normalized class in `H^{2c}(ℂ^c, ℂ^c \ {0}; ℚ)`.
     RelativeCohomology ℚ (neighborhoodSupportComplementPair W S) (2 * c) :=
   relativeCohomologyMap ℚ (2 * c) (chartNormalProjectionPair E c e S hS W hW)
-    (normalizedRelativeCoclass (standardComplexLocalClass c)
+    (normalizedRelativeCoclass (standardComplexLocalClass ℚ c)
       (standardComplexLocalClass_ne_zero_for_chart c))
 
 end AlgebraicTopology.Singular

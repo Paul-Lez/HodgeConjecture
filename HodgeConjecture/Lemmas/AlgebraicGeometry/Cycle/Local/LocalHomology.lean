@@ -114,13 +114,13 @@ def smoothClosedSupportNormalClass :
     RelativeHomology ℚ
       (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) (2 * (d - m)) :=
   (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
-    (2 * (d - m))).inv.hom (standardComplexLocalClass (d - m))
+    (2 * (d - m))).inv.hom (standardComplexLocalClass ℚ (d - m))
 
 @[simp] theorem smoothClosedSupportNormalClass_normalization :
     (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
       (2 * (d - m))).hom.hom
       (smoothClosedSupportNormalClass X Y i m d z V hzV) =
-        standardComplexLocalClass (d - m) :=
+        standardComplexLocalClass ℚ (d - m) :=
   ConcreteCategory.congr_hom
     (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
       (2 * (d - m))).inv_hom_id _

@@ -49,7 +49,7 @@ lemma stdSimplex_map_apply_eq_zero_of_notMem_range
 /-- A simplex in the simplicial boundary, realized affinely in punctured coordinate space. -/
 def standardAffineBoundarySimplex (d k : ℕ)
     (x : (∂Δ[d] : SSet.{0}).obj (op (SimplexCategory.mk k))) :
-    C(stdSimplex ℝ (Fin (k + 1)), ({0}ᶜ : Set (StandardRealModel d))) where
+    C(stdSimplex ℝ (Fin (k + 1)), ({0}ᶜ : Set (Fin d → ℝ))) where
   toFun t := ⟨standardAffineSimplex d (stdSimplex.map x.1 t), by
     obtain ⟨j, hj⟩ := (SSet.mem_boundary_iff_notMem_range x.1).mp x.2
     exact standardAffineSimplex_ne_zero_of_coord_zero d _ j

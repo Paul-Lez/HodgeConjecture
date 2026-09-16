@@ -72,7 +72,7 @@ lemma relativeHomologyMap_cast {P Q : TopPair} {m n : ℕ} (h : m = n)
 
 /-- The fixed inverse real/imaginary coordinate map as a continuous map. -/
 def standardRealToComplexMap (d : ℕ) :
-    TopCat.of (StandardRealModel (d * 2)) ⟶ TopCat.of (Fin d → ℂ) :=
+    TopCat.of (Fin (d * 2) → ℝ) ⟶ TopCat.of (Fin d → ℂ) :=
   TopCat.ofHom ⟨(complexRealHomeomorph d).symm, (complexRealHomeomorph d).symm.continuous⟩
 
 lemma standardRealToComplexMap_injective (d : ℕ) :
@@ -102,10 +102,10 @@ def standardComplexOrientationNeighborhoodClass (d : ℕ) :
 
 /-- The ordered coordinate map commutes exactly with translations, including the maps on
 punctured subspaces. -/
-lemma standardRealToComplexPair_translation (d : ℕ) (v : StandardRealModel (d * 2)) :
-    translationPointComplementPairMap (StandardRealModel (d * 2)) v ≫
+lemma standardRealToComplexPair_translation (d : ℕ) (v : Fin (d * 2) → ℝ) :
+    translationPointComplementPairMap (Fin (d * 2) → ℝ) v ≫
       imagePointPairMap (standardRealToComplexMap d) (standardRealToComplexMap_injective d) v =
-      standardRealToComplexPair d ≫
+      (standardComplexRealPairIso d).inv ≫
         translationPointComplementPairMap (Fin d → ℂ) (standardRealToComplexMap d v) := by
   apply MorphismProperty.Arrow.Hom.ext
   · ext w
@@ -123,7 +123,7 @@ theorem standardComplexOrientationNeighborhoodClass_restrict (d : ℕ) (y : Fin 
       (supportInclusionPairMap (TopCat.of (Fin d → ℂ)) (Set.singleton_subset_iff.mpr hy))
       (standardComplexOrientationNeighborhoodClass d) =
       relativeHomologyMap ℚ (2 * d) (translationPointComplementPairMap (Fin d → ℂ) y)
-        (standardComplexLocalClass d) := by
+        (standardComplexLocalClass ℚ d) := by
   obtain ⟨v, hv, rfl⟩ := hy
   rw [standardComplexOrientationNeighborhoodClass, relativeHomologyMap_cast]
   change (Nat.mul_comm d 2) ▸ relativeHomologyMap ℚ (d * 2) _
@@ -131,7 +131,7 @@ theorem standardComplexOrientationNeighborhoodClass_restrict (d : ℕ) (y : Fin 
   rw [← LinearMap.comp_apply, ← relativeHomologyMap_comp,
     imageSupportPairMap_restrict _ _ _ _ hv,
     relativeHomologyMap_comp, LinearMap.comp_apply,
-    show supportInclusionPairMap (TopCat.of (StandardRealModel (d * 2)))
+    show supportInclusionPairMap (TopCat.of (Fin (d * 2) → ℝ))
         (Set.singleton_subset_iff.mpr hv) = standardOrientationBallPointMap (d * 2) v hv from rfl,
     standardOrientationBallClass_restrict, ← LinearMap.comp_apply,
     ← relativeHomologyMap_comp, standardRealToComplexPair_translation,

@@ -94,11 +94,11 @@ def normalSliceRelativeHomologyIso (n : ℕ) :
 /-- The relative normal class uses the exact complex orientation, transported by the
 actual zero tangent section. -/
 def normalSliceClass : RelativeHomology ℚ (normalSlicePair E c) (2 * c) :=
-  relativeHomologyMap ℚ (2 * c) (normalSliceSection E c) (standardComplexLocalClass c)
+  relativeHomologyMap ℚ (2 * c) (normalSliceSection E c) (standardComplexLocalClass ℚ c)
 
 @[simp] theorem normalSliceProjection_class :
     relativeHomologyMap ℚ (2 * c) (normalSliceProjection E c) (normalSliceClass E c) =
-      standardComplexLocalClass c := by
+      standardComplexLocalClass ℚ c := by
   exact ConcreteCategory.congr_hom (normalSliceRelativeHomologyIso E c (2 * c)).inv_hom_id _
 
 end AlgebraicTopology.Singular

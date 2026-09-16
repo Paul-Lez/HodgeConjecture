@@ -96,7 +96,7 @@ theorem standardPuncturedPair_pathConnectedSpace (d : ℕ) (hd : 1 < d) :
     PathConnectedSpace (standardPuncturedPair d).snd := by
   apply isPathConnected_iff_pathConnectedSpace.mp
   apply isPathConnected_compl_singleton_of_one_lt_rank
-  simpa only [StandardRealModel, rank_fun', Fintype.card_fin] using
+  simpa only [rank_fun', Fintype.card_fin] using
     (show (1 : Cardinal) < (d : Cardinal) from by exact_mod_cast hd)
 
 /-- In a pair with nonempty subspace and path-connected ambient space, degree-zero
@@ -116,7 +116,7 @@ theorem standardLocalHomology_zero_isZero (d : ℕ) (hd : 0 < d) :
     IsZero (RelativeHomology ℚ (standardPuncturedPair d) 0) := by
   let : Nonempty (standardPuncturedPair d).snd := standardPuncturedPair_nonempty d hd
   let : PathConnectedSpace (standardPuncturedPair d).fst :=
-    inferInstanceAs (PathConnectedSpace (StandardRealModel d))
+    inferInstanceAs (PathConnectedSpace (Fin d → ℝ))
   exact relativeHomology_zero_isZero_of_pathConnected (standardPuncturedPair d)
 
 /-- Local degree-one homology vanishes in real dimension greater than one. -/
@@ -125,7 +125,7 @@ theorem standardLocalHomology_one_isZero (d : ℕ) (hd : 1 < d) :
   let : PathConnectedSpace (standardPuncturedPair d).snd :=
     standardPuncturedPair_pathConnectedSpace d hd
   let : PathConnectedSpace (standardPuncturedPair d).fst :=
-    inferInstanceAs (PathConnectedSpace (StandardRealModel d))
+    inferInstanceAs (PathConnectedSpace (Fin d → ℝ))
   apply HomologicalComplex.ExactAt.isZero_homology
   refine (relativeChainShortComplex_shortExact ℚ (standardPuncturedPair d)).exactAt_X₃ 1 ?_ ?_
   · exact (standardRealModel_homology_isZero d 1 (by omega)).epi _

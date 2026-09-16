@@ -62,12 +62,12 @@ lemma relativeSingular_homology_exact_relative (X : TopPair) (n : ℕ) :
 lemma standardSubspaceBoundaryChain_inclusion (n : ℕ) :
     standardSubspaceBoundaryChain n ≫
       ((chainPairFunctor ℚ).obj (standardPuncturedPair (n + 1))).hom.f n =
-    standardAmbientSimplexChain (n + 1) ≫
+    standardAmbientSimplexChain ℚ (n + 1) ≫
       ((chainPairFunctor ℚ).obj
         (standardPuncturedPair (n + 1))).right.d (n + 1) n := by
   rw [standardSubspaceBoundaryChain, Preadditive.sum_comp]
   simp_rw [Preadditive.zsmul_comp, standardFaceChain_inclusion]
-  exact (standardAmbientSimplexChain_boundary n).symm
+  exact (standardAmbientSimplexChain_boundary ℚ n).symm
 
 lemma standardSubspaceBoundaryChain_boundary (n : ℕ) :
     standardSubspaceBoundaryChain n ≫
@@ -97,8 +97,8 @@ def standardPuncturedBoundaryClass (n : ℕ) :
       (standardPuncturedPair (n + 1))).left.homologyπ n).hom) 1
 
 lemma standardLocalCycle_comp_relativeSingularBoundary (n : ℕ) :
-    standardLocalCycle (n + 1) ≫
-        (standardLocalRelativeChainComplex (n + 1)).homologyπ (n + 1) ≫
+    standardLocalCycle ℚ (n + 1) ≫
+        (standardLocalRelativeChainComplex ℚ (n + 1)).homologyπ (n + 1) ≫
         relativeSingularBoundary (standardPuncturedPair (n + 1)) n =
       standardPuncturedBoundaryCycle n ≫
         ((chainPairFunctor ℚ).obj
@@ -106,8 +106,8 @@ lemma standardLocalCycle_comp_relativeSingularBoundary (n : ℕ) :
   let hS := relativeChainShortComplex_shortExact ℚ
     (standardPuncturedPair (n + 1))
   exact hS.δ_eq (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
-    (standardLocalChain (n + 1)) (standardLocalChain_boundary_succ n)
-    (standardAmbientSimplexChain (n + 1)) rfl
+    (standardLocalChain ℚ (n + 1)) (standardLocalChain_boundary_succ ℚ n)
+    (standardAmbientSimplexChain ℚ (n + 1)) rfl
     (standardSubspaceBoundaryChain n) (standardSubspaceBoundaryChain_inclusion n)
     ((ComplexShape.down ℕ).next n) rfl
 
@@ -115,7 +115,7 @@ lemma standardLocalCycle_comp_relativeSingularBoundary (n : ℕ) :
 boundary of the standard affine simplex. -/
 lemma relativeSingularBoundary_standardLocalClass (n : ℕ) :
     (relativeSingularBoundary (standardPuncturedPair (n + 1)) n).hom
-        (standardLocalClass (n + 1)) =
+        (standardLocalClass ℚ (n + 1)) =
       standardPuncturedBoundaryClass n :=
   ConcreteCategory.congr_hom (standardLocalCycle_comp_relativeSingularBoundary n) 1
 
@@ -139,8 +139,8 @@ def rationalSingularHomologyIsoOfHomotopyEquiv
 
 /-- Positive-degree rational singular homology of a real coordinate space vanishes. -/
 lemma standardRealModel_homology_isZero (d k : ℕ) (hk : k ≠ 0) :
-    IsZero (Homology ℚ (TopCat.of (StandardRealModel d)) k) := by
-  let e := (ContractibleSpace.hequiv_unit (StandardRealModel d)).some
+    IsZero (Homology ℚ (TopCat.of (Fin d → ℝ)) k) := by
+  let e := (ContractibleSpace.hequiv_unit (Fin d → ℝ)).some
   exact (AlgebraicTopology.isZero_singularHomologyFunctor_of_totallyDisconnectedSpace
     (ModuleCat (R := ℚ)) k (ModuleCat.of ℚ ℚ) (TopCat.of Unit) hk).of_iso
       (rationalSingularHomologyIsoOfHomotopyEquiv k e)
@@ -162,7 +162,7 @@ lemma standardPuncturedRelativeBoundaryIso_hom (n : ℕ) (hn : n ≠ 0) :
 /-- Above dimension one, nonvanishing of the standard local class is equivalent to nonvanishing
 of its explicit oriented boundary in the punctured Euclidean space. -/
 lemma standardLocalClass_succ_ne_zero_iff (n : ℕ) (hn : n ≠ 0) :
-    standardLocalClass (n + 1) ≠ 0 ↔ standardPuncturedBoundaryClass n ≠ 0 := by
+    standardLocalClass ℚ (n + 1) ≠ 0 ↔ standardPuncturedBoundaryClass n ≠ 0 := by
   rw [← relativeSingularBoundary_standardLocalClass n,
     ← standardPuncturedRelativeBoundaryIso_hom n hn]
   exact (standardPuncturedRelativeBoundaryIso n hn).toLinearEquiv.map_ne_zero_iff.symm
@@ -170,16 +170,16 @@ lemma standardLocalClass_succ_ne_zero_iff (n : ℕ) (hn : n ≠ 0) :
 /-- Above dimension one, the standard local class spans exactly when its explicit oriented
 boundary spans the preceding homology of the punctured Euclidean space. -/
 lemma span_standardLocalClass_succ_eq_top_iff (n : ℕ) (hn : n ≠ 0) :
-    Submodule.span ℚ {standardLocalClass (n + 1)} = ⊤ ↔
+    Submodule.span ℚ {standardLocalClass ℚ (n + 1)} = ⊤ ↔
       Submodule.span ℚ {standardPuncturedBoundaryClass n} = ⊤ := by
   let e := (standardPuncturedRelativeBoundaryIso n hn).toLinearEquiv
-  have he : e (standardLocalClass (n + 1)) = standardPuncturedBoundaryClass n := by
+  have he : e (standardLocalClass ℚ (n + 1)) = standardPuncturedBoundaryClass n := by
     change (standardPuncturedRelativeBoundaryIso n hn).hom.hom
-      (standardLocalClass (n + 1)) = _
+      (standardLocalClass ℚ (n + 1)) = _
     rw [standardPuncturedRelativeBoundaryIso_hom,
       relativeSingularBoundary_standardLocalClass]
   have hmap :
-      (Submodule.span ℚ {standardLocalClass (n + 1)}).map e.toLinearMap =
+      (Submodule.span ℚ {standardLocalClass ℚ (n + 1)}).map e.toLinearMap =
         Submodule.span ℚ {standardPuncturedBoundaryClass n} := by
     rw [Submodule.map_span]
     simp [he]
@@ -196,14 +196,14 @@ lemma span_standardLocalClass_succ_eq_top_iff (n : ℕ) (hn : n ≠ 0) :
 /-! ### The standard class in dimension one -/
 
 /-- The point `-1` of the standard punctured real line. -/
-def standardNegativePoint : ({0}ᶜ : Set (StandardRealModel 1)) := ⟨fun _ ↦ -1, by
+def standardNegativePoint : ({0}ᶜ : Set (Fin 1 → ℝ)) := ⟨fun _ ↦ -1, by
   simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
   intro h
   have := congr_fun h 0
   norm_num at this⟩
 
 /-- The point `1` of the standard punctured real line. -/
-def standardPositivePoint : ({0}ᶜ : Set (StandardRealModel 1)) := ⟨fun _ ↦ 1, by
+def standardPositivePoint : ({0}ᶜ : Set (Fin 1 → ℝ)) := ⟨fun _ ↦ 1, by
   simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
   intro h
   have := congr_fun h 0
@@ -216,15 +216,15 @@ lemma standardPuncturedLine_components_ne :
   intro h
   have hj : Joined standardNegativePoint standardPositivePoint := Quotient.exact h
   obtain ⟨p⟩ := hj
-  let g : unitInterval → ℝ := fun t ↦ (p t : StandardRealModel 1) 0
+  let g : unitInterval → ℝ := fun t ↦ (p t : Fin 1 → ℝ) 0
   have hg : Continuous g :=
     (((continuous_apply (0 : Fin 1)).comp continuous_subtype_val).comp p.continuous)
   have hg0 : g 0 = -1 := by
-    change (p 0 : StandardRealModel 1) 0 = -1
+    change (p 0 : Fin 1 → ℝ) 0 = -1
     rw [show p 0 = standardNegativePoint from p.source]
     rfl
   have hg1 : g 1 = 1 := by
-    change (p 1 : StandardRealModel 1) 0 = 1
+    change (p 1 : Fin 1 → ℝ) 0 = 1
     rw [show p 1 = standardPositivePoint from p.target]
     rfl
   have hz : (0 : ℝ) ∈ Set.range g :=
@@ -274,7 +274,7 @@ def standardPuncturedFaceCycle (i : Fin 2) :
     ModuleCat.of ℚ ℚ ⟶
       ((chainPairFunctor ℚ).obj (standardPuncturedPair 1)).left.cycles 0 :=
   ((chainPairFunctor ℚ).obj (standardPuncturedPair 1)).left.liftCycles
-    (standardSubspaceFaceChain 0 i) 0 (by simp) (by simp)
+    (standardSubspaceFaceChain ℚ 0 i) 0 (by simp) (by simp)
 
 lemma standardPuncturedBoundaryCycle_zero_eq :
     standardPuncturedBoundaryCycle 0 =
@@ -284,8 +284,8 @@ lemma standardPuncturedBoundaryCycle_zero_eq :
   rw [Preadditive.sub_comp]
   simp only [standardPuncturedBoundaryCycle, standardPuncturedFaceCycle,
     HomologicalComplex.liftCycles_i]
-  change (∑ i : Fin 2, (-1 : ℤ) ^ i.val • standardSubspaceFaceChain 0 i) =
-    standardSubspaceFaceChain 0 0 - standardSubspaceFaceChain 0 1
+  change (∑ i : Fin 2, (-1 : ℤ) ^ i.val • standardSubspaceFaceChain ℚ 0 i) =
+    standardSubspaceFaceChain ℚ 0 0 - standardSubspaceFaceChain ℚ 0 1
   norm_num
   rw [sub_eq_add_neg]
 
@@ -353,7 +353,7 @@ lemma standardPuncturedBoundaryClass_zero_ne_zero :
 
 /-- The explicit standard local class is nonzero in
 `H₁(ℝ, ℝ ∖ {0}; ℚ)`. -/
-lemma standardLocalClass_one_ne_zero : standardLocalClass 1 ≠ 0 := by
+lemma standardLocalClass_one_ne_zero : standardLocalClass ℚ 1 ≠ 0 := by
   intro h
   apply standardPuncturedBoundaryClass_zero_ne_zero
   rw [← relativeSingularBoundary_standardLocalClass 0, h, map_zero]

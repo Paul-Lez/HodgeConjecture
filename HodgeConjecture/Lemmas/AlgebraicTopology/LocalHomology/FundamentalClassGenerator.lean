@@ -38,7 +38,7 @@ namespace AlgebraicTopology.Singular
 
 def standardComplexLocalClassMul (p : ℕ) :
     RelativeHomology ℚ (standardComplexPuncturedPair p) (p * 2) :=
-  (standardComplexRealRelativeHomologyIso p).inv.hom (standardLocalClass (p * 2))
+  (standardComplexRealRelativeHomologyIso ℚ p).inv.hom (standardLocalClass ℚ (p * 2))
 
 /-- Transport a relative homology class along an equality of degrees. -/
 def relativeHomologyDegreeCast {X : TopPair} {i j : ℕ} (h : i = j)
@@ -55,18 +55,18 @@ lemma span_relativeHomologyDegreeCast_eq_top_iff {X : TopPair} {i j : ℕ} (h : 
       Submodule.span ℚ {z} = ⊤ := by aesop
 
 lemma standardComplexRealRelativeHomologyIso_hom_standardComplexLocalClassMul (p : ℕ) :
-    (standardComplexRealRelativeHomologyIso p).hom.hom
+    (standardComplexRealRelativeHomologyIso ℚ p).hom.hom
         (standardComplexLocalClassMul p) =
-      standardLocalClass (p * 2) := by
-  exact (standardComplexRealRelativeHomologyIso p).inv_hom_id_apply
-    (standardLocalClass (p * 2))
+      standardLocalClass ℚ (p * 2) := by
+  exact (standardComplexRealRelativeHomologyIso ℚ p).inv_hom_id_apply
+    (standardLocalClass ℚ (p * 2))
 
 lemma standardComplexLocalClassMul_ne_zero_iff (p : ℕ) :
-    standardComplexLocalClassMul p ≠ 0 ↔ standardLocalClass (p * 2) ≠ 0 := by
-  exact (standardComplexRealRelativeHomologyIso p).symm.toLinearEquiv.map_ne_zero_iff
+    standardComplexLocalClassMul p ≠ 0 ↔ standardLocalClass ℚ (p * 2) ≠ 0 := by
+  exact (standardComplexRealRelativeHomologyIso ℚ p).symm.toLinearEquiv.map_ne_zero_iff
 
 lemma standardComplexLocalClass_ne_zero_iff (p : ℕ) :
-    standardComplexLocalClass p ≠ 0 ↔ standardLocalClass (p * 2) ≠ 0 := by
+    standardComplexLocalClass ℚ p ≠ 0 ↔ standardLocalClass ℚ (p * 2) ≠ 0 := by
   change relativeHomologyDegreeCast (Nat.mul_comm p 2)
       (standardComplexLocalClassMul p) ≠ 0 ↔ _
   rw [relativeHomologyDegreeCast_ne_zero_iff,
@@ -74,13 +74,13 @@ lemma standardComplexLocalClass_ne_zero_iff (p : ℕ) :
 
 lemma span_standardComplexLocalClassMul_eq_top_iff (p : ℕ) :
     Submodule.span ℚ {standardComplexLocalClassMul p} = ⊤ ↔
-      Submodule.span ℚ {standardLocalClass (p * 2)} = ⊤ := by
-  let e := (standardComplexRealRelativeHomologyIso p).toLinearEquiv
-  have he : e (standardComplexLocalClassMul p) = standardLocalClass (p * 2) :=
+      Submodule.span ℚ {standardLocalClass ℚ (p * 2)} = ⊤ := by
+  let e := (standardComplexRealRelativeHomologyIso ℚ p).toLinearEquiv
+  have he : e (standardComplexLocalClassMul p) = standardLocalClass ℚ (p * 2) :=
     standardComplexRealRelativeHomologyIso_hom_standardComplexLocalClassMul p
   have hmap :
       (Submodule.span ℚ {standardComplexLocalClassMul p}).map e.toLinearMap =
-        Submodule.span ℚ {standardLocalClass (p * 2)} := by
+        Submodule.span ℚ {standardLocalClass ℚ (p * 2)} := by
     rw [Submodule.map_span]
     simp [he]
   have etop : (⊤ : Submodule ℚ _).map e.toLinearMap = ⊤ := by
@@ -94,8 +94,8 @@ lemma span_standardComplexLocalClassMul_eq_top_iff (p : ℕ) :
     rw [hmap, h, etop]
 
 lemma span_standardComplexLocalClass_eq_top_iff (p : ℕ) :
-    Submodule.span ℚ {standardComplexLocalClass p} = ⊤ ↔
-      Submodule.span ℚ {standardLocalClass (p * 2)} = ⊤ := by
+    Submodule.span ℚ {standardComplexLocalClass ℚ p} = ⊤ ↔
+      Submodule.span ℚ {standardLocalClass ℚ (p * 2)} = ⊤ := by
   change Submodule.span ℚ
       {relativeHomologyDegreeCast (Nat.mul_comm p 2) (standardComplexLocalClassMul p)} = ⊤ ↔ _
   rw [span_relativeHomologyDegreeCast_eq_top_iff,
@@ -126,7 +126,7 @@ noncomputable instance standardLocalProjectionZeroIsIso :
 /-- The relative-chain projection with its ambient source exposed through the pair functor. -/
 def standardRelativeChainProjectionZero :
     ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right ⟶
-      standardLocalRelativeChainComplex 0 :=
+      standardLocalRelativeChainComplex ℚ 0 :=
   relativeChainProjection ℚ (standardPuncturedPair 0)
 
 noncomputable instance standardRelativeChainProjectionZeroIsIso :
@@ -143,20 +143,20 @@ def standardRelativeHomologyProjectionZeroIso :
 def standardLocalRelativeHomologyZeroIso :
     RelativeHomology ℚ (standardPuncturedPair 0) 0 ≅ ModuleCat.of ℚ ℚ :=
   letI (j : Fin 0) : TotallyDisconnectedSpace ℝ := Fin.elim0 j
-  letI : TotallyDisconnectedSpace (StandardRealModel 0) := inferInstance
+  letI : TotallyDisconnectedSpace (Fin 0 → ℝ) := inferInstance
   standardRelativeHomologyProjectionZeroIso.symm ≪≫
       singularHomologyFunctorZeroOfTotallyDisconnectedSpace
         (ModuleCat (R := ℚ)) (ModuleCat.of ℚ ℚ)
-          (TopCat.of (StandardRealModel 0)) ≪≫
+          (TopCat.of (Fin 0 → ℝ)) ≪≫
       CategoryTheory.Limits.coproductUniqueIso
-        (fun _ : StandardRealModel 0 ↦ ModuleCat.of ℚ ℚ)
+        (fun _ : Fin 0 → ℝ ↦ ModuleCat.of ℚ ℚ)
 
 /-- The ambient zero-cycle represented by the unique singular point of `ℝ⁰`. -/
 def standardAmbientCycleZero :
     ModuleCat.of ℚ ℚ ⟶
       ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right.cycles 0 :=
   ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right.liftCycles
-    (standardAmbientSimplexChain 0) 0 (by simp) (by
+    (standardAmbientSimplexChain ℚ 0) 0 (by simp) (by
       rw [((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right.shape 0 0 (by simp)]
       exact comp_zero)
 
@@ -170,8 +170,8 @@ lemma standardAmbientCycleZero_projection :
     standardAmbientCycleZero ≫
         HomologicalComplex.cyclesMap
           standardRelativeChainProjectionZero 0 =
-      standardLocalCycle 0 := by
-  apply (cancel_mono ((standardLocalRelativeChainComplex 0).iCycles 0)).mp
+      standardLocalCycle ℚ 0 := by
+  apply (cancel_mono ((standardLocalRelativeChainComplex ℚ 0).iCycles 0)).mp
   rw [Category.assoc, HomologicalComplex.cyclesMap_i, standardLocalCycle_inclusion,
     ← Category.assoc, standardAmbientCycleZero, HomologicalComplex.liftCycles_i]
   rfl
@@ -179,12 +179,12 @@ lemma standardAmbientCycleZero_projection :
 lemma standardAmbientClassZero_projection :
     standardRelativeHomologyProjectionZeroIso.hom.hom
         standardAmbientClassZero =
-      standardLocalClass 0 := by
+      standardLocalClass ℚ 0 := by
   have hmor :
       standardAmbientCycleZero ≫
           ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right.homologyπ 0 ≫
           standardRelativeHomologyProjectionZeroIso.hom =
-        standardLocalCycle 0 ≫ (standardLocalRelativeChainComplex 0).homologyπ 0 := by
+        standardLocalCycle ℚ 0 ≫ (standardLocalRelativeChainComplex ℚ 0).homologyπ 0 := by
     change standardAmbientCycleZero ≫
       ((chainPairFunctor ℚ).obj (standardPuncturedPair 0)).right.homologyπ 0 ≫
         HomologicalComplex.homologyMap standardRelativeChainProjectionZero 0 = _
@@ -226,7 +226,7 @@ lemma standardAmbientClassZero_epsilon :
   exact ConcreteCategory.congr_hom hmor 1
 
 lemma standardLocalClass_zero_epsilon :
-    standardLocalRelativeHomologyZeroε.hom (standardLocalClass 0) = 1 := by
+    standardLocalRelativeHomologyZeroε.hom (standardLocalClass ℚ 0) = 1 := by
   rw [← standardAmbientClassZero_projection]
   change standardAmbientHomologyZeroε.hom
     (standardRelativeHomologyProjectionZeroIso.inv.hom
@@ -234,35 +234,35 @@ lemma standardLocalClass_zero_epsilon :
   rw [standardRelativeHomologyProjectionZeroIso.hom_inv_id_apply]
   exact standardAmbientClassZero_epsilon
 
-lemma standardLocalClass_zero_ne_zero : standardLocalClass 0 ≠ 0 := by
+lemma standardLocalClass_zero_ne_zero : standardLocalClass ℚ 0 ≠ 0 := by
   intro h
   have := standardLocalClass_zero_epsilon
   rw [h, map_zero] at this
   exact zero_ne_one this
 
 lemma span_standardLocalClass_zero_eq_top :
-    Submodule.span ℚ {standardLocalClass 0} = ⊤ := by
+    Submodule.span ℚ {standardLocalClass ℚ 0} = ⊤ := by
   let e := standardLocalRelativeHomologyZeroIso.toLinearEquiv
-  have he : e (standardLocalClass 0) ≠ (0 : ℚ) :=
+  have he : e (standardLocalClass ℚ 0) ≠ (0 : ℚ) :=
     e.map_ne_zero_iff.mpr standardLocalClass_zero_ne_zero
   have hmap :
-      (Submodule.span ℚ {standardLocalClass 0}).map e.toLinearMap =
-        Submodule.span ℚ {e (standardLocalClass 0)} := by
+      (Submodule.span ℚ {standardLocalClass ℚ 0}).map e.toLinearMap =
+        Submodule.span ℚ {e (standardLocalClass ℚ 0)} := by
     rw [Submodule.map_span]
     simp only [Set.image_singleton]
-    change Submodule.span ℚ {e (standardLocalClass 0)} = _
+    change Submodule.span ℚ {e (standardLocalClass ℚ 0)} = _
     rfl
-  have hone : Submodule.span ℚ {e (standardLocalClass 0)} = ⊤ := by
-    apply (Submodule.span_singleton_eq_top_iff ℚ (e (standardLocalClass 0))).mpr
+  have hone : Submodule.span ℚ {e (standardLocalClass ℚ 0)} = ⊤ := by
+    apply (Submodule.span_singleton_eq_top_iff ℚ (e (standardLocalClass ℚ 0))).mpr
     intro q
-    exact ⟨q / e (standardLocalClass 0), by
+    exact ⟨q / e (standardLocalClass ℚ 0), by
       simpa only [smul_eq_mul] using div_mul_cancel₀ q he⟩
   apply Submodule.map_injective_of_injective e.injective
   rw [hmap, hone, Submodule.map_top]
   exact (LinearMap.range_eq_top.mpr e.surjective).symm
 
 lemma span_standardComplexLocalClass_zero_eq_top :
-    Submodule.span ℚ {standardComplexLocalClass 0} = ⊤ := by
+    Submodule.span ℚ {standardComplexLocalClass ℚ 0} = ⊤ := by
   have h := (span_standardComplexLocalClassMul_eq_top_iff 0).mpr
     span_standardLocalClass_zero_eq_top
   simpa [standardComplexLocalClass, standardComplexLocalClassMul] using h
