@@ -103,12 +103,12 @@ def standardFaceSimplex (n : ℕ) (i : Fin (n + 2)) :
 abbrev standardLocalRelativeChainComplex (d : ℕ) :=
   (relativeChainFunctor R).obj (standardPuncturedPair d)
 
-/-- A component of the projection to the standard relative chain complex, in the arrow form
-that `chainPairFunctor` produces. -/
-def standardLocalProjectionComponent (d k : ℕ) :
-    ((chainPairFunctor R).obj (standardPuncturedPair d)).right.X k ⟶
-      (standardLocalRelativeChainComplex R d).X k :=
-  (relativeChainProjection R (standardPuncturedPair d)).f k
+/-- The projection to the standard relative chain complex, in the arrow form that
+`chainPairFunctor` produces. -/
+def standardLocalProjection (d : ℕ) :
+    ((chainPairFunctor R).obj (standardPuncturedPair d)).right ⟶
+      standardLocalRelativeChainComplex R d :=
+  relativeChainProjection R (standardPuncturedPair d)
 
 /-- The standard affine simplex as an absolute singular chain. -/
 def standardAmbientSimplexChain (d : ℕ) :
@@ -121,7 +121,7 @@ def standardAmbientSimplexChain (d : ℕ) :
 `(ℝ^d, ℝ^d ∖ {0})`. -/
 def standardLocalChain (d : ℕ) :
     ModuleCat.of R R ⟶ (standardLocalRelativeChainComplex R d).X d :=
-  standardAmbientSimplexChain R d ≫ standardLocalProjectionComponent R d d
+  standardAmbientSimplexChain R d ≫ (standardLocalProjection R d).f d
 
 /-- A face of the standard simplex as an absolute singular chain. -/
 def standardAmbientFaceChain (n : ℕ) (i : Fin (n + 2)) :
@@ -159,23 +159,16 @@ lemma standardAmbientSimplexChain_boundary (n : ℕ) :
     (ModuleCat.of R R) (standardSingularSimplex (n + 1))
 
 lemma standardAmbientFaceChain_projection (n : ℕ) (i : Fin (n + 2)) :
-    standardAmbientFaceChain R n i ≫ standardLocalProjectionComponent R (n + 1) n = 0 := by
-  have hzero : ((chainPairFunctor R).obj (standardPuncturedPair (n + 1))).hom.f n ≫
-      standardLocalProjectionComponent R (n + 1) n = 0 :=
-    congrArg (fun f => HomologicalComplex.Hom.f f n)
-      (subspaceChainMap_relativeChainProjection R (standardPuncturedPair (n + 1)))
-  rw [← standardFaceChain_inclusion, Category.assoc, hzero, comp_zero]
+    standardAmbientFaceChain R n i ≫ (standardLocalProjection R (n + 1)).f n = 0 := by
+  rw [← standardFaceChain_inclusion, Category.assoc, ← HomologicalComplex.comp_f,
+    standardLocalProjection, subspaceChainMap_relativeChainProjection,
+    HomologicalComplex.zero_f, comp_zero]
 
 lemma standardLocalChain_boundary_succ (n : ℕ) :
     standardLocalChain R (n + 1) ≫
       (standardLocalRelativeChainComplex R (n + 1)).d (n + 1) n = 0 := by
-  have hcomm : standardLocalProjectionComponent R (n + 1) (n + 1) ≫
-      (standardLocalRelativeChainComplex R (n + 1)).d (n + 1) n =
-    ((chainPairFunctor R).obj (standardPuncturedPair (n + 1))).right.d (n + 1) n ≫
-      standardLocalProjectionComponent R (n + 1) n :=
-    (relativeChainProjection R (standardPuncturedPair (n + 1))).comm (n + 1) n
-  rw [standardLocalChain, Category.assoc, hcomm, ← Category.assoc,
-    standardAmbientSimplexChain_boundary, Preadditive.sum_comp]
+  rw [standardLocalChain, Category.assoc, (standardLocalProjection R (n + 1)).comm (n + 1) n,
+    ← Category.assoc, standardAmbientSimplexChain_boundary, Preadditive.sum_comp]
   refine Finset.sum_eq_zero fun i _ => ?_
   rw [Preadditive.zsmul_comp, standardAmbientFaceChain_projection, smul_zero]
 
