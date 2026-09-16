@@ -35,9 +35,11 @@ variable {M : Type} [TopologicalSpace M]
 
 variable (X : TopCat.{0}) (S : Set X) (n : ℕ)
 
-/-- The literal presheaf of rational relative cohomology of neighborhood/support pairs.
-We retain the rational group but forget its scalar structure for the additive sheaf API. -/
+/-- The presheaf `V ↦ H^n(V, V \ S; ℚ)` on `X`, for a subset `S ⊆ X`, with restriction maps the
+pullbacks along inclusions of pairs. The rational vector space is kept as an additive group
+only. -/
 def supportRelativeCohomologyPresheaf : TopCat.Presheaf AddCommGrpCat X where
+  -- `V ↦ H^n(V, V \ S; ℚ)`.
   obj V := AddCommGrpCat.of (RelativeCohomology ℚ
     (neighborhoodSupportComplementPair (V.unop : Set X) S) n)
   map {U V} f := AddCommGrpCat.ofHom
@@ -62,8 +64,10 @@ def supportRelativeCohomologyPresheaf : TopCat.Presheaf AddCommGrpCat X where
             (W := (V.unop : Set X)) (V := (U.unop : Set X)) (leOfHom f.unop) S) a)
     rw [← LinearMap.comp_apply, ← relativeCohomologyMap_comp, neighborhoodSupportInclusionPairMap_comp]
 
-/-- Actual sheafification, not a presupposed sheaf property of relative cohomology. -/
+/-- `𝓗^n_S`, the sheaf on `X` associated with the presheaf `V ↦ H^n(V, V \ S; ℚ)`. This is a
+sheafification: relative cohomology is not itself a sheaf. -/
 def supportRelativeCohomologySheaf : TopCat.Sheaf AddCommGrpCat X :=
+  -- The sheaf associated with `V ↦ H^n(V, V \ S; ℚ)`; write it `𝓗^n_S`.
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj
     (supportRelativeCohomologyPresheaf X S n)
 
@@ -72,8 +76,9 @@ def supportRelativeCohomologyToSheaf :
     supportRelativeCohomologyPresheaf X S n ⟶ (supportRelativeCohomologySheaf X S n).obj :=
   toSheafify (Opens.grothendieckTopology X) _
 
-/-- Germ of an actual relative coclass in the sheafification. -/
+/-- The germ at `x ∈ V` of a class `a ∈ H^n(V, V \ S; ℚ)`, in the stalk `(𝓗^n_S)_x`. -/
 def supportRelativeCohomologyGerm (V : Opens X) (x : X) (hx : x ∈ V)
+    -- A class in `H^n(V, V \ S; ℚ)`.
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n) :
     (supportRelativeCohomologySheaf X S n).presheaf.stalk x :=
   (supportRelativeCohomologySheaf X S n).presheaf.germ V x hx

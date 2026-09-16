@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularFlasqueModel
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
@@ -50,11 +52,16 @@ def openIntersectionPairIsoSupportComplement (S : Set X) (hS : IsClosed S) (V : 
 
 variable [T2Space X] [∀ V : Opens X, ParacompactSpace V] (U V : Opens X)
 
-/-- Actual local supported singular cohomology computes the literal relative pair
-`(V, V ∩ U)`, in supported degree `n`. -/
+/-- `H^n_{X \ U}(V; ℚ) ≅ H^n(V, V ⊓ U; ℚ)`: the cohomology of sections over `V` of
+`Γ_{X \ U}(C^•_sing)` is the rational singular cohomology of the pair `(V, V ⊓ U)`. -/
 def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
+    -- `H^n_{X \ U}(V; ℚ) ≅ H^n(V, V ⊓ U; ℚ)`.
+    ((((TopCat.Sheaf.supportEvaluation X
+      -- Sections over the open `V`.
+      V).mapHomologicalComplex ℤᵘᵖ).obj
+      -- `Γ_{X \ U}` of the singular-cochain sheaf complex.
       (supportedRationalSingularCochainComplex X U))).homology (n : ℤ) ≃+
+        -- `H^n` of the pair `(V, V ⊓ U)`.
         RelativeCohomology ℚ (openInclusionPair X (Opens.infLELeft V U)) n :=
   (TopCat.Sheaf.supportedSectionHomologyIsoRestrictionCone X U V
       (rationalSingularCochainComplex X) (fun _ => inferInstance) (n : ℤ)).addCommGroupIsoToAddEquiv
@@ -65,12 +72,17 @@ def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
         ((n : ℤ) - 1)).addCommGroupIsoToAddEquiv
     |>.trans (openSingularSheafRestrictionConeCohomologyEquivRelative X (Opens.infLELeft V U) n)
 
-/-- Actual local supported singular cohomology computes `(V, V \ S)`, with the pair
-homeomorphism displayed explicitly rather than silently replacing an inclusion. -/
+/-- `H^n_S(V; ℚ) ≅ H^n(V, V \ S; ℚ)` for a closed `S ⊆ X`, through the explicit identification
+of the pairs `(V, V ⊓ (X \ S))` and `(V, V \ S)`. -/
 def supportedRationalSingularSectionCohomologyEquivSupportComplement
     (S : Set X) (hS : IsClosed S) (V : Opens X) (n : ℕ) :
-    ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj
+    -- `H^n_S(V; ℚ) ≅ H^n(V, V \ S; ℚ)`.
+    ((((TopCat.Sheaf.supportEvaluation X
+      -- Sections over the open `V`.
+      V).mapHomologicalComplex ℤᵘᵖ).obj
+      -- `Γ_S` of the singular-cochain sheaf complex.
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ) ≃+
+        -- `H^n` of the pair `(V, V \ S)`.
         RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n :=
   (supportedRationalSingularSectionCohomologyEquivRelative X ⟨Sᶜ, hS.isOpen_compl⟩ V n).trans
     (((HomologicalComplex.homologyFunctor (ModuleCat ℚ) (ComplexShape.up ℕ) n).mapIso

@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportHypercohomology
 
 import Mathlib.Algebra.Homology.HomotopyCategory.Plus
@@ -81,13 +83,13 @@ theorem globalSectionsNat_map_quasiIso
     HomologicalComplex.extendMap f ComplexShape.embeddingUpNat
   let eK := HomologicalComplex.mapExtendCanonicalIso Γ K ComplexShape.embeddingUpNat
   let eL := HomologicalComplex.mapExtendCanonicalIso Γ L ComplexShape.embeddingUpNat
-  let : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map fInt) :=
+  let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map fInt) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       fInt 0 0 (extendNat_term_isFlasque K hK) (extendNat_term_isFlasque L hL)
   have h : HomologicalComplex.extendMap
         ((Γ.mapHomologicalComplex (ComplexShape.up ℕ)).map f)
           ComplexShape.embeddingUpNat ≫ eL.inv =
-      eK.inv ≫ (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map fInt :=
+      eK.inv ≫ (Γ.mapHomologicalComplex ℤᵘᵖ).map fInt :=
     HomologicalComplex.mapExtendCanonicalIso_inv_naturality Γ f ComplexShape.embeddingUpNat
   have hcomp : QuasiIso
       (HomologicalComplex.extendMap
@@ -364,7 +366,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
     globalRawToSingularSheafInt X ≫
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-            (ComplexShape.up ℤ)).map
+            ℤᵘᵖ).map
           (naturalSingularResolutionRestriction X Z hZ) =
       globalRawSingularRestrictionInt ℚ
           (TopCat.of (ComplexPoint X))
@@ -384,7 +386,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
   have hg : HomologicalComplex.extendMap
         ((Γ.mapHomologicalComplex (ComplexShape.up ℕ)).map g)
           ComplexShape.embeddingUpNat ≫ eD.inv =
-      eS.inv ≫ (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map
+      eS.inv ≫ (Γ.mapHomologicalComplex ℤᵘᵖ).map
         (HomologicalComplex.extendMap g ComplexShape.embeddingUpNat) :=
     HomologicalComplex.mapExtendCanonicalIso_inv_naturality Γ g ComplexShape.embeddingUpNat
   have hab : a ≫
@@ -392,7 +394,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
     globalNaturalSingularResolutionRestrictionNat_naturality
       X Z hZ
   change (HomologicalComplex.extendMap a ComplexShape.embeddingUpNat ≫ eS.inv) ≫
-      (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map
+      (Γ.mapHomologicalComplex ℤᵘᵖ).map
         (HomologicalComplex.extendMap g ComplexShape.embeddingUpNat) =
     HomologicalComplex.extendMap f ComplexShape.embeddingUpNat ≫
       (HomologicalComplex.extendMap b ComplexShape.embeddingUpNat ≫ eD.inv)
@@ -412,7 +414,7 @@ def globalRawSupportConeToGlobalNaturalSingularCone
       CochainComplex.mappingCone
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-            (ComplexShape.up ℤ)).map
+            ℤᵘᵖ).map
           (naturalSingularResolutionRestriction X Z hZ)) :=
   CochainComplex.mappingCone.map
     (globalRawSingularRestrictionInt ℚ
@@ -420,7 +422,7 @@ def globalRawSupportConeToGlobalNaturalSingularCone
       Zᶜ)
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map
+        ℤᵘᵖ).map
       (naturalSingularResolutionRestriction X Z hZ))
     (globalRawToSingularSheafInt X)
     (globalRawComplementToDerivedPushforwardInt X Z hZ)
@@ -448,7 +450,7 @@ noncomputable instance globalRawSupportConeToGlobalNaturalSingularCone_quasiIso
       Zᶜ)
     (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map
+        ℤᵘᵖ).map
       (naturalSingularResolutionRestriction X Z hZ))
     (globalRawToSingularSheafInt X)
     (globalRawComplementToDerivedPushforwardInt X Z hZ) _)

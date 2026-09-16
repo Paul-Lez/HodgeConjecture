@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueComparison
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
@@ -44,7 +46,7 @@ def sectionComplexRestriction {I : Type*} (c : ComplexShape I)
 theorem sectionComplexRestriction_extend
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℕ)
     {V W : Opens X} (i : W ⟶ V) :
-    sectionComplexRestriction X (.up ℤ) (K.extend ComplexShape.embeddingUpNat) i ≫
+    sectionComplexRestriction X ℤᵘᵖ (K.extend ComplexShape.embeddingUpNat) i ≫
       (HomologicalComplex.mapExtendCanonicalIso (supportEvaluation X W) K
         ComplexShape.embeddingUpNat).hom =
       (HomologicalComplex.mapExtendCanonicalIso (supportEvaluation X V) K
@@ -59,7 +61,7 @@ def sectionComplexRestrictionExtendConeIso
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℕ)
     {V W : Opens X} (i : W ⟶ V) :
     CochainComplex.mappingCone
-      (sectionComplexRestriction X (.up ℤ) (K.extend ComplexShape.embeddingUpNat) i) ≅
+      (sectionComplexRestriction X ℤᵘᵖ (K.extend ComplexShape.embeddingUpNat) i) ≅
       CochainComplex.mappingCone
         (HomologicalComplex.extendMap (sectionComplexRestriction X (.up ℕ) K i)
           ComplexShape.embeddingUpNat) :=
@@ -77,7 +79,7 @@ variable (U V : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 /-- The third term of the actual support sequence is sections on the actual intersection. -/
 def supportRestrictionSectionsIntersectionIso :
     (supportRestrictionSectionsComplexShortComplex X U V K).X₃ ≅
-      ((supportEvaluation X (V ⊓ U)).mapHomologicalComplex (.up ℤ)).obj K :=
+      ((supportEvaluation X (V ⊓ U)).mapHomologicalComplex ℤᵘᵖ).obj K :=
   HomologicalComplex.Hom.isoOfComponents
     (fun n => supportedOutsideIntersectionIso X U V (K.X n))
     (fun n m _ => (K.d n m).hom.naturality
@@ -87,7 +89,7 @@ def supportRestrictionSectionsIntersectionIso :
 theorem supportRestrictionSectionsIntersectionIso_restriction :
     (supportRestrictionSectionsComplexShortComplex X U V K).g ≫
       (supportRestrictionSectionsIntersectionIso X U V K).hom =
-        sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U) :=
+        sectionComplexRestriction X ℤᵘᵖ K (Opens.infLELeft V U) :=
   HomologicalComplex.Hom.ext (funext fun n ↦
     toOpenRestrictionPushforward_intersection X U V (K.X n))
 
@@ -97,7 +99,7 @@ set_option backward.defeqAttrib.useBackward true in
 def supportRestrictionSectionsConeIso :
     CochainComplex.mappingCone (supportRestrictionSectionsComplexShortComplex X U V K).g ≅
       CochainComplex.mappingCone
-        (sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U)) :=
+        (sectionComplexRestriction X ℤᵘᵖ K (Opens.infLELeft V U)) :=
   HomologicalComplex.homotopyCofiber.mapArrowIso _ _
     (fun j => ⟨j - 1, ComplexShape.up_mk _ _ (by omega)⟩)
     (Arrow.isoMk (Iso.refl _) (supportRestrictionSectionsIntersectionIso X U V K)
@@ -105,18 +107,22 @@ def supportRestrictionSectionsConeIso :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- A flasque supported-section kernel computes the true restriction cone, with
-supported degree `n` corresponding to cone degree `n - 1`. -/
+/-- `H^n(Γ_{X \ U}(V, K)) ≅ H^{n-1}(cone(K(V) → K(V ⊓ U)))` for a termwise flasque complex of
+sheaves `K`: the sections over `V` supported on `X \ U` compute the cone of restriction, with
+a shift of degree. -/
 def supportedSectionHomologyIsoRestrictionCone
     (hK : ∀ n, (K.X n).IsFlasque) (n : ℤ) :
+    -- `H^n(Γ_{X \ U}(V, K)) ≅ H^{n-1}(cone(K(V) → K(V ⊓ U)))`.
+    -- `Γ_{X \ U}(V, K)`, the first term of `Γ_{X \ U}(V, K) → K(V) → K(V ⊓ U)`.
     (supportRestrictionSectionsComplexShortComplex X U V K).X₁.homology n ≅
       (CochainComplex.mappingCone
-        (sectionComplexRestriction X (.up ℤ) K (Opens.infLELeft V U))).homology (n - 1) :=
+        -- The restriction `K(V) → K(V ⊓ U)`.
+        (sectionComplexRestriction X ℤᵘᵖ K (Opens.infLELeft V U))).homology (n - 1) :=
   let S := supportRestrictionSectionsComplexShortComplex X U V K
   letI : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
     CochainComplex.mappingCocone.quasiIso_shiftedLiftShortComplex S
       (supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque X U V K hK)
-  let e := ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftIso
+  let e := ((HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftIso
     1 (n - 1) n (by omega)).app S.X₁
   e.symm ≪≫
     asIso (HomologicalComplex.homologyMap

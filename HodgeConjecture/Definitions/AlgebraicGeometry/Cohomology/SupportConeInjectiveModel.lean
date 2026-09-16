@@ -26,9 +26,11 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- The standard ambient rational injective resolution in integer degrees. -/
+/-- The fixed injective resolution `I^•` of the constant sheaf `ℚ` on `X(ℂ)`, in integer
+degrees. -/
 def ambientRationalInjectiveComplex :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+  -- An injective resolution `ℚ_{X(ℂ)} → I^•`.
   (TopCat.Sheaf.ambientConstantInjectiveResolution
     (TopCat.of (ComplexPoint X)) (AddCommGrpCat.of ℚ)).cocomplex.extend
       ComplexShape.embeddingUpNat

@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.DerivedSectionsLocalization
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
 
@@ -50,7 +52,7 @@ def derivedClosedSupportInjectiveModelIso (Z : Closeds X)
       DerivedCategory.Q.obj
         (supportRestrictionSectionsComplexShortComplex X Z.compl ⊤
           (((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex
-            (.up ℤ)).obj I.obj)).X₁ :=
+            ℤᵘᵖ).obj I.obj)).X₁ :=
   (DerivedCategory.Plus.ι.mapIso
     (asIso ((derivedClosedSupportSectionsUnit X Z).app
       ((InjectiveObject.ι (Sheaf AddCommGrpCat.{u} X)).mapHomotopyCategoryPlus.obj

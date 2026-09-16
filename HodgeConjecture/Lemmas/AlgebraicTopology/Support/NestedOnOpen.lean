@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NestedLocalization
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
@@ -142,9 +144,9 @@ supported-section complex on the complement `U` of the smaller support. -/
 def nestedSupportRestrictionLastComplexIso
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     (nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).X₃ ≅
-      ((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj
-        (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K) :=
-  (NatIso.mapHomologicalComplex (sheafSectionsBetweenOpensGlobalNatIso X h) (.up ℤ)).app K
+      ((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj
+        (((sheafSectionsSupportedOutside X V).mapHomologicalComplex ℤᵘᵖ).obj K) :=
+  (NatIso.mapHomologicalComplex (sheafSectionsBetweenOpensGlobalNatIso X h) ℤᵘᵖ).app K
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -186,8 +188,8 @@ theorem nestedSupportRestrictionLastComplexIso_g
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     (nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).g ≫
         (nestedSupportRestrictionLastComplexIso X h K).hom =
-      sectionComplexRestriction X (.up ℤ)
-        (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)
+      sectionComplexRestriction X ℤᵘᵖ
+        (((sheafSectionsSupportedOutside X V).mapHomologicalComplex ℤᵘᵖ).obj K)
         (homOfLE (le_top : U ≤ ⊤)) := by
   ext n : 1
   exact toSheafSectionsBetweenOpens_global_comparison X h (K.X n)

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
@@ -29,11 +31,17 @@ open AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- The literal supported ambient rational injective complex for a closed support. -/
+/-- `RΓ_S(ℚ)` for a closed `S ⊆ X(ℂ)`: the complex of sheaves `Γ_S(I^•)` of sections supported
+on `S` of the fixed injective resolution `ℚ → I^•` on `X(ℂ)`. -/
 def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
+  -- `RΓ_S(ℚ)`: the `S`-supported subsheaves of an injective resolution of `ℚ` on `X(ℂ)`.
   ((TopCat.Sheaf.sheafSectionsSupportedOutside
-    (TopCat.of (ComplexPoint X)) S.compl).mapHomologicalComplex (.up ℤ)).obj
+    -- `X(ℂ)`.
+    (TopCat.of (ComplexPoint X))
+    -- The open `X(ℂ) \ S`; sections supported outside it are the sections supported on `S`.
+    S.compl).mapHomologicalComplex ℤᵘᵖ).obj
+      -- The injective resolution `I^•` of `ℚ` on `X(ℂ)`.
       (ambientRationalInjectiveComplex X)
 
 instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint X)) :

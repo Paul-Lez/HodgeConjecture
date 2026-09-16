@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.FieldToComplex
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
 public import HodgeConjecture.Lemmas.LinearAlgebra.HodgeStructure
@@ -233,7 +235,7 @@ private lemma fieldToHolomorphicDeRhamComplexInt_scalar
 
 /-- Quasi-isomorphisms of analytic sheaf complexes. -/
 abbrev analyticQuasiIsomorphisms :=
-  HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X) (.up ℤ)
+  HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X) ℤᵘᵖ
 
 noncomputable instance analyticHasSmallLocalizedShiftedHom
     (K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ) :

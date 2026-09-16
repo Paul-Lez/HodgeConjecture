@@ -38,11 +38,17 @@ theorem mem_smoothClosedSupportChartOpen (z : ComplexPoint Y) :
     Point.map i z ∈ smoothClosedSupportChartOpen X Y i m d z :=
   closedImmersionHolomorphicFlatteningChart_mem_source X Y i m d z
 
-/-- The target is the sheafification of the literal relative-cohomology presheaf. -/
+/-- `𝓗^{2(d-m)}_{Y(ℂ)}`, the sheaf on `X(ℂ)` associated with `V ↦ H^{2(d-m)}(V, V \ Y(ℂ); ℚ)`.
+Here `d - m` is the codimension of `Y` in `X`. -/
 abbrev smoothClosedSupportCoclassSheaf : TopCat.Sheaf AddCommGrpCat
     (TopCat.of (ComplexPoint X)) :=
-  supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-    (Set.range (Point.map i)) (2 * (d - m))
+  supportRelativeCohomologySheaf
+    -- `X(ℂ)`.
+    (TopCat.of (ComplexPoint X))
+    -- `Y(ℂ) ⊆ X(ℂ)`, the image of the closed immersion `i`.
+    (Set.range (Point.map i))
+    -- Twice the codimension of `Y` in `X`.
+    (2 * (d - m))
 
 /-- The exact normal coclass determines a section on its full chart source. -/
 def smoothClosedSupportChartSheafSection (z : ComplexPoint Y) :
@@ -65,7 +71,6 @@ def smoothClosedSupportChartCoclassGerm (z : ComplexPoint Y)
       (smoothClosedSupportChartOpen X Y i m d z) (le_refl _))
 
 set_option backward.isDefEq.respectTransparency false in
-set_option backward.defeqAttrib.useBackward true in
 /-- The ambient overlap theorem proves equality of chart germs on support. -/
 private theorem smoothClosedSupportChartCoclassGerm_eq
     (z z' : ComplexPoint Y) (x : ComplexPoint X)
@@ -148,9 +153,13 @@ theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
     intro y hy
     rw [map_zero, smoothClosedSupportCoclassStalk_eq_zero X Y i m d y hy]
 
-/-- The unique global gluing of exactly normalized smooth normal coclasses. -/
+/-- The global section of `𝓗^{2(d-m)}_{Y(ℂ)}` on `X(ℂ)` that glues the normalized normal-chart
+coclasses. It is unique with this property. -/
 def smoothClosedSupportCoclassSection :
-    (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj (op ⊤) :=
+    -- A global section of `𝓗^{2(d-m)}_{Y(ℂ)}` on `X(ℂ)`.
+    (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj
+      -- All of `X(ℂ)`.
+      (op ⊤) :=
   TopCat.Sheaf.sectionOfLocallyRepresentable _
     (smoothClosedSupportCoclassStalk X Y i m d)
     (smoothClosedSupportCoclassStalk_locallyRepresentable X Y i m d)

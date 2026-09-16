@@ -25,8 +25,9 @@ namespace AlgebraicTopology.Singular
 variable {M : Type} [TopologicalSpace M]
   (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
 
-/-- The actual pair consisting of a neighborhood and the complement of a support in it. -/
+/-- The pair `(W, W \ S)` of a subset `W ⊆ M` and the complement in it of a subset `S`. -/
 abbrev neighborhoodSupportComplementPair (W S : Set M) : TopPair :=
+  -- The pair `(W, W \ S)`.
   TopPair.ofSubset (X := TopCat.of W) {w | w.1 ∉ S}
 
 variable (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (x : M) (hx : x ∈ e.source)

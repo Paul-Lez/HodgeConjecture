@@ -61,7 +61,8 @@ theorem cycleComponentSmoothLocusClosedLiftOver_openInclusion :
 
 namespace ComplexPoint
 
-/-- The complex points of `X` in `cycleComponentSmoothLocusAmbientOpen X x`. -/
+/-- The open `X(ℂ) \ Z_sing(ℂ)`, where `Z` is the closure of `x` and `Z_sing` its singular
+locus. -/
 def cycleComponentSmoothSupportAmbientOpen : Opens (ComplexPoint X) :=
   ⟨Point.overOpen (cycleComponentSmoothLocusAmbientOpen X x), Point.isOpen_overOpen _⟩
 

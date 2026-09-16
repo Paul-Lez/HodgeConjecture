@@ -59,9 +59,10 @@ def toOpenRestrictionPushforward (U : Opens X) :
     ext V : 2
     exact (f.hom.naturality _).symm
 
-/-- The sheaf of sections vanishing on `U`, defined as the kernel of the
-coefficient-wise restriction map. -/
+/-- `Γ_{X \ U} : F ↦ Γ_{X \ U}(F)`, the subsheaf of sections of `F` supported on the closed set
+`X \ U`, defined as the kernel of `F → j_*(F|_U)` for `j : U ↪ X`. -/
 def sheafSectionsSupportedOutside (U : Opens X) :
+    -- `F ↦ Γ_{X \ U}(F)`, the subsheaf of sections that vanish on `U`.
     Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} X where
   obj F := kernel ((toOpenRestrictionPushforward X U).app F)
   map f := kernel.map _ _ f ((openRestrictionPushforward X U).map f)

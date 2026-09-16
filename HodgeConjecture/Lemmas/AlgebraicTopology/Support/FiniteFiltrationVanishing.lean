@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NestedOnOpen
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueComparison
 
@@ -67,8 +69,8 @@ theorem isZero_sheafSectionsSupportedOutside_top (F : Sheaf AddCommGrpCat.{u} X)
 without any acyclicity or boundedness assumption on its coefficients. -/
 theorem supportedSections_top_homology_isZero (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (n : ℤ) :
-    IsZero ((((supportEvaluation X W).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X ⊤).mapHomologicalComplex (.up ℤ)).obj K)).homology n) :=
+    IsZero ((((supportEvaluation X W).mapHomologicalComplex ℤᵘᵖ).obj
+      (((sheafSectionsSupportedOutside X ⊤).mapHomologicalComplex ℤᵘᵖ).obj K)).homology n) :=
   ShortComplex.isZero_homology_of_isZero_X₂ _
     ((supportEvaluation X W).map_isZero
       (isZero_sheafSectionsSupportedOutside_top X (K.X n)))
@@ -100,12 +102,12 @@ vanishing of the larger support in the same degree. -/
 theorem nestedSupportRestriction_middle_homology_isZero
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
     (hK : ∀ n, (K.X n).IsFlasque) (n : ℤ)
-    (hsmall : IsZero ((((supportEvaluation X ⊤).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj K)).homology n))
-    (hlayer : IsZero ((((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)).homology n)) :
-    IsZero ((((supportEvaluation X ⊤).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X V).mapHomologicalComplex (.up ℤ)).obj K)).homology n) := by
+    (hsmall : IsZero ((((supportEvaluation X ⊤).mapHomologicalComplex ℤᵘᵖ).obj
+      (((sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).obj K)).homology n))
+    (hlayer : IsZero ((((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj
+      (((sheafSectionsSupportedOutside X V).mapHomologicalComplex ℤᵘᵖ).obj K)).homology n)) :
+    IsZero ((((supportEvaluation X ⊤).mapHomologicalComplex ℤᵘᵖ).obj
+      (((sheafSectionsSupportedOutside X V).mapHomologicalComplex ℤᵘᵖ).obj K)).homology n) := by
   let S := nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K
   have hS := nestedSupportRestrictionSectionsComplexShortComplex_shortExact_of_flasque X h ⊤ K hK
   have hlast : IsZero (S.X₃.homology n) := hlayer.of_iso
@@ -123,11 +125,11 @@ theorem finiteNestedSupport_homology_isZero
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
     (hK : ∀ n, (K.X n).IsFlasque) (n : ℤ)
     (hlayer : ∀ k, k < N → IsZero
-      ((((supportEvaluation X (O (k + 1))).mapHomologicalComplex (.up ℤ)).obj
-        (((sheafSectionsSupportedOutside X (O k)).mapHomologicalComplex (.up ℤ)).obj K)).homology n))
+      ((((supportEvaluation X (O (k + 1))).mapHomologicalComplex ℤᵘᵖ).obj
+        (((sheafSectionsSupportedOutside X (O k)).mapHomologicalComplex ℤᵘᵖ).obj K)).homology n))
     (k : ℕ) (hk : k ≤ N) :
-    IsZero ((((supportEvaluation X ⊤).mapHomologicalComplex (.up ℤ)).obj
-      (((sheafSectionsSupportedOutside X (O k)).mapHomologicalComplex (.up ℤ)).obj K)).homology n) := by
+    IsZero ((((supportEvaluation X ⊤).mapHomologicalComplex ℤᵘᵖ).obj
+      (((sheafSectionsSupportedOutside X (O k)).mapHomologicalComplex ℤᵘᵖ).obj K)).homology n) := by
   induction hk using Nat.decreasingInduction with
   | self =>
       rw [hN]
