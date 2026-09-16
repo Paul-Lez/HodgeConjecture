@@ -79,8 +79,8 @@ degree one in dimension zero, without invoking a positive-degree boundary isomor
 theorem standardLocalHomology_isZero_of_dimension_lt (d k : ℕ) (hk : d < k) :
     IsZero (RelativeHomology ℚ (standardPuncturedPair ℝ d) k) := by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : k ≠ 0)
-  exact (relativeSingular_homology_exact_relative (standardPuncturedPair ℝ d) n).isZero_of_both_isZero
-    (standardRealModel_homology_isZero d (n + 1) (by omega))
+  exact (relativeSingular_homology_exact_relative (standardPuncturedPair ℝ d)
+    n).isZero_of_both_isZero (standardRealModel_homology_isZero d (n + 1) (by omega))
     (standardPuncturedHomology_isZero_of_dimension_le d n (by omega))
 
 /-- Positive-dimensional punctured Euclidean space is nonempty. -/
@@ -150,8 +150,8 @@ theorem standardLocalHomology_isZero_of_ne (d k : ℕ) (hk : k ≠ d) :
     · exact standardLocalHomology_zero_isZero d hlt
     · exact standardLocalHomology_one_isZero d hlt
     · exact
-        (relativeSingular_homology_exact_relative (standardPuncturedPair ℝ d) (n + 1)).isZero_of_both_isZero
-          (standardRealModel_homology_isZero d (n + 2) (by omega))
+        (relativeSingular_homology_exact_relative (standardPuncturedPair ℝ d)
+          (n + 1)).isZero_of_both_isZero (standardRealModel_homology_isZero d (n + 2) (by omega))
           (standardPuncturedHomology_isZero_of_lt d (n + 1) (by omega) (by omega))
   · exact standardLocalHomology_isZero_of_dimension_lt d k hgt
 

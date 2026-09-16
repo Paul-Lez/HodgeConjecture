@@ -882,7 +882,8 @@ lemma standardFacetCarrierSimplexMap_delta (d n : ℕ) (i : Fin (n + 2))
     (SSet.stdSimplex.objEquiv
       ((standardFacetCarrierSimplexMap d
         ((coverSmallSingularSubcomplex
-          (standardPuncturedPair ℝ d).snd (standardPuncturedFacetCover d) : SSet).δ i x)).app _ F)).toOrderHom r
+          (standardPuncturedPair ℝ d).snd (standardPuncturedFacetCover d) : SSet).δ i x)).app _
+            F)).toOrderHom r
   change standardFacetComplementCarrierMax d x
       ((F.obj r).map (standardFaceVertexOrderHom n i)) =
     standardFacetComplementCarrierMax d
