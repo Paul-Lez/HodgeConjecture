@@ -45,7 +45,7 @@ variable (d : ℕ)
 /-- Recenter a continuous injection at a chosen source point. -/
 def centeredComplexEmbeddingPair (F : (Fin d → ℂ) → (Fin d → ℂ))
     (hF : Continuous F) (hFi : Function.Injective F) (v : Fin d → ℂ) :
-    standardComplexPuncturedPair d ⟶ standardComplexPuncturedPair d :=
+    standardPuncturedPair ℂ d ⟶ standardPuncturedPair ℂ d :=
   complexPuncturedPairMapOf d (fun w => F (w + v) - F v)
     ((hF.comp (continuous_id.add continuous_const)).sub continuous_const)
     (fun w hw h => hw

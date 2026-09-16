@@ -207,9 +207,9 @@ lemma complexMatrixPuncturedMap_apply
 
 /-- An invertible complex matrix acts on complex affine space and its punctured subspace. -/
 def complexMatrixPuncturedPairMap (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0) :
-    standardComplexPuncturedPair d ⟶ standardComplexPuncturedPair d :=
-  TopPair.ofHom (X := standardComplexPuncturedPair d)
-    (Y := standardComplexPuncturedPair d)
+    standardPuncturedPair ℂ d ⟶ standardPuncturedPair ℂ d :=
+  TopPair.ofHom (X := standardPuncturedPair ℂ d)
+    (Y := standardPuncturedPair ℂ d)
     (complexMatrixMap d A)
     (complexMatrixPuncturedMap d A hA)
     (by
@@ -221,7 +221,7 @@ def complexMatrixPuncturedPairMap (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det �
 def complexMatrixPuncturedPairHomotopy
     {A : Matrix (Fin d) (Fin d) ℂ} (hA : A.det ≠ 0)
     (H : Matrix.ComplexIsotopyToOne A) :
-    TopPair.Homotopy (𝟙 (standardComplexPuncturedPair d))
+    TopPair.Homotopy (𝟙 (standardPuncturedPair ℂ d))
       (complexMatrixPuncturedPairMap d A hA) where
   fst :=
     { toFun := fun tx ↦ (H.path tx.1).mulVec tx.2

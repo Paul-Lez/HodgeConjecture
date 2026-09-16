@@ -80,7 +80,7 @@ lemma radialTargetPointPairMap_chartTargetInverseAtSource :
 /-- A normalized actual coordinate parametrization gives the exact chart-local class.
 The only comparison used in this proof is genuine point-neighborhood excision. -/
 theorem chartTargetPointPairMap_localClass
-    (P : standardComplexPuncturedPair d ⟶ neighborhoodPointComplementPair e.target (e x))
+    (P : standardPuncturedPair ℂ d ⟶ neighborhoodPointComplementPair e.target (e x))
     (hP : relativeHomologyMap ℚ (2 * d)
       (P ≫ neighborhoodPointComplementPairMap e.target (e x)) (standardComplexLocalClass ℚ d) =
       relativeHomologyMap ℚ (2 * d)

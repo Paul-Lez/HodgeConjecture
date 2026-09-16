@@ -38,9 +38,9 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type) [CommRing R]
 
-/-- The pair consisting of real coordinate space and the complement of its origin. -/
-abbrev standardPuncturedPair (d : ℕ) : TopPair :=
-  TopPair.ofSubset (X := TopCat.of (Fin d → ℝ)) ({0}ᶜ : Set (Fin d → ℝ))
+/-- The pair `(𝕜^d, 𝕜^d \ {0})` for a topological field `𝕜`. -/
+abbrev standardPuncturedPair (𝕜 : Type) [Field 𝕜] [TopologicalSpace 𝕜] (d : ℕ) : TopPair :=
+  TopPair.ofSubset (X := TopCat.of (Fin d → 𝕜)) ({0}ᶜ : Set (Fin d → 𝕜))
 
 /-- The affine `d`-simplex with vertices the standard basis and the vector `(-1, ..., -1)`. -/
 def standardAffineSimplex (d : ℕ) (t : stdSimplex ℝ (Fin (d + 1))) : Fin d → ℝ :=
@@ -80,8 +80,8 @@ lemma standardAffineSimplex_ne_zero_of_coord_zero (d : ℕ)
 
 /-- The affine simplex as a singular simplex of real coordinate space. -/
 def standardSingularSimplex (d : ℕ) :
-    (TopCat.toSSet.obj (standardPuncturedPair d).fst) _⦋d⦌ :=
-  ((standardPuncturedPair d).fst.toSSetObjEquiv _).symm
+    (TopCat.toSSet.obj (standardPuncturedPair ℝ d).fst) _⦋d⦌ :=
+  ((standardPuncturedPair ℝ d).fst.toSSetObjEquiv _).symm
     ⟨standardAffineSimplex d, continuous_standardAffineSimplex d⟩
 
 /-- A face of the positive-dimensional standard simplex, lifted to the punctured space. -/
@@ -95,26 +95,26 @@ def standardFaceMap (n : ℕ) (i : Fin (n + 2)) :
 /-- A face of the positive-dimensional standard simplex as a singular simplex of the
 punctured space. -/
 def standardFaceSimplex (n : ℕ) (i : Fin (n + 2)) :
-    (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).snd) _⦋n⦌ :=
-  ((standardPuncturedPair (n + 1)).snd.toSSetObjEquiv _).symm
+    (TopCat.toSSet.obj (standardPuncturedPair ℝ (n + 1)).snd) _⦋n⦌ :=
+  ((standardPuncturedPair ℝ (n + 1)).snd.toSSetObjEquiv _).symm
     (standardFaceMap n i)
 
 /-- The relative singular chain complex of the standard punctured real coordinate space. -/
 abbrev standardLocalRelativeChainComplex (d : ℕ) :=
-  (relativeChainFunctor R).obj (standardPuncturedPair d)
+  (relativeChainFunctor R).obj (standardPuncturedPair ℝ d)
 
 /-- The projection to the standard relative chain complex, in the arrow form that
 `chainPairFunctor` produces. -/
 def standardLocalProjection (d : ℕ) :
-    ((chainPairFunctor R).obj (standardPuncturedPair d)).right ⟶
+    ((chainPairFunctor R).obj (standardPuncturedPair ℝ d)).right ⟶
       standardLocalRelativeChainComplex R d :=
-  relativeChainProjection R (standardPuncturedPair d)
+  relativeChainProjection R (standardPuncturedPair ℝ d)
 
 /-- The standard affine simplex as an absolute singular chain. -/
 def standardAmbientSimplexChain (d : ℕ) :
     ModuleCat.of R R ⟶
-      ((chainPairFunctor R).obj (standardPuncturedPair d)).right.X d :=
-  (TopCat.toSSet.obj (standardPuncturedPair d).fst).ιChainComplex
+      ((chainPairFunctor R).obj (standardPuncturedPair ℝ d)).right.X d :=
+  (TopCat.toSSet.obj (standardPuncturedPair ℝ d).fst).ιChainComplex
     (standardSingularSimplex d)
 
 /-- The standard affine simplex, projected to the relative singular chain complex of
@@ -126,36 +126,36 @@ def standardLocalChain (d : ℕ) :
 /-- A face of the standard simplex as an absolute singular chain. -/
 def standardAmbientFaceChain (n : ℕ) (i : Fin (n + 2)) :
     ModuleCat.of R R ⟶
-      ((chainPairFunctor R).obj (standardPuncturedPair (n + 1))).right.X n :=
-  (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).fst).ιChainComplex
-    ((TopCat.toSSet.obj (standardPuncturedPair (n + 1)).fst).δ i
+      ((chainPairFunctor R).obj (standardPuncturedPair ℝ (n + 1))).right.X n :=
+  (TopCat.toSSet.obj (standardPuncturedPair ℝ (n + 1)).fst).ιChainComplex
+    ((TopCat.toSSet.obj (standardPuncturedPair ℝ (n + 1)).fst).δ i
       (standardSingularSimplex (n + 1)))
 
 /-- A face of the standard simplex as a chain in the punctured subspace. -/
 def standardSubspaceFaceChain (n : ℕ) (i : Fin (n + 2)) :
     ModuleCat.of R R ⟶
-      ((chainPairFunctor R).obj (standardPuncturedPair (n + 1))).left.X n :=
-  (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).snd).ιChainComplex
+      ((chainPairFunctor R).obj (standardPuncturedPair ℝ (n + 1))).left.X n :=
+  (TopCat.toSSet.obj (standardPuncturedPair ℝ (n + 1)).snd).ιChainComplex
     (standardFaceSimplex n i)
 
 lemma standardFaceChain_inclusion (n : ℕ) (i : Fin (n + 2)) :
     standardSubspaceFaceChain R n i ≫
-      ((chainPairFunctor R).obj (standardPuncturedPair (n + 1))).hom.f n =
+      ((chainPairFunctor R).obj (standardPuncturedPair ℝ (n + 1))).hom.f n =
     standardAmbientFaceChain R n i := by
-  change (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).snd).ιChainComplex
+  change (TopCat.toSSet.obj (standardPuncturedPair ℝ (n + 1)).snd).ιChainComplex
       (standardFaceSimplex n i) ≫
     (SSet.chainComplexMap
-      (TopCat.toSSet.map (standardPuncturedPair (n + 1)).map)
+      (TopCat.toSSet.map (standardPuncturedPair ℝ (n + 1)).map)
       (ModuleCat.of R R)).f n = _
   rw [SSet.ι_chainComplexMap_f]
   rfl
 
 lemma standardAmbientSimplexChain_boundary (n : ℕ) :
     standardAmbientSimplexChain R (n + 1) ≫
-      ((chainPairFunctor R).obj (standardPuncturedPair (n + 1))).right.d (n + 1) n =
+      ((chainPairFunctor R).obj (standardPuncturedPair ℝ (n + 1))).right.d (n + 1) n =
     ∑ i : Fin (n + 2), (-1) ^ i.val • standardAmbientFaceChain R n i :=
   SSet.ιChainComplex_d
-    (TopCat.toSSet.obj (standardPuncturedPair (n + 1)).fst)
+    (TopCat.toSSet.obj (standardPuncturedPair ℝ (n + 1)).fst)
     (ModuleCat.of R R) (standardSingularSimplex (n + 1))
 
 lemma standardAmbientFaceChain_projection (n : ℕ) (i : Fin (n + 2)) :
@@ -187,7 +187,7 @@ def standardLocalCycle (d : ℕ) :
 
 /-- The canonical class represented by the standard affine local cycle in
 `H_d(ℝ^d, ℝ^d ∖ {0}; R)`. -/
-def standardLocalClass (d : ℕ) : RelativeHomology R (standardPuncturedPair d) d :=
+def standardLocalClass (d : ℕ) : RelativeHomology R (standardPuncturedPair ℝ d) d :=
   ((standardLocalCycle R d ≫ (standardLocalRelativeChainComplex R d).homologyπ d).hom) 1
 
 end AlgebraicTopology.Singular

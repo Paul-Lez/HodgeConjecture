@@ -59,16 +59,16 @@ def standardAffineBoundarySimplex (d k : ℕ)
 /-- The boundary of the universal affine `d`-simplex as a map of simplicial sets into the
 singular simplicial set of punctured `ℝ^d`. -/
 def standardAffineBoundarySimplicialMap (d : ℕ) :
-    (∂Δ[d] : SSet.{0}) ⟶ TopCat.toSSet.obj (standardPuncturedPair d).snd where
-  app n := ↾ fun x ↦ ((standardPuncturedPair d).snd.toSSetObjEquiv _).symm
+    (∂Δ[d] : SSet.{0}) ⟶ TopCat.toSSet.obj (standardPuncturedPair ℝ d).snd where
+  app n := ↾ fun x ↦ ((standardPuncturedPair ℝ d).snd.toSSetObjEquiv _).symm
     (standardAffineBoundarySimplex d n.unop.len x)
   naturality n m f := by
     ext x
-    change ((standardPuncturedPair d).snd.toSSetObjEquiv m).symm
+    change ((standardPuncturedPair ℝ d).snd.toSSetObjEquiv m).symm
         (standardAffineBoundarySimplex d m.unop.len
           ((∂Δ[d] : SSet.{0}).map f x)) = _
     calc
-      _ = ((standardPuncturedPair d).snd.toSSetObjEquiv m).symm
+      _ = ((standardPuncturedPair ℝ d).snd.toSSetObjEquiv m).symm
           ((standardAffineBoundarySimplex d n.unop.len x).comp
             ⟨stdSimplex.map f.unop, stdSimplex.continuous_map f.unop⟩) := by
         congr 1
@@ -78,7 +78,7 @@ def standardAffineBoundarySimplicialMap (d : ℕ) :
         rw [stdSimplex.map_comp_apply]
         rfl
       _ = _ := (TopCat.toSSetObjEquiv_symm_naturality
-        (X := (standardPuncturedPair d).snd) (f := f.unop)
+        (X := (standardPuncturedPair ℝ d).snd) (f := f.unop)
         (g := standardAffineBoundarySimplex d n.unop.len x)).symm
 
 /-- The unique nondegenerate simplex in the top dimension of a standard simplex. -/
@@ -125,7 +125,7 @@ lemma standardAffineBoundarySimplicialMap_face (n : ℕ) (i : Fin (n + 2)) :
 /-- The chain map from a simplicial boundary to singular chains of punctured coordinate space. -/
 def standardAffineBoundaryChainMap (d : ℕ) :
     ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)) ⟶
-      (TopCat.toSSet.obj (standardPuncturedPair d).snd).chainComplex
+      (TopCat.toSSet.obj (standardPuncturedPair ℝ d).snd).chainComplex
         (ModuleCat.of ℚ ℚ) :=
   SSet.chainComplexMap (standardAffineBoundarySimplicialMap d) (ModuleCat.of ℚ ℚ)
 

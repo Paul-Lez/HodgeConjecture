@@ -37,7 +37,7 @@ variable (X Y : Over (Spec ↧ℂ))
 
 /-- The actual normal parametrization factored through the genuine ambient chart target. -/
 def smoothClosedPointNormalTargetPairMap :
-    standardComplexPuncturedPair d ⟶
+    standardPuncturedPair ℂ d ⟶
       neighborhoodPointComplementPair (localChart X d (Point.map i z)).target
         (localChart X d (Point.map i z) (Point.map i z)) :=
   let c := localChart X d (Point.map i z) (Point.map i z)

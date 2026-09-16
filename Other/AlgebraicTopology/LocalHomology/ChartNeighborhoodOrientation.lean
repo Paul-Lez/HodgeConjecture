@@ -41,7 +41,7 @@ variable (d : ℕ)
 def radialTargetPointPairMap (U : Set (Fin d → ℂ)) (c : Fin d → ℂ) (r : ℝ)
     (hr : 0 < r) (hball : Metric.ball c r ⊆ U) (v q : Fin d → ℂ)
     (hq : OpenPartialHomeomorph.univBall c r v = q) :
-    standardComplexPuncturedPair d ⟶ neighborhoodPointComplementPair U q :=
+    standardPuncturedPair ℂ d ⟶ neighborhoodPointComplementPair U q :=
   have hmem (w : Fin d → ℂ) : OpenPartialHomeomorph.univBall c r (w + v) ∈ U := by
     apply hball
     rw [← OpenPartialHomeomorph.univBall_target c hr]
