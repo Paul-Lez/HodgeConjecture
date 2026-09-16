@@ -50,8 +50,8 @@ def openIntersectionPairIsoSupportComplement (S : Set X) (hS : IsClosed S) (V : 
 
 variable [T2Space X] [∀ V : Opens X, ParacompactSpace V] (U V : Opens X)
 
-/-- Actual local supported singular cohomology computes the literal relative pair
-`(V, V ∩ U)`, in supported degree `n`. -/
+/-- `H^n_{X \ U}(V; ℚ) ≅ H^n(V, V ⊓ U; ℚ)`: the cohomology of sections over `V` of
+`Γ_{X \ U}(C^•_sing)` is the rational singular cohomology of the pair `(V, V ⊓ U)`. -/
 def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
     -- `H^n_{X \ U}(V; ℚ) ≅ H^n(V, V ⊓ U; ℚ)`.
     ((((TopCat.Sheaf.supportEvaluation X
@@ -70,8 +70,8 @@ def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
         ((n : ℤ) - 1)).addCommGroupIsoToAddEquiv
     |>.trans (openSingularSheafRestrictionConeCohomologyEquivRelative X (Opens.infLELeft V U) n)
 
-/-- Actual local supported singular cohomology computes `(V, V \ S)`, with the pair
-homeomorphism displayed explicitly rather than silently replacing an inclusion. -/
+/-- `H^n_S(V; ℚ) ≅ H^n(V, V \ S; ℚ)` for a closed `S ⊆ X`, through the explicit identification
+of the pairs `(V, V ⊓ (X \ S))` and `(V, V \ S)`. -/
 def supportedRationalSingularSectionCohomologyEquivSupportComplement
     (S : Set X) (hS : IsClosed S) (V : Opens X) (n : ℕ) :
     -- `H^n_S(V; ℚ) ≅ H^n(V, V \ S; ℚ)`.

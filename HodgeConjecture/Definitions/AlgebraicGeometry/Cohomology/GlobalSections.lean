@@ -128,7 +128,7 @@ def integerConstantSingleComplex (Y : TopCat.{0}) :
     ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
       (AddCommGrpCat.of ℤ))
 
-/-- Evaluation of an integer-indexed sheaf complex on the top open subset. -/
+/-- `Γ(Y, K^•)`, the complex of global sections of a complex of sheaves `K^•` on `Y`. -/
 def globalSectionsComplexInt (Y : TopCat.{0})
     (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
     -- `Γ(Y, K^•)`.

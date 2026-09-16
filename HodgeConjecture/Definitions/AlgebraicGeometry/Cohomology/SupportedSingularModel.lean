@@ -30,7 +30,9 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom]
 
-/-- Its actual supported version for any open complement, not just a smooth support. -/
+/-- `Γ_{X(ℂ) \ U}(C^•_sing) → Γ_{X(ℂ) \ U}(I^•)`: the comparison from sections supported on
+`X(ℂ) \ U` of the rational singular-cochain sheaves to those of the injective resolution `I^•`
+of `ℚ`, for any open `U`. -/
 def complexSupportedSingularToAmbientInjective
     (U : Opens (ComplexPoint X)) :
     -- `Γ_{X(ℂ) \ U}` of the singular-cochain model, mapping to `Γ_{X(ℂ) \ U}(I^•)`.

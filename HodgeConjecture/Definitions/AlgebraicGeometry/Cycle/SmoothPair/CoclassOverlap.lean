@@ -29,7 +29,10 @@ variable (X Y : Over (Spec ↧ℂ))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- The normal-projection coclass on any subset of a holomorphic flattening chart. -/
+/-- For `W` inside a holomorphic chart around `i(z)` that flattens `Y(ℂ)`, the class in
+`H^{2(d-m)}(W, W \ Y(ℂ); ℚ)` pulled back along the normal projection
+`(W, W \ Y(ℂ)) → (ℂ^{d-m}, ℂ^{d-m} \ {0})` from the class in `H^{2(d-m)}(ℂ^{d-m}, ℂ^{d-m} \ {0}; ℚ)`
+that pairs to `1` with the standard complex local class. -/
 def smoothClosedSupportChartCoclass (W : Set (ComplexPoint X))
     (hW : W ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     RelativeCohomology ℚ (neighborhoodSupportComplementPair W

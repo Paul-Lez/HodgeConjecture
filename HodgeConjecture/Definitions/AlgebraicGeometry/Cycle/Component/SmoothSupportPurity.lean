@@ -31,13 +31,15 @@ variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
-/-- The exact analytic complement of the canonical singular boundary. -/
+/-- The open `X(ℂ) \ Z_sing(ℂ)`, where `Z` is the closure of `x` and `Z_sing` its singular
+locus. -/
 abbrev cycleComponentSmoothSupportAmbientOpen : Opens (ComplexPoint X) :=
   -- `X(ℂ) \ Z_sing(ℂ)`.
   (cycleComponentSingularAnalyticClosedFiltration X x 0).compl
 
 include hx in
-/-- Actual cofinal ambient relative-cohomology calculations along the smooth locus. -/
+/-- Every `y ∈ Z(ℂ) \ Z_sing(ℂ)` has arbitrarily small open neighborhoods `W` in `X(ℂ)` with
+`H^n(W, W \ Z(ℂ); ℚ) = 0` for `n ≠ 2p`. -/
 private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
     (y : ComplexPoint X) (hy : y ∈ cycleComponentSupport X x)
     (hyU : y ∈ cycleComponentSmoothSupportAmbientOpen X x)
@@ -75,7 +77,9 @@ private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
   exact hW n (by omega)
 
 include hx in
-/-- Cofinal supported-section vanishing for the literal original ambient resolution. -/
+/-- For each `n ≠ 2p`, every `y ∈ X(ℂ) \ Z_sing(ℂ)` has arbitrarily small open neighborhoods `W`
+(depending on `n`) with `H^n_{Z(ℂ)}(W; ℚ) = 0`, where `H^n_{Z(ℂ)}(W; ℚ) = H^n(Γ(W, RΓ_{Z(ℂ)}(ℚ)))`
+is computed in the fixed injective resolution. -/
 theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
     (n : ℤ) (hn : n ≠ 2 * (p : ℤ))
     (y : ComplexPoint X) (hyU : y ∈ cycleComponentSmoothSupportAmbientOpen X x)
@@ -121,7 +125,8 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
         (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl W
         ((ambientRationalInjectiveComplex X).X (q : ℤ)) inf_le_right
 
-/-- Restriction of the original full-support injective model to the boundary complement. -/
+/-- `RΓ_{Z(ℂ)}(ℚ)|_{X(ℂ) \ Z_sing(ℂ)}`: the `Z(ℂ)`-supported part `Γ_{Z(ℂ)}(I^•)` of the injective
+resolution of `ℚ`, restricted to the open `X(ℂ) \ Z_sing(ℂ)`. -/
 def cycleComponentSmoothRestrictedInjectiveComplex :
     CochainComplex (TopCat.Sheaf AddCommGrpCat
       (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))) ℤ :=
@@ -141,17 +146,19 @@ instance cycleComponentSmoothRestrictedInjectiveComplex_isStrictlyGE :
   infer_instance
 
 include hx in
-/-- The actual restricted cohomology sheaves are concentrated in degree `2p`. -/
+/-- Purity: on `X(ℂ) \ Z_sing(ℂ)`, the cohomology sheaves `𝓗^n(RΓ_{Z(ℂ)}(ℚ))` vanish for
+`n ≠ 2p`. -/
 theorem cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
     (n : ℤ) (hn : n ≠ 2 * (p : ℤ)) :
-    -- The sheaf `𝓗^n_{Z(ℂ)}` on `X(ℂ) \ Z_sing(ℂ)` is zero away from degree `2p`.
+    -- The cohomology sheaf `𝓗^n(RΓ_{Z(ℂ)}(ℚ))` on `X(ℂ) \ Z_sing(ℂ)` is zero for `n ≠ 2p`.
     IsZero ((cycleComponentSmoothRestrictedInjectiveComplex X x).homology n) :=
   TopCat.Sheaf.openRestriction_homology_isZero_of_cofinal_sections
     (TopCat.of (ComplexPoint X)) _ _ n
     (cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing X x hx n hn)
 
-/-- The canonical lowest-degree isomorphism using the original ambient resolution and
-the original ambient cohomology sheaf, both evaluated on the boundary complement. -/
+/-- `H^{2p}_{Z(ℂ)}(U; ℚ) ≅ Γ(U, 𝓗^{2p}(RΓ_{Z(ℂ)}(ℚ)))` for `U = X(ℂ) \ Z_sing(ℂ)`: because the
+cohomology sheaves vanish below degree `2p` on `U`, the degree-`2p` cohomology of sections over
+`U` is the sections of the degree-`2p` cohomology sheaf. -/
 def cycleComponentSmoothSupportLowestSectionCohomologyIso :
     -- `H^{2p}_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ); ℚ)`.
     ((((TopCat.Sheaf.supportEvaluation
@@ -163,7 +170,7 @@ def cycleComponentSmoothSupportLowestSectionCohomologyIso :
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
           -- Degree `2p`.
           (2 * (p : ℤ))) ≅
-      -- Sections of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`.
+      -- Sections of the cohomology sheaf `𝓗^{2p}(RΓ_{Z(ℂ)}(ℚ))` over `X(ℂ) \ Z_sing(ℂ)`.
       ((complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)).homology
         -- Degree `2p`.
         (2 * (p : ℤ))).obj.obj

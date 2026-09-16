@@ -43,9 +43,11 @@ def chartNormalProjectionPair (W : Set M) (hW : W ⊆ e.source) :
       ((((e.continuousOn.mono hW).domRestrict).comp continuous_subtype_val).snd).subtype_mk _⟩)
     (by ext w; rfl)
 
-/-- The coclass on a whole chart neighborhood is the actual normal-projection pullback. -/
+/-- For `W ⊆ e.source`, the class in `H^{2c}(W, W \ S; ℚ)` pulled back along the normal projection
+`(W, W \ S) → (ℂ^c, ℂ^c \ {0})` of the chart `e` from the class in `H^{2c}(ℂ^c, ℂ^c \ {0}; ℚ)` that
+pairs to `1` with the standard complex local class in `H_{2c}(ℂ^c, ℂ^c \ {0}; ℚ)`. -/
 def chartNormalProjectionCoclass (W : Set M) (hW : W ⊆ e.source) :
-    -- The pullback to `H^{2c}(W, W \ S; ℚ)` of the generator of `H^{2c}(ℂ^c, ℂ^c \ {0}; ℚ)`.
+    -- The pullback to `H^{2c}(W, W \ S; ℚ)` of the normalized class in `H^{2c}(ℂ^c, ℂ^c \ {0}; ℚ)`.
     RelativeCohomology ℚ (neighborhoodSupportComplementPair W S) (2 * c) :=
   relativeCohomologyMap ℚ (2 * c) (chartNormalProjectionPair E c e S hS W hW)
     (normalizedRelativeCoclass (standardComplexLocalClass c)

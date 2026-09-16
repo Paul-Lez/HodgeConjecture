@@ -46,8 +46,9 @@ theorem cycleComponentSmoothClosedLift_codimension :
   have hpd : p ≤ dim X.left := by exact_mod_cast h
   omega
 
-/-- The normalized section in the auxiliary algebraic ambient open, in the proved
-degree 2p. The class is the general normal-chart gluing, not supplied data. -/
+/-- The normalized global section of `𝓗^{2p}_{Z_reg(ℂ)}` on the complex manifold `(X \ Z_sing)(ℂ)`,
+where `𝓗^{2p}_{Z_reg(ℂ)}` is the sheaf associated with `V ↦ H^{2p}(V, V \ Z_reg(ℂ); ℚ)`. It is glued
+from the normal-chart coclasses; `2p` is twice the codimension of `Z` in `X`. -/
 def cycleComponentSmoothClosedLiftCoclassSection :
     (supportRelativeCohomologySheaf
       -- If `Z ⊆ X` is the variety, this is the `X \ Z_sing` open, as a complex manifold.
@@ -90,8 +91,9 @@ theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
   rw [Set.image_univ]
   exact cycleComponentSmoothLocusAmbientOpen_analytic_image X x
 
-/-- The normalized component coclass section, living on the singular-boundary
-complement in the ORIGINAL ambient relative-cohomology sheaf. -/
+/-- The normalized section of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`, where `𝓗^{2p}_{Z(ℂ)}` is
+the sheaf on `X(ℂ)` associated with `V ↦ H^{2p}(V, V \ Z(ℂ); ℚ)`. It is the previous section,
+transported along the open embedding `(X \ Z_sing)(ℂ) ↪ X(ℂ)`. -/
 def cycleComponentSmoothSupportCoclassSection :
     (supportRelativeCohomologySheaf
       -- `X(ℂ)` the topological space of complex points of the ambient variety.

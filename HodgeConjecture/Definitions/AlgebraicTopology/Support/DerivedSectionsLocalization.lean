@@ -67,8 +67,8 @@ instance (V : Opens X) :
 instance : (openRestrictionPushforward X U).Additive where
   map_add := by intros; rfl
 
-/-- The actual support/restriction sequence applied termwise to a coefficient
-complex. No boundedness is needed for this algebraic sequence. -/
+/-- The sequence `Γ_{X \ U}(K) → K → j_*(K|_U)`, for a complex of sheaves `K` on `X` and
+`j : U ↪ X`, applied termwise. No boundedness is needed. -/
 def supportRestrictionComplexShortComplex
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     -- The sequence `Γ_{X \ U}(K) → K → j_*(K|_U)`.

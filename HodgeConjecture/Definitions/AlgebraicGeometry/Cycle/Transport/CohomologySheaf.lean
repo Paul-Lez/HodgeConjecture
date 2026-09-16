@@ -29,7 +29,8 @@ open AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- The literal supported ambient rational injective complex for a closed support. -/
+/-- `RΓ_S(ℚ)` for a closed `S ⊆ X(ℂ)`: the complex of sheaves `Γ_S(I^•)` of sections supported
+on `S` of the fixed injective resolution `ℚ → I^•` on `X(ℂ)`. -/
 def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
   -- `RΓ_S(ℚ)`: the `S`-supported subsheaves of an injective resolution of `ℚ` on `X(ℂ)`.

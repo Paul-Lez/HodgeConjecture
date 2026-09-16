@@ -54,8 +54,8 @@ open TopCat.Sheaf
 variable (X : TopCat.{0}) [T2Space X] [∀ V : Opens X, ParacompactSpace V]
   (S : Set X) (hS : IsClosed S) (n : ℕ)
 
-/-- The actual local cohomology presheaf of supported singular cochains is the
-literal relative-cohomology presheaf, with its literal pair restrictions. -/
+/-- The presheaves `V ↦ H^n_S(V; ℚ)` and `V ↦ H^n(V, V \ S; ℚ)` on `X` agree, together with
+their restriction maps. -/
 def supportedSingularCohomologyPresheafIsoRelative :
     -- `V ↦ H^n_S(V; ℚ)` is the presheaf `V ↦ H^n(V, V \ S; ℚ)`.
     sectionCohomologyPresheaf X
@@ -85,10 +85,10 @@ def supportedSingularCohomologyPresheafIsoRelative :
     exact supportedRationalSingularSectionCohomologyEquivSupportComplement_naturality
       X S hS a.unop n _)
 
-/-- Exact sheafification identifies the actual supported cohomology sheaf with
-the sheafification of literal neighborhood/support relative cohomology. -/
+/-- The `n`-th cohomology sheaf of `Γ_S(C^•_sing)` is `𝓗^n_S`, the sheaf associated with
+`V ↦ H^n(V, V \ S; ℚ)`; this uses that sheafification is exact. -/
 def supportedSingularCohomologySheafIsoRelative :
-    -- The `n`-th cohomology sheaf of `RΓ_S(ℚ)`.
+    -- The `n`-th cohomology sheaf of `Γ_S(C^•_sing)`.
     (supportedRationalSingularCochainComplex X
       -- The open `X \ S`.
       ⟨Sᶜ, hS.isOpen_compl⟩).homology (n : ℤ) ≅

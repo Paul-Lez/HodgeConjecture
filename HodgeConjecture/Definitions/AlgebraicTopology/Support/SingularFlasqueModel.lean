@@ -31,7 +31,7 @@ variable (X : TopCat.{0})
 def rationalSingularCochainComplex : CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   (singularCochainSheafComplex ℚ X).extend ComplexShape.embeddingUpNat
 
-/-- The fixed injective resolution of actual rational constants, in integer degrees. -/
+/-- The fixed injective resolution `I^•` of the constant sheaf `ℚ_X`, in integer degrees. -/
 def rationalConstantInjectiveComplex : CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   -- An injective resolution `ℚ_X → I^•`.
   (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).cocomplex.extend
@@ -99,8 +99,8 @@ instance singularToConstantInjectiveComplex_quasiIso :
     QuasiIso (singularToConstantInjectiveComplex X hX) :=
   (HomologicalComplex.quasiIso_extendMap_iff _ _).mpr inferInstance
 
-/-- The actual supported singular-cochain sheaf model. Its terms are kernels
-of restriction; its cohomology is not defined to be a desired purity group. -/
+/-- `Γ_{X \ U}(C^•_sing)`: the complex of subsheaves of the rational singular-cochain sheaves
+consisting of sections supported on `X \ U`. -/
 def supportedRationalSingularCochainComplex (U : Opens X) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   -- `Γ_{X \ U}` applied to the sheaf complex of rational singular cochains.

@@ -38,9 +38,9 @@ variable (X : Over (Spec ↧ℂ))
 local instance cycleComponentSheafClassAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
-/-- The supported injective cohomology sheaf is the sheaf of local
-relative cohomology, by the constructed singular resolution and its literal
-restriction-natural comparison. -/
+/-- `𝓗^n(RΓ_S(ℚ)) ≅ 𝓗^n_S` for a closed `S ⊆ X(ℂ)`: the `n`-th cohomology sheaf of `RΓ_S(ℚ)`, the
+`S`-supported part of the injective resolution of `ℚ` on `X(ℂ)`, is the sheaf associated with
+`V ↦ H^n(V, V \ S; ℚ)`. The comparison goes through the singular resolution. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
     -- The `n`-th cohomology sheaf of `RΓ_S(ℚ)`.
@@ -57,8 +57,9 @@ def complexSupportInjectiveCohomologySheafIsoRelative
 
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
-/-- Degree-`2p` cohomology of global sections supported on the component,
-computed in the fixed ambient injective resolution. -/
+/-- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, the cohomology of `X(ℂ)` with support in `Z(ℂ)`, where `Z` is the
+closure of `x`. It is computed as `H^{2p}(Γ(X(ℂ), RΓ_{Z(ℂ)}(ℚ)))` in the fixed injective
+resolution. -/
 abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
   -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, with `Z` the subvariety with generic point `x`.
   (((TopCat.Sheaf.supportEvaluation
@@ -73,7 +74,8 @@ abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
     -- Degree `2p`.
     (2 * (p : ℤ))
 
-/-- Sections of the local relative-cohomology sheaf on the smooth-locus ambient open. -/
+/-- `Γ(X(ℂ) \ Z_sing(ℂ), 𝓗^{2p}_{Z(ℂ)})`: sections over the complement of the singular locus of
+`Z` of the sheaf `𝓗^{2p}_{Z(ℂ)}` associated with `V ↦ H^{2p}(V, V \ Z(ℂ); ℚ)`. -/
 abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
   -- Sections of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`.
   (supportRelativeCohomologySheaf
@@ -86,9 +88,11 @@ abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
       -- The open `X(ℂ) \ Z_sing(ℂ)`.
       (op (cycleComponentSmoothSupportAmbientOpen X x))
 
-/-- Supported cohomology on the full component is identified with sections
-of the local relative-cohomology sheaf on its smooth-locus ambient open.
-Each of the three arrows is a proved isomorphism. -/
+/-- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) ≅ Γ(X(ℂ) \ Z_sing(ℂ), 𝓗^{2p}_{Z(ℂ)})`, as the composite of three
+isomorphisms: restriction to `X(ℂ) \ Z_sing(ℂ)`, which is bijective because supported cohomology
+of `Z_sing(ℂ)` vanishes in degrees `2p` and `2p + 1`; passage to sections of the lowest nonzero
+cohomology sheaf, by purity along `Z(ℂ) \ Z_sing(ℂ)`; and the identification of that sheaf with
+`𝓗^{2p}_{Z(ℂ)}`. -/
 def cycleComponentSupportedClassNormalizationIso :
     CycleComponentSupportedCohomology X x p ≅
       CycleComponentSmoothCoclassSections X x p :=
@@ -100,21 +104,22 @@ def cycleComponentSupportedClassNormalizationIso :
           (complexSupportInjectiveCohomologySheafIsoRelative X
             (cycleComponentAnalyticClosedSupport X x) (2 * p)))
 
-/-- Extend a smooth-locus coclass uniquely across the singular boundary.
-The inverse comes from proved purity and boundary vanishing; no extension datum is supplied. -/
+/-- `Γ(X(ℂ) \ Z_sing(ℂ), 𝓗^{2p}_{Z(ℂ)}) → H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`: a section on the complement of
+the singular locus extends uniquely across `Z_sing(ℂ)`. This is the inverse of the normalization
+isomorphism; no extension datum is supplied. -/
 def cycleComponentExtendSmoothCoclass :
     CycleComponentSmoothCoclassSections X x p →+
       CycleComponentSupportedCohomology X x p :=
   (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
 
-/-- The globally supported class extending the exact complex-normal
-coclass. The inverse is that of the proved normalization isomorphism. -/
+/-- The class in `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)` that extends the normalized section of `𝓗^{2p}_{Z(ℂ)}`
+on `X(ℂ) \ Z_sing(ℂ)` across the singular locus. -/
 def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
   cycleComponentExtendSmoothCoclass X x hx
     (cycleComponentSmoothSupportCoclassSection X x hx)
 
-/-- The constructed class in the existing support-cone presentation. Its
-comparison includes the proved cone sign required by support forgetting. -/
+/-- The same class in `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, in the mapping-cone presentation of cohomology
+with support. The comparison includes the cone sign that support forgetting needs. -/
 def cycleComponentSheafSupportedClass :
     -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, in the support-cone presentation.
     RationalCohomologyWithSupport X
@@ -126,8 +131,9 @@ def cycleComponentSheafSupportedClass :
     (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
       (cycleComponentSupportedInjectiveClass X x hx)
 
-/-- **Step 3.** The unconditional ordinary class of an arbitrary integral component: the
-supported class of step 2, with its support forgotten.
+/-- **Step 3.** The class `[Z] ∈ H^{2p}(X(ℂ); ℚ)` of the integral subvariety `Z` with generic
+point `x`: the image of the supported class of step 2 under `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) →
+H^{2p}(X(ℂ); ℚ)`.
 
 This is the composite of the three steps, not a second route into ordinary cohomology; the
 agreement with `forgetSupport` is therefore definitional rather than a theorem. -/

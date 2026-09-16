@@ -105,8 +105,9 @@ def supportRestrictionSectionsConeIso :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- A flasque supported-section kernel computes the true restriction cone, with
-supported degree `n` corresponding to cone degree `n - 1`. -/
+/-- `H^n(Γ_{X \ U}(V, K)) ≅ H^{n-1}(cone(K(V) → K(V ⊓ U)))` for a termwise flasque complex of
+sheaves `K`: the sections over `V` supported on `X \ U` compute the cone of restriction, with
+a shift of degree. -/
 def supportedSectionHomologyIsoRestrictionCone
     (hK : ∀ n, (K.X n).IsFlasque) (n : ℤ) :
     -- `H^n(Γ_{X \ U}(V, K)) ≅ H^{n-1}(cone(K(V) → K(V ⊓ U)))`.

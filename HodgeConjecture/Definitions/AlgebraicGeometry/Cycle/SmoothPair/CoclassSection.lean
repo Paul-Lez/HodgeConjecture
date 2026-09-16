@@ -38,7 +38,8 @@ theorem mem_smoothClosedSupportChartOpen (z : ComplexPoint Y) :
     Point.map i z ∈ smoothClosedSupportChartOpen X Y i m d z :=
   closedImmersionHolomorphicFlatteningChart_mem_source X Y i m d z
 
-/-- The target is the sheafification of the literal relative-cohomology presheaf. -/
+/-- `𝓗^{2(d-m)}_{Y(ℂ)}`, the sheaf on `X(ℂ)` associated with `V ↦ H^{2(d-m)}(V, V \ Y(ℂ); ℚ)`.
+Here `d - m` is the codimension of `Y` in `X`. -/
 abbrev smoothClosedSupportCoclassSheaf : TopCat.Sheaf AddCommGrpCat
     (TopCat.of (ComplexPoint X)) :=
   supportRelativeCohomologySheaf
@@ -152,7 +153,8 @@ theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
     intro y hy
     rw [map_zero, smoothClosedSupportCoclassStalk_eq_zero X Y i m d y hy]
 
-/-- The unique global gluing of exactly normalized smooth normal coclasses. -/
+/-- The global section of `𝓗^{2(d-m)}_{Y(ℂ)}` on `X(ℂ)` that glues the normalized normal-chart
+coclasses. It is unique with this property. -/
 def smoothClosedSupportCoclassSection :
     -- A global section of `𝓗^{2(d-m)}_{Y(ℂ)}` on `X(ℂ)`.
     (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj
