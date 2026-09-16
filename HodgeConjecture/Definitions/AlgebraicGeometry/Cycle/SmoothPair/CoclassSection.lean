@@ -70,7 +70,6 @@ def smoothClosedSupportChartCoclassGerm (z : ComplexPoint Y)
       (smoothClosedSupportChartOpen X Y i m d z) (le_refl _))
 
 set_option backward.isDefEq.respectTransparency false in
-set_option backward.defeqAttrib.useBackward true in
 /-- The ambient overlap theorem proves equality of chart germs on support. -/
 private theorem smoothClosedSupportChartCoclassGerm_eq
     (z z' : ComplexPoint Y) (x : ComplexPoint X)
