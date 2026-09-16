@@ -24,7 +24,7 @@ noncomputable section
 universe u w
 open ProjectiveSpace
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-  (d p q : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
 
 # The variety and its complex points
@@ -507,7 +507,7 @@ example : @Guide.Hodge.D18.hodgePiece = @AlgebraicGeometry.ComplexPoint.hodgePie
 ```
 
 The degree $`n` is an independent index, as for the filtration; when $`p+q=n` this is the usual
-$`(p,q)` piece, which the notation {lean}`H^{p, q}(X)` abbreviates.
+$`(p,q)` piece.
 
 # Hodge classes
 

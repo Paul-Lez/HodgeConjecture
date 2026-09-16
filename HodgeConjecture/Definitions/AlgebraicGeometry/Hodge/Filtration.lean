@@ -658,13 +658,10 @@ def conjHodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
   (hodgeFiltrationComplexSubmodule X p n).comap (deRhamConjSemilinear X n)
 
 /-- The intersection `F^p ⊓ conj F^q` in degree `n`. For smooth projective varieties and
-`p + q = n`, this is the usual `(p,q)` Hodge piece, written `H^{p, q}(X)`. -/
+`p + q = n`, this is the usual `(p,q)` Hodge piece. -/
 def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ (DeRhamHypercohomology X n) :=
   hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
-
-/-- `H^{p, q}(X)` is the `(p, q)` Hodge piece in its natural degree `p + q`. -/
-scoped notation3:max "H^{" p ", " q "}" "(" X ")" => hodgePiece X p q (p + q)
 
 /-- Cohomology classes with coefficients in `K` whose de Rham images lie in `F^p ⊓ conj F^p`
 in degree `2p`. When conjugation fixes the image of `K` in `ℂ`, see
