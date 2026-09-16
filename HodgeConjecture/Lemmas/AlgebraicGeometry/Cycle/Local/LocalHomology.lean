@@ -98,7 +98,7 @@ def smoothClosedSupportNeighborhoodPairIso :
 def smoothClosedSupportRelativeHomologyIso (n : ℕ) :
     RelativeHomology ℚ
       (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n ≅
-        RelativeHomology ℚ (standardPuncturedPair ℂ (d - m)) n :=
+        RelativeHomology ℚ (puncturedPair ℂ (d - m)) n :=
   ((relativeHomologyFunctor ℚ n).mapIso
     (smoothClosedSupportNeighborhoodPairIso X Y i m d z V hzV).symm) ≪≫
     normalSliceRelativeHomologyIso (Fin m → ℂ) (d - m) n

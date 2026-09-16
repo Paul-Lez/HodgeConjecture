@@ -57,7 +57,7 @@ def puncturedChartModelTargetHomeomorph :
 
 /-- The pair isomorphism from the standard complex local model to the open chart target. -/
 def standardComplexChartTargetPairIso :
-    standardPuncturedPair ℂ d ≅
+    puncturedPair ℂ d ≅
       neighborhoodPointComplementPair (chartModelEmbedding d e x hx).target x where
   hom := TopPair.ofHom
     (TopCat.ofHom ⟨chartModelTargetHomeomorph d e x hx,

@@ -37,7 +37,7 @@ variable (R : Type) [CommRing R]
 chain in punctured Euclidean space. -/
 def standardSubspaceBoundaryChain (n : ℕ) :
     ModuleCat.of ℚ ℚ ⟶
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ (n + 1))).left.X n :=
+      ((chainPairFunctor ℚ).obj (puncturedPair ℝ (n + 1))).left.X n :=
   ∑ i : Fin (n + 2), (-1) ^ i.val • standardSubspaceFaceChain ℚ n i
 
 lemma standardLocalCycle_inclusion (d : ℕ) :

@@ -36,7 +36,7 @@ variable (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
 
 /-- The actual normal projection from a neighborhood support pair. -/
 def chartNormalProjectionPair (W : Set M) (hW : W ⊆ e.source) :
-    neighborhoodSupportComplementPair W S ⟶ standardPuncturedPair ℂ c :=
+    neighborhoodSupportComplementPair W S ⟶ puncturedPair ℂ c :=
   TopPair.ofHom
     (TopCat.ofHom ⟨fun w => (e w.1).2, ((e.continuousOn.mono hW).domRestrict).snd⟩)
     (TopCat.ofHom ⟨fun w => ⟨(e w.1.1).2, fun h => w.2 ((hS _ (hW w.1.2)).mpr h)⟩,

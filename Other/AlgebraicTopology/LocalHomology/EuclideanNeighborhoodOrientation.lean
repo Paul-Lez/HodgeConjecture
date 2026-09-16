@@ -107,7 +107,7 @@ lemma standardOrientationBallFace_projection (n : ℕ) (i : Fin (n + 2)) :
     (standardOrientationBallFaceMap n i)
   have hσ :
       (TopCat.toSSet.map (standardOrientationBallPair (n + 1)).map).app _ σ =
-        (TopCat.toSSet.obj (standardPuncturedPair ℝ (n + 1)).fst).δ i
+        (TopCat.toSSet.obj (puncturedPair ℝ (n + 1)).fst).δ i
           (standardSingularSimplex (n + 1)) := by
     apply ((standardOrientationBallPair (n + 1)).fst.toSSetObjEquiv _).injective
     ext t
@@ -132,7 +132,7 @@ lemma standardOrientationBallChain_boundary (d : ℕ) :
       (relativeChainProjection ℚ (standardOrientationBallPair (n + 1))).comm,
       ← Category.assoc]
     change (standardAmbientSimplexChain ℚ (n + 1) ≫
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ (n + 1))).right.d (n + 1) n) ≫ _ = 0
+      ((chainPairFunctor ℚ).obj (puncturedPair ℝ (n + 1))).right.d (n + 1) n) ≫ _ = 0
     rw [standardAmbientSimplexChain_boundary, Preadditive.sum_comp]
     apply Finset.sum_eq_zero
     intro i _

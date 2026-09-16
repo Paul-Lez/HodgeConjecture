@@ -61,20 +61,20 @@ lemma relativeSingular_homology_exact_relative (X : TopPair) (n : ℕ) :
 
 lemma standardSubspaceBoundaryChain_inclusion (n : ℕ) :
     standardSubspaceBoundaryChain n ≫
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ (n + 1))).hom.f n =
+      ((chainPairFunctor ℚ).obj (puncturedPair ℝ (n + 1))).hom.f n =
     standardAmbientSimplexChain ℚ (n + 1) ≫
       ((chainPairFunctor ℚ).obj
-        (standardPuncturedPair ℝ (n + 1))).right.d (n + 1) n := by
+        (puncturedPair ℝ (n + 1))).right.d (n + 1) n := by
   rw [standardSubspaceBoundaryChain, Preadditive.sum_comp]
   simp_rw [Preadditive.zsmul_comp, standardFaceChain_inclusion]
   exact (standardAmbientSimplexChain_boundary ℚ n).symm
 
 lemma standardSubspaceBoundaryChain_boundary (n : ℕ) :
     standardSubspaceBoundaryChain n ≫
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ (n + 1))).left.d n
+      ((chainPairFunctor ℚ).obj (puncturedPair ℝ (n + 1))).left.d n
         ((ComplexShape.down ℕ).next n) = 0 := by
-  let f := ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ (n + 1))).hom
-  let : Mono f := relativeChainMap_mono ℚ (standardPuncturedPair ℝ (n + 1))
+  let f := ((chainPairFunctor ℚ).obj (puncturedPair ℝ (n + 1))).hom
+  let : Mono f := relativeChainMap_mono ℚ (puncturedPair ℝ (n + 1))
   rw [← cancel_mono (f.f ((ComplexShape.down ℕ).next n)), Category.assoc, ← f.comm,
     ← Category.assoc, standardSubspaceBoundaryChain_inclusion, Category.assoc,
     HomologicalComplex.d_comp_d, comp_zero]
@@ -83,28 +83,28 @@ lemma standardSubspaceBoundaryChain_boundary (n : ℕ) :
 /-- The boundary of the standard affine simplex as a cycle in punctured Euclidean space. -/
 def standardPuncturedBoundaryCycle (n : ℕ) :
     ModuleCat.of ℚ ℚ ⟶
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ (n + 1))).left.cycles n :=
-  ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ (n + 1))).left.liftCycles
+      ((chainPairFunctor ℚ).obj (puncturedPair ℝ (n + 1))).left.cycles n :=
+  ((chainPairFunctor ℚ).obj (puncturedPair ℝ (n + 1))).left.liftCycles
     (standardSubspaceBoundaryChain n) ((ComplexShape.down ℕ).next n) rfl
     (standardSubspaceBoundaryChain_boundary n)
 
 /-- The homology class of the boundary of the standard affine simplex in punctured Euclidean
 space. -/
 def standardPuncturedBoundaryClass (n : ℕ) :
-    Homology ℚ (standardPuncturedPair ℝ (n + 1)).snd n :=
+    Homology ℚ (puncturedPair ℝ (n + 1)).snd n :=
   ((standardPuncturedBoundaryCycle n ≫
     ((chainPairFunctor ℚ).obj
-      (standardPuncturedPair ℝ (n + 1))).left.homologyπ n).hom) 1
+      (puncturedPair ℝ (n + 1))).left.homologyπ n).hom) 1
 
 lemma standardLocalCycle_comp_relativeSingularBoundary (n : ℕ) :
     standardLocalCycle ℚ (n + 1) ≫
         (standardLocalRelativeChainComplex ℚ (n + 1)).homologyπ (n + 1) ≫
-        relativeSingularBoundary (standardPuncturedPair ℝ (n + 1)) n =
+        relativeSingularBoundary (puncturedPair ℝ (n + 1)) n =
       standardPuncturedBoundaryCycle n ≫
         ((chainPairFunctor ℚ).obj
-          (standardPuncturedPair ℝ (n + 1))).left.homologyπ n := by
+          (puncturedPair ℝ (n + 1))).left.homologyπ n := by
   let hS := relativeChainShortComplex_shortExact ℚ
-    (standardPuncturedPair ℝ (n + 1))
+    (puncturedPair ℝ (n + 1))
   exact hS.δ_eq (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
     (standardLocalChain ℚ (n + 1)) (standardLocalChain_boundary_succ ℚ n)
     (standardAmbientSimplexChain ℚ (n + 1)) rfl
@@ -114,7 +114,7 @@ lemma standardLocalCycle_comp_relativeSingularBoundary (n : ℕ) :
 /-- The connecting map sends the standard local class to the homology class of the oriented
 boundary of the standard affine simplex. -/
 lemma relativeSingularBoundary_standardLocalClass (n : ℕ) :
-    (relativeSingularBoundary (standardPuncturedPair ℝ (n + 1)) n).hom
+    (relativeSingularBoundary (puncturedPair ℝ (n + 1)) n).hom
         (standardLocalClass ℚ (n + 1)) =
       standardPuncturedBoundaryClass n :=
   ConcreteCategory.congr_hom (standardLocalCycle_comp_relativeSingularBoundary n) 1
@@ -148,16 +148,16 @@ lemma standardRealModel_homology_isZero (d k : ℕ) (hk : k ≠ 0) :
 /-- In positive degree, the connecting map identifies the local homology of Euclidean space with
 the preceding homology of its punctured complement. -/
 def standardPuncturedRelativeBoundaryIso (n : ℕ) (hn : n ≠ 0) :
-    RelativeHomology ℚ (standardPuncturedPair ℝ (n + 1)) (n + 1) ≅
-      Homology ℚ (standardPuncturedPair ℝ (n + 1)).snd n :=
-  (relativeChainShortComplex_shortExact ℚ (standardPuncturedPair ℝ (n + 1))).δIso
+    RelativeHomology ℚ (puncturedPair ℝ (n + 1)) (n + 1) ≅
+      Homology ℚ (puncturedPair ℝ (n + 1)).snd n :=
+  (relativeChainShortComplex_shortExact ℚ (puncturedPair ℝ (n + 1))).δIso
     (n + 1) n (ComplexShape.down_mk (n + 1) n (by lia))
     (standardRealModel_homology_isZero (n + 1) (n + 1) (by lia))
     (standardRealModel_homology_isZero (n + 1) n hn)
 
 lemma standardPuncturedRelativeBoundaryIso_hom (n : ℕ) (hn : n ≠ 0) :
     (standardPuncturedRelativeBoundaryIso n hn).hom =
-      relativeSingularBoundary (standardPuncturedPair ℝ (n + 1)) n := rfl
+      relativeSingularBoundary (puncturedPair ℝ (n + 1)) n := rfl
 
 /-- Above dimension one, nonvanishing of the standard local class is equivalent to nonvanishing
 of its explicit oriented boundary in the punctured Euclidean space. -/
@@ -264,7 +264,7 @@ lemma standardFaceSimplex_components_ne :
       SSet.π₀.mk (standardFaceSimplex 0 (1 : Fin 2)) := by
   intro h
   have hz := congrArg
-    (TopCat.zerothHomotopyEquiv (X := (standardPuncturedPair ℝ 1).snd)).symm h
+    (TopCat.zerothHomotopyEquiv (X := (puncturedPair ℝ 1).snd)).symm h
   simp only [TopCat.zerothHomotopyEquiv_symm_mk] at hz
   rw [standardFaceSimplex_zero_point, standardFaceSimplex_one_point] at hz
   exact standardPuncturedLine_components_ne hz
@@ -272,15 +272,15 @@ lemma standardFaceSimplex_components_ne :
 /-- A vertex of the standard one-simplex, regarded as a zero-cycle in the punctured line. -/
 def standardPuncturedFaceCycle (i : Fin 2) :
     ModuleCat.of ℚ ℚ ⟶
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 1)).left.cycles 0 :=
-  ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 1)).left.liftCycles
+      ((chainPairFunctor ℚ).obj (puncturedPair ℝ 1)).left.cycles 0 :=
+  ((chainPairFunctor ℚ).obj (puncturedPair ℝ 1)).left.liftCycles
     (standardSubspaceFaceChain ℚ 0 i) 0 (by simp) (by simp)
 
 lemma standardPuncturedBoundaryCycle_zero_eq :
     standardPuncturedBoundaryCycle 0 =
       standardPuncturedFaceCycle 0 - standardPuncturedFaceCycle 1 := by
   rw [← cancel_mono
-    (((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 1)).left.iCycles 0)]
+    (((chainPairFunctor ℚ).obj (puncturedPair ℝ 1)).left.iCycles 0)]
   rw [Preadditive.sub_comp]
   simp only [standardPuncturedBoundaryCycle, standardPuncturedFaceCycle,
     HomologicalComplex.liftCycles_i]
@@ -292,24 +292,24 @@ lemma standardPuncturedBoundaryCycle_zero_eq :
 set_option backward.isDefEq.respectTransparency false in
 lemma standardPuncturedFaceCycle_homology₀Iso (i : Fin 2) :
     standardPuncturedFaceCycle i ≫
-        ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 1)).left.homologyπ 0 ≫
-        ((TopCat.toSSet.obj (standardPuncturedPair ℝ 1).snd).homology₀Iso
+        ((chainPairFunctor ℚ).obj (puncturedPair ℝ 1)).left.homologyπ 0 ≫
+        ((TopCat.toSSet.obj (puncturedPair ℝ 1).snd).homology₀Iso
           (ModuleCat.of ℚ ℚ)).hom =
-      Sigma.ι (fun (_ : (TopCat.toSSet.obj (standardPuncturedPair ℝ 1).snd).π₀) ↦
+      Sigma.ι (fun (_ : (TopCat.toSSet.obj (puncturedPair ℝ 1).snd).π₀) ↦
         ModuleCat.of ℚ ℚ) (SSet.π₀.mk (standardFaceSimplex 0 i)) :=
   SSet.liftCycles_ιChainComplex_homologyπ_homology₀Iso_hom
-    (TopCat.toSSet.obj (standardPuncturedPair ℝ 1).snd) (ModuleCat.of ℚ ℚ)
+    (TopCat.toSSet.obj (puncturedPair ℝ 1).snd) (ModuleCat.of ℚ ℚ)
       (standardFaceSimplex 0 i)
 
 set_option backward.isDefEq.respectTransparency false in
 lemma standardPuncturedBoundaryCycle_homology₀Iso :
     standardPuncturedBoundaryCycle 0 ≫
-        ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 1)).left.homologyπ 0 ≫
-        ((TopCat.toSSet.obj (standardPuncturedPair ℝ 1).snd).homology₀Iso
+        ((chainPairFunctor ℚ).obj (puncturedPair ℝ 1)).left.homologyπ 0 ≫
+        ((TopCat.toSSet.obj (puncturedPair ℝ 1).snd).homology₀Iso
           (ModuleCat.of ℚ ℚ)).hom =
-      Sigma.ι (fun (_ : (TopCat.toSSet.obj (standardPuncturedPair ℝ 1).snd).π₀) ↦
+      Sigma.ι (fun (_ : (TopCat.toSSet.obj (puncturedPair ℝ 1).snd).π₀) ↦
           ModuleCat.of ℚ ℚ) (SSet.π₀.mk (standardFaceSimplex 0 0)) -
-        Sigma.ι (fun (_ : (TopCat.toSSet.obj (standardPuncturedPair ℝ 1).snd).π₀) ↦
+        Sigma.ι (fun (_ : (TopCat.toSSet.obj (puncturedPair ℝ 1).snd).π₀) ↦
           ModuleCat.of ℚ ℚ) (SSet.π₀.mk (standardFaceSimplex 0 1)) := by
   rw [standardPuncturedBoundaryCycle_zero_eq, Preadditive.sub_comp,
     standardPuncturedFaceCycle_homology₀Iso, standardPuncturedFaceCycle_homology₀Iso]
@@ -317,7 +317,7 @@ lemma standardPuncturedBoundaryCycle_homology₀Iso :
 open scoped Classical in
 /-- A linear functional detecting the negative component of the punctured line. -/
 def standardPuncturedBoundaryDetector :
-    (∐ (fun (_ : (TopCat.toSSet.obj (standardPuncturedPair ℝ 1).snd).π₀) ↦
+    (∐ (fun (_ : (TopCat.toSSet.obj (puncturedPair ℝ 1).snd).π₀) ↦
       ModuleCat.of ℚ ℚ)) ⟶ ModuleCat.of ℚ ℚ :=
   Sigma.desc fun j ↦
     if j = SSet.π₀.mk (standardFaceSimplex 0 0) then 𝟙 _ else 0
@@ -325,13 +325,13 @@ def standardPuncturedBoundaryDetector :
 set_option backward.isDefEq.respectTransparency false in
 lemma standardPuncturedBoundaryCycle_detect :
     standardPuncturedBoundaryCycle 0 ≫
-        ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 1)).left.homologyπ 0 ≫
-        ((TopCat.toSSet.obj (standardPuncturedPair ℝ 1).snd).homology₀Iso
+        ((chainPairFunctor ℚ).obj (puncturedPair ℝ 1)).left.homologyπ 0 ≫
+        ((TopCat.toSSet.obj (puncturedPair ℝ 1).snd).homology₀Iso
           (ModuleCat.of ℚ ℚ)).hom ≫ standardPuncturedBoundaryDetector = 𝟙 _ := by
   calc
     _ = (standardPuncturedBoundaryCycle 0 ≫
-          ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 1)).left.homologyπ 0 ≫
-          ((TopCat.toSSet.obj (standardPuncturedPair ℝ 1).snd).homology₀Iso
+          ((chainPairFunctor ℚ).obj (puncturedPair ℝ 1)).left.homologyπ 0 ≫
+          ((TopCat.toSSet.obj (puncturedPair ℝ 1).snd).homology₀Iso
             (ModuleCat.of ℚ ℚ)).hom) ≫ standardPuncturedBoundaryDetector := by
             simp only [Category.assoc]
     _ = _ := by
@@ -346,7 +346,7 @@ lemma standardPuncturedBoundaryClass_zero_ne_zero :
   intro h
   have hdet := ConcreteCategory.congr_hom standardPuncturedBoundaryCycle_detect 1
   change (standardPuncturedBoundaryDetector.hom
-      (((TopCat.toSSet.obj (standardPuncturedPair ℝ 1).snd).homology₀Iso
+      (((TopCat.toSSet.obj (puncturedPair ℝ 1).snd).homology₀Iso
         (ModuleCat.of ℚ ℚ)).hom.hom (standardPuncturedBoundaryClass 0))) = 1 at hdet
   rw [h] at hdet
   norm_num at hdet

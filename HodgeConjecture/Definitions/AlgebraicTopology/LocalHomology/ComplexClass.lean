@@ -35,7 +35,7 @@ open CategoryTheory
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type*) [CommRing R]
+variable (R : Type) [CommRing R]
 
 /-- The orientation-ordered homeomorphism from complex coordinate space to real coordinate space.
 
@@ -47,7 +47,7 @@ def complexRealHomeomorph (p : ℕ) : (Fin p → ℂ) ≃ₜ (Fin (p * 2) → �
 
 /-- The isomorphism of punctured pairs induced by ordered real and imaginary coordinates. -/
 def standardComplexRealPairIso (p : ℕ) :
-    standardPuncturedPair ℂ p ≅ standardPuncturedPair ℝ (p * 2) :=
+    puncturedPair ℂ p ≅ puncturedPair ℝ (p * 2) :=
   TopPair.isoOfSubset (complexRealHomeomorph p) fun _ =>
     not_congr (Complex.piCoordCLE p).map_eq_zero_iff
 
@@ -55,15 +55,15 @@ def standardComplexRealPairIso (p : ℕ) :
 homeomorphism `ℂ^p ≅ ℝ^{2p}`. -/
 def standardComplexRealRelativeHomologyIso (p : ℕ) :
     -- `H_{2p}(ℂ^p, ℂ^p \ {0}; R) ≅ H_{2p}(ℝ^{2p}, ℝ^{2p} \ {0}; R)`.
-    RelativeHomology R (standardPuncturedPair ℂ p) (p * 2) ≅
-      RelativeHomology R (standardPuncturedPair ℝ (p * 2)) (p * 2) :=
+    RelativeHomology R (puncturedPair ℂ p) (p * 2) ≅
+      RelativeHomology R (puncturedPair ℝ (p * 2)) (p * 2) :=
   (relativeHomologyFunctor R (p * 2)).mapIso (standardComplexRealPairIso p)
 
 /-- The generator of `H_{2p}(ℂ^p, ℂ^p \ {0}; R)` transported from the standard local class of
 `ℝ^{2p}` through `ℂ^p ≅ ℝ^{2p}`. It fixes the complex orientation. -/
 def standardComplexLocalClass (p : ℕ) :
     -- The complex-orientation generator of `H_{2p}(ℂ^p, ℂ^p \ {0}; R)`.
-    RelativeHomology R (standardPuncturedPair ℂ p) (2 * p) :=
+    RelativeHomology R (puncturedPair ℂ p) (2 * p) :=
   (Nat.mul_comm p 2) ▸
     (standardComplexRealRelativeHomologyIso R p).inv.hom (standardLocalClass R (p * 2))
 

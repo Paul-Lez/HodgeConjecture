@@ -47,7 +47,7 @@ affine-space pair. -/
 def complexPuncturedPairMapOf
     (f : (Fin d → ℂ) → (Fin d → ℂ)) (hf : Continuous f)
     (hf_ne : ∀ z, z ≠ 0 → f z ≠ 0) :
-    standardPuncturedPair ℂ d ⟶ standardPuncturedPair ℂ d :=
+    puncturedPair ℂ d ⟶ puncturedPair ℂ d :=
   TopPair.ofHom
     (TopCat.ofHom ⟨f, hf⟩)
     (TopCat.ofHom
@@ -64,7 +64,7 @@ lemma complexPuncturedPairMapOf_fst_apply
 /-- Point excision upgrades a homotopy on any open neighborhood of the distinguished point to
 equality of the two induced maps on ambient relative homology. -/
 theorem relativeHomologyMap_eq_of_neighborhood_pairHomotopy
-    {Y : TopPair} (n : ℕ) (F G : standardPuncturedPair ℂ d ⟶ Y)
+    {Y : TopPair} (n : ℕ) (F G : puncturedPair ℂ d ⟶ Y)
     (U : Set (Fin d → ℂ)) (hU : IsOpen U) (h0U : 0 ∈ U)
     (H : TopPair.Homotopy
       (neighborhoodPointComplementPairMap U 0 ≫ F)
@@ -142,7 +142,7 @@ def complexNeighborhoodPuncturedPairMapOf
     (U : Set (Fin d → ℂ)) (f : (Fin d → ℂ) → (Fin d → ℂ))
     (hf : ContinuousOn f U)
     (hf_ne : ∀ z, z ∈ U → z ≠ 0 → f z ≠ 0) :
-    neighborhoodPointComplementPair U 0 ⟶ standardPuncturedPair ℂ d :=
+    neighborhoodPointComplementPair U 0 ⟶ puncturedPair ℂ d :=
   TopPair.ofHom
     (TopCat.ofHom ⟨fun z ↦ f z.1, hf.domRestrict⟩)
     (TopCat.ofHom

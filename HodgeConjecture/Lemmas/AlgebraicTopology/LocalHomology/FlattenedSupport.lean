@@ -149,7 +149,7 @@ def flattenedSupportPairIso : normalSlicePair E c ≅
 def flattenedSupportRelativeHomologyIso (n : ℕ) :
     RelativeHomology ℚ
       (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n ≅
-        RelativeHomology ℚ (standardPuncturedPair ℂ c) n :=
+        RelativeHomology ℚ (puncturedPair ℂ c) n :=
   ((relativeHomologyFunctor ℚ n).mapIso (flattenedSupportPairIso E c e x hx S hS h0).symm) ≪≫
     normalSliceRelativeHomologyIso E c n
 

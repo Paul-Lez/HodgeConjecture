@@ -37,7 +37,7 @@ open scoped Simplicial
 namespace AlgebraicTopology.Singular
 
 def standardComplexLocalClassMul (p : ℕ) :
-    RelativeHomology ℚ (standardPuncturedPair ℂ p) (p * 2) :=
+    RelativeHomology ℚ (puncturedPair ℂ p) (p * 2) :=
   (standardComplexRealRelativeHomologyIso ℚ p).inv.hom (standardLocalClass ℚ (p * 2))
 
 /-- Transport a relative homology class along an equality of degrees. -/
@@ -101,47 +101,47 @@ lemma span_standardComplexLocalClass_eq_top_iff (p : ℕ) :
   rw [span_relativeHomologyDegreeCast_eq_top_iff,
     span_standardComplexLocalClassMul_eq_top_iff]
 
-lemma isEmpty_standardPuncturedPair_zero_simplices (n : ℕ) :
-    IsEmpty ((TopCat.toSSet.obj (standardPuncturedPair ℝ 0).snd) _⦋n⦌) := by
+lemma isEmpty_puncturedPair_zero_simplices (n : ℕ) :
+    IsEmpty ((TopCat.toSSet.obj (puncturedPair ℝ 0).snd) _⦋n⦌) := by
   constructor
   intro σ
-  let f := ((standardPuncturedPair ℝ 0).snd.toSSetObjEquiv _ ) σ
+  let f := ((puncturedPair ℝ 0).snd.toSSetObjEquiv _ ) σ
   let y := f stdSimplex.barycenter
   apply y.2
   funext j
   exact Fin.elim0 j
 
 lemma standardPairChainMap_zero :
-    ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).hom = 0 := by
+    ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).hom = 0 := by
   apply HomologicalComplex.hom_ext
   intro n
   apply SSet.chainComplex_hom_ext
   intro σ
-  exact (isEmpty_standardPuncturedPair_zero_simplices n).false σ |>.elim
+  exact (isEmpty_puncturedPair_zero_simplices n).false σ |>.elim
 
 noncomputable instance standardLocalProjectionZeroIsIso :
-    IsIso (relativeChainProjection ℚ (standardPuncturedPair ℝ 0)) :=
+    IsIso (relativeChainProjection ℚ (puncturedPair ℝ 0)) :=
   cokernel.π_of_zero standardPairChainMap_zero
 
 /-- The relative-chain projection with its ambient source exposed through the pair functor. -/
 def standardRelativeChainProjectionZero :
-    ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right ⟶
+    ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right ⟶
       standardLocalRelativeChainComplex ℚ 0 :=
-  relativeChainProjection ℚ (standardPuncturedPair ℝ 0)
+  relativeChainProjection ℚ (puncturedPair ℝ 0)
 
 noncomputable instance standardRelativeChainProjectionZeroIsIso :
     IsIso standardRelativeChainProjectionZero :=
   cokernel.π_of_zero standardPairChainMap_zero
 
 def standardRelativeHomologyProjectionZeroIso :
-    ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right.homology 0 ≅
-      RelativeHomology ℚ (standardPuncturedPair ℝ 0) 0 :=
+    ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right.homology 0 ≅
+      RelativeHomology ℚ (puncturedPair ℝ 0) 0 :=
   HomologicalComplex.homologyMapIso
     (asIso standardRelativeChainProjectionZero) 0
 
 /-- The zero-dimensional standard relative local homology group is canonically one-dimensional. -/
 def standardLocalRelativeHomologyZeroIso :
-    RelativeHomology ℚ (standardPuncturedPair ℝ 0) 0 ≅ ModuleCat.of ℚ ℚ :=
+    RelativeHomology ℚ (puncturedPair ℝ 0) 0 ≅ ModuleCat.of ℚ ℚ :=
   letI (j : Fin 0) : TotallyDisconnectedSpace ℝ := Fin.elim0 j
   letI : TotallyDisconnectedSpace (Fin 0 → ℝ) := inferInstance
   standardRelativeHomologyProjectionZeroIso.symm ≪≫
@@ -154,17 +154,17 @@ def standardLocalRelativeHomologyZeroIso :
 /-- The ambient zero-cycle represented by the unique singular point of `ℝ⁰`. -/
 def standardAmbientCycleZero :
     ModuleCat.of ℚ ℚ ⟶
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right.cycles 0 :=
-  ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right.liftCycles
+      ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right.cycles 0 :=
+  ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right.liftCycles
     (standardAmbientSimplexChain ℚ 0) 0 (by simp) (by
-      rw [((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right.shape 0 0 (by simp)]
+      rw [((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right.shape 0 0 (by simp)]
       exact comp_zero)
 
 /-- The class of the unique singular point in the ambient homology of `ℝ⁰`. -/
 def standardAmbientClassZero :
-    ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right.homology 0 :=
+    ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right.homology 0 :=
   ((standardAmbientCycleZero ≫
-    ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right.homologyπ 0).hom) 1
+    ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right.homologyπ 0).hom) 1
 
 lemma standardAmbientCycleZero_projection :
     standardAmbientCycleZero ≫
@@ -182,11 +182,11 @@ lemma standardAmbientClassZero_projection :
       standardLocalClass ℚ 0 := by
   have hmor :
       standardAmbientCycleZero ≫
-          ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right.homologyπ 0 ≫
+          ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right.homologyπ 0 ≫
           standardRelativeHomologyProjectionZeroIso.hom =
         standardLocalCycle ℚ 0 ≫ (standardLocalRelativeChainComplex ℚ 0).homologyπ 0 := by
     change standardAmbientCycleZero ≫
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right.homologyπ 0 ≫
+      ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right.homologyπ 0 ≫
         HomologicalComplex.homologyMap standardRelativeChainProjectionZero 0 = _
     rw [HomologicalComplex.homologyπ_naturality, ← Category.assoc,
       standardAmbientCycleZero_projection]
@@ -194,13 +194,13 @@ lemma standardAmbientClassZero_projection :
 
 /-- The ordinary `H₀` augmentation, with its source exposed through the pair functor. -/
 def standardAmbientHomologyZeroε :
-    ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right.homology 0 ⟶
+    ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right.homology 0 ⟶
       ModuleCat.of ℚ ℚ :=
-  (standardPuncturedPair ℝ 0).fst.singularHomology₀ε (ModuleCat.of ℚ ℚ)
+  (puncturedPair ℝ 0).fst.singularHomology₀ε (ModuleCat.of ℚ ℚ)
 
 /-- The augmentation on zero-dimensional relative local homology. -/
 def standardLocalRelativeHomologyZeroε :
-    RelativeHomology ℚ (standardPuncturedPair ℝ 0) 0 ⟶ ModuleCat.of ℚ ℚ :=
+    RelativeHomology ℚ (puncturedPair ℝ 0) 0 ⟶ ModuleCat.of ℚ ℚ :=
   standardRelativeHomologyProjectionZeroIso.inv ≫
     standardAmbientHomologyZeroε
 
@@ -208,19 +208,19 @@ lemma standardAmbientClassZero_epsilon :
     standardAmbientHomologyZeroε.hom
         standardAmbientClassZero = 1 := by
   have h := SSet.liftCycles_ιChainComplex_homologyπ_homology₀ε
-    (TopCat.toSSet.obj (standardPuncturedPair ℝ 0).fst) (ModuleCat.of ℚ ℚ)
+    (TopCat.toSSet.obj (puncturedPair ℝ 0).fst) (ModuleCat.of ℚ ℚ)
     (standardSingularSimplex 0)
   have hmor : standardAmbientCycleZero ≫
-      ((chainPairFunctor ℚ).obj (standardPuncturedPair ℝ 0)).right.homologyπ 0 ≫
+      ((chainPairFunctor ℚ).obj (puncturedPair ℝ 0)).right.homologyπ 0 ≫
         standardAmbientHomologyZeroε = 𝟙 (ModuleCat.of ℚ ℚ) := by
     change
-      ((TopCat.toSSet.obj (standardPuncturedPair ℝ 0).fst).chainComplex
+      ((TopCat.toSSet.obj (puncturedPair ℝ 0).fst).chainComplex
         (ModuleCat.of ℚ ℚ)).liftCycles
-          ((TopCat.toSSet.obj (standardPuncturedPair ℝ 0).fst).ιChainComplex
+          ((TopCat.toSSet.obj (puncturedPair ℝ 0).fst).ιChainComplex
             (standardSingularSimplex 0)) 0 (by simp) (by simp) ≫
-        ((TopCat.toSSet.obj (standardPuncturedPair ℝ 0).fst).chainComplex
+        ((TopCat.toSSet.obj (puncturedPair ℝ 0).fst).chainComplex
           (ModuleCat.of ℚ ℚ)).homologyπ 0 ≫
-        (TopCat.toSSet.obj (standardPuncturedPair ℝ 0).fst).homology₀ε
+        (TopCat.toSSet.obj (puncturedPair ℝ 0).fst).homology₀ε
           (ModuleCat.of ℚ ℚ) = 𝟙 (ModuleCat.of ℚ ℚ)
     exact h
   exact ConcreteCategory.congr_hom hmor 1
