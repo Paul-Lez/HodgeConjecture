@@ -35,7 +35,7 @@ open CategoryTheory
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [CommRing R]
+variable (R : Type*) [CommRing R]
 
 /-- The orientation-ordered homeomorphism from complex coordinate space to real coordinate space.
 
