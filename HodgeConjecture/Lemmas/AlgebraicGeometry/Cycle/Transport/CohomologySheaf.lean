@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
 
 /-!
@@ -31,7 +33,7 @@ singular cohomology of the same literal local support pair. -/
 def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
     (V : Opens (ComplexPoint X)) (n : ℕ) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ) ≃+
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ) ≃+
         RelativeCohomology ℚ (neighborhoodSupportComplementPair
           (V : Set (ComplexPoint X)) (S : Set (ComplexPoint X))) n :=
   letI : ∀ W : Opens (ComplexPoint X), ParacompactSpace W := openParacompactSpace X

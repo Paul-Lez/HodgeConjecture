@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularNaturality
@@ -104,16 +106,16 @@ of restriction; its cohomology is not defined to be a desired purity group. -/
 def supportedRationalSingularCochainComplex (U : Opens X) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   -- `Γ_{X \ U}` applied to the sheaf complex of rational singular cochains.
-  ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
+  ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).obj
     -- The sheaf complex `C^•_sing(-; ℚ)`.
     (rationalSingularCochainComplex X)
 
 /-- Apply actual supported sections to the constructed resolution comparison. -/
 def supportedSingularToInjectiveComplex (U : Opens X) :
     supportedRationalSingularCochainComplex X U ⟶
-      ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).obj
+      ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).obj
         (rationalConstantInjectiveComplex X) :=
-  ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map
+  ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).map
     (singularToConstantInjectiveComplex X hX)
 
 variable [T2Space X] [∀ V : Opens X, ParacompactSpace V]

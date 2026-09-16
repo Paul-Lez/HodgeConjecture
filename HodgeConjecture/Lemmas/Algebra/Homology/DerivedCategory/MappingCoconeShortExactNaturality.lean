@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 
 /-!
@@ -50,7 +52,7 @@ lemma shortExactHomologyIsoCone_naturality (f : S ⟶ T)
     (shortExactHomologyIsoCone S hS n n' h).hom ≫
       HomologicalComplex.homologyMap
         (mappingCone.map S.g T.g f.τ₂ f.τ₃ f.comm₂₃.symm) n := by
-  let H := HomologicalComplex.homologyFunctor C (.up ℤ) 0
+  let H := HomologicalComplex.homologyFunctor C ℤᵘᵖ 0
   change (H.shift n').map f.τ₁ ≫
       (((H.shiftIso 1 n n' h).inv.app T.X₁) ≫
         (H.shift n).map (shiftedLiftShortComplex T)) =

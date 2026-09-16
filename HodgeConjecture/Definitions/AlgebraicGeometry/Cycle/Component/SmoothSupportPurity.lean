@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.OpenTransport
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
@@ -86,7 +88,7 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
         -- `X(ℂ)`.
         (TopCat.of (ComplexPoint X))
         -- Sections over the open `W`.
-        W).mapHomologicalComplex (.up ℤ)).obj
+        W).mapHomologicalComplex ℤᵘᵖ).obj
         -- `RΓ_{Z(ℂ)}(ℚ)`.
         (complexSupportInjectiveComplex X
           -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
@@ -110,7 +112,7 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
       let e := complexSupportInjectiveSectionCohomologyEquiv X
         (cycleComponentAnalyticClosedSupport X x) W q
       let : Subsingleton ((((TopCat.Sheaf.supportEvaluation
-          (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex (.up ℤ)).obj
+          (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex ℤᵘᵖ).obj
             (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
               (q : ℤ)) := e.injective.subsingleton
       exact AddCommGrpCat.isZero_of_subsingleton _
@@ -129,7 +131,7 @@ def cycleComponentSmoothRestrictedInjectiveComplex :
   let U : Opens (TopCat.of (ComplexPoint X)) := cycleComponentSmoothSupportAmbientOpen X x
   -- Restriction of sheaves to the open `U = X(ℂ) \ Z_sing(ℂ)`.
   ((U.isOpenEmbedding.sheafPullback
-    AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
+    AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
       -- `RΓ_{Z(ℂ)}(ℚ)` on `X(ℂ)`.
       (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
 
@@ -158,7 +160,7 @@ def cycleComponentSmoothSupportLowestSectionCohomologyIso :
       -- `X(ℂ)`.
       (TopCat.of (ComplexPoint X))
       -- Sections over the open `X(ℂ) \ Z_sing(ℂ)`.
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
+      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
         -- `RΓ_{Z(ℂ)}(ℚ)`.
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
           -- Degree `2p`.

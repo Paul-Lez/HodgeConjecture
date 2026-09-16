@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
 public import HodgeConjecture.Mathlib.CategoryTheory.Abelian.KernelCompositionShortExact
@@ -128,8 +130,8 @@ def nestedSupportRestrictionComplexShortComplex
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :=
   ShortComplex.mk
-    (((sheafSectionsSupportedOutsideMap X h).mapHomologicalComplex (.up ℤ)).app K)
-    (((toSheafSectionsBetweenOpens X h).mapHomologicalComplex (.up ℤ)).app K)
+    (((sheafSectionsSupportedOutsideMap X h).mapHomologicalComplex ℤᵘᵖ).app K)
+    (((toSheafSectionsBetweenOpens X h).mapHomologicalComplex ℤᵘᵖ).app K)
     (by ext n; exact NatTrans.congr_app (sheafSectionsSupportedOutsideMap_toBetween X h) (K.X n))
 
 /-- The actual nested-support sequence of section complexes on an open set. -/
@@ -137,7 +139,7 @@ def nestedSupportRestrictionSectionsComplexShortComplex (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex AddCommGrpCat.{u} ℤ) :=
   (nestedSupportRestrictionComplexShortComplex X h K).map
-    ((supportEvaluation X W).mapHomologicalComplex (.up ℤ))
+    ((supportEvaluation X W).mapHomologicalComplex ℤᵘᵖ)
 
 lemma nestedSupportRestrictionSectionsComplexShortComplex_shortExact (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :

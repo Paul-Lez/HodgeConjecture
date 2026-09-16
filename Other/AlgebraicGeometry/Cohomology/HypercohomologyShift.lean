@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexShiftNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift
@@ -42,9 +44,9 @@ displayed explicitly. -/
 def globalSectionsShiftShortComplex :
     (globalSectionsComplexInt Y (K⟦s⟧)).sc n ⟶
       (globalSectionsComplexInt Y K).sc n' :=
-  (HomologicalComplex.shortComplexFunctor AddCommGrpCat (.up ℤ) n).map
+  (HomologicalComplex.shortComplexFunctor AddCommGrpCat ℤᵘᵖ n).map
     ((((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
-      (.up ℤ)).commShiftIso s).hom.app K) ≫
+      ℤᵘᵖ).commShiftIso s).hom.app K) ≫
     (CochainComplex.shiftShortComplexFunctorIso AddCommGrpCat s n n' (by omega)).hom.app
       (globalSectionsComplexInt Y K)
 
@@ -54,32 +56,32 @@ lemma globalSectionsShiftShortComplex_homologyMap :
     ShortComplex.homologyMap (globalSectionsShiftShortComplex Y K s n n' h) =
     HomologicalComplex.homologyMap
       ((((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
-        (.up ℤ)).commShiftIso s).hom.app K) n ≫
-      ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftIso
+        ℤᵘᵖ).commShiftIso s).hom.app K) n ≫
+      ((HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftIso
         s n n' (by omega)).hom.app (globalSectionsComplexInt Y K) :=
   (ShortComplex.homologyMap_comp _ _).trans
     (congrArg (fun f => HomologicalComplex.homologyMap
       ((((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
-        (.up ℤ)).commShiftIso s).hom.app K) n ≫ f)
+        ℤᵘᵖ).commShiftIso s).hom.app K) n ≫ f)
       (CochainComplex.ShiftSequence.shiftIso_hom_app s n n' (by omega)
         (globalSectionsComplexInt Y K)).symm)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma homComplexSingleIntegerGlobalSections_rightUnshift_middle :
-    ((HomologicalComplex.shortComplexFunctor AddCommGrpCat (.up ℤ) n).map
+    ((HomologicalComplex.shortComplexFunctor AddCommGrpCat ℤᵘᵖ n).map
       (homComplexSingleIntegerIsoGlobalSections Y (K⟦s⟧)).hom ≫
         globalSectionsShiftShortComplex Y K s n n' h).τ₂ =
     (CochainComplex.HomComplex.rightUnshiftShortComplex
       (integerConstantSingleComplex Y) K s n n' h ≫
-      (HomologicalComplex.shortComplexFunctor AddCommGrpCat (.up ℤ) n').map
+      (HomologicalComplex.shortComplexFunctor AddCommGrpCat ℤᵘᵖ n').map
         (homComplexSingleIntegerIsoGlobalSections Y K).hom).τ₂ := by
   subst n'
   ext z
   exact congrArg
     (fun f : (integerConstantSingleComplex Y).X 0 ⟶ K.X (n + s) =>
       integerConstantHomAddEquivGlobalSections (K.X (n + s))
-        ((HomologicalComplex.singleObjXSelf (.up ℤ) 0 𝓒(Y; ℤ)).inv ≫ f))
+        ((HomologicalComplex.singleObjXSelf ℤᵘᵖ 0 𝓒(Y; ℤ)).inv ≫ f))
     (CochainComplex.HomComplex.rightUnshift_v_zero
       (integerConstantSingleComplex Y) K s n z).symm
 
@@ -232,10 +234,10 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_shifted_naturality
     hypercohomologyAddEquivGlobalSectionsKInjective X L n'
       (x.comp (Localization.SmallShiftedHom.mk
         (analyticQuasiIsomorphisms X) f) (by omega)) =
-    (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
+    (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
       (ShiftedHom.map f
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)))
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ))
         n n' (by omega)
       (hypercohomologyAddEquivGlobalSectionsKInjective X K n x) := by
   have hf : x.comp (Localization.SmallShiftedHom.mk

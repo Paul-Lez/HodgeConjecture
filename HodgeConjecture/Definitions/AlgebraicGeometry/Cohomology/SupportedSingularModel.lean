@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularFlasqueModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
@@ -37,7 +39,7 @@ def complexSupportedSingularToAmbientInjective
     supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U ⟶
       ((TopCat.Sheaf.sheafSectionsSupportedOutside
         -- `X(ℂ)`.
-        (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
+        (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex ℤᵘᵖ).obj
           -- The injective resolution `I^•` of `ℚ` on `X(ℂ)`.
           (ambientRationalInjectiveComplex X) :=
   supportedSingularToInjectiveComplex (TopCat.of (ComplexPoint X))

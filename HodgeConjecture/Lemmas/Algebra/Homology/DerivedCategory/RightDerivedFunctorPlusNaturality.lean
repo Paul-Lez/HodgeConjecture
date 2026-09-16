@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlus
 
 /-!
@@ -28,10 +30,10 @@ set_option backward.isDefEq.respectTransparency false in
 /-- Apply a natural transformation of additive functors to bounded-below homotopy complexes. -/
 def mapHomotopyCategoryPlus (α : F ⟶ G) :
     F.mapHomotopyCategoryPlus ⟶ G.mapHomotopyCategoryPlus where
-  app K := ObjectProperty.homMk ((α.mapHomotopyCategory (.up ℤ)).app K.obj)
+  app K := ObjectProperty.homMk ((α.mapHomotopyCategory ℤᵘᵖ).app K.obj)
   naturality K L f := by
     ext
-    exact (α.mapHomotopyCategory (.up ℤ)).naturality f.hom
+    exact (α.mapHomotopyCategory ℤᵘᵖ).naturality f.hom
 
 @[simp]
 theorem mapHomotopyCategoryPlus_id (F : C ⥤ D) [F.Additive] :

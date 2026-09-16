@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.RelativeCochainCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
 public import Mathlib.Algebra.Category.ModuleCat.Projective
@@ -48,7 +50,7 @@ set_option backward.isDefEq.respectTransparency false in
 original nonnegative short complex. -/
 def relativeDualCochainShortComplexIntEvalIso (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X).map
-        (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) (n : ℤ)) ≅
+        (HomologicalComplex.eval (ModuleCat.{u} R) ℤᵘᵖ (n : ℤ)) ≅
       (relativeDualCochainShortComplexNat R X).map
         (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) n) :=
   have hn : ComplexShape.embeddingUpNat.f n = (n : ℤ) := rfl
@@ -126,7 +128,7 @@ lemma relativeDualCochainShortComplexInt_shortExact (X : TopPair.{u}) :
         (relativeDualCochainShortComplexNat R X).map
             (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℕ) z.toNat) ≅
           (relativeDualCochainShortComplexInt R X).map
-            (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z) := by
+            (HomologicalComplex.eval (ModuleCat.{u} R) ℤᵘᵖ z) := by
       simpa only [hn] using
         (relativeDualCochainShortComplexIntEvalIso R X z.toNat).symm
     exact ShortComplex.shortExact_of_iso e
@@ -139,7 +141,7 @@ lemma relativeDualCochainShortComplexInt_shortExact (X : TopPair.{u}) :
       rw [← hn]
       exact Int.natCast_nonneg n
     let S := (relativeDualCochainShortComplexInt R X).map
-      (HomologicalComplex.eval (ModuleCat.{u} R) (ComplexShape.up ℤ) z)
+      (HomologicalComplex.eval (ModuleCat.{u} R) ℤᵘᵖ z)
     have h₁ : IsZero S.X₁ := by
       dsimp [S, relativeDualCochainShortComplexInt]
       exact (relativeDualCochainShortComplexNat R X).X₁.isZero_extend_X
