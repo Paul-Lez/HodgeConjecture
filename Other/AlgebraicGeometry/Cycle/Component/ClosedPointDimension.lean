@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.LocalGenerator
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Locus
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
 import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
@@ -45,41 +46,46 @@ nothing in the statement's dependency chain uses these results, only material in
 open CategoryTheory Ideal MvPolynomial Topology TopologicalSpace
 namespace AlgebraicGeometry
 attribute [local instance] overSpecAlgebra
-variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) {d p : ℕ}
 
-/-- The underlying point of every complex point of a codimension-`p` reduced component has
+/-- The underlying point of every complex point of a codimension-`p` closed subvariety has
 coheight `d - p`. -/
-lemma cycleComponent_complexPoint_coheight_eq_sub
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
+lemma closedEmbedding_complexPoint_coheight_eq_sub
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left]
+    (z : ComplexPoint (Y))
     [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = p) :
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) :
     Order.coheight z.underlying = d - p :=
-  cycleComponent_closedPoint_coheight_eq_sub X x z.underlying hx
-    (cycleComponent_complexPoint_underlying_isClosed X x z)
+  closedEmbedding_closedPoint_coheight_eq_sub i z.underlying hi
+    (closedEmbedding_complexPoint_underlying_isClosed i z)
 
-/-- In every ambient dimension, a reduced component of coheight `p` has separate component and
-ambient étale coordinates, with exactly `d - p` component coordinates. -/
-lemma nonempty_cycleComponentSeparateLocalCoordinates
+/-- In every ambient dimension, a closed subvariety of coheight `p` has separate source and
+ambient étale coordinates, with exactly `d - p` source coordinates. -/
+lemma nonempty_closedEmbeddingSeparateLocalCoordinates
     [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (d p : ℕ)
+    [IsProjective X.hom] [IsIntegral Y.left] [IsClosedImmersion i.left] (d p : ℕ)
     [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = p) :
-    Nonempty (CycleComponentSeparateLocalCoordinates X x d (d - p)) := by
-  let c : cycleComponent X.left x ⟶ Spec ↧ℂ :=
-    cycleComponentι X.left x ≫ X.hom
-  let S : (cycleComponent X.left x).Opens := c.smoothLocus
-  let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
-  let : Smooth g := cycleComponent_smoothLocus_smooth X x
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) :
+    Nonempty (ClosedEmbeddingSeparateLocalCoordinates i d (d - p)) := by
+  let c : Y.left ⟶ Spec ↧ℂ :=
+    i.left ≫ X.hom
+  let S : (Y.left).Opens := c.smoothLocus
+  let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ Y.hom
+  let : Smooth g := by
+    change Smooth (S.ι ≫ Y.hom)
+    have h : Y.hom = c := (Over.w i).symm
+    rw [h]
+    exact c.smooth_restrict_smoothLocus
   obtain ⟨z, hzsmooth, hzclosed⟩ :=
-    exists_cycleComponent_smooth_closed_complexPoint X x
+    exists_closedEmbedding_smooth_closed_complexPoint i
   let zs : S.toScheme := ⟨z.underlying, hzsmooth⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
   have hstandardComplex := algebraMap_isStandardSmooth (Over.mk g) hstandard
   obtain ⟨m, hm⟩ :=
     hstandardComplex.exists_isStandardSmoothOfRelativeDimension
   have hzsClosed : IsClosed {zs} := by
-    have hpreimage : S.ι ⁻¹' ({z.underlying} : Set (cycleComponent X.left x)) =
+    have hpreimage : S.ι ⁻¹' ({z.underlying} : Set (Y.left)) =
         ({zs} : Set S.toScheme) := by
       ext y
       simp only [Set.mem_preimage, Set.mem_singleton_iff]
@@ -102,22 +108,22 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
       _ = Order.coheight zw := hPcoheight
       _ = Order.coheight zs := hWcoheight.symm
       _ = Order.coheight z.underlying := hScoheight.symm
-      _ = d - p := cycleComponent_complexPoint_coheight_eq_sub X x z hx
+      _ = d - p := closedEmbedding_complexPoint_coheight_eq_sub i z hi
   subst m
   obtain ⟨coordinateRingHom, hcomp, hetale⟩ := hm.exists_etale_mvPolynomial
   exact ⟨
     { point := z
       point_mem_smoothLocus := hzsmooth
       point_isClosed := hzclosed
-      componentNeighborhood := W
-      componentNeighborhood_isAffine := hW
-      point_mem_componentNeighborhood := hzsW
-      componentCoordinateAlgHom :=
+      sourceNeighborhood := W
+      sourceNeighborhood_isAffine := hW
+      point_mem_sourceNeighborhood := hzsW
+      sourceCoordinateAlgHom :=
         { toRingHom := coordinateRingHom
           commutes' := fun c ↦ DFunLike.congr_fun hcomp c }
-      componentCoordinateAlgHom_etale := hetale
+      sourceCoordinateAlgHom_etale := hetale
       ambientCoordinates := localEtaleCoordinates X d
-        (cycleComponentι X.left x z.underlying) }⟩
+        (i.left z.underlying) }⟩
 
 end AlgebraicGeometry
 end

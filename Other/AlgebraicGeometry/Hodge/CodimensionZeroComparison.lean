@@ -116,15 +116,26 @@ theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff :
 
 /-! ### The normalization chain is injective in codimension zero -/
 
-/-- The component belonging to the generic point of an integral variety has the whole analytic
-space as its support. -/
-lemma cycleComponentSupport_genericPoint_eq_univ
+/-- The closed embedding of the whole variety, as the reduced closure of its generic point. -/
+abbrev genericPointEmbedding : cycleComponentOver X (genericPoint X.left) ⟶ X :=
+  cycleComponentOverι X (genericPoint X.left)
+
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
+/-- Its ambient generic point has coheight zero. -/
+lemma coheight_genericPointEmbedding
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
-    cycleComponentSupport X (genericPoint X.left) = Set.univ := by
-  rw [cycleComponentSupport]
-  change (@Point.underlying ℂ _ _ X) ⁻¹'
-    (closure {genericPoint X.left} : Set X.left) = Set.univ
-  rw [genericPoint_closure (α := X.left)]
+    coheight (closedEmbeddingGenericPoint (genericPointEmbedding X)) = ((0 : ℕ) : ℕ∞) := by
+  rw [closedEmbeddingGenericPoint_cycleComponentOverι]
+  exact coheight_genericPoint_eq_zero X
+
+
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
+/-- The reduced closure of the generic point of an integral variety has the whole analytic space
+as its support. -/
+lemma closedEmbeddingSupport_genericPointEmbedding_eq_univ
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
+    closedEmbeddingSupport (genericPointEmbedding X) = Set.univ := by
+  rw [closedEmbeddingSupport_cycleComponentOverι, genericPoint_closure (α := X.left)]
   exact Set.preimage_univ
 
 
@@ -141,32 +152,32 @@ theorem forgetSupport_injective_of_eq_univ (Z : Set (ComplexPoint X))
 /-- The generic-point component class vanishes exactly when the globally supported class it is
 built from vanishes: support on the whole analytic space is forgotten injectively, and the
 support-cone presentation is an isomorphism. -/
-theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass
+theorem closedEmbeddingSheafClass_genericPointEmbedding_eq_zero_iff_supportedInjectiveClass
     :
-    cycleComponentSheafClass X (genericPoint X.left)
-        (coheight_genericPoint_eq_zero X) = 0 ↔
-      cycleComponentSupportedInjectiveClass X (genericPoint X.left)
-        (coheight_genericPoint_eq_zero X) = 0 := by
-  have hZ : cycleComponentSupport X (genericPoint X.left) = Set.univ :=
-    cycleComponentSupport_genericPoint_eq_univ X
-  rw [cycleComponentSheafClass_eq_forgetSupport]
+    closedEmbeddingSheafClass (genericPointEmbedding X)
+        (coheight_genericPointEmbedding X) = 0 ↔
+      closedEmbeddingSupportedInjectiveClass (genericPointEmbedding X)
+        (coheight_genericPointEmbedding X) = 0 := by
+  have hZ : closedEmbeddingSupport (genericPointEmbedding X) = Set.univ :=
+    closedEmbeddingSupport_genericPointEmbedding_eq_univ X
+  rw [closedEmbeddingSheafClass_eq_forgetSupport]
   refine Iff.trans (map_eq_zero_iff _ (forgetSupport_injective_of_eq_univ X _ hZ _)) ?_
-  rw [cycleComponentSheafSupportedClass]
+  rw [closedEmbeddingSheafSupportedClass]
   exact map_eq_zero_iff _ (AddEquiv.injective _)
 
 /-- The generic-point component class vanishes exactly when the normalized coclass section it is
 constructed from vanishes: the normalization comparison is an isomorphism. -/
-theorem cycleComponentSheafClass_genericPoint_eq_zero_iff
+theorem closedEmbeddingSheafClass_genericPointEmbedding_eq_zero_iff
     :
-    cycleComponentSheafClass X (genericPoint X.left)
-        (coheight_genericPoint_eq_zero X) = 0 ↔
-      cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) = 0 := by
-  have hcoclass : (cycleComponentSupportedClassNormalizationIso X (genericPoint X.left) (coheight_genericPoint_eq_zero X)).addCommGroupIsoToAddEquiv
-      (cycleComponentSupportedInjectiveClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X)) =
-      cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) :=
-    cycleComponentSupportedInjectiveClass_normalization X (genericPoint X.left) (coheight_genericPoint_eq_zero X)
+    closedEmbeddingSheafClass (genericPointEmbedding X)
+        (coheight_genericPointEmbedding X) = 0 ↔
+      closedEmbeddingSmoothSupportCoclassSection (genericPointEmbedding X) (coheight_genericPointEmbedding X) = 0 := by
+  have hcoclass : (closedEmbeddingSupportedClassNormalizationIso (genericPointEmbedding X) (coheight_genericPointEmbedding X)).addCommGroupIsoToAddEquiv
+      (closedEmbeddingSupportedInjectiveClass (genericPointEmbedding X) (coheight_genericPointEmbedding X)) =
+      closedEmbeddingSmoothSupportCoclassSection (genericPointEmbedding X) (coheight_genericPointEmbedding X) :=
+    closedEmbeddingSupportedInjectiveClass_normalization (genericPointEmbedding X) (coheight_genericPointEmbedding X)
   refine Iff.trans
-    (cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass X) ?_
+    (closedEmbeddingSheafClass_genericPointEmbedding_eq_zero_iff_supportedInjectiveClass X) ?_
   rw [← hcoclass]
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
   · rw [h]
@@ -176,17 +187,17 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff
 /-- The comparison of the two codimension-zero span constructions, reduced to nonvanishing of the
 one normalized coclass section the component class is built from. -/
 theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_coclassSection_ne_zero
-    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
+    (hne : closedEmbeddingSmoothSupportCoclassSection (genericPointEmbedding X) (coheight_genericPointEmbedding X) ≠ 0) :
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X :=
   (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff X).mpr
-    fun h ↦ hne ((cycleComponentSheafClass_genericPoint_eq_zero_iff X).mp h)
+    fun h ↦ hne ((closedEmbeddingSheafClass_genericPointEmbedding_eq_zero_iff X).mp h)
 
 /-! ### The codimension-zero Hodge conjecture from the local nonvanishing -/
 
 /-- The constructed codimension-zero algebraic cycle-class span is all of degree-zero rational
 cohomology when the normalized coclass section is nonzero. -/
 theorem algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero
-    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
+    (hne : closedEmbeddingSmoothSupportCoclassSection (genericPointEmbedding X) (coheight_genericPointEmbedding X) ≠ 0) :
     algebraicCycleClassSpan X 0 = ⊤ := by
   let hV : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
   exact algebraicCycleClassSpan_zero_eq_top_of_connected X hV
@@ -195,7 +206,7 @@ theorem algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero
 /-- The degree-zero Hodge classes are exactly the algebraic cycle-class span when the normalized
 coclass section is nonzero. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero
-    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
+    (hne : closedEmbeddingSmoothSupportCoclassSection (genericPointEmbedding X) (coheight_genericPointEmbedding X) ≠ 0) :
     Hdg^0(X; ℚ) = algebraicCycleClassSpan X 0 := by
   let hV : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
   exact rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected X hV
@@ -204,7 +215,7 @@ theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_n
 /-- The Hodge-conjecture inclusion in codimension zero follows from nonvanishing of the normalized
 coclass section. -/
 theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_coclassSection_ne_zero
-    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
+    (hne : closedEmbeddingSmoothSupportCoclassSection (genericPointEmbedding X) (coheight_genericPointEmbedding X) ≠ 0) :
     Hdg^0(X; ℚ) ≤ algebraicCycleClassSpan X 0 := by
   rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero X hne]
 
@@ -212,7 +223,7 @@ theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_coclassSection_n
 complex dimension zero, given nonvanishing of the normalized coclass section. -/
 theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero_of_coclassSection_ne_zero
     (hd : dim X.left = 0)
-    (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) (p : ℕ) :
+    (hne : closedEmbeddingSmoothSupportCoclassSection (genericPointEmbedding X) (coheight_genericPointEmbedding X) ≠ 0) (p : ℕ) :
     Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p := by
   let _ : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
   exact rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero X hd

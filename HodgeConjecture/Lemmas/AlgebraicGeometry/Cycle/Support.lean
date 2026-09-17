@@ -26,7 +26,7 @@ public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 /-!
-# Geometric support of algebraic cycles
+# Geometric support of a closed subvariety
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Support`.
@@ -37,7 +37,6 @@ Lemmas about the definitions in
 @[expose] public noncomputable section
 open CategoryTheory Topology TopologicalSpace
 namespace AlgebraicGeometry
-variable (X : Over (Spec ↧ℂ))
 
 @[simp]
 lemma range_cycleComponentι (X : Scheme) (x : X) :
@@ -48,6 +47,22 @@ lemma range_cycleComponentι (X : Scheme) (x : X) :
   rw [Scheme.IdealSheafData.range_subschemeι]
   rfl
 
+/-- The image of a closed immersion whose source is irreducible is the closure of the image of
+the generic point. -/
+theorem range_eq_closure_image_genericPoint {X Y : Scheme} (f : Y ⟶ X) [IsClosedImmersion f]
+    [IrreducibleSpace Y] :
+    Set.range f = closure {f (genericPoint Y)} := by
+  rw [← Set.image_singleton, f.isClosedEmbedding.closure_image_eq, genericPoint_closure,
+    Set.image_univ]
+
+/-- The generic point of the reduced closure of `x` lies over `x`. -/
+@[simp]
+theorem cycleComponentι_genericPoint (X : Scheme) (x : X) :
+    cycleComponentι X x (genericPoint (cycleComponent X x)) = x := by
+  refine IsGenericPoint.eq (S := closure {x}) ?_ isGenericPoint_closure
+  show closure {cycleComponentι X x (genericPoint (cycleComponent X x))} = closure {x}
+  rw [← range_eq_closure_image_genericPoint, range_cycleComponentι]
+
 end AlgebraicGeometry
 end
 
@@ -57,7 +72,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
 
 /-- The kernel of a complex point is the vanishing ideal of the closure of its underlying scheme
 point. -/
@@ -87,57 +102,43 @@ private lemma complexPoint_ker_eq_vanishingIdeal_closure
     simpa only [TopologicalSpace.Closeds.coe_top, Set.image_univ] using hrange
   rwa [himage] at h
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
-/-- A complex point in the support of a component annihilates the defining ideal of that
-component. -/
-lemma cycleComponent_vanishingIdeal_le_complexPoint_ker
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : (ComplexPoint X)) (hz : z.underlying ∈ closure {x}) :
-    (cycleComponentι X.left x).ker ≤ z.left.ker := by
-  unfold cycleComponentι
-  rw [Scheme.IdealSheafData.ker_subschemeι]
-  rw [complexPoint_ker_eq_vanishingIdeal_closure z]
-  apply Scheme.IdealSheafData.vanishingIdeal_antimono
-  exact closure_minimal (Set.singleton_subset_iff.mpr hz) isClosed_closure
+/-- A complex point in the support of a closed embedding annihilates the kernel of that
+embedding. -/
+lemma closedEmbedding_ker_le_complexPoint_ker [IsClosedImmersion i.left]
+    (z : ComplexPoint X) (hz : z ∈ closedEmbeddingSupport i) :
+    i.left.ker ≤ z.left.ker := by
+  rw [complexPoint_ker_eq_vanishingIdeal_closure z,
+    ← Scheme.IdealSheafData.le_support_iff_le_vanishingIdeal]
+  have h : ((Scheme.Hom.ker i.left).support : Set X.left) = closure (Set.range i.left) :=
+    Scheme.Hom.support_ker i.left
+  have hz' : z.underlying ∈ Set.range i.left := hz
+  exact fun y hy ↦ h.ge (closure_mono (Set.singleton_subset_iff.mpr hz') hy)
 
-/-- The map on complex points induced by the canonical inclusion of a cycle component. -/
-def cycleComponentMap
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) → (ComplexPoint X) :=
-  Point.map (Over.homMk (cycleComponentι X.left x) rfl)
-
-/-- Lift a complex point in a component support through the reduced closed component. -/
-def cycleComponentComplexPointLift
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : (ComplexPoint X)) (hz : z ∈ cycleComponentSupport X x) :
-    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) :=
-  have hz' : z.underlying ∈ closure {x} := hz
-  Over.homMk (IsClosedImmersion.lift (cycleComponentι X.left x) z.left
-      (cycleComponent_vanishingIdeal_le_complexPoint_ker X x z hz')) (by
-    change _ ≫ (cycleComponentι X.left x ≫ X.hom) = 𝟙 _
-    rw [← Category.assoc, IsClosedImmersion.lift_fac]
+/-- Lift a complex point in the support of a closed embedding through that embedding. -/
+def closedEmbeddingComplexPointLift [IsClosedImmersion i.left]
+    (z : ComplexPoint X) (hz : z ∈ closedEmbeddingSupport i) :
+    ComplexPoint Y :=
+  Over.homMk (IsClosedImmersion.lift i.left z.left
+      (closedEmbedding_ker_le_complexPoint_ker i z hz)) (by
+    change _ ≫ Y.hom = 𝟙 _
+    rw [← Over.w i, ← Category.assoc, IsClosedImmersion.lift_fac]
     exact Over.w z)
 
 @[simp]
-lemma cycleComponentMap_lift
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : (ComplexPoint X)) (hz : z ∈ cycleComponentSupport X x) :
-    cycleComponentMap X x (cycleComponentComplexPointLift X x z hz) = z :=
-  Over.OverMorphism.ext (IsClosedImmersion.lift_fac (cycleComponentι X.left x) z.left _)
+lemma map_closedEmbeddingComplexPointLift [IsClosedImmersion i.left]
+    (z : ComplexPoint X) (hz : z ∈ closedEmbeddingSupport i) :
+    Point.map i (closedEmbeddingComplexPointLift i z hz) = z :=
+  Over.OverMorphism.ext (IsClosedImmersion.lift_fac i.left z.left _)
 
-/-- The analytic complex points in the smooth locus of a reduced cycle component. -/
-def cycleComponentSmoothAnalyticLocus
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Set (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :=
-  Point.overOpen
-    (cycleComponentι X.left x ≫ X.hom).smoothLocus
+/-- The complex points of the source of a closed embedding that lie in its smooth locus. -/
+def closedEmbeddingSmoothAnalyticLocus [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsClosedImmersion i.left] : Set (ComplexPoint Y) :=
+  Point.overOpen (i.left ≫ X.hom).smoothLocus
 
-/-- The image in the ambient analytic space of the smooth locus of a cycle component. -/
-def cycleComponentSmoothSupport
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) : Set (ComplexPoint X) :=
-  cycleComponentMap X x '' cycleComponentSmoothAnalyticLocus X x
+/-- The image in `X(ℂ)` of the smooth locus of the source of a closed embedding. -/
+def closedEmbeddingSmoothSupport [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsClosedImmersion i.left] : Set (ComplexPoint X) :=
+  Point.map i '' closedEmbeddingSmoothAnalyticLocus i
 
 end AlgebraicGeometry
 
@@ -149,29 +150,18 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
 
-/-- The reduced closure of a point in a projective complex variety is Noetherian.
+/-- The source of a closed embedding of a projective complex variety is Noetherian.
 
-This is not an instance: the component does not determine the structure morphism carrying the
-projectivity hypothesis. -/
-theorem cycleComponent_isNoetherian
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IsNoetherian (cycleComponent X.left x) :=
-  @isNoetherian_of_isProjective (Over.mk (cycleComponentι X.left x ≫ X.hom))
-    (cycleComponent_projective X x)
-
-/-- The smooth locus of an integral cycle component is a smooth complex scheme. -/
-theorem cycleComponent_smoothLocus_smooth
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Smooth
-      ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
-        (cycleComponentι X.left x ≫ X.hom)) :=
-  (cycleComponentι X.left x ≫ X.hom).smooth_restrict_smoothLocus
+This is not an instance: the source does not determine the embedding carrying the projectivity
+hypothesis. -/
+theorem closedEmbedding_isNoetherian [IsProjective X.hom] [IsClosedImmersion i.left] :
+    IsNoetherian Y.left :=
+  @isNoetherian_of_isProjective Y (closedEmbedding_isProjective i)
 
 /-- The complex points over a Zariski-closed subset form an analytically closed set. -/
-lemma isClosed_complexPoint_underlying_preimage
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+lemma isClosed_complexPoint_underlying_preimage (X : Over (Spec ↧ℂ))
     (Z : TopologicalSpace.Closeds X.left) :
     IsClosed ((@Point.underlying ℂ _ _ X) ⁻¹'
       (Z : Set X.left)) := by
@@ -180,10 +170,35 @@ lemma isClosed_complexPoint_underlying_preimage
     isOpen_compl_iff.mpr Z.2⟩
   exact Point.isOpen_overOpen (X := X) U
 
-lemma isClosed_cycleComponentSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IsClosed (cycleComponentSupport X x) :=
+lemma isClosed_closedEmbeddingSupport [IsClosedImmersion i.left] :
+    IsClosed (closedEmbeddingSupport i) :=
   isClosed_complexPoint_underlying_preimage X
-    ⟨closure {x}, isClosed_closure⟩
+    ⟨Set.range i.left, i.left.isClosedEmbedding.isClosed_range⟩
+
+/-- The image of a closed embedding whose source is irreducible is the closure of its ambient
+generic point. -/
+theorem range_eq_closure_closedEmbeddingGenericPoint [IrreducibleSpace Y.left]
+    [IsClosedImmersion i.left] :
+    Set.range i.left = closure {closedEmbeddingGenericPoint i} :=
+  range_eq_closure_image_genericPoint i.left
+
+/-- The ambient generic point of the closed embedding of the reduced closure of `x` is `x`. -/
+@[simp]
+theorem closedEmbeddingGenericPoint_cycleComponentOverι (X : Over (Spec ↧ℂ)) (x : X.left) :
+    closedEmbeddingGenericPoint (cycleComponentOverι X x) = x :=
+  cycleComponentι_genericPoint X.left x
+
+/-- A codimension hypothesis on `x` is one on the ambient generic point of the closed embedding
+of its reduced closure. -/
+theorem coheight_closedEmbeddingGenericPoint_cycleComponentOverι
+    (X : Over (Spec ↧ℂ)) (x : X.left) {p : ℕ} (hx : Order.coheight x = p) :
+    Order.coheight (closedEmbeddingGenericPoint (cycleComponentOverι X x)) = p := by
+  rwa [closedEmbeddingGenericPoint_cycleComponentOverι]
+
+/-- The support of the closed embedding of the reduced closure of `x`. -/
+@[simp]
+theorem closedEmbeddingSupport_cycleComponentOverι (X : Over (Spec ↧ℂ)) (x : X.left) :
+    closedEmbeddingSupport (cycleComponentOverι X x) = Point.underlying ⁻¹' closure {x} :=
+  congrArg (Point.underlying ⁻¹' ·) (range_cycleComponentι X.left x)
 
 end AlgebraicGeometry

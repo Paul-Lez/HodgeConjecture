@@ -41,73 +41,76 @@ open Point
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec ↧ℂ))
-
 /-- Singular cohomology of the analytic complex-point space. -/
-abbrev RationalSingularCohomology
+abbrev RationalSingularCohomology (X : Over (Spec ↧ℂ))
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (n : ℕ) :=
   Cohomology ℚ (TopCat.of (ComplexPoint X)) n
 
-/-- Singular cohomology supported on an irreducible algebraic component. -/
-abbrev RationalSingularComponentCohomologyWithSupport
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+
+/-- Singular cohomology supported on an closed subvariety. -/
+abbrev RationalSingularClosedEmbeddingCohomologyWithSupport
     [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (n : ℕ) :=
+    [IsProjective X.hom] [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ) :=
   CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X))
-    (cycleComponentSupport X x) n
+    (closedEmbeddingSupport i) n
 
 /-- A class generates its supported cohomology group over `ℚ`. This is a property, not an
 assumed purity theorem. -/
-def IsSupportedCohomologyGenerator {X : Over (Spec ↧ℂ)}
+def IsSupportedCohomologyGenerator {X Y : Over (Spec ↧ℂ)} {i : Y ⟶ X}
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-    {x : X.left} {n : ℕ}
-    (β : RationalSingularComponentCohomologyWithSupport X x n) : Prop :=
+    [IsIntegral Y.left] [IsClosedImmersion i.left] {n : ℕ}
+    (β : RationalSingularClosedEmbeddingCohomologyWithSupport i n) : Prop :=
   Submodule.span ℚ {β} = ⊤
 
-/-- The degree-`2p` singular cycle-class line of an irreducible codimension-`p` component.
+/-- The degree-`2p` singular cycle-class line of an codimension-`p` closed subvariety.
 It is the span of the images of all generators of the corresponding supported cohomology group.
 This definition is independent of the choice and scaling of a fundamental class. -/
-def singularComponentCycleClassLine
+def singularClosedEmbeddingCycleClassLine
     [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (p : ℕ) (x : X.left) :
+    [IsProjective X.hom] [IsIntegral Y.left] [IsClosedImmersion i.left] (p : ℕ) :
     Submodule ℚ (RationalSingularCohomology X (2 * p)) :=
-  Submodule.span ℚ {α | ∃ β : RationalSingularComponentCohomologyWithSupport X x (2 * p),
+  Submodule.span ℚ {α | ∃ β : RationalSingularClosedEmbeddingCohomologyWithSupport i (2 * p),
     IsSupportedCohomologyGenerator β ∧
       forgetSupport ℚ (TopCat.of (ComplexPoint X))
-          (cycleComponentSupport X x) (2 * p) β = α}
+          (closedEmbeddingSupport i) (2 * p) β = α}
 
-/-- The rational span of the guarded singular component-class lines in codimension `p`.
+/-- The rational span of the guarded singular subvariety-class lines in codimension `p`.
 Cohomological purity and local normalization are still required before this can be identified
 with the usual topological cycle-class span in positive codimension. -/
-def rationalSingularAlgebraicCycleClassSpan
+def rationalSingularAlgebraicCycleClassSpan (X : Over (Spec ↧ℂ))
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) :
     Submodule ℚ (RationalSingularCohomology X (2 * p)) :=
-  ⨆ (x : X.left) (_ : coheight x = p), singularComponentCycleClassLine X p x
+  ⨆ (x : X.left) (_ : coheight x = p),
+    singularClosedEmbeddingCycleClassLine (cycleComponentOverι X x) p
 
-/-- The forgotten class of a supported generator belongs to its component cycle-class line. -/
-lemma forgetSupport_mem_singularComponentCycleClassLine
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) (x : X.left)
-    (β : RationalSingularComponentCohomologyWithSupport X x (2 * p))
+/-- The forgotten class of a supported generator belongs to its subvariety cycle-class line. -/
+lemma forgetSupport_mem_singularClosedEmbeddingCycleClassLine
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (p : ℕ)
+    (β : RationalSingularClosedEmbeddingCohomologyWithSupport i (2 * p))
     (hβ : IsSupportedCohomologyGenerator β) :
     forgetSupport ℚ (TopCat.of (ComplexPoint X))
-        (cycleComponentSupport X x) (2 * p) β ∈
-      singularComponentCycleClassLine X p x :=
+        (closedEmbeddingSupport i) (2 * p) β ∈
+      singularClosedEmbeddingCycleClassLine i p :=
   Submodule.subset_span ⟨β, hβ, rfl⟩
 
-/-- Any supported generator computes the same intrinsic component line. -/
-lemma singularComponentCycleClassLine_eq_span
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) (x : X.left)
-    (β : RationalSingularComponentCohomologyWithSupport X x (2 * p))
+/-- Any supported generator computes the same intrinsic subvariety line. -/
+lemma singularClosedEmbeddingCycleClassLine_eq_span
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (p : ℕ)
+    (β : RationalSingularClosedEmbeddingCohomologyWithSupport i (2 * p))
     (hβ : IsSupportedCohomologyGenerator β) :
-    singularComponentCycleClassLine X p x =
+    singularClosedEmbeddingCycleClassLine i p =
       Submodule.span ℚ
         {forgetSupport ℚ (TopCat.of (ComplexPoint X))
-          (cycleComponentSupport X x) (2 * p) β} := by
+          (closedEmbeddingSupport i) (2 * p) β} := by
   apply le_antisymm
   · apply Submodule.span_le.mpr
     intro α hα
     obtain ⟨γ, -, rfl⟩ := hα
     let f := forgetSupport ℚ (TopCat.of (ComplexPoint X))
-      (cycleComponentSupport X x) (2 * p)
+      (closedEmbeddingSupport i) (2 * p)
     have hγ : γ ∈ Submodule.span ℚ {β} := by
       rw [hβ]
       exact Submodule.mem_top
@@ -125,14 +128,15 @@ full algebraic cycle-class span. -/
 lemma forgetSupport_mem_rationalSingularAlgebraicCycleClassSpan
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) (x : X.left)
     (hx : coheight x = p)
-    (β : RationalSingularComponentCohomologyWithSupport X x (2 * p))
+    (β : RationalSingularClosedEmbeddingCohomologyWithSupport (cycleComponentOverι X x) (2 * p))
     (hβ : IsSupportedCohomologyGenerator β) :
     forgetSupport ℚ (TopCat.of (ComplexPoint X))
-        (cycleComponentSupport X x) (2 * p) β ∈
+        (closedEmbeddingSupport (cycleComponentOverι X x)) (2 * p) β ∈
       rationalSingularAlgebraicCycleClassSpan X p := by
-  apply (le_iSup (fun y : X.left => ⨆ hy : coheight y = p,
-    singularComponentCycleClassLine X p y) x)
-  apply (le_iSup (fun _ : coheight x = p => singularComponentCycleClassLine X p x) hx)
-  exact forgetSupport_mem_singularComponentCycleClassLine X p x β hβ
+  refine le_iSup (fun y : X.left => ⨆ _ : coheight y = p,
+    singularClosedEmbeddingCycleClassLine (cycleComponentOverι X y) p) x ?_
+  refine le_iSup (fun _ : coheight x = p =>
+    singularClosedEmbeddingCycleClassLine (cycleComponentOverι X x) p) hx ?_
+  exact forgetSupport_mem_singularClosedEmbeddingCycleClassLine _ p β hβ
 
 end AlgebraicGeometry.ComplexPoint

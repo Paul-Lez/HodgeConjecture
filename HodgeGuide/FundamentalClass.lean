@@ -25,6 +25,8 @@ noncomputable section
 open CategoryTheory.Limits Opposite AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+  {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) [IsIntegral Y.left] [IsClosedImmersion i.left]
+  (hi : coheight (closedEmbeddingGenericPoint i) = p)
 ```
 
 # The class to be constructed
@@ -98,50 +100,50 @@ sheaf — {name}`supportRelativeCohomologySheaf` applied to an open — and not 
 namespace Guide.Subvariety.D1
 ```
 ```lean
-def cycleComponentSmoothClosedLiftCoclassSection (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) :
+def closedEmbeddingSmoothClosedLiftCoclassSection {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] [IsIntegral Y.left] [IsClosedImmersion i.left] {p : ℕ}
+    (hi : coheight (closedEmbeddingGenericPoint i) = p) :
     (supportRelativeCohomologySheaf
-      (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
-      (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+      (TopCat.of (ComplexPoint (closedEmbeddingSmoothLocusAmbientOpenOver i)))
+      (Set.range (Point.map (closedEmbeddingSmoothLocusClosedLiftOver i)))
       (2 * p)).obj.obj (op ⊤) :=
-  letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
-  have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
+  letI := closedEmbeddingSmoothLocusOver_hom_smoothOfRelativeDimension i hi
+  have hdeg := closedEmbeddingSmoothClosedLift_codimension i hi
   hdeg ▸ smoothClosedSupportCoclassSection
-    (cycleComponentSmoothLocusAmbientOpenOver X x)
-    (cycleComponentSmoothLocusOver X x)
-    (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)
+    (closedEmbeddingSmoothLocusAmbientOpenOver i)
+    (closedEmbeddingSmoothLocusOver i)
+    (closedEmbeddingSmoothLocusClosedLiftOver i) (dim X.left - p) (dim X.left)
 ```
 ```lean -show
 end Guide.Subvariety.D1
-example : @Guide.Subvariety.D1.cycleComponentSmoothClosedLiftCoclassSection = @AlgebraicGeometry.ComplexPoint.cycleComponentSmoothClosedLiftCoclassSection := rfl
+example : @Guide.Subvariety.D1.closedEmbeddingSmoothClosedLiftCoclassSection = @AlgebraicGeometry.ComplexPoint.closedEmbeddingSmoothClosedLiftCoclassSection := rfl
 ```
 ```lean -show
 namespace Guide.Subvariety.D2
 ```
 ```lean
-def cycleComponentSmoothSupportCoclassSection (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) :
+def closedEmbeddingSmoothSupportCoclassSection {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] [IsIntegral Y.left] [IsClosedImmersion i.left] {p : ℕ}
+    (hi : coheight (closedEmbeddingGenericPoint i) = p) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-      (cycleComponentSupport X x) (2 * p)).obj.obj
-      (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
-  supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)
-    (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-    (cycleComponentSupport X x)
-    (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
-    (cycleComponentSmoothClosedLiftAmbientMap_support X x)
-    (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
-    (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
-    (cycleComponentSmoothClosedLiftCoclassSection X x hx)
+      (closedEmbeddingSupport i) (2 * p)).obj.obj
+      (op (closedEmbeddingSmoothSupportAmbientOpen i)) :=
+  supportRelativeCohomologySectionOnOpen (closedEmbeddingSmoothClosedLiftAmbientMap i)
+    (closedEmbeddingSmoothClosedLiftAmbientMap_isOpenEmbedding i)
+    (closedEmbeddingSupport i)
+    (Set.range (Point.map (closedEmbeddingSmoothLocusClosedLiftOver i)))
+    (closedEmbeddingSmoothClosedLiftAmbientMap_support i)
+    (2 * p) (closedEmbeddingSmoothSupportAmbientOpen i)
+    (closedEmbeddingSmoothClosedLiftAmbientMap_imageOpen i)
+    (closedEmbeddingSmoothClosedLiftCoclassSection i hi)
 ```
 ```lean -show
 end Guide.Subvariety.D2
-example : @Guide.Subvariety.D2.cycleComponentSmoothSupportCoclassSection = @AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection := rfl
+example : @Guide.Subvariety.D2.closedEmbeddingSmoothSupportCoclassSection = @AlgebraicGeometry.ComplexPoint.closedEmbeddingSmoothSupportCoclassSection := rfl
 ```
 
 ```lean
-#check cycleComponentSmoothSupportCoclassSection_restrict
+#check closedEmbeddingSmoothSupportCoclassSection_restrict
 ```
 
 The restriction theorem says that on each chart the glued section is the class of that chart,
@@ -160,7 +162,7 @@ The smooth locus of a component always has a complex point, so this applies to e
 in every codimension: the normalization does not silently produce zero anywhere.
 
 ```lean
-#check cycleComponentSmoothSupportCoclassSection_ne_zero
+#check closedEmbeddingSmoothSupportCoclassSection_ne_zero
 ```
 
 Whether the resulting class in *ordinary* cohomology is nonzero is a different question, because
@@ -187,7 +189,7 @@ long exact sequence of the nested supports $`Z_{\mathrm{sing}}\subseteq Z` then 
 sides of the restriction map.
 
 ```lean
-#check cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree
+#check closedEmbeddingSingularBoundarySectionCohomology_isZero_cycleDegree
 ```
 
 The second passes from a cohomology group to a group of sections, and it is the step that purity
@@ -197,7 +199,7 @@ cohomology of the sections over $`U` agrees with the sections of the cohomology 
 lower degree contributes a correction.
 
 ```lean
-#check cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
+#check closedEmbeddingSmoothRestrictedInjective_homology_isZero_of_ne
 ```
 
 The third identifies $`\mathcal H^{2p}(R\Gamma_Z\mathbb Q)`, the cohomology sheaf of the supported
@@ -214,74 +216,75 @@ uniquely across $`Z_{\mathrm{sing}}` to a class supported on all of $`Z`.
 namespace Guide.Subvariety.D3
 ```
 ```lean
-def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) :
+def closedEmbeddingSupportExtensionIso {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] [IsIntegral Y.left] [IsClosedImmersion i.left] {p : ℕ}
+    (hi : coheight (closedEmbeddingGenericPoint i) = p) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
+        (closedEmbeddingAnalyticClosedSupport i))).homology (2 * (p : ℤ))) ≅
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
+      (closedEmbeddingSmoothSupportAmbientOpen i)).mapHomologicalComplex (.up ℤ)).obj
+        (complexSupportInjectiveComplex X (closedEmbeddingAnalyticClosedSupport i))).homology
           (2 * (p : ℤ))) :=
-  letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
-  asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
+  letI := closedEmbeddingSupportSectionRestriction_homology_isIso i hi
+  asIso (HomologicalComplex.homologyMap (closedEmbeddingSupportSectionRestriction i) (2 * (p : ℤ)))
 ```
 ```lean -show
 end Guide.Subvariety.D3
-example : @Guide.Subvariety.D3.cycleComponentSupportExtensionIso = @AlgebraicGeometry.ComplexPoint.cycleComponentSupportExtensionIso := rfl
+example : @Guide.Subvariety.D3.closedEmbeddingSupportExtensionIso = @AlgebraicGeometry.ComplexPoint.closedEmbeddingSupportExtensionIso := rfl
 ```
 ```lean -show
 namespace Guide.Subvariety.D4
 ```
 ```lean
-def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) :
+def closedEmbeddingSupportedClassNormalizationIso {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] {p : ℕ}
+    (hi : coheight (closedEmbeddingGenericPoint i) = p) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
+        (closedEmbeddingAnalyticClosedSupport i))).homology (2 * (p : ℤ))) ≅
       (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-        (cycleComponentSupport X x) (2 * p)).obj.obj
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
+        (closedEmbeddingSupport i) (2 * p)).obj.obj
+          (op (closedEmbeddingSmoothSupportAmbientOpen i)) :=
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
-  cycleComponentSupportExtensionIso X x hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
+  closedEmbeddingSupportExtensionIso i hi ≪≫
+    closedEmbeddingSmoothSupportLowestSectionCohomologyIso i hi ≪≫
       (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-        (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
-          (complexSupportInjectiveCohomologySheafIsoRelative X
-            (cycleComponentAnalyticClosedSupport X x) (2 * p)))
+        (closedEmbeddingSmoothSupportAmbientOpen i)).mapIso
+          (complexSupportInjectiveCohomologySheafIsoRelative
+            (closedEmbeddingAnalyticClosedSupport i) (2 * p)))
 ```
 ```lean -show
 end Guide.Subvariety.D4
-example : @Guide.Subvariety.D4.cycleComponentSupportedClassNormalizationIso = @AlgebraicGeometry.ComplexPoint.cycleComponentSupportedClassNormalizationIso := rfl
+example : @Guide.Subvariety.D4.closedEmbeddingSupportedClassNormalizationIso = @AlgebraicGeometry.ComplexPoint.closedEmbeddingSupportedClassNormalizationIso := rfl
 ```
 
 ```lean
-#check cycleComponentSupportedInjectiveClass_unique
+#check closedEmbeddingSupportedInjectiveClass_unique
 ```
 
 The two ends of that isomorphism have short names, which keep the distinction visible in later
-signatures: {name}`CycleComponentSupportedCohomology` is the group $`H^{2p}_Z(X;\mathbb Q)`, and
-{name}`CycleComponentSmoothCoclassSections` is the group of sections
+signatures: {name}`ClosedEmbeddingSupportedCohomology` is the group $`H^{2p}_Z(X;\mathbb Q)`, and
+{name}`ClosedEmbeddingSmoothCoclassSections` is the group of sections
 $`\Gamma(U,\mathcal H^{2p}_Z)`. Despite the shared word "cohomology", they are objects of
-different kinds, and {name}`cycleComponentExtendSmoothCoclass`, the inverse of the normalization
+different kinds, and {name}`closedEmbeddingExtendSmoothCoclass`, the inverse of the normalization
 isomorphism, is the only passage between them. Applying it to the normalized section of Step 1
 gives the class of the component.
 
 ```lean
-#check CycleComponentSupportedCohomology
-#check CycleComponentSmoothCoclassSections
-#check cycleComponentExtendSmoothCoclass
-#check cycleComponentExtendSmoothCoclass_normalization
-#check cycleComponentExtendSmoothCoclass_unique
+#check ClosedEmbeddingSupportedCohomology
+#check ClosedEmbeddingSmoothCoclassSections
+#check closedEmbeddingExtendSmoothCoclass
+#check closedEmbeddingExtendSmoothCoclass_normalization
+#check closedEmbeddingExtendSmoothCoclass_unique
 ```
 
 ```lean
 example :
-    CycleComponentSupportedCohomology X x p :=
-  cycleComponentExtendSmoothCoclass X x hx
-    (cycleComponentSmoothSupportCoclassSection X x hx)
+    ClosedEmbeddingSupportedCohomology i p :=
+  closedEmbeddingExtendSmoothCoclass i hi
+    (closedEmbeddingSmoothSupportCoclassSection i hi)
 ```
 
 # Step 3: from support to ordinary cohomology
@@ -295,35 +298,37 @@ cohomology, which is the class the statement uses.
 namespace Guide.Subvariety.D5
 ```
 ```lean
-def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) :
-    RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
-      (cycleComponentSupportedInjectiveClass X x hx)
+def closedEmbeddingSheafSupportedClass {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] {p : ℕ}
+    (hi : coheight (closedEmbeddingGenericPoint i) = p) :
+    RationalCohomologyWithSupport X (closedEmbeddingSupport i) (2 * (p : ℤ)) :=
+  (rationalSupportAddEquivSupportedInjectiveHomology X (closedEmbeddingSupport i)
+    (closedEmbeddingAnalyticClosedSupport i).isClosed (2 * (p : ℤ))).symm
+      (closedEmbeddingSupportedInjectiveClass i hi)
 ```
 ```lean -show
 end Guide.Subvariety.D5
-example : @Guide.Subvariety.D5.cycleComponentSheafSupportedClass = @AlgebraicGeometry.ComplexPoint.cycleComponentSheafSupportedClass := rfl
+example : @Guide.Subvariety.D5.closedEmbeddingSheafSupportedClass = @AlgebraicGeometry.ComplexPoint.closedEmbeddingSheafSupportedClass := rfl
 ```
 ```lean -show
 namespace Guide.Subvariety.D6
 ```
 ```lean
-def cycleComponentSheafClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) : H^(2 * (p : ℤ))(X; ℚ) :=
-  forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
-    (cycleComponentSheafSupportedClass X x hx)
+def closedEmbeddingSheafClass {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
+    [Smooth X.hom] [IsProjective X.hom] {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] {p : ℕ}
+    (hi : coheight (closedEmbeddingGenericPoint i) = p) : H^(2 * (p : ℤ))(X; ℚ) :=
+  forgetSupport X (closedEmbeddingSupport i) (2 * (p : ℤ))
+    (closedEmbeddingSheafSupportedClass i hi)
 ```
 ```lean -show
 end Guide.Subvariety.D6
-example : @Guide.Subvariety.D6.cycleComponentSheafClass = @AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass := rfl
+example : @Guide.Subvariety.D6.closedEmbeddingSheafClass = @AlgebraicGeometry.ComplexPoint.closedEmbeddingSheafClass := rfl
 ```
 
 ```lean
-#check cycleComponentSheafClass_eq_forgetSupport
+#check closedEmbeddingSheafClass_eq_forgetSupport
 ```
 
 Both definitions take only the variety, the generic point of the subvariety, and a proof that its
@@ -334,9 +339,10 @@ is an isomorphism. The nonzero normalized section therefore gives a nonzero clas
 $`H^0(X;\mathbb Q)` in every dimension, without assuming analytic connectedness.
 
 ```lean
-#check cycleComponentSheafClass_genericPoint_ne_zero
+#check closedEmbeddingSheafClass_genericPointEmbedding_ne_zero
 ```
 ```lean -show
-example : cycleComponentSheafClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
-  cycleComponentSheafClass_genericPoint_ne_zero X
+example : closedEmbeddingSheafClass (genericPointEmbedding X)
+    (coheight_genericPointEmbedding X) ≠ 0 :=
+  closedEmbeddingSheafClass_genericPointEmbedding_ne_zero
 ```

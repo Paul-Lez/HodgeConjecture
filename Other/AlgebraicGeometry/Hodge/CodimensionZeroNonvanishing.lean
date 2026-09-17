@@ -23,48 +23,50 @@ open CategoryTheory Order TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)}
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- Every component's normalized coclass section is nonzero, as detected on its smooth locus. -/
-theorem cycleComponentSmoothSupportCoclassSection_ne_zero
-    (x : X.left) {p : ℕ}
-    (hx : coheight x = p) :
-    cycleComponentSmoothSupportCoclassSection X x hx ≠ 0 := by
-  apply cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero X x hx
-  apply (cycleComponentSmoothClosedLiftCoclassSection_ne_zero_iff X x hx).mpr
-  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
-  obtain ⟨z⟩ := cycleComponentSmoothLocusOver_nonempty X x
+/-- The normalized coclass section of a closed subvariety is nonzero, as detected on its smooth
+locus. -/
+theorem closedEmbeddingSmoothSupportCoclassSection_ne_zero (i : Y ⟶ X)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] {p : ℕ}
+    (hi : coheight (closedEmbeddingGenericPoint i) = p) :
+    closedEmbeddingSmoothSupportCoclassSection i hi ≠ 0 := by
+  apply closedEmbeddingSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero i hi
+  apply (closedEmbeddingSmoothClosedLiftCoclassSection_ne_zero_iff i hi).mpr
+  let := closedEmbeddingSmoothLocusOver_hom_smoothOfRelativeDimension i hi
+  obtain ⟨z⟩ := closedEmbeddingSmoothLocusOver_nonempty i
   exact smoothClosedSupportCoclassSection_ne_zero _ _ _ (dim X.left - p) (dim X.left) z
 
-/-- The generic component's normalized coclass section is nonzero in every dimension. -/
-theorem cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero
-    :
-    cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
-  cycleComponentSmoothSupportCoclassSection_ne_zero X _ (coheight_genericPoint_eq_zero X)
+/-- The normalized coclass section of the whole variety is nonzero in every dimension. -/
+theorem closedEmbeddingSmoothSupportCoclassSection_genericPointEmbedding_ne_zero :
+    closedEmbeddingSmoothSupportCoclassSection (genericPointEmbedding X)
+      (coheight_genericPointEmbedding X) ≠ 0 :=
+  closedEmbeddingSmoothSupportCoclassSection_ne_zero _ (coheight_genericPointEmbedding X)
 
 /-- The constructed ordinary cycle class of the whole variety is nonzero in every dimension. -/
-theorem cycleComponentSheafClass_genericPoint_ne_zero :
-    cycleComponentSheafClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
-  fun h ↦ cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X
-    ((cycleComponentSheafClass_genericPoint_eq_zero_iff X).mp h)
+theorem closedEmbeddingSheafClass_genericPointEmbedding_ne_zero :
+    closedEmbeddingSheafClass (genericPointEmbedding X)
+      (coheight_genericPointEmbedding X) ≠ 0 :=
+  fun h ↦ closedEmbeddingSmoothSupportCoclassSection_genericPointEmbedding_ne_zero
+    ((closedEmbeddingSheafClass_genericPointEmbedding_eq_zero_iff X).mp h)
 
 /-- The constructed codimension-zero span agrees with the span of the cohomological unit. -/
 theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan :
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X :=
   (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_iff X).mpr
-    (cycleComponentSheafClass_genericPoint_ne_zero X)
+    closedEmbeddingSheafClass_genericPointEmbedding_ne_zero
 
 /-- The constructed codimension-zero classes span degree-zero cohomology. -/
 theorem algebraicCycleClassSpan_zero_eq_top :
     algebraicCycleClassSpan X 0 = ⊤ :=
   algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero X
-    (cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X)
+    closedEmbeddingSmoothSupportCoclassSection_genericPointEmbedding_ne_zero
 
 /-- The codimension-zero Hodge conjecture in every dimension. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan :
     Hdg^0(X; ℚ) = algebraicCycleClassSpan X 0 :=
   rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero X
-    (cycleComponentSmoothSupportCoclassSection_genericPoint_ne_zero X)
+    closedEmbeddingSmoothSupportCoclassSection_genericPointEmbedding_ne_zero
 
 end AlgebraicGeometry.ComplexPoint

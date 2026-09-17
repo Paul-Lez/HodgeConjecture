@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 
 /-!
-# Actual purity along the smooth locus of an integral cycle component
+# Actual purity along the smooth locus of a closed subvariety
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity`.
@@ -21,25 +21,26 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec ↧ℂ))
-  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-  {p : ℕ} (hx : Order.coheight x = p)
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
+  {p : ℕ} (hi : Order.coheight (closedEmbeddingGenericPoint i) = p)
 
 /-- Its forward map displays the actual open-section identification, canonical
 sheafification comparison on the open, and exact open-restriction homology comparison. -/
-@[simp] theorem cycleComponentSmoothSupportLowestSectionCohomologyIso_hom :
-    (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom =
+@[simp] theorem closedEmbeddingSmoothSupportLowestSectionCohomologyIso_hom :
+    (closedEmbeddingSmoothSupportLowestSectionCohomologyIso i hi).hom =
       HomologicalComplex.homologyMap
         (TopCat.Sheaf.openRestrictionTopSectionComplexIso (TopCat.of (ComplexPoint X))
-          (cycleComponentSmoothSupportAmbientOpen X x)
-          (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).inv
+          (closedEmbeddingSmoothSupportAmbientOpen i)
+          (complexSupportInjectiveComplex X (closedEmbeddingAnalyticClosedSupport i))).inv
         (2 * (p : ℤ)) ≫
       TopCat.Sheaf.sectionCohomologyToSheafSection
-        (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))
-        (cycleComponentSmoothRestrictedInjectiveComplex X x) (2 * (p : ℤ)) ⊤ ≫
+        (TopCat.of (closedEmbeddingSmoothSupportAmbientOpen i))
+        (closedEmbeddingSmoothRestrictedInjectiveComplex i) (2 * (p : ℤ)) ⊤ ≫
       (TopCat.Sheaf.openRestrictionHomologyTopSectionsIso (TopCat.of (ComplexPoint X))
-        (cycleComponentSmoothSupportAmbientOpen X x)
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
+        (closedEmbeddingSmoothSupportAmbientOpen i)
+        (complexSupportInjectiveComplex X (closedEmbeddingAnalyticClosedSupport i))
         (2 * (p : ℤ))).hom := rfl
 
 end AlgebraicGeometry.ComplexPoint

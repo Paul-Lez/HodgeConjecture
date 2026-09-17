@@ -74,7 +74,6 @@ public import Other.AlgebraicGeometry.Cycle.Component.AnalyticEmbedding
 public import Other.AlgebraicGeometry.Cycle.Component.BorelMoore
 public import Other.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 public import Other.AlgebraicGeometry.Cycle.Component.CoclassNonzero
-public import Other.AlgebraicGeometry.Cycle.Component.GenericPoint
 public import Other.AlgebraicGeometry.Cycle.Component.LocalGenerator
 public import Other.AlgebraicGeometry.Cycle.Component.LocalOrientation
 public import Other.AlgebraicGeometry.Cycle.Component.LocalOrientationCoherence

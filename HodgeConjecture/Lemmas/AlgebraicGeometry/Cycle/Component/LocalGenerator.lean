@@ -26,7 +26,7 @@ import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 /-!
 # Local generators from exact cycle-component coordinates
 
-An exact étale coordinate package on the smooth locus of a cycle component gives an
+An exact étale coordinate package on the smooth locus of a closed subvariety gives an
 analytic chart on its chosen affine neighborhood. This file constructs that chart directly from
 the retained polynomial-ring homomorphism. It then transports the proved standard complex local
 homology generator through the chart.
@@ -45,24 +45,25 @@ namespace AlgebraicGeometry
 
 attribute [local instance] overSpecAlgebra
 
-variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
-  [Smooth X.hom] [IsProjective X.hom] {x : X.left}
+variable {d n : ℕ} {X Y : Over (Spec ↧ℂ)} [IsIntegral X.left]
+  [Smooth X.hom] [IsProjective X.hom] {i : Y ⟶ X} [IsIntegral Y.left]
+  [IsClosedImmersion i.left]
   [SmoothOfRelativeDimension d X.hom]
 
-namespace CycleComponentSeparateLocalCoordinates
+namespace ClosedEmbeddingSeparateLocalCoordinates
 
-variable (C : CycleComponentSeparateLocalCoordinates X x d n)
+variable (C : ClosedEmbeddingSeparateLocalCoordinates i d n)
 
-/-- The complex structure map on the selected affine component neighborhood. -/
+/-- The complex structure map on the selected affine source neighborhood. -/
 abbrev neighborhoodStructureMap :
-    C.componentNeighborhood.toScheme ⟶ Spec ↧ℂ :=
-  C.componentNeighborhood.ι ≫ (componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom
+    C.sourceNeighborhood.toScheme ⟶ Spec ↧ℂ :=
+  C.sourceNeighborhood.ι ≫ (sourceSmoothLocus i).ι ≫ Y.hom
 
-/-- The retained exact component coordinates, transported to global sections of the affine
+/-- The retained exact source coordinates, transported to global sections of the affine
 neighborhood itself. -/
 def coordinateRingHomOnNeighborhood :
-    MvPolynomial (Fin n) ℂ →+* Γ(C.componentNeighborhood.toScheme, ⊤) :=
-  C.componentNeighborhood.topIso.inv.hom.comp C.componentCoordinateAlgHom.toRingHom
+    MvPolynomial (Fin n) ℂ →+* Γ(C.sourceNeighborhood.toScheme, ⊤) :=
+  C.sourceNeighborhood.topIso.inv.hom.comp C.sourceCoordinateAlgHom.toRingHom
 
 /-- The transported coordinate map is compatible with the neighborhood's complex structure
 map. -/
@@ -70,25 +71,25 @@ lemma C_comp_coordinateRingHomOnNeighborhood :
     CommRingCat.ofHom MvPolynomial.C ≫
         CommRingCat.ofHom C.coordinateRingHomOnNeighborhood =
       (Scheme.ΓSpecIso ↧ℂ).inv ≫ C.neighborhoodStructureMap.appTop := by
-  apply (cancel_mono C.componentNeighborhood.topIso.hom).mp
+  apply (cancel_mono C.sourceNeighborhood.topIso.hom).mp
   change (((CommRingCat.ofHom MvPolynomial.C) ≫
-      CommRingCat.ofHom C.componentCoordinateAlgHom.toRingHom) ≫
-        C.componentNeighborhood.topIso.inv) ≫
-          C.componentNeighborhood.topIso.hom =
+      CommRingCat.ofHom C.sourceCoordinateAlgHom.toRingHom) ≫
+        C.sourceNeighborhood.topIso.inv) ≫
+          C.sourceNeighborhood.topIso.hom =
     (((Scheme.ΓSpecIso ↧ℂ).inv ≫
       C.neighborhoodStructureMap.appTop) ≫
-        C.componentNeighborhood.topIso.hom)
+        C.sourceNeighborhood.topIso.hom)
   rw [Category.assoc, Iso.inv_hom_id, Category.comp_id]
   simp only [neighborhoodStructureMap, Scheme.Hom.comp_appTop, Category.assoc]
   rw [Scheme.Opens.ι_appTop_topIso_hom]
-  exact congrArg CommRingCat.ofHom C.componentCoordinateAlgHom.comp_algebraMap
+  exact congrArg CommRingCat.ofHom C.sourceCoordinateAlgHom.comp_algebraMap
 
 /-- The transported exact coordinate map remains étale. -/
 lemma coordinateRingHomOnNeighborhood_etale :
     C.coordinateRingHomOnNeighborhood.Etale :=
-  RingHom.Etale.respectsIso.1 C.componentCoordinateAlgHom.toRingHom
-    C.componentNeighborhood.topIso.symm.commRingCatIsoToRingEquiv
-      C.componentCoordinateAlgHom_etale
+  RingHom.Etale.respectsIso.1 C.sourceCoordinateAlgHom.toRingHom
+    C.sourceNeighborhood.topIso.symm.commRingCatIsoToRingEquiv
+      C.sourceCoordinateAlgHom_etale
 
 /-- Complex affine `n`-space is standard smooth of relative dimension `n`, using its presentation
 with `n` variables and no relations. -/
@@ -116,7 +117,7 @@ lemma mvPolynomial_C_isStandardSmoothOfRelativeDimension :
   exact P.isStandardSmoothOfRelativeDimension (by
     simp [Algebra.Presentation.dimension])
 
-/-- The structure map of the exact affine component neighborhood is standard smooth of the
+/-- The structure map of the exact affine source neighborhood is standard smooth of the
 coordinate package's specified dimension on global sections. -/
 lemma neighborhoodStructureMap_appTop_isStandardSmoothOfRelativeDimension :
     C.neighborhoodStructureMap.appTop.hom.IsStandardSmoothOfRelativeDimension n := by
@@ -153,38 +154,38 @@ lemma neighborhoodStructureMap_appTop_isStandardSmoothOfRelativeDimension :
     exact congrArg C.neighborhoodStructureMap.appTop.hom ha
   exact heq ▸ h
 
-/-- The exact coordinates prove that the selected affine component neighborhood is smooth of the
+/-- The exact coordinates prove that the selected affine source neighborhood is smooth of the
 specified relative dimension. -/
 noncomputable instance neighborhoodSmoothOfRelativeDimension :
     SmoothOfRelativeDimension n C.neighborhoodStructureMap where
   exists_isStandardSmoothOfRelativeDimension y := by
-    let : IsAffine C.componentNeighborhood.toScheme :=
-      C.componentNeighborhood_isAffine
+    let : IsAffine C.sourceNeighborhood.toScheme :=
+      C.sourceNeighborhood_isAffine
     refine ⟨⊤, isAffineOpen_top _, C.neighborhoodStructureMap ⁻¹ᵁ ⊤,
       ?_, by simp, le_rfl, ?_⟩
-    · simpa using (isAffineOpen_top C.componentNeighborhood.toScheme)
+    · simpa using (isAffineOpen_top C.sourceNeighborhood.toScheme)
     · rw [Scheme.Hom.appLE_eq_app]
       exact C.neighborhoodStructureMap_appTop_isStandardSmoothOfRelativeDimension
 
 noncomputable local instance coordinateRingAlgebra :
-    Algebra (MvPolynomial (Fin n) ℂ) Γ(C.componentNeighborhood.toScheme, ⊤) :=
+    Algebra (MvPolynomial (Fin n) ℂ) Γ(C.sourceNeighborhood.toScheme, ⊤) :=
   C.coordinateRingHomOnNeighborhood.toAlgebra
 
 noncomputable local instance coordinateRingComplexAlgebra :
-    Algebra ℂ Γ(C.componentNeighborhood.toScheme, ⊤) :=
+    Algebra ℂ Γ(C.sourceNeighborhood.toScheme, ⊤) :=
   (C.coordinateRingHomOnNeighborhood.comp MvPolynomial.C).toAlgebra
 
 noncomputable local instance coordinateRingScalarTower :
     IsScalarTower ℂ (MvPolynomial (Fin n) ℂ)
-      Γ(C.componentNeighborhood.toScheme, ⊤) :=
+      Γ(C.sourceNeighborhood.toScheme, ⊤) :=
   IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
 
 noncomputable local instance coordinateRingEtale :
     Algebra.Etale (MvPolynomial (Fin n) ℂ)
-      Γ(C.componentNeighborhood.toScheme, ⊤) :=
+      Γ(C.sourceNeighborhood.toScheme, ⊤) :=
   RingHom.etale_algebraMap.mp C.coordinateRingHomOnNeighborhood_etale
 
-end CycleComponentSeparateLocalCoordinates
+end ClosedEmbeddingSeparateLocalCoordinates
 end AlgebraicGeometry
 
 namespace AlgebraicTopology.Singular

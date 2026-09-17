@@ -24,7 +24,7 @@ noncomputable section
 universe u w
 open ProjectiveSpace
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+  (d p : ℕ) (x : X.left) (hi : coheight x = p) (n : ℤ)
 ```
 
 # The variety and its complex points

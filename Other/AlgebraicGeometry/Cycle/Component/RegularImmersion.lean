@@ -19,6 +19,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Locus
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 import Other.AlgebraicGeometry.Smooth.RegularLocal
@@ -44,135 +45,139 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-  [IsProjective X.hom] (x : X.left)
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) [IsIntegral X.left] [Smooth X.hom]
+  [IsProjective X.hom] [IsIntegral Y.left] [IsClosedImmersion i.left]
 
-/-- The component stalk at a point in the component's smooth locus is regular local. -/
-lemma cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus
-    (z : cycleComponent X.left x)
-    (hz : z ∈ (cycleComponentι X.left x ≫ X.hom).smoothLocus) :
-    IsRegularLocalRing ((cycleComponent X.left x).presheaf.stalk z) := by
-  let c : cycleComponent X.left x ⟶ Spec ↧ℂ :=
-    cycleComponentι X.left x ≫ X.hom
-  let U : (cycleComponent X.left x).Opens := c.smoothLocus
+omit [IsIntegral X.left] [IsProjective X.hom] [IsIntegral Y.left] in
+/-- The stalk of the source at a point of its smooth locus is regular local. -/
+lemma closedEmbedding_stalk_isRegularLocalRing_of_mem_smoothLocus
+    (z : Y.left)
+    (hz : z ∈ (i.left ≫ X.hom).smoothLocus) :
+    IsRegularLocalRing ((Y.left).presheaf.stalk z) := by
+  let c : Y.left ⟶ Spec ↧ℂ :=
+    i.left ≫ X.hom
+  let U : (Y.left).Opens := c.smoothLocus
   let g : U.toScheme ⟶ Spec ↧ℂ := U.ι ≫ c
-  let : Smooth g := cycleComponent_smoothLocus_smooth X x
+  let : Smooth g := (i.left ≫ X.hom).smooth_restrict_smoothLocus
   let zu : U.toScheme := ⟨z, hz⟩
   have hregular : IsRegularLocalRing (U.toScheme.presheaf.stalk zu) :=
     Smooth.isRegularLocalRing_stalk_complex (f := g) zu
   exact @IsRegularLocalRing.of_ringEquiv (U.toScheme.presheaf.stalk zu) _ hregular
-    ((cycleComponent X.left x).presheaf.stalk z) _
+    ((Y.left).presheaf.stalk z) _
     (U.stalkIso zu).commRingCatIsoToRingEquiv
 
-omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- The ambient stalk at a point of a cycle component in a smooth complex variety is regular
-local. -/
-lemma cycleComponent_ambient_stalk_isRegularLocalRing
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] [IsIntegral Y.left]
+  [IsClosedImmersion i.left] in
+/-- The ambient stalk at the image of a point of the source in a smooth complex variety is
+regular local. -/
+lemma closedEmbedding_ambient_stalk_isRegularLocalRing
     {d : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (z : cycleComponent X.left x) :
+    (z : Y.left) :
     IsRegularLocalRing
-      (X.left.presheaf.stalk (cycleComponentι X.left x z)) :=
+      (X.left.presheaf.stalk (i.left z)) :=
   SmoothOfRelativeDimension.isRegularLocalRing_stalk_complex
-    (d := d) (f := X.hom) (cycleComponentι X.left x z)
+    (d := d) (f := X.hom) (i.left z)
 
+omit [IsIntegral X.left] [IsProjective X.hom] [IsIntegral Y.left] in
 /-- At a smooth component point, the quotient of the ambient stalk by the kernel of the
 closed-immersion stalk map is regular local. -/
-lemma cycleComponent_stalkMap_quotient_isRegularLocalRing_of_mem_smoothLocus
-    (z : cycleComponent X.left x)
-    (hz : z ∈ (cycleComponentι X.left x ≫ X.hom).smoothLocus) :
+lemma closedEmbedding_stalkMap_quotient_isRegularLocalRing_of_mem_smoothLocus
+    (z : Y.left)
+    (hz : z ∈ (i.left ≫ X.hom).smoothLocus) :
     IsRegularLocalRing
-      (X.left.presheaf.stalk (cycleComponentι X.left x z) ⧸
-        RingHom.ker ((cycleComponentι X.left x).stalkMap z).hom) := by
-  have hsurj := (cycleComponentι X.left x).stalkMap_surjective z
-  have hregular := cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus X x z hz
+      (X.left.presheaf.stalk (i.left z) ⧸
+        RingHom.ker ((i.left).stalkMap z).hom) := by
+  have hsurj := (i.left).stalkMap_surjective z
+  have hregular := closedEmbedding_stalk_isRegularLocalRing_of_mem_smoothLocus i z hz
   exact @IsRegularLocalRing.of_ringEquiv
-    ((cycleComponent X.left x).presheaf.stalk z) _ hregular _ _
+    ((Y.left).presheaf.stalk z) _ hregular _ _
     (RingHom.quotientKerEquivOfSurjective hsurj).symm
 
-omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- The kernel of the cycle-component stalk map is finitely generated. -/
-lemma cycleComponent_stalkMap_ker_fg
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] [IsIntegral Y.left]
+  [IsClosedImmersion i.left] in
+/-- The kernel of the stalk map of a closed embedding is finitely generated. -/
+lemma closedEmbedding_stalkMap_ker_fg
     {d : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (z : cycleComponent X.left x) :
-    (RingHom.ker ((cycleComponentι X.left x).stalkMap z).hom).FG := by
+    (z : Y.left) :
+    (RingHom.ker ((i.left).stalkMap z).hom).FG := by
   have _ : IsRegularLocalRing
-      (X.left.presheaf.stalk (cycleComponentι X.left x z)) :=
-    cycleComponent_ambient_stalk_isRegularLocalRing (d := d) X x z
+      (X.left.presheaf.stalk (i.left z)) :=
+    closedEmbedding_ambient_stalk_isRegularLocalRing (d := d) i z
   exact (RingHom.ker
-    ((cycleComponentι X.left x).stalkMap z).hom).fg_of_isNoetherianRing
+    ((i.left).stalkMap z).hom).fg_of_isNoetherianRing
 
-/-- The kernel of the cycle-component stalk map is prime. -/
-lemma cycleComponent_stalkMap_ker_isPrime {X : Scheme} (x : X) (z : cycleComponent X x) :
-    (RingHom.ker ((cycleComponentι X x).stalkMap z).hom).IsPrime :=
+/-- The kernel of the stalk map of a closed immersion is prime. -/
+lemma closedImmersion_stalkMap_ker_isPrime {X Z : Scheme} (f : Z ⟶ X) [IsIntegral Z] (z : Z) :
+    (RingHom.ker (f.stalkMap z).hom).IsPrime :=
   RingHom.ker_isPrime _
 
-/-- At a complex point of a codimension-`p` component in a smooth complex `d`-fold, the quotient
+/-- At a complex point of a codimension-`p` closed subvariety in a smooth complex `d`-fold, the quotient
 of the ambient stalk by the stalk-map kernel has Krull dimension `d - p`. -/
-lemma ringKrullDim_cycleComponent_stalkMap_quotient
+lemma ringKrullDim_closedEmbedding_stalkMap_quotient
     {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
-    (hx : Order.coheight x = p) :
+    (z : ComplexPoint (Y))
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) :
     ringKrullDim
-      (X.left.presheaf.stalk (cycleComponentι X.left x z.underlying) ⧸
-        RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom) =
+      (X.left.presheaf.stalk (i.left z.underlying) ⧸
+        RingHom.ker ((i.left).stalkMap z.underlying).hom) =
       d - p := by
-  have hsurj := (cycleComponentι X.left x).stalkMap_surjective z.underlying
+  have hsurj := (i.left).stalkMap_surjective z.underlying
   calc
     ringKrullDim
-        (X.left.presheaf.stalk (cycleComponentι X.left x z.underlying) ⧸
-          RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom) =
-        ringKrullDim ((cycleComponent X.left x).presheaf.stalk z.underlying) :=
+        (X.left.presheaf.stalk (i.left z.underlying) ⧸
+          RingHom.ker ((i.left).stalkMap z.underlying).hom) =
+        ringKrullDim ((Y.left).presheaf.stalk z.underlying) :=
       ringKrullDim_eq_of_ringEquiv (RingHom.quotientKerEquivOfSurjective hsurj)
     _ = Order.coheight z.underlying := ringKrullDim_stalk_eq_coheight z.underlying
     _ = d - p := congrArg (fun n : ℕ∞ ↦ (↑n : WithBot ℕ∞))
-      (cycleComponent_complexPoint_coheight_eq_sub
-        (d := d) (p := p) X x z hx)
+      (closedEmbedding_complexPoint_coheight_eq_sub
+        (d := d) (p := p) i z hi)
 
-/-- The ambient stalk at the image of a complex component point has Krull dimension `d`. -/
-lemma ringKrullDim_cycleComponent_ambient_stalk
+/-- The ambient stalk at the image of a complex point of the source has Krull dimension `d`. -/
+lemma ringKrullDim_closedEmbedding_ambient_stalk
     {d : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
+    (z : ComplexPoint (Y)) :
     ringKrullDim
-      (X.left.presheaf.stalk (cycleComponentι X.left x z.underlying)) = d := by
+      (X.left.presheaf.stalk (i.left z.underlying)) = d := by
   rw [ringKrullDim_stalk_eq_coheight]
-  have hclosed := cycleComponent_complexPoint_ambient_underlying_isClosed X x z
+  have hclosed := closedEmbedding_complexPoint_ambient_underlying_isClosed i z
   have hsum := SmoothOfRelativeDimension.height_add_coheight_eq_of_isClosed
     (f := X.hom) (d := d)
-    (cycleComponentι X.left x z.underlying) hclosed
-  have hmin : IsMin (cycleComponentι X.left x z.underlying) := by
+    (i.left z.underlying) hclosed
+  have hmin : IsMin (i.left z.underlying) := by
     intro y hy
-    have hy' : y ∈ closure {cycleComponentι X.left x z.underlying} := by
+    have hy' : y ∈ closure {i.left z.underlying} := by
       rw [← specializes_iff_mem_closure, ← Scheme.le_iff_specializes]
       exact hy
     rw [hclosed.closure_eq] at hy'
     exact (Set.mem_singleton_iff.mp hy').ge
-  have hheight : Order.height (cycleComponentι X.left x z.underlying) = 0 :=
+  have hheight : Order.height (i.left z.underlying) = 0 :=
     Order.IsMin.height_eq_zero hmin
   rw [hheight, zero_add] at hsum
   exact_mod_cast hsum
 
 /-- The minimal number of generators of the stalk-map kernel is at least the geometric
 codimension `p`. -/
-lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
+lemma closedEmbedding_codimension_le_stalkMap_ker_spanFinrank
     {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
-    (hx : Order.coheight x = p) :
+    (z : ComplexPoint (Y))
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) :
     (p : ℕ∞) ≤ Submodule.spanFinrank
-      (RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom) := by
-  let R := X.left.presheaf.stalk (cycleComponentι X.left x z.underlying)
+      (RingHom.ker ((i.left).stalkMap z.underlying).hom) := by
+  let R := X.left.presheaf.stalk (i.left z.underlying)
   let I : Ideal R :=
-    RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom
+    RingHom.ker ((i.left).stalkMap z.underlying).hom
   let : IsRegularLocalRing R :=
-    cycleComponent_ambient_stalk_isRegularLocalRing (d := d) X x z.underlying
+    closedEmbedding_ambient_stalk_isRegularLocalRing (d := d) i z.underlying
   have hI : I ≤ Ring.jacobson R := by
     rw [IsLocalRing.ringJacobson_eq_maximalIdeal]
     exact IsLocalRing.le_maximalIdeal (RingHom.ker_ne_top _)
   have hle := ringKrullDim_le_ringKrullDim_quotient_add_spanFinrank I hI
-  rw [ringKrullDim_cycleComponent_ambient_stalk (d := d) X x z,
-    ringKrullDim_cycleComponent_stalkMap_quotient
-      (d := d) (p := p) X x z hx] at hle
+  rw [ringKrullDim_closedEmbedding_ambient_stalk (d := d) i z,
+    ringKrullDim_closedEmbedding_stalkMap_quotient
+      (d := d) (p := p) i z hi] at hle
   have hle' : (d : ℕ∞) ≤ ((d - p : ℕ) : ℕ∞) + I.spanFinrank := WithBot.coe_le_coe.mp hle
-  have hp : p ≤ d := cycleComponent_codimension_le X x hx
+  have hp : p ≤ d := closedEmbedding_codimension_le i hi
   have hdecomp : (d : ℕ∞) = ((d - p : ℕ) : ℕ∞) + (p : ℕ∞) := by
     exact_mod_cast (Nat.sub_add_cancel hp).symm
   rw [hdecomp] at hle'
@@ -180,24 +185,24 @@ lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
 
 /-- The stalk-map kernel has a finite generating set of minimal size, and that size is at least
 the geometric codimension. -/
-lemma exists_cycleComponent_stalkMap_ker_generators
+lemma exists_closedEmbedding_stalkMap_ker_generators
     {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
-    (hx : Order.coheight x = p) :
+    (z : ComplexPoint (Y))
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) :
     ∃ s : Finset (X.left.presheaf.stalk
-        (cycleComponentι X.left x z.underlying)),
+        (i.left z.underlying)),
       Ideal.span (s : Set _) =
-          RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom ∧
+          RingHom.ker ((i.left).stalkMap z.underlying).hom ∧
         s.card = Submodule.spanFinrank
-          (RingHom.ker ((cycleComponentι X.left x).stalkMap z.underlying).hom) ∧
+          (RingHom.ker ((i.left).stalkMap z.underlying).hom) ∧
         p ≤ s.card := by
   obtain ⟨s, hcard, hspan⟩ :=
     Submodule.FG.exists_span_finset_card_eq_spanFinrank
-      (cycleComponent_stalkMap_ker_fg (d := d) X x z.underlying)
+      (closedEmbedding_stalkMap_ker_fg (d := d) i z.underlying)
   refine ⟨s, ?_, hcard, ?_⟩
   · rwa [← Ideal.submodule_span_eq]
-  · have hle := cycleComponent_codimension_le_stalkMap_ker_spanFinrank
-      (d := d) (p := p) X x z hx
+  · have hle := closedEmbedding_codimension_le_stalkMap_ker_spanFinrank
+      (d := d) (p := p) i z hi
     rw [← hcard] at hle
     exact_mod_cast hle
 

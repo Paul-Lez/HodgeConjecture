@@ -32,56 +32,58 @@ nothing in the statement's dependency chain uses these results, only material in
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
 namespace AlgebraicGeometry.ComplexPoint
-variable (X : Over (Spec ↧ℂ))
+variable {X : Over (Spec ↧ℂ)}
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-attribute [local instance] cycleComponentSheafClassAnalyticTopology
-variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
+attribute [local instance] closedEmbeddingSheafClassAnalyticTopology
+variable {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
+  {p : ℕ} (hi : Order.coheight (closedEmbeddingGenericPoint i) = p)
 
 /-- The prescribed smooth-locus section determines the extension uniquely. -/
-theorem cycleComponentExtendSmoothCoclass_unique
-    (s : CycleComponentSmoothCoclassSections X x p)
-    (a : CycleComponentSupportedCohomology X x p)
-    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a = s) :
-    a = cycleComponentExtendSmoothCoclass X x hx s :=
-  (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv.injective
-    (ha.trans (cycleComponentExtendSmoothCoclass_normalization X x hx s).symm)
+theorem closedEmbeddingExtendSmoothCoclass_unique
+    (s : ClosedEmbeddingSmoothCoclassSections i p)
+    (a : ClosedEmbeddingSupportedCohomology i p)
+    (ha : (closedEmbeddingSupportedClassNormalizationIso i hi).hom a = s) :
+    a = closedEmbeddingExtendSmoothCoclass i hi s :=
+  (closedEmbeddingSupportedClassNormalizationIso i hi).addCommGroupIsoToAddEquiv.injective
+    (ha.trans (closedEmbeddingExtendSmoothCoclass_normalization i hi s).symm)
 
 /-- The normalized global extension is unique, by injectivity of the
 restriction/purity comparison. This is a theorem, not a supplied existence input. -/
-theorem cycleComponentSupportedInjectiveClass_unique
-    (a : CycleComponentSupportedCohomology X x p)
-    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a =
-      cycleComponentSmoothSupportCoclassSection X x hx) :
-    a = cycleComponentSupportedInjectiveClass X x hx :=
-  cycleComponentExtendSmoothCoclass_unique X x hx _ a ha
+theorem closedEmbeddingSupportedInjectiveClass_unique
+    (a : ClosedEmbeddingSupportedCohomology i p)
+    (ha : (closedEmbeddingSupportedClassNormalizationIso i hi).hom a =
+      closedEmbeddingSmoothSupportCoclassSection i hi) :
+    a = closedEmbeddingSupportedInjectiveClass i hi :=
+  closedEmbeddingExtendSmoothCoclass_unique i hi _ a ha
 
 /-- The ordinary class is the support-forgetting image of the supported class. Since
-`cycleComponentSheafClass` is now defined as that composite, this holds by definition; it is
+`closedEmbeddingSheafClass` is defined as that composite, this holds by definition; it is
 kept as a named rewrite for the proofs that use it. -/
-theorem cycleComponentSheafClass_eq_forgetSupport :
-    cycleComponentSheafClass X x hx =
-      forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
-        (cycleComponentSheafSupportedClass X x hx) :=
+theorem closedEmbeddingSheafClass_eq_forgetSupport :
+    closedEmbeddingSheafClass i hi =
+      forgetSupport X (closedEmbeddingSupport i) (2 * (p : ℤ))
+        (closedEmbeddingSheafSupportedClass i hi) :=
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The ordinary class computed directly in the ambient injective model, bypassing the
-mapping-cone presentation. This was the old definition of `cycleComponentSheafClass`. -/
-theorem cycleComponentSheafClass_eq_injectiveModel :
-    cycleComponentSheafClass X x hx =
+mapping-cone presentation. This was the old definition of `closedEmbeddingSheafClass`. -/
+theorem closedEmbeddingSheafClass_eq_injectiveModel :
+    closedEmbeddingSheafClass i hi =
       (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
         (HomologicalComplex.homologyMap
           (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-            (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
+            (TopCat.of (ComplexPoint X)) (closedEmbeddingAnalyticClosedSupport i).compl ⊤
             (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
-          (cycleComponentSupportedInjectiveClass X x hx)) := by
+          (closedEmbeddingSupportedInjectiveClass i hi)) := by
   apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).injective
-  rw [cycleComponentSheafClass_eq_forgetSupport,
+  rw [closedEmbeddingSheafClass_eq_forgetSupport,
     rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
-    (cycleComponentSupport X x) (cycleComponentAnalyticClosedSupport X x).isClosed]
-  simp only [cycleComponentSheafSupportedClass, AddEquiv.apply_symm_apply]
+    (closedEmbeddingSupport i) (closedEmbeddingAnalyticClosedSupport i).isClosed]
+  simp only [closedEmbeddingSheafSupportedClass, AddEquiv.apply_symm_apply]
   rfl
 
 end AlgebraicGeometry.ComplexPoint

@@ -22,6 +22,8 @@ noncomputable section
 universe u
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+  {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) [IsIntegral Y.left] [IsClosedImmersion i.left]
+  (hi : coheight (closedEmbeddingGenericPoint i) = p)
 
 local instance analyticSupportHasDerivedCategory (X : Over (Spec ↧ℂ)) :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
@@ -41,15 +43,15 @@ namespace Guide.Cycles.D1
 ```lean
 def codimensionCycleSubgroup (X : Scheme.{u}) (p : ℕ) : AddSubgroup (AlgebraicCycle X ℤ) where
   carrier c := ∀ x, c x ≠ 0 → coheight x = p
-  zero_mem' x hx := (hx rfl).elim
+  zero_mem' x hi := (hi rfl).elim
   add_mem' := by
-    intro a b ha hb x hx
+    intro a b ha hb x hi
     by_cases hax : a x = 0
-    · exact hb x (by simpa [hax] using hx)
+    · exact hb x (by simpa [hax] using hi)
     · exact ha x hax
   neg_mem' := by
-    intro a ha x hx
-    refine ha x fun h ↦ hx ?_
+    intro a ha x hi
+    refine ha x fun h ↦ hi ?_
     change -(a x) = 0
     simp [h]
 ```
@@ -62,12 +64,12 @@ namespace Guide.Cycles.D2
 ```
 ```lean
 open scoped Classical in
-noncomputable def codimensionCycleSubgroup.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
+noncomputable def codimensionCycleSubgroup.single {X : Scheme.{u}} {p : ℕ} (x : X) (hi : coheight x = p)
     (n : ℤ) : codimensionCycleSubgroup X p :=
   ⟨Function.locallyFinsuppWithin.single x n, by
     intro y hy
     by_cases h : y = x
-    · simpa [h] using hx
+    · simpa [h] using hi
     · simp [Function.locallyFinsuppWithin.single_apply, h] at hy⟩
 ```
 ```lean -show
@@ -76,11 +78,13 @@ example : @Guide.Cycles.D2.codimensionCycleSubgroup.single.{u} = @AlgebraicGeome
 ```
 # The support of a subvariety
 
+A closed embedding into {lean}`X` presents a subvariety, and {name}`closedEmbeddingSupport` is
+its support in $`X(\mathbb C)`: the preimage of the image of the embedding under the map from
+complex points to scheme points. It is closed in the analytic topology.
+
 For a point {lean}`x` of {lean}`X.left`, {lean}`cycleComponent X.left x` is the reduced closed
 subscheme with underlying space $`\overline{\{x\}}`, and {name}`cycleComponentι` is its closed
-immersion into {lean}`X.left`. The
-support of the subvariety in $`X(\mathbb C)` is the preimage of $`\overline{\{x\}}` under the map
-from complex points to scheme points, and it is closed in the analytic topology.
+immersion into {lean}`X.left`.
 
 ```lean -show
 namespace Guide.Cycles.D5
@@ -110,17 +114,16 @@ example : @Guide.Cycles.D6.cycleComponentι.{u} = @AlgebraicGeometry.cycleCompon
 namespace Guide.Cycles.D7
 ```
 ```lean
-def cycleComponentSupport (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) : Set (ComplexPoint X) :=
-  Point.underlying ⁻¹' closure {x}
+def closedEmbeddingSupport {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) : Set (ComplexPoint X) :=
+  Point.underlying ⁻¹' Set.range i.left
 ```
 ```lean -show
 end Guide.Cycles.D7
-example : @Guide.Cycles.D7.cycleComponentSupport = @AlgebraicGeometry.cycleComponentSupport := rfl
+example : @Guide.Cycles.D7.closedEmbeddingSupport = @AlgebraicGeometry.closedEmbeddingSupport := rfl
 ```
 
 ```lean
-#check isClosed_cycleComponentSupport
+#check isClosed_closedEmbeddingSupport
 ```
 
 Only the ambient variety is assumed smooth. A subvariety may be singular, and the construction of

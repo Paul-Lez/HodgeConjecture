@@ -47,182 +47,188 @@ namespace AlgebraicGeometry.ComplexPoint
 open AlgebraicTopology.Singular
 
 /-- The analytic space underlying the reduced closure of one point of a projective variety. -/
-abbrev CycleComponentAnalyticPoint
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) :=
-  ComplexPoint (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom))
+abbrev ClosedEmbeddingAnalyticPoint
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :=
+  ComplexPoint (Y)
 
 /-- Integral Borel--Moore homology of a projective analytic cycle component. -/
-abbrev IntegralCycleComponentBorelMooreHomology
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ) : AddCommGrpCat :=
+abbrev IntegralClosedEmbeddingBorelMooreHomology
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ) : AddCommGrpCat :=
   IntegralCompactificationBorelMooreHomology
-    (Set.univᶜ : Set (CycleComponentAnalyticPoint V x)) n
+    (Set.univᶜ : Set (ClosedEmbeddingAnalyticPoint V i)) n
 
 /-- A family of exactly normalized integral local orientation classes on the component's smooth
 analytic locus. -/
-abbrev IntegralCycleComponentLocalOrientation
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ) :=
-  ∀ (z : CycleComponentAnalyticPoint V x),
-    z ∈ cycleComponentSmoothAnalyticLocus V.over x →
+abbrev IntegralClosedEmbeddingLocalOrientation
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ) :=
+  ∀ (z : ClosedEmbeddingAnalyticPoint V i),
+    z ∈ closedEmbeddingSmoothAnalyticLocus i →
       IntegralRelativeHomology (pointComplementPair z) n
 
 /-- The local value of an integral Borel--Moore class of a compact cycle component. -/
-def integralCycleComponentBorelMooreToLocal
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ)
-    (z : CycleComponentAnalyticPoint V x) :
-    IntegralCycleComponentBorelMooreHomology V x n →+
+def integralClosedEmbeddingBorelMooreToLocal
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ)
+    (z : ClosedEmbeddingAnalyticPoint V i) :
+    IntegralClosedEmbeddingBorelMooreHomology V i n →+
       IntegralRelativeHomology (pointComplementPair z) n :=
   integralCompactificationBorelMooreToLocal Set.univ n z (Set.mem_univ z)
 
 /-- An integral component class is fundamental when its local values at smooth points are the
 specified positive complex-orientation generators. -/
-def IsIntegralCycleComponentBorelMooreFundamentalClass
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ)
-    (orientation : IntegralCycleComponentLocalOrientation V x n)
-    (c : IntegralCycleComponentBorelMooreHomology V x n) : Prop :=
-  ∀ (z : CycleComponentAnalyticPoint V x)
-      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
-    integralCycleComponentBorelMooreToLocal V x n z c = orientation z hz
+def IsIntegralClosedEmbeddingBorelMooreFundamentalClass
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ)
+    (orientation : IntegralClosedEmbeddingLocalOrientation V i n)
+    (c : IntegralClosedEmbeddingBorelMooreHomology V i n) : Prop :=
+  ∀ (z : ClosedEmbeddingAnalyticPoint V i)
+      (hz : z ∈ closedEmbeddingSmoothAnalyticLocus i),
+    integralClosedEmbeddingBorelMooreToLocal V i n z c = orientation z hz
 
 /-- The uniquely normalized integral Borel--Moore fundamental class of a projective cycle
 component, once the global existence and uniqueness theorem has been proved. -/
-def integralCycleComponentBorelMooreFundamentalClass
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ)
-    (orientation : IntegralCycleComponentLocalOrientation V x n)
-    (h : ∃! c, IsIntegralCycleComponentBorelMooreFundamentalClass V x n orientation c) :
-    IntegralCycleComponentBorelMooreHomology V x n :=
+def integralClosedEmbeddingBorelMooreFundamentalClass
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ)
+    (orientation : IntegralClosedEmbeddingLocalOrientation V i n)
+    (h : ∃! c, IsIntegralClosedEmbeddingBorelMooreFundamentalClass V i n orientation c) :
+    IntegralClosedEmbeddingBorelMooreHomology V i n :=
   Classical.choose h.exists
 
 /-- The selected integral component class has its exact local normalization. -/
-lemma integralCycleComponentBorelMooreFundamentalClass_isFundamental
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ)
-    (orientation : IntegralCycleComponentLocalOrientation V x n)
-    (h : ∃! c, IsIntegralCycleComponentBorelMooreFundamentalClass V x n orientation c) :
-    IsIntegralCycleComponentBorelMooreFundamentalClass V x n orientation
-      (integralCycleComponentBorelMooreFundamentalClass V x n orientation h) :=
+lemma integralClosedEmbeddingBorelMooreFundamentalClass_isFundamental
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ)
+    (orientation : IntegralClosedEmbeddingLocalOrientation V i n)
+    (h : ∃! c, IsIntegralClosedEmbeddingBorelMooreFundamentalClass V i n orientation c) :
+    IsIntegralClosedEmbeddingBorelMooreFundamentalClass V i n orientation
+      (integralClosedEmbeddingBorelMooreFundamentalClass V i n orientation h) :=
   Classical.choose_spec h.exists
 
 /-- Exact local normalization determines the integral component class uniquely. -/
-lemma eq_integralCycleComponentBorelMooreFundamentalClass
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (n : ℕ)
-    (orientation : IntegralCycleComponentLocalOrientation V x n)
-    (h : ∃! c, IsIntegralCycleComponentBorelMooreFundamentalClass V x n orientation c)
-    (c : IntegralCycleComponentBorelMooreHomology V x n)
-    (hc : IsIntegralCycleComponentBorelMooreFundamentalClass V x n orientation c) :
-    c = integralCycleComponentBorelMooreFundamentalClass V x n orientation h :=
+lemma eq_integralClosedEmbeddingBorelMooreFundamentalClass
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ)
+    (orientation : IntegralClosedEmbeddingLocalOrientation V i n)
+    (h : ∃! c, IsIntegralClosedEmbeddingBorelMooreFundamentalClass V i n orientation c)
+    (c : IntegralClosedEmbeddingBorelMooreHomology V i n)
+    (hc : IsIntegralClosedEmbeddingBorelMooreFundamentalClass V i n orientation c) :
+    c = integralClosedEmbeddingBorelMooreFundamentalClass V i n orientation h :=
   h.unique hc
-    (integralCycleComponentBorelMooreFundamentalClass_isFundamental V x n orientation h)
+    (integralClosedEmbeddingBorelMooreFundamentalClass_isFundamental V i n orientation h)
 
 /-- Borel--Moore homology of a projective analytic cycle component.  Compactness identifies it
 with ordinary homology, presented uniformly as relative homology modulo the empty boundary. -/
-abbrev CycleComponentBorelMooreHomology
+abbrev ClosedEmbeddingBorelMooreHomology
     (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
-    (x : V.scheme) (n : ℕ) : ModuleCat R :=
+    {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over) [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ) : ModuleCat R :=
   CompactificationBorelMooreHomology R
-    (Set.univᶜ : Set (CycleComponentAnalyticPoint V x)) n
+    (Set.univᶜ : Set (ClosedEmbeddingAnalyticPoint V i)) n
 
 /-- A family of exactly normalized local orientation classes on the smooth analytic locus of a
 cycle component. -/
-abbrev CycleComponentLocalOrientation
+abbrev ClosedEmbeddingLocalOrientation
     (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
-    (x : V.scheme) (n : ℕ) :=
-  ∀ (z : CycleComponentAnalyticPoint V x),
-    z ∈ cycleComponentSmoothAnalyticLocus V.over x →
+    {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over) [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ) :=
+  ∀ (z : ClosedEmbeddingAnalyticPoint V i),
+    z ∈ closedEmbeddingSmoothAnalyticLocus i →
       RelativeHomology R (pointComplementPair z) n
 
 /-- The local value of a Borel--Moore class of a compact cycle component. -/
-def cycleComponentBorelMooreToLocal
+def closedEmbeddingBorelMooreToLocal
     (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
-    (x : V.scheme) (n : ℕ) (z : CycleComponentAnalyticPoint V x) :
-    CycleComponentBorelMooreHomology R V x n →ₗ[R]
+    {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over) [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ) (z : ClosedEmbeddingAnalyticPoint V i) :
+    ClosedEmbeddingBorelMooreHomology R V i n →ₗ[R]
       RelativeHomology R (pointComplementPair z) n :=
   compactificationBorelMooreToLocal R Set.univ n z (Set.mem_univ z)
 
 /-- A component class is its oriented Borel--Moore fundamental class when its local value at
 every smooth point is exactly the specified complex-orientation class. -/
-def IsCycleComponentBorelMooreFundamentalClass
+def IsClosedEmbeddingBorelMooreFundamentalClass
     (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
-    (x : V.scheme) (n : ℕ)
-    (orientation : CycleComponentLocalOrientation R V x n)
-    (c : CycleComponentBorelMooreHomology R V x n) : Prop :=
-  ∀ (z : CycleComponentAnalyticPoint V x)
-      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
-    cycleComponentBorelMooreToLocal R V x n z c = orientation z hz
+    {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over) [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ)
+    (orientation : ClosedEmbeddingLocalOrientation R V i n)
+    (c : ClosedEmbeddingBorelMooreHomology R V i n) : Prop :=
+  ∀ (z : ClosedEmbeddingAnalyticPoint V i)
+      (hz : z ∈ closedEmbeddingSmoothAnalyticLocus i),
+    closedEmbeddingBorelMooreToLocal R V i n z c = orientation z hz
 
 /-- The Borel--Moore fundamental class of a projective cycle component, selected after the
 existence and uniqueness theorem has established its exact local normalization. -/
-def cycleComponentBorelMooreFundamentalClass
+def closedEmbeddingBorelMooreFundamentalClass
     (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
-    (x : V.scheme) (n : ℕ)
-    (orientation : CycleComponentLocalOrientation R V x n)
-    (h : ∃! c, IsCycleComponentBorelMooreFundamentalClass R V x n orientation c) :
-    CycleComponentBorelMooreHomology R V x n :=
+    {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over) [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ)
+    (orientation : ClosedEmbeddingLocalOrientation R V i n)
+    (h : ∃! c, IsClosedEmbeddingBorelMooreFundamentalClass R V i n orientation c) :
+    ClosedEmbeddingBorelMooreHomology R V i n :=
   Classical.choose h.exists
 
 /-- The selected component class has the required local orientation at every smooth point. -/
-lemma cycleComponentBorelMooreFundamentalClass_isFundamental
+lemma closedEmbeddingBorelMooreFundamentalClass_isFundamental
     (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
-    (x : V.scheme) (n : ℕ)
-    (orientation : CycleComponentLocalOrientation R V x n)
-    (h : ∃! c, IsCycleComponentBorelMooreFundamentalClass R V x n orientation c) :
-    IsCycleComponentBorelMooreFundamentalClass R V x n orientation
-      (cycleComponentBorelMooreFundamentalClass R V x n orientation h) :=
+    {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over) [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ)
+    (orientation : ClosedEmbeddingLocalOrientation R V i n)
+    (h : ∃! c, IsClosedEmbeddingBorelMooreFundamentalClass R V i n orientation c) :
+    IsClosedEmbeddingBorelMooreFundamentalClass R V i n orientation
+      (closedEmbeddingBorelMooreFundamentalClass R V i n orientation h) :=
   Classical.choose_spec h.exists
 
 /-- Exact local normalization determines the component fundamental class uniquely. -/
-lemma eq_cycleComponentBorelMooreFundamentalClass
+lemma eq_closedEmbeddingBorelMooreFundamentalClass
     (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
-    (x : V.scheme) (n : ℕ)
-    (orientation : CycleComponentLocalOrientation R V x n)
-    (h : ∃! c, IsCycleComponentBorelMooreFundamentalClass R V x n orientation c)
-    (c : CycleComponentBorelMooreHomology R V x n)
-    (hc : IsCycleComponentBorelMooreFundamentalClass R V x n orientation c) :
-    c = cycleComponentBorelMooreFundamentalClass R V x n orientation h :=
+    {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over) [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ)
+    (orientation : ClosedEmbeddingLocalOrientation R V i n)
+    (h : ∃! c, IsClosedEmbeddingBorelMooreFundamentalClass R V i n orientation c)
+    (c : ClosedEmbeddingBorelMooreHomology R V i n)
+    (hc : IsClosedEmbeddingBorelMooreFundamentalClass R V i n orientation c) :
+    c = closedEmbeddingBorelMooreFundamentalClass R V i n orientation h :=
   h.unique hc
-    (cycleComponentBorelMooreFundamentalClass_isFundamental R V x n orientation h)
+    (closedEmbeddingBorelMooreFundamentalClass_isFundamental R V i n orientation h)
 
 @[simp]
-lemma cycleComponentBorelMooreToLocal_fundamentalClass
+lemma closedEmbeddingBorelMooreToLocal_fundamentalClass
     (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
-    (x : V.scheme) (n : ℕ)
-    (orientation : CycleComponentLocalOrientation R V x n)
-    (h : ∃! c, IsCycleComponentBorelMooreFundamentalClass R V x n orientation c)
-    (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
-    cycleComponentBorelMooreToLocal R V x n z
-        (cycleComponentBorelMooreFundamentalClass R V x n orientation h) =
+    {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over) [IsIntegral Y.left] [IsClosedImmersion i.left] (n : ℕ)
+    (orientation : ClosedEmbeddingLocalOrientation R V i n)
+    (h : ∃! c, IsClosedEmbeddingBorelMooreFundamentalClass R V i n orientation c)
+    (z : ClosedEmbeddingAnalyticPoint V i)
+    (hz : z ∈ closedEmbeddingSmoothAnalyticLocus i) :
+    closedEmbeddingBorelMooreToLocal R V i n z
+        (closedEmbeddingBorelMooreFundamentalClass R V i n orientation h) =
       orientation z hz :=
-  cycleComponentBorelMooreFundamentalClass_isFundamental R V x n orientation h z hz
+  closedEmbeddingBorelMooreFundamentalClass_isFundamental R V i n orientation h z hz
 
 /-! ### Fundamental classes of zero-dimensional components -/
 
-/-- A codimension-`d` component in a smooth complex `d`-fold has at most one complex point.
-This is derived from the component's Krull dimension, rather than imposed as data. -/
-lemma cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
+/-- A codimension-`d` closed subvariety of a smooth complex `d`-fold has at most one complex
+point. This is derived from its Krull dimension, rather than imposed as data. -/
+lemma closedEmbeddingAnalyticPoint_subsingleton_of_coheight_eq_dimension
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
-    (hx : Order.coheight x = d) :
-    Subsingleton (CycleComponentAnalyticPoint V x) := by
-  have hdim : Order.krullDim (cycleComponent V.scheme x) = 0 := by
-    simpa using orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
-      (f := V.structureMap) (d := d) x hx
-  let hcomponent : Subsingleton (cycleComponent V.scheme x) := by
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = d) :
+    Subsingleton (ClosedEmbeddingAnalyticPoint V i) := by
+  have hdim : Order.krullDim (Y.left) = 0 := by
+    simpa using orderKrullDim_closedEmbedding_eq_zero_of_coheight_eq_dimension
+      (f := V.structureMap) (d := d) i.left hi
+  let hcomponent : Subsingleton (Y.left) := by
     constructor
     intro a b
-    have htopLe (q : cycleComponent V.scheme x) :
-        (⊤ : cycleComponent V.scheme x) ≤ q :=
+    have htopLe (q : Y.left) :
+        (⊤ : Y.left) ≤ q :=
       Order.krullDim_nonpos_iff_forall_isMin.mp hdim.le ⊤ le_top
     apply inseparable_iff_eq.mp
     rw [inseparable_iff_specializes_and, ← Scheme.le_iff_specializes,
       ← Scheme.le_iff_specializes]
     exact ⟨le_top.trans (htopLe a), le_top.trans (htopLe b)⟩
-  let : Subsingleton (Over.mk
-      (cycleComponentι V.over.left x ≫ V.over.hom)).left := hcomponent
   constructor
   intro a b
-  let : LocallyOfFiniteType
-      (Over.mk (cycleComponentι V.over.left x ≫ V.over.hom)).hom :=
-    inferInstanceAs (LocallyOfFiniteType
-      (cycleComponentι V.over.left x ≫ V.over.hom))
+  let : LocallyOfFiniteType Y.hom := by
+    rw [show Y.hom = i.left ≫ V.over.hom from (Over.w i).symm]
+    infer_instance
   exact ComplexPoint.underlying_injective_of_locallyOfFiniteType
     (Subsingleton.elim a.underlying b.underlying)
 
@@ -230,24 +236,25 @@ lemma cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension
 The component is a one-point space, so restriction from its homology to local homology is an
 isomorphism; the inverse sends the explicit complex local orientation to the required global
 class.  No global fundamental-class theorem is used. -/
-theorem existsUnique_cycleComponentBorelMooreFundamentalClass_of_coheight_eq_dimension
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
+theorem existsUnique_closedEmbeddingBorelMooreFundamentalClass_of_coheight_eq_dimension
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
-    (hx : Order.coheight x = d) :
-    ∃! c, IsCycleComponentBorelMooreFundamentalClass
-      ℚ V x (2 * (d - d))
-        (cycleComponentComplexLocalOrientation V x d d hx) c := by
-  let : TopologicalSpace (CycleComponentAnalyticPoint V x) :=
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = d) :
+    ∃! c, IsClosedEmbeddingBorelMooreFundamentalClass
+      ℚ V i (2 * (d - d))
+        (closedEmbeddingComplexLocalOrientation V i d d hi) c := by
+  let : TopologicalSpace (ClosedEmbeddingAnalyticPoint V i) :=
     Point.analyticTopology
-  let : Subsingleton (CycleComponentAnalyticPoint V x) :=
-    cycleComponentAnalyticPoint_subsingleton_of_coheight_eq_dimension V x d hx
-  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint V.over x
-  let orientation := cycleComponentComplexLocalOrientation V x d d hx
+  let : Subsingleton (ClosedEmbeddingAnalyticPoint V i) :=
+    closedEmbeddingAnalyticPoint_subsingleton_of_coheight_eq_dimension V i d hi
+  obtain ⟨z, hz⟩ := exists_closedEmbedding_smooth_complexPoint i
+  let orientation := closedEmbeddingComplexLocalOrientation V i d d hi
   let e := compactificationBorelMooreToLocalEquivOfSubsingleton ℚ z (2 * (d - d))
-  let c : CycleComponentBorelMooreHomology ℚ V x (2 * (d - d)) :=
+  let c : ClosedEmbeddingBorelMooreHomology ℚ V i (2 * (d - d)) :=
     e.symm (orientation z hz)
-  have hc : IsCycleComponentBorelMooreFundamentalClass
-      ℚ V x (2 * (d - d)) orientation c := by
+  have hc : IsClosedEmbeddingBorelMooreFundamentalClass
+      ℚ V i (2 * (d - d)) orientation c := by
     intro w hw
     have hwz : w = z := Subsingleton.elim w z
     subst w
@@ -260,103 +267,112 @@ theorem existsUnique_cycleComponentBorelMooreFundamentalClass_of_coheight_eq_dim
 component of a smooth complex `d`-fold. The exact local complex orientation is constructed, not
 stored in this structure; this field is only the global existence-and-uniqueness theorem which
 must be discharged by oriented-manifold Borel--Moore homology. -/
-structure RationalCycleComponentBorelMooreData
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d p : ℕ)
+structure RationalClosedEmbeddingBorelMooreData
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (d p : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
-    (hx : Order.coheight x = p) where
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) where
   /-- The localization and dimension theorem producing a unique global Borel--Moore class. -/
   existsUnique_fundamentalClass :
-    ∃! c, IsCycleComponentBorelMooreFundamentalClass
-      ℚ V x (2 * (d - p))
-        (cycleComponentComplexLocalOrientation V x d p hx) c
+    ∃! c, IsClosedEmbeddingBorelMooreFundamentalClass
+      ℚ V i (2 * (d - p))
+        (closedEmbeddingComplexLocalOrientation V i d p hi) c
 
 /-- The rational Borel--Moore data of a maximal-codimension component is constructed from the
 one-point calculation, with no theorem-valued input. -/
-theorem rationalCycleComponentBorelMooreDataOfCoheightEqDimension
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
+theorem rationalClosedEmbeddingBorelMooreDataOfCoheightEqDimension
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
-    (hx : Order.coheight x = d) :
-    RationalCycleComponentBorelMooreData V x d d hx where
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = d) :
+    RationalClosedEmbeddingBorelMooreData V i d d hi where
   existsUnique_fundamentalClass :=
-    existsUnique_cycleComponentBorelMooreFundamentalClass_of_coheight_eq_dimension
-      V x d hx
+    existsUnique_closedEmbeddingBorelMooreFundamentalClass_of_coheight_eq_dimension
+      V i d hi
 
 /-- A maximal-codimension component carries rational Borel--Moore data.  The witness is the
 one-point construction, so this existence statement holds for every smooth projective variety
 and every point of maximal coheight. -/
-theorem nonempty_rationalCycleComponentBorelMooreData_of_coheight_eq_dimension
-    (V : SmoothProjectiveComplexVariety) (x : V.scheme) (d : ℕ)
+theorem nonempty_rationalClosedEmbeddingBorelMooreData_of_coheight_eq_dimension
+    (V : SmoothProjectiveComplexVariety) {Y : Over (Spec ↧ℂ)} (i : Y ⟶ V.over)
+    [IsIntegral Y.left] [IsClosedImmersion i.left] (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
-    (hx : Order.coheight x = d) :
-    Nonempty (RationalCycleComponentBorelMooreData V x d d hx) :=
-  ⟨rationalCycleComponentBorelMooreDataOfCoheightEqDimension V x d hx⟩
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = d) :
+    Nonempty (RationalClosedEmbeddingBorelMooreData V i d d hi) :=
+  ⟨rationalClosedEmbeddingBorelMooreDataOfCoheightEqDimension V i d hi⟩
 
-namespace RationalCycleComponentBorelMooreData
+namespace RationalClosedEmbeddingBorelMooreData
 
 /-- The constructed exact local complex orientation used to normalize the component class. -/
 def localOrientation
-    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
-    (_D : RationalCycleComponentBorelMooreData V x d p hx) :
-    CycleComponentLocalOrientation ℚ V x (2 * (d - p)) :=
-  cycleComponentComplexLocalOrientation V x d p hx
+    {V : SmoothProjectiveComplexVariety} {Y : Over (Spec ↧ℂ)} {i : Y ⟶ V.over}
+  [IsIntegral Y.left] [IsClosedImmersion i.left] {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hi : Order.coheight (closedEmbeddingGenericPoint i) = p}
+    (_D : RationalClosedEmbeddingBorelMooreData V i d p hi) :
+    ClosedEmbeddingLocalOrientation ℚ V i (2 * (d - p)) :=
+  closedEmbeddingComplexLocalOrientation V i d p hi
 
 /-- Every value of the constructed local orientation is an exact generator of top local
 homology; this property is proved from the explicit complex chart class. -/
 theorem span_localOrientation_eq_top
-    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
-    (D : RationalCycleComponentBorelMooreData V x d p hx)
-    (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
+    {V : SmoothProjectiveComplexVariety} {Y : Over (Spec ↧ℂ)} {i : Y ⟶ V.over}
+  [IsIntegral Y.left] [IsClosedImmersion i.left] {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hi : Order.coheight (closedEmbeddingGenericPoint i) = p}
+    (D : RationalClosedEmbeddingBorelMooreData V i d p hi)
+    (z : ClosedEmbeddingAnalyticPoint V i)
+    (hz : z ∈ closedEmbeddingSmoothAnalyticLocus i) :
     Submodule.span ℚ {D.localOrientation z hz} = ⊤ :=
-  span_cycleComponentComplexLocalOrientation_eq_top V x d p hx z hz
+  span_closedEmbeddingComplexLocalOrientation_eq_top V i d p hi z hz
 
 /-- The distinguished rational Borel--Moore fundamental class supplied by the global
 existence-and-uniqueness theorem and normalized by the constructed local orientation. -/
 def fundamentalClass
-    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
-    (D : RationalCycleComponentBorelMooreData V x d p hx) :
-    CycleComponentBorelMooreHomology ℚ V x (2 * (d - p)) :=
-  cycleComponentBorelMooreFundamentalClass ℚ V x (2 * (d - p))
+    {V : SmoothProjectiveComplexVariety} {Y : Over (Spec ↧ℂ)} {i : Y ⟶ V.over}
+  [IsIntegral Y.left] [IsClosedImmersion i.left] {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hi : Order.coheight (closedEmbeddingGenericPoint i) = p}
+    (D : RationalClosedEmbeddingBorelMooreData V i d p hi) :
+    ClosedEmbeddingBorelMooreHomology ℚ V i (2 * (d - p)) :=
+  closedEmbeddingBorelMooreFundamentalClass ℚ V i (2 * (d - p))
     D.localOrientation D.existsUnique_fundamentalClass
 
 /-- The distinguished class has exactly the positive complex local orientation. -/
 lemma fundamentalClass_isFundamental
-    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
-    (D : RationalCycleComponentBorelMooreData V x d p hx) :
-    IsCycleComponentBorelMooreFundamentalClass
-      ℚ V x (2 * (d - p)) D.localOrientation D.fundamentalClass :=
-  cycleComponentBorelMooreFundamentalClass_isFundamental ℚ V x (2 * (d - p))
+    {V : SmoothProjectiveComplexVariety} {Y : Over (Spec ↧ℂ)} {i : Y ⟶ V.over}
+  [IsIntegral Y.left] [IsClosedImmersion i.left] {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hi : Order.coheight (closedEmbeddingGenericPoint i) = p}
+    (D : RationalClosedEmbeddingBorelMooreData V i d p hi) :
+    IsClosedEmbeddingBorelMooreFundamentalClass
+      ℚ V i (2 * (d - p)) D.localOrientation D.fundamentalClass :=
+  closedEmbeddingBorelMooreFundamentalClass_isFundamental ℚ V i (2 * (d - p))
     D.localOrientation D.existsUnique_fundamentalClass
 
 /-- Any class with the same exact local complex orientation is the distinguished fundamental
 class.  In particular, the construction does not retain a choice up to a nonzero rational
 multiple. -/
 lemma eq_fundamentalClass
-    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
-    (D : RationalCycleComponentBorelMooreData V x d p hx)
-    (c : CycleComponentBorelMooreHomology ℚ V x (2 * (d - p)))
-    (hc : IsCycleComponentBorelMooreFundamentalClass
-      ℚ V x (2 * (d - p)) D.localOrientation c) :
+    {V : SmoothProjectiveComplexVariety} {Y : Over (Spec ↧ℂ)} {i : Y ⟶ V.over}
+  [IsIntegral Y.left] [IsClosedImmersion i.left] {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hi : Order.coheight (closedEmbeddingGenericPoint i) = p}
+    (D : RationalClosedEmbeddingBorelMooreData V i d p hi)
+    (c : ClosedEmbeddingBorelMooreHomology ℚ V i (2 * (d - p)))
+    (hc : IsClosedEmbeddingBorelMooreFundamentalClass
+      ℚ V i (2 * (d - p)) D.localOrientation c) :
     c = D.fundamentalClass :=
-  eq_cycleComponentBorelMooreFundamentalClass ℚ V x (2 * (d - p))
+  eq_closedEmbeddingBorelMooreFundamentalClass ℚ V i (2 * (d - p))
     D.localOrientation D.existsUnique_fundamentalClass c hc
 
 @[simp]
 lemma toLocal_fundamentalClass
-    {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d p : ℕ}
-    [SmoothOfRelativeDimension d V.structureMap] {hx : Order.coheight x = p}
-    (D : RationalCycleComponentBorelMooreData V x d p hx)
-    (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x) :
-    cycleComponentBorelMooreToLocal ℚ V x (2 * (d - p)) z D.fundamentalClass =
+    {V : SmoothProjectiveComplexVariety} {Y : Over (Spec ↧ℂ)} {i : Y ⟶ V.over}
+  [IsIntegral Y.left] [IsClosedImmersion i.left] {d p : ℕ}
+    [SmoothOfRelativeDimension d V.structureMap] {hi : Order.coheight (closedEmbeddingGenericPoint i) = p}
+    (D : RationalClosedEmbeddingBorelMooreData V i d p hi)
+    (z : ClosedEmbeddingAnalyticPoint V i)
+    (hz : z ∈ closedEmbeddingSmoothAnalyticLocus i) :
+    closedEmbeddingBorelMooreToLocal ℚ V i (2 * (d - p)) z D.fundamentalClass =
       D.localOrientation z hz :=
   D.fundamentalClass_isFundamental z hz
 
-end RationalCycleComponentBorelMooreData
+end RationalClosedEmbeddingBorelMooreData
 
 end AlgebraicGeometry.ComplexPoint
