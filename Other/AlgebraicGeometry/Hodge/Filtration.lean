@@ -75,17 +75,6 @@ private lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
   rw [integerToFieldConstantSheaf, fieldScalarSheaf, integerToFieldConstantSheaf,
     ← Functor.map_comp, ofHom_zmultiplesAddHom_comp_mulLeft]
 
-omit [Algebra K ℂ] in
-/-- Scalar multiplication after an integer-to-rational constant-complex map multiplies its
-rational coefficient. -/
-private lemma integerToFieldConstantSheafComplexInt_comp_fieldScalarComplex (q r : K) :
-    integerToFieldConstantSheafComplexInt K X r ≫
-      fieldScalarComplex K X q =
-        integerToFieldConstantSheafComplexInt K X (q * r) := by
-  unfold integerToFieldConstantSheafComplexInt fieldScalarComplex
-  rw [← HomologicalComplex.extendMap_comp, ← Functor.map_comp,
-    integerToFieldConstantSheaf_comp_fieldScalarSheaf]
-
 /-- The unit in degree-zero rational cohomology. -/
 def fieldCohomologyUnit : H^0(X; K) :=
   fieldCohomologyClass K X 1

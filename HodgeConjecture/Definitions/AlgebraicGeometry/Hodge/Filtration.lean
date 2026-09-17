@@ -192,26 +192,6 @@ def fieldScalarComplex (q : K) :
     ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
       (fieldScalarSheaf K X q)) ComplexShape.embeddingUpNat
 
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarComplex_one : fieldScalarComplex K X 1 = 𝟙 _ := by
-  unfold fieldScalarComplex constantFieldSheafComplexInt
-  rw [fieldScalarSheaf_one, (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map_id,
-    HomologicalComplex.extendMap_id]
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarComplex_add (a b : K) :
-    fieldScalarComplex K X (a + b) =
-      fieldScalarComplex K X a + fieldScalarComplex K X b := by
-  unfold fieldScalarComplex
-  rw [fieldScalarSheaf_add, Functor.map_add, HomologicalComplex.extendMap_add]
-
-omit [Algebra K ℂ] in
-@[simp] lemma fieldScalarComplex_mul (a b : K) :
-    fieldScalarComplex K X (a * b) =
-      fieldScalarComplex K X b ≫ fieldScalarComplex K X a := by
-  unfold fieldScalarComplex
-  rw [fieldScalarSheaf_mul, Functor.map_comp, HomologicalComplex.extendMap_comp]
-
 /-- The integer-indexed inclusion of rational constants into complex constants commutes with
 scalar multiplication. -/
 private lemma fieldToComplexConstantSheafComplexInt_scalar (q : K) :
@@ -411,18 +391,28 @@ local instance analyticSiteHasDerivedCategory :
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) AddCommGrpCat.{0}) :=
   analyticHasDerivedCategory X
 
+/-- The source comparison, as a small shifted morphism from the source object of Mathlib's sheaf
+cohomology to the integer constant sheaf complex. -/
+private def constantIntegerComparison :=
+  Localization.SmallShiftedHom.mk₀Inv (W := analyticQuasiIsomorphisms X) (0 : ℤ) rfl
+    (constantIntegerSheafComplexIntIsoSingleULift X).hom
+    ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)
+
+/-- The target comparison, as a small shifted morphism from the constant sheaf complex to the
+constant sheaf in degree zero. -/
+private def constantFieldComparison :=
+  Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
+    (constantFieldSheafComplexIntIsoSingle K X).hom
+
 /-- Precomposition with the source comparison commutes with postcomposition by a map of
 complexes. -/
-private lemma mk₀Inv_comp_comp_mk₀ {L M : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (n : ℤ)
+private lemma constantIntegerComparison_comp_comp_mk₀
+    {L M : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (n : ℤ)
     (β : Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
       (constantIntegerSheafComplexInt X) L n) (h : L ⟶ M) :
-    ((Localization.SmallShiftedHom.mk₀Inv (W := analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-        (constantIntegerSheafComplexIntIsoSingleULift X).hom
-        ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)).comp β (add_zero n)).comp
+    ((constantIntegerComparison X).comp β (add_zero n)).comp
       (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl h) (zero_add n) =
-    (Localization.SmallShiftedHom.mk₀Inv (W := analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-        (constantIntegerSheafComplexIntIsoSingleULift X).hom
-        ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)).comp
+    (constantIntegerComparison X).comp
       (β.comp (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl h)
         (zero_add n)) (add_zero n) :=
   Localization.SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X) _ β _
@@ -443,20 +433,11 @@ def hypercohomologyAddEquivConstantCohomology (n : ℕ) :
     apply Abelian.Ext.ext
     rw [Abelian.Ext.add_hom]
     show Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
-        (((Localization.SmallShiftedHom.mk₀Inv (W := analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-            (constantIntegerSheafComplexIntIsoSingleULift X).hom _).comp (α + β) _).comp
-          (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-            (constantFieldSheafComplexIntIsoSingle K X).hom) _) =
+        (((constantIntegerComparison X).comp (α + β) _).comp (constantFieldComparison K X) _) =
       Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
-        (((Localization.SmallShiftedHom.mk₀Inv (W := analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-            (constantIntegerSheafComplexIntIsoSingleULift X).hom _).comp α _).comp
-          (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-            (constantFieldSheafComplexIntIsoSingle K X).hom) _) +
+        (((constantIntegerComparison X).comp α _).comp (constantFieldComparison K X) _) +
       Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
-        (((Localization.SmallShiftedHom.mk₀Inv (W := analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-            (constantIntegerSheafComplexIntIsoSingleULift X).hom _).comp β _).comp
-          (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-            (constantFieldSheafComplexIntIsoSingle K X).hom) _)
+        (((constantIntegerComparison X).comp β _).comp (constantFieldComparison K X) _)
     simp only [Localization.SmallShiftedHom.equiv_comp, hypercohomologyEquiv_add,
       ShiftedHom.add_comp, ShiftedHom.comp_add]
     rfl
@@ -471,24 +452,19 @@ lemma hypercohomologyAddEquivConstantCohomology_map {L : Type} [Field L]
         ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map f)
           ComplexShape.embeddingUpNat) n α) =
     Sheaf.H.map f n (hypercohomologyAddEquivConstantCohomology K X n α) := by
-  show ((Localization.SmallShiftedHom.mk₀Inv (W := analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-        (constantIntegerSheafComplexIntIsoSingleULift X).hom _).comp
-        (α.comp (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-          (HomologicalComplex.extendMap
-            ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map f)
-            ComplexShape.embeddingUpNat)) (zero_add _)) (add_zero _)).comp
-      (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-        (constantFieldSheafComplexIntIsoSingle L X).hom) (zero_add _) =
-    (((Localization.SmallShiftedHom.mk₀Inv (W := analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-        (constantIntegerSheafComplexIntIsoSingleULift X).hom _).comp α (add_zero _)).comp
-      (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-        (constantFieldSheafComplexIntIsoSingle K X).hom) (zero_add _)).comp
+  show ((constantIntegerComparison X).comp (hypercohomologyMap X (HomologicalComplex.extendMap
+        ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map f)
+          ComplexShape.embeddingUpNat) n α) (add_zero _)).comp
+      (constantFieldComparison L X) (zero_add _) =
+    (((constantIntegerComparison X).comp α (add_zero _)).comp (constantFieldComparison K X)
+      (zero_add _)).comp
       (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map f)) (zero_add _)
-  refine (mk₀Inv_comp_comp_mk₀ X _ _ _).trans (Eq.trans ?_
+  refine (constantIntegerComparison_comp_comp_mk₀ X _ _ _).trans (Eq.trans ?_
     ((congrArg (fun γ => γ.comp (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X)
       (0 : ℤ) rfl ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map f))
-      (zero_add _)) (mk₀Inv_comp_comp_mk₀ X _ α _)).trans (mk₀Inv_comp_comp_mk₀ X _ _ _)).symm)
+      (zero_add _)) (constantIntegerComparison_comp_comp_mk₀ X _ α _)).trans
+        (constantIntegerComparison_comp_comp_mk₀ X _ _ _)).symm)
   congr 1
   change hypercohomologyMap X _ n (hypercohomologyMap X _ n α) =
     hypercohomologyMap X _ n (hypercohomologyMap X _ n α)

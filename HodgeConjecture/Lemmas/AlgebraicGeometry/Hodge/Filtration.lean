@@ -76,30 +76,6 @@ omit [Algebra K ℂ] in
   rw [h, Functor.map_add]
   rfl
 
-/-- A rational number as a morphism of constant complexes. -/
-def integerToFieldConstantSheafComplexInt (q : K) :
-    constantIntegerSheafComplexInt X ⟶
-      constantFieldSheafComplexInt K X :=
-  HomologicalComplex.extendMap
-    ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-      (integerToFieldConstantSheaf K X q)) ComplexShape.embeddingUpNat
-
-omit [Algebra K ℂ] in
-@[simp] lemma integerToFieldConstantSheafComplexInt_zero :
-    integerToFieldConstantSheafComplexInt K X 0 = 0 := by
-  unfold integerToFieldConstantSheafComplexInt
-  rw [integerToFieldConstantSheaf_zero, Functor.map_zero,
-    HomologicalComplex.extendMap_zero]
-
-omit [Algebra K ℂ] in
-@[simp] lemma integerToFieldConstantSheafComplexInt_add (a b : K) :
-    integerToFieldConstantSheafComplexInt K X (a + b) =
-      integerToFieldConstantSheafComplexInt K X a +
-        integerToFieldConstantSheafComplexInt K X b := by
-  unfold integerToFieldConstantSheafComplexInt
-  rw [integerToFieldConstantSheaf_add, Functor.map_add,
-    HomologicalComplex.extendMap_add]
-
 /-- The source object of Mathlib's sheaf cohomology mapped to the constant integer sheaf. -/
 def uliftIntegerToIntegerConstantSheaf :
     (constantSheaf (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) AddCommGrpCat).obj
