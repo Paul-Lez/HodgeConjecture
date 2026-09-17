@@ -70,4 +70,4 @@ formalization.
   codimension for a variety of dimension zero;
 * `HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures, their
   conjugation and their rational Hodge classes; `Other/LinearAlgebra/HodgeStructure.lean`: the
-  $`(p,p)` criterion for them, which nothing in the statement depends on.
+  $`(p,p)` criterion for them, on which nothing in the statement depends.

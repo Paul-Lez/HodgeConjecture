@@ -33,8 +33,8 @@ Let $`X` be smooth of complex dimension $`d`, and let $`Z\subseteq X` be an irre
 subvariety of codimension $`p`, with smooth locus $`Z_{\mathrm{reg}}` and singular locus
 $`Z_{\mathrm{sing}}`.
 
-Two distinct objects go by "cohomology with support" in this chapter, and the construction moves
-from one to the other, so they are worth separating before anything else.
+Two distinct objects are called "cohomology with support" in this chapter, and the construction
+moves from one to the other, so they are worth separating before anything else.
 
 * The **group** $`H^n_Z(X;\mathbb Q)`, the cohomology of $`X(\mathbb C)` with support in
   $`Z(\mathbb C)`, built in {ref "cycles"}[Cycles and cohomology with support]. It is a single
@@ -43,33 +43,33 @@ from one to the other, so they are worth separating before anything else.
   $`Z\cap U`.
 * The **sheaf** $`\mathcal H^n_Z` on $`X(\mathbb C)`, the sheafification of the presheaf
   $`V\mapsto H^n(V,V\setminus Z;\mathbb Q)`. Relative cohomology is not a sheaf, so the
-  sheafification is doing real work. What one has of it are its sections
-  $`\Gamma(U,\mathcal H^n_Z)` over an open $`U`, and its stalks, which record the local picture at
-  a point.
+  sheafification is not a formality: a section of $`\mathcal H^n_Z` need not come from a single
+  relative class. The sheaf is used through its sections $`\Gamma(U,\mathcal H^n_Z)` over an open
+  $`U`, and through its stalks, which record the local picture at a point.
 
 A section of the sheaf is not a class in the group, and the two are related only by a comparison
-that has to be proved. Step 1 builds a section; Step 2 proves the comparison and crosses over;
+that must be proved. Step 1 builds a section, Step 2 proves the comparison and applies it, and
 Step 3 forgets the support.
 
 Near a point of $`Z_{\mathrm{reg}}`, holomorphic coordinates identify the pair $`(X,Z)` with
 $`(\mathbb C^d,\mathbb C^{d-p})`. Classically the stalk of $`\mathcal H^{2p}_Z` at such a point is
-one dimensional and the stalks of $`\mathcal H^n_Z` vanish for $`n\ne2p`; the complex structure
+one-dimensional and the stalks of $`\mathcal H^n_Z` vanish for $`n\ne2p`; the complex structure
 orients the normal directions, and the orientation singles out a generator of that stalk, the Thom
 class of the normal bundle. The vanishing off degree $`2p` is proved here, over all of
-$`X(\mathbb C)\setminus Z_{\mathrm{sing}}(\mathbb C)`, and Step 2 uses it. One dimensionality in
+$`X(\mathbb C)\setminus Z_{\mathrm{sing}}(\mathbb C)`, and Step 2 uses it. One-dimensionality in
 degree $`2p` is the ambient purity that is not formalized; see
 {ref "scope-and-status"}[Scope and status].
 
-The choice of generator is the essential point, and it is why the ambient purity is not what the
-construction rests on. Purity would fix a line in the stalk, but a cycle class map needs the one
-generator of that line with multiplicity one. The formalization singles out that generator chart by
-chart from the complex orientation, without knowing that the line is all there is.
+The choice of generator is the essential point, and it is why the construction does not rest on
+ambient purity. Purity would fix a line in the stalk, but a cycle class map needs the one generator
+of that line that has multiplicity one. The formalization selects that generator chart by chart
+from the complex orientation, without needing to know that the stalk is no larger than the line.
 
-Local homology is what fixes the normalization, and it is worth being exact about where. The
-generator of a chart is *defined* as the unique relative cohomology class pairing to one with the
-local fundamental homology class of that chart, carried across the universal-coefficient
-equivalence. So the modules under `AlgebraicTopology/LocalHomology/` are genuinely in the
-statement's dependency cone. What the construction does avoid is a duality theorem: the class is
+Local homology fixes the normalization, and it enters at one precise place. The generator of a
+chart is *defined* as the unique relative cohomology class pairing to one with the local
+fundamental homology class of that chart, carried across the universal-coefficient equivalence.
+The modules under `AlgebraicTopology/LocalHomology/` are therefore in the statement's dependency
+cone. What the construction does avoid is a duality theorem: the class is
 assembled in cohomology with support throughout and never obtained as the dual of a homology
 class of $`Z`. `Other/` builds a Borel–Moore homology of the pair $`Z\subset X` and the duality
 identifying the two, but the statement does not pass through it. Goresky,
@@ -85,15 +85,14 @@ where it is a smooth closed immersion of relative dimension $`d-p`. Its codimens
 as $`d-(d-p)=p`, which uses $`p\le d`, a consequence of smoothness; this is what makes the
 natural-number subtraction in the types exact.
 
-Each normal chart carries a relative cohomology class in degree $`2p`, the oriented generator
-above. These classes agree where charts overlap, so their images in $`\mathcal H^{2p}_Z` glue.
-What Step 1 delivers is therefore a section
+Each normal chart carries a relative cohomology class in degree $`2p`, the generator that the
+orientation singles out. These classes agree where charts overlap, so their images in
+$`\mathcal H^{2p}_Z` glue. What Step 1 delivers is therefore a section
 
 $$`\Gamma\bigl(X(\mathbb C)\setminus Z_{\mathrm{sing}}(\mathbb C),\ \mathcal H^{2p}_Z\bigr),`
 
-and not yet an element of any cohomology group. That the types below are sheaf sections — an
-application of {name}`supportRelativeCohomologySheaf` to an open — rather than cohomology groups is
-exactly this point.
+and not yet an element of any cohomology group. This is why the types below are sections of a
+sheaf — {name}`supportRelativeCohomologySheaf` applied to an open — and not cohomology groups.
 
 ```lean -show
 namespace Guide.Subvariety.D1
@@ -180,7 +179,7 @@ $$`H^{2p}_Z(X;\mathbb Q)
    \;\xrightarrow{\ \sim\ }\;\Gamma\bigl(U,\mathcal H^{2p}(R\Gamma_Z\mathbb Q)\bigr)
    \;\xrightarrow{\ \sim\ }\;\Gamma(U,\mathcal H^{2p}_Z).`
 
-The first is restriction to $`U`, and it is where the singular locus is disposed of.
+The first is restriction to $`U`, and it is what removes the singular locus from the problem.
 $`Z_{\mathrm{sing}}` has a finite filtration by closed subsets whose successive differences are
 smooth, each of codimension at least $`p+1` in $`X`, so cohomology supported on
 $`Z_{\mathrm{sing}}` vanishes in degrees below $`2(p+1)`, in particular in $`2p` and $`2p+1`. The
@@ -191,11 +190,11 @@ sides of the restriction map.
 #check cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree
 ```
 
-The second crosses from a group to a group of sections, and this is the step the word "purity"
-refers to. On $`U` the cohomology sheaves of $`R\Gamma_Z\mathbb Q` vanish in every degree other
-than $`2p`, so $`2p` is the lowest nonvanishing one; for the lowest nonvanishing degree, the
-cohomology of the sections over $`U` is the sections of the cohomology sheaf, with no correction
-from lower degrees.
+The second passes from a cohomology group to a group of sections, and it is the step that purity
+supplies. On $`U` the cohomology sheaves of $`R\Gamma_Z\mathbb Q` vanish in every degree other than
+$`2p`, so $`2p` is the lowest degree in which they are nonzero. In that lowest degree the
+cohomology of the sections over $`U` agrees with the sections of the cohomology sheaf, because no
+lower degree contributes a correction.
 
 ```lean
 #check cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
@@ -208,9 +207,8 @@ resolution.
 
 Of the two definitions quoted below, the first is the restriction isomorphism on its own and the
 second is the whole composite, the normalization isomorphism
-$`H^{2p}_Z(X;\mathbb Q)\cong\Gamma(U,\mathcal H^{2p}_Z)`. Reading the composite backwards is what
-extends a section on $`U` uniquely across $`Z_{\mathrm{sing}}` to a class supported on all of
-$`Z`.
+$`H^{2p}_Z(X;\mathbb Q)\cong\Gamma(U,\mathcal H^{2p}_Z)`. Its inverse extends a section on $`U`
+uniquely across $`Z_{\mathrm{sing}}` to a class supported on all of $`Z`.
 
 ```lean -show
 namespace Guide.Subvariety.D3
@@ -266,8 +264,8 @@ example : @Guide.Subvariety.D4.cycleComponentSupportedClassNormalizationIso = @A
 The two ends of that isomorphism have short names, which keep the distinction visible in later
 signatures: {name}`CycleComponentSupportedCohomology` is the group $`H^{2p}_Z(X;\mathbb Q)`, and
 {name}`CycleComponentSmoothCoclassSections` is the group of sections
-$`\Gamma(U,\mathcal H^{2p}_Z)`. Despite the shared word "cohomology" they are different kinds of
-object, and {name}`cycleComponentExtendSmoothCoclass`, the inverse of the normalization
+$`\Gamma(U,\mathcal H^{2p}_Z)`. Despite the shared word "cohomology", they are objects of
+different kinds, and {name}`cycleComponentExtendSmoothCoclass`, the inverse of the normalization
 isomorphism, is the only passage between them. Applying it to the normalized section of Step 1
 gives the class of the component.
 
@@ -329,8 +327,7 @@ example : @Guide.Subvariety.D6.cycleComponentSheafClass = @AlgebraicGeometry.Com
 ```
 
 Both definitions take only the variety, the generic point of the subvariety, and a proof that its
-coheight is $`p`. No dimension is passed: the construction reads $`d` off as {lean}`dim X.left`
-internally.
+coheight is $`p`. No dimension is passed: the construction uses {lean}`dim X.left` internally.
 
 For the generic point of $`X` itself, the support is all of $`X(\mathbb C)`, so forgetting support
 is an isomorphism. The nonzero normalized section therefore gives a nonzero class in

@@ -33,7 +33,7 @@ tag := "complex-points"
 %%%
 
 We begin with the definition of a projective morphism of schemes, which the repository supplies in
-the explicit form. A {name}`Presentation` of a morphism $`f\colon X\to T` consists of a natural
+an explicit form. A {name}`Presentation` of a morphism $`f\colon X\to T` consists of a natural
 number $`n`, a closed immersion of $`X` into the $`n`-dimensional projective space over $`T`, and
 a proof that composing that immersion with the projection to $`T` recovers $`f`. A morphism is
 projective when a presentation exists; the definition is a `Prop`, so the presentation is not part

@@ -173,13 +173,13 @@ stands between the two cases above and the general one.
   $`\operatorname{cl}_X(Z)\in\operatorname{Hdg}^p(X,\mathbb Q)`. This is the reverse inclusion,
   and it is what would turn the statement into the usual equality.
 * Compatibility of the two singular comparisons. Constant-sheaf cohomology is identified with
-  singular cohomology twice over: ordinarily, by
-  `rationalCohomologyLinearEquivSingularCohomology`, and with support in a closed set, by
-  `rationalCohomologyWithSupportAddEquivSingular`. Both are constructed and proved to be
+  singular cohomology in two settings: ordinary cohomology, by
+  `rationalCohomologyLinearEquivSingularCohomology`, and cohomology with support in a closed set,
+  by `rationalCohomologyWithSupportAddEquivSingular`. Both are constructed and proved to be
   isomorphisms, under point-set hypotheses that a projective variety satisfies. What is missing is
-  the square these two isomorphisms form with the map forgetting support on each side. Until it is
-  known to commute, the class constructed here is not known to be the topologist's fundamental
-  class in singular cohomology.
+  the square these two isomorphisms form with the map forgetting support on each side. Until that
+  square is known to commute, the class constructed here cannot be matched with the topologist's
+  fundamental class in singular cohomology.
 
 # Degree and support conventions
 %%%
@@ -197,9 +197,9 @@ $`H^{2p}(X;\mathbb Q)`, in which the conjecture is stated.
 
 Alongside that group there is a sheaf, $`\mathcal H^n_Z` on $`X(\mathbb C)`, the sheafification of
 $`V\mapsto H^n(V,V\setminus Z;\mathbb Q)`. Roman $`H` is always the group and script
-$`\mathcal H` always the sheaf, here and in the source. The construction of the class of a
-subvariety is built in the sheaf and only afterwards transported to the group, so the two should
-not be read as the same thing; see {ref "class-of-a-subvariety"}[The class of a subvariety].
+$`\mathcal H` always the sheaf, here and in the source. The class of a subvariety is built in the
+sheaf and only afterwards transported to the group, so the two should not be read as the same
+thing; see {ref "class-of-a-subvariety"}[The class of a subvariety].
 
 # Notation
 %%%
@@ -213,9 +213,9 @@ sheaf are global.
 
 * `↧X` is the bundling map `FooCat.of X` of a concrete category, with `FooCat` read off from the
   expected type: {lean}`(↧ℂ : CommRingCat)` is `CommRingCat.of ℂ` and
-  {lean}`(↧(ComplexPoint X) : TopCat)` is `TopCat.of (ComplexPoint X)`. The expected type has to be
+  {lean}`(↧(ComplexPoint X) : TopCat)` is `TopCat.of (ComplexPoint X)`. The expected type must be
   known, which is why the notation is always used in a position that fixes it. It is copied from
-  two pending Mathlib pull requests and kept under `HodgeConjecture/Mathlib/` until they land.
+  two pending Mathlib pull requests and kept under `HodgeConjecture/Mathlib/` until those land.
 * `𝓒(T; R)` is the constant sheaf of additive groups on the space `T` with value `R`, and
   `𝓒[T; A]` the same for an object `A` of `AddCommGrpCat`.
 * `Ω•(X)` is the holomorphic de Rham complex of `X`, indexed by the integers, and `F^p Ω•(X)` its
@@ -227,6 +227,6 @@ sheaf are global.
 * `F^p H_dR^n(X)` is the Hodge filtration on de Rham cohomology, and `Hdg^p(X; K)` the Hodge
   classes of codimension `p` with coefficients in `K`.
 
-In the cohomology notations the literature would name the variety, where the argument written
-here is the object `X` of the over category, which carries the variety `X.left` together with its
+In the cohomology notations the literature would name the variety; the argument written here is
+instead the object `X` of the over category, which carries the variety `X.left` together with its
 map to $`\operatorname{Spec}\mathbb C`.

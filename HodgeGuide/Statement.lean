@@ -77,8 +77,8 @@ Both maps are stated for a bundled variety. A {name}`SmoothProjectiveComplexVari
 scheme together with its structure morphism to $`\operatorname{Spec}\mathbb C`, carrying
 integrality, smoothness and projectivity as instance fields, and {lean}`V.over` re-presents it as
 the object of {lean}`Over (Spec ↧ℂ)` that everything else in the development takes. The bundling
-exists for the constructions in `Other/` that thread one scheme and one structure morphism through
-many comparison objects at once, chiefly the Borel–Moore one; it buys nothing for the statement,
+exists for the constructions in `Other/`, chiefly the Borel–Moore one, that thread a single scheme
+and structure morphism through many comparison objects at once. It is of no use to the statement,
 which stays unbundled, as does {name}`algebraicCycleClassSpan` below.
 
 # The algebraic subspace
@@ -114,8 +114,8 @@ example : @Guide.Statement.D2.algebraicCycleClassSpan = @AlgebraicGeometry.Compl
 In Lean the span is the supremum, over all points {lean}`x` and all proofs {lean}`hx` of
 {lean}`coheight x = p`, of the line spanned by {lean}`cycleComponentSheafClass X x hx`. The
 supremum ranges over the proof {lean}`hx` as well as the point, because {lean}`hx` is an argument
-of the class; that the class does not in fact depend on which proof is supplied is automatic, since
-{lean}`coheight x = p` is a proposition.
+of the class. The class does not depend on which proof is supplied, since
+{lean}`coheight x = p` is a proposition and Lean identifies any two of its proofs.
 
 # The proposition
 
@@ -210,9 +210,9 @@ the statement stronger than the conjecture rather than weaker.
 
 The two cases overlap in exactly one situation. When $`\dim X=0` every codimension is either zero
 or above the dimension, so the conjecture holds for such a variety in every codimension at once.
-That is the one class of varieties for which the repository proves the conjecture, and it proves
-nothing about the conjecture's content: a smooth projective integral variety of dimension zero
-over $`\mathbb C` is a point.
+That is the one class of varieties for which the repository proves the conjecture, and the case
+carries no information about its content: a smooth projective integral variety of dimension zero
+over $`\mathbb C` is a single point.
 
 ```lean
 #check rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_zero
