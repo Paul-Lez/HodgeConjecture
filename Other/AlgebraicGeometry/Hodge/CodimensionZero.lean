@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Hodge.FiltrationDegreeZero
 import Other.AlgebraicGeometry.Cycle.ClassDimension
 import Other.AlgebraicGeometry.ComplexPoint.ProjectiveConnected

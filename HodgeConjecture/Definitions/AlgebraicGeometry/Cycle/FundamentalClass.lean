@@ -6,7 +6,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportExtension
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCohomologySheafComparison
@@ -53,6 +53,8 @@ def complexSupportInjectiveCohomologySheafIsoRelative
     (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
       supportedSingularCohomologySheafIsoRelative
         (TopCat.of (ComplexPoint X)) S S.isClosed n
+
+section
 
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
@@ -131,5 +133,15 @@ agreement with `forgetSupport` is therefore definitional rather than a theorem. 
 def cycleComponentSheafClass : H^(2 * p)(X; ℚ) :=
   forgetSupport X (cycleComponentSupport X x) (2 * p)
     (cycleComponentSheafSupportedClass X x hx)
+
+end
+
+/-- The rational span of the constructed codimension-`p` component classes.
+
+The relative dimension is the canonical `dim X`, whose certificate is proved from smoothness and
+integrality. This definition spans explicit normalized component classes. -/
+def algebraicCycleClassSpan (p : ℕ) : Submodule ℚ (H^(2 * p)(X; ℚ)) :=
+  ⨆ (x : X.left) (hx : Order.coheight x = p),
+    Submodule.span ℚ {cycleComponentSheafClass X x hx}
 
 end AlgebraicGeometry.ComplexPoint

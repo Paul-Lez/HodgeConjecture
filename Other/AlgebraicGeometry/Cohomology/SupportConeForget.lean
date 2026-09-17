@@ -6,7 +6,6 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift
 public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
@@ -17,8 +16,8 @@ public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 /-!
 # Support-forgetting in the rational injective model
 
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget`.
+Ordinary rational cohomology is computed by the ambient rational injective resolution, and
+the support-forgetting map becomes the cone connecting map of that resolution.
 -/
 
 @[expose] public noncomputable section

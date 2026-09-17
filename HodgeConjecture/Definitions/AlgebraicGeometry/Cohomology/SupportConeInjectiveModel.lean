@@ -62,4 +62,12 @@ instance ambientRationalInjectiveComplex_isStrictlyGE :
   dsimp only [ambientRationalInjectiveComplex]
   infer_instance
 
+local instance rationalConeForgetSheafDerivedCategory :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+
+instance ambientRationalInjectiveComplex_isKInjective :
+    (ambientRationalInjectiveComplex X).IsKInjective :=
+  CochainComplex.isKInjective_of_injective _ 0
+
 end AlgebraicGeometry.ComplexPoint

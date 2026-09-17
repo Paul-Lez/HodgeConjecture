@@ -232,11 +232,9 @@ The shortest route through the implementation is:
 5. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SupportExtension.lean`, its
    extension across the singular locus;
 6. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`, the class of a
-   subvariety;
-7. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`, the span the
-   statement compares against;
-8. `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, the maps on cycles;
-9. `Other/AlgebraicGeometry/Hodge/CodimensionZeroComparison.lean` and
+   subvariety and the span the statement compares against;
+7. `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, the maps on cycles;
+8. `Other/AlgebraicGeometry/Hodge/CodimensionZeroComparison.lean` and
    `CodimensionZeroNonvanishing.lean`, the codimension-zero case.
 
 Things to keep track of while reading: integer versus natural-number degrees, real versus complex

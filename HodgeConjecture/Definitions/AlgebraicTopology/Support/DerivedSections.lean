@@ -59,6 +59,12 @@ def toOpenRestrictionPushforward (U : Opens X) :
     ext V : 2
     exact (f.hom.naturality _).symm
 
+/-- Restriction-pushforward on an ambient open is literally evaluation on its
+intersection with the excluded open. -/
+def supportedOutsideIntersectionIso (U V : Opens X) (F : Sheaf AddCommGrpCat.{u} X) :
+    ((openRestrictionPushforward X U).obj F).obj.obj (op V) ≅ F.obj.obj (op (V ⊓ U)) :=
+  F.obj.mapIso (eqToIso (congrArg op (Opens.functor_map_eq_inf U V)))
+
 /-- `Γ_{X \ U} : F ↦ Γ_{X \ U}(F)`, the subsheaf of sections of `F` supported on the closed set
 `X \ U`, defined as the kernel of `F → j_*(F|_U)` for `j : U ↪ X`. -/
 def sheafSectionsSupportedOutside (U : Opens X) :

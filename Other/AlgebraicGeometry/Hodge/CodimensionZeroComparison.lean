@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
 import Other.AlgebraicGeometry.Cycle.Codimension
 
 import Other.AlgebraicGeometry.Cohomology.RationalDegreeZero
