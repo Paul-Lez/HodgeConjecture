@@ -62,7 +62,7 @@ previous point coclass construction. -/
 geometric variety as input and uses its constructed complex-oriented point classes. -/
 def pointCycleClassOnCycles :
     codimensionCycleSubgroup V.scheme d →+
-      H^(2 * (d : ℤ))(V.over; ℚ) :=
+      H^(2 * d)(V.over; ℚ) :=
   cycleClassOnCyclesOfComponents (maximalCodimensionComponentClass V d)
 
 /-- An individual point with multiplicity `n` has exactly `n` times its normalized coclass. -/
@@ -88,7 +88,7 @@ lemma pointCycleClassOnCycles_single_eq_forgetSupport_pointCoclass
     (x : V.scheme) (hx : coheight x = d) (n : ℤ) :
     pointCycleClassOnCycles V d (codimensionCycleSubgroup.single x hx n) =
       n • forgetSupport V.over
-        (cycleComponentSupport V.over x) (2 * (d : ℤ))
+        (cycleComponentSupport V.over x) (2 * d)
         ((auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
           V d x hx).supportedComparison.symm
             (maximalCodimensionSupportedGenerator V d x hx)) := by
@@ -102,7 +102,8 @@ lemma pointCycleClassOnCycles_sum_single
     (x : ι → V.scheme) (hx : ∀ i, coheight (x i) = d) (n : ι → ℤ) :
     pointCycleClassOnCycles V d (∑ i ∈ s, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
       ∑ i ∈ s, n i • maximalCodimensionComponentClass V d (x i) (hx i) := by
-  simp
+  rw [map_sum]
+  exact Finset.sum_congr rfl fun i _ ↦ pointCycleClassOnCycles_single V d (x i) (hx i) (n i)
 
 /-- The finite-support formula on every integral point cycle. The zero branch is unused at
 every point with a nonzero coefficient, by the defining codimension condition on `c`. -/
@@ -118,7 +119,7 @@ lemma pointCycleClassOnCycles_apply
 coefficients. Its second argument is an integral cycle, not a Chow class. -/
 def pointCycleClassRationalExtensionBilinear :
     ℚ →ₗ[ℚ] codimensionCycleSubgroup V.scheme d →ₗ[ℤ]
-      H^(2 * (d : ℤ))(V.over; ℚ) where
+      H^(2 * d)(V.over; ℚ) where
   toFun q := q • (pointCycleClassOnCycles V d).toIntLinearMap
   map_add' _ _ := by
     ext
@@ -132,7 +133,7 @@ represented by `ℚ ⊗[ℤ] codimensionCycleSubgroup V.scheme d`. No rational-e
 quotient is taken here. -/
 def rationalPointCycleClassOnCycles :
     TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme d) →ₗ[ℚ]
-      H^(2 * (d : ℤ))(V.over; ℚ) :=
+      H^(2 * d)(V.over; ℚ) :=
   TensorProduct.AlgebraTensorModule.lift (pointCycleClassRationalExtensionBilinear V d)
 
 /-- Rational extension agrees with the integral class map on pure tensors. -/
@@ -146,7 +147,7 @@ def rationalPointCycleClassOnCycles :
     (q : ℚ) (x : V.scheme) (hx : coheight x = d) :
     rationalPointCycleClassOnCycles V d (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
       q • maximalCodimensionComponentClass V d x hx := by
-  simp
+  rw [rationalPointCycleClassOnCycles_tmul, pointCycleClassOnCycles_single, one_smul]
 
 /-- Exact evaluation on every finite rational linear combination of points. -/
 lemma rationalPointCycleClassOnCycles_sum_tmul_single
@@ -155,6 +156,8 @@ lemma rationalPointCycleClassOnCycles_sum_tmul_single
     rationalPointCycleClassOnCycles V d
         (∑ i ∈ s, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
       ∑ i ∈ s, q i • maximalCodimensionComponentClass V d (x i) (hx i) := by
-  simp
+  rw [map_sum]
+  exact Finset.sum_congr rfl fun i _ ↦
+    rationalPointCycleClassOnCycles_tmul_single V d (q i) (x i) (hx i)
 
 end AlgebraicGeometry.ComplexPoint

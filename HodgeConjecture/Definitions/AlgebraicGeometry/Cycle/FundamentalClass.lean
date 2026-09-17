@@ -94,8 +94,7 @@ of `Z_sing(ℂ)` vanishes in degrees `2p` and `2p + 1`; passage to sections of t
 cohomology sheaf, by purity along `Z(ℂ) \ Z_sing(ℂ)`; and the identification of that sheaf with
 `𝓗^{2p}_{Z(ℂ)}`. -/
 def cycleComponentSupportedClassNormalizationIso :
-    CycleComponentSupportedCohomology X x p ≅
-      CycleComponentSmoothCoclassSections X x p :=
+    CycleComponentSupportedCohomology X x p ≅ CycleComponentSmoothCoclassSections X x p :=
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
   cycleComponentSupportExtensionIso X x hx ≪≫
     cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
@@ -108,8 +107,7 @@ def cycleComponentSupportedClassNormalizationIso :
 the singular locus extends uniquely across `Z_sing(ℂ)`. This is the inverse of the normalization
 isomorphism; no extension datum is supplied. -/
 def cycleComponentExtendSmoothCoclass :
-    CycleComponentSmoothCoclassSections X x p →+
-      CycleComponentSupportedCohomology X x p :=
+    CycleComponentSmoothCoclassSections X x p →+ CycleComponentSupportedCohomology X x p :=
   (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
 
 /-- The class in `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)` that extends the normalized section of `𝓗^{2p}_{Z(ℂ)}`
@@ -126,9 +124,9 @@ def cycleComponentSheafSupportedClass :
       -- `Z(ℂ)`.
       (cycleComponentSupport X x)
       -- Degree `2p`.
-      (2 * (p : ℤ)) :=
+      ((2 * p : ℕ) : ℤ) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
+    (cycleComponentAnalyticClosedSupport X x).isClosed ((2 * p : ℕ) : ℤ)).symm
       (cycleComponentSupportedInjectiveClass X x hx)
 
 /-- **Step 3.** The class `[Z] ∈ H^{2p}(X(ℂ); ℚ)` of the integral subvariety `Z` with generic
@@ -137,8 +135,8 @@ H^{2p}(X(ℂ); ℚ)`.
 
 This is the composite of the three steps, not a second route into ordinary cohomology; the
 agreement with `forgetSupport` is therefore definitional rather than a theorem. -/
-def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
-  forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
+def cycleComponentSheafClass : H^(2 * p)(X; ℚ) :=
+  forgetSupport X (cycleComponentSupport X x) (2 * p)
     (cycleComponentSheafSupportedClass X x hx)
 
 end AlgebraicGeometry.ComplexPoint

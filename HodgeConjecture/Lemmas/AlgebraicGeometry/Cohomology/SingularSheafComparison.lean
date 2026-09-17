@@ -54,11 +54,11 @@ lemma rationalToSingularCochainComplexInt_quasiIso
 abbrev RationalSingularCochainHypercohomology (n : ℤ) : Type 1 :=
   Hypercohomology X (singularCochainSheafComplexInt X ℚ) n
 
-/-- Rational constant-sheaf cohomology is canonically additively equivalent to the
-hypercohomology of its singular-cochain resolution. -/
-def rationalCohomologySingularCochainAddEquiv
+/-- Hypercohomology of the rational constant sheaf complex is canonically additively equivalent
+to the hypercohomology of its singular-cochain resolution. -/
+def rationalHypercohomologySingularCochainAddEquiv
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    H^n(X; ℚ) ≃+
+    Hypercohomology X (constantFieldSheafComplexInt ℚ X) n ≃+
       RationalSingularCochainHypercohomology X n where
   toEquiv := Localization.SmallShiftedHom.postcompEquiv
     (rationalToSingularCochainComplexInt X)
@@ -68,12 +68,28 @@ def rationalCohomologySingularCochainAddEquiv
       (rationalToSingularCochainComplexInt X) n).map_add α β
 
 @[simp]
-lemma rationalCohomologySingularCochainAddEquiv_apply
+lemma rationalHypercohomologySingularCochainAddEquiv_apply
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : H^n(X; ℚ)) :
-    rationalCohomologySingularCochainAddEquiv X n α =
+    (α : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n) :
+    rationalHypercohomologySingularCochainAddEquiv X n α =
       hypercohomologyMap X
         (rationalToSingularCochainComplexInt X) n α :=
+  rfl
+
+/-- Rational constant-sheaf cohomology is canonically additively equivalent to the
+hypercohomology of its singular-cochain resolution. -/
+def rationalCohomologySingularCochainAddEquiv
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
+    H^n(X; ℚ) ≃+ RationalSingularCochainHypercohomology X n :=
+  (hypercohomologyAddEquivConstantCohomology ℚ X n).symm.trans
+    (rationalHypercohomologySingularCochainAddEquiv X n)
+
+@[simp]
+lemma rationalCohomologySingularCochainAddEquiv_apply
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) (α : H^n(X; ℚ)) :
+    rationalCohomologySingularCochainAddEquiv X n α =
+      hypercohomologyMap X (rationalToSingularCochainComplexInt X) n
+        ((hypercohomologyAddEquivConstantCohomology ℚ X n).symm α) :=
   rfl
 
 end AlgebraicGeometry.ComplexPoint

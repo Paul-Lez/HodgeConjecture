@@ -24,7 +24,7 @@ The relative dimension is the canonical `dim X`, whose certificate is proved fro
 integrality. This definition spans explicit normalized component classes. -/
 def algebraicCycleClassSpan
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ) :
-    Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
+    Submodule ℚ (H^(2 * p)(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
     Submodule.span ℚ {cycleComponentSheafClass X x hx}
 

@@ -128,9 +128,9 @@ def auxiliarySupportedClass
 /-- The comparison-dependent ordinary rational cohomology class. -/
 def auxiliaryOrdinaryClass
     (D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :
-    H^(2 * (p : ℤ))(V.over; ℚ) :=
+    H^(2 * p)(V.over; ℚ) :=
   forgetSupport V.over
-    (cycleComponentSupport V.over x) (2 * (p : ℤ))
+    (cycleComponentSupport V.over x) (2 * p)
     D.auxiliarySupportedClass
 
 end AuxiliaryRationalCycleComponentBorelMooreComparisonData
@@ -275,9 +275,9 @@ def constantSheafSupportedFundamentalClass
 /-- The conditional normalized ordinary rational component class. -/
 def ordinaryFundamentalClass
     (D : ComplexOrientedRationalCycleComponentClassData V d p x hx) :
-    H^(2 * (p : ℤ))(V.over; ℚ) :=
+    H^(2 * p)(V.over; ℚ) :=
   forgetSupport V.over
-    (cycleComponentSupport V.over x) (2 * (p : ℤ))
+    (cycleComponentSupport V.over x) (2 * p)
       D.constantSheafSupportedFundamentalClass
 
 end ComplexOrientedRationalCycleComponentClassData
@@ -642,7 +642,7 @@ def maximalCodimensionComponentClass
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = d) :
-    H^(2 * (d : ℤ))(V.over; ℚ) :=
+    H^(2 * d)(V.over; ℚ) :=
   AuxiliaryRationalCycleComponentBorelMooreComparisonData.auxiliaryOrdinaryClass
     (auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx)
 
@@ -655,7 +655,7 @@ lemma maximalCodimensionComponentClass_eq_forgetSupport_pointCoclass
     maximalCodimensionComponentClass V d x hx =
       forgetSupport V.over
         (cycleComponentSupport V.over x)
-        (2 * (d : ℤ))
+        (2 * d)
         ((auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx).supportedComparison.symm
           (maximalCodimensionSupportedGenerator V d x hx)) := by
   unfold maximalCodimensionComponentClass

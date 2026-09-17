@@ -40,6 +40,10 @@ variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
 attribute [local instance] analyticHasDerivedCategory
 
+set_option linter.auxLemma false
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
+
 /-- The chosen rational-linear retraction, applied to the complex constant sheaf. -/
 def complexToFieldConstantSheaf :
     𝓒(↧(ComplexPoint X); ℂ) ⟶ 𝓒(↧(ComplexPoint X); K) :=
@@ -54,9 +58,7 @@ def complexToFieldConstantSheafComplexInt :
     ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
       (complexToFieldConstantSheaf K X)) ComplexShape.embeddingUpNat
 
-attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1 TopCat.instCategorySheaf._aux_3
-  TopCat.instCategorySheaf._aux_5 constantComplexAddCommGrpPresheaf in
-
+attribute [local implicit_reducible] constantComplexAddCommGrpPresheaf in
 omit [Algebra K ℂ] in
 /-- Multiplying an integer by `r` and then by `q` is multiplying it by `q * r`. -/
 private lemma ofHom_zmultiplesAddHom_comp_mulLeft (q r : K) :
@@ -64,10 +66,7 @@ private lemma ofHom_zmultiplesAddHom_comp_mulLeft (q r : K) :
         AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q) =
       AddCommGrpCat.ofHom (zmultiplesAddHom K (q * r)) := by aesop
 
-set_option linter.auxLemma false in
 omit [Algebra K ℂ] in
-attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
-  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 in
 /-- Applying a rational scalar after the constant class `r` gives the constant class `q * r`. -/
 private lemma integerToFieldConstantSheaf_comp_fieldScalarSheaf (q r : K) :
     integerToFieldConstantSheaf K X r ≫
@@ -92,27 +91,24 @@ def fieldCohomologyUnit : H^0(X; K) :=
   fieldCohomologyClass K X 1
 
 /-- Extension of coefficients from rational to complex constant-sheaf cohomology. -/
-def fieldToComplexCohomology (n : ℤ) :
+def fieldToComplexCohomology (n : ℕ) :
     H^n(X; K) →+ ComplexConstantCohomology X n :=
-  hypercohomologyMap X
-    (fieldToComplexConstantSheafComplexInt K X) n
+  (hypercohomologyMap X (fieldToComplexConstantSheafComplexInt K X) n).comp
+    (hypercohomologyAddEquivConstantCohomology K X n).symm.toAddMonoidHom
 
 /-- The cohomological retraction induced by the chosen rational-linear retraction `ℂ → K`. -/
-def complexToFieldCohomology (n : ℤ) :
+def complexToFieldCohomology (n : ℕ) :
     ComplexConstantCohomology X n →+ H^n(X; K) :=
-  hypercohomologyMap X
-    (complexToFieldConstantSheafComplexInt K X) n
+  (hypercohomologyAddEquivConstantCohomology K X n).toAddMonoidHom.comp
+    (hypercohomologyMap X (complexToFieldConstantSheafComplexInt K X) n)
 
 omit [Algebra K ℂ] in
 /-- Constant degree-zero cohomology classes respect rational scalar multiplication. -/
 lemma fieldCohomologyClass_mul (q r : K) :
     fieldCohomologyClass K X (q * r) =
       q • fieldCohomologyClass K X r := by
-  rw [field_smul_eq]
-  unfold fieldCohomologyClass hypercohomologyMap
-  dsimp
-  rw [← smallShiftedHomMkZero_comp X,
-    integerToFieldConstantSheafComplexInt_comp_fieldScalarComplex]
+  rw [field_smul_eq, Sheaf.H.map_apply, fieldCohomologyClass, fieldCohomologyClass,
+    Abelian.Ext.mk₀_comp_mk₀, Category.assoc, integerToFieldConstantSheaf_comp_fieldScalarSheaf]
 
 /-- Rational constants map rational-linearly to degree-zero rational cohomology. -/
 def fieldCohomologyClassLinear : K →ₗ[K] H^0(X; K) where
@@ -174,38 +170,39 @@ lemma complexConstantCohomologyDeRhamEquiv_apply
   rfl
 
 /-- The rational-to-complex cohomology map has the displayed cohomological left inverse. -/
-lemma complexToFieldCohomology_leftInverse (n : ℤ) :
+lemma complexToFieldCohomology_leftInverse (n : ℕ) :
     Function.LeftInverse (complexToFieldCohomology K X n)
       (fieldToComplexCohomology K X n) := by
   intro α
   unfold complexToFieldCohomology fieldToComplexCohomology
+  simp only [AddMonoidHom.comp_apply, AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe]
   rw [← hypercohomologyMap_comp_apply X,
     fieldToComplexConstantSheafComplexInt_comp_complexToField,
     hypercohomologyMap_id]
-  rfl
+  exact AddEquiv.apply_symm_apply _ α
 
 /-- Extension from rational to complex constant-sheaf cohomology is injective in every degree. -/
-lemma fieldToComplexCohomology_injective (n : ℤ) :
+lemma fieldToComplexCohomology_injective (n : ℕ) :
     Function.Injective (fieldToComplexCohomology K X n) :=
   (complexToFieldCohomology_leftInverse K X n).injective
 
 /-- The rational-to-de Rham map factors through extension from rational to complex constants. -/
 lemma fieldToDeRhamCohomology_factor
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ)
     (α : H^n(X; K)) :
     fieldToDeRhamCohomology K X n α =
       hypercohomologyMap X
         (constantsToHolomorphicDeRhamComplexInt X) n
-        (fieldToComplexCohomology K X n α) := by
-  exact hypercohomologyMap_comp_apply X
+        (fieldToComplexCohomology K X n α) :=
+  hypercohomologyMap_comp_apply X
     (fieldToComplexConstantSheafComplexInt K X)
-    (constantsToHolomorphicDeRhamComplexInt X) n α
+    (constantsToHolomorphicDeRhamComplexInt X) n _
 
 /-- The rational-to-de Rham comparison is injective. The holomorphic Poincaré lemma supplies
 the analytic quasi-isomorphism, while the explicit splitting of `K → ℂ` proves that extending
 scalars is injective; no finite-dimensionality assumption is needed. -/
 lemma fieldToDeRhamCohomology_injective
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
     Function.Injective (fieldToDeRhamCohomology K X n) := by
   intro α β hαβ
   apply fieldToComplexCohomology_injective K X n
@@ -279,11 +276,12 @@ lemma fieldToComplexConstantSheafComplexInt_comp_conj
 /-- Such classes are their own conjugates in complex constant-sheaf cohomology. -/
 lemma conj_fieldToComplexCohomology
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q)
-    (n : ℤ) (α : H^n(X; K)) :
+    (n : ℕ) (α : H^n(X; K)) :
     hypercohomologyMap X (conjConstantComplexSheafComplexInt X) n
         (fieldToComplexCohomology K X n α) =
       fieldToComplexCohomology K X n α := by
   unfold fieldToComplexCohomology
+  simp only [AddMonoidHom.comp_apply, AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe]
   rw [← hypercohomologyMap_comp_apply,
     fieldToComplexConstantSheafComplexInt_comp_conj K X hK]
 
@@ -291,7 +289,7 @@ lemma conj_fieldToComplexCohomology
 makes `F^p` alone the right condition over `ℚ`. -/
 lemma deRhamConj_fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom]
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q)
-    (n : ℤ) (α : H^n(X; K)) :
+    (n : ℕ) (α : H^n(X; K)) :
     deRhamConj X n (fieldToDeRhamCohomology K X n α) =
       fieldToDeRhamCohomology K X n α := by
   have he : fieldToDeRhamCohomology K X n α =
@@ -321,13 +319,13 @@ lemma hodgePiece_eq_bot_of_lt [IsIntegral X.left] [Smooth X.hom]
 lemma hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q) (p : ℕ) :
     Hdg^p(K; X) =
-      ((hodgeFiltrationComplexSubmodule X p (2 * p)).restrictScalars K).comap
+      ((hodgeFiltrationComplexSubmodule X p (2 * p : ℕ)).restrictScalars K).comap
         (fieldToDeRhamCohomologyLinear K X (2 * p)) := by
   refine SetLike.ext fun α ↦ ?_
-  show fieldToDeRhamCohomology K X (2 * (p : ℤ)) α ∈
-      hodgePiece X (p : ℤ) (p : ℤ) (2 * (p : ℤ)) ↔
-    fieldToDeRhamCohomology K X (2 * (p : ℤ)) α ∈
-      hodgeFiltration X (p : ℤ) (2 * (p : ℤ))
+  show fieldToDeRhamCohomology K X (2 * p) α ∈
+      hodgePiece X (p : ℤ) (p : ℤ) (2 * p : ℕ) ↔
+    fieldToDeRhamCohomology K X (2 * p) α ∈
+      hodgeFiltration X (p : ℤ) (2 * p : ℕ)
   rw [mem_hodgePiece_iff, deRhamConj_fieldToDeRhamCohomology K X hK]
   exact ⟨fun h ↦ h.1, fun h ↦ ⟨h, h⟩⟩
 
@@ -336,7 +334,7 @@ definitions agree. -/
 lemma hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left]
     [Smooth X.hom] (p : ℕ) :
     Hdg^p(ℚ; X) =
-      ((hodgeFiltrationComplexSubmodule X p (2 * p)).restrictScalars ℚ).comap
+      ((hodgeFiltrationComplexSubmodule X p (2 * p : ℕ)).restrictScalars ℚ).comap
         (fieldToDeRhamCohomologyLinear ℚ X (2 * p)) :=
   hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule ℚ X (fun q ↦ by simp) p
 

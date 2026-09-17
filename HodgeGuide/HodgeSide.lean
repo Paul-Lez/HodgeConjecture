@@ -235,8 +235,10 @@ cohomology.
 
 # Cohomology as morphisms in the derived category
 
-For a complex of sheaves $`K^\bullet` on $`X(\mathbb C)`, hypercohomology is defined as a group of
-morphisms in the derived category,
+Constant-sheaf cohomology $`H^n(X;K)` is Mathlib's sheaf cohomology {name}`CategoryTheory.Sheaf.H`
+of the constant sheaf $`\underline{K}_X` on $`X(\mathbb C)`. The de Rham side needs the
+cohomology of a complex of sheaves. For a complex $`K^\bullet` on $`X(\mathbb C)`, hypercohomology
+is defined as a group of morphisms in the derived category,
 
 $$`\mathbb H^n(X,K^\bullet)
   =\operatorname{Hom}_{D(X)}(\underline{\mathbb Z}_X,K^\bullet[n]),`
@@ -261,15 +263,20 @@ end Guide.Hodge.D3
 example : @Guide.Hodge.D3.Hypercohomology = @AlgebraicGeometry.ComplexPoint.Hypercohomology := rfl
 ```
 
-Cohomology with coefficients in a field `K` is the case of the constant sheaf `K`, and it is
-written with the notation $`H^n(X;K)`:
+Cohomology with coefficients in a field `K` is written with the notation $`H^n(X;K)`. Mathlib
+defines it as the `Ext`-group from the constant sheaf $`\underline{\mathbb Z}_X` to
+$`\underline{K}_X`, which is the same group of morphisms in the derived category. The comparison
+{name}`hypercohomologyAddEquivConstantCohomology` identifies it with the hypercohomology of the
+constant sheaf complex.
 
 ```lean -show
 namespace Guide.Hodge.D4
 ```
 ```lean
-example (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℤ) :
-    H^n(X; K) = Hypercohomology X (constantFieldSheafComplexInt K X) n := rfl
+example (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℕ) :
+    H^n(X; K) =
+      Sheaf.H ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).obj (AddCommGrpCat.of K)) n :=
+  rfl
 ```
 ```lean -show
 end Guide.Hodge.D4
@@ -291,7 +298,7 @@ namespace Guide.Hodge.D6
 ```
 ```lean
 def fieldToDeRhamCohomologyLinear (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
     H^n(X; K) →ₗ[K] DeRhamHypercohomology X n where
   toFun := fieldToDeRhamCohomology K X n
   map_add' := (fieldToDeRhamCohomology K X n).map_add
@@ -526,7 +533,7 @@ namespace Guide.Hodge.D11
 ```lean
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X; K)) :=
-  ((hodgePiece X p p (2 * p)).restrictScalars K).comap
+  ((hodgePiece X p p (2 * p : ℕ)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 ```
 ```lean -show

@@ -239,9 +239,9 @@ namespace Guide.Subvariety.D5
 def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
+    RationalCohomologyWithSupport X (cycleComponentSupport X x) ((2 * p : ℕ) : ℤ) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
+    (cycleComponentAnalyticClosedSupport X x).isClosed ((2 * p : ℕ) : ℤ)).symm
       (cycleComponentSupportedInjectiveClass X x hx)
 ```
 ```lean -show
@@ -254,8 +254,8 @@ namespace Guide.Subvariety.D6
 ```lean
 def cycleComponentSheafClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) : H^(2 * (p : ℤ))(X; ℚ) :=
-  forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
+    (hx : coheight x = p) : H^(2 * p)(X; ℚ) :=
+  forgetSupport X (cycleComponentSupport X x) (2 * p)
     (cycleComponentSheafSupportedClass X x hx)
 ```
 ```lean -show

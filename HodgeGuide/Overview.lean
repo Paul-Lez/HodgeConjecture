@@ -27,9 +27,9 @@ instance arguments {lean}`IsIntegral X.left`, {lean}`Smooth X.hom` and {lean}`Is
 The over category, the spectrum, integral schemes and smooth morphisms are Mathlib's;
 projectivity and the complex points of {lean}`X` are defined in the repository, see
 {ref "complex-points"}[The variety and its complex points].
-A codimension is a natural number {lean}`p`, while cohomological degrees are integers, so the class
-of a codimension-$`p` cycle lives in degree {lean}`2 * (p : ℤ)`; the coercion is visible in the
-types below.
+A codimension is a natural number {lean}`p`, and the class of a codimension-$`p` cycle lives in
+sheaf cohomology of degree {lean}`2 * p`. The degrees of hypercohomology groups are integers, so a
+coercion appears where the two meet.
 
 The statement is a single proposition, comparing two subspaces of rational cohomology. Here it is
 as declared in `HodgeConjecture/Statement.lean`:
@@ -56,7 +56,7 @@ namespace Guide.Overview.D2
 ```lean
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X; K)) :=
-  ((hodgePiece X p p (2 * p)).restrictScalars K).comap
+  ((hodgePiece X p p (2 * p : ℕ)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 ```
 ```lean -show
@@ -68,7 +68,7 @@ namespace Guide.Overview.D3
 ```
 ```lean
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
+    [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * p)(X; ℚ)) :=
   ⨆ (x : X.left) (hx : coheight x = p),
     Submodule.span ℚ {cycleComponentSheafClass X x hx}
 ```
@@ -169,7 +169,7 @@ tag := "degree-and-support-conventions"
 A subvariety $`Z` of codimension $`p` in a smooth variety $`X` of dimension $`d` has $`p` complex
 normal directions, so its class sits in the cohomological degree $`2p` that the complex
 orientation of those directions can generate. This is the origin of the index
-{lean}`2 * (p : ℤ)` throughout the code; the complementary index
+{lean}`2 * p` throughout the code; the complementary index
 {lean}`2 * ((d - p : ℕ) : ℤ)`, the real dimension of $`Z`, appears wherever a construction is
 indexed by $`Z` rather than by its codimension. A class with support in $`Z` lies in
 $`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the ordinary group

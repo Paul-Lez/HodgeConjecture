@@ -85,9 +85,7 @@ lemma hodgeFiltrationComplexSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.
 lemma hodgeClasses_zero_eq_top [IsIntegral X.left] [Smooth X.hom] :
     Hdg^0(K; X) = ⊤ := by
   refine SetLike.ext fun α ↦ ?_
-  change fieldToDeRhamCohomology K X (2 * (0 : ℕ)) α ∈
-      hodgePiece X ((0 : ℕ) : ℤ) ((0 : ℕ) : ℤ) (2 * (0 : ℕ)) ↔ True
-  simp only [Nat.cast_zero]
+  change fieldToDeRhamCohomology K X (2 * 0) α ∈ hodgePiece X 0 0 0 ↔ True
   rw [hodgePiece_zero_eq_top]
   trivial
 

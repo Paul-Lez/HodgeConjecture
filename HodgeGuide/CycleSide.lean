@@ -138,7 +138,9 @@ The formalization builds the first term as a homotopy fibre. It resolves the con
 $`\underline{\mathbb Q}_U` injectively, pushes the resolution forward along $`j`, maps
 $`\underline{\mathbb Q}_X` to the result, and takes the mapping cone shifted by $`-1`.
 Hypercohomology of this complex is $`H^n_Z(X;\mathbb Q)`, and the connecting map of the triangle
-is {name}`forgetSupport`, the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
+is {name}`forgetSupportHypercohomology`. Composed with the comparison between hypercohomology of
+the constant sheaf complex and sheaf cohomology, it is {name}`forgetSupport`, the map
+$`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
 
 ```lean -show
 namespace Guide.Cycles.D8
@@ -168,19 +170,10 @@ example : @Guide.Cycles.D9.RationalCohomologyWithSupport = @AlgebraicGeometry.Co
 namespace Guide.Cycles.D10
 ```
 ```lean
-def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
-    RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) where
-  toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
-  map_zero' := by
-    apply (Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    simp only [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
-  map_add' α β := by
-    apply (Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    simp only [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_add, ShiftedHom.add_comp]
+def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℕ) :
+    RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) :=
+  (hypercohomologyAddEquivConstantCohomology ℚ X n).toAddMonoidHom.comp
+    (forgetSupportHypercohomology X Z n)
 ```
 ```lean -show
 end Guide.Cycles.D10
