@@ -71,17 +71,23 @@ def supportRelativeCohomologySheaf : TopCat.Sheaf AddCommGrpCat X :=
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj
     (supportRelativeCohomologyPresheaf X S n)
 
+/-- `𝓗_[S]^n(X; ℚ)` is the `n`-th rational relative-cohomology sheaf on `X` with support in `S`,
+the sheaf associated with `V ↦ H^n(V, V \ S; ℚ)`. The literature writes it `𝓗^n_S`; the support
+precedes the degree here, as in `H_[Z]^n(X; ℚ)`. -/
+scoped notation:max "𝓗_[" S "]^" n:max "(" X "; " "ℚ" ")" =>
+  supportRelativeCohomologySheaf X S n
+
 /-- The canonical map taking an actual relative class to its sheafified local section. -/
 def supportRelativeCohomologyToSheaf :
-    supportRelativeCohomologyPresheaf X S n ⟶ (supportRelativeCohomologySheaf X S n).obj :=
+    supportRelativeCohomologyPresheaf X S n ⟶ (𝓗_[S]^n(X; ℚ)).obj :=
   toSheafify (Opens.grothendieckTopology X) _
 
 /-- The germ at `x ∈ V` of a class `a ∈ H^n(V, V \ S; ℚ)`, in the stalk `(𝓗^n_S)_x`. -/
 def supportRelativeCohomologyGerm (V : Opens X) (x : X) (hx : x ∈ V)
     -- A class in `H^n(V, V \ S; ℚ)`.
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n) :
-    (supportRelativeCohomologySheaf X S n).presheaf.stalk x :=
-  (supportRelativeCohomologySheaf X S n).presheaf.germ V x hx
+    (𝓗_[S]^n(X; ℚ)).presheaf.stalk x :=
+  (𝓗_[S]^n(X; ℚ)).presheaf.germ V x hx
     ((supportRelativeCohomologyToSheaf X S n).app (op V) a)
 
 end AlgebraicTopology.Singular

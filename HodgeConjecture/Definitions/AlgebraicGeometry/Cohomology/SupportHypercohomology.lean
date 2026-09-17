@@ -62,7 +62,7 @@ def isoHomCongrAddEquiv
 the derived category. -/
 def hypercohomologyAddEquivDerived
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) :
-    Hypercohomology X K n ≃+
+    ℍ^n(X; K) ≃+
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
         (DerivedCategory.Q.obj K) n where

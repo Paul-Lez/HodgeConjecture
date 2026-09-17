@@ -49,7 +49,7 @@ is the cohomology of global sections, with no further injective resolution. -/
 def hypercohomologyAddEquivGlobalSectionsKInjective
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective] (n : ℤ) :
     -- `ℍ^n(X(ℂ); K) ≅ H^n(Γ(X(ℂ), K))`.
-    Hypercohomology X K n ≃+
+    ℍ^n(X; K) ≃+
       (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X)) K).homology n :=
   (hypercohomologyAddEquivDerived X K n).trans
     ((isoHomCongrAddEquiv

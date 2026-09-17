@@ -95,8 +95,7 @@ noncomputable instance degreeZeroFiniteType [Finite n] (R : Type*) [CommRing R] 
 scheme. -/
 noncomputable instance terminalProjProper [Finite n] :
     IsProper (terminal.from (Proj ℤ[n].{u, v})) := by
-  have hterminal : IsTerminal
-      (Spec ↧(homogeneousSubmodule n (ULift.{max u v} ℤ) 0)) :=
+  have hterminal : IsTerminal (Spec ↧(ℤ[n].{u, v} 0)) :=
     IsTerminal.ofIso specULiftZIsTerminal
       (Scheme.Spec.mapIso
         (degreeZeroEquiv n (ULift.{max u v} ℤ)).toCommRingCatIso.op)
@@ -106,7 +105,7 @@ noncomputable instance terminalProjProper [Finite n] :
   infer_instance
 
 /-- The structure morphism from projective space to its base scheme. -/
-noncomputable def toBase : ProjectiveSpace n S ⟶ S :=
+noncomputable def toBase : ℙ(n; S) ⟶ S :=
   pullback.fst (terminal.from S) (terminal.from (Proj ℤ[n].{u, v}))
 
 /-- Finite-dimensional projective space is proper over its base. -/
@@ -123,7 +122,7 @@ structure Presentation (f : X ⟶ T) where
   /-- The dimension of the ambient projective space. -/
   ambientDimension : ℕ
   /-- The closed embedding into projective space. -/
-  immersion : X ⟶ ProjectiveSpace (Fin (ambientDimension + 1)) T
+  immersion : X ⟶ ℙ(Fin (ambientDimension + 1); T)
   [isClosedImmersion : IsClosedImmersion immersion]
   /-- The embedding is a morphism over the base scheme. -/
   immersion_toBase :

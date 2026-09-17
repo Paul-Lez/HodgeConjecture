@@ -85,7 +85,7 @@ scoped notation:max "H_[" n "]" "(" Y "; " R ")" => Homology R Y n
 
 /-- The map on singular homology induced by a continuous map. -/
 def homologyMap (R : Type u) [CommRing R] {X Y : TopCat.{u}} (n : ℕ) (f : X ⟶ Y) :
-    Homology R X n →ₗ[R] Homology R Y n :=
+    H_[n](X; R) →ₗ[R] H_[n](Y; R) :=
   (((singularHomologyFunctor (ModuleCat.{u} R) n).obj (ModuleCat.of R R)).map f).hom
 
 /-- A topological pair `A ⊆ X`, sent to the induced arrow `C_*(A) ⟶ C_*(X)` of singular
