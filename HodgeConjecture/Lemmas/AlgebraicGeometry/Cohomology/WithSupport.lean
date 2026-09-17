@@ -232,6 +232,10 @@ abbrev RationalCohomologyWithSupport
     (Z : Set (ComplexPoint X)) (n : ℤ) : Type 1 :=
   Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)
 
+/-- `H_[Z]^n(X; ℚ)` is rational constant-sheaf cohomology of `X(ℂ)` with support in `Z`, in
+integer degree `n`. -/
+scoped notation:max "H_[" Z "]^" n:max "(" X "; " "ℚ" ")" => RationalCohomologyWithSupport X Z n
+
 /-- The degree-one connecting morphism from the mapping cone to the ambient rational constant
 complex. -/
 def forgetSupportShiftedHom (Z : Set (ComplexPoint X)) :

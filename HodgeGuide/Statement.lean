@@ -129,7 +129,7 @@ namespace Guide.Statement.D1
 ```lean
 def HodgeConjecture : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ),
-    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p
+    Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p
 ```
 ```lean -show
 end Guide.Statement.D1
@@ -139,13 +139,13 @@ example : @Guide.Statement.D1.HodgeConjecture = @HodgeConjecture := rfl
 It quantifies over a scheme {lean}`X` over $`\mathbb C` that is integral with smooth and projective
 structure morphism, and over a natural number {lean}`p`. The conclusion is the inclusion of subspaces
 
-$$`\operatorname{Hdg}^p(X;\mathbb Q)\le A^p(X):`
+$$`\operatorname{Hdg}^p(X,\mathbb Q)\le A^p(X):`
 
 every rational Hodge class of degree $`2p` is a rational linear combination of classes of
 algebraic subvarieties of codimension $`p`. This is the conjecture as Deligne states it,
 [pp. 45–46](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=56). The reverse
 inclusion, that every algebraic class is a Hodge class, is a theorem that has not yet been
-formalized, so the formulation as an equality $`\operatorname{Hdg}^p(X;\mathbb Q)=A^p(X)` is not
+formalized, so the formulation as an equality $`\operatorname{Hdg}^p(X,\mathbb Q)=A^p(X)` is not
 yet available.
 
 # What the repository proves about the statement
@@ -168,7 +168,7 @@ break.
 
 Codimension zero is the substantial one. Both sides are computed, and they agree:
 
-$$`\operatorname{Hdg}^0(X;\mathbb Q)=A^0(X)=H^0(X;\mathbb Q).`
+$$`\operatorname{Hdg}^0(X,\mathbb Q)=A^0(X)=H^0(X;\mathbb Q).`
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.rationalHodgeClasses_zero_eq_algebraicCycleClassSpan

@@ -217,7 +217,7 @@ lemma fieldToDeRhamCohomology_injective
 is above the complex dimension. -/
 lemma hodgeFilteredDeRhamComplex_isZero_of_lt
     [IsIntegral X.left] [Smooth X.hom] {p : ℤ} (hp : (dim X.left : ℤ) < p) :
-    IsZero (hodgeFilteredDeRhamComplex X p) := by
+    IsZero (F^p Ω•(X)) := by
   rw [hodgeFilteredDeRhamComplex,
     HomologicalComplex.isZero_stupidTrunc_iff]
   refine ⟨fun n => ?_⟩
@@ -320,7 +320,7 @@ lemma hodgePiece_eq_bot_of_lt [IsIntegral X.left] [Smooth X.hom]
 `(p,p)` and the Hodge filtration alone cuts out the Hodge classes. -/
 lemma hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q) (p : ℕ) :
-    Hdg^p(K; X) =
+    Hdg^p(X; K) =
       ((hodgeFiltrationComplexSubmodule X p (2 * p)).restrictScalars K).comap
         (fieldToDeRhamCohomologyLinear K X (2 * p)) := by
   refine SetLike.ext fun α ↦ ?_
@@ -335,7 +335,7 @@ lemma hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left] 
 definitions agree. -/
 lemma hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.left]
     [Smooth X.hom] (p : ℕ) :
-    Hdg^p(ℚ; X) =
+    Hdg^p(X; ℚ) =
       ((hodgeFiltrationComplexSubmodule X p (2 * p)).restrictScalars ℚ).comap
         (fieldToDeRhamCohomologyLinear ℚ X (2 * p)) :=
   hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule ℚ X (fun q ↦ by simp) p
@@ -344,7 +344,7 @@ lemma hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule [IsIntegral X.le
 rational-to-de Rham comparison. In particular, showing that comparison injective makes the
 out-of-range Hodge subgroup vanish. -/
 lemma hodgeClasses_eq_ker_of_lt [IsIntegral X.left] [Smooth X.hom] {p : ℕ} (hp : dim X.left < p) :
-    Hdg^p(K; X) =
+    Hdg^p(X; K) =
       LinearMap.ker (fieldToDeRhamCohomologyLinear K X (2 * p)) := by
   rw [hodgeClasses,
     hodgePiece_eq_bot_of_lt X (by exact_mod_cast hp : (dim X.left : ℤ) < (p : ℤ)),
@@ -354,7 +354,7 @@ lemma hodgeClasses_eq_ker_of_lt [IsIntegral X.left] [Smooth X.hom] {p : ℕ} (hp
 lemma hodgeClasses_eq_bot_of_lt
     [IsIntegral X.left] [Smooth X.hom]
     {p : ℕ} (hp : dim X.left < p) :
-    Hdg^p(K; X) = ⊥ := by
+    Hdg^p(X; K) = ⊥ := by
   rw [hodgeClasses_eq_ker_of_lt K X hp]
   exact LinearMap.ker_eq_bot.mpr (fieldToDeRhamCohomology_injective K X (2 * p))
 

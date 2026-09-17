@@ -21,7 +21,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 # Algebraic cycle-class lines in singular cohomology
 
 Let `Z` be an irreducible algebraic subset of complex codimension `p`. Its fundamental class is
-the image of a generator of `H^{2p}(X, X ∖ Z; ℚ)` in ordinary singular cohomology. Rather than
+the image of a generator of `H^{2p}(X, X ∖ Z, ℚ)` in ordinary singular cohomology. Rather than
 choosing a generator and thereby introducing an arbitrary sign or rational scalar, this file
 takes the span of the images of all generators. This gives the cycle-class line intrinsically.
 

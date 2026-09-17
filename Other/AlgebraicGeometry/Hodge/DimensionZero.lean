@@ -48,7 +48,7 @@ theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_dimensi
 variety of complex dimension zero. -/
 theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_zero
     (hd : dim X.left = 0) (p : ℕ) :
-    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p :=
+    Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p :=
   rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero X hd
     (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_dimension_eq_zero X hd) p
 

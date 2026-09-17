@@ -529,6 +529,9 @@ def holomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
     CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(ComplexPoint X)) ℤ :=
   (holomorphicDeRhamComplex X (dim X.left)).extend ComplexShape.embeddingUpNat
 
+/-- `Ω•(X)` is the holomorphic de Rham complex of `X(ℂ)`, indexed by the integers. -/
+scoped notation:max "Ω•" "(" X ")" => holomorphicDeRhamComplexInt X
+
 instance [IsIntegral X.left] [Smooth X.hom] :
     CochainComplex.IsStrictlyGE (holomorphicDeRhamComplexInt X) 0 := by
   unfold holomorphicDeRhamComplexInt
