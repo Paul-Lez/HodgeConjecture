@@ -110,7 +110,7 @@ example : @Guide.Subvariety.D2.cycleComponentSmoothSupportCoclassSection = @Alge
 ```
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection_restrict
+#check cycleComponentSmoothSupportCoclassSection_restrict
 ```
 
 The restriction theorem says that on each chart the glued section is the class of that chart,
@@ -122,14 +122,14 @@ class. It therefore stays nonzero under restriction to any neighborhood of that 
 nonzero germ and hence a nonzero glued section.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.smoothClosedSupportCoclassSection_ne_zero
+#check smoothClosedSupportCoclassSection_ne_zero
 ```
 
 The smooth locus of a component always has a complex point, so this applies to every component,
 in every codimension: the normalization does not silently produce zero anywhere.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection_ne_zero
+#check cycleComponentSmoothSupportCoclassSection_ne_zero
 ```
 
 Whether the resulting class in *ordinary* cohomology is nonzero is a different question, because
@@ -151,7 +151,7 @@ is an isomorphism. Its inverse extends the class of Step 1 uniquely to a class w
 all of $`Z`.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree
+#check cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree
 ```
 
 ```lean -show
@@ -202,7 +202,7 @@ example : @Guide.Subvariety.D4.cycleComponentSupportedClassNormalizationIso = @A
 ```
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSupportedInjectiveClass_unique
+#check cycleComponentSupportedInjectiveClass_unique
 ```
 
 The compact interface names the supported group and the smooth-locus section group.
@@ -211,11 +211,11 @@ the proved isomorphism above. Applying it to the normalized smooth-locus section
 the component class.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.CycleComponentSupportedCohomology
-#check AlgebraicGeometry.ComplexPoint.CycleComponentSmoothCoclassSections
-#check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass
-#check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass_normalization
-#check AlgebraicGeometry.ComplexPoint.cycleComponentExtendSmoothCoclass_unique
+#check CycleComponentSupportedCohomology
+#check CycleComponentSmoothCoclassSections
+#check cycleComponentExtendSmoothCoclass
+#check cycleComponentExtendSmoothCoclass_normalization
+#check cycleComponentExtendSmoothCoclass_unique
 ```
 
 ```lean
@@ -264,18 +264,19 @@ example : @Guide.Subvariety.D6.cycleComponentSheafClass = @AlgebraicGeometry.Com
 ```
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_eq_forgetSupport
+#check cycleComponentSheafClass_eq_forgetSupport
 ```
 
-Both definitions take only the variety, the generic point, its coheight, and the dimension $`d` as
-arguments.
+Both definitions take only the variety, the generic point of the subvariety, and a proof that its
+coheight is $`p`. No dimension is passed: the construction reads $`d` off as {lean}`dim X.left`
+internally.
 
 For the generic point of $`X` itself, the support is all of $`X(\mathbb C)`, so forgetting support
 is an isomorphism. The nonzero normalized section therefore gives a nonzero class in
 $`H^0(X;\mathbb Q)` in every dimension, without assuming analytic connectedness.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_genericPoint_ne_zero
+#check cycleComponentSheafClass_genericPoint_ne_zero
 ```
 ```lean -show
 example : cycleComponentSheafClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0 :=
