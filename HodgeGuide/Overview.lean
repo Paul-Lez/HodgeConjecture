@@ -107,11 +107,16 @@ irreducible subvarieties of codimension $`p`.
    point of the scheme {lean}`X.left` of coheight $`p`, and form the cohomology of $`X(\mathbb C)`
    with support in $`Z`.
 4. On the smooth locus of $`Z`, the complex orientation of the normal directions singles out a
-   generator of the cohomology with support in $`Z` in degree $`2p`, locally in charts, and these
-   local generators glue.
-5. Extend the resulting class uniquely across the singular locus of $`Z`, which has codimension at
-   least $`p+1`, so that its cohomology with support vanishes in degrees $`2p` and $`2p+1`.
-   Forgetting the support gives $`\operatorname{cl}_X(Z)\in H^{2p}(X;\mathbb Q)`.
+   generator in degree $`2p` chart by chart. These local generators agree on overlaps, so they
+   glue — not to a cohomology class, but to a *section* of $`\mathcal H^{2p}_Z`, the sheafification
+   of $`V\mapsto H^{2p}(V,V\setminus Z;\mathbb Q)`, over the complement of the singular locus.
+5. Cross from that sheaf to the cohomology group. Restriction to the complement of
+   $`Z_{\mathrm{sing}}` is bijective on $`H^{2p}_Z`, because $`Z_{\mathrm{sing}}` has codimension
+   at least $`p+1` and so supports nothing in degrees $`2p` and $`2p+1`; and on that complement
+   $`2p` is the lowest degree in which the cohomology sheaves of $`R\Gamma_Z\mathbb Q` are
+   nonzero, which makes the group $`H^{2p}_Z` the group of sections of $`\mathcal H^{2p}_Z`.
+   Together these identify the section of step 4 with a class in $`H^{2p}_Z(X;\mathbb Q)`, and
+   forgetting the support gives $`\operatorname{cl}_X(Z)\in H^{2p}(X;\mathbb Q)`.
 6. Extend $`\operatorname{cl}_X` additively to cycles and $`\mathbb Q`-linearly to rational cycles.
    The statement itself uses only the span of the classes of individual subvarieties.
 
@@ -120,9 +125,10 @@ step 3 of {ref "cycles"}[Cycles and cohomology with support], steps 4 and 5 of
 {ref "class-of-a-subvariety"}[The class of a subvariety], and step 6 of
 {ref "the-statement"}[The statement].
 
-Everything happens in cohomology with support. `Other/` also builds a Borel–Moore homology of the
-pair $`Z\subset X` and the duality that identifies the class above with a fundamental class, but
-nothing in the statement passes through it, so this guide leaves it aside.
+The classes themselves live in cohomology, with support and then without; local homology enters
+only to normalize the chart generators in step 4. `Other/` also builds a Borel–Moore homology of
+the pair $`Z\subset X` and the duality that identifies the class above with a fundamental class,
+but nothing in the statement passes through that, so this guide leaves it aside.
 
 # Scope and status
 %%%
@@ -188,6 +194,12 @@ orientation of those directions can generate. This is the origin of the index
 indexed by $`Z` rather than by its codimension. A class with support in $`Z` lies in
 $`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the ordinary group
 $`H^{2p}(X;\mathbb Q)`, in which the conjecture is stated.
+
+Alongside that group there is a sheaf, $`\mathcal H^n_Z` on $`X(\mathbb C)`, the sheafification of
+$`V\mapsto H^n(V,V\setminus Z;\mathbb Q)`. Roman $`H` is always the group and script
+$`\mathcal H` always the sheaf, here and in the source. The construction of the class of a
+subvariety is built in the sheaf and only afterwards transported to the group, so the two should
+not be read as the same thing; see {ref "class-of-a-subvariety"}[The class of a subvariety].
 
 # Notation
 %%%
