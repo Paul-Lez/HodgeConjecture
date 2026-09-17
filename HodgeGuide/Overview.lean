@@ -22,8 +22,11 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
 
 The conjecture concerns a smooth projective variety over $`\mathbb C`. In Lean such a variety is an
 object {lean}`X` of the over category {lean}`Over (Spec ↧ℂ)`: a scheme {lean}`X.left` together with
-its structure morphism {lean}`X.hom`, a morphism {lean}`X.left ⟶ Spec ↧ℂ`. The hypotheses are the
-instance arguments {lean}`IsIntegral X.left`, {lean}`Smooth X.hom` and {lean}`IsProjective X.hom`.
+its structure morphism {lean}`X.hom`, a morphism {lean}`X.left ⟶ Spec ↧ℂ`. The down arrow is the
+bundling notation described in {ref "notation"}[Notation]: {lean}`(↧ℂ : CommRingCat)` is the field
+$`\mathbb C` viewed as an object of {lean}`CommRingCat`, so {lean}`Spec ↧ℂ` is its spectrum. The
+hypotheses are the instance arguments {lean}`IsIntegral X.left`, {lean}`Smooth X.hom` and
+{lean}`IsProjective X.hom`.
 The over category, the spectrum, integral schemes and smooth morphisms are Mathlib's;
 projectivity and the complex points of {lean}`X` are defined in the repository, see
 {ref "complex-points"}[The variety and its complex points].
@@ -104,11 +107,16 @@ irreducible subvarieties of codimension $`p`.
    point of the scheme {lean}`X.left` of coheight $`p`, and form the cohomology of $`X(\mathbb C)`
    with support in $`Z`.
 4. On the smooth locus of $`Z`, the complex orientation of the normal directions singles out a
-   generator of the cohomology with support in $`Z` in degree $`2p`, locally in charts, and these
-   local generators glue.
-5. Extend the resulting class uniquely across the singular locus of $`Z`, which has codimension at
-   least $`p+1`, so that its cohomology with support vanishes in degrees $`2p` and $`2p+1`.
-   Forgetting the support gives $`\operatorname{cl}_X(Z)\in H^{2p}(X;\mathbb Q)`.
+   generator in degree $`2p` chart by chart. These local generators agree on overlaps, so they
+   glue — not to a cohomology class, but to a *section* of $`\mathcal H^{2p}_Z`, the sheafification
+   of $`V\mapsto H^{2p}(V,V\setminus Z;\mathbb Q)`, over the complement of the singular locus.
+5. Cross from that sheaf to the cohomology group. Restriction to the complement of
+   $`Z_{\mathrm{sing}}` is bijective on $`H^{2p}_Z`, because $`Z_{\mathrm{sing}}` has codimension
+   at least $`p+1` and so supports nothing in degrees $`2p` and $`2p+1`; and on that complement
+   $`2p` is the lowest degree in which the cohomology sheaves of $`R\Gamma_Z\mathbb Q` are
+   nonzero, which makes the group $`H^{2p}_Z` the group of sections of $`\mathcal H^{2p}_Z`.
+   Together these identify the section of step 4 with a class in $`H^{2p}_Z(X;\mathbb Q)`, and
+   forgetting the support gives $`\operatorname{cl}_X(Z)\in H^{2p}(X;\mathbb Q)`.
 6. Extend $`\operatorname{cl}_X` additively to cycles and $`\mathbb Q`-linearly to rational cycles.
    The statement itself uses only the span of the classes of individual subvarieties.
 
@@ -117,9 +125,10 @@ step 3 of {ref "cycles"}[Cycles and cohomology with support], steps 4 and 5 of
 {ref "class-of-a-subvariety"}[The class of a subvariety], and step 6 of
 {ref "the-statement"}[The statement].
 
-Everything happens in cohomology with support. `Other/` also builds a Borel–Moore homology of the
-pair $`Z\subset X` and the duality that identifies the class above with a fundamental class, but
-nothing in the statement passes through it, so this guide leaves it aside.
+The classes themselves live in cohomology, with support and then without; local homology enters
+only to normalize the chart generators in step 4. `Other/` also builds a Borel–Moore homology of
+the pair $`Z\subset X` and the duality that identifies the class above with a fundamental class,
+but nothing in the statement passes through that, so this guide leaves it aside.
 
 # Scope and status
 %%%
@@ -144,6 +153,11 @@ Two cases of the conjecture itself are proved, both unconditionally, and both in
   $`p`, and the Hodge classes vanish because $`F^p` does. The inclusion is then vacuous, but it
   does check that the two sides degenerate in the same place.
 
+The two cases together exhaust the codimensions exactly when $`\dim X=0`, and the repository draws
+that corollary: the conjecture holds in every codimension for a smooth projective complex variety
+of dimension zero. That is the one class of varieties for which it is settled here, and it is
+settled for a trivial reason, since such a variety is a single point.
+
 See {ref "what-is-proved"}[What the repository proves about the statement] for the declarations.
 
 Three classical facts about the construction are not formalized. None is needed to state the
@@ -158,8 +172,14 @@ stands between the two cases above and the general one.
 * The class of a subvariety is a Hodge class:
   $`\operatorname{cl}_X(Z)\in\operatorname{Hdg}^p(X,\mathbb Q)`. This is the reverse inclusion,
   and it is what would turn the statement into the usual equality.
-* The comparison between constant-sheaf and singular cohomology is not known to commute with
-  forgetting support.
+* Compatibility of the two singular comparisons. Constant-sheaf cohomology is identified with
+  singular cohomology in two settings: ordinary cohomology, by
+  `rationalCohomologyLinearEquivSingularCohomology`, and cohomology with support in a closed set,
+  by `rationalCohomologyWithSupportAddEquivSingular`. Both are constructed and proved to be
+  isomorphisms, under point-set hypotheses that a projective variety satisfies. What is missing is
+  the square these two isomorphisms form with the map forgetting support on each side. Until that
+  square is known to commute, the class constructed here cannot be matched with the topologist's
+  fundamental class in singular cohomology.
 
 # Degree and support conventions
 %%%
@@ -174,3 +194,39 @@ orientation of those directions can generate. This is the origin of the index
 indexed by $`Z` rather than by its codimension. A class with support in $`Z` lies in
 $`H_Z^{2p}(X;\mathbb Q)`; the map {name}`forgetSupport` sends it to the ordinary group
 $`H^{2p}(X;\mathbb Q)`, in which the conjecture is stated.
+
+Alongside that group there is a sheaf, $`\mathcal H^n_Z` on $`X(\mathbb C)`, the sheafification of
+$`V\mapsto H^n(V,V\setminus Z;\mathbb Q)`. Roman $`H` is always the group and script
+$`\mathcal H` always the sheaf, here and in the source. The class of a subvariety is built in the
+sheaf and only afterwards transported to the group, so the two should not be read as the same
+thing; see {ref "class-of-a-subvariety"}[The class of a subvariety].
+
+# Notation
+%%%
+tag := "notation"
+%%%
+
+The repository introduces a small set of notations, listed here once. Each is declared next to the
+object it names. The cohomology notations are scoped to the `AlgebraicGeometry.ComplexPoint`
+namespace, so they are in force only where that namespace is open; the down arrow and the constant
+sheaf are global.
+
+* `↧X` is the bundling map `FooCat.of X` of a concrete category, with `FooCat` read off from the
+  expected type: {lean}`(↧ℂ : CommRingCat)` is `CommRingCat.of ℂ` and
+  {lean}`(↧(ComplexPoint X) : TopCat)` is `TopCat.of (ComplexPoint X)`. The expected type must be
+  known, which is why the notation is always used in a position that fixes it. It is copied from
+  two pending Mathlib pull requests and kept under `HodgeConjecture/Mathlib/` until those land.
+* `𝓒(T; R)` is the constant sheaf of additive groups on the space `T` with value `R`, and
+  `𝓒[T; A]` the same for an object `A` of `AddCommGrpCat`.
+* `Ω•(X)` is the holomorphic de Rham complex of `X`, indexed by the integers, and `F^p Ω•(X)` its
+  stupid truncation in form degrees at least `p`.
+* `ℍ^n(X; 𝒦)` is the hypercohomology of a complex of sheaves `𝒦`, and `H^n(X; K)` the case of the
+  constant sheaf `K` in degree zero, that is, cohomology of $`X(\mathbb C)` with coefficients in
+  `K`.
+* `H_[Z]^n(X; ℚ)` is rational cohomology with support in a closed set `Z`.
+* `F^p H_dR^n(X)` is the Hodge filtration on de Rham cohomology, and `Hdg^p(X; K)` the Hodge
+  classes of codimension `p` with coefficients in `K`.
+
+In the cohomology notations the literature would name the variety; the argument written here is
+instead the object `X` of the over category, which carries the variety `X.left` together with its
+map to $`\operatorname{Spec}\mathbb C`.

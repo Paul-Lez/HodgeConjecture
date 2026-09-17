@@ -120,7 +120,7 @@ example : @Guide.Cycles.D7.cycleComponentSupport = @AlgebraicGeometry.cycleCompo
 ```
 
 ```lean
-#check AlgebraicGeometry.isClosed_cycleComponentSupport
+#check isClosed_cycleComponentSupport
 ```
 
 Only the ambient variety is assumed smooth. A subvariety may be singular, and the construction of
@@ -136,9 +136,16 @@ $$`R\Gamma_Z(X,\mathbb Q_X)\longrightarrow R\Gamma(X,\mathbb Q_X)
 
 The formalization builds the first term as a homotopy fibre. It resolves the constant sheaf
 $`\underline{\mathbb Q}_U` injectively, pushes the resolution forward along $`j`, maps
-$`\underline{\mathbb Q}_X` to the result, and takes the mapping cone shifted by $`-1`.
-Hypercohomology of this complex is $`H^n_Z(X;\mathbb Q)`, and the connecting map of the triangle
-is {name}`forgetSupport`, the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
+$`\underline{\mathbb Q}_X` into the result, and takes the mapping cone of that map. The fibre is
+the cone shifted by $`-1`, but the complex itself is left unshifted and the shift is carried in
+the degree instead: $`H^n_Z(X;\mathbb Q)` is the hypercohomology of the cone in degree $`n-1`,
+which is the `n - 1` in the second definition below. The group has its own notation,
+`H_[Z]^n(X; ℚ)`.
+
+Forgetting support is the first map of the displayed triangle. In the mapping-cone picture it is
+the cone's connecting morphism to $`\underline{\mathbb Q}_X[1]`, and composing a class of degree
+$`n-1` in the cone with that morphism gives a class in degree $`n` of the ambient complex. The
+composite is {name}`forgetSupport`, the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
 
 ```lean -show
 namespace Guide.Cycles.D8

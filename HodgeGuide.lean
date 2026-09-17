@@ -10,6 +10,7 @@ import HodgeGuide.FundamentalClass
 import HodgeGuide.Statement
 import HodgeGuide.References
 import HodgeGuide.Provenance
+import HodgeGuide.Disclaimer
 
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
@@ -25,6 +26,10 @@ authors := ["The HodgeConjecture contributors"]
 :::fcProvenance
 :::
 
+:::wip
+This guide is currently work in progress.
+:::
+
 This guide explains the formalization of the Hodge conjecture in the
 [`HodgeConjecture`](https://github.com/Paul-Lez/HodgeConjecture) repository, which will eventually
 appear in [Formal Conjectures](https://github.com/google-deepmind/formal-conjectures). The goal is
@@ -33,16 +38,21 @@ to faithfully encode the statement of the
 in Lean.
 
 The conjecture is stated, not proved, though two of its cases are: codimension zero, and every
-codimension above the dimension. A few classical theorems surrounding the statement are not yet
-formalized either; {ref "scope-and-status"}[Scope and status] lists both sides of this.
+codimension above the dimension. Those two meet only when the variety has dimension zero, and
+there the conjecture is proved outright. A few classical theorems surrounding the statement are
+not yet formalized either; {ref "scope-and-status"}[Scope and status] lists both sides of this.
 
 The Lean code in this guide, including the terms that appear inside sentences, is elaborated when
-the site is built. Definitions are quoted in full, and the build checks that each quotation is
-definitionally equal to the declaration in the repository; theorems are listed with `#check`, and
-their statements appear on hover, as do the types and docstrings of all names. Names defined
-in this repository are underlined with dots wherever they appear, in code, in hovers, and in
-the text; every other name comes from Mathlib or from Lean itself, and the guide does not
-re-explain those. The site is generated with [Verso](https://github.com/leanprover/verso).
+the site is built. Definitions are quoted in full: each quotation is re-elaborated in a scratch
+namespace, and the build then checks it against the declaration in the repository by `rfl`, so a
+quotation that has drifted from the source fails the build. The single exception is the class
+`IsProjective`, where re-declaring a structure creates a new type rather than a copy of the old
+one; there the check is that the two versions are logically equivalent. Theorems are not quoted
+but listed with `#check`, so what is displayed is whatever the repository currently proves; the
+statements appear on hover, as do the types and docstrings of all names. Names defined in this
+repository are underlined with dots wherever they appear, in code, in hovers, and in the text;
+every other name comes from Mathlib or from Lean itself, and the guide does not re-explain those.
+The site is generated with [Verso](https://github.com/leanprover/verso).
 
 {include 1 HodgeGuide.Overview}
 

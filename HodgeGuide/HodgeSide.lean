@@ -32,7 +32,12 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
 tag := "complex-points"
 %%%
 
-We begin with the definition of a projective morphism of schemes.
+We begin with the definition of a projective morphism of schemes, which the repository supplies in
+an explicit form. A {name}`Presentation` of a morphism $`f\colon X\to T` consists of a natural
+number $`n`, a closed immersion of $`X` into the $`n`-dimensional projective space over $`T`, and
+a proof that composing that immersion with the projection to $`T` recovers $`f`. A morphism is
+projective when a presentation exists; the definition is a `Prop`, so the presentation is not part
+of the data.
 
 ```lean -show
 namespace Guide.Hodge.D20
@@ -130,7 +135,7 @@ end
 ```
 
 ```lean
-#check AlgebraicGeometry.Point.analyticTopology_eq_generateFrom
+#check Point.analyticTopology_eq_generateFrom
 ```
 
 The dimension of $`X` is the Krull dimension of its underlying space, as a natural number.
@@ -220,7 +225,7 @@ example : @Guide.Hodge.D2.constantsToHolomorphicDeRhamComplexInt = @AlgebraicGeo
 The instance below is the holomorphic Poincaré lemma:
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.constantsToHolomorphicDeRhamComplexInt_quasiIso
+#check constantsToHolomorphicDeRhamComplexInt_quasiIso
 ```
 
 It says that, on stalks, a closed holomorphic form of positive degree is exact, and the closed holomorphic
@@ -382,8 +387,8 @@ used later — the first is what makes every degree-zero class a Hodge class, th
 makes the conjecture vacuous above the dimension.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule_zero_eq_top
-#check AlgebraicGeometry.ComplexPoint.hodgeFiltration_eq_bot_of_lt
+#check hodgeFiltrationComplexSubmodule_zero_eq_top
+#check hodgeFiltration_eq_bot_of_lt
 ```
 
 # Complex conjugation and the Hodge pieces
@@ -463,8 +468,8 @@ The result is an involution and is conjugate-linear, so it can be bundled as a s
 $`\overline{F^q}` is then the preimage of $`F^q` under it.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.deRhamConj_involutive
-#check AlgebraicGeometry.ComplexPoint.deRhamConj_smul
+#check deRhamConj_involutive
+#check deRhamConj_smul
 ```
 
 ```lean -show
@@ -517,8 +522,8 @@ classes whose de Rham image lies in the $`(p,p)` piece:
 $$`\operatorname{Hdg}^p(X;K)
  =\{\alpha\in H^{2p}(X;K):\alpha_{\mathrm{dR}}\in H^{p,p}\}.`
 
-In Lean this is the preimage of {name}`hodgePiece` under the comparison map, and the notation
-{lean}`Hdg^p(X; ℚ)` abbreviates the case $`K=\mathbb Q`.
+In Lean this is the preimage of {name}`hodgePiece` under the comparison map. The notation
+`Hdg^p(X; K)` is available for every such $`K`; the conjecture uses {lean}`Hdg^p(X; ℚ)`.
 
 ```lean -show
 namespace Guide.Hodge.D11
@@ -543,8 +548,8 @@ Hodge class, and there are none above the dimension. These are the two ends of t
 the repository settles; see {ref "what-is-proved"}[What the repository proves about the statement].
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_zero_eq_top
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_bot_of_lt
+#check hodgeClasses_zero_eq_top
+#check hodgeClasses_eq_bot_of_lt
 ```
 
 # Why the filtration alone suffices over the rationals
@@ -557,15 +562,18 @@ lemma below proves this for any such $`K`; the second specializes it to $`\mathb
 coefficient field of the conjecture.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule
+#check hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule
+#check hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule
 ```
 
-The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from
-`HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: conjugation fixes rational
-vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector in
-$`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in $`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`,
-and the only summand common to both is $`H^{p,p}`.
+The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below.
+Pure Hodge structures themselves are defined in
+`HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`; the criterion is proved in
+`Other/LinearAlgebra/HodgeStructure.lean`, since nothing in the statement depends on it.
+Conjugation fixes rational vectors and exchanges $`H^{a,b}` with $`H^{b,a}`, so a rational vector
+in $`F^p=\bigoplus_{a\ge p}H^{a,2p-a}` also lies in
+$`\overline{F^p}=\bigoplus_{b\ge p}H^{2p-b,b}`, and the only summand common to both is
+$`H^{p,p}`.
 
 ```lean
 #check HodgeStructure.Pure.ofBase_mem_filtration_iff
