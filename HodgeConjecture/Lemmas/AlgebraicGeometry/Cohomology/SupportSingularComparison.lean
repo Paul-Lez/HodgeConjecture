@@ -108,8 +108,7 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
   apply sheafify_hom_ext
     (J := Opens.grothendieckTopology
       (TopCat.of (ComplexPoint X)))
-    (P := constantCoefficientPresheaf ℚ
-      (TopCat.of (ComplexPoint X))) _ _
+    (P := 𝓒ᵖ(↧(ComplexPoint X); ℚ)) _ _
     ((TopCat.Sheaf.pushforward AddCommGrpCat
       (analyticComplementInclusion X Z)).obj
         (singularCochainSheaf ℚ
@@ -123,8 +122,7 @@ lemma constantsToSingularCochainZeroSheaf_comp_singularRestriction
     (Opens.map (analyticComplementInclusion X Z)).op
       (toSheafify (Opens.grothendieckTopology
           (TopCat.of ↥Zᶜ))
-          (constantCoefficientPresheaf ℚ
-            (TopCat.of ↥Zᶜ)) ≫
+          𝓒ᵖ(↧↥Zᶜ; ℚ) ≫
         sheafifyMap (Opens.grothendieckTopology
           (TopCat.of ↥Zᶜ))
           (constantsToSingularCochainZero ℚ

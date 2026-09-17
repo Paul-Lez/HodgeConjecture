@@ -19,13 +19,13 @@ public import Mathlib.CategoryTheory.Sites.ConstantSheaf
 public import Mathlib.Topology.Sheaves.Abelian
 
 /-!
-# Constant sheaves of additive groups on a topological space
+# Constant presheaves and sheaves of additive groups on a topological space
 
 `CategoryTheory.constantSheaf` sheafifies the constant presheaf on a site. This file
-specialises it to the site of open subsets of a topological space with values in additive
-groups, and introduces notation for the two ways the value is given: as an object
-`A : AddCommGrpCat`, written `𝓒[X; A]`, and as a type `R` carrying an `AddCommGroup`
-instance — a field, a ring, `ℤ` — written `𝓒(X; R)`.
+specialises the constant presheaf and its sheafification to the site of open subsets of a
+topological space with values in additive groups. Each has notation for the two ways the value
+is given: as an object `A : AddCommGrpCat`, written `𝓒ᵖ[X; A]` and `𝓒[X; A]`, and as a type `R`
+carrying an `AddCommGroup` instance — a field, a ring, `ℤ` — written `𝓒ᵖ(X; R)` and `𝓒(X; R)`.
 -/
 
 @[expose] public noncomputable section
@@ -33,6 +33,22 @@ instance — a field, a ring, `ℤ` — written `𝓒(X; R)`.
 open CategoryTheory TopologicalSpace
 
 universe u
+
+namespace TopCat.Presheaf
+
+variable (X : TopCat.{u})
+
+/-- The constant presheaf on `X` with value the additive group `A`. -/
+abbrev const (A : AddCommGrpCat.{u}) : TopCat.Presheaf AddCommGrpCat.{u} X :=
+  (Functor.const (Opens X)ᵒᵖ).obj A
+
+@[inherit_doc const]
+notation3 "𝓒ᵖ[" X "; " A "]" => TopCat.Presheaf.const X A
+
+/-- The constant presheaf on `X` with value the additive group of `R`. -/
+notation3 "𝓒ᵖ(" X "; " R ")" => TopCat.Presheaf.const X (AddCommGrpCat.of R)
+
+end TopCat.Presheaf
 
 namespace TopCat.Sheaf
 
@@ -50,7 +66,8 @@ abbrev constantFunctor :
 /-- The constant sheaf on `X` with value the additive group `A`.
 
 The codomain is written with `TopCat.Sheaf`, whose category instance carries the sheaf-level
-instances this object is used with. -/
+instances this object is used with. Write `(constantFunctor X).obj A` instead where a
+`CategoryTheory.Sheaf` instance is needed. -/
 abbrev const (A : AddCommGrpCat.{u}) : TopCat.Sheaf AddCommGrpCat.{u} X :=
   (constantFunctor X).obj A
 

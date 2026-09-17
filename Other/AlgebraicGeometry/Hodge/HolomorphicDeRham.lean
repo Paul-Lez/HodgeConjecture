@@ -44,7 +44,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 /-- Conjugating twice is the identity on the constant complex presheaf. -/
 lemma conjConstantComplexPresheaf_comp_self :
     conjConstantComplexPresheaf X ≫ conjConstantComplexPresheaf X =
-      𝟙 (constantComplexAddCommGrpPresheaf X) := by
+      𝟙 𝓒ᵖ(↧(ComplexPoint X); ℂ) := by
   ext U : 2
   change (starRingEnd ℂ).toAddMonoidHom.comp (starRingEnd ℂ).toAddMonoidHom = AddMonoidHom.id ℂ
   exact AddMonoidHom.ext Complex.conj_conj

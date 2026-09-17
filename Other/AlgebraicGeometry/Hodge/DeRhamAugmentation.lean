@@ -34,7 +34,7 @@ def constantsToHolomorphicDeRhamPresheafComplex
     [SmoothOfRelativeDimension d X.hom] :
     (CochainComplex.single₀
       (TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (constantComplexAddCommGrpPresheaf X) ⟶
+        𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶
       holomorphicDeRhamPresheafComplex X d :=
   HomologicalComplex.mkHomFromSingle
     (constantsToHolomorphicDeRhamZero X d) <| by
