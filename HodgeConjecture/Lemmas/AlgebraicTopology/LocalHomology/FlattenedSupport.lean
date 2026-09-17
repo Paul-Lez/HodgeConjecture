@@ -149,7 +149,7 @@ def flattenedSupportPairIso : normalSlicePair E c ≅
 def flattenedSupportRelativeHomologyIso (n : ℕ) :
     RelativeHomology ℚ
       (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n ≅
-        RelativeHomology ℚ (standardComplexPuncturedPair c) n :=
+        RelativeHomology ℚ (puncturedPair ℂ c) n :=
   ((relativeHomologyFunctor ℚ n).mapIso (flattenedSupportPairIso E c e x hx S hS h0).symm) ≪≫
     normalSliceRelativeHomologyIso E c n
 
@@ -158,7 +158,7 @@ def flattenedSupportNormalClass :
     RelativeHomology ℚ
       (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) (2 * c) :=
   (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).inv.hom
-    (standardComplexLocalClass c)
+    (standardComplexLocalClass ℚ c)
 
 end AlgebraicTopology.Singular
 
@@ -198,7 +198,7 @@ include hS h0
 
 @[simp] theorem flattenedSupportNormalClass_normalization :
     (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).hom.hom
-      (flattenedSupportNormalClass E c e x hx S hS h0) = standardComplexLocalClass c :=
+      (flattenedSupportNormalClass E c e x hx S hS h0) = standardComplexLocalClass ℚ c :=
   ConcreteCategory.congr_hom
     (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).inv_hom_id _
 

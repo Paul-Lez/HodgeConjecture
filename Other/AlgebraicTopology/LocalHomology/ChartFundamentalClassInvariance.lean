@@ -176,16 +176,16 @@ theorem localClassOfChart_eq_of_hasFDerivAt_compressedTransition
       (zero_mem_compressedChartTransition_source d e e' x hx hx') f f.continuousOn
       (compressedChartTransition_zero d e e' x hx hx') hderivA
   obtain ⟨c, hc⟩ := neighborhoodPointComplement_relativeHomologyMap_surjective
-    V 0 hVopen h0V (2 * d) (standardComplexLocalClass d)
+    V 0 hVopen h0V (2 * d) (standardComplexLocalClass ℚ d)
   have hfc : relativeHomologyMap ℚ (2 * d)
       (complexNeighborhoodPuncturedPairMapOf d V f
         (f.continuousOn.mono hVsource) hf_ne) c =
-      standardComplexLocalClass d := hlocal c hc
+      standardComplexLocalClass ℚ d := hlocal c hc
   have hpair := complexNeighborhoodPuncturedPairMap_compressedChartTransition_comp
     d e e' x hx hx' V hVsource hf_ne
   calc
     relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e x hx)
-        (standardComplexLocalClass d) =
+        (standardComplexLocalClass ℚ d) =
         relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e x hx)
           (relativeHomologyMap ℚ (2 * d) (neighborhoodPointComplementPairMap V 0) c) := by
             rw [hc]
@@ -204,7 +204,7 @@ theorem localClassOfChart_eq_of_hasFDerivAt_compressedTransition
               rw [relativeHomologyMap_comp]
               rfl
     _ = relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e' x hx')
-        (standardComplexLocalClass d) := by rw [hfc]
+        (standardComplexLocalClass ℚ d) := by rw [hfc]
 
 /-- It is enough to differentiate the ordinary coordinate transition.  The derivatives of both
 radial compression factors in `chartModelEmbedding` are inserted automatically, and their

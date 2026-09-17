@@ -18,7 +18,7 @@ boundary. -/
 def standardAffineBoundaryHomologyIso (n : ℕ) :
     ((∂Δ[n + 2] : SSet.{0}).chainComplex
       (ModuleCat.of ℚ ℚ)).homology (n + 1) ≅
-    ((TopCat.toSSet.obj (standardPuncturedPair (n + 2)).snd).chainComplex
+    ((TopCat.toSSet.obj (puncturedPair ℝ (n + 2)).snd).chainComplex
       (ModuleCat.of ℚ ℚ)).homology (n + 1) :=
   (standardAffineBoundaryChainHomotopyEquiv (n + 2)).toHomologyIso (n + 1)
 

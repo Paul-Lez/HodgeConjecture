@@ -30,13 +30,13 @@ abbrev normalSlicePair : TopPair :=
   TopPair.ofSubset (X := TopCat.of (E × (Fin c → ℂ))) {z | z.2 ≠ 0}
 
 /-- Projection to the actual normal point-complement pair. -/
-def normalSliceProjection : normalSlicePair E c ⟶ standardComplexPuncturedPair c :=
+def normalSliceProjection : normalSlicePair E c ⟶ puncturedPair ℂ c :=
   TopPair.ofHom (TopCat.ofHom ⟨Prod.snd, continuous_snd⟩)
     (TopCat.ofHom ⟨fun z => ⟨z.1.2, z.2⟩,
       by fun_prop⟩) (by ext z; rfl)
 
 /-- The zero tangent section preserves the punctured normal coordinate. -/
-def normalSliceSection : standardComplexPuncturedPair c ⟶ normalSlicePair E c :=
+def normalSliceSection : puncturedPair ℂ c ⟶ normalSlicePair E c :=
   TopPair.ofHom (TopCat.ofHom ⟨fun z => (0, z), continuous_const.prodMk continuous_id⟩)
     (TopCat.ofHom ⟨fun z => ⟨(0, z.1), z.2⟩, by fun_prop⟩) (by ext z; rfl)
 
@@ -65,7 +65,7 @@ def normalSliceContraction :
 /-- Normal projection and zero section are inverse up to the actual relative prism homotopy. -/
 def normalSliceRelativeChainHomotopyEquiv :
     HomotopyEquiv ((relativeChainFunctor ℚ).obj (normalSlicePair E c))
-      ((relativeChainFunctor ℚ).obj (standardComplexPuncturedPair c)) where
+      ((relativeChainFunctor ℚ).obj (puncturedPair ℂ c)) where
   hom := (relativeChainFunctor ℚ).map (normalSliceProjection E c)
   inv := (relativeChainFunctor ℚ).map (normalSliceSection E c)
   homotopyHomInvId :=
@@ -80,7 +80,7 @@ def normalSliceRelativeChainHomotopyEquiv :
 /-- The induced normal-slice isomorphism in every relative homology degree. -/
 def normalSliceRelativeHomologyIso (n : ℕ) :
     RelativeHomology ℚ (normalSlicePair E c) n ≅
-      RelativeHomology ℚ (standardComplexPuncturedPair c) n :=
+      RelativeHomology ℚ (puncturedPair ℂ c) n :=
   (normalSliceRelativeChainHomotopyEquiv E c).toHomologyIso n
 
 @[simp] theorem normalSliceRelativeHomologyIso_hom (n : ℕ) :
@@ -94,11 +94,11 @@ def normalSliceRelativeHomologyIso (n : ℕ) :
 /-- The relative normal class uses the exact complex orientation, transported by the
 actual zero tangent section. -/
 def normalSliceClass : RelativeHomology ℚ (normalSlicePair E c) (2 * c) :=
-  relativeHomologyMap ℚ (2 * c) (normalSliceSection E c) (standardComplexLocalClass c)
+  relativeHomologyMap ℚ (2 * c) (normalSliceSection E c) (standardComplexLocalClass ℚ c)
 
 @[simp] theorem normalSliceProjection_class :
     relativeHomologyMap ℚ (2 * c) (normalSliceProjection E c) (normalSliceClass E c) =
-      standardComplexLocalClass c := by
+      standardComplexLocalClass ℚ c := by
   exact ConcreteCategory.congr_hom (normalSliceRelativeHomologyIso E c (2 * c)).inv_hom_id _
 
 end AlgebraicTopology.Singular

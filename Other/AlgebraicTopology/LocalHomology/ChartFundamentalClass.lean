@@ -54,7 +54,7 @@ lemma continuous_puncturedChartModelEmbedding :
     (chartModelEmbedding_source d e x hx)).continuous.comp continuous_subtype_val) _
 
 /-- The map from the standard punctured complex affine space to the local pair at `x`. -/
-def chartModelEmbeddingPair : standardComplexPuncturedPair d ⟶ pointComplementPair x :=
+def chartModelEmbeddingPair : puncturedPair ℂ d ⟶ pointComplementPair x :=
   TopPair.ofHom
     (TopCat.ofHom ⟨chartModelEmbedding d e x hx,
       (chartModelEmbedding d e x hx).isOpenEmbedding
@@ -66,7 +66,7 @@ def chartModelEmbeddingPair : standardComplexPuncturedPair d ⟶ pointComplement
 /-- The local homology class at `x`, normalized by the complex ordering of the chart. -/
 def localClassOfChart : RelativeHomology ℚ (pointComplementPair x) (2 * d) :=
   relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e x hx)
-    (standardComplexLocalClass d)
+    (standardComplexLocalClass ℚ d)
 
 end AlgebraicTopology.Singular
 end
