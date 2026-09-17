@@ -117,16 +117,9 @@ def holomorphicDeRhamPresheafComplex [SmoothOfRelativeDimension d X.hom] :
       holomorphicDeRhamDifferential X d p := by
   simp [holomorphicDeRhamPresheafComplex]
 
-/-- The constant presheaf of additive groups with value `ℂ`. -/
-def constantComplexAddCommGrpPresheaf :
-    TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
-  (Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).obj
-    (AddCommGrpCat.of ℂ)
-
 /-- Constants as holomorphic de Rham forms of degree zero. -/
 def constantsToHolomorphicDeRhamZero [SmoothOfRelativeDimension d X.hom] :
-    constantComplexAddCommGrpPresheaf X ⟶
-      holomorphicDeRhamPresheaf X d 0 where
+    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶ holomorphicDeRhamPresheaf X d 0 where
   app U := AddCommGrpCat.ofHom
     (holomorphicFormOfConstant X d U).toAddMonoidHom
   naturality {U V} i := by
@@ -170,8 +163,8 @@ private lemma constantsToHolomorphicDeRhamZero_stalk_mono
       (constantsToHolomorphicDeRhamZero X d)) := by
   rw [AddCommGrpCat.mono_iff_injective]
   intro z z' h
-  obtain ⟨U, hxU, c, rfl⟩ := (constantComplexAddCommGrpPresheaf X).exists_germ_eq z
-  obtain ⟨V, hxV, c', rfl⟩ := (constantComplexAddCommGrpPresheaf X).exists_germ_eq z'
+  obtain ⟨U, hxU, c, rfl⟩ := 𝓒ᵖ(↧(ComplexPoint X); ℂ).exists_germ_eq z
+  obtain ⟨V, hxV, c', rfl⟩ := 𝓒ᵖ(↧(ComplexPoint X); ℂ).exists_germ_eq z'
   rw [TopCat.Presheaf.stalkFunctor_map_germ_apply,
     TopCat.Presheaf.stalkFunctor_map_germ_apply] at h
   obtain ⟨W, hxW, iWU, iWV, hW⟩ :=
@@ -182,11 +175,11 @@ private lemma constantsToHolomorphicDeRhamZero_stalk_mono
   have hcc' : c = c' := by
     apply holomorphicFormOfConstant_injective X d (.op W)
     have hc := congrArg (fun k :
-        (constantComplexAddCommGrpPresheaf X).obj (.op U) ⟶
+        𝓒ᵖ(↧(ComplexPoint X); ℂ).obj (.op U) ⟶
           (holomorphicDeRhamPresheaf X d 0).obj (.op W) ↦ k c)
       ((constantsToHolomorphicDeRhamZero X d).naturality iWU.op)
     have hc' := congrArg (fun k :
-        (constantComplexAddCommGrpPresheaf X).obj (.op V) ⟶
+        𝓒ᵖ(↧(ComplexPoint X); ℂ).obj (.op V) ⟶
           (holomorphicDeRhamPresheaf X d 0).obj (.op W) ↦ k c')
       ((constantsToHolomorphicDeRhamZero X d).naturality iWV.op)
     change holomorphicFormOfConstant X d (.op W) c =
@@ -197,8 +190,8 @@ private lemma constantsToHolomorphicDeRhamZero_stalk_mono
         ((constantsToHolomorphicDeRhamZero X d).app (.op V) c') at hc'
     exact hc.trans (hW.trans hc'.symm)
   subst c'
-  rw [← (constantComplexAddCommGrpPresheaf X).germ_res_apply iWU x hxW,
-    ← (constantComplexAddCommGrpPresheaf X).germ_res_apply iWV x hxW]
+  rw [← 𝓒ᵖ(↧(ComplexPoint X); ℂ).germ_res_apply iWU x hxW,
+    ← 𝓒ᵖ(↧(ComplexPoint X); ℂ).germ_res_apply iWV x hxW]
   rfl
 
 lemma constantsToHolomorphicDeRhamZero_comp_differential
@@ -317,8 +310,7 @@ Conjugation is a ring automorphism of `ℂ`, so it acts on the constant complex 
 way a scalar does; unlike a scalar it is only additive over `ℂ`, which is what makes the induced
 map on cohomology conjugate-linear rather than linear. -/
 def conjConstantComplexPresheaf :
-    constantComplexAddCommGrpPresheaf X ⟶
-      constantComplexAddCommGrpPresheaf X where
+    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶ 𝓒ᵖ(↧(ComplexPoint X); ℂ) where
   app _ := AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom
   naturality {U V} i := by
     ext x
@@ -379,7 +371,7 @@ noncomputable def constantsToHolomorphicDeRhamShortComplexSheafificationUnit
           (TopCat.of (ComplexPoint X))) where
   τ₁ := toSheafify
     (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-    (constantComplexAddCommGrpPresheaf X)
+    𝓒ᵖ(↧(ComplexPoint X); ℂ)
   τ₂ := toSheafify
     (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     (holomorphicDeRhamPresheaf X d 0)
@@ -415,7 +407,7 @@ private lemma constantsToHolomorphicDeRhamSheafShortComplex_exact
   let η := (stalk.mapShortComplex).map unit
   let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
-      (constantComplexAddCommGrpPresheaf X)
+      𝓒ᵖ(↧(ComplexPoint X); ℂ)
   let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (holomorphicDeRhamPresheaf X d 0)
@@ -442,7 +434,7 @@ private lemma constantsToHolomorphicDeRhamZeroSheaf_mono
   let η : S ⟶ T := (stalk.mapShortComplex).map unit
   let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
-      (constantComplexAddCommGrpPresheaf X)
+      𝓒ᵖ(↧(ComplexPoint X); ℂ)
   let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (holomorphicDeRhamPresheaf X d 0)

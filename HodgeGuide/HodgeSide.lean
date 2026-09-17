@@ -402,7 +402,7 @@ namespace Guide.Hodge.D12
 ```
 ```lean
 def conjConstantComplexPresheaf (X : Over (Spec ↧ℂ)) :
-    constantComplexAddCommGrpPresheaf X ⟶ constantComplexAddCommGrpPresheaf X where
+    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶ 𝓒ᵖ(↧(ComplexPoint X); ℂ) where
   app _ := AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom
   naturality {U V} i := by
     ext x

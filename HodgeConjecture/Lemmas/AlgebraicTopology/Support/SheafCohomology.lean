@@ -70,17 +70,16 @@ scoped notation "𝓖[" X "]" => grothendieckTopology X
 /-- Constant sheaves restrict along a continuous map. -/
 def constantRestriction {X Y : TopCat.{u}} (f : X ⟶ Y) (A : AddCommGrpCat.{u}) :
     𝓒[Y; A] ⟶ (pushforward _ f).obj 𝓒[X; A] :=
-  ⟨sheafifyLift 𝓖[Y] (Functor.whiskerLeft (Opens.map f).op (toSheafify 𝓖[X]
-    ((Functor.const (Opens X)ᵒᵖ).obj A)))
+  ⟨sheafifyLift 𝓖[Y] (Functor.whiskerLeft (Opens.map f).op (toSheafify 𝓖[X] 𝓒ᵖ[X; A]))
     ((pushforward AddCommGrpCat f).obj 𝓒[X; A]).property⟩
 
 @[reassoc]
 lemma toSheafify_constantRestriction {X Y : TopCat.{u}} (f : X ⟶ Y)
     (A : AddCommGrpCat.{u}) :
-    toSheafify 𝓖[Y] ((Functor.const (Opens Y)ᵒᵖ).obj A) ≫
+    toSheafify 𝓖[Y] 𝓒ᵖ[Y; A] ≫
         (constantRestriction f A).hom =
       Functor.whiskerLeft (Opens.map f).op
-        (toSheafify 𝓖[X] ((Functor.const (Opens X)ᵒᵖ).obj A)) :=
+        (toSheafify 𝓖[X] 𝓒ᵖ[X; A]) :=
   toSheafify_sheafifyLift _ _ _
 
 @[simp]

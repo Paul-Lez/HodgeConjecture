@@ -97,16 +97,10 @@ Hom-group instance avoids depending on reducibility-sensitive typeclass search t
 sheaf subcategory. -/
 def integerConstantHomAddEquivGlobalSections
     (F : TopCat.Sheaf AddCommGrpCat Y) :
-    letI : AddCommGroup
-        ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
-          (AddCommGrpCat.of ℤ) ⟶ F) :=
+    letI : AddCommGroup ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) :=
       (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y)).homGroup _ _
-    ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
-        (AddCommGrpCat.of ℤ) ⟶ F) ≃+
-      F.obj.obj (.op (⊤ : Opens Y)) := by
-  letI : AddCommGroup
-      ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
-        (AddCommGrpCat.of ℤ) ⟶ F) :=
+    ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) ≃+ F.obj.obj (.op (⊤ : Opens Y)) := by
+  letI : AddCommGroup ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) :=
     (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y)).homGroup _ _
   exact ((constantSheafAdj (Opens.grothendieckTopology Y) AddCommGrpCat
       isTerminalTop).homAddEquiv (AddCommGrpCat.of ℤ) F).trans <|
@@ -115,8 +109,7 @@ def integerConstantHomAddEquivGlobalSections
 /-- The constant-integer/global-sections equivalence is natural in the sheaf. -/
 lemma integerConstantHomAddEquivGlobalSections_naturality
     {F G : TopCat.Sheaf AddCommGrpCat Y} (f : F ⟶ G)
-    (g : (constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
-      (AddCommGrpCat.of ℤ) ⟶ F) :
+    (g : (constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) :
     integerConstantHomAddEquivGlobalSections G (g ≫ f) =
       f.hom.app (.op (⊤ : Opens Y))
         (integerConstantHomAddEquivGlobalSections F g) := rfl
@@ -127,8 +120,7 @@ end
 def integerConstantSingleComplex (Y : TopCat.{0}) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=
   (CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat Y) 0).obj
-    ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
-      (AddCommGrpCat.of ℤ))
+    ((constantFunctor Y).obj (AddCommGrpCat.of ℤ))
 
 /-- `Γ(Y, K^•)`, the complex of global sections of a complex of sheaves `K^•` on `Y`. -/
 def globalSectionsComplexInt (Y : TopCat.{0})
@@ -142,9 +134,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The additive constant-sheaf adjunction identifies the coyoneda functor represented by the
 constant integer sheaf with the global-sections functor. -/
 def integerConstantHomIsoGlobalSectionsFunctor (Y : TopCat.{0}) :
-    preadditiveCoyoneda.obj
-        (.op ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
-          (AddCommGrpCat.of ℤ))) ≅
+    preadditiveCoyoneda.obj (.op ((constantFunctor Y).obj (AddCommGrpCat.of ℤ))) ≅
       IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y :=
   NatIso.ofComponents
     (fun F ↦ (integerConstantHomAddEquivGlobalSections F).toAddCommGrpIso)
@@ -169,8 +159,7 @@ def homComplexSingleIntegerIsoGlobalSections
   letI : (IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
   CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda
-      ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
-        (AddCommGrpCat.of ℤ)) K ≪≫
+      ((constantFunctor Y).obj (AddCommGrpCat.of ℤ)) K ≪≫
     (NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y)
       ℤᵘᵖ).app K
 

@@ -166,7 +166,7 @@ private lemma const_map_algebraMap_comp_complexScalarPresheaf (q : K) : (Functor
 
 set_option linter.auxLemma false in
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1 TopCat.instCategorySheaf._aux_3
-  TopCat.instCategorySheaf._aux_5 constantComplexAddCommGrpPresheaf in
+  TopCat.instCategorySheaf._aux_5 in
 /-- The inclusion of rational constants into complex constants commutes with scalar
 multiplication. -/
 private lemma fieldToComplexConstantSheaf_scalar (q : K) :

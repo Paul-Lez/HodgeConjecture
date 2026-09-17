@@ -44,15 +44,11 @@ namespace TopCat
 
 variable (X : TopCat.{u})
 
-/-- The constant additive presheaf with value `A`. -/
-abbrev constantAddCommGrpPresheaf (A : AddCommGrpCat.{u}) : X.Presheaf AddCommGrpCat.{u} :=
-  (Functor.const (Opens X)ᵒᵖ).obj A
-
 private lemma constantPresheaf_Γgerm_injective (x : X) (A : AddCommGrpCat.{u}) :
-    Function.Injective ((constantAddCommGrpPresheaf X A).Γgerm x) := by
+    Function.Injective (𝓒ᵖ[X; A].Γgerm x) := by
   intro a b h
   obtain ⟨U, hxU, i, j, hij⟩ :=
-    (constantAddCommGrpPresheaf X A).germ_eq x (by simp) (by simp) a b h
+    𝓒ᵖ[X; A].germ_eq x (by simp) (by simp) a b h
   simpa using hij
 
 /-- On a nonempty space, the sheafification map for a constant additive presheaf is injective on
@@ -60,9 +56,9 @@ global sections. -/
 lemma constant_toSheafify_app_top_injective [Nonempty X] (A : AddCommGrpCat.{u}) :
     Function.Injective
       ((CategoryTheory.toSheafify (Opens.grothendieckTopology X)
-        (constantAddCommGrpPresheaf X A)).app (op ⊤)) := by
+        𝓒ᵖ[X; A]).app (op ⊤)) := by
   let x : X := Classical.choice inferInstance
-  let P := constantAddCommGrpPresheaf X A
+  let P := 𝓒ᵖ[X; A]
   let η := CategoryTheory.toSheafify (Opens.grothendieckTopology X) P
   let Q : X.Presheaf AddCommGrpCat.{u} :=
     CategoryTheory.sheafify (Opens.grothendieckTopology X) P
@@ -88,14 +84,14 @@ lemma constant_toSheafify_app_top_injective [Nonempty X] (A : AddCommGrpCat.{u})
 
 private lemma exists_constant_local_representation (A : AddCommGrpCat.{u})
     (s : (CategoryTheory.sheafify (Opens.grothendieckTopology X)
-      (constantAddCommGrpPresheaf X A)).obj (op ⊤)) (x : X) :
+      𝓒ᵖ[X; A]).obj (op ⊤)) (x : X) :
     ∃ U : Opens X, x ∈ U ∧ ∃ a : A,
       (CategoryTheory.sheafify (Opens.grothendieckTopology X)
-          (constantAddCommGrpPresheaf X A)).map (homOfLE le_top).op s =
+          𝓒ᵖ[X; A]).map (homOfLE le_top).op s =
         (CategoryTheory.toSheafify (Opens.grothendieckTopology X)
-          (constantAddCommGrpPresheaf X A)).app (op U) a := by
+          𝓒ᵖ[X; A]).app (op U) a := by
   let J := Opens.grothendieckTopology X
-  let P := constantAddCommGrpPresheaf X A
+  let P := 𝓒ᵖ[X; A]
   let Q : X.Presheaf AddCommGrpCat.{u} := CategoryTheory.sheafify J P
   let η := CategoryTheory.toSheafify J P
   let stalk := Presheaf.stalkFunctor AddCommGrpCat.{u} x
@@ -121,18 +117,18 @@ private lemma exists_constant_local_representation (A : AddCommGrpCat.{u})
 
 private lemma constant_local_representation_value_unique (A : AddCommGrpCat.{u})
     (s : (CategoryTheory.sheafify (Opens.grothendieckTopology X)
-      (constantAddCommGrpPresheaf X A)).obj (op ⊤)) (x : X)
+      𝓒ᵖ[X; A]).obj (op ⊤)) (x : X)
     (U V : Opens X) (hxU : x ∈ U) (hxV : x ∈ V) (a b : A)
     (ha : (CategoryTheory.sheafify (Opens.grothendieckTopology X)
-          (constantAddCommGrpPresheaf X A)).map (homOfLE le_top).op s =
+          𝓒ᵖ[X; A]).map (homOfLE le_top).op s =
         (CategoryTheory.toSheafify (Opens.grothendieckTopology X)
-          (constantAddCommGrpPresheaf X A)).app (op U) a)
+          𝓒ᵖ[X; A]).app (op U) a)
     (hb : (CategoryTheory.sheafify (Opens.grothendieckTopology X)
-          (constantAddCommGrpPresheaf X A)).map (homOfLE le_top).op s =
+          𝓒ᵖ[X; A]).map (homOfLE le_top).op s =
         (CategoryTheory.toSheafify (Opens.grothendieckTopology X)
-          (constantAddCommGrpPresheaf X A)).app (op V) b) : a = b := by
+          𝓒ᵖ[X; A]).app (op V) b) : a = b := by
   let J := Opens.grothendieckTopology X
-  let P := constantAddCommGrpPresheaf X A
+  let P := 𝓒ᵖ[X; A]
   let Q : X.Presheaf AddCommGrpCat.{u} := CategoryTheory.sheafify J P
   let η := CategoryTheory.toSheafify J P
   let stalk := Presheaf.stalkFunctor AddCommGrpCat.{u} x
@@ -144,16 +140,16 @@ private lemma constant_local_representation_value_unique (A : AddCommGrpCat.{u})
     change Q.germ U x hxU (η.app (op U) a) = Q.germ V x hxV (η.app (op V) b)
     rw [← ha, ← hb, Q.germ_res_apply, Q.germ_res_apply]
   obtain ⟨W, hxW, iWU, iWV, hW⟩ := P.germ_eq x hxU hxV a b hp
-  simpa [P, constantAddCommGrpPresheaf] using hW
+  simpa [P, TopCat.Presheaf.const] using hW
 
 /-- On a connected space, every global section of a constant additive sheaf comes from a
 constant global section before sheafification. -/
 lemma constant_toSheafify_app_top_surjective [ConnectedSpace X] (A : AddCommGrpCat.{u}) :
     Function.Surjective
       ((CategoryTheory.toSheafify (Opens.grothendieckTopology X)
-        (constantAddCommGrpPresheaf X A)).app (op ⊤)) := by
+        𝓒ᵖ[X; A]).app (op ⊤)) := by
   let J := Opens.grothendieckTopology X
-  let P := constantAddCommGrpPresheaf X A
+  let P := 𝓒ᵖ[X; A]
   let F := (presheafToSheaf J AddCommGrpCat.{u}).obj P
   let Q : X.Presheaf AddCommGrpCat.{u} := F.obj
   let η := CategoryTheory.toSheafify J P
@@ -187,7 +183,7 @@ def constantSheafGlobalSectionsAddEquiv [ConnectedSpace X] (A : AddCommGrpCat.{u
     A ≃+ 𝓒[X; A].obj.obj (op ⊤) :=
   AddEquiv.ofBijective
     ((CategoryTheory.toSheafify (Opens.grothendieckTopology X)
-      (constantAddCommGrpPresheaf X A)).app (op ⊤)).hom
+      𝓒ᵖ[X; A]).app (op ⊤)).hom
     ⟨constant_toSheafify_app_top_injective X A,
       constant_toSheafify_app_top_surjective X A⟩
 
@@ -195,7 +191,7 @@ def constantSheafGlobalSectionsAddEquiv [ConnectedSpace X] (A : AddCommGrpCat.{u
 lemma constantSheafGlobalSectionsAddEquiv_apply [ConnectedSpace X] (A : AddCommGrpCat.{u})
     (a : A) : constantSheafGlobalSectionsAddEquiv X A a =
       (CategoryTheory.toSheafify (Opens.grothendieckTopology X)
-        (constantAddCommGrpPresheaf X A)).app (op ⊤) a := rfl
+        𝓒ᵖ[X; A]).app (op ⊤) a := rfl
 
 /-- On a connected topological space, the constant-sheaf functor on additive commutative groups
 is fully faithful. -/
@@ -207,7 +203,7 @@ def constantSheafFullyFaithfulOfConnected [ConnectedSpace X] :
     apply (ConcreteCategory.isIso_iff_bijective _).2
     change Function.Bijective
       ((CategoryTheory.toSheafify (Opens.grothendieckTopology X)
-        (constantAddCommGrpPresheaf X A)).app (op ⊤))
+        𝓒ᵖ[X; A]).app (op ⊤))
     exact ⟨constant_toSheafify_app_top_injective X A,
       constant_toSheafify_app_top_surjective X A⟩
   letI : IsIso adj.unit := NatIso.isIso_of_isIso_app _
@@ -219,8 +215,8 @@ instance constantSheaf_faithful_of_nonempty [Nonempty X] :
     (Sheaf.constantFunctor X).Faithful where
   map_injective {A B} f g h := by
     let J := Opens.grothendieckTopology X
-    let PA := constantAddCommGrpPresheaf X A
-    let PB := constantAddCommGrpPresheaf X B
+    let PA := 𝓒ᵖ[X; A]
+    let PB := 𝓒ᵖ[X; B]
     let cf : PA ⟶ PB := (Functor.const (Opens X)ᵒᵖ).map f
     let cg : PA ⟶ PB := (Functor.const (Opens X)ᵒᵖ).map g
     let ηA := CategoryTheory.toSheafify J PA

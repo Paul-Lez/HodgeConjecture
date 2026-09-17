@@ -55,7 +55,7 @@ def complexToFieldConstantSheafComplexInt :
       (complexToFieldConstantSheaf K X)) ComplexShape.embeddingUpNat
 
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1 TopCat.instCategorySheaf._aux_3
-  TopCat.instCategorySheaf._aux_5 constantComplexAddCommGrpPresheaf in
+  TopCat.instCategorySheaf._aux_5 in
 
 omit [Algebra K ℂ] in
 /-- Multiplying an integer by `r` and then by `q` is multiplying it by `q * r`. -/
