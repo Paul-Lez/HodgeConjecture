@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Stratification.ClosedFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Basic
 
 /-!
 # The canonical smooth decomposition as a closed filtration
 
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Stratification.ClosedFiltration`.
+The filtration is antitone, consecutive closed supports differ by the actual smooth piece,
+and it is empty at the length of the existing finite list and thereafter.
 -/
 
 @[expose] public noncomputable section

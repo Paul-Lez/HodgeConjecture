@@ -42,6 +42,12 @@ variable (R : Type) [CommRing R]
 abbrev puncturedPair (𝕜 : Type) [Field 𝕜] [TopologicalSpace 𝕜] (d : ℕ) : TopPair :=
   TopPair.ofSubset (X := TopCat.of (Fin d → 𝕜)) ({0}ᶜ : Set (Fin d → 𝕜))
 
+/-- The pair `(W, W \ S)` of a subset `W ⊆ M` and the complement in it of a subset `S`. -/
+abbrev neighborhoodSupportComplementPair {M : Type} [TopologicalSpace M] (W S : Set M) :
+    TopPair :=
+  -- The pair `(W, W \ S)`.
+  TopPair.ofSubset (X := TopCat.of W) {w | w.1 ∉ S}
+
 /-- The affine `d`-simplex with vertices the standard basis and the vector `(-1, ..., -1)`. -/
 def standardAffineSimplex (d : ℕ) (t : stdSimplex ℝ (Fin (d + 1))) : Fin d → ℝ :=
   fun j => t (Fin.castSucc j) - t (Fin.last d)

@@ -14,10 +14,11 @@ public import Mathlib.AlgebraicGeometry.IdealSheaf.Subscheme
 
 Each step takes the actual reduced closed subscheme on a closed subset, removes its smooth
 locus, and continues on the closed remainder. Noetherian induction makes this construction
-finite. The pieces are actual smooth locally closed subschemes, not supplied stratification
-data. This is an algebraic prerequisite for dimension induction; it does not assert a
-Whitney or frontier condition, triangulation, analytic homology vanishing, or extension of an
-orientation across singularities.
+finite, and iterating the step indexes it by natural numbers. The pieces are actual smooth
+locally closed subschemes, not supplied stratification data. This is an algebraic
+prerequisite for dimension induction; it does not assert a Whitney or frontier condition,
+triangulation, analytic homology vanishing, or extension of an orientation across
+singularities.
 -/
 
 @[expose] public noncomputable section
@@ -67,12 +68,21 @@ instance reducedClosedStructureMap_locallyOfFiniteType (S : Closeds X) :
   dsimp [reducedClosedStructureMap]
   infer_instance
 
+/-- The closed complement of the actual smooth locus. -/
+def singularLocusClosed : Closeds X := f.smoothLocus.compl
+
 /-- The singular remainder, regarded as a closed subset of the original scheme. -/
 def reducedClosedSingularRemainder (S : Closeds X) : Closeds X :=
   ⟨reducedClosedSubschemeι S ''
     ((reducedClosedStructureMap f S).smoothLocus : Set (reducedClosedSubscheme S))ᶜ,
     (reducedClosedSubschemeι S).isClosedEmbedding.isClosedMap _
       (reducedClosedStructureMap f S).smoothLocus.isOpen.isClosed_compl⟩
+
+/-- Iteration of the actual reduced singular remainder, padded only by empty supports
+after the already constructed finite decomposition terminates. -/
+def reducedSmoothClosedFiltration (S : Closeds X) : ℕ → Closeds X
+  | 0 => S
+  | k + 1 => reducedClosedSingularRemainder f (reducedSmoothClosedFiltration S k)
 
 local instance reducedSmoothStratificationWellFoundedRelation [NoetherianSpace X] :
     WellFoundedRelation (Closeds X) :=

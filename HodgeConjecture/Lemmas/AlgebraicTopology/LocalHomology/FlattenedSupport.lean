@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.FlattenedSupport
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalSlicePurity
+public import Mathlib.Analysis.Normed.Module.Ball.Homeomorph
 
 /-!
 # Actual relative homology near a flattened support
 
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.FlattenedSupport`.
+Radial compression into a small product-norm ball preserves the zero-normal plane.
+Composing with the inverse flattening chart gives a pair homeomorphism from the normal-slice
+model to a small open neighborhood paired with its support complement, along which the
+homology calculation and the normalized class are transported.
 -/
 
 /-! ### Constructions used only in proofs -/
