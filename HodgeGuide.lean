@@ -10,6 +10,7 @@ import HodgeGuide.FundamentalClass
 import HodgeGuide.Statement
 import HodgeGuide.References
 import HodgeGuide.Provenance
+import HodgeGuide.Disclaimer
 
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
@@ -23,6 +24,13 @@ authors := ["The HodgeConjecture contributors"]
 %%%
 
 :::fcProvenance
+:::
+
+:::wip
+**Work in progress.** Both this guide and the formalization it describes are unfinished, and the
+site is rebuilt from `main` on every push. The conjecture is stated but not proved, several
+classical theorems around the statement are still missing, and names and file layout are still
+changing. See {ref "scope-and-status"}[Scope and status] for what is settled and what is not.
 :::
 
 This guide explains the formalization of the Hodge conjecture in the
