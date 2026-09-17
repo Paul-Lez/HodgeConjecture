@@ -42,13 +42,9 @@ theorem mem_smoothClosedSupportChartOpen (z : ComplexPoint Y) :
 Here `d - m` is the codimension of `Y` in `X`. -/
 abbrev smoothClosedSupportCoclassSheaf : TopCat.Sheaf AddCommGrpCat
     (TopCat.of (ComplexPoint X)) :=
-  supportRelativeCohomologySheaf
-    -- `X(ℂ)`.
-    (TopCat.of (ComplexPoint X))
-    -- `Y(ℂ) ⊆ X(ℂ)`, the image of the closed immersion `i`.
-    (Set.range (Point.map i))
-    -- Twice the codimension of `Y` in `X`.
-    (2 * (d - m))
+  -- The support is `Y(ℂ) ⊆ X(ℂ)`, the image of the closed immersion `i`; the degree is twice
+  -- the codimension of `Y` in `X`.
+  𝓗_[Set.range (Point.map i)]^(2 * (d - m))(TopCat.of (ComplexPoint X); ℚ)
 
 /-- The exact normal coclass determines a section on its full chart source. -/
 def smoothClosedSupportChartSheafSection (z : ComplexPoint Y) :

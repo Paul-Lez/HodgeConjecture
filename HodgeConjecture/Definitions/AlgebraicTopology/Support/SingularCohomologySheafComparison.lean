@@ -94,8 +94,7 @@ def supportedSingularCohomologySheafIsoRelative :
     (supportedRationalSingularCochainComplex X
       -- The open `X \ S`.
       ⟨Sᶜ, hS.isOpen_compl⟩).homology (n : ℤ) ≅
-      -- The sheaf `𝓗^n_S` associated with `V ↦ H^n(V, V \ S; ℚ)`.
-      supportRelativeCohomologySheaf X S n :=
+      𝓗_[S]^n(X; ℚ) :=
   (sectionCohomologyPresheafSheafificationIso X
     (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩) (n : ℤ)).symm ≪≫
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).mapIso

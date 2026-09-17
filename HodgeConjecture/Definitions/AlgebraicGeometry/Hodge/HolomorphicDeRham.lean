@@ -533,7 +533,7 @@ def holomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
 scoped notation:max "Ω•" "(" X ")" => holomorphicDeRhamComplexInt X
 
 instance [IsIntegral X.left] [Smooth X.hom] :
-    CochainComplex.IsStrictlyGE (holomorphicDeRhamComplexInt X) 0 := by
+    CochainComplex.IsStrictlyGE Ω•(X) 0 := by
   unfold holomorphicDeRhamComplexInt
   infer_instance
 
@@ -541,7 +541,7 @@ instance [IsIntegral X.left] [Smooth X.hom] :
 dimension. -/
 lemma holomorphicDeRhamComplexInt_isZero_X_of_lt
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) (hn : (dim X.left : ℤ) < n) :
-    IsZero ((holomorphicDeRhamComplexInt X).X n) := by
+    IsZero (Ω•(X).X n) := by
   have hn0 : 0 ≤ n := by lia
   let p := n.toNat
   have hp : (p : ℤ) = n := by
@@ -555,7 +555,7 @@ lemma holomorphicDeRhamComplexInt_isZero_X_of_lt
 complex dimension. -/
 noncomputable instance holomorphicDeRhamComplexInt_isStrictlyLE
     [IsIntegral X.left] [Smooth X.hom] :
-    (holomorphicDeRhamComplexInt X).IsStrictlySupported
+    Ω•(X).IsStrictlySupported
       (ComplexShape.embeddingUpIntLE (dim X.left)) where
   isZero n hn := by
     rw [ComplexShape.notMem_range_embeddingUpIntLE_iff] at hn
@@ -563,8 +563,7 @@ noncomputable instance holomorphicDeRhamComplexInt_isStrictlyLE
 
 /-- The constant-to-de Rham comparison on integer-indexed complexes. -/
 def constantsToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
-    constantComplexSheafComplexInt X ⟶
-      holomorphicDeRhamComplexInt X :=
+    constantComplexSheafComplexInt X ⟶ Ω•(X) :=
   HomologicalComplex.extendMap
     (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat
 
