@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Basic
 

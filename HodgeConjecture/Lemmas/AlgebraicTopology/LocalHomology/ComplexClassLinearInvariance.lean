@@ -207,9 +207,9 @@ lemma complexMatrixPuncturedMap_apply
 
 /-- An invertible complex matrix acts on complex affine space and its punctured subspace. -/
 def complexMatrixPuncturedPairMap (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0) :
-    standardComplexPuncturedPair d ⟶ standardComplexPuncturedPair d :=
-  TopPair.ofHom (X := standardComplexPuncturedPair d)
-    (Y := standardComplexPuncturedPair d)
+    puncturedPair ℂ d ⟶ puncturedPair ℂ d :=
+  TopPair.ofHom (X := puncturedPair ℂ d)
+    (Y := puncturedPair ℂ d)
     (complexMatrixMap d A)
     (complexMatrixPuncturedMap d A hA)
     (by
@@ -221,7 +221,7 @@ def complexMatrixPuncturedPairMap (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det �
 def complexMatrixPuncturedPairHomotopy
     {A : Matrix (Fin d) (Fin d) ℂ} (hA : A.det ≠ 0)
     (H : Matrix.ComplexIsotopyToOne A) :
-    TopPair.Homotopy (𝟙 (standardComplexPuncturedPair d))
+    TopPair.Homotopy (𝟙 (puncturedPair ℂ d))
       (complexMatrixPuncturedPairMap d A hA) where
   fst :=
     { toFun := fun tx ↦ (H.path tx.1).mulVec tx.2
@@ -257,11 +257,11 @@ def complexMatrixPuncturedPairHomotopy
 theorem relativeHomologyMap_complexMatrix_standardComplexLocalClass
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0) :
     relativeHomologyMap ℚ (2 * d) (complexMatrixPuncturedPairMap d A hA)
-        (standardComplexLocalClass d) =
-      standardComplexLocalClass d := by
+        (standardComplexLocalClass ℚ d) =
+      standardComplexLocalClass ℚ d := by
   let H := (Matrix.nonempty_complexIsotopyToOne A hA).some
   have h := (complexMatrixPuncturedPairHomotopy d hA H).relativeHomologyMap_apply_eq
-    (R := ℚ) (2 * d) (standardComplexLocalClass d)
+    (R := ℚ) (2 * d) (standardComplexLocalClass ℚ d)
   simpa using h.symm
 
 end AlgebraicTopology.Singular

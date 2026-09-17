@@ -83,9 +83,9 @@ def supportOpenEmbeddingSheafificationIso (P : TopCat.Presheaf AddCommGrpCat X) 
 associated with `V ↦ H^n(V, V \ S; ℚ)`. -/
 def supportRelativeCohomologySheafOpenIso (n : ℕ) :
     -- `𝓗^n_B` on `Y` is the restriction of `𝓗^n_S` along the open embedding `f`.
-    supportRelativeCohomologySheaf Y B n ≅
+    𝓗_[B]^n(Y; ℚ) ≅
       -- Restriction of sheaves along `f`.
-      (hf.sheafPullback AddCommGrpCat).obj (supportRelativeCohomologySheaf X S n) :=
+      (hf.sheafPullback AddCommGrpCat).obj 𝓗_[S]^n(X; ℚ) :=
   (presheafToSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).mapIso
       (supportRelativeCohomologyPresheafOpenIso f hf S B hB n).symm ≪≫
     supportOpenEmbeddingSheafificationIso f hf (supportRelativeCohomologyPresheaf X S n)
@@ -93,9 +93,9 @@ def supportRelativeCohomologySheafOpenIso (n : ℕ) :
 /-- A global section of `𝓗^n_B` on `Y` gives a section of `𝓗^n_S` over the open `f(Y) ⊆ X`. -/
 def supportRelativeCohomologySectionOpenImage (n : ℕ)
     -- A global section of `𝓗^n_B` on `Y`.
-    (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤)) :
+    (s : (𝓗_[B]^n(Y; ℚ)).obj.obj (op ⊤)) :
     -- A section of `𝓗^n_S` on the open `f(Y) ⊆ X`.
-    (supportRelativeCohomologySheaf X S n).obj.obj
+    (𝓗_[S]^n(X; ℚ)).obj.obj
       -- The open `f(Y)`.
       (op (hf.functor.obj ⊤)) :=
   (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op ⊤) s
@@ -104,9 +104,9 @@ def supportRelativeCohomologySectionOpenImage (n : ℕ)
 identification is the unique open inclusion, not an arbitrary section equivalence. -/
 def supportRelativeCohomologySectionOnOpen (n : ℕ) (U : Opens X)
     (hU : hf.functor.obj ⊤ = U)
-    (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤)) :
-    (supportRelativeCohomologySheaf X S n).obj.obj (op U) :=
-  (supportRelativeCohomologySheaf X S n).obj.map (eqToHom hU.symm).op
+    (s : (𝓗_[B]^n(Y; ℚ)).obj.obj (op ⊤)) :
+    (𝓗_[S]^n(X; ℚ)).obj.obj (op U) :=
+  (𝓗_[S]^n(X; ℚ)).obj.map (eqToHom hU.symm).op
     (supportRelativeCohomologySectionOpenImage f hf S B hB n s)
 
 end AlgebraicTopology.Singular

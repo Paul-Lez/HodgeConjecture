@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.GlobalSections
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 /-! # Naturality of the additive map/extension comparison -/
@@ -65,10 +67,10 @@ variable {C D : Type u} [Category* C] [Category* D] [Abelian C] [Abelian D]
 /-- If applying an additive functor to a nonnegative chain map gives a
 quasi-isomorphism, the same holds for its extension to integer degrees. -/
 lemma quasiIso_map_extendMap_nat :
-    QuasiIso ((F.mapHomologicalComplex (.up ℤ)).map
+    QuasiIso ((F.mapHomologicalComplex ℤᵘᵖ).map
       (HomologicalComplex.extendMap f ComplexShape.embeddingUpNat)) := by
   have : QuasiIso ((HomologicalComplex.mapExtendCanonicalIso F K ComplexShape.embeddingUpNat).inv ≫
-      (F.mapHomologicalComplex (.up ℤ)).map
+      (F.mapHomologicalComplex ℤᵘᵖ).map
         (HomologicalComplex.extendMap f ComplexShape.embeddingUpNat)) := by
     rw [← HomologicalComplex.mapExtendCanonicalIso_inv_naturality F f ComplexShape.embeddingUpNat]
     infer_instance

@@ -10,6 +10,7 @@ import Other.AlgebraicGeometry.Cycle.SheafClass
 import Other.AlgebraicGeometry.ComplexPoint.SmoothConnected
 import Other.AlgebraicGeometry.Hodge.Filtration
 import Other.LinearAlgebra.HodgeStructure
+import Other.AlgebraicGeometry.Hodge.DimensionZero
 
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
@@ -27,7 +28,7 @@ open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
 noncomputable section
 universe u u_1
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ) (V : SmoothProjectiveComplexVariety)
 ```
 
 # From subvarieties to cycles
@@ -51,7 +52,7 @@ example : @Guide.Statement.D5.sheafCycleClassOnCycles = @AlgebraicGeometry.Compl
 ```
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.sheafCycleClassOnCycles_single
+#check sheafCycleClassOnCycles_single
 ```
 
 ```lean -show
@@ -69,18 +70,16 @@ example : @Guide.Statement.D6.rationalSheafCycleClassOnCycles = @AlgebraicGeomet
 ```
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.rationalSheafCycleClassOnCycles_tmul_single
+#check rationalSheafCycleClassOnCycles_tmul_single
 ```
 
-These maps take a {name}`SmoothProjectiveComplexVariety`, a scheme with its structure morphism to
-$`\operatorname{Spec}\mathbb C`, together with a natural number {lean}`d` and an instance saying
-that the structure morphism is smooth of relative dimension {lean}`d`. The construction of the
-class of a subvariety needs that dimension. For a smooth integral complex scheme the instance
-holds at {lean}`dim X.left`, so a caller supplies {lean}`dim X.left` and typeclass search finds the
-certificate.
-
-{name}`algebraicCycleClassSpan`, defined next, evaluates each class at {lean}`dim X.left` directly,
-so the statement mentions the scheme and its structure morphism alone.
+Both maps are stated for a bundled variety. A {name}`SmoothProjectiveComplexVariety` packages a
+scheme together with its structure morphism to $`\operatorname{Spec}\mathbb C`, carrying
+integrality, smoothness and projectivity as instance fields, and {lean}`V.over` re-presents it as
+the object of {lean}`Over (Spec ↧ℂ)` that everything else in the development takes. The bundling
+exists for the constructions in `Other/`, chiefly the Borel–Moore one, that thread a single scheme
+and structure morphism through many comparison objects at once. It is of no use to the statement,
+which stays unbundled, as does {name}`algebraicCycleClassSpan` below.
 
 # The algebraic subspace
 
@@ -109,13 +108,14 @@ example : @Guide.Statement.D2.algebraicCycleClassSpan = @AlgebraicGeometry.Compl
 ```
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_mem_algebraicCycleClassSpan
+#check cycleComponentSheafClass_mem_algebraicCycleClassSpan
 ```
 
 In Lean the span is the supremum, over all points {lean}`x` and all proofs {lean}`hx` of
-{lean}`coheight x = p`, of the line spanned by
-{lean}`cycleComponentSheafClass X x hx`, where the named argument fixes the
-dimension at {lean}`dim X.left`.
+{lean}`coheight x = p`, of the line spanned by {lean}`cycleComponentSheafClass X x hx`. The
+supremum ranges over the proof {lean}`hx` as well as the point, because {lean}`hx` is an argument
+of the class. The class does not depend on which proof is supplied, since
+{lean}`coheight x = p` is a proposition and Lean identifies any two of its proofs.
 
 # The proposition
 
@@ -129,7 +129,7 @@ namespace Guide.Statement.D1
 ```lean
 def HodgeConjecture : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ),
-    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p
+    Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p
 ```
 ```lean -show
 end Guide.Statement.D1
@@ -139,13 +139,13 @@ example : @Guide.Statement.D1.HodgeConjecture = @HodgeConjecture := rfl
 It quantifies over a scheme {lean}`X` over $`\mathbb C` that is integral with smooth and projective
 structure morphism, and over a natural number {lean}`p`. The conclusion is the inclusion of subspaces
 
-$$`\operatorname{Hdg}^p(X;\mathbb Q)\le A^p(X):`
+$$`\operatorname{Hdg}^p(X,\mathbb Q)\le A^p(X):`
 
 every rational Hodge class of degree $`2p` is a rational linear combination of classes of
 algebraic subvarieties of codimension $`p`. This is the conjecture as Deligne states it,
 [pp. 45–46](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf#page=56). The reverse
 inclusion, that every algebraic class is a Hodge class, is a theorem that has not yet been
-formalized, so the formulation as an equality $`\operatorname{Hdg}^p(X;\mathbb Q)=A^p(X)` is not
+formalized, so the formulation as an equality $`\operatorname{Hdg}^p(X,\mathbb Q)=A^p(X)` is not
 yet available.
 
 # What the repository proves about the statement
@@ -153,7 +153,8 @@ yet available.
 tag := "what-is-proved"
 %%%
 
-The conjecture is stated, not proved. Two of its cases are proved outright.
+The conjecture is stated, not proved. Two of its cases are proved outright, and together they
+settle it for varieties of dimension zero.
 
 The easy case is $`p>\dim X`. A smooth variety has no point of coheight above its dimension, so
 the span is $`\bot`; and $`F^p` vanishes there, so the Hodge classes are $`\bot` too. The
@@ -162,16 +163,16 @@ check that the two sides degenerate together, which a mismatch in the degree con
 break.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_bot_of_lt
-#check AlgebraicGeometry.ComplexPoint.algebraicCycleClassSpan_eq_bot_of_lt
+#check hodgeClasses_eq_bot_of_lt
+#check algebraicCycleClassSpan_eq_bot_of_lt
 ```
 
 Codimension zero is the substantial one. Both sides are computed, and they agree:
 
-$$`\operatorname{Hdg}^0(X;\mathbb Q)=A^0(X)=H^0(X;\mathbb Q).`
+$$`\operatorname{Hdg}^0(X,\mathbb Q)=A^0(X)=H^0(X;\mathbb Q).`
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.rationalHodgeClasses_zero_eq_algebraicCycleClassSpan
+#check rationalHodgeClasses_zero_eq_algebraicCycleClassSpan
 ```
 
 The left-hand side is everything, because $`F^0` is; that is the sanity check of
@@ -182,9 +183,9 @@ complex scheme is connected, so $`H^0` is itself a line, and the class is nonzer
 is proved here, from Noether normalization and a local étale chart, rather than assumed.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_zero_eq_top
-#check AlgebraicGeometry.ComplexPoint.connectedSpace
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_genericPoint_ne_zero
+#check hodgeClasses_zero_eq_top
+#check connectedSpace
+#check cycleComponentSheafClass_genericPoint_ne_zero
 ```
 
 The nonvanishing is the part that tests the construction. Its proof runs the chain of
@@ -198,7 +199,7 @@ For a component of positive codimension the same chain stops at the last step. T
 section is still nonzero, for every component:
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.cycleComponentSmoothSupportCoclassSection_ne_zero
+#check cycleComponentSmoothSupportCoclassSection_ne_zero
 ```
 
 but forgetting support need not be injective on $`H^{2p}_Z(X;\mathbb Q)`, and showing that it is
@@ -206,6 +207,16 @@ on the fundamental-class line is cohomological purity, which is open; see
 {ref "scope-and-status"}[Scope and status]. Until it is settled, $`A^p(X)` is generated by classes
 not yet known to be nonzero, so it could be smaller than the classical right-hand side, making
 the statement stronger than the conjecture rather than weaker.
+
+The two cases overlap in exactly one situation. When $`\dim X=0` every codimension is either zero
+or above the dimension, so the conjecture holds for such a variety in every codimension at once.
+That is the one class of varieties for which the repository proves the conjecture, and the case
+carries no information about its content: a smooth projective integral variety of dimension zero
+over $`\mathbb C` is a single point.
+
+```lean
+#check rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_zero
+```
 
 # Reading the source
 

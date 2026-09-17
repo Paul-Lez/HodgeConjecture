@@ -75,7 +75,7 @@ theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected
     (hV : ConnectedSpace (ComplexPoint X))
     (hcompare : algebraicCycleClassSpan X 0 =
       codimensionZeroCycleClassSpan X) :
-    Hdg^0(ℚ; X) = algebraicCycleClassSpan X 0 := by
+    Hdg^0(X; ℚ) = algebraicCycleClassSpan X 0 := by
   rw [hodgeClasses_zero_eq_top,
     algebraicCycleClassSpan_zero_eq_top_of_connected X hV hcompare]
 
@@ -85,7 +85,7 @@ theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected
     (hV : ConnectedSpace (ComplexPoint X))
     (hcompare : algebraicCycleClassSpan X 0 =
       codimensionZeroCycleClassSpan X) :
-    Hdg^0(ℚ; X) ≤ algebraicCycleClassSpan X 0 := by
+    Hdg^0(X; ℚ) ≤ algebraicCycleClassSpan X 0 := by
   rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected X hV hcompare]
 
 /-- For a smooth projective complex variety of dimension zero, the Hodge-conjecture inclusion
@@ -94,7 +94,7 @@ theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero
     (hd : dim X.left = 0)
     (hcompare : algebraicCycleClassSpan X 0 =
       codimensionZeroCycleClassSpan X) (p : ℕ) :
-    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p := by
+    Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p := by
   by_cases hp : p = 0
   · subst p
     exact rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_connected X

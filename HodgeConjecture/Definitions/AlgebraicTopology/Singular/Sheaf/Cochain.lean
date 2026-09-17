@@ -241,10 +241,6 @@ private lemma openBoundary_comp_zeroAugmentation (U : (Opens X)ᵒᵖ) :
   simplicialBoundary_comp_zeroAugmentation R
     (TopCat.toSSet.obj ((Opens.toTopCat X).obj U.unop))
 
-/-- The constant presheaf with value the additive group of `R`. -/
-def constantCoefficientPresheaf : TopCat.Presheaf AddCommGrpCat X :=
-  (Functor.const (Opens X)ᵒᵖ).obj (AddCommGrpCat.of R)
-
 /-- A scalar defines the corresponding constant singular zero-cochain. -/
 def constantSingularZeroCochain (U : (Opens X)ᵒᵖ) :
     R →+ OpenCochains R X U 0 where
@@ -254,14 +250,14 @@ def constantSingularZeroCochain (U : (Opens X)ᵒᵖ) :
 
 /-- Constant functions form singular zero-cochains, naturally under restriction. -/
 def constantsToSingularCochainZero :
-    constantCoefficientPresheaf R X ⟶ singularCochainPresheaf R X 0 where
+    𝓒ᵖ(X; R) ⟶ singularCochainPresheaf R X 0 where
   app U := AddCommGrpCat.ofHom (constantSingularZeroCochain R X U)
   naturality {U V} i := by
     ext r
     change R at r
     apply LinearMap.ext
     intro c
-    dsimp [constantCoefficientPresheaf, constantSingularZeroCochain,
+    dsimp [TopCat.Presheaf.const, constantSingularZeroCochain,
       singularCochainPresheaf]
     exact congrArg (r * ·) <| congrArg (fun f ↦ f.hom c) <|
       (openZeroAugmentation_naturality R X i).symm

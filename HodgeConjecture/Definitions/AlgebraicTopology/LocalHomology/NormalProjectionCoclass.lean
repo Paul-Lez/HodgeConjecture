@@ -36,7 +36,7 @@ variable (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
 
 /-- The actual normal projection from a neighborhood support pair. -/
 def chartNormalProjectionPair (W : Set M) (hW : W ⊆ e.source) :
-    neighborhoodSupportComplementPair W S ⟶ standardComplexPuncturedPair c :=
+    neighborhoodSupportComplementPair W S ⟶ puncturedPair ℂ c :=
   TopPair.ofHom
     (TopCat.ofHom ⟨fun w => (e w.1).2, ((e.continuousOn.mono hW).domRestrict).snd⟩)
     (TopCat.ofHom ⟨fun w => ⟨(e w.1.1).2, fun h => w.2 ((hS _ (hW w.1.2)).mpr h)⟩,
@@ -50,7 +50,7 @@ def chartNormalProjectionCoclass (W : Set M) (hW : W ⊆ e.source) :
     -- The pullback to `H^{2c}(W, W \ S; ℚ)` of the normalized class in `H^{2c}(ℂ^c, ℂ^c \ {0}; ℚ)`.
     RelativeCohomology ℚ (neighborhoodSupportComplementPair W S) (2 * c) :=
   relativeCohomologyMap ℚ (2 * c) (chartNormalProjectionPair E c e S hS W hW)
-    (normalizedRelativeCoclass (standardComplexLocalClass c)
+    (normalizedRelativeCoclass (standardComplexLocalClass ℚ c)
       (standardComplexLocalClass_ne_zero_for_chart c))
 
 end AlgebraicTopology.Singular

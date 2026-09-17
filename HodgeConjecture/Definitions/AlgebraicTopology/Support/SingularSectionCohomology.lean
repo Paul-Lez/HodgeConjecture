@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularFlasqueModel
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
@@ -56,7 +58,7 @@ def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
     -- `H^n_{X \ U}(V; ℚ) ≅ H^n(V, V ⊓ U; ℚ)`.
     ((((TopCat.Sheaf.supportEvaluation X
       -- Sections over the open `V`.
-      V).mapHomologicalComplex (.up ℤ)).obj
+      V).mapHomologicalComplex ℤᵘᵖ).obj
       -- `Γ_{X \ U}` of the singular-cochain sheaf complex.
       (supportedRationalSingularCochainComplex X U))).homology (n : ℤ) ≃+
         -- `H^n` of the pair `(V, V ⊓ U)`.
@@ -77,7 +79,7 @@ def supportedRationalSingularSectionCohomologyEquivSupportComplement
     -- `H^n_S(V; ℚ) ≅ H^n(V, V \ S; ℚ)`.
     ((((TopCat.Sheaf.supportEvaluation X
       -- Sections over the open `V`.
-      V).mapHomologicalComplex (.up ℤ)).obj
+      V).mapHomologicalComplex ℤᵘᵖ).obj
       -- `Γ_S` of the singular-cochain sheaf complex.
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩))).homology (n : ℤ) ≃+
         -- `H^n` of the pair `(V, V \ S)`.

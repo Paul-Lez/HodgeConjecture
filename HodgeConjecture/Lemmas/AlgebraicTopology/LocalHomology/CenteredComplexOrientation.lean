@@ -45,7 +45,7 @@ variable (d : ℕ)
 /-- Recenter a continuous injection at a chosen source point. -/
 def centeredComplexEmbeddingPair (F : (Fin d → ℂ) → (Fin d → ℂ))
     (hF : Continuous F) (hFi : Function.Injective F) (v : Fin d → ℂ) :
-    standardComplexPuncturedPair d ⟶ standardComplexPuncturedPair d :=
+    puncturedPair ℂ d ⟶ puncturedPair ℂ d :=
   complexPuncturedPairMapOf d (fun w => F (w + v) - F v)
     ((hF.comp (continuous_id.add continuous_const)).sub continuous_const)
     (fun w hw h => hw
@@ -112,7 +112,7 @@ theorem centeredComplexUnivBall_preserves_standardComplexLocalClass
     relativeHomologyMap ℚ (2 * d)
       (centeredComplexEmbeddingPair d (OpenPartialHomeomorph.univBall c r)
         (continuous_complexUnivBall d c r) (injective_complexUnivBall d c r) v)
-      (standardComplexLocalClass d) = standardComplexLocalClass d := by
+      (standardComplexLocalClass ℚ d) = standardComplexLocalClass ℚ d := by
   rw [centeredComplexEmbeddingPair_relativeHomologyMap_eq]
   let L : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ) :=
     (r : ℂ) • ContinuousLinearMap.id ℂ (Fin d → ℂ)

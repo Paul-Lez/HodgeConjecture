@@ -83,7 +83,7 @@ lemma hodgeFiltrationComplexSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.
 
 /-- Every rational degree-zero cohomology class belongs to the rational Hodge subgroup. -/
 lemma hodgeClasses_zero_eq_top [IsIntegral X.left] [Smooth X.hom] :
-    Hdg^0(K; X) = ⊤ := by
+    Hdg^0(X; K) = ⊤ := by
   refine SetLike.ext fun α ↦ ?_
   change fieldToDeRhamCohomology K X (2 * 0) α ∈ hodgePiece X 0 0 0 ↔ True
   rw [hodgePiece_zero_eq_top]

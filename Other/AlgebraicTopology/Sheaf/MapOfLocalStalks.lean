@@ -57,7 +57,7 @@ def globalMapOfLocallyRepresentable : A ⟶ F.presheaf.obj (op ⊤) :=
 
 /-- The actual presheaf map from constants, prior to sheafification. -/
 def constantPresheafMapOfLocallyRepresentable :
-    (Functor.const (Opens X)ᵒᵖ).obj A ⟶ F.presheaf where
+    𝓒ᵖ[X; A] ⟶ F.presheaf where
   app U := globalMapOfLocallyRepresentable F A g hlocal ≫
     F.presheaf.map (homOfLE (show U.unop ≤ ⊤ from le_top)).op
   naturality {U V} i := by
@@ -79,7 +79,7 @@ group to the stalk. Its map is the germ of an actual constant section. -/
 def constantSheafStalkIso (A : AddCommGrpCat.{u}) (x : X) :
     A ≅ (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj
       𝓒[X; A].obj :=
-  let P : TopCat.Presheaf AddCommGrpCat.{u} X := (Functor.const (Opens X)ᵒᵖ).obj A
+  let P : TopCat.Presheaf AddCommGrpCat.{u} X := 𝓒ᵖ[X; A]
   letI : IsIso (P.Γgerm x) := by
     apply (ConcreteCategory.isIso_iff_bijective _).2
     constructor
@@ -123,7 +123,7 @@ theorem globalMapOfLocallyRepresentable_germ (x : X) :
 /-- The sheaf map agrees with the explicitly constructed map on constant sections. -/
 @[reassoc]
 theorem constantSheafMapOfLocallyRepresentable_unit :
-    toSheafify (Opens.grothendieckTopology X) ((Functor.const (Opens X)ᵒᵖ).obj A) ≫
+    toSheafify (Opens.grothendieckTopology X) 𝓒ᵖ[X; A] ≫
       (constantSheafMapOfLocallyRepresentable F A g hlocal).hom =
       constantPresheafMapOfLocallyRepresentable F A g hlocal :=
   toSheafify_sheafifyLift _ _ _

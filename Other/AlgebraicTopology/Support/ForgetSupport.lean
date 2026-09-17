@@ -63,8 +63,7 @@ local instance :
 
 /-- Restriction of the ambient integer sheaf to a closed support. -/
 def integerToSupport (Z : Closeds X) :
-    (constantSheaf 𝓖[X] AddCommGrpCat).obj
-        (AddCommGrpCat.of (ULift.{u} ℤ)) ⟶ supportIntegerSheaf X Z :=
+    (constantFunctor X).obj (AddCommGrpCat.of (ULift.{u} ℤ)) ⟶ supportIntegerSheaf X Z :=
   constantRestriction (closedInclusion X Z) _
 
 @[reassoc (attr := simp)]
@@ -75,8 +74,7 @@ lemma integerToSupport_map {Z W : Closeds X} (h : Z ≤ W) :
 
 /-- The integer sheaf supported on the whole space is the ordinary integer sheaf. -/
 def supportIntegerSheafTopIso :
-    (constantSheaf 𝓖[X] AddCommGrpCat).obj
-        (AddCommGrpCat.of (ULift.{u} ℤ)) ≅ supportIntegerSheaf X ⊤ where
+    (constantFunctor X).obj (AddCommGrpCat.of (ULift.{u} ℤ)) ≅ supportIntegerSheaf X ⊤ where
   hom := integerToSupport X ⊤
   inv := (pushforward AddCommGrpCat (closedInclusion X ⊤)).map
     (constantRestriction

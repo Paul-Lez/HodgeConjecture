@@ -70,17 +70,16 @@ scoped notation "𝓖[" X "]" => grothendieckTopology X
 /-- Constant sheaves restrict along a continuous map. -/
 def constantRestriction {X Y : TopCat.{u}} (f : X ⟶ Y) (A : AddCommGrpCat.{u}) :
     𝓒[Y; A] ⟶ (pushforward _ f).obj 𝓒[X; A] :=
-  ⟨sheafifyLift 𝓖[Y] (Functor.whiskerLeft (Opens.map f).op (toSheafify 𝓖[X]
-    ((Functor.const (Opens X)ᵒᵖ).obj A)))
+  ⟨sheafifyLift 𝓖[Y] (Functor.whiskerLeft (Opens.map f).op (toSheafify 𝓖[X] 𝓒ᵖ[X; A]))
     ((pushforward AddCommGrpCat f).obj 𝓒[X; A]).property⟩
 
 @[reassoc]
 lemma toSheafify_constantRestriction {X Y : TopCat.{u}} (f : X ⟶ Y)
     (A : AddCommGrpCat.{u}) :
-    toSheafify 𝓖[Y] ((Functor.const (Opens Y)ᵒᵖ).obj A) ≫
+    toSheafify 𝓖[Y] 𝓒ᵖ[Y; A] ≫
         (constantRestriction f A).hom =
       Functor.whiskerLeft (Opens.map f).op
-        (toSheafify 𝓖[X] ((Functor.const (Opens X)ᵒᵖ).obj A)) :=
+        (toSheafify 𝓖[X] 𝓒ᵖ[X; A]) :=
   toSheafify_sheafifyLift _ _ _
 
 @[simp]
@@ -163,6 +162,10 @@ abbrev cohomologyWithSupport (Z : Closeds X)
     (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) (n : ℕ) :=
   Ext (supportIntegerSheaf X Z) F n
 
+/-- `H_[Z]^n(X; F)` is sheaf cohomology of `X` with support in the closed subset `Z`, in degree
+`n` with coefficients in the sheaf `F`. -/
+scoped notation:max "H_[" Z "]^" n:max "(" X "; " F ")" => cohomologyWithSupport X Z F n
+
 instance (Z : Closeds X)
     (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) (n : ℕ) :
     AddCommGroup (cohomologyWithSupport X Z F n) :=
@@ -193,6 +196,10 @@ abbrev compactlySupportedCohomology
     (F : CategoryTheory.Sheaf 𝓖[X] AddCommGrpCat.{u}) (n : ℕ) :
     AddCommGrpCat.{u} :=
   (compactlySupportedCohomologyFunctor X n).obj F
+
+/-- `H_c^n(X; F)` is compactly supported sheaf cohomology of `X` in degree `n` with coefficients
+in the sheaf `F`. -/
+scoped notation:max "H_c^" n:max "(" X "; " F ")" => compactlySupportedCohomology X F n
 
 /-- A class with specified compact closed support defines a compactly supported class. -/
 def toCompactlySupportedCohomology (K : CompactCloseds X)

@@ -62,7 +62,7 @@ omit [T1Space M] in
 /-- The oriented standard complex class generates its local homology in every complex
 dimension. -/
 lemma span_standardComplexLocalClass_eq_top_for_chart :
-    Submodule.span ℚ {standardComplexLocalClass d} = ⊤ := by
+    Submodule.span ℚ {standardComplexLocalClass ℚ d} = ⊤ := by
   cases d with
   | zero => exact span_standardComplexLocalClass_zero_eq_top
   | succ n =>
@@ -73,7 +73,7 @@ lemma span_standardComplexLocalClass_eq_top_for_chart :
 
 /-- The oriented standard complex local class is nonzero in every complex dimension. -/
 lemma standardComplexLocalClass_ne_zero_for_chart :
-    standardComplexLocalClass d ≠ 0 := by
+    standardComplexLocalClass ℚ d ≠ 0 := by
   rw [standardComplexLocalClass_ne_zero_iff]
   by_cases hd : d = 0
   · subst d

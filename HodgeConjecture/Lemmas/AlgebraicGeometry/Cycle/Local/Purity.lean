@@ -60,7 +60,7 @@ lemma normalizedRelativeCoclass_pairing_self {R : Type*} [Field R] {X : TopPair}
 
 /-- The oriented standard complex local class is nonzero in every complex dimension. -/
 lemma standardComplexLocalClass_ne_zero (n : ℕ) :
-    standardComplexLocalClass n ≠ 0 := by
+    standardComplexLocalClass ℚ n ≠ 0 := by
   rw [standardComplexLocalClass_ne_zero_iff]
   by_cases hn : n = 0
   · subst n

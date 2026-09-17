@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportExtension
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
@@ -45,10 +47,7 @@ def complexSupportInjectiveCohomologySheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
     -- The `n`-th cohomology sheaf of `RΓ_S(ℚ)`.
     (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
-      -- The sheaf `𝓗^n_S` associated with `V ↦ H^n(V, V \ S; ℚ)`.
-      supportRelativeCohomologySheaf
-        -- `X(ℂ)`.
-        (TopCat.of (ComplexPoint X)) S n :=
+      𝓗_[S]^n(TopCat.of (ComplexPoint X); ℚ) :=
   letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
   (asIso (HomologicalComplex.homologyMap
     (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
@@ -66,7 +65,7 @@ abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
     -- `X(ℂ)`.
     (TopCat.of (ComplexPoint X))
     -- Global sections, i.e. sections over all of `X(ℂ)`.
-    ⊤).mapHomologicalComplex (.up ℤ)).obj
+    ⊤).mapHomologicalComplex ℤᵘᵖ).obj
     -- `RΓ_{Z(ℂ)}(ℚ)`.
     (complexSupportInjectiveComplex X
       -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
@@ -77,14 +76,8 @@ abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
 /-- `Γ(X(ℂ) \ Z_sing(ℂ), 𝓗^{2p}_{Z(ℂ)})`: sections over the complement of the singular locus of
 `Z` of the sheaf `𝓗^{2p}_{Z(ℂ)}` associated with `V ↦ H^{2p}(V, V \ Z(ℂ); ℚ)`. -/
 abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
-  -- Sections of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`.
-  (supportRelativeCohomologySheaf
-    -- `X(ℂ)`.
-    (TopCat.of (ComplexPoint X))
-    -- `Z(ℂ)`.
-    (cycleComponentSupport X x)
-    -- Degree `2p`.
-    (2 * p)).obj.obj
+  -- Sections of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`, with support `Z(ℂ)` and degree `2p`.
+  (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).obj.obj
       -- The open `X(ℂ) \ Z_sing(ℂ)`.
       (op (cycleComponentSmoothSupportAmbientOpen X x))
 

@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportHypercohomology
 import Mathlib.Algebra.Homology.HomotopyCategory.Plus
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHypercohomology
@@ -115,7 +117,7 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
     (i : K ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map i)]
+        ℤᵘᵖ).map i)]
     (n : ℤ) :
     Hypercohomology X K n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt
@@ -141,9 +143,9 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
   let e₅ := (HomologicalComplex.homologyMapIso
     (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
       |>.addCommGroupIsoToAddEquiv
-  letI : QuasiIso ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) := inferInstance
+  letI : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map i) := inferInstance
   let e₆ := (asIso (HomologicalComplex.homologyMap
-    ((Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map i) n)).symm
+    ((Γ.mapHomologicalComplex ℤᵘᵖ).map i) n)).symm
       |>.addCommGroupIsoToAddEquiv
   e₀.trans <| e₁.trans <| e₂.trans <| e₃.trans <| e₄.trans <| e₅.trans e₆
 
@@ -167,7 +169,7 @@ def hypercohomologyAddEquivGlobalSections
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
   haveI : QuasiIso
       (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-        ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
+        ).mapHomologicalComplex ℤᵘᵖ).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i N N hKflasque hIflasque
   hypercohomologyAddEquivGlobalSectionsOfResolution
@@ -185,7 +187,7 @@ def globalSectionsNaturalSingularConeIsoMappingCone
       CochainComplex.mappingCone
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-            (ComplexShape.up ℤ)).map
+            ℤᵘᵖ).map
           (naturalSingularResolutionRestriction X Z hZ)) :=
   CochainComplex.mappingCone.mapHomologicalComplexIso
     (naturalSingularResolutionRestriction X Z hZ)

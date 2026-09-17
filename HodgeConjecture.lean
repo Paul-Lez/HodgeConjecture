@@ -268,6 +268,7 @@ public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import HodgeConjecture.Mathlib.RingTheory.SmoothKrullDimension
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
+public import HodgeConjecture.Mathlib.Topology.Category.TopPair
 public import HodgeConjecture.Mathlib.Topology.ChartedSpaceParacompact
 public import HodgeConjecture.Mathlib.Topology.KrullDimension
 public import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact

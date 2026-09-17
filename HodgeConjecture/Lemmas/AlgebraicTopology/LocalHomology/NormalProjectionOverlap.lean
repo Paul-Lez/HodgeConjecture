@@ -41,11 +41,11 @@ theorem exists_open_normalTransition_localClass_invariance_within
       IsOpen V ∧ 0 ∈ V ∧
       ∀ z : RelativeHomology ℚ (neighborhoodPointComplementPair V 0) (2 * c),
         relativeHomologyMap ℚ (2 * c) (neighborhoodPointComplementPairMap V 0) z =
-          standardComplexLocalClass c →
+          standardComplexLocalClass ℚ c →
         relativeHomologyMap ℚ (2 * c)
           (complexNeighborhoodPuncturedPairMapOf c V (normalTransitionMap c t a)
             ((normalTransitionMap_continuousOn c t a).mono (hV.trans hUt))
-            hne) z = standardComplexLocalClass c := by
+            hne) z = standardComplexLocalClass ℚ c := by
   let L := normalTransitionDerivativeEquiv t a ha hp ht hti
   let A := complexMatrixOfContinuousLinearMap c L.toContinuousLinearMap
   have hA := complexMatrixOfContinuousLinearMap_det_ne_zero c L.toContinuousLinearMap L.injective
@@ -167,7 +167,7 @@ theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
   have hfiber : ∀ v ∈ V, (a, v) ∈ e.target ∧ e.symm (a, v) ∈ W := fun _ hv => hV hv
   let F := chartNormalFiberPair c e S hS a W V hfiber
   obtain ⟨z, hz⟩ := (neighborhoodPointComplement_relativeHomologyMap_bijective
-    V 0 hVo h0V (2 * c)).2 (standardComplexLocalClass c)
+    V 0 hVo h0V (2 * c)).2 (standardComplexLocalClass ℚ c)
   have hFz : relativeHomologyMap ℚ (2 * c) F z =
       flattenedSupportNormalClass E c e x hx S hS h0 := by
     apply chartNormalProjection_relativeHomologyMap_injective E c e S hS x hx h0
@@ -185,7 +185,8 @@ theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
       relativeCohomologyEquivDualHomology_normalizedRelativeCoclass]
     rw [← LinearMap.comp_apply (relativeHomologyMap ℚ (2 * c)
       (chartNormalProjectionPair E c e' S hS' W hW')), ← relativeHomologyMap_comp]
-    change normalizedDual (standardComplexLocalClass c) (standardComplexLocalClass_ne_zero_for_chart c)
+    change normalizedDual (standardComplexLocalClass ℚ c)
+        (standardComplexLocalClass_ne_zero_for_chart c)
       (relativeHomologyMap ℚ (2 * c)
         (chartNormalFiberPair c e S hS a W V hfiber ≫ chartNormalProjectionPair E c e' S hS' W hW') z) = 1
     rw [chartNormalFiber_comp_other_projection c e S hS a W V hfiber e' hS' hW'

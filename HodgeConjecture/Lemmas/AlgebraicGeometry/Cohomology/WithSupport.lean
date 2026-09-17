@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
 public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
@@ -65,14 +67,13 @@ def pushforwardComplementConstantRationalSheaf
 /-- Constant rational sections restrict canonically to locally constant sections on the
 complement. This is the presheaf morphism before sheafifying the source. -/
 def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
-    (Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).obj
-        (AddCommGrpCat.of ℚ) ⟶
+    𝓒ᵖ(↧(ComplexPoint X); ℚ) ⟶
       (pushforwardComplementConstantRationalSheaf X Z).obj :=
   let U := TopCat.of ↥Zᶜ
   let J := Opens.grothendieckTopology U
   Functor.whiskerLeft (Opens.map (analyticComplementInclusion X Z)).op
     ((sheafificationAdjunction J AddCommGrpCat).unit.app
-      ((Functor.const (Opens U)ᵒᵖ).obj (AddCommGrpCat.of ℚ)))
+      𝓒ᵖ(U; ℚ))
 
 /-- The canonical restriction of the rational constant sheaf to the complement. -/
 def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
@@ -202,7 +203,7 @@ noncomputable instance isIso_mappingConeTriangleh_mor₃_univ :
         (AnalyticAdditiveSheaf X) :=
     ⟨_, _, f, ⟨Iso.refl _⟩⟩
   exact (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _ hdist).1
-    ((HomotopyCategory.quotient (AnalyticAdditiveSheaf X) (ComplexShape.up ℤ)).map_isZero
+    ((HomotopyCategory.quotient (AnalyticAdditiveSheaf X) ℤᵘᵖ).map_isZero
       (isZero_derivedPushforwardComplement_univ_int X))
 
 /-- The same whole-support connecting morphism is an isomorphism in the derived category used by
@@ -229,6 +230,10 @@ homotopy fiber of restriction as the mapping cone shifted by `-1`. -/
 abbrev RationalCohomologyWithSupport
     (Z : Set (ComplexPoint X)) (n : ℤ) : Type 1 :=
   Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)
+
+/-- `H_[Z]^n(X; ℚ)` is rational constant-sheaf cohomology of `X(ℂ)` with support in `Z`, in
+integer degree `n`. -/
+scoped notation:max "H_[" Z "]^" n:max "(" X "; " "ℚ" ")" => RationalCohomologyWithSupport X Z n
 
 /-- The degree-one connecting morphism from the mapping cone to the ambient rational constant
 complex. -/
