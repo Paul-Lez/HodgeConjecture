@@ -27,10 +27,7 @@ authors := ["The HodgeConjecture contributors"]
 :::
 
 :::wip
-**Work in progress.** Both this guide and the formalization it describes are unfinished, and the
-site is rebuilt from `main` on every push. The conjecture is stated but not proved, several
-classical theorems around the statement are still missing, and names and file layout are still
-changing. See {ref "scope-and-status"}[Scope and status] for what is settled and what is not.
+This guide is currently work in progress.
 :::
 
 This guide explains the formalization of the Hodge conjecture in the
