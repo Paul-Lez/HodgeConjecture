@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 
 /-!
 # Constructed sheaf cycle classes in arbitrary codimension

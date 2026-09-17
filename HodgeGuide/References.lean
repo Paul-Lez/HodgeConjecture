@@ -55,9 +55,7 @@ formalization.
   and `SupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`: the class of a
-  subvariety;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`: the span of those
-  classes, which is the right-hand side of the statement;
+  subvariety and the span of those classes, which is the right-hand side of the statement;
 * `Other/AlgebraicGeometry/Cycle/SheafClass.lean`: the maps on cycles;
 * `Other/AlgebraicGeometry/ComplexPoint/SmoothConnected.lean`: connectedness of the
   analytification of a smooth integral complex scheme;

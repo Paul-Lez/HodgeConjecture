@@ -4,15 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.FlasqueSections
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsNaturality
+public import Mathlib.Topology.Sheaves.Flasque
+public import Mathlib.Topology.Sheaves.SheafCondition.PairwiseIntersections
 
 /-!
-# Constructions used only in proofs
+# Supported sections preserve flasqueness
 
-These were built to prove the results about the definitions in
-`HodgeConjecture.Definitions.AlgebraicTopology.Support.FlasqueSections`.
-The statement of the conjecture never inspects them: every path from the statement to one
-of them runs through a proof, so proof irrelevance makes their bodies immaterial.
+A supported section over `V` glues with zero on the excluded open `U` to a section on
+`V ⊔ U`. Flasqueness extends that section to `W ⊔ U` when `V ≤ W`, and its restriction to
+`W` vanishes on `W ⊓ U`, so it lies in the kernel defining supported sections.
 -/
 
 @[expose] public noncomputable section

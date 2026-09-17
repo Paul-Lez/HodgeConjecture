@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Smooth.SingularLocusDimension
+public import HodgeConjecture.Lemmas.Topology.Dimension.ClosedSubset
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Basic
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
@@ -13,8 +16,10 @@ import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 /-!
 # The actual singular locus has smaller algebraic dimension
 
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Smooth.SingularLocusDimension`.
+Over a perfect field the complement of the smooth locus of a reduced irreducible scheme is
+a proper closed subset. This file proves the strict Krull-dimension bound of that reduced
+closed subscheme, including the `d - p` bound for cycle components. The bounds are on
+algebraic dimension throughout.
 -/
 
 /-! ### Constructions used only in proofs -/
