@@ -7,7 +7,6 @@ module
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift
 public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyShift

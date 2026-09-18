@@ -6,7 +6,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
+public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
 
