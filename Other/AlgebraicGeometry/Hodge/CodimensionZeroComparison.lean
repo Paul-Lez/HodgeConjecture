@@ -132,7 +132,7 @@ lemma cycleComponentSupport_genericPoint_eq_univ
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 /-- Forgetting support is injective whenever the support is the whole analytic space. -/
 theorem forgetSupport_injective_of_eq_univ (Z : Set (ComplexPoint X))
-    (hZ : Z = Set.univ) (n : ℤ) :
+    (hZ : Z = Set.univ) (n : ℕ) :
     Function.Injective (forgetSupport X Z n) := by
   subst hZ
   intro a b hab

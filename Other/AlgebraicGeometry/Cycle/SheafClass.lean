@@ -33,7 +33,7 @@ variable (V : SmoothProjectiveComplexVariety)
 /-- An actual additive map from algebraic cycles to ordinary rational cohomology,
 using the constructed sheaf class in every codimension. -/
 def sheafCycleClassOnCycles (p : ℕ) :
-    codimensionCycleSubgroup V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
+    codimensionCycleSubgroup V.scheme p →+ H^(2 * p)(V.over; ℚ) :=
   cycleClassOnCyclesOfComponents (fun x hx ↦ cycleComponentSheafClass V.over x hx)
 
 /-- An individual component carries its exact integer multiplicity. -/
@@ -51,7 +51,8 @@ theorem sheafCycleClassOnCycles_sum_single (p : ℕ)
     (hx : ∀ i, coheight (x i) = p) (n : ι → ℤ) :
     sheafCycleClassOnCycles V p (∑ i ∈ t, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
       ∑ i ∈ t, n i • cycleComponentSheafClass V.over (x i) (hx i) := by
-  simp
+  rw [map_sum]
+  exact Finset.sum_congr rfl fun i _ ↦ sheafCycleClassOnCycles_single V p (x i) (hx i) (n i)
 
 /-- The explicit finite-support formula. The codimension test's zero branch
 is never used for a nonzero coefficient of a codimension-`p` cycle. -/
@@ -65,7 +66,7 @@ theorem sheafCycleClassOnCycles_apply (p : ℕ) (c : codimensionCycleSubgroup V.
 second input, not a rational-equivalence quotient. -/
 def sheafCycleClassRationalExtensionBilinear (p : ℕ) :
     ℚ →ₗ[ℚ] codimensionCycleSubgroup V.scheme p →ₗ[ℤ]
-      H^(2 * (p : ℤ))(V.over; ℚ) where
+      H^(2 * p)(V.over; ℚ) where
   toFun q := q • (sheafCycleClassOnCycles V p).toIntLinearMap
   map_add' _ _ := by
     ext
@@ -78,7 +79,7 @@ def sheafCycleClassRationalExtensionBilinear (p : ℕ) :
 arbitrary codimension. No unproved geometric data are arguments. -/
 def rationalSheafCycleClassOnCycles (p : ℕ) :
     TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme p) →ₗ[ℚ]
-      H^(2 * (p : ℤ))(V.over; ℚ) :=
+      H^(2 * p)(V.over; ℚ) :=
   TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 
 /-- Rational extension agrees with the constructed integral map on pure tensors. -/
@@ -94,7 +95,7 @@ theorem rationalSheafCycleClassOnCycles_tmul_single (p : ℕ) (q : ℚ)
     (x : V.scheme) (hx : coheight x = p) :
     rationalSheafCycleClassOnCycles V p (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
       q • cycleComponentSheafClass V.over x hx := by
-  simp
+  rw [rationalSheafCycleClassOnCycles_tmul, sheafCycleClassOnCycles_single, one_smul]
 
 /-- Every finite rational combination is sent to the corresponding exact
 combination of the constructed ordinary cohomology classes. -/
@@ -104,7 +105,9 @@ theorem rationalSheafCycleClassOnCycles_sum_tmul_single (p : ℕ)
     rationalSheafCycleClassOnCycles V p
       (∑ i ∈ t, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
       ∑ i ∈ t, q i • cycleComponentSheafClass V.over (x i) (hx i) := by
-  simp
+  rw [map_sum]
+  exact Finset.sum_congr rfl fun i _ ↦
+    rationalSheafCycleClassOnCycles_tmul_single V p (q i) (x i) (hx i)
 
 /-- Every actually constructed component class belongs to the algebraic cycle-class span. -/
 theorem cycleComponentSheafClass_mem_algebraicCycleClassSpan

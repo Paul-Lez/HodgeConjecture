@@ -97,8 +97,8 @@ def analyticComponentPointSupportedInjectiveCoclass :
 
 /-- The positive literal supported-kernel inclusion of the old point coclass, in
 the repository's ordinary rational cohomology. No legacy cone-sign equality is claimed. -/
-def analyticComponentPointPositiveKernelClass : H^(2 * (d : ℤ))(X; ℚ) :=
-  (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (d : ℤ))).symm
+def analyticComponentPointPositiveKernelClass : H^(2 * d)(X; ℚ) :=
+  (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * d)).symm
     (HomologicalComplex.homologyMap
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
         (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
