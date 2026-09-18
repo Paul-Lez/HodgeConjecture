@@ -15,6 +15,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    concurrency:
+      group: guide-${{ github.ref }}
+      cancel-in-progress: true
+
     permissions:
       contents: write
       pages: write
@@ -32,8 +36,21 @@ jobs:
       - name: Check the import layering
         run: python3 scripts/check_import_layers.py
 
+      - name: Build the Verso guide
+        if: github.event_name != 'pull_request'
+        run: lake exe hodge-guide
+      - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: _out/html-multi
+
+      # The release upload gets an HTTP 500 from GitHub from time to time, and
+      # the guide must still deploy when it does.  The next push republishes.
       - name: Export the trust index
         id: trust
+        continue-on-error: true
         if: github.event_name != 'pull_request'
         uses: chrisflav/trust-action@v1
         with:
@@ -44,22 +61,12 @@ jobs:
           publish: ${{ github.ref == 'refs/heads/main' && 'release' || 'false' }}
 
       - name: Keep the index as an artifact
-        if: github.event_name != 'pull_request'
+        if: steps.trust.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: trust-index
           path: ${{ steps.trust.outputs.index-root }}
           retention-days: 30
-
-      - name: Build the Verso guide
-        if: github.event_name != 'pull_request'
-        run: lake exe hodge-guide
-      - uses: actions/configure-pages@v5
-        if: github.event_name != 'pull_request'
-      - uses: actions/upload-pages-artifact@v3
-        if: github.event_name != 'pull_request'
-        with:
-          path: _out/html-multi
 
   deploy:
     if: github.event_name != 'pull_request'
