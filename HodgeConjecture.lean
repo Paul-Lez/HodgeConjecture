@@ -31,7 +31,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.WithSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.AnalyticSheaf
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
@@ -89,7 +88,6 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDeriv
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShiftNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.ShortExactQuasiIso
 public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturality
-public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexShiftNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
@@ -125,7 +123,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.LocalGene
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalCoordinates
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
@@ -136,7 +133,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.Holomorph
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveCompact
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Projective
