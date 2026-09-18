@@ -34,41 +34,42 @@ nothing in the statement's dependency chain uses these results, only material in
 @[expose] public noncomputable section
 open CategoryTheory Topology TopologicalSpace
 namespace AlgebraicGeometry
-variable (X : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
 
-lemma range_cycleComponentMap_subset
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Set.range (cycleComponentMap X x) ⊆ cycleComponentSupport X x := by
+lemma range_closedEmbeddingMap_subset
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    Set.range (Point.map i) ⊆ closedEmbeddingSupport i := by
   rintro z ⟨w, rfl⟩
-  change (cycleComponentι X.left x) w.underlying ∈ closure {x}
-  rw [← range_cycleComponentι X.left x]
   exact ⟨w.underlying, rfl⟩
 
-/-- A closed immersion of a cycle component is injective on complex points. -/
-lemma cycleComponentMap_injective
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Function.Injective (cycleComponentMap X x) := fun _ _ hab =>
-  Over.OverMorphism.ext ((cancel_mono (cycleComponentι X.left x)).mp
+/-- A closed embedding is injective on complex points. -/
+lemma closedEmbeddingMap_injective
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    Function.Injective (Point.map i) := fun _ _ hab =>
+  Over.OverMorphism.ext ((cancel_mono (i.left)).mp
     (congrArg (fun z => z.left) hab))
 
-/-- Map the complex points of a cycle component into its analytic support. -/
-def cycleComponentSupportMap
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) →
-      cycleComponentSupport X x :=
-  fun z => ⟨cycleComponentMap X x z,
-    range_cycleComponentMap_subset X x ⟨z, rfl⟩⟩
+/-- Map the complex points of the source of a closed embedding into its support. -/
+def closedEmbeddingSupportMap
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    ComplexPoint (Y) →
+      closedEmbeddingSupport i :=
+  fun z => ⟨Point.map i z,
+    range_closedEmbeddingMap_subset i ⟨z, rfl⟩⟩
 
-/-- Complex points of the reduced component are equivalent to the points in its analytic
-support. -/
-def cycleComponentPointEquivSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) ≃
-      cycleComponentSupport X x :=
-  Equiv.ofBijective (cycleComponentSupportMap X x) ⟨
-    fun _ _ h => cycleComponentMap_injective X x (congrArg Subtype.val h),
-    fun z => ⟨cycleComponentComplexPointLift X x z z.2,
-      Subtype.ext (cycleComponentMap_lift X x z z.2)⟩⟩
+/-- Complex points of the source of a closed embedding are equivalent to its support. -/
+def closedEmbeddingPointEquivSupport
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    ComplexPoint (Y) ≃
+      closedEmbeddingSupport i :=
+  Equiv.ofBijective (closedEmbeddingSupportMap i) ⟨
+    fun _ _ h => closedEmbeddingMap_injective i (congrArg Subtype.val h),
+    fun z => ⟨closedEmbeddingComplexPointLift i z z.2,
+      Subtype.ext (map_closedEmbeddingComplexPointLift i z z.2)⟩⟩
 
 end AlgebraicGeometry
 end
@@ -76,7 +77,7 @@ end
 @[expose] public noncomputable section
 open CategoryTheory Topology TopologicalSpace
 namespace AlgebraicGeometry
-variable (X : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
 
 /-- An algebraic cycle on a projective complex variety has finite support. Algebraic cycles are
 locally finite by definition, and the underlying Zariski space is compact. -/
@@ -88,36 +89,38 @@ lemma algebraicCycle_support_finite {R : Type*} [Zero R]
   simpa using c.locallyFiniteSupport.finite_inter_support_of_isCompact
     (W := Set.univ) isCompact_univ
 
-/-- Every integral cycle component has a complex point in its smooth locus. The smooth locus is
-dense over the perfect field `ℂ`, and a projective complex variety has a closed point there. -/
-theorem exists_cycleComponent_smooth_complexPoint
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ∃ z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)),
+/-- The integral source of a closed embedding has a complex point in its smooth locus. The
+smooth locus is dense over the perfect field `ℂ`, and a projective complex variety has a closed
+point there. -/
+theorem exists_closedEmbedding_smooth_complexPoint
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    ∃ z : ComplexPoint (Y),
       z.underlying ∈
-        (cycleComponentι X.left x ≫ X.hom).smoothLocus := by
-  let f := cycleComponentι X.left x ≫ X.hom
-  let : JacobsonSpace (cycleComponent X.left x) :=
+        (i.left ≫ X.hom).smoothLocus := by
+  let f := i.left ≫ X.hom
+  let : JacobsonSpace (Y.left) :=
     LocallyOfFiniteType.jacobsonSpace f
   obtain ⟨y, hy, hyClosed⟩ := nonempty_inter_closedPoints
     f.dense_smoothLocus_of_perfectField.nonempty
     f.smoothLocus.2.isLocallyClosed
   let p := (pointEquivClosedPoint f).symm ⟨y, hyClosed⟩
-  refine ⟨Over.homMk p.1 p.2, ?_⟩
+  refine ⟨Over.homMk p.1 (by rw [show Y.hom = f from (Over.w i).symm]; exact p.2), ?_⟩
   have hp := (pointEquivClosedPoint f).apply_symm_apply ⟨y, hyClosed⟩
   have hp' : p.1 (IsLocalRing.closedPoint ℂ) = y := congrArg Subtype.val hp
   change p.1 (IsLocalRing.closedPoint ℂ) ∈ f.smoothLocus
   rw [hp']
   exact hy
 
-/-- The complex points of a reduced cycle component map onto exactly its closed analytic
-support. -/
-lemma range_cycleComponentMap
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Set.range (cycleComponentMap X x) = cycleComponentSupport X x := by
-  apply Set.Subset.antisymm (range_cycleComponentMap_subset X x)
+/-- The complex points of the source of a closed embedding map onto its support. -/
+lemma range_closedEmbeddingMap
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    Set.range (Point.map i) = closedEmbeddingSupport i := by
+  apply Set.Subset.antisymm (range_closedEmbeddingMap_subset i)
   intro z hz
-  exact ⟨cycleComponentComplexPointLift X x z hz,
-    cycleComponentMap_lift X x z hz⟩
+  exact ⟨closedEmbeddingComplexPointLift i z hz,
+    map_closedEmbeddingComplexPointLift i z hz⟩
 
 end AlgebraicGeometry
 end

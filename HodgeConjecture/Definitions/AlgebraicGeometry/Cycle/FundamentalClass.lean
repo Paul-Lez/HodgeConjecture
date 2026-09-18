@@ -13,7 +13,7 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCoho
 /-!
 # Constructed sheaf cycle classes in arbitrary codimension
 
-The exactly normalized normal-chart coclass on a component's smooth locus is
+The exactly normalized normal-chart coclass on the smooth locus of a closed subvariety is
 transported to the supported cohomology sheaf. Lowest-degree purity
 and the proved unique extension across the singular boundary then give an
 supported class on the original ambient variety. Forgetting support
@@ -34,10 +34,10 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec ↧ℂ))
+variable {X : Over (Spec ↧ℂ)}
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-local instance cycleComponentSheafClassAnalyticTopology :
+local instance closedEmbeddingSheafClassAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
 /-- `𝓗^n(RΓ_S(ℚ)) ≅ 𝓗^n_S` for a closed `S ⊆ X(ℂ)`: the `n`-th cohomology sheaf of `RΓ_S(ℚ)`, the
@@ -56,13 +56,15 @@ def complexSupportInjectiveCohomologySheafIsoRelative
 
 section
 
-variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
+variable {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
+  {p : ℕ} (hi : Order.coheight (closedEmbeddingGenericPoint i) = p)
 
 /-- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, the cohomology of `X(ℂ)` with support in `Z(ℂ)`, where `Z` is the
-closure of `x`. It is computed as `H^{2p}(Γ(X(ℂ), RΓ_{Z(ℂ)}(ℚ)))` in the fixed injective
+image of `i`. It is computed as `H^{2p}(Γ(X(ℂ), RΓ_{Z(ℂ)}(ℚ)))` in the fixed injective
 resolution. -/
-abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
-  -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, with `Z` the subvariety with generic point `x`.
+abbrev ClosedEmbeddingSupportedCohomology (p : ℕ) : AddCommGrpCat :=
+  -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, with `Z` the image of `i`.
   (((TopCat.Sheaf.supportEvaluation
     -- `X(ℂ)`.
     (TopCat.of (ComplexPoint X))
@@ -71,72 +73,82 @@ abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
     -- `RΓ_{Z(ℂ)}(ℚ)`.
     (complexSupportInjectiveComplex X
       -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
-      (cycleComponentAnalyticClosedSupport X x))).homology
+      (closedEmbeddingAnalyticClosedSupport i))).homology
     -- Degree `2p`.
     (2 * (p : ℤ))
 
 /-- `Γ(X(ℂ) \ Z_sing(ℂ), 𝓗^{2p}_{Z(ℂ)})`: sections over the complement of the singular locus of
 `Z` of the sheaf `𝓗^{2p}_{Z(ℂ)}` associated with `V ↦ H^{2p}(V, V \ Z(ℂ); ℚ)`. -/
-abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
+abbrev ClosedEmbeddingSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
   -- Sections of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`, with support `Z(ℂ)` and degree `2p`.
-  (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).obj.obj
+  (𝓗_[closedEmbeddingSupport i]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).obj.obj
       -- The open `X(ℂ) \ Z_sing(ℂ)`.
-      (op (cycleComponentSmoothSupportAmbientOpen X x))
+      (op (closedEmbeddingSmoothSupportAmbientOpen i))
 
 /-- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) ≅ Γ(X(ℂ) \ Z_sing(ℂ), 𝓗^{2p}_{Z(ℂ)})`, as the composite of three
 isomorphisms: restriction to `X(ℂ) \ Z_sing(ℂ)`, which is bijective because supported cohomology
 of `Z_sing(ℂ)` vanishes in degrees `2p` and `2p + 1`; passage to sections of the lowest nonzero
 cohomology sheaf, by purity along `Z(ℂ) \ Z_sing(ℂ)`; and the identification of that sheaf with
 `𝓗^{2p}_{Z(ℂ)}`. -/
-def cycleComponentSupportedClassNormalizationIso :
-    CycleComponentSupportedCohomology X x p ≅
-      CycleComponentSmoothCoclassSections X x p :=
+def closedEmbeddingSupportedClassNormalizationIso :
+    ClosedEmbeddingSupportedCohomology i p ≅
+      ClosedEmbeddingSmoothCoclassSections i p :=
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
-  cycleComponentSupportExtensionIso X x hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
+  closedEmbeddingSupportExtensionIso i hi ≪≫
+    closedEmbeddingSmoothSupportLowestSectionCohomologyIso i hi ≪≫
       (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-        (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
-          (complexSupportInjectiveCohomologySheafIsoRelative X
-            (cycleComponentAnalyticClosedSupport X x) (2 * p)))
+        (closedEmbeddingSmoothSupportAmbientOpen i)).mapIso
+          (complexSupportInjectiveCohomologySheafIsoRelative
+            (closedEmbeddingAnalyticClosedSupport i) (2 * p)))
 
 /-- `Γ(X(ℂ) \ Z_sing(ℂ), 𝓗^{2p}_{Z(ℂ)}) → H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`: a section on the complement of
 the singular locus extends uniquely across `Z_sing(ℂ)`. This is the inverse of the normalization
 isomorphism; no extension datum is supplied. -/
-def cycleComponentExtendSmoothCoclass :
-    CycleComponentSmoothCoclassSections X x p →+
-      CycleComponentSupportedCohomology X x p :=
-  (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
+def closedEmbeddingExtendSmoothCoclass :
+    ClosedEmbeddingSmoothCoclassSections i p →+
+      ClosedEmbeddingSupportedCohomology i p :=
+  (closedEmbeddingSupportedClassNormalizationIso i hi).inv.hom
 
 /-- The class in `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)` that extends the normalized section of `𝓗^{2p}_{Z(ℂ)}`
 on `X(ℂ) \ Z_sing(ℂ)` across the singular locus. -/
-def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
-  cycleComponentExtendSmoothCoclass X x hx
-    (cycleComponentSmoothSupportCoclassSection X x hx)
+def closedEmbeddingSupportedInjectiveClass : ClosedEmbeddingSupportedCohomology i p :=
+  closedEmbeddingExtendSmoothCoclass i hi
+    (closedEmbeddingSmoothSupportCoclassSection i hi)
 
 /-- The same class in `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, in the mapping-cone presentation of cohomology
 with support. The comparison includes the cone sign that support forgetting needs. -/
-def cycleComponentSheafSupportedClass :
+def closedEmbeddingSheafSupportedClass :
     -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, in the support-cone presentation.
     RationalCohomologyWithSupport X
       -- `Z(ℂ)`.
-      (cycleComponentSupport X x)
+      (closedEmbeddingSupport i)
       -- Degree `2p`.
       (2 * (p : ℤ)) :=
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
-      (cycleComponentSupportedInjectiveClass X x hx)
+  (rationalSupportAddEquivSupportedInjectiveHomology X (closedEmbeddingSupport i)
+    (closedEmbeddingAnalyticClosedSupport i).isClosed (2 * (p : ℤ))).symm
+      (closedEmbeddingSupportedInjectiveClass i hi)
 
-/-- **Step 3.** The class `[Z] ∈ H^{2p}(X(ℂ); ℚ)` of the integral subvariety `Z` with generic
-point `x`: the image of the supported class of step 2 under `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) →
-H^{2p}(X(ℂ); ℚ)`.
+/-- **Step 3.** The class `[Z] ∈ H^{2p}(X(ℂ); ℚ)` of the closed subvariety `Z` presented by the
+closed embedding `i`: the image of the supported class of step 2 under
+`H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) → H^{2p}(X(ℂ); ℚ)`.
 
 This is the composite of the three steps, not a second route into ordinary cohomology; the
 agreement with `forgetSupport` is therefore definitional rather than a theorem. -/
-def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
-  forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
-    (cycleComponentSheafSupportedClass X x hx)
+def closedEmbeddingSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
+  forgetSupport X (closedEmbeddingSupport i) (2 * (p : ℤ))
+    (closedEmbeddingSheafSupportedClass i hi)
+
+/-- The class `[Z] ∈ H^{2p}(X(ℂ); ℚ)` of the integral subvariety `Z` with generic point `x`: the
+class of the closed embedding of the reduced closure of `x`. -/
+def cycleComponentSheafClass (X : Over (Spec ↧ℂ))
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    (x : X.left) {p : ℕ} (hx : Order.coheight x = p) : H^(2 * (p : ℤ))(X; ℚ) :=
+  closedEmbeddingSheafClass (cycleComponentOverι X x)
+    (by rwa [closedEmbeddingGenericPoint_cycleComponentOverι])
 
 end
+
+variable (X)
 
 /-- The rational span of the constructed codimension-`p` component classes.
 

@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SupportExtension
 
 /-!
-# Unique extension across a cycle component's singular boundary
+# Unique extension across the singular boundary of a closed subvariety
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SupportExtension`.
@@ -19,13 +19,14 @@ open CategoryTheory Limits TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec ↧ℂ))
-  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-  {p : ℕ} (hx : Order.coheight x = p)
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
+  {p : ℕ} (hi : Order.coheight (closedEmbeddingGenericPoint i) = p)
 
 @[simp]
-theorem cycleComponentSupportExtensionIso_hom :
-    (cycleComponentSupportExtensionIso X x hx).hom =
-      HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)) := rfl
+theorem closedEmbeddingSupportExtensionIso_hom :
+    (closedEmbeddingSupportExtensionIso i hi).hom =
+      HomologicalComplex.homologyMap (closedEmbeddingSupportSectionRestriction i) (2 * (p : ℤ)) := rfl
 
 end AlgebraicGeometry.ComplexPoint

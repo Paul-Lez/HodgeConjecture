@@ -24,7 +24,7 @@ import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FundamentalClassGe
 import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 
 /-!
-# Local dual classes on cycle components
+# Local dual classes on closed subvarieties
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Local.Purity`.

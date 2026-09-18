@@ -39,14 +39,6 @@ namespace AlgebraicGeometry
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- The inclusion of a cycle component on complex points, bundled as a continuous map. -/
-noncomputable def cycleComponentContinuousMap
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    @ContinuousMap
-      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
-      (ComplexPoint X) Point.analyticTopology Point.analyticTopology :=
-  Point.continuousMap (Over.homMk (cycleComponentι X.left x) rfl)
-
 /-- The underlying closed support of an algebraic cycle: the union of the closures of all generic
 points having nonzero coefficient. -/
 def algebraicCycleSupport {R : Type*} [Zero R] (X : Scheme)
@@ -65,9 +57,9 @@ lemma analyticCycleSupport_eq_iUnion {R : Type*} [Zero R]
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (c : AlgebraicCycle X.left R) :
     analyticCycleSupport X c =
-      ⋃ x ∈ c.support, cycleComponentSupport X x := by
+      ⋃ x ∈ c.support, closedEmbeddingSupport (cycleComponentOverι X x) := by
   ext z
-  simp [analyticCycleSupport, algebraicCycleSupport, cycleComponentSupport]
+  simp [analyticCycleSupport, algebraicCycleSupport]
 
 /-- The analytic support of an algebraic cycle on a projective variety is closed. -/
 lemma isClosed_analyticCycleSupport {R : Type*} [Zero R]
@@ -75,15 +67,16 @@ lemma isClosed_analyticCycleSupport {R : Type*} [Zero R]
     [IsProjective X.hom] (c : AlgebraicCycle X.left R) :
     IsClosed (analyticCycleSupport X c) := by
   rw [analyticCycleSupport_eq_iUnion]
-  exact (algebraicCycle_support_finite X c).isClosed_biUnion fun x _ =>
-    isClosed_cycleComponentSupport X x
+  exact (algebraicCycle_support_finite c).isClosed_biUnion fun x _ =>
+    isClosed_closedEmbeddingSupport (cycleComponentOverι X x)
 
-lemma cycleComponentSupport_subset_analyticCycleSupport {R : Type*} [Zero R]
+lemma closedEmbeddingSupport_subset_analyticCycleSupport {R : Type*} [Zero R]
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (c : AlgebraicCycle X.left R)
     (x : X.left) (hx : c x ≠ 0) :
-    cycleComponentSupport X x ⊆ analyticCycleSupport X c :=
-  fun _ hz => Set.mem_iUnion₂.mpr ⟨x, Function.mem_support.mpr hx, hz⟩
+    closedEmbeddingSupport (cycleComponentOverι X x) ⊆ analyticCycleSupport X c :=
+  fun _ hz => Set.mem_iUnion₂.mpr ⟨x, Function.mem_support.mpr hx,
+    (range_cycleComponentι X.left x).le hz⟩
 
 @[simp]
 lemma algebraicCycleSupport_zero {R : Type*} [Zero R] (X : Scheme) :

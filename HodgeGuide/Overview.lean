@@ -17,7 +17,7 @@ set_option verso.code.warnLineLength 0
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
 noncomputable section
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+  (d p : ℕ) (x : X.left) (hi : coheight x = p) (n : ℤ)
 ```
 
 The conjecture concerns a smooth projective variety over $`\mathbb C`. In Lean such a variety is an

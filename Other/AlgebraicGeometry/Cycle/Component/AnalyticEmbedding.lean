@@ -37,58 +37,59 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
-variable (X : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
 
-/-- The complex-point map of a reduced cycle component is a closed topological embedding. -/
-lemma cycleComponentMap_isClosedEmbedding
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IsClosedEmbedding (cycleComponentMap X x) := by
-  let i : Over.mk (cycleComponentι X.left x ≫ X.hom) ⟶ X :=
-    Over.homMk (cycleComponentι X.left x) rfl
-  let : IsClosedImmersion i.left :=
-    inferInstanceAs (IsClosedImmersion (cycleComponentι X.left x))
-  exact isClosedEmbedding_map_of_closedImmersion i
+/-- The complex-point map of a closed embedding is a closed topological embedding. -/
+lemma closedEmbeddingMap_isClosedEmbedding
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    IsClosedEmbedding (Point.map i) :=
+  isClosedEmbedding_map_of_closedImmersion i
 
-/-- The analytification of a reduced cycle component is canonically homeomorphic to its
-analytic support in the ambient variety. -/
-def cycleComponentPointHomeomorphSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)) ≃ₜ
-      cycleComponentSupport X x :=
-  (cycleComponentMap_isClosedEmbedding X x).toIsEmbedding.toHomeomorph.trans
-    (Homeomorph.setCongr (range_cycleComponentMap X x))
+/-- The analytification of the source of a closed embedding is homeomorphic to its support in
+the ambient variety. -/
+def closedEmbeddingPointHomeomorphSupport
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    ComplexPoint (Y) ≃ₜ
+      closedEmbeddingSupport i :=
+  (closedEmbeddingMap_isClosedEmbedding i).toIsEmbedding.toHomeomorph.trans
+    (Homeomorph.setCongr (range_closedEmbeddingMap i))
 
 @[simp]
-lemma cycleComponentPointHomeomorphSupport_apply
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
-    cycleComponentPointHomeomorphSupport X x z =
-      cycleComponentSupportMap X x z := by
+lemma closedEmbeddingPointHomeomorphSupport_apply
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left]
+    (z : ComplexPoint (Y)) :
+    closedEmbeddingPointHomeomorphSupport i z =
+      closedEmbeddingSupportMap i z := by
   rfl
 
-/-- The underlying equivalence of the component-support homeomorphism is the previously
-constructed point equivalence. -/
-lemma cycleComponentPointHomeomorphSupport_toEquiv
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    (cycleComponentPointHomeomorphSupport X x).toEquiv =
-      cycleComponentPointEquivSupport X x :=
+/-- The underlying equivalence of the support homeomorphism is the point equivalence. -/
+lemma closedEmbeddingPointHomeomorphSupport_toEquiv
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    (closedEmbeddingPointHomeomorphSupport i).toEquiv =
+      closedEmbeddingPointEquivSupport i :=
   Equiv.ext fun _ ↦ rfl
 
 /-- The smooth analytic locus of a component is homeomorphic to its image in the ambient
 analytic variety. -/
-def cycleComponentSmoothPointHomeomorphSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    cycleComponentSmoothAnalyticLocus X x ≃ₜ
-      cycleComponentSmoothSupport X x :=
-  (cycleComponentMap_isClosedEmbedding X x).toIsEmbedding.homeomorphImage
-    (cycleComponentSmoothAnalyticLocus X x)
+def closedEmbeddingSmoothPointHomeomorphSupport
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    closedEmbeddingSmoothAnalyticLocus i ≃ₜ
+      closedEmbeddingSmoothSupport i :=
+  (closedEmbeddingMap_isClosedEmbedding i).toIsEmbedding.homeomorphImage
+    (closedEmbeddingSmoothAnalyticLocus i)
 
 @[simp]
-lemma cycleComponentSmoothPointHomeomorphSupport_apply
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : cycleComponentSmoothAnalyticLocus X x) :
-    (cycleComponentSmoothPointHomeomorphSupport X x z : (ComplexPoint X)) =
-      cycleComponentMap X x z := by
+lemma closedEmbeddingSmoothPointHomeomorphSupport_apply
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left]
+    (z : closedEmbeddingSmoothAnalyticLocus i) :
+    (closedEmbeddingSmoothPointHomeomorphSupport i z : (ComplexPoint X)) =
+      Point.map i z := by
   rfl
 
 end AlgebraicGeometry.ComplexPoint

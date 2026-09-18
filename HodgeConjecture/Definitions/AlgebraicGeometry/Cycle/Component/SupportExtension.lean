@@ -11,7 +11,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSup
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FiniteFiltrationVanishing
 
 /-!
-# Unique extension across a cycle component's singular boundary
+# Unique extension across the singular boundary of a closed subvariety
 
 The canonical finite smooth filtration and its layerwise vanishing give the singular
 boundary zero supported cohomology below `2(p+1)`, in particular in degrees `2p` and
@@ -26,15 +26,16 @@ open CategoryTheory Limits TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec ↧ℂ))
-  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-  {p : ℕ} (hx : Order.coheight x = p)
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
+  {p : ℕ} (hi : Order.coheight (closedEmbeddingGenericPoint i) = p)
 
-include hx in
+include hi in
 /-- `H^n_{Z_sing,k(ℂ)}(X(ℂ); ℚ) = 0` for `n < 2(p + 1)`, where `Z_sing,k` is the `k`-th stage of
 the finite smooth filtration of `Z_sing` (so `Z_sing,0 = Z_sing`). -/
-private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
-    (k : ℕ) (hk : k ≤ cycleComponentSingularFiltrationLength X x)
+private theorem closedEmbeddingSingularFiltrationSectionCohomology_isZero_of_lt
+    (k : ℕ) (hk : k ≤ closedEmbeddingSingularFiltrationLength i)
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
     -- `H^n_{Z_sing,k(ℂ)}(X(ℂ); ℚ)`, for the `k`-th stage of the singular filtration.
     IsZero ((((TopCat.Sheaf.supportEvaluation
@@ -45,26 +46,26 @@ private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
       -- `RΓ_{Z_sing,k(ℂ)}(ℚ)`.
       (complexSupportInjectiveComplex X
         -- `Z_sing,k(ℂ)`, as a closed subset of `X(ℂ)`.
-        (cycleComponentSingularAnalyticClosedFiltration X x k))).homology n) := by
-  let O (j : ℕ) := (cycleComponentSingularAnalyticClosedFiltration X x j).compl
+        (closedEmbeddingSingularAnalyticClosedFiltration i k))).homology n) := by
+  let O (j : ℕ) := (closedEmbeddingSingularAnalyticClosedFiltration i j).compl
   have hO : Monotone O := fun _ _ hab _ hy hyb ↦
-    hy (cycleComponentSingularAnalyticClosedFiltration_antitone X x hab hyb)
-  have hN : O (cycleComponentSingularFiltrationLength X x) = ⊤ := by
+    hy (closedEmbeddingSingularAnalyticClosedFiltration_antitone i hab hyb)
+  have hN : O (closedEmbeddingSingularFiltrationLength i) = ⊤ := by
     dsimp only [O]
-    rw [cycleComponentSingularAnalyticClosedFiltration_length]
+    rw [closedEmbeddingSingularAnalyticClosedFiltration_length]
     ext y
     change (y ∉ (∅ : Set (ComplexPoint X))) ↔ y ∈ Set.univ
     simp
   exact TopCat.Sheaf.finiteNestedSupport_homology_isZero
-    (TopCat.of (ComplexPoint X)) O hO (cycleComponentSingularFiltrationLength X x) hN
+    (TopCat.of (ComplexPoint X)) O hO (closedEmbeddingSingularFiltrationLength i) hN
     (ambientRationalInjectiveComplex X)
     (fun j => TopCat.Sheaf.injective_isFlasque _ _) n
-    (fun j _ => cycleComponentSingularLayerSectionCohomology_isZero_of_lt
-      X x hx j n hn) k hk
+    (fun j _ => closedEmbeddingSingularLayerSectionCohomology_isZero_of_lt
+      i hi j n hn) k hk
 
-include hx in
+include hi in
 /-- `H^n_{Z_sing(ℂ)}(X(ℂ); ℚ) = 0` for `n < 2(p + 1)`. -/
-private theorem cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
+private theorem closedEmbeddingSingularBoundarySectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
     -- `H^n_{Z_sing(ℂ)}(X(ℂ); ℚ)`.
     IsZero ((((TopCat.Sheaf.supportEvaluation
@@ -75,13 +76,13 @@ private theorem cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
       -- `RΓ_{Z_sing(ℂ)}(ℚ)`.
       (complexSupportInjectiveComplex X
         -- `Z_sing(ℂ)`, as a closed subset of `X(ℂ)`.
-        (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology n) :=
-  cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt X x hx
+        (closedEmbeddingSingularAnalyticClosedFiltration i 0))).homology n) :=
+  closedEmbeddingSingularFiltrationSectionCohomology_isZero_of_lt i hi
     0 (Nat.zero_le _) n hn
 
-include hx in
+include hi in
 /-- `H^{2p}_{Z_sing(ℂ)}(X(ℂ); ℚ) = 0`. -/
-theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree :
+theorem closedEmbeddingSingularBoundarySectionCohomology_isZero_cycleDegree :
     -- `H^{2p}_{Z_sing(ℂ)}(X(ℂ); ℚ)`.
     IsZero ((((TopCat.Sheaf.supportEvaluation
       -- `X(ℂ)`.
@@ -91,14 +92,14 @@ theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree :
       -- `RΓ_{Z_sing(ℂ)}(ℚ)`.
       (complexSupportInjectiveComplex X
         -- `Z_sing(ℂ)`, as a closed subset of `X(ℂ)`.
-        (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology
+        (closedEmbeddingSingularAnalyticClosedFiltration i 0))).homology
       -- Degree `2p`.
       (2 * (p : ℤ))) :=
-  cycleComponentSingularBoundarySectionCohomology_isZero_of_lt X x hx _ (by omega)
+  closedEmbeddingSingularBoundarySectionCohomology_isZero_of_lt i hi _ (by omega)
 
-include hx in
+include hi in
 /-- `H^{2p+1}_{Z_sing(ℂ)}(X(ℂ); ℚ) = 0`. -/
-private theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ :
+private theorem closedEmbeddingSingularBoundarySectionCohomology_isZero_cycleDegree_succ :
     -- `H^{2p+1}_{Z_sing(ℂ)}(X(ℂ); ℚ)`.
     IsZero ((((TopCat.Sheaf.supportEvaluation
       -- `X(ℂ)`.
@@ -108,28 +109,29 @@ private theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegr
       -- `RΓ_{Z_sing(ℂ)}(ℚ)`.
       (complexSupportInjectiveComplex X
         -- `Z_sing(ℂ)`, as a closed subset of `X(ℂ)`.
-        (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology
+        (closedEmbeddingSingularAnalyticClosedFiltration i 0))).homology
       -- Degree `2p + 1`.
       (2 * (p : ℤ) + 1)) :=
-  cycleComponentSingularBoundarySectionCohomology_isZero_of_lt X x hx _ (by omega)
+  closedEmbeddingSingularBoundarySectionCohomology_isZero_of_lt i hi _ (by omega)
 
-/-- Every point of the singular boundary belongs to the full component support. -/
-private theorem cycleComponentSingularBoundary_le_support :
-    cycleComponentSingularAnalyticClosedFiltration X x 0 ≤ cycleComponentAnalyticClosedSupport X x := by
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
+/-- Every point of the singular boundary belongs to the full support. -/
+private theorem closedEmbeddingSingularBoundary_le_support :
+    closedEmbeddingSingularAnalyticClosedFiltration i 0 ≤
+      closedEmbeddingAnalyticClosedSupport i := by
   intro y hy
   obtain ⟨z, _, hz⟩ := hy
-  change y.underlying ∈ closure ({x} : Set X.left)
-  rw [← range_cycleComponentι X.left x]
   exact ⟨z, hz⟩
 
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
 /-- The actual complement inclusion determining the localization sequence. -/
-private theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
-    (cycleComponentAnalyticClosedSupport X x).compl ≤ cycleComponentSmoothSupportAmbientOpen X x :=
-  fun _ hy hyS ↦ hy (cycleComponentSingularBoundary_le_support X x hyS)
+private theorem closedEmbeddingSupportComplement_le_smoothAmbientOpen :
+    (closedEmbeddingAnalyticClosedSupport i).compl ≤ closedEmbeddingSmoothSupportAmbientOpen i :=
+  fun _ hy hyS ↦ hy (closedEmbeddingSingularBoundary_le_support i hyS)
 
 /-- The restriction `Γ(X(ℂ), RΓ_{Z(ℂ)}(ℚ)) → Γ(X(ℂ) \ Z_sing(ℂ), RΓ_{Z(ℂ)}(ℚ))` of complexes of
 sections. -/
-def cycleComponentSupportSectionRestriction :
+def closedEmbeddingSupportSectionRestriction :
     -- Restriction `RΓ_{Z(ℂ)}(X(ℂ)) → RΓ_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ))`.
     ((TopCat.Sheaf.supportEvaluation
       -- `X(ℂ)`.
@@ -137,37 +139,37 @@ def cycleComponentSupportSectionRestriction :
       -- Global sections.
       ⊤).mapHomologicalComplex ℤᵘᵖ).obj
       -- `RΓ_{Z(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) ⟶
+      (complexSupportInjectiveComplex X (closedEmbeddingAnalyticClosedSupport i)) ⟶
     ((TopCat.Sheaf.supportEvaluation
       -- `X(ℂ)`.
       (TopCat.of (ComplexPoint X))
       -- Sections over the open `X(ℂ) \ Z_sing(ℂ)`.
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
+      (closedEmbeddingSmoothSupportAmbientOpen i)).mapHomologicalComplex ℤᵘᵖ).obj
         -- `RΓ_{Z(ℂ)}(ℚ)`.
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) :=
+        (complexSupportInjectiveComplex X (closedEmbeddingAnalyticClosedSupport i)) :=
   TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) ℤᵘᵖ
-    (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) (homOfLE le_top)
+    (complexSupportInjectiveComplex X (closedEmbeddingAnalyticClosedSupport i)) (homOfLE le_top)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-include hx in
+include hi in
 /-- Restriction `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) → H^{2p}_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ); ℚ)` is an isomorphism:
 in the localization sequence for `Z_sing(ℂ) ⊆ Z(ℂ)`, the neighbouring terms
 `H^{2p}_{Z_sing(ℂ)}(X(ℂ); ℚ)` and `H^{2p+1}_{Z_sing(ℂ)}(X(ℂ); ℚ)` vanish. -/
-theorem cycleComponentSupportSectionRestriction_homology_isIso :
-    IsIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ))) := by
+theorem closedEmbeddingSupportSectionRestriction_homology_isIso :
+    IsIso (HomologicalComplex.homologyMap (closedEmbeddingSupportSectionRestriction i) (2 * (p : ℤ))) := by
   let T := TopCat.of (ComplexPoint X)
-  let h := cycleComponentSupportComplement_le_smoothAmbientOpen X x
+  let h := closedEmbeddingSupportComplement_le_smoothAmbientOpen i
   let K := ambientRationalInjectiveComplex X
   let S := TopCat.Sheaf.nestedSupportRestrictionSectionsComplexShortComplex T h ⊤ K
   let := TopCat.Sheaf.nestedSupportRestriction_homologyMap_isIso_of_vanishing T h ⊤ K
     (2 * (p : ℤ))
-    (cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree X x hx)
-    (cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ X x hx)
+    (closedEmbeddingSingularBoundarySectionCohomology_isZero_cycleDegree i hi)
+    (closedEmbeddingSingularBoundarySectionCohomology_isZero_cycleDegree_succ i hi)
   have he : HomologicalComplex.homologyMap S.g (2 * (p : ℤ)) ≫
       HomologicalComplex.homologyMap
         (TopCat.Sheaf.nestedSupportRestrictionLastComplexIso T h K).hom (2 * (p : ℤ)) =
-    HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)) := by
+    HomologicalComplex.homologyMap (closedEmbeddingSupportSectionRestriction i) (2 * (p : ℤ)) := by
     rw [← HomologicalComplex.homologyMap_comp]
     exact congrArg (fun f => HomologicalComplex.homologyMap f (2 * (p : ℤ)))
       (TopCat.Sheaf.nestedSupportRestrictionLastComplexIso_g T h K)
@@ -176,7 +178,7 @@ theorem cycleComponentSupportSectionRestriction_homology_isIso :
 
 /-- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) ≅ H^{2p}_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ); ℚ)`: the restriction map, with its
 inverse. -/
-def cycleComponentSupportExtensionIso :
+def closedEmbeddingSupportExtensionIso :
     -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`.
     ((((TopCat.Sheaf.supportEvaluation
       -- `X(ℂ)`.
@@ -186,7 +188,7 @@ def cycleComponentSupportExtensionIso :
       -- `RΓ_{Z(ℂ)}(ℚ)`.
       (complexSupportInjectiveComplex X
         -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
-        (cycleComponentAnalyticClosedSupport X x))).homology
+        (closedEmbeddingAnalyticClosedSupport i))).homology
       -- Degree `2p`.
       (2 * (p : ℤ))) ≅
     -- `H^{2p}_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ); ℚ)`.
@@ -194,12 +196,12 @@ def cycleComponentSupportExtensionIso :
       -- `X(ℂ)`.
       (TopCat.of (ComplexPoint X))
       -- Sections over the open `X(ℂ) \ Z_sing(ℂ)`.
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
+      (closedEmbeddingSmoothSupportAmbientOpen i)).mapHomologicalComplex ℤᵘᵖ).obj
         -- `RΓ_{Z(ℂ)}(ℚ)`.
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
+        (complexSupportInjectiveComplex X (closedEmbeddingAnalyticClosedSupport i))).homology
           -- Degree `2p`.
           (2 * (p : ℤ))) :=
-  letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
-  asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
+  letI := closedEmbeddingSupportSectionRestriction_homology_isIso i hi
+  asIso (HomologicalComplex.homologyMap (closedEmbeddingSupportSectionRestriction i) (2 * (p : ℤ)))
 
 end AlgebraicGeometry.ComplexPoint

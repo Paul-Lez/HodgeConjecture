@@ -23,174 +23,178 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ))
-  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
 
 /-- The exact terminal index is read from the already constructed finite decomposition. -/
-abbrev cycleComponentSingularFiltrationLength : ℕ :=
-  (cycleComponentSingularStratification X x).length
+abbrev closedEmbeddingSingularFiltrationLength : ℕ :=
+  (closedEmbeddingSingularStratification i).length
 
 /-- The actual smooth scheme occurring between two consecutive closed supports. -/
-abbrev cycleComponentSingularFiltrationStratum (k : ℕ) : Scheme :=
-  reducedClosedSmoothPiece (cycleComponentι X.left x ≫ X.hom)
-    (cycleComponentSingularClosedFiltration X x k)
+abbrev closedEmbeddingSingularFiltrationStratum (k : ℕ) : Scheme :=
+  reducedClosedSmoothPiece (i.left ≫ X.hom)
+    (closedEmbeddingSingularClosedFiltration i k)
 
 /-- Its actual locally closed immersion into the original smooth ambient scheme. -/
-def cycleComponentSingularFiltrationStratumι (k : ℕ) :
-    cycleComponentSingularFiltrationStratum X x k ⟶ X.left :=
-  reducedClosedSmoothPieceι (cycleComponentι X.left x ≫ X.hom)
-    (cycleComponentSingularClosedFiltration X x k) ≫ cycleComponentι X.left x
+def closedEmbeddingSingularFiltrationStratumι (k : ℕ) :
+    closedEmbeddingSingularFiltrationStratum i k ⟶ X.left :=
+  reducedClosedSmoothPieceι (i.left ≫ X.hom)
+    (closedEmbeddingSingularClosedFiltration i k) ≫ i.left
 
 /-- A singular-filtration stratum with its induced structure map to `Spec ℂ`. -/
-abbrev cycleComponentSingularFiltrationStratumOver (k : ℕ) : Over (Spec ↧ℂ) :=
-  Over.mk (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom)
+abbrev closedEmbeddingSingularFiltrationStratumOver (k : ℕ) : Over (Spec ↧ℂ) :=
+  Over.mk (closedEmbeddingSingularFiltrationStratumι i k ≫ X.hom)
 
 /-- The stratum immersion bundled over `Spec ℂ`. -/
-def cycleComponentSingularFiltrationStratumOverι (k : ℕ) :
-    cycleComponentSingularFiltrationStratumOver X x k ⟶ X :=
-  Over.homMk (cycleComponentSingularFiltrationStratumι X x k) rfl
+def closedEmbeddingSingularFiltrationStratumOverι (k : ℕ) :
+    closedEmbeddingSingularFiltrationStratumOver i k ⟶ X :=
+  Over.homMk (closedEmbeddingSingularFiltrationStratumι i k) rfl
 
-instance cycleComponentSingularFiltrationStratumOverι_isImmersion (k : ℕ) :
-    IsImmersion (cycleComponentSingularFiltrationStratumOverι X x k).left := by
-  change IsImmersion (reducedClosedSmoothPieceι (cycleComponentι X.left x ≫ X.hom)
-    (cycleComponentSingularClosedFiltration X x k) ≫ cycleComponentι X.left x)
+instance closedEmbeddingSingularFiltrationStratumOverι_isImmersion (k : ℕ) :
+    IsImmersion (closedEmbeddingSingularFiltrationStratumOverι i k).left := by
+  change IsImmersion (reducedClosedSmoothPieceι (i.left ≫ X.hom)
+    (closedEmbeddingSingularClosedFiltration i k) ≫ i.left)
   infer_instance
 
 set_option backward.isDefEq.respectTransparency false in
-instance cycleComponentSingularFiltrationStratumι_isImmersion (k : ℕ) :
-    IsImmersion (cycleComponentSingularFiltrationStratumι X x k) := by
-  dsimp [cycleComponentSingularFiltrationStratumι]
+instance closedEmbeddingSingularFiltrationStratumι_isImmersion (k : ℕ) :
+    IsImmersion (closedEmbeddingSingularFiltrationStratumι i k) := by
+  dsimp [closedEmbeddingSingularFiltrationStratumι]
   infer_instance
 
-instance cycleComponentSingularFiltrationStratum_smooth (k : ℕ) :
-    Smooth (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom) := by
-  change Smooth ((reducedClosedSmoothPieceι (cycleComponentι X.left x ≫ X.hom)
-    (cycleComponentSingularClosedFiltration X x k) ≫ cycleComponentι X.left x) ≫ X.hom)
+instance closedEmbeddingSingularFiltrationStratum_smooth (k : ℕ) :
+    Smooth (closedEmbeddingSingularFiltrationStratumι i k ≫ X.hom) := by
+  change Smooth ((reducedClosedSmoothPieceι (i.left ≫ X.hom)
+    (closedEmbeddingSingularClosedFiltration i k) ≫ i.left) ≫ X.hom)
   rw [Category.assoc]
   infer_instance
 
-instance cycleComponentSingularFiltrationStratumOver_locallyOfFiniteType (k : ℕ) :
-    LocallyOfFiniteType (cycleComponentSingularFiltrationStratumOver X x k).hom := by
-  change LocallyOfFiniteType (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom)
+instance closedEmbeddingSingularFiltrationStratumOver_locallyOfFiniteType (k : ℕ) :
+    LocallyOfFiniteType (closedEmbeddingSingularFiltrationStratumOver i k).hom := by
+  change LocallyOfFiniteType (closedEmbeddingSingularFiltrationStratumι i k ≫ X.hom)
   infer_instance
 
-omit [IsIntegral X.left] [Smooth X.hom] in
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
 /-- The successive ambient difference is precisely the image of the actual smooth stratum. -/
-theorem cycleComponentSingularAmbientClosedFiltration_layer (k : ℕ) :
-    Set.range (cycleComponentSingularFiltrationStratumι X x k) =
-      (cycleComponentSingularAmbientClosedFiltration X x k : Set X.left) \
-        (cycleComponentSingularAmbientClosedFiltration X x (k + 1) : Set X.left) := by
-  rw [cycleComponentSingularFiltrationStratumι, Scheme.Hom.comp_base, TopCat.coe_comp,
+theorem closedEmbeddingSingularAmbientClosedFiltration_layer (k : ℕ) :
+    Set.range (closedEmbeddingSingularFiltrationStratumι i k) =
+      (closedEmbeddingSingularAmbientClosedFiltration i k : Set X.left) \
+        (closedEmbeddingSingularAmbientClosedFiltration i (k + 1) : Set X.left) := by
+  rw [closedEmbeddingSingularFiltrationStratumι, Scheme.Hom.comp_base, TopCat.coe_comp,
     Set.range_comp, reducedSmoothClosedFiltration_layer]
-  exact Set.image_sdiff (cycleComponentι X.left x).isClosedEmbedding.injective _ _
+  exact Set.image_sdiff (i.left).isClosedEmbedding.injective _ _
 
 /-- The exact ambient open used by the consecutive-support localization triangle. -/
-def cycleComponentSingularStratumAmbientOpen (k : ℕ) : X.left.Opens :=
-  (cycleComponentSingularAmbientClosedFiltration X x (k + 1)).compl
+def closedEmbeddingSingularStratumAmbientOpen (k : ℕ) : X.left.Opens :=
+  (closedEmbeddingSingularAmbientClosedFiltration i (k + 1)).compl
 
 /-- The actual smooth stratum factors into the complement of the next closed support. -/
-def cycleComponentSingularStratumClosedLift (k : ℕ) :
-    cycleComponentSingularFiltrationStratum X x k ⟶
-      cycleComponentSingularStratumAmbientOpen X x k :=
-  IsOpenImmersion.lift (cycleComponentSingularStratumAmbientOpen X x k).ι
-    (cycleComponentSingularFiltrationStratumι X x k) (by
+def closedEmbeddingSingularStratumClosedLift (k : ℕ) :
+    closedEmbeddingSingularFiltrationStratum i k ⟶
+      closedEmbeddingSingularStratumAmbientOpen i k :=
+  IsOpenImmersion.lift (closedEmbeddingSingularStratumAmbientOpen i k).ι
+    (closedEmbeddingSingularFiltrationStratumι i k) (by
       rw [Scheme.Opens.range_ι]
       intro y hy
-      exact ((cycleComponentSingularAmbientClosedFiltration_layer X x k).le hy).2)
+      exact ((closedEmbeddingSingularAmbientClosedFiltration_layer i k).le hy).2)
 
 /-- The localization open with its induced structure map to `Spec ℂ`. -/
-abbrev cycleComponentSingularStratumAmbientOpenOver (k : ℕ) : Over (Spec ↧ℂ) :=
-  ComplexPoint.openScheme X (cycleComponentSingularStratumAmbientOpen X x k)
+abbrev closedEmbeddingSingularStratumAmbientOpenOver (k : ℕ) : Over (Spec ↧ℂ) :=
+  ComplexPoint.openScheme X (closedEmbeddingSingularStratumAmbientOpen i k)
 
-instance cycleComponentSingularStratumAmbientOpenOver_locallyOfFiniteType (k : ℕ) :
-    LocallyOfFiniteType (cycleComponentSingularStratumAmbientOpenOver X x k).hom := by
+instance closedEmbeddingSingularStratumAmbientOpenOver_locallyOfFiniteType (k : ℕ) :
+    LocallyOfFiniteType (closedEmbeddingSingularStratumAmbientOpenOver i k).hom := by
   change LocallyOfFiniteType
-    ((cycleComponentSingularStratumAmbientOpen X x k).ι ≫ X.hom)
+    ((closedEmbeddingSingularStratumAmbientOpen i k).ι ≫ X.hom)
   infer_instance
 
-omit [IsIntegral X.left] [Smooth X.hom] in
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
 @[reassoc (attr := simp)]
-theorem cycleComponentSingularStratumClosedLift_ι (k : ℕ) :
-    cycleComponentSingularStratumClosedLift X x k ≫
-      (cycleComponentSingularStratumAmbientOpen X x k).ι =
-        cycleComponentSingularFiltrationStratumι X x k :=
+theorem closedEmbeddingSingularStratumClosedLift_ι (k : ℕ) :
+    closedEmbeddingSingularStratumClosedLift i k ≫
+      (closedEmbeddingSingularStratumAmbientOpen i k).ι =
+        closedEmbeddingSingularFiltrationStratumι i k :=
   IsOpenImmersion.lift_fac _ _ _
 
 /-- The closed stratum lift bundled over `Spec ℂ`. -/
-def cycleComponentSingularStratumClosedLiftOver (k : ℕ) :
-    cycleComponentSingularFiltrationStratumOver X x k ⟶
-      cycleComponentSingularStratumAmbientOpenOver X x k :=
-  Over.homMk (cycleComponentSingularStratumClosedLift X x k) (by
-    change cycleComponentSingularStratumClosedLift X x k ≫
-      ((cycleComponentSingularStratumAmbientOpen X x k).ι ≫ X.hom) =
-        cycleComponentSingularFiltrationStratumι X x k ≫ X.hom
-    rw [← Category.assoc, cycleComponentSingularStratumClosedLift_ι])
+def closedEmbeddingSingularStratumClosedLiftOver (k : ℕ) :
+    closedEmbeddingSingularFiltrationStratumOver i k ⟶
+      closedEmbeddingSingularStratumAmbientOpenOver i k :=
+  Over.homMk (closedEmbeddingSingularStratumClosedLift i k) (by
+    change closedEmbeddingSingularStratumClosedLift i k ≫
+      ((closedEmbeddingSingularStratumAmbientOpen i k).ι ≫ X.hom) =
+        closedEmbeddingSingularFiltrationStratumι i k ≫ X.hom
+    rw [← Category.assoc, closedEmbeddingSingularStratumClosedLift_ι])
 
-omit [IsIntegral X.left] [Smooth X.hom] in
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
 /-- Its closed image is exactly the restriction of the current support to that open. -/
-theorem range_cycleComponentSingularStratumClosedLift (k : ℕ) :
-    Set.range (cycleComponentSingularStratumClosedLift X x k) =
-      (cycleComponentSingularStratumAmbientOpen X x k).ι ⁻¹'
-        (cycleComponentSingularAmbientClosedFiltration X x k : Set X.left) := by
-  have hf (w : cycleComponentSingularFiltrationStratum X x k) :
-      (cycleComponentSingularStratumAmbientOpen X x k).ι
-        (cycleComponentSingularStratumClosedLift X x k w) =
-          cycleComponentSingularFiltrationStratumι X x k w :=
-    congrArg (fun f => f w) (cycleComponentSingularStratumClosedLift_ι X x k)
+theorem range_closedEmbeddingSingularStratumClosedLift (k : ℕ) :
+    Set.range (closedEmbeddingSingularStratumClosedLift i k) =
+      (closedEmbeddingSingularStratumAmbientOpen i k).ι ⁻¹'
+        (closedEmbeddingSingularAmbientClosedFiltration i k : Set X.left) := by
+  have hf (w : closedEmbeddingSingularFiltrationStratum i k) :
+      (closedEmbeddingSingularStratumAmbientOpen i k).ι
+        (closedEmbeddingSingularStratumClosedLift i k w) =
+          closedEmbeddingSingularFiltrationStratumι i k w :=
+    congrArg (fun f => f w) (closedEmbeddingSingularStratumClosedLift_ι i k)
   ext y
   constructor
   · rintro ⟨w, rfl⟩
-    exact ((cycleComponentSingularAmbientClosedFiltration_layer X x k).le ⟨w, (hf w).symm⟩).1
+    exact ((closedEmbeddingSingularAmbientClosedFiltration_layer i k).le ⟨w, (hf w).symm⟩).1
   · intro hy
-    obtain ⟨w, hw⟩ := (cycleComponentSingularAmbientClosedFiltration_layer X x k).ge ⟨hy, y.2⟩
-    exact ⟨w, (cycleComponentSingularStratumAmbientOpen X x k).ι.isOpenEmbedding.injective
+    obtain ⟨w, hw⟩ := (closedEmbeddingSingularAmbientClosedFiltration_layer i k).ge ⟨hy, y.2⟩
+    exact ⟨w, (closedEmbeddingSingularStratumAmbientOpen i k).ι.isOpenEmbedding.injective
       ((hf w).trans hw)⟩
 
 /-- Each actual layer is a closed immersion in precisely the open needed by localization,
 not in an unrelated auxiliary open. -/
-instance cycleComponentSingularStratumClosedLift_isClosedImmersion (k : ℕ) :
-    IsClosedImmersion (cycleComponentSingularStratumClosedLift X x k) := by
-  have : IsPreimmersion (cycleComponentSingularStratumClosedLift X x k ≫
-      (cycleComponentSingularStratumAmbientOpen X x k).ι) := by
-    rw [cycleComponentSingularStratumClosedLift_ι]
+instance closedEmbeddingSingularStratumClosedLift_isClosedImmersion (k : ℕ) :
+    IsClosedImmersion (closedEmbeddingSingularStratumClosedLift i k) := by
+  have : IsPreimmersion (closedEmbeddingSingularStratumClosedLift i k ≫
+      (closedEmbeddingSingularStratumAmbientOpen i k).ι) := by
+    rw [closedEmbeddingSingularStratumClosedLift_ι]
     infer_instance
-  let : IsPreimmersion (cycleComponentSingularStratumClosedLift X x k) :=
-    .of_comp (cycleComponentSingularStratumClosedLift X x k)
-      (cycleComponentSingularStratumAmbientOpen X x k).ι
+  let : IsPreimmersion (closedEmbeddingSingularStratumClosedLift i k) :=
+    .of_comp (closedEmbeddingSingularStratumClosedLift i k)
+      (closedEmbeddingSingularStratumAmbientOpen i k).ι
   apply IsClosedImmersion.of_isPreimmersion
-  rw [range_cycleComponentSingularStratumClosedLift]
-  exact (cycleComponentSingularAmbientClosedFiltration X x k).isClosed.preimage
-    (cycleComponentSingularStratumAmbientOpen X x k).ι.continuous
+  rw [range_closedEmbeddingSingularStratumClosedLift]
+  exact (closedEmbeddingSingularAmbientClosedFiltration i k).isClosed.preimage
+    (closedEmbeddingSingularStratumAmbientOpen i k).ι.continuous
 
-instance cycleComponentSingularStratumClosedLiftOver_isClosedImmersion (k : ℕ) :
-    IsClosedImmersion (cycleComponentSingularStratumClosedLiftOver X x k).left := by
-  change IsClosedImmersion (cycleComponentSingularStratumClosedLift X x k)
+instance closedEmbeddingSingularStratumClosedLiftOver_isClosedImmersion (k : ℕ) :
+    IsClosedImmersion (closedEmbeddingSingularStratumClosedLiftOver i k).left := by
+  change IsClosedImmersion (closedEmbeddingSingularStratumClosedLift i k)
   infer_instance
 
 /-- The actual localization open remains smooth of the original ambient dimension. -/
-instance cycleComponentSingularStratumAmbientOpen_smoothOfRelativeDimension
+instance closedEmbeddingSingularStratumAmbientOpen_smoothOfRelativeDimension
     (k d : ℕ) [SmoothOfRelativeDimension d X.hom] :
-    SmoothOfRelativeDimension d ((cycleComponentSingularStratumAmbientOpen X x k).ι ≫ X.hom) := by
+    SmoothOfRelativeDimension d ((closedEmbeddingSingularStratumAmbientOpen i k).ι ≫ X.hom) := by
   simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 d
-    (cycleComponentSingularStratumAmbientOpen X x k).ι X.hom
+    (closedEmbeddingSingularStratumAmbientOpen i k).ι X.hom
 
-instance cycleComponentSingularStratumClosedLift_smooth (k : ℕ) :
-    Smooth (cycleComponentSingularStratumClosedLift X x k ≫
-      (cycleComponentSingularStratumAmbientOpen X x k).ι ≫ X.hom) := by
-  rw [← Category.assoc, cycleComponentSingularStratumClosedLift_ι]
+instance closedEmbeddingSingularStratumClosedLift_smooth (k : ℕ) :
+    Smooth (closedEmbeddingSingularStratumClosedLift i k ≫
+      (closedEmbeddingSingularStratumAmbientOpen i k).ι ≫ X.hom) := by
+  rw [← Category.assoc, closedEmbeddingSingularStratumClosedLift_ι]
   infer_instance
 
 namespace ComplexPoint
 
 /-- The smooth-locus immersion into the ambient variety, bundled over `Spec ℂ`. -/
-def cycleComponentSmoothLocusOverι : cycleComponentSmoothLocusOver X x ⟶ X :=
-  Over.homMk ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
-    cycleComponentι X.left x) rfl
+def closedEmbeddingSmoothLocusOverι : closedEmbeddingSmoothLocusOver i ⟶ X :=
+  Over.homMk ((i.left ≫ X.hom).smoothLocus.ι ≫ i.left) (by
+    change ((i.left ≫ X.hom).smoothLocus.ι ≫ i.left) ≫ X.hom =
+      (i.left ≫ X.hom).smoothLocus.ι ≫ Y.hom
+    rw [Category.assoc]
+    exact congrArg (fun f ↦ (i.left ≫ X.hom).smoothLocus.ι ≫ f) (Over.w i))
 
-instance cycleComponentSmoothLocusOverι_isImmersion :
-    IsImmersion (cycleComponentSmoothLocusOverι X x).left := by
-  change IsImmersion ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
-    cycleComponentι X.left x)
+instance closedEmbeddingSmoothLocusOverι_isImmersion :
+    IsImmersion (closedEmbeddingSmoothLocusOverι i).left := by
+  change IsImmersion ((i.left ≫ X.hom).smoothLocus.ι ≫
+    i.left)
   infer_instance
 
 end ComplexPoint
@@ -204,114 +208,118 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ))
-  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
 
-theorem cycleComponentSingularClosedFiltration_length :
-    cycleComponentSingularClosedFiltration X x
-      (cycleComponentSingularStratification X x).length = ⊥ := by
-  let := cycleComponent_isNoetherian X x
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
+theorem closedEmbeddingSingularClosedFiltration_length :
+    closedEmbeddingSingularClosedFiltration i
+      (closedEmbeddingSingularStratification i).length = ⊥ := by
+  let := closedEmbedding_isNoetherian i
   exact reducedSmoothClosedFiltration_length _ _
 
-omit [IsIntegral X.left] [Smooth X.hom] in
-theorem cycleComponentSingularAmbientClosedFiltration_antitone :
-    Antitone (cycleComponentSingularAmbientClosedFiltration X x) :=
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
+theorem closedEmbeddingSingularAmbientClosedFiltration_antitone :
+    Antitone (closedEmbeddingSingularAmbientClosedFiltration i) :=
   fun _ _ hkl ↦ Set.image_mono (reducedSmoothClosedFiltration_antitone _ _ hkl)
 
-theorem cycleComponentSingularAmbientClosedFiltration_length :
-    cycleComponentSingularAmbientClosedFiltration X x
-      (cycleComponentSingularStratification X x).length = ⊥ := by
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
+theorem closedEmbeddingSingularAmbientClosedFiltration_length :
+    closedEmbeddingSingularAmbientClosedFiltration i
+      (closedEmbeddingSingularStratification i).length = ⊥ := by
   apply SetLike.coe_injective
-  change cycleComponentι X.left x ''
-    (cycleComponentSingularClosedFiltration X x
-      (cycleComponentSingularStratification X x).length : Set _) = ∅
-  rw [cycleComponentSingularClosedFiltration_length]
+  change i.left ''
+    (closedEmbeddingSingularClosedFiltration i
+      (closedEmbeddingSingularStratification i).length : Set _) = ∅
+  rw [closedEmbeddingSingularClosedFiltration_length]
   exact Set.image_empty _
 
 /-- Every closed remainder stays below the proved singular-boundary dimension bound. -/
-theorem cycleComponentSingularClosedFiltration_dimension_lt
-    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ) :
-    topologicalKrullDim (cycleComponentSingularClosedFiltration X x k) < (dim X.left - p : ℕ) :=
+theorem closedEmbeddingSingularClosedFiltration_dimension_lt
+    {p : ℕ} (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) (k : ℕ) :
+    topologicalKrullDim (closedEmbeddingSingularClosedFiltration i k) < (dim X.left - p : ℕ) :=
   (IsEmbedding.inclusion (reducedSmoothClosedFiltration_le _ _ k)).isInducing.topologicalKrullDim_le.trans_lt
-    (topologicalKrullDim_cycleComponent_singularLocus_lt X x hx)
+    (topologicalKrullDim_closedEmbedding_singularLocus_lt i hi)
 
 /-- Every smooth layer has strictly smaller dimension than the component. -/
-theorem cycleComponentSingularFiltrationStratum_dimension_lt
-    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ) :
-    topologicalKrullDim (cycleComponentSingularFiltrationStratum X x k) < (dim X.left - p : ℕ) :=
+theorem closedEmbeddingSingularFiltrationStratum_dimension_lt
+    {p : ℕ} (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) (k : ℕ) :
+    topologicalKrullDim (closedEmbeddingSingularFiltrationStratum i k) < (dim X.left - p : ℕ) :=
   (topologicalKrullDim_reducedClosedSmoothPiece_le _ le_rfl).trans_lt
-    (cycleComponentSingularClosedFiltration_dimension_lt X x hx k)
+    (closedEmbeddingSingularClosedFiltration_dimension_lt i hi k)
 
 /-- The normal codimension lower bound is realized on standard-smooth affine
 neighborhoods of every stratum point, including strata of nonconstant dimension. -/
-theorem cycleComponentSingularFiltrationStratum_exists_affine_normalCodimension_ge
-    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)
-    (z : cycleComponentSingularFiltrationStratum X x k) :
-    ∃ (U : (cycleComponentSingularFiltrationStratum X x k).Opens) (_ : IsAffineOpen U),
+theorem closedEmbeddingSingularFiltrationStratum_exists_affine_normalCodimension_ge
+    {p : ℕ} (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) (k : ℕ)
+    (z : closedEmbeddingSingularFiltrationStratum i k) :
+    ∃ (U : (closedEmbeddingSingularFiltrationStratum i k).Opens) (_ : IsAffineOpen U),
       z ∈ U ∧ ∃ n : ℕ, n < dim X.left - p ∧ p + 1 ≤ dim X.left - n ∧
         RingHom.IsStandardSmoothOfRelativeDimension n
-          ((cycleComponentSingularFiltrationStratumι X x k ≫ X.hom).appLE ⊤ U (by simp)).hom := by
+          ((closedEmbeddingSingularFiltrationStratumι i k ≫ X.hom).appLE ⊤ U (by simp)).hom := by
   obtain ⟨U, hU, hzU, n, hn, hstd⟩ :=
     Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
-      (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom)
-      (cycleComponentSingularFiltrationStratum_dimension_lt X x hx k) z
+      (closedEmbeddingSingularFiltrationStratumι i k ≫ X.hom)
+      (closedEmbeddingSingularFiltrationStratum_dimension_lt i hi k) z
   exact ⟨U, hU, hzU, n, hn, by omega, hstd⟩
 
 /-- The dimension bound supplies genuine smooth scheme morphisms of fixed local
 dimension, ready for the normal-coordinate construction. -/
-theorem cycleComponentSingularFiltrationStratum_exists_smooth_relativeDimension
-    {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)
-    (z : cycleComponentSingularFiltrationStratum X x k) :
-    ∃ (U : (cycleComponentSingularFiltrationStratum X x k).Opens) (_ : IsAffineOpen U),
+theorem closedEmbeddingSingularFiltrationStratum_exists_smooth_relativeDimension
+    {p : ℕ} (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) (k : ℕ)
+    (z : closedEmbeddingSingularFiltrationStratum i k) :
+    ∃ (U : (closedEmbeddingSingularFiltrationStratum i k).Opens) (_ : IsAffineOpen U),
       z ∈ U ∧ ∃ n : ℕ, n < dim X.left - p ∧ p + 1 ≤ dim X.left - n ∧
-        SmoothOfRelativeDimension n (U.ι ≫ cycleComponentSingularFiltrationStratumι X x k ≫ X.hom) := by
+        SmoothOfRelativeDimension n (U.ι ≫ closedEmbeddingSingularFiltrationStratumι i k ≫ X.hom) := by
   obtain ⟨U, hU, hzU, n, hn, hcodim, hstd⟩ :=
-    cycleComponentSingularFiltrationStratum_exists_affine_normalCodimension_ge X x
-      hx k z
+    closedEmbeddingSingularFiltrationStratum_exists_affine_normalCodimension_ge i
+      hi k z
   exact ⟨U, hU, hzU, n, hn, hcodim,
     smoothOfRelativeDimension_affineOpen_of_isStandardSmooth _ hU hstd⟩
 
 namespace ComplexPoint
 
-omit [IsIntegral X.left] [Smooth X.hom] in
-theorem cycleComponentSingularAnalyticClosedFiltration_antitone :
-    Antitone (cycleComponentSingularAnalyticClosedFiltration X x) :=
-  fun _ _ hkl _ hz ↦ cycleComponentSingularAmbientClosedFiltration_antitone X x hkl hz
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
+theorem closedEmbeddingSingularAnalyticClosedFiltration_antitone :
+    Antitone (closedEmbeddingSingularAnalyticClosedFiltration i) :=
+  fun _ _ hkl _ hz ↦ closedEmbeddingSingularAmbientClosedFiltration_antitone i hkl hz
 
-theorem cycleComponentSingularAnalyticClosedFiltration_length :
-    cycleComponentSingularAnalyticClosedFiltration X x
-      (cycleComponentSingularStratification X x).length = ⊥ := by
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
+theorem closedEmbeddingSingularAnalyticClosedFiltration_length :
+    closedEmbeddingSingularAnalyticClosedFiltration i
+      (closedEmbeddingSingularStratification i).length = ⊥ := by
   apply SetLike.coe_injective
   change Point.underlying ⁻¹'
-    (cycleComponentSingularAmbientClosedFiltration X x
-      (cycleComponentSingularStratification X x).length : Set X.left) = ∅
-  rw [cycleComponentSingularAmbientClosedFiltration_length]
+    (closedEmbeddingSingularAmbientClosedFiltration i
+      (closedEmbeddingSingularStratification i).length : Set X.left) = ∅
+  rw [closedEmbeddingSingularAmbientClosedFiltration_length]
   exact Set.preimage_empty
 
-omit [IsIntegral X.left] [Smooth X.hom] in
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
 /-- Each analytic successive difference is the complex-point image of its smooth
 stratum, not a supplied support parametrization. -/
-theorem cycleComponentSingularAnalyticClosedFiltration_layer (k : ℕ) :
-    Set.range (Point.map (cycleComponentSingularFiltrationStratumOverι X x k)) =
-      (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X)) \
-        (cycleComponentSingularAnalyticClosedFiltration X x (k + 1) : Set (ComplexPoint X)) := by
+theorem closedEmbeddingSingularAnalyticClosedFiltration_layer (k : ℕ) :
+    Set.range (Point.map (closedEmbeddingSingularFiltrationStratumOverι i k)) =
+      (closedEmbeddingSingularAnalyticClosedFiltration i k : Set (ComplexPoint X)) \
+        (closedEmbeddingSingularAnalyticClosedFiltration i (k + 1) : Set (ComplexPoint X)) := by
   rw [range_map_of_isImmersion X]
-  change Point.underlying ⁻¹' Set.range (cycleComponentSingularFiltrationStratumι X x k) = _
-  rw [cycleComponentSingularAmbientClosedFiltration_layer]
+  change Point.underlying ⁻¹' Set.range (closedEmbeddingSingularFiltrationStratumι i k) = _
+  rw [closedEmbeddingSingularAmbientClosedFiltration_layer]
   rfl
 
-omit [IsIntegral X.left] [Smooth X.hom] in
+omit [IsIntegral X.left] [Smooth X.hom] [IsIntegral Y.left] in
 /-- Inside the exact localization open, the stratum's closed-embedding image
 is precisely the current analytic closed support restricted to that open. -/
-theorem cycleComponentSingularStratumClosedLift_complexPoints_range (k : ℕ) :
-    Set.range (Point.map (cycleComponentSingularStratumClosedLiftOver X x k)) =
-      Point.map (openInclusion X (cycleComponentSingularStratumAmbientOpen X x k)) ⁻¹'
-          (cycleComponentSingularAnalyticClosedFiltration X x k : Set (ComplexPoint X)) := by
+theorem closedEmbeddingSingularStratumClosedLift_complexPoints_range (k : ℕ) :
+    Set.range (Point.map (closedEmbeddingSingularStratumClosedLiftOver i k)) =
+      Point.map (openInclusion X (closedEmbeddingSingularStratumAmbientOpen i k)) ⁻¹'
+          (closedEmbeddingSingularAnalyticClosedFiltration i k : Set (ComplexPoint X)) := by
   rw [range_map_of_isImmersion]
-  change (Point.underlying : ComplexPoint (cycleComponentSingularStratumAmbientOpenOver X x k) →
-    (cycleComponentSingularStratumAmbientOpenOver X x k).left) ⁻¹'
-      Set.range (cycleComponentSingularStratumClosedLift X x k) = _
-  rw [range_cycleComponentSingularStratumClosedLift]
+  change (Point.underlying : ComplexPoint (closedEmbeddingSingularStratumAmbientOpenOver i k) →
+    (closedEmbeddingSingularStratumAmbientOpenOver i k).left) ⁻¹'
+      Set.range (closedEmbeddingSingularStratumClosedLift i k) = _
+  rw [range_closedEmbeddingSingularStratumClosedLift]
   rfl
 
 end ComplexPoint

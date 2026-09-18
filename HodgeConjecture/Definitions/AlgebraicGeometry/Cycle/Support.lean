@@ -25,12 +25,15 @@ import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
-# Geometric support of algebraic cycles
+# Geometric support of a closed subvariety
+
+A closed embedding `i : Y ⟶ X` over `Spec ℂ` has a support: the complex points of `X` in the
+image of `i`. When the source is irreducible the image is the closure of one ambient point, the
+ambient generic point of `i`.
 
 An algebraic cycle in Mathlib is indexed by the generic points of its irreducible components.
-This file constructs the reduced integral closed subscheme attached to such a point and the
-corresponding closed subset of complex points. It also constructs the geometric support of a
-whole cycle as the union of the closures of the generic points with nonzero coefficient.
+This file also constructs the reduced integral closed subscheme attached to such a point, and
+the closed embedding it carries.
 -/
 
 @[expose] public noncomputable section
@@ -38,8 +41,6 @@ whole cycle as the union of the closures of the generic points with nonzero coef
 open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
-
-variable (X : Over (Spec ↧ℂ))
 
 /-- The reduced closed subscheme whose underlying space is the closure of `x`. -/
 def cycleComponent (X : Scheme) (x : X) : Scheme :=
@@ -75,24 +76,44 @@ instance (X : Scheme) (x : X) : IrreducibleSpace (cycleComponent X x) :=
 instance (X : Scheme) (x : X) : IsIntegral (cycleComponent X x) :=
   isIntegral_of_irreducibleSpace_of_isReduced _
 
-/-- A cycle component of a projective variety is projective over `ℂ`. -/
-instance cycleComponent_projective
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IsProjective (cycleComponentι X.left x ≫ X.hom) := by
+/-- The reduced closure of `x`, over `Spec ℂ`. -/
+def cycleComponentOver (X : Over (Spec ↧ℂ)) (x : X.left) : Over (Spec ↧ℂ) :=
+  Over.mk (cycleComponentι X.left x ≫ X.hom)
+
+/-- The closed embedding of the reduced closure of `x`, over `Spec ℂ`. -/
+def cycleComponentOverι (X : Over (Spec ↧ℂ)) (x : X.left) : cycleComponentOver X x ⟶ X :=
+  Over.homMk (cycleComponentι X.left x) rfl
+
+instance (X : Over (Spec ↧ℂ)) (x : X.left) : IsIntegral (cycleComponentOver X x).left :=
+  inferInstanceAs (IsIntegral (cycleComponent X.left x))
+
+instance (X : Over (Spec ↧ℂ)) (x : X.left) :
+    IsClosedImmersion (cycleComponentOverι X x).left :=
+  inferInstanceAs (IsClosedImmersion (cycleComponentι X.left x))
+
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+
+/-- The complex points of `X` in the image of a closed embedding. -/
+def closedEmbeddingSupport : Set (ComplexPoint X) :=
+  Point.underlying ⁻¹' Set.range i.left
+
+/-- The ambient point of a closed embedding whose source is irreducible. -/
+def closedEmbeddingGenericPoint [IrreducibleSpace Y.left] : X.left :=
+  i.left (genericPoint Y.left)
+
+/-- A closed embedding of a projective variety is projective over `ℂ`. -/
+theorem closedEmbedding_isProjective [IsProjective X.hom] [IsClosedImmersion i.left] :
+    IsProjective Y.hom := by
   rcases ‹IsProjective X.hom›.nonempty_presentation with ⟨P⟩
-  exact ⟨⟨
+  refine ⟨⟨
     { ambientDimension := P.ambientDimension
-      immersion := cycleComponentι X.left x ≫ P.immersion
+      immersion := i.left ≫ P.immersion
       isClosedImmersion := by
         let := P.isClosedImmersion
         infer_instance
-      immersion_toBase := by rw [Category.assoc, P.immersion_toBase] }
+      immersion_toBase := ?_ }
   ⟩⟩
-
-/-- The complex points supported on the irreducible closed subset with generic point `x`. -/
-def cycleComponentSupport
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Set (ComplexPoint X) :=
-  Point.underlying ⁻¹' closure {x}
+  rw [Category.assoc, P.immersion_toBase]
+  exact Over.w i
 
 end AlgebraicGeometry

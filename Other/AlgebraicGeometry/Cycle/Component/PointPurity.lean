@@ -51,8 +51,7 @@ open Point
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec ↧ℂ))
-  [IsProjective X.hom] (d : ℕ)
+variable (X : Over (Spec ↧ℂ)) [IsProjective X.hom] (d : ℕ)
 
 /-- The ambient chart-local homology class at an analytic point. -/
 def analyticPointLocalHomologyClass [SmoothOfRelativeDimension d X.hom]
@@ -115,22 +114,25 @@ lemma span_analyticPointLocalCoclass_eq_top [SmoothOfRelativeDimension d X.hom]
     (analyticPointLocalHomologyClass_ne_zero X d z)
     (span_analyticPointLocalHomologyClass_eq_top X d z)
 
-/-- A maximal-codimension component of a smooth complex variety has a singleton analytic
+variable {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
+
+/-- A maximal-codimension closed subvariety of a smooth complex variety has a singleton
 support. -/
-lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.left]
+lemma closedEmbeddingSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.left]
     [Smooth X.hom] [SmoothOfRelativeDimension d X.hom]
-    (x : X.left) (hx : coheight x = d)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
-    cycleComponentSupport X x = {cycleComponentMap X x z} := by
-  have hdim : Order.krullDim (cycleComponent X.left x) = 0 := by
-    simpa using orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
-      (f := X.hom) (d := d) x hx
-  let : Subsingleton (cycleComponent X.left x) := by
+    (hi : coheight (closedEmbeddingGenericPoint i) = d)
+    (z : ComplexPoint Y) :
+    closedEmbeddingSupport i = {Point.map i z} := by
+  have hdim : Order.krullDim (Y.left) = 0 := by
+    simpa using orderKrullDim_closedEmbedding_eq_zero_of_coheight_eq_dimension
+      (f := X.hom) (d := d) i.left hi
+  let : Subsingleton (Y.left) := by
     constructor
     intro a b
-    have hallMin : ∀ q : cycleComponent X.left x, IsMin q :=
+    have hallMin : ∀ q : Y.left, IsMin q :=
       Order.krullDim_nonpos_iff_forall_isMin.mp hdim.le
-    have htopLe (q : cycleComponent X.left x) : (⊤ : cycleComponent X.left x) ≤ q :=
+    have htopLe (q : Y.left) : (⊤ : Y.left) ≤ q :=
       hallMin ⊤ le_top
     have hab : a ≤ b := le_top.trans (htopLe b)
     have hba : b ≤ a := le_top.trans (htopLe a)
@@ -139,12 +141,13 @@ lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.
       ← Scheme.le_iff_specializes]
     exact ⟨hba, hab⟩
   have hpoints : Subsingleton
-      (ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) := by
-    let : LocallyOfFiniteType (Over.mk (cycleComponentι X.left x ≫ X.hom)).hom :=
-      inferInstanceAs (LocallyOfFiniteType (cycleComponentι X.left x ≫ X.hom))
+      (ComplexPoint Y) := by
+    let : LocallyOfFiniteType Y.hom := by
+      rw [show Y.hom = i.left ≫ X.hom from (Over.w i).symm]
+      infer_instance
     exact ⟨fun a b ↦ ComplexPoint.underlying_injective_of_locallyOfFiniteType
-      (Subsingleton.elim (α := cycleComponent X.left x) a.underlying b.underlying)⟩
-  rw [← range_cycleComponentMap]
+      (Subsingleton.elim (α := Y.left) a.underlying b.underlying)⟩
+  rw [← range_closedEmbeddingMap]
   ext y
   constructor
   · rintro ⟨w, rfl⟩
@@ -152,19 +155,19 @@ lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.
     exact Set.mem_singleton _
   · exact fun hy ↦ ⟨z, Set.mem_singleton_iff.mp hy.symm⟩
 
-/-- Every maximal-codimension component has a generator of its singular cohomology with
-support. -/
+/-- Every maximal-codimension closed subvariety has a generator of its singular cohomology
+with support. -/
 theorem exists_singularComponentSupportedGenerator_of_coheight_eq_dimension [IsIntegral X.left]
     [Smooth X.hom] [SmoothOfRelativeDimension d X.hom]
-    (x : X.left) (hx : coheight x = d) :
-    ∃ β : RationalSingularComponentCohomologyWithSupport X x (2 * d),
+    (hi : coheight (closedEmbeddingGenericPoint i) = d) :
+    ∃ β : RationalSingularClosedEmbeddingCohomologyWithSupport i (2 * d),
       IsSupportedCohomologyGenerator β := by
-  obtain ⟨z, -⟩ := exists_cycleComponent_smooth_complexPoint X x
-  let y := cycleComponentMap X x z
-  have hsupport : cycleComponentSupport X x = {y} :=
-    cycleComponentSupport_eq_singleton_of_coheight_eq_dimension X d x hx z
+  obtain ⟨z, -⟩ := exists_closedEmbedding_smooth_complexPoint i
+  let y := Point.map i z
+  have hsupport : closedEmbeddingSupport i = {y} :=
+    closedEmbeddingSupport_eq_singleton_of_coheight_eq_dimension X d i hi z
   change ∃ β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X))
-      (cycleComponentSupport X x) (2 * d),
+      (closedEmbeddingSupport i) (2 * d),
     Submodule.span ℚ {β} = ⊤
   rw [hsupport]
   exact ⟨analyticPointLocalCoclass X d y,

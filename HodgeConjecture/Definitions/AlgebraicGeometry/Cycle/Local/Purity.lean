@@ -24,16 +24,16 @@ import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FundamentalClassGe
 import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 
 /-!
-# Local dual classes on cycle components
+# Local dual classes on closed subvarieties
 
-The local fundamental class obtained from exact coordinates on the smooth locus of a cycle
-component is nonzero.  Since it generates local homology, there is a unique local cohomology
+The local fundamental class obtained from exact coordinates on the smooth locus of a closed
+subvariety is nonzero.  Since it generates local homology, there is a unique local cohomology
 class evaluating to one on it, and that normalized dual class generates cohomology supported at
 the chosen point.
 
-This is intrinsic purity on the smooth component neighborhood.  It does not yet give ambient
+This is intrinsic purity on the smooth neighborhood in the subvariety.  It does not yet give ambient
 purity in codimension `p`: that requires a Thom or Gysin comparison between the intrinsic local
-homology in degree `2 * (d - p)` and ambient cohomology supported on the component in degree
+homology in degree `2 * (d - p)` and ambient cohomology supported on the subvariety in degree
 `2 * p`.
 -/
 

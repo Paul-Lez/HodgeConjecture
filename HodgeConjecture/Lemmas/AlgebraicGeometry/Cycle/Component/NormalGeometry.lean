@@ -23,17 +23,15 @@ import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
-# Smooth geometry of cycle components
+# Smooth geometry of a closed subvariety
 
-The reduced closure of a point in a smooth projective complex variety is an integral projective
-scheme.  This file records that its smooth locus is dense, that its smooth closed points are
-dense, and that a smooth closed complex point can be chosen together with ambient étale
-coordinates.
+The source of a closed embedding of a smooth projective complex variety, with integral source,
+is an integral projective scheme. This file records that its smooth locus is dense, that its
+smooth closed points are dense, and the bound on its dimension.
 
-For an ambient scheme smooth of relative dimension `d`, a component whose generic point has
-coheight `p` has dimension at most `d - p`. The later module `Smooth.CatenaryDimension` upgrades
-this bound to equality. A simultaneous coordinate normal form of exact codimension `p` is still
-not asserted here.
+For an ambient scheme smooth of relative dimension `d`, a closed subvariety whose ambient
+generic point has coheight `p` has dimension at most `d - p`. The later module
+`Smooth.CatenaryDimension` upgrades this bound to equality.
 -/
 
 @[expose] public noncomputable section
@@ -42,52 +40,44 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
 
-/-- The smooth locus of a reduced cycle component is Zariski dense. -/
-lemma dense_cycleComponent_smoothLocus
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Dense
-      ((cycleComponentι X.left x ≫ X.hom).smoothLocus :
-        Set (cycleComponent X.left x)) :=
-  (cycleComponentι X.left x ≫ X.hom).dense_smoothLocus_of_perfectField
+omit [IsIntegral X.left] [IsProjective X.hom] in
+/-- The smooth locus of the source of a closed embedding is Zariski dense. -/
+lemma dense_closedEmbedding_smoothLocus :
+    Dense ((i.left ≫ X.hom).smoothLocus : Set Y.left) :=
+  (i.left ≫ X.hom).dense_smoothLocus_of_perfectField
 
-/-- The smooth locus of an integral cycle component is irreducible. -/
-noncomputable instance cycleComponent_smoothLocus_irreducibleSpace
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    IrreducibleSpace
-      (cycleComponentι X.left x ≫ X.hom).smoothLocus := by
-  obtain ⟨y, hy⟩ := (dense_cycleComponent_smoothLocus X x).nonempty
-  let : Nonempty
-      (cycleComponentι X.left x ≫ X.hom).smoothLocus :=
-    ⟨⟨y, hy⟩⟩
-  exact
-    (cycleComponentι X.left x ≫ X.hom).smoothLocus.ι.isOpenEmbedding.irreducibleSpace
+/-- The smooth locus of the integral source of a closed embedding is irreducible. -/
+noncomputable instance closedEmbedding_smoothLocus_irreducibleSpace :
+    IrreducibleSpace (i.left ≫ X.hom).smoothLocus := by
+  obtain ⟨y, hy⟩ := (dense_closedEmbedding_smoothLocus i).nonempty
+  let : Nonempty (i.left ≫ X.hom).smoothLocus := ⟨⟨y, hy⟩⟩
+  exact (i.left ≫ X.hom).smoothLocus.ι.isOpenEmbedding.irreducibleSpace
 
-/-- The scheme points that are both smooth and closed are dense in a reduced cycle component. -/
-lemma dense_cycleComponent_smooth_closedPoints
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    Dense
-      (((cycleComponentι X.left x ≫ X.hom).smoothLocus :
-          Set (cycleComponent X.left x)) ∩
-        closedPoints (cycleComponent X.left x)) := by
-  let f := cycleComponentι X.left x ≫ X.hom
-  let : JacobsonSpace (cycleComponent X.left x) :=
-    LocallyOfFiniteType.jacobsonSpace f
+omit [IsIntegral X.left] [IsProjective X.hom] in
+/-- The scheme points that are both smooth and closed are dense in the integral source of a
+closed embedding. -/
+lemma dense_closedEmbedding_smooth_closedPoints :
+    Dense (((i.left ≫ X.hom).smoothLocus : Set Y.left) ∩ closedPoints Y.left) := by
+  let f := i.left ≫ X.hom
+  let : JacobsonSpace Y.left := LocallyOfFiniteType.jacobsonSpace f
   exact dense_iff_closure_eq.mpr ((JacobsonSpace.closure_inter_closedPoints_eq_closure
     f.smoothLocus.2.isLocallyClosed).trans
-      (dense_iff_closure_eq.mp (dense_cycleComponent_smoothLocus X x)))
+      (dense_iff_closure_eq.mp (dense_closedEmbedding_smoothLocus i)))
 
-/-- The reduced component of a point of coheight `p` in a smooth complex `d`-fold has
-topological Krull dimension at most `d - p`. -/
-lemma topologicalKrullDim_cycleComponent_le_sub
-    [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) {d p : ℕ}
-    [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) :
-    topologicalKrullDim (cycleComponent X.left x) ≤ d - p := by
-  rw [topologicalKrullDim_cycleComponent]
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
+/-- A closed subvariety whose ambient generic point has coheight `p` in a smooth complex `d`-fold
+has topological Krull dimension at most `d - p`. -/
+lemma topologicalKrullDim_closedEmbedding_le_sub {d p : ℕ}
+    [SmoothOfRelativeDimension d X.hom]
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) :
+    topologicalKrullDim Y.left ≤ d - p := by
+  rw [topologicalKrullDim_eq_height_image_genericPoint i.left]
   exact WithBot.coe_le_coe.mpr
     (SmoothOfRelativeDimension.height_le_sub_of_coheight_eq
-      (f := X.hom) (d := d) x hx)
+      (f := X.hom) (d := d) _ hi)
 
 end AlgebraicGeometry

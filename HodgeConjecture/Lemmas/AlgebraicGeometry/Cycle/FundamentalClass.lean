@@ -21,28 +21,40 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec ↧ℂ))
+variable {X : Over (Spec ↧ℂ)}
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-attribute [local instance] cycleComponentSheafClassAnalyticTopology
+attribute [local instance] closedEmbeddingSheafClassAnalyticTopology
 
-variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
+variable {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
+  {p : ℕ} (hi : Order.coheight (closedEmbeddingGenericPoint i) = p)
 
 /-- Extension recovers exactly the prescribed smooth-locus section. -/
 @[simp]
-theorem cycleComponentExtendSmoothCoclass_normalization
-    (s : CycleComponentSmoothCoclassSections X x p) :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom
-      (cycleComponentExtendSmoothCoclass X x hx s) = s :=
+theorem closedEmbeddingExtendSmoothCoclass_normalization
+    (s : ClosedEmbeddingSmoothCoclassSections i p) :
+    (closedEmbeddingSupportedClassNormalizationIso i hi).hom
+      (closedEmbeddingExtendSmoothCoclass i hi s) = s :=
   AddEquiv.apply_symm_apply
-    (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv s
+    (closedEmbeddingSupportedClassNormalizationIso i hi).addCommGroupIsoToAddEquiv s
 
 /-- Exact smooth-locus normalization, not equality only up to a scalar. -/
 @[simp]
-theorem cycleComponentSupportedInjectiveClass_normalization :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom
-      (cycleComponentSupportedInjectiveClass X x hx) =
-    cycleComponentSmoothSupportCoclassSection X x hx :=
-  cycleComponentExtendSmoothCoclass_normalization X x hx _
+theorem closedEmbeddingSupportedInjectiveClass_normalization :
+    (closedEmbeddingSupportedClassNormalizationIso i hi).hom
+      (closedEmbeddingSupportedInjectiveClass i hi) =
+    closedEmbeddingSmoothSupportCoclassSection i hi :=
+  closedEmbeddingExtendSmoothCoclass_normalization i hi _
+
+/-- The component class of `x` is the class of the closed embedding of the reduced closure
+of `x`. -/
+@[simp]
+theorem cycleComponentSheafClass_eq_closedEmbeddingSheafClass (x : X.left)
+    (hx : Order.coheight x = p)
+    (h : Order.coheight (closedEmbeddingGenericPoint (cycleComponentOverι X x)) = p) :
+    cycleComponentSheafClass X x hx =
+      closedEmbeddingSheafClass (cycleComponentOverι X x) h :=
+  rfl
 
 end AlgebraicGeometry.ComplexPoint

@@ -42,18 +42,18 @@ attribute [local instance] overSpecAlgebra
 section SchemeGeometry
 variable {X : Scheme} {f : X ⟶ Spec ↧ℂ} {d p : ℕ}
 
-/-- A component whose generic point has coheight equal to the ambient dimension has dimension
-zero. -/
-lemma orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
-    [IsIntegral X] [SmoothOfRelativeDimension d f] (x : X)
-    (hx : Order.coheight x = d) :
-    Order.krullDim (cycleComponent X x) =
-      (↑(0 : ℕ∞) : WithBot ℕ∞) := by
-  rw [orderKrullDim_cycleComponent]
+/-- A closed subvariety whose ambient generic point has coheight equal to the ambient dimension
+has dimension zero. -/
+lemma orderKrullDim_closedEmbedding_eq_zero_of_coheight_eq_dimension
+    {Z : Scheme} (g : Z ⟶ X) [IsClosedImmersion g] [IrreducibleSpace Z]
+    [IsIntegral X] [SmoothOfRelativeDimension d f]
+    (hi : Order.coheight (g (genericPoint Z)) = d) :
+    Order.krullDim Z = (↑(0 : ℕ∞) : WithBot ℕ∞) := by
+  rw [orderKrullDim_eq_height_image_genericPoint g]
   have h := SmoothOfRelativeDimension.height_add_coheight_eq_of_coheight_eq_dimension
-    (f := f) (d := d) x hx
-  rw [hx] at h
-  have hheight : Order.height x = 0 :=
+    (f := f) (d := d) (g (genericPoint Z)) hi
+  rw [hi] at h
+  have hheight : Order.height (g (genericPoint Z)) = 0 :=
     bot_unique ((ENat.add_le_add_iff_right (ENat.natCast_ne_top d)).mp (by simpa using h.le))
   rw [hheight]
 

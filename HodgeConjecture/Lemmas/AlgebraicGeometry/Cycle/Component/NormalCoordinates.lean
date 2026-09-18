@@ -26,17 +26,17 @@ import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 
 /-!
-# Exact local coordinates on small-dimensional cycle components
+# Exact local coordinates on small-dimensional closed subvarieties
 
-This file proves exact dimension and local-coordinate statements for reduced cycle components in
-the cases covered by the pointwise dimension formula: components of dimension zero or one in an
-arbitrary smooth complex variety, and all components in ambient relative dimension at most two.
+This file proves exact dimension and local-coordinate statements for closed subvarieties in the
+cases covered by the pointwise dimension formula: subvarieties of dimension zero or one in an
+arbitrary smooth complex variety, and all subvarieties in ambient relative dimension at most two.
 
-The local coordinates are constructed on the smooth locus of the component.  Their number is
-proved to be exactly the dimension of the component, rather than being included as an assumption.
+The local coordinates are constructed on the smooth locus of the subvariety.  Their number is
+proved to be exactly its dimension, rather than being included as an assumption.
 The support library now proves the arbitrary-dimensional catenary formula and the resulting
-global dimension of each component.  Extending the coordinate package still requires a local
-bridge showing that every closed point of the component has that coheight; that bridge is not
+global dimension of each subvariety.  Extending the coordinate package still requires a local
+bridge showing that every closed point of the subvariety has that coheight; that bridge is not
 proved here.
 -/
 
@@ -84,59 +84,53 @@ lemma SmoothOfRelativeDimension.coheight_eq_dimension_of_isClosed
 
 end SchemeGeometry
 
-variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
+variable {X : Over (Spec ↧ℂ)} {d p : ℕ}
 
-namespace CycleComponentSeparateLocalCoordinates
+namespace ClosedEmbeddingSeparateLocalCoordinates
 
-/-- The smooth locus of the reduced cycle component underlying an exact coordinate package. -/
-abbrev componentSmoothLocus
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) :=
-  (cycleComponentι X.left x ≫ X.hom).smoothLocus
+/-- The smooth locus of the source of a closed embedding underlying an exact coordinate
+package. -/
+abbrev sourceSmoothLocus {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) [Smooth X.hom]
+    [IsProjective X.hom] [IsClosedImmersion i.left] :=
+  (i.left ≫ X.hom).smoothLocus
 
-/-- The component's smooth locus, bundled over the complex base. -/
-abbrev componentSmoothScheme
-    (X : Over (Spec ↧ℂ)) [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) : Over (Spec ↧ℂ) :=
-  Over.mk ((componentSmoothLocus X x).ι ≫ cycleComponentι X.left x ≫ X.hom)
+/-- That smooth locus, bundled over the complex base. -/
+abbrev sourceSmoothScheme {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) [Smooth X.hom]
+    [IsProjective X.hom] [IsClosedImmersion i.left] : Over (Spec ↧ℂ) :=
+  Over.mk ((sourceSmoothLocus i).ι ≫ Y.hom)
 
-end CycleComponentSeparateLocalCoordinates
+end ClosedEmbeddingSeparateLocalCoordinates
 
-/-- Separate exact local coordinates on a smooth cycle component and on its smooth ambient
-variety.  The component coordinates use exactly `n` variables.  This package does not assert
-that the two coordinate systems straighten the closed immersion simultaneously. -/
-structure CycleComponentSeparateLocalCoordinates
+/-- Separate exact local coordinates on the smooth locus of a closed subvariety and on its
+smooth ambient variety. The source coordinates use exactly `n` variables. This package does not
+assert that the two coordinate systems straighten the closed embedding simultaneously. -/
+structure ClosedEmbeddingSeparateLocalCoordinates {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
     [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) (d n : ℕ)
+    [IsProjective X.hom] [IsIntegral Y.left] [IsClosedImmersion i.left] (d n : ℕ)
     [SmoothOfRelativeDimension d X.hom] where
-  /-- A complex point of the reduced component. -/
-  point : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))
-  /-- The point lies in the component's smooth locus. -/
+  /-- A complex point of the source. -/
+  point : ComplexPoint Y
+  /-- The point lies in the smooth locus of the source. -/
   point_mem_smoothLocus : point.underlying ∈
-    (cycleComponentι X.left x ≫ X.hom).smoothLocus
-  /-- The underlying point is closed in the component. -/
+    (i.left ≫ X.hom).smoothLocus
+  /-- The underlying point is closed in the source. -/
   point_isClosed : IsClosed {point.underlying}
-  /-- An affine neighborhood in the smooth locus of the component. -/
-  componentNeighborhood :
-    (CycleComponentSeparateLocalCoordinates.componentSmoothScheme
-      (X := X) (x := x)).left.Opens
-  /-- The component neighborhood is affine. -/
-  componentNeighborhood_isAffine : IsAffineOpen componentNeighborhood
-  /-- The chosen point belongs to the component neighborhood. -/
-  point_mem_componentNeighborhood :
+  /-- An affine neighborhood in the smooth locus of the source. -/
+  sourceNeighborhood :
+    (ClosedEmbeddingSeparateLocalCoordinates.sourceSmoothScheme i).left.Opens
+  /-- The source neighborhood is affine. -/
+  sourceNeighborhood_isAffine : IsAffineOpen sourceNeighborhood
+  /-- The chosen point belongs to the source neighborhood. -/
+  point_mem_sourceNeighborhood :
     (⟨point.underlying, point_mem_smoothLocus⟩ :
-      (CycleComponentSeparateLocalCoordinates.componentSmoothScheme
-        (X := X) (x := x)).left) ∈
-        componentNeighborhood
-  /-- An étale coordinate homomorphism of complex algebras with exactly `n` component
+      (ClosedEmbeddingSeparateLocalCoordinates.sourceSmoothScheme i).left) ∈
+        sourceNeighborhood
+  /-- An étale coordinate homomorphism of complex algebras with exactly `n` source
   coordinates. -/
-  componentCoordinateAlgHom : MvPolynomial (Fin n) ℂ →ₐ[ℂ]
-    Γ((CycleComponentSeparateLocalCoordinates.componentSmoothScheme
-      (X := X) (x := x)).left, componentNeighborhood)
-  /-- The component coordinate homomorphism is étale. -/
-  componentCoordinateAlgHom_etale : componentCoordinateAlgHom.toRingHom.Etale
+  sourceCoordinateAlgHom : MvPolynomial (Fin n) ℂ →ₐ[ℂ]
+    Γ((ClosedEmbeddingSeparateLocalCoordinates.sourceSmoothScheme i).left, sourceNeighborhood)
+  /-- The source coordinate homomorphism is étale. -/
+  sourceCoordinateAlgHom_etale : sourceCoordinateAlgHom.toRingHom.Etale
   /-- Independently chosen étale coordinates on the ambient `d`-fold. -/
-  ambientCoordinates : LocalEtaleCoordinates X d
-    (cycleComponentι X.left x point.underlying)
+  ambientCoordinates : LocalEtaleCoordinates X d (i.left point.underlying)
 
-end AlgebraicGeometry
