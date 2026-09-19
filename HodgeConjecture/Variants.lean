@@ -21,10 +21,10 @@ public import Mathlib.CategoryTheory.Monoidal.Grp
 /-!
 # Special cases of the Hodge conjecture
 
-This file states (but does not prove!) special cases of the Hodge conjecture, and the
-implications between them. Three of the cases are theorems: the Lefschetz (1,1) theorem, the
-case of varieties of dimension three or less, and the case of abelian varieties of dimension
-five or less. The case of all abelian varieties is open.
+This file states (but does not prove!) special cases of the Hodge conjecture. Three of them
+are theorems: the Lefschetz (1,1) theorem, the case of varieties of dimension three or less,
+and the case of abelian varieties of dimension five or less. The case of all abelian varieties
+is open.
 
 ## References
 
@@ -71,28 +71,5 @@ showed that the Weil classes on an abelian fourfold of Weil type are algebraic. 
 def HodgeConjectureForAbelianVarietiesInDimensionLE (n : ℕ) : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] [GrpObj X],
     dim X.left ≤ n → ∀ p : ℕ, Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p
-
-/-! ### Implications between the statements -/
-
-theorem HodgeConjecture.lefschetzOneOne (h : HodgeConjecture) : LefschetzOneOne :=
-  fun X _ _ _ ↦ h X 1
-
-theorem HodgeConjecture.inDimensionLE (h : HodgeConjecture) (n : ℕ) :
-    HodgeConjectureInDimensionLE n :=
-  fun X _ _ _ _ ↦ h X
-
-theorem HodgeConjecture.forAbelianVarieties (h : HodgeConjecture) :
-    HodgeConjectureForAbelianVarieties :=
-  fun X _ _ _ _ ↦ h X
-
-theorem HodgeConjectureForAbelianVarieties.inDimensionLE
-    (h : HodgeConjectureForAbelianVarieties) (n : ℕ) :
-    HodgeConjectureForAbelianVarietiesInDimensionLE n :=
-  fun X _ _ _ _ _ ↦ h X
-
-theorem HodgeConjectureInDimensionLE.forAbelianVarieties {n : ℕ}
-    (h : HodgeConjectureInDimensionLE n) :
-    HodgeConjectureForAbelianVarietiesInDimensionLE n :=
-  fun X _ _ _ _ hd ↦ h X hd
 
 end
