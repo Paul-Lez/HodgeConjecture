@@ -29,7 +29,7 @@ def derivedHomAddEquivGlobalSectionsKInjective
     ShiftedHom
       (DerivedCategory.Q.obj (integerConstantSingleComplex Y)) (DerivedCategory.Q.obj K) n ≃+
     (globalSectionsComplexInt Y K).homology n :=
-  (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass _ K n).trans
+  (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass _ K n).trans
     ((CochainComplex.HomComplex.homologyAddEquiv _ K n).symm.trans
       (HomologicalComplex.homologyMapIso
         (homComplexSingleIntegerIsoGlobalSections Y K) n).addCommGroupIsoToAddEquiv)

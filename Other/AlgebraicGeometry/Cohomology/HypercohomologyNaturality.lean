@@ -152,12 +152,12 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_naturality
       (derivedHomAddEquivGlobalSectionsKInjective Y K n x) := by
   let A := integerConstantSingleComplex Y
   let y := (CochainComplex.HomComplex.homologyAddEquiv A K n).symm
-    (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass A K n x)
+    (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A K n x)
   have hH : HomologicalComplex.homologyMap
       (CochainComplex.HomComplex.postcompMap A f) n y =
       (CochainComplex.HomComplex.homologyAddEquiv A L n).symm
         (CochainComplex.HomComplex.postcompClass A f n
-          (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass
+          (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass
             A K n x)) := by
     apply (CochainComplex.HomComplex.homologyAddEquiv A L n).injective
     rw [CochainComplex.HomComplex.homologyAddEquiv_postcompMap, AddEquiv.apply_symm_apply]
@@ -167,7 +167,7 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_naturality
   rw [HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp] at hΓ
   have hΓy := ConcreteCategory.congr_hom hΓ y
   dsimp only [derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
-  rw [AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass_naturality,
+  rw [CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_naturality,
     ← hH]
   exact hΓy
 

@@ -257,6 +257,10 @@ public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincar
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart
 public import HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors
 public import HodgeConjecture.Mathlib.CategoryTheory.Abelian.KernelCompositionShortExact
+public import HodgeConjecture.Mathlib.CategoryTheory.Sites.SheafCohomology.Pair
+public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.KInjectiveHom
+public import HodgeConjecture.Mathlib.Algebra.Homology.HomComplexSingle
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.Cohomology
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import HodgeConjecture.Mathlib.RingTheory.SmoothKrullDimension
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits

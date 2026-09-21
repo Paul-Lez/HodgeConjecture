@@ -165,13 +165,13 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
       (derivedHomAddEquivGlobalSectionsKInjective Y (K⟦s⟧) n x) := by
   let A := integerConstantSingleComplex Y
   let y := (CochainComplex.HomComplex.homologyAddEquiv A (K⟦s⟧) n).symm
-    (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass
+    (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass
       A (K⟦s⟧) n x)
   have hH : ShortComplex.homologyMap
       (CochainComplex.HomComplex.rightUnshiftShortComplex A K s n n' h) y =
       (CochainComplex.HomComplex.homologyAddEquiv A K n').symm
         (CochainComplex.HomComplex.rightUnshiftClass A K s n n' h
-          (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass
+          (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass
             A (K⟦s⟧) n x)) := by
     apply (CochainComplex.HomComplex.homologyAddEquiv A K n').injective
     rw [CochainComplex.HomComplex.homologyAddEquiv_rightUnshift,
@@ -180,7 +180,7 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
   have hΓy := ConcreteCategory.congr_hom
     (homComplexSingleIntegerGlobalSections_rightUnshift_homology Y K s n n' h) y
   dsimp only [derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
-  rw [AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift
+  rw [CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift
     _ _ s n n' h, ← hH]
   exact hΓy.symm
 
