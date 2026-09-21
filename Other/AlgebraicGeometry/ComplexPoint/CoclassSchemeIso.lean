@@ -33,7 +33,8 @@ variable (X Y : Over (Spec ↧ℂ))
 /-- The actual point-complement map associated with the actual analytic homeomorphism. -/
 def complexSchemeIsoPointPairMap :
     pointComplementPair z ⟶ pointComplementPair (Point.map e.hom z) :=
-  pointComplementHomeomorphPairMap (Point.isoMapHomeomorph e) z
+  pointComplementPairMap
+    (f := Point.continuousMap e.hom) (Point.isoMapHomeomorph e).injective z
 
 omit [IsProjective X.hom] [IsProjective Y.hom] in
 /-- Scheme-isomorphism naturality preserves the exact complex local orientation,
@@ -47,7 +48,8 @@ theorem complexSchemeIsoPointPairMap_localClass :
   let b := localChart X d (H z)
   let hz := mem_localChart_source Y d z
   let hb := mem_localChart_source X d (H z)
-  change relativeHomologyMap ℚ (2 * d) (pointComplementHomeomorphPairMap H z)
+  change relativeHomologyMap ℚ (2 * d)
+    (pointComplementPairMap (f := ⟨H, H.continuous⟩) H.injective z)
     (localClassOfChart d a z hz) = localClassOfChart d b (H z) hb
   rw [localClassOfChart_homeomorphTransport]
   apply localClassOfChart_eq_of_analyticAt_transition

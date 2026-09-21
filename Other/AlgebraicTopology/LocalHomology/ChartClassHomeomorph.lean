@@ -24,13 +24,6 @@ namespace AlgebraicTopology.Singular
 variable {M N : Type} [TopologicalSpace M] [TopologicalSpace N]
   (H : M ≃ₜ N) (x : M)
 
-/-- The actual homeomorphism map on point-complement pairs. -/
-def pointComplementHomeomorphPairMap : pointComplementPair x ⟶ pointComplementPair (H x) :=
-  TopPair.ofHom
-    (TopCat.ofHom ⟨H, H.continuous⟩)
-    (TopCat.ofHom ⟨fun y => ⟨H y, fun he => y.2 (H.injective he)⟩,
-      (H.continuous.comp continuous_subtype_val).subtype_mk _⟩) rfl
-
 variable (d : ℕ) (e : OpenPartialHomeomorph M (Fin d → ℂ)) (hx : x ∈ e.source)
 
 include hx in
@@ -51,7 +44,8 @@ theorem chartRadius_homeomorphTransport :
 
 /-- The actual compressed-chart pair map factors through the homeomorphism. -/
 theorem chartModelEmbeddingPair_homeomorphTransport :
-    chartModelEmbeddingPair d e x hx ≫ pointComplementHomeomorphPairMap H x =
+    chartModelEmbeddingPair d e x hx ≫
+      pointComplementPairMap (f := ⟨H, H.continuous⟩) H.injective x =
       chartModelEmbeddingPair d (H.symm.transOpenPartialHomeomorph e) (H x)
         (mem_homeomorphTransportedChart H x d e hx) := by
   apply MorphismProperty.Arrow.Hom.ext
@@ -78,7 +72,8 @@ theorem chartModelEmbeddingPair_homeomorphTransport :
 /-- Exact naturality for the transported chart, before imposing any orientation
 comparison between this chart and a separately chosen target chart. -/
 theorem localClassOfChart_homeomorphTransport :
-    relativeHomologyMap ℚ (2 * d) (pointComplementHomeomorphPairMap H x)
+    relativeHomologyMap ℚ (2 * d)
+      (pointComplementPairMap (f := ⟨H, H.continuous⟩) H.injective x)
       (localClassOfChart d e x hx) =
     localClassOfChart d (H.symm.transOpenPartialHomeomorph e) (H x)
       (mem_homeomorphTransportedChart H x d e hx) := by

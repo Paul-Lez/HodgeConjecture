@@ -43,9 +43,9 @@ private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
     (V : Opens (ComplexPoint X)) (hyV : y ∈ V) :
     ∃ W : Opens (ComplexPoint X), W ≤ V ∧ y ∈ W ∧
       ∀ n : ℕ, n ≠ 2 * p →
-        IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
+        IsZero (RelativeCohomology ℚ
           (neighborhoodSupportComplementPair (W : Set (ComplexPoint X))
-            (cycleComponentSupport X x)) n)) := by
+            (cycleComponentSupport X x)) n) := by
   let O := cycleComponentSmoothLocusAmbientOpen X x
   let OX := cycleComponentSmoothLocusAmbientOpenOver X x
   let Y := cycleComponentSmoothLocusOver X x
@@ -65,15 +65,15 @@ private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
     rw [hx] at h
     exact_mod_cast h
   obtain ⟨W, hWV, hzW, hW⟩ := exists_smoothClosedSupportImageNeighborhood
-    OX Y i (dim X.left - p) (dim X.left) f (isOpenEmbedding_map_open X O)
-    (cycleComponentSupport X x) hS z V hyV
+    i (dim X.left - p) (dim X.left) (isOpenEmbedding_map_open X O)
+    hS z V hyV
   refine ⟨W, hWV, hzW, ?_⟩
   intro n hn
   exact hW n (by omega)
 
 include hx in
-/-- Cofinal supported-section vanishing for the literal original ambient resolution. -/
-theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
+/-- Cofinal supported-section vanishing for the ambient resolution. -/
+private theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
     (n : ℤ) (hn : n ≠ 2 * (p : ℤ))
     (y : ComplexPoint X) (hyU : y ∈ cycleComponentSmoothSupportAmbientOpen X x)
     (V : Opens (ComplexPoint X)) (hyV : y ∈ V) :
@@ -111,31 +111,31 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
         (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl W
         ((ambientRationalInjectiveComplex X).X (q : ℤ)) inf_le_right
 
-/-- Restriction of the original full-support injective model to the boundary complement. -/
-def cycleComponentSmoothRestrictedInjectiveComplex :
-    CochainComplex (TopCat.Sheaf AddCommGrpCat
-      (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))) ℤ :=
-  let U : Opens (TopCat.of (ComplexPoint X)) := cycleComponentSmoothSupportAmbientOpen X x
-  ((U.isOpenEmbedding.sheafPullback
-    AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
-      (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
-
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-instance cycleComponentSmoothRestrictedInjectiveComplex_isStrictlyGE :
-    (cycleComponentSmoothRestrictedInjectiveComplex X x).IsStrictlyGE 0 := by
-  dsimp [cycleComponentSmoothRestrictedInjectiveComplex]
-  infer_instance
-
 include hx in
-/-- The actual restricted cohomology sheaves are concentrated in degree `2p`. -/
+/-- The restricted supported cohomology sheaves are concentrated in degree `2p`. -/
 theorem cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
     (n : ℤ) (hn : n ≠ 2 * (p : ℤ)) :
-    IsZero ((cycleComponentSmoothRestrictedInjectiveComplex X x).homology n) :=
-  TopCat.Sheaf.openRestriction_homology_isZero_of_cofinal_sections
+    IsZero (((((show Opens (TopCat.of (ComplexPoint X)) from
+      cycleComponentSmoothSupportAmbientOpen X x).isOpenEmbedding.sheafPullback
+        AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
+        (complexSupportInjectiveComplex X
+          (cycleComponentAnalyticClosedSupport X x))).homology n) := by
+  let U : Opens (TopCat.of (ComplexPoint X)) := cycleComponentSmoothSupportAmbientOpen X x
+  let K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of U)) ℤ :=
+    ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
+      (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
+  change IsZero (K.homology n)
+  let : K.IsStrictlyGE 0 := by
+    dsimp only [K]
+    infer_instance
+  exact TopCat.Sheaf.openRestriction_homology_isZero_of_cofinal_sections
     (TopCat.of (ComplexPoint X)) _ _ n
     (cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing X x hx n hn)
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
 /-- The canonical lowest-degree isomorphism using the original ambient resolution and
 the original ambient cohomology sheaf, both evaluated on the boundary complement. -/
 def cycleComponentSmoothSupportLowestSectionCohomologyIso :
@@ -145,6 +145,13 @@ def cycleComponentSmoothSupportLowestSectionCohomologyIso :
           (2 * (p : ℤ))) ≅
       ((complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)).homology
         (2 * (p : ℤ))).obj.obj (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
+  let U : Opens (TopCat.of (ComplexPoint X)) := cycleComponentSmoothSupportAmbientOpen X x
+  let K : CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of U)) ℤ :=
+    ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
+      (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
+  letI : K.IsStrictlyGE 0 := by
+    dsimp only [K]
+    infer_instance
   TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso
     (TopCat.of (ComplexPoint X)) (cycleComponentSmoothSupportAmbientOpen X x)
     (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))

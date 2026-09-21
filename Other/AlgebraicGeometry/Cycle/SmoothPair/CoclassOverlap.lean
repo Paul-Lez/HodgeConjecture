@@ -67,7 +67,7 @@ theorem smoothClosedSupportNormalCoclass_restrict_eq_chart
     relativeCohomologyMap ℚ (2 * (d - m))
       (neighborhoodSupportInclusionPairMap hWV (Set.range (Point.map i)))
       (smoothClosedSupportNormalCoclass X Y i m d z V hzV) =
-    smoothClosedSupportChartCoclass X Y i m d z W hW := by
+    smoothClosedSupportChartCoclass i m d z W hW := by
   rw [smoothClosedSupportNormalCoclass_eq_projection]
   exact chartNormalProjectionCoclass_restrict (Fin m → ℂ) (d - m)
     (smoothClosedSupportRestrictionChart X Y i m d z V)

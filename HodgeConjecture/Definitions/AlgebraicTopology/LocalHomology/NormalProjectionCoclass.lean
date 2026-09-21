@@ -23,13 +23,6 @@ namespace AlgebraicTopology.Singular
 
 variable {M : Type} [TopologicalSpace M]
 
-/-- Inclusion of actual neighborhood/support-complement pairs. -/
-def neighborhoodSupportInclusionPairMap {W V : Set M} (hWV : W ⊆ V) (S : Set M) :
-    neighborhoodSupportComplementPair W S ⟶ neighborhoodSupportComplementPair V S :=
-  TopPair.ofHom
-    (TopCat.ofHom ⟨fun w => ⟨w.1, hWV w.2⟩, by fun_prop⟩)
-    (TopCat.ofHom ⟨fun w => ⟨⟨w.1.1, hWV w.1.2⟩, w.2⟩, by fun_prop⟩) (by ext w; rfl)
-
 variable (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
   (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (S : Set M)
   (hS : ∀ y ∈ e.source, y ∈ S ↔ (e y).2 = 0)

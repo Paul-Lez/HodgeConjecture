@@ -36,23 +36,18 @@ theorem cycleComponentSmoothSupportCoclassSection_restrict
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * p)).obj.map (homOfLE hV).op
         (cycleComponentSmoothSupportCoclassSection X x hx) =
-    (supportRelativeCohomologySheafOpenIso (cycleComponentSmoothClosedLiftAmbientMap X x)
+    (supportRelativeCohomologySheafOpenIso
       (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-      (cycleComponentSupport X x)
-      (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
       (cycleComponentSmoothClosedLiftAmbientMap_support X x) (2 * p)).hom.hom.app (op V)
       ((supportRelativeCohomologySheaf
         (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
         (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
         (2 * p)).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op
         (cycleComponentSmoothClosedLiftCoclassSection X x hx)) :=
-  supportRelativeCohomologySectionOnOpen_restrict
-    (cycleComponentSmoothClosedLiftAmbientMap X x)
+  supportRelativeCohomologySheafOpenIso_hom_app_top_restrict
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-    (cycleComponentSupport X x)
-    (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
-    (cycleComponentSmoothClosedLiftAmbientMap_support X x)
-    (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
+    (cycleComponentSmoothClosedLiftAmbientMap_support X x) (2 * p)
+    (cycleComponentSmoothSupportAmbientOpen X x)
     (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
     (cycleComponentSmoothClosedLiftCoclassSection X x hx) V hV
 

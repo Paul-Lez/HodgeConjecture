@@ -23,7 +23,7 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X Y : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)}
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
@@ -31,21 +31,21 @@ variable (X Y : Over (Spec ↧ℂ))
 /-- The normalized normal coclass has nonzero germ at its center. -/
 theorem smoothClosedSupportNormalCoclassGerm_ne_zero
     (z : ComplexPoint Y) (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V) :
-    supportRelativeCohomologyGerm (TopCat.of (ComplexPoint X))
+    @supportRelativeCohomologyGerm (TopCat.of (ComplexPoint X))
       (Set.range (Point.map i)) (2 * (d - m))
-      (smoothClosedSupportNeighborhood X Y i m d z V hzV)
-      (Point.map i z) (mem_smoothClosedSupportNeighborhood X Y i m d z V hzV)
+      (smoothClosedSupportNeighborhood X Y i m d z V hzV) (Point.map i z)
+      (mem_smoothClosedSupportNeighborhood X Y i m d z V hzV)
       (smoothClosedSupportNormalCoclass X Y i m d z V hzV) ≠ 0 :=
   supportRelativeCohomologyGerm_ne_zero_of_restrict_ne_zero _ _ _ _ _ _ _
-    (smoothClosedSupportNormalCoclass_restrict_ne_zero X Y i m d z V hzV)
+    (smoothClosedSupportNormalCoclass_restrict_ne_zero i m d z V hzV)
 
 /-- A point of the smooth support witnesses nonvanishing of its global coclass section. -/
 theorem smoothClosedSupportCoclassSection_ne_zero (z : ComplexPoint Y) :
-    smoothClosedSupportCoclassSection X Y i m d ≠ 0 := by
+    smoothClosedSupportCoclassSection i m d ≠ 0 := by
   intro hzero
   have hg := smoothClosedSupportCoclassSection_germ_eq_normalCoclass
-    X Y i m d z ⊤ (show Point.map i z ∈ (⊤ : Opens (ComplexPoint X)) from trivial)
+    i m d z ⊤ (show Point.map i z ∈ (⊤ : Opens (ComplexPoint X)) from trivial)
   rw [hzero, map_zero] at hg
-  exact smoothClosedSupportNormalCoclassGerm_ne_zero X Y i m d z ⊤ trivial hg.symm
+  exact smoothClosedSupportNormalCoclassGerm_ne_zero i m d z ⊤ trivial hg.symm
 
 end AlgebraicGeometry.ComplexPoint

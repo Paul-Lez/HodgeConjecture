@@ -22,7 +22,7 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X Y : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)}
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
@@ -62,6 +62,6 @@ theorem smoothClosedSupportNormalCoclass_restrict_ne_zero
     (neighborhoodSupportInclusionPairMap hTW (Set.range (Point.map i)))) hzero
   rw [map_zero, ← LinearMap.comp_apply, ← relativeCohomologyMap_comp,
     neighborhoodSupportInclusionPairMap_comp hTW hWU, heq] at h
-  exact smoothClosedSupportNormalCoclass_ne_zero X Y i m d z W hzW h
+  exact smoothClosedSupportNormalCoclass_ne_zero i m d z W hzW h
 
 end AlgebraicGeometry.ComplexPoint

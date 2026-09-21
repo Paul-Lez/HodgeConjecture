@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NeighborhoodPairImage
 
 /-!
 # Actual open-embedding transport of the relative-cohomology sheaf
@@ -19,28 +20,16 @@ open CategoryTheory Limits TopologicalSpace Topology Opposite
 
 namespace AlgebraicTopology.Singular
 
-variable {X Y : TopCat.{0}} (f : Y ⟶ X) (hf : IsOpenEmbedding f)
-  (S : Set X) (B : Set Y) (hB : f ⁻¹' S = B)
+variable {X Y : TopCat.{0}} {f : Y ⟶ X} (hf : IsOpenEmbedding f)
+  {S : Set X} {B : Set Y} (hB : f ⁻¹' S = B)
 
 /-- Inverse transport is literal pullback along the inverse pair homeomorphism. -/
 theorem supportRelativeCohomologyPresheafOpenIso_inv_app (n : ℕ) (V : Opens Y)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set Y) B) n) :
-    (supportRelativeCohomologyPresheafOpenIso f hf S B hB n).inv.app (op V) a =
+    (supportRelativeCohomologyPresheafOpenIso hf hB n).inv.app (op V) a =
       relativeCohomologyMap ℚ n
-        (neighborhoodSupportPairImageIso f hf.isEmbedding (V : Set Y) B S
+        (neighborhoodSupportPairImageIso hf.isEmbedding
           (fun y _ => by rw [← hB]; rfl)).inv a := rfl
-
-@[reassoc]
-theorem supportOpenEmbeddingSheafificationIso_unit (P : TopCat.Presheaf AddCommGrpCat X) :
-    toSheafify (Opens.grothendieckTopology Y) (hf.functor.op ⋙ P) ≫
-      (supportOpenEmbeddingSheafificationIso f hf P).hom.hom =
-    Functor.whiskerLeft hf.functor.op (toSheafify (Opens.grothendieckTopology X) P) := by
-  let : hf.functor.IsContinuous (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) :=
-    hf.functor_isContinuous
-  let : hf.functor.IsCocontinuous (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) :=
-    hf.functor_isCocontinuous
-  exact hf.functor.toSheafify_pullbackSheafificationCompatibility AddCommGrpCat
-    (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X) P
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -49,50 +38,69 @@ pair-homeomorphism pullbacks before application of the ambient sheafification un
 @[reassoc]
 theorem supportRelativeCohomologySheafOpenIso_unit (n : ℕ) :
     supportRelativeCohomologyToSheaf Y B n ≫
-      (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom =
-    (supportRelativeCohomologyPresheafOpenIso f hf S B hB n).inv ≫
+      (supportRelativeCohomologySheafOpenIso hf hB n).hom.hom =
+    (supportRelativeCohomologyPresheafOpenIso hf hB n).inv ≫
       Functor.whiskerLeft hf.functor.op (supportRelativeCohomologyToSheaf X S n) := by
+  let : hf.functor.IsContinuous (Opens.grothendieckTopology Y)
+      (Opens.grothendieckTopology X) := hf.functor_isContinuous
+  let : hf.functor.IsCocontinuous (Opens.grothendieckTopology Y)
+      (Opens.grothendieckTopology X) := hf.functor_isCocontinuous
+  have hunit := hf.functor.toSheafify_pullbackSheafificationCompatibility AddCommGrpCat
+    (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X)
+    (supportRelativeCohomologyPresheaf X S n)
   change toSheafify _ _ ≫ (sheafifyMap _ _ ≫ _) = _
-  rw [← Category.assoc, ← toSheafify_naturality, Category.assoc,
-    supportOpenEmbeddingSheafificationIso_unit]
-  rfl
-
-/-- Restriction of the transported section is transport of its actual restriction. -/
-theorem supportRelativeCohomologySectionOpenImage_restrict (n : ℕ)
-    (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤)) (V : Opens Y) :
-    (supportRelativeCohomologySheaf X S n).obj.map
-      (hf.functor.map (homOfLE (show V ≤ ⊤ from le_top))).op
-      (supportRelativeCohomologySectionOpenImage f hf S B hB n s) =
-    (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op V)
-      ((supportRelativeCohomologySheaf Y B n).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op s) := by
-  aesop
+  rw [← Category.assoc, ← toSheafify_naturality, Category.assoc]
+  exact congrArg (fun k =>
+    (supportRelativeCohomologyPresheafOpenIso hf hB n).inv ≫ k) hunit
 
 /-- The open transport preserves the literal sheafification images of local classes. -/
 theorem supportRelativeCohomologySheafOpenIso_unit_apply (n : ℕ) (V : Opens Y)
     (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set Y) B) n) :
-    (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op V)
+    (supportRelativeCohomologySheafOpenIso hf hB n).hom.hom.app (op V)
       ((supportRelativeCohomologyToSheaf Y B n).app (op V) a) =
     (supportRelativeCohomologyToSheaf X S n).app (op (hf.functor.obj V))
-      ((supportRelativeCohomologyPresheafOpenIso f hf S B hB n).inv.app (op V) a) := by
+      ((supportRelativeCohomologyPresheafOpenIso hf hB n).inv.app (op V) a) := by
   have h := ConcreteCategory.congr_hom
-    (NatTrans.congr_app (supportRelativeCohomologySheafOpenIso_unit f hf S B hB n) (op V)) a
+    (NatTrans.congr_app (supportRelativeCohomologySheafOpenIso_unit hf hB n) (op V)) a
   exact h
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
+/-- Point-coclass sections commute with transport through an open embedding. -/
+theorem supportRelativeCohomologyPointSection_open
+    (n : ℕ) (V : Opens Y) {x : Y} (hx : x ∈ B)
+    (a : RelativeCohomology ℚ (pointComplementPair (f x)) n) :
+    (supportRelativeCohomologySheafOpenIso hf hB n).hom.hom.app (op V)
+      (supportRelativeCohomologyPointSection V hx
+        (relativeCohomologyMap ℚ n
+          (pointComplementPairMap (f := f.hom) hf.injective x) a)) =
+      supportRelativeCohomologyPointSection (hf.functor.obj V)
+        (by change x ∈ f ⁻¹' S; rw [hB]; exact hx) a := by
+  have hxS : f x ∈ S := by
+    change x ∈ f ⁻¹' S
+    rw [hB]
+    exact hx
+  rw [supportRelativeCohomologyPointSection,
+    supportRelativeCohomologySheafOpenIso_unit_apply,
+    supportRelativeCohomologyPresheafOpenIso_inv_app]
+  apply congrArg ((supportRelativeCohomologyToSheaf X S n).app _)
+  rw [← LinearMap.comp_apply, ← relativeCohomologyMap_comp,
+    ← LinearMap.comp_apply, ← relativeCohomologyMap_comp, Category.assoc,
+    neighborhoodSupportPairImageIso_inv_comp_toPoint hf.isEmbedding
+      (fun y _ => by rw [← hB]; rfl) hx hxS]
+  rfl
 
-
-/-- Restriction to each actual image neighborhood retains the constructed comparison. -/
-theorem supportRelativeCohomologySectionOnOpen_restrict (n : ℕ) (U : Opens X)
-    (hU : hf.functor.obj ⊤ = U)
+/-- Transport from the full source commutes with restriction to an image open. -/
+theorem supportRelativeCohomologySheafOpenIso_hom_app_top_restrict
+    (n : ℕ) (U : Opens X) (hU : hf.functor.obj ⊤ = U)
     (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤))
     (V : Opens Y) (hV : hf.functor.obj V ≤ U) :
     (supportRelativeCohomologySheaf X S n).obj.map (homOfLE hV).op
-      (supportRelativeCohomologySectionOnOpen f hf S B hB n U hU s) =
-    (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op V)
-      ((supportRelativeCohomologySheaf Y B n).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op s) := by
-  have he : (eqToHom hU.symm).op ≫ (homOfLE hV).op =
-      (hf.functor.map (homOfLE (show V ≤ ⊤ from le_top))).op := Subsingleton.elim _ _
-  dsimp only [supportRelativeCohomologySectionOnOpen]
-  rw [← ConcreteCategory.comp_apply, ← Functor.map_comp, he]
-  exact supportRelativeCohomologySectionOpenImage_restrict f hf S B hB n s V
+        ((supportRelativeCohomologySheaf X S n).obj.map (eqToHom hU.symm).op
+          ((supportRelativeCohomologySheafOpenIso hf hB n).hom.hom.app (op ⊤) s)) =
+      (supportRelativeCohomologySheafOpenIso hf hB n).hom.hom.app (op V)
+        ((supportRelativeCohomologySheaf Y B n).obj.map
+          (homOfLE (show V ≤ ⊤ from le_top)).op s) := by
+  aesop
 
 end AlgebraicTopology.Singular

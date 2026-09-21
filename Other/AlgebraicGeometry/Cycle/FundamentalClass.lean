@@ -37,23 +37,15 @@ variable (X : Over (Spec ↧ℂ))
 attribute [local instance] cycleComponentSheafClassAnalyticTopology
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
-/-- The prescribed smooth-locus section determines the extension uniquely. -/
-theorem cycleComponentExtendSmoothCoclass_unique
-    (s : CycleComponentSmoothCoclassSections X x p)
-    (a : CycleComponentSupportedCohomology X x p)
-    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a = s) :
-    a = cycleComponentExtendSmoothCoclass X x hx s :=
-  (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv.injective
-    (ha.trans (cycleComponentExtendSmoothCoclass_normalization X x hx s).symm)
-
 /-- The normalized global extension is unique, by injectivity of the
 restriction/purity comparison. This is a theorem, not a supplied existence input. -/
 theorem cycleComponentSupportedInjectiveClass_unique
     (a : CycleComponentSupportedCohomology X x p)
-    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a =
+    (ha : (cycleComponentSupportedClassNormalizationIso x hx).hom a =
       cycleComponentSmoothSupportCoclassSection X x hx) :
-    a = cycleComponentSupportedInjectiveClass X x hx :=
-  cycleComponentExtendSmoothCoclass_unique X x hx _ a ha
+    a = cycleComponentSupportedInjectiveClass hx := by
+  rw [cycleComponentSupportedInjectiveClass, ← ha]
+  exact (cycleComponentSupportedClassNormalizationIso x hx).hom_inv_id_apply a |>.symm
 
 /-- The ordinary class is the support-forgetting image of the supported class. Since
 `cycleComponentSheafClass` is now defined as that composite, this holds by definition; it is
@@ -76,7 +68,7 @@ theorem cycleComponentSheafClass_eq_injectiveModel :
           (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
             (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
             (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
-          (cycleComponentSupportedInjectiveClass X x hx)) := by
+          (cycleComponentSupportedInjectiveClass hx)) := by
   apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).injective
   rw [cycleComponentSheafClass_eq_forgetSupport,
     rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
