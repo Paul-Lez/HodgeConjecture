@@ -117,7 +117,7 @@ theorem cycleComponentSheafClass_mem_algebraicCycleClassSpan
       Submodule.span ℚ {cycleComponentSheafClass X x hx} ≤
         algebraicCycleClassSpan X p := by
     unfold algebraicCycleClassSpan
-    exact le_iSup_of_le x (le_iSup_of_le hx le_rfl)
+    exact le_sSup ⟨x, hx, rfl⟩
   exact hle (Submodule.subset_span (Set.mem_singleton _))
 
 end AlgebraicGeometry.ComplexPoint
