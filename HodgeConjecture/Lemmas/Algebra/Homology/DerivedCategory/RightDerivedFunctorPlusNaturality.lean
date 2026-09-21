@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlus
 
 /-!
@@ -25,13 +27,15 @@ variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
   {F G H : C ⥤ D} [F.Additive] [G.Additive] [H.Additive]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- Apply a natural transformation of additive functors to bounded-below homotopy complexes. -/
+/-- Let `F,G : C → D` be additive functors between abelian categories and `α : F → G` a natural
+transformation. Applying `α` in each degree of a bounded-below cochain complex gives this
+transformation between the induced functors on bounded-below homotopy categories. -/
 def mapHomotopyCategoryPlus (α : F ⟶ G) :
     F.mapHomotopyCategoryPlus ⟶ G.mapHomotopyCategoryPlus where
-  app K := ObjectProperty.homMk ((α.mapHomotopyCategory (.up ℤ)).app K.obj)
+  app K := ObjectProperty.homMk ((α.mapHomotopyCategory ℤᵘᵖ).app K.obj)
   naturality K L f := by
     ext
-    exact (α.mapHomotopyCategory (.up ℤ)).naturality f.hom
+    exact (α.mapHomotopyCategory ℤᵘᵖ).naturality f.hom
 
 @[simp]
 theorem mapHomotopyCategoryPlus_id (F : C ⥤ D) [F.Additive] :
@@ -44,8 +48,10 @@ theorem mapHomotopyCategoryPlus_comp (α : F ⟶ G) (β : G ⟶ H) :
 
 variable [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
 
-/-- The transformation of the bounded-below right derived functors, obtained from the derived
-universal property. -/
+/-- Let `F,G : C → D` be additive functors between abelian categories with derived categories, and
+assume `C` has enough injectives. A natural transformation `α : F → G` induces this
+transformation `RF → RG` on bounded-below derived categories. It is computed by applying `α`
+degreewise to an injective resolution. -/
 def rightDerivedFunctorPlus (α : F ⟶ G) :
     F.rightDerivedFunctorPlus ⟶ G.rightDerivedFunctorPlus :=
   Functor.rightDerivedNatTrans F.rightDerivedFunctorPlus G.rightDerivedFunctorPlus
@@ -92,8 +98,9 @@ variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
   [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
   {F G : C ⥤ D} [F.Additive] [G.Additive]
 
-/-- A coefficient natural isomorphism induces an isomorphism of the bounded-below
-right derived functors, using the derived natural transformations. -/
+/-- Let `F,G : C → D` be additive functors between abelian categories with derived categories, and
+assume `C` has enough injectives. A natural isomorphism `e : F ≅ G` induces this isomorphism `RF
+≅ RG` on bounded-below derived categories, by applying `e` degreewise to injective resolutions. -/
 def rightDerivedFunctorPlus (e : F ≅ G) :
     F.rightDerivedFunctorPlus ≅ G.rightDerivedFunctorPlus where
   hom := e.hom.rightDerivedFunctorPlus

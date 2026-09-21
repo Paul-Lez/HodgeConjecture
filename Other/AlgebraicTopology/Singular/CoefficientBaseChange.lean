@@ -64,7 +64,7 @@ local instance (X : TopCat) (n : ℕ) : IsScalarTower ℚ ℂ (Cohomology ℂ X 
   IsScalarTower.of_compHom ℚ ℂ _
 
 /-- A singular chain group identified with finitely supported functions on singular simplices. -/
-def chainGroupFinsuppIso (R : Type) [Field R] (X : TopCat) (n : ℕ) :
+def chainGroupFinsuppIso (R : Type) [CommRing R] (X : TopCat) (n : ℕ) :
     ((TopCat.toSSet.obj X).chainComplex (ModuleCat.of R R)).X n ≅
       ModuleCat.of R (((TopCat.toSSet.obj X).obj
         (Opposite.op (SimplexCategory.mk n))) →₀ R) :=
@@ -74,7 +74,7 @@ def chainGroupFinsuppIso (R : Type) [Field R] (X : TopCat) (n : ℕ) :
       (Opposite.op (SimplexCategory.mk n))))
 
 @[simp]
-lemma chainGroupFinsuppIso_iota (R : Type) [Field R] (X : TopCat) (n : ℕ)
+lemma chainGroupFinsuppIso_iota (R : Type) [CommRing R] (X : TopCat) (n : ℕ)
     (x : (TopCat.toSSet.obj X).obj (Opposite.op (SimplexCategory.mk n))) (r : R) :
     (chainGroupFinsuppIso R X n).toLinearEquiv
         ((SSet.ιChainComplex (C := ModuleCat R) (R := ModuleCat.of R R)

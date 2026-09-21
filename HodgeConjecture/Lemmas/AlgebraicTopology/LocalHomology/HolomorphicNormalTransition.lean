@@ -28,7 +28,9 @@ section GeneralNormal
 variable {E N : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [NormedAddCommGroup N] [NormedSpace ℂ N]
 
-/-- The normal-to-normal block of an ambient derivative. -/
+/-- Let `E,N` be complex normed vector spaces and `A : E × N → E × N` a continuous complex-linear
+map. Its normal block is the continuous linear map `N → N` given by `v ↦ (A(0,v)).2`, the second
+component of `A` on the second summand. -/
 def normalBlock (A : (E × N) →L[ℂ] (E × N)) : N →L[ℂ] N :=
   (ContinuousLinearMap.snd ℂ E N).comp (A.comp (ContinuousLinearMap.inr ℂ E N))
 
@@ -112,8 +114,10 @@ theorem normalTransition_derivative_rightInverse :
   have hi : (e ∘ e.symm) =ᶠ[𝓝 (e (a, (0 : N)))] id := e.eventually_right_inverse' ha
   exact (h.congr_of_eventuallyEq hi.symm).unique (hasFDerivAt_id _)
 
-/-- The normal derivative is complex-linearly invertible, with inverse the normal
-block of the derivative of the inverse chart. -/
+/-- Let `e` be a local homeomorphism of `E × N`, where `E,N` are complex normed vector spaces,
+preserving the locus `N = 0`. Suppose `e` and its inverse are analytic at `(a,0)` and `e(a,0)`.
+This continuous complex-linear equivalence on `N` is `v ↦ (De_(a,0)(0,v)).2`; its inverse is the
+same block of the derivative of `e⁻¹` at `e(a,0)`. -/
 def normalTransitionDerivativeEquiv : N ≃L[ℂ] N where
   toLinearEquiv :=
     { toLinearMap := normalBlock (fderiv ℂ e (a, 0))
@@ -151,7 +155,9 @@ variable (c : ℕ)
   (hplane : ∀ p ∈ e.source, (e p).2 = 0 ↔ p.2 = 0)
   (he : AnalyticAt ℂ e (a, 0)) (hei : AnalyticAt ℂ e.symm (e (a, 0)))
 
-/-- The transverse normal map of a coordinate transition. -/
+/-- Let `E` be a complex normed vector space and `e` a local coordinate change on `E × ℂ^c`. Fix `a
+∈ E`. This function `ℂ^c → ℂ^c` sends `v` to the normal component `(e(a,v)).2`. Its geometric
+domain is the set of `v` for which `(a,v)` lies in the source of `e`. -/
 def normalTransitionMap (v : Fin c → ℂ) : Fin c → ℂ := (e (a, v)).2
 
 /-- Only normal parameters whose full points are in the transition domain are used. -/
@@ -181,11 +187,11 @@ theorem exists_open_normalTransition_localClass_invariance :
       IsOpen W ∧ 0 ∈ W ∧
       ∀ z : RelativeHomology ℚ (neighborhoodPointComplementPair W 0) (2 * c),
         relativeHomologyMap ℚ (2 * c) (neighborhoodPointComplementPairMap W 0) z =
-          standardComplexLocalClass c →
+          standardComplexLocalClass ℚ c →
         relativeHomologyMap ℚ (2 * c)
           (complexNeighborhoodPuncturedPairMapOf c W (normalTransitionMap c e a)
             ((normalTransitionMap_continuousOn c e a).mono hW)
-            hne) z = standardComplexLocalClass c := by
+            hne) z = standardComplexLocalClass ℚ c := by
   let L := normalTransitionDerivativeEquiv e a ha hplane he hei
   let A := complexMatrixOfContinuousLinearMap c L.toContinuousLinearMap
   have hA : A.det ≠ 0 :=

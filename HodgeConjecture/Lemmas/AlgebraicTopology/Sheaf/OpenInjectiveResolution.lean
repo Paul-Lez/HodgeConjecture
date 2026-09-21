@@ -6,6 +6,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Comparing an ambient resolution with a resolution on an open subspace
 
@@ -23,17 +25,22 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{0}) (U : Opens X) (A : AddCommGrpCat.{0})
 
-/-- Restrict the ambient injective resolution termwise. The restriction is flasque. -/
+/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
+`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
+injective resolution of `A_U`. This is the nonnegative cochain complex `I|_U` obtained by
+restricting each sheaf and differential to `U`. -/
 def restrictedAmbientConstantResolution :
     CochainComplex (Sheaf AddCommGrpCat.{0} (TopCat.of U)) ℕ :=
   ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex (.up ℕ)).obj
     (ambientConstantInjectiveResolution X A).cocomplex
 
-/-- The augmentation from open constants into the restricted ambient
-resolution, using the normalized constant/open isomorphism. -/
+/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
+`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
+injective resolution of `A_U`. This augmentation `A_U[0] → I|_U` restricts the augmentation of
+`I` and identifies `A_X|_U` with `A_U`. -/
 def restrictedAmbientConstantAugmentation :
     (CochainComplex.single₀ (Sheaf AddCommGrpCat.{0} (TopCat.of U))).obj
-        ((constantSheaf (Opens.grothendieckTopology (TopCat.of U)) AddCommGrpCat).obj A) ⟶
+        𝓒[↧U; A] ⟶
       restrictedAmbientConstantResolution X U A :=
   (CochainComplex.single₀ _).map (constantOpenSheafRestrictionIso X U A).hom ≫
     (HomologicalComplex.singleMapHomologicalComplex
@@ -61,8 +68,10 @@ instance restrictedAmbientConstantAugmentation_quasiIso :
   dsimp only [restrictedAmbientConstantAugmentation]
   infer_instance
 
-/-- A map from the restricted ambient resolution to the independent
-open-subspace resolution, extending the prescribed constant augmentation. -/
+/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
+`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
+injective resolution of `A_U`. This chosen cochain map `I|_U → J` extends the identity on `A_U`:
+its composite with the restricted augmentation equals the augmentation of `J`. -/
 def restrictedAmbientToOpenResolution :
     restrictedAmbientConstantResolution X U A ⟶
       (ambientConstantInjectiveResolution (TopCat.of U) A).cocomplex :=
@@ -78,7 +87,10 @@ instance restrictedAmbientConstantResolution_isFlasque (n : ℕ) :
     @injective_isFlasque _ _ ((ambientConstantInjectiveResolution X A).injective n)
   exact openSheafRestriction_isFlasque X U _
 
-/-- The restriction of the ambient injective complex. -/
+/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
+`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
+injective resolution of `A_U`. This cochain map `I → j_*(I|_U)` restricts each degree to `U`. On
+an open `V ⊆ X` its component is `I^q(V) → I^q(V ∩ U)`. -/
 def ambientInjectiveRestriction :
     (ambientConstantInjectiveResolution X A).cocomplex ⟶
       ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
@@ -88,8 +100,10 @@ def ambientInjectiveRestriction :
   comm' i j _h := ((toOpenRestrictionPushforward X U).naturality
     ((ambientConstantInjectiveResolution X A).cocomplex.d i j)).symm
 
-/-- Restriction from the ambient injective resolution to the independently
-chosen open-subspace resolution, through open restriction. -/
+/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
+`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
+injective resolution of `A_U`. This cochain map `I → j_*J` is restriction `I → j_*(I|_U)`
+followed by direct image of the chosen augmentation-preserving map `I|_U → J`. -/
 def ambientToOpenInjectiveResolution :
     (ambientConstantInjectiveResolution X A).cocomplex ⟶
       ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
@@ -98,8 +112,10 @@ def ambientToOpenInjectiveResolution :
     ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).map
       (restrictedAmbientToOpenResolution X U A)
 
-/-- Global sections of the pushed-forward comparison. Its source is the open restriction of the
-ambient resolution. -/
+/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
+`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
+injective resolution of `A_U`. This map of complexes is obtained by taking global sections on
+`X` of `j_*(I|_U) → j_*J`. Under the direct-image identification it is `Γ(U,I|_U) → Γ(U,J)`. -/
 def globalRestrictedAmbientToOpenResolution :
     ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
       (.up ℕ)).obj
@@ -194,8 +210,7 @@ lemma ambientAugmentation_comp_openResolution :
       ((ambientConstantInjectiveResolution X A).ι.f 0)
     dsimp only [Functor.id_map] at hnat
     rw [← Category.assoc, hnat]
-    change ((toOpenRestrictionPushforward X U).app
-        ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj A) ≫ _) ≫ _ = _
+    change ((toOpenRestrictionPushforward X U).app 𝓒[X; A] ≫ _) ≫ _ = _
     rw [← constantRestriction_pushforward_constantToOpen]
     dsimp only [openRestrictionPushforward, Functor.comp_map]
     simp only [Category.assoc]

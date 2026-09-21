@@ -115,7 +115,7 @@ lemma eq_integralCycleComponentBorelMooreFundamentalClass
 /-- Borel--Moore homology of a projective analytic cycle component.  Compactness identifies it
 with ordinary homology, presented uniformly as relative homology modulo the empty boundary. -/
 abbrev CycleComponentBorelMooreHomology
-    (R : Type) [Field R] (V : SmoothProjectiveComplexVariety)
+    (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
     (x : V.scheme) (n : ℕ) : ModuleCat R :=
   CompactificationBorelMooreHomology R
     (Set.univᶜ : Set (CycleComponentAnalyticPoint V x)) n
@@ -123,7 +123,7 @@ abbrev CycleComponentBorelMooreHomology
 /-- A family of exactly normalized local orientation classes on the smooth analytic locus of a
 cycle component. -/
 abbrev CycleComponentLocalOrientation
-    (R : Type) [Field R] (V : SmoothProjectiveComplexVariety)
+    (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
     (x : V.scheme) (n : ℕ) :=
   ∀ (z : CycleComponentAnalyticPoint V x),
     z ∈ cycleComponentSmoothAnalyticLocus V.over x →
@@ -131,7 +131,7 @@ abbrev CycleComponentLocalOrientation
 
 /-- The local value of a Borel--Moore class of a compact cycle component. -/
 def cycleComponentBorelMooreToLocal
-    (R : Type) [Field R] (V : SmoothProjectiveComplexVariety)
+    (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
     (x : V.scheme) (n : ℕ) (z : CycleComponentAnalyticPoint V x) :
     CycleComponentBorelMooreHomology R V x n →ₗ[R]
       RelativeHomology R (pointComplementPair z) n :=
@@ -140,7 +140,7 @@ def cycleComponentBorelMooreToLocal
 /-- A component class is its oriented Borel--Moore fundamental class when its local value at
 every smooth point is exactly the specified complex-orientation class. -/
 def IsCycleComponentBorelMooreFundamentalClass
-    (R : Type) [Field R] (V : SmoothProjectiveComplexVariety)
+    (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
     (x : V.scheme) (n : ℕ)
     (orientation : CycleComponentLocalOrientation R V x n)
     (c : CycleComponentBorelMooreHomology R V x n) : Prop :=
@@ -151,7 +151,7 @@ def IsCycleComponentBorelMooreFundamentalClass
 /-- The Borel--Moore fundamental class of a projective cycle component, selected after the
 existence and uniqueness theorem has established its exact local normalization. -/
 def cycleComponentBorelMooreFundamentalClass
-    (R : Type) [Field R] (V : SmoothProjectiveComplexVariety)
+    (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
     (x : V.scheme) (n : ℕ)
     (orientation : CycleComponentLocalOrientation R V x n)
     (h : ∃! c, IsCycleComponentBorelMooreFundamentalClass R V x n orientation c) :
@@ -160,7 +160,7 @@ def cycleComponentBorelMooreFundamentalClass
 
 /-- The selected component class has the required local orientation at every smooth point. -/
 lemma cycleComponentBorelMooreFundamentalClass_isFundamental
-    (R : Type) [Field R] (V : SmoothProjectiveComplexVariety)
+    (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
     (x : V.scheme) (n : ℕ)
     (orientation : CycleComponentLocalOrientation R V x n)
     (h : ∃! c, IsCycleComponentBorelMooreFundamentalClass R V x n orientation c) :
@@ -170,7 +170,7 @@ lemma cycleComponentBorelMooreFundamentalClass_isFundamental
 
 /-- Exact local normalization determines the component fundamental class uniquely. -/
 lemma eq_cycleComponentBorelMooreFundamentalClass
-    (R : Type) [Field R] (V : SmoothProjectiveComplexVariety)
+    (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
     (x : V.scheme) (n : ℕ)
     (orientation : CycleComponentLocalOrientation R V x n)
     (h : ∃! c, IsCycleComponentBorelMooreFundamentalClass R V x n orientation c)
@@ -182,7 +182,7 @@ lemma eq_cycleComponentBorelMooreFundamentalClass
 
 @[simp]
 lemma cycleComponentBorelMooreToLocal_fundamentalClass
-    (R : Type) [Field R] (V : SmoothProjectiveComplexVariety)
+    (R : Type) [CommRing R] (V : SmoothProjectiveComplexVariety)
     (x : V.scheme) (n : ℕ)
     (orientation : CycleComponentLocalOrientation R V x n)
     (h : ∃! c, IsCycleComponentBorelMooreFundamentalClass R V x n orientation c)

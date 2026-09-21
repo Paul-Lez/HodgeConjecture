@@ -31,7 +31,7 @@ nothing in the statement's dependency chain uses these results, only material in
 open CategoryTheory Topology TopologicalSpace
 open AlgebraicTopology.Singular
 namespace AlgebraicGeometry.ComplexPoint
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)

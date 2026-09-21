@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 
 /-!
@@ -43,4 +43,4 @@ component classes of `Cycle.FundamentalClass` indexed by the points of codimensi
 @[expose] public def HodgeConjecture : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ),
-    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p
+    Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p

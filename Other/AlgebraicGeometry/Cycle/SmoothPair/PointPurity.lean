@@ -29,7 +29,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (d : ℕ)
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
@@ -37,9 +37,9 @@ variable (X Y : Over (Spec (.of ℂ)))
 
 /-- The actual normal parametrization factored through the genuine ambient chart target. -/
 def smoothClosedPointNormalTargetPairMap :
-    standardComplexPuncturedPair d ⟶
+    puncturedPair ℂ d ⟶
       neighborhoodPointComplementPair (localChart X d (Point.map i z)).target
-        (localChart X d (Point.map i z) (Point.map i z)) := by
+        (localChart X d (Point.map i z) (Point.map i z)) :=
   let c := localChart X d (Point.map i z) (Point.map i z)
   let L := closedImmersionPointNormalLinearMap X Y i d z
   let r := smoothClosedPointNormalRadius X Y i d z V hzV
@@ -58,7 +58,7 @@ def smoothClosedPointNormalTargetPairMap :
     simpa only [map_zero] using add_left_cancel (h.trans (add_zero c).symm)
   have hcont : Continuous (fun w => c + L (R w)) :=
     continuous_const.add (L.continuous.comp (continuous_complexUnivBall d 0 r))
-  exact TopPair.ofHom
+  TopPair.ofHom
     (TopCat.ofHom ⟨fun w => ⟨c + L (R w), hmem w⟩, hcont.subtype_mk hmem⟩)
     (TopCat.ofHom ⟨fun w => ⟨⟨c + L (R w.1), hmem w.1⟩, hne w.1 w.2⟩,
       ((hcont.comp continuous_subtype_val).subtype_mk _).subtype_mk _⟩) rfl
@@ -106,7 +106,7 @@ theorem smoothClosedPointNormalTargetPairMap_comp_inclusion :
 /-- The actual normal model sends the fixed standard class to the exact ambient chart class. -/
 theorem smoothClosedPointNormalModelPairMap_localClass :
     relativeHomologyMap ℚ (2 * d) (smoothClosedPointNormalModelPairMap X Y i d z V hzV)
-      (standardComplexLocalClass d) =
+      (standardComplexLocalClass ℚ d) =
         localClassOfChart d (localChart X d (Point.map i z)) (Point.map i z)
           (mem_localChart_source X d (Point.map i z)) := by
   rw [← smoothClosedPointNormalTargetPairMap_inverseChart]
@@ -126,7 +126,7 @@ theorem smoothClosedPointNormalClass_to_analyticPointLocalHomologyClass :
       relativeHomologyMap ℚ (2 * d)
         (normalSliceSection (Fin 0 → ℂ) d ≫
           (smoothClosedSupportNeighborhoodPairIso X Y i 0 d z V hzV).hom)
-        (standardComplexLocalClass d) := by
+        (standardComplexLocalClass ℚ d) := by
     rw [relativeHomologyMap_comp]
     rfl
   rw [hclass, ← LinearMap.comp_apply, ← relativeHomologyMap_comp, Category.assoc]

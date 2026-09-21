@@ -34,7 +34,7 @@ open CategoryTheory Limits TopologicalSpace
 open scoped Simplicial
 universe u
 namespace AlgebraicTopology.Singular
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Restriction of relative chains over the open neighborhoods of `x`. -/
 def relativeChainNeighborhoodDiagram (x : X) : (OpenNhds x)ᵒᵖ ⥤ ChainCategory R :=

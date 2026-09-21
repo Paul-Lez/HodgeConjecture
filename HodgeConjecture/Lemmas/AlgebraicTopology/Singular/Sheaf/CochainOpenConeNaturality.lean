@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
 
@@ -15,10 +17,11 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
   {V W V' W' : Opens X} (i : W ⟶ V) (i' : W' ⟶ V') (a : V' ⟶ V) (b : W' ⟶ W)
 
-/-- The map of pairs induced by a square of ambient open inclusions. -/
+/-- Let `X` be a topological space and `W ⊆ V`, `W′ ⊆ V′` open subsets, with `V′ ⊆ V` and `W′ ⊆ W`.
+This map of topological pairs `(V′,W′) → (V,W)` is given by the two inclusions. -/
 def openInclusionPairMap : openInclusionPair X i' ⟶ openInclusionPair X i :=
   TopPair.ofHom ((Opens.toTopCat X).map a) ((Opens.toTopCat X).map b) (by ext x; rfl)
 
@@ -48,7 +51,10 @@ lemma openSingularSheafRestriction_square :
   rw [← Functor.map_comp, ← Functor.map_comp]
   congr 1
 
-/-- Restriction on raw local cones. -/
+/-- Let `X` be a topological space and `W ⊆ V`, `W′ ⊆ V′` open subsets, with `V′ ⊆ V` and `W′ ⊆ W`.
+For a commutative ring `R`, restriction of singular cochains induces this map `Cone(C^•(V;R) →
+C^•(W;R)) → Cone(C^•(V′;R) → C^•(W′;R))`, with all complexes extended by zero to negative
+degrees and regarded as complexes of abelian groups. -/
 def openRawSingularRestrictionConeMap :
     openRawSingularRestrictionCone R X i ⟶ openRawSingularRestrictionCone R X i' :=
   CochainComplex.mappingCone.map _ _
@@ -57,7 +63,10 @@ def openRawSingularRestrictionConeMap :
     (by rw [← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp,
       openRawSingularRestriction_square R X i i' a b])
 
-/-- Restriction on sheaf-section local cones. -/
+/-- Let `X` be a topological space and `W ⊆ V`, `W′ ⊆ V′` open subsets, with `V′ ⊆ V` and `W′ ⊆ W`.
+Let `C` be the complex of sheafified singular cochains with coefficients in a commutative ring
+`R`. Restriction of sections gives this map `Cone(C(V) → C(W)) → Cone(C(V′) → C(W′))`, after
+extension by zero to negative degrees. -/
 def openSingularSheafRestrictionConeMap :
     openSingularSheafRestrictionCone R X i ⟶ openSingularSheafRestrictionCone R X i' :=
   CochainComplex.mappingCone.map _ _
@@ -94,21 +103,24 @@ lemma openRawSingularRestrictionConeIsoRelative_hom :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The relative cone map after forgetting scalars termwise. -/
+/-- Let `R` be a commutative ring and `f : (X,A) → (Y,B)` a map of topological pairs. Pullback
+induces this map of abelian-group complexes `Cone(C^•(Y;R) → C^•(B;R)) → Cone(C^•(X;R) →
+C^•(A;R))`. The singular cochain complexes are extended by zero to negative degrees and their
+scalar structure is forgotten before taking cones. -/
 def forgottenRelativeCochainConeMap {P Q : TopPair.{0}} (f : P ⟶ Q) :
     CochainComplex.mappingCone
-        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
           (relativeCochainRestrictionInt R Q)) ⟶
       CochainComplex.mappingCone
-        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+        (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
           (relativeCochainRestrictionInt R P)) :=
   CochainComplex.mappingCone.map _ _
-    (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+    (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
       (relativeDualCochainShortComplexIntMap R f).τ₂)
-    (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+    (((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
       (relativeDualCochainShortComplexIntMap R f).τ₃)
     (by rw [← Functor.map_comp, ← Functor.map_comp]
-        exact congrArg ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+        exact congrArg ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
           (relativeDualCochainShortComplexIntMap R f).comm₂₃.symm)
 
 set_option backward.defeqAttrib.useBackward true in
@@ -133,7 +145,7 @@ lemma openRawSingularRestrictionConeIsoRelative_naturality :
 including the canonical comparison for forgetting scalars. -/
 def openRawSingularRestrictionConeIsoForgottenRelative :
     openRawSingularRestrictionCone R X i ≅
-      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).obj
+      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
         (CochainComplex.mappingCone (relativeCochainRestrictionInt R (openInclusionPair X i))) :=
   openRawSingularRestrictionConeIsoRelative R X i ≪≫
     (CochainComplex.mappingCone.mapHomologicalComplexIso
@@ -148,7 +160,7 @@ lemma openRawSingularRestrictionConeIsoForgottenRelative_naturality :
     openRawSingularRestrictionConeMap R X i i' a b ≫
       (openRawSingularRestrictionConeIsoForgottenRelative R X i').hom =
     (openRawSingularRestrictionConeIsoForgottenRelative R X i).hom ≫
-      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℤ)).map
+      ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).map
         (relativeCochainConeMap R (openInclusionPairMap X i i' a b)) := by
   dsimp only [openRawSingularRestrictionConeIsoForgottenRelative, Iso.trans_hom, Iso.symm_hom]
   rw [← Category.assoc, openRawSingularRestrictionConeIsoRelative_naturality, Category.assoc,
@@ -162,8 +174,11 @@ lemma openRawSingularRestrictionConeIsoForgottenRelative_naturality :
     Iso.inv_hom_id_assoc]
   rfl
 
-/-- The homology comparison, retaining the scalar-forgetting
-homology isomorphism as a separate canonical factor. -/
+/-- Let `W ⊆ V` be open subsets of a topological space `X`, and let `R` be a commutative ring. This
+identifies degree-`n` cohomology of the cone of raw cochain restriction from `V` to `W` with the
+underlying additive group of `H^n(Cone(C^•(V;R) → C^•(W;R)))` formed in `R`-modules. It combines
+the identification of open-subspace cochains with the fact that forgetting scalars commutes with
+cohomology. -/
 def openRawSingularRestrictionConeHomologyIso (n : ℤ) :
     (openRawSingularRestrictionCone R X i).homology n ≅
       (forget₂ (ModuleCat R) AddCommGrpCat).obj
@@ -187,7 +202,7 @@ lemma openRawSingularRestrictionConeHomologyIso_naturality (n : ℤ) :
       (forget₂ (ModuleCat R) AddCommGrpCat).map
         (HomologicalComplex.homologyMap
           (relativeCochainConeMap R (openInclusionPairMap X i i' a b)) n) := by
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) n
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ n
   change H.map (openRawSingularRestrictionConeMap R X i i' a b) ≫
       (H.map (openRawSingularRestrictionConeIsoForgottenRelative R X i').hom ≫ _) =
     (H.map (openRawSingularRestrictionConeIsoForgottenRelative R X i).hom ≫ _) ≫ _
@@ -197,7 +212,7 @@ lemma openRawSingularRestrictionConeHomologyIso_naturality (n : ℤ) :
   exact congrArg (fun f => H.map
     (openRawSingularRestrictionConeIsoForgottenRelative R X i).hom ≫ f)
     (ShortComplex.mapHomologyIso_hom_naturality
-      ((HomologicalComplex.shortComplexFunctor (ModuleCat R) (.up ℤ) n).map
+      ((HomologicalComplex.shortComplexFunctor (ModuleCat R) ℤᵘᵖ n).map
         (relativeCochainConeMap R (openInclusionPairMap X i i' a b)))
       (forget₂ (ModuleCat R) AddCommGrpCat))
 
@@ -214,7 +229,7 @@ lemma openRawSingularRestrictionConeCohomologyEquivRelative_eq (n : ℕ)
   let eB := CochainComplex.mappingCone.mapHomologicalComplexIso
     (relativeCochainRestrictionInt R (openInclusionPair X i))
     (forget₂ (ModuleCat R) AddCommGrpCat)
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) ((n : ℤ) - 1)
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ ((n : ℤ) - 1)
   change relativeCochainConeCohomologyEquivCanonical R (openInclusionPair X i) n
     ((ShortComplex.mapHomologyIso _ (forget₂ (ModuleCat R) AddCommGrpCat)).hom
       (H.map eB.inv (H.map eA.hom z))) =
@@ -247,13 +262,16 @@ lemma openRawSingularRestrictionConeCohomologyEquivRelative_naturality (n : ℕ)
   rw [h]
   exact relativeCochainConeCohomologyEquivCanonical_naturality _ _ _ _
 
-/-- Homology of the raw-to-sheaf cone map. -/
+/-- Let `W ⊆ V` be open subsets of a topological space `X`, each Hausdorff and paracompact. Write
+`C` for the sheafified rational singular cochain complex. Sheafification induces this
+isomorphism `H^n(Cone(C^•(V;ℚ) → C^•(W;ℚ))) ≅ H^n(Cone(C(V) → C(W)))` in every integer degree,
+comparing raw cochains with sections of the cochain sheaves. -/
 def openRawToSingularSheafRestrictionConeHomologyIso
     [ParacompactSpace V] [T2Space V] [ParacompactSpace W] [T2Space W] (n : ℤ) :
     (openRawSingularRestrictionCone ℚ X i).homology n ≅
-      (openSingularSheafRestrictionCone ℚ X i).homology n := by
-  let := openRawToSingularSheafRestrictionCone_quasiIso X i
-  exact asIso (HomologicalComplex.homologyMap (openRawToSingularSheafRestrictionCone ℚ X i) n)
+      (openSingularSheafRestrictionCone ℚ X i).homology n :=
+  letI := openRawToSingularSheafRestrictionCone_quasiIso X i
+  asIso (HomologicalComplex.homologyMap (openRawToSingularSheafRestrictionCone ℚ X i) n)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -267,7 +285,7 @@ lemma openRawToSingularSheafRestrictionConeHomologyIso_inv_naturality
       (openRawToSingularSheafRestrictionConeHomologyIso X i' n).inv =
     (openRawToSingularSheafRestrictionConeHomologyIso X i n).inv ≫
       HomologicalComplex.homologyMap (openRawSingularRestrictionConeMap ℚ X i i' a b) n := by
-  have h := congrArg (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) n).map
+  have h := congrArg (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ n).map
     (openRawToSingularSheafRestrictionCone_naturality ℚ X i i' a b)
   rw [Functor.map_comp, Functor.map_comp] at h
   change HomologicalComplex.homologyMap (openRawSingularRestrictionConeMap ℚ X i i' a b) n ≫

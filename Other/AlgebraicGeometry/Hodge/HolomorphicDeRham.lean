@@ -23,6 +23,8 @@ import Mathlib.Topology.Sheaves.Sheafify
 import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # HolomorphicDeRham, the part the statement does not need
 
@@ -42,7 +44,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 /-- Conjugating twice is the identity on the constant complex presheaf. -/
 lemma conjConstantComplexPresheaf_comp_self :
     conjConstantComplexPresheaf X ≫ conjConstantComplexPresheaf X =
-      𝟙 (constantComplexAddCommGrpPresheaf X) := by
+      𝟙 𝓒ᵖ(↧(ComplexPoint X); ℂ) := by
   ext U : 2
   change (starRingEnd ℂ).toAddMonoidHom.comp (starRingEnd ℂ).toAddMonoidHom = AddMonoidHom.id ℂ
   exact AddMonoidHom.ext Complex.conj_conj
@@ -50,7 +52,7 @@ lemma conjConstantComplexPresheaf_comp_self :
 /-- Conjugating twice is the identity on the constant complex sheaf. -/
 lemma conjConstantComplexSheaf_comp_self :
     conjConstantComplexSheaf X ≫ conjConstantComplexSheaf X =
-      𝟙 (constantComplexSheaf X) := by
+      𝟙 𝓒(↧(ComplexPoint X); ℂ) := by
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
   change (presheafToSheaf J AddCommGrpCat).map (conjConstantComplexPresheaf X) ≫

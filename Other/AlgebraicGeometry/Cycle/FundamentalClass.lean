@@ -16,26 +16,41 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 public import Other.AlgebraicGeometry.Cohomology.SupportConeForget
 
 /-!
-# FundamentalClass, the part the statement does not need
+# Constructed sheaf cycle classes in arbitrary codimension
 
-Separated out of
-`HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass`:
-nothing in the statement's dependency chain uses these results, only material in
-`Other` does.
+The normalized extension across the singular boundary is unique, and the ordinary class is
+the support-forgetting image of the supported class.
 -/
 
 @[expose] public noncomputable section
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
 namespace AlgebraicGeometry.ComplexPoint
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 attribute [local instance] cycleComponentSheafClassAnalyticTopology
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
+
+/-- Extension recovers exactly the prescribed smooth-locus section. -/
+@[simp]
+theorem cycleComponentExtendSmoothCoclass_normalization
+    (s : CycleComponentSmoothCoclassSections X x p) :
+    (cycleComponentSupportedClassNormalizationIso X x hx).hom
+      (cycleComponentExtendSmoothCoclass X x hx s) = s :=
+  AddEquiv.apply_symm_apply
+    (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv s
+
+/-- Exact smooth-locus normalization, not equality only up to a scalar. -/
+@[simp]
+theorem cycleComponentSupportedInjectiveClass_normalization :
+    (cycleComponentSupportedClassNormalizationIso X x hx).hom
+      (cycleComponentSupportedInjectiveClass X x hx) =
+    cycleComponentSmoothSupportCoclassSection X x hx :=
+  cycleComponentExtendSmoothCoclass_normalization X x hx _
 
 /-- The prescribed smooth-locus section determines the extension uniquely. -/
 theorem cycleComponentExtendSmoothCoclass_unique

@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
 import Other.AlgebraicGeometry.Cycle.Codimension
 
 import Other.AlgebraicGeometry.Cohomology.RationalDegreeZero
@@ -196,7 +196,7 @@ theorem algebraicCycleClassSpan_zero_eq_top_of_coclassSection_ne_zero
 coclass section is nonzero. -/
 theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero
     (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
-    Hdg^0(ℚ; X) = algebraicCycleClassSpan X 0 := by
+    Hdg^0(X; ℚ) = algebraicCycleClassSpan X 0 := by
   let hV : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
   exact rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_connected X hV
     (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_coclassSection_ne_zero X hne)
@@ -205,7 +205,7 @@ theorem rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_n
 coclass section. -/
 theorem rationalHodgeClasses_zero_le_algebraicCycleClassSpan_of_coclassSection_ne_zero
     (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) :
-    Hdg^0(ℚ; X) ≤ algebraicCycleClassSpan X 0 := by
+    Hdg^0(X; ℚ) ≤ algebraicCycleClassSpan X 0 := by
   rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan_of_coclassSection_ne_zero X hne]
 
 /-- The Hodge-conjecture inclusion in every codimension for a smooth projective complex variety of
@@ -213,7 +213,7 @@ complex dimension zero, given nonvanishing of the normalized coclass section. -/
 theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero_of_coclassSection_ne_zero
     (hd : dim X.left = 0)
     (hne : cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) ≠ 0) (p : ℕ) :
-    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p := by
+    Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p := by
   let _ : ConnectedSpace (ComplexPoint X) := ComplexPoint.connectedSpace X
   exact rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_eq_zero X hd
     (algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_coclassSection_ne_zero

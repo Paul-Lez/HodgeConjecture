@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
@@ -26,23 +28,27 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- The supported ambient rational injective complex for a closed support. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and `S` a closed subset of its analytic
+space `X(ℂ)`. For the chosen injective resolution `ℚ → I^•`, this complex has in each degree the
+subsheaf of `I^n` consisting of sections that vanish off `S`. Its differentials are induced by
+those of `I^•`, and it represents the derived sheaf of sections with support in `S`. -/
 def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
+  -- `RΓ_S(ℚ)`: the `S`-supported subsheaves of an injective resolution of `ℚ` on `X(ℂ)`.
   ((TopCat.Sheaf.sheafSectionsSupportedOutside
-    (TopCat.of (ComplexPoint X)) S.compl).mapHomologicalComplex (.up ℤ)).obj
+    -- `X(ℂ)`.
+    (TopCat.of (ComplexPoint X))
+    -- The open `X(ℂ) \ S`; sections supported outside it are the sections supported on `S`.
+    S.compl).mapHomologicalComplex ℤᵘᵖ).obj
+      -- The injective resolution `I^•` of `ℚ` on `X(ℂ)`.
       (ambientRationalInjectiveComplex X)
 
 instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint X)) :
     (complexSupportInjectiveComplex X S).IsStrictlyGE 0 := by
   dsimp [complexSupportInjectiveComplex]
   infer_instance
-
-variable (Y : Over (Spec (.of ℂ))) (i : Y ⟶ X)
-  (m d : ℕ) [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left]
 
 end AlgebraicGeometry.ComplexPoint

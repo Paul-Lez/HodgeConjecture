@@ -329,7 +329,7 @@ lemma backFace_naturality {Y : SSet.{u}} (f : X ⟶ Y) {p q : ℕ}
     backFace Y (f.app _ x) = f.app _ (backFace X x) :=
   (NatTrans.naturality_apply f (backInclusion p q).op x).symm
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-- Unnormalised simplicial chains with coefficients in a field, in one degree. -/
 abbrev ChainGroup (X : SSet.{u}) (n : ℕ) : ModuleCat.{u} R :=
@@ -713,7 +713,7 @@ theorem cap_naturality {X Y : SSet.{u}} (f : X ⟶ Y) (p q : ℕ)
 /-! ## Descent to homology -/
 
 /-- Algebraic simplicial cocycles. -/
-abbrev Cocycle (R : Type u) [Field R] (X : SSet.{u}) (p : ℕ) :=
+abbrev Cocycle (R : Type u) [CommRing R] (X : SSet.{u}) (p : ℕ) :=
   LinearMap.ker (coboundary R p : Cochain R X p →ₗ[R] Cochain R X (p + 1))
 
 /-- Maps of short complexes with the same middle component induce the same map on homology. -/
@@ -730,51 +730,48 @@ noncomputable def capShortComplexHomZero {X : SSet.{u}} (p : ℕ)
     (phi : Cochain R X p) (hphi : coboundary R p phi = 0) :
     (X.chainComplex (ModuleCat.of R R)).sc' (p + 1) p
         ((ComplexShape.down ℕ).next p) ⟶
-      (X.chainComplex (ModuleCat.of R R)).sc' 1 0 0 := by
+      (X.chainComplex (ModuleCat.of R R)).sc' 1 0 0 :=
   let s : R := (-1 : R) ^ p
   have hs : s * s = 1 := by
     dsimp only [s]
     rw [← pow_add, (Even.add_self p).neg_one_pow]
-  refine
-    { τ₁ := ModuleCat.ofHom (s • cap R p 1 phi)
-      τ₂ := capHom R p 0 phi
-      τ₃ := 0
-      comm₁₂ := ?_
-      comm₂₃ := ?_ }
-  · refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
-    change boundary R 0 (s • cap R p 1 phi c) =
-      cap R p 0 phi (boundary R p c)
-    rw [map_smul]
-    have h := boundary_cap_eq_of_cocycle R p 0 phi hphi c
-    simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · change capHom R p 0 phi ≫
-        (X.chainComplex (ModuleCat.of R R)).d 0 0 =
-      (X.chainComplex (ModuleCat.of R R)).d p ((ComplexShape.down ℕ).next p) ≫ 0
-    rw [(X.chainComplex (ModuleCat.of R R)).shape 0 0 (by simp),
-      comp_zero, comp_zero]
+  { τ₁ := ModuleCat.ofHom (s • cap R p 1 phi)
+    τ₂ := capHom R p 0 phi
+    τ₃ := 0
+    comm₁₂ := by
+      refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
+      change boundary R 0 (s • cap R p 1 phi c) =
+        cap R p 0 phi (boundary R p c)
+      rw [map_smul]
+      have h := boundary_cap_eq_of_cocycle R p 0 phi hphi c
+      simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
+    comm₂₃ := by
+      change capHom R p 0 phi ≫
+          (X.chainComplex (ModuleCat.of R R)).d 0 0 =
+        (X.chainComplex (ModuleCat.of R R)).d p ((ComplexShape.down ℕ).next p) ≫ 0
+      rw [(X.chainComplex (ModuleCat.of R R)).shape 0 0 (by simp),
+        comp_zero, comp_zero] }
 
 /-- The explicit three-degree cap morphism ending in a positive degree. -/
 noncomputable def capShortComplexHomSucc {X : SSet.{u}} (p q : ℕ)
     (phi : Cochain R X p) (hphi : coboundary R p phi = 0) :
     (X.chainComplex (ModuleCat.of R R)).sc' (p + (q + 2)) (p + (q + 1)) (p + q) ⟶
-      (X.chainComplex (ModuleCat.of R R)).sc' (q + 2) (q + 1) q := by
+      (X.chainComplex (ModuleCat.of R R)).sc' (q + 2) (q + 1) q :=
   let s : R := (-1 : R) ^ p
   have hs : s * s = 1 := by
     dsimp only [s]
     rw [← pow_add, (Even.add_self p).neg_one_pow]
-  refine
-    { τ₁ := ModuleCat.ofHom (s • cap R p (q + 2) phi)
-      τ₂ := capHom R p (q + 1) phi
-      τ₃ := ModuleCat.ofHom (s • cap R p q phi)
-      comm₁₂ := ?_
-      comm₂₃ := ?_ }
-  · refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
-    change boundary R (q + 1) (s • cap R p (q + 2) phi c) =
-      cap R p (q + 1) phi (boundary R (p + (q + 1)) c)
-    rw [map_smul]
-    have h := boundary_cap_eq_of_cocycle R p (q + 1) phi hphi c
-    simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · exact ModuleCat.hom_ext (cap_boundary_compatibility_of_cocycle R p q phi hphi)
+  { τ₁ := ModuleCat.ofHom (s • cap R p (q + 2) phi)
+    τ₂ := capHom R p (q + 1) phi
+    τ₃ := ModuleCat.ofHom (s • cap R p q phi)
+    comm₁₂ := by
+      refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
+      change boundary R (q + 1) (s • cap R p (q + 2) phi c) =
+        cap R p (q + 1) phi (boundary R (p + (q + 1)) c)
+      rw [map_smul]
+      have h := boundary_cap_eq_of_cocycle R p (q + 1) phi hphi c
+      simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
+    comm₂₃ := ModuleCat.hom_ext (cap_boundary_compatibility_of_cocycle R p q phi hphi) }
 
 /-- The short-complex morphism induced by capping with a cocycle.  The adjacent-degree
 components carry the sign needed to turn the signed cap boundary formula into strictly
@@ -782,25 +779,23 @@ commutative squares. -/
 noncomputable def capShortComplexHom {X : SSet.{u}} (p q : ℕ)
     (phi : Cochain R X p) (hphi : coboundary R p phi = 0) :
     (X.chainComplex (ModuleCat.of R R)).sc (p + q) ⟶
-      (X.chainComplex (ModuleCat.of R R)).sc q := by
+      (X.chainComplex (ModuleCat.of R R)).sc q :=
   let K := X.chainComplex (ModuleCat.of R R)
-  cases q with
-  | zero =>
-      exact
-        (K.isoSc' (p + 1) p ((ComplexShape.down ℕ).next p)
-            (ChainComplex.prev ℕ p) rfl).hom ≫
-          capShortComplexHomZero R p phi hphi ≫
-          (K.isoSc' 1 0 0 (ChainComplex.prev ℕ 0)
-            ChainComplex.next_nat_zero).inv
-  | succ q =>
-      exact
-        (K.isoSc' (p + (q + 2)) (p + (q + 1)) (p + q)
-            (by rw [ChainComplex.prev]; omega)
-            (by rw [show p + (q + 1) = (p + q) + 1 by omega,
-              ChainComplex.next_nat_succ])).hom ≫
-          capShortComplexHomSucc R p q phi hphi ≫
-          (K.isoSc' (q + 2) (q + 1) q
-            (by rw [ChainComplex.prev]; omega) (ChainComplex.next_nat_succ q)).inv
+  match q with
+  | 0 =>
+      (K.isoSc' (p + 1) p ((ComplexShape.down ℕ).next p)
+          (ChainComplex.prev ℕ p) rfl).hom ≫
+        capShortComplexHomZero R p phi hphi ≫
+        (K.isoSc' 1 0 0 (ChainComplex.prev ℕ 0)
+          ChainComplex.next_nat_zero).inv
+  | q + 1 =>
+      (K.isoSc' (p + (q + 2)) (p + (q + 1)) (p + q)
+          (by rw [ChainComplex.prev]; omega)
+          (by rw [show p + (q + 1) = (p + q) + 1 by omega,
+            ChainComplex.next_nat_succ])).hom ≫
+        capShortComplexHomSucc R p q phi hphi ≫
+        (K.isoSc' (q + 2) (q + 1) q
+          (by rw [ChainComplex.prev]; omega) (ChainComplex.next_nat_succ q)).inv
 
 @[simp]
 lemma capShortComplexHom_τ₂ {X : SSet.{u}} (p q : ℕ)
@@ -955,7 +950,7 @@ lemma capCocycleHomologyLinear_apply {X : SSet.{u}} (p q : ℕ)
 
 /-- The cohomology of algebraic simplicial cochains, using the same short-complex model
 as singular cochain cohomology. -/
-abbrev CochainCohomology (R : Type u) [Field R] (X : SSet.{u}) (p : ℕ) :
+abbrev CochainCohomology (R : Type u) [CommRing R] (X : SSet.{u}) (p : ℕ) :
     ModuleCat.{u} R :=
   ((X.chainComplex (ModuleCat.of R R)).sc p).linearDual.homology
 

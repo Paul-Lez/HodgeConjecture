@@ -39,7 +39,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Singular cochain cohomology in degree `n`, expressed through the reversed algebraic-dual of
 the degree-`n` short complex of the singular chain complex. -/

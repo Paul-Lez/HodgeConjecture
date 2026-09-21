@@ -39,16 +39,16 @@ set_option backward.defeqAttrib.useBackward true in
 def openSubsetSupportPairMap (V : Opens ((Opens.toTopCat X).obj U)) :
     TopPair.ofSubset (X := (Opens.toTopCat X).obj U)
         (V : Set ((Opens.toTopCat X).obj U))ᶜ ⟶
-      TopPair.ofSubset (X := X) (U.isOpenEmbedding.functor.obj V : Set X)ᶜ := by
-  refine TopPair.ofHom U.inclusion' ?_ ?_
-  · have hmem : ∀ z : ((V : Set ((Opens.toTopCat X).obj U))ᶜ :
-        Set ((Opens.toTopCat X).obj U)), z.val.val ∈
-        (U.isOpenEmbedding.functor.obj V : Set X)ᶜ := by
-      rintro z ⟨w, hw, heq⟩
-      exact z.property ((Subtype.ext heq) ▸ hw)
-    exact TopCat.ofHom ⟨fun z => ⟨z.val.val, hmem z⟩,
-      (continuous_subtype_val.comp continuous_subtype_val).subtype_mk hmem⟩
-  · rfl
+      TopPair.ofSubset (X := X) (U.isOpenEmbedding.functor.obj V : Set X)ᶜ :=
+  have hmem : ∀ z : ((V : Set ((Opens.toTopCat X).obj U))ᶜ :
+      Set ((Opens.toTopCat X).obj U)), z.val.val ∈
+      (U.isOpenEmbedding.functor.obj V : Set X)ᶜ := by
+    rintro z ⟨w, hw, heq⟩
+    exact z.property ((Subtype.ext heq) ▸ hw)
+  TopPair.ofHom U.inclusion'
+    (TopCat.ofHom ⟨fun z => ⟨z.val.val, hmem z⟩,
+      (continuous_subtype_val.comp continuous_subtype_val).subtype_mk hmem⟩)
+    rfl
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -56,14 +56,14 @@ set_option backward.defeqAttrib.useBackward true in
 def openSubsetPointPairMap (y : (Opens.toTopCat X).obj U) :
     TopPair.ofSubset (X := (Opens.toTopCat X).obj U)
         ({y} : Set ((Opens.toTopCat X).obj U))ᶜ ⟶
-      TopPair.ofSubset (X := X) ({y.val} : Set X)ᶜ := by
-  refine TopPair.ofHom U.inclusion' ?_ ?_
-  · have hmem : ∀ z : (({y} : Set ((Opens.toTopCat X).obj U))ᶜ :
-        Set ((Opens.toTopCat X).obj U)), z.val.val ∈ ({y.val} : Set X)ᶜ :=
-      fun z hz => z.property (Subtype.ext hz)
-    exact TopCat.ofHom ⟨fun z => ⟨z.val.val, hmem z⟩,
-      (continuous_subtype_val.comp continuous_subtype_val).subtype_mk hmem⟩
-  · rfl
+      TopPair.ofSubset (X := X) ({y.val} : Set X)ᶜ :=
+  have hmem : ∀ z : (({y} : Set ((Opens.toTopCat X).obj U))ᶜ :
+      Set ((Opens.toTopCat X).obj U)), z.val.val ∈ ({y.val} : Set X)ᶜ :=
+    fun z hz => z.property (Subtype.ext hz)
+  TopPair.ofHom U.inclusion'
+    (TopCat.ofHom ⟨fun z => ⟨z.val.val, hmem z⟩,
+      (continuous_subtype_val.comp continuous_subtype_val).subtype_mk hmem⟩)
+    rfl
 
 /-- Inclusion of relative pairs commutes with restriction from an open support to a point. -/
 lemma openSubsetSupportPairMap_restrict (V : Opens ((Opens.toTopCat X).obj U))
@@ -77,7 +77,7 @@ lemma openSubsetSupportPairMap_restrict (V : Opens ((Opens.toTopCat X).obj U))
   · ext z; rfl
   · rfl
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-- The actual open-inclusion maps form a natural transformation of pair-valued presheaves. -/
 def openComplementPairRestriction :

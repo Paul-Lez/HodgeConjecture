@@ -21,7 +21,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
 
 /-- The image of the top open of a subspace is that ambient open itself. -/
 def openSubspaceImageTopIso (V : Opens X) : V.isOpenEmbedding.functor.obj ⊤ ≅ V :=
@@ -29,8 +29,10 @@ def openSubspaceImageTopIso (V : Opens X) : V.isOpenEmbedding.functor.obj ⊤ �
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Ambient raw cochains on `V` identified with top-open raw cochains of
-the space `V`, through the image homeomorphism. -/
+/-- Let `X` be a topological space and `R` a commutative ring. For an open `V ⊆ X`,
+this identifies the singular cochain presheaf on `X` evaluated at `V` with the singular cochain
+presheaf on the space `V` evaluated at its whole space. Both are the complex `C^•(V;R)`,
+regarded as a complex of abelian groups. -/
 def openRawSingularCochainComplexIsoGlobal (V : Opens X) :
     openRawSingularCochainComplex R X V ≅ globalRawSingularCochainComplex R (TopCat.of V) :=
   (NatIso.mapHomologicalComplex
@@ -45,16 +47,15 @@ set_option backward.isDefEq.respectTransparency false in
 sections of its intrinsic singular sheaf, using the normalized open restriction. -/
 def openSingularCochainSheafComplexIsoGlobal (V : Opens X) :
     openSingularCochainSheafComplex R X V ≅
-      globalSingularCochainSheafComplex R (TopCat.of V) := by
-  let : (TopCat.Sheaf.forget AddCommGrpCat X ⋙
+      globalSingularCochainSheafComplex R (TopCat.of V) :=
+  letI : (TopCat.Sheaf.forget AddCommGrpCat X ⋙
       (evaluation (Opens X)ᵒᵖ AddCommGrpCat).obj (.op V)).PreservesZeroMorphisms :=
     inferInstanceAs ((TopCat.Sheaf.supportEvaluation X V).PreservesZeroMorphisms)
-  let : (TopCat.Sheaf.forget AddCommGrpCat X ⋙
+  letI : (TopCat.Sheaf.forget AddCommGrpCat X ⋙
       (evaluation (Opens X)ᵒᵖ AddCommGrpCat).obj
         (.op (V.isOpenEmbedding.functor.obj ⊤))).PreservesZeroMorphisms :=
     inferInstanceAs ((TopCat.Sheaf.supportEvaluation X
       (V.isOpenEmbedding.functor.obj ⊤)).PreservesZeroMorphisms)
-  exact
   (NatIso.mapHomologicalComplex
     (Functor.isoWhiskerLeft (TopCat.Sheaf.forget AddCommGrpCat X)
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat).mapIso (openSubspaceImageTopIso X V).op))
@@ -72,7 +73,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

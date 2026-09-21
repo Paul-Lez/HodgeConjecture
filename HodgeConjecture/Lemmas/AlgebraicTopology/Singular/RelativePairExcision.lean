@@ -101,19 +101,19 @@ def pointComplementToFalseCoverMember (U : Set X) (x : X) :
 /-- The chain map from the point complement into the small chains. -/
 def pointComplementToExcisionSmallSingularSet (U : Set X) (x : X) :
     TopCat.toSSet.obj (pointComplementPair x).snd ⟶
-      coverSmallSingularSubcomplex (TopCat.of X) (pointExcisionCover U x) := by
-  refine SSet.Subcomplex.lift
-    (TopCat.toSSet.map (pointComplementAmbientInclusion x)) ?_
-  intro n z hz
-  rw [mem_coverSmallSingularSubcomplex_iff]
-  refine ⟨false, ?_⟩
-  change z ∈ Set.range ((TopCat.toSSet.map
-    (topologicalSubsetInclusion (TopCat.of X) (pointExcisionCover U x false))).app n)
-  obtain ⟨a, rfl⟩ := hz
-  refine ⟨(TopCat.toSSet.map (pointComplementToFalseCoverMember U x)).app n a, ?_⟩
-  apply ((TopCat.of X).toSSetObjEquiv n).injective
-  ext t
-  rfl
+      coverSmallSingularSubcomplex (TopCat.of X) (pointExcisionCover U x) :=
+  SSet.Subcomplex.lift
+    (TopCat.toSSet.map (pointComplementAmbientInclusion x)) (by
+      intro n z hz
+      rw [mem_coverSmallSingularSubcomplex_iff]
+      refine ⟨false, ?_⟩
+      change z ∈ Set.range ((TopCat.toSSet.map
+        (topologicalSubsetInclusion (TopCat.of X) (pointExcisionCover U x false))).app n)
+      obtain ⟨a, rfl⟩ := hz
+      refine ⟨(TopCat.toSSet.map (pointComplementToFalseCoverMember U x)).app n a, ?_⟩
+      apply ((TopCat.of X).toSSetObjEquiv n).injective
+      ext t
+      rfl)
 
 omit [T1Space X] in
 @[reassoc (attr := simp)]
@@ -477,19 +477,19 @@ def neighborhoodToTrueCoverMember (U : Set X) (x : X) :
 /-- The chain map from neighborhood chains to the point-excision-small chains. -/
 def neighborhoodToPointExcisionSmallSingularSet (U : Set X) (x : X) :
     TopCat.toSSet.obj (TopCat.of U) ⟶
-      coverSmallSingularSubcomplex (TopCat.of X) (pointExcisionCover U x) := by
-  refine SSet.Subcomplex.lift
-    (TopCat.toSSet.map (topologicalSubsetInclusion (TopCat.of X) U)) ?_
-  intro n z hz
-  rw [mem_coverSmallSingularSubcomplex_iff]
-  refine ⟨true, ?_⟩
-  change z ∈ Set.range ((TopCat.toSSet.map
-    (topologicalSubsetInclusion (TopCat.of X) (pointExcisionCover U x true))).app n)
-  obtain ⟨a, rfl⟩ := hz
-  refine ⟨(TopCat.toSSet.map (neighborhoodToTrueCoverMember U x)).app n a, ?_⟩
-  apply ((TopCat.of X).toSSetObjEquiv n).injective
-  ext t
-  rfl
+      coverSmallSingularSubcomplex (TopCat.of X) (pointExcisionCover U x) :=
+  SSet.Subcomplex.lift
+    (TopCat.toSSet.map (topologicalSubsetInclusion (TopCat.of X) U)) (by
+      intro n z hz
+      rw [mem_coverSmallSingularSubcomplex_iff]
+      refine ⟨true, ?_⟩
+      change z ∈ Set.range ((TopCat.toSSet.map
+        (topologicalSubsetInclusion (TopCat.of X) (pointExcisionCover U x true))).app n)
+      obtain ⟨a, rfl⟩ := hz
+      refine ⟨(TopCat.toSSet.map (neighborhoodToTrueCoverMember U x)).app n a, ?_⟩
+      apply ((TopCat.of X).toSSetObjEquiv n).injective
+      ext t
+      rfl)
 
 omit [T1Space X] in
 @[reassoc (attr := simp)]

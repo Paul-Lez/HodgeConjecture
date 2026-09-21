@@ -471,12 +471,12 @@ def triadUnionSmallChainArrow : Arrow (ChainCategory ℚ) :=
 /-- The morphism from the cover-small pair to the ordinary pair `(X, A ∪ B)`. -/
 def triadUnionSmallToUnionPairArrow :
     triadUnionSmallChainArrow X A B ⟶
-      (chainPairFunctor ℚ).obj (TopPair.ofSubset (A ∪ B)) := by
-  refine Arrow.homMk (triadUnionSmallChainInclusion X A B) (𝟙 _) ?_
-  change triadUnionSmallChainInclusion X A B ≫
-      triadUnionAmbientChainMap X A B =
-    triadUnionSmallToAmbientChains X A B ≫ 𝟙 _
-  simp [triadUnionSmallToAmbientChains]
+      (chainPairFunctor ℚ).obj (TopPair.ofSubset (A ∪ B)) :=
+  Arrow.homMk (triadUnionSmallChainInclusion X A B) (𝟙 _) (by
+    change triadUnionSmallChainInclusion X A B ≫
+        triadUnionAmbientChainMap X A B =
+      triadUnionSmallToAmbientChains X A B ≫ 𝟙 _
+    simp [triadUnionSmallToAmbientChains])
 
 /-- The map from the small-relative quotient to ordinary chains relative to `A ∪ B`. -/
 def triadUnionSmallRelativeToUnionRelativeChainMap :

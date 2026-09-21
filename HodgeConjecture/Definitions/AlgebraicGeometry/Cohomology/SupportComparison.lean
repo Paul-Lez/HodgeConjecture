@@ -33,12 +33,6 @@ direct image along an open embedding preserves injective additive sheaves.
 open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
 open scoped CochainComplex.Plus.modelCategoryQuillen
 
-namespace Topology.IsOpenEmbedding
-
-variable {X Y : TopCat.{0}} {f : X ⟶ Y} (hf : IsOpenEmbedding f)
-
-end Topology.IsOpenEmbedding
-
 namespace CochainComplex
 
 universe v u
@@ -52,9 +46,11 @@ variable {A S I : CochainComplex C ℤ}
   (a : A ⟶ S) [Mono a] [QuasiIso a]
   (r : A ⟶ I)
 
-/-- A map into a bounded-below degreewise-injective complex extends strictly across a monic
-quasi-isomorphism. This is the lifting property in the injective model structure. -/
-noncomputable def liftToInjective (hI : ∀ n : ℤ, Injective (I.X n)) : S ⟶ I := by
+/-- In an abelian category with enough injectives, let `a : A → S` be a monomorphism and
+quasi-isomorphism of integer-indexed complexes that are zero in negative degrees. Let `I` also
+be zero in negative degrees and have injective terms. For a complex map `r : A → I`, this
+chooses a complex map `l : S → I` with `l ∘ a = r`. -/
+noncomputable def liftToInjective (hI : ∀ n : ℤ, Injective (I.X n)) : S ⟶ I :=
   let A' : Plus C := ⟨A, 0, inferInstance⟩
   let S' : Plus C := ⟨S, 0, inferInstance⟩
   let I' : Plus C := ⟨I, 0, inferInstance⟩
@@ -69,7 +65,7 @@ noncomputable def liftToInjective (hI : ∀ n : ℤ, Injective (I.X n)) : S ⟶ 
     (Plus.modelCategoryQuillen.weakEquivalence_iff a').2 (inferInstance : QuasiIso a)
   letI : IsFibrant I' :=
     (Plus.modelCategoryQuillen.isFibrant_iff I').2 hI
-  exact sq.lift.hom
+  sq.lift.hom
 
 end
 
@@ -80,7 +76,7 @@ namespace AlgebraicTopology.Singular
 set_option backward.isDefEq.respectTransparency false in
 /-- The constant-to-singular-cochain resolution is a monomorphism of complexes. -/
 lemma constantsToSingularCochainSheafComplex_mono
-    (R : Type) [Field R] (Y : TopCat.{0}) :
+    (R : Type) [CommRing R] (Y : TopCat.{0}) :
     Mono (constantsToSingularCochainSheafComplex R Y) := by
   apply HomologicalComplex.mono_of_mono_f
   intro n
@@ -90,11 +86,11 @@ lemma constantsToSingularCochainSheafComplex_mono
       exact constantsToSingularCochainZeroSheaf_mono R Y
   | succ n =>
       exact (HomologicalComplex.isZero_single_obj_X (ComplexShape.up ℕ) 0
-        (constantCoefficientSheaf R Y) (n + 1) (by lia)).mono _
+        𝓒(Y; R) (n + 1) (by lia)).mono _
 
 /-- Extending the constant-to-singular-cochain resolution to integer degrees remains monic. -/
 lemma constantsToSingularCochainComplexInt_mono
-    (R : Type) [Field R] (Y : TopCat.{0}) :
+    (R : Type) [CommRing R] (Y : TopCat.{0}) :
     Mono (HomologicalComplex.extendMap
       (constantsToSingularCochainSheafComplex R Y) ComplexShape.embeddingUpNat) := by
   let a := constantsToSingularCochainSheafComplex R Y
@@ -108,7 +104,7 @@ lemma constantsToSingularCochainComplexInt_mono
       (i := m) (i' := (m : ℤ)) rfl]
     infer_instance
   · exact (((CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat Y)).obj
-      (constantCoefficientSheaf R Y)).isZero_extend_X
+      𝓒(Y; R)).isZero_extend_X
         ComplexShape.embeddingUpNat n (fun i hi ↦ hn ⟨i, hi⟩)).mono _
 
 end AlgebraicTopology.Singular

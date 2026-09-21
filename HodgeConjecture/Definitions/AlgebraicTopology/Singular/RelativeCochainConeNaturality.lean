@@ -26,10 +26,12 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
-/-- Canonical comparison from integer dual-relative cohomology to its
-restriction cone, induced by the positive `(inclusion, 0)` lift. -/
+/-- Let `R` be a commutative ring and `(X, A)` a topological pair, with `A` embedded in `X`. This
+identifies `H^n(C^*(X, A; R))` with `H^{n-1}(Cone(C^*(X; R) → C^*(A; R)))`. The complexes are
+extended by zero to integer degrees before taking the cone. The comparison uses the map with
+components `(inclusion, 0)`, fixing its sign. -/
 def relativeDualCochainHomologyIsoCone (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X).X₁.homology (n : ℤ) ≅
       (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)).homology
@@ -38,14 +40,20 @@ def relativeDualCochainHomologyIsoCone (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X)
     (relativeDualCochainShortComplexInt_shortExact R X) ((n : ℤ) - 1) n (by omega)
 
-/-- Integer dual-relative cohomology computes `RelativeCohomology` by the evaluation pairing. -/
+/-- Let `R` be a commutative ring and `(X, A)` a topological pair, with `A` embedded in `X`.
+Extending the relative cochain complex by zero to negative integer degrees leaves its degree-`n`
+cohomology unchanged. This is the resulting linear equivalence with relative singular cohomology
+`H^n(X, A; R)`. -/
 def relativeDualCochainCohomologyEquiv (X : TopPair.{u}) (n : ℕ) :
     (relativeDualCochainShortComplexInt R X).X₁.homology (n : ℤ) ≃ₗ[R]
       RelativeCohomology R X n :=
   (((relativeChainFunctor R).obj X).linearDualCochainComplex.extendHomologyIso
     ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).toLinearEquiv
 
-/-- Relative cohomology computed from the explicit canonical cone lift. -/
+/-- Let `R` be a commutative ring and `(X, A)` a topological pair, with `A` embedded in `X`. This
+linear equivalence identifies `H^{n-1}(Cone(C^*(X; R) → C^*(A; R)))` with relative singular
+cohomology `H^n(X, A; R)`. It is inverse to the cohomology map induced by the relative-cochain
+inclusion with zero second cone component. -/
 def relativeCochainConeCohomologyEquivCanonical (X : TopPair.{u}) (n : ℕ) :
     (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)).homology
         ((n : ℤ) - 1) ≃ₗ[R] RelativeCohomology R X n :=

@@ -23,21 +23,9 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-section GeneralOpenTransport
-
-variable (X Y : Over (Spec (.of ℂ)))
-  (i : Y ⟶ X) (m d : ℕ)
-  [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
-  [IsClosedImmersion i.left]
-  {M : TopCat.{0}} (f : TopCat.of (ComplexPoint X) ⟶ M)
-  (hf : IsOpenEmbedding f) (S : Set M)
-  (hS : f ⁻¹' S = Set.range (Point.map i))
-
-end GeneralOpenTransport
-
 section Component
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
@@ -57,21 +45,28 @@ theorem cycleComponentSmoothClosedLift_codimension :
   have hpd : p ≤ dim X.left := by exact_mod_cast h
   omega
 
-/-- The normalized section in the auxiliary algebraic ambient open, in degree `2p`. It is the
-general normal-chart gluing. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. On the analytic space of the open scheme `X \
+Z_sing`, this is the global section of the sheafification of `V ↦ H^{2p}(V, V \ Z_reg(ℂ); ℚ)`
+obtained by gluing local normal orientation coclasses. The local class is normalized to pair to
+`1` with the orientation class of the complex normal space. -/
 def cycleComponentSmoothClosedLiftCoclassSection :
-    (supportRelativeCohomologySheaf
-      (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
-      (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
-      (2 * p)).obj.obj (op ⊤) := by
-  let := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
+    -- The support is the image of `Z_reg`; if `Z ⊆ X` is the variety, the ambient space is the
+    -- `X \ Z_sing` open, as a complex manifold.
+    (𝓗_[Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x))]^(2 * p)
+      (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)); ℚ)).obj.obj
+      (op ⊤) :=
+  letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
-  exact hdeg ▸ smoothClosedSupportCoclassSection
+  hdeg ▸ smoothClosedSupportCoclassSection
     (cycleComponentSmoothLocusAmbientOpenOver X x)
     (cycleComponentSmoothLocusOver X x)
     (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)
 
-/-- The analytic open-embedding map back to the original ambient space. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. This is the continuous map `(X \ Z_sing)(ℂ) → X(ℂ)` induced by
+inclusion of the open subscheme. It identifies its source with the analytic open subset `X(ℂ) \
+Z_sing(ℂ)`. -/
 def cycleComponentSmoothClosedLiftAmbientMap :
     TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)) ⟶
     TopCat.of (ComplexPoint X) :=
@@ -99,11 +94,16 @@ theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
   rw [Set.image_univ]
   exact cycleComponentSmoothLocusAmbientOpen_analytic_image X x
 
-/-- The normalized component coclass section on the singular-boundary complement, as a section
-of the original ambient relative-cohomology sheaf. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_sing(ℂ)`, and
+`𝓗^{2p}_S` for the sheafification of `V ↦ H^{2p}(V, V \ S; ℚ)`. This section of `𝓗^{2p}_S` on
+`U` is obtained by gluing the local coclasses defined by complex normal coordinates along
+`Z_reg(ℂ)`. The local class is normalized to pair to `1` with the orientation class of the
+complex normal space. -/
 def cycleComponentSmoothSupportCoclassSection :
-    (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-      (cycleComponentSupport X x) (2 * p)).obj.obj
+    -- The support is `Z(ℂ)`, the complex points of the subvariety, inside `X(ℂ)`.
+    (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).obj.obj
+      -- The open set of complex points of the complement of the singular boundary, i.e. `X(ℂ) \ Z_sing(ℂ)`.
       (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)

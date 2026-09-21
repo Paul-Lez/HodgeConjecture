@@ -55,14 +55,17 @@ formalization.
   and `SupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`: the class of a
-  subvariety;
-* `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`: the span of those
-  classes, which is the right-hand side of the statement;
+  subvariety and the span of those classes, which is the right-hand side of the statement;
 * `Other/AlgebraicGeometry/Cycle/SheafClass.lean`: the maps on cycles;
 * `Other/AlgebraicGeometry/ComplexPoint/SmoothConnected.lean`: connectedness of the
   analytification of a smooth integral complex scheme;
+* `Other/AlgebraicGeometry/Hodge/Filtration.lean`: that the comparison map to de Rham cohomology
+  is injective, that $`F^0` is everything and $`F^p` vanishes above the dimension, and that over a
+  field fixed by conjugation the filtration alone cuts out the Hodge classes;
 * `Other/AlgebraicGeometry/Hodge/CodimensionZeroComparison.lean` and
   `CodimensionZeroNonvanishing.lean`: nonvanishing of the class of the whole variety and
-  the codimension-zero case of the conjecture;
-* `HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures and the
-  $`(p,p)` criterion.
+  the codimension-zero case of the conjecture; `DimensionZero.lean`: the conjecture in every
+  codimension for a variety of dimension zero;
+* `HodgeConjecture/Lemmas/LinearAlgebra/HodgeStructure.lean`: pure Hodge structures, their
+  conjugation and their rational Hodge classes; `Other/LinearAlgebra/HodgeStructure.lean`: the
+  $`(p,p)` criterion for them, on which nothing in the statement depends.

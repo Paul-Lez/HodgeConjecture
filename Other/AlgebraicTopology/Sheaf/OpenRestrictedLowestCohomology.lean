@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
 public import Other.AlgebraicTopology.Sheaf.CohomologyOpenRestriction
 
@@ -35,9 +37,9 @@ variable (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
 /-- The same literal equality transport on the actual section complexes. -/
 def sectionComplexEqIso {V W : Opens X} (h : V = W) :
-    ((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).obj K ≅
-      ((supportEvaluation X W).mapHomologicalComplex (.up ℤ)).obj K :=
-  (NatIso.mapHomologicalComplex (supportEvaluationEqIso X h) (.up ℤ)).app K
+    ((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj K ≅
+      ((supportEvaluation X W).mapHomologicalComplex ℤᵘᵖ).obj K :=
+  (NatIso.mapHomologicalComplex (supportEvaluationEqIso X h) ℤᵘᵖ).app K
 
 @[simp]
 theorem sectionComplexEqIso_hom_refl (V : Opens X) :
@@ -81,7 +83,7 @@ theorem openRestrictedLowestSectionCohomologyIso_hom (U : Opens X) (N n : ℤ)
     [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero
       ((((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-        (.up ℤ)).obj K).homology j))
+        ℤᵘᵖ).obj K).homology j))
     (hflasque : ∀ j, (K.X j).IsFlasque) :
     (openRestrictedLowestSectionCohomologyIso X U K N n hK hflasque).hom =
       sectionCohomologyToSheafSection X K n U := by
@@ -91,7 +93,7 @@ theorem openRestrictedLowestSectionCohomologyIso_hom (U : Opens X) (N n : ℤ)
   change homologyMap (openRestrictionTopSectionComplexIso X U K).inv n ≫
     (sectionCohomologyToSheafSection (TopCat.of U)
       (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-        (.up ℤ)).obj K) n ⊤ ≫
+        ℤᵘᵖ).obj K) n ⊤ ≫
       ((K.sc n).mapHomologyIso (U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u})).hom.hom.app
         (op (⊤ : Opens (TopCat.of U))) ≫
       (openRestrictionTopSectionsIso X U).hom.app (K.homology n)) = _

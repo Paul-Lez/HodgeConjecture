@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
@@ -22,6 +23,7 @@ public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.Topology.Sheaves.Abelian
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicPoincare
 import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 import Mathlib.Algebra.Category.Grp.Zero
@@ -51,7 +53,11 @@ open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-/-- Holomorphic de Rham forms in a fixed degree, as a presheaf of additive groups. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. Holomorphic
+forms are defined as Kähler forms of the algebra of holomorphic functions, modulo forms whose
+coordinate derivative evaluations vanish in every chart. For a natural number `p`, this presheaf
+of abelian groups sends an analytic open `U` to its holomorphic `p`-forms, with restriction
+induced by restriction of functions. -/
 def holomorphicDeRhamPresheaf [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) where
   obj U := AddCommGrpCat.of
@@ -82,7 +88,11 @@ private lemma holomorphicDeRhamPresheaf_isZero_of_lt
         holomorphicForm_eq_zero_of_lt X d U hp y]⟩
   exact AddCommGrpCat.isZero_of_subsingleton _
 
-/-- The exterior derivative as a morphism of presheaves. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. Holomorphic
+forms are defined as Kähler forms of the algebra of holomorphic functions, modulo forms whose
+coordinate derivative evaluations vanish in every chart. This presheaf morphism raises degree
+from `p` to `p+1` by exterior differentiation, sending `a₀ da₁ ∧ ⋯ ∧ daₚ` to `da₀ ∧ da₁ ∧ ⋯ ∧
+daₚ`. -/
 def holomorphicDeRhamDifferential [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     holomorphicDeRhamPresheaf X d p ⟶
       holomorphicDeRhamPresheaf X d (p + 1) where
@@ -99,7 +109,11 @@ lemma holomorphicDeRhamDifferential_comp [SmoothOfRelativeDimension d X.hom] (p 
   NatTrans.ext <| funext fun U => AddCommGrpCat.hom_ext <| AddMonoidHom.ext fun x =>
     holomorphicFormDifferential_squared X d U p x
 
-/-- The holomorphic de Rham complex before sheafification. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. Holomorphic
+forms are defined as Kähler forms of the algebra of holomorphic functions, modulo forms whose
+coordinate derivative evaluations vanish in every chart. This is the nonnegative complex of
+presheaves assigning holomorphic `p`-forms to each open in degree `p`, with the exterior
+derivative as differential. -/
 def holomorphicDeRhamPresheafComplex [SmoothOfRelativeDimension d X.hom] :
     CochainComplex
       (TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℕ :=
@@ -114,16 +128,12 @@ def holomorphicDeRhamPresheafComplex [SmoothOfRelativeDimension d X.hom] :
       holomorphicDeRhamDifferential X d p := by
   simp [holomorphicDeRhamPresheafComplex]
 
-/-- The constant presheaf of additive groups with value `ℂ`. -/
-def constantComplexAddCommGrpPresheaf :
-    TopCat.Presheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
-  (Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).obj
-    (AddCommGrpCat.of ℂ)
-
-/-- Constants as holomorphic de Rham forms of degree zero. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. This morphism
+from the constant complex presheaf to holomorphic zero-forms assigns to `c ∈ ℂ` on each open `U`
+the class of the constant function `c` among Kähler zero-forms modulo forms with zero coordinate
+evaluations. -/
 def constantsToHolomorphicDeRhamZero [SmoothOfRelativeDimension d X.hom] :
-    constantComplexAddCommGrpPresheaf X ⟶
-      holomorphicDeRhamPresheaf X d 0 where
+    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶ holomorphicDeRhamPresheaf X d 0 where
   app U := AddCommGrpCat.ofHom
     (holomorphicFormOfConstant X d U).toAddMonoidHom
   naturality {U V} i := by
@@ -167,8 +177,8 @@ private lemma constantsToHolomorphicDeRhamZero_stalk_mono
       (constantsToHolomorphicDeRhamZero X d)) := by
   rw [AddCommGrpCat.mono_iff_injective]
   intro z z' h
-  obtain ⟨U, hxU, c, rfl⟩ := (constantComplexAddCommGrpPresheaf X).exists_germ_eq z
-  obtain ⟨V, hxV, c', rfl⟩ := (constantComplexAddCommGrpPresheaf X).exists_germ_eq z'
+  obtain ⟨U, hxU, c, rfl⟩ := 𝓒ᵖ(↧(ComplexPoint X); ℂ).exists_germ_eq z
+  obtain ⟨V, hxV, c', rfl⟩ := 𝓒ᵖ(↧(ComplexPoint X); ℂ).exists_germ_eq z'
   rw [TopCat.Presheaf.stalkFunctor_map_germ_apply,
     TopCat.Presheaf.stalkFunctor_map_germ_apply] at h
   obtain ⟨W, hxW, iWU, iWV, hW⟩ :=
@@ -179,11 +189,11 @@ private lemma constantsToHolomorphicDeRhamZero_stalk_mono
   have hcc' : c = c' := by
     apply holomorphicFormOfConstant_injective X d (.op W)
     have hc := congrArg (fun k :
-        (constantComplexAddCommGrpPresheaf X).obj (.op U) ⟶
+        𝓒ᵖ(↧(ComplexPoint X); ℂ).obj (.op U) ⟶
           (holomorphicDeRhamPresheaf X d 0).obj (.op W) ↦ k c)
       ((constantsToHolomorphicDeRhamZero X d).naturality iWU.op)
     have hc' := congrArg (fun k :
-        (constantComplexAddCommGrpPresheaf X).obj (.op V) ⟶
+        𝓒ᵖ(↧(ComplexPoint X); ℂ).obj (.op V) ⟶
           (holomorphicDeRhamPresheaf X d 0).obj (.op W) ↦ k c')
       ((constantsToHolomorphicDeRhamZero X d).naturality iWV.op)
     change holomorphicFormOfConstant X d (.op W) c =
@@ -194,8 +204,8 @@ private lemma constantsToHolomorphicDeRhamZero_stalk_mono
         ((constantsToHolomorphicDeRhamZero X d).app (.op V) c') at hc'
     exact hc.trans (hW.trans hc'.symm)
   subst c'
-  rw [← (constantComplexAddCommGrpPresheaf X).germ_res_apply iWU x hxW,
-    ← (constantComplexAddCommGrpPresheaf X).germ_res_apply iWV x hxW]
+  rw [← 𝓒ᵖ(↧(ComplexPoint X); ℂ).germ_res_apply iWU x hxW,
+    ← 𝓒ᵖ(↧(ComplexPoint X); ℂ).germ_res_apply iWV x hxW]
   rfl
 
 lemma constantsToHolomorphicDeRhamZero_comp_differential
@@ -205,7 +215,10 @@ lemma constantsToHolomorphicDeRhamZero_comp_differential
   NatTrans.ext <| funext fun U => AddCommGrpCat.hom_ext <| AddMonoidHom.ext fun c =>
     holomorphicFormDifferential_ofConstant X d U c
 
-/-- Holomorphic de Rham forms in a fixed degree, after additive sheafification. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. Holomorphic
+forms are defined as Kähler forms of the algebra of holomorphic functions, modulo forms whose
+coordinate derivative evaluations vanish in every chart. For a natural number `p`, this is the
+sheafification, as abelian groups, of the presheaf of holomorphic `p`-forms on analytic opens. -/
 def holomorphicDeRhamSheaf [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
@@ -220,7 +233,9 @@ lemma holomorphicDeRhamSheaf_isZero_of_lt
   exact (presheafToSheaf J AddCommGrpCat).map_isZero
     (holomorphicDeRhamPresheaf_isZero_of_lt X d hp)
 
-/-- The sheafified exterior derivative. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. This is the
+sheaf morphism `d : Ω^p → Ω^{p+1}` obtained by sheafifying exterior differentiation of
+holomorphic forms. On a local expression it sends `a₀ da₁ ∧ ⋯ ∧ daₚ` to `da₀ ∧ da₁ ∧ ⋯ ∧ daₚ`. -/
 def holomorphicDeRhamSheafDifferential [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     holomorphicDeRhamSheaf X d p ⟶
       holomorphicDeRhamSheaf X d (p + 1) :=
@@ -228,7 +243,10 @@ def holomorphicDeRhamSheafDifferential [SmoothOfRelativeDimension d X.hom] (p : 
   (presheafToSheaf J AddCommGrpCat).map
     (holomorphicDeRhamDifferential X d p)
 
-/-- The sheafified holomorphic de Rham complex. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. The holomorphic
+de Rham complex is `Ω⁰ → Ω¹ → Ω² → ⋯`, with exterior differentiation. Each term is obtained by
+sheafifying Kähler forms of holomorphic functions modulo forms whose coordinate derivative
+evaluations vanish in every chart. Degrees are natural numbers. -/
 def holomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom] :
     CochainComplex
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℕ :=
@@ -249,8 +267,10 @@ def holomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom] :
   simp [holomorphicDeRhamComplex]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The degreewise sheafification unit from holomorphic forms to the underlying presheaf of the
-holomorphic de Rham sheaf complex. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. This map of
+complexes sends a holomorphic form on an analytic open to its section in the sheaf of such
+forms. It is the degreewise sheafification unit of the presheaf de Rham complex, and commutes
+with exterior differentiation. -/
 noncomputable def holomorphicDeRhamSheafificationUnit
     [SmoothOfRelativeDimension d X.hom] :
     holomorphicDeRhamPresheafComplex X d ⟶
@@ -308,36 +328,30 @@ private lemma holomorphicDeRhamComplex_exactAt_succ
   let : IsIso η := ShortComplex.isIso_of_isIso η
   exact ShortComplex.exact_of_iso (asIso η) hP
 
-/-- The constant sheaf with value the additive group of complex numbers. -/
-@[implicit_reducible]
-def constantComplexSheaf :
-    TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
-  let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
-  (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of ℂ)
-
-/-- Complex conjugation on the constant complex presheaf.
-
-Conjugation is a ring automorphism of `ℂ` that is additive but not `ℂ`-linear, so the induced
-map on cohomology is conjugate-linear. -/
+/-- Let `X` be a complex scheme. On its analytic space `X(ℂ)`, this endomorphism of the constant
+presheaf of abelian groups with value `ℂ` acts on each open by `c ↦ conj(c)`. -/
 def conjConstantComplexPresheaf :
-    constantComplexAddCommGrpPresheaf X ⟶
-      constantComplexAddCommGrpPresheaf X where
+    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶ 𝓒ᵖ(↧(ComplexPoint X); ℂ) where
   app _ := AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom
   naturality {U V} i := by
     ext x
     rfl
 
-/-- Complex conjugation on the constant complex sheaf. -/
+/-- Let `X` be a complex scheme. This endomorphism of the constant complex sheaf on `X(ℂ)`
+conjugates locally constant complex-valued functions pointwise. It is additive and
+conjugate-linear. -/
 def conjConstantComplexSheaf :
-    constantComplexSheaf X ⟶ constantComplexSheaf X := by
+    𝓒(↧(ComplexPoint X); ℂ) ⟶ 𝓒(↧(ComplexPoint X); ℂ) :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
-  exact (presheafToSheaf J AddCommGrpCat).map
+  (presheafToSheaf J AddCommGrpCat).map
     (conjConstantComplexPresheaf X)
 
-/-- The sheafified inclusion of constants as de Rham zero-forms. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. This map from
+the constant complex sheaf to the sheaf `Ω⁰` of holomorphic zero-forms regards locally constant
+complex-valued functions as holomorphic zero-forms. -/
 def constantsToHolomorphicDeRhamZeroSheaf [SmoothOfRelativeDimension d X.hom] :
-    constantComplexSheaf X ⟶ holomorphicDeRhamSheaf X d 0 :=
+    𝓒(↧(ComplexPoint X); ℂ) ⟶ holomorphicDeRhamSheaf X d 0 :=
   let J := Opens.grothendieckTopology (TopCat.of (ComplexPoint X))
   (presheafToSheaf J AddCommGrpCat).map
     (constantsToHolomorphicDeRhamZero X d)
@@ -354,7 +368,10 @@ lemma constantsToHolomorphicDeRhamZeroSheaf_comp_differential
   rw [← Functor.map_comp, constantsToHolomorphicDeRhamZero_comp_differential,
     Functor.map_zero]
 
-/-- The augmented holomorphic de Rham short complex before sheafification. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. This is the
+sequence of presheaves `ℂ → Ω⁰ → Ω¹`, where the first arrow sends constants to holomorphic
+zero-forms and the second is exterior differentiation. The composite is zero because constants
+have zero derivative. -/
 noncomputable def constantsToHolomorphicDeRhamPresheafShortComplex
     [SmoothOfRelativeDimension d X.hom] :
     ShortComplex (TopCat.Presheaf AddCommGrpCat
@@ -363,7 +380,10 @@ noncomputable def constantsToHolomorphicDeRhamPresheafShortComplex
     (holomorphicDeRhamDifferential X d 0)
     (constantsToHolomorphicDeRhamZero_comp_differential X d)
 
-/-- The augmented holomorphic de Rham short complex after sheafification. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. This is the
+sequence of sheaves `ℂ_X → Ω⁰ → Ω¹`, where `ℂ_X` consists of locally constant functions and the
+two arrows are inclusion as holomorphic zero-forms and exterior differentiation. The form
+sheaves are obtained by sheafifying the corresponding presheaves. -/
 noncomputable def constantsToHolomorphicDeRhamSheafShortComplex
     [SmoothOfRelativeDimension d X.hom] :
     ShortComplex (TopCat.Sheaf AddCommGrpCat
@@ -373,7 +393,10 @@ noncomputable def constantsToHolomorphicDeRhamSheafShortComplex
     (constantsToHolomorphicDeRhamZeroSheaf_comp_differential X d)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The sheafification unit between the augmented presheaf and sheaf short complexes. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. This morphism
+sends the presheaf sequence `ℂ → Ω⁰ → Ω¹` to the underlying presheaves of its sheafification.
+Each component sends a constant or a holomorphic form to the section represented by its local
+germs. -/
 noncomputable def constantsToHolomorphicDeRhamShortComplexSheafificationUnit
     [SmoothOfRelativeDimension d X.hom] :
     constantsToHolomorphicDeRhamPresheafShortComplex X d ⟶
@@ -382,7 +405,7 @@ noncomputable def constantsToHolomorphicDeRhamShortComplexSheafificationUnit
           (TopCat.of (ComplexPoint X))) where
   τ₁ := toSheafify
     (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-    (constantComplexAddCommGrpPresheaf X)
+    𝓒ᵖ(↧(ComplexPoint X); ℂ)
   τ₂ := toSheafify
     (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     (holomorphicDeRhamPresheaf X d 0)
@@ -418,7 +441,7 @@ private lemma constantsToHolomorphicDeRhamSheafShortComplex_exact
   let η := (stalk.mapShortComplex).map unit
   let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
-      (constantComplexAddCommGrpPresheaf X)
+      𝓒ᵖ(↧(ComplexPoint X); ℂ)
   let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (holomorphicDeRhamPresheaf X d 0)
@@ -445,7 +468,7 @@ private lemma constantsToHolomorphicDeRhamZeroSheaf_mono
   let η : S ⟶ T := (stalk.mapShortComplex).map unit
   let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
-      (constantComplexAddCommGrpPresheaf X)
+      𝓒ᵖ(↧(ComplexPoint X); ℂ)
   let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat
       (holomorphicDeRhamPresheaf X d 0)
@@ -457,14 +480,17 @@ private lemma constantsToHolomorphicDeRhamZeroSheaf_mono
   rw [h]
   infer_instance
 
-/-- The comparison from the constant sheaf complex to the holomorphic de Rham complex. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. This map of
+nonnegative sheaf complexes `ℂ_X[0] → Ω^•` includes locally constant functions as holomorphic
+zero-forms. The source is zero in every positive degree, and the target differential is exterior
+differentiation. -/
 def constantsToHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom] :
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (constantComplexSheaf X) ⟶
+        𝓒(↧(ComplexPoint X); ℂ) ⟶
       holomorphicDeRhamComplex X d :=
   (CochainComplex.fromSingle₀Equiv (holomorphicDeRhamComplex X d)
-    (constantComplexSheaf X)).symm
+    𝓒(↧(ComplexPoint X); ℂ)).symm
       ⟨constantsToHolomorphicDeRhamZeroSheaf X d, by
         rw [holomorphicDeRhamComplex_d]
         exact constantsToHolomorphicDeRhamZeroSheaf_comp_differential X d⟩
@@ -487,7 +513,7 @@ lemma constantsToHolomorphicDeRhamComplex_quasiIsoAt_succ
     [SmoothOfRelativeDimension d X.hom] (p : ℕ) :
     QuasiIsoAt (constantsToHolomorphicDeRhamComplex X d) (p + 1) := by
   rw [quasiIsoAt_iff_exactAt _ _
-    (CochainComplex.exactAt_succ_single_obj (constantComplexSheaf X) p)]
+    (CochainComplex.exactAt_succ_single_obj 𝓒(↧(ComplexPoint X); ℂ) p)]
   exact holomorphicDeRhamComplex_exactAt_succ X d p
 
 /-- The constant sheaf resolves the holomorphic de Rham complex in all natural degrees. -/
@@ -499,41 +525,48 @@ instance constantsToHolomorphicDeRhamComplex_quasiIso
     · exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_zero X d
     · exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_succ X d p
 
-/-- The constant sheaf complex, extended by zero from natural to integer degrees. -/
+/-- Let `X` be a complex scheme. This integer-indexed complex of sheaves of abelian groups on `X(ℂ)`
+has the constant complex sheaf in degree zero, zero in every other degree, and zero
+differentials. -/
 @[implicit_reducible]
 def constantComplexSheafComplexInt :
     CochainComplex
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
   ((CochainComplex.single₀
     (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-      (constantComplexSheaf X)).extend ComplexShape.embeddingUpNat
+      𝓒(↧(ComplexPoint X); ℂ)).extend ComplexShape.embeddingUpNat
 
-/-- Complex conjugation on the constant complex-valued complex concentrated in degree zero. -/
+/-- Let `X` be a complex scheme. This endomorphism of the nonnegative sheaf complex `ℂ_X[0]`
+conjugates locally constant functions in degree zero; every positive-degree term is zero. -/
 def conjConstantComplexComplex :
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (constantComplexSheaf X) ⟶
+        𝓒(↧(ComplexPoint X); ℂ) ⟶
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (constantComplexSheaf X) :=
+        𝓒(↧(ComplexPoint X); ℂ) :=
   (CochainComplex.single₀ _).map (conjConstantComplexSheaf X)
 
-/-- Complex conjugation on the integer-indexed constant complex-valued complex.
-
-Conjugation is not `ℂ`-linear, so it lives on the constant-sheaf side of the comparison and not
-on the holomorphic de Rham complex. -/
+/-- Let `X` be a complex scheme. This endomorphism of the integer-indexed sheaf complex `ℂ_X[0]`
+conjugates locally constant functions in degree zero, with zero terms in all other degrees. It
+is additive and conjugate-linear. -/
 def conjConstantComplexSheafComplexInt :
     constantComplexSheafComplexInt X ⟶ constantComplexSheafComplexInt X :=
   HomologicalComplex.extendMap (conjConstantComplexComplex X)
     ComplexShape.embeddingUpNat
 
-/-- The holomorphic de Rham complex, extended by zero to negative degrees. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`. This integer-indexed complex on `X(ℂ)` has the
+sheaf of holomorphic `p`-forms in each degree `p ≥ 0`, exterior differentiation as differential,
+and zero terms in negative degrees. Its charts use the dimension of `X`. -/
 def holomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
     CochainComplex (TopCat.Sheaf AddCommGrpCat ↧(ComplexPoint X)) ℤ :=
   (holomorphicDeRhamComplex X (dim X.left)).extend ComplexShape.embeddingUpNat
 
+/-- `Ω•(X)` is the holomorphic de Rham complex of `X(ℂ)`, indexed by the integers. -/
+scoped notation:max "Ω•" "(" X ")" => holomorphicDeRhamComplexInt X
+
 instance [IsIntegral X.left] [Smooth X.hom] :
-    CochainComplex.IsStrictlyGE (holomorphicDeRhamComplexInt X) 0 := by
+    CochainComplex.IsStrictlyGE Ω•(X) 0 := by
   unfold holomorphicDeRhamComplexInt
   infer_instance
 
@@ -541,7 +574,7 @@ instance [IsIntegral X.left] [Smooth X.hom] :
 dimension. -/
 lemma holomorphicDeRhamComplexInt_isZero_X_of_lt
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) (hn : (dim X.left : ℤ) < n) :
-    IsZero ((holomorphicDeRhamComplexInt X).X n) := by
+    IsZero (Ω•(X).X n) := by
   have hn0 : 0 ≤ n := by lia
   let p := n.toNat
   have hp : (p : ℤ) = n := by
@@ -555,16 +588,17 @@ lemma holomorphicDeRhamComplexInt_isZero_X_of_lt
 complex dimension. -/
 noncomputable instance holomorphicDeRhamComplexInt_isStrictlyLE
     [IsIntegral X.left] [Smooth X.hom] :
-    (holomorphicDeRhamComplexInt X).IsStrictlySupported
+    Ω•(X).IsStrictlySupported
       (ComplexShape.embeddingUpIntLE (dim X.left)) where
   isZero n hn := by
     rw [ComplexShape.notMem_range_embeddingUpIntLE_iff] at hn
     exact holomorphicDeRhamComplexInt_isZero_X_of_lt X n hn
 
-/-- The constant-to-de Rham comparison on integer-indexed complexes. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`. This map `ℂ_X[0] → Ω^•` of integer-indexed sheaf
+complexes includes locally constant functions as holomorphic zero-forms. The source is
+concentrated in degree zero and the holomorphic de Rham complex is zero in negative degrees. -/
 def constantsToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
-    constantComplexSheafComplexInt X ⟶
-      holomorphicDeRhamComplexInt X :=
+    constantComplexSheafComplexInt X ⟶ Ω•(X) :=
   HomologicalComplex.extendMap
     (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat
 

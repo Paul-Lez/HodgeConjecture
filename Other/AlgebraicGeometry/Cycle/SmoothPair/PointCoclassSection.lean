@@ -27,8 +27,9 @@ namespace AlgebraicTopology.Singular
 
 variable {M : Type} [TopologicalSpace M]
 
-/-- The actual inclusion from a neighborhood/support pair into the pair with one
-point removed. It exists when the distinguished point belongs to the support. -/
+/-- Let `M` be a topological space, `V,S ⊆ M`, and `x ∈ S`. This map of pairs `(V,V \ S) → (M,M \
+{x})` is given by inclusion into `M`. The condition `x ∈ S` ensures that points outside `S`
+avoid `x`. -/
 def neighborhoodSupportToPointPairMap (V S : Set M) (x : M) (hx : x ∈ S) :
     neighborhoodSupportComplementPair V S ⟶ pointComplementPair x :=
   TopPair.ofHom
@@ -36,7 +37,7 @@ def neighborhoodSupportToPointPairMap (V S : Set M) (x : M) (hx : x ∈ S) :
     (TopCat.ofHom ⟨fun w => ⟨w.1.1, fun h => w.2 (h ▸ hx)⟩,
       (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _⟩) rfl
 
-/-- Literal ambient inclusions factor through every nested neighborhood. -/
+/-- ambient inclusions factor through every nested neighborhood. -/
 @[simp] theorem neighborhoodSupportInclusionPairMap_toPoint {U V : Set M}
     (hUV : U ⊆ V) (S : Set M) (x : M) (hx : x ∈ S) :
     neighborhoodSupportInclusionPairMap hUV S ≫ neighborhoodSupportToPointPairMap V S x hx =
@@ -47,13 +48,16 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (d : ℕ)
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] [IsProjective X.hom]
 
-/-- The ambient point coclass, pulled back to the whole-open pair and sent through the
-sheafification unit. -/
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, with `Y` of dimension zero and
+`X` projective of dimension `d`. For `z ∈ Y(ℂ)`, put `M = X(ℂ)`, `x = i(z)`, and `S = i(Y(ℂ))`.
+This global section of the sheafification of `V ↦ H^{2d}(V,V \ S;ℚ)` is obtained by pulling the
+point coclass in `H^{2d}(M,M \ {x};ℚ)` back to `(M,M \ S)` and applying sheafification. The
+point coclass evaluates to one on the chosen complex local homology class at `x`. -/
 def smoothClosedPointCoclassSection (z : ComplexPoint Y) :
     (smoothClosedSupportCoclassSheaf X Y i 0 d).obj.obj (op ⊤) :=
   (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
@@ -64,7 +68,7 @@ def smoothClosedPointCoclassSection (z : ComplexPoint Y) :
         (analyticPointLocalCoclass X d (Point.map i z)))
 
 omit [IsProjective X.hom] in
-/-- The literal local-to-point map is the map used by the existing exact
+/-- The local-to-point map is the map used by the existing exact
 normal-slice/point comparison. -/
 theorem neighborhoodSupportToPointPairMap_eq_smoothClosedPointNeighborhoodPairMap
     (z : ComplexPoint Y) (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V) :
@@ -76,7 +80,7 @@ theorem neighborhoodSupportToPointPairMap_eq_smoothClosedPointNeighborhoodPairMa
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- At its distinguished point the old global coclass has exactly the germ of the
+/-- At its distinguished point the global point coclass has exactly the germ of the
 general normal coclass, with coefficient one. -/
 theorem smoothClosedPointCoclassSection_germ_eq_normalCoclass
     (z : ComplexPoint Y) (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V) :
@@ -105,7 +109,7 @@ theorem smoothClosedPointCoclassSection_germ_eq_normalCoclass
   exact (smoothClosedPointNormalCoclass_eq_analyticPointLocalCoclass X Y i d z V hzV).symm
 
 omit [SmoothOfRelativeDimension 0 Y.hom] in
-/-- The old global point image vanishes off the actual closed support. -/
+/-- The global point section vanishes off the closed support. -/
 theorem smoothClosedPointCoclassSection_germ_eq_zero
     (z : ComplexPoint Y) (x : ComplexPoint X) (hx : x ∉ Set.range (Point.map i)) :
     (smoothClosedSupportCoclassSheaf X Y i 0 d).presheaf.Γgerm x
@@ -134,23 +138,23 @@ theorem smoothClosedSupportCoclassSection_eq_point_of_singleton
 
 section PointComparison
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
 
 /-- The identity complex point of the base scheme over itself. -/
-def complexSpecIdentityPoint : ComplexPoint (Over.mk (𝟙 (Spec (.of ℂ)))) :=
+def complexSpecIdentityPoint : ComplexPoint (Over.mk (𝟙 (Spec ↧ℂ))) :=
   𝟙 _
 
 local instance complexSpecIdentitySmooth :
-    SmoothOfRelativeDimension 0 (Over.mk (𝟙 (Spec (.of ℂ)))).hom := by
-  change SmoothOfRelativeDimension 0 (𝟙 (Spec (.of ℂ)))
+    SmoothOfRelativeDimension 0 (Over.mk (𝟙 (Spec ↧ℂ))).hom := by
+  change SmoothOfRelativeDimension 0 (𝟙 (Spec ↧ℂ))
   infer_instance
 
 /-- There is just one complex point of the base over itself. -/
-theorem complexSpecPoint_eq_identity (w : ComplexPoint (Over.mk (𝟙 (Spec (.of ℂ))))) :
+theorem complexSpecPoint_eq_identity (w : ComplexPoint (Over.mk (𝟙 (Spec ↧ℂ)))) :
     w = complexSpecIdentityPoint :=
-  (Over.mkIdTerminal (X := Spec (.of ℂ))).hom_ext w complexSpecIdentityPoint
+  (Over.mkIdTerminal (X := Spec ↧ℂ)).hom_ext w complexSpecIdentityPoint
 
-/-- The actual scheme morphism represented by any complex point is a closed
+/-- The scheme morphism represented by any complex point is a closed
 immersion; no point-immersion input is supplied. -/
 theorem complexPoint_isClosedImmersion (z : ComplexPoint X) :
     IsClosedImmersion z.left :=
@@ -160,7 +164,7 @@ theorem complexPoint_isClosedImmersion (z : ComplexPoint X) :
     Point.map z complexSpecIdentityPoint = z := by
   simp [Point.map, complexSpecIdentityPoint]
 
-/-- The actual analytic image of the point closed immersion is its singleton. -/
+/-- The analytic image of the point closed immersion is its singleton. -/
 theorem range_map_complexPoint (z : ComplexPoint X) :
     Set.range (Point.map z) = {z} := by
   ext x
@@ -174,16 +178,20 @@ theorem range_map_complexPoint (z : ComplexPoint X) :
 
 variable (d : ℕ) [SmoothOfRelativeDimension d X.hom] [IsProjective X.hom]
 
-/-- The general smooth-support section specialized to the actual point immersion.
-It is still defined by the same arbitrary-dimensional normal-chart gluing. -/
+/-- Let `X` be a smooth projective scheme of dimension `d` over `ℂ`, and let `z ∈ M = X(ℂ)`. This
+global section of the sheafification of `V ↦ H^{2d}(V,V \ {z};ℚ)` is constructed by applying the
+smooth closed-support construction to the point immersion `Spec ℂ → X`. That construction glues
+local cohomology classes which evaluate to one on the chosen complex normal homology classes. -/
 def complexPointSmoothSupportCoclassSection (z : ComplexPoint X) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-      (Set.range (Point.map z)) (2 * d)).obj.obj (op ⊤) := by
+      (Set.range (Point.map z)) (2 * d)).obj.obj (op ⊤) :=
   letI := complexPoint_isClosedImmersion X z
-  exact smoothClosedSupportCoclassSection X (Over.mk (𝟙 _)) z 0 d
+  smoothClosedSupportCoclassSection X (Over.mk (𝟙 _)) z 0 d
 
-/-- The actual sheafification image of the pre-existing global point coclass.
-The only adapter is the literal inclusion of the whole-open subtype pair. -/
+/-- Let `X` be a smooth projective scheme of dimension `d` over `ℂ`, and let `z ∈ M = X(ℂ)`. This
+global section of the sheafification of `V ↦ H^{2d}(V,V \ {z};ℚ)` is the image of the point
+coclass in `H^{2d}(M,M \ {z};ℚ)`. The point coclass is normalized to evaluate to one on the
+chosen complex local homology class at `z`. -/
 def analyticPointLocalCoclassSheafSection (z : ComplexPoint X) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
       (Set.range (Point.map z)) (2 * d)).obj.obj (op ⊤) :=

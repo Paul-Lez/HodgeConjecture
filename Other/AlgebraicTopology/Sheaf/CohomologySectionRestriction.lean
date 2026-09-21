@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
 /-!
 # Open-restriction naturality of canonical cohomology-sheaf sections
@@ -26,14 +28,14 @@ universe u
 theorem sectionCohomologyToSheafSection_restriction
     (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
     (n : ℤ) {V W : Opens X} (a : W ⟶ V) :
-    HomologicalComplex.homologyMap (sectionComplexRestriction X (.up ℤ) K a) n ≫
+    HomologicalComplex.homologyMap (sectionComplexRestriction X ℤᵘᵖ K a) n ≫
         sectionCohomologyToSheafSection X K n W =
       sectionCohomologyToSheafSection X K n V ≫ (K.homology n).obj.map a.op := by
   let eV := sectionCohomologyPresheafOnOpenIso X K n V
   let eW := sectionCohomologyPresheafOnOpenIso X K n W
   have h := sectionCohomologyPresheafOnOpenIso_inv_naturality X K n a
   have h' :
-      HomologicalComplex.homologyMap (sectionComplexRestriction X (.up ℤ) K a) n ≫
+      HomologicalComplex.homologyMap (sectionComplexRestriction X ℤᵘᵖ K a) n ≫
           eW.hom = eV.hom ≫ (sectionCohomologyPresheaf X K n).map a.op := by
     apply (cancel_mono eW.inv).1
     simp only [Category.assoc, Iso.hom_inv_id, Category.comp_id]

@@ -38,9 +38,10 @@ universe u
 
 namespace CategoryTheory.ShortComplex
 
-variable {R : Type u} [Field R]
+section CommRing
+variable {R : Type u} [CommRing R]
 
-/-- The canonical class of an explicit cycle in a short complex of vector spaces. -/
+/-- The canonical class of an explicit cycle in a short complex of modules. -/
 def moduleCatHomologyClass (S : ShortComplex (ModuleCat.{u} R)) :
     LinearMap.ker S.g.hom →ₗ[R] S.homology :=
   S.moduleCatHomologyIso.inv.hom.comp (LinearMap.range S.moduleCatToCycles).mkQ
@@ -108,6 +109,11 @@ def linearDualMap {S T : ShortComplex (ModuleCat.{u} R)} (f : S ⟶ T) :
     intro x
     exact congrArg phi (ConcreteCategory.congr_hom f.comm₁₂ x).symm
 
+end CommRing
+
+section Field
+variable {R : Type u} [Field R]
+
 set_option backward.isDefEq.respectTransparency false in
 /-- Universal coefficients evaluate a dual cycle on an ordinary cycle without any
 choice of generators or representatives in the resulting pairing. -/
@@ -154,11 +160,14 @@ theorem linearDualHomologyEquiv_naturality
     linearDualHomologyEquiv_class_apply_class, linearDualHomologyEquiv_class_apply_class]
   rfl
 
+end Field
+
 end CategoryTheory.ShortComplex
 
 namespace HomologicalComplex
 
-variable {R : Type u} [Field R]
+section CommRing
+variable {R : Type u} [CommRing R]
   {K L : ChainComplex (ModuleCat.{u} R) ℕ}
 
 set_option backward.defeqAttrib.useBackward true in
@@ -169,6 +178,12 @@ lemma linearDualCochainComplexScIso_naturality (f : K ⟶ L) (n : ℕ) :
       (linearDualCochainComplexScIso K n).hom =
     (linearDualCochainComplexScIso L n).hom ≫
       ShortComplex.linearDualMap ((shortComplexFunctor (ModuleCat R) (.down ℕ) n).map f) := rfl
+
+end CommRing
+
+section Field
+variable {R : Type u} [Field R]
+  {K L : ChainComplex (ModuleCat.{u} R) ℕ}
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -191,5 +206,7 @@ lemma linearDualHomologyEquiv_naturality (f : K ⟶ L) (n : ℕ)
       (ShortComplex.linearDualMap ((shortComplexFunctor (ModuleCat R) (.down ℕ) n).map f))
       (ShortComplex.homologyMap (linearDualCochainComplexScIso L n).hom a) from ha]
   exact congrArg (fun α => α z) (ShortComplex.linearDualHomologyEquiv_naturality _ _)
+
+end Field
 
 end HomologicalComplex

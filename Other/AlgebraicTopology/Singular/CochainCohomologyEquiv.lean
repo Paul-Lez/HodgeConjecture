@@ -25,7 +25,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The short-complex model computes singular cohomology: the degree-`n` short complex of the
 singular cochain complex is the reversed dual of the degree-`n` short complex of the singular

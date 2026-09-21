@@ -29,16 +29,9 @@ open CategoryTheory Limits TopologicalSpace HomologicalComplex Opposite
 
 universe u
 
-namespace CategoryTheory.ShortComplex
-
-variable {C D E : Type*} [Category* C] [Category* D] [Category* E]
-  [Abelian C] [Abelian D] [Abelian E]
-
-end CategoryTheory.ShortComplex
-
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The stalk functor with its domain displayed as a functor category, to align the
 canonical additive structures used in functor-category homology comparisons. -/

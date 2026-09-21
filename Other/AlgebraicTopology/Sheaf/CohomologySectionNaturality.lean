@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.CohomologySection
 
 /-! # Coefficient-map naturality of the canonical local cohomology-sheaf class -/
@@ -22,18 +24,18 @@ variable (X : TopCat.{u}) {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
 /-- The actual map on the presheaves of local section-complex cohomology. -/
 def sectionCohomologyPresheafMap :
     sectionCohomologyPresheaf X K n ⟶ sectionCohomologyPresheaf X L n :=
-  homologyMap (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).map f) n
+  homologyMap (((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).map f) n
 
 /-- The actual evaluation/homology comparison is natural in coefficient maps. -/
 @[reassoc]
 lemma sectionCohomologyPresheafOnOpenIso_naturality (U : Opens X) :
-    homologyMap (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).map f) n ≫
+    homologyMap (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).map f) n ≫
       (sectionCohomologyPresheafOnOpenIso X L n U).hom =
     (sectionCohomologyPresheafOnOpenIso X K n U).hom ≫
       (sectionCohomologyPresheafMap X f n).app (op U) :=
   ShortComplex.mapHomologyIso_hom_naturality
-    ((shortComplexFunctor ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) (.up ℤ) n).map
-      (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).map f))
+    ((shortComplexFunctor ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) ℤᵘᵖ n).map
+      (((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).map f))
     ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op U))
 
 set_option backward.defeqAttrib.useBackward true in
@@ -56,23 +58,23 @@ lemma sectionCohomologyPresheafSheafificationIso_naturality :
     inferInstanceAs (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).PreservesZeroMorphisms
   let : P.PreservesHomology :=
     inferInstanceAs (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).PreservesHomology
-  let g := (F.mapHomologicalComplex (.up ℤ)).map f
-  let e : (F ⋙ P).mapHomologicalComplex (.up ℤ) ≅
-      (𝟭 (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex (.up ℤ) := NatIso.mapHomologicalComplex
+  let g := (F.mapHomologicalComplex ℤᵘᵖ).map f
+  let e : (F ⋙ P).mapHomologicalComplex ℤᵘᵖ ≅
+      (𝟭 (Sheaf AddCommGrpCat.{u} X)).mapHomologicalComplex ℤᵘᵖ := NatIso.mapHomologicalComplex
     (asIso (sheafificationAdjunction (Opens.grothendieckTopology X) AddCommGrpCat.{u}).counit)
-    (.up ℤ)
-  let H := homologyFunctor (Sheaf AddCommGrpCat.{u} X) (.up ℤ) n
+    ℤᵘᵖ
+  let H := homologyFunctor (Sheaf AddCommGrpCat.{u} X) ℤᵘᵖ n
   change P.map (homologyMap g n) ≫
-      (((((F.mapHomologicalComplex (.up ℤ)).obj L).sc n).mapHomologyIso P).inv ≫
+      (((((F.mapHomologicalComplex ℤᵘᵖ).obj L).sc n).mapHomologyIso P).inv ≫
         H.map (e.app L).hom) =
-    (((((F.mapHomologicalComplex (.up ℤ)).obj K).sc n).mapHomologyIso P).inv ≫
+    (((((F.mapHomologicalComplex ℤᵘᵖ).obj K).sc n).mapHomologyIso P).inv ≫
         H.map (e.app K).hom) ≫ H.map f
   calc
-    _ = (((((F.mapHomologicalComplex (.up ℤ)).obj K).sc n).mapHomologyIso P).inv ≫
-        H.map ((P.mapHomologicalComplex (.up ℤ)).map g)) ≫ H.map (e.app L).hom :=
+    _ = (((((F.mapHomologicalComplex ℤᵘᵖ).obj K).sc n).mapHomologyIso P).inv ≫
+        H.map ((P.mapHomologicalComplex ℤᵘᵖ).map g)) ≫ H.map (e.app L).hom :=
       congrArg (fun t => t ≫ H.map (e.app L).hom)
         (ShortComplex.mapHomologyIso_inv_naturality
-          ((shortComplexFunctor _ (.up ℤ) n).map g) P)
+          ((shortComplexFunctor _ ℤᵘᵖ n).map g) P)
     _ = _ := by
       simp only [Category.assoc]
       congr 1
@@ -94,7 +96,7 @@ lemma sectionCohomologyPresheafToSheaf_naturality :
 commutes with every actual coefficient-complex map. -/
 @[reassoc]
 lemma sectionCohomologyToSheafSection_naturality (U : Opens X) :
-    homologyMap (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).map f) n ≫
+    homologyMap (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).map f) n ≫
       sectionCohomologyToSheafSection X L n U =
     sectionCohomologyToSheafSection X K n U ≫ (homologyMap f n).hom.app (op U) := by
   dsimp only [sectionCohomologyToSheafSection]

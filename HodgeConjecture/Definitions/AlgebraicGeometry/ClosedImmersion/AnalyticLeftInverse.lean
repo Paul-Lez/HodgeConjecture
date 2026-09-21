@@ -19,21 +19,15 @@ written in complex charts, and in particular the inclusion has injective derivat
 
 open CategoryTheory Topology TopologicalSpace Filter
 
-namespace AlgebraicGeometry
-
-universe u
-
-variable {X Y : Scheme.{u}} (i : Y ⟶ X) [IsClosedImmersion i]
-
-end AlgebraicGeometry
-
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
 
-/-- The inclusion written in the canonical intrinsic and ambient complex charts. -/
+/-- Let `i : Y → X` be a morphism of smooth complex schemes of respective dimensions `m` and `d`,
+and let `z ∈ Y(ℂ)`. If `eY` and `eX` are the chosen analytic charts at `z` and `i(z)`, this is
+the coordinate expression `eX ∘ i ∘ eY⁻¹ : ℂ^m → ℂ^d`, valid where both charts are defined. -/
 def inclusionInComplexCharts (z : ComplexPoint Y) :
     (Fin m → ℂ) → (Fin d → ℂ) :=
   fun v => localChart X d (Point.map i z)

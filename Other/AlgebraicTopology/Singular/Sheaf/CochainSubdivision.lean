@@ -18,7 +18,6 @@ module
 public import Other.Algebra.Homology.LinearDual
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
 public import Other.AlgebraicTopology.Sheaf.FlasqueGlobalSections
-public import Other.AlgebraicTopology.Sheaf.FlasqueAcyclic
 public import Other.AlgebraicTopology.Singular.CochainCohomology
 
 @[expose] public noncomputable section
@@ -36,14 +35,14 @@ noncomputable def openSimplexLift {X : TopCat.{u}} {U V : Opens X} (n : ℕ)
     (s : OpenSimplex X (.op U) n)
     (h : ∀ z, (((TopCat.of U).toSSetObjEquiv
       (Opposite.op (SimplexCategory.mk n)) s z : U) : X) ∈ V) :
-    OpenSimplex X (.op V) n := by
+    OpenSimplex X (.op V) n :=
   let m := Opposite.op (SimplexCategory.mk n)
   let fs := (TopCat.of U).toSSetObjEquiv m s
   let f : C(stdSimplex ℝ (Fin (n + 1)), TopCat.of V) :=
     ⟨fun z ↦ ⟨((fs z : U) : X), h z⟩,
       Continuous.subtype_mk
         (continuous_subtype_val.comp fs.continuous) _⟩
-  exact (TopCat.of V).toSSetObjEquiv m |>.symm f
+  (TopCat.of V).toSSetObjEquiv m |>.symm f
 
 @[simp]
 lemma openSimplexMap_openSimplexLift {X : TopCat.{u}} {U V : Opens X} (i : V ⟶ U) (n : ℕ)
@@ -55,7 +54,7 @@ lemma openSimplexMap_openSimplexLift {X : TopCat.{u}} {U V : Opens X} (i : V ⟶
     (Opposite.op (SimplexCategory.mk n)) |>.injective
   rfl
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Ordinary singular cochain cohomology is canonically linearly equivalent to the cohomology of
 cochains on the top open subset. -/
@@ -75,13 +74,12 @@ def topOpenRationalCochainHomotopyEquivCoverSmall
     HomotopyEquiv
       (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex
       (CoverSmallRationalSingularChainComplex Y U).linearDualCochainComplex :=
-  by
     let e₁ : HomotopyEquiv
         (TopOpenSingularChainComplex ℚ Y).linearDualCochainComplex
         ((TopCat.toSSet.obj Y).chainComplex
           (ModuleCat.of ℚ ℚ)).linearDualCochainComplex :=
       HomotopyEquiv.ofIso (singularCochainComplexIsoTopOpen ℚ Y).symm
-    exact e₁.trans
+    e₁.trans
       (rationalCochainHomotopyEquivCoverSmall Y U hUopen hUcover)
 
 lemma topOpenRationalCochainHomotopyEquivCoverSmall_hom
@@ -118,14 +116,14 @@ end AlgebraicTopology.Singular
 
 namespace AlgebraicTopology.Singular
 
-variable {R : Type u} [Field R] {X : TopCat.{u}}
+variable {R : Type u} [CommRing R] {X : TopCat.{u}}
 
 /-- Every positive sheaf-cohomology group of a term of the singular-cochain resolution vanishes
 on a hereditarily paracompact Hausdorff space. -/
 lemma singularCochainSheaf_cohomology_succ_eq_zero
     [T2Space X] [∀ V : Opens X, ParacompactSpace V]
     (n q : ℕ) (x : Abelian.Ext
-      (TopCat.Sheaf.IsFlasque.globalSectionsSource (X := X))
+      𝓒(X; ULift.{u} ℤ)
       (singularCochainSheaf R X n) (q + 1)) :
     x = 0 :=
   TopCat.Sheaf.IsFlasque.cohomology_succ_eq_zero

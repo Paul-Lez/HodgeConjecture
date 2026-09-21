@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
@@ -40,33 +42,37 @@ lemma sectionComplexRestriction_square {I : Type*} (c : ComplexShape I)
   rw [← Functor.map_comp, ← Functor.map_comp]
   congr 1
 
-/-- The restriction on the cones of section restriction. -/
+/-- Let `K` be an integer-indexed complex of sheaves of abelian groups on a topological space `X`.
+For nested opens `W ⊆ V`, `W′ ⊆ V′`, with `V′ ⊆ V` and `W′ ⊆ W`, restriction induces this map
+`Cone(K(V) → K(W)) → Cone(K(V′) → K(W′))`. -/
 def sectionComplexRestrictionConeMap
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
     {V W V' W' : Opens X} (i : W ⟶ V) (i' : W' ⟶ V')
     (a : V' ⟶ V) (b : W' ⟶ W) :
-    CochainComplex.mappingCone (sectionComplexRestriction X (.up ℤ) K i) ⟶
-      CochainComplex.mappingCone (sectionComplexRestriction X (.up ℤ) K i') :=
+    CochainComplex.mappingCone (sectionComplexRestriction X ℤᵘᵖ K i) ⟶
+      CochainComplex.mappingCone (sectionComplexRestriction X ℤᵘᵖ K i') :=
   CochainComplex.mappingCone.map _ _
-    (sectionComplexRestriction X (.up ℤ) K a)
-    (sectionComplexRestriction X (.up ℤ) K b)
-    (sectionComplexRestriction_square X (.up ℤ) K i i' a b)
+    (sectionComplexRestriction X ℤᵘᵖ K a)
+    (sectionComplexRestriction X ℤᵘᵖ K b)
+    (sectionComplexRestriction_square X ℤᵘᵖ K i i' a b)
 
 variable (U : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
   {V W : Opens X} (a : W ⟶ V)
 
-/-- The map between the three terms of the supported-section sequence. -/
+/-- Let `K` be an integer-indexed complex of sheaves of abelian groups on a topological space `X`,
+with `U` open and `W ⊆ V` open. This restricts all three complexes in `Γ_{X \ U}(V,K) → K(V) →
+K(V ∩ U)` to the corresponding complexes over `W`. -/
 def supportRestrictionSectionsComplexMap :
     supportRestrictionSectionsComplexShortComplex X U V K ⟶
       supportRestrictionSectionsComplexShortComplex X U W K where
-  τ₁ := sectionComplexRestriction X (.up ℤ)
+  τ₁ := sectionComplexRestriction X ℤᵘᵖ
     (supportRestrictionComplexShortComplex X U K).X₁ a
-  τ₂ := sectionComplexRestriction X (.up ℤ) K a
-  τ₃ := sectionComplexRestriction X (.up ℤ)
+  τ₂ := sectionComplexRestriction X ℤᵘᵖ K a
+  τ₃ := sectionComplexRestriction X ℤᵘᵖ
     (supportRestrictionComplexShortComplex X U K).X₃ a
-  comm₁₂ := (((supportEvaluationRestriction X a).mapHomologicalComplex (.up ℤ)).naturality
+  comm₁₂ := (((supportEvaluationRestriction X a).mapHomologicalComplex ℤᵘᵖ).naturality
     (supportRestrictionComplexShortComplex X U K).f).symm
-  comm₂₃ := (((supportEvaluationRestriction X a).mapHomologicalComplex (.up ℤ)).naturality
+  comm₂₃ := (((supportEvaluationRestriction X a).mapHomologicalComplex ℤᵘᵖ).naturality
     (supportRestrictionComplexShortComplex X U K).g).symm
 
 /-- The pushforward/intersection identification commutes with restriction. -/
@@ -86,7 +92,7 @@ lemma supportRestrictionSectionsIntersectionIso_naturality :
     (supportRestrictionSectionsComplexMap X U K a).τ₃ ≫
       (supportRestrictionSectionsIntersectionIso X U W K).hom =
     (supportRestrictionSectionsIntersectionIso X U V K).hom ≫
-      sectionComplexRestriction X (.up ℤ) K
+      sectionComplexRestriction X ℤᵘᵖ K
         (homOfLE (inf_le_inf_right U (leOfHom a))) :=
   HomologicalComplex.Hom.ext
     (funext fun n ↦ supportedOutsideIntersectionIso_naturality X U a (K.X n))
@@ -136,7 +142,7 @@ lemma supportedSectionHomologyIsoRestrictionCone_naturality
   let T := supportRestrictionSectionsComplexShortComplex X U W K
   let hS := supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque X U V K hK
   let hT := supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque X U W K hK
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat.{u} (.up ℤ) (n - 1)
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat.{u} ℤᵘᵖ (n - 1)
   change HomologicalComplex.homologyMap (supportRestrictionSectionsComplexMap X U K a).τ₁ n ≫
       ((CochainComplex.mappingCocone.shortExactHomologyIsoCone T hT (n - 1) n (by omega)).hom ≫
         H.map (supportRestrictionSectionsConeIso X U W K).hom) =

@@ -20,7 +20,6 @@ public import HodgeConjecture.Lemmas.Algebra.FieldToComplex
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDual
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportComparison
@@ -32,21 +31,18 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.WithSupport
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.AnalyticSheaf
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SupportExtension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Stratification.ClosedFiltration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.SingularLocusDimension
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.SmoothPair.CoclassOverlap
@@ -92,7 +88,6 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDeriv
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlusShiftNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.ShortExactQuasiIso
 public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturality
-public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexShiftNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
@@ -128,7 +123,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.LocalGene
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalCoordinates
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
@@ -139,7 +133,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.Holomorph
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicPoincare
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveCompact
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Projective
@@ -252,7 +245,6 @@ public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
 public import HodgeConjecture.Lemmas.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Lemmas.RingTheory.TranscendenceDegreeKrullDimension
 public import HodgeConjecture.Lemmas.Topology.Dimension.Basic
-public import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 public import HodgeConjecture.Mathlib.Algebra.Homology.KernelAcyclic
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
@@ -260,6 +252,7 @@ public import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
 public import HodgeConjecture.Mathlib.Algebra.Ring.Basic
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
+public import HodgeConjecture.Mathlib.AlgebraicTopology.SimplicialSet.ChainComplexSplit
 public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart
 public import HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors
@@ -268,7 +261,9 @@ public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import HodgeConjecture.Mathlib.RingTheory.SmoothKrullDimension
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
+public import HodgeConjecture.Mathlib.Topology.Category.TopPair
 public import HodgeConjecture.Mathlib.Topology.ChartedSpaceParacompact
 public import HodgeConjecture.Mathlib.Topology.KrullDimension
 public import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 public import HodgeConjecture.Statement
+public import HodgeConjecture.Variants

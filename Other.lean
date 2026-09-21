@@ -127,7 +127,6 @@ public import Other.AlgebraicTopology.Sheaf.CohomologyOpenRestriction
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionRestriction
 public import Other.AlgebraicTopology.Sheaf.ConstantDegreeZero
-public import Other.AlgebraicTopology.Sheaf.FlasqueAcyclic
 public import Other.AlgebraicTopology.Sheaf.FlasqueGlobalSections
 public import Other.AlgebraicTopology.Sheaf.FlasqueLowestCohomology
 public import Other.AlgebraicTopology.Sheaf.HomologySection

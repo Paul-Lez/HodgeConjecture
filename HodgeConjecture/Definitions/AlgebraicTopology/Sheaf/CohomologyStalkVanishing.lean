@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.HomologySection
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueQuasiIso
@@ -28,29 +30,28 @@ open CategoryTheory Limits TopologicalSpace Opposite HomologicalComplex
 
 universe u
 
-namespace TopCat.Presheaf
-
-variable {X : TopCat.{u}}
-
-end TopCat.Presheaf
-
 namespace TopCat.Sheaf
 
 open AlgebraicTopology.Singular
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- Degree-`n` homology of the presheaf complex underlying `K`. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. For an integer `n`, this presheaf sends an open `U` to `H^n(K(U))`, cycles modulo
+boundaries in the complex obtained by taking sections on `U`. Its restriction maps are induced
+by restriction of sections. -/
 def sectionCohomologyPresheaf (n : ℤ) : Presheaf AddCommGrpCat.{u} X :=
-  (((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).homology n
+  (((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K).homology n
 
-/-- Exact evaluation of presheaves identifies section-complex homology with
-the homology presheaf on the same open set. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. For an open `U` and an integer `n`, this identifies `H^n(K(U))` with the value at
+`U` of the presheaf `V ↦ H^n(K(V))`. It expresses that kernels and cokernels of presheaves are
+computed on each open set. -/
 def sectionCohomologyPresheafOnOpenIso (n : ℤ) (U : Opens X) :
-    (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ≅
-      (sectionCohomologyPresheaf X K n).obj (op U) := by
+    (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n ≅
+      (sectionCohomologyPresheaf X K n).obj (op U) :=
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
-    ((((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K).sc n)
-  exact S.mapHomologyIso ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op U))
+    ((((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K).sc n)
+  S.mapHomologyIso ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op U))
 
 end TopCat.Sheaf

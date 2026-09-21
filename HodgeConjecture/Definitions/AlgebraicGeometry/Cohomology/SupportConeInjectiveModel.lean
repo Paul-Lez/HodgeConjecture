@@ -25,14 +25,19 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- The standard ambient rational injective resolution in integer degrees. -/
+/-- Let `X` be a scheme over `ℂ`. This is the complex `I^•` of sheaves of abelian groups in a chosen
+injective resolution `ℚ → I^•` on the analytic space `X(ℂ)`. It is indexed by integers and is
+zero in negative degrees. -/
 def ambientRationalInjectiveComplex :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
+  -- An injective resolution `ℚ_{X(ℂ)} → I^•`.
   (TopCat.Sheaf.ambientConstantInjectiveResolution
     (TopCat.of (ComplexPoint X)) (AddCommGrpCat.of ℚ)).cocomplex.extend
       ComplexShape.embeddingUpNat
 
-/-- Its constant augmentation. -/
+/-- Let `X` be a scheme over `ℂ`. This is the augmentation `ℚ[0] → I^•` of the chosen injective
+resolution of the constant rational sheaf on the analytic space `X(ℂ)`, with both complexes
+indexed by integers. -/
 def ambientRationalInjectiveAugmentation :
     constantFieldSheafComplexInt ℚ X ⟶
       ambientRationalInjectiveComplex X :=
@@ -58,5 +63,13 @@ instance ambientRationalInjectiveComplex_isStrictlyGE :
     (ambientRationalInjectiveComplex X).IsStrictlyGE 0 := by
   dsimp only [ambientRationalInjectiveComplex]
   infer_instance
+
+local instance rationalConeForgetSheafDerivedCategory :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+
+instance ambientRationalInjectiveComplex_isKInjective :
+    (ambientRationalInjectiveComplex X).IsKInjective :=
+  CochainComplex.isKInjective_of_injective _ 0
 
 end AlgebraicGeometry.ComplexPoint

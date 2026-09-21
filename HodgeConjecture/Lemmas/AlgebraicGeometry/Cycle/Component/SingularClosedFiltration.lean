@@ -6,6 +6,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Ambient closed supports for singular-component localization induction
 
@@ -21,26 +23,38 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- The terminal index, read off from the finite decomposition. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
+scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
+locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. This natural
+number is the length of the finite list of closed subsets in that construction. From this index
+onward the closed filtration is empty. -/
 abbrev cycleComponentSingularFiltrationLength : ℕ :=
   (cycleComponentSingularStratification X x).length
 
-/-- The smooth scheme occurring between two consecutive closed supports. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
+scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
+locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. The `k`-th
+stratum is the smooth locus of the reduced closed subscheme on `S_k`; its underlying subset is
+`S_k \ S_{k+1}`. -/
 abbrev cycleComponentSingularFiltrationStratum (k : ℕ) : Scheme :=
   reducedClosedSmoothPiece (cycleComponentι X.left x ≫ X.hom)
     (cycleComponentSingularClosedFiltration X x k)
 
-/-- Its locally closed immersion into the original smooth ambient scheme. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
+scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
+locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. This morphism
+includes the smooth stratum `S_k \ S_{k+1}` into `X`, by its inclusion in `Z` followed by the
+closed immersion `Z → X`. -/
 def cycleComponentSingularFiltrationStratumι (k : ℕ) :
     cycleComponentSingularFiltrationStratum X x k ⟶ X.left :=
   reducedClosedSmoothPieceι (cycleComponentι X.left x ≫ X.hom)
     (cycleComponentSingularClosedFiltration X x k) ≫ cycleComponentι X.left x
 
 /-- A singular-filtration stratum with its induced structure map to `Spec ℂ`. -/
-abbrev cycleComponentSingularFiltrationStratumOver (k : ℕ) : Over (Spec (.of ℂ)) :=
+abbrev cycleComponentSingularFiltrationStratumOver (k : ℕ) : Over (Spec ↧ℂ) :=
   Over.mk (cycleComponentSingularFiltrationStratumι X x k ≫ X.hom)
 
 /-- The stratum immersion bundled over `Spec ℂ`. -/
@@ -82,11 +96,19 @@ theorem cycleComponentSingularAmbientClosedFiltration_layer (k : ℕ) :
     Set.range_comp, reducedSmoothClosedFiltration_layer]
   exact Set.image_sdiff (cycleComponentι X.left x).isClosedEmbedding.injective _ _
 
-/-- The ambient open used by the consecutive-support localization triangle. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
+scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
+locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. This open
+subscheme of `X` is the complement of the image of `S_{k+1}` in `X`. The `k`-th stratum is
+closed in this open. -/
 def cycleComponentSingularStratumAmbientOpen (k : ℕ) : X.left.Opens :=
   (cycleComponentSingularAmbientClosedFiltration X x (k + 1)).compl
 
-/-- The smooth stratum factors into the complement of the next closed support. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
+scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
+locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. This morphism
+includes the stratum `S_k \ S_{k+1}` into the open subscheme `X \ S_{k+1}`, interpreting the
+closed subsets of `Z` as subsets of `X`. -/
 def cycleComponentSingularStratumClosedLift (k : ℕ) :
     cycleComponentSingularFiltrationStratum X x k ⟶
       cycleComponentSingularStratumAmbientOpen X x k :=
@@ -97,7 +119,7 @@ def cycleComponentSingularStratumClosedLift (k : ℕ) :
       exact ((cycleComponentSingularAmbientClosedFiltration_layer X x k).le hy).2)
 
 /-- The localization open with its induced structure map to `Spec ℂ`. -/
-abbrev cycleComponentSingularStratumAmbientOpenOver (k : ℕ) : Over (Spec (.of ℂ)) :=
+abbrev cycleComponentSingularStratumAmbientOpenOver (k : ℕ) : Over (Spec ↧ℂ) :=
   ComplexPoint.openScheme X (cycleComponentSingularStratumAmbientOpen X x k)
 
 instance cycleComponentSingularStratumAmbientOpenOver_locallyOfFiniteType (k : ℕ) :
@@ -201,7 +223,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
 theorem cycleComponentSingularClosedFiltration_length :

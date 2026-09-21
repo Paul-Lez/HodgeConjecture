@@ -5,9 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.Cycle.ClassOnCycles
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
+public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.SmoothProjectiveVariety
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.ClassSpan
 /-!
 # Unconditional integral and rational algebraic-cycle class maps
 

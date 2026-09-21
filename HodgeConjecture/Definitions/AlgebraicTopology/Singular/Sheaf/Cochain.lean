@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
 public import Mathlib.Algebra.Homology.QuasiIso
 public import Mathlib.Algebra.Homology.SingleHomology
@@ -24,7 +25,6 @@ public import Mathlib.Topology.Connected.LocallyPathConnected
 public import Mathlib.Topology.Homotopy.Contractible
 public import Mathlib.Topology.Sheaves.Abelian
 
-import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Contractible
 import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
 import Mathlib.Topology.Homotopy.TopCat.ZerothHomotopy
@@ -52,23 +52,31 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
-/-- The singular chain complex, functorially restricted to the open subsets of `X`. -/
+/-- Let `R` be a commutative ring and `X` a topological space. This functor sends an open subset `U`
+to its singular chain complex `C_*(U; R)`, freely generated in degree `n` by continuous singular
+`n`-simplices. Inclusions of opens induce the chain maps. -/
 def openSingularChainComplexFunctor :
     Opens X ⥤ ChainComplex (ModuleCat.{u} R) ℕ :=
   Opens.toTopCat X ⋙
     (singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)
 
-/-- Singular chains of an open subset of `X` in degree `n`. -/
+/-- Let `R` be a commutative ring and `X` a topological space. For an open subset `U` and a natural
+number `n`, this is `C_n(U; R)`, the free `R`-module on continuous maps from the standard
+`n`-simplex to `U`. -/
 abbrev OpenChains (U : (Opens X)ᵒᵖ) (n : ℕ) :=
   (openSingularChainComplexFunctor R X).obj U.unop |>.X n
 
-/-- Singular cochains of an open subset of `X` in degree `n`. -/
+/-- Let `R` be a commutative ring and `X` a topological space. For an open subset `U` and a natural
+number `n`, this is the module `Hom_R(C_n(U; R), R)` of singular cochains, or equivalently all
+functions assigning an element of `R` to each singular `n`-simplex in `U`. -/
 abbrev OpenCochains (U : (Opens X)ᵒᵖ) (n : ℕ) :=
   Module.Dual R (OpenChains R X U n)
 
-/-- The singular cochain presheaf in a fixed degree. -/
+/-- Let `R` be a commutative ring and `X` a topological space. For a natural number `n`, this
+presheaf of abelian groups sends an open `U` to `C^n(U; R) = Hom_R(C_n(U; R), R)`. Restrictions
+precompose cochains with the chain maps induced by inclusions of opens. -/
 def singularCochainPresheaf (n : ℕ) : TopCat.Presheaf AddCommGrpCat X where
   obj U := AddCommGrpCat.of (OpenCochains R X U n)
   map {U V} i := AddCommGrpCat.ofHom <|
@@ -84,7 +92,9 @@ def singularCochainPresheaf (n : ℕ) : TopCat.Presheaf AddCommGrpCat X where
       (openSingularChainComplexFunctor R X).map_comp]
     rfl
 
-/-- The singular coboundary, dual to the singular boundary. -/
+/-- Let `R` be a commutative ring and `X` a topological space. This morphism of presheaves sends a
+singular `n`-cochain `φ` on an open `U` to the `(n+1)`-cochain `φ ∘ ∂`, where `∂` is the
+alternating sum of the simplex face maps. -/
 def singularCochainCoboundary (n : ℕ) :
     singularCochainPresheaf R X n ⟶ singularCochainPresheaf R X (n + 1) where
   app U := AddCommGrpCat.ofHom <|
@@ -131,7 +141,9 @@ lemma singularCochainCoboundary_comp (n : ℕ) :
     _ = φ 0 := rfl
     _ = 0 := φ.map_zero
 
-/-- The singular cochain complex as a complex of presheaves. -/
+/-- Let `R` be a commutative ring and `X` a topological space. This nonnegative complex of
+presheaves has `U ↦ Hom_R(C_n(U; R), R)` in degree `n`, with restrictions induced by inclusions
+of opens and coboundary `φ ↦ φ ∘ ∂`. -/
 def singularCochainPresheafComplex :
     CochainComplex (TopCat.Presheaf AddCommGrpCat X) ℕ :=
   CochainComplex.of
@@ -145,18 +157,24 @@ lemma singularCochainPresheafComplex_d (n : ℕ) :
       singularCochainCoboundary R X n := by
   simp [singularCochainPresheafComplex]
 
-/-- Singular cochains in a fixed degree, sheafified as additive groups. -/
+/-- Let `R` be a commutative ring and `X` a topological space. For a natural number `n`, this is the
+sheafification, as abelian groups, of `U ↦ C^n(U; R)`. Its sections are locally represented by
+singular cochains, with representatives identified if they agree on smaller neighborhoods. -/
 def singularCochainSheaf (n : ℕ) : TopCat.Sheaf AddCommGrpCat X :=
   let J := Opens.grothendieckTopology X
   (presheafToSheaf J AddCommGrpCat).obj (singularCochainPresheaf R X n)
 
-/-- The sheafified singular coboundary. -/
+/-- Let `R` be a commutative ring and `X` a topological space. Sheafifying the singular coboundary
+`φ ↦ φ ∘ ∂` gives this morphism from the sheaf of degree-`n` singular cochains to that of
+degree-`n+1` cochains. -/
 def singularCochainSheafCoboundary (n : ℕ) :
     singularCochainSheaf R X n ⟶ singularCochainSheaf R X (n + 1) :=
   let J := Opens.grothendieckTopology X
   (presheafToSheaf J AddCommGrpCat).map (singularCochainCoboundary R X n)
 
-/-- The degreewise sheafification of the singular cochain complex. -/
+/-- Let `R` be a commutative ring and `X` a topological space. This nonnegative complex of sheaves
+of abelian groups is obtained by sheafifying `U ↦ C^n(U; R)` in every degree. Its differential
+is induced by the singular coboundary `φ ↦ φ ∘ ∂`. -/
 def singularCochainSheafComplex :
     CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℕ :=
   let J := Opens.grothendieckTopology X
@@ -174,8 +192,9 @@ lemma singularCochainSheafComplex_d (n : ℕ) :
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The degreewise sheafification unit from singular cochains to the underlying presheaf of the
-singular-cochain sheaf complex. -/
+/-- Let `R` be a commutative ring and `X` a topological space. This map from the singular cochain
+presheaf complex to its degreewise sheafification sends each cochain on an open set to the
+section represented by its local germs. It commutes with singular coboundaries. -/
 noncomputable def singularCochainSheafificationUnit :
     singularCochainPresheafComplex R X ⟶
       (TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapHomologicalComplex
@@ -190,7 +209,8 @@ noncomputable def singularCochainSheafificationUnit :
     exact (toSheafify_naturality (Opens.grothendieckTopology X)
       (singularCochainCoboundary R X i)).symm
 
-/-- The augmentation of simplicial zero-chains, sending every vertex to `1`. -/
+/-- Let `R` be a commutative ring and `S` a simplicial set. This linear map from the free module of
+zero-chains on `S` to `R` sums coefficients, sending every vertex to `1`. -/
 def simplicialZeroAugmentation (S : SSet.{u}) :
     (S.chainComplex (ModuleCat.of R R)).X 0 ⟶ ModuleCat.of R R :=
   Limits.Sigma.desc (fun _ ↦ 𝟙 _)
@@ -220,7 +240,9 @@ private lemma simplicialBoundary_comp_zeroAugmentation (S : SSet.{u}) :
   rw [← Category.assoc, SSet.ιChainComplex_d, Preadditive.sum_comp]
   simp
 
-/-- The augmentation on the zero-chains of an open subset. -/
+/-- Let `R` be a commutative ring and `X` a topological space. For an open `U`, this map `C_0(U; R)
+→ R` sends every point of `U`, regarded as a singular zero-simplex, to `1` and sums coefficients
+on finite chains. -/
 def openZeroAugmentation (U : (Opens X)ᵒᵖ) :
     OpenChains R X U 0 ⟶ ModuleCat.of R R :=
   simplicialZeroAugmentation R <|
@@ -240,27 +262,26 @@ private lemma openBoundary_comp_zeroAugmentation (U : (Opens X)ᵒᵖ) :
   simplicialBoundary_comp_zeroAugmentation R
     (TopCat.toSSet.obj ((Opens.toTopCat X).obj U.unop))
 
-/-- The constant presheaf with value the additive group of `R`. -/
-def constantCoefficientPresheaf : TopCat.Presheaf AddCommGrpCat X :=
-  (Functor.const (Opens X)ᵒᵖ).obj (AddCommGrpCat.of R)
-
-/-- A scalar defines the corresponding constant singular zero-cochain. -/
+/-- Let `R` be a commutative ring and `X` a topological space. For an open `U`, this linear map
+sends `r ∈ R` to the singular zero-cochain on `U` with constant value `r` on every point. -/
 def constantSingularZeroCochain (U : (Opens X)ᵒᵖ) :
     R →+ OpenCochains R X U 0 where
   toFun r := r • (openZeroAugmentation R X U).hom
   map_zero' := LinearMap.ext fun c ↦ by simp
   map_add' r s := LinearMap.ext fun c ↦ by simp [add_smul]
 
-/-- Constant functions form singular zero-cochains, naturally under restriction. -/
+/-- Let `R` be a commutative ring and `X` a topological space. This presheaf morphism sends an
+element `r` of the constant presheaf `R` on each open `U` to the singular zero-cochain whose
+value is `r` at every point of `U`. -/
 def constantsToSingularCochainZero :
-    constantCoefficientPresheaf R X ⟶ singularCochainPresheaf R X 0 where
+    𝓒ᵖ(X; R) ⟶ singularCochainPresheaf R X 0 where
   app U := AddCommGrpCat.ofHom (constantSingularZeroCochain R X U)
   naturality {U V} i := by
     ext r
     change R at r
     apply LinearMap.ext
     intro c
-    dsimp [constantCoefficientPresheaf, constantSingularZeroCochain,
+    dsimp [TopCat.Presheaf.const, constantSingularZeroCochain,
       singularCochainPresheaf]
     exact congrArg (r * ·) <| congrArg (fun f ↦ f.hom c) <|
       (openZeroAugmentation_naturality R X i).symm
@@ -288,14 +309,11 @@ lemma constantsToSingularCochainZero_comp_coboundary :
       _ = 0 := rfl
   rw [hc, mul_zero]
 
-/-- The constant sheaf with value the additive group of `R`. -/
-def constantCoefficientSheaf : TopCat.Sheaf AddCommGrpCat X :=
-  let J := Opens.grothendieckTopology X
-  (constantSheaf J AddCommGrpCat).obj (AddCommGrpCat.of R)
-
-/-- The sheafified inclusion of constants into singular zero-cochains. -/
+/-- Let `R` be a commutative ring and `X` a topological space. This sheaf morphism from the constant
+sheaf `R_X` to the sheafification of singular zero-cochains sends a locally constant function to
+its germs as a zero-cochain. -/
 def constantsToSingularCochainZeroSheaf :
-    constantCoefficientSheaf R X ⟶ singularCochainSheaf R X 0 :=
+    𝓒(X; R) ⟶ singularCochainSheaf R X 0 :=
   let J := Opens.grothendieckTopology X
   (presheafToSheaf J AddCommGrpCat).map (constantsToSingularCochainZero R X)
 
@@ -311,13 +329,14 @@ lemma constantsToSingularCochainZeroSheaf_comp_coboundary :
   rw [← Functor.map_comp, constantsToSingularCochainZero_comp_coboundary,
     Functor.map_zero]
 
-/-- The canonical comparison from the constant sheaf complex to the singular-cochain sheaf
-complex. -/
+/-- Let `R` be a commutative ring and `X` a topological space. This map from the constant sheaf
+`R_X` in degree zero to the sheafified singular cochain complex includes locally constant
+functions as zero-cochains. All positive-degree components of the source are zero. -/
 def constantsToSingularCochainSheafComplex :
     (CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat X)).obj
-        (constantCoefficientSheaf R X) ⟶ singularCochainSheafComplex R X :=
+        𝓒(X; R) ⟶ singularCochainSheafComplex R X :=
   (CochainComplex.fromSingle₀Equiv (singularCochainSheafComplex R X)
-    (constantCoefficientSheaf R X)).symm
+    𝓒(X; R)).symm
       ⟨constantsToSingularCochainZeroSheaf R X, by
         rw [singularCochainSheafComplex_d]
         exact constantsToSingularCochainZeroSheaf_comp_coboundary R X⟩

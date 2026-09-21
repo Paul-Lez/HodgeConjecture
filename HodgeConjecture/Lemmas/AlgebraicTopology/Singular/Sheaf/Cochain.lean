@@ -17,7 +17,6 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.Cochain
 
-import HodgeConjecture.Mathlib.Algebra.Homology.DualExact
 import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Contractible
 import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
@@ -41,7 +40,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The augmented singular zero-cochain short complex before sheafification. -/
 noncomputable def constantsToSingularCochainPresheafShortComplex :
@@ -63,7 +62,7 @@ noncomputable def constantsToSingularCochainShortComplexSheafificationUnit :
     constantsToSingularCochainPresheafShortComplex R X ⟶
       (constantsToSingularCochainSheafShortComplex R X).map
         (TopCat.Sheaf.forget AddCommGrpCat.{u} X) where
-  τ₁ := toSheafify (Opens.grothendieckTopology X) (constantCoefficientPresheaf R X)
+  τ₁ := toSheafify (Opens.grothendieckTopology X) 𝓒ᵖ(X; R)
   τ₂ := toSheafify (Opens.grothendieckTopology X) (singularCochainPresheaf R X 0)
   τ₃ := toSheafify (Opens.grothendieckTopology X) (singularCochainPresheaf R X 1)
   comm₁₂ := (toSheafify_naturality (Opens.grothendieckTopology X)
@@ -83,7 +82,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 set_option backward.isDefEq.respectTransparency false in
 /-- If every closed singular `(n + 1)`-cochain has a primitive near each point, then the
@@ -241,8 +240,8 @@ lemma constantsToSingularCochainZero_stalk_mono (x : X) :
       (constantsToSingularCochainZero R X)) := by
   rw [AddCommGrpCat.mono_iff_injective]
   intro z z' h
-  obtain ⟨U, hxU, r, rfl⟩ := (constantCoefficientPresheaf R X).exists_germ_eq z
-  obtain ⟨V, hxV, s, rfl⟩ := (constantCoefficientPresheaf R X).exists_germ_eq z'
+  obtain ⟨U, hxU, r, rfl⟩ := 𝓒ᵖ(X; R).exists_germ_eq z
+  obtain ⟨V, hxV, s, rfl⟩ := 𝓒ᵖ(X; R).exists_germ_eq z'
   rw [TopCat.Presheaf.stalkFunctor_map_germ_apply,
     TopCat.Presheaf.stalkFunctor_map_germ_apply] at h
   obtain ⟨W, hxW, iWU, iWV, hW⟩ :=
@@ -253,11 +252,11 @@ lemma constantsToSingularCochainZero_stalk_mono (x : X) :
   have hrs : r = s := by
     apply constantSingularZeroCochain_injective R X (.op W)
     have hr := congrArg (fun k :
-        (constantCoefficientPresheaf R X).obj (.op U) ⟶
+        𝓒ᵖ(X; R).obj (.op U) ⟶
           (singularCochainPresheaf R X 0).obj (.op W) ↦ k r)
       ((constantsToSingularCochainZero R X).naturality iWU.op)
     have hs := congrArg (fun k :
-        (constantCoefficientPresheaf R X).obj (.op V) ⟶
+        𝓒ᵖ(X; R).obj (.op V) ⟶
           (singularCochainPresheaf R X 0).obj (.op W) ↦ k s)
       ((constantsToSingularCochainZero R X).naturality iWV.op)
     change constantSingularZeroCochain R X (.op W) r =
@@ -268,8 +267,8 @@ lemma constantsToSingularCochainZero_stalk_mono (x : X) :
         ((constantsToSingularCochainZero R X).app (.op V) s) at hs
     exact hr.trans (hW.trans hs.symm)
   subst s
-  rw [← (constantCoefficientPresheaf R X).germ_res_apply iWU x hxW,
-    ← (constantCoefficientPresheaf R X).germ_res_apply iWV x hxW]
+  rw [← 𝓒ᵖ(X; R).germ_res_apply iWU x hxW,
+    ← 𝓒ᵖ(X; R).germ_res_apply iWV x hxW]
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
@@ -315,7 +314,7 @@ lemma constantsToSingularCochainSheafShortComplex_exact [LocallyPathConnectedSpa
   let η := (stalk.mapShortComplex).map unit
   let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
-      (constantCoefficientPresheaf R X)
+      𝓒ᵖ(X; R)
   let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
       (singularCochainPresheaf R X 0)
@@ -339,7 +338,7 @@ lemma constantsToSingularCochainZeroSheaf_mono :
   let η : S ⟶ T := (stalk.mapShortComplex).map unit
   let : IsIso η.τ₁ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
-      (constantCoefficientPresheaf R X)
+      𝓒ᵖ(X; R)
   let : IsIso η.τ₂ :=
     TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso x AddCommGrpCat.{u}
       (singularCochainPresheaf R X 0)
@@ -376,7 +375,7 @@ lemma constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_locallyPrimitive
             (singularCochainPresheaf R X (n + 1)).map i.op φ) :
     QuasiIsoAt (constantsToSingularCochainSheafComplex R X) (n + 1) := by
   rw [quasiIsoAt_iff_exactAt _ _
-    (CochainComplex.exactAt_succ_single_obj (constantCoefficientSheaf R X) n)]
+    (CochainComplex.exactAt_succ_single_obj 𝓒(X; R) n)]
   exact singularCochainSheafComplex_exactAt_succ_of_locallyPrimitive R X n hlocal
 
 set_option backward.isDefEq.respectTransparency false in
@@ -397,8 +396,6 @@ lemma exists_local_singularCochain_primitive_of_contractibleOpenBasis
   let K := (openSingularChainComplexFunctor R X).obj V
   let φV : OpenCochains R X (.op V) (n + 1) :=
     (singularCochainPresheaf R X (n + 1)).map i.op φ
-  have hK : K.ExactAt (n + 1) :=
-    singularChainComplex_exactAt_of_contractible R V (n + 1) (by lia)
   have hφV : (K.d (n + 2) (n + 1)).hom.dualMap φV = 0 := by
     change (singularCochainCoboundary R X (n + 1)).app (.op V) φV = 0
     dsimp [φV]
@@ -406,7 +403,10 @@ lemma exists_local_singularCochain_primitive_of_contractibleOpenBasis
       (singularCochainCoboundary R X (n + 1)).naturality,
       ConcreteCategory.comp_apply, hφ, map_zero]
   have hker : φV ∈ LinearMap.ker (K.d (n + 2) (n + 1)).hom.dualMap := hφV
-  rw [← K.dual_differentials_range_eq_ker_of_exactAt n hK] at hker
+  have hrange : LinearMap.range (K.d (n + 1) n).hom.dualMap =
+      LinearMap.ker (K.d (n + 2) (n + 1)).hom.dualMap :=
+    singularChain_dual_range_eq_ker_of_contractible R V n
+  rw [← hrange] at hker
   obtain ⟨ψ, hψ⟩ := hker
   exact ⟨V, hxV, i, ψ, hψ⟩
 

@@ -34,7 +34,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ))) (d : ℕ)
+variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 variable [IsProjective X.hom] [SmoothOfRelativeDimension d X.hom]
   (z : ComplexPoint X)

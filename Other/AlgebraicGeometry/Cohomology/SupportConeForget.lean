@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift
 public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyShift
@@ -15,8 +15,8 @@ public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 /-!
 # Support-forgetting in the rational injective model
 
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget`.
+Ordinary rational cohomology is computed by the ambient rational injective resolution, and
+the support-forgetting map becomes the cone connecting map of that resolution.
 -/
 
 @[expose] public noncomputable section
@@ -25,12 +25,14 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
 attribute [local instance] rationalConeForgetSheafDerivedCategory
 
-/-- Ordinary rational cohomology computed by the actual ambient rational
-injective resolution. This has the ordinary augmentation normalization. -/
+/-- Let `X` be a scheme over `ℂ`, let `Y = X(ℂ)` have its analytic topology, and let `I` be the
+chosen injective resolution of the constant rational sheaf on `Y`. This additive equivalence
+identifies rational sheaf cohomology `H^n(Y;ℚ)` with `H^n(Γ(Y,I))` for every integer `n`. It is
+induced by the augmentation of the constant sheaf into `I`. -/
 def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
     H^n(X; ℚ) ≃+
       (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X))
-        (ambientRationalInjectiveComplex X)).homology n := by
+        (ambientRationalInjectiveComplex X)).homology n :=
   let e : H^n(X; ℚ) ≃+
       Hypercohomology X (ambientRationalInjectiveComplex X) n :=
     { toEquiv := Localization.SmallShiftedHom.postcompEquiv
@@ -38,7 +40,7 @@ def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
         ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)
       map_add' α β := (hypercohomologyMap X
         (ambientRationalInjectiveAugmentation X) n).map_add α β }
-  exact e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ n)
+  e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ n)
 
 end AlgebraicGeometry.ComplexPoint
 end
@@ -91,19 +93,19 @@ lemma hypercohomologyMap_comp_shifted
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The original support-forgetting map, after replacing the ambient
-constant sheaf by its actual injective resolution, is the actual cone
+constant sheaf by its injective resolution, is the cone
 connecting homology map. -/
 lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
     (x : RationalCohomologyWithSupport X Z n) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n
       (forgetSupport X Z n x) =
-    (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
+    (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
       (ShiftedHom.map
         (CochainComplex.mappingCone.triangle
           (ambientRationalInjectiveRestriction X Z hZ)).mor₃
         ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)))
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ))
       (n - 1) n (by omega)
       (rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x) := by
   exact (congrArg (hypercohomologyAddEquivGlobalSectionsKInjective X
@@ -119,7 +121,7 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The normalized support equivalence intertwines the existing
-`forgetSupport` with the actual inclusion of supported injective sections.
+`forgetSupport` with the inclusion of supported injective sections.
 No compatibility or choice of a sign is supplied as an input. -/
 lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
@@ -138,7 +140,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
     (ambientRationalInjectiveComplex X)
   let b := ambientRationalInjectiveRestriction X Z hZ
   let c := supportConeToAmbientInjectiveGlobalCone X Z hZ
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
+  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
   let e := CochainComplex.mappingCone.mapHomologicalComplexIso b Γ
   let y := rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x
   let : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
@@ -146,14 +148,14 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)
   have hc : HomologicalComplex.homologyMap c (n - 1) ≫
       H.shiftMap (CochainComplex.mappingCone.triangle
-        ((Γ.mapHomologicalComplex (.up ℤ)).map b)).mor₃ (n - 1) n (by omega) =
+        ((Γ.mapHomologicalComplex ℤᵘᵖ).map b)).mor₃ (n - 1) n (by omega) =
       H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) := by
     change (H.shift (n - 1)).map c ≫ _ = _
     rw [← Functor.shiftMap_comp', supportConeToAmbientInjectiveGlobalCone_connecting]
   have hc' : inv (HomologicalComplex.homologyMap c (n - 1)) ≫
       H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) =
       H.shiftMap (CochainComplex.mappingCone.triangle
-        ((Γ.mapHomologicalComplex (.up ℤ)).map b)).mor₃ (n - 1) n (by omega) := by
+        ((Γ.mapHomologicalComplex ℤᵘᵖ).map b)).mor₃ (n - 1) n (by omega) := by
     rw [← hc, IsIso.inv_hom_id_assoc]
   have hl := CochainComplex.mappingCocone.inv_homologyMap_shiftedLiftShortComplex_connecting
     S (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)
@@ -162,7 +164,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
     b Γ (n - 1) n (by omega)
   rw [rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone]
   change H.shiftMap (ShiftedHom.map (CochainComplex.mappingCone.triangle b).mor₃
-      (Γ.mapHomologicalComplex (.up ℤ))) (n - 1) n (by omega) y =
+      (Γ.mapHomologicalComplex ℤᵘᵖ)) (n - 1) n (by omega) y =
     HomologicalComplex.homologyMap S.f n
       (-(((H.shiftIso 1 (n - 1) n (by omega)).hom.app S.X₁)
         ((inv (HomologicalComplex.homologyMap

@@ -241,15 +241,15 @@ def affineSpecPointHomeomorph :
     @Homeomorph
       (ComplexPoint (ComplexPoint.openScheme X D.neighborhood))
       (ComplexPoint (Over.mk (ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤))))
-      Point.analyticTopology Point.analyticTopology := by
-  let : IsAffine D.neighborhood.toScheme := D.isAffine
+      Point.analyticTopology Point.analyticTopology :=
+  letI : IsAffine D.neighborhood.toScheme := D.isAffine
   let e := asIso D.neighborhood.toScheme.toSpecΓ
   have he : e.hom ≫ ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤) =
       D.neighborhood.ι ≫ X.hom := by
     change D.neighborhood.toScheme.toSpecΓ ≫
       ComplexPoint.affineSpecStructureMap Γ(D.neighborhood.toScheme, ⊤) = _
     exact D.toSpecΓ_over
-  exact Point.isoMapHomeomorph (Over.isoMk e he)
+  Point.isoMapHomeomorph (Over.isoMk e he)
 
 lemma affineSpecPointHomeomorph_apply
     (z : ComplexPoint (ComplexPoint.openScheme X D.neighborhood)) :
@@ -355,9 +355,9 @@ lemma ambientAnalyticCoordinates_apply_eq_evaluate
       exact congrArg Subtype.val
         ((ComplexPoint.openHomeomorph X D.neighborhood).apply_symm_apply z)
 
-/-- The explicit analytic projection chart centered at a point of the ambient coordinate
-neighborhood. Its inverse is the standard étale construction, and so carries its analyticity
-theorem. -/
+/-- Let `X` be smooth of relative dimension `d` over `ℂ`. Choose an affine open `W ⊆ X` and an étale
+coordinate map `W → 𝔸^d_ℂ`. For `z ∈ W(ℂ)`, this local homeomorphism from `W(ℂ)` to `ℂ^d` is the
+induced coordinate map near `z`, with local inverse supplied by the étale projection chart. -/
 noncomputable def ambientProjectionChart
     (z : {z : ComplexPoint X // z ∈ Point.overOpen D.neighborhood}) :
     OpenPartialHomeomorph

@@ -80,44 +80,43 @@ def mul {A B : Matrix n n ℂ}
 
 /-- An invertible diagonal complex matrix is isotopic to the identity. -/
 def diagonal (D : n → ℂ) (hD : (Matrix.diagonal D).det ≠ 0) :
-    ComplexIsotopyToOne (Matrix.diagonal D) := by
+    ComplexIsotopyToOne (Matrix.diagonal D) :=
   have hDi : ∀ i, D i ≠ 0 := fun i hi ↦ hD <| by
     rw [Matrix.det_diagonal]
     exact Finset.prod_eq_zero (Finset.mem_univ i) hi
-  refine
-    { path :=
-        ⟨fun t ↦ Matrix.diagonal fun i ↦
-            Complex.exp (((t : ℝ) : ℂ) * Complex.log (D i)), ?_⟩
-      map_zero := ?_
-      map_one := ?_
-      det_ne_zero := ?_ }
-  · refine continuous_pi fun i ↦ continuous_pi fun j ↦ ?_
-    change Continuous (fun a : unitInterval ↦ if i = j then
-      Complex.exp (((a : ℝ) : ℂ) * Complex.log (D i)) else 0)
-    by_cases hij : i = j
-    · simp only [hij, ↓reduceIte]
-      fun_prop
-    · simp only [hij, ↓reduceIte]
-      exact continuous_const
-  · ext i j
-    by_cases hij : i = j
-    · subst j
-      simp [Matrix.diagonal]
-    · simp [Matrix.diagonal, hij]
-  · ext i j
-    by_cases hij : i = j
-    · subst j
-      simp [Matrix.diagonal, Complex.exp_log (hDi i)]
-    · simp [Matrix.diagonal, hij]
-  · intro t
-    change (Matrix.diagonal (fun i ↦
-      Complex.exp (((t : ℝ) : ℂ) * Complex.log (D i)))).det ≠ 0
-    rw [Matrix.det_diagonal]
-    exact Finset.prod_ne_zero_iff.mpr fun i _ ↦ Complex.exp_ne_zero _
+  { path :=
+      ⟨fun t ↦ Matrix.diagonal fun i ↦
+          Complex.exp (((t : ℝ) : ℂ) * Complex.log (D i)), by
+        refine continuous_pi fun i ↦ continuous_pi fun j ↦ ?_
+        change Continuous (fun a : unitInterval ↦ if i = j then
+          Complex.exp (((a : ℝ) : ℂ) * Complex.log (D i)) else 0)
+        by_cases hij : i = j
+        · simp only [hij, ↓reduceIte]
+          fun_prop
+        · simp only [hij, ↓reduceIte]
+          exact continuous_const⟩
+    map_zero := by
+      ext i j
+      by_cases hij : i = j
+      · subst j
+        simp [Matrix.diagonal]
+      · simp [Matrix.diagonal, hij]
+    map_one := by
+      ext i j
+      by_cases hij : i = j
+      · subst j
+        simp [Matrix.diagonal, Complex.exp_log (hDi i)]
+      · simp [Matrix.diagonal, hij]
+    det_ne_zero := by
+      intro t
+      change (Matrix.diagonal (fun i ↦
+        Complex.exp (((t : ℝ) : ℂ) * Complex.log (D i)))).det ≠ 0
+      rw [Matrix.det_diagonal]
+      exact Finset.prod_ne_zero_iff.mpr fun i _ ↦ Complex.exp_ne_zero _ }
 
 /-- A complex transvection is isotopic to the identity by scaling its off-diagonal entry. -/
 def transvection (t : Matrix.TransvectionStruct n ℂ) :
-    ComplexIsotopyToOne t.toMatrix := by
+    ComplexIsotopyToOne t.toMatrix :=
   let P : C(unitInterval, Matrix n n ℂ) :=
     ⟨fun s ↦ Matrix.transvection t.i t.j (((s : ℝ) : ℂ) * t.c), by
       refine continuous_pi fun i ↦ continuous_pi fun j ↦ ?_
@@ -129,18 +128,15 @@ def transvection (t : Matrix.TransvectionStruct n ℂ) :
         fun_prop
       · simp [h]
         exact continuous_const⟩
-  refine
-    { path := P
-      map_zero := ?_
-      map_one := ?_
-      det_ne_zero := ?_ }
-  · simp [P]
-  · simp [P, Matrix.TransvectionStruct.toMatrix]
-  · intro s
-    simpa only [P, ContinuousMap.coe_mk] using
-      (show (Matrix.transvection t.i t.j (((s : ℝ) : ℂ) * t.c)).det ≠ 0 by
-        rw [Matrix.det_transvection_of_ne _ _ t.hij]
-        exact one_ne_zero)
+  { path := P
+    map_zero := by simp [P]
+    map_one := by simp [P, Matrix.TransvectionStruct.toMatrix]
+    det_ne_zero := by
+      intro s
+      simpa only [P, ContinuousMap.coe_mk] using
+        (show (Matrix.transvection t.i t.j (((s : ℝ) : ℂ) * t.c)).det ≠ 0 by
+          rw [Matrix.det_transvection_of_ne _ _ t.hij]
+          exact one_ne_zero) }
 
 end ComplexIsotopyToOne
 
@@ -210,9 +206,9 @@ lemma complexMatrixPuncturedMap_apply
 
 /-- An invertible complex matrix acts on complex affine space and its punctured subspace. -/
 def complexMatrixPuncturedPairMap (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0) :
-    standardComplexPuncturedPair d ⟶ standardComplexPuncturedPair d :=
-  TopPair.ofHom (X := standardComplexPuncturedPair d)
-    (Y := standardComplexPuncturedPair d)
+    puncturedPair ℂ d ⟶ puncturedPair ℂ d :=
+  TopPair.ofHom (X := puncturedPair ℂ d)
+    (Y := puncturedPair ℂ d)
     (complexMatrixMap d A)
     (complexMatrixPuncturedMap d A hA)
     (by
@@ -224,7 +220,7 @@ def complexMatrixPuncturedPairMap (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det �
 def complexMatrixPuncturedPairHomotopy
     {A : Matrix (Fin d) (Fin d) ℂ} (hA : A.det ≠ 0)
     (H : Matrix.ComplexIsotopyToOne A) :
-    TopPair.Homotopy (𝟙 (standardComplexPuncturedPair d))
+    TopPair.Homotopy (𝟙 (puncturedPair ℂ d))
       (complexMatrixPuncturedPairMap d A hA) where
   fst :=
     { toFun := fun tx ↦ (H.path tx.1).mulVec tx.2
@@ -260,11 +256,11 @@ def complexMatrixPuncturedPairHomotopy
 theorem relativeHomologyMap_complexMatrix_standardComplexLocalClass
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0) :
     relativeHomologyMap ℚ (2 * d) (complexMatrixPuncturedPairMap d A hA)
-        (standardComplexLocalClass d) =
-      standardComplexLocalClass d := by
+        (standardComplexLocalClass ℚ d) =
+      standardComplexLocalClass ℚ d := by
   let H := (Matrix.nonempty_complexIsotopyToOne A hA).some
   have h := (complexMatrixPuncturedPairHomotopy d hA H).relativeHomologyMap_apply_eq
-    (R := ℚ) (2 * d) (standardComplexLocalClass d)
+    (R := ℚ) (2 * d) (standardComplexLocalClass ℚ d)
   simpa using h.symm
 
 end AlgebraicTopology.Singular

@@ -44,7 +44,9 @@ lemma shortExact_map_forget {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)
 
 variable {A B : TopCat.Sheaf AddCommGrpCat.{u} X} (f : A ⟶ B)
 
-/-- The kernel/source/image short complex. -/
+/-- Let `f : F → G` be a morphism of sheaves of abelian groups on a topological space `X`. This is
+the sequence `ker(f) → F → im(f)`, with the kernel inclusion and the canonical map to the image.
+The composite is zero. -/
 def kernelImageShortComplex : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
   ShortComplex.mk (kernel.ι f) (Abelian.factorThruImage f) (by
     rw [← cancel_mono (Abelian.image.ι f), zero_comp, Category.assoc,
@@ -67,7 +69,9 @@ lemma kernelImageShortComplex_shortExact : (kernelImageShortComplex f).ShortExac
           mono_f := by dsimp [kernelImageShortComplex]; infer_instance
           epi_g := by dsimp [kernelImageShortComplex]; infer_instance }
 
-/-- The image/codomain/cokernel short exact sequence is the abelian image sequence. -/
+/-- Let `f : F → G` be a morphism of sheaves of abelian groups on a topological space `X`. This is
+the sequence `im(f) → G → coker(f)`, with the image inclusion and the cokernel projection. The
+composite is zero. -/
 def imageCokernelShortComplex : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
   ShortComplex.mk (Abelian.image.ι f) (cokernel.π f)
     (Abelian.image_ι_comp_eq_zero (cokernel.condition f))

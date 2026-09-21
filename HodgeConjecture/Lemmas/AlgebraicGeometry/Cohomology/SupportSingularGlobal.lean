@@ -34,7 +34,7 @@ namespace AlgebraicTopology.Singular
 
 universe u v
 
-variable (R : Type) [Field R] (X : TopCat.{0})
+variable (R : Type) [CommRing R] (X : TopCat.{0})
 
 /-- The raw global singular-cochain complex, extended by zero to integer degrees. -/
 def globalRawSingularCochainComplexInt : CochainComplex AddCommGrpCat ℤ :=

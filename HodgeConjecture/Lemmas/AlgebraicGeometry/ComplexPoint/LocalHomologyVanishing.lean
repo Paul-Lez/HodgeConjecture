@@ -26,16 +26,8 @@ namespace AlgebraicTopology.Singular
 
 /-- Complex coordinate space has local homology only in twice its complex dimension. -/
 theorem standardComplexLocalHomology_isZero_of_ne (d n : ℕ) (hn : n ≠ 2 * d) :
-    IsZero (RelativeHomology ℚ (standardComplexPuncturedPair d) n) :=
+    IsZero (RelativeHomology ℚ (puncturedPair ℂ d) n) :=
   (standardLocalHomology_isZero_of_ne (d * 2) n (by omega)).of_iso
     ((relativeHomologyFunctor ℚ n).mapIso (standardComplexRealPairIso d))
 
 end AlgebraicTopology.Singular
-
-namespace AlgebraicGeometry.ComplexPoint
-
-open AlgebraicTopology.Singular
-
-variable (X : Over (Spec (.of ℂ))) (d : ℕ)
-
-end AlgebraicGeometry.ComplexPoint

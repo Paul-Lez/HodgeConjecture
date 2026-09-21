@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 
 /-! # Cone maps and additive comparison naturality -/
@@ -44,13 +46,13 @@ cone map after the canonical additive-functor comparison. -/
 lemma mapHomologicalComplexIso_naturality (f : K ⟶ L) (g : K' ⟶ L')
     (a : K ⟶ K') (b : L ⟶ L') (h : f ≫ b = a ≫ g)
     (F : C ⥤ D) [F.Additive] :
-    (F.mapHomologicalComplex (.up ℤ)).map (map f g a b h) ≫
+    (F.mapHomologicalComplex ℤᵘᵖ).map (map f g a b h) ≫
       (mapHomologicalComplexIso g F).hom =
     (mapHomologicalComplexIso f F).hom ≫
-      map ((F.mapHomologicalComplex (.up ℤ)).map f)
-        ((F.mapHomologicalComplex (.up ℤ)).map g)
-        ((F.mapHomologicalComplex (.up ℤ)).map a)
-        ((F.mapHomologicalComplex (.up ℤ)).map b)
+      map ((F.mapHomologicalComplex ℤᵘᵖ).map f)
+        ((F.mapHomologicalComplex ℤᵘᵖ).map g)
+        ((F.mapHomologicalComplex ℤᵘᵖ).map a)
+        ((F.mapHomologicalComplex ℤᵘᵖ).map b)
         (by rw [← Functor.map_comp, h, Functor.map_comp]) := by
   ext n
   simp only [HomologicalComplex.comp_f, Functor.mapHomologicalComplex_map_f]

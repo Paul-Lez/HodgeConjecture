@@ -144,12 +144,12 @@ theorem subsetSingularMap_mono :
 set_option backward.isDefEq.respectTransparency false in
 /-- The singular set of a subset is canonically its image subcomplex, without any choice of
 homology generators. -/
-def subsetSingularIso : TopCat.toSSet.obj (TopCat.of U) ≅ subsetSingularSubcomplex X U := by
+def subsetSingularIso : TopCat.toSSet.obj (TopCat.of U) ≅ subsetSingularSubcomplex X U :=
   let f := TopCat.toSSet.map (topologicalSubsetInclusion X U)
-  let : Mono f := subsetSingularMap_mono X U
-  let : Mono (SSet.Subcomplex.toRange f) :=
+  letI : Mono f := subsetSingularMap_mono X U
+  letI : Mono (SSet.Subcomplex.toRange f) :=
     mono_of_mono_fac (SSet.Subcomplex.toRange_ι f)
-  exact asIso (SSet.Subcomplex.toRange f)
+  asIso (SSet.Subcomplex.toRange f)
 
 /-- The two-open small singular set, before any openness assumptions. -/
 abbrev TwoSubsetSmallSingularSet : SSet :=
@@ -273,10 +273,10 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The canonical comparison from two-open small homology to ambient homology. -/
 def twoSubsetSmallHomologyIso
     (hU : IsOpen U) (hV : IsOpen V) (hUV : U ∪ V = Set.univ) (n : ℕ) :
-    (singularMayerVietorisShortComplex X U V).X₃.homology n ≅ Homology ℚ X n := by
-  let : IsIso (HomologicalComplex.homologyMap (twoSubsetSmallChainInclusion X U V) n) :=
+    (singularMayerVietorisShortComplex X U V).X₃.homology n ≅ Homology ℚ X n :=
+  letI : IsIso (HomologicalComplex.homologyMap (twoSubsetSmallChainInclusion X U V) n) :=
     twoSubsetSmallChainInclusion_homology_isIso X U V hU hV hUV n
-  exact asIso (HomologicalComplex.homologyMap (twoSubsetSmallChainInclusion X U V) n)
+  asIso (HomologicalComplex.homologyMap (twoSubsetSmallChainInclusion X U V) n)
 
 /-- The Mayer--Vietoris connecting map `Hₙ₊₁(X;ℚ) → Hₙ(U∩V;ℚ)`. It is constructed
 from the short exact chain sequence and the proven open-cover comparison. -/

@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Topology.Sheaves.Flasque
 
@@ -44,8 +46,8 @@ namespace BoundedBelowComplex
 
 variable (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- Evaluation of a sheaf on the top open subset, viewed as a functor. This is
-`CategoryTheory.sheafSections` at the top open, stated with the domain spelled `TopCat.Sheaf`. -/
+/-- Let `X` be a topological space. The global sections functor sends a sheaf of abelian groups `F`
+to `F(X)` and a sheaf morphism to its map on sections over the whole space. -/
 def globalSectionsFunctor (X : TopCat.{u}) :
     TopCat.Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
   (sheafSections (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj (op (⊤ : Opens X))
@@ -67,12 +69,13 @@ noncomputable instance globalSectionsFunctor_preservesFiniteLimits :
   exact comp_preservesFiniteLimits (TopCat.Sheaf.forget AddCommGrpCat.{u} X)
     ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op (⊤ : Opens X)))
 
-/-- The integer-indexed cochain complex obtained by evaluating a sheaf complex on the top open
-subset. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. This is the complex of abelian groups with `K^n(X)` in degree `n` and
+differentials obtained by evaluating those of `K` on the whole space. -/
 def globalSectionsComplex
     (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ) :
     CochainComplex AddCommGrpCat.{u} ℤ :=
-  ((globalSectionsFunctor X).mapHomologicalComplex (ComplexShape.up ℤ)).obj K
+  ((globalSectionsFunctor X).mapHomologicalComplex ℤᵘᵖ).obj K
 
 end BoundedBelowComplex
 

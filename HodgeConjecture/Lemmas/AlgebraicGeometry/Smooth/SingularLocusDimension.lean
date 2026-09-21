@@ -4,16 +4,22 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Smooth.SingularLocusDimension
+public import HodgeConjecture.Lemmas.Topology.Dimension.ClosedSubset
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Basic
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # The singular locus has smaller algebraic dimension
 
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Smooth.SingularLocusDimension`.
+Over a perfect field the complement of the smooth locus of a reduced irreducible scheme is
+a proper closed subset. This file proves the strict Krull-dimension bound of that reduced
+closed subscheme, including the `d - p` bound for cycle components. The bounds are on
+algebraic dimension throughout.
 -/
 
 /-! ### Constructions used only in proofs -/
@@ -43,15 +49,18 @@ instance reducedSingularLocusι_isClosedImmersion :
     IsClosedImmersion (reducedSingularLocusι f) :=
   inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f)))
 
-variable (Y : Over (Spec (.of ℂ)))
+variable (Y : Over (Spec ↧ℂ))
   [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
 
-/-- The singular locus of every cycle component admits the finite smooth
-decomposition constructed by Noetherian recursion. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
+scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
+locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. This finite
+list records those successive closed subsets until the empty set is reached. Each difference
+between consecutive terms, with its induced reduced structure, is smooth over `ℂ`. -/
 def cycleComponentSingularStratification (x : Y.left) :
-    List (Closeds (cycleComponent Y.left x)) := by
+    List (Closeds (cycleComponent Y.left x)) :=
   letI := cycleComponent_isNoetherian Y x
-  exact reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
+  reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
     (singularLocusClosed (cycleComponentι Y.left x ≫ Y.hom))
 
 end AlgebraicGeometry
@@ -101,7 +110,7 @@ theorem topologicalKrullDim_reducedClosedSmoothPiece_le {S T : Closeds X} (hTS :
 /-- On a smooth complex scheme of algebraic dimension below `m`, every point has a
 standard-smooth affine neighborhood of some relative dimension below `m`. -/
 theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
-    {Z : Scheme} (g : Z ⟶ Spec (.of ℂ)) [Smooth g] {m : ℕ}
+    {Z : Scheme} (g : Z ⟶ Spec ↧ℂ) [Smooth g] {m : ℕ}
     (hdim : topologicalKrullDim Z < m) (z : Z) :
     ∃ (U : Z.Opens) (_ : IsAffineOpen U), z ∈ U ∧
       ∃ n : ℕ, n < m ∧
@@ -116,7 +125,7 @@ theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
   rw [hdimU] at hlt
   exact ⟨U, hU, hzU, n, by exact_mod_cast hlt, hn⟩
 
-variable (Y : Over (Spec (.of ℂ)))
+variable (Y : Over (Spec ↧ℂ))
   [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
 
 /-- For a codimension-`p` component of a smooth projective complex `d`-fold, the reduced

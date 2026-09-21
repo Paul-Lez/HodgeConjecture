@@ -29,6 +29,8 @@ public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.Topology.Sheaves.Abelian
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # The holomorphic de Rham complex
 
@@ -73,9 +75,8 @@ lemma scalarHolomorphicDeRhamPresheaf_d
 def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom]
     (c : ℂ) :
     holomorphicDeRhamComplex X d ⟶
-      holomorphicDeRhamComplex X d := by
-  unfold holomorphicDeRhamComplex
-  exact CochainComplex.ofHom
+      holomorphicDeRhamComplex X d :=
+  CochainComplex.ofHom
     (fun p =>
       let J := Opens.grothendieckTopology
         (TopCat.of (ComplexPoint X))
@@ -84,6 +85,7 @@ def scalarHolomorphicDeRhamComplex [SmoothOfRelativeDimension d X.hom]
     (fun p => by
       let J := Opens.grothendieckTopology
         (TopCat.of (ComplexPoint X))
+      unfold holomorphicDeRhamComplex
       simp only [CochainComplex.of_d]
       change (presheafToSheaf J AddCommGrpCat).map
           (scalarHolomorphicDeRhamPresheaf X d p c) ≫
@@ -120,8 +122,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 /-- Scalar multiplication on the constant complex presheaf. -/
 def complexScalarPresheaf (c : ℂ) :
-    constantComplexAddCommGrpPresheaf X ⟶
-      constantComplexAddCommGrpPresheaf X where
+    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶ 𝓒ᵖ(↧(ComplexPoint X); ℂ) where
   app _ := AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ c)
   naturality {U V} i := by
     ext x
@@ -129,10 +130,10 @@ def complexScalarPresheaf (c : ℂ) :
 
 /-- Scalar multiplication on the constant complex sheaf. -/
 def complexScalarSheaf (c : ℂ) :
-    constantComplexSheaf X ⟶ constantComplexSheaf X := by
+    𝓒(↧(ComplexPoint X); ℂ) ⟶ 𝓒(↧(ComplexPoint X); ℂ) :=
   let J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
-  exact (presheafToSheaf J AddCommGrpCat).map
+  (presheafToSheaf J AddCommGrpCat).map
     (complexScalarPresheaf X c)
 
 /-- Scalar multiplication on the constant complex-valued complex concentrated in degree zero. -/
@@ -140,10 +141,10 @@ def complexScalarSheaf (c : ℂ) :
 def complexScalarComplex (c : ℂ) :
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (constantComplexSheaf X) ⟶
+        𝓒(↧(ComplexPoint X); ℂ) ⟶
     (CochainComplex.single₀
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-        (constantComplexSheaf X) :=
+        𝓒(↧(ComplexPoint X); ℂ) :=
   (CochainComplex.single₀ _).map (complexScalarSheaf X c)
 
 /-- Scalar multiplication on the integer-indexed constant complex-valued complex. -/
@@ -326,7 +327,7 @@ lemma constantsToHolomorphicDeRhamComplex_scalar
   rcases p with _ | p
   · exact constantsToHolomorphicDeRhamZero_scalar X d c
   · apply (HomologicalComplex.isZero_single_obj_X
-      (ComplexShape.up ℕ) 0 (constantComplexSheaf X) (p + 1)
+      (ComplexShape.up ℕ) 0 𝓒(↧(ComplexPoint X); ℂ) (p + 1)
       (Nat.succ_ne_zero p)).eq_of_src
 
 /-- Conjugation intertwines the two scalar multiplications in degree zero. -/

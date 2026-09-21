@@ -57,7 +57,7 @@ def puncturedChartModelTargetHomeomorph :
 
 /-- The pair isomorphism from the standard complex local model to the open chart target. -/
 def standardComplexChartTargetPairIso :
-    standardComplexPuncturedPair d ≅
+    puncturedPair ℂ d ≅
       neighborhoodPointComplementPair (chartModelEmbedding d e x hx).target x where
   hom := TopPair.ofHom
     (TopCat.ofHom ⟨chartModelTargetHomeomorph d e x hx,
@@ -120,7 +120,7 @@ theorem span_localClassOfChart_eq_top :
   let f := relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e x hx)
   calc
     Submodule.span ℚ {localClassOfChart d e x hx} =
-        (Submodule.span ℚ {standardComplexLocalClass d}).map f := by
+        (Submodule.span ℚ {standardComplexLocalClass ℚ d}).map f := by
       rw [Submodule.map_span]
       simp only [Set.image_singleton]
       rfl

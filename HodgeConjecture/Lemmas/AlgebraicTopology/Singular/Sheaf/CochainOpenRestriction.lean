@@ -16,9 +16,11 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u}) (U : Opens X)
+variable (R : Type u) [CommRing R] (X : TopCat.{u}) (U : Opens X)
 
-/-- An open in an open subspace is identified with its ambient image. -/
+/-- Let `U` be open in a topological space `X` and `V` open in the subspace `U`. This is the
+isomorphism of topological spaces between `V` regarded as a subspace of `U` and its image
+regarded as a subspace of `X`. Both maps preserve the underlying point of `X`. -/
 def openSubspaceImageIso (V : Opens U) :
     (Opens.toTopCat (TopCat.of U)).obj V ≅
       (Opens.toTopCat X).obj (U.isOpenEmbedding.functor.obj V) :=
@@ -31,7 +33,9 @@ lemma openSubspaceImageIso_naturality {V W : Opens U} (f : V ⟶ W) :
         (Opens.toTopCat X).map (U.isOpenEmbedding.functor.map f) :=
   TopCat.hom_ext rfl
 
-/-- The ambient-image homeomorphisms induce chain isomorphisms. -/
+/-- Let `X` be a topological space, `U ⊆ X` open, and `R` a commutative ring. For an open `V` of the
+subspace `U`, the identification of `V` with its image in `X` induces this isomorphism of
+singular chain complexes with coefficients in `R`. -/
 def openSubspaceImageChainIso (V : Opens U) :
     (openSingularChainComplexFunctor R (TopCat.of U)).obj V ≅
       (openSingularChainComplexFunctor R X).obj (U.isOpenEmbedding.functor.obj V) :=
@@ -48,8 +52,10 @@ lemma openSubspaceImageChainIso_naturality {V W : Opens U} (f : V ⟶ W) :
     Functor.comp_map, Functor.mapIso_hom]
   rw [← Functor.map_comp, ← Functor.map_comp, openSubspaceImageIso_naturality]
 
-/-- Restricting ambient raw singular cochains to the open subspace gives
-intrinsic raw cochains there, by dualizing the image chain map. -/
+/-- Let `X` be a topological space, `U ⊆ X` open, and `R` a commutative ring. For each nonnegative
+degree `n`, this isomorphism identifies the restriction to `U` of the presheaf of singular
+`R`-valued `n`-cochains on `X` with the singular cochain presheaf defined on `U` itself. It is
+induced by identifying each open subset of `U` with its image in `X`. -/
 def singularCochainPresheafOpenRestrictionIso (n : ℕ) :
     U.isOpenEmbedding.functor.op ⋙ singularCochainPresheaf R X n ≅
       singularCochainPresheaf R (TopCat.of U) n :=
@@ -84,8 +90,10 @@ lemma singularCochainPresheafOpenRestrictionIso_coboundary (n : ℕ) :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The raw open-subspace comparison respects the singular
-coboundaries, and hence is an isomorphism of complexes. -/
+/-- Let `X` be a topological space, `U ⊆ X` open, and `R` a commutative ring. This isomorphism of
+presheaf complexes identifies singular cochains on `X` restricted to `U` with singular cochains
+defined on `U`. In each degree it uses the homeomorphism from an open subset of `U` to its image
+in `X`; these identifications commute with the coboundary. -/
 def singularCochainPresheafComplexOpenRestrictionIso :
     (Functor.mapHomologicalComplex
       ((Functor.whiskeringLeft _ _ AddCommGrpCat).obj U.isOpenEmbedding.functor.op)
@@ -127,8 +135,10 @@ lemma singularCochainSheafOpenRestrictionIso_coboundary (n : ℕ) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The open restriction of the ambient sheafified singular
-cochains is the intrinsic complex on that open subspace. -/
+/-- Let `X` be a topological space, `U ⊆ X` open, and `R` a commutative ring. Let `C_X` and `C_U` be
+the degreewise sheafifications of the presheaf complexes of singular `R`-cochains on `X` and
+`U`. This isomorphism `C_X|_U ≅ C_U` follows from the identification of open-subspace cochains
+and the compatibility of sheafification with open restriction. -/
 def singularCochainSheafComplexOpenRestrictionIso :
     ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex (.up ℕ)).obj
       (singularCochainSheafComplex R X) ≅

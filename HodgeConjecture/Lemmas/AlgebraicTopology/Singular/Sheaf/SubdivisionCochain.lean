@@ -81,7 +81,7 @@ private theorem exists_coveringSieve_locallyFinite_closedRefinement
   refine ⟨W, hWopen, hWcover, ?_, fun I ↦ (hWsub I).trans (hVsub I)⟩
   exact (hVfinite.subset fun I ↦ subset_closure.trans (hWsub I)).closure
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The singular chain complex of the top open subset of `X`. -/
 abbrev TopOpenSingularChainComplex : ChainComplex (ModuleCat.{u} R) ℕ :=
@@ -158,8 +158,10 @@ lemma globalRawSingularCochainComplexIso_hom_f_apply (n : ℕ)
     (globalRawSingularCochainComplexIso R X).hom.f n x = x :=
   rfl
 
-/-- The singular-cochain presheaf complex after applying the first plus construction
-degreewise. Its terms are presheaves. -/
+/-- Let `X` be a topological space and `R` a commutative ring. Apply the first plus construction to
+each presheaf `U ↦ C^n(U;R)` of singular cochains: its sections are compatible families over
+open covers, with families identified when they agree on a common refinement. The induced
+singular coboundaries make these presheaves into this nonnegative cochain complex. -/
 def singularCochainPlusPresheafComplex :
     CochainComplex (TopCat.Presheaf AddCommGrpCat X) ℕ :=
   ((Opens.grothendieckTopology X).plusFunctor AddCommGrpCat).mapHomologicalComplex
@@ -502,7 +504,7 @@ end RationalCover
 
 section HereditarilyParacompact
 
-variable {R : Type u} [Field R] {X : TopCat.{u}}
+variable {R : Type u} [CommRing R] {X : TopCat.{u}}
 
 /-- Regard an open subset of an open subspace as an open subset of the ambient space. -/
 def ambientOpen (U : Opens X) (V : Opens U) : Opens X :=
@@ -840,7 +842,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Inclusion of an open subset into the top open, followed by inclusion of the top open into the
 space, is the usual subspace inclusion. -/
@@ -1264,7 +1266,7 @@ end RationalCover
 
 section HereditarilyParacompact
 
-variable {R : Type u} [Field R] {X : TopCat.{u}}
+variable {R : Type u} [CommRing R] {X : TopCat.{u}}
 
 /-- On a paracompact Hausdorff space, ordinary cochains map quasi-isomorphically to global
 sections of the double-plus singular-cochain complex. -/

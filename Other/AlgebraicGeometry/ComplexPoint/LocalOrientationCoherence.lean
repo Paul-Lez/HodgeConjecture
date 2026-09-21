@@ -40,7 +40,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X : Over (Spec (.of ℂ))) (d : ℕ)
+variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 /-- The normalized local homology classes obtained from any two preferred algebraic charts
 containing a point coincide. -/

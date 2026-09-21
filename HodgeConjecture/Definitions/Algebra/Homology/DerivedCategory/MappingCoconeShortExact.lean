@@ -24,16 +24,14 @@ namespace CochainComplex
 
 variable {C : Type*} [Category* C] [Abelian C]
 
-namespace mappingCone
-
-end mappingCone
-
 namespace mappingCocone
 
 variable (S : ShortComplex (CochainComplex C ℤ))
 
-/-- The explicit rotated-cone comparison, before shifting back to the homotopy fiber. It is
-built from canonical chain maps. -/
+/-- Let `A → B → C` be a sequence of integer-indexed cochain complexes in an abelian category, with
+zero composite. This is the canonical map `A[1] → Cone(B → C)` obtained from the inclusion `A →
+B` and the zero component in `C`. When the sequence is short exact, the map is a
+quasi-isomorphism. -/
 def shiftedLiftShortComplex : S.X₁⟦(1 : ℤ)⟧ ⟶ mappingCone S.g :=
   (mappingCone.rotateHomotopyEquiv S.f).hom ≫
     mappingCone.map (mappingCone.inr S.f) S.g (𝟙 _)

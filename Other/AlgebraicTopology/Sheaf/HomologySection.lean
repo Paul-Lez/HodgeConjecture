@@ -86,7 +86,7 @@ end
 open CategoryTheory Limits TopologicalSpace HomologicalComplex Opposite
 universe u
 namespace AlgebraicTopology.Singular
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Evaluation of the presheaf chain complex is the actual relative chain complex. -/
 def singularChainPresheafComplexEvaluationIso (U : Opens X) :
@@ -106,12 +106,12 @@ def singularChainPresheafComplexEvaluationIso (U : Opens X) :
 def relativeHomologyPresheafSectionIso (U : Opens X) (n : ℕ) :
     (forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).obj
       (RelativeHomology R (TopPair.ofSubset (U : Set X)ᶜ) n) ≅
-      ((singularChainPresheafComplex R X).homology n).obj (op U) := by
+      ((singularChainPresheafComplex R X).homology n).obj (op U) :=
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
     (singularChainPresheafComplex R X).sc n
   let e := S.mapHomologyIso
     ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op U))
-  exact ((((relativeChainFunctor R).obj (TopPair.ofSubset (U : Set X)ᶜ)).sc n).mapHomologyIso
+  ((((relativeChainFunctor R).obj (TopPair.ofSubset (U : Set X)ᶜ)).sc n).mapHomologyIso
       (forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u})).symm ≪≫
     (homologyMapIso (singularChainPresheafComplexEvaluationIso R X U) n).symm ≪≫
       e
@@ -121,12 +121,12 @@ homology sheaf of the actual relative-chain model. -/
 def singularChainHomologySheafificationIso (n : ℕ) :
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
       ((singularChainPresheafComplex R X).homology n) ≅
-      singularChainHomologySheaf R X n := by
+      singularChainHomologySheaf R X n :=
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
     (singularChainPresheafComplex R X).sc n
   let e := S.mapHomologyIso
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
-  exact e.symm
+  e.symm
 
 /-- The canonical map from presheaf homology to the actual homology sheaf. -/
 def singularChainHomologyPresheafToSheaf (n : ℕ) :
@@ -156,10 +156,10 @@ def singularChainHomologyPresheafStalkIso [T2Space X] (x : X) (n : ℕ) :
     (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj
       ((singularChainPresheafComplex R X).homology n) ≅
       (forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u}).obj
-        (RelativeHomology R (TopPair.ofSubset ({x} : Set X)ᶜ) n) := by
+        (RelativeHomology R (TopPair.ofSubset ({x} : Set X)ᶜ) n) :=
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) :=
     (singularChainPresheafComplex R X).sc n
-  exact (S.mapHomologyIso (additivePresheafStalkFunctor X x)).symm ≪≫
+  (S.mapHomologyIso (additivePresheafStalkFunctor X x)).symm ≪≫
     homologyMapIso (singularChainPresheafComplexStalkIso R X x) n ≪≫
       (((relativeChainFunctor R).obj (TopPair.ofSubset ({x} : Set X)ᶜ)).sc n).mapHomologyIso
         (forget₂ (ModuleCat.{u} R) AddCommGrpCat.{u})

@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FundamentalClass
 public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
+public import HodgeConjecture.Mathlib.Topology.Category.TopPair
 public import Mathlib.Analysis.Complex.Basic
 
 /-!
@@ -24,8 +25,8 @@ public import Mathlib.Analysis.Complex.Basic
 
 This file identifies `ℂ^p` with an ordered real coordinate space by listing the real and imaginary
 part of each complex coordinate consecutively. It transports the explicit standard local cycle to
-`H_{2p}(ℂ^p, ℂ^p ∖ {0}; ℚ)`. The complex orientation therefore comes from the complex
-coordinates themselves.
+`H_{2p}(ℂ^p, ℂ^p ∖ {0}; R)`. Thus the complex orientation is constructed from complex coordinates
+rather than supplied as data.
 -/
 
 open CategoryTheory
@@ -34,83 +35,38 @@ open CategoryTheory
 
 namespace AlgebraicTopology.Singular
 
-/-- The orientation-ordered homeomorphism from complex coordinate space to real coordinate space.
+variable (R : Type) [CommRing R]
 
-This is the coordinate map of `Complex.piBasisOneI`, so it lists the real and imaginary part of
-each complex coordinate consecutively; continuity in both directions comes from
-`Basis.equivFunL`. -/
-def complexRealHomeomorph (p : ℕ) : (Fin p → ℂ) ≃ₜ StandardRealModel (p * 2) :=
+/-- For a natural number `p`, this homeomorphism `ℂ^p ≃ ℝ^{2p}` sends each complex coordinate to its
+real and imaginary parts, ordered consecutively as `(Re z₀, Im z₀, Re z₁, Im z₁, …)`. This
+ordering fixes the convention for complex orientation. -/
+def complexRealHomeomorph (p : ℕ) : (Fin p → ℂ) ≃ₜ (Fin (p * 2) → ℝ) :=
   (Complex.piCoordCLE p).toHomeomorph
 
-/-- Complex coordinate space paired with the complement of its origin. -/
-abbrev standardComplexPuncturedPair (p : ℕ) : TopPair :=
-  TopPair.ofSubset (X := TopCat.of (Fin p → ℂ)) ({0}ᶜ : Set (Fin p → ℂ))
-
-/-- The inverse coordinate homeomorphism restricted to the punctured spaces. -/
-def puncturedRealToComplex (p : ℕ) :
-    ({0}ᶜ : Set (StandardRealModel (p * 2))) → ({0}ᶜ : Set (Fin p → ℂ)) :=
-  fun x => ⟨(Complex.piCoordCLE p).symm x.1,
-    fun hz => x.2 ((Complex.piCoordCLE p).symm.map_eq_zero_iff.mp hz)⟩
-
-/-- The restricted inverse coordinate map is continuous. -/
-lemma continuous_puncturedRealToComplex (p : ℕ) : Continuous (puncturedRealToComplex p) :=
-  ((complexRealHomeomorph p).symm.continuous.comp continuous_subtype_val).subtype_mk _
-
-/-- The inverse coordinate homeomorphism as a morphism of punctured pairs. -/
-def standardRealToComplexPair (p : ℕ) :
-    standardPuncturedPair (p * 2) ⟶ standardComplexPuncturedPair p :=
-  TopPair.ofHom
-    (TopCat.ofHom ⟨(complexRealHomeomorph p).symm,
-      (complexRealHomeomorph p).symm.continuous⟩)
-    (TopCat.ofHom ⟨puncturedRealToComplex p, continuous_puncturedRealToComplex p⟩)
-    (by ext x; rfl)
-
-/-- The complex-to-real coordinate homeomorphism restricted to the punctured spaces. -/
-def puncturedComplexToReal (p : ℕ) :
-    ({0}ᶜ : Set (Fin p → ℂ)) → ({0}ᶜ : Set (StandardRealModel (p * 2))) :=
-  fun z => ⟨Complex.piCoordCLE p z.1,
-    fun hz => z.2 ((Complex.piCoordCLE p).map_eq_zero_iff.mp hz)⟩
-
-/-- The restricted complex-to-real coordinate map is continuous. -/
-lemma continuous_puncturedComplexToReal (p : ℕ) : Continuous (puncturedComplexToReal p) :=
-  ((complexRealHomeomorph p).continuous.comp continuous_subtype_val).subtype_mk _
-
-/-- The coordinate homeomorphism as a morphism from the complex pair to the real pair. -/
-def standardComplexToRealPair (p : ℕ) :
-    standardComplexPuncturedPair p ⟶ standardPuncturedPair (p * 2) :=
-  TopPair.ofHom
-    (TopCat.ofHom ⟨complexRealHomeomorph p, (complexRealHomeomorph p).continuous⟩)
-    (TopCat.ofHom ⟨puncturedComplexToReal p, continuous_puncturedComplexToReal p⟩)
-    (by ext z; rfl)
-
-/-- The isomorphism of punctured pairs induced by ordered real and imaginary coordinates. -/
+/-- For a natural number `p`, splitting each complex coordinate into consecutive real and imaginary
+parts gives this isomorphism of pairs `(ℂ^p, ℂ^p \ {0}) ≅ (ℝ^{2p}, ℝ^{2p} \ {0})`. -/
 def standardComplexRealPairIso (p : ℕ) :
-    standardComplexPuncturedPair p ≅ standardPuncturedPair (p * 2) where
-  hom := standardComplexToRealPair p
-  inv := standardRealToComplexPair p
-  hom_inv_id := by
-    apply MorphismProperty.Arrow.Hom.ext
-    · ext z
-      exact Subtype.ext ((complexRealHomeomorph p).left_inv z.1)
-    · ext z
-      exact (complexRealHomeomorph p).left_inv z
-  inv_hom_id := by
-    apply MorphismProperty.Arrow.Hom.ext
-    · ext x
-      exact Subtype.ext ((complexRealHomeomorph p).right_inv x.1)
-    · ext x
-      exact (complexRealHomeomorph p).right_inv x
+    puncturedPair ℂ p ≅ puncturedPair ℝ (p * 2) :=
+  TopPair.isoOfSubset (complexRealHomeomorph p) fun _ =>
+    not_congr (Complex.piCoordCLE p).map_eq_zero_iff
 
-/-- The induced isomorphism between complex and real local homology. -/
+/-- Let `R` be a commutative ring and `p` a natural number. This isomorphism `H_{2p}(ℂ^p, ℂ^p \ {0};
+R) ≅ H_{2p}(ℝ^{2p}, ℝ^{2p} \ {0}; R)` is induced by the coordinate map ordering the real and
+imaginary parts consecutively. -/
 def standardComplexRealRelativeHomologyIso (p : ℕ) :
-    RelativeHomology ℚ (standardComplexPuncturedPair p) (p * 2) ≅
-      RelativeHomology ℚ (standardPuncturedPair (p * 2)) (p * 2) :=
-  (relativeHomologyFunctor ℚ (p * 2)).mapIso (standardComplexRealPairIso p)
+    -- `H_{2p}(ℂ^p, ℂ^p \ {0}; R) ≅ H_{2p}(ℝ^{2p}, ℝ^{2p} \ {0}; R)`.
+    RelativeHomology R (puncturedPair ℂ p) (p * 2) ≅
+      RelativeHomology R (puncturedPair ℝ (p * 2)) (p * 2) :=
+  (relativeHomologyFunctor R (p * 2)).mapIso (standardComplexRealPairIso p)
 
-/-- The standard complex local class obtained from the explicit real local cycle. -/
+/-- Let `R` be a commutative ring and `p` a natural number. This class in `H_{2p}(ℂ^p, ℂ^p \ {0};
+R)` is transported from the affine simplex in `ℝ^{2p}` with ordered vertices the standard basis
+followed by `(-1, …, -1)`, with coefficient `1`. Transport uses consecutive real and imaginary
+coordinates and fixes the normalization of the local complex class. -/
 def standardComplexLocalClass (p : ℕ) :
-    RelativeHomology ℚ (standardComplexPuncturedPair p) (2 * p) :=
+    -- The complex-orientation generator of `H_{2p}(ℂ^p, ℂ^p \ {0}; R)`.
+    RelativeHomology R (puncturedPair ℂ p) (2 * p) :=
   (Nat.mul_comm p 2) ▸
-    (standardComplexRealRelativeHomologyIso p).inv.hom (standardLocalClass (p * 2))
+    (standardComplexRealRelativeHomologyIso R p).inv.hom (standardLocalClass R (p * 2))
 
 end AlgebraicTopology.Singular

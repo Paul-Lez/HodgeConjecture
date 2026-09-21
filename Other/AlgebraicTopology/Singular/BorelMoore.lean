@@ -128,14 +128,14 @@ lemma eq_integralCompactificationFundamentalClass
 Borel--Moore homology of `X ∖ S`.  When `X` is compact Hausdorff and `S` is closed, this computes
 the usual Borel--Moore homology of the open complement. -/
 abbrev CompactificationBorelMooreHomology
-    (R : Type) [Field R] {X : Type} [TopologicalSpace X]
+    (R : Type) [CommRing R] {X : Type} [TopologicalSpace X]
     (S : Set X) (n : ℕ) : ModuleCat R :=
   RelativeHomology R (TopPair.ofSubset (X := TopCat.of X) S) n
 
 /-- The local value at `x` of a class represented in the compactification model for
 Borel--Moore homology. -/
 def compactificationBorelMooreToLocal
-    (R : Type) [Field R] {X : Type} [TopologicalSpace X]
+    (R : Type) [CommRing R] {X : Type} [TopologicalSpace X]
     (U : Set X) (n : ℕ) (x : X) (hx : x ∈ U) :
     CompactificationBorelMooreHomology R Uᶜ n →ₗ[R]
       RelativeHomology R (pointComplementPair x) n :=
@@ -174,21 +174,21 @@ lemma compactificationToPointComplementPair_isIso_of_subsingleton
 /-- For a one-point compactification, the canonical local-value map is a linear equivalence in
 every degree. -/
 def compactificationBorelMooreToLocalEquivOfSubsingleton
-    (R : Type) [Field R] {X : Type} [TopologicalSpace X] [Subsingleton X]
+    (R : Type) [CommRing R] {X : Type} [TopologicalSpace X] [Subsingleton X]
     (x : X) (n : ℕ) :
     CompactificationBorelMooreHomology R (Set.univ : Set X)ᶜ n ≃ₗ[R]
-      RelativeHomology R (pointComplementPair x) n := by
+      RelativeHomology R (pointComplementPair x) n :=
   let f := compactificationToPointComplementPair
     (Set.univ : Set X) x (Set.mem_univ x)
-  let : IsIso f := compactificationToPointComplementPair_isIso_of_subsingleton x
-  exact LinearEquiv.ofBijective
+  letI : IsIso f := compactificationToPointComplementPair_isIso_of_subsingleton x
+  LinearEquiv.ofBijective
     (compactificationBorelMooreToLocal R (Set.univ : Set X) n x (Set.mem_univ x))
     ((ConcreteCategory.isIso_iff_bijective
       ((relativeHomologyFunctor R n).map f)).mp inferInstance)
 
 @[simp]
 lemma compactificationBorelMooreToLocalEquivOfSubsingleton_apply
-    (R : Type) [Field R] {X : Type} [TopologicalSpace X] [Subsingleton X]
+    (R : Type) [CommRing R] {X : Type} [TopologicalSpace X] [Subsingleton X]
     (x : X) (n : ℕ)
     (c : CompactificationBorelMooreHomology R (Set.univ : Set X)ᶜ n) :
     compactificationBorelMooreToLocalEquivOfSubsingleton R x n c =
@@ -198,7 +198,7 @@ lemma compactificationBorelMooreToLocalEquivOfSubsingleton_apply
 /-- A compactification-relative Borel--Moore class has the prescribed orientation when all of
 its local values are exactly the selected local orientation classes. -/
 def IsCompactificationFundamentalClass
-    (R : Type) [Field R] {X : Type} [TopologicalSpace X]
+    (R : Type) [CommRing R] {X : Type} [TopologicalSpace X]
     (U : Set X) (n : ℕ)
     (orientation : ∀ (x : X), x ∈ U → RelativeHomology R (pointComplementPair x) n)
     (c : CompactificationBorelMooreHomology R Uᶜ n) : Prop :=
@@ -209,7 +209,7 @@ def IsCompactificationFundamentalClass
 uniqueness have been proved.  Unlike choosing an arbitrary generator, the resulting class is
 fixed by its exact local normalization. -/
 def compactificationFundamentalClass
-    (R : Type) [Field R] {X : Type} [TopologicalSpace X]
+    (R : Type) [CommRing R] {X : Type} [TopologicalSpace X]
     (U : Set X) (n : ℕ)
     (orientation : ∀ (x : X), x ∈ U → RelativeHomology R (pointComplementPair x) n)
     (h : ∃! c, IsCompactificationFundamentalClass R U n orientation c) :
@@ -218,7 +218,7 @@ def compactificationFundamentalClass
 
 /-- The selected compactification fundamental class has its defining local normalization. -/
 lemma compactificationFundamentalClass_isFundamental
-    (R : Type) [Field R] {X : Type} [TopologicalSpace X]
+    (R : Type) [CommRing R] {X : Type} [TopologicalSpace X]
     (U : Set X) (n : ℕ)
     (orientation : ∀ (x : X), x ∈ U → RelativeHomology R (pointComplementPair x) n)
     (h : ∃! c, IsCompactificationFundamentalClass R U n orientation c) :
@@ -228,7 +228,7 @@ lemma compactificationFundamentalClass_isFundamental
 
 /-- A class with the required local normalization equals the selected fundamental class. -/
 lemma eq_compactificationFundamentalClass
-    (R : Type) [Field R] {X : Type} [TopologicalSpace X]
+    (R : Type) [CommRing R] {X : Type} [TopologicalSpace X]
     (U : Set X) (n : ℕ)
     (orientation : ∀ (x : X), x ∈ U → RelativeHomology R (pointComplementPair x) n)
     (h : ∃! c, IsCompactificationFundamentalClass R U n orientation c)
@@ -239,7 +239,7 @@ lemma eq_compactificationFundamentalClass
 
 @[simp]
 lemma compactificationBorelMooreToLocal_fundamentalClass
-    (R : Type) [Field R] {X : Type} [TopologicalSpace X]
+    (R : Type) [CommRing R] {X : Type} [TopologicalSpace X]
     (U : Set X) (n : ℕ)
     (orientation : ∀ (x : X), x ∈ U → RelativeHomology R (pointComplementPair x) n)
     (h : ∃! c, IsCompactificationFundamentalClass R U n orientation c)

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportExtension
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCohomologySheafComparison
@@ -28,84 +30,132 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 local instance cycleComponentSheafClassAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
 
-/-- The supported injective cohomology sheaf is the sheaf of local
-relative cohomology, by the singular resolution and its
-restriction-natural comparison. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and `S ⊆ X(ℂ)` closed. For a natural
+number `n`, this identifies the degree-`n` cohomology sheaf of `Γ_S(I^•)` with the
+sheafification of `V ↦ H^n(V, V \ S; ℚ)`. Here `ℚ → I^•` is an injective resolution and `Γ_S`
+takes sections vanishing off `S`. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
+    -- The `n`-th cohomology sheaf of `RΓ_S(ℚ)`.
     (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
-      supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n := by
-  let : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
-  exact (asIso (HomologicalComplex.homologyMap
+      𝓗_[S]^n(TopCat.of (ComplexPoint X); ℚ) :=
+  letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
+  (asIso (HomologicalComplex.homologyMap
     (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
       supportedSingularCohomologySheafIsoRelative
         (TopCat.of (ComplexPoint X)) S S.isClosed n
 
+section
+
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
-/-- Degree-`2p` cohomology of global sections supported on the component,
-computed in the fixed ambient injective resolution. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. For a natural number `p`, this is `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`,
+computed from global sections of the subsheaves supported in `Z(ℂ)` of a chosen injective
+resolution of the constant rational sheaf. -/
 abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
-  (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-    (.up ℤ)).obj (complexSupportInjectiveComplex X
-      (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))
+  -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, with `Z` the subvariety with generic point `x`.
+  (((TopCat.Sheaf.supportEvaluation
+    -- `X(ℂ)`.
+    (TopCat.of (ComplexPoint X))
+    -- Global sections, i.e. sections over all of `X(ℂ)`.
+    ⊤).mapHomologicalComplex ℤᵘᵖ).obj
+    -- `RΓ_{Z(ℂ)}(ℚ)`.
+    (complexSupportInjectiveComplex X
+      -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
+      (cycleComponentAnalyticClosedSupport X x))).homology
+    -- Degree `2p`.
+    (2 * (p : ℤ))
 
-/-- Sections of the local relative-cohomology sheaf on the smooth-locus ambient open. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_sing(ℂ)`, and `𝓗^{2p}_S` for the
+sheafification of `V ↦ H^{2p}(V, V \ S; ℚ)`. For a natural number `p`, this is the abelian group
+`Γ(U, 𝓗^{2p}_S)` of sections of the local relative-cohomology sheaf away from the singular locus
+of `Z`. -/
 abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
-  (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-    (cycleComponentSupport X x) (2 * p)).obj.obj
+  -- Sections of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`, with support `Z(ℂ)` and degree `2p`.
+  (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).obj.obj
+      -- The open `X(ℂ) \ Z_sing(ℂ)`.
       (op (cycleComponentSmoothSupportAmbientOpen X x))
 
-/-- Supported cohomology on the full component is identified with sections
-of the local relative-cohomology sheaf on its smooth-locus ambient open.
-Each of the three arrows is an isomorphism. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_sing(ℂ)`, and
+`𝓗^{2p}_S` for the sheafification of `V ↦ H^{2p}(V, V \ S; ℚ)`. This is the isomorphism
+`H^{2p}_S(X(ℂ); ℚ) ≅ Γ(U, 𝓗^{2p}_S)`. It restricts a supported class to `U` and takes its local
+relative classes. Purity on the smooth locus and vanishing of cohomology supported on the
+singular locus make the map invertible. -/
 def cycleComponentSupportedClassNormalizationIso :
     CycleComponentSupportedCohomology X x p ≅
-      CycleComponentSmoothCoclassSections X x p := by
-  refine cycleComponentSupportExtensionIso X x hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫ ?_
-  let e := (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
-        (complexSupportInjectiveCohomologySheafIsoRelative X
-          (cycleComponentAnalyticClosedSupport X x) (2 * p))
+      CycleComponentSmoothCoclassSections X x p :=
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
-  dsimp only [TopCat.Sheaf.supportEvaluation, Functor.comp_obj] at e
-  rw [he] at e
-  exact e
+  cycleComponentSupportExtensionIso X x hx ≪≫
+    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
+      (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+        (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
+          (complexSupportInjectiveCohomologySheafIsoRelative X
+            (cycleComponentAnalyticClosedSupport X x) (2 * p)))
 
-/-- Extend a smooth-locus coclass uniquely across the singular boundary. The inverse comes from
-purity and boundary vanishing. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_sing(ℂ)`, and
+`𝓗^{2p}_S` for the sheafification of `V ↦ H^{2p}(V, V \ S; ℚ)`. This additive map `Γ(U,
+𝓗^{2p}_S) → H^{2p}_S(X(ℂ); ℚ)` assigns to a section its unique supported class on all of `X(ℂ)`.
+It inverts restriction followed by passage to local relative-cohomology classes. -/
 def cycleComponentExtendSmoothCoclass :
     CycleComponentSmoothCoclassSections X x p →+
       CycleComponentSupportedCohomology X x p :=
   (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
 
-/-- The globally supported class extending the exact complex-normal
-coclass. The inverse is that of the normalization isomorphism. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_sing(ℂ)`, and
+`𝓗^{2p}_S` for the sheafification of `V ↦ H^{2p}(V, V \ S; ℚ)`. This is the class in
+`H^{2p}_S(X(ℂ); ℚ)` whose restriction to `U` gives the section obtained from local normal
+coordinates along the smooth locus of `Z`. The local class is normalized to pair to `1` with the
+orientation class of the complex normal space. The class is computed with supported sections of
+an injective resolution of `ℚ`. -/
 def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
   cycleComponentExtendSmoothCoclass X x hx
     (cycleComponentSmoothSupportCoclassSection X x hx)
 
-/-- The component class in the support-cone presentation. The comparison carries the cone sign
-required by support forgetting. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. This is the rational cohomology class with support
+in `Z(ℂ)` whose local relative classes along the smooth locus are the complex orientation
+coclasses of the normal spaces. The local class is normalized to pair to `1` with the
+orientation class of the complex normal space. It is expressed in the restriction-cone model
+`ℍ^{2p-1}(Cone(ℚ → Rj_*ℚ))`, where `j` includes the complement of `Z(ℂ)`. -/
 def cycleComponentSheafSupportedClass :
-    RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
+    -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, in the support-cone presentation.
+    RationalCohomologyWithSupport X
+      -- `Z(ℂ)`.
+      (cycleComponentSupport X x)
+      -- Degree `2p`.
+      (2 * (p : ℤ)) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
     (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
       (cycleComponentSupportedInjectiveClass X x hx)
 
-/-- **Step 3.** The unconditional ordinary class of an arbitrary integral component: the
-supported class of step 2, with its support forgotten.
-
-Being the composite of the three steps, it agrees with `forgetSupport` definitionally. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. The fundamental cohomology class `[Z] ∈ H^{2p}(X(ℂ);
+ℚ)` is the image, under forgetting support, of the class supported on `Z(ℂ)` determined by the
+complex orientation of each normal space along the smooth locus. The local class is normalized
+to pair to `1` with the orientation class of the complex normal space. -/
 def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
   forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
     (cycleComponentSheafSupportedClass X x hx)
+
+end
+
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and `p` a natural number. This is the
+rational subspace of `H^{2p}(X(ℂ); ℚ)` spanned by the fundamental cohomology classes of all
+codimension-`p` integral closed subvarieties of `X`. Their classes are normalized by the complex
+orientations of their normal spaces on their smooth loci. -/
+def algebraicCycleClassSpan (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
+  ⨆ (x : X.left) (hx : Order.coheight x = p),
+    Submodule.span ℚ {cycleComponentSheafClass X x hx}
 
 end AlgebraicGeometry.ComplexPoint

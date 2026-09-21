@@ -45,20 +45,21 @@ variable (X : TopCat.{u}) (U : Opens X)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Sheafification followed by open restriction is canonically
-sheafification of the restricted presheaf. -/
+/-- Let `U` be open in a topological space `X` and `P` a presheaf of abelian groups on `X`. This
+natural isomorphism `(P⁺⁺)|_U ≅ (P|_U)⁺⁺` identifies restriction of the sheafification of `P`
+with sheafification of its restriction. -/
 def openRestrictionSheafificationIso (P : Presheaf AddCommGrpCat.{u} X) :
     (presheafToSheaf (Opens.grothendieckTopology (TopCat.of U)) AddCommGrpCat).obj
       (U.isOpenEmbedding.functor.op ⋙ P) ≅
     (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
-      ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj P) := by
-  let : U.isOpenEmbedding.functor.IsContinuous
+      ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj P) :=
+  letI : U.isOpenEmbedding.functor.IsContinuous
       (Opens.grothendieckTopology (TopCat.of U)) (Opens.grothendieckTopology X) :=
     U.isOpenEmbedding.functor_isContinuous
-  let : U.isOpenEmbedding.functor.IsCocontinuous
+  letI : U.isOpenEmbedding.functor.IsCocontinuous
       (Opens.grothendieckTopology (TopCat.of U)) (Opens.grothendieckTopology X) :=
     U.isOpenEmbedding.functor_isCocontinuous
-  exact (U.isOpenEmbedding.functor.pushforwardContinuousSheafificationCompatibility
+  (U.isOpenEmbedding.functor.pushforwardContinuousSheafificationCompatibility
     AddCommGrpCat (Opens.grothendieckTopology (TopCat.of U))
       (Opens.grothendieckTopology X)).app P
 

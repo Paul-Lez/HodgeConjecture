@@ -12,6 +12,9 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import Other.Algebra.Homology.DerivedCategory.ConcentratedOrientation
 public import Other.AlgebraicTopology.Singular.Sheaf.ChainHomology
 
@@ -38,7 +41,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- Reindexing the actual homology sheaf from homological to cohomological grading. -/
 def singularChainSheafCochainHomologyIso (N : ℕ) :
@@ -62,11 +65,6 @@ theorem singularChainSheafCochainHomology_concentrated [T2Space X] (N : ℕ)
       (singularChainHomologySheaf_isZero_of_localHomology_isZero R X m
         (hlocal m (by omega)))
 
-/-- The constant coefficient sheaf on an arbitrary topological space. -/
-abbrev singularOrientationConstantSheaf : TopCat.Sheaf AddCommGrpCat.{u} X :=
-  (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
-    (AddCommGrpCat.of R)
-
 local instance singularChainSheafOrientationHasDerivedCategory :
     HasDerivedCategory (TopCat.Sheaf AddCommGrpCat.{u} X) :=
   HasDerivedCategory.standard _
@@ -77,10 +75,10 @@ def singularChainSheafDerivedSingleOrientationIso [T2Space X] (N : ℕ)
     (hlocal : ∀ (m : ℕ), m ≠ N → ∀ x : X,
       IsZero (RelativeHomology R (TopPair.ofSubset ({x} : Set X)ᶜ) m))
     (orientation : singularChainHomologySheaf R X N ≅
-      singularOrientationConstantSheaf R X) :
+      𝓒(X; R)) :
     DerivedCategory.Q.obj (singularChainSheafCochainComplex R X) ≅
       (DerivedCategory.singleFunctor (TopCat.Sheaf AddCommGrpCat.{u} X) (-(N : ℤ))).obj
-        (singularOrientationConstantSheaf R X) :=
+        𝓒(X; R) :=
   DerivedCategory.concentratedOrientationIso (singularChainSheafCochainComplex R X)
     (-(N : ℤ)) (singularChainSheafCochainHomology_concentrated R X N hlocal)
     (singularChainSheafCochainHomologyIso R X N ≪≫ orientation)
@@ -92,12 +90,12 @@ theorem singularChainSheafDerivedSingleOrientationIso_homology [T2Space X] (N : 
     (hlocal : ∀ (m : ℕ), m ≠ N → ∀ x : X,
       IsZero (RelativeHomology R (TopPair.ofSubset ({x} : Set X)ᶜ) m))
     (orientation : singularChainHomologySheaf R X N ≅
-      singularOrientationConstantSheaf R X) :
+      𝓒(X; R)) :
     (DerivedCategory.homologyFunctor _ (-(N : ℤ))).map
       (singularChainSheafDerivedSingleOrientationIso R X N hlocal orientation).hom ≫
       (DerivedCategory.homologyFunctorFactors _ (-(N : ℤ))).hom.app
-        ((single _ (.up ℤ) (-(N : ℤ))).obj (singularOrientationConstantSheaf R X)) ≫
-      (singleObjHomologySelfIso (.up ℤ) (-(N : ℤ)) _).hom =
+        ((single _ ℤᵘᵖ (-(N : ℤ))).obj 𝓒(X; R)) ≫
+      (singleObjHomologySelfIso ℤᵘᵖ (-(N : ℤ)) _).hom =
       (DerivedCategory.homologyFunctorFactors _ (-(N : ℤ))).hom.app
         (singularChainSheafCochainComplex R X) ≫
         (singularChainSheafCochainHomologyIso R X N).hom ≫ orientation.hom :=
@@ -109,11 +107,11 @@ def singularChainSheafDerivedOrientationIso [T2Space X] (N : ℕ)
     (hlocal : ∀ (m : ℕ), m ≠ N → ∀ x : X,
       IsZero (RelativeHomology R (TopPair.ofSubset ({x} : Set X)ᶜ) m))
     (orientation : singularChainHomologySheaf R X N ≅
-      singularOrientationConstantSheaf R X) :
+      𝓒(X; R)) :
     DerivedCategory.Q.obj (singularChainSheafCochainComplex R X) ≅
       ((DerivedCategory.singleFunctor (TopCat.Sheaf AddCommGrpCat.{u} X) 0).obj
-        (singularOrientationConstantSheaf R X))⟦(N : ℤ)⟧ := by
-  simpa only [neg_neg] using DerivedCategory.concentratedOrientationShiftIso
+        𝓒(X; R))⟦(N : ℤ)⟧ :=
+  neg_neg (N : ℤ) ▸ DerivedCategory.concentratedOrientationShiftIso
     (singularChainSheafCochainComplex R X) (-(N : ℤ))
     (singularChainSheafCochainHomology_concentrated R X N hlocal)
     (singularChainSheafCochainHomologyIso R X N ≪≫ orientation)

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularSectionNaturality
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.CohomologySection
 
@@ -33,9 +35,9 @@ lemma sectionCohomologyPresheafOnOpenIso_inv_naturality
     (sectionCohomologyPresheaf X K n).map a.op ≫
       (sectionCohomologyPresheafOnOpenIso X K n W).inv =
     (sectionCohomologyPresheafOnOpenIso X K n V).inv ≫
-      homologyMap (sectionComplexRestriction X (.up ℤ) K a) n := by
+      homologyMap (sectionComplexRestriction X ℤᵘᵖ K a) n := by
   let P : CochainComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) ℤ :=
-    ((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K
+    ((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) := P.sc n
   change ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).map a.op).app S.homology ≫
       (S.mapHomologyIso ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op W))).inv =
@@ -54,10 +56,14 @@ open TopCat.Sheaf
 variable (X : TopCat.{0}) [T2Space X] [∀ V : Opens X, ParacompactSpace V]
   (S : Set X) (hS : IsClosed S) (n : ℕ)
 
-/-- The local cohomology presheaf of supported singular cochains is the
-relative-cohomology presheaf, with its pair restrictions. -/
+/-- Let `X` be a Hausdorff topological space whose every open subset is paracompact. Let `S ⊆ X` be
+closed and `n` a natural number. This presheaf isomorphism identifies `V ↦ H^n(Γ(V, Γ_S(C^•)))`
+with `V ↦ H^n(V, V \ S; ℚ)`. Here `C^•` is the sheafified rational singular cochain complex, and
+`Γ_S` takes the subsheaves of sections vanishing off `S`. -/
 def supportedSingularCohomologyPresheafIsoRelative :
+    -- `V ↦ H^n_S(V; ℚ)` is the presheaf `V ↦ H^n(V, V \ S; ℚ)`.
     sectionCohomologyPresheaf X
+      -- `Γ_S` of the singular-cochain sheaf complex.
       (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩) (n : ℤ) ≅
         supportRelativeCohomologyPresheaf X S n :=
   NatIso.ofComponents (fun V =>
@@ -83,11 +89,16 @@ def supportedSingularCohomologyPresheafIsoRelative :
     exact supportedRationalSingularSectionCohomologyEquivSupportComplement_naturality
       X S hS a.unop n _)
 
-/-- Exact sheafification identifies the supported cohomology sheaf with
-the sheafification of neighborhood/support relative cohomology. -/
+/-- Let `X` be a Hausdorff topological space whose every open subset is paracompact. Let `S ⊆ X` be
+closed and `C^•` the sheafified rational singular cochain complex. The degree-`n` cohomology
+sheaf of its subsheaves of sections supported in `S` is identified with the sheafification of `V
+↦ H^n(V, V \ S; ℚ)`, rational relative singular cohomology. -/
 def supportedSingularCohomologySheafIsoRelative :
-    (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩).homology (n : ℤ) ≅
-      supportRelativeCohomologySheaf X S n :=
+    -- The `n`-th cohomology sheaf of `Γ_S(C^•_sing)`.
+    (supportedRationalSingularCochainComplex X
+      -- The open `X \ S`.
+      ⟨Sᶜ, hS.isOpen_compl⟩).homology (n : ℤ) ≅
+      𝓗_[S]^n(X; ℚ) :=
   (sectionCohomologyPresheafSheafificationIso X
     (supportedRationalSingularCochainComplex X ⟨Sᶜ, hS.isOpen_compl⟩) (n : ℤ)).symm ≪≫
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).mapIso

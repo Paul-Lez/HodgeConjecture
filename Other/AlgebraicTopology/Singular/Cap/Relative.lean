@@ -42,7 +42,7 @@ namespace AlgebraicTopology.Singular
 
 open CategoryTheory
 
-variable (R : Type u) [Field R]
+variable (R : Type u) [CommRing R]
 
 /-! ## Relative chain-level cap product -/
 
@@ -319,32 +319,31 @@ noncomputable def relativeCapShortComplexHomZero (X : TopPair.{u}) (p : ℕ)
     ((relativeChainFunctor R).obj X).sc' (p + 1) p
         ((ComplexShape.down ℕ).next p) ⟶
       (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X.fst).sc'
-        1 0 0 := by
+        1 0 0 :=
   let s : R := (-1 : R) ^ p
   have hs : s * s = 1 := by
     dsimp only [s]
     rw [← pow_add, (Even.add_self p).neg_one_pow]
-  refine
-    { τ₁ := ModuleCat.ofHom (s • relativeCap R X p 1 phi)
-      τ₂ := relativeCapHom R X p 0 phi
-      τ₃ := 0
-      comm₁₂ := ?_
-      comm₂₃ := ?_ }
-  · refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
-    change Simplicial.boundary R 0 (s • relativeCap R X p 1 phi c) =
-      relativeCap R X p 0 phi (relativeBoundary R X p c)
-    rw [map_smul]
-    have h := LinearMap.congr_fun
-      (boundary_relativeCap_eq_of_cocycle R X p 0 phi hphi) c
-    change Simplicial.boundary R 0 (relativeCap R X p 1 phi c) =
-      s • relativeCap R X p 0 phi (relativeBoundary R X p c) at h
-    simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · change relativeCapHom R X p 0 phi ≫
-        (((singularChainComplexFunctor (ModuleCat.{u} R)).obj
-          (ModuleCat.of R R)).obj X.fst).d 0 0 =
-      ((relativeChainFunctor R).obj X).d p ((ComplexShape.down ℕ).next p) ≫ 0
-    rw [((((singularChainComplexFunctor (ModuleCat.{u} R)).obj
-      (ModuleCat.of R R)).obj X.fst).shape 0 0 (by simp)), comp_zero, comp_zero]
+  { τ₁ := ModuleCat.ofHom (s • relativeCap R X p 1 phi)
+    τ₂ := relativeCapHom R X p 0 phi
+    τ₃ := 0
+    comm₁₂ := by
+      refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
+      change Simplicial.boundary R 0 (s • relativeCap R X p 1 phi c) =
+        relativeCap R X p 0 phi (relativeBoundary R X p c)
+      rw [map_smul]
+      have h := LinearMap.congr_fun
+        (boundary_relativeCap_eq_of_cocycle R X p 0 phi hphi) c
+      change Simplicial.boundary R 0 (relativeCap R X p 1 phi c) =
+        s • relativeCap R X p 0 phi (relativeBoundary R X p c) at h
+      simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
+    comm₂₃ := by
+      change relativeCapHom R X p 0 phi ≫
+          (((singularChainComplexFunctor (ModuleCat.{u} R)).obj
+            (ModuleCat.of R R)).obj X.fst).d 0 0 =
+        ((relativeChainFunctor R).obj X).d p ((ComplexShape.down ℕ).next p) ≫ 0
+      rw [((((singularChainComplexFunctor (ModuleCat.{u} R)).obj
+        (ModuleCat.of R R)).obj X.fst).shape 0 0 (by simp)), comp_zero, comp_zero] }
 
 /-- The explicit relative-to-absolute cap morphism ending in a positive degree. -/
 noncomputable def relativeCapShortComplexHomSucc (X : TopPair.{u}) (p q : ℕ)
@@ -352,57 +351,53 @@ noncomputable def relativeCapShortComplexHomSucc (X : TopPair.{u}) (p q : ℕ)
     ((relativeChainFunctor R).obj X).sc'
         (p + ((q + 1) + 1)) (p + (q + 1)) (p + q) ⟶
       (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X.fst).sc'
-        ((q + 1) + 1) (q + 1) q := by
+        ((q + 1) + 1) (q + 1) q :=
   let s : R := (-1 : R) ^ p
   have hs : s * s = 1 := by
     dsimp only [s]
     rw [← pow_add, (Even.add_self p).neg_one_pow]
-  refine
-    { τ₁ := ModuleCat.ofHom (s • relativeCap R X p ((q + 1) + 1) phi)
-      τ₂ := relativeCapHom R X p (q + 1) phi
-      τ₃ := ModuleCat.ofHom (s • relativeCap R X p q phi)
-      comm₁₂ := ?_
-      comm₂₃ := ?_ }
-  · refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
-    change Simplicial.boundary R (q + 1)
-        (s • relativeCap R X p ((q + 1) + 1) phi c) =
-      relativeCap R X p (q + 1) phi
-        (relativeBoundary R X (p + (q + 1)) c)
-    rw [map_smul]
-    have h := LinearMap.congr_fun
-      (boundary_relativeCap_eq_of_cocycle R X p (q + 1) phi hphi) c
-    change Simplicial.boundary R (q + 1)
-        (relativeCap R X p ((q + 1) + 1) phi c) =
-      s • relativeCap R X p (q + 1) phi
-        (relativeBoundary R X (p + (q + 1)) c) at h
-    simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
-  · exact ModuleCat.hom_ext (boundary_relativeCap_eq_of_cocycle R X p q phi hphi)
+  { τ₁ := ModuleCat.ofHom (s • relativeCap R X p ((q + 1) + 1) phi)
+    τ₂ := relativeCapHom R X p (q + 1) phi
+    τ₃ := ModuleCat.ofHom (s • relativeCap R X p q phi)
+    comm₁₂ := by
+      refine ModuleCat.hom_ext (LinearMap.ext fun c => ?_)
+      change Simplicial.boundary R (q + 1)
+          (s • relativeCap R X p ((q + 1) + 1) phi c) =
+        relativeCap R X p (q + 1) phi
+          (relativeBoundary R X (p + (q + 1)) c)
+      rw [map_smul]
+      have h := LinearMap.congr_fun
+        (boundary_relativeCap_eq_of_cocycle R X p (q + 1) phi hphi) c
+      change Simplicial.boundary R (q + 1)
+          (relativeCap R X p ((q + 1) + 1) phi c) =
+        s • relativeCap R X p (q + 1) phi
+          (relativeBoundary R X (p + (q + 1)) c) at h
+      simpa [s, hs, smul_smul] using congrArg (fun z ↦ s • z) h
+    comm₂₃ := ModuleCat.hom_ext (boundary_relativeCap_eq_of_cocycle R X p q phi hphi) }
 
 /-- The short-complex morphism underlying the same-pair relative cap product. -/
 noncomputable def relativeCapShortComplexHom (X : TopPair.{u}) (p q : ℕ)
     (phi : RelativeCochain R X p) (hphi : relativeCoboundary R X p phi = 0) :
     ((relativeChainFunctor R).obj X).sc (p + q) ⟶
-      (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X.fst).sc q := by
+      (((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).obj X.fst).sc q :=
   let Krel := (relativeChainFunctor R).obj X
   let Kabs := ((singularChainComplexFunctor (ModuleCat.{u} R)).obj
     (ModuleCat.of R R)).obj X.fst
-  cases q with
-  | zero =>
-      exact
-        (Krel.isoSc' (p + 1) p ((ComplexShape.down ℕ).next p)
-            (ChainComplex.prev ℕ p) rfl).hom ≫
-          relativeCapShortComplexHomZero R X p phi hphi ≫
-          (Kabs.isoSc' 1 0 0 (ChainComplex.prev ℕ 0)
-            ChainComplex.next_nat_zero).inv
-  | succ q =>
-      exact
-        (Krel.isoSc' (p + ((q + 1) + 1)) (p + (q + 1)) (p + q)
-            (by rw [ChainComplex.prev]; omega)
-            (by rw [show p + (q + 1) = (p + q) + 1 by omega,
-              ChainComplex.next_nat_succ])).hom ≫
-          relativeCapShortComplexHomSucc R X p q phi hphi ≫
-          (Kabs.isoSc' ((q + 1) + 1) (q + 1) q
-            (by rw [ChainComplex.prev]) (ChainComplex.next_nat_succ q)).inv
+  match q with
+  | 0 =>
+      (Krel.isoSc' (p + 1) p ((ComplexShape.down ℕ).next p)
+          (ChainComplex.prev ℕ p) rfl).hom ≫
+        relativeCapShortComplexHomZero R X p phi hphi ≫
+        (Kabs.isoSc' 1 0 0 (ChainComplex.prev ℕ 0)
+          ChainComplex.next_nat_zero).inv
+  | q + 1 =>
+      (Krel.isoSc' (p + ((q + 1) + 1)) (p + (q + 1)) (p + q)
+          (by rw [ChainComplex.prev]; omega)
+          (by rw [show p + (q + 1) = (p + q) + 1 by omega,
+            ChainComplex.next_nat_succ])).hom ≫
+        relativeCapShortComplexHomSucc R X p q phi hphi ≫
+        (Kabs.isoSc' ((q + 1) + 1) (q + 1) q
+          (by rw [ChainComplex.prev]) (ChainComplex.next_nat_succ q)).inv
 
 @[simp]
 lemma relativeCapShortComplexHom_τ₂ (X : TopPair.{u}) (p q : ℕ)

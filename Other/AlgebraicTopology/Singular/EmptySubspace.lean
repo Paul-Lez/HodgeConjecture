@@ -41,7 +41,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The pair `(X, ∅)`. -/
 abbrev emptySubspacePair : TopPair.{u} :=
@@ -101,6 +101,14 @@ def wholeSupportCohomologyLinearEquiv (n : ℕ) :
       (HomologicalComplex.linearDualIso (asIso (relativeChainProjection R P))) n
     exact (ConcreteCategory.isIso_iff_bijective e.hom).mp e.isIso_hom
 
+end AlgebraicTopology.Singular
+
+namespace AlgebraicTopology.Singular
+
+/-! The next lemma is a universal-coefficient statement, so it needs a field. -/
+
+variable (R : Type u) [Field R] (X : TopCat.{u})
+
 @[simp]
 lemma wholeSupportCohomologyLinearEquiv_apply (n : ℕ)
     (α : CohomologyWithSupport R X Set.univ n) (z : Homology R X n) :
@@ -109,6 +117,12 @@ lemma wholeSupportCohomologyLinearEquiv_apply (n : ℕ)
         ((relativeHomologyProjection R
           (TopPair.ofSubset ((Set.univ : Set X)ᶜ)) n).hom z) :=
   cohomologyEquivDualHomology_forgetSupport R X Set.univ n α z
+
+end AlgebraicTopology.Singular
+
+namespace AlgebraicTopology.Singular
+
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The canonical whole-support equivalence has the existing forget-support map as its underlying
 linear map. -/

@@ -41,7 +41,7 @@ variable (d : ℕ)
 def radialTargetPointPairMap (U : Set (Fin d → ℂ)) (c : Fin d → ℂ) (r : ℝ)
     (hr : 0 < r) (hball : Metric.ball c r ⊆ U) (v q : Fin d → ℂ)
     (hq : OpenPartialHomeomorph.univBall c r v = q) :
-    standardComplexPuncturedPair d ⟶ neighborhoodPointComplementPair U q := by
+    puncturedPair ℂ d ⟶ neighborhoodPointComplementPair U q :=
   have hmem (w : Fin d → ℂ) : OpenPartialHomeomorph.univBall c r (w + v) ∈ U := by
     apply hball
     rw [← OpenPartialHomeomorph.univBall_target c hr]
@@ -51,13 +51,12 @@ def radialTargetPointPairMap (U : Set (Fin d → ℂ)) (c : Fin d → ℂ) (r : 
     intro h
     exact w.2 (add_right_cancel (show w.1 + v = 0 + v by
       simpa using injective_complexUnivBall d c r (h.trans hq.symm)))
-  refine TopPair.ofHom
+  TopPair.ofHom
     (TopCat.ofHom ⟨fun w => ⟨OpenPartialHomeomorph.univBall c r (w + v), hmem w⟩,
-      by fun_prop⟩) ?_ ?_
-  · refine TopCat.ofHom ⟨fun w => ⟨⟨OpenPartialHomeomorph.univBall c r (w.1 + v),
-        hmem w.1⟩, hne w⟩, ?_⟩
-    fun_prop
-  · rfl
+      by fun_prop⟩)
+    (TopCat.ofHom ⟨fun w => ⟨⟨OpenPartialHomeomorph.univBall c r (w.1 + v),
+      hmem w.1⟩, hne w⟩, by fun_prop⟩)
+    rfl
 
 /-- Forgetting the target restriction displays exactly the centered radial map followed by
 translation to its image point. -/
@@ -91,9 +90,9 @@ lemma radialTargetPointPairMap_normalization
     (hq : OpenPartialHomeomorph.univBall c r v = q) :
     relativeHomologyMap ℚ (2 * d) (neighborhoodPointComplementPairMap U q)
       (relativeHomologyMap ℚ (2 * d)
-        (radialTargetPointPairMap d U c r hr hball v q hq) (standardComplexLocalClass d)) =
+        (radialTargetPointPairMap d U c r hr hball v q hq) (standardComplexLocalClass ℚ d)) =
       relativeHomologyMap ℚ (2 * d) (translationPointComplementPairMap (Fin d → ℂ) q)
-        (standardComplexLocalClass d) := by
+        (standardComplexLocalClass ℚ d) := by
   rw [← LinearMap.comp_apply, ← relativeHomologyMap_comp,
     radialTargetPointPairMap_comp_inclusion, relativeHomologyMap_comp, LinearMap.comp_apply,
     centeredComplexUnivBall_preserves_standardComplexLocalClass d c r hr v]
@@ -108,10 +107,10 @@ theorem radialTargetPointPairMap_class_eq
     (hq : OpenPartialHomeomorph.univBall c r v = q)
     (hq' : OpenPartialHomeomorph.univBall c' r' v' = q) :
     relativeHomologyMap ℚ (2 * d)
-      (radialTargetPointPairMap d U c r hr hball v q hq) (standardComplexLocalClass d) =
+      (radialTargetPointPairMap d U c r hr hball v q hq) (standardComplexLocalClass ℚ d) =
       relativeHomologyMap ℚ (2 * d)
         (radialTargetPointPairMap d U c' r' hr' hball' v' q hq')
-          (standardComplexLocalClass d) := by
+          (standardComplexLocalClass ℚ d) := by
   have hqU : q ∈ U := by
     rw [← hq]
     apply hball
@@ -125,14 +124,14 @@ variable {M : Type} [TopologicalSpace M]
 /-- Apply the inverse chart on its genuine open target, with the distinguished point removed. -/
 def chartTargetInversePointPairMap (e : OpenPartialHomeomorph M (Fin d → ℂ))
     (q : Fin d → ℂ) (hq : q ∈ e.target) :
-    neighborhoodPointComplementPair e.target q ⟶ pointComplementPair (e.symm q) := by
+    neighborhoodPointComplementPair e.target q ⟶ pointComplementPair (e.symm q) :=
   have hne (w : {w : e.target | w.1 ≠ q}) : e.symm w.1.1 ≠ e.symm q := fun h ↦
     w.2 (e.symm.injOn w.1.2 hq h)
-  refine TopPair.ofHom
-    (TopCat.ofHom ⟨fun w => e.symm w.1, e.symm.continuousOn.domRestrict⟩) ?_ ?_
-  · exact TopCat.ofHom ⟨fun w => ⟨e.symm w.1.1, hne w⟩,
-      (e.symm.continuousOn.domRestrict.comp continuous_subtype_val).subtype_mk hne⟩
-  · rfl
+  TopPair.ofHom
+    (TopCat.ofHom ⟨fun w => e.symm w.1, e.symm.continuousOn.domRestrict⟩)
+    (TopCat.ofHom ⟨fun w => ⟨e.symm w.1.1, hne w⟩,
+      (e.symm.continuousOn.domRestrict.comp continuous_subtype_val).subtype_mk hne⟩)
+    rfl
 
 variable (e : OpenPartialHomeomorph M (Fin d → ℂ)) (x : M) (hx : x ∈ e.source)
 
@@ -169,7 +168,7 @@ theorem chartOrientationEmbeddingMap_translate_standardComplexLocalClass (v : Fi
       (translationPointComplementPairMap (Fin d → ℂ) v ≫
         imagePointPairMap (chartOrientationEmbeddingMap d e x hx)
           (chartOrientationEmbeddingMap_injective d e x hx) v)
-      (standardComplexLocalClass d) =
+      (standardComplexLocalClass ℚ d) =
       localClassOfChart d e (chartOrientationEmbeddingMap d e x hx v)
         (chartOrientationEmbeddingMap_mem_source d e x hx v) := by
   let q := OpenPartialHomeomorph.univBall (e x) (chartRadius d e x hx) v
@@ -206,15 +205,15 @@ theorem chartOrientationEmbeddingMap_translate_standardComplexLocalClass (v : Fi
             e.symm (OpenPartialHomeomorph.univBall (e y) (chartRadius d e y hy) (z + 0)) := by
         rw [add_zero]
       exact h w
-  have hclasses : relativeHomologyMap ℚ (2 * d) P (standardComplexLocalClass d) =
-      relativeHomologyMap ℚ (2 * d) Q (standardComplexLocalClass d) :=
+  have hclasses : relativeHomologyMap ℚ (2 * d) P (standardComplexLocalClass ℚ d) =
+      relativeHomologyMap ℚ (2 * d) Q (standardComplexLocalClass ℚ d) :=
     radialTargetPointPairMap_class_eq d e.target e.open_target
       (e x) (e y) (chartRadius d e x hx) (chartRadius d e y hy)
       (chartRadius_pos d e x hx) (chartRadius_pos d e y hy)
       (ball_chartRadius_subset d e x hx) (ball_chartRadius_subset d e y hy) v 0 q rfl hq'
-  change relativeHomologyMap ℚ (2 * d) _ (standardComplexLocalClass d) =
+  change relativeHomologyMap ℚ (2 * d) _ (standardComplexLocalClass ℚ d) =
     relativeHomologyMap ℚ (2 * d) (chartModelEmbeddingPair d e y hy)
-      (standardComplexLocalClass d)
+      (standardComplexLocalClass ℚ d)
   rw [hP, hQ, relativeHomologyMap_comp, relativeHomologyMap_comp, LinearMap.comp_apply,
     LinearMap.comp_apply, hclasses]
 
@@ -265,7 +264,7 @@ theorem chartOrientationNeighborhoodClass_restrict (y : M)
         (imagePointPairMap (chartOrientationEmbeddingMap d e x hx)
           (chartOrientationEmbeddingMap_injective d e x hx) v)
         (relativeHomologyMap ℚ (2 * d) (translationPointComplementPairMap (Fin d → ℂ) v)
-          (standardComplexLocalClass d)) := hmap
+          (standardComplexLocalClass ℚ d)) := hmap
     _ = _ := by
       rw [← LinearMap.comp_apply, ← relativeHomologyMap_comp]
       exact chartOrientationEmbeddingMap_translate_standardComplexLocalClass d e x hx v

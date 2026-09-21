@@ -120,7 +120,7 @@ def standardSphereSuccNormalizedChainsXIsoStandard
 /-- The top cycle kernels of the boundary and full standard simplex agree. -/
 def standardSphereSuccTopCyclesIsoStandardSimplexSuccTopCycles (n : ℕ) :
     kernel ((standardSphereSuccNormalizedRationalChains n).d (n + 1) n) ≅
-      kernel ((standardSimplexSuccNormalizedRationalChains n).d (n + 1) n) := by
+      kernel ((standardSimplexSuccNormalizedRationalChains n).d (n + 1) n) :=
   let f := SSet.normalizedChainComplexMap
     (SSet.boundary (n + 2) : SSet.Subcomplex (Δ[n + 2] : SSet.{0})).ι
       (ModuleCat.of ℚ ℚ)
@@ -136,7 +136,7 @@ def standardSphereSuccTopCyclesIsoStandardSimplexSuccTopCycles (n : ℕ) :
   letI : IsIso φ.τ₃ := by
     dsimp [φ, shortComplexFunctor']
     infer_instance
-  exact ((standardSphereSuccNormalizedRationalChains n).sc'
+  ((standardSphereSuccNormalizedRationalChains n).sc'
       (n + 2) (n + 1) n).cyclesIsoKernel.symm ≪≫
     asIso (ShortComplex.cyclesMap φ) ≪≫
       ((standardSimplexSuccNormalizedRationalChains n).sc'
@@ -144,7 +144,7 @@ def standardSphereSuccTopCyclesIsoStandardSimplexSuccTopCycles (n : ℕ) :
 
 /-- The top normalized group of a standard simplex is canonically one-dimensional. -/
 def standardSimplexSuccNormalizedChainsXTopIsoRat (n : ℕ) :
-    (standardSimplexSuccNormalizedRationalChains n).X (n + 2) ≅ ModuleCat.of ℚ ℚ := by
+    (standardSimplexSuccNormalizedRationalChains n).X (n + 2) ≅ ModuleCat.of ℚ ℚ :=
   let top : (Δ[n + 2] : SSet.{0}).nonDegenerate (n + 2) :=
     ⟨SSet.stdSimplex.objEquiv.symm (𝟙 (SimplexCategory.mk (n + 2))),
       SSet.stdSimplex.objEquiv_symm_id_mem_nonDegenerate (n + 2)⟩
@@ -159,7 +159,7 @@ def standardSimplexSuccNormalizedChainsXTopIsoRat (n : ℕ) :
           rw [← SSet.stdSimplex.nonDegenerate_top_dim]
           exact x.2
         simpa [top] using hx' }
-  exact IsColimit.coconePointUniqueUpToIso
+  IsColimit.coconePointUniqueUpToIso
     ((Δ[n + 2] : SSet.{0}).isColimitCofanNormalizedChainComplex
       (ModuleCat.of ℚ ℚ) (n + 2))
     (Cofan.isColimitMkOfUnique (Iso.refl (ModuleCat.of ℚ ℚ))
@@ -183,7 +183,7 @@ lemma standardSimplexSucc_normalized_d_top_mono (n : ℕ) :
 degree below. -/
 def standardSimplexSuccNormalizedChainsXTopIsoTopCycles (n : ℕ) :
     (standardSimplexSuccNormalizedRationalChains n).X (n + 2) ≅
-      kernel ((standardSimplexSuccNormalizedRationalChains n).d (n + 1) n) := by
+      kernel ((standardSimplexSuccNormalizedRationalChains n).d (n + 1) n) :=
   letI : Mono ((standardSimplexSuccNormalizedRationalChains n).d (n + 2) (n + 1)) :=
     standardSimplexSucc_normalized_d_top_mono n
   have h := standardSimplexSucc_normalizedChains_exactAt n (n + 1) (by lia)
@@ -194,7 +194,7 @@ def standardSimplexSuccNormalizedChainsXTopIsoTopCycles (n : ℕ) :
         (n + 2) (n + 1) n (by simp) (by simp)) h
   letI : Mono ((standardSimplexSuccNormalizedRationalChains n).sc'
       (n + 2) (n + 1) n).f := standardSimplexSucc_normalized_d_top_mono n
-  exact IsLimit.conePointUniqueUpToIso h'.fIsKernel
+  IsLimit.conePointUniqueUpToIso h'.fIsKernel
     (limit.isLimit (parallelPair
       ((standardSimplexSuccNormalizedRationalChains n).d (n + 1) n) 0))
 
@@ -215,12 +215,12 @@ lemma standardSphereSucc_normalizedChains_aboveTop_isZero (n : ℕ) :
 /-- Top normalized homology of the boundary of a standard simplex is its top cycle kernel. -/
 def standardSphereSuccNormalizedHomologyTopIsoTopCycles (n : ℕ) :
     (standardSphereSuccNormalizedRationalChains n).homology (n + 1) ≅
-      kernel ((standardSphereSuccNormalizedRationalChains n).d (n + 1) n) := by
+      kernel ((standardSphereSuccNormalizedRationalChains n).d (n + 1) n) :=
   let K := standardSphereSuccNormalizedRationalChains n
   let S := K.sc' (n + 2) (n + 1) n
   have hf : S.f = 0 :=
     (standardSphereSucc_normalizedChains_aboveTop_isZero n).eq_of_src _ _
-  exact K.homologyIsoSc' (n + 2) (n + 1) n (by simp) (by simp) ≪≫
+  K.homologyIsoSc' (n + 2) (n + 1) n (by simp) (by simp) ≪≫
     (S.asIsoHomologyπ hf).symm ≪≫ S.cyclesIsoKernel
 
 /-- Normalized rational top homology of a positive-dimensional standard simplicial sphere is

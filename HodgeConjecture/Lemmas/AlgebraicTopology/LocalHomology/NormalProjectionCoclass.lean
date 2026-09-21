@@ -89,7 +89,7 @@ theorem flattenedSupportNormalClass_eq_normalFiber :
     flattenedSupportNormalClass E c e x hx S hS h0 =
       relativeHomologyMap ℚ (2 * c)
         (normalSliceSection E c ≫ (flattenedSupportPairIso E c e x hx S hS h0).hom)
-        (standardComplexLocalClass c) := by aesop
+        (standardComplexLocalClass ℚ c) := by aesop
 
 /-- Normal projection sends the local normal class to the exactly normalized standard
 class. -/
@@ -97,7 +97,7 @@ theorem chartNormalProjection_normalClass :
     relativeHomologyMap ℚ (2 * c)
       (chartNormalProjectionPair E c e S hS (flattenedSupportNeighborhood E c e x hx)
         (flattenedSupportNeighborhood_subset_source E c e x hx))
-      (flattenedSupportNormalClass E c e x hx S hS h0) = standardComplexLocalClass c := by
+      (flattenedSupportNormalClass E c e x hx S hS h0) = standardComplexLocalClass ℚ c := by
   rw [flattenedSupportNormalClass_eq_normalFiber, ← LinearMap.comp_apply,
     ← relativeHomologyMap_comp, Category.assoc, normalFiber_comp_chartNormalProjection]
   exact centeredComplexUnivBall_preserves_standardComplexLocalClass c _ _

@@ -23,7 +23,8 @@ namespace AlgebraicGeometry
 
 variable {X Y : Scheme} (i : Y ⟶ X) [IsClosedImmersion i] (A : Y.Opens)
 
-/-- Delete the closed image of the discarded source complement. -/
+/-- Let `i : Y → X` be a closed immersion of schemes and `A ⊆ Y` open. This is the open subset `X \
+i(Y \ A)`. Its inverse image in `Y` is `A`, and the image of `A` is closed in this open subset. -/
 def closedImmersionSourceOpenTarget : X.Opens :=
   ⟨(i '' (A : Set Y)ᶜ)ᶜ, (i.isClosedEmbedding.isClosedMap _ A.isOpen.isClosed_compl).isOpen_compl⟩
 
@@ -33,7 +34,9 @@ theorem closedImmersionSourceOpenTarget_preimage :
   rw [Set.preimage_compl, Set.preimage_image_eq _ i.isClosedEmbedding.injective,
     compl_compl]
 
-/-- The factor of the source open into the corresponding target open. -/
+/-- Let `i : Y → X` be a closed immersion of schemes and `A ⊆ Y` open. This is the restricted
+morphism `A → X \ i(Y \ A)`, obtained by factoring the inclusion of `A` followed by `i` through
+that open subscheme of `X`. -/
 def closedImmersionSourceOpenLift : (A : Scheme) ⟶ (closedImmersionSourceOpenTarget i A : Scheme) :=
   IsOpenImmersion.lift (closedImmersionSourceOpenTarget i A).ι (A.ι ≫ i) (by
     rw [Scheme.Opens.range_ι]
@@ -82,7 +85,3 @@ instance closedImmersionSourceOpenLift_isClosedImmersion :
     (closedImmersionSourceOpenTarget i A).ι.continuous
 
 end AlgebraicGeometry
-
-namespace AlgebraicGeometry.ComplexPoint
-
-end AlgebraicGeometry.ComplexPoint

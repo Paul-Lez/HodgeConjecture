@@ -39,7 +39,9 @@ theorem openRestrictionImage_mono {U V : Opens X} (h : V ≤ U) (W : Opens X) :
   rintro x ⟨y, hy, rfl⟩
   exact ⟨⟨y.1, h y.2⟩, hy, rfl⟩
 
-/-- Further restriction from `U` to `V ⊆ U`, on the open pushforward functors. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`. This natural map from direct image of
+restriction to `U` to direct image of restriction to `V` acts on a sheaf `F` and open `W` by
+`F(W ∩ U) → F(W ∩ V)`. -/
 def openRestrictionPushforwardMap {U V : Opens X} (h : V ≤ U) :
     openRestrictionPushforward X U ⟶ openRestrictionPushforward X V where
   app F := ⟨{
@@ -110,7 +112,9 @@ def sheafSectionsWithClosedSupportMap {Z W : Closeds X} (h : Z ≤ W) :
     sheafSectionsWithClosedSupport X Z ⟶ sheafSectionsWithClosedSupport X W :=
   sheafSectionsSupportedOutsideMap X (show W.compl ≤ Z.compl from fun _ hx hz ↦ hx (h hz))
 
-/-- The support-enlargement map on global sections. -/
+/-- Let `Z ⊆ W` be closed subsets of a topological space `X`. This natural transformation includes
+the group of global sections of a sheaf of abelian groups supported in `Z` into the group of
+those supported in `W`. -/
 def closedSupportSectionsMap {Z W : Closeds X} (h : Z ≤ W) :
     closedSupportSections X Z ⟶ closedSupportSections X W :=
   Functor.whiskerRight (sheafSectionsWithClosedSupportMap X h)
@@ -137,7 +141,9 @@ local instance derivedSupportNaturalitySheafDerivedCategory :
 local instance derivedSupportNaturalityGroupDerivedCategory :
     HasDerivedCategory AddCommGrpCat.{u} := HasDerivedCategory.standard _
 
-/-- Derived support enlargement, constructed from the kernel map. -/
+/-- Let `Z ⊆ W` be closed subsets of a topological space `X`. This natural map `RΓ_Z(X,-) →
+RΓ_W(X,-)` on bounded-below sheaf complexes is obtained by applying inclusion of supported
+global sections to an injective resolution. -/
 def derivedClosedSupportSectionsMap {Z W : Closeds X} (h : Z ≤ W) :
     derivedClosedSupportSections X Z ⟶ derivedClosedSupportSections X W :=
   (closedSupportSectionsMap X h).rightDerivedFunctorPlus

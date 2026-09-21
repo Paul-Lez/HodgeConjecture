@@ -49,7 +49,7 @@ lemma stdSimplex_map_apply_eq_zero_of_notMem_range
 /-- A simplex in the simplicial boundary, realized affinely in punctured coordinate space. -/
 def standardAffineBoundarySimplex (d k : ℕ)
     (x : (∂Δ[d] : SSet.{0}).obj (op (SimplexCategory.mk k))) :
-    C(stdSimplex ℝ (Fin (k + 1)), ({0}ᶜ : Set (StandardRealModel d))) where
+    C(stdSimplex ℝ (Fin (k + 1)), ({0}ᶜ : Set (Fin d → ℝ))) where
   toFun t := ⟨standardAffineSimplex d (stdSimplex.map x.1 t), by
     obtain ⟨j, hj⟩ := (SSet.mem_boundary_iff_notMem_range x.1).mp x.2
     exact standardAffineSimplex_ne_zero_of_coord_zero d _ j
@@ -59,16 +59,16 @@ def standardAffineBoundarySimplex (d k : ℕ)
 /-- The boundary of the universal affine `d`-simplex as a map of simplicial sets into the
 singular simplicial set of punctured `ℝ^d`. -/
 def standardAffineBoundarySimplicialMap (d : ℕ) :
-    (∂Δ[d] : SSet.{0}) ⟶ TopCat.toSSet.obj (standardPuncturedPair d).snd where
-  app n := ↾ fun x ↦ ((standardPuncturedPair d).snd.toSSetObjEquiv _).symm
+    (∂Δ[d] : SSet.{0}) ⟶ TopCat.toSSet.obj (puncturedPair ℝ d).snd where
+  app n := ↾ fun x ↦ ((puncturedPair ℝ d).snd.toSSetObjEquiv _).symm
     (standardAffineBoundarySimplex d n.unop.len x)
   naturality n m f := by
     ext x
-    change ((standardPuncturedPair d).snd.toSSetObjEquiv m).symm
+    change ((puncturedPair ℝ d).snd.toSSetObjEquiv m).symm
         (standardAffineBoundarySimplex d m.unop.len
           ((∂Δ[d] : SSet.{0}).map f x)) = _
     calc
-      _ = ((standardPuncturedPair d).snd.toSSetObjEquiv m).symm
+      _ = ((puncturedPair ℝ d).snd.toSSetObjEquiv m).symm
           ((standardAffineBoundarySimplex d n.unop.len x).comp
             ⟨stdSimplex.map f.unop, stdSimplex.continuous_map f.unop⟩) := by
         congr 1
@@ -78,7 +78,7 @@ def standardAffineBoundarySimplicialMap (d : ℕ) :
         rw [stdSimplex.map_comp_apply]
         rfl
       _ = _ := (TopCat.toSSetObjEquiv_symm_naturality
-        (X := (standardPuncturedPair d).snd) (f := f.unop)
+        (X := (puncturedPair ℝ d).snd) (f := f.unop)
         (g := standardAffineBoundarySimplex d n.unop.len x)).symm
 
 /-- The unique nondegenerate simplex in the top dimension of a standard simplex. -/
@@ -125,17 +125,17 @@ lemma standardAffineBoundarySimplicialMap_face (n : ℕ) (i : Fin (n + 2)) :
 /-- The chain map from a simplicial boundary to singular chains of punctured coordinate space. -/
 def standardAffineBoundaryChainMap (d : ℕ) :
     ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)) ⟶
-      (TopCat.toSSet.obj (standardPuncturedPair d).snd).chainComplex
+      (TopCat.toSSet.obj (puncturedPair ℝ d).snd).chainComplex
         (ModuleCat.of ℚ ℚ) :=
   SSet.chainComplexMap (standardAffineBoundarySimplicialMap d) (ModuleCat.of ℚ ℚ)
 
+open scoped Classical in
 /-- A degreewise retraction from chains of the full simplex to chains of its boundary. Simplices
 outside the boundary are sent to zero. -/
 def standardSphereBoundaryChainRetractionComponent (d k : ℕ) :
     ((Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)).X k ⟶
-      ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)).X k := by
-  classical
-  exact ((Δ[d] : SSet.{0}).isColimitChainComplexXCofan
+      ((∂Δ[d] : SSet.{0}).chainComplex (ModuleCat.of ℚ ℚ)).X k :=
+  ((Δ[d] : SSet.{0}).isColimitChainComplexXCofan
     (ModuleCat.of ℚ ℚ) k).desc
       (Cofan.mk _ (fun x ↦ if hx : x ∈ (SSet.boundary d).obj _ then
         (∂Δ[d] : SSet.{0}).ιChainComplex ⟨x, hx⟩ else 0))
@@ -239,12 +239,12 @@ def standardSphereSimplicialNormalizedBoundaryChain (n : ℕ) :
     ((∂Δ[n + 2] : SSet.{0}).toNormalizedChainComplex
       (ModuleCat.of ℚ ℚ)).f (n + 1)
 
+open scoped Classical in
 /-- The coefficient functional of the zeroth oriented facet in normalized top chains. -/
 def standardSphereSimplicialNormalizedBoundaryDetector (n : ℕ) :
     (standardSphereSuccNormalizedRationalChains n).X (n + 1) ⟶
-      ModuleCat.of ℚ ℚ := by
-  classical
-  exact Cofan.IsColimit.desc
+      ModuleCat.of ℚ ℚ :=
+  Cofan.IsColimit.desc
     ((∂Δ[n + 2] : SSet.{0}).isColimitCofanNormalizedChainComplex
       (ModuleCat.of ℚ ℚ) (n + 1)) (fun x ↦
         if x.1 = standardSphereBoundaryFaceSimplex (n + 1) 0 then 𝟙 _ else 0)

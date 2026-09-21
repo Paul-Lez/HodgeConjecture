@@ -36,7 +36,7 @@ end OpenPartialHomeomorph
 namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
@@ -53,7 +53,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
@@ -77,7 +77,10 @@ private theorem closedImmersionNormalCoordinateChange_symm_at_chart (y : Complex
 
 variable (z' : ComplexPoint Y)
 
-/-- The transition between two holomorphic support-flattening charts. -/
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ` of dimensions `m` and `d`,
+respectively. Choose points `z,z′ ∈ Y(ℂ)` and their holomorphic charts `e_z,e_z′` in `ℂ^m ×
+ℂ^{d-m}` that identify the image of `Y(ℂ)` with the locus where the second coordinate is zero.
+This local homeomorphism is the coordinate change `e_z′ ∘ e_z⁻¹` on the overlap. -/
 def closedImmersionNormalTransition :
     OpenPartialHomeomorph ((Fin m → ℂ) × (Fin (d - m) → ℂ))
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
@@ -153,7 +156,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
@@ -213,7 +216,5 @@ theorem closedImmersionHolomorphicFlatteningChart_mem_source :
     closedImmersionHolomorphicFlatteningChart X Y i m d z (Point.map i z) =
       (localChart Y m z z, 0) :=
   closedImmersionStandardFlatteningChart_center X Y i m d z
-
-variable (z' : ComplexPoint Y)
 
 end AlgebraicGeometry.ComplexPoint

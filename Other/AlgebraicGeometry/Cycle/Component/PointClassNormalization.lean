@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicGeometry.Cycle.Component.PointCoclassNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafNormalization
 public import Other.AlgebraicGeometry.Cycle.SheafClass
@@ -32,7 +33,7 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
@@ -42,7 +43,7 @@ theorem complexSupportInjectiveCohomologySheafIsoRelative_restriction_section
     (S : Closeds (ComplexPoint X)) (n : ℕ)
     {V W : Opens (ComplexPoint X)} (a : W ⟶ V) :
     HomologicalComplex.homologyMap
-      (TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) (.up ℤ)
+      (TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) ℤᵘᵖ
         (complexSupportInjectiveComplex X S) a) (n : ℤ) ≫
       TopCat.Sheaf.sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
         (complexSupportInjectiveComplex X S) (n : ℤ) W ≫
@@ -88,7 +89,7 @@ def analyticComponentPointRelativeCoclass :
 comparison; this is an explicit comparison target, not the definition of the general class. -/
 def analyticComponentPointSupportedInjectiveCoclass :
     (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (d : ℤ)) :=
   (complexSupportInjectiveSectionCohomologyEquiv X
     (cycleComponentAnalyticClosedSupport X x) ⊤ (2 * d)).symm

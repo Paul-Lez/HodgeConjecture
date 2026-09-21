@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
 public import HodgeConjecture.Mathlib.CategoryTheory.Abelian.KernelCompositionShortExact
@@ -34,7 +36,9 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) {U V : Opens X} (h : V ≤ U)
 
-/-- Sections on `U` vanishing on `V`, pushed to the original ambient space. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`, and let `F` be a sheaf of abelian
+groups. This functor sends `F` to the kernel of `j_{U*}(F|_U) → j_{V*}(F|_V)`. On an open `W`,
+its sections are elements of `F(W ∩ U)` that vanish on `W ∩ V`. -/
 def sheafSectionsBetweenOpens : Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} X where
   obj F := kernel ((openRestrictionPushforwardMap X h).app F)
   map f := kernel.map _ _ ((openRestrictionPushforward X U).map f)
@@ -54,8 +58,9 @@ instance : (sheafSectionsBetweenOpens X h).Additive where
     apply (cancel_mono (kernel.ι _)).1
     simp [sheafSectionsBetweenOpens, Preadditive.add_comp, Preadditive.comp_add]
 
-/-- On each ambient open set the last term is exactly the kernel of
-restriction from its intersection with `U` to its intersection with `V`. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`, and let `F` be a sheaf of abelian
+groups. For an open `W`, this identifies sections on `W` of the kernel sheaf of restriction from
+`U` to `V` with the kernel of `F(W ∩ U) → F(W ∩ V)`. -/
 def sheafSectionsBetweenOpensOnOpenIso (W : Opens X) (F : Sheaf AddCommGrpCat.{u} X) :
     ((sheafSectionsBetweenOpens X h).obj F).obj.obj (op W) ≅
       kernel (((openRestrictionPushforwardMap X h).app F).hom.app (op W)) :=
@@ -96,7 +101,9 @@ lemma sheafSectionsSupportedOutsideMap_toBetween :
   simp [toSheafSectionsBetweenOpens, sheafSectionsSupportedOutsideMap,
     liftSheafSectionsSupportedOutside, sheafSectionsSupportedOutsideInclusion]
 
-/-- The inclusion/restriction sequence for two nested complements. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`, and let `F` be a sheaf of abelian
+groups. This is the sequence `Γ_{X \ U}(F) → Γ_{X \ V}(F) → ker(j_{U*}(F|_U) → j_{V*}(F|_V))`.
+Its first map enlarges support and its second restricts sections to `U`. -/
 def nestedSupportRestrictionShortComplex (F : Sheaf AddCommGrpCat.{u} X) :
     ShortComplex (Sheaf AddCommGrpCat.{u} X) :=
   ShortComplex.mk ((sheafSectionsSupportedOutsideMap X h).app F)
@@ -126,16 +133,19 @@ def nestedSupportRestrictionComplexShortComplex
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :=
   ShortComplex.mk
-    (((sheafSectionsSupportedOutsideMap X h).mapHomologicalComplex (.up ℤ)).app K)
-    (((toSheafSectionsBetweenOpens X h).mapHomologicalComplex (.up ℤ)).app K)
+    (((sheafSectionsSupportedOutsideMap X h).mapHomologicalComplex ℤᵘᵖ).app K)
+    (((toSheafSectionsBetweenOpens X h).mapHomologicalComplex ℤᵘᵖ).app K)
     (by ext n; exact NatTrans.congr_app (sheafSectionsSupportedOutsideMap_toBetween X h) (K.X n))
 
-/-- The nested-support sequence of section complexes on an open set. -/
+/-- Let `V ⊆ U` and `W` be open subsets of a topological space `X`, and let `K` be an
+integer-indexed complex of sheaves of abelian groups. This is the sequence of complexes obtained
+degreewise from `Γ_{X \ U}(W,K) → Γ_{X \ V}(W,K) → ker(K(W ∩ U) → K(W ∩ V))`, by support
+inclusion and restriction. -/
 def nestedSupportRestrictionSectionsComplexShortComplex (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex AddCommGrpCat.{u} ℤ) :=
   (nestedSupportRestrictionComplexShortComplex X h K).map
-    ((supportEvaluation X W).mapHomologicalComplex (.up ℤ))
+    ((supportEvaluation X W).mapHomologicalComplex ℤᵘᵖ)
 
 lemma nestedSupportRestrictionSectionsComplexShortComplex_shortExact (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :

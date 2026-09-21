@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.CohomologyStalkVanishing
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestriction
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.ShortExactQuasiIso
@@ -32,8 +34,9 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U : Opens X)
 
-/-- Global sections after open restriction are sections on the ambient
-open set, via the canonical equality of the image of the top open with `U`. -/
+/-- Let `X` be a topological space and `U ⊆ X` open. This natural isomorphism identifies global
+sections of a sheaf of abelian groups restricted to the space `U` with its original sections on
+the open subset `U`. -/
 def openRestrictionGlobalSectionsIso :
     U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⋙
         IsFlasque.BoundedBelowComplex.globalSectionsFunctor (TopCat.of U) ≅
@@ -50,14 +53,14 @@ theorem supportEvaluation_map_quasiIso_of_flasque
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ} (f : K ⟶ L) [QuasiIso f]
     (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
-    QuasiIso (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).map f) := by
+    QuasiIso (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).map f) := by
   let R := U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}
   let Γ := IsFlasque.BoundedBelowComplex.globalSectionsFunctor (TopCat.of U)
   let K' : CochainComplex (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤ :=
-    (R.mapHomologicalComplex (.up ℤ)).obj K
+    (R.mapHomologicalComplex ℤᵘᵖ).obj K
   let L' : CochainComplex (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤ :=
-    (R.mapHomologicalComplex (.up ℤ)).obj L
-  let f' : K' ⟶ L' := (R.mapHomologicalComplex (.up ℤ)).map f
+    (R.mapHomologicalComplex ℤᵘᵖ).obj L
+  let f' : K' ⟶ L' := (R.mapHomologicalComplex ℤᵘᵖ).map f
   let : QuasiIso f' := openSheafRestriction_map_quasiIso X U f
   have hK' (n : ℤ) : (K'.X n).IsFlasque := by
     let : (K.X n).IsFlasque := hK n
@@ -65,11 +68,11 @@ theorem supportEvaluation_map_quasiIso_of_flasque
   have hL' (n : ℤ) : (L'.X n).IsFlasque := by
     let : (L.X n).IsFlasque := hL n
     exact openSheafRestriction_isFlasque X U _
-  let : QuasiIso ((Γ.mapHomologicalComplex (.up ℤ)).map f') :=
+  let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map f') :=
     IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso f' nK nL hK' hL'
-  let e := NatIso.mapHomologicalComplex (openRestrictionGlobalSectionsIso X U) (.up ℤ)
-  apply (quasiIso_iff_of_arrow_mk_iso ((Γ.mapHomologicalComplex (.up ℤ)).map f')
-    (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).map f)
+  let e := NatIso.mapHomologicalComplex (openRestrictionGlobalSectionsIso X U) ℤᵘᵖ
+  apply (quasiIso_iff_of_arrow_mk_iso ((Γ.mapHomologicalComplex ℤᵘᵖ).map f')
+    (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).map f)
     (Arrow.isoMk (e.app K) (e.app L) (e.hom.naturality f).symm)).mp
   infer_instance
 
@@ -93,14 +96,16 @@ lemma supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque
   intro n
   exact supportRestrictionSectionsShortComplex_shortExact_of_flasque X U V (K.X n)
 
-/-- A coefficient-complex map induces the map of localization sequences. -/
+/-- Let `X` be a topological space, `U ⊆ X` open, and `f : K → L` a map of integer-indexed sheaf
+complexes. This is the induced map from `Γ_{X \ U}(K) → K → j_*(K|_U)` to the same sequence for
+`L`, applying `f` to supported sections, all sections, and restricted sections. -/
 def supportRestrictionComplexShortComplexMap
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ} (f : K ⟶ L) :
     supportRestrictionComplexShortComplex X U K ⟶
       supportRestrictionComplexShortComplex X U L where
-  τ₁ := ((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map f
+  τ₁ := ((sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).map f
   τ₂ := f
-  τ₃ := ((openRestrictionPushforward X U).mapHomologicalComplex (.up ℤ)).map f
+  τ₃ := ((openRestrictionPushforward X U).mapHomologicalComplex ℤᵘᵖ).map f
   comm₁₂ := by
     ext n
     exact (sheafSectionsSupportedOutsideInclusion X U).naturality (f.f n)
@@ -114,16 +119,16 @@ theorem supportedSections_map_quasiIso_of_flasque
     (V : Opens X) {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
     (f : K ⟶ L) [QuasiIso f] (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
-    QuasiIso (((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).map
-      (((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map f)) := by
-  let φ := (((supportEvaluation X V).mapHomologicalComplex (.up ℤ)).mapShortComplex).map
+    QuasiIso (((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).map
+      (((sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).map f)) := by
+  let φ := (((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).mapShortComplex).map
     (supportRestrictionComplexShortComplexMap X U f)
   have h₂ : QuasiIso φ.τ₂ :=
     supportEvaluation_map_quasiIso_of_flasque X V f nK nL hK hL
   have h₃ : QuasiIso φ.τ₃ := by
     change QuasiIso (((supportEvaluation X
       (U.isOpenEmbedding.functor.obj ((Opens.map U.inclusion').obj V))).mapHomologicalComplex
-        (.up ℤ)).map f)
+        ℤᵘᵖ).map f)
     exact supportEvaluation_map_quasiIso_of_flasque X _ f nK nL hK hL
   exact CochainComplex.quasiIso_first_of_shortExact φ
     (supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque X U V K hK)
@@ -135,7 +140,7 @@ theorem sheafSectionsSupportedOutside_map_quasiIso_of_flasque
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
     (f : K ⟶ L) [QuasiIso f] (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
-    QuasiIso (((sheafSectionsSupportedOutside X U).mapHomologicalComplex (.up ℤ)).map f) := by
+    QuasiIso (((sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).map f) := by
   apply quasiIso_of_cofinal_section_quasiIso
   exact fun x V hxV =>
     ⟨V, le_rfl, hxV, supportedSections_map_quasiIso_of_flasque X U V f nK nL hK hL⟩

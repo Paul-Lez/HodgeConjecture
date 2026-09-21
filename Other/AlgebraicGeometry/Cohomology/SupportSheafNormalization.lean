@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
+public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
 
@@ -17,7 +19,7 @@ open AlgebraicTopology.Singular TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 local instance complexSupportCohomologySheafNormalizationParacompact :
@@ -82,7 +84,7 @@ lemma complexSupportInjectiveCohomologySheafIsoRelative_section
 lemma complexSupportInjectiveCohomologySheafIsoRelative_section_apply
     (S : Closeds (ComplexPoint X)) (n : ℕ) (V : Opens (ComplexPoint X))
     (z : ((((supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ)) :
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X S))).homology (n : ℤ)) :
     (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.app (op V)
       (sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
         (complexSupportInjectiveComplex X S) (n : ℤ) V z) =

@@ -41,11 +41,11 @@ theorem exists_open_normalTransition_localClass_invariance_within
       IsOpen V ∧ 0 ∈ V ∧
       ∀ z : RelativeHomology ℚ (neighborhoodPointComplementPair V 0) (2 * c),
         relativeHomologyMap ℚ (2 * c) (neighborhoodPointComplementPairMap V 0) z =
-          standardComplexLocalClass c →
+          standardComplexLocalClass ℚ c →
         relativeHomologyMap ℚ (2 * c)
           (complexNeighborhoodPuncturedPairMapOf c V (normalTransitionMap c t a)
             ((normalTransitionMap_continuousOn c t a).mono (hV.trans hUt))
-            hne) z = standardComplexLocalClass c := by
+            hne) z = standardComplexLocalClass ℚ c := by
   let L := normalTransitionDerivativeEquiv t a ha hp ht hti
   let A := complexMatrixOfContinuousLinearMap c L.toContinuousLinearMap
   have hA := complexMatrixOfContinuousLinearMap_det_ne_zero c L.toContinuousLinearMap L.injective
@@ -68,10 +68,12 @@ variable {M E : Type} [TopologicalSpace M] [NormedAddCommGroup E] [NormedSpace �
   (a : E) (W : Set M) (V : Set (Fin c → ℂ))
   (hV : ∀ v ∈ V, (a, v) ∈ e.target ∧ e.symm (a, v) ∈ W)
 
-/-- The uncompressed normal fiber is a map from a small normal point-complement
-pair into the chosen ambient support-complement pair. -/
+/-- Let `e` be a chart on a topological space `M` with values in `E × ℂ^c`, identifying a subset `S`
+with the locus where the second coordinate is zero. Fix `a ∈ E`, `W ⊆ M`, and `V ⊆ ℂ^c` such
+that `(a,v)` lies in the chart target and `e⁻¹(a,v) ∈ W` for every `v ∈ V`. This map of pairs
+`(V,V \ {0}) → (W,W \ S)` sends `v` to `e⁻¹(a,v)`. -/
 def chartNormalFiberPair :
-    neighborhoodPointComplementPair V 0 ⟶ neighborhoodSupportComplementPair W S := by
+    neighborhoodPointComplementPair V 0 ⟶ neighborhoodSupportComplementPair W S :=
   have hc : Continuous (fun v : V => e.symm (a, v.1)) :=
     e.symm.continuousOn.comp_continuous (continuous_const.prodMk continuous_subtype_val)
       (fun v => (hV v.1 v.2).1)
@@ -80,7 +82,7 @@ def chartNormalFiberPair :
     have hz := (hS _ (e.map_target (hV v.1.1 v.1.2).1)).mp hs
     rw [e.right_inv (hV v.1.1 v.1.2).1] at hz
     exact v.2 hz
-  exact TopPair.ofHom
+  TopPair.ofHom
     (TopCat.ofHom ⟨fun v => ⟨e.symm (a, v.1), (hV v.1 v.2).2⟩, hc.subtype_mk _⟩)
     (TopCat.ofHom ⟨fun v => ⟨⟨e.symm (a, v.1.1), (hV v.1.1 v.1.2).2⟩, hn v⟩,
       (hc.comp continuous_subtype_val).subtype_mk _ |>.subtype_mk _⟩) (by ext v; rfl)
@@ -166,7 +168,7 @@ theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
   have hfiber : ∀ v ∈ V, (a, v) ∈ e.target ∧ e.symm (a, v) ∈ W := fun _ hv => hV hv
   let F := chartNormalFiberPair c e S hS a W V hfiber
   obtain ⟨z, hz⟩ := (neighborhoodPointComplement_relativeHomologyMap_bijective
-    V 0 hVo h0V (2 * c)).2 (standardComplexLocalClass c)
+    V 0 hVo h0V (2 * c)).2 (standardComplexLocalClass ℚ c)
   have hFz : relativeHomologyMap ℚ (2 * c) F z =
       flattenedSupportNormalClass E c e x hx S hS h0 := by
     apply chartNormalProjection_relativeHomologyMap_injective E c e S hS x hx h0
@@ -184,7 +186,8 @@ theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
       relativeCohomologyEquivDualHomology_normalizedRelativeCoclass]
     rw [← LinearMap.comp_apply (relativeHomologyMap ℚ (2 * c)
       (chartNormalProjectionPair E c e' S hS' W hW')), ← relativeHomologyMap_comp]
-    change normalizedDual (standardComplexLocalClass c) (standardComplexLocalClass_ne_zero_for_chart c)
+    change normalizedDual (standardComplexLocalClass ℚ c)
+        (standardComplexLocalClass_ne_zero_for_chart c)
       (relativeHomologyMap ℚ (2 * c)
         (chartNormalFiberPair c e S hS a W V hfiber ≫ chartNormalProjectionPair E c e' S hS' W hW') z) = 1
     rw [chartNormalFiber_comp_other_projection c e S hS a W V hfiber e' hS' hW'

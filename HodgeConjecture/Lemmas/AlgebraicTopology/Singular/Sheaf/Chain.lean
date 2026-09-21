@@ -51,7 +51,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The contravariant functor sending an open set `U` to the pair `(X, X ∖ U)`. -/
 def openComplementPairFunctor : (Opens X)ᵒᵖ ⥤ TopPair.{u} where
@@ -61,7 +61,9 @@ def openComplementPairFunctor : (Opens X)ᵒᵖ ⥤ TopPair.{u} where
   map_comp i j :=
     supportInclusionPairMap_trans X (leOfHom j.unop) (leOfHom i.unop)
 
-/-- The relative singular-chain complex, contravariantly in the open support. -/
+/-- Let `X` be a topological space and `R` a commutative ring. This functor sends an open `U ⊆ X` to
+the relative singular chain complex `C_*(X,X \ U;R) = C_*(X;R)/C_*(X \ U;R)`. For `V ⊆ U`,
+restriction is the quotient map induced by `X \ U ⊆ X \ V`. -/
 def openRelativeSingularChainComplexFunctor :
     (Opens X)ᵒᵖ ⥤ ChainComplex (ModuleCat.{u} R) ℕ :=
   openComplementPairFunctor X ⋙ relativeChainFunctor R
@@ -115,7 +117,9 @@ def singularChainSheafBoundary (n : ℕ) :
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).map
     (singularChainBoundary R X n)
 
-/-- Degreewise sheafification of the relative singular-chain complex. -/
+/-- Let `X` be a topological space and `R` a commutative ring. This chain complex of sheaves of
+abelian groups is obtained by sheafifying, in each nonnegative degree, the presheaf `U ↦ C_*(X,X
+\ U;R)`. Its boundary is induced by the alternating sum of the faces of a singular simplex. -/
 def singularChainSheafComplex : ChainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℕ :=
   ((presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).mapHomologicalComplex
     (ComplexShape.down ℕ)).obj (singularChainPresheafComplex R X)
@@ -128,7 +132,10 @@ def singularChainSheafComplex : ChainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) 
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The degreewise sheafification unit, as a chain map. -/
+/-- Let `X` be a topological space and `R` a commutative ring. This chain map sends the presheaf
+complex `U ↦ C_*(X,X \ U;R)` to the underlying presheaf complex of its degreewise
+sheafification. In each degree it takes a relative chain to the section represented by that
+chain locally. -/
 def singularChainSheafificationUnit :
     singularChainPresheafComplex R X ⟶
       ((TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapHomologicalComplex

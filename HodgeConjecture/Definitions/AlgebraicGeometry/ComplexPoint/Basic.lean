@@ -65,7 +65,8 @@ namespace AlgebraicGeometry
 
 variable (R : Type) [CommRing R]
 
-/-- An `R`-point of a scheme over `Spec R`, as a morphism in the over category. -/
+/-- Let `R` be a commutative ring and `X` a scheme over `Spec R`. An `R`-point of `X` is a morphism
+`Spec R → X` whose composite with the structure map `X → Spec R` is the identity. -/
 abbrev Point (X : Over (Spec ↧R)) :=
   Over.mk (𝟙 (Spec ↧R)) ⟶ X
 
@@ -77,7 +78,8 @@ section Functoriality
 
 variable {X Y Z : Over (Spec ↧R)}
 
-/-- The map on `R`-points induced by a morphism over `Spec R`. -/
+/-- Let `R` be a commutative ring and `f : X → Y` a morphism of schemes over `Spec R`. This sends an
+`R`-point `z : Spec R → X` to the composite `f ∘ z : Spec R → Y`. -/
 noncomputable def map (f : X ⟶ Y) : Point R X → Point R Y :=
   fun z ↦ z ≫ f
 
@@ -96,42 +98,44 @@ section IsLocalRing
 
 variable [IsLocalRing R] {X : Over (Spec ↧R)}
 
-/-- The scheme point and local stalk homomorphism corresponding to an `R`-point.
-
-`Spec R` has a unique closed point when `R` is local, and a morphism out of it is exactly a point
-of `X.left` together with a local homomorphism from the stalk there. Everything below that speaks of
-*the* point underlying an `R`-point rests on this. -/
+/-- Let `R` be a commutative local ring and `X` a scheme over `Spec R`. An `R`-point `z : Spec R →
+X` determines the image `x` of the unique closed point of `Spec R` and a local ring homomorphism
+`𝒪_{X,x} → R`. This is that pair, with the assertion that the homomorphism is local. -/
 noncomputable def stalkData (z : Point R X) :
     Σ x : X.left, {f : X.left.presheaf.stalk x ⟶ ↧R // IsLocalHom f.hom} :=
   SpecToEquivOfLocalRing X.left ↧R z.left
 
-/-- The underlying point of the scheme. -/
+/-- Let `R` be a commutative local ring and `X` a scheme over `Spec R`. For an `R`-point `z : Spec R
+→ X`, this is the image in `X` of the unique closed point of `Spec R`. -/
 noncomputable def underlying (z : Point R X) : X.left := z.stalkData.1
 
-/-- The local homomorphism from the stalk at the underlying point. -/
+/-- Let `R` be a commutative local ring and `X` a scheme over `Spec R`. For an `R`-point `z : Spec R
+→ X`, let `x` be the image of the closed point of `Spec R`. This is the induced local
+homomorphism `𝒪_{X,x} → R` from the stalk of the structure sheaf. -/
 noncomputable def stalkHom (z : Point R X) :
     X.left.presheaf.stalk z.underlying ⟶ ↧R := z.stalkData.2.1
 
 instance (z : Point R X) : IsLocalHom z.stalkHom.hom := z.stalkData.2.2
 
-/-- The `R`-points whose underlying scheme point lies in `U`. -/
+/-- Let `R` be a commutative local ring and `X` a scheme over `Spec R`. For a Zariski open `U ⊆ X`,
+this is the set of `R`-points `z : Spec R → X` that send the unique closed point of `Spec R`
+into `U`. -/
 noncomputable def overOpen (U : X.left.Opens) : Set (Point R X) :=
   {z | z.underlying ∈ U}
 
-/-- An `R`-point whose underlying scheme point lies in `U`.
-
-The domain condition is carried by the type, so a regular function on `U` can be evaluated at
-such a point. -/
+/-- Let `R` be a commutative local ring and `X` a scheme over `Spec R`. For a Zariski open `U ⊆ X`,
+this is the type of `R`-points together with the condition that the image of the closed point of
+`Spec R` lies in `U`. -/
 abbrev OverOpen (U : X.left.Opens) := {z : Point R X // z.underlying ∈ U}
 
-/--
-Evaluation of a local regular function at an `R`-point. Outside the function's domain this is
-defined to be zero; all uses in the analytic topology are restricted to `overOpen U`.
--/
+open scoped Classical in
+/-- Let `R` be a commutative local ring and `X` a scheme over `Spec R`. For a regular function `s`
+on a Zariski open `U` and an `R`-point `z`, evaluate the germ of `s` using the stalk
+homomorphism `𝒪_{X,x} → R` induced by `z` if its underlying point `x` is in `U`. The value is
+defined to be zero when `x ∉ U`. -/
 noncomputable def evaluate (U : X.left.Opens) (s : Γ(X.left, U))
-    (z : Point R X) : R := by
-  classical
-  exact if hz : z.underlying ∈ U then z.stalkHom (X.left.presheaf.germ U z.underlying hz s) else 0
+    (z : Point R X) : R :=
+  if hz : z.underlying ∈ U then z.stalkHom (X.left.presheaf.germ U z.underlying hz s) else 0
 
 /-- Restricting a regular function does not change its value at a point in the smaller open. -/
 lemma evaluate_res {U V : X.left.Opens} (hVU : V ≤ U) (s : Γ(X.left, U))
@@ -153,11 +157,9 @@ lemma mem_overOpen_basicOpen_iff_isUnit_evaluate {U : X.left.Opens} (s : Γ(X.le
   rw [isUnit_map_iff z.stalkHom.hom]
   exact X.left.mem_basicOpen s z.underlying hz
 
-/-- Evaluation of all regular functions on `U` at an `R`-point lying over `U`, bundled as a
-ring homomorphism `Γ(X.left, U) ⟶ ↧R`.
-
-This is the chart map of the analytic topology: over an affine open it identifies the `R`-points
-with Mathlib's space of ring homomorphisms into `R`. -/
+/-- Let `R` be a commutative local ring and `X` a scheme over `Spec R`. For an `R`-point with
+underlying point `x` in the Zariski open `U`, this ring homomorphism `Γ(U, 𝒪_X) → R` first takes
+the germ at `x` and then applies the stalk map induced by the point. -/
 noncomputable def evaluationHom (U : X.left.Opens)
     (z : OverOpen (X := X) U) : Γ(X.left, U) ⟶ ↧R :=
   X.left.presheaf.germ U z.1.underlying z.2 ≫ z.1.stalkHom
@@ -229,24 +231,28 @@ section Topology
 
 variable [TopologicalSpace R]
 
-/-- The chart topology on the `R`-points lying over an open subset: the topology of pointwise
-convergence, pulled back along `evaluationHom` from Mathlib's topology on `Γ(X.left, U) ⟶ ↧R`. -/
+/-- Let `R` be a commutative local ring with a topology and `X` a scheme over `Spec R`. On the
+`R`-points whose underlying points lie in the open `U`, this is the topology induced by
+evaluation into `Hom(Γ(U, 𝒪_X), R)`. The homomorphism space has the topology of pointwise
+convergence on regular functions. -/
 @[instance_reducible]
 noncomputable def chartTopology (U : X.left.Opens) :
     TopologicalSpace (OverOpen (X := X) U) :=
   .induced (evaluationHom U) inferInstance
 
-/-- Sets obtained by restricting an inverse image of an open subset of `R` to the domain of a local
-regular function. -/
+/-- Let `R` be a commutative local ring with a topology and `X` a scheme over `Spec R`. This family
+consists of sets `{z | underlying(z) ∈ U and s(z) ∈ V}`, where `U` is Zariski open in `X`, `s` a
+regular function on `U`, and `V` open in `R`. These sets specify local conditions on values of
+regular functions. -/
 noncomputable def analyticSubbasis : Set (Set (Point R X)) :=
   {W | ∃ (U : X.left.Opens) (s : Γ(X.left, U)) (V : Set R), IsOpen V ∧
     W = overOpen U ∩ evaluate U s ⁻¹' V}
 
-/-- The analytic topology on `R`-points: the topology glued from the affine charts, each of
-which carries Mathlib's topology of pointwise convergence on `Γ(X.left, U) ⟶ ↧R`.
-
-This is the canonical topology on a space of `R`-points, so it is registered as an instance;
-`instance_reducible` lets it unify with the equivalent local instances declared in other files. -/
+/-- Let `R` be a commutative local ring with a topology and `X` a scheme over `Spec R`. Give the
+points over each affine open the topology of pointwise convergence of regular-function
+evaluations. This is the topology on all `R`-points obtained by taking the supremum of the
+topologies coinduced by those chart inclusions. For `R = ℂ`, it is the analytic topology on
+complex points. -/
 @[instance_reducible]
 noncomputable instance analyticTopology : TopologicalSpace (Point R X) :=
   ⨆ U : X.left.affineOpens,
@@ -373,25 +379,28 @@ lemma continuous_map {Y : Over (Spec ↧R)} (f : X ⟶ Y) :
   rw [hover, heval]
   exact isOpen_overOpen_inter_preimage _ _ _ hV
 
-/-- A morphism over `Spec R`, bundled as a continuous map on `R`-points. -/
+/-- Let `R` be a commutative local ring with continuous multiplication and open units, and let `f :
+X → Y` be a morphism of schemes over `R`. This is the continuous map on `R`-points `z ↦ f ∘ z`,
+for the topologies defined by local regular-function evaluations. -/
 noncomputable def continuousMap {Y : Over (Spec ↧R)} (f : X ⟶ Y) :
     @ContinuousMap (Point R X) (Point R Y)
       analyticTopology analyticTopology :=
   @ContinuousMap.mk _ _ analyticTopology analyticTopology (map f) (continuous_map f)
 
-/-- An isomorphism of schemes over `Spec R` induces a homeomorphism on `R`-points. -/
+/-- Let `R` be a commutative local ring with continuous multiplication and open units, and let `e :
+X ≅ Y` be an isomorphism of schemes over `R`. Composition with `e` and `e⁻¹` gives this
+homeomorphism of `R`-point spaces with their regular-function evaluation topologies. -/
 noncomputable def isoMapHomeomorph {Y : Over (Spec ↧R)} (e : X ≅ Y) :
     @Homeomorph (Point R X) (Point R Y)
-      analyticTopology analyticTopology := by
-  let : TopologicalSpace (Point R X) := analyticTopology
-  let : TopologicalSpace (Point R Y) := analyticTopology
-  exact
-    { toFun := map e.hom
-      invFun := map e.inv
-      left_inv z := by simp [map, Category.assoc]
-      right_inv z := by simp [map, Category.assoc]
-      continuous_toFun := continuous_map e.hom
-      continuous_invFun := continuous_map e.inv }
+      analyticTopology analyticTopology :=
+  letI : TopologicalSpace (Point R X) := analyticTopology
+  letI : TopologicalSpace (Point R Y) := analyticTopology
+  { toFun := map e.hom
+    invFun := map e.inv
+    left_inv z := by simp [map, Category.assoc]
+    right_inv z := by simp [map, Category.assoc]
+    continuous_toFun := continuous_map e.hom
+    continuous_invFun := continuous_map e.inv }
 
 @[simp]
 lemma isoMapHomeomorph_apply {Y : Over (Spec ↧R)} (e : X ≅ Y)
@@ -403,15 +412,10 @@ end Topology
 
 end IsLocalRing
 
-section Field
-
-variable {K : Type} [Field K] {X : Over (Spec ↧K)}
-
-end Field
-
 end Point
 
-/-- A complex point of a scheme over `Spec ℂ`. -/
+/-- Let `X` be a scheme over `ℂ`. A complex point is a scheme morphism `Spec ℂ → X` over `Spec ℂ`,
+equivalently a point with a compatible complex-valued homomorphism from its residue field. -/
 abbrev ComplexPoint (X : Over (Spec ↧ℂ)) := Point ℂ X
 
 end AlgebraicGeometry

@@ -60,7 +60,7 @@ lemma normalizedRelativeCoclass_pairing_self {R : Type*} [Field R] {X : TopPair}
 
 /-- The oriented standard complex local class is nonzero in every complex dimension. -/
 lemma standardComplexLocalClass_ne_zero (n : ℕ) :
-    standardComplexLocalClass n ≠ 0 := by
+    standardComplexLocalClass ℚ n ≠ 0 := by
   rw [standardComplexLocalClass_ne_zero_iff]
   by_cases hn : n = 0
   · subst n
@@ -74,20 +74,22 @@ def linearEquivOfNormalizedGenerators
     {N : Type*} [AddCommGroup N] [Module R N]
     (x : M) (hx : x ≠ 0) (hxspan : Submodule.span R {x} = ⊤)
     (y : N) (hy : y ≠ 0) (hyspan : Submodule.span R {y} = ⊤) :
-    M ≃ₗ[R] N := by
+    M ≃ₗ[R] N :=
   let f : M →ₗ[R] N :=
     (LinearMap.toSpanSingleton R N y).comp (normalizedDual x hx)
   let g : N →ₗ[R] M :=
     (LinearMap.toSpanSingleton R M x).comp (normalizedDual y hy)
-  apply LinearEquiv.ofLinearMap f g
-  · apply LinearMap.ext
-    intro n
-    obtain ⟨a, rfl⟩ := (Submodule.span_singleton_eq_top_iff R y).mp hyspan n
-    simp [f, g, normalizedDual_apply_self]
-  · apply LinearMap.ext
-    intro m
-    obtain ⟨a, rfl⟩ := (Submodule.span_singleton_eq_top_iff R x).mp hxspan m
-    simp [f, g, normalizedDual_apply_self]
+  LinearEquiv.ofLinearMap f g
+    (by
+      apply LinearMap.ext
+      intro n
+      obtain ⟨a, rfl⟩ := (Submodule.span_singleton_eq_top_iff R y).mp hyspan n
+      simp [f, g, normalizedDual_apply_self])
+    (by
+      apply LinearMap.ext
+      intro m
+      obtain ⟨a, rfl⟩ := (Submodule.span_singleton_eq_top_iff R x).mp hxspan m
+      simp [f, g, normalizedDual_apply_self])
 
 end AlgebraicTopology.Singular
 
@@ -143,23 +145,3 @@ lemma linearEquivOfNormalizedGenerators_apply_generator
     linearEquivOfNormalizedGenerators x hx hxspan y hy hyspan x = y := by simp
 
 end AlgebraicTopology.Singular
-
-namespace AlgebraicGeometry.CycleComponentSeparateLocalCoordinates
-
-open AlgebraicTopology.Singular
-
-section
-
-variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
-  [Smooth X.hom] [IsProjective X.hom] {x : X.left}
-  [SmoothOfRelativeDimension d X.hom]
-  (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-end
-
-variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
-  [Smooth X.hom] [IsProjective X.hom] {x : X.left}
-  [SmoothOfRelativeDimension d X.hom]
-  (C : CycleComponentSeparateLocalCoordinates X x d n)
-
-end AlgebraicGeometry.CycleComponentSeparateLocalCoordinates

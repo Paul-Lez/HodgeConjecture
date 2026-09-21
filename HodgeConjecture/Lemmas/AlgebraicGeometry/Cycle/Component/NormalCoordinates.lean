@@ -101,9 +101,11 @@ abbrev componentSmoothScheme
 
 end CycleComponentSeparateLocalCoordinates
 
-/-- Separate exact local coordinates on a smooth cycle component and on its smooth ambient
-variety.  The component coordinates use exactly `n` variables.  The two coordinate systems are
-independent of one another. -/
+/-- Let `X` be a smooth integral projective scheme of dimension `d` over `ℂ`, and let `Z` be the
+reduced closure of a scheme point `x ∈ X`. This structure records a complex point in the smooth
+locus of `Z`, an affine neighborhood there with an étale map to `𝔸^n_ℂ`, and an independently
+chosen étale coordinate chart of `X` at the image point with `d` coordinates. It also records
+that the chosen point of `Z` is closed. -/
 structure CycleComponentSeparateLocalCoordinates
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (x : X.left) (d n : ℕ)

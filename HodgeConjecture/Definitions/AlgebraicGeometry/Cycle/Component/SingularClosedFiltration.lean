@@ -12,6 +12,8 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Analytific
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.AffineRelativeDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Open
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Ambient closed supports for singular-component localization induction
 
@@ -28,15 +30,21 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- The canonical closed remainders inside the integral component's singular boundary. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the reduced closure of
+the scheme point `x`. Start with `S₀ = Z_sing` and obtain `S_{k+1}` by removing the smooth locus
+of the reduced scheme on `S_k`. This is the closed subset `S_k` of `Z`, for a natural number
+`k`. -/
 abbrev cycleComponentSingularClosedFiltration (k : ℕ) : Closeds (cycleComponent X.left x) :=
   reducedSmoothClosedFiltration (cycleComponentι X.left x ≫ X.hom)
     (singularLocusClosed (cycleComponentι X.left x ≫ X.hom)) k
 
-/-- Every stage is a closed support in the original algebraic ambient scheme. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the reduced closure of
+the scheme point `x`. Start with `S₀ = Z_sing` and obtain `S_{k+1}` by removing the smooth locus
+of the reduced scheme on `S_k`. This is the image of `S_k` as a closed subset of the ambient
+scheme `X`. -/
 def cycleComponentSingularAmbientClosedFiltration (k : ℕ) : Closeds X.left :=
   ⟨cycleComponentι X.left x '' (cycleComponentSingularClosedFiltration X x k : Set _),
     (cycleComponentι X.left x).isClosedEmbedding.isClosedMap _
@@ -44,14 +52,19 @@ def cycleComponentSingularAmbientClosedFiltration (k : ℕ) : Closeds X.left :=
 
 namespace ComplexPoint
 
-/-- The analytically closed ambient supports for nested-support localization. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the reduced closure of
+the scheme point `x`. Start with `S₀ = Z_sing` and obtain `S_{k+1}` by removing the smooth locus
+of the reduced scheme on `S_k`. This is the analytically closed subset `S_k(ℂ) ⊆ X(ℂ)`, formed
+by taking complex points whose underlying scheme points lie in `S_k`. -/
 def cycleComponentSingularAnalyticClosedFiltration (k : ℕ) : Closeds (ComplexPoint X) :=
   ⟨Point.underlying ⁻¹' (cycleComponentSingularAmbientClosedFiltration X x k : Set X.left),
     (cycleComponentSingularAmbientClosedFiltration X x k).isClosed.preimage
       (continuous_underlying_to_zariski X)⟩
 
-/-- The smooth locus of the component, bundled over `Spec ℂ`. -/
-abbrev cycleComponentSmoothLocusOver : Over (Spec (.of ℂ)) :=
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the reduced closure of
+the scheme point `x`. This is the smooth locus `Z_reg` as a scheme over `ℂ`, with structure
+morphism induced by its inclusion in `Z` and then in `X`. -/
+abbrev cycleComponentSmoothLocusOver : Over (Spec ↧ℂ) :=
   Over.mk (((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫
     cycleComponentι X.left x) ≫ X.hom)
 

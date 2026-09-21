@@ -29,7 +29,7 @@ variable (d : ℕ)
 theorem centeredComplexLinear_preserves_standardComplexLocalClass
     (L : (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) (hL : Function.Injective L) :
     relativeHomologyMap ℚ (2 * d) (centeredComplexEmbeddingPair d L L.continuous hL 0)
-      (standardComplexLocalClass d) = standardComplexLocalClass d := by
+      (standardComplexLocalClass ℚ d) = standardComplexLocalClass ℚ d := by
   let A := complexMatrixOfContinuousLinearMap d L
   have hAL : (A.mulVecLin.toContinuousLinearMap :
       (Fin d → ℂ) →L[ℂ] (Fin d → ℂ)) = L :=
@@ -45,14 +45,14 @@ variable {M : Type} [TopologicalSpace M]
 
 /-- The inverse chart on its target, with the exact ambient basepoint as codomain. -/
 def chartTargetInverseAtSourcePairMap :
-    neighborhoodPointComplementPair e.target (e x) ⟶ pointComplementPair x := by
+    neighborhoodPointComplementPair e.target (e x) ⟶ pointComplementPair x :=
   have hne (v : {v : e.target | v.1 ≠ e x}) : e.symm v.1.1 ≠ x := by
     intro h
     apply v.2
     calc
       v.1.1 = e (e.symm v.1.1) := (e.right_inv v.1.2).symm
       _ = e x := congrArg e h
-  exact TopPair.ofHom
+  TopPair.ofHom
     (TopCat.ofHom ⟨fun v => e.symm v.1, e.symm.continuousOn.domRestrict⟩)
     (TopCat.ofHom ⟨fun v => ⟨e.symm v.1.1, hne v⟩,
       (e.symm.continuousOn.domRestrict.comp continuous_subtype_val).subtype_mk hne⟩) rfl
@@ -80,18 +80,18 @@ lemma radialTargetPointPairMap_chartTargetInverseAtSource :
 /-- A normalized actual coordinate parametrization gives the exact chart-local class.
 The only comparison used in this proof is genuine point-neighborhood excision. -/
 theorem chartTargetPointPairMap_localClass
-    (P : standardComplexPuncturedPair d ⟶ neighborhoodPointComplementPair e.target (e x))
+    (P : puncturedPair ℂ d ⟶ neighborhoodPointComplementPair e.target (e x))
     (hP : relativeHomologyMap ℚ (2 * d)
-      (P ≫ neighborhoodPointComplementPairMap e.target (e x)) (standardComplexLocalClass d) =
+      (P ≫ neighborhoodPointComplementPairMap e.target (e x)) (standardComplexLocalClass ℚ d) =
       relativeHomologyMap ℚ (2 * d)
-        (translationPointComplementPairMap (Fin d → ℂ) (e x)) (standardComplexLocalClass d)) :
+        (translationPointComplementPairMap (Fin d → ℂ) (e x)) (standardComplexLocalClass ℚ d)) :
     relativeHomologyMap ℚ (2 * d) (P ≫ chartTargetInverseAtSourcePairMap d e x)
-      (standardComplexLocalClass d) = localClassOfChart d e x hx := by
+      (standardComplexLocalClass ℚ d) = localClassOfChart d e x hx := by
   let Q := radialTargetPointPairMap d e.target (e x) (chartRadius d e x hx)
     (chartRadius_pos d e x hx) (ball_chartRadius_subset d e x hx) 0 (e x)
     (OpenPartialHomeomorph.univBall_apply_zero _ _)
-  have hPQ : relativeHomologyMap ℚ (2 * d) P (standardComplexLocalClass d) =
-      relativeHomologyMap ℚ (2 * d) Q (standardComplexLocalClass d) := by
+  have hPQ : relativeHomologyMap ℚ (2 * d) P (standardComplexLocalClass ℚ d) =
+      relativeHomologyMap ℚ (2 * d) Q (standardComplexLocalClass ℚ d) := by
     apply (neighborhoodPointComplement_relativeHomologyMap_bijective e.target (e x)
       e.open_target (e.map_source hx) (2 * d)).1
     rw [← LinearMap.comp_apply, ← relativeHomologyMap_comp, hP]
@@ -101,7 +101,7 @@ theorem chartTargetPointPairMap_localClass
   rw [relativeHomologyMap_comp, LinearMap.comp_apply, hPQ,
     ← LinearMap.comp_apply, ← relativeHomologyMap_comp]
   change relativeHomologyMap ℚ (2 * d)
-    (Q ≫ chartTargetInverseAtSourcePairMap d e x) (standardComplexLocalClass d) = _
+    (Q ≫ chartTargetInverseAtSourcePairMap d e x) (standardComplexLocalClass ℚ d) = _
   rw [show Q ≫ chartTargetInverseAtSourcePairMap d e x = chartModelEmbeddingPair d e x hx
     from radialTargetPointPairMap_chartTargetInverseAtSource d e x hx]
   rfl

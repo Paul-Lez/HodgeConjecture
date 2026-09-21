@@ -68,7 +68,10 @@ theorem existsUnique_section_of_locally_representable
     rw [ht' x, ← F.presheaf.Γgerm_res_apply (i := homOfLE (show U x ≤ ⊤ from le_top))
       x (hx x), ht x, hs x x (hx x)]
 
-/-- The uniquely specified global section; choice selects only the unique gluing. -/
+/-- Let `F` be a sheaf of abelian groups on a topological space `X`. Suppose a germ `g(x) ∈ F_x` is
+specified for each point, and every point has a neighborhood with a section whose germs equal
+`g` throughout that neighborhood. This is the unique global section whose germ at every `x` is
+`g(x)`. -/
 def sectionOfLocallyRepresentable
     (g : ∀ x : X, F.presheaf.stalk x)
     (hlocal : ∀ x : X, ∃ (U : Opens X) (_ : x ∈ U) (s : F.presheaf.obj (op U)),
@@ -83,13 +86,5 @@ theorem sectionOfLocallyRepresentable_germ
       ∀ (y : X) (hy : y ∈ U), F.presheaf.germ U y hy s = g y) (x : X) :
     F.presheaf.Γgerm x (sectionOfLocallyRepresentable F g hlocal) = g x :=
   (existsUnique_section_of_locally_representable F g hlocal).exists.choose_spec x
-
-variable (A : AddCommGrpCat.{u}) (g : ∀ x : X, A ⟶ F.presheaf.stalk x)
-  (hlocal : ∀ (a : A) (x : X), ∃ (U : Opens X) (_ : x ∈ U) (s : F.presheaf.obj (op U)),
-    ∀ (y : X) (hy : y ∈ U), F.presheaf.germ U y hy s = g y a)
-
-variable {F}
-
-variable (F)
 
 end TopCat.Sheaf

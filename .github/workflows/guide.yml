@@ -14,6 +14,16 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    concurrency:
+      group: guide-${{ github.ref }}
+      cancel-in-progress: true
+
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
     steps:
       - uses: actions/checkout@v4
       - uses: leanprover/lean-action@v1
@@ -25,6 +35,7 @@ jobs:
         run: lake build
       - name: Check the import layering
         run: python3 scripts/check_import_layers.py
+
       - name: Build the Verso guide
         if: github.event_name != 'pull_request'
         run: lake exe hodge-guide
@@ -34,6 +45,28 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           path: _out/html-multi
+
+      # The release upload gets an HTTP 500 from GitHub from time to time, and
+      # the guide must still deploy when it does.  The next push republishes.
+      - name: Export the trust index
+        id: trust
+        continue-on-error: true
+        if: github.event_name != 'pull_request'
+        uses: chrisflav/trust-action@v1
+        with:
+          module: HodgeConjecture
+          with-bodies: 'true'
+          with-code: 'true'
+          setup-lean: 'false'
+          publish: ${{ github.ref == 'refs/heads/main' && 'release' || 'false' }}
+
+      - name: Keep the index as an artifact
+        if: steps.trust.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: trust-index
+          path: ${{ steps.trust.outputs.index-root }}
+          retention-days: 30
 
   deploy:
     if: github.event_name != 'pull_request'

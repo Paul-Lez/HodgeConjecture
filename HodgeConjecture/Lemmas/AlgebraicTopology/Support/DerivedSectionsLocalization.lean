@@ -25,15 +25,18 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U : Opens X)
 
-/-- The support inclusion followed by restriction-pushforward. -/
+/-- Let `U` be open in a topological space `X` and `F` a sheaf of abelian groups. This is the
+sequence `Γ_{X \ U}(F) → F → j_*(F|_U)`, where `j : U → X` is inclusion. The maps include
+sections vanishing on `U` and restrict to `U`. -/
 def supportRestrictionShortComplex (F : Sheaf AddCommGrpCat.{u} X) :
     ShortComplex (Sheaf AddCommGrpCat.{u} X) :=
   ShortComplex.mk ((sheafSectionsSupportedOutsideInclusion X U).app F)
     ((toOpenRestrictionPushforward X U).app F)
     (sheafSectionsSupportedOutsideInclusion_restriction X U F)
 
-/-- The sequence of sections on `V`, with the supported-sections inclusion
-and restriction map. -/
+/-- Let `U,V` be open in a topological space `X` and `F` a sheaf of abelian groups. This sequence
+takes sections on `V` of `Γ_{X \ U}(F) → F → j_*(F|_U)`. Under the intersection identification
+it is `ker(F(V) → F(V ∩ U)) → F(V) → F(V ∩ U)`. -/
 def supportRestrictionSectionsShortComplex (V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) : ShortComplex AddCommGrpCat.{u} :=
   (supportRestrictionShortComplex X U F).map (supportEvaluation X V)
@@ -59,26 +62,6 @@ lemma supportRestrictionSectionsComplexShortComplex_shortExact (V : Opens X)
   HomologicalComplex.shortExact_of_degreewise_shortExact _ fun n =>
     supportRestrictionSectionsShortComplex_shortExact X U V (K.X n)
 
-attribute [local instance] derivedSupportLocalizationSheafDerivedCategory
-
-attribute [local instance] derivedSupportLocalizationGroupDerivedCategory
-
 end TopCat.Sheaf
 
 end
-
-@[expose] public noncomputable section
-
-open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
-
-universe u
-
-namespace TopCat.Sheaf
-
-variable (X : TopCat.{u}) (U : Opens X)
-
-attribute [local instance] derivedSupportLocalizationSheafDerivedCategory
-
-attribute [local instance] derivedSupportLocalizationGroupDerivedCategory
-
-end TopCat.Sheaf

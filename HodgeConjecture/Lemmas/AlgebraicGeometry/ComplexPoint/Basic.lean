@@ -48,26 +48,6 @@ namespace Point
 
 variable {R}
 
-section Functoriality
-
-variable {X Y Z : Over (Spec ↧R)}
-
-end Functoriality
-
-section IsLocalRing
-
-variable [IsLocalRing R] {X : Over (Spec ↧R)}
-
-section Topology
-
-variable [TopologicalSpace R]
-
-variable [ContinuousMul R] [IsOpenUnits R]
-
-end Topology
-
-end IsLocalRing
-
 section Field
 
 variable {K : Type} [Field K] {X : Over (Spec ↧K)}
@@ -100,12 +80,6 @@ variable (R : Type) [CommRing R]
 namespace Point
 
 variable {R}
-
-section Functoriality
-
-variable {X Y Z : Over (Spec ↧R)}
-
-end Functoriality
 
 section IsLocalRing
 

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportedSingularModel
 
 /-!
@@ -22,11 +24,13 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ)))
+variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom]
 
-/-- The singular-to-injective resolution map, using local contractibility of the analytic
-space. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `Y = X(ℂ)` its analytic topology. This
+cochain map sends the sheafified rational singular cochain complex on `Y` to the chosen
+injective resolution of the constant rational sheaf. It extends the identity on constant
+cochains and uses local contractibility of `Y`. -/
 def complexSingularToAmbientInjective :
     rationalSingularCochainComplex (TopCat.of (ComplexPoint X)) ⟶
       ambientRationalInjectiveComplex X :=
@@ -39,37 +43,26 @@ instance complexSingularToAmbientInjective_quasiIso :
 
 variable [IsProjective X.hom]
 
-/-- Local supported singular cohomology and the supported injective
-model are canonically isomorphic in every integer degree. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `Y = X(ℂ)` its analytic topology. Assume
+also that `X` is projective, and let `U,V ⊆ Y` be open. The comparison from sheafified rational
+singular cochains `C` to a constant-sheaf injective resolution `I` induces this isomorphism
+`H^n(Γ_{Y \ U}(V,C)) ≅ H^n(Γ_{Y \ U}(V,I))` for every integer `n`. In each complex, sections
+over `V` are required to vanish on `V ∩ U`. -/
 def complexSupportedSingularInjectiveHomologyIso
     (U V : Opens (ComplexPoint X)) (n : ℤ) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj
+      ℤᵘᵖ).obj
         (supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) U))).homology n ≅
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-      (.up ℤ)).obj
+      ℤᵘᵖ).obj
         (((TopCat.Sheaf.sheafSectionsSupportedOutside
-          (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex (.up ℤ)).obj
-            (ambientRationalInjectiveComplex X)))).homology n := by
-  let : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=
+          (TopCat.of (ComplexPoint X)) U).mapHomologicalComplex ℤᵘᵖ).obj
+            (ambientRationalInjectiveComplex X)))).homology n :=
+  letI : ∀ W : Opens (ComplexPoint X), ParacompactSpace W :=
     openParacompactSpace X
-  exact supportedSingularInjectiveHomologyIso (TopCat.of (ComplexPoint X))
+  supportedSingularInjectiveHomologyIso (TopCat.of (ComplexPoint X))
     (exists_contractibleOpen_le X) U V n
 
 end AlgebraicGeometry.ComplexPoint
 
 end
-
-@[expose] public noncomputable section
-
-open CategoryTheory TopologicalSpace
-open AlgebraicTopology.Singular
-
-namespace AlgebraicGeometry.ComplexPoint
-
-variable (X : Over (Spec (.of ℂ)))
-  [IsIntegral X.left] [Smooth X.hom]
-
-variable [IsProjective X.hom]
-
-end AlgebraicGeometry.ComplexPoint

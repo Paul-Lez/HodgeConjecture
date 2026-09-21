@@ -34,11 +34,11 @@ variable (X : Over (Spec ↧ℂ))
 canonically equivalent. -/
 def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     FilteredDeRhamHypercohomology X 0 n ≃
-      DeRhamHypercohomology X n := by
+      DeRhamHypercohomology X n :=
   letI : IsIso (hodgeFilteredDeRhamInclusion X 0) := by
     unfold hodgeFilteredDeRhamInclusion hodgeFilteredDeRhamComplex
     infer_instance
-  exact Localization.SmallShiftedHom.postcompEquiv
+  Localization.SmallShiftedHom.postcompEquiv
     (hodgeFilteredDeRhamInclusion X 0)
     (by
       change QuasiIso (hodgeFilteredDeRhamInclusion X 0)
@@ -83,7 +83,7 @@ lemma hodgeFiltrationComplexSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.
 
 /-- Every rational degree-zero cohomology class belongs to the rational Hodge subgroup. -/
 lemma hodgeClasses_zero_eq_top [IsIntegral X.left] [Smooth X.hom] :
-    Hdg^0(K; X) = ⊤ := by
+    Hdg^0(X; K) = ⊤ := by
   refine SetLike.ext fun α ↦ ?_
   change fieldToDeRhamCohomology K X (2 * (0 : ℕ)) α ∈
       hodgePiece X ((0 : ℕ) : ℤ) ((0 : ℕ) : ℤ) (2 * (0 : ℕ)) ↔ True

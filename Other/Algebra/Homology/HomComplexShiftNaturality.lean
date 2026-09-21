@@ -15,16 +15,15 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturality
-public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexShiftNaturality
 
 /-!
-# HomComplexShiftNaturality, the part the statement does not need
+# Hom-complex cohomology and target shifts
 
-Separated out of
-`HodgeConjecture.Lemmas.Algebra.Homology.HomComplexShiftNaturality`:
-nothing in the statement's dependency chain uses these results, only material in
-`Other` does.
+Unshifting the target of a hom-complex is an additive map on cochains, cocycles and
+cohomology classes, and it is the homology map of a sign-normalized three-term comparison.
 -/
 
 @[expose] public noncomputable section
@@ -56,6 +55,32 @@ def rightUnshiftCochain : Cochain A (K⟦s⟧) n →+ Cochain A K n' where
   map_zero' := by simp
   map_add' _ _ := Cochain.rightUnshift_add _ _ _ _
 
+/-- Unshift the target on cocycles. -/
+def rightUnshiftCocycle : Cocycle A (K⟦s⟧) n →+ Cocycle A K n' where
+  toFun z := z.rightUnshift n' h
+  map_zero' := by ext; simp [Cocycle.rightUnshift]
+  map_add' _ _ := by ext; simp [Cocycle.rightUnshift, Cochain.rightUnshift_add]
+
+/-- Target unshifting descends through actual coboundaries. The factor
+`(-1)^s` is included in the witnessing primitive. -/
+def rightUnshiftClass : CohomologyClass A (K⟦s⟧) n →+ CohomologyClass A K n' :=
+  CohomologyClass.descAddMonoidHom
+    ((CohomologyClass.mkAddMonoidHom A K n').comp (rightUnshiftCocycle A K s n n' h)) (by
+      intro z hz
+      obtain ⟨m, hm, a, ha⟩ := hz
+      change CohomologyClass.mk (z.rightUnshift n' h) = 0
+      rw [CohomologyClass.mk_eq_zero_iff]
+      refine ⟨m + s, by omega,
+        s.negOnePow • a.rightUnshift (m + s) rfl, ?_⟩
+      rw [δ_units_smul, Cochain.δ_rightUnshift a (m + s) rfl n' n h, ha,
+        smul_smul, Int.units_mul_self, one_smul]
+      rfl)
+
+@[simp]
+lemma rightUnshiftClass_mk (z : Cocycle A (K⟦s⟧) n) :
+    rightUnshiftClass A K s n n' h (CohomologyClass.mk z) =
+      CohomologyClass.mk (z.rightUnshift n' h) := rfl
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The actual three-term map for unshifting a target. The outer components
@@ -63,24 +88,24 @@ have the standard `(-1)^s` factors; its middle component has no sign. -/
 def rightUnshiftShortComplex :
     (HomComplex A (K⟦s⟧)).sc n ⟶ (HomComplex A K).sc n' where
   τ₁ := s.negOnePow • AddCommGrpCat.ofHom
-    (rightUnshiftCochain A K s ((ComplexShape.up ℤ).prev n)
-      ((ComplexShape.up ℤ).prev n') (by simp only [CochainComplex.prev]; omega))
+    (rightUnshiftCochain A K s ((ℤᵘᵖ).prev n)
+      ((ℤᵘᵖ).prev n') (by simp only [CochainComplex.prev]; omega))
   τ₂ := AddCommGrpCat.ofHom (rightUnshiftCochain A K s n n' h)
   τ₃ := s.negOnePow • AddCommGrpCat.ofHom
-    (rightUnshiftCochain A K s ((ComplexShape.up ℤ).next n)
-      ((ComplexShape.up ℤ).next n') (by simp only [CochainComplex.next]; omega))
+    (rightUnshiftCochain A K s ((ℤᵘᵖ).next n)
+      ((ℤᵘᵖ).next n') (by simp only [CochainComplex.next]; omega))
   comm₁₂ := by
     ext z
-    change δ ((ComplexShape.up ℤ).prev n') n'
-        (s.negOnePow • z.rightUnshift ((ComplexShape.up ℤ).prev n')
+    change δ ((ℤᵘᵖ).prev n') n'
+        (s.negOnePow • z.rightUnshift ((ℤᵘᵖ).prev n')
           (by simp only [CochainComplex.prev]; omega)) =
-      (δ ((ComplexShape.up ℤ).prev n) n z).rightUnshift n' h
+      (δ ((ℤᵘᵖ).prev n) n z).rightUnshift n' h
     rw [δ_units_smul, Cochain.δ_rightUnshift z _ _ n' n h,
       smul_smul, Int.units_mul_self, one_smul]
   comm₂₃ := by
     ext z
-    exact Cochain.δ_rightUnshift z n' h ((ComplexShape.up ℤ).next n')
-      ((ComplexShape.up ℤ).next n) (by simp only [CochainComplex.next]; omega)
+    exact Cochain.δ_rightUnshift z n' h ((ℤᵘᵖ).next n')
+      ((ℤᵘᵖ).next n) (by simp only [CochainComplex.next]; omega)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

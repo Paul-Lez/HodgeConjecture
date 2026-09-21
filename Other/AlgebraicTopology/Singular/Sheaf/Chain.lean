@@ -37,7 +37,7 @@ nothing in the statement's dependency chain uses these results, only material in
 open CategoryTheory Limits TopologicalSpace
 universe u
 namespace AlgebraicTopology.Singular
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The chain-complex-level identification of stalks before and after sheafification.
 This is not yet an identification with the local relative homology at `x`. -/
@@ -47,13 +47,13 @@ def singularChainSheafificationStalkIso (x : X) :
     ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex
       (ComplexShape.down ℕ)).obj
       (((TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapHomologicalComplex
-        (ComplexShape.down ℕ)).obj (singularChainSheafComplex R X)) := by
+        (ComplexShape.down ℕ)).obj (singularChainSheafComplex R X)) :=
   let f := ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).mapHomologicalComplex
     (ComplexShape.down ℕ)).map (singularChainSheafificationUnit R X)
   have : ∀ n, IsIso (f.f n) := fun n ↦
     singularChainSheafificationUnit_stalk_isIso R X x n
   have : IsIso f := HomologicalComplex.Hom.isIso_of_components f
-  exact asIso f
+  asIso f
 
 end AlgebraicTopology.Singular
 end

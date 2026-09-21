@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.CohomologySection
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueLowerVanishing
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueCokernel
@@ -28,13 +30,15 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- The kernel of the boundary-to-cycles map is the preceding cycle sheaf. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. For an integer `n`, the kernel of the differential viewed as `K^{n-1} → Z^n(K)`
+is canonically the preceding cycle sheaf `Z^{n-1}(K) = ker(d^{n-1})`. -/
 def kernelBoundaryToCyclesIso (n : ℤ) :
-    kernel (K.sc n).toCycles ≅ K.cycles ((ComplexShape.up ℤ).prev n) :=
-  letI p := (ComplexShape.up ℤ).prev n
-  letI hp : p = n - 1 := (ComplexShape.up ℤ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
-  letI hnext : (ComplexShape.up ℤ).next p = n :=
-    (ComplexShape.up ℤ).next_eq' (ComplexShape.up_mk _ _ (by rw [hp]; omega))
+    kernel (K.sc n).toCycles ≅ K.cycles ((ℤᵘᵖ).prev n) :=
+  letI p := (ℤᵘᵖ).prev n
+  letI hp : p = n - 1 := (ℤᵘᵖ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
+  letI hnext : (ℤᵘᵖ).next p = n :=
+    (ℤᵘᵖ).next_eq' (ComplexShape.up_mk _ _ (by rw [hp]; omega))
   (kernelCompMono (K.sc n).toCycles (K.sc n).iCycles).symm ≪≫
     kernelIsoOfEq (K.sc n).toCycles_i ≪≫
     IsLimit.conePointUniqueUpToIso (kernelIsKernel (K.sc n).f) (K.cyclesIsKernel p n hnext)
@@ -45,13 +49,13 @@ private theorem forget_preservesLeftHomologyOf_lowest (N n : ℤ) [K.IsStrictlyG
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :
     (forget AddCommGrpCat.{u} X).PreservesLeftHomologyOf (K.sc n) := by
   let F := forget AddCommGrpCat.{u} X
-  let p := (ComplexShape.up ℤ).prev n
-  have hp : p = n - 1 := (ComplexShape.up ℤ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
+  let p := (ℤᵘᵖ).prev n
+  have hp : p = n - 1 := (ℤᵘᵖ).prev_eq' (ComplexShape.up_mk _ _ (by omega))
   let : (K.cycles p).IsFlasque :=
     IsFlasque.BoundedBelowComplex.cycles_isFlasque_of_exact_le K N (n - 1)
       (fun j hj => (K.exactAt_iff_isZero_homology j).mpr (hK j (by omega)))
       hflasque p (by rw [hp])
-  let : (F.obj (K.cycles ((ComplexShape.up ℤ).prev n))).IsFlasque :=
+  let : (F.obj (K.cycles ((ℤᵘᵖ).prev n))).IsFlasque :=
     inferInstanceAs ((K.cycles p).IsFlasque)
   let : (kernel (K.sc n).toCycles).IsFlasque :=
     TopCat.Presheaf.IsFlasque.of_iso (F.mapIso (kernelBoundaryToCyclesIso X K n))
@@ -91,12 +95,14 @@ theorem sectionCohomologyToSheafSection_isIso_lowest (N n : ℤ) [K.IsStrictlyGE
   dsimp only [sectionCohomologyToSheafSection]
   infer_instance
 
-/-- The lowest-degree isomorphism, with the comparison as its
-forward map. Taking `U = ⊤` gives the global-sections isomorphism. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. Assume `K` is zero below `N`, every term is flasque (all restriction maps are
+surjective), and `𝓗^j(K) = 0` for `j < n`. For every open `U`, this isomorphism `H^n(K(U)) ≅
+Γ(U, 𝓗^n(K))` sends a cocycle section to its class in the cohomology sheaf. -/
 def lowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque)
     (U : Opens X) :
-    (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ≅
+    (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n ≅
       (K.homology n).obj.obj (op U) :=
   let := sectionCohomologyToSheafSection_isIso_lowest X K N n hK hflasque U
   asIso (sectionCohomologyToSheafSection X K n U)

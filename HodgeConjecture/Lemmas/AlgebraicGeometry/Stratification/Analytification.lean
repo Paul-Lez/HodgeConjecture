@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Stratification.Analytification
 
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
@@ -24,7 +25,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ))) {Y : Over (Spec (.of ℂ))}
+variable (X : Over (Spec ↧ℂ)) {Y : Over (Spec ↧ℂ)}
 
 variable [LocallyOfFiniteType X.hom] [NoetherianSpace X.left]
 
@@ -48,7 +49,7 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec (.of ℂ))) {Y : Over (Spec (.of ℂ))}
+variable (X : Over (Spec ↧ℂ)) {Y : Over (Spec ↧ℂ)}
 
 /-- Forgetting a complex point to its underlying Zariski point is continuous for the
 analytic topology. -/
@@ -82,7 +83,7 @@ theorem range_map_of_isImmersion (i : Y ⟶ X)
     apply Over.OverMorphism.ext
     have heq :
         (⟨(Point.map i w).left, (Point.map i w).w⟩ :
-          {q : Spec (.of ℂ) ⟶ X.left // q ≫ X.hom = 𝟙 _}) = ⟨z.left, z.w⟩ := by
+          {q : Spec ↧ℂ ⟶ X.left // q ≫ X.hom = 𝟙 _}) = ⟨z.left, z.w⟩ := by
       apply (pointEquivClosedPoint X.hom).injective
       apply Subtype.ext
       change i.left w.underlying = z.underlying
@@ -92,7 +93,5 @@ theorem range_map_of_isImmersion (i : Y ⟶ X)
       rw [hw]
       exact hy
     exact congrArg Subtype.val heq
-
-variable [LocallyOfFiniteType X.hom] [NoetherianSpace X.left]
 
 end AlgebraicGeometry.ComplexPoint

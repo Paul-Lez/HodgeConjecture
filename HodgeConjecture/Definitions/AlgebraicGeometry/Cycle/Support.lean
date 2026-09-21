@@ -41,12 +41,15 @@ namespace AlgebraicGeometry
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- The reduced closed subscheme whose underlying space is the closure of `x`. -/
+/-- Let `X` be a scheme and `x` a point of its underlying topological space. This is the closed
+subscheme defined by the vanishing ideal of `closure {x}`. It has that closure as its underlying
+space and the reduced scheme structure, so it is integral with generic point `x`. -/
 def cycleComponent (X : Scheme) (x : X) : Scheme :=
   (Scheme.IdealSheafData.vanishingIdeal
     (X := X) ⟨closure {x}, isClosed_closure⟩).subscheme
 
-/-- The canonical closed immersion of the reduced closure of `x`. -/
+/-- Let `X` be a scheme and `x` a scheme point. This is the closed immersion into `X` of the reduced
+closed subscheme with underlying space `closure {x}`, defined by its vanishing ideal sheaf. -/
 def cycleComponentι (X : Scheme) (x : X) : cycleComponent X x ⟶ X :=
   (Scheme.IdealSheafData.vanishingIdeal
     (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι
@@ -89,7 +92,9 @@ instance cycleComponent_projective
       immersion_toBase := by rw [Category.assoc, P.immersion_toBase] }
   ⟩⟩
 
-/-- The complex points supported on the irreducible closed subset with generic point `x`. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. This is the subset `Z(ℂ) ⊆ X(ℂ)`, consisting of complex points
+whose underlying scheme point belongs to `closure {x}`. -/
 def cycleComponentSupport
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
     Set (ComplexPoint X) :=

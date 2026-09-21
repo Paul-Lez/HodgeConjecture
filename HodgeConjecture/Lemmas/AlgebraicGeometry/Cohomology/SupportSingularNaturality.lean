@@ -16,6 +16,8 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportComparison
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+
 /-!
 # Naturality of the supported singular comparison
 
@@ -35,7 +37,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] {U X : TopCat.{u}} (j : U ⟶ X)
+variable (R : Type u) [CommRing R] {U X : TopCat.{u}} (j : U ⟶ X)
 
 lemma contractibleOpenBasis_of_isOpenEmbedding
     (hj : Topology.IsOpenEmbedding j)
@@ -317,7 +319,7 @@ def complementConstantRationalSingleComplex
     (Z : Set (ComplexPoint X)) :
     CochainComplex (AnalyticComplementAdditiveSheaf X Z) ℕ :=
   (CochainComplex.single₀ (AnalyticComplementAdditiveSheaf X Z)).obj
-    (complementConstantRationalSheaf X Z)
+    𝓒(↧↥Zᶜ; ℚ)
 
 def complementSingularCochainSheafComplex
     (Z : Set (ComplexPoint X)) :
@@ -370,18 +372,18 @@ def complementSingularToInjectiveResolutionInt
     (complementSingularCochainSheafComplex X Z).extend
         ComplexShape.embeddingUpNat ⟶
       (complementConstantRationalInjectiveResolution X Z).cocomplex.extend
-        ComplexShape.embeddingUpNat := by
+        ComplexShape.embeddingUpNat :=
   let a := complementConstantsToSingularCochainInt X Z
   let r := complementResolutionMapInt X Z
   let I := (complementConstantRationalInjectiveResolution X Z).cocomplex.extend
     ComplexShape.embeddingUpNat
-  let : Mono a := complementConstantsToSingularCochainInt_mono X Z
-  let : QuasiIso a :=
+  letI : Mono a := complementConstantsToSingularCochainInt_mono X Z
+  letI : QuasiIso a :=
     complementConstantsToSingularCochainInt_quasiIso X Z hZ
   have hI : ∀ n : ℤ, Injective (I.X n) := fun n ↦ by
     dsimp [I]
     infer_instance
-  exact CochainComplex.liftToInjective a r hI
+  CochainComplex.liftToInjective a r hI
 
 set_option linter.style.haveILetI false in
 lemma complementConstants_comp_singularToInjectiveResolutionInt

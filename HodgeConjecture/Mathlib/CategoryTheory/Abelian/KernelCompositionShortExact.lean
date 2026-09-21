@@ -50,7 +50,9 @@ lemma kernelCompositionShortComplex_shortExact [Epi f] :
 
 variable (k : A ⟶ D) (hk : f ≫ g = k)
 
-/-- The same sequence with a specified composite, preserving the kernel objects. -/
+/-- Let `f : A → B` and `g : B → D` be morphisms in an abelian category, and let `k : A → D` satisfy
+`k = g ∘ f`. This is the sequence `ker(f) → ker(k) → ker(g)`. The first map is induced by the
+identity of `A`, and the second by `f`. Their composite is zero. -/
 def kernelFactorizationShortComplex : ShortComplex C where
   X₁ := kernel f
   X₂ := kernel k
@@ -61,7 +63,10 @@ def kernelFactorizationShortComplex : ShortComplex C where
     apply (cancel_mono (kernel.ι g)).1
     simp
 
-/-- Replacing the composite by its equality is a canonical kernel isomorphism. -/
+/-- Let `f : A → B` and `g : B → D` be morphisms in an abelian category, and let `k : A → D` satisfy
+`k = g ∘ f`. This isomorphism identifies the sequence `ker(f) → ker(g ∘ f) → ker(g)` with
+`ker(f) → ker(k) → ker(g)`. It is the identity on the outer terms and the canonical
+identification induced by the equality of morphisms on the middle term. -/
 def kernelCompositionFactorizationIso :
     kernelCompositionShortComplex f g ≅ kernelFactorizationShortComplex f g k hk :=
   ShortComplex.isoMk (Iso.refl _) (kernelIsoOfEq hk) (Iso.refl _)
@@ -84,8 +89,10 @@ variable {E : Type*} [Category* E] [Abelian E]
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Kernel-preserving functors identify the sequence with that of the mapped restriction
-maps. -/
+/-- Let `f : A → B` and `g : B → D` be morphisms in an abelian category, and let `k : A → D` satisfy
+`k = g ∘ f`. For an additive functor `F` between abelian categories that preserves kernels, this
+identifies the image under `F` of `ker(f) → ker(k) → ker(g)` with `ker(F(f)) → ker(F(k)) →
+ker(F(g))`, using the canonical kernel comparison isomorphisms. -/
 def kernelFactorizationShortComplexMapIso :
     (kernelFactorizationShortComplex f g k hk).map F ≅
       kernelFactorizationShortComplex (F.map f) (F.map g) (F.map k)

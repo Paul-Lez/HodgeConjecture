@@ -25,7 +25,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 open AlgebraicTopology.Singular
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (d : ℕ)
   [SmoothOfRelativeDimension 0 Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
@@ -110,7 +110,7 @@ def smoothClosedPointNeighborhoodPairMap :
 /-- The normal-purity parametrization specialized to zero tangent dimension, followed
 by the genuine ambient point-complement inclusion. -/
 def smoothClosedPointNormalModelPairMap :
-    standardComplexPuncturedPair d ⟶ pointComplementPair (Point.map i z) :=
+    puncturedPair ℂ d ⟶ pointComplementPair (Point.map i z) :=
   normalSliceSection (Fin 0 → ℂ) d ≫
     (smoothClosedSupportNeighborhoodPairIso X Y i 0 d z V hzV).hom ≫
       smoothClosedPointNeighborhoodPairMap X Y i d z V hzV

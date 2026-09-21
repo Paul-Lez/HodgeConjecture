@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturality
 
@@ -49,7 +51,7 @@ set_option backward.isDefEq.respectTransparency false in
 of postcomposition. -/
 def postcompLeftHomologyMapData (n : ℤ) :
     ShortComplex.LeftHomologyMapData
-      ((HomologicalComplex.shortComplexFunctor AddCommGrpCat (.up ℤ) n).map
+      ((HomologicalComplex.shortComplexFunctor AddCommGrpCat ℤᵘᵖ n).map
         (postcompMap K f)) (leftHomologyData K L n) (leftHomologyData K M n) where
   φK := AddCommGrpCat.ofHom (postcompCocycle K f n)
   φH := AddCommGrpCat.ofHom (postcompClass K f n)
@@ -61,7 +63,7 @@ def postcompLeftHomologyMapData (n : ℤ) :
         (leftHomologyData K L n).i ≫ (postcompMap K f).f n from rfl,
       ← Category.assoc, ShortComplex.LeftHomologyData.f'_i,
       Category.assoc, ShortComplex.LeftHomologyData.f'_i]
-    exact ((HomologicalComplex.shortComplexFunctor AddCommGrpCat (.up ℤ) n).map
+    exact ((HomologicalComplex.shortComplexFunctor AddCommGrpCat ℤᵘᵖ n).map
       (postcompMap K f)).comm₁₂.symm
   commπ := rfl
 

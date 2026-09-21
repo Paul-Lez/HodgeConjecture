@@ -35,9 +35,47 @@ open CategoryTheory Limits
 universe u
 
 
+namespace CategoryTheory.ShortComplex
+
+variable {R : Type u} [CommRing R]
+
+/-- Dualising a splitting of a short complex of modules gives a splitting of the reversed dual
+short complex: the retraction and the section swap roles. -/
+def Splitting.linearDual {S : ShortComplex (ModuleCat.{u} R)} (h : S.Splitting) :
+    S.linearDual.Splitting where
+  r := ModuleCat.ofHom h.s.hom.dualMap
+  s := ModuleCat.ofHom h.r.hom.dualMap
+  f_r := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro φ
+    change Module.Dual R S.X₃ at φ
+    exact LinearMap.ext fun x => congrArg φ (ConcreteCategory.congr_hom h.s_g x)
+  s_g := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro φ
+    change Module.Dual R S.X₁ at φ
+    exact LinearMap.ext fun x => congrArg φ (ConcreteCategory.congr_hom h.f_r x)
+  id := by
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    intro φ
+    change Module.Dual R S.X₂ at φ
+    refine LinearMap.ext fun x => ?_
+    change φ (h.s.hom (S.g.hom x)) + φ (S.f.hom (h.r.hom x)) = φ x
+    rw [← map_add]
+    refine congrArg φ ?_
+    have hx := ConcreteCategory.congr_hom h.id x
+    change S.f.hom (h.r.hom x) + h.s.hom (S.g.hom x) = x at hx
+    rw [add_comm]
+    exact hx
+
+end CategoryTheory.ShortComplex
+
 namespace HomologicalComplex
 
-variable {R : Type u} [Field R]
+variable {R : Type u} [CommRing R]
 
 attribute [simp] HomologicalComplex.linearDualCochainComplex_X
 

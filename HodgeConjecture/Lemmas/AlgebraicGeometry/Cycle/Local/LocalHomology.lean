@@ -28,13 +28,16 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X Y : Over (Spec (.of ℂ)))
+variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
   (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
 
-/-- Restrict the flattening chart by the prescribed ambient open. -/
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ` of dimensions `m` and `d`,
+respectively. For `z ∈ Y(ℂ)` and an ambient open `V ⊆ X(ℂ)`, this is the chart at `i(z)` with
+source restricted to `V`. Its coordinates lie in `ℂ^m × ℂ^{d-m}`, and the image of `Y(ℂ)` is
+given by vanishing of the second coordinate. -/
 def smoothClosedSupportRestrictionChart :
     OpenPartialHomeomorph (ComplexPoint X)
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
@@ -98,7 +101,7 @@ def smoothClosedSupportNeighborhoodPairIso :
 def smoothClosedSupportRelativeHomologyIso (n : ℕ) :
     RelativeHomology ℚ
       (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n ≅
-        RelativeHomology ℚ (standardComplexPuncturedPair (d - m)) n :=
+        RelativeHomology ℚ (puncturedPair ℂ (d - m)) n :=
   ((relativeHomologyFunctor ℚ n).mapIso
     (smoothClosedSupportNeighborhoodPairIso X Y i m d z V hzV).symm) ≪≫
     normalSliceRelativeHomologyIso (Fin m → ℂ) (d - m) n
@@ -114,13 +117,13 @@ def smoothClosedSupportNormalClass :
     RelativeHomology ℚ
       (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) (2 * (d - m)) :=
   (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
-    (2 * (d - m))).inv.hom (standardComplexLocalClass (d - m))
+    (2 * (d - m))).inv.hom (standardComplexLocalClass ℚ (d - m))
 
 @[simp] theorem smoothClosedSupportNormalClass_normalization :
     (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
       (2 * (d - m))).hom.hom
       (smoothClosedSupportNormalClass X Y i m d z V hzV) =
-        standardComplexLocalClass (d - m) :=
+        standardComplexLocalClass ℚ (d - m) :=
   ConcreteCategory.congr_hom
     (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
       (2 * (d - m))).inv_hom_id _

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.CohomologyStalkVanishing
 /-!
 # Canonical cohomology-sheaf sections from local section-complex classes
@@ -27,31 +29,37 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- Sheafification of the local cohomology presheaf is the cohomology
-sheaf, by exact sheafification and its counit. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. For an integer `n`, this identifies the sheafification of `U ↦ H^n(K(U))` with
+the cohomology sheaf `𝓗^n(K) = ker(d^n)/im(d^{n-1})`, where the quotient is taken in sheaves. -/
 def sectionCohomologyPresheafSheafificationIso (n : ℤ) :
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj
       (sectionCohomologyPresheaf X K n) ≅ K.homology n :=
   let P : CochainComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) ℤ :=
-    ((forget AddCommGrpCat.{u} X).mapHomologicalComplex (.up ℤ)).obj K
+    ((forget AddCommGrpCat.{u} X).mapHomologicalComplex ℤᵘᵖ).obj K
   let S : ShortComplex ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) := P.sc n
   let e := NatIso.mapHomologicalComplex
     (asIso (sheafificationAdjunction (Opens.grothendieckTopology X) AddCommGrpCat.{u}).counit)
-    (.up ℤ)
+    ℤᵘᵖ
   (S.mapHomologyIso
     (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})).symm ≪≫
       homologyMapIso (e.app K) n
 
-/-- The canonical map from local cohomology classes to the cohomology sheaf. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. For an integer `n`, this morphism from the presheaf `U ↦ H^n(K(U))` to the
+underlying presheaf of `𝓗^n(K)` sends a class of cocycle sections to its image in the quotient
+sheaf `ker(d^n)/im(d^{n-1})`. -/
 def sectionCohomologyPresheafToSheaf (n : ℤ) :
     sectionCohomologyPresheaf X K n ⟶ (K.homology n).obj :=
   toSheafify (Opens.grothendieckTopology X) _ ≫
     (sectionCohomologyPresheafSheafificationIso X K n).hom.hom
 
-/-- A cohomology class of sections on `U` determines a section of the
-cohomology sheaf on `U`. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. For an open `U` and an integer `n`, this is the canonical map `H^n(K(U)) → Γ(U,
+𝓗^n(K))`: a cocycle section is sent to its class in the cohomology sheaf, the sheaf quotient of
+cycles by boundaries. -/
 def sectionCohomologyToSheafSection (n : ℤ) (U : Opens X) :
-    (((supportEvaluation X U).mapHomologicalComplex (.up ℤ)).obj K).homology n ⟶
+    (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n ⟶
       (K.homology n).obj.obj (op U) :=
   (sectionCohomologyPresheafOnOpenIso X K n U).hom ≫
     (sectionCohomologyPresheafToSheaf X K n).app (op U)

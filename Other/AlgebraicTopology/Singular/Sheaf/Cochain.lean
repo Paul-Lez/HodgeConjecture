@@ -25,12 +25,12 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The canonical augmentation from the constant presheaf complex to singular cochains. -/
 def constantsToSingularCochainPresheafComplex :
     (CochainComplex.single₀ (TopCat.Presheaf AddCommGrpCat X)).obj
-        (constantCoefficientPresheaf R X) ⟶ singularCochainPresheafComplex R X :=
+        𝓒ᵖ(X; R) ⟶ singularCochainPresheafComplex R X :=
   HomologicalComplex.mkHomFromSingle (constantsToSingularCochainZero R X) <| by
     intro k hk
     obtain rfl : k = 1 := by simpa using hk.symm

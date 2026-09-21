@@ -23,7 +23,8 @@ namespace AlgebraicTopology.Singular
 
 variable {M : Type} [TopologicalSpace M]
 
-/-- Inclusion of neighborhood/support-complement pairs. -/
+/-- Let `M` be a topological space and `W ⊆ V` and `S` subsets of `M`. This is the map of pairs `(W,
+W \ S) → (V, V \ S)` given by inclusion on both subspaces. -/
 def neighborhoodSupportInclusionPairMap {W V : Set M} (hWV : W ⊆ V) (S : Set M) :
     neighborhoodSupportComplementPair W S ⟶ neighborhoodSupportComplementPair V S :=
   TopPair.ofHom
@@ -34,22 +35,27 @@ variable (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
   (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (S : Set M)
   (hS : ∀ y ∈ e.source, y ∈ S ↔ (e y).2 = 0)
 
-/-- The normal projection from a neighborhood support pair. -/
+/-- Let `M` be a topological space, `E` a real normed vector space, and `e` a chart from an open
+subset of `M` to `E × ℂ^c`. Suppose `S ⊆ M` agrees in this chart with the zero set of the second
+coordinate. For `W` in the chart source, normal projection `w ↦ (e(w)).2` gives this map of
+pairs `(W, W \ S) → (ℂ^c, ℂ^c \ {0})`. -/
 def chartNormalProjectionPair (W : Set M) (hW : W ⊆ e.source) :
-    neighborhoodSupportComplementPair W S ⟶ standardComplexPuncturedPair c :=
+    neighborhoodSupportComplementPair W S ⟶ puncturedPair ℂ c :=
   TopPair.ofHom
     (TopCat.ofHom ⟨fun w => (e w.1).2, ((e.continuousOn.mono hW).domRestrict).snd⟩)
     (TopCat.ofHom ⟨fun w => ⟨(e w.1.1).2, fun h => w.2 ((hS _ (hW w.1.2)).mpr h)⟩,
       ((((e.continuousOn.mono hW).domRestrict).comp continuous_subtype_val).snd).subtype_mk _⟩)
     (by ext w; rfl)
 
-/-- The coclass on a whole chart neighborhood is the normal-projection pullback. -/
+/-- Let `M` be a topological space with a chart `e` into `E × ℂ^c`, where `E` is a real normed
+vector space. Suppose `S ⊆ M` is the zero-normal-coordinate locus in the chart. For `W` in its
+source, this class in `H^{2c}(W, W \ S; ℚ)` is the pullback under normal projection of the class
+evaluating to `1` on the complex orientation class of `(ℂ^c, ℂ^c \ {0})`. -/
 def chartNormalProjectionCoclass (W : Set M) (hW : W ⊆ e.source) :
+    -- The pullback to `H^{2c}(W, W \ S; ℚ)` of the normalized class in `H^{2c}(ℂ^c, ℂ^c \ {0}; ℚ)`.
     RelativeCohomology ℚ (neighborhoodSupportComplementPair W S) (2 * c) :=
   relativeCohomologyMap ℚ (2 * c) (chartNormalProjectionPair E c e S hS W hW)
-    (normalizedRelativeCoclass (standardComplexLocalClass c)
+    (normalizedRelativeCoclass (standardComplexLocalClass ℚ c)
       (standardComplexLocalClass_ne_zero_for_chart c))
-
-variable (x : M) (hx : x ∈ e.source) (h0 : (e x).2 = 0)
 
 end AlgebraicTopology.Singular

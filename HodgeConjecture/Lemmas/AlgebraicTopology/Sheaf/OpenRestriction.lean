@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SheafCohomology
 public import Mathlib.CategoryTheory.Sites.GlobalSections
+
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Exact open restriction with its adjunction
@@ -64,9 +68,11 @@ lemma openSheafRestriction_map_quasiIso
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
     (f : K ⟶ L) [QuasiIso f] :
     QuasiIso (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-      (.up ℤ)).map f) := inferInstance
+      ℤᵘᵖ).map f) := inferInstance
 
-/-- The counit of open restriction/direct image. -/
+/-- Let `j : U → X` be the inclusion of an open subset of a topological space. For a sheaf `F` of
+abelian groups on `U`, this natural map `(j_*F)|_U → F` identifies sections on an open of `U`
+with sections on its image in `X`. It is the counit of restriction followed by direct image. -/
 def openSheafRestrictionCounit :
     pushforward AddCommGrpCat.{u} U.inclusion' ⋙
       U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⟶
@@ -84,8 +90,10 @@ def openSheafRestrictionCounit :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The open-restriction adjunction with the support-defining restriction
-as its unit, so later resolution comparisons have a fixed normalization. -/
+/-- Let `j : U → X` be the inclusion of an open subset of a topological space. Restriction of
+sheaves of abelian groups to `U` is left adjoint to direct image along `j`. This adjunction
+identifies morphisms `F|_U → G` with morphisms `F → j_*G`; its unit sends sections of `F` to
+their restrictions to `U`. -/
 def openSheafRestrictionAdjunction :
     U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⊣
       pushforward AddCommGrpCat.{u} U.inclusion' :=
@@ -112,24 +120,20 @@ def openSheafRestrictionAdjunction :
 /-- Constant sections on an open subspace map to the restriction of the ambient
 constant sheaf, by the sheafification unit itself. -/
 def constantToOpenSheafRestriction (A : AddCommGrpCat.{u}) :
-    (constantSheaf (Opens.grothendieckTopology (TopCat.of U)) AddCommGrpCat).obj A ⟶
-      (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
-        ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj A) :=
+    𝓒[↧U; A] ⟶
+      (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj 𝓒[X; A] :=
   ⟨sheafifyLift (Opens.grothendieckTopology (TopCat.of U))
     (Functor.whiskerLeft U.isOpenEmbedding.functor.op
-      (toSheafify (Opens.grothendieckTopology X)
-        ((Functor.const (Opens X)ᵒᵖ).obj A)))
+      (toSheafify (Opens.grothendieckTopology X) 𝓒ᵖ[X; A]))
     ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
-      ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj A)).property⟩
+      𝓒[X; A]).property⟩
 
 @[reassoc]
 lemma toSheafify_constantToOpenSheafRestriction (A : AddCommGrpCat.{u}) :
-    toSheafify (Opens.grothendieckTopology (TopCat.of U))
-        ((Functor.const (Opens (TopCat.of U))ᵒᵖ).obj A) ≫
+    toSheafify (Opens.grothendieckTopology (TopCat.of U)) 𝓒ᵖ[↧U; A] ≫
       (constantToOpenSheafRestriction X U A).hom =
     Functor.whiskerLeft U.isOpenEmbedding.functor.op
-      (toSheafify (Opens.grothendieckTopology X)
-        ((Functor.const (Opens X)ᵒᵖ).obj A)) :=
+      (toSheafify (Opens.grothendieckTopology X) 𝓒ᵖ[X; A]) :=
   toSheafify_sheafifyLift _ _ _
 
 set_option backward.defeqAttrib.useBackward true in
@@ -142,29 +146,28 @@ lemma constantRestriction_pushforward_constantToOpen (A : AddCommGrpCat.{u}) :
       (pushforward AddCommGrpCat U.inclusion').map
         (constantToOpenSheafRestriction X U A) =
     (toOpenRestrictionPushforward X U).app
-      ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj A) := by
+      𝓒[X; A] := by
   apply CategoryTheory.Sheaf.hom_ext_iff.mpr
   apply sheafify_hom_ext
-  · exact ((openRestrictionPushforward X U).obj
-      ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj A)).property
+  · exact ((openRestrictionPushforward X U).obj 𝓒[X; A]).property
   rw [ObjectProperty.FullSubcategory.comp_hom, ← Category.assoc,
     toSheafify_constantRestriction]
   ext V : 2
-  change (toSheafify (Opens.grothendieckTopology (TopCat.of U))
-    ((Functor.const (Opens (TopCat.of U))ᵒᵖ).obj A)).app _ ≫
+  change (toSheafify (Opens.grothendieckTopology (TopCat.of U)) 𝓒ᵖ[↧U; A]).app _ ≫
       (constantToOpenSheafRestriction X U A).hom.app _ = _
   rw [← NatTrans.comp_app, toSheafify_constantToOpenSheafRestriction]
   simpa [toOpenRestrictionPushforward, Topology.IsOpenEmbedding.sheafPullback,
-    Functor.sheafPushforwardContinuous, constantSheaf] using ((toSheafify (Opens.grothendieckTopology X)
-    ((Functor.const (Opens X)ᵒᵖ).obj A)).naturality
-      (U.isOpenEmbedding.isOpenMap.adjunction.counit.app V.unop).op)
+    Functor.sheafPushforwardContinuous, constantSheaf, TopCat.Sheaf.const,
+    TopCat.Sheaf.constantFunctor] using
+    ((toSheafify (Opens.grothendieckTopology X) 𝓒ᵖ[X; A]).naturality
+        (U.isOpenEmbedding.isOpenMap.adjunction.counit.app V.unop).op)
 
-/-- The inverse constant/open comparison is the adjoint of constant
-restriction to the subspace. -/
+/-- Let `U` be open in a topological space `X` and `A` an abelian group. This map from the
+restriction of the constant sheaf `A_X` to the constant sheaf `A_U` is adjoint to `A_X →
+j_*A_U`, where `j : U → X` is inclusion. It preserves constant sections. -/
 def openSheafRestrictionToConstant (A : AddCommGrpCat.{u}) :
     (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
-        ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj A) ⟶
-      (constantSheaf (Opens.grothendieckTopology (TopCat.of U)) AddCommGrpCat).obj A :=
+        𝓒[X; A] ⟶ 𝓒[↧U; A] :=
   ((openSheafRestrictionAdjunction X U).homEquiv _ _).symm
     (constantRestriction U.inclusion' A)
 
@@ -185,26 +188,24 @@ lemma constantToOpen_openSheafRestrictionToConstant (A : AddCommGrpCat.{u}) :
     constantToOpenSheafRestriction X U A ≫ openSheafRestrictionToConstant X U A = 𝟙 _ := by
   apply CategoryTheory.Sheaf.hom_ext_iff.mpr
   apply sheafify_hom_ext
-  · exact ((constantSheaf (Opens.grothendieckTopology (TopCat.of U)) AddCommGrpCat).obj A).property
+  · exact 𝓒[↧U; A].property
   rw [ObjectProperty.FullSubcategory.comp_hom, ← Category.assoc,
     toSheafify_constantToOpenSheafRestriction]
   ext V : 2
   change _ ≫ (((U.isOpenEmbedding.sheafPullback AddCommGrpCat).map
     (constantRestriction U.inclusion' A)).hom.app V ≫
       ((openSheafRestrictionCounit X U).app _).hom.app V) = _
-  change (toSheafify (Opens.grothendieckTopology X)
-    ((Functor.const (Opens X)ᵒᵖ).obj A) ≫ (constantRestriction U.inclusion' A).hom).app _ ≫ _ = _
+  change (toSheafify (Opens.grothendieckTopology X) 𝓒ᵖ[X; A] ≫
+    (constantRestriction U.inclusion' A).hom).app _ ≫ _ = _
   rw [toSheafify_constantRestriction]
-  exact ((toSheafify (Opens.grothendieckTopology (TopCat.of U))
-    ((Functor.const (Opens (TopCat.of U))ᵒᵖ).obj A)).naturality
+  exact ((toSheafify (Opens.grothendieckTopology (TopCat.of U)) 𝓒ᵖ[↧U; A]).naturality
       (U.isOpenEmbedding.isOpenMap.adjunction.unit.app V.unop).op).symm
 
 /-- Constant sheaves commute with open restriction through the explicitly
 normalized maps induced by constant sections. -/
 def constantOpenSheafRestrictionIso (A : AddCommGrpCat.{u}) :
-    (constantSheaf (Opens.grothendieckTopology (TopCat.of U)) AddCommGrpCat).obj A ≅
-      (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
-        ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj A) where
+    𝓒[↧U; A] ≅
+      (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj 𝓒[X; A] where
   hom := constantToOpenSheafRestriction X U A
   inv := openSheafRestrictionToConstant X U A
   hom_inv_id := constantToOpen_openSheafRestrictionToConstant X U A

@@ -37,15 +37,17 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
 
-/-- Restrict a sheaf to an open subspace and push it forward again. The pullback
-here is the concrete open-embedding pullback, obtained by evaluating on the
-corresponding ambient open sets. -/
+/-- Let `X` be a topological space, `U ⊆ X` an open subset, and `j : U → X` the inclusion. This
+functor sends a sheaf of abelian groups `F` to `j_*(F|_U)`. Its sections on an open `V ⊆ X` are
+the sections `F(V ∩ U)`. -/
 def openRestrictionPushforward (U : Opens X) :
     Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} X :=
   U.isOpenEmbedding.sheafPullback AddCommGrpCat ⋙
     pushforward AddCommGrpCat U.inclusion'
 
-/-- The restriction morphism, functorial in the coefficient sheaf. -/
+/-- Let `X` be a topological space and `U ⊆ X` open. This natural transformation sends a sheaf of
+abelian groups `F` to the restriction morphism `F → j_*(F|_U)`, where `j : U → X` is inclusion.
+On each open `V`, it is restriction `F(V) → F(V ∩ U)`. -/
 def toOpenRestrictionPushforward (U : Opens X) :
     𝟭 (Sheaf AddCommGrpCat.{u} X) ⟶ openRestrictionPushforward X U where
   app F := ⟨{
@@ -59,9 +61,18 @@ def toOpenRestrictionPushforward (U : Opens X) :
     ext V : 2
     exact (f.hom.naturality _).symm
 
-/-- The sheaf of sections vanishing on `U`, defined as the kernel of the
-coefficient-wise restriction map. -/
+/-- Let `X` be a topological space, `U` and `V` open subsets, and `F` a sheaf of abelian groups on
+`X`. This is the identification `(j_*(F|_U))(V) ≅ F(V ∩ U)`, where `j : U → X` is the inclusion. -/
+def supportedOutsideIntersectionIso (U V : Opens X) (F : Sheaf AddCommGrpCat.{u} X) :
+    ((openRestrictionPushforward X U).obj F).obj.obj (op V) ≅ F.obj.obj (op (V ⊓ U)) :=
+  F.obj.mapIso (eqToIso (congrArg op (Opens.functor_map_eq_inf U V)))
+
+/-- Let `X` be a topological space and `U ⊆ X` open. The functor `Γ_{X \ U}` sends a sheaf of
+abelian groups `F` to the kernel of restriction `F → j_*(F|_U)`, where `j : U → X` is inclusion.
+On an open `V`, its sections are those sections of `F(V)` that vanish on `V ∩ U`, or
+equivalently have support in the closed set `X \ U`. -/
 def sheafSectionsSupportedOutside (U : Opens X) :
+    -- `F ↦ Γ_{X \ U}(F)`, the subsheaf of sections that vanish on `U`.
     Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} X where
   obj F := kernel ((toOpenRestrictionPushforward X U).app F)
   map f := kernel.map _ _ f ((openRestrictionPushforward X U).map f)
@@ -79,7 +90,8 @@ instance (U : Opens X) : (sheafSectionsSupportedOutside X U).Additive where
     apply (cancel_mono (kernel.ι _)).1
     simp [sheafSectionsSupportedOutside, Preadditive.add_comp, Preadditive.comp_add]
 
-/-- Inclusion of supported sections into the original coefficient sheaf. -/
+/-- Let `X` be a topological space, `U ⊆ X` open, and `F` a sheaf of abelian groups. This natural
+morphism `Γ_{X \ U}(F) → F` includes sections that vanish on `U` into all sections of `F`. -/
 def sheafSectionsSupportedOutsideInclusion (U : Opens X) :
     sheafSectionsSupportedOutside X U ⟶ 𝟭 (Sheaf AddCommGrpCat.{u} X) where
   app F := kernel.ι ((toOpenRestrictionPushforward X U).app F)

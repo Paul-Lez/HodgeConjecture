@@ -33,7 +33,7 @@ universe u
 
 namespace AlgebraicTopology.Singular
 
-variable (R : Type u) [Field R] (X : TopCat.{u})
+variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
 /-- The homology sheaf in homological degree `n` of the actual relative singular-chain sheaf
 complex. Under the cohomological convention this is the homology sheaf in degree `-n`. -/
