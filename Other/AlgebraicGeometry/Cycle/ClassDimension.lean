@@ -49,7 +49,8 @@ lemma algebraicCycleClassSpan_eq_bot_of_lt
     [SmoothOfRelativeDimension d X.hom] (h : d < p) :
     algebraicCycleClassSpan X p = ⊥ := by
   unfold algebraicCycleClassSpan
-  refine le_antisymm (iSup_le fun x ↦ iSup_le fun hx ↦ ?_) bot_le
+  refine le_antisymm (sSup_le ?_) bot_le
+  rintro _ ⟨x, hx, rfl⟩
   exact (SmoothOfRelativeDimension.coheight_ne_of_lt (f := X.hom) (d := d) x h hx).elim
 
 end AlgebraicGeometry.ComplexPoint
