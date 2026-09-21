@@ -33,9 +33,8 @@ commutative ring.
 
 Over a field the homology of the reversed dual is canonically the dual of the homology, with no
 finite-dimensionality hypothesis: this is `linearDualHomologyEquiv`. Over a ring the comparison
-map `dualHomologyComparisonExplicit` still exists but need not be bijective, which is the `Ext`
-term of the universal coefficient theorem. Each namespace below is split into a `CommRing` section
-and a `Field` section accordingly.
+map `dualHomologyComparisonExplicit` still exists but need not be bijective. Each namespace below
+is split into a `CommRing` section and a `Field` section accordingly.
 -/
 
 @[expose] public noncomputable section

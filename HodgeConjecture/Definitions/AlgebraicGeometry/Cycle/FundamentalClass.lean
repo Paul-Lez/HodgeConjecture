@@ -80,7 +80,7 @@ sheafification of `V ↦ H^{2p}(V, V \ S; ℚ)`. For a natural number `p`, this 
 of `Z`. -/
 abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
   -- Sections of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`, with support `Z(ℂ)` and degree `2p`.
-  (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).obj.obj
+  (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj
       -- The open `X(ℂ) \ Z_sing(ℂ)`.
       (op (cycleComponentSmoothSupportAmbientOpen X x))
 

@@ -19,7 +19,6 @@ namespace CochainComplex.mappingCocone
 variable {C : Type*} [Category* C] [Abelian C]
   {S T : ShortComplex (CochainComplex C ℤ)}
 
-set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Let `0 → A → B → C → 0` be a short exact sequence of integer-indexed cochain complexes in an
 abelian category. For degrees `n` and `m = n+1`, the canonical map `A[1] → Cone(B → C)` induces

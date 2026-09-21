@@ -71,7 +71,7 @@ lemma of_isZero (F : TopCat.Sheaf AddCommGrpCat.{u} X) (hF : IsZero F) : F.IsFla
   epi {U V} i := by
     have hobj : IsZero F.obj :=
       (TopCat.Sheaf.forget AddCommGrpCat X).map_isZero hF
-    have hV : IsZero (F.obj.obj V) :=
+    have hV : IsZero (F.presheaf.obj V) :=
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat).obj V).map_isZero hobj
     exact hV.epi (F.obj.map i)
 

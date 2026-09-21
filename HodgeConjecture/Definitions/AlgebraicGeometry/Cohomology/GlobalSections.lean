@@ -100,12 +100,12 @@ def integerConstantHomAddEquivGlobalSections
     (F : TopCat.Sheaf AddCommGrpCat Y) :
     letI : AddCommGroup ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) :=
       (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y)).homGroup _ _
-    ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) ≃+ F.obj.obj (.op (⊤ : Opens Y)) := by
+    ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) ≃+ F.presheaf.obj (.op (⊤ : Opens Y)) := by
   letI : AddCommGroup ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) :=
     (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y)).homGroup _ _
   exact ((constantSheafAdj (Opens.grothendieckTopology Y) AddCommGrpCat
       isTerminalTop).homAddEquiv (AddCommGrpCat.of ℤ) F).trans <|
-    AddCommGrpCat.homAddEquiv.trans (zmultiplesAddHom (F.obj.obj (.op ⊤))).symm
+    AddCommGrpCat.homAddEquiv.trans (zmultiplesAddHom (F.presheaf.obj (.op ⊤))).symm
 
 /-- The constant-integer/global-sections equivalence is natural in the sheaf. -/
 lemma integerConstantHomAddEquivGlobalSections_naturality

@@ -101,9 +101,9 @@ same way. This sends a global section of `𝓗^n_B` to a section of `𝓗^n_S` o
 `f(Y)`, using the homeomorphism of pairs induced by `f`. -/
 def supportRelativeCohomologySectionOpenImage (n : ℕ)
     -- A global section of `𝓗^n_B` on `Y`.
-    (s : (𝓗_[B]^n(Y; ℚ)).obj.obj (op ⊤)) :
+    (s : (𝓗_[B]^n(Y; ℚ)).presheaf.obj (op ⊤)) :
     -- A section of `𝓗^n_S` on the open `f(Y) ⊆ X`.
-    (𝓗_[S]^n(X; ℚ)).obj.obj
+    (𝓗_[S]^n(X; ℚ)).presheaf.obj
       -- The open `f(Y)`.
       (op (hf.functor.obj ⊤)) :=
   (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op ⊤) s
@@ -114,9 +114,9 @@ same way. For a specified open `U = f(Y)`, this sends a global section of `𝓗^
 of `𝓗^n_S` on `U`, using the homeomorphism induced by `f` and the given equality of opens. -/
 def supportRelativeCohomologySectionOnOpen (n : ℕ) (U : Opens X)
     (hU : hf.functor.obj ⊤ = U)
-    (s : (𝓗_[B]^n(Y; ℚ)).obj.obj (op ⊤)) :
-    (𝓗_[S]^n(X; ℚ)).obj.obj (op U) :=
-  (𝓗_[S]^n(X; ℚ)).obj.map (eqToHom hU.symm).op
+    (s : (𝓗_[B]^n(Y; ℚ)).presheaf.obj (op ⊤)) :
+    (𝓗_[S]^n(X; ℚ)).presheaf.obj (op U) :=
+  (𝓗_[S]^n(X; ℚ)).presheaf.map (eqToHom hU.symm).op
     (supportRelativeCohomologySectionOpenImage f hf S B hB n s)
 
 end AlgebraicTopology.Singular

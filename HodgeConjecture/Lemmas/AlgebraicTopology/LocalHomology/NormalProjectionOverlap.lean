@@ -183,8 +183,8 @@ theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
       (flattenedSupportNormalClass E c e x hx S hS h0) = 1 := by
     rw [← hFz, chartNormalProjectionCoclass,
       relativeCohomologyEquivDualHomology_relativeCohomologyMap,
-      relativeCohomologyEquivDualHomology_normalizedRelativeCoclass]
-    rw [← LinearMap.comp_apply (relativeHomologyMap ℚ (2 * c)
+      relativeCohomologyEquivDualHomology_normalizedRelativeCoclass,
+      ← LinearMap.comp_apply (relativeHomologyMap ℚ (2 * c)
       (chartNormalProjectionPair E c e' S hS' W hW')), ← relativeHomologyMap_comp]
     change normalizedDual (standardComplexLocalClass ℚ c)
         (standardComplexLocalClass_ne_zero_for_chart c)

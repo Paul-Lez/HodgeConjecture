@@ -60,12 +60,11 @@ groups on `X`. For an open `U` and an integer `n`, this is the canonical map `H^
 cycles by boundaries. -/
 def sectionCohomologyToSheafSection (n : ℤ) (U : Opens X) :
     (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n ⟶
-      (K.homology n).obj.obj (op U) :=
+      (K.homology n).presheaf.obj (op U) :=
   (sectionCohomologyPresheafOnOpenIso X K n U).hom ≫
     (sectionCohomologyPresheafToSheaf X K n).app (op U)
 
 set_option backward.isDefEq.respectTransparency false in
-set_option backward.defeqAttrib.useBackward true in
 /-- The canonical presheaf-to-sheaf class map induces an isomorphism on every stalk. -/
 instance sectionCohomologyPresheafToSheaf_stalk_isIso (n : ℤ) (x : X) :
     IsIso ((Presheaf.stalkFunctor AddCommGrpCat.{u} x).map

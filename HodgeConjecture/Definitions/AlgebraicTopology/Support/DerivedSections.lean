@@ -64,7 +64,7 @@ def toOpenRestrictionPushforward (U : Opens X) :
 /-- Let `X` be a topological space, `U` and `V` open subsets, and `F` a sheaf of abelian groups on
 `X`. This is the identification `(j_*(F|_U))(V) ≅ F(V ∩ U)`, where `j : U → X` is the inclusion. -/
 def supportedOutsideIntersectionIso (U V : Opens X) (F : Sheaf AddCommGrpCat.{u} X) :
-    ((openRestrictionPushforward X U).obj F).obj.obj (op V) ≅ F.obj.obj (op (V ⊓ U)) :=
+    ((openRestrictionPushforward X U).obj F).presheaf.obj (op V) ≅ F.presheaf.obj (op (V ⊓ U)) :=
   F.obj.mapIso (eqToIso (congrArg op (Opens.functor_map_eq_inf U V)))
 
 /-- Let `X` be a topological space and `U ⊆ X` open. The functor `Γ_{X \ U}` sends a sheaf of

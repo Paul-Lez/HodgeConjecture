@@ -56,7 +56,7 @@ of the sheafification of `V ↦ H^{2c}(V,V \ S;ℚ)`. It is obtained by pulling 
 `H^{2c}(ℂ^c,ℂ^c \ {0};ℚ)` evaluating to `1` on the complex orientation class along the normal
 coordinate and sheafifying. -/
 def smoothClosedSupportChartSheafSection (z : ComplexPoint Y) :
-    (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj
+    (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.obj
       (op (smoothClosedSupportChartOpen X Y i m d z)) :=
   (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
     (Set.range (Point.map i)) (2 * (d - m))).app _
@@ -147,7 +147,7 @@ of the entire normalized stalk family. -/
 theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
     ∀ x : ComplexPoint X,
       ∃ (U : Opens (ComplexPoint X)) (_ : x ∈ U)
-        (s : (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj (op U)),
+        (s : (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.obj (op U)),
         ∀ (y : ComplexPoint X) (hy : y ∈ U),
           (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.germ U y hy s =
             smoothClosedSupportCoclassStalk X Y i m d y := by
@@ -170,7 +170,7 @@ glues the zero section off `S` with pullbacks in normal charts of the class in `
 {0};ℚ)` evaluating to `1` on the complex orientation class. -/
 def smoothClosedSupportCoclassSection :
     -- A global section of `𝓗^{2(d-m)}_{Y(ℂ)}` on `X(ℂ)`.
-    (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj
+    (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.obj
       -- All of `X(ℂ)`.
       (op ⊤) :=
   TopCat.Sheaf.sectionOfLocallyRepresentable _

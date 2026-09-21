@@ -62,11 +62,11 @@ def closedImmersionNormalCoordinatesLinearEquiv :
   (ContinuousLinearEquiv.refl ℂ (Fin m → ℂ)).prodCongr
     (closedImmersionNormalKernelEquiv X Y i m d z)
 
-/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, of respective dimensions `m`
-and `d`, and let `z ∈ Y(ℂ)`. This local homeomorphism changes coordinates in `ℂ^d` near the
-chart image of `i(z)` to tangent and normal coordinates in `ℂ^m × ℂ^{d-m}`. It inverts the
-parametrization `(v,w) ↦ g(v)+w`, where `g` represents `i`, then identifies the chosen normal
-space with `ℂ^{d-m}`. -/
+/-- Let `i : Y → X` be a closed immersion of smooth complex schemes of dimensions `m,d`, and let `z
+∈ Y(ℂ)`. In the chosen analytic charts write `g = e_X ∘ i ∘ e_Y⁻¹` and `a = e_Y(z)`. Choose a
+complex linear left inverse `P` of `Dg(a)`. This local homeomorphism from `ℂ^d` to `ℂ^m ×
+ℂ^{d-m}` inverts `(v,w) ↦ g(v)+w` near `(a,0)` and identifies `ker P` with `ℂ^{d-m}` using a
+chosen basis. -/
 def closedImmersionNormalCoordinateChange :
     OpenPartialHomeomorph (Fin d → ℂ) ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
   (closedImmersionNormalChart X Y i m d z).symm.trans

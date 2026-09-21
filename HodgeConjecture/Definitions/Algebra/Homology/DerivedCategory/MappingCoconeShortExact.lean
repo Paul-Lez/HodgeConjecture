@@ -29,7 +29,7 @@ namespace mappingCocone
 variable (S : ShortComplex (CochainComplex C ℤ))
 
 /-- Let `A → B → C` be a sequence of integer-indexed cochain complexes in an abelian category, with
-zero composite. This is the canonical map `A[1] → Cone(B → C)` obtained from the inclusion `A →
+zero composite. This is the canonical map `A[1] → Cone(B → C)` obtained from the first map `A →
 B` and the zero component in `C`. When the sequence is short exact, the map is a
 quasi-isomorphism. -/
 def shiftedLiftShortComplex : S.X₁⟦(1 : ℤ)⟧ ⟶ mappingCone S.g :=
