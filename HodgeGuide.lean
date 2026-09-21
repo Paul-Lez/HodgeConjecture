@@ -26,10 +26,6 @@ authors := ["The HodgeConjecture contributors"]
 :::fcProvenance
 :::
 
-:::wip
-This guide is currently work in progress.
-:::
-
 This guide explains the formalization of the Hodge conjecture in the
 [`HodgeConjecture`](https://github.com/Paul-Lez/HodgeConjecture) repository, which will eventually
 appear in [Formal Conjectures](https://github.com/google-deepmind/formal-conjectures). The goal is
