@@ -31,21 +31,20 @@ that algebra.
 ## The exterior derivative
 
 The exterior derivative is the odd degree-one `R`-derivation `d` of `⋀ Ω[A⁄R]` extending the
-universal derivation `A → Ω[A⁄R]`. It is obtained from a universal property: an odd derivation is
-the same thing as an algebra map `x ↦ x + (d x) * ε`
-into the square-zero extension `Sq R A = ⋀ Ω[A⁄R] ⊕ ⋀ Ω[A⁄R] * ε` by an odd square-zero element,
-whose multiplication `(x, u) * (y, v) = (x * y, involute x * v + u * y)` encodes the graded
-Leibniz rule. Here `involute` is the grade involution, so `involute x = (-1) ^ p * x` on a form of
-degree `p`, and the rule read off from that product is the usual
-`d (x * y) = d x * y + (-1) ^ p * x * d y`.
+universal derivation `A → Ω[A⁄R]`. It is obtained from a universal property: an odd derivation
+is encoded by an algebra map `x ↦ (x, d x)` into an auxiliary square-zero ring `Sq R A` with
+additive group `⋀ Ω[A⁄R] × ⋀ Ω[A⁄R]`. Its multiplication `(x, u) * (y, v) = (x * y, involute x *
+v + u * y)` encodes the graded Leibniz rule. Here `involute` is the grade involution, so
+`involute x = (-1) ^ p * x` on a form of degree `p`, and the rule read off from that product is
+the usual `d (x * y) = d x * y + (-1) ^ p * x * d y`.
 
-Giving `Sq R A` the twisted `A`-algebra structure `a ↦ a + (d a) * ε` turns that algebra map into
+Giving `Sq R A` the twisted `A`-algebra structure `a ↦ (a, d a)` turns that algebra map into
 an `A`-algebra map, so it is produced in two steps:
 
 * the universal property of `Ω[A⁄R]` applied to the derivation `a ↦ (d a, 0)` gives an
-  `A`-linear `phi : Ω[A⁄R] → Sq R A`, necessarily of the form `ω ↦ ω + (d ω) * ε`;
+  `A`-linear `phi : Ω[A⁄R] → Sq R A`, of the form `ω ↦ (ω, d ω)`;
 * the universal property of the exterior algebra applied to `phi` gives `deRhamHom`, and `d` is
-  its `ε`-component `extDeriv`.
+  its second component `extDeriv`.
 
 The identities `d ∘ d = 0`, the graded Leibniz rule, and the fact that `d` raises the degree by
 one then follow by induction on the exterior algebra.
