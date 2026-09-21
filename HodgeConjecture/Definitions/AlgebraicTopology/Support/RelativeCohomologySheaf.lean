@@ -75,8 +75,7 @@ def supportRelativeCohomologySheaf : TopCat.Sheaf AddCommGrpCat X :=
     (supportRelativeCohomologyPresheaf X S n)
 
 /-- `𝓗_[S]^n(X; ℚ)` is the `n`-th rational relative-cohomology sheaf on `X` with support in `S`,
-the sheaf associated with `V ↦ H^n(V, V \ S; ℚ)`. The literature writes it `𝓗^n_S`; the support
-precedes the degree here, as in `H_[Z]^n(X; ℚ)`. -/
+the sheaf associated with `V ↦ H^n(V, V \ S; ℚ)`. -/
 scoped notation:max "𝓗_[" S "]^" n:max "(" X "; " "ℚ" ")" =>
   supportRelativeCohomologySheaf X S n
 
