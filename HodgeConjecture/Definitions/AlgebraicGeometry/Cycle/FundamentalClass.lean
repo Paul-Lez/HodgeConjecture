@@ -111,23 +111,20 @@ def cycleComponentExtendSmoothCoclass :
       CycleComponentSupportedCohomology X x p :=
   (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
 
-/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
-integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_sing(ℂ)`, and
-`𝓗^{2p}_S` for the sheafification of `V ↦ H^{2p}(V, V \ S; ℚ)`. This is the class in
-`H^{2p}_S(X(ℂ); ℚ)` whose restriction to `U` gives the section obtained from local normal
-coordinates along the smooth locus of `Z`. The local class is normalized to pair to `1` with the
-orientation class of the complex normal space. The class is computed with supported sections of
-an injective resolution of `ℚ`. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and `Z` the codimension-`p` integral
+subvariety with generic point `x`. This is the class in `H^{2p}_{Z(ℂ)}(X(ℂ);ℚ)` computed from
+sections supported on `Z(ℂ)` of an injective resolution of the constant rational sheaf. Its
+local classes along the smooth locus of `Z` evaluate to `1` on the complex orientation classes
+of the normal spaces. -/
 def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
   cycleComponentExtendSmoothCoclass X x hx
     (cycleComponentSmoothSupportCoclassSection X x hx)
 
-/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
-integral subvariety with generic point `x`. This is the rational cohomology class with support
-in `Z(ℂ)` whose local relative classes along the smooth locus are the complex orientation
-coclasses of the normal spaces. The local class is normalized to pair to `1` with the
-orientation class of the complex normal space. It is expressed in the restriction-cone model
-`ℍ^{2p-1}(Cone(ℚ → Rj_*ℚ))`, where `j` includes the complement of `Z(ℂ)`. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and `Z` the codimension-`p` integral
+subvariety with generic point `x`. This class in `H^{2p}_{Z(ℂ)}(X(ℂ);ℚ)` is expressed as
+`ℍ^{2p-1}(Cone(ℚ → Rj_*ℚ))`, where `j` includes the complement of `Z(ℂ)`. Its local classes
+along the smooth locus of `Z` evaluate to `1` on the complex orientation classes of the normal
+spaces. -/
 def cycleComponentSheafSupportedClass :
     -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, in the support-cone presentation.
     RationalCohomologyWithSupport X
@@ -139,11 +136,10 @@ def cycleComponentSheafSupportedClass :
     (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
       (cycleComponentSupportedInjectiveClass X x hx)
 
-/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
-integral subvariety with generic point `x`. The fundamental cohomology class `[Z] ∈ H^{2p}(X(ℂ);
-ℚ)` is the image, under forgetting support, of the class supported on `Z(ℂ)` determined by the
-complex orientation of each normal space along the smooth locus. The local class is normalized
-to pair to `1` with the orientation class of the complex normal space. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and `Z` the codimension-`p` integral
+subvariety with generic point `x`. The fundamental cohomology class `[Z] ∈ H^{2p}(X(ℂ);ℚ)` is
+obtained by forgetting the support of the class in `H^{2p}_{Z(ℂ)}(X(ℂ);ℚ)` whose local classes
+along the smooth locus evaluate to `1` on the complex orientation classes of the normal spaces. -/
 def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
   forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
     (cycleComponentSheafSupportedClass X x hx)

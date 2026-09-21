@@ -26,28 +26,23 @@ namespace AlgebraicGeometry
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
-scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
-locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. This natural
-number is the length of the finite list of closed subsets in that construction. From this index
-onward the closed filtration is empty. -/
+/-- Let `X` be a smooth integral projective complex scheme and `Z` the reduced closure of `x ∈ X`.
+Put `S₀ = Z_sing` and `S_{k+1} = (S_k)_sing`, giving each closed subset its reduced scheme
+structure. This is the length of the finite list defining the filtration; all terms from this
+index onward are empty. -/
 abbrev cycleComponentSingularFiltrationLength : ℕ :=
   (cycleComponentSingularStratification X x).length
 
-/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
-scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
-locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. The `k`-th
-stratum is the smooth locus of the reduced closed subscheme on `S_k`; its underlying subset is
-`S_k \ S_{k+1}`. -/
+/-- Let `X` be a smooth integral projective complex scheme and `Z` the reduced closure of `x ∈ X`.
+Put `S₀ = Z_sing` and `S_{k+1} = (S_k)_sing`, giving each closed subset its reduced scheme
+structure. This smooth scheme is the stratum `S_k \ S_{k+1}` with its induced reduced structure. -/
 abbrev cycleComponentSingularFiltrationStratum (k : ℕ) : Scheme :=
   reducedClosedSmoothPiece (cycleComponentι X.left x ≫ X.hom)
     (cycleComponentSingularClosedFiltration X x k)
 
-/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
-scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
-locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. This morphism
-includes the smooth stratum `S_k \ S_{k+1}` into `X`, by its inclusion in `Z` followed by the
-closed immersion `Z → X`. -/
+/-- Let `X` be a smooth integral projective complex scheme and `Z` the reduced closure of `x ∈ X`.
+Put `S₀ = Z_sing` and `S_{k+1} = (S_k)_sing`, giving each closed subset its reduced scheme
+structure. This morphism is the inclusion of the smooth stratum `S_k \ S_{k+1}` into `X`. -/
 def cycleComponentSingularFiltrationStratumι (k : ℕ) :
     cycleComponentSingularFiltrationStratum X x k ⟶ X.left :=
   reducedClosedSmoothPieceι (cycleComponentι X.left x ≫ X.hom)
@@ -96,19 +91,16 @@ theorem cycleComponentSingularAmbientClosedFiltration_layer (k : ℕ) :
     Set.range_comp, reducedSmoothClosedFiltration_layer]
   exact Set.image_sdiff (cycleComponentι X.left x).isClosedEmbedding.injective _ _
 
-/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
-scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
-locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. This open
-subscheme of `X` is the complement of the image of `S_{k+1}` in `X`. The `k`-th stratum is
-closed in this open. -/
+/-- Let `X` be a smooth integral projective complex scheme and `Z` the reduced closure of `x ∈ X`.
+Put `S₀ = Z_sing` and `S_{k+1} = (S_k)_sing`, giving each closed subset its reduced scheme
+structure. This open subscheme is `X \ S_{k+1}`, in which the `k`-th stratum is closed. -/
 def cycleComponentSingularStratumAmbientOpen (k : ℕ) : X.left.Opens :=
   (cycleComponentSingularAmbientClosedFiltration X x (k + 1)).compl
 
-/-- Let `X` be a smooth integral projective scheme over `ℂ`, and let `Z` be the reduced closure of a
-scheme point `x ∈ X`. Starting with the singular locus of `Z`, repeatedly take the singular
-locus of the reduced closed subscheme to obtain descending closed subsets `S_k`. This morphism
-includes the stratum `S_k \ S_{k+1}` into the open subscheme `X \ S_{k+1}`, interpreting the
-closed subsets of `Z` as subsets of `X`. -/
+/-- Let `X` be a smooth integral projective complex scheme and `Z` the reduced closure of `x ∈ X`.
+Put `S₀ = Z_sing` and `S_{k+1} = (S_k)_sing`, giving each closed subset its reduced scheme
+structure. This is the inclusion of the smooth stratum `S_k \ S_{k+1}` into the open subscheme
+`X \ S_{k+1}`. -/
 def cycleComponentSingularStratumClosedLift (k : ℕ) :
     cycleComponentSingularFiltrationStratum X x k ⟶
       cycleComponentSingularStratumAmbientOpen X x k :=

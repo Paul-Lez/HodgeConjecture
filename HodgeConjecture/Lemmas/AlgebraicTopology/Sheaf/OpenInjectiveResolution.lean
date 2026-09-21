@@ -25,19 +25,17 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{0}) (U : Opens X) (A : AddCommGrpCat.{0})
 
-/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
-`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
-injective resolution of `A_U`. This is the nonnegative cochain complex `I|_U` obtained by
-restricting each sheaf and differential to `U`. -/
+/-- Let `U` be open in a topological space `X`, and let `A` be an abelian group. For the chosen
+injective resolution `I` of the constant sheaf `A_X`, this is the nonnegative cochain complex
+`I|_U`, obtained by restricting each sheaf and differential to `U`. -/
 def restrictedAmbientConstantResolution :
     CochainComplex (Sheaf AddCommGrpCat.{0} (TopCat.of U)) ℕ :=
   ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex (.up ℕ)).obj
     (ambientConstantInjectiveResolution X A).cocomplex
 
-/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
-`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
-injective resolution of `A_U`. This augmentation `A_U[0] → I|_U` restricts the augmentation of
-`I` and identifies `A_X|_U` with `A_U`. -/
+/-- Let `U` be open in a topological space `X`, and let `A` be an abelian group. For the chosen
+injective resolution `I` of the constant sheaf `A_X`, this augmentation `A_U[0] → I|_U`
+restricts the augmentation of `I` and identifies `A_X|_U` with `A_U`. -/
 def restrictedAmbientConstantAugmentation :
     (CochainComplex.single₀ (Sheaf AddCommGrpCat.{0} (TopCat.of U))).obj
         𝓒[↧U; A] ⟶
@@ -68,10 +66,10 @@ instance restrictedAmbientConstantAugmentation_quasiIso :
   dsimp only [restrictedAmbientConstantAugmentation]
   infer_instance
 
-/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
-`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
-injective resolution of `A_U`. This chosen cochain map `I|_U → J` extends the identity on `A_U`:
-its composite with the restricted augmentation equals the augmentation of `J`. -/
+/-- Let `U` be open in a topological space `X`, and let `A` be an abelian group. For the chosen
+injective resolutions `I,J` of the constant sheaves `A_X,A_U`, this cochain map `I|_U → J`
+extends the identity on `A_U`: composing with the restricted augmentation gives the augmentation
+of `J`. -/
 def restrictedAmbientToOpenResolution :
     restrictedAmbientConstantResolution X U A ⟶
       (ambientConstantInjectiveResolution (TopCat.of U) A).cocomplex :=
@@ -87,10 +85,9 @@ instance restrictedAmbientConstantResolution_isFlasque (n : ℕ) :
     @injective_isFlasque _ _ ((ambientConstantInjectiveResolution X A).injective n)
   exact openSheafRestriction_isFlasque X U _
 
-/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
-`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
-injective resolution of `A_U`. This cochain map `I → j_*(I|_U)` restricts each degree to `U`. On
-an open `V ⊆ X` its component is `I^q(V) → I^q(V ∩ U)`. -/
+/-- Let `U` be open in a topological space `X`, with inclusion `j`, and let `A` be an abelian group.
+For the chosen injective resolution `I` of `A_X`, this cochain map `I → j_*(I|_U)` restricts
+sections to `U`. In degree `q`, on an open `V`, it is `I^q(V) → I^q(V ∩ U)`. -/
 def ambientInjectiveRestriction :
     (ambientConstantInjectiveResolution X A).cocomplex ⟶
       ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
@@ -100,10 +97,10 @@ def ambientInjectiveRestriction :
   comm' i j _h := ((toOpenRestrictionPushforward X U).naturality
     ((ambientConstantInjectiveResolution X A).cocomplex.d i j)).symm
 
-/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
-`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
-injective resolution of `A_U`. This cochain map `I → j_*J` is restriction `I → j_*(I|_U)`
-followed by direct image of the chosen augmentation-preserving map `I|_U → J`. -/
+/-- Let `U` be open in a topological space `X`, with inclusion `j`, and let `A` be an abelian group.
+For the chosen injective resolutions `I,J` of the constant sheaves `A_X,A_U`, this map `I →
+j_*J` composes restriction with the direct image of the comparison `I|_U → J` extending the
+identity on `A_U`. -/
 def ambientToOpenInjectiveResolution :
     (ambientConstantInjectiveResolution X A).cocomplex ⟶
       ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
@@ -112,10 +109,10 @@ def ambientToOpenInjectiveResolution :
     ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).map
       (restrictedAmbientToOpenResolution X U A)
 
-/-- Let `X` be a topological space, `U ⊆ X` open with inclusion `j`, and `A` an abelian group. Write
-`I` for the chosen injective resolution of the constant sheaf `A_X` and `J` for the chosen
-injective resolution of `A_U`. This map of complexes is obtained by taking global sections on
-`X` of `j_*(I|_U) → j_*J`. Under the direct-image identification it is `Γ(U,I|_U) → Γ(U,J)`. -/
+/-- Let `U` be open in a topological space `X`, with inclusion `j`, and let `A` be an abelian group.
+For the chosen injective resolutions `I,J` of the constant sheaves `A_X,A_U`, this map
+`Γ(U,I|_U) → Γ(U,J)` takes sections of the comparison extending the identity on `A_U`. Both
+sides are expressed as global sections of direct images under `j`. -/
 def globalRestrictedAmbientToOpenResolution :
     ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
       (.up ℕ)).obj

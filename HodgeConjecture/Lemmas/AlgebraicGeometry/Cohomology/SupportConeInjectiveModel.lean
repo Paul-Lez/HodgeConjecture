@@ -25,11 +25,10 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- Let `X` be a scheme over `ℂ`, let `Y = X(ℂ)`, and let `Z ⊆ Y` be closed with complement `U`.
-Write `I` for the chosen injective resolution of the constant rational sheaf on `Y`, `J` for the
-chosen resolution on `U`, and `j : U → Y` for inclusion. This map `I → j_*J` first restricts to
-`U`, then applies the comparison `I|_U → J` extending the identity on constant sheaves. Both
-complexes are extended by zero to negative degrees. -/
+/-- Let `X` be a scheme over `ℂ`, `Y = X(ℂ)`, and `j : U → Y` the inclusion of the complement of a
+closed subset `Z`. Let `I,J` be the chosen injective resolutions of the constant rational
+sheaves on `Y,U`. This map `I → j_*J` restricts to `U` and applies the comparison `I|_U → J`
+extending the identity on constants. The complexes are zero in negative degrees. -/
 def ambientRationalInjectiveRestriction
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     ambientRationalInjectiveComplex X ⟶
@@ -58,10 +57,10 @@ lemma ambientRationalAugmentation_comp_restriction
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
       (AddCommGrpCat.of ℚ))
 
-/-- Let `X` be a scheme over `ℂ`, let `Y = X(ℂ)`, and let `Z ⊆ Y` be closed with complement `U`.
-Write `I` for the chosen injective resolution of the constant rational sheaf on `Y`, `J` for the
-chosen resolution on `U`, and `j : U → Y` for inclusion. This map `Cone(ℚ_Y[0] → j_*J) → Cone(I
-→ j_*J)` is induced by the augmentation `ℚ_Y[0] → I` and the identity of `j_*J`. -/
+/-- Let `X` be a scheme over `ℂ`, `Y = X(ℂ)`, and `j : U → Y` the inclusion of the complement of a
+closed subset `Z`. Let `I,J` be the chosen injective resolutions of the constant rational
+sheaves on `Y,U`. This map `Cone(ℚ_Y[0] → j_*J) → Cone(I → j_*J)` applies the augmentation
+`ℚ_Y[0] → I` and the identity on `j_*J`. -/
 def rationalSupportConeToAmbientInjectiveCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     rationalCohomologyWithSupportComplex X Z ⟶
@@ -105,11 +104,10 @@ instance ambientRationalInjectiveCone_isKInjective
       (ambientRationalInjectiveRestriction X Z hZ)).IsKInjective :=
   CochainComplex.isKInjective_of_injective _ (-1)
 
-/-- Let `X` be a scheme over `ℂ`, let `Y = X(ℂ)`, and let `Z ⊆ Y` be closed with complement `U`.
-Write `I` for the chosen injective resolution of the constant rational sheaf on `Y`, `J` for the
-chosen resolution on `U`, and `j : U → Y` for inclusion. This additive equivalence identifies
-cohomology with support `H_Z^n(Y;ℚ)` with `H^{n-1}(Γ(Y,Cone(I → j_*J)))`. It replaces the
-constant sheaf in the defining support cone by its injective resolution. -/
+/-- Let `X` be a scheme over `ℂ`, `Y = X(ℂ)`, and `j : U → Y` the inclusion of the complement of a
+closed subset `Z`. Let `I,J` be the chosen injective resolutions of the constant rational
+sheaves on `Y,U`. Replacing `ℚ_Y[0]` by `I` gives this additive equivalence `H_Z^n(Y;ℚ) ≃
+H^{n-1}(Γ(Y,Cone(I → j_*J)))` from cohomology with support in `Z`. -/
 def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
@@ -127,11 +125,10 @@ def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
         (rationalSupportConeToAmbientInjectiveCone X Z hZ) (n - 1)).map_add α β }
   e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ (n - 1))
 
-/-- Let `X` be a scheme over `ℂ`, let `Y = X(ℂ)`, and let `Z ⊆ Y` be closed with complement `U`.
-Write `I` for the chosen injective resolution of the constant rational sheaf on `Y`, `J` for the
-chosen resolution on `U`, and `j : U → Y` for inclusion. This is the direct image under `j` of
-the comparison `I|_U → J` extending the identity on the constant rational sheaf, after extension
-by zero to negative degrees. -/
+/-- Let `X` be a scheme over `ℂ`, `Y = X(ℂ)`, and `j : U → Y` the inclusion of the complement of a
+closed subset `Z`. Let `I,J` be the chosen injective resolutions of the constant rational
+sheaves on `Y,U`. This map `j_*(I|_U) → j_*J` is the direct image of the comparison extending
+the identity on constants, with both complexes zero in negative degrees. -/
 def ambientRationalOpenResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     ((TopCat.Sheaf.openRestrictionPushforward
@@ -167,11 +164,10 @@ lemma supportRestriction_comp_openResolutionComparison
   exact (ComplexShape.embeddingUpNat.extendFunctor (AnalyticAdditiveSheaf X)).map_comp _ _
     |>.symm
 
-/-- Let `X` be a scheme over `ℂ`, let `Y = X(ℂ)`, and let `Z ⊆ Y` be closed with complement `U`.
-Write `I` for the chosen injective resolution of the constant rational sheaf on `Y`, `J` for the
-chosen resolution on `U`, and `j : U → Y` for inclusion. Taking global sections of the direct
-image of `I|_U → J` gives this map of complexes `Γ(U,I|_U) → Γ(U,J)`, with both sides expressed
-as sections on `Y`. -/
+/-- Let `X` be a scheme over `ℂ` and `U` the complement of a closed subset of `Y = X(ℂ)`. For the
+chosen injective resolutions `I,J` of the constant rational sheaves on `Y,U`, this map
+`Γ(U,I|_U) → Γ(U,J)` takes sections of the comparison `I|_U → J` extending the identity on
+constants. -/
 def globalAmbientRationalOpenResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :=
   ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
@@ -202,11 +198,10 @@ instance globalAmbientRationalOpenResolutionComparison_quasiIso
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Let `X` be a scheme over `ℂ`, let `Y = X(ℂ)`, and let `Z ⊆ Y` be closed with complement `U`.
-Write `I` for the chosen injective resolution of the constant rational sheaf on `Y`, `J` for the
-chosen resolution on `U`, and `j : U → Y` for inclusion. This map `Cone(Γ(Y,I) → Γ(U,I|_U)) →
-Cone(Γ(Y,I) → Γ(U,J))` uses the identity on the ambient sections and the augmentation-preserving
-comparison on `U`. -/
+/-- Let `X` be a scheme over `ℂ` and `U` the complement of a closed subset of `Y = X(ℂ)`. For the
+chosen injective resolutions `I,J` of the constant rational sheaves on `Y,U`, this map
+`Cone(Γ(Y,I) → Γ(U,I|_U)) → Cone(Γ(Y,I) → Γ(U,J))` uses the identity on ambient sections and the
+comparison `I|_U → J` extending the identity on constants. -/
 def supportConeToAmbientInjectiveGlobalCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     CochainComplex.mappingCone
@@ -231,13 +226,10 @@ instance supportConeToAmbientInjectiveGlobalCone_quasiIso
     QuasiIso (supportConeToAmbientInjectiveGlobalCone X Z hZ) :=
   CochainComplex.mappingCone.quasiIso_map_of_quasiIso _ _ _ _ _
 
-/-- Let `X` be a scheme over `ℂ`, let `Y = X(ℂ)`, and let `Z ⊆ Y` be closed with complement `U`.
-Write `I` for the chosen injective resolution of the constant rational sheaf on `Y`, `J` for the
-chosen resolution on `U`, and `j : U → Y` for inclusion. Cohomology with support `H_Z^n(Y;ℚ)` is
-additively isomorphic to `H^n(Γ_Z(Y,I))`, where `Γ_Z(Y,I^q) = ker(I^q(Y) → I^q(U))`. This
-equivalence passes from the defining shifted restriction cone to that kernel complex. A final
-negation accounts for the sign of the cone triangle, so forgetting support corresponds to
-including the kernel into `Γ(Y,I)`. -/
+/-- Let `X` be a scheme over `ℂ`, `Z ⊆ Y = X(ℂ)` closed, and `I` the chosen injective resolution of
+the constant rational sheaf on `Y`. This additive equivalence identifies cohomology with support
+`H_Z^n(Y;ℚ)` with `H^n(Γ_Z(Y,I))`, where `Γ_Z(Y,I^q) = ker(I^q(Y) → I^q(Y \ Z))`. Its sign makes
+forgetting support correspond to inclusion into `Γ(Y,I)`. -/
 def rationalSupportAddEquivSupportedInjectiveHomology
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+

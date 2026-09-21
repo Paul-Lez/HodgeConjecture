@@ -102,22 +102,16 @@ namespace Sq
 
 variable {R A}
 
-/-- Let `R` be a commutative ring and `A` a commutative `R`-algebra. Write `E = ⋀_A Ω_{A/R}` for the
-exterior algebra of Kähler differentials. The auxiliary ring `Sq` consists of pairs `(x,u)` in
-`E × E`, with product `(x,u)(y,v) = (xy, involute(x)v + uy)`, where `involute` negates
-odd-degree forms. This constructor returns the pair `(x,u)` from its two components. -/
+/-- For a commutative `R`-algebra `A` and `E = ⋀_A Ω_{A/R}`, the exterior algebra of Kähler
+differentials, this constructs the pair `(x,u)` in the auxiliary ring `Sq R A = E × E`. -/
 def mk (x u : ExtAlg R A) : Sq R A := (x, u)
 
-/-- Let `R` be a commutative ring and `A` a commutative `R`-algebra. Write `E = ⋀_A Ω_{A/R}` for the
-exterior algebra of Kähler differentials. The auxiliary ring `Sq` consists of pairs `(x,u)` in
-`E × E`, with product `(x,u)(y,v) = (xy, involute(x)v + uy)`, where `involute` negates
-odd-degree forms. This is the first projection `(x,u) ↦ x`. -/
+/-- For a commutative `R`-algebra `A` and `E = ⋀_A Ω_{A/R}`, the exterior algebra of Kähler
+differentials, this is the first projection `(x,u) ↦ x` from `Sq R A = E × E`. -/
 def fst (s : Sq R A) : ExtAlg R A := Prod.fst s
 
-/-- Let `R` be a commutative ring and `A` a commutative `R`-algebra. Write `E = ⋀_A Ω_{A/R}` for the
-exterior algebra of Kähler differentials. The auxiliary ring `Sq` consists of pairs `(x,u)` in
-`E × E`, with product `(x,u)(y,v) = (xy, involute(x)v + uy)`, where `involute` negates
-odd-degree forms. This is the second projection `(x,u) ↦ u`. -/
+/-- For a commutative `R`-algebra `A` and `E = ⋀_A Ω_{A/R}`, the exterior algebra of Kähler
+differentials, this is the second projection `(x,u) ↦ u` from `Sq R A = E × E`. -/
 def snd (s : Sq R A) : ExtAlg R A := Prod.snd s
 
 @[simp] lemma fst_mk (x u : ExtAlg R A) : fst (mk x u) = x := rfl
@@ -179,11 +173,9 @@ instance instRing : Ring (Sq R A) where
 
 end Sq
 
-/-- Let `R` be a commutative ring and `A` a commutative `R`-algebra. Write `E = ⋀_A Ω_{A/R}` for the
-exterior algebra of Kähler differentials. The auxiliary ring `Sq` consists of pairs `(x,u)` in
-`E × E`, with product `(x,u)(y,v) = (xy, involute(x)v + uy)`, where `involute` negates
-odd-degree forms. This ring homomorphism sends `a ∈ A` to `(a, da)`, with `a` in degree zero and
-its Kähler differential in degree one. It supplies the `A`-algebra structure on `Sq`. -/
+/-- For a commutative `R`-algebra `A`, let `E = ⋀_A Ω_{A/R}` be the exterior algebra of Kähler
+differentials. This ring homomorphism `A → Sq R A = E × E` sends `a` to `(a,da)`, with `a` in
+degree zero and its differential in degree one. It defines the `A`-algebra structure on `Sq`. -/
 def twist : A →+* Sq R A where
   toFun a := Sq.mk (algebraMap A (ExtAlg R A) a)
     (ExteriorAlgebra.ι A (KaehlerDifferential.D R A a))
@@ -243,11 +235,9 @@ end Sq
 
 namespace Sq
 
-/-- Let `R` be a commutative ring and `A` a commutative `R`-algebra. Write `E = ⋀_A Ω_{A/R}` for the
-exterior algebra of Kähler differentials. The auxiliary ring `Sq` consists of pairs `(x,u)` in
-`E × E`, with product `(x,u)(y,v) = (xy, involute(x)v + uy)`, where `involute` negates
-odd-degree forms. Give `Sq` the `A`-algebra structure `a ↦ (a, da)`. This `A`-algebra
-homomorphism is the first projection `(x,u) ↦ x`. -/
+/-- For a commutative `R`-algebra `A`, let `E = ⋀_A Ω_{A/R}` be the exterior algebra of Kähler
+differentials. For the `A`-algebra structure `a ↦ (a,da)` on `Sq R A = E × E`, this is the first
+projection `(x,u) ↦ x` as an `A`-algebra homomorphism. -/
 def fstAlgHom : Sq R A →ₐ[A] ExtAlg R A where
   toFun := fst
   map_one' := rfl
@@ -258,11 +248,9 @@ def fstAlgHom : Sq R A →ₐ[A] ExtAlg R A where
 
 @[simp] lemma fstAlgHom_apply (s : Sq R A) : fstAlgHom R A s = fst s := rfl
 
-/-- Let `R` be a commutative ring and `A` a commutative `R`-algebra. Write `E = ⋀_A Ω_{A/R}` for the
-exterior algebra of Kähler differentials. The auxiliary ring `Sq` consists of pairs `(x,u)` in
-`E × E`, with product `(x,u)(y,v) = (xy, involute(x)v + uy)`, where `involute` negates
-odd-degree forms. This `R`-linear map is the second projection `(x,u) ↦ u`, using the scalar
-action inherited from the base ring `R`. -/
+/-- For a commutative `R`-algebra `A`, let `E = ⋀_A Ω_{A/R}` be the exterior algebra of Kähler
+differentials. This is the second projection `(x,u) ↦ u` from `Sq R A = E × E` as an `R`-linear
+map. -/
 def sndLinear : Sq R A →ₗ[R] ExtAlg R A where
   toFun := snd
   map_add' _ _ := rfl
@@ -272,11 +260,9 @@ def sndLinear : Sq R A →ₗ[R] ExtAlg R A where
 
 end Sq
 
-/-- Let `R` be a commutative ring and `A` a commutative `R`-algebra. Write `E = ⋀_A Ω_{A/R}` for the
-exterior algebra of Kähler differentials. The auxiliary ring `Sq` consists of pairs `(x,u)` in
-`E × E`, with product `(x,u)(y,v) = (xy, involute(x)v + uy)`, where `involute` negates
-odd-degree forms. Using the `A`-module structure induced by `a ↦ (a, da)`, this `R`-derivation
-sends `a` to `(da, 0)`, with `da` included in the exterior algebra. -/
+/-- For a commutative `R`-algebra `A`, let `E = ⋀_A Ω_{A/R}` be the exterior algebra of Kähler
+differentials. This `R`-derivation `A → Sq R A = E × E` sends `a` to `(da,0)`. The target uses
+the `A`-action defined by `a ↦ (a,da)`. -/
 def epsDerivation : Derivation R A (Sq R A) where
   toFun a := Sq.mk (ExteriorAlgebra.ι A (KaehlerDifferential.D R A a)) 0
   map_add' a b := by ext <;> simp
@@ -287,12 +273,9 @@ def epsDerivation : Derivation R A (Sq R A) where
     · simp
     · simp [Sq.snd_smul, ExteriorAlgebra.ι_add_mul_swap]
 
-/-- Let `R` be a commutative ring and `A` a commutative `R`-algebra. Write `E = ⋀_A Ω_{A/R}` for the
-exterior algebra of Kähler differentials. The auxiliary ring `Sq` consists of pairs `(x,u)` in
-`E × E`, with product `(x,u)(y,v) = (xy, involute(x)v + uy)`, where `involute` negates
-odd-degree forms. With the `A`-action defined by `a ↦ (a, da)`, the universal property of Kähler
-differentials gives this `A`-linear map `Ω_{A/R} → Sq`, determined by `da ↦ (da, 0)`. Its second
-component on `a db` is `da ∧ db`. -/
+/-- For a commutative `R`-algebra `A`, let `E = ⋀_A Ω_{A/R}` be the exterior algebra of Kähler
+differentials. This `A`-linear map `Ω_{A/R} → Sq R A = E × E` sends `da` to `(da,0)`, using the
+target action `a ↦ (a,da)`. In particular, it sends `a db` to `(a db,da ∧ db)`. -/
 def phi : Ω[A⁄R] →ₗ[A] Sq R A := (epsDerivation R A).liftKaehlerDifferential
 
 @[simp] lemma phi_D (a : A) :
@@ -345,11 +328,10 @@ lemma phi_mul_self (ω : Ω[A⁄R]) : phi R A ω * phi R A ω = 0 := by
   · rw [Sq.snd_mul, fst_phi, involute_ι, neg_mul, Sq.snd_zero,
       ι_mul_eq_involute_mul_ι, involute_snd_phi, neg_add_cancel]
 
-/-- Let `R` be a commutative ring and `A` a commutative `R`-algebra. Write `E = ⋀_A Ω_{A/R}` for the
-exterior algebra of Kähler differentials. The auxiliary ring `Sq` consists of pairs `(x,u)` in
-`E × E`, with product `(x,u)(y,v) = (xy, involute(x)v + uy)`, where `involute` negates
-odd-degree forms. With `A` acting on `Sq` by `a ↦ (a, da)`, this `A`-algebra homomorphism sends
-a form `ω` to `(ω, dω)`. It is determined by sending each exact one-form `da` to `(da, 0)`. -/
+/-- For a commutative `R`-algebra `A`, let `E = ⋀_A Ω_{A/R}` be the exterior algebra of Kähler
+differentials. With `A` acting on `Sq R A = E × E` by `a ↦ (a,da)`, this `A`-algebra
+homomorphism sends `da` to `(da,0)`. On an arbitrary form `ω` its value is `(ω,dω)`; the second
+component defines the exterior derivative. -/
 def deRhamHom : ExtAlg R A →ₐ[A] Sq R A :=
   ExteriorAlgebra.lift A ⟨phi R A, phi_mul_self R A⟩
 

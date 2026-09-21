@@ -244,11 +244,10 @@ abbrev rationalCohomologyWithSupportComplex
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   CochainComplex.mappingCone (rationalRestrictionComplexInt X Z)
 
-/-- Let `X` be a scheme over `ℂ` and `Z` a closed subset of its analytic space `X(ℂ)`. Rational
-cohomology with support in `Z` is `H^n_Z(X(ℂ); ℚ) = ℍ^{n-1}(X(ℂ), Cone(ℚ → Rj_*ℚ))`, where `j :
-X(ℂ) \ Z → X(ℂ)` is the inclusion. Equivalently, it is the cohomology obtained by deriving the
-functor of global sections that vanish on the complement. The definition uses an injective
-resolution on the complement and applies the same cone formula to arbitrary subsets `Z`. -/
+/-- Let `X` be a scheme over `ℂ`, `Z ⊆ Y = X(ℂ)` any subset, and `j : Y \ Z → Y` the inclusion. This
+defines `H_Z^n(Y;ℚ)` as `ℍ^{n-1}(Y,Cone(ℚ_Y → Rj_*ℚ_{Y \ Z}))`, using constant rational sheaves.
+For closed `Z`, it can also be computed from global sections vanishing off `Z` in an injective
+resolution of `ℚ_Y`. -/
 abbrev RationalCohomologyWithSupport
     (Z : Set (ComplexPoint X)) (n : ℤ) : Type 1 :=
   Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)

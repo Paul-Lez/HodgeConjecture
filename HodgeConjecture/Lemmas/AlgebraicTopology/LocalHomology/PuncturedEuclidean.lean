@@ -1364,12 +1364,9 @@ abbrev StandardFacetCarrierPrismFamily (d : ℕ) :=
           (standardFacetCarrier d x)))).chainComplex
             (AddCommGrpCat.of ℤ)).X (n + 1)
 
-/-- Let `d ∈ ℕ`, and cover `ℝ^d \ {0}` by the sets `U_i` where the `i`-th coordinate of
-`(x_0,…,x_{d-1},0)` is not maximal. For a singular simplex `σ` contained in some `U_i`, let
-`I(σ)` be the intersection of all cover members containing its image. Given a family `P`
-assigning an integral `(n+1)`-chain in `I(τ)` to each `n`-simplex `τ`, this chain for an
-`(n+1)`-simplex `σ` is `∑_i (-1)^i P(∂_i σ)`. Each face chain is included into `I(σ)` before
-summing. -/
+/-- For an `(n+1)`-simplex `σ` in `ℝ^d \ {0}` subordinate to the standard facet cover and a family
+`P` of local prism chains, this integral chain is `∑_i (-1)^i P(∂_i σ)`. Each term is included
+into the intersection of cover members containing `σ` before summing. -/
 def standardFacetCarrierPrismFaces
     (d : ℕ) (P : StandardFacetCarrierPrismFamily d) (n : ℕ)
     (x : (coverSmallSingularSubcomplex
@@ -1604,13 +1601,10 @@ lemma exists_standardFacetCarrierIntersectionPrism_zero
     (standardFacetCarrierIntersectionDiscrepancy d 0 x)
     (standardFacetCarrierIntersectionDiscrepancy_zero_augmentation d x)
 
-/-- Let `d ∈ ℕ`, and cover `ℝ^d \ {0}` by the sets `U_i` where the `i`-th coordinate of
-`(x_0,…,x_{d-1},0)` is not maximal. For a singular simplex `σ` contained in some `U_i`, let
-`I(σ)` be the intersection of all cover members containing its image. For an `(n+1)`-simplex `σ`
-and a chosen family of prism chains `P` on its faces, this integral chain in `I(σ)` is the
-affine carrier chain minus the subdivided source chain minus `∑_i (-1)^i P(∂_i σ)`. The affine
-carrier chain sends each vertex of the barycentric subdivision to the standard-simplex vertex
-selected by the cover; the source chain uses the last-vertex subdivision map followed by `σ`. -/
+/-- For an `(n+1)`-simplex `σ` in `ℝ^d \ {0}` subordinate to the standard facet cover and a family
+`P` of local prism chains, this is the affine carrier chain minus the subdivided source chain
+minus `∑_i (-1)^i P(∂_i σ)`. All terms are integral chains in the intersection of cover members
+containing `σ`. -/
 def standardFacetCarrierPrismResidual
     (d : ℕ) (P : StandardFacetCarrierPrismFamily d) (n : ℕ)
     (x : (coverSmallSingularSubcomplex

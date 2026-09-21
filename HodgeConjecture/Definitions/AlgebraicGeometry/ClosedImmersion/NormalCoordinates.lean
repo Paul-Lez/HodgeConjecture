@@ -43,11 +43,10 @@ theorem closedImmersionDerivativeProjection_leftInverse :
   (exists_leftInverse_fderiv_inclusionInComplexCharts
     X Y i m d z).choose_spec
 
-/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, of respective dimensions `m`
-and `d`, and let `z ∈ Y(ℂ)`. Let `P : ℂ^d → ℂ^m` be the chosen left inverse of the derivative of
-`i` in analytic coordinates, and write `g` for its coordinate expression. This local
-homeomorphism parametrizes ambient coordinates by `(v, w) ↦ g(v) + w`, with `v ∈ ℂ^m` and `w ∈
-ker P`, near `(z, 0)` in coordinates. -/
+/-- Let `i : Y → X` be a closed immersion of smooth complex schemes of dimensions `m,d`, and let `z
+∈ Y(ℂ)`. In the chosen charts write `g = e_X ∘ i ∘ e_Y⁻¹` and `a = e_Y(z)`. For the chosen
+complex-linear left inverse `P` of `Dg(a)`, this local homeomorphism `ℂ^m × ker P → ℂ^d` is
+`(v,w) ↦ g(v)+w` near `(a,0)`. -/
 def closedImmersionNormalChart :
     OpenPartialHomeomorph
       ((Fin m → ℂ) ×

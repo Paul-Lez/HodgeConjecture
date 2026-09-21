@@ -101,10 +101,9 @@ def relativeCohomologyToAbsolute (R : Type u) [CommRing R] (X : TopPair.{u}) (n 
   (HomologicalComplex.homologyMap
     (HomologicalComplex.linearDualMap (relativeChainProjection R X)) n).hom
 
-/-- Let `X` be a topological space, `R` a commutative ring, and `Z ⊆ X` a closed subset. Singular
-cohomology with support in `Z` is `H_Z^n(X;R) = H^n(X,X \ Z;R)`. It is the degree-`n` cohomology
-of the linear dual of `C_*(X;R)/C_*(X \ Z;R)`. The same formula defines this object for an
-arbitrary subset `Z`. -/
+/-- Let `X` be a topological space, `R` a commutative ring, and `Z ⊆ X` any subset. This defines
+`H_Z^n(X;R)` as relative singular cohomology `H^n(X,X \ Z;R)`, computed from the `R`-linear dual
+of `C_*(X;R)/C_*(X \ Z;R)`. For closed `Z`, this is singular cohomology with support in `Z`. -/
 abbrev CohomologyWithSupport (R : Type u) [CommRing R] (X : TopCat.{u})
     (Z : Set X) (n : ℕ) : ModuleCat.{u} R :=
   RelativeCohomology R (TopPair.ofSubset Zᶜ) n
