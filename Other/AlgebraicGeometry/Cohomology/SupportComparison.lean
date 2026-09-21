@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.WithSupport
+public import Other.AlgebraicGeometry.Cohomology.WithSupport
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainResolution
 public import HodgeConjecture.Mathlib.Algebra.Homology.LiftToInjective
 public import HodgeConjecture.Lemmas.Algebra.Homology.MappingConeQuasiIso

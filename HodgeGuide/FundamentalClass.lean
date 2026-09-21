@@ -286,10 +286,10 @@ example :
 
 # Step 3: from support to ordinary cohomology
 
-The extension is a class in the cohomology of an injective resolution with supports. Transporting
-it through the comparison with the mapping-cone model of the previous section gives the class of
-the subvariety in cohomology with support, and forgetting the support gives its class in ordinary
-cohomology, which is the class the statement uses.
+The extension is a class in the cohomology of an injective resolution with supports. The
+comparison of the previous section identifies that group with $`H^{2p}_Z(X;\mathbb Q)`, and
+forgetting the support gives the class in ordinary cohomology, which is the class the statement
+uses.
 
 ```lean -show
 namespace Guide.Subvariety.D5
@@ -298,10 +298,10 @@ namespace Guide.Subvariety.D5
 def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    RationalCohomologyWithSupport X (cycleComponentSupport X x) ((2 * p : ℕ) : ℤ) :=
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentAnalyticClosedSupport X x).isClosed ((2 * p : ℕ) : ℤ)).symm
-      (cycleComponentSupportedInjectiveClass X x hx)
+    H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) :=
+  have he : 2 * (p : ℤ) = ((2 * p : ℕ) : ℤ) := by omega
+  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
+    (2 * p)).symm (he ▸ cycleComponentSupportedInjectiveClass X x hx)
 ```
 ```lean -show
 end Guide.Subvariety.D5
@@ -314,7 +314,7 @@ namespace Guide.Subvariety.D6
 def cycleComponentSheafClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) : H^(2 * p)(X; ℚ) :=
-  forgetSupport X (cycleComponentSupport X x) (2 * p)
+  forgetSupport ℚ X (cycleComponentAnalyticClosedSupport X x) (2 * p)
     (cycleComponentSheafSupportedClass X x hx)
 ```
 ```lean -show

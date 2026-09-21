@@ -18,7 +18,7 @@ module
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeComparison
+public import Other.AlgebraicGeometry.Cohomology.SupportConeComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularGlobal
 
 import Mathlib.Algebra.Homology.HomotopyCategory.Plus

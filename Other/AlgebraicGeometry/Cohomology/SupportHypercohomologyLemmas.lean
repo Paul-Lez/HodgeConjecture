@@ -17,7 +17,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyDef
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueExtendNat
 
 import Mathlib.Algebra.Homology.HomotopyCategory.Plus

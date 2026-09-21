@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportComparison
+public import Other.AlgebraicGeometry.Cohomology.SupportComparison
 
 /-!
 # Singular comparison with support

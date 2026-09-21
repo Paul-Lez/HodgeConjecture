@@ -18,7 +18,7 @@ module
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModelLemmas
 
 /-!
 # SupportConeInjectiveModel, the part the statement does not need

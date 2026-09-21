@@ -87,7 +87,7 @@ forgetting support. This equality fixes its scale and sign. -/
 lemma pointCycleClassOnCycles_single_eq_forgetSupport_pointCoclass
     (x : V.scheme) (hx : coheight x = d) (n : ℤ) :
     pointCycleClassOnCycles V d (codimensionCycleSubgroup.single x hx n) =
-      n • forgetSupport V.over
+      n • coneForgetSupport V.over
         (cycleComponentSupport V.over x) (2 * d)
         ((auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
           V d x hx).supportedComparison.symm

@@ -49,7 +49,7 @@ formalization.
   `Filtration.lean`: the de Rham complex, hypercohomology, and the Hodge filtration;
 * `Other/AlgebraicGeometry/Cycle/Codimension.lean`,
   `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Support.lean`,
-  and `HodgeConjecture/Lemmas/AlgebraicGeometry/Cohomology/WithSupport.lean`: cycles, their
+  and `HodgeConjecture/Definitions/AlgebraicGeometry/Cohomology/WithSupport.lean`: cycles, their
   supports, and cohomology with support;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`
   and `SupportExtension.lean`: the class on the smooth locus and its extension

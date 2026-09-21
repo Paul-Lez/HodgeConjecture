@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportComparison
+public import Other.AlgebraicGeometry.Cohomology.SupportComparisonLemmas
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainRestriction
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 

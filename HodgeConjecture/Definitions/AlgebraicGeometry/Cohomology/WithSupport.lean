@@ -54,6 +54,13 @@ def forgetSupport (n : ℕ) : H_[Z]^n(X; K) →+ H^n(X; K) :=
   (Sheaf.H'.addEquivTerminal isTerminalTop _ n).toAddMonoidHom.comp
     (Sheaf.relH.forget _ (homOfLE (le_top : Z.compl ≤ ⊤)) n)
 
+/-- Forgetting the support `X(ℂ)` itself is injective. -/
+lemma forgetSupport_injective_of_eq_top (hZ : Z = ⊤) (n : ℕ) :
+    Function.Injective (forgetSupport K X Z n) :=
+  (Sheaf.H'.addEquivTerminal isTerminalTop _ n).injective.comp
+    (TopCat.Sheaf.relH.forget_injective_of_eq_bot (TopCat.of (ComplexPoint X)) _ _
+      (by rw [hZ]; ext; simp) n)
+
 set_option linter.auxLemma false in
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
   TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 in

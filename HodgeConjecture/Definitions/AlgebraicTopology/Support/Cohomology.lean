@@ -51,6 +51,43 @@ abbrev supportH (Z : Closeds X)
 @[inherit_doc supportH]
 scoped notation:max "H_[" Z "]^" n:max "(" X "; " F ")" => supportH X Z F n
 
+set_option linter.auxLemma false in
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 in
+/-- `ℤ[U] = 0` for the empty open `U`: every sheaf has only the zero section on `U`. -/
+lemma isZero_freeAbelianSheaf_of_eq_bot (U : Opens X) (hU : U = ⊥) :
+    IsZero ((CategoryTheory.Sheaf.freeAbelianSheaf (Opens.grothendieckTopology X)).obj U) := by
+  subst hU
+  rw [IsZero.iff_id_eq_zero]
+  apply (CategoryTheory.Sheaf.freeAbelianSheafHomAddEquiv ⊥ _).injective
+  have : Subsingleton
+      (((CategoryTheory.Sheaf.freeAbelianSheaf (Opens.grothendieckTopology X)).obj ⊥).obj.obj
+        (op ⊥)) :=
+    AddCommGrpCat.subsingleton_of_isZero (IsZero.of_iso (isZero_zero _)
+      (HasZeroObject.zeroIsoIsTerminal (isTerminalOfEmpty (X := X)
+        ((CategoryTheory.Sheaf.freeAbelianSheaf (Opens.grothendieckTopology X)).obj ⊥))).symm)
+  exact Subsingleton.elim _ _
+
+/-- For `W = ⊥`, the map `ℤ[V] ⟶ ℤ[V, W]` is an isomorphism. -/
+instance {W V : Opens X} (f : W ⟶ V) [Fact (W = ⊥)] :
+    IsIso (cokernel.π ((CategoryTheory.Sheaf.freeAbelianSheaf (Opens.grothendieckTopology X)).map f)) := by
+  have hf : (CategoryTheory.Sheaf.freeAbelianSheaf (Opens.grothendieckTopology X)).map f = 0 :=
+    (isZero_freeAbelianSheaf_of_eq_bot X W Fact.out).eq_of_src _ _
+  have : cokernel.π ((CategoryTheory.Sheaf.freeAbelianSheaf (Opens.grothendieckTopology X)).map f) =
+      cokernel.π (0 : _ ⟶ _) ≫ (cokernelIsoOfEq hf).inv := by
+    rw [← π_comp_cokernelIsoOfEq_hom hf, Category.assoc, Iso.hom_inv_id, Category.comp_id]
+  rw [this]
+  infer_instance
+
+/-- Forgetting the support `X` itself loses nothing. -/
+lemma relH.forget_injective_of_eq_bot
+    (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) {W V : Opens X}
+    (f : W ⟶ V) (hW : W = ⊥) (n : ℕ) :
+    Function.Injective (CategoryTheory.Sheaf.relH.forget F f n) :=
+  haveI : Fact (W = ⊥) := ⟨hW⟩
+  (Ext.precompAddEquiv (asIso (cokernel.π
+    ((CategoryTheory.Sheaf.freeAbelianSheaf (Opens.grothendieckTopology X)).map f))) F n).injective
+
 variable {X} (Z : Closeds X)
   (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
 
