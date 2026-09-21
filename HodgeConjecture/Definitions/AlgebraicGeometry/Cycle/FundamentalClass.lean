@@ -151,7 +151,7 @@ rational subspace of `H^{2p}(X(ℂ); ℚ)` spanned by the fundamental cohomology
 codimension-`p` integral closed subvarieties of `X`. Their classes are normalized by the complex
 orientations of their normal spaces on their smooth loci. -/
 def algebraicCycleClassSpan (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
-  ⨆ (x : X.left) (hx : Order.coheight x = p),
-    Submodule.span ℚ {cycleComponentSheafClass X x hx}
+  sSup {Submodule.span ℚ {cycleComponentSheafClass X x hx} |
+    (x : X.left) (hx : Order.coheight x = p) }
 
 end AlgebraicGeometry.ComplexPoint
