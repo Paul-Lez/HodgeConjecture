@@ -27,10 +27,9 @@ import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Singular.Cohomology`.
 
-Because cohomology is the homology of the dual cochain complex rather than the dual of homology,
-the pairing of a cohomology class against a homology class is not definitional: it is mediated by
-the universal-coefficient equivalence `cohomologyEquivDualHomology`. The `_apply` lemmas below
-record that this pairing is natural, which is what the old definitional `rfl` lemmas expressed.
+Cohomology is the homology of the dual cochain complex, so the pairing of a cohomology class
+against a homology class is mediated by the universal-coefficient equivalence
+`cohomologyEquivDualHomology`. The `_apply` lemmas below record that this pairing is natural.
 -/
 
 /-! ### Constructions used only in proofs -/
@@ -48,8 +47,9 @@ abbrev singularChainComplexMap (R : Type u) [CommRing R] {X Y : TopCat.{u}} (f :
     SingularChainComplex R X ⟶ SingularChainComplex R Y :=
   ((singularChainComplexFunctor (ModuleCat.{u} R)).obj (ModuleCat.of R R)).map f
 
-/-- The singular cochain complex `C^*(X; R)`, the degreewise `R`-linear dual of the singular
-chain complex. -/
+/-- Let `X` be a topological space and `R` a commutative ring. The singular cochain complex
+`C^•(X;R)` has degree-`n` term `Hom_R(C_n(X;R),R)`, where `C_n` is the free module on singular
+`n`-simplices. Its coboundary sends `φ` to `φ ∘ ∂`, with `∂` the singular boundary. -/
 abbrev SingularCochainComplex (R : Type u) [CommRing R] (X : TopCat.{u}) :
     CochainComplex (ModuleCat.{u} R) ℕ :=
   (SingularChainComplex R X).linearDualCochainComplex
@@ -63,8 +63,9 @@ abbrev singularCochainComplexMap (R : Type u) [CommRing R] {X Y : TopCat.{u}} (f
     SingularCochainComplex R Y ⟶ SingularCochainComplex R X :=
   HomologicalComplex.linearDualMap (singularChainComplexMap R f)
 
-/-- Singular cohomology with coefficients in a commutative ring, defined as the homology of the
-singular cochain complex — that is, by dualising the chain complex, not by dualising homology. -/
+/-- Let `X` be a topological space and `R` a commutative ring. Singular cohomology `H^n(X;R)` is
+`ker(δ : C^n → C^{n+1}) / im(δ : C^{n-1} → C^n)`, where `C^n = Hom_R(C_n(X;R),R)` and `δφ = φ ∘
+∂`. In degree zero the denominator is zero. -/
 abbrev Cohomology (R : Type u) [CommRing R] (X : TopCat.{u}) (n : ℕ) : ModuleCat.{u} R :=
   (SingularCochainComplex R X).homology n
 
@@ -76,9 +77,9 @@ def cohomologyMap (R : Type u) [CommRing R] {X Y : TopCat.{u}} (n : ℕ) (f : X 
     Cohomology R Y n →ₗ[R] Cohomology R X n :=
   (HomologicalComplex.homologyMap (singularCochainComplexMap R f) n).hom
 
-/-- Universal coefficients over a field: singular cohomology, defined by dualising the chain
-complex, is canonically the linear dual of singular homology. This is a theorem here, not the
-definition of cohomology. -/
+/-- Let `X` be a topological space and `R` a field. This linear equivalence `H^n(X;R) ≅
+Hom_R(H_n(X;R),R)` sends a singular cohomology class `[φ]` to the functional `[c] ↦ φ(c)` on
+homology classes. It is the universal coefficient isomorphism over a field. -/
 def cohomologyEquivDualHomology (R : Type u) [Field R] (X : TopCat.{u}) (n : ℕ) :
     Cohomology R X n ≃ₗ[R] Module.Dual R (Homology R X n) :=
   (SingularChainComplex R X).linearDualHomologyEquiv n
@@ -100,7 +101,9 @@ def relativeCohomologyToAbsolute (R : Type u) [CommRing R] (X : TopPair.{u}) (n 
   (HomologicalComplex.homologyMap
     (HomologicalComplex.linearDualMap (relativeChainProjection R X)) n).hom
 
-/-- Singular cohomology of `X` with support in `Z`, defined as `H^n((X, Zᶜ); R)`. -/
+/-- Let `X` be a topological space, `R` a commutative ring, and `Z ⊆ X` any subset. This defines
+`H_Z^n(X;R)` as relative singular cohomology `H^n(X,X \ Z;R)`, computed from the `R`-linear dual
+of `C_*(X;R)/C_*(X \ Z;R)`. For closed `Z`, this is singular cohomology with support in `Z`. -/
 abbrev CohomologyWithSupport (R : Type u) [CommRing R] (X : TopCat.{u})
     (Z : Set X) (n : ℕ) : ModuleCat.{u} R :=
   RelativeCohomology R (TopPair.ofSubset Zᶜ) n
@@ -324,7 +327,7 @@ lemma enlargeSupport_rfl (R : Type u) [CommRing R] (X : TopCat.{u}) (Z : Set X) 
     enlargeSupport R X (Set.Subset.rfl : Z ⊆ Z) n = LinearMap.id := by
   rw [enlargeSupport, supportInclusionPairMap_rfl, relativeCohomologyMap_id]
 
-/-- Relative cohomology vanishes wherever relative homology does: the two are linked by the
+/-- If relative homology is a subsingleton, so is relative cohomology, by the
 universal-coefficient equivalence. -/
 lemma relativeCohomology_subsingleton (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ)
     (h : Subsingleton (RelativeHomology R X n)) :
@@ -333,7 +336,7 @@ lemma relativeCohomology_subsingleton (R : Type u) [Field R] (X : TopPair.{u}) (
     ⟨fun φ ψ => LinearMap.ext fun x => by rw [h.elim x 0, map_zero, map_zero]⟩
   (relativeCohomologyEquivDualHomology R X n).toEquiv.subsingleton
 
-/-- Relative cohomology is zero wherever relative homology is. -/
+/-- If relative homology is a zero object, so is relative cohomology. -/
 lemma relativeCohomology_isZero (R : Type u) [Field R] (X : TopPair.{u}) (n : ℕ)
     (h : IsZero (RelativeHomology R X n)) : IsZero (RelativeCohomology R X n) :=
   have := relativeCohomology_subsingleton R X n (ModuleCat.subsingleton_of_isZero h)

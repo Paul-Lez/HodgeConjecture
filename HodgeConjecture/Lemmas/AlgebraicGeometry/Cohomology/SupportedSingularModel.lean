@@ -27,8 +27,10 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom]
 
-/-- The actual singular-to-injective resolution map, using proved local
-contractibility of the analytic space. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `Y = X(ℂ)` its analytic topology. This
+cochain map sends the sheafified rational singular cochain complex on `Y` to the chosen
+injective resolution of the constant rational sheaf. It extends the identity on constant
+cochains and uses local contractibility of `Y`. -/
 def complexSingularToAmbientInjective :
     rationalSingularCochainComplex (TopCat.of (ComplexPoint X)) ⟶
       ambientRationalInjectiveComplex X :=
@@ -41,8 +43,11 @@ instance complexSingularToAmbientInjective_quasiIso :
 
 variable [IsProjective X.hom]
 
-/-- Local supported singular cohomology and the literal supported injective
-model are canonically isomorphic in every integer degree. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `Y = X(ℂ)` its analytic topology. Assume
+also that `X` is projective, and let `U,V ⊆ Y` be open. The comparison from sheafified rational
+singular cochains `C` to a constant-sheaf injective resolution `I` induces this isomorphism
+`H^n(Γ_{Y \ U}(V,C)) ≅ H^n(Γ_{Y \ U}(V,I))` for every integer `n`. In each complex, sections
+over `V` are required to vanish on `V ∩ U`. -/
 def complexSupportedSingularInjectiveHomologyIso
     (U V : Opens (ComplexPoint X)) (n : ℤ) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex

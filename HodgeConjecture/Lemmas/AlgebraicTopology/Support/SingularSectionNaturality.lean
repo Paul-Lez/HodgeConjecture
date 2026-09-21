@@ -10,7 +10,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictio
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenConeNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.RelativeCohomologySheaf
-/-! # Naturality of actual supported singular-section relative cohomology -/
+/-! # Naturality of supported singular-section relative cohomology -/
 
 @[expose] public noncomputable section
 
@@ -23,7 +23,10 @@ open TopCat.Sheaf
 variable (X : TopCat.{0}) [T2Space X] [∀ V : Opens X, ParacompactSpace V]
   (U : Opens X) {V W : Opens X} (a : W ⟶ V)
 
-/-- The actual two-step supported kernel and grading comparison, before the relative calculation. -/
+/-- Let `X` be Hausdorff with every open subset paracompact, and let `U,V ⊆ X` be open. Write `C^•`
+for sheafified rational singular cochains. This identifies `H^n(Γ(V, Γ_{X \ U}(C^•)))` with
+`H^{n-1}(Cone(C^•(V) → C^•(V ∩ U)))`, using the inclusion of the kernel of restriction and
+extension to integer degrees. -/
 def supportedSingularSectionConeHomologyIso (V : Opens X) (n : ℤ) :
     ((((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj
       (supportedRationalSingularCochainComplex X U))).homology n ≅
@@ -36,7 +39,7 @@ def supportedSingularSectionConeHomologyIso (V : Opens X) (n : ℤ) :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- The actual supported kernel-to-singular-cone comparison respects open restriction. -/
+/-- The supported kernel-to-singular-cone comparison respects open restriction. -/
 @[reassoc]
 lemma supportedSingularSectionConeHomologyIso_naturality (n : ℤ) :
     HomologicalComplex.homologyMap
@@ -62,7 +65,7 @@ lemma supportedSingularSectionConeHomologyIso_naturality (n : ℤ) :
     (singularCochainSheafComplex ℚ X) (Opens.infLELeft V U) (Opens.infLELeft W U)
     a (homOfLE (inf_le_inf_right U (leOfHom a))))
 
-/-- Restriction naturality of the entire existing supported-section-to-relative equivalence. -/
+/-- Restriction naturality of the whole supported-section-to-relative equivalence. -/
 lemma supportedRationalSingularSectionCohomologyEquivRelative_naturality
     (n : ℕ)
     (z : ((((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj
@@ -95,7 +98,7 @@ lemma supportedRationalSingularSectionCohomologyEquivRelative_naturality
     (Opens.infLELeft V U) (Opens.infLELeft W U) a
     (homOfLE (inf_le_inf_right U (leOfHom a))) n _
 
-/-- The final support-complement comparison preserves literal ambient-open restrictions. -/
+/-- The final support-complement comparison preserves ambient-open restrictions. -/
 lemma supportedRationalSingularSectionCohomologyEquivSupportComplement_naturality
     (S : Set X) (hS : IsClosed S) {V W : Opens X} (a : W ⟶ V) (n : ℕ)
     (z : ((((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj

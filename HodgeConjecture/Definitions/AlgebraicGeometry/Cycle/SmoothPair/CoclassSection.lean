@@ -28,7 +28,10 @@ variable (X Y : Over (Spec ↧ℂ))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left]
 
-/-- The source open of a constructed holomorphic normal chart. -/
+/-- Let `i : Y → X` be a closed immersion of smooth complex schemes of respective dimensions `m` and
+`d`, and put `S = i(Y(ℂ))` and `c = d-m`. For `z ∈ Y(ℂ)`, this is the source of a chosen
+holomorphic chart near `i(z)` with coordinates in `ℂ^m × ℂ^c` in which `S` is the zero set of
+the normal coordinate. -/
 def smoothClosedSupportChartOpen (z : ComplexPoint Y) :
     Opens (ComplexPoint X) :=
   ⟨(closedImmersionHolomorphicFlatteningChart X Y i m d z).source,
@@ -38,15 +41,20 @@ theorem mem_smoothClosedSupportChartOpen (z : ComplexPoint Y) :
     Point.map i z ∈ smoothClosedSupportChartOpen X Y i m d z :=
   closedImmersionHolomorphicFlatteningChart_mem_source X Y i m d z
 
-/-- `𝓗^{2(d-m)}_{Y(ℂ)}`, the sheaf on `X(ℂ)` associated with `V ↦ H^{2(d-m)}(V, V \ Y(ℂ); ℚ)`.
-Here `d - m` is the codimension of `Y` in `X`. -/
+/-- Let `i : Y → X` be a closed immersion of smooth complex schemes of dimensions `m,d`. Put `S =
+i(Y(ℂ))` and `c = d-m`. This is the sheafification on `X(ℂ)` of the relative singular cohomology
+presheaf `V ↦ H^{2c}(V,V \ S;ℚ)`, considered as abelian groups. -/
 abbrev smoothClosedSupportCoclassSheaf : TopCat.Sheaf AddCommGrpCat
     (TopCat.of (ComplexPoint X)) :=
   -- The support is `Y(ℂ) ⊆ X(ℂ)`, the image of the closed immersion `i`; the degree is twice
   -- the codimension of `Y` in `X`.
   𝓗_[Set.range (Point.map i)]^(2 * (d - m))(TopCat.of (ComplexPoint X); ℚ)
 
-/-- The exact normal coclass determines a section on its full chart source. -/
+/-- Let `i : Y → X` be a closed immersion of smooth complex schemes of dimensions `m,d`. Put `S =
+i(Y(ℂ))` and `c = d-m`. On the chosen normal chart at `i(z)`, with `z ∈ Y(ℂ)`, this is a section
+of the sheafification of `V ↦ H^{2c}(V,V \ S;ℚ)`. It is obtained by pulling back the class in
+`H^{2c}(ℂ^c,ℂ^c \ {0};ℚ)` evaluating to `1` on the complex orientation class along the normal
+coordinate and sheafifying. -/
 def smoothClosedSupportChartSheafSection (z : ComplexPoint Y) :
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.obj
       (op (smoothClosedSupportChartOpen X Y i m d z)) :=
@@ -55,7 +63,11 @@ def smoothClosedSupportChartSheafSection (z : ComplexPoint Y) :
       (smoothClosedSupportChartCoclass X Y i m d z
         (smoothClosedSupportChartOpen X Y i m d z) (le_refl _))
 
-/-- Its germ is, by definition, the germ of the fixed normal-projection coclass. -/
+/-- Let `i : Y → X` be a closed immersion of smooth complex schemes of dimensions `m,d`. Put `S =
+i(Y(ℂ))` and `c = d-m`. For `z ∈ Y(ℂ)` and `x` in the chosen normal chart at `i(z)`, this is a
+germ in the sheafification of `V ↦ H^{2c}(V,V \ S;ℚ)`. It is the germ at `x` of the pullback
+along the normal coordinate of the class in `H^{2c}(ℂ^c,ℂ^c \ {0};ℚ)` evaluating to `1` on the
+complex orientation class. -/
 def smoothClosedSupportChartCoclassGerm (z : ComplexPoint Y)
     (x : ComplexPoint X)
     (hx : x ∈ smoothClosedSupportChartOpen X Y i m d z) :
@@ -98,8 +110,11 @@ private theorem smoothClosedSupportChartCoclassGerm_eq_zero
       (smoothClosedSupportChartOpen X Y i m d z) (le_refl _))
 
 open scoped Classical in
-/-- A pointwise normalized germ family. Choice selects a preimage point only;
-the proved chart-overlap theorem below proves independence of that selection. -/
+/-- Let `i : Y → X` be a closed immersion of smooth complex schemes of dimensions `m,d`. Put `S =
+i(Y(ℂ))` and `c = d-m`. This element of the stalk at `x` of the sheafification of `V ↦
+H^{2c}(V,V \ S;ℚ)` is zero off `S`. On `S`, it is the germ of the pullback, in a chosen normal
+chart at `x`, of the class in `H^{2c}(ℂ^c,ℂ^c \ {0};ℚ)` evaluating to `1` on the complex
+orientation class. -/
 def smoothClosedSupportCoclassStalk (x : ComplexPoint X) :
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.stalk x :=
   if hxS : x ∈ Set.range (Point.map i) then
@@ -108,8 +123,8 @@ def smoothClosedSupportCoclassStalk (x : ComplexPoint X) :
         mem_smoothClosedSupportChartOpen X Y i m d hxS.choose)
   else 0
 
-/-- The normalized germ family agrees with every chart, including at points
-outside the support. This supplies local coherence as a theorem, not as data. -/
+/-- The normalized germ family agrees with every chart, including at points outside the
+support. -/
 theorem smoothClosedSupportCoclassStalk_eq_chartGerm
     (z : ComplexPoint Y) (x : ComplexPoint X)
     (hx : x ∈ smoothClosedSupportChartOpen X Y i m d z) :
@@ -149,8 +164,10 @@ theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
     intro y hy
     rw [map_zero, smoothClosedSupportCoclassStalk_eq_zero X Y i m d y hy]
 
-/-- The global section of `𝓗^{2(d-m)}_{Y(ℂ)}` on `X(ℂ)` that glues the normalized normal-chart
-coclasses. It is unique with this property. -/
+/-- Let `i : Y → X` be a closed immersion of smooth complex schemes of dimensions `m,d`. Put `S =
+i(Y(ℂ))` and `c = d-m`. This global section of the sheafification of `V ↦ H^{2c}(V,V \ S;ℚ)`
+glues the zero section off `S` with pullbacks in normal charts of the class in `H^{2c}(ℂ^c,ℂ^c \
+{0};ℚ)` evaluating to `1` on the complex orientation class. -/
 def smoothClosedSupportCoclassSection :
     -- A global section of `𝓗^{2(d-m)}_{Y(ℂ)}` on `X(ℂ)`.
     (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.obj

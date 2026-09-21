@@ -8,12 +8,11 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AnalyticMap
 public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
 
 /-!
-# Analytic local left inverses from actual section lifting
+# Analytic local left inverses from section lifting
 
 Intrinsic regular coordinate functions lift through a closed immersion on a common affine
 ambient neighborhood. Their analytic evaluations give a local left inverse to the inclusion
-written in complex charts. In particular derivative injectivity is proved, not supplied as
-an immersion or purity field.
+written in complex charts, and in particular the inclusion has injective derivative.
 -/
 
 @[expose] public noncomputable section
@@ -26,7 +25,9 @@ variable (X Y : Over (Spec ↧ℂ))
   (i : Y ⟶ X) (m d : ℕ)
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
 
-/-- The actual inclusion written in the canonical intrinsic and ambient complex charts. -/
+/-- Let `i : Y → X` be a morphism of smooth complex schemes of respective dimensions `m` and `d`,
+and let `z ∈ Y(ℂ)`. If `eY` and `eX` are the chosen analytic charts at `z` and `i(z)`, this is
+the coordinate expression `eX ∘ i ∘ eY⁻¹ : ℂ^m → ℂ^d`, valid where both charts are defined. -/
 def inclusionInComplexCharts (z : ComplexPoint Y) :
     (Fin m → ℂ) → (Fin d → ℂ) :=
   fun v => localChart X d (Point.map i z)

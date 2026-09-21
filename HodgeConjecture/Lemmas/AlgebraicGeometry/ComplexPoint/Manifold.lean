@@ -28,14 +28,14 @@ import Mathlib.Geometry.Manifold.Complex
 /-!
 # The topological manifold of complex points
 
-If a complex scheme is smooth of relative dimension `d`, its constructed analytic complex-point
+If a complex scheme is smooth of relative dimension `d`, its analytic complex-point
 space is locally homeomorphic to `ℂ^d`. This file turns the chosen algebraic étale coordinates into
-an actual `ChartedSpace (Fin d → ℂ)` structure and proves that its transition maps are
+a `ChartedSpace (Fin d → ℂ)` structure and proves that its transition maps are
 holomorphic. So the complex points form a complex-analytic manifold of complex dimension `d`, in
 particular a topological manifold of real dimension `2 * d`; both structures are instances.
 
 The charts are not extra input. At a complex point we choose the affine étale coordinates supplied
-by relative-dimensional smoothness, take a local inverse for the proven local homeomorphism, and
+by relative-dimensional smoothness, take a local inverse for that local homeomorphism, and
 extend that chart from the corresponding analytic open subset to the ambient space.
 -/
 

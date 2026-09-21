@@ -27,8 +27,8 @@ import Mathlib.Algebra.Homology.HomotopyCategory.Plus
 # Hypercohomology and singular cohomology with support
 
 This file develops the bounded-below flasque comparison needed for cohomology with support.
-It applies the same explicit injective-replacement argument used for ordinary singular cohomology
-to the mapping cone of singular restriction. No hypercohomology spectral sequence is assumed.
+It applies the same explicit injective-replacement argument used for ordinary singular
+cohomology to the mapping cone of singular restriction.
 -/
 
 @[expose] public noncomputable section
@@ -50,7 +50,8 @@ local instance bettiSupportHypercohomologyComparisonHasDerivedCategory :
 local instance bettiSupportHypercohomologyAddCommGrpHasDerivedCategory :
     HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard AddCommGrpCat
 
-/-- Conjugating a morphism by two isomorphisms is an additive equivalence of Hom groups. -/
+/-- In a preadditive category, let `eA : A ≅ A'` and `eB : B ≅ B'` be isomorphisms. This additive
+equivalence sends `f : A → B` to `eB ∘ f ∘ eA⁻¹ : A' → B'`. -/
 def isoHomCongrAddEquiv
     {C : Type u} [Category.{v} C] [Preadditive C]
     {A B A' B' : C} (eA : A ≅ A') (eB : B ≅ B') :
@@ -58,8 +59,9 @@ def isoHomCongrAddEquiv
   toEquiv := Iso.homCongr eA eB
   map_add' f g := by simp [Iso.homCongr]
 
-/-- The chosen additive structure on hypercohomology is transported from shifted morphisms in
-the derived category. -/
+/-- Let `X` be a scheme over `ℂ`, `K` an integer-indexed complex of sheaves of abelian groups on its
+analytic space, and `n` an integer. This additive equivalence identifies hypercohomology
+`ℍ^n(X(ℂ); K)` with `Hom_D(ℤ[0], K[n])`, morphisms in the derived category of sheaves on `X(ℂ)`. -/
 def hypercohomologyAddEquivDerived
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) :
     ℍ^n(X; K) ≃+
@@ -70,8 +72,10 @@ def hypercohomologyAddEquivDerived
     (analyticQuasiIsomorphisms X) DerivedCategory.Q
   map_add' := hypercohomologyEquiv_add X K n
 
-/-- For a K-injective target, shifted derived morphisms are additively identified with
-cohomology classes in the Hom complex. -/
+/-- Let `K` and `L` be integer-indexed cochain complexes in an abelian category, with `L`
+K-injective, and let `n` be an integer. This additive equivalence identifies `Hom_D(K, L[n])`
+with degree-`n` cocycles in the Hom complex modulo coboundaries, or equivalently chain maps `K →
+L[n]` modulo chain homotopy. -/
 def kInjectiveDerivedHomAddEquivCohomologyClass
     {C : Type u} [Category.{v} C] [Abelian C] [HasDerivedCategory C]
     (K L : CochainComplex C ℤ) [L.IsKInjective] (n : ℤ) :

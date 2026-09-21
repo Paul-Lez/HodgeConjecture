@@ -11,7 +11,7 @@ import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
-# Complex points of the constructed smooth decomposition
+# Complex points of the smooth decomposition
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.Stratification.Analytification`.
@@ -51,7 +51,7 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ)) {Y : Over (Spec ↧ℂ)}
 
-/-- Forgetting a complex point to its underlying Zariski point is continuous for the actual
+/-- Forgetting a complex point to its underlying Zariski point is continuous for the
 analytic topology. -/
 theorem continuous_underlying_to_zariski :
     Continuous (Point.underlying : ComplexPoint X → X.left) := by

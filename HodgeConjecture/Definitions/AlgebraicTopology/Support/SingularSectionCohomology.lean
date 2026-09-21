@@ -26,16 +26,17 @@ namespace AlgebraicTopology.Singular
 
 variable (X : TopCat.{0})
 
-/-- The literal intersection subspace and the complement of a support inside an open
-are homeomorphic by regrouping subtype witnesses. -/
+/-- Let `X` be a topological space, `S ⊆ X` closed, and `V ⊆ X` open. This homeomorphism identifies
+the subspace `V ∩ (X \ S)` of `X` with the subspace `{v ∈ V | v ∉ S}` of `V`; it leaves each
+underlying point unchanged. -/
 def openIntersectionSupportComplementHomeomorph (S : Set X) (hS : IsClosed S) (V : Opens X) :
     ↥(V ⊓ (⟨Sᶜ, hS.isOpen_compl⟩ : Opens X)) ≃ₜ {v : V | v.1 ∉ S} where
   toEquiv := (Equiv.subtypeSubtypeEquivSubtypeInter (· ∈ V) (· ∉ S)).symm
   continuous_toFun := (continuous_subtype_val.subtype_mk _).subtype_mk _
   continuous_invFun := (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
 
-/-- The actual open-inclusion pair is the actual support-complement pair, preserving
-the ambient open pointwise. -/
+/-- Let `X` be a topological space, `S ⊆ X` closed, and `V ⊆ X` open. This identifies the pairs `(V,
+V ∩ (X \ S))` and `(V, V \ S)`, acting as the identity on underlying points in both spaces. -/
 def openIntersectionPairIsoSupportComplement (S : Set X) (hS : IsClosed S) (V : Opens X) :
     openInclusionPair X (Opens.infLELeft V (⟨Sᶜ, hS.isOpen_compl⟩ : Opens X)) ≅
       neighborhoodSupportComplementPair (V : Set X) S where
@@ -52,8 +53,10 @@ def openIntersectionPairIsoSupportComplement (S : Set X) (hS : IsClosed S) (V : 
 
 variable [T2Space X] [∀ V : Opens X, ParacompactSpace V] (U V : Opens X)
 
-/-- `H^n_{X \ U}(V; ℚ) ≅ H^n(V, V ⊓ U; ℚ)`: the cohomology of sections over `V` of
-`Γ_{X \ U}(C^•_sing)` is the rational singular cohomology of the pair `(V, V ⊓ U)`. -/
+/-- Let `X` be a Hausdorff topological space whose every open subset is paracompact. Let `U` and `V`
+be open and `C^•` the complex of sheafified rational singular cochains. The sections on `V` that
+vanish on `V ∩ U` form a subcomplex. This additive equivalence identifies its degree-`n`
+cohomology with relative singular cohomology `H^n(V, V ∩ U; ℚ)`. -/
 def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
     -- `H^n_{X \ U}(V; ℚ) ≅ H^n(V, V ⊓ U; ℚ)`.
     ((((TopCat.Sheaf.supportEvaluation X
@@ -72,8 +75,10 @@ def supportedRationalSingularSectionCohomologyEquivRelative (n : ℕ) :
         ((n : ℤ) - 1)).addCommGroupIsoToAddEquiv
     |>.trans (openSingularSheafRestrictionConeCohomologyEquivRelative X (Opens.infLELeft V U) n)
 
-/-- `H^n_S(V; ℚ) ≅ H^n(V, V \ S; ℚ)` for a closed `S ⊆ X`, through the explicit identification
-of the pairs `(V, V ⊓ (X \ S))` and `(V, V \ S)`. -/
+/-- Let `X` be a Hausdorff topological space whose every open subset is paracompact. Let `S ⊆ X` be
+closed and `V ⊆ X` open. This identifies degree-`n` cohomology of sections on `V` of the
+sheafified rational singular cochains supported in `S` with relative singular cohomology `H^n(V,
+V \ S; ℚ)`. -/
 def supportedRationalSingularSectionCohomologyEquivSupportComplement
     (S : Set X) (hS : IsClosed S) (V : Opens X) (n : ℕ) :
     -- `H^n_S(V; ℚ) ≅ H^n(V, V \ S; ℚ)`.

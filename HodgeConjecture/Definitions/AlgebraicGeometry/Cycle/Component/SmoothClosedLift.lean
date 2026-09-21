@@ -26,11 +26,15 @@ namespace AlgebraicGeometry
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- The precise algebraic open complementary to the canonical singular boundary. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. This is the Zariski open subset `X \ Z_sing`, obtained by
+removing the singular locus of `Z`, viewed as a closed subset of `X`. -/
 def cycleComponentSmoothLocusAmbientOpen : X.left.Opens :=
   (cycleComponentSingularAmbientClosedFiltration X x 0).compl
 
-/-- The ambient boundary complement with its induced structure map to `Spec ℂ`. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. This is the open subscheme `X \ Z_sing` together with its
+structure morphism to `Spec ℂ`, restricted from that of `X`. -/
 abbrev cycleComponentSmoothLocusAmbientOpenOver : Over (Spec ↧ℂ) :=
   ComplexPoint.openScheme X (cycleComponentSmoothLocusAmbientOpen X x)
 
@@ -45,7 +49,9 @@ instance cycleComponentSmoothLocusAmbientOpenInclusion_isImmersion :
   change IsImmersion (cycleComponentSmoothLocusAmbientOpen X x).ι
   infer_instance
 
-/-- The actual smooth locus, closed in the complement of its singular boundary. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. The smooth locus `Z_reg` is closed in `X \ Z_sing`. This is its
+closed immersion into that open subscheme, obtained by restricting the inclusion `Z → X`. -/
 def cycleComponentSmoothLocusClosedLift :
     (cycleComponentι X.left x ≫ X.hom).smoothLocus.toScheme ⟶
       (cycleComponentSmoothLocusAmbientOpen X x).toScheme :=
@@ -64,7 +70,9 @@ theorem cycleComponentSmoothLocusClosedLift_ι :
       (cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫ cycleComponentι X.left x :=
   closedImmersionSourceOpenLift_ι _ _
 
-/-- The smooth-locus closed lift bundled over `Spec ℂ`. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. This is the closed immersion `Z_reg → X \ Z_sing` as a morphism
+of schemes over `ℂ`; both structure maps are induced by that of `X`. -/
 def cycleComponentSmoothLocusClosedLiftOver :
     ComplexPoint.cycleComponentSmoothLocusOver X x ⟶
       cycleComponentSmoothLocusAmbientOpenOver X x :=
@@ -98,7 +106,9 @@ instance cycleComponentSmoothLocusAmbientOpenOver_smoothOfRelativeDimension :
 
 namespace ComplexPoint
 
-/-- The full cycle support as an actual closed analytic subset. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. This is `Z(ℂ)` as a closed subset of the analytic space `X(ℂ)`,
+namely the complex points whose underlying scheme points lie in `Z`. -/
 def cycleComponentAnalyticClosedSupport : Closeds (ComplexPoint X) :=
   ⟨cycleComponentSupport X x, isClosed_cycleComponentSupport X x⟩
 

@@ -12,10 +12,10 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.RightDeriv
 /-!
 # Shift compatibility of derived natural transformations
 
-The transformations induced by coefficient maps commute with the actual coherent
-shifts. This is needed to compare support enlargement before and after orientation
-duality. The compatibility is proved on complexes and descended through the actual
-injective-resolution comparison, not supplied as data.
+The transformations induced by coefficient maps commute with the coherent
+shifts. This is needed to compare support enlargement before and after orientation duality. The
+compatibility is proved on complexes and descended through the injective-resolution
+comparison.
 -/
 
 @[expose] public noncomputable section
@@ -76,7 +76,7 @@ instance mapCochainComplexCommShift : CommShift (α.mapHomologicalComplex ℤᵘ
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The induced transformation on homotopy categories retains the actual shifts. -/
+/-- The induced transformation on homotopy categories retains the shifts. -/
 instance mapHomotopyCategoryCommShift : CommShift (α.mapHomotopyCategory ℤᵘᵖ) ℤ := by
   have h : Functor.whiskerLeft (HomotopyCategory.quotient C ℤᵘᵖ)
       (α.mapHomotopyCategory ℤᵘᵖ) =
@@ -121,7 +121,7 @@ variable [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- On injective complexes the derived transformation is the actual termwise map,
+/-- On injective complexes the derived transformation is the termwise map,
 conjugated by the canonical derived-unit isomorphisms. -/
 theorem rightDerivedFunctorPlus_onInjectives :
     Functor.whiskerLeft (HomotopyCategory.Plus.injectiveToDerived C)
@@ -137,8 +137,8 @@ theorem rightDerivedFunctorPlus_onInjectives :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Coherent shift compatibility of the actual derived transformation. No shift
-compatibility of the coefficient map is supplied: it was proved termwise above. -/
+/-- Coherent shift compatibility of the derived transformation, from the termwise compatibility
+of the coefficient map proved above. -/
 instance rightDerivedFunctorPlusCommShift : CommShift α.rightDerivedFunctorPlus ℤ := by
   have : CommShift (Functor.whiskerLeft (HomotopyCategory.Plus.injectiveToDerived C)
       α.rightDerivedFunctorPlus) ℤ := by

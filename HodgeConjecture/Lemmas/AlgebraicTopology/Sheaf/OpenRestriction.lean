@@ -13,11 +13,11 @@ public import Mathlib.CategoryTheory.Sites.GlobalSections
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
-# Exact open restriction with its actual adjunction
+# Exact open restriction with its adjunction
 
 The naive open restriction is both a continuous-site direct image (hence
 left exact) and isomorphic to topological inverse image (hence right exact).
-Its adjunction to open direct image is displayed with the actual restriction
+Its adjunction to open direct image is displayed with the restriction
 unit used to define sections with support.
 -/
 
@@ -70,7 +70,9 @@ lemma openSheafRestriction_map_quasiIso
     QuasiIso (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
       ℤᵘᵖ).map f) := inferInstance
 
-/-- The actual counit of open restriction/direct image. -/
+/-- Let `j : U → X` be the inclusion of an open subset of a topological space. For a sheaf `F` of
+abelian groups on `U`, this natural map `(j_*F)|_U → F` identifies sections on an open of `U`
+with sections on its image in `X`. It is the counit of restriction followed by direct image. -/
 def openSheafRestrictionCounit :
     pushforward AddCommGrpCat.{u} U.inclusion' ⋙
       U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⟶
@@ -88,8 +90,10 @@ def openSheafRestrictionCounit :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The open-restriction adjunction with the actual support-defining restriction
-as its unit, so later resolution comparisons have a fixed normalization. -/
+/-- Let `j : U → X` be the inclusion of an open subset of a topological space. Restriction of
+sheaves of abelian groups to `U` is left adjoint to direct image along `j`. This adjunction
+identifies morphisms `F|_U → G` with morphisms `F → j_*G`; its unit sends sections of `F` to
+their restrictions to `U`. -/
 def openSheafRestrictionAdjunction :
     U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⊣
       pushforward AddCommGrpCat.{u} U.inclusion' :=
@@ -134,7 +138,7 @@ lemma toSheafify_constantToOpenSheafRestriction (A : AddCommGrpCat.{u}) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Actual restriction of ambient constants, followed by the constant/open
+/-- Restriction of ambient constants, followed by the constant/open
 comparison, is the support-defining restriction unit. -/
 @[reassoc]
 lemma constantRestriction_pushforward_constantToOpen (A : AddCommGrpCat.{u}) :
@@ -158,8 +162,9 @@ lemma constantRestriction_pushforward_constantToOpen (A : AddCommGrpCat.{u}) :
     ((toSheafify (Opens.grothendieckTopology X) 𝓒ᵖ[X; A]).naturality
         (U.isOpenEmbedding.isOpenMap.adjunction.counit.app V.unop).op)
 
-/-- The inverse constant/open comparison is the adjoint of actual constant
-restriction to the subspace. -/
+/-- Let `U` be open in a topological space `X` and `A` an abelian group. This map from the
+restriction of the constant sheaf `A_X` to the constant sheaf `A_U` is adjoint to `A_X →
+j_*A_U`, where `j : U → X` is inclusion. It preserves constant sections. -/
 def openSheafRestrictionToConstant (A : AddCommGrpCat.{u}) :
     (U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
         𝓒[X; A] ⟶ 𝓒[↧U; A] :=

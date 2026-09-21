@@ -54,7 +54,8 @@ open Point
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
 
-/-- Sheaves of additive groups on the analytic complex-point space. -/
+/-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. This is the category of
+sheaves of abelian groups on `X(ℂ)`. -/
 abbrev AnalyticAdditiveSheaf :=
   TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))
 
@@ -62,13 +63,17 @@ local instance analyticHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-/-- The inclusion of the rational constant sheaf into the complex constant sheaf. -/
+/-- Let `K` be a field with a specified embedding into `ℂ`, and let `X` be a scheme over `ℂ`. This
+morphism of constant sheaves on the analytic space `X(ℂ)` sends a locally constant `K`-valued
+function to the same function with values in `ℂ`. -/
 abbrev fieldToComplexConstantSheaf :
     𝓒(↧(ComplexPoint X); K) ⟶ 𝓒(↧(ComplexPoint X); ℂ) :=
   (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
 
-/-- The constant rational sheaf complex, extended by zero to integer degrees. -/
+/-- Let `K` be a field and `X` a scheme over `ℂ`. This integer-indexed complex on the analytic space
+`X(ℂ)` has the constant sheaf `K` in degree zero, zero sheaves in all other degrees, and zero
+differentials. -/
 @[implicit_reducible]
 def constantFieldSheafComplexInt :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
@@ -79,7 +84,9 @@ instance : (constantFieldSheafComplexInt K X).IsStrictlyGE 0 := by
   unfold constantFieldSheafComplexInt
   infer_instance
 
-/-- Extension of rational constants to complex constants as a map of integer complexes. -/
+/-- Let `K` be a field with a specified embedding into `ℂ`, and let `X` be a scheme over `ℂ`. This
+map of integer-indexed complexes applies `K → ℂ` to the constant sheaves in degree zero. Both
+complexes are zero in every other degree. -/
 def fieldToComplexConstantSheafComplexInt :
     constantFieldSheafComplexInt K X ⟶
       constantComplexSheafComplexInt X :=
@@ -87,20 +94,26 @@ def fieldToComplexConstantSheafComplexInt :
     ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
       (fieldToComplexConstantSheaf K X)) ComplexShape.embeddingUpNat
 
-/-- Rational constants mapped canonically into the holomorphic de Rham complex. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For a field
+`K` embedded in `ℂ`, this map `K[0] → Ω^•` sends locally constant `K`-valued functions to
+holomorphic zero-forms via the embedding. Here `Ω^•` is the complex of sheaves of holomorphic
+differential forms with exterior derivative. -/
 def fieldToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
     constantFieldSheafComplexInt K X ⟶ Ω•(X) :=
   fieldToComplexConstantSheafComplexInt K X ≫
     constantsToHolomorphicDeRhamComplexInt X
 
-/-- The constant integer sheaf complex, extended by zero to integer degrees. -/
+/-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. This integer-indexed
+complex has the constant integer sheaf in degree zero and zero sheaves in all other degrees,
+with zero differentials. -/
 @[implicit_reducible]
 def constantIntegerSheafComplexInt :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
     𝓒(↧(ComplexPoint X); ℤ)).extend ComplexShape.embeddingUpNat
 
-/-- Scalar multiplication on the rational constant sheaf. -/
+/-- Let `K` be a field, `X` a scheme over `ℂ`, and `q ∈ K`. This endomorphism of the constant sheaf
+`K` on the analytic space `X(ℂ)` multiplies each locally constant function by `q`. -/
 abbrev fieldScalarSheaf (q : K) :
     𝓒(↧(ComplexPoint X); K) ⟶ 𝓒(↧(ComplexPoint X); K) :=
   (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
@@ -167,7 +180,7 @@ private lemma const_map_algebraMap_comp_complexScalarPresheaf (q : K) : (Functor
 set_option linter.auxLemma false in
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1 TopCat.instCategorySheaf._aux_3
   TopCat.instCategorySheaf._aux_5 in
-/-- The inclusion of rational constants into complex constants commutes with scalar
+/-- The inclusion of `K`-valued constants into complex constants commutes with scalar
 multiplication. -/
 private lemma fieldToComplexConstantSheaf_scalar (q : K) :
     fieldToComplexConstantSheaf K X ≫
@@ -181,7 +194,8 @@ private lemma fieldToComplexConstantSheaf_scalar (q : K) :
 
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
   TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 in
-/-- Scalar multiplication on the rational constant sheaf complex. -/
+/-- Let `K` be a field, `X` a scheme over `ℂ`, and `q ∈ K`. This endomorphism of the integer-indexed
+complex `K[0]` on the analytic space `X(ℂ)` multiplies its degree-zero constant sheaf by `q`. -/
 def fieldScalarComplex (q : K) :
     constantFieldSheafComplexInt K X ⟶
       constantFieldSheafComplexInt K X :=
@@ -209,7 +223,7 @@ omit [Algebra K ℂ] in
   unfold fieldScalarComplex
   rw [fieldScalarSheaf_mul, Functor.map_comp, HomologicalComplex.extendMap_comp]
 
-/-- The integer-indexed inclusion of rational constants into complex constants commutes with
+/-- The integer-indexed inclusion of `K`-valued constants into complex constants commutes with
 scalar multiplication. -/
 private lemma fieldToComplexConstantSheafComplexInt_scalar (q : K) :
     fieldToComplexConstantSheafComplexInt K X ≫
@@ -220,7 +234,7 @@ private lemma fieldToComplexConstantSheafComplexInt_scalar (q : K) :
     ← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp, ← Functor.map_comp,
     complexScalarComplex, ← Functor.map_comp, fieldToComplexConstantSheaf_scalar]
 
-/-- The rational-to-de Rham comparison of complexes commutes with rational scalar
+/-- The `K`-coefficient to de Rham comparison of complexes commutes with `K`-scalar
 multiplication. -/
 private lemma fieldToHolomorphicDeRhamComplexInt_scalar
     [IsIntegral X.left] [Smooth X.hom] (q : K) :
@@ -232,7 +246,9 @@ private lemma fieldToHolomorphicDeRhamComplexInt_scalar
   rw [Category.assoc, constantsToHolomorphicDeRhamComplexInt_scalar, ← Category.assoc,
     fieldToComplexConstantSheafComplexInt_scalar, Category.assoc]
 
-/-- Quasi-isomorphisms of analytic sheaf complexes. -/
+/-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. This is the class of maps
+between integer-indexed complexes of sheaves of abelian groups that induce isomorphisms on every
+cohomology sheaf. -/
 abbrev analyticQuasiIsomorphisms :=
   HomologicalComplex.quasiIso (AnalyticAdditiveSheaf X) ℤᵘᵖ
 
@@ -244,7 +260,10 @@ noncomputable instance analyticHasSmallLocalizedShiftedHom
   exact Localization.hasSmallLocalizedHom_of_isLocalization
     (analyticQuasiIsomorphisms X) DerivedCategory.Q
 
-/-- Hypercohomology of an analytic sheaf complex in integer degree `n`. -/
+/-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For an integer-indexed
+complex `F` of sheaves of abelian groups, its degree-`n` hypercohomology is `ℍ^n(X(ℂ); F) =
+Hom_D(ℤ[0], F[n])`. Here `D` is the derived category, obtained by inverting maps inducing
+isomorphisms on all cohomology sheaves, and `ℤ` is the constant integer sheaf. -/
 @[implicit_reducible]
 def Hypercohomology
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) : Type 1 :=
@@ -264,7 +283,9 @@ its structure morphism `X`. -/
 scoped notation3:max "H^" n:max "(" X "; " K ")" =>
   ℍ^n(X; constantFieldSheafComplexInt K X)
 
-/-- Complex constant-sheaf cohomology in integer degree `n`. -/
+/-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. Degree-`n` cohomology with
+coefficients in the constant complex sheaf is `H^n(X(ℂ); ℂ) = ℍ^n(X(ℂ); ℂ[0])`. It is the group
+of morphisms `ℤ[0] → ℂ[n]` in the derived category of sheaves of abelian groups. -/
 abbrev ComplexConstantCohomology (n : ℤ) : Type 1 :=
   ℍ^n(X; constantComplexSheafComplexInt X)
 
@@ -292,16 +313,20 @@ lemma hypercohomologyEquiv_add
         (analyticQuasiIsomorphisms X) DerivedCategory.Q) β := by
   simp [Equiv.add_def]
 
-/-- Hypercohomology of the holomorphic de Rham complex in integer degree `n`, that is
-`ℍ^n(X; Ω•(X))`. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. Holomorphic
+de Rham cohomology `H_dR^n(X)` is the degree-`n` hypercohomology of the sheaf complex `𝒪 → Ω¹ →
+Ω² → ⋯`, whose differential is exterior differentiation. The complex is zero in negative
+degrees. -/
 abbrev DeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) : Type 1 :=
   ℍ^n(X; Ω•(X))
 
 @[inherit_doc DeRhamHypercohomology]
 scoped notation:max "H_dR^" n:max "(" X ")" => DeRhamHypercohomology X n
 
-/-- The constant-to-holomorphic-de Rham quasi-isomorphism induces the corresponding
-equivalence on hypercohomology. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. The
+inclusion of locally constant complex functions into holomorphic zero-forms gives this
+equivalence `H^n(X(ℂ); ℂ) ≃ ℍ^n(X(ℂ); Ω^•)`. The holomorphic Poincaré lemma makes the inclusion
+`ℂ[0] → Ω^•` a quasi-isomorphism. -/
 def complexConstantCohomologyDeRhamEquiv
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     ComplexConstantCohomology X n ≃ H_dR^n(X) :=
@@ -310,7 +335,9 @@ def complexConstantCohomologyDeRhamEquiv
     (by
       change QuasiIso (constantsToHolomorphicDeRhamComplexInt X)
       infer_instance)
-/-- Postcomposition on hypercohomology by a map of complexes. -/
+/-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. A map of sheaf complexes `f
+: K → L` induces this additive map `ℍ^n(X(ℂ); K) → ℍ^n(X(ℂ); L)`. In the derived category it
+sends `α : ℤ[0] → K[n]` to its composite with `f[n]`. -/
 def hypercohomologyMap
     {K L : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (f : K ⟶ L) (n : ℤ) :
     ℍ^n(X; K) →+ ℍ^n(X; L) where
@@ -384,8 +411,10 @@ lemma hypercohomologyMap_add_apply
   simp [hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
     Functor.map_add]
 
-/-- Scalars acting on a coefficient complex by an additive, unital and antimultiplicative family
-of endomorphisms act on its hypercohomology. -/
+/-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. Let a semiring `R` act on a
+sheaf complex `C` through endomorphisms `s(r)` with `s(a+b) = s(a)+s(b)`, `s(1) = id`, and
+`s(ab) = s(a) ∘ s(b)`. If the specified scalar action on `ℍ^n(X(ℂ); C)` is induced by these
+maps, this construction supplies its `R`-module structure. -/
 noncomputable abbrev hypercohomologyModule {R : Type*} [Semiring R]
     {C : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (s : R → (C ⟶ C)) (n : ℤ)
     [SMul R ℍ^n(X; C)]
@@ -416,7 +445,7 @@ noncomputable abbrev hypercohomologyModule {R : Type*} [Semiring R]
       apply e.injective
       simp [e, hypercohomologyMap])
 
-/-- The rational action on constant-sheaf cohomology, induced by scalar multiplication on the
+/-- The `K`-action on constant-sheaf cohomology, induced by scalar multiplication on the
 coefficient sheaf. -/
 noncomputable instance (n : ℤ) :
     SMul K (H^n(X; K)) :=
@@ -427,7 +456,7 @@ lemma field_smul_eq (n : ℤ) (q : K) (α : H^n(X; K)) :
     q • α = hypercohomologyMap X
       (fieldScalarComplex K X q) n α := rfl
 
-/-- Rational constant-sheaf cohomology is canonically a rational vector space. -/
+/-- For a scheme `X` over `ℂ` and a field `K`, constant-sheaf cohomology `H^n(X(ℂ); K)` is a `K`-vector space, with scalars acting on coefficient functions. -/
 noncomputable instance fieldCohomologyModule (n : ℤ) :
     Module K (H^n(X; K)) :=
   hypercohomologyModule X (fieldScalarComplex K X) n (field_smul_eq K X n)
@@ -474,12 +503,14 @@ noncomputable instance deRhamHypercohomologyIsScalarTower
     IsScalarTower K ℂ H_dR^n(X) :=
   IsScalarTower.restrictScalars K ℂ H_dR^n(X)
 
-/-- The derived comparison from rational cohomology to holomorphic de Rham hypercohomology. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For a field
+`K` embedded in `ℂ`, this additive map `H^n(X(ℂ); K) → H_dR^n(X)` is induced by including
+locally constant `K`-valued functions as holomorphic zero-forms. -/
 def fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     H^n(X; K) →+ H_dR^n(X) :=
   hypercohomologyMap X (fieldToHolomorphicDeRhamComplexInt K X) n
 
-/-- The rational-to-de Rham comparison is compatible with rational scalar multiplication. -/
+/-- The `K`-coefficient to de Rham comparison is compatible with `K`-scalar multiplication. -/
 lemma fieldToDeRhamCohomology_smul
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
     (q : K) (α : H^n(X; K)) :
@@ -490,7 +521,9 @@ lemma fieldToDeRhamCohomology_smul
   rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
   rw [fieldToHolomorphicDeRhamComplexInt_scalar]
 
-/-- The rational-to-de Rham comparison as a rational-linear map. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For a field
+`K` embedded in `ℂ`, the inclusion `K[0] → Ω^•` induces this `K`-linear map from constant-sheaf
+cohomology `H^n(X(ℂ); K)` to holomorphic de Rham cohomology `H_dR^n(X)`. -/
 def fieldToDeRhamCohomologyLinear
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     H^n(X; K) →ₗ[K] H_dR^n(X) where
@@ -498,8 +531,10 @@ def fieldToDeRhamCohomologyLinear
   map_add' := (fieldToDeRhamCohomology K X n).map_add
   map_smul' := fieldToDeRhamCohomology_smul K X n
 
-/-- `F^p Ω•(X)` is the holomorphic de Rham complex `Ω•(X)` with only the form degrees at least
-`p` retained. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For an
+integer `p`, the complex `F^p Ω^•` has the sheaf of holomorphic `q`-forms in degrees `q ≥ p` and
+zero in degrees `q < p`. Its remaining differentials are exterior derivatives; this is the
+truncation by form degree. -/
 def hodgeFilteredDeRhamComplex [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   Ω•(X).stupidTrunc (ComplexShape.embeddingUpIntGE p)
@@ -507,12 +542,16 @@ def hodgeFilteredDeRhamComplex [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
 @[inherit_doc hodgeFilteredDeRhamComplex]
 scoped notation:max "F^" p:max " Ω•" "(" X ")" => hodgeFilteredDeRhamComplex X p
 
-/-- Inclusion of the degree-at-least-`p` de Rham complex into the full complex. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For an
+integer `p`, this map `F^p Ω^• → Ω^•` is the identity on holomorphic forms in degrees at least
+`p` and the zero map below `p`, where the source is zero. -/
 def hodgeFilteredDeRhamInclusion [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
     F^p Ω•(X) ⟶ Ω•(X) :=
   HomologicalComplex.stupidTruncInclusion Ω•(X) (ComplexShape.embeddingUpIntGE p)
 
-/-- Complex scalar multiplication on the filtered de Rham complex. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For an
+integer `p` and a scalar `c ∈ ℂ`, this endomorphism multiplies forms by `c` in the complex `F^p
+Ω^•` of holomorphic forms in degrees at least `p`, which is zero in lower degrees. -/
 def hodgeFilteredDeRhamComplexScalar [IsIntegral X.left] [Smooth X.hom]
     (p : ℤ) (c : ℂ) :
     F^p Ω•(X) ⟶ F^p Ω•(X) :=
@@ -532,17 +571,24 @@ private lemma hodgeFilteredDeRhamComplexScalar_comp_inclusion
     (ComplexShape.embeddingUpIntGE p)
     (scalarHolomorphicDeRhamComplexInt X c)
 
-/-- Hypercohomology of the degree-at-least-`p` part of the de Rham complex. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For
+integers `p` and `n`, this is `ℍ^n(X(ℂ); F^p Ω^•)`, the hypercohomology of the holomorphic de
+Rham complex with terms below form degree `p` replaced by zero. -/
 abbrev FilteredDeRhamHypercohomology [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : Type 1 :=
   ℍ^n(X; F^p Ω•(X))
 
-/-- The map from filtered to full de Rham hypercohomology. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For
+integers `p` and `n`, inclusion of holomorphic forms of degree at least `p` into the full de
+Rham complex induces this map `ℍ^n(X(ℂ); F^p Ω^•) → H_dR^n(X)`. -/
 def filteredToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) :
     FilteredDeRhamHypercohomology X p n →+ H_dR^n(X) :=
   hypercohomologyMap X (hodgeFilteredDeRhamInclusion X p) n
 
-/-- The Hodge filtration `F^p` on de Rham hypercohomology. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. The `p`-th
+Hodge filtration in degree `n` is the additive subgroup `F^p H_dR^n(X)` given by the image of
+`ℍ^n(X(ℂ); F^p Ω^•) → ℍ^n(X(ℂ); Ω^•)`. The source complex keeps holomorphic forms of degree at
+least `p` and is zero in lower degrees. -/
 def hodgeFiltration [IsIntegral X.left] [Smooth X.hom] (p n : ℤ) :
     AddSubgroup H_dR^n(X) :=
   (filteredToDeRhamCohomology X p n).range
@@ -560,7 +606,9 @@ lemma hodgeFiltration_complex_smul_mem [IsIntegral X.left] [Smooth X.hom]
   rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
   rw [hodgeFilteredDeRhamComplexScalar_comp_inclusion]
 
-/-- The Hodge filtration bundled as a complex subspace of de Rham hypercohomology. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. The complex
+subspace `F^p H_dR^n(X)` is the image on degree-`n` hypercohomology of the inclusion of
+holomorphic forms of degrees at least `p` into the full de Rham complex. -/
 def hodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : Submodule ℂ H_dR^n(X) where
   carrier := hodgeFiltration X p n
@@ -578,7 +626,10 @@ Conjugation is not `ℂ`-linear, so it acts on the constant sheaf `ℂ` rather t
 de Rham complex, and is transported across the constant-to-de Rham comparison. The `(p,q)` piece
 is then *defined* as `F^p ⊓ conj F^q`, which needs no Hodge decomposition theorem. -/
 
-/-- The constant-to-de Rham comparison equivalence, upgraded to an additive equivalence. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. This
+additive equivalence `H^n(X(ℂ); ℂ) ≃ H_dR^n(X)` is induced by the inclusion of the constant
+complex sheaf into the holomorphic de Rham complex. The inclusion is a quasi-isomorphism by the
+holomorphic Poincaré lemma. -/
 def complexConstantCohomologyDeRhamAddEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     ComplexConstantCohomology X n ≃+ H_dR^n(X) :=
   { complexConstantCohomologyDeRhamEquiv X n with
@@ -615,7 +666,10 @@ private lemma complexConstantCohomologyDeRhamAddEquiv_symm_scalar [IsIntegral X.
   rw [AddEquiv.apply_symm_apply, complexConstantCohomologyDeRhamAddEquiv_scalar,
     AddEquiv.apply_symm_apply]
 
-/-- Complex conjugation on de Rham hypercohomology, transported from the constant sheaf `ℂ`. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. This
+additive endomorphism of `H_dR^n(X)` is complex conjugation transported through `H^n(X(ℂ); ℂ) ≃
+H_dR^n(X)`. On constant-sheaf cohomology, conjugation is induced by conjugating the locally
+constant coefficient functions. -/
 def deRhamConj [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     H_dR^n(X) →+ H_dR^n(X) :=
   ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
@@ -637,28 +691,38 @@ lemma deRhamConj_smul [IsIntegral X.left] [Smooth X.hom] (n : ℤ) (c : ℂ) (α
     ← hypercohomologyMap_comp_apply, complexScalarComplexInt_comp_conj,
     hypercohomologyMap_comp_apply, complexConstantCohomologyDeRhamAddEquiv_scalar]
 
-/-- Conjugation on de Rham hypercohomology, bundled as a conjugate-linear map. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. Conjugation
+of constant complex coefficients, transported through `H^n(X(ℂ); ℂ) ≃ H_dR^n(X)`, gives this
+conjugate-linear endomorphism of de Rham cohomology. It sends `c α` to `conj(c) conj(α)`. -/
 def deRhamConjSemilinear [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     H_dR^n(X) →ₛₗ[starRingEnd ℂ] H_dR^n(X) where
   toFun := deRhamConj X n
   map_add' := (deRhamConj X n).map_add
   map_smul' := deRhamConj_smul X n
 
-/-- The conjugate Hodge filtration `conj F^p`. Conjugation is an involution, so the preimage of
-`F^p` is also its image. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. The
+conjugate Hodge filtration in degree `n` consists of classes whose complex conjugates lie in
+`F^p H_dR^n(X)`. Here `F^p` is the image of the hypercohomology of holomorphic forms of degree
+at least `p`, and conjugation is transported from constant complex coefficients. -/
 def conjHodgeFiltrationComplexSubmodule [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : Submodule ℂ H_dR^n(X) :=
   (F^p H_dR^n(X)).comap (deRhamConjSemilinear X n)
 
-/-- The intersection `F^p ⊓ conj F^q` in degree `n`. For smooth projective varieties and
-`p + q = n`, this is the usual `(p,q)` Hodge piece. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. This
+complex subspace of `H_dR^n(X)` is `F^p ∩ conjugate(F^q)`, where `F^r` is the image of the
+hypercohomology of holomorphic forms in degrees at least `r`. Conjugation comes from constant
+complex coefficients. When `X` is projective and `p + q = n`, this is the Hodge component of
+type `(p,q)`. -/
 def hodgePiece [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
     Submodule ℂ H_dR^n(X) :=
   F^p H_dR^n(X) ⊓ conjHodgeFiltrationComplexSubmodule X q n
 
-/-- Cohomology classes with coefficients in `K` whose de Rham images lie in `F^p ⊓ conj F^p`
-in degree `2p`. When conjugation fixes the image of `K` in `ℂ`, see
-`hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule` for the equivalent `F^p` condition. -/
+/-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For a field
+`K` embedded in `ℂ` and a natural number `p`, these are the classes in `H^{2p}(X(ℂ); K)` whose
+de Rham images belong to `F^p ∩ conjugate(F^p)`. The filtration `F^p` is the image of the
+hypercohomology of holomorphic forms of degrees at least `p`. Conjugation is induced by
+conjugating constant complex coefficients; for projective `X`, the intersection is the Hodge
+component of type `(p,p)`. -/
 def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
     Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap

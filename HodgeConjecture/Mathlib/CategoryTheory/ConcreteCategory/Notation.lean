@@ -99,7 +99,7 @@ open OfNotation
 /-- `↧X` is the object of a concrete category corresponding to the type `X`, i.e. `FooCat.of X`
 where the category `FooCat` is determined by the expected type.
 
-`↧X` elaborates to a literal application of `FooCat.of`.
+`↧X` elaborates to an application of `FooCat.of`.
 * `(↧R : CommRingCat)` is `CommRingCat.of R`,
 * `(↧M : ModuleCat R)` is `ModuleCat.of R M`,
 * `(↧A : CommAlgCat R)` is `CommAlgCat.of R A`.

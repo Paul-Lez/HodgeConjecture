@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.DerivedSectionsLocalization
 
 /-!
-# The actual localization sequence on injective coefficient complexes
+# The localization sequence on injective coefficient complexes
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Support.DerivedSectionsLocalization`.
@@ -25,24 +25,26 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U : Opens X)
 
-/-- The actual support inclusion followed by restriction-pushforward. -/
+/-- Let `U` be open in a topological space `X` and `F` a sheaf of abelian groups. This is the
+sequence `Γ_{X \ U}(F) → F → j_*(F|_U)`, where `j : U → X` is inclusion. The maps include
+sections vanishing on `U` and restrict to `U`. -/
 def supportRestrictionShortComplex (F : Sheaf AddCommGrpCat.{u} X) :
     ShortComplex (Sheaf AddCommGrpCat.{u} X) :=
   ShortComplex.mk ((sheafSectionsSupportedOutsideInclusion X U).app F)
     ((toOpenRestrictionPushforward X U).app F)
     (sheafSectionsSupportedOutsideInclusion_restriction X U F)
 
-/-- The sequence of sections on `V`, with the actual supported-sections inclusion
-and actual restriction map. -/
+/-- Let `U,V` be open in a topological space `X` and `F` a sheaf of abelian groups. This sequence
+takes sections on `V` of `Γ_{X \ U}(F) → F → j_*(F|_U)`. Under the intersection identification
+it is `ker(F(V) → F(V ∩ U)) → F(V) → F(V ∩ U)`. -/
 def supportRestrictionSectionsShortComplex (V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) : ShortComplex AddCommGrpCat.{u} :=
   (supportRestrictionShortComplex X U F).map (supportEvaluation X V)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Evaluation on every open set preserves this particular localization sequence
-for injective coefficients. This does not assert that evaluation is exact in
-general. -/
+/-- For injective coefficients, evaluation on every open set preserves this localization
+sequence. -/
 private lemma supportRestrictionSectionsShortComplex_shortExact (V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) [Injective F] :
     (supportRestrictionSectionsShortComplex X U V F).ShortExact where

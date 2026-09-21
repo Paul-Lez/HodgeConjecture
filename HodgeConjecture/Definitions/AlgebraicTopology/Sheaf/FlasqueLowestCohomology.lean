@@ -30,7 +30,9 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- The kernel of the actual boundary-to-cycles map is the preceding cycle sheaf. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. For an integer `n`, the kernel of the differential viewed as `K^{n-1} → Z^n(K)`
+is canonically the preceding cycle sheaf `Z^{n-1}(K) = ker(d^{n-1})`. -/
 def kernelBoundaryToCyclesIso (n : ℤ) :
     kernel (K.sc n).toCycles ≅ K.cycles ((ℤᵘᵖ).prev n) :=
   letI p := (ℤᵘᵖ).prev n
@@ -42,7 +44,7 @@ def kernelBoundaryToCyclesIso (n : ℤ) :
     IsLimit.conePointUniqueUpToIso (kernelIsKernel (K.sc n).f) (K.cyclesIsKernel p n hnext)
 
 /-- In the first potentially nonzero cohomology degree, the forgetful functor
-preserves the actual left homology of this short complex. -/
+preserves the left homology of this short complex. -/
 private theorem forget_preservesLeftHomologyOf_lowest (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :
     (forget AddCommGrpCat.{u} X).PreservesLeftHomologyOf (K.sc n) := by
@@ -63,7 +65,7 @@ private theorem forget_preservesLeftHomologyOf_lowest (N n : ℤ) [K.IsStrictlyG
       f' := IsFlasque.forget_preservesCokernel (K.sc n).toCycles }
   exact Functor.PreservesLeftHomologyOf.mk' F (ShortComplex.LeftHomologyData.canonical (K.sc n))
 
-/-- The lowest-degree section-cohomology presheaf is an actual sheaf. -/
+/-- The lowest-degree section-cohomology presheaf is a sheaf. -/
 private theorem sectionCohomologyPresheaf_isSheaf_lowest (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :
     CategoryTheory.Presheaf.IsSheaf (Opens.grothendieckTopology X)
@@ -74,8 +76,8 @@ private theorem sectionCohomologyPresheaf_isSheaf_lowest (N n : ℤ) [K.IsStrict
   exact (CategoryTheory.Presheaf.isSheaf_of_iso_iff e).mpr (K.homology n).property
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual presheaf-to-cohomology-sheaf comparison is an isomorphism, because
-its literal sheafification unit is an isomorphism in this degree. -/
+/-- The presheaf-to-cohomology-sheaf comparison is an isomorphism, because
+its sheafification unit is an isomorphism in this degree. -/
 private theorem sectionCohomologyPresheafToSheaf_isIso_lowest (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque) :
     IsIso (sectionCohomologyPresheafToSheaf X K n) := by
@@ -93,8 +95,10 @@ theorem sectionCohomologyToSheafSection_isIso_lowest (N n : ℤ) [K.IsStrictlyGE
   dsimp only [sectionCohomologyToSheafSection]
   infer_instance
 
-/-- The constructed lowest-degree isomorphism, with the actual comparison as its
-forward map. Taking `U = ⊤` gives the global-sections isomorphism. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. Assume `K` is zero below `N`, every term is flasque (all restriction maps are
+surjective), and `𝓗^j(K) = 0` for `j < n`. For every open `U`, this isomorphism `H^n(K(U)) ≅
+Γ(U, 𝓗^n(K))` sends a cocycle section to its class in the cohomology sheaf. -/
 def lowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque)
     (U : Opens X) :

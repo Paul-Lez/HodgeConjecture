@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.FlasqueLowestCohomology
 
 /-!
-# The actual lowest-degree cohomology comparison for flasque complexes
+# The lowest-degree cohomology comparison for flasque complexes
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.FlasqueLowestCohomology`.

@@ -15,12 +15,12 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.ShortExact
 
 A quasi-isomorphism of bounded-below termwise-flasque complexes remains a
 quasi-isomorphism on every open set. The proof restricts to that open set and
-uses the proved flasque global-sections theorem. Consequently its direct image
+uses the flasque global-sections theorem. Consequently its direct image
 under any continuous map is a sheaf quasi-isomorphism. This is a theorem about
 flasque models, not an assertion that arbitrary direct image is exact.
 
 The localization sequence is short exact on every open set for flasque
-coefficients, so the actual supported-sections complex computes the fiber of
+coefficients, so the supported-sections complex computes the fiber of
 restriction even for the singular-cochain flasque model.
 -/
 
@@ -34,8 +34,9 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U : Opens X)
 
-/-- Global sections after open restriction are actual sections on the ambient
-open set, via the canonical equality of the image of the top open with `U`. -/
+/-- Let `X` be a topological space and `U ⊆ X` open. This natural isomorphism identifies global
+sections of a sheaf of abelian groups restricted to the space `U` with its original sections on
+the open subset `U`. -/
 def openRestrictionGlobalSectionsIso :
     U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⋙
         IsFlasque.BoundedBelowComplex.globalSectionsFunctor (TopCat.of U) ≅
@@ -46,8 +47,8 @@ def openRestrictionGlobalSectionsIso :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Open-set sections preserve quasi-isomorphisms between bounded-below
-termwise-flasque complexes. All acyclicity is proved from flasqueness. -/
+/-- Open-set sections preserve quasi-isomorphisms between bounded-below termwise-flasque
+complexes. -/
 theorem supportEvaluation_map_quasiIso_of_flasque
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ} (f : K ⟶ L) [QuasiIso f]
     (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
@@ -85,7 +86,7 @@ lemma supportRestrictionSectionsShortComplex_shortExact_of_flasque (V : Opens X)
     (KernelFork.mapIsLimit _ (kernelIsKernel _) (supportEvaluation X V))
   epi_g := toOpenRestrictionPushforward_app_epi X U F V
 
-/-- Termwise flasqueness is sufficient for the actual localization sequence
+/-- Termwise flasqueness is sufficient for the localization sequence
 of section complexes to be short exact. -/
 lemma supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque
     (V : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
@@ -95,7 +96,9 @@ lemma supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque
   intro n
   exact supportRestrictionSectionsShortComplex_shortExact_of_flasque X U V (K.X n)
 
-/-- A coefficient-complex map induces the actual map of localization sequences. -/
+/-- Let `X` be a topological space, `U ⊆ X` open, and `f : K → L` a map of integer-indexed sheaf
+complexes. This is the induced map from `Γ_{X \ U}(K) → K → j_*(K|_U)` to the same sequence for
+`L`, applying `f` to supported sections, all sections, and restricted sections. -/
 def supportRestrictionComplexShortComplexMap
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ} (f : K ⟶ L) :
     supportRestrictionComplexShortComplex X U K ⟶
@@ -110,9 +113,8 @@ def supportRestrictionComplexShortComplexMap
     ext n
     exact (toOpenRestrictionPushforward X U).naturality (f.f n)
 
-/-- Supported sections of a quasi-isomorphism between bounded-below flasque
-models are a quasi-isomorphism on every open set. This is a proved acyclicity
-statement for these models, not exactness of supported sections in general. -/
+/-- Supported sections of a quasi-isomorphism between bounded-below flasque models are a
+quasi-isomorphism on every open set. -/
 theorem supportedSections_map_quasiIso_of_flasque
     (V : Opens X) {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
     (f : K ⟶ L) [QuasiIso f] (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
@@ -133,7 +135,7 @@ theorem supportedSections_map_quasiIso_of_flasque
     (supportRestrictionSectionsComplexShortComplex_shortExact_of_flasque X U V L hL)
 
 /-- Termwise supported sections preserve quasi-isomorphisms between bounded-below
-flasque models, as detected by their actual section complexes. -/
+flasque models, as detected by their section complexes. -/
 theorem sheafSectionsSupportedOutside_map_quasiIso_of_flasque
     {K L : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ}
     (f : K ⟶ L) [QuasiIso f] (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]

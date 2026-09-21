@@ -12,10 +12,9 @@ public import Mathlib.Analysis.Normed.Module.Connected
 /-!
 # Dimensional vanishing for Euclidean local homology
 
-These vanishing statements use the constructed affine boundary chain-homotopy equivalence
+These vanishing statements use the affine boundary chain-homotopy equivalence
 and the dimension bound on normalized simplicial chains. They are prerequisites for proving
 that the concrete relative-chain sheaf has cohomology only in the orientation degree.
-No bounded chain model or homology-vanishing certificate is supplied as input.
 -/
 
 @[expose] public noncomputable section
@@ -74,8 +73,8 @@ theorem standardPuncturedHomology_isZero_of_dimension_le (d k : ℕ) (hk : d ≤
     (ModuleCat.of ℚ ℚ) k d hk).of_iso
       ((standardAffineBoundaryChainHomotopyEquiv d).toHomologyIso k).symm
 
-/-- Local homology of real `d`-space vanishes above degree `d`. This also covers
-degree one in dimension zero, without invoking a positive-degree boundary isomorphism. -/
+/-- Local homology of real `d`-space vanishes above degree `d`, degree one in dimension zero
+included. -/
 theorem standardLocalHomology_isZero_of_dimension_lt (d k : ℕ) (hk : d < k) :
     IsZero (RelativeHomology ℚ (puncturedPair ℝ d) k) := by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : k ≠ 0)

@@ -9,13 +9,11 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueBoundedBelow
 # Global lower-degree vanishing for flasque coefficient complexes
 
 If a bounded-below termwise-flasque sheaf complex is exact through degree `M`,
-its global section complex is exact through the same degree. Only the stated
-initial range is used; exactness in higher degrees is not assumed.
+its global section complex is exact through the same degree. Only the stated initial range is
+used.
 
-The proof inductively establishes flasqueness of the cycle sheaves in that
-range and then applies the actual short exact cycles sequence. This is the
-globalization step for supported semipurity, without assuming a spectral
-sequence or an exact global-sections functor.
+The proof inductively establishes flasqueness of the cycle sheaves in that range and then applies
+the short exact cycles sequence. This is the globalization step for supported semipurity.
 -/
 
 @[expose] public noncomputable section

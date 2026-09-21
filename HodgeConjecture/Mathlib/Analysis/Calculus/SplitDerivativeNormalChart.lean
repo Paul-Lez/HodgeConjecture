@@ -12,10 +12,10 @@ public import Mathlib.Analysis.Normed.Module.FiniteDimension
 /-!
 # Normal coordinates from a split derivative
 
-A map with a split injective strict derivative extends to an actual local coordinate map
+A map with a split injective strict derivative extends to a local coordinate map
 by adding vectors in the kernel of a left inverse. This is an application of the inverse
 function theorem, not an assumed flattening equivalence. The zero-normal slice is exactly
-the original parametrization on the constructed coordinate domain. Identifying that slice
+the original parametrization on the coordinate domain. Identifying that slice
 with an entire geometric support additionally requires a local embedding assertion.
 -/
 
@@ -30,8 +30,10 @@ variable {𝕜 E F : Type*} [NontriviallyNormedField 𝕜] [CompleteSpace 𝕜]
   [NormedAddCommGroup F] [NormedSpace 𝕜 F]
   [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F]
 
-/-- A specified left inverse splits the ambient vector space into the original tangent
-space and the actual kernel of that left inverse. -/
+/-- Let `E,F` be finite-dimensional normed vector spaces over a complete nontrivially normed field
+`𝕜`. If continuous linear maps `A : E → F` and `P : F → E` satisfy `P ∘ A = id`, this continuous
+linear equivalence `E × ker(P) ≅ F` sends `(v,n)` to `A(v)+n`. Its inverse sends `y` to
+`(P(y),y-A(P(y)))`. -/
 def splitKernelEquiv (A : E →L[𝕜] F) (P : F →L[𝕜] E)
     (h : P.comp A = ContinuousLinearMap.id 𝕜 E) : (E × P.ker) ≃L[𝕜] F :=
   LinearEquiv.toContinuousLinearEquiv
@@ -83,7 +85,10 @@ theorem add_kernel (hf : HasStrictFDerivAt f A a) (P : F →L[𝕜] E)
     (a, (0 : P.ker)) (ContinuousLinearMap.snd 𝕜 E P.ker).hasStrictFDerivAt
   convert h1.add h2 using 1 <;> rfl
 
-/-- The actual inverse-function-theorem coordinate map `(v,n) ↦ f(v)+n`. -/
+/-- Let `E,F` be finite-dimensional normed vector spaces over a complete nontrivially normed field
+`𝕜`. Suppose `f : E → F` has strict derivative `A` at `a`, with continuous linear left inverse
+`P`. This local homeomorphism from `E × ker(P)` to `F` is given near `(a,0)` by `(v,n) ↦
+f(v)+n`. Its local inverse is supplied by the inverse function theorem. -/
 def normalChart (hf : HasStrictFDerivAt f A a) (P : F →L[𝕜] E)
     (h : P.comp A = ContinuousLinearMap.id 𝕜 E) :
     OpenPartialHomeomorph (E × P.ker) F :=
@@ -114,7 +119,7 @@ theorem normalChart_symm_apply (hf : HasStrictFDerivAt f A a) (P : F →L[𝕜] 
   simpa using (hf.normalChart P h).left_inv hv
 
 /-- On its ambient target, zero normal coordinate is equivalent to membership in the
-image of the zero-normal part of the actual coordinate domain. -/
+image of the zero-normal part of the coordinate domain. -/
 theorem normalChart_normal_eq_zero_iff (hf : HasStrictFDerivAt f A a) (P : F →L[𝕜] E)
     (h : P.comp A = ContinuousLinearMap.id 𝕜 E) (y : F)
     (hy : y ∈ (hf.normalChart P h).target) :

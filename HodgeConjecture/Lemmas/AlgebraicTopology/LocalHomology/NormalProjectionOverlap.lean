@@ -10,9 +10,9 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.Holomorphic
 /-!
 # Normal fibers and ambient overlap compatibility
 
-Actual normal fibers factor both normal projections through maps of point-complement
+Normal fibers factor both normal projections through maps of point-complement
 pairs. Complex orientation invariance of the normal transition therefore gives agreement
-of the actual ambient supported coclasses, not just an abstract transverse comparison.
+of the ambient supported coclasses, not just an abstract transverse comparison.
 -/
 
 @[expose] public noncomputable section
@@ -31,7 +31,7 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 include ha hp ht hti in
 /-- Exact normal orientation invariance can be obtained inside any prescribed open
-normal neighborhood. This permits the transverse pair map to land in an actual chosen
+normal neighborhood. This permits the transverse pair map to land in a chosen
 common ambient neighborhood. -/
 theorem exists_open_normalTransition_localClass_invariance_within
     (U : Set (Fin c → ℂ)) (hU : IsOpen U) (h0U : 0 ∈ U)
@@ -68,8 +68,10 @@ variable {M E : Type} [TopologicalSpace M] [NormedAddCommGroup E] [NormedSpace �
   (a : E) (W : Set M) (V : Set (Fin c → ℂ))
   (hV : ∀ v ∈ V, (a, v) ∈ e.target ∧ e.symm (a, v) ∈ W)
 
-/-- The uncompressed normal fiber is a genuine map from a small normal point-complement
-pair into the chosen ambient support-complement pair. -/
+/-- Let `e` be a chart on a topological space `M` with values in `E × ℂ^c`, identifying a subset `S`
+with the locus where the second coordinate is zero. Fix `a ∈ E`, `W ⊆ M`, and `V ⊆ ℂ^c` such
+that `(a,v)` lies in the chart target and `e⁻¹(a,v) ∈ W` for every `v ∈ V`. This map of pairs
+`(V,V \ {0}) → (W,W \ S)` sends `v` to `e⁻¹(a,v)`. -/
 def chartNormalFiberPair :
     neighborhoodPointComplementPair V 0 ⟶ neighborhoodSupportComplementPair W S :=
   have hc : Continuous (fun v : V => e.symm (a, v.1)) :=
@@ -86,7 +88,7 @@ def chartNormalFiberPair :
       (hc.comp continuous_subtype_val).subtype_mk _ |>.subtype_mk _⟩) (by ext v; rfl)
 
 omit [NormedSpace ℝ E] in
-/-- In the chart used to define the fiber, normal projection is literally inclusion. -/
+/-- In the chart used to define the fiber, normal projection is inclusion. -/
 theorem chartNormalFiber_comp_projection (hW : W ⊆ e.source) :
     chartNormalFiberPair c e S hS a W V hV ≫ chartNormalProjectionPair E c e S hS W hW =
       neighborhoodPointComplementPairMap V 0 := by
@@ -98,8 +100,7 @@ theorem chartNormalFiber_comp_projection (hW : W ⊆ e.source) :
     exact congrArg Prod.snd (e.right_inv (hV v.1 v.2).1)
 
 omit [NormedSpace ℝ E] in
-/-- In a second chart, normal projection of the same actual fiber is literally the
-normal transition map, not an unspecified comparison. -/
+/-- In a second chart, normal projection of the same fiber is the normal transition map. -/
 theorem chartNormalFiber_comp_other_projection
     (e' : OpenPartialHomeomorph M (E × (Fin c → ℂ)))
     (hS' : ∀ y ∈ e'.source, y ∈ S ↔ (e' y).2 = 0) (hW' : W ⊆ e'.source)
@@ -122,7 +123,7 @@ variable {M E : Type} [TopologicalSpace M] [NormedAddCommGroup E]
 
 include hS hS' in
 omit [NormedSpace ℝ E] [NormedSpace ℂ E] in
-/-- Flattening the same actual support proves the zero-plane criterion for the transition. -/
+/-- Flattening the same support proves the zero-plane criterion for the transition. -/
 theorem supportChartTransition_preserves_plane (v : E × (Fin c → ℂ))
     (hv : v ∈ (e.symm.trans e').source) :
     (e.symm.trans e' v).2 = 0 ↔ v.2 = 0 := by
@@ -131,9 +132,9 @@ theorem supportChartTransition_preserves_plane (v : E × (Fin c → ℂ))
   exact (hS' (e.symm v) hv.2).symm.trans h1
 
 include h0 in
-/-- On a modeled ambient neighborhood contained in both chart sources, the actual
+/-- On a modeled ambient neighborhood contained in both chart sources, the
 normal-projection coclasses agree. The proof factors both projections through the same
-actual normal fiber and uses the proved complex normal-transition orientation theorem. -/
+normal fiber and uses the complex normal-transition orientation theorem. -/
 theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
     (hW' : (flattenedSupportNeighborhood E c e x hx : Set M) ⊆ e'.source)
     (ht : AnalyticAt ℂ (e.symm.trans e') (e x))
@@ -195,9 +196,9 @@ theorem chartNormalProjectionCoclass_eq_on_flattenedNeighborhood
   exact (chartNormalProjectionCoclass_unique E c e S hS x hx h0 _ hvalue).symm
 
 include hx h0 in
-/-- Genuine ambient overlap agreement on a sufficiently small common open neighborhood.
-The local class is not chosen by one-dimensionality: it is already constructed by the
-normal pair model, and the proof checks its exact transition normalization. -/
+/-- Ambient overlap agreement on a sufficiently small common open neighborhood. The local class
+is the one built by the normal pair model, and the proof checks its exact transition
+normalization. -/
 theorem exists_open_chartNormalProjectionCoclass_eq (hx' : x ∈ e'.source)
     (ht : AnalyticAt ℂ (e.symm.trans e') (e x))
     (hti : AnalyticAt ℂ (e.symm.trans e').symm ((e.symm.trans e') (e x))) :

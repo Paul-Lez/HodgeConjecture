@@ -45,14 +45,16 @@ namespace AlgebraicTopology.Singular
 
 variable {R M : Type*} [Field R] [AddCommGroup M] [Module R M]
 
-/-- The normalized dual of a nonzero vector. -/
+/-- Let `M` be a vector space over a field `R` and `z ∈ M` a nonzero vector. This is a chosen linear
+functional `M → R` taking `z` to `1`. In dimensions greater than one, this condition need not
+determine the functional uniquely. -/
 def normalizedDual (z : M) (hz : z ≠ 0) : Module.Dual R M :=
   Classical.choose (Module.Projective.exists_dual_eq_one R hz)
 
-/-- The relative cohomology class normalized to pair to one with a given nonzero relative
-homology class. Cohomology is the homology of the dual cochain complex rather than the dual of
-homology, so the normalized functional is transported along the universal-coefficient
-equivalence. -/
+/-- Let `R` be a field, `(X, A)` a topological pair, and `z` a nonzero class in relative singular
+homology `H_n(X, A; R)`. Choose a linear functional on this homology group taking `z` to `1`,
+and use the universal-coefficient equivalence to obtain a class in `H^n(X, A; R)`. This is the
+resulting coclass; the normalization alone is unique when the homology is one-dimensional. -/
 def normalizedRelativeCoclass {R : Type*} [Field R] {X : TopPair} {n : ℕ}
     (z : RelativeHomology R X n) (hz : z ≠ 0) : RelativeCohomology R X n :=
   (relativeCohomologyEquivDualHomology R X n).symm (normalizedDual z hz)

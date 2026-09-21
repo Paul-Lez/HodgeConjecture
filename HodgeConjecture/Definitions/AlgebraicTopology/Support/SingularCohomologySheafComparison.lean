@@ -28,7 +28,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- The canonical evaluation/homology comparison respects actual open restriction. -/
+/-- The canonical evaluation/homology comparison respects open restriction. -/
 @[reassoc]
 lemma sectionCohomologyPresheafOnOpenIso_inv_naturality
     (n : ℤ) {V W : Opens X} (a : W ⟶ V) :
@@ -56,8 +56,10 @@ open TopCat.Sheaf
 variable (X : TopCat.{0}) [T2Space X] [∀ V : Opens X, ParacompactSpace V]
   (S : Set X) (hS : IsClosed S) (n : ℕ)
 
-/-- The presheaves `V ↦ H^n_S(V; ℚ)` and `V ↦ H^n(V, V \ S; ℚ)` on `X` agree, together with
-their restriction maps. -/
+/-- Let `X` be a Hausdorff topological space whose every open subset is paracompact. Let `S ⊆ X` be
+closed and `n` a natural number. This presheaf isomorphism identifies `V ↦ H^n(Γ(V, Γ_S(C^•)))`
+with `V ↦ H^n(V, V \ S; ℚ)`. Here `C^•` is the sheafified rational singular cochain complex, and
+`Γ_S` takes the subsheaves of sections vanishing off `S`. -/
 def supportedSingularCohomologyPresheafIsoRelative :
     -- `V ↦ H^n_S(V; ℚ)` is the presheaf `V ↦ H^n(V, V \ S; ℚ)`.
     sectionCohomologyPresheaf X
@@ -87,8 +89,10 @@ def supportedSingularCohomologyPresheafIsoRelative :
     exact supportedRationalSingularSectionCohomologyEquivSupportComplement_naturality
       X S hS a.unop n _)
 
-/-- The `n`-th cohomology sheaf of `Γ_S(C^•_sing)` is `𝓗^n_S`, the sheaf associated with
-`V ↦ H^n(V, V \ S; ℚ)`; this uses that sheafification is exact. -/
+/-- Let `X` be a Hausdorff topological space whose every open subset is paracompact. Let `S ⊆ X` be
+closed and `C^•` the sheafified rational singular cochain complex. The degree-`n` cohomology
+sheaf of its subsheaves of sections supported in `S` is identified with the sheafification of `V
+↦ H^n(V, V \ S; ℚ)`, rational relative singular cohomology. -/
 def supportedSingularCohomologySheafIsoRelative :
     -- The `n`-th cohomology sheaf of `Γ_S(C^•_sing)`.
     (supportedRationalSingularCochainComplex X

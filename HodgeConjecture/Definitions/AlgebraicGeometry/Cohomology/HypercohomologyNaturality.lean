@@ -21,9 +21,9 @@ local instance derivedGlobalSectionsHasDerivedCategory :
     HasDerivedCategory (Sheaf AddCommGrpCat Y) :=
   HasDerivedCategory.standard (Sheaf AddCommGrpCat Y)
 
-/-- On a K-injective sheaf complex, derived morphisms from the integer
-constant sheaf are computed by actual global sections, with no further
-replacement complex. -/
+/-- Let `Y` be a topological space, `K` a K-injective complex of sheaves of abelian groups on `Y`,
+and `n` an integer. This is the additive equivalence `Hom_D(ℤ[0], K[n]) ≃ H^n(Γ(Y, K))`. It
+evaluates morphisms from the constant integer sheaf at the section `1`. -/
 def derivedHomAddEquivGlobalSectionsKInjective
     (K : CochainComplex (Sheaf AddCommGrpCat Y) ℤ) [K.IsKInjective] (n : ℤ) :
     ShiftedHom
@@ -44,8 +44,9 @@ local instance hypercohomologyNaturalitySheafDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-/-- `ℍ^n(X(ℂ); K) ≅ H^n(Γ(X(ℂ), K))` for a K-injective complex of sheaves `K`: hypercohomology
-is the cohomology of global sections, with no further injective resolution. -/
+/-- Let `X` be a scheme over `ℂ`, `K` a K-injective complex of sheaves of abelian groups on its
+analytic space, and `n` an integer. This additive equivalence identifies hypercohomology
+`ℍ^n(X(ℂ); K)` with the degree-`n` cohomology of the complex of global sections `Γ(X(ℂ), K)`. -/
 def hypercohomologyAddEquivGlobalSectionsKInjective
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective] (n : ℤ) :
     -- `ℍ^n(X(ℂ); K) ≅ H^n(Γ(X(ℂ), K))`.

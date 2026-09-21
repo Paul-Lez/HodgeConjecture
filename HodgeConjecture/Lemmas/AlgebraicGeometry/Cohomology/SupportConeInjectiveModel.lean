@@ -25,8 +25,10 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- Restriction from the ambient injective resolution to the fixed complement
-resolution, using the strict comparison on the actual open complement. -/
+/-- Let `X` be a scheme over `ℂ`, `Y = X(ℂ)`, and `j : U → Y` the inclusion of the complement of a
+closed subset `Z`. Let `I,J` be the chosen injective resolutions of the constant rational
+sheaves on `Y,U`. This map `I → j_*J` restricts to `U` and applies the comparison `I|_U → J`
+extending the identity on constants. The complexes are zero in negative degrees. -/
 def ambientRationalInjectiveRestriction
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     ambientRationalInjectiveComplex X ⟶
@@ -55,8 +57,10 @@ lemma ambientRationalAugmentation_comp_restriction
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
       (AddCommGrpCat.of ℚ))
 
-/-- The actual map from the old rational support cone to its ambient-injective
-source replacement. -/
+/-- Let `X` be a scheme over `ℂ`, `Y = X(ℂ)`, and `j : U → Y` the inclusion of the complement of a
+closed subset `Z`. Let `I,J` be the chosen injective resolutions of the constant rational
+sheaves on `Y,U`. This map `Cone(ℚ_Y[0] → j_*J) → Cone(I → j_*J)` applies the augmentation
+`ℚ_Y[0] → I` and the identity on `j_*J`. -/
 def rationalSupportConeToAmbientInjectiveCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     rationalCohomologyWithSupportComplex X Z ⟶
@@ -81,7 +85,7 @@ instance ambientRationalInjectiveCone_isStrictlyGE
     infer_instance
   exact CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1) (by omega) (by omega)
 
-/-- The replacement cone is genuinely termwise injective: its terms are
+/-- The replacement cone is termwise injective: its terms are
 finite biproducts of ambient injectives and open direct images of injectives. -/
 instance ambientRationalInjectiveCone_injective
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (q : ℤ) :
@@ -100,8 +104,10 @@ instance ambientRationalInjectiveCone_isKInjective
       (ambientRationalInjectiveRestriction X Z hZ)).IsKInjective :=
   CochainComplex.isKInjective_of_injective _ (-1)
 
-/-- The existing support group is computed by the global sections of this
-normalized ambient-injective cone. No smoothness assumption is needed. -/
+/-- Let `X` be a scheme over `ℂ`, `Y = X(ℂ)`, and `j : U → Y` the inclusion of the complement of a
+closed subset `Z`. Let `I,J` be the chosen injective resolutions of the constant rational
+sheaves on `Y,U`. Replacing `ℚ_Y[0]` by `I` gives this additive equivalence `H_Z^n(Y;ℚ) ≃
+H^{n-1}(Γ(Y,Cone(I → j_*J)))` from cohomology with support in `Z`. -/
 def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
@@ -119,9 +125,10 @@ def rationalSupportAddEquivAmbientInjectiveConeGlobalSections
         (rationalSupportConeToAmbientInjectiveCone X Z hZ) (n - 1)).map_add α β }
   e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ (n - 1))
 
-/-- Compare actual restriction of the integer-indexed ambient resolution with
-the independently chosen complement resolution. The map/extension isomorphism
-is displayed explicitly, rather than requiring the two models to be equal. -/
+/-- Let `X` be a scheme over `ℂ`, `Y = X(ℂ)`, and `j : U → Y` the inclusion of the complement of a
+closed subset `Z`. Let `I,J` be the chosen injective resolutions of the constant rational
+sheaves on `Y,U`. This map `j_*(I|_U) → j_*J` is the direct image of the comparison extending
+the identity on constants, with both complexes zero in negative degrees. -/
 def ambientRationalOpenResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     ((TopCat.Sheaf.openRestrictionPushforward
@@ -143,7 +150,7 @@ def ambientRationalOpenResolutionComparison
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
-lemma actualRestriction_comp_openResolutionComparison
+lemma supportRestriction_comp_openResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     (TopCat.Sheaf.supportRestrictionComplexShortComplex
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
@@ -157,7 +164,10 @@ lemma actualRestriction_comp_openResolutionComparison
   exact (ComplexShape.embeddingUpNat.extendFunctor (AnalyticAdditiveSheaf X)).map_comp _ _
     |>.symm
 
-/-- Global sections of the actual open-resolution comparison. -/
+/-- Let `X` be a scheme over `ℂ` and `U` the complement of a closed subset of `Y = X(ℂ)`. For the
+chosen injective resolutions `I,J` of the constant rational sheaves on `Y,U`, this map
+`Γ(U,I|_U) → Γ(U,J)` takes sections of the comparison `I|_U → J` extending the identity on
+constants. -/
 def globalAmbientRationalOpenResolutionComparison
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :=
   ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
@@ -188,10 +198,11 @@ instance globalAmbientRationalOpenResolutionComparison_quasiIso
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual group-level restriction cone maps to the cone of the independent
-complement resolution. Both the ambient component and the prescribed
-restriction square are fixed. -/
-def actualSupportConeToAmbientInjectiveGlobalCone
+/-- Let `X` be a scheme over `ℂ` and `U` the complement of a closed subset of `Y = X(ℂ)`. For the
+chosen injective resolutions `I,J` of the constant rational sheaves on `Y,U`, this map
+`Cone(Γ(Y,I) → Γ(U,I|_U)) → Cone(Γ(Y,I) → Γ(U,J))` uses the identity on ambient sections and the
+comparison `I|_U → J` extending the identity on constants. -/
+def supportConeToAmbientInjectiveGlobalCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     CochainComplex.mappingCone
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
@@ -207,20 +218,18 @@ def actualSupportConeToAmbientInjectiveGlobalCone
         (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,
-        actualRestriction_comp_openResolutionComparison])
+        supportRestriction_comp_openResolutionComparison])
 
 set_option backward.isDefEq.respectTransparency false in
-instance actualSupportConeToAmbientInjectiveGlobalCone_quasiIso
+instance supportConeToAmbientInjectiveGlobalCone_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    QuasiIso (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) :=
+    QuasiIso (supportConeToAmbientInjectiveGlobalCone X Z hZ) :=
   CochainComplex.mappingCone.quasiIso_map_of_quasiIso _ _ _ _ _
 
-/-- The existing rational support group is the homology of the actual
-kernel-defined supported sections of the ambient rational injective
-resolution. The shift `n - 1` in the old cone model is reconciled by the
-explicit homology/shift isomorphism. The final negation corrects the
-standard cone triangle's negative connecting projection, so that the
-comparison preserves the actual support-forgetting inclusion. -/
+/-- Let `X` be a scheme over `ℂ`, `Z ⊆ Y = X(ℂ)` closed, and `I` the chosen injective resolution of
+the constant rational sheaf on `Y`. This additive equivalence identifies cohomology with support
+`H_Z^n(Y;ℚ)` with `H^n(Γ_Z(Y,I))`, where `Γ_Z(Y,I^q) = ker(I^q(Y) → I^q(Y \ Z))`. Its sign makes
+forgetting support correspond to inclusion into `Γ(Y,I)`. -/
 def rationalSupportAddEquivSupportedInjectiveHomology
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
@@ -237,7 +246,7 @@ def rationalSupportAddEquivSupportedInjectiveHomology
     (CochainComplex.mappingCone.mapHomologicalComplexIso
       (ambientRationalInjectiveRestriction X Z hZ) Γ) (n - 1)
   let e₃ := (asIso (HomologicalComplex.homologyMap
-    (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) (n - 1))).symm
+    (supportConeToAmbientInjectiveGlobalCone X Z hZ) (n - 1))).symm
   letI : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
     CochainComplex.mappingCocone.quasiIso_shiftedLiftShortComplex S
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)

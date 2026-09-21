@@ -30,7 +30,7 @@ factor through one member of the family.  Its chain complex maps canonically and
 to the full singular chain complex, and every cover-member chain map factors through it.
 
 The classical subdivision theorem says that, for an open cover, this inclusion is a chain-homotopy
-equivalence.  The definitions below state that next step using mathlib's actual `HomotopyEquiv`
+equivalence.  The definitions below state that next step using mathlib's `HomotopyEquiv`
 API and prove its full homological consequence.  Mathlib's current simplicial subdivision functor
 does not yet provide a last-vertex map, a subdivision chain map, or its chain homotopy to the
 identity, so that theorem cannot yet be constructed from library primitives.

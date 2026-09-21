@@ -41,7 +41,7 @@ instance derivedSheafSectionsWithClosedSupport_commShift (Z : Closeds X) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The sheaf-valued derived unit respects the constructed shifts. -/
+/-- The sheaf-valued derived unit respects the shifts. -/
 instance derivedSheafSectionsWithClosedSupportUnit_commShift (Z : Closeds X) :
     NatTrans.CommShift (derivedSheafSectionsWithClosedSupportUnit X Z) ℤ :=
   Functor.rightDerivedFunctorPlusUnitCommShift (sheafSectionsWithClosedSupport X Z)
@@ -54,7 +54,7 @@ instance derivedClosedSupportSections_commShift (Z : Closeds X) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The group-valued derived unit respects the constructed shifts. -/
+/-- The group-valued derived unit respects the shifts. -/
 instance derivedClosedSupportSectionsUnit_commShift (Z : Closeds X) :
     NatTrans.CommShift (derivedClosedSupportSectionsUnit X Z) ℤ :=
   Functor.rightDerivedFunctorPlusUnitCommShift (closedSupportSections X Z)

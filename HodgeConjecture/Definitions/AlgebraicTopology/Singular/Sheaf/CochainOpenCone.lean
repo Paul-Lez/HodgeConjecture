@@ -15,8 +15,8 @@ public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 
 /-! # Local singular-cochain restriction cones
 
-The comparison is the cone map of the actual sheafification units and
-actual restriction maps. Cone degree `n - 1` computes relative degree `n`.
+The comparison is the cone map of the sheafification units and
+restriction maps. Cone degree `n - 1` computes relative degree `n`.
 -/
 
 @[expose] public noncomputable section
@@ -30,21 +30,26 @@ variable (R : Type) [CommRing R] (X : TopCat.{0})
 local instance singularCochainOpenConeDerivedCategory : HasDerivedCategory AddCommGrpCat :=
   HasDerivedCategory.standard AddCommGrpCat
 
-/-- The local raw cochain restriction cone, extended by zero in negative degrees. -/
+/-- Let `R` be a commutative ring and `W ⊆ V` open subsets of a topological space `X`. This is the
+mapping cone of singular-cochain restriction `C^*(V; R) → C^*(W; R)`. Both cochain complexes are
+extended by zero to negative integer degrees before taking the cone; the cone itself can have a
+term in degree `-1`. -/
 def openRawSingularRestrictionCone {V W : Opens X} (i : W ⟶ V) :
     CochainComplex AddCommGrpCat ℤ :=
   CochainComplex.mappingCone
     (HomologicalComplex.extendMap (openRawSingularRestriction R X i)
       ComplexShape.embeddingUpNat)
 
-/-- The local sheaf-section restriction cone. -/
+/-- Let `R` be a commutative ring and `W ⊆ V` open subsets of a topological space `X`. Let `S^•` be
+the sheafification on `X` of singular cochains. This is `Cone(Γ(V, S^•) → Γ(W, S^•))`, formed
+after extending both section complexes by zero to negative integer degrees. -/
 def openSingularSheafRestrictionCone {V W : Opens X} (i : W ⟶ V) :
     CochainComplex AddCommGrpCat ℤ :=
   CochainComplex.mappingCone
     (HomologicalComplex.extendMap (openSingularSheafRestriction R X i)
       ComplexShape.embeddingUpNat)
 
-/-- The actual local sheafification restriction square, after extension by zero. -/
+/-- The local sheafification restriction square, after extension by zero. -/
 lemma openSingularSheafRestrictionInt_naturality {V W : Opens X} (i : W ⟶ V) :
     HomologicalComplex.extendMap (openRawSingularRestriction R X i)
         ComplexShape.embeddingUpNat ≫
@@ -57,7 +62,10 @@ lemma openSingularSheafRestrictionInt_naturality {V W : Opens X} (i : W ⟶ V) :
   rw [← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp,
     openSingularSheafRestriction_naturality]
 
-/-- The local cone comparison induced by the actual sheafification units. -/
+/-- Let `R` be a commutative ring and `W ⊆ V` open subsets of a topological space `X`. The maps
+taking singular cochains to their sheafified sections on `V` and `W` commute with restriction.
+This is the induced map from `Cone(C^*(V; R) → C^*(W; R))` to the cone of restriction of those
+sheaf sections, in integer degrees. -/
 def openRawToSingularSheafRestrictionCone {V W : Opens X} (i : W ⟶ V) :
     openRawSingularRestrictionCone R X i ⟶ openSingularSheafRestrictionCone R X i :=
   CochainComplex.mappingCone.map _ _
@@ -68,7 +76,7 @@ def openRawToSingularSheafRestrictionCone {V W : Opens X} (i : W ⟶ V) :
     (openSingularSheafRestrictionInt_naturality R X i)
 
 /-- Both local open spaces being paracompact Hausdorff suffices for the
-actual cone comparison to be a quasi-isomorphism. -/
+cone comparison to be a quasi-isomorphism. -/
 theorem openRawToSingularSheafRestrictionCone_quasiIso {V W : Opens X} (i : W ⟶ V)
     [ParacompactSpace V] [T2Space V] [ParacompactSpace W] [T2Space W] :
     QuasiIso (openRawToSingularSheafRestrictionCone ℚ X i) := by
@@ -76,14 +84,17 @@ theorem openRawToSingularSheafRestrictionCone_quasiIso {V W : Opens X} (i : W �
   let := openRawToSingularCochainSheafComplex_quasiIso X W
   exact CochainComplex.mappingCone.map_quasiIso_of_vertical_quasiIso _ _ _ _ _
 
-/-- The actual topological pair consisting of two nested ambient opens. -/
+/-- Let `W ⊆ V` be open subsets of a topological space `X`. This is the topological pair `(V, W)`,
+consisting of the two subspaces and their inclusion. -/
 def openInclusionPair {V W : Opens X} (i : W ⟶ V) : TopPair :=
   TopPair.of ((Opens.toTopCat X).map i)
     (Topology.IsEmbedding.of_comp ((Opens.toTopCat X).map i).hom.continuous
       V.inclusion'.hom.continuous W.isOpenEmbedding.isEmbedding)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- Raw sections are the actual dual singular complex of the open space. -/
+/-- Let `R` be a commutative ring and `V` an open subset of a topological space `X`. This identifies
+evaluation at `V` of the singular cochain presheaf complex with `Hom_R(C_*(V; R), R)`, viewed as
+a complex of abelian groups. -/
 def openRawSingularCochainComplexIsoDual (V : Opens X) :
     openRawSingularCochainComplex R X V ≅
       ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex (.up ℕ)).obj
@@ -100,7 +111,7 @@ def openRawSingularCochainComplexIsoDual (V : Opens X) :
       ext φ
       rfl)
 
-/-- The preceding identification preserves the literal dual of the
+/-- The preceding identification preserves the dual of the
 singular-chain inclusion of nested opens. -/
 private lemma openRawSingularRestriction_transport {V W : Opens X} (i : W ⟶ V) :
     openRawSingularRestriction R X i ≫ (openRawSingularCochainComplexIsoDual R X W).hom =
@@ -109,8 +120,9 @@ private lemma openRawSingularRestriction_transport {V W : Opens X} (i : W ⟶ V)
           (HomologicalComplex.linearDualMap
             ((chainPairFunctor R).obj (openInclusionPair X i)).hom) := rfl
 
-/-- The actual raw cochains on an ambient open, in the integer-indexed
-presentation used by relative cohomology. -/
+/-- Let `R` be a commutative ring and `V` an open subset of a topological space `X`. This identifies
+the integer-indexed extension of the singular cochains on `V` with the linear dual of its
+singular chain complex extended to integer degrees, after forgetting the module structure. -/
 def openRawSingularCochainComplexIntIsoDual (V : Opens X) :
     (openRawSingularCochainComplex R X V).extend ComplexShape.embeddingUpNat ≅
       ((forget₂ (ModuleCat R) AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
@@ -150,8 +162,10 @@ lemma openRawSingularRestrictionInt_transport {V W : Opens X} (i : W ⟶ V) :
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
-/-- The raw local cone is the relative-cochain cone, via its actual
-restriction square. -/
+/-- Let `R` be a commutative ring and `W ⊆ V` open subsets of a topological space `X`. This
+identifies the cone formed from the presheaf restriction on singular cochains with the cone of
+the dual chain map of the pair `(V, W)`, after forgetting the `R`-module structure. Both cones
+use integer degrees. -/
 def openRawSingularRestrictionConeIsoRelative {V W : Opens X} (i : W ⟶ V) :
     openRawSingularRestrictionCone R X i ≅
       CochainComplex.mappingCone
@@ -163,8 +177,9 @@ def openRawSingularRestrictionConeIsoRelative {V W : Opens X} (i : W ⟶ V) :
       (openRawSingularCochainComplexIntIsoDual R X W)
       (openRawSingularRestrictionInt_transport R X i).symm)
 
-/-- The raw local cone computes relative cohomology of the literal
-embedded pair `(V, W)`. -/
+/-- Let `R` be a commutative ring and `W ⊆ V` open subsets of a topological space `X`. This additive
+equivalence is `H^{n-1}(Cone(C^*(V; R) → C^*(W; R))) ≃ H^n(V, W; R)`, where the right side is
+relative singular cohomology and the cone uses integer degrees. -/
 def openRawSingularRestrictionConeCohomologyEquivRelative {V W : Opens X}
     (i : W ⟶ V) (n : ℕ) :
     (openRawSingularRestrictionCone R X i).homology ((n : ℤ) - 1) ≃+
@@ -183,8 +198,10 @@ def openRawSingularRestrictionConeCohomologyEquivRelative {V W : Opens X}
     (forget₂ (ModuleCat R) AddCommGrpCat)).addCommGroupIsoToAddEquiv
     |>.trans (relativeCochainConeCohomologyEquivCanonical R (openInclusionPair X i) n).toAddEquiv
 
-/-- Sections of the actual singular sheaf restriction cone compute
-relative rational cohomology. Apply to `Opens.infLELeft V U` for `(V, V ∩ U)`. -/
+/-- Let `W ⊆ V` be open subsets of a topological space `X`, with both subspaces paracompact and
+Hausdorff. Let `S^•` be the sheafified rational singular cochain complex on `X`. This additive
+equivalence identifies `H^{n-1}(Cone(Γ(V, S^•) → Γ(W, S^•)))` with relative singular cohomology
+`H^n(V, W; ℚ)`. -/
 def openSingularSheafRestrictionConeCohomologyEquivRelative {V W : Opens X}
     (i : W ⟶ V) [ParacompactSpace V] [T2Space V]
     [ParacompactSpace W] [T2Space W] (n : ℕ) :

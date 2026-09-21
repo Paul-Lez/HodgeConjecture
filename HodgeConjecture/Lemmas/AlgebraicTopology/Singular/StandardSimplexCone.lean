@@ -24,7 +24,7 @@ This module is ported from Paul Lezeau's corresponding file in
 # The cone contraction on standard-simplex chains
 
 Prepending the zero vertex defines an extra degeneracy on every standard simplex.  On integral
-simplicial chains this is the classical cone operator.  This file constructs it on the actual
+simplicial chains this is the classical cone operator.  This file constructs it on the
 coproduct basis used by `SSet.chainComplex` and proves its positive-degree contraction identity.
 -/
 
@@ -124,7 +124,7 @@ public theorem standardSimplexZeroConeComponent_fills_cycle
   simp only [← Category.assoc, hz, zero_comp, add_zero] at h
   exact h
 
-/-- Subdivision followed by last vertex, minus the identity, as an actual chain map. -/
+/-- Subdivision followed by last vertex, minus the identity, as a chain map. -/
 public noncomputable def barycentricLastVertexDiscrepancyChainMap (X : SSet.{0}) :
     X.chainComplex (AddCommGrpCat.of ℤ) ⟶
       X.chainComplex (AddCommGrpCat.of ℤ) :=
@@ -461,7 +461,7 @@ public theorem canonicalBarycentricLastVertexPrism_zero :
     canonicalBarycentricLastVertexPrism 0 = 0 := by
   simp [canonicalBarycentricLastVertexPrism]
 
-/-- The recursive prism is the cone on discrepancy minus the already constructed face
+/-- The recursive prism is the cone on discrepancy minus the face
 prisms. -/
 public theorem canonicalBarycentricLastVertexPrism_succ
     (n : ℕ) :
@@ -515,8 +515,7 @@ public theorem canonicalBarycentricLastVertexPrism_boundary
       abel
 
 /-- The explicit canonical chain homotopy from subdivision followed by last vertex to the
-identity. The explicit recursively coned universal prisms supply the formerly missing
-acyclic-model datum. -/
+identity, built from the recursively coned universal prisms. -/
 public noncomputable def barycentricSubdivisionLastVertexHomotopyCanonical
     (X : SSet.{0}) :
     Homotopy

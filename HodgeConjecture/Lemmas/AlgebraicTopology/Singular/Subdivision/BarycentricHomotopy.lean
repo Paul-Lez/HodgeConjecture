@@ -103,7 +103,7 @@ public noncomputable def standardPrismFaceChain
             (SSet.stdSimplex.map (SimplexCategory.δ i))
             (AddCommGrpCat.of ℤ)).f (n + 1))
 
-/-- The smallest remaining acyclic-model datum.  Its equation is the literal universal-simplex
+/-- The smallest remaining acyclic-model datum.  Its equation is the universal-simplex
 prism identity: discrepancy equals the prism boundary plus the transported prisms of all faces. -/
 public structure BarycentricLastVertexPrismData where
   /-- The universal degree-raising prism chain on each standard simplex. -/

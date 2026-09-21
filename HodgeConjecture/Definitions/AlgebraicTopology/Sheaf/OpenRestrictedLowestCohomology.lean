@@ -11,8 +11,8 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestrictedVanis
 /-!
 # Canonical lowest-degree section comparison on an ambient open
 
-The coefficient complex stays on the original ambient space. The actual open
-restriction, its exact homology comparison, and literal equality of the top open's
+The coefficient complex stays on the original ambient space. The open
+restriction, its exact homology comparison, and equality of the top open's
 image identify the lowest-degree comparison on the restricted space with an
 isomorphism between ambient section cohomology and ambient cohomology-sheaf sections.
 -/
@@ -27,7 +27,9 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) (U : Opens X)
 
-/-- Actual global sections of open restriction are ambient sections on the same open. -/
+/-- Let `X` be a topological space and `U ⊆ X` open. For each sheaf of abelian groups `F` on `X`,
+global sections of `F|_U` are exactly sections of `F` over `U`. This is the resulting natural
+isomorphism `Γ(U, F|_U) ≅ F(U)`. -/
 def openRestrictionTopSectionsIso :
     U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⋙ supportEvaluation (TopCat.of U) ⊤ ≅
       supportEvaluation X U :=
@@ -39,7 +41,9 @@ variable (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The same actual open equality applied to coefficient complexes. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. For an open `U`, this identifies the complex of global sections of `K|_U` with
+the complex `K(U)` obtained by evaluating the original sheaves on `U`. -/
 def openRestrictionTopSectionComplexIso :
     ((supportEvaluation (TopCat.of U) ⊤).mapHomologicalComplex ℤᵘᵖ).obj
       (((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
@@ -47,7 +51,9 @@ def openRestrictionTopSectionComplexIso :
       ((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K :=
   (NatIso.mapHomologicalComplex (openRestrictionTopSectionsIso X U) ℤᵘᵖ).app K
 
-/-- Exact open restriction identifies sections of the two actual homology sheaves. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. For an open `U` and an integer `n`, exactness of restriction gives `𝓗^n(K|_U) ≅
+𝓗^n(K)|_U`. This is the induced isomorphism between their groups of sections on `U`. -/
 def openRestrictionHomologyTopSectionsIso (n : ℤ) :
     (((((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
       ℤᵘᵖ).obj K).homology n).presheaf.obj (op (⊤ : Opens (TopCat.of U)))) ≅
@@ -58,8 +64,11 @@ def openRestrictionHomologyTopSectionsIso (n : ℤ) :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Actual lowest-degree comparison on an open where lower cohomology sheaves vanish.
-Its maps are fixed by restriction, sheafification, and exact homology functoriality. -/
+/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
+groups on `X`. Let `U ⊆ X` be open. Suppose `K` is zero below `N`, all its terms are flasque,
+and the cohomology sheaves of `K|_U` vanish below degree `n`. Then the canonical map from
+classes of cocycle sections to sections of the cohomology sheaf is this isomorphism `H^n(K(U)) ≅
+Γ(U, 𝓗^n(K))`. -/
 def openRestrictedLowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero
       ((((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex

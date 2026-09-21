@@ -10,11 +10,10 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCoho
 /-!
 # The normalized component coclass on the original ambient smooth-support open
 
-The component's smooth locus is closed in the complement of its singular
-boundary. We construct its exactly normalized smooth-support section there and
-transport it through the analytic open embedding. The result is a section
-of the ORIGINAL ambient relative-cohomology sheaf on the singular-boundary
-complement. No section, purity comparison, or orientation coherence is an input.
+The component's smooth locus is closed in the complement of its singular boundary. Its exactly
+normalized smooth-support section there is transported through the analytic open embedding,
+giving a section of the original ambient relative-cohomology sheaf on the singular-boundary
+complement.
 -/
 
 @[expose] public noncomputable section
@@ -31,14 +30,14 @@ variable (X : Over (Spec ↧ℂ))
   {p : ℕ} (hx : Order.coheight x = p)
 
 include hx in
-/-- The proved dimension of the smooth locus, bundled over `Spec ℂ`. -/
+/-- The dimension of the smooth locus, bundled over `Spec ℂ`. -/
 theorem cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension :
     SmoothOfRelativeDimension (dim X.left - p) (cycleComponentSmoothLocusOver X x).hom :=
   cycleComponentSmoothLocus_smoothOfRelativeDimension X x hx
 
 include X hx in
 omit [IsProjective X.hom] in
-/-- The codimension arithmetic is proved from the coheight bound. -/
+/-- The codimension arithmetic, from the coheight bound. -/
 theorem cycleComponentSmoothClosedLift_codimension :
     dim X.left - (dim X.left - p) = p := by
   have h := SmoothOfRelativeDimension.coheight_le_complex (f := X.hom) (d := dim X.left) x
@@ -46,9 +45,11 @@ theorem cycleComponentSmoothClosedLift_codimension :
   have hpd : p ≤ dim X.left := by exact_mod_cast h
   omega
 
-/-- The normalized global section of `𝓗^{2p}_{Z_reg(ℂ)}` on the complex manifold `(X \ Z_sing)(ℂ)`,
-where `𝓗^{2p}_{Z_reg(ℂ)}` is the sheaf associated with `V ↦ H^{2p}(V, V \ Z_reg(ℂ); ℚ)`. It is glued
-from the normal-chart coclasses; `2p` is twice the codimension of `Z` in `X`. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. On the analytic space of the open scheme `X \
+Z_sing`, this is the global section of the sheafification of `V ↦ H^{2p}(V, V \ Z_reg(ℂ); ℚ)`
+obtained by gluing local normal orientation coclasses. The local class is normalized to pair to
+`1` with the orientation class of the complex normal space. -/
 def cycleComponentSmoothClosedLiftCoclassSection :
     -- The support is the image of `Z_reg`; if `Z ⊆ X` is the variety, the ambient space is the
     -- `X \ Z_sing` open, as a complex manifold.
@@ -62,7 +63,10 @@ def cycleComponentSmoothClosedLiftCoclassSection :
     (cycleComponentSmoothLocusOver X x)
     (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)
 
-/-- The analytic open-embedding map back to the original ambient space. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. This is the continuous map `(X \ Z_sing)(ℂ) → X(ℂ)` induced by
+inclusion of the open subscheme. It identifies its source with the analytic open subset `X(ℂ) \
+Z_sing(ℂ)`. -/
 def cycleComponentSmoothClosedLiftAmbientMap :
     TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)) ⟶
     TopCat.of (ComplexPoint X) :=
@@ -90,9 +94,12 @@ theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
   rw [Set.image_univ]
   exact cycleComponentSmoothLocusAmbientOpen_analytic_image X x
 
-/-- The normalized section of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`, where `𝓗^{2p}_{Z(ℂ)}` is
-the sheaf on `X(ℂ)` associated with `V ↦ H^{2p}(V, V \ Z(ℂ); ℚ)`. It is the previous section,
-transported along the open embedding `(X \ Z_sing)(ℂ) ↪ X(ℂ)`. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_sing(ℂ)`, and
+`𝓗^{2p}_S` for the sheafification of `V ↦ H^{2p}(V, V \ S; ℚ)`. This section of `𝓗^{2p}_S` on
+`U` is obtained by gluing the local coclasses defined by complex normal coordinates along
+`Z_reg(ℂ)`. The local class is normalized to pair to `1` with the orientation class of the
+complex normal space. -/
 def cycleComponentSmoothSupportCoclassSection :
     -- The support is `Z(ℂ)`, the complex points of the subvariety, inside `X(ℂ)`.
     (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj

@@ -58,7 +58,7 @@ structure Pure (n : ℕ) where
   piece_eq_bot_of_add_ne : ∀ p q, p + q ≠ n → piece p q = ⊥
   /-- Every complexified vector has a unique finite decomposition into Hodge pieces. -/
   isInternal : DirectSum.IsInternal (fun pq : ℕ × ℕ ↦ piece pq.1 pq.2)
-  /-- The constructed complex conjugation exchanges bidegrees. -/
+  /-- The complex conjugation exchanges bidegrees. -/
   conjugate_mem_iff : ∀ p q x, conjugate V x ∈ piece p q ↔ x ∈ piece q p
 
 namespace Pure

@@ -38,7 +38,11 @@ theorem supportedSingularToInjectiveComplex_onOpen_quasiIso (U V : Opens X) :
   TopCat.Sheaf.supportedSections_map_quasiIso_of_flasque X U V
     (singularToConstantInjectiveComplex X hX) 0 0 (fun _ => inferInstance) (fun _ => inferInstance)
 
-/-- Actual section-complex cohomology agrees through the normalized comparison. -/
+/-- Let `X` be Hausdorff, with every open subset paracompact, and with a basis of contractible open
+neighborhoods. Let `C` be the sheafified rational singular cochain complex and `I` an injective
+resolution of the constant rational sheaf. For opens `U,V ⊆ X`, the augmentation-preserving
+comparison `C → I` induces this isomorphism `H^n(Γ_{X \ U}(V,C)) ≅ H^n(Γ_{X \ U}(V,I))`. Here
+supported sections on `V` are sections vanishing on `V ∩ U`, and `n` is any integer. -/
 def supportedSingularInjectiveHomologyIso (U V : Opens X) (n : ℤ) :
     ((((TopCat.Sheaf.supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj
       (supportedRationalSingularCochainComplex X U))).homology n ≅

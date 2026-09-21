@@ -15,11 +15,11 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
 
 /-!
-# Sections of the homology sheaf from actual relative homology
+# Sections of the homology sheaf from relative homology
 
-Exact sheafification sends presheaf homology to the actual homology sheaf. The unit
+Exact sheafification sends presheaf homology to the homology sheaf. The unit
 therefore sends a relative singular homology class on an open support to a section of
-the homology sheaf. The germ comparison records the actual restriction to local relative
+the homology sheaf. The germ comparison records the restriction to local relative
 homology, which is essential for preserving normalized fundamental classes.
 -/
 

@@ -14,17 +14,16 @@ public import Mathlib.Algebra.Homology.HomologySequence
 /-!
 # Localization between two nested closed supports
 
-For `V ⊆ U` open, the actual restrictions `F → j_{U*}F|U → j_{V*}F|V`
+For `V ⊆ U` open, the restrictions `F → j_{U*}F|U → j_{V*}F|V`
 give a short exact sequence on injective coefficients:
 `0 → Γ_{X∖U} F → Γ_{X∖V} F → ker(j_{U*}F|U → j_{V*}F|V) → 0`.
 The last term is explicitly the sheaf of sections on `U` vanishing on `V`,
 viewed on `X`. Thus for closed supports `S ⊆ Z`, the sequence removes `S`
 from `Z`, by taking `U = X∖S` and `V = X∖Z`.
 
-Exactness persists on every open set, since the first restriction is onto for
-injective (indeed flasque) coefficients. No local purity or dimension vanishing
-is assumed here. The resulting canonical mapping-fiber comparison is the
-algebraic localization step needed when extending over singular strata.
+Exactness persists on every open set, since the first restriction is onto for injective (indeed
+flasque) coefficients. The resulting canonical mapping-fiber comparison is the algebraic
+localization step needed when extending over singular strata.
 -/
 
 @[expose] public noncomputable section
@@ -37,7 +36,9 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u}) {U V : Opens X} (h : V ≤ U)
 
-/-- Sections on `U` vanishing on `V`, pushed to the original ambient space. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`, and let `F` be a sheaf of abelian
+groups. This functor sends `F` to the kernel of `j_{U*}(F|_U) → j_{V*}(F|_V)`. On an open `W`,
+its sections are elements of `F(W ∩ U)` that vanish on `W ∩ V`. -/
 def sheafSectionsBetweenOpens : Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} X where
   obj F := kernel ((openRestrictionPushforwardMap X h).app F)
   map f := kernel.map _ _ ((openRestrictionPushforward X U).map f)
@@ -57,8 +58,9 @@ instance : (sheafSectionsBetweenOpens X h).Additive where
     apply (cancel_mono (kernel.ι _)).1
     simp [sheafSectionsBetweenOpens, Preadditive.add_comp, Preadditive.comp_add]
 
-/-- On each ambient open set the last term is exactly the kernel of actual
-restriction from its intersection with `U` to its intersection with `V`. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`, and let `F` be a sheaf of abelian
+groups. For an open `W`, this identifies sections on `W` of the kernel sheaf of restriction from
+`U` to `V` with the kernel of `F(W ∩ U) → F(W ∩ V)`. -/
 def sheafSectionsBetweenOpensOnOpenIso (W : Opens X) (F : Sheaf AddCommGrpCat.{u} X) :
     ((sheafSectionsBetweenOpens X h).obj F).obj.obj (op W) ≅
       kernel (((openRestrictionPushforwardMap X h).app F).hom.app (op W)) :=
@@ -99,7 +101,9 @@ lemma sheafSectionsSupportedOutsideMap_toBetween :
   simp [toSheafSectionsBetweenOpens, sheafSectionsSupportedOutsideMap,
     liftSheafSectionsSupportedOutside, sheafSectionsSupportedOutsideInclusion]
 
-/-- The actual inclusion/restriction sequence for two nested complements. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`, and let `F` be a sheaf of abelian
+groups. This is the sequence `Γ_{X \ U}(F) → Γ_{X \ V}(F) → ker(j_{U*}(F|_U) → j_{V*}(F|_V))`.
+Its first map enlarges support and its second restricts sections to `U`. -/
 def nestedSupportRestrictionShortComplex (F : Sheaf AddCommGrpCat.{u} X) :
     ShortComplex (Sheaf AddCommGrpCat.{u} X) :=
   ShortComplex.mk ((sheafSectionsSupportedOutsideMap X h).app F)
@@ -115,8 +119,7 @@ lemma nestedSupportRestrictionShortComplex_eq (F : Sheaf AddCommGrpCat.{u} X) :
         ((toOpenRestrictionPushforward X V).app F)
         (NatTrans.congr_app (toOpenRestrictionPushforward_comp X h) F) := rfl
 
-/-- Exactness after evaluation is proved using flasqueness, not by treating
-global sections as an exact functor. -/
+/-- Exactness after evaluation, by flasqueness of the terms. -/
 lemma nestedSupportRestrictionSectionsShortComplex_shortExact (W : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) [Injective F] :
     ((nestedSupportRestrictionShortComplex X h F).map (supportEvaluation X W)).ShortExact := by
@@ -134,7 +137,10 @@ def nestedSupportRestrictionComplexShortComplex
     (((toSheafSectionsBetweenOpens X h).mapHomologicalComplex ℤᵘᵖ).app K)
     (by ext n; exact NatTrans.congr_app (sheafSectionsSupportedOutsideMap_toBetween X h) (K.X n))
 
-/-- The actual nested-support sequence of section complexes on an open set. -/
+/-- Let `V ⊆ U` and `W` be open subsets of a topological space `X`, and let `K` be an
+integer-indexed complex of sheaves of abelian groups. This is the sequence of complexes obtained
+degreewise from `Γ_{X \ U}(W,K) → Γ_{X \ V}(W,K) → ker(K(W ∩ U) → K(W ∩ V))`, by support
+inclusion and restriction. -/
 def nestedSupportRestrictionSectionsComplexShortComplex (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     ShortComplex (CochainComplex AddCommGrpCat.{u} ℤ) :=
@@ -147,9 +153,8 @@ lemma nestedSupportRestrictionSectionsComplexShortComplex_shortExact (W : Opens 
   HomologicalComplex.shortExact_of_degreewise_shortExact _
     fun n => nestedSupportRestrictionSectionsShortComplex_shortExact X h W (K.X n)
 
-/-- Removing the smaller support preserves degree `n` cohomology if its two
-adjacent groups vanish. These are explicit hypotheses of the extension lemma;
-no vanishing statement about a singular locus is asserted here. -/
+/-- Removing the smaller support preserves degree `n` cohomology if its two adjacent groups
+vanish. Those two vanishings are hypotheses of the extension lemma. -/
 lemma nestedSupportRestriction_homologyMap_isIso_of_vanishing (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)]
     (n : ℤ)

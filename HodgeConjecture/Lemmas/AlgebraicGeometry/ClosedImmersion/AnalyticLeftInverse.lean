@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.AnalyticLeftInverse
 
 /-!
-# Analytic local left inverses from actual section lifting
+# Analytic local left inverses from section lifting
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.AnalyticLeftInverse`.
@@ -24,7 +24,7 @@ universe u
 variable {X Y : Scheme.{u}} (i : Y ⟶ X) [IsClosedImmersion i]
 
 /-- Any family of sections on an intrinsic open lifts, after restriction, on a single
-affine ambient neighborhood of the selected point. The lifts come from the actual
+affine ambient neighborhood of the selected point. The lifts come from the
 surjective closed-immersion map on affine sections. -/
 theorem Scheme.Hom.exists_affine_local_section_lifts
     {J : Type*} (V : Y.Opens) (s : J → Γ(Y, V)) (y : Y) (hy : y ∈ V) :
@@ -55,7 +55,7 @@ variable (X Y : Over (Spec ↧ℂ))
   unfold inclusionInComplexCharts
   rw [(localChart Y m z).left_inv (mem_localChart_source Y m z)]
 
-/-- Analyticity is inherited from the actual morphism of smooth schemes. -/
+/-- Analyticity is inherited from the morphism of smooth schemes. -/
 theorem analyticAt_inclusionInComplexCharts (z : ComplexPoint Y) :
     AnalyticAt ℂ (inclusionInComplexCharts X Y i m d z)
       (localChart Y m z z) := by
@@ -64,9 +64,8 @@ theorem analyticAt_inclusionInComplexCharts (z : ComplexPoint Y) :
   rw [(localChart Y m z).left_inv (mem_localChart_source Y m z)]
   exact mem_localChart_source X d (Point.map i z)
 
-/-- A smooth closed immersion has an actual analytic local left inverse in complex
-coordinates. It is constructed by lifting the intrinsic coordinate sections, not assumed
-from an analytic-immersion structure. -/
+/-- A smooth closed immersion has an analytic local left inverse in complex coordinates,
+obtained by lifting the intrinsic coordinate sections. -/
 theorem exists_analytic_localLeftInverse_of_isClosedImmersion [IsClosedImmersion i.left]
     (z : ComplexPoint Y) :
     ∃ L : (Fin d → ℂ) → (Fin m → ℂ),
@@ -120,8 +119,8 @@ theorem exists_analytic_localLeftInverse_of_isClosedImmersion [IsClosedImmersion
       ← localChart_apply_component_eq_evaluate Y m z (eY.symm v) (eY.map_target hvY) j]
     exact congrFun (eY.right_inv hvY) j
 
-/-- The derivative of a smooth closed immersion has an actual continuous-linear left
-inverse, obtained by differentiating the constructed analytic local left inverse. -/
+/-- The derivative of a smooth closed immersion has a continuous-linear left
+inverse, obtained by differentiating the analytic local left inverse. -/
 theorem exists_leftInverse_fderiv_inclusionInComplexCharts [IsClosedImmersion i.left]
     (z : ComplexPoint Y) :
     ∃ P : (Fin d → ℂ) →L[ℂ] (Fin m → ℂ),

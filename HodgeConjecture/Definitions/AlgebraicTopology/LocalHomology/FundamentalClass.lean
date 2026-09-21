@@ -25,8 +25,8 @@ This file constructs a canonical relative singular cycle in
 `(-1, ..., -1)`. Its barycenter is the unique point that maps to the origin, while each face
 misses the origin. Its relative boundary therefore vanishes.
 
-This explicit cycle fixes the ordering and sign convention needed to normalize local Thom and
-fundamental classes without adding an orientation as arbitrary data.
+This explicit cycle fixes the ordering and sign convention used to normalize local Thom and
+fundamental classes.
 -/
 
 @[expose] public noncomputable section
@@ -38,17 +38,21 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type) [CommRing R]
 
-/-- The pair `(𝕜^d, 𝕜^d \ {0})` for a topological field `𝕜`. -/
+/-- Let `𝕜` be a field with a topology and `d` a natural number. This topological pair consists of
+`𝕜^d`, with the product topology, and the inclusion of its subspace `𝕜^d \ {0}`. -/
 abbrev puncturedPair (𝕜 : Type) [Field 𝕜] [TopologicalSpace 𝕜] (d : ℕ) : TopPair :=
   TopPair.ofSubset (X := TopCat.of (Fin d → 𝕜)) ({0}ᶜ : Set (Fin d → 𝕜))
 
-/-- The pair `(W, W \ S)` of a subset `W ⊆ M` and the complement in it of a subset `S`. -/
+/-- Let `M` be a topological space and `W, S ⊆ M` subsets. This topological pair consists of the
+subspace `W` and the inclusion into it of `W \ S`, also with its subspace topology. -/
 abbrev neighborhoodSupportComplementPair {M : Type} [TopologicalSpace M] (W S : Set M) :
     TopPair :=
   -- The pair `(W, W \ S)`.
   TopPair.ofSubset (X := TopCat.of W) {w | w.1 ∉ S}
 
-/-- The affine `d`-simplex with vertices the standard basis and the vector `(-1, ..., -1)`. -/
+/-- For a natural number `d`, this affine map from the standard `d`-simplex to `ℝ^d` has ordered
+vertices `e₀, …, e_{d-1}, (-1, …, -1)`. In barycentric coordinates it sends `t` to the vector
+with coordinates `t_j - t_d`. -/
 def standardAffineSimplex (d : ℕ) (t : stdSimplex ℝ (Fin (d + 1))) : Fin d → ℝ :=
   fun j => t (Fin.castSucc j) - t (Fin.last d)
 
@@ -84,13 +88,18 @@ lemma standardAffineSimplex_ne_zero_of_coord_zero (d : ℕ)
     Finset.sum_eq_zero fun j _ => hall j
   exact zero_ne_one (hzero.symm.trans t.2.2)
 
-/-- The affine simplex as a singular simplex of real coordinate space. -/
+/-- For a natural number `d`, this is the singular `d`-simplex of `ℝ^d` given in barycentric
+coordinates by `t ↦ (t_j - t_d)_j`. Its ordered vertices are the standard basis vectors followed
+by `(-1, …, -1)`. -/
 def standardSingularSimplex (d : ℕ) :
     (TopCat.toSSet.obj (puncturedPair ℝ d).fst) _⦋d⦌ :=
   ((puncturedPair ℝ d).fst.toSSetObjEquiv _).symm
     ⟨standardAffineSimplex d, continuous_standardAffineSimplex d⟩
 
-/-- A face of the positive-dimensional standard simplex, lifted to the punctured space. -/
+/-- For a natural number `n` and face index `i`, this continuous map from the standard `n`-simplex
+to `ℝ^{n+1} \ {0}` is the `i`-th face of the affine simplex with vertices the standard basis
+followed by `(-1, …, -1)`. The face avoids the origin because one barycentric coordinate is
+zero. -/
 def standardFaceMap (n : ℕ) (i : Fin (n + 2)) :
     C(stdSimplex ℝ (Fin (n + 1)), ({0}ᶜ : Set (Fin (n + 1) → ℝ))) where
   toFun t := ⟨standardAffineSimplex (n + 1) (stdSimplex.map i.succAbove t),
@@ -98,38 +107,48 @@ def standardFaceMap (n : ℕ) (i : Fin (n + 2)) :
       (stdSimplex_map_succAbove_self_zero n i t)⟩
   continuous_toFun := by fun_prop
 
-/-- A face of the positive-dimensional standard simplex as a singular simplex of the
-punctured space. -/
+/-- For a natural number `n` and face index `i`, this is the singular `n`-simplex of `ℝ^{n+1} \ {0}`
+obtained by omitting vertex `i` from the ordered affine simplex with vertices the standard basis
+followed by `(-1, …, -1)`. -/
 def standardFaceSimplex (n : ℕ) (i : Fin (n + 2)) :
     (TopCat.toSSet.obj (puncturedPair ℝ (n + 1)).snd) _⦋n⦌ :=
   ((puncturedPair ℝ (n + 1)).snd.toSSetObjEquiv _).symm
     (standardFaceMap n i)
 
-/-- The relative singular chain complex of the standard punctured real coordinate space. -/
+/-- Let `R` be a commutative ring and `d` a natural number. This is the quotient singular chain
+complex `C_*(ℝ^d; R)/C_*(ℝ^d \ {0}; R)` of the pair consisting of real coordinate space and its
+punctured subspace. -/
 abbrev standardLocalRelativeChainComplex (d : ℕ) :=
   (relativeChainFunctor R).obj (puncturedPair ℝ d)
 
-/-- The projection to the standard relative chain complex, in the arrow form that
-`chainPairFunctor` produces. -/
+/-- Let `R` be a commutative ring and `d` a natural number. This is the quotient map of chain
+complexes `C_*(ℝ^d; R) → C_*(ℝ^d, ℝ^d \ {0}; R)`, which sets chains contained in the punctured
+space equal to zero. -/
 def standardLocalProjection (d : ℕ) :
     ((chainPairFunctor R).obj (puncturedPair ℝ d)).right ⟶
       standardLocalRelativeChainComplex R d :=
   relativeChainProjection R (puncturedPair ℝ d)
 
-/-- The standard affine simplex as an absolute singular chain. -/
+/-- Let `R` be a commutative ring and `d` a natural number. The chosen affine simplex in `ℝ^d` has
+ordered vertices `e₀, …, e_{d-1}, (-1, …, -1)`, where the `e_j` are standard basis vectors. This
+linear map `R → C_d(ℝ^d; R)` sends `r` to `r` times that singular simplex. -/
 def standardAmbientSimplexChain (d : ℕ) :
     ModuleCat.of R R ⟶
       ((chainPairFunctor R).obj (puncturedPair ℝ d)).right.X d :=
   (TopCat.toSSet.obj (puncturedPair ℝ d).fst).ιChainComplex
     (standardSingularSimplex d)
 
-/-- The standard affine simplex, projected to the relative singular chain complex of
-`(ℝ^d, ℝ^d ∖ {0})`. -/
+/-- Let `R` be a commutative ring and `d` a natural number. The chosen affine simplex in `ℝ^d` has
+ordered vertices `e₀, …, e_{d-1}, (-1, …, -1)`, where the `e_j` are standard basis vectors. This
+map `R → C_d(ℝ^d, ℝ^d \ {0}; R)` sends `1` to its relative chain class, by quotienting out
+chains in the punctured space. -/
 def standardLocalChain (d : ℕ) :
     ModuleCat.of R R ⟶ (standardLocalRelativeChainComplex R d).X d :=
   standardAmbientSimplexChain R d ≫ (standardLocalProjection R d).f d
 
-/-- A face of the standard simplex as an absolute singular chain. -/
+/-- Let `R` be a commutative ring, `n` a natural number, and `i` a face index. This linear map `R →
+C_n(ℝ^{n+1}; R)` sends `1` to the `i`-th face of the affine simplex with ordered vertices the
+standard basis followed by `(-1, …, -1)`. -/
 def standardAmbientFaceChain (n : ℕ) (i : Fin (n + 2)) :
     ModuleCat.of R R ⟶
       ((chainPairFunctor R).obj (puncturedPair ℝ (n + 1))).right.X n :=
@@ -137,7 +156,9 @@ def standardAmbientFaceChain (n : ℕ) (i : Fin (n + 2)) :
     ((TopCat.toSSet.obj (puncturedPair ℝ (n + 1)).fst).δ i
       (standardSingularSimplex (n + 1)))
 
-/-- A face of the standard simplex as a chain in the punctured subspace. -/
+/-- Let `R` be a commutative ring, `n` a natural number, and `i` a face index. This map `R →
+C_n(ℝ^{n+1} \ {0}; R)` sends `1` to the `i`-th face of the affine simplex with vertices the
+standard basis followed by `(-1, …, -1)`. Every such face avoids the origin. -/
 def standardSubspaceFaceChain (n : ℕ) (i : Fin (n + 2)) :
     ModuleCat.of R R ⟶
       ((chainPairFunctor R).obj (puncturedPair ℝ (n + 1))).left.X n :=
@@ -185,14 +206,19 @@ lemma standardLocalChain_boundary (d : ℕ) :
   | zero => simp
   | succ n => rw [ChainComplex.next_nat_succ]; exact standardLocalChain_boundary_succ R n
 
-/-- The standard relative cycle represented by an affine simplex meeting the origin once. -/
+/-- Let `R` be a commutative ring and `d` a natural number. The chosen affine simplex in `ℝ^d` has
+ordered vertices `e₀, …, e_{d-1}, (-1, …, -1)`, where the `e_j` are standard basis vectors. Its
+boundary lies in `ℝ^d \ {0}`, so it defines a relative cycle. This map from `R` to relative
+cycles sends `1` to that cycle. -/
 def standardLocalCycle (d : ℕ) :
     ModuleCat.of R R ⟶ (standardLocalRelativeChainComplex R d).cycles d :=
   (standardLocalRelativeChainComplex R d).liftCycles (standardLocalChain R d)
     ((ComplexShape.down ℕ).next d) rfl (standardLocalChain_boundary R d)
 
-/-- The canonical class represented by the standard affine local cycle in
-`H_d(ℝ^d, ℝ^d ∖ {0}; R)`. -/
+/-- Let `R` be a commutative ring and `d` a natural number. The chosen affine simplex in `ℝ^d` has
+ordered vertices `e₀, …, e_{d-1}, (-1, …, -1)`, where the `e_j` are standard basis vectors. This
+is its class in `H_d(ℝ^d, ℝ^d \ {0}; R)`, with coefficient `1`. Its boundary vanishes in
+relative chains because all faces avoid the origin. -/
 def standardLocalClass (d : ℕ) : RelativeHomology R (puncturedPair ℝ d) d :=
   ((standardLocalCycle R d ≫ (standardLocalRelativeChainComplex R d).homologyπ d).hom) 1
 

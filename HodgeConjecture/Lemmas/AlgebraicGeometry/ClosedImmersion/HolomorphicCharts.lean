@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts
 
 /-!
-# Actual holomorphic support-flattening charts
+# Holomorphic support-flattening charts
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts`.
@@ -58,8 +58,8 @@ variable (X Y : Over (Spec ↧ℂ))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- At every selected ambient source point, the underlying normal coordinate change and
-its inverse are analytic, not only at the initially distinguished center. -/
+/-- The underlying normal coordinate change and its inverse are analytic at every ambient
+source point. -/
 private theorem closedImmersionHolomorphicFlatteningChart_analytic (y : ComplexPoint X)
     (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source) :
     AnalyticAt ℂ (closedImmersionNormalCoordinateChange X Y i m d z)
@@ -77,14 +77,17 @@ private theorem closedImmersionNormalCoordinateChange_symm_at_chart (y : Complex
 
 variable (z' : ComplexPoint Y)
 
-/-- The genuine transition between two constructed holomorphic support-flattening charts. -/
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ` of dimensions `m` and `d`,
+respectively. Choose points `z,z′ ∈ Y(ℂ)` and their holomorphic charts `e_z,e_z′` in `ℂ^m ×
+ℂ^{d-m}` that identify the image of `Y(ℂ)` with the locus where the second coordinate is zero.
+This local homeomorphism is the coordinate change `e_z′ ∘ e_z⁻¹` on the overlap. -/
 def closedImmersionNormalTransition :
     OpenPartialHomeomorph ((Fin m → ℂ) × (Fin (d - m) → ℂ))
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
   (closedImmersionHolomorphicFlatteningChart X Y i m d z).symm.trans
     (closedImmersionHolomorphicFlatteningChart X Y i m d z')
 
-/-- These actual transitions are holomorphic throughout their domains. -/
+/-- These transitions are holomorphic throughout their domains. -/
 theorem analyticAt_closedImmersionNormalTransition
     (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
     (hv : v ∈ (closedImmersionNormalTransition X Y i m d z z').source) :
@@ -120,7 +123,7 @@ theorem analyticAt_closedImmersionNormalTransition
   have hlast : AnalyticAt ℂ A' (C' (C.symm (A.symm v))) := himage ▸ hA'
   exact hlast.comp (f := fun w => C' (C.symm (A.symm w))) (x := v) hmiddle
 
-/-- The actual inverse transition is holomorphic at the image of every source point. -/
+/-- The inverse transition is holomorphic at the image of every source point. -/
 theorem analyticAt_closedImmersionNormalTransition_symm
     (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
     (hv : v ∈ (closedImmersionNormalTransition X Y i m d z z').source) :

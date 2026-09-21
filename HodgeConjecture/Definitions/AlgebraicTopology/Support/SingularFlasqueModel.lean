@@ -29,11 +29,14 @@ namespace AlgebraicTopology.Singular
 
 variable (X : TopCat.{0})
 
-/-- The actual singular-cochain sheaf complex in integer degrees. -/
+/-- Let `X` be a topological space. This complex of sheaves is obtained by sheafifying the
+presheaves of rational singular cochains degree by degree. Its differential is induced by the
+singular coboundary, and it is extended by zero to negative integer degrees. -/
 def rationalSingularCochainComplex : CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   (singularCochainSheafComplex ℚ X).extend ComplexShape.embeddingUpNat
 
-/-- The fixed injective resolution `I^•` of the constant sheaf `ℚ_X`, in integer degrees. -/
+/-- Let `X` be a topological space. This is the integer-indexed complex in a chosen injective
+resolution `ℚ_X → I^•` of the constant rational sheaf, with zero terms in negative degrees. -/
 def rationalConstantInjectiveComplex : CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   -- An injective resolution `ℚ_X → I^•`.
   (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).cocomplex.extend
@@ -57,7 +60,10 @@ instance rationalConstantInjectiveComplex_injective (n : ℤ) :
 variable (hX : ∀ (x : X) (V : Opens X), x ∈ V →
   ∃ (W : Opens X), x ∈ W ∧ ContractibleSpace W ∧ W ≤ V)
 
-/-- Strictly extend the constant augmentation to the actual injective resolution. -/
+/-- Let `X` be a topological space with a basis of contractible open sets. Write `C^•` for the
+sheafified rational singular cochains and `ℚ_X → I^•` for a chosen injective resolution. This
+chooses a map `C^• → I^•` whose composite with the constant-cochain inclusion `ℚ_X[0] → C^•`
+equals the resolution augmentation. Complexes are indexed by natural numbers. -/
 def singularToConstantInjectiveResolution :
     singularCochainSheafComplex ℚ X ⟶
       (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).cocomplex :=
@@ -91,7 +97,9 @@ instance singularToConstantInjectiveResolution_quasiIso :
     exact (TopCat.Sheaf.ambientConstantInjectiveResolution X (AddCommGrpCat.of ℚ)).quasiIso
   exact quasiIso_of_comp_left a _
 
-/-- The same strictly normalized comparison in integer degrees. -/
+/-- Let `X` be a topological space with a basis of contractible open sets. This map from sheafified
+rational singular cochains to a chosen injective resolution of `ℚ_X` extends the identity on
+constant coefficients. Both complexes are indexed by integers and zero in negative degrees. -/
 def singularToConstantInjectiveComplex :
     rationalSingularCochainComplex X ⟶ rationalConstantInjectiveComplex X :=
   HomologicalComplex.extendMap (singularToConstantInjectiveResolution X hX)
@@ -101,8 +109,10 @@ instance singularToConstantInjectiveComplex_quasiIso :
     QuasiIso (singularToConstantInjectiveComplex X hX) :=
   (HomologicalComplex.quasiIso_extendMap_iff _ _).mpr inferInstance
 
-/-- `Γ_{X \ U}(C^•_sing)`: the complex of subsheaves of the rational singular-cochain sheaves
-consisting of sections supported on `X \ U`. -/
+/-- Let `X` be a topological space and `U ⊆ X` open. In each nonnegative degree, take the kernel of
+restriction of the sheafified rational singular cochains to `U`. These are the sheaf sections
+supported in the closed set `X \ U`. Singular coboundaries give the differentials, and
+negative-degree terms are zero. -/
 def supportedRationalSingularCochainComplex (U : Opens X) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat X) ℤ :=
   -- `Γ_{X \ U}` applied to the sheaf complex of rational singular cochains.
@@ -110,7 +120,10 @@ def supportedRationalSingularCochainComplex (U : Opens X) :
     -- The sheaf complex `C^•_sing(-; ℚ)`.
     (rationalSingularCochainComplex X)
 
-/-- Apply actual supported sections to the constructed resolution comparison. -/
+/-- Let `X` have a basis of contractible open sets and let `U ⊆ X` be open. This map `Γ_{X \ U}(C^•)
+→ Γ_{X \ U}(I^•)` restricts the augmentation-preserving comparison from sheafified rational
+singular cochains `C^•` to an injective resolution `I^•` of `ℚ_X` to the subsheaves of sections
+vanishing on `U`. -/
 def supportedSingularToInjectiveComplex (U : Opens X) :
     supportedRationalSingularCochainComplex X U ⟶
       ((TopCat.Sheaf.sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).obj
@@ -127,8 +140,8 @@ instance rationalSingularCochainComplex_isFlasque (n : ℤ) :
   change (singularCochainSheaf ℚ X m).IsFlasque
   infer_instance
 
-/-- Supported singular cochains really compute the supported injective model,
-on the level of actual sheaf complexes. -/
+/-- Supported singular cochains compute the supported injective model, at the level of sheaf
+complexes. -/
 instance supportedSingularToInjectiveComplex_quasiIso (U : Opens X) :
     QuasiIso (supportedSingularToInjectiveComplex X hX U) :=
   TopCat.Sheaf.sheafSectionsSupportedOutside_map_quasiIso_of_flasque X U

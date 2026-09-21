@@ -21,11 +21,11 @@ public import Mathlib.Topology.Sheaves.Stalks
 /-!
 # Assembling constant-sheaf maps from locally represented stalk maps
 
-A pointwise family of additive maps from a fixed group to the stalks is not automatically
-a sheaf map. This module proves the precise assembly theorem: each value must be locally
-represented by a section. Unique sheaf gluing then constructs the map. The stalk formula
-retains the specified maps exactly, and isomorphisms on stalks give an actual sheaf
-isomorphism. Geometric applications must prove the local representability hypothesis.
+A pointwise family of additive maps from a fixed group to the stalks assembles into a sheaf map
+exactly when each value is locally represented by a section. Unique sheaf gluing then constructs
+the map, the stalk formula retains the specified maps exactly, and isomorphisms on stalks give a
+sheaf isomorphism. Local representability is a hypothesis, to be discharged by each geometric
+application.
 -/
 
 @[expose] public noncomputable section
@@ -68,7 +68,10 @@ theorem existsUnique_section_of_locally_representable
     rw [ht' x, ← F.presheaf.Γgerm_res_apply (i := homOfLE (show U x ≤ ⊤ from le_top))
       x (hx x), ht x, hs x x (hx x)]
 
-/-- The uniquely specified global section; choice selects only the unique gluing. -/
+/-- Let `F` be a sheaf of abelian groups on a topological space `X`. Suppose a germ `g(x) ∈ F_x` is
+specified for each point, and every point has a neighborhood with a section whose germs equal
+`g` throughout that neighborhood. This is the unique global section whose germ at every `x` is
+`g(x)`. -/
 def sectionOfLocallyRepresentable
     (g : ∀ x : X, F.presheaf.stalk x)
     (hlocal : ∀ x : X, ∃ (U : Opens X) (_ : x ∈ U) (s : F.presheaf.obj (op U)),

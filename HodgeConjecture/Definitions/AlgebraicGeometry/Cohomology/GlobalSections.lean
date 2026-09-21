@@ -38,8 +38,7 @@ computes the hypercohomology of that resolution on a hereditarily paracompact Ha
 
 The derived comparison uses a bounded-below termwise-injective replacement. The mapping-cone
 argument in `Sheaf.FlasqueQuasiIso` proves that its quasi-isomorphism remains a
-quasi-isomorphism after taking global sections. Thus no spectral sequence or acyclic-resolution
-theorem is assumed.
+quasi-isomorphism after taking global sections.
 -/
 
 @[expose] public noncomputable section
@@ -54,8 +53,10 @@ variable {C : Type u} [Category.{v} C] [Preadditive C] [HasZeroObject C]
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
-/-- The Hom complex from an object placed in degree zero is the degreewise preadditive
-coyoneda functor applied to the target complex. -/
+/-- Let `C` be a preadditive category with a zero object, `X` an object, and `K` an integer-indexed
+cochain complex in `C`. This identifies the Hom complex from `X[0]` to `K` with the complex of
+abelian groups `n ↦ Hom_C(X, K^n)`, whose differential is postcomposition with the differential
+of `K`. -/
 def fromSingleZeroIsoPreadditiveCoyoneda (X : C) (K : CochainComplex C ℤ) :
     CochainComplex.HomComplex ((CochainComplex.singleFunctor C 0).obj X) K ≅
       ((preadditiveCoyoneda.obj (.op X)).mapHomologicalComplex
@@ -91,10 +92,10 @@ section
 
 variable {Y : TopCat.{0}}
 
-/-- Morphisms from the constant integer sheaf are the same as global sections. This is the
-degree-zero adjunction underlying the global-sections comparison below. The explicit local
-Hom-group instance avoids depending on reducibility-sensitive typeclass search through the
-sheaf subcategory. -/
+/-- Let `Y` be a topological space and `F` a sheaf of abelian groups on `Y`. This additive
+equivalence `Hom(ℤ_Y, F) ≃ Γ(Y, F)` evaluates a sheaf morphism at the constant global section
+`1`. Its inverse sends a section `s` to the morphism taking each locally constant integer to the
+corresponding multiple of `s`. -/
 def integerConstantHomAddEquivGlobalSections
     (F : TopCat.Sheaf AddCommGrpCat Y) :
     letI : AddCommGroup ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) :=
@@ -116,13 +117,17 @@ lemma integerConstantHomAddEquivGlobalSections_naturality
 
 end
 
-/-- The integer sheaf placed in cohomological degree zero. -/
+/-- Let `Y` be a topological space. This integer-indexed complex of sheaves of abelian groups on `Y`
+has the constant integer sheaf `ℤ_Y` in degree zero, zero sheaves in every other degree, and
+zero differentials. -/
 def integerConstantSingleComplex (Y : TopCat.{0}) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=
   (CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat Y) 0).obj
     ((constantFunctor Y).obj (AddCommGrpCat.of ℤ))
 
-/-- `Γ(Y, K^•)`, the complex of global sections of a complex of sheaves `K^•` on `Y`. -/
+/-- Let `Y` be a topological space and `K` an integer-indexed complex of sheaves of abelian groups
+on `Y`. The complex `Γ(Y, K)` has `Γ(Y, K^n)` in degree `n`; its differentials are the maps on
+global sections induced by those of `K`. -/
 def globalSectionsComplexInt (Y : TopCat.{0})
     (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
     -- `Γ(Y, K^•)`.
@@ -131,8 +136,9 @@ def globalSectionsComplexInt (Y : TopCat.{0})
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
-/-- The additive constant-sheaf adjunction identifies the coyoneda functor represented by the
-constant integer sheaf with the global-sections functor. -/
+/-- Let `Y` be a topological space. This natural isomorphism identifies the functors `F ↦ Hom(ℤ_Y,
+F)` and `F ↦ Γ(Y, F)` on sheaves of abelian groups, by evaluating each morphism at the constant
+section `1`. -/
 def integerConstantHomIsoGlobalSectionsFunctor (Y : TopCat.{0}) :
     preadditiveCoyoneda.obj (.op ((constantFunctor Y).obj (AddCommGrpCat.of ℤ))) ≅
       IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y :=
@@ -148,8 +154,8 @@ def integerConstantHomIsoGlobalSectionsFunctor (Y : TopCat.{0}) :
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
-/-- The Hom complex from the degree-zero integer sheaf is canonically the complex of global
-sections. -/
+/-- Let `Y` be a topological space and `K` an integer-indexed complex of sheaves of abelian groups.
+Evaluation at `1` gives this isomorphism of complexes `Hom^•(ℤ_Y[0], K) ≅ Γ(Y, K)`. -/
 def homComplexSingleIntegerIsoGlobalSections
     (Y : TopCat.{0}) (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
     CochainComplex.HomComplex (integerConstantSingleComplex Y) K ≅
@@ -175,8 +181,9 @@ local instance bettiGlobalSectionsHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-/-- The integer constant-sheaf complex used to define hypercohomology is the degree-zero
-integer constant sheaf, after extending its natural-number grading to integer degrees. -/
+/-- Let `X` be a scheme over `ℂ`. This identifies two complexes on its analytic space: the constant
+integer sheaf in degree zero first indexed by natural numbers and then extended by zero, and the
+same sheaf placed directly in degree zero of an integer-indexed complex. -/
 def constantIntegerSheafComplexIntIsoSingle :
     constantIntegerSheafComplexInt X ≅
       TopCat.Sheaf.integerConstantSingleComplex

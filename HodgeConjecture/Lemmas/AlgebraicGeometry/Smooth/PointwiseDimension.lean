@@ -36,7 +36,7 @@ under étale coordinates.
 Above relative dimension two, the remaining commutative-algebra statement is the arbitrary-prime
 dimension formula for a polynomial ring over a field.  Mathlib currently proves the height of
 maximal polynomial ideals and the global Krull dimension, but not this arbitrary-prime catenary
-formula.  No higher-dimensional pointwise equality is assumed here.
+formula.
 -/
 
 @[expose] public noncomputable section

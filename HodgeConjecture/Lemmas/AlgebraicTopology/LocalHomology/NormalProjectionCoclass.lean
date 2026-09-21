@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
 
 /-!
-# Actual normal projections and the local support coclass
+# Normal projections and the local support coclass
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.NormalProjectionCoclass`.
@@ -32,7 +32,7 @@ theorem neighborhoodSupportInclusion_comp_chartNormalProjection
       chartNormalProjectionPair E c e S hS W (hWV.trans hV) := rfl
 
 omit [NormedSpace ℝ E] in
-/-- The chart coclass is compatible with actual neighborhood inclusion. -/
+/-- The chart coclass is compatible with neighborhood inclusion. -/
 theorem chartNormalProjectionCoclass_restrict {W V : Set M} (hWV : W ⊆ V) (hV : V ⊆ e.source) :
     relativeCohomologyMap ℚ (2 * c) (neighborhoodSupportInclusionPairMap hWV S)
       (chartNormalProjectionCoclass E c e S hS V hV) =
@@ -53,8 +53,8 @@ theorem univBall_zero_tangent_normal (a : E) (r : ℝ) (hr : 0 < r) (v : Fin c �
 
 variable (x : M) (hx : x ∈ e.source) (h0 : (e x).2 = 0)
 
-/-- The actual normal fiber, local pair homeomorphism, and normal projection compose
-to the standard radial point-complement map, with no scalar ambiguity. -/
+/-- The normal fiber, local pair homeomorphism, and normal projection compose to the standard
+radial point-complement map, scale included. -/
 theorem normalFiber_comp_chartNormalProjection :
     normalSliceSection E c ≫ (flattenedSupportPairIso E c e x hx S hS h0).hom ≫
       chartNormalProjectionPair E c e S hS (flattenedSupportNeighborhood E c e x hx)
@@ -83,15 +83,16 @@ theorem normalFiber_comp_chartNormalProjection :
         OpenPartialHomeomorph.univBall (0 : Fin c → ℂ) (flattenedSupportRadius E c e x hx) 0
     simpa only [add_zero, OpenPartialHomeomorph.univBall_apply_zero, sub_zero] using hp v
 
-/-- The previously constructed class is exactly the image of the fixed class on this
-actual normal fiber. -/
+/-- The flattened-support normal class is the image of the fixed class on this normal
+fiber. -/
 theorem flattenedSupportNormalClass_eq_normalFiber :
     flattenedSupportNormalClass E c e x hx S hS h0 =
       relativeHomologyMap ℚ (2 * c)
         (normalSliceSection E c ≫ (flattenedSupportPairIso E c e x hx S hS h0).hom)
         (standardComplexLocalClass ℚ c) := by aesop
 
-/-- Normal projection sends the actual local normal class to the exact standard class. -/
+/-- Normal projection sends the local normal class to the exactly normalized standard
+class. -/
 theorem chartNormalProjection_normalClass :
     relativeHomologyMap ℚ (2 * c)
       (chartNormalProjectionPair E c e S hS (flattenedSupportNeighborhood E c e x hx)
@@ -102,7 +103,7 @@ theorem chartNormalProjection_normalClass :
   exact centeredComplexUnivBall_preserves_standardComplexLocalClass c _ _
     (flattenedSupportRadius_pos E c e x hx) 0
 
-/-- The actual chart-projection coclass has precisely the required normalization. -/
+/-- The chart-projection coclass has precisely the required normalization. -/
 theorem chartNormalProjectionCoclass_apply_normalClass :
     relativeCohomologyEquivDualHomology ℚ
         (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) (2 * c)
@@ -113,7 +114,7 @@ theorem chartNormalProjectionCoclass_apply_normalClass :
     relativeCohomologyEquivDualHomology_normalizedRelativeCoclass,
     chartNormalProjection_normalClass, normalizedDual_apply_self]
 
-/-- Generation follows from the already constructed pair isomorphism and contraction. -/
+/-- Generation follows from the pair isomorphism and contraction. -/
 theorem span_flattenedSupportNormalClass_eq_top :
     Submodule.span ℚ {flattenedSupportNormalClass E c e x hx S hS h0} = ⊤ := by
   let eH := (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).symm.toLinearEquiv
@@ -121,8 +122,8 @@ theorem span_flattenedSupportNormalClass_eq_top :
   rwa [Submodule.map_span, Set.image_singleton, Submodule.map_top, LinearEquiv.range] at h
 
 include h0 in
-/-- In top normal degree the actual normal projection is injective; this is deduced from
-the pair computation and its exact normalization, not used to construct the comparison. -/
+/-- In top normal degree the normal projection is injective, by the pair computation and its
+exact normalization. -/
 theorem chartNormalProjection_relativeHomologyMap_injective :
     Function.Injective (relativeHomologyMap ℚ (2 * c)
       (chartNormalProjectionPair E c e S hS (flattenedSupportNeighborhood E c e x hx)
@@ -136,8 +137,8 @@ theorem chartNormalProjection_relativeHomologyMap_injective :
   rw [map_smul, map_smul, chartNormalProjection_normalClass] at hvw
   rw [smul_left_injective ℚ (standardComplexLocalClass_ne_zero_for_chart c) hvw]
 
-/-- A local supported coclass equals the actual normal-projection coclass precisely when
-it evaluates to one on the constructed normal class. -/
+/-- A local supported coclass equals the normal-projection coclass precisely when
+it evaluates to one on the normal class. -/
 theorem chartNormalProjectionCoclass_unique
     (α : RelativeCohomology ℚ
       (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) (2 * c))

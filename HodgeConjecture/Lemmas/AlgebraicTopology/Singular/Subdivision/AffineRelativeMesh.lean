@@ -27,9 +27,10 @@ This module is ported from Paul Lezeau's corresponding file in
 
 # Relative mesh estimates for affine barycentric subdivision
 
-This file proves the relative (rather than merely intrinsic) mesh estimate.  If the vertices of
-an affine parent simplex are `p i`, then the images of the barycenters in any flag of nested
-nonempty faces have diameter at most `n / (n + 1)` times the diameter of the parent vertices.
+This file proves the relative mesh estimate, which bounds diameters in the image of an affine
+parent simplex.  If the vertices of that parent are `p i`, then the images of the barycenters in
+any flag of nested nonempty faces have diameter at most `n / (n + 1)` times the diameter of the
+parent vertices.
 The result is stated first in an arbitrary real normed vector space and then specialized to the
 affine self-maps used by iterated singular subdivision.
 -/

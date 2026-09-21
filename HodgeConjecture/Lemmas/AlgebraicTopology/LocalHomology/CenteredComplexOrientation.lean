@@ -25,13 +25,12 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundam
 # Moving the center of a complex-coordinate embedding
 
 For a continuous injective map `F : ℂ^d → ℂ^d`, the maps
-`w ↦ F(w + t • v) - F(t • v)` form a homotopy of punctured pairs. Injectivity, not
-differentiability at varying centers, prevents this homotopy from hitting zero.
+`w ↦ F(w + t • v) - F(t • v)` form a homotopy of punctured pairs. Injectivity of `F` alone
+keeps this homotopy away from zero.
 
 In particular the standard radial chart compression preserves the exact complex local class
 at every center. Complex differentiability is used only at the model origin, where the
-derivative is a positive scalar times the identity. No assertion that radial compression is
-holomorphic away from the origin is needed or made.
+derivative is a positive scalar times the identity.
 -/
 
 @[expose] public noncomputable section
@@ -105,8 +104,8 @@ lemma injective_complexUnivBall (c : Fin d → ℂ) (r : ℝ) :
   ((OpenPartialHomeomorph.univBall c r).isOpenEmbedding
     (OpenPartialHomeomorph.univBall_source c r)).injective
 
-/-- At every center the positive-radius compression preserves the precisely normalized
-complex local homology class. -/
+/-- At every center the positive-radius compression preserves the exactly normalized complex
+local homology class. -/
 theorem centeredComplexUnivBall_preserves_standardComplexLocalClass
     (c : Fin d → ℂ) (r : ℝ) (hr : 0 < r) (v : Fin d → ℂ) :
     relativeHomologyMap ℚ (2 * d)

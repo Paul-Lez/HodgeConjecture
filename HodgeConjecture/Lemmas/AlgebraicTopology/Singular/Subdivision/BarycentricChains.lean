@@ -23,7 +23,7 @@ This module is ported from Paul Lezeau's corresponding file in
 
 # Low-dimensional barycentric fundamental chains
 
-This file constructs the first actual components of the barycentric subdivision chain operator.
+This file constructs the first components of the barycentric subdivision chain operator.
 The construction starts from the vertex of `sd Δ[0]` represented by the singleton chain and
 uses Yoneda naturality to associate a subdivided vertex to every vertex of a simplicial set.
 -/
@@ -48,10 +48,7 @@ public theorem nonemptyFiniteChainSingleton_finset
     (nonemptyFiniteChainSingleton x).finset = {x} :=
   rfl
 
-/-- A specified nonempty finset in a linear order, regarded as a finite chain.
-
-This constructor is shared by the all-degree barycentric development; unlike the removed
-degree-one scaffolding, it is part of that file's live API. -/
+/-- A specified nonempty finset in a linear order, regarded as a finite chain. -/
 public noncomputable def nonemptyFiniteChainOfFinset
     {X : Type*} [LinearOrder X] (s : Finset X) (hs : s.Nonempty) :
     NonemptyFiniteChains X where

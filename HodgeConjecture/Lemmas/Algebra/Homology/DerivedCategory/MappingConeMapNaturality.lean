@@ -8,7 +8,7 @@ import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 
-/-! # Actual cone maps and additive comparison naturality -/
+/-! # Cone maps and additive comparison naturality -/
 
 @[expose] public noncomputable section
 
@@ -21,7 +21,7 @@ variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The general homotopy-cofiber arrow map is the literal standard cone
+/-- The general homotopy-cofiber arrow map is the standard cone
 map, with zero off-diagonal homotopy. -/
 lemma mapArrowHom_eq_map (f : K ⟶ L) (g : K' ⟶ L')
     (a : K ⟶ K') (b : L ⟶ L') (h : f ≫ b = a ≫ g) :
@@ -40,7 +40,7 @@ lemma mapArrowHom_eq_map (f : K ⟶ L) (g : K' ⟶ L')
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Applying an additive functor to a cone map agrees with the literal
+/-- Applying an additive functor to a cone map agrees with the
 cone map after the canonical additive-functor comparison. -/
 @[reassoc]
 lemma mapHomologicalComplexIso_naturality (f : K ⟶ L) (g : K' ⟶ L')

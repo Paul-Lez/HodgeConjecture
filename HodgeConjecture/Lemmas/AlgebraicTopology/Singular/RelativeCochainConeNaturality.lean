@@ -27,7 +27,10 @@ variable (R : Type u) [CommRing R]
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual contravariant map of dual relative short exact sequences. -/
+/-- Let `R` be a commutative ring and `f : (X,A) → (Y,B)` a continuous map of topological pairs.
+Pullback of singular cochains gives this map from the sequence `C^•(Y,B;R) → C^•(Y;R) →
+C^•(B;R)` to the corresponding sequence for `(X,A)`. Relative cochains are the `R`-linear duals
+of the quotient chain complexes, and the complexes are indexed by nonnegative integers. -/
 def relativeDualCochainShortComplexNatMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
     relativeDualCochainShortComplexNat R Y ⟶ relativeDualCochainShortComplexNat R X where
   τ₁ := HomologicalComplex.linearDualMap ((relativeChainFunctor R).map f)
@@ -49,13 +52,19 @@ def relativeDualCochainShortComplexNatMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
     rw [← HomologicalComplex.linearDualMap_comp, ← HomologicalComplex.linearDualMap_comp]
     exact congrArg HomologicalComplex.linearDualMap ((chainPairFunctor R).map f).w.symm
 
-/-- Extend the actual relative short-complex map to integer degrees. -/
+/-- Let `R` be a commutative ring and `f : (X,A) → (Y,B)` a continuous map of topological pairs.
+This is the pullback map between the sequences `C^•(Y,B;R) → C^•(Y;R) → C^•(B;R)` and
+`C^•(X,A;R) → C^•(X;R) → C^•(A;R)`, after extending all singular cochain complexes by zero to
+negative degrees. -/
 def relativeDualCochainShortComplexIntMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
     relativeDualCochainShortComplexInt R Y ⟶ relativeDualCochainShortComplexInt R X :=
   ((ComplexShape.embeddingUpNat.extendFunctor (ModuleCat R)).mapShortComplex).map
     (relativeDualCochainShortComplexNatMap R f)
 
-/-- The literal relative restriction-cone map induced by a map of pairs. -/
+/-- Let `R` be a commutative ring and `f : (X,A) → (Y,B)` a continuous map of topological pairs.
+This cochain map `Cone(C^•(Y;R) → C^•(B;R)) → Cone(C^•(X;R) → C^•(A;R))` is induced by pullback
+on the ambient spaces and subspaces. The complexes are extended by zero to negative degrees
+before forming the cones. -/
 def relativeCochainConeMap {X Y : TopPair.{u}} (f : X ⟶ Y) :
     CochainComplex.mappingCone (relativeCochainRestrictionInt R Y) ⟶
       CochainComplex.mappingCone (relativeCochainRestrictionInt R X) :=
@@ -94,7 +103,7 @@ lemma relativeDualCochainHomologyIsoCone_naturality {X Y : TopPair.{u}} (f : X �
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Integer extension and universal coefficients preserve the actual
+/-- Integer extension and universal coefficients preserve the
 relative pullback map. -/
 lemma relativeDualCochainCohomologyEquiv_naturality {X Y : TopPair.{u}} (f : X ⟶ Y) (n : ℕ)
     (a : (relativeDualCochainShortComplexInt R Y).X₁.homology (n : ℤ)) :
@@ -107,8 +116,8 @@ lemma relativeDualCochainCohomologyEquiv_naturality {X Y : TopPair.{u}} (f : X �
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The canonical restriction-cone comparison intertwines actual maps of
-pairs with the existing relative cohomology pullback. -/
+/-- The canonical restriction-cone comparison intertwines maps of
+pairs with the relative cohomology pullback. -/
 lemma relativeCochainConeCohomologyEquivCanonical_naturality
     {X Y : TopPair.{u}} (f : X ⟶ Y) (n : ℕ)
     (a : (CochainComplex.mappingCone (relativeCochainRestrictionInt R Y)).homology
