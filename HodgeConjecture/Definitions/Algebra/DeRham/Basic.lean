@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import Mathlib.Algebra.TrivSqZeroExt.Basic
 public import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 public import Mathlib.LinearAlgebra.ExteriorPower.Basic
 public import Mathlib.RingTheory.Kaehler.Basic
@@ -65,6 +66,7 @@ universe u
 namespace Algebra.DeRham
 
 open CliffordAlgebra (involute involute_ι)
+open TrivSqZeroExt (fst snd)
 
 variable (R A : Type u) [CommRing R] [CommRing A] [Algebra R A]
 
@@ -91,85 +93,37 @@ private lemma ι_mul_eq_involute_mul_ι (m : Ω[A⁄R]) (y : ExtAlg R A) :
 
 variable (R A)
 
-/-- Let `R` be a commutative ring and `A` a commutative `R`-algebra. Write `E = ⋀_A Ω_{A/R}` for the
-exterior algebra of Kähler differentials. This auxiliary ring has underlying additive group `E ×
-E` and multiplication `(x,u)(y,v) = (xy, involute(x)v + uy)`, where the grade involution acts by
-`(-1)^p` in degree `p`. Its second summand is a square-zero ideal. The multiplication encodes
-the graded Leibniz rule for exterior differentiation. -/
-def Sq : Type u := ExtAlg R A × ExtAlg R A
+/-- The square-zero extension of the exterior algebra. Its multiplication is
+`(x, u) * (y, v) = (x * y, involute x * v + u * y)`, encoding the graded Leibniz rule.
+The synonym unfolds in implicit arguments so that Mathlib's projections apply directly, but stays
+opaque to typeclass synthesis to keep the twisted ring and scalar actions separate. -/
+@[implicit_reducible] def Sq : Type u := TrivSqZeroExt (ExtAlg R A) (ExtAlg R A)
 
 namespace Sq
 
+instance instRing : Ring (Sq R A) := by
+  -- Only the left action is twisted; these instances stay local to the ring construction.
+  letI : SMul (ExtAlg R A) (ExtAlg R A) := ⟨fun x v => involute x * v⟩
+  letI : Module (ExtAlg R A) (ExtAlg R A) :=
+    Module.compHom (ExtAlg R A) (involute (R := A) (M := Ω[A⁄R])).toRingHom
+  letI : SMulCommClass (ExtAlg R A) (ExtAlg R A)ᵐᵒᵖ (ExtAlg R A) :=
+    ⟨fun x y u => (mul_assoc (involute x) u y.unop).symm⟩
+  exact inferInstanceAs (Ring (TrivSqZeroExt (ExtAlg R A) (ExtAlg R A)))
+
 variable {R A}
-
-/-- For a commutative `R`-algebra `A` and `E = ⋀_A Ω_{A/R}`, the exterior algebra of Kähler
-differentials, this constructs the pair `(x,u)` in the auxiliary ring `Sq R A = E × E`. -/
-def mk (x u : ExtAlg R A) : Sq R A := (x, u)
-
-/-- For a commutative `R`-algebra `A` and `E = ⋀_A Ω_{A/R}`, the exterior algebra of Kähler
-differentials, this is the first projection `(x,u) ↦ x` from `Sq R A = E × E`. -/
-def fst (s : Sq R A) : ExtAlg R A := Prod.fst s
-
-/-- For a commutative `R`-algebra `A` and `E = ⋀_A Ω_{A/R}`, the exterior algebra of Kähler
-differentials, this is the second projection `(x,u) ↦ u` from `Sq R A = E × E`. -/
-def snd (s : Sq R A) : ExtAlg R A := Prod.snd s
-
-@[simp] lemma fst_mk (x u : ExtAlg R A) : fst (mk x u) = x := rfl
-
-@[simp] lemma snd_mk (x u : ExtAlg R A) : snd (mk x u) = u := rfl
-
-@[ext] lemma ext {s t : Sq R A} (h₁ : fst s = fst t) (h₂ : snd s = snd t) : s = t :=
-  Prod.ext h₁ h₂
-
-instance instAddCommGroup : AddCommGroup (Sq R A) :=
-  inferInstanceAs (AddCommGroup (ExtAlg R A × ExtAlg R A))
-
-@[simp] lemma fst_zero : fst (0 : Sq R A) = 0 := rfl
-
-@[simp] lemma snd_zero : snd (0 : Sq R A) = 0 := rfl
 
 @[simp] lemma fst_add (s t : Sq R A) : fst (s + t) = fst s + fst t := rfl
 
 @[simp] lemma snd_add (s t : Sq R A) : snd (s + t) = snd s + snd t := rfl
 
-@[simp] lemma fst_neg (s : Sq R A) : fst (-s) = -fst s := rfl
-
-@[simp] lemma snd_neg (s : Sq R A) : snd (-s) = -snd s := rfl
-
-instance : Mul (Sq R A) :=
-  ⟨fun s t => mk (fst s * fst t) (involute (fst s) * snd t + snd s * fst t)⟩
-
 @[simp] lemma fst_mul (s t : Sq R A) : fst (s * t) = fst s * fst t := rfl
-
-@[simp] lemma snd_mul (s t : Sq R A) :
-    snd (s * t) = involute (fst s) * snd t + snd s * fst t := rfl
-
-instance : One (Sq R A) := ⟨mk 1 0⟩
 
 @[simp] lemma fst_one : fst (1 : Sq R A) = 1 := rfl
 
 @[simp] lemma snd_one : snd (1 : Sq R A) = 0 := rfl
 
-instance instRing : Ring (Sq R A) where
-  __ := instAddCommGroup (R := R) (A := A)
-  mul_assoc s t u := by
-    ext
-    · simp [mul_assoc]
-    · simp [map_mul, mul_add, add_mul, mul_assoc, add_assoc]
-  one_mul s := by ext <;> simp
-  mul_one s := by ext <;> simp
-  left_distrib s t u := by
-    ext
-    · simp [mul_add]
-    · simp only [fst_add, snd_add, snd_mul, mul_add]
-      abel
-  right_distrib s t u := by
-    ext
-    · simp [add_mul]
-    · simp only [fst_add, snd_add, snd_mul, map_add, add_mul]
-      abel
-  zero_mul s := by ext <;> simp
-  mul_zero s := by ext <;> simp
+@[simp] lemma snd_mul (s t : Sq R A) :
+    snd (s * t) = involute (fst s) * snd t + snd s * fst t := rfl
 
 end Sq
 
@@ -177,30 +131,38 @@ end Sq
 differentials. This ring homomorphism `A → Sq R A = E × E` sends `a` to `(a,da)`, with `a` in
 degree zero and its differential in degree one. It defines the `A`-algebra structure on `Sq`. -/
 def twist : A →+* Sq R A where
-  toFun a := Sq.mk (algebraMap A (ExtAlg R A) a)
-    (ExteriorAlgebra.ι A (KaehlerDifferential.D R A a))
-  map_one' := by ext <;> simp
+  toFun a := (algebraMap A (ExtAlg R A) a,
+    ExteriorAlgebra.ι A (KaehlerDifferential.D R A a))
+  map_one' := by apply TrivSqZeroExt.ext <;> simp
   map_mul' a b := by
-    ext
-    · simp
-    · simp [Algebra.smul_def, Algebra.commutes (R := A) b (ExteriorAlgebra.ι A _)]
-  map_zero' := by ext <;> simp
-  map_add' a b := by ext <;> simp
+    apply TrivSqZeroExt.ext
+    · exact map_mul (algebraMap A (ExtAlg R A)) a b
+    · change ExteriorAlgebra.ι A (KaehlerDifferential.D R A (a * b)) =
+        involute (algebraMap A (ExtAlg R A) a) *
+          ExteriorAlgebra.ι A (KaehlerDifferential.D R A b) +
+        ExteriorAlgebra.ι A (KaehlerDifferential.D R A a) * algebraMap A (ExtAlg R A) b
+      simp [Algebra.smul_def, Algebra.commutes (R := A) b (ExteriorAlgebra.ι A _)]
+  map_zero' := by apply TrivSqZeroExt.ext <;> simp
+  map_add' a b := by
+    apply TrivSqZeroExt.ext
+    · exact map_add (algebraMap A (ExtAlg R A)) a b
+    · exact map_add ((ExteriorAlgebra.ι A).compDer (KaehlerDifferential.D R A)) a b
 
 @[simp] lemma fst_twist (a : A) :
-    Sq.fst (twist R A a) = algebraMap A (ExtAlg R A) a := rfl
+    fst (twist R A a) = algebraMap A (ExtAlg R A) a := rfl
 
 @[simp] lemma snd_twist (a : A) :
-    Sq.snd (twist R A a) = ExteriorAlgebra.ι A (KaehlerDifferential.D R A a) := rfl
+    snd (twist R A a) = ExteriorAlgebra.ι A (KaehlerDifferential.D R A a) := rfl
 
 lemma twist_commutes (a : A) (s : Sq R A) : twist R A a * s = s * twist R A a := by
-  ext
-  · simpa using Algebra.commutes a (Sq.fst s)
+  apply TrivSqZeroExt.ext
+  · simpa using Algebra.commutes a (fst s)
   · simp only [Sq.snd_mul, fst_twist, snd_twist, AlgHom.commutes,
-      ι_mul_eq_involute_mul_ι (KaehlerDifferential.D R A a) (Sq.fst s)]
-    rw [Algebra.commutes a (Sq.snd s)]
+      ι_mul_eq_involute_mul_ι (KaehlerDifferential.D R A a) (fst s)]
+    rw [Algebra.commutes a (snd s)]
     abel
 
+-- This scalar action includes `d a`, so it is not the componentwise action on `TrivSqZeroExt`.
 instance : Algebra A (Sq R A) := (twist R A).toAlgebra' (twist_commutes R A)
 
 instance : Algebra R (Sq R A) :=
@@ -264,12 +226,12 @@ end Sq
 differentials. This `R`-derivation `A → Sq R A = E × E` sends `a` to `(da,0)`. The target uses
 the `A`-action defined by `a ↦ (a,da)`. -/
 def epsDerivation : Derivation R A (Sq R A) where
-  toFun a := Sq.mk (ExteriorAlgebra.ι A (KaehlerDifferential.D R A a)) 0
-  map_add' a b := by ext <;> simp
-  map_smul' r a := by ext <;> simp
-  map_one_eq_zero' := by ext <;> simp
+  toFun a := TrivSqZeroExt.inl (ExteriorAlgebra.ι A (KaehlerDifferential.D R A a))
+  map_add' a b := by apply TrivSqZeroExt.ext <;> simp
+  map_smul' r a := by apply TrivSqZeroExt.ext <;> simp
+  map_one_eq_zero' := by apply TrivSqZeroExt.ext <;> simp
   leibniz' a b := by
-    ext
+    apply TrivSqZeroExt.ext
     · simp
     · simp [Sq.snd_smul, ExteriorAlgebra.ι_add_mul_swap]
 
@@ -280,7 +242,7 @@ def phi : Ω[A⁄R] →ₗ[A] Sq R A := (epsDerivation R A).liftKaehlerDifferent
 
 @[simp] lemma phi_D (a : A) :
     phi R A (KaehlerDifferential.D R A a) =
-      Sq.mk (ExteriorAlgebra.ι A (KaehlerDifferential.D R A a)) 0 :=
+      TrivSqZeroExt.inl (ExteriorAlgebra.ι A (KaehlerDifferential.D R A a)) :=
   (epsDerivation R A).liftKaehlerDifferential_comp_D a
 
 /-- To prove a statement about every Kähler differential it suffices to treat the exact ones
@@ -298,7 +260,7 @@ lemma D_induction {motive : Ω[A⁄R] → Prop} (ω : Ω[A⁄R])
   | add x y _ _ hx hy => exact add x y hx hy
   | smul a x _ hx => exact smul a x hx
 
-@[simp] lemma fst_phi (ω : Ω[A⁄R]) : Sq.fst (phi R A ω) = ExteriorAlgebra.ι A ω := by
+@[simp] lemma fst_phi (ω : Ω[A⁄R]) : fst (phi R A ω) = ExteriorAlgebra.ι A ω := by
   have h : (Sq.fstAlgHom R A).toLinearMap.comp (phi R A) = ExteriorAlgebra.ι A := by
     refine LinearMap.ext_on (KaehlerDifferential.span_range_derivation R A) ?_
     rintro _ ⟨a, rfl⟩
@@ -306,15 +268,15 @@ lemma D_induction {motive : Ω[A⁄R] → Prop} (ω : Ω[A⁄R])
   exact congrArg (fun f => f ω) h
 
 lemma snd_phi_smul (a : A) (ω : Ω[A⁄R]) :
-    Sq.snd (phi R A (a • ω)) =
-      a • Sq.snd (phi R A ω) +
+    snd (phi R A (a • ω)) =
+      a • snd (phi R A ω) +
         ExteriorAlgebra.ι A (KaehlerDifferential.D R A a) * ExteriorAlgebra.ι A ω := by
   rw [map_smul, Sq.snd_smul, fst_phi]
 
 /-- The exterior derivative of a differential is an even element, so it commutes with everything
 of degree one. -/
 lemma involute_snd_phi (ω : Ω[A⁄R]) :
-    involute (Sq.snd (phi R A ω)) = Sq.snd (phi R A ω) := by
+    involute (snd (phi R A ω)) = snd (phi R A ω) := by
   induction ω using D_induction with
   | D a => simp
   | zero => simp
@@ -323,9 +285,9 @@ lemma involute_snd_phi (ω : Ω[A⁄R]) :
       rw [snd_phi_smul, map_add, map_smul, hx, map_mul, involute_ι, involute_ι, neg_mul_neg]
 
 lemma phi_mul_self (ω : Ω[A⁄R]) : phi R A ω * phi R A ω = 0 := by
-  ext
+  apply TrivSqZeroExt.ext
   · simp
-  · rw [Sq.snd_mul, fst_phi, involute_ι, neg_mul, Sq.snd_zero,
+  · rw [Sq.snd_mul, fst_phi, involute_ι, neg_mul, TrivSqZeroExt.snd_zero,
       ι_mul_eq_involute_mul_ι, involute_snd_phi, neg_add_cancel]
 
 /-- For a commutative `R`-algebra `A`, let `E = ⋀_A Ω_{A/R}` be the exterior algebra of Kähler
@@ -339,7 +301,7 @@ def deRhamHom : ExtAlg R A →ₐ[A] Sq R A :=
     deRhamHom R A (ExteriorAlgebra.ι A ω) = phi R A ω :=
   ExteriorAlgebra.lift_ι_apply A _ _ ω
 
-@[simp] lemma fst_deRhamHom (x : ExtAlg R A) : Sq.fst (deRhamHom R A x) = x := by
+@[simp] lemma fst_deRhamHom (x : ExtAlg R A) : fst (deRhamHom R A x) = x := by
   have h : (Sq.fstAlgHom R A).comp (deRhamHom R A) = AlgHom.id A (ExtAlg R A) := by
     apply ExteriorAlgebra.hom_ext
     ext ω
@@ -354,13 +316,13 @@ def extDeriv : ExtAlg R A →ₗ[R] ExtAlg R A :=
   (Sq.sndLinear R A).comp ((deRhamHom R A).toLinearMap.restrictScalars R)
 
 @[simp] lemma extDeriv_ι (ω : Ω[A⁄R]) :
-    extDeriv R A (ExteriorAlgebra.ι A ω) = Sq.snd (phi R A ω) := by
+    extDeriv R A (ExteriorAlgebra.ι A ω) = snd (phi R A ω) := by
   simp [extDeriv]
 
 @[simp] lemma extDeriv_algebraMap (a : A) :
     extDeriv R A (algebraMap A (ExtAlg R A) a) =
       ExteriorAlgebra.ι A (KaehlerDifferential.D R A a) := by
-  show Sq.snd (deRhamHom R A (algebraMap A (ExtAlg R A) a)) = _
+  show snd (deRhamHom R A (algebraMap A (ExtAlg R A) a)) = _
   rw [AlgHom.commutes]
   rfl
 
@@ -368,7 +330,7 @@ def extDeriv : ExtAlg R A →ₗ[R] ExtAlg R A :=
 lemma extDeriv_mul (x y : ExtAlg R A) :
     extDeriv R A (x * y) =
       involute x * extDeriv R A y + extDeriv R A x * y := by
-  show Sq.snd (deRhamHom R A (x * y)) = _
+  show snd (deRhamHom R A (x * y)) = _
   simp only [map_mul, Sq.snd_mul, fst_deRhamHom]
   rfl
 
@@ -383,12 +345,12 @@ private lemma ι_mem_exteriorPower (ω : Ω[A⁄R]) :
     ExteriorAlgebra.ι A ω ∈ ⋀[A]^1 Ω[A⁄R] := by simp
 
 
-private lemma snd_phi_mem (ω : Ω[A⁄R]) : Sq.snd (phi R A ω) ∈ ⋀[A]^2 Ω[A⁄R] := by
+private lemma snd_phi_mem (ω : Ω[A⁄R]) : snd (phi R A ω) ∈ ⋀[A]^2 Ω[A⁄R] := by
 
   induction ω using D_induction with
   | D a => simp
   | zero => simp
-  | add x y hx hy => rw [map_add, Sq.snd_add]; exact Submodule.add_mem _ hx hy
+  | add x y hx hy => rw [map_add, TrivSqZeroExt.snd_add]; exact Submodule.add_mem _ hx hy
   | smul a x hx =>
       rw [snd_phi_smul]
       exact Submodule.add_mem _ (Submodule.smul_mem _ _ hx)
@@ -463,7 +425,7 @@ private lemma extDeriv_exact (p : ℕ) (v : Fin p → A) :
       simp
   | succ p ih =>
       rw [coe_exact, ExteriorAlgebra.ιMulti_succ_apply, extDeriv_mul, involute_ι,
-        extDeriv_ι, phi_D, Sq.snd_mk, zero_mul, add_zero]
+        extDeriv_ι, phi_D, TrivSqZeroExt.snd_inl, zero_mul, add_zero]
       have : (Matrix.vecTail fun i => KaehlerDifferential.D R A (v i)) =
           fun i => KaehlerDifferential.D R A (Matrix.vecTail v i) := rfl
       rw [this, ← coe_exact R A p (Matrix.vecTail v), ih (Matrix.vecTail v), mul_zero]
