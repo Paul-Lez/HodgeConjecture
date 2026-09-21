@@ -16,7 +16,8 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.WithSupport
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SingularSheafComparison
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainResolution
+public import HodgeConjecture.Mathlib.Algebra.Homology.LiftToInjective
 public import HodgeConjecture.Lemmas.Algebra.Homology.MappingConeQuasiIso
 public import Mathlib.Algebra.Homology.ModelCategory.Injective
 
@@ -33,81 +34,7 @@ direct image along an open embedding preserves injective additive sheaves.
 open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
 open scoped CochainComplex.Plus.modelCategoryQuillen
 
-namespace CochainComplex
 
-universe v u
-
-variable {C : Type u} [Category.{v} C] [Abelian C] [EnoughInjectives C]
-
-section
-
-variable {A S I : CochainComplex C ℤ}
-  [A.IsStrictlyGE 0] [S.IsStrictlyGE 0] [I.IsStrictlyGE 0]
-  (a : A ⟶ S) [Mono a] [QuasiIso a]
-  (r : A ⟶ I)
-
-/-- In an abelian category with enough injectives, let `a : A → S` be a monomorphism and
-quasi-isomorphism of integer-indexed complexes that are zero in negative degrees. Let `I` also
-be zero in negative degrees and have injective terms. For a complex map `r : A → I`, this
-chooses a complex map `l : S → I` with `l ∘ a = r`. -/
-noncomputable def liftToInjective (hI : ∀ n : ℤ, Injective (I.X n)) : S ⟶ I :=
-  let A' : Plus C := ⟨A, 0, inferInstance⟩
-  let S' : Plus C := ⟨S, 0, inferInstance⟩
-  let I' : Plus C := ⟨I, 0, inferInstance⟩
-  let a' : A' ⟶ S' := ObjectProperty.homMk a
-  let r' : A' ⟶ I' := ObjectProperty.homMk r
-  let Z' := ⊤_ Plus C
-  let p : I' ⟶ Z' := terminal.from I'
-  let b : S' ⟶ Z' := terminal.from S'
-  let sq : CommSq r' a' p b := CommSq.mk (Subsingleton.elim _ _)
-  letI : Mono a' := (Plus.mono_iff a').2 (inferInstance : Mono a)
-  letI : WeakEquivalence a' :=
-    (Plus.modelCategoryQuillen.weakEquivalence_iff a').2 (inferInstance : QuasiIso a)
-  letI : IsFibrant I' :=
-    (Plus.modelCategoryQuillen.isFibrant_iff I').2 hI
-  sq.lift.hom
-
-end
-
-end CochainComplex
-
-namespace AlgebraicTopology.Singular
-
-set_option backward.isDefEq.respectTransparency false in
-/-- The constant-to-singular-cochain resolution is a monomorphism of complexes. -/
-lemma constantsToSingularCochainSheafComplex_mono
-    (R : Type) [CommRing R] (Y : TopCat.{0}) :
-    Mono (constantsToSingularCochainSheafComplex R Y) := by
-  apply HomologicalComplex.mono_of_mono_f
-  intro n
-  cases n with
-  | zero =>
-      change Mono (constantsToSingularCochainZeroSheaf R Y)
-      exact constantsToSingularCochainZeroSheaf_mono R Y
-  | succ n =>
-      exact (HomologicalComplex.isZero_single_obj_X (ComplexShape.up ℕ) 0
-        𝓒(Y; R) (n + 1) (by lia)).mono _
-
-/-- Extending the constant-to-singular-cochain resolution to integer degrees remains monic. -/
-lemma constantsToSingularCochainComplexInt_mono
-    (R : Type) [CommRing R] (Y : TopCat.{0}) :
-    Mono (HomologicalComplex.extendMap
-      (constantsToSingularCochainSheafComplex R Y) ComplexShape.embeddingUpNat) := by
-  let a := constantsToSingularCochainSheafComplex R Y
-  let : Mono a := constantsToSingularCochainSheafComplex_mono R Y
-  apply HomologicalComplex.mono_of_mono_f
-  intro n
-  by_cases hn : ∃ m : ℕ, (m : ℤ) = n
-  · obtain ⟨m, rfl⟩ := hn
-    change Mono ((HomologicalComplex.extendMap a ComplexShape.embeddingUpNat).f (m : ℤ))
-    rw [HomologicalComplex.extendMap_f a ComplexShape.embeddingUpNat
-      (i := m) (i' := (m : ℤ)) rfl]
-    infer_instance
-  · exact (((CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat Y)).obj
-      𝓒(Y; R)).isZero_extend_X
-        ComplexShape.embeddingUpNat n (fun i hi ↦ hn ⟨i, hi⟩)).mono _
-
-end AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 

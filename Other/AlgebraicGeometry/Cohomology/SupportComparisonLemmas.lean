@@ -72,38 +72,6 @@ private theorem pushforward_injective (hf : IsOpenEmbedding f)
 
 end Topology.IsOpenEmbedding
 
-namespace CochainComplex
-
-universe v u
-variable {C : Type u} [Category.{v} C] [Abelian C] [EnoughInjectives C]
-variable {A S I : CochainComplex C ℤ}
-  [A.IsStrictlyGE 0] [S.IsStrictlyGE 0] [I.IsStrictlyGE 0]
-  (a : A ⟶ S) [Mono a] [QuasiIso a]
-  (r : A ⟶ I)
-
-set_option backward.isDefEq.respectTransparency false in
-set_option linter.style.haveILetI false in
-set_option linter.unusedSectionVars false in
-/-- The injective lift strictly extends the prescribed map. -/
-lemma comp_liftToInjective (hI : ∀ n : ℤ, Injective (I.X n)) :
-    a ≫ liftToInjective a r hI = r := by
-  let A' : Plus C := ⟨A, 0, inferInstance⟩
-  let S' : Plus C := ⟨S, 0, inferInstance⟩
-  let I' : Plus C := ⟨I, 0, inferInstance⟩
-  let a' : A' ⟶ S' := ObjectProperty.homMk a
-  let r' : A' ⟶ I' := ObjectProperty.homMk r
-  let Z' := ⊤_ Plus C
-  let p : I' ⟶ Z' := terminal.from I'
-  let b : S' ⟶ Z' := terminal.from S'
-  let sq : CommSq r' a' p b := CommSq.mk (Subsingleton.elim _ _)
-  letI : Mono a' := (Plus.mono_iff a').2 (inferInstance : Mono a)
-  letI : WeakEquivalence a' :=
-    (Plus.modelCategoryQuillen.weakEquivalence_iff a').2 (inferInstance : QuasiIso a)
-  letI : IsFibrant I' :=
-    (Plus.modelCategoryQuillen.isFibrant_iff I').2 hI
-  exact congrArg (fun f ↦ f.hom) sq.fac_left
-
-end CochainComplex
 
 namespace AlgebraicGeometry.ComplexPoint
 

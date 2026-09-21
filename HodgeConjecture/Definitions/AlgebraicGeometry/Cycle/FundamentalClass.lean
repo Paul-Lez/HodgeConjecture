@@ -6,7 +6,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.WithSupport
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportExtension
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCohomologySheafComparison
@@ -119,27 +119,22 @@ def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X 
     (cycleComponentSmoothSupportCoclassSection X x hx)
 
 /-- Let `X` be a smooth integral projective scheme over `ℂ` and `Z` the codimension-`p` integral
-subvariety with generic point `x`. This class in `H^{2p}_{Z(ℂ)}(X(ℂ);ℚ)` is expressed as
-`ℍ^{2p-1}(Cone(ℚ → Rj_*ℚ))`, where `j` includes the complement of `Z(ℂ)`. Its local classes
+subvariety with generic point `x`. This is the class in `H^{2p}_{Z(ℂ)}(X(ℂ);ℚ)` whose local classes
 along the smooth locus of `Z` evaluate to `1` on the complex orientation classes of the normal
 spaces. -/
 def cycleComponentSheafSupportedClass :
-    -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, in the support-cone presentation.
-    RationalCohomologyWithSupport X
-      -- `Z(ℂ)`.
-      (cycleComponentSupport X x)
-      -- Degree `2p`.
-      ((2 * p : ℕ) : ℤ) :=
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentAnalyticClosedSupport X x).isClosed ((2 * p : ℕ) : ℤ)).symm
-      (cycleComponentSupportedInjectiveClass X x hx)
+    -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`.
+    H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) :=
+  have he : 2 * (p : ℤ) = ((2 * p : ℕ) : ℤ) := by omega
+  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
+    (2 * p)).symm (he ▸ cycleComponentSupportedInjectiveClass X x hx)
 
 /-- Let `X` be a smooth integral projective scheme over `ℂ` and `Z` the codimension-`p` integral
 subvariety with generic point `x`. The fundamental cohomology class `[Z] ∈ H^{2p}(X(ℂ);ℚ)` is
 obtained by forgetting the support of the class in `H^{2p}_{Z(ℂ)}(X(ℂ);ℚ)` whose local classes
 along the smooth locus evaluate to `1` on the complex orientation classes of the normal spaces. -/
 def cycleComponentSheafClass : H^(2 * p)(X; ℚ) :=
-  forgetSupport X (cycleComponentSupport X x) (2 * p)
+  forgetSupport ℚ X (cycleComponentAnalyticClosedSupport X x) (2 * p)
     (cycleComponentSheafSupportedClass X x hx)
 
 end

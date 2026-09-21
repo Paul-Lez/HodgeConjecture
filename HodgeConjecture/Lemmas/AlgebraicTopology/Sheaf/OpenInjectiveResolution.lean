@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenInjectiveResolution
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueExtendNat
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
@@ -235,7 +236,7 @@ theorem globalRestrictedAmbientToOpenResolution_quasiIso :
       (.up ℕ)).map (restrictedAmbientToOpenResolution X U A))
   let : QuasiIso (restrictedAmbientToOpenResolution X U A) :=
     restrictedAmbientToOpenResolution_quasiIso X U A
-  apply AlgebraicGeometry.ComplexPoint.globalSectionsNat_map_quasiIso
+  apply TopCat.Sheaf.globalSectionsNat_map_quasiIso
   · exact restrictedAmbientConstantResolution_isFlasque X U A
   · exact fun n => @injective_isFlasque _ _ ((ambientConstantInjectiveResolution (TopCat.of U) A).injective n)
 

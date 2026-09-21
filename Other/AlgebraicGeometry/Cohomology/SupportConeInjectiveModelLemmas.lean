@@ -6,13 +6,17 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
+public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 
 /-!
 # Normalized injective models for the rational support cone
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution`.
 -/
 
 /-! ### Constructions used only in proofs -/
