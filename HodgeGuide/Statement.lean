@@ -99,8 +99,8 @@ namespace Guide.Statement.D2
 ```lean
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * p)(X; ℚ)) :=
-  ⨆ (x : X.left) (hx : coheight x = p),
-    Submodule.span ℚ {cycleComponentSheafClass X x hx}
+  sSup {Submodule.span ℚ {cycleComponentSheafClass X x hx} |
+    (x : X.left) (hx : coheight x = p) }
 ```
 ```lean -show
 end Guide.Statement.D2
@@ -225,8 +225,8 @@ The shortest route through the implementation is:
 1. `HodgeConjecture/Statement.lean`, the statement;
 2. `HodgeConjecture/Definitions/AlgebraicGeometry/Hodge/Filtration.lean`, cohomology and the Hodge
    filtration;
-3. `HodgeConjecture/Lemmas/AlgebraicGeometry/Cohomology/WithSupport.lean`, the mapping-cone
-   model of cohomology with support;
+3. `HodgeConjecture/Definitions/AlgebraicGeometry/Cohomology/WithSupport.lean`, cohomology with
+   support as an `Ext` group;
 4. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`,
    the class on the smooth locus;
 5. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SupportExtension.lean`, its
