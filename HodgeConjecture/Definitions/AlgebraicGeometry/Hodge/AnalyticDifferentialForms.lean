@@ -22,7 +22,7 @@ public import HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWed
 /-!
 # Analytic differential forms
 
-This file constructs analytic differential forms from holomorphic functions and their actual
+This file constructs analytic differential forms from holomorphic functions and their
 manifold derivatives. The pointwise algebra of wedges lives in
 `HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors` and
 `HodgeConjecture.Lemmas.Analysis.Calculus.DifferentialForm.ExactWedge`.
@@ -61,7 +61,9 @@ noncomputable instance holomorphicFunctionPresheafAlgebra
   inferInstanceAs (Algebra ℂ
     C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯)
 
-/-- Restriction of holomorphic functions as an algebra homomorphism over the constants. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. For analytic
+opens `V ⊆ U`, this `ℂ`-algebra homomorphism sends a holomorphic function on `U` to its
+restriction to `V`. -/
 def holomorphicRestrictionAlgHom [SmoothOfRelativeDimension d X.hom]
     {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) :
     ((holomorphicFunctionPresheaf X d).obj U : Type) →ₐ[ℂ]
@@ -80,11 +82,16 @@ def holomorphicRestrictionAlgHom [SmoothOfRelativeDimension d X.hom]
       (holomorphicRestrictionAlgHom X d j).comp
         (holomorphicRestrictionAlgHom X d i) := rfl
 
+/-- Let `X` be a smooth complex scheme of dimension `d` and `U` an analytic open in `X(ℂ)`. This is
+the complex algebra of holomorphic functions `U → ℂ`, with pointwise operations, defined using
+the chosen analytic charts. -/
 abbrev OpenHolomorphicFunctions [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :=
   ((holomorphicFunctionPresheaf X d).obj U : Type)
 
-/-- The part of a fixed chart target whose inverse image belongs to `U`. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. For an analytic
+open `U` and the chosen chart `e` at `z`, this is the set of coordinates `y` in the chart target
+such that `e.symm(y) ∈ U`. It is an open subset of `ℂ^d`. -/
 def chartSectionDomain [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) :
     Set (Fin d → ℂ) :=
@@ -100,8 +107,9 @@ lemma isOpen_chartSectionDomain [SmoothOfRelativeDimension d X.hom]
     (chartAt (Fin d → ℂ) z).isOpen_inter_preimage_symm
       (Opposite.unop U).isOpen
 
-/-- An arbitrary total extension of a section from its open domain. Its values outside the
-domain play no role in derivatives taken within that domain. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. For an analytic
+open `U` and a holomorphic function `f : U → ℂ`, this total function on `X(ℂ)` equals `f` on `U`
+and zero outside `U`. -/
 def extendedSection [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     (f : OpenHolomorphicFunctions X d U) :
@@ -125,7 +133,10 @@ private lemma extendedSection_contMDiffWithinAt [SmoothOfRelativeDimension d X.h
     (holomorphicFunctionSheaf_section_analytic X d f).contMDiffAt
       (x := ⟨x, hx⟩)
 
-/-- The expression of a holomorphic section in one fixed chart. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. For a holomorphic
+function `f` on `U`, this is its coordinate expression `f ∘ e.symm` on `D`, defined as a total
+function by first extending `f` by zero outside `U`. -/
 def chartSection [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     (z : ComplexPoint X)
@@ -175,7 +186,10 @@ lemma chartSection_contDiffOn [SmoothOfRelativeDimension d X.hom]
         hy.2⟩) = _
   rw [Subtype.val_injective.extend_apply]
 
-/-- The derivative of a section in one fixed chart. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. For a holomorphic
+function `f` on `U`, this is the complex Fréchet derivative of `f ∘ e.symm` within `D` at `y`.
+Its value is a continuous complex linear functional on `ℂ^d`. -/
 def chartSectionDifferential [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     (z : ComplexPoint X)
@@ -260,8 +274,10 @@ lemma chartSectionDifferential_algebraMap [SmoothOfRelativeDimension d X.hom]
 
 /-! ### Reading holomorphic functions in a fixed chart -/
 
-/-- Expressing holomorphic functions on `U` in a fixed chart, as a homomorphism of `ℂ`-algebras
-into functions on the coordinate domain of that chart. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. This `ℂ`-algebra
+homomorphism sends each holomorphic function `f` on `U` to the function `y ↦ f(e.symm(y))` on
+`D`. -/
 def chartSectionAlgHom [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) :
     OpenHolomorphicFunctions X d U →ₐ[ℂ] (↥(chartSectionDomain X d U z) → ℂ) where
@@ -283,8 +299,10 @@ def chartSectionAlgHom [SmoothOfRelativeDimension d X.hom]
     (f : OpenHolomorphicFunctions X d U) (y : ↥(chartSectionDomain X d U z)) :
     chartSectionAlgHom X d U z f y = chartSection X d U z f y.1 := rfl
 
-/-- Functions on the coordinate domain of a fixed chart form a module over the holomorphic
-functions on `U`, acting through their expression in that chart. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. For a complex
+vector space `V`, functions `D → V` form a module over `𝒪(U)`, the holomorphic functions on `U`,
+by `(f • v)(y) = f(e.symm(y)) • v(y)`. This is that module structure. -/
 abbrev chartFieldModule [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
     (V : Type) [AddCommGroup V] [Module ℂ V] :
@@ -314,8 +332,11 @@ theorem chartFieldTower [SmoothOfRelativeDimension d X.hom]
 
 attribute [local instance] chartFieldTower
 
-/-- The coordinate differentials of holomorphic sections form a `ℂ`-derivation into covector
-fields along the coordinate domain of a fixed chart. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. This
+`ℂ`-derivation sends a holomorphic function `f` on `U` to the covector field `y ↦ D(f ∘
+e.symm)(y)` on `D`. Multiplication by holomorphic functions is evaluated in these coordinates,
+so the derivative obeys the Leibniz rule. -/
 def chartDerivation [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) :
     Derivation ℂ (OpenHolomorphicFunctions X d U)
@@ -348,7 +369,10 @@ private lemma update_eval {p : ℕ} {V W : Type*} (L : Fin p → V → W) (i : F
   funext j
   by_cases h : j = i <;> simp [h]
 
-/-- The pointwise wedge of covector fields along a fixed chart. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. For a natural
+number `p`, this alternating multilinear map sends `p` covector fields on `D` to their pointwise
+exterior product. At `y`, it gives an alternating continuous `p`-linear form on `ℂ^d`. -/
 def chartWedge [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ) :
     (↥(chartSectionDomain X d U z) → ((Fin d → ℂ) →L[ℂ] ℂ))
@@ -382,8 +406,11 @@ def chartWedge [SmoothOfRelativeDimension d X.hom]
     (y : ↥(chartSectionDomain X d U z)) :
     chartWedge X d U z p L y = ContinuousAlternatingMap.wedgeCovectors ℂ (Fin d → ℂ) fun i => L i y := rfl
 
-/-- Fixed-chart evaluation of differential forms, as a `ℂ`-linear map into alternating-form
-fields on the coordinate domain. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. Let `𝒪(U)` be the
+algebra of holomorphic functions. This `𝒪(U)`-linear map evaluates algebraic Kähler `p`-forms as
+alternating-form fields on `D`: it sends `a₀ da₁ ∧ ⋯ ∧ daₚ` to the coordinate value of `a₀`
+times the wedge of the coordinate derivatives of the `a_j`. -/
 def chartEvaluationHolo [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ) :
     Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p →ₗ[OpenHolomorphicFunctions X d U]
@@ -407,7 +434,9 @@ private lemma chartEvaluationHolo_mk [SmoothOfRelativeDimension d X.hom]
     exteriorPower.alternatingMapLinearEquiv_apply_ιMulti]
   simp
 
-/-- Extend a function on the coordinate domain of a fixed chart by zero. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. For any type `V`
+with zero, this extends a function `D → V` to `ℂ^d` by assigning zero outside `D`. -/
 def extendByZero [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
     {V : Type} [Zero V] (F : ↥(chartSectionDomain X d U z) → V) : (Fin d → ℂ) → V :=
@@ -430,7 +459,10 @@ lemma extendByZero_apply_of_notMem [SmoothOfRelativeDimension d X.hom]
   · rintro ⟨⟨w, hw⟩, rfl⟩
     exact hy hw
 
-/-- Extension by zero, as a `ℂ`-linear map on chart fields. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. For a complex
+vector space `V`, this is the complex linear map from functions `D → V` to functions `ℂ^d → V`
+that extends by zero off `D`. -/
 def extendByZeroLinear [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X)
     (V : Type) [AddCommGroup V] [Module ℂ V] :
@@ -447,8 +479,11 @@ def extendByZeroLinear [SmoothOfRelativeDimension d X.hom]
     · simp [extendByZero_apply_of_mem X d U z _ hy]
     · simp [extendByZero_apply_of_notMem X d U z _ hy]
 
-/-- Fixed-chart evaluation of a differential form, as a `ℂ`-linear map into alternating-form
-fields on the chart target, extended by zero outside the coordinate domain. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. This complex
+linear map evaluates algebraic Kähler `p`-forms of `𝒪(U)` as alternating continuous `p`-linear
+forms on `ℂ^d` at each point of `D`, using coordinate derivatives. The resulting field is
+extended by zero off `D`. -/
 def chartEvaluation [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ) :
     Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p →ₗ[ℂ]
@@ -494,7 +529,10 @@ private lemma chartEvaluation_apply_of_mem [SmoothOfRelativeDimension d X.hom]
       chartEvaluation X d U z p a - chartEvaluation X d U z p b :=
   map_sub (chartEvaluation X d U z p) a b
 
-/-- Fixed-chart evaluation of the generator `a₀ * d v₀ ∧ ⋯ ∧ d vₚ₋₁`. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. For holomorphic
+functions `a₀, v₀, …, v_{p-1}` on `U`, this field evaluates the generator `a₀ dv₀ ∧ ⋯ ∧
+dv_{p-1}` as `a₀(e.symm(y))` times the wedge of the coordinate derivatives of the `v_j` at `y`. -/
 def chartGeneratorEvaluation [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (z : ComplexPoint X) (p : ℕ)
     (a₀ : OpenHolomorphicFunctions X d U) (v : Fin p → OpenHolomorphicFunctions X d U) :
@@ -620,7 +658,11 @@ lemma chartEvaluation_differential
         extDerivWithin_smul c _
           ((isOpen_chartSectionDomain X d U z).uniqueDiffWithinAt hy)]
 
-/-- Evaluation at one point of one fixed coordinate chart. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, `U ⊆ X(ℂ)` open, and `e` the chosen chart
+at `z`. Its coordinate domain over `U` is `D = {y ∈ e.target | e.symm y ∈ U}`. For a natural
+number `p` and a coordinate point `y`, this complex linear map evaluates an algebraic Kähler
+`p`-form of `𝒪(U)` at `y` using coordinate derivatives, producing an alternating continuous
+`p`-linear form on `ℂ^d`. Its value is zero off `D`. -/
 def chartEvaluationAt [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
     (z : ComplexPoint X) (p : ℕ) (y : Fin d → ℂ) :
@@ -628,8 +670,10 @@ def chartEvaluationAt [SmoothOfRelativeDimension d X.hom]
       (Fin d → ℂ) [⋀^Fin p]→L[ℂ] ℂ :=
   (LinearMap.proj y).comp (chartEvaluation X d U z p)
 
-/-- Differential forms that vanish in every fixed chart at every point of its coordinate
-domain. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. For an analytic
+open `U`, this is the complex subspace of algebraic Kähler `p`-forms of `𝒪(U)` whose evaluations
+by coordinate derivatives vanish at every point in every chosen analytic chart. These are the
+relations imposed to obtain analytic differential forms. -/
 def chartEvaluationKernel [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
     Submodule ℂ (Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p) :=
@@ -660,7 +704,10 @@ lemma differential_mem_chartEvaluationKernel
   rw [chartEvaluation_differential X d U z p θ hy, extDerivWithin_congr' hEq hy,
     extDerivWithin_zero]
 
-/-- Restriction of differential forms along an inclusion of open sets. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. For analytic
+opens `V ⊆ U` and a natural number `p`, restriction `𝒪(U) → 𝒪(V)` induces this map on algebraic
+Kähler `p`-forms, sending `a₀ da₁ ∧ ⋯ ∧ daₚ` to the form obtained by restricting each function
+to `V`. -/
 def formRestriction [SmoothOfRelativeDimension d X.hom]
     {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
     Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p →ₗ[ℂ]
@@ -766,20 +813,28 @@ lemma formRestriction_mem_chartEvaluationKernel
   exact (mem_chartEvaluationKernel_iff X d U p θ).1 hθ z y
     ⟨hy.1, leOfHom i.unop hy.2⟩
 
-/-- Analytic differential forms of degree `p` on `U`: Kähler differential forms of the
-holomorphic functions, modulo the identities that actual complex derivatives detect. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. For an analytic
+open `U` and a natural number `p`, holomorphic `p`-forms are defined as `⋀^p_{𝒪(U)} Ω_{𝒪(U)/ℂ}`
+modulo the forms whose evaluations by coordinate derivatives vanish everywhere in every chosen
+chart. Here `𝒪(U)` is the algebra of holomorphic functions on `U`. -/
 abbrev HolomorphicForm [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :=
   Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) p ⧸
     chartEvaluationKernel X d U p
 
-/-- A complex constant regarded as an analytic differential zero-form. -/
+/-- Let `X` be a smooth complex scheme of dimension `d`, with analytic space `X(ℂ)`. For an analytic
+open `U`, this complex linear map sends `c ∈ ℂ` to the zero-form represented by the constant
+holomorphic function `c` in the quotient of algebraic forms by those vanishing in all charts. -/
 def holomorphicFormOfConstant [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
     ℂ →ₗ[ℂ] HolomorphicForm X d U 0 :=
   (chartEvaluationKernel X d U 0).mkQ.comp
     (Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d U))
 
+/-- Let `X` be a smooth complex scheme of dimension `d` and `U` an analytic open in `X(ℂ)`. This
+complex linear exterior derivative sends holomorphic `p`-forms to `(p+1)`-forms. It descends the
+Kähler exterior derivative to the quotient by forms whose coordinate derivative evaluations
+vanish everywhere. -/
 def holomorphicFormDifferential [SmoothOfRelativeDimension d X.hom]
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (p : ℕ) :
     HolomorphicForm X d U p →ₗ[ℂ] HolomorphicForm X d U (p + 1) :=
@@ -791,6 +846,9 @@ def holomorphicFormDifferential [SmoothOfRelativeDimension d X.hom]
           Submodule.Quotient.mk_eq_zero]
         exact differential_mem_chartEvaluationKernel X d U p hθ)
 
+/-- Let `X` be a smooth complex scheme of dimension `d` and `V ⊆ U` analytic opens. This complex
+linear map restricts holomorphic `p`-forms from `U` to `V`, by restricting their coefficient
+functions and passing to the quotient by forms whose coordinate evaluations vanish. -/
 def holomorphicFormRestriction [SmoothOfRelativeDimension d X.hom]
     {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V) (p : ℕ) :
     HolomorphicForm X d U p →ₗ[ℂ] HolomorphicForm X d V p :=

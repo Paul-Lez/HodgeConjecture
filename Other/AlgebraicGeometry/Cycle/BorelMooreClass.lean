@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHypercohomology
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.FundamentalClass
+public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Cycle.Component.BorelMoore
 public import Other.AlgebraicGeometry.Cycle.Component.PointPurity
 public import Other.AlgebraicGeometry.SmoothProjectiveVariety

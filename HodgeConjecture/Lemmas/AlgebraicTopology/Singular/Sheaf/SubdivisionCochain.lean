@@ -158,8 +158,10 @@ lemma globalRawSingularCochainComplexIso_hom_f_apply (n : ℕ)
     (globalRawSingularCochainComplexIso R X).hom.f n x = x :=
   rfl
 
-/-- The singular-cochain presheaf complex after applying the first plus construction degreewise.
-This is a complex of presheaves, not a complex of sheaves. -/
+/-- Let `X` be a topological space and `R` a commutative ring. Apply the first plus construction to
+each presheaf `U ↦ C^n(U;R)` of singular cochains: its sections are compatible families over
+open covers, with families identified when they agree on a common refinement. The induced
+singular coboundaries make these presheaves into this nonnegative cochain complex. -/
 def singularCochainPlusPresheafComplex :
     CochainComplex (TopCat.Presheaf AddCommGrpCat X) ℕ :=
   ((Opens.grothendieckTopology X).plusFunctor AddCommGrpCat).mapHomologicalComplex
@@ -1162,7 +1164,7 @@ theorem exists_topOpenLocallyZero_primitive
         Y S ((ComplexShape.up ℕ).prev n) ψ hψsmall)
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual kernel of the map from top-open rational cochains to global first-plus cochains is
+/-- The kernel of the map from top-open rational cochains to global first-plus cochains is
 acyclic. -/
 theorem topOpenToGlobalSingularCochainPlusComplex_kernel_acyclic :
     (kernel (topOpenToGlobalSingularCochainPlusComplex ℚ Y)).Acyclic := by

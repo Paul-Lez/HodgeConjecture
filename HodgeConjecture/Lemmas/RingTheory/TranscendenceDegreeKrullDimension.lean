@@ -96,7 +96,7 @@ variable [Algebra.FiniteType k R] [Algebra.FiniteType k S]
 
 include k in
 /-- A quasi-finite map between finite-type algebras over a field preserves the Krull dimension of
-the quotient at a prime.  This does not assert that the induced quotient map is flat. -/
+the quotient at a prime. -/
 lemma QuasiFinite.ringKrullDim_quotient_eq (P : Ideal S) [P.IsPrime] :
     ringKrullDim (S ⧸ P) = ringKrullDim (R ⧸ P.under R) := by
   let q : Ideal R := P.under R

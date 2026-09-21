@@ -31,6 +31,7 @@ universe u
 namespace Algebra.DeRham
 
 open CliffordAlgebra (involute involute_ι)
+open TrivSqZeroExt (snd)
 
 variable (R A : Type u) [CommRing R] [CommRing A] [Algebra R A]
 
@@ -51,15 +52,15 @@ lemma extDeriv_involute (x : ExtAlg R A) :
       simp only [mul_neg, neg_mul, neg_add]
   | add x y hx hy => simp only [map_add, hx, hy, neg_add]
 
-lemma extDeriv_snd_phi (ω : Ω[A⁄R]) : extDeriv R A (Sq.snd (phi R A ω)) = 0 := by
+lemma extDeriv_snd_phi (ω : Ω[A⁄R]) : extDeriv R A (snd (phi R A ω)) = 0 := by
   induction ω using D_induction with
   | D a => simp
   | zero => simp
-  | add x y hx hy => rw [map_add, Sq.snd_add, map_add, hx, hy, add_zero]
+  | add x y hx hy => rw [map_add, TrivSqZeroExt.snd_add, map_add, hx, hy, add_zero]
   | smul a x hx =>
       rw [snd_phi_smul, map_add, Algebra.smul_def, extDeriv_mul, extDeriv_mul, hx,
         AlgHom.commutes, extDeriv_algebraMap, mul_zero, zero_add, involute_ι]
-      simp only [extDeriv_ι, phi_D, Sq.snd_mk, zero_mul, add_zero, neg_mul]
+      simp only [extDeriv_ι, phi_D, TrivSqZeroExt.snd_inl, zero_mul, add_zero, neg_mul]
       abel
 
 /-- The exterior derivative squares to zero. -/
@@ -92,8 +93,8 @@ lemma extAlgMap_involute (x : ExtAlg R A) :
   | add x y hx hy => simp only [map_add, hx, hy]
 
 lemma extAlgMap_snd_phi (ω : Ω[A⁄R]) :
-    extAlgMap R A B (Sq.snd (phi R A ω)) =
-      Sq.snd (phi R B (KaehlerDifferential.map R R A B ω)) := by
+    extAlgMap R A B (snd (phi R A ω)) =
+      snd (phi R B (KaehlerDifferential.map R R A B ω)) := by
   induction ω using D_induction with
   | D a => simp
   | zero => simp
@@ -102,7 +103,7 @@ lemma extAlgMap_snd_phi (ω : Ω[A⁄R]) :
       rw [snd_phi_smul, map_add, map_smul, hx, map_mul, extAlgMap_ι, extAlgMap_ι,
         KaehlerDifferential.map_D, map_smul,
         ← algebraMap_smul (R := A) B a (KaehlerDifferential.map R R A B x), snd_phi_smul,
-        ← algebraMap_smul (R := A) B a (Sq.snd (phi R B (KaehlerDifferential.map R R A B x)))]
+        ← algebraMap_smul (R := A) B a (snd (phi R B (KaehlerDifferential.map R R A B x)))]
 
 lemma extAlgMap_extDeriv (x : ExtAlg R A) :
     extAlgMap R A B (extDeriv R A x) = extDeriv R B (extAlgMap R A B x) := by

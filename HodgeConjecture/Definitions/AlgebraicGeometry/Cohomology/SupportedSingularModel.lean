@@ -14,12 +14,10 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectivePa
 /-!
 # Supported singular models on smooth projective complex varieties
 
-The generic supported singular/injective comparison is specialized using the
-constructed analytic contractible neighborhoods and hereditary paracompactness
-of smooth projective analytifications. Only the geometric scheme hypotheses
-remain: no purity, fundamental class, or comparison equivalence is an input.
-The target is literally the ambient injective complex used by the derived
-rational support comparison.
+The generic supported singular/injective comparison is specialized using the analytic
+contractible neighborhoods and hereditary paracompactness of smooth projective analytifications.
+Only the geometric scheme hypotheses remain. The target is the ambient injective complex used by
+the derived rational support comparison.
 -/
 
 @[expose] public noncomputable section
@@ -32,9 +30,10 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom]
 
-/-- `Γ_{X(ℂ) \ U}(C^•_sing) → Γ_{X(ℂ) \ U}(I^•)`: the comparison from sections supported on
-`X(ℂ) \ U` of the rational singular-cochain sheaves to those of the injective resolution `I^•`
-of `ℚ`, for any open `U`. -/
+/-- Let `X` be a smooth integral complex scheme and `U ⊆ X(ℂ)` an analytic open. Write `C^•` for the
+sheafified rational singular cochains and `ℚ → I^•` for the chosen injective resolution. This
+map `Γ_{X(ℂ) \ U}(C^•) → Γ_{X(ℂ) \ U}(I^•)` restricts the augmentation-preserving resolution
+comparison to subsheaves of sections vanishing on `U`. -/
 def complexSupportedSingularToAmbientInjective
     (U : Opens (ComplexPoint X)) :
     -- `Γ_{X(ℂ) \ U}` of the singular-cochain model, mapping to `Γ_{X(ℂ) \ U}(I^•)`.
@@ -49,7 +48,7 @@ def complexSupportedSingularToAmbientInjective
 
 variable [IsProjective X.hom]
 
-/-- The constructed supported comparison is a sheaf quasi-isomorphism under
+/-- The supported comparison is a sheaf quasi-isomorphism under
 the usual smooth projective geometry hypotheses alone. -/
 instance complexSupportedSingularToAmbientInjective_quasiIso
     (U : Opens (ComplexPoint X)) :

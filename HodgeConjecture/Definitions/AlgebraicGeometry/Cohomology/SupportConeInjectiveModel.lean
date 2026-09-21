@@ -11,11 +11,10 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.Hypercohomolog
 /-!
 # Normalized injective models for the rational support cone
 
-The existing rational support object resolves constants on the complement
+The rational support object resolves constants on the complement
 independently of the ambient space. This file connects that model with the
-actual restriction of an ambient injective resolution. All comparison maps
-extend the given constant restriction, rather than choosing an abstract
-equivalence between cohomology groups.
+restriction of an ambient injective resolution. All comparison maps extend the given constant
+restriction.
 -/
 
 @[expose] public noncomputable section
@@ -26,8 +25,9 @@ namespace AlgebraicGeometry.ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- The fixed injective resolution `I^•` of the constant sheaf `ℚ` on `X(ℂ)`, in integer
-degrees. -/
+/-- Let `X` be a scheme over `ℂ`. This is the complex `I^•` of sheaves of abelian groups in a chosen
+injective resolution `ℚ → I^•` on the analytic space `X(ℂ)`. It is indexed by integers and is
+zero in negative degrees. -/
 def ambientRationalInjectiveComplex :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   -- An injective resolution `ℚ_{X(ℂ)} → I^•`.
@@ -35,7 +35,9 @@ def ambientRationalInjectiveComplex :
     (TopCat.of (ComplexPoint X)) (AddCommGrpCat.of ℚ)).cocomplex.extend
       ComplexShape.embeddingUpNat
 
-/-- Its actual constant augmentation. -/
+/-- Let `X` be a scheme over `ℂ`. This is the augmentation `ℚ[0] → I^•` of the chosen injective
+resolution of the constant rational sheaf on the analytic space `X(ℂ)`, with both complexes
+indexed by integers. -/
 def ambientRationalInjectiveAugmentation :
     constantFieldSheafComplexInt ℚ X ⟶
       ambientRationalInjectiveComplex X :=

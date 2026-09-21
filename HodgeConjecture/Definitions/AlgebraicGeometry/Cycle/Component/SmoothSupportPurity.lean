@@ -33,8 +33,9 @@ variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
-/-- The open `X(ℂ) \ Z_sing(ℂ)`, where `Z` is the closure of `x` and `Z_sing` its singular
-locus. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. This is the analytic open subset `X(ℂ) \ Z_sing(ℂ)`, on which the
+remaining support is the complex manifold `Z_reg(ℂ)`. -/
 abbrev cycleComponentSmoothSupportAmbientOpen : Opens (ComplexPoint X) :=
   -- `X(ℂ) \ Z_sing(ℂ)`.
   (cycleComponentSingularAnalyticClosedFiltration X x 0).compl
@@ -127,8 +128,10 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
         (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl W
         ((ambientRationalInjectiveComplex X).X (q : ℤ)) inf_le_right
 
-/-- `RΓ_{Z(ℂ)}(ℚ)|_{X(ℂ) \ Z_sing(ℂ)}`: the `Z(ℂ)`-supported part `Γ_{Z(ℂ)}(I^•)` of the injective
-resolution of `ℚ`, restricted to the open `X(ℂ) \ Z_sing(ℂ)`. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. Take the subsheaves of sections supported in `Z(ℂ)` of a chosen
+injective resolution of `ℚ` on `X(ℂ)`, then restrict the resulting complex to `X(ℂ) \
+Z_sing(ℂ)`. This is the resulting integer-indexed sheaf complex. -/
 def cycleComponentSmoothRestrictedInjectiveComplex :
     CochainComplex (TopCat.Sheaf AddCommGrpCat
       (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))) ℤ :=
@@ -158,9 +161,11 @@ theorem cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
     (TopCat.of (ComplexPoint X)) _ _ n
     (cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing X x hx n hn)
 
-/-- `H^{2p}_{Z(ℂ)}(U; ℚ) ≅ Γ(U, 𝓗^{2p}(RΓ_{Z(ℂ)}(ℚ)))` for `U = X(ℂ) \ Z_sing(ℂ)`: because the
-cohomology sheaves vanish below degree `2p` on `U`, the degree-`2p` cohomology of sections over
-`U` is the sections of the degree-`2p` cohomology sheaf. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. Put `U = X(ℂ) \ Z_sing(ℂ)` and let `K` be the
+subsheaf complex of a rational injective resolution consisting of sections supported in `Z(ℂ)`.
+Purity implies `𝓗^j(K)|_U = 0` for `j < 2p`, giving this isomorphism `H^{2p}(Γ(U, K)) ≅ Γ(U,
+𝓗^{2p}(K))`. -/
 def cycleComponentSmoothSupportLowestSectionCohomologyIso :
     -- `H^{2p}_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ); ℚ)`.
     ((((TopCat.Sheaf.supportEvaluation
@@ -175,7 +180,7 @@ def cycleComponentSmoothSupportLowestSectionCohomologyIso :
       -- Sections of the cohomology sheaf `𝓗^{2p}(RΓ_{Z(ℂ)}(ℚ))` over `X(ℂ) \ Z_sing(ℂ)`.
       ((complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)).homology
         -- Degree `2p`.
-        (2 * (p : ℤ))).obj.obj
+        (2 * (p : ℤ))).presheaf.obj
           -- The open `X(ℂ) \ Z_sing(ℂ)`.
           (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso

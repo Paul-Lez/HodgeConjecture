@@ -31,8 +31,10 @@ open AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- `RΓ_S(ℚ)` for a closed `S ⊆ X(ℂ)`: the complex of sheaves `Γ_S(I^•)` of sections supported
-on `S` of the fixed injective resolution `ℚ → I^•` on `X(ℂ)`. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and `S` a closed subset of its analytic
+space `X(ℂ)`. For the chosen injective resolution `ℚ → I^•`, this complex has in each degree the
+subsheaf of `I^n` consisting of sections that vanish off `S`. Its differentials are induced by
+those of `I^•`, and it represents the derived sheaf of sections with support in `S`. -/
 def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
   -- `RΓ_S(ℚ)`: the `S`-supported subsheaves of an injective resolution of `ℚ` on `X(ℂ)`.

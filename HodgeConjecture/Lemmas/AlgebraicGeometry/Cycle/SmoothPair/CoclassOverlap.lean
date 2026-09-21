@@ -37,9 +37,8 @@ theorem smoothClosedSupportChartCoclass_restrict
 
 variable (z' : ComplexPoint Y)
 
-/-- Exactly normalized ambient coclass agreement for the closed-immersion charts.
-The only inputs are smoothness, the closed immersion, and membership in its chart
-overlap and image. Holomorphicity and invertibility of the normal derivative are proved. -/
+/-- Exactly normalized ambient coclass agreement for the closed-immersion charts, from
+smoothness, the closed immersion, and membership in its chart overlap and image. -/
 theorem exists_open_smoothClosedSupportChartCoclass_eq
     (x : ComplexPoint X) (hxS : x ∈ Set.range (Point.map i))
     (hx : x ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)

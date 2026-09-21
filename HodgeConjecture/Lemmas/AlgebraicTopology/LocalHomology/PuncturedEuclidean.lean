@@ -1364,8 +1364,9 @@ abbrev StandardFacetCarrierPrismFamily (d : ℕ) :=
           (standardFacetCarrier d x)))).chainComplex
             (AddCommGrpCat.of ℤ)).X (n + 1)
 
-/-- The alternating sum of the already constructed face prisms, restricted into the carrier
-intersection assigned to the original simplex. -/
+/-- For an `(n+1)`-simplex `σ` in `ℝ^d \ {0}` subordinate to the standard facet cover and a family
+`P` of local prism chains, this integral chain is `∑_i (-1)^i P(∂_i σ)`. Each term is included
+into the intersection of cover members containing `σ` before summing. -/
 def standardFacetCarrierPrismFaces
     (d : ℕ) (P : StandardFacetCarrierPrismFamily d) (n : ℕ)
     (x : (coverSmallSingularSubcomplex
@@ -1600,7 +1601,10 @@ lemma exists_standardFacetCarrierIntersectionPrism_zero
     (standardFacetCarrierIntersectionDiscrepancy d 0 x)
     (standardFacetCarrierIntersectionDiscrepancy_zero_augmentation d x)
 
-/-- The local residual left after subtracting the already constructed face prisms. -/
+/-- For an `(n+1)`-simplex `σ` in `ℝ^d \ {0}` subordinate to the standard facet cover and a family
+`P` of local prism chains, this is the affine carrier chain minus the subdivided source chain
+minus `∑_i (-1)^i P(∂_i σ)`. All terms are integral chains in the intersection of cover members
+containing `σ`. -/
 def standardFacetCarrierPrismResidual
     (d : ℕ) (P : StandardFacetCarrierPrismFamily d) (n : ℕ)
     (x : (coverSmallSingularSubcomplex

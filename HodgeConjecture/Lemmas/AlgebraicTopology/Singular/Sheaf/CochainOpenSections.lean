@@ -29,8 +29,10 @@ def openSubspaceImageTopIso (V : Opens X) : V.isOpenEmbedding.functor.obj ⊤ �
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Ambient raw cochains on `V` identified with top-open raw cochains of
-the space `V`, through the actual image homeomorphism. -/
+/-- Let `X` be a topological space and `R` a commutative ring. For an open `V ⊆ X`,
+this identifies the singular cochain presheaf on `X` evaluated at `V` with the singular cochain
+presheaf on the space `V` evaluated at its whole space. Both are the complex `C^•(V;R)`,
+regarded as a complex of abelian groups. -/
 def openRawSingularCochainComplexIsoGlobal (V : Opens X) :
     openRawSingularCochainComplex R X V ≅ globalRawSingularCochainComplex R (TopCat.of V) :=
   (NatIso.mapHomologicalComplex
@@ -75,7 +77,7 @@ variable (R : Type) [CommRing R] (X : TopCat.{0})
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The intrinsic/global comparison retains the actual sheafification unit. -/
+/-- The intrinsic/global comparison retains the sheafification unit. -/
 @[reassoc]
 lemma openRawToSingularCochainSheafComplex_global (V : Opens X) :
     openRawToSingularCochainSheafComplex R X V ≫
@@ -106,9 +108,8 @@ lemma openRawToSingularCochainSheafComplex_global (V : Opens X) :
           (openSubspaceImageTopIso X V).hom.op ≫ f.app (.op ⊤))
         (toSheafify_singularCochainSheafOpenRestrictionIso R X V n)
 
-/-- On any paracompact Hausdorff ambient open, raw rational singular
-cochains map quasi-isomorphically to sections of the actual singular sheaf.
-No separation or paracompactness assumption is made on the rest of `X`. -/
+/-- On any paracompact Hausdorff ambient open, raw rational singular cochains map
+quasi-isomorphically to sections of the singular sheaf. The hypothesis is on that open alone. -/
 theorem openRawToSingularCochainSheafComplex_quasiIso (V : Opens X)
     [ParacompactSpace V] [T2Space V] :
     QuasiIso (openRawToSingularCochainSheafComplex ℚ X V) := by
@@ -119,7 +120,7 @@ theorem openRawToSingularCochainSheafComplex_quasiIso (V : Opens X)
   rw [← openRawToSingularCochainSheafComplex_global] at this
   exact (quasiIso_iff_comp_right _ _).mp this
 
-/-- The open-section comparisons commute with the literal restriction maps.
+/-- The open-section comparisons commute with the restriction maps.
 In particular this applies to `W = V ⊓ U`. -/
 @[reassoc]
 lemma openSingularSheafRestriction_naturality {V W : Opens X} (i : W ⟶ V) :

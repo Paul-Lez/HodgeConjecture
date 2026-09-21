@@ -25,13 +25,13 @@ public import Mathlib.Analysis.Calculus.FDeriv.Basic
 This file supplies the nonlinear local-degree step in the comparison of complex charts.  If a
 continuous map fixes the origin, is complex differentiable there, and has invertible derivative,
 then on a sufficiently small neighborhood its straight-line homotopy to the derivative avoids the
-origin away from the origin.  Point excision lets us use this local homotopy to compare the induced
-maps on the ambient local homology group.  Combining this with the complex-linear calculation shows
-that the map preserves the standard complex local class.
+origin away from the origin.  Point excision turns this local homotopy into a comparison of the
+induced maps on the ambient local homology group.  Combined with the complex-linear calculation,
+this shows that the map preserves the standard complex local class.
 
 The only global condition is the one required to even define a self-map of the point-complement
 pair: the map has no zero away from the origin.  In chart applications this follows from
-injectivity of the coordinate change.  No local homotopy or local-degree datum is assumed.
+injectivity of the coordinate change.
 -/
 
 @[expose] public noncomputable section
@@ -214,10 +214,9 @@ def complexStraightLineLocalPairHomotopy
         simp }
   w := rfl
 
-/-- A genuinely local coordinate-change theorem.  On some open neighborhood `V` contained in
-the prescribed coordinate domain `U`, the local map sends every lift of the standard local class
-through point excision back to the standard local class.  In particular, neither a global
-extension nor a global injectivity/nonvanishing hypothesis is needed. -/
+/-- A local coordinate-change theorem.  On some open neighborhood `V` contained in the
+prescribed coordinate domain `U`, the local map sends every lift of the standard local class
+through point excision back to the standard local class. -/
 theorem exists_open_complexDifferentiable_localClass_invariance
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0)
     (U : Set (Fin d → ℂ)) (hU : IsOpen U) (h0U : 0 ∈ U)
@@ -319,9 +318,9 @@ def complexStraightLineNeighborhoodPairHomotopy
 /-- A continuous, origin-preserving map with no other zero and invertible complex derivative at
 the origin preserves the standard complex local homology class.
 
-Unlike a global straight-line argument, only the germ of the homotopy is required to avoid zero:
-`exists_open_straightLine_ne_zero` constructs the required open neighborhood, and point excision
-then cancels its inclusion on relative homology. -/
+Only the germ of the straight-line homotopy is required to avoid zero:
+`exists_open_straightLine_ne_zero` constructs the open neighborhood on which it does, and point
+excision then cancels its inclusion on relative homology. -/
 theorem relativeHomologyMap_complexDifferentiable_standardComplexLocalClass
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0)
     (f : (Fin d → ℂ) → (Fin d → ℂ)) (hf : Continuous f)

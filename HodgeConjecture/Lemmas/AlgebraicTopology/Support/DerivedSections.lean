@@ -46,8 +46,9 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
 
-/-- A morphism of sheaves whose restriction to `U` is zero factors canonically
-through the sheaf of sections supported outside `U`. -/
+/-- Let `U` be open in a topological space `X` and `f : F → G` a morphism of sheaves of abelian
+groups whose restriction to `U` is zero. This is the unique factorization of `f` through the
+subsheaf of `G` consisting of sections supported in `X \ U`. -/
 def liftSheafSectionsSupportedOutside (U : Opens X)
     {F G : Sheaf AddCommGrpCat.{u} X} (f : F ⟶ G)
     (hf : f ≫ (toOpenRestrictionPushforward X U).app G = 0) :
@@ -62,12 +63,12 @@ lemma liftSheafSectionsSupportedOutside_inclusion (U : Opens X)
       (sheafSectionsSupportedOutsideInclusion X U).app G = f :=
   kernel.lift_ι _ _ _
 
-/-- On every ambient open set, supported sections are exactly the kernel of
-restriction to its intersection with `U`. This is the canonical kernel
-comparison, not a supplied equivalence. -/
+/-- Let `X` be a topological space, `U,V ⊆ X` open, and `F` a sheaf of abelian groups. This
+identifies sections on `V` of the subsheaf supported in `X \ U` with `ker(F(V) → F(V ∩ U))`,
+where the map is restriction. -/
 def sheafSectionsSupportedOutsideOnOpenIso (U V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) :
-    ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V) ≅
+    ((sheafSectionsSupportedOutside X U).obj F).presheaf.obj (op V) ≅
       kernel (((toOpenRestrictionPushforward X U).app F).hom.app (op V)) :=
   let ev : Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
     sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat ⋙
@@ -79,7 +80,7 @@ def sheafSectionsSupportedOutsideOnOpenIso (U V : Opens X)
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op V))
   PreservesKernel.iso ev ((toOpenRestrictionPushforward X U).app F)
 
-/-- The kernel comparison preserves the actual inclusion of supported sections
+/-- The kernel comparison preserves the inclusion of supported sections
 into all sections. -/
 @[reassoc (attr := simp)]
 lemma sheafSectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
@@ -99,7 +100,9 @@ lemma sheafSectionsSupportedOutsideOnOpenIso_hom_ι (U V : Opens X)
     _ = _
   exact kernelComparison_comp_ι ((toOpenRestrictionPushforward X U).app F) ev
 
-/-- The sheaf-valued sections-with-support functor for a closed support. -/
+/-- Let `X` be a topological space and `Z ⊆ X` closed. This functor sends a sheaf of abelian groups
+`F` to the subsheaf `Γ_Z(F)` whose sections on `V` are those elements of `F(V)` that vanish on
+`V \ Z`. It is the kernel of restriction to the direct image from `X \ Z`. -/
 def sheafSectionsWithClosedSupport (Z : Closeds X) :
     Sheaf AddCommGrpCat.{u} X ⥤ Sheaf AddCommGrpCat.{u} X :=
   sheafSectionsSupportedOutside X Z.compl
@@ -107,8 +110,9 @@ def sheafSectionsWithClosedSupport (Z : Closeds X) :
 instance (Z : Closeds X) : (sheafSectionsWithClosedSupport X Z).Additive :=
   inferInstanceAs (sheafSectionsSupportedOutside X Z.compl).Additive
 
-/-- Global sections supported in a closed subset, obtained by evaluating the
-concrete support sheaf on the whole ambient space. -/
+/-- Let `X` be a topological space and `Z ⊆ X` closed. This functor sends a sheaf of abelian groups
+`F` to `Γ_Z(X,F) = ker(F(X) → F(X \ Z))`, the group of global sections whose support is
+contained in `Z`. -/
 def closedSupportSections (Z : Closeds X) :
     Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
   sheafSectionsWithClosedSupport X Z ⋙
@@ -125,24 +129,26 @@ attribute [local instance] supportSheafHasDerivedCategory
 
 attribute [local instance] supportGroupsHasDerivedCategory
 
-/-- The genuine right derived sheaf sections-with-support functor on bounded-below
-complexes. Enough injectives is furnished by the Grothendieck abelian category of
-abelian sheaves, not supplied as mathematical data. -/
+/-- Let `X` be a topological space and `Z ⊆ X` closed. This right derived functor on bounded-below
+complexes of sheaves of abelian groups replaces a complex by an injective resolution and then
+takes, in every degree, the subsheaf of sections vanishing off `Z`. Its values are complexes of
+sheaves on `X` in the bounded-below derived category. -/
 def derivedSheafSectionsWithClosedSupport (Z : Closeds X) :
     DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X) ⥤
       DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X) :=
   (sheafSectionsWithClosedSupport X Z).rightDerivedFunctorPlus
 
-/-- The canonical comparison from termwise sections with support to their derived
-functor. -/
+/-- Let `X` be a topological space and `Z ⊆ X` closed. For a bounded-below complex `K` of sheaves of
+abelian groups, the resolution map `K → I` induces a map from the termwise subsheaves of
+sections supported in `Z` to the corresponding subsheaves of `I`. This is the resulting natural
+comparison with the right derived sheaf functor. -/
 def derivedSheafSectionsWithClosedSupportUnit (Z : Closeds X) :
     (sheafSectionsWithClosedSupport X Z).mapHomotopyCategoryPlus ⋙
         DerivedCategory.Plus.Qh ⟶
       DerivedCategory.Plus.Qh ⋙ derivedSheafSectionsWithClosedSupport X Z :=
   (sheafSectionsWithClosedSupport X Z).rightDerivedFunctorPlusUnit
 
-/-- This construction satisfies Mathlib's universal property of a right derived
-functor; it is not merely a named candidate endofunctor. -/
+/-- The construction satisfies Mathlib's universal property of a right derived functor. -/
 instance derivedSheafSectionsWithClosedSupport_isRightDerivedFunctor (Z : Closeds X) :
     (derivedSheafSectionsWithClosedSupport X Z).IsRightDerivedFunctor
       (derivedSheafSectionsWithClosedSupportUnit X Z)
@@ -151,15 +157,19 @@ instance derivedSheafSectionsWithClosedSupport_isRightDerivedFunctor (Z : Closed
     derivedSheafSectionsWithClosedSupportUnit]
   infer_instance
 
-/-- The group-valued derived sections-with-support functor `RΓ_Z` on
-bounded-below complexes. This is derived from the actual functor of global
-sections vanishing on the complement. -/
+/-- Let `X` be a topological space and `Z ⊆ X` closed. The functor `RΓ_Z(X,-)` from bounded-below
+sheaf complexes to the bounded-below derived category of abelian groups is computed by an
+injective resolution `I`: in degree `q`, take global sections of `I^q` vanishing on `X \ Z`. Its
+degree-`n` cohomology is cohomology with support in `Z`. -/
 def derivedClosedSupportSections (Z : Closeds X) :
     DerivedCategory.Plus (Sheaf AddCommGrpCat.{u} X) ⥤
       DerivedCategory.Plus AddCommGrpCat.{u} :=
   (closedSupportSections X Z).rightDerivedFunctorPlus
 
-/-- The canonical unit defining group-valued derived sections with support. -/
+/-- Let `X` be a topological space and `Z ⊆ X` closed. For a bounded-below complex `K` of sheaves of
+abelian groups, this natural map compares the complex of global sections of `K` supported in `Z`
+with its right derived value `RΓ_Z(X,K)`. It is induced by mapping `K` to an injective
+resolution. -/
 def derivedClosedSupportSectionsUnit (Z : Closeds X) :
     (closedSupportSections X Z).mapHomotopyCategoryPlus ⋙
         DerivedCategory.Plus.Qh ⟶

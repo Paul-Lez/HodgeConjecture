@@ -33,9 +33,8 @@ commutative ring.
 
 Over a field the homology of the reversed dual is canonically the dual of the homology, with no
 finite-dimensionality hypothesis: this is `linearDualHomologyEquiv`. Over a ring the comparison
-map `dualHomologyComparisonExplicit` still exists but need not be bijective, which is the `Ext`
-term of the universal coefficient theorem. Each namespace below is split into a `CommRing` section
-and a `Field` section accordingly.
+map `dualHomologyComparisonExplicit` still exists but need not be bijective. Each namespace below
+is split into a `CommRing` section and a `Field` section accordingly.
 -/
 
 @[expose] public noncomputable section
@@ -51,11 +50,16 @@ variable {R : Type u} [CommRing R]
 
 attribute [local implicit_reducible] ShortComplex.moduleCatMk ShortComplex.moduleCatLeftHomologyData
 
-/-- The reversed algebraic-dual short complex. -/
+/-- Let `R` be a commutative ring and `S` a sequence `A → B → C` of `R`-modules with zero composite.
+Its reversed dual is the sequence `Hom_R(C,R) → Hom_R(B,R) → Hom_R(A,R)`, whose maps precompose
+with those of `S`. -/
 abbrev linearDual (S : ShortComplex (ModuleCat.{u} R)) :
     ShortComplex (ModuleCat.{u} R) :=
   ShortComplex.moduleCatMk S.g.hom.dualMap S.f.hom.dualMap (by ext; simp)
 
+/-- Let `R` be a commutative ring and `A → B → C` a sequence of modules with zero composite. A
+functional on `B` vanishing on the image of `A` restricts to cycles and descends to `ker(B →
+C)/im(A → B)`. This is the resulting linear map from dual cycles to functionals on homology. -/
 @[simps]
 def dualCycleToHomologyFunctional (S : ShortComplex (ModuleCat.{u} R)) :
     LinearMap.ker S.f.hom.dualMap →ₗ[R]
@@ -83,8 +87,10 @@ lemma dualCycleToHomologyFunctional_vanishes_on_boundaries
   induction z using Submodule.Quotient.induction_on with
   | H z => simp [moduleCatToCycles, S.g.hom.dualMap_apply]
 
-/-- The canonical pairing from the explicit homology of the dual complex to the dual of the
-explicit homology of the original complex. -/
+/-- Let `R` be a commutative ring and `S = (A → B → C)` a sequence of modules with zero composite.
+This linear map from the homology of the reversed dual to `Hom_R(H(S), R)` pairs the class of a
+functional `φ` with the class of a cycle `z` by `φ(z)`, using quotient modules for both homology
+groups. -/
 def dualHomologyComparisonExplicit (S : ShortComplex (ModuleCat.{u} R)) :
     S.linearDual.moduleCatLeftHomologyData.H →ₗ[R]
       Module.Dual R S.moduleCatLeftHomologyData.H :=
@@ -140,8 +146,9 @@ lemma dualHomologyComparisonExplicit_injective
       obtain ⟨η, hη⟩ := hv
       exact ⟨η, Subtype.ext hη⟩
 
-/-- Universal coefficients for a short complex of vector spaces: the homology of its reversed
-dual is canonically linearly equivalent to the dual of its homology. -/
+/-- Let `R` be a field and `S = (A → B → C)` a sequence of vector spaces with zero composite.
+Evaluation of a dual cocycle on a cycle gives this linear equivalence `H(S*) ≃ Hom_R(H(S), R)`,
+where `S*` is the reversed dual sequence. It holds without a finite-dimensionality assumption. -/
 def linearDualHomologyEquiv (S : ShortComplex (ModuleCat.{u} R)) :
     S.linearDual.homology ≃ₗ[R] Module.Dual R S.homology :=
   S.linearDual.moduleCatHomologyIso.toLinearEquiv.trans <|
@@ -159,7 +166,9 @@ namespace HomologicalComplex
 section CommRing
 variable {R : Type u} [CommRing R]
 
-/-- The algebraic-dual cochain complex of a nonnegatively graded chain complex of modules. -/
+/-- Let `R` be a commutative ring and `K` a chain complex of `R`-modules in nonnegative degrees. Its
+dual cochain complex has `Hom_R(K_n, R)` in degree `n`, with coboundary `φ ↦ φ ∘ ∂`, where `∂ :
+K_{n+1} → K_n` is the boundary of `K`. -/
 @[implicit_reducible, simps -isSimp X d]
 def linearDualCochainComplex (K : ChainComplex (ModuleCat.{u} R) ℕ) :
     CochainComplex (ModuleCat.{u} R) ℕ where
@@ -177,8 +186,9 @@ lemma linearDualCochainComplex_d_succ (K : ChainComplex (ModuleCat.{u} R) ℕ) (
       ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap := rfl
 
 attribute [local implicit_reducible] shortComplexFunctor' shortComplexFunctor
-/-- The degree-`n` short complex of a linear-dual cochain complex is the reversed dual of the
-degree-`n` short complex of the original chain complex. -/
+/-- Let `R` be a commutative ring and `K` a nonnegative chain complex of `R`-modules. For each `n`,
+this identifies the three terms around degree `n` in the dual cochain complex with the reversed
+linear duals of the three terms around `n` in `K`, including the adjacent differentials. -/
 @[implicit_reducible]
 def linearDualCochainComplexScIso (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
     K.linearDualCochainComplex.sc n ≅ (K.sc n).linearDual :=
@@ -188,8 +198,9 @@ def linearDualCochainComplexScIso (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : 
 
 variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
 
-/-- Algebraic duality sends a map of nonnegative chain complexes contravariantly to a map of
-cochain complexes. -/
+/-- Let `R` be a commutative ring and `f : K → L` a map of nonnegative chain complexes of
+`R`-modules. This map of dual cochain complexes `L* → K*` sends a degree-`n` functional `φ` to
+`φ ∘ f_n`. -/
 @[implicit_reducible, simps f]
 def linearDualMap (f : K ⟶ L) :
     L.linearDualCochainComplex ⟶ K.linearDualCochainComplex where
@@ -209,8 +220,9 @@ lemma linearDualMap_comp (f : K ⟶ L) (g : L ⟶ M) :
     linearDualMap (f ≫ g) = linearDualMap g ≫ linearDualMap f :=
   rfl
 
-/-- Algebraic duality sends an isomorphism of chain complexes to an isomorphism of cochain
-complexes, reversing its direction. -/
+/-- Let `R` be a commutative ring and `e : K ≅ L` an isomorphism of nonnegative chain complexes of
+`R`-modules. Precomposition with `e` gives this isomorphism of dual cochain complexes `L* ≅ K*`,
+with inverse given by precomposition with `e⁻¹`. -/
 @[implicit_reducible]
 def linearDualIso (e : K ≅ L) :
     L.linearDualCochainComplex ≅ K.linearDualCochainComplex where
@@ -224,8 +236,9 @@ end CommRing
 section Field
 variable {R : Type u} [Field R]
 
-/-- Universal coefficients for a complex of vector spaces: the degree-`n` cohomology of the
-linear-dual cochain complex is canonically the linear dual of the degree-`n` homology. -/
+/-- Let `R` be a field and `K` a nonnegative chain complex of `R`-vector spaces. Evaluation of
+cocycles on cycles gives this linear equivalence `H^n(Hom_R(K,R)) ≃ Hom_R(H_n(K), R)`. It
+requires no finite-dimensionality assumption. -/
 def linearDualHomologyEquiv (K : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ) :
     K.linearDualCochainComplex.homology n ≃ₗ[R] Module.Dual R (K.homology n) :=
   (ShortComplex.homologyMapIso (linearDualCochainComplexScIso K n)).toLinearEquiv.trans

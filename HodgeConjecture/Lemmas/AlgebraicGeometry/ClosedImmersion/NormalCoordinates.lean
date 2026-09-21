@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.NormalCoordinates
 
 /-!
-# Constructed normal coordinates for smooth closed immersions
+# Normal coordinates for smooth closed immersions
 
 Lemmas about the definitions in
 `HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.NormalCoordinates`.
@@ -24,7 +24,7 @@ variable (X Y : Over (Spec ↧ℂ))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- The constructed normal parametrization is complex analytic at its center. -/
+/-- The normal parametrization is complex analytic at its center. -/
 theorem analyticAt_closedImmersionNormalChart :
     AnalyticAt ℂ (closedImmersionNormalChart X Y i m d z)
       (localChart Y m z z, 0) := by
@@ -37,7 +37,7 @@ theorem analyticAt_closedImmersionNormalChart :
         ((ContinuousLinearMap.snd ℂ (Fin m → ℂ) P.ker).analyticAt _))
 
 /-- The inverse normal coordinates are complex analytic as well, by the analytic inverse
-function theorem applied to the actual invertible complex derivative. -/
+function theorem applied to the invertible complex derivative. -/
 theorem analyticAt_closedImmersionNormalChart_symm :
     AnalyticAt ℂ (closedImmersionNormalChart X Y i m d z).symm
       (localChart X d (Point.map i z) (Point.map i z)) := by
@@ -64,7 +64,7 @@ theorem closedImmersionFlatteningChart_mem_source :
       closedImmersionNormalChart_mem_target X Y i m d z⟩,
     (exists_open_normalCriterion X Y i m d z).choose_spec.2.1⟩
 
-/-- The complete geometric support is flattened, not merely a parametrized sub-piece. -/
+/-- The chart flattens the whole geometric support. -/
 theorem closedImmersionFlatteningChart_mem_range_iff (y : ComplexPoint X)
     (hy : y ∈ (closedImmersionFlatteningChart X Y i m d z).source) :
     y ∈ Set.range (Point.map i) ↔
@@ -77,7 +77,7 @@ theorem closedImmersionStandardFlatteningChart_mem_source :
   rw [closedImmersionStandardFlatteningChart_source]
   exact closedImmersionFlatteningChart_mem_source X Y i m d z
 
-/-- The support is exactly the zero-normal plane throughout the actual chart source. -/
+/-- The support is exactly the zero-normal plane throughout the chart source. -/
 theorem closedImmersionStandardFlatteningChart_mem_range_iff (y : ComplexPoint X)
     (hy : y ∈ (closedImmersionStandardFlatteningChart X Y i m d z).source) :
     y ∈ Set.range (Point.map i) ↔

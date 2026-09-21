@@ -37,30 +37,32 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type) [CommRing R]
 
-/-- The orientation-ordered homeomorphism from complex coordinate space to real coordinate space.
-
-This is the coordinate map of `Complex.piBasisOneI`, so it lists the real and imaginary part of
-each complex coordinate consecutively; continuity in both directions comes from
-`Basis.equivFunL`. -/
+/-- For a natural number `p`, this homeomorphism `ℂ^p ≃ ℝ^{2p}` sends each complex coordinate to its
+real and imaginary parts, ordered consecutively as `(Re z₀, Im z₀, Re z₁, Im z₁, …)`. This
+ordering fixes the convention for complex orientation. -/
 def complexRealHomeomorph (p : ℕ) : (Fin p → ℂ) ≃ₜ (Fin (p * 2) → ℝ) :=
   (Complex.piCoordCLE p).toHomeomorph
 
-/-- The isomorphism of punctured pairs induced by ordered real and imaginary coordinates. -/
+/-- For a natural number `p`, splitting each complex coordinate into consecutive real and imaginary
+parts gives this isomorphism of pairs `(ℂ^p, ℂ^p \ {0}) ≅ (ℝ^{2p}, ℝ^{2p} \ {0})`. -/
 def standardComplexRealPairIso (p : ℕ) :
     puncturedPair ℂ p ≅ puncturedPair ℝ (p * 2) :=
   TopPair.isoOfSubset (complexRealHomeomorph p) fun _ =>
     not_congr (Complex.piCoordCLE p).map_eq_zero_iff
 
-/-- `H_{2p}(ℂ^p, ℂ^p \ {0}; R) ≅ H_{2p}(ℝ^{2p}, ℝ^{2p} \ {0}; R)`, induced by the coordinate
-homeomorphism `ℂ^p ≅ ℝ^{2p}`. -/
+/-- Let `R` be a commutative ring and `p` a natural number. This isomorphism `H_{2p}(ℂ^p, ℂ^p \ {0};
+R) ≅ H_{2p}(ℝ^{2p}, ℝ^{2p} \ {0}; R)` is induced by the coordinate map ordering the real and
+imaginary parts consecutively. -/
 def standardComplexRealRelativeHomologyIso (p : ℕ) :
     -- `H_{2p}(ℂ^p, ℂ^p \ {0}; R) ≅ H_{2p}(ℝ^{2p}, ℝ^{2p} \ {0}; R)`.
     RelativeHomology R (puncturedPair ℂ p) (p * 2) ≅
       RelativeHomology R (puncturedPair ℝ (p * 2)) (p * 2) :=
   (relativeHomologyFunctor R (p * 2)).mapIso (standardComplexRealPairIso p)
 
-/-- The generator of `H_{2p}(ℂ^p, ℂ^p \ {0}; R)` transported from the standard local class of
-`ℝ^{2p}` through `ℂ^p ≅ ℝ^{2p}`. It fixes the complex orientation. -/
+/-- Let `R` be a commutative ring and `p` a natural number. This class in `H_{2p}(ℂ^p, ℂ^p \ {0};
+R)` is transported from the affine simplex in `ℝ^{2p}` with ordered vertices the standard basis
+followed by `(-1, …, -1)`, with coefficient `1`. Transport uses consecutive real and imaginary
+coordinates and fixes the normalization of the local complex class. -/
 def standardComplexLocalClass (p : ℕ) :
     -- The complex-orientation generator of `H_{2p}(ℂ^p, ℂ^p \ {0}; R)`.
     RelativeHomology R (puncturedPair ℂ p) (2 * p) :=

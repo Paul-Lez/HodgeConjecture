@@ -35,15 +35,18 @@ theorem openRestrictionImage_top (U : Opens X) :
 theorem openRestrictionImage_eq_of_le {U V : Opens X} (h : V ≤ U) :
     openRestrictionImage X V U = V := by simp_all
 
-/-- The literal equality of opens identifies global sections of the open
-pushforward with sections of the original sheaf on that open. -/
+/-- Let `X` be a topological space and `U ⊆ X` open, with inclusion `j`. This natural isomorphism
+identifies `Γ(X, j_*(F|_U))` with `F(U)` for every sheaf of abelian groups `F`. -/
 def openRestrictionPushforwardTopEvaluationIso (U : Opens X) :
     openRestrictionPushforward X U ⋙ supportEvaluation X ⊤ ≅ supportEvaluation X U :=
   NatIso.ofComponents (fun F =>
     F.obj.mapIso (eqToIso (congrArg op (openRestrictionImage_top X U))))
     (fun f => (f.hom.naturality _).symm)
 
-/-- The last localization kernel includes into the actual sections on `U`. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`, and let `F` be a sheaf of abelian
+groups. This includes the kernel sheaf of `j_{U*}(F|_U) → j_{V*}(F|_V)` into `j_{U*}(F|_U)`. On
+an open `W` it includes sections over `W ∩ U` vanishing on `W ∩ V` into all sections over `W ∩
+U`. -/
 def sheafSectionsBetweenOpensInclusion {U V : Opens X} (h : V ≤ U) :
     sheafSectionsBetweenOpens X h ⟶ openRestrictionPushforward X U where
   app F := kernel.ι ((openRestrictionPushforwardMap X h).app F)
@@ -51,16 +54,16 @@ def sheafSectionsBetweenOpensInclusion {U V : Opens X} (h : V ≤ U) :
 
 variable {U V : Opens X} (h : V ≤ U)
 
-/-- The two target section groups are identified by their common actual open
-`V`, using `V ≤ U`. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`, and let `F` be a sheaf of abelian
+groups. This identifies global sections of `j_{V*}(F|_V)` with its sections over `U`: both
+groups are `F(V)` because `V ⊆ U`. -/
 def nestedSupportRestrictionTargetIso (F : Sheaf AddCommGrpCat.{u} X) :
     ((openRestrictionPushforward X V).obj F).obj.obj (op ⊤) ≅
       ((openRestrictionPushforward X V).obj F).obj.obj (op U) :=
   F.obj.mapIso (eqToIso (congrArg op
     ((openRestrictionImage_top X V).trans (openRestrictionImage_eq_of_le X h).symm)))
 
-/-- The comparison of the two restriction arrows is the literal presheaf
-restriction square, not a comparison supplied on cohomology. -/
+/-- The comparison of the two restriction arrows is the presheaf restriction square. -/
 @[reassoc]
 theorem nestedSupportRestrictionTargetIso_square (F : Sheaf AddCommGrpCat.{u} X) :
     (((openRestrictionPushforwardMap X h).app F).hom.app (op ⊤)) ≫
@@ -71,8 +74,9 @@ theorem nestedSupportRestrictionTargetIso_square (F : Sheaf AddCommGrpCat.{u} X)
   rw [← F.obj.map_comp, ← F.obj.map_comp]
   congr 1
 
-/-- Canonical kernel comparison between the last global localization term and
-supported sections on the actual open complement. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`, and let `F` be a sheaf of abelian
+groups. This identifies global sections of `ker(j_{U*}(F|_U) → j_{V*}(F|_V))` with sections over
+`U` of the subsheaf of `F` supported in `X \ V`. Both are the kernel of `F(U) → F(V)`. -/
 def sheafSectionsBetweenOpensGlobalIso (F : Sheaf AddCommGrpCat.{u} X) :
     ((sheafSectionsBetweenOpens X h).obj F).obj.obj (op ⊤) ≅
       ((sheafSectionsSupportedOutside X V).obj F).obj.obj (op U) :=
@@ -84,7 +88,7 @@ def sheafSectionsBetweenOpensGlobalIso (F : Sheaf AddCommGrpCat.{u} X) :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The comparison preserves the actual inclusion into sections on `U`. -/
+/-- The comparison preserves the inclusion into sections on `U`. -/
 @[reassoc (attr := simp)]
 theorem sheafSectionsBetweenOpensGlobalIso_hom_inclusion
     (F : Sheaf AddCommGrpCat.{u} X) :
@@ -101,7 +105,7 @@ theorem sheafSectionsBetweenOpensGlobalIso_hom_inclusion
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Naturality in the actual coefficient sheaf. -/
+/-- Naturality in the coefficient sheaf. -/
 @[reassoc]
 theorem sheafSectionsBetweenOpensGlobalIso_naturality
     {F G : Sheaf AddCommGrpCat.{u} X} (f : F ⟶ G) :
@@ -132,15 +136,19 @@ theorem sheafSectionsBetweenOpensGlobalIso_naturality
     ((sheafSectionsBetweenOpensInclusion X h).app F).hom.app (op ⊤) ≫ q)
       ((openRestrictionPushforwardTopEvaluationIso X U).hom.naturality f)
 
-/-- The comparison is a natural isomorphism of actual section functors. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X`. For each sheaf `F` of abelian groups,
+global sections of the kernel sheaf of restriction from `U` to `V` equal sections of `F` over
+`U` vanishing on `V`. This is that identification as a natural isomorphism in `F`. -/
 def sheafSectionsBetweenOpensGlobalNatIso :
     sheafSectionsBetweenOpens X h ⋙ supportEvaluation X ⊤ ≅
       sheafSectionsSupportedOutside X V ⋙ supportEvaluation X U :=
   NatIso.ofComponents (sheafSectionsBetweenOpensGlobalIso X h)
     (fun f => sheafSectionsBetweenOpensGlobalIso_naturality X h f)
 
-/-- The last complex in global nested-support localization is the actual
-supported-section complex on the complement `U` of the smaller support. -/
+/-- Let `V ⊆ U` be open subsets of a topological space `X` and `K` an integer-indexed sheaf complex.
+This identifies the last complex in the global sequence for supports `X \ U ⊆ X \ V` with
+sections on `U` of `K` vanishing on `V`. In each degree both are the kernel of `K^q(U) →
+K^q(V)`. -/
 def nestedSupportRestrictionLastComplexIso
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) :
     (nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K).X₃ ≅
@@ -150,8 +158,8 @@ def nestedSupportRestrictionLastComplexIso
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The last localization map, under the proved kernel comparison, is
-literally restriction of the supported section to `U`. -/
+/-- The last localization map, under the kernel comparison, is
+restriction of the supported section to `U`. -/
 @[reassoc]
 theorem toSheafSectionsBetweenOpens_global_comparison
     (F : Sheaf AddCommGrpCat.{u} X) :
@@ -181,7 +189,7 @@ theorem toSheafSectionsBetweenOpens_global_comparison
   rw [← F.obj.map_comp]
   congr 1
 
-/-- The last-complex identification retains the literal restriction map,
+/-- The last-complex identification retains the restriction map,
 before passage to homology. -/
 @[reassoc]
 theorem nestedSupportRestrictionLastComplexIso_g

@@ -11,7 +11,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHyperco
 /-!
 # Comparing an ambient resolution with a resolution on an open subspace
 
-The comparison is lifted on the open subspace across the actual restricted
+The comparison is lifted on the open subspace across the restricted
 augmentation. Exact open restriction and the normalized constant-sheaf
 comparison prove that this augmentation is a monic quasi-isomorphism.
 -/
@@ -47,8 +47,10 @@ lemma mono_extendMap_nat {K L : CochainComplex C ℕ} (a : K ⟶ L) [Mono a] :
 variable {A K I : CochainComplex C ℕ} (a : A ⟶ K) [Mono a] [QuasiIso a]
   (r : A ⟶ I) (hI : ∀ n, Injective (I.X n))
 
-/-- Strict injective lifting for nonnegative cochain complexes, transported
-through the fully faithful extension to integer degrees. -/
+/-- In an abelian category with enough injectives, let `a : A → K` be a monomorphism and
+quasi-isomorphism of nonnegative cochain complexes, and let every term of `I` be injective. For
+a map `r : A → I`, this chooses a map `l : K → I` satisfying `l ∘ a = r` as an equality of
+complex maps. -/
 def liftToInjectiveNat : K ⟶ I :=
   letI := mono_extendMap_nat a
   letI : CochainComplex.IsStrictlyGE (A.extend ComplexShape.embeddingUpNat) 0 := inferInstance
@@ -70,7 +72,9 @@ namespace TopCat.Sheaf
 variable (X : TopCat.{0}) (U : Opens X) (A : AddCommGrpCat.{0})
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The fixed injective resolution of the constant coefficient sheaf. -/
+/-- Let `X` be a topological space and `A` an abelian group. This is a chosen injective resolution
+`A_X → I^•` of the sheaf of locally constant `A`-valued functions on `X`, indexed by nonnegative
+integers. -/
 def ambientConstantInjectiveResolution :
     InjectiveResolution (C := Sheaf AddCommGrpCat.{0} X)
       𝓒[X; A] :=

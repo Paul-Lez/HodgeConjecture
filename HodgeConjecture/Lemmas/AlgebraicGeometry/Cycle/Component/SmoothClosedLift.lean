@@ -22,14 +22,14 @@ namespace AlgebraicGeometry
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
 
-/-- `X ∖ Z_sing` really is the complement of the image of the component's singular locus: the
+/-- `X ∖ Z_sing` is the complement of the image of the component's singular locus: the
 filtration index `0` in the definition contributes nothing. -/
 @[simp] theorem coe_cycleComponentSmoothLocusAmbientOpen :
     (cycleComponentSmoothLocusAmbientOpen X x : Set X.left) =
       (cycleComponentι X.left x ''
         (singularLocusClosed (cycleComponentι X.left x ≫ X.hom) : Set _))ᶜ := rfl
 
-/-- The exact image of the lift is the restriction of the full component support. -/
+/-- The image of the lift is the restriction of the full component support. -/
 theorem range_cycleComponentSmoothLocusClosedLift :
     Set.range (cycleComponentSmoothLocusClosedLift X x) =
       (cycleComponentSmoothLocusAmbientOpen X x).ι ⁻¹' closure ({x} : Set X.left) := by
@@ -38,8 +38,7 @@ theorem range_cycleComponentSmoothLocusClosedLift :
 
 variable {p : ℕ}
 
-/-- The smooth locus has exactly the constant relative dimension of the integral
-component, not just a locally chosen dimension. -/
+/-- The smooth locus has the relative dimension of the integral component, constantly. -/
 theorem cycleComponentSmoothLocus_smoothOfRelativeDimension (hx : Order.coheight x = p) :
     SmoothOfRelativeDimension (dim X.left - p)
       ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫ cycleComponentι X.left x ≫ X.hom) := by
@@ -67,8 +66,8 @@ theorem cycleComponentSmoothLocus_smoothOfRelativeDimension (hx : Order.coheight
 namespace ComplexPoint
 
 omit [IsIntegral X.left] [Smooth X.hom] in
-/-- The analytic image of the algebraic boundary complement is the exact open used by
-the original ambient supported resolution. -/
+/-- The analytic image of the algebraic boundary complement is the open used by the original
+ambient supported resolution. -/
 theorem cycleComponentSmoothLocusAmbientOpen_analytic_image :
     Set.range (Point.map (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x))) =
       ((cycleComponentSingularAnalyticClosedFiltration X x 0).compl : Set (ComplexPoint X)) := by

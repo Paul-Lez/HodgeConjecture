@@ -452,7 +452,7 @@ public theorem affineFlagChainMap_face
     iota_affineFlagChainComponent]
 
 /-- The signed affine barycentric subdivision of the topological standard `n`-simplex, now as
-an actual integral singular chain. -/
+an integral singular chain. -/
 public noncomputable def affineSubdividedSimplexFundamentalChain (n : ℕ) :
     AddCommGrpCat.of ℤ ⟶
       ((TopCat.toSSet.obj (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).chainComplex
@@ -754,7 +754,7 @@ public theorem affineSingularSubdivisionComponents_commute
     iota_affineSingularSubdivisionComponent]
   rfl
 
-/-- The genuine affine barycentric subdivision endomorphism of the integral singular chain
+/-- The affine barycentric subdivision endomorphism of the integral singular chain
 complex of a topological space. -/
 public noncomputable def affineSingularSubdivisionChainMap
     (X : TopCat.{0}) :

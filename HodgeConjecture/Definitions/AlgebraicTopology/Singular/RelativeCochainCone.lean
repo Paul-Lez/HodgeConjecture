@@ -46,7 +46,9 @@ namespace AlgebraicTopology.Singular
 variable (R : Type u) [CommRing R]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The dual relative, ambient, and subspace cochain complexes in nonnegative degrees. -/
+/-- Let `R` be a commutative ring and `(X, A)` a topological pair, with `A` embedded in `X`. This is
+the sequence `C^*(X, A; R) → C^*(X; R) → C^*(A; R)` of nonnegative cochain complexes. The maps
+include cochains vanishing on `A` and restrict cochains to `A`; their composite is zero. -/
 def relativeDualCochainShortComplexNat (X : TopPair.{u}) :
     ShortComplex (CochainComplex (ModuleCat.{u} R) ℕ) :=
   ShortComplex.mk
@@ -62,15 +64,18 @@ def relativeDualCochainShortComplexNat (X : TopPair.{u}) :
       rw [subspaceChainMap_relativeChainProjection]
       exact map_zero φ)
 
-/-- The dual relative, ambient, and subspace cochain complexes, extended by zero to integer
-degrees. -/
+/-- Let `R` be a commutative ring and `(X, A)` a topological pair, with `A` embedded in `X`. This is
+the sequence `C^*(X, A; R) → C^*(X; R) → C^*(A; R)`, with all complexes extended by zero to
+negative integer degrees. Its maps are inclusion of cochains vanishing on `A` and restriction to
+`A`. -/
 def relativeDualCochainShortComplexInt (X : TopPair.{u}) :
     ShortComplex (CochainComplex (ModuleCat.{u} R) ℤ) :=
   (relativeDualCochainShortComplexNat R X).map
     (ComplexShape.embeddingUpNat.extendFunctor (ModuleCat.{u} R))
 
-/-- Restriction from ambient singular cochains to subspace singular cochains, in integer
-degrees. -/
+/-- Let `R` be a commutative ring and `(X, A)` a topological pair, with `A` embedded in `X`. This
+map `C^*(X; R) → C^*(A; R)` restricts singular cochains along the embedding of `A`. Both
+complexes are indexed by integers and zero in negative degrees. -/
 def relativeCochainRestrictionInt (X : TopPair.{u}) :
     ((SingularChainComplex R X.fst).linearDualCochainComplex.extend
         ComplexShape.embeddingUpNat) ⟶

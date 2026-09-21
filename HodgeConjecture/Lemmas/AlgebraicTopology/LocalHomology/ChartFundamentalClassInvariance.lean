@@ -26,12 +26,12 @@ public import Mathlib.Analysis.Calculus.FDeriv.Linear
 
 This file turns the local nonlinear degree calculation into a chart-comparison theorem.  For two
 complex charts through the same point, their compressed inverse-chart embeddings determine an
-actual open partial homeomorphism of `ℂᵈ`.  If its derivative at the model origin is injective
+open partial homeomorphism of `ℂᵈ`.  If its derivative at the model origin is injective
 and complex linear, the two explicitly normalized chart-local homology classes agree.
 
 The proof constructs the overlap neighborhood, uses point excision to lift the standard class,
-and proves the factorization through the transition as an equality of maps of topological pairs.
-Thus no chart-compatibility or local-degree statement is assumed.
+and proves the factorization through the transition as an equality of maps of topological
+pairs.
 -/
 
 @[expose] public noncomputable section
@@ -75,8 +75,7 @@ private lemma hasFDerivAt_univUnitBall_formula_normed :
     _ ≤ ε * ‖x‖ := mul_le_mul_of_nonneg_right hx.le (norm_nonneg x)
 
 /-- The positive-radius radial chart compression has derivative `r · id` at the model origin.
-This is complex differentiability at the origin only; the norm-dependent map is not asserted to
-be holomorphic away from the origin. -/
+The statement is complex differentiability at the origin alone. -/
 lemma hasFDerivAt_univBall_complex (c : Fin d → ℂ) (r : ℝ) (hr : 0 < r) :
     HasFDerivAt (OpenPartialHomeomorph.univBall c r :
       (Fin d → ℂ) → (Fin d → ℂ))

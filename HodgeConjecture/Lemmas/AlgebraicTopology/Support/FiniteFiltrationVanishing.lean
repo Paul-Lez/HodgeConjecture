@@ -10,11 +10,11 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NestedOnOpen
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueComparison
 
 /-!
-# Vanishing through an actual finite closed-support filtration
+# Vanishing through a finite closed-support filtration
 
 The localization sequence for two nested supports is short exact on every
 open for termwise-flasque coefficients. A finite filtration ending in the
-empty support therefore propagates cohomological vanishing from its actual
+empty support therefore propagates cohomological vanishing from its
 open layers to the whole support. Layer vanishing is an explicit hypothesis
 of this general lemma, not an asserted purity or dimension theorem.
 -/
@@ -31,7 +31,7 @@ variable (X : TopCat.{u})
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Restriction to the whole space is an isomorphism on each actual open-set
+/-- Restriction to the whole space is an isomorphism on each open-set
 section group. -/
 theorem toOpenRestrictionPushforward_top_app_isIso
     (F : Sheaf AddCommGrpCat.{u} X) (W : Opens X) :
@@ -45,7 +45,7 @@ theorem toOpenRestrictionPushforward_top_app_isIso
   rw [heq]
   infer_instance
 
-/-- The actual whole-space restriction morphism is an isomorphism of sheaves. -/
+/-- The whole-space restriction morphism is an isomorphism of sheaves. -/
 theorem toOpenRestrictionPushforward_top_isIso (F : Sheaf AddCommGrpCat.{u} X) :
     IsIso ((toOpenRestrictionPushforward X ⊤).app F) := by
   let : ∀ W, IsIso (((toOpenRestrictionPushforward X ⊤).app F).hom.app W) :=
@@ -59,14 +59,14 @@ theorem toOpenRestrictionPushforward_top_isIso (F : Sheaf AddCommGrpCat.{u} X) :
   exact isIso_of_reflects_iso ((toOpenRestrictionPushforward X ⊤).app F)
     (forget AddCommGrpCat.{u} X)
 
-/-- The actual kernel defining sections with empty support is zero. -/
+/-- The kernel defining sections with empty support is zero. -/
 theorem isZero_sheafSectionsSupportedOutside_top (F : Sheaf AddCommGrpCat.{u} X) :
     IsZero ((sheafSectionsSupportedOutside X ⊤).obj F) := by
   let := toOpenRestrictionPushforward_top_isIso X F
   exact isZero_kernel_of_mono ((toOpenRestrictionPushforward X ⊤).app F)
 
-/-- In particular the empty supported-section complex has zero cohomology,
-without any acyclicity or boundedness assumption on its coefficients. -/
+/-- In particular the empty supported-section complex has zero cohomology, for arbitrary
+coefficients. -/
 theorem supportedSections_top_homology_isZero (W : Opens X)
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (n : ℤ) :
     IsZero ((((supportEvaluation X W).mapHomologicalComplex ℤᵘᵖ).obj
@@ -77,8 +77,7 @@ theorem supportedSections_top_homology_isZero (W : Opens X)
 
 variable {U V : Opens X} (h : V ≤ U)
 
-/-- Flasqueness suffices for the nested-support sequence to be short exact
-on every open. Injectivity is not required. -/
+/-- Flasqueness suffices for the nested-support sequence to be short exact on every open. -/
 theorem nestedSupportRestrictionSectionsShortComplex_shortExact_of_flasque
     (W : Opens X) (F : Sheaf AddCommGrpCat.{u} X) [F.IsFlasque] :
     ((nestedSupportRestrictionShortComplex X h F).map (supportEvaluation X W)).ShortExact := by
@@ -87,7 +86,7 @@ theorem nestedSupportRestrictionSectionsShortComplex_shortExact_of_flasque
     toOpenRestrictionPushforward_app_epi X U F W
   exact kernelFactorizationShortComplex_map_shortExact _ _ _ _ _
 
-/-- The same exact sequence for actual section complexes of flasque sheaves. -/
+/-- The same exact sequence for section complexes of flasque sheaves. -/
 theorem nestedSupportRestrictionSectionsComplexShortComplex_shortExact_of_flasque
     (W : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
     (hK : ∀ n, (K.X n).IsFlasque) :
@@ -97,7 +96,7 @@ theorem nestedSupportRestrictionSectionsComplexShortComplex_shortExact_of_flasqu
   exact nestedSupportRestrictionSectionsShortComplex_shortExact_of_flasque X h W (K.X n)
 
 include h in
-/-- Vanishing of the smaller support and the actual open layer implies
+/-- Vanishing of the smaller support and the open layer implies
 vanishing of the larger support in the same degree. -/
 theorem nestedSupportRestriction_middle_homology_isZero
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
@@ -118,7 +117,7 @@ theorem nestedSupportRestriction_middle_homology_isZero
 
 /-- A finite increasing sequence of open complements, terminating at the
 whole space, gives vanishing on every corresponding closed support once the
-actual open layers vanish. The induction uses only the proved localization
+open layers vanish. The induction uses only the localization
 sequence; the layer hypotheses still have to be discharged geometrically. -/
 theorem finiteNestedSupport_homology_isZero
     (O : ℕ → Opens X) (hO : Monotone O) (N : ℕ) (hN : O N = ⊤)

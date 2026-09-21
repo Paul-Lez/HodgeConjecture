@@ -28,8 +28,7 @@ This file defines its sheaf of holomorphic functions: a section is a complex-val
 which is complex analytic in those charts. Mathlib expresses complex analyticity as manifold
 differentiability of order `ω`.
 
-The sheaf and its ring operations are constructed by the local-predicate sheaf machinery. No
-analytic atlas or sheaf is supplied as data.
+The sheaf and its ring operations are built by the local-predicate sheaf machinery.
 -/
 
 @[expose] public noncomputable section
@@ -43,8 +42,10 @@ open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-/-- The sheaf of complex-valued functions which are analytic in the algebraically constructed
-étale charts, initially regarded as a sheaf of types. -/
+/-- Let `X` be a smooth scheme over `ℂ` of relative dimension `d`. On its analytic space `X(ℂ)`,
+this sheaf assigns to an open `U` the complex-valued functions on `U` that are analytic in the
+chosen étale coordinate charts. Restriction is restriction of functions; the values here are
+sets. -/
 def holomorphicFunctionSheafToTypes [SmoothOfRelativeDimension d X.hom] :
     TopCat.Sheaf (Type) (TopCat.of (ComplexPoint X)) :=
   (contDiffWithinAt_localInvariantProp (I := 𝓘(ℂ, Fin d → ℂ))
@@ -56,7 +57,9 @@ instance holomorphicFunctionSheafToTypes.commRing [SmoothOfRelativeDimension d X
   inferInstanceAs <| CommRing
     C^ω⟮𝓘(ℂ, Fin d → ℂ), (Opposite.unop U : Opens (ComplexPoint X)); ℂ⟯
 
-/-- The presheaf of rings underlying the holomorphic-function sheaf. -/
+/-- Let `X` be a smooth scheme over `ℂ` of relative dimension `d`. This presheaf of commutative
+rings on the analytic space `X(ℂ)` assigns to each open `U` the ring of holomorphic functions `U
+→ ℂ`, with pointwise operations and restriction of functions. -/
 def holomorphicFunctionPresheaf [SmoothOfRelativeDimension d X.hom] :
     TopCat.Presheaf CommRingCat (TopCat.of (ComplexPoint X)) where
   obj U := CommRingCat.of
@@ -67,8 +70,9 @@ def holomorphicFunctionPresheaf [SmoothOfRelativeDimension d X.hom] :
   map_id _ := rfl
   map_comp _ _ := rfl
 
-/-- The sheaf of complex-valued functions which are analytic in the algebraically constructed
-étale charts. -/
+/-- Let `X` be a smooth scheme over `ℂ` of relative dimension `d`. This is the sheaf of commutative
+rings `𝒪` on `X(ℂ)`: its sections on an analytic open `U` are functions `U → ℂ` that are
+analytic in the chosen étale charts, with pointwise ring operations. -/
 def holomorphicFunctionSheaf [SmoothOfRelativeDimension d X.hom] :
     TopCat.Sheaf CommRingCat (TopCat.of (ComplexPoint X)) where
   obj := holomorphicFunctionPresheaf X d

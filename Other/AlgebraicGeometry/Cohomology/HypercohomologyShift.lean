@@ -17,20 +17,11 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexShiftNaturality
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift
 public import Other.Algebra.Homology.HomComplexShiftNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 
-/-!
-# HypercohomologyShift, the part the statement does not need
-
-Separated out of
-`HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift`:
-nothing in the statement's dependency chain uses these results, only material in
-`Other` does.
--/
+/-! # Shift normalization of hypercohomology and global sections -/
 
 @[expose] public noncomputable section
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
@@ -105,7 +96,10 @@ end
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
 namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
-attribute [local instance] hypercohomologyShiftSheafDerivedCategory
+
+local instance hypercohomologyShiftSheafDerivedCategory :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

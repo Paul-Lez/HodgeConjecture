@@ -9,13 +9,13 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainCone
 /-!
-# Constructed local relative homology for smooth closed supports
+# Local relative homology for smooth closed supports
 
 Every prescribed open neighborhood of a point on a smooth closed complex subvariety contains
-an explicitly constructed smaller open neighborhood whose support-complement pair has rational
+a smaller open neighborhood whose support-complement pair has rational
 relative homology and cohomology only in degree twice the complex codimension. The comparison
-and the exactly normalized normal class come from flattening, radial compression, and
-tangent contraction. No purity, derivative, or comparison equivalence is supplied.
+and the exactly normalized normal class come from flattening, radial compression, and tangent
+contraction.
 
 This is a cofinal local singular calculation. The identification with derived sheaf sections
 with support, and gluing its normalizations across overlapping charts, are separate theorems.
@@ -34,7 +34,10 @@ variable (X Y : Over (Spec ↧ℂ))
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
   (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
 
-/-- Restrict the constructed flattening chart by the prescribed ambient open. -/
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ` of dimensions `m` and `d`,
+respectively. For `z ∈ Y(ℂ)` and an ambient open `V ⊆ X(ℂ)`, this is the chart at `i(z)` with
+source restricted to `V`. Its coordinates lie in `ℂ^m × ℂ^{d-m}`, and the image of `Y(ℂ)` is
+given by vanishing of the second coordinate. -/
 def smoothClosedSupportRestrictionChart :
     OpenPartialHomeomorph (ComplexPoint X)
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=

@@ -7,7 +7,6 @@ module
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyShift
 public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyShift
@@ -26,8 +25,10 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
 attribute [local instance] rationalConeForgetSheafDerivedCategory
 
-/-- Hypercohomology of the rational constant complex computed by the actual ambient rational
-injective resolution. This has the ordinary augmentation normalization. -/
+/-- Let `X` be a scheme over `ℂ`, let `Y = X(ℂ)` have its analytic topology, and let `I` be the
+chosen injective resolution of the constant rational sheaf on `Y`. This additive equivalence
+identifies rational hypercohomology `ℍ^n(Y; ℚ[0])` with `H^n(Γ(Y,I))` for every integer `n`. It is
+induced by the augmentation of the constant sheaf into `I`. -/
 def rationalHypercohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
     Hypercohomology X (constantFieldSheafComplexInt ℚ X) n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X))
@@ -101,7 +102,7 @@ lemma hypercohomologyMap_comp_shifted
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The original support-forgetting map, after replacing the ambient
-constant sheaf by its actual injective resolution, is the actual cone
+constant sheaf by its injective resolution, is the cone
 connecting homology map. -/
 lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
@@ -129,7 +130,7 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The normalized support equivalence intertwines the existing
-`forgetSupport` with the actual inclusion of supported injective sections.
+`forgetSupport` with the inclusion of supported injective sections.
 No compatibility or choice of a sign is supplied as an input. -/
 lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
@@ -147,7 +148,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
   let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤
     (ambientRationalInjectiveComplex X)
   let b := ambientRationalInjectiveRestriction X Z hZ
-  let c := actualSupportConeToAmbientInjectiveGlobalCone X Z hZ
+  let c := supportConeToAmbientInjectiveGlobalCone X Z hZ
   let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
   let e := CochainComplex.mappingCone.mapHomologicalComplexIso b Γ
   let y := rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x
@@ -159,7 +160,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
         ((Γ.mapHomologicalComplex ℤᵘᵖ).map b)).mor₃ (n - 1) n (by omega) =
       H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) := by
     change (H.shift (n - 1)).map c ≫ _ = _
-    rw [← Functor.shiftMap_comp', actualSupportConeToAmbientInjectiveGlobalCone_connecting]
+    rw [← Functor.shiftMap_comp', supportConeToAmbientInjectiveGlobalCone_connecting]
   have hc' : inv (HomologicalComplex.homologyMap c (n - 1)) ≫
       H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) =
       H.shiftMap (CochainComplex.mappingCone.triangle

@@ -35,7 +35,7 @@ lemma mapExtendCanonicalIso_inv_naturality
     Iso.inv_hom_id_assoc]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- Naturality in an actual transformation out of the identity functor. This
+/-- Naturality in a transformation out of the identity functor. This
 fixes the normalization of restriction after extending a complex by zero. -/
 @[reassoc]
 lemma mapExtendCanonicalIso_hom_naturality_from_id

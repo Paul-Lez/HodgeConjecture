@@ -27,13 +27,10 @@ public noncomputable section
 
 namespace TopologicalSpace
 
-/-- The dimension of an irreducible topological space is its Krull dimension: the supremum of the
-lengths of chains of irreducible closed subsets.
-
-Truncating to `ℕ` collapses the two degenerate values of `topologicalKrullDim`: the empty space,
-which the `IrreducibleSpace` hypothesis rules out, and infinite-dimensional spaces, which come out
-as `0`. Irreducibility also makes this *the* dimension of the space, rather than the maximum of the
-dimensions of its irreducible components. -/
+/-- Let `X` be an irreducible topological space. Its dimension is the supremum of the lengths of
+strict chains of nonempty irreducible closed subsets, converted to a natural number. A chain of
+`r+1` subsets has length `r`. This conversion returns `0` when the Krull dimension is infinite;
+irreducibility excludes the empty-space case. -/
 @[expose, nolint unusedArguments]
 def dim (X : Type*) [TopologicalSpace X] [IrreducibleSpace X] : ℕ :=
   ((topologicalKrullDim X).unbotD 0).toNat

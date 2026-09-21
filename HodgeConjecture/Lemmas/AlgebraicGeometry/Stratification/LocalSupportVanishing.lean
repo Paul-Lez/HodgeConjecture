@@ -35,7 +35,7 @@ variable (X : Over (Spec ↧ℂ))
   {p : ℕ} (hx : Order.coheight x = p) (k : ℕ)
 
 include hx in
-/-- Every point in the actual `k`th layer has cofinal actual ambient neighborhoods
+/-- Every point in the `k`th layer has cofinal ambient neighborhoods
 whose relative cohomology below degree `2(p+1)` vanishes. -/
 theorem cycleComponentSingularLayer_exists_relativeCohomology_vanishing
     (y : ComplexPoint X)
@@ -131,10 +131,8 @@ theorem cycleComponentSingularLayer_exists_supportedInjectiveSection_vanishing
         ((ambientRationalInjectiveComplex X).X (q : ℤ)) inf_le_right
 
 include hx in
-/-- The exact open-layer section complex needed by finite support localization has
-zero cohomology below `2(p+1)`. The resolution remains the one on the original
-projective ambient variety; no injective resolution on a projective auxiliary open
-is assumed. -/
+/-- The open-layer section complex needed by finite support localization has zero cohomology
+below `2(p+1)`. The resolution remains the one on the original projective ambient variety. -/
 theorem cycleComponentSingularLayerSectionCohomology_isZero_of_lt
     (n : ℤ) (hn : n < 2 * ((p : ℤ) + 1)) :
     IsZero ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))

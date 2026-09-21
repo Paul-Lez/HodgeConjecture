@@ -35,8 +35,8 @@ open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
-/-- A section of the holomorphic-function sheaf is an analytic map to `ℂ` in the constructed
-charted-space structure. -/
+/-- A section of the holomorphic-function sheaf is an analytic map to `ℂ` in the charted-space
+structure on complex points. -/
 lemma holomorphicFunctionSheaf_section_analytic [SmoothOfRelativeDimension d X.hom]
     {U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ}
     (s : (holomorphicFunctionSheaf X d).presheaf.obj U) :

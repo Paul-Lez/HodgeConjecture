@@ -142,8 +142,7 @@ end ComplexIsotopyToOne
 
 /-- Every invertible complex matrix is isotopic to the identity through invertible matrices.
 
-This is a concrete form of path connectedness of `GLₙ(ℂ)`, proved without taking that
-path-connectedness as an imported black box. -/
+This is a concrete form of path connectedness of `GLₙ(ℂ)`. -/
 theorem nonempty_complexIsotopyToOne (A : Matrix n n ℂ) (hA : A.det ≠ 0) :
     Nonempty (ComplexIsotopyToOne A) := by
   apply Matrix.diagonal_transvection_induction_of_det_ne_zero
@@ -180,7 +179,7 @@ def complexMatrixMap (A : Matrix (Fin d) (Fin d) ℂ) :
     TopCat.of (Fin d → ℂ) ⟶ TopCat.of (Fin d → ℂ) :=
   TopCat.ofHom ⟨A.mulVec, A.mulVecLin.continuous_of_finiteDimensional⟩
 
-/-- The restriction of an invertible complex matrix to the complement of the origin. -/
+/-- An invertible complex matrix sends a nonzero vector to a nonzero vector. -/
 lemma complexMatrix_mulVec_ne_zero
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.det ≠ 0)
     (z : ({0}ᶜ : Set (Fin d → ℂ))) : A.mulVec z.1 ≠ 0 := fun hz ↦

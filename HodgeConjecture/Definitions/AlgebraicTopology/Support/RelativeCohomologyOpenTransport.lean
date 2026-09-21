@@ -26,7 +26,7 @@ namespace AlgebraicTopology.Singular
 variable {X Y : TopCat.{0}} (f : Y ⟶ X) (hf : IsOpenEmbedding f)
   (S : Set X) (B : Set Y) (hB : f ⁻¹' S = B)
 
-/-- The pair-image identification respects literal neighborhood inclusions. -/
+/-- The pair-image identification respects neighborhood inclusions. -/
 theorem neighborhoodSupportPairImageIso_naturality {U V : Opens Y} (hUV : U ≤ V) :
     neighborhoodSupportInclusionPairMap (W := (U : Set Y)) (V := (V : Set Y)) hUV B ≫
       (neighborhoodSupportPairImageIso f hf.isEmbedding (V : Set Y) B S
@@ -39,7 +39,10 @@ theorem neighborhoodSupportPairImageIso_naturality {U V : Opens Y} (hUV : U ≤ 
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The presheaf comparison comes from the actual pair-image homeomorphisms. -/
+/-- Let `f : Y → X` be an open embedding of topological spaces, let `S ⊆ X`, and put `B = f⁻¹(S)`.
+For a natural number `n`, pullback identifies the presheaves on `Y` given by `V ↦ H^n(f(V), f(V)
+\ S; ℚ)` and `V ↦ H^n(V, V \ B; ℚ)`. The groups are relative singular cohomology, with
+restriction maps induced by inclusions. -/
 def supportRelativeCohomologyPresheafOpenIso (n : ℕ) :
     hf.functor.op ⋙ supportRelativeCohomologyPresheaf X S n ≅
       supportRelativeCohomologyPresheaf Y B n :=
@@ -65,8 +68,9 @@ def supportRelativeCohomologyPresheafOpenIso (n : ℕ) :
       relativeCohomologyMap_comp]
     rfl)
 
-/-- The open-image functor commutes with sheafification, through the actual
-restricted unit. This is the general open-embedding version of open restriction. -/
+/-- Let `f : Y → X` be an open embedding of topological spaces and `P` a presheaf of abelian groups
+on `X`. Sheafifying the presheaf `V ↦ P(f(V))` gives the same sheaf on `Y` as restricting the
+sheafification of `P` along `f`. This is the isomorphism induced by the sheafification unit. -/
 def supportOpenEmbeddingSheafificationIso (P : TopCat.Presheaf AddCommGrpCat X) :
     (presheafToSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj (hf.functor.op ⋙ P) ≅
       (hf.sheafPullback AddCommGrpCat).obj
@@ -78,9 +82,10 @@ def supportOpenEmbeddingSheafificationIso (P : TopCat.Presheaf AddCommGrpCat X) 
   (hf.functor.pushforwardContinuousSheafificationCompatibility AddCommGrpCat
     (Opens.grothendieckTopology Y) (Opens.grothendieckTopology X)).app P
 
-/-- `𝓗^n_B ≅ f^{-1} 𝓗^n_S` for an open embedding `f : Y → X` with `f^{-1}(S) = B`: the sheaf on
-`Y` associated with `V ↦ H^n(V, V \ B; ℚ)` is the restriction along `f` of the sheaf on `X`
-associated with `V ↦ H^n(V, V \ S; ℚ)`. -/
+/-- Let `f : Y → X` be an open embedding of topological spaces, let `S ⊆ X`, and put `B = f⁻¹(S)`.
+Write `𝓗^n_S` for the sheafification of `V ↦ H^n(V, V \ S; ℚ)`, and define `𝓗^n_B` on `Y` in the
+same way. Pullback of relative singular cohomology gives this sheaf isomorphism `𝓗^n_B ≅
+f⁻¹𝓗^n_S`. -/
 def supportRelativeCohomologySheafOpenIso (n : ℕ) :
     -- `𝓗^n_B` on `Y` is the restriction of `𝓗^n_S` along the open embedding `f`.
     𝓗_[B]^n(Y; ℚ) ≅
@@ -90,23 +95,28 @@ def supportRelativeCohomologySheafOpenIso (n : ℕ) :
       (supportRelativeCohomologyPresheafOpenIso f hf S B hB n).symm ≪≫
     supportOpenEmbeddingSheafificationIso f hf (supportRelativeCohomologyPresheaf X S n)
 
-/-- A global section of `𝓗^n_B` on `Y` gives a section of `𝓗^n_S` over the open `f(Y) ⊆ X`. -/
+/-- Let `f : Y → X` be an open embedding of topological spaces, let `S ⊆ X`, and put `B = f⁻¹(S)`.
+Write `𝓗^n_S` for the sheafification of `V ↦ H^n(V, V \ S; ℚ)`, and define `𝓗^n_B` on `Y` in the
+same way. This sends a global section of `𝓗^n_B` to a section of `𝓗^n_S` on the open image
+`f(Y)`, using the homeomorphism of pairs induced by `f`. -/
 def supportRelativeCohomologySectionOpenImage (n : ℕ)
     -- A global section of `𝓗^n_B` on `Y`.
-    (s : (𝓗_[B]^n(Y; ℚ)).obj.obj (op ⊤)) :
+    (s : (𝓗_[B]^n(Y; ℚ)).presheaf.obj (op ⊤)) :
     -- A section of `𝓗^n_S` on the open `f(Y) ⊆ X`.
-    (𝓗_[S]^n(X; ℚ)).obj.obj
+    (𝓗_[S]^n(X; ℚ)).presheaf.obj
       -- The open `f(Y)`.
       (op (hf.functor.obj ⊤)) :=
   (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op ⊤) s
 
-/-- Transport to a specified ambient open equal to the actual image. The final
-identification is the unique open inclusion, not an arbitrary section equivalence. -/
+/-- Let `f : Y → X` be an open embedding of topological spaces, let `S ⊆ X`, and put `B = f⁻¹(S)`.
+Write `𝓗^n_S` for the sheafification of `V ↦ H^n(V, V \ S; ℚ)`, and define `𝓗^n_B` on `Y` in the
+same way. For a specified open `U = f(Y)`, this sends a global section of `𝓗^n_B` to a section
+of `𝓗^n_S` on `U`, using the homeomorphism induced by `f` and the given equality of opens. -/
 def supportRelativeCohomologySectionOnOpen (n : ℕ) (U : Opens X)
     (hU : hf.functor.obj ⊤ = U)
-    (s : (𝓗_[B]^n(Y; ℚ)).obj.obj (op ⊤)) :
-    (𝓗_[S]^n(X; ℚ)).obj.obj (op U) :=
-  (𝓗_[S]^n(X; ℚ)).obj.map (eqToHom hU.symm).op
+    (s : (𝓗_[B]^n(Y; ℚ)).presheaf.obj (op ⊤)) :
+    (𝓗_[S]^n(X; ℚ)).presheaf.obj (op U) :=
+  (𝓗_[S]^n(X; ℚ)).presheaf.map (eqToHom hU.symm).op
     (supportRelativeCohomologySectionOpenImage f hf S B hB n s)
 
 end AlgebraicTopology.Singular

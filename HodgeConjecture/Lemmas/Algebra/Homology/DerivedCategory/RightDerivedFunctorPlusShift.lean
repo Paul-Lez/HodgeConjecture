@@ -12,11 +12,9 @@ public import Mathlib.CategoryTheory.Shift.Localization
 
 The bounded-below homotopy category of injective objects is equivalent to the
 bounded-below derived category. The right-derived unit becomes an isomorphism
-on this category. We therefore descend the existing coherent shifts through
-this equivalence, using Mathlib's localization construction.
-
-No shift isomorphism is supplied as mathematical input. Boundedness is explicit
-in all source and target categories.
+on this category. The coherent shifts descend through this equivalence, using
+Mathlib's localization construction. Boundedness is explicit in all source and target
+categories.
 -/
 
 @[expose] public noncomputable section
@@ -71,9 +69,8 @@ instance : (injectiveToDerived C).IsLocalization
   Functor.IsLocalization.of_isEquivalence _ _ (by rfl)
 
 omit [HasDerivedCategory C] in
-/-- Natural transformations into a functor that inverts quasi-isomorphisms are
-determined by their values on bounded-below injective complexes. The proof uses
-the existing injective resolutions, not an extra resolution hypothesis. -/
+/-- Natural transformations into a functor that inverts quasi-isomorphisms are determined by
+their values on bounded-below injective complexes. -/
 lemma natTrans_ext_on_injectives {H : Type*} [Category* H]
     {F G : HomotopyCategory.Plus C ⥤ H}
     (hG : (HomotopyCategory.Plus.quasiIso C).IsInvertedBy G)
@@ -140,7 +137,7 @@ instance rightDerivedFunctorPlusInjectiveLifting :
       F.rightDerivedFunctorPlusOnInjectives F.rightDerivedFunctorPlus :=
   ⟨F.rightDerivedFunctorPlusOnInjectivesIso⟩
 
-/-- Coherent shift compatibility of the actual bounded-below right derived
+/-- Coherent shift compatibility of the bounded-below right derived
 functor. Its zero and addition coherence laws are inherited by localization
 from the termwise complex-level shift compatibility. -/
 instance rightDerivedFunctorPlusCommShift : F.rightDerivedFunctorPlus.CommShift ℤ :=
@@ -148,8 +145,8 @@ instance rightDerivedFunctorPlusCommShift : F.rightDerivedFunctorPlus.CommShift 
     (MorphismProperty.isomorphisms (HomotopyCategory.Plus (InjectiveObject C))) ℤ
     F.rightDerivedFunctorPlusOnInjectives F.rightDerivedFunctorPlus
 
-/-- The injective-resolution comparison is compatible with the constructed
-coherent shifts. This pins the comparison to the actual derived unit. -/
+/-- The injective-resolution comparison is compatible with the coherent shifts, which pins it to
+the derived unit. -/
 instance rightDerivedFunctorPlusOnInjectivesIso_commShift :
     NatTrans.CommShift F.rightDerivedFunctorPlusOnInjectivesIso.hom ℤ :=
   NatTrans.commShift_iso_hom_of_localization
@@ -174,7 +171,7 @@ instance rightDerivedFunctorPlusUnit_whiskerLeft_injectives_commShift :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The full right-derived unit commutes with the constructed coherent shifts,
+/-- The full right-derived unit commutes with the coherent shifts,
 including on complexes which are not termwise injective. -/
 instance rightDerivedFunctorPlusUnitCommShift :
     NatTrans.CommShift F.rightDerivedFunctorPlusUnit ℤ where

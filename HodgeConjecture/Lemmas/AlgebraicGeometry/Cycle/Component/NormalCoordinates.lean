@@ -32,12 +32,11 @@ This file proves exact dimension and local-coordinate statements for reduced cyc
 the cases covered by the pointwise dimension formula: components of dimension zero or one in an
 arbitrary smooth complex variety, and all components in ambient relative dimension at most two.
 
-The local coordinates are constructed on the smooth locus of the component.  Their number is
-proved to be exactly the dimension of the component, rather than being included as an assumption.
-The support library now proves the arbitrary-dimensional catenary formula and the resulting
-global dimension of each component.  Extending the coordinate package still requires a local
-bridge showing that every closed point of the component has that coheight; that bridge is not
-proved here.
+The local coordinates live on the smooth locus of the component, and their number is exactly the
+dimension of the component.  The support library proves the arbitrary-dimensional catenary formula
+and the resulting global dimension of each component.  Extending the coordinate package still
+requires a local bridge showing that every closed point of the component has that coheight, which
+is a separate statement.
 -/
 
 @[expose] public noncomputable section
@@ -102,9 +101,11 @@ abbrev componentSmoothScheme
 
 end CycleComponentSeparateLocalCoordinates
 
-/-- Separate exact local coordinates on a smooth cycle component and on its smooth ambient
-variety.  The component coordinates use exactly `n` variables.  This package does not assert
-that the two coordinate systems straighten the closed immersion simultaneously. -/
+/-- Let `X` be a smooth integral projective scheme of dimension `d` over `ℂ`, and let `Z` be the
+reduced closure of a scheme point `x ∈ X`. This structure records a complex point in the smooth
+locus of `Z`, an affine neighborhood there with an étale map to `𝔸^n_ℂ`, and an independently
+chosen étale coordinate chart of `X` at the image point with `d` coordinates. It also records
+that the chosen point of `Z` is closed. -/
 structure CycleComponentSeparateLocalCoordinates
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (x : X.left) (d n : ℕ)

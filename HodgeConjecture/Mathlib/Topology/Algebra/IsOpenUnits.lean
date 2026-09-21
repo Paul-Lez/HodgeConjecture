@@ -21,7 +21,7 @@ public import Mathlib.Topology.Algebra.IsOpenUnits
 # Monoids with open units
 
 Mathlib's `IsOpenUnits M` records that `Mˣ` is open in `M` and carries the subspace topology, but
-does not unfold that into the two consequences one actually uses: the units form an open set, and
+does not unfold that into the two consequences one uses: the units form an open set, and
 inversion is continuous on it.
 
 These belong in `Mathlib/Topology/Algebra/IsOpenUnits.lean`; this file can be deleted once they

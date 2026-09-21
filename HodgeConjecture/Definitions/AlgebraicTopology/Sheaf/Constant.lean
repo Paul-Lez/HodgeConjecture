@@ -38,7 +38,9 @@ namespace TopCat.Presheaf
 
 variable (X : TopCat.{u})
 
-/-- The constant presheaf on `X` with value the additive group `A`. -/
+/-- Let `X` be a topological space and `A` an abelian group. The constant presheaf assigns `A` to
+every open subset of `X`, including the empty set, and the identity homomorphism to every
+inclusion. -/
 abbrev const (A : AddCommGrpCat.{u}) : TopCat.Presheaf AddCommGrpCat.{u} X :=
   (Functor.const (Opens X)ᵒᵖ).obj A
 
@@ -54,20 +56,16 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
 
-/-- The constant sheaf functor on `X`, from additive groups to sheaves of additive groups.
-
-The codomain is written with `CategoryTheory.Sheaf`, whose category instance is the one
-Mathlib's instances for `CategoryTheory.constantSheaf` are stated for; instance search is keyed
-on that category instance, so writing it this way is what lets those instances be found. -/
+/-- Let `X` be a topological space. This functor sends an abelian group `A` to the sheaf of locally
+constant functions from open subsets of `X` to `A`, obtained by sheafifying the constant
+presheaf. Group homomorphisms act by postcomposition on these functions. -/
 abbrev constantFunctor :
     AddCommGrpCat.{u} ⥤ CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u} :=
   CategoryTheory.constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}
 
-/-- The constant sheaf on `X` with value the additive group `A`.
-
-The codomain is written with `TopCat.Sheaf`, whose category instance carries the sheaf-level
-instances this object is used with. Write `(constantFunctor X).obj A` instead where a
-`CategoryTheory.Sheaf` instance is needed. -/
+/-- Let `X` be a topological space and `A` an abelian group. The constant sheaf `A_X` assigns to
+each open `U` the group of locally constant functions `U → A`, with pointwise addition and
+restriction of functions. It is defined by sheafifying the constant presheaf. -/
 abbrev const (A : AddCommGrpCat.{u}) : TopCat.Sheaf AddCommGrpCat.{u} X :=
   (constantFunctor X).obj A
 

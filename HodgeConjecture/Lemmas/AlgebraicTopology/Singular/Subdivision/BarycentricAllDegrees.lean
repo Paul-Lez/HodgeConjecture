@@ -26,7 +26,7 @@ This module is ported from Paul Lezeau's corresponding file in
 
 For each permutation of the vertices of the standard `n`-simplex, its successive nonempty
 prefixes form a maximal flag in the poset of nonempty subsets.  The signed sum of these flags is
-the oriented barycentric fundamental chain.  This file constructs that chain in Mathlib's actual
+the oriented barycentric fundamental chain.  This file constructs that chain in Mathlib's
 `SimplexCategory.sd` nerve model and transports it naturally to every simplex of every simplicial
 set.
 -/
@@ -287,8 +287,8 @@ public noncomputable def subdividedSimplexOuterFaceSum (n : ℕ) :
           ((SimplexCategory.sd.{0}.obj (SimplexCategory.mk (n + 1))).δ
             (Fin.last (n + 1)) (permutationMaximalFlagSimplex σ)))
 
-/-- After the certified pairwise cancellations, only the faces obtained by deleting the full
-vertex set remain in the boundary of the barycentric fundamental chain. -/
+/-- After the pairwise cancellations, only the faces obtained by deleting the full vertex set
+remain in the boundary of the barycentric fundamental chain. -/
 public theorem subdividedSimplexFundamentalChain_boundary_eq_outer
     (n : ℕ) :
     subdividedSimplexFundamentalChain (n + 1) ≫

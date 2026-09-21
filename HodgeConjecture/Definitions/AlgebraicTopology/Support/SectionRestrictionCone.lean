@@ -28,13 +28,16 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
 
-/-- Restriction between the actual open-section evaluation functors. -/
+/-- Let `X` be a topological space and `W ⊆ V` open subsets. This natural transformation sends a
+sheaf of abelian groups `F` to its restriction map `F(V) → F(W)`. -/
 def supportEvaluationRestriction {V W : Opens X} (i : W ⟶ V) :
     supportEvaluation X V ⟶ supportEvaluation X W where
   app F := F.obj.map i.op
   naturality _F _G f := (f.hom.naturality i.op).symm
 
-/-- The actual restriction morphism of section complexes, in any grading. -/
+/-- Let `X` be a topological space, `W ⊆ V` open subsets, and `K` a complex of sheaves of abelian
+groups with any specified grading. This map of section complexes `K(V) → K(W)` restricts
+sections in each degree. -/
 def sectionComplexRestriction {I : Type*} (c : ComplexShape I)
     (K : HomologicalComplex (Sheaf AddCommGrpCat.{u} X) c)
     {V W : Opens X} (i : W ⟶ V) :
@@ -42,7 +45,7 @@ def sectionComplexRestriction {I : Type*} (c : ComplexShape I)
       ((supportEvaluation X W).mapHomologicalComplex c).obj K :=
   ((supportEvaluationRestriction X i).mapHomologicalComplex c).app K
 
-/-- Actual section restriction commutes with extension from natural to integer degrees. -/
+/-- Section restriction commutes with extension from natural to integer degrees. -/
 theorem sectionComplexRestriction_extend
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℕ)
     {V W : Opens X} (i : W ⟶ V) :
@@ -56,7 +59,10 @@ theorem sectionComplexRestriction_extend
   HomologicalComplex.mapExtendCanonicalIso_natTrans (supportEvaluation X V) K
     ComplexShape.embeddingUpNat (supportEvaluationRestriction X i)
 
-/-- The corresponding actual restriction cones agree under the canonical grading comparison. -/
+/-- Let `X` be a topological space, `W ⊆ V` open subsets, and `K` a nonnegative complex of sheaves
+of abelian groups. The two ways to extend the restriction map `K(V) → K(W)` by zero to negative
+degrees give canonically isomorphic mapping cones: extend the sheaf complex before taking
+sections, or extend the resulting section complexes. -/
 def sectionComplexRestrictionExtendConeIso
     (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℕ)
     {V W : Opens X} (i : W ⟶ V) :
@@ -76,7 +82,10 @@ def sectionComplexRestrictionExtendConeIso
 
 variable (U V : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
-/-- The third term of the actual support sequence is sections on the actual intersection. -/
+/-- Let `X` be a topological space, `U` and `V` open subsets, and `K` an integer-indexed complex of
+sheaves of abelian groups on `X`. For `j : U → X`, this is the degreewise identification `Γ(V,
+j_*(K|_U)) ≅ K(V ∩ U)`. It identifies the last complex in the sequence of supported sections,
+all sections, and restricted sections. -/
 def supportRestrictionSectionsIntersectionIso :
     (supportRestrictionSectionsComplexShortComplex X U V K).X₃ ≅
       ((supportEvaluation X (V ⊓ U)).mapHomologicalComplex ℤᵘᵖ).obj K :=
@@ -85,7 +94,7 @@ def supportRestrictionSectionsIntersectionIso :
     (fun n m _ => (K.d n m).hom.naturality
       (eqToHom (congrArg op (Opens.functor_map_eq_inf U V))))
 
-/-- The intersection identification preserves the literal restriction arrow. -/
+/-- The intersection identification preserves the restriction arrow. -/
 theorem supportRestrictionSectionsIntersectionIso_restriction :
     (supportRestrictionSectionsComplexShortComplex X U V K).g ≫
       (supportRestrictionSectionsIntersectionIso X U V K).hom =
@@ -95,7 +104,10 @@ theorem supportRestrictionSectionsIntersectionIso_restriction :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The cone of the actual support-sequence arrow is the cone of actual open restriction. -/
+/-- Let `X` be a topological space, `U` and `V` open subsets, and `K` an integer-indexed complex of
+sheaves of abelian groups on `X`. The equality `Γ(V, j_*(K|_U)) ≅ K(V ∩ U)`, for `j : U → X`,
+induces this isomorphism from the cone of `K(V) → Γ(V, j_*(K|_U))` to the cone of restriction
+`K(V) → K(V ∩ U)`. -/
 def supportRestrictionSectionsConeIso :
     CochainComplex.mappingCone (supportRestrictionSectionsComplexShortComplex X U V K).g ≅
       CochainComplex.mappingCone
@@ -107,9 +119,10 @@ def supportRestrictionSectionsConeIso :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- `H^n(Γ_{X \ U}(V, K)) ≅ H^{n-1}(cone(K(V) → K(V ⊓ U)))` for a termwise flasque complex of
-sheaves `K`: the sections over `V` supported on `X \ U` compute the cone of restriction, with
-a shift of degree. -/
+/-- Let `X` be a topological space, `U` and `V` open subsets, and `K` an integer-indexed complex of
+sheaves of abelian groups on `X`. Assume every term of `K` is flasque, so its restriction maps
+are surjective. Then sections on `V` vanishing on `V ∩ U` form the kernel of a surjective map of
+complexes. This gives the isomorphism `H^n(Γ_{X \ U}(V, K)) ≅ H^{n-1}(Cone(K(V) → K(V ∩ U)))`. -/
 def supportedSectionHomologyIsoRestrictionCone
     (hK : ∀ n, (K.X n).IsFlasque) (n : ℤ) :
     -- `H^n(Γ_{X \ U}(V, K)) ≅ H^{n-1}(cone(K(V) → K(V ⊓ U)))`.

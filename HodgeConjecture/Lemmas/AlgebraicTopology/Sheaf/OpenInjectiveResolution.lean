@@ -25,15 +25,17 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{0}) (U : Opens X) (A : AddCommGrpCat.{0})
 
-/-- Restrict the ambient injective resolution termwise. It is flasque, but no
-assertion that its terms are injective on the subspace is required. -/
+/-- Let `U` be open in a topological space `X`, and let `A` be an abelian group. For the chosen
+injective resolution `I` of the constant sheaf `A_X`, this is the nonnegative cochain complex
+`I|_U`, obtained by restricting each sheaf and differential to `U`. -/
 def restrictedAmbientConstantResolution :
     CochainComplex (Sheaf AddCommGrpCat.{0} (TopCat.of U)) ℕ :=
   ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex (.up ℕ)).obj
     (ambientConstantInjectiveResolution X A).cocomplex
 
-/-- The augmentation from actual open constants into the restricted ambient
-resolution, using the normalized constant/open isomorphism. -/
+/-- Let `U` be open in a topological space `X`, and let `A` be an abelian group. For the chosen
+injective resolution `I` of the constant sheaf `A_X`, this augmentation `A_U[0] → I|_U`
+restricts the augmentation of `I` and identifies `A_X|_U` with `A_U`. -/
 def restrictedAmbientConstantAugmentation :
     (CochainComplex.single₀ (Sheaf AddCommGrpCat.{0} (TopCat.of U))).obj
         𝓒[↧U; A] ⟶
@@ -64,8 +66,10 @@ instance restrictedAmbientConstantAugmentation_quasiIso :
   dsimp only [restrictedAmbientConstantAugmentation]
   infer_instance
 
-/-- An actual map from the restricted ambient resolution to the independent
-open-subspace resolution, extending the prescribed constant augmentation. -/
+/-- Let `U` be open in a topological space `X`, and let `A` be an abelian group. For the chosen
+injective resolutions `I,J` of the constant sheaves `A_X,A_U`, this cochain map `I|_U → J`
+extends the identity on `A_U`: composing with the restricted augmentation gives the augmentation
+of `J`. -/
 def restrictedAmbientToOpenResolution :
     restrictedAmbientConstantResolution X U A ⟶
       (ambientConstantInjectiveResolution (TopCat.of U) A).cocomplex :=
@@ -81,7 +85,9 @@ instance restrictedAmbientConstantResolution_isFlasque (n : ℕ) :
     @injective_isFlasque _ _ ((ambientConstantInjectiveResolution X A).injective n)
   exact openSheafRestriction_isFlasque X U _
 
-/-- The actual restriction of the ambient injective complex. -/
+/-- Let `U` be open in a topological space `X`, with inclusion `j`, and let `A` be an abelian group.
+For the chosen injective resolution `I` of `A_X`, this cochain map `I → j_*(I|_U)` restricts
+sections to `U`. In degree `q`, on an open `V`, it is `I^q(V) → I^q(V ∩ U)`. -/
 def ambientInjectiveRestriction :
     (ambientConstantInjectiveResolution X A).cocomplex ⟶
       ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
@@ -91,8 +97,10 @@ def ambientInjectiveRestriction :
   comm' i j _h := ((toOpenRestrictionPushforward X U).naturality
     ((ambientConstantInjectiveResolution X A).cocomplex.d i j)).symm
 
-/-- Restriction from the ambient injective resolution to the independently
-chosen open-subspace resolution, through actual open restriction. -/
+/-- Let `U` be open in a topological space `X`, with inclusion `j`, and let `A` be an abelian group.
+For the chosen injective resolutions `I,J` of the constant sheaves `A_X,A_U`, this map `I →
+j_*J` composes restriction with the direct image of the comparison `I|_U → J` extending the
+identity on `A_U`. -/
 def ambientToOpenInjectiveResolution :
     (ambientConstantInjectiveResolution X A).cocomplex ⟶
       ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
@@ -101,8 +109,10 @@ def ambientToOpenInjectiveResolution :
     ((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).map
       (restrictedAmbientToOpenResolution X U A)
 
-/-- Global sections of the pushed-forward comparison. Its source uses the
-actual open restriction of the ambient resolution, not a supplied model. -/
+/-- Let `U` be open in a topological space `X`, with inclusion `j`, and let `A` be an abelian group.
+For the chosen injective resolutions `I,J` of the constant sheaves `A_X,A_U`, this map
+`Γ(U,I|_U) → Γ(U,J)` takes sections of the comparison extending the identity on `A_U`. Both
+sides are expressed as global sections of direct images under `j`. -/
 def globalRestrictedAmbientToOpenResolution :
     ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
       (.up ℕ)).obj
@@ -173,7 +183,7 @@ lemma restrictedAmbientToOpenResolution_quasiIso :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Strict normalization: the independently resolved restriction extends
-the actual restriction map of constant sheaves. -/
+the restriction map of constant sheaves. -/
 @[reassoc]
 lemma ambientAugmentation_comp_openResolution :
     (ambientConstantInjectiveResolution X A).ι ≫ ambientToOpenInjectiveResolution X U A =
@@ -216,9 +226,8 @@ lemma ambientAugmentation_comp_openResolution :
     exact (HomologicalComplex.isZero_single_obj_X (.up ℕ) 0 _ (n + 1) (by omega)).eq_of_src _ _
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The comparison remains a quasi-isomorphism after global sections: on the
-open subspace both actual resolutions are termwise flasque. No exactness of
-open direct image on arbitrary complexes is asserted. -/
+/-- The comparison remains a quasi-isomorphism after global sections, because on the open
+subspace both resolutions are termwise flasque. -/
 theorem globalRestrictedAmbientToOpenResolution_quasiIso :
     QuasiIso (globalRestrictedAmbientToOpenResolution X U A) := by
   change QuasiIso

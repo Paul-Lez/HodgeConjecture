@@ -28,8 +28,10 @@ open AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- Actual open-section cohomology of the supported injective model is relative
-singular cohomology of the same literal local support pair. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, `Y = X(ℂ)` with its analytic topology,
+`S ⊆ Y` closed, and `V ⊆ Y` open. For an injective resolution `I` of the constant rational
+sheaf, this additive equivalence identifies `H^n(Γ_S(V,I))` with relative singular cohomology
+`H^n(V,V \ S;ℚ)`. Here `Γ_S(V,I^q)` consists of sections over `V` that vanish off `S`. -/
 def complexSupportInjectiveSectionCohomologyEquiv (S : Closeds (ComplexPoint X))
     (V : Opens (ComplexPoint X)) (n : ℕ) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex

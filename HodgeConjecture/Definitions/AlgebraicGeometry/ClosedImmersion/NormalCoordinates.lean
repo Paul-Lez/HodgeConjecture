@@ -9,12 +9,12 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ClosedImmers
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart
 
 /-!
-# Constructed normal coordinates for smooth closed immersions
+# Normal coordinates for smooth closed immersions
 
 The derivative projection here comes from lifted algebraic coordinate sections. The normal
-chart is then constructed by the inverse function theorem. Finally the actual topological
+chart is then constructed by the inverse function theorem. Finally the topological
 embedding theorem excludes remote branches and identifies the whole local analytic support
-with zero normal coordinate. No analytic immersion or flattening equivalence is supplied.
+with zero normal coordinate.
 -/
 
 @[expose] public noncomputable section
@@ -28,7 +28,10 @@ variable (X Y : Over (Spec ↧ℂ))
   [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
   [IsClosedImmersion i.left] (z : ComplexPoint Y)
 
-/-- The actual derivative left inverse obtained from lifted intrinsic coordinates. -/
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, of respective dimensions `m`
+and `d`, and let `z ∈ Y(ℂ)`. In the chosen analytic charts, the derivative of `i` is an
+injective complex linear map `ℂ^m → ℂ^d`. This chooses a continuous complex linear left inverse
+`P : ℂ^d → ℂ^m`, so `P ∘ D i = id`. -/
 def closedImmersionDerivativeProjection : (Fin d → ℂ) →L[ℂ] (Fin m → ℂ) :=
   (exists_leftInverse_fderiv_inclusionInComplexCharts
     X Y i m d z).choose
@@ -40,8 +43,10 @@ theorem closedImmersionDerivativeProjection_leftInverse :
   (exists_leftInverse_fderiv_inclusionInComplexCharts
     X Y i m d z).choose_spec
 
-/-- Actual normal-coordinate parametrization, with the kernel of the constructed
-derivative projection as its complex normal space. -/
+/-- Let `i : Y → X` be a closed immersion of smooth complex schemes of dimensions `m,d`, and let `z
+∈ Y(ℂ)`. In the chosen charts write `g = e_X ∘ i ∘ e_Y⁻¹` and `a = e_Y(z)`. For the chosen
+complex-linear left inverse `P` of `Dg(a)`, this local homeomorphism `ℂ^m × ker P → ℂ^d` is
+`(v,w) ↦ g(v)+w` near `(a,0)`. -/
 def closedImmersionNormalChart :
     OpenPartialHomeomorph
       ((Fin m → ℂ) ×
@@ -78,8 +83,7 @@ theorem closedImmersionNormalChart_mem_target :
     (closedImmersionNormalChart X Y i m d z).left_inv
       (closedImmersionNormalChart_mem_source X Y i m d z)
 
-/-- The normal space has the actual complex codimension, by the constructed linear
-splitting; algebraic dimension is not substituted for a topological dimension theorem. -/
+/-- The normal space has complex dimension `d - m`. -/
 theorem closedImmersionNormalKernel_finrank :
     Module.finrank ℂ
       (closedImmersionDerivativeProjection X Y i m d z).ker =
@@ -92,8 +96,8 @@ theorem closedImmersionNormalKernel_finrank :
   simp only [Module.finrank_prod, Module.finrank_pi, Fintype.card_fin] at hdim
   omega
 
-/-- Near the selected ambient point, membership in the entire actual image is equivalent
-to having zero normal coordinate. The forward direction uses the proved induced topology
+/-- Near the selected ambient point, membership in the entire image is equivalent
+to having zero normal coordinate. The forward direction uses the induced topology
 to exclude image points whose intrinsic parameters are outside the coordinate neighborhood. -/
 private theorem eventually_mem_range_iff_normal_eq_zero :
     ∀ᶠ y in 𝓝 (Point.map i z),
@@ -153,8 +157,8 @@ private theorem eventually_mem_range_iff_normal_eq_zero :
     rw [hn] at hright
     simpa only [Submodule.coe_zero, add_zero] using hright
 
-/-- An actual open ambient neighborhood on which normal coordinates detect the full
-closed-immersion image, extracted from the proved neighborhood assertion. -/
+/-- An open ambient neighborhood on which normal coordinates detect the full
+closed-immersion image, extracted from the neighborhood assertion. -/
 theorem exists_open_normalCriterion :
     ∃ W : Set (ComplexPoint X), IsOpen W ∧ Point.map i z ∈ W ∧
       ∀ y ∈ W, y ∈ Set.range (Point.map i) ↔
@@ -164,9 +168,10 @@ theorem exists_open_normalCriterion :
     (eventually_mem_range_iff_normal_eq_zero X Y i m d z)
   exact ⟨W, hWopen, hzW, hWsub⟩
 
-/-- The ambient flattening chart, restricted so that its zero-normal locus is exactly
-the actual embedded support on its entire source. Every ingredient has been constructed
-from the given smooth closed immersion. -/
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, of respective dimensions `m`
+and `d`, and let `z ∈ Y(ℂ)`. This chart maps a neighborhood of `i(z)` in `X(ℂ)` to `ℂ^m × ker
+P`, where `P` is a chosen left inverse of the coordinate derivative of `i`. Throughout its
+source, membership in `i(Y(ℂ))` is equivalent to the second coordinate being zero. -/
 def closedImmersionFlatteningChart :
     OpenPartialHomeomorph (ComplexPoint X)
       ((Fin m → ℂ) ×
@@ -186,9 +191,10 @@ def closedImmersionFlatteningChart :
       (localChart Y m z z, 0) :=
   closedImmersionNormalChart_symm_center X Y i m d z
 
-/-- Identifying the actual normal space with standard complex coordinates uses only its
-proved complex dimension. This is a complex-linear coordinate choice, not a choice of
-homology generator or an orientation class. -/
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, of respective dimensions `m`
+and `d`, and let `z ∈ Y(ℂ)`. Let `P : ℂ^d → ℂ^m` be the chosen left inverse of the derivative of
+`i` in analytic coordinates. Since `ker P` has complex dimension `d-m`, this chooses a
+continuous complex linear equivalence `ker P ≃ ℂ^{d-m}`. -/
 def closedImmersionNormalKernelEquiv :
     (closedImmersionDerivativeProjection X Y i m d z).ker ≃L[ℂ]
       (Fin (d - m) → ℂ) :=
@@ -196,8 +202,10 @@ def closedImmersionNormalKernelEquiv :
     simpa only [Module.finrank_pi, Fintype.card_fin] using
       closedImmersionNormalKernel_finrank X Y i m d z)).toContinuousLinearEquiv
 
-/-- The actual ambient support-flattening chart in standard tangent and normal complex
-spaces, ready for the normal-slice pair calculation. -/
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, of respective dimensions `m`
+and `d`, and let `z ∈ Y(ℂ)`. This chart maps a neighborhood of `i(z)` in `X(ℂ)` to `ℂ^m ×
+ℂ^{d-m}`. Its second coordinate is normal to `Y`, and its zero set throughout the source is
+exactly the image of `Y(ℂ)` there. -/
 def closedImmersionStandardFlatteningChart :
     OpenPartialHomeomorph (ComplexPoint X)
       ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=

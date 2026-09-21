@@ -47,25 +47,30 @@ local instance analyticSupportHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-/-- The inclusion of the complement of a subset into the complex-point space. -/
+/-- Let `X` be a scheme over `ℂ` and `Z ⊆ X(ℂ)`. This is the continuous inclusion `X(ℂ) \ Z → X(ℂ)`,
+where complex points have the analytic topology and the complement has the subspace topology. -/
 def analyticComplementInclusion (Z : Set (ComplexPoint X)) :
     TopCat.of ↥Zᶜ ⟶
       TopCat.of (ComplexPoint X) :=
   TopCat.subtypeInclusion (TopCat.of (ComplexPoint X)) Zᶜ
 
-/-- Sheaves of additive groups on the complement of a subset. -/
+/-- Let `X` be a scheme over `ℂ` and `Z ⊆ X(ℂ)`. This is the category of sheaves of abelian groups
+on the subspace `X(ℂ) \ Z` of the analytic space of complex points. -/
 abbrev AnalyticComplementAdditiveSheaf (Z : Set (ComplexPoint X)) :=
   TopCat.Sheaf AddCommGrpCat (TopCat.of ↥Zᶜ)
 
-/-- The rational constant sheaf on the complement, pushed forward to the ambient space. -/
+/-- Let `X` be a scheme over `ℂ`, `Z ⊆ X(ℂ)`, and `j : X(ℂ) \ Z → X(ℂ)` the inclusion. This is
+`j_*ℚ`, the sheaf whose sections on an analytic open `V` are locally constant rational-valued
+functions on `V \ Z`. -/
 def pushforwardComplementConstantRationalSheaf
     (Z : Set (ComplexPoint X)) : AnalyticAdditiveSheaf X :=
   (TopCat.Sheaf.pushforward AddCommGrpCat
     (analyticComplementInclusion X Z)).obj
       𝓒(↧↥Zᶜ; ℚ)
 
-/-- Constant rational sections restrict canonically to locally constant sections on the
-complement. This is the presheaf morphism before sheafifying the source. -/
+/-- Let `X` be a scheme over `ℂ` and `Z ⊆ X(ℂ)`. This map sends a rational number on each analytic
+open `V` to the constant function with that value on `V \ Z`. Its source is the constant
+presheaf and its target is the direct image of the constant sheaf on the complement. -/
 def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
     𝓒ᵖ(↧(ComplexPoint X); ℚ) ⟶
       (pushforwardComplementConstantRationalSheaf X Z).obj :=
@@ -75,7 +80,9 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
     ((sheafificationAdjunction J AddCommGrpCat).unit.app
       𝓒ᵖ(U; ℚ))
 
-/-- The canonical restriction of the rational constant sheaf to the complement. -/
+/-- Let `X` be a scheme over `ℂ`, `Z ⊆ X(ℂ)`, and `j : X(ℂ) \ Z → X(ℂ)` the inclusion. This is the
+sheaf morphism `ℚ → j_*ℚ` that restricts locally constant rational-valued functions from `V` to
+`V \ Z` on every analytic open `V`. -/
 def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
     𝓒(↧(ComplexPoint X); ℚ) ⟶
       pushforwardComplementConstantRationalSheaf X Z :=
@@ -84,14 +91,17 @@ def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
   ⟨sheafifyLift J (rationalRestrictionPresheaf X Z)
     (pushforwardComplementConstantRationalSheaf X Z).property⟩
 
-/-- A fixed injective resolution used to compute the derived pushforward from the complement. -/
+/-- Let `X` be a scheme over `ℂ` and `Z ⊆ X(ℂ)`. Choose an injective resolution `ℚ → I^•` of the
+constant rational sheaf on the analytic subspace `X(ℂ) \ Z`. The complex is indexed by
+nonnegative integers and is exact after the augmentation. -/
 def complementConstantRationalInjectiveResolution
     (Z : Set (ComplexPoint X)) :
     InjectiveResolution 𝓒(↧↥Zᶜ; ℚ) :=
   injectiveResolution 𝓒(↧↥Zᶜ; ℚ)
 
-/-- A complex representing the derived pushforward of the rational constant sheaf on the
-complement. -/
+/-- Let `X` be a scheme over `ℂ`, `Z ⊆ X(ℂ)`, and `j : X(ℂ) \ Z → X(ℂ)` the inclusion. Resolve the
+constant rational sheaf on the complement by injective sheaves `I^•` and apply `j_*` in each
+degree. The resulting complex `j_*I^•`, indexed by nonnegative integers, represents `Rj_*ℚ`. -/
 def derivedPushforwardComplementConstantRationalComplexNat
     (Z : Set (ComplexPoint X)) :
     CochainComplex (AnalyticAdditiveSheaf X) ℕ :=
@@ -119,8 +129,7 @@ private lemma isZero_derivedPushforwardComplement_univ_X (n : ℕ) :
       (Set.univ : Set (ComplexPoint X)))).map_isZero
         (isZero_sheaf_on_complement_univ X _)
 
-/-- The complex representing derived pushforward from the empty complement is itself a zero
-object, not merely acyclic. -/
+/-- The complex representing derived pushforward from the empty complement is a zero object. -/
 private lemma isZero_derivedPushforwardComplement_univ :
     IsZero (derivedPushforwardComplementConstantRationalComplexNat X
       (Set.univ : Set (ComplexPoint X))) := by
@@ -130,7 +139,9 @@ private lemma isZero_derivedPushforwardComplement_univ :
   · exact fun K ↦ ⟨⟨⟨0⟩, fun f ↦ HomologicalComplex.hom_ext _ _ fun n ↦
       (isZero_derivedPushforwardComplement_univ_X X n).eq_zero_of_tgt _⟩⟩
 
-/-- The derived pushforward complex, extended by zero to integer degrees. -/
+/-- Let `X` be a scheme over `ℂ`, `Z ⊆ X(ℂ)`, and `j : X(ℂ) \ Z → X(ℂ)` the inclusion. This
+integer-indexed complex represents `Rj_*ℚ`: it is `j_*I^q` for `q ≥ 0`, using an injective
+resolution `ℚ → I^•` on the complement, and zero for `q < 0`. -/
 def derivedPushforwardComplementConstantRationalComplexInt
     (Z : Set (ComplexPoint X)) :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
@@ -151,7 +162,9 @@ lemma isZero_derivedPushforwardComplement_univ_int :
     (AnalyticAdditiveSheaf X)).map_isZero
       (isZero_derivedPushforwardComplement_univ X)
 
-/-- The pushed-forward resolution map from the underived constant sheaf on the complement. -/
+/-- Let `X` be a scheme over `ℂ`, `Z ⊆ X(ℂ)`, and `j : X(ℂ) \ Z → X(ℂ)` the inclusion. For the
+chosen injective resolution `ℚ → I^•` on the complement, this is its direct image `j_*ℚ[0] →
+j_*I^•`, as a map of complexes indexed by nonnegative integers. -/
 def pushforwardComplementResolutionMap
     (Z : Set (ComplexPoint X)) :
     ((TopCat.Sheaf.pushforward AddCommGrpCat
@@ -166,8 +179,10 @@ def pushforwardComplementResolutionMap
       (ComplexShape.up ℕ)).map
     (complementConstantRationalInjectiveResolution X Z).ι
 
-/-- Restriction from ambient rational constants to a complex representing the derived
-pushforward from the complement. -/
+/-- Let `X` be a scheme over `ℂ`, `Z ⊆ X(ℂ)`, and `j : X(ℂ) \ Z → X(ℂ)` the inclusion. This map of
+complexes `ℚ[0] → j_*I^•` restricts locally constant functions to the complement and then
+applies the augmentation of its chosen injective resolution `ℚ → I^•`. Degrees are nonnegative
+integers. -/
 def rationalRestrictionComplexNat
     (Z : Set (ComplexPoint X)) :
     (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
@@ -181,8 +196,9 @@ def rationalRestrictionComplexNat
           𝓒(↧↥Zᶜ; ℚ) ≫
     pushforwardComplementResolutionMap X Z
 
-/-- Restriction from the ambient rational constant complex to the derived pushforward from the
-complement. -/
+/-- Let `X` be a scheme over `ℂ` and `Z ⊆ X(ℂ)`. This is the integer-indexed map `ℚ[0] → j_*I^•`
+representing restriction to `X(ℂ) \ Z`, where `j` is the inclusion and `ℚ → I^•` is an injective
+resolution on the complement. Both complexes are zero in negative degrees. -/
 def rationalRestrictionComplexInt (Z : Set (ComplexPoint X)) :
     constantFieldSheafComplexInt ℚ X ⟶
       derivedPushforwardComplementConstantRationalComplexInt X Z :=
@@ -219,14 +235,19 @@ noncomputable instance isIso_derivedMappingConeTriangle_mor₃_univ :
     (DerivedCategory.mappingCone_triangle_distinguished f)).1
     (DerivedCategory.Q.map_isZero (isZero_derivedPushforwardComplement_univ_int X))
 
-/-- The mapping-cone model for the homotopy fiber defining rational cohomology with support. -/
+/-- Let `X` be a scheme over `ℂ`, let `Z ⊆ X(ℂ)`, and write `j : X(ℂ) \ Z → X(ℂ)` for the inclusion.
+This is the mapping cone of the restriction `ℚ[0] → j_*I^•`, where `ℚ → I^•` is an injective
+resolution on the complement. For closed `Z`, the cone shifted by `-1` represents the sheaf
+complex of derived sections with support in `Z`. -/
 abbrev rationalCohomologyWithSupportComplex
     (Z : Set (ComplexPoint X)) :
     CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
   CochainComplex.mappingCone (rationalRestrictionComplexInt X Z)
 
-/-- Rational constant-sheaf cohomology with support in `Z`. The degree shift realizes the
-homotopy fiber of restriction as the mapping cone shifted by `-1`. -/
+/-- Let `X` be a scheme over `ℂ`, `Z ⊆ Y = X(ℂ)` any subset, and `j : Y \ Z → Y` the inclusion. This
+defines `H_Z^n(Y;ℚ)` as `ℍ^{n-1}(Y,Cone(ℚ_Y → Rj_*ℚ_{Y \ Z}))`, using constant rational sheaves.
+For closed `Z`, it can also be computed from global sections vanishing off `Z` in an injective
+resolution of `ℚ_Y`. -/
 abbrev RationalCohomologyWithSupport
     (Z : Set (ComplexPoint X)) (n : ℤ) : Type 1 :=
   Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)
@@ -235,8 +256,9 @@ abbrev RationalCohomologyWithSupport
 integer degree `n`. -/
 scoped notation:max "H_[" Z "]^" n:max "(" X "; " "ℚ" ")" => RationalCohomologyWithSupport X Z n
 
-/-- The degree-one connecting morphism from the mapping cone to the ambient rational constant
-complex. -/
+/-- Let `X` be a scheme over `ℂ` and `Z ⊆ X(ℂ)`. For the cone of rational restriction `ℚ → Rj_*ℚ`,
+with `j` the complement inclusion, this is the connecting morphism `Cone(ℚ → Rj_*ℚ) → ℚ[1]` in
+the derived category. Its action on hypercohomology defines the map that forgets support. -/
 def forgetSupportShiftedHom (Z : Set (ComplexPoint X)) :
     Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
       (rationalCohomologyWithSupportComplex X Z)

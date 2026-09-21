@@ -46,8 +46,10 @@ variable {A S I : CochainComplex C ℤ}
   (a : A ⟶ S) [Mono a] [QuasiIso a]
   (r : A ⟶ I)
 
-/-- A map into a bounded-below degreewise-injective complex extends strictly across a monic
-quasi-isomorphism. This is the lifting property in the injective model structure. -/
+/-- In an abelian category with enough injectives, let `a : A → S` be a monomorphism and
+quasi-isomorphism of integer-indexed complexes that are zero in negative degrees. Let `I` also
+be zero in negative degrees and have injective terms. For a complex map `r : A → I`, this
+chooses a complex map `l : S → I` with `l ∘ a = r`. -/
 noncomputable def liftToInjective (hI : ∀ n : ℤ, Injective (I.X n)) : S ⟶ I :=
   let A' : Plus C := ⟨A, 0, inferInstance⟩
   let S' : Plus C := ⟨S, 0, inferInstance⟩

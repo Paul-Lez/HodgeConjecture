@@ -153,7 +153,7 @@ variable (X : Over (Spec ↧ℂ))
 
 /-- The reduced closure of a point in a projective complex variety is Noetherian.
 
-This is not an instance: the component does not determine the structure morphism carrying the
+It is a `def` because the component does not determine the structure morphism carrying the
 projectivity hypothesis. -/
 theorem cycleComponent_isNoetherian
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :

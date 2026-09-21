@@ -122,13 +122,15 @@ private theorem cycleComponentSingularBoundary_le_support :
   rw [← range_cycleComponentι X.left x]
   exact ⟨z, hz⟩
 
-/-- The actual complement inclusion determining the localization sequence. -/
+/-- The complement inclusion determining the localization sequence. -/
 private theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
     (cycleComponentAnalyticClosedSupport X x).compl ≤ cycleComponentSmoothSupportAmbientOpen X x :=
   fun _ hy hyS ↦ hy (cycleComponentSingularBoundary_le_support X x hyS)
 
-/-- The restriction `Γ(X(ℂ), RΓ_{Z(ℂ)}(ℚ)) → Γ(X(ℂ) \ Z_sing(ℂ), RΓ_{Z(ℂ)}(ℚ))` of complexes of
-sections. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. Let `I^•` be the chosen injective resolution of `ℚ` on `X(ℂ)`.
+This restricts sections of its subsheaves supported in `Z(ℂ)` from all of `X(ℂ)` to `X(ℂ) \
+Z_sing(ℂ)`, degree by degree. -/
 def cycleComponentSupportSectionRestriction :
     -- Restriction `RΓ_{Z(ℂ)}(X(ℂ)) → RΓ_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ))`.
     ((TopCat.Sheaf.supportEvaluation
@@ -174,8 +176,11 @@ theorem cycleComponentSupportSectionRestriction_homology_isIso :
   rw [← he]
   infer_instance
 
-/-- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) ≅ H^{2p}_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ); ℚ)`: the restriction map, with its
-inverse. -/
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
+integral subvariety with generic point `x`. Restriction to `U = X(ℂ) \ Z_sing(ℂ)` gives this
+isomorphism `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) ≅ H^{2p}_{Z(ℂ) ∩ U}(U; ℚ)`. Its inverse extends a class
+uniquely across the singular locus, whose supported cohomology vanishes in degrees `2p` and
+`2p+1`. -/
 def cycleComponentSupportExtensionIso :
     -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`.
     ((((TopCat.Sheaf.supportEvaluation

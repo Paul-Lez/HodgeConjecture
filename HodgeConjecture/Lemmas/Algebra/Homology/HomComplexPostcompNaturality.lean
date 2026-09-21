@@ -17,13 +17,18 @@ namespace CochainComplex.HomComplex
 variable {C : Type*} [Category* C] [Abelian C]
   (K : CochainComplex C ℤ) {L M : CochainComplex C ℤ} (f : L ⟶ M)
 
-/-- Postcomposition on cocycles as an additive map. -/
+/-- Let `K,L,M` be integer-indexed cochain complexes in an abelian category and `f : L → M` a
+cochain map. Postcomposition sends a degree-`n` cocycle `z` of `Hom(K,L)` to the cocycle `f ∘ z`
+of `Hom(K,M)`. This is the resulting additive map. -/
 def postcompCocycle (n : ℤ) : Cocycle K L n →+ Cocycle K M n where
   toFun z := z.postcomp f
   map_zero' := by ext; simp [Cocycle.postcomp]
   map_add' x y := by ext; simp [Cocycle.postcomp, Cochain.add_comp]
 
-/-- Postcomposition descends to actual cohomology classes. -/
+/-- Let `K,L,M` be integer-indexed cochain complexes in an abelian category and `f : L → M` a
+cochain map. This additive map `H^n(Hom(K,L)) → H^n(Hom(K,M))` sends the class of a cocycle `z`
+to the class of `f ∘ z`. Postcomposition preserves coboundaries, so it is well-defined on
+cohomology. -/
 def postcompClass (n : ℤ) : CohomologyClass K L n →+ CohomologyClass K M n :=
   CohomologyClass.descAddMonoidHom
     ((CohomologyClass.mkAddMonoidHom K M n).comp (postcompCocycle K f n)) (by

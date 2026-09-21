@@ -208,8 +208,8 @@ lemma exists_openSimplex_inf_of_eq {U A B : Opens X} (i : A ⟶ U) (j : B ⟶ U)
     exact hst z
 
 /-- Compatible cochains on any family of open subsets extend to a cochain on the containing open
-set. Compatibility is expressed on basis simplices after mapping them into the containing open.
-No covering hypothesis is needed. -/
+set. Compatibility is expressed on basis simplices after mapping them into the containing
+open. -/
 lemma exists_openCochain_of_compatibleOnSimplexBasis
     {U : (Opens X)ᵒᵖ} {ι : Type*} (V : ι → (Opens X)ᵒᵖ)
     (e : ∀ i, U ⟶ V i) (n : ℕ) (φ : ∀ i, OpenCochains R X (V i) n)

@@ -63,9 +63,9 @@ theorem exists_smoothClosedSupportImageNeighborhood
     exact ModuleCat.isZero_of_subsingleton _
 
 omit [SmoothOfRelativeDimension m Y.hom] in
-/-- Fixed-dimensional source opens suffice: the target is restricted by deleting the
-discarded closed image, while the resulting neighborhoods and pairs live in the original
-ambient analytic space. No projectivity or global source dimension is needed. -/
+/-- Fixed-dimensional source opens suffice: the target is restricted by deleting the discarded
+closed image, while the resulting neighborhoods and pairs live in the original ambient analytic
+space. -/
 theorem exists_smoothClosedSourceOpenNeighborhood
     (A : Y.left.Opens) [SmoothOfRelativeDimension m (openScheme Y A).hom]
     (z : ComplexPoint (openScheme Y A))

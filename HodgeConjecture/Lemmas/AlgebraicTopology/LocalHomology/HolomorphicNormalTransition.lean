@@ -12,9 +12,9 @@ public import Mathlib.Analysis.Calculus.FDeriv.Prod
 # The normal derivative of a support-preserving holomorphic transition
 
 Preservation of the zero-normal plane forces the tangent-to-normal derivative block to
-vanish. Differentiating the actual local inverse identity then constructs inverse normal
-blocks. No invertibility or orientation-preservation theorem is supplied for the normal
-map; both are consequences of the given holomorphic support-preserving coordinate transition.
+vanish. Differentiating the local inverse identity then constructs inverse normal blocks.
+Invertibility and orientation preservation of the normal map both follow from the given
+holomorphic support-preserving coordinate transition.
 -/
 
 @[expose] public noncomputable section
@@ -28,7 +28,9 @@ section GeneralNormal
 variable {E N : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [NormedAddCommGroup N] [NormedSpace ℂ N]
 
-/-- The normal-to-normal block of an actual ambient derivative. -/
+/-- Let `E,N` be complex normed vector spaces and `A : E × N → E × N` a continuous complex-linear
+map. Its normal block is the continuous linear map `N → N` given by `v ↦ (A(0,v)).2`, the second
+component of `A` on the second summand. -/
 def normalBlock (A : (E × N) →L[ℂ] (E × N)) : N →L[ℂ] N :=
   (ContinuousLinearMap.snd ℂ E N).comp (A.comp (ContinuousLinearMap.inr ℂ E N))
 
@@ -46,7 +48,7 @@ theorem normal_tangent_derivative_eq_zero {f : (E × N) → (E × N)}
   have heq := (hc.congr_of_eventuallyEq hp.symm).unique (hasFDerivAt_const (0 : N) a)
   exact DFunLike.congr_fun heq v
 
-/-- The normal blocks inherit an actual left inverse from a split ambient derivative
+/-- The normal blocks inherit a left inverse from a split ambient derivative
 when the inverse derivative preserves the tangent plane. -/
 theorem normalBlock_leftInverse (A B : (E × N) →L[ℂ] (E × N))
     (hBA : B.comp A = ContinuousLinearMap.id ℂ (E × N))
@@ -112,8 +114,10 @@ theorem normalTransition_derivative_rightInverse :
   have hi : (e ∘ e.symm) =ᶠ[𝓝 (e (a, (0 : N)))] id := e.eventually_right_inverse' ha
   exact (h.congr_of_eventuallyEq hi.symm).unique (hasFDerivAt_id _)
 
-/-- The normal derivative is complex-linearly invertible, with inverse the actual normal
-block of the derivative of the inverse chart. -/
+/-- Let `e` be a local homeomorphism of `E × N`, where `E,N` are complex normed vector spaces,
+preserving the locus `N = 0`. Suppose `e` and its inverse are analytic at `(a,0)` and `e(a,0)`.
+This continuous complex-linear equivalence on `N` is `v ↦ (De_(a,0)(0,v)).2`; its inverse is the
+same block of the derivative of `e⁻¹` at `e(a,0)`. -/
 def normalTransitionDerivativeEquiv : N ≃L[ℂ] N where
   toLinearEquiv :=
     { toLinearMap := normalBlock (fderiv ℂ e (a, 0))
@@ -131,7 +135,7 @@ def normalTransitionDerivativeEquiv : N ≃L[ℂ] N where
     normalTransitionDerivativeEquiv e a ha hplane he hei v =
       (fderiv ℂ e (a, 0) (0, v)).2 := rfl
 
-/-- The actual map on a transverse normal fiber has the constructed normal derivative. -/
+/-- The map on a transverse normal fiber has the normal derivative. -/
 theorem normalTransition_hasFDerivAt :
     HasFDerivAt (fun v : N => (e (a, v)).2)
       (normalTransitionDerivativeEquiv e a ha hplane he hei).toContinuousLinearMap 0 := by
@@ -151,7 +155,9 @@ variable (c : ℕ)
   (hplane : ∀ p ∈ e.source, (e p).2 = 0 ↔ p.2 = 0)
   (he : AnalyticAt ℂ e (a, 0)) (hei : AnalyticAt ℂ e.symm (e (a, 0)))
 
-/-- The actual transverse normal map of a coordinate transition. -/
+/-- Let `E` be a complex normed vector space and `e` a local coordinate change on `E × ℂ^c`. Fix `a
+∈ E`. This function `ℂ^c → ℂ^c` sends `v` to the normal component `(e(a,v)).2`. Its geometric
+domain is the set of `v` for which `(a,v)` lies in the source of `e`. -/
 def normalTransitionMap (v : Fin c → ℂ) : Fin c → ℂ := (e (a, v)).2
 
 /-- Only normal parameters whose full points are in the transition domain are used. -/
@@ -173,8 +179,8 @@ theorem normalTransitionMap_continuousOn :
     (fun _ hv => hv)).snd
 
 include ha hplane he hei in
-/-- The actual normal map preserves the exactly normalized complex class on a sufficiently
-small normal neighborhood. The inverse normal derivative is proved above, not assumed. -/
+/-- The normal map preserves the exactly normalized complex class on a sufficiently small
+normal neighborhood. -/
 theorem exists_open_normalTransition_localClass_invariance :
     ∃ (W : Set (Fin c → ℂ)) (hW : W ⊆ normalTransitionDomain c e a)
       (hne : ∀ v, v ∈ W → v ≠ 0 → normalTransitionMap c e a v ≠ 0),

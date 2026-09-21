@@ -47,9 +47,9 @@ local notation3 "ℤ[" n "].{" u "," v "}" => homogeneousSubmodule n (ULift.{max
 
 attribute [local instance] MvPolynomial.gradedAlgebra
 
-/--
-The projective space over a scheme `S`, with homogeneous coordinates indexed by `n`
--/
+/-- Let `S` be a scheme and `n` an index set for homogeneous coordinates. This is projective space
+over `S`, defined by base change to `S` of `Proj(ℤ[x_i | i ∈ n])` with each variable in degree
+one. For `n = Fin (d+1)`, this is the usual `d`-dimensional projective space `ℙ^d_S`. -/
 noncomputable def ProjectiveSpace : Scheme.{max u v} :=
   pullback (terminal.from S) (terminal.from (Proj ℤ[n].{u, v}))
 
@@ -58,8 +58,9 @@ scoped [AlgebraicGeometry] notation "ℙ("n"; "S")" => ProjectiveSpace n S
 
 namespace ProjectiveSpace
 
-/-- The degree-zero part of the standard grading on a polynomial ring consists exactly of
-the constant polynomials. -/
+/-- Let `R` be a commutative ring and `n` an index set of polynomial variables, each assigned degree
+one. The degree-zero homogeneous subring of `R[x_i | i ∈ n]` is isomorphic to `R`: this
+equivalence takes the constant coefficient, with inverse the inclusion of constant polynomials. -/
 noncomputable def degreeZeroEquiv (R : Type*) [CommRing R] :
     homogeneousSubmodule n R 0 ≃+* R where
   toFun f := coeff 0 f.1
@@ -104,7 +105,8 @@ noncomputable instance terminalProjProper [Finite n] :
     MorphismProperty.cancel_right_of_respectsIso (P := @IsProper)]
   infer_instance
 
-/-- The structure morphism from projective space to its base scheme. -/
+/-- Let `S` be a scheme and `n` an index set of homogeneous coordinates. This is the structure
+morphism `ℙ(n; S) → S`, the projection from the base change of `Proj(ℤ[x_i | i ∈ n])` to `S`. -/
 noncomputable def toBase : ℙ(n; S) ⟶ S :=
   pullback.fst (terminal.from S) (terminal.from (Proj ℤ[n].{u, v}))
 
@@ -117,7 +119,9 @@ universe w
 
 variable {X T : Scheme.{w}}
 
-/-- An explicit closed embedding over `S` into a finite-dimensional projective space. -/
+/-- Let `f : X → T` be a morphism of schemes. A projective presentation consists of a natural number
+`d` and a closed immersion `i : X → ℙ^d_T` such that the composite of `i` with the projection
+`ℙ^d_T → T` is `f`. -/
 structure Presentation (f : X ⟶ T) where
   /-- The dimension of the ambient projective space. -/
   ambientDimension : ℕ
@@ -138,7 +142,8 @@ universe w
 
 variable {X T : Scheme.{w}}
 
-/-- A scheme morphism is projective if it admits a finite-dimensional projective presentation. -/
+/-- A morphism of schemes `f : X → T` is projective here if there exist a natural number `d` and a
+closed immersion `X → ℙ^d_T` whose composite with the projection to `T` is `f`. -/
 class IsProjective (f : X ⟶ T) : Prop where
   /-- A finite-dimensional projective presentation exists. -/
   nonempty_presentation : Nonempty (Presentation f)
