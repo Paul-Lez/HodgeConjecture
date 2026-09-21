@@ -175,7 +175,7 @@ def cycleComponentSmoothSupportLowestSectionCohomologyIso :
       -- Sections of the cohomology sheaf `𝓗^{2p}(RΓ_{Z(ℂ)}(ℚ))` over `X(ℂ) \ Z_sing(ℂ)`.
       ((complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)).homology
         -- Degree `2p`.
-        (2 * (p : ℤ))).obj.obj
+        (2 * (p : ℤ))).presheaf.obj
           -- The open `X(ℂ) \ Z_sing(ℂ)`.
           (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso

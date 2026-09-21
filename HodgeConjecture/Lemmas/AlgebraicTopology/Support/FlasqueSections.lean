@@ -51,9 +51,9 @@ theorem supportedOutsideInclusion_restrict_intersection :
 /-- A section zero on the intersection lifts into the actual supported-section kernel.
 The proof uses its canonical on-open kernel comparison, not a chosen support lift. -/
 theorem exists_supportedOutsideSection_of_restrict_eq_zero
-    (s : F.obj.obj (op V))
+    (s : F.presheaf.obj (op V))
     (hs : F.obj.map (homOfLE (inf_le_left : V ⊓ U ≤ V)).op s = 0) :
-    ∃ t : ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V),
+    ∃ t : ((sheafSectionsSupportedOutside X U).obj F).presheaf.obj (op V),
       ((sheafSectionsSupportedOutsideInclusion X U).app F).hom.app (op V) t = s := by
   let r := ((toOpenRestrictionPushforward X U).app F).hom.app (op V)
   have hr : r s = 0 := by

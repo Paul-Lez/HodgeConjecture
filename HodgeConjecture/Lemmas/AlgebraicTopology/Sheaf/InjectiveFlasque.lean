@@ -49,7 +49,7 @@ abbrev freeAbelianYonedaSheaf :
 open subset. -/
 def freeAbelianYonedaSheafHomEquiv (U : Opens X)
     (F : TopCat.Sheaf AddCommGrpCat.{u} X) :
-    ((freeAbelianYonedaSheaf X).obj U ⟶ F) ≃ F.obj.obj (op U) :=
+    ((freeAbelianYonedaSheaf X).obj U ⟶ F) ≃ F.presheaf.obj (op U) :=
   ((sheafificationAdjunction (Opens.grothendieckTopology X)
       AddCommGrpCat.{u}).homEquiv _ _).trans <|
     ((AddCommGrpCat.adj.whiskerRight (Opens X)ᵒᵖ).homEquiv _ _).trans

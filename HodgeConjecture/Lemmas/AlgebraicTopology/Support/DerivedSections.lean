@@ -67,7 +67,7 @@ restriction to its intersection with `U`. This is the canonical kernel
 comparison, not a supplied equivalence. -/
 def sheafSectionsSupportedOutsideOnOpenIso (U V : Opens X)
     (F : Sheaf AddCommGrpCat.{u} X) :
-    ((sheafSectionsSupportedOutside X U).obj F).obj.obj (op V) ≅
+    ((sheafSectionsSupportedOutside X U).obj F).presheaf.obj (op V) ≅
       kernel (((toOpenRestrictionPushforward X U).app F).hom.app (op V)) :=
   let ev : Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
     sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat ⋙

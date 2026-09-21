@@ -48,7 +48,7 @@ abbrev smoothClosedSupportCoclassSheaf : TopCat.Sheaf AddCommGrpCat
 
 /-- The exact normal coclass determines a section on its full chart source. -/
 def smoothClosedSupportChartSheafSection (z : ComplexPoint Y) :
-    (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj
+    (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.obj
       (op (smoothClosedSupportChartOpen X Y i m d z)) :=
   (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
     (Set.range (Point.map i)) (2 * (d - m))).app _
@@ -132,7 +132,7 @@ of the entire normalized stalk family. -/
 theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
     ∀ x : ComplexPoint X,
       ∃ (U : Opens (ComplexPoint X)) (_ : x ∈ U)
-        (s : (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj (op U)),
+        (s : (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.obj (op U)),
         ∀ (y : ComplexPoint X) (hy : y ∈ U),
           (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.germ U y hy s =
             smoothClosedSupportCoclassStalk X Y i m d y := by
@@ -153,7 +153,7 @@ theorem smoothClosedSupportCoclassStalk_locallyRepresentable :
 coclasses. It is unique with this property. -/
 def smoothClosedSupportCoclassSection :
     -- A global section of `𝓗^{2(d-m)}_{Y(ℂ)}` on `X(ℂ)`.
-    (smoothClosedSupportCoclassSheaf X Y i m d).obj.obj
+    (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.obj
       -- All of `X(ℂ)`.
       (op ⊤) :=
   TopCat.Sheaf.sectionOfLocallyRepresentable _

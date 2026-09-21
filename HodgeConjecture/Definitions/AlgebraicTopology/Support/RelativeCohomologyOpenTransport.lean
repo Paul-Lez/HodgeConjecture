@@ -93,9 +93,9 @@ def supportRelativeCohomologySheafOpenIso (n : ℕ) :
 /-- A global section of `𝓗^n_B` on `Y` gives a section of `𝓗^n_S` over the open `f(Y) ⊆ X`. -/
 def supportRelativeCohomologySectionOpenImage (n : ℕ)
     -- A global section of `𝓗^n_B` on `Y`.
-    (s : (𝓗_[B]^n(Y; ℚ)).obj.obj (op ⊤)) :
+    (s : (𝓗_[B]^n(Y; ℚ)).presheaf.obj (op ⊤)) :
     -- A section of `𝓗^n_S` on the open `f(Y) ⊆ X`.
-    (𝓗_[S]^n(X; ℚ)).obj.obj
+    (𝓗_[S]^n(X; ℚ)).presheaf.obj
       -- The open `f(Y)`.
       (op (hf.functor.obj ⊤)) :=
   (supportRelativeCohomologySheafOpenIso f hf S B hB n).hom.hom.app (op ⊤) s
@@ -104,9 +104,9 @@ def supportRelativeCohomologySectionOpenImage (n : ℕ)
 identification is the unique open inclusion, not an arbitrary section equivalence. -/
 def supportRelativeCohomologySectionOnOpen (n : ℕ) (U : Opens X)
     (hU : hf.functor.obj ⊤ = U)
-    (s : (𝓗_[B]^n(Y; ℚ)).obj.obj (op ⊤)) :
-    (𝓗_[S]^n(X; ℚ)).obj.obj (op U) :=
-  (𝓗_[S]^n(X; ℚ)).obj.map (eqToHom hU.symm).op
+    (s : (𝓗_[B]^n(Y; ℚ)).presheaf.obj (op ⊤)) :
+    (𝓗_[S]^n(X; ℚ)).presheaf.obj (op U) :=
+  (𝓗_[S]^n(X; ℚ)).presheaf.map (eqToHom hU.symm).op
     (supportRelativeCohomologySectionOpenImage f hf S B hB n s)
 
 end AlgebraicTopology.Singular

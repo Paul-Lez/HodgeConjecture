@@ -99,7 +99,7 @@ def lowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (hK : ∀ j, j < n → IsZero (K.homology j)) (hflasque : ∀ j, (K.X j).IsFlasque)
     (U : Opens X) :
     (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n ≅
-      (K.homology n).obj.obj (op U) :=
+      (K.homology n).presheaf.obj (op U) :=
   let := sectionCohomologyToSheafSection_isIso_lowest X K N n hK hflasque U
   asIso (sectionCohomologyToSheafSection X K n U)
 

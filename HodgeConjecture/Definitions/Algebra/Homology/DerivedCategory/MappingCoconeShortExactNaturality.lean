@@ -19,7 +19,6 @@ namespace CochainComplex.mappingCocone
 variable {C : Type*} [Category* C] [Abelian C]
   {S T : ShortComplex (CochainComplex C ℤ)}
 
-set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Homology comparison induced by the canonical short-exact-sequence
 lift. Its source degree is one larger than the cone degree. -/

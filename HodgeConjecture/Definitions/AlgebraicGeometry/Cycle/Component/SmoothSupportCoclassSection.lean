@@ -53,7 +53,7 @@ def cycleComponentSmoothClosedLiftCoclassSection :
     -- The support is the image of `Z_reg`; if `Z ⊆ X` is the variety, the ambient space is the
     -- `X \ Z_sing` open, as a complex manifold.
     (𝓗_[Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x))]^(2 * p)
-      (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)); ℚ)).obj.obj
+      (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)); ℚ)).presheaf.obj
       (op ⊤) :=
   letI := cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
@@ -95,7 +95,7 @@ the sheaf on `X(ℂ)` associated with `V ↦ H^{2p}(V, V \ Z(ℂ); ℚ)`. It is 
 transported along the open embedding `(X \ Z_sing)(ℂ) ↪ X(ℂ)`. -/
 def cycleComponentSmoothSupportCoclassSection :
     -- The support is `Z(ℂ)`, the complex points of the subvariety, inside `X(ℂ)`.
-    (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).obj.obj
+    (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj
       -- The open set of complex points of the complement of the singular boundary, i.e. `X(ℂ) \ Z_sing(ℂ)`.
       (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
   supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)

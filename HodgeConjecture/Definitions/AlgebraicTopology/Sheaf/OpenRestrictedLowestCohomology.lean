@@ -50,8 +50,8 @@ def openRestrictionTopSectionComplexIso :
 /-- Exact open restriction identifies sections of the two actual homology sheaves. -/
 def openRestrictionHomologyTopSectionsIso (n : ℤ) :
     (((((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
-      ℤᵘᵖ).obj K).homology n).obj.obj (op (⊤ : Opens (TopCat.of U)))) ≅
-        (K.homology n).obj.obj (op U) :=
+      ℤᵘᵖ).obj K).homology n).presheaf.obj (op (⊤ : Opens (TopCat.of U)))) ≅
+        (K.homology n).presheaf.obj (op U) :=
   (supportEvaluation (TopCat.of U) ⊤).mapIso
     ((K.sc n).mapHomologyIso (U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u})) ≪≫
       (openRestrictionTopSectionsIso X U).app (K.homology n)
@@ -66,7 +66,7 @@ def openRestrictedLowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
         ℤᵘᵖ).obj K).homology j))
     (hflasque : ∀ j, (K.X j).IsFlasque) :
     (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n ≅
-      (K.homology n).obj.obj (op U) :=
+      (K.homology n).presheaf.obj (op U) :=
   let L := ((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
     ℤᵘᵖ).obj K
   have hLF (j : ℤ) : (L.X j).IsFlasque := by
