@@ -44,10 +44,30 @@ open Point
 variable (X : Over (Spec ↧ℂ))
   [IsProjective X.hom]
 
+/-- Every open subset of the analytification of a projective scheme smooth of a fixed relative
+dimension is paracompact.  Unlike the dimension-free specialization below, this does not require
+integrality: the explicitly supplied smooth dimension already provides the manifold model. -/
+theorem openParacompactSpace_of_smoothOfRelativeDimension (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom]
+    (U : Opens (ComplexPoint X)) : ParacompactSpace U :=
+  opens_paracompactSpace_of_compact_chartedSpace (H := Fin d → ℂ) U
+
 /-- Every open subset of a smooth projective complex analytification is paracompact. -/
 theorem openParacompactSpace [IsIntegral X.left] [Smooth X.hom]
     (U : Opens (ComplexPoint X)) : ParacompactSpace U :=
-  opens_paracompactSpace_of_compact_chartedSpace (H := Fin (dim X.left) → ℂ) U
+  openParacompactSpace_of_smoothOfRelativeDimension X (dim X.left) U
+
+/-- Every term of the rational singular-cochain sheaf resolution on a projective
+analytification smooth of a specified relative dimension is flasque.  This avoids the
+unnecessary integrality hypothesis of the dimension-free specialization below. -/
+theorem rationalSingularCochainSheafIsFlasque_of_smoothOfRelativeDimension (d n : ℕ)
+    [SmoothOfRelativeDimension d X.hom] :
+    TopCat.Sheaf.IsFlasque
+      (AlgebraicTopology.Singular.singularCochainSheaf ℚ
+        (TopCat.of (ComplexPoint X)) n) := by
+  let : ∀ U : Opens (ComplexPoint X), ParacompactSpace U :=
+    openParacompactSpace_of_smoothOfRelativeDimension X d
+  infer_instance
 
 /-- Every term of the rational singular-cochain sheaf resolution on a smooth projective
 analytification is flasque. -/
@@ -56,9 +76,19 @@ theorem rationalSingularCochainSheafIsFlasque [IsIntegral X.left] [Smooth X.hom]
     TopCat.Sheaf.IsFlasque
       (AlgebraicTopology.Singular.singularCochainSheaf ℚ
         (TopCat.of (ComplexPoint X)) n) := by
+  exact rationalSingularCochainSheafIsFlasque_of_smoothOfRelativeDimension X (dim X.left) n
+
+/-- Ordinary rational singular cochains compute the global sections of the chosen
+singular-cochain sheaf complex on a projective analytification smooth of a specified relative
+dimension. -/
+theorem rationalSingularCochain_globalComparison_quasiIso_of_smoothOfRelativeDimension
+    (d : ℕ) [SmoothOfRelativeDimension d X.hom] :
+    QuasiIso
+      (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ
+        (TopCat.of (ComplexPoint X))) := by
   let : ∀ U : Opens (ComplexPoint X), ParacompactSpace U :=
-    openParacompactSpace X
-  infer_instance
+    openParacompactSpace_of_smoothOfRelativeDimension X d
+  exact AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
 
 /-- Ordinary rational singular cochains compute the global sections of the chosen
 singular-cochain sheaf complex on a smooth projective analytification. -/
@@ -67,8 +97,7 @@ theorem rationalSingularCochain_globalComparison_quasiIso
     QuasiIso
       (AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex ℚ
         (TopCat.of (ComplexPoint X))) := by
-  let : ∀ U : Opens (ComplexPoint X), ParacompactSpace U :=
-    openParacompactSpace X
-  exact AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso
+  exact rationalSingularCochain_globalComparison_quasiIso_of_smoothOfRelativeDimension
+    X (dim X.left)
 
 end AlgebraicGeometry.ComplexPoint

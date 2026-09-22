@@ -49,6 +49,7 @@ open CategoryTheory CategoryTheory.Limits Finsupp AlgebraicTopology.OrderedCechT
 namespace AlgebraicTopology
 
 variable {ι : Type} [LinearOrder ι]
+variable {C : Type 1} [Category C] [Preadditive C] [HasCoproducts C]
 
 /-- A nonempty finite set of cover indices. -/
 public abbrev CoverSupport (ι : Type) := {s : Finset ι // s.Nonempty}
@@ -63,8 +64,9 @@ public theorem tupleSupport_subset_iff {n m : ℕ} (a : Fin (n + 1) → ι) (b :
 
 /-- A contravariant diagram of chain complexes on nonempty finite sets of cover indices: the
 generic local intersection-chain input of the ordered Čech construction. -/
-public abbrev SupportChainModels (ι : Type) :=
-  (CoverSupport ι)ᵒᵖ ⥤ ChainComplex AddCommGrpCat ℕ
+public abbrev SupportChainModels (ι : Type) (C : Type 1 := AddCommGrpCat) [Category C]
+    [Preadditive C] :=
+  (CoverSupport ι)ᵒᵖ ⥤ ChainComplex C ℕ
 
 /-- A class of ordered tuples, one predicate per simplicial degree, closed under faces. -/
 public structure TupleClass (ι : Type) where
@@ -102,7 +104,7 @@ public structure Admissible (P Q : TupleClass ι) {n m : ℕ}
 
 namespace SupportChainModels
 
-variable (M : SupportChainModels ι)
+variable (M : SupportChainModels ι C)
 
 /-- The local chain model at a nonempty support. -/
 public abbrev model (s : CoverSupport ι) := M.obj (Opposite.op s)
@@ -123,7 +125,7 @@ public theorem face_comp {r s t : CoverSupport ι} (hrs : r.1 ⊆ s.1) (hst : s.
   rfl
 
 /-- The coproduct of local models over the tuples of a class in one simplicial degree. -/
-public abbrev cechObject (P : TupleClass ι) (n : ℕ) : ChainComplex AddCommGrpCat ℕ :=
+public abbrev cechObject (P : TupleClass ι) (n : ℕ) : ChainComplex C ℕ :=
   ∐ fun a : {a : Fin (n + 1) → ι // P.mem n a} ↦ M.model (tupleSupport a.1)
 
 /-- The face map from the model of `a` to the model of `b`, or zero if `b` is not supported in
@@ -293,7 +295,7 @@ public theorem realize_boundary_realize_boundary (P : TupleClass ι) (n : ℕ) :
 /-- The alternating-face bicomplex of the local models over a class of tuples, as a chain
 complex of chain complexes. -/
 public def cechComplex (P : TupleClass ι) :
-    HomologicalComplex₂ AddCommGrpCat (ComplexShape.down ℕ) (ComplexShape.down ℕ) :=
+    HomologicalComplex₂ C (ComplexShape.down ℕ) (ComplexShape.down ℕ) :=
   ChainComplex.of (M.cechObject P)
     (fun n ↦ M.realize P P (boundary : Formal ι (n + 2) →ₗ[ℤ] Formal ι (n + 1)))
     (M.realize_boundary_realize_boundary P)
@@ -310,7 +312,7 @@ public theorem cechComplex_d (P : TupleClass ι) (n : ℕ) :
     (fun n ↦ M.realize P P (boundary : Formal ι (n + 2) →ₗ[ℤ] Formal ι (n + 1))) n
 
 /-- The total complex of the ordered Čech bicomplex over a class of tuples. -/
-public abbrev cechTotal (P : TupleClass ι) : ChainComplex AddCommGrpCat ℕ :=
+public abbrev cechTotal (P : TupleClass ι) : ChainComplex C ℕ :=
   (M.cechComplex P).total (ComplexShape.down ℕ)
 
 /-- Realize a family of admissible formal operators commuting with the boundary on the source

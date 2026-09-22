@@ -64,8 +64,8 @@ private lemma relativeChainMap_mono (X : TopPair.{u}) :
     (ModuleCat.of R R)).map X.hom)
   apply Functor.map_mono
 
-/-- Singular chains of a pair form a short exact sequence. -/
-private lemma relativeChainShortComplex_shortExact (X : TopPair.{u}) :
+/-- Singular chains of a topological pair form a short exact sequence. -/
+lemma relativeChainShortComplex_shortExact (X : TopPair.{u}) :
     (relativeChainShortComplex R X).ShortExact := by
   let : Mono ((chainPairFunctor R).obj X).hom := relativeChainMap_mono R X
   exact

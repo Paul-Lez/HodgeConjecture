@@ -258,10 +258,12 @@ end Singular
 
 namespace SupportChainModels
 
-variable {ι : Type} [LinearOrder ι] {M N : SupportChainModels ι}
+variable {ι : Type} [LinearOrder ι]
+  {C : Type 1} [Category C] [Preadditive C] [HasCoproducts C]
+  {M N : SupportChainModels ι C}
 
 /-- A natural morphism between contravariant diagrams of local chain models. -/
-public abbrev Hom (M N : SupportChainModels ι) := M ⟶ N
+public abbrev Hom (M N : SupportChainModels ι C) := M ⟶ N
 
 namespace Hom
 
@@ -323,6 +325,53 @@ public def cechMap (P : TupleClass ι) : M.cechComplex P ⟶ N.cechComplex P whe
     obtain rfl : i = j + 1 := hij.symm
     rw [M.cechComplex_d, N.cechComplex_d]
     exact η.realize_naturality P P _
+
+/-- The map on ordered Čech complexes is functorial in the natural map of local chain
+models. -/
+public lemma cechMap_comp {P : SupportChainModels ι C}
+    (f : Hom M N) (g : Hom N P) (T : TupleClass ι) :
+    cechMap (f ≫ g) T = cechMap f T ≫ cechMap g T := by
+  apply HomologicalComplex.Hom.ext
+  funext n
+  change Limits.Sigma.map
+      (fun a : {a : Fin (n + 1) → ι // T.mem n a} ↦
+        f.app (Opposite.op (tupleSupport a.1)) ≫
+          g.app (Opposite.op (tupleSupport a.1))) =
+    Limits.Sigma.map (fun a : {a : Fin (n + 1) → ι // T.mem n a} ↦
+        f.app (Opposite.op (tupleSupport a.1))) ≫
+      Limits.Sigma.map (fun a : {a : Fin (n + 1) → ι // T.mem n a} ↦
+        g.app (Opposite.op (tupleSupport a.1)))
+  exact (Limits.Sigma.map_comp_map _ _).symm
+
+set_option backward.isDefEq.respectTransparency false in
+/-- A natural map of local models commutes with the inclusion of normalized
+ordered tuples into all ordered tuples. -/
+@[reassoc]
+public theorem cechMap_comp_normalizedInclusion :
+  η.cechMap TupleClass.strictMono ≫ N.normalizedInclusion =
+      M.normalizedInclusion ≫ η.cechMap TupleClass.all := by
+  apply HomologicalComplex.Hom.ext
+  funext n
+  simp only [HomologicalComplex.comp_f, cechMap, normalizedInclusion,
+    strictInclusion, monotoneInclusion, realizeChainMap_f]
+  rw [← Category.assoc, η.realize_naturality
+    TupleClass.strictMono TupleClass.monotone (LinearMap.id),
+    Category.assoc, η.realize_naturality
+      TupleClass.monotone TupleClass.all (LinearMap.id),
+    ← Category.assoc]
+
+/-- The preceding naturality survives direct-sum totalization. -/
+@[reassoc]
+public theorem totalCechMap_comp_totalNormalizedInclusion :
+    HomologicalComplex₂.total.map (η.cechMap TupleClass.strictMono)
+        (ComplexShape.down ℕ) ≫ N.totalNormalizedInclusion =
+      M.totalNormalizedInclusion ≫
+        HomologicalComplex₂.total.map (η.cechMap TupleClass.all)
+          (ComplexShape.down ℕ) := by
+  unfold SupportChainModels.totalNormalizedInclusion
+  rw [← HomologicalComplex₂.total.map_comp,
+    η.cechMap_comp_normalizedInclusion,
+    HomologicalComplex₂.total.map_comp]
 
 end Hom
 

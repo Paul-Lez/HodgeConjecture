@@ -48,7 +48,9 @@ namespace AlgebraicTopology
 
 namespace SupportChainModels
 
-variable {ι : Type} [LinearOrder ι] (M : SupportChainModels ι)
+variable {ι : Type} [LinearOrder ι]
+  {C : Type 1} [Category C] [Preadditive C] [HasCoproducts C]
+  (M : SupportChainModels ι C)
 
 /-! ### Sorting with sign -/
 

@@ -47,7 +47,8 @@ namespace AlgebraicTopology
 
 section BicomplexLemmas
 
-variable (K : HomologicalComplex₂ AddCommGrpCat (ComplexShape.down ℕ) (ComplexShape.down ℕ))
+variable {C : Type 1} [Category C] [Preadditive C] [HasCoproducts C]
+  (K : HomologicalComplex₂ C (ComplexShape.down ℕ) (ComplexShape.down ℕ))
 
 /-- A summand inclusion followed by the total differential is the sum of the horizontal and
 vertical summand differentials. -/
@@ -90,7 +91,8 @@ public theorem d₂_zero (p n : ℕ) : K.d₂ (ComplexShape.down ℕ) p 0 n = 0 
 
 end BicomplexLemmas
 
-variable {K M : HomologicalComplex₂ AddCommGrpCat (ComplexShape.down ℕ) (ComplexShape.down ℕ)}
+variable {C : Type 1} [Category C] [Preadditive C] [HasCoproducts C]
+variable {K M : HomologicalComplex₂ C (ComplexShape.down ℕ) (ComplexShape.down ℕ)}
   {φ ψ : K ⟶ M} (h : Homotopy φ ψ)
 
 /-- The summand formula for totalizing a horizontal homotopy: on bidegree `(p, q)` it is the

@@ -24,6 +24,131 @@ variable {M : Type} [TopologicalSpace M]
 
 variable (X : TopCat.{0}) (S : Set X) (n : ℕ)
 
+/-- Transport a sheafified relative-cohomology section along an equality of the
+displayed support sets. -/
+def supportRelativeCohomologySectionTransport
+    {S' : Set X} (hS : S' = S) (V : Opens X)
+    (s : (supportRelativeCohomologySheaf X S' n).obj.obj (op V)) :
+    (supportRelativeCohomologySheaf X S n).obj.obj (op V) := by
+  subst S'
+  exact s
+
+/-- Transport a sheafified relative-cohomology section simultaneously along equalities of the
+displayed support and the open on which the section is defined. -/
+def supportRelativeCohomologySectionSupportOpenTransport
+    {S' : Set X} (hS : S' = S) {U' U : Opens X} (hU : U' = U)
+    (s : (supportRelativeCohomologySheaf X S' n).obj.obj (op U')) :
+    (supportRelativeCohomologySheaf X S n).obj.obj (op U) := by
+  subst S'
+  subst U'
+  exact s
+
+@[simp] theorem supportRelativeCohomologySectionSupportOpenTransport_rfl
+    (U : Opens X) (s : (supportRelativeCohomologySheaf X S n).obj.obj (op U)) :
+    supportRelativeCohomologySectionSupportOpenTransport X S n rfl rfl s = s := rfl
+
+@[simp] theorem supportRelativeCohomologySectionTransport_rfl
+    (V : Opens X) (s : (supportRelativeCohomologySheaf X S n).obj.obj (op V)) :
+    supportRelativeCohomologySectionTransport X S n rfl V s = s := rfl
+
+/-- Successive transport first in the support and then simultaneously in the support and
+the displayed open is the single transport along the composite equalities. -/
+theorem supportRelativeCohomologySectionSupportOpenTransport_comp_support
+    {S₀ S₁ : Set X} (h₀₁ : S₀ = S₁) (h₁S : S₁ = S)
+    {U' U : Opens X} (hU : U' = U)
+    (s : (supportRelativeCohomologySheaf X S₀ n).obj.obj (op U')) :
+    supportRelativeCohomologySectionSupportOpenTransport X S n h₁S hU
+        (supportRelativeCohomologySectionTransport X S₁ n h₀₁ U' s) =
+      supportRelativeCohomologySectionSupportOpenTransport X S n (h₀₁.trans h₁S) hU s := by
+  subst S₀
+  subst S₁
+  subst U'
+  rfl
+
+/-- Transport a stalk element along an equality of the displayed supports. -/
+def supportRelativeCohomologyStalkTransport
+    {S' : Set X} (hS : S' = S) (x : X)
+    (a : (supportRelativeCohomologySheaf X S' n).presheaf.stalk x) :
+    (supportRelativeCohomologySheaf X S n).presheaf.stalk x := by
+  subst S'
+  exact a
+
+@[simp] theorem supportRelativeCohomologyStalkTransport_rfl
+    (x : X) (a : (supportRelativeCohomologySheaf X S n).presheaf.stalk x) :
+    supportRelativeCohomologyStalkTransport X S n rfl x a = a := rfl
+
+@[simp] theorem supportRelativeCohomologyStalkTransport_zero
+    {S' : Set X} (hS : S' = S) (x : X) :
+    supportRelativeCohomologyStalkTransport X S n hS x
+      (0 : (supportRelativeCohomologySheaf X S' n).presheaf.stalk x) = 0 := by
+  subst S'
+  rfl
+
+/-- Germ formation commutes with transport of a section along an equality of supports. -/
+theorem supportRelativeCohomologySectionTransport_germ
+    {S' : Set X} (hS : S' = S) (V : Opens X) (x : X) (hx : x ∈ V)
+    (s : (supportRelativeCohomologySheaf X S' n).obj.obj (op V)) :
+    (supportRelativeCohomologySheaf X S n).presheaf.germ V x hx
+      (supportRelativeCohomologySectionTransport X S n hS V s) =
+    supportRelativeCohomologyStalkTransport X S n hS x
+      ((supportRelativeCohomologySheaf X S' n).presheaf.germ V x hx s) := by
+  subst S'
+  rfl
+
+/-- Global-section germs commute with support transport. -/
+theorem supportRelativeCohomologySectionTransport_Γgerm
+    {S' : Set X} (hS : S' = S) (x : X)
+    (s : (supportRelativeCohomologySheaf X S' n).obj.obj (op ⊤)) :
+    (supportRelativeCohomologySheaf X S n).presheaf.Γgerm x
+      (supportRelativeCohomologySectionTransport X S n hS ⊤ s) =
+    supportRelativeCohomologyStalkTransport X S n hS x
+      ((supportRelativeCohomologySheaf X S' n).presheaf.Γgerm x s) := by
+  subst S'
+  rfl
+
+/-- Sheafification of a local relative class is unchanged by transporting the displayed
+support set along an equality.  Keeping this as a named lemma avoids exposing dependent
+casts when two geometric presentations have been proved to have the same analytic image. -/
+theorem supportRelativeCohomologyToSheaf_transport_support
+    {S' : Set X} (hS : S' = S) (V : Opens X)
+    (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S') n) :
+    hS ▸ ((supportRelativeCohomologyToSheaf X S' n).app (op V) a) =
+      (supportRelativeCohomologyToSheaf X S n).app (op V) (hS ▸ a) := by
+  subst S'
+  rfl
+
+/-- Germ formation commutes with transport along an equality of support sets. -/
+theorem supportRelativeCohomologyGerm_transport_support
+    {S' : Set X} (hS : S' = S) (V : Opens X) (x : X) (hx : x ∈ V)
+    (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S') n) :
+    hS ▸ supportRelativeCohomologyGerm X S' n V x hx a =
+      supportRelativeCohomologyGerm X S n V x hx (hS ▸ a) := by
+  subst S'
+  rfl
+
+/-- The same germ-transport statement expressed through the named stalk transport. -/
+theorem supportRelativeCohomologyStalkTransport_germ
+    {S' : Set X} (hS : S' = S) (V : Opens X) (x : X) (hx : x ∈ V)
+    (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S') n) :
+    supportRelativeCohomologyStalkTransport X S n hS x
+      (supportRelativeCohomologyGerm X S' n V x hx a) =
+    supportRelativeCohomologyGerm X S n V x hx (hS ▸ a) := by
+  subst S'
+  rfl
+
+/-- Restriction of neighborhood relative cohomology commutes with transport of
+the displayed support set. -/
+theorem neighborhoodSupportRelativeCohomologyMap_transport_support
+    {S' : Set X} (hS : S' = S) {U V : Opens X} (hUV : U ≤ V)
+    (a : RelativeCohomology ℚ
+      (neighborhoodSupportComplementPair (V : Set X) S') n) :
+    relativeCohomologyMap ℚ n
+        (neighborhoodSupportInclusionPairMap hUV S) (hS ▸ a) =
+      hS ▸ relativeCohomologyMap ℚ n
+        (neighborhoodSupportInclusionPairMap hUV S') a := by
+  subst S'
+  rfl
+
 @[simp] theorem supportRelativeCohomologyPresheaf_map_apply {U V : Opens X}
     (hUV : U ≤ V) (a : RelativeCohomology ℚ (neighborhoodSupportComplementPair (V : Set X) S) n) :
     (supportRelativeCohomologyPresheaf X S n).map (homOfLE hUV).op a =

@@ -43,6 +43,14 @@ def rationalToSingularCochainComplexInt :
       singularCochainSheafComplexInt X ℚ :=
   constantsToSingularCochainComplexInt X ℚ
 
+/-- The rational constant-to-singular comparison only needs a supplied smooth relative
+dimension; integrality was used only to recover that dimension automatically. -/
+lemma rationalToSingularCochainComplexInt_quasiIso_of_smoothOfRelativeDimension (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom] :
+    QuasiIso (rationalToSingularCochainComplexInt X) := by
+  change QuasiIso (constantsToSingularCochainComplexInt X ℚ)
+  exact constantsToSingularCochainComplexInt_quasiIso_of_smoothOfRelativeDimension X d ℚ
+
 /-- The rational constant-to-singular comparison is a quasi-isomorphism on a smooth
 complex-point space. -/
 lemma rationalToSingularCochainComplexInt_quasiIso
@@ -64,6 +72,15 @@ def rationalCohomologySingularCochainEquiv
   Localization.SmallShiftedHom.postcompEquiv
     (rationalToSingularCochainComplexInt X)
     (rationalToSingularCochainComplexInt_quasiIso X)
+
+/-- The constant-sheaf-to-singular-cochain hypercohomology comparison with an explicitly
+provided smooth relative dimension. -/
+def rationalCohomologySingularCochainEquiv_of_smoothOfRelativeDimension (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom] (n : ℤ) :
+    H^n(X; ℚ) ≃ RationalSingularCochainHypercohomology X n :=
+  Localization.SmallShiftedHom.postcompEquiv
+    (rationalToSingularCochainComplexInt X)
+    (rationalToSingularCochainComplexInt_quasiIso_of_smoothOfRelativeDimension X d)
 
 /-- The comparison equivalence is the map on hypercohomology induced by the canonical
 constant-to-singular-cochain morphism. -/

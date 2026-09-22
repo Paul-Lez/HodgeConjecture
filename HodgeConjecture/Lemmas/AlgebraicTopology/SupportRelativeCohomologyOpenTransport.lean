@@ -107,4 +107,19 @@ theorem supportRelativeCohomologySectionOnOpen_restrict (n : ℕ) (U : Opens X)
   rw [← ConcreteCategory.comp_apply, ← Functor.map_comp, he]
   exact supportRelativeCohomologySectionOpenImage_restrict f hf S B hB n s V
 
+/-- Changing only the displayed support and image-open equalities in an open-transported
+section is exactly dependent transport of the resulting section. -/
+theorem supportRelativeCohomologySectionOnOpen_transport
+    {S' : Set X} (hS : S' = S)
+    (hB' : f ⁻¹' S' = B)
+    {U' U : Opens X} (hU : U' = U)
+    (hImage' : hf.functor.obj ⊤ = U') (hImage : hf.functor.obj ⊤ = U)
+    (n : ℕ) (s : (supportRelativeCohomologySheaf Y B n).obj.obj (op ⊤)) :
+    supportRelativeCohomologySectionOnOpen f hf S B hB n U hImage s =
+      supportRelativeCohomologySectionSupportOpenTransport X S n hS hU
+        (supportRelativeCohomologySectionOnOpen f hf S' B hB' n U' hImage' s) := by
+  subst S'
+  subst U'
+  rfl
+
 end AlgebraicTopology.Singular

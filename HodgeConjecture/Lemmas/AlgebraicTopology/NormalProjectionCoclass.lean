@@ -26,6 +26,20 @@ variable (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
   (hS : ∀ y ∈ e.source, y ∈ S ↔ (e y).2 = 0)
 
 omit [NormedSpace ℝ E] in
+/-- Transporting the support set in a normal-projection coclass is the same as rebuilding the
+coclass with the transported support-membership proof.  This small dependent-transport lemma is
+useful when comparing different closed-immersion presentations of the same analytic support. -/
+theorem chartNormalProjectionCoclass_transport_support
+    {S' : Set M} (h : S' = S)
+    (hS' : ∀ y ∈ e.source, y ∈ S' ↔ (e y).2 = 0)
+    (W : Set M) (hW : W ⊆ e.source) :
+    h ▸ chartNormalProjectionCoclass E c e S' hS' W hW =
+      chartNormalProjectionCoclass E c e S
+        (fun y hy ↦ by rw [← h]; exact hS' y hy) W hW := by
+  subst S
+  rfl
+
+omit [NormedSpace ℝ E] in
 theorem neighborhoodSupportInclusion_comp_chartNormalProjection
     {W V : Set M} (hWV : W ⊆ V) (hV : V ⊆ e.source) :
     neighborhoodSupportInclusionPairMap hWV S ≫ chartNormalProjectionPair E c e S hS V hV =

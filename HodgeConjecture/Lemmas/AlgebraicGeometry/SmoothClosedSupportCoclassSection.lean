@@ -124,4 +124,80 @@ theorem smoothClosedSupportCoclassSection_unique_of_normalization
       (mem_smoothClosedSupportChartOpen X Y i m d z)).symm
   · rw [hzero x hxS, smoothClosedSupportCoclassStalk_eq_zero X Y i m d x hxS]
 
+section CrossPresentation
+
+variable (Y' : Over (Spec (.of ℂ))) (i' : Y' ⟶ X)
+  [SmoothOfRelativeDimension m Y'.hom] [IsClosedImmersion i'.left]
+
+/-- Two smooth closed-immersion presentations with the same analytic image give the
+same globally normalized support coclass.  The support equality is the only transport
+in the statement; compatibility of the normal orientations is a theorem of the
+holomorphic transition maps, not an extra hypothesis. -/
+theorem smoothClosedSupportCoclassSection_eq_cross
+    (hS : Set.range (Point.map i') = Set.range (Point.map i)) :
+    smoothClosedSupportCoclassSection X Y i m d =
+      supportRelativeCohomologySectionTransport
+        (TopCat.of (ComplexPoint X)) (Set.range (Point.map i)) (2 * (d - m))
+        hS ⊤ (smoothClosedSupportCoclassSection X Y' i' m d) := by
+  apply TopCat.Presheaf.section_ext (smoothClosedSupportCoclassSheaf X Y i m d)
+  intro x hx
+  change (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.Γgerm x
+      (smoothClosedSupportCoclassSection X Y i m d) =
+    (smoothClosedSupportCoclassSheaf X Y i m d).presheaf.Γgerm x
+      (supportRelativeCohomologySectionTransport
+        (TopCat.of (ComplexPoint X)) (Set.range (Point.map i)) (2 * (d - m))
+        hS ⊤ (smoothClosedSupportCoclassSection X Y' i' m d))
+  by_cases hxS : x ∈ Set.range (Point.map i)
+  · have hxS0 := hxS
+    obtain ⟨z, hz⟩ := hxS
+    obtain ⟨z', hz'⟩ : x ∈ Set.range (Point.map i') := by
+      rwa [hS]
+    have hxz : x ∈ smoothClosedSupportChartOpen X Y i m d z := by
+      simpa only [hz] using mem_smoothClosedSupportChartOpen X Y i m d z
+    have hxz' : x ∈ smoothClosedSupportChartOpen X Y' i' m d z' := by
+      simpa only [hz'] using mem_smoothClosedSupportChartOpen X Y' i' m d z'
+    rw [supportRelativeCohomologySectionTransport_Γgerm]
+    obtain ⟨W, hW, hW', hxW, heq⟩ :=
+      exists_open_smoothClosedSupportChartCoclass_eq_cross
+        X Y i m d z Y' i' z' hS x hxS0 hxz hxz'
+    have hWU : (W : Set (ComplexPoint X)) ⊆
+        (smoothClosedSupportChartOpen X Y i m d z : Set (ComplexPoint X)) := hW
+    have hWV : (W : Set (ComplexPoint X)) ⊆
+        (smoothClosedSupportChartOpen X Y' i' m d z' : Set (ComplexPoint X)) := hW'
+    calc
+      _ = smoothClosedSupportChartCoclassGerm X Y i m d z x hxz :=
+        smoothClosedSupportCoclassSection_germ_eq_chart X Y i m d z x hxz
+      _ = supportRelativeCohomologyStalkTransport
+          (TopCat.of (ComplexPoint X)) (Set.range (Point.map i)) (2 * (d - m))
+          hS x (smoothClosedSupportChartCoclassGerm X Y' i' m d z' x hxz') := by
+        unfold smoothClosedSupportChartCoclassGerm
+        rw [supportRelativeCohomologyStalkTransport_germ]
+        apply supportRelativeCohomologyGerm_eq_of_restrict_eq
+          (TopCat.of (ComplexPoint X)) (Set.range (Point.map i)) (2 * (d - m))
+          (U := smoothClosedSupportChartOpen X Y i m d z)
+          (V := smoothClosedSupportChartOpen X Y' i' m d z')
+          hWU hWV x hxW
+        rw [smoothClosedSupportChartCoclass_restrict X Y i m d z hWU (le_refl _)]
+        rw [neighborhoodSupportRelativeCohomologyMap_transport_support
+          (TopCat.of (ComplexPoint X)) (Set.range (Point.map i)) (2 * (d - m))
+          hS hWV (smoothClosedSupportChartCoclass X Y' i' m d z'
+            (smoothClosedSupportChartOpen X Y' i' m d z') (le_refl _))]
+        rw [smoothClosedSupportChartCoclass_restrict X Y' i' m d z' hWV (le_refl _)]
+        exact heq
+      _ = supportRelativeCohomologyStalkTransport
+          (TopCat.of (ComplexPoint X)) (Set.range (Point.map i)) (2 * (d - m))
+          hS x ((smoothClosedSupportCoclassSheaf X Y' i' m d).presheaf.Γgerm x
+            (smoothClosedSupportCoclassSection X Y' i' m d)) := by
+        congr 1
+        exact (smoothClosedSupportCoclassSection_germ_eq_chart
+          X Y' i' m d z' x hxz').symm
+  · rw [smoothClosedSupportCoclassSection_germ_eq_zero X Y i m d x hxS]
+    have hxS' : x ∉ Set.range (Point.map i') := by
+      rwa [hS]
+    rw [supportRelativeCohomologySectionTransport_Γgerm,
+      smoothClosedSupportCoclassSection_germ_eq_zero X Y' i' m d x hxS']
+    simp only [supportRelativeCohomologyStalkTransport_zero]
+
+end CrossPresentation
+
 end AlgebraicGeometry.ComplexPoint

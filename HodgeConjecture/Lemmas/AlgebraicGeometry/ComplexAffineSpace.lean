@@ -21,6 +21,8 @@ public import Mathlib.AlgebraicGeometry.AffineSpace
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.Logic.Equiv.PartialEquiv
 import Mathlib.Topology.Algebra.MvPolynomial
+import Mathlib.Analysis.Analytic.Polynomial
+public import Mathlib.Analysis.Analytic.Basic
 
 /-!
 # Complex points of affine space
@@ -228,6 +230,52 @@ lemma continuousOn_evaluate_basicOpen_affineSpaceEquiv_symm {n : Type}
       pow_ne_zero k ((mem_overOpen_basicOpen_iff_evaluate_ne_zero
         (X := Over.mk (complexAffineSpace n ↘ Spec ↧ℂ)) (U := ⊤) f _ trivial).mp hv)
   exact hrat.congr fun v hv ↦ h _ hv
+
+/-- Evaluation of a local regular section on affine space is complex analytic in the standard
+Euclidean coordinates.  The localization quotient is written explicitly as a quotient of two
+polynomial evaluations; the denominator is nonzero on the principal open. -/
+lemma analyticAt_evaluate_basicOpen_affineSpaceEquiv_symm
+    {n : ℕ} (f : Γ(complexAffineSpace (Fin n), ⊤))
+    (t : Γ(complexAffineSpace (Fin n), (complexAffineSpace (Fin n)).basicOpen f))
+    (v : Fin n → ℂ)
+    (hv : (affineSpaceEquiv (Fin n)).symm v ∈
+      overOpen ((complexAffineSpace (Fin n)).basicOpen f)) :
+    AnalyticAt ℂ
+      (fun w : Fin n → ℂ ↦ evaluate ((complexAffineSpace (Fin n)).basicOpen f) t
+        ((affineSpaceEquiv (Fin n)).symm w)) v := by
+  obtain ⟨k, a, h⟩ :=
+    exists_evaluate_basicOpen_eq_div (X := Over.mk (complexAffineSpace (Fin n) ↘ Spec ↧ℂ))
+      (isAffineOpen_top (complexAffineSpace (Fin n))) f t
+  have ha : AnalyticAt ℂ
+      (fun w : Fin n → ℂ ↦ evaluate ⊤ a ((affineSpaceEquiv (Fin n)).symm w)) v := by
+    rw [show (fun w : Fin n → ℂ ↦ evaluate ⊤ a ((affineSpaceEquiv (Fin n)).symm w)) =
+      (fun w : Fin n → ℂ ↦ MvPolynomial.eval w (affineGlobalPolynomial a)) by
+        funext w
+        exact evaluate_affineSpaceEquiv_symm_top a w]
+    exact AnalyticOnNhd.eval_mvPolynomial _ _ (Set.mem_univ _)
+  have hf : AnalyticAt ℂ
+      (fun w : Fin n → ℂ ↦ evaluate ⊤ f ((affineSpaceEquiv (Fin n)).symm w)) v := by
+    rw [show (fun w : Fin n → ℂ ↦ evaluate ⊤ f ((affineSpaceEquiv (Fin n)).symm w)) =
+      (fun w : Fin n → ℂ ↦ MvPolynomial.eval w (affineGlobalPolynomial f)) by
+        funext w
+        exact evaluate_affineSpaceEquiv_symm_top f w]
+    exact AnalyticOnNhd.eval_mvPolynomial _ _ (Set.mem_univ _)
+  have hne : evaluate ⊤ f ((affineSpaceEquiv (Fin n)).symm v) ≠ 0 := by
+    exact (mem_overOpen_basicOpen_iff_evaluate_ne_zero
+      (X := Over.mk (complexAffineSpace (Fin n) ↘ Spec ↧ℂ)) (U := ⊤) f
+      ((affineSpaceEquiv (Fin n)).symm v) trivial).mp hv
+  have hrat : AnalyticAt ℂ
+      (fun w : Fin n → ℂ ↦ evaluate ⊤ a ((affineSpaceEquiv (Fin n)).symm w) /
+        evaluate ⊤ f ((affineSpaceEquiv (Fin n)).symm w) ^ k) v :=
+    ha.div (hf.pow k) (pow_ne_zero k hne)
+  have hv' : v ∈ (affineSpaceEquiv (Fin n)).symm ⁻¹'
+      overOpen ((complexAffineSpace (Fin n)).basicOpen f) := hv
+  have hev : (affineSpaceEquiv (Fin n)).symm ⁻¹'
+      overOpen ((complexAffineSpace (Fin n)).basicOpen f) ∈ 𝓝 v :=
+    (isOpen_affineSpaceEquiv_symm_preimage_overOpen_basicOpen f).mem_nhds hv'
+  apply hrat.congr
+  filter_upwards [hev] with w hw
+  exact (h ((affineSpaceEquiv (Fin n)).symm w) hw).symm
 
 /-- The inverse coordinate map is continuous for every local regular-function subbasis set. -/
 lemma continuous_affineSpaceEquiv_symm (n : Type) :

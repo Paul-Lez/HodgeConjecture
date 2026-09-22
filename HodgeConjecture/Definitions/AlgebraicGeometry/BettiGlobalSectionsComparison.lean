@@ -370,7 +370,7 @@ def linearDualCochainComplexScIso
           HomologicalComplex.shortComplexFunctor']
         rw [ChainComplex.next_nat_succ]
         change ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap = D.d n (n + 1)
-        exact (HomologicalComplex.linearDualCochainComplex_d K n).symm
+        exact (HomologicalComplex.linearDualCochainComplex_d K n (n + 1)).symm
   · simp only [Iso.refl_hom, Category.id_comp, Category.comp_id,
       HomologicalComplex.shortComplexFunctor'_obj_g]
     dsimp only [ShortComplex.linearDual, ShortComplex.moduleCatMk,
@@ -378,7 +378,7 @@ def linearDualCochainComplexScIso
       HomologicalComplex.shortComplexFunctor']
     rw [ChainComplex.prev]
     change ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap = D.d n (n + 1)
-    exact (HomologicalComplex.linearDualCochainComplex_d K n).symm
+    exact (HomologicalComplex.linearDualCochainComplex_d K n (n + 1)).symm
 
 /-- Ordinary singular cohomology, presented as the homology of the algebraic-dual singular
 cochain complex. -/
@@ -473,6 +473,19 @@ def rationalSingularCochainHypercohomologyEquivCohomology
         |>.trans <|
         (AlgebraicTopology.Singular.HereditarilyParacompact.rationalSingularCohomologyEquivGlobalSections
           Y n).symm.toEquiv
+
+/-- On a smooth complex scheme whose analytification is hereditarily paracompact Hausdorff,
+rational constant-sheaf cohomology agrees with the repository's rational singular cohomology. -/
+def rationalCohomologyEquivSingularCohomology_of_smoothOfRelativeDimension
+    (d : ℕ) [SmoothOfRelativeDimension d X.hom]
+    [T2Space (ComplexPoint X)]
+    [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
+    (n : ℕ) :
+    H^(n : ℤ)(X; ℚ) ≃
+      AlgebraicTopology.Singular.Cohomology ℚ
+        (TopCat.of (ComplexPoint X)) n :=
+  (rationalCohomologySingularCochainEquiv_of_smoothOfRelativeDimension X d (n : ℤ)).trans
+    (rationalSingularCochainHypercohomologyEquivCohomology X n)
 
 /-- On a smooth complex scheme whose analytification is hereditarily paracompact Hausdorff,
 rational constant-sheaf cohomology agrees with the repository's rational singular cohomology. -/

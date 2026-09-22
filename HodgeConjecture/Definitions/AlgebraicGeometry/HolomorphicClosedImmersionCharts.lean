@@ -173,6 +173,91 @@ theorem analyticAt_closedImmersionNormalTransition_symm
     (closedImmersionNormalTransition X Y i m d z z' v)
     ((closedImmersionNormalTransition X Y i m d z z').map_source hv)
 
+section CrossPresentation
+
+variable (Y' : Over (Spec (.of ℂ))) (i' : Y' ⟶ X)
+  [SmoothOfRelativeDimension m Y'.hom] [IsClosedImmersion i'.left]
+  (z'Y : ComplexPoint Y')
+
+/-- The coordinate transition between holomorphic flattening charts coming from two
+possibly different smooth closed-immersion presentations in the same smooth ambient scheme. -/
+def closedImmersionNormalTransitionCross :
+    OpenPartialHomeomorph ((Fin m → ℂ) × (Fin (d - m) → ℂ))
+      ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
+  (closedImmersionHolomorphicFlatteningChart X Y i m d z).symm.trans
+    (closedImmersionHolomorphicFlatteningChart X Y' i' m d z'Y)
+
+/-- Cross-presentation transitions are holomorphic.  This statement only uses the two
+constructed ambient holomorphic charts; equality of their closed images is not needed. -/
+theorem analyticAt_closedImmersionNormalTransitionCross
+    (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
+    (hv : v ∈ (closedImmersionNormalTransitionCross X Y i m d z Y' i' z'Y).source) :
+    AnalyticAt ℂ (closedImmersionNormalTransitionCross X Y i m d z Y' i' z'Y) v := by
+  let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
+  let e' := closedImmersionHolomorphicFlatteningChart X Y' i' m d z'Y
+  let C := localChart X d (Point.map i z)
+  let C' := localChart X d (Point.map i' z'Y)
+  let A := closedImmersionNormalCoordinateChange X Y i m d z
+  let A' := closedImmersionNormalCoordinateChange X Y' i' m d z'Y
+  let y := e.symm v
+  have hyv : y ∈ e.source := e.map_target hv.1
+  have hyv' : y ∈ e'.source := hv.2
+  have hyC : y ∈ C.source := hyv.1.1
+  have hyC' : y ∈ C'.source := hyv'.1.1
+  have hAv := closedImmersionNormalCoordinateChange_symm_at_chart
+    X Y i m d z y hyv
+  change A.symm (e (e.symm v)) = C y at hAv
+  rw [e.right_inv hv.1] at hAv
+  have hA := (closedImmersionHolomorphicFlatteningChart_analytic
+    X Y i m d z y hyv).2
+  change AnalyticAt ℂ A.symm (e (e.symm v)) at hA
+  rw [e.right_inv hv.1] at hA
+  have hA' := (closedImmersionHolomorphicFlatteningChart_analytic
+    X Y' i' m d z'Y y hyv').1
+  have hCC : AnalyticAt ℂ (fun w => C' (C.symm w)) (C y) := by
+    apply analyticAt_localChart_transition X d (Point.map i z) (Point.map i' z'Y)
+    refine ⟨C.map_source hyC, ?_⟩
+    change C.symm (C y) ∈ C'.source
+    rw [C.left_inv hyC]
+    exact hyC'
+  have hCC' : AnalyticAt ℂ (fun w => C' (C.symm w)) (A.symm v) := hAv ▸ hCC
+  have hmiddle := hCC'.comp hA
+  have himage : C' (C.symm (A.symm v)) = C' y := by rw [hAv, C.left_inv hyC]
+  have hlast : AnalyticAt ℂ A' (C' (C.symm (A.symm v))) := himage ▸ hA'
+  exact hlast.comp (f := fun w => C' (C.symm (A.symm w))) (x := v) hmiddle
+
+/-- If the two smooth closed immersions have the same analytic image, their cross-presentation
+transition preserves the zero-normal plane in both directions. -/
+theorem closedImmersionNormalTransitionCross_preserves_support
+    (hS : Set.range (Point.map i) = Set.range (Point.map i'))
+    (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
+    (hv : v ∈ (closedImmersionNormalTransitionCross X Y i m d z Y' i' z'Y).source) :
+    (closedImmersionNormalTransitionCross X Y i m d z Y' i' z'Y v).2 = 0 ↔
+      v.2 = 0 := by
+  let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
+  let e' := closedImmersionHolomorphicFlatteningChart X Y' i' m d z'Y
+  have hy := e.map_target hv.1
+  have h1 := closedImmersionHolomorphicFlatteningChart_mem_range_iff
+    X Y i m d z (e.symm v) hy
+  have h2 := closedImmersionHolomorphicFlatteningChart_mem_range_iff
+    X Y' i' m d z'Y (e.symm v) hv.2
+  change e.symm v ∈ Set.range (Point.map i) ↔ (e (e.symm v)).2 = 0 at h1
+  rw [e.right_inv hv.1] at h1
+  rw [hS] at h1
+  exact h2.symm.trans h1
+
+/-- The inverse cross-presentation transition is holomorphic at the image of every source point. -/
+theorem analyticAt_closedImmersionNormalTransitionCross_symm
+    (v : (Fin m → ℂ) × (Fin (d - m) → ℂ))
+    (hv : v ∈ (closedImmersionNormalTransitionCross X Y i m d z Y' i' z'Y).source) :
+    AnalyticAt ℂ (closedImmersionNormalTransitionCross X Y i m d z Y' i' z'Y).symm
+      (closedImmersionNormalTransitionCross X Y i m d z Y' i' z'Y v) :=
+  analyticAt_closedImmersionNormalTransitionCross X Y' i' m d z'Y Y i z
+    (closedImmersionNormalTransitionCross X Y i m d z Y' i' z'Y v)
+    ((closedImmersionNormalTransitionCross X Y i m d z Y' i' z'Y).map_source hv)
+
+end CrossPresentation
+
 /-- For a point in a genuine overlap, the normal derivative has a constructed complex
 linear inverse. Only membership in the actual overlap is required. -/
 def closedImmersionNormalTransitionDerivativeEquiv (a : Fin m → ℂ)

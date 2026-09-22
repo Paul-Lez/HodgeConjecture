@@ -28,6 +28,18 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
 
+/-- Restriction along the identity inclusion of an open is the identity chain map. -/
+@[simp]
+lemma sectionComplexRestriction_id {I : Type*} (c : ComplexShape I)
+    (K : HomologicalComplex (Sheaf AddCommGrpCat.{u} X) c)
+    (V : Opens X) :
+    sectionComplexRestriction X c K (homOfLE (le_refl V)) = 𝟙 _ := by
+  apply HomologicalComplex.Hom.ext
+  funext n
+  change (K.X n).obj.map (homOfLE (le_refl V)).op = 𝟙 _
+  rw [← (K.X n).obj.map_id (op V)]
+  congr 1
+
 /-- Actual section restriction around a rectangle of open inclusions. -/
 lemma sectionComplexRestriction_square {I : Type*} (c : ComplexShape I)
     (K : HomologicalComplex (Sheaf AddCommGrpCat.{u} X) c)

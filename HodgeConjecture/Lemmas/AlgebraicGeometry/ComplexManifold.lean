@@ -228,16 +228,17 @@ instance isManifold_omega [SmoothOfRelativeDimension d X.hom] :
     Set.range_id, Set.inter_univ] using
     contDiffOn_localChart_transition X d z z'
 
-/-- Every analytic neighborhood of a smooth complex point contains an open contractible
-neighborhood. The smaller neighborhood is the inverse image of a Euclidean ball in the chosen
-algebraic coordinate chart. -/
-lemma exists_contractibleOpen_le [IsIntegral X.left] [Smooth X.hom]
+/-- Every analytic neighborhood of a point on a scheme smooth of a fixed relative dimension
+contains an open contractible neighborhood. The smaller neighborhood is the inverse image of a
+Euclidean ball in the chosen algebraic coordinate chart. -/
+lemma exists_contractibleOpen_le_of_smoothOfRelativeDimension
+    [SmoothOfRelativeDimension d X.hom]
     (x : ComplexPoint X)
     (U : TopologicalSpace.Opens (ComplexPoint X)) (hxU : x ∈ U) :
     ∃ (V : TopologicalSpace.Opens (ComplexPoint X)),
       x ∈ V ∧ ContractibleSpace V ∧ V ≤ U := by
-  let e := localChart X (dim X.left) x
-  have hxsource : x ∈ e.source := mem_localChart_source X (dim X.left) x
+  let e := localChart X d x
+  have hxsource : x ∈ e.source := mem_localChart_source X d x
   have hopen : IsOpen (e.target ∩ e.symm ⁻¹' (U : Set _)) :=
     e.isOpen_inter_preimage_symm U.2
   have hximage : e x ∈ e.target ∩ e.symm ⁻¹' (U : Set _) := by
@@ -267,6 +268,17 @@ lemma exists_contractibleOpen_le [IsIntegral X.left] [Smooth X.hom]
     have hzU : e.symm (e z) ∈ (U : Set _) := (hball hz.2).2
     rwa [e.left_inv hz.1] at hzU
   exact ⟨V, hxV, hVcontractible, hVU⟩
+
+/-- Every analytic neighborhood of a smooth complex point contains an open contractible
+neighborhood. This is the dimension-free form of
+`exists_contractibleOpen_le_of_smoothOfRelativeDimension`, using the dimension supplied by
+integrality and smoothness. -/
+lemma exists_contractibleOpen_le [IsIntegral X.left] [Smooth X.hom]
+    (x : ComplexPoint X)
+    (U : TopologicalSpace.Opens (ComplexPoint X)) (hxU : x ∈ U) :
+    ∃ (V : TopologicalSpace.Opens (ComplexPoint X)),
+      x ∈ V ∧ ContractibleSpace V ∧ V ≤ U :=
+  exists_contractibleOpen_le_of_smoothOfRelativeDimension X (dim X.left) x U hxU
 
 /-- The analytic topology on the smooth complex-point space is locally path connected. -/
 theorem locallyPathConnectedSpace [IsIntegral X.left] [Smooth X.hom] :

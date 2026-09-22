@@ -48,13 +48,21 @@ open CategoryTheory CategoryTheory.Limits Simplicial
 
 namespace AlgebraicTopology
 
-/-- Integral chains applied in the inner simplicial direction to an augmented Čech nerve. -/
-public noncomputable def integralCechAugmentedChains (A : Arrow SSet) :
-    SimplicialObject.Augmented (ChainComplex AddCommGrpCat ℕ) :=
+/-- Chains with coefficients in `R` applied in the inner simplicial direction to an augmented
+Čech nerve. -/
+public noncomputable def cechAugmentedChains
+    (C : Type 1) [Category C] [Preadditive C] [HasCoproducts C]
+    (R : C) (A : Arrow SSet) :
+    SimplicialObject.Augmented (ChainComplex C ℕ) :=
   ((SimplicialObject.Augmented.whiskering SSet
-    (ChainComplex AddCommGrpCat ℕ)).obj
-      ((SSet.chainComplexFunctor AddCommGrpCat).obj (AddCommGrpCat.of ℤ))).obj
+    (ChainComplex C ℕ)).obj
+      ((SSet.chainComplexFunctor C).obj R)).obj
         A.augmentedCechNerve
+
+/-- Integral chains applied in the inner simplicial direction to an augmented Čech nerve. -/
+public noncomputable abbrev integralCechAugmentedChains (A : Arrow SSet) :
+    SimplicialObject.Augmented (ChainComplex AddCommGrpCat ℕ) :=
+  cechAugmentedChains AddCommGrpCat (AddCommGrpCat.of ℤ) A
 
 /-- The integral Čech--simplicial first-quadrant bicomplex of an arrow of simplicial sets. -/
 public noncomputable def integralCechBicomplex (A : Arrow SSet) :

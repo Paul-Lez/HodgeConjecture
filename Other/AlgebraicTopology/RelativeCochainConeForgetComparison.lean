@@ -111,4 +111,73 @@ theorem relativeCochainCone_legacy_canonical_inclusion (n : ℕ) :
     (relativeDualCochainShortComplexInt_shortExact R X)
     ((n : ℤ) - 1) (n : ℤ) (by omega)).symm
 
+set_option maxHeartbeats 1000000 in
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- Universal coefficients commute with the actual quotient from absolute to relative chains.
+This is the absolute-target square before inserting the relative mapping-cone equivalence. -/
+theorem relativeDualCochain_toAbsolute_apply
+    (n : ℕ) (b : (relativeDualCochainShortComplexInt R X).X₁.homology (n : ℤ))
+    (z : Homology R X.fst n) :
+    HomologicalComplex.linearDualHomologyEquiv (SingularChainComplex R X.fst) n
+        (((relativeDualCochainShortComplexNat R X).X₂.extendHomologyIso
+          ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).hom.hom
+          (HomologicalComplex.homologyMap
+            (relativeDualCochainShortComplexInt R X).f (n : ℤ) b)) z =
+      HomologicalComplex.linearDualHomologyEquiv ((relativeChainFunctor R).obj X) n
+        (((((relativeDualCochainShortComplexNat R X).X₁).extendHomologyIso
+          ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).hom.hom) b)
+        ((relativeHomologyProjection R X n).hom z) := by
+  have he := HomologicalComplex.extendHomologyIso_hom_naturality
+    (HomologicalComplex.linearDualMap (relativeChainProjection R X))
+    ComplexShape.embeddingUpNat
+    (j := n) (j' := (n : ℤ)) rfl
+  have he' := ConcreteCategory.congr_hom he b
+  change ((relativeDualCochainShortComplexNat R X).X₂.extendHomologyIso
+      ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).hom.hom
+      (HomologicalComplex.homologyMap
+        (relativeDualCochainShortComplexInt R X).f (n : ℤ) b) =
+    HomologicalComplex.homologyMap
+      (HomologicalComplex.linearDualMap (relativeChainProjection R X)) n
+      (((((relativeDualCochainShortComplexNat R X).X₁).extendHomologyIso
+        ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).hom.hom) b) at he'
+  rw [he']
+  let b₀ := ((((relativeDualCochainShortComplexNat R X).X₁).extendHomologyIso
+    ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).hom.hom) b
+  exact HomologicalComplex.linearDualHomologyEquiv_naturality
+    (relativeChainProjection R X) n b₀ z
+
+set_option maxHeartbeats 1000000 in
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- The canonical relative cone comparison is compatible with forgetting support.
+
+This is the universal-coefficient square needed to read the actual ambient cochain component of
+a mapping-cone class.  It is proved directly from the naturality of the extension homology
+isomorphism and of the linear-dual homology equivalence; no representative or comparison map is
+chosen. -/
+theorem relativeCochainConeCohomologyEquivCanonical_toAbsolute
+    (n : ℕ)
+    (a : (CochainComplex.mappingCone (relativeCochainRestrictionInt R X)).homology
+      ((n : ℤ) - 1)) :
+    HomologicalComplex.linearDualHomologyEquiv (SingularChainComplex R X.fst) n
+        (((relativeDualCochainShortComplexNat R X).X₂.extendHomologyIso
+          ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).hom.hom
+          (HomologicalComplex.homologyMap
+            (relativeDualCochainShortComplexInt R X).f (n : ℤ)
+            ((relativeDualCochainHomologyIsoCone R X n).inv.hom a))) =
+      AlgebraicTopology.Singular.relativeCohomologyToAbsolute R X n
+        (relativeCochainConeCohomologyEquivCanonical R X n a) := by
+  ext z
+  change _ = (relativeCochainConeCohomologyEquivCanonical R X n a)
+    ((relativeHomologyProjection R X n).hom z)
+  change _ = HomologicalComplex.linearDualHomologyEquiv
+    ((relativeChainFunctor R).obj X) n
+      (((((relativeDualCochainShortComplexNat R X).X₁).extendHomologyIso
+        ComplexShape.embeddingUpNat (j := n) (j' := (n : ℤ)) rfl).hom.hom)
+        ((relativeDualCochainHomologyIsoCone R X n).inv.hom a))
+      ((relativeHomologyProjection R X n).hom z)
+  exact relativeDualCochain_toAbsolute_apply R X n
+    ((relativeDualCochainHomologyIsoCone R X n).inv.hom a) z
+
 end AlgebraicTopology.Singular

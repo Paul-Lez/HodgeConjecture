@@ -65,6 +65,31 @@ public theorem mem_openCoverIntersection_iff (s : Finset ι) (x : X) :
     x ∈ openCoverIntersection X U s ↔ ∀ i ∈ s, x ∈ U i := by
   simp [openCoverIntersection]
 
+/-- Inserting a cover member which is the whole ambient space does not change a finite
+intersection.  This is the geometric identity used by the distinguished-member extra
+degeneracy for a Čech cover containing a universal member. -/
+public theorem openCoverIntersection_insert_of_eq_univ
+    (i₀ : ι) (s : Finset ι) (hU : U i₀ = Set.univ) :
+    openCoverIntersection X U (insert i₀ s) = openCoverIntersection X U s := by
+  ext x
+  simp only [mem_openCoverIntersection_iff]
+  constructor
+  · intro h i hi
+    exact h i (Finset.mem_insert_of_mem hi)
+  · intro h i hi
+    rcases Finset.mem_insert.mp hi with rfl | hi
+    · rw [hU]
+      exact Set.mem_univ x
+    · exact h i hi
+
+/-- The corresponding canonical isomorphism of intersection spaces. -/
+public def openCoverIntersectionInsertUniversalIso
+    (i₀ : ι) (s : Finset ι) (hU : U i₀ = Set.univ) :
+    TopCat.of (openCoverIntersection X U (insert i₀ s)) ≅
+      TopCat.of (openCoverIntersection X U s) :=
+  eqToIso (congrArg (fun T : Set X ↦ TopCat.of T)
+    (openCoverIntersection_insert_of_eq_univ X U i₀ s hU))
+
 /-- Inclusion of a smaller geometric intersection into a larger one, contravariant in the
 finite support. -/
 public def openCoverIntersectionInclusion {s t : Finset ι} (hst : s ⊆ t) :
@@ -181,6 +206,22 @@ public def openCoverTupleIntersectionToCechSummand
     TopCat.toSSet.obj (TopCat.of (openCoverTupleIntersection X U a)) ⟶
       (Arrow.mk (coverSmallPresentation X U)).augmentedCechNerve.left.obj n :=
   WidePullback.lift (openCoverTupleIntersectionToSmall X U a)
+    (openCoverTupleIntersectionToPresentationLeg X U a)
+    (openCoverTupleIntersectionToPresentationLeg_condition X U a)
+
+/-- The canonical map from an ordered intersection into the Čech nerve lies over its
+canonical map to the cover-small singular simplicial set. -/
+@[reassoc]
+public theorem openCoverTupleIntersectionToCechSummand_comp_augmentation
+    {n : SimplexCategoryᵒᵖ} (a : OpenCoverCechTuple (ι := ι) n) :
+    openCoverTupleIntersectionToCechSummand X U a ≫
+        (Arrow.mk (coverSmallPresentation X U)).augmentedCechNerve.hom.app n =
+      openCoverTupleIntersectionToSmall X U a := by
+  dsimp [openCoverTupleIntersectionToCechSummand,
+    Arrow.augmentedCechNerve]
+  exact WidePullback.lift_base
+    (fun _ : Fin (n.unop.len + 1) => coverSmallPresentation X U)
+    (openCoverTupleIntersectionToSmall X U a)
     (openCoverTupleIntersectionToPresentationLeg X U a)
     (openCoverTupleIntersectionToPresentationLeg_condition X U a)
 

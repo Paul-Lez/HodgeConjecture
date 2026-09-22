@@ -35,10 +35,15 @@ open CategoryTheory CategoryTheory.Limits ZeroObject
 
 namespace AlgebraicTopology
 
+variable {C : Type 1} [Category C] [Preadditive C] [HasZeroObject C]
+
+local notation "FirstQuadrantBicomplex" => AlgebraicTopology.FirstQuadrantBicomplex C
+local notation "FirstQuadrantChainComplex" => AlgebraicTopology.FirstQuadrantChainComplex C
+
 /-- A single outer column of a first-quadrant bicomplex. -/
 public noncomputable abbrev firstQuadrantSingleColumn
     (K : FirstQuadrantBicomplex) (p : ℕ) : FirstQuadrantBicomplex :=
-  (HomologicalComplex.single (ChainComplex AddCommGrpCat ℕ)
+  (HomologicalComplex.single (ChainComplex C ℕ)
     (ComplexShape.down ℕ) p).obj (K.X p)
 
 /-- The unique nonzero outer column is canonically the original column. -/

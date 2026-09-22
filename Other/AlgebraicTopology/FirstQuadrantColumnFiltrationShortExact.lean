@@ -37,6 +37,11 @@ open CategoryTheory CategoryTheory.Limits ZeroObject
 
 namespace AlgebraicTopology
 
+variable {C : Type 1} [Category C] [Abelian C] [HasCoproducts C] [AB4 C]
+
+local notation "FirstQuadrantBicomplex" => AlgebraicTopology.FirstQuadrantBicomplex C
+local notation "FirstQuadrantChainComplex" => AlgebraicTopology.FirstQuadrantChainComplex C
+
 set_option backward.isDefEq.respectTransparency false in
 /-- The differential of a finite prefix, transported to the original bicomplex in two
 retained degrees. -/
@@ -126,7 +131,7 @@ public noncomputable def firstQuadrantColumnPrefixSuccInclusionIsKernel
   apply HomologicalComplex.isLimitOfEval
   intro q
   refine (Limits.isLimitMapConeForkEquiv'
-    (HomologicalComplex.eval (ChainComplex AddCommGrpCat ℕ) (ComplexShape.down ℕ) q)
+    (HomologicalComplex.eval (ChainComplex C ℕ) (ComplexShape.down ℕ) q)
     (firstQuadrantColumnPrefixSuccInclusion_comp_toLast K p)).symm ?_
   change IsLimit (KernelFork.ofι
     (HomologicalComplex.Hom.f (firstQuadrantColumnPrefixSuccInclusion K p) q)

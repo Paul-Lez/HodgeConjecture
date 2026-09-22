@@ -7,6 +7,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicTopology.RelativeCochainCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LinearDualHomologyNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
+
 /-! # Canonical natural relative-cochain cone comparison
 
 Unlike a completion of a morphism of distinguished triangles, the explicit

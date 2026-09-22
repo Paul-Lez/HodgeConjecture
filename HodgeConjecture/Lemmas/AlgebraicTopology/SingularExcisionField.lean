@@ -393,6 +393,45 @@ instance coverSmallRationalSingularChainInclusion_mono :
   dsimp [SSet, SimplicialObject.whiskering, SimplicialObject]
   infer_instance
 
+/-- If one cover member is the whole space, the rational small-chain inclusion is an
+isomorphism.  This is the coefficient-`ℚ` counterpart of the integral result and avoids
+introducing subdivision into the distinguished-member Čech contraction. -/
+theorem coverSmallRationalSingularChainInclusion_isIso_of_member_eq_univ
+    (j : ι) (hj : U j = Set.univ) :
+    IsIso (coverSmallRationalSingularChainInclusion X U) := by
+  let htop := coverSmallSingularSubcomplex_eq_top_of_member_eq_univ X U j hj
+  let e : (coverSmallSingularSubcomplex X U : SSet) ≅ TopCat.toSSet.obj X :=
+    (SSet.Subcomplex.eqToIso htop).trans (SSet.Subcomplex.topIso _)
+  have he : e.hom = (coverSmallSingularSubcomplex X U).ι := by
+    dsimp [e]
+    exact SSet.Subcomplex.homOfLE_ι htop.le
+  change IsIso (SSet.chainComplexMap (coverSmallSingularSubcomplex X U).ι
+    (ModuleCat.of ℚ ℚ))
+  rw [← he]
+  infer_instance
+
+/-- The same universal-member identification as a chain-homotopy equivalence. -/
+theorem coverSmallRationalChainApproximation_of_member_eq_univ
+    (j : ι) (hj : U j = Set.univ) :
+    HomologicalComplex.homotopyEquivalences (ModuleCat ℚ) (ComplexShape.down ℕ)
+      (coverSmallRationalSingularChainInclusion X U) := by
+  let := coverSmallRationalSingularChainInclusion_isIso_of_member_eq_univ X U j hj
+  exact HomologicalComplex.homotopyEquivalences.of_isIso _
+
+/-- A rational small-chain homotopy equivalence selected from the literal universal-member
+isomorphism. -/
+def coverSmallRationalChainHomotopyEquiv_of_member_eq_univ
+    (j : ι) (hj : U j = Set.univ) :
+    HomotopyEquiv (CoverSmallRationalSingularChainComplex X U)
+      ((TopCat.toSSet.obj X).chainComplex (ModuleCat.of ℚ ℚ)) :=
+  (coverSmallRationalChainApproximation_of_member_eq_univ X U j hj).choose
+
+lemma coverSmallRationalChainHomotopyEquiv_of_member_eq_univ_hom
+    (j : ι) (hj : U j = Set.univ) :
+    (coverSmallRationalChainHomotopyEquiv_of_member_eq_univ X U j hj).hom =
+      coverSmallRationalSingularChainInclusion X U :=
+  (coverSmallRationalChainApproximation_of_member_eq_univ X U j hj).choose_spec
+
 /-- The proven integral subdivision-and-prism homotopy transports to rational coefficients:
 the all-open-cover small-chain theorem with rational coefficients. -/
 theorem coverSmallRationalChainApproximation_of_openCover

@@ -5,6 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.RelativeCochainConeNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.ExtendConnecting
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LinearDualConnecting
 
 /-!
 # RelativeCochainConeNaturality
@@ -103,5 +105,4 @@ lemma relativeCochainConeCohomologyEquivCanonical_naturality
         ((relativeDualCochainHomologyIsoCone R Y n).toLinearEquiv b)))
   simp only [LinearEquiv.symm_apply_apply]
   exact relativeDualCochainCohomologyEquiv_naturality R f n b
-
 end AlgebraicTopology.Singular

@@ -35,13 +35,61 @@ calculation, this proves that the constant-sheaf-to-singular-cochain map is a qu
 
 @[expose] public noncomputable section
 
-open CategoryTheory TopologicalSpace
+open CategoryTheory Filter TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
 open Point
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
+
+/-- With a displayed smooth relative dimension, the local contractible-chart proof of the
+positive-degree constant-to-singular comparison does not need integrality. -/
+lemma constantsToSingularCochain_quasiIsoAt_succ_of_smoothOfRelativeDimension
+    [SmoothOfRelativeDimension d X.hom]
+    (R : Type) [Field R] (n : ℕ) :
+    QuasiIsoAt
+      (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
+        (TopCat.of (ComplexPoint X))) (n + 1) := by
+  apply AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_succ_of_contractibleOpenBasis
+  exact fun x U hxU ↦ exists_contractibleOpen_le_of_smoothOfRelativeDimension X d x U hxU
+
+/-- The degree-zero comparison has the same weaker smooth-relative-dimension hypothesis. -/
+lemma constantsToSingularCochain_quasiIsoAt_zero_of_smoothOfRelativeDimension
+    [SmoothOfRelativeDimension d X.hom]
+    (R : Type) [Field R] :
+    QuasiIsoAt
+      (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
+        (TopCat.of (ComplexPoint X))) 0 := by
+  let : LocallyPathConnectedSpace (ComplexPoint X) := ⟨fun x ↦
+    hasBasis_self.mpr fun S hS ↦ by
+      obtain ⟨V, hVS, hVopen, hxV⟩ := mem_nhds_iff.mp hS
+      let Vo : Opens (ComplexPoint X) := ⟨V, hVopen⟩
+      obtain ⟨W, hxW, hWcontractible, hWVo⟩ :=
+        exists_contractibleOpen_le_of_smoothOfRelativeDimension X d x Vo hxV
+      refine ⟨(W : Set (ComplexPoint X)), W.2.mem_nhds hxW, ?_, ?_⟩
+      · rw [isPathConnected_iff_pathConnectedSpace]
+        let : ContractibleSpace W := hWcontractible
+        infer_instance
+      · exact fun y hy ↦ hVS (hWVo hy)⟩
+  exact
+    AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex_quasiIsoAt_zero
+      R (TopCat.of (ComplexPoint X))
+
+/-- A supplied smooth relative dimension suffices for the full constant-to-singular cochain
+quasi-isomorphism. -/
+lemma constantsToSingularCochain_quasiIso_of_smoothOfRelativeDimension
+    [SmoothOfRelativeDimension d X.hom]
+    (R : Type) [Field R] :
+    QuasiIso
+      (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
+        (TopCat.of (ComplexPoint X))) := by
+  refine ⟨fun n ↦ ?_⟩
+  cases n with
+  | zero =>
+      exact constantsToSingularCochain_quasiIsoAt_zero_of_smoothOfRelativeDimension X d R
+  | succ n =>
+      exact constantsToSingularCochain_quasiIsoAt_succ_of_smoothOfRelativeDimension X d R n
 
 /-- The constant-to-singular-cochain comparison on a smooth complex-point space is a
 quasi-isomorphism in positive degrees. -/
@@ -108,7 +156,19 @@ def constantsToSingularCochainComplexInt (R : Type) [Field R] :
       singularCochainSheafComplexInt X R :=
   HomologicalComplex.extendMap
     (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
-      (TopCat.of (ComplexPoint X))) ComplexShape.embeddingUpNat
+    (TopCat.of (ComplexPoint X))) ComplexShape.embeddingUpNat
+
+/-- The integer-indexed comparison also only needs the displayed smooth relative dimension. -/
+lemma constantsToSingularCochainComplexInt_quasiIso_of_smoothOfRelativeDimension
+    [SmoothOfRelativeDimension d X.hom]
+    (R : Type) [Field R] :
+    QuasiIso (constantsToSingularCochainComplexInt X R) := by
+  unfold constantsToSingularCochainComplexInt constantCoefficientSheafComplexInt
+    singularCochainSheafComplexInt
+  exact (HomologicalComplex.quasiIso_extendMap_iff
+    (AlgebraicTopology.Singular.constantsToSingularCochainSheafComplex R
+      (TopCat.of (ComplexPoint X))) ComplexShape.embeddingUpNat).mpr
+        (constantsToSingularCochain_quasiIso_of_smoothOfRelativeDimension X d R)
 
 /-- The integer-indexed constant-to-singular comparison remains a quasi-isomorphism. -/
 lemma constantsToSingularCochainComplexInt_quasiIso

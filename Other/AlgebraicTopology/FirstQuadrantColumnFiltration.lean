@@ -37,6 +37,10 @@ open CategoryTheory CategoryTheory.Limits ZeroObject
 
 namespace AlgebraicTopology
 
+variable {C : Type 1} [Category C] [Preadditive C] [HasZeroObject C]
+
+local notation "FirstQuadrantBicomplex" => AlgebraicTopology.FirstQuadrantBicomplex C
+
 /-- The finite interval of outer degrees retained by the `n`th brutal prefix. -/
 public abbrev FirstQuadrantColumnPrefixIndex (n : ℕ) := {p : ℕ // p ≤ n}
 

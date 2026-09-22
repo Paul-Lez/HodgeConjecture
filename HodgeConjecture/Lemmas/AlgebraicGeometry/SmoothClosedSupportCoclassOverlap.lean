@@ -102,6 +102,65 @@ theorem exists_open_smoothClosedSupportChartCoclass_eq
     (analyticAt_closedImmersionNormalTransition X Y i m d z z' (e x) ht)
     (analyticAt_closedImmersionNormalTransition_symm X Y i m d z z' (e x) ht)
 
+section CrossPresentation
+
+variable (Y' : Over (Spec (.of ℂ))) (i' : Y' ⟶ X)
+  [SmoothOfRelativeDimension m Y'.hom] [IsClosedImmersion i'.left]
+  (z'Y : ComplexPoint Y')
+
+/-- Exactly normalized ambient coclasses agree for two smooth closed-immersion
+presentations having the same analytic image.  The equality on the right explicitly transports
+the second local class across the equality of supports; no orientation or unit is an input. -/
+theorem exists_open_smoothClosedSupportChartCoclass_eq_cross
+    (hS : Set.range (Point.map i') = Set.range (Point.map i))
+    (x : ComplexPoint X) (hxS : x ∈ Set.range (Point.map i))
+    (hx : x ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)
+    (hx' : x ∈ (closedImmersionHolomorphicFlatteningChart X Y' i' m d z'Y).source) :
+    ∃ (W : Opens (ComplexPoint X))
+      (hW : (W : Set _) ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)
+      (hW' : (W : Set _) ⊆
+        (closedImmersionHolomorphicFlatteningChart X Y' i' m d z'Y).source),
+      x ∈ W ∧ smoothClosedSupportChartCoclass X Y i m d z W hW =
+        hS ▸ smoothClosedSupportChartCoclass X Y' i' m d z'Y W hW' := by
+  let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
+  let e' := closedImmersionHolomorphicFlatteningChart X Y' i' m d z'Y
+  have ht : e x ∈
+      (closedImmersionNormalTransitionCross X Y i m d z Y' i' z'Y).source := by
+    refine ⟨e.map_source hx, ?_⟩
+    change e.symm (e x) ∈ e'.source
+    rwa [e.left_inv hx]
+  have hmem' : ∀ y ∈ e'.source,
+      y ∈ Set.range (Point.map i) ↔ (e' y).2 = 0 := by
+    intro y hy
+    rw [← hS]
+    exact closedImmersionHolomorphicFlatteningChart_mem_range_iff
+      X Y' i' m d z'Y y hy
+  obtain ⟨W, hW, hW', hxW, heq⟩ :=
+    exists_open_chartNormalProjectionCoclass_eq (d - m) e e'
+      (Set.range (Point.map i))
+      (closedImmersionHolomorphicFlatteningChart_mem_range_iff X Y i m d z)
+      hmem' x hx
+      ((closedImmersionHolomorphicFlatteningChart_mem_range_iff
+        X Y i m d z x hx).mp hxS) hx'
+      (analyticAt_closedImmersionNormalTransitionCross
+        X Y i m d z Y' i' z'Y (e x) ht)
+      (analyticAt_closedImmersionNormalTransitionCross_symm
+        X Y i m d z Y' i' z'Y (e x) ht)
+  refine ⟨W, hW, hW', hxW, ?_⟩
+  change chartNormalProjectionCoclass (Fin m → ℂ) (d - m) e
+      (Set.range (Point.map i)) _ W hW =
+    hS ▸ chartNormalProjectionCoclass (Fin m → ℂ) (d - m) e'
+      (Set.range (Point.map i')) _ W hW'
+  calc
+    _ = chartNormalProjectionCoclass (Fin m → ℂ) (d - m) e'
+        (Set.range (Point.map i)) hmem' W hW' := heq
+    _ = _ := (chartNormalProjectionCoclass_transport_support
+      (Fin m → ℂ) (d - m) e' (Set.range (Point.map i)) hS
+      (closedImmersionHolomorphicFlatteningChart_mem_range_iff
+        X Y' i' m d z'Y) W hW').symm
+
+end CrossPresentation
+
 /-- Ambient overlap agreement remains cofinal inside any prescribed common open. -/
 theorem exists_open_smoothClosedSupportChartCoclass_eq_within
     (x : ComplexPoint X) (hxS : x ∈ Set.range (Point.map i))

@@ -42,18 +42,23 @@ open CategoryTheory CategoryTheory.Limits ZeroObject
 
 namespace AlgebraicTopology
 
+variable {C : Type 1} [Category C] [Abelian C] [HasCoproducts C] [AB4 C]
+
+local notation "FirstQuadrantBicomplex" => AlgebraicTopology.FirstQuadrantBicomplex C
+local notation "FirstQuadrantChainComplex" => AlgebraicTopology.FirstQuadrantChainComplex C
+
 /-- The horizontal chain complex obtained by evaluating a first-quadrant bicomplex in a fixed
 inner degree. -/
 public noncomputable def firstQuadrantHorizontalRow
     (K : FirstQuadrantBicomplex) (q : ℕ) : FirstQuadrantChainComplex :=
-  ((HomologicalComplex.eval AddCommGrpCat (ComplexShape.down ℕ) q).mapHomologicalComplex
+  ((HomologicalComplex.eval C (ComplexShape.down ℕ) q).mapHomologicalComplex
     (ComplexShape.down ℕ)).obj K
 
 /-- Evaluation of a bicomplex map on a horizontal row. -/
 public noncomputable def firstQuadrantHorizontalRowMap
     {K L : FirstQuadrantBicomplex} (f : K ⟶ L) (q : ℕ) :
     firstQuadrantHorizontalRow K q ⟶ firstQuadrantHorizontalRow L q :=
-  ((HomologicalComplex.eval AddCommGrpCat (ComplexShape.down ℕ) q).mapHomologicalComplex
+  ((HomologicalComplex.eval C (ComplexShape.down ℕ) q).mapHomologicalComplex
     (ComplexShape.down ℕ)).map f
 
 /-- Rowwise quasi-isomorphisms induce a quasi-isomorphism on the direct-sum total complex. -/
@@ -198,7 +203,7 @@ public theorem firstQuadrantColumnPrefixTotalToOriginal_quasiIsoAt
     (firstQuadrantColumnPrefixTotalToOriginal K N)
     (n + 1) n ((ComplexShape.down ℕ).next n) (by simp) rfl]
   let φ := (HomologicalComplex.shortComplexFunctor'
-    AddCommGrpCat (ComplexShape.down ℕ)
+    C (ComplexShape.down ℕ)
     (n + 1) n ((ComplexShape.down ℕ).next n)).map
       (firstQuadrantColumnPrefixTotalToOriginal K N)
   have hnext : (ComplexShape.down ℕ).next n ≤ N := by
@@ -300,7 +305,7 @@ public theorem firstQuadrantTotal_quasiIso_of_all_prefixes
 public noncomputable def firstQuadrantSingleColumnMap
     {K L : FirstQuadrantBicomplex} (f : K ⟶ L) (p : ℕ) :
     firstQuadrantSingleColumn K p ⟶ firstQuadrantSingleColumn L p :=
-  (HomologicalComplex.single (ChainComplex AddCommGrpCat ℕ)
+  (HomologicalComplex.single (ChainComplex C ℕ)
     (ComplexShape.down ℕ) p).map (f.f p)
 
 /-- Projection from a total supported in outer column `p` to its sole summand in
@@ -350,7 +355,7 @@ public theorem firstQuadrantSingleColumnTotalXHom_inv
     simp only [dif_pos]
     rw [← Category.assoc, he, Category.id_comp, Category.comp_id]
   · have hz : IsZero (((firstQuadrantSingleColumn K p).X r).X s) :=
-      (HomologicalComplex.eval AddCommGrpCat
+      (HomologicalComplex.eval C
         (ComplexShape.down ℕ) s).map_isZero
         (HomologicalComplex.isZero_single_obj_X
           (ComplexShape.down ℕ) p (K.X p) r hr)
@@ -415,7 +420,7 @@ public theorem firstQuadrantSingleColumnTotalXIso_d
       HomologicalComplex₂.ι_totalDesc]
     simp
   · have hz : IsZero (((firstQuadrantSingleColumn K p).X r).X s) :=
-      (HomologicalComplex.eval AddCommGrpCat
+      (HomologicalComplex.eval C
         (ComplexShape.down ℕ) s).map_isZero
         (HomologicalComplex.isZero_single_obj_X
           (ComplexShape.down ℕ) p (K.X p) r hr)
@@ -491,7 +496,7 @@ public theorem firstQuadrantSingleColumnTotalXIso_naturality
     simp only [e, HomologicalComplex.comp_f, if_pos, Category.assoc, he,
       Category.comp_id]
   · have hz : IsZero (((firstQuadrantSingleColumn K p).X r).X s) :=
-      (HomologicalComplex.eval AddCommGrpCat
+      (HomologicalComplex.eval C
         (ComplexShape.down ℕ) s).map_isZero
         (HomologicalComplex.isZero_single_obj_X
           (ComplexShape.down ℕ) p (K.X p) r hr)
@@ -527,7 +532,7 @@ public theorem firstQuadrantSingleColumnTotalX_isZero_of_not_exists
     subst r
     exact hn s hrs
   have hz : IsZero (((firstQuadrantSingleColumn K p).X r).X s) :=
-    (HomologicalComplex.eval AddCommGrpCat
+    (HomologicalComplex.eval C
       (ComplexShape.down ℕ) s).map_isZero
       (HomologicalComplex.isZero_single_obj_X
         (ComplexShape.down ℕ) p (K.X p) r hr)
@@ -893,7 +898,7 @@ public theorem firstQuadrantFinitePrefixTotal_quasiIso_of_singleColumns
         infer_instance
       exact quasiIso_of_comp_right a b
   | succ N ih =>
-      let T := HomologicalComplex₂.totalFunctor AddCommGrpCat
+      let T := HomologicalComplex₂.totalFunctor C
         (ComplexShape.down ℕ) (ComplexShape.down ℕ) (ComplexShape.down ℕ)
       let S₁ := firstQuadrantColumnPrefixSuccShortComplex K N
       let S₂ := firstQuadrantColumnPrefixSuccShortComplex L N
@@ -952,7 +957,7 @@ public instance firstQuadrantTotalComplexShapeSymmetry :
 /-- Flip a first-quadrant bicomplex map across the diagonal. -/
 public def firstQuadrantFlipMap
     {K L : FirstQuadrantBicomplex} (f : K ⟶ L) : K.flip ⟶ L.flip :=
-  (HomologicalComplex₂.flipFunctor AddCommGrpCat
+  (HomologicalComplex₂.flipFunctor C
     (ComplexShape.down ℕ) (ComplexShape.down ℕ)).map f
 
 /-- A column map of the flipped bicomplex is exactly the corresponding horizontal row map. -/
@@ -1016,7 +1021,7 @@ public theorem firstQuadrantTotal_quasiIso_of_rows
 
 /-- The generic rowwise-totalization proposition is unconditional. -/
 public theorem firstQuadrantRowwiseTotalization :
-    FirstQuadrantRowwiseTotalization :=
+    FirstQuadrantRowwiseTotalization (C := C) :=
   fun f hrow => firstQuadrantTotal_quasiIso_of_rows f hrow
 
 end AlgebraicTopology

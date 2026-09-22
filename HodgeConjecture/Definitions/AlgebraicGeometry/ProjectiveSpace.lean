@@ -144,6 +144,19 @@ class IsProjective (f : X ⟶ T) : Prop where
   /-- A finite-dimensional projective presentation exists. -/
   nonempty_presentation : Nonempty (Presentation f)
 
+/-- Projective space over its base is projective, using its identity closed immersion as the
+chosen presentation. -/
+noncomputable def ProjectiveSpace.selfPresentation (N : ℕ) (T : Scheme.{w}) :
+    Presentation (toBase (Fin (N + 1)) T) where
+  ambientDimension := N
+  immersion := 𝟙 _
+  isClosedImmersion := inferInstance
+  immersion_toBase := Category.id_comp _
+
+noncomputable instance projectiveSpace_toBase_isProjective (N : ℕ) (T : Scheme.{w}) :
+    IsProjective (toBase (Fin (N + 1)) T) :=
+  ⟨⟨ProjectiveSpace.selfPresentation N T⟩⟩
+
 /-- A projective morphism in the explicit-presentation sense is proper. -/
 instance IsProjective.isProper {f : X ⟶ T} [h : IsProjective f] : IsProper f := by
   obtain ⟨P⟩ := h.nonempty_presentation
