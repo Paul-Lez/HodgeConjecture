@@ -139,12 +139,12 @@ lemma cycleComponentAnalyticClosedSupport_genericPoint_eq_top
 
 /-- The generic-point component class vanishes exactly when the globally supported class it is
 built from vanishes: support on the whole analytic space is forgotten injectively, and the
-comparison with the injective model is an isomorphism. -/
-theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass
+comparison with the singular model is an isomorphism. -/
+theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedSingularClass
     :
     cycleComponentSheafClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 ↔
-      cycleComponentSupportedInjectiveClass X (genericPoint X.left)
+      cycleComponentSupportedSingularClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 := by
   rw [cycleComponentSheafClass_eq_forgetSupport]
   refine Iff.trans (map_eq_zero_iff _ (forgetSupport_injective_of_eq_top ℚ X _
@@ -160,11 +160,11 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff
         (coheight_genericPoint_eq_zero X) = 0 ↔
       cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) = 0 := by
   have hcoclass : (cycleComponentSupportedClassNormalizationIso X (genericPoint X.left) (coheight_genericPoint_eq_zero X)).addCommGroupIsoToAddEquiv
-      (cycleComponentSupportedInjectiveClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X)) =
+      (cycleComponentSupportedSingularClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X)) =
       cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) :=
-    cycleComponentSupportedInjectiveClass_normalization X (genericPoint X.left) (coheight_genericPoint_eq_zero X)
+    cycleComponentSupportedSingularClass_normalization X (genericPoint X.left) (coheight_genericPoint_eq_zero X)
   refine Iff.trans
-    (cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass X) ?_
+    (cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedSingularClass X) ?_
   rw [← hcoclass]
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
   · rw [h]

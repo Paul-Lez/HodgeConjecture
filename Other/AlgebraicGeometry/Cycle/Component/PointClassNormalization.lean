@@ -53,7 +53,7 @@ theorem complexSupportSingularCohomologySheafIsoRelative_restriction_section
     (complexSupportSingularSectionCohomologyEquiv X S V n).toAddCommGrpIso.hom ≫
       (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X)) S n).app (op V) ≫
       (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) S n).obj.map a.op := by
-  rw [TopCat.Sheaf.sectionCohomologyToSheafSection_restriction_assoc,
+  erw [TopCat.Sheaf.sectionCohomologyToSheafSection_restriction_assoc,
     (supportedSingularCohomologySheafIsoRelative (TopCat.of (ComplexPoint X)) S S.isClosed n).hom.hom.naturality,
     complexSupportSingularCohomologySheafIsoRelative_section_assoc]
 
