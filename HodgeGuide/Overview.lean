@@ -72,8 +72,8 @@ namespace Guide.Overview.D3
 ```lean
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * p)(X; ℚ)) :=
-  sSup {Submodule.span ℚ {cycleComponentSheafClass X x hx} |
-    (x : X.left) (hx : coheight x = p) }
+  ⨆ (x : X.left) (hx : coheight x = p),
+    Submodule.span ℚ {cycleComponentSheafClass X x hx}
 ```
 ```lean -show
 end Guide.Overview.D3
