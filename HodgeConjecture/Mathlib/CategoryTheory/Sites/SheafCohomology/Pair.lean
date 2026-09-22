@@ -107,6 +107,21 @@ def pairSheafHomAddEquiv {U V : C} (f : U ⟶ V) (G : Sheaf J AddCommGrpCat.{v})
     ext
     simp only [Preadditive.comp_add, map_add, AddSubgroup.coe_add]
 
+/-- The map `ℤ[V', U'] ⟶ ℤ[V, U]` induced by a commutative square `U' ⟶ U`, `V' ⟶ V`. -/
+def pairSheafMap {U V U' V' : C} (f : U ⟶ V) (f' : U' ⟶ V') (a : U' ⟶ U) (b : V' ⟶ V)
+    (w : f' ≫ b = a ≫ f) : pairSheaf (J := J) f' ⟶ pairSheaf (J := J) f :=
+  cokernel.map _ _ ((freeAbelianSheaf J).map a) ((freeAbelianSheaf J).map b)
+    (by rw [← Functor.map_comp, ← Functor.map_comp, w])
+
+lemma pairSheafHomAddEquiv_pairSheafMap_comp {U V U' V' : C} (f : U ⟶ V) (f' : U' ⟶ V')
+    (a : U' ⟶ U) (b : V' ⟶ V) (w : f' ≫ b = a ≫ f) (G : Sheaf J AddCommGrpCat.{v})
+    (φ : pairSheaf (J := J) f ⟶ G) :
+    (pairSheafHomAddEquiv f' G (pairSheafMap f f' a b w ≫ φ) : G.obj.obj (op V')) =
+      G.obj.map b.op (pairSheafHomAddEquiv f G φ) := by
+  change freeAbelianSheafHomAddEquiv V' G (cokernel.π _ ≫ pairSheafMap f f' a b w ≫ φ) =
+    G.obj.map b.op (freeAbelianSheafHomAddEquiv V G (cokernel.π _ ≫ φ))
+  rw [pairSheafMap, cokernel.π_desc_assoc, Category.assoc, freeAbelianSheafHomAddEquiv_map_comp]
+
 variable [HasExt.{w} (Sheaf J AddCommGrpCat.{v})]
 
 /-- `H^n(V, U; F)`, the cohomology of the pair `(V, U)` with coefficients in `F`. -/
@@ -128,6 +143,11 @@ def δ [Mono f] (n₀ n₁ : ℕ) (h : 1 + n₀ = n₁) : F.H' n₀ U →+ relH 
 /-- The map on cohomology of the pair induced by a morphism of sheaves. -/
 def map {F G : Sheaf J AddCommGrpCat.{v}} (g : F ⟶ G) (n : ℕ) : relH F n f →+ relH G n f :=
   (Ext.mk₀ g).postcomp _ (add_zero n)
+
+/-- The map `H^n(V, U; F) → H^n(V', U'; F)` induced by a map of pairs `(V', U') → (V, U)`. -/
+def restrict {U' V' : C} (f' : U' ⟶ V') (a : U' ⟶ U) (b : V' ⟶ V) (w : f' ≫ b = a ≫ f) (n : ℕ) :
+    relH F n f →+ relH F n f' :=
+  (Ext.mk₀ (pairSheafMap f f' a b w)).precomp F (zero_add n)
 
 /-- The long exact sequence of the pair `(V, U)`. -/
 lemma sequence_exact [Mono f] (n₀ n₁ : ℕ) (h : 1 + n₀ = n₁) :

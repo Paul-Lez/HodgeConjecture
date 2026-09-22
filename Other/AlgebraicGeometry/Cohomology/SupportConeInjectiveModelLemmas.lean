@@ -10,7 +10,7 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientIn
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
-public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityLemmas
+public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef
 
 /-!
 # Normalized injective models for the rational support cone

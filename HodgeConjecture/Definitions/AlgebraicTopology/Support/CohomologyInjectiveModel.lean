@@ -17,6 +17,8 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.Cohomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.DerivedSectionsLocalization
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SectionRestrictionCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsNaturality
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueSections
 public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.KInjectiveHom
 public import HodgeConjecture.Mathlib.Algebra.Homology.HomComplexSingle
@@ -58,6 +60,18 @@ lemma supportedSectionsIsoKer_hom_subtype (U V W : Opens X) (hW : V ⊓ U = W)
   subst hW
   simp [supportedSectionsIsoKer, kernelCompMono]
 
+
+/-- `Γ_{X ∖ U}(V, K) → Γ_{X ∖ U'}(V', K)` for `U' ≤ U` and `V' ≤ V`: enlarge the support, then
+restrict the sections. -/
+def supportedSectionsRestriction {U U' V V' : Opens X} (hU : U' ≤ U) (hV : V' ≤ V)
+    (K : CochainComplex (Sheaf AddCommGrpCat X) ℤ) :
+    ((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj
+        (((sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).obj K) ⟶
+      ((supportEvaluation X V').mapHomologicalComplex ℤᵘᵖ).obj
+        (((sheafSectionsSupportedOutside X U').mapHomologicalComplex ℤᵘᵖ).obj K) :=
+  ((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).map
+      (((sheafSectionsSupportedOutsideMap X hU).mapHomologicalComplex ℤᵘᵖ).app K) ≫
+    sectionComplexRestriction X ℤᵘᵖ _ (homOfLE hV)
 
 set_option linter.auxLemma false
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1

@@ -197,7 +197,6 @@ public import Other.AlgebraicGeometry.Cohomology.SupportComparison
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyDef
 public import Other.Algebra.Homology.HomComplexPostcompNaturalityLemmas
 public import Other.Algebra.Homology.ShiftedExact
-public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityLemmas
 public import Other.AlgebraicGeometry.Cohomology.SupportComparisonLemmas
 public import Other.AlgebraicGeometry.Cohomology.SupportConeComparison
 public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModelLemmas

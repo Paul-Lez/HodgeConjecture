@@ -18,7 +18,6 @@ module
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef
-public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityLemmas
 public import Other.Algebra.Homology.HomComplexPostcompNaturality
 
 /-!
@@ -90,23 +89,6 @@ attribute [local instance] hypercohomologyNaturalitySheafDerivedCategory
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-lemma kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk
-    {C : Type*} [Category* C] [Abelian C] [HasDerivedCategory C]
-    (K L : CochainComplex C ℤ) [L.IsKInjective] (n : ℤ)
-    (z : CochainComplex.HomComplex.Cocycle K L n) :
-    (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass K L n).symm
-      (CochainComplex.HomComplex.CohomologyClass.mk z) =
-    ShiftedHom.map (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
-      DerivedCategory.Q := by
-  dsimp [CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass,
-    isoHomCongrAddEquiv, ShiftedHom.map]
-  rw [CochainComplex.HomComplex.CohomologyClass.toHom_mk]
-  have h := (DerivedCategory.quotientCompQhIso C).hom.naturality
-    (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
-  simp
-
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
 lemma kInjectiveDerivedHomAddEquivCohomologyClass_naturality
     {C : Type*} [Category* C] [Abelian C] [HasDerivedCategory C]
     (A K L : CochainComplex C ℤ) [K.IsKInjective] [L.IsKInjective]
@@ -121,8 +103,8 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_naturality
   obtain ⟨x, rfl⟩ := (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A K n).symm.surjective x
   obtain ⟨z, rfl⟩ := x.mk_surjective
   rw [AddEquiv.apply_symm_apply, CochainComplex.HomComplex.postcompClass_mk,
-    AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
-    AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
     CochainComplex.HomComplex.Cocycle.equivHomShift_symm_postcomp]
   simp only [ShiftedHom.map, Functor.map_comp, Category.assoc,
     Functor.commShiftIso_hom_naturality]
