@@ -69,11 +69,13 @@ theorem algebraicCycleClassSpan_zero_eq_span_genericPoint :
     algebraicCycleClassSpan X 0 =
       Submodule.span ℚ {cycleComponentSheafClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X)} := by
   unfold algebraicCycleClassSpan
-  refine le_antisymm (sSup_le ?_)
-    (le_sSup ⟨genericPoint X.left, coheight_genericPoint_eq_zero X, rfl⟩)
-  rintro _ ⟨x, hx, rfl⟩
-  obtain rfl := eq_genericPoint_of_coheight_zero x (by simpa using hx)
-  exact le_rfl
+  apply le_antisymm
+  · apply sSup_le
+    rintro S ⟨x, hx, hS⟩
+    subst S
+    obtain rfl := eq_genericPoint_of_coheight_zero x (by simpa using hx)
+    exact le_rfl
+  · exact le_sSup ⟨genericPoint X.left, coheight_genericPoint_eq_zero X, rfl⟩
 
 /-! ### Degree-zero cohomology is a line on a connected analytification -/
 
