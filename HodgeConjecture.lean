@@ -26,7 +26,6 @@ public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.Anal
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.NormalCoordinates
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.SourceOpen
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.AnalyticSheaf
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
@@ -56,7 +55,6 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.Fundamental
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.FlasqueLowestCohomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.NeighborhoodPairImage
 public import HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainConeNaturality
@@ -64,7 +62,6 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.Cocha
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenSections
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.Cochain
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularFlasqueModel
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologySheaf
@@ -104,7 +101,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Open
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SingularComparison
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.StandardEtale
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.LocalGenerator
@@ -177,7 +173,6 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NestedOnOpen
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionOverlap
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalSlicePurity
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestrictedVanishing
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenRestriction
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenSheafification

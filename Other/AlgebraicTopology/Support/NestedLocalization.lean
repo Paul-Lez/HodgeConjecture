@@ -30,10 +30,10 @@ def nestedSupportRestrictionToFiber (W : Opens X)
   CochainComplex.mappingCocone.liftShortComplex _
 
 lemma nestedSupportRestrictionToFiber_quasiIso (W : Opens X)
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :
+    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (hK : ∀ n, (K.X n).IsFlasque) :
     QuasiIso (nestedSupportRestrictionToFiber X h W K) :=
   CochainComplex.mappingCocone.quasiIso_liftShortComplex _
-    (nestedSupportRestrictionSectionsComplexShortComplex_shortExact X h W K)
+    (nestedSupportRestrictionSectionsComplexShortComplex_shortExact X h W K hK)
 
 /-- The fiber comparison preserves the literal support-enlargement map. -/
 @[reassoc (attr := simp)]
@@ -46,25 +46,25 @@ lemma nestedSupportRestrictionToFiber_fst (W : Opens X)
 /-- The extension equivalence is the inverse of actual restriction, rather
 than an arbitrarily chosen linear equivalence between cohomology groups. -/
 def nestedSupportRestrictionHomologyIsoOfVanishing (W : Opens X)
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)]
+    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (hK : ∀ n, (K.X n).IsFlasque)
     (n : ℤ)
     (hn : IsZero ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology n))
     (hn₁ : IsZero
       ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology (n + 1))) :
     (nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₂.homology n ≅
       (nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₃.homology n :=
-  have := nestedSupportRestriction_homologyMap_isIso_of_vanishing X h W K n hn hn₁
+  have := nestedSupportRestriction_homologyMap_isIso_of_vanishing X h W K hK n hn hn₁
   asIso (HomologicalComplex.homologyMap
     (nestedSupportRestrictionSectionsComplexShortComplex X h W K).g n)
 
 @[simp]
 lemma nestedSupportRestrictionHomologyIsoOfVanishing_hom (W : Opens X)
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)]
+    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (hK : ∀ n, (K.X n).IsFlasque)
     (n : ℤ)
     (hn : IsZero ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology n))
     (hn₁ : IsZero
       ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology (n + 1))) :
-    (nestedSupportRestrictionHomologyIsoOfVanishing X h W K n hn hn₁).hom =
+    (nestedSupportRestrictionHomologyIsoOfVanishing X h W K hK n hn hn₁).hom =
       HomologicalComplex.homologyMap
         (nestedSupportRestrictionSectionsComplexShortComplex X h W K).g n := rfl
 end TopCat.Sheaf

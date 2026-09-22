@@ -206,3 +206,10 @@ public import Other.AlgebraicGeometry.Cohomology.SupportSingularNaturality
 public import Other.AlgebraicGeometry.Cohomology.WithSupport
 public import Other.Mathlib.Topology.Category.TopCat.Basic
 public import Other.AlgebraicTopology.Support.ClosedSupportSheaf
+public import Other.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
+public import Other.AlgebraicTopology.Sheaf.OpenInjectiveResolution
+public import Other.AlgebraicTopology.Sheaf.OpenInjectiveResolutionLemmas
+public import Other.AlgebraicGeometry.Cohomology.SupportedSingularModel
+public import Other.AlgebraicGeometry.Cohomology.SupportedSingularModelLemmas
+public import Other.AlgebraicTopology.Support.SingularInjectiveModel
+public import Other.AlgebraicTopology.Support.SingularInjectiveModelLemmas

@@ -7,7 +7,7 @@ module
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SingularFlasqueModel
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularFlasqueModel
 public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
 /-!

@@ -121,7 +121,7 @@ lemma nestedSupportRestrictionShortComplex_eq (F : Sheaf AddCommGrpCat.{u} X) :
 
 /-- Exactness after evaluation, by flasqueness of the terms. -/
 lemma nestedSupportRestrictionSectionsShortComplex_shortExact (W : Opens X)
-    (F : Sheaf AddCommGrpCat.{u} X) [Injective F] :
+    (F : Sheaf AddCommGrpCat.{u} X) [F.IsFlasque] :
     ((nestedSupportRestrictionShortComplex X h F).map (supportEvaluation X W)).ShortExact := by
   rw [nestedSupportRestrictionShortComplex_eq]
   have : Epi ((supportEvaluation X W).map ((toOpenRestrictionPushforward X U).app F)) :=
@@ -148,15 +148,15 @@ def nestedSupportRestrictionSectionsComplexShortComplex (W : Opens X)
     ((supportEvaluation X W).mapHomologicalComplex ℤᵘᵖ)
 
 lemma nestedSupportRestrictionSectionsComplexShortComplex_shortExact (W : Opens X)
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)] :
+    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (hK : ∀ n, (K.X n).IsFlasque) :
     (nestedSupportRestrictionSectionsComplexShortComplex X h W K).ShortExact :=
   HomologicalComplex.shortExact_of_degreewise_shortExact _
-    fun n => nestedSupportRestrictionSectionsShortComplex_shortExact X h W (K.X n)
+    fun n => letI := hK n; nestedSupportRestrictionSectionsShortComplex_shortExact X h W (K.X n)
 
 /-- Removing the smaller support preserves degree `n` cohomology if its two adjacent groups
 vanish. Those two vanishings are hypotheses of the extension lemma. -/
 lemma nestedSupportRestriction_homologyMap_isIso_of_vanishing (W : Opens X)
-    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) [∀ n, Injective (K.X n)]
+    (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ) (hK : ∀ n, (K.X n).IsFlasque)
     (n : ℤ)
     (hn : IsZero ((nestedSupportRestrictionSectionsComplexShortComplex X h W K).X₁.homology n))
     (hn₁ : IsZero
@@ -164,7 +164,7 @@ lemma nestedSupportRestriction_homologyMap_isIso_of_vanishing (W : Opens X)
     IsIso (HomologicalComplex.homologyMap
       (nestedSupportRestrictionSectionsComplexShortComplex X h W K).g n) := by
   let S := nestedSupportRestrictionSectionsComplexShortComplex X h W K
-  have hS := nestedSupportRestrictionSectionsComplexShortComplex_shortExact X h W K
+  have hS := nestedSupportRestrictionSectionsComplexShortComplex_shortExact X h W K hK
   have : Mono (HomologicalComplex.homologyMap S.g n) :=
     (hS.homology_exact₂ n).mono_g (hn.eq_zero_of_src _)
   have : Epi (HomologicalComplex.homologyMap S.g n) :=

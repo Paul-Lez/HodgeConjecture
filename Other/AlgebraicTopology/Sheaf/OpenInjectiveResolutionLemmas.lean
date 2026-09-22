@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenInjectiveResolution
+public import Other.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueExtendNat
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation

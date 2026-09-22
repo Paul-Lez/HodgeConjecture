@@ -6,18 +6,18 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularFlasqueModel
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveParacompact
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
 
 /-!
-# Cohomology-sheaf concentration for smooth closed supports
+# Supported singular cochains on a smooth projective variety
 
-The complex is the supported-sections kernel applied to the fixed ambient rational injective
-resolution. Its open-section homology is compared to relative singular cohomology by the
-singular resolution and restriction-cone maps, and cofinal normal neighborhoods then give
-stalkwise and sheafwise concentration in degree twice the complex codimension. Identifying
-the surviving cohomology sheaf with rational constants on the support is left to a later file.
+`Γ_S(C^•)` is the complex of sections supported in the closed set `S` of the sheafified rational
+singular cochains on `X(ℂ)`. It is bounded below and termwise flasque, and its open-section
+cohomology is relative singular cohomology.
 -/
 
 @[expose] public noncomputable section
@@ -32,23 +32,22 @@ variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
 /-- Let `X` be a smooth integral projective scheme over `ℂ` and `S` a closed subset of its analytic
-space `X(ℂ)`. For the chosen injective resolution `ℚ → I^•`, this complex has in each degree the
-subsheaf of `I^n` consisting of sections that vanish off `S`. Its differentials are induced by
-those of `I^•`, and it represents the derived sheaf of sections with support in `S`. -/
-def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
+space `X(ℂ)`. This complex has in each degree the subsheaf of the sheafified rational singular
+cochains consisting of sections that vanish off `S`. -/
+def complexSupportSingularComplex (S : Closeds (ComplexPoint X)) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
-  -- `RΓ_S(ℚ)`: the `S`-supported subsheaves of an injective resolution of `ℚ` on `X(ℂ)`.
-  ((TopCat.Sheaf.sheafSectionsSupportedOutside
-    -- `X(ℂ)`.
-    (TopCat.of (ComplexPoint X))
-    -- The open `X(ℂ) \ S`; sections supported outside it are the sections supported on `S`.
-    S.compl).mapHomologicalComplex ℤᵘᵖ).obj
-      -- The injective resolution `I^•` of `ℚ` on `X(ℂ)`.
-      (ambientRationalInjectiveComplex X)
+  -- `Γ_S(C^•)`, the `S`-supported subsheaves of the singular cochains on `X(ℂ)`.
+  supportedRationalSingularCochainComplex (TopCat.of (ComplexPoint X)) S.compl
 
-instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint X)) :
-    (complexSupportInjectiveComplex X S).IsStrictlyGE 0 := by
-  dsimp [complexSupportInjectiveComplex]
+instance complexSupportSingularComplex_isStrictlyGE (S : Closeds (ComplexPoint X)) :
+    (complexSupportSingularComplex X S).IsStrictlyGE 0 := by
+  dsimp [complexSupportSingularComplex, supportedRationalSingularCochainComplex]
   infer_instance
+
+instance complexSupportSingularComplex_isFlasque (S : Closeds (ComplexPoint X)) (n : ℤ) :
+    ((complexSupportSingularComplex X S).X n).IsFlasque :=
+  letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
+  TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque (TopCat.of (ComplexPoint X)) S.compl
+    ((rationalSingularCochainComplex (TopCat.of (ComplexPoint X))).X n)
 
 end AlgebraicGeometry.ComplexPoint

@@ -17,7 +17,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
+public import Other.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
 public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModelLemmas
 
 /-!

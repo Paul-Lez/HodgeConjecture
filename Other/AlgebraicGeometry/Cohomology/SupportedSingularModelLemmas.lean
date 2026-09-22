@@ -6,7 +6,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportedSingularModel
+public import Other.AlgebraicGeometry.Cohomology.SupportedSingularModel
 
 /-!
 # Supported singular models on smooth projective complex varieties

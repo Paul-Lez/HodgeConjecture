@@ -6,8 +6,8 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
+public import Other.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
+public import Other.AlgebraicTopology.Sheaf.OpenInjectiveResolutionLemmas
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef

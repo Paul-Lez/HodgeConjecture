@@ -18,6 +18,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModelLemmas
 public import Other.AlgebraicGeometry.Cohomology.SupportConeForget
+public import Other.AlgebraicGeometry.Cohomology.SupportedSingularModelLemmas
 
 /-!
 # Constructed sheaf cycle classes in arbitrary codimension
@@ -46,9 +47,9 @@ theorem cycleComponentExtendSmoothCoclass_normalization
 
 /-- Exact smooth-locus normalization, not equality only up to a scalar. -/
 @[simp]
-theorem cycleComponentSupportedInjectiveClass_normalization :
+theorem cycleComponentSupportedSingularClass_normalization :
     (cycleComponentSupportedClassNormalizationIso X x hx).hom
-      (cycleComponentSupportedInjectiveClass X x hx) =
+      (cycleComponentSupportedSingularClass X x hx) =
     cycleComponentSmoothSupportCoclassSection X x hx :=
   cycleComponentExtendSmoothCoclass_normalization X x hx _
 
@@ -63,11 +64,11 @@ theorem cycleComponentExtendSmoothCoclass_unique
 
 /-- The normalized global extension is unique, by injectivity of the
 restriction/purity comparison. This is a theorem, not a supplied existence input. -/
-theorem cycleComponentSupportedInjectiveClass_unique
+theorem cycleComponentSupportedSingularClass_unique
     (a : CycleComponentSupportedCohomology X x p)
     (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a =
       cycleComponentSmoothSupportCoclassSection X x hx) :
-    a = cycleComponentSupportedInjectiveClass X x hx :=
+    a = cycleComponentSupportedSingularClass X x hx :=
   cycleComponentExtendSmoothCoclass_unique X x hx _ a ha
 
 /-- The ordinary class is the support-forgetting image of the supported class, by definition. -/
@@ -82,7 +83,9 @@ def coneCycleComponentSheafSupportedClass :
     RationalCohomologyWithSupport X (cycleComponentSupport X x) ((2 * p : ℕ) : ℤ) :=
   (coneSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
     (cycleComponentAnalyticClosedSupport X x).isClosed ((2 * p : ℕ) : ℤ)).symm
-      (cycleComponentSupportedInjectiveClass X x hx)
+      ((complexSupportedSingularInjectiveHomologyIso X
+        (cycleComponentAnalyticClosedSupport X x).compl ⊤ ((2 * p : ℕ) : ℤ)).hom
+          (cycleComponentSupportedSingularClass X x hx))
 
 /-- The class of the component computed through the mapping-cone model. Its agreement with
 `cycleComponentSheafClass` is not yet proved. -/
@@ -101,7 +104,9 @@ theorem coneCycleComponentSheafClass_eq_injectiveModel :
           (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
             (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
             (ambientRationalInjectiveComplex X)).f (2 * p)
-          (cycleComponentSupportedInjectiveClass X x hx)) := by
+          ((complexSupportedSingularInjectiveHomologyIso X
+            (cycleComponentAnalyticClosedSupport X x).compl ⊤ (2 * p)).hom
+              (cycleComponentSupportedSingularClass X x hx))) := by
   apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * p)).injective
   rw [AddEquiv.apply_symm_apply]
   change rationalHypercohomologyAddEquivAmbientInjectiveHomology X _
