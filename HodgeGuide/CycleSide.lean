@@ -145,7 +145,9 @@ which is the `n - 1` in the second definition below. The group has its own notat
 Forgetting support is the first map of the displayed triangle. In the mapping-cone picture it is
 the cone's connecting morphism to $`\underline{\mathbb Q}_X[1]`, and composing a class of degree
 $`n-1` in the cone with that morphism gives a class in degree $`n` of the ambient complex. The
-composite is {name}`forgetSupport`, the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
+composite is {name}`forgetSupportHypercohomology`. Followed by the comparison between
+hypercohomology of the constant sheaf complex and sheaf cohomology, it is {name}`forgetSupport`,
+the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
 
 ```lean -show
 namespace Guide.Cycles.D8
@@ -175,19 +177,10 @@ example : @Guide.Cycles.D9.RationalCohomologyWithSupport = @AlgebraicGeometry.Co
 namespace Guide.Cycles.D10
 ```
 ```lean
-def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
-    RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) where
-  toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
-  map_zero' := by
-    apply (Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    simp only [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_zero, ShiftedHom.zero_comp]
-  map_add' α β := by
-    apply (Localization.SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    simp only [Localization.SmallShiftedHom.equiv_comp,
-      hypercohomologyEquiv_add, ShiftedHom.add_comp]
+def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℕ) :
+    RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) :=
+  (hypercohomologyAddEquivConstantCohomology ℚ X n).toAddMonoidHom.comp
+    (forgetSupportHypercohomology X Z n)
 ```
 ```lean -show
 end Guide.Cycles.D10

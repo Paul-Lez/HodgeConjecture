@@ -47,131 +47,38 @@ open Point
 
 variable (X : Over (Spec ↧ℂ))
 
-/-- The natural-to-integer cochain embedding sends degree zero to degree zero. -/
-lemma embeddingUpNat_zero : ComplexShape.embeddingUpNat.f 0 = (0 : ℤ) := rfl
+set_option linter.auxLemma false
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
 
-/-- The extended integer constant-sheaf complex is the integer constant sheaf in degree zero. -/
-def constantIntegerSheafComplexIntIsoSingleZero :
-    constantIntegerSheafComplexInt X ≅
-      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℤ) :=
-  HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℤ) 0 0 embeddingUpNat_zero
-
-/-- The extended rational constant-sheaf complex is the rational constant sheaf in degree zero. -/
-def constantRationalSheafComplexIntIsoSingleZero :
-    constantFieldSheafComplexInt ℚ X ≅
-      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℚ) :=
-  HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℚ) 0 0 embeddingUpNat_zero
-
-/-- The inverse of the integer extension/single comparison is a quasi-isomorphism. -/
-lemma constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso :
-    analyticQuasiIsomorphisms X
-      (constantIntegerSheafComplexIntIsoSingleZero X).inv := by
-  let : IsIso (constantIntegerSheafComplexIntIsoSingleZero X).inv :=
-    (constantIntegerSheafComplexIntIsoSingleZero X).isIso_inv
-  exact ⟨fun _ ↦ inferInstance⟩
-
-/-- The rational extension/single comparison is a quasi-isomorphism. -/
-lemma constantRationalSheafComplexIntIsoSingleZero_hom_quasiIso :
-    analyticQuasiIsomorphisms X
-      (constantRationalSheafComplexIntIsoSingleZero X).hom := by
-  let : IsIso (constantRationalSheafComplexIntIsoSingleZero X).hom :=
-    (constantRationalSheafComplexIntIsoSingleZero X).isIso_hom
-  exact ⟨fun _ ↦ inferInstance⟩
-
-/-- Degree-zero rational cohomology after replacing both extended complexes by single
-complexes. -/
-def rationalCohomologyZeroEquivSingle :
-    H^0(X; ℚ) ≃
-      Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℤ))
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℚ)) (0 : ℤ) :=
-  (Localization.SmallShiftedHom.precompEquiv
-      (constantIntegerSheafComplexIntIsoSingleZero X).inv
-      (constantIntegerSheafComplexIntIsoSingleZero_inv_quasiIso X)).trans
-    (Localization.SmallShiftedHom.postcompEquiv
-      (constantRationalSheafComplexIntIsoSingleZero X).hom
-      (constantRationalSheafComplexIntIsoSingleZero_hom_quasiIso X))
-
-/-- The single-complex shifted morphism group is definitionally the corresponding Ext group. -/
-def rationalCohomologyZeroSingleEquivExt :
-    Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℤ))
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-          𝓒(↧(ComplexPoint X); ℚ)) (0 : ℤ) ≃
-      Abelian.Ext 𝓒(↧(ComplexPoint X); ℤ)
-        𝓒(↧(ComplexPoint X); ℚ) 0 :=
-  Equiv.refl _
-
-/-- The definitional comparison from shifted Hom to Ext acts as the identity. -/
-@[simp] lemma rationalCohomologyZeroSingleEquivExt_apply
-    (a : Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
-      ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℤ))
-      ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
-        𝓒(↧(ComplexPoint X); ℚ)) (0 : ℤ)) :
-    rationalCohomologyZeroSingleEquivExt X a = a := rfl
+/-- The source object of Mathlib's sheaf cohomology is the constant integer sheaf. -/
+def uliftIntegerConstantSheafIso :
+    (constantSheaf (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) AddCommGrpCat).obj
+      (AddCommGrpCat.of (ULift ℤ)) ≅ 𝓒(↧(ComplexPoint X); ℤ) :=
+  (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).mapIso
+    (AddEquiv.ulift (α := ℤ)).toAddCommGrpIso
 
 /-- Degree-zero rational constant-sheaf cohomology is ordinary Hom from integer constants to
 rational constants. -/
 def rationalCohomologyZeroEquivSheafHom :
     H^0(X; ℚ) ≃
       (𝓒(↧(ComplexPoint X); ℤ) ⟶ 𝓒(↧(ComplexPoint X); ℚ)) :=
-  ((rationalCohomologyZeroEquivSingle X).trans
-    (rationalCohomologyZeroSingleEquivExt X)).trans Abelian.Ext.homEquiv₀
+  Abelian.Ext.homEquiv₀.trans ((uliftIntegerConstantSheafIso X).homCongr (Iso.refl _))
 
-set_option backward.isDefEq.respectTransparency.types false in
-set_option backward.isDefEq.respectTransparency false in
-/-- Replacing the extended complexes by single complexes sends a constant class to the
-corresponding single-complex morphism. -/
-lemma rationalCohomologyZeroEquivSingle_class (q : ℚ) :
-    rationalCohomologyZeroEquivSingle X
-        (fieldCohomologyClass ℚ X q) =
-      Localization.SmallShiftedHom.mk₀
-        (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map
-          (integerToFieldConstantSheaf ℚ X q)) := by
-  simp only [rationalCohomologyZeroEquivSingle, fieldCohomologyClass, Equiv.trans_apply,
-    Hypercohomology, Localization.SmallShiftedHom.precompEquiv_apply]
-  rw [← smallShiftedHomMkZero_comp X, Localization.SmallShiftedHom.postcompEquiv_apply,
-    ← smallShiftedHomMkZero_comp X]
-  congr 1
-  unfold constantIntegerSheafComplexInt constantFieldSheafComplexInt
-    integerToFieldConstantSheafComplexInt
-    constantIntegerSheafComplexIntIsoSingleZero
-    constantRationalSheafComplexIntIsoSingleZero
-  ext i
-  by_cases hi : i = 0
-  · subst i
-    simp only [HomologicalComplex.comp_f]
-    rw [HomologicalComplex.extendSingleIso_inv_f,
-      HomologicalComplex.extendMap_f _ _ embeddingUpNat_zero,
-      HomologicalComplex.extendSingleIso_hom_f]
-    simp
-    exact (HomologicalComplex.single_map_f_self ℤᵘᵖ 0
-      (integerToFieldConstantSheaf ℚ X q)).symm
-  · exact (HomologicalComplex.isZero_single_obj_X
-      ℤᵘᵖ 0 𝓒(↧(ComplexPoint X); ℤ) i hi).eq_of_src _ _
-
-set_option backward.isDefEq.respectTransparency.types false in
-set_option backward.isDefEq.respectTransparency false in
 /-- The degree-zero comparison sends the constant class of `q` to the constant-sheaf morphism
 induced by `n ↦ n q`. -/
 @[simp] theorem rationalCohomologyZeroEquivSheafHom_class (q : ℚ) :
     rationalCohomologyZeroEquivSheafHom X
         (fieldCohomologyClass ℚ X q) =
       integerToFieldConstantSheaf ℚ X q := by
-  apply (Abelian.Ext.mk₀_bijective _ _).injective
-  dsimp only [rationalCohomologyZeroEquivSheafHom, Equiv.trans_apply]
-  rw [Abelian.Ext.mk₀_homEquiv₀_apply, rationalCohomologyZeroEquivSingle_class,
-    rationalCohomologyZeroSingleEquivExt_apply]
-  rfl
+  have h : Abelian.Ext.homEquiv₀ (Abelian.Ext.mk₀
+      (uliftIntegerToIntegerConstantSheaf X ≫ integerToFieldConstantSheaf ℚ X q)) =
+      uliftIntegerToIntegerConstantSheaf X ≫ integerToFieldConstantSheaf ℚ X q :=
+    (Abelian.Ext.mk₀_bijective _ _).injective (Abelian.Ext.mk₀_homEquiv₀_apply _)
+  rw [rationalCohomologyZeroEquivSheafHom, Equiv.trans_apply, fieldCohomologyClass, h,
+    Iso.homCongr_apply, Iso.refl_hom, Category.comp_id]
+  change (uliftIntegerConstantSheafIso X).inv ≫ (uliftIntegerConstantSheafIso X).hom ≫ _ = _
+  rw [Iso.inv_hom_id_assoc]
 
 /-- If the constant-sheaf functor is faithful, distinct rational constants define distinct
 degree-zero cohomology classes. -/

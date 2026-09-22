@@ -267,13 +267,11 @@ def forgetSupportShiftedHom (Z : Set (ComplexPoint X)) :
     (CochainComplex.mappingCone.triangle
       (rationalRestrictionComplexInt X Z)).mor₃
 
-/-- Let `X` be a scheme over `ℂ`, `Z ⊆ X(ℂ)`, and `n` an integer. This is the additive map
-`H^n_Z(X(ℂ); ℚ) → H^n(X(ℂ); ℚ)` induced by the connecting morphism of the restriction cone. For
-closed `Z`, it sends a class represented by sections supported in `Z` to its ordinary cohomology
-class. -/
-def forgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
+/-- Forget support, using the connecting morphism of the mapping-cone triangle, in the
+hypercohomology presentation of rational cohomology. -/
+def forgetSupportHypercohomology (Z : Set (ComplexPoint X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+
-      H^n(X; ℚ) where
+      Hypercohomology X (constantFieldSheafComplexInt ℚ X) n where
   toFun α := α.comp (forgetSupportShiftedHom X Z) (by lia)
   map_zero' := by
     apply (Localization.SmallShiftedHom.equiv
@@ -285,6 +283,12 @@ def forgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
       (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
     simp only [Localization.SmallShiftedHom.equiv_comp,
       hypercohomologyEquiv_add, ShiftedHom.add_comp]
+
+/-- Forget support: the map `H^n_Z(X(ℂ); ℚ) → H^n(X(ℂ); ℚ)`. -/
+def forgetSupport (Z : Set (ComplexPoint X)) (n : ℕ) :
+    RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) :=
+  (hypercohomologyAddEquivConstantCohomology ℚ X n).toAddMonoidHom.comp
+    (forgetSupportHypercohomology X Z n)
 
 section
 
@@ -301,13 +305,13 @@ instance isIso_forgetSupportShiftedHom_univ_map :
 
 end
 
-/-- Let `X` be a scheme over `ℂ` and `n` an integer. Cohomology supported on the whole analytic
-space equals ordinary cohomology: `H^n_{X(ℂ)}(X(ℂ); ℚ) ≃ H^n(X(ℂ); ℚ)`. This equivalence is the
-map that forgets support; the complement is empty, so its restriction complex is zero. -/
-noncomputable def forgetSupportEquivUniv (n : ℤ) :
+/-- For support equal to the whole space, forgetting support is a canonical equivalence with
+ordinary rational cohomology in its hypercohomology presentation. Its forward map is
+definitionally the support-forgetting map. -/
+noncomputable def forgetSupportHypercohomologyEquivUniv (n : ℤ) :
     RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
-      H^n(X; ℚ) :=
+      Hypercohomology X (constantFieldSheafComplexInt ℚ X) n :=
   let eSource : RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
       ShiftedHom
@@ -316,7 +320,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
         (n - 1) :=
     Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  let eTarget : H^n(X; ℚ) ≃
+  let eTarget : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
         (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=
@@ -338,13 +342,13 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
       (show (1 : ℤ) + (n - 1) = n by lia)
   have hcomp (α : RationalCohomologyWithSupport X
       (Set.univ : Set (ComplexPoint X)) n) :
-      eTarget (forgetSupport X Set.univ n α) = eComp (eSource α) := by
+      eTarget (forgetSupportHypercohomology X Set.univ n α) = eComp (eSource α) := by
     change eTarget
       (α.comp (forgetSupportShiftedHom X Set.univ) (by lia)) = _
     rw [Localization.SmallShiftedHom.equiv_comp]
     exact (ShiftedHom.postcompEquivOfIsIso_apply g
       (show (1 : ℤ) + (n - 1) = n by lia) (eSource α)).symm
-  { toFun := forgetSupport X Set.univ n
+  { toFun := forgetSupportHypercohomology X Set.univ n
     invFun := fun α => eSource.symm (eComp.symm (eTarget α))
     left_inv := fun α ↦ eSource.injective (by
       rw [eSource.apply_symm_apply, hcomp, eComp.symm_apply_apply])
@@ -367,10 +371,21 @@ variable (X : Over (Spec ↧ℂ))
 
 attribute [local instance] analyticSupportHasDerivedCategory
 
-@[simp] lemma forgetSupportEquivUniv_apply (n : ℤ)
+@[simp] lemma forgetSupportHypercohomologyEquivUniv_apply (n : ℤ)
     (α : RationalCohomologyWithSupport X
       (Set.univ : Set (ComplexPoint X)) n) :
-    forgetSupportEquivUniv X n α =
-      forgetSupport X Set.univ n α := rfl
+    forgetSupportHypercohomologyEquivUniv X n α =
+      forgetSupportHypercohomology X Set.univ n α := rfl
+
+/-- For support equal to the whole space, forgetting support is a canonical equivalence with
+ordinary rational cohomology. -/
+noncomputable def forgetSupportEquivUniv (n : ℕ) :
+    RationalCohomologyWithSupport X (Set.univ : Set (ComplexPoint X)) n ≃ H^n(X; ℚ) :=
+  (forgetSupportHypercohomologyEquivUniv X n).trans
+    (hypercohomologyAddEquivConstantCohomology ℚ X n).toEquiv
+
+@[simp] lemma forgetSupportEquivUniv_apply (n : ℕ)
+    (α : RationalCohomologyWithSupport X (Set.univ : Set (ComplexPoint X)) n) :
+    forgetSupportEquivUniv X n α = forgetSupport X Set.univ n α := rfl
 
 end AlgebraicGeometry.ComplexPoint

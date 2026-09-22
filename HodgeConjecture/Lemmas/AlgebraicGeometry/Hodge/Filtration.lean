@@ -42,6 +42,10 @@ variable (X : Over (Spec ↧ℂ))
 
 attribute [local instance] analyticHasDerivedCategory
 
+set_option linter.auxLemma false
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
+
 /-- A rational number as a morphism from the integer to the rational constant sheaf. -/
 def integerToFieldConstantSheaf (q : K) :
     𝓒(↧(ComplexPoint X); ℤ) ⟶ 𝓒(↧(ComplexPoint X); K) :=
@@ -72,51 +76,34 @@ omit [Algebra K ℂ] in
   rw [h, Functor.map_add]
   rfl
 
-/-- A rational number as a morphism of constant complexes. -/
-def integerToFieldConstantSheafComplexInt (q : K) :
-    constantIntegerSheafComplexInt X ⟶
-      constantFieldSheafComplexInt K X :=
-  HomologicalComplex.extendMap
-    ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
-      (integerToFieldConstantSheaf K X q)) ComplexShape.embeddingUpNat
-
-omit [Algebra K ℂ] in
-@[simp] lemma integerToFieldConstantSheafComplexInt_zero :
-    integerToFieldConstantSheafComplexInt K X 0 = 0 := by
-  unfold integerToFieldConstantSheafComplexInt
-  rw [integerToFieldConstantSheaf_zero, Functor.map_zero,
-    HomologicalComplex.extendMap_zero]
-
-omit [Algebra K ℂ] in
-@[simp] lemma integerToFieldConstantSheafComplexInt_add (a b : K) :
-    integerToFieldConstantSheafComplexInt K X (a + b) =
-      integerToFieldConstantSheafComplexInt K X a +
-        integerToFieldConstantSheafComplexInt K X b := by
-  unfold integerToFieldConstantSheafComplexInt
-  rw [integerToFieldConstantSheaf_add, Functor.map_add,
-    HomologicalComplex.extendMap_add]
+/-- The source object of Mathlib's sheaf cohomology mapped to the constant integer sheaf. -/
+def uliftIntegerToIntegerConstantSheaf :
+    (constantSheaf (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) AddCommGrpCat).obj
+      (AddCommGrpCat.of (ULift ℤ)) ⟶ 𝓒(↧(ComplexPoint X); ℤ) :=
+  (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+    (AddCommGrpCat.ofHom (AddEquiv.ulift (α := ℤ)).toAddMonoidHom)
 
 /-- The constant rational class `q` in degree-zero rational cohomology. -/
 def fieldCohomologyClass (q : K) : H^0(X; K) :=
-  Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-    (integerToFieldConstantSheafComplexInt K X q)
+  Abelian.Ext.mk₀ (uliftIntegerToIntegerConstantSheaf X ≫ integerToFieldConstantSheaf K X q)
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldCohomologyClass_zero :
     fieldCohomologyClass K X 0 = 0 := by
-  apply (Localization.SmallShiftedHom.equiv
-    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-  simp [fieldCohomologyClass, hypercohomologyEquiv_zero,
-    integerToFieldConstantSheafComplexInt_zero]
+  rw [fieldCohomologyClass, integerToFieldConstantSheaf_zero]
+  exact (congrArg Abelian.Ext.mk₀
+    (Limits.comp_zero (f := uliftIntegerToIntegerConstantSheaf X))).trans
+    (Abelian.Ext.mk₀_zero _ _)
 
 omit [Algebra K ℂ] in
 @[simp] lemma fieldCohomologyClass_add (a b : K) :
     fieldCohomologyClass K X (a + b) =
       fieldCohomologyClass K X a + fieldCohomologyClass K X b := by
-  apply (Localization.SmallShiftedHom.equiv
-    (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-  simp [fieldCohomologyClass, hypercohomologyEquiv_add,
-    integerToFieldConstantSheafComplexInt_add]
+  rw [fieldCohomologyClass, fieldCohomologyClass, fieldCohomologyClass,
+    integerToFieldConstantSheaf_add]
+  exact (congrArg Abelian.Ext.mk₀ (Preadditive.comp_add _ _ _ (uliftIntegerToIntegerConstantSheaf X)
+    (integerToFieldConstantSheaf K X a) (integerToFieldConstantSheaf K X b))).trans
+    (Abelian.Ext.mk₀_add _ _)
 
 end AlgebraicGeometry.ComplexPoint
 

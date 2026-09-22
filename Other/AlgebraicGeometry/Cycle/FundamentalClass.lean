@@ -75,7 +75,7 @@ theorem cycleComponentSupportedInjectiveClass_unique
 kept as a named rewrite for the proofs that use it. -/
 theorem cycleComponentSheafClass_eq_forgetSupport :
     cycleComponentSheafClass X x hx =
-      forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
+      forgetSupport X (cycleComponentSupport X x) (2 * p)
         (cycleComponentSheafSupportedClass X x hx) :=
   rfl
 
@@ -86,14 +86,19 @@ set_option backward.defeqAttrib.useBackward true in
 mapping-cone presentation. This was the old definition of `cycleComponentSheafClass`. -/
 theorem cycleComponentSheafClass_eq_injectiveModel :
     cycleComponentSheafClass X x hx =
-      (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
+      (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * p)).symm
         (HomologicalComplex.homologyMap
           (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
             (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
-            (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
+            (ambientRationalInjectiveComplex X)).f (2 * p)
           (cycleComponentSupportedInjectiveClass X x hx)) := by
-  apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).injective
-  rw [cycleComponentSheafClass_eq_forgetSupport,
+  apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * p)).injective
+  rw [AddEquiv.apply_symm_apply, cycleComponentSheafClass_eq_forgetSupport]
+  change rationalHypercohomologyAddEquivAmbientInjectiveHomology X _
+    ((hypercohomologyAddEquivConstantCohomology ℚ X (2 * p)).symm
+      ((hypercohomologyAddEquivConstantCohomology ℚ X (2 * p))
+        (forgetSupportHypercohomology X _ _ _))) = _
+  rw [AddEquiv.symm_apply_apply,
     rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
     (cycleComponentSupport X x) (cycleComponentAnalyticClosedSupport X x).isClosed]
   simp only [cycleComponentSheafSupportedClass, AddEquiv.apply_symm_apply]

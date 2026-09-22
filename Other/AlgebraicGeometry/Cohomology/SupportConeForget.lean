@@ -27,13 +27,13 @@ attribute [local instance] rationalConeForgetSheafDerivedCategory
 
 /-- Let `X` be a scheme over `ℂ`, let `Y = X(ℂ)` have its analytic topology, and let `I` be the
 chosen injective resolution of the constant rational sheaf on `Y`. This additive equivalence
-identifies rational sheaf cohomology `H^n(Y;ℚ)` with `H^n(Γ(Y,I))` for every integer `n`. It is
+identifies rational hypercohomology `ℍ^n(Y; ℚ[0])` with `H^n(Γ(Y,I))` for every integer `n`. It is
 induced by the augmentation of the constant sheaf into `I`. -/
-def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
-    H^n(X; ℚ) ≃+
+def rationalHypercohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
+    Hypercohomology X (constantFieldSheafComplexInt ℚ X) n ≃+
       (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X))
         (ambientRationalInjectiveComplex X)).homology n :=
-  let e : H^n(X; ℚ) ≃+
+  let e : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n ≃+
       Hypercohomology X (ambientRationalInjectiveComplex X) n :=
     { toEquiv := Localization.SmallShiftedHom.postcompEquiv
         (ambientRationalInjectiveAugmentation X)
@@ -41,6 +41,15 @@ def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
       map_add' α β := (hypercohomologyMap X
         (ambientRationalInjectiveAugmentation X) n).map_add α β }
   e.trans (hypercohomologyAddEquivGlobalSectionsKInjective X _ n)
+
+/-- Ordinary rational cohomology computed by the actual ambient rational injective
+resolution. -/
+def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℕ) :
+    H^n(X; ℚ) ≃+
+      (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X))
+        (ambientRationalInjectiveComplex X)).homology n :=
+  (hypercohomologyAddEquivConstantCohomology ℚ X n).symm.trans
+    (rationalHypercohomologyAddEquivAmbientInjectiveHomology X n)
 
 end AlgebraicGeometry.ComplexPoint
 end
@@ -98,8 +107,8 @@ connecting homology map. -/
 lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
     (x : RationalCohomologyWithSupport X Z n) :
-    rationalCohomologyAddEquivAmbientInjectiveHomology X n
-      (forgetSupport X Z n x) =
+    rationalHypercohomologyAddEquivAmbientInjectiveHomology X n
+      (forgetSupportHypercohomology X Z n x) =
     (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
       (ShiftedHom.map
         (CochainComplex.mappingCone.triangle
@@ -126,8 +135,8 @@ No compatibility or choice of a sign is supplied as an input. -/
 lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
     (x : RationalCohomologyWithSupport X Z n) :
-    rationalCohomologyAddEquivAmbientInjectiveHomology X n
-      (forgetSupport X Z n x) =
+    rationalHypercohomologyAddEquivAmbientInjectiveHomology X n
+      (forgetSupportHypercohomology X Z n x) =
     HomologicalComplex.homologyMap
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
         (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤

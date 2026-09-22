@@ -91,8 +91,7 @@ integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_
 relative classes. Purity on the smooth locus and vanishing of cohomology supported on the
 singular locus make the map invertible. -/
 def cycleComponentSupportedClassNormalizationIso :
-    CycleComponentSupportedCohomology X x p ≅
-      CycleComponentSmoothCoclassSections X x p :=
+    CycleComponentSupportedCohomology X x p ≅ CycleComponentSmoothCoclassSections X x p :=
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
   cycleComponentSupportExtensionIso X x hx ≪≫
     cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
@@ -107,8 +106,7 @@ integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_
 𝓗^{2p}_S) → H^{2p}_S(X(ℂ); ℚ)` assigns to a section its unique supported class on all of `X(ℂ)`.
 It inverts restriction followed by passage to local relative-cohomology classes. -/
 def cycleComponentExtendSmoothCoclass :
-    CycleComponentSmoothCoclassSections X x p →+
-      CycleComponentSupportedCohomology X x p :=
+    CycleComponentSmoothCoclassSections X x p →+ CycleComponentSupportedCohomology X x p :=
   (cycleComponentSupportedClassNormalizationIso X x hx).inv.hom
 
 /-- Let `X` be a smooth integral projective scheme over `ℂ` and `Z` the codimension-`p` integral
@@ -131,17 +129,17 @@ def cycleComponentSheafSupportedClass :
       -- `Z(ℂ)`.
       (cycleComponentSupport X x)
       -- Degree `2p`.
-      (2 * (p : ℤ)) :=
+      ((2 * p : ℕ) : ℤ) :=
   (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentAnalyticClosedSupport X x).isClosed (2 * (p : ℤ))).symm
+    (cycleComponentAnalyticClosedSupport X x).isClosed ((2 * p : ℕ) : ℤ)).symm
       (cycleComponentSupportedInjectiveClass X x hx)
 
 /-- Let `X` be a smooth integral projective scheme over `ℂ` and `Z` the codimension-`p` integral
 subvariety with generic point `x`. The fundamental cohomology class `[Z] ∈ H^{2p}(X(ℂ);ℚ)` is
 obtained by forgetting the support of the class in `H^{2p}_{Z(ℂ)}(X(ℂ);ℚ)` whose local classes
 along the smooth locus evaluate to `1` on the complex orientation classes of the normal spaces. -/
-def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
-  forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
+def cycleComponentSheafClass : H^(2 * p)(X; ℚ) :=
+  forgetSupport X (cycleComponentSupport X x) (2 * p)
     (cycleComponentSheafSupportedClass X x hx)
 
 end
@@ -150,7 +148,7 @@ end
 rational subspace of `H^{2p}(X(ℂ); ℚ)` spanned by the fundamental cohomology classes of all
 codimension-`p` integral closed subvarieties of `X`. Their classes are normalized by the complex
 orientations of their normal spaces on their smooth loci. -/
-def algebraicCycleClassSpan (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
+def algebraicCycleClassSpan (p : ℕ) : Submodule ℚ (H^(2 * p)(X; ℚ)) :=
   sSup {Submodule.span ℚ {cycleComponentSheafClass X x hx} |
     (x : X.left) (hx : Order.coheight x = p) }
 

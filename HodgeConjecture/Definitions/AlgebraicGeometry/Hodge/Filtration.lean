@@ -20,11 +20,13 @@ import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 public import HodgeConjecture.Lemmas.Algebra.FieldToComplex
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
 public import HodgeConjecture.Lemmas.LinearAlgebra.HodgeStructure
+public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
 public import Mathlib.Algebra.Homology.DerivedCategory.Basic
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Algebra.Module.MinimalAxioms
 public import Mathlib.CategoryTheory.Localization.SmallShiftedHom
+public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
 public import Mathlib.Data.Int.Cast.Lemmas
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
@@ -32,10 +34,11 @@ import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 /-!
 # The Hodge filtration
 
-This file defines rational sheaf cohomology and holomorphic de Rham hypercohomology on the
-analytic complex-point space of a smooth complex scheme. Hypercohomology is expressed with
-Mathlib's small shifted morphisms in the localization at quasi-isomorphisms. This avoids exposing
-a noncanonical choice of derived category in the public types.
+This file defines constant-sheaf cohomology and holomorphic de Rham hypercohomology on the
+analytic complex-point space of a smooth complex scheme. Constant-sheaf cohomology is Mathlib's
+sheaf cohomology. Hypercohomology is expressed with Mathlib's small shifted morphisms in the
+localization at quasi-isomorphisms; for the constant sheaf complex it agrees with sheaf
+cohomology. This avoids exposing a noncanonical choice of derived category in the public types.
 
 The stupid truncation of the holomorphic de Rham complex in form degrees at least `p` maps into
 the full complex. Its image on hypercohomology is the Hodge filtration `F^p`. A rational Hodge
@@ -53,6 +56,12 @@ open Point
 
 variable (K : Type) [Field K] [Algebra K ℂ]
 variable (X : Over (Spec ↧ℂ))
+
+set_option linter.auxLemma false
+/- Sheaves on a space are sheaves on its site of opens; the category instance is looked up under
+that spelling by Mathlib's sheaf cohomology. -/
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
 
 /-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. This is the category of
 sheaves of abelian groups on `X(ℂ)`. -/
@@ -155,7 +164,6 @@ omit [Algebra K ℂ] in
   change (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
       (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft (a * b))) = _
   rw [AddMonoidHom.mulLeft_mul, h, Functor.map_comp]
-  rfl
 
 /-- Multiplying by `q` in `K` before including into `ℂ` agrees with including first and then
 multiplying by `algebraMap K ℂ q`. -/
@@ -177,9 +185,6 @@ private lemma const_map_algebraMap_comp_complexScalarPresheaf (q : K) : (Functor
   (Functor.const (Opens (ComplexPoint X))ᵒᵖ).map
     (AddCommGrpCat.ofHom (algebraMap K ℂ : K →+ ℂ) ≫ AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ ((algebraMap K ℂ) q))) := rfl
 
-set_option linter.auxLemma false in
-attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1 TopCat.instCategorySheaf._aux_3
-  TopCat.instCategorySheaf._aux_5 in
 /-- The inclusion of `K`-valued constants into complex constants commutes with scalar
 multiplication. -/
 private lemma fieldToComplexConstantSheaf_scalar (q : K) :
@@ -192,8 +197,6 @@ private lemma fieldToComplexConstantSheaf_scalar (q : K) :
     ← ofHom_algebraMap_comp_complexScalarSMul,
     const_map_algebraMap_comp_complexScalarPresheaf]
 
-attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
-  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 in
 /-- Let `K` be a field, `X` a scheme over `ℂ`, and `q ∈ K`. This endomorphism of the integer-indexed
 complex `K[0]` on the analytic space `X(ℂ)` multiplies its degree-zero constant sheaf by `q`. -/
 def fieldScalarComplex (q : K) :
@@ -275,13 +278,21 @@ analytic space `X(ℂ)`. The symbol `ℍ` follows page 51 of
 [P. Deligne, *The Hodge Conjecture*](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf). -/
 scoped notation:max "ℍ^" n:max "(" X "; " 𝒦 ")" => Hypercohomology X 𝒦 n
 
-/-- `H^n(X; K)` is the cohomology of the analytic space `X(ℂ)` with coefficients in the field
-`K`, in integer degree `n`. It is the hypercohomology of the constant sheaf `K` in degree zero.
+/-- `Ext`-groups of analytic sheaves are computed in `Type 1`. The instance is stated on the site
+category, which is how Mathlib's sheaf cohomology looks it up. -/
+instance analyticHasExt :
+    HasExt.{1} (CategoryTheory.Sheaf
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) AddCommGrpCat.{0}) :=
+  fun _ _ _ _ ↦ Localization.hasSmallLocalizedHom_of_isLocalization
+    (analyticQuasiIsomorphisms X) DerivedCategory.Q
+
+/-- `H^n(X; K)` is the sheaf cohomology of the analytic space `X(ℂ)` with coefficients in the
+constant sheaf `K`, in degree `n`, as defined in Mathlib.
 
 The literature writes `H^n(X; K)` for the variety `X.left` alone; here the variety is presented by
 its structure morphism `X`. -/
 scoped notation3:max "H^" n:max "(" X "; " K ")" =>
-  ℍ^n(X; constantFieldSheafComplexInt K X)
+  Sheaf.H ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).obj (AddCommGrpCat.of K)) n
 
 /-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. Degree-`n` cohomology with
 coefficients in the constant complex sheaf is `H^n(X(ℂ); ℂ) = ℍ^n(X(ℂ); ℂ[0])`. It is the group
@@ -411,6 +422,124 @@ lemma hypercohomologyMap_add_apply
   simp [hypercohomologyMap, Localization.SmallShiftedHom.equiv_comp,
     Functor.map_add]
 
+/-- The constant sheaf complex is the constant sheaf placed in degree zero. -/
+def constantFieldSheafComplexIntIsoSingle :
+    constantFieldSheafComplexInt K X ≅
+      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj 𝓒(↧(ComplexPoint X); K) :=
+  HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat 𝓒(↧(ComplexPoint X); K) 0 0 rfl
+
+/-- The integer constant sheaf complex is the source object of Mathlib's sheaf cohomology placed
+in degree zero. -/
+def constantIntegerSheafComplexIntIsoSingleULift :
+    constantIntegerSheafComplexInt X ≅
+      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+        ((constantSheaf (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+          AddCommGrpCat).obj (AddCommGrpCat.of (ULift ℤ))) :=
+  HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
+      𝓒(↧(ComplexPoint X); ℤ) 0 0 rfl ≪≫
+    (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).mapIso
+      ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).mapIso
+        (AddEquiv.ulift (α := ℤ)).toAddCommGrpIso).symm
+
+local instance analyticSiteHasDerivedCategory :
+    HasDerivedCategory (CategoryTheory.Sheaf
+      (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) AddCommGrpCat.{0}) :=
+  analyticHasDerivedCategory X
+
+/-- The source comparison, as a small shifted morphism from the source object of Mathlib's sheaf
+cohomology to the integer constant sheaf complex. -/
+private def constantIntegerComparison :=
+  Localization.SmallShiftedHom.mk₀Inv (W := analyticQuasiIsomorphisms X) (0 : ℤ) rfl
+    (constantIntegerSheafComplexIntIsoSingleULift X).hom
+    ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance)
+
+/-- The target comparison, as a small shifted morphism from the constant sheaf complex to the
+constant sheaf in degree zero. -/
+private def constantFieldComparison :=
+  Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
+    (constantFieldSheafComplexIntIsoSingle K X).hom
+
+/-- Precomposition with the source comparison commutes with postcomposition by a map of
+complexes. -/
+private lemma constantIntegerComparison_comp_comp_mk₀
+    {L M : CochainComplex (AnalyticAdditiveSheaf X) ℤ} (n : ℤ)
+    (β : Localization.SmallShiftedHom (analyticQuasiIsomorphisms X)
+      (constantIntegerSheafComplexInt X) L n) (h : L ⟶ M) :
+    ((constantIntegerComparison X).comp β (add_zero n)).comp
+      (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl h) (zero_add n) =
+    (constantIntegerComparison X).comp
+      (β.comp (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl h)
+        (zero_add n)) (add_zero n) :=
+  Localization.SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X) _ β _
+    (add_zero n) (zero_add n) (by simp)
+
+/-- Hypercohomology of the constant sheaf complex is Mathlib's sheaf cohomology of the constant
+sheaf. -/
+def hypercohomologyAddEquivConstantCohomology (n : ℕ) :
+    Hypercohomology X (constantFieldSheafComplexInt K X) n ≃+ H^n(X; K) where
+  toEquiv :=
+    (Localization.SmallShiftedHom.precompEquiv.{1} (W := analyticQuasiIsomorphisms X)
+      (constantIntegerSheafComplexIntIsoSingleULift X).hom
+      ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance) (a := (n : ℤ))).symm.trans
+    (Localization.SmallShiftedHom.postcompEquiv.{1} (W := analyticQuasiIsomorphisms X)
+      (constantFieldSheafComplexIntIsoSingle K X).hom
+      ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance) (a := (n : ℤ)))
+  map_add' α β := by
+    apply Abelian.Ext.ext
+    rw [Abelian.Ext.add_hom]
+    show Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
+        (((constantIntegerComparison X).comp (α + β) _).comp (constantFieldComparison K X) _) =
+      Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
+        (((constantIntegerComparison X).comp α _).comp (constantFieldComparison K X) _) +
+      Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
+        (((constantIntegerComparison X).comp β _).comp (constantFieldComparison K X) _)
+    simp only [Localization.SmallShiftedHom.equiv_comp, hypercohomologyEquiv_add,
+      ShiftedHom.add_comp, ShiftedHom.comp_add]
+    rfl
+
+omit [Algebra K ℂ] in
+/-- The comparison with Mathlib's sheaf cohomology is natural in maps of constant sheaves. -/
+lemma hypercohomologyAddEquivConstantCohomology_map {L : Type} [Field L]
+    (f : 𝓒(↧(ComplexPoint X); K) ⟶ 𝓒(↧(ComplexPoint X); L)) (n : ℕ)
+    (α : Hypercohomology X (constantFieldSheafComplexInt K X) n) :
+    hypercohomologyAddEquivConstantCohomology L X n
+      (hypercohomologyMap X (HomologicalComplex.extendMap
+        ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map f)
+          ComplexShape.embeddingUpNat) n α) =
+    Sheaf.H.map f n (hypercohomologyAddEquivConstantCohomology K X n α) := by
+  show ((constantIntegerComparison X).comp (hypercohomologyMap X (HomologicalComplex.extendMap
+        ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map f)
+          ComplexShape.embeddingUpNat) n α) (add_zero _)).comp
+      (constantFieldComparison L X) (zero_add _) =
+    (((constantIntegerComparison X).comp α (add_zero _)).comp (constantFieldComparison K X)
+      (zero_add _)).comp
+      (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map f)) (zero_add _)
+  refine (constantIntegerComparison_comp_comp_mk₀ X _ _ _).trans (Eq.trans ?_
+    ((congrArg (fun γ => γ.comp (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X)
+      (0 : ℤ) rfl ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map f))
+      (zero_add _)) (constantIntegerComparison_comp_comp_mk₀ X _ α _)).trans
+        (constantIntegerComparison_comp_comp_mk₀ X _ _ _)).symm)
+  congr 1
+  change hypercohomologyMap X _ n (hypercohomologyMap X _ n α) =
+    hypercohomologyMap X _ n (hypercohomologyMap X _ n α)
+  rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
+  exact congrArg (fun g => hypercohomologyMap X g n α)
+    (HomologicalComplex.extendSingleIso_hom_naturality ComplexShape.embeddingUpNat f 0 0 rfl)
+
+omit [Algebra K ℂ] in
+/-- The inverse comparison is natural in maps of constant sheaves. -/
+lemma hypercohomologyAddEquivConstantCohomology_symm_map {L : Type} [Field L]
+    (f : 𝓒(↧(ComplexPoint X); K) ⟶ 𝓒(↧(ComplexPoint X); L)) (n : ℕ) (β : H^n(X; K)) :
+    (hypercohomologyAddEquivConstantCohomology L X n).symm (Sheaf.H.map f n β) =
+      hypercohomologyMap X (HomologicalComplex.extendMap
+        ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map f)
+          ComplexShape.embeddingUpNat) n
+        ((hypercohomologyAddEquivConstantCohomology K X n).symm β) := by
+  apply (hypercohomologyAddEquivConstantCohomology L X n).injective
+  rw [AddEquiv.apply_symm_apply, hypercohomologyAddEquivConstantCohomology_map,
+    AddEquiv.apply_symm_apply]
+
 /-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. Let a semiring `R` act on a
 sheaf complex `C` through endomorphisms `s(r)` with `s(a+b) = s(a)+s(b)`, `s(1) = id`, and
 `s(ab) = s(a) ∘ s(b)`. If the specified scalar action on `ℍ^n(X(ℂ); C)` is induced by these
@@ -447,21 +576,39 @@ noncomputable abbrev hypercohomologyModule {R : Type*} [Semiring R]
 
 /-- The `K`-action on constant-sheaf cohomology, induced by scalar multiplication on the
 coefficient sheaf. -/
-noncomputable instance (n : ℤ) :
+noncomputable instance (n : ℕ) :
     SMul K (H^n(X; K)) :=
-  ⟨fun q α ↦ hypercohomologyMap X (fieldScalarComplex K X q) n α⟩
+  ⟨fun q α ↦ Sheaf.H.map (fieldScalarSheaf K X q) n α⟩
 
 omit [Algebra K ℂ] in
-lemma field_smul_eq (n : ℤ) (q : K) (α : H^n(X; K)) :
-    q • α = hypercohomologyMap X
-      (fieldScalarComplex K X q) n α := rfl
+lemma field_smul_eq (n : ℕ) (q : K) (α : H^n(X; K)) :
+    q • α = Sheaf.H.map (fieldScalarSheaf K X q) n α := rfl
 
 /-- For a scheme `X` over `ℂ` and a field `K`, constant-sheaf cohomology `H^n(X(ℂ); K)` is a `K`-vector space, with scalars acting on coefficient functions. -/
-noncomputable instance fieldCohomologyModule (n : ℤ) :
+noncomputable instance fieldCohomologyModule (n : ℕ) :
     Module K (H^n(X; K)) :=
-  hypercohomologyModule X (fieldScalarComplex K X) n (field_smul_eq K X n)
-    (fieldScalarComplex_add K X) (fieldScalarComplex_one K X)
-    (fieldScalarComplex_mul K X)
+  Module.ofMinimalAxioms
+    (fun r α β => by
+      rw [field_smul_eq, field_smul_eq, field_smul_eq]
+      exact map_add _ α β)
+    (fun a b α => by
+      rw [field_smul_eq, field_smul_eq, field_smul_eq, fieldScalarSheaf_add]
+      exact Sheaf.H.map_add_apply _ _ α)
+    (fun a b α => by
+      rw [field_smul_eq, field_smul_eq, field_smul_eq, fieldScalarSheaf_mul,
+        Sheaf.H.map_comp_apply])
+    (fun α => by
+      rw [field_smul_eq, fieldScalarSheaf_one, Sheaf.H.map_id_apply])
+
+omit [Algebra K ℂ] in
+/-- The comparison with hypercohomology carries scalar multiplication to the action of the
+scalar complex. -/
+lemma hypercohomologyAddEquivConstantCohomology_symm_smul (n : ℕ) (q : K) (α : H^n(X; K)) :
+    (hypercohomologyAddEquivConstantCohomology K X n).symm (q • α) =
+      hypercohomologyMap X (fieldScalarComplex K X q) n
+        ((hypercohomologyAddEquivConstantCohomology K X n).symm α) := by
+  rw [field_smul_eq, hypercohomologyAddEquivConstantCohomology_symm_map]
+  rfl
 
 /-- The complex action on holomorphic de Rham hypercohomology, induced by scalar multiplication
 on the holomorphic de Rham complex. -/
@@ -506,26 +653,28 @@ noncomputable instance deRhamHypercohomologyIsScalarTower
 /-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For a field
 `K` embedded in `ℂ`, this additive map `H^n(X(ℂ); K) → H_dR^n(X)` is induced by including
 locally constant `K`-valued functions as holomorphic zero-forms. -/
-def fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+def fieldToDeRhamCohomology [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
     H^n(X; K) →+ H_dR^n(X) :=
-  hypercohomologyMap X (fieldToHolomorphicDeRhamComplexInt K X) n
+  (hypercohomologyMap X (fieldToHolomorphicDeRhamComplexInt K X) n).comp
+    (hypercohomologyAddEquivConstantCohomology K X n).symm.toAddMonoidHom
 
 /-- The `K`-coefficient to de Rham comparison is compatible with `K`-scalar multiplication. -/
 lemma fieldToDeRhamCohomology_smul
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ)
     (q : K) (α : H^n(X; K)) :
     fieldToDeRhamCohomology K X n (q • α) =
       q • fieldToDeRhamCohomology K X n α := by
-  rw [field_smul_eq, deRham_field_smul_eq]
+  rw [deRham_field_smul_eq]
   unfold fieldToDeRhamCohomology
-  rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
-  rw [fieldToHolomorphicDeRhamComplexInt_scalar]
+  simp only [AddMonoidHom.comp_apply, AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe]
+  rw [hypercohomologyAddEquivConstantCohomology_symm_smul, ← hypercohomologyMap_comp_apply,
+    ← hypercohomologyMap_comp_apply, fieldToHolomorphicDeRhamComplexInt_scalar]
 
 /-- Let `X` be a smooth integral scheme over `ℂ`, and give `X(ℂ)` its analytic topology. For a field
 `K` embedded in `ℂ`, the inclusion `K[0] → Ω^•` induces this `K`-linear map from constant-sheaf
 cohomology `H^n(X(ℂ); K)` to holomorphic de Rham cohomology `H_dR^n(X)`. -/
 def fieldToDeRhamCohomologyLinear
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
     H^n(X; K) →ₗ[K] H_dR^n(X) where
   toFun := fieldToDeRhamCohomology K X n
   map_add' := (fieldToDeRhamCohomology K X n).map_add
@@ -725,7 +874,7 @@ conjugating constant complex coefficients; for projective `X`, the intersection 
 component of type `(p,p)`. -/
 def hodgeClasses [IsIntegral X.left] [Smooth X.hom] (p : ℕ) :
     Submodule K (H^(2 * p)(X; K)) :=
-  ((hodgePiece X p p (2 * p)).restrictScalars K).comap
+  ((hodgePiece X p p (2 * p : ℕ)).restrictScalars K).comap
     (fieldToDeRhamCohomologyLinear K X (2 * p))
 
 /-- `Hdg^p(f; K)` is the space of Hodge classes of codimension `p` with coefficients in `K`.
