@@ -37,17 +37,23 @@ open CategoryTheory Topology TopologicalSpace
 
 namespace AlgebraicGeometry
 
+open CycleComponent
+
 open ComplexPoint
 
 variable (X : Over (Spec ↧ℂ))
 
+namespace CycleComponent
+
 /-- The inclusion of a cycle component on complex points, bundled as a continuous map. -/
-noncomputable def cycleComponentContinuousMap
+noncomputable def continuousMap
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
     @ContinuousMap
-      (ComplexPoint (cycleComponentOver X x))
+      (ComplexPoint (over X x))
       (ComplexPoint X) Point.analyticTopology Point.analyticTopology :=
   Point.continuousMap (Over.homMk (X.left.pointClosureι x) rfl)
+
+end CycleComponent
 
 variable {R : Type*} [Zero R] (c : AlgebraicCycle X.left R)
 
@@ -71,13 +77,13 @@ lemma mem_analyticCycleSupport {z : ComplexPoint X} :
 coefficient. -/
 lemma coe_analyticCycleSupport_eq_iUnion :
     (analyticCycleSupport X c : Set (ComplexPoint X)) =
-      ⋃ x ∈ c.support, cycleComponentSupport X x :=
+      ⋃ x ∈ c.support, x‾(ℂ) :=
   (congrArg (Point.underlying ⁻¹' ·) c.coe_closedSupport_eq_iUnion).trans Set.preimage_iUnion₂
 
 /-- The support of a component with a nonzero coefficient lies in the analytic support of the
 cycle. -/
-lemma cycleComponentSupport_le_analyticCycleSupport {x : X.left} (hx : c x ≠ 0) :
-    cycleComponentSupport X x ≤ analyticCycleSupport X c :=
+lemma CycleComponent.support_le_analyticCycleSupport {x : X.left} (hx : c x ≠ 0) :
+    x‾(ℂ) ≤ analyticCycleSupport X c :=
   fun _ hz ↦ c.closure_singleton_le_closedSupport hx hz
 
 /-- The zero cycle has empty analytic support. -/

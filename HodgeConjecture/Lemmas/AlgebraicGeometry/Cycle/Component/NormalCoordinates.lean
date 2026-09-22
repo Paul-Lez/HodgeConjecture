@@ -86,38 +86,42 @@ end SchemeGeometry
 
 variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
 
+namespace CycleComponent
+
 /-- Separate exact local coordinates on a smooth cycle component and on its smooth ambient
 variety.  The component coordinates use exactly `n` variables.  This package does not assert
 that the two coordinate systems straighten the closed immersion simultaneously. -/
-structure CycleComponentSeparateLocalCoordinates
+structure SeparateLocalCoordinates
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (x : X.left) (d n : ℕ)
     [SmoothOfRelativeDimension d X.hom] where
   /-- A complex point of the reduced component. -/
-  point : ComplexPoint (cycleComponentOver X x)
+  point : ComplexPoint (over X x)
   /-- The point lies in the component's smooth locus. -/
   point_mem_smoothLocus : point.underlying ∈
-    cycleComponentSmoothLocus X x
+    smoothLocus X x
   /-- The underlying point is closed in the component. -/
   point_isClosed : IsClosed {point.underlying}
   /-- An affine neighborhood in the smooth locus of the component. -/
   componentNeighborhood :
-    (cycleComponentSmoothLocusOver X x).left.Opens
+    (smoothLocusOver X x).left.Opens
   /-- The component neighborhood is affine. -/
   componentNeighborhood_isAffine : IsAffineOpen componentNeighborhood
   /-- The chosen point belongs to the component neighborhood. -/
   point_mem_componentNeighborhood :
     (⟨point.underlying, point_mem_smoothLocus⟩ :
-      (cycleComponentSmoothLocusOver X x).left) ∈
+      (smoothLocusOver X x).left) ∈
         componentNeighborhood
   /-- An étale coordinate homomorphism of complex algebras with exactly `n` component
   coordinates. -/
   componentCoordinateAlgHom : MvPolynomial (Fin n) ℂ →ₐ[ℂ]
-    Γ((cycleComponentSmoothLocusOver X x).left, componentNeighborhood)
+    Γ((smoothLocusOver X x).left, componentNeighborhood)
   /-- The component coordinate homomorphism is étale. -/
   componentCoordinateAlgHom_etale : componentCoordinateAlgHom.toRingHom.Etale
   /-- Independently chosen étale coordinates on the ambient `d`-fold. -/
   ambientCoordinates : LocalEtaleCoordinates X d
     (X.left.pointClosureι x point.underlying)
+
+end CycleComponent
 
 end AlgebraicGeometry

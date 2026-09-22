@@ -55,6 +55,8 @@ open CategoryTheory Order TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open CycleComponent
+
 open AlgebraicTopology.Singular
 
 
@@ -97,7 +99,7 @@ singular cohomology with support in the component's cycle-class degree. -/
 def supportedComparison
     (_D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :
     RationalCohomologyWithSupport V.over
-        (cycleComponentSupport V.over x) (2 * (p : ℤ)) ≃+
+        (support V.over x) (2 * (p : ℤ)) ≃+
       RationalSingularComponentCohomologyWithSupport V.over x (2 * p) :=
   letI : TopologicalSpace V.analyticPoint := Point.analyticTopology
   letI : T2Space V.analyticPoint := inferInstance
@@ -110,8 +112,8 @@ def supportedComparison
   (show ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) by omega) ▸
     rationalCohomologyWithSupportAddEquivSingular
       V.over
-        (cycleComponentSupport V.over x)
-        ((cycleComponentSupport V.over x).isClosed) (2 * p)
+        (support V.over x)
+        ((support V.over x).isClosed) (2 * p)
 
 /-- The supported comparison depends only on the component, not on the surrounding data. -/
 lemma supportedComparison_eq
@@ -122,7 +124,7 @@ lemma supportedComparison_eq
 def auxiliarySupportedClass
     (D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :
     RationalCohomologyWithSupport V.over
-      (cycleComponentSupport V.over x) (2 * (p : ℤ)) :=
+      (support V.over x) (2 * (p : ℤ)) :=
   D.supportedComparison.symm D.auxiliarySingularSupportedClass
 
 /-- The comparison-dependent ordinary rational cohomology class. -/
@@ -130,7 +132,7 @@ def auxiliaryOrdinaryClass
     (D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :
     H^(2 * (p : ℤ))(V.over; ℚ) :=
   forgetSupport V.over
-    (cycleComponentSupport V.over x) (2 * (p : ℤ))
+    (support V.over x) (2 * (p : ℤ))
     D.auxiliarySupportedClass
 
 end AuxiliaryRationalCycleComponentBorelMooreComparisonData
@@ -151,7 +153,7 @@ structure RationalCycleComponentLocalThomCapInput
   local homology at a smooth point. -/
   capWithAmbientComplexOrientation :
     ∀ (z : CycleComponentAnalyticPoint V x)
-      (_hz : z ∈ cycleComponentSmoothAnalyticLocus
+      (_hz : z ∈ smoothAnalyticLocus
         V.over x),
       RationalSingularComponentCohomologyWithSupport V.over x (2 * p) →ₗ[ℚ]
         RelativeHomology ℚ (pointComplementPair z) (2 * (d - p))
@@ -159,7 +161,7 @@ structure RationalCycleComponentLocalThomCapInput
   local_ext : ∀
       (α β : RationalSingularComponentCohomologyWithSupport V.over x (2 * p)),
     (∀ (z : CycleComponentAnalyticPoint V x)
-      (hz : z ∈ cycleComponentSmoothAnalyticLocus
+      (hz : z ∈ smoothAnalyticLocus
         V.over x),
       capWithAmbientComplexOrientation z hz α =
         capWithAmbientComplexOrientation z hz β) → α = β
@@ -175,7 +177,7 @@ def IsComplexOrientedAlexanderPoincare
     (e : CycleComponentBorelMooreHomology ℚ V x (2 * (d - p)) ≃ₗ[ℚ]
       RationalSingularComponentCohomologyWithSupport V.over x (2 * p)) : Prop :=
   ∀ (c) (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
+    (hz : z ∈ smoothAnalyticLocus V.over x),
     T.capWithAmbientComplexOrientation z hz (e c) =
       cycleComponentBorelMooreToLocal ℚ V x (2 * (d - p)) z c
 
@@ -238,7 +240,7 @@ smooth point. -/
 theorem alexanderPoincare_fundamentalClass_local
     (D : ComplexOrientedRationalCycleComponentClassData V d p x hx)
     (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus
+    (hz : z ∈ smoothAnalyticLocus
       V.over x) :
     D.localThomCap.capWithAmbientComplexOrientation z hz D.supportedFundamentalClass =
       cycleComponentComplexLocalOrientation V x d p hx z hz :=
@@ -250,7 +252,7 @@ theorem supportedFundamentalClass_unique
     (D : ComplexOrientedRationalCycleComponentClassData V d p x hx)
     (α : RationalSingularComponentCohomologyWithSupport V.over x (2 * p))
     (hα : ∀ (z : CycleComponentAnalyticPoint V x)
-      (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x),
+      (hz : z ∈ smoothAnalyticLocus V.over x),
       D.localThomCap.capWithAmbientComplexOrientation z hz α =
         cycleComponentComplexLocalOrientation V x d p hx z hz) :
     α = D.supportedFundamentalClass :=
@@ -269,7 +271,7 @@ comparison after local Thom-cap normalization. -/
 def constantSheafSupportedFundamentalClass
     (D : ComplexOrientedRationalCycleComponentClassData V d p x hx) :
     RationalCohomologyWithSupport V.over
-      (cycleComponentSupport V.over x) (2 * (p : ℤ)) :=
+      (support V.over x) (2 * (p : ℤ)) :=
   D.toAuxiliaryComparisonData.supportedComparison.symm D.supportedFundamentalClass
 
 /-- The conditional normalized ordinary rational component class. -/
@@ -277,7 +279,7 @@ def ordinaryFundamentalClass
     (D : ComplexOrientedRationalCycleComponentClassData V d p x hx) :
     H^(2 * (p : ℤ))(V.over; ℚ) :=
   forgetSupport V.over
-    (cycleComponentSupport V.over x) (2 * (p : ℤ))
+    (support V.over x) (2 * (p : ℤ))
       D.constantSheafSupportedFundamentalClass
 
 end ComplexOrientedRationalCycleComponentClassData
@@ -298,15 +300,15 @@ theorem nonempty_auxiliaryRationalCycleComponentBorelMooreComparisonData_of_comp
 def maximalCodimensionCycleComponentPoint
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
     CycleComponentAnalyticPoint V x :=
-  Classical.choose (exists_cycleComponent_smooth_complexPoint
+  Classical.choose (exists_smooth_complexPoint
     V.over x)
 
 /-- The selected point belongs to the component's smooth analytic locus. -/
 lemma maximalCodimensionCycleComponentPoint_mem_smooth
     (V : SmoothProjectiveComplexVariety) (x : V.scheme) :
     maximalCodimensionCycleComponentPoint V x ∈
-      cycleComponentSmoothAnalyticLocus V.over x :=
-  Classical.choose_spec (exists_cycleComponent_smooth_complexPoint
+      smoothAnalyticLocus V.over x :=
+  Classical.choose_spec (exists_smooth_complexPoint
     V.over x)
 
 /-- A maximal-codimension component's support is the singleton containing its selected point. -/
@@ -314,8 +316,8 @@ lemma maximalCodimensionCycleComponentSupport_eq_singleton
     (V : SmoothProjectiveComplexVariety) (d : ℕ)
     [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = d) :
-    (cycleComponentSupport V.over x : Set V.analyticPoint) =
-      {Point.map (cycleComponentOverι V.over x)
+    (support V.over x : Set V.analyticPoint) =
+      {Point.map (CycleComponent.ι V.over x)
         (maximalCodimensionCycleComponentPoint V x)} :=
   cycleComponentSupport_eq_singleton_of_coheight_eq_dimension
     V.over d x hx
@@ -332,7 +334,7 @@ def maximalCodimensionSupportedGenerator
   LinearEquiv.cast (R := ℚ) (M := F)
     (maximalCodimensionCycleComponentSupport_eq_singleton V d x hx).symm
       (analyticPointLocalCoclass V.over d
-        (Point.map (cycleComponentOverι V.over x)
+        (Point.map (CycleComponent.ι V.over x)
           (maximalCodimensionCycleComponentPoint V x)))
 
 /-- The supported point coclass generates the maximal-codimension target. -/
@@ -342,7 +344,7 @@ lemma span_maximalCodimensionSupportedGenerator_eq_top
     (x : V.scheme) (hx : coheight x = d) :
     Submodule.span ℚ {maximalCodimensionSupportedGenerator V d x hx} = ⊤ := by
   let z := maximalCodimensionCycleComponentPoint V x
-  let y := Point.map (cycleComponentOverι V.over x) z
+  let y := Point.map (CycleComponent.ι V.over x) z
   let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
     (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d))
   let e := LinearEquiv.cast (R := ℚ) (M := F)
@@ -366,7 +368,7 @@ lemma maximalCodimensionSupportedGenerator_ne_zero
     (x : V.scheme) (hx : coheight x = d) :
     maximalCodimensionSupportedGenerator V d x hx ≠ 0 := by
   let z := maximalCodimensionCycleComponentPoint V x
-  let y := Point.map (cycleComponentOverι V.over x) z
+  let y := Point.map (CycleComponent.ι V.over x) z
   let F := fun Z : Set V.analyticPoint ↦ ↥(CohomologyWithSupport ℚ
     (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d))
   let e := LinearEquiv.cast (R := ℚ) (M := F)
@@ -495,7 +497,7 @@ def maximalCodimensionLocalThomCapEquiv
     [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = d)
     (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus
+    (hz : z ∈ smoothAnalyticLocus
       V.over x) :
     RationalSingularComponentCohomologyWithSupport V.over x (2 * d) ≃ₗ[ℚ]
       RelativeHomology ℚ (pointComplementPair z) (2 * (d - d)) :=
@@ -514,7 +516,7 @@ def maximalCodimensionLocalThomCapEquiv
     [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = d)
     (z : CycleComponentAnalyticPoint V x)
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus
+    (hz : z ∈ smoothAnalyticLocus
       V.over x) :
     maximalCodimensionLocalThomCapEquiv V d x hx z hz
         (maximalCodimensionSupportedGenerator V d x hx) =
@@ -654,7 +656,7 @@ lemma maximalCodimensionComponentClass_eq_forgetSupport_pointCoclass
     (x : V.scheme) (hx : coheight x = d) :
     maximalCodimensionComponentClass V d x hx =
       forgetSupport V.over
-        (cycleComponentSupport V.over x)
+        (support V.over x)
         (2 * (d : ℤ))
         ((auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx).supportedComparison.symm
           (maximalCodimensionSupportedGenerator V d x hx)) := by

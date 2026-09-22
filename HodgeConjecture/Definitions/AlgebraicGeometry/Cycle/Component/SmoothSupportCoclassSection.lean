@@ -25,6 +25,8 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open CycleComponent
+
 section Component
 
 variable (X : Over (Spec ↧ℂ))
@@ -47,41 +49,41 @@ from the normal-chart coclasses; `2p` is twice the codimension of `Z` in `X`. -/
 def cycleComponentSmoothClosedLiftCoclassSection :
     (supportRelativeCohomologySheaf
       -- If `Z ⊆ X` is the variety, this is the `X \ Z_sing` open, as a complex manifold.
-      (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
+      (TopCat.of (ComplexPoint (smoothAmbientOpenOver X x)))
       -- The image of `Z_reg`.
-      (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+      (Set.range (Point.map (smoothClosedLift X x)))
       (2 * p)).obj.obj (op ⊤) :=
-  letI := cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
+  letI := smoothLocusOver_smoothOfRelativeDimension X x hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
   hdeg ▸ smoothClosedSupportCoclassSection
-    (cycleComponentSmoothLocusAmbientOpenOver X x)
-    (cycleComponentSmoothLocusOver X x)
-    (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)
+    (smoothAmbientOpenOver X x)
+    (smoothLocusOver X x)
+    (smoothClosedLift X x) (dim X.left - p) (dim X.left)
 
 /-- The analytic open-embedding map back to the original ambient space. -/
 def cycleComponentSmoothClosedLiftAmbientMap :
-    TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)) ⟶
+    TopCat.of (ComplexPoint (smoothAmbientOpenOver X x)) ⟶
     TopCat.of (ComplexPoint X) :=
   TopCat.ofHom (Point.continuousMap
-    (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x)))
+    (openInclusion X (smoothAmbientOpen X x)))
 
 omit [IsIntegral X.left] [IsProjective X.hom] in
 theorem cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding :
     IsOpenEmbedding (cycleComponentSmoothClosedLiftAmbientMap X x) :=
-  isOpenEmbedding_map_open X (cycleComponentSmoothLocusAmbientOpen X x)
+  isOpenEmbedding_map_open X (smoothAmbientOpen X x)
 
 omit [IsIntegral X.left] [IsProjective X.hom] in
 /-- Support membership is transported by the lift-image theorem. -/
 theorem cycleComponentSmoothClosedLiftAmbientMap_support :
-    cycleComponentSmoothClosedLiftAmbientMap X x ⁻¹' cycleComponentSupport X x =
-      Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)) :=
-  (range_map_cycleComponentSmoothLocusClosedLiftOver X x).symm
+    cycleComponentSmoothClosedLiftAmbientMap X x ⁻¹' x‾(ℂ) =
+      Set.range (Point.map (smoothClosedLift X x)) :=
+  (range_map_smoothClosedLift X x).symm
 
 omit [IsIntegral X.left] [IsProjective X.hom] in
 /-- The image open is exactly the complement of the canonical first singular boundary. -/
 theorem cycleComponentSmoothClosedLiftAmbientMap_imageOpen :
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x).functor.obj ⊤ =
-      cycleComponentSmoothSupportAmbientOpen X x := by
+      x‾ˢⁱⁿᵍ(ℂ)ᶜ := by
   apply Opens.ext
   change (cycleComponentSmoothClosedLiftAmbientMap X x) '' Set.univ = _
   rw [Set.image_univ]
@@ -95,15 +97,15 @@ def cycleComponentSmoothSupportCoclassSection :
       -- `X(ℂ)` the topological space of complex points of the ambient variety.
       (TopCat.of (ComplexPoint X))
       -- `Z(ℂ)` the topological space of complex points of the subvariety we're considering.
-      (cycleComponentSupport X x) (2 * p)).obj.obj
+      (x‾(ℂ)) (2 * p)).obj.obj
       -- The open set of complex points of the complement of the singular boundary, i.e. `X(ℂ) \ Z_sing(ℂ)`.
-      (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
+      (op (x‾ˢⁱⁿᵍ(ℂ)ᶜ)) :=
   supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-    (cycleComponentSupport X x)
-    (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+    (x‾(ℂ))
+    (Set.range (Point.map (smoothClosedLift X x)))
     (cycleComponentSmoothClosedLiftAmbientMap_support X x)
-    (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
+    (2 * p) (x‾ˢⁱⁿᵍ(ℂ)ᶜ)
     (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
     (cycleComponentSmoothClosedLiftCoclassSection X x hx)
 

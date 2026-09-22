@@ -10,6 +10,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import HodgeConjecture.Mathlib.Topology.KrullDimension
 
 /-!
 # The actual singular locus has smaller algebraic dimension
@@ -47,11 +48,15 @@ instance reducedSingularLocusι_isClosedImmersion :
 
 variable (Y : Over (Spec ↧ℂ)) [IsNoetherian Y.left] [LocallyOfFiniteType Y.hom]
 
+namespace CycleComponent
+
 /-- The finite smooth stratification of the singular locus of the cycle component at `x`. -/
-def cycleComponentSingularStratification (x : Y.left) :
+def singularStratification (x : Y.left) :
     List (Closeds (Y.left.pointClosure x)) :=
   reducedSmoothStratification (Y.left.pointClosureι x ≫ Y.hom)
     (singularLocusClosed (Y.left.pointClosureι x ≫ Y.hom))
+
+end CycleComponent
 
 end AlgebraicGeometry
 
@@ -120,14 +125,18 @@ theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
 variable (Y : Over (Spec ↧ℂ))
   [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
 
+namespace CycleComponent
+
 /-- For a codimension-`p` component of a smooth projective complex `d`-fold, the reduced
 singular locus has algebraic dimension strictly less than `d - p`. -/
-theorem topologicalKrullDim_cycleComponent_singularLocus_lt
+theorem topologicalKrullDim_singularLocus_lt
     (x : Y.left) {d p : ℕ} [SmoothOfRelativeDimension d Y.hom]
     (hx : Order.coheight x = p) :
     topologicalKrullDim
       (reducedSingularLocus (Y.left.pointClosureι x ≫ Y.hom)) < (d - p : ℕ) :=
   topologicalKrullDim_reducedSingularLocus_lt _
-    (topologicalKrullDim_cycleComponent_le_sub Y x hx)
+    (topologicalKrullDim_le_sub Y x hx)
+
+end CycleComponent
 
 end AlgebraicGeometry

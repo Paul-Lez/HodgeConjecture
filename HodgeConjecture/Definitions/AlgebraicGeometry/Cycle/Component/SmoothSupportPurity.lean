@@ -28,6 +28,8 @@ open CategoryTheory CategoryTheory.Limits Topology TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open CycleComponent
+
 open AlgebraicTopology.Singular
 
 variable (X : Over (Spec ↧ℂ))
@@ -38,8 +40,8 @@ include hx in
 /-- Every `y ∈ Z(ℂ) \ Z_sing(ℂ)` has arbitrarily small open neighborhoods `W` in `X(ℂ)` with
 `H^n(W, W \ Z(ℂ); ℚ) = 0` for `n ≠ 2p`. -/
 private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
-    (y : ComplexPoint X) (hy : y ∈ cycleComponentSupport X x)
-    (hyU : y ∈ cycleComponentSmoothSupportAmbientOpen X x)
+    (y : ComplexPoint X) (hy : y ∈ x‾(ℂ))
+    (hyU : y ∈ x‾ˢⁱⁿᵍ(ℂ)ᶜ)
     (V : Opens (ComplexPoint X)) (hyV : y ∈ V) :
     ∃ W : Opens (ComplexPoint X), W ≤ V ∧ y ∈ W ∧
       ∀ n : ℕ, n ≠ 2 * p →
@@ -47,19 +49,19 @@ private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
         IsZero (ModuleCat.of ℚ (RelativeCohomology ℚ
           (neighborhoodSupportComplementPair (W : Set (ComplexPoint X))
             -- `Z(ℂ)`.
-            (cycleComponentSupport X x)) n)) := by
-  let O := cycleComponentSmoothLocusAmbientOpen X x
-  let OX := cycleComponentSmoothLocusAmbientOpenOver X x
-  let Y := cycleComponentSmoothLocusOver X x
-  let i : Y ⟶ OX := cycleComponentSmoothLocusClosedLiftOver X x
+            (x‾(ℂ))) n)) := by
+  let O := smoothAmbientOpen X x
+  let OX := smoothAmbientOpenOver X x
+  let Y := smoothLocusOver X x
+  let i : Y ⟶ OX := smoothClosedLift X x
   let : SmoothOfRelativeDimension (dim X.left - p) Y.hom :=
-    cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
+    smoothLocusOver_smoothOfRelativeDimension X x hx
   have : SmoothOfRelativeDimension (dim X.left) OX.hom := by
     change SmoothOfRelativeDimension (dim X.left) (O.ι ≫ X.hom)
     simpa only [Nat.zero_add] using smoothOfRelativeDimension_comp 0 (dim X.left) O.ι X.hom
   let f := Point.map (openInclusion X O)
-  have hS : f ⁻¹' cycleComponentSupport X x = Set.range (Point.map i) :=
-    (range_map_cycleComponentSmoothLocusClosedLiftOver X x).symm
+  have hS : f ⁻¹' x‾(ℂ) = Set.range (Point.map i) :=
+    (range_map_smoothClosedLift X x).symm
   obtain ⟨w, rfl⟩ := (range_map_openInclusion X O).ge hyU
   obtain ⟨z, rfl⟩ := hS.le hy
   have hpd : p ≤ dim X.left := by
@@ -68,7 +70,7 @@ private theorem cycleComponentSmoothSupport_exists_relativeCohomology_vanishing
     exact_mod_cast h
   obtain ⟨W, hWV, hzW, hW⟩ := exists_smoothClosedSupportImageNeighborhood
     OX Y i (dim X.left - p) (dim X.left) f (isOpenEmbedding_map_open X O)
-    (cycleComponentSupport X x) hS z V hyV
+    (x‾(ℂ)) hS z V hyV
   refine ⟨W, hWV, hzW, ?_⟩
   intro n hn
   exact hW n (by omega)
@@ -79,7 +81,7 @@ include hx in
 is computed in the fixed injective resolution. -/
 theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
     (n : ℤ) (hn : n ≠ 2 * (p : ℤ))
-    (y : ComplexPoint X) (hyU : y ∈ cycleComponentSmoothSupportAmbientOpen X x)
+    (y : ComplexPoint X) (hyU : y ∈ x‾ˢⁱⁿᵍ(ℂ)ᶜ)
     (V : Opens (ComplexPoint X)) (hyV : y ∈ V) :
     ∃ W : Opens (ComplexPoint X), W ≤ V ∧ y ∈ W ∧
       -- `H^n_{Z(ℂ)}(W; ℚ)` vanishes away from degree `2p`.
@@ -91,49 +93,49 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
         -- `RΓ_{Z(ℂ)}(ℚ)`.
         (complexSupportInjectiveComplex X
           -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
-          (cycleComponentSupport X x))).homology n) := by
+          (x‾(ℂ)))).homology n) := by
   by_cases hneg : n < 0
   · refine ⟨V, le_rfl, hyV, ?_⟩
     apply ShortComplex.isZero_homology_of_isZero_X₂
     exact (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).map_isZero
       ((complexSupportInjectiveComplex X
-        (cycleComponentSupport X x)).isZero_of_isStrictlyGE 0 n hneg)
+        (x‾(ℂ))).isZero_of_isStrictlyGE 0 n hneg)
   · obtain ⟨q, rfl⟩ := Int.eq_ofNat_of_zero_le (le_of_not_gt hneg)
-    by_cases hy : y ∈ cycleComponentSupport X x
+    by_cases hy : y ∈ x‾(ℂ)
     · obtain ⟨W, hWV, hyW, hW⟩ :=
         cycleComponentSmoothSupport_exists_relativeCohomology_vanishing X x hx
           y hy hyU V hyV
       refine ⟨W, hWV, hyW, ?_⟩
       let : Subsingleton (RelativeCohomology ℚ
           (neighborhoodSupportComplementPair (W : Set (ComplexPoint X))
-            (cycleComponentSupport X x : Set (ComplexPoint X))) q) :=
+            (x‾(ℂ) : Set (ComplexPoint X))) q) :=
         ModuleCat.subsingleton_of_isZero (hW q (by exact_mod_cast hn))
       let e := complexSupportInjectiveSectionCohomologyEquiv X
-        (cycleComponentSupport X x) W q
+        (x‾(ℂ)) W q
       let : Subsingleton ((((TopCat.Sheaf.supportEvaluation
           (TopCat.of (ComplexPoint X)) W).mapHomologicalComplex ℤᵘᵖ).obj
-            (complexSupportInjectiveComplex X (cycleComponentSupport X x))).homology
+            (complexSupportInjectiveComplex X (x‾(ℂ)))).homology
               (q : ℤ)) := e.injective.subsingleton
       exact AddCommGrpCat.isZero_of_subsingleton _
-    · let W := V ⊓ (cycleComponentSupport X x).compl
+    · let W := V ⊓ (x‾(ℂ)).compl
       refine ⟨W, inf_le_left, ⟨hyV, hy⟩, ?_⟩
       apply ShortComplex.isZero_homology_of_isZero_X₂
       exact TopCat.Sheaf.supportedOutsideSections_isZero_of_le
-        (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x).compl W
+        (TopCat.of (ComplexPoint X)) (x‾(ℂ)).compl W
         ((ambientRationalInjectiveComplex X).X (q : ℤ)) inf_le_right
 
 /-- `RΓ_{Z(ℂ)}(ℚ)|_{X(ℂ) \ Z_sing(ℂ)}`: the `Z(ℂ)`-supported part `Γ_{Z(ℂ)}(I^•)` of the injective
 resolution of `ℚ`, restricted to the open `X(ℂ) \ Z_sing(ℂ)`. -/
 def cycleComponentSmoothRestrictedInjectiveComplex :
     CochainComplex (TopCat.Sheaf AddCommGrpCat
-      (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))) ℤ :=
+      (TopCat.of (x‾ˢⁱⁿᵍ(ℂ)ᶜ))) ℤ :=
   -- `RΓ_{Z(ℂ)}(ℚ)`, restricted to the open `X(ℂ) \ Z_sing(ℂ)`.
-  let U : Opens (TopCat.of (ComplexPoint X)) := cycleComponentSmoothSupportAmbientOpen X x
+  let U : Opens (TopCat.of (ComplexPoint X)) := x‾ˢⁱⁿᵍ(ℂ)ᶜ
   -- Restriction of sheaves to the open `U = X(ℂ) \ Z_sing(ℂ)`.
   ((U.isOpenEmbedding.sheafPullback
     AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
       -- `RΓ_{Z(ℂ)}(ℚ)` on `X(ℂ)`.
-      (complexSupportInjectiveComplex X (cycleComponentSupport X x))
+      (complexSupportInjectiveComplex X (x‾(ℂ)))
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -162,25 +164,25 @@ def cycleComponentSmoothSupportLowestSectionCohomologyIso :
       -- `X(ℂ)`.
       (TopCat.of (ComplexPoint X))
       -- Sections over the open `X(ℂ) \ Z_sing(ℂ)`.
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
+      (x‾ˢⁱⁿᵍ(ℂ)ᶜ)).mapHomologicalComplex ℤᵘᵖ).obj
         -- `RΓ_{Z(ℂ)}(ℚ)`.
-        (complexSupportInjectiveComplex X (cycleComponentSupport X x))).homology
+        (complexSupportInjectiveComplex X (x‾(ℂ)))).homology
           -- Degree `2p`.
           (2 * (p : ℤ))) ≅
       -- Sections of the cohomology sheaf `𝓗^{2p}(RΓ_{Z(ℂ)}(ℚ))` over `X(ℂ) \ Z_sing(ℂ)`.
-      ((complexSupportInjectiveComplex X (cycleComponentSupport X x)).homology
+      ((complexSupportInjectiveComplex X (x‾(ℂ))).homology
         -- Degree `2p`.
         (2 * (p : ℤ))).obj.obj
           -- The open `X(ℂ) \ Z_sing(ℂ)`.
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
+          (op (x‾ˢⁱⁿᵍ(ℂ)ᶜ)) :=
   TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso
-    (TopCat.of (ComplexPoint X)) (cycleComponentSmoothSupportAmbientOpen X x)
-    (complexSupportInjectiveComplex X (cycleComponentSupport X x))
+    (TopCat.of (ComplexPoint X)) (x‾ˢⁱⁿᵍ(ℂ)ᶜ)
+    (complexSupportInjectiveComplex X (x‾(ℂ)))
     0 (2 * (p : ℤ))
     (fun j hj => cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
       X x hx j (ne_of_lt hj))
     (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
-      (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x).compl
+      (TopCat.of (ComplexPoint X)) (x‾(ℂ)).compl
         ((ambientRationalInjectiveComplex X).X j))
 
 end AlgebraicGeometry.ComplexPoint

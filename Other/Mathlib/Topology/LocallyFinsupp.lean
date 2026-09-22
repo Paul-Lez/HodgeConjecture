@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Mathlib.Algebra.Group.Subgroup.Lattice
-public import Mathlib.Data.Finsupp.Basic
+public import Mathlib.Algebra.Group.Finsupp
 public import Mathlib.Topology.Algebra.Support
 public import Mathlib.Topology.LocallyFinsupp
 

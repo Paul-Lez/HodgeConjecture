@@ -40,7 +40,7 @@ not asserted here.
 
 open CategoryTheory Topology TopologicalSpace
 
-namespace AlgebraicGeometry
+namespace AlgebraicGeometry.CycleComponent
 
 variable (X : Over (Spec ↧ℂ)) (x : X.left)
 
@@ -49,30 +49,30 @@ section FiniteType
 variable [LocallyOfFiniteType X.hom]
 
 /-- The smooth locus of a cycle component is Zariski dense. -/
-lemma dense_cycleComponentSmoothLocus :
-    Dense (cycleComponentSmoothLocus X x : Set (X.left.pointClosure x)) :=
+lemma dense_smoothLocus :
+    Dense (smoothLocus X x : Set (X.left.pointClosure x)) :=
   (X.left.pointClosureι x ≫ X.hom).dense_smoothLocus_of_perfectField
 
 /-- The smooth locus of a cycle component is irreducible. -/
-instance : IrreducibleSpace (cycleComponentSmoothLocus X x) := by
-  obtain ⟨y, hy⟩ := (dense_cycleComponentSmoothLocus X x).nonempty
-  let : Nonempty (cycleComponentSmoothLocus X x) := ⟨⟨y, hy⟩⟩
-  exact (cycleComponentSmoothLocus X x).ι.isOpenEmbedding.irreducibleSpace
+instance : IrreducibleSpace (smoothLocus X x) := by
+  obtain ⟨y, hy⟩ := (dense_smoothLocus X x).nonempty
+  let : Nonempty (smoothLocus X x) := ⟨⟨y, hy⟩⟩
+  exact (smoothLocus X x).ι.isOpenEmbedding.irreducibleSpace
 
 /-- The closed points of the smooth locus are dense in a cycle component. -/
-lemma dense_cycleComponentSmoothLocus_closedPoints :
-    Dense ((cycleComponentSmoothLocus X x : Set (X.left.pointClosure x)) ∩
+lemma dense_smoothLocus_closedPoints :
+    Dense ((smoothLocus X x : Set (X.left.pointClosure x)) ∩
       closedPoints (X.left.pointClosure x)) := by
   let f := X.left.pointClosureι x ≫ X.hom
   exact dense_iff_closure_eq.mpr ((JacobsonSpace.closure_inter_closedPoints_eq_closure
     f.smoothLocus.2.isLocallyClosed).trans
-      (dense_iff_closure_eq.mp (dense_cycleComponentSmoothLocus X x)))
+      (dense_iff_closure_eq.mp (dense_smoothLocus X x)))
 
 end FiniteType
 
 /-- The reduced component of a point of coheight `p` in a smooth complex `d`-fold has
 topological Krull dimension at most `d - p`. -/
-lemma topologicalKrullDim_cycleComponent_le_sub
+lemma topologicalKrullDim_le_sub
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] {d p : ℕ}
     [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) :
     topologicalKrullDim (X.left.pointClosure x) ≤ d - p := by
@@ -81,4 +81,4 @@ lemma topologicalKrullDim_cycleComponent_le_sub
     (SmoothOfRelativeDimension.height_le_sub_of_coheight_eq
       (f := X.hom) (d := d) x hx)
 
-end AlgebraicGeometry
+end AlgebraicGeometry.CycleComponent

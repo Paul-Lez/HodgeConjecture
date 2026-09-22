@@ -26,48 +26,50 @@ the component, their images in `X.left`, and the complex points of `X` over thos
 
 open CategoryTheory Topology TopologicalSpace
 
-namespace AlgebraicGeometry
+namespace AlgebraicGeometry.CycleComponent
 
 variable (X : Over (Spec ↧ℂ)) [LocallyOfFiniteType X.hom] (x : X.left)
 
 /-- The `k`-th stage of the canonical smooth filtration of the singular locus of the cycle
 component at `x`. -/
-abbrev cycleComponentSingularFiltration (k : ℕ) : Closeds (X.left.pointClosure x) :=
+abbrev singularFiltration (k : ℕ) : Closeds (X.left.pointClosure x) :=
   reducedSmoothClosedFiltration (X.left.pointClosureι x ≫ X.hom)
     (singularLocusClosed (X.left.pointClosureι x ≫ X.hom)) k
 
 /-- The image in `X.left` of the `k`-th stage of the singular filtration of the cycle component
 at `x`. -/
-def cycleComponentAmbientSingularFiltration (k : ℕ) : Closeds X.left :=
-  ⟨X.left.pointClosureι x '' (cycleComponentSingularFiltration X x k : Set _),
+def ambientSingularFiltration (k : ℕ) : Closeds X.left :=
+  ⟨X.left.pointClosureι x '' (singularFiltration X x k : Set _),
     (X.left.pointClosureι x).isClosedEmbedding.isClosedMap _
-      (cycleComponentSingularFiltration X x k).isClosed⟩
+      (singularFiltration X x k).isClosed⟩
 
 @[simp]
-lemma coe_cycleComponentAmbientSingularFiltration (k : ℕ) :
-    (cycleComponentAmbientSingularFiltration X x k : Set X.left) =
-      X.left.pointClosureι x '' (cycleComponentSingularFiltration X x k : Set _) :=
+lemma coe_ambientSingularFiltration (k : ℕ) :
+    (ambientSingularFiltration X x k : Set X.left) =
+      X.left.pointClosureι x '' (singularFiltration X x k : Set _) :=
   rfl
 
-namespace ComplexPoint
+/-- `Z_sing,k(ℂ)`: the complex points of `X` over the `k`-th stage of the singular filtration of
+the cycle component at `x`. The singular locus is the stage `k = 0`, written `x‾ˢⁱⁿᵍ(ℂ)`. -/
+def analyticSingularFiltration (k : ℕ) : Closeds (ComplexPoint X) :=
+  (ambientSingularFiltration X x k).preimage Point.continuous_underlying
 
-/-- The complex points of `X` over the `k`-th stage of the singular filtration of the cycle
-component at `x`. -/
-def cycleComponentAnalyticSingularFiltration (k : ℕ) : Closeds (ComplexPoint X) :=
-  (cycleComponentAmbientSingularFiltration X x k).preimage Point.continuous_underlying
+@[inherit_doc analyticSingularFiltration]
+scoped notation3:max x:max "‾ˢⁱⁿᵍ[" k "](ℂ)" => analyticSingularFiltration _ x k
+
+@[inherit_doc analyticSingularFiltration]
+scoped notation3:max x:max "‾ˢⁱⁿᵍ(ℂ)" => analyticSingularFiltration _ x 0
 
 @[simp]
-lemma coe_cycleComponentAnalyticSingularFiltration (k : ℕ) :
-    (cycleComponentAnalyticSingularFiltration X x k : Set (ComplexPoint X)) =
-      Point.underlying ⁻¹' (cycleComponentAmbientSingularFiltration X x k : Set X.left) :=
+lemma coe_analyticSingularFiltration (k : ℕ) :
+    (x‾ˢⁱⁿᵍ[k](ℂ) : Set (ComplexPoint X)) =
+      Point.underlying ⁻¹' (ambientSingularFiltration X x k : Set X.left) :=
   rfl
 
 @[simp]
-lemma mem_cycleComponentAnalyticSingularFiltration {z : ComplexPoint X} {k : ℕ} :
-    z ∈ cycleComponentAnalyticSingularFiltration X x k ↔
-      z.underlying ∈ cycleComponentAmbientSingularFiltration X x k :=
+lemma mem_analyticSingularFiltration {z : ComplexPoint X} {k : ℕ} :
+    z ∈ x‾ˢⁱⁿᵍ[k](ℂ) ↔
+      z.underlying ∈ ambientSingularFiltration X x k :=
   Iff.rfl
 
-end ComplexPoint
-
-end AlgebraicGeometry
+end AlgebraicGeometry.CycleComponent

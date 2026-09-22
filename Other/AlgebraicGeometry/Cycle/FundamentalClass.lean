@@ -32,6 +32,8 @@ nothing in the statement's dependency chain uses these results, only material in
 open CategoryTheory Limits TopologicalSpace Opposite
 open AlgebraicTopology.Singular
 namespace AlgebraicGeometry.ComplexPoint
+
+open CycleComponent
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 attribute [local instance] cycleComponentSheafClassAnalyticTopology
@@ -60,7 +62,7 @@ theorem cycleComponentSupportedInjectiveClass_unique
 kept as a named rewrite for the proofs that use it. -/
 theorem cycleComponentSheafClass_eq_forgetSupport :
     cycleComponentSheafClass X x hx =
-      forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
+      forgetSupport X (x‾(ℂ)) (2 * (p : ℤ))
         (cycleComponentSheafSupportedClass X x hx) :=
   rfl
 
@@ -74,13 +76,13 @@ theorem cycleComponentSheafClass_eq_injectiveModel :
       (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).symm
         (HomologicalComplex.homologyMap
           (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
-            (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x).compl ⊤
+            (TopCat.of (ComplexPoint X)) (x‾(ℂ)).compl ⊤
             (ambientRationalInjectiveComplex X)).f (2 * (p : ℤ))
           (cycleComponentSupportedInjectiveClass X x hx)) := by
   apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (p : ℤ))).injective
   rw [cycleComponentSheafClass_eq_forgetSupport,
     rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
-    (cycleComponentSupport X x) (cycleComponentSupport X x).isClosed]
+    (x‾(ℂ)) (x‾(ℂ)).isClosed]
   simp only [cycleComponentSheafSupportedClass, AddEquiv.apply_symm_apply]
   rfl
 

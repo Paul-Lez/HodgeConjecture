@@ -5,9 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.ReducedClosedSubscheme
-public import HodgeConjecture.Mathlib.Topology.KrullDimension
-public import Mathlib.Order.KrullDimension
-public import Mathlib.Topology.KrullDimension
+import HodgeConjecture.Mathlib.Topology.KrullDimension
 
 /-!
 # The closure of a point as an integral closed subscheme

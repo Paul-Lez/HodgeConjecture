@@ -37,14 +37,16 @@ normalized local classes.
 open CategoryTheory Topology Filter
 
 namespace AlgebraicGeometry
-namespace CycleComponentSeparateLocalCoordinates
+
+open CycleComponent
+namespace CycleComponent.SeparateLocalCoordinates
 
 open AlgebraicTopology.Singular
 
 variable {V : SmoothProjectiveComplexVariety} {x : V.scheme} {d n : ℕ}
   [SmoothOfRelativeDimension d V.structureMap]
 
-variable (C : CycleComponentSeparateLocalCoordinates V.over x d n)
+variable (C : SeparateLocalCoordinates V.over x d n)
 
 /-- Each exact coordinate of the affine component chart is evaluation of the corresponding
 global regular function. -/
@@ -58,12 +60,12 @@ lemma neighborhoodProjectionChart_apply_eq_evaluate
 
 /-- The open of the smooth locus on which a component coordinate is represented by a regular
 section. -/
-abbrev smoothCoordinateOpen : (cycleComponentSmoothLocus V.over x).toScheme.Opens :=
+abbrev smoothCoordinateOpen : (smoothLocus V.over x).toScheme.Opens :=
   C.componentNeighborhood.ι ''ᵁ (⊤ : C.componentNeighborhood.toScheme.Opens)
 
 /-- A component coordinate, transported from its affine neighborhood to the smooth locus. -/
 def smoothCoordinateSection (i : Fin n) :
-    Γ((cycleComponentSmoothLocus V.over x).toScheme, C.smoothCoordinateOpen) :=
+    Γ((smoothLocus V.over x).toScheme, C.smoothCoordinateOpen) :=
   (C.componentNeighborhood.ι.appIso ⊤).inv
     (C.coordinateRingHomOnNeighborhood (MvPolynomial.X i))
 
@@ -79,30 +81,30 @@ lemma componentProjectionChart_symm_apply (w : Fin n → ℂ) :
 /-- Canceling the common open immersion into the component identifies two lifts to its smooth
 locus. -/
 lemma smoothPoints_eq_of_neighborhoodToComponentPoint_eq
-    (C' : CycleComponentSeparateLocalCoordinates V.over x d n)
+    (C' : SeparateLocalCoordinates V.over x d n)
     (z : ComplexPoint C.neighborhoodScheme)
     (z' : ComplexPoint C'.neighborhoodScheme)
     (h : C.neighborhoodToComponentPoint z = C'.neighborhoodToComponentPoint z') :
     Point.map (ComplexPoint.openInclusion
-      (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood) z =
+      (smoothLocusOver V.over x) C.componentNeighborhood) z =
       Point.map (ComplexPoint.openInclusion
-        (cycleComponentSmoothLocusOver V.over x) C'.componentNeighborhood) z' :=
+        (smoothLocusOver V.over x) C'.componentNeighborhood) z' :=
   (ComplexPoint.isOpenEmbedding_map_open
-    (cycleComponentOver V.over x)
-    (cycleComponentSmoothLocus V.over x)).injective h
+    (over V.over x)
+    (smoothLocus V.over x)).injective h
 
 /-- If a smooth-locus point lies in the source of an extended component chart, that chart is
 evaluation of its defining smooth-locus sections. -/
 lemma componentProjectionChart_apply_component_eq_evaluate
-    (q : ComplexPoint (cycleComponentSmoothLocusOver V.over x))
+    (q : ComplexPoint (smoothLocusOver V.over x))
     (hq : Point.map (ComplexPoint.openInclusion
-      (cycleComponentOver V.over x)
-      (cycleComponentSmoothLocus V.over x)) q ∈
+      (over V.over x)
+      (smoothLocus V.over x)) q ∈
       C.componentProjectionChart.source) (i : Fin n) :
     C.componentProjectionChart
         (Point.map (ComplexPoint.openInclusion
-          (cycleComponentOver V.over x)
-          (cycleComponentSmoothLocus V.over x)) q) i =
+          (over V.over x)
+          (smoothLocus V.over x)) q) i =
       Point.evaluate C.smoothCoordinateOpen
         (C.smoothCoordinateSection i) q := by
   rw [componentProjectionChart, OpenPartialHomeomorph.lift_openEmbedding_source] at hq
@@ -112,34 +114,34 @@ lemma componentProjectionChart_apply_component_eq_evaluate
     C.neighborhoodProjectionChart_apply_eq_evaluate z hz i]
   have hsmooth :
       Point.map (ComplexPoint.openInclusion
-        (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood) z = q :=
+        (smoothLocusOver V.over x) C.componentNeighborhood) z = q :=
     (ComplexPoint.isOpenEmbedding_map_open
-      (cycleComponentOver V.over x)
-      (cycleComponentSmoothLocus V.over x)).injective heq
+      (over V.over x)
+      (smoothLocus V.over x)).injective heq
   rw [← hsmooth]
-  exact (ComplexPoint.evaluate_openEquiv (cycleComponentSmoothLocusOver V.over x)
+  exact (ComplexPoint.evaluate_openEquiv (smoothLocusOver V.over x)
     C.componentNeighborhood
     (C.coordinateRingHomOnNeighborhood (MvPolynomial.X i)) z).symm
 
 /-- Membership in the extended chart source forces the corresponding smooth-locus point to lie
 in the affine open on which the chart coordinates are represented. -/
 lemma mem_smoothCoordinateOpen_of_mem_componentProjectionChart_source
-    (q : ComplexPoint (cycleComponentSmoothLocusOver V.over x))
+    (q : ComplexPoint (smoothLocusOver V.over x))
     (hq : Point.map (ComplexPoint.openInclusion
-      (cycleComponentOver V.over x)
-      (cycleComponentSmoothLocus V.over x)) q ∈
+      (over V.over x)
+      (smoothLocus V.over x)) q ∈
       C.componentProjectionChart.source) :
     q ∈ Point.overOpen C.smoothCoordinateOpen := by
   rw [componentProjectionChart, OpenPartialHomeomorph.lift_openEmbedding_source] at hq
   obtain ⟨z, _, heq⟩ := hq
   have hsmooth : Point.map (ComplexPoint.openInclusion
-      (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood) z = q :=
+      (smoothLocusOver V.over x) C.componentNeighborhood) z = q :=
     (ComplexPoint.isOpenEmbedding_map_open
-      (cycleComponentOver V.over x)
-      (cycleComponentSmoothLocus V.over x)).injective heq
+      (over V.over x)
+      (smoothLocus V.over x)).injective heq
   rw [← hsmooth]
   change (Point.map (ComplexPoint.openInclusion
-    (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood) z).underlying ∈
+    (smoothLocusOver V.over x) C.componentNeighborhood) z).underlying ∈
     C.componentNeighborhood.ι ''ᵁ (⊤ : C.componentNeighborhood.toScheme.Opens)
   rw [Point.underlying_map, Scheme.Opens.ι_image_top]
   exact z.underlying.property
@@ -149,14 +151,14 @@ exact component chart, provided the section is defined at the distinguished inve
 point. -/
 lemma analyticAt_componentProjectionChart_symm_smoothEvaluate
     {w : Fin n → ℂ} (hw : w ∈ C.componentProjectionChart.target)
-    (W : (cycleComponentSmoothLocus V.over x).toScheme.Opens)
-    (s : Γ((cycleComponentSmoothLocus V.over x).toScheme, W))
+    (W : (smoothLocus V.over x).toScheme.Opens)
+    (s : Γ((smoothLocus V.over x).toScheme, W))
     (hW : Point.map (ComplexPoint.openInclusion
-        (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood)
+        (smoothLocusOver V.over x) C.componentNeighborhood)
         (C.neighborhoodProjectionChart.symm w) ∈ Point.overOpen W) :
     AnalyticAt ℂ (fun v ↦ Point.evaluate W s
       (Point.map (ComplexPoint.openInclusion
-        (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood)
+        (smoothLocusOver V.over x) C.componentNeighborhood)
         (C.neighborhoodProjectionChart.symm v))) w := by
   have hw' : w ∈ C.neighborhoodProjectionChart.target := by
     simpa only [componentProjectionChart,
@@ -164,36 +166,36 @@ lemma analyticAt_componentProjectionChart_symm_smoothEvaluate
   have hW' : C.neighborhoodProjectionChart.symm w ∈
       Point.overOpen (C.componentNeighborhood.ι ⁻¹ᵁ W) :=
     (Point.mem_overOpen_map_iff (ComplexPoint.openInclusion
-      (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood) _ W).mp hW
+      (smoothLocusOver V.over x) C.componentNeighborhood) _ W).mp hW
   have ha := C.analyticAt_neighborhoodProjectionChart_symm_evaluate hw'
     (C.componentNeighborhood.ι ⁻¹ᵁ W)
     (C.componentNeighborhood.ι.app W s) hW'
   apply ha.congr
   filter_upwards with v
   exact (Point.evaluate_map (ComplexPoint.openInclusion
-    (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood) W s
+    (smoothLocusOver V.over x) C.componentNeighborhood) W s
     (C.neighborhoodProjectionChart.symm v)).symm
 
 /-- Each coordinate of a transition between two exact component charts is complex analytic. -/
 lemma analyticAt_componentProjectionChart_transition_component
-    (C' : CycleComponentSeparateLocalCoordinates V.over x d n)
+    (C' : SeparateLocalCoordinates V.over x d n)
     {w : Fin n → ℂ}
     (hw : w ∈ (C.componentProjectionChart.symm.trans
       C'.componentProjectionChart).source) (i : Fin n) :
     AnalyticAt ℂ (fun v ↦ C'.componentProjectionChart
       (C.componentProjectionChart.symm v) i) w := by
   rw [OpenPartialHomeomorph.trans_source] at hw
-  let q : ComplexPoint (cycleComponentSmoothLocusOver V.over x) :=
+  let q : ComplexPoint (smoothLocusOver V.over x) :=
     Point.map (ComplexPoint.openInclusion
-      (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood)
+      (smoothLocusOver V.over x) C.componentNeighborhood)
       (C.neighborhoodProjectionChart.symm w)
   have hqmap : Point.map (ComplexPoint.openInclusion
-      (cycleComponentOver V.over x)
-      (cycleComponentSmoothLocus V.over x)) q =
+      (over V.over x)
+      (smoothLocus V.over x)) q =
       C.componentProjectionChart.symm w := rfl
   have hsource : Point.map (ComplexPoint.openInclusion
-      (cycleComponentOver V.over x)
-      (cycleComponentSmoothLocus V.over x)) q ∈
+      (over V.over x)
+      (smoothLocus V.over x)) q ∈
       C'.componentProjectionChart.source := hqmap ▸ hw.2
   have hW : q ∈ Point.overOpen C'.smoothCoordinateOpen :=
     C'.mem_smoothCoordinateOpen_of_mem_componentProjectionChart_source q hsource
@@ -206,17 +208,17 @@ lemma analyticAt_componentProjectionChart_transition_component
       C'.componentProjectionChart.source ∈ nhds w :=
     hcontinuous (C'.componentProjectionChart.open_source.mem_nhds hw.2)
   filter_upwards [heventually] with v hv
-  let qv : ComplexPoint (cycleComponentSmoothLocusOver V.over x) :=
+  let qv : ComplexPoint (smoothLocusOver V.over x) :=
     Point.map (ComplexPoint.openInclusion
-      (cycleComponentSmoothLocusOver V.over x) C.componentNeighborhood)
+      (smoothLocusOver V.over x) C.componentNeighborhood)
       (C.neighborhoodProjectionChart.symm v)
   have hqvmap : Point.map (ComplexPoint.openInclusion
-      (cycleComponentOver V.over x)
-      (cycleComponentSmoothLocus V.over x)) qv =
+      (over V.over x)
+      (smoothLocus V.over x)) qv =
       C.componentProjectionChart.symm v := rfl
   have hv' : Point.map (ComplexPoint.openInclusion
-      (cycleComponentOver V.over x)
-      (cycleComponentSmoothLocus V.over x)) qv ∈
+      (over V.over x)
+      (smoothLocus V.over x)) qv ∈
       C'.componentProjectionChart.source := by
     rwa [hqvmap]
   rw [← hqvmap]
@@ -224,7 +226,7 @@ lemma analyticAt_componentProjectionChart_transition_component
 
 /-- A transition between two exact component charts is complex analytic on its overlap. -/
 lemma analyticAt_componentProjectionChart_transition
-    (C' : CycleComponentSeparateLocalCoordinates V.over x d n)
+    (C' : SeparateLocalCoordinates V.over x d n)
     {w : Fin n → ℂ}
     (hw : w ∈ (C.componentProjectionChart.symm.trans
       C'.componentProjectionChart).source) :
@@ -236,7 +238,7 @@ lemma analyticAt_componentProjectionChart_transition
 /-- Any two exact component charts transport the normalized complex local class to the same
 class at every point in their common source. -/
 theorem localClassOfChart_componentProjectionChart_eq
-    (C' : CycleComponentSeparateLocalCoordinates V.over x d n)
+    (C' : SeparateLocalCoordinates V.over x d n)
     (q : ComplexPoint (Over.mk
       (V.over.left.pointClosureι x ≫ V.over.hom)))
     (hq : q ∈ C.componentProjectionChart.source)
@@ -276,7 +278,7 @@ private lemma transport_trans
 /-- Exact coordinate packages centered at the same component point construct the same local
 orientation class.  The equality transports the first class along equality of the centers. -/
 theorem componentLocalOrientationClass_eq_of_point_eq
-    (C' : CycleComponentSeparateLocalCoordinates V.over x d n)
+    (C' : SeparateLocalCoordinates V.over x d n)
     (hpoint : C.point = C'.point) :
     hpoint ▸ C.componentLocalOrientationClass =
       C'.componentLocalOrientationClass := by
@@ -300,11 +302,11 @@ theorem componentLocalOrientationClass_eq_of_point_eq
 /-- The local class produced by any exact package centered at a prescribed smooth point agrees
 with the canonical class defined using the internally chosen package. -/
 theorem componentLocalOrientationClass_eq_cycleComponentComplexLocalOrientation
-    (p : ℕ) (D : CycleComponentSeparateLocalCoordinates V.over x d (d - p))
+    (p : ℕ) (D : SeparateLocalCoordinates V.over x d (d - p))
     (hx : Order.coheight x = p)
     (z : ComplexPoint (Over.mk
       (V.over.left.pointClosureι x ≫ V.over.hom)))
-    (hz : z ∈ cycleComponentSmoothAnalyticLocus V.over x)
+    (hz : z ∈ smoothAnalyticLocus V.over x)
     (hpoint : D.point = z) :
     hpoint ▸ D.componentLocalOrientationClass =
       ComplexPoint.cycleComponentComplexLocalOrientation V x d p hx z hz := by
@@ -323,5 +325,5 @@ theorem componentLocalOrientationClass_eq_cycleComponentComplexLocalOrientation
   rw [hproof] at htransport
   simpa only [ComplexPoint.cycleComponentComplexLocalOrientation, C'] using htransport
 
-end CycleComponentSeparateLocalCoordinates
+end CycleComponent.SeparateLocalCoordinates
 end AlgebraicGeometry

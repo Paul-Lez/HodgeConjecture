@@ -5,8 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
-public import Mathlib.Topology.Sets.Closeds
-public import Other.Mathlib.Topology.LocallyFinsupp
+import Other.Mathlib.Topology.LocallyFinsupp
 
 /-!
 # The support of an algebraic cycle

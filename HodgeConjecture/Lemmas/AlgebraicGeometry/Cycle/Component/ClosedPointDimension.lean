@@ -138,9 +138,11 @@ attribute [local instance] overSpecAlgebra
 
 variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
 
+namespace CycleComponent
+
 /-- Every closed point of the reduced closure of a codimension-`p` point in a smooth complex
 `d`-fold has coheight `d - p` inside that reduced closure. -/
-lemma cycleComponent_closedPoint_coheight_eq_sub
+lemma closedPoint_coheight_eq_sub
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
     (z : X.left.pointClosure x)
     [SmoothOfRelativeDimension d X.hom]
@@ -245,5 +247,7 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
   apply WithBot.coe_injective
   rw [← hQcoheight]
   exact hQheight
+
+end CycleComponent
 
 end AlgebraicGeometry

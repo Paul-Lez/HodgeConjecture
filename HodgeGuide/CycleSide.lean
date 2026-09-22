@@ -17,7 +17,7 @@ tag := "cycles"
 %%%
 
 ```lean -show
-open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+open AlgebraicGeometry CycleComponent CategoryTheory ComplexPoint Order TopologicalSpace
 noncomputable section
 universe u
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
@@ -78,13 +78,13 @@ noncomputable def supported.single {X : Type*} [TopologicalSpace X] {Y : Type*} 
 end Guide.Cycles.D3
 example : @Guide.Cycles.D3.supported.single = @Function.locallyFinsupp.supported.single := rfl
 ```
-# The support of a subvariety
+# The a‾(ℂ) subvariety
 
 For a closed subset `S` of a scheme `X`, `X.reducedClosedSubscheme S` is the reduced closed
 subscheme with underlying space `S`. For a point {lean}`x` of {lean}`X.left`,
 {lean}`X.left.pointClosure x` is the case $`S = \overline{\{x\}}`: the integral closed subscheme
 with generic point $`x`, and {name}`Scheme.pointClosureι` is its closed immersion into
-{lean}`X.left`. The support of the subvariety in $`X(\mathbb C)` is the closed set of complex
+{lean}`X.left`. The the‾(ℂ) subvariety in $`X(\mathbb C)` is the closed set of complex
 points whose underlying scheme point lies in $`\overline{\{x\}}`.
 
 ```lean -show
@@ -113,16 +113,16 @@ example : @Guide.Cycles.D6.pointClosure.{u} = @AlgebraicGeometry.Scheme.pointClo
 namespace Guide.Cycles.D7
 ```
 ```lean
-def cycleComponentSupport (X : Over (Spec ↧ℂ)) (x : X.left) : Closeds (ComplexPoint X) :=
+def support (X : Over (Spec ↧ℂ)) (x : X.left) : Closeds (ComplexPoint X) :=
   (Closeds.closure {x}).preimage Point.continuous_underlying
 ```
 ```lean -show
 end Guide.Cycles.D7
-example : @Guide.Cycles.D7.cycleComponentSupport = @AlgebraicGeometry.ComplexPoint.cycleComponentSupport := rfl
+example : @Guide.Cycles.D7.support = @AlgebraicGeometry.CycleComponent.support := rfl
 ```
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.mem_cycleComponentSupport
+#check mem_support
 ```
 
 Only the ambient variety is assumed smooth. A subvariety may be singular, and the construction of

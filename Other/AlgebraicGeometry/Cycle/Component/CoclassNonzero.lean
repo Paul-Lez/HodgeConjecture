@@ -17,6 +17,8 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open CycleComponent
+
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
@@ -24,9 +26,9 @@ variable (X : Over (Spec ↧ℂ))
 omit [IsIntegral X.left] in
 /-- The actual smooth locus of each reduced component has a complex point. -/
 theorem cycleComponentSmoothLocusOver_nonempty :
-    Nonempty (ComplexPoint (cycleComponentSmoothLocusOver X x)) := by
-  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint X x
-  exact ⟨asOpenPoint (cycleComponentOver X x) (cycleComponentSmoothLocus X x) z hz⟩
+    Nonempty (ComplexPoint (smoothLocusOver X x)) := by
+  obtain ⟨z, hz⟩ := exists_smooth_complexPoint X x
+  exact ⟨asOpenPoint (over X x) (smoothLocus X x) z hz⟩
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Open transport of the normalized component section preserves nonvanishing. -/
@@ -40,11 +42,11 @@ theorem cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero
   simp only [homOfLE_refl, op_id] at h
   apply hne
   let e := (sheafToPresheaf (Opens.grothendieckTopology
-    (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x))) AddCommGrpCat).mapIso
+    (ComplexPoint (smoothAmbientOpenOver X x))) AddCommGrpCat).mapIso
     (supportRelativeCohomologySheafOpenIso (cycleComponentSmoothClosedLiftAmbientMap X x)
       (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-      (cycleComponentSupport X x)
-      (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+      (x‾(ℂ))
+      (Set.range (Point.map (smoothClosedLift X x)))
       (cycleComponentSmoothClosedLiftAmbientMap_support X x) (2 * p))
   apply (ConcreteCategory.bijective_of_isIso (e.app (op ⊤)).hom).1
   rw [map_zero]
@@ -53,15 +55,15 @@ theorem cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero
 /-- The degree identification does not change whether the auxiliary section vanishes. -/
 theorem cycleComponentSmoothClosedLiftCoclassSection_ne_zero_iff :
     cycleComponentSmoothClosedLiftCoclassSection X x hx ≠ 0 ↔
-      letI := cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
-      smoothClosedSupportCoclassSection (cycleComponentSmoothLocusAmbientOpenOver X x)
-        (cycleComponentSmoothLocusOver X x) (cycleComponentSmoothLocusClosedLiftOver X x)
+      letI := smoothLocusOver_smoothOfRelativeDimension X x hx
+      smoothClosedSupportCoclassSection (smoothAmbientOpenOver X x)
+        (smoothLocusOver X x) (smoothClosedLift X x)
         (dim X.left - p) (dim X.left) ≠ 0 := by
-  let := cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
+  let := smoothLocusOver_smoothOfRelativeDimension X x hx
   have transport (a b : ℕ) (h : a = b)
       (s : (supportRelativeCohomologySheaf
-        (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
-        (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+        (TopCat.of (ComplexPoint (smoothAmbientOpenOver X x)))
+        (Set.range (Point.map (smoothClosedLift X x)))
         (2 * a)).obj.obj (op ⊤)) : (h ▸ s) ≠ 0 ↔ s ≠ 0 := by
     subst b
     rfl

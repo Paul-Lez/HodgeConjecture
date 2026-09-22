@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Support
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ClosedImmersion
+import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ClosedImmersion
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
@@ -31,15 +31,17 @@ Lemmas about the definitions in
 
 open CategoryTheory Topology TopologicalSpace
 
-namespace AlgebraicGeometry.ComplexPoint
+namespace AlgebraicGeometry.CycleComponent
+
+open ComplexPoint
 
 variable (X : Over (Spec ↧ℂ)) (x : X.left)
 
 /-- The complex points of the cycle component at `x` are the complex points of `X` on it. -/
 @[simp]
-lemma range_map_cycleComponentOverι :
-    Set.range (Point.map (cycleComponentOverι X x)) = cycleComponentSupport X x := by
+lemma range_map_ι :
+    Set.range (Point.map (ι X x)) = x‾(ℂ) := by
   ext
   simp [range_map_of_closedImmersion]
 
-end AlgebraicGeometry.ComplexPoint
+end AlgebraicGeometry.CycleComponent

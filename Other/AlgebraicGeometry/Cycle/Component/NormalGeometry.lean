@@ -35,13 +35,15 @@ nothing in the statement's dependency chain uses these results, only material in
 
 @[expose] public noncomputable section
 open CategoryTheory Topology TopologicalSpace
-namespace AlgebraicGeometry
+namespace AlgebraicGeometry.CycleComponent
+
+open ComplexPoint
 variable (X : Over (Spec ↧ℂ))
 
 /-- The underlying scheme point of a complex point of a cycle component is closed. -/
-lemma cycleComponent_complexPoint_underlying_isClosed
+lemma complexPoint_underlying_isClosed
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (cycleComponentOver X x)) :
+    (z : ComplexPoint (over X x)) :
     IsClosed {z.underlying} := by
   let φ : Spec ↧ℂ ⟶ X.left.pointClosure x := z.left
   exact ((pointEquivClosedPoint
@@ -49,28 +51,28 @@ lemma cycleComponent_complexPoint_underlying_isClosed
 
 /-- The image in the ambient variety of a complex point of a cycle component is a closed scheme
 point. -/
-lemma cycleComponent_complexPoint_ambient_underlying_isClosed
+lemma complexPoint_ambient_underlying_isClosed
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (cycleComponentOver X x)) :
+    (z : ComplexPoint (over X x)) :
     IsClosed {X.left.pointClosureι x z.underlying} := by
   have hclosed := (X.left.pointClosureι x).isClosedEmbedding.isClosedMap
-    {z.underlying} (cycleComponent_complexPoint_underlying_isClosed X x z)
+    {z.underlying} (complexPoint_underlying_isClosed X x z)
   simpa only [Set.image_singleton] using hclosed
 
 /-- A reduced cycle component has a smooth complex point whose underlying scheme point is
 closed. -/
-lemma exists_cycleComponent_smooth_closed_complexPoint
+lemma exists_smooth_closed_complexPoint
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ∃ z : ComplexPoint (cycleComponentOver X x),
+    ∃ z : ComplexPoint (over X x),
       z.underlying ∈
-          cycleComponentSmoothLocus X x ∧
+          smoothLocus X x ∧
         IsClosed {z.underlying} := by
-  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint X x
-  exact ⟨z, hz, cycleComponent_complexPoint_underlying_isClosed X x z⟩
+  obtain ⟨z, hz⟩ := exists_smooth_complexPoint X x
+  exact ⟨z, hz, complexPoint_underlying_isClosed X x z⟩
 
 /-- The coheight of the generic point of a component cannot exceed the relative dimension of
 the smooth ambient complex scheme. -/
-lemma cycleComponent_codimension_le
+lemma codimension_le
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (x : X.left) {d p : ℕ}
     [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) :
@@ -80,5 +82,5 @@ lemma cycleComponent_codimension_le
   rw [hx] at hle
   exact_mod_cast hle
 
-end AlgebraicGeometry
+end AlgebraicGeometry.CycleComponent
 end

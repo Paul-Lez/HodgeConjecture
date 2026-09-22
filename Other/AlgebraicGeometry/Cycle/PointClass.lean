@@ -38,6 +38,8 @@ open CategoryTheory Order TopologicalSpace Function.locallyFinsupp
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open CycleComponent
+
 variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
   [SmoothOfRelativeDimension d V.structureMap]
 
@@ -88,7 +90,7 @@ lemma pointCycleClassOnCycles_single_eq_forgetSupport_pointCoclass
     (x : V.scheme) (hx : coheight x = d) (n : ℤ) :
     pointCycleClassOnCycles V d (supported.single x hx n) =
       n • forgetSupport V.over
-        (cycleComponentSupport V.over x) (2 * (d : ℤ))
+        (support V.over x) (2 * (d : ℤ))
         ((auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
           V d x hx).supportedComparison.symm
             (maximalCodimensionSupportedGenerator V d x hx)) := by

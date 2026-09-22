@@ -25,6 +25,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.RingTheory.Unramified.LocalStructure
+import HodgeConjecture.Mathlib.Topology.KrullDimension
 
 /-!
 # Pointwise dimension of smooth complex schemes

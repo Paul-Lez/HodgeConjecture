@@ -25,6 +25,7 @@ import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.RingTheory.KrullDimension.Field
 import Mathlib.RingTheory.KrullDimension.Polynomial
 import Mathlib.RingTheory.Unramified.LocalStructure
+import HodgeConjecture.Mathlib.Topology.KrullDimension
 
 /-!
 # Dimension bounds for smooth complex schemes

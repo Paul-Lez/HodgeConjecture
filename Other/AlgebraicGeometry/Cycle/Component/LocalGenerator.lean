@@ -36,21 +36,23 @@ nothing in the statement's dependency chain uses these results, only material in
 @[expose] public noncomputable section
 open CategoryTheory Topology
 namespace AlgebraicGeometry
+
+open CycleComponent
 attribute [local instance] overSpecAlgebra
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}
   [SmoothOfRelativeDimension d X.hom]
-namespace CycleComponentSeparateLocalCoordinates
-variable (C : CycleComponentSeparateLocalCoordinates X x d n)
+namespace CycleComponent.SeparateLocalCoordinates
+variable (C : SeparateLocalCoordinates X x d n)
 attribute [local instance] coordinateRingAlgebra
 attribute [local instance] coordinateRingComplexAlgebra
 attribute [local instance] coordinateRingScalarTower
 attribute [local instance] coordinateRingEtale
 
 /-- The selected smooth component point regarded as a complex point of the smooth locus. -/
-def smoothPoint : ComplexPoint (cycleComponentSmoothLocusOver X x) :=
-  ComplexPoint.asOpenPoint (cycleComponentOver X x)
-    (cycleComponentSmoothLocus X x)
+def smoothPoint : ComplexPoint (smoothLocusOver X x) :=
+  ComplexPoint.asOpenPoint (over X x)
+    (smoothLocus X x)
     C.point C.point_mem_smoothLocus
 
 /-- The selected affine component neighborhood, bundled over the complex base. -/
@@ -60,21 +62,21 @@ abbrev neighborhoodScheme : Over (Spec ↧ℂ) :=
 /-- The selected smooth point regarded as a complex point of its affine neighborhood. -/
 def neighborhoodPoint :
     ComplexPoint C.neighborhoodScheme :=
-  ComplexPoint.asOpenPoint (cycleComponentSmoothLocusOver X x) C.componentNeighborhood
+  ComplexPoint.asOpenPoint (smoothLocusOver X x) C.componentNeighborhood
     (smoothPoint C) (by
       change (smoothPoint C).underlying ∈ C.componentNeighborhood
-      have hmap : Point.map (ComplexPoint.openInclusion (cycleComponentOver X x)
-          (cycleComponentSmoothLocus X x)) (smoothPoint C) =
+      have hmap : Point.map (ComplexPoint.openInclusion (over X x)
+          (smoothLocus X x)) (smoothPoint C) =
           C.point :=
         congrArg Subtype.val
-          ((ComplexPoint.openEquiv (cycleComponentOver X x)
-            (cycleComponentSmoothLocus X x)).apply_symm_apply
+          ((ComplexPoint.openEquiv (over X x)
+            (smoothLocus X x)).apply_symm_apply
               ⟨C.point, C.point_mem_smoothLocus⟩)
       have hu := congrArg Point.underlying hmap
       rw [Point.underlying_map] at hu
       have hu' : (smoothPoint C).underlying =
           (⟨C.point.underlying, C.point_mem_smoothLocus⟩ :
-            (cycleComponentSmoothLocus X x).toScheme) := Subtype.ext hu
+            (smoothLocus X x).toScheme) := Subtype.ext hu
       rw [hu']
       exact C.point_mem_componentNeighborhood)
 
@@ -222,6 +224,6 @@ lemma analyticAt_neighborhoodProjectionChart_symm_evaluate
   have hres := Point.evaluate_res hgW s yv hv
   exact (hres.trans (hquot yv hv)).symm
 
-end CycleComponentSeparateLocalCoordinates
+end CycleComponent.SeparateLocalCoordinates
 end AlgebraicGeometry
 end

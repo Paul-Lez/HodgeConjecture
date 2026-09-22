@@ -32,6 +32,7 @@ import Mathlib.RingTheory.Polynomial.UniqueFactorization
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 public import Other.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 public import Other.AlgebraicGeometry.Cycle.Component.NormalGeometry
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Locus
 
 /-!
 # ClosedPointDimension, the part the statement does not need
@@ -48,32 +49,34 @@ namespace AlgebraicGeometry
 attribute [local instance] overSpecAlgebra
 variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
 
+namespace CycleComponent
+
 /-- The underlying point of every complex point of a codimension-`p` reduced component has
 coheight `d - p`. -/
-lemma cycleComponent_complexPoint_coheight_eq_sub
+lemma complexPoint_coheight_eq_sub
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (cycleComponentOver X x))
+    (z : ComplexPoint (over X x))
     [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = p) :
     Order.coheight z.underlying = d - p :=
-  cycleComponent_closedPoint_coheight_eq_sub X x z.underlying hx
-    (cycleComponent_complexPoint_underlying_isClosed X x z)
+  closedPoint_coheight_eq_sub X x z.underlying hx
+    (complexPoint_underlying_isClosed X x z)
 
 /-- In every ambient dimension, a reduced component of coheight `p` has separate component and
 ambient étale coordinates, with exactly `d - p` component coordinates. -/
-lemma nonempty_cycleComponentSeparateLocalCoordinates
+lemma nonempty_separateLocalCoordinates
     [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (x : X.left) (d p : ℕ)
     [SmoothOfRelativeDimension d X.hom]
     (hx : Order.coheight x = p) :
-    Nonempty (CycleComponentSeparateLocalCoordinates X x d (d - p)) := by
+    Nonempty (SeparateLocalCoordinates X x d (d - p)) := by
   let c : X.left.pointClosure x ⟶ Spec ↧ℂ :=
     X.left.pointClosureι x ≫ X.hom
   let S : (X.left.pointClosure x).Opens := c.smoothLocus
   let g : S.toScheme ⟶ Spec ↧ℂ := S.ι ≫ c
   let : Smooth g := c.smooth_restrict_smoothLocus
   obtain ⟨z, hzsmooth, hzclosed⟩ :=
-    exists_cycleComponent_smooth_closed_complexPoint X x
+    exists_smooth_closed_complexPoint X x
   let zs : S.toScheme := ⟨z.underlying, hzsmooth⟩
   obtain ⟨W, hW, hzsW, hstandard⟩ := Smooth.exists_affine_isStandardSmooth g zs
   have hstandardComplex := algebraMap_isStandardSmooth (Over.mk g) hstandard
@@ -103,7 +106,7 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
       _ = Order.coheight zw := hPcoheight
       _ = Order.coheight zs := hWcoheight.symm
       _ = Order.coheight z.underlying := hScoheight.symm
-      _ = d - p := cycleComponent_complexPoint_coheight_eq_sub X x z hx
+      _ = d - p := complexPoint_coheight_eq_sub X x z hx
   subst m
   obtain ⟨coordinateRingHom, hcomp, hetale⟩ := hm.exists_etale_mvPolynomial
   exact ⟨
@@ -119,6 +122,8 @@ lemma nonempty_cycleComponentSeparateLocalCoordinates
       componentCoordinateAlgHom_etale := hetale
       ambientCoordinates := localEtaleCoordinates X d
         (X.left.pointClosureι x z.underlying) }⟩
+
+end CycleComponent
 
 end AlgebraicGeometry
 end

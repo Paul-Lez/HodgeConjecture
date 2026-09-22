@@ -47,6 +47,8 @@ open CategoryTheory Order Topology TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open CycleComponent
+
 open Point
 
 open AlgebraicTopology.Singular
@@ -121,11 +123,11 @@ support. -/
 lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.left]
     [Smooth X.hom] [SmoothOfRelativeDimension d X.hom]
     (x : X.left) (hx : coheight x = d)
-    (z : ComplexPoint (cycleComponentOver X x)) :
-    (cycleComponentSupport X x : Set (ComplexPoint X)) =
-      {Point.map (cycleComponentOverι X x) z} := by
+    (z : ComplexPoint (over X x)) :
+    (x‾(ℂ) : Set (ComplexPoint X)) =
+      {Point.map (CycleComponent.ι X x) z} := by
   have hdim : Order.krullDim (X.left.pointClosure x) = 0 := by
-    simpa using orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
+    simpa using orderKrullDim_eq_zero_of_coheight_eq_dimension
       (f := X.hom) (d := d) x hx
   let : Subsingleton (X.left.pointClosure x) := by
     constructor
@@ -141,10 +143,10 @@ lemma cycleComponentSupport_eq_singleton_of_coheight_eq_dimension [IsIntegral X.
       ← Scheme.le_iff_specializes]
     exact ⟨hba, hab⟩
   have hpoints : Subsingleton
-      (ComplexPoint (cycleComponentOver X x)) := by
+      (ComplexPoint (over X x)) := by
     exact ⟨fun a b ↦ ComplexPoint.underlying_injective_of_locallyOfFiniteType
       (Subsingleton.elim (α := X.left.pointClosure x) a.underlying b.underlying)⟩
-  rw [← range_map_cycleComponentOverι]
+  rw [← range_map_ι]
   ext y
   constructor
   · rintro ⟨w, rfl⟩
@@ -159,12 +161,12 @@ theorem exists_singularComponentSupportedGenerator_of_coheight_eq_dimension [IsI
     (x : X.left) (hx : coheight x = d) :
     ∃ β : RationalSingularComponentCohomologyWithSupport X x (2 * d),
       IsSupportedCohomologyGenerator β := by
-  obtain ⟨z, -⟩ := exists_cycleComponent_smooth_complexPoint X x
-  let y := Point.map (cycleComponentOverι X x) z
-  have hsupport : (cycleComponentSupport X x : Set (ComplexPoint X)) = {y} :=
+  obtain ⟨z, -⟩ := exists_smooth_complexPoint X x
+  let y := Point.map (CycleComponent.ι X x) z
+  have hsupport : (x‾(ℂ) : Set (ComplexPoint X)) = {y} :=
     cycleComponentSupport_eq_singleton_of_coheight_eq_dimension X d x hx z
   change ∃ β : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X))
-      (cycleComponentSupport X x) (2 * d),
+      (x‾(ℂ)) (2 * d),
     Submodule.span ℚ {β} = ⊤
   rw [hsupport]
   exact ⟨analyticPointLocalCoclass X d y,

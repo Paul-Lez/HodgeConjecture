@@ -19,6 +19,8 @@ open CategoryTheory CategoryTheory.Limits Topology TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open CycleComponent
+
 open AlgebraicTopology.Singular
 
 variable (X : Over (Spec ↧ℂ))
@@ -31,15 +33,15 @@ sheafification comparison on the open, and exact open-restriction homology compa
     (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom =
       HomologicalComplex.homologyMap
         (TopCat.Sheaf.openRestrictionTopSectionComplexIso (TopCat.of (ComplexPoint X))
-          (cycleComponentSmoothSupportAmbientOpen X x)
-          (complexSupportInjectiveComplex X (cycleComponentSupport X x))).inv
+          (x‾ˢⁱⁿᵍ(ℂ)ᶜ)
+          (complexSupportInjectiveComplex X (x‾(ℂ)))).inv
         (2 * (p : ℤ)) ≫
       TopCat.Sheaf.sectionCohomologyToSheafSection
-        (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))
+        (TopCat.of (x‾ˢⁱⁿᵍ(ℂ)ᶜ))
         (cycleComponentSmoothRestrictedInjectiveComplex X x) (2 * (p : ℤ)) ⊤ ≫
       (TopCat.Sheaf.openRestrictionHomologyTopSectionsIso (TopCat.of (ComplexPoint X))
-        (cycleComponentSmoothSupportAmbientOpen X x)
-        (complexSupportInjectiveComplex X (cycleComponentSupport X x))
+        (x‾ˢⁱⁿᵍ(ℂ)ᶜ)
+        (complexSupportInjectiveComplex X (x‾(ℂ)))
         (2 * (p : ℤ))).hom := rfl
 
 end AlgebraicGeometry.ComplexPoint

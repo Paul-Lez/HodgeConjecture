@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Mathlib.Topology.Sober
-public import Mathlib.Topology.Sets.Closeds
 
 /-!
 # Generic points in quasi-sober spaces

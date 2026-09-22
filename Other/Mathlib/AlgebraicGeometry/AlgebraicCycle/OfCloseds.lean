@@ -8,7 +8,7 @@ public import Other.Mathlib.AlgebraicGeometry.AlgebraicCycle.Support
 
 import Mathlib.Algebra.Order.Group.Indicator
 public import Other.Mathlib.Topology.NoetherianSpace
-public import Other.Mathlib.Topology.Sober
+import Other.Mathlib.Topology.Sober
 
 /-!
 # The cycle of a closed subset

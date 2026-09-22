@@ -22,6 +22,8 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open CycleComponent
+
 section Component
 
 variable (X : Over (Spec ↧ℂ))
@@ -31,29 +33,29 @@ variable (X : Over (Spec ↧ℂ))
 /-- Restriction to each image neighborhood agrees with transport of the
 constructed auxiliary normalized section. No ambient section comparison is supplied. -/
 theorem cycleComponentSmoothSupportCoclassSection_restrict
-    (V : Opens (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
+    (V : Opens (ComplexPoint (smoothAmbientOpenOver X x)))
     (hV : (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x).functor.obj V ≤
-      cycleComponentSmoothSupportAmbientOpen X x) :
+      x‾ˢⁱⁿᵍ(ℂ)ᶜ) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-      (cycleComponentSupport X x) (2 * p)).obj.map (homOfLE hV).op
+      (x‾(ℂ)) (2 * p)).obj.map (homOfLE hV).op
         (cycleComponentSmoothSupportCoclassSection X x hx) =
     (supportRelativeCohomologySheafOpenIso (cycleComponentSmoothClosedLiftAmbientMap X x)
       (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-      (cycleComponentSupport X x)
-      (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+      (x‾(ℂ))
+      (Set.range (Point.map (smoothClosedLift X x)))
       (cycleComponentSmoothClosedLiftAmbientMap_support X x) (2 * p)).hom.hom.app (op V)
       ((supportRelativeCohomologySheaf
-        (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
-        (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+        (TopCat.of (ComplexPoint (smoothAmbientOpenOver X x)))
+        (Set.range (Point.map (smoothClosedLift X x)))
         (2 * p)).obj.map (homOfLE (show V ≤ ⊤ from le_top)).op
         (cycleComponentSmoothClosedLiftCoclassSection X x hx)) :=
   supportRelativeCohomologySectionOnOpen_restrict
     (cycleComponentSmoothClosedLiftAmbientMap X x)
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-    (cycleComponentSupport X x)
-    (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+    (x‾(ℂ))
+    (Set.range (Point.map (smoothClosedLift X x)))
     (cycleComponentSmoothClosedLiftAmbientMap_support X x)
-    (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
+    (2 * p) (x‾ˢⁱⁿᵍ(ℂ)ᶜ)
     (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
     (cycleComponentSmoothClosedLiftCoclassSection X x hx) V hV
 

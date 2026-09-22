@@ -44,20 +44,22 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry
 
+open CycleComponent
+
 attribute [local instance] overSpecAlgebra
 
 variable {d n : ℕ} {X : Over (Spec ↧ℂ)} [IsIntegral X.left]
   [Smooth X.hom] [IsProjective X.hom] {x : X.left}
   [SmoothOfRelativeDimension d X.hom]
 
-namespace CycleComponentSeparateLocalCoordinates
+namespace CycleComponent.SeparateLocalCoordinates
 
-variable (C : CycleComponentSeparateLocalCoordinates X x d n)
+variable (C : SeparateLocalCoordinates X x d n)
 
 /-- The complex structure map on the selected affine component neighborhood. -/
 abbrev neighborhoodStructureMap :
     C.componentNeighborhood.toScheme ⟶ Spec ↧ℂ :=
-  C.componentNeighborhood.ι ≫ (cycleComponentSmoothLocus X x).ι ≫ X.left.pointClosureι x ≫ X.hom
+  C.componentNeighborhood.ι ≫ (smoothLocus X x).ι ≫ X.left.pointClosureι x ≫ X.hom
 
 /-- The retained exact component coordinates, transported to global sections of the affine
 neighborhood itself. -/
@@ -185,7 +187,7 @@ noncomputable local instance coordinateRingEtale :
       Γ(C.componentNeighborhood.toScheme, ⊤) :=
   RingHom.etale_algebraMap.mp C.coordinateRingHomOnNeighborhood_etale
 
-end CycleComponentSeparateLocalCoordinates
+end CycleComponent.SeparateLocalCoordinates
 end AlgebraicGeometry
 
 namespace AlgebraicTopology.Singular

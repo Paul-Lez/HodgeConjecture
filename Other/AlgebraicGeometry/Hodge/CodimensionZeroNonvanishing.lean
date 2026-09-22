@@ -24,6 +24,8 @@ open CategoryTheory Order TopologicalSpace
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open CycleComponent
+
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
@@ -34,7 +36,7 @@ theorem cycleComponentSmoothSupportCoclassSection_ne_zero
     cycleComponentSmoothSupportCoclassSection X x hx ≠ 0 := by
   apply cycleComponentSmoothSupportCoclassSection_ne_zero_of_lift_ne_zero X x hx
   apply (cycleComponentSmoothClosedLiftCoclassSection_ne_zero_iff X x hx).mpr
-  let := cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
+  let := smoothLocusOver_smoothOfRelativeDimension X x hx
   obtain ⟨z⟩ := cycleComponentSmoothLocusOver_nonempty X x
   exact smoothClosedSupportCoclassSection_ne_zero _ _ _ (dim X.left - p) (dim X.left) z
 

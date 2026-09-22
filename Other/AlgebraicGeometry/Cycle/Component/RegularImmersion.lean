@@ -25,6 +25,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 import Other.AlgebraicGeometry.Smooth.RegularLocal
 public import Other.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 public import Other.AlgebraicGeometry.Cycle.Component.NormalGeometry
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Locus
 
 /-!
 # Local rings of cycle-component immersions
@@ -45,6 +46,8 @@ open CategoryTheory Topology
 
 namespace AlgebraicGeometry
 
+open CycleComponent
+
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
   [IsProjective X.hom] (x : X.left)
 
@@ -52,7 +55,7 @@ omit [IsIntegral X.left] in
 /-- The component stalk at a point in the component's smooth locus is regular local. -/
 lemma cycleComponent_stalk_isRegularLocalRing_of_mem_smoothLocus
     (z : X.left.pointClosure x)
-    (hz : z ∈ cycleComponentSmoothLocus X x) :
+    (hz : z ∈ smoothLocus X x) :
     IsRegularLocalRing ((X.left.pointClosure x).presheaf.stalk z) := by
   let c : X.left.pointClosure x ⟶ Spec ↧ℂ :=
     X.left.pointClosureι x ≫ X.hom
@@ -82,7 +85,7 @@ omit [IsIntegral X.left] in
 closed-immersion stalk map is regular local. -/
 lemma cycleComponent_stalkMap_quotient_isRegularLocalRing_of_mem_smoothLocus
     (z : X.left.pointClosure x)
-    (hz : z ∈ cycleComponentSmoothLocus X x) :
+    (hz : z ∈ smoothLocus X x) :
     IsRegularLocalRing
       (X.left.presheaf.stalk (X.left.pointClosureι x z) ⧸
         RingHom.ker ((X.left.pointClosureι x).stalkMap z).hom) := by
@@ -113,7 +116,7 @@ lemma cycleComponent_stalkMap_ker_isPrime {X : Scheme} (x : X) (z : X.pointClosu
 of the ambient stalk by the stalk-map kernel has Krull dimension `d - p`. -/
 lemma ringKrullDim_cycleComponent_stalkMap_quotient
     {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint (cycleComponentOver X x))
+    (z : ComplexPoint (over X x))
     (hx : Order.coheight x = p) :
     ringKrullDim
       (X.left.presheaf.stalk (X.left.pointClosureι x z.underlying) ⧸
@@ -128,17 +131,17 @@ lemma ringKrullDim_cycleComponent_stalkMap_quotient
       ringKrullDim_eq_of_ringEquiv (RingHom.quotientKerEquivOfSurjective hsurj)
     _ = Order.coheight z.underlying := ringKrullDim_stalk_eq_coheight z.underlying
     _ = d - p := congrArg (fun n : ℕ∞ ↦ (↑n : WithBot ℕ∞))
-      (cycleComponent_complexPoint_coheight_eq_sub
+      (complexPoint_coheight_eq_sub
         (d := d) (p := p) X x z hx)
 
 /-- The ambient stalk at the image of a complex component point has Krull dimension `d`. -/
 lemma ringKrullDim_cycleComponent_ambient_stalk
     {d : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint (cycleComponentOver X x)) :
+    (z : ComplexPoint (over X x)) :
     ringKrullDim
       (X.left.presheaf.stalk (X.left.pointClosureι x z.underlying)) = d := by
   rw [ringKrullDim_stalk_eq_coheight]
-  have hclosed := cycleComponent_complexPoint_ambient_underlying_isClosed X x z
+  have hclosed := complexPoint_ambient_underlying_isClosed X x z
   have hsum := SmoothOfRelativeDimension.height_add_coheight_eq_of_isClosed
     (f := X.hom) (d := d)
     (X.left.pointClosureι x z.underlying) hclosed
@@ -158,7 +161,7 @@ lemma ringKrullDim_cycleComponent_ambient_stalk
 codimension `p`. -/
 lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
     {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint (cycleComponentOver X x))
+    (z : ComplexPoint (over X x))
     (hx : Order.coheight x = p) :
     (p : ℕ∞) ≤ Submodule.spanFinrank
       (RingHom.ker ((X.left.pointClosureι x).stalkMap z.underlying).hom) := by
@@ -175,7 +178,7 @@ lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
     ringKrullDim_cycleComponent_stalkMap_quotient
       (d := d) (p := p) X x z hx] at hle
   have hle' : (d : ℕ∞) ≤ ((d - p : ℕ) : ℕ∞) + I.spanFinrank := WithBot.coe_le_coe.mp hle
-  have hp : p ≤ d := cycleComponent_codimension_le X x hx
+  have hp : p ≤ d := codimension_le X x hx
   have hdecomp : (d : ℕ∞) = ((d - p : ℕ) : ℕ∞) + (p : ℕ∞) := by
     exact_mod_cast (Nat.sub_add_cancel hp).symm
   rw [hdecomp] at hle'
@@ -185,7 +188,7 @@ lemma cycleComponent_codimension_le_stalkMap_ker_spanFinrank
 the geometric codimension. -/
 lemma exists_cycleComponent_stalkMap_ker_generators
     {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
-    (z : ComplexPoint (cycleComponentOver X x))
+    (z : ComplexPoint (over X x))
     (hx : Order.coheight x = p) :
     ∃ s : Finset (X.left.presheaf.stalk
         (X.left.pointClosureι x z.underlying)),

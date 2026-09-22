@@ -25,6 +25,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import HodgeConjecture.Mathlib.Topology.KrullDimension
 
 /-!
 # Smooth integral complex schemes are equidimensional

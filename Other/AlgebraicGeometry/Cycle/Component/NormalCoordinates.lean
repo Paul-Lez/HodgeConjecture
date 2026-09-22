@@ -41,9 +41,11 @@ attribute [local instance] overSpecAlgebra
 section SchemeGeometry
 variable {X : Scheme} {f : X ⟶ Spec ↧ℂ} {d p : ℕ}
 
+namespace CycleComponent
+
 /-- A component whose generic point has coheight equal to the ambient dimension has dimension
 zero. -/
-lemma orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
+lemma orderKrullDim_eq_zero_of_coheight_eq_dimension
     [IsIntegral X] [SmoothOfRelativeDimension d f] (x : X)
     (hx : Order.coheight x = d) :
     Order.krullDim (X.pointClosure x) =
@@ -55,6 +57,8 @@ lemma orderKrullDim_cycleComponent_eq_zero_of_coheight_eq_dimension
   have hheight : Order.height x = 0 :=
     bot_unique ((ENat.add_le_add_iff_right (ENat.natCast_ne_top d)).mp (by simpa using h.le))
   rw [hheight]
+
+end CycleComponent
 
 end SchemeGeometry
 end AlgebraicGeometry

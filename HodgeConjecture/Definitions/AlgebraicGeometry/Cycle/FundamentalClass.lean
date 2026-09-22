@@ -34,6 +34,8 @@ open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
+open CycleComponent
+
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
@@ -72,7 +74,7 @@ abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
     -- `RΓ_{Z(ℂ)}(ℚ)`.
     (complexSupportInjectiveComplex X
       -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
-      (cycleComponentSupport X x))).homology
+      (x‾(ℂ)))).homology
     -- Degree `2p`.
     (2 * (p : ℤ))
 
@@ -84,11 +86,11 @@ abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
     -- `X(ℂ)`.
     (TopCat.of (ComplexPoint X))
     -- `Z(ℂ)`.
-    (cycleComponentSupport X x)
+    (x‾(ℂ))
     -- Degree `2p`.
     (2 * p)).obj.obj
       -- The open `X(ℂ) \ Z_sing(ℂ)`.
-      (op (cycleComponentSmoothSupportAmbientOpen X x))
+      (op (x‾ˢⁱⁿᵍ(ℂ)ᶜ))
 
 /-- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) ≅ Γ(X(ℂ) \ Z_sing(ℂ), 𝓗^{2p}_{Z(ℂ)})`, as the composite of three
 isomorphisms: restriction to `X(ℂ) \ Z_sing(ℂ)`, which is bijective because supported cohomology
@@ -102,9 +104,9 @@ def cycleComponentSupportedClassNormalizationIso :
   cycleComponentSupportExtensionIso X x hx ≪≫
     cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
       (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-        (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
+        (x‾ˢⁱⁿᵍ(ℂ)ᶜ)).mapIso
           (complexSupportInjectiveCohomologySheafIsoRelative X
-            (cycleComponentSupport X x) (2 * p)))
+            (x‾(ℂ)) (2 * p)))
 
 /-- `Γ(X(ℂ) \ Z_sing(ℂ), 𝓗^{2p}_{Z(ℂ)}) → H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`: a section on the complement of
 the singular locus extends uniquely across `Z_sing(ℂ)`. This is the inverse of the normalization
@@ -126,11 +128,11 @@ def cycleComponentSheafSupportedClass :
     -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`, in the support-cone presentation.
     RationalCohomologyWithSupport X
       -- `Z(ℂ)`.
-      (cycleComponentSupport X x)
+      (x‾(ℂ))
       -- Degree `2p`.
       (2 * (p : ℤ)) :=
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentSupport X x).isClosed (2 * (p : ℤ))).symm
+  (rationalSupportAddEquivSupportedInjectiveHomology X (x‾(ℂ))
+    (x‾(ℂ)).isClosed (2 * (p : ℤ))).symm
       (cycleComponentSupportedInjectiveClass X x hx)
 
 /-- **Step 3.** The class `[Z] ∈ H^{2p}(X(ℂ); ℚ)` of the integral subvariety `Z` with generic
@@ -140,7 +142,7 @@ H^{2p}(X(ℂ); ℚ)`.
 This is the composite of the three steps, not a second route into ordinary cohomology; the
 agreement with `forgetSupport` is therefore definitional rather than a theorem. -/
 def cycleComponentSheafClass : H^(2 * (p : ℤ))(X; ℚ) :=
-  forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
+  forgetSupport X (x‾(ℂ)) (2 * (p : ℤ))
     (cycleComponentSheafSupportedClass X x hx)
 
 end AlgebraicGeometry.ComplexPoint

@@ -20,7 +20,7 @@ tag := "class-of-a-subvariety"
 %%%
 
 ```lean -show
-open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+open AlgebraicGeometry CycleComponent CategoryTheory ComplexPoint Order TopologicalSpace
 noncomputable section
 open CategoryTheory.Limits Opposite AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
@@ -43,7 +43,7 @@ $$`\operatorname{cl}_X(Z)\in H^{2p}_Z(X;\mathbb Q),`
 and then, after forgetting the support, in $`H^{2p}(X;\mathbb Q)`.
 
 The choice of generator is the essential point. Purity alone says that the local cohomology with
-support in degree $`2p` is one-dimensional, which fixes a line but not the multiplicity-one
+degree‾(ℂ) $`2p` is one-dimensional, which fixes a line but not the multiplicity-one
 generator that a cycle class map needs. The formalization fixes the generator chart by chart using
 the complex orientation.
 
@@ -71,15 +71,15 @@ def cycleComponentSmoothClosedLiftCoclassSection (X : Over (Spec ↧ℂ)) [IsInt
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
     (supportRelativeCohomologySheaf
-      (TopCat.of (ComplexPoint (cycleComponentSmoothLocusAmbientOpenOver X x)))
-      (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+      (TopCat.of (ComplexPoint (smoothAmbientOpenOver X x)))
+      (Set.range (Point.map (smoothClosedLift X x)))
       (2 * p)).obj.obj (op ⊤) :=
-  letI := cycleComponentSmoothLocusOver_smoothOfRelativeDimension X x hx
+  letI := smoothLocusOver_smoothOfRelativeDimension X x hx
   have hdeg := cycleComponentSmoothClosedLift_codimension X x hx
   hdeg ▸ smoothClosedSupportCoclassSection
-    (cycleComponentSmoothLocusAmbientOpenOver X x)
-    (cycleComponentSmoothLocusOver X x)
-    (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - p) (dim X.left)
+    (smoothAmbientOpenOver X x)
+    (smoothLocusOver X x)
+    (smoothClosedLift X x) (dim X.left - p) (dim X.left)
 ```
 ```lean -show
 end Guide.Subvariety.D1
@@ -93,14 +93,14 @@ def cycleComponentSmoothSupportCoclassSection (X : Over (Spec ↧ℂ)) [IsIntegr
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-      (cycleComponentSupport X x) (2 * p)).obj.obj
-      (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
+      (support X x) (2 * p)).obj.obj
+      (op (analyticSmoothAmbientOpen X x)) :=
   supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
-    (cycleComponentSupport X x)
-    (Set.range (Point.map (cycleComponentSmoothLocusClosedLiftOver X x)))
+    (support X x)
+    (Set.range (Point.map (smoothClosedLift X x)))
     (cycleComponentSmoothClosedLiftAmbientMap_support X x)
-    (2 * p) (cycleComponentSmoothSupportAmbientOpen X x)
+    (2 * p) (analyticSmoothAmbientOpen X x)
     (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x)
     (cycleComponentSmoothClosedLiftCoclassSection X x hx)
 ```
@@ -116,7 +116,7 @@ example : @Guide.Subvariety.D2.cycleComponentSmoothSupportCoclassSection = @Alge
 The restriction theorem says that on each chart the glued section is the class of that chart,
 exactly and not merely up to a nonzero rational multiple.
 
-This section is nonzero whenever the smooth support has a complex point. Every neighborhood of
+This section is nonzero whenever the smooth a‾(ℂ) complex point. Every neighborhood of
 that point contains a smaller normal chart, where the coclass evaluates to one on the normal
 class. It therefore stays nonzero under restriction to any neighborhood of that point, giving a
 nonzero germ and hence a nonzero glued section.
@@ -133,7 +133,7 @@ in every codimension: the normalization does not silently produce zero anywhere.
 ```
 
 Whether the resulting class in *ordinary* cohomology is nonzero is a different question, because
-forgetting support may kill it. That step is settled only for the generic point, at the end of
+forgetting kill‾(ℂ) it. That step is settled only for the generic point, at the end of
 this chapter, and in general it is cohomological purity; see
 {ref "what-is-proved"}[What the repository proves about the statement].
 
@@ -141,14 +141,13 @@ this chapter, and in general it is cohomological purity; see
 
 The singular locus $`Z_{\mathrm{sing}}` has a finite filtration by closed subsets whose successive
 differences are smooth. Each layer has codimension at least $`p+1` in $`X`, so its cohomology with
-support vanishes in degrees below $`2(p+1)`, in particular in degrees $`2p` and $`2p+1`. The long
+in‾(ℂ) degrees below $`2(p+1)`, in particular in degrees $`2p` and $`2p+1`. The long
 exact sequence for the nested supports $`Z_{\mathrm{sing}}\subseteq Z` then shows that restriction
 
 $$`H_Z^{2p}(X;\mathbb Q)\longrightarrow
   H_{Z_{\mathrm{reg}}}^{2p}(X\setminus Z_{\mathrm{sing}};\mathbb Q)`
 
-is an isomorphism. Its inverse extends the class of Step 1 uniquely to a class with support in
-all of $`Z`.
+is an isomorphism. Its inverse extends the class of Step 1 uniquely to a class with all‾(ℂ) of $`Z`.
 
 ```lean
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree
@@ -163,10 +162,10 @@ def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.lef
     (hx : coheight x = p) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentSupport X x))).homology (2 * (p : ℤ))) ≅
+        (support X x))).homology (2 * (p : ℤ))) ≅
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
-        (complexSupportInjectiveComplex X (cycleComponentSupport X x))).homology
+      (analyticSmoothAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
+        (complexSupportInjectiveComplex X (support X x))).homology
           (2 * (p : ℤ))) :=
   letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
   asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
@@ -184,17 +183,17 @@ def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsInt
     (hx : coheight x = p) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
       (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentSupport X x))).homology (2 * (p : ℤ))) ≅
+        (support X x))).homology (2 * (p : ℤ))) ≅
       (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-        (cycleComponentSupport X x) (2 * p)).obj.obj
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
+        (support X x) (2 * p)).obj.obj
+          (op (analyticSmoothAmbientOpen X x)) :=
   have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
   cycleComponentSupportExtensionIso X x hx ≪≫
     cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
       (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-        (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
+        (analyticSmoothAmbientOpen X x)).mapIso
           (complexSupportInjectiveCohomologySheafIsoRelative X
-            (cycleComponentSupport X x) (2 * p)))
+            (support X x) (2 * p)))
 ```
 ```lean -show
 end Guide.Subvariety.D4
@@ -225,11 +224,11 @@ example :
     (cycleComponentSmoothSupportCoclassSection X x hx)
 ```
 
-# Step 3: from support to ordinary cohomology
+# Step 3: from ordinary‾(ℂ) cohomology
 
 The extension is a class in the cohomology of an injective resolution with supports. Transporting
 it through the comparison with the mapping-cone model of the previous section gives the class of
-the subvariety in cohomology with support, and forgetting the support gives its class in ordinary
+the subvariety in cohomology with support, and forgetting the its‾(ℂ) class in ordinary
 cohomology, which is the class the statement uses.
 
 ```lean -show
@@ -239,9 +238,9 @@ namespace Guide.Subvariety.D5
 def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    RationalCohomologyWithSupport X (cycleComponentSupport X x) (2 * (p : ℤ)) :=
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
-    (cycleComponentSupport X x).isClosed (2 * (p : ℤ))).symm
+    RationalCohomologyWithSupport X (support X x) (2 * (p : ℤ)) :=
+  (rationalSupportAddEquivSupportedInjectiveHomology X (support X x)
+    (support X x).isClosed (2 * (p : ℤ))).symm
       (cycleComponentSupportedInjectiveClass X x hx)
 ```
 ```lean -show
@@ -255,7 +254,7 @@ namespace Guide.Subvariety.D6
 def cycleComponentSheafClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) : H^(2 * (p : ℤ))(X; ℚ) :=
-  forgetSupport X (cycleComponentSupport X x) (2 * (p : ℤ))
+  forgetSupport X (support X x) (2 * (p : ℤ))
     (cycleComponentSheafSupportedClass X x hx)
 ```
 ```lean -show
@@ -270,8 +269,7 @@ example : @Guide.Subvariety.D6.cycleComponentSheafClass = @AlgebraicGeometry.Com
 Both definitions take only the variety, the generic point, its coheight, and the dimension $`d` as
 arguments.
 
-For the generic point of $`X` itself, the support is all of $`X(\mathbb C)`, so forgetting support
-is an isomorphism. The nonzero normalized section therefore gives a nonzero class in
+For the generic point of $`X` itself, the all‾(ℂ) of $`X(\mathbb C)`, so forgetting an‾(ℂ) isomorphism. The nonzero normalized section therefore gives a nonzero class in
 $`H^0(X;\mathbb Q)` in every dimension, without assuming analytic connectedness.
 
 ```lean
