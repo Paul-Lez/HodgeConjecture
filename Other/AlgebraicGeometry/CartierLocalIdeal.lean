@@ -158,10 +158,10 @@ theorem exists_away_eq_component
             (algebraMap (Γ(S, f.opens)) (Localization.Away s)) =
           (Ideal.span {f.equation}).map
             (algebraMap (Γ(S, f.opens)) (Localization.Away s)) := by
-  letI : Algebra (Γ(S, f.opens)) (S.presheaf.stalk x) :=
+  let _ : Algebra (Γ(S, f.opens)) (S.presheaf.stalk x) :=
     TopCat.Presheaf.algebra_section_stalk S.presheaf ⟨x, f.mem⟩
-  letI := f.isAffineOpen.isLocalization_stalk ⟨x, f.mem⟩
-  letI : IsNoetherianRing Γ(S, f.opens) :=
+  let _ := f.isAffineOpen.isLocalization_stalk ⟨x, f.mem⟩
+  let _ : IsNoetherianRing Γ(S, f.opens) :=
     IsLocallyNoetherian.component_noetherian ⟨f.opens, f.isAffineOpen⟩
   have heq : f.equation ∈ (f.isAffineOpen.primeIdealOf ⟨x, f.mem⟩).asIdeal := by
     by_contra hnot
