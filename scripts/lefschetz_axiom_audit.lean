@@ -6,7 +6,10 @@ import Other.AlgebraicGeometry.CartierChernLocalWinding
 import Other.AlgebraicGeometry.CartierLocalIdeal
 import Other.AlgebraicGeometry.ChernRelativeChartFormulaGenericLocal
 import Other.Analysis.Complex.NormalDivision
+import Other.Analysis.Complex.NormalDivisionFinOne
 import Other.RingTheory.RegularLocalEquation
+import Other.AlgebraicTopology.Sheaf.CohomologyShiftDerivedVanishing
+import Other.AlgebraicGeometry.ClosedImmersion.HolomorphicChartsAnalytic
 /- Representative axiom checks for the incomplete Lefschetz development.
 Run: lake env lean scripts/lefschetz_axiom_audit.lean
 See docs/LEFSCHETZ_HANDOFF.md for the full goal and remaining obligations. -/
@@ -387,3 +390,7 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms Ideal.generator_not_mem_square_of_regular_quotient
 #print axioms Complex.continuousOn_normalQuotient
 #print axioms Complex.exists_ball_analytic_normalQuotient_factor
+#print axioms CategoryTheory.Functor.mapHomologyShift_eq_zero_of_mapDerivedCategory_eq_zero
+#print axioms AlgebraicGeometry.ComplexPoint.analyticAt_closedImmersionHolomorphicFlatteningChart_normalCoordinateChange
+#print axioms AlgebraicGeometry.ComplexPoint.analyticAt_closedImmersionHolomorphicFlatteningChart_evaluate
+#print axioms Complex.exists_nhds_normalQuotientFinOne_factor

@@ -24,6 +24,7 @@ public import Other.Algebra.Homology.HomComplexPostcompNaturality
 public import Other.Algebra.Homology.HomComplexShiftNaturality
 public import Other.Algebra.Homology.LinearDual
 public import Other.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts
+public import Other.AlgebraicGeometry.ClosedImmersion.HolomorphicChartsAnalytic
 public import Other.AlgebraicGeometry.ClosedImmersion.NormalTransitionDerivative
 public import Other.AlgebraicGeometry.ClosedImmersion.PointNormalCoordinates
 public import Other.AlgebraicGeometry.Cohomology.GlobalSections
@@ -126,6 +127,7 @@ public import Other.AlgebraicTopology.Sheaf.CohomologyOpenComparison
 public import Other.AlgebraicTopology.Sheaf.CohomologyOpenRestriction
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionRestriction
+public import Other.AlgebraicTopology.Sheaf.CohomologyShiftDerivedVanishing
 public import Other.AlgebraicTopology.Sheaf.ConstantDegreeZero
 public import Other.AlgebraicTopology.Sheaf.FlasqueGlobalSections
 public import Other.AlgebraicTopology.Sheaf.FlasqueLowestCohomology
@@ -179,6 +181,7 @@ public import Other.AlgebraicTopology.Support.RestrictionFiber
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
 public import Other.Analysis.Complex.AnalyticDivision
 public import Other.Analysis.Complex.NormalDivision
+public import Other.Analysis.Complex.NormalDivisionFinOne
 public import Other.Analysis.Complex.Polynomial.Complement
 public import Other.Analysis.Complex.Polynomial.FactorGrowth
 public import Other.Analysis.Complex.Polynomial.FiniteSingularity
