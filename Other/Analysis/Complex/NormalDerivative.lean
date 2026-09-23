@@ -14,6 +14,49 @@ namespace Complex
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
+/-! Pulling a function back by a local analytic homeomorphism preserves a nonzero first jet. -/
+theorem fderiv_comp_symm_ne_zero_of_openPartialHomeomorph
+    {F G : Type*} [NormedAddCommGroup F] [NormedSpace ℂ F]
+    [NormedAddCommGroup G] [NormedSpace ℂ G]
+    (e : OpenPartialHomeomorph E F) {g : E → G} {p : E}
+    (hp : p ∈ e.source) (hg : AnalyticAt ℂ g p)
+    (he : AnalyticAt ℂ e p)
+    (hes : AnalyticAt ℂ e.symm (e p))
+    (hgne : fderiv ℂ g p ≠ 0) :
+    fderiv ℂ (fun v ↦ g (e.symm v)) (e p) ≠ 0 := by
+  have hleft : (fderiv ℂ e.symm (e p)).comp (fderiv ℂ e p) =
+      ContinuousLinearMap.id ℂ E := by
+    have hcomp := hes.hasStrictFDerivAt.hasFDerivAt.comp p
+      he.hasStrictFDerivAt.hasFDerivAt
+    have heq : e.symm ∘ e =ᶠ[𝓝 p] id := by
+      filter_upwards [e.open_source.mem_nhds hp] with z hz
+      exact e.left_inv hz
+    have hid := hcomp.congr_of_eventuallyEq heq.symm
+    simpa only [Function.comp_apply, fderiv_id] using hid.fderiv.symm
+  have hpull : fderiv ℂ (fun v ↦ g (e.symm v)) (e p) =
+      (fderiv ℂ g p).comp (fderiv ℂ e.symm (e p)) := by
+    have hgp : HasFDerivAt g (fderiv ℂ g p) (e.symm (e p)) := by
+      rw [e.left_inv hp]
+      exact hg.hasStrictFDerivAt.hasFDerivAt
+    have hcomp := hgp.comp (e p)
+      hes.hasStrictFDerivAt.hasFDerivAt
+    change fderiv ℂ (g ∘ e.symm) (e p) = _
+    exact hcomp.fderiv
+  intro hzero
+  apply hgne
+  rw [hpull] at hzero
+  have hrewrite : fderiv ℂ g p =
+      ((fderiv ℂ g p).comp (fderiv ℂ e.symm (e p))).comp
+        (fderiv ℂ e p) := by
+    calc
+      fderiv ℂ g p = (fderiv ℂ g p).comp (ContinuousLinearMap.id ℂ E) := by
+        rw [ContinuousLinearMap.comp_id]
+      _ = (fderiv ℂ g p).comp
+          ((fderiv ℂ e.symm (e p)).comp (fderiv ℂ e p)) := by rw [hleft]
+      _ = ((fderiv ℂ g p).comp (fderiv ℂ e.symm (e p))).comp
+          (fderiv ℂ e p) := by rw [ContinuousLinearMap.comp_assoc]
+  rw [hrewrite, hzero, ContinuousLinearMap.zero_comp]
+
 /-! A function which vanishes on the normal hyperplane has no tangent first jet. -/
 theorem fderiv_eq_zero_on_normal_tangent
     {f : E × (Fin 1 → ℂ) → ℂ} {V : Set (E × (Fin 1 → ℂ))}

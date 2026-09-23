@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts
+public import Other.Analysis.Complex.NormalDerivative
 
 /-!
 # Analytic provenance of the canonical flattening chart
@@ -153,6 +154,43 @@ theorem fderiv_closedImmersionHolomorphicFlatteningChart_evaluate_normal
   rw [fderiv_closedImmersionHolomorphicFlatteningChart_evaluate
     X Y i m d z V s y hy hV]
   rfl
+
+/-! A nonzero ambient jet remains nonzero after the canonical analytic coordinate change. -/
+theorem fderiv_closedImmersionHolomorphicFlatteningChart_evaluate_ne_zero
+    (V : X.left.Opens) (s : Γ(X.left, V))
+    (y : ComplexPoint X)
+    (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)
+    (hV : (closedImmersionHolomorphicFlatteningChart X Y i m d z).symm
+      (closedImmersionHolomorphicFlatteningChart X Y i m d z y) ∈ Point.overOpen V)
+    (hambient : fderiv ℂ (fun w ↦ Point.evaluate V s
+        ((localChart X d (Point.map i z)).symm w))
+        (localChart X d (Point.map i z) y) ≠ 0) :
+    fderiv ℂ (fun v ↦ Point.evaluate V s
+        ((closedImmersionHolomorphicFlatteningChart X Y i m d z).symm v))
+      (closedImmersionHolomorphicFlatteningChart X Y i m d z y) ≠ 0 := by
+  let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
+  let A := closedImmersionNormalCoordinateChange X Y i m d z
+  let C := localChart X d (Point.map i z)
+  let g := fun w ↦ Point.evaluate V s (C.symm w)
+  have hA : AnalyticAt ℂ A (C y) ∧ AnalyticAt ℂ A.symm (e y) :=
+    analyticAt_closedImmersionHolomorphicFlatteningChart_normalCoordinateChange
+      X Y i m d z y hy
+  have hCtarget : C y ∈ C.target := C.map_source hy.1.1
+  have hV' : C.symm (C y) ∈ Point.overOpen V := by
+    have hyV : y ∈ Point.overOpen V := by
+      change e.symm (e y) ∈ Point.overOpen V at hV
+      rw [e.left_inv hy] at hV
+      exact hV
+    rw [C.left_inv hy.1.1]
+    exact hyV
+  have hg : AnalyticAt ℂ g (C y) := by
+    exact analyticAt_localChart_symm_evaluate X d (Point.map i z) hCtarget V s hV'
+  have hpull := Complex.fderiv_comp_symm_ne_zero_of_openPartialHomeomorph
+    (e := A) (g := g) (p := C y) hy.1.2.1 hg hA.1 hA.2 hambient
+  have hAC : A (C y) = e y := by
+    rfl
+  rw [hAC] at hpull
+  simpa only [e, A, C, g, closedImmersionHolomorphicFlatteningChart_symm_apply] using hpull
 
 /-! The pointwise result above is most useful after restricting the chart source to the
 local-form domain.  This packages the resulting analyticity on the *whole* coordinate target of
