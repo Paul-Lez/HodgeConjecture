@@ -171,69 +171,15 @@ theorem cycleComponentSupportedInjectiveClass_point_normalization
     TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso_hom]
   exact analyticComponentPointSupportedInjectiveCoclass_section_normalization X x _ z hx
 
-/-- Exact positive-kernel point normalization of the general ordinary class.
-The separate legacy ordinary comparison retains its independently checked cone sign. -/
-theorem cycleComponentSheafClass_point_normalization
+/-- Exact positive-kernel point normalization of the mapping-cone class. -/
+theorem coneCycleComponentSheafClass_point_normalization
     (hx : Order.coheight x = d) :
-    cycleComponentSheafClass X x hx =
+    coneCycleComponentSheafClass X x hx =
       analyticComponentPointPositiveKernelClass X x d z := by
-  rw [cycleComponentSheafClass_eq_injectiveModel,
+  rw [coneCycleComponentSheafClass_eq_injectiveModel,
     cycleComponentSupportedInjectiveClass_point_normalization X x d z hx]
   rfl
 
 end Point
-
-variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
-  [SmoothOfRelativeDimension d V.structureMap]
-
-/-- Exact integer multiplicity at every point component in the general cycle map. -/
-theorem sheafCycleClassOnCycles_single_point_normalization
-    (x : V.scheme) (hx : Order.coheight x = d)
-    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
-    (n : ℤ) :
-    sheafCycleClassOnCycles V d (codimensionCycleSubgroup.single x hx n) =
-      n • analyticComponentPointPositiveKernelClass V.over x d z := by
-  rw [sheafCycleClassOnCycles_single,
-    cycleComponentSheafClass_point_normalization V.over x d z hx]
-
-/-- Every finite integral point cycle uses the same exact positive normalization,
-including negative multiplicities and repeated points. -/
-theorem sheafCycleClassOnCycles_sum_single_point_normalization
-    {ι : Type*} (t : Finset ι)
-    (x : ι → V.scheme) (hx : ∀ i, Order.coheight (x i) = d)
-    (z : ∀ i, ComplexPoint (Over.mk
-      (cycleComponentι V.scheme (x i) ≫ V.structureMap))) (n : ι → ℤ) :
-    sheafCycleClassOnCycles V d
-      (∑ i ∈ t, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
-      ∑ i ∈ t, n i • analyticComponentPointPositiveKernelClass
-        V.over (x i) d (z i) := by
-  rw [sheafCycleClassOnCycles_sum_single]
-  refine Finset.sum_congr rfl fun i _ ↦ ?_
-  rw [cycleComponentSheafClass_point_normalization V.over (x i) d (z i) (hx i)]
-
-/-- Exact rational point multiplicity after scalar extension of the general map. -/
-theorem rationalSheafCycleClassOnCycles_tmul_single_point_normalization
-    (x : V.scheme) (hx : Order.coheight x = d)
-    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
-    (q : ℚ) :
-    rationalSheafCycleClassOnCycles V d (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
-      q • analyticComponentPointPositiveKernelClass V.over x d z := by
-  rw [rationalSheafCycleClassOnCycles_tmul_single,
-    cycleComponentSheafClass_point_normalization V.over x d z hx]
-
-/-- The general rational map has the exact point normalization on arbitrary
-finite rational combinations, with no normalization choice for each summand. -/
-theorem rationalSheafCycleClassOnCycles_sum_tmul_single_point_normalization
-    {ι : Type*} (t : Finset ι)
-    (x : ι → V.scheme) (hx : ∀ i, Order.coheight (x i) = d)
-    (z : ∀ i, ComplexPoint (Over.mk
-      (cycleComponentι V.scheme (x i) ≫ V.structureMap))) (q : ι → ℚ) :
-    rationalSheafCycleClassOnCycles V d
-      (∑ i ∈ t, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
-      ∑ i ∈ t, q i • analyticComponentPointPositiveKernelClass
-        V.over (x i) d (z i) := by
-  rw [rationalSheafCycleClassOnCycles_sum_tmul_single]
-  refine Finset.sum_congr rfl fun i _ ↦ ?_
-  rw [cycleComponentSheafClass_point_normalization V.over (x i) d (z i) (hx i)]
 
 end AlgebraicGeometry.ComplexPoint

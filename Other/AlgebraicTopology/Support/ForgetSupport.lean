@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SheafCohomology
+public import Other.AlgebraicTopology.Support.ClosedSupportSheaf
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives

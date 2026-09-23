@@ -18,7 +18,7 @@ module
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
-public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturality
+public import Other.Algebra.Homology.HomComplexPostcompNaturalityLemmas
 
 /-!
 # HomComplexPostcompNaturality, the part the statement does not need

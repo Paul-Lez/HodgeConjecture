@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularNaturality
+public import Other.AlgebraicGeometry.Cohomology.SupportSingularNaturality
 
 /-!
 # Singular cochains and cohomology with support

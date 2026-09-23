@@ -17,9 +17,9 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyDef
 import Mathlib.Algebra.Homology.HomotopyCategory.Plus
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyLemmas
 public import Other.AlgebraicGeometry.Cohomology.GlobalSections
 public import Other.AlgebraicGeometry.Cohomology.SupportSingularGlobal
 
@@ -138,7 +138,7 @@ def hypercohomologyAddEquivGlobalSectionsOfResolution
   let e₂ : ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj I) n ≃+
       ShiftedHom (DerivedCategory.Q.obj A') (DerivedCategory.Q.obj I) n :=
     isoHomCongrAddEquiv (DerivedCategory.Q.mapIso e) (Iso.refl _)
-  let e₃ := kInjectiveDerivedHomAddEquivCohomologyClass A' I n
+  let e₃ := CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A' I n
   let e₄ := (CochainComplex.HomComplex.homologyAddEquiv A' I n).symm
   let e₅ := (HomologicalComplex.homologyMapIso
     (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
