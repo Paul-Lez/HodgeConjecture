@@ -53,7 +53,7 @@ theorem exists_genericWindingChartData_of_fderiv_ne_zero
           (cycleComponentAnalyticClosedSupport X x) coord w =
         f (ChernWinding.flattenedPuncturedInclusion
           (S := cycleComponentSupport X x) (Fin (d - 1) → ℂ) F.chart q F.mem_source w)) :
-    Nonempty (GenericWindingChartData X c x d q) := by
+    ∃ G : GenericWindingChartData X c x d q, G.toChart.carrier ≤ F.flattened := by
   obtain ⟨U, hUn, hUopen, hUsub, e', hq', he'sub, he'source, he'apply, he'U, u, hu, hfactor⟩ :=
     Complex.exists_restricted_normalDivision_chart F.chart F.mem_source F.center hf hzero
       (by
@@ -158,12 +158,15 @@ theorem exists_genericWindingChartData_of_fderiv_ne_zero
         (Fsmall.chart (w.1.1 : ComplexPoint X)).2 0 := by
       rfl
     rw [hnu, hline]
-  exact ⟨toGenericWindingChartData c F Vsmall hqsmall i localForm hVsmall
+  let G := toGenericWindingChartData c F Vsmall hqsmall i localForm hVsmall
     (by simpa [Fsmall, restrictedFlattened] using coordSmall)
     (by simpa [Fsmall, restrictedFlattened] using hcoordSmall)
     (by simpa [Fsmall, restrictedFlattened] using normalUnit)
     (by simpa [Fsmall, restrictedFlattened] using normalUnit_ne_zero)
-    (by simpa [Fsmall, restrictedFlattened] using hfactorSmall)⟩
+    (by simpa [Fsmall, restrictedFlattened] using hfactorSmall)
+  refine ⟨G, ?_⟩
+  change Fsmall.flattened ≤ F.flattened
+  exact hWsmall
 
 end FlatteningChartWithCoclass
 
