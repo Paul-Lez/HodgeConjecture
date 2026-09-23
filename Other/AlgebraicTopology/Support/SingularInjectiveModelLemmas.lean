@@ -6,7 +6,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularFlasqueModel
+public import Other.AlgebraicTopology.Support.SingularInjectiveModel
 
 /-!
 # Constructions used only in proofs

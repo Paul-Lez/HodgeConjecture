@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenInjectiveResolution
+public import Other.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.Filtration
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 

@@ -77,24 +77,6 @@ theorem supportedSections_top_homology_isZero (W : Opens X)
 
 variable {U V : Opens X} (h : V ≤ U)
 
-/-- Flasqueness suffices for the nested-support sequence to be short exact on every open. -/
-theorem nestedSupportRestrictionSectionsShortComplex_shortExact_of_flasque
-    (W : Opens X) (F : Sheaf AddCommGrpCat.{u} X) [F.IsFlasque] :
-    ((nestedSupportRestrictionShortComplex X h F).map (supportEvaluation X W)).ShortExact := by
-  rw [nestedSupportRestrictionShortComplex_eq]
-  let : Epi ((supportEvaluation X W).map ((toOpenRestrictionPushforward X U).app F)) :=
-    toOpenRestrictionPushforward_app_epi X U F W
-  exact kernelFactorizationShortComplex_map_shortExact _ _ _ _ _
-
-/-- The same exact sequence for section complexes of flasque sheaves. -/
-theorem nestedSupportRestrictionSectionsComplexShortComplex_shortExact_of_flasque
-    (W : Opens X) (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
-    (hK : ∀ n, (K.X n).IsFlasque) :
-    (nestedSupportRestrictionSectionsComplexShortComplex X h W K).ShortExact := by
-  apply HomologicalComplex.shortExact_of_degreewise_shortExact
-  intro n
-  exact nestedSupportRestrictionSectionsShortComplex_shortExact_of_flasque X h W (K.X n)
-
 include h in
 /-- Vanishing of the smaller support and the open layer implies
 vanishing of the larger support in the same degree. -/
@@ -108,7 +90,7 @@ theorem nestedSupportRestriction_middle_homology_isZero
     IsZero ((((supportEvaluation X ⊤).mapHomologicalComplex ℤᵘᵖ).obj
       (((sheafSectionsSupportedOutside X V).mapHomologicalComplex ℤᵘᵖ).obj K)).homology n) := by
   let S := nestedSupportRestrictionSectionsComplexShortComplex X h ⊤ K
-  have hS := nestedSupportRestrictionSectionsComplexShortComplex_shortExact_of_flasque X h ⊤ K hK
+  have hS := nestedSupportRestrictionSectionsComplexShortComplex_shortExact X h ⊤ K hK
   have hlast : IsZero (S.X₃.homology n) := hlayer.of_iso
     ((HomologicalComplex.homologyFunctor _ _ n).mapIso
       (nestedSupportRestrictionLastComplexIso X h K))

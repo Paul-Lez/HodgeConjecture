@@ -176,7 +176,7 @@ two are identified by a composite of three isomorphisms, each for its own reason
 
 $$`H^{2p}_Z(X;\mathbb Q)
    \;\xrightarrow{\ \sim\ }\;H^{2p}_Z(U;\mathbb Q)
-   \;\xrightarrow{\ \sim\ }\;\Gamma\bigl(U,\mathcal H^{2p}(R\Gamma_Z\mathbb Q)\bigr)
+   \;\xrightarrow{\ \sim\ }\;\Gamma\bigl(U,\mathcal H^{2p}(\Gamma_Z C^\bullet)\bigr)
    \;\xrightarrow{\ \sim\ }\;\Gamma(U,\mathcal H^{2p}_Z).`
 
 The first is restriction to $`U`, and it is what removes the singular locus from the problem.
@@ -191,19 +191,19 @@ sides of the restriction map.
 ```
 
 The second passes from a cohomology group to a group of sections, and it is the step that purity
-supplies. On $`U` the cohomology sheaves of $`R\Gamma_Z\mathbb Q` vanish in every degree other than
+supplies. Write $`C^\bullet` for the sheafified rational singular cochains. On $`U` the cohomology
+sheaves of $`\Gamma_Z C^\bullet`, its sections supported in $`Z`, vanish in every degree other than
 $`2p`, so $`2p` is the lowest degree in which they are nonzero. In that lowest degree the
 cohomology of the sections over $`U` agrees with the sections of the cohomology sheaf, because no
 lower degree contributes a correction.
 
 ```lean
-#check cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
+#check cycleComponentSmoothRestrictedSingular_homology_isZero_of_ne
 ```
 
-The third identifies $`\mathcal H^{2p}(R\Gamma_Z\mathbb Q)`, the cohomology sheaf of the supported
-part of an injective resolution, with $`\mathcal H^{2p}_Z`, the sheafification of
-$`V\mapsto H^{2p}(V,V\setminus Z;\mathbb Q)`. The comparison runs through the singular
-resolution.
+The third identifies $`\mathcal H^{2p}(\Gamma_Z C^\bullet)`, the cohomology sheaf of the supported
+singular cochains, with $`\mathcal H^{2p}_Z`, the sheafification of
+$`V\mapsto H^{2p}(V,V\setminus Z;\mathbb Q)`.
 
 Of the two definitions quoted below, the first is the restriction isomorphism on its own and the
 second is the whole composite, the normalization isomorphism
@@ -218,11 +218,11 @@ def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.lef
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      (.up ℤ)).obj (complexSupportSingularComplex X
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
       (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
+        (complexSupportSingularComplex X (cycleComponentAnalyticClosedSupport X x))).homology
           (2 * (p : ℤ))) :=
   letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
   asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
@@ -239,7 +239,7 @@ def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsInt
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
     ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      (.up ℤ)).obj (complexSupportSingularComplex X
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
       (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * p)).obj.obj
@@ -249,8 +249,10 @@ def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsInt
     cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
       (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
         (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
-          (complexSupportInjectiveCohomologySheafIsoRelative X
-            (cycleComponentAnalyticClosedSupport X x) (2 * p)))
+          (letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
+          supportedSingularCohomologySheafIsoRelative (TopCat.of (ComplexPoint X))
+            (cycleComponentAnalyticClosedSupport X x)
+            (cycleComponentAnalyticClosedSupport X x).isClosed (2 * p)))
 ```
 ```lean -show
 end Guide.Subvariety.D4
@@ -258,7 +260,7 @@ example : @Guide.Subvariety.D4.cycleComponentSupportedClassNormalizationIso = @A
 ```
 
 ```lean
-#check cycleComponentSupportedInjectiveClass_unique
+#check cycleComponentSupportedSingularClass_unique
 ```
 
 The two ends of that isomorphism have short names, which keep the distinction visible in later
@@ -286,7 +288,7 @@ example :
 
 # Step 3: from support to ordinary cohomology
 
-The extension is a class in the cohomology of an injective resolution with supports. The
+The extension is a class in the cohomology of the supported singular cochains. The
 comparison of the previous section identifies that group with $`H^{2p}_Z(X;\mathbb Q)`, and
 forgetting the support gives the class in ordinary cohomology, which is the class the statement
 uses.
@@ -300,8 +302,8 @@ def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.lef
     (hx : coheight x = p) :
     H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) :=
   have he : 2 * (p : ℤ) = ((2 * p : ℕ) : ℤ) := by omega
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
-    (2 * p)).symm (he ▸ cycleComponentSupportedInjectiveClass X x hx)
+  (rationalSupportAddEquivSupportedSingularHomology X (cycleComponentAnalyticClosedSupport X x)
+    (2 * p)).symm (he ▸ cycleComponentSupportedSingularClass X x hx)
 ```
 ```lean -show
 end Guide.Subvariety.D5

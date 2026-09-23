@@ -23,6 +23,7 @@ inverse is the unique extension operation.
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace Opposite
+open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -43,7 +44,7 @@ private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
       -- Global sections.
       ⊤).mapHomologicalComplex ℤᵘᵖ).obj
       -- `RΓ_{Z_sing,k(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X
+      (complexSupportSingularComplex X
         -- `Z_sing,k(ℂ)`, as a closed subset of `X(ℂ)`.
         (cycleComponentSingularAnalyticClosedFiltration X x k))).homology n) := by
   let O (j : ℕ) := (cycleComponentSingularAnalyticClosedFiltration X x j).compl
@@ -55,10 +56,11 @@ private theorem cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt
     ext y
     change (y ∉ (∅ : Set (ComplexPoint X))) ↔ y ∈ Set.univ
     simp
+  letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
   exact TopCat.Sheaf.finiteNestedSupport_homology_isZero
     (TopCat.of (ComplexPoint X)) O hO (cycleComponentSingularFiltrationLength X x) hN
-    (ambientRationalInjectiveComplex X)
-    (fun j => TopCat.Sheaf.injective_isFlasque _ _) n
+    (rationalSingularCochainComplex (TopCat.of (ComplexPoint X)))
+    (fun j => rationalSingularCochainComplex_isFlasque _ j) n
     (fun j _ => cycleComponentSingularLayerSectionCohomology_isZero_of_lt
       X x hx j n hn) k hk
 
@@ -73,7 +75,7 @@ private theorem cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
       -- Global sections.
       ⊤).mapHomologicalComplex ℤᵘᵖ).obj
       -- `RΓ_{Z_sing(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X
+      (complexSupportSingularComplex X
         -- `Z_sing(ℂ)`, as a closed subset of `X(ℂ)`.
         (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology n) :=
   cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt X x hx
@@ -89,7 +91,7 @@ theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree :
       -- Global sections.
       ⊤).mapHomologicalComplex ℤᵘᵖ).obj
       -- `RΓ_{Z_sing(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X
+      (complexSupportSingularComplex X
         -- `Z_sing(ℂ)`, as a closed subset of `X(ℂ)`.
         (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology
       -- Degree `2p`.
@@ -106,7 +108,7 @@ private theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegr
       -- Global sections.
       ⊤).mapHomologicalComplex ℤᵘᵖ).obj
       -- `RΓ_{Z_sing(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X
+      (complexSupportSingularComplex X
         -- `Z_sing(ℂ)`, as a closed subset of `X(ℂ)`.
         (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology
       -- Degree `2p + 1`.
@@ -139,16 +141,16 @@ def cycleComponentSupportSectionRestriction :
       -- Global sections.
       ⊤).mapHomologicalComplex ℤᵘᵖ).obj
       -- `RΓ_{Z(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) ⟶
+      (complexSupportSingularComplex X (cycleComponentAnalyticClosedSupport X x)) ⟶
     ((TopCat.Sheaf.supportEvaluation
       -- `X(ℂ)`.
       (TopCat.of (ComplexPoint X))
       -- Sections over the open `X(ℂ) \ Z_sing(ℂ)`.
       (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
         -- `RΓ_{Z(ℂ)}(ℚ)`.
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) :=
+        (complexSupportSingularComplex X (cycleComponentAnalyticClosedSupport X x)) :=
   TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) ℤᵘᵖ
-    (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) (homOfLE le_top)
+    (complexSupportSingularComplex X (cycleComponentAnalyticClosedSupport X x)) (homOfLE le_top)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -160,10 +162,11 @@ theorem cycleComponentSupportSectionRestriction_homology_isIso :
     IsIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ))) := by
   let T := TopCat.of (ComplexPoint X)
   let h := cycleComponentSupportComplement_le_smoothAmbientOpen X x
-  let K := ambientRationalInjectiveComplex X
+  let K := rationalSingularCochainComplex (TopCat.of (ComplexPoint X))
   let S := TopCat.Sheaf.nestedSupportRestrictionSectionsComplexShortComplex T h ⊤ K
+  letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
   let := TopCat.Sheaf.nestedSupportRestriction_homologyMap_isIso_of_vanishing T h ⊤ K
-    (2 * (p : ℤ))
+    (fun n => rationalSingularCochainComplex_isFlasque _ n) (2 * (p : ℤ))
     (cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree X x hx)
     (cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ X x hx)
   have he : HomologicalComplex.homologyMap S.g (2 * (p : ℤ)) ≫
@@ -189,7 +192,7 @@ def cycleComponentSupportExtensionIso :
       -- Global sections.
       ⊤).mapHomologicalComplex ℤᵘᵖ).obj
       -- `RΓ_{Z(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X
+      (complexSupportSingularComplex X
         -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
         (cycleComponentAnalyticClosedSupport X x))).homology
       -- Degree `2p`.
@@ -201,7 +204,7 @@ def cycleComponentSupportExtensionIso :
       -- Sections over the open `X(ℂ) \ Z_sing(ℂ)`.
       (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
         -- `RΓ_{Z(ℂ)}(ℚ)`.
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
+        (complexSupportSingularComplex X (cycleComponentAnalyticClosedSupport X x))).homology
           -- Degree `2p`.
           (2 * (p : ℤ))) :=
   letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
