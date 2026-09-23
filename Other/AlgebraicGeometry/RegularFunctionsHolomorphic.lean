@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AnalyticSheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
 public import Mathlib.Topology.Sheaves.Functors
 
 /-!
@@ -86,27 +86,27 @@ def regularFunctionsToHolomorphic (U : X.left.Opens) :
     apply Subtype.ext
     funext x
     change Point.evaluate U (1 : Γ(X.left, U)) (x : ComplexPoint X) = 1
-    rw [← Point.evaluationHom_hom_apply U ⟨(x : ComplexPoint X), x.property⟩]
+    rw [← Point.evaluationHom_apply U ⟨(x : ComplexPoint X), x.property⟩]
     exact map_one _
   map_mul' a b := by
     apply Subtype.ext
     funext x
     change Point.evaluate U (a * b) (x : ComplexPoint X) =
       Point.evaluate U a (x : ComplexPoint X) * Point.evaluate U b (x : ComplexPoint X)
-    simp only [← Point.evaluationHom_hom_apply U ⟨(x : ComplexPoint X), x.property⟩]
+    simp only [← Point.evaluationHom_apply U ⟨(x : ComplexPoint X), x.property⟩]
     exact map_mul _ a b
   map_zero' := by
     apply Subtype.ext
     funext x
     change Point.evaluate U (0 : Γ(X.left, U)) (x : ComplexPoint X) = 0
-    rw [← Point.evaluationHom_hom_apply U ⟨(x : ComplexPoint X), x.property⟩]
+    rw [← Point.evaluationHom_apply U ⟨(x : ComplexPoint X), x.property⟩]
     exact map_zero _
   map_add' a b := by
     apply Subtype.ext
     funext x
     change Point.evaluate U (a + b) (x : ComplexPoint X) =
       Point.evaluate U a (x : ComplexPoint X) + Point.evaluate U b (x : ComplexPoint X)
-    simp only [← Point.evaluationHom_hom_apply U ⟨(x : ComplexPoint X), x.property⟩]
+    simp only [← Point.evaluationHom_apply U ⟨(x : ComplexPoint X), x.property⟩]
     exact map_add _ a b
 
 set_option backward.isDefEq.respectTransparency false in
