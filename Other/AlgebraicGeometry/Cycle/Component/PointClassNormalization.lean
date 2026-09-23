@@ -55,17 +55,6 @@ theorem complexSupportInjectiveCohomologySheafIsoRelative_restriction_section
     (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.naturality,
     complexSupportInjectiveCohomologySheafIsoRelative_section_assoc]
 
-/-- The normalization isomorphism's forward map displays the actual restriction,
-actual lowest-degree map, and actual cohomology-sheaf comparison. -/
-theorem cycleComponentSupportedClassNormalizationIso_hom :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom =
-      HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x)
-        (2 * (p : ℤ)) ≫
-      (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom ≫
-      (complexSupportInjectiveCohomologySheafIsoRelative X
-        (cycleComponentAnalyticClosedSupport X x) (2 * p)).hom.hom.app
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) := rfl
-
 section Point
 
 variable (d : ℕ) [SmoothOfRelativeDimension d X.hom]
@@ -156,19 +145,129 @@ theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The ACTUAL general supported component class is the old normalized point
-coclass transported through the actual relative/injective comparison. This is
-a uniqueness theorem about the general construction, not a point branch. -/
+set_option maxHeartbeats 10000000 in
+/-- The supported component class equals the normalized point class. -/
 theorem cycleComponentSupportedInjectiveClass_point_normalization
     (hx : Order.coheight x = d) :
     cycleComponentSupportedInjectiveClass X x hx =
-      analyticComponentPointSupportedInjectiveCoclass X x d z := by
-  obtain rfl : dim X.left = d := SmoothOfRelativeDimension.dim_eq X.hom d
+      (rationalSupportAddEquivSupportedInjectiveHomology X
+        (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
+        (analyticComponentPointSupportedInjectiveCoclass X x d z) := by
+  let a : CycleComponentSupportedCohomology X x d :=
+    (rationalSupportAddEquivSupportedInjectiveHomology X
+      (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
+      (analyticComponentPointSupportedInjectiveCoclass X x d z)
   symm
-  apply cycleComponentSupportedInjectiveClass_unique X x hx
-  rw [cycleComponentSupportedClassNormalizationIso_hom,
-    cycleComponentSmoothSupportLowestSectionCohomologyIso,
+  apply cycleComponentSupportedInjectiveClass_unique X x hx a
+  set_option maxHeartbeats 10000000 in
+  have hnorm :
+      (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a =
+        (complexSupportInjectiveCohomologySheafIsoRelative X
+          (cycleComponentAnalyticClosedSupport X x) (2 * d)).hom.hom.app
+            (op (cycleComponentSmoothSupportAmbientOpen X x))
+          ((cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx).hom
+            (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x)
+              (2 * (d : ℤ))
+              ((rationalSupportAddEquivSupportedInjectiveHomology X
+                (cycleComponentAnalyticClosedSupport X x) (2 * d)) a))) := by
+    let T := TopCat.of (ComplexPoint X)
+    let Z := cycleComponentAnalyticClosedSupport X x
+    let U := cycleComponentSmoothSupportAmbientOpen X x
+    let hW : U ⊓ Z.compl = Z.compl := inf_eq_right.mpr
+      (cycleComponentSupportComplement_le_smoothAmbientOpen X x)
+    let f : Z.compl ⟶ U := homOfLE (by
+      intro y hy hyS
+      obtain ⟨w, _, hw⟩ := hyS
+      apply hy
+      change y.underlying ∈ closure ({x} : Set X.left)
+      rw [← range_cycleComponentι X.left x]
+      exact ⟨w, hw⟩)
+    let g : U ⟶ ⊤ := homOfLE le_top
+    let F := (TopCat.Sheaf.constantFunctor T).obj (AddCommGrpCat.of ℚ)
+    let n : ℕ := 2 * d
+    have hcycle (y : H_[Z]^n(X; ℚ)) :
+        cycleComponentSupportExtensionIso X x hx y =
+          CategoryTheory.Sheaf.relH.restrict F (homOfLE (show Z.compl ≤ ⊤ from le_top))
+            f (homOfLE (show Z.compl ≤ Z.compl from le_rfl)) g
+            (by apply Subsingleton.elim) n y := by
+      rfl
+    change cycleComponentSmoothSupportLowestSectionCohomologyEquiv X x hx
+      (cycleComponentSupportExtensionIso X x hx a) = _
+    have hcycle' : cycleComponentSupportExtensionIso X x hx a =
+        CategoryTheory.Sheaf.relH.restrict F (homOfLE (show Z.compl ≤ ⊤ from le_top))
+          (homOfLE (show Z.compl ≤ U from
+            (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
+          (homOfLE (show Z.compl ≤ Z.compl from le_rfl)) (homOfLE (show U ≤ ⊤ from le_top))
+          (by apply Subsingleton.elim) n a := by
+      rw [hcycle]
+    rw [hcycle']
+    dsimp [cycleComponentSmoothSupportLowestSectionCohomologyEquiv]
+    let bridge :=
+      @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology T Z.compl U Z.compl hW
+        (analyticHasExt X) F (ambientRationalInjectiveComplex X)
+        (ambientRationalInjectiveComplex_isKInjective X)
+        (ambientRationalInjectiveSingleAugmentation X)
+        (ambientRationalInjectiveSingleAugmentation_quasiIso X) n
+    have hbridge :=
+      @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology_restrict T Z.compl
+        (⊤ : Opens T) Z.compl Z.compl U Z.compl (top_inf_eq _) hW le_rfl le_top le_rfl
+        (analyticHasExt X) F (ambientRationalInjectiveComplex X)
+        (ambientRationalInjectiveComplex_isKInjective X)
+        (ambientRationalInjectiveSingleAugmentation X)
+        (ambientRationalInjectiveSingleAugmentation_quasiIso X) n a
+    let lowest :
+        ((((TopCat.Sheaf.supportEvaluation T U).mapHomologicalComplex ℤᵘᵖ).obj
+          (((TopCat.Sheaf.sheafSectionsSupportedOutside T Z.compl).mapHomologicalComplex ℤᵘᵖ).obj
+            (ambientRationalInjectiveComplex X))).homology (n : ℤ)) ≅
+          (TopCat.Sheaf.supportEvaluation T U).obj
+            ((complexSupportInjectiveComplex X Z).homology (n : ℤ)) := by
+      change _ ≅
+        ((complexSupportInjectiveComplex X Z).homology (n : ℤ)).presheaf.obj (op U)
+      exact cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx
+    let sheaf := (TopCat.Sheaf.supportEvaluation T U).mapIso
+      (complexSupportInjectiveCohomologySheafIsoRelative X Z n)
+    have h := congrArg
+      (fun z =>
+        (lowest.addCommGroupIsoToAddEquiv.trans sheaf.addCommGroupIsoToAddEquiv) z)
+      hbridge
+    change
+      sheaf.addCommGroupIsoToAddEquiv.toAddMonoidHom
+          (lowest.addCommGroupIsoToAddEquiv.toAddMonoidHom
+            (bridge ((CategoryTheory.Sheaf.relH.restrict F
+              (homOfLE (show Z.compl ≤ ⊤ from le_top))
+              (homOfLE (show Z.compl ≤ U from
+                (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
+              (homOfLE (show Z.compl ≤ Z.compl from le_rfl))
+              (homOfLE (show U ≤ ⊤ from le_top))
+              (by apply Subsingleton.elim) n) a))) = _
+    convert h using 1 <;> simp only [AddEquiv.trans_apply]
+    · rfl
+    · have hsupport :
+          TopCat.Sheaf.supportedSectionsRestriction T
+              (show Z.compl ≤ Z.compl from le_rfl)
+              (show U ≤ (⊤ : Opens T) from le_top)
+              (ambientRationalInjectiveComplex X) =
+            cycleComponentSupportSectionRestriction X x := by
+        dsimp [TopCat.Sheaf.supportedSectionsRestriction,
+          cycleComponentSupportSectionRestriction, complexSupportInjectiveComplex]
+        rw [TopCat.Sheaf.sheafSectionsSupportedOutsideMap_refl]
+        simp [T, Z]
+      rw [hsupport]
+      dsimp [lowest, sheaf, bridge,
+        cycleComponentSupportSectionRestriction, cycleComponentSmoothRestrictedInjectiveComplex,
+        complexSupportInjectiveComplex]
+      simp [TopCat.Sheaf.supportEvaluation, T, Z, U, n]
+      rfl
+  rw [hnorm,
+    cycleComponentSmoothSupportLowestSectionCohomologyComplexIso,
     TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso_hom]
+  have ha :
+      (rationalSupportAddEquivSupportedInjectiveHomology X
+        (cycleComponentAnalyticClosedSupport X x) (2 * d)) a =
+        analyticComponentPointSupportedInjectiveCoclass X x d z := by
+    dsimp [a]
+    exact AddEquiv.apply_symm_apply _ _
+  rw [ha]
   exact analyticComponentPointSupportedInjectiveCoclass_section_normalization X x _ z hx
 
 /-- Exact positive-kernel point normalization of the mapping-cone class. -/
@@ -178,6 +277,7 @@ theorem coneCycleComponentSheafClass_point_normalization
       analyticComponentPointPositiveKernelClass X x d z := by
   rw [coneCycleComponentSheafClass_eq_injectiveModel,
     cycleComponentSupportedInjectiveClass_point_normalization X x d z hx]
+  simp
   rfl
 
 end Point

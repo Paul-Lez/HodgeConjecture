@@ -3,6 +3,7 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
+import HodgeConjecture.Mathlib.CategoryTheory.Sites.SheafCohomology.Pair
 import Other.AlgebraicGeometry.Hodge.CodimensionZeroNonvanishing
 import Other.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
 import Other.AlgebraicGeometry.Cycle.FundamentalClass
@@ -217,15 +218,19 @@ namespace Guide.Subvariety.D3
 def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
-          (2 * (p : ℤ))) :=
-  letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
-  asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
+    H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) ≃+
+      CategoryTheory.Sheaf.relH
+        ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
+        (2 * p)
+        (homOfLE (show (cycleComponentAnalyticClosedSupport X x).compl ≤
+            cycleComponentSmoothSupportAmbientOpen X x from by
+          intro y hy hyS
+          obtain ⟨z, _, hz⟩ := hyS
+          apply hy
+          change y.underlying ∈ closure ({x} : Set X.left)
+          rw [← range_cycleComponentι X.left x]
+          exact ⟨z, hz⟩)) :=
+  AlgebraicGeometry.ComplexPoint.cycleComponentSupportExtensionIso X x hx
 ```
 ```lean -show
 end Guide.Subvariety.D3
@@ -238,19 +243,10 @@ namespace Guide.Subvariety.D4
 def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
-      (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-        (cycleComponentSupport X x) (2 * p)).obj.obj
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
-  have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
-  cycleComponentSupportExtensionIso X x hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
-      (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-        (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
-          (complexSupportInjectiveCohomologySheafIsoRelative X
-            (cycleComponentAnalyticClosedSupport X x) (2 * p)))
+    CycleComponentSupportedCohomology X x p ≃+
+      CycleComponentSmoothCoclassSections X x p :=
+  cycleComponentSupportExtensionIso X x hx |>.trans <|
+    cycleComponentSmoothSupportLowestSectionCohomologyEquiv X x hx
 ```
 ```lean -show
 end Guide.Subvariety.D4
@@ -297,11 +293,9 @@ namespace Guide.Subvariety.D5
 ```lean
 def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) :
+  (hx : coheight x = p) :
     H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) :=
-  have he : 2 * (p : ℤ) = ((2 * p : ℕ) : ℤ) := by omega
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
-    (2 * p)).symm (he ▸ cycleComponentSupportedInjectiveClass X x hx)
+  cycleComponentSupportedInjectiveClass X x hx
 ```
 ```lean -show
 end Guide.Subvariety.D5

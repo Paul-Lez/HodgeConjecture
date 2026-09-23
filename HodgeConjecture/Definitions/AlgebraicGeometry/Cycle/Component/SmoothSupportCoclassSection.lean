@@ -102,9 +102,11 @@ integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_
 complex normal space. -/
 def cycleComponentSmoothSupportCoclassSection :
     -- The support is `Z(ℂ)`, the complex points of the subvariety, inside `X(ℂ)`.
-    (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj
+    (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
+      (cycleComponentSmoothSupportAmbientOpen X x)).obj
+      (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ))
       -- The open set of complex points of the complement of the singular boundary, i.e. `X(ℂ) \ Z_sing(ℂ)`.
-      (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
+      :=
   supportRelativeCohomologySectionOnOpen (cycleComponentSmoothClosedLiftAmbientMap X x)
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
     (cycleComponentSupport X x)

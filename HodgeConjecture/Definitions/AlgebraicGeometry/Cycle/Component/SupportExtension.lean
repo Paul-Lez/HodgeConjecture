@@ -9,6 +9,7 @@ import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.LocalSupportVanishing
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FiniteFiltrationVanishing
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.WithSupport
 
 /-!
 # Unique extension across a cycle component's singular boundary
@@ -22,7 +23,7 @@ inverse is the unique extension operation.
 
 @[expose] public noncomputable section
 
-open CategoryTheory Limits TopologicalSpace Opposite
+open CategoryTheory Limits Abelian TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -98,7 +99,7 @@ theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree :
 
 include hx in
 /-- `H^{2p+1}_{Z_sing(ℂ)}(X(ℂ); ℚ) = 0`. -/
-private theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ :
+theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ :
     -- `H^{2p+1}_{Z_sing(ℂ)}(X(ℂ); ℚ)`.
     IsZero ((((TopCat.Sheaf.supportEvaluation
       -- `X(ℂ)`.
@@ -123,7 +124,7 @@ private theorem cycleComponentSingularBoundary_le_support :
   exact ⟨z, hz⟩
 
 /-- The complement inclusion determining the localization sequence. -/
-private theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
+theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
     (cycleComponentAnalyticClosedSupport X x).compl ≤ cycleComponentSmoothSupportAmbientOpen X x :=
   fun _ hy hyS ↦ hy (cycleComponentSingularBoundary_le_support X x hyS)
 
@@ -181,7 +182,7 @@ integral subvariety with generic point `x`. Restriction to `U = X(ℂ) \ Z_sing(
 isomorphism `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) ≅ H^{2p}_{Z(ℂ) ∩ U}(U; ℚ)`. Its inverse extends a class
 uniquely across the singular locus, whose supported cohomology vanishes in degrees `2p` and
 `2p+1`. -/
-def cycleComponentSupportExtensionIso :
+def cycleComponentSupportExtensionComplexIso :
     -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`.
     ((((TopCat.Sheaf.supportEvaluation
       -- `X(ℂ)`.
@@ -206,5 +207,80 @@ def cycleComponentSupportExtensionIso :
           (2 * (p : ℤ))) :=
   letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
   asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
+
+set_option maxHeartbeats 800000 in
+include hx in
+/-- `H_[Z]^{2p}(X; ℚ) ≃ relH ℚ (2p) (Z.compl ≤ U)`, where `U` is the smooth ambient open. -/
+def cycleComponentSupportExtensionIso :
+    H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) ≃+
+      CategoryTheory.Sheaf.relH
+        ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
+        (2 * p)
+        (homOfLE (show (cycleComponentAnalyticClosedSupport X x).compl ≤
+            cycleComponentSmoothSupportAmbientOpen X x from by
+          intro y hy hyS
+          obtain ⟨z, _, hz⟩ := hyS
+          apply hy
+          change y.underlying ∈ closure ({x} : Set X.left)
+          rw [← range_cycleComponentι X.left x]
+          exact ⟨z, hz⟩)) := by
+  let T := TopCat.of (ComplexPoint X)
+  let Z := cycleComponentAnalyticClosedSupport X x
+  let U := cycleComponentSmoothSupportAmbientOpen X x
+  let f : Z.compl ⟶ U := homOfLE (by
+    intro y hy hyS
+    obtain ⟨z, _, hz⟩ := hyS
+    apply hy
+    change y.underlying ∈ closure ({x} : Set X.left)
+    rw [← range_cycleComponentι X.left x]
+    exact ⟨z, hz⟩)
+  let g : U ⟶ ⊤ := homOfLE le_top
+  let F := (TopCat.Sheaf.constantFunctor T).obj (AddCommGrpCat.of ℚ)
+  let n : ℕ := 2 * p
+  let S := Ext.contravariantSequence
+    (CategoryTheory.Sheaf.pairNestedShortComplex_shortExact f g) F n (n + 1) (by omega)
+  have hS := CategoryTheory.Sheaf.relH.nestedSequence_exact F f g n (n + 1) (by omega)
+  have hz0 : IsZero (S.obj' 0) := by
+    change IsZero (AddCommGrpCat.of (CategoryTheory.Sheaf.relH F n g))
+    let e := rationalSupportAddEquivSupportedInjectiveHomology X
+      (cycleComponentSingularAnalyticClosedFiltration X x 0) n
+    let hcomplex : IsZero ((((TopCat.Sheaf.supportEvaluation T ⊤).mapHomologicalComplex ℤᵘᵖ).obj
+      (complexSupportInjectiveComplex X
+        (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology (n : ℤ)) := by
+      simpa [n] using cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree X x hx
+    letI : Subsingleton ((((TopCat.Sheaf.supportEvaluation T ⊤).mapHomologicalComplex ℤᵘᵖ).obj
+      (complexSupportInjectiveComplex X
+        (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology (n : ℤ)) :=
+      AddCommGrpCat.subsingleton_of_isZero hcomplex
+    letI : Subsingleton
+        (H_[cycleComponentSingularAnalyticClosedFiltration X x 0]^n(X; ℚ)) :=
+      e.injective.subsingleton
+    exact AddCommGrpCat.isZero_of_subsingleton _
+  have hz3 : IsZero (S.obj' 3) := by
+    change IsZero (AddCommGrpCat.of (CategoryTheory.Sheaf.relH F (n + 1) g))
+    let e := rationalSupportAddEquivSupportedInjectiveHomology X
+      (cycleComponentSingularAnalyticClosedFiltration X x 0) (n + 1)
+    let hcomplex : IsZero ((((TopCat.Sheaf.supportEvaluation T ⊤).mapHomologicalComplex ℤᵘᵖ).obj
+      (complexSupportInjectiveComplex X
+        (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology ((n + 1 : ℕ) : ℤ)) := by
+      simpa [n, add_assoc] using
+        cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ X x hx
+    letI : Subsingleton ((((TopCat.Sheaf.supportEvaluation T ⊤).mapHomologicalComplex ℤᵘᵖ).obj
+      (complexSupportInjectiveComplex X
+        (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology ((n + 1 : ℕ) : ℤ)) :=
+      AddCommGrpCat.subsingleton_of_isZero hcomplex
+    letI : Subsingleton
+        (H_[cycleComponentSingularAnalyticClosedFiltration X x 0]^(n + 1)(X; ℚ)) :=
+      e.injective.subsingleton
+    exact AddCommGrpCat.isZero_of_subsingleton _
+  let q := S.map' 1 2 (by omega) (by omega)
+  have hmono : Mono q := (hS.exact 0).mono_g (hz0.eq_zero_of_src _)
+  have hepi : Epi q := (hS.exact 1).epi_f (hz3.eq_zero_of_tgt _)
+  letI : IsIso q := isIso_of_mono_of_epi _
+  let e := (asIso q).addCommGroupIsoToAddEquiv
+  change CategoryTheory.Sheaf.relH F n
+      (homOfLE (show Z.compl ≤ ⊤ from le_top)) ≃+
+    CategoryTheory.Sheaf.relH F n f
+  exact e
 
 end AlgebraicGeometry.ComplexPoint

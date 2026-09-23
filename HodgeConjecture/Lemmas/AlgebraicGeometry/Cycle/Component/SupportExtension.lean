@@ -24,8 +24,8 @@ variable (X : Over (Spec ↧ℂ))
   {p : ℕ} (hx : Order.coheight x = p)
 
 @[simp]
-theorem cycleComponentSupportExtensionIso_hom :
-    (cycleComponentSupportExtensionIso X x hx).hom =
+theorem cycleComponentSupportExtensionComplexIso_hom :
+    (cycleComponentSupportExtensionComplexIso X x hx).hom =
       HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)) := rfl
 
 end AlgebraicGeometry.ComplexPoint
