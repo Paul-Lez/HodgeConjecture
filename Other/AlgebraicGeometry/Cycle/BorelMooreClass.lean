@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyLemmas
 public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Cycle.Component.BorelMoore
 public import Other.AlgebraicGeometry.Cycle.Component.PointPurity
@@ -129,7 +129,7 @@ def auxiliarySupportedClass
 def auxiliaryOrdinaryClass
     (D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :
     H^(2 * p)(V.over; ℚ) :=
-  forgetSupport V.over
+  coneForgetSupport V.over
     (cycleComponentSupport V.over x) (2 * p)
     D.auxiliarySupportedClass
 
@@ -276,7 +276,7 @@ def constantSheafSupportedFundamentalClass
 def ordinaryFundamentalClass
     (D : ComplexOrientedRationalCycleComponentClassData V d p x hx) :
     H^(2 * p)(V.over; ℚ) :=
-  forgetSupport V.over
+  coneForgetSupport V.over
     (cycleComponentSupport V.over x) (2 * p)
       D.constantSheafSupportedFundamentalClass
 
@@ -653,7 +653,7 @@ lemma maximalCodimensionComponentClass_eq_forgetSupport_pointCoclass
     [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = d) :
     maximalCodimensionComponentClass V d x hx =
-      forgetSupport V.over
+      coneForgetSupport V.over
         (cycleComponentSupport V.over x)
         (2 * d)
         ((auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx).supportedComparison.symm

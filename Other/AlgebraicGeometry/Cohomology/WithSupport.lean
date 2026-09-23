@@ -18,8 +18,8 @@ module
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
+public import Other.Mathlib.Topology.Category.TopCat.Basic
+public import Other.Algebra.Homology.ShiftedExact
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 public import Mathlib.CategoryTheory.Abelian.Injective.Resolution
 
@@ -252,9 +252,6 @@ abbrev RationalCohomologyWithSupport
     (Z : Set (ComplexPoint X)) (n : ℤ) : Type 1 :=
   Hypercohomology X (rationalCohomologyWithSupportComplex X Z) (n - 1)
 
-/-- `H_[Z]^n(X; ℚ)` is rational constant-sheaf cohomology of `X(ℂ)` with support in `Z`, in
-integer degree `n`. -/
-scoped notation:max "H_[" Z "]^" n:max "(" X "; " "ℚ" ")" => RationalCohomologyWithSupport X Z n
 
 /-- Let `X` be a scheme over `ℂ` and `Z ⊆ X(ℂ)`. For the cone of rational restriction `ℚ → Rj_*ℚ`,
 with `j` the complement inclusion, this is the connecting morphism `Cone(ℚ → Rj_*ℚ) → ℚ[1]` in
@@ -285,7 +282,7 @@ def forgetSupportHypercohomology (Z : Set (ComplexPoint X)) (n : ℤ) :
       hypercohomologyEquiv_add, ShiftedHom.add_comp]
 
 /-- Forget support: the map `H^n_Z(X(ℂ); ℚ) → H^n(X(ℂ); ℚ)`. -/
-def forgetSupport (Z : Set (ComplexPoint X)) (n : ℕ) :
+def coneForgetSupport (Z : Set (ComplexPoint X)) (n : ℕ) :
     RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) :=
   (hypercohomologyAddEquivConstantCohomology ℚ X n).toAddMonoidHom.comp
     (forgetSupportHypercohomology X Z n)
@@ -386,6 +383,6 @@ noncomputable def forgetSupportEquivUniv (n : ℕ) :
 
 @[simp] lemma forgetSupportEquivUniv_apply (n : ℕ)
     (α : RationalCohomologyWithSupport X (Set.univ : Set (ComplexPoint X)) n) :
-    forgetSupportEquivUniv X n α = forgetSupport X Set.univ n α := rfl
+    forgetSupportEquivUniv X n α = coneForgetSupport X Set.univ n α := rfl
 
 end AlgebraicGeometry.ComplexPoint

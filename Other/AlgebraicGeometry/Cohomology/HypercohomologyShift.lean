@@ -17,7 +17,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
+public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef
 public import Other.Algebra.Homology.HomComplexShiftNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 
@@ -108,16 +108,16 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift
     (A K : CochainComplex C ℤ) [K.IsKInjective]
     (s n n' : ℤ) (h : n + s = n')
     (x : ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj (K⟦s⟧)) n) :
-    kInjectiveDerivedHomAddEquivCohomologyClass A K n'
+    CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A K n'
       (x.comp ((DerivedCategory.Q.commShiftIso s).hom.app K) (by omega)) =
     CochainComplex.HomComplex.rightUnshiftClass A K s n n' h
-      (kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n x) := by
-  apply (kInjectiveDerivedHomAddEquivCohomologyClass A K n').symm.injective
-  obtain ⟨x, rfl⟩ := (kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n).symm.surjective x
+      (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n x) := by
+  apply (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A K n').symm.injective
+  obtain ⟨x, rfl⟩ := (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n).symm.surjective x
   obtain ⟨z, rfl⟩ := x.mk_surjective
   rw [AddEquiv.apply_symm_apply, CochainComplex.HomComplex.rightUnshiftClass_mk,
-    kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
-    kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
     CochainComplex.HomComplex.equivHomShift_symm_rightUnshift,
     ShiftedHom.map_comp]
   simp [ShiftedHom.map]
@@ -165,13 +165,13 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
       (derivedHomAddEquivGlobalSectionsKInjective Y (K⟦s⟧) n x) := by
   let A := integerConstantSingleComplex Y
   let y := (CochainComplex.HomComplex.homologyAddEquiv A (K⟦s⟧) n).symm
-    (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass
+    (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass
       A (K⟦s⟧) n x)
   have hH : ShortComplex.homologyMap
       (CochainComplex.HomComplex.rightUnshiftShortComplex A K s n n' h) y =
       (CochainComplex.HomComplex.homologyAddEquiv A K n').symm
         (CochainComplex.HomComplex.rightUnshiftClass A K s n n' h
-          (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass
+          (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass
             A (K⟦s⟧) n x)) := by
     apply (CochainComplex.HomComplex.homologyAddEquiv A K n').injective
     rw [CochainComplex.HomComplex.homologyAddEquiv_rightUnshift,

@@ -216,3 +216,5 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
 
 end BoundedBelowComplex
 end TopCat.Sheaf.IsFlasque
+
+end

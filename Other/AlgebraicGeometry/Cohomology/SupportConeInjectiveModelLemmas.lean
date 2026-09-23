@@ -6,13 +6,17 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
+public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
+public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef
 
 /-!
 # Normalized injective models for the rational support cone
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel`.
+`HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution`.
 -/
 
 /-! ### Constructions used only in proofs -/
@@ -230,7 +234,7 @@ instance supportConeToAmbientInjectiveGlobalCone_quasiIso
 the constant rational sheaf on `Y`. This additive equivalence identifies cohomology with support
 `H_Z^n(Y;ℚ)` with `H^n(Γ_Z(Y,I))`, where `Γ_Z(Y,I^q) = ker(I^q(Y) → I^q(Y \ Z))`. Its sign makes
 forgetting support correspond to inclusion into `Γ(Y,I)`. -/
-def rationalSupportAddEquivSupportedInjectiveHomology
+def coneSupportAddEquivSupportedInjectiveHomology
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex

@@ -15,10 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularNaturality
+public import Other.AlgebraicGeometry.Cohomology.SupportSingularNaturality
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
-import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularComparison
+import Other.AlgebraicGeometry.Cohomology.SupportSingularComparison
 
 /-!
 # Singular support-cone comparison
