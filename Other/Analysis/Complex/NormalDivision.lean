@@ -99,7 +99,6 @@ theorem continuousOn_normalQuotient
   · have hcont : ContinuousAt (normalQuotient f) p :=
       normalQuotient_continuousAt_plane hpz (hf p hp)
         (hdf.continuousAt (hV.mem_nhds hp)) (by
-          have hp' : (p.1, (0 : ℂ)) = p := by ext <;> simp [hpz]
           have hVp : V ∈ 𝓝 (p.1, (0 : ℂ)) := by
             have hp' : (p.1, (0 : ℂ)) = p := by ext <;> simp [hpz]
             rw [hp']
@@ -118,12 +117,6 @@ theorem continuousOn_normalQuotient
       simp [normalQuotient, hqz]
     exact hq.continuousWithinAt
 
-end Complex
-
-namespace Complex
-
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
-
 /-- Analytic functions admit continuous division by a simple normal coordinate on a zero-plane. -/
 theorem analyticOnNhd_normalQuotient
     {f : E × ℂ → ℂ} {V : Set (E × ℂ)} (hV : IsOpen V)
@@ -134,12 +127,6 @@ theorem analyticOnNhd_normalQuotient
   · intro p hp
     exact (hf p hp).hasStrictFDerivAt
   · exact (hf.fderiv).continuousOn
-
-end Complex
-
-namespace Complex
-
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 /-- Near a nonzero normal derivative, the continuous normal quotient is a nowhere-zero factor. -/
 theorem exists_ball_normalQuotient_factor
@@ -168,12 +155,6 @@ theorem exists_ball_normalQuotient_factor
       simp [hyz]
     · rw [normalQuotient, if_neg hyz]
       field_simp
-
-end Complex
-
-namespace Complex
-
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 /-- An analytic simple normal zero has a continuous nowhere-zero factor after shrinking. -/
 theorem exists_ball_analytic_normalQuotient_factor
