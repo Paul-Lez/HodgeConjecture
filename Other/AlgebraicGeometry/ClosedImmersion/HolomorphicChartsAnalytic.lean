@@ -133,6 +133,27 @@ theorem fderiv_closedImmersionHolomorphicFlatteningChart_evaluate
     _ = (fderiv ℂ (fun w ↦ Point.evaluate V s (C.symm w)) (C y)).comp
         (fderiv ℂ A.symm (e y)) := by rw [hleft]
 
+/-- The preceding chain rule evaluated on the distinguished normal basis vector. -/
+theorem fderiv_closedImmersionHolomorphicFlatteningChart_evaluate_normal
+    (V : X.left.Opens) (s : Γ(X.left, V))
+    (y : ComplexPoint X)
+    (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)
+    (hV : (closedImmersionHolomorphicFlatteningChart X Y i m d z).symm
+      (closedImmersionHolomorphicFlatteningChart X Y i m d z y) ∈ Point.overOpen V) :
+    fderiv ℂ (fun v ↦ Point.evaluate V s
+        ((closedImmersionHolomorphicFlatteningChart X Y i m d z).symm v))
+      (closedImmersionHolomorphicFlatteningChart X Y i m d z y)
+      (0, fun _ : Fin (d - m) ↦ (1 : ℂ)) =
+      fderiv ℂ (fun w ↦ Point.evaluate V s
+        ((localChart X d (Point.map i z)).symm w))
+        (localChart X d (Point.map i z) y)
+        (fderiv ℂ (closedImmersionNormalCoordinateChange X Y i m d z).symm
+          (closedImmersionHolomorphicFlatteningChart X Y i m d z y)
+          (0, fun _ : Fin (d - m) ↦ (1 : ℂ))) := by
+  rw [fderiv_closedImmersionHolomorphicFlatteningChart_evaluate
+    X Y i m d z V s y hy hV]
+  rfl
+
 /-! The pointwise result above is most useful after restricting the chart source to the
 local-form domain.  This packages the resulting analyticity on the *whole* coordinate target of
 that restricted chart, so a normal-division argument can be applied without extending a chart
