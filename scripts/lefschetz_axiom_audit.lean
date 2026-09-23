@@ -9,6 +9,7 @@ import Other.AlgebraicGeometry.ChernWindingGenericChartAssembly
 import Other.AlgebraicGeometry.ChernWindingGenericChartConditional
 import Other.AlgebraicGeometry.SupportedInjectiveSectionNaturality
 import Other.AlgebraicGeometry.Cohomology.SupportSheafConeComparison
+import Other.AlgebraicGeometry.Cohomology.SupportSheafConeQuasiIso
 import Other.AlgebraicTopology.Sheaf.FlasquePushforwardQuasiIso
 import Other.AlgebraicGeometry.ChernRelativeChartFormulaGenericLocal
 import Other.Analysis.Complex.NormalDivision
@@ -413,6 +414,8 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms CochainComplex.mappingCocone.map_shiftedLiftShortComplex
 #print axioms AlgebraicGeometry.ComplexPoint.supportSheafToAmbientInjectiveCone_globalSections
 #print axioms TopCat.Sheaf.pushforward_map_quasiIso_of_flasque
+#print axioms AlgebraicGeometry.ComplexPoint.ambientRationalOpenResolutionComparison_quasiIso
+#print axioms AlgebraicGeometry.ComplexPoint.supportSheafToAmbientInjectiveCone_quasiIso
 #print axioms Complex.fderiv_comp_symm_ne_zero_of_openPartialHomeomorph
 #print axioms Complex.fderiv_eq_zero_on_normal_tangent
 #print axioms Complex.normal_deriv_ne_zero_of_fderiv_ne_zero

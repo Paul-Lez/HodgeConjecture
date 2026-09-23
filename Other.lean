@@ -36,6 +36,7 @@ public import Other.AlgebraicGeometry.Cohomology.SingularComparison
 public import Other.AlgebraicGeometry.Cohomology.SupportConeForget
 public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeComparison
+public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeQuasiIso
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomology
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSingularGlobal
