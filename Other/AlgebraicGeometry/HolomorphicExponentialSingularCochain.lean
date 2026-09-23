@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.ChernWindingRationalCochain
 public import Other.AlgebraicGeometry.HolomorphicExponentialSequence
-public import Other.AlgebraicTopology.SingularCochainSheaf
+public import Other.AlgebraicTopology.Singular.Sheaf.Cochain
 
 /-!
 # The exponential sequence and rational singular cochains
@@ -209,10 +209,10 @@ theorem integerConstantsToHolomorphicSheaf_comp_toSingularZeroSheaf :
   have hi : integerToFieldConstantSheaf ℚ X 1 = (presheafToSheaf J AddCommGrpCat).map c := by
     change (presheafToSheaf J AddCommGrpCat).map
       ((Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).map
-        (AddCommGrpCat.ofHom (integerMultipleAddHom ℚ 1))) = _
+        (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ 1))) = _
     congr 2
     ext
-    simp [integerMultipleAddHom]
+    simp [zmultiplesAddHom]
   rw [hi]
   apply Sheaf.hom_ext
   apply sheafify_hom_ext _ _ _ (singularCochainSheaf ℚ (TopCat.of (ComplexPoint X)) 0).property

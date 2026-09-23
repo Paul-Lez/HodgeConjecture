@@ -192,11 +192,12 @@ theorem homologyπ_comp_windingRationalPeriodHom :
 
 /-- The winding class of `g`, as an honest *rational* singular cohomology class. -/
 def windingRationalPeriod : AlgebraicTopology.Singular.Cohomology ℚ Y 1 :=
-  (windingRationalPeriodHom g hg).hom
+  (cohomologyEquivDualHomology ℚ Y 1).symm (windingRationalPeriodHom g hg).hom
 
 /-- **The winding period is rational.**  Its complexification is the complex winding period. -/
 theorem rationalPeriod_windingRationalPeriod :
-    rationalPeriod (AlgebraicTopology.Singular.Homology ℚ Y 1) (windingRationalPeriod g hg) =
+    (Algebra.linearMap ℚ ℂ).comp
+      (cohomologyEquivDualHomology ℚ Y 1 (windingRationalPeriod g hg)) =
       windingPeriod g hg := by
   have hcat : windingRationalPeriodHom g hg ≫ ratToComplex = windingPeriodHom g hg := by
     rw [← cancel_epi ((singularChains Y).homologyπ 1), ← Category.assoc,
@@ -204,6 +205,8 @@ theorem rationalPeriod_windingRationalPeriod :
       windingCochain_eq_coboundary_add_integer g hg, Preadditive.comp_add, ← Category.assoc,
       HomologicalComplex.iCycles_d, zero_comp, zero_add, Category.assoc]
   ext z
+  simp only [LinearMap.comp_apply, windingRationalPeriod]
+  erw [LinearEquiv.apply_symm_apply]
   exact congrArg (fun h : _ ⟶ ModuleCat.of ℚ ℂ => (ModuleCat.Hom.hom h) z) hcat
 
 /-! ### The obligation of `ChernWindingBoundary.lean`, discharged -/
@@ -217,8 +220,10 @@ variable {M : Type} [TopologicalSpace M] (W S : Set M)
 homomorphism. -/
 theorem hasRationalWindingPeriod (g : C(puncturedSpace W S, ℂ)) (hg : ∀ y, g y ≠ 0) :
     HasRationalWindingPeriod W S g hg := by
-  refine ⟨(windingRationalPeriod g hg).comp
-    (relativeSingularBoundary (supportPair W S) 1).hom, ?_⟩
+  refine ⟨(relativeCohomologyEquivDualHomology ℚ (supportPair W S) 2).symm
+    ((cohomologyEquivDualHomology ℚ (puncturedSpace W S) 1 (windingRationalPeriod g hg)).comp
+      (relativeSingularBoundary (supportPair W S) 1).hom), ?_⟩
+  simp only [LinearEquiv.apply_symm_apply]
   ext z
   exact LinearMap.congr_fun (rationalPeriod_windingRationalPeriod g hg)
     ((relativeSingularBoundary (supportPair W S) 1).hom z)

@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.ChernWindingCochain
-public import Other.AlgebraicTopology.NormalProjectionCoclass
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
 
 /-!
 # The connecting map of a pair and the winding class with support
@@ -13,9 +13,9 @@ public import Other.AlgebraicTopology.NormalProjectionCoclass
 Let `S ⊆ M` be a support and `W ⊆ M` a neighbourhood.  The pair `(W, W ∖ S)` has a homology
 connecting map `∂ : H₂(W, W ∖ S; ℚ) → H₁(W ∖ S; ℚ)`
 (`AlgebraicTopology.Singular.relativeSingularBoundary`, already in the repository), and the
-repository's relative *cohomology* is by definition the linear dual of relative homology.  So a
-functional on `H₁(W ∖ S; ℚ)` is transported to a functional on `H₂(W, W ∖ S; ℚ)` simply by
-precomposition with `∂`; no long exact sequence in cohomology is needed.
+relative cohomology is identified with the linear dual of relative homology by the
+universal-coefficient equivalence. A functional on `H₁(W ∖ S; ℚ)` is transported to a
+functional on `H₂(W, W ∖ S; ℚ)` by precomposition with `∂`.
 
 Composing with `ChernWinding.windingPeriod` gives, for a continuous nowhere vanishing `g` on
 `W ∖ S`, the **relative winding period**
@@ -68,7 +68,7 @@ relative homology of the pair `(W, W ∖ S)` along the homology connecting map. 
 composite `∂ ∘ δ` of the winding-number connecting map of the exponential sequence with the
 connecting map of the pair. -/
 def relativeWindingPeriod (g : C(puncturedSpace W S, ℂ)) (hg : ∀ y, g y ≠ 0) :
-    ComplexPeriodSpace (RelativeHomology ℚ (supportPair W S) 2) :=
+    RelativeHomology ℚ (supportPair W S) 2 →ₗ[ℚ] ℂ :=
   (windingPeriod g hg).comp (relativeSingularBoundary (supportPair W S) 1).hom
 
 theorem relativeWindingPeriod_apply (g : C(puncturedSpace W S, ℂ)) (hg : ∀ y, g y ≠ 0)
@@ -106,7 +106,7 @@ no sheaf theory: `relativeWindingPeriod` evaluated on the class of an integral r
 is the winding number of `g` along the boundary `1`-cycle, hence an integer. -/
 def HasRationalWindingPeriod (g : C(puncturedSpace W S, ℂ)) (hg : ∀ y, g y ≠ 0) : Prop :=
   ∃ a : RelativeCohomology ℚ (supportPair W S) 2,
-    rationalPeriod (RelativeHomology ℚ (supportPair W S) 2) a = relativeWindingPeriod W S g hg
+    (Algebra.linearMap ℚ ℂ).comp (relativeCohomologyEquivDualHomology ℚ (supportPair W S) 2 a) = relativeWindingPeriod W S g hg
 
 /-- The rational relative cohomology class with support cut out by the winding period. -/
 def windingRelativeClass {g : C(puncturedSpace W S, ℂ)} {hg : ∀ y, g y ≠ 0}
@@ -116,22 +116,28 @@ def windingRelativeClass {g : C(puncturedSpace W S, ℂ)} {hg : ∀ y, g y ≠ 0
 
 theorem rationalPeriod_windingRelativeClass {g : C(puncturedSpace W S, ℂ)} {hg : ∀ y, g y ≠ 0}
     (h : HasRationalWindingPeriod W S g hg) :
-    rationalPeriod (RelativeHomology ℚ (supportPair W S) 2) (windingRelativeClass W S h) =
+    (Algebra.linearMap ℚ ℂ).comp
+      (relativeCohomologyEquivDualHomology ℚ (supportPair W S) 2 (windingRelativeClass W S h)) =
       relativeWindingPeriod W S g hg :=
   h.choose_spec
 
 theorem windingRelativeClass_apply {g : C(puncturedSpace W S, ℂ)} {hg : ∀ y, g y ≠ 0}
     (h : HasRationalWindingPeriod W S g hg) (z : RelativeHomology ℚ (supportPair W S) 2) :
-    ((windingRelativeClass W S h z : ℚ) : ℂ) = relativeWindingPeriod W S g hg z :=
+    ((relativeCohomologyEquivDualHomology ℚ (supportPair W S) 2
+      (windingRelativeClass W S h) z : ℚ) : ℂ) = relativeWindingPeriod W S g hg z :=
   LinearMap.congr_fun (rationalPeriod_windingRelativeClass W S h) z
 
 /-- The winding class is determined by the period. -/
 theorem windingRelativeClass_unique {g : C(puncturedSpace W S, ℂ)} {hg : ∀ y, g y ≠ 0}
     (h : HasRationalWindingPeriod W S g hg) (a : RelativeCohomology ℚ (supportPair W S) 2)
-    (ha : rationalPeriod (RelativeHomology ℚ (supportPair W S) 2) a =
+    (ha : (Algebra.linearMap ℚ ℂ).comp (relativeCohomologyEquivDualHomology ℚ (supportPair W S) 2 a) =
       relativeWindingPeriod W S g hg) :
     a = windingRelativeClass W S h :=
-  rationalPeriod_injective _ (ha.trans (rationalPeriod_windingRelativeClass W S h).symm)
+by
+  apply (relativeCohomologyEquivDualHomology ℚ (supportPair W S) 2).injective
+  ext z
+  have hz := LinearMap.congr_fun (ha.trans (rationalPeriod_windingRelativeClass W S h).symm) z
+  exact (algebraMap ℚ ℂ).injective hz
 
 /-- The winding class is additive in the function. -/
 theorem windingRelativeClass_mul {g h k : C(puncturedSpace W S, ℂ)}
@@ -142,7 +148,7 @@ theorem windingRelativeClass_mul {g h k : C(puncturedSpace W S, ℂ)}
     windingRelativeClass W S hrk =
       windingRelativeClass W S hrg + windingRelativeClass W S hrh := by
   refine (windingRelativeClass_unique W S hrk _ ?_).symm
-  rw [map_add, rationalPeriod_windingRelativeClass, rationalPeriod_windingRelativeClass,
+  rw [map_add, LinearMap.comp_add, rationalPeriod_windingRelativeClass, rationalPeriod_windingRelativeClass,
     relativeWindingPeriod_mul W S g h k hg hh hk hmul]
 
 /-- The winding class of a function with a global continuous logarithm vanishes. -/
@@ -151,7 +157,7 @@ theorem windingRelativeClass_eq_zero_of_exp {g : C(puncturedSpace W S, ℂ)}
     (hfg : ∀ y, Complex.exp (f y) = g y) (h : HasRationalWindingPeriod W S g hg) :
     windingRelativeClass W S h = 0 := by
   refine (windingRelativeClass_unique W S h 0 ?_).symm
-  rw [map_zero, relativeWindingPeriod_eq_zero_of_exp W S g f hg hfg]
+  rw [map_zero, LinearMap.comp_zero, relativeWindingPeriod_eq_zero_of_exp W S g f hg hfg]
 
 /-! ### The normalisation criterion on a flattening chart -/
 

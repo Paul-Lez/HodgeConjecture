@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.ChernWindingLift
-public import Other.AlgebraicTopology.SingularCohomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
 
 /-!

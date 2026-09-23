@@ -112,7 +112,7 @@ def relativeDualCochainShortComplexNatDegreewiseSplitting (X : TopPair.{u}) (n :
 
 /-- Dualizing the singular-chain sequence of a pair gives a short exact sequence of
 nonnegative cochain complexes. -/
-private lemma relativeDualCochainShortComplexNat_shortExact (X : TopPair.{u}) :
+lemma relativeDualCochainShortComplexNat_shortExact (X : TopPair.{u}) :
     (relativeDualCochainShortComplexNat R X).ShortExact := by
   rw [HomologicalComplex.shortExact_iff_degreewise_shortExact]
   exact fun n => (relativeDualCochainShortComplexNatDegreewiseSplitting R X n).shortExact

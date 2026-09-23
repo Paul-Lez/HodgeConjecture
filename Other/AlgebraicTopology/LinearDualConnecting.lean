@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.LinearDualHomologyNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDualNaturality
 public import Other.Algebra.Homology.DualExact
+public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 public import Mathlib.Algebra.Homology.ConcreteCategory
 public import Mathlib.LinearAlgebra.Dual.Lemmas
 
@@ -23,6 +24,39 @@ universe u
 @[expose] public noncomputable section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 800000
+
+namespace CategoryTheory.ShortComplex
+
+variable {R : Type u} [Field R]
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- Universal coefficients is the literal evaluation of an actual dual
+cycle on an actual cycle. -/
+lemma linearDualHomologyEquiv_homologyπ_apply (S : ShortComplex (ModuleCat.{u} R))
+    (φ : S.linearDual.cycles) (z : S.cycles) :
+    S.linearDualHomologyEquiv (S.linearDual.homologyπ φ) (S.homologyπ z) =
+      (show Module.Dual R S.X₂ from S.linearDual.iCycles φ) (S.iCycles z) := by
+  change S.dualHomologyComparisonExplicit
+    (S.linearDual.moduleCatHomologyIso.hom (S.linearDual.homologyπ φ))
+    (S.moduleCatHomologyIso.hom (S.homologyπ z)) = _
+  have hφ := ConcreteCategory.congr_hom (π_moduleCatCyclesIso_hom S.linearDual) φ
+  have hz := ConcreteCategory.congr_hom (π_moduleCatCyclesIso_hom S) z
+  change S.linearDual.moduleCatHomologyIso.hom (S.linearDual.homologyπ φ) =
+    Submodule.Quotient.mk (S.linearDual.moduleCatCyclesIso.hom φ) at hφ
+  change S.moduleCatHomologyIso.hom (S.homologyπ z) =
+    Submodule.Quotient.mk (S.moduleCatCyclesIso.hom z) at hz
+  rw [hφ, hz]
+  change (show Module.Dual R S.X₂ from (S.linearDual.moduleCatCyclesIso.hom φ).val)
+    (S.moduleCatCyclesIso.hom z).val = _
+  have hφ' := ConcreteCategory.congr_hom (moduleCatCyclesIso_hom_i S.linearDual) φ
+  have hz' := ConcreteCategory.congr_hom (moduleCatCyclesIso_hom_i S) z
+  change (S.linearDual.moduleCatCyclesIso.hom φ).val = S.linearDual.iCycles φ at hφ'
+  change (S.moduleCatCyclesIso.hom z).val = S.iCycles z at hz'
+  rw [hφ', hz']
+
+end CategoryTheory.ShortComplex
+
 
 namespace HomologicalComplex
 variable {R : Type u} [Field R]
@@ -156,7 +190,7 @@ lemma linearDualChain_connecting_pairing
     (show Module.Dual R (S.X₁.X n) from α) t
   change (S.g.f (n + 1)).hom.dualMap γ =
     S.X₂.linearDualCochainComplex.d n (n + 1) β at hγ
-  rw [linearDualCochainComplex_d] at hγ
+  rw [linearDualCochainComplex_d_succ] at hγ
   have he := LinearMap.congr_fun hγ v
   change S.g.f (n + 1) v = x at hv
   change S.f.f n t = S.X₂.d (n + 1) n v at ht

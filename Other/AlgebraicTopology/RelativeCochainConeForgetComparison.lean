@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainConeNaturality
+public import Other.AlgebraicTopology.Singular.RelativeCochainCone
 public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
 
 /-!
@@ -29,6 +30,7 @@ namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [Field R] (X : TopPair.{u})
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The legacy triangle completion respects the same negative shifted
 relative-to-ambient inclusion as the explicit canonical lift. -/
 @[reassoc]
@@ -36,8 +38,15 @@ theorem relativeDualShiftIsoCochainCone_hom_connecting :
     (relativeDualShiftIsoCochainCone R X).hom ≫
         (CochainComplex.mappingCone.triangleh (relativeCochainRestrictionInt R X)).mor₃ =
       -((HomotopyCategory.quotient (ModuleCat R) (.up ℤ)).map
-        (relativeDualCochainShortComplexInt R X).f)⟦(1 : ℤ)⟧' :=
-  relativeDualShiftIsoCochainCone_hom_comp_mor₃ R X
+        (relativeDualCochainShortComplexInt R X).f)⟦(1 : ℤ)⟧' := by
+  change (relativeCochainConeTriangleIso R X).hom.hom₃ ≫
+      (CochainComplex.mappingCone.triangleh
+        (relativeCochainRestrictionInt R X)).mor₃ = _
+  rw [← (relativeCochainConeTriangleIso R X).hom.comm₃]
+  unfold relativeCochainConeTriangleIso
+  rw [Pretriangulated.isoTriangleOfIso₁₂_hom_hom₁]
+  simp
+  rfl
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in

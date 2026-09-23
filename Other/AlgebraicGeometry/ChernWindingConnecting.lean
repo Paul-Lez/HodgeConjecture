@@ -54,7 +54,10 @@ def rationalWindingCohomologyClass :
 
 lemma linearDualHomologyEquiv_rationalWindingCohomologyClass :
     HomologicalComplex.linearDualHomologyEquiv (singularChains Y) 1
-      (rationalWindingCohomologyClass g hg) = windingRationalPeriod g hg := by
+      (rationalWindingCohomologyClass g hg) =
+      cohomologyEquivDualHomology ℚ Y 1 (windingRationalPeriod g hg) := by
+  unfold windingRationalPeriod
+  erw [LinearEquiv.apply_symm_apply]
   ext z
   obtain ⟨w, rfl⟩ := (ModuleCat.epi_iff_surjective
     ((singularChains Y).homologyπ 1)).mp inferInstance z
@@ -70,15 +73,13 @@ class defined by periods along the relative homology boundary. -/
 theorem rationalWindingCohomologyClass_connecting
     (g : C(puncturedSpace W S, ℂ)) (hg : ∀ y, g y ≠ 0)
     (h : HasRationalWindingPeriod W S g hg) :
-    HomologicalComplex.linearDualHomologyEquiv
-        ((relativeChainFunctor ℚ).obj (supportPair W S)) 2
-      ((relativeDualCochainShortComplexNat_shortExact ℚ (supportPair W S)).δ 1 2 rfl
-        (rationalWindingCohomologyClass g hg)) = windingRelativeClass W S h := by
+    (relativeDualCochainShortComplexNat_shortExact ℚ (supportPair W S)).δ 1 2 rfl
+      (rationalWindingCohomologyClass g hg) = windingRelativeClass W S h := by
   apply windingRelativeClass_unique W S h
   ext z
   have hp := ShortComplex.linearDualChain_connecting_pairing
-    (relativeSingularChainShortComplex (supportPair W S))
-    (relativeSingularChainShortComplex_shortExact (supportPair W S)) 1
+    (relativeChainShortComplex ℚ (supportPair W S))
+    (relativeChainShortComplex_shortExact ℚ (supportPair W S)) 1
     (rationalWindingCohomologyClass g hg) z
   refine (congrArg (fun q : ℚ => (q : ℂ)) hp).trans ?_
   change ((HomologicalComplex.linearDualHomologyEquiv (singularChains _) 1
@@ -140,11 +141,9 @@ theorem relativeCochainConeCohomologyEquiv_boundary_rationalWinding
       (T.X₃.extendHomologyIso ComplexShape.embeddingUpNat
         (j := 1) (j' := (1 : ℤ)) rfl).inv_hom_id (rationalWindingCohomologyClass g hg)
   rw [ha] at hea
-  change HomologicalComplex.linearDualHomologyEquiv
-    ((relativeChainFunctor ℚ).obj P) 2
-      ((T.X₁.extendHomologyIso ComplexShape.embeddingUpNat
-        (j := 2) (j' := (2 : ℤ)) rfl).hom
-        ((relativeDualCochainShortComplexInt_shortExact ℚ P).δ 1 2 rfl a)) = _
+  change (T.X₁.extendHomologyIso ComplexShape.embeddingUpNat
+      (j := 2) (j' := (2 : ℤ)) rfl).hom
+      ((relativeDualCochainShortComplexInt_shortExact ℚ P).δ 1 2 rfl a) = _
   rw [hea]
   exact rationalWindingCohomologyClass_connecting W S g hg h
 
