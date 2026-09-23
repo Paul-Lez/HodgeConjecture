@@ -35,6 +35,7 @@ public import Other.AlgebraicGeometry.Cohomology.SingularCochainVanishing
 public import Other.AlgebraicGeometry.Cohomology.SingularComparison
 public import Other.AlgebraicGeometry.Cohomology.SupportConeForget
 public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeComparison
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomology
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSingularGlobal
@@ -180,6 +181,7 @@ public import Other.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 public import Other.AlgebraicTopology.Support.RestrictionFiber
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
 public import Other.Analysis.Complex.AnalyticDivision
+public import Other.Analysis.Complex.NormalDerivative
 public import Other.Analysis.Complex.NormalDivision
 public import Other.Analysis.Complex.NormalDivisionChart
 public import Other.Analysis.Complex.NormalDivisionFinOne
@@ -202,6 +204,7 @@ public import Other.RingTheory.StandardEtaleAlgebraic
 public import Other.Algebra.Homology.DegreewiseSplitConnecting
 public import Other.Algebra.Homology.DerivedCategory.MappingCoconeBoundary
 public import Other.Algebra.Homology.DerivedCategory.MappingCoconeBoundaryNaturality
+public import Other.Algebra.Homology.DerivedCategory.MappingCoconeFunctor
 public import Other.Algebra.Homology.DualExact
 public import Other.Algebra.Homology.ExtendConnecting
 public import Other.Algebra.Homology.MappingConeCocycle
@@ -247,6 +250,7 @@ public import Other.AlgebraicGeometry.ChernWindingCochain
 public import Other.AlgebraicGeometry.ChernWindingCohomologyNaturality
 public import Other.AlgebraicGeometry.ChernWindingConnecting
 public import Other.AlgebraicGeometry.ChernWindingGenericChartAssembly
+public import Other.AlgebraicGeometry.ChernWindingGenericChartConditional
 public import Other.AlgebraicGeometry.ChernWindingGenericChartData
 public import Other.AlgebraicGeometry.ChernWindingGenericChartExistence
 public import Other.AlgebraicGeometry.ChernWindingHolomorphicLog
