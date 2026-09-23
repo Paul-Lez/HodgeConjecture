@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-23)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5280 jobs),
-and the comparison audit checks 306 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5281 jobs),
+and the comparison audit checks 307 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -29,6 +29,10 @@ comparison with the existing global support normalization. Three steps remain:
 - Construct the normalized winding charts from that nonzero derivative.
 - Prove local normalization of the actual Chern class, including restriction of the
   original complement comparison and its shift and sign conventions.
+
+`FlasquePushforwardQuasiIso.lean` proves that direct image preserves comparisons between
+bounded-below flasque complexes. This supplies the resolution comparison needed to show
+that the support sheaf-to-cone map is a quasi-isomorphism; that application is still pending.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.

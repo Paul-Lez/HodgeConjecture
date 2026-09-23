@@ -127,6 +127,7 @@ public import Other.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 public import Other.AlgebraicTopology.Sheaf.CohomologyOpenComparison
 public import Other.AlgebraicTopology.Sheaf.CohomologyOpenRestriction
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
+public import Other.AlgebraicTopology.Sheaf.FlasquePushforwardQuasiIso
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionRestriction
 public import Other.AlgebraicTopology.Sheaf.CohomologyShiftDerivedVanishing
 public import Other.AlgebraicTopology.Sheaf.ConstantDegreeZero
