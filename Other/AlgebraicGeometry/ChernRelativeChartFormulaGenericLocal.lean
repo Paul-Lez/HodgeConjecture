@@ -55,8 +55,9 @@ def HasRelativeChernChartFormulaGenericLocal : Prop :=
                     ((cycleComponentSupportedClassNormalizationIso X x hx).hom (γ x))
 
 set_option maxHeartbeats 1000000 in
-/-- The generic-local formula is sufficient for the full local model: intersecting its exceptional
-closed set with the chart exceptional set preserves injectivity of restriction. -/
+/-- The generic-local formula is sufficient for the full local model: taking the union of its
+exceptional closed set with the chart exceptional set (equivalently, intersecting the good opens)
+preserves injectivity of restriction. -/
 theorem hasChernLocalModel_of_chartFormulaGenericLocal
     (hcharts : HasNormalizedWindingCharts X)
     (hformula : HasRelativeChernChartFormulaGenericLocal X) :
