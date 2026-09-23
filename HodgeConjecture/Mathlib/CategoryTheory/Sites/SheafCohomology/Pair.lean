@@ -6,6 +6,8 @@ module
 
 public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
 public import Mathlib.CategoryTheory.Sites.MayerVietorisSquare
+public import Mathlib.CategoryTheory.Abelian.CommSq
+public import Mathlib.CategoryTheory.Abelian.DiagramLemmas.KernelCokernelComp
 public import Mathlib.Algebra.Homology.DerivedCategory.Ext.ExactSequences
 
 /-!
@@ -122,6 +124,60 @@ lemma pairSheafHomAddEquiv_pairSheafMap_comp {U V U' V' : C} (f : U ⟶ V) (f' :
     G.obj.map b.op (freeAbelianSheafHomAddEquiv V G (cokernel.π _ ≫ φ))
   rw [pairSheafMap, cokernel.π_desc_assoc, Category.assoc, freeAbelianSheafHomAddEquiv_map_comp]
 
+def pairNestedShortComplex {W U V : C} (f : W ⟶ U) (g : U ⟶ V) :
+    ShortComplex (Sheaf J AddCommGrpCat.{v}) :=
+  ShortComplex.mk
+    (pairSheafMap (J := J) (f ≫ g) f (𝟙 _) g (by simp))
+    (pairSheafMap (J := J) g (f ≫ g) f (𝟙 _) (by simp))
+    (by
+      apply (cancel_epi (cokernel.π ((freeAbelianSheaf J).map f))).1
+      dsimp [pairSheafMap, cokernel.map]
+      simp)
+
+set_option maxHeartbeats 800000 in
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency.types false in
+lemma pairNestedShortComplex_shortExact {W U V : C} (f : W ⟶ U) (g : U ⟶ V)
+    [Mono f] [Mono g] :
+    (pairNestedShortComplex (J := J) f g).ShortExact := by
+  let F := freeAbelianSheaf J
+  have hmono : Mono (cokernel.map (F.map f) (F.map f ≫ F.map g) (𝟙 _) (F.map g)
+      (by simp)) := by
+    apply Abelian.mono_cokernel_map_of_isPullback
+    refine IsPullback.of_vert_isIso_mono (fst := F.map f) (snd := 𝟙 _)
+      (f := F.map g) (g := F.map f ≫ F.map g) ?_
+    exact ⟨by simp⟩
+  have hepi : Epi (cokernel.map (F.map f ≫ F.map g) (F.map g) (F.map f) (𝟙 _)
+      (by simp)) := by
+    dsimp [cokernel.map]
+    apply cokernel.desc_epi
+  let S : ShortComplex (Sheaf J AddCommGrpCat.{v}) := ShortComplex.mk
+    (cokernel.map (F.map f) (F.map f ≫ F.map g) (𝟙 _) (F.map g) (by simp))
+    (cokernel.map (F.map f ≫ F.map g) (F.map g) (F.map f) (𝟙 _) (by simp))
+    (by
+      apply (cancel_epi (cokernel.π (F.map f))).1
+      dsimp [cokernel.map]
+      simp)
+  let h : F.map f ≫ F.map g = F.map (f ≫ g) := (F.map_comp f g).symm
+  let e₂ : cokernel (F.map f ≫ F.map g) ≅ cokernel (F.map (f ≫ g)) := cokernelIsoOfEq h
+  let e : S ≅
+      pairNestedShortComplex (J := J) f g :=
+    ShortComplex.isoMk (Iso.refl _) e₂ (Iso.refl _) (by
+      apply (cancel_epi (cokernel.π (F.map f))).1
+      dsimp [S, pairNestedShortComplex, e₂, h, pairSheafMap, cokernel.map]
+      dsimp [F]
+      simp only [Category.id_comp]
+      rw [cokernel.π_desc, cokernel.π_desc_assoc]
+      simp [Category.assoc, π_comp_cokernelIsoOfEq_hom]) (by
+      apply (cancel_epi (cokernel.π (F.map f ≫ F.map g))).1
+      dsimp [S, pairNestedShortComplex, e₂, h, pairSheafMap, cokernel.map]
+      dsimp [F]
+      simp [Category.assoc, cokernelIsoOfEq_hom_comp_desc h])
+  exact ShortComplex.shortExact_of_iso e
+    { exact := (kernelCokernelCompSequence_exact (F.map f) (F.map g)).exact 3 (by omega)
+      mono_f := hmono
+      epi_g := hepi }
+
 variable [HasExt.{w} (Sheaf J AddCommGrpCat.{v})]
 
 /-- `H^n(V, U; F)`, the cohomology of the pair `(V, U)` with coefficients in `F`. -/
@@ -152,6 +208,11 @@ def restrict {U' V' : C} (f' : U' ⟶ V') (a : U' ⟶ U) (b : V' ⟶ V) (w : f' 
 /-- The long exact sequence of the pair `(V, U)`. -/
 lemma sequence_exact [Mono f] (n₀ n₁ : ℕ) (h : 1 + n₀ = n₁) :
     (Ext.contravariantSequence (pairShortComplex_shortExact (J := J) f) F n₀ n₁ h).Exact :=
+  Ext.contravariantSequence_exact _ _ _ _ _
+
+lemma nestedSequence_exact {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
+    (n₀ n₁ : ℕ) (h : 1 + n₀ = n₁) :
+    (Ext.contravariantSequence (pairNestedShortComplex_shortExact (J := J) f g) F n₀ n₁ h).Exact :=
   Ext.contravariantSequence_exact _ _ _ _ _
 
 end relH

@@ -27,8 +27,8 @@ variable (X : Over (Spec ↧ℂ))
 
 /-- Its forward map displays the open-section identification, canonical
 sheafification comparison on the open, and exact open-restriction homology comparison. -/
-@[simp] theorem cycleComponentSmoothSupportLowestSectionCohomologyIso_hom :
-    (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom =
+@[simp] theorem cycleComponentSmoothSupportLowestSectionCohomologyComplexIso_hom :
+    (cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx).hom =
       HomologicalComplex.homologyMap
         (TopCat.Sheaf.openRestrictionTopSectionComplexIso (TopCat.of (ComplexPoint X))
           (cycleComponentSmoothSupportAmbientOpen X x)

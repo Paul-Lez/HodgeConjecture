@@ -147,7 +147,6 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClas
   refine Iff.trans (map_eq_zero_iff _ (forgetSupport_injective_of_eq_top ℚ X _
     (cycleComponentAnalyticClosedSupport_genericPoint_eq_top X) _)) ?_
   rw [cycleComponentSheafSupportedClass]
-  exact Iff.trans (map_eq_zero_iff _ (AddEquiv.injective _)) Iff.rfl
 
 /-- The generic-point component class vanishes exactly when the normalized coclass section it is
 constructed from vanishes: the normalization comparison is an isomorphism. -/
@@ -156,7 +155,7 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff
     cycleComponentSheafClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 ↔
       cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) = 0 := by
-  have hcoclass : (cycleComponentSupportedClassNormalizationIso X (genericPoint X.left) (coheight_genericPoint_eq_zero X)).addCommGroupIsoToAddEquiv
+  have hcoclass : cycleComponentSupportedClassNormalizationIso X (genericPoint X.left) (coheight_genericPoint_eq_zero X)
       (cycleComponentSupportedInjectiveClass X (genericPoint X.left) (coheight_genericPoint_eq_zero X)) =
       cycleComponentSmoothSupportCoclassSection X (genericPoint X.left) (coheight_genericPoint_eq_zero X) :=
     cycleComponentSupportedInjectiveClass_normalization X (genericPoint X.left) (coheight_genericPoint_eq_zero X)

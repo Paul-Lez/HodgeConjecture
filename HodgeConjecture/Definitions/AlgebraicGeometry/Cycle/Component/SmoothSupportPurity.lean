@@ -166,7 +166,7 @@ integral subvariety with generic point `x`. Put `U = X(ℂ) \ Z_sing(ℂ)` and l
 subsheaf complex of a rational injective resolution consisting of sections supported in `Z(ℂ)`.
 Purity implies `𝓗^j(K)|_U = 0` for `j < 2p`, giving this isomorphism `H^{2p}(Γ(U, K)) ≅ Γ(U,
 𝓗^{2p}(K))`. -/
-def cycleComponentSmoothSupportLowestSectionCohomologyIso :
+def cycleComponentSmoothSupportLowestSectionCohomologyComplexIso :
     -- `H^{2p}_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ); ℚ)`.
     ((((TopCat.Sheaf.supportEvaluation
       -- `X(ℂ)`.
