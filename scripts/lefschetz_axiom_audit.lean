@@ -2,6 +2,9 @@ import Other.AlgebraicGeometry.RelativeChernLocalBoundary
 import Other.AlgebraicTopology.CohomologySheafSectionDerivedVanishing
 import Other.AlgebraicGeometry.CocycleGlobalSectionNaturality
 import Other.AlgebraicGeometry.CartierWindingChartVanishing
+import Other.AlgebraicGeometry.CartierChernLocalWinding
+import Other.AlgebraicGeometry.CartierLocalIdeal
+import Other.AlgebraicGeometry.ChernRelativeChartFormulaGenericLocal
 /- Representative axiom checks for the incomplete Lefschetz development.
 Run: lake env lean scripts/lefschetz_axiom_audit.lean
 See docs/LEFSCHETZ_HANDOFF.md for the full goal and remaining obligations. -/
@@ -376,3 +379,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms TopCat.Sheaf.homComplexPairSheafIsoSupportedSections_forget
 #print axioms AlgebraicGeometry.ComplexPoint.rationalCohomologyAddEquivAmbientInjectiveHomology_eq_extModel
 #print axioms AlgebraicGeometry.ComplexPoint.rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
+#print axioms AlgebraicGeometry.Scheme.CartierData.LocalForm.exists_away_eq_component_with_exceptional
+#print axioms AlgebraicGeometry.ComplexPoint.IsCartierComplementLift.relativeChernClass_sub_eq_windingSheaf_cartier
+#print axioms AlgebraicGeometry.ComplexPoint.hasChernLocalModel_of_chartFormulaGenericLocal

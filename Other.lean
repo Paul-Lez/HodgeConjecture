@@ -213,10 +213,12 @@ public import Other.AlgebraicGeometry.BettiScalarComparison
 public import Other.AlgebraicGeometry.BettiScalarNaturality
 public import Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 public import Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison
+public import Other.AlgebraicGeometry.CartierChernLocalWinding
 public import Other.AlgebraicGeometry.CartierDataOfTrivializingCover
 public import Other.AlgebraicGeometry.CartierFrameLift
 public import Other.AlgebraicGeometry.CartierLocalForm
 public import Other.AlgebraicGeometry.CartierLocalFormUnit
+public import Other.AlgebraicGeometry.CartierLocalIdeal
 public import Other.AlgebraicGeometry.CartierWindingChartFrame
 public import Other.AlgebraicGeometry.CartierWindingChartUnit
 public import Other.AlgebraicGeometry.CartierWindingChartVanishing
@@ -224,6 +226,7 @@ public import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 public import Other.AlgebraicGeometry.ChernLocalModel
 public import Other.AlgebraicGeometry.ChernLocalModelWinding
 public import Other.AlgebraicGeometry.ChernRelativeChartFormula
+public import Other.AlgebraicGeometry.ChernRelativeChartFormulaGenericLocal
 public import Other.AlgebraicGeometry.ChernRelativeChartFormulaSplitting
 public import Other.AlgebraicGeometry.ChernRelativeClass
 public import Other.AlgebraicGeometry.ChernRelativeClassGeneric
