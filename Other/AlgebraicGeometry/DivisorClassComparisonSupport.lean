@@ -16,8 +16,8 @@ analytic support `|D|^an` of the divisor*, while the constructed cycle class
 `sheafCycleClassOnCycles` is a finite sum of classes each supported on the analytic support of a
 *single* component. This file provides the bookkeeping that connects the two, entirely inside the
 concrete "supported injective sections" model in which both the constructed component classes
-(`cycleComponentSupportedInjectiveClass`) and `forgetSupport`
-(`rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport`) are already expressed.
+(`cycleComponentSupportedInjectiveClass`) and `coneForgetSupport`
+(`coneSupportAddEquivSupportedInjectiveHomology_forgetSupport`) are already expressed.
 
 * `SupportedInjectiveHomology X S n` — the supported group itself, abbreviating the homology of
   the global sections of the `S`-supported part of the ambient rational injective resolution.
@@ -74,7 +74,7 @@ def enlargeSupportedInjectiveHomology {S T : Closeds (ComplexPoint X)} (h : S �
 
 /-- Forgetting the support, in the concrete model. This is the map already used by
 `cycleComponentSheafClass` and by
-`rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport`. -/
+`coneSupportAddEquivSupportedInjectiveHomology_forgetSupport`. -/
 def supportedInjectiveToAmbient (S : Closeds (ComplexPoint X)) (n : ℤ) :
     SupportedInjectiveHomology X S n ⟶
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex (TopCat.of (ComplexPoint X))

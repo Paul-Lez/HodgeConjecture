@@ -60,11 +60,11 @@ lemma globalRawComplementToActualSingularOutside_eq_topOpen :
 /-- The fixed rational support comparison, followed by the existing relative
 section comparison, sends a raw positive boundary to the negative raw relative
 boundary on the literal top-open pair. -/
-lemma rationalSupportAddEquivSupportedInjectiveHomology_raw_boundary_relative (n : ℕ)
+lemma coneSupportAddEquivSupportedInjectiveHomology_raw_boundary_relative (n : ℕ)
     (z : (globalRawPushforwardSingularCochainComplexInt ℚ
       (TopCat.of (ComplexPoint X)) ((S : Set (ComplexPoint X))ᶜ)).homology ((n : ℤ) - 1)) :
     complexSupportInjectiveSectionCohomologyEquiv X S ⊤ n
-      (rationalSupportAddEquivSupportedInjectiveHomology X S S.isClosed n
+      (coneSupportAddEquivSupportedInjectiveHomology X S S.isClosed n
         (hypercohomologyMap X
           (CochainComplex.mappingCone.inr (rationalRestrictionComplexInt X S)) ((n : ℤ) - 1)
           ((complementRationalHypercohomologyAddEquivGlobalSections X S ((n : ℤ) - 1)).symm
@@ -96,7 +96,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_raw_boundary_relative (n
   let eS := supportedRationalSingularSectionCohomologyEquivSupportComplement Y S S.isClosed ⊤ n
   let eI := complexSupportedSingularInjectiveHomologyIso X S.compl ⊤ (n : ℤ)
   have hb := congrArg e
-    (rationalSupportAddEquivSupportedInjectiveHomology_raw_boundary X S S.isClosed (n : ℤ) z)
+    (coneSupportAddEquivSupportedInjectiveHomology_raw_boundary X S S.isClosed (n : ℤ) z)
   have hm : e (-eI.hom a) = -eS a :=
     (e.map_neg (eI.hom a)).trans
       (congrArg Neg.neg

@@ -49,7 +49,7 @@ lemma rationalSupportBoundary_restrictedSingularOneCocycle_eq_winding :
         ((openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d))
         ((openRestrictionTopEval Ω).inv.app (holomorphicUnitSheaf X d) u)))
     complexSupportInjectiveSectionCohomologyEquiv X S ⊤ 2
-      (rationalSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2
+      (coneSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2
         (hypercohomologyMap X
           (CochainComplex.mappingCone.inr (rationalRestrictionComplexInt X S)) 1
           (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
@@ -80,7 +80,7 @@ lemma rationalSupportBoundary_restrictedSingularOneCocycle_eq_winding :
     apply e.injective
     exact (complementRationalHypercohomology_restrictedSingularOneCocycle_eq_intrinsicWinding
       X Ω d u).trans (e.apply_symm_apply _).symm
-  have hb := rationalSupportAddEquivSupportedInjectiveHomology_raw_boundary_relative X S 2 zΩ
+  have hb := coneSupportAddEquivSupportedInjectiveHomology_raw_boundary_relative X S 2 zΩ
   have htop : HomologicalComplex.homologyMap
       (globalRawComplementToTopOpenCochains ℚ Y S.compl) 1 zΩ =
     ChernWinding.openRawRationalWindingClass Y (⊤ ⊓ S.compl)
@@ -96,7 +96,7 @@ lemma rationalSupportBoundary_restrictedSingularOneCocycle_eq_winding :
       (derivedPushforwardComplementConstantRationalComplexInt X (S : Set (ComplexPoint X))) 1 →
       RelativeCohomology ℚ (neighborhoodSupportComplementPair ((⊤ : Opens Y) : Set Y) (S : Set Y)) 2 := fun b =>
     complexSupportInjectiveSectionCohomologyEquiv X S ⊤ 2
-      (rationalSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2
+      (coneSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2
         (hypercohomologyMap X (CochainComplex.mappingCone.inr (rationalRestrictionComplexInt X S)) 1 b))
   refine (congrArg F ha).trans (hb.trans ?_)
   exact (congrArg (fun b =>

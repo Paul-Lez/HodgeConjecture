@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-23)
 
-Validation after the split: main `1b509d2` is merged, `lake build` passes (5233 jobs),
-and the comparison audit checks 275 distinct declarations with only `propext`,
+Validation after the split: main `9aba2ec` is merged, `lake build` passes (5260 jobs),
+and the comparison audit checks 280 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -18,6 +18,14 @@ class of `c.divisor` equals the rational first Chern class of `E`. GAGA is a sep
 input to the Lefschetz application; it is not an assumption of this comparison.
 The requested completion gate is an independent passing Sol xhigh review of that
 full theorem. The theorem and that completion review are still outstanding.
+
+Main `9aba2ec` replaces statement-facing supported cohomology with relative-sheaf
+Ext. `CycleClassExtComparison.lean` restores the presentation of the actual cycle
+class in the ambient injective resolution: `SupportedExtForgetComparison.lean`
+proves compatibility of the Ext forget-support map with inclusion of supported
+sections, using `OrdinaryExtAmbientComparison.lean` for the ordinary comparison.
+The relative Chern construction still uses the explicitly named cone model; its
+comparison target remains the actual Ext-defined cycle class.
 
 This status supersedes the older universal chart-formula sketches below. In
 particular, `HasRelativeChernChartFormula` and
@@ -76,7 +84,7 @@ The current worktree additionally proves:
   rational-support-to-injective boundary sign: a positive complement boundary
   becomes the **negative** canonical supported-injective kernel boundary.
   `ActualSingularSupportBoundary.lean` further proves
-  `rationalSupportAddEquivSupportedInjectiveHomology_raw_boundary`: for every raw
+  `coneSupportAddEquivSupportedInjectiveHomology_raw_boundary`: for every raw
   complement cohomology class, this is minus its actual supported-singular kernel
   boundary under `complexSupportedSingularInjectiveHomologyIso`. The proof uses
   the naturality of the canonical short-exact-sequence comparison, not an assumed
@@ -96,7 +104,7 @@ The current worktree additionally proves:
   opens. This theorem by itself does not identify the actual exponential class.
 - `RationalSupportBoundaryRelative.lean` now composes the fixed global negative
   boundary with this local relative normalization. Its theorem
-  `rationalSupportAddEquivSupportedInjectiveHomology_raw_boundary_relative`
+  `coneSupportAddEquivSupportedInjectiveHomology_raw_boundary_relative`
   proves that the actual rational-support comparison followed by the existing
   relative section comparison is the **negative** raw relative boundary on the
   top-open pair. The factorization through actual top-open raw cochains is `rfl`.
@@ -988,7 +996,7 @@ codimension-two excision.
 
 *The support bookkeeping (proved).* All of it is stated inside the concrete "supported injective
 sections" model, which is where both `cycleComponentSupportedInjectiveClass` and
-`rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport` already live, so no further
+`coneSupportAddEquivSupportedInjectiveHomology_forgetSupport` already live, so no further
 comparison of models is needed:
 
 ```lean
@@ -1022,8 +1030,8 @@ computable in this model, and both hold by `rfl`:
       (cycleComponentSupportedInjectiveClass X x hx))` — this *is* the definition of
   `cycleComponentSheafClass`;
 * `rationalCohomologyAddEquivAmbientInjectiveHomology X n (forgetSupport X ↑S n β) =
-  supportedInjectiveToAmbient X S n (rationalSupportAddEquivSupportedInjectiveHomology X ↑S S.isClosed n β)`
-  — this is `rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport`.
+  supportedInjectiveToAmbient X S n (coneSupportAddEquivSupportedInjectiveHomology X ↑S S.isClosed n β)`
+  — this is `coneSupportAddEquivSupportedInjectiveHomology_forgetSupport`.
 
 Also proved there: the analytic support of a finite family of components,
 `componentsAnalyticClosedSupport X s := s.sup (fun x ↦ cycleComponentAnalyticClosedSupport X x)`,
@@ -1227,7 +1235,7 @@ conclusion **with a canonical witness** rather than by bare exactness.
 
 **(iii) The consequence for step 4.** In
 `Other/AlgebraicGeometry/ChernRelativeClassNaturality.lean` the relative class is transported into
-the supported injective model along `rationalSupportAddEquivSupportedInjectiveHomology` (the only
+the supported injective model along `coneSupportAddEquivSupportedInjectiveHomology` (the only
 bookkeeping is `compl_compl`, packaged as `supportedClassTransport`), giving
 
 ```lean
@@ -1385,7 +1393,7 @@ def relativeChernClassOnClosed (S : Closeds (ComplexPoint X)) (E ℓ hℓ)
 
 def relativeChernSupportedClassOnClosed (S E ℓ hℓ cmp) :
     SupportedInjectiveHomology X S (2 * (1 : ℤ)) :=
-  rationalSupportAddEquivSupportedInjectiveHomology X ↑S S.isClosed _
+  coneSupportAddEquivSupportedInjectiveHomology X ↑S S.isClosed _
     (relativeChernClassOnClosed S E ℓ hℓ cmp)
 
 theorem supportedInjectiveToAmbient_relativeChernSupportedClassOnClosed :

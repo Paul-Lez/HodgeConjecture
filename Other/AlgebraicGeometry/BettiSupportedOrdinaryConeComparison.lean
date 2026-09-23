@@ -71,7 +71,7 @@ lands in the actual ambient injective homology with the unaltered connecting sig
 theorem rationalCohomologyAmbient_forgetSupport_naturalSingularCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℕ)
     (a : RationalCohomologyWithSupport X Z (n : ℤ)) :
-    rationalCohomologyAddEquivAmbientInjectiveHomology X n (forgetSupport X Z n a) =
+    rationalCohomologyAddEquivAmbientInjectiveHomology X n (coneForgetSupport X Z n a) =
       (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
         (ShiftedHom.map
           ((CochainComplex.mappingCone.triangle (naturalSingularResolutionRestriction X Z hZ)).mor₃ ≫
@@ -83,7 +83,7 @@ theorem rationalCohomologyAmbient_forgetSupport_naturalSingularCone
           X Z hZ (n : ℤ) a) := by
   let K := CochainComplex.mappingCone (naturalSingularResolutionRestriction X Z hZ)
   let : K.IsStrictlyGE (-1) := naturalSingularSupportCone_isStrictlyGE X Z hZ
-  dsimp [rationalCohomologyAddEquivAmbientInjectiveHomology, forgetSupport]
+  dsimp [rationalCohomologyAddEquivAmbientInjectiveHomology, coneForgetSupport]
   rw [AddEquiv.symm_apply_apply]
   change hypercohomologyAddEquivGlobalSectionsKInjective X _ (n : ℤ)
     (hypercohomologyMap X (ambientRationalInjectiveAugmentation X) (n : ℤ)

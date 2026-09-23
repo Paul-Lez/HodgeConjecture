@@ -182,7 +182,7 @@ theorem complexSupportInjectiveSectionCohomologyEquiv_inclusion_eq_neg_legacy
         ((complexSupportInjectiveSectionCohomologyEquiv X S ⊤ n).symm
           (relativeCohomologyMap ℚ n
             (topOpenNeighborhoodSupportPairIso (TopCat.of (ComplexPoint X)) S).hom a))) =
-    -(forgetSupport X S n
+    -(coneForgetSupport X S n
       ((rationalCohomologyWithSupportAddEquivSingular X S S.isClosed n).symm a)) := by
   apply (rationalCohomologyAddEquivAmbientInjectiveHomology X n).injective
   rw [AddEquiv.apply_symm_apply, map_neg,

@@ -400,3 +400,10 @@ public import Other.AlgebraicGeometry.Cohomology.SupportSingularNaturality
 public import Other.AlgebraicGeometry.Cohomology.WithSupport
 public import Other.Mathlib.Topology.Category.TopCat.Basic
 public import Other.AlgebraicTopology.Support.ClosedSupportSheaf
+public import Other.AlgebraicTopology.FreeAbelianTerminalEvaluation
+public import Other.AlgebraicTopology.SupportedExtForget
+public import Other.AlgebraicGeometry.OrdinaryExtAmbientComparison
+public import Other.AlgebraicGeometry.SupportedExtForgetComparison
+public import Other.AlgebraicGeometry.CycleClassExtComparison
+public import Other.AlgebraicTopology.SupportedExtComparisonEvaluation
+public import Other.AlgebraicGeometry.HypercohomologyExtImage

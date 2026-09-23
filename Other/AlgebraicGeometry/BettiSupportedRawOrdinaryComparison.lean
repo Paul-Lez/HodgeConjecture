@@ -70,7 +70,7 @@ followed by the actual raw-to-sheaf and singular-to-injective maps. -/
 theorem rationalCohomologyAmbient_forgetSupport_rawSingularCone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℕ)
     (a : RationalCohomologyWithSupport X Z (n : ℤ)) :
-    rationalCohomologyAddEquivAmbientInjectiveHomology X n (forgetSupport X Z n a) =
+    rationalCohomologyAddEquivAmbientInjectiveHomology X n (coneForgetSupport X Z n a) =
       HomologicalComplex.homologyMap
         (globalRawToSingularSheafInt X ≫
           ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
@@ -139,7 +139,7 @@ theorem rationalCohomologyAmbient_forgetSupport_of_singular
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℕ)
     (a : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) Z n) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n
-      (forgetSupport X Z n
+      (coneForgetSupport X Z n
         ((rationalCohomologyWithSupportAddEquivSingular X Z hZ n).symm a)) =
       HomologicalComplex.homologyMap
         (globalRawToSingularSheafInt X ≫

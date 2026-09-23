@@ -18,7 +18,7 @@ restriction of the constant integer section `1`. In the application `Ω` is the 
 support of the divisor, on which the rational section frames the line bundle.
 
 The goal is that the rational first Chern class of `E` restricts to zero on `Ω`, hence lifts to
-rational cohomology with support in `Z = Ωᶜ` through `forgetSupport`, by the exactness proved in
+rational cohomology with support in `Z = Ωᶜ` through `coneForgetSupport`, by the exactness proved in
 `Other/AlgebraicGeometry/CohomologyWithSupportExact.lean`.
 
 What is **proved** unconditionally, in
@@ -358,7 +358,7 @@ theorem exists_forgetSupport_eq_integralToRational_firstChernClass
       (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection) :
     ∃ β : RationalCohomologyWithSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2,
-      forgetSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2 β =
+      coneForgetSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2 β =
         integralToRationalCohomology X 2 E.firstChernClass :=
   exists_forgetSupport_eq_of_restrictToComplement_eq_zero X _ 2 _
     (restrictToComplement_integralToRational_firstChernClass_eq_zero hvan E ℓ hℓ)

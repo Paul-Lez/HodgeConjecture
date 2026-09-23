@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.WithSupport
-public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
+public import Other.AlgebraicGeometry.Cohomology.WithSupport
+public import Other.Algebra.Homology.ShiftedExact
 
 /-!
 # Exactness of the support sequence in the middle
@@ -179,7 +179,7 @@ theorem exact_forgetSupportHypercohomology_restrictToComplementHypercohomology
 /-- A class coming from cohomology with support in `Z` restricts to zero on the complement. -/
 theorem restrictToComplement_forgetSupport (Z : Set (ComplexPoint X)) (n : ℕ)
     (β : RationalCohomologyWithSupport X Z n) :
-    restrictToComplement X Z n (forgetSupport X Z n β) = 0 := by
+    restrictToComplement X Z n (coneForgetSupport X Z n β) = 0 := by
   change restrictToComplementHypercohomology X Z (n : ℤ)
     ((hypercohomologyAddEquivConstantCohomology ℚ X n).symm
       ((hypercohomologyAddEquivConstantCohomology ℚ X n)
@@ -192,7 +192,7 @@ theorem exists_forgetSupport_eq_of_restrictToComplement_eq_zero
     (Z : Set (ComplexPoint X)) (n : ℕ)
     (α : H^n(X; ℚ))
     (hα : restrictToComplement X Z n α = 0) :
-    ∃ β : RationalCohomologyWithSupport X Z n, forgetSupport X Z n β = α := by
+    ∃ β : RationalCohomologyWithSupport X Z n, coneForgetSupport X Z n β = α := by
   let e : Hypercohomology X (constantFieldSheafComplexInt ℚ X) (n : ℤ) ≃ H^n(X; ℚ) :=
     hypercohomologyAddEquivConstantCohomology ℚ X n
   have hα' : restrictToComplementHypercohomology X Z (n : ℤ) (e.symm α) = 0 := by
@@ -207,7 +207,7 @@ theorem exists_forgetSupport_eq_of_restrictToComplement_eq_zero
 
 /-- The support sequence is exact at ordinary rational cohomology in degree `n`. -/
 theorem exact_forgetSupport_restrictToComplement (Z : Set (ComplexPoint X)) (n : ℕ) :
-    Function.Exact (forgetSupport X Z n) (restrictToComplement X Z n) := fun α ↦
+    Function.Exact (coneForgetSupport X Z n) (restrictToComplement X Z n) := fun α ↦
   ⟨fun hα ↦ exists_forgetSupport_eq_of_restrictToComplement_eq_zero X Z n α hα,
     fun ⟨β, hβ⟩ ↦ hβ ▸ restrictToComplement_forgetSupport X Z n β⟩
 

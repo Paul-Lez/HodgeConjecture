@@ -386,7 +386,7 @@ def relativeChernClass (cmp : RelativeChernComparison X d Ω) :
 set_option backward.isDefEq.respectTransparency false in
 /-- **The relative first Chern class lifts the rational first Chern class.** -/
 theorem forgetSupport_relativeChernClass (cmp : RelativeChernComparison X d Ω) :
-    forgetSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2 (E.relativeChernClass Ω ℓ hℓ cmp) =
+    coneForgetSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2 (E.relativeChernClass Ω ℓ hℓ cmp) =
       integralToRationalCohomology X 2 E.firstChernClass := by
   change (hypercohomologyAddEquivConstantCohomology ℚ X 2)
       (forgetSupportHypercohomology X ((Ω : Set (ComplexPoint X))ᶜ) 2
@@ -490,7 +490,7 @@ theorem nonempty_relativeChernComparison (Ω : Opens (TopCat.of (ComplexPoint X)
 
 /-- **Unconditional form of step 3 with a witness attached to the splitting and comparison.**
 The rational first Chern class of
-an extension splitting over `Ω` is the image, under `forgetSupport`, of the relative first Chern
+an extension splitting over `Ω` is the image, under `coneForgetSupport`, of the relative first Chern
 class attached to the splitting. Compare
 `exists_forgetSupport_eq_integralToRational_firstChernClass`, which produces a lift by bare
 exactness; here the lift is `E.relativeChernClass Ω ℓ hℓ cmp`, built from the splitting. -/
@@ -500,7 +500,7 @@ theorem exists_relativeChernClass (Ω : Opens (TopCat.of (ComplexPoint X)))
       (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection) :
     ∃ β : RationalCohomologyWithSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2,
-      forgetSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2 β =
+      coneForgetSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2 β =
         integralToRationalCohomology X 2 E.firstChernClass :=
   (nonempty_relativeChernComparison X d Ω).elim fun cmp =>
     ⟨E.relativeChernClass Ω ℓ hℓ cmp, E.forgetSupport_relativeChernClass Ω ℓ hℓ cmp⟩

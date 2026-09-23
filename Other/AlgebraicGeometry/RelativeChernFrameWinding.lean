@@ -43,7 +43,7 @@ lemma rationalSupportBoundary_restrictedSingularOneCocycle_eq_windingHom :
         ((openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d))
         ((openRestrictionTopEval Ω).inv.app (holomorphicUnitSheaf X d) u)))
     complexSupportInjectiveSectionCohomologyEquiv X S ⊤ 2
-      (rationalSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2
+      (coneSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2
         (hypercohomologyMap X
           (CochainComplex.mappingCone.inr (rationalRestrictionComplexInt X S)) 1
           (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
@@ -70,7 +70,7 @@ lemma HolomorphicUnitExtension.relativeChernClass_sub_eq_winding
     let Y := TopCat.of (ComplexPoint X)
     let S : Closeds Y := ⟨(Ω : Set Y)ᶜ, Ω.isOpen.isClosed_compl⟩
     let j : ⊤ ⊓ S.compl ⟶ Ω := homOfLE (fun _q hq => not_not.mp hq.2)
-    let F := (rationalSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2).trans
+    let F := (coneSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2).trans
       (complexSupportInjectiveSectionCohomologyEquiv X S ⊤ 2)
     F (E.relativeChernClass Ω ℓ₂ hℓ₂ cmp) - F (E.relativeChernClass Ω ℓ₁ hℓ₁ cmp) =
       windingRelativeHom (hasWindingPeriods X d ⊤ S)
@@ -79,7 +79,7 @@ lemma HolomorphicUnitExtension.relativeChernClass_sub_eq_winding
   let Y := TopCat.of (ComplexPoint X)
   let S : Closeds Y := ⟨(Ω : Set Y)ᶜ, Ω.isOpen.isClosed_compl⟩
   let j : ⊤ ⊓ S.compl ⟶ Ω := homOfLE (fun _q hq => not_not.mp hq.2)
-  let F := (rationalSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2).trans
+  let F := (coneSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2).trans
     (complexSupportInjectiveSectionCohomologyEquiv X S ⊤ 2)
   have hb := E.relativeChernClass_sub_eq_neg_unit_boundary X Ω ℓ₁ ℓ₂ hℓ₁ hℓ₂ cmp w hw
   have hc := rationalSupportBoundary_restrictedSingularOneCocycle_eq_windingHom X Ω d (-w)
@@ -101,7 +101,7 @@ lemma HolomorphicUnitExtension.relativeChernClass_sub_eq_windingSheaf
     let Y := TopCat.of (ComplexPoint X)
     let S : Closeds Y := ⟨(Ω : Set Y)ᶜ, Ω.isOpen.isClosed_compl⟩
     let j : ⊤ ⊓ S.compl ⟶ Ω := homOfLE (fun _q hq => not_not.mp hq.2)
-    let z := rationalSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2
+    let z := coneSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2
       (E.relativeChernClass Ω ℓ₂ hℓ₂ cmp - E.relativeChernClass Ω ℓ₁ hℓ₁ cmp)
     (complexSupportInjectiveCohomologySheafIsoRelative X S 2).hom.hom.app (op ⊤)
       (TopCat.Sheaf.sectionCohomologyToSheafSection Y (complexSupportInjectiveComplex X S) 2 ⊤ z) =
@@ -110,7 +110,7 @@ lemma HolomorphicUnitExtension.relativeChernClass_sub_eq_windingSheaf
   dsimp only
   let Y := TopCat.of (ComplexPoint X)
   let S : Closeds Y := ⟨(Ω : Set Y)ᶜ, Ω.isOpen.isClosed_compl⟩
-  let F := (rationalSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2).trans
+  let F := (coneSupportAddEquivSupportedInjectiveHomology X S S.isClosed 2).trans
     (complexSupportInjectiveSectionCohomologyEquiv X S ⊤ 2)
   refine (complexSupportInjectiveCohomologySheafIsoRelative_section_apply X S 2 ⊤ _).trans ?_
   exact congrArg (fun b => (supportRelativeCohomologyToSheaf Y S 2).app (op ⊤) b)
