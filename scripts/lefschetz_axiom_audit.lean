@@ -5,6 +5,8 @@ import Other.AlgebraicGeometry.CartierWindingChartVanishing
 import Other.AlgebraicGeometry.CartierChernLocalWinding
 import Other.AlgebraicGeometry.CartierLocalIdeal
 import Other.AlgebraicGeometry.ChernRelativeChartFormulaGenericLocal
+import Other.Analysis.Complex.NormalDivision
+import Other.RingTheory.RegularLocalEquation
 /- Representative axiom checks for the incomplete Lefschetz development.
 Run: lake env lean scripts/lefschetz_axiom_audit.lean
 See docs/LEFSCHETZ_HANDOFF.md for the full goal and remaining obligations. -/
@@ -382,3 +384,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.Scheme.CartierData.LocalForm.exists_away_eq_component_with_exceptional
 #print axioms AlgebraicGeometry.ComplexPoint.IsCartierComplementLift.relativeChernClass_sub_eq_windingSheaf_cartier
 #print axioms AlgebraicGeometry.ComplexPoint.hasChernLocalModel_of_chartFormulaGenericLocal
+#print axioms Ideal.generator_not_mem_square_of_regular_quotient
+#print axioms Complex.continuousOn_normalQuotient
+#print axioms Complex.exists_ball_analytic_normalQuotient_factor

@@ -177,6 +177,8 @@ public import Other.AlgebraicTopology.Support.RelativeCohomologyGerm
 public import Other.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 public import Other.AlgebraicTopology.Support.RestrictionFiber
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
+public import Other.Analysis.Complex.AnalyticDivision
+public import Other.Analysis.Complex.NormalDivision
 public import Other.Analysis.Complex.Polynomial.Complement
 public import Other.Analysis.Complex.Polynomial.FactorGrowth
 public import Other.Analysis.Complex.Polynomial.FiniteSingularity
@@ -190,6 +192,7 @@ public import Other.Mathlib.Algebra.Category.ModuleCat.Basic
 public import Other.Mathlib.Algebra.Homology.StupidTruncation
 public import Other.RingTheory.AlgebraicNonvanishing
 public import Other.RingTheory.IntegralPrimitiveElement
+public import Other.RingTheory.RegularLocalEquation
 public import Other.RingTheory.RegularLocalQuotientKernel
 public import Other.RingTheory.StandardEtaleAlgebraic
 public import Other.Algebra.Homology.DegreewiseSplitConnecting
