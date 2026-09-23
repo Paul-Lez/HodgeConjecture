@@ -222,6 +222,8 @@ public import Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison
 public import Other.AlgebraicGeometry.CartierChernLocalWinding
 public import Other.AlgebraicGeometry.CartierDataOfTrivializingCover
 public import Other.AlgebraicGeometry.CartierFrameLift
+public import Other.AlgebraicGeometry.CartierLocalComponentKernel
+public import Other.AlgebraicGeometry.CartierLocalDerivative
 public import Other.AlgebraicGeometry.CartierLocalForm
 public import Other.AlgebraicGeometry.CartierLocalFormUnit
 public import Other.AlgebraicGeometry.CartierLocalIdeal
@@ -243,6 +245,7 @@ public import Other.AlgebraicGeometry.ChernWindingChartPeriods
 public import Other.AlgebraicGeometry.ChernWindingCochain
 public import Other.AlgebraicGeometry.ChernWindingCohomologyNaturality
 public import Other.AlgebraicGeometry.ChernWindingConnecting
+public import Other.AlgebraicGeometry.ChernWindingGenericChartAssembly
 public import Other.AlgebraicGeometry.ChernWindingGenericChartData
 public import Other.AlgebraicGeometry.ChernWindingGenericChartExistence
 public import Other.AlgebraicGeometry.ChernWindingHolomorphicLog
@@ -331,6 +334,7 @@ public import Other.AlgebraicGeometry.SheafHomOfLocalStalkMaps
 public import Other.AlgebraicGeometry.SupportEnlargementCodimTwo
 public import Other.AlgebraicGeometry.SupportUnionSplitting
 public import Other.AlgebraicGeometry.SupportedInjectiveBoundaryNormalization
+public import Other.AlgebraicGeometry.SupportedInjectiveSectionNaturality
 public import Other.AlgebraicGeometry.UnitExtensionClassObligations
 public import Other.AlgebraicGeometry.UnitExtensionClassOfMiddleHom
 public import Other.AlgebraicGeometry.UnitExtensionClassOfSectionSheaf
