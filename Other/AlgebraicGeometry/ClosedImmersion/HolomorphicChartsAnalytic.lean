@@ -81,4 +81,38 @@ theorem analyticAt_closedImmersionHolomorphicFlatteningChart_evaluate
   filter_upwards [] with v
   simp only [Function.comp_apply, A, closedImmersionHolomorphicFlatteningChart_symm_apply]
 
+/-! The pointwise result above is most useful after restricting the chart source to the
+local-form domain.  This packages the resulting analyticity on the *whole* coordinate target of
+that restricted chart, so a normal-division argument can be applied without extending a chart
+function by an arbitrary value outside its provenance domain. -/
+
+theorem analyticOnNhd_closedImmersionHolomorphicFlatteningChart_restrict_evaluate
+    (V : X.left.Opens) (s : Γ(X.left, V))
+    (A : Set (ComplexPoint X)) (hA : IsOpen A)
+    (hAs : A ⊆ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)
+    (hAV : A ⊆ Point.overOpen V) :
+    AnalyticOnNhd ℂ
+      (fun v ↦ Point.evaluate V s
+        (((closedImmersionHolomorphicFlatteningChart X Y i m d z).restrOpen A hA).symm v))
+      ((closedImmersionHolomorphicFlatteningChart X Y i m d z).restrOpen A hA).target := by
+  intro v hv
+  let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
+  let eA := e.restrOpen A hA
+  have hy : (eA.symm v) ∈ eA.source := eA.map_target hv
+  have hyA : (eA.symm v) ∈ A := by
+    rw [OpenPartialHomeomorph.restrOpen_source] at hy
+    exact hy.2
+  have hye : (eA.symm v) ∈ e.source := hAs hyA
+  have hV : e.symm (e (eA.symm v)) ∈ Point.overOpen V := by
+    rw [e.left_inv hye]
+    exact hAV hyA
+  have hat := analyticAt_closedImmersionHolomorphicFlatteningChart_evaluate
+    X Y i m d z V s (eA.symm v) hye hV
+  have heq : eA (eA.symm v) = v := eA.right_inv hv
+  rw [← heq]
+  apply hat.congr
+  filter_upwards [eA.open_target.mem_nhds (eA.map_source hy)] with w hw
+  change Point.evaluate V s (e.symm w) = Point.evaluate V s (eA.symm w)
+  congr 1
+
 end AlgebraicGeometry.ComplexPoint
