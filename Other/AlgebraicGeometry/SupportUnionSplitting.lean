@@ -18,10 +18,11 @@ For two opens `U`, `U'` of a space `X` — equivalently two closed sets `Z = X �
 when the coefficients are flasque, and its kernel is exactly the sections supported in
 `Z ∩ Z' = X ∖ (U ⊔ U')`. This gives the short exact sequence of section complexes
 
-`0 → Γ(X, Γ̲_{Z ∩ Z'} K) → Γ(X, Γ̲_Z K) → Γ(U', Γ̲_Z K) → 0`
+`0 → Γ(X, K_{Z ∩ Z'}) → Γ(X, K_Z) → Γ(U', K_Z) → 0`
 
-whose homology sequence is the only input needed for Mayer–Vietoris in a union of two closed
-supports: taking `Z` to be one of the two closed sets and `U'` the complement of the other one,
+where `K_Z` is the subsheaf of sections supported in `Z`. Its homology sequence is the only
+input needed for Mayer–Vietoris in a union of two closed supports: taking `Z` to be one of the
+two closed sets and `U'` the complement of the other one,
 the third term is insensitive to enlarging `Z` to the union (`supportedOutsideMap_app_bijective`),
 so the resulting connecting maps identify the failure of
 `H^n_{Z} ⊕ H^n_{Z'} → H^n_{Z ∪ Z'}` to be onto with `H^{n+1}_{Z ∩ Z'}`.
@@ -147,7 +148,7 @@ theorem supportedOutsideMap_restrict_eq_zero (F : Sheaf AddCommGrpCat.{u} X)
   exact supportedOutsideSection_restrict_eq_zero le_top hU'W a
 
 /-- The degreewise splitting sequence
-`0 → Γ(X, Γ̲_{X∖W} F) → Γ(X, Γ̲_{X∖U} F) → Γ(U', Γ̲_{X∖U} F) → 0`. -/
+`0 → Γ(X, F_{X∖W}) → Γ(X, F_{X∖U}) → Γ(U', F_{X∖U}) → 0`. -/
 def supportSplitSectionsShortComplexAux (F : Sheaf AddCommGrpCat.{u} X) :
     ShortComplex AddCommGrpCat.{u} :=
   ShortComplex.mk
@@ -251,7 +252,7 @@ theorem supportedSectionsEnlarge_comp {V₁ V₂ V₃ : Opens X} (h : V₂ ≤ V
   exact ConcreteCategory.congr_hom key a
 
 /-- The splitting sequence of section complexes
-`0 → Γ(X, Γ̲_{X∖W} K) → Γ(X, Γ̲_{X∖U} K) → Γ(U', Γ̲_{X∖U} K) → 0`. -/
+`0 → Γ(X, K_{X∖W}) → Γ(X, K_{X∖U}) → Γ(U', K_{X∖U}) → 0`. -/
 def supportSplitSectionsShortComplex : ShortComplex (CochainComplex AddCommGrpCat.{u} ℤ) :=
   ShortComplex.mk
     (((supportEvaluation X ⊤).mapHomologicalComplex (.up ℤ)).map

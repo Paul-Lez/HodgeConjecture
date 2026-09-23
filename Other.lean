@@ -407,3 +407,4 @@ public import Other.AlgebraicGeometry.SupportedExtForgetComparison
 public import Other.AlgebraicGeometry.CycleClassExtComparison
 public import Other.AlgebraicTopology.SupportedExtComparisonEvaluation
 public import Other.AlgebraicGeometry.HypercohomologyExtImage
+public import Other.CategoryTheory.Abelian.ExtOneRepresentative

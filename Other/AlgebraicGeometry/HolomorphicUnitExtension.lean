@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.HolomorphicIntegralHodgeClass
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
-public import HodgeConjecture.Mathlib.CategoryTheory.Abelian.ExtOneRepresentative
+public import Other.CategoryTheory.Abelian.ExtOneRepresentative
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 
 /-!
