@@ -22,8 +22,7 @@ that progress on any one of them can be checked independently.
   multiplication by a nonzero integer. Mathematically this is finite generation of `H²(X, ℤ)`.
 * `HasAlgebraicModel X`: the invertible holomorphic section sheaf constructed from a unit-sheaf
   extension is the analytification of an algebraic invertible sheaf. This is the projective
-  GAGA statement for line bundles; `AnalyticLineBundlesAlgebraize X` is its natural general
-  form (every invertible analytic sheaf algebraizes), from which it follows.
+  GAGA obligation for line bundles.
 * `HasDivisorOfAlgebraicModel X`: an algebraic invertible sheaf analytifying to that section
   sheaf is represented by a codimension-one cycle whose constructed cycle class is the rational
   image of the extension's first Chern class. This combines the divisor/line-bundle dictionary
@@ -47,7 +46,7 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
 
 /-- Every rational degree-two class is a rational multiple of an integral class. -/
 def HasIntegralDenominatorClearing : Prop :=
-  ∀ α : FieldCohomology ℚ X 2, ∃ (m : ℤ) (β : IntegralCohomology X 2),
+  ∀ α : H^2(X; ℚ), ∃ (m : ℤ) (β : IntegralCohomology X 2),
     m ≠ 0 ∧ integralToRationalCohomology X 2 β = m • α
 
 /-- The holomorphic section sheaf of every unit-sheaf extension is the analytification of an
@@ -57,22 +56,6 @@ def HasAlgebraicModel : Prop :=
     ∃ L : X.left.Modules, TauCeti.SheafOfModules.IsInvertible L ∧
       Nonempty ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules)
 
-/-- Projective GAGA for line bundles, stated for an arbitrary invertible sheaf of modules over
-the holomorphic structure sheaf: it is the analytification of an algebraic invertible sheaf.
-This is the form of the obligation that does not mention the exponential sequence at all. -/
-def AnalyticLineBundlesAlgebraize : Prop :=
-  ∀ M : SheafOfModules.{0} (holomorphicRingSheaf X (dim X.left)),
-    TauCeti.SheafOfModules.IsInvertible M →
-    ∃ L : X.left.Modules, TauCeti.SheafOfModules.IsInvertible L ∧
-      Nonempty ((moduleAnalytification X (dim X.left)).obj L ≅ M)
-
-omit [IsProjective X.hom] in
-/-- The general line-bundle GAGA statement specialises to the section sheaves of unit-sheaf
-extensions, which are invertible by `sectionSheafOfModules_isInvertible`. -/
-theorem hasAlgebraicModel_of_analyticLineBundlesAlgebraize
-    (h : AnalyticLineBundlesAlgebraize X) : HasAlgebraicModel X :=
-  fun E ↦ h E.sectionSheafOfModules E.sectionSheafOfModules_isInvertible
-
 /-- An algebraic invertible sheaf analytifying to the section sheaf of a unit-sheaf extension
 is represented by an integral codimension-one cycle whose constructed class is the rational
 image of the extension's first Chern class. -/
@@ -80,16 +63,16 @@ def HasDivisorOfAlgebraicModel : Prop :=
   ∀ (E : HolomorphicUnitExtension X (dim X.left)) (L : X.left.Modules),
     TauCeti.SheafOfModules.IsInvertible L →
     ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules) →
-    ∃ D : CodimensionCycle X.left 1,
-      sheafCycleClassOnCycles (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1 D =
+    ∃ D : codimensionCycleSubgroup X.left 1,
+      sheafCycleClassOnCycles { scheme := X.left, structureMap := X.hom } 1 D =
         integralToRationalCohomology X 2 E.firstChernClass
 
 /-- The first Chern class of every unit-sheaf extension is the constructed class of an integral
 codimension-one cycle. -/
 def HasDivisorOfUnitExtension : Prop :=
   ∀ E : HolomorphicUnitExtension X (dim X.left),
-    ∃ D : CodimensionCycle X.left 1,
-      sheafCycleClassOnCycles (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1 D =
+    ∃ D : codimensionCycleSubgroup X.left 1,
+      sheafCycleClassOnCycles { scheme := X.left, structureMap := X.hom } 1 D =
         integralToRationalCohomology X 2 E.firstChernClass
 
 /-- An algebraic model together with its divisor representation gives the divisor of the
@@ -104,7 +87,7 @@ theorem hasDivisorOfUnitExtension_of_algebraicModel
 omit [IsProjective X.hom] in
 /-- Scaling by an integer preserves rational Hodge classes. -/
 theorem zsmul_mem_hodgeClasses {p : ℕ} (m : ℤ)
-    {α : FieldCohomology ℚ X (2 * p)} (hα : α ∈ Hdg^p(ℚ; X)) :
+    {α : H^(2 * p)(X; ℚ)} (hα : α ∈ Hdg^p(ℚ; X)) :
     m • α ∈ Hdg^p(ℚ; X) := by
   rw [← Int.cast_smul_eq_zsmul ℚ]
   exact Submodule.smul_mem _ _ hα
@@ -114,10 +97,10 @@ set_option backward.isDefEq.respectTransparency false in
 of degree two on `X` is the class of a rational divisor. -/
 theorem exists_rationalSheafCycleClassOnCycles_eq_of_obligations
     (hclear : HasIntegralDenominatorClearing X) (hdivisor : HasDivisorOfUnitExtension X)
-    (α : FieldCohomology ℚ X 2) (hα : α ∈ Hdg^1(ℚ; X)) :
-    ∃ D : TensorProduct ℤ ℚ (CodimensionCycle X.left 1),
+    (α : H^2(X; ℚ)) (hα : α ∈ Hdg^1(ℚ; X)) :
+    ∃ D : TensorProduct ℤ ℚ (codimensionCycleSubgroup X.left 1),
       rationalSheafCycleClassOnCycles
-        (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1 D = α := by
+        { scheme := X.left, structureMap := X.hom } 1 D = α := by
   obtain ⟨m, β, hm, hβ⟩ := hclear α
   have hβHodge : integralToRationalCohomology X 2 β ∈ Hdg^1(ℚ; X) := by
     rw [hβ]

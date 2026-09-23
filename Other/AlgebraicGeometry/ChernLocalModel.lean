@@ -119,7 +119,7 @@ omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 turns the conclusion of step 3, which is stated for the complement of an open set `Ω`, into
 `HasSupportedChernLift`, whose support is the closed set `|D|^an` itself. -/
 theorem exists_forgetSupport_of_support_eq {Z Z' : Set (ComplexPoint X)} (hZ : Z = Z') (n : ℤ)
-    (α : FieldCohomology ℚ X n)
+    (α : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n)
     (h : ∃ β : RationalCohomologyWithSupport X Z n, forgetSupport X Z n β = α) :
     ∃ β : RationalCohomologyWithSupport X Z' n, forgetSupport X Z' n β = α := by
   subst hZ

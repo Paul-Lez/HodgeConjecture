@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.CohomologyWithSupport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.WithSupport
 
 /-!
 # Exactness of the support sequence in the middle
@@ -59,7 +59,7 @@ lemma equiv_forgetSupportShiftedHom (Z : Set (ComplexPoint X)) :
 /-- Restriction of rational cohomology to the complement of `Z`, in the same derived
 presentation. -/
 def restrictToComplement (Z : Set (ComplexPoint X)) (n : ℤ) :
-    FieldCohomology ℚ X n →+
+    Hypercohomology X (constantFieldSheafComplexInt ℚ X) n →+
       Hypercohomology X
         (derivedPushforwardComplementConstantRationalComplexInt X Z) n :=
   hypercohomologyMap X (rationalRestrictionComplexInt X Z) n
@@ -67,7 +67,7 @@ def restrictToComplement (Z : Set (ComplexPoint X)) (n : ℤ) :
 /-- In the derived category, restriction to the complement is postcomposition with the first
 morphism of the restriction triangle. -/
 lemma equiv_restrictToComplement (Z : Set (ComplexPoint X)) (n : ℤ)
-    (α : FieldCohomology ℚ X n) :
+    (α : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n) :
     (Localization.SmallShiftedHom.equiv
       (analyticQuasiIsomorphisms X) DerivedCategory.Q) (restrictToComplement X Z n α) =
       ((Localization.SmallShiftedHom.equiv
@@ -116,10 +116,11 @@ theorem restrictToComplement_forgetSupport (Z : Set (ComplexPoint X)) (n : ℤ)
 /-- Exactness in the middle: a rational class restricting to zero on the complement of `Z` comes
 from rational cohomology with support in `Z`. -/
 theorem exists_forgetSupport_eq_of_restrictToComplement_eq_zero
-    (Z : Set (ComplexPoint X)) (n : ℤ) (α : FieldCohomology ℚ X n)
+    (Z : Set (ComplexPoint X)) (n : ℤ)
+    (α : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n)
     (hα : restrictToComplement X Z n α = 0) :
     ∃ β : RationalCohomologyWithSupport X Z n, forgetSupport X Z n β = α := by
-  let eTarget : FieldCohomology ℚ X n ≃
+  let eTarget : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n ≃
       ShiftedHom
         (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
         (DerivedCategory.Q.obj (constantFieldSheafComplexInt ℚ X)) n :=

@@ -8,7 +8,7 @@ as the original scoping note.
 
 This scopes the remaining *topological* obligation for the unconditional rational Lefschetz
 `(1, 1)` theorem (see [LEFSCHETZ_HANDOFF.md](LEFSCHETZ_HANDOFF.md)). It is independent of the
-GAGA obligation ([GAGA_HANDOFF.md](GAGA_HANDOFF.md)) and of the divisor/cycle-class comparison.
+GAGA obligation ([PR41 GAGA handoff](https://github.com/Paul-Lez/HodgeConjecture/pull/41)) and of the divisor/cycle-class comparison.
 
 ## The exact target
 

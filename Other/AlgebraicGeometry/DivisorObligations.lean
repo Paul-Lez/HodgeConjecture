@@ -71,7 +71,7 @@ def HasDivisorClassOfSomeCartierData : Prop :=
     TauCeti.SheafOfModules.IsInvertible L →
     ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules) →
     ∃ c : Scheme.CartierData X.left, c.Represents L ∧
-      sheafCycleClassOnCycles (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1 c.divisor =
+      sheafCycleClassOnCycles { scheme := X.left, structureMap := X.hom } 1 c.divisor =
         integralToRationalCohomology X 2 E.firstChernClass
 
 /-- The uniform form of the same comparison: *every* Cartier datum representing an algebraic
@@ -87,7 +87,7 @@ def HasDivisorClassOfCartierData : Prop :=
     TauCeti.SheafOfModules.IsInvertible L →
     ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules) →
     ∀ c : Scheme.CartierData X.left, c.Represents L →
-      sheafCycleClassOnCycles (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1 c.divisor =
+      sheafCycleClassOnCycles { scheme := X.left, structureMap := X.hom } 1 c.divisor =
         integralToRationalCohomology X 2 E.firstChernClass
 
 /-- The uniform comparison implies the existential one, the Cartier data being supplied by

@@ -286,7 +286,7 @@ generic charts and shrinkings, and apply the existing uniform assembly.
 
 This document scopes the third of the three remaining obligations for the unconditional
 rational Lefschetz `(1, 1)` theorem (see [LEFSCHETZ_HANDOFF.md](LEFSCHETZ_HANDOFF.md); the
-second is scoped in [GAGA_HANDOFF.md](GAGA_HANDOFF.md)). Nothing here depends on the other two
+second is scoped in [PR41 GAGA handoff](https://github.com/Paul-Lez/HodgeConjecture/pull/41)). Nothing here depends on the other two
 obligations.
 
 The algebraic half is **proved**: every invertible sheaf of modules on `X.left` is represented by
@@ -2364,7 +2364,7 @@ Summary of the named obligations, in dependency order:
   used by `TauCeti.SheafOfModules.IsInvertible` is `SheafOfModules.over`,
   `SheafOfModules.evaluation`, and `(M.over U).val.obj (op W) = M.val.obj (op W.left)` holds by
   `rfl`.
-* Analytic side: see [GAGA_HANDOFF.md](GAGA_HANDOFF.md) §"The objects involved" for
+* Analytic side: see [PR41 GAGA handoff](https://github.com/Paul-Lez/HodgeConjecture/pull/41) §"The objects involved" for
   `ComplexPoint`, `holomorphicFunctionSheaf`, `moduleAnalytification` and the charts.
 
 ## 6. Verification

@@ -48,7 +48,7 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 | `Other/AlgebraicGeometry/HolomorphicLineBundleCoordinates.lean`, `HolomorphicLineBundleInvertible.lean` | Local coordinate isomorphisms; `E.sectionSheafOfModules_isInvertible`. |
 | `Other/AlgebraicGeometry/RegularFunctionsHolomorphic.lean` | `regularToHolomorphicSheaf`, the structure-sheaf map over `underlyingContinuousMap`. |
 | `Other/AlgebraicGeometry/AnalytificationModules.lean` | `moduleAnalytification`, its adjunction and `moduleAnalytificationUnitIso`. |
-| `Other/AlgebraicGeometry/HolomorphicLocallyRingedSpace.lean` | Holomorphic stalks are local; `analytificationToAlgebraic`. |
+| [PR41 GAGA work](https://github.com/Paul-Lez/HodgeConjecture/pull/41) | Holomorphic stalks are local; `analytificationToAlgebraic`. |
 | `Other/LinearAlgebra/RationalDenominators.lean`, `Other/Algebra/Homology/RationalCochainDenominators.lean` | Denominator clearing for finitely generated abelian groups and for homology. |
 | `Other/AlgebraicGeometry/LefschetzOneOneReduction.lean` | The remaining obligations as explicit propositions, and `RationalLefschetzOneOne.of_obligations`. |
 
@@ -96,7 +96,7 @@ states, for a single smooth projective integral complex variety `X`:
    form `AnalyticLineBundlesAlgebraize X` (every invertible analytic sheaf is the
    analytification of an invertible algebraic one) implies it by
    `hasAlgebraicModel_of_analyticLineBundlesAlgebraize`. This obligation is scoped for
-   independent work in [GAGA_HANDOFF.md](GAGA_HANDOFF.md).
+   independent work in [PR41 GAGA handoff](https://github.com/Paul-Lez/HodgeConjecture/pull/41).
 3. `HasDivisorOfAlgebraicModel X`: such an `L` is represented by `D : CodimensionCycle X.left 1`
    with `sheafCycleClassOnCycles (ofOver X) 1 D = integralToRationalCohomology X 2
    E.firstChernClass`. Since `D` is existential, sign and `2πi` normalisation conventions do not

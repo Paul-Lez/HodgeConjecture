@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ChowGroup
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
+public import Other.AlgebraicGeometry.Cycle.Codimension
+public import Other.AlgebraicGeometry.OrderOfVanishing
 
 /-!
 # Divisors of rational functions and of Cartier data
 
 This file constructs the Weil divisor attached to local rational-function data on an integral
-Noetherian scheme, as an element of `CodimensionCycle S 1`.
+Noetherian scheme, as an element of `codimensionCycleSubgroup S 1`.
 
 * `Scheme.principalCodimensionOneDivisor S f` is the divisor of a rational function `f`. Its
   local finiteness comes from `Scheme.ord_locallyFiniteSupport` and its purity from the fact
@@ -38,7 +38,7 @@ namespace AlgebraicGeometry
 /-- The divisor of a rational function on an integral Noetherian scheme, as a codimension-one
 cycle. The zero function gives the zero cycle. -/
 def Scheme.principalCodimensionOneDivisor (S : Scheme.{u}) [IsIntegral S] [IsNoetherian S]
-    (f : S.functionField) : CodimensionCycle S 1 :=
+    (f : S.functionField) : codimensionCycleSubgroup S 1 :=
   ⟨{ toFun := S.ord f
      supportWithinDomain' := by simp
      supportLocallyFiniteWithinDomain' := by
@@ -115,7 +115,7 @@ lemma ordFun_eq_zero_of_coheight_ne_one {x : S} (hx : coheight x ≠ 1) : c.ordF
   Scheme.ord_eq_zero_of_coheight_neq_one hx _
 
 /-- The Weil divisor of the local data, as a codimension-one cycle. -/
-def divisor : CodimensionCycle S 1 :=
+def divisor : codimensionCycleSubgroup S 1 :=
   ⟨{ toFun := c.ordFun
      supportWithinDomain' := by simp
      supportLocallyFiniteWithinDomain' := by
@@ -152,7 +152,7 @@ def ofFunctionField (f : S.functionField) (hf : f ≠ 0) : S.CartierData where
 @[simp]
 lemma ofFunctionField_divisor (f : S.functionField) (hf : f ≠ 0) :
     (ofFunctionField f hf).divisor = S.principalCodimensionOneDivisor f := by
-  refine CodimensionCycle.ext fun x ↦ ?_
+  refine codimensionCycleSubgroup.ext fun x ↦ ?_
   change (ofFunctionField f hf).ordFun x = S.ord f x
   exact (ofFunctionField f hf).ordFun_eq PUnit.unit x trivial
 

@@ -193,7 +193,7 @@ theorem cartierData_represents : (t.cartierData).Represents L :=
   ⟨t.gen, t.gen_generates, fun i j u hu hue ↦ t.germToFunctionField_mul_fn i j u hu hue⟩
 
 /-- The divisor of a rational section of a sheaf with a trivializing cover. -/
-def divisor : CodimensionCycle S 1 := t.cartierData.divisor
+def divisor : codimensionCycleSubgroup S 1 := t.cartierData.divisor
 
 /-- Every sheaf of modules with a trivializing cover is represented by Cartier data. -/
 theorem exists_cartierData_represents (t : TrivializingCover L) :

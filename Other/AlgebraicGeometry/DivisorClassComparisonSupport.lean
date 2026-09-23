@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.SheafCycleClass
+public import Other.AlgebraicGeometry.Cycle.SheafClass
 public import Other.AlgebraicGeometry.DivisorObligations
 public import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 
@@ -227,38 +227,38 @@ theorem exists_componentContribution_sum_singleton (x : X.left) (n : ℤ)
 /-! ### Components of a codimension-one cycle -/
 
 /-- The finite set of components of a codimension-one cycle on the projective variety `X.left`. -/
-def cycleComponents (D : CodimensionCycle X.left 1) : Finset X.left :=
+def cycleComponents (D : codimensionCycleSubgroup X.left 1) : Finset X.left :=
   (compactCycleToFinsupp D.1).support
 
 omit [IsIntegral X.left] [Smooth X.hom] in
 /-- Membership in the component set is nonvanishing of the multiplicity. -/
-theorem mem_cycleComponents_iff (D : CodimensionCycle X.left 1) (x : X.left) :
+theorem mem_cycleComponents_iff (D : codimensionCycleSubgroup X.left 1) (x : X.left) :
     x ∈ cycleComponents X D ↔ D.1 x ≠ 0 := by
   rw [cycleComponents, Finsupp.mem_support_iff]
   exact Iff.rfl
 
 omit [IsIntegral X.left] [Smooth X.hom] in
 /-- Every component of a codimension-one cycle has coheight one. -/
-theorem coheight_of_mem_cycleComponents {D : CodimensionCycle X.left 1} {x : X.left}
+theorem coheight_of_mem_cycleComponents {D : codimensionCycleSubgroup X.left 1} {x : X.left}
     (hx : x ∈ cycleComponents X D) : coheight x = ((1 : ℕ) : ℕ∞) :=
   D.2 x ((mem_cycleComponents_iff X D x).mp hx)
 
 /-- The analytic support `|D|^an` of a codimension-one cycle. -/
-abbrev cycleAnalyticClosedSupport (D : CodimensionCycle X.left 1) : Closeds (ComplexPoint X) :=
+abbrev cycleAnalyticClosedSupport (D : codimensionCycleSubgroup X.left 1) : Closeds (ComplexPoint X) :=
   componentsAnalyticClosedSupport X (cycleComponents X D)
 
 /-- The constructed cycle class of a codimension-one cycle is the explicit finite sum of its
 component classes with their exact integer multiplicities. -/
-theorem sheafCycleClassOnCycles_eq_sum (D : CodimensionCycle X.left 1) :
-    sheafCycleClassOnCycles (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1 D =
+theorem sheafCycleClassOnCycles_eq_sum (D : codimensionCycleSubgroup X.left 1) :
+    sheafCycleClassOnCycles { scheme := X.left, structureMap := X.hom } 1 D =
       ∑ x ∈ cycleComponents X D, D.1 x •
         (if hx : coheight x = ((1 : ℕ) : ℕ∞) then
-            cycleComponentSheafClass X x (d := dim X.left) hx
+          cycleComponentSheafClass X x hx
           else 0) := by
-  rw [show sheafCycleClassOnCycles (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1 D =
+  rw [show sheafCycleClassOnCycles { scheme := X.left, structureMap := X.hom } 1 D =
       (compactCycleToFinsupp D.1).sum fun x n ↦
         n • if hx : coheight x = ((1 : ℕ) : ℕ∞) then
-            cycleComponentSheafClass X x (d := dim X.left) hx else 0 from rfl]
+            cycleComponentSheafClass X x hx else 0 from rfl]
   rfl
 
 end AlgebraicGeometry.ComplexPoint

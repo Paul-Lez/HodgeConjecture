@@ -11,7 +11,7 @@ public import HodgeConjecture.Statement
 
 On a smooth projective integral complex variety, every rational cohomology class of degree two
 and Hodge type `(1, 1)` is the class of a rational divisor. Here a rational divisor is an element
-of `ℚ ⊗[ℤ] CodimensionCycle X 1`, and its class is given by the constructed cycle-class map.
+of `ℚ ⊗[ℤ] codimensionCycleSubgroup X 1`, and its class is given by the constructed cycle-class map.
 
 The proof specializes `HodgeConjecture` to codimension one and realizes the resulting span
 membership by a rational cycle. It uses the conjecture as an explicit hypothesis.
@@ -36,11 +36,11 @@ open CategoryTheory AlgebraicGeometry ComplexPoint
 every rational Hodge class in degree two is the class of a rational divisor. -/
 @[expose] public def RationalLefschetzOneOne : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (α : FieldCohomology ℚ X 2),
+    [IsProjective X.hom] (α : H^2(X; ℚ)),
     α ∈ Hdg^1(ℚ; X) →
-      ∃ D : TensorProduct ℤ ℚ (CodimensionCycle X.left 1),
+      ∃ D : TensorProduct ℤ ℚ (codimensionCycleSubgroup X.left 1),
         rationalSheafCycleClassOnCycles
-          (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1 D = α
+          { scheme := X.left, structureMap := X.hom } 1 D = α
 
 /-- The Hodge conjecture implies the rational Lefschetz `(1, 1)` theorem. -/
 public theorem HodgeConjecture.rationalLefschetzOneOne
@@ -60,12 +60,12 @@ public theorem HodgeConjecture.rationalLefschetzOneOne_direct :
   intro hodge X _ _ _ α hα
   have hspan : algebraicCycleClassSpan X 1 ≤
       LinearMap.range (rationalSheafCycleClassOnCycles
-        (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1) := by
+        { scheme := X.left, structureMap := X.hom } 1) := by
     refine iSup_le fun x ↦ iSup_le fun hx ↦ ?_
     apply (Submodule.span_singleton_le_iff_mem _ _).mpr
-    refine ⟨1 ⊗ₜ[ℤ] CodimensionCycle.single x hx 1, ?_⟩
+    refine ⟨1 ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1, ?_⟩
     refine (rationalSheafCycleClassOnCycles_tmul_single
-      (DimensionedSmoothProjectiveComplexVariety.ofOver X) 1 1 x hx).trans ?_
+      { scheme := X.left, structureMap := X.hom } 1 1 x hx).trans ?_
     rw [one_smul]
     rfl
   exact hspan (hodge X 1 hα)
