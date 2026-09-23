@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
+public import Other.AlgebraicTopology.SupportedSingularOrdinaryComparison
 
 /-! # Literal top-open normalization of relative cochain classes -/
 
@@ -80,11 +80,11 @@ theorem globalRawCochainIntIso_comp_topOpenDual (U : Opens X) :
   let f := (relativeDualCochainShortComplexNatMap R (topOpenIntersectionPairIso X U).hom).τ₂
   change (HomologicalComplex.extendMap (globalRawSingularCochainComplexIsoSingular R X).hom
       ComplexShape.embeddingUpNat ≫
-    (HomologicalComplex.mapExtendIso F (SingularChainComplex R X).linearDualCochainComplex
+    (HomologicalComplex.mapExtendCanonicalIso F (SingularChainComplex R X).linearDualCochainComplex
       ComplexShape.embeddingUpNat).inv) ≫
       (F.mapHomologicalComplex (.up ℤ)).map (HomologicalComplex.extendMap f
         ComplexShape.embeddingUpNat) = _
-  rw [Category.assoc, ← HomologicalComplex.mapExtendIso_inv_naturality,
+  rw [Category.assoc, ← HomologicalComplex.mapExtendCanonicalIso_inv_naturality,
     ← Category.assoc, ← HomologicalComplex.extendMap_comp]
   rw [globalRawCochainIso_comp_topOpenDual]
   rfl

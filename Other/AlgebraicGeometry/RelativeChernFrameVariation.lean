@@ -39,7 +39,7 @@ lemma hypercohomologyEquiv_sub (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ
   exact e.map_sub a b
 /-- A morphism from the integer constant sheaf is determined by its value on one. -/
 lemma constantIntegerMorphism_eq_constHomOfSection
-    (F : AnalyticAdditiveSheaf X) (s : constantIntegerSheaf X ⟶ F) :
+    (F : AnalyticAdditiveSheaf X) (s : 𝓒(↧(ComplexPoint X); ℤ) ⟶ F) :
     s = TopCat.Sheaf.constHomOfSection F
       (s.hom.app (op ⊤) HolomorphicUnitExtension.integerOneSection) := by
   have h := TopCat.Sheaf.constHomOfSection_comp
@@ -51,7 +51,7 @@ lemma constantIntegerMorphism_eq_constHomOfSection
 then reconstructing the constant morphism returns the original morphism. -/
 lemma restrictedIntegerMorphism_eq_constHomOfSection
     (Ω : Opens (TopCat.of (ComplexPoint X))) (F : AnalyticAdditiveSheaf X)
-    (s : constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj F) :
+    (s : 𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj F) :
     s = TopCat.Sheaf.constHomOfSection ((openRestrictionFunctor Ω).obj F)
       ((openRestrictionTopEval Ω).inv.app F
         ((openRestrictionTopEval Ω).hom.app F
@@ -65,7 +65,7 @@ variable {d : ℕ} [SmoothOfRelativeDimension d X.hom]
   (E : HolomorphicUnitExtension X d) (Ω : Opens (TopCat.of (ComplexPoint X)))
   (ℓ : E.middle.obj.obj (op Ω))
   (hℓ : E.projection.hom.app (op Ω) ℓ =
-    (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
       HolomorphicUnitExtension.integerOneSection)
 
 /-- The existing relative Chern class under the actual derived-category comparison. -/
@@ -73,7 +73,7 @@ lemma HolomorphicUnitExtension.relativeChernClass_equiv
     (cmp : RelativeChernComparison X d Ω) :
     SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
       (E.relativeChernClass Ω ℓ hℓ cmp) =
-    DerivedCategory.Q.map (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).hom ≫
+    DerivedCategory.Q.map (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).hom ≫
       (isoOfHom DerivedCategory.Q (analyticQuasiIsomorphisms X) E.coneToInteger
         (by change QuasiIso _; exact E.quasiIso_coneToInteger)).inv ≫
       DerivedCategory.Q.map (E.relativeConeMap Ω ℓ hℓ) ≫
@@ -87,16 +87,17 @@ lemma HolomorphicUnitExtension.relativeChernClass_equiv
 
 variable (ℓ₁ ℓ₂ : E.middle.obj.obj (op Ω))
   (hℓ₁ : E.projection.hom.app (op Ω) ℓ₁ =
-    (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
       HolomorphicUnitExtension.integerOneSection)
   (hℓ₂ : E.projection.hom.app (op Ω) ℓ₂ =
-    (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
       HolomorphicUnitExtension.integerOneSection)
 
+set_option maxHeartbeats 2000000 in
 /-- The literal difference of cone maps determines the difference of relative Chern classes. -/
 lemma HolomorphicUnitExtension.relativeChernClass_sub_of_cone_difference
     (cmp : RelativeChernComparison X d Ω)
-    (s : constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d))
+    (s : 𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d))
     (hs : E.relativeConeMap Ω ℓ₂ hℓ₂ - E.relativeConeMap Ω ℓ₁ hℓ₁ =
       E.coneToInteger ≫ (analyticSingleFunctor X).map s ≫
         CochainComplex.mappingCone.inr
@@ -117,7 +118,7 @@ lemma HolomorphicUnitExtension.relativeChernClass_sub_of_cone_difference
   simp only [CategoryTheory.Functor.map_comp, Category.assoc]
   let e := isoOfHom DerivedCategory.Q (analyticQuasiIsomorphisms X) E.coneToInteger
     (by change QuasiIso _; exact E.quasiIso_coneToInteger)
-  change DerivedCategory.Q.map (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).hom ≫
+  change DerivedCategory.Q.map (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).hom ≫
     e.inv ≫ e.hom ≫ _ = _
   rw [Iso.inv_hom_id_assoc]
   rfl
@@ -126,7 +127,7 @@ variable [IsIntegral X.left] [Smooth X.hom]
 /-- A frame change is the actual singular boundary of the quotient integer-input morphism. -/
 lemma HolomorphicUnitExtension.exists_relativeChernClass_sub_eq_singular_boundary
     (cmp : RelativeChernComparison X d Ω) :
-    ∃ s : constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d),
+    ∃ s : 𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d),
       s ≫ (openRestrictionFunctor Ω).map E.inclusion = E.liftHom Ω ℓ₁ - E.liftHom Ω ℓ₂ ∧
       E.relativeChernClass Ω ℓ₂ hℓ₂ cmp - E.relativeChernClass Ω ℓ₁ hℓ₁ cmp =
         hypercohomologyMap X

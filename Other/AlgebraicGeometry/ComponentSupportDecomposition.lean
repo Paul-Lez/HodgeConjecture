@@ -178,7 +178,7 @@ cohomology vanishes below the real codimension, so in fact all degrees `< 4` van
 three is used here, through the connecting map of the Mayer–Vietoris sequence. -/
 def HasCodimensionTwoSupportedVanishing : Prop :=
   ∀ W : Closeds X.left, (∀ z ∈ W, (2 : ℕ∞) ≤ coheight z) →
-    IsZero (SupportedInjectiveHomology X (analyticClosedSupport X W) (2 * ((1 : ℕ) : ℤ) + 1))
+    IsZero (SupportedInjectiveHomology X (analyticClosedSupport X W) (3 : ℤ))
 
 /-! ### Excision in codimension one -/
 
@@ -201,7 +201,7 @@ theorem hasComponentSupportDecomposition (hvan : HasCodimensionTwoSupportedVanis
       refine ⟨fun _ => 0, ?_⟩
       rw [Finset.sum_empty]
       have hz : IsZero (SupportedInjectiveHomology X
-          (componentsAnalyticClosedSupport X (∅ : Finset X.left)) (2 * ((1 : ℕ) : ℤ))) := by
+          (componentsAnalyticClosedSupport X (∅ : Finset X.left)) (2 : ℤ)) := by
         rw [show componentsAnalyticClosedSupport X (∅ : Finset X.left) = ⊥ from Finset.sup_empty]
         exact isZero_supportedInjectiveHomology_bot X _
       simpa using ConcreteCategory.congr_hom (hz.eq_of_src (𝟙 _) 0) β
@@ -246,7 +246,7 @@ theorem hasComponentSupportDecomposition (hvan : HasCodimensionTwoSupportedVanis
         · exact Or.inl hz₁
       have hvanZ : IsZero (SupportedInjectiveHomology X
           (cycleComponentAnalyticClosedSupport X a ⊓ componentsAnalyticClosedSupport X t)
-          (2 * ((1 : ℕ) : ℤ) + 1)) := by
+          (3 : ℤ)) := by
         have hW : analyticClosedSupport X
             (⟨closure {a}, isClosed_closure⟩ ⊓ componentsZariskiSupport X t) =
             cycleComponentAnalyticClosedSupport X a ⊓ componentsAnalyticClosedSupport X t := by
@@ -264,8 +264,8 @@ theorem hasComponentSupportDecomposition (hvan : HasCodimensionTwoSupportedVanis
         (componentsAnalyticClosedSupport X (insert a t)).compl
         (cycleComponentAnalyticClosedSupport X a ⊓ componentsAnalyticClosedSupport X t).compl
         h₁ h₂ hmeet h₁' h₂' hcover (ambientRationalInjectiveComplex X)
-        (fun j => TopCat.Sheaf.injective_isFlasque _ _) (2 * ((1 : ℕ) : ℤ))
-        (2 * ((1 : ℕ) : ℤ) + 1) rfl hvanZ β
+        (fun j => TopCat.Sheaf.injective_isFlasque _ _) (2 : ℤ)
+        (3 : ℤ) rfl hvanZ β
       obtain ⟨γ', hγ'⟩ := ih hco' α₂
       refine ⟨Function.update γ' a α₁, ?_⟩
       rw [Finset.sum_insert ha]
@@ -274,18 +274,18 @@ theorem hasComponentSupportDecomposition (hvan : HasCodimensionTwoSupportedVanis
         intro x hx
         have hne : x ≠ a := by rintro rfl; exact ha hx
         exact Function.update_of_ne hne _ _
-      have key₁ : componentContribution X (insert a t) a (2 * ((1 : ℕ) : ℤ)) α₁ =
-          enlargeSupportedInjectiveHomology X hle₁ (2 * ((1 : ℕ) : ℤ)) α₁ :=
+      have key₁ : componentContribution X (insert a t) a (2 : ℤ) α₁ =
+          enlargeSupportedInjectiveHomology X hle₁ (2 : ℤ) α₁ :=
         componentContribution_of_mem X (Finset.mem_insert_self a t) _ α₁
-      have key₂ : ∀ x ∈ t, componentContribution X (insert a t) x (2 * ((1 : ℕ) : ℤ))
+      have key₂ : ∀ x ∈ t, componentContribution X (insert a t) x (2 : ℤ)
             (Function.update γ' a α₁ x) =
-          enlargeSupportedInjectiveHomology X hle₂ (2 * ((1 : ℕ) : ℤ))
-            (componentContribution X t x (2 * ((1 : ℕ) : ℤ)) (γ' x)) := by
+          enlargeSupportedInjectiveHomology X hle₂ (2 : ℤ)
+            (componentContribution X t x (2 : ℤ) (γ' x)) := by
         intro x hx
         rw [hupd x hx, componentContribution_of_mem X (Finset.mem_insert_of_mem hx),
           componentContribution_of_mem X hx]
         exact (TopCat.Sheaf.supportedSectionsEnlarge_comp (TopCat.of (ComplexPoint X))
-          (ambientRationalInjectiveComplex X) _ _ (2 * ((1 : ℕ) : ℤ)) (γ' x)).symm
+          (ambientRationalInjectiveComplex X) _ _ (2 : ℤ) (γ' x)).symm
       rw [Finset.sum_congr rfl key₂, hupd_a, key₁, ← map_sum, ← hγ']
       exact hsum
 

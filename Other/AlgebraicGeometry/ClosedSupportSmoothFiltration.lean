@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.CycleComponentSingularClosedFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SingularClosedFiltration
 
 /-!
 # The canonical smooth filtration of an arbitrary closed subset of the ambient variety

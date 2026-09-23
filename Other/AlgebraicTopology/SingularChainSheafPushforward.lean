@@ -17,6 +17,7 @@ module
 
 public import Other.AlgebraicTopology.Singular.Sheaf.Chain
 public import Other.AlgebraicTopology.Singular.Sheaf.ChainStalk
+public import Other.AlgebraicTopology.ClosedEmbeddingSheafification
 
 /-!
 # Closed-embedding pushforward on the actual relative singular-chain sheaves

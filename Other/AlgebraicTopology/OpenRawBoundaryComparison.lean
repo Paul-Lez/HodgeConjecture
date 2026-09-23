@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.SingularCochainOpenCone
+public import HodgeConjecture.Definitions.AlgebraicTopology.Singular.Sheaf.CochainOpenCone
 public import Other.AlgebraicTopology.RelativeCochainConeBoundaryComparison
-public import Other.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality
 
 /-!
 # Positive boundary normalization of raw open relative cohomology

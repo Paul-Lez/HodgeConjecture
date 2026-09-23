@@ -87,8 +87,8 @@ theorem hasDivisorOfUnitExtension_of_algebraicModel
 omit [IsProjective X.hom] in
 /-- Scaling by an integer preserves rational Hodge classes. -/
 theorem zsmul_mem_hodgeClasses {p : ℕ} (m : ℤ)
-    {α : H^(2 * p)(X; ℚ)} (hα : α ∈ Hdg^p(ℚ; X)) :
-    m • α ∈ Hdg^p(ℚ; X) := by
+    {α : H^(2 * p)(X; ℚ)} (hα : α ∈ Hdg^p(X; ℚ)) :
+    m • α ∈ Hdg^p(X; ℚ) := by
   rw [← Int.cast_smul_eq_zsmul ℚ]
   exact Submodule.smul_mem _ _ hα
 
@@ -97,12 +97,12 @@ set_option backward.isDefEq.respectTransparency false in
 of degree two on `X` is the class of a rational divisor. -/
 theorem exists_rationalSheafCycleClassOnCycles_eq_of_obligations
     (hclear : HasIntegralDenominatorClearing X) (hdivisor : HasDivisorOfUnitExtension X)
-    (α : H^2(X; ℚ)) (hα : α ∈ Hdg^1(ℚ; X)) :
+    (α : H^2(X; ℚ)) (hα : α ∈ Hdg^1(X; ℚ)) :
     ∃ D : TensorProduct ℤ ℚ (codimensionCycleSubgroup X.left 1),
       rationalSheafCycleClassOnCycles
         { scheme := X.left, structureMap := X.hom } 1 D = α := by
   obtain ⟨m, β, hm, hβ⟩ := hclear α
-  have hβHodge : integralToRationalCohomology X 2 β ∈ Hdg^1(ℚ; X) := by
+  have hβHodge : integralToRationalCohomology X 2 β ∈ Hdg^1(X; ℚ) := by
     rw [hβ]
     exact zsmul_mem_hodgeClasses X m hα
   obtain ⟨E, hE⟩ := exists_holomorphicUnitExtension_of_integral_hodgeClass X β hβHodge

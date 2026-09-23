@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
-public import Other.AlgebraicGeometry.HolomorphicLineBundleModule
+public import Other.AlgebraicGeometry.HolomorphicRingSheaf
 public import Mathlib.AlgebraicGeometry.Modules.Sheaf
 public import Mathlib.Algebra.Category.ModuleCat.Sheaf.PullbackFree
 

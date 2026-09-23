@@ -60,7 +60,7 @@ def HasComplementFrameOffCodimTwo : Prop :=
           (2 : ℕ∞) ≤ coheight z) ∧
         ∃ ℓ : E.middle.obj.obj (op ((analyticClosedSupport X Z').compl)),
           E.projection.hom.app (op ((analyticClosedSupport X Z').compl)) ℓ =
-            (constantIntegerSheaf X).obj.map (homOfLE le_top).op
+            (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE le_top).op
               HolomorphicUnitExtension.integerOneSection
 
 /-- The analytic support of the divisor lies in the analytic support of any Zariski-closed set
@@ -192,7 +192,7 @@ theorem exists_lift_of_goodLocus (E : HolomorphicUnitExtension X (dim X.left))
     (hΩ : ∀ z ∈ Ω, Point.underlying z ∈ goodLocus c) (hΩc : Ω ≤ divisorComplementOpen c) :
     ∃ ℓ : E.middle.obj.obj (op Ω),
       E.projection.hom.app (op Ω) ℓ =
-        (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
+        (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
           HolomorphicUnitExtension.integerOneSection := by
   obtain ⟨g, hg, hrep⟩ := hc
   let D : ∀ z : Ω, c.UnitDatum (Point.underlying (z : ComplexPoint X)) :=
@@ -217,10 +217,10 @@ theorem exists_lift_of_goodLocus (E : HolomorphicUnitExtension X (dim X.left))
     (fun z => sres E.middle (hWl z) (localLift g E e z (D z) hg)) hcompat
   refine ⟨ℓ, ?_⟩
   show E.projection.hom.app _ ℓ = integerOneRestrict X Ω
-  apply (constantIntegerSheaf X).eq_of_locally_eq' W Ω (fun z => homOfLE (hWΩ z)) hcover
+  apply (𝓒(↧(ComplexPoint X); ℤ)).eq_of_locally_eq' W Ω (fun z => homOfLE (hWΩ z)) hcover
   intro z
-  change sres (constantIntegerSheaf X) _ (E.projection.hom.app _ ℓ) =
-    sres (constantIntegerSheaf X) _ (integerOneRestrict X Ω)
+  change sres (𝓒(↧(ComplexPoint X); ℤ)) _ (E.projection.hom.app _ ℓ) =
+    sres (𝓒(↧(ComplexPoint X); ℤ)) _ (integerOneRestrict X Ω)
   rw [sres_hom, sres_integerOneRestrict]
   have h1 : sres E.middle (hWΩ z) ℓ = sres E.middle (hWl z) (localLift g E e z (D z) hg) := hℓ z
   rw [h1, ← sres_hom, projection_localLift, sres_integerOneRestrict]

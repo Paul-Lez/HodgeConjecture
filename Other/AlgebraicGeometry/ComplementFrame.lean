@@ -515,11 +515,11 @@ theorem hasComplementFrame_of_unitOffDivisor (hunit : HasUnitOffDivisor X) :
     (fun z w => localLift_compatible g E e z (D z) hg w (D w) hrep)
   refine ⟨ℓ, ?_⟩
   show E.projection.hom.app _ ℓ = integerOneRestrict X (divisorComplementOpen c)
-  apply (constantIntegerSheaf X).eq_of_locally_eq' W (divisorComplementOpen c)
+  apply (𝓒(↧(ComplexPoint X); ℤ)).eq_of_locally_eq' W (divisorComplementOpen c)
     (fun z => homOfLE (liftOpen_le_compl E z (D z))) hcover
   intro z
-  change sres (constantIntegerSheaf X) _ (E.projection.hom.app _ ℓ) =
-    sres (constantIntegerSheaf X) _ (integerOneRestrict X (divisorComplementOpen c))
+  change sres (𝓒(↧(ComplexPoint X); ℤ)) _ (E.projection.hom.app _ ℓ) =
+    sres (𝓒(↧(ComplexPoint X); ℤ)) _ (integerOneRestrict X (divisorComplementOpen c))
   rw [sres_hom, sres_integerOneRestrict]
   have h1 : sres E.middle (liftOpen_le_compl E z (D z)) ℓ = localLift g E e z (D z) hg := hℓ z
   rw [h1]

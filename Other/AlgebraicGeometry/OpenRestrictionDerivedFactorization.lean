@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.OpenRestrictionLocalSheaf
-public import Other.AlgebraicGeometry.BettiCohomologyWithSupportComparison
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportComparison
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
 
@@ -169,7 +169,7 @@ variable (Ω : Opens (TopCat.of (ComplexPoint X))) (Z : Set (ComplexPoint X))
 
 /-- The complement of `Z` mapped into an open set containing it. -/
 def complementToOpen (hZΩ : (Ω : Set (ComplexPoint X)) = Zᶜ) :
-    TopCat.of (AnalyticComplement X Z) ⟶ TopCat.of ↥Ω :=
+    TopCat.of ↥Zᶜ ⟶ TopCat.of ↥Ω :=
   TopCat.ofHom ⟨fun x => ⟨x.1, hZΩ.ge x.2⟩, Continuous.subtype_mk continuous_subtype_val _⟩
 
 /-- The inclusion of the complement of `Z` factors through an open set with complement `Z`. -/

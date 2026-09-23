@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.CycleComponentSheafClass
+public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.ClosedSupportCoheightDimension
-public import Other.AlgebraicTopology.CohomologySheafSectionRestriction
-public import Other.AlgebraicTopology.OpenRestrictedLowestCohomologyNormalization
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.CycleComponentDimension
+public import Other.AlgebraicTopology.Sheaf.CohomologySectionRestriction
+public import Other.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
+public import Other.AlgebraicGeometry.Cycle.Component.GenericPoint
 
 /-!
 # Restriction of the local relative-cohomology sheaf away from a small closed subset
@@ -258,7 +259,12 @@ theorem cycleComponentSupportComplement_le_smoothAmbientOpen_inf (B : Closeds X.
     (hB : (B : Set X.left) ⊆ closure ({x} : Set X.left)) :
     (cycleComponentAnalyticClosedSupport X x).compl ≤
       cycleComponentSmoothSupportAmbientOpen X x ⊓ (analyticClosedSupport X B).compl :=
-  le_inf (cycleComponentSupportComplement_le_smoothAmbientOpen X x)
+  le_inf (fun y hy hyS => by
+      apply hy
+      obtain ⟨z, _, hz⟩ := hyS
+      change y.underlying ∈ closure ({x} : Set X.left)
+      rw [← range_cycleComponentι X.left x]
+      exact ⟨z, hz⟩)
     (fun _ hy hyB => hy (hB hyB))
 
 /-! ### The injectivity -/
@@ -299,7 +305,7 @@ theorem sectionCohomologyToSheafSection_inf_isIso
     (fun j hj => TopCat.Sheaf.openRestriction_homology_isZero_of_cofinal_sections
       (TopCat.of (ComplexPoint X)) _ _ j
       (fun y hy V hyV => cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
-        X x (d := d) hx j (ne_of_lt hj) y hy.1 V hyV))
+        X x hx j (ne_of_lt hj) y hy.1 V hyV))
     (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
       (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl
         ((ambientRationalInjectiveComplex X).X j))]
@@ -315,7 +321,7 @@ theorem sectionCohomologyToSheafSection_smoothSupportAmbientOpen_isIso
     (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
     (cycleComponentSmoothSupportAmbientOpen X x) 0 (2 * (p : ℤ))
     (fun j hj => cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
-      X x (d := d) hx j (ne_of_lt hj))
+      X x hx j (ne_of_lt hj))
     (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
       (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl
         ((ambientRationalInjectiveComplex X).X j))]
@@ -335,7 +341,7 @@ theorem cycleComponentSupportHomologySheaf_map_inf_mono
       (TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) (.up ℤ)
         (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))
         (homOfLE (le_top : cycleComponentSmoothSupportAmbientOpen X x ≤ ⊤))) (2 * (p : ℤ))) :=
-    cycleComponentSupportSectionRestriction_homology_isIso X x (d := d) hx
+    cycleComponentSupportSectionRestriction_homology_isIso X x hx
   have h₂ := cycleComponentSupportSectionRestriction_inf_homologyMap_mono X x (d := d) hx B hB hxB
   have h₃ := TopCat.Sheaf.homologyMap_sectionComplexRestriction_mono_of_top
     (TopCat.of (ComplexPoint X))

@@ -5,7 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.ChernWindingNormalChartBoundary
-public import Other.AlgebraicTopology.NormalProjectionCoclass
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
+public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
 
 /-!
 # The winding number of the normal coordinate on a flattening chart
@@ -21,12 +22,12 @@ The proof is a chain of four transports, each of which is a lemma already in the
 `ChernWindingNormalChartBoundary.lean`:
 
 * `flattenedSupportNormalClass_eq_normalFiber` writes the local normal class as the image of
-  `standardComplexLocalClass 1` under `Ψ := normalSliceSection ≫ flattenedSupportPairIso.hom`;
+  `standardComplexLocalClass ℚ 1` under `Ψ := normalSliceSection ≫ flattenedSupportPairIso.hom`;
 * `relativeSingularBoundary_naturality` moves the connecting map `∂` across `Ψ`;
 * `normalFiber_comp_chartNormalProjection` identifies `Ψ ≫ chartNormalProjectionPair` with the
   recentred radial compression `centeredComplexEmbeddingPair 1 (univBall 0 r) … 0`, and
   `centeredComplexUnivBall_preserves_standardComplexLocalClass` says that compression fixes
-  `standardComplexLocalClass 1` — so the radial compression built into
+  `standardComplexLocalClass ℚ 1` — so the radial compression built into
   `flattenedSupportEmbedding` costs nothing;
 * `relativeSingularBoundary_standardComplexLocalClass` and
   `windingPeriod_standardPuncturedBoundaryClass` finish, with the sign `+1`.
@@ -35,6 +36,26 @@ The only hypothesis is `hcoord`: the given nowhere vanishing function *is* the n
 of the chart, i.e. `g w = (e w).2 0`, expressed through the repository's own
 `chartNormalProjectionPair`.
 -/
+
+
+
+private lemma piCoordCLE_one_re (z : Fin 1 → ℂ) :
+    (Complex.piCoordCLE 1 z) 0 = (z 0).re := by
+  simp only [Nat.reduceMul, Complex.piCoordCLE, Complex.piBasisOneI, Module.Basis.smulTower', Complex.basisOneI,
+    Fin.isValue, Complex.real_smul, Module.Basis.equivFunL_apply, Module.Basis.repr_reindex,
+    Equiv.coe_prodComm, Finsupp.mapDomain_equiv_apply]
+  rw [show finProdFinEquiv.symm 0 = Prod.swap (finProdFinEquiv.symm 0) by decide]
+  rw [Finsupp.mapDomain_apply Prod.swap_injective]
+  simp [Module.Basis.smulTower', Complex.basisOneI, show (finProdFinEquiv (m := 2) (n := 1)).symm 0 = (0, 0) by decide]
+
+private lemma piCoordCLE_one_im (z : Fin 1 → ℂ) :
+    (Complex.piCoordCLE 1 z) 1 = (z 0).im := by
+  simp only [Nat.reduceMul, Complex.piCoordCLE, Complex.piBasisOneI, Module.Basis.smulTower', Complex.basisOneI,
+    Fin.isValue, Complex.real_smul, Module.Basis.equivFunL_apply, Module.Basis.repr_reindex,
+    Equiv.coe_prodComm, Finsupp.mapDomain_equiv_apply]
+  rw [show finProdFinEquiv.symm 1 = Prod.swap (finProdFinEquiv.symm 1) by decide]
+  rw [Finsupp.mapDomain_apply Prod.swap_injective]
+  simp [Module.Basis.smulTower', Complex.basisOneI, show (finProdFinEquiv (m := 2) (n := 1)).symm 1 = (1, 0) by decide]
 
 @[expose] public noncomputable section
 
@@ -45,26 +66,37 @@ namespace ChernWinding
 /-! ### The coordinate on the standard complex punctured line -/
 
 /-- The single complex coordinate of the standard complex punctured line. -/
-def complexLineCoordinate : C((standardComplexPuncturedPair 1).snd, ℂ) :=
+def complexLineCoordinate : C((puncturedPair ℂ 1).snd, ℂ) :=
   ⟨fun z => Subtype.val z 0, (continuous_apply 0).comp continuous_subtype_val⟩
 
-theorem complexLineCoordinate_apply (z : (standardComplexPuncturedPair 1).snd) :
+theorem complexLineCoordinate_apply (z : (puncturedPair ℂ 1).snd) :
     complexLineCoordinate z = Subtype.val z 0 := rfl
 
-theorem complexLineCoordinate_ne_zero (z : (standardComplexPuncturedPair 1).snd) :
+theorem complexLineCoordinate_ne_zero (z : (puncturedPair ℂ 1).snd) :
     complexLineCoordinate z ≠ 0 := by
   intro h
   refine z.2 (funext fun j => ?_)
   obtain rfl : j = 0 := Subsingleton.elim _ _
   exact h
 
-theorem complexLineCoordinate_standardRealToComplex (v : (standardPuncturedPair 2).snd) :
-    complexLineCoordinate ((standardRealToComplexPair 1).left v) = complexCoordinate v := by
-  have h0 : finProdFinEquiv ((0 : Fin 1), (0 : Fin 2)) = (0 : Fin 2) := by decide
-  have h1 : finProdFinEquiv ((0 : Fin 1), (1 : Fin 2)) = (1 : Fin 2) := by decide
-  show realCoordinatesToComplex 1 (Subtype.val v) 0 = complexCoordinateFun (Subtype.val v)
-  rw [realCoordinatesToComplex, h0, h1]
-  apply Complex.ext <;> simp [complexCoordinateFun]
+theorem complexLineCoordinate_standardRealToComplex (v : (puncturedPair ℝ 2).snd) :
+    complexLineCoordinate (((standardComplexRealPairIso 1).inv).left v) = complexCoordinate v := by
+  show ((complexRealHomeomorph 1).symm (Subtype.val v)) 0 = complexCoordinateFun (Subtype.val v)
+  apply Complex.ext
+  · calc
+      (((complexRealHomeomorph 1).symm (Subtype.val v)) 0).re =
+          (Complex.piCoordCLE 1 ((complexRealHomeomorph 1).symm (Subtype.val v))) 0 :=
+            (piCoordCLE_one_re _).symm
+      _ = (Subtype.val v) 0 := by
+        simpa [complexRealHomeomorph] using congrFun ((complexRealHomeomorph 1).right_inv (Subtype.val v)) 0
+      _ = (complexCoordinateFun (Subtype.val v)).re := by simp [complexCoordinateFun]
+  · calc
+      (((complexRealHomeomorph 1).symm (Subtype.val v)) 0).im =
+          (Complex.piCoordCLE 1 ((complexRealHomeomorph 1).symm (Subtype.val v))) 1 :=
+            (piCoordCLE_one_im _).symm
+      _ = (Subtype.val v) 1 := by
+        simpa [complexRealHomeomorph] using congrFun ((complexRealHomeomorph 1).right_inv (Subtype.val v)) 1
+      _ = (complexCoordinateFun (Subtype.val v)).im := by simp [complexCoordinateFun]
 
 /-! ### The winding number of the normal coordinate -/
 
@@ -80,7 +112,7 @@ punctured line. -/
 abbrev flattenedNormalProjection :
     neighborhoodSupportComplementPair
       ((flattenedSupportNeighborhood E 1 e x hx : TopologicalSpace.Opens M) : Set M) S ⟶
-      standardComplexPuncturedPair 1 :=
+      puncturedPair ℂ 1 :=
   chartNormalProjectionPair E 1 e S hS (flattenedSupportNeighborhood E 1 e x hx)
     (flattenedSupportNeighborhood_subset_source E 1 e x hx)
 
@@ -97,7 +129,7 @@ theorem flattenedNormalClass_eq_normalFiber :
     flattenedNormalClass E e S hS x hx h0 =
       relativeHomologyMap ℚ (1 + 1)
         (normalSliceSection E 1 ≫ (flattenedSupportPairIso E 1 e x hx S hS h0).hom)
-        (standardComplexLocalClass 1) :=
+        (standardComplexLocalClass ℚ 1) :=
   flattenedSupportNormalClass_eq_normalFiber E 1 e S hS x hx h0
 
 /-- The normal slice section, followed by the normal projection, is the recentred radial
@@ -124,11 +156,11 @@ theorem windingPeriod_flattenedNormalClass
         ((relativeSingularBoundary (neighborhoodSupportComplementPair
           ((flattenedSupportNeighborhood E 1 e x hx : TopologicalSpace.Opens M) : Set M) S) 1).hom
           (flattenedNormalClass E e S hS x hx h0)) = 1 := by
-  set Ψ : standardComplexPuncturedPair 1 ⟶
+  set Ψ : puncturedPair ℂ 1 ⟶
       neighborhoodSupportComplementPair
       ((flattenedSupportNeighborhood E 1 e x hx : TopologicalSpace.Opens M) : Set M) S :=
     normalSliceSection E 1 ≫ (flattenedSupportPairIso E 1 e x hx S hS h0).hom with hΨ
-  set Θ : standardComplexPuncturedPair 1 ⟶ standardComplexPuncturedPair 1 :=
+  set Θ : puncturedPair ℂ 1 ⟶ puncturedPair ℂ 1 :=
     centeredComplexEmbeddingPair 1
       (OpenPartialHomeomorph.univBall (0 : Fin 1 → ℂ) (flattenedSupportRadius E 1 e x hx))
       (continuous_complexUnivBall 1 _ _) (injective_complexUnivBall 1 _ _) 0 with hΘ
@@ -145,22 +177,22 @@ theorem windingPeriod_flattenedNormalClass
     show complexLineCoordinate (Θ.left z) ≠ 0
     exact complexLineCoordinate_ne_zero _
   have hreal : ∀ v, (complexLineCoordinate.comp
-      (topMap (standardRealToComplexPair 1).left)) v ≠ 0 := by
+      (topMap ((standardComplexRealPairIso 1).inv).left)) v ≠ 0 := by
     intro v
-    show complexLineCoordinate ((standardRealToComplexPair 1).left v) ≠ 0
+    show complexLineCoordinate (((standardComplexRealPairIso 1).inv).left v) ≠ 0
     exact complexLineCoordinate_ne_zero _
   rw [flattenedNormalClass_eq_normalFiber E e S hS x hx h0, ← hΨ,
-    relativeSingularBoundary_relativeHomologyMap Ψ 1 (standardComplexLocalClass 1),
+    relativeSingularBoundary_relativeHomologyMap Ψ 1 (standardComplexLocalClass ℚ 1),
     ← homologyMap_eq_chainPairFunctor_left Ψ 1,
     ← windingPeriod_map g Ψ.left hg hgΨ,
     windingPeriod_congr hgΨ hΘne hfun,
     windingPeriod_map complexLineCoordinate Θ.left complexLineCoordinate_ne_zero hΘne,
     homologyMap_eq_chainPairFunctor_left Θ 1,
-    ← relativeSingularBoundary_relativeHomologyMap Θ 1 (standardComplexLocalClass 1),
+    ← relativeSingularBoundary_relativeHomologyMap Θ 1 (standardComplexLocalClass ℚ 1),
     centeredComplexUnivBall_preserves_standardComplexLocalClass 1 (0 : Fin 1 → ℂ)
       (flattenedSupportRadius E 1 e x hx) (flattenedSupportRadius_pos E 1 e x hx) 0,
     relativeSingularBoundary_standardComplexLocalClass,
-    ← windingPeriod_map complexLineCoordinate (standardRealToComplexPair 1).left
+    ← windingPeriod_map complexLineCoordinate ((standardComplexRealPairIso 1).inv).left
       complexLineCoordinate_ne_zero hreal,
     windingPeriod_congr hreal complexCoordinate_ne_zero
       (ContinuousMap.ext complexLineCoordinate_standardRealToComplex)]

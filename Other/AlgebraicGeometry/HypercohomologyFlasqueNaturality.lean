@@ -80,6 +80,7 @@ theorem hypercohomologyAddEquivGlobalSectionsOfResolution_map
   rw [← ConcreteCategory.comp_apply, IsIso.inv_hom_id]
   rfl
 
+set_option maxHeartbeats 800000 in
 /-- Naturality of the resolution comparison into any actual K-injective target.
 No compatibility of chosen resolutions is an input: a homotopy lift is constructed. -/
 theorem hypercohomologyAddEquivGlobalSectionsOfResolution_naturality_to_kInjective

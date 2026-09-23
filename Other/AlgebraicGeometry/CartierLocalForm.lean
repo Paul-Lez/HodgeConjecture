@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.DiscreteValuationLocalRing
 public import Other.AlgebraicGeometry.DivisorOfRationalSection
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Points
+public import Other.AlgebraicGeometry.ComplexPoint.Basic
 
 /-!
 # The algebraic local form of a Cartier local equation

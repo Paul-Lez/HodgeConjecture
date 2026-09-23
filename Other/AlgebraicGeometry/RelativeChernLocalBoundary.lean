@@ -33,11 +33,11 @@ variable (E : HolomorphicUnitExtension X d)
   {U V : Opens (TopCat.of (ComplexPoint X))} (h : V ≤ U)
   (ℓ : E.middle.obj.obj (op U))
   (hℓ : E.projection.hom.app (op U) ℓ =
-    (constantIntegerSheaf X).obj.map (homOfLE (le_top : U ≤ ⊤)).op
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : U ≤ ⊤)).op
       HolomorphicUnitExtension.integerOneSection)
   (ℓ₂ : E.middle.obj.obj (op V))
   (hℓ₂ : E.projection.hom.app (op V) ℓ₂ =
-    (constantIntegerSheaf X).obj.map (homOfLE (le_top : V ≤ ⊤)).op
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : V ≤ ⊤)).op
       HolomorphicUnitExtension.integerOneSection)
 
 include hℓ in

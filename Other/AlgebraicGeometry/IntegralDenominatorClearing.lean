@@ -6,8 +6,8 @@ module
 
 public import Other.AlgebraicGeometry.BettiScalarComparison
 public import Other.AlgebraicGeometry.LefschetzOneOneReduction
-public import Other.AlgebraicGeometry.ProjectiveAnalytificationHausdorff
-public import Other.AlgebraicGeometry.ProjectiveAnalytificationParacompact
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveHausdorff
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ProjectiveParacompact
 public import Other.AlgebraicTopology.IntegralSingularHomologyFinite
 public import Other.AlgebraicGeometry.BettiScalarNaturality
 public import Other.AlgebraicTopology.SimplicialCochainDenominators
@@ -60,7 +60,7 @@ open AlgebraicTopology.Singular in
 cochain complexes. -/
 lemma ordinarySingularCohomologyCoefficientChange_apply
     {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) (Y : TopCat.{0}) (n : ℕ)
-    (a : OrdinarySingularCohomology R Y n) :
+    (a : Cohomology R Y n) :
     ordinarySingularCohomologyCoefficientChange f Y n a =
       (ordinaryForgottenSingularCochainHomologyIso S Y n).hom
         (HomologicalComplex.homologyMap
@@ -78,7 +78,8 @@ theorem hasIntegralDenominatorClearing_of_hasFiniteSecondHomology
   intro α₀
   let Y := TopCat.of (ComplexPoint X)
   let : ∀ U : Opens (ComplexPoint X), ParacompactSpace U := openParacompactSpace X
-  let α : ScalarCohomology X ℚ ((2 : ℕ) : ℤ) := α₀
+  let α : ScalarCohomology X ℚ ((2 : ℕ) : ℤ) :=
+    (hypercohomologyAddEquivConstantCohomology ℚ X 2).symm α₀
   let Eℤ := scalarCohomologyAddEquivOrdinarySingularCohomology X ℤ 2
   let Eℚ := scalarCohomologyAddEquivOrdinarySingularCohomology X ℚ 2
   let Fℤ := (AlgebraicTopology.Singular.ordinaryForgottenSingularCochainHomologyIso ℤ Y 2)
@@ -95,11 +96,14 @@ theorem hasIntegralDenominatorClearing_of_hasFiniteSecondHomology
         (Int.castRingHom ℚ) Y) 2 β' = m • Fℚ.symm (Eℚ α) := hβ₀
   refine ⟨m, Eℤ.symm (Fℤ β'), hm, ?_⟩
   have h1 : integralToRationalCohomology X 2 (Eℤ.symm (Fℤ β')) =
-      hypercohomologyMap X (constantCoefficientSheafComplexIntMap X (Int.castRingHom ℚ))
-        ((2 : ℕ) : ℤ) (Eℤ.symm (Fℤ β')) := by
+      hypercohomologyAddEquivConstantCohomology ℚ X 2
+        (hypercohomologyMap X (constantCoefficientSheafComplexIntMap X (Int.castRingHom ℚ))
+          ((2 : ℕ) : ℤ) (Eℤ.symm (Fℤ β'))) := by
     rw [constantCoefficientSheafComplexIntMap_intCast]
     rfl
   rw [h1]
+  apply (hypercohomologyAddEquivConstantCohomology ℚ X 2).symm.injective
+  rw [AddEquiv.symm_apply_apply, map_zsmul]
   change hypercohomologyMap X (constantCoefficientSheafComplexIntMap X (Int.castRingHom ℚ))
     ((2 : ℕ) : ℤ) (Eℤ.symm (Fℤ β')) = m • α
   apply Eℚ.injective

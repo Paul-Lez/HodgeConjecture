@@ -9,7 +9,8 @@ public import Other.AlgebraicTopology.SingularExcisionScalar
 public import Mathlib.Algebra.Category.Grp.ZModuleEquivalence
 public import Mathlib.RingTheory.Finiteness.Basic
 
-import Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
+import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
+import Other.AlgebraicTopology.Singular.Sheaf.CochainSubdivision
 
 /-!
 # Finiteness of integral singular homology in the `ModuleCat ℤ` model

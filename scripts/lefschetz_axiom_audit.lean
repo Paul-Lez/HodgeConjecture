@@ -300,7 +300,7 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 
 -- Normalized raw representatives and the actual exponential/winding class equality.
 #print axioms HomologicalComplex.mapExtendCanonicalIso_inv_f
-#print axioms HomologicalComplex.mapExtendIso_hom_f
+#print axioms HomologicalComplex.mapExtendCanonicalIso_hom_f
 #print axioms AlgebraicTopology.Singular.openRawSingularCochainComplexIntIsoDual_inv_f
 #print axioms CategoryTheory.ShortComplex.homologyπ_mapHomologyIso_hom
 #print axioms ChernWinding.homologyπ_rationalWindingIntCocycle

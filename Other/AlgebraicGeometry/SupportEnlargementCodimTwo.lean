@@ -245,7 +245,7 @@ theorem enlargeSupportedInjectiveHomology_bijective_of_codimTwo
     (hcod : ∀ z ∈ Z', z ∉ Z → (2 : ℕ∞) ≤ coheight z) :
     Function.Bijective
       (enlargeSupportedInjectiveHomology X (analyticClosedSupport_le_of_le X hZZ')
-        (2 * ((1 : ℕ) : ℤ))) :=
+        (2 : ℤ)) :=
   enlargeSupportedInjectiveHomology_bijective_of_codimTwo' X Z Z' hZZ' hcod _ (by norm_num)
 
 /-- **Descending a class along a codimension-two enlargement.** Every degree-two class supported
@@ -253,12 +253,12 @@ on `Z'^an` is the enlargement of a class supported on `Z^an`, with the same ordi
 theorem exists_enlarge_eq_of_codimTwo
     (Z Z' : Closeds X.left) (hZZ' : Z ≤ Z')
     (hcod : ∀ z ∈ Z', z ∉ Z → (2 : ℕ∞) ≤ coheight z)
-    (β' : SupportedInjectiveHomology X (analyticClosedSupport X Z') (2 * ((1 : ℕ) : ℤ))) :
-    ∃ β : SupportedInjectiveHomology X (analyticClosedSupport X Z) (2 * ((1 : ℕ) : ℤ)),
+    (β' : SupportedInjectiveHomology X (analyticClosedSupport X Z') (2 : ℤ)) :
+    ∃ β : SupportedInjectiveHomology X (analyticClosedSupport X Z) (2 : ℤ),
       enlargeSupportedInjectiveHomology X (analyticClosedSupport_le_of_le X hZZ')
-          (2 * ((1 : ℕ) : ℤ)) β = β' ∧
-        supportedInjectiveToAmbient X (analyticClosedSupport X Z) (2 * ((1 : ℕ) : ℤ)) β =
-          supportedInjectiveToAmbient X (analyticClosedSupport X Z') (2 * ((1 : ℕ) : ℤ)) β' := by
+          (2 : ℤ) β = β' ∧
+        supportedInjectiveToAmbient X (analyticClosedSupport X Z) (2 : ℤ) β =
+          supportedInjectiveToAmbient X (analyticClosedSupport X Z') (2 : ℤ) β' := by
   obtain ⟨β, hβ⟩ :=
     (enlargeSupportedInjectiveHomology_bijective_of_codimTwo X Z Z' hZZ' hcod).2 β'
   exact ⟨β, hβ, by rw [← hβ, supportedInjectiveToAmbient_enlarge]⟩

@@ -218,7 +218,7 @@ def NormalizesCoclass (hx : coheight x = p) : Prop :=
   ch.winding ch.coord =
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x)
       (2 * p)).obj.map (homOfLE ch.le).op
-      (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)
+      (cycleComponentSmoothSupportCoclassSection X x hx)
 
 /-- **(a) Naturality.** The restriction to the chart of the supported class `a` is the winding
 class of the local equation of the bundle, namely of `u * h ^ n`. -/
@@ -240,7 +240,7 @@ theorem restrict_eq_zsmul_coclass (hx : coheight x = p) (n : ℤ)
         (2 * p)).obj.map (homOfLE ch.le).op a =
       (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X)) (cycleComponentSupport X x)
         (2 * p)).obj.map (homOfLE ch.le).op
-        (n • cycleComponentSmoothSupportCoclassSection X x (d := d) hx) := by
+        (n • cycleComponentSmoothSupportCoclassSection X x hx) := by
   obtain ⟨u, hu⟩ := ha
   rw [hu, map_add, hb u, zero_add, map_zsmul, hc, map_zsmul]
 
@@ -266,7 +266,7 @@ theorem computesClass_of_restrict_eq {q : ComplexPoint X}
         (cycleComponentSupport X x) (2 * p)).obj.map (homOfLE ch.le).op a =
       (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * p)).obj.map (homOfLE ch.le).op
-        (n • cycleComponentSmoothSupportCoclassSection X x (d := d) hx)) :
+        (n • cycleComponentSmoothSupportCoclassSection X x hx)) :
     ch.ComputesClass n a := by
   refine ⟨0, ?_⟩
   rw [map_add, hb 0, zero_add, map_zsmul, hc, ha, map_zsmul]
@@ -349,21 +349,21 @@ def HasChernWindingNaturality : Prop :=
     ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules) →
     ∀ c : Scheme.CartierData X.left, c.Represents L →
       ∃ β : SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor)
-          (2 * ((1 : ℕ) : ℤ)),
+          ((2 : ℤ)),
         supportedInjectiveToAmbient X (cycleAnalyticClosedSupport X c.divisor)
-            (2 * ((1 : ℕ) : ℤ)) β =
-          rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))
+            ((2 : ℤ)) β =
+          rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (1 : ℕ))
             (integralToRationalCohomology X 2 E.firstChernClass) ∧
         ∀ γ : ∀ x : X.left,
             SupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
-              (2 * ((1 : ℕ) : ℤ)),
+              ((2 : ℤ)),
           β = ∑ x ∈ cycleComponents X c.divisor,
-              componentContribution X (cycleComponents X c.divisor) x (2 * ((1 : ℕ) : ℤ)) (γ x) →
+              componentContribution X (cycleComponents X c.divisor) x ((2 : ℤ)) (γ x) →
           ∀ x ∈ cycleComponents X c.divisor, ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
           ∀ (q : ComplexPoint X) (ch : ChernWindingChart X c x (dim X.left) 1 q),
             ch.HasTrivialUnitWinding → ch.NormalizesCoclass hx →
             ch.ComputesClass (c.divisor x)
-              ((cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom (γ x))
+              ((cycleComponentSupportedClassNormalizationIso X x hx).hom (γ x))
 
 /-- Obligation (a) is no stronger than the target: if the local model holds, then its normalised
 lift makes every normalised winding chart compute the class. Together with

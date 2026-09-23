@@ -2,6 +2,14 @@
 
 ## Current implementation status (2026-09-23)
 
+Validation after the split: main `1b509d2` is merged, `lake build` passes (5233 jobs),
+and the comparison audit checks 275 distinct declarations with only `propext`,
+`Classical.choice`, and `Quot.sound`.
+
+The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
+The GAGA sources and their audit moved to [PR41](https://github.com/Paul-Lez/HodgeConjecture/pull/41),
+which is stacked on PR9. This split does not discharge either remaining chart obligation.
+
 The active target is the **uniform** divisor–Chern identity
 `HasDivisorClassOfCartierData X`: for every holomorphic-unit extension `E`, every
 invertible algebraic line bundle `L` identified with its analytic section sheaf,
@@ -242,8 +250,8 @@ The next required steps are concrete:
    assembly, build the umbrella target, audit axioms, and request the full
    completion review.
 
-The latest integrated verification at this point is `lake build Other` (5152
-jobs, passing) and `lake env lean scripts/lefschetz_axiom_audit.lean` (408 checked
+Before the split, the combined tip `0a3f040` passed `lake build Other` (5152
+jobs) and `lake env lean scripts/lefschetz_axiom_audit.lean` (408 checked
 declarations, no `sorryAx`). The latest bounded Sol xhigh reviews pass the local
 supported-singular normalization, raw/dual boundary and restriction comparisons,
 winding naturality, the fixed rational support-to-relative sign, the actual

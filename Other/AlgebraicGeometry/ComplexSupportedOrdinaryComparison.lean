@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
+public import Other.AlgebraicGeometry.BettiSupportedOrdinarySign
 
 /-! # Actual positive ordinary normalization of the ambient supported injective model -/
 
@@ -42,8 +43,7 @@ theorem complexOpenRawToSheafTop_eq_global :
         (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤)
         (singularCochainSheafComplex ℚ (TopCat.of (ComplexPoint X)))
         ComplexShape.embeddingUpNat).inv = globalRawToSingularSheafInt X := by
-  rw [openRawToSingularCochainSheafComplex_top,
-    HomologicalComplex.mapExtendCanonicalIso_eq_bettiMapExtendIso]
+  rw [openRawToSingularCochainSheafComplex_top]
   rfl
 
 variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
@@ -175,16 +175,16 @@ followed by its cone-defined support-forgetting map. -/
 theorem complexSupportInjectiveSectionCohomologyEquiv_inclusion_eq_neg_legacy
     (S : Closeds (ComplexPoint X)) (n : ℕ)
     (a : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) S n) :
-    (rationalCohomologyAddEquivAmbientInjectiveHomology X (n : ℤ)).symm
+    (rationalCohomologyAddEquivAmbientInjectiveHomology X n).symm
       (HomologicalComplex.homologyMap
         (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
           (TopCat.of (ComplexPoint X)) S.compl ⊤ (ambientRationalInjectiveComplex X)).f (n : ℤ)
         ((complexSupportInjectiveSectionCohomologyEquiv X S ⊤ n).symm
           (relativeCohomologyMap ℚ n
             (topOpenNeighborhoodSupportPairIso (TopCat.of (ComplexPoint X)) S).hom a))) =
-    -(forgetSupport X S (n : ℤ)
+    -(forgetSupport X S n
       ((rationalCohomologyWithSupportAddEquivSingular X S S.isClosed n).symm a)) := by
-  apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (n : ℤ)).injective
+  apply (rationalCohomologyAddEquivAmbientInjectiveHomology X n).injective
   rw [AddEquiv.apply_symm_apply, map_neg,
     complexSupportInjectiveSectionCohomologyEquiv_inclusion_positive,
     rationalCohomologyAmbient_forgetSupport_of_singular_signed X S S.isClosed,

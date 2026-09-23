@@ -33,7 +33,7 @@ variable (Ω : Opens (TopCat.of (ComplexPoint X)))
 restricted singular cocycle boundary, with positive sign before support transport. -/
 lemma RelativeChernComparison.boundary_eq_singular_on_section
     (cmp : RelativeChernComparison X d Ω)
-    (s : constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d)) :
+    (s : 𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d)) :
     (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
       ((constantIntegerSheafComplexIntIsoSingle X).hom ≫
         (analyticSingleFunctor X).map s ≫

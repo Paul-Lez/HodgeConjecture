@@ -92,23 +92,23 @@ def HasRelativeChernChartFormulaExists : Prop :=
         (hle : cycleAnalyticClosedSupport X c.divisor ≤ analyticClosedSupport X Z')
         (ℓ : E.middle.obj.obj (op ((analyticClosedSupport X Z').compl)))
         (hℓ : E.projection.hom.app (op ((analyticClosedSupport X Z').compl)) ℓ =
-          (constantIntegerSheaf X).obj.map
+          (𝓒(↧(ComplexPoint X); ℤ)).obj.map
             (homOfLE (le_top : (analyticClosedSupport X Z').compl ≤ ⊤)).op
             HolomorphicUnitExtension.integerOneSection)
         (cmp : RelativeChernComparison X (dim X.left) (analyticClosedSupport X Z').compl),
         ∀ β : SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor)
-            (2 * ((1 : ℕ) : ℤ)),
-          enlargeSupportedInjectiveHomology X hle (2 * ((1 : ℕ) : ℤ)) β =
+            (2 : ℤ),
+          enlargeSupportedInjectiveHomology X hle (2 : ℤ) β =
               relativeChernSupportedClassOnClosed (analyticClosedSupport X Z') E ℓ hℓ cmp →
             ∀ γ : ∀ x : X.left, SupportedInjectiveHomology X
-              (cycleComponentAnalyticClosedSupport X x) (2 * ((1 : ℕ) : ℤ)),
+              (cycleComponentAnalyticClosedSupport X x) (2 : ℤ),
             β = ∑ x ∈ cycleComponents X c.divisor,
-                componentContribution X (cycleComponents X c.divisor) x (2 * ((1 : ℕ) : ℤ)) (γ x) →
+                componentContribution X (cycleComponents X c.divisor) x (2 : ℤ) (γ x) →
             ∀ x ∈ cycleComponents X c.divisor, ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
             ∀ (q : ComplexPoint X) (ch : ChernWindingChart X c x (dim X.left) 1 q),
               ch.HasTrivialUnitWinding → ch.NormalizesCoclass hx →
               ch.ComputesClass (c.divisor x)
-                ((cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom (γ x))
+                ((cycleComponentSupportedClassNormalizationIso X x hx).hom (γ x))
 
 set_option maxHeartbeats 1000000 in
 /-- The existential form is implied by the universal one, so restating the obligation this way
@@ -147,7 +147,7 @@ theorem hasChernWindingNaturality_of_chartFormulaExists
     (analyticClosedSupport_componentsZariskiSupport X (cycleComponents X c.divisor)) rfl hle
     (relativeChernSupportedClassOnClosed (analyticClosedSupport X Z') E ℓ hℓ cmp)
   refine ⟨β, ?_, ?_⟩
-  · rw [← supportedInjectiveToAmbient_enlarge X hle (2 * ((1 : ℕ) : ℤ)) β, hβ]
+  · rw [← supportedInjectiveToAmbient_enlarge X hle (2 : ℤ) β, hβ]
     exact supportedInjectiveToAmbient_relativeChernSupportedClassOnClosed
       (analyticClosedSupport X Z') E ℓ hℓ cmp
   · intro γ hγ x hxs hx q ch hb hcn

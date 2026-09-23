@@ -5,6 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.ChernWindingNormalChartTransport
+public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
+public import Other.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 
 /-!
 # The glued coclass restricts to the normal-projection coclass of a flattening chart
@@ -350,7 +352,7 @@ structure FlatteningChartWithCoclass (q : ComplexPoint X) where
   coclass_restrict : ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * 1)).obj.map (homOfLE le).op
-        (cycleComponentSmoothSupportCoclassSection X x (d := d) hx) =
+        (cycleComponentSmoothSupportCoclassSection X x hx) =
       (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * 1)).app
         (op (flattenedSupportNeighborhood (Fin (d - 1) → ℂ) 1 chart q mem_source))
@@ -366,7 +368,10 @@ theorem exists_flatteningChartWithCoclass (hx : coheight x = ((1 : ℕ) : ℕ∞
     (q : ComplexPoint X) (hq : q ∈ cycleComponentSmoothSupportAmbientOpen X x)
     (hqS : q ∈ cycleComponentSupport X x) :
     Nonempty (FlatteningChartWithCoclass X x d q) := by
-  let := cycleComponentSmoothClosedLiftStructureMap_smoothOfRelativeDimension X x (d := d) hx
+  have hd : d = dim X.left := (SmoothOfRelativeDimension.dim_eq X.hom d).symm
+  subst d
+  letI : SmoothOfRelativeDimension (dim X.left - 1) (cycleComponentSmoothLocusOver X x).hom :=
+    cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
   have hq' : q ∈ (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x).functor.obj ⊤ := by
     rw [cycleComponentSmoothClosedLiftAmbientMap_imageOpen]
     exact hq
@@ -377,20 +382,22 @@ theorem exists_flatteningChartWithCoclass (hx : coheight x = ((1 : ℕ) : ℕ∞
   obtain ⟨z, rfl⟩ := hq'S
   obtain ⟨T⟩ := nonempty_transportedFlatteningChart_cast
     (cycleComponentSmoothLocusAmbientOpenOver X x) (cycleComponentSmoothLocusOver X x)
-    (cycleComponentSmoothLocusClosedLiftOver X x) (d - 1) d
+    (cycleComponentSmoothLocusClosedLiftOver X x) (dim X.left - 1) (dim X.left)
     (cycleComponentSmoothClosedLiftAmbientMap X x)
     (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x)
     (cycleComponentSupport X x) (cycleComponentSmoothClosedLiftAmbientMap_support X x)
     (cycleComponentSmoothSupportAmbientOpen X x)
     (cycleComponentSmoothClosedLiftAmbientMap_imageOpen X x) z 1
-    (cycleComponentSmoothClosedLift_codimension X x (d := d) hx)
+    (cycleComponentSmoothClosedLift_codimension X x hx)
   exact ⟨{
     chart := T.chart
     mem_source := T.mem_source
     flattens := T.flattens
     center := T.center
     le := T.le
-    coclass_restrict := fun _ => T.coclass_restrict }⟩
+    coclass_restrict := fun _ => by
+      simpa [cycleComponentSmoothSupportCoclassSection,
+        cycleComponentSmoothClosedLiftCoclassSection] using T.coclass_restrict }⟩
 
 namespace FlatteningChartWithCoclass
 

@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.ChernWindingHolomorphicLog
-public import Other.AlgebraicTopology.FlattenedSupportLocalHomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
 
 /-!
 # Holomorphic logarithms on a flattened-support neighbourhood

@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.HolomorphicExponentialSingularCochain
 public import Other.AlgebraicGeometry.ChernRelativeClass
-public import Other.AlgebraicGeometry.ComplexSingularComparison
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SingularComparison
 public import Other.Algebra.Homology.MappingConeCocycle
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
 
@@ -77,7 +77,7 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 /-- Integer constants as a zero-cocycle in the singular resolution. -/
 def integerSingularZeroCocycle :
-    Cocycle ((analyticSingleFunctor X).obj (constantIntegerSheaf X))
+    Cocycle ((analyticSingleFunctor X).obj (𝓒(↧(ComplexPoint X); ℤ)))
       (singularCochainSheafComplexInt X ℚ) 0 :=
   Cocycle.fromSingleMk
     (integerToFieldConstantSheaf ℚ X 1 ≫
@@ -156,21 +156,21 @@ set_option backward.isDefEq.respectTransparency.types false in
 /-- The integer cocycle is the standard rational singular augmentation, with its usual source identification. -/
 theorem integerSingularZeroCocycle_homOf :
     Cocycle.homOf (integerSingularZeroCocycle X) =
-      (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).inv ≫
-        integerToFieldConstantSheafComplexInt ℚ X 1 ≫ constantsToSingularCochainComplexInt X ℚ := by
+      (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv ≫
+        analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1) ≫ constantsToSingularCochainComplexInt X ℚ := by
   apply HomologicalComplex.from_single_hom_ext
   simp only [HomologicalComplex.comp_f]
   dsimp only [integerSingularZeroCocycle, Cocycle.homOf, Cocycle.fromSingleMk, Cocycle.mk]
   erw [Cochain.fromSingleMk_v]
   simp only [analyticSheafComplexIntIsoSingle, HomologicalComplex.extendSingleIso_inv_f]
-  rw [integerToFieldConstantSheafComplexInt, constantsToSingularCochainComplexInt]
+  rw [analyticSheafComplexIntMap, constantsToSingularCochainComplexInt]
   erw [HomologicalComplex.extendMap_f _ _ (i := 0) (i' := (0 : ℤ)) rfl,
     HomologicalComplex.extendMap_f _ _ (i := 0) (i' := (0 : ℤ)) rfl]
   simp [constantsToSingularCochainSheafComplex, singularCochainSheafTermIso,
     CochainComplex.single₀, HomologicalComplex.single_map_f_self,
     Category.assoc, CochainComplex.fromSingle₀Equiv_symm_apply_f_zero]
-  erw [Iso.inv_hom_id_assoc]
 
+set_option maxHeartbeats 1000000 in
 set_option backward.isDefEq.respectTransparency false in
 /-- Precomposing the exponential extension class by its cone presentation recovers the triangle boundary. -/
 theorem exponential_cone_comp_extClass :
@@ -193,7 +193,7 @@ theorem exponential_cone_comp_extClass :
     ShortComplex.map, CochainComplex.singleFunctor, analyticSingleFunctor,
     exponentialSingleShortComplex, Category.comp_id, SingleFunctors.postcomp]
 
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 2000000 in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The repository's rational exponential class is represented by negative winding in the

@@ -142,7 +142,7 @@ theorem IsCartierComplementLift.chart_liftHom_difference_section
     (hℓ : IsCartierComplementLift g E e hg Ω ℓ)
     (hΩc : Ω ≤ divisorComplementOpen c) (hchΩ : ch.punctured ≤ Ω)
     (z : ComplexPoint X) (hcz : ch.carrier ≤ E.localLifts.opens z)
-    (s : constantIntegerSheaf X ⟶
+    (s : 𝓒(↧(ComplexPoint X); ℤ) ⟶
       (openRestrictionFunctor ch.punctured).obj (holomorphicUnitSheaf X (dim X.left)))
     (hs : s ≫ (openRestrictionFunctor ch.punctured).map E.inclusion =
       E.liftHom ch.punctured (sres E.middle ch.punctured_le

@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.SmoothRegularLocal
+public import Other.AlgebraicGeometry.Smooth.RegularLocal
 public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.OrderOfVanishing
+public import Other.AlgebraicGeometry.OrderOfVanishing
 public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
 
 /-!

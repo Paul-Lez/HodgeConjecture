@@ -108,18 +108,18 @@ def HasSupportedChernLift : Prop :=
     ∀ c : Scheme.CartierData X.left, c.Represents L →
       ∃ β : RationalCohomologyWithSupport X
           ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
-            Set (ComplexPoint X)) (2 * ((1 : ℕ) : ℤ)),
+            Set (ComplexPoint X)) ((2 : ℤ)),
         forgetSupport X
             ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
-              Set (ComplexPoint X)) (2 * ((1 : ℕ) : ℤ)) β =
+              Set (ComplexPoint X)) (2 * (1 : ℕ)) β =
           integralToRationalCohomology X 2 E.firstChernClass
 
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 /-- Transport of a supported lift along an equality of supports. This is the bookkeeping that
 turns the conclusion of step 3, which is stated for the complement of an open set `Ω`, into
 `HasSupportedChernLift`, whose support is the closed set `|D|^an` itself. -/
-theorem exists_forgetSupport_of_support_eq {Z Z' : Set (ComplexPoint X)} (hZ : Z = Z') (n : ℤ)
-    (α : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n)
+theorem exists_forgetSupport_of_support_eq {Z Z' : Set (ComplexPoint X)} (hZ : Z = Z') (n : ℕ)
+    (α : H^n(X; ℚ))
     (h : ∃ β : RationalCohomologyWithSupport X Z n, forgetSupport X Z n β = α) :
     ∃ β : RationalCohomologyWithSupport X Z' n, forgetSupport X Z' n β = α := by
   subst hZ
@@ -136,19 +136,19 @@ theorem exists_supportedChernLift_of_splitting
       (cycleAnalyticClosedSupport X c.divisor).compl)
     (ℓ : E.middle.obj.obj (op ((cycleAnalyticClosedSupport X c.divisor).compl)))
     (hℓ : E.projection.hom.app (op ((cycleAnalyticClosedSupport X c.divisor).compl)) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top :
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top :
           (cycleAnalyticClosedSupport X c.divisor).compl ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection) :
     ∃ β : RationalCohomologyWithSupport X
         ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
-          Set (ComplexPoint X)) (2 * ((1 : ℕ) : ℤ)),
+          Set (ComplexPoint X)) ((2 : ℤ)),
       forgetSupport X
           ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
-            Set (ComplexPoint X)) (2 * ((1 : ℕ) : ℤ)) β =
+            Set (ComplexPoint X)) (2 * (1 : ℕ)) β =
         integralToRationalCohomology X 2 E.firstChernClass :=
   exists_forgetSupport_of_support_eq X
     (compl_compl (cycleAnalyticClosedSupport X c.divisor : Set (ComplexPoint X)))
-    (2 * ((1 : ℕ) : ℤ)) _
+    (2 * (1 : ℕ)) _
     (exists_forgetSupport_eq_integralToRational_firstChernClass hvan E ℓ hℓ)
 
 /-- **Obligation: excision in codimension one.** A degree-two rational class supported on a finite
@@ -163,11 +163,11 @@ involved. -/
 def HasComponentSupportDecomposition : Prop :=
   ∀ (s : Finset X.left), (∀ x ∈ s, coheight x = ((1 : ℕ) : ℕ∞)) →
     ∀ β : SupportedInjectiveHomology X (componentsAnalyticClosedSupport X s)
-        (2 * ((1 : ℕ) : ℤ)),
+        ((2 : ℤ)),
       ∃ γ : ∀ x : X.left,
           SupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
-            (2 * ((1 : ℕ) : ℤ)),
-        β = ∑ x ∈ s, componentContribution X s x (2 * ((1 : ℕ) : ℤ)) (γ x)
+            ((2 : ℤ)),
+        β = ∑ x ∈ s, componentContribution X s x ((2 : ℤ)) (γ x)
 
 /-- **Obligation: the local model of the first Chern class along a divisor.**
 
@@ -210,19 +210,19 @@ def HasChernLocalModel : Prop :=
     ((moduleAnalytification X (dim X.left)).obj L ≅ E.sectionSheafOfModules) →
     ∀ c : Scheme.CartierData X.left, c.Represents L →
       ∃ β : SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor)
-          (2 * ((1 : ℕ) : ℤ)),
+          ((2 : ℤ)),
         supportedInjectiveToAmbient X (cycleAnalyticClosedSupport X c.divisor)
-            (2 * ((1 : ℕ) : ℤ)) β =
-          rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))
+            ((2 : ℤ)) β =
+          rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (1 : ℕ))
             (integralToRationalCohomology X 2 E.firstChernClass) ∧
         ∀ γ : ∀ x : X.left,
             SupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
-              (2 * ((1 : ℕ) : ℤ)),
+              ((2 : ℤ)),
           β = ∑ x ∈ cycleComponents X c.divisor,
-              componentContribution X (cycleComponents X c.divisor) x (2 * ((1 : ℕ) : ℤ)) (γ x) →
+              componentContribution X (cycleComponents X c.divisor) x ((2 : ℤ)) (γ x) →
           ∀ x ∈ cycleComponents X c.divisor, ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
-            (cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom (γ x) =
-              (c.divisor x) • cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx
+            (cycleComponentSupportedClassNormalizationIso X x hx).hom (γ x) =
+              (c.divisor x) • cycleComponentSmoothSupportCoclassSection X x hx
 
 /-! ### The assembly -/
 
@@ -234,15 +234,14 @@ variable {X}
 theorem eq_zsmul_cycleComponentSupportedInjectiveClass {x : X.left}
     (hx : coheight x = ((1 : ℕ) : ℕ∞)) (n : ℤ)
     (a : SupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
-      (2 * ((1 : ℕ) : ℤ)))
-    (ha : (cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom a =
-      n • cycleComponentSmoothSupportCoclassSection X x (d := dim X.left) hx) :
-    a = n • cycleComponentSupportedInjectiveClass X x (d := dim X.left) hx := by
-  refine (cycleComponentSupportedClassNormalizationIso X x
-    (d := dim X.left) hx).addCommGroupIsoToAddEquiv.injective ?_
+      ((2 : ℤ)))
+    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a =
+      n • cycleComponentSmoothSupportCoclassSection X x hx) :
+    a = n • cycleComponentSupportedInjectiveClass X x hx := by
+  refine (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv.injective ?_
   rw [map_zsmul]
   exact ha.trans (congrArg (fun t => n • t)
-    (cycleComponentSupportedInjectiveClass_normalization X x (d := dim X.left) hx).symm)
+    (cycleComponentSupportedInjectiveClass_normalization X x hx).symm)
 
 variable (X)
 
@@ -264,21 +263,22 @@ theorem hasDivisorClassOfCartierData_of_localModel
   have hnorm := hlocal γ hγ
   have key : ∀ x ∈ cycleComponents X c.divisor,
       supportedInjectiveToAmbient X (componentsAnalyticClosedSupport X
-          (cycleComponents X c.divisor)) (2 * ((1 : ℕ) : ℤ))
-        (componentContribution X (cycleComponents X c.divisor) x (2 * ((1 : ℕ) : ℤ)) (γ x)) =
-      c.divisor x • rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))
+          (cycleComponents X c.divisor)) ((2 : ℤ))
+        (componentContribution X (cycleComponents X c.divisor) x ((2 : ℤ)) (γ x)) =
+      c.divisor x • rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (1 : ℕ))
         (if hx : coheight x = ((1 : ℕ) : ℕ∞) then
-            cycleComponentSheafClass X x (d := dim X.left) hx else 0) := by
+            cycleComponentSheafClass X x hx else 0) := by
     intro x hxs
     have hx1 : coheight x = ((1 : ℕ) : ℕ∞) := coheight_of_mem_cycleComponents X hxs
     have hγx : γ x = c.divisor x • cycleComponentSupportedInjectiveClass X x
-        (d := dim X.left) hx1 :=
+         hx1 :=
       eq_zsmul_cycleComponentSupportedInjectiveClass hx1 _ (γ x) (hnorm x hxs hx1)
     rw [supportedInjectiveToAmbient_componentContribution X hxs, hγx, map_zsmul, dif_pos hx1]
     congr 1
+    rw [cycleComponentSheafClass_eq_injectiveModel]
     exact (AddEquiv.apply_symm_apply
-      (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))) _).symm
-  apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))).injective
+      (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (1 : ℕ))) _).symm
+  apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (1 : ℕ))).injective
   rw [sheafCycleClassOnCycles_eq_sum X c.divisor, map_sum, ← hb, hγ, map_sum]
   refine Finset.sum_congr rfl fun x hxs => ?_
   rw [key x hxs, map_zsmul]

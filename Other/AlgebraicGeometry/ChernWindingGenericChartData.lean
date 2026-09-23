@@ -99,7 +99,7 @@ structure GenericWindingChartData (q : ComplexPoint X) where
   coclass_restrict : ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * 1)).obj.map (homOfLE le).op
-        (cycleComponentSmoothSupportCoclassSection X x (d := d) hx) =
+        (cycleComponentSmoothSupportCoclassSection X x hx) =
       (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * 1)).app
         (op (flattenedSupportNeighborhood (Fin (d - 1) → ℂ) 1 chart q mem_source))

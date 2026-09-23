@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 
 /-! # Naturality of positive canonical cone boundaries -/
 

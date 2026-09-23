@@ -52,23 +52,23 @@ lemma HolomorphicUnitExtension.liftHom_restrict :
 /-- The frame condition is preserved by restriction. -/
 lemma HolomorphicUnitExtension.projection_restrict_lift
     (hℓ : E.projection.hom.app (op U) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : U ≤ ⊤)).op
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : U ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection) :
     E.projection.hom.app (op V) (E.middle.obj.map (homOfLE h).op ℓ) =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : V ≤ ⊤)).op
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : V ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection := by
   have hn := ConcreteCategory.congr_hom (E.projection.hom.naturality (homOfLE h).op) ℓ
   change E.projection.hom.app (op V) (E.middle.obj.map (homOfLE h).op ℓ) =
-    (constantIntegerSheaf X).obj.map (homOfLE h).op (E.projection.hom.app (op U) ℓ) at hn
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE h).op (E.projection.hom.app (op U) ℓ) at hn
   rw [hn, hℓ]
-  change ((constantIntegerSheaf X).obj.map _ ≫ (constantIntegerSheaf X).obj.map _) _ = _
-  rw [← (constantIntegerSheaf X).obj.map_comp]
+  change ((𝓒(↧(ComplexPoint X); ℤ)).obj.map _ ≫ (𝓒(↧(ComplexPoint X); ℤ)).obj.map _) _ = _
+  rw [← (𝓒(↧(ComplexPoint X); ℤ)).obj.map_comp]
   rfl
 
 /-- The actual splitting retraction commutes with restriction of its defining frame. -/
 lemma HolomorphicUnitExtension.restrictionFactorisation_restrict
     (hℓ : E.projection.hom.app (op U) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : U ≤ ⊤)).op
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : U ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection) :
     E.restrictionFactorisation U ℓ hℓ ≫
       (TopCat.Sheaf.openRestrictionPushforwardMap (TopCat.of (ComplexPoint X)) h).app
@@ -103,7 +103,7 @@ def relativeUnitConeRestriction : relativeUnitCone X d U ⟶ relativeUnitCone X 
 /-- The actual cone map of a restricted frame factors through the larger-open cone. -/
 lemma HolomorphicUnitExtension.relativeConeMap_restrict
     (hℓ : E.projection.hom.app (op U) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : U ≤ ⊤)).op
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : U ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection) :
     E.relativeConeMap U ℓ hℓ ≫ relativeUnitConeRestriction X h =
       E.relativeConeMap V (E.middle.obj.map (homOfLE h).op ℓ)

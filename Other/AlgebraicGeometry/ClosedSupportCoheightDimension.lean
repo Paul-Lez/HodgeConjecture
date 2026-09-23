@@ -119,7 +119,7 @@ theorem hasCodimensionTwoSupportedVanishing : HasCodimensionTwoSupportedVanishin
   intro W hW
   have hstr : ClosedSupportStrataNormalCodimension X W (dim X.left) 2 :=
     closedSupportStrataNormalCodimension_of_forall_le_coheight X W hW
-  exact closedSupportSectionCohomology_isZero_of_lt hstr (2 * ((1 : ℕ) : ℤ) + 1) (by norm_num)
+  exact closedSupportSectionCohomology_isZero_of_lt hstr (3 : ℤ) (by norm_num)
 
 /-- **Excision in codimension one, unconditionally.** -/
 theorem hasComponentSupportDecomposition_unconditional :

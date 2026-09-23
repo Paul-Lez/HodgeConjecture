@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.HypercohomologyGlobalSectionsNaturality
+public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality
 public import Other.AlgebraicTopology.ConstantSheafGlobalSection
 
@@ -27,13 +27,13 @@ set_option maxHeartbeats 600000
 namespace TopCat.Sheaf
 variable (Y : TopCat.{0}) (F : Sheaf AddCommGrpCat Y)
 lemma integerConstantHomEquivGlobalSections_id :
-    integerConstantHomEquivGlobalSections (integerConstantSheaf Y) (𝟙 _) =
+    integerConstantHomAddEquivGlobalSections (integerConstantSheaf Y) (𝟙 _) =
       integerOne (Y := Y) := by
   rfl
 lemma integerConstantHomEquivGlobalSections_constHomOfSection
     (t : F.obj.obj (op ⊤)) :
-    integerConstantHomEquivGlobalSections F (constHomOfSection F t) = t := by
-  have h := integerConstantHomEquivGlobalSections_naturality
+    integerConstantHomAddEquivGlobalSections F (constHomOfSection F t) = t := by
+  have h := integerConstantHomAddEquivGlobalSections_naturality
     (constHomOfSection F t) (𝟙 (integerConstantSheaf Y))
   rw [Category.id_comp, integerConstantHomEquivGlobalSections_id] at h
   refine h.trans ?_
@@ -56,13 +56,13 @@ lemma homComplexSingleIntegerIsoGlobalSections_precomp_constHom
         (constHomOfSection F t))).comp α (zero_add n)) =
     ((Cochain.fromSingleEquiv (zero_add n) α).hom.app (op ⊤)) t := by
   obtain ⟨a, rfl⟩ := Cochain.fromSingleMk_surjective α n (zero_add n)
-  change integerConstantHomEquivGlobalSections (K.X n)
+  change integerConstantHomAddEquivGlobalSections (K.X n)
     (Cochain.fromSingleEquiv (zero_add n)
       ((Cochain.ofHom ((CochainComplex.singleFunctor (Sheaf AddCommGrpCat Y) 0).map
         (constHomOfSection F t))).comp (Cochain.fromSingleMk a (zero_add n)) (zero_add n))) = _
   rw [← Cochain.fromSingleMk_precomp, Cochain.fromSingleEquiv_fromSingleMk,
     Cochain.fromSingleEquiv_fromSingleMk]
-  exact (integerConstantHomEquivGlobalSections_naturality a (constHomOfSection F t)).trans
+  exact (integerConstantHomAddEquivGlobalSections_naturality a (constHomOfSection F t)).trans
     (congrArg (a.hom.app (op ⊤)) (integerConstantHomEquivGlobalSections_constHomOfSection Y F t))
 
 end TopCat.Sheaf
@@ -117,12 +117,12 @@ local instance cocycleGlobalSectionsDerivedCategory : HasDerivedCategory (Analyt
 lemma derivedHomAddEquivGlobalSectionsKInjective_cocycle
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective] (n : ℤ)
     (z : Cocycle (TopCat.Sheaf.integerConstantSingleComplex (TopCat.of (ComplexPoint X))) K n) :
-    derivedHomAddEquivGlobalSectionsKInjective X K n
+    TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective (TopCat.of (ComplexPoint X)) K n
       (ShiftedHom.map (Cocycle.equivHomShift.symm z) DerivedCategory.Q) =
     (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X)) K).homologyπ n
       (TopCat.Sheaf.integerCocycleGlobalSection (TopCat.of (ComplexPoint X)) K n z) := by
   rw [← kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk]
-  simp only [derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply,
+  simp only [TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply,
     AddEquiv.apply_symm_apply, homologyAddEquiv_symm_mk]
   exact ConcreteCategory.congr_hom
     (HomologicalComplex.homologyπ_naturality
@@ -160,7 +160,7 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_mk_cocycle
         ((constantIntegerSheafComplexIntIsoSingle X).hom ≫ Cocycle.equivHomShift.symm z)) =
     (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X)) K).homologyπ n
       (TopCat.Sheaf.integerCocycleGlobalSection (TopCat.of (ComplexPoint X)) K n z) := by
-  change derivedHomAddEquivGlobalSectionsKInjective X K n
+  change TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective (TopCat.of (ComplexPoint X)) K n
     ((DerivedCategory.Q.map (constantIntegerSheafComplexIntIsoSingle X).inv) ≫
       (Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q)
         (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
@@ -172,6 +172,6 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_mk_cocycle
       ShiftedHom.map (Cocycle.equivHomShift.symm z) DerivedCategory.Q := by
     simp only [ShiftedHom.map, CategoryTheory.Functor.map_comp, ← Category.assoc,
       ← CategoryTheory.Functor.map_comp, Iso.inv_hom_id, CategoryTheory.Functor.map_id, Category.id_comp]
-  exact (congrArg (derivedHomAddEquivGlobalSectionsKInjective X K n) he).trans
+  exact (congrArg (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective (TopCat.of (ComplexPoint X)) K n) he).trans
     (derivedHomAddEquivGlobalSectionsKInjective_cocycle X K n z)
 end AlgebraicGeometry.ComplexPoint

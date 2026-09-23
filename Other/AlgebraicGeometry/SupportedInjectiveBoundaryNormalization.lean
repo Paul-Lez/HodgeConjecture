@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.RationalSupportConeBoundaryComparison
-public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 
 /-!
 # The boundary sign of the actual supported injective comparison
@@ -44,7 +44,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_eq_neg (n : ℤ)
     rationalSupportAddEquivSupportedInjectiveHomology X Z hZ n a =
       -((actualInjectiveSupportHomologyIsoCone X Z hZ n).inv
         ((asIso (HomologicalComplex.homologyMap
-          (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) (n - 1))).inv
+          (supportConeToAmbientInjectiveGlobalCone X Z hZ) (n - 1))).inv
           (HomologicalComplex.homologyMap
             (CochainComplex.mappingCone.mapHomologicalComplexIso
               (ambientRationalInjectiveRestriction X Z hZ)
@@ -58,13 +58,13 @@ lemma actualSupportConeToAmbientInjectiveGlobalCone_inr :
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
         (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
         (ambientRationalInjectiveComplex X)).g ≫
-      actualSupportConeToAmbientInjectiveGlobalCone X Z hZ =
+      supportConeToAmbientInjectiveGlobalCone X Z hZ =
     globalAmbientRationalOpenResolutionComparison X Z hZ ≫
       CochainComplex.mappingCone.inr
         (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
           (ambientRationalInjectiveRestriction X Z hZ)) := by
-  simp [actualSupportConeToAmbientInjectiveGlobalCone, CochainComplex.mappingCone.map]
+  simp [supportConeToAmbientInjectiveGlobalCone, CochainComplex.mappingCone.map]
 
 /-- The existing rational support comparison sends a positive complement boundary
 to the negative of the canonical supported-injective kernel boundary. -/
@@ -89,7 +89,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_boundary (n : ℤ)
     AddEquiv.apply_symm_apply]
   congr 2
   let e := asIso (HomologicalComplex.homologyMap
-    (actualSupportConeToAmbientInjectiveGlobalCone X Z hZ) (n - 1))
+    (supportConeToAmbientInjectiveGlobalCone X Z hZ) (n - 1))
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
     (TopCat.of (ComplexPoint X))
   have hi : globalAmbientRationalOpenResolutionComparison X Z hZ ≫
@@ -101,7 +101,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_boundary (n : ℤ)
         (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
           (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
           (ambientRationalInjectiveComplex X)).g ≫
-        actualSupportConeToAmbientInjectiveGlobalCone X Z hZ := by
+        supportConeToAmbientInjectiveGlobalCone X Z hZ := by
     rw [CochainComplex.mappingCone.map_inr,
       actualSupportConeToAmbientInjectiveGlobalCone_inr]
   have hiH := congrArg (fun f => HomologicalComplex.homologyMap f (n - 1)) hi

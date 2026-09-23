@@ -7,7 +7,7 @@ module
 public import Other.AlgebraicGeometry.BettiScalarComparison
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueMapNaturality
 public import Other.AlgebraicTopology.SingularCochainCoefficientChange
-public import Other.Algebra.Homology.MapExtendNaturality
+public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 
 /-!
 # Naturality of the scalar Betti comparison in the coefficient ring
@@ -32,7 +32,7 @@ variable {R S : Type} [CommRing R] [CommRing S] (f : R →+* S)
 /-- The identification of ordinary singular cohomology with the cohomology of global sections
 of the singular-cochain sheaf complex is compatible with change of coefficients. -/
 lemma ordinaryScalarSingularCohomologyEquivGlobalSections_coefficientChange
-    (a : OrdinarySingularCohomology R Y n) :
+    (a : Cohomology R Y n) :
     ordinaryScalarSingularCohomologyEquivGlobalSections S Y n
         (ordinarySingularCohomologyCoefficientChange f Y n a) =
       HomologicalComplex.homologyMap (globalSingularCochainSheafComplexMap f Y) n
@@ -123,17 +123,17 @@ lemma globalSectionsSingularCochainComplexIntIsoExtend_scalar_naturality :
   let eComp : F ⋙ E ≅ G := Iso.refl _
   let ι := (Functor.mapHomologicalComplexCompIso eComp (ComplexShape.up ℕ)).inv
   change (G.mapHomologicalComplex (.up ℤ)).map (HomologicalComplex.extendMap g e) ≫
-      (HomologicalComplex.mapExtendIso G
+      (HomologicalComplex.mapExtendCanonicalIso G
         (AlgebraicTopology.Singular.singularCochainSheafComplex S Y) e).hom ≫
         HomologicalComplex.extendMap
           (ι.app (AlgebraicTopology.Singular.singularCochainSheafComplex S Y)) e =
-    ((HomologicalComplex.mapExtendIso G
+    ((HomologicalComplex.mapExtendCanonicalIso G
         (AlgebraicTopology.Singular.singularCochainSheafComplex R Y) e).hom ≫
         HomologicalComplex.extendMap
           (ι.app (AlgebraicTopology.Singular.singularCochainSheafComplex R Y)) e) ≫
       HomologicalComplex.extendMap
         ((F.mapHomologicalComplex (.up ℕ) ⋙ E.mapHomologicalComplex (.up ℕ)).map g) e
-  have h1 := HomologicalComplex.mapExtendIso_inv_naturality G g e
+  have h1 := HomologicalComplex.mapExtendCanonicalIso_inv_naturality G g e
   rw [Iso.comp_inv_eq] at h1
   have h2 := ι.naturality g
   simp only [Category.assoc]

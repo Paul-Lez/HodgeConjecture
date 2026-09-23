@@ -5,8 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.ClosedSupportSmoothFiltration
-public import Other.AlgebraicGeometry.SingularFiltrationLocalSupportVanishing
-public import Other.AlgebraicTopology.FiniteSheafSupportVanishing
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.LocalSupportVanishing
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FiniteFiltrationVanishing
 
 /-!
 # Vanishing of supported cohomology along a closed subset of codimension at least `q`

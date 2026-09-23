@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
-public import Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 public import Other.AlgebraicGeometry.HolomorphicIntegralHodgeClass
+public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import Other.AlgebraicTopology.Singular.Sheaf.CochainSubdivision
 
 /-!
 # Constant-sheaf cohomology with arbitrary coefficients and singular cohomology
@@ -105,7 +105,7 @@ def globalSectionsSingularCochainComplexIntIsoExtend_scalar :
   let : F.Additive := by dsimp [F]; infer_instance
   let : E.Additive := by dsimp [E]; infer_instance
   let eComp : F ⋙ E ≅ G := Iso.refl _
-  exact HomologicalComplex.mapExtendIso G K ComplexShape.embeddingUpNat ≪≫
+  exact HomologicalComplex.mapExtendCanonicalIso G K ComplexShape.embeddingUpNat ≪≫
     (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
       ((Functor.mapHomologicalComplexCompIso eComp (ComplexShape.up ℕ)).app K).symm
 
@@ -146,10 +146,10 @@ namespace AlgebraicTopology.Singular.HereditarilyParacompact
 the cohomology of the global-section complex of the singular-cochain sheaf resolution. -/
 def ordinaryScalarSingularCohomologyEquivGlobalSections
     (R : Type) [CommRing R] (Y : TopCat.{0}) [ParacompactSpace Y] [T2Space Y] (n : ℕ) :
-    AlgebraicTopology.Singular.OrdinarySingularCohomology R Y n ≃+
+    AlgebraicTopology.Singular.Cohomology R Y n ≃+
       (AlgebraicTopology.Singular.globalSingularCochainSheafComplex R Y).homology n := by
-  let := AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso R
-    (Y := Y)
+  letI := AlgebraicTopology.Singular.topOpenToGlobalSingularCochainSheafComplex_quasiIso_of_commRing
+    R (Y := Y)
   exact
     AlgebraicTopology.Singular.ordinarySingularCohomologyEquivGlobalRaw R Y n |>.trans <|
       (asIso (HomologicalComplex.homologyMap
@@ -172,7 +172,7 @@ def scalarSingularCochainHypercohomologyEquivOrdinaryCohomology
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
     ScalarSingularCochainHypercohomology X R (n : ℤ) ≃
-      AlgebraicTopology.Singular.OrdinarySingularCohomology R
+      AlgebraicTopology.Singular.Cohomology R
         (TopCat.of (ComplexPoint X)) n := by
   let Y := TopCat.of (ComplexPoint X)
   let K := AlgebraicTopology.Singular.globalSingularCochainSheafComplex R Y
@@ -198,7 +198,7 @@ def scalarCohomologyEquivOrdinarySingularCohomology
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
     ScalarCohomology X R (n : ℤ) ≃
-      AlgebraicTopology.Singular.OrdinarySingularCohomology R
+      AlgebraicTopology.Singular.Cohomology R
         (TopCat.of (ComplexPoint X)) n :=
   (scalarCohomologySingularCochainEquiv X R (n : ℤ)).trans
     (scalarSingularCochainHypercohomologyEquivOrdinaryCohomology X R n)
@@ -211,7 +211,7 @@ def integralCohomologyEquivOrdinarySingularCohomology
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
     IntegralCohomology X (n : ℤ) ≃
-      AlgebraicTopology.Singular.OrdinarySingularCohomology ℤ
+      AlgebraicTopology.Singular.Cohomology ℤ
         (TopCat.of (ComplexPoint X)) n :=
   scalarCohomologyEquivOrdinarySingularCohomology X ℤ n
 
@@ -235,7 +235,7 @@ def scalarSingularCochainHypercohomologyAddEquivOrdinaryCohomology
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
     ScalarSingularCochainHypercohomology X R (n : ℤ) ≃+
-      AlgebraicTopology.Singular.OrdinarySingularCohomology R
+      AlgebraicTopology.Singular.Cohomology R
         (TopCat.of (ComplexPoint X)) n := by
   let Y := TopCat.of (ComplexPoint X)
   let K := AlgebraicTopology.Singular.globalSingularCochainSheafComplex R Y
@@ -267,7 +267,7 @@ def scalarCohomologyAddEquivOrdinarySingularCohomology
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
     ScalarCohomology X R (n : ℤ) ≃+
-      AlgebraicTopology.Singular.OrdinarySingularCohomology R
+      AlgebraicTopology.Singular.Cohomology R
         (TopCat.of (ComplexPoint X)) n :=
   (scalarCohomologySingularCochainAddEquiv X R (n : ℤ)).trans
     (scalarSingularCochainHypercohomologyAddEquivOrdinaryCohomology X R n)

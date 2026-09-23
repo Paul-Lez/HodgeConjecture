@@ -77,12 +77,12 @@ theorem coclass_restrict_of_germ (hx : coheight x = ((1 : ℕ) : ℕ∞))
           (cycleComponentSupport X x) (2 * 1)).presheaf.germ W y hy
           ((supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
             (cycleComponentSupport X x) (2 * 1)).obj.map (homOfLE hW).op
-            (cycleComponentSmoothSupportCoclassSection X x (d := d) hx)) =
+            (cycleComponentSmoothSupportCoclassSection X x hx)) =
         supportRelativeCohomologyGerm (TopCat.of (ComplexPoint X))
           (cycleComponentSupport X x) (2 * 1) W y hy a) :
     (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * 1)).obj.map (homOfLE hW).op
-        (cycleComponentSmoothSupportCoclassSection X x (d := d) hx) =
+        (cycleComponentSmoothSupportCoclassSection X x hx) =
       (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
         (cycleComponentSupport X x) (2 * 1)).app (op W) a :=
   supportRelativeCohomologySheaf_eq_toSheaf_of_germ (TopCat.of (ComplexPoint X))

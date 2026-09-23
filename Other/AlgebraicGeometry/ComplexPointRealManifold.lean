@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexManifold
-public import Other.AlgebraicGeometry.ProjectiveAnalytification
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Projective
 public import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
 
 /-!

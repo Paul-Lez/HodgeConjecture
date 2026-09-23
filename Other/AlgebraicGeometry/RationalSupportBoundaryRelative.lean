@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.ActualSingularSupportBoundary
 public import Other.AlgebraicTopology.SupportedSingularBoundaryRelative
-public import Other.AlgebraicGeometry.ComplexSupportCohomologySheafNormalization
+public import Other.AlgebraicGeometry.Cohomology.SupportSheafNormalization
 
 /-!
 # Relative normalization of the fixed rational support boundary

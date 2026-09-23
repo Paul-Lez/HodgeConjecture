@@ -38,7 +38,7 @@ every rational Hodge class in degree two is the class of a rational divisor. -/
 @[expose] public def RationalLefschetzOneOne : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (α : H^2(X; ℚ)),
-    α ∈ Hdg^1(ℚ; X) →
+    α ∈ Hdg^1(X; ℚ) →
       ∃ D : TensorProduct ℤ ℚ (codimensionCycleSubgroup X.left 1),
         rationalSheafCycleClassOnCycles
           { scheme := X.left, structureMap := X.hom } 1 D = α

@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueMapNaturality
-public import Other.AlgebraicGeometry.DerivedSupportRationalConeComparison
+public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 
 /-!
 # The common boundary of the fixed rational support-cone models

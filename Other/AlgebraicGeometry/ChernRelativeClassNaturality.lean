@@ -40,9 +40,17 @@ def supportedClassTransport {Z Z' : Set (ComplexPoint X)} (h : Z = Z') (n : ℤ)
   subst h; exact Equiv.refl _
 
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
+@[simp] lemma forgetSupportHypercohomology_supportedClassTransport
+    {Z Z' : Set (ComplexPoint X)} (h : Z = Z') (n : ℤ)
+    (β : RationalCohomologyWithSupport X Z n) :
+    forgetSupportHypercohomology X Z' n (supportedClassTransport X h n β) =
+      forgetSupportHypercohomology X Z n β := by
+  subst h; rfl
+
+omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 @[simp] lemma forgetSupport_supportedClassTransport {Z Z' : Set (ComplexPoint X)} (h : Z = Z')
-    (n : ℤ) (β : RationalCohomologyWithSupport X Z n) :
-    forgetSupport X Z' n (supportedClassTransport X h n β) = forgetSupport X Z n β := by
+    (n : ℕ) (β : RationalCohomologyWithSupport X Z n) :
+    forgetSupport X Z' n (supportedClassTransport X h (n : ℤ) β) = forgetSupport X Z n β := by
   subst h; rfl
 
 /-! ### The splitting datum off the support of the divisor -/
@@ -60,7 +68,7 @@ def HasComplementFrame : Prop :=
     ∀ c : Scheme.CartierData X.left, c.Represents L →
       ∃ ℓ : E.middle.obj.obj (op ((cycleAnalyticClosedSupport X c.divisor).compl)),
         E.projection.hom.app (op ((cycleAnalyticClosedSupport X c.divisor).compl)) ℓ =
-          (constantIntegerSheaf X).obj.map (homOfLE (le_top :
+          (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top :
               (cycleAnalyticClosedSupport X c.divisor).compl ≤ ⊤)).op
             HolomorphicUnitExtension.integerOneSection
 
@@ -87,7 +95,7 @@ def relativeChernClassOnSupport (c : Scheme.CartierData X.left)
     (E : HolomorphicUnitExtension X (dim X.left))
     (ℓ : E.middle.obj.obj (op (divisorComplementOpen c)))
     (hℓ : E.projection.hom.app (op (divisorComplementOpen c)) ℓ =
-      (constantIntegerSheaf X).obj.map
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map
         (homOfLE (le_top : divisorComplementOpen c ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection)
     (cmp : RelativeChernComparison X (dim X.left) (divisorComplementOpen c)) :
@@ -107,31 +115,33 @@ def relativeChernSupportedClass (c : Scheme.CartierData X.left)
     (E : HolomorphicUnitExtension X (dim X.left))
     (ℓ : E.middle.obj.obj (op (divisorComplementOpen c)))
     (hℓ : E.projection.hom.app (op (divisorComplementOpen c)) ℓ =
-      (constantIntegerSheaf X).obj.map
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map
         (homOfLE (le_top : divisorComplementOpen c ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection)
     (cmp : RelativeChernComparison X (dim X.left) (divisorComplementOpen c)) :
-    SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor) (2 * ((1 : ℕ) : ℤ)) :=
+    SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor) (2 : ℤ) :=
   rationalSupportAddEquivSupportedInjectiveHomology X
     ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
       Set (ComplexPoint X))
-    (cycleAnalyticClosedSupport X c.divisor).isClosed (2 * ((1 : ℕ) : ℤ))
+    (cycleAnalyticClosedSupport X c.divisor).isClosed (2 : ℤ)
     (relativeChernClassOnSupport c E ℓ hℓ cmp)
 
 set_option maxHeartbeats 1000000 in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- **The relative first Chern class is a lift of the rational first Chern class.** This is the
 first clause of `HasChernLocalModel` / `HasChernWindingNaturality`, for the canonical witness. -/
 theorem supportedInjectiveToAmbient_relativeChernSupportedClass
     (c : Scheme.CartierData X.left) (E : HolomorphicUnitExtension X (dim X.left))
     (ℓ : E.middle.obj.obj (op (divisorComplementOpen c)))
     (hℓ : E.projection.hom.app (op (divisorComplementOpen c)) ℓ =
-      (constantIntegerSheaf X).obj.map
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map
         (homOfLE (le_top : divisorComplementOpen c ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection)
     (cmp : RelativeChernComparison X (dim X.left) (divisorComplementOpen c)) :
-    supportedInjectiveToAmbient X (cycleAnalyticClosedSupport X c.divisor) (2 * ((1 : ℕ) : ℤ))
+    supportedInjectiveToAmbient X (cycleAnalyticClosedSupport X c.divisor) (2 : ℤ)
         (relativeChernSupportedClass c E ℓ hℓ cmp) =
-      rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * ((1 : ℕ) : ℤ))
+      rationalCohomologyAddEquivAmbientInjectiveHomology X 2
         (integralToRationalCohomology X 2 E.firstChernClass) := by
   have h := rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
     ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
@@ -139,8 +149,13 @@ theorem supportedInjectiveToAmbient_relativeChernSupportedClass
     (cycleAnalyticClosedSupport X c.divisor).isClosed 2
     (relativeChernClassOnSupport c E ℓ hℓ cmp)
   refine h.symm.trans (congrArg _ ?_)
-  rw [relativeChernClassOnSupport, forgetSupport_supportedClassTransport]
-  exact E.forgetSupport_relativeChernClass _ ℓ hℓ cmp
+  rw [relativeChernClassOnSupport, forgetSupportHypercohomology_supportedClassTransport]
+  have hc := congrArg (hypercohomologyAddEquivConstantCohomology ℚ X 2).symm
+    (E.forgetSupport_relativeChernClass _ ℓ hℓ cmp)
+  dsimp only [forgetSupport, AddMonoidHom.comp_apply,
+    AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe] at hc
+  simpa only [Nat.cast_ofNat, AddEquiv.symm_apply_apply, AddEquiv.toEquiv_eq_coe,
+    AddEquiv.coe_toEquiv] using hc
 
 /-! ### The remaining obligation, and the reduction -/
 
@@ -157,20 +172,20 @@ def HasRelativeChernChartFormula : Prop :=
   ∀ (c : Scheme.CartierData X.left) (E : HolomorphicUnitExtension X (dim X.left))
     (ℓ : E.middle.obj.obj (op (divisorComplementOpen c)))
     (hℓ : E.projection.hom.app (op (divisorComplementOpen c)) ℓ =
-      (constantIntegerSheaf X).obj.map
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map
         (homOfLE (le_top : divisorComplementOpen c ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection)
     (cmp : RelativeChernComparison X (dim X.left) (divisorComplementOpen c))
     (γ : ∀ x : X.left, SupportedInjectiveHomology X
-      (cycleComponentAnalyticClosedSupport X x) (2 * ((1 : ℕ) : ℤ))),
+      (cycleComponentAnalyticClosedSupport X x) (2 : ℤ)),
     relativeChernSupportedClass c E ℓ hℓ cmp =
         ∑ x ∈ cycleComponents X c.divisor,
-          componentContribution X (cycleComponents X c.divisor) x (2 * ((1 : ℕ) : ℤ)) (γ x) →
+          componentContribution X (cycleComponents X c.divisor) x (2 : ℤ) (γ x) →
       ∀ x ∈ cycleComponents X c.divisor, ∀ hx : coheight x = ((1 : ℕ) : ℕ∞),
       ∀ (q : ComplexPoint X) (ch : ChernWindingChart X c x (dim X.left) 1 q),
         ch.HasTrivialUnitWinding → ch.NormalizesCoclass hx →
         ch.ComputesClass (c.divisor x)
-          ((cycleComponentSupportedClassNormalizationIso X x (d := dim X.left) hx).hom (γ x))
+          ((cycleComponentSupportedClassNormalizationIso X x hx).hom (γ x))
 
 set_option maxHeartbeats 1000000 in
 /-- **The reduction.** The frame off the divisor together with the chart formula for the

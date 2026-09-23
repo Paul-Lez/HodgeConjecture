@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicTopology.FlasqueSupportedSections
-public import Other.AlgebraicTopology.SupportedSectionRestrictionCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueSections
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
 public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 public import Mathlib.Algebra.Homology.HomologySequence
 public import Mathlib.Topology.Sheaves.SheafCondition.UniqueGluing

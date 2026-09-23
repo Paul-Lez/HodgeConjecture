@@ -70,7 +70,7 @@ singular class on a unit to the class of the preceding explicit winding cocycle.
 lemma derivedHomAddEquivGlobalSections_restrictedSingularOneCocycle :
     let := derivedPushforwardComplementConstantRationalComplexInt_isKInjective X
       ((Ω : Set (ComplexPoint X))ᶜ) Ω.isOpen.isClosed_compl
-    derivedHomAddEquivGlobalSectionsKInjective X
+    TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective (TopCat.of (ComplexPoint X))
       (derivedPushforwardComplementConstantRationalComplexInt X ((Ω : Set (ComplexPoint X))ᶜ)) 1
       (ShiftedHom.map
         (((analyticSingleFunctor X).map (TopCat.Sheaf.constHomOfSection

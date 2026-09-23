@@ -5,8 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.HolomorphicExponentialSingularRestriction
-public import Other.AlgebraicTopology.SupportedSectionRestrictionCone
-public import Other.AlgebraicTopology.SingularCochainOpenSections
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SectionRestrictionCone
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainOpenSections
 public import Other.AlgebraicGeometry.ComplementResolutionBoundaryComparison
 
 /-!

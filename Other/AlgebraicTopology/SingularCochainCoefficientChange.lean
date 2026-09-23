@@ -5,10 +5,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicTopology.SimplicialCochainCoefficientChange
-public import Other.AlgebraicTopology.SingularSubdivisionCochainSheaf
-public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
-public import Other.AlgebraicGeometry.ComplexSingularComparison
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
+public import Other.AlgebraicTopology.Singular.Sheaf.CochainSubdivision
+public import Other.AlgebraicGeometry.Cohomology.GlobalSections
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SingularComparison
+public import Other.AlgebraicGeometry.Hodge.Filtration
 
 /-!
 # Change of coefficients on singular-cochain sheaves
@@ -99,12 +100,12 @@ def singularCochainSheafComplexMap :
 
 /-- Change of coefficients on the constant presheaf. -/
 def constantCoefficientPresheafMap :
-    constantCoefficientPresheaf R X ⟶ constantCoefficientPresheaf S X :=
+    𝓒ᵖ(X; R) ⟶ 𝓒ᵖ(X; S) :=
   (Functor.const (Opens X)ᵒᵖ).map (AddCommGrpCat.ofHom f.toAddMonoidHom)
 
 /-- Change of coefficients on the constant sheaf. -/
 def constantCoefficientSheafMap :
-    constantCoefficientSheaf R X ⟶ constantCoefficientSheaf S X :=
+    𝓒(X; R) ⟶ 𝓒(X; S) :=
   (constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat).map
     (AddCommGrpCat.ofHom f.toAddMonoidHom)
 
@@ -266,7 +267,7 @@ variable (R) in
 cochain complex. -/
 def ordinaryForgottenSingularCochainHomologyIso (n : ℕ) :
     (ordinaryForgottenSingularCochainComplex R X).homology n ≅
-      (forget₂ (ModuleCat.{u} R) AddCommGrpCat).obj (OrdinarySingularCohomology R X n) :=
+      (forget₂ (ModuleCat.{u} R) AddCommGrpCat).obj (Cohomology R X n) :=
   ShortComplex.mapHomologyIso ((SingularChainComplex R X).linearDualCochainComplex.sc n)
     (forget₂ (ModuleCat.{u} R) AddCommGrpCat)
 
@@ -285,7 +286,7 @@ def topOpenForgottenSingularCochainCoefficientChange :
 set_option backward.isDefEq.respectTransparency false in
 /-- Change of coefficients on ordinary singular cohomology. -/
 def ordinarySingularCohomologyCoefficientChange (n : ℕ) :
-    OrdinarySingularCohomology R X n →+ OrdinarySingularCohomology S X n :=
+    Cohomology R X n →+ Cohomology S X n :=
   ((ordinaryForgottenSingularCochainHomologyIso R X n).inv ≫
     HomologicalComplex.homologyMap (ordinaryForgottenSingularCochainCoefficientChange f X) n ≫
       (ordinaryForgottenSingularCochainHomologyIso S X n).hom).hom
@@ -399,7 +400,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- Change of coefficients on ordinary singular cohomology corresponds, under the identification
 with raw global cochain cohomology, to the map induced by the presheaf coefficient change. -/
 lemma ordinarySingularCohomologyEquivGlobalRaw_coefficientChange (n : ℕ)
-    (a : OrdinarySingularCohomology R X n) :
+    (a : Cohomology R X n) :
     ordinarySingularCohomologyEquivGlobalRaw S X n
         (ordinarySingularCohomologyCoefficientChange f X n a) =
       HomologicalComplex.homologyMap (globalRawSingularCochainComplexMap f X) n
@@ -451,17 +452,21 @@ set_option backward.isDefEq.respectTransparency false in
 integer-to-rational comparison with scalar `1`. -/
 lemma constantCoefficientSheafComplexIntMap_intCast :
     constantCoefficientSheafComplexIntMap X (Int.castRingHom ℚ) =
-      integerToFieldConstantSheafComplexInt ℚ X 1 := by
-  have h : AddCommGrpCat.ofHom (integerMultipleAddHom ℚ 1) =
+      HomologicalComplex.extendMap
+        ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
+          ((constantSheaf (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+            AddCommGrpCat).map (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ 1))))
+        ComplexShape.embeddingUpNat := by
+  have h : AddCommGrpCat.ofHom (zmultiplesAddHom ℚ 1) =
       AddCommGrpCat.ofHom (Int.castRingHom ℚ).toAddMonoidHom := by
     congr 1
     ext
-    simp [integerMultipleAddHom]
+    simp [zmultiplesAddHom]
   change _ = HomologicalComplex.extendMap
     ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map
       ((constantSheaf (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-        AddCommGrpCat).map
-          (AddCommGrpCat.ofHom (integerMultipleAddHom ℚ 1)))) ComplexShape.embeddingUpNat
+        AddCommGrpCat).map (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ 1))))
+      ComplexShape.embeddingUpNat
   rw [h]
   rfl
 

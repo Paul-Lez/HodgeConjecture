@@ -5,8 +5,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.ChernWindingCochain
-public import Other.AlgebraicTopology.EuclideanLocalHomology
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.Euclidean
 public import Mathlib.Analysis.SpecialFunctions.Complex.Log
+public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
 
 /-!
 # The winding number of the identity around the standard punctured boundary class
@@ -62,19 +63,19 @@ theorem logIncrement_of_slitPlane {A : Type*} [TopologicalSpace A] [SimplyConnec
 /-! ### The standard triangle -/
 
 /-- The identification of the standard real plane with `ℂ`. -/
-def complexCoordinateFun (v : StandardRealModel 2) : ℂ := v 0 + v 1 * Complex.I
+def complexCoordinateFun (v : Fin 2 → ℝ) : ℂ := v 0 + v 1 * Complex.I
 
-@[simp] theorem complexCoordinateFun_re (v : StandardRealModel 2) :
+@[simp] theorem complexCoordinateFun_re (v : Fin 2 → ℝ) :
     (complexCoordinateFun v).re = v 0 := by simp [complexCoordinateFun]
 
-@[simp] theorem complexCoordinateFun_im (v : StandardRealModel 2) :
+@[simp] theorem complexCoordinateFun_im (v : Fin 2 → ℝ) :
     (complexCoordinateFun v).im = v 1 := by simp [complexCoordinateFun]
 
 theorem continuous_complexCoordinateFun : Continuous complexCoordinateFun := by
   unfold complexCoordinateFun
   fun_prop
 
-theorem complexCoordinateFun_ne_zero {v : StandardRealModel 2} (hv : v ≠ 0) :
+theorem complexCoordinateFun_ne_zero {v : Fin 2 → ℝ} (hv : v ≠ 0) :
     complexCoordinateFun v ≠ 0 := by
   intro h
   refine hv (funext fun j => ?_)
@@ -87,11 +88,11 @@ theorem complexCoordinateFun_ne_zero {v : StandardRealModel 2} (hv : v ≠ 0) :
   · simpa using h1
 
 /-- The identification of the punctured real plane with the punctured complex line. -/
-def complexCoordinate : C((standardPuncturedPair 2).snd, ℂ) :=
+def complexCoordinate : C((puncturedPair ℝ 2).snd, ℂ) :=
   ⟨fun v => complexCoordinateFun v.1,
     continuous_complexCoordinateFun.comp continuous_subtype_val⟩
 
-theorem complexCoordinate_ne_zero (v : (standardPuncturedPair 2).snd) :
+theorem complexCoordinate_ne_zero (v : (puncturedPair ℝ 2).snd) :
     complexCoordinate v ≠ 0 :=
   complexCoordinateFun_ne_zero v.2
 
@@ -329,29 +330,29 @@ theorem windingPeriod_standardPuncturedBoundaryClass :
     windingPeriod complexCoordinate complexCoordinate_ne_zero
       (standardPuncturedBoundaryClass 1) = 1 := by
   have hlift : standardPuncturedBoundaryCycle 1 ≫
-      (singularChains (standardPuncturedPair 2).snd).iCycles 1 =
+      (singularChains (puncturedPair ℝ 2).snd).iCycles 1 =
       standardSubspaceBoundaryChain 1 :=
     HomologicalComplex.liftCycles_i _ _ _ _ _
   have h1 : windingPeriod complexCoordinate complexCoordinate_ne_zero
       (standardPuncturedBoundaryClass 1) =
       ((standardPuncturedBoundaryCycle 1 ≫
-        (singularChains (standardPuncturedPair 2).snd).iCycles 1 ≫
-        windingCochain complexCoordinate complexCoordinate_ne_zero).hom) 1 := by
+        (singularChains (puncturedPair ℝ 2).snd).iCycles 1 ≫
+        windingCochain (Y := (puncturedPair ℝ 2).snd) complexCoordinate complexCoordinate_ne_zero).hom) 1 := by
     rw [← homologyπ_comp_windingPeriodHom]
     rfl
   have hterm : ∀ i : Fin 3,
-      (((-1 : ℤ) ^ (i : ℕ) • standardSubspaceFaceChain 1 i) ≫
-          windingCochain complexCoordinate complexCoordinate_ne_zero) =
+      (((-1 : ℤ) ^ (i : ℕ) • standardSubspaceFaceChain ℚ 1 i) ≫
+          windingCochain (Y := (puncturedPair ℝ 2).snd) complexCoordinate complexCoordinate_ne_zero) =
         scalarHomDiv ((-1 : ℂ) ^ (i : ℕ) *
           simplexIncrement complexCoordinate complexCoordinate_ne_zero
             (standardFaceSimplex 1 i)) := by
     intro i
     rw [Preadditive.zsmul_comp]
-    rw [show (standardSubspaceFaceChain 1 i ≫
-        windingCochain complexCoordinate complexCoordinate_ne_zero) =
+    rw [show (standardSubspaceFaceChain ℚ 1 i ≫
+        windingCochain (Y := (puncturedPair ℝ 2).snd) complexCoordinate complexCoordinate_ne_zero) =
       scalarHom (simplexIncrement complexCoordinate complexCoordinate_ne_zero
         (standardFaceSimplex 1 i) / twoPiI) from
-      ιChainComplex_comp_windingCochain complexCoordinate complexCoordinate_ne_zero
+      ιChainComplex_comp_windingCochain (Y := (puncturedPair ℝ 2).snd) complexCoordinate complexCoordinate_ne_zero
         (standardFaceSimplex 1 i)]
     rw [scalarHomDiv_apply,
       show ((-1 : ℂ) ^ (i : ℕ) * simplexIncrement complexCoordinate complexCoordinate_ne_zero

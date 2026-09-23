@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.HolomorphicExponentialSingularClass
-public import Other.AlgebraicGeometry.BettiSupportConeComparison
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeComparison
 public import Other.Algebra.Homology.SingleCocycleFactorization
 /-!
 # Restricting the exponential–winding comparison

@@ -61,15 +61,15 @@ namespace HolomorphicUnitExtension
 variable (E : HolomorphicUnitExtension X d) (Ω : Opens (TopCat.of (ComplexPoint X)))
   (ℓ₁ ℓ₂ : E.middle.obj.obj (op Ω))
   (hℓ₁ : E.projection.hom.app (op Ω) ℓ₁ =
-    (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection)
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection)
   (hℓ₂ : E.projection.hom.app (op Ω) ℓ₂ =
-    (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection)
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection)
 
 /-- The two factorisations of the restriction morphism attached to two lifts of `1` over `Ω`
 differ by a morphism factoring through the projection: their difference kills the inclusion of the
 unit sheaf, and the projection is a cokernel of that inclusion. -/
 theorem exists_restrictionFactorisation_eq_add :
-    ∃ s : constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d),
+    ∃ s : 𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d),
       E.restrictionFactorisation Ω ℓ₂ hℓ₂ =
         E.restrictionFactorisation Ω ℓ₁ hℓ₁ + E.projection ≫ s := by
   have hzero : E.inclusion ≫
@@ -86,7 +86,7 @@ theorem exists_restrictionFactorisation_eq_add :
 quotient and the inclusion into the relative unit cone. This is the chain-level boundary
 term that survives when a unit on the complement does not extend across the divisor. -/
 theorem exists_relativeConeMap_sub_eq :
-    ∃ s : constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d),
+    ∃ s : 𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d),
       E.relativeConeMap Ω ℓ₂ hℓ₂ - E.relativeConeMap Ω ℓ₁ hℓ₁ =
         E.coneToInteger ≫ (analyticSingleFunctor X).map s ≫
           CochainComplex.mappingCone.inr
@@ -104,7 +104,7 @@ set_option backward.isDefEq.respectTransparency.types false in
 theorem restrictionFactorisation_comp_inclusion
     (ℓ : E.middle.obj.obj (op Ω))
     (hℓ : E.projection.hom.app (op Ω) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
     E.restrictionFactorisation Ω ℓ hℓ ≫ (openRestrictionFunctor Ω).map E.inclusion =
       restrictionUnit Ω E.middle - E.projection ≫ E.liftHom Ω ℓ := by
   have hr := (E.restrictedSplitting Ω ℓ hℓ).r_f
@@ -139,7 +139,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The cone difference factors through the frame difference in the opposite order.
 This records the frame sign explicitly at the level of sheaf morphisms. -/
 theorem exists_relativeConeMap_sub_eq_with_liftHom :
-    ∃ s : constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d),
+    ∃ s : 𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d),
       s ≫ (openRestrictionFunctor Ω).map E.inclusion = E.liftHom Ω ℓ₁ - E.liftHom Ω ℓ₂ ∧
       E.relativeConeMap Ω ℓ₂ hℓ₂ - E.relativeConeMap Ω ℓ₁ hℓ₁ =
         E.coneToInteger ≫ (analyticSingleFunctor X).map s ≫
@@ -175,7 +175,7 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 /-- On sections, the quotient morphism records the frame difference in reverse order. -/
 theorem liftHom_difference_section
-    (s : constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d))
+    (s : 𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d))
     (hs : s ≫ (openRestrictionFunctor Ω).map E.inclusion = E.liftHom Ω ℓ₁ - E.liftHom Ω ℓ₂) :
     E.inclusion.hom.app (op Ω)
       ((openRestrictionTopEval Ω).hom.app (holomorphicUnitSheaf X d)
@@ -186,7 +186,7 @@ theorem liftHom_difference_section
       (((openRestrictionFunctor Ω).map E.inclusion).hom.app (op ⊤)
         (s.hom.app (op ⊤) integerOneSection)) = _ at hn
   refine hn.symm.trans ?_
-  have he := congrArg (fun f : constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj E.middle =>
+  have he := congrArg (fun f : 𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj E.middle =>
     (openRestrictionTopEval Ω).hom.app E.middle (f.hom.app (op ⊤) integerOneSection)) hs
   change (openRestrictionTopEval Ω).hom.app E.middle
       (((openRestrictionFunctor Ω).map E.inclusion).hom.app (op ⊤)
@@ -201,7 +201,7 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 /-- If the new frame differs by the unit `w`, the cone quotient section is `-w`. -/
 theorem liftHom_difference_section_eq_neg_unit
-    (s : constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d))
+    (s : 𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d))
     (hs : s ≫ (openRestrictionFunctor Ω).map E.inclusion = E.liftHom Ω ℓ₁ - E.liftHom Ω ℓ₂)
     (w : (holomorphicUnitSheaf X d).obj.obj (op Ω))
     (hw : E.inclusion.hom.app (op Ω) w = ℓ₂ - ℓ₁) :

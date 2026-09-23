@@ -55,10 +55,10 @@ lemma rationalSupportBoundary_restrictedSingularOneCocycle_eq_windingHom :
 variable (E : HolomorphicUnitExtension X d)
   (ℓ₁ ℓ₂ : E.middle.obj.obj (op Ω))
   (hℓ₁ : E.projection.hom.app (op Ω) ℓ₁ =
-    (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
       HolomorphicUnitExtension.integerOneSection)
   (hℓ₂ : E.projection.hom.app (op Ω) ℓ₂ =
-    (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
       HolomorphicUnitExtension.integerOneSection)
 
 /-- Changing a frame by a unit changes the actual relative first Chern class

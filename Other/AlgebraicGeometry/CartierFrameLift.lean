@@ -129,10 +129,10 @@ theorem exists_lift_of_goodLocus_with_localFormula
   obtain ⟨ℓ, hℓ, -⟩ := E.middle.existsUnique_gluing' W Ω (fun z => homOfLE (hWΩ z)) hcover
     (fun z => sres E.middle (hWl z) (localLift g E e z (D z) hg)) hcompat
   refine ⟨ℓ, ?_, ?_⟩
-  · apply (constantIntegerSheaf X).eq_of_locally_eq' W Ω (fun z => homOfLE (hWΩ z)) hcover
+  · apply (𝓒(↧(ComplexPoint X); ℤ)).eq_of_locally_eq' W Ω (fun z => homOfLE (hWΩ z)) hcover
     intro z
-    change sres (constantIntegerSheaf X) _ (E.projection.hom.app _ ℓ) =
-      sres (constantIntegerSheaf X) _ (integerOneRestrict X Ω)
+    change sres (𝓒(↧(ComplexPoint X); ℤ)) _ (E.projection.hom.app _ ℓ) =
+      sres (𝓒(↧(ComplexPoint X); ℤ)) _ (integerOneRestrict X Ω)
     rw [sres_hom, sres_integerOneRestrict]
     have h1 : sres E.middle (hWΩ z) ℓ = sres E.middle (hWl z) (localLift g E e z (D z) hg) := hℓ z
     rw [h1, ← sres_hom, projection_localLift, sres_integerOneRestrict]

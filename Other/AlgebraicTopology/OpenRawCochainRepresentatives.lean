@@ -21,30 +21,6 @@ set_option backward.isDefEq.respectTransparency.types false
 set_option backward.defeqAttrib.useBackward true
 set_option maxHeartbeats 800000
 
-universe u v
-
-namespace HomologicalComplex
-variable {C D : Type u} [Category C] [Category D]
-  [Preadditive C] [Preadditive D] [HasZeroObject C] [HasZeroObject D]
-  {i i' : Type v} {c : ComplexShape i} {c' : ComplexShape i'}
-  (F : C ⥤ D) [F.Additive] (K : HomologicalComplex C c)
-  (e : c.Embedding c') [e.IsRelIff]
-omit [e.IsRelIff] in
-lemma mapExtendIso_hom_f {p : i} {q : i'} (h : e.f p = q) :
-    (mapExtendIso F K e).hom.f q =
-    F.map (K.extendXIso e h).hom ≫
-      (((F.mapHomologicalComplex c).obj K).extendXIso e h).inv := by
-  change (mapExtendXIsoAux F K (e.r q)).hom =
-    F.map (extend.XIso K (e.r_eq_some h)).hom ≫
-      (extend.XIso ((F.mapHomologicalComplex c).obj K) (e.r_eq_some h)).inv
-  have H (a : Option i) (ha : a = some p) :
-      (mapExtendXIsoAux F K a).hom = F.map (extend.XIso K ha).hom ≫
-        (extend.XIso ((F.mapHomologicalComplex c).obj K) ha).inv := by
-    subst a
-    simp [mapExtendXIsoAux, extend.XIso]
-    rfl
-  exact H _ _
-end HomologicalComplex
 namespace AlgebraicTopology.Singular
 variable (R : Type) [Field R] (X : TopCat.{0}) (V : Opens X)
 lemma openRawSingularCochainComplexIntIsoDual_inv_f (n : ℕ) :
@@ -58,9 +34,9 @@ lemma openRawSingularCochainComplexIntIsoDual_inv_f (n : ℕ) :
   dsimp only [openRawSingularCochainComplexIntIsoDual, Iso.trans_inv, Iso.symm_inv,
     Functor.mapIso_inv]
   rw [HomologicalComplex.comp_f]
-  erw [HomologicalComplex.mapExtendIso_hom_f (forget₂ (ModuleCat R) AddCommGrpCat)
+  erw [HomologicalComplex.mapExtendCanonicalIso_hom_f (forget₂ (ModuleCat R) AddCommGrpCat)
     (SingularChainComplex R (TopCat.of V)).linearDualCochainComplex
-    ComplexShape.embeddingUpNat (p := n) (q := (n : ℤ)) rfl]
+    ComplexShape.embeddingUpNat (i := n) (j := (n : ℤ)) rfl]
   erw [HomologicalComplex.extendMap_f _ ComplexShape.embeddingUpNat (i := n) rfl]
   simp only [Category.assoc, ← CategoryTheory.Functor.map_comp_assoc, Iso.inv_hom_id,
     CategoryTheory.Functor.map_id, Category.id_comp, Iso.inv_hom_id_assoc]

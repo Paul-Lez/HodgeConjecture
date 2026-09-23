@@ -62,8 +62,8 @@ def rationalChernShiftedHom :
       (constantFieldSheafComplexInt ℚ X) ((1 : ℕ) : ℤ) :=
   SmallShiftedHom.comp (holomorphicExponentialSequence_shortExact X d).extClass
     (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-      ((analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).inv ≫
-        integerToFieldConstantSheafComplexInt ℚ X 1)) (zero_add ((1 : ℕ) : ℤ))
+      ((analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv ≫
+        analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1))) (zero_add ((1 : ℕ) : ℤ))
 
 /-- The unique factorization of the rational exponential class through restriction to `Ω`.
 Its identification with singular winding is a separate comparison theorem. -/
@@ -173,7 +173,7 @@ abbrev inclusionCone : CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
 
 /-- The canonical quasi-isomorphism from the mapping cone of the inclusion to the quotient. -/
 abbrev coneToInteger :
-    E.inclusionCone ⟶ (analyticSingleFunctor X).obj (constantIntegerSheaf X) :=
+    E.inclusionCone ⟶ (analyticSingleFunctor X).obj (𝓒(↧(ComplexPoint X); ℤ)) :=
   CochainComplex.mappingCone.descShortComplex E.singleShortComplex
 
 lemma quasiIso_coneToInteger : QuasiIso E.coneToInteger :=
@@ -210,27 +210,29 @@ theorem cohomologyClass_comp_rationalChernShiftedHom :
     SmallShiftedHom.comp E.cohomologyClass (rationalChernShiftedHom X d)
         (show ((1 : ℕ) : ℤ) + ((1 : ℕ) : ℤ) = ((2 : ℕ) : ℤ) by lia) =
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-          (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).inv).comp
-        (integralToRationalCohomology X 2 E.firstChernClass) (add_zero ((2 : ℕ) : ℤ)) := by
-  have hα : analyticSheafCohomologyEquivExt X (constantIntegerSheaf X) 2 E.firstChernClass =
+          (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv).comp
+        (hypercohomologyMap X
+          (analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1)) 2
+          E.firstChernClass) (add_zero ((2 : ℕ) : ℤ)) := by
+  have hα : analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2 E.firstChernClass =
       holomorphicFirstChernClass X d E.cohomologyClass :=
-    (analyticSheafCohomologyEquivExt X (constantIntegerSheaf X) 2).apply_symm_apply _
-  have h1 := analyticSheafCohomologyEquivExt_comp X (constantIntegerSheaf X) 2 E.firstChernClass
+    (analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).apply_symm_apply _
+  have h1 := analyticSheafCohomologyEquivExt_comp X (𝓒(↧(ComplexPoint X); ℤ)) 2 E.firstChernClass
     (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-      ((analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).inv ≫
-        integerToFieldConstantSheafComplexInt ℚ X 1)) (zero_add ((2 : ℕ) : ℤ))
+      ((analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv ≫
+        analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1))) (zero_add ((2 : ℕ) : ℤ))
   rw [hα, SmallShiftedHom.mk₀_comp_mk₀' (M := ℤ),
-    show (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).hom ≫
-      (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).inv ≫
-        integerToFieldConstantSheafComplexInt ℚ X 1 =
-      integerToFieldConstantSheafComplexInt ℚ X 1 by
+    show (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).hom ≫
+      (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv ≫
+        analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1) =
+      analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1) by
       rw [← Category.assoc, Iso.hom_inv_id, Category.id_comp]] at h1
   refine Eq.trans ?_ h1
   exact (SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X) E.cohomologyClass
     (holomorphicExponentialSequence_shortExact X d).extClass
     (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-      ((analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).inv ≫
-        integerToFieldConstantSheafComplexInt ℚ X 1))
+      ((analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv ≫
+        analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1)))
     (show ((1 : ℕ) : ℤ) + ((1 : ℕ) : ℤ) = ((2 : ℕ) : ℤ) by lia) (zero_add ((1 : ℕ) : ℤ))
     (by lia)).symm
 
@@ -238,7 +240,7 @@ theorem cohomologyClass_comp_rationalChernShiftedHom :
 
 variable (Ω : Opens (TopCat.of (ComplexPoint X))) (ℓ : E.middle.obj.obj (op Ω))
   (hℓ : E.projection.hom.app (op Ω) ℓ =
-    (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection)
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The commutative square expressing that the restriction morphism of the unit sheaf factors
@@ -266,7 +268,7 @@ functorial for honest commutative squares, and the square is the factorisation
 `E.inclusion ≫ restrictionFactorisation = restrictionUnit` produced by the splitting datum `ℓ`. -/
 def relativeCohomologyClass :
     SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
-      ((analyticSingleFunctor X).obj (constantIntegerSheaf X)) (relativeUnitCone X d Ω)
+      ((analyticSingleFunctor X).obj (𝓒(↧(ComplexPoint X); ℤ))) (relativeUnitCone X d Ω)
       (0 : ℤ) :=
   (SmallShiftedHom.precompEquiv E.coneToInteger
     (by change QuasiIso _; exact E.quasiIso_coneToInteger) (a := (0 : ℤ))).symm
@@ -319,7 +321,7 @@ def relativeCohomologyClass' :
     SmallShiftedHom.{1} (analyticQuasiIsomorphisms X) (constantIntegerSheafComplexInt X)
       (relativeUnitCone X d Ω) (0 : ℤ) :=
   (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-      (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).hom).comp
+      (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).hom).comp
     (E.relativeCohomologyClass Ω ℓ hℓ) (add_zero (0 : ℤ))
 
 set_option backward.isDefEq.respectTransparency false in
@@ -328,12 +330,12 @@ lemma relativeCohomologyClass'_comp_relativeUnitConeδ :
         (SmallShiftedHom.mk (analyticQuasiIsomorphisms X) (relativeUnitConeδ X d Ω))
         (add_zero ((1 : ℕ) : ℤ)) =
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-          (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).hom).comp
+          (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).hom).comp
         E.cohomologyClass (add_zero ((1 : ℕ) : ℤ)) := by
   rw [relativeCohomologyClass',
     SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X)
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-        (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).hom)
+        (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).hom)
       (E.relativeCohomologyClass Ω ℓ hℓ)
       (SmallShiftedHom.mk (analyticQuasiIsomorphisms X) (relativeUnitConeδ X d Ω))
       (add_zero (0 : ℤ)) (add_zero ((1 : ℕ) : ℤ)) (by lia),
@@ -344,24 +346,28 @@ set_option backward.isDefEq.respectTransparency false in
 theorem mk₀_comp_cohomologyClass_comp_rationalChernShiftedHom :
     SmallShiftedHom.comp
         ((SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-            (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).hom).comp
+            (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).hom).comp
           E.cohomologyClass (add_zero ((1 : ℕ) : ℤ)))
         (rationalChernShiftedHom X d)
         (show ((1 : ℕ) : ℤ) + ((1 : ℕ) : ℤ) = ((2 : ℕ) : ℤ) by lia) =
-      integralToRationalCohomology X 2 E.firstChernClass := by
+      hypercohomologyMap X
+        (analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1)) 2
+        E.firstChernClass := by
   rw [SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X)
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-        (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).hom)
+        (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).hom)
       E.cohomologyClass (rationalChernShiftedHom X d)
       (add_zero ((1 : ℕ) : ℤ)) (show ((1 : ℕ) : ℤ) + ((1 : ℕ) : ℤ) = ((2 : ℕ) : ℤ) by lia)
       (by lia),
     E.cohomologyClass_comp_rationalChernShiftedHom,
     ← SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X)
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-        (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).hom)
+        (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).hom)
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-        (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).inv)
-      (integralToRationalCohomology X 2 E.firstChernClass)
+        (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv)
+      (hypercohomologyMap X
+        (analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1)) 2
+        E.firstChernClass)
       (add_zero (0 : ℤ)) (add_zero ((2 : ℕ) : ℤ)) (by lia),
     SmallShiftedHom.mk₀_comp_mk₀' (M := ℤ), Iso.hom_inv_id,
     SmallShiftedHom.mk₀_id_comp]
@@ -382,6 +388,14 @@ set_option backward.isDefEq.respectTransparency false in
 theorem forgetSupport_relativeChernClass (cmp : RelativeChernComparison X d Ω) :
     forgetSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2 (E.relativeChernClass Ω ℓ hℓ cmp) =
       integralToRationalCohomology X 2 E.firstChernClass := by
+  change (hypercohomologyAddEquivConstantCohomology ℚ X 2)
+      (forgetSupportHypercohomology X ((Ω : Set (ComplexPoint X))ᶜ) 2
+        (E.relativeChernClass Ω ℓ hℓ cmp)) =
+    (hypercohomologyAddEquivConstantCohomology ℚ X 2)
+      (hypercohomologyMap X
+        (analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1)) 2
+        E.firstChernClass)
+  apply congrArg (hypercohomologyAddEquivConstantCohomology ℚ X 2)
   show SmallShiftedHom.comp
       (SmallShiftedHom.comp (E.relativeCohomologyClass' Ω ℓ hℓ) cmp.hom
         (show ((1 : ℕ) : ℤ) + (0 : ℤ) = (2 : ℤ) - 1 by lia))
@@ -407,7 +421,7 @@ end HolomorphicUnitExtension
 
 variable (X d)
 
-set_option maxHeartbeats 1000000 in
+set_option maxHeartbeats 2000000 in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The comparison datum exists.** This is the axiom TR3 of triangulated categories applied to
 the square formed by the rational exponential Chern class and the factorisation of the restricted
@@ -483,7 +497,7 @@ exactness; here the lift is `E.relativeChernClass Ω ℓ hℓ cmp`, built from t
 theorem exists_relativeChernClass (Ω : Opens (TopCat.of (ComplexPoint X)))
     (E : HolomorphicUnitExtension X d) (ℓ : E.middle.obj.obj (op Ω))
     (hℓ : E.projection.hom.app (op Ω) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
         HolomorphicUnitExtension.integerOneSection) :
     ∃ β : RationalCohomologyWithSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2,
       forgetSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2 β =

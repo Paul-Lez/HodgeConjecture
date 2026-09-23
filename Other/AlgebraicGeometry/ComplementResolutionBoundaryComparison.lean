@@ -78,7 +78,7 @@ lemma actualSingularRestriction_comp_ambientOutsideResolutionComparison :
     (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ (complexSingularToAmbientInjective X)
   change _ ≫ (_ ≫ ambientRationalOpenResolutionComparison X Z hZ) = _
   erw [← Category.assoc, ← f.comm₂₃, Category.assoc,
-    actualRestriction_comp_openResolutionComparison]
+    supportRestriction_comp_openResolutionComparison]
   rfl
 
 local instance complementComparisonDerivedCategory :

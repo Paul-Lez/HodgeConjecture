@@ -15,10 +15,10 @@ limitations under the License.
 -/
 module
 
-public import Other.AlgebraicTopology.SingularCoverSmall
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.CoverSmall
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
 
-import Other.AlgebraicTopology.SingularExcisionOpenCover
+import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.OpenCover
 
 /-!
 # Small singular chains with coefficients in a commutative ring
