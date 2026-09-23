@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.HolomorphicUnitExtension
 public import Other.AlgebraicTopology.ConstantSheafGlobalSection
-public import Other.AlgebraicTopology.NestedSheafSupportOnOpen
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.NestedOnOpen
 
 /-!
 # Unit-sheaf extensions that split on an open set
@@ -83,12 +83,12 @@ variable (X)
 /-- The constant integer sheaf of the analytic space is the constant integer sheaf of its
 underlying topological space. -/
 lemma constantIntegerSheaf_eq :
-    constantIntegerSheaf X = TopCat.Sheaf.integerConstantSheaf (TopCat.of (ComplexPoint X)) := rfl
+    𝓒(↧(ComplexPoint X); ℤ) = TopCat.Sheaf.integerConstantSheaf (TopCat.of (ComplexPoint X)) := rfl
 
 /-- The global section `1` of the constant integer sheaf determines the identity. -/
 lemma constHomOfSection_integerOneSection :
-    TopCat.Sheaf.constHomOfSection (constantIntegerSheaf X)
-        (HolomorphicUnitExtension.integerOneSection (X := X)) = 𝟙 (constantIntegerSheaf X) :=
+    TopCat.Sheaf.constHomOfSection (𝓒(↧(ComplexPoint X); ℤ))
+        (HolomorphicUnitExtension.integerOneSection (X := X)) = 𝟙 (𝓒(↧(ComplexPoint X); ℤ)) :=
   TopCat.Sheaf.constHomOfSection_integerOne
 
 /-- Restriction of analytic sheaves to an open subset. -/
@@ -127,7 +127,7 @@ variable (E : HolomorphicUnitExtension X d) (Ω : Opens (TopCat.of (ComplexPoint
 /-- The morphism from the constant integer sheaf determined by a section of the middle sheaf on
 `Ω`. -/
 def liftHom (ℓ : E.middle.obj.obj (op Ω)) :
-    constantIntegerSheaf X ⟶ (openRestrictionFunctor Ω).obj E.middle :=
+    𝓒(↧(ComplexPoint X); ℤ) ⟶ (openRestrictionFunctor Ω).obj E.middle :=
   TopCat.Sheaf.constHomOfSection _ ((openRestrictionTopEval Ω).inv.app E.middle ℓ)
 
 set_option backward.isDefEq.respectTransparency false in
@@ -135,24 +135,24 @@ set_option backward.isDefEq.respectTransparency false in
 the constant section `1`. -/
 lemma projection_liftSection (ℓ : E.middle.obj.obj (op Ω))
     (hℓ : E.projection.hom.app (op Ω) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
     ((openRestrictionFunctor Ω).map E.projection).hom.app (op ⊤)
         ((openRestrictionTopEval Ω).inv.app E.middle ℓ) =
-      (restrictionUnit Ω (constantIntegerSheaf X)).hom.app (op ⊤) (integerOneSection (X := X)) := by
+      (restrictionUnit Ω (𝓒(↧(ComplexPoint X); ℤ))).hom.app (op ⊤) (integerOneSection (X := X)) := by
   have hnat := (openRestrictionTopEval Ω).inv.naturality E.projection
   have hleft : ((openRestrictionFunctor Ω).map E.projection).hom.app (op ⊤)
       ((openRestrictionTopEval Ω).inv.app E.middle ℓ) =
-      (openRestrictionTopEval Ω).inv.app (constantIntegerSheaf X)
+      (openRestrictionTopEval Ω).inv.app (𝓒(↧(ComplexPoint X); ℤ))
         (E.projection.hom.app (op Ω) ℓ) :=
     (CategoryTheory.comp_apply _ _ ℓ).symm.trans
       ((CategoryTheory.congr_fun hnat.symm ℓ).trans (CategoryTheory.comp_apply _ _ ℓ))
-  have h2 : (openRestrictionTopEval Ω).hom.app (constantIntegerSheaf X) ≫
-      (openRestrictionTopEval Ω).inv.app (constantIntegerSheaf X) = 𝟙 _ :=
-    (openRestrictionTopEval Ω).hom_inv_id_app (constantIntegerSheaf X)
-  have hu : (openRestrictionTopEval Ω).hom.app (constantIntegerSheaf X)
-      ((restrictionUnit Ω (constantIntegerSheaf X)).hom.app (op ⊤)
+  have h2 : (openRestrictionTopEval Ω).hom.app (𝓒(↧(ComplexPoint X); ℤ)) ≫
+      (openRestrictionTopEval Ω).inv.app (𝓒(↧(ComplexPoint X); ℤ)) = 𝟙 _ :=
+    (openRestrictionTopEval Ω).hom_inv_id_app (𝓒(↧(ComplexPoint X); ℤ))
+  have hu : (openRestrictionTopEval Ω).hom.app (𝓒(↧(ComplexPoint X); ℤ))
+      ((restrictionUnit Ω (𝓒(↧(ComplexPoint X); ℤ))).hom.app (op ⊤)
         (integerOneSection (X := X))) =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
         (integerOneSection (X := X)) :=
     openRestrictionTopEval_restrictionUnit Ω _ _
   rw [hleft, hℓ, ← hu]
@@ -163,23 +163,23 @@ set_option backward.isDefEq.respectTransparency false in
 /-- A lift of the constant section `1` over `Ω` splits the projection after restriction to `Ω`. -/
 lemma liftHom_comp_projection (ℓ : E.middle.obj.obj (op Ω))
     (hℓ : E.projection.hom.app (op Ω) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
     E.liftHom Ω ℓ ≫ (openRestrictionFunctor Ω).map E.projection =
-      restrictionUnit Ω (constantIntegerSheaf X) := by
+      restrictionUnit Ω (𝓒(↧(ComplexPoint X); ℤ)) := by
   rw [liftHom, TopCat.Sheaf.constHomOfSection_comp, E.projection_liftSection Ω ℓ hℓ,
     ← TopCat.Sheaf.constHomOfSection_comp, constHomOfSection_integerOneSection]
   exact Category.id_comp _
 
 /-- The section of the restricted projection determined by a lift of `1` over `Ω`. -/
 def restrictedSection (ℓ : E.middle.obj.obj (op Ω)) :
-    (restrictToOpen X Ω).obj (constantIntegerSheaf X) ⟶ (restrictToOpen X Ω).obj E.middle :=
+    (restrictToOpen X Ω).obj (𝓒(↧(ComplexPoint X); ℤ)) ⟶ (restrictToOpen X Ω).obj E.middle :=
   ((openRestrictionAdjunction Ω).homEquiv _ _).symm (E.liftHom Ω ℓ)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The restricted section really is a section of the restricted projection. -/
 lemma restrictedSection_comp_projection (ℓ : E.middle.obj.obj (op Ω))
     (hℓ : E.projection.hom.app (op Ω) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
     E.restrictedSection Ω ℓ ≫ (restrictToOpen X Ω).map E.projection = 𝟙 _ := by
   apply ((openRestrictionAdjunction Ω).homEquiv _ _).injective
   rw [Adjunction.homEquiv_naturality_right, Adjunction.homEquiv_id, restrictedSection,
@@ -195,7 +195,7 @@ lemma shortExact_map_restrictToOpen :
 /-- The splitting of the restricted extension determined by a lift of `1` over `Ω`. -/
 def restrictedSplitting (ℓ : E.middle.obj.obj (op Ω))
     (hℓ : E.projection.hom.app (op Ω) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
     (E.shortComplex.map (restrictToOpen X Ω)).Splitting :=
   ShortComplex.Splitting.ofExactOfSection _ (E.shortExact_map_restrictToOpen Ω).exact
     (E.restrictedSection Ω ℓ) (E.restrictedSection_comp_projection Ω ℓ hℓ)
@@ -205,7 +205,7 @@ def restrictedSplitting (ℓ : E.middle.obj.obj (op Ω))
 inclusion of the unit sheaf into the middle term. -/
 def restrictionFactorisation (ℓ : E.middle.obj.obj (op Ω))
     (hℓ : E.projection.hom.app (op Ω) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
     E.middle ⟶ (openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d) :=
   (openRestrictionAdjunction Ω).homEquiv _ _ (E.restrictedSplitting Ω ℓ hℓ).r
 
@@ -213,7 +213,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The factorisation really factors the canonical restriction morphism. -/
 lemma inclusion_comp_restrictionFactorisation (ℓ : E.middle.obj.obj (op Ω))
     (hℓ : E.projection.hom.app (op Ω) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
     E.inclusion ≫ E.restrictionFactorisation Ω ℓ hℓ =
       restrictionUnit Ω (holomorphicUnitSheaf X d) := by
   rw [restrictionFactorisation, ← Adjunction.homEquiv_naturality_left]
@@ -225,7 +225,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- **The class of an extension splitting on `Ω` dies after restriction to `Ω`.** -/
 theorem cohomologyClass_comp_restrictionUnit_eq_zero (ℓ : E.middle.obj.obj (op Ω))
     (hℓ : E.projection.hom.app (op Ω) ℓ =
-      (constantIntegerSheaf X).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op integerOneSection) :
     E.cohomologyClass.comp
         (Abelian.Ext.mk₀ (restrictionUnit Ω (holomorphicUnitSheaf X d))) (add_zero 1) = 0 := by
   rw [cohomologyClass, ← E.inclusion_comp_restrictionFactorisation Ω ℓ hℓ,

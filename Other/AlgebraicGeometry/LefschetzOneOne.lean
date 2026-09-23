@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Statement
+public import Other.AlgebraicGeometry.Cycle.SheafClass
 
 /-!
 # The rational Lefschetz (1, 1) theorem assuming the Hodge conjecture
@@ -46,7 +47,19 @@ every rational Hodge class in degree two is the class of a rational divisor. -/
 public theorem HodgeConjecture.rationalLefschetzOneOne
     (hodge : HodgeConjecture) : RationalLefschetzOneOne := by
   intro X _ _ _ α hα
-  exact algebraicCycleClassSpan_le_range_rationalSheafCycleClassOnCycles X 1 (hodge X 1 hα)
+  have hspan : algebraicCycleClassSpan X 1 ≤
+      LinearMap.range (rationalSheafCycleClassOnCycles
+        { scheme := X.left, structureMap := X.hom } 1) := by
+    refine sSup_le ?_
+    rintro S ⟨x, hx, hS⟩
+    subst S
+    apply (Submodule.span_singleton_le_iff_mem _ _).mpr
+    refine ⟨1 ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1, ?_⟩
+    refine (rationalSheafCycleClassOnCycles_tmul_single
+      { scheme := X.left, structureMap := X.hom } 1 1 x hx).trans ?_
+    rw [one_smul]
+    rfl
+  exact hspan (hodge X 1 hα)
 
 open scoped TensorProduct
 
@@ -61,7 +74,9 @@ public theorem HodgeConjecture.rationalLefschetzOneOne_direct :
   have hspan : algebraicCycleClassSpan X 1 ≤
       LinearMap.range (rationalSheafCycleClassOnCycles
         { scheme := X.left, structureMap := X.hom } 1) := by
-    refine iSup_le fun x ↦ iSup_le fun hx ↦ ?_
+    refine sSup_le ?_
+    rintro S ⟨x, hx, hS⟩
+    subst S
     apply (Submodule.span_singleton_le_iff_mem _ _).mpr
     refine ⟨1 ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1, ?_⟩
     refine (rationalSheafCycleClassOnCycles_tmul_single

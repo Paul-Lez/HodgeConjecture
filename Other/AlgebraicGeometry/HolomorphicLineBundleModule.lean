@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.HolomorphicLineBundleSections
+public import Other.AlgebraicGeometry.HolomorphicRingSheaf
 public import Mathlib.Algebra.Category.ModuleCat.Sheaf
 
 /-!
@@ -26,12 +27,6 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 local instance holomorphicLineBundleModuleTopology : TopologicalSpace (ComplexPoint X) :=
   Point.analyticTopology
-
-/-- The holomorphic structure sheaf, regarded as a sheaf of rings. -/
-def holomorphicRingSheaf :
-    Sheaf (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) RingCat :=
-  (sheafCompose (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-    (forget₂ CommRingCat RingCat)).obj (holomorphicFunctionSheaf X d)
 
 namespace HolomorphicUnitExtension
 

@@ -6,7 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.HolomorphicIntegralHodgeClass
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
-public import Other.CategoryTheory.Abelian.ExtOneRepresentative
+public import HodgeConjecture.Mathlib.CategoryTheory.Abelian.ExtOneRepresentative
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 
 /-!
@@ -35,7 +35,7 @@ structure HolomorphicUnitExtension where
   /-- Inclusion of the holomorphic units. -/
   inclusion : holomorphicUnitSheaf X d ⟶ middle
   /-- Projection to the constant integer sheaf. -/
-  projection : middle ⟶ constantIntegerSheaf X
+  projection : middle ⟶ 𝓒(↧(ComplexPoint X); ℤ)
   /-- Consecutive arrows have zero composite. -/
   zero : inclusion ≫ projection = 0
   /-- The extension is short exact. -/
@@ -51,19 +51,19 @@ abbrev shortComplex (E : HolomorphicUnitExtension X d) :=
 
 /-- The degree-one sheaf cohomology class of an extension. -/
 def cohomologyClass (E : HolomorphicUnitExtension X d) :
-    Abelian.Ext.{1} (constantIntegerSheaf X) (holomorphicUnitSheaf X d) 1 :=
+    Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1 :=
   E.shortExact.extClass
 
 /-- The integral first Chern class of an extension, in the project's cohomology presentation. -/
 def firstChernClass (E : HolomorphicUnitExtension X d) : IntegralCohomology X 2 :=
-  (analyticSheafCohomologyEquivExt X (constantIntegerSheaf X) 2).symm
+  (analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
     (holomorphicFirstChernClass X d E.cohomologyClass)
 
 variable (X d)
 
 /-- Every degree-one class of the holomorphic-unit sheaf is represented by an extension. -/
 theorem exists_cohomologyClass
-    (β : Abelian.Ext.{1} (constantIntegerSheaf X) (holomorphicUnitSheaf X d) 1) :
+    (β : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1) :
     ∃ E : HolomorphicUnitExtension X d, E.cohomologyClass = β := by
   obtain ⟨M, i, p, w, h, hβ⟩ := Abelian.Ext.exists_shortExact β
   exact ⟨⟨M, i, p, w, h⟩, hβ⟩
@@ -71,7 +71,7 @@ theorem exists_cohomologyClass
 variable {X d}
 
 /-- The constant integer section `1` on the whole analytic space. -/
-def integerOneSection : (constantIntegerSheaf X).obj.obj
+def integerOneSection : (𝓒(↧(ComplexPoint X); ℤ)).obj.obj
     (op (⊤ : Opens (TopCat.of (ComplexPoint X)))) :=
   (toSheafify (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     ((Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).obj (AddCommGrpCat.of ℤ))).app
@@ -92,7 +92,7 @@ theorem exists_holomorphicUnitExtension_of_integral_hodgeClass [IsIntegral X.lef
   obtain ⟨β, hβ⟩ := exists_holomorphicFirstChernClass_of_integral_hodgeClass X α hα
   obtain ⟨E, hE⟩ := HolomorphicUnitExtension.exists_cohomologyClass X (dim X.left) β
   refine ⟨E, ?_⟩
-  apply (analyticSheafCohomologyEquivExt X (constantIntegerSheaf X) 2).injective
+  apply (analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).injective
   rw [HolomorphicUnitExtension.firstChernClass, Equiv.apply_symm_apply, hE, hβ]
 
 end AlgebraicGeometry.ComplexPoint

@@ -94,20 +94,20 @@ theorem germ_zsmul {F : AnalyticAdditiveSheaf X} {U : Opens (TopCat.of (ComplexP
   map_zsmul _ _ _
 
 theorem sres_integerOneRestrict {U V : Opens (TopCat.of (ComplexPoint X))} (h : V ≤ U) :
-    sres (constantIntegerSheaf X) h (integerOneRestrict X U) = integerOneRestrict X V :=
+    sres (𝓒(↧(ComplexPoint X); ℤ)) h (integerOneRestrict X U) = integerOneRestrict X V :=
   integerOneRestrict_map X h
 
 theorem germ_integerOneRestrict (W : Opens (TopCat.of (ComplexPoint X))) (x : ComplexPoint X)
     (hxW : x ∈ W) :
-    (constantIntegerSheaf X).presheaf.germ W x hxW (integerOneRestrict X W) =
-      (constantIntegerSheaf X).presheaf.germ ⊤ x True.intro (integerOneSection (X := X)) :=
-  germ_sres (F := constantIntegerSheaf X) le_top (integerOneSection (X := X)) x hxW
+    (𝓒(↧(ComplexPoint X); ℤ)).presheaf.germ W x hxW (integerOneRestrict X W) =
+      (𝓒(↧(ComplexPoint X); ℤ)).presheaf.germ ⊤ x True.intro (integerOneSection (X := X)) :=
+  germ_sres (F := 𝓒(↧(ComplexPoint X); ℤ)) le_top (integerOneSection (X := X)) x hxW
 
 /-- Consecutive maps of an extension annihilate sections. -/
 theorem inclusion_projection_apply (E : HolomorphicUnitExtension X d)
     {U : Opens (TopCat.of (ComplexPoint X))} (a : (holomorphicUnitSheaf X d).obj.obj (op U)) :
     E.projection.hom.app (op U) (E.inclusion.hom.app (op U) a) = 0 := by
-  have h := congrArg (fun f : holomorphicUnitSheaf X d ⟶ constantIntegerSheaf X =>
+  have h := congrArg (fun f : holomorphicUnitSheaf X d ⟶ 𝓒(↧(ComplexPoint X); ℤ) =>
     f.hom.app (op U) a) E.zero
   simp at h
   exact h
@@ -250,11 +250,11 @@ theorem exists_sourceModel (z : ComplexPoint X) {V : Opens (TopCat.of (ComplexPo
   obtain ⟨U₀, hxU₀, hU₀V, n, hn⟩ :=
     exists_zsmul_integerOneSection X V (E.projection.hom.app (op V) s) x hxV
   refine ⟨U₀ ⊓ c.opens z, ⟨hxU₀, hxz⟩, inf_le_left.trans hU₀V, inf_le_right, n, ?_⟩
-  have hn' : sres (constantIntegerSheaf X) hU₀V (E.projection.hom.app (op V) s) =
+  have hn' : sres (𝓒(↧(ComplexPoint X); ℤ)) hU₀V (E.projection.hom.app (op V) s) =
       n • integerOneRestrict X U₀ := hn
-  have hres : sres (constantIntegerSheaf X) (inf_le_left.trans hU₀V : U₀ ⊓ c.opens z ≤ V)
+  have hres : sres (𝓒(↧(ComplexPoint X); ℤ)) (inf_le_left.trans hU₀V : U₀ ⊓ c.opens z ≤ V)
       (E.projection.hom.app (op V) s) = n • integerOneRestrict X (U₀ ⊓ c.opens z) := by
-    rw [← sres_sres (F := constantIntegerSheaf X) hU₀V
+    rw [← sres_sres (F := 𝓒(↧(ComplexPoint X); ℤ)) hU₀V
       (inf_le_left : U₀ ⊓ c.opens z ≤ U₀), hn', sres_zsmul, sres_integerOneRestrict]
   have hproj : E.projection.hom.app (op (U₀ ⊓ c.opens z))
       (sres E.middle (inf_le_left.trans hU₀V) s -
@@ -287,11 +287,11 @@ theorem germ_targetModel_eq (x : ComplexPoint X) {U U' : Opens (TopCat.of (Compl
   have hn : n = n' := by
     have hp := congrArg (E.projection.hom.app (op W)) hW'
     rw [c.map_sourceModel, c.map_sourceModel] at hp
-    have hg := congrArg ((constantIntegerSheaf X).presheaf.germ W x hxW) hp
+    have hg := congrArg ((𝓒(↧(ComplexPoint X); ℤ)).presheaf.germ W x hxW) hp
     rw [germ_zsmul, germ_zsmul, germ_integerOneRestrict] at hg
     refine integerOneSection_zsmul_germ_injective X x ?_
-    exact (germ_zsmul (F := constantIntegerSheaf X) n (integerOneSection (X := X)) x
-      True.intro).trans (hg.trans (germ_zsmul (F := constantIntegerSheaf X) n'
+    exact (germ_zsmul (F := 𝓒(↧(ComplexPoint X); ℤ)) n (integerOneSection (X := X)) x
+      True.intro).trans (hg.trans (germ_zsmul (F := 𝓒(↧(ComplexPoint X); ℤ)) n'
         (integerOneSection (X := X)) x True.intro).symm)
   subst hn
   have hincl : E.inclusion.hom.app (op W) (sres (holomorphicUnitSheaf X d) iU.le a) =

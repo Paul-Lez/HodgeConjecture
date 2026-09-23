@@ -219,9 +219,9 @@ theorem middleHom_projection : c.middleHom ≫ E'.projection = E.projection := b
   apply AddCommGrpCat.hom_ext
   apply AddMonoidHom.ext
   intro s
-  apply TopCat.Presheaf.section_ext (constantIntegerSheaf X) V
+  apply TopCat.Presheaf.section_ext (𝓒(↧(ComplexPoint X); ℤ)) V
   intro x hx
-  show (constantIntegerSheaf X).presheaf.germ V x hx
+  show (𝓒(↧(ComplexPoint X); ℤ)).presheaf.germ V x hx
       (E'.projection.hom.app (op V) (c.middleHom.hom.app (op V) s)) = _
   rw [germ_hom, c.germ_middleHom, c.projection_stalkValue, ← germ_hom]
 
