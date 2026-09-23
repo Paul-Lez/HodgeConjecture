@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-23)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5276 jobs),
-and the comparison audit checks 299 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5280 jobs),
+and the comparison audit checks 306 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -22,7 +22,8 @@ full theorem. The theorem and that completion review are still outstanding.
 The current work proves generic ideal generation in the actual component stalk,
 a nonzero cotangent class for the local equation, and continuous division by a simple
 analytic normal coordinate on restricted charts. It also proves the positive winding
-identity for the compatible Cartier frame difference. Three steps remain:
+identity for the compatible Cartier frame difference and an exact sheaf-map
+comparison with the existing global support normalization. Three steps remain:
 
 - Identify the algebraic cotangent class with the analytic derivative.
 - Construct the normalized winding charts from that nonzero derivative.
