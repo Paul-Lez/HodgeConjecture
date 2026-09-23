@@ -50,4 +50,35 @@ theorem analyticAt_closedImmersionHolomorphicFlatteningChart_normalCoordinateCha
       (closedImmersionHolomorphicFlatteningChart X Y i m d z y) :=
   ((OpenPartialHomeomorph.biAnalyticRestrict_mem_source_iff _ _).mp hy.1.2).2
 
+/-- A regular function remains analytic after pullback by the canonical flattening chart. -/
+theorem analyticAt_closedImmersionHolomorphicFlatteningChart_evaluate
+    (V : X.left.Opens) (s : Γ(X.left, V))
+    (y : ComplexPoint X)
+    (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)
+    (hV : (closedImmersionHolomorphicFlatteningChart X Y i m d z).symm
+      (closedImmersionHolomorphicFlatteningChart X Y i m d z y) ∈ Point.overOpen V) :
+    AnalyticAt ℂ
+      (fun v ↦ Point.evaluate V s
+        ((closedImmersionHolomorphicFlatteningChart X Y i m d z).symm v))
+      (closedImmersionHolomorphicFlatteningChart X Y i m d z y) := by
+  let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
+  let A := closedImmersionNormalCoordinateChange X Y i m d z
+  have hA : AnalyticAt ℂ A.symm (e y) := by
+    exact (analyticAt_closedImmersionHolomorphicFlatteningChart_normalCoordinateChange
+      X Y i m d z y hy).2
+  have htarget : A.symm (e y) ∈ (localChart X d (Point.map i z)).target := by
+    have hleft : A.symm (e y) = localChart X d (Point.map i z) y := by
+      change A.symm (A (localChart X d (Point.map i z) y)) = _
+      exact A.left_inv hy.1.2.1
+    rw [hleft]
+    exact (localChart X d (Point.map i z)).map_source hy.1.1
+  have hV' : (localChart X d (Point.map i z)).symm (A.symm (e y)) ∈
+      Point.overOpen V := by
+    simpa only [e, closedImmersionHolomorphicFlatteningChart_symm_apply] using hV
+  have heval := analyticAt_localChart_symm_evaluate X d (Point.map i z) htarget V s hV'
+  have hcomp := heval.comp hA
+  apply hcomp.congr
+  filter_upwards [] with v
+  simp only [Function.comp_apply, A, closedImmersionHolomorphicFlatteningChart_symm_apply]
+
 end AlgebraicGeometry.ComplexPoint
