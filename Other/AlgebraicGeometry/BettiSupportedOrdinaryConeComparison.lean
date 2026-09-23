@@ -69,8 +69,8 @@ variable [T2Space (ComplexPoint X)] [∀ U : Opens (ComplexPoint X), Paracompact
 /-- The old support-forgetting map, computed through its natural singular support cone,
 lands in the actual ambient injective homology with the unaltered connecting sign. -/
 theorem rationalCohomologyAmbient_forgetSupport_naturalSingularCone
-    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
-    (a : RationalCohomologyWithSupport X Z n) :
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℕ)
+    (a : RationalCohomologyWithSupport X Z (n : ℤ)) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n (forgetSupport X Z n a) =
       (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
         (ShiftedHom.map
@@ -78,21 +78,25 @@ theorem rationalCohomologyAmbient_forgetSupport_naturalSingularCone
             (complexSingularToAmbientInjective X)⟦(1 : ℤ)⟧')
           ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
             (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)))
-        (n - 1) n (by omega)
-        (rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections X Z hZ n a) := by
+        ((n : ℤ) - 1) (n : ℤ) (by omega)
+        (rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections
+          X Z hZ (n : ℤ) a) := by
   let K := CochainComplex.mappingCone (naturalSingularResolutionRestriction X Z hZ)
   let : K.IsStrictlyGE (-1) := naturalSingularSupportCone_isStrictlyGE X Z hZ
-  change hypercohomologyAddEquivGlobalSectionsKInjective X _ n
-    (hypercohomologyMap X (ambientRationalInjectiveAugmentation X) n
-      (a.comp (Localization.SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
-        (CochainComplex.mappingCone.triangle (rationalRestrictionComplexInt X Z)).mor₃) (by omega))) = _
+  dsimp [rationalCohomologyAddEquivAmbientInjectiveHomology, forgetSupport]
+  rw [AddEquiv.symm_apply_apply]
+  change hypercohomologyAddEquivGlobalSectionsKInjective X _ (n : ℤ)
+    (hypercohomologyMap X (ambientRationalInjectiveAugmentation X) (n : ℤ)
+      (forgetSupportHypercohomology X Z (n : ℤ) a)) = _
   exact (congrArg (hypercohomologyAddEquivGlobalSectionsKInjective X
-    (ambientRationalInjectiveComplex X) n)
-    (hypercohomologyMap_comp_shifted X 1 (n - 1) n (by omega)
+    (ambientRationalInjectiveComplex X) (n : ℤ))
+    (hypercohomologyMap_comp_shifted X 1 ((n : ℤ) - 1) (n : ℤ) (by omega)
       (rationalSupportConeToNaturalSingularCone X Z hZ) _ _ _
-      (rationalSupportConeToNaturalSingularCone_ambient_connecting X Z hZ) a)).trans
+      (rationalSupportConeToNaturalSingularCone_ambient_connecting X Z hZ)
+      a)).trans
     (hypercohomologyAddEquivGlobalSections_shifted_naturality_to_kInjective
       X K (ambientRationalInjectiveComplex X) (-1)
-      (naturalSingularSupportCone_term_isFlasque X Z hZ) 1 (n - 1) n (by omega) _ _)
+      (naturalSingularSupportCone_term_isFlasque X Z hZ) 1 ((n : ℤ) - 1) (n : ℤ)
+      (by omega) _ _)
 
 end AlgebraicGeometry.ComplexPoint

@@ -6,6 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyShift
+public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomology
 
 /-!
 # Naturality through actual flasque and injective resolution comparisons
@@ -71,7 +72,7 @@ theorem hypercohomologyAddEquivGlobalSectionsOfResolution_map
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map i) n
   dsimp only [hypercohomologyAddEquivGlobalSectionsOfResolution,
     hypercohomologyAddEquivGlobalSectionsKInjective,
-    derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
+    TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply]
   rw [hypercohomologyAddEquivDerived_naturality]
   simp only [isoHomCongrAddEquiv_apply, Iso.refl_inv, Iso.refl_hom,
     Category.id_comp, Category.comp_id, Functor.mapIso_hom]
