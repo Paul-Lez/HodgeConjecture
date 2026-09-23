@@ -65,6 +65,34 @@ def rationalChernShiftedHom :
       ((analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).inv ≫
         integerToFieldConstantSheafComplexInt ℚ X 1)) (zero_add ((1 : ℕ) : ℤ))
 
+/-- The unique factorization of the rational exponential class through restriction to `Ω`.
+Its identification with singular winding is a separate comparison theorem. -/
+def restrictedRationalChernShiftedHom (Ω : Opens (TopCat.of (ComplexPoint X))) :
+    SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
+      ((analyticSingleFunctor X).obj ((openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d)))
+      (derivedPushforwardComplementConstantRationalComplexInt X ((Ω : Set (ComplexPoint X))ᶜ))
+      ((1 : ℕ) : ℤ) :=
+  (Equiv.ofBijective _ (bijective_comp_restrictionUnit X Ω ((Ω : Set (ComplexPoint X))ᶜ)
+    Ω.isOpen.isClosed_compl (compl_compl _).symm (holomorphicUnitSheaf X d) ((1 : ℕ) : ℤ))).symm
+    ((rationalChernShiftedHom X d).comp
+      (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
+        (rationalRestrictionComplexInt X ((Ω : Set (ComplexPoint X))ᶜ)))
+      (zero_add ((1 : ℕ) : ℤ)))
+
+/-- The defining factorization equation for the restricted rational exponential class. -/
+theorem restriction_comp_restrictedRationalChernShiftedHom
+    (Ω : Opens (TopCat.of (ComplexPoint X))) :
+    (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
+      ((analyticSingleFunctor X).map (restrictionUnit Ω (holomorphicUnitSheaf X d)))).comp
+        (restrictedRationalChernShiftedHom X d Ω) (add_zero ((1 : ℕ) : ℤ)) =
+    (rationalChernShiftedHom X d).comp
+      (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
+        (rationalRestrictionComplexInt X ((Ω : Set (ComplexPoint X))ᶜ)))
+      (zero_add ((1 : ℕ) : ℤ)) :=
+  (Equiv.ofBijective _ (bijective_comp_restrictionUnit X Ω ((Ω : Set (ComplexPoint X))ᶜ)
+    Ω.isOpen.isClosed_compl (compl_compl _).symm (holomorphicUnitSheaf X d)
+      ((1 : ℕ) : ℤ))).apply_symm_apply _
+
 variable {X d}
 
 /-! ### The comparison datum, and the relative first Chern class -/
@@ -72,9 +100,9 @@ variable {X d}
 /-- **The comparison datum of Route A.**
 
 A derived morphism from the cone of the restriction morphism of the unit sheaf to the supported
-rational complex, compatible with the connecting maps: composing it with `forgetSupport` is
-composing the connecting morphism of the relative unit cone with the rational exponential Chern
-class.
+rational complex, together with the restricted exponential class and all three squares of
+the morphism of triangles. In particular it records both the support-forgetting equation
+and the boundary equation on units from the complement.
 
 Such a datum exists by the axiom TR3 of triangulated categories applied to the commutative square
 formed by the exponential class and the factorisation `ζ` of
@@ -94,6 +122,39 @@ structure RelativeChernComparison (Y : Over (Spec ↧ℂ)) (e : ℕ)
       (SmallShiftedHom.mk (analyticQuasiIsomorphisms Y) (relativeUnitConeδ Y e V))
       (rationalChernShiftedHom Y e)
       (show ((1 : ℕ) : ℤ) + ((1 : ℕ) : ℤ) = ((2 : ℕ) : ℤ) by lia)
+  /-- The exponential class after restricting to the open complement. -/
+  restrictionClass : SmallShiftedHom.{1} (analyticQuasiIsomorphisms Y)
+    ((analyticSingleFunctor Y).obj ((openRestrictionFunctor V).obj (holomorphicUnitSheaf Y e)))
+    (derivedPushforwardComplementConstantRationalComplexInt Y ((V : Set (ComplexPoint Y))ᶜ))
+    ((1 : ℕ) : ℤ)
+  /-- The first square of the comparison of triangles. -/
+  restriction_comm :
+    (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms Y) 0 rfl
+      ((analyticSingleFunctor Y).map (restrictionUnit V (holomorphicUnitSheaf Y e)))).comp
+        restrictionClass (add_zero ((1 : ℕ) : ℤ)) =
+    (rationalChernShiftedHom Y e).comp
+      (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms Y) 0 rfl
+        (rationalRestrictionComplexInt Y ((V : Set (ComplexPoint Y))ᶜ)))
+      (zero_add ((1 : ℕ) : ℤ))
+  /-- The second square. The minus sign is the sign of the shifted restriction triangle. -/
+  boundary_comm :
+    (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms Y) 0 rfl
+      (CochainComplex.mappingCone.inr
+        ((analyticSingleFunctor Y).map (restrictionUnit V (holomorphicUnitSheaf Y e))))).comp
+      hom (add_zero ((1 : ℕ) : ℤ)) =
+    restrictionClass.comp
+      (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms Y) 0 rfl
+        (-CochainComplex.mappingCone.inr
+          (rationalRestrictionComplexInt Y ((V : Set (ComplexPoint Y))ᶜ))))
+      (zero_add ((1 : ℕ) : ℤ))
+
+/-- Every full comparison of triangles uses the same restricted exponential class. -/
+theorem RelativeChernComparison.restrictionClass_eq
+    {Ω : Opens (TopCat.of (ComplexPoint X))} (cmp : RelativeChernComparison X d Ω) :
+    cmp.restrictionClass = restrictedRationalChernShiftedHom X d Ω := by
+  apply (bijective_comp_restrictionUnit X Ω ((Ω : Set (ComplexPoint X))ᶜ)
+    Ω.isOpen.isClosed_compl (compl_compl _).symm (holomorphicUnitSheaf X d) ((1 : ℕ) : ℤ)).1
+  exact cmp.restriction_comm.trans (restriction_comp_restrictedRationalChernShiftedHom X d Ω).symm
 
 namespace HolomorphicUnitExtension
 
@@ -371,7 +432,7 @@ theorem nonempty_relativeChernComparison (Ω : Opens (TopCat.of (ComplexPoint X)
     rw [SmallShiftedHom.equiv_comp, SmallShiftedHom.equiv_comp, SmallShiftedHom.equiv_mk₀,
       SmallShiftedHom.equiv_mk₀, ShiftedHom.comp_mk₀, ShiftedHom.mk₀_comp] at h
     exact h.symm
-  obtain ⟨c, -, hc₃⟩ := complete_distinguished_triangle_morphism
+  obtain ⟨c, hc₂, hc₃⟩ := complete_distinguished_triangle_morphism
     (DerivedCategory.Q.mapTriangle.obj (CochainComplex.mappingCone.triangle
       ((analyticSingleFunctor X).map (restrictionUnit Ω (holomorphicUnitSheaf X d)))))
     ((CategoryTheory.shiftFunctor (Triangle (DerivedCategory (AnalyticAdditiveSheaf X)))
@@ -391,22 +452,30 @@ theorem nonempty_relativeChernComparison (Ω : Opens (TopCat.of (ComplexPoint X)
       CategoryTheory.Functor.map_neg, Preadditive.comp_neg,
       Units.neg_smul, one_smul, neg_inj] at hc₃
     simp only [CategoryTheory.Functor.comp_obj, Category.comp_id] at hc₃
-    refine ⟨⟨(SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q).symm c, ?_⟩⟩
-    apply (SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
-    rw [SmallShiftedHom.equiv_comp, SmallShiftedHom.equiv_comp, Equiv.apply_symm_apply,
-      equiv_forgetSupportShiftedHom, SmallShiftedHom.equiv_mk]
-    have hc₃' : (DerivedCategory.Q.map (relativeUnitConeδ X d Ω) ≫
-          (DerivedCategory.Q.commShiftIso ((1 : ℕ) : ℤ)).hom.app
-            ((analyticSingleFunctor X).obj (holomorphicUnitSheaf X d))) ≫
-          (shiftFunctor (DerivedCategory (AnalyticAdditiveSheaf X)) ((1 : ℕ) : ℤ)).map ζ₀D =
-        c ≫ (shiftFunctor (DerivedCategory (AnalyticAdditiveSheaf X)) ((1 : ℕ) : ℤ)).map
-          (restrictionDerivedTriangle X ((Ω : Set (ComplexPoint X))ᶜ)).mor₃ := hc₃
-    dsimp only [ShiftedHom.comp, ShiftedHom.map]
-    simp only [← Category.assoc]
-    rw [hc₃']
-    rfl
+    refine ⟨⟨(SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q).symm c,
+      ?_, ζ, hζ.symm, ?_⟩⟩
+    · apply (SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+      rw [SmallShiftedHom.equiv_comp, SmallShiftedHom.equiv_comp, Equiv.apply_symm_apply,
+        equiv_forgetSupportShiftedHom, SmallShiftedHom.equiv_mk]
+      have hc₃' : (DerivedCategory.Q.map (relativeUnitConeδ X d Ω) ≫
+            (DerivedCategory.Q.commShiftIso ((1 : ℕ) : ℤ)).hom.app
+              ((analyticSingleFunctor X).obj (holomorphicUnitSheaf X d))) ≫
+            (shiftFunctor (DerivedCategory (AnalyticAdditiveSheaf X)) ((1 : ℕ) : ℤ)).map ζ₀D =
+          c ≫ (shiftFunctor (DerivedCategory (AnalyticAdditiveSheaf X)) ((1 : ℕ) : ℤ)).map
+            (restrictionDerivedTriangle X ((Ω : Set (ComplexPoint X))ᶜ)).mor₃ := hc₃
+      dsimp only [ShiftedHom.comp, ShiftedHom.map]
+      simp only [← Category.assoc]
+      rw [hc₃']
+      rfl
+    · apply (SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
+      rw [SmallShiftedHom.equiv_comp, SmallShiftedHom.equiv_comp, Equiv.apply_symm_apply,
+        SmallShiftedHom.equiv_mk₀, SmallShiftedHom.equiv_mk₀,
+        ShiftedHom.mk₀_comp, ShiftedHom.comp_mk₀]
+      simpa [Triangle.shiftFunctor, CategoryTheory.Functor.mapTriangle,
+        CochainComplex.mappingCone.triangle, restrictionDerivedTriangle, hζD] using hc₂
 
-/-- **Unconditional form of step 3 with a canonical witness.** The rational first Chern class of
+/-- **Unconditional form of step 3 with a witness attached to the splitting and comparison.**
+The rational first Chern class of
 an extension splitting over `Ω` is the image, under `forgetSupport`, of the relative first Chern
 class attached to the splitting. Compare
 `exists_forgetSupport_eq_integralToRational_firstChernClass`, which produces a lift by bare

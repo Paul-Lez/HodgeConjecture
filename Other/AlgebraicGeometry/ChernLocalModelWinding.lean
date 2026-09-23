@@ -100,11 +100,10 @@ form of the conclusion. The two remaining obligations are
 that, granted normalised charts, `HasChernWindingNaturality X ↔ HasChernLocalModel X`: the
 reduction is faithful and does not weaken the target.
 
-The winding homomorphism is *data* in the chart rather than a construction, because neither `∂`
-(the connecting map of the pair in the repository's `RelativeCohomology`, which has no long exact
-sequence yet) nor `δ` (which needs the exponential sequence on an open subspace together with the
-Betti comparison) exists in the repository. Constructing `w` is the first step of any attack on
-`HasNormalizedWindingCharts`.
+The chart interface stores the winding homomorphism as data. The later files
+`ChernWindingUnitClass.lean` and `ChernWindingRational.lean` construct it from singular winding
+periods and the relative cohomology boundary. Identifying that construction with the restricted
+exponential connecting class is a separate requirement of the Chern-class comparison.
 -/
 
 @[expose] public noncomputable section

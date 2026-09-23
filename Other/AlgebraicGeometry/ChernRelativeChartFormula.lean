@@ -20,17 +20,22 @@ As stated it is **false**, for the same reason as the `ℙ¹` counterexample tha
   differ by the image of the class of `w` under the connecting maps. Concretely, for `X = ℙ¹`,
   `L = 𝒪`, the rational section `s = z` and `D = [0] − [∞]`, one has `Ω' = ℙ¹ ∖ {0, ∞}` and
   `w = z ∈ 𝒪ˣ(Ω')` has winding number `1` around `0`; replacing `ℓ` by `ℓ + ι(w)` changes the
-  local multiplicities from `(1, −1)` to `(2, −2)`. Since `w` does *not* extend to a unit across
+  supported class by a nonzero generator `(±1, ∓1)`, with sign depending on the boundary
+  convention. At most one frame therefore has the required multiplicities `(1, −1)`.
+  Since `w` does *not* extend to a unit across
   `0`, the extra unit `u` allowed by `ChernWindingChart.ComputesClass` cannot absorb the change.
   So the conclusion fails for one of the two frames.
 
-* *The comparison datum is not unique.* `RelativeChernComparison` is produced by the axiom TR3,
-  which determines its filler only up to the image of
-  `Hom_{D(X)}(cone(η), Rj_*ℚ_{Ω'}[1])`; concretely, two data `cmp₁, cmp₂` give relative Chern
-  classes differing by a class in the image of `H²(Ω', ℚ) → H²_{(Z')^an}(X^an, ℚ)`, which is not
-  zero in general (in the `ℙ¹` example that image is exactly the ambiguity `(1, −1)ℚ`).
+The ambiguity of a supported lift with a fixed ambient class is the image of
+`H¹(Ω', ℚ) → H²_{(Z')^an}(X^an, ℚ)`. In the `ℙ¹` example this image is `(1, −1)ℚ`.
+This explains the frame dependence above; it does not by itself show that changing a full
+comparison of triangles changes the class for a fixed frame. `RelativeChernComparison` now
+records all three squares of that comparison, including the boundary square on units.
 
-This file therefore restates the obligation with `Z'`, `ℓ` and `cmp` quantified **existentially**
+The old predicate also allows unrelated choices of `E` and `c`. The obligation below requires
+that `c` represent a line bundle whose analytification is the bundle of `E`.
+
+This file therefore repairs the obligation, also quantifying `Z'`, `ℓ` and `cmp` **existentially**
 — `HasRelativeChernChartFormulaExists` — and re-proves the two reductions. Nothing is lost: the
 existential form is implied by the universal one
 (`hasRelativeChernChartFormulaExists_of_generic`), and it is what the reduction actually consumes,
@@ -71,9 +76,10 @@ least two, a frame `ℓ` of the bundle over `X^an ∖ (Z')^an`, and a comparison
 that the relative first Chern class they cut out computes the divisor multiplicities on every
 normalised winding chart.
 
-The existential quantifiers on `ℓ` and `cmp` are **forced**: see the file docstring for the `ℙ¹`
-counterexample to the universally quantified form. They cost nothing, because the reduction below
-chooses `Z'`, `ℓ` and `cmp` itself. -/
+The frame must be chosen compatibly with the Cartier datum: see the file docstring for the `ℙ¹`
+counterexample to arbitrary frame choices. Existence of a compatible frame and comparison datum
+is sufficient for the reduction below. This definition states the remaining obligation; it does
+not prove that compatibility. -/
 def HasRelativeChernChartFormulaExists : Prop :=
   ∀ (E : HolomorphicUnitExtension X (dim X.left)) (L : X.left.Modules),
     TauCeti.SheafOfModules.IsInvertible L →
@@ -148,12 +154,19 @@ theorem hasChernWindingNaturality_of_chartFormulaExists
     exact hform β hβ γ hγ x hxs hx q ch hb hcn
 
 set_option maxHeartbeats 1000000 in
+/-- The corrected local formula proves compatibility for every representing Cartier datum. -/
+theorem hasDivisorClassOfCartierData_of_chartFormulaExists
+    (hcharts : HasNormalizedWindingCharts X) (h : HasRelativeChernChartFormulaExists X) :
+    HasDivisorClassOfCartierData X :=
+  hasDivisorClassOfCartierData_of_localModel X (hasComponentSupportDecomposition_unconditional X)
+    (hasChernLocalModel_of_winding X hcharts
+      (hasChernWindingNaturality_of_chartFormulaExists X h))
+
 /-- **Step 4 of `docs/DIVISOR_HANDOFF.md` §4.3, with the corrected quantifiers.** -/
 theorem hasDivisorClassOfSomeCartierData_of_chartFormulaExists
     (hcharts : HasNormalizedWindingCharts X) (h : HasRelativeChernChartFormulaExists X) :
     HasDivisorClassOfSomeCartierData X :=
-  hasDivisorClassOfSomeCartierData_of_supportedChernLift_of_localModel X
-    (hasChernLocalModel_of_winding X hcharts
-      (hasChernWindingNaturality_of_chartFormulaExists X h))
+  hasDivisorClassOfSomeCartierData_of_cartierData X
+    (hasDivisorClassOfCartierData_of_chartFormulaExists X hcharts h)
 
 end AlgebraicGeometry.ComplexPoint

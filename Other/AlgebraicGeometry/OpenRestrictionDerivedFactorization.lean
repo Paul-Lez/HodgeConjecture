@@ -123,6 +123,46 @@ theorem exists_smallShiftedHom_comp_eq
   rw [Cocycle.fromSingleMk_precomp]
   exact toSmallShiftedHom_mk_precomp X _ _
 
+set_option maxHeartbeats 400000 in
+set_option backward.isDefEq.respectTransparency false in
+/-- Precomposition is also injective: a primitive after restriction lifts termwise,
+so equality of the restricted derived morphisms implies equality before restriction. -/
+theorem injective_smallShiftedHom_precomp
+    {A B : AnalyticAdditiveSheaf X} (η : A ⟶ B)
+    (J : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [J.IsKInjective] (n : ℤ)
+    (hbij : ∀ q : ℤ, Function.Bijective (fun b : B ⟶ J.X q => η ≫ b)) :
+    Function.Injective (fun ζ : Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj B) J n =>
+      (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map η)).comp ζ
+          (add_zero n)) := by
+  intro ζ₁ ζ₂ heq
+  obtain ⟨x₁, rfl⟩ := (CohomologyClass.equivOfIsKInjective.{1}
+    (K := (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj B)
+    (L := J) (n := n)).surjective ζ₁
+  obtain ⟨x₂, rfl⟩ := (CohomologyClass.equivOfIsKInjective.{1}
+    (K := (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj B)
+    (L := J) (n := n)).surjective ζ₂
+  obtain ⟨z₁, rfl⟩ := x₁.mk_surjective
+  obtain ⟨z₂, rfl⟩ := x₂.mk_surjective
+  obtain ⟨a₁, ha₁, rfl⟩ := Cocycle.fromSingleMk_surjective z₁ n (zero_add n) (n + 1) rfl
+  obtain ⟨a₂, ha₂, rfl⟩ := Cocycle.fromSingleMk_surjective z₂ n (zero_add n) (n + 1) rfl
+  simp only [CohomologyClass.equivOfIsKInjective_apply] at heq
+  rw [← toSmallShiftedHom_mk_precomp, ← toSmallShiftedHom_mk_precomp] at heq
+  have hh := (CohomologyClass.bijective_toSmallShiftedHom_of_isKInjective _ _ _).1 heq
+  congr 1
+  rw [← sub_eq_zero, ← CohomologyClass.mk_sub, ← Cocycle.fromSingleMk_sub,
+    CohomologyClass.mk_eq_zero_iff,
+    Cocycle.fromSingleMk_mem_coboundaries_iff _ _ _ _ _ (n - 1) (by lia)]
+  rw [← Cocycle.fromSingleMk_precomp, ← Cocycle.fromSingleMk_precomp,
+    ← sub_eq_zero, ← CohomologyClass.mk_sub, ← Cocycle.fromSingleMk_sub,
+    CohomologyClass.mk_eq_zero_iff,
+    Cocycle.fromSingleMk_mem_coboundaries_iff _ _ _ _ _ (n - 1) (by lia)] at hh
+  obtain ⟨a, ha⟩ := hh
+  obtain ⟨b, hb⟩ := (hbij (n - 1)).2 a
+  refine ⟨b, (hbij n).1 ?_⟩
+  simpa [← Category.assoc, hb, Preadditive.comp_sub] using ha
+
 section
 
 variable (Ω : Opens (TopCat.of (ComplexPoint X))) (Z : Set (ComplexPoint X))
@@ -186,6 +226,26 @@ theorem exists_comp_restrictionUnit_eq
   letI := derivedPushforwardComplementConstantRationalComplexInt_isKInjective X Z hZ
   exact exists_smallShiftedHom_comp_eq X (restrictionUnit Ω F) _ n
     (fun q => isOpenRestrictionLocal_derivedPushforward X Ω Z hZΩ q F) ζ'
+
+set_option linter.style.haveILetI false in
+/-- Restriction to the open complement induces a bijection on derived morphisms into its
+pushed-forward rational resolution. In particular, the factorization above is unique. -/
+theorem bijective_comp_restrictionUnit
+    (hZ : IsClosed Z) (hZΩ : (Ω : Set (ComplexPoint X)) = Zᶜ)
+    (F : AnalyticAdditiveSheaf X) (n : ℤ) :
+    Function.Bijective (fun ζ : Localization.SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+          ((openRestrictionFunctor Ω).obj F))
+        (derivedPushforwardComplementConstantRationalComplexInt X Z) n =>
+      (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map
+          (restrictionUnit Ω F))).comp ζ (add_zero n)) := by
+  letI := derivedPushforwardComplementConstantRationalComplexInt_isKInjective X Z hZ
+  refine ⟨injective_smallShiftedHom_precomp X (restrictionUnit Ω F) _ n
+    (fun q => isOpenRestrictionLocal_derivedPushforward X Ω Z hZΩ q F), ?_⟩
+  intro ζ'
+  obtain ⟨ζ, hζ⟩ := exists_comp_restrictionUnit_eq X Ω Z hZ hZΩ F n ζ'
+  exact ⟨ζ, hζ.symm⟩
 
 end
 

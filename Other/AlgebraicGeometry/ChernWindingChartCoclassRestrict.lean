@@ -61,11 +61,13 @@ the open embedding. -/
 def openEmbeddingTransportChart : OpenPartialHomeomorph N (E × (Fin c → ℂ)) :=
   (hf.toOpenPartialHomeomorph f).symm.trans e
 
+omit [NormedSpace ℝ E] in
 theorem openEmbeddingTransportChart_apply (w : M) :
     openEmbeddingTransportChart f hf E c e (f w) = e w := by
   rw [openEmbeddingTransportChart, OpenPartialHomeomorph.trans_apply,
     hf.toOpenPartialHomeomorph_left_inv]
 
+omit [NormedSpace ℝ E] in
 theorem openEmbeddingTransportChart_source :
     (openEmbeddingTransportChart f hf E c e).source = f '' e.source := by
   ext y
@@ -124,9 +126,10 @@ theorem chartNormalProjectionPair_transport (W : Set M) (hW : W ⊆ e.source) :
     conv_rhs => rw [← h, openEmbeddingTransportChart_apply]
   apply MorphismProperty.Arrow.Hom.ext
   · ext v
-    exact key v
-  · ext v
+    apply Subtype.ext
     exact key v.1
+  · ext v
+    exact key v
 
 /-- **Transport of the normal-projection coclass.**  Pulling back the coclass of a chart along
 the pair homeomorphism of an open embedding gives the coclass of the transported chart. -/
@@ -185,6 +188,8 @@ theorem flattenedSupportNeighborhood_openEmbeddingTransportChart_le (U : Opens X
   exact ⟨w, trivial, rfl⟩
 
 set_option maxHeartbeats 1000000 in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- **Transport of the chart normalisation.**  If the auxiliary section is, on the whole source
 of a flattening chart, the sheafification of that chart's normal-projection coclass, then its
 transport is, on the flattened neighbourhood of the transported chart at any of its points, the
@@ -286,7 +291,7 @@ embedding, carries the normalised smooth-support section. -/
 theorem nonempty_transportedFlatteningChart (z : ComplexPoint Y) :
     Nonempty (TransportedFlatteningChart X Y i m f hf S hS U hU (f (Point.map i z)) (d - m)
       (smoothClosedSupportCoclassSection X Y i m d)) := by
-  haveI : Nonempty (TopCat.of (ComplexPoint X)) := ⟨Point.map i z⟩
+  have : Nonempty (TopCat.of (ComplexPoint X)) := ⟨Point.map i z⟩
   let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
   have hmem : f (Point.map i z) ∈ (openEmbeddingTransportChart f hf (Fin m → ℂ) (d - m) e).source :=
     mem_openEmbeddingTransportChart_source f hf (Fin m → ℂ) (d - m) e _
@@ -440,6 +445,8 @@ theorem flattened_restrictChart_le_self (hq : q ∈ V) :
     (flattenedSupportNeighborhood_subset_source _ _ _ _ _ hy)
 
 set_option maxHeartbeats 1000000 in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- **Shrinking.**  Restricting the chart to an open neighbourhood `V` of `q` (inside the
 flattened neighbourhood of the original chart) gives again a `FlatteningChartWithCoclass`, whose
 chart source lies in `V` (`restrictChart_source_subset`) and whose flattened neighbourhood lies

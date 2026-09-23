@@ -253,13 +253,11 @@ the remaining obligation `HasDivisorClassOfSomeCartierData X` of `docs/DIVISOR_H
 Note that `HasSupportedChernLift` is *not* a hypothesis: the existence of a supported lift is part
 of `HasChernLocalModel`, which asks for a *normalised* one. The bare existence supplied by step 3
 would not suffice, because the lift is not unique (see the docstring of `HasChernLocalModel`). -/
-theorem hasDivisorClassOfSomeCartierData_of_localModel
+theorem hasDivisorClassOfCartierData_of_localModel
     (hdec : HasComponentSupportDecomposition X)
     (hloc : HasChernLocalModel X) :
-    HasDivisorClassOfSomeCartierData X := by
-  intro E L hL iso
-  obtain ⟨c, hc⟩ := exists_cartierData_represents X L hL
-  refine ⟨c, hc, ?_⟩
+    HasDivisorClassOfCartierData X := by
+  intro E L hL iso c hc
   obtain ⟨b, hb, hlocal⟩ := hloc E L hL iso c hc
   obtain ⟨γ, hγ⟩ := hdec (cycleComponents X c.divisor)
     (fun x hx => coheight_of_mem_cycleComponents X hx) b
@@ -284,5 +282,14 @@ theorem hasDivisorClassOfSomeCartierData_of_localModel
   rw [sheafCycleClassOnCycles_eq_sum X c.divisor, map_sum, ← hb, hγ, map_sum]
   refine Finset.sum_congr rfl fun x hxs => ?_
   rw [key x hxs, map_zsmul]
+
+/-- The uniform local-model comparison also supplies the existential comparison consumed by
+the Lefschetz reduction. -/
+theorem hasDivisorClassOfSomeCartierData_of_localModel
+    (hdec : HasComponentSupportDecomposition X)
+    (hloc : HasChernLocalModel X) :
+    HasDivisorClassOfSomeCartierData X :=
+  hasDivisorClassOfSomeCartierData_of_cartierData X
+    (hasDivisorClassOfCartierData_of_localModel X hdec hloc)
 
 end AlgebraicGeometry.ComplexPoint

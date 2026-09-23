@@ -1,5 +1,289 @@
 # Handoff: the divisor of an algebraic model (`HasDivisorOfAlgebraicModel`)
 
+## Current implementation status (2026-09-23)
+
+The active target is the **uniform** divisor–Chern identity
+`HasDivisorClassOfCartierData X`: for every holomorphic-unit extension `E`, every
+invertible algebraic line bundle `L` identified with its analytic section sheaf,
+and every Cartier datum `c` representing `L`, the repository's constructed cycle
+class of `c.divisor` equals the rational first Chern class of `E`. GAGA is a separate
+input to the Lefschetz application; it is not an assumption of this comparison.
+The requested completion gate is an independent passing Sol xhigh review of that
+full theorem. The theorem and that completion review are still outstanding.
+
+This status supersedes the older universal chart-formula sketches below. In
+particular, `HasRelativeChernChartFormula` and
+`HasRelativeChernChartFormulaGeneric` are retained compatibility interfaces, not
+valid obligations to discharge: they allowed arbitrary complement frames and did
+not relate the extension to the Cartier datum. Use
+`HasRelativeChernChartFormulaExists`, which includes those relations and chooses a
+compatible frame. Its reduction now proves the uniform target via
+`hasDivisorClassOfCartierData_of_chartFormulaExists`; both chart hypotheses in that
+reduction remain to be proved.
+
+The current worktree additionally proves:
+
+- `RelativeChernComparison` records all three triangle squares, including the
+  boundary square. `bijective_comp_restrictionUnit` proves uniqueness of its
+  restricted exponential class.
+- `ChernWindingRationalCochain.lean` constructs rational winding cochains and proves
+  their periods equal `windingRationalPeriodHom`. The auxiliary rational-linear
+  projection from complex numbers changes representatives, not these periods.
+- `HolomorphicExponentialSingularClass.lean` proves
+  `rationalChernShiftedHom_comp_singularAugmentation`: the existing rational
+  exponential class, after the standard singular augmentation, is **negative**
+  winding. The integer coefficient map and mapping-cone sign are both checked.
+- `RelativeCochainConeBoundaryComparison.lean` proves that the legacy relative-cone
+  comparison sends positive cone inclusion to the positive degreewise-split
+  connecting morphism, also after taking homology. This controls boundary classes
+  without claiming equality of all possible triangle completions.
+- `MappingCoconeBoundary.lean` supplies an explicit homotopy proving the same
+  positive connecting-map formula for the canonical cone comparison. The legacy
+  and canonical relative-cohomology equivalences now agree on the boundary image.
+- `LinearDualConnecting.lean` proves that the actual universal-coefficient pairing
+  intertwines the dual cohomological connecting map with the homological boundary,
+  with a positive sign, over any field and without finite-dimensionality.
+  `ExtendConnecting.lean` transports connecting maps through the actual extension
+  homology isomorphisms by a morphism of snake diagrams.
+- `ChernWindingConnecting.lean` identifies the rational winding cocycle's class
+  with its winding-period functional and proves
+  `relativeCochainConeCohomologyEquiv_boundary_rationalWinding`: the repository's
+  relative-cone comparison sends its positive cone boundary to the existing
+  `windingRelativeClass`. This includes the natural-to-integer grading transport;
+  it does not yet include the supported-injective comparison or its negation.
+- `RationalSupportConeBoundaryComparison.lean` proves that the prescribed natural
+  singular and ambient-injective support-cone comparisons agree on the image of
+  the common complement boundary. It does not compare arbitrary relative classes.
+- `PrecompFactorization.lean` descends complex maps and homotopies along degreewise
+  bijective precomposition. `ComplementResolutionBoundaryComparison.lean` applies
+  this to the actual open restriction: the natural and ambient-injective complement
+  maps are homotopic, with the same rational constant augmentation.
+- `GlobalRawOpenComplement.lean` transports intrinsic complement cochains to the
+  literal top-open intersection. Raw restriction is an epimorphism of complexes;
+  no surjectivity on cycles or cohomology is claimed.
+  `RawComplementResolutionComparison.lean` uses cancellation of complex maps to
+  identify the actual sheafification map with the fixed natural complement map,
+  and obtains the ambient-injective equality on cohomology from the homotopy.
+- `SupportedInjectiveBoundaryNormalization.lean` proves the full existing
+  rational-support-to-injective boundary sign: a positive complement boundary
+  becomes the **negative** canonical supported-injective kernel boundary.
+  `ActualSingularSupportBoundary.lean` further proves
+  `rationalSupportAddEquivSupportedInjectiveHomology_raw_boundary`: for every raw
+  complement cohomology class, this is minus its actual supported-singular kernel
+  boundary under `complexSupportedSingularInjectiveHomologyIso`. The proof uses
+  the naturality of the canonical short-exact-sequence comparison, not an assumed
+  purity or divisor formula.
+- `SupportedSingularBoundaryRelative.lean` proves that the existing local
+  supported-singular comparison takes a positive kernel boundary to the positive
+  raw relative-cone boundary on every open. `OpenRawBoundaryComparison.lean`
+  identifies this with the positive dual-cochain boundary and proves naturality
+  under literal raw restriction, including the coefficient-forgetting comparison.
+  `ChernWindingCohomologyNaturality.lean` proves winding-class pullback naturality
+  through the prescribed integer grading.
+- `ChernWindingSupportedBoundary.lean` proves
+  `supportedSingularSectionCohomologyEquivSupportComplement_winding_boundary`:
+  the positive supported-singular boundary of the raw winding class maps to the
+  existing positive `windingRelativeClass` through the literal intersection-pair
+  isomorphism. Its raw winding class also commutes with restriction to smaller
+  opens. This theorem by itself does not identify the actual exponential class.
+- `RationalSupportBoundaryRelative.lean` now composes the fixed global negative
+  boundary with this local relative normalization. Its theorem
+  `rationalSupportAddEquivSupportedInjectiveHomology_raw_boundary_relative`
+  proves that the actual rational-support comparison followed by the existing
+  relative section comparison is the **negative** raw relative boundary on the
+  top-open pair. The factorization through actual top-open raw cochains is `rfl`.
+- `HolomorphicExponentialSingularSections.lean` extracts the degree-one coefficient
+  of the actual `restrictedSingularOneCocycle`, proves its closedness, and uses the
+  open-local factorization's injectivity to identify it with the restricted
+  unit-to-winding map followed by the fixed natural resolution comparison.
+  `restrictedSingularOneCoefficient_apply_on_open_raw` evaluates it explicitly
+  on every open `V`: a unit on `V ∩ Ω` produces its literal raw rational winding
+  cochain, sheafified and mapped into the complement resolution, with positive
+  sign. `naturalSingularOutsideResolutionComparisonOnOpen` spells out the
+  double-complement equality rather than treating it as definitional. These are
+  strict sheaf/cochain identities. The additional theorem
+  `naturalSingularOutsideResolutionComparisonOnOpen_eq_canonical` identifies its
+  `OnOpen` factor strictly with the pre-existing canonical complement factor,
+  after actual restriction along `(Ωᶜ)ᶜ ≤ Ω`.
+- `CocycleGlobalSections.lean` proves that the prescribed Hom-complex comparison
+  evaluates a cocycle on the section defining its constant-integer input. It
+  computes the actual cycle and its class under the direct K-injective comparison,
+  retaining the original constant-complex isomorphism. Identity naturality also
+  identifies the existing flasque comparison with this direct comparison.
+- `HolomorphicExponentialSingularSectionClass.lean` instantiates this with the
+  actual restricted singular cocycle and a holomorphic unit. Its
+  `iCycles_restrictedSingularOneGlobalCocycle` gives the literal raw winding
+  representative. `complementRationalHypercohomology_restrictedSingularOneCocycle`
+  proves that the particular complement hypercohomology equivalence used by the
+  support theorem sends the actual cocycle class to `homologyπ` of this cycle.
+- `OpenRawCochainRepresentatives.lean` and `ChernWindingRawRepresentative.lean`
+  prove that the existing normalized raw winding class is represented by the
+  literal rational winding cochain through the actual integer-grading and
+  coefficient-forgetting comparisons. The cycle and its `homologyπ` are both
+  computed; no inverse image is arbitrarily declared to be the exponential class.
+- `HolomorphicExponentialRawWindingClass.lean` proves exact equality of this raw
+  cycle's image with `restrictedSingularOneGlobalCocycle` under the specified
+  sheafification, grading, top-open evaluation and fixed resolution maps. Its
+  `complementRationalHypercohomology_restrictedSingularOneCocycle_eq_rawWinding`
+  proves the corresponding equality for the actual restricted singular class.
+- `OpenRawComplementNormalization.lean` proves the intrinsic-to-top-open raw
+  transport is an isomorphism of complexes, and raw restriction is epic on
+  complexes. `HolomorphicExponentialIntrinsicWindingClass.lean` uses cancellation
+  of those complex maps to identify the open comparison with the exact original
+  `globalRawComplementToDerivedPushforwardInt` pipeline. The theorem
+  `complementRationalHypercohomology_restrictedSingularOneCocycle_eq_intrinsicWinding`
+  now supplies the actual class in precisely the presentation consumed by the
+  fixed support-boundary theorem. `openRawToIntrinsicComplement_comp_topOpen`
+  identifies its top-open image with literal restriction to the intersection.
+  No surjectivity on cycles or cohomology is inferred from raw restriction being
+  epic. This resolves the previous raw-representative/presentation gap.
+- `RelativeChernSectionBoundary.lean` evaluates the actual triangle boundary square
+  on the constant-integer morphism attached to a section.
+  `RelativeChernFrameVariation.lean` computes the difference of the existing
+  `relativeChernClass` values, retaining the same comparison datum, the original
+  `coneToInteger` quasi-isomorphism and the constant-complex normalization. If
+  `inclusion(w) = ℓ₂ - ℓ₁`, the difference of the Chern classes is the singular
+  boundary evaluated on **`-w`**.
+- `ChernWindingRawBoundary.lean` identifies the actual positive raw relative
+  boundary with the existing positive winding class.
+  `HolomorphicExponentialSupportWinding.lean` composes the exact intrinsic
+  representative with the fixed support comparison: the boundary of the actual
+  restricted singular cocycle evaluated on a unit is **negative winding**.
+  Literal double-complement and top-open pair maps are retained. This closes
+  the previously outstanding global support-to-winding composition.
+- `RelativeChernFrameWinding.lean` composes these two signs. Its theorem
+  `HolomorphicUnitExtension.relativeChernClass_sub_eq_winding` proves that a frame
+  change by `w` changes the actual normalized relative Chern class by **positive
+  winding of `w`**, under the original support and relative-section comparisons.
+  `relativeChernClass_sub_eq_windingSheaf` transports the same equality through
+  the existing section-to-cohomology-sheaf normalization used by the cycle class.
+  This is a global complement frame-variation theorem. It does not yet prove
+  local vanishing for a regular chart frame or the Cartier chart formula.
+- `MappingConeFactorization.lean` contracts a cone map whose square factors
+  through the source of the target arrow. In particular, it contracts the
+  actual image of a cone under an additive functor when the mapped arrow is
+  invertible, using the canonical additive-functor cone comparison.
+- `RelativeChernFrameRestriction.lean` proves that the actual `liftHom` and
+  splitting retraction commute with restriction from `U` to `V ≤ U`.
+  `relativeConeMap_restrict` gives the strict factorization of the restricted
+  frame's cone map through `relativeUnitCone U`.
+- `RelativeChernFrameLocalVanishing.lean` applies the actual restriction functor
+  to `U`. Its mapped single restriction arrow is an isomorphism, so the
+  intermediate relative unit cone contracts. The resulting null-homotopy of
+  the actual frame cone map implies
+  `HolomorphicUnitExtension.relativeChernClass_restrict_eq_zero`: the existing
+  relative Chern class of a frame extending over `U` becomes zero under exact
+  derived restriction to `U`, for every comparison datum on `V`.
+- `CartierWindingChartVanishing.lean` instantiates this with the actual regular
+  Cartier chart frame and its existing frame lift. This proves vanishing of
+  the mapped derived morphism. Identifying it with the local section under the
+  cycle class's prescribed cohomology-sheaf normalization still needs proof.
+- `RelativeChernLocalBoundary.lean` combines this derived vanishing with the
+  actual frame-variation identity. For `V ≤ U`, a reference frame on `U`, and a
+  frame on `V` differing from its restriction by `inclusion(w)`,
+  `relativeChernClass_local_eq_neg_unit_boundary` identifies the actual Chern
+  class after derived restriction to `U` with the actual singular boundary
+  evaluated on `-w`. The same comparison datum is retained. The proof uses
+  cone hypercohomology in degree one for rational supported degree two.
+- `CohomologySheafSectionDerivedVanishing.lean` proves that a coefficient map
+  vanishing after actual derived restriction induces zero on the restricted
+  cohomology sheaf. The original section-to-cohomology-sheaf map consequently
+  kills the image of that coefficient map, without assuming exactness of
+  open-set sections.
+- `CocycleGlobalSectionNaturality.lean` proves postcomposition naturality of the
+  prescribed `integerCocycleGlobalSection`, its actual `homologyπ` class, and its
+  canonical cohomology-sheaf section. Derived restriction vanishing of a
+  coefficient map therefore gives local vanishing for the normalized section
+  of a postcomposed cocycle; a degree-zero specialization treats the cocycle
+  of a map from the constant integer complex directly. Applying these results
+  through the shifts, resolutions, and the prescribed rational-support
+  comparison of the actual relative Chern class still remains.
+- `HolomorphicFrameLift.lean` constructs the lift associated with a generating
+  holomorphic section, proves independence of the canonical trivialization and
+  compatibility with restriction, and proves that multiplying a frame by `u`
+  adds `inclusion u` to its lift.
+- `CartierFrameLift.lean` identifies the existing local Cartier lift with this
+  construction. `exists_lift_of_goodLocus_with_localFormula` retains the glued
+  lift's restriction formula for **every** local unit datum.
+- `CartierLocalFormUnit.lean` constructs unit data on the basic open of a prime
+  equation from the exact local form `f = u * h^m`, including negative `m`.
+  `CartierWindingChartUnit.lean` identifies its analytification on a punctured
+  chart with the extendable unit plus `m` times `coord`, and proves
+  `winding_cartierUnit` from `HasTrivialUnitWinding`.
+- `CartierWindingChartFrame.lean` proves
+  `IsCartierComplementLift.restrict_chart_eq_restrict_regularLift_add`: on a
+  chart contained in a canonical lifting neighborhood and whose punctured open
+  lies in the chosen complement, the rational lift is an extendable regular
+  lift plus the full Cartier unit. `chart_liftHom_difference_section` identifies
+  the cone quotient section with the **negative** Cartier unit. This supplies
+  the previously missing local frame sign without assuming a Chern-class formula.
+
+The next required steps are concrete:
+
+1. Identify the exact derived restriction of the actual relative Chern class
+   with its local section under the prescribed supported-injective and
+   cohomology-sheaf comparisons. The global boundary and frame-variation
+   identities, strict frame-cone restriction, and derived vanishing for an
+   extending frame are now proved. Compatibility of these maps with local
+   sections and support enlargement is still required.
+2. Instantiate the strengthened complement gluing theorem and the proved Cartier
+   frame formula. Shrink the chart into a canonical lifting neighborhood and
+   ensure its punctured open lies in the chosen complement. Prove that the
+   regular-frame reference contributes zero under the local cohomology-sheaf
+   normalization, using its now-proved derived vanishing. Compare the original
+   complement class with the frame restricted to the punctured chart, apply
+   the positive frame-variation formula to `ch.cartierUnit`, and use
+   `winding_cartierUnit` to obtain the divisor multiplicity.
+3. Construct the remaining generic normalized winding charts, including agreement
+   of the analytified local equation with a transverse normal coordinate up to a
+   nowhere-zero factor. Coclass transport, logarithms, and winding normalization
+   have separate proved inputs; their geometric assembly is still needed.
+4. Discharge `HasRelativeChernChartFormulaExists`, apply the existing uniform
+   assembly, build the umbrella target, audit axioms, and request the full
+   completion review.
+
+The latest integrated verification at this point is `lake build Other` (5152
+jobs, passing) and `lake env lean scripts/lefschetz_axiom_audit.lean` (408 checked
+declarations, no `sorryAx`). The latest bounded Sol xhigh reviews pass the local
+supported-singular normalization, raw/dual boundary and restriction comparisons,
+winding naturality, the fixed rational support-to-relative sign, the actual
+restricted cocycle's explicit section formula, and its actual representative under
+both the direct and the existing complement hypercohomology comparisons. Further
+bounded reviews pass the literal raw winding cycle representative, its exact image
+as the actual restricted singular cycle, and the final intrinsic-complement class
+comparison. The latter review specifically checks that epi cancellation takes
+place only on complex maps and does not assert homology surjectivity. These
+reviews find no assumed divisor/Chern identity and no unjustified comparison away
+from boundary classes. The additional bounded Sol xhigh reviews pass the actual
+relative-Chern frame-difference calculation, its evaluation on the negative
+quotient unit, the complete fixed support-to-winding composition, the resulting
+positive frame variation, and its transport through the existing cohomology-sheaf
+normalization. Further bounded reviews pass the exact frame-restriction maps,
+the cone contraction after actual open restriction, derived vanishing of the
+existing relative Chern class for an extending frame, its actual regular Cartier
+chart instance, and the resulting local negative-unit singular-boundary identity.
+The latter review explicitly checks the cone hypercohomology degree `2 - 1 = 1`
+and the included reference-frame hypothesis. These are
+**partial reviews, not the requested full completion review**.
+
+The next proof should connect the now-proved local derived boundary identity
+`HolomorphicUnitExtension.relativeChernClass_local_eq_neg_unit_boundary` to the
+existing supported-injective section and cohomology-sheaf maps. The generic
+derived-vanishing and actual-cocycle naturality lemmas above now handle the
+section normalization for the image of a coefficient map. The remaining bridge
+must retain the shifts and resolutions in the actual rational-support comparison;
+these generic lemmas alone do not identify its normalized class. The global
+`relativeChernClass_sub_eq_windingSheaf` already fixes the winding normalization. The rational Cartier frame and regular reference frame only live
+on the appropriate opens. Strict restriction of the frame cone map and derived
+vanishing of the extending reference are now proved. Their compatibility with
+the prescribed local cohomology-sheaf section still requires proof. The existing
+`IsCartierComplementLift.restrict_chart_eq_restrict_regularLift_add` identifies
+their difference with the full Cartier unit once the chart containment and
+punctured-open hypotheses hold. Finish that local comparison, construct uniform
+generic charts and shrinkings, and apply the existing uniform assembly.
+`HasDivisorClassOfCartierData X` remains unproved.
+
+
 This document scopes the third of the three remaining obligations for the unconditional
 rational Lefschetz `(1, 1)` theorem (see [LEFSCHETZ_HANDOFF.md](LEFSCHETZ_HANDOFF.md); the
 second is scoped in [GAGA_HANDOFF.md](GAGA_HANDOFF.md)). Nothing here depends on the other two
