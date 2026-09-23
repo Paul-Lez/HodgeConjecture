@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-23)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5268 jobs),
-and the comparison audit checks 286 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5276 jobs),
+and the comparison audit checks 299 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -19,11 +19,18 @@ input to the Lefschetz application; it is not an assumption of this comparison.
 The requested completion gate is an independent passing Astra high review of that
 full theorem. The theorem and that completion review are still outstanding.
 
-The current work proves generic ideal generation for the Cartier local equation,
-a nonzero cotangent class for a regular local hypersurface equation, and continuous
-division by a simple analytic normal coordinate. It also proves the positive winding
-identity for the compatible Cartier frame difference. The algebraic-to-analytic
-differential comparison and the local normalization of the actual Chern class remain.
+The current work proves generic ideal generation in the actual component stalk,
+a nonzero cotangent class for the local equation, and continuous division by a simple
+analytic normal coordinate on restricted charts. It also proves the positive winding
+identity for the compatible Cartier frame difference. Three steps remain:
+
+- Identify the algebraic cotangent class with the analytic derivative.
+- Construct the normalized winding charts from that nonzero derivative.
+- Prove local normalization of the actual Chern class, including restriction of the
+  original complement comparison and its shift and sign conventions.
+
+An independent Astra high diagnostic review confirmed these gaps. It was not a
+completion review; the full theorem must still pass that review.
 
 Main `9aba2ec` replaces statement-facing supported cohomology with relative-sheaf
 Ext. `CycleClassExtComparison.lean` restores the presentation of the actual cycle
