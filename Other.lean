@@ -199,6 +199,7 @@ public import Other.Mathlib.Algebra.Category.Grp.Basic
 public import Other.Mathlib.Algebra.Category.ModuleCat.Basic
 public import Other.Mathlib.Algebra.Homology.StupidTruncation
 public import Other.RingTheory.AlgebraicNonvanishing
+public import Other.RingTheory.CotangentDetection
 public import Other.RingTheory.IntegralPrimitiveElement
 public import Other.RingTheory.RegularLocalEquation
 public import Other.RingTheory.RegularLocalQuotientKernel

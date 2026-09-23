@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-23)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5282 jobs),
-and the comparison audit checks 309 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5283 jobs),
+and the comparison audit checks 312 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -29,6 +29,10 @@ comparison with the existing global support normalization. Three steps remain:
 - Construct the normalized winding charts from that nonzero derivative.
 - Prove local normalization of the actual Chern class, including restriction of the
   original complement comparison and its shift and sign conventions.
+
+`CotangentDetection.lean` proves that an injective residue-valued cotangent map detects
+nonzero first-order classes. It also gives the criterion from surjectivity and equal finite
+dimensions. Constructing and identifying the actual analytic map remains in progress.
 
 `FlasquePushforwardQuasiIso.lean` proves that direct image preserves comparisons between
 bounded-below flasque complexes. `SupportSheafConeQuasiIso.lean` applies it to the fixed
