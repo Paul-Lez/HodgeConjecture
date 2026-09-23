@@ -181,6 +181,7 @@ public import Other.AlgebraicTopology.Support.RestrictionFiber
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
 public import Other.Analysis.Complex.AnalyticDivision
 public import Other.Analysis.Complex.NormalDivision
+public import Other.Analysis.Complex.NormalDivisionChart
 public import Other.Analysis.Complex.NormalDivisionFinOne
 public import Other.Analysis.Complex.Polynomial.Complement
 public import Other.Analysis.Complex.Polynomial.FactorGrowth
