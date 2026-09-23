@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-23)
 
-Validation after the split: main `9aba2ec` is merged, `lake build` passes (5260 jobs),
-and the comparison audit checks 280 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5268 jobs),
+and the comparison audit checks 286 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -16,8 +16,14 @@ invertible algebraic line bundle `L` identified with its analytic section sheaf,
 and every Cartier datum `c` representing `L`, the repository's constructed cycle
 class of `c.divisor` equals the rational first Chern class of `E`. GAGA is a separate
 input to the Lefschetz application; it is not an assumption of this comparison.
-The requested completion gate is an independent passing Sol xhigh review of that
+The requested completion gate is an independent passing Astra high review of that
 full theorem. The theorem and that completion review are still outstanding.
+
+The current work proves generic ideal generation for the Cartier local equation,
+a nonzero cotangent class for a regular local hypersurface equation, and continuous
+division by a simple analytic normal coordinate. It also proves the positive winding
+identity for the compatible Cartier frame difference. The algebraic-to-analytic
+differential comparison and the local normalization of the actual Chern class remain.
 
 Main `9aba2ec` replaces statement-facing supported cohomology with relative-sheaf
 Ext. `CycleClassExtComparison.lean` restores the presentation of the actual cycle
