@@ -124,6 +124,7 @@ lemma pairSheafHomAddEquiv_pairSheafMap_comp {U V U' V' : C} (f : U ⟶ V) (f' :
     G.obj.map b.op (freeAbelianSheafHomAddEquiv V G (cokernel.π _ ≫ φ))
   rw [pairSheafMap, cokernel.π_desc_assoc, Category.assoc, freeAbelianSheafHomAddEquiv_map_comp]
 
+/-- The short complex of pair sheaves for composable morphisms. -/
 def pairNestedShortComplex {W U V : C} (f : W ⟶ U) (g : U ⟶ V) :
     ShortComplex (Sheaf J AddCommGrpCat.{v}) :=
   ShortComplex.mk
@@ -137,6 +138,7 @@ def pairNestedShortComplex {W U V : C} (f : W ⟶ U) (g : U ⟶ V) :
 set_option maxHeartbeats 800000 in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency.types false in
+/-- The nested pair-sheaf short complex is short exact for composable monomorphisms. -/
 lemma pairNestedShortComplex_shortExact {W U V : C} (f : W ⟶ U) (g : U ⟶ V)
     [Mono f] [Mono g] :
     (pairNestedShortComplex (J := J) f g).ShortExact := by
@@ -172,7 +174,7 @@ lemma pairNestedShortComplex_shortExact {W U V : C} (f : W ⟶ U) (g : U ⟶ V)
       apply (cancel_epi (cokernel.π (F.map f ≫ F.map g))).1
       dsimp [S, pairNestedShortComplex, e₂, h, pairSheafMap, cokernel.map]
       dsimp [F]
-      simp [Category.assoc, cokernelIsoOfEq_hom_comp_desc h])
+      simp)
   exact ShortComplex.shortExact_of_iso e
     { exact := (kernelCokernelCompSequence_exact (F.map f) (F.map g)).exact 3 (by omega)
       mono_f := hmono
@@ -210,6 +212,7 @@ lemma sequence_exact [Mono f] (n₀ n₁ : ℕ) (h : 1 + n₀ = n₁) :
     (Ext.contravariantSequence (pairShortComplex_shortExact (J := J) f) F n₀ n₁ h).Exact :=
   Ext.contravariantSequence_exact _ _ _ _ _
 
+/-- The long exact sequence associated with nested pair sheaves. -/
 lemma nestedSequence_exact {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
     (n₀ n₁ : ℕ) (h : 1 + n₀ = n₁) :
     (Ext.contravariantSequence (pairNestedShortComplex_shortExact (J := J) f g) F n₀ n₁ h).Exact :=
@@ -234,9 +237,7 @@ def freeAbelianSheafTerminalIso :
       apply AddCommGrpCat.hom_ext
       apply FreeAbelianGroup.lift_ext
       intro h
-      first
-        | rfl
-        | simp [FreeAbelianGroup.uniqueEquiv, AddCommGrpCat.free_map_coe, FreeAbelianGroup.map_of])
+      rfl)
 
 /-- Precomposition with an isomorphism is an additive equivalence of `Ext` groups. -/
 def _root_.CategoryTheory.Abelian.Ext.precompAddEquiv {A B : Sheaf J AddCommGrpCat.{v}} (e : A ≅ B)
