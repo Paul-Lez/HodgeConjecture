@@ -56,9 +56,8 @@ section
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
 /-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
-be its reduced closure in `X`. For a natural number `p`, this is `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`,
-computed from global sections of the subsheaves supported in `Z(ℂ)` of a chosen injective
-resolution of the constant rational sheaf. -/
+be its reduced closure in `X`. For a natural number `p`, this is the Ext group
+`H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`. -/
 abbrev CycleComponentSupportedCohomology (p : ℕ) : AddCommGrpCat :=
   AddCommGrpCat.of (H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ))
 
@@ -69,9 +68,8 @@ sheafification of `V ↦ H^{2p}(V, V \ S; ℚ)`. For a natural number `p`, this 
 of `Z`. -/
 abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
   -- Sections of `𝓗^{2p}_{Z(ℂ)}` over `X(ℂ) \ Z_sing(ℂ)`, with support `Z(ℂ)` and degree `2p`.
-  (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).obj
-    (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ))
+  (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj
+    (op (cycleComponentSmoothSupportAmbientOpen X x))
 
 set_option maxHeartbeats 800000 in
 /-- The restricted supported Ext group is the normalized coclass section group. -/
