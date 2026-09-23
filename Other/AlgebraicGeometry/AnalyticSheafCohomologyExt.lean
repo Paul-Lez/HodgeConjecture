@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Basic
 
 /-!
@@ -69,9 +69,9 @@ theorem analyticSheafComplexIntIsoSingle_naturality
 /-- Sheaf cohomology in a nonnegative degree agrees with Ext from the constant integer sheaf. -/
 def analyticSheafCohomologyEquivExt (F : AnalyticAdditiveSheaf X) (n : ℕ) :
     Hypercohomology X (analyticSheafComplexInt X F) n ≃
-      Abelian.Ext.{1} (constantIntegerSheaf X) F n :=
+      Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) F n :=
   (Localization.SmallShiftedHom.precompEquiv
-      (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).inv
+      (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv
       (by change QuasiIso _; infer_instance)).trans
     (Localization.SmallShiftedHom.postcompEquiv
       (analyticSheafComplexIntIsoSingle X F).hom
@@ -99,12 +99,13 @@ theorem analyticSheafCohomologyEquivExt_apply (F : AnalyticAdditiveSheaf X) (n :
     (α : Hypercohomology X (analyticSheafComplexInt X F) n) :
     analyticSheafCohomologyEquivExt X F n α =
       ((Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
-        (analyticSheafComplexIntIsoSingle X (constantIntegerSheaf X)).inv).comp α
+        (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv).comp α
           (add_zero (n : ℤ))).comp
         (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
           (analyticSheafComplexIntIsoSingle X F).hom) (zero_add (n : ℤ)) := rfl
 
 set_option backward.isDefEq.respectTransparency false in
+set_option maxHeartbeats 1000000 in
 /-- The cohomology/Ext comparison respects maps of coefficient sheaves. -/
 theorem analyticSheafCohomologyEquivExt_naturality
     {F G : AnalyticAdditiveSheaf X} (f : F ⟶ G) (n : ℕ)
@@ -129,7 +130,7 @@ theorem analyticSheafCohomologyEquivExt_zero (F : AnalyticAdditiveSheaf X) (n : 
     analyticSheafCohomologyEquivExt X F n 0 = 0 := by
   apply (Localization.SmallShiftedHom.equiv
     (analyticQuasiIsomorphisms X) (DerivedCategory.Q (C := AnalyticAdditiveSheaf X))).injective
-  change _ = (0 : Abelian.Ext.{1} (constantIntegerSheaf X) F n).hom
+  change _ = (0 : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) F n).hom
   rw [Abelian.Ext.zero_hom]
   rw [analyticSheafCohomologyEquivExt_apply]
   simp only [Localization.SmallShiftedHom.equiv_comp]

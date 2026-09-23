@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HolomorphicDeRham
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
 public import Other.AlgebraicGeometry.HolomorphicExponential
 
 /-!
@@ -27,85 +27,77 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 local instance holomorphicZeroFormsTopology : TopologicalSpace (ComplexPoint X) :=
   Point.analyticTopology
 
-/-- A raw zero-form is evaluated by summing its holomorphic coefficients. -/
-def rawZeroFormToFunction (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
-    Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions X d U) 0 →ₗ[ℂ]
+/-- The degree-zero exterior power gives the coefficient function of a Kähler zero-form. -/
+def algebraicZeroFormToFunction (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
+    Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) 0 →ₗ[ℂ]
       OpenHolomorphicFunctions X d U :=
-  Finsupp.linearCombination ℂ Prod.fst
+  (exteriorPower.zeroEquiv (OpenHolomorphicFunctions X d U)
+    Ω[OpenHolomorphicFunctions X d U⁄ℂ]).toLinearMap.restrictScalars ℂ
 
 @[simp]
-lemma rawZeroFormToFunction_single (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (g : Algebra.DeRham.Generator (OpenHolomorphicFunctions X d U) 0) (c : ℂ) :
-    rawZeroFormToFunction X d U (Finsupp.single g c) = c • g.1 :=
-  Finsupp.linearCombination_single ..
+lemma algebraicZeroFormToFunction_mk (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (a : OpenHolomorphicFunctions X d U) (v : Fin 0 → OpenHolomorphicFunctions X d U) :
+    algebraicZeroFormToFunction X d U (Algebra.DeRham.mk ℂ _ 0 a v) = a := by
+  simp [algebraicZeroFormToFunction, Algebra.DeRham.mk, Algebra.DeRham.exact]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- Evaluation of a zero-form in a chart agrees with its underlying holomorphic function. -/
-lemma chartRawEvaluation_zero_apply (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
-    (z : ComplexPoint X) (a : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions X d U) 0)
+/-- Evaluation of a zero-form in a chart gives its coefficient function. -/
+lemma chartEvaluation_zero_apply (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ)
+    (z : ComplexPoint X) (a : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) 0)
     {y : Fin d → ℂ} (hy : y ∈ chartSectionDomain X d U z) :
-    chartRawEvaluation X d U z 0 a y Fin.elim0 =
-      (rawZeroFormToFunction X d U a).1
+    chartEvaluation X d U z 0 a y Fin.elim0 =
+      (algebraicZeroFormToFunction X d U a).1
         ⟨(extChartAt 𝓘(ℂ, Fin d → ℂ) z).symm y, hy.2⟩ := by
-  classical
-  induction a using Finsupp.induction with
-  | zero => rw [map_zero, map_zero]; rfl
-  | single_add g c a hg hc ih =>
-      rw [map_add, map_add]
-      change _ + _ = (rawZeroFormToFunction X d U (Finsupp.single g c)).1 _ +
-        (rawZeroFormToFunction X d U a).1 _
-      refine congrArg₂ (· + ·) ?_ ih
-      rw [chartRawEvaluation_single, rawZeroFormToFunction_single]
-      change c * (chartSection X d U z g.1 y * 1) =
-        c * g.1.1 ⟨(extChartAt 𝓘(ℂ, Fin d → ℂ) z).symm y, hy.2⟩
-      rw [chartSection_apply_of_mem X d U z _ hy, mul_one]
+  induction a using Algebra.DeRham.mk_induction with
+  | mk a v =>
+      rw [chartEvaluation_mk X d U z 0 a v hy, algebraicZeroFormToFunction_mk]
+      simp [chartGeneratorEvaluation, chartSection_apply_of_mem X d U z a hy]
+  | zero => rw [chartEvaluation_zero, map_zero]; rfl
+  | add a b ha hb =>
+      rw [chartEvaluation_add, map_add]
+      exact congrArg₂ (· + ·) ha hb
+  | smul c a ha =>
+      rw [chartEvaluation_smul, map_smul]
+      exact congrArg (c • ·) ha
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- Analytic zero-form relations evaluate to the zero holomorphic function. -/
-lemma holomorphicFormRelations_zero_le_ker (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
-    holomorphicFormRelations X d U 0 ≤ LinearMap.ker (rawZeroFormToFunction X d U) := by
+/-- A zero-form which vanishes in all charts has zero coefficient function. -/
+lemma chartEvaluationKernel_zero_le_ker (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
+    chartEvaluationKernel X d U 0 ≤ LinearMap.ker (algebraicZeroFormToFunction X d U) := by
   intro a ha
-  rw [holomorphicFormRelations_eq_restrictionStableAnalyticKernel,
-    restrictionStableAnalyticKernel] at ha
-  simp only [Submodule.mem_iInf, Submodule.mem_comap] at ha
-  specialize ha U (𝟙 U)
-  rw [rawRestriction_id, LinearMap.id_apply] at ha
   rw [LinearMap.mem_ker]
   apply Subtype.ext
   funext x
   let e := extChartAt 𝓘(ℂ, Fin d → ℂ) (x : ComplexPoint X)
-  have hx : (x : ComplexPoint X) ∈ e.source :=
-    mem_extChartAt_source (x : ComplexPoint X)
+  have hx : (x : ComplexPoint X) ∈ e.source := mem_extChartAt_source (x : ComplexPoint X)
   have hy : e x ∈ chartSectionDomain X d U x :=
     ⟨e.map_source hx, by change e.symm (e x) ∈ U.unop; rw [e.left_inv hx]; exact x.2⟩
   have heval := congrArg (fun f : (Fin d → ℂ) [⋀^Fin 0]→L[ℂ] ℂ ↦ f Fin.elim0)
     ((mem_chartEvaluationKernel_iff X d U 0 a).mp ha x (e x) hy)
-  rw [chartRawEvaluation_zero_apply X d U x a hy] at heval
+  rw [chartEvaluation_zero_apply X d U x a hy] at heval
   have hpoint : (⟨e.symm (e x), hy.2⟩ : U.unop) = x := Subtype.ext (e.left_inv hx)
-  change (rawZeroFormToFunction X d U a).1 ⟨e.symm (e x), hy.2⟩ = 0 at heval
+  change (algebraicZeroFormToFunction X d U a).1 ⟨e.symm (e x), hy.2⟩ = 0 at heval
   rw [hpoint] at heval
   exact heval
 
 /-- The holomorphic function represented by an analytic zero-form. -/
 def holomorphicZeroFormToFunction (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) :
     HolomorphicForm X d U 0 →ₗ[ℂ] OpenHolomorphicFunctions X d U :=
-  (holomorphicFormRelations X d U 0).liftQ (rawZeroFormToFunction X d U)
-    (holomorphicFormRelations_zero_le_ker X d U)
+  (chartEvaluationKernel X d U 0).liftQ (algebraicZeroFormToFunction X d U)
+    (chartEvaluationKernel_zero_le_ker X d U)
 
-/-- Evaluation of raw zero-forms commutes with restriction. -/
-lemma rawZeroFormToFunction_restriction
+/-- Evaluation of algebraic zero-forms commutes with restriction. -/
+lemma algebraicZeroFormToFunction_restriction
     {U V : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ} (i : U ⟶ V)
-    (a : Algebra.DeRham.RawForm ℂ (OpenHolomorphicFunctions X d U) 0) :
-    rawZeroFormToFunction X d V (rawRestriction X d i 0 a) =
-      holomorphicRestrictionAlgHom X d i (rawZeroFormToFunction X d U a) := by
-  classical
-  induction a using Finsupp.induction with
+    (a : Algebra.DeRham.Form ℂ (OpenHolomorphicFunctions X d U) 0) :
+    algebraicZeroFormToFunction X d V (formRestriction X d i 0 a) =
+      holomorphicRestrictionAlgHom X d i (algebraicZeroFormToFunction X d U a) := by
+  induction a using Algebra.DeRham.mk_induction with
+  | mk a v => simp [formRestriction]
   | zero => simp
-  | single_add g c a hg hc ih =>
-      rw [map_add, map_add, map_add, map_add, ih]
-      congr 1
-      simp [rawZeroFormToFunction, rawRestriction, Algebra.DeRham.generatorMap]
+  | add a b ha hb => simp [ha, hb]
+  | smul c a ha => simp [ha]
 
 /-- Evaluation of analytic zero-forms commutes with restriction. -/
 lemma holomorphicZeroFormToFunction_restriction
@@ -113,8 +105,8 @@ lemma holomorphicZeroFormToFunction_restriction
     (a : HolomorphicForm X d U 0) :
     holomorphicZeroFormToFunction X d V (holomorphicFormRestriction X d i 0 a) =
       holomorphicRestrictionAlgHom X d i (holomorphicZeroFormToFunction X d U a) := by
-  obtain ⟨a, rfl⟩ := Submodule.mkQ_surjective (holomorphicFormRelations X d U 0) a
-  exact rawZeroFormToFunction_restriction X d i a
+  obtain ⟨a, rfl⟩ := Submodule.mkQ_surjective (chartEvaluationKernel X d U 0) a
+  exact algebraicZeroFormToFunction_restriction X d i a
 
 /-- Evaluation on the presheaf of holomorphic zero-forms. -/
 def holomorphicZeroFormToFunctionPresheaf :
@@ -138,13 +130,13 @@ lemma holomorphicZeroFormToFunction_ofConstant
     (U : (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ) (c : ℂ) :
     holomorphicZeroFormToFunction X d U (holomorphicFormOfConstant X d U c) =
       algebraMap ℂ (OpenHolomorphicFunctions X d U) c := by
-  change rawZeroFormToFunction X d U
-    (Finsupp.single (algebraMap ℂ (OpenHolomorphicFunctions X d U) c, Fin.elim0) 1) = _
-  rw [rawZeroFormToFunction_single, one_smul]
+  change algebraicZeroFormToFunction X d U
+    (Algebra.DeRham.ofConstant ℂ (OpenHolomorphicFunctions X d U) c) = _
+  simp [Algebra.DeRham.ofConstant_apply, Algebra.DeRham.ofFunction_apply]
 
 /-- Complex constants as holomorphic functions, before sheafification. -/
 def complexConstantsToHolomorphicPresheaf :
-    constantComplexAddCommGrpPresheaf X ⟶ (holomorphicAdditiveSheaf X d).obj where
+    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶ (holomorphicAdditiveSheaf X d).obj where
   app U := AddCommGrpCat.ofHom ContMDiffMap.C.toAddMonoidHom
   naturality {U V} i := by
     apply AddCommGrpCat.hom_ext
@@ -154,7 +146,7 @@ def complexConstantsToHolomorphicPresheaf :
 
 /-- The inclusion of the constant complex sheaf into holomorphic functions. -/
 def complexConstantsToHolomorphicSheaf :
-    constantComplexSheaf X ⟶ holomorphicAdditiveSheaf X d :=
+    𝓒(↧(ComplexPoint X); ℂ) ⟶ holomorphicAdditiveSheaf X d :=
   ⟨sheafifyLift (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     (complexConstantsToHolomorphicPresheaf X d) (holomorphicAdditiveSheaf X d).property⟩
 

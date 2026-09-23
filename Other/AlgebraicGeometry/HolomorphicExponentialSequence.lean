@@ -5,8 +5,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.HolomorphicExponential
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import Mathlib.Topology.Sheaves.Sheafify
+
+import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 
 /-!
 # The holomorphic exponential sequence
@@ -44,7 +46,7 @@ def integerConstantsToHolomorphicPresheaf :
 
 /-- The canonical inclusion of the constant integer sheaf into holomorphic functions. -/
 def integerConstantsToHolomorphicSheaf :
-    constantIntegerSheaf X ⟶ holomorphicAdditiveSheaf X d :=
+    𝓒(↧(ComplexPoint X); ℤ) ⟶ holomorphicAdditiveSheaf X d :=
   ⟨sheafifyLift (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     (integerConstantsToHolomorphicPresheaf X d) (holomorphicAdditiveSheaf X d).property⟩
 
@@ -117,7 +119,7 @@ set_option backward.isDefEq.respectTransparency false in
 theorem holomorphicExponentialPresheafSequence_stalk_exact (x : ComplexPoint X) :
     ((holomorphicExponentialPresheafSequence X d).map
       (TopCat.Presheaf.stalkFunctor AddCommGrpCat x)).Exact := by
-  apply holomorphicStalkExact_of_locallyPrimitive
+  apply TopCat.Presheaf.stalkExact_of_locallyPrimitive
   intro y U hy f hf
   change C^ω⟮𝓘(ℂ, Fin d → ℂ), U; ℂ⟯ at f
   change ContMDiffMap.holomorphicExponential f = 0 at hf

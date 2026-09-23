@@ -27,23 +27,23 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 /-- The analytic first Chern-class connecting map of the holomorphic exponential sequence. -/
 def holomorphicFirstChernClass :
-    Abelian.Ext.{1} (constantIntegerSheaf X) (holomorphicUnitSheaf X d) 1 →+
-      Abelian.Ext.{1} (constantIntegerSheaf X) (constantIntegerSheaf X) 2 :=
+    Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1 →+
+      Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (𝓒(↧(ComplexPoint X); ℤ)) 2 :=
   (holomorphicExponentialSequence_shortExact X d).extClass.postcomp
-    (constantIntegerSheaf X) rfl
+    (𝓒(↧(ComplexPoint X); ℤ)) rfl
 
 /-- The map on second cohomology induced by the inclusion of integers into holomorphic functions. -/
 def integerToHolomorphicSecondCohomology :
-    Abelian.Ext.{1} (constantIntegerSheaf X) (constantIntegerSheaf X) 2 →+
-      Abelian.Ext.{1} (constantIntegerSheaf X) (holomorphicAdditiveSheaf X d) 2 :=
+    Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (𝓒(↧(ComplexPoint X); ℤ)) 2 →+
+      Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicAdditiveSheaf X d) 2 :=
   (Abelian.Ext.mk₀ (integerConstantsToHolomorphicSheaf X d)).postcomp
-    (constantIntegerSheaf X) (add_zero 2)
+    (𝓒(↧(ComplexPoint X); ℤ)) (add_zero 2)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- An integral cohomology class lifts through the analytic Chern-class connecting map exactly
 when its image in the second cohomology of holomorphic functions vanishes. -/
 theorem exists_holomorphicFirstChernClass_iff
-    (α : Abelian.Ext.{1} (constantIntegerSheaf X) (constantIntegerSheaf X) 2) :
+    (α : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (𝓒(↧(ComplexPoint X); ℤ)) 2) :
     (∃ β, holomorphicFirstChernClass X d β = α) ↔
       integerToHolomorphicSecondCohomology X d α = 0 := by
   constructor
@@ -54,6 +54,6 @@ theorem exists_holomorphicFirstChernClass_iff
       ShortComplex.ShortExact.extClass_comp, Abelian.Ext.comp_zero]
   · intro hα
     exact Abelian.Ext.covariant_sequence_exact₁
-      (constantIntegerSheaf X) (holomorphicExponentialSequence_shortExact X d) α hα rfl
+      (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicExponentialSequence_shortExact X d) α hα rfl
 
 end AlgebraicGeometry.ComplexPoint

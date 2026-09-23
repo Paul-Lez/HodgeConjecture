@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.HolomorphicZeroForms
-public import HodgeConjecture.Definitions.AlgebraicGeometry.HodgeFiltration
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 
 /-!
 # Projection from de Rham cohomology to holomorphic-function cohomology
@@ -85,10 +85,9 @@ theorem deRhamToHolomorphicFunctionCohomology_eq_zero_of_mem
 /-- A rational Hodge class of degree two has zero image in the second cohomology of
 holomorphic functions under the canonical de Rham comparison. -/
 theorem hodgeClass_one_toHolomorphicFunctionCohomology_eq_zero
-    [IsIntegral X.left] [Smooth X.hom] (α : FieldCohomology ℚ X 2)
+    [IsIntegral X.left] [Smooth X.hom] (α : H^2(X; ℚ))
     (hα : α ∈ hodgeClasses ℚ X 1) :
     deRhamToHolomorphicFunctionCohomology X 2 (fieldToDeRhamCohomology ℚ X 2 α) = 0 := by
-  rw [hodgeClasses_rat_eq_comap_hodgeFiltrationSubmodule] at hα
-  exact deRhamToHolomorphicFunctionCohomology_eq_zero_of_mem X 2 _ hα
+  exact deRhamToHolomorphicFunctionCohomology_eq_zero_of_mem X 2 _ hα.1
 
 end AlgebraicGeometry.ComplexPoint

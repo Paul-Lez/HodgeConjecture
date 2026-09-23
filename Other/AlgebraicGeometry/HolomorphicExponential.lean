@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexAnalyticSheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AnalyticSheaf
 public import Other.Geometry.Manifold.HolomorphicLogarithm
 public import Mathlib.Algebra.Category.Grp.Adjunctions
 public import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
