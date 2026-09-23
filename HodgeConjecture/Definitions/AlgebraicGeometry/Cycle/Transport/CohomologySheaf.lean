@@ -1,0 +1,54 @@
+/-
+Copyright 2026 The Formal Conjectures Authors.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+module
+
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
+
+/-!
+# Cohomology-sheaf concentration for smooth closed supports
+
+The complex is the supported-sections kernel applied to the fixed ambient rational injective
+resolution. Its open-section homology is compared to relative singular cohomology by the
+singular resolution and restriction-cone maps, and cofinal normal neighborhoods then give
+stalkwise and sheafwise concentration in degree twice the complex codimension. Identifying
+the surviving cohomology sheaf with rational constants on the support is left to a later file.
+-/
+
+@[expose] public noncomputable section
+
+open CategoryTheory CategoryTheory.Limits Topology TopologicalSpace Opposite
+
+namespace AlgebraicGeometry.ComplexPoint
+
+open AlgebraicTopology.Singular
+
+variable (X : Over (Spec ↧ℂ))
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+
+/-- Let `X` be a smooth integral projective scheme over `ℂ` and `S` a closed subset of its analytic
+space `X(ℂ)`. For the chosen injective resolution `ℚ → I^•`, this complex has in each degree the
+subsheaf of `I^n` consisting of sections that vanish off `S`. Its differentials are induced by
+those of `I^•`, and it represents the derived sheaf of sections with support in `S`. -/
+def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
+  -- `RΓ_S(ℚ)`: the `S`-supported subsheaves of an injective resolution of `ℚ` on `X(ℂ)`.
+  ((TopCat.Sheaf.sheafSectionsSupportedOutside
+    -- `X(ℂ)`.
+    (TopCat.of (ComplexPoint X))
+    -- The open `X(ℂ) \ S`; sections supported outside it are the sections supported on `S`.
+    S.compl).mapHomologicalComplex ℤᵘᵖ).obj
+      -- The injective resolution `I^•` of `ℚ` on `X(ℂ)`.
+      (ambientRationalInjectiveComplex X)
+
+instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint X)) :
+    (complexSupportInjectiveComplex X S).IsStrictlyGE 0 := by
+  dsimp [complexSupportInjectiveComplex]
+  infer_instance
+
+end AlgebraicGeometry.ComplexPoint

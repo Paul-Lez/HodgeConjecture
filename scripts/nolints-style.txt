@@ -1,0 +1,6 @@
+-- Style exceptions for `lake exe lint-style`.
+--
+-- Each line has the shape
+--   <path> : line <n> : <ERR_CODE> : <message>
+-- and lines starting with `--` are comments. Prefer fixing the source over adding an
+-- entry here: the line numbers recorded below go stale as soon as the file moves.

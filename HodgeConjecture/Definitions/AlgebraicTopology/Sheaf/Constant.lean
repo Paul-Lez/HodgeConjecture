@@ -1,0 +1,80 @@
+/-
+Copyright 2026 The Formal Conjectures Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-/
+module
+
+public import Mathlib.CategoryTheory.Sites.ConstantSheaf
+public import Mathlib.Topology.Sheaves.Abelian
+
+/-!
+# Constant presheaves and sheaves of additive groups on a topological space
+
+`CategoryTheory.constantSheaf` sheafifies the constant presheaf on a site. This file
+specialises the constant presheaf and its sheafification to the site of open subsets of a
+topological space with values in additive groups. Each has notation for the two ways the value
+is given: as an object `A : AddCommGrpCat`, written `𝓒ᵖ[X; A]` and `𝓒[X; A]`, and as a type `R`
+carrying an `AddCommGroup` instance — a field, a ring, `ℤ` — written `𝓒ᵖ(X; R)` and `𝓒(X; R)`.
+-/
+
+@[expose] public noncomputable section
+
+open CategoryTheory TopologicalSpace
+
+universe u
+
+namespace TopCat.Presheaf
+
+variable (X : TopCat.{u})
+
+/-- Let `X` be a topological space and `A` an abelian group. The constant presheaf assigns `A` to
+every open subset of `X`, including the empty set, and the identity homomorphism to every
+inclusion. -/
+abbrev const (A : AddCommGrpCat.{u}) : TopCat.Presheaf AddCommGrpCat.{u} X :=
+  (Functor.const (Opens X)ᵒᵖ).obj A
+
+@[inherit_doc const]
+notation3 "𝓒ᵖ[" X "; " A "]" => TopCat.Presheaf.const X A
+
+/-- The constant presheaf on `X` with value the additive group of `R`. -/
+notation3 "𝓒ᵖ(" X "; " R ")" => TopCat.Presheaf.const X (AddCommGrpCat.of R)
+
+end TopCat.Presheaf
+
+namespace TopCat.Sheaf
+
+variable (X : TopCat.{u})
+
+/-- Let `X` be a topological space. This functor sends an abelian group `A` to the sheaf of locally
+constant functions from open subsets of `X` to `A`, obtained by sheafifying the constant
+presheaf. Group homomorphisms act by postcomposition on these functions. -/
+abbrev constantFunctor :
+    AddCommGrpCat.{u} ⥤ CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u} :=
+  CategoryTheory.constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}
+
+/-- Let `X` be a topological space and `A` an abelian group. The constant sheaf `A_X` assigns to
+each open `U` the group of locally constant functions `U → A`, with pointwise addition and
+restriction of functions. It is defined by sheafifying the constant presheaf. -/
+abbrev const (A : AddCommGrpCat.{u}) : TopCat.Sheaf AddCommGrpCat.{u} X :=
+  (constantFunctor X).obj A
+
+@[inherit_doc const]
+notation3 "𝓒[" X "; " A "]" => TopCat.Sheaf.const X A
+
+/-- The constant sheaf on `X` with value the additive group of `R`. -/
+notation3 "𝓒(" X "; " R ")" => TopCat.Sheaf.const X (AddCommGrpCat.of R)
+
+end TopCat.Sheaf
+
+end

@@ -1,0 +1,103 @@
+/-
+Copyright 2026 The Formal Conjectures Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-/
+module
+
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
+public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+
+import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Locus
+import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.AlgebraicGeometry.AlgClosed.Basic
+import Mathlib.Analysis.Complex.Polynomial.Basic
+
+/-!
+# Geometric support of algebraic cycles
+
+An algebraic cycle in Mathlib is indexed by the generic points of its irreducible components.
+This file constructs the reduced integral closed subscheme attached to such a point and the
+corresponding closed subset of complex points. It also constructs the geometric support of a
+whole cycle as the union of the closures of the generic points with nonzero coefficient.
+-/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Topology TopologicalSpace
+
+namespace AlgebraicGeometry
+
+variable (X : Over (Spec ↧ℂ))
+
+/-- Let `X` be a scheme and `x` a point of its underlying topological space. This is the closed
+subscheme defined by the vanishing ideal of `closure {x}`. It has that closure as its underlying
+space and the reduced scheme structure, so it is integral with generic point `x`. -/
+def cycleComponent (X : Scheme) (x : X) : Scheme :=
+  (Scheme.IdealSheafData.vanishingIdeal
+    (X := X) ⟨closure {x}, isClosed_closure⟩).subscheme
+
+/-- Let `X` be a scheme and `x` a scheme point. This is the closed immersion into `X` of the reduced
+closed subscheme with underlying space `closure {x}`, defined by its vanishing ideal sheaf. -/
+def cycleComponentι (X : Scheme) (x : X) : cycleComponent X x ⟶ X :=
+  (Scheme.IdealSheafData.vanishingIdeal
+    (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι
+
+instance (X : Scheme) (x : X) : IsClosedImmersion (cycleComponentι X x) := by
+  change IsClosedImmersion
+    ((Scheme.IdealSheafData.vanishingIdeal
+      (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι)
+  infer_instance
+
+instance (X : Scheme) (x : X) : IsReduced (cycleComponent X x) := by
+  let I := Scheme.IdealSheafData.vanishingIdeal
+    (X := X) ⟨closure {x}, isClosed_closure⟩
+  change IsReduced I.subscheme
+  rw [IsReduced.iff_of_openCover I.subscheme I.subschemeCover.openCover]
+  intro U
+  let U' : X.affineOpens := U
+  change IsReduced (Spec ↧(Γ(X, U') ⧸ I.ideal U'))
+  rw [affine_isReduced_iff, ← Ideal.isRadical_iff_quotient_reduced]
+  change (PrimeSpectrum.vanishingIdeal (U'.2.fromSpec ⁻¹' closure {x})).IsRadical
+  exact PrimeSpectrum.isRadical_vanishingIdeal _
+
+instance (X : Scheme) (x : X) : IrreducibleSpace (cycleComponent X x) :=
+  Subtype.irreducibleSpace isIrreducible_singleton.closure
+
+instance (X : Scheme) (x : X) : IsIntegral (cycleComponent X x) :=
+  isIntegral_of_irreducibleSpace_of_isReduced _
+
+/-- A cycle component of a projective variety is projective over `ℂ`. -/
+instance cycleComponent_projective
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
+    IsProjective (cycleComponentι X.left x ≫ X.hom) := by
+  rcases ‹IsProjective X.hom›.nonempty_presentation with ⟨P⟩
+  exact ⟨⟨
+    { ambientDimension := P.ambientDimension
+      immersion := cycleComponentι X.left x ≫ P.immersion
+      isClosedImmersion := by
+        let := P.isClosedImmersion
+        infer_instance
+      immersion_toBase := by rw [Category.assoc, P.immersion_toBase] }
+  ⟩⟩
+
+/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+be its reduced closure in `X`. This is the subset `Z(ℂ) ⊆ X(ℂ)`, consisting of complex points
+whose underlying scheme point belongs to `closure {x}`. -/
+def cycleComponentSupport
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
+    Set (ComplexPoint X) :=
+  Point.underlying ⁻¹' closure {x}
+
+end AlgebraicGeometry

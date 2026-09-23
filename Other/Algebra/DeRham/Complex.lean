@@ -15,7 +15,7 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.Algebra.DeRham.Basic
+public import HodgeConjecture.Lemmas.Algebra.DeRham.Basic
 public import Mathlib.Algebra.Category.ModuleCat.Basic
 public import Mathlib.Algebra.Homology.HomologicalComplex
 

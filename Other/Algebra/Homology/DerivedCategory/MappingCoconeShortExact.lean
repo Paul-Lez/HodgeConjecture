@@ -4,16 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Mathlib.Algebra.Homology.DerivedCategory.ShortExact
-
-/-!
-# The canonical homotopy fiber comparison for a short exact sequence
-
-For `0 → A → B → C → 0` this file constructs the canonical quasi-isomorphism
-`A → mappingCocone (B → C)`. Its normalization is the actual inclusion `A → B`.
-The proof uses the explicit mapping-cone rotation homotopy equivalence and the
-canonical quasi-isomorphism from the cone of `A → B` to `C`.
--/
+public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 
 @[expose] public noncomputable section
 
@@ -24,52 +15,15 @@ namespace CochainComplex
 
 variable {C : Type*} [Category* C] [Abelian C]
 
-namespace mappingCone
-
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
-/-- A map of mapping cones induced by quasi-isomorphisms is a quasi-isomorphism. -/
-lemma quasiIso_map_of_quasiIso {K₁ L₁ K₂ L₂ : CochainComplex C ℤ}
-    (f₁ : K₁ ⟶ L₁) (f₂ : K₂ ⟶ L₂) (a : K₁ ⟶ K₂) (b : L₁ ⟶ L₂)
-    (h : f₁ ≫ b = a ≫ f₂) [QuasiIso a] [QuasiIso b] :
-    QuasiIso (map f₁ f₂ a b h) := by
-  let := HasDerivedCategory.standard C
-  apply (DerivedCategory.isIso_Q_map_iff_quasiIso C _).1
-  exact isIso₃_of_isIso₁₂
-    (DerivedCategory.Q.mapTriangle.map (triangleMap f₁ f₂ a b h))
-    (DerivedCategory.mappingCone_triangle_distinguished f₁)
-    (DerivedCategory.mappingCone_triangle_distinguished f₂)
-    (inferInstanceAs (IsIso (DerivedCategory.Q.map a)))
-    (inferInstanceAs (IsIso (DerivedCategory.Q.map b)))
-
-end mappingCone
-
 namespace mappingCocone
 
 variable (S : ShortComplex (CochainComplex C ℤ))
-
-/-- The explicit rotated-cone comparison, before shifting back to the homotopy
-fiber. It is built from canonical chain maps, not from a choice of a completion
-of a morphism of distinguished triangles. -/
-def shiftedLiftShortComplex : S.X₁⟦(1 : ℤ)⟧ ⟶ mappingCone S.g :=
-  (mappingCone.rotateHomotopyEquiv S.f).hom ≫
-    mappingCone.map (mappingCone.inr S.f) S.g (𝟙 _)
-      (mappingCone.descShortComplex S) (by simp)
-
-lemma quasiIso_shiftedLiftShortComplex (hS : S.ShortExact) :
-    QuasiIso (shiftedLiftShortComplex S) := by
-  have := mappingCone.quasiIso_descShortComplex hS
-  have := mappingCone.quasiIso_map_of_quasiIso
-    (mappingCone.inr S.f) S.g (𝟙 _) (mappingCone.descShortComplex S) (by simp)
-  dsimp only [shiftedLiftShortComplex]
-  infer_instance
 
 /-- Canonical comparison from the first term of a short complex to the homotopy
 fiber of its second map. -/
 def liftShortComplex : S.X₁ ⟶ mappingCocone S.g :=
   (shiftFunctorCompIsoId _ (1 : ℤ) (-1) (by simp)).inv.app S.X₁ ≫
     (shiftedLiftShortComplex S)⟦(-1 : ℤ)⟧'
-
 set_option backward.isDefEq.respectTransparency false in
 lemma quasiIso_liftShortComplex (hS : S.ShortExact) :
     QuasiIso (liftShortComplex S) := by
@@ -126,7 +80,6 @@ lemma liftShortComplex_eq_lift :
       exact congrArg (fun f : S.X₁ ⟶ S.X₂ => f.f p ≫ (inl S.g).v p p (add_zero p))
         (liftShortComplex_fst S)
     _ = _ := by rw [id_X]; simp
-
 end mappingCocone
 
 end CochainComplex

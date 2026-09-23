@@ -1,0 +1,232 @@
+/-
+Copyright 2026 The Formal Conjectures Authors.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+module
+
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.AnalyticLeftInverse
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ClosedImmersion
+public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart
+
+/-!
+# Normal coordinates for smooth closed immersions
+
+The derivative projection here comes from lifted algebraic coordinate sections. The normal
+chart is then constructed by the inverse function theorem. Finally the topological
+embedding theorem excludes remote branches and identifies the whole local analytic support
+with zero normal coordinate.
+-/
+
+@[expose] public noncomputable section
+
+open CategoryTheory Topology Filter
+
+namespace AlgebraicGeometry.ComplexPoint
+
+variable (X Y : Over (Spec ↧ℂ))
+  (i : Y ⟶ X) (m d : ℕ)
+  [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
+  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, of respective dimensions `m`
+and `d`, and let `z ∈ Y(ℂ)`. In the chosen analytic charts, the derivative of `i` is an
+injective complex linear map `ℂ^m → ℂ^d`. This chooses a continuous complex linear left inverse
+`P : ℂ^d → ℂ^m`, so `P ∘ D i = id`. -/
+def closedImmersionDerivativeProjection : (Fin d → ℂ) →L[ℂ] (Fin m → ℂ) :=
+  (exists_leftInverse_fderiv_inclusionInComplexCharts
+    X Y i m d z).choose
+
+theorem closedImmersionDerivativeProjection_leftInverse :
+    (closedImmersionDerivativeProjection X Y i m d z).comp
+      (fderiv ℂ (inclusionInComplexCharts X Y i m d z)
+        (localChart Y m z z)) = ContinuousLinearMap.id ℂ (Fin m → ℂ) :=
+  (exists_leftInverse_fderiv_inclusionInComplexCharts
+    X Y i m d z).choose_spec
+
+/-- Let `i : Y → X` be a closed immersion of smooth complex schemes of dimensions `m,d`, and let `z
+∈ Y(ℂ)`. In the chosen charts write `g = e_X ∘ i ∘ e_Y⁻¹` and `a = e_Y(z)`. For the chosen
+complex-linear left inverse `P` of `Dg(a)`, this local homeomorphism `ℂ^m × ker P → ℂ^d` is
+`(v,w) ↦ g(v)+w` near `(a,0)`. -/
+def closedImmersionNormalChart :
+    OpenPartialHomeomorph
+      ((Fin m → ℂ) ×
+        (closedImmersionDerivativeProjection X Y i m d z).ker)
+      (Fin d → ℂ) :=
+  (analyticAt_inclusionInComplexCharts X Y i m d z).hasStrictFDerivAt.normalChart
+    (closedImmersionDerivativeProjection X Y i m d z)
+    (closedImmersionDerivativeProjection_leftInverse X Y i m d z)
+
+@[simp] theorem closedImmersionNormalChart_apply
+    (v : (Fin m → ℂ) ×
+      (closedImmersionDerivativeProjection X Y i m d z).ker) :
+    closedImmersionNormalChart X Y i m d z v =
+      inclusionInComplexCharts X Y i m d z v.1 + v.2 := rfl
+
+theorem closedImmersionNormalChart_mem_source :
+    (localChart Y m z z, 0) ∈
+      (closedImmersionNormalChart X Y i m d z).source :=
+  (analyticAt_inclusionInComplexCharts X Y i m d z).hasStrictFDerivAt.normalChart_mem_source _ _
+
+theorem closedImmersionNormalChart_mem_target :
+    localChart X d (Point.map i z) (Point.map i z) ∈
+      (closedImmersionNormalChart X Y i m d z).target := by
+  simpa only [closedImmersionNormalChart, inclusionInComplexCharts_at_center] using
+    (analyticAt_inclusionInComplexCharts X Y i m d z).hasStrictFDerivAt.normalChart_mem_target
+      (closedImmersionDerivativeProjection X Y i m d z)
+      (closedImmersionDerivativeProjection_leftInverse X Y i m d z)
+
+@[simp] theorem closedImmersionNormalChart_symm_center :
+    (closedImmersionNormalChart X Y i m d z).symm
+      (localChart X d (Point.map i z) (Point.map i z)) =
+        (localChart Y m z z, 0) := by
+  simpa using
+    (closedImmersionNormalChart X Y i m d z).left_inv
+      (closedImmersionNormalChart_mem_source X Y i m d z)
+
+/-- The normal space has complex dimension `d - m`. -/
+theorem closedImmersionNormalKernel_finrank :
+    Module.finrank ℂ
+      (closedImmersionDerivativeProjection X Y i m d z).ker =
+        d - m := by
+  have hdim :=
+    ((fderiv ℂ (inclusionInComplexCharts X Y i m d z)
+      (localChart Y m z z)).splitKernelEquiv
+      (closedImmersionDerivativeProjection X Y i m d z)
+      (closedImmersionDerivativeProjection_leftInverse X Y i m d z)).toLinearEquiv.finrank_eq
+  simp only [Module.finrank_prod, Module.finrank_pi, Fintype.card_fin] at hdim
+  omega
+
+/-- Near the selected ambient point, membership in the entire image is equivalent
+to having zero normal coordinate. The forward direction uses the induced topology
+to exclude image points whose intrinsic parameters are outside the coordinate neighborhood. -/
+private theorem eventually_mem_range_iff_normal_eq_zero :
+    ∀ᶠ y in 𝓝 (Point.map i z),
+      y ∈ Set.range (Point.map i) ↔
+        ((closedImmersionNormalChart X Y i m d z).symm
+          (localChart X d (Point.map i z) y)).2 = 0 := by
+  let eY := localChart Y m z
+  let eX := localChart X d (Point.map i z)
+  let eN := closedImmersionNormalChart X Y i m d z
+  let g := Point.map i
+  have hzY : z ∈ eY.source := mem_localChart_source Y m z
+  have hzX : g z ∈ eX.source := mem_localChart_source X d (g z)
+  have hzN : (eY z, 0) ∈ eN.source :=
+    closedImmersionNormalChart_mem_source X Y i m d z
+  have hzNt : eX (g z) ∈ eN.target :=
+    closedImmersionNormalChart_mem_target X Y i m d z
+  have hcenter : eN.symm (eX (g z)) = (eY z, 0) :=
+    closedImmersionNormalChart_symm_center X Y i m d z
+  have hparam : ∀ᶠ w in 𝓝 z, w ∈ eY.source ∧ (eY w, 0) ∈ eN.source := by
+    filter_upwards [eY.open_source.mem_nhds hzY,
+      ((eY.continuousAt hzY).prodMk continuousAt_const)
+        (eN.open_source.mem_nhds hzN)] with w hwY hwN
+    exact ⟨hwY, hwN⟩
+  rw [(isInducing_map_of_closedImmersion i).nhds_eq_comap z, eventually_comap] at hparam
+  have hN : ∀ᶠ y in 𝓝 (g z), eX y ∈ eN.target :=
+    (eX.continuousAt hzX) (eN.open_target.mem_nhds hzNt)
+  have hc : ContinuousAt (fun y => (eN.symm (eX y)).1) (g z) :=
+    ((eN.continuousAt_symm hzNt).comp (eX.continuousAt hzX)).fst
+  have hback : ∀ᶠ y in 𝓝 (g z),
+      g (eY.symm (eN.symm (eX y)).1) ∈ eX.source := by
+    have hcont : ContinuousAt (fun y => g (eY.symm (eN.symm (eX y)).1)) (g z) := by
+      apply (Point.continuous_map i).continuousAt.comp
+      apply ContinuousAt.comp _ hc
+      change ContinuousAt eY.symm (eN.symm (eX (g z))).1
+      rw [hcenter]
+      exact eY.continuousAt_symm (eY.map_source hzY)
+    apply hcont (eX.open_source.mem_nhds _)
+    change g (eY.symm (eN.symm (eX (g z))).1) ∈ eX.source
+    rw [hcenter, eY.left_inv hzY]
+    exact hzX
+  filter_upwards [hparam, hN, hback, eX.open_source.mem_nhds hzX] with y hpre hyN hyback hyX
+  constructor
+  · rintro ⟨w, rfl⟩
+    obtain ⟨hwY, hwN⟩ := hpre w rfl
+    have hφ : eN (eY w, 0) = eX (g w) := by
+      change eX (g (eY.symm (eY w))) + 0 = _
+      rw [eY.left_inv hwY, add_zero]
+    have heq := eN.left_inv hwN
+    rw [hφ] at heq
+    exact congrArg Prod.snd heq
+  · intro hn
+    change (eN.symm (eX y)).2 = 0 at hn
+    refine ⟨eY.symm (eN.symm (eX y)).1, ?_⟩
+    apply eX.injOn hyback hyX
+    have hright := eN.right_inv hyN
+    change eX (g (eY.symm (eN.symm (eX y)).1)) + (eN.symm (eX y)).2 = eX y at hright
+    rw [hn] at hright
+    simpa only [Submodule.coe_zero, add_zero] using hright
+
+/-- An open ambient neighborhood on which normal coordinates detect the full
+closed-immersion image, extracted from the neighborhood assertion. -/
+theorem exists_open_normalCriterion :
+    ∃ W : Set (ComplexPoint X), IsOpen W ∧ Point.map i z ∈ W ∧
+      ∀ y ∈ W, y ∈ Set.range (Point.map i) ↔
+        ((closedImmersionNormalChart X Y i m d z).symm
+          (localChart X d (Point.map i z) y)).2 = 0 := by
+  obtain ⟨W, hWsub, hWopen, hzW⟩ := mem_nhds_iff.mp
+    (eventually_mem_range_iff_normal_eq_zero X Y i m d z)
+  exact ⟨W, hWopen, hzW, hWsub⟩
+
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, of respective dimensions `m`
+and `d`, and let `z ∈ Y(ℂ)`. This chart maps a neighborhood of `i(z)` in `X(ℂ)` to `ℂ^m × ker
+P`, where `P` is a chosen left inverse of the coordinate derivative of `i`. Throughout its
+source, membership in `i(Y(ℂ))` is equivalent to the second coordinate being zero. -/
+def closedImmersionFlatteningChart :
+    OpenPartialHomeomorph (ComplexPoint X)
+      ((Fin m → ℂ) ×
+        (closedImmersionDerivativeProjection X Y i m d z).ker) :=
+  ((localChart X d (Point.map i z)).trans
+    (closedImmersionNormalChart X Y i m d z).symm).restrOpen
+      (exists_open_normalCriterion X Y i m d z).choose
+      (exists_open_normalCriterion X Y i m d z).choose_spec.1
+
+@[simp] theorem closedImmersionFlatteningChart_apply (y : ComplexPoint X) :
+    closedImmersionFlatteningChart X Y i m d z y =
+      (closedImmersionNormalChart X Y i m d z).symm
+        (localChart X d (Point.map i z) y) := rfl
+
+@[simp] theorem closedImmersionFlatteningChart_center :
+    closedImmersionFlatteningChart X Y i m d z (Point.map i z) =
+      (localChart Y m z z, 0) :=
+  closedImmersionNormalChart_symm_center X Y i m d z
+
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, of respective dimensions `m`
+and `d`, and let `z ∈ Y(ℂ)`. Let `P : ℂ^d → ℂ^m` be the chosen left inverse of the derivative of
+`i` in analytic coordinates. Since `ker P` has complex dimension `d-m`, this chooses a
+continuous complex linear equivalence `ker P ≃ ℂ^{d-m}`. -/
+def closedImmersionNormalKernelEquiv :
+    (closedImmersionDerivativeProjection X Y i m d z).ker ≃L[ℂ]
+      (Fin (d - m) → ℂ) :=
+  (LinearEquiv.ofFinrankEq _ _ (by
+    simpa only [Module.finrank_pi, Fintype.card_fin] using
+      closedImmersionNormalKernel_finrank X Y i m d z)).toContinuousLinearEquiv
+
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ`, of respective dimensions `m`
+and `d`, and let `z ∈ Y(ℂ)`. This chart maps a neighborhood of `i(z)` in `X(ℂ)` to `ℂ^m ×
+ℂ^{d-m}`. Its second coordinate is normal to `Y`, and its zero set throughout the source is
+exactly the image of `Y(ℂ)` there. -/
+def closedImmersionStandardFlatteningChart :
+    OpenPartialHomeomorph (ComplexPoint X)
+      ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
+  (closedImmersionFlatteningChart X Y i m d z).trans
+    (((ContinuousLinearEquiv.refl ℂ (Fin m → ℂ)).prodCongr
+      (closedImmersionNormalKernelEquiv X Y i m d z)).toHomeomorph.toOpenPartialHomeomorph)
+
+@[simp] theorem closedImmersionStandardFlatteningChart_apply (y : ComplexPoint X) :
+    closedImmersionStandardFlatteningChart X Y i m d z y =
+      ((closedImmersionFlatteningChart X Y i m d z y).1,
+        closedImmersionNormalKernelEquiv X Y i m d z
+          (closedImmersionFlatteningChart X Y i m d z y).2) := rfl
+
+@[simp] theorem closedImmersionStandardFlatteningChart_source :
+    (closedImmersionStandardFlatteningChart X Y i m d z).source =
+      (closedImmersionFlatteningChart X Y i m d z).source := by
+  simp only [closedImmersionStandardFlatteningChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, Set.preimage_univ, Set.inter_univ]
+
+@[simp] theorem closedImmersionStandardFlatteningChart_center :
+    closedImmersionStandardFlatteningChart X Y i m d z
+      (Point.map i z) = (localChart Y m z z, 0) := by simp
+
+end AlgebraicGeometry.ComplexPoint

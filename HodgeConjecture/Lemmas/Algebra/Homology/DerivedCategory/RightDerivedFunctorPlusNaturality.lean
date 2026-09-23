@@ -1,0 +1,115 @@
+/-
+Copyright 2026 The Formal Conjectures Authors.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+module
+
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
+public import Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlus
+
+/-!
+# Natural transformations on bounded-below right derived functors
+
+A natural transformation of additive functors induces a transformation of their
+right derived functors. The construction uses the derived universal property,
+and its compatibility with the derived units is proved. This supplies, for
+example, the canonical support-enlargement and forget-support maps.
+-/
+
+@[expose] public noncomputable section
+
+open CategoryTheory
+
+namespace CategoryTheory.NatTrans
+
+variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
+  {F G H : C ⥤ D} [F.Additive] [G.Additive] [H.Additive]
+
+set_option backward.isDefEq.respectTransparency false in
+/-- Let `F,G : C → D` be additive functors between abelian categories and `α : F → G` a natural
+transformation. Applying `α` in each degree of a bounded-below cochain complex gives this
+transformation between the induced functors on bounded-below homotopy categories. -/
+def mapHomotopyCategoryPlus (α : F ⟶ G) :
+    F.mapHomotopyCategoryPlus ⟶ G.mapHomotopyCategoryPlus where
+  app K := ObjectProperty.homMk ((α.mapHomotopyCategory ℤᵘᵖ).app K.obj)
+  naturality K L f := by
+    ext
+    exact (α.mapHomotopyCategory ℤᵘᵖ).naturality f.hom
+
+@[simp]
+theorem mapHomotopyCategoryPlus_id (F : C ⥤ D) [F.Additive] :
+    mapHomotopyCategoryPlus (𝟙 F) = 𝟙 F.mapHomotopyCategoryPlus := rfl
+
+@[simp]
+theorem mapHomotopyCategoryPlus_comp (α : F ⟶ G) (β : G ⟶ H) :
+    mapHomotopyCategoryPlus (α ≫ β) =
+      mapHomotopyCategoryPlus α ≫ mapHomotopyCategoryPlus β := rfl
+
+variable [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
+
+/-- Let `F,G : C → D` be additive functors between abelian categories with derived categories, and
+assume `C` has enough injectives. A natural transformation `α : F → G` induces this
+transformation `RF → RG` on bounded-below derived categories. It is computed by applying `α`
+degreewise to an injective resolution. -/
+def rightDerivedFunctorPlus (α : F ⟶ G) :
+    F.rightDerivedFunctorPlus ⟶ G.rightDerivedFunctorPlus :=
+  Functor.rightDerivedNatTrans F.rightDerivedFunctorPlus G.rightDerivedFunctorPlus
+    F.rightDerivedFunctorPlusUnit G.rightDerivedFunctorPlusUnit
+      (HomotopyCategory.Plus.quasiIso C)
+        (Functor.whiskerRight α.mapHomotopyCategoryPlus DerivedCategory.Plus.Qh)
+
+/-- Compatibility with the derived units on every bounded-below homotopy complex. -/
+@[reassoc (attr := simp)]
+theorem rightDerivedFunctorPlus_unit (α : F ⟶ G) :
+    F.rightDerivedFunctorPlusUnit ≫
+        Functor.whiskerLeft DerivedCategory.Plus.Qh α.rightDerivedFunctorPlus =
+      Functor.whiskerRight α.mapHomotopyCategoryPlus DerivedCategory.Plus.Qh ≫
+        G.rightDerivedFunctorPlusUnit :=
+  Functor.rightDerivedNatTrans_fac _ _ _ _ _ _
+
+/-- The pointwise form pins the derived transformation to the coefficient transformation
+when computing on an injective resolution. -/
+@[reassoc (attr := simp)]
+theorem rightDerivedFunctorPlus_unit_app (α : F ⟶ G)
+    (K : HomotopyCategory.Plus C) :
+    F.rightDerivedFunctorPlusUnit.app K ≫
+        α.rightDerivedFunctorPlus.app (DerivedCategory.Plus.Qh.obj K) =
+      DerivedCategory.Plus.Qh.map (α.mapHomotopyCategoryPlus.app K) ≫
+        G.rightDerivedFunctorPlusUnit.app K :=
+  Functor.rightDerivedNatTrans_app _ _ _ _ _ _ _
+
+@[simp]
+theorem rightDerivedFunctorPlus_id (F : C ⥤ D) [F.Additive] :
+    rightDerivedFunctorPlus (𝟙 F) = 𝟙 F.rightDerivedFunctorPlus := by
+  simp [rightDerivedFunctorPlus]
+
+@[simp]
+theorem rightDerivedFunctorPlus_comp (α : F ⟶ G) (β : G ⟶ H) :
+    rightDerivedFunctorPlus (α ≫ β) =
+      rightDerivedFunctorPlus α ≫ rightDerivedFunctorPlus β := by
+  simp [rightDerivedFunctorPlus]
+
+end CategoryTheory.NatTrans
+
+namespace CategoryTheory.NatIso
+
+variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
+  [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
+  {F G : C ⥤ D} [F.Additive] [G.Additive]
+
+/-- Let `F,G : C → D` be additive functors between abelian categories with derived categories, and
+assume `C` has enough injectives. A natural isomorphism `e : F ≅ G` induces this isomorphism `RF
+≅ RG` on bounded-below derived categories, by applying `e` degreewise to injective resolutions. -/
+def rightDerivedFunctorPlus (e : F ≅ G) :
+    F.rightDerivedFunctorPlus ≅ G.rightDerivedFunctorPlus where
+  hom := e.hom.rightDerivedFunctorPlus
+  inv := e.inv.rightDerivedFunctorPlus
+  hom_inv_id := by
+    rw [← NatTrans.rightDerivedFunctorPlus_comp, e.hom_inv_id,
+      NatTrans.rightDerivedFunctorPlus_id]
+  inv_hom_id := by
+    rw [← NatTrans.rightDerivedFunctorPlus_comp, e.inv_hom_id,
+      NatTrans.rightDerivedFunctorPlus_id]
+
+end CategoryTheory.NatIso

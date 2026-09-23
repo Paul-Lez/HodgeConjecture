@@ -15,26 +15,13 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Lemmas.LinearAlgebra.ComplexOrientation
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.LinearAlgebra.Complex.Orientation
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Mathlib.RingTheory.Complex
 public import Mathlib.RingTheory.Norm.Transitivity
 
-/-!
-# Orientations of complex vector spaces
-
-Every complex-linear automorphism preserves either real orientation of its underlying real vector
-space.  This file proves that fact from the determinant norm formula and defines the standard
-orientation of `Fin n → ℂ`, with real and imaginary basis vectors interleaved.
-
-The generic preservation theorem is phrased using mathlib's `Orientation`.  In particular, it is
-the linear-algebra input needed to construct the constant-sign `Manifold.OrientationLift` proposed
-in [mathlib4 PR #35376](https://github.com/leanprover-community/mathlib4/pull/35376): apply
-`Manifold.OrientationLift.compatible_of_det` to the positivity result after identifying a
-holomorphic tangent coordinate change with the scalar restriction of a complex-linear
-equivalence.
--/
 
 @[expose] public noncomputable section
 
@@ -52,33 +39,11 @@ theorem LinearEquiv.det_restrictScalars_complex_pos
   rw [LinearMap.det_restrictScalars, Algebra.norm_complex_apply]
   exact Complex.normSq_pos.mpr f.isUnit_det'.ne_zero
 
-/-- A complex-linear automorphism preserves every real orientation after restriction of scalars. -/
-theorem Orientation.map_restrictScalars_complexLinearEquiv
-    {E ι : Type*} [AddCommGroup E] [Module ℝ E] [Module ℂ E]
-    [IsScalarTower ℝ ℂ E] [Module.Free ℂ E]
-    [FiniteDimensional ℝ E] [Fintype ι]
-    (f : E ≃ₗ[ℂ] E) (ω : Orientation ℝ E ι)
-    (hι : Fintype.card ι = Module.finrank ℝ E) :
-    Orientation.map ι (f.restrictScalars ℝ) ω = ω := by
-  rw [Orientation.map_eq_iff_det_pos ω (f.restrictScalars ℝ) hι]
-  exact f.det_restrictScalars_complex_pos
+end
+
+@[expose] public noncomputable section
 
 namespace Complex
-
-/-- The real dimension of `Fin n → ℂ` is `2 * n`, in the form expected by
-`Manifold.OrientationLift`. -/
-instance piOrientationFinrankFact (n : ℕ) :
-    Fact (Fintype.card (Fin (n * 2)) = Module.finrank ℝ (Fin n → ℂ)) :=
-  ⟨by simp [Module.finrank_pi_fintype, Complex.finrank_real_complex]⟩
-
-/-- The standard real basis of `Fin n → ℂ`, ordered
-`(re z 0, im z 0, re z 1, im z 1, ...)`.
-
-It is obtained by composing the standard complex basis of the function space with `basisOneI`,
-then reindexing the product basis by `finProdFinEquiv`.
--/
-def piBasisOneI (n : ℕ) : Module.Basis (Fin (n * 2)) ℝ (Fin n → ℂ) :=
-  (basisOneI.smulTower' (Pi.basisFun ℂ (Fin n))).reindex finProdFinEquiv
 
 /-- The canonical complex orientation of `Fin n → ℂ`, regarded as a real vector space. -/
 def piOrientation (n : ℕ) : Orientation ℝ (Fin n → ℂ) (Fin (n * 2)) :=

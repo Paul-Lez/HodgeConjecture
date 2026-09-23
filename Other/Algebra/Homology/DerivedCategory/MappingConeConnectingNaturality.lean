@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
+public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 /-! # Exact normalization of the cone connecting map
 
 Mathlib's standard cone triangle uses the negative first projection. These
@@ -55,9 +56,9 @@ connecting projection, with the functor's canonical shift comparison. -/
 lemma mapHomologicalComplexIso_connecting {K L : CochainComplex C ℤ}
     (f : K ⟶ L) (F : C ⥤ D) [F.Additive] :
     (mapHomologicalComplexIso f F).hom ≫
-      (triangle ((F.mapHomologicalComplex (.up ℤ)).map f)).mor₃ =
-    (F.mapHomologicalComplex (.up ℤ)).map (triangle f).mor₃ ≫
-      (((F.mapHomologicalComplex (.up ℤ)).commShiftIso (1 : ℤ)).hom.app K) := by
+      (triangle ((F.mapHomologicalComplex ℤᵘᵖ).map f)).mor₃ =
+    (F.mapHomologicalComplex ℤᵘᵖ).map (triangle f).mor₃ ≫
+      (((F.mapHomologicalComplex ℤᵘᵖ).commShiftIso (1 : ℤ)).hom.app K) := by
   ext n
   simp [mapHomologicalComplexIso, mapHomologicalComplexXIso,
     mapHomologicalComplexXIso', triangle, HomComplex.Cocycle.homOf,
@@ -71,11 +72,11 @@ lemma mapHomologicalComplexIso_homology_connecting {K L : CochainComplex C ℤ}
     (f : K ⟶ L) (F : C ⥤ D) [F.Additive]
     (n n' : ℤ) (h : 1 + n = n') :
     HomologicalComplex.homologyMap (mapHomologicalComplexIso f F).hom n ≫
-      (HomologicalComplex.homologyFunctor D (.up ℤ) 0).shiftMap
-        (triangle ((F.mapHomologicalComplex (.up ℤ)).map f)).mor₃ n n' h =
-    (HomologicalComplex.homologyFunctor D (.up ℤ) 0).shiftMap
-      (ShiftedHom.map (triangle f).mor₃ (F.mapHomologicalComplex (.up ℤ))) n n' h := by
-  change ((HomologicalComplex.homologyFunctor D (.up ℤ) 0).shift n).map _ ≫ _ = _
+      (HomologicalComplex.homologyFunctor D ℤᵘᵖ 0).shiftMap
+        (triangle ((F.mapHomologicalComplex ℤᵘᵖ).map f)).mor₃ n n' h =
+    (HomologicalComplex.homologyFunctor D ℤᵘᵖ 0).shiftMap
+      (ShiftedHom.map (triangle f).mor₃ (F.mapHomologicalComplex ℤᵘᵖ)) n n' h := by
+  change ((HomologicalComplex.homologyFunctor D ℤᵘᵖ 0).shift n).map _ ≫ _ = _
   rw [← Functor.shiftMap_comp', mapHomologicalComplexIso_connecting]
   rfl
 
@@ -102,15 +103,15 @@ set_option backward.isDefEq.respectTransparency false in
 lemma homologyMap_shiftedLiftShortComplex_connecting
     (S : ShortComplex (CochainComplex C ℤ)) (n n' : ℤ) (h : 1 + n = n') :
     HomologicalComplex.homologyMap (shiftedLiftShortComplex S) n ≫
-      (HomologicalComplex.homologyFunctor C (.up ℤ) 0).shiftMap
+      (HomologicalComplex.homologyFunctor C ℤᵘᵖ 0).shiftMap
         (mappingCone.triangle S.g).mor₃ n n' h =
-    -(((HomologicalComplex.homologyFunctor C (.up ℤ) 0).shiftIso 1 n n' h).hom.app
+    -(((HomologicalComplex.homologyFunctor C ℤᵘᵖ 0).shiftIso 1 n n' h).hom.app
       S.X₁ ≫ HomologicalComplex.homologyMap S.f n') := by
-  change ((HomologicalComplex.homologyFunctor C (.up ℤ) 0).shift n).map _ ≫ _ = _
+  change ((HomologicalComplex.homologyFunctor C ℤᵘᵖ 0).shift n).map _ ≫ _ = _
   rw [← Functor.shiftMap_comp', shiftedLiftShortComplex_connecting]
   simp only [Functor.shiftMap, Functor.map_neg, Preadditive.neg_comp]
   congr 1
-  exact (((HomologicalComplex.homologyFunctor C (.up ℤ) 0).shiftIso
+  exact (((HomologicalComplex.homologyFunctor C ℤᵘᵖ 0).shiftIso
     1 n n' h).hom.naturality S.f)
 
 set_option backward.defeqAttrib.useBackward true in
@@ -122,9 +123,9 @@ lemma inv_homologyMap_shiftedLiftShortComplex_connecting
     (n n' : ℤ) (h : 1 + n = n') :
     letI := quasiIso_shiftedLiftShortComplex S hS;
     -(inv (HomologicalComplex.homologyMap (shiftedLiftShortComplex S) n) ≫
-      ((HomologicalComplex.homologyFunctor C (.up ℤ) 0).shiftIso 1 n n' h).hom.app S.X₁ ≫
+      ((HomologicalComplex.homologyFunctor C ℤᵘᵖ 0).shiftIso 1 n n' h).hom.app S.X₁ ≫
       HomologicalComplex.homologyMap S.f n') =
-    (HomologicalComplex.homologyFunctor C (.up ℤ) 0).shiftMap
+    (HomologicalComplex.homologyFunctor C ℤᵘᵖ 0).shiftMap
       (mappingCone.triangle S.g).mor₃ n n' h := by
   let := quasiIso_shiftedLiftShortComplex S hS
   have hh := congrArg

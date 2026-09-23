@@ -1,0 +1,228 @@
+/-
+Copyright 2026 The Formal Conjectures Authors.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+module
+
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalSlicePurity
+public import Mathlib.Analysis.Normed.Module.Ball.Homeomorph
+
+/-!
+# Relative homology near a flattened support
+
+Radial compression into a small product-norm ball preserves the zero-normal plane.
+Composing with the inverse flattening chart gives a pair homeomorphism from the normal-slice
+model to a small open neighborhood paired with its support complement, along which the
+homology calculation and the normalized class are transported.
+-/
+
+/-! ### Constructions used only in proofs -/
+
+@[expose] public noncomputable section
+
+open CategoryTheory CategoryTheory.Limits Topology
+
+namespace AlgebraicTopology.Singular
+
+variable {M : Type} [TopologicalSpace M]
+  (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
+
+section
+
+variable (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (x : M) (hx : x ∈ e.source)
+include hx
+
+omit [NormedSpace ℝ E] in
+/-- A positive coordinate-ball radius is obtained from the open chart target. -/
+theorem exists_flattenedSupportRadius :
+    ∃ r : ℝ, 0 < r ∧ Metric.ball (e x) r ⊆ e.target :=
+  Metric.isOpen_iff.mp e.open_target (e x) (e.map_source hx)
+
+end
+
+/-- Radial compression centered on the zero-normal plane preserves that plane exactly. -/
+private theorem univBall_normal_eq_zero_iff (a : E) (r : ℝ) (hr : 0 < r)
+    (v : E × (Fin c → ℂ)) :
+    (OpenPartialHomeomorph.univBall (a, (0 : Fin c → ℂ)) r v).2 = 0 ↔ v.2 = 0 := by
+  rw [OpenPartialHomeomorph.univBall, dif_pos hr]
+  change (r • ((Real.sqrt (1 + ‖v‖ ^ 2))⁻¹ • v) + (a, (0 : Fin c → ℂ))).2 = 0 ↔ _
+  have hs : (Real.sqrt (1 + ‖v‖ ^ 2))⁻¹ ≠ 0 := by positivity
+  simp only [Prod.snd_add, Prod.smul_snd, add_zero, smul_eq_zero, hr.ne', hs, false_or]
+
+variable (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (x : M) (hx : x ∈ e.source)
+
+include hx
+
+def flattenedSupportRadius : ℝ := (exists_flattenedSupportRadius E c e x hx).choose
+
+omit [NormedSpace ℝ E] in
+theorem flattenedSupportRadius_pos : 0 < flattenedSupportRadius E c e x hx :=
+  (exists_flattenedSupportRadius E c e x hx).choose_spec.1
+
+omit [NormedSpace ℝ E] in
+private theorem ball_flattenedSupportRadius_subset :
+    Metric.ball (e x) (flattenedSupportRadius E c e x hx) ⊆ e.target :=
+  (exists_flattenedSupportRadius E c e x hx).choose_spec.2
+
+/-- Let `M` be a topological space, `E` a real normed vector space, and `e` a chart from an open
+subset of `M` to `E × ℂ^c`, with `x` in its source. Choose a positive radius whose ball about
+`e(x)` lies in the chart target. This open embedding first maps all of `E × ℂ^c`
+homeomorphically onto that ball by radial compression, then applies `e⁻¹`. -/
+def flattenedSupportEmbedding : OpenPartialHomeomorph (E × (Fin c → ℂ)) M :=
+  (OpenPartialHomeomorph.univBall (e x) (flattenedSupportRadius E c e x hx)).trans e.symm
+
+theorem flattenedSupportEmbedding_source :
+    (flattenedSupportEmbedding E c e x hx).source = Set.univ := by
+  refine Set.eq_univ_of_forall fun v => ⟨by simp, ?_⟩
+  apply ball_flattenedSupportRadius_subset E c e x hx
+  rw [← OpenPartialHomeomorph.univBall_target (e x)
+    (flattenedSupportRadius_pos E c e x hx)]
+  exact (OpenPartialHomeomorph.univBall (e x)
+    (flattenedSupportRadius E c e x hx)).map_source (by simp)
+
+/-- Let `M` be a topological space, `E` a real normed vector space, and `e` a chart from an open
+subset of `M` to `E × ℂ^c`, with `x` in its source. This open neighborhood of `x` is the inverse
+image under `e` of a chosen positive-radius ball about `e(x)` contained in the chart target. -/
+def flattenedSupportNeighborhood : TopologicalSpace.Opens M :=
+  ⟨(flattenedSupportEmbedding E c e x hx).target,
+    (flattenedSupportEmbedding E c e x hx).open_target⟩
+
+theorem flattenedSupportNeighborhood_subset_source :
+    (flattenedSupportNeighborhood E c e x hx : Set M) ⊆ e.source :=
+  fun _ hy => hy.1
+
+/-- Let `M` be a topological space, `E` a real normed vector space, and `e` a chart from an open
+subset of `M` to `E × ℂ^c`, with `x` in its source. This homeomorphism identifies `E × ℂ^c` with
+the inverse image of a chosen ball about `e(x)` in the chart target. It radially compresses the
+product onto that ball and applies `e⁻¹`. -/
+def flattenedSupportHomeomorph :
+    (E × (Fin c → ℂ)) ≃ₜ flattenedSupportNeighborhood E c e x hx :=
+  (((Homeomorph.setCongr (flattenedSupportEmbedding_source E c e x hx)).trans
+    (Homeomorph.Set.univ _)).symm).trans
+      (flattenedSupportEmbedding E c e x hx).toHomeomorphSourceTarget
+
+theorem flattenedSupportHomeomorph_coordinates (v : E × (Fin c → ℂ)) :
+    e (flattenedSupportHomeomorph E c e x hx v) =
+      OpenPartialHomeomorph.univBall (e x) (flattenedSupportRadius E c e x hx) v := by
+  apply e.right_inv
+  apply ball_flattenedSupportRadius_subset E c e x hx
+  rw [← OpenPartialHomeomorph.univBall_target (e x)
+    (flattenedSupportRadius_pos E c e x hx)]
+  exact (OpenPartialHomeomorph.univBall (e x)
+    (flattenedSupportRadius E c e x hx)).map_source (by simp)
+
+variable (S : Set M) (hS : ∀ y ∈ e.source, y ∈ S ↔ (e y).2 = 0) (h0 : (e x).2 = 0)
+
+include hS h0
+
+theorem flattenedSupportHomeomorph_mem_support_iff (v : E × (Fin c → ℂ)) :
+    (flattenedSupportHomeomorph E c e x hx v : M) ∈ S ↔ v.2 = 0 := by
+  rw [hS _ (flattenedSupportNeighborhood_subset_source E c e x hx
+    (flattenedSupportHomeomorph E c e x hx v).2), flattenedSupportHomeomorph_coordinates]
+  have he : e x = ((e x).1, (0 : Fin c → ℂ)) := Prod.ext rfl h0
+  rw [he]
+  exact univBall_normal_eq_zero_iff E c _ _ (flattenedSupportRadius_pos E c e x hx) v
+
+/-- Let `M` be a topological space, `E` a real normed vector space, and `e` a chart from an open
+subset of `M` to `E × ℂ^c`, with `x` in its source. Suppose a subset `S ⊆ M` is given in this
+chart by vanishing of the normal coordinate and `x ∈ S`. Let `W` be the inverse image of the
+chosen ball about `e(x)`. Radial compression followed by `e⁻¹` restricts to this homeomorphism
+`E × (ℂ^c \ {0}) ≃ W \ S`. -/
+def flattenedSupportComplementHomeomorph :
+    {v : E × (Fin c → ℂ) | v.2 ≠ 0} ≃ₜ
+      {w : flattenedSupportNeighborhood E c e x hx | (w : M) ∉ S} :=
+  (flattenedSupportHomeomorph E c e x hx).subtype fun v =>
+    not_congr (flattenedSupportHomeomorph_mem_support_iff E c e x hx S hS h0 v).symm
+
+/-- Let `M` be a topological space, `E` a real normed vector space, and `e` a chart from an open
+subset of `M` to `E × ℂ^c`, with `x` in its source. Suppose a subset `S ⊆ M` is given in this
+chart by vanishing of the normal coordinate and `x ∈ S`. Let `W` be the inverse image of the
+chosen ball about `e(x)`. This isomorphism of topological pairs `(E × ℂ^c, E × (ℂ^c \ {0})) ≅
+(W,W \ S)` is given by radial compression into the ball followed by `e⁻¹`. -/
+def flattenedSupportPairIso : normalSlicePair E c ≅
+    neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S where
+  hom := TopPair.ofHom
+    (TopCat.ofHom ⟨flattenedSupportHomeomorph E c e x hx,
+      (flattenedSupportHomeomorph E c e x hx).continuous⟩)
+    (TopCat.ofHom ⟨flattenedSupportComplementHomeomorph E c e x hx S hS h0,
+      (flattenedSupportComplementHomeomorph E c e x hx S hS h0).continuous⟩) (by ext v; rfl)
+  inv := TopPair.ofHom
+    (TopCat.ofHom ⟨(flattenedSupportHomeomorph E c e x hx).symm,
+      (flattenedSupportHomeomorph E c e x hx).symm.continuous⟩)
+    (TopCat.ofHom ⟨(flattenedSupportComplementHomeomorph E c e x hx S hS h0).symm,
+      (flattenedSupportComplementHomeomorph E c e x hx S hS h0).symm.continuous⟩) (by ext v; rfl)
+  hom_inv_id := by
+    apply MorphismProperty.Arrow.Hom.ext
+    · ext v
+      exact (flattenedSupportComplementHomeomorph E c e x hx S hS h0).left_inv v
+    · ext v
+      exact (flattenedSupportHomeomorph E c e x hx).left_inv v
+  inv_hom_id := by
+    apply MorphismProperty.Arrow.Hom.ext
+    · ext v
+      exact (flattenedSupportComplementHomeomorph E c e x hx S hS h0).right_inv v
+    · ext v
+      exact (flattenedSupportHomeomorph E c e x hx).right_inv v
+
+/-- Let `M` be a topological space, `E` a real normed vector space, and `e` a chart from an open
+subset of `M` to `E × ℂ^c`, with `x` in its source. Suppose a subset `S ⊆ M` is given in this
+chart by vanishing of the normal coordinate and `x ∈ S`. Let `W` be the inverse image of the
+chosen ball about `e(x)`. This isomorphism `H_n(W,W \ S;ℚ) ≅ H_n(ℂ^c,ℂ^c \ {0};ℚ)` uses the
+chart and contracts the `E` coordinate to zero. -/
+def flattenedSupportRelativeHomologyIso (n : ℕ) :
+    RelativeHomology ℚ
+      (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) n ≅
+        RelativeHomology ℚ (puncturedPair ℂ c) n :=
+  ((relativeHomologyFunctor ℚ n).mapIso (flattenedSupportPairIso E c e x hx S hS h0).symm) ≪≫
+    normalSliceRelativeHomologyIso E c n
+
+/-- The local class is the transport of the fixed, exactly normalized complex normal class. -/
+def flattenedSupportNormalClass :
+    RelativeHomology ℚ
+      (neighborhoodSupportComplementPair (flattenedSupportNeighborhood E c e x hx) S) (2 * c) :=
+  (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).inv.hom
+    (standardComplexLocalClass ℚ c)
+
+end AlgebraicTopology.Singular
+
+end
+
+@[expose] public noncomputable section
+
+open CategoryTheory CategoryTheory.Limits Topology
+
+namespace AlgebraicTopology.Singular
+
+variable {M : Type} [TopologicalSpace M]
+  (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] (c : ℕ)
+
+variable (e : OpenPartialHomeomorph M (E × (Fin c → ℂ))) (x : M) (hx : x ∈ e.source)
+
+include hx
+
+@[simp] theorem flattenedSupportEmbedding_zero : flattenedSupportEmbedding E c e x hx 0 = x := by
+  change e.symm (OpenPartialHomeomorph.univBall (e x) _ 0) = x
+  rw [OpenPartialHomeomorph.univBall_apply_zero, e.left_inv hx]
+
+theorem mem_flattenedSupportNeighborhood : x ∈ flattenedSupportNeighborhood E c e x hx := by
+  have h := (flattenedSupportEmbedding E c e x hx).map_source
+    (show 0 ∈ (flattenedSupportEmbedding E c e x hx).source by
+      rw [flattenedSupportEmbedding_source]; trivial)
+  change x ∈ (flattenedSupportEmbedding E c e x hx).target
+  simpa only [flattenedSupportEmbedding_zero] using h
+
+@[simp] theorem flattenedSupportHomeomorph_apply (v : E × (Fin c → ℂ)) :
+    (flattenedSupportHomeomorph E c e x hx v : M) =
+      flattenedSupportEmbedding E c e x hx v := rfl
+
+variable (S : Set M) (hS : ∀ y ∈ e.source, y ∈ S ↔ (e y).2 = 0) (h0 : (e x).2 = 0)
+
+include hS h0
+
+@[simp] theorem flattenedSupportNormalClass_normalization :
+    (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).hom.hom
+      (flattenedSupportNormalClass E c e x hx S hS h0) = standardComplexLocalClass ℚ c :=
+  ConcreteCategory.congr_hom
+    (flattenedSupportRelativeHomologyIso E c e x hx S hS h0 (2 * c)).inv_hom_id _
+
+end AlgebraicTopology.Singular

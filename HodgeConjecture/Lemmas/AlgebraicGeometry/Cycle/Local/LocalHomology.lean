@@ -1,0 +1,159 @@
+/-
+Copyright 2026 The Formal Conjectures Authors.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+module
+
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.NormalCoordinates
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.Purity
+public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FlattenedSupport
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeCochainCone
+/-!
+# Local relative homology for smooth closed supports
+
+Every prescribed open neighborhood of a point on a smooth closed complex subvariety contains
+a smaller open neighborhood whose support-complement pair has rational
+relative homology and cohomology only in degree twice the complex codimension. The comparison
+and the exactly normalized normal class come from flattening, radial compression, and tangent
+contraction.
+
+This is a cofinal local singular calculation. The identification with derived sheaf sections
+with support, and gluing its normalizations across overlapping charts, are separate theorems.
+-/
+
+@[expose] public noncomputable section
+
+open CategoryTheory CategoryTheory.Limits Topology TopologicalSpace
+open AlgebraicTopology.Singular
+
+namespace AlgebraicGeometry.ComplexPoint
+
+variable (X Y : Over (Spec ↧ℂ))
+  (i : Y ⟶ X) (m d : ℕ)
+  [SmoothOfRelativeDimension m Y.hom] [SmoothOfRelativeDimension d X.hom]
+  [IsClosedImmersion i.left] (z : ComplexPoint Y)
+  (V : Opens (ComplexPoint X)) (hzV : Point.map i z ∈ V)
+
+/-- Let `i : Y → X` be a closed immersion of smooth schemes over `ℂ` of dimensions `m` and `d`,
+respectively. For `z ∈ Y(ℂ)` and an ambient open `V ⊆ X(ℂ)`, this is the chart at `i(z)` with
+source restricted to `V`. Its coordinates lie in `ℂ^m × ℂ^{d-m}`, and the image of `Y(ℂ)` is
+given by vanishing of the second coordinate. -/
+def smoothClosedSupportRestrictionChart :
+    OpenPartialHomeomorph (ComplexPoint X)
+      ((Fin m → ℂ) × (Fin (d - m) → ℂ)) :=
+  (closedImmersionStandardFlatteningChart X Y i m d z).restrOpen V V.isOpen
+
+include hzV in
+theorem smoothClosedSupportRestrictionChart_mem_source :
+    Point.map i z ∈
+      (smoothClosedSupportRestrictionChart X Y i m d z V).source :=
+  ⟨closedImmersionStandardFlatteningChart_mem_source X Y i m d z, hzV⟩
+
+@[simp] theorem smoothClosedSupportRestrictionChart_center :
+    smoothClosedSupportRestrictionChart X Y i m d z V (Point.map i z) =
+      (localChart Y m z z, 0) :=
+  closedImmersionStandardFlatteningChart_center X Y i m d z
+
+theorem smoothClosedSupportRestrictionChart_mem_range_iff (y : ComplexPoint X)
+    (hy : y ∈ (smoothClosedSupportRestrictionChart X Y i m d z V).source) :
+    y ∈ Set.range (Point.map i) ↔
+      (smoothClosedSupportRestrictionChart X Y i m d z V y).2 = 0 :=
+  closedImmersionStandardFlatteningChart_mem_range_iff X Y i m d z y hy.1
+
+/-- A small open support-model neighborhood inside the prescribed open. -/
+def smoothClosedSupportNeighborhood : Opens (ComplexPoint X) :=
+  flattenedSupportNeighborhood (Fin m → ℂ) (d - m)
+    (smoothClosedSupportRestrictionChart X Y i m d z V)
+    (Point.map i z)
+    (smoothClosedSupportRestrictionChart_mem_source X Y i m d z V hzV)
+
+theorem mem_smoothClosedSupportNeighborhood :
+    Point.map i z ∈ smoothClosedSupportNeighborhood X Y i m d z V hzV :=
+  mem_flattenedSupportNeighborhood _ _ _ _ _
+
+theorem smoothClosedSupportNeighborhood_le :
+    smoothClosedSupportNeighborhood X Y i m d z V hzV ≤ V :=
+  fun _ hy ↦ (flattenedSupportNeighborhood_subset_source (Fin m → ℂ) (d - m)
+    (smoothClosedSupportRestrictionChart X Y i m d z V)
+    (Point.map i z)
+    (smoothClosedSupportRestrictionChart_mem_source X Y i m d z V hzV)
+    hy).2
+
+/-- The local support-complement pair, with the image as support. -/
+abbrev smoothClosedSupportNeighborhoodPair : TopPair :=
+  neighborhoodSupportComplementPair
+    (smoothClosedSupportNeighborhood X Y i m d z V hzV)
+    (Set.range (Point.map i))
+
+/-- The pair homeomorphism to the product normal model. -/
+def smoothClosedSupportNeighborhoodPairIso :
+    normalSlicePair (Fin m → ℂ) (d - m) ≅
+      smoothClosedSupportNeighborhoodPair X Y i m d z V hzV :=
+  flattenedSupportPairIso (Fin m → ℂ) (d - m)
+    (smoothClosedSupportRestrictionChart X Y i m d z V)
+    (Point.map i z)
+    (smoothClosedSupportRestrictionChart_mem_source X Y i m d z V hzV)
+    (Set.range (Point.map i))
+    (smoothClosedSupportRestrictionChart_mem_range_iff X Y i m d z V)
+    (congrArg Prod.snd (smoothClosedSupportRestrictionChart_center X Y i m d z V))
+
+/-- All-degree local relative homology, computed from the pair maps. -/
+def smoothClosedSupportRelativeHomologyIso (n : ℕ) :
+    RelativeHomology ℚ
+      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n ≅
+        RelativeHomology ℚ (puncturedPair ℂ (d - m)) n :=
+  ((relativeHomologyFunctor ℚ n).mapIso
+    (smoothClosedSupportNeighborhoodPairIso X Y i m d z V hzV).symm) ≪≫
+    normalSliceRelativeHomologyIso (Fin m → ℂ) (d - m) n
+
+theorem smoothClosedSupportRelativeHomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * (d - m)) :
+    IsZero (RelativeHomology ℚ
+      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n) :=
+  (standardComplexLocalHomology_isZero_of_ne (d - m) n hn).of_iso
+    (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV n)
+
+/-- The exact complex-normal class in the local support pair. -/
+def smoothClosedSupportNormalClass :
+    RelativeHomology ℚ
+      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) (2 * (d - m)) :=
+  (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
+    (2 * (d - m))).inv.hom (standardComplexLocalClass ℚ (d - m))
+
+@[simp] theorem smoothClosedSupportNormalClass_normalization :
+    (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
+      (2 * (d - m))).hom.hom
+      (smoothClosedSupportNormalClass X Y i m d z V hzV) =
+        standardComplexLocalClass ℚ (d - m) :=
+  ConcreteCategory.congr_hom
+    (smoothClosedSupportRelativeHomologyIso X Y i m d z V hzV
+      (2 * (d - m))).inv_hom_id _
+
+theorem smoothClosedSupportNormalClass_ne_zero :
+    smoothClosedSupportNormalClass X Y i m d z V hzV ≠ 0 := by
+  intro hzero
+  have h := smoothClosedSupportNormalClass_normalization X Y i m d z V hzV
+  rw [hzero, map_zero] at h
+  exact standardComplexLocalClass_ne_zero_for_chart (d - m) h.symm
+
+/-- The coclass normalized to pair to one with the exact complex normal class. -/
+def smoothClosedSupportNormalCoclass :
+    RelativeCohomology ℚ
+      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV)
+        (2 * (d - m)) :=
+  normalizedRelativeCoclass (smoothClosedSupportNormalClass X Y i m d z V hzV)
+    (smoothClosedSupportNormalClass_ne_zero X Y i m d z V hzV)
+
+@[simp] theorem smoothClosedSupportNormalCoclass_apply_class :
+    relativeCohomologyEquivDualHomology ℚ
+        (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) (2 * (d - m))
+        (smoothClosedSupportNormalCoclass X Y i m d z V hzV)
+      (smoothClosedSupportNormalClass X Y i m d z V hzV) = 1 :=
+  normalizedRelativeCoclass_pairing_self _ _
+
+theorem smoothClosedSupportRelativeCohomology_isZero_of_ne (n : ℕ) (hn : n ≠ 2 * (d - m)) :
+    IsZero (RelativeCohomology ℚ
+      (smoothClosedSupportNeighborhoodPair X Y i m d z V hzV) n) :=
+  relativeCohomology_isZero ℚ _ n
+    (smoothClosedSupportRelativeHomology_isZero_of_ne X Y i m d z V hzV n hn)
+
+end AlgebraicGeometry.ComplexPoint

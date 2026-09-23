@@ -33,6 +33,28 @@ def without_comments(source: str) -> str:
     return "".join(result)
 
 
+def guide_path_errors() -> list[str]:
+    """Check the source paths the Verso guide quotes in prose against the repository.
+
+    The guide names modules as `Directory/File.lean` inside backticks, and a bare
+    `File.lean` continues the directory of the previous entry. Nothing elaborates those
+    strings, so a module that moves between `Definitions`, `Lemmas` and `Other` leaves the
+    published guide pointing at a path that no longer exists.
+    """
+    errors = []
+    for path in sorted((ROOT / "HodgeGuide").rglob("*.lean")) + [ROOT / "HodgeGuide.lean"]:
+        directory = None
+        for quoted in re.findall(r"`([A-Za-z][A-Za-z0-9/]*\.lean)`",
+                                 without_comments(path.read_text())):
+            if "/" in quoted:
+                directory = quoted.rsplit("/", 1)[0]
+            elif directory is not None:
+                quoted = f"{directory}/{quoted}"
+            if not (ROOT / quoted).is_file():
+                errors.append(f"{path.relative_to(ROOT)}: guide names missing source {quoted}")
+    return errors
+
+
 def import_closure(graph: dict[str, set[str]], root: str) -> set[str]:
     closure = set()
     pending = [root]
@@ -62,7 +84,7 @@ def main() -> int:
             or dependency.startswith(("HodgeConjecture.", "Other."))
         }
 
-    errors = []
+    errors = guide_path_errors()
     for module, dependencies in graph.items():
         for dependency in dependencies - graph.keys():
             errors.append(f"{module}: missing local import {dependency}")
