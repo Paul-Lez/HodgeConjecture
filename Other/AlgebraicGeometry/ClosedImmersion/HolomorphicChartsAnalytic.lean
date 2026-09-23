@@ -81,6 +81,58 @@ theorem analyticAt_closedImmersionHolomorphicFlatteningChart_evaluate
   filter_upwards [] with v
   simp only [Function.comp_apply, A, closedImmersionHolomorphicFlatteningChart_symm_apply]
 
+/-- The first jet of a regular function in the canonical flattening coordinates is obtained by
+composing its jet in the ambient local chart with the derivative of the inverse normal-coordinate
+change.  This is the analytic bridge used to turn a nonzero algebraic cotangent class into the
+nonzero normal derivative required by normal division. -/
+theorem fderiv_closedImmersionHolomorphicFlatteningChart_evaluate
+    (V : X.left.Opens) (s : Γ(X.left, V))
+    (y : ComplexPoint X)
+    (hy : y ∈ (closedImmersionHolomorphicFlatteningChart X Y i m d z).source)
+    (hV : (closedImmersionHolomorphicFlatteningChart X Y i m d z).symm
+      (closedImmersionHolomorphicFlatteningChart X Y i m d z y) ∈ Point.overOpen V) :
+    fderiv ℂ (fun v ↦ Point.evaluate V s
+        ((closedImmersionHolomorphicFlatteningChart X Y i m d z).symm v))
+      (closedImmersionHolomorphicFlatteningChart X Y i m d z y) =
+      (fderiv ℂ (fun w ↦ Point.evaluate V s
+        ((localChart X d (Point.map i z)).symm w))
+        (localChart X d (Point.map i z) y)).comp
+      (fderiv ℂ (closedImmersionNormalCoordinateChange X Y i m d z).symm
+        (closedImmersionHolomorphicFlatteningChart X Y i m d z y)) := by
+  let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
+  let A := closedImmersionNormalCoordinateChange X Y i m d z
+  let C := localChart X d (Point.map i z)
+  let g := fun w ↦ Point.evaluate V s (C.symm w)
+  have hA : AnalyticAt ℂ A.symm (e y) :=
+    (analyticAt_closedImmersionHolomorphicFlatteningChart_normalCoordinateChange
+      X Y i m d z y hy).2
+  have hleft : A.symm (e y) = C y := by
+    change A.symm (A (C y)) = _
+    exact A.left_inv hy.1.2.1
+  have htarget : A.symm (e y) ∈ C.target := by
+    rw [hleft]
+    exact C.map_source hy.1.1
+  have hC : AnalyticAt ℂ g (A.symm (e y)) := by
+    have h := analyticAt_localChart_symm_evaluate X d (Point.map i z) htarget V s
+      (by simpa [e, A, C] using hV)
+    exact h
+  have hcomp := hC.hasStrictFDerivAt.hasFDerivAt.comp (e y)
+    hA.hasStrictFDerivAt.hasFDerivAt
+  have hcomp' : HasFDerivAt (g ∘ A.symm)
+      ((fderiv ℂ g (A.symm (e y))).comp (fderiv ℂ A.symm (e y))) (e y) := by
+    simpa only [hC.hasStrictFDerivAt.hasFDerivAt.fderiv,
+      hA.hasStrictFDerivAt.hasFDerivAt.fderiv, Function.comp_apply] using hcomp
+  have hEq : (fun v ↦ Point.evaluate V s (e.symm v)) = g ∘ A.symm := by
+    funext v
+    simp only [g, Function.comp_apply, e, A, C,
+      closedImmersionHolomorphicFlatteningChart_symm_apply]
+  calc
+    fderiv ℂ (fun v ↦ Point.evaluate V s (e.symm v)) (e y) =
+        fderiv ℂ (g ∘ A.symm) (e y) := by rw [hEq]
+    _ = (fderiv ℂ g (A.symm (e y))).comp (fderiv ℂ A.symm (e y)) := hcomp'.fderiv
+    _ = (fderiv ℂ (fun w ↦ Point.evaluate V s (C.symm w)) (C y)).comp
+        (fderiv ℂ A.symm (e y)) := by rw [hleft]
+
 /-! The pointwise result above is most useful after restricting the chart source to the
 local-form domain.  This packages the resulting analyticity on the *whole* coordinate target of
 that restricted chart, so a normal-division argument can be applied without extending a chart
