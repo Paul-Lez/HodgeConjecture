@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.OpenRestrictionLocalSheaf
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportComparison
+public import Other.AlgebraicGeometry.Cohomology.SupportComparisonLemmas
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
 

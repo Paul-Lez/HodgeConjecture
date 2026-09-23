@@ -1,20 +1,31 @@
 /-
 Copyright 2026 The Formal Conjectures Authors.
-Released under Apache 2.0 license as described in the file LICENSE.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
-public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
-public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
-/-!
-# Normalized injective models for the rational support cone
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenInjectiveResolution
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.Filtration
+public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 
-The rational support object resolves constants on the complement
-independently of the ambient space. This file connects that model with the
-restriction of an ambient injective resolution. All comparison maps extend the given constant
-restriction.
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
+/-!
+# The chosen injective resolution of the constant rational sheaf
+
+`ℚ → I^•` is a chosen injective resolution of the constant rational sheaf on the analytic space
+`X(ℂ)`, indexed by integers. It is K-injective.
 -/
 
 @[expose] public noncomputable section
@@ -72,4 +83,18 @@ instance ambientRationalInjectiveComplex_isKInjective :
     (ambientRationalInjectiveComplex X).IsKInjective :=
   CochainComplex.isKInjective_of_injective _ 0
 
+/-- The augmentation `ℚ[0] → I^•`, with the source the constant sheaf placed in degree zero. -/
+def ambientRationalInjectiveSingleAugmentation :
+    (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj 𝓒(↧(ComplexPoint X); ℚ) ⟶
+      ambientRationalInjectiveComplex X :=
+  (constantFieldSheafComplexIntIsoSingle ℚ X).inv ≫ ambientRationalInjectiveAugmentation X
+
+instance ambientRationalInjectiveSingleAugmentation_quasiIso :
+    QuasiIso (ambientRationalInjectiveSingleAugmentation X) := by
+  dsimp only [ambientRationalInjectiveSingleAugmentation]
+  infer_instance
+
+
 end AlgebraicGeometry.ComplexPoint
+
+end

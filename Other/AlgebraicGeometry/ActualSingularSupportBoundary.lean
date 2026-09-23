@@ -104,10 +104,10 @@ lemma actualSingularSupportBoundary_comp_injective (n : ℤ)
 
 /-- A literal raw complement boundary in the fixed rational support model maps to
 minus its canonical supported-singular boundary under the actual injective comparison. -/
-lemma rationalSupportAddEquivSupportedInjectiveHomology_raw_boundary (n : ℤ)
+lemma coneSupportAddEquivSupportedInjectiveHomology_raw_boundary (n : ℤ)
     (z : (globalRawPushforwardSingularCochainComplexInt ℚ
       (TopCat.of (ComplexPoint X)) Zᶜ).homology (n - 1)) :
-    rationalSupportAddEquivSupportedInjectiveHomology X Z hZ n
+    coneSupportAddEquivSupportedInjectiveHomology X Z hZ n
       (hypercohomologyMap X
         (CochainComplex.mappingCone.inr (rationalRestrictionComplexInt X Z)) (n - 1)
         ((complementRationalHypercohomologyAddEquivGlobalSections X Z (n - 1)).symm
@@ -127,7 +127,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_raw_boundary (n : ℤ)
     HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp] at hm
   have hz := ConcreteCategory.congr_hom hm z
   simp only [ConcreteCategory.comp_apply] at hz
-  erw [← hz, rationalSupportAddEquivSupportedInjectiveHomology_boundary,
+  erw [← hz, coneSupportAddEquivSupportedInjectiveHomology_boundary,
     actualSingularSupportBoundary_comp_injective]
 
 end AlgebraicGeometry.ComplexPoint

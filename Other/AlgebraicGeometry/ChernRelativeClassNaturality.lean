@@ -50,7 +50,7 @@ omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
 @[simp] lemma forgetSupport_supportedClassTransport {Z Z' : Set (ComplexPoint X)} (h : Z = Z')
     (n : ℕ) (β : RationalCohomologyWithSupport X Z n) :
-    forgetSupport X Z' n (supportedClassTransport X h (n : ℤ) β) = forgetSupport X Z n β := by
+    coneForgetSupport X Z' n (supportedClassTransport X h (n : ℤ) β) = coneForgetSupport X Z n β := by
   subst h; rfl
 
 /-! ### The splitting datum off the support of the divisor -/
@@ -120,7 +120,7 @@ def relativeChernSupportedClass (c : Scheme.CartierData X.left)
         HolomorphicUnitExtension.integerOneSection)
     (cmp : RelativeChernComparison X (dim X.left) (divisorComplementOpen c)) :
     SupportedInjectiveHomology X (cycleAnalyticClosedSupport X c.divisor) (2 : ℤ) :=
-  rationalSupportAddEquivSupportedInjectiveHomology X
+  coneSupportAddEquivSupportedInjectiveHomology X
     ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
       Set (ComplexPoint X))
     (cycleAnalyticClosedSupport X c.divisor).isClosed (2 : ℤ)
@@ -143,7 +143,7 @@ theorem supportedInjectiveToAmbient_relativeChernSupportedClass
         (relativeChernSupportedClass c E ℓ hℓ cmp) =
       rationalCohomologyAddEquivAmbientInjectiveHomology X 2
         (integralToRationalCohomology X 2 E.firstChernClass) := by
-  have h := rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
+  have h := coneSupportAddEquivSupportedInjectiveHomology_forgetSupport X
     ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
       Set (ComplexPoint X))
     (cycleAnalyticClosedSupport X c.divisor).isClosed 2
@@ -152,7 +152,7 @@ theorem supportedInjectiveToAmbient_relativeChernSupportedClass
   rw [relativeChernClassOnSupport, forgetSupportHypercohomology_supportedClassTransport]
   have hc := congrArg (hypercohomologyAddEquivConstantCohomology ℚ X 2).symm
     (E.forgetSupport_relativeChernClass _ ℓ hℓ cmp)
-  dsimp only [forgetSupport, AddMonoidHom.comp_apply,
+  dsimp only [coneForgetSupport, AddMonoidHom.comp_apply,
     AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe] at hc
   simpa only [Nat.cast_ofNat, AddEquiv.symm_apply_apply, AddEquiv.toEquiv_eq_coe,
     AddEquiv.coe_toEquiv] using hc

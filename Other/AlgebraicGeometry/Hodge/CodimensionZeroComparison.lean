@@ -128,33 +128,26 @@ lemma cycleComponentSupport_genericPoint_eq_univ
     (closure {genericPoint X.left} : Set X.left) = Set.univ
   rw [genericPoint_closure (α := X.left)]
   exact Set.preimage_univ
-
-
-
-omit [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] in
-/-- Forgetting support is injective whenever the support is the whole analytic space. -/
-theorem forgetSupport_injective_of_eq_univ (Z : Set (ComplexPoint X))
-    (hZ : Z = Set.univ) (n : ℕ) :
-    Function.Injective (forgetSupport X Z n) := by
-  subst hZ
-  intro a b hab
-  exact (forgetSupportEquivUniv X n).injective hab
+/-- The component of the generic point has the whole analytic space as its closed support. -/
+lemma cycleComponentAnalyticClosedSupport_genericPoint_eq_top
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
+    cycleComponentAnalyticClosedSupport X (genericPoint X.left) = ⊤ :=
+  SetLike.coe_injective (cycleComponentSupport_genericPoint_eq_univ X)
 
 /-- The generic-point component class vanishes exactly when the globally supported class it is
 built from vanishes: support on the whole analytic space is forgotten injectively, and the
-support-cone presentation is an isomorphism. -/
+comparison with the injective model is an isomorphism. -/
 theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClass
     :
     cycleComponentSheafClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 ↔
       cycleComponentSupportedInjectiveClass X (genericPoint X.left)
         (coheight_genericPoint_eq_zero X) = 0 := by
-  have hZ : cycleComponentSupport X (genericPoint X.left) = Set.univ :=
-    cycleComponentSupport_genericPoint_eq_univ X
   rw [cycleComponentSheafClass_eq_forgetSupport]
-  refine Iff.trans (map_eq_zero_iff _ (forgetSupport_injective_of_eq_univ X _ hZ _)) ?_
+  refine Iff.trans (map_eq_zero_iff _ (forgetSupport_injective_of_eq_top ℚ X _
+    (cycleComponentAnalyticClosedSupport_genericPoint_eq_top X) _)) ?_
   rw [cycleComponentSheafSupportedClass]
-  exact map_eq_zero_iff _ (AddEquiv.injective _)
+  exact Iff.trans (map_eq_zero_iff _ (AddEquiv.injective _)) Iff.rfl
 
 /-- The generic-point component class vanishes exactly when the normalized coclass section it is
 constructed from vanishes: the normalization comparison is an isomorphism. -/

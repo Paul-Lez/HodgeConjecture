@@ -17,8 +17,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
+public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef
 public import Other.Algebra.Homology.HomComplexPostcompNaturality
 
 /-!
@@ -90,39 +89,22 @@ attribute [local instance] hypercohomologyNaturalitySheafDerivedCategory
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-lemma kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk
-    {C : Type*} [Category* C] [Abelian C] [HasDerivedCategory C]
-    (K L : CochainComplex C ℤ) [L.IsKInjective] (n : ℤ)
-    (z : CochainComplex.HomComplex.Cocycle K L n) :
-    (kInjectiveDerivedHomAddEquivCohomologyClass K L n).symm
-      (CochainComplex.HomComplex.CohomologyClass.mk z) =
-    ShiftedHom.map (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
-      DerivedCategory.Q := by
-  dsimp [kInjectiveDerivedHomAddEquivCohomologyClass,
-    isoHomCongrAddEquiv, ShiftedHom.map]
-  rw [CochainComplex.HomComplex.CohomologyClass.toHom_mk]
-  have h := (DerivedCategory.quotientCompQhIso C).hom.naturality
-    (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
-  simp
-
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
 lemma kInjectiveDerivedHomAddEquivCohomologyClass_naturality
     {C : Type*} [Category* C] [Abelian C] [HasDerivedCategory C]
     (A K L : CochainComplex C ℤ) [K.IsKInjective] [L.IsKInjective]
     (f : K ⟶ L) (n : ℤ)
     (x : ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj K) n) :
-    kInjectiveDerivedHomAddEquivCohomologyClass A L n
+    CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A L n
       (x ≫ (DerivedCategory.Q.map f)⟦n⟧') =
     CochainComplex.HomComplex.postcompClass A f n
-      (kInjectiveDerivedHomAddEquivCohomologyClass A K n x) := by
-  apply (kInjectiveDerivedHomAddEquivCohomologyClass A L n).symm.injective
+      (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A K n x) := by
+  apply (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A L n).symm.injective
   rw [AddEquiv.symm_apply_apply]
-  obtain ⟨x, rfl⟩ := (kInjectiveDerivedHomAddEquivCohomologyClass A K n).symm.surjective x
+  obtain ⟨x, rfl⟩ := (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A K n).symm.surjective x
   obtain ⟨z, rfl⟩ := x.mk_surjective
   rw [AddEquiv.apply_symm_apply, CochainComplex.HomComplex.postcompClass_mk,
-    kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
-    kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
     CochainComplex.HomComplex.Cocycle.equivHomShift_symm_postcomp]
   simp only [ShiftedHom.map, Functor.map_comp, Category.assoc,
     Functor.commShiftIso_hom_naturality]
@@ -152,12 +134,12 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_naturality
       (derivedHomAddEquivGlobalSectionsKInjective Y K n x) := by
   let A := integerConstantSingleComplex Y
   let y := (CochainComplex.HomComplex.homologyAddEquiv A K n).symm
-    (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass A K n x)
+    (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A K n x)
   have hH : HomologicalComplex.homologyMap
       (CochainComplex.HomComplex.postcompMap A f) n y =
       (CochainComplex.HomComplex.homologyAddEquiv A L n).symm
         (CochainComplex.HomComplex.postcompClass A f n
-          (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass
+          (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass
             A K n x)) := by
     apply (CochainComplex.HomComplex.homologyAddEquiv A L n).injective
     rw [CochainComplex.HomComplex.homologyAddEquiv_postcompMap, AddEquiv.apply_symm_apply]

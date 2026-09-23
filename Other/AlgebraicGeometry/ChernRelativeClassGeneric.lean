@@ -70,7 +70,7 @@ def relativeChernSupportedClassOnClosed (S : Closeds (ComplexPoint X))
         HolomorphicUnitExtension.integerOneSection)
     (cmp : RelativeChernComparison X (dim X.left) S.compl) :
     SupportedInjectiveHomology X S (2 : ℤ) :=
-  rationalSupportAddEquivSupportedInjectiveHomology X
+  coneSupportAddEquivSupportedInjectiveHomology X
     ((S : Closeds (ComplexPoint X)) : Set (ComplexPoint X)) S.isClosed (2 : ℤ)
     (relativeChernClassOnClosed S E ℓ hℓ cmp)
 
@@ -91,14 +91,14 @@ theorem supportedInjectiveToAmbient_relativeChernSupportedClassOnClosed
         (relativeChernSupportedClassOnClosed S E ℓ hℓ cmp) =
       rationalCohomologyAddEquivAmbientInjectiveHomology X 2
         (integralToRationalCohomology X 2 E.firstChernClass) := by
-  have h := rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport X
+  have h := coneSupportAddEquivSupportedInjectiveHomology_forgetSupport X
     ((S : Closeds (ComplexPoint X)) : Set (ComplexPoint X)) S.isClosed 2
     (relativeChernClassOnClosed S E ℓ hℓ cmp)
   refine h.symm.trans (congrArg _ ?_)
   rw [relativeChernClassOnClosed, forgetSupportHypercohomology_supportedClassTransport]
   have hc := congrArg (hypercohomologyAddEquivConstantCohomology ℚ X 2).symm
     (E.forgetSupport_relativeChernClass _ ℓ hℓ cmp)
-  dsimp only [forgetSupport, AddMonoidHom.comp_apply,
+  dsimp only [coneForgetSupport, AddMonoidHom.comp_apply,
     AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe] at hc
   simpa only [Nat.cast_ofNat, AddEquiv.symm_apply_apply, AddEquiv.toEquiv_eq_coe,
     AddEquiv.coe_toEquiv] using hc

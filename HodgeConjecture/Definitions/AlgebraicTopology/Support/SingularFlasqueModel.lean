@@ -8,7 +8,8 @@ import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.FlasqueComparison
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularNaturality
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueExtendNat
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainResolution
 
 /-!
 # Singular-cochain models for supported injective resolutions
@@ -135,7 +136,7 @@ variable [T2Space X] [∀ V : Opens X, ParacompactSpace V]
 
 instance rationalSingularCochainComplex_isFlasque (n : ℤ) :
     ((rationalSingularCochainComplex X).X n).IsFlasque := by
-  apply AlgebraicGeometry.ComplexPoint.extendNat_term_isFlasque
+  apply TopCat.Sheaf.extendNat_term_isFlasque
   intro m
   change (singularCochainSheaf ℚ X m).IsFlasque
   infer_instance

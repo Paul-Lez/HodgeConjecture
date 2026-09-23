@@ -17,7 +17,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturality
+public import Other.Algebra.Homology.HomComplexPostcompNaturalityLemmas
 
 /-!
 # Hom-complex cohomology and target shifts

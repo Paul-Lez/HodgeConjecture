@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Lemmas.Algebra.Homology.HomComplexPostcompNaturality
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import Other.Algebra.Homology.HomComplexPostcompNaturalityLemmas
+public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyLemmas
 
 /-! # Naturality of the hypercohomology/global-sections comparison -/
 
@@ -29,7 +29,7 @@ def derivedHomAddEquivGlobalSectionsKInjective
     ShiftedHom
       (DerivedCategory.Q.obj (integerConstantSingleComplex Y)) (DerivedCategory.Q.obj K) n ≃+
     (globalSectionsComplexInt Y K).homology n :=
-  (AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass _ K n).trans
+  (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass _ K n).trans
     ((CochainComplex.HomComplex.homologyAddEquiv _ K n).symm.trans
       (HomologicalComplex.homologyMapIso
         (homComplexSingleIntegerIsoGlobalSections Y K) n).addCommGroupIsoToAddEquiv)

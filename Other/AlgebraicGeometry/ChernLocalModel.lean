@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.DivisorClassComparisonSupport
+public import Other.AlgebraicGeometry.CycleClassExtComparison
 
 /-!
 # The local model of the first Chern class along a divisor, and the final assembly
@@ -17,7 +18,7 @@ has been produced, and it proves the assembly.
 
 The draft of `HasChernLocalModel` in the handoff quantified over a class
 `β : RationalCohomologyWithSupport X (cycleComponentSupport X x) 2` supported on a **single**
-component with `forgetSupport β = c₁`. When the divisor has more than one component no such `β`
+component with `coneForgetSupport β = c₁`. When the divisor has more than one component no such `β`
 exists, so the drafted proposition was vacuous. What step 3 actually produces is a class supported
 on the analytic support `|D|^an` of the *whole* divisor, and the comparison target
 `sheafCycleClassOnCycles … 1 c.divisor` is the *sum*
@@ -51,7 +52,7 @@ Chern class. That is false, and made the whole assembly rest on an unprovable hy
 is not unique: by the exactness of the support sequence two lifts differ by the image of
 `H¹(X^an ∖ |D|^an, ℚ)`, and such a difference does change the local multiplicities. Concretely,
 for `X = ℙ¹`, `L = 𝒪` and the rational section `s = z`, the divisor is `D = [0] − [∞]` and
-`c₁(L) = 0`, while `H²_{\{0,∞\}}(ℙ¹, ℚ) ≅ ℚ²` with `forgetSupport` the sum map; both `(1, −1)`
+`c₁(L) = 0`, while `H²_{\{0,∞\}}(ℙ¹, ℚ) ≅ ℚ²` with `coneForgetSupport` the sum map; both `(1, −1)`
 and `(2, −2)` lift `c₁ = 0`, and only the first is the divisor. The statement is therefore
 existential in `β`, and the witness is the **relative first Chern class** `c₁(L, s)` cut out by
 the splitting of `E` over `X^an ∖ |D|^an`.
@@ -109,7 +110,7 @@ def HasSupportedChernLift : Prop :=
       ∃ β : RationalCohomologyWithSupport X
           ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
             Set (ComplexPoint X)) ((2 : ℤ)),
-        forgetSupport X
+        coneForgetSupport X
             ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
               Set (ComplexPoint X)) (2 * (1 : ℕ)) β =
           integralToRationalCohomology X 2 E.firstChernClass
@@ -120,8 +121,8 @@ turns the conclusion of step 3, which is stated for the complement of an open se
 `HasSupportedChernLift`, whose support is the closed set `|D|^an` itself. -/
 theorem exists_forgetSupport_of_support_eq {Z Z' : Set (ComplexPoint X)} (hZ : Z = Z') (n : ℕ)
     (α : H^n(X; ℚ))
-    (h : ∃ β : RationalCohomologyWithSupport X Z n, forgetSupport X Z n β = α) :
-    ∃ β : RationalCohomologyWithSupport X Z' n, forgetSupport X Z' n β = α := by
+    (h : ∃ β : RationalCohomologyWithSupport X Z n, coneForgetSupport X Z n β = α) :
+    ∃ β : RationalCohomologyWithSupport X Z' n, coneForgetSupport X Z' n β = α := by
   subst hZ
   exact h
 
@@ -142,7 +143,7 @@ theorem exists_supportedChernLift_of_splitting
     ∃ β : RationalCohomologyWithSupport X
         ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
           Set (ComplexPoint X)) ((2 : ℤ)),
-      forgetSupport X
+      coneForgetSupport X
           ((cycleAnalyticClosedSupport X c.divisor : Closeds (ComplexPoint X)) :
             Set (ComplexPoint X)) (2 * (1 : ℕ)) β =
         integralToRationalCohomology X 2 E.firstChernClass :=
@@ -183,7 +184,7 @@ universally over every `β` lifting the first Chern class. That is *false*. The 
 by the exactness of the support sequence, two lifts differ by the image of
 `H¹(X^an ∖ |D|^an, ℚ)` under the connecting map, and such a difference does change the local
 multiplicities. Take `X = ℙ¹`, `L = 𝒪`, the rational section `s = z`, so `D = [0] − [∞]` and
-`c₁(L) = 0`. Then `H²_{\{0, ∞\}}(ℙ¹, ℚ) ≅ ℚ²` by the two local coclasses, `forgetSupport` is the
+`c₁(L) = 0`. Then `H²_{\{0, ∞\}}(ℙ¹, ℚ) ≅ ℚ²` by the two local coclasses, `coneForgetSupport` is the
 sum map `ℚ² → ℚ`, and *both* `β = (1, −1)` and `β = (2, −2)` lift `c₁ = 0`; only the first has the
 local multiplicities `(1, −1)` of `D`. So a universally quantified statement is refutable, and any
 theorem resting on it rests on an unprovable hypothesis.

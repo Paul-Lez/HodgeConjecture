@@ -10,7 +10,7 @@ public import Other.AlgebraicTopology.GlobalRawRelativeConnecting
 /-!
 # The exact ordinary sign of the original Betti support comparison
 
-The old singular support comparison, inverted and followed by `forgetSupport`,
+The old singular support comparison, inverted and followed by `coneForgetSupport`,
 is the negative of the actual positive dual-relative cochain inclusion, after the
 prescribed raw-to-sheaf and singular-to-injective maps. This theorem computes a
 sign already present in the definitions; it does not change an orientation or
@@ -36,7 +36,7 @@ theorem rationalCohomologyAmbient_forgetSupport_of_singular_signed
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℕ)
     (a : CohomologyWithSupport ℚ (TopCat.of (ComplexPoint X)) Z n) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n
-      (forgetSupport X Z n
+      (coneForgetSupport X Z n
         ((rationalCohomologyWithSupportAddEquivSingular X Z hZ n).symm a)) =
     -(HomologicalComplex.homologyMap
       (globalRawToSingularSheafInt X ≫

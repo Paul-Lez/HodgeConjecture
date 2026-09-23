@@ -8,8 +8,8 @@ The split preserves the work in progress; it does not prove GAGA. The divisor–
 
 ## Current status (2026-09-23)
 
-Validation on the PR9 comparison base `b227af2` (including main `1b509d2`):
-`lake build` passes (5465 jobs), and the GAGA audit checks 132 distinct declarations
+Validation on comparison commit `afecaab` above main `9aba2ec`:
+`lake build` passes (5492 jobs), and the GAGA audit checks 132 distinct declarations
 with only `propext`, `Classical.choice`, and `Quot.sound`.
 
 The target `AnalyticLineBundlesAlgebraize` is stated in
@@ -26,8 +26,8 @@ projective space. The dimension-zero and subsingleton cases are already handled 
 The dated progress sections below record intermediate assessments and may describe gaps that
 have since been closed; this paragraph is the current claim and gap list.
 
-This document scopes one of the three remaining obligations for the unconditional rational
-Lefschetz `(1, 1)` theorem (see [LEFSCHETZ_HANDOFF.md](LEFSCHETZ_HANDOFF.md)). It is written
+This document scopes the GAGA input to the unconditional rational Lefschetz `(1, 1)` theorem
+(see [LEFSCHETZ_HANDOFF.md](LEFSCHETZ_HANDOFF.md)). It is written
 so that the work can be done in isolation: nothing here requires the exponential sequence,
 Hodge classes, or cycle classes.
 

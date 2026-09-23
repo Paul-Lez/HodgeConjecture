@@ -1,54 +1,29 @@
 /-
 Copyright 2026 The Formal Conjectures Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    https://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
+public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexShift
+public import HodgeConjecture.Mathlib.Algebra.Homology.HomComplexPrecomp
+
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeComparison
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportSingularGlobal
-
-import Mathlib.Algebra.Homology.HomotopyCategory.Plus
-
 /-!
-# Hypercohomology and singular cohomology with support
+# Morphisms in the derived category into a K-injective complex
 
-This file develops the bounded-below flasque comparison needed for cohomology with support.
-It applies the same explicit injective-replacement argument used for ordinary singular
-cohomology to the mapping cone of singular restriction.
+For a K-injective complex `L`, morphisms `K → L[n]` in the derived category are chain maps modulo
+homotopy, that is cohomology classes of the Hom complex.
 -/
 
 @[expose] public noncomputable section
 
-open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
-
-namespace AlgebraicGeometry.ComplexPoint
-
-open Point
+open CategoryTheory Limits
 
 universe u v
 
-variable (X : Over (Spec ↧ℂ))
-
-local instance bettiSupportHypercohomologyComparisonHasDerivedCategory :
-    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
-  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
-
-local instance bettiSupportHypercohomologyAddCommGrpHasDerivedCategory :
-    HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard AddCommGrpCat
+namespace CategoryTheory
 
 /-- In a preadditive category, let `eA : A ≅ A'` and `eB : B ≅ B'` be isomorphisms. This additive
 equivalence sends `f : A → B` to `eB ∘ f ∘ eA⁻¹ : A' → B'`. -/
@@ -59,18 +34,15 @@ def isoHomCongrAddEquiv
   toEquiv := Iso.homCongr eA eB
   map_add' f g := by simp [Iso.homCongr]
 
-/-- Let `X` be a scheme over `ℂ`, `K` an integer-indexed complex of sheaves of abelian groups on its
-analytic space, and `n` an integer. This additive equivalence identifies hypercohomology
-`ℍ^n(X(ℂ); K)` with `Hom_D(ℤ[0], K[n])`, morphisms in the derived category of sheaves on `X(ℂ)`. -/
-def hypercohomologyAddEquivDerived
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) :
-    ℍ^n(X; K) ≃+
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj K) n where
-  toEquiv := Localization.SmallShiftedHom.equiv
-    (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  map_add' := hypercohomologyEquiv_add X K n
+@[simp]
+lemma isoHomCongrAddEquiv_apply
+    {C : Type u} [Category.{v} C] [Preadditive C]
+    {A B A' B' : C} (eA : A ≅ A') (eB : B ≅ B') (f : A ⟶ B) :
+    isoHomCongrAddEquiv eA eB f = eA.inv ≫ f ≫ eB.hom := rfl
+
+end CategoryTheory
+
+namespace CochainComplex
 
 /-- Let `K` and `L` be integer-indexed cochain complexes in an abelian category, with `L`
 K-injective, and let `n` be an integer. This additive equivalence identifies `Hom_D(K, L[n])`
@@ -122,4 +94,42 @@ def kInjectiveDerivedHomAddEquivCohomologyClass
   eDerived.trans <| eQh.symm.trans <|
     CochainComplex.HomComplex.CohomologyClass.homAddEquiv.symm
 
-end AlgebraicGeometry.ComplexPoint
+variable {C : Type u} [Category.{v} C] [Abelian C] [HasDerivedCategory C]
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+lemma kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk
+    (K L : CochainComplex C ℤ) [L.IsKInjective] (n : ℤ)
+    (z : CochainComplex.HomComplex.Cocycle K L n) :
+    (kInjectiveDerivedHomAddEquivCohomologyClass K L n).symm
+      (CochainComplex.HomComplex.CohomologyClass.mk z) =
+    ShiftedHom.map (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
+      DerivedCategory.Q := by
+  dsimp [kInjectiveDerivedHomAddEquivCohomologyClass, isoHomCongrAddEquiv, ShiftedHom.map]
+  rw [CochainComplex.HomComplex.CohomologyClass.toHom_mk]
+  have h := (DerivedCategory.quotientCompQhIso C).hom.naturality
+    (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
+  simp
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- The identification is natural in the source complex. -/
+lemma kInjectiveDerivedHomAddEquivCohomologyClass_precomp
+    {A A' : CochainComplex C ℤ} (g : A' ⟶ A) (L : CochainComplex C ℤ) [L.IsKInjective] (n : ℤ)
+    (x : ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj L) n) :
+    kInjectiveDerivedHomAddEquivCohomologyClass A' L n (DerivedCategory.Q.map g ≫ x) =
+      CochainComplex.HomComplex.precompClass g L n
+        (kInjectiveDerivedHomAddEquivCohomologyClass A L n x) := by
+  apply (kInjectiveDerivedHomAddEquivCohomologyClass A' L n).symm.injective
+  rw [AddEquiv.symm_apply_apply]
+  obtain ⟨x, rfl⟩ := (kInjectiveDerivedHomAddEquivCohomologyClass A L n).symm.surjective x
+  obtain ⟨z, rfl⟩ := x.mk_surjective
+  rw [AddEquiv.apply_symm_apply, CochainComplex.HomComplex.precompClass_mk,
+    kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.HomComplex.Cocycle.equivHomShift_symm_precomp]
+  simp only [ShiftedHom.map, Functor.map_comp, Category.assoc]
+
+end CochainComplex
+
+end

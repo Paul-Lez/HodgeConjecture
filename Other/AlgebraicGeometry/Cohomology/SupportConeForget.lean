@@ -6,7 +6,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModelLemmas
 public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyShift
@@ -132,7 +132,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The normalized support equivalence intertwines the existing
 `forgetSupport` with the inclusion of supported injective sections.
 No compatibility or choice of a sign is supplied as an input. -/
-lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
+lemma coneSupportAddEquivSupportedInjectiveHomology_forgetSupport
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
     (x : RationalCohomologyWithSupport X Z n) :
     rationalHypercohomologyAddEquivAmbientInjectiveHomology X n
@@ -141,7 +141,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
         (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
         (ambientRationalInjectiveComplex X)).f n
-      (rationalSupportAddEquivSupportedInjectiveHomology X Z hZ n x) := by
+      (coneSupportAddEquivSupportedInjectiveHomology X Z hZ n x) := by
   let Y := TopCat.of (ComplexPoint X)
   let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
   let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y

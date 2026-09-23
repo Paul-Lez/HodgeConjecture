@@ -121,7 +121,7 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_cocycle
       (ShiftedHom.map (Cocycle.equivHomShift.symm z) DerivedCategory.Q) =
     (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X)) K).homologyπ n
       (TopCat.Sheaf.integerCocycleGlobalSection (TopCat.of (ComplexPoint X)) K n z) := by
-  rw [← kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk]
+  rw [← CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk]
   simp only [TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective, AddEquiv.trans_apply,
     AddEquiv.apply_symm_apply, homologyAddEquiv_symm_mk]
   exact ConcreteCategory.congr_hom

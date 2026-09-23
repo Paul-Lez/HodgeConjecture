@@ -39,9 +39,9 @@ def actualInjectiveSupportHomologyIsoCone (n : ℤ) :
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤ _) (n - 1) n (by omega)
 
 /-- Unfolding the existing support comparison exposes its final negation. -/
-lemma rationalSupportAddEquivSupportedInjectiveHomology_eq_neg (n : ℤ)
+lemma coneSupportAddEquivSupportedInjectiveHomology_eq_neg (n : ℤ)
     (a : RationalCohomologyWithSupport X Z n) :
-    rationalSupportAddEquivSupportedInjectiveHomology X Z hZ n a =
+    coneSupportAddEquivSupportedInjectiveHomology X Z hZ n a =
       -((actualInjectiveSupportHomologyIsoCone X Z hZ n).inv
         ((asIso (HomologicalComplex.homologyMap
           (supportConeToAmbientInjectiveGlobalCone X Z hZ) (n - 1))).inv
@@ -68,11 +68,11 @@ lemma actualSupportConeToAmbientInjectiveGlobalCone_inr :
 
 /-- The existing rational support comparison sends a positive complement boundary
 to the negative of the canonical supported-injective kernel boundary. -/
-lemma rationalSupportAddEquivSupportedInjectiveHomology_boundary (n : ℤ)
+lemma coneSupportAddEquivSupportedInjectiveHomology_boundary (n : ℤ)
     (z : (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
       (ambientRationalInjectiveComplex X)).X₃.homology (n - 1)) :
-    rationalSupportAddEquivSupportedInjectiveHomology X Z hZ n
+    coneSupportAddEquivSupportedInjectiveHomology X Z hZ n
       (hypercohomologyMap X
         (CochainComplex.mappingCone.inr (rationalRestrictionComplexInt X Z)) (n - 1)
         ((complementRationalHypercohomologyAddEquivGlobalSections X Z (n - 1)).symm
@@ -84,7 +84,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_boundary (n : ℤ)
           (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
             (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
             (ambientRationalInjectiveComplex X)).g) (n - 1) z)) := by
-  rw [rationalSupportAddEquivSupportedInjectiveHomology_eq_neg,
+  rw [coneSupportAddEquivSupportedInjectiveHomology_eq_neg,
     rationalSupportAddEquivAmbientInjectiveConeGlobalSections_boundary,
     AddEquiv.apply_symm_apply]
   congr 2
