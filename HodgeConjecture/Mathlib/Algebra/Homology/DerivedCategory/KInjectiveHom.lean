@@ -6,6 +6,7 @@ module
 
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexShift
+public import HodgeConjecture.Mathlib.Algebra.Homology.HomComplexPrecomp
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
@@ -32,6 +33,12 @@ def isoHomCongrAddEquiv
     (A ⟶ B) ≃+ (A' ⟶ B') where
   toEquiv := Iso.homCongr eA eB
   map_add' f g := by simp [Iso.homCongr]
+
+@[simp]
+lemma isoHomCongrAddEquiv_apply
+    {C : Type u} [Category.{v} C] [Preadditive C]
+    {A B A' B' : C} (eA : A ≅ A') (eB : B ≅ B') (f : A ⟶ B) :
+    isoHomCongrAddEquiv eA eB f = eA.inv ≫ f ≫ eB.hom := rfl
 
 end CategoryTheory
 
@@ -86,6 +93,42 @@ def kInjectiveDerivedHomAddEquivCohomologyClass
         exact ⟨fun _ _ hfg ↦ h.injective hfg, h.surjective⟩)
   eDerived.trans <| eQh.symm.trans <|
     CochainComplex.HomComplex.CohomologyClass.homAddEquiv.symm
+
+variable {C : Type u} [Category.{v} C] [Abelian C] [HasDerivedCategory C]
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+lemma kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk
+    (K L : CochainComplex C ℤ) [L.IsKInjective] (n : ℤ)
+    (z : CochainComplex.HomComplex.Cocycle K L n) :
+    (kInjectiveDerivedHomAddEquivCohomologyClass K L n).symm
+      (CochainComplex.HomComplex.CohomologyClass.mk z) =
+    ShiftedHom.map (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
+      DerivedCategory.Q := by
+  dsimp [kInjectiveDerivedHomAddEquivCohomologyClass, isoHomCongrAddEquiv, ShiftedHom.map]
+  rw [CochainComplex.HomComplex.CohomologyClass.toHom_mk]
+  have h := (DerivedCategory.quotientCompQhIso C).hom.naturality
+    (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
+  simp
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- The identification is natural in the source complex. -/
+lemma kInjectiveDerivedHomAddEquivCohomologyClass_precomp
+    {A A' : CochainComplex C ℤ} (g : A' ⟶ A) (L : CochainComplex C ℤ) [L.IsKInjective] (n : ℤ)
+    (x : ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj L) n) :
+    kInjectiveDerivedHomAddEquivCohomologyClass A' L n (DerivedCategory.Q.map g ≫ x) =
+      CochainComplex.HomComplex.precompClass g L n
+        (kInjectiveDerivedHomAddEquivCohomologyClass A L n x) := by
+  apply (kInjectiveDerivedHomAddEquivCohomologyClass A' L n).symm.injective
+  rw [AddEquiv.symm_apply_apply]
+  obtain ⟨x, rfl⟩ := (kInjectiveDerivedHomAddEquivCohomologyClass A L n).symm.surjective x
+  obtain ⟨z, rfl⟩ := x.mk_surjective
+  rw [AddEquiv.apply_symm_apply, CochainComplex.HomComplex.precompClass_mk,
+    kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.HomComplex.Cocycle.equivHomShift_symm_precomp]
+  simp only [ShiftedHom.map, Functor.map_comp, Category.assoc]
 
 end CochainComplex
 

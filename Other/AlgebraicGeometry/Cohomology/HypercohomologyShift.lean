@@ -17,7 +17,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityLemmas
+public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef
 public import Other.Algebra.Homology.HomComplexShiftNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 
@@ -116,8 +116,8 @@ lemma kInjectiveDerivedHomAddEquivCohomologyClass_rightUnshift
   obtain ⟨x, rfl⟩ := (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A (K⟦s⟧) n).symm.surjective x
   obtain ⟨z, rfl⟩ := x.mk_surjective
   rw [AddEquiv.apply_symm_apply, CochainComplex.HomComplex.rightUnshiftClass_mk,
-    AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
-    AlgebraicGeometry.ComplexPoint.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
+    CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_symm_mk,
     CochainComplex.HomComplex.equivHomShift_symm_rightUnshift,
     ShiftedHom.map_comp]
   simp [ShiftedHom.map]
