@@ -32,6 +32,8 @@ theorem exists_restricted_normalDivision_chart
     ∃ U : Set (E × (Fin 1 → ℂ)), U ∈ 𝓝 (e q) ∧ IsOpen U ∧ U ⊆ e.target ∧
       ∃ e' : OpenPartialHomeomorph M (E × (Fin 1 → ℂ)),
         q ∈ e'.source ∧ e'.source ⊆ e.source ∧
+          e'.source = e.source ∩ e ⁻¹' U ∧
+          (∀ y ∈ e'.source, e' y = e y) ∧
           (∀ y ∈ e'.source, e' y ∈ U) ∧
           ∃ u : C((e'.source : Set M), ℂ),
             (∀ y, u y ≠ 0) ∧
@@ -55,10 +57,15 @@ theorem exists_restricted_normalDivision_chart
     ⟨fun y ↦ ⟨e' y, hchartU y⟩,
       (continuousOn_iff_continuous_domRestrict.mp e'.continuousOn).subtype_mk _⟩
   let u' := u.comp chartMap
-  refine ⟨U, hUn, hUopen, hUsub, e', hq', ?_, ?_, u', ?_, ?_⟩
+  refine ⟨U, hUn, hUopen, hUsub, e', hq', ?_, ?_, ?_, ?_, u', ?_, ?_⟩
   · intro y hy
     rw [OpenPartialHomeomorph.restrOpen_source] at hy
     exact hy.1
+  · simp only [e', OpenPartialHomeomorph.restrOpen_source]
+    ext y
+    simp [A]
+  · intro y hy
+    rfl
   · intro y hy
     rw [OpenPartialHomeomorph.restrOpen_source] at hy
     exact hy.2.2
