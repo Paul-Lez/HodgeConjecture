@@ -128,9 +128,6 @@ lemma cycleComponentSupport_genericPoint_eq_univ
     (closure {genericPoint X.left} : Set X.left) = Set.univ
   rw [genericPoint_closure (α := X.left)]
   exact Set.preimage_univ
-
-
-
 /-- The component of the generic point has the whole analytic space as its closed support. -/
 lemma cycleComponentAnalyticClosedSupport_genericPoint_eq_top
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
