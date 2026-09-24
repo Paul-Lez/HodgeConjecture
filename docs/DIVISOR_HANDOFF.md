@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5315 jobs),
-and the comparison audit checks 419 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5316 jobs),
+and the comparison audit checks 422 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -58,12 +58,14 @@ map is a quasi-isomorphism and factors the original support equivalence through 
 inverse on homology, the prescribed shift, and the final minus sign.
 `SupportSheafConeSectionTransport.lean` computes the original normalized support section
 from its local cone-cohomology section through that inverse, shift, and sign.
-The actual Chern boundary section still has to be identified.
+Its identification with winding remains.
 `CohomologySectionDerivedTransport.lean` transports an exact derived restriction square
 to the prescribed local section, retaining the homology and shift comparisons.
 `SupportAmbientSectionDerivedSquare.lean` applies this to the original supported class
 through a genuine K-injective cocycle representative. The original Chern boundary square
-is now proved; its transport to the ambient cone and evaluation in local cohomology remain.
+is now proved. `RelativeChernOriginalAmbientDerivedBoundary.lean` transports it to
+the ambient cone and computes the original local section from the canonical integer
+input and the actual local boundary map.
 `OriginalChernRawWinding.lean` computes the actual local chain map on the restricted
 integer-one section as the literal raw winding cochain through the fixed complement
 resolution and ambient cone maps. Passing this calculation to the normalized supported
@@ -112,7 +114,13 @@ with the overlap-unit map evaluated on the negative frame difference.
 `RelativeChernOriginalDerivedBoundary.lean` identifies the inverse cone-to-integer map
 after derived restriction. `RelativeChernOriginalDerivedBoundarySquare.lean` applies the
 original comparison boundary square and expresses the restricted Chern class as the
-boundary of the negative local frame difference. Computing its normalized local section remains.
+boundary of the negative local frame difference. Identifying its normalized local section
+with winding remains.
+
+The remaining calculation has three parallel tasks: restrict the canonical integer
+input, identify the local boundary class with normalized winding, and prove that
+normalized winding commutes with support enlargement from a component to the bad locus.
+Their outputs supply the local premise of `hasChernLocalModel_of_original_local_section`.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.
