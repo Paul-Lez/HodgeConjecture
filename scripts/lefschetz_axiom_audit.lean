@@ -15,6 +15,7 @@ import Other.AlgebraicGeometry.CartierWindingChartVanishing
 import Other.AlgebraicGeometry.CartierChernLocalWinding
 import Other.AlgebraicGeometry.CartierWindingChartNormalizedVanishing
 import Other.AlgebraicGeometry.CartierWindingChartCoefficient
+import Other.AlgebraicGeometry.CartierOriginalChernFrame
 import Other.AlgebraicGeometry.ChernRelativeCanonicalLift
 import Other.AlgebraicGeometry.ChernComponentLocalIsolation
 import Other.AlgebraicGeometry.ChernComponentSectionExtraction
@@ -566,3 +567,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.hasChernLocalModel_of_original_local_section
 
 #print axioms AlgebraicGeometry.ComplexPoint.restrict_original_relativeChernClass_derived_boundary
+
+#print axioms AlgebraicGeometry.ComplexPoint.ChernWindingChart.compatible_frame_restriction

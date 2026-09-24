@@ -239,6 +239,7 @@ public import Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison
 public import Other.AlgebraicGeometry.CartierChernLocalWinding
 public import Other.AlgebraicGeometry.CartierWindingChartNormalizedVanishing
 public import Other.AlgebraicGeometry.CartierWindingChartCoefficient
+public import Other.AlgebraicGeometry.CartierOriginalChernFrame
 public import Other.AlgebraicGeometry.ChernRelativeCanonicalLift
 public import Other.AlgebraicGeometry.ChernComponentLocalIsolation
 public import Other.AlgebraicGeometry.ChernComponentSectionExtraction
